@@ -122,7 +122,7 @@ public Action ExitWarden(int client, int args)
 
 public Action roundStart(Handle event, const char[] name, bool dontBroadcast) 
 {
-	Warden = -1;
+//	Warden = -1;
 }
 
 public Action playerDeath(Handle event, const char[] name, bool dontBroadcast) 
