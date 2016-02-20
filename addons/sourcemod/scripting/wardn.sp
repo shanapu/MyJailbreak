@@ -85,14 +85,14 @@ public void OnPluginStart()
 	CreateConVar("sm_warden_version", PLUGIN_VERSION,  "The version of the SourceMod plugin MyJailBreak - Warden", FCVAR_REPLICATED|FCVAR_SPONLY|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	g_cVar_mnotes = CreateConVar("sm_warden_better_notifications", "0", "0 - disabled, 1 - Will use hint and center text", _, true, 0.0, true, 1.0);
 	g_enabled = CreateConVar("sm_warden_enable", "1", "0 - disabled, 1 - enable warden");	
-	g_prefix = CreateConVar("sm_warden_prefix", "[warden]", "Insert your Jailprefix. default:warden - [warden]");
+	g_prefix = CreateConVar("sm_warden_prefix", "warden - ", "Insert your Jailprefix. default:warden - warden");
 	g_colorenabled = CreateConVar("sm_wardencolor_enable", "1", "0 - disabled, 1 - enable warden colored");
 	
 	g_sounds = CreateConVar("sm_wardensounds_enable", "1", "0 - disabled, 1 - enable warden");
-	cvSndWarden = CreateConVar("warden_sounds_path", "MyJailbreak/warden.mp3", "Path to the sound which should be played for a new warden.");
+	cvSndWarden = CreateConVar("warden_sounds_path", "myjailbreak/warden.mp3", "Path to the sound which should be played for a new warden.");
 	GetConVarString(cvSndWarden, sSndWarden, sizeof(sSndWarden));
 	HookConVarChange(cvSndWarden, OnSettingChanged);
-	cvSndWardenDied = CreateConVar("warden_sounds_path2", "MyJailbreak/unwarden.mp3", "Path to the sound which should be played when there is no warden anymore.");
+	cvSndWardenDied = CreateConVar("warden_sounds_path2", "myjailbreak/unwarden.mp3", "Path to the sound which should be played when there is no warden anymore.");
 	GetConVarString(cvSndWardenDied, sSndWardenDied, sizeof(sSndWardenDied));
 	HookConVarChange(cvSndWardenDied, OnSettingChanged);
 	
