@@ -23,6 +23,7 @@ Handle gF_OnWardenRemovedByAdmin = null;
 
 new Handle:g_enabled=INVALID_HANDLE;
 new Handle:g_prefix=INVALID_HANDLE;
+new Handle:g_colorenabled=INVALID_HANDLE;
 
 new String:g_wprefix[64];
 
@@ -76,9 +77,12 @@ public void OnPluginStart()
 	CreateConVar("sm_warden_version", PLUGIN_VERSION,  "The version of the SourceMod plugin MyJailBreak - Warden", FCVAR_REPLICATED|FCVAR_SPONLY|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	g_cVar_mnotes = CreateConVar("sm_warden_better_notifications", "0", "0 - disabled, 1 - Will use hint and center text", _, true, 0.0, true, 1.0);
 	g_enabled = CreateConVar("sm_warden_enable", "1", "0 - disabled, 1 - enable warden");	
-	g_prefix = CreateConVar("sm_warden_prefix", "[\x04warden\x01]", "Insert your Jailprefix. default:warden - [warden]");
+	g_prefix = CreateConVar("sm_warden_prefix", "[warden]", "Insert your Jailprefix. default:warden - [warden]");
+	g_colorenabled = CreateConVar("sm_wardencolor_enable", "1", "0 - disabled, 1 - enable warden colored");
 	
-	AutoExecConfig(true, "MyJailbreak/warden");
+	
+	
+	AutoExecConfig(true, "MyJailbreak_warden");
 	
 	GetConVarString(g_prefix, g_wprefix, sizeof(g_wprefix));
 }
@@ -88,7 +92,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, interr_max)
 	CreateNative("warden_exist", Native_ExistWarden);
 	CreateNative("warden_iswarden", Native_IsWarden);
 	CreateNative("warden_set", Native_SetWarden);
-	CreateNative("warden_remove", Native_RemoveWarden);
+	CreateNative("warden_removed", Native_RemoveWarden);
 	CreateNative("warden_get", Native_GetWarden);
 	
 	RegPluginLibrary("warden");
@@ -212,7 +216,7 @@ public int m_SetWarden(Menu menu, MenuAction action, int client, int Position)
             tempwarden[client] = userid;
             Menu menu1 = CreateMenu(m_WardenOverwrite);
             char buffer[64];
-            Format(buffer,sizeof(buffer), "%t", "warden_replace", Warden);
+            Format(buffer,sizeof(buffer), "Kick warden %N?", Warden);
             menu1.SetTitle(buffer);
             menu1.AddItem("1", "Yes");
             menu1.AddItem("0", "No");
@@ -222,7 +226,7 @@ public int m_SetWarden(Menu menu, MenuAction action, int client, int Position)
           else
           {
             Warden = i;
-            PrintToChatAll("%s %t", g_wprefix, "warden_adminset", i);
+            PrintToChatAll("%s %t", g_wprefix, "warden_new", Warden);
             CreateTimer(0.5, Timer_WardenFixColor, i, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
             Call_StartForward(gF_OnWardenCreatedByAdmin);
             Call_PushCell(i);
@@ -243,8 +247,8 @@ public int m_WardenOverwrite(Menu menu, MenuAction action, int client, int Posit
     if(choice == 1)
     {
       int newwarden = GetClientOfUserId(tempwarden[client]);
-      PrintToChatAll("%s %t", g_wprefix, "warden_remove", Warden);
-      PrintToChatAll("%s %t", g_wprefix, "warden_adminset", newwarden);
+      PrintToChatAll("%s %t", g_wprefix, "warden_removed", Warden);
+      PrintToChatAll("%s %t", g_wprefix, "warden_new", newwarden);
       Warden = newwarden;
       CreateTimer(0.5, Timer_WardenFixColor, newwarden, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
       Call_StartForward(gF_OnWardenCreatedByAdmin);
@@ -261,8 +265,10 @@ public Action Timer_WardenFixColor(Handle timer,any client)
     if(IsClientWarden(client))
     {
 		if(GetConVarInt(g_enabled) == 1)	
-		{
+		{ if(GetConVarInt(g_colorenabled) == 1)	
+			{
 			SetEntityRenderColor(client,0,102,204);
+			}
 		}
     }
     else
@@ -331,7 +337,7 @@ public Action HookPlayerChat(int client, const char[] command, int args)
 		
 		if(IsClientInGame(client) && IsPlayerAlive(client) && GetClientTeam(client) == CS_TEAM_CT)
 		{
-			PrintToChatAll("%s %N : %s" g_wprefix, client, szText);
+			PrintToChatAll("%s %N : %s", g_wprefix, client, szText);
 			return Plugin_Handled;
 		}
 	}
@@ -365,8 +371,8 @@ void RemoveTheWarden(int client)
 	
 	if(GetConVarBool(g_cVar_mnotes))
 	{
-		PrintCenterTextAll("%s %t", g_wprefix, "warden_removed", client);
-		PrintHintTextToAll("%s %t", g_wprefix, "warden_removed", client);
+		PrintCenterTextAll("%s %t", g_wprefix, "warden_removed", client, Warden);
+		PrintHintTextToAll("%s %t", g_wprefix, "warden_removed", client, Warden);
 	}
 	
 	if(IsClientInGame(client) && IsPlayerAlive(client))
