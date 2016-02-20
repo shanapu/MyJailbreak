@@ -89,4 +89,13 @@
 		"pt"		"Atualmente não há carcereiro na prisão."
 		"sv"		"det fanns ingen fängelsedirektör att avskeda."
 	}
+	
+	"warden_disabled"
+	{
+		"#format"	""
+		"en"		"Warden is disabled."
+		"es"		"Warden is disabled."
+		"pt"		"Warden is disabled."
+		"sv"		"Warden is disabled."
+	}
 }
