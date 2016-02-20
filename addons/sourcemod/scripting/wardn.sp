@@ -123,6 +123,20 @@ public void OnMapStart()
 	}	
 }
 
+public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
+{
+	if(convar == cvSndWarden)
+	{
+		strcopy(sSndWarden, sizeof(sSndWarden), newValue);
+		PrecacheSoundAnyDownload(sSndWarden);
+	}
+	else if(convar == cvSndWardenDied)
+	{
+		strcopy(sSndWardenDied, sizeof(sSndWardenDied), newValue);
+		PrecacheSoundAnyDownload(sSndWardenDied);
+	}
+}
+
 public Action BecomeWarden(int client, int args) 
 {
 	if(GetConVarInt(g_enabled) == 1)	
