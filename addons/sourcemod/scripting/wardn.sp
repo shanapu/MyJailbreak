@@ -319,7 +319,7 @@ void SetTheWarden(int client)
 	}
 	
 	Warden = client;
-	SetEntityRenderColor(client, 0, 0, 240, 255);
+	CreateTimer(0.5, Timer_WardenFixColor, client, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 	SetClientListeningFlags(client, VOICE_NORMAL);
 	
 	Forward_OnWardenCreation(client);
