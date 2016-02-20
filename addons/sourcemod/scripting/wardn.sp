@@ -1,7 +1,7 @@
 #include <sourcemod>
 #include <sdktools>
 #include <cstrike>
-#include <wardn>
+#include <warden>
 
 #define LoopAliveClients(%1) for(int %1 = 1;%1 <= MaxClients;%1++) if(IsValidClient(%1, true))
 
@@ -19,6 +19,8 @@ Handle gF_OnWardenDisconnected = null;
 Handle gF_OnWardenDeath = null;
 Handle gF_OnWardenRemovedBySelf = null;
 Handle gF_OnWardenRemovedByAdmin = null;
+
+new Handle:g_enabled=INVALID_HANDLE;
 
 public Plugin myinfo = {
 	name = "MyJailbreak - Warden",
@@ -41,7 +43,9 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_commander", BecomeWarden);
 	RegConsoleCmd("sm_uc", ExitWarden);
 	RegConsoleCmd("sm_uncommander", ExitWarden);
+	
 	// Admin commands
+	
 	RegAdminCmd("sm_sw", SetWarden, ADMFLAG_GENERIC);
 	RegAdminCmd("sm_setwarden", SetWarden, ADMFLAG_GENERIC);
 	RegAdminCmd("sm_rw", RemoveWarden, ADMFLAG_GENERIC);
@@ -67,6 +71,10 @@ public void OnPluginStart()
 	//ConVars
 	CreateConVar("sm_warden_version", PLUGIN_VERSION,  "The version of the SourceMod plugin MyJailBreak - Warden", FCVAR_REPLICATED|FCVAR_SPONLY|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	g_cVar_mnotes = CreateConVar("sm_warden_better_notifications", "0", "0 - disabled, 1 - Will use hint and center text", _, true, 0.0, true, 1.0);
+	g_enabled = CreateConVar("sm_warden_enable", "1", "0 - disabled, 1 - enable warden");	
+	
+	
+	AutoExecConfig(true, "MyJailbreak-warden");
 }
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, interr_max)
@@ -83,22 +91,25 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, interr_max)
 
 public Action BecomeWarden(int client, int args) 
 {
-	if (Warden == -1)
+	if(GetConVarInt(g_enabled) == 1)	
 	{
-		if (GetClientTeam(client) == CS_TEAM_CT)
+		if (Warden == -1)
 		{
-			if (IsPlayerAlive(client))
+			if (GetClientTeam(client) == CS_TEAM_CT)
 			{
-			SetTheWarden(client);
-			Call_StartForward(gF_OnWardenCreatedByUser);
-			Call_PushCell(client);
-			Call_Finish();
+				if (IsPlayerAlive(client))
+				{
+				SetTheWarden(client);
+				Call_StartForward(gF_OnWardenCreatedByUser);
+				Call_PushCell(client);
+				Call_Finish();
+				}
+				else PrintToChat(client, "Warden ~ %t", "warden_playerdead");
 			}
-			else PrintToChat(client, "Warden ~ %t", "warden_playerdead");
+			else PrintToChat(client, "Warden ~ %t", "warden_ctsonly");
 		}
-		else PrintToChat(client, "Warden ~ %t", "warden_ctsonly");
+		else PrintToChat(client, "Warden ~ %t", "warden_exist", Warden);
 	}
-	else PrintToChat(client, "Warden ~ %t", "warden_exist", Warden);
 }
 
 public Action ExitWarden(int client, int args) 
@@ -122,9 +133,11 @@ public Action ExitWarden(int client, int args)
 
 public Action roundStart(Handle event, const char[] name, bool dontBroadcast) 
 {
-//	Warden = -1;
+if(GetConVarInt(g_enabled) == 0)	
+	{
+		Warden = -1;
+	}
 }
-
 public Action playerDeath(Handle event, const char[] name, bool dontBroadcast) 
 {
 	int client = GetClientOfUserId(GetEventInt(event, "userid"));
@@ -147,6 +160,8 @@ public Action playerDeath(Handle event, const char[] name, bool dontBroadcast)
 }
 public Action SetWarden(int client,int args)
 {
+  if(GetConVarInt(g_enabled) == 1)	
+{
   if(IsValidClient(client))
   {
     Menu menu = CreateMenu(m_SetWarden);
@@ -165,7 +180,9 @@ public Action SetWarden(int client,int args)
     menu.ExitButton = true;
     menu.Display(client,MENU_TIME_FOREVER);
   }
+  }
   return Plugin_Handled;
+
 }
 
 public int m_SetWarden(Menu menu, MenuAction action, int client, int Position)
@@ -229,24 +246,29 @@ public int m_WardenOverwrite(Menu menu, MenuAction action, int client, int Posit
 }
 public Action Timer_WardenFixColor(Handle timer,any client)
 {
+  
   if(IsValidClient(client, true))
-  {
+{
     if(IsClientWarden(client))
     {
-      SetEntityRenderColor(client,0,102,204);
+		if(GetConVarInt(g_enabled) == 1)	
+		{
+			SetEntityRenderColor(client,0,102,204);
+		}
     }
     else
     {
       SetEntityRenderColor(client);
       return Plugin_Stop;
     }
-  }
+}
   else
   {
     return Plugin_Stop;
   }
   return Plugin_Continue;
-}
+ }
+ 
 public Action playerTeam(Handle event, const char[] name, bool dontBroadcast) 
 {
 	int client = GetClientOfUserId(GetEventInt(event, "userid"));
@@ -310,6 +332,8 @@ public Action HookPlayerChat(int client, const char[] command, int args)
 
 void SetTheWarden(int client)
 {
+	if(GetConVarInt(g_enabled) == 1)	
+	{
 	PrintToChatAll("Warden ~ %t", "warden_new", client);
 	
 	if(GetConVarBool(g_cVar_mnotes))
@@ -323,6 +347,7 @@ void SetTheWarden(int client)
 	SetClientListeningFlags(client, VOICE_NORMAL);
 	
 	Forward_OnWardenCreation(client);
+	}
 }
 
 void RemoveTheWarden(int client)
