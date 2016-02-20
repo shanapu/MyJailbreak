@@ -3,6 +3,7 @@
 #include <cstrike>
 #include <warden>
 #include <multicolors>
+#include <emitsoundany>
 
 #define LoopAliveClients(%1) for(int %1 = 1;%1 <= MaxClients;%1++) if(IsValidClient(%1, true))
 
@@ -10,6 +11,12 @@
 
 int Warden = -1;
 int tempwarden[MAXPLAYERS+1] = -1;
+
+ConVar cvSndWarden;
+char sSndWarden[256];
+
+ConVar cvSndWardenDied;
+char sSndWardenDied[256];
 
 Handle g_cVar_mnotes;
 Handle g_fward_onBecome;
@@ -24,6 +31,7 @@ Handle gF_OnWardenRemovedByAdmin = null;
 new Handle:g_enabled=INVALID_HANDLE;
 new Handle:g_prefix=INVALID_HANDLE;
 new Handle:g_colorenabled=INVALID_HANDLE;
+new Handle:g_sounds=INVALID_HANDLE;
 
 new String:g_wprefix[64];
 
@@ -80,6 +88,13 @@ public void OnPluginStart()
 	g_prefix = CreateConVar("sm_warden_prefix", "[warden]", "Insert your Jailprefix. default:warden - [warden]");
 	g_colorenabled = CreateConVar("sm_wardencolor_enable", "1", "0 - disabled, 1 - enable warden colored");
 	
+	g_sounds = CreateConVar("sm_wardensounds_enable", "1", "0 - disabled, 1 - enable warden");
+	cvSndWarden = CreateConVar("warden_sounds_path", "MyJailbreak/warden.mp3", "Path to the sound which should be played for a new warden.");
+	GetConVarString(cvSndWarden, sSndWarden, sizeof(sSndWarden));
+	HookConVarChange(cvSndWarden, OnSettingChanged);
+	cvSndWardenDied = CreateConVar("warden_sounds_path2", "MyJailbreak/unwarden.mp3", "Path to the sound which should be played when there is no warden anymore.");
+	GetConVarString(cvSndWardenDied, sSndWardenDied, sizeof(sSndWardenDied));
+	HookConVarChange(cvSndWardenDied, OnSettingChanged);
 	
 	
 	AutoExecConfig(true, "MyJailbreak_warden");
@@ -97,6 +112,15 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, interr_max)
 	
 	RegPluginLibrary("warden");
 	return APLRes_Success;
+}
+
+public void OnMapStart()
+{
+	if(GetConVarInt(g_sounds) == 1)	
+	{
+		PrecacheSoundAnyDownload(sSndWarden);
+		PrecacheSoundAnyDownload(sSndWardenDied);
+	}	
 }
 
 public Action BecomeWarden(int client, int args) 
@@ -170,6 +194,11 @@ public Action playerDeath(Handle event, const char[] name, bool dontBroadcast)
 		Call_PushCell(client);
 		Call_Finish();
     }
+	if(GetConVarInt(g_enabled) == 1)	
+	{
+		if(warden_iswarden(client))
+		EmitSoundToAllAny(sSndWardenDied);
+	}
 }
 public Action SetWarden(int client,int args)
 {
@@ -472,3 +501,32 @@ stock bool IsValidClient(int client, bool alive = false)
   }
   return false;
 }
+
+public void warden_OnWardenCreated(int client)
+{
+	if(GetConVarInt(g_sounds) == 1)	
+	{
+	EmitSoundToAllAny(sSndWarden);
+	}
+}
+
+public void warden_OnWardenRemoved(int client)
+{
+	if(GetConVarInt(g_sounds) == 1)	
+	{
+	EmitSoundToAllAny(sSndWardenDied);
+	}
+}
+
+void PrecacheSoundAnyDownload(char[] sSound)
+{
+	if(GetConVarInt(g_sounds) == 1)	
+	{
+	PrecacheSoundAny(sSound);
+	
+	char sBuffer[256];
+	Format(sBuffer, sizeof(sBuffer), "sound/%s", sSound);
+	AddFileToDownloadsTable(sBuffer);
+	}
+}
+
