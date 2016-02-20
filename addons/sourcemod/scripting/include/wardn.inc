@@ -1,35 +1,35 @@
-#if defined _eskojbwarden_included_
+#if defined _warden_included
   #endinput
 #endif
-#define _eskojbwarden_included_
+#define _warden_included
 
-/**
- * Check if client is Warden
+/*********************************************************
+ * Checks if any warden exist
  *
- * @param client
- * @return        True if client is warden.
- */
-native bool EJBW_IsClientWarden(int client);
+ * @true on match , false if not
+ *********************************************************/
+native warden_exist();
 
-/**
- * Check if warden exists
+/*********************************************************
+ * returns if client is warden
  *
- * @return        True if yes
- */
-native bool EJBW_WardenExist();
+ * @param client		The client to run the check on
+ * @true on match, false if not		
+ *********************************************************/
+native warden_iswarden(client);
 
-/**
- * Check if warden exists
+/*********************************************************
+ * Set a client as warden
  *
- * @param client
- * @return        True if successfully
- */
-native bool EJBW_SetWarden(int client);
+ * @param client		The client to set as warden
+ * @NoReturn
+ *********************************************************/
+native warden_set(client);
 
-/**
- * Check if warden exists
+/*********************************************************
+ * Removes the current warden if he exists
  *
- * @param client
- * @return        True if successfully
- */
-native bool EJBW_RemoveWarden(int client);
+ * @param client		The warden client to remove
+ * @NoReturn	
+ *********************************************************/
+native warden_remove(client);
