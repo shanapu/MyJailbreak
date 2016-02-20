@@ -33,3 +33,16 @@ native warden_set(client);
  * @NoReturn	
  *********************************************************/
 native warden_remove(client);
+
+/*********************************************************
+ * get the current warden if he exists
+ *
+ * @param client		The warden client to remove
+ * @NoReturn	
+ *********************************************************/
+native warden_get(client);
+
+
+
+
+
