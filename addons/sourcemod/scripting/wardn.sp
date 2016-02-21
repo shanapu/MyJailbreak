@@ -91,10 +91,10 @@ public void OnPluginStart()
 	g_colorenabled = CreateConVar("sm_wardencolor_enable", "1", "0 - disabled, 1 - enable warden colored");
 	
 	g_sounds = CreateConVar("sm_wardensounds_enable", "1", "0 - disabled, 1 - enable warden");
-	cvSndWarden = CreateConVar("warden_sounds_path", "myjailbreak/warden.mp3", "Path to the sound which should be played for a new warden.");
+	cvSndWarden = CreateConVar("warden_sounds_path", "music/myjailbreak/warden.mp3", "Path to the sound which should be played for a new warden.");
 	GetConVarString(cvSndWarden, sSndWarden, sizeof(sSndWarden));
 	HookConVarChange(cvSndWarden, OnSettingChanged);
-	cvSndWardenDied = CreateConVar("warden_sounds_path2", "myjailbreak/unwarden.mp3", "Path to the sound which should be played when there is no warden anymore.");
+	cvSndWardenDied = CreateConVar("warden_sounds_path2", "music/myjailbreak/unwarden.mp3", "Path to the sound which should be played when there is no warden anymore.");
 	GetConVarString(cvSndWardenDied, sSndWardenDied, sizeof(sSndWardenDied));
 	HookConVarChange(cvSndWardenDied, OnSettingChanged);
 	
