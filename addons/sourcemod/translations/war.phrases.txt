@@ -1,0 +1,91 @@
+"Phrases"
+{
+	"war_twin"
+	{
+		"#format"	""
+		"en"		"Terrorists win"
+		
+	}
+	
+	"war_ctwin"
+	{
+		"#format"	""
+		"en"		"Counter-Terrorists win"
+		
+	}
+	
+	"war_end"
+	{
+		"#format"	""
+		"en"		"War ended"
+		
+	}
+	
+	"war_next"
+	{
+		"#format"	""
+		"en"		"Next round is war"
+		
+	}
+	
+	"war_endkill"
+	{
+		"#format"	""
+		"en"		"Ende of war a random Team get killed!"
+		
+	}
+	
+	"war_start"
+	{
+		"#format"	""
+		"en"		"The War has started!"
+		
+	}
+	
+	"war_voted"
+	{
+		"#format"	""
+		"en"		"You allready voted for war"
+		
+	}
+	
+	"war_progress"
+	{
+		"#format"	""
+		"en"		"War is allready in progress"
+		
+	}
+	
+	"war_minct"
+	{
+		"#format"	""
+		"en"		"For a war you need a least one CT"
+		
+	}
+	
+
+	"war_disabled"
+	{
+		"#format"	""
+		"en"		"War is disabled."
+		
+	}
+	
+	"war_adminset"
+	{
+		"#format"	"{1:N}"
+		"en"		"Admin: {1} set as Warden"
+		"es"		"Admin: {1} set as Warden"
+		"pt"		"Admin: {1} set as Warden"
+		"sv"		"Admin: {1} set as Warden"
+	}
+	
+	"war_replace"
+	{
+		"#format"	"{1:N}"
+		"en"		"{1} is Warden, want replace him?"
+		"es"		"{1} is Warden, want replace him?"
+		"pt"		"{1} is Warden, want replace him?"
+		"sv"		"{1} is Warden, want replace him?"
+	}
+}

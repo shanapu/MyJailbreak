@@ -1,3 +1,5 @@
+#pragma semicolon 1
+
 #include <sourcemod>
 #include <sdktools>
 #include <cstrike>
@@ -85,7 +87,7 @@ public void OnPluginStart()
 	CreateConVar("sm_warden_version", PLUGIN_VERSION,  "The version of the SourceMod plugin MyJailBreak - Warden", FCVAR_REPLICATED|FCVAR_SPONLY|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	g_cVar_mnotes = CreateConVar("sm_warden_better_notifications", "0", "0 - disabled, 1 - Will use hint and center text", _, true, 0.0, true, 1.0);
 	g_enabled = CreateConVar("sm_warden_enable", "1", "0 - disabled, 1 - enable warden");	
-	g_prefix = CreateConVar("sm_warden_prefix", "warden - ", "Insert your Jailprefix. default:warden - warden");
+	g_prefix = CreateConVar("sm_warden_prefix", "warden", "Insert your Jailprefix. shown in braces [warden]");
 	g_colorenabled = CreateConVar("sm_wardencolor_enable", "1", "0 - disabled, 1 - enable warden colored");
 	
 	g_sounds = CreateConVar("sm_wardensounds_enable", "1", "0 - disabled, 1 - enable warden");
@@ -152,12 +154,12 @@ public Action BecomeWarden(int client, int args)
 				Call_PushCell(client);
 				Call_Finish();
 				}
-				else PrintToChat(client, "%s %t", g_wprefix, "warden_playerdead");
+				else PrintToChat(client, "[%s] %t", g_wprefix, "warden_playerdead");
 			}
-			else PrintToChat(client, "%s %t", g_wprefix, "warden_ctsonly");
+			else PrintToChat(client, "[%s] %t", g_wprefix, "warden_ctsonly");
 		}
-		else PrintToChat(client, "%s %t", g_wprefix, "warden_exist", Warden);
-	}else PrintToChat(client, "%s %t", g_wprefix, "warden_disabled");
+		else PrintToChat(client, "[%s] %t", g_wprefix, "warden_exist", Warden);
+	}else PrintToChat(client, "[%s] %t", g_wprefix, "warden_disabled");
 }
 
 public Action ExitWarden(int client, int args) 
@@ -166,20 +168,20 @@ public Action ExitWarden(int client, int args)
 	{
 	if(client == Warden)
 	{
-		PrintToChatAll("%s %t", g_wprefix, "warden_retire", client);
+		PrintToChatAll("[%s] %t", g_wprefix, "warden_retire", client);
 		
 		if(GetConVarBool(g_cVar_mnotes))
 		{
-			PrintCenterTextAll("%s %t", g_wprefix, "warden_retire", client);
-			PrintHintTextToAll("%s %t", g_wprefix, "warden_retire", client);
+			PrintCenterTextAll("[%s] %t", g_wprefix, "warden_retire", client);
+			PrintHintTextToAll("[%s] %t", g_wprefix, "warden_retire", client);
 		}
 		
 		Warden = -1;
 		Forward_OnWardenRemoved(client);
 		SetEntityRenderColor(client, 255, 255, 255, 255);
 	}
-	else PrintToChat(client, "%s %t", g_wprefix, "warden_notwarden");
-	}else PrintToChat(client, "%s %t", g_wprefix, "warden_disabled");
+	else PrintToChat(client, "[%s] %t", g_wprefix, "warden_notwarden");
+	}else PrintToChat(client, "[%s] %t", g_wprefix, "warden_disabled");
 }
 
 public Action roundStart(Handle event, const char[] name, bool dontBroadcast) 
@@ -195,12 +197,12 @@ public Action playerDeath(Handle event, const char[] name, bool dontBroadcast)
 	
 	if(client == Warden)
 	{
-		PrintToChatAll("%s %t", g_wprefix, "warden_dead", client);
+		PrintToChatAll("[%s] %t", g_wprefix, "warden_dead", client);
 		
 		if(GetConVarBool(g_cVar_mnotes))
 		{
-			PrintCenterTextAll("%s %t", g_wprefix, "warden_dead", client);
-			PrintHintTextToAll("%s %t", g_wprefix, "warden_dead", client);
+			PrintCenterTextAll("[%s] %t", g_wprefix, "warden_dead", client);
+			PrintHintTextToAll("[%s] %t", g_wprefix, "warden_dead", client);
 		}
 		
 		RemoveTheWarden(client);
@@ -269,7 +271,7 @@ public int m_SetWarden(Menu menu, MenuAction action, int client, int Position)
           else
           {
             Warden = i;
-            PrintToChatAll("%s %t", g_wprefix, "warden_new", Warden);
+            PrintToChatAll("[%s] %t", g_wprefix, "warden_new", Warden);
             CreateTimer(0.5, Timer_WardenFixColor, i, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
             Call_StartForward(gF_OnWardenCreatedByAdmin);
             Call_PushCell(i);
@@ -290,8 +292,8 @@ public int m_WardenOverwrite(Menu menu, MenuAction action, int client, int Posit
     if(choice == 1)
     {
       int newwarden = GetClientOfUserId(tempwarden[client]);
-      PrintToChatAll("%s %t", g_wprefix, "warden_removed", Warden);
-      PrintToChatAll("%s %t", g_wprefix, "warden_new", newwarden);
+      PrintToChatAll("[%s] %t", g_wprefix, "warden_removed", Warden);
+      PrintToChatAll("[%s] %t", g_wprefix, "warden_new", newwarden);
       Warden = newwarden;
       CreateTimer(0.5, Timer_WardenFixColor, newwarden, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
       Call_StartForward(gF_OnWardenCreatedByAdmin);
@@ -339,12 +341,12 @@ public void OnClientDisconnect(int client)
 {
 	if(client == Warden)
 	{
-		PrintToChatAll("%s %t", g_wprefix, "warden_disconnected");
+		PrintToChatAll("[%s] %t", g_wprefix, "warden_disconnected");
 		
 		if(GetConVarBool(g_cVar_mnotes))
 		{
-			PrintCenterTextAll("%s %t", g_wprefix, "warden_disconnected", client);
-			PrintHintTextToAll("%s %t", g_wprefix, "warden_disconnected", client);
+			PrintCenterTextAll("[%s] %t", g_wprefix, "warden_disconnected", client);
+			PrintHintTextToAll("[%s] %t", g_wprefix, "warden_disconnected", client);
 		}
 		
 		Warden = -1;
@@ -364,7 +366,7 @@ public Action RemoveWarden(int client, int args)
 	Call_PushCell(client);
 	Call_Finish();
 	}
-	else PrintToChatAll("%s %t", g_wprefix, "warden_noexist");
+	else PrintToChatAll("[%s] %t", g_wprefix, "warden_noexist");
 	return Plugin_Handled;
 	}
 
@@ -380,7 +382,7 @@ public Action HookPlayerChat(int client, const char[] command, int args)
 		
 		if(IsClientInGame(client) && IsPlayerAlive(client) && GetClientTeam(client) == CS_TEAM_CT)
 		{
-			PrintToChatAll("%s %N : %s", g_wprefix, client, szText);
+			PrintToChatAll("[%s] %N : %s", g_wprefix, client, szText);
 			return Plugin_Handled;
 		}
 	}
@@ -392,12 +394,12 @@ void SetTheWarden(int client)
 {
 	if(GetConVarInt(g_enabled) == 1)	
 	{
-	PrintToChatAll("%s %t", g_wprefix, "warden_new", client);
+	PrintToChatAll("[%s] %t", g_wprefix, "warden_new", client);
 	
 	if(GetConVarBool(g_cVar_mnotes))
 	{
-		PrintCenterTextAll("%s %t", g_wprefix, "warden_new", client);
-		PrintHintTextToAll("%s %t", g_wprefix, "warden_new", client);
+		PrintCenterTextAll("[%s] %t", g_wprefix, "warden_new", client);
+		PrintHintTextToAll("[%s] %t", g_wprefix, "warden_new", client);
 	}
 	
 	Warden = client;
@@ -405,17 +407,17 @@ void SetTheWarden(int client)
 	SetClientListeningFlags(client, VOICE_NORMAL);
 	
 	Forward_OnWardenCreation(client);
-	}else PrintToChat(client, "%s %t", g_wprefix, "warden_disabled");
+	}else PrintToChat(client, "[%s] %t", g_wprefix, "warden_disabled");
 }
 
 void RemoveTheWarden(int client)
 {
-	PrintToChatAll("%s %t", g_wprefix, "warden_removed", client, Warden);
+	PrintToChatAll("[%s] %t", g_wprefix, "warden_removed", client, Warden);
 	
 	if(GetConVarBool(g_cVar_mnotes))
 	{
-		PrintCenterTextAll("%s %t", g_wprefix, "warden_removed", client, Warden);
-		PrintHintTextToAll("%s %t", g_wprefix, "warden_removed", client, Warden);
+		PrintCenterTextAll("[%s] %t", g_wprefix, "warden_removed", client, Warden);
+		PrintHintTextToAll("[%s] %t", g_wprefix, "warden_removed", client, Warden);
 	}
 	
 	if(IsClientInGame(client) && IsPlayerAlive(client))
