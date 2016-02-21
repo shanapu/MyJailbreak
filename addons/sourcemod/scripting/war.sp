@@ -29,14 +29,14 @@ new Handle:nodamagetimerc;
 new Handle:RoundLimitsc;
 new Handle:g_wenabled=INVALID_HANDLE;
 new Handle:g_warprefix=INVALID_HANDLE;
-new Handle:g_warcmd=INVALID_HANDLE;
+//new Handle:g_warcmd=INVALID_HANDLE;
 
 new bool:IsWar;
 new bool:StartWar;
 
 new String:voted[1500];
 new String:g_wwarprefix[64];
-new String:g_wwarcmd[64];
+//new String:g_wwarcmd[64];
 
 new Float:Pos[3];
 
@@ -61,7 +61,7 @@ public OnPluginStart()
 	CreateConVar("sm_war_version", "PLUGIN_VERSION", "The version of the SourceMod plugin MyJailBreak - War", FCVAR_PLUGIN|FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	g_wenabled = CreateConVar("sm_war_enable", "1", "0 - disabled, 1 - enable war");
 	g_warprefix = CreateConVar("sm_war_prefix", "war", "Insert your Jailprefix. shown in braces [war]");
-	g_warcmd = CreateConVar("sm_war_cmd", "!krieg", "Insert your 2nd chat trigger. !war still enabled");
+	//g_warcmd = CreateConVar("sm_war_cmd", "!krieg", "Insert your 2nd chat trigger. !war still enabled");
 	roundtimec = CreateConVar("sm_war_roundtime", "400", "Maximum round time for a single war round");
 	freezetimec = CreateConVar("sm_war_freezetime", "45", "Time freeze T");
 	nodamagetimerc = CreateConVar("sm_war_nodamage", "15", "Time after freezetime damage disbaled");
@@ -70,7 +70,7 @@ public OnPluginStart()
 	AutoExecConfig(true, "MyJailbreak_War");
 	
 	GetConVarString(g_warprefix, g_wwarprefix, sizeof(g_wwarprefix));
-	GetConVarString(g_warcmd, g_wwarcmd, sizeof(g_wwarcmd));
+	//GetConVarString(g_warcmd, g_wwarcmd, sizeof(g_wwarcmd));
 	
 	IsWar = false;
 	StartWar = false;
@@ -433,7 +433,7 @@ public PlayerSay(Handle:event, String:name[], bool:dontBroadcast)
     GetClientAuthString(client, steamid, sizeof(steamid));
     GetEventString(event, "text", text, sizeof(text));
     
-    if (StrEqual(text, "g_wwarcmd") || StrEqual(text, "!war"))
+    if (StrEqual(text, "!krieg") || StrEqual(text, "!war"))
     {
 	if(GetConVarInt(g_wenabled) == 1)
 	{	
