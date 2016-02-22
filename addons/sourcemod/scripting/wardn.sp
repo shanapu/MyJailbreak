@@ -6,6 +6,7 @@
 #include <warden>
 #include <multicolors>
 #include <emitsoundany>
+#include <smartjaildoors>
 
 #define LoopAliveClients(%1) for(int %1 = 1;%1 <= MaxClients;%1++) if(IsValidClient(%1, true))
 
@@ -29,13 +30,18 @@ Handle gF_OnWardenDisconnected = null;
 Handle gF_OnWardenDeath = null;
 Handle gF_OnWardenRemovedBySelf = null;
 Handle gF_OnWardenRemovedByAdmin = null;
-
+new Handle:g_opentimer=INVALID_HANDLE;
+new Handle:g_opentimerenable=INVALID_HANDLE;
 new Handle:g_enabled=INVALID_HANDLE;
 new Handle:g_prefix=INVALID_HANDLE;
 new Handle:g_colorenabled=INVALID_HANDLE;
+new Handle:g_openenabled=INVALID_HANDLE;
 new Handle:g_sounds=INVALID_HANDLE;
+new opentimer;
+new Handle:countertime = INVALID_HANDLE;
 
-new String:g_wprefix[64];
+
+char g_wprefix[64];
 
 public Plugin myinfo = {
 	name = "MyJailbreak - Warden",
@@ -58,6 +64,8 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_commander", BecomeWarden);
 	RegConsoleCmd("sm_uc", ExitWarden);
 	RegConsoleCmd("sm_uncommander", ExitWarden);
+	RegConsoleCmd("sm_open", OpenDoors);
+	RegConsoleCmd("sm_close", CloseDoors);
 	
 	// Admin commands
 	
@@ -89,7 +97,7 @@ public void OnPluginStart()
 	g_enabled = CreateConVar("sm_warden_enable", "1", "0 - disabled, 1 - enable warden");	
 	g_prefix = CreateConVar("sm_warden_prefix", "warden", "Insert your Jailprefix. shown in braces [warden]");
 	g_colorenabled = CreateConVar("sm_wardencolor_enable", "1", "0 - disabled, 1 - enable warden colored");
-	
+	g_openenabled = CreateConVar("sm_wardenopen_enable", "1", "0 - disabled, 1 - warden can open/close cells");
 	g_sounds = CreateConVar("sm_wardensounds_enable", "1", "0 - disabled, 1 - enable warden");
 	cvSndWarden = CreateConVar("warden_sounds_path", "music/myjailbreak/warden.mp3", "Path to the sound which should be played for a new warden.");
 	GetConVarString(cvSndWarden, sSndWarden, sizeof(sSndWarden));
@@ -97,11 +105,52 @@ public void OnPluginStart()
 	cvSndWardenDied = CreateConVar("warden_sounds_path2", "music/myjailbreak/unwarden.mp3", "Path to the sound which should be played when there is no warden anymore.");
 	GetConVarString(cvSndWardenDied, sSndWardenDied, sizeof(sSndWardenDied));
 	HookConVarChange(cvSndWardenDied, OnSettingChanged);
+	g_opentimer = CreateConVar("sm_wardenopen_time", "60", "Time in seconds for open doors on round start automaticly");
+	g_opentimerenable = CreateConVar("sm_wardenopen_time_enable", "1", "should doors open automatic 0- no 1 yes");
 	
+	HookEvent("round_start", Event_RoundStart);
 	
 	AutoExecConfig(true, "MyJailbreak_warden");
 	
 	GetConVarString(g_prefix, g_wprefix, sizeof(g_wprefix));
+}
+
+public Action:Event_RoundStart(Handle:event, const String:name[], bool:dontBroadcast)
+{
+	if (countertime != INVALID_HANDLE)
+		KillTimer(countertime);
+		
+	countertime = INVALID_HANDLE;
+	
+	
+	opentimer = GetConVarInt(g_opentimer);
+	countertime = CreateTimer(1.0, ccounter, _, TIMER_REPEAT);
+}
+
+public Action:ccounter(Handle:timer, Handle:pack)
+{
+	--opentimer;
+	if(opentimer < 1)
+	{
+	if(GetConVarInt(g_opentimerenable) == 1)	
+	{
+	if(!warden_exist())
+	{}else
+	openit();
+	PrintToChatAll("[%s] %t", g_wprefix, "warden_openauto");
+	
+	if (countertime != INVALID_HANDLE)
+	KillTimer(countertime);
+	
+	countertime = INVALID_HANDLE;
+	
+	}
+	}
+}
+
+openit()
+{
+	SJD_OpenDoors(); 
 }
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, interr_max)
@@ -138,6 +187,37 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 		PrecacheSoundAnyDownload(sSndWardenDied);
 	}
 }
+
+public Action:OpenDoors(client, args)
+{
+	if(GetConVarInt(g_openenabled) == 1)
+	{
+	if (warden_iswarden(client))
+	{
+	PrintToChatAll("[%s] %t", g_wprefix, "warden_dooropen"); 
+	SJD_OpenDoors();
+	}
+	else
+	PrintToChat(client, "[%s] %t", g_wprefix, "warden_notwarden"); 
+	}
+}
+
+public Action:CloseDoors(client, args)
+{
+if(GetConVarInt(g_openenabled) == 1)
+{
+	if (warden_iswarden(client))
+	{
+	PrintToChatAll("[%s] %t", g_wprefix, "warden_doorclose"); 
+	SJD_CloseDoors();
+	KillTimer(countertime);
+	}
+	else
+	PrintToChat(client, "[%s] %t", g_wprefix, "warden_notwarden"); 
+	}
+}
+
+
 
 public Action BecomeWarden(int client, int args) 
 {

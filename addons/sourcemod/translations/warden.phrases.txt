@@ -116,4 +116,24 @@
 		"pt"		"{1} is Warden, want replace him?"
 		"sv"		"{1} is Warden, want replace him?"
 	}
+	"warden_dooropen"
+	{
+		"#format"	""
+		"en"		"Warden has open the cells."
+	}
+		"warden_doorclose"
+	{
+		"#format"	""
+		"en"		"Warden has close the cells."
+	}
+	"warden_notwarden"
+	{
+		"#format"	""
+		"en"		"you are not the warden of this prison"
+	}
+		"warden_openauto"
+	{
+		"#format"	""
+		"en"		"cell doors open automaticly"
+	}
 }

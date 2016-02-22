@@ -28,12 +28,6 @@
 		
 	}
 	
-	"war_endkill"
-	{
-		"#format"	""
-		"en"		"Ende of war a random Team get killed!"
-		
-	}
 	
 	"war_start"
 	{
@@ -63,7 +57,7 @@
 		
 	}
 	
-
+	
 	"war_disabled"
 	{
 		"#format"	""
@@ -71,21 +65,16 @@
 		
 	}
 	
-	"war_adminset"
+	"war_damage"
 	{
-		"#format"	"{1:N}"
-		"en"		"Admin: {1} set as Warden"
-		"es"		"Admin: {1} set as Warden"
-		"pt"		"Admin: {1} set as Warden"
-		"sv"		"Admin: {1} set as Warden"
+		"#format"	""
+		"en"		"seconds until damage enabled"
+		
 	}
-	
-	"war_replace"
+	"war_timetohide"
 	{
-		"#format"	"{1:N}"
-		"en"		"{1} is Warden, want replace him?"
-		"es"		"{1} is Warden, want replace him?"
-		"pt"		"{1} is Warden, want replace him?"
-		"sv"		"{1} is Warden, want replace him?"
+		"#format"	""
+		"en"		"seconds until unfreeze"
+		
 	}
 }
