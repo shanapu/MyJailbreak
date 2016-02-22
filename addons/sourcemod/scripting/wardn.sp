@@ -134,16 +134,13 @@ public Action:ccounter(Handle:timer, Handle:pack)
 	{
 	if(GetConVarInt(g_opentimerenable) == 1)	
 	{
-	if(!warden_exist())
-	{}else
-	openit();
-	PrintToChatAll("[%s] %t", g_wprefix, "warden_openauto");
-	
-	if (countertime != INVALID_HANDLE)
-	KillTimer(countertime);
-	
-	countertime = INVALID_HANDLE;
-	
+		openit();
+		PrintToChatAll("[%s] %t", g_wprefix, "warden_openauto"); 
+		
+		if (countertime != INVALID_HANDLE)
+			KillTimer(countertime);
+		
+		countertime = INVALID_HANDLE;
 	}
 	}
 }
