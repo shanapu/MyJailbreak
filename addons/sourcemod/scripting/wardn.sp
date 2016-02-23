@@ -15,6 +15,10 @@
 
 int Warden = -1;
 int tempwarden[MAXPLAYERS+1] = -1;
+new Handle:g_iWardenColorRed;
+new Handle:g_iWardenColorGreen;
+new Handle:g_iWardenColorBlue;
+
 
 ConVar cvSndWarden;
 char sSndWarden[256];
@@ -115,6 +119,10 @@ public void OnPluginStart()
 	g_opentimer = CreateConVar("sm_wardenopen_time", "60", "Time in seconds for open doors on round start automaticly");
 	g_opentimerenable = CreateConVar("sm_wardenopen_time_enable", "1", "should doors open automatic 0- no 1 yes");
 	g_opentimerwarden = CreateConVar("sm_wardenopen_time_warden", "1", "should doors open automatic after sm_wardenopen_time when there is a warden? needs sm_wardenopen_time_enable 1");
+	g_iWardenColorRed = CreateConVar("sm_wardencolor_red", "0");
+	g_iWardenColorGreen = CreateConVar("sm_wardencolor_green", "0");
+	g_iWardenColorBlue = CreateConVar("sm_wardencolor_blue", "255");
+	
 	
 	HookEvent("round_start", Event_RoundStart);
 	
@@ -463,12 +471,21 @@ public Action Timer_WardenFixColor(Handle timer,any client)
   
   if(IsValidClient(client, true))
 {
+
+	int g_iWardenColorRedw;
+	int g_iWardenColorGreenw;
+	int g_iWardenColorBluew;
+
+	g_iWardenColorRedw = GetConVarInt(g_iWardenColorRed);
+	g_iWardenColorGreenw = GetConVarInt(g_iWardenColorGreen);
+	g_iWardenColorBluew = GetConVarInt(g_iWardenColorBlue);
+
 	if(IsClientWarden(client))
 	{
 		if(GetConVarInt(g_enabled) == 1)	
 		{ if(GetConVarInt(g_colorenabled) == 1)	
 			{
-			SetEntityRenderColor(client,0,102,204);
+			SetEntityRenderColor(client, g_iWardenColorRedw, g_iWardenColorGreenw, g_iWardenColorBluew, 255);
 			}
 		}
 	}
