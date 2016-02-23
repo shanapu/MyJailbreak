@@ -1,6 +1,6 @@
 # MyJailbreak 
 
-## Jailbreak plugin meshup (patchwork?) by shanapu
+## Jailbreak plugin meshup (patchwork?)
 
 ### Plugins:
 
