@@ -48,10 +48,8 @@
 	"warden_notwarden"
 	{
 		"#format"	""
-		"en"		"you are not the warden and therefore may not retire."
-		"es"		"No eres el AlcÃ¡ide, y no puedes jubilarte."
-		"pt"		"Você não é o diretor, e você não pode se aposentar.."
-		"sv"		"du är inte fängelsedirektören och kan därför inte avgå."
+		"en"		"you  must be the warden to use this command"
+
 	}
 	
 	"warden_dead"
@@ -94,27 +92,21 @@
 	{
 		"#format"	""
 		"en"		"Warden is disabled."
-		"es"		"Warden is disabled."
-		"pt"		"Warden is disabled."
-		"sv"		"Warden is disabled."
+
 	}
 	
 	"warden_adminset"
 	{
 		"#format"	"{1:N}"
 		"en"		"Admin: {1} set as Warden"
-		"es"		"Admin: {1} set as Warden"
-		"pt"		"Admin: {1} set as Warden"
-		"sv"		"Admin: {1} set as Warden"
+
 	}
 	
 	"warden_replace"
 	{
 		"#format"	"{1:N}"
 		"en"		"{1} is Warden, want replace him?"
-		"es"		"{1} is Warden, want replace him?"
-		"pt"		"{1} is Warden, want replace him?"
-		"sv"		"{1} is Warden, want replace him?"
+
 	}
 	"warden_dooropen"
 	{
@@ -135,5 +127,22 @@
 	{
 		"#format"	""
 		"en"		"cell doors open automaticly"
+	}
+		"warden_time"
+	{
+		"#format"	""
+		"en"		"Now, the cell doors should be open"
+	}
+	
+		"warden_noblockon"
+	{
+		"#format"	""
+		"en"		"the warden set noblock on!"
+	}
+	
+			"warden_noblockoff"
+	{
+		"#format"	""
+		"en"		"the warden set noblock off!"
 	}
 }

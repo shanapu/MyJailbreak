@@ -3,10 +3,11 @@
 #include <sourcemod>
 #include <sdktools>
 #include <cstrike>
-#include <warden>
+#include <wardn>
 #include <multicolors>
 #include <emitsoundany>
 #include <smartjaildoors>
+#include <smlib>
 
 #define LoopAliveClients(%1) for(int %1 = 1;%1 <= MaxClients;%1++) if(IsValidClient(%1, true))
 
@@ -32,13 +33,16 @@ Handle gF_OnWardenRemovedBySelf = null;
 Handle gF_OnWardenRemovedByAdmin = null;
 new Handle:g_opentimer=INVALID_HANDLE;
 new Handle:g_opentimerenable=INVALID_HANDLE;
+new Handle:g_opentimerwarden=INVALID_HANDLE;
 new Handle:g_enabled=INVALID_HANDLE;
+new Handle:g_noblock=INVALID_HANDLE;
 new Handle:g_prefix=INVALID_HANDLE;
 new Handle:g_colorenabled=INVALID_HANDLE;
 new Handle:g_openenabled=INVALID_HANDLE;
 new Handle:g_sounds=INVALID_HANDLE;
 new opentimer;
 new Handle:countertime = INVALID_HANDLE;
+new g_CollisionOffset;
 
 
 char g_wprefix[64];
@@ -53,9 +57,12 @@ public Plugin myinfo = {
 
 public void OnPluginStart() 
 {
-    // Translation
+	// Translation
 	LoadTranslations("warden.phrases");
 	// Client commands
+
+	RegConsoleCmd("sm_noblockon", noblockon); 
+	RegConsoleCmd("sm_noblockoff", noblockoff); 
 	RegConsoleCmd("sm_w", BecomeWarden);
 	RegConsoleCmd("sm_warden", BecomeWarden);
 	RegConsoleCmd("sm_uw", ExitWarden);
@@ -73,10 +80,7 @@ public void OnPluginStart()
 	RegAdminCmd("sm_setwarden", SetWarden, ADMFLAG_GENERIC);
 	RegAdminCmd("sm_rw", RemoveWarden, ADMFLAG_GENERIC);
 	RegAdminCmd("sm_removewarden", RemoveWarden, ADMFLAG_GENERIC);
-    //Hooks
-	HookEvent("round_start", roundStart);
-	HookEvent("player_death", playerDeath);
-	HookEvent("player_team", playerTeam);
+
 	//Forwards
 	gF_OnWardenCreatedByUser = CreateGlobalForward("Warden_OnWardenCreatedByUser", ET_Ignore, Param_Cell);
 	gF_OnWardenCreatedByAdmin = CreateGlobalForward("Warden_OnWardenCreatedByAdmin", ET_Ignore, Param_Cell);
@@ -95,6 +99,7 @@ public void OnPluginStart()
 	CreateConVar("sm_warden_version", PLUGIN_VERSION,  "The version of the SourceMod plugin MyJailBreak - Warden", FCVAR_REPLICATED|FCVAR_SPONLY|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	g_cVar_mnotes = CreateConVar("sm_warden_better_notifications", "0", "0 - disabled, 1 - Will use hint and center text", _, true, 0.0, true, 1.0);
 	g_enabled = CreateConVar("sm_warden_enable", "1", "0 - disabled, 1 - enable warden");	
+	g_noblock = CreateConVar("sm_warden_noblock", "1", "0 - disabled, 1 - enable setable noblock for warden");	
 	g_prefix = CreateConVar("sm_warden_prefix", "warden", "Insert your Jailprefix. shown in braces [warden]");
 	g_colorenabled = CreateConVar("sm_wardencolor_enable", "1", "0 - disabled, 1 - enable warden colored");
 	g_openenabled = CreateConVar("sm_wardenopen_enable", "1", "0 - disabled, 1 - warden can open/close cells");
@@ -107,12 +112,15 @@ public void OnPluginStart()
 	HookConVarChange(cvSndWardenDied, OnSettingChanged);
 	g_opentimer = CreateConVar("sm_wardenopen_time", "60", "Time in seconds for open doors on round start automaticly");
 	g_opentimerenable = CreateConVar("sm_wardenopen_time_enable", "1", "should doors open automatic 0- no 1 yes");
+	g_opentimerwarden = CreateConVar("sm_wardenopen_time_warden", "1", "should doors open automatic after sm_wardenopen_time when there is a warden? needs sm_wardenopen_time_enable 1");
 	
 	HookEvent("round_start", Event_RoundStart);
 	
 	AutoExecConfig(true, "MyJailbreak_warden");
 	
 	GetConVarString(g_prefix, g_wprefix, sizeof(g_wprefix));
+	
+	g_CollisionOffset = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
 }
 
 public Action:Event_RoundStart(Handle:event, const String:name[], bool:dontBroadcast)
@@ -127,21 +135,79 @@ public Action:Event_RoundStart(Handle:event, const String:name[], bool:dontBroad
 	countertime = CreateTimer(1.0, ccounter, _, TIMER_REPEAT);
 }
 
+EnableNoBlock(client)
+{
+	SetEntData(client, g_CollisionOffset, 2, 4, true);
+}
+
+
+EnableBlock(client)
+{
+	SetEntData(client, g_CollisionOffset, 5, 4, true);
+}
+
+public Action:noblockon(client, args)
+{ 
+	if(GetConVarInt(g_noblock) == 1)	
+	{
+		if (warden_iswarden(client))
+		{
+	
+		LOOP_CLIENTS(i, CLIENTFILTER_TEAMONE)
+				{
+						
+						EnableNoBlock(i);	
+				}
+
+		CPrintToChatAll("[%s] %t", g_wprefix, "warden_noblockon");
+		}
+		else
+		{
+		CPrintToChat(client, "[%s] %t", g_wprefix, "warden_notwarden");
+		}
+	}
+}
+
+public Action:noblockoff(client, args)
+{ 
+	if (warden_iswarden(client))
+	{
+	LOOP_CLIENTS(i, CLIENTFILTER_TEAMONE)
+				{
+					
+						EnableBlock(i);	
+				}
+	CPrintToChatAll("[%s] %t", g_wprefix, "warden_noblockoff");  
+		}
+	else
+	{
+		CPrintToChat(client, "[%s] %t", g_wprefix, "warden_notwarden"); 
+	}
+}
+
+
 public Action:ccounter(Handle:timer, Handle:pack)
 {
 	--opentimer;
 	if(opentimer < 1)
 	{
-	if(GetConVarInt(g_opentimerenable) == 1)	
+	if(warden_exist() != 1)	
 	{
+		if(GetConVarInt(g_opentimerenable) == 1)	
+		{
+		if(GetConVarInt(g_opentimerwarden) == 1)	
+		{
 		openit();
-		PrintToChatAll("[%s] %t", g_wprefix, "warden_openauto"); 
+		PrintToChatAll("[%s] %t", g_wprefix, "warden_openauto");
 		
 		if (countertime != INVALID_HANDLE)
 			KillTimer(countertime);
 		
 		countertime = INVALID_HANDLE;
-	}
+		}
+		}
+	}else
+	PrintToChatAll("[%s] %t", g_wprefix, "warden_opentime");
 	}
 }
 
@@ -214,7 +280,14 @@ if(GetConVarInt(g_openenabled) == 1)
 	}
 }
 
-
+public Action:Event_RoundEnd(Handle:event, const String:name[], bool:dontbroadcast)
+{
+    LOOP_CLIENTS(i, CLIENTFILTER_TEAMONE)
+				{
+						
+						EnableBlock(i);	
+				}
+}
 
 public Action BecomeWarden(int client, int args) 
 {
@@ -286,7 +359,7 @@ public Action playerDeath(Handle event, const char[] name, bool dontBroadcast)
 		Call_StartForward(gF_OnWardenDeath);
 		Call_PushCell(client);
 		Call_Finish();
-    }
+	}
 	if(GetConVarInt(g_enabled) == 1)	
 	{
 		if(warden_iswarden(client))
@@ -299,21 +372,21 @@ public Action SetWarden(int client,int args)
 {
   if(IsValidClient(client))
   {
-    Menu menu = CreateMenu(m_SetWarden);
-    menu.SetTitle("Select players");
-    LoopAliveClients(i)
-    {
-      if(GetClientTeam(i) == CS_TEAM_CT && IsClientWarden(i) == false)
-      {
-        char userid[11];
-        char username[MAX_NAME_LENGTH];
-        IntToString(GetClientUserId(i), userid, sizeof(userid));
-        Format(username, sizeof(username), "%N", i);
-        menu.AddItem(userid,username);
-      }
-    }
-    menu.ExitButton = true;
-    menu.Display(client,MENU_TIME_FOREVER);
+	Menu menu = CreateMenu(m_SetWarden);
+	menu.SetTitle("Select players");
+	LoopAliveClients(i)
+	{
+	  if(GetClientTeam(i) == CS_TEAM_CT && IsClientWarden(i) == false)
+	  {
+		char userid[11];
+		char username[MAX_NAME_LENGTH];
+		IntToString(GetClientUserId(i), userid, sizeof(userid));
+		Format(username, sizeof(username), "%N", i);
+		menu.AddItem(userid,username);
+	  }
+	}
+	menu.ExitButton = true;
+	menu.Display(client,MENU_TIME_FOREVER);
   }
   }
   return Plugin_Handled;
@@ -324,59 +397,59 @@ public int m_SetWarden(Menu menu, MenuAction action, int client, int Position)
 {
   if(action == MenuAction_Select)
   {
-    char Item[11];
-    menu.GetItem(Position,Item,sizeof(Item));
-    LoopAliveClients(i)
-    {
-      if(GetClientTeam(i) == CS_TEAM_CT && IsClientWarden(i) == false)
-      {
-        int userid = GetClientUserId(i);
-        if(userid == StringToInt(Item))
-        {
-          if(IsWarden() == true)
-          {
-            tempwarden[client] = userid;
-            Menu menu1 = CreateMenu(m_WardenOverwrite);
-            char buffer[64];
-            Format(buffer,sizeof(buffer), "Kick warden %N?", Warden);
-            menu1.SetTitle(buffer);
-            menu1.AddItem("1", "Yes");
-            menu1.AddItem("0", "No");
-            menu1.ExitButton = false;
-            menu1.Display(client,MENU_TIME_FOREVER);
-          }
-          else
-          {
-            Warden = i;
-            PrintToChatAll("[%s] %t", g_wprefix, "warden_new", Warden);
-            CreateTimer(0.5, Timer_WardenFixColor, i, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
-            Call_StartForward(gF_OnWardenCreatedByAdmin);
-            Call_PushCell(i);
-            Call_Finish();
-          }
-        }
-      }
-    }
+	char Item[11];
+	menu.GetItem(Position,Item,sizeof(Item));
+	LoopAliveClients(i)
+	{
+	  if(GetClientTeam(i) == CS_TEAM_CT && IsClientWarden(i) == false)
+	  {
+		int userid = GetClientUserId(i);
+		if(userid == StringToInt(Item))
+		{
+		  if(IsWarden() == true)
+		  {
+			tempwarden[client] = userid;
+			Menu menu1 = CreateMenu(m_WardenOverwrite);
+			char buffer[64];
+			Format(buffer,sizeof(buffer), "Kick warden %N?", Warden);
+			menu1.SetTitle(buffer);
+			menu1.AddItem("1", "Yes");
+			menu1.AddItem("0", "No");
+			menu1.ExitButton = false;
+			menu1.Display(client,MENU_TIME_FOREVER);
+		  }
+		  else
+		  {
+			Warden = i;
+			PrintToChatAll("[%s] %t", g_wprefix, "warden_new", Warden);
+			CreateTimer(0.5, Timer_WardenFixColor, i, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
+			Call_StartForward(gF_OnWardenCreatedByAdmin);
+			Call_PushCell(i);
+			Call_Finish();
+		  }
+		}
+	  }
+	}
   }
 }
 public int m_WardenOverwrite(Menu menu, MenuAction action, int client, int Position)
 {
   if(action == MenuAction_Select && IsClientWarden(client))
   {
-    char Item[11];
-    menu.GetItem(Position,Item,sizeof(Item));
-    int choice = StringToInt(Item);
-    if(choice == 1)
-    {
-      int newwarden = GetClientOfUserId(tempwarden[client]);
-      PrintToChatAll("[%s] %t", g_wprefix, "warden_removed", Warden);
-      PrintToChatAll("[%s] %t", g_wprefix, "warden_new", newwarden);
-      Warden = newwarden;
-      CreateTimer(0.5, Timer_WardenFixColor, newwarden, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
-      Call_StartForward(gF_OnWardenCreatedByAdmin);
-      Call_PushCell(newwarden);
-      Call_Finish();
-    }
+	char Item[11];
+	menu.GetItem(Position,Item,sizeof(Item));
+	int choice = StringToInt(Item);
+	if(choice == 1)
+	{
+	  int newwarden = GetClientOfUserId(tempwarden[client]);
+	  PrintToChatAll("[%s] %t", g_wprefix, "warden_removed", Warden);
+	  PrintToChatAll("[%s] %t", g_wprefix, "warden_new", newwarden);
+	  Warden = newwarden;
+	  CreateTimer(0.5, Timer_WardenFixColor, newwarden, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
+	  Call_StartForward(gF_OnWardenCreatedByAdmin);
+	  Call_PushCell(newwarden);
+	  Call_Finish();
+	}
   }
 }
 public Action Timer_WardenFixColor(Handle timer,any client)
@@ -384,24 +457,24 @@ public Action Timer_WardenFixColor(Handle timer,any client)
   
   if(IsValidClient(client, true))
 {
-    if(IsClientWarden(client))
-    {
+	if(IsClientWarden(client))
+	{
 		if(GetConVarInt(g_enabled) == 1)	
 		{ if(GetConVarInt(g_colorenabled) == 1)	
 			{
 			SetEntityRenderColor(client,0,102,204);
 			}
 		}
-    }
-    else
-    {
-      SetEntityRenderColor(client);
-      return Plugin_Stop;
-    }
+	}
+	else
+	{
+	  SetEntityRenderColor(client);
+	  return Plugin_Stop;
+	}
 }
   else
   {
-    return Plugin_Stop;
+	return Plugin_Stop;
   }
   return Plugin_Continue;
  }
@@ -431,7 +504,7 @@ public void OnClientDisconnect(int client)
 		Call_StartForward(gF_OnWardenDisconnected);
 		Call_PushCell(client);
 		Call_Finish();
-    }
+	}
 }
 
 public Action RemoveWarden(int client, int args)
@@ -551,8 +624,8 @@ public int Native_RemoveWarden(Handle plugin, int numParams)
 }
 
 public int Native_GetWarden(Handle:plugin, argc)
-{    
-    	return Warden;
+{	
+		return Warden;
 }
 
 void Forward_OnWardenCreation(int client)
@@ -574,7 +647,7 @@ stock bool IsWarden()
 {
   if(Warden != -1)
   {
-    return true;
+	return true;
   }
   return false;
 }
@@ -582,7 +655,7 @@ stock bool IsClientWarden(int client)
 {
   if(client == Warden)
   {
-    return true;
+	return true;
   }
   return false;
 }
@@ -590,7 +663,7 @@ stock bool IsValidClient(int client, bool alive = false)
 {
   if(client >= 1 && client <= MaxClients && IsClientConnected(client) && IsClientInGame(client) && (alive == false || IsPlayerAlive(client)))
   {
-    return true;
+	return true;
   }
   return false;
 }
