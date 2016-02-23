@@ -7,7 +7,7 @@
 //Compiler Options
 #pragma semicolon 1
 
-#define PLUGIN_VERSION   "1.1xx"
+#define PLUGIN_VERSION   "0.1"
 
 new freezetime;
 new nodamagetimer;
