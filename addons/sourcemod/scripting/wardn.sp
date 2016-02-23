@@ -109,7 +109,7 @@ public void OnPluginStart()
 	g_prefix = CreateConVar("sm_warden_prefix", "warden", "Insert your Jailprefix. shown in braces [warden]");
 	g_colorenabled = CreateConVar("sm_wardencolor_enable", "1", "0 - disabled, 1 - enable warden colored");
 	g_openenabled = CreateConVar("sm_wardenopen_enable", "1", "0 - disabled, 1 - warden can open/close cells");
-	g_sounds = CreateConVar("sm_wardensounds_enable", "1", "0 - disabled, 1 - enable warden");
+	g_sounds = CreateConVar("sm_wardensounds_enable", "1", "0 - disabled, 1 - enable warden sounds");
 	cvSndWarden = CreateConVar("warden_sounds_path", "music/myjailbreak/warden.mp3", "Path to the sound which should be played for a new warden.");
 	GetConVarString(cvSndWarden, sSndWarden, sizeof(sSndWarden));
 	HookConVarChange(cvSndWarden, OnSettingChanged);
@@ -119,9 +119,9 @@ public void OnPluginStart()
 	g_opentimer = CreateConVar("sm_wardenopen_time", "60", "Time in seconds for open doors on round start automaticly");
 	g_opentimerenable = CreateConVar("sm_wardenopen_time_enable", "1", "should doors open automatic 0- no 1 yes");
 	g_opentimerwarden = CreateConVar("sm_wardenopen_time_warden", "1", "should doors open automatic after sm_wardenopen_time when there is a warden? needs sm_wardenopen_time_enable 1");
-	g_iWardenColorRed = CreateConVar("sm_wardencolor_red", "0");
-	g_iWardenColorGreen = CreateConVar("sm_wardencolor_green", "0");
-	g_iWardenColorBlue = CreateConVar("sm_wardencolor_blue", "255");
+	g_iWardenColorRed = CreateConVar("sm_wardencolor_red", "0","What color to turn the warden into (set R, G and B values to 255 to disable) (Rgb): x - red value", 0, true, 0.0, true, 255.0);
+	g_iWardenColorGreen = CreateConVar("sm_wardencolor_green", "0","What color to turn the warden into (rGb): x - green value", 0, true, 0.0, true, 255.0);
+	g_iWardenColorBlue = CreateConVar("sm_wardencolor_blue", "255","What color to turn the warden into (rgB): x - blue value", 0, true, 0.0, true, 255.0);
 	
 	
 	HookEvent("round_start", Event_RoundStart);
