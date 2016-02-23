@@ -7,7 +7,7 @@
 //Compiler Options
 #pragma semicolon 1
 
-#define PLUGIN_VERSION   "0.1"
+#define PLUGIN_VERSION   "1.1xx"
 
 new freezetime;
 new nodamagetimer;
@@ -70,10 +70,11 @@ public OnPluginStart()
 	nodamagetimerc = CreateConVar("sm_war_nodamage", "30", "Time after freezetime damage disbaled");
 	RoundLimitsc = CreateConVar("sm_war_roundsnext", "3", "Runden nach Krieg oder Mapstart bis Krieg gestartet werden kann");
 	
-	AutoExecConfig(true, "MyJailbreak_War");
-	
+
 	GetConVarString(g_warprefix, g_wwarprefix, sizeof(g_wwarprefix));
 	GetConVarString(g_warcmd, g_wwarcmd, sizeof(g_wwarcmd));
+	
+	AutoExecConfig(true, "MyJailbreak_War");
 	
 	IsWar = false;
 	StartWar = false;
@@ -376,10 +377,10 @@ public Action:NoWeapon(Handle:timer)
 public PlayerSay(Handle:event, String:name[], bool:dontBroadcast)
 {
 	decl String:text[256];
-	decl String:player_authid[64];
+	decl String:steamid[64];
 	new client = GetClientOfUserId(GetEventInt(event, "userid"));
 	
-	GetClientAuthId(client, AuthId_Steam3, player_authid, sizeof(player_authid));
+	GetClientAuthString(client, steamid, sizeof(steamid));
 	GetEventString(event, "text", text, sizeof(text));
 	
 	if (StrEqual(text, g_wwarcmd) || StrEqual(text, "!war"))
@@ -392,7 +393,7 @@ public PlayerSay(Handle:event, String:name[], bool:dontBroadcast)
 			{
 				if (!IsWar && !StartWar)
 				{
-					if (StrContains(voted, player_authid, true) == -1)
+					if (StrContains(voted, steamid, true) == -1)
 					{
 						new playercount = (GetClientCount(true) / 2);
 						
@@ -400,7 +401,7 @@ public PlayerSay(Handle:event, String:name[], bool:dontBroadcast)
 						
 						new Missing = playercount - votecount + 1;
 						
-						Format(voted, sizeof(voted), "%s,%s", voted, player_authid);
+						Format(voted, sizeof(voted), "%s,%s", voted, steamid);
 						
 						if (votecount > playercount)
 						{

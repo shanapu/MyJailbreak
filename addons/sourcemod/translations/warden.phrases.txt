@@ -128,7 +128,7 @@
 		"#format"	""
 		"en"		"cell doors open automaticly"
 	}
-		"warden_time"
+		"warden_opentime"
 	{
 		"#format"	""
 		"en"		"Now, the cell doors should be open"
@@ -145,4 +145,5 @@
 		"#format"	""
 		"en"		"the warden set noblock off!"
 	}
+	
 }

@@ -102,7 +102,7 @@ public void OnPluginStart()
 	
 	//ConVars
 	CreateConVar("sm_warden_version", PLUGIN_VERSION,  "The version of the SourceMod plugin MyJailBreak - Warden", FCVAR_REPLICATED|FCVAR_SPONLY|FCVAR_NOTIFY|FCVAR_DONTRECORD);
-	g_cVar_mnotes = CreateConVar("sm_warden_better_notifications", "0", "0 - disabled, 1 - Will use hint and center text", _, true, 0.0, true, 1.0);
+	g_cVar_mnotes = CreateConVar("sm_warden_better_notifications", "1", "0 - disabled, 1 - Will use hint and center text", _, true, 0.0, true, 1.0);
 	g_enabled = CreateConVar("sm_warden_enable", "1", "0 - disabled, 1 - enable warden");	
 	g_nextround = CreateConVar("sm_warden_nextround", "1", "0 - disabled, 1 - enable warden stay after round end");	
 	g_noblock = CreateConVar("sm_warden_noblock", "1", "0 - disabled, 1 - enable setable noblock for warden");	
@@ -126,9 +126,11 @@ public void OnPluginStart()
 	
 	HookEvent("round_start", Event_RoundStart);
 	
-	AutoExecConfig(true, "MyJailbreak_warden");
+
 	
 	GetConVarString(g_prefix, g_wprefix, sizeof(g_wprefix));
+	
+	AutoExecConfig(true, "MyJailbreak_warden");
 	
 	g_CollisionOffset = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
 }
