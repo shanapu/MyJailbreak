@@ -1,7 +1,3 @@
-/*
- * Sourcemod War Plugin
- */
-
 //includes
 #include <cstrike>
 #include <sourcemod>
@@ -33,7 +29,7 @@ new Handle:RoundLimitsc;
 new Handle:g_wenabled=INVALID_HANDLE;
 new Handle:g_wspawncell=INVALID_HANDLE;
 new Handle:g_warprefix=INVALID_HANDLE;
-//new Handle:g_warcmd=INVALID_HANDLE;
+new Handle:g_warcmd=INVALID_HANDLE;
 new Handle:cvar;
 
 new bool:IsWar;
@@ -41,14 +37,14 @@ new bool:StartWar;
 
 new String:voted[1500];
 new String:g_wwarprefix[64];
-//new String:g_wwarcmd[64];
+char g_wwarcmd[64];
 
 new Float:Pos[3];
 
 
 public Plugin myinfo = {
 	name = "MyJailbreak - War",
-	author = "shanapu & Floody",
+	author = "shanapu & Floody.de",
 	description = "Jailbreak War script",
 	version = PLUGIN_VERSION,
 	url = ""
@@ -67,7 +63,7 @@ public OnPluginStart()
 	g_wenabled = CreateConVar("sm_war_enable", "1", "0 - disabled, 1 - enable war");
 	g_wspawncell = CreateConVar("sm_war_spawn", "1", "0 - teleport to ct and freeze, 1 - stay in cell open cell doors with aw/weapon menu - need sjd");
 	g_warprefix = CreateConVar("sm_war_prefix", "war", "Insert your Jailprefix. shown in braces [war]");
-	//g_warcmd = CreateConVar("sm_war_cmd", "!krieg", "Insert your 2nd chat trigger. !war still enabled");
+	g_warcmd = CreateConVar("sm_war_cmd", "!krieg", "Insert your 2nd chat trigger. !war still enabled");
 	roundtimec = CreateConVar("sm_war_roundtime", "5", "Round time for a single war round");
 	roundtimenormalc = CreateConVar("sm_nowar_roundtime", "12", "set round time after a war round");
 	freezetimec = CreateConVar("sm_war_freezetime", "30", "Time freeze T");
@@ -77,7 +73,7 @@ public OnPluginStart()
 	AutoExecConfig(true, "MyJailbreak_War");
 	
 	GetConVarString(g_warprefix, g_wwarprefix, sizeof(g_wwarprefix));
-	//GetConVarString(g_warcmd, g_wwarcmd, sizeof(g_wwarcmd));
+	GetConVarString(g_warcmd, g_wwarcmd, sizeof(g_wwarcmd));
 	
 	IsWar = false;
 	StartWar = false;
@@ -380,13 +376,13 @@ public Action:NoWeapon(Handle:timer)
 public PlayerSay(Handle:event, String:name[], bool:dontBroadcast)
 {
 	decl String:text[256];
-	decl String:steamid[64];
+	decl String:player_authid[64];
 	new client = GetClientOfUserId(GetEventInt(event, "userid"));
 	
-	GetClientAuthString(client, steamid, sizeof(steamid));
+	GetClientAuthId(client, AuthId_Steam3, player_authid, sizeof(player_authid));
 	GetEventString(event, "text", text, sizeof(text));
 	
-	if (StrEqual(text, "!krieg") || StrEqual(text, "!war"))
+	if (StrEqual(text, g_wwarcmd) || StrEqual(text, "!war"))
 	{
 	if(GetConVarInt(g_wenabled) == 1)
 	{	
@@ -396,7 +392,7 @@ public PlayerSay(Handle:event, String:name[], bool:dontBroadcast)
 			{
 				if (!IsWar && !StartWar)
 				{
-					if (StrContains(voted, steamid, true) == -1)
+					if (StrContains(voted, player_authid, true) == -1)
 					{
 						new playercount = (GetClientCount(true) / 2);
 						
@@ -404,7 +400,7 @@ public PlayerSay(Handle:event, String:name[], bool:dontBroadcast)
 						
 						new Missing = playercount - votecount + 1;
 						
-						Format(voted, sizeof(voted), "%s,%s", voted, steamid);
+						Format(voted, sizeof(voted), "%s,%s", voted, player_authid);
 						
 						if (votecount > playercount)
 						{
