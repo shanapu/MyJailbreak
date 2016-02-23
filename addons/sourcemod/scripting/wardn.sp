@@ -35,6 +35,7 @@ new Handle:g_opentimer=INVALID_HANDLE;
 new Handle:g_opentimerenable=INVALID_HANDLE;
 new Handle:g_opentimerwarden=INVALID_HANDLE;
 new Handle:g_enabled=INVALID_HANDLE;
+new Handle:g_nextround=INVALID_HANDLE;
 new Handle:g_noblock=INVALID_HANDLE;
 new Handle:g_prefix=INVALID_HANDLE;
 new Handle:g_colorenabled=INVALID_HANDLE;
@@ -99,6 +100,7 @@ public void OnPluginStart()
 	CreateConVar("sm_warden_version", PLUGIN_VERSION,  "The version of the SourceMod plugin MyJailBreak - Warden", FCVAR_REPLICATED|FCVAR_SPONLY|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	g_cVar_mnotes = CreateConVar("sm_warden_better_notifications", "0", "0 - disabled, 1 - Will use hint and center text", _, true, 0.0, true, 1.0);
 	g_enabled = CreateConVar("sm_warden_enable", "1", "0 - disabled, 1 - enable warden");	
+	g_nextround = CreateConVar("sm_warden_next round", "1", "0 - disabled, 1 - enable warden stay after round end");	
 	g_noblock = CreateConVar("sm_warden_noblock", "1", "0 - disabled, 1 - enable setable noblock for warden");	
 	g_prefix = CreateConVar("sm_warden_prefix", "warden", "Insert your Jailprefix. shown in braces [warden]");
 	g_colorenabled = CreateConVar("sm_wardencolor_enable", "1", "0 - disabled, 1 - enable warden colored");
@@ -147,7 +149,7 @@ EnableBlock(client)
 }
 
 public Action:noblockon(client, args)
-{ 
+{
 	if(GetConVarInt(g_noblock) == 1)	
 	{
 		if (warden_iswarden(client))
@@ -336,9 +338,13 @@ public Action ExitWarden(int client, int args)
 
 public Action roundStart(Handle event, const char[] name, bool dontBroadcast) 
 {
-if(GetConVarInt(g_enabled) == 0)	
+if(GetConVarInt(g_nextround) == 0)
 	{
-		Warden = -1;
+			Warden = -1;
+	}
+	else if(GetConVarInt(g_enabled) == 0)
+	{
+			Warden = -1;
 	}
 }
 public Action playerDeath(Handle event, const char[] name, bool dontBroadcast) 
