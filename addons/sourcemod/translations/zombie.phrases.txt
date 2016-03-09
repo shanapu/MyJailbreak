@@ -1,82 +1,82 @@
 "Phrases"
 {
-	"duckhunt_twin"
+	"zombie_twin"
 	{
 		"#format"	""
 		"en"		"Terroist surived"
 		
 	}
 	
-	"duckhunt_ctwin"
+	"zombie_ctwin"
 	{
 		"#format"	""
 		"en"		"Zombies killed all"
 		
 	}
 	
-	"duckhunt_end"
+	"zombie_end"
 	{
 		"#format"	""
-		"en"		"duckhunt ended"
+		"en"		"zombie ended"
 		
 	}
 	
-	"duckhunt_next"
+	"zombie_next"
 	{
 		"#format"	""
-		"en"		"Next round is duckhunt"
+		"en"		"Next round is zombieinthedark"
 		
 	}
 	
 	
-	"duckhunt_start"
+	"zombie_start"
 	{
 		"#format"	""
-		"en"		"The duckhunt has started!"
+		"en"		"The zombieinthedark has started!"
 		
 	}
 	
-	"duckhunt_voted"{
+	"zombie_voted"{
 		"#format"	""
-		"en"		"You allready voted for duckhunt"
+		"en"		"You allready voted for zombieinthedark"
 		
 	}
 	
-	"duckhunt_progress"
+	"zombie_progress"
 	{
 		"#format"	""
-		"en"		"duckhunt is allready in progress"
+		"en"		"zombieinthedark is allready in progress"
 		
 	}
 	
-	"duckhunt_minct"
+	"zombie_minct"
 	{
 		"#format"	""
-		"en"		"For a duckhunt you need a least one CT"
+		"en"		"For a zombieinthedark you need a least one CT"
 		
 	}
 	
 	
-	"duckhunt_disabled"
+	"zombie_disabled"
 	{
 		"#format"	""
-		"en"		"duckhunt is disabled."
+		"en"		"zombieinthedark is disabled."
 		
 	}
 	
-	"duckhunt_damage"
+	"zombie_damage"
 	{
 		"#format"	""
 		"en"		"seconds until damage enabled"
 		
 	}
-	"duckhunt_timetoduckhunt"
+	"zombie_timetozombie"
 	{
 		"#format"	""
 		"en"		"seconds to hide "
 		
 	}
-	"duckhunt_timetounfreeze"
+	"zombie_timetounfreeze"
 	{
 		"#format"	""
 		"en"		"seconds until unfreeze"

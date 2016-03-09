@@ -187,7 +187,7 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 		SetCvar("sm_war_enable", 0);
 		SetCvar("sm_warffa_enable", 0);
 		SetCvar("sm_warden_enable", 0);
-		SetCvar("sm_zombie_enable", 0)
+		SetCvar("sm_zombie_enable", 0);
 		IsHide = true;
 		HideRound++;
 		StartHide = false;
@@ -229,8 +229,8 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 				}
 				freezetime--;
 				HideTimer = CreateTimer(1.0, Hide, _, TIMER_REPEAT);
-				}
-				{AcceptEntityInput(FogIndex, "TurnOn");}
+			}
+		{AcceptEntityInput(FogIndex, "TurnOn");}
 	}
 }
 
