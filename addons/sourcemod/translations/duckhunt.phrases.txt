@@ -10,7 +10,7 @@
 	"duckhunt_ctwin"
 	{
 		"#format"	""
-		"en"		"Zombies killed all"
+		"en"		"all ducks got hunted"
 		
 	}
 	
@@ -70,16 +70,10 @@
 		"en"		"seconds until damage enabled"
 		
 	}
-	"duckhunt_timetoduckhunt"
-	{
-		"#format"	""
-		"en"		"seconds to hide "
-		
-	}
 	"duckhunt_timetounfreeze"
 	{
 		"#format"	""
-		"en"		"seconds until unfreeze"
+		"en"		"seconds until start"
 		
 	}
 }

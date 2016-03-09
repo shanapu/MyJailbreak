@@ -16,6 +16,7 @@ new roundtimenormal;
 new votecount;
 new DuckHuntRound;
 new RoundLimits;
+new m_flNextSecondaryAttack;
 
 new Handle:LimitTimer;
 new Handle:DuckHuntTimer;
@@ -86,6 +87,8 @@ public OnPluginStart()
 	AddFileToDownloadsTable("models/chicken/chicken.vvd");
 	AddFileToDownloadsTable("models/chicken/chicken.mdl");
 	PrecacheModel("models/chicken/chicken.mdl", true);
+	
+	m_flNextSecondaryAttack = FindSendPropOffs("CBaseCombatWeapon", "m_flNextSecondaryAttack");
 }
 
 
@@ -141,6 +144,9 @@ public RoundEnd(Handle:event, String:name[], bool:dontBroadcast)
 		SetCvar("sm_war_enable", 1);
 		SetCvar("sm_zombie_enable", 1);
 		SetCvar("sm_hide_enable", 1);
+		SetCvar("sv_gravity", 800);
+		SetCvar("sv_airaccelerate", 12);                            
+		SetCvarF("sv_accelerate", 5.5);
 		SetCvar("sm_warffa_enable", 1);
 		SetCvar("sm_warden_enable", 1);
 		SetCvar("mp_roundtime", roundtimenormal);
@@ -155,6 +161,9 @@ public RoundEnd(Handle:event, String:name[], bool:dontBroadcast)
 	SetCvar("mp_roundtime_hostage", roundtime);
 	SetCvar("mp_roundtime_defuse", roundtime);
 	}
+	
+	for(new i = 1; i <= MaxClients; i++)
+	if(IsClientInGame(i)) SDKUnhook(i, SDKHook_PreThink, OnPreThink);
 }
 
 public Action SetDuckHunt(int client,int args)
@@ -171,26 +180,70 @@ public Action SetDuckHunt(int client,int args)
 public OnClientPutInServer(client)
 {
 	SDKHook(client, SDKHook_WeaponCanUse, OnWeaponCanUse);
+	SDKHook(client, SDKHook_PreThink, OnPreThink);
 }
 
 public Action:OnWeaponCanUse(client, weapon)
 {
-	decl String:sWeapon[32];
-	GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
-
-	if (!StrEqual(sWeapon, "weapon_knife") || (GetClientTeam(client) == CS_TEAM_CT && !StrEqual(sWeapon, "weapon_awp")))
+	if(IsDuckHunt == true)
 		{
-			if (IsClientInGame(client) && IsPlayerAlive(client))
+					if(GetClientTeam(client) == CS_TEAM_CT)
 			{
-			if(IsDuckHunt == true)
+		decl String:sWeapon[32];
+		GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
+
+		if(!StrEqual(sWeapon, "weapon_awp"))
+		{
+		
+			if (IsClientInGame(client) && IsPlayerAlive(client))
 			{
 			return Plugin_Handled;
 			}
+		}
+
+		}
+		if(GetClientTeam(client) == CS_TEAM_T)
+			{
+		decl String:sWeapon[32];
+		GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
+
+		if(!StrEqual(sWeapon, "weapon_knife"))
+		{
+		
+			if (IsClientInGame(client) && IsPlayerAlive(client))
+			{
+			return Plugin_Handled;
 			}
 		}
+
+		}
+		}
+		return Plugin_Continue;
+}
+
+public Action:OnPreThink(client)
+{
+	new iWeapon = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
+	SetNoScope(iWeapon);
 	return Plugin_Continue;
 }
 
+stock SetNoScope(weapon)
+{
+	if(IsValidEdict(weapon))
+	{
+		decl String:classname[MAX_NAME_LENGTH];
+
+		if (GetEdictClassname(weapon, classname, sizeof(classname))
+		|| StrEqual(classname[7], "ssg08")  || StrEqual(classname[7], "aug")
+		|| StrEqual(classname[7], "sg550")  || StrEqual(classname[7], "sg552")
+		|| StrEqual(classname[7], "sg556")  || StrEqual(classname[7], "awp")
+		|| StrEqual(classname[7], "scar20") || StrEqual(classname[7], "g3sg1"))
+		{
+			SetEntDataFloat(weapon, m_flNextSecondaryAttack, GetGameTime() + 1.0);
+		}
+	}
+}
 
 public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 {
@@ -203,6 +256,10 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 		SetCvar("sm_warffa_enable", 0);
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("sm_hide_enable", 0);
+		SetCvar("sv_gravity", 180);
+		SetCvar("sm_anticamp_enable", 1);
+		SetCvar("sv_airaccelerate", 9999);
+		SetCvarF("sv_accelerate", 9999.0);
 		IsDuckHunt = true;
 		DuckHuntRound++;
 		StartDuckHunt = false;
@@ -235,7 +292,8 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 						if (GetClientTeam(client) == 2)
 						{
 						SetEntityModel(client, "models/chicken/chicken.mdl");
-						SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.3);
+						SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.2);
+						SetEntityGravity(client, 0.3);
 						}
 					}
 					if (IsClientInGame(client))
@@ -247,7 +305,9 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 				}
 				preparetime--;
 				DuckHuntTimer = CreateTimer(1.0, DuckHunt, _, TIMER_REPEAT);
-				}
+			}
+		for(new i = 1; i <= MaxClients; i++)
+		if(IsClientInGame(i)) SDKHook(i, SDKHook_PreThink, OnPreThink);
 	}
 }
 
@@ -264,15 +324,9 @@ public Action:DuckHunt(Handle:timer)
 		for (new client=1; client <= MaxClients; client++)
 		if (IsClientInGame(client) && IsPlayerAlive(client))
 			{
-		if (GetClientTeam(client) == 3)
-						{
+		
 						PrintCenterText(client,"%i %t", preparetime, "duckhunt_timetounfreeze");
-						}
-		if (GetClientTeam(client) == 2)
-						{
-						PrintCenterText(client,"%i %t", preparetime, "duckhunt_timetoduckhunt");
-						}
-		}
+			}
 		return Plugin_Continue;
 	}
 	
@@ -290,7 +344,7 @@ public Action:DuckHunt(Handle:timer)
 				}
 			if (GetClientTeam(client) == 3)
 				{
-				SetEntProp(client, Prop_Data, "m_takedamage", 0.5, 1);
+				SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 				}
 			}
 		}
