@@ -140,6 +140,7 @@ public RoundEnd(Handle:event, String:name[], bool:dontBroadcast)
 			warffaRound = 0;
 			Format(voted, sizeof(voted), "");
 			SetCvar("sm_hosties_lr", 1);
+			SetCvar("dice_enable", 1);
 			SetCvar("sm_warden_enable", 1);
 			SetCvar("sm_hide_enable", 1);
 			SetCvar("sm_zombie_enable", 1);
@@ -175,7 +176,7 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 {
 	if (Startwarffa || Iswarffa)
 	{
-		
+		SetCvar("dice_enable", 0);
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("sm_hide_enable", 0);

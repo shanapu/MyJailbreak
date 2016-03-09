@@ -7,214 +7,214 @@
 	"already"
 	{
 		"#format"	"{1:i}"
-		"en"		"You already diced {lightgreen}{1} time(s)!"
+		"en"		"You already diced {1} time(s)!"
 	}
 	"money"
 	{
 		"#format"	"{1:i}"
-		"en"		"You need more than {lightgreen}{1}$ to dice!"
+		"en"		"You need more than {1}$ to dice!"
 	}
 	"rolling"
 	{
 		"#format"	"{1:i},{2:i}"
-		"en"		"Rolling the dice... {lightgreen}{1} of {2} time(s)!"
+		"en"		"Rolling the dice... {1} of {2} time(s)!"
 	}
 	"wrong"
 	{
-		"en"		"You're in the {lightgreen}wrong Team!"
+		"en"		"You're in the wrong Team!"
 	}
 	"dead"
 	{
-		"en"		"You have to {lightgreen}be alive!"
+		"en"		"You have to be alive!"
 	}
 	"noclip"
 	{
 		"#format"	"{1:i}"
-		"en"		"No Clip timer: {lightgreen}{1}!"
+		"en"		"No Clip timer: {1}!"
 	}
 	"deagle"
 	{
-		"en"		"{lightgreen}Pssst... {green}you got a Weapon!"
+		"en"		"Pssst... {green}you got a Weapon!"
 	}
 	"start"
 	{
 		"#format"   "{1:s}"
-		"en"		"Type {lightgreen}!{1} {green}to roll the dice."
+		"en"		"Type !{1} {green}to roll the dice."
 	}
 	"dice1"
 	{
 		"#format"   "{1:N},{2:i}"
-		"en"		"{1} rolled {lightgreen}a {2}: {default}He gets a lot of alcohol!"
+		"en"		"{1} rolled a {2}: He gets a lot of alcohol!"
 	}
 	"dice2"
 	{
 		"#format"   "{1:N},{2:i}"
-		"en"		"{1} rolled {lightgreen}a {2}: {default}He gets drugs!"
+		"en"		"{1} rolled a {2}: He gets drugs!"
 	}
 	"dice3"
 	{
 		"#format"   "{1:N},{2:i}"
-		"en"		"{1} rolled {lightgreen}a {2}: {default}He gets burned!"
+		"en"		"{1} rolled a {2}: He gets burned!"
 	}
 	"dice4"
 	{
 		"#format"   "{1:N},{2:i}"
-		"en"		"{1} rolled {lightgreen}a {2}: {default}He gets 1.65x speed"
+		"en"		"{1} rolled a {2}: He gets 1.65x speed"
 	}
 	"dice5"
 	{
 		"#format"   "{1:N},{2:i}"
-		"en"		"{1} rolled {lightgreen}a {2}: {default}He become a rocket!"
+		"en"		"{1} rolled a {2}: He become a rocket!"
 	}
 	"dice6"
 	{
 		"#format"   "{1:N},{2:i}"
-		"en"		"{1} rolled {lightgreen}a {2}: {default}He gets nothing!"
+		"en"		"{1} rolled a {2}: He gets nothing!"
 	}
 	"dice7"
 	{
 		"#format"   "{1:N},{2:i}"
-		"en"		"{1} rolled {lightgreen}a {2}: {default}He gets LongJump!"
+		"en"		"{1} rolled a {2}: He gets LongJump!"
 	}
 	"dice8"
 	{
 		"#format"   "{1:N},{2:i}"
-		"en"		"{1} rolled {lightgreen}a {2}: {default}He gets a Deagle!"
+		"en"		"{1} rolled a {2}: He gets a Deagle!"
 	}
 	"dice9"
 	{
 		"#format"   "{1:N},{2:i}"
-		"en"		"{1} rolled {lightgreen}a {2}: {default}He lose 50 HP!"
+		"en"		"{1} rolled a {2}: He lose 50 HP!"
 	}
 	"dice10"
 	{
 		"#format"   "{1:N},{2:i}"
-		"en"		"{1} rolled {lightgreen}a {2}: {default}He gets 50 HP!"
+		"en"		"{1} rolled a {2}: He gets 50 HP!"
 	}
 	"dice11"
 	{
 		"#format"   "{1:N},{2:i}"
-		"en"		"{1} rolled {lightgreen}a {2}: {default}He gets 0.65x speed!"
+		"en"		"{1} rolled a {2}: He gets 0.65x speed!"
 	}
 	"dice12"
 	{
 		"#format"   "{1:N},{2:i}"
-		"en"		"{1} rolled {lightgreen}a {2}: {default}He gets a grenade!"
+		"en"		"{1} rolled a {2}: He gets a grenade!"
 	}
 	"dice13"
 	{
 		"#format"   "{1:N},{2:i}"
-		"en"		"{1} rolled {lightgreen}a {2}: {default}He gets two flashbangs!"
+		"en"		"{1} rolled a {2}: He gets two flashbangs!"
 	}
 	"dice14"
 	{
 		"#format"   "{1:N},{2:i}"
-		"en"		"{1} rolled {lightgreen}a {2}: {default}He gets nothing!"
+		"en"		"{1} rolled a {2}: He gets nothing!"
 	}
 	"dice15"
 	{
 		"#format"   "{1:N},{2:i}"
-		"en"		"{1} rolled {lightgreen}a {2}: {default}He gets half gravity!"
+		"en"		"{1} rolled a {2}: He gets half gravity!"
 	}
 	"dice16"
 	{
 		"#format"   "{1:N},{2:i}"
-		"en"		"{1} rolled {lightgreen}a {2}: {default}He gets twice gravity!"
+		"en"		"{1} rolled a {2}: He gets twice gravity!"
 	}
 	"dice17"
 	{
 		"#format"   "{1:N},{2:i}"
-		"en"		"{1} rolled {lightgreen}a {2}: {default}He gets 1.65x speed and 50 HP!"
+		"en"		"{1} rolled a {2}: He gets 1.65x speed and 50 HP!"
 	}
 	"dice18"
 	{
 		"#format"   "{1:N},{2:i}"
-		"en"		"{1} rolled {lightgreen}a {2}: {default}He gets 0.65x speed and lose 30 HP. But gets half gravity!"
+		"en"		"{1} rolled a {2}: He gets 0.65x speed and lose 30 HP. But gets half gravity!"
 	}
 	"dice19"
 	{
 		"#format"   "{1:N},{2:i}"
-		"en"		"{1} rolled {lightgreen}a {2}: {default}He gets 0.65x speed and twice gravity. But gets 30 HP!"
+		"en"		"{1} rolled a {2}: He gets 0.65x speed and twice gravity. But gets 30 HP!"
 	}
 	"dice20"
 	{
 		"#format"   "{1:N},{2:i}"
-		"en"		"{1} rolled {lightgreen}a {2}: {default}He gets 5 seconds noclip!"
+		"en"		"{1} rolled a {2}: He gets 5 seconds noclip!"
 	}
 	"dice21"
 	{
 		"#format"   "{1:N},{2:i}"
-		"en"		"{1} rolled {lightgreen}a {2}: {default}He gets 30 seconds freezed!"
+		"en"		"{1} rolled a {2}: He gets 30 seconds freezed!"
 	}
 	"dice22"
 	{
 		"#format"   "{1:N},{2:i}"
-		"en"		"{1} rolled {lightgreen}a {2}: {default}He gets 100 seconds shaked!"
+		"en"		"{1} rolled a {2}: He gets 100 seconds shaked!"
 	}
 	"dice23"
 	{
 		"#format"   "{1:N},{2:i}"
-		"en"		"{1} rolled {lightgreen}a {2}: {default}He gets a Glock!"
+		"en"		"{1} rolled a {2}: He gets a Glock!"
 	}
 	"dice24"
 	{
 		"#format"   "{1:N},{2:i}"
-		"en"		"{1} rolled {lightgreen}a {2}: {default}He has only 1 HP left!"
+		"en"		"{1} rolled a {2}: He has only 1 HP left!"
 	}
 	"dice25"
 	{
 		"#format"   "{1:N},{2:i}"
-		"en"		"{1} rolled {lightgreen}a {2}: {default}He gets a shotgun!"
+		"en"		"{1} rolled a {2}: He gets a shotgun!"
 	}
 	"dice26"
 	{
 		"#format"   "{1:N},{2:i}"
-		"en"		"{1} rolled {lightgreen}a {2}: {default}He gets froggy (2x) Jump!"
+		"en"		"{1} rolled a {2}: He gets froggy (2x) Jump!"
 	}
 	"dice27"
 	{
 		"#format"   "{1:N},{2:i}"
-		"en"		"{1} rolled {lightgreen}a {2}: {default}He has always NightVision on!"
+		"en"		"{1} rolled a {2}: He has always NightVision on!"
 	}
 	"dice28"
 	{
 		"#format"   "{1:N},{2:i}"
-		"en"		"{1} rolled {lightgreen}a {2}: {default}He has less FOV!"
+		"en"		"{1} rolled a {2}: He has less FOV!"
 	}
 	"dice29"
 	{
 		"#format"   "{1:N},{2:i}"
-		"en"		"{1} rolled {lightgreen}a {2}: {default}He has high FOV!"
+		"en"		"{1} rolled a {2}: He has high FOV!"
 	}
 	"dice30"
 	{
 		"#format"   "{1:N},{2:i}"
-		"en"		"{1} rolled {lightgreen}a {2}: {default}He is almost invisible!"
+		"en"		"{1} rolled a {2}: He is almost invisible!"
 	}
 	"dice31"
 	{
 		"#format"   "{1:N},{2:i}"
-		"en"		"{1} rolled {lightgreen}a {2}: {default}He burns all the time. But with more speed and more HP!"
+		"en"		"{1} rolled a {2}: He burns all the time. But with more speed and more HP!"
 	}
 	"dice32"
 	{
 		"#format"   "{1:N},{2:i}"
-		"en"		"{1} rolled {lightgreen}a {2}: {default}Now ALL Players are walking backwards!"
+		"en"		"{1} rolled a {2}: Now ALL Players are walking backwards!"
 	}
 	"dice32_all"
 	{
 		"#format"   "{1:i}"
-		"en"		"Someone rolled a {1}: {default}Now ALL Players are walking backwards!"
+		"en"		"Someone rolled a {1}: Now ALL Players are walking backwards!"
 	}
 	"dice33"
 	{
 		"#format"   "{1:N},{2:i}"
-		"en"		"{1} rolled {lightgreen}a {2}: {default}Now ALL Players are ice skaters!"
+		"en"		"{1} rolled a {2}: Now ALL Players are ice skaters!"
 	}
 	"dice33_all"
 	{
 		"#format"   "{1:i}"
-		"en"		"Someone rolled a {1}: {default}Now ALL Players are ice skaters!"
+		"en"		"Someone rolled a {1}: Now ALL Players are ice skaters!"
 	}
 		"disabled"
 	{

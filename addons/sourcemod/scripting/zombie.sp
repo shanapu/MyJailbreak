@@ -152,6 +152,7 @@ public RoundEnd(Handle:event, String:name[], bool:dontBroadcast)
 		SetCvar("sm_hosties_lr", 1);
 		SetCvar("sm_war_enable", 1);
 		SetCvar("sm_hide_enable", 1);
+		SetCvar("dice_enable", 1);
 		SetCvar("sm_warffa_enable", 1);
 		SetCvar("sm_warden_enable", 1);
 		SetCvar("mp_roundtime", roundtimenormal);
@@ -217,6 +218,7 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 		SetCvar("sm_warffa_enable", 0);
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("sm_hide_enable", 0);
+		SetCvar("dice_enable", 0);
 		IsZombie = true;
 		ZombieRound++;
 		StartZombie = false;

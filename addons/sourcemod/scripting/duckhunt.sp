@@ -142,11 +142,9 @@ public RoundEnd(Handle:event, String:name[], bool:dontBroadcast)
 		Format(voted, sizeof(voted), "");
 		SetCvar("sm_hosties_lr", 1);
 		SetCvar("sm_war_enable", 1);
+		SetCvar("dice_enable", 1);
 		SetCvar("sm_zombie_enable", 1);
 		SetCvar("sm_hide_enable", 1);
-		SetCvar("sv_gravity", 800);
-		SetCvar("sv_airaccelerate", 12);                            
-		SetCvarF("sv_accelerate", 5.5);
 		SetCvar("sm_warffa_enable", 1);
 		SetCvar("sm_warden_enable", 1);
 		SetCvar("mp_roundtime", roundtimenormal);
@@ -256,10 +254,8 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 		SetCvar("sm_warffa_enable", 0);
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("sm_hide_enable", 0);
-		SetCvar("sv_gravity", 180);
-		SetCvar("sm_anticamp_enable", 1);
-		SetCvar("sv_airaccelerate", 9999);
-		SetCvarF("sv_accelerate", 9999.0);
+		SetCvar("dice_enable", 0);
+
 		IsDuckHunt = true;
 		DuckHuntRound++;
 		StartDuckHunt = false;
@@ -341,6 +337,7 @@ public Action:DuckHunt(Handle:timer)
 			if (GetClientTeam(client) == 2)
 				{
 				SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
+				SetEntityGravity(client, 0.3);
 				}
 			if (GetClientTeam(client) == 3)
 				{

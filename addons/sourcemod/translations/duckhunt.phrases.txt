@@ -67,7 +67,7 @@
 	"duckhunt_damage"
 	{
 		"#format"	""
-		"en"		"seconds until damage enabled"
+		"en"		"seconds until cells open and the hunt begin"
 		
 	}
 	"duckhunt_timetounfreeze"
