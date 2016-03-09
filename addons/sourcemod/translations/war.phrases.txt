@@ -36,8 +36,7 @@
 		
 	}
 	
-	"war_voted"
-	{
+	"war_voted"{
 		"#format"	""
 		"en"		"You allready voted for war"
 		

@@ -1,0 +1,85 @@
+"Phrases"
+{
+	"duckhunt_twin"
+	{
+		"#format"	""
+		"en"		"Terroist surived"
+		
+	}
+	
+	"duckhunt_ctwin"
+	{
+		"#format"	""
+		"en"		"Zombies killed all"
+		
+	}
+	
+	"duckhunt_end"
+	{
+		"#format"	""
+		"en"		"duckhunt ended"
+		
+	}
+	
+	"duckhunt_next"
+	{
+		"#format"	""
+		"en"		"Next round is duckhunt"
+		
+	}
+	
+	
+	"duckhunt_start"
+	{
+		"#format"	""
+		"en"		"The duckhunt has started!"
+		
+	}
+	
+	"duckhunt_voted"{
+		"#format"	""
+		"en"		"You allready voted for duckhunt"
+		
+	}
+	
+	"duckhunt_progress"
+	{
+		"#format"	""
+		"en"		"duckhunt is allready in progress"
+		
+	}
+	
+	"duckhunt_minct"
+	{
+		"#format"	""
+		"en"		"For a duckhunt you need a least one CT"
+		
+	}
+	
+	
+	"duckhunt_disabled"
+	{
+		"#format"	""
+		"en"		"duckhunt is disabled."
+		
+	}
+	
+	"duckhunt_damage"
+	{
+		"#format"	""
+		"en"		"seconds until damage enabled"
+		
+	}
+	"duckhunt_timetoduckhunt"
+	{
+		"#format"	""
+		"en"		"seconds to hide "
+		
+	}
+	"duckhunt_timetounfreeze"
+	{
+		"#format"	""
+		"en"		"seconds until unfreeze"
+		
+	}
+}

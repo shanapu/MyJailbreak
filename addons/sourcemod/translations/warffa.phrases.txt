@@ -1,0 +1,74 @@
+"Phrases"
+{
+	"warffa_twin"
+	{
+		"#format"	""
+		"en"		"Terrorists win"
+		
+	}
+	
+	"warffa_ctwin"
+	{
+		"#format"	""
+		"en"		"Counter-Terrorists win"
+		
+	}
+	
+	"warffa_end"
+	{
+		"#format"	""
+		"en"		"battle royale ended"
+		
+	}
+	
+	"warffa_next"
+	{
+		"#format"	""
+		"en"		"Next round is battle royale"
+		
+	}
+	
+	
+	"warffa_start"
+	{
+		"#format"	""
+		"en"		"The battle royale has started!"
+		
+	}
+	
+	"warffa_voted"{
+		"#format"	""
+		"en"		"You allready voted for battle royale"
+		
+	}
+	
+	"warffa_progress"
+	{
+		"#format"	""
+		"en"		"battle royale is allready in progress"
+		
+	}
+	
+	"warffa_minct"
+	{
+		"#format"	""
+		"en"		"For a battle royale you need a least one CT"
+		
+	}
+	
+	
+	"warffa_disabled"
+	{
+		"#format"	""
+		"en"		"battle royale is disabled."
+		
+	}
+	
+	"warffa_damage"
+	{
+		"#format"	""
+		"en"		"seconds until damage enabled"
+		
+	}
+
+}

@@ -1,0 +1,85 @@
+"Phrases"
+{
+	"hide_twin"
+	{
+		"#format"	""
+		"en"		"Hider win"
+		
+	}
+	
+	"hide_ctwin"
+	{
+		"#format"	""
+		"en"		"Seeker win"
+		
+	}
+	
+	"hide_end"
+	{
+		"#format"	""
+		"en"		"hideinthedark ended"
+		
+	}
+	
+	"hide_next"
+	{
+		"#format"	""
+		"en"		"Next round is hideinthedark"
+		
+	}
+	
+	
+	"hide_start"
+	{
+		"#format"	""
+		"en"		"The hideinthedark has started!"
+		
+	}
+	
+	"hide_voted"{
+		"#format"	""
+		"en"		"You allready voted for hideinthedark"
+		
+	}
+	
+	"hide_progress"
+	{
+		"#format"	""
+		"en"		"hideinthedark is allready in progress"
+		
+	}
+	
+	"hide_minct"
+	{
+		"#format"	""
+		"en"		"For a hideinthedark you need a least one CT"
+		
+	}
+	
+	
+	"hide_disabled"
+	{
+		"#format"	""
+		"en"		"hideinthedark is disabled."
+		
+	}
+	
+	"hide_damage"
+	{
+		"#format"	""
+		"en"		"seconds until damage enabled"
+		
+	}
+	"hide_timetohide"
+	{
+		"#format"	""
+		"en"		"seconds to hide and until freeze"
+		
+	}
+	"hide_timetounfreeze"
+	{
+		"#format"	""
+		"en"		"seconds until unfreeze"
+		
+	}
+}
