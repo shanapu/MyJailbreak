@@ -1,10 +1,7 @@
 #include <sourcemod>
 #include <sdktools>
-#include <colors>
 #include <autoexecconfig>
 
-#undef REQUIRE_PLUGIN
-#include <updater>
 
 #pragma semicolon 1
 
@@ -58,13 +55,11 @@ public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
 
 public OnPluginStart()
 {
-	if (!CColorAllowed(Color_Lightgreen) && CColorAllowed(Color_Darkred))
-		CReplaceColor(Color_Lightgreen, Color_Darkred);
-
+	
 	started = false;
 
 	AutoExecConfig_SetFile("dice_config", "dice");
-	AutoExecConfig_CreateConVar("dice_sm", "1.6.2", "Dice for Souremod by Popoklopsi", FCVAR_PLUGIN|FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
+	AutoExecConfig_CreateConVar("dice_sm", "1.6.2,edit", "Dice for Souremod by Popoklopsi", FCVAR_PLUGIN|FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	c_DiceEnable = AutoExecConfig_CreateConVar("dice_enable", "1", "enable dice 0 - disabled");
 	c_DiceText = AutoExecConfig_CreateConVar("dice_text", "dice", "Command to dice (without exclamation mark), convert to UTF-8 without BOM for special characters");
 	c_ShowNumber = AutoExecConfig_CreateConVar("dice_show", "2", "Players, which see the result: 1 = Everybody, 2 = just T's, 3 = just CT's, 4 = Only you");
@@ -112,18 +107,6 @@ public OnConfigsExecuted()
 		
 		started = true;
 	}
-}
-
-public OnAllPluginsLoaded()
-{
-	if (LibraryExists("updater"))
-		Updater_AddPlugin("http://popoklopsi.de/dice/update.txt");
-}
-
-public OnLibraryAdded(const String:name[])
-{
-	if (StrEqual(name, "updater"))
-		Updater_AddPlugin("http://popoklopsi.de/dice/update.txt");
 }
 
 public OnMapStart()
@@ -200,7 +183,7 @@ public PlayerSpawn(Handle:event, const String:name[], bool:dontBroadcast)
 	
 	if (IsPlayerAlive(client) && IsClientInGame(client))
 	{
-		CPrintToChat(client, "{lightgreen}[{green}%t{lightgreen}]{green} %t", "dice", "start", DiceText);
+		PrintToChat(client, "[%t] %t", "dice", "start", DiceText);
 		
 		NoclipCounter[client] = 5;
 		ClientDiced[client] = 0;
@@ -264,7 +247,7 @@ public PrepareDice(client)
 {
 	decl String:Prefix[64];
 	
-	Format(Prefix, sizeof(Prefix), "{lightgreen}[{green}%T{lightgreen}]{green} ", "dice", client);
+	Format(Prefix, sizeof(Prefix), "[%T] ", "dice", client);
 
 	new money = GetEntData(client, FindSendPropOffs("CCSPlayer", "m_iAccount"));
 	
@@ -285,7 +268,7 @@ public PrepareDice(client)
 						ClientDiced[client]++;
 						DiceNow(client);
 					}
-					else CPrintToChat(client, "%s%t", Prefix, "money", DiceMoney);
+					else PrintToChat(client, "%s%t", Prefix, "money", DiceMoney);
 				}
 				else
 				{
@@ -293,13 +276,13 @@ public PrepareDice(client)
 					DiceNow(client);
 				}
 			}
-			else CPrintToChat(client, "%s%t", Prefix, "dead");
+			else PrintToChat(client, "%s%t", Prefix, "dead");
 		}
-		else CPrintToChat(client, "%s%t", Prefix, "already", DiceCount);
+		else PrintToChat(client, "%s%t", Prefix, "already", DiceCount);
 	}
-	else CPrintToChat(client, "%s%t", Prefix, "wrong");
+	else PrintToChat(client, "%s%t", Prefix, "wrong");
 	}
-	else CPrintToChat(client, "%s%t", Prefix, "disabled");
+	else PrintToChat(client, "%s%t", Prefix, "disabled");
 }
 
 DiceNow(client)
@@ -307,7 +290,7 @@ DiceNow(client)
 	new number;
 	new count;
 
-	CPrintToChat(client, "{lightgreen}[{green}%t{lightgreen}]{green} %t", "dice", "rolling", ClientDiced[client], DiceCount);
+	PrintToChat(client, "[%t] %t", "dice", "rolling", ClientDiced[client], DiceCount);
 
 	number = count = GetRandomInt(1, DICES);
 
@@ -401,7 +384,7 @@ DiceNow(client)
 		{
 			noclip(client, true, 5.0);
 			
-			CPrintToChat(client, "{lightgreen}[{green}%t{lightgreen}]{green} %t", "dice", "noclip", NoclipCounter[client]);
+			PrintToChat(client, "[%t] %t", "dice", "noclip", NoclipCounter[client]);
 			
 			CreateTimer(1.0, NclipTimer, client, TIMER_REPEAT);
 		}
@@ -476,7 +459,7 @@ public Action:NclipTimer(Handle:timer, any:client)
 {
 	if (NoclipCounter[client] > 0 && IsPlayerAlive(client) && IsClientInGame(client))
 	{
-		CPrintToChat(client, "{lightgreen}[{green}%t{lightgreen}]{green} %t", "dice", "noclip", NoclipCounter[client]);
+		PrintToChat(client, "[%t] %t", "dice", "noclip", NoclipCounter[client]);
 
 		NoclipCounter[client]--;
 		
@@ -497,7 +480,7 @@ ShowText(client, DiceNumber)
 	new clients[MAXPLAYERS + 1];
 	new ClientCount = 0;
 
-	Format(Prefix, sizeof(Prefix), "{lightgreen}[{green}%T{lightgreen}]{green} ", "dice", LANG_SERVER);
+	Format(Prefix, sizeof(Prefix), "[%T] ", "dice", LANG_SERVER);
 
 	Format(trans, sizeof(trans), "dice%i", DiceNumber);
 	Format(trans_all, sizeof(trans_all), "dice%i_all", DiceNumber);
@@ -526,15 +509,15 @@ ShowText(client, DiceNumber)
 			
 		Format(trans, sizeof(trans), "dice%i", DiceNumber);
 		
-		CPrintToChat(client, "%s%t", Prefix, "deagle");
-		CPrintToChat(client, "%s%t", Prefix, "deagle");
+		PrintToChat(client, "%s%t", Prefix, "deagle");
+		PrintToChat(client, "%s%t", Prefix, "deagle");
 	}
 
 	if ((DiceNumber == 32 || DiceNumber == 33) && ShowNumber != 1)
-		CPrintToChatAll("%s%t", Prefix, trans_all, DiceNumber);
+		PrintToChatAll("%s%t", Prefix, trans_all, DiceNumber);
 
 	for (new x=0; x < ClientCount; x++)
-		CPrintToChat(clients[x], "%s%t", Prefix, trans, client, DiceNumber);
+		PrintToChat(clients[x], "%s%t", Prefix, trans, client, DiceNumber);
 }
 
 // PRESETS
