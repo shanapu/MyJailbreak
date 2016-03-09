@@ -1,0 +1,77 @@
+// Here you can define what numbers are enabled, use
+// "number" 	"1"
+// to enable this number, or
+// "number" 	"0"
+// to disable this number.
+//
+// Numbers:
+// 1: Drunk (Not CS:GO)
+// 2: Drugs
+// 3: Burn
+// 4: 1.65x Speed
+// 5: Rocket
+// 6: Nothing
+// 7: Long Jump
+// 8: Deagle
+// 9: -50 Health
+// 10: +50 Health
+// 11: 0.65x Speed
+// 12: Grenade
+// 13: Two Flashbangs
+// 14: Nothing
+// 15: Half Gravity
+// 16: Twice Gravity
+// 17: 1.65x Speed and +50 Health
+// 18: -30 Health, half Gravity and 0.65x Speed
+// 19: Twice Gravity, 0.65x Speed, +30 Health
+// 20: 5 Seconds noclip
+// 21: 30 Seconds freezed
+// 22: 100 Seconds Shaked
+// 23: Glock
+// 24: 1 HP
+// 25: M3 / Sawed off
+// 26: Froggy Jump
+// 27: Always Nightvision
+// 28: Low FOV
+// 29: High Fov
+// 30: Invisible
+// 31: Player is burning with more HP and more speed
+// 32: Every player is walking backwards (Default: off)
+// 33: Every player is a ice walker
+
+"DiceEnables"
+{
+	"1"		"1"
+	"2"		"1"
+	"3"		"1"
+	"4"		"1"
+	"5"		"1"
+	"6"		"1"
+	"7"		"1"
+	"8"		"1"
+	"9"		"1"
+	"10"	"1"
+	"11"	"1"
+	"12"	"1"
+	"13"	"1"
+	"14"	"1"
+	"15"	"1"
+	"16"	"1"
+	"17"	"1"
+	"18"	"1"
+	"19"	"1"
+	"20"	"1"
+	"21"	"1"
+	"22"	"1"
+	"23"	"1"
+	"24"	"1"
+	"25"	"1"
+	"26"	"1"
+	"27"	"1"
+	"28"	"1"
+	"29"	"1"
+	"30"	"1"
+	"31"	"1"
+	"32"	"0"
+	"33"	"1"
+}

@@ -24,7 +24,7 @@
 	"zombie_next"
 	{
 		"#format"	""
-		"en"		"Next round is zombieinthedark"
+		"en"		"Next round is zombie"
 		
 	}
 	
@@ -32,27 +32,27 @@
 	"zombie_start"
 	{
 		"#format"	""
-		"en"		"The zombieinthedark has started!"
+		"en"		"The zombie has started!"
 		
 	}
 	
 	"zombie_voted"{
 		"#format"	""
-		"en"		"You allready voted for zombieinthedark"
+		"en"		"You allready voted for zombie"
 		
 	}
 	
 	"zombie_progress"
 	{
 		"#format"	""
-		"en"		"zombieinthedark is allready in progress"
+		"en"		"zombie is allready in progress"
 		
 	}
 	
 	"zombie_minct"
 	{
 		"#format"	""
-		"en"		"For a zombieinthedark you need a least one CT"
+		"en"		"For a zombie you need a least one CT"
 		
 	}
 	
@@ -60,7 +60,7 @@
 	"zombie_disabled"
 	{
 		"#format"	""
-		"en"		"zombieinthedark is disabled."
+		"en"		"zombie is disabled."
 		
 	}
 	

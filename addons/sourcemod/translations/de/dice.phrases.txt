@@ -1,0 +1,179 @@
+"Phrases"
+{
+	"dice"
+	{
+		"de"		"Würfeln"
+	}
+	"already"
+	{
+		"de"		"Du hast schon {lightgreen}{1}x gewürfelt!"
+	}
+	"money"
+	{
+		"de"		"Du brauchst mehr wie {lightgreen}{1}$ um zu würfeln!"
+	}
+	"rolling"
+	{
+		"de"		"Würfel wird gerollt... {lightgreen}{1} von {2}x!"
+	}
+	"wrong"
+	{
+		"de"		"Du bist {lightgreen}im falschem Team!"
+	}
+	"dead"
+	{
+		"de"		"Du musst schon {lightgreen}Leben zum würfeln!"
+	}
+	"noclip"
+	{
+		"de"		"No Clip Timer: {lightgreen}{1}!"
+	}
+	"deagle"
+	{
+		"de"		"{lightgreen}Pssst... {green}Du hast eine Waffe bekommen!"
+	}
+	"start"
+	{
+		"de"		"Schreibe {lightgreen}!{1} {green}um zu Würfeln."
+	}
+	"dice1"
+	{
+		"de"		"{1} hat eine {lightgreen}{2} gewürfelt: {default}Er bekommt sehr viel Alkohol!"
+	}
+	"dice2"
+	{
+		"de"		"{1} hat eine {lightgreen}{2} gewürfelt: {default}Er bekommt Drogen!"
+	}
+	"dice3"
+	{
+		"de"		"{1} hat eine {lightgreen}{2} gewürfelt: {default}Er wird angebrannt!"
+	}
+	"dice4"
+	{
+		"de"		"{1} hat eine {lightgreen}{2} gewürfelt: {default}Er bekommt 1.65x Geschwindigkeit!"
+	}
+	"dice5"
+	{
+		"de"		"{1} hat eine {lightgreen}{2} gewürfelt: {default}Er wird zur Rakete!"
+	}
+	"dice6"
+	{
+		"de"		"{1} hat eine {lightgreen}{2} gewürfelt: {default}Er bekommt nichts!"
+	}
+	"dice7"
+	{
+		"de"		"{1} hat eine {lightgreen}{2} gewürfelt: {default}Er bekommt LongJump!"
+	}
+	"dice8"
+	{
+		"de"		"{1} hat eine {lightgreen}{2} gewürfelt: {default}Er bekommt eine Deagle!"
+	}
+	"dice9"
+	{
+		"de"		"{1} hat eine {lightgreen}{2} gewürfelt: {default}Er verliert 50 HP!"
+	}
+	"dice10"
+	{
+		"de"		"{1} hat eine {lightgreen}{2} gewürfelt: {default}Er bekommt 50 HP!"
+	}
+	"dice11"
+	{
+		"de"		"{1} hat eine {lightgreen}{2} gewürfelt: {default}Er bekommt 0.65x Geschwindigkeit!"
+	}
+	"dice12"
+	{
+		"de"		"{1} hat eine {lightgreen}{2} gewürfelt: {default}Er bekommt eine Granate!"
+	}
+	"dice13"
+	{
+		"de"		"{1} hat eine {lightgreen}{2} gewürfelt: {default}Er bekommt zwei Flash Granaten!"
+	}
+	"dice14"
+	{
+		"de"		"{1} hat eine {lightgreen}{2} gewürfelt: {default}Er bekommt nichts!"
+	}
+	"dice15"
+	{
+		"de"		"{1} hat eine {lightgreen}{2} gewürfelt: {default}Er bekommt halbe Gravity!"
+	}
+	"dice16"
+	{
+		"de"		"{1} hat eine {lightgreen}{2} gewürfelt: {default}Er bekommt doppelte Gravity!"
+	}
+	"dice17"
+	{
+		"de"		"{1} hat eine {lightgreen}{2} gewürfelt: {default}Er bekommt 1.65x Geschwindigkeit und 50 HP!"
+	}
+	"dice18"
+	{
+		"de"		"{1} hat eine {lightgreen}{2} gewürfelt: {default}Er bekommt 0.65x Geschwindigkeit und verliert 30 HP. Bekommt aber halbe Gravity!"
+	}
+	"dice19"
+	{
+		"de"		"{1} hat eine {lightgreen}{2} gewürfelt: {default}Er bekommt 0.65x Geschwindigkeit und doppelte Gravity. Aber bekommt 30 HP!"
+	}
+	"dice20"
+	{
+		"de"		"{1} hat eine {lightgreen}{2} gewürfelt: {default}Er bekommt 5 Sekunden Noclip!"
+	}
+	"dice21"
+	{
+		"de"		"{1} hat eine {lightgreen}{2} gewürfelt: {default}Er wird 30 Sekunden gefreezed!"
+	}
+	"dice22"
+	{
+		"de"		"{1} hat eine {lightgreen}{2} gewürfelt: {default}Er wird 100 Sekunden geschüttelt!"
+	}
+	"dice23"
+	{
+		"de"		"{1} hat eine {lightgreen}{2} gewürfelt: {default}Er bekommt eine Glock!"
+	}
+	"dice24"
+	{
+		"de"		"{1} hat eine {lightgreen}{2} gewürfelt: {default}Er hat nur noch 1 HP!"
+	}
+	"dice25"
+	{
+		"de"		"{1} hat eine {lightgreen}{2} gewürfelt: {default}Er bekommt eine Shotgun!"
+	}
+	"dice26"
+	{
+		"de"		"{1} hat eine {lightgreen}{2} gewürfelt: {default}Er bekommt Froggy (2x) Jump!"
+	}
+	"dice27"
+	{
+		"de"		"{1} hat eine {lightgreen}{2} gewürfelt: {default}Er hat immer das Nachtsichtgerät an!"
+	}
+	"dice28"
+	{
+		"de"		"{1} hat eine {lightgreen}{2} gewürfelt: {default}Er hat wenig FOV!"
+	}
+	"dice29"
+	{
+		"de"		"{1} hat eine {lightgreen}{2} gewürfelt: {default}Er hat viel FOV!"
+	}
+	"dice30"
+	{
+		"de"		"{1} hat eine {lightgreen}{2} gewürfelt: {default}Er ist fast unsichtbar!"
+	}
+	"dice31"
+	{
+		"de"		"{1} hat eine {lightgreen}{2} gewürfelt: {default}Er brennt die ganze Zeit. Aber mit mehr Geschwindigkeit und HP!"
+	}
+	"dice32"
+	{
+		"de"		"{1} hat eine {lightgreen}{2} gewürfelt: {default}Jetzt laufen ALLE SPIELER rückwärts!"
+	}
+	"dice32_all"
+	{
+		"de"		"Jemad hat eine {lightgreen}{2} gewürfelt: {default}Jetzt laufen ALLE SPIELER rückwärts!"
+	}
+	"dice33"
+	{
+		"de"		"{1} hat eine {lightgreen}{2} gewürfelt: {default}Jetzt sind ALLE SPIELER Ice Skaters!"
+	}
+	"dice33_all"
+	{
+		"de"		"Jemad hat eine {lightgreen}{2} gewürfelt: {default}Jetzt sind ALLE SPIELER Ice Skaters!"
+	}
+}
