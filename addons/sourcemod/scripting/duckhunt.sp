@@ -146,6 +146,7 @@ public RoundEnd(Handle:event, String:name[], bool:dontBroadcast)
 		SetCvar("sm_zombie_enable", 1);
 		SetCvar("sm_hide_enable", 1);
 		SetCvar("sm_warffa_enable", 1);
+		SetCvar("sv_infinite_ammo", 0);
 		SetCvar("sm_warden_enable", 1);
 		SetCvar("mp_roundtime", roundtimenormal);
 		SetCvar("mp_roundtime_hostage", roundtimenormal);
@@ -255,7 +256,7 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("sm_hide_enable", 0);
 		SetCvar("dice_enable", 0);
-
+		SetCvar("sv_infinite_ammo", 1);
 		IsDuckHunt = true;
 		DuckHuntRound++;
 		StartDuckHunt = false;
