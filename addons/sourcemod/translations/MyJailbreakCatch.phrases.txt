@@ -1,0 +1,85 @@
+"Phrases"
+{
+	"catch_twin"
+	{
+		"#format"	""
+		"en"		"Terroist surived"
+		
+	}
+	
+	"catch_ctwin"
+	{
+		"#format"	""
+		"en"		"Zombies killed all"
+		
+	}
+	
+	"catch_end"
+	{
+		"#format"	""
+		"en"		"catch ended"
+		
+	}
+	
+	"catch_next"
+	{
+		"#format"	""
+		"en"		"Next round is catch"
+		
+	}
+	
+	
+	"catch_start"
+	{
+		"#format"	""
+		"en"		"The catch has started!"
+		
+	}
+	
+	"catch_voted"{
+		"#format"	""
+		"en"		"You allready voted for catch"
+		
+	}
+	
+	"catch_progress"
+	{
+		"#format"	""
+		"en"		"catch is allready in progress"
+		
+	}
+	
+	"catch_minct"
+	{
+		"#format"	""
+		"en"		"For a catch you need a least one CT"
+		
+	}
+	
+	
+	"catch_disabled"
+	{
+		"#format"	""
+		"en"		"catch is disabled."
+		
+	}
+	
+	"catch_damage"
+	{
+		"#format"	""
+		"en"		"seconds until damage enabled"
+		
+	}
+	"catch_timetocatch"
+	{
+		"#format"	""
+		"en"		"seconds to hide"
+		
+	}
+	"catch_timetouncatch"
+	{
+		"#format"	""
+		"en"		"seconds until unfreeze"
+		
+	}
+}
