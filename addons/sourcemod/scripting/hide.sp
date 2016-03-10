@@ -219,6 +219,7 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 						if (GetClientTeam(client) == 3)
 						{
 						SetEntityMoveType(client, MOVETYPE_NONE);
+						GivePlayerItem(client, "weapon_tagrenade");
 						}
 					}
 					PrintToChatAll("[%s] Terrors versteckt euch", g_whideprefix);
