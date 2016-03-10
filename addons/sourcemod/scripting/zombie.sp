@@ -153,6 +153,7 @@ public RoundEnd(Handle:event, String:name[], bool:dontBroadcast)
 		SetCvar("sm_war_enable", 1);
 		SetCvar("sm_hide_enable", 1);
 		SetCvar("dice_enable", 1);
+		SetCvar("sm_beacon_enabled", 0);
 		SetCvar("sv_infinite_ammo", 0);
 		SetCvar("sm_warffa_enable", 1);
 		SetCvar("sm_warden_enable", 1);
@@ -218,6 +219,7 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 		SetCvar("sm_war_enable", 0);
 		SetCvar("sm_warffa_enable", 0);
 		SetCvar("sm_warden_enable", 0);
+		SetCvar("sm_beacon_enabled", 1);
 		SetCvar("sm_hide_enable", 0);
 		SetCvar("sv_infinite_ammo", 1);
 		SetCvar("dice_enable", 0);

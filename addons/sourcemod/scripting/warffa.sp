@@ -141,6 +141,7 @@ public RoundEnd(Handle:event, String:name[], bool:dontBroadcast)
 			Format(voted, sizeof(voted), "");
 			SetCvar("sm_hosties_lr", 1);
 			SetCvar("dice_enable", 1);
+			SetCvar("sm_beacon_enabled", 0);
 			SetCvar("sm_warden_enable", 1);
 			SetCvar("sm_hide_enable", 1);
 			SetCvar("sm_zombie_enable", 1);
@@ -180,6 +181,7 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("sm_hide_enable", 0);
+		SetCvar("sm_beacon_enabled", 1);
 		SetCvar("sm_war_enable", 0);
 		SetCvar("mp_teammates_are_enemies", 1);
 		SetCvar("mp_friendlyfire", 1);
