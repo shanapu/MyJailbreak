@@ -55,7 +55,7 @@ public Plugin myinfo = {
 public OnPluginStart()
 {
 	// Translation
-	LoadTranslations("war.phrases");
+	LoadTranslations("MyJailbreakWar.phrases");
 	
 	RegAdminCmd("sm_setwar", SetWar, ADMFLAG_GENERIC);
 	

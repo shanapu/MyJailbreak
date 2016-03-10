@@ -52,7 +52,7 @@ public Plugin myinfo = {
 public OnPluginStart()
 {
 	// Translation
-	LoadTranslations("duckhunt.phrases");
+	LoadTranslations("MyJailbreakDuckHunt.phrases");
 	
 	RegAdminCmd("sm_setduckhunt", SetDuckHunt, ADMFLAG_GENERIC);
 	

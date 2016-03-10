@@ -43,7 +43,7 @@ char g_whidecmd[64];
 
 
 public Plugin myinfo = {
-	name = "MyJailbreak - HideintheDark",
+	name = "MyJailbreak - HideInTheDark",
 	author = "shanapu & Floody.de, fransico",
 	description = "Jailbreak Hide script",
 	version = PLUGIN_VERSION,
@@ -55,7 +55,7 @@ public Plugin myinfo = {
 public OnPluginStart()
 {
 	// Translation
-	LoadTranslations("verstecken.phrases");
+	LoadTranslations("MyJailbreakHide.phrases");
 	
 	RegAdminCmd("sm_sethide", SetHide, ADMFLAG_GENERIC);
 	

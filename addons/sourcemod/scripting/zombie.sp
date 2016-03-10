@@ -56,7 +56,7 @@ public Plugin myinfo = {
 public OnPluginStart()
 {
 	// Translation
-	LoadTranslations("zombie.phrases");
+	LoadTranslations("MyJailbreakZombie.phrases");
 	
 	RegAdminCmd("sm_setzombie", SetZombie, ADMFLAG_GENERIC);
 	

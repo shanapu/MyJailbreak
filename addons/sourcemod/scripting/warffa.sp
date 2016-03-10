@@ -55,7 +55,7 @@ public Plugin myinfo = {
 public OnPluginStart()
 {
 	// Translation
-	LoadTranslations("warffa.phrases");
+	LoadTranslations("MyJailbreakWarffa.phrases");
 	
 	RegAdminCmd("sm_setwarffa", Setwarffa, ADMFLAG_GENERIC);
 	

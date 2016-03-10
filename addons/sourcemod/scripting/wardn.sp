@@ -63,7 +63,7 @@ public Plugin myinfo = {
 public void OnPluginStart() 
 {
 	// Translation
-	LoadTranslations("warden.phrases");
+	LoadTranslations("MyJailbreakWarden.phrases");
 	// Client commands
 
 	RegConsoleCmd("sm_noblockon", noblockon); 
@@ -580,6 +580,8 @@ void SetTheWarden(int client)
 	Warden = client;
 	CreateTimer(0.5, Timer_WardenFixColor, client, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 	SetClientListeningFlags(client, VOICE_NORMAL);
+	GivePlayerItem(client, "weapon_healthshot");
+	GivePlayerItem(client, "weapon_healthshot");
 	
 	Forward_OnWardenCreation(client);
 	}else PrintToChat(client, "[%s] %t", g_wprefix, "warden_disabled");
