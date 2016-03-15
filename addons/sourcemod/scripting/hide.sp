@@ -63,7 +63,7 @@ public OnPluginStart()
 	g_wenabled = CreateConVar("sm_hide_enable", "1", "0 - disabled, 1 - enable war");
 	g_hideprefix = CreateConVar("sm_hide_prefix", "war", "Insert your Jailprefix. shown in braces [war]");
 	g_hidecmd = CreateConVar("sm_hide_cmd", "!verstecken", "Insert your 2nd chat trigger. !war still enabled");
-	roundtimec = CreateConVar("sm_hide_roundtime", "5", "Round time for a single war round");
+	roundtimec = CreateConVar("sm_hide_roundtime", "8", "Round time for a single war round");
 	roundtimenormalc = CreateConVar("sm_nohide_roundtime", "12", "set round time after a war round zour normal mp_roudntime");
 	freezetimec = CreateConVar("sm_hide_freezetime", "30", "Time freeze T");
 	RoundLimitsc = CreateConVar("sm_hide_roundsnext", "3", "Runden nach Krieg oder Mapstart bis Krieg gestartet werden kann");
@@ -273,11 +273,14 @@ public Action:Hide(Handle:timer)
 				if (GetClientTeam(client) == 3)
 				{
 				SetEntityMoveType(client, MOVETYPE_WALK);
+				SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.4);
+				GivePlayerItem(client, "weapon_tagrenade");
 				}
 				if (GetClientTeam(client) == 2)
 				{
 				SetEntityMoveType(client, MOVETYPE_NONE);
 				SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
+				SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 0.1);
 				}
 			}
 		}

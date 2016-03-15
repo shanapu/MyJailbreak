@@ -199,7 +199,7 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 		if (WarRound == 3) DrawPanelText(WarMenu, "Runde 3 von 3");
 		if(GetConVarInt(g_wspawncell) == 0)
 		{
-		DrawPanelText(WarMenu, "Nicht wundern falls ihr in der Luft hängt");
+		DrawPanelText(WarMenu, roundtime);
 		DrawPanelText(WarMenu, "-----------------------------------");
 		DrawPanelText(WarMenu, "In Kriegrunden spielen CT's gegen T's");
 		DrawPanelText(WarMenu, "                                   ");

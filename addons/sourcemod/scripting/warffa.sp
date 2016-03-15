@@ -17,6 +17,11 @@ new votecount;
 new warffaRound;
 new RoundLimits;
 
+new FogIndex = -1;
+new Float:mapFogStart = 0.0;
+new Float:mapFogEnd = 150.0;
+new Float:mapFogDensity = 0.99;
+
 new Handle:LimitTimer;
 new Handle:HideTimer;
 new Handle:WeaponTimer;
@@ -102,6 +107,19 @@ public OnMapStart()
 	roundtime = GetConVarInt(roundtimec);
 	roundtimenormal = GetConVarInt(roundtimenormalc);
 
+	new ent; 
+	ent = FindEntityByClassname(-1, "env_fog_controller");
+	if (ent != -1) 
+	{
+		FogIndex = ent;
+	}
+	else
+	{
+		FogIndex = CreateEntityByName("env_fog_controller");
+		DispatchSpawn(FogIndex);
+	}
+	DoFog();
+	AcceptEntityInput(FogIndex, "TurnOff");
 }
 
 public OnConfigsExecuted()
@@ -176,7 +194,7 @@ public Action Setwarffa(int client,int args)
 public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 {
 	if (Startwarffa || Iswarffa)
-	{
+	{ 	{AcceptEntityInput(FogIndex, "TurnOn");}
 		SetCvar("dice_enable", 0);
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_warden_enable", 0);
@@ -333,10 +351,24 @@ public Action:NoWeapon(Handle:timer)
 	}
 
 	PrintToChatAll("[%s] %t", g_wwarffaprefix, "warffa_start");
-	
+	DoFog();
+	AcceptEntityInput(FogIndex, "TurnOff");
 	WeaponTimer = INVALID_HANDLE;
 	
 	return Plugin_Stop;
+}
+
+DoFog()
+{
+	if(FogIndex != -1)
+	{
+		DispatchKeyValue(FogIndex, "fogblend", "0");
+		DispatchKeyValue(FogIndex, "fogcolor", "0 0 0");
+		DispatchKeyValue(FogIndex, "fogcolor2", "0 0 0");
+		DispatchKeyValueFloat(FogIndex, "fogstart", mapFogStart);
+		DispatchKeyValueFloat(FogIndex, "fogend", mapFogEnd);
+		DispatchKeyValueFloat(FogIndex, "fogmaxdensity", mapFogDensity);
+	}
 }
 
 public PlayerSay(Handle:event, String:name[], bool:dontBroadcast)

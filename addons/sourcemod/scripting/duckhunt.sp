@@ -10,6 +10,7 @@
 
 #define PLUGIN_VERSION   "0.1"
 
+
 new preparetime;
 new roundtime;
 new roundtimenormal;
@@ -62,7 +63,7 @@ public OnPluginStart()
 	g_duckhuntcmd = CreateConVar("sm_duckhunt_cmd", "!entenjagd", "Insert your 2nd chat trigger. !war still enabled");
 	roundtimec = CreateConVar("sm_duckhunt_roundtime", "5", "Round time for a single war round");
 	roundtimenormalc = CreateConVar("sm_noduckhunt_roundtime", "12", "set round time after a war round zour normal mp_roudntime");
-	preparetimec = CreateConVar("sm_duckhunt_preparetime", "35", "Time freeze duckhunts");
+	preparetimec = CreateConVar("sm_duckhunt_preparetime", "15", "Time freeze duckhunts");
 	RoundLimitsc = CreateConVar("sm_duckhunt_roundsnext", "3", "Runden nach Krieg oder Mapstart bis Krieg gestartet werden kann");
 	
 
@@ -87,6 +88,9 @@ public OnPluginStart()
 	AddFileToDownloadsTable("models/chicken/chicken.vvd");
 	AddFileToDownloadsTable("models/chicken/chicken.mdl");
 	PrecacheModel("models/chicken/chicken.mdl", true);
+	PrecacheModel("models/player/custom_player/legacy/tm_phoenix_heavy.mdl", true);
+
+
 	
 	m_flNextSecondaryAttack = FindSendPropOffs("CBaseCombatWeapon", "m_flNextSecondaryAttack");
 }
@@ -187,12 +191,11 @@ public Action:OnWeaponCanUse(client, weapon)
 {
 	if(IsDuckHunt == true)
 		{
-					if(GetClientTeam(client) == CS_TEAM_CT)
-			{
+
 		decl String:sWeapon[32];
 		GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
 
-		if(!StrEqual(sWeapon, "weapon_awp"))
+		if(!StrEqual(sWeapon, "weapon_awp") && !StrEqual(sWeapon, "weapon_knife"))
 		{
 		
 			if (IsClientInGame(client) && IsPlayerAlive(client))
@@ -201,22 +204,6 @@ public Action:OnWeaponCanUse(client, weapon)
 			}
 		}
 
-		}
-		if(GetClientTeam(client) == CS_TEAM_T)
-			{
-		decl String:sWeapon[32];
-		GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
-
-		if(!StrEqual(sWeapon, "weapon_knife"))
-		{
-		
-			if (IsClientInGame(client) && IsPlayerAlive(client))
-			{
-			return Plugin_Handled;
-			}
-		}
-
-		}
 		}
 		return Plugin_Continue;
 }
@@ -286,6 +273,8 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 					{
 						if (GetClientTeam(client) == 3)
 						{
+						SetEntityModel(client, "models/player/custom_player/legacy/tm_phoenix_heavy.mdl");
+						SetEntityHealth(client, 600);
 						GivePlayerItem(client, "weapon_awp");
 						}
 						if (GetClientTeam(client) == 2)
@@ -293,6 +282,7 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 						SetEntityModel(client, "models/chicken/chicken.mdl");
 						SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.2);
 						SetEntityGravity(client, 0.3);
+						GivePlayerItem(client, "weapon_hegrenade");
 						}
 					}
 					if (IsClientInGame(client))
@@ -346,7 +336,7 @@ public Action:DuckHunt(Handle:timer)
 				}
 			if (GetClientTeam(client) == 3)
 				{
-				SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
+				SetEntProp(client, Prop_Data, "m_takedamage", 1, 1);
 				}
 			}
 		}

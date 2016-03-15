@@ -17,11 +17,6 @@ new votecount;
 new ZombieRound;
 new RoundLimits;
 
-new FogIndex = -1;
-new Float:mapFogStart = 0.0;
-new Float:mapFogEnd = 150.0;
-new Float:mapFogDensity = 0.99;
-
 new Handle:LimitTimer;
 new Handle:ZombieTimer;
 new Handle:WeaponTimer;
@@ -102,19 +97,6 @@ public OnMapStart()
 	roundtime = GetConVarInt(roundtimec);
 	roundtimenormal = GetConVarInt(roundtimenormalc);
 	
-	new ent; 
-	ent = FindEntityByClassname(-1, "env_fog_controller");
-	if (ent != -1) 
-	{
-		FogIndex = ent;
-	}
-	else
-	{
-		FogIndex = CreateEntityByName("env_fog_controller");
-		DispatchSpawn(FogIndex);
-	}
-	DoFog();
-	AcceptEntityInput(FogIndex, "TurnOff");
 }
 
 public OnConfigsExecuted()
@@ -161,8 +143,6 @@ public RoundEnd(Handle:event, String:name[], bool:dontBroadcast)
 		SetCvar("mp_roundtime_hostage", roundtimenormal);
 		SetCvar("mp_roundtime_defuse", roundtimenormal);
 		PrintToChatAll("[%s] %t", g_wzombieprefix, "zombie_end");
-		DoFog();
-		AcceptEntityInput(FogIndex, "TurnOff");
 	}
 	if (StartZombie)
 	{
@@ -319,7 +299,7 @@ public Action:Zombie(Handle:timer)
 			}
 		}
 	}
-	{AcceptEntityInput(FogIndex, "TurnOn");}
+
 	PrintCenterTextAll("%t", "zombie_start");
 	PrintToChatAll("[%s] %t", g_wzombieprefix, "zombie_start");
 
@@ -330,18 +310,6 @@ public Action:Zombie(Handle:timer)
 	return Plugin_Stop;
 }
 
-DoFog()
-{
-	if(FogIndex != -1)
-	{
-		DispatchKeyValue(FogIndex, "fogblend", "0");
-		DispatchKeyValue(FogIndex, "fogcolor", "0 0 0");
-		DispatchKeyValue(FogIndex, "fogcolor2", "0 0 0");
-		DispatchKeyValueFloat(FogIndex, "fogstart", mapFogStart);
-		DispatchKeyValueFloat(FogIndex, "fogend", mapFogEnd);
-		DispatchKeyValueFloat(FogIndex, "fogmaxdensity", mapFogDensity);
-	}
-}
 
 public PlayerSay(Handle:event, String:name[], bool:dontBroadcast)
 {

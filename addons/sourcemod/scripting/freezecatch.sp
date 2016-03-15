@@ -10,7 +10,6 @@
 
 #define PLUGIN_VERSION   "0.1"
 
-new freezetime;
 new roundtime;
 new roundtimenormal;
 new votecount;
@@ -19,13 +18,11 @@ new RoundLimits;
 
 new bool:catched[MAXPLAYERS+1];
 
-new Handle:LimitTimer;
-new Handle:CatchTimer;
-new Handle:WeaponTimer;
+
+
 new Handle:CatchMenu;
 new Handle:roundtimec;
 new Handle:roundtimenormalc;
-new Handle:freezetimec;
 new Handle:RoundLimitsc;
 new Handle:g_wenabled=INVALID_HANDLE;
 new Handle:g_catchprefix=INVALID_HANDLE;
@@ -98,7 +95,7 @@ public OnMapStart()
 	RoundLimits = 0;
 	
 	
-	freezetime = GetConVarInt(freezetimec);
+
 	roundtime = GetConVarInt(roundtimec);
 	roundtimenormal = GetConVarInt(roundtimenormalc);
 }
@@ -121,9 +118,6 @@ public RoundEnd(Handle:event, String:name[], bool:dontBroadcast)
 			if (IsClientInGame(client)) SetEntData(client, FindSendPropOffs("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
 		}
 		
-		if (LimitTimer != INVALID_HANDLE) KillTimer(LimitTimer);
-		if (CatchTimer != INVALID_HANDLE) KillTimer(CatchTimer);
-		if (WeaponTimer != INVALID_HANDLE) KillTimer(WeaponTimer);
 		
 		roundtime = GetConVarInt(roundtimec);
 		roundtimenormal = GetConVarInt(roundtimenormalc);
@@ -168,6 +162,7 @@ public Action SetCatch(int client,int args)
 
 public OnClientPutInServer(client)
 {
+	catched[client] = false;
 	SDKHook(client, SDKHook_WeaponCanUse, OnWeaponCanUse);
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 }
@@ -266,7 +261,7 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 						}
 						if (GetClientTeam(client) == 2) //t
 						{
-
+						catched[client] = false;
 						}
 					}
 					PrintToChatAll("[%s] Versteckt euch die Catchs kommen", g_wcatchprefix);
