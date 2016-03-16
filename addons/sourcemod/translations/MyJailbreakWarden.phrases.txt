@@ -3,10 +3,10 @@
 	"warden_new"
 	{
 		"#format"	"{1:N}"
-		"en"		"{1} has become the warden of this prison."
-		"es"		"{1} Es ahora el AlcÃ¡ide de esta PrisiÃ³n."
-		"pt"		"{1} Agora, o diretor da prisão.."
-		"sv"		"{1} har blivit fängelsedirektör över detta fängelse."
+		"en"		"{purple}{1}{default} has become the warden of this prison."
+		"es"		"{purple}{1}{default} Es ahora el AlcÃ¡ide de esta PrisiÃ³n."
+		"pt"		"{purple}{1}{default} Agora, o diretor da prisão.."
+		"sv"		"{purple}{1}{default} har blivit fängelsedirektör över detta fängelse."
 	}
 	
 	"warden_playerdead"
@@ -30,19 +30,19 @@
 	"warden_exist"
 	{
 		"#format"	"{1:N}"
-		"en"		"current warden is: {1}"
-		"es"		"AlcÃ¡ide Actual: {1}"
-		"pt"		"Atual diretor: {1}"
-		"sv"		"nuvarande fängelsedirektör är: {1}"
+		"en"		"current warden is: {purple}{1}{default}"
+		"es"		"AlcÃ¡ide Actual: {purple}{1}{default}"
+		"pt"		"Atual diretor: {purple}{1}{default}"
+		"sv"		"nuvarande fängelsedirektör är: {purple}{1}{default}"
 	}
 	
 	"warden_retire"
 	{
 		"#format"	"{1:N}"
-		"en"		"{1} has decided to retire. You may now choose a new one."
-		"es"		"{1} ha decidido jubilarse. Ahora toca elegir uno nuevo."
-		"pt"		"{1} o atual diretor, decidiu se aposentar. Agora começa a escolher um novo.."
-		"sv"		"{1} har bestämt sig för att avgå. Ni bör nu välja en ny."
+		"en"		"{purple}{1}{default} has decided to retire. You may now choose a new one."
+		"es"		"{purple}{1}{default} ha decidido jubilarse. Ahora toca elegir uno nuevo."
+		"pt"		"{purple}{1}{default} o atual diretor, decidiu se aposentar. Agora começa a escolher um novo.."
+		"sv"		"{purple}{1}{default} har bestämt sig för att avgå. Ni bör nu välja en ny."
 	}
 	
 	"warden_notwarden"
@@ -73,10 +73,10 @@
 	"warden_removed"
 	{
 		"#format"	"{1:N},{2:N}"
-		"en"		"Admin: {1} fired Warden: {2}"
-		"es"		"Administrador: {1} ha prejubilado al AlcÃ¡ide: {2}"
-		"pt"		"O Administrador do: {1} o diretor se aposentou cedo: {2}"
-		"sv"		"Admin: {1} avskedade Fängelsedirektören: {2}"
+		"en"		"Admin: {purple}{1}{default} fired Warden: {2}"
+		"es"		"Administrador: {purple}{1}{default} ha prejubilado al AlcÃ¡ide: {2}"
+		"pt"		"O Administrador do: {purple}{1}{default} o diretor se aposentou cedo: {2}"
+		"sv"		"Admin: {purple}{1}{default} avskedade Fängelsedirektören: {2}"
 	}
 	
 	"warden_noexist"
@@ -98,7 +98,7 @@
 	"warden_adminset"
 	{
 		"#format"	"{1:N}"
-		"en"		"Admin: {1} set as Warden"
+		"en"		"Admin: {purple}{1}{default} set as Warden"
 
 	}
 	

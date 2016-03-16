@@ -571,7 +571,7 @@ public Action HookPlayerChat(int client, const char[] command, int args)
 		
 		if(IsClientInGame(client) && IsPlayerAlive(client) && GetClientTeam(client) == CS_TEAM_CT)
 		{
-			CPrintToChatAll("%s %N : %s", g_wprefix, client, szText);
+			CPrintToChatAll("%s {blue}%N{default}: %s", g_wprefix, client, szText);
 			return Plugin_Handled;
 		}
 	}
