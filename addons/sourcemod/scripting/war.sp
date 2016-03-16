@@ -463,15 +463,15 @@ public PlayerSay(Handle:event, String:name[], bool:dontBroadcast)
 						else CPrintToChatAll("%s %t", g_wwarprefix, "war_need", Missing);
 						
 					}
-					else PrintToChat(client, "%s %t", g_wwarprefix, "war_voted");
+					else CPrintToChat(client, "%s %t", g_wwarprefix, "war_voted");
 				}
-				else PrintToChat(client, "%s %t", g_wwarprefix, "war_progress");
+				else CPrintToChat(client, "%s %t", g_wwarprefix, "war_progress");
 			}
-			else PrintToChat(client, "%s %t", g_wwarprefix, "war_wait", RoundLimits);
+			else CPrintToChat(client, "%s %t", g_wwarprefix, "war_wait", RoundLimits);
 		}
-		else PrintToChat(client, "%s %t", g_wwarprefix, "war_minct");
+		else CPrintToChat(client, "%s %t", g_wwarprefix, "war_minct");
 	}
-	else PrintToChat(client, "%s %t", g_wwarprefix, "war_disabled");
+	else CPrintToChat(client, "%s %t", g_wwarprefix, "war_disabled");
 	}
 }
 
