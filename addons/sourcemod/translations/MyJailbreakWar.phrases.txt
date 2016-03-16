@@ -1,6 +1,6 @@
-"Phrases"
+"Phrases"    
 {
-	"war_need"
+	"war_need"  //{default}, {darkred}, {green}, {lightgreen}, "{red}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
 	{
 		"en"		"votes left to {red}war"
 		"de"		"votes bis {red}krieg{default} beginnt"
@@ -19,14 +19,14 @@
 		
 	}
 	
-	"war_end"
+	"war_end" //{default}, {darkred}, {green}, {lightgreen}, "{red}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
 	{
 		"#format"	""
 		"en"		"War ended"
 		
 	}
 	
-	"war_rounds"
+	"war_rounds" //{default}, {darkred}, {green}, {lightgreen}, "{red}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
 	{
 		"#format"	"{1:i}"
 		"en"		"Round {1} of 3"
@@ -34,7 +34,7 @@
 		
 	}
 	
-	"war_next"
+	"war_next" //{default}, {darkred}, {green}, {lightgreen}, "{red}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
 	{
 		"#format"	""
 		"en"		"Next round is {red}war"
@@ -42,27 +42,28 @@
 	}
 	
 	
-	"war_start"
+	"war_start" //{default}, {darkred}, {green}, {lightgreen}, "{red}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
 	{
 		"#format"	""
 		"en"		"The War has started!"
 		
 	}
 	
-	"war_voted"{
+	"war_voted" //{default}, {darkred}, {green}, {lightgreen}, "{red}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
+	{
 		"#format"	""
 		"en"		"You allready voted for war"
 		
 	}
 	
-	"war_progress"
+	"war_progress"  //{default}, {darkred}, {green}, {lightgreen}, "{red}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
 	{
 		"#format"	""
 		"en"		"War is allready in progress"
 		
 	}
 	
-	"war_minct"
+	"war_minct"//{default}, {darkred}, {green}, {lightgreen}, "{red}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
 	{
 		"#format"	""
 		"en"		"For a war you need a least one CT"
@@ -70,7 +71,7 @@
 	}
 	
 	
-	"war_disabled"
+	"war_disabled"//{default}, {darkred}, {green}, {lightgreen}, "{red}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
 	{
 		"#format"	""
 		"en"		"War is disabled."
@@ -89,66 +90,66 @@
 		"en"		"seconds until unfreeze"
 		
 	}
-	"PanelTitle"
+	"war_info_Title"
 	{
 		"en"		"war is activ"
 		"de"		"Krieg ist aktiv"
 	}
 	
-	"PanelTele"
+	"war_info_Tele"
 	{
 		"en"		"Do not be surprised if you hangs in the air and freezed"
 		"de"		"Nicht wundern falls ihr in der Luft hängt und dich nicht bewegen kannst"
 	}
 	
-	"PanelSpawn"
+	"war_info_Spawn"
 	{
 		"en"		"Do not wonder if you spawn with weapon and the cells are open"
 		"de"		"Nicht wundern warum ihr mit waffe und offenen Zelle spawnt"
 	}
-	"PanelTeleT"
+	"war_info_TeleT"
 	{
 		"en"		"Do not be surprised if teleportet to weaponcamber"
 		"de"		"Nicht wundern weil du in die waffenkammer geportet wurdest"
 	}
 	
-	"PanelSpawnT"
+	"war_info_SpawnT"
 	{
 		"en"		"Do not wonder if you spawn in the open cell"
 		"de"		"Nicht wundern warum ihr in der offenen Zelle spawnt"
 	}
 	
-	"PanelLine2"
+	"war_info_Line2"
 	{
 		"en"		"In warround ct play against t"
 		"de"		"In Kriegrunden spielen CT's gegen T's"
 	}
 	
-	"PanelLine3"
+	"war_info_Line3"
 	{
 		"en"		"Während der no damge phase kannst du aus der zelle/waffenkammer"
 		"de"		"Während der no damge phase kannst du aus der zelle/waffenkammer"
 	}
 	
-	"PanelLine4"
+	"war_info_Line4"
 	{
 		"en"		"Alle normalen Jailregeln sind dabei aufgehoben!"
 		"de"		"Alle normalen Jailregeln sind dabei aufgehoben!"
 	}
 	
-	"PanelLine5"
+	"war_info_Line5"
 	{
 		"en"		"There is no last request!"
 		"de"		"Der letzte Terrorist hat keinen Wunsch!"
 	}
 	
-	"PanelLine6"
+	"war_info_Line6"
 	{
 		"en"		"Jeder darf überall hin wo er will!"
 		"de"		"Jeder darf überall hin wo er will!"
 	}
 	
-	"PanelLine7"
+	"war_info_Line7"
 	{
 		"en"		"bau keine scheisse!"
 		"de"		"bau keine scheisse!"

@@ -8,7 +8,8 @@
 //Compiler Options
 #pragma semicolon 1
 
-#define PLUGIN_VERSION   "0.x"
+#define PLUGIN_VERSION		"0.x"
+#define SERVERTAG			"MyJB War"
 
 new freezetime;
 new nodamagetimer;
@@ -38,6 +39,7 @@ new bool:StartWar;
 
 new String:voted[1500];
 new String:g_wwarprefix[64];
+
 char g_wwarcmd[64];
 
 new Float:Pos[3];
@@ -63,14 +65,14 @@ public OnPluginStart()
 	CreateConVar("sm_war_version", "PLUGIN_VERSION", "The version of the SourceMod plugin MyJailBreak - War", FCVAR_PLUGIN|FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	g_wenabled = CreateConVar("sm_war_enable", "1", "0 - disabled, 1 - enable war");
 	g_wspawncell = CreateConVar("sm_war_spawn", "1", "0 - teleport to ct and freeze, 1 - stay in cell open cell doors with aw/weapon menu - need sjd");
-	g_warprefix = CreateConVar("sm_war_prefix", "war", "Insert your Jailprefix. shown in braces [war]");
+	g_warprefix = CreateConVar("sm_war_prefix", "[{green}war{default}]", "Insert your Jailprefix.");
 	g_warcmd = CreateConVar("sm_war_cmd", "!krieg", "Insert your 2nd chat trigger. !war still enabled");
 	roundtimec = CreateConVar("sm_war_roundtime", "5", "Round time for a single war round");
-	roundtimenormalc = CreateConVar("sm_nowar_roundtime", "12", "set round time after a war round");
+	roundtimenormalc = CreateConVar("sm_nowar_roundtime", "12", "set round time after a war round");    //TODO: https://wiki.alliedmods.net/ConVars_(SourceMod_Scripting)#Using.2FChanging_Values
 	freezetimec = CreateConVar("sm_war_freezetime", "30", "Time freeze T");
 	nodamagetimerc = CreateConVar("sm_war_nodamage", "30", "Time after freezetime damage disbaled");
 	RoundLimitsc = CreateConVar("sm_war_roundsnext", "3", "Runden nach Krieg oder Mapstart bis Krieg gestartet werden kann");
-	
+	gH_ServerTag = CreateConVar("sm_war_servertag", "1", "Enable or disable automatic adding MyJailbreak in sv_tags: 0 - disable, 1 - enable");
 
 	GetConVarString(g_warprefix, g_wwarprefix, sizeof(g_wwarprefix));
 	GetConVarString(g_warcmd, g_wwarcmd, sizeof(g_wwarcmd));
@@ -108,6 +110,12 @@ public OnMapStart()
 
 public OnConfigsExecuted()
 {
+
+if (GetConVarInt(gH_ServerTag) == 1)
+	{
+	ServerCommand("sv_tags %s\n", SERVERTAG);
+	}
+
 	roundtime = GetConVarInt(roundtimec);
 	roundtimenormal = GetConVarInt(roundtimenormalc);
 	freezetime = GetConVarInt(freezetimec);
@@ -148,10 +156,12 @@ public RoundEnd(Handle:event, String:name[], bool:dontBroadcast)
 			SetCvar("dice_enable", 1);
 			SetCvar("sm_beacon_enabled", 0);
 			SetCvar("sm_warffa_enable", 1);
+			SetCvar("sm_duckhunt_enable", 1);
+			SetCvar("sm_freeze_enable", 1);
 			SetCvar("mp_roundtime", roundtimenormal);
 			SetCvar("mp_roundtime_hostage", roundtimenormal);
 			SetCvar("mp_roundtime_defuse", roundtimenormal);
-			CPrintToChatAll("[{green}%s{default}] %t", g_wwarprefix, "war_end");
+			CPrintToChatAll("%s %t", g_wwarprefix, "war_end");
 		}
 	}
 	if (StartWar)
@@ -169,7 +179,14 @@ public Action SetWar(int client,int args)
 	StartWar = true;
 	RoundLimits = GetConVarInt(RoundLimitsc);
 	votecount = 0;
-	CPrintToChatAll("[{green}%s{default}] %t", g_wwarprefix, "war_next");
+	
+	SetCvar("sm_hide_enable", 0);
+	SetCvar("sm_warffa_enable", 0);
+	SetCvar("sm_zombie_enable", 0);
+	SetCvar("sm_duckhunt_enable", 0);
+	SetCvar("sm_freeze_enable", 0);
+	
+	CPrintToChatAll("%s %t", g_wwarprefix, "war_next");
 	}
 }
 
@@ -178,8 +195,8 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 	if (StartWar || IsWar)
 	{
 		
-		decl String:message1[255], String:message2[255], String:message3[255], String:message4[255], String:message5[255], String:message6[255], String:message7[255], String:message8[255];
-		decl String:message9[255], String:message10[255], String:message11[255], String:message12[255], String:message13[255], String:message14[255];
+		decl String:info1[255], String:info2[255], String:info3[255], String:info4[255], String:info5[255], String:info6[255], String:info7[255], String:info8[255];
+		decl String:info9[255], String:info10[255], String:info11[255], String:info12[255];
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("dice_enable", 0);
@@ -193,50 +210,50 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 		freezetime = 0;
 		}
 		WarMenu = CreatePanel();
-		Format(message1, sizeof(message1), "%T", "PanelTitle", LANG_SERVER);
-		SetPanelTitle(WarMenu, message1);
+		Format(info1, sizeof(info1), "%T", "war_info_Title", LANG_SERVER);
+		SetPanelTitle(WarMenu, info1);
 		DrawPanelText(WarMenu, "                                   ");
-		Format(message10, sizeof(message10), "%T", "RoundOne", LANG_SERVER);
-		if (WarRound == 1) DrawPanelText(WarMenu, message10);
-		Format(message11, sizeof(message11), "%T", "RoundTwo", LANG_SERVER);
-		if (WarRound == 2) DrawPanelText(WarMenu, message11);
-		Format(message12, sizeof(message12), "%T", "RoundThree", LANG_SERVER);
-		if (WarRound == 3) DrawPanelText(WarMenu, message12);
+		Format(info10, sizeof(info10), "%T", "RoundOne", LANG_SERVER);
+		if (WarRound == 1) DrawPanelText(WarMenu, info10);
+		Format(info11, sizeof(info11), "%T", "RoundTwo", LANG_SERVER);
+		if (WarRound == 2) DrawPanelText(WarMenu, info11);
+		Format(info12, sizeof(info12), "%T", "RoundThree", LANG_SERVER);
+		if (WarRound == 3) DrawPanelText(WarMenu, info12);
 		DrawPanelText(WarMenu, "                                   ");
 		if(GetConVarInt(g_wspawncell) == 0)
 		{
-		Format(message2, sizeof(message2), "%T", "PanelTele", LANG_SERVER);
-		DrawPanelText(WarMenu, message2);
+		Format(info2, sizeof(info2), "%T", "war_info_Tele", LANG_SERVER);
+		DrawPanelText(WarMenu, info2);
 		DrawPanelText(WarMenu, "-----------------------------------");
-		Format(message3, sizeof(message3), "%T", "PanelLine2", LANG_SERVER);
-		DrawPanelText(WarMenu, message3);
-		Format(message4, sizeof(message4), "%T", "PanelLine3", LANG_SERVER);
-		DrawPanelText(WarMenu, message4);
-		Format(message5, sizeof(message5), "%T", "PanelLine4", LANG_SERVER);
-		DrawPanelText(WarMenu, message5);
-		Format(message6, sizeof(message6), "%T", "PanelLine5", LANG_SERVER);
-		DrawPanelText(WarMenu, message6);
-		Format(message7, sizeof(message7), "%T", "PanelLine6", LANG_SERVER);
-		DrawPanelText(WarMenu, message7);
-		Format(message8, sizeof(message8), "%T", "PanelLine7", LANG_SERVER);
-		DrawPanelText(WarMenu, message8);
+		Format(info3, sizeof(info3), "%T", "war_info_Line2", LANG_SERVER);
+		DrawPanelText(WarMenu, info3);
+		Format(info4, sizeof(info4), "%T", "war_info_Line3", LANG_SERVER);
+		DrawPanelText(WarMenu, info4);
+		Format(info5, sizeof(info5), "%T", "war_info_Line4", LANG_SERVER);
+		DrawPanelText(WarMenu, info5);
+		Format(info6, sizeof(info6), "%T", "war_info_Line5", LANG_SERVER);
+		DrawPanelText(WarMenu, info6);
+		Format(info7, sizeof(info7), "%T", "war_info_Line6", LANG_SERVER);
+		DrawPanelText(WarMenu, info7);
+		Format(info8, sizeof(info8), "%T", "war_info_Line7", LANG_SERVER);
+		DrawPanelText(WarMenu, info8);
 		DrawPanelText(WarMenu, "-----------------------------------");
 		}else{
-		Format(message9, sizeof(message9), "%T", "PanelSpawn", LANG_SERVER);
-		DrawPanelText(WarMenu, message9);
+		Format(info9, sizeof(info9), "%T", "war_info_Spawn", LANG_SERVER);
+		DrawPanelText(WarMenu, info9);
 		DrawPanelText(WarMenu, "-----------------------------------");
-		Format(message3, sizeof(message3), "%T", "PanelLine2", LANG_SERVER);
-		DrawPanelText(WarMenu, message3);
-		Format(message4, sizeof(message4), "%T", "PanelLine3", LANG_SERVER);
-		DrawPanelText(WarMenu, message4);
-		Format(message5, sizeof(message5), "%T", "PanelLine4", LANG_SERVER);
-		DrawPanelText(WarMenu, message5);
-		Format(message6, sizeof(message6), "%T", "PanelLine5", LANG_SERVER);
-		DrawPanelText(WarMenu, message6);
-		Format(message7, sizeof(message7), "%T", "PanelLine6", LANG_SERVER);
-		DrawPanelText(WarMenu, message7);
-		Format(message8, sizeof(message8), "%T", "PanelLine7", LANG_SERVER);
-		DrawPanelText(WarMenu, message8);
+		Format(info3, sizeof(info3), "%T", "war_info_Line2", LANG_SERVER);
+		DrawPanelText(WarMenu, info3);
+		Format(info4, sizeof(info4), "%T", "war_info_Line3", LANG_SERVER);
+		DrawPanelText(WarMenu, info4);
+		Format(info5, sizeof(info5), "%T", "war_info_Line4", LANG_SERVER);
+		DrawPanelText(WarMenu, info5);
+		Format(info6, sizeof(info6), "%T", "war_info_Line5", LANG_SERVER);
+		DrawPanelText(WarMenu, info6);
+		Format(info7, sizeof(info7), "%T", "war_info_Line6", LANG_SERVER);
+		DrawPanelText(WarMenu, info7);
+		Format(info8, sizeof(info8), "%T", "war_info_Line7", LANG_SERVER);
+		DrawPanelText(WarMenu, info8);
 		DrawPanelText(WarMenu, "-----------------------------------");
 		}
 		
@@ -298,7 +315,7 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 						}
 					}
 					}
-				}CPrintToChatAll("[{green}%s{default}] %t", g_wwarprefix ,"war_rounds", WarRound);
+				}CPrintToChatAll("%s %t", g_wwarprefix ,"war_rounds", WarRound);
 			}
 			for(new client=1; client <= MaxClients; client++)
 			{
@@ -365,7 +382,6 @@ public Action:Hide(Handle:timer)
 		}
 	}
 	
-
 	WeaponTimer = CreateTimer(1.0, NoWeapon, _, TIMER_REPEAT);
 	
 	HideTimer = INVALID_HANDLE;
@@ -393,7 +409,7 @@ public Action:NoWeapon(Handle:timer)
 		if (IsClientInGame(client) && IsPlayerAlive(client)) SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
 	}
 
-	CPrintToChatAll("[{green}%s{default}] %t", g_wwarprefix, "war_start");
+	CPrintToChatAll("%s %t", g_wwarprefix, "war_start");
 	
 	WeaponTimer = INVALID_HANDLE;
 	
@@ -439,21 +455,23 @@ public PlayerSay(Handle:event, String:name[], bool:dontBroadcast)
 							SetCvar("sm_hide_enable", 0);
 							SetCvar("sm_warffa_enable", 0);
 							SetCvar("sm_zombie_enable", 0);
+							SetCvar("sm_duckhunt_enable", 0);
+							SetCvar("sm_freeze_enable", 0);
 							
-							CPrintToChatAll("[{green}%s{default}] %t", g_wwarprefix, "war_next");
+							CPrintToChatAll("%s %t", g_wwarprefix, "war_next");
 						}
-						else CPrintToChatAll("[{green}%s{default}] %t", g_wwarprefix, "war_need", Missing);
+						else CPrintToChatAll("%s %t", g_wwarprefix, "war_need", Missing);
 						
 					}
-					else PrintToChat(client, "[{green}%s{default}] %t", g_wwarprefix, "war_voted");
+					else PrintToChat(client, "%s %t", g_wwarprefix, "war_voted");
 				}
-				else PrintToChat(client, "[{green}%s{default}] %t", g_wwarprefix, "war_progress");
+				else PrintToChat(client, "%s %t", g_wwarprefix, "war_progress");
 			}
-			else PrintToChat(client, "[{green}%s{default}] %t", g_wwarprefix, "war_wait", RoundLimits);
+			else PrintToChat(client, "%s %t", g_wwarprefix, "war_wait", RoundLimits);
 		}
-		else PrintToChat(client, "[{green}%s{default}] %t", g_wwarprefix, "war_minct");
+		else PrintToChat(client, "%s %t", g_wwarprefix, "war_minct");
 	}
-	else PrintToChat(client, "[{green}%s{default}] %t", g_wwarprefix, "war_disabled");
+	else PrintToChat(client, "%s %t", g_wwarprefix, "war_disabled");
 	}
 }
 

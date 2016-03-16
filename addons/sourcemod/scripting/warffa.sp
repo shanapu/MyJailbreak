@@ -68,7 +68,7 @@ public OnPluginStart()
 	g_wenabled = CreateConVar("sm_warffa_enable", "1", "0 - disabled, 1 - enable warffa");
 	g_wspawncell = CreateConVar("sm_warffa_spawn", "1", "0 - teleport to weaponroom, 1 - standart spawn - cell doors auto open");
 	g_warffaprefix = CreateConVar("sm_warffa_prefix", "warffa", "Insert your Jailprefix. shown in braces [warffa]");
-	g_warffacmd = CreateConVar("sm_warffa_cmd", "!krieg", "Insert your 2nd chat trigger. !warffa still enabled");
+	g_warffacmd = CreateConVar("sm_warffa_cmd", "!ffa", "Insert your 2nd chat trigger. !warffa still enabled");
 	roundtimec = CreateConVar("sm_warffa_roundtime", "5", "Round time for a single warffa round");
 	roundtimenormalc = CreateConVar("sm_nowarffa_roundtime", "12", "set round time after a warffa round");
 	freezetimec = CreateConVar("sm_warffa_freezetime", "30", "Time freeze T");
