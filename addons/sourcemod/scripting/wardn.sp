@@ -554,6 +554,8 @@ public Action HookPlayerChat(int client, const char[] command, int args)
 		
 		if(szText[0] == '/' || szText[0] == '@' || IsChatTrigger())
 			return Plugin_Handled;
+		if(szText[0] == '!')
+			return Plugin_Continue;
 		
 		if(IsClientInGame(client) && IsPlayerAlive(client) && GetClientTeam(client) == CS_TEAM_CT)
 		{
