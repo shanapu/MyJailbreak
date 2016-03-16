@@ -1,5 +1,10 @@
 "Phrases"
 {
+	"war_need"
+	{
+		"en"		"votes left to {red}war"
+		"de"		"votes bis {red}krieg{default} beginnt"
+	}
 	"war_twin"
 	{
 		"#format"	""
@@ -21,10 +26,18 @@
 		
 	}
 	
+	"war_rounds"
+	{
+		"#format"	"{1:i}"
+		"en"		"Round {1} of 3"
+		"de"		"Runde {1} von 3"
+		
+	}
+	
 	"war_next"
 	{
 		"#format"	""
-		"en"		"Next round is war"
+		"en"		"Next round is {red}war"
 		
 	}
 	
@@ -75,5 +88,87 @@
 		"#format"	""
 		"en"		"seconds until unfreeze"
 		
+	}
+	"PanelTitle"
+	{
+		"en"		"war is activ"
+		"de"		"Krieg ist aktiv"
+	}
+	
+	"PanelTele"
+	{
+		"en"		"Do not be surprised if you hangs in the air and freezed"
+		"de"		"Nicht wundern falls ihr in der Luft hängt und dich nicht bewegen kannst"
+	}
+	
+	"PanelSpawn"
+	{
+		"en"		"Do not wonder if you spawn with weapon and the cells are open"
+		"de"		"Nicht wundern warum ihr mit waffe und offenen Zelle spawnt"
+	}
+	"PanelTeleT"
+	{
+		"en"		"Do not be surprised if teleportet to weaponcamber"
+		"de"		"Nicht wundern weil du in die waffenkammer geportet wurdest"
+	}
+	
+	"PanelSpawnT"
+	{
+		"en"		"Do not wonder if you spawn in the open cell"
+		"de"		"Nicht wundern warum ihr in der offenen Zelle spawnt"
+	}
+	
+	"PanelLine2"
+	{
+		"en"		"In warround ct play against t"
+		"de"		"In Kriegrunden spielen CT's gegen T's"
+	}
+	
+	"PanelLine3"
+	{
+		"en"		"Während der no damge phase kannst du aus der zelle/waffenkammer"
+		"de"		"Während der no damge phase kannst du aus der zelle/waffenkammer"
+	}
+	
+	"PanelLine4"
+	{
+		"en"		"Alle normalen Jailregeln sind dabei aufgehoben!"
+		"de"		"Alle normalen Jailregeln sind dabei aufgehoben!"
+	}
+	
+	"PanelLine5"
+	{
+		"en"		"There is no last request!"
+		"de"		"Der letzte Terrorist hat keinen Wunsch!"
+	}
+	
+	"PanelLine6"
+	{
+		"en"		"Jeder darf überall hin wo er will!"
+		"de"		"Jeder darf überall hin wo er will!"
+	}
+	
+	"PanelLine7"
+	{
+		"en"		"bau keine scheisse!"
+		"de"		"bau keine scheisse!"
+	}
+		
+	"RoundOne"
+	{
+		"en"		"Round 1 of 3"
+		"de"		"Runde 1 von 3"
+	}
+		
+	"RoundTwo"
+	{
+		"en"		"Round 2 of 3"
+		"de"		"Runde 2 von 3"
+	}
+		
+	"RoundThree"
+	{
+		"en"		"last round"
+		"de"		"letzte war runde"
 	}
 }

@@ -1,5 +1,6 @@
 //includes
 #include <cstrike>
+#include <colors>
 #include <sourcemod>
 #include <sdktools>
 #include <smartjaildoors>
@@ -7,7 +8,7 @@
 //Compiler Options
 #pragma semicolon 1
 
-#define PLUGIN_VERSION   "1.1xx"
+#define PLUGIN_VERSION   "0.x"
 
 new freezetime;
 new nodamagetimer;
@@ -150,7 +151,7 @@ public RoundEnd(Handle:event, String:name[], bool:dontBroadcast)
 			SetCvar("mp_roundtime", roundtimenormal);
 			SetCvar("mp_roundtime_hostage", roundtimenormal);
 			SetCvar("mp_roundtime_defuse", roundtimenormal);
-			PrintToChatAll("[%s] %t", g_wwarprefix, "war_end");
+			CPrintToChatAll("[{green}%s{default}] %t", g_wwarprefix, "war_end");
 		}
 	}
 	if (StartWar)
@@ -168,7 +169,7 @@ public Action SetWar(int client,int args)
 	StartWar = true;
 	RoundLimits = GetConVarInt(RoundLimitsc);
 	votecount = 0;
-	PrintToChatAll("[%s] %t", g_wwarprefix, "war_next");
+	CPrintToChatAll("[{green}%s{default}] %t", g_wwarprefix, "war_next");
 	}
 }
 
@@ -177,13 +178,12 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 	if (StartWar || IsWar)
 	{
 		
+		decl String:message1[255], String:message2[255], String:message3[255], String:message4[255], String:message5[255], String:message6[255], String:message7[255], String:message8[255];
+		decl String:message9[255], String:message10[255], String:message11[255], String:message12[255], String:message13[255], String:message14[255];
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_warden_enable", 0);
-		SetCvar("sm_hide_enable", 0);
-		SetCvar("sm_warffa_enable", 0);
-		SetCvar("sm_beacon_enabled", 1);
-		SetCvar("sm_zombie_enable", 0);
 		SetCvar("dice_enable", 0);
+		SetCvar("sm_beacon_enabled", 1);
 		WarRound++;
 		IsWar = true;
 		StartWar = false;
@@ -193,32 +193,50 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 		freezetime = 0;
 		}
 		WarMenu = CreatePanel();
-		DrawPanelText(WarMenu, "Krieg ist aktiv");
-		if (WarRound == 1) DrawPanelText(WarMenu, "Runde 1 von 3");
-		if (WarRound == 2) DrawPanelText(WarMenu, "Runde 2 von 3");
-		if (WarRound == 3) DrawPanelText(WarMenu, "Runde 3 von 3");
+		Format(message1, sizeof(message1), "%T", "PanelTitle", LANG_SERVER);
+		SetPanelTitle(WarMenu, message1);
+		DrawPanelText(WarMenu, "                                   ");
+		Format(message10, sizeof(message10), "%T", "RoundOne", LANG_SERVER);
+		if (WarRound == 1) DrawPanelText(WarMenu, message10);
+		Format(message11, sizeof(message11), "%T", "RoundTwo", LANG_SERVER);
+		if (WarRound == 2) DrawPanelText(WarMenu, message11);
+		Format(message12, sizeof(message12), "%T", "RoundThree", LANG_SERVER);
+		if (WarRound == 3) DrawPanelText(WarMenu, message12);
+		DrawPanelText(WarMenu, "                                   ");
 		if(GetConVarInt(g_wspawncell) == 0)
 		{
-		DrawPanelText(WarMenu, roundtime);
+		Format(message2, sizeof(message2), "%T", "PanelTele", LANG_SERVER);
+		DrawPanelText(WarMenu, message2);
 		DrawPanelText(WarMenu, "-----------------------------------");
-		DrawPanelText(WarMenu, "In Kriegrunden spielen CT's gegen T's");
-		DrawPanelText(WarMenu, "                                   ");
-		DrawPanelText(WarMenu, "- In der Waffenstillstandsphase darf man schon aus der Waffenkammer!");
-		DrawPanelText(WarMenu, "- Alle normalen Jailregeln sind dabei aufgehoben!");
-		DrawPanelText(WarMenu, "- Buchstaben-, Yard- und Waffenkammercampen ist verboten!");
-		DrawPanelText(WarMenu, "- Der letzte Terrorist hat keinen Wunsch!");
-		DrawPanelText(WarMenu, "- Jeder darf überall hin wo er will!");
+		Format(message3, sizeof(message3), "%T", "PanelLine2", LANG_SERVER);
+		DrawPanelText(WarMenu, message3);
+		Format(message4, sizeof(message4), "%T", "PanelLine3", LANG_SERVER);
+		DrawPanelText(WarMenu, message4);
+		Format(message5, sizeof(message5), "%T", "PanelLine4", LANG_SERVER);
+		DrawPanelText(WarMenu, message5);
+		Format(message6, sizeof(message6), "%T", "PanelLine5", LANG_SERVER);
+		DrawPanelText(WarMenu, message6);
+		Format(message7, sizeof(message7), "%T", "PanelLine6", LANG_SERVER);
+		DrawPanelText(WarMenu, message7);
+		Format(message8, sizeof(message8), "%T", "PanelLine7", LANG_SERVER);
+		DrawPanelText(WarMenu, message8);
 		DrawPanelText(WarMenu, "-----------------------------------");
 		}else{
-		DrawPanelText(WarMenu, "Nicht wundern warum ihr in der Zelle spawnt");
+		Format(message9, sizeof(message9), "%T", "PanelSpawn", LANG_SERVER);
+		DrawPanelText(WarMenu, message9);
 		DrawPanelText(WarMenu, "-----------------------------------");
-		DrawPanelText(WarMenu, "In Kriegrunden spielen CT's gegen T's");
-		DrawPanelText(WarMenu, "                                   ");
-		DrawPanelText(WarMenu, "- In der Waffenstillstandsphase darf man schon aus der Waffenkammer!");
-		DrawPanelText(WarMenu, "- Alle normalen Jailregeln sind dabei aufgehoben!");
-		DrawPanelText(WarMenu, "- Buchstaben-, Yard- und Waffenkammercampen ist verboten!");
-		DrawPanelText(WarMenu, "- Der letzte Terrorist hat keinen Wunsch!");
-		DrawPanelText(WarMenu, "- Jeder darf überall hin wo er will!");
+		Format(message3, sizeof(message3), "%T", "PanelLine2", LANG_SERVER);
+		DrawPanelText(WarMenu, message3);
+		Format(message4, sizeof(message4), "%T", "PanelLine3", LANG_SERVER);
+		DrawPanelText(WarMenu, message4);
+		Format(message5, sizeof(message5), "%T", "PanelLine4", LANG_SERVER);
+		DrawPanelText(WarMenu, message5);
+		Format(message6, sizeof(message6), "%T", "PanelLine5", LANG_SERVER);
+		DrawPanelText(WarMenu, message6);
+		Format(message7, sizeof(message7), "%T", "PanelLine6", LANG_SERVER);
+		DrawPanelText(WarMenu, message7);
+		Format(message8, sizeof(message8), "%T", "PanelLine7", LANG_SERVER);
+		DrawPanelText(WarMenu, message8);
 		DrawPanelText(WarMenu, "-----------------------------------");
 		}
 		
@@ -280,7 +298,7 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 						}
 					}
 					}
-				}PrintToChatAll("[%s] Runde %i von 3", g_wwarprefix, WarRound);
+				}CPrintToChatAll("[{green}%s{default}] %t", g_wwarprefix ,"war_rounds", WarRound);
 			}
 			for(new client=1; client <= MaxClients; client++)
 			{
@@ -375,7 +393,7 @@ public Action:NoWeapon(Handle:timer)
 		if (IsClientInGame(client) && IsPlayerAlive(client)) SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
 	}
 
-	PrintToChatAll("[%s] %t", g_wwarprefix, "war_start");
+	CPrintToChatAll("[{green}%s{default}] %t", g_wwarprefix, "war_start");
 	
 	WeaponTimer = INVALID_HANDLE;
 	
@@ -418,20 +436,24 @@ public PlayerSay(Handle:event, String:name[], bool:dontBroadcast)
 							RoundLimits = GetConVarInt(RoundLimitsc);
 							votecount = 0;
 							
-							PrintToChatAll("[%s] %t", g_wwarprefix, "war_next");
+							SetCvar("sm_hide_enable", 0);
+							SetCvar("sm_warffa_enable", 0);
+							SetCvar("sm_zombie_enable", 0);
+							
+							CPrintToChatAll("[{green}%s{default}] %t", g_wwarprefix, "war_next");
 						}
-						else PrintToChatAll("[%s] %i Votes bis Krieg beginnt", g_wwarprefix, Missing);
+						else CPrintToChatAll("[{green}%s{default}] %t", g_wwarprefix, "war_need", Missing);
 						
 					}
-					else PrintToChat(client, "[%s] %t", g_wwarprefix, "war_voted");
+					else PrintToChat(client, "[{green}%s{default}] %t", g_wwarprefix, "war_voted");
 				}
-				else PrintToChat(client, "[%s] %t", g_wwarprefix, "war_progress");
+				else PrintToChat(client, "[{green}%s{default}] %t", g_wwarprefix, "war_progress");
 			}
-			else PrintToChat(client, "[%s] Du musst noch %i Runden warten", g_wwarprefix, RoundLimits);
+			else PrintToChat(client, "[{green}%s{default}] %t", g_wwarprefix, "war_wait", RoundLimits);
 		}
-		else PrintToChat(client, "[%s] %t", g_wwarprefix, "war_minct");
+		else PrintToChat(client, "[{green}%s{default}] %t", g_wwarprefix, "war_minct");
 	}
-	else PrintToChat(client, "[%s] %t", g_wwarprefix, "war_disabled");
+	else PrintToChat(client, "[{green}%s{default}] %t", g_wwarprefix, "war_disabled");
 	}
 }
 
