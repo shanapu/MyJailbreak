@@ -143,9 +143,11 @@ public Action:Event_RoundStart(Handle:event, const String:name[], bool:dontBroad
 		
 	countertime = INVALID_HANDLE;
 	
-	
+	if(GetConVarInt(g_enabled) == 1)	
+	{	
 	opentimer = GetConVarInt(g_opentimer);
 	countertime = CreateTimer(1.0, ccounter, _, TIMER_REPEAT);
+	}
 }
 
 EnableNoBlock(client)
