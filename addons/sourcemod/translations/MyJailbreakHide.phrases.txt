@@ -1,5 +1,10 @@
 "Phrases"
 {
+	"hide_need"  //{default}, {darkred}, {green}, {lightgreen}, "{darkred}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
+	{
+		"en"		"votes left to {darkred}war"
+		"de"		"votes bis {darkred}krieg{default} beginnt"
+	}
 	"hide_twin"
 	{
 		"#format"	""
@@ -81,5 +86,57 @@
 		"#format"	""
 		"en"		"seconds until unfreeze"
 		
+	}
+		"hide_info_Title"
+	{
+		"en"		"FFA is activ"
+		"de"		"FFA ist aktiv"
+	}
+	
+	"hide_info_Line1"
+	{
+		"en"		"Do not be surprised if ported in wk"
+		"de"		"Nicht wundern falls ihr in die wk geportet wurdet"
+	}
+	"hide_info_Line2"
+	{
+		"en"		"In warround ct play against t"
+		"de"		"In Kriegrunden spielen CT's gegen T's"
+	}
+	
+	"hide_info_Line3"
+	{
+		"en"		"Während der no damge phase kannst du aus der zelle/waffenkammer"
+		"de"		"Während der no damge phase kannst du aus der zelle/waffenkammer"
+	}
+	
+	"hide_info_Line4"
+	{
+		"en"		"Alle normalen Jailregeln sind aufgehoben!"
+		"de"		"Alle normalen Jailregeln sind aufgehoben!"
+	}
+	
+	"hide_info_Line5"
+	{
+		"en"		"There is no last request!"
+		"de"		"Der letzte Terrorist hat keinen Wunsch!"
+	}
+	
+	"hide_info_Line6"
+	{
+		"en"		"Jeder darf überall hin wo er will!"
+		"de"		"Jeder darf überall hin wo er will!"
+	}
+	
+	"hide_info_Line7"
+	{
+		"en"		"bau keine scheisse!"
+		"de"		"bau keine scheisse!"
+	}
+		"hide_wait"
+	{
+		"#format"	"{1:i}"
+		"en"		"you must wait {1} more rounds"
+		"de"		"Du musst noch {1} Runden warten"
 	}
 }

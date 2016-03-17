@@ -9,7 +9,6 @@
 #pragma semicolon 1
 
 #define PLUGIN_VERSION		"0.x"
-#define SERVERTAG			"MyJB War"
 
 new freezetime;
 new nodamagetimer;
@@ -72,7 +71,6 @@ public OnPluginStart()
 	freezetimec = CreateConVar("sm_war_freezetime", "30", "Time freeze T");
 	nodamagetimerc = CreateConVar("sm_war_nodamage", "30", "Time after freezetime damage disbaled");
 	RoundLimitsc = CreateConVar("sm_war_roundsnext", "3", "Runden nach Krieg oder Mapstart bis Krieg gestartet werden kann");
-	gH_ServerTag = CreateConVar("sm_war_servertag", "1", "Enable or disable automatic adding MyJailbreak in sv_tags: 0 - disable, 1 - enable");
 
 	GetConVarString(g_warprefix, g_wwarprefix, sizeof(g_wwarprefix));
 	GetConVarString(g_warcmd, g_wwarcmd, sizeof(g_wwarcmd));
@@ -110,12 +108,6 @@ public OnMapStart()
 
 public OnConfigsExecuted()
 {
-
-if (GetConVarInt(gH_ServerTag) == 1)
-	{
-	ServerCommand("sv_tags %s\n", SERVERTAG);
-	}
-
 	roundtime = GetConVarInt(roundtimec);
 	roundtimenormal = GetConVarInt(roundtimenormalc);
 	freezetime = GetConVarInt(freezetimec);
@@ -153,11 +145,12 @@ public RoundEnd(Handle:event, String:name[], bool:dontBroadcast)
 			SetCvar("sm_warden_enable", 1);
 			SetCvar("sm_hide_enable", 1);
 			SetCvar("sm_zombie_enable", 1);
+			SetCvar("sm_noscope_enable", 1);
 			SetCvar("dice_enable", 1);
 			SetCvar("sm_beacon_enabled", 0);
 			SetCvar("sm_warffa_enable", 1);
 			SetCvar("sm_duckhunt_enable", 1);
-			SetCvar("sm_freeze_enable", 1);
+			SetCvar("sm_catch_enable", 1);
 			SetCvar("mp_roundtime", roundtimenormal);
 			SetCvar("mp_roundtime_hostage", roundtimenormal);
 			SetCvar("mp_roundtime_defuse", roundtimenormal);
@@ -184,7 +177,7 @@ public Action SetWar(int client,int args)
 	SetCvar("sm_warffa_enable", 0);
 	SetCvar("sm_zombie_enable", 0);
 	SetCvar("sm_duckhunt_enable", 0);
-	SetCvar("sm_freeze_enable", 0);
+	SetCvar("sm_catch_enable", 0);
 	
 	CPrintToChatAll("%s %t", g_wwarprefix, "war_next");
 	}
@@ -454,9 +447,10 @@ public PlayerSay(Handle:event, String:name[], bool:dontBroadcast)
 							
 							SetCvar("sm_hide_enable", 0);
 							SetCvar("sm_warffa_enable", 0);
+							SetCvar("sm_noscope_enable", 0);
 							SetCvar("sm_zombie_enable", 0);
 							SetCvar("sm_duckhunt_enable", 0);
-							SetCvar("sm_freeze_enable", 0);
+							SetCvar("sm_catch_enable", 0);
 							
 							CPrintToChatAll("%s %t", g_wwarprefix, "war_next");
 						}

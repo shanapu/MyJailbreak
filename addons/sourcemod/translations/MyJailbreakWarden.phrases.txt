@@ -9,6 +9,15 @@
 		"sv"		"{purple}{1}{default} har blivit fängelsedirektör över detta fängelse."
 	}
 	
+	"warden_new_nc"
+	{
+		"#format"	"{1:N}"
+		"en"		"{1} has become the warden of this prison."
+		"es"		"{1} Es ahora el AlcÃ¡ide de esta PrisiÃ³n."
+		"pt"		"{1} Agora, o diretor da prisão.."
+		"sv"		"{1} har blivit fängelsedirektör över detta fängelse."
+	}
+	
 	"warden_playerdead"
 	{
 		"#format"	""
@@ -44,6 +53,15 @@
 		"pt"		"{purple}{1}{default} o atual diretor, decidiu se aposentar. Agora começa a escolher um novo.."
 		"sv"		"{purple}{1}{default} har bestämt sig för att avgå. Ni bör nu välja en ny."
 	}
+		
+	"warden_retire_nc"
+	{
+		"#format"	"{1:N}"
+		"en"		"{1} has decided to retire. You may now choose a new one."
+		"es"		"{1} ha decidido jubilarse. Ahora toca elegir uno nuevo."
+		"pt"		"{1} o atual diretor, decidiu se aposentar. Agora começa a escolher um novo.."
+		"sv"		"{1} har bestämt sig för att avgå. Ni bör nu välja en ny."
+	}
 	
 	"warden_notwarden"
 	{
@@ -55,13 +73,30 @@
 	"warden_dead"
 	{
 		"#format"	""
+		"en"		"the warden are now {darkred}dead{default}. You may now choose a new one."
+		"es"		"El AlcÃ¡ide ha {darkred}dead{default}! Ahora toca elegir uno juevo."
+		"pt"		"O diretor está {darkred}dead{default}, agora começa a escolher um novo."
+		"sv"		"fängelsedirektören är död. Ni bör nu välja en ny."
+	}
+		
+	"warden_dead_nc"
+	{
+		"#format"	""
 		"en"		"the warden are now dead. You may now choose a new one."
 		"es"		"El AlcÃ¡ide ha muerto! Ahora toca elegir uno juevo."
 		"pt"		"O diretor está morto, agora começa a escolher um novo."
 		"sv"		"fängelsedirektören är död. Ni bör nu välja en ny."
 	}
-	
 	"warden_disconnected"
+	{
+		"#format"	""
+		"en"		"the warden has {purple}disconnected{default}. You may now choose a new one."
+		"es"		"El AlcÃ¡ide ha desertado. Ahora toca elegir uno nuevo."
+		"pt"		"O diretor deixou o jogo. Agora começa a escolher um novo."
+		"sv"		"fängelsedirektören har lämnat. Ni bör nu välja en ny."
+	}
+		
+	"warden_disconnected_nc"
 	{
 		"#format"	""
 		"en"		"the warden has disconnected. You may now choose a new one."
@@ -77,6 +112,14 @@
 		"es"		"Administrador: {purple}{1}{default} ha prejubilado al AlcÃ¡ide: {2}"
 		"pt"		"O Administrador do: {purple}{1}{default} o diretor se aposentou cedo: {2}"
 		"sv"		"Admin: {purple}{1}{default} avskedade Fängelsedirektören: {2}"
+	}
+		"warden_removed_nc"
+	{
+		"#format"	"{1:N},{2:N}"
+		"en"		"Admin: {1} fired Warden: {2}"
+		"es"		"Administrador: {1} ha prejubilado al AlcÃ¡ide: {2}"
+		"pt"		"O Administrador do: {{1} o diretor se aposentou cedo: {2}"
+		"sv"		"Admin: {1} avskedade Fängelsedirektören: {2}"
 	}
 	
 	"warden_noexist"

@@ -1,7 +1,7 @@
 #include <sourcemod>
 #include <sdktools>
 #include <autoexecconfig>
-
+#include <colors>
 
 #pragma semicolon 1
 
@@ -183,7 +183,7 @@ public PlayerSpawn(Handle:event, const String:name[], bool:dontBroadcast)
 	
 	if (IsPlayerAlive(client) && IsClientInGame(client))
 	{
-		PrintToChat(client, "[%t] %t", "dice", "start", DiceText);
+		CPrintToChat(client, "[%t] %t", "dice", "start", DiceText);
 		
 		NoclipCounter[client] = 5;
 		ClientDiced[client] = 0;
@@ -268,7 +268,7 @@ public PrepareDice(client)
 						ClientDiced[client]++;
 						DiceNow(client);
 					}
-					else PrintToChat(client, "%s%t", Prefix, "money", DiceMoney);
+					else CPrintToChat(client, "%s%t", Prefix, "money", DiceMoney);
 				}
 				else
 				{
@@ -276,13 +276,13 @@ public PrepareDice(client)
 					DiceNow(client);
 				}
 			}
-			else PrintToChat(client, "%s%t", Prefix, "dead");
+			else CPrintToChat(client, "%s%t", Prefix, "dead");
 		}
-		else PrintToChat(client, "%s%t", Prefix, "already", DiceCount);
+		else CPrintToChat(client, "%s%t", Prefix, "already", DiceCount);
 	}
-	else PrintToChat(client, "%s%t", Prefix, "wrong");
+	else CPrintToChat(client, "%s%t", Prefix, "wrong");
 	}
-	else PrintToChat(client, "%s%t", Prefix, "disabled");
+	else CPrintToChat(client, "%s%t", Prefix, "disabled");
 }
 
 DiceNow(client)
@@ -290,7 +290,7 @@ DiceNow(client)
 	new number;
 	new count;
 
-	PrintToChat(client, "[%t] %t", "dice", "rolling", ClientDiced[client], DiceCount);
+	CPrintToChat(client, "[%t] %t", "dice", "rolling", ClientDiced[client], DiceCount);
 
 	number = count = GetRandomInt(1, DICES);
 
@@ -384,7 +384,7 @@ DiceNow(client)
 		{
 			noclip(client, true, 5.0);
 			
-			PrintToChat(client, "[%t] %t", "dice", "noclip", NoclipCounter[client]);
+			CPrintToChat(client, "[%t] %t", "dice", "noclip", NoclipCounter[client]);
 			
 			CreateTimer(1.0, NclipTimer, client, TIMER_REPEAT);
 		}
@@ -459,7 +459,7 @@ public Action:NclipTimer(Handle:timer, any:client)
 {
 	if (NoclipCounter[client] > 0 && IsPlayerAlive(client) && IsClientInGame(client))
 	{
-		PrintToChat(client, "[%t] %t", "dice", "noclip", NoclipCounter[client]);
+		CPrintToChat(client, "[%t] %t", "dice", "noclip", NoclipCounter[client]);
 
 		NoclipCounter[client]--;
 		
@@ -509,15 +509,15 @@ ShowText(client, DiceNumber)
 			
 		Format(trans, sizeof(trans), "dice%i", DiceNumber);
 		
-		PrintToChat(client, "%s%t", Prefix, "deagle");
-		PrintToChat(client, "%s%t", Prefix, "deagle");
+		CPrintToChat(client, "%s%t", Prefix, "deagle");
+		CPrintToChat(client, "%s%t", Prefix, "deagle");
 	}
 
 	if ((DiceNumber == 32 || DiceNumber == 33) && ShowNumber != 1)
-		PrintToChatAll("%s%t", Prefix, trans_all, DiceNumber);
+		CPrintToChatAll("%s%t", Prefix, trans_all, DiceNumber);
 
 	for (new x=0; x < ClientCount; x++)
-		PrintToChat(clients[x], "%s%t", Prefix, trans, client, DiceNumber);
+		CPrintToChat(clients[x], "%s%t", Prefix, trans, client, DiceNumber);
 }
 
 // PRESETS

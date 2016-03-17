@@ -1,13 +1,14 @@
 //includes
 #include <cstrike>
 #include <sourcemod>
+#include <colors>
 #include <sdktools>
 #include <smartjaildoors>
 
 //Compiler Options
 #pragma semicolon 1
 
-#define PLUGIN_VERSION   "1.1xx"
+#define PLUGIN_VERSION   "0.x"
 
 new freezetime;
 new nodamagetimer;
@@ -67,8 +68,8 @@ public OnPluginStart()
 	CreateConVar("sm_warffa_version", "PLUGIN_VERSION", "The version of the SourceMod plugin MyJailBreak - War", FCVAR_PLUGIN|FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	g_wenabled = CreateConVar("sm_warffa_enable", "1", "0 - disabled, 1 - enable warffa");
 	g_wspawncell = CreateConVar("sm_warffa_spawn", "1", "0 - teleport to weaponroom, 1 - standart spawn - cell doors auto open");
-	g_warffaprefix = CreateConVar("sm_warffa_prefix", "warffa", "Insert your Jailprefix. shown in braces [warffa]");
-	g_warffacmd = CreateConVar("sm_warffa_cmd", "!ffa", "Insert your 2nd chat trigger. !warffa still enabled");
+	g_warffaprefix = CreateConVar("sm_warffa_prefix", "[{green}ffa{default}]", "Insert your Jailprefix. shown in braces [warffa]");
+	g_warffacmd = CreateConVar("sm_warffa_cmd", "!warffa", "Insert your 2nd chat trigger. !warffa still enabled");
 	roundtimec = CreateConVar("sm_warffa_roundtime", "5", "Round time for a single warffa round");
 	roundtimenormalc = CreateConVar("sm_nowarffa_roundtime", "12", "set round time after a warffa round");
 	freezetimec = CreateConVar("sm_warffa_freezetime", "30", "Time freeze T");
@@ -137,6 +138,7 @@ public RoundEnd(Handle:event, String:name[], bool:dontBroadcast)
 	
 	if (Iswarffa)
 	{
+	
 		for(new client=1; client <= MaxClients; client++)
 		{
 			if (IsClientInGame(client)) SetEntData(client, FindSendPropOffs("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
@@ -162,14 +164,17 @@ public RoundEnd(Handle:event, String:name[], bool:dontBroadcast)
 			SetCvar("sm_beacon_enabled", 0);
 			SetCvar("sm_warden_enable", 1);
 			SetCvar("sm_hide_enable", 1);
+			SetCvar("sm_noscope_enable", 1);
 			SetCvar("sm_zombie_enable", 1);
 			SetCvar("sm_war_enable", 1);
+			SetCvar("sm_duckhunt_enable", 1);
+			SetCvar("sm_catch_enable", 1);
 			SetCvar("mp_teammates_are_enemies", 0);
 			SetCvar("mp_friendlyfire", 0);
 			SetCvar("mp_roundtime", roundtimenormal);
 			SetCvar("mp_roundtime_hostage", roundtimenormal);
 			SetCvar("mp_roundtime_defuse", roundtimenormal);
-			PrintToChatAll("[%s] %t", g_wwarffaprefix, "warffa_end");
+			CPrintToChatAll("%s %t", g_wwarffaprefix, "warffa_end");
 		}
 	}
 	if (Startwarffa)
@@ -187,23 +192,23 @@ public Action Setwarffa(int client,int args)
 	Startwarffa = true;
 	RoundLimits = GetConVarInt(RoundLimitsc);
 	votecount = 0;
-	PrintToChatAll("[%s] %t", g_wwarffaprefix, "warffa_next");
+	CPrintToChatAll("%s %t", g_wwarffaprefix, "warffa_next");
 	}
 }
 
 public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 {
 	if (Startwarffa || Iswarffa)
-	{ 	{AcceptEntityInput(FogIndex, "TurnOn");}
+	{	{AcceptEntityInput(FogIndex, "TurnOn");}
+		decl String:info1[255], String:info2[255], String:info3[255], String:info4[255], String:info5[255], String:info6[255], String:info7[255], String:info8[255];
+		decl String:info9[255], String:info10[255], String:info11[255], String:info12[255];
+		
 		SetCvar("dice_enable", 0);
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_warden_enable", 0);
-		SetCvar("sm_hide_enable", 0);
 		SetCvar("sm_beacon_enabled", 1);
-		SetCvar("sm_war_enable", 0);
 		SetCvar("mp_teammates_are_enemies", 1);
 		SetCvar("mp_friendlyfire", 1);
-		SetCvar("sm_zombie_enable", 0);
 		warffaRound++;
 		Iswarffa = true;
 		Startwarffa = false;
@@ -213,32 +218,50 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 		freezetime = 0;
 		}
 		warffaMenu = CreatePanel();
-		DrawPanelText(warffaMenu, "Krieg - Jeder gegen Jeden - ist aktiv");
-		if (warffaRound == 1) DrawPanelText(warffaMenu, "Runde 1 von 3");
-		if (warffaRound == 2) DrawPanelText(warffaMenu, "Runde 2 von 3");
-		if (warffaRound == 3) DrawPanelText(warffaMenu, "Runde 3 von 3");
+		Format(info1, sizeof(info1), "%T", "warffa_info_Title", LANG_SERVER);
+		SetPanelTitle(warffaMenu, info1);
+		DrawPanelText(warffaMenu, "                                   ");
+		Format(info10, sizeof(info10), "%T", "RoundOne", LANG_SERVER);
+		if (warffaRound == 1) DrawPanelText(warffaMenu, info10);
+		Format(info11, sizeof(info11), "%T", "RoundTwo", LANG_SERVER);
+		if (warffaRound == 2) DrawPanelText(warffaMenu, info11);
+		Format(info12, sizeof(info12), "%T", "RoundThree", LANG_SERVER);
+		if (warffaRound == 3) DrawPanelText(warffaMenu, info12);
+		DrawPanelText(warffaMenu, "                                   ");
 		if(GetConVarInt(g_wspawncell) == 0)
 		{
-		DrawPanelText(warffaMenu, "Nicht wundern falls ihr in der Luft hängt");
+		Format(info2, sizeof(info2), "%T", "warffa_info_Tele", LANG_SERVER);
+		DrawPanelText(warffaMenu, info2);
 		DrawPanelText(warffaMenu, "-----------------------------------");
-		DrawPanelText(warffaMenu, "In Battle Royale spielt jeder gegen jeden");
-		DrawPanelText(warffaMenu, "                                   ");
-		DrawPanelText(warffaMenu, "- In der Waffenstillstandsphase darf man schon aus der Waffenkammer!");
-		DrawPanelText(warffaMenu, "- Alle normalen Jailregeln sind dabei aufgehoben!");
-		DrawPanelText(warffaMenu, "- Buchstaben-, Yard- und Waffenkammercampen ist verboten!");
-		DrawPanelText(warffaMenu, "- Der letzte Terrorist hat keinen Wunsch!");
-		DrawPanelText(warffaMenu, "- Jeder darf überall hin wo er will!");
+		Format(info3, sizeof(info3), "%T", "warffa_info_Line2", LANG_SERVER);
+		DrawPanelText(warffaMenu, info3);
+		Format(info4, sizeof(info4), "%T", "warffa_info_Line3", LANG_SERVER);
+		DrawPanelText(warffaMenu, info4);
+		Format(info5, sizeof(info5), "%T", "warffa_info_Line4", LANG_SERVER);
+		DrawPanelText(warffaMenu, info5);
+		Format(info6, sizeof(info6), "%T", "warffa_info_Line5", LANG_SERVER);
+		DrawPanelText(warffaMenu, info6);
+		Format(info7, sizeof(info7), "%T", "warffa_info_Line6", LANG_SERVER);
+		DrawPanelText(warffaMenu, info7);
+		Format(info8, sizeof(info8), "%T", "warffa_info_Line7", LANG_SERVER);
+		DrawPanelText(warffaMenu, info8);
 		DrawPanelText(warffaMenu, "-----------------------------------");
 		}else{
-		DrawPanelText(warffaMenu, "Nicht wundern warum ihr in der Zelle spawnt");
+		Format(info9, sizeof(info9), "%T", "warffa_info_Spawn", LANG_SERVER);
+		DrawPanelText(warffaMenu, info9);
 		DrawPanelText(warffaMenu, "-----------------------------------");
-		DrawPanelText(warffaMenu, "In Battle Royale spielt jeder gegen jeden");
-		DrawPanelText(warffaMenu, "                                   ");
-		DrawPanelText(warffaMenu, "- In der Waffenstillstandsphase darf man schon aus der Waffenkammer!");
-		DrawPanelText(warffaMenu, "- Alle normalen Jailregeln sind dabei aufgehoben!");
-		DrawPanelText(warffaMenu, "- Buchstaben-, Yard- und Waffenkammercampen ist verboten!");
-		DrawPanelText(warffaMenu, "- Der letzte Terrorist hat keinen Wunsch!");
-		DrawPanelText(warffaMenu, "- Jeder darf überall hin wo er will!");
+		Format(info3, sizeof(info3), "%T", "warffa_info_Line2", LANG_SERVER);
+		DrawPanelText(warffaMenu, info3);
+		Format(info4, sizeof(info4), "%T", "warffa_info_Line3", LANG_SERVER);
+		DrawPanelText(warffaMenu, info4);
+		Format(info5, sizeof(info5), "%T", "warffa_info_Line4", LANG_SERVER);
+		DrawPanelText(warffaMenu, info5);
+		Format(info6, sizeof(info6), "%T", "warffa_info_Line5", LANG_SERVER);
+		DrawPanelText(warffaMenu, info6);
+		Format(info7, sizeof(info7), "%T", "warffa_info_Line6", LANG_SERVER);
+		DrawPanelText(warffaMenu, info7);
+		Format(info8, sizeof(info8), "%T", "warffa_info_Line7", LANG_SERVER);
+		DrawPanelText(warffaMenu, info8);
 		DrawPanelText(warffaMenu, "-----------------------------------");
 		}
 		
@@ -299,7 +322,7 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 						}
 					}
 					}
-				}PrintToChatAll("[%s] Runde %i von 3", g_wwarffaprefix, warffaRound);
+				}CPrintToChatAll("%s Runde %i von 3", g_wwarffaprefix, warffaRound);
 			}
 			for(new client=1; client <= MaxClients; client++)
 			{
@@ -350,7 +373,7 @@ public Action:NoWeapon(Handle:timer)
 		if (IsClientInGame(client) && IsPlayerAlive(client)) SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
 	}
 
-	PrintToChatAll("[%s] %t", g_wwarffaprefix, "warffa_start");
+	CPrintToChatAll("%s %t", g_wwarffaprefix, "warffa_start");
 	DoFog();
 	AcceptEntityInput(FogIndex, "TurnOff");
 	WeaponTimer = INVALID_HANDLE;
@@ -380,7 +403,7 @@ public PlayerSay(Handle:event, String:name[], bool:dontBroadcast)
 	GetClientAuthString(client, steamid, sizeof(steamid));
 	GetEventString(event, "text", text, sizeof(text));
 	
-	if (StrEqual(text, g_wwarffacmd) || StrEqual(text, "!warffa"))
+	if (StrEqual(text, g_wwarffacmd) || StrEqual(text, "!ffa"))
 	{
 	if(GetConVarInt(g_wenabled) == 1)
 	{	
@@ -404,23 +427,30 @@ public PlayerSay(Handle:event, String:name[], bool:dontBroadcast)
 						{
 							Startwarffa = true;
 							
+							SetCvar("sm_hide_enable", 0);
+							SetCvar("sm_war_enable", 0);
+							SetCvar("sm_zombie_enable", 0);
+							SetCvar("sm_duckhunt_enable", 0);
+							SetCvar("sm_catch_enable", 0);
+							SetCvar("sm_noscope_enable", 0);
+							
 							RoundLimits = GetConVarInt(RoundLimitsc);
 							votecount = 0;
 							
-							PrintToChatAll("[%s] %t", g_wwarffaprefix, "warffa_next");
+							CPrintToChatAll("%s %t", g_wwarffaprefix, "warffa_next");
 						}
-						else PrintToChatAll("[%s] %i Votes bis Krieg beginnt", g_wwarffaprefix, Missing);
+						else CPrintToChatAll("%s %t", g_wwarffaprefix, "warffa_need", Missing);
 						
 					}
-					else PrintToChat(client, "[%s] %t", g_wwarffaprefix, "warffa_voted");
+					else CPrintToChat(client, "%s %t", g_wwarffaprefix, "warffa_voted");
 				}
-				else PrintToChat(client, "[%s] %t", g_wwarffaprefix, "warffa_progress");
+				else CPrintToChat(client, "%s %t", g_wwarffaprefix, "warffa_progress");
 			}
-			else PrintToChat(client, "[%s] Du musst noch %i Runden warten", g_wwarffaprefix, RoundLimits);
+			else CPrintToChat(client, "%s %t", g_wwarffaprefix, "warffa_wait", RoundLimits);
 		}
-		else PrintToChat(client, "[%s] %t", g_wwarffaprefix, "warffa_minct");
+		else CPrintToChat(client, "%s %t", g_wwarffaprefix, "warffa_minct");
 	}
-	else PrintToChat(client, "[%s] %t", g_wwarffaprefix, "warffa_disabled");
+	else CPrintToChat(client, "%s %t", g_wwarffaprefix, "warffa_disabled");
 	}
 }
 

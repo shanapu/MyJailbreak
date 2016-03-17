@@ -1,6 +1,7 @@
 //includes
 #include <cstrike>
 #include <sourcemod>
+#include <colors>
 #include <sdktools>
 #include <smartjaildoors>
 #include <sdkhooks>
@@ -8,7 +9,7 @@
 //Compiler Options
 #pragma semicolon 1
 
-#define PLUGIN_VERSION   "0.1"
+#define PLUGIN_VERSION   "0.x"
 
 new roundtime;
 new roundtimenormal;
@@ -56,13 +57,12 @@ public OnPluginStart()
 	
 	CreateConVar("sm_catch_version", "PLUGIN_VERSION", "The version of the SourceMod plugin MyJailBreak - War", FCVAR_PLUGIN|FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	g_wenabled = CreateConVar("sm_catch_enable", "1", "0 - disabled, 1 - enable war");
-	g_catchprefix = CreateConVar("sm_catch_prefix", "war", "Insert your Jailprefix. shown in braces [war]");
-	g_catchcmd = CreateConVar("sm_catch_cmd", "!verstecken", "Insert your 2nd chat trigger. !war still enabled");
+	g_catchprefix = CreateConVar("sm_catch_prefix", "[{green}catch{default}]", "Insert your Jailprefix. shown in braces [war]");
+	g_catchcmd = CreateConVar("sm_catch_cmd", "!fangen", "Insert your 2nd chat trigger. !war still enabled");
 	roundtimec = CreateConVar("sm_catch_roundtime", "5", "Round time for a single war round");
 	roundtimenormalc = CreateConVar("sm_nocatch_roundtime", "12", "set round time after a war round zour normal mp_roudntime");
 	RoundLimitsc = CreateConVar("sm_catch_roundsnext", "3", "Runden nach Krieg oder Mapstart bis Krieg gestartet werden kann");
 	
-
 	GetConVarString(g_catchprefix, g_wcatchprefix, sizeof(g_wcatchprefix));
 	GetConVarString(g_catchcmd, g_wcatchcmd, sizeof(g_wcatchcmd));
 	
@@ -131,6 +131,8 @@ public RoundEnd(Handle:event, String:name[], bool:dontBroadcast)
 		SetCvar("sm_hosties_lr", 1);
 		SetCvar("sm_war_enable", 1);
 		SetCvar("sm_hide_enable", 1);
+		SetCvar("sm_zombie_enable", 1);
+		SetCvar("sm_duckhunt_enable", 1);
 		SetCvar("dice_enable", 1);
 		SetCvar("sm_beacon_enabled", 0);
 		SetCvar("sv_infinite_ammo", 0);
@@ -139,7 +141,7 @@ public RoundEnd(Handle:event, String:name[], bool:dontBroadcast)
 		SetCvar("mp_roundtime", roundtimenormal);
 		SetCvar("mp_roundtime_hostage", roundtimenormal);
 		SetCvar("mp_roundtime_defuse", roundtimenormal);
-		PrintToChatAll("[%s] %t", g_wcatchprefix, "catch_end");
+		CPrintToChatAll("%s %t", g_wcatchprefix, "catch_end");
 	}
 	if (StartCatch)
 	{
@@ -156,7 +158,7 @@ public Action SetCatch(int client,int args)
 	StartCatch = true;
 	RoundLimits = GetConVarInt(RoundLimitsc);
 	votecount = 0;
-	PrintToChatAll("[%s] %t", g_wcatchprefix, "catch_next");
+	CPrintToChatAll("%s %t", g_wcatchprefix, "catch_next");
 	}
 }
 
@@ -220,32 +222,36 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 {
 	if (StartCatch)
 	{
+		decl String:info1[255], String:info2[255], String:info3[255], String:info4[255], String:info5[255], String:info6[255], String:info7[255], String:info8[255];
 		
 		SetCvar("sm_hosties_lr", 0);
-		SetCvar("sm_war_enable", 0);
-		SetCvar("sm_warffa_enable", 0);
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("sm_beacon_enabled", 1);
-		SetCvar("sm_hide_enable", 0);
 		SetCvar("sv_infinite_ammo", 1);
 		SetCvar("dice_enable", 0);
 		IsCatch = true;
 		CatchRound++;
 		StartCatch = false;
 		SJD_OpenDoors();
-
 		CatchMenu = CreatePanel();
-		DrawPanelText(CatchMenu, "Wir spielen eine Catch Round!");
-
-		DrawPanelText(CatchMenu, "Die Terrors verstecken sich ");
+		Format(info1, sizeof(info1), "%T", "catch_info_Title", LANG_SERVER);
+		SetPanelTitle(CatchMenu, info1);
+		DrawPanelText(CatchMenu, "                                   ");
+		Format(info2, sizeof(info2), "%T", "catch_info_Line1", LANG_SERVER);
+		DrawPanelText(CatchMenu, info2);
 		DrawPanelText(CatchMenu, "-----------------------------------");
-		DrawPanelText(CatchMenu, "Die Counter werden zu catchs");
-		DrawPanelText(CatchMenu, "								   ");
-		DrawPanelText(CatchMenu, "- In der Waffenstillstandsphase darf man schon aus der Waffenkammer!");
-		DrawPanelText(CatchMenu, "- Alle normalen Jailregeln sind dabei aufgehoben!");
-		DrawPanelText(CatchMenu, "- Buchstaben-, Yard- und Waffenkammercampen ist verboten!");
-		DrawPanelText(CatchMenu, "- Der letzte Terrorist hat keinen Wunsch!");
-		DrawPanelText(CatchMenu, "- Jeder darf überall hin wo er will!");
+		Format(info3, sizeof(info3), "%T", "catch_info_Line2", LANG_SERVER);
+		DrawPanelText(CatchMenu, info3);
+		Format(info4, sizeof(info4), "%T", "catch_info_Line3", LANG_SERVER);
+		DrawPanelText(CatchMenu, info4);
+		Format(info5, sizeof(info5), "%T", "catch_info_Line4", LANG_SERVER);
+		DrawPanelText(CatchMenu, info5);
+		Format(info6, sizeof(info6), "%T", "catch_info_Line5", LANG_SERVER);
+		DrawPanelText(CatchMenu, info6);
+		Format(info7, sizeof(info7), "%T", "catch_info_Line6", LANG_SERVER);
+		DrawPanelText(CatchMenu, info7);
+		Format(info8, sizeof(info8), "%T", "catch_info_Line7", LANG_SERVER);
+		DrawPanelText(CatchMenu, info8);
 		DrawPanelText(CatchMenu, "-----------------------------------");
 		
 		if (CatchRound > 0)
@@ -264,17 +270,16 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 						catched[client] = false;
 						}
 					}
-					PrintToChatAll("[%s] Versteckt euch die Catchs kommen", g_wcatchprefix);
+					CPrintToChatAll("%s Versteckt euch die Catchs kommen", g_wcatchprefix);
 					if (IsClientInGame(client))
 					{
 					SetEntData(client, FindSendPropOffs("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
 					SendPanelToClient(CatchMenu, client, Pass, 15);
-					SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 					}
 				}
 				
 				PrintCenterTextAll("%t", "catch_start");
-				PrintToChatAll("[%s] %t", g_wcatchprefix, "catch_start");
+				CPrintToChatAll("%s %t", g_wcatchprefix, "catch_start");
 				}
 	}
 }
@@ -320,20 +325,26 @@ public PlayerSay(Handle:event, String:name[], bool:dontBroadcast)
 							RoundLimits = GetConVarInt(RoundLimitsc);
 							votecount = 0;
 							
-							PrintToChatAll("[%s] %t", g_wcatchprefix, "catch_next");
+							SetCvar("sm_hide_enable", 0);
+							SetCvar("sm_warffa_enable", 0);
+							SetCvar("sm_zombie_enable", 0);
+							SetCvar("sm_duckhunt_enable", 0);
+							SetCvar("sm_war_enable", 0);
+							
+							CPrintToChatAll("%s %t", g_wcatchprefix, "catch_next");
 						}
-						else PrintToChatAll("[%s] %i Votes bis Krieg beginnt", g_wcatchprefix, Missing);
+						else CPrintToChatAll("%s %t", g_wcatchprefix, "catch_need", Missing);
 						
 					}
-					else PrintToChat(client, "[%s] %t", g_wcatchprefix, "catch_voted");
+					else CPrintToChat(client, "%s %t", g_wcatchprefix, "catch_voted");
 				}
-				else PrintToChat(client, "[%s] %t", g_wcatchprefix, "catch_progress");
+				else CPrintToChat(client, "%s %t", g_wcatchprefix, "catch_progress");
 			}
-			else PrintToChat(client, "[%s] Du musst noch %i Runden warten", g_wcatchprefix, RoundLimits);
+			else CPrintToChat(client, "%s %t", g_wcatchprefix, "war_wait", RoundLimits);
 		}
-		else PrintToChat(client, "[%s] %t", g_wcatchprefix, "catch_minct");
+		else CPrintToChat(client, "%s %t", g_wcatchprefix, "catch_minct");
 	}
-	else PrintToChat(client, "[%s] %t", g_wcatchprefix, "catch_disabled");
+	else CPrintToChat(client, "%s %t", g_wcatchprefix, "catch_disabled");
 	}
 }
 
@@ -402,7 +413,7 @@ CatchEm(client, attacker)
 	SetEntityRenderColor(client, 0, 0, 255, 255);
 	catched[client] = true;
 	
-	PrintToChatAll("[\x04goo.event\x01] Wärter %N hat Häftling %N gefreezt", attacker, client);
+	CPrintToChatAll("%s %t", g_wcatchprefix, "catch_catch", attacker, client);
 }
 
 FreeEm(client, attacker)
@@ -411,7 +422,7 @@ FreeEm(client, attacker)
 	SetEntityRenderColor(client, 255, 255, 255, 0);
 	catched[client] = false;
 	
-	PrintToChatAll("[\x04goo.event\x01] Häftling %N hat %N befreit", attacker, client);
+	CPrintToChatAll("%s %t", g_wcatchprefix, "catch_unfreeze", attacker, client);
 }
 
 CheckStatus()
@@ -421,4 +432,5 @@ CheckStatus()
 		if(IsClientInGame(i) && IsPlayerAlive(i) && GetClientTeam(i) == CS_TEAM_T && !catched[i]) number++;
 		
 	if(number == 0) CS_TerminateRound(5.0, CSRoundEnd_CTWin);
+	CPrintToChatAll("%s %t", g_wcatchprefix, "catch_end");
 }

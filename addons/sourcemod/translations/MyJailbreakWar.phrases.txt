@@ -1,9 +1,9 @@
 "Phrases"    
 {
-	"war_need"  //{default}, {darkred}, {green}, {lightgreen}, "{red}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
+	"war_need"  //{default}, {darkred}, {green}, {lightgreen}, "{darkred}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
 	{
-		"en"		"votes left to {red}war"
-		"de"		"votes bis {red}krieg{default} beginnt"
+		"en"		"votes left to {darkred}war"
+		"de"		"votes bis {darkred}krieg{default} beginnt"
 	}
 	"war_twin"
 	{
@@ -19,14 +19,14 @@
 		
 	}
 	
-	"war_end" //{default}, {darkred}, {green}, {lightgreen}, "{red}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
+	"war_end" //{default}, {darkred}, {green}, {lightgreen}, "{darkred}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
 	{
 		"#format"	""
 		"en"		"War ended"
 		
 	}
 	
-	"war_rounds" //{default}, {darkred}, {green}, {lightgreen}, "{red}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
+	"war_rounds" //{default}, {darkred}, {green}, {lightgreen}, "{darkred}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
 	{
 		"#format"	"{1:i}"
 		"en"		"Round {1} of 3"
@@ -34,36 +34,36 @@
 		
 	}
 	
-	"war_next" //{default}, {darkred}, {green}, {lightgreen}, "{red}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
+	"war_next" //{default}, {darkred}, {green}, {lightgreen}, "{darkred}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
 	{
 		"#format"	""
-		"en"		"Next round is {red}war"
+		"en"		"Next round is {darkred}war"
 		
 	}
 	
 	
-	"war_start" //{default}, {darkred}, {green}, {lightgreen}, "{red}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
+	"war_start" //{default}, {darkred}, {green}, {lightgreen}, "{darkred}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
 	{
 		"#format"	""
 		"en"		"The War has started!"
 		
 	}
 	
-	"war_voted" //{default}, {darkred}, {green}, {lightgreen}, "{red}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
+	"war_voted" //{default}, {darkred}, {green}, {lightgreen}, "{darkred}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
 	{
 		"#format"	""
 		"en"		"You allready voted for war"
 		
 	}
 	
-	"war_progress"  //{default}, {darkred}, {green}, {lightgreen}, "{red}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
+	"war_progress"  //{default}, {darkred}, {green}, {lightgreen}, "{darkred}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
 	{
 		"#format"	""
 		"en"		"War is allready in progress"
 		
 	}
 	
-	"war_minct"//{default}, {darkred}, {green}, {lightgreen}, "{red}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
+	"war_minct"//{default}, {darkred}, {green}, {lightgreen}, "{darkred}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
 	{
 		"#format"	""
 		"en"		"For a war you need a least one CT"
@@ -71,7 +71,7 @@
 	}
 	
 	
-	"war_disabled"//{default}, {darkred}, {green}, {lightgreen}, "{red}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
+	"war_disabled"//{default}, {darkred}, {green}, {lightgreen}, "{darkred}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
 	{
 		"#format"	""
 		"en"		"War is disabled."
@@ -133,8 +133,8 @@
 	
 	"war_info_Line4"
 	{
-		"en"		"Alle normalen Jailregeln sind dabei aufgehoben!"
-		"de"		"Alle normalen Jailregeln sind dabei aufgehoben!"
+		"en"		"Alle normalen Jailregeln sind aufgehoben!"
+		"de"		"Alle normalen Jailregeln sind aufgehoben!"
 	}
 	
 	"war_info_Line5"
@@ -171,5 +171,11 @@
 	{
 		"en"		"last round"
 		"de"		"letzte war runde"
+	}
+	"war_wait"
+	{
+		"#format"	"{1:i}"
+		"en"		"you must wait {1} more rounds"
+		"de"		"Du musst noch {1} Runden warten"
 	}
 }

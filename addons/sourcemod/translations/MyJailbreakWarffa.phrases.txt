@@ -1,5 +1,10 @@
 "Phrases"
 {
+	"warffa_need"  //{default}, {darkred}, {green}, {lightgreen}, "{darkred}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
+	{
+		"en"		"votes left to {darkred}war"
+		"de"		"votes bis {darkred}krieg{default} beginnt"
+	}
 	"warffa_twin"
 	{
 		"#format"	""
@@ -17,14 +22,14 @@
 	"warffa_end"
 	{
 		"#format"	""
-		"en"		"battle royale ended"
+		"en"		"ffa ended"
 		
 	}
 	
 	"warffa_next"
 	{
 		"#format"	""
-		"en"		"Next round is battle royale"
+		"en"		"Next round is ffa"
 		
 	}
 	
@@ -32,27 +37,27 @@
 	"warffa_start"
 	{
 		"#format"	""
-		"en"		"The battle royale has started!"
+		"en"		"The ffa has started!"
 		
 	}
 	
 	"warffa_voted"{
 		"#format"	""
-		"en"		"You allready voted for battle royale"
+		"en"		"You allready voted for ffa"
 		
 	}
 	
 	"warffa_progress"
 	{
 		"#format"	""
-		"en"		"battle royale is allready in progress"
+		"en"		"ffa is allready in progress"
 		
 	}
 	
 	"warffa_minct"
 	{
 		"#format"	""
-		"en"		"For a battle royale you need a least one CT"
+		"en"		"For a ffa you need a least one CT"
 		
 	}
 	
@@ -60,7 +65,7 @@
 	"warffa_disabled"
 	{
 		"#format"	""
-		"en"		"battle royale is disabled."
+		"en"		"ffa is disabled."
 		
 	}
 	
@@ -69,6 +74,94 @@
 		"#format"	""
 		"en"		"seconds until damage enabled"
 		
+	}
+	"warffa_info_Title"
+	{
+		"en"		"FFA is activ"
+		"de"		"FFA ist aktiv"
+	}
+	
+	"warffa_info_Tele"
+	{
+		"en"		"Do not be surprised if ported in wk"
+		"de"		"Nicht wundern falls ihr in die wk geportet wurdet"
+	}
+	
+	"warffa_info_Spawn"
+	{
+		"en"		"Do not wonder if you spawn with weapon and the cells are open"
+		"de"		"Nicht wundern warum ihr mit waffe und offenen Zelle spawnt"
+	}
+	"warffa_info_TeleT"
+	{
+		"en"		"Do not be surprised if teleportet to weaponcamber"
+		"de"		"Nicht wundern weil du in die waffenkammer geportet wurdest"
+	}
+	
+	"warffa_info_SpawnT"
+	{
+		"en"		"Do not wonder if you spawn in the open cell"
+		"de"		"Nicht wundern warum ihr in der offenen Zelle spawnt"
+	}
+	
+	"warffa_info_Line2"
+	{
+		"en"		"In warround ct play against t"
+		"de"		"In Kriegrunden spielen CT's gegen T's"
+	}
+	
+	"warffa_info_Line3"
+	{
+		"en"		"Während der no damge phase kannst du aus der zelle/waffenkammer"
+		"de"		"Während der no damge phase kannst du aus der zelle/waffenkammer"
+	}
+	
+	"warffa_info_Line4"
+	{
+		"en"		"Alle normalen Jailregeln sind aufgehoben!"
+		"de"		"Alle normalen Jailregeln sind aufgehoben!"
+	}
+	
+	"warffa_info_Line5"
+	{
+		"en"		"There is no last request!"
+		"de"		"Der letzte Terrorist hat keinen Wunsch!"
+	}
+	
+	"warffa_info_Line6"
+	{
+		"en"		"Jeder darf überall hin wo er will!"
+		"de"		"Jeder darf überall hin wo er will!"
+	}
+	
+	"warffa_info_Line7"
+	{
+		"en"		"bau keine scheisse!"
+		"de"		"bau keine scheisse!"
+	}
+		
+	"RoundOne"
+	{
+		"en"		"Round 1 of 3"
+		"de"		"Runde 1 von 3"
+	}
+		
+	"RoundTwo"
+	{
+		"en"		"Round 2 of 3"
+		"de"		"Runde 2 von 3"
+	}
+		
+	"RoundThree"
+	{
+		"en"		"last ffa round"
+		"de"		"letzte ffa runde"
+	}
+		"warffa_wait"
+	{
+		"#format"	"{1:i}"
+		"en"		"you must wait {1} more rounds"
+		"de"		"Du musst noch {1} Runden warten"
 	}
 
 }

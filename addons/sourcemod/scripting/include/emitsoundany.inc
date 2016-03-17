@@ -168,7 +168,7 @@ stock EmitSoundToAllAny(const String:sample[],
 	origin, dir, updatePos, soundtime);
 }
 
-stock EmitAmbientSoundAny(const String:name[],
+stock EmitAmbientSoundAny(const String:sample[],
 						const Float:pos[3],
 						entity = SOUND_FROM_WORLD,
 						level = SNDLEVEL_NORMAL,

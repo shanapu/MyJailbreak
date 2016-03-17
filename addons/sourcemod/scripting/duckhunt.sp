@@ -1,6 +1,7 @@
 //includes
 #include <cstrike>
 #include <sourcemod>
+#include <colors>
 #include <sdktools>
 #include <smartjaildoors>
 #include <sdkhooks>
@@ -8,7 +9,7 @@
 //Compiler Options
 #pragma semicolon 1
 
-#define PLUGIN_VERSION   "0.1"
+#define PLUGIN_VERSION   "0.x"
 
 
 new preparetime;
@@ -17,7 +18,6 @@ new roundtimenormal;
 new votecount;
 new DuckHuntRound;
 new RoundLimits;
-new m_flNextSecondaryAttack;
 
 new Handle:LimitTimer;
 new Handle:DuckHuntTimer;
@@ -59,7 +59,7 @@ public OnPluginStart()
 	
 	CreateConVar("sm_duckhunt_version", "PLUGIN_VERSION", "The version of the SourceMod plugin MyJailBreak - War", FCVAR_PLUGIN|FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	g_wenabled = CreateConVar("sm_duckhunt_enable", "1", "0 - disabled, 1 - enable war");
-	g_duckhuntprefix = CreateConVar("sm_duckhunt_prefix", "war", "Insert your Jailprefix. shown in braces [war]");
+	g_duckhuntprefix = CreateConVar("sm_duckhunt_prefix", "[{green}duckhunt{default}]", "Insert your Jailprefix. shown in braces [war]");
 	g_duckhuntcmd = CreateConVar("sm_duckhunt_cmd", "!entenjagd", "Insert your 2nd chat trigger. !war still enabled");
 	roundtimec = CreateConVar("sm_duckhunt_roundtime", "5", "Round time for a single war round");
 	roundtimenormalc = CreateConVar("sm_noduckhunt_roundtime", "12", "set round time after a war round zour normal mp_roudntime");
@@ -90,9 +90,6 @@ public OnPluginStart()
 	PrecacheModel("models/chicken/chicken.mdl", true);
 	PrecacheModel("models/player/custom_player/legacy/tm_phoenix_heavy.mdl", true);
 
-
-	
-	m_flNextSecondaryAttack = FindSendPropOffs("CBaseCombatWeapon", "m_flNextSecondaryAttack");
 }
 
 
@@ -146,8 +143,10 @@ public RoundEnd(Handle:event, String:name[], bool:dontBroadcast)
 		Format(voted, sizeof(voted), "");
 		SetCvar("sm_hosties_lr", 1);
 		SetCvar("sm_war_enable", 1);
+		SetCvar("sm_noscope_enable", 1);
 		SetCvar("dice_enable", 1);
 		SetCvar("sm_zombie_enable", 1);
+		SetCvar("sm_catch_enable", 1);
 		SetCvar("sm_hide_enable", 1);
 		SetCvar("sm_warffa_enable", 1);
 		SetCvar("sm_beacon_enabled", 0);
@@ -156,7 +155,7 @@ public RoundEnd(Handle:event, String:name[], bool:dontBroadcast)
 		SetCvar("mp_roundtime", roundtimenormal);
 		SetCvar("mp_roundtime_hostage", roundtimenormal);
 		SetCvar("mp_roundtime_defuse", roundtimenormal);
-		PrintToChatAll("[%s] %t", g_wduckhuntprefix, "duckhunt_end");
+		CPrintToChatAll("%s %t", g_wduckhuntprefix, "duckhunt_end");
 		
 	}
 	if (StartDuckHunt)
@@ -166,8 +165,6 @@ public RoundEnd(Handle:event, String:name[], bool:dontBroadcast)
 	SetCvar("mp_roundtime_defuse", roundtime);
 	}
 	
-	for(new i = 1; i <= MaxClients; i++)
-	if(IsClientInGame(i)) SDKUnhook(i, SDKHook_PreThink, OnPreThink);
 }
 
 public Action SetDuckHunt(int client,int args)
@@ -177,14 +174,13 @@ public Action SetDuckHunt(int client,int args)
 	StartDuckHunt = true;
 	RoundLimits = GetConVarInt(RoundLimitsc);
 	votecount = 0;
-	PrintToChatAll("[%s] %t", g_wduckhuntprefix, "duckhunt_next");
+	CPrintToChatAll("%s %t", g_wduckhuntprefix, "duckhunt_next");
 	}
 }
 
 public OnClientPutInServer(client)
 {
 	SDKHook(client, SDKHook_WeaponCanUse, OnWeaponCanUse);
-	SDKHook(client, SDKHook_PreThink, OnPreThink);
 }
 
 public Action:OnWeaponCanUse(client, weapon)
@@ -195,55 +191,31 @@ public Action:OnWeaponCanUse(client, weapon)
 		decl String:sWeapon[32];
 		GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
 
-		if(!StrEqual(sWeapon, "weapon_awp") && !StrEqual(sWeapon, "weapon_knife"))
+		if(StrEqual(sWeapon, "weapon_hegrenade") || StrEqual(sWeapon, "weapon_knife") || (GetClientTeam(client) == 3 && StrEqual(sWeapon, "weapon_nova")))
 		{
 		
 			if (IsClientInGame(client) && IsPlayerAlive(client))
 			{
-			return Plugin_Handled;
+			return Plugin_Continue;
 			}
 		}
-
+		return Plugin_Handled;
 		}
 		return Plugin_Continue;
 }
 
-public Action:OnPreThink(client)
-{
-	new iWeapon = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
-	SetNoScope(iWeapon);
-	return Plugin_Continue;
-}
 
-stock SetNoScope(weapon)
-{
-	if(IsValidEdict(weapon))
-	{
-		decl String:classname[MAX_NAME_LENGTH];
 
-		if (GetEdictClassname(weapon, classname, sizeof(classname))
-		|| StrEqual(classname[7], "ssg08")  || StrEqual(classname[7], "aug")
-		|| StrEqual(classname[7], "sg550")  || StrEqual(classname[7], "sg552")
-		|| StrEqual(classname[7], "sg556")  || StrEqual(classname[7], "awp")
-		|| StrEqual(classname[7], "scar20") || StrEqual(classname[7], "g3sg1"))
-		{
-			SetEntDataFloat(weapon, m_flNextSecondaryAttack, GetGameTime() + 1.0);
-		}
-	}
-}
 
 public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 {
 	if (StartDuckHunt)
 	{
+		decl String:info1[255], String:info2[255], String:info3[255], String:info4[255], String:info5[255], String:info6[255], String:info7[255], String:info8[255];
 		
 		SetCvar("sm_hosties_lr", 0);
-		SetCvar("sm_war_enable", 0);
-		SetCvar("sm_zombie_enable", 0);
-		SetCvar("sm_warffa_enable", 0);
-		SetCvar("sm_beacon_enabled", 1);
 		SetCvar("sm_warden_enable", 0);
-		SetCvar("sm_hide_enable", 0);
+		SetCvar("sm_beacon_enabled", 1);
 		SetCvar("dice_enable", 0);
 		SetCvar("sv_infinite_ammo", 1);
 		IsDuckHunt = true;
@@ -251,17 +223,24 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 		StartDuckHunt = false;
 		
 		DuckHuntMenu = CreatePanel();
-		DrawPanelText(DuckHuntMenu, "Wir spielen eine DuckHunt Round!");
-
-		DrawPanelText(DuckHuntMenu, "Die Terrors sind hühnchen ");
+		Format(info1, sizeof(info1), "%T", "duckhunt_info_Title", LANG_SERVER);
+		SetPanelTitle(DuckHuntMenu, info1);
+		DrawPanelText(DuckHuntMenu, "                                   ");
+		Format(info2, sizeof(info2), "%T", "duckhunt_info_Line1", LANG_SERVER);
+		DrawPanelText(DuckHuntMenu, info2);
 		DrawPanelText(DuckHuntMenu, "-----------------------------------");
-		DrawPanelText(DuckHuntMenu, "Die Counter haben noscope awp");
-		DrawPanelText(DuckHuntMenu, "								   ");
-		DrawPanelText(DuckHuntMenu, "- In der Waffenstillstandsphase darf man schon aus der Waffenkammer!");
-		DrawPanelText(DuckHuntMenu, "- Alle normalen Jailregeln sind dabei aufgehoben!");
-		DrawPanelText(DuckHuntMenu, "- Buchstaben-, Yard- und Waffenkammercampen ist verboten!");
-		DrawPanelText(DuckHuntMenu, "- Der letzte Terrorist hat keinen Wunsch!");
-		DrawPanelText(DuckHuntMenu, "- Jeder darf überall hin wo er will!");
+		Format(info3, sizeof(info3), "%T", "duckhunt_info_Line2", LANG_SERVER);
+		DrawPanelText(DuckHuntMenu, info3);
+		Format(info4, sizeof(info4), "%T", "duckhunt_info_Line3", LANG_SERVER);
+		DrawPanelText(DuckHuntMenu, info4);
+		Format(info5, sizeof(info5), "%T", "duckhunt_info_Line4", LANG_SERVER);
+		DrawPanelText(DuckHuntMenu, info5);
+		Format(info6, sizeof(info6), "%T", "duckhunt_info_Line5", LANG_SERVER);
+		DrawPanelText(DuckHuntMenu, info6);
+		Format(info7, sizeof(info7), "%T", "duckhunt_info_Line6", LANG_SERVER);
+		DrawPanelText(DuckHuntMenu, info7);
+		Format(info8, sizeof(info8), "%T", "duckhunt_info_Line7", LANG_SERVER);
+		DrawPanelText(DuckHuntMenu, info8);
 		DrawPanelText(DuckHuntMenu, "-----------------------------------");
 		
 		if (DuckHuntRound > 0)
@@ -275,13 +254,14 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 						{
 						SetEntityModel(client, "models/player/custom_player/legacy/tm_phoenix_heavy.mdl");
 						SetEntityHealth(client, 600);
-						GivePlayerItem(client, "weapon_awp");
+						GivePlayerItem(client, "weapon_nova");
 						}
 						if (GetClientTeam(client) == 2)
 						{
 						SetEntityModel(client, "models/chicken/chicken.mdl");
 						SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.2);
 						SetEntityGravity(client, 0.3);
+						SetEntityHealth(client, 150);
 						GivePlayerItem(client, "weapon_hegrenade");
 						}
 					}
@@ -295,8 +275,6 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 				preparetime--;
 				DuckHuntTimer = CreateTimer(1.0, DuckHunt, _, TIMER_REPEAT);
 			}
-		for(new i = 1; i <= MaxClients; i++)
-		if(IsClientInGame(i)) SDKHook(i, SDKHook_PreThink, OnPreThink);
 	}
 }
 
@@ -336,13 +314,13 @@ public Action:DuckHunt(Handle:timer)
 				}
 			if (GetClientTeam(client) == 3)
 				{
-				SetEntProp(client, Prop_Data, "m_takedamage", 1, 1);
+				SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
 				}
 			}
 		}
 	}
 	PrintCenterTextAll("%t", "duckhunt_start");
-	PrintToChatAll("[%s] %t", g_wduckhuntprefix, "duckhunt_start");
+	CPrintToChatAll("%s %t", g_wduckhuntprefix, "duckhunt_start");
 	SJD_OpenDoors();
 
 
@@ -386,23 +364,29 @@ public PlayerSay(Handle:event, String:name[], bool:dontBroadcast)
 						{
 							StartDuckHunt = true;
 							
+							SetCvar("sm_war_enable", 0);
+							SetCvar("sm_zombie_enable", 0);
+							SetCvar("sm_warffa_enable", 0);
+							SetCvar("sm_hide_enable", 0);
+							SetCvar("sm_catch_enable", 0);
+							SetCvar("sm_noscope_enable", 0);
 							RoundLimits = GetConVarInt(RoundLimitsc);
 							votecount = 0;
 							
-							PrintToChatAll("[%s] %t", g_wduckhuntprefix, "duckhunt_next");
+							CPrintToChatAll("%s %t", g_wduckhuntprefix, "duckhunt_next");
 						}
-						else PrintToChatAll("[%s] %i Votes bis Krieg beginnt", g_wduckhuntprefix, Missing);
+						else CPrintToChatAll("%s %t", g_wduckhuntprefix, "duckhunt_need", Missing);
 						
 					}
-					else PrintToChat(client, "[%s] %t", g_wduckhuntprefix, "duckhunt_voted");
+					else CPrintToChat(client, "%s %t", g_wduckhuntprefix, "duckhunt_voted");
 				}
-				else PrintToChat(client, "[%s] %t", g_wduckhuntprefix, "duckhunt_progress");
+				else CPrintToChat(client, "%s %t", g_wduckhuntprefix, "duckhunt_progress");
 			}
-			else PrintToChat(client, "[%s] Du musst noch %i Runden warten", g_wduckhuntprefix, RoundLimits);
+			else CPrintToChat(client, "%s %t", g_wduckhuntprefix, "duckhunt_wait", RoundLimits);
 		}
-		else PrintToChat(client, "[%s] %t", g_wduckhuntprefix, "duckhunt_minct");
+		else CPrintToChat(client, "%s %t", g_wduckhuntprefix, "duckhunt_minct");
 	}
-	else PrintToChat(client, "[%s] %t", g_wduckhuntprefix, "duckhunt_disabled");
+	else CPrintToChat(client, "%s %t", g_wduckhuntprefix, "duckhunt_disabled");
 	}
 }
 

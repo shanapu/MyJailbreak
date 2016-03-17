@@ -1,13 +1,14 @@
 //includes
 #include <cstrike>
 #include <sourcemod>
+#include <colors>
 #include <sdktools>
 #include <smartjaildoors>
 
 //Compiler Options
 #pragma semicolon 1
 
-#define PLUGIN_VERSION   "0.1"
+#define PLUGIN_VERSION   "0.x"
 
 new freezetime;
 new roundtime;
@@ -61,14 +62,13 @@ public OnPluginStart()
 	
 	CreateConVar("sm_hide_version", "PLUGIN_VERSION", "The version of the SourceMod plugin MyJailBreak - War", FCVAR_PLUGIN|FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	g_wenabled = CreateConVar("sm_hide_enable", "1", "0 - disabled, 1 - enable war");
-	g_hideprefix = CreateConVar("sm_hide_prefix", "war", "Insert your Jailprefix. shown in braces [war]");
+	g_hideprefix = CreateConVar("sm_hide_prefix", "[{green}hide{default}]", "Insert your Jailprefix. shown in braces [war]");
 	g_hidecmd = CreateConVar("sm_hide_cmd", "!verstecken", "Insert your 2nd chat trigger. !war still enabled");
 	roundtimec = CreateConVar("sm_hide_roundtime", "8", "Round time for a single war round");
 	roundtimenormalc = CreateConVar("sm_nohide_roundtime", "12", "set round time after a war round zour normal mp_roudntime");
 	freezetimec = CreateConVar("sm_hide_freezetime", "30", "Time freeze T");
 	RoundLimitsc = CreateConVar("sm_hide_roundsnext", "3", "Runden nach Krieg oder Mapstart bis Krieg gestartet werden kann");
 	
-
 	GetConVarString(g_hideprefix, g_whideprefix, sizeof(g_whideprefix));
 	GetConVarString(g_hidecmd, g_whidecmd, sizeof(g_whidecmd));
 	
@@ -151,12 +151,15 @@ public RoundEnd(Handle:event, String:name[], bool:dontBroadcast)
 		SetCvar("sm_war_enable", 1);
 		SetCvar("sm_zombie_enable", 1);
 		SetCvar("sm_warffa_enable", 1);
+		SetCvar("sm_noscope_enable", 1);
+		SetCvar("sm_duckhunt_enable", 1);
+		SetCvar("sm_catch_enable", 1);
 		SetCvar("sm_warden_enable", 1);
 		SetCvar("dice_enable", 1);
 		SetCvar("mp_roundtime", roundtimenormal);
 		SetCvar("mp_roundtime_hostage", roundtimenormal);
 		SetCvar("mp_roundtime_defuse", roundtimenormal);
-		PrintToChatAll("[%s] %t", g_whideprefix, "hide_end");
+		CPrintToChatAll("%s %t", g_whideprefix, "hide_end");
 		DoFog();
 		AcceptEntityInput(FogIndex, "TurnOff");
 	}
@@ -175,7 +178,7 @@ public Action SetHide(int client,int args)
 	StartHide = true;
 	RoundLimits = GetConVarInt(RoundLimitsc);
 	votecount = 0;
-	PrintToChatAll("[%s] %t", g_whideprefix, "hide_next");
+	CPrintToChatAll("%s %t", g_whideprefix, "hide_next");
 	}
 }
 
@@ -183,12 +186,10 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 {
 	if (StartHide)
 	{
+		decl String:info1[255], String:info2[255], String:info3[255], String:info4[255], String:info5[255], String:info6[255], String:info7[255], String:info8[255];
 		
 		SetCvar("sm_hosties_lr", 0);
-		SetCvar("sm_war_enable", 0);
-		SetCvar("sm_warffa_enable", 0);
 		SetCvar("sm_warden_enable", 0);
-		SetCvar("sm_zombie_enable", 0);
 		SetCvar("dice_enable", 0);
 		IsHide = true;
 		HideRound++;
@@ -196,17 +197,24 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 		SJD_OpenDoors();
 
 		HideMenu = CreatePanel();
-		DrawPanelText(HideMenu, "Wir spielen Verstecken im Dunkeln!");
-
-		DrawPanelText(HideMenu, "Die Terrors verstecken sich ");
+		Format(info1, sizeof(info1), "%T", "hide_info_Title", LANG_SERVER);
+		SetPanelTitle(HideMenu, info1);
+		DrawPanelText(HideMenu, "                                   ");
+		Format(info2, sizeof(info2), "%T", "hide_info_Line1", LANG_SERVER);
+		DrawPanelText(HideMenu, info2);
 		DrawPanelText(HideMenu, "-----------------------------------");
-		DrawPanelText(HideMenu, "Die Counter suchen die Terrors");
-		DrawPanelText(HideMenu, "								   ");
-		DrawPanelText(HideMenu, "- In der Waffenstillstandsphase darf man schon aus der Waffenkammer!");
-		DrawPanelText(HideMenu, "- Alle normalen Jailregeln sind dabei aufgehoben!");
-		DrawPanelText(HideMenu, "- Buchstaben-, Yard- und Waffenkammercampen ist verboten!");
-		DrawPanelText(HideMenu, "- Der letzte Terrorist hat keinen Wunsch!");
-		DrawPanelText(HideMenu, "- Jeder darf überall hin wo er will!");
+		Format(info3, sizeof(info3), "%T", "hide_info_Line2", LANG_SERVER);
+		DrawPanelText(HideMenu, info3);
+		Format(info4, sizeof(info4), "%T", "hide_info_Line3", LANG_SERVER);
+		DrawPanelText(HideMenu, info4);
+		Format(info5, sizeof(info5), "%T", "hide_info_Line4", LANG_SERVER);
+		DrawPanelText(HideMenu, info5);
+		Format(info6, sizeof(info6), "%T", "hide_info_Line5", LANG_SERVER);
+		DrawPanelText(HideMenu, info6);
+		Format(info7, sizeof(info7), "%T", "hide_info_Line6", LANG_SERVER);
+		DrawPanelText(HideMenu, info7);
+		Format(info8, sizeof(info8), "%T", "hide_info_Line7", LANG_SERVER);
+		DrawPanelText(HideMenu, info8);
 		DrawPanelText(HideMenu, "-----------------------------------");
 		
 		if (HideRound > 0)
@@ -222,7 +230,7 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 						GivePlayerItem(client, "weapon_tagrenade");
 						}
 					}
-					PrintToChatAll("[%s] Terrors versteckt euch", g_whideprefix);
+					CPrintToChatAll("%s Terrors versteckt euch", g_whideprefix);
 					if (IsClientInGame(client))
 					{
 					SetEntData(client, FindSendPropOffs("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
@@ -286,7 +294,7 @@ public Action:Hide(Handle:timer)
 		}
 	}
 	PrintCenterTextAll("%t", "hide_start");
-	PrintToChatAll("[%s] %t", g_whideprefix, "hide_start");
+	CPrintToChatAll("%s %t", g_whideprefix, "hide_start");
 
 
 	
@@ -341,23 +349,30 @@ public PlayerSay(Handle:event, String:name[], bool:dontBroadcast)
 						{
 							StartHide = true;
 							
+							SetCvar("sm_war_enable", 0);
+							SetCvar("sm_warffa_enable", 0);
+							SetCvar("sm_zombie_enable", 0);
+							SetCvar("sm_duckhunt_enable", 0);
+							SetCvar("sm_catch_enable", 0);
+							SetCvar("sm_noscope_enable", 0);
+							
 							RoundLimits = GetConVarInt(RoundLimitsc);
 							votecount = 0;
 							
-							PrintToChatAll("[%s] %t", g_whideprefix, "hide_next");
+							CPrintToChatAll("%s %t", g_whideprefix, "hide_next");
 						}
-						else PrintToChatAll("[%s] %i Votes bis Krieg beginnt", g_whideprefix, Missing);
+						else CPrintToChatAll("%s %t", g_whideprefix, "hide_need", Missing);
 						
 					}
-					else PrintToChat(client, "[%s] %t", g_whideprefix, "hide_voted");
+					else CPrintToChat(client, "%s %t", g_whideprefix, "hide_voted");
 				}
-				else PrintToChat(client, "[%s] %t", g_whideprefix, "hide_progress");
+				else CPrintToChat(client, "%s %t", g_whideprefix, "hide_progress");
 			}
-			else PrintToChat(client, "[%s] Du musst noch %i Runden warten", g_whideprefix, RoundLimits);
+			else CPrintToChat(client, "%s %t", g_whideprefix, "hide_wait", RoundLimits);
 		}
-		else PrintToChat(client, "[%s] %t", g_whideprefix, "hide_minct");
+		else CPrintToChat(client, "%s %t", g_whideprefix, "hide_minct");
 	}
-	else PrintToChat(client, "[%s] %t", g_whideprefix, "hide_disabled");
+	else CPrintToChat(client, "%s %t", g_whideprefix, "hide_disabled");
 	}
 }
 

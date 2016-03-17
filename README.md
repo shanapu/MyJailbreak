@@ -1,18 +1,26 @@
 # MyJailbreak 
 
-## Jailbreak plugin meshup (patchwork?)
+## Jailbreak plugin mashup (or patchwork?)
 
 ### Plugins:
 
 #### Wardn
 
-Become Warden, Exit Warden, admin remove Warden, admin Set Warden, .... 
-
-##### Features:
-
 #### War
 
-##### Features:
+#### War - FFA
+
+#### War - Zombie
+
+#### War - Noscope
+
+#### War - catch
+
+#### War - Hide
+
+#### War - Duckhunt
+
+#### dice
 
 # Credits: 
 

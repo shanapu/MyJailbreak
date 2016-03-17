@@ -2,13 +2,14 @@
 #include <cstrike>
 #include <sourcemod>
 #include <sdktools>
+#include <colors>
 #include <smartjaildoors>
 #include <sdkhooks>
 
 //Compiler Options
 #pragma semicolon 1
 
-#define PLUGIN_VERSION   "0.1"
+#define PLUGIN_VERSION   "0.x"
 
 new freezetime;
 new roundtime;
@@ -57,14 +58,13 @@ public OnPluginStart()
 	
 	CreateConVar("sm_zombie_version", "PLUGIN_VERSION", "The version of the SourceMod plugin MyJailBreak - War", FCVAR_PLUGIN|FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	g_wenabled = CreateConVar("sm_zombie_enable", "1", "0 - disabled, 1 - enable war");
-	g_zombieprefix = CreateConVar("sm_zombie_prefix", "war", "Insert your Jailprefix. shown in braces [war]");
-	g_zombiecmd = CreateConVar("sm_zombie_cmd", "!verstecken", "Insert your 2nd chat trigger. !war still enabled");
+	g_zombieprefix = CreateConVar("sm_zombie_prefix", "[{green}zombie{default}]", "Insert your Jailprefix. shown in braces [war]");
+	g_zombiecmd = CreateConVar("sm_zombie_cmd", "!zomb", "Insert your 2nd chat trigger. !war still enabled");
 	roundtimec = CreateConVar("sm_zombie_roundtime", "5", "Round time for a single war round");
 	roundtimenormalc = CreateConVar("sm_nozombie_roundtime", "12", "set round time after a war round zour normal mp_roudntime");
 	freezetimec = CreateConVar("sm_zombie_freezetime", "35", "Time freeze zombies");
 	RoundLimitsc = CreateConVar("sm_zombie_roundsnext", "3", "Runden nach Krieg oder Mapstart bis Krieg gestartet werden kann");
 	
-
 	GetConVarString(g_zombieprefix, g_wzombieprefix, sizeof(g_wzombieprefix));
 	GetConVarString(g_zombiecmd, g_wzombiecmd, sizeof(g_wzombiecmd));
 	
@@ -133,7 +133,10 @@ public RoundEnd(Handle:event, String:name[], bool:dontBroadcast)
 		Format(voted, sizeof(voted), "");
 		SetCvar("sm_hosties_lr", 1);
 		SetCvar("sm_war_enable", 1);
+		SetCvar("sm_noscope_enable", 1);
 		SetCvar("sm_hide_enable", 1);
+		SetCvar("sm_duckhunt_enable", 1);
+		SetCvar("sm_catch_enable", 1);
 		SetCvar("dice_enable", 1);
 		SetCvar("sm_beacon_enabled", 0);
 		SetCvar("sv_infinite_ammo", 0);
@@ -142,7 +145,7 @@ public RoundEnd(Handle:event, String:name[], bool:dontBroadcast)
 		SetCvar("mp_roundtime", roundtimenormal);
 		SetCvar("mp_roundtime_hostage", roundtimenormal);
 		SetCvar("mp_roundtime_defuse", roundtimenormal);
-		PrintToChatAll("[%s] %t", g_wzombieprefix, "zombie_end");
+		CPrintToChatAll("%s %t", g_wzombieprefix, "zombie_end");
 	}
 	if (StartZombie)
 	{
@@ -159,7 +162,7 @@ public Action SetZombie(int client,int args)
 	StartZombie = true;
 	RoundLimits = GetConVarInt(RoundLimitsc);
 	votecount = 0;
-	PrintToChatAll("[%s] %t", g_wzombieprefix, "zombie_next");
+	CPrintToChatAll("%s %t", g_wzombieprefix, "zombie_next");
 	}
 }
 
@@ -194,13 +197,11 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 {
 	if (StartZombie)
 	{
+		decl String:info1[255], String:info2[255], String:info3[255], String:info4[255], String:info5[255], String:info6[255], String:info7[255], String:info8[255];
 		
 		SetCvar("sm_hosties_lr", 0);
-		SetCvar("sm_war_enable", 0);
-		SetCvar("sm_warffa_enable", 0);
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("sm_beacon_enabled", 1);
-		SetCvar("sm_hide_enable", 0);
 		SetCvar("sv_infinite_ammo", 1);
 		SetCvar("dice_enable", 0);
 		IsZombie = true;
@@ -209,17 +210,24 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 		SJD_OpenDoors();
 
 		ZombieMenu = CreatePanel();
-		DrawPanelText(ZombieMenu, "Wir spielen eine Zombie Round!");
-
-		DrawPanelText(ZombieMenu, "Die Terrors verstecken sich ");
+		Format(info1, sizeof(info1), "%T", "zombie_info_Title", LANG_SERVER);
+		SetPanelTitle(ZombieMenu, info1);
+		DrawPanelText(ZombieMenu, "                                   ");
+		Format(info2, sizeof(info2), "%T", "zombie_info_Line1", LANG_SERVER);
+		DrawPanelText(ZombieMenu, info2);
 		DrawPanelText(ZombieMenu, "-----------------------------------");
-		DrawPanelText(ZombieMenu, "Die Counter werden zu zombies");
-		DrawPanelText(ZombieMenu, "								   ");
-		DrawPanelText(ZombieMenu, "- In der Waffenstillstandsphase darf man schon aus der Waffenkammer!");
-		DrawPanelText(ZombieMenu, "- Alle normalen Jailregeln sind dabei aufgehoben!");
-		DrawPanelText(ZombieMenu, "- Buchstaben-, Yard- und Waffenkammercampen ist verboten!");
-		DrawPanelText(ZombieMenu, "- Der letzte Terrorist hat keinen Wunsch!");
-		DrawPanelText(ZombieMenu, "- Jeder darf überall hin wo er will!");
+		Format(info3, sizeof(info3), "%T", "zombie_info_Line2", LANG_SERVER);
+		DrawPanelText(ZombieMenu, info3);
+		Format(info4, sizeof(info4), "%T", "zombie_info_Line3", LANG_SERVER);
+		DrawPanelText(ZombieMenu, info4);
+		Format(info5, sizeof(info5), "%T", "zombie_info_Line4", LANG_SERVER);
+		DrawPanelText(ZombieMenu, info5);
+		Format(info6, sizeof(info6), "%T", "zombie_info_Line5", LANG_SERVER);
+		DrawPanelText(ZombieMenu, info6);
+		Format(info7, sizeof(info7), "%T", "zombie_info_Line6", LANG_SERVER);
+		DrawPanelText(ZombieMenu, info7);
+		Format(info8, sizeof(info8), "%T", "zombie_info_Line7", LANG_SERVER);
+		DrawPanelText(ZombieMenu, info8);
 		DrawPanelText(ZombieMenu, "-----------------------------------");
 		
 		if (ZombieRound > 0)
@@ -243,7 +251,7 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 						GivePlayerItem(client, "weapon_hegrenade");
 						}
 					}
-					PrintToChatAll("[%s] Versteckt euch die Zombies kommen", g_wzombieprefix);
+					CPrintToChatAll("%s Versteckt euch die Zombies kommen", g_wzombieprefix);
 					if (IsClientInGame(client))
 					{
 					SetEntData(client, FindSendPropOffs("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
@@ -299,11 +307,8 @@ public Action:Zombie(Handle:timer)
 			}
 		}
 	}
-
 	PrintCenterTextAll("%t", "zombie_start");
-	PrintToChatAll("[%s] %t", g_wzombieprefix, "zombie_start");
-
-
+	CPrintToChatAll("%s %t", g_wzombieprefix, "zombie_start");
 	
 	ZombieTimer = INVALID_HANDLE;
 	
@@ -344,23 +349,30 @@ public PlayerSay(Handle:event, String:name[], bool:dontBroadcast)
 						{
 							StartZombie = true;
 							
+							SetCvar("sm_hide_enable", 0);
+							SetCvar("sm_warffa_enable", 0);
+							SetCvar("sm_war_enable", 0);
+							SetCvar("sm_duckhunt_enable", 0);
+							SetCvar("sm_catch_enable", 0);
+							SetCvar("sm_noscope_enable", 0);
+							
 							RoundLimits = GetConVarInt(RoundLimitsc);
 							votecount = 0;
 							
-							PrintToChatAll("[%s] %t", g_wzombieprefix, "zombie_next");
+							CPrintToChatAll("%s %t", g_wzombieprefix, "zombie_next");
 						}
-						else PrintToChatAll("[%s] %i Votes bis Krieg beginnt", g_wzombieprefix, Missing);
+						else CPrintToChatAll("%s %t", g_wzombieprefix, "zombie_need", Missing);
 						
 					}
-					else PrintToChat(client, "[%s] %t", g_wzombieprefix, "zombie_voted");
+					else CPrintToChat(client, "%s %t", g_wzombieprefix, "zombie_voted");
 				}
-				else PrintToChat(client, "[%s] %t", g_wzombieprefix, "zombie_progress");
+				else CPrintToChat(client, "%s %t", g_wzombieprefix, "zombie_progress");
 			}
-			else PrintToChat(client, "[%s] Du musst noch %i Runden warten", g_wzombieprefix, RoundLimits);
+			else CPrintToChat(client, "%s %t", g_wzombieprefix, "zombie_wait", RoundLimits);
 		}
-		else PrintToChat(client, "[%s] %t", g_wzombieprefix, "zombie_minct");
+		else CPrintToChat(client, "%s %t", g_wzombieprefix, "zombie_minct");
 	}
-	else PrintToChat(client, "[%s] %t", g_wzombieprefix, "zombie_disabled");
+	else CPrintToChat(client, "%s %t", g_wzombieprefix, "zombie_disabled");
 	}
 }
 

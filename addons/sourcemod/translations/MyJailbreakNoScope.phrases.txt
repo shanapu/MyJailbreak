@@ -1,134 +1,134 @@
 "Phrases"
 {
-	"duckhunt_need"  //{default}, {darkred}, {green}, {lightgreen}, "{darkred}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
+	"noscope_need"  //{default}, {darkred}, {green}, {lightgreen}, "{darkred}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
 	{
 		"en"		"votes left to {darkred}war"
 		"de"		"votes bis {darkred}krieg{default} beginnt"
 	}
-	"duckhunt_twin"
+	"noscope_twin"
 	{
 		"#format"	""
 		"en"		"Terroist surived"
 		
 	}
 	
-	"duckhunt_ctwin"
+	"noscope_ctwin"
 	{
 		"#format"	""
 		"en"		"all ducks got hunted"
 		
 	}
 	
-	"duckhunt_end"
+	"noscope_end"
 	{
 		"#format"	""
-		"en"		"duckhunt ended"
+		"en"		"noscope ended"
 		
 	}
 	
-	"duckhunt_next"
+	"noscope_next"
 	{
 		"#format"	""
-		"en"		"Next round is duckhunt"
+		"en"		"Next round is noscope"
 		
 	}
 	
 	
-	"duckhunt_start"
+	"noscope_start"
 	{
 		"#format"	""
-		"en"		"The duckhunt has started!"
+		"en"		"The noscope has started!"
 		
 	}
 	
-	"duckhunt_voted"{
+	"noscope_voted"{
 		"#format"	""
-		"en"		"You allready voted for duckhunt"
+		"en"		"You allready voted for noscope"
 		
 	}
 	
-	"duckhunt_progress"
+	"noscope_progress"
 	{
 		"#format"	""
-		"en"		"duckhunt is allready in progress"
+		"en"		"noscope is allready in progress"
 		
 	}
 	
-	"duckhunt_minct"
+	"noscope_minct"
 	{
 		"#format"	""
-		"en"		"For a duckhunt you need a least one CT"
+		"en"		"For a noscope you need a least one CT"
 		
 	}
 	
 	
-	"duckhunt_disabled"
+	"noscope_disabled"
 	{
 		"#format"	""
-		"en"		"duckhunt is disabled."
+		"en"		"noscope is disabled."
 		
 	}
 	
-	"duckhunt_damage"
+	"noscope_damage"
 	{
 		"#format"	""
 		"en"		"seconds until cells open and the hunt begin"
 		
 	}
-	"duckhunt_timetounfreeze"
+	"noscope_timetounfreeze"
 	{
 		"#format"	""
 		"en"		"seconds until start"
 		
 	}
 	
-	"duckhunt_info_Title"
+	"noscope_info_Title"
 	{
 		"en"		"FFA is activ"
 		"de"		"FFA ist aktiv"
 	}
 	
-	"duckhunt_info_Line1"
+	"noscope_info_Line1"
 	{
 		"en"		"Do not be surprised if ported in wk"
 		"de"		"Nicht wundern falls ihr in die wk geportet wurdet"
 	}
-	"duckhunt_info_Line2"
+	"noscope_info_Line2"
 	{
 		"en"		"In warround ct play against t"
 		"de"		"In Kriegrunden spielen CT's gegen T's"
 	}
 	
-	"duckhunt_info_Line3"
+	"noscope_info_Line3"
 	{
 		"en"		"Während der no damge phase kannst du aus der zelle/waffenkammer"
 		"de"		"Während der no damge phase kannst du aus der zelle/waffenkammer"
 	}
 	
-	"duckhunt_info_Line4"
+	"noscope_info_Line4"
 	{
 		"en"		"Alle normalen Jailregeln sind aufgehoben!"
 		"de"		"Alle normalen Jailregeln sind aufgehoben!"
 	}
 	
-	"duckhunt_info_Line5"
+	"noscope_info_Line5"
 	{
 		"en"		"There is no last request!"
 		"de"		"Der letzte Terrorist hat keinen Wunsch!"
 	}
 	
-	"duckhunt_info_Line6"
+	"noscope_info_Line6"
 	{
 		"en"		"Jeder darf überall hin wo er will!"
 		"de"		"Jeder darf überall hin wo er will!"
 	}
 	
-	"duckhunt_info_Line7"
+	"noscope_info_Line7"
 	{
 		"en"		"bau keine scheisse!"
 		"de"		"bau keine scheisse!"
 	}
-		"duckhunt_wait"
+		"noscope_wait"
 	{
 		"#format"	"{1:i}"
 		"en"		"you must wait {1} more rounds"
