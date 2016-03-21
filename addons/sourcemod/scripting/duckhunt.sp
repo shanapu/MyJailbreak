@@ -11,6 +11,7 @@
 
 #define PLUGIN_VERSION   "0.x"
 
+ConVar gc_bTagEnabled;
 
 new preparetime;
 new roundtime;
@@ -28,16 +29,13 @@ new Handle:roundtimenormalc;
 new Handle:preparetimec;
 new Handle:RoundLimitsc;
 new Handle:g_wenabled=INVALID_HANDLE;
-new Handle:g_duckhuntprefix=INVALID_HANDLE;
-new Handle:g_duckhuntcmd=INVALID_HANDLE;
 new Handle:cvar;
 
 new bool:IsDuckHunt;
 new bool:StartDuckHunt;
 
 new String:voted[1500];
-new String:g_wduckhuntprefix[64];
-char g_wduckhuntcmd[64];
+
 
 
 public Plugin myinfo = {
@@ -59,17 +57,13 @@ public OnPluginStart()
 	
 	CreateConVar("sm_duckhunt_version", "PLUGIN_VERSION", "The version of the SourceMod plugin MyJailBreak - War", FCVAR_PLUGIN|FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	g_wenabled = CreateConVar("sm_duckhunt_enable", "1", "0 - disabled, 1 - enable war");
-	g_duckhuntprefix = CreateConVar("sm_duckhunt_prefix", "[{green}duckhunt{default}]", "Insert your Jailprefix. shown in braces [war]");
-	g_duckhuntcmd = CreateConVar("sm_duckhunt_cmd", "!entenjagd", "Insert your 2nd chat trigger. !war still enabled");
 	roundtimec = CreateConVar("sm_duckhunt_roundtime", "5", "Round time for a single war round");
 	roundtimenormalc = CreateConVar("sm_noduckhunt_roundtime", "12", "set round time after a war round zour normal mp_roudntime");
 	preparetimec = CreateConVar("sm_duckhunt_preparetime", "15", "Time freeze duckhunts");
 	RoundLimitsc = CreateConVar("sm_duckhunt_roundsnext", "3", "Runden nach Krieg oder Mapstart bis Krieg gestartet werden kann");
-	
+	gc_bTagEnabled = CreateConVar("sm_duckhunt_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 
-	GetConVarString(g_duckhuntprefix, g_wduckhuntprefix, sizeof(g_wduckhuntprefix));
-	GetConVarString(g_duckhuntcmd, g_wduckhuntcmd, sizeof(g_wduckhuntcmd));
-	
+
 	AutoExecConfig(true, "MyJailbreak_DuckHunt");
 	
 	IsDuckHunt = false;
@@ -115,6 +109,18 @@ public OnConfigsExecuted()
 	roundtimenormal = GetConVarInt(roundtimenormalc);
 	preparetime = GetConVarInt(preparetimec);
 	RoundLimits = 0;
+	
+	if (gc_bTagEnabled.BoolValue)
+	{
+		ConVar hTags = FindConVar("sv_tags");
+		char sTags[128];
+		hTags.GetString(sTags, sizeof(sTags));
+		if (StrContains(sTags, "MyJailbreak", false) == -1)
+		{
+			StrCat(sTags, sizeof(sTags), ", MyJailbreak");
+			hTags.SetString(sTags);
+		}
+	}
 }
 
 public RoundEnd(Handle:event, String:name[], bool:dontBroadcast)
@@ -148,14 +154,14 @@ public RoundEnd(Handle:event, String:name[], bool:dontBroadcast)
 		SetCvar("sm_zombie_enable", 1);
 		SetCvar("sm_catch_enable", 1);
 		SetCvar("sm_hide_enable", 1);
-		SetCvar("sm_warffa_enable", 1);
+		SetCvar("sm_ffa_enable", 1);
 		SetCvar("sm_beacon_enabled", 0);
 		SetCvar("sv_infinite_ammo", 0);
 		SetCvar("sm_warden_enable", 1);
 		SetCvar("mp_roundtime", roundtimenormal);
 		SetCvar("mp_roundtime_hostage", roundtimenormal);
 		SetCvar("mp_roundtime_defuse", roundtimenormal);
-		CPrintToChatAll("%s %t", g_wduckhuntprefix, "duckhunt_end");
+		CPrintToChatAll("%t %t", "duckhunt_tag" , "duckhunt_end");
 		
 	}
 	if (StartDuckHunt)
@@ -174,7 +180,7 @@ public Action SetDuckHunt(int client,int args)
 	StartDuckHunt = true;
 	RoundLimits = GetConVarInt(RoundLimitsc);
 	votecount = 0;
-	CPrintToChatAll("%s %t", g_wduckhuntprefix, "duckhunt_next");
+	CPrintToChatAll("%t %t", "duckhunt_tag" , "duckhunt_next");
 	}
 }
 
@@ -320,7 +326,7 @@ public Action:DuckHunt(Handle:timer)
 		}
 	}
 	PrintCenterTextAll("%t", "duckhunt_start");
-	CPrintToChatAll("%s %t", g_wduckhuntprefix, "duckhunt_start");
+	CPrintToChatAll("%t %t", "duckhunt_tag" , "duckhunt_start");
 	SJD_OpenDoors();
 
 
@@ -340,7 +346,7 @@ public PlayerSay(Handle:event, String:name[], bool:dontBroadcast)
 	GetClientAuthString(client, steamid, sizeof(steamid));
 	GetEventString(event, "text", text, sizeof(text));
 	
-	if (StrEqual(text, g_wduckhuntcmd) || StrEqual(text, "!duckhunt"))
+	if (StrEqual(text, "!entenjagd") || StrEqual(text, "!duckhunt"))
 	{
 	if(GetConVarInt(g_wenabled) == 1)
 	{	
@@ -366,27 +372,27 @@ public PlayerSay(Handle:event, String:name[], bool:dontBroadcast)
 							
 							SetCvar("sm_war_enable", 0);
 							SetCvar("sm_zombie_enable", 0);
-							SetCvar("sm_warffa_enable", 0);
+							SetCvar("sm_ffa_enable", 0);
 							SetCvar("sm_hide_enable", 0);
 							SetCvar("sm_catch_enable", 0);
 							SetCvar("sm_noscope_enable", 0);
 							RoundLimits = GetConVarInt(RoundLimitsc);
 							votecount = 0;
 							
-							CPrintToChatAll("%s %t", g_wduckhuntprefix, "duckhunt_next");
+							CPrintToChatAll("%t %t", "duckhunt_tag" , "duckhunt_next");
 						}
-						else CPrintToChatAll("%s %t", g_wduckhuntprefix, "duckhunt_need", Missing);
+						else CPrintToChatAll("%t %t", "duckhunt_tag" , "duckhunt_need", Missing);
 						
 					}
-					else CPrintToChat(client, "%s %t", g_wduckhuntprefix, "duckhunt_voted");
+					else CPrintToChat(client, "%t %t", "duckhunt_tag" , "duckhunt_voted");
 				}
-				else CPrintToChat(client, "%s %t", g_wduckhuntprefix, "duckhunt_progress");
+				else CPrintToChat(client, "%t %t", "duckhunt_tag" , "duckhunt_progress");
 			}
-			else CPrintToChat(client, "%s %t", g_wduckhuntprefix, "duckhunt_wait", RoundLimits);
+			else CPrintToChat(client, "%t %t", "duckhunt_tag" , "duckhunt_wait", RoundLimits);
 		}
-		else CPrintToChat(client, "%s %t", g_wduckhuntprefix, "duckhunt_minct");
+		else CPrintToChat(client, "%t %t", "duckhunt_tag" , "duckhunt_minct");
 	}
-	else CPrintToChat(client, "%s %t", g_wduckhuntprefix, "duckhunt_disabled");
+	else CPrintToChat(client, "%t %t", "duckhunt_tag" , "duckhunt_disabled");
 	}
 }
 

@@ -1,5 +1,9 @@
 "Phrases"
 {
+	"noscope_tag"
+	{
+		"en"		"[{green}noscope{default}]"
+	}
 	"noscope_need"  //{default}, {darkred}, {green}, {lightgreen}, "{darkred}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
 	{
 		"en"		"votes left to {darkred}war"

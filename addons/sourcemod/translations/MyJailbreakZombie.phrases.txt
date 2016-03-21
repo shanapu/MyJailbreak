@@ -1,5 +1,9 @@
 "Phrases"
 {
+	"zombie_tag"
+	{
+		"en"		"[{green}zombie{default}]"
+	}
 	"zombie_need"  //{default}, {darkred}, {green}, {lightgreen}, "{darkred}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
 	{
 		"en"		"votes left to {darkred}war"

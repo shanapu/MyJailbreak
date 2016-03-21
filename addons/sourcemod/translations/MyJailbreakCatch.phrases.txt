@@ -1,5 +1,10 @@
 "Phrases"
 {
+	"catch_tag"
+	{
+		"en"		"[{green}catch{default}]"
+	}
+
 	"catch_need"  //{default}, {darkred}, {green}, {lightgreen}, "{darkred}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
 	{
 		"en"		"votes left to {darkred}catch"

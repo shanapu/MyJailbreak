@@ -1,29 +1,33 @@
 "Phrases"    
 {
+	"war_tag"
+	{
+		"en"		"[{green}war{default}]"
+	}
+	
+	
 	"war_need"  //{default}, {darkred}, {green}, {lightgreen}, "{darkred}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
 	{
-		"en"		"votes left to {darkred}war"
-		"de"		"votes bis {darkred}krieg{default} beginnt"
+			"#format"	"{1:i}"
+		"en"		"{1} votes left to {darkred}war"
+		"de"		"noch {1} votes bis {darkred}krieg{default} beginnt"
 	}
 	"war_twin"
 	{
 		"#format"	""
 		"en"		"Terrorists win"
-		
 	}
 	
 	"war_ctwin"
 	{
 		"#format"	""
 		"en"		"Counter-Terrorists win"
-		
 	}
 	
 	"war_end" //{default}, {darkred}, {green}, {lightgreen}, "{darkred}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
 	{
 		"#format"	""
 		"en"		"War ended"
-		
 	}
 	
 	"war_rounds" //{default}, {darkred}, {green}, {lightgreen}, "{darkred}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
@@ -31,14 +35,12 @@
 		"#format"	"{1:i}"
 		"en"		"Round {1} of 3"
 		"de"		"Runde {1} von 3"
-		
 	}
 	
 	"war_next" //{default}, {darkred}, {green}, {lightgreen}, "{darkred}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
 	{
 		"#format"	""
 		"en"		"Next round is {darkred}war"
-		
 	}
 	
 	

@@ -20,22 +20,21 @@ new RoundLimits;
 new bool:catched[MAXPLAYERS+1];
 
 
+ConVar gc_bTagEnabled;
+
 
 new Handle:CatchMenu;
 new Handle:roundtimec;
 new Handle:roundtimenormalc;
 new Handle:RoundLimitsc;
 new Handle:g_wenabled=INVALID_HANDLE;
-new Handle:g_catchprefix=INVALID_HANDLE;
-new Handle:g_catchcmd=INVALID_HANDLE;
 new Handle:cvar;
 
 new bool:IsCatch;
 new bool:StartCatch;
 
 new String:voted[1500];
-new String:g_wcatchprefix[64];
-char g_wcatchcmd[64];
+
 
 
 public Plugin myinfo = {
@@ -57,14 +56,11 @@ public OnPluginStart()
 	
 	CreateConVar("sm_catch_version", "PLUGIN_VERSION", "The version of the SourceMod plugin MyJailBreak - War", FCVAR_PLUGIN|FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	g_wenabled = CreateConVar("sm_catch_enable", "1", "0 - disabled, 1 - enable war");
-	g_catchprefix = CreateConVar("sm_catch_prefix", "[{green}catch{default}]", "Insert your Jailprefix. shown in braces [war]");
-	g_catchcmd = CreateConVar("sm_catch_cmd", "!fangen", "Insert your 2nd chat trigger. !war still enabled");
 	roundtimec = CreateConVar("sm_catch_roundtime", "5", "Round time for a single war round");
 	roundtimenormalc = CreateConVar("sm_nocatch_roundtime", "12", "set round time after a war round zour normal mp_roudntime");
 	RoundLimitsc = CreateConVar("sm_catch_roundsnext", "3", "Runden nach Krieg oder Mapstart bis Krieg gestartet werden kann");
-	
-	GetConVarString(g_catchprefix, g_wcatchprefix, sizeof(g_wcatchprefix));
-	GetConVarString(g_catchcmd, g_wcatchcmd, sizeof(g_wcatchcmd));
+	gc_bTagEnabled = CreateConVar("sm_hide_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+
 	
 	AutoExecConfig(true, "MyJailbreak_Catch");
 	
@@ -105,6 +101,18 @@ public OnConfigsExecuted()
 	roundtime = GetConVarInt(roundtimec);
 	roundtimenormal = GetConVarInt(roundtimenormalc);
 	RoundLimits = 0;
+	
+	if (gc_bTagEnabled.BoolValue)
+	{
+		ConVar hTags = FindConVar("sv_tags");
+		char sTags[128];
+		hTags.GetString(sTags, sizeof(sTags));
+		if (StrContains(sTags, "MyJailbreak", false) == -1)
+		{
+			StrCat(sTags, sizeof(sTags), ", MyJailbreak");
+			hTags.SetString(sTags);
+		}
+	}
 }
 
 public RoundEnd(Handle:event, String:name[], bool:dontBroadcast)
@@ -136,12 +144,12 @@ public RoundEnd(Handle:event, String:name[], bool:dontBroadcast)
 		SetCvar("dice_enable", 1);
 		SetCvar("sm_beacon_enabled", 0);
 		SetCvar("sv_infinite_ammo", 0);
-		SetCvar("sm_warffa_enable", 1);
+		SetCvar("sm_ffa_enable", 1);
 		SetCvar("sm_warden_enable", 1);
 		SetCvar("mp_roundtime", roundtimenormal);
 		SetCvar("mp_roundtime_hostage", roundtimenormal);
 		SetCvar("mp_roundtime_defuse", roundtimenormal);
-		CPrintToChatAll("%s %t", g_wcatchprefix, "catch_end");
+		CPrintToChatAll("%t %t", "catch_tag" , "catch_end");
 	}
 	if (StartCatch)
 	{
@@ -158,7 +166,7 @@ public Action SetCatch(int client,int args)
 	StartCatch = true;
 	RoundLimits = GetConVarInt(RoundLimitsc);
 	votecount = 0;
-	CPrintToChatAll("%s %t", g_wcatchprefix, "catch_next");
+	CPrintToChatAll("%t %t", "catch_tag" , "catch_next");
 	}
 }
 
@@ -270,7 +278,6 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 						catched[client] = false;
 						}
 					}
-					CPrintToChatAll("%s Versteckt euch die Catchs kommen", g_wcatchprefix);
 					if (IsClientInGame(client))
 					{
 					SetEntData(client, FindSendPropOffs("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
@@ -279,7 +286,7 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 				}
 				
 				PrintCenterTextAll("%t", "catch_start");
-				CPrintToChatAll("%s %t", g_wcatchprefix, "catch_start");
+				CPrintToChatAll("%t %t", "catch_tag" , "catch_start");
 				}
 	}
 }
@@ -298,7 +305,7 @@ public PlayerSay(Handle:event, String:name[], bool:dontBroadcast)
 	GetClientAuthString(client, steamid, sizeof(steamid));
 	GetEventString(event, "text", text, sizeof(text));
 	
-	if (StrEqual(text, g_wcatchcmd) || StrEqual(text, "!catch"))
+	if (StrEqual(text, "!fangen") || StrEqual(text, "!catch"))
 	{
 	if(GetConVarInt(g_wenabled) == 1)
 	{	
@@ -326,25 +333,25 @@ public PlayerSay(Handle:event, String:name[], bool:dontBroadcast)
 							votecount = 0;
 							
 							SetCvar("sm_hide_enable", 0);
-							SetCvar("sm_warffa_enable", 0);
+							SetCvar("sm_ffa_enable", 0);
 							SetCvar("sm_zombie_enable", 0);
 							SetCvar("sm_duckhunt_enable", 0);
 							SetCvar("sm_war_enable", 0);
 							
-							CPrintToChatAll("%s %t", g_wcatchprefix, "catch_next");
+							CPrintToChatAll("%t %t", "catch_tag" , "catch_next");
 						}
-						else CPrintToChatAll("%s %t", g_wcatchprefix, "catch_need", Missing);
+						else CPrintToChatAll("%t %t", "catch_tag" , "catch_need", Missing);
 						
 					}
-					else CPrintToChat(client, "%s %t", g_wcatchprefix, "catch_voted");
+					else CPrintToChat(client, "%t %t", "catch_tag" , "catch_voted");
 				}
-				else CPrintToChat(client, "%s %t", g_wcatchprefix, "catch_progress");
+				else CPrintToChat(client, "%t %t", "catch_tag" , "catch_progress");
 			}
-			else CPrintToChat(client, "%s %t", g_wcatchprefix, "war_wait", RoundLimits);
+			else CPrintToChat(client, "%t %t", "catch_tag" , "war_wait", RoundLimits);
 		}
-		else CPrintToChat(client, "%s %t", g_wcatchprefix, "catch_minct");
+		else CPrintToChat(client, "%t %t", "catch_tag" , "catch_minct");
 	}
-	else CPrintToChat(client, "%s %t", g_wcatchprefix, "catch_disabled");
+	else CPrintToChat(client, "%t %t", "catch_tag" , "catch_disabled");
 	}
 }
 
@@ -413,7 +420,7 @@ CatchEm(client, attacker)
 	SetEntityRenderColor(client, 0, 0, 255, 255);
 	catched[client] = true;
 	
-	CPrintToChatAll("%s %t", g_wcatchprefix, "catch_catch", attacker, client);
+	CPrintToChatAll("%t %t", "catch_tag" , "catch_catch", attacker, client);
 }
 
 FreeEm(client, attacker)
@@ -422,7 +429,7 @@ FreeEm(client, attacker)
 	SetEntityRenderColor(client, 255, 255, 255, 0);
 	catched[client] = false;
 	
-	CPrintToChatAll("%s %t", g_wcatchprefix, "catch_unfreeze", attacker, client);
+	CPrintToChatAll("%t %t", "catch_tag" , "catch_unfreeze", attacker, client);
 }
 
 CheckStatus()
@@ -432,5 +439,5 @@ CheckStatus()
 		if(IsClientInGame(i) && IsPlayerAlive(i) && GetClientTeam(i) == CS_TEAM_T && !catched[i]) number++;
 		
 	if(number == 0) CS_TerminateRound(5.0, CSRoundEnd_CTWin);
-	CPrintToChatAll("%s %t", g_wcatchprefix, "catch_end");
+	CPrintToChatAll("%t %t", "catch_tag" , "catch_end");
 }

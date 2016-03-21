@@ -9,7 +9,7 @@
 #pragma semicolon 1
 
 #define PLUGIN_VERSION		"0.x"
-
+ConVar gc_bTagEnabled;
 new freezetime;
 new nodamagetimer;
 new roundtime;
@@ -29,17 +29,15 @@ new Handle:nodamagetimerc;
 new Handle:RoundLimitsc;
 new Handle:g_wenabled=INVALID_HANDLE;
 new Handle:g_wspawncell=INVALID_HANDLE;
-new Handle:g_warprefix=INVALID_HANDLE;
-new Handle:g_warcmd=INVALID_HANDLE;
 new Handle:cvar;
 
 new bool:IsWar;
 new bool:StartWar;
 
 new String:voted[1500];
-new String:g_wwarprefix[64];
 
-char g_wwarcmd[64];
+
+
 
 new Float:Pos[3];
 
@@ -64,16 +62,14 @@ public OnPluginStart()
 	CreateConVar("sm_war_version", "PLUGIN_VERSION", "The version of the SourceMod plugin MyJailBreak - War", FCVAR_PLUGIN|FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	g_wenabled = CreateConVar("sm_war_enable", "1", "0 - disabled, 1 - enable war");
 	g_wspawncell = CreateConVar("sm_war_spawn", "1", "0 - teleport to ct and freeze, 1 - stay in cell open cell doors with aw/weapon menu - need sjd");
-	g_warprefix = CreateConVar("sm_war_prefix", "[{green}war{default}]", "Insert your Jailprefix.");
-	g_warcmd = CreateConVar("sm_war_cmd", "!krieg", "Insert your 2nd chat trigger. !war still enabled");
 	roundtimec = CreateConVar("sm_war_roundtime", "5", "Round time for a single war round");
 	roundtimenormalc = CreateConVar("sm_nowar_roundtime", "12", "set round time after a war round");    //TODO: https://wiki.alliedmods.net/ConVars_(SourceMod_Scripting)#Using.2FChanging_Values
 	freezetimec = CreateConVar("sm_war_freezetime", "30", "Time freeze T");
 	nodamagetimerc = CreateConVar("sm_war_nodamage", "30", "Time after freezetime damage disbaled");
 	RoundLimitsc = CreateConVar("sm_war_roundsnext", "3", "Runden nach Krieg oder Mapstart bis Krieg gestartet werden kann");
-
-	GetConVarString(g_warprefix, g_wwarprefix, sizeof(g_wwarprefix));
-	GetConVarString(g_warcmd, g_wwarcmd, sizeof(g_wwarcmd));
+	gc_bTagEnabled = CreateConVar("sm_war_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	
+	
 	
 	AutoExecConfig(true, "MyJailbreak_War");
 	
@@ -113,6 +109,18 @@ public OnConfigsExecuted()
 	freezetime = GetConVarInt(freezetimec);
 	nodamagetimer = GetConVarInt(nodamagetimerc);
 	RoundLimits = 0;
+	
+	if (gc_bTagEnabled.BoolValue)
+	{
+		ConVar hTags = FindConVar("sv_tags");
+		char sTags[128];
+		hTags.GetString(sTags, sizeof(sTags));
+		if (StrContains(sTags, "MyJailbreak", false) == -1)
+		{
+			StrCat(sTags, sizeof(sTags), ", MyJailbreak");
+			hTags.SetString(sTags);
+		}
+	}
 }
 
 public RoundEnd(Handle:event, String:name[], bool:dontBroadcast)
@@ -148,13 +156,13 @@ public RoundEnd(Handle:event, String:name[], bool:dontBroadcast)
 			SetCvar("sm_noscope_enable", 1);
 			SetCvar("dice_enable", 1);
 			SetCvar("sm_beacon_enabled", 0);
-			SetCvar("sm_warffa_enable", 1);
+			SetCvar("sm_ffa_enable", 1);
 			SetCvar("sm_duckhunt_enable", 1);
 			SetCvar("sm_catch_enable", 1);
 			SetCvar("mp_roundtime", roundtimenormal);
 			SetCvar("mp_roundtime_hostage", roundtimenormal);
 			SetCvar("mp_roundtime_defuse", roundtimenormal);
-			CPrintToChatAll("%s %t", g_wwarprefix, "war_end");
+			CPrintToChatAll("%t %t", "war_tag" , "war_end");
 		}
 	}
 	if (StartWar)
@@ -174,12 +182,12 @@ public Action SetWar(int client,int args)
 	votecount = 0;
 	
 	SetCvar("sm_hide_enable", 0);
-	SetCvar("sm_warffa_enable", 0);
+	SetCvar("sm_ffa_enable", 0);
 	SetCvar("sm_zombie_enable", 0);
 	SetCvar("sm_duckhunt_enable", 0);
 	SetCvar("sm_catch_enable", 0);
 	
-	CPrintToChatAll("%s %t", g_wwarprefix, "war_next");
+	CPrintToChatAll("%t %t", "war_tag" , "war_next");
 	}
 }
 
@@ -308,7 +316,7 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 						}
 					}
 					}
-				}CPrintToChatAll("%s %t", g_wwarprefix ,"war_rounds", WarRound);
+				}CPrintToChatAll("%t %t", "war_tag" ,"war_rounds", WarRound);
 			}
 			for(new client=1; client <= MaxClients; client++)
 			{
@@ -402,7 +410,7 @@ public Action:NoWeapon(Handle:timer)
 		if (IsClientInGame(client) && IsPlayerAlive(client)) SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
 	}
 
-	CPrintToChatAll("%s %t", g_wwarprefix, "war_start");
+	CPrintToChatAll("%t %t", "war_tag" , "war_start");
 	
 	WeaponTimer = INVALID_HANDLE;
 	
@@ -418,7 +426,7 @@ public PlayerSay(Handle:event, String:name[], bool:dontBroadcast)
 	GetClientAuthString(client, steamid, sizeof(steamid));
 	GetEventString(event, "text", text, sizeof(text));
 	
-	if (StrEqual(text, g_wwarcmd) || StrEqual(text, "!war"))
+	if (StrEqual(text, "!war") || StrEqual(text, "!krieg"))
 	{
 	if(GetConVarInt(g_wenabled) == 1)
 	{	
@@ -446,26 +454,26 @@ public PlayerSay(Handle:event, String:name[], bool:dontBroadcast)
 							votecount = 0;
 							
 							SetCvar("sm_hide_enable", 0);
-							SetCvar("sm_warffa_enable", 0);
+							SetCvar("sm_ffa_enable", 0);
 							SetCvar("sm_noscope_enable", 0);
 							SetCvar("sm_zombie_enable", 0);
 							SetCvar("sm_duckhunt_enable", 0);
 							SetCvar("sm_catch_enable", 0);
 							
-							CPrintToChatAll("%s %t", g_wwarprefix, "war_next");
+							CPrintToChatAll("%t %t", "war_tag" , "war_next");
 						}
-						else CPrintToChatAll("%s %t", g_wwarprefix, "war_need", Missing);
+						else CPrintToChatAll("%t %t", "war_tag" , "war_need", Missing);
 						
 					}
-					else CPrintToChat(client, "%s %t", g_wwarprefix, "war_voted");
+					else CPrintToChat(client, "%t %t", "war_tag" , "war_voted");
 				}
-				else CPrintToChat(client, "%s %t", g_wwarprefix, "war_progress");
+				else CPrintToChat(client, "%t %t", "war_tag" , "war_progress");
 			}
-			else CPrintToChat(client, "%s %t", g_wwarprefix, "war_wait", RoundLimits);
+			else CPrintToChat(client, "%t %t", "war_tag" , "war_wait", RoundLimits);
 		}
-		else CPrintToChat(client, "%s %t", g_wwarprefix, "war_minct");
+		else CPrintToChat(client, "%t %t", "war_tag" , "war_minct");
 	}
-	else CPrintToChat(client, "%s %t", g_wwarprefix, "war_disabled");
+	else CPrintToChat(client, "%t %t", "war_tag" , "war_disabled");
 	}
 }
 

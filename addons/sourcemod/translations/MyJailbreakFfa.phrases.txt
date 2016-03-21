@@ -1,60 +1,73 @@
 "Phrases"
 {
-	"warffa_need"  //{default}, {darkred}, {green}, {lightgreen}, "{darkred}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
+	"ffa_tag"
 	{
-		"en"		"votes left to {darkred}war"
-		"de"		"votes bis {darkred}krieg{default} beginnt"
+		"en"		"[{green}ffa{default}]"
+	} 
+	
+	"ffa_need"  //{default}, {darkred}, {green}, {lightgreen}, "{darkred}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
+	{
+			"#format"	"{1:i}"
+		"en"		"{1} votes left to {darkred}ffa"
+		"de"		"noch {1} votes bis {darkred}ffa{default} beginnt"
 	}
-	"warffa_twin"
+	"ffa_twin"
 	{
 		"#format"	""
 		"en"		"Terrorists win"
 		
 	}
 	
-	"warffa_ctwin"
+	"ffa_ctwin"
 	{
 		"#format"	""
 		"en"		"Counter-Terrorists win"
 		
 	}
 	
-	"warffa_end"
+	"ffa_end"
 	{
 		"#format"	""
 		"en"		"ffa ended"
 		
 	}
 	
-	"warffa_next"
+	"ffa_next"
 	{
 		"#format"	""
 		"en"		"Next round is ffa"
 		
 	}
 	
+	"ffa_rounds" //{default}, {darkred}, {green}, {lightgreen}, "{darkred}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
+	{
+		"#format"	"{1:i}"
+		"en"		"Round {1} of 3"
+		"de"		"Runde {1} von 3"
+	}
 	
-	"warffa_start"
+	
+	"ffa_start"
 	{
 		"#format"	""
 		"en"		"The ffa has started!"
 		
 	}
 	
-	"warffa_voted"{
+	"ffa_voted"{
 		"#format"	""
 		"en"		"You allready voted for ffa"
 		
 	}
 	
-	"warffa_progress"
+	"ffa_progress"
 	{
 		"#format"	""
 		"en"		"ffa is allready in progress"
 		
 	}
 	
-	"warffa_minct"
+	"ffa_minct"
 	{
 		"#format"	""
 		"en"		"For a ffa you need a least one CT"
@@ -62,79 +75,79 @@
 	}
 	
 	
-	"warffa_disabled"
+	"ffa_disabled"
 	{
 		"#format"	""
 		"en"		"ffa is disabled."
 		
 	}
 	
-	"warffa_damage"
+	"ffa_damage"
 	{
 		"#format"	""
 		"en"		"seconds until damage enabled"
 		
 	}
-	"warffa_info_Title"
+	"ffa_info_Title"
 	{
 		"en"		"FFA is activ"
 		"de"		"FFA ist aktiv"
 	}
 	
-	"warffa_info_Tele"
+	"ffa_info_Tele"
 	{
 		"en"		"Do not be surprised if ported in wk"
 		"de"		"Nicht wundern falls ihr in die wk geportet wurdet"
 	}
 	
-	"warffa_info_Spawn"
+	"ffa_info_Spawn"
 	{
 		"en"		"Do not wonder if you spawn with weapon and the cells are open"
 		"de"		"Nicht wundern warum ihr mit waffe und offenen Zelle spawnt"
 	}
-	"warffa_info_TeleT"
+	"ffa_info_TeleT"
 	{
 		"en"		"Do not be surprised if teleportet to weaponcamber"
 		"de"		"Nicht wundern weil du in die waffenkammer geportet wurdest"
 	}
 	
-	"warffa_info_SpawnT"
+	"ffa_info_SpawnT"
 	{
 		"en"		"Do not wonder if you spawn in the open cell"
 		"de"		"Nicht wundern warum ihr in der offenen Zelle spawnt"
 	}
 	
-	"warffa_info_Line2"
+	"ffa_info_Line2"
 	{
 		"en"		"In warround ct play against t"
 		"de"		"In Kriegrunden spielen CT's gegen T's"
 	}
 	
-	"warffa_info_Line3"
+	"ffa_info_Line3"
 	{
 		"en"		"Während der no damge phase kannst du aus der zelle/waffenkammer"
 		"de"		"Während der no damge phase kannst du aus der zelle/waffenkammer"
 	}
 	
-	"warffa_info_Line4"
+	"ffa_info_Line4"
 	{
 		"en"		"Alle normalen Jailregeln sind aufgehoben!"
 		"de"		"Alle normalen Jailregeln sind aufgehoben!"
 	}
 	
-	"warffa_info_Line5"
+	"ffa_info_Line5"
 	{
 		"en"		"There is no last request!"
 		"de"		"Der letzte Terrorist hat keinen Wunsch!"
 	}
 	
-	"warffa_info_Line6"
+	"ffa_info_Line6"
 	{
 		"en"		"Jeder darf überall hin wo er will!"
 		"de"		"Jeder darf überall hin wo er will!"
 	}
 	
-	"warffa_info_Line7"
+	"ffa_info_Line7"
 	{
 		"en"		"bau keine scheisse!"
 		"de"		"bau keine scheisse!"
@@ -157,7 +170,7 @@
 		"en"		"last ffa round"
 		"de"		"letzte ffa runde"
 	}
-		"warffa_wait"
+		"ffa_wait"
 	{
 		"#format"	"{1:i}"
 		"en"		"you must wait {1} more rounds"

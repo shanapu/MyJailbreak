@@ -10,7 +10,7 @@
 #pragma semicolon 1
 
 #define PLUGIN_VERSION   "0.x"
-
+ConVar gc_bTagEnabled;
 new freezetime;
 new roundtime;
 new roundtimenormal;
@@ -27,16 +27,12 @@ new Handle:roundtimenormalc;
 new Handle:freezetimec;
 new Handle:RoundLimitsc;
 new Handle:g_wenabled=INVALID_HANDLE;
-new Handle:g_zombieprefix=INVALID_HANDLE;
-new Handle:g_zombiecmd=INVALID_HANDLE;
 new Handle:cvar;
 
 new bool:IsZombie;
 new bool:StartZombie;
 
 new String:voted[1500];
-new String:g_wzombieprefix[64];
-char g_wzombiecmd[64];
 
 
 public Plugin myinfo = {
@@ -58,15 +54,12 @@ public OnPluginStart()
 	
 	CreateConVar("sm_zombie_version", "PLUGIN_VERSION", "The version of the SourceMod plugin MyJailBreak - War", FCVAR_PLUGIN|FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	g_wenabled = CreateConVar("sm_zombie_enable", "1", "0 - disabled, 1 - enable war");
-	g_zombieprefix = CreateConVar("sm_zombie_prefix", "[{green}zombie{default}]", "Insert your Jailprefix. shown in braces [war]");
-	g_zombiecmd = CreateConVar("sm_zombie_cmd", "!zomb", "Insert your 2nd chat trigger. !war still enabled");
 	roundtimec = CreateConVar("sm_zombie_roundtime", "5", "Round time for a single war round");
 	roundtimenormalc = CreateConVar("sm_nozombie_roundtime", "12", "set round time after a war round zour normal mp_roudntime");
 	freezetimec = CreateConVar("sm_zombie_freezetime", "35", "Time freeze zombies");
 	RoundLimitsc = CreateConVar("sm_zombie_roundsnext", "3", "Runden nach Krieg oder Mapstart bis Krieg gestartet werden kann");
-	
-	GetConVarString(g_zombieprefix, g_wzombieprefix, sizeof(g_wzombieprefix));
-	GetConVarString(g_zombiecmd, g_wzombiecmd, sizeof(g_wzombiecmd));
+	gc_bTagEnabled = CreateConVar("sm_zombie_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+
 	
 	AutoExecConfig(true, "MyJailbreak_Zombie");
 	
@@ -105,6 +98,18 @@ public OnConfigsExecuted()
 	roundtimenormal = GetConVarInt(roundtimenormalc);
 	freezetime = GetConVarInt(freezetimec);
 	RoundLimits = 0;
+	
+	if (gc_bTagEnabled.BoolValue)
+	{
+		ConVar hTags = FindConVar("sv_tags");
+		char sTags[128];
+		hTags.GetString(sTags, sizeof(sTags));
+		if (StrContains(sTags, "MyJailbreak", false) == -1)
+		{
+			StrCat(sTags, sizeof(sTags), ", MyJailbreak");
+			hTags.SetString(sTags);
+		}
+	}
 }
 
 public RoundEnd(Handle:event, String:name[], bool:dontBroadcast)
@@ -140,12 +145,12 @@ public RoundEnd(Handle:event, String:name[], bool:dontBroadcast)
 		SetCvar("dice_enable", 1);
 		SetCvar("sm_beacon_enabled", 0);
 		SetCvar("sv_infinite_ammo", 0);
-		SetCvar("sm_warffa_enable", 1);
+		SetCvar("sm_ffa_enable", 1);
 		SetCvar("sm_warden_enable", 1);
 		SetCvar("mp_roundtime", roundtimenormal);
 		SetCvar("mp_roundtime_hostage", roundtimenormal);
 		SetCvar("mp_roundtime_defuse", roundtimenormal);
-		CPrintToChatAll("%s %t", g_wzombieprefix, "zombie_end");
+		CPrintToChatAll("%t %t", "zombie_tag" , "zombie_end");
 	}
 	if (StartZombie)
 	{
@@ -162,7 +167,7 @@ public Action SetZombie(int client,int args)
 	StartZombie = true;
 	RoundLimits = GetConVarInt(RoundLimitsc);
 	votecount = 0;
-	CPrintToChatAll("%s %t", g_wzombieprefix, "zombie_next");
+	CPrintToChatAll("%t %t", "zombie_tag" , "zombie_next");
 	}
 }
 
@@ -251,7 +256,6 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 						GivePlayerItem(client, "weapon_hegrenade");
 						}
 					}
-					CPrintToChatAll("%s Versteckt euch die Zombies kommen", g_wzombieprefix);
 					if (IsClientInGame(client))
 					{
 					SetEntData(client, FindSendPropOffs("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
@@ -308,7 +312,7 @@ public Action:Zombie(Handle:timer)
 		}
 	}
 	PrintCenterTextAll("%t", "zombie_start");
-	CPrintToChatAll("%s %t", g_wzombieprefix, "zombie_start");
+	CPrintToChatAll("%t %t", "zombie_tag" , "zombie_start");
 	
 	ZombieTimer = INVALID_HANDLE;
 	
@@ -325,7 +329,7 @@ public PlayerSay(Handle:event, String:name[], bool:dontBroadcast)
 	GetClientAuthString(client, steamid, sizeof(steamid));
 	GetEventString(event, "text", text, sizeof(text));
 	
-	if (StrEqual(text, g_wzombiecmd) || StrEqual(text, "!zombie"))
+	if (StrEqual(text, "!undead") || StrEqual(text, "!zombie"))
 	{
 	if(GetConVarInt(g_wenabled) == 1)
 	{	
@@ -350,7 +354,7 @@ public PlayerSay(Handle:event, String:name[], bool:dontBroadcast)
 							StartZombie = true;
 							
 							SetCvar("sm_hide_enable", 0);
-							SetCvar("sm_warffa_enable", 0);
+							SetCvar("sm_ffa_enable", 0);
 							SetCvar("sm_war_enable", 0);
 							SetCvar("sm_duckhunt_enable", 0);
 							SetCvar("sm_catch_enable", 0);
@@ -359,20 +363,20 @@ public PlayerSay(Handle:event, String:name[], bool:dontBroadcast)
 							RoundLimits = GetConVarInt(RoundLimitsc);
 							votecount = 0;
 							
-							CPrintToChatAll("%s %t", g_wzombieprefix, "zombie_next");
+							CPrintToChatAll("%t %t", "zombie_tag" , "zombie_next");
 						}
-						else CPrintToChatAll("%s %t", g_wzombieprefix, "zombie_need", Missing);
+						else CPrintToChatAll("%t %t", "zombie_tag" , "zombie_need", Missing);
 						
 					}
-					else CPrintToChat(client, "%s %t", g_wzombieprefix, "zombie_voted");
+					else CPrintToChat(client, "%t %t", "zombie_tag" , "zombie_voted");
 				}
-				else CPrintToChat(client, "%s %t", g_wzombieprefix, "zombie_progress");
+				else CPrintToChat(client, "%t %t", "zombie_tag" , "zombie_progress");
 			}
-			else CPrintToChat(client, "%s %t", g_wzombieprefix, "zombie_wait", RoundLimits);
+			else CPrintToChat(client, "%t %t", "zombie_tag" , "zombie_wait", RoundLimits);
 		}
-		else CPrintToChat(client, "%s %t", g_wzombieprefix, "zombie_minct");
+		else CPrintToChat(client, "%t %t", "zombie_tag" , "zombie_minct");
 	}
-	else CPrintToChat(client, "%s %t", g_wzombieprefix, "zombie_disabled");
+	else CPrintToChat(client, "%t %t", "zombie_tag" , "zombie_disabled");
 	}
 }
 

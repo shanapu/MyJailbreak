@@ -1,5 +1,10 @@
 "Phrases"
 {
+	"warden_tag"
+	{
+		"en"		"[{green}warden{default}]"
+	}
+	
 	"warden_new"
 	{
 		"#format"	"{1:N}"

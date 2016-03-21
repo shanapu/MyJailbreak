@@ -9,6 +9,7 @@
 #include <smartjaildoors>
 #include <smlib>
 #include <colors>
+#include <autoexecconfig>
 
 #define LoopAliveClients(%1) for(int %1 = 1;%1 <= MaxClients;%1++) if(IsValidClient(%1, true))
 
@@ -27,6 +28,8 @@ char sSndWarden[256];
 ConVar cvSndWardenDied;
 char sSndWardenDied[256];
 
+ConVar gc_bTagEnabled;
+
 Handle g_cVar_mnotes;
 Handle g_fward_onBecome;
 Handle g_fward_onRemove;
@@ -42,16 +45,12 @@ new Handle:g_opentimerwarden=INVALID_HANDLE;
 new Handle:g_enabled=INVALID_HANDLE;
 new Handle:g_nextround=INVALID_HANDLE;
 new Handle:g_noblock=INVALID_HANDLE;
-new Handle:g_prefix=INVALID_HANDLE;
 new Handle:g_colorenabled=INVALID_HANDLE;
 new Handle:g_openenabled=INVALID_HANDLE;
 new Handle:g_sounds=INVALID_HANDLE;
 new opentimer;
 new Handle:countertime = INVALID_HANDLE;
 new g_CollisionOffset;
-
-
-char g_wprefix[64];
 
 public Plugin myinfo = {
 	name = "MyJailbreak - Warden",
@@ -99,38 +98,42 @@ public void OnPluginStart()
 	
 	
 	AddCommandListener(HookPlayerChat, "say");
-	
-	
-	//ConVars
-	CreateConVar("sm_warden_version", PLUGIN_VERSION,  "The version of the SourceMod plugin MyJailBreak - Warden", FCVAR_REPLICATED|FCVAR_SPONLY|FCVAR_NOTIFY|FCVAR_DONTRECORD);
-	g_cVar_mnotes = CreateConVar("sm_warden_better_notifications", "1", "0 - disabled, 1 - Will use hint and center text", _, true, 0.0, true, 1.0);
-	g_enabled = CreateConVar("sm_warden_enable", "1", "0 - disabled, 1 - enable warden");	
-	g_nextround = CreateConVar("sm_warden_nextround", "1", "0 - disabled, 1 - enable warden stay after round end");	
-	g_noblock = CreateConVar("sm_warden_noblock", "1", "0 - disabled, 1 - enable setable noblock for warden");	
-	g_prefix = CreateConVar("sm_warden_prefix", "[{green}warden{default}]", "Insert your Jailprefix. shown in braces [warden]");
-	g_colorenabled = CreateConVar("sm_wardencolor_enable", "1", "0 - disabled, 1 - enable warden colored");
-	g_openenabled = CreateConVar("sm_wardenopen_enable", "1", "0 - disabled, 1 - warden can open/close cells");
-	g_sounds = CreateConVar("sm_wardensounds_enable", "1", "0 - disabled, 1 - enable warden sounds");
-	cvSndWarden = CreateConVar("warden_sounds_path", "music/myjailbreak/warden.mp3", "Path to the sound which should be played for a new warden.");
-	GetConVarString(cvSndWarden, sSndWarden, sizeof(sSndWarden));
-	HookConVarChange(cvSndWarden, OnSettingChanged);
-	cvSndWardenDied = CreateConVar("warden_sounds_path2", "music/myjailbreak/unwarden.mp3", "Path to the sound which should be played when there is no warden anymore.");
-	GetConVarString(cvSndWardenDied, sSndWardenDied, sizeof(sSndWardenDied));
-	HookConVarChange(cvSndWardenDied, OnSettingChanged);
-	g_opentimer = CreateConVar("sm_wardenopen_time", "60", "Time in seconds for open doors on round start automaticly");
-	g_opentimerenable = CreateConVar("sm_wardenopen_time_enable", "1", "should doors open automatic 0- no 1 yes");   // TODO: DONT WORK
-	g_opentimerwarden = CreateConVar("sm_wardenopen_time_warden", "1", "should doors open automatic after sm_wardenopen_time when there is a warden? needs sm_wardenopen_time_enable 1");   // TODO: DONT WORK
-	g_iWardenColorRed = CreateConVar("sm_wardencolor_red", "0","What color to turn the warden into (set R, G and B values to 255 to disable) (Rgb): x - red value", 0, true, 0.0, true, 255.0);
-	g_iWardenColorGreen = CreateConVar("sm_wardencolor_green", "0","What color to turn the warden into (rGb): x - green value", 0, true, 0.0, true, 255.0);
-	g_iWardenColorBlue = CreateConVar("sm_wardencolor_blue", "255","What color to turn the warden into (rgB): x - blue value", 0, true, 0.0, true, 255.0);
-	
-	HookEvent("round_start", Event_RoundStart);
-	
 
 	
-	GetConVarString(g_prefix, g_wprefix, sizeof(g_wprefix));
+	AutoExecConfig_SetFile("MyJailbreak_warden");
+	AutoExecConfig_SetCreateFile(true);
+
 	
+	//ConVars
+	AutoExecConfig_CreateConVar("sm_warden_version", PLUGIN_VERSION,  "The version of the SourceMod plugin MyJailBreak - Warden", FCVAR_REPLICATED|FCVAR_SPONLY|FCVAR_NOTIFY|FCVAR_DONTRECORD);
+	g_cVar_mnotes = AutoExecConfig_CreateConVar("sm_warden_better_notifications", "1", "0 - disabled, 1 - Will use hint and center text", _, true, 0.0, true, 1.0);
+	g_enabled = AutoExecConfig_CreateConVar("sm_warden_enable", "1", "0 - disabled, 1 - enable warden");	
+	g_nextround = AutoExecConfig_CreateConVar("sm_warden_nextround", "1", "0 - disabled, 1 - enable warden stay after round end");	
+	g_noblock = AutoExecConfig_CreateConVar("sm_warden_noblock", "1", "0 - disabled, 1 - enable setable noblock for warden");	
+	g_colorenabled = AutoExecConfig_CreateConVar("sm_wardencolor_enable", "1", "0 - disabled, 1 - enable warden colored");
+	g_openenabled = AutoExecConfig_CreateConVar("sm_wardenopen_enable", "1", "0 - disabled, 1 - warden can open/close cells");
+	g_sounds = AutoExecConfig_CreateConVar("sm_wardensounds_enable", "1", "0 - disabled, 1 - enable warden sounds");
+	cvSndWarden = AutoExecConfig_CreateConVar("warden_sounds_path", "music/myjailbreak/warden.mp3", "Path to the sound which should be played for a new warden.");
+	GetConVarString(cvSndWarden, sSndWarden, sizeof(sSndWarden));
+	HookConVarChange(cvSndWarden, OnSettingChanged);
+	cvSndWardenDied = AutoExecConfig_CreateConVar("warden_sounds_path2", "music/myjailbreak/unwarden.mp3", "Path to the sound which should be played when there is no warden anymore.");
+	GetConVarString(cvSndWardenDied, sSndWardenDied, sizeof(sSndWardenDied));
+	HookConVarChange(cvSndWardenDied, OnSettingChanged);
+	g_opentimer = AutoExecConfig_CreateConVar("sm_wardenopen_time", "60", "Time in seconds for open doors on round start automaticly");
+	g_opentimerenable = AutoExecConfig_CreateConVar("sm_wardenopen_time_enable", "1", "should doors open automatic 0- no 1 yes");   // TODO: DONT WORK
+	g_opentimerwarden = AutoExecConfig_CreateConVar("sm_wardenopen_time_warden", "1", "should doors open automatic after sm_wardenopen_time when there is a warden? needs sm_wardenopen_time_enable 1");   // TODO: DONT WORK
+	g_iWardenColorRed = AutoExecConfig_CreateConVar("sm_wardencolor_red", "0","What color to turn the warden into (set R, G and B values to 255 to disable) (Rgb): x - red value", 0, true, 0.0, true, 255.0);
+	g_iWardenColorGreen = AutoExecConfig_CreateConVar("sm_wardencolor_green", "0","What color to turn the warden into (rGb): x - green value", 0, true, 0.0, true, 255.0);
+	g_iWardenColorBlue = AutoExecConfig_CreateConVar("sm_wardencolor_blue", "255","What color to turn the warden into (rgB): x - blue value", 0, true, 0.0, true, 255.0);
+	gc_bTagEnabled = AutoExecConfig_CreateConVar("sm_warden_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+
+	HookEvent("round_start", Event_RoundStart);
+	
+	AutoExecConfig_CacheConvars();
+	AutoExecConfig_ExecuteFile();
+	AutoExecConfig_CleanFile();
 	AutoExecConfig(true, "MyJailbreak_warden");
+	
 	
 	g_CollisionOffset = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
 }
@@ -147,6 +150,22 @@ public Action:Event_RoundStart(Handle:event, const String:name[], bool:dontBroad
 	{	
 	opentimer = GetConVarInt(g_opentimer);
 	countertime = CreateTimer(1.0, ccounter, _, TIMER_REPEAT);
+	}
+}
+
+public OnConfigsExecuted()
+{
+	
+	if (gc_bTagEnabled.BoolValue)
+	{
+		ConVar hTags = FindConVar("sv_tags");
+		char sTags[128];
+		hTags.GetString(sTags, sizeof(sTags));
+		if (StrContains(sTags, "MyJailbreak", false) == -1)
+		{
+			StrCat(sTags, sizeof(sTags), ", MyJailbreak");
+			hTags.SetString(sTags);
+		}
 	}
 }
 
@@ -174,11 +193,11 @@ public Action:noblockon(client, args)
 						EnableNoBlock(i);	
 				}
 
-		CPrintToChatAll("%s %t", g_wprefix, "warden_noblockon");
+		CPrintToChatAll("%t %t", "warden_tag" , "warden_noblockon");
 		}
 		else
 		{
-		CPrintToChat(client, "%s %t", g_wprefix, "warden_notwarden");
+		CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
 		}
 	}
 }
@@ -192,11 +211,11 @@ public Action:noblockoff(client, args)
 					
 						EnableBlock(i);	
 				}
-	CPrintToChatAll("%s %t", g_wprefix, "warden_noblockoff");  
+	CPrintToChatAll("%t %t", "warden_tag" , "warden_noblockoff");  
 		}
 	else
 	{
-		CPrintToChat(client, "%s %t", g_wprefix, "warden_notwarden"); 
+		CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden"); 
 	}
 }
 
@@ -211,7 +230,7 @@ public Action:ccounter(Handle:timer, Handle:pack)
 		if(GetConVarInt(g_opentimerenable) == 1)	
 		{
 		openit();
-		CPrintToChatAll("%s %t", g_wprefix, "warden_openauto");
+		CPrintToChatAll("%t %t", "warden_tag" , "warden_openauto");
 		
 		if (countertime != INVALID_HANDLE)
 			KillTimer(countertime);
@@ -225,17 +244,16 @@ public Action:ccounter(Handle:timer, Handle:pack)
 		if(GetConVarInt(g_opentimerwarden) == 1)	
 		{
 		openit();
-		CPrintToChatAll("%s %t", g_wprefix, "warden_openauto");
+		CPrintToChatAll("%t %t", "warden_tag" , "warden_openauto");
 		
 		if (countertime != INVALID_HANDLE)
 			KillTimer(countertime);
 		
 		countertime = INVALID_HANDLE;
 		}else
-	CPrintToChatAll("%s %t", g_wprefix, "warden_opentime"); 
-			if (countertime != INVALID_HANDLE)
-			KillTimer(countertime);
-		
+	CPrintToChatAll("%t %t", "warden_tag" , "warden_opentime"); 
+		if (countertime != INVALID_HANDLE)
+		KillTimer(countertime);
 		countertime = INVALID_HANDLE;
 		}
 	}
@@ -288,11 +306,11 @@ public Action:OpenDoors(client, args)
 	{
 	if (warden_iswarden(client))
 	{
-	CPrintToChatAll("%s %t", g_wprefix, "warden_dooropen"); 
+	CPrintToChatAll("%t %t", "warden_tag" , "warden_dooropen"); 
 	SJD_OpenDoors();
 	}
 	else
-	CPrintToChat(client, "%s %t", g_wprefix, "warden_notwarden"); 
+	CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden"); 
 	}
 }
 
@@ -302,15 +320,14 @@ if(GetConVarInt(g_openenabled) == 1)
 {
 	if (warden_iswarden(client))
 	{
-	CPrintToChatAll("%s %t", g_wprefix, "warden_doorclose"); 
+	CPrintToChatAll("%t %t", "warden_tag" , "warden_doorclose"); 
 	SJD_CloseDoors();
 	if (countertime != INVALID_HANDLE)
-			KillTimer(countertime);
-		
+		KillTimer(countertime);
 		countertime = INVALID_HANDLE;
 	}
 	else
-	CPrintToChat(client, "%s %t", g_wprefix, "warden_notwarden"); 
+	CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden"); 
 	}
 }
 
@@ -338,12 +355,12 @@ public Action BecomeWarden(int client, int args)
 				Call_PushCell(client);
 				Call_Finish();
 				}
-				else CPrintToChat(client, "%s %t", g_wprefix, "warden_playerdead");
+				else CPrintToChat(client, "%t %t", "warden_tag" , "warden_playerdead");
 			}
-			else CPrintToChat(client, "%s %t", g_wprefix, "warden_ctsonly");
+			else CPrintToChat(client, "%t %t", "warden_tag" , "warden_ctsonly");
 		}
-		else CPrintToChat(client, "%s %t", g_wprefix, "warden_exist", Warden);
-	}else CPrintToChat(client, "%s %t", g_wprefix, "warden_disabled");
+		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_exist", Warden);
+	}else CPrintToChat(client, "%t %t", "warden_tag" , "warden_disabled");
 }
 
 public Action ExitWarden(int client, int args) 
@@ -352,7 +369,7 @@ public Action ExitWarden(int client, int args)
 	{
 	if(client == Warden)
 	{
-		CPrintToChatAll("%s %t", g_wprefix, "warden_retire", client);
+		CPrintToChatAll("%t %t", "warden_tag" , "warden_retire", client);
 		
 		if(GetConVarBool(g_cVar_mnotes))
 		{
@@ -364,8 +381,8 @@ public Action ExitWarden(int client, int args)
 		Forward_OnWardenRemoved(client);
 		SetEntityRenderColor(client, 255, 255, 255, 255);
 	}
-	else CPrintToChat(client, "%s %t", g_wprefix, "warden_notwarden");
-	}else CPrintToChat(client, "%s %t", g_wprefix, "warden_disabled");
+	else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
+	}else CPrintToChat(client, "%t %t", "warden_tag" , "warden_disabled");
 }
 
 public Action roundStart(Handle event, const char[] name, bool dontBroadcast) 
@@ -385,7 +402,7 @@ public Action playerDeath(Handle event, const char[] name, bool dontBroadcast)
 	
 	if(client == Warden)
 	{
-		CPrintToChatAll("%s %t", g_wprefix, "warden_dead", client);
+		CPrintToChatAll("%t %t", "warden_tag" , "warden_dead", client);
 		
 		if(GetConVarBool(g_cVar_mnotes))
 		{
@@ -459,7 +476,7 @@ public int m_SetWarden(Menu menu, MenuAction action, int client, int Position)
 		  else
 		  {
 			Warden = i;
-			CPrintToChatAll("%s %t", g_wprefix, "warden_new", Warden);
+			CPrintToChatAll("%t %t", "warden_tag" , "warden_new", Warden);
 			CreateTimer(0.5, Timer_WardenFixColor, i, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 			Call_StartForward(gF_OnWardenCreatedByAdmin);
 			Call_PushCell(i);
@@ -480,8 +497,8 @@ public int m_WardenOverwrite(Menu menu, MenuAction action, int client, int Posit
 	if(choice == 1)
 	{
 	  int newwarden = GetClientOfUserId(tempwarden[client]);
-	  CPrintToChatAll("%s %t", g_wprefix, "warden_removed", Warden);
-	  CPrintToChatAll("%s %t", g_wprefix, "warden_new", newwarden);
+	  CPrintToChatAll("%t %t", "warden_tag" , "warden_removed", Warden);
+	  CPrintToChatAll("%t %t", "warden_tag" , "warden_new", newwarden);
 	  Warden = newwarden;
 	  CreateTimer(0.5, Timer_WardenFixColor, newwarden, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 	  Call_StartForward(gF_OnWardenCreatedByAdmin);
@@ -538,7 +555,7 @@ public void OnClientDisconnect(int client)
 {
 	if(client == Warden)
 	{
-		CPrintToChatAll("%s %t", g_wprefix, "warden_disconnected");
+		CPrintToChatAll("%t %t", "warden_tag" , "warden_disconnected");
 		
 		if(GetConVarBool(g_cVar_mnotes))
 		{
@@ -563,7 +580,7 @@ public Action RemoveWarden(int client, int args)
 	Call_PushCell(client);
 	Call_Finish();
 	}
-	else CPrintToChatAll("%s %t", g_wprefix, "warden_noexist");
+	else CPrintToChatAll("%t %t", "warden_tag" , "warden_noexist");
 	return Plugin_Handled;
 	}
 
@@ -581,7 +598,7 @@ public Action HookPlayerChat(int client, const char[] command, int args)
 		
 		if(IsClientInGame(client) && IsPlayerAlive(client) && GetClientTeam(client) == CS_TEAM_CT)
 		{
-			CPrintToChatAll("%s {blue}%N{default}: %s", g_wprefix, client, szText);
+			CPrintToChatAll("%t {blue}%N{default}: %s", "warden_tag", client, szText);
 			return Plugin_Handled;
 		}
 	}
@@ -593,7 +610,7 @@ void SetTheWarden(int client)
 {
 	if(GetConVarInt(g_enabled) == 1)	
 	{
-	CPrintToChatAll("%s %t", g_wprefix, "warden_new", client);
+	CPrintToChatAll("%t %t", "warden_tag" , "warden_new", client);
 	
 	if(GetConVarBool(g_cVar_mnotes))
 	{
@@ -608,12 +625,12 @@ void SetTheWarden(int client)
 	GivePlayerItem(client, "weapon_healthshot");
 	
 	Forward_OnWardenCreation(client);
-	}else CPrintToChat(client, "%s %t", g_wprefix, "warden_disabled");
+	}else CPrintToChat(client, "%t %t", "warden_tag" , "warden_disabled");
 }
 
 void RemoveTheWarden(int client)
 {
-	CPrintToChatAll("%s %t", g_wprefix, "warden_removed", client, Warden);
+	CPrintToChatAll("%t %t", "warden_tag" , "warden_removed", client, Warden);
 	
 	if(GetConVarBool(g_cVar_mnotes))
 	{

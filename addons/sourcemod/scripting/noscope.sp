@@ -10,7 +10,7 @@
 
 #define PLUGIN_VERSION   "0.1"
 
-
+ConVar gc_bTagEnabled;
 new preparetime;
 new roundtime;
 new roundtimenormal;
@@ -28,16 +28,13 @@ new Handle:roundtimenormalc;
 new Handle:preparetimec;
 new Handle:RoundLimitsc;
 new Handle:g_wenabled=INVALID_HANDLE;
-new Handle:g_noscopeprefix=INVALID_HANDLE;
-new Handle:g_noscopecmd=INVALID_HANDLE;
 new Handle:cvar;
 
 new bool:IsNoScope;
 new bool:StartNoScope;
 
 new String:voted[1500];
-new String:g_wnoscopeprefix[64];
-char g_wnoscopecmd[64];
+
 
 
 public Plugin myinfo = {
@@ -59,16 +56,14 @@ public OnPluginStart()
 	
 	CreateConVar("sm_noscope_version", "PLUGIN_VERSION", "The version of the SourceMod plugin MyJailBreak - War", FCVAR_PLUGIN|FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	g_wenabled = CreateConVar("sm_noscope_enable", "1", "0 - disabled, 1 - enable war");
-	g_noscopeprefix = CreateConVar("sm_noscope_prefix", "war", "Insert your Jailprefix. shown in braces [war]");
-	g_noscopecmd = CreateConVar("sm_noscope_cmd", "!entenjagd", "Insert your 2nd chat trigger. !war still enabled");
 	roundtimec = CreateConVar("sm_noscope_roundtime", "5", "Round time for a single war round");
 	roundtimenormalc = CreateConVar("sm_nonoscope_roundtime", "12", "set round time after a war round zour normal mp_roudntime");
 	preparetimec = CreateConVar("sm_noscope_preparetime", "15", "Time freeze noscopes");
 	RoundLimitsc = CreateConVar("sm_noscope_roundsnext", "3", "Runden nach Krieg oder Mapstart bis Krieg gestartet werden kann");
-	
+	gc_bTagEnabled = CreateConVar("sm_noscope_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 
-	GetConVarString(g_noscopeprefix, g_wnoscopeprefix, sizeof(g_wnoscopeprefix));
-	GetConVarString(g_noscopecmd, g_wnoscopecmd, sizeof(g_wnoscopecmd));
+
+
 	
 	AutoExecConfig(true, "MyJailbreak_NoScope");
 	
@@ -108,6 +103,18 @@ public OnConfigsExecuted()
 	roundtimenormal = GetConVarInt(roundtimenormalc);
 	preparetime = GetConVarInt(preparetimec);
 	RoundLimits = 0;
+	
+	if (gc_bTagEnabled.BoolValue)
+	{
+		ConVar hTags = FindConVar("sv_tags");
+		char sTags[128];
+		hTags.GetString(sTags, sizeof(sTags));
+		if (StrContains(sTags, "MyJailbreak", false) == -1)
+		{
+			StrCat(sTags, sizeof(sTags), ", MyJailbreak");
+			hTags.SetString(sTags);
+		}
+	}
 }
 
 public RoundEnd(Handle:event, String:name[], bool:dontBroadcast)
@@ -140,14 +147,14 @@ public RoundEnd(Handle:event, String:name[], bool:dontBroadcast)
 		SetCvar("sm_zombie_enable", 1);
 		SetCvar("sm_hide_enable", 1);
 		SetCvar("sm_duckhunt_enable", 1);
-		SetCvar("sm_warffa_enable", 1);
+		SetCvar("sm_ffa_enable", 1);
 		SetCvar("sm_beacon_enabled", 0);
 		SetCvar("sv_infinite_ammo", 0);
 		SetCvar("sm_warden_enable", 1);
 		SetCvar("mp_roundtime", roundtimenormal);
 		SetCvar("mp_roundtime_hostage", roundtimenormal);
 		SetCvar("mp_roundtime_defuse", roundtimenormal);
-		PrintToChatAll("%s %t", g_wnoscopeprefix, "noscope_end");
+		PrintToChatAll("%t %t", "noscope_tag" , "noscope_end");
 		
 	}
 	if (StartNoScope)
@@ -168,7 +175,7 @@ public Action SetNoScope(int client,int args)
 	StartNoScope = true;
 	RoundLimits = GetConVarInt(RoundLimitsc);
 	votecount = 0;
-	PrintToChatAll("%s %t", g_wnoscopeprefix, "noscope_next");
+	PrintToChatAll("%t %t", "noscope_tag" , "noscope_next");
 	}
 }
 
@@ -197,7 +204,7 @@ public Action:OnWeaponCanUse(client, weapon)
 		return Plugin_Handled;
 		}
 		return Plugin_Continue;
-}
+		}
 
 public Action:OnPreThink(client)
 {
@@ -231,7 +238,7 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_war_enable", 0);
 		SetCvar("sm_zombie_enable", 0);
-		SetCvar("sm_warffa_enable", 0);
+		SetCvar("sm_ffa_enable", 0);
 		SetCvar("sm_beacon_enabled", 1);
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("sm_hide_enable", 0);
@@ -241,7 +248,7 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 		NoScopeRound++;
 		StartNoScope = false;
 		
-			SJD_OpenDoors();
+		SJD_OpenDoors();
 		
 		NoScopeMenu = CreatePanel();
 		Format(info1, sizeof(info1), "%T", "noscope_info_Title", LANG_SERVER);
@@ -340,7 +347,7 @@ public Action:NoScope(Handle:timer)
 		}
 	}
 	PrintCenterTextAll("%t", "noscope_start");
-	PrintToChatAll("%s %t", g_wnoscopeprefix, "noscope_start");
+	PrintToChatAll("%t %t", "noscope_tag" , "noscope_start");
 	
 	NoScopeTimer = INVALID_HANDLE;
 	
@@ -357,7 +364,7 @@ public PlayerSay(Handle:event, String:name[], bool:dontBroadcast)
 	GetClientAuthString(client, steamid, sizeof(steamid));
 	GetEventString(event, "text", text, sizeof(text));
 	
-	if (StrEqual(text, g_wnoscopecmd) || StrEqual(text, "!noscope"))
+	if (StrEqual(text, "!scout") || StrEqual(text, "!noscope"))
 	{
 	if(GetConVarInt(g_wenabled) == 1)
 	{	
@@ -384,20 +391,20 @@ public PlayerSay(Handle:event, String:name[], bool:dontBroadcast)
 							RoundLimits = GetConVarInt(RoundLimitsc);
 							votecount = 0;
 							
-							PrintToChatAll("%s %t", g_wnoscopeprefix, "noscope_next");
+							PrintToChatAll("%t %t", "noscope_tag" , "noscope_next");
 						}
-						else PrintToChatAll("%s %t", g_wnoscopeprefix, "noscope_need", Missing);
+						else PrintToChatAll("%t %t", "noscope_tag" , "noscope_need", Missing);
 						
 					}
-					else PrintToChat(client, "%s %t", g_wnoscopeprefix, "noscope_voted");
+					else PrintToChat(client, "%t %t", "noscope_tag" , "noscope_voted");
 				}
-				else PrintToChat(client, "%s %t", g_wnoscopeprefix, "noscope_progress");
+				else PrintToChat(client, "%t %t", "noscope_tag" , "noscope_progress");
 			}
-			else PrintToChat(client, "%s %t", g_wnoscopeprefix, "noscope_wait", RoundLimits);
+			else PrintToChat(client, "%t %t", "noscope_tag" , "noscope_wait", RoundLimits);
 		}
-		else PrintToChat(client, "%s %t", g_wnoscopeprefix, "noscope_minct");
+		else PrintToChat(client, "%t %t", "noscope_tag" , "noscope_minct");
 	}
-	else PrintToChat(client, "%s %t", g_wnoscopeprefix, "noscope_disabled");
+	else PrintToChat(client, "%t %t", "noscope_tag" , "noscope_disabled");
 	}
 }
 

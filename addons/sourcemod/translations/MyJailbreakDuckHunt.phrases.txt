@@ -1,5 +1,9 @@
 "Phrases"
 {
+	"duckhunt_tag"
+	{
+		"en"		"[{green}duckhunt{default}]"
+	}
 	"duckhunt_need"  //{default}, {darkred}, {green}, {lightgreen}, "{darkred}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
 	{
 		"en"		"votes left to {darkred}war"

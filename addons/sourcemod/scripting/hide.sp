@@ -9,7 +9,7 @@
 #pragma semicolon 1
 
 #define PLUGIN_VERSION   "0.x"
-
+ConVar gc_bTagEnabled;
 new freezetime;
 new roundtime;
 new roundtimenormal;
@@ -31,16 +31,12 @@ new Handle:roundtimenormalc;
 new Handle:freezetimec;
 new Handle:RoundLimitsc;
 new Handle:g_wenabled=INVALID_HANDLE;
-new Handle:g_hideprefix=INVALID_HANDLE;
-new Handle:g_hidecmd=INVALID_HANDLE;
 new Handle:cvar;
 
 new bool:IsHide;
 new bool:StartHide;
 
 new String:voted[1500];
-new String:g_whideprefix[64];
-char g_whidecmd[64];
 
 
 public Plugin myinfo = {
@@ -62,15 +58,12 @@ public OnPluginStart()
 	
 	CreateConVar("sm_hide_version", "PLUGIN_VERSION", "The version of the SourceMod plugin MyJailBreak - War", FCVAR_PLUGIN|FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	g_wenabled = CreateConVar("sm_hide_enable", "1", "0 - disabled, 1 - enable war");
-	g_hideprefix = CreateConVar("sm_hide_prefix", "[{green}hide{default}]", "Insert your Jailprefix. shown in braces [war]");
-	g_hidecmd = CreateConVar("sm_hide_cmd", "!verstecken", "Insert your 2nd chat trigger. !war still enabled");
 	roundtimec = CreateConVar("sm_hide_roundtime", "8", "Round time for a single war round");
 	roundtimenormalc = CreateConVar("sm_nohide_roundtime", "12", "set round time after a war round zour normal mp_roudntime");
 	freezetimec = CreateConVar("sm_hide_freezetime", "30", "Time freeze T");
 	RoundLimitsc = CreateConVar("sm_hide_roundsnext", "3", "Runden nach Krieg oder Mapstart bis Krieg gestartet werden kann");
-	
-	GetConVarString(g_hideprefix, g_whideprefix, sizeof(g_whideprefix));
-	GetConVarString(g_hidecmd, g_whidecmd, sizeof(g_whidecmd));
+	gc_bTagEnabled = CreateConVar("sm_hide_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+
 	
 	AutoExecConfig(true, "MyJailbreak_Hide");
 	
@@ -121,6 +114,18 @@ public OnConfigsExecuted()
 	roundtimenormal = GetConVarInt(roundtimenormalc);
 	freezetime = GetConVarInt(freezetimec);
 	RoundLimits = 0;
+	
+	if (gc_bTagEnabled.BoolValue)
+	{
+		ConVar hTags = FindConVar("sv_tags");
+		char sTags[128];
+		hTags.GetString(sTags, sizeof(sTags));
+		if (StrContains(sTags, "MyJailbreak", false) == -1)
+		{
+			StrCat(sTags, sizeof(sTags), ", MyJailbreak");
+			hTags.SetString(sTags);
+		}
+	}
 }
 
 public RoundEnd(Handle:event, String:name[], bool:dontBroadcast)
@@ -131,7 +136,11 @@ public RoundEnd(Handle:event, String:name[], bool:dontBroadcast)
 	{
 		for(new client=1; client <= MaxClients; client++)
 		{
-			if (IsClientInGame(client)) SetEntData(client, FindSendPropOffs("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
+			if (IsClientInGame(client)) 
+			{
+			SetEntData(client, FindSendPropOffs("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
+			SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
+			}
 		}
 		
 		if (LimitTimer != INVALID_HANDLE) KillTimer(LimitTimer);
@@ -150,7 +159,7 @@ public RoundEnd(Handle:event, String:name[], bool:dontBroadcast)
 		SetCvar("sm_hosties_lr", 1);
 		SetCvar("sm_war_enable", 1);
 		SetCvar("sm_zombie_enable", 1);
-		SetCvar("sm_warffa_enable", 1);
+		SetCvar("sm_ffa_enable", 1);
 		SetCvar("sm_noscope_enable", 1);
 		SetCvar("sm_duckhunt_enable", 1);
 		SetCvar("sm_catch_enable", 1);
@@ -159,9 +168,10 @@ public RoundEnd(Handle:event, String:name[], bool:dontBroadcast)
 		SetCvar("mp_roundtime", roundtimenormal);
 		SetCvar("mp_roundtime_hostage", roundtimenormal);
 		SetCvar("mp_roundtime_defuse", roundtimenormal);
-		CPrintToChatAll("%s %t", g_whideprefix, "hide_end");
+		CPrintToChatAll("%t %t", "hide_tag" , "hide_end");
 		DoFog();
 		AcceptEntityInput(FogIndex, "TurnOff");
+		
 	}
 	if (StartHide)
 	{
@@ -178,7 +188,7 @@ public Action SetHide(int client,int args)
 	StartHide = true;
 	RoundLimits = GetConVarInt(RoundLimitsc);
 	votecount = 0;
-	CPrintToChatAll("%s %t", g_whideprefix, "hide_next");
+	CPrintToChatAll("%t %t", "hide_tag" , "hide_next");
 	}
 }
 
@@ -230,7 +240,6 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 						GivePlayerItem(client, "weapon_tagrenade");
 						}
 					}
-					CPrintToChatAll("%s Terrors versteckt euch", g_whideprefix);
 					if (IsClientInGame(client))
 					{
 					SetEntData(client, FindSendPropOffs("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
@@ -282,19 +291,18 @@ public Action:Hide(Handle:timer)
 				{
 				SetEntityMoveType(client, MOVETYPE_WALK);
 				SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.4);
-				GivePlayerItem(client, "weapon_tagrenade");
 				}
 				if (GetClientTeam(client) == 2)
 				{
 				SetEntityMoveType(client, MOVETYPE_NONE);
 				SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
-				SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 0.1);
+				SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 0.4);
 				}
 			}
 		}
 	}
 	PrintCenterTextAll("%t", "hide_start");
-	CPrintToChatAll("%s %t", g_whideprefix, "hide_start");
+	CPrintToChatAll("%t %t", "hide_tag" , "hide_start");
 
 
 	
@@ -325,7 +333,7 @@ public PlayerSay(Handle:event, String:name[], bool:dontBroadcast)
 	GetClientAuthString(client, steamid, sizeof(steamid));
 	GetEventString(event, "text", text, sizeof(text));
 	
-	if (StrEqual(text, g_whidecmd) || StrEqual(text, "!hide"))
+	if (StrEqual(text, "!verstecken") || StrEqual(text, "!hide"))
 	{
 	if(GetConVarInt(g_wenabled) == 1)
 	{	
@@ -350,7 +358,7 @@ public PlayerSay(Handle:event, String:name[], bool:dontBroadcast)
 							StartHide = true;
 							
 							SetCvar("sm_war_enable", 0);
-							SetCvar("sm_warffa_enable", 0);
+							SetCvar("sm_ffa_enable", 0);
 							SetCvar("sm_zombie_enable", 0);
 							SetCvar("sm_duckhunt_enable", 0);
 							SetCvar("sm_catch_enable", 0);
@@ -359,20 +367,20 @@ public PlayerSay(Handle:event, String:name[], bool:dontBroadcast)
 							RoundLimits = GetConVarInt(RoundLimitsc);
 							votecount = 0;
 							
-							CPrintToChatAll("%s %t", g_whideprefix, "hide_next");
+							CPrintToChatAll("%t %t", "hide_tag" , "hide_next");
 						}
-						else CPrintToChatAll("%s %t", g_whideprefix, "hide_need", Missing);
+						else CPrintToChatAll("%t %t", "hide_tag" , "hide_need", Missing);
 						
 					}
-					else CPrintToChat(client, "%s %t", g_whideprefix, "hide_voted");
+					else CPrintToChat(client, "%t %t", "hide_tag" , "hide_voted");
 				}
-				else CPrintToChat(client, "%s %t", g_whideprefix, "hide_progress");
+				else CPrintToChat(client, "%t %t", "hide_tag" , "hide_progress");
 			}
-			else CPrintToChat(client, "%s %t", g_whideprefix, "hide_wait", RoundLimits);
+			else CPrintToChat(client, "%t %t", "hide_tag" , "hide_wait", RoundLimits);
 		}
-		else CPrintToChat(client, "%s %t", g_whideprefix, "hide_minct");
+		else CPrintToChat(client, "%t %t", "hide_tag" , "hide_minct");
 	}
-	else CPrintToChat(client, "%s %t", g_whideprefix, "hide_disabled");
+	else CPrintToChat(client, "%t %t", "hide_tag" , "hide_disabled");
 	}
 }
 
