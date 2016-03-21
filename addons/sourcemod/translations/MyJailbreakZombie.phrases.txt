@@ -6,8 +6,9 @@
 	}
 	"zombie_need"  //{default}, {darkred}, {green}, {lightgreen}, "{darkred}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
 	{
-		"en"		"votes left to {darkred}war"
-		"de"		"votes bis {darkred}krieg{default} beginnt"
+		"#format"	"{1:i}"
+		"en"		"votes left to {darkred}zombie"
+		"de"		"noch {1} votes bis {darkred}zombie{default} beginnt"
 	}
 	"zombie_twin"
 	{
@@ -93,30 +94,30 @@
 	}
 			"zombie_info_Title"
 	{
-		"en"		"FFA is activ"
-		"de"		"FFA ist aktiv"
+		"en"		"zombie is activ"
+		"de"		"zombie ist aktiv"
 	}
 	
 	"zombie_info_Line1"
 	{
-		"en"		"Do not be surprised if ported in wk"
-		"de"		"Nicht wundern falls ihr in die wk geportet wurdet"
+		"en"		"Zombies(ct) against Humans(t)"
+		"de"		"Zombies(ct) gegen Humans(t)"
 	}
 	"zombie_info_Line2"
 	{
-		"en"		"In warround ct play against t"
-		"de"		"In Kriegrunden spielen CT's gegen T's"
+		"en"		"Zombies freezed and Human can hide"
+		"de"		"Zombies sind eine zeit gefreezt damit die T sich verstcken können"
 	}
 	
 	"zombie_info_Line3"
 	{
-		"en"		"Während der no damge phase kannst du aus der zelle/waffenkammer"
+		"en"		"you can move and exit the wk in nodamge phase"
 		"de"		"Während der no damge phase kannst du aus der zelle/waffenkammer"
 	}
 	
 	"zombie_info_Line4"
 	{
-		"en"		"Alle normalen Jailregeln sind aufgehoben!"
+		"en"		"All normal jailRules are repealed"
 		"de"		"Alle normalen Jailregeln sind aufgehoben!"
 	}
 	
@@ -128,13 +129,13 @@
 	
 	"zombie_info_Line6"
 	{
-		"en"		"Jeder darf überall hin wo er will!"
+		"en"		"Everyone is allowed to go everywhere where he wants"
 		"de"		"Jeder darf überall hin wo er will!"
 	}
 	
 	"zombie_info_Line7"
 	{
-		"en"		"bau keine scheisse!"
+		"en"		"dont be an asshole!"
 		"de"		"bau keine scheisse!"
 	}
 		"zombie_wait"

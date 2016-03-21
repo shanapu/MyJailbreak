@@ -7,22 +7,21 @@
 	
 	"ffa_need"  //{default}, {darkred}, {green}, {lightgreen}, "{darkred}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
 	{
-			"#format"	"{1:i}"
+		"#format"	"{1:i}"
 		"en"		"{1} votes left to {darkred}ffa"
 		"de"		"noch {1} votes bis {darkred}ffa{default} beginnt"
 	}
 	"ffa_twin"
 	{
 		"#format"	""
-		"en"		"Terrorists win"
+		"en"		"a Terrorist win"
 		
 	}
 	
 	"ffa_ctwin"
 	{
 		"#format"	""
-		"en"		"Counter-Terrorists win"
-		
+		"en"		"a Counter-Terrorist win"
 	}
 	
 	"ffa_end"
@@ -125,13 +124,13 @@
 	
 	"ffa_info_Line3"
 	{
-		"en"		"Während der no damge phase kannst du aus der zelle/waffenkammer"
+		"en"		"you can move and exit the wk in nodamge phase"
 		"de"		"Während der no damge phase kannst du aus der zelle/waffenkammer"
 	}
 	
 	"ffa_info_Line4"
 	{
-		"en"		"Alle normalen Jailregeln sind aufgehoben!"
+		"en"		"All normal jailRules are repealed"
 		"de"		"Alle normalen Jailregeln sind aufgehoben!"
 	}
 	
@@ -143,13 +142,13 @@
 	
 	"ffa_info_Line6"
 	{
-		"en"		"Jeder darf überall hin wo er will!"
+		"en"		"Everyone is allowed to go everywhere where he wants"
 		"de"		"Jeder darf überall hin wo er will!"
 	}
 	
 	"ffa_info_Line7"
 	{
-		"en"		"bau keine scheisse!"
+		"en"		"dont be an asshole!"
 		"de"		"bau keine scheisse!"
 	}
 		

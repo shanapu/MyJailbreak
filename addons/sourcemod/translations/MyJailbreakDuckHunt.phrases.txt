@@ -6,13 +6,14 @@
 	}
 	"duckhunt_need"  //{default}, {darkred}, {green}, {lightgreen}, "{darkred}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
 	{
-		"en"		"votes left to {darkred}war"
-		"de"		"votes bis {darkred}krieg{default} beginnt"
+		"#format"	"{1:i}"
+		"en"		"votes left to {darkred}duckhunht"
+		"de"		"noch {1} votes bis {darkred}entenjagd{default} beginnt"
 	}
 	"duckhunt_twin"
 	{
 		"#format"	""
-		"en"		"Terroist surived"
+		"en"		"The duckhunter died"
 		
 	}
 	
@@ -88,30 +89,30 @@
 	
 	"duckhunt_info_Title"
 	{
-		"en"		"FFA is activ"
-		"de"		"FFA ist aktiv"
+		"en"		"Duckhunt is activ"
+		"de"		"Entenjagd ist aktiv"
 	}
 	
 	"duckhunt_info_Line1"
 	{
-		"en"		"Do not be surprised if ported in wk"
-		"de"		"Nicht wundern falls ihr in die wk geportet wurdet"
+		"en"		"a kind of Clay pigeon shooting"
+		"de"		"Eine Art Tontaubenschiessen"
 	}
 	"duckhunt_info_Line2"
 	{
-		"en"		"In warround ct play against t"
-		"de"		"In Kriegrunden spielen CT's gegen T's"
+		"en"		"Cts got novas"
+		"de"		"Counter Terrorist haben Nova"
 	}
 	
 	"duckhunt_info_Line3"
 	{
-		"en"		"Während der no damge phase kannst du aus der zelle/waffenkammer"
-		"de"		"Während der no damge phase kannst du aus der zelle/waffenkammer"
+		"en"		"Ts are chickens and got knife and greante"
+		"de"		"terroristen sind chicken haben Knife und Granten"
 	}
 	
 	"duckhunt_info_Line4"
 	{
-		"en"		"Alle normalen Jailregeln sind aufgehoben!"
+		"en"		"All normal jailRules are repealed"
 		"de"		"Alle normalen Jailregeln sind aufgehoben!"
 	}
 	
@@ -123,13 +124,13 @@
 	
 	"duckhunt_info_Line6"
 	{
-		"en"		"Jeder darf überall hin wo er will!"
+		"en"		"Everyone is allowed to go everywhere where he wants"
 		"de"		"Jeder darf überall hin wo er will!"
 	}
 	
 	"duckhunt_info_Line7"
 	{
-		"en"		"bau keine scheisse!"
+		"en"		"dont be an asshole!"
 		"de"		"bau keine scheisse!"
 	}
 		"duckhunt_wait"

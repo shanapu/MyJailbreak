@@ -7,20 +7,21 @@
 
 	"catch_need"  //{default}, {darkred}, {green}, {lightgreen}, "{darkred}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
 	{
+		"#format"	"{1:i}"
 		"en"		"votes left to {darkred}catch"
-		"de"		"votes bis {darkred}fangen{default} beginnt"
+		"de"		"noch {1} votes bis {darkred}fangen{default} beginnt"
 	}
 	"catch_twin"
 	{
 		"#format"	""
-		"en"		"Terroist surived"
+		"en"		"Terrorist escaped"
 		
 	}
 	
 	"catch_ctwin"
 	{
 		"#format"	""
-		"en"		"Zombies killed all"
+		"en"		"all Terrors catched"
 		
 	}
 	
@@ -73,51 +74,33 @@
 		"en"		"catch is disabled."
 		
 	}
-	
-	"catch_damage"
-	{
-		"#format"	""
-		"en"		"seconds until damage enabled"
-		
-	}
-	"catch_timetocatch"
-	{
-		"#format"	""
-		"en"		"seconds to hide"
-		
-	}
-	"catch_timetouncatch"
-	{
-		"#format"	""
-		"en"		"seconds until unfreeze"
-		
-	}
+
 	"catch_info_Title"
 	{
-		"en"		"FFA is activ"
-		"de"		"FFA ist aktiv"
+		"en"		"catch is activ"
+		"de"		"Fangen ist aktiv"
 	}
 	
 	"catch_info_Line1"
 	{
-		"en"		"Do not be surprised if ported in wk"
-		"de"		"Nicht wundern falls ihr in die wk geportet wurdet"
+		"en"		"CTs must catch & freeze all Ts by knifing"
+		"de"		"Die Ct müssen alle T mit dem messer einfangen und freezen"
 	}
 	"catch_info_Line2"
 	{
-		"en"		"In warround ct play against t"
-		"de"		"In Kriegrunden spielen CT's gegen T's"
+		"en"		"T can unfreeze catched Ts with knife"
+		"de"		"T können gefreezte T mit dem messer befreien"
 	}
 	
 	"catch_info_Line3"
 	{
-		"en"		"Während der no damge phase kannst du aus der zelle/waffenkammer"
-		"de"		"Während der no damge phase kannst du aus der zelle/waffenkammer"
+		"en"		"round end when all T catched or roud time left"
+		"de"		"Die runde endet wenn alle T gefangen sind oder die zeit abgelaufen ist"
 	}
 	
 	"catch_info_Line4"
 	{
-		"en"		"Alle normalen Jailregeln sind aufgehoben!"
+		"en"		"All normal jailRules are repealed"
 		"de"		"Alle normalen Jailregeln sind aufgehoben!"
 	}
 	
@@ -129,13 +112,13 @@
 	
 	"catch_info_Line6"
 	{
-		"en"		"Jeder darf überall hin wo er will!"
+		"en"		"Everyone is allowed to go everywhere where he wants"
 		"de"		"Jeder darf überall hin wo er will!"
 	}
 	
 	"catch_info_Line7"
 	{
-		"en"		"bau keine scheisse!"
+		"en"		"dont be an asshole!"
 		"de"		"bau keine scheisse!"
 	}
 	"catch_wait"

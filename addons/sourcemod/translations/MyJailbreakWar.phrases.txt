@@ -129,13 +129,13 @@
 	
 	"war_info_Line3"
 	{
-		"en"		"Während der no damge phase kannst du aus der zelle/waffenkammer"
+		"en"		"you can move and exit the wk in nodamge phase"
 		"de"		"Während der no damge phase kannst du aus der zelle/waffenkammer"
 	}
 	
 	"war_info_Line4"
 	{
-		"en"		"Alle normalen Jailregeln sind aufgehoben!"
+		"en"		"All normal jailRules are repealed"
 		"de"		"Alle normalen Jailregeln sind aufgehoben!"
 	}
 	
@@ -147,13 +147,13 @@
 	
 	"war_info_Line6"
 	{
-		"en"		"Jeder darf überall hin wo er will!"
+		"en"		"Everyone is allowed to go everywhere where he wants"
 		"de"		"Jeder darf überall hin wo er will!"
 	}
 	
 	"war_info_Line7"
 	{
-		"en"		"bau keine scheisse!"
+		"en"		"dont be an asshole!"
 		"de"		"bau keine scheisse!"
 	}
 		

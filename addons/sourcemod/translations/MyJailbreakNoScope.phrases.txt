@@ -6,8 +6,9 @@
 	}
 	"noscope_need"  //{default}, {darkred}, {green}, {lightgreen}, "{darkred}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
 	{
-		"en"		"votes left to {darkred}war"
-		"de"		"votes bis {darkred}krieg{default} beginnt"
+			"#format"	"{1:i}"
+		"en"		"votes left to {darkred}noscope"
+		"de"		"noch {1} votes bis {darkred}noscope{default} beginnt"
 	}
 	"noscope_twin"
 	{
@@ -105,13 +106,13 @@
 	
 	"noscope_info_Line3"
 	{
-		"en"		"Während der no damge phase kannst du aus der zelle/waffenkammer"
+		"en"		"you can move and exit the wk in nodamge phase"
 		"de"		"Während der no damge phase kannst du aus der zelle/waffenkammer"
 	}
 	
 	"noscope_info_Line4"
 	{
-		"en"		"Alle normalen Jailregeln sind aufgehoben!"
+		"en"		"All normal jailRules are repealed"
 		"de"		"Alle normalen Jailregeln sind aufgehoben!"
 	}
 	
@@ -123,13 +124,13 @@
 	
 	"noscope_info_Line6"
 	{
-		"en"		"Jeder darf überall hin wo er will!"
+		"en"		"Everyone is allowed to go everywhere where he wants"
 		"de"		"Jeder darf überall hin wo er will!"
 	}
 	
 	"noscope_info_Line7"
 	{
-		"en"		"bau keine scheisse!"
+		"en"		"dont be an asshole!"
 		"de"		"bau keine scheisse!"
 	}
 		"noscope_wait"
