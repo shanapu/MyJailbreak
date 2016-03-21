@@ -74,22 +74,16 @@
 		
 	}
 	
-	"zombie_damage"
-	{
-		"#format"	""
-		"en"		"seconds until damage enabled"
-		
-	}
 	"zombie_timetozombie"
 	{
-		"#format"	""
-		"en"		"seconds to hide "
+		"#format"	"{1:i}"
+		"en"		"{1} seconds to hide "
 		
 	}
 	"zombie_timetounfreeze"
 	{
-		"#format"	""
-		"en"		"seconds until unfreeze"
+		"#format"	"{1:i}"
+		"en"		"{1} seconds until unfreeze"
 		
 	}
 			"zombie_info_Title"

@@ -300,7 +300,7 @@ public Action:DuckHunt(Handle:timer)
 		if (IsClientInGame(client) && IsPlayerAlive(client))
 			{
 		
-						PrintCenterText(client,"%i %t", preparetime, "duckhunt_timetounfreeze");
+						PrintCenterText(client,"%t", "duckhunt_timetounfreeze", preparetime);
 			}
 		return Plugin_Continue;
 	}

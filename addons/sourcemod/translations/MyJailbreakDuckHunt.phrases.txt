@@ -73,17 +73,11 @@
 		"en"		"duckhunt is disabled."
 		
 	}
-	
-	"duckhunt_damage"
-	{
-		"#format"	""
-		"en"		"seconds until cells open and the hunt begin"
-		
-	}
+
 	"duckhunt_timetounfreeze"
 	{
-		"#format"	""
-		"en"		"seconds until start"
+		"#format"	"{1:i}"
+		"en"		"{1} seconds until start"
 		
 	}
 	

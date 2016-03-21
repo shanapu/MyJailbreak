@@ -284,11 +284,11 @@ public Action:Zombie(Handle:timer)
 			{
 		if (GetClientTeam(client) == 3)
 						{
-						PrintCenterText(client,"%i %t", freezetime, "zombie_timetounfreeze");
+						PrintCenterText(client,"%t", "zombie_timetounfreeze", freezetime);
 						}
 		if (GetClientTeam(client) == 2)
 						{
-						PrintCenterText(client,"%i %t", freezetime, "zombie_timetozombie");
+						PrintCenterText(client,"%t", "zombie_timetozombie", freezetime);
 						}
 		}
 		return Plugin_Continue;

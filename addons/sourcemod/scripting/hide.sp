@@ -269,11 +269,11 @@ public Action:Hide(Handle:timer)
 			{
 		if (GetClientTeam(client) == 3)
 						{
-						PrintCenterText(client,"%i %t", freezetime, "hide_timetounfreeze");
+						PrintCenterText(client,"%t", "hide_timetounfreeze", freezetime);
 						}
 		if (GetClientTeam(client) == 2)
 						{
-						PrintCenterText(client,"%i %t", freezetime, "hide_timetohide");
+						PrintCenterText(client,"%t", "hide_timetohide", freezetime);
 						}
 		}
 		return Plugin_Continue;

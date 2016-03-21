@@ -320,7 +320,7 @@ public Action:NoScope(Handle:timer)
 		if (IsClientInGame(client) && IsPlayerAlive(client))
 			{
 		
-						PrintCenterText(client,"%i %t", preparetime, "noscope_timetounfreeze");
+						PrintCenterText(client,"%t", "noscope_timetounfreeze", preparetime);
 			}
 		return Plugin_Continue;
 	}

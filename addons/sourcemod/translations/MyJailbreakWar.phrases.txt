@@ -82,14 +82,14 @@
 	
 	"war_damage"
 	{
-		"#format"	""
-		"en"		"seconds until damage enabled"
+	"#format"	"{1:i}"
+		"en"		"{1} seconds until damage enabled"
 		
 	}
 	"war_timetohide"
 	{
-		"#format"	""
-		"en"		"seconds until unfreeze"
+		#format"	"{1:i}"
+		"en"		"{1} seconds until unfreeze"
 		
 	}
 	"war_info_Title"

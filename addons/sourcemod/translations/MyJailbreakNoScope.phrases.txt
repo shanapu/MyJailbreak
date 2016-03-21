@@ -74,16 +74,11 @@
 		
 	}
 	
-	"noscope_damage"
-	{
-		"#format"	""
-		"en"		"seconds until cells open and the hunt begin"
-		
-	}
+
 	"noscope_timetounfreeze"
 	{
-		"#format"	""
-		"en"		"seconds until start"
+		"#format"	"{1:i}"
+		"en"		"{1} seconds until start"
 		
 	}
 	

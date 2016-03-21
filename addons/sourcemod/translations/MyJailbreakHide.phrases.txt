@@ -74,22 +74,17 @@
 		
 	}
 	
-	"hide_damage"
-	{
-		"#format"	""
-		"en"		"seconds until damage enabled"
-		
-	}
+
 	"hide_timetohide"
 	{
-		"#format"	""
-		"en"		"seconds to hide and until freeze"
+	#format"	"{1:i}"
+		"en"		"{1} seconds to hide and until freeze"
 		
 	}
 	"hide_timetounfreeze"
 	{
-		"#format"	""
-		"en"		"seconds until unfreeze"
+		"#format"	"{1:i}"
+		"en"		"{1} seconds until unfreeze"
 		
 	}
 		"hide_info_Title"

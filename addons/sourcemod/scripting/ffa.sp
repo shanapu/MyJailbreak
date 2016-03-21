@@ -364,7 +364,7 @@ public Action:NoWeapon(Handle:timer)
 	{
 		nodamagetimer--;
 		
-		PrintCenterTextAll("%i %t", nodamagetimer, "ffa_damage");
+		PrintCenterTextAll("%t", "ffa_damage", nodamagetimer);
 		
 		return Plugin_Continue;
 	}

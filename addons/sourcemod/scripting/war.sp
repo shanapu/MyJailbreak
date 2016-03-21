@@ -355,7 +355,7 @@ public Action:Hide(Handle:timer)
 	{
 		freezetime--;
 		
-		PrintCenterTextAll("%i %t", freezetime, "war_timetohide");
+		PrintCenterTextAll("%t", "war_timetohide", freezetime);
 		
 		return Plugin_Continue;
 	}
@@ -396,7 +396,7 @@ public Action:NoWeapon(Handle:timer)
 	{
 		nodamagetimer--;
 		
-		PrintCenterTextAll("%i %t", nodamagetimer, "war_damage");
+		PrintCenterTextAll("%t", "war_damage", nodamagetimer);
 		
 		return Plugin_Continue;
 	}
