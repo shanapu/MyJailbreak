@@ -64,8 +64,8 @@ public Action:JbMenu(client,args)
 	SetMenuTitle(menu, menuinfo1);
 	if (warden_iswarden(client)) 
 	{
-	Format(menuinfo2, sizeof(menuinfo2), "%T", "menu_info_Title", LANG_SERVER);
-	AddMenuItem(menu, "simonmenu", menuinfo2);
+	Format(menuinfo2, sizeof(menuinfo2), "%T", "menu_overlays", LANG_SERVER);
+	AddMenuItem(menu, "overlays", menuinfo2);
 	Format(menuinfo3, sizeof(menuinfo3), "%T", "menu_opencell", LANG_SERVER);
 	AddMenuItem(menu, "cellopen", menuinfo3);
 	Format(menuinfo4, sizeof(menuinfo4), "%T", "menu_teamgames", LANG_SERVER);
@@ -238,7 +238,7 @@ public JBMenuHandler(Handle:menu, MenuAction:action, client, itemNum)
 		{
 			FakeClientCommand(client, "say /admin");
 		}
-		else if ( strcmp(info,"simonmenu") == 0 ) 
+		else if ( strcmp(info,"overlays") == 0 ) 
 		{
 			FakeClientCommand(client, "say !jboverlays");
 		}
