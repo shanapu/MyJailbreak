@@ -3,6 +3,7 @@
 #include <sourcemod>
 #include <colors>
 #include <sdktools>
+#include <wardn>
 #include <smartjaildoors>
 #include <sdkhooks>
 
@@ -177,10 +178,13 @@ public Action SetDuckHunt(int client,int args)
 {
 	if(GetConVarInt(g_wenabled) == 1)	
 	{
+	if (warden_iswarden(client)) 
+	{
 	StartDuckHunt = true;
 	RoundLimits = GetConVarInt(RoundLimitsc);
 	votecount = 0;
 	CPrintToChatAll("%t %t", "duckhunt_tag" , "duckhunt_next");
+	}
 	}
 }
 

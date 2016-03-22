@@ -3,6 +3,7 @@
 #include <sourcemod>
 #include <colors>
 #include <sdktools>
+#include <wardn>
 #include <smartjaildoors>
 
 //Compiler Options
@@ -194,10 +195,13 @@ public Action Setffa(int client,int args)
 {
 	if(GetConVarInt(g_wenabled) == 1)	
 	{
+	if (warden_iswarden(client)) 
+	{
 	Startffa = true;
 	RoundLimits = GetConVarInt(RoundLimitsc);
 	votecount = 0;
 	CPrintToChatAll("%t %t", "ffa_tag" , "ffa_next");
+	}
 	}
 }
 

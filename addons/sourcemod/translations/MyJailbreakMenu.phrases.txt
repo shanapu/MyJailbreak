@@ -65,52 +65,52 @@
 	{
 		"#format"		""
 		"en"			"join Terror"
-	}	
+	}
 	"menu_dice"
 	{
 		"#format"		""
 		"en"			"roll the dice"
-	}	
+	}
 	"menu_joinct"
 	{
 		"#format"		""
 		"en"			"join Counter Terror"
-	}	
+	}
 	"menu_votect"
 	{
 		"#format"		""
 		"en"			"Vote against guard"
-	}	
+	}
 	"menu_votewarden"
 	{
 		"#format"		""
 		"en"			"vote against warden"
-	}	
+	}
 	"menu_event_Title"
 	{
 		"#format"		""
 		"en"			"MyJailbreak EventDays Menu"
-	}	
+	}
 	"menu_war"
 	{
 		"#format"		""
 		"en"			"Start war next round"
-	}	
+	}
 	"menu_ffa"
 	{
 		"#format"		""
 		"en"			"Start ffa next round"
-	}	
+	}
 	"menu_zombie"
 	{
 		"#format"		""
 		"en"			"Start zombie next round"
-	}	
+	}
 	"menu_hide"
 	{
 		"#format"		""
 		"en"			"Start hide next round"
-	}	
+	}
 	"menu_catch"
 	{
 		"#format"		""
@@ -130,5 +130,10 @@
 	{
 		"#format"		""
 		"en"			"you are not the warden"
+	}
+	"menu_israndomdead"
+	{
+		"#format"		"{1:n}"
+		"en"			"{1} was killed randomly"
 	}
 }

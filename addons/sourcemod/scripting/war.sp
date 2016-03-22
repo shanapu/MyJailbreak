@@ -4,6 +4,7 @@
 #include <sourcemod>
 #include <sdktools>
 #include <smartjaildoors>
+#include <wardn>
 
 //Compiler Options
 #pragma semicolon 1
@@ -176,6 +177,8 @@ public RoundEnd(Handle:event, String:name[], bool:dontBroadcast)
 public Action SetWar(int client,int args)
 {
 	if(GetConVarInt(g_wenabled) == 1)	
+	{	
+	if (warden_iswarden(client)) 
 	{
 	StartWar = true;
 	RoundLimits = GetConVarInt(RoundLimitsc);
@@ -188,6 +191,7 @@ public Action SetWar(int client,int args)
 	SetCvar("sm_catch_enable", 0);
 	
 	CPrintToChatAll("%t %t", "war_tag" , "war_next");
+	}
 	}
 }
 

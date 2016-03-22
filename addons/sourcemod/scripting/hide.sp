@@ -3,6 +3,7 @@
 #include <sourcemod>
 #include <colors>
 #include <sdktools>
+#include <wardn>
 #include <smartjaildoors>
 
 //Compiler Options
@@ -185,10 +186,13 @@ public Action SetHide(int client,int args)
 {
 	if(GetConVarInt(g_wenabled) == 1)	
 	{
+	if (warden_iswarden(client)) 
+	{
 	StartHide = true;
 	RoundLimits = GetConVarInt(RoundLimitsc);
 	votecount = 0;
 	CPrintToChatAll("%t %t", "hide_tag" , "hide_next");
+	}
 	}
 }
 

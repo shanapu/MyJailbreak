@@ -5,6 +5,7 @@
 #include <sdktools>
 #include <smartjaildoors>
 #include <sdkhooks>
+#include <wardn>
 
 //Compiler Options
 #pragma semicolon 1
@@ -163,10 +164,13 @@ public Action SetCatch(int client,int args)
 {
 	if(GetConVarInt(g_wenabled) == 1)	
 	{
+	if (warden_iswarden(client)) 
+	{
 	StartCatch = true;
 	RoundLimits = GetConVarInt(RoundLimitsc);
 	votecount = 0;
 	CPrintToChatAll("%t %t", "catch_tag" , "catch_next");
+	}
 	}
 }
 

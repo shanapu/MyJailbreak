@@ -5,6 +5,7 @@
 #include <colors>
 #include <smartjaildoors>
 #include <sdkhooks>
+#include <wardn>
 
 //Compiler Options
 #pragma semicolon 1
@@ -164,10 +165,13 @@ public Action SetZombie(int client,int args)
 {
 	if(GetConVarInt(g_wenabled) == 1)	
 	{
+	if (warden_iswarden(client)) 
+	{
 	StartZombie = true;
 	RoundLimits = GetConVarInt(RoundLimitsc);
 	votecount = 0;
 	CPrintToChatAll("%t %t", "zombie_tag" , "zombie_next");
+	}
 	}
 }
 

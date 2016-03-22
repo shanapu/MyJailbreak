@@ -3,6 +3,7 @@
 #include <sourcemod>
 #include <sdktools>
 #include <smartjaildoors>
+#include <wardn>
 #include <sdkhooks>
 
 //Compiler Options
@@ -172,10 +173,13 @@ public Action SetNoScope(int client,int args)
 {
 	if(GetConVarInt(g_wenabled) == 1)	
 	{
+	if (warden_iswarden(client)) 
+	{
 	StartNoScope = true;
 	RoundLimits = GetConVarInt(RoundLimitsc);
 	votecount = 0;
 	PrintToChatAll("%t %t", "noscope_tag" , "noscope_next");
+	}
 	}
 }
 

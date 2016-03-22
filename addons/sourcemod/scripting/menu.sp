@@ -2,7 +2,7 @@
 #include <sdktools>
 #include <sdkhooks>
 #include <cstrike>
-#include <warden>
+#include <wardn>
 #include <colors>
 
 new Handle:cvar_ff;
@@ -47,7 +47,6 @@ public OnPluginStart()
 	
 	
 	gc_bTagEnabled = CreateConVar("sm_menu_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-
 	
 	cvar_ff = FindConVar("mp_teammates_are_enemies");
 }
@@ -56,7 +55,7 @@ public Action:JbMenu(client,args)
 {
 	decl String:menuinfo1[255], String:menuinfo2[255], String:menuinfo3[255], String:menuinfo4[255], String:menuinfo5[255], String:menuinfo6[255], String:menuinfo7[255], String:menuinfo8[255];
 	decl String:menuinfo9[255], String:menuinfo10[255], String:menuinfo11[255], String:menuinfo12[255], String:menuinfo13[255], String:menuinfo14[255], String:menuinfo15[255], String:menuinfo16[255];
-	decl String:menuinfo17[255]; 
+	decl String:menuinfo17[255], String:menuinfo177[255]; 
 	
 	new Handle:menu = CreateMenu(JBMenuHandler);
 	
@@ -119,8 +118,8 @@ public Action:JbMenu(client,args)
 	}
 	if (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
 	{
-	Format(menuinfo18, sizeof(menuinfo18), "%T", "menu_admin", LANG_SERVER);
-	AddMenuItem(menu, "admin", menuinfo18);
+	Format(menuinfo177, sizeof(menuinfo177), "%T", "menu_admin", LANG_SERVER);
+	AddMenuItem(menu, "admin", menuinfo177);
 	}
 	
 //	AddMenuItem(menu, "servercmd", "Spieler Menu");
@@ -170,7 +169,7 @@ public JBMenuHandler(Handle:menu, MenuAction:action, client, itemNum)
 {
 	if ( action == MenuAction_Select ) 
 	{
-		new String:menuinfo[32];
+		new String:info[32];
 		
 		GetMenuItem(menu, itemNum, info, sizeof(info));
 		
@@ -276,7 +275,7 @@ public JBMenuHandler(Handle:menu, MenuAction:action, client, itemNum)
 			if(clientV > 0)
 			{
 				ForcePlayerSuicide(clientV);
-				CPrintToChatAll("%t %t", "menu_tag", "menu_israndomdead, clientV);  //%N
+				CPrintToChatAll("%t %t", "menu_tag", "menu_israndomdead", clientV); 
 				
 			}
 			JbMenu(client,0);
@@ -292,11 +291,11 @@ public EventMenuHandler(Handle:menu, MenuAction:action, client, itemNum)
 {
 	if ( action == MenuAction_Select ) 
 	{
-		new String:menuinfo[32];
+		new String:info[32];
 		
 		GetMenuItem(menu, itemNum, info, sizeof(info));
 		
-		else if ( strcmp(info,"war") == 0 ) 
+		if ( strcmp(info,"war") == 0 ) 
 		{
 			FakeClientCommand(client, "sm_setwar");
 		} 
