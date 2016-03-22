@@ -1,0 +1,134 @@
+"Phrases"
+{
+	
+	"menu_tag"
+	{
+		"#format"		""
+		"en"			"[MyJailbreak Menu]"
+	}	
+	"menu_info_Title"
+	{
+		"#format"		""
+		"en"			"MyJailbreak Menu"
+	}	
+	"menu_overlays"
+	{
+		"#format"		""
+		"en"			"Call Overlays"
+	}	
+	"menu_opencell"
+	{
+		"#format"		""
+		"en"			"open cell doors"
+	}	
+	"menu_teamgames"
+	{
+		"#format"		""
+		"en"			"team games"
+	}	
+	"menu_eventgames"
+	{
+		"#format"		""
+		"en"			"Event Days"
+	}	
+	"menu_guns"
+	{
+		"#format"		""
+		"en"			"weapon Menu"
+	}	
+	"menu_ffon"
+	{
+		"#format"		""
+		"en"			"enable FF for Ts"
+	}	
+	"menu_ffoff"
+	{
+		"#format"		""
+		"en"			"disable FF for Ts"
+	}	
+	"menu_randomdead"
+	{
+		"#format"		""
+		"en"			"Kill a random T"
+	}	
+	"menu_unwarden"
+	{
+		"#format"		""
+		"en"			"Leave warden"
+	}	
+	"menu_getwarden"
+	{
+		"#format"		""
+		"en"			"become warden"
+	}	
+	"menu_joint"
+	{
+		"#format"		""
+		"en"			"join Terror"
+	}	
+	"menu_dice"
+	{
+		"#format"		""
+		"en"			"roll the dice"
+	}	
+	"menu_joinct"
+	{
+		"#format"		""
+		"en"			"join Counter Terror"
+	}	
+	"menu_votect"
+	{
+		"#format"		""
+		"en"			"Vote against guard"
+	}	
+	"menu_votewarden"
+	{
+		"#format"		""
+		"en"			"vote against warden"
+	}	
+	"menu_event_Title"
+	{
+		"#format"		""
+		"en"			"MyJailbreak EventDays Menu"
+	}	
+	"menu_war"
+	{
+		"#format"		""
+		"en"			"Start war next round"
+	}	
+	"menu_ffa"
+	{
+		"#format"		""
+		"en"			"Start ffa next round"
+	}	
+	"menu_zombie"
+	{
+		"#format"		""
+		"en"			"Start zombie next round"
+	}	
+	"menu_hide"
+	{
+		"#format"		""
+		"en"			"Start hide next round"
+	}	
+	"menu_catch"
+	{
+		"#format"		""
+		"en"			"Start catch next round"
+	}
+	"menu_noscope"
+	{
+		"#format"		""
+		"en"			"Start noscope next round"
+	}	
+	"menu_duckhunt"
+	{
+		"#format"		""
+		"en"			"Start duckhunt next round"
+	}
+	"menu_notwarden"
+	{
+		"#format"		""
+		"en"			"you are not the warden"
+	}
+}
