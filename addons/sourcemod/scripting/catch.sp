@@ -30,7 +30,7 @@ new Handle:roundtimec;
 new Handle:roundtimenormalc;
 new Handle:RoundLimitsc;
 new Handle:g_wenabled=INVALID_HANDLE;
-new Handle:cvar;
+new Handle:usecvar;
 
 new bool:IsCatch;
 new bool:StartCatch;
@@ -169,8 +169,6 @@ public RoundEnd(Handle:event, String:name[], bool:dontBroadcast)
 
 public Action SetCatch(int client,int args)
 {
-	if(GetConVarInt(g_wenabled) == 1)	
-	{
 	if(GetConVarInt(g_wenabled) == 1)	
 	{
 	if (warden_iswarden(client) || CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
@@ -375,32 +373,32 @@ public PlayerSay(Handle:event, String:name[], bool:dontBroadcast)
 
 public SetCvar(String:cvarName[64], value)
 {
-	cvar = FindConVar(cvarName);
-	if(cvar == INVALID_HANDLE) return;
+	usecvar = FindConVar(cvarName);
+	if(usecvar == INVALID_HANDLE) return;
 	
-	new flags = GetConVarFlags(cvar);
+	new flags = GetConVarFlags(usecvar);
 	flags &= ~FCVAR_NOTIFY;
-	SetConVarFlags(cvar, flags);
+	SetConVarFlags(usecvar, flags);
 
-	SetConVarInt(cvar, value);
+	SetConVarInt(usecvar, value);
 
 	flags |= FCVAR_NOTIFY;
-	SetConVarFlags(cvar, flags);
+	SetConVarFlags(usecvar, flags);
 }
 
 public SetCvarF(String:cvarName[64], Float:value)
 {
-	cvar = FindConVar(cvarName);
-	if(cvar == INVALID_HANDLE) return;
+	usecvar = FindConVar(cvarName);
+	if(usecvar == INVALID_HANDLE) return;
 
-	new flags = GetConVarFlags(cvar);
+	new flags = GetConVarFlags(usecvar);
 	flags &= ~FCVAR_NOTIFY;
-	SetConVarFlags(cvar, flags);
+	SetConVarFlags(usecvar, flags);
 
-	SetConVarFloat(cvar, value);
+	SetConVarFloat(usecvar, value);
 
 	flags |= FCVAR_NOTIFY;
-	SetConVarFlags(cvar, flags);
+	SetConVarFlags(usecvar, flags);
 }
 
 public OnMapEnd()
@@ -435,6 +433,7 @@ CatchEm(client, attacker)
 	SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 0.0);
 	SetEntityRenderColor(client, 0, 0, 255, 255);
 	catched[client] = true;
+
 	
 	CPrintToChatAll("%t %t", "catch_tag" , "catch_catch", attacker, client);
 }

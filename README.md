@@ -160,7 +160,7 @@ based/merged/idea plugins:
 
 This plugin allows players to vote and warden to set next round to hide and seek
 
-####EventDay -  Duckhunt
+#### EventDay -  Duckhunt
 based/merged/idea plugins: 
 - https://forums.alliedmods.net/showpost.php?p=1657893&postcount=11?p=1657893&postcount=11
 - https://github.com/Franc1sco/Franug-JailBreak/blob/Only-Days-And-Captain/addons/sourcemod/scripting/jailbreak_open.sp

@@ -1,0 +1,5 @@
+"MonitorScreen"
+{
+	"$basetexture" "overlays/sm_hosties/ansage3"
+	"$translucent" 1
+}

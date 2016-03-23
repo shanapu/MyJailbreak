@@ -29,7 +29,7 @@ new Handle:roundtimenormalc;
 new Handle:freezetimec;
 new Handle:RoundLimitsc;
 new Handle:g_wenabled=INVALID_HANDLE;
-new Handle:cvar;
+new Handle:usecvar;
 
 new bool:IsZombie;
 new bool:StartZombie;
@@ -398,32 +398,32 @@ public PlayerSay(Handle:event, String:name[], bool:dontBroadcast)
 
 public SetCvar(String:cvarName[64], value)
 {
-	cvar = FindConVar(cvarName);
-	if(cvar == INVALID_HANDLE) return;
+	usecvar = FindConVar(cvarName);
+	if(usecvar == INVALID_HANDLE) return;
 	
-	new flags = GetConVarFlags(cvar);
+	new flags = GetConVarFlags(usecvar);
 	flags &= ~FCVAR_NOTIFY;
-	SetConVarFlags(cvar, flags);
+	SetConVarFlags(usecvar, flags);
 
-	SetConVarInt(cvar, value);
+	SetConVarInt(usecvar, value);
 
 	flags |= FCVAR_NOTIFY;
-	SetConVarFlags(cvar, flags);
+	SetConVarFlags(usecvar, flags);
 }
 
 public SetCvarF(String:cvarName[64], Float:value)
 {
-	cvar = FindConVar(cvarName);
-	if(cvar == INVALID_HANDLE) return;
+	usecvar = FindConVar(cvarName);
+	if(usecvar == INVALID_HANDLE) return;
 
-	new flags = GetConVarFlags(cvar);
+	new flags = GetConVarFlags(usecvar);
 	flags &= ~FCVAR_NOTIFY;
-	SetConVarFlags(cvar, flags);
+	SetConVarFlags(usecvar, flags);
 
-	SetConVarFloat(cvar, value);
+	SetConVarFloat(usecvar, value);
 
 	flags |= FCVAR_NOTIFY;
-	SetConVarFlags(cvar, flags);
+	SetConVarFlags(usecvar, flags);
 }
 
 public OnMapEnd()

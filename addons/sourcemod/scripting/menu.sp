@@ -51,6 +51,7 @@ public OnPluginStart()
 	
 	gc_bTagEnabled = AutoExecConfig_CreateConVar("sm_menu_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	
+	
 	AutoExecConfig_CacheConvars();
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
