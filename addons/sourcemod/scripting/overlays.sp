@@ -3,7 +3,7 @@
 // ====[ INCLUDES ]============================================================
 #include <sourcemod>
 #include <sdktools>
-#include <warden>
+#include <wardn>
 
 // ====[ DEFINES ]=============================================================
 #define PLUGIN_VERSION			"1.1"

@@ -12,7 +12,6 @@
 
 #define PLUGIN_VERSION   "0.x"
 ConVar gc_bTagEnabled;
-new freezetime;
 new nodamagetimer;
 new roundtime;
 new roundtimenormal;
@@ -31,7 +30,6 @@ new Handle:WeaponTimer;
 new Handle:ffaMenu;
 new Handle:roundtimec;
 new Handle:roundtimenormalc;
-new Handle:freezetimec;
 new Handle:nodamagetimerc;
 new Handle:RoundLimitsc;
 new Handle:g_wenabled=INVALID_HANDLE;
@@ -73,8 +71,7 @@ public OnPluginStart()
 	g_wspawncell = AutoExecConfig_CreateConVar("sm_ffa_spawn", "1", "0 - teleport to weaponroom, 1 - standart spawn - cell doors auto open");
 	roundtimec = AutoExecConfig_CreateConVar("sm_ffa_roundtime", "5", "Round time for a single ffa round");
 	roundtimenormalc = AutoExecConfig_CreateConVar("sm_noffa_roundtime", "12", "set round time after a ffa round");
-	freezetimec = AutoExecConfig_CreateConVar("sm_ffa_freezetime", "30", "Time freeze T");
-	nodamagetimerc = AutoExecConfig_CreateConVar("sm_ffa_nodamage", "30", "Time after freezetime damage disbaled");
+	nodamagetimerc = AutoExecConfig_CreateConVar("sm_ffa_nodamage", "30", "Time damage disbaled");
 	RoundLimitsc = AutoExecConfig_CreateConVar("sm_ffa_roundsnext", "3", "Rounds until event can be started again.");
 	gc_bTagEnabled = AutoExecConfig_CreateConVar("sm_ffa_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 
@@ -104,8 +101,7 @@ public OnMapStart()
 	Startffa = false;
 	RoundLimits = 0;
 	
-	
-	freezetime = GetConVarInt(freezetimec);
+
 	nodamagetimer = GetConVarInt(nodamagetimerc);
 	roundtime = GetConVarInt(roundtimec);
 	roundtimenormal = GetConVarInt(roundtimenormalc);
@@ -129,7 +125,7 @@ public OnConfigsExecuted()
 {
 	roundtime = GetConVarInt(roundtimec);
 	roundtimenormal = GetConVarInt(roundtimenormalc);
-	freezetime = GetConVarInt(freezetimec);
+
 	nodamagetimer = GetConVarInt(nodamagetimerc);
 	RoundLimits = 0;
 	
@@ -235,7 +231,6 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 		if(GetConVarInt(g_wspawncell) == 1)
 		{
 		SJD_OpenDoors();
-		freezetime = 0;
 		}
 		ffaMenu = CreatePanel();
 		Format(info1, sizeof(info1), "%T", "ffa_info_Title", LANG_SERVER);
@@ -353,8 +348,6 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 					SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 				}
 			}
-			
-			freezetime--;
 			
 
 

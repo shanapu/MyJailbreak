@@ -3,7 +3,7 @@
 	"ffa_tag"
 	{
 		"en"		"[{green}ffa{default}]"
-	} 
+	}
 	
 	"ffa_need"  //{default}, {darkred}, {green}, {lightgreen}, "{darkred}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
 	{

@@ -77,7 +77,7 @@
 
 	"hide_timetohide"
 	{
-	#format"	"{1:i}"
+	"#format"	"{1:i}"
 		"en"		"{1} seconds to hide and until freeze"
 		
 	}

@@ -5,10 +5,9 @@
 		"en"		"[{green}war{default}]"
 	}
 	
-	
 	"war_need"  //{default}, {darkred}, {green}, {lightgreen}, "{darkred}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
 	{
-			"#format"	"{1:i}"
+		"#format"	"{1:i}"
 		"en"		"{1} votes left to {darkred}war"
 		"de"		"noch {1} votes bis {darkred}krieg{default} beginnt"
 	}
@@ -17,13 +16,11 @@
 		"#format"	""
 		"en"		"Terrorists win"
 	}
-	
-	"war_ctwin"
+		"war_ctwin"
 	{
 		"#format"	""
 		"en"		"Counter-Terrorists win"
 	}
-	
 	"war_end" //{default}, {darkred}, {green}, {lightgreen}, "{darkred}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
 	{
 		"#format"	""
@@ -88,9 +85,8 @@
 	}
 	"war_timetohide"
 	{
-		#format"	"{1:i}"
+		"#format"	"{1:i}"
 		"en"		"{1} seconds until unfreeze"
-		
 	}
 	"war_info_Title"
 	{
