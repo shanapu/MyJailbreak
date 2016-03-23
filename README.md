@@ -2,7 +2,7 @@
 
 ## Jailbreak plugin mashup (or patchwork?) pack
 
-### Plugins:
+### Plugins: [Wardn](https://git.tf/shanapu/MyJailbreak#wardn), [War](https://git.tf/shanapu/MyJailbreak#eventday-war), [FFA](https://git.tf/shanapu/MyJailbreak#eventday-ffa), [Zombie](https://git.tf/shanapu/MyJailbreak#eventday-zombie), [Noscope](https://git.tf/shanapu/MyJailbreak#eventday-noscope), [Catch](https://git.tf/shanapu/MyJailbreak#eventday-catch), [Hide](https://git.tf/shanapu/MyJailbreak#eventday-hide), [Duckhunt](https://git.tf/shanapu/MyJailbreak#eventday-duckhunt), 
 
 #### Wardn
 based/merged/idea plugins: 
