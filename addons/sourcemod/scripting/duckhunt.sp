@@ -285,6 +285,7 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 						SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.2);
 						SetEntityGravity(client, 0.3);
 						SetEntityHealth(client, 150);
+						CS_DropWeapon(client, index, true, false);
 						GivePlayerItem(client, "weapon_hegrenade");
 						}
 					}
