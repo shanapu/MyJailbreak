@@ -21,6 +21,9 @@ new Handle:g_iWardenColorRed;
 new Handle:g_iWardenColorGreen;
 new Handle:g_iWardenColorBlue;
 
+new votecount;
+
+new String:voted[1500];
 
 ConVar cvSndWarden;
 char sSndWarden[256];
@@ -132,6 +135,7 @@ public void OnPluginStart()
 	gc_bTagEnabled = AutoExecConfig_CreateConVar("sm_warden_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 
 	HookEvent("round_start", Event_RoundStart);
+	HookEvent("player_say", PlayerSay);
 	
 	AutoExecConfig_CacheConvars();
 	AutoExecConfig_ExecuteFile();
@@ -140,6 +144,9 @@ public void OnPluginStart()
 	
 	
 	g_CollisionOffset = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
+	
+	votecount = 0;
+
 }
 
 
@@ -288,6 +295,8 @@ public void OnMapStart()
 		PrecacheSoundAnyDownload(sSndWarden);
 		PrecacheSoundAnyDownload(sSndWardenDied);
 	}	
+	votecount = 0;
+
 }
 
 public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
@@ -329,7 +338,7 @@ if(GetConVarInt(g_openenabled) == 1)
 	if (countertime != INVALID_HANDLE)
 		KillTimer(countertime);
 		countertime = INVALID_HANDLE;
-	}
+		}
 	else
 	CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden"); 
 	}
@@ -767,4 +776,51 @@ void PrecacheSoundAnyDownload(char[] sSound)
 	AddFileToDownloadsTable(sBuffer);
 	}
 }
+
+
+
+
+
+public PlayerSay(Handle:event, String:name[], bool:dontBroadcast)
+{
+	decl String:text[256];
+	decl String:steamid[64];
+	new client = GetClientOfUserId(GetEventInt(event, "userid"));
+	
+	GetClientAuthString(client, steamid, sizeof(steamid));
+	GetEventString(event, "text", text, sizeof(text));
+	
+	if (StrEqual(text, "!votewarden") || StrEqual(text, "!vw"))
+	{
+	if(GetConVarInt(g_enabled) == 1)
+	{	
+		if (warden_exist())
+		{
+			if (StrContains(voted, steamid, true) == -1)
+					{
+						new playercount = (GetClientCount(true) / 2);
+						
+						votecount++;
+						
+						new Missing = playercount - votecount + 1;
+						
+						Format(voted, sizeof(voted), "%s,%s", voted, steamid);
+						
+						if (votecount > playercount)
+						{
+								RemoveTheWarden(client);
+								votecount = 0;
+						}
+						else CPrintToChatAll("%t %t", "warden_tag" , "warden_need", Missing);
+						
+					}
+					else CPrintToChat(client, "%t %t", "warden_tag" , "warden_voted");
+				}
+		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_noexist");
+	}
+	else CPrintToChat(client, "%t %t", "warden_tag" , "warden_disabled");
+	}
+}
+
+
 
