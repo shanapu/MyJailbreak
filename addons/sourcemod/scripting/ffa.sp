@@ -5,6 +5,7 @@
 #include <sdktools>
 #include <wardn>
 #include <smartjaildoors>
+#include <autoexecconfig>
 
 //Compiler Options
 #pragma semicolon 1
@@ -59,20 +60,27 @@ public Plugin myinfo = {
 public OnPluginStart()
 {
 	// Translation
+	LoadTranslations("MyJailbreakWarden.phrases");
 	LoadTranslations("MyJailbreakFfa.phrases");
 	
-	RegAdminCmd("sm_setffa", Setffa, ADMFLAG_GENERIC);
+	RegConsoleCmd("sm_setffa", Setffa);
 	
-	CreateConVar("sm_ffa_version", "PLUGIN_VERSION", "The version of the SourceMod plugin MyJailBreak - War", FCVAR_PLUGIN|FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
-	g_wenabled = CreateConVar("sm_ffa_enable", "1", "0 - disabled, 1 - enable ffa");
-	g_wspawncell = CreateConVar("sm_ffa_spawn", "1", "0 - teleport to weaponroom, 1 - standart spawn - cell doors auto open");
-	roundtimec = CreateConVar("sm_ffa_roundtime", "5", "Round time for a single ffa round");
-	roundtimenormalc = CreateConVar("sm_noffa_roundtime", "12", "set round time after a ffa round");
-	freezetimec = CreateConVar("sm_ffa_freezetime", "30", "Time freeze T");
-	nodamagetimerc = CreateConVar("sm_ffa_nodamage", "30", "Time after freezetime damage disbaled");
-	RoundLimitsc = CreateConVar("sm_ffa_roundsnext", "3", "Runden nach Krieg oder Mapstart bis Krieg gestartet werden kann");
-	gc_bTagEnabled = CreateConVar("sm_ffa_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	AutoExecConfig_SetFile("MyJailbreak_ffa");
+	AutoExecConfig_SetCreateFile(true);
+	
+	AutoExecConfig_CreateConVar("sm_ffa_version", "PLUGIN_VERSION", "The version of the SourceMod plugin MyJailBreak - War", FCVAR_PLUGIN|FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
+	g_wenabled = AutoExecConfig_CreateConVar("sm_ffa_enable", "1", "0 - disabled, 1 - enable ffa");
+	g_wspawncell = AutoExecConfig_CreateConVar("sm_ffa_spawn", "1", "0 - teleport to weaponroom, 1 - standart spawn - cell doors auto open");
+	roundtimec = AutoExecConfig_CreateConVar("sm_ffa_roundtime", "5", "Round time for a single ffa round");
+	roundtimenormalc = AutoExecConfig_CreateConVar("sm_noffa_roundtime", "12", "set round time after a ffa round");
+	freezetimec = AutoExecConfig_CreateConVar("sm_ffa_freezetime", "30", "Time freeze T");
+	nodamagetimerc = AutoExecConfig_CreateConVar("sm_ffa_nodamage", "30", "Time after freezetime damage disbaled");
+	RoundLimitsc = AutoExecConfig_CreateConVar("sm_ffa_roundsnext", "3", "Rounds until event can be started again.");
+	gc_bTagEnabled = AutoExecConfig_CreateConVar("sm_ffa_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 
+	AutoExecConfig_CacheConvars();
+	AutoExecConfig_ExecuteFile();
+	AutoExecConfig_CleanFile();
 	AutoExecConfig(true, "MyJailbreak_ffa");
 	
 	Isffa = false;
@@ -195,13 +203,16 @@ public Action Setffa(int client,int args)
 {
 	if(GetConVarInt(g_wenabled) == 1)	
 	{
-	if (warden_iswarden(client)) 
+	if (warden_iswarden(client) || CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
+	{
+	if (RoundLimits == 0)
 	{
 	Startffa = true;
 	RoundLimits = GetConVarInt(RoundLimitsc);
 	votecount = 0;
 	CPrintToChatAll("%t %t", "ffa_tag" , "ffa_next");
-	}
+	}else CPrintToChat(client, "%t %t", "ffa_tag" , "ffa_wait", RoundLimits);
+	}else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
 	}
 }
 
@@ -412,7 +423,7 @@ public PlayerSay(Handle:event, String:name[], bool:dontBroadcast)
 	GetClientAuthString(client, steamid, sizeof(steamid));
 	GetEventString(event, "text", text, sizeof(text));
 	
-	if (StrEqual(text, "!ffa") || StrEqual(text, "!ffa"))
+	if (StrEqual(text, "!ffa") || StrEqual(text, "!warffa"))
 	{
 	if(GetConVarInt(g_wenabled) == 1)
 	{	

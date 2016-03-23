@@ -6,6 +6,7 @@
 #include <smartjaildoors>
 #include <sdkhooks>
 #include <wardn>
+#include <autoexecconfig>
 
 //Compiler Options
 #pragma semicolon 1
@@ -49,19 +50,25 @@ public Plugin myinfo = {
 public OnPluginStart()
 {
 	// Translation
+	LoadTranslations("MyJailbreakWarden.phrases");
 	LoadTranslations("MyJailbreakZombie.phrases");
 	
-	RegAdminCmd("sm_setzombie", SetZombie, ADMFLAG_GENERIC);
+	RegConsoleCmd("sm_setzombie", SetZombie);
 	
-	CreateConVar("sm_zombie_version", "PLUGIN_VERSION", "The version of the SourceMod plugin MyJailBreak - War", FCVAR_PLUGIN|FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
-	g_wenabled = CreateConVar("sm_zombie_enable", "1", "0 - disabled, 1 - enable war");
-	roundtimec = CreateConVar("sm_zombie_roundtime", "5", "Round time for a single war round");
-	roundtimenormalc = CreateConVar("sm_nozombie_roundtime", "12", "set round time after a war round zour normal mp_roudntime");
-	freezetimec = CreateConVar("sm_zombie_freezetime", "35", "Time freeze zombies");
-	RoundLimitsc = CreateConVar("sm_zombie_roundsnext", "3", "Runden nach Krieg oder Mapstart bis Krieg gestartet werden kann");
-	gc_bTagEnabled = CreateConVar("sm_zombie_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	AutoExecConfig_SetFile("MyJailbreak_zombie");
+	AutoExecConfig_SetCreateFile(true);
+	
+	AutoExecConfig_CreateConVar("sm_zombie_version", "PLUGIN_VERSION", "The version of the SourceMod plugin MyJailBreak - War", FCVAR_PLUGIN|FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
+	g_wenabled = AutoExecConfig_CreateConVar("sm_zombie_enable", "1", "0 - disabled, 1 - enable war");
+	roundtimec = AutoExecConfig_CreateConVar("sm_zombie_roundtime", "5", "Round time for a single war round");
+	roundtimenormalc = AutoExecConfig_CreateConVar("sm_nozombie_roundtime", "12", "set round time after a war round zour normal mp_roudntime");
+	freezetimec = AutoExecConfig_CreateConVar("sm_zombie_freezetime", "35", "Time freeze zombies");
+	RoundLimitsc = AutoExecConfig_CreateConVar("sm_zombie_roundsnext", "3", "Rounds until event can be started again.");
+	gc_bTagEnabled = AutoExecConfig_CreateConVar("sm_zombie_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 
-	
+	AutoExecConfig_CacheConvars();
+	AutoExecConfig_ExecuteFile();
+	AutoExecConfig_CleanFile();
 	AutoExecConfig(true, "MyJailbreak_Zombie");
 	
 	IsZombie = false;
@@ -165,13 +172,16 @@ public Action SetZombie(int client,int args)
 {
 	if(GetConVarInt(g_wenabled) == 1)	
 	{
-	if (warden_iswarden(client)) 
+	if (warden_iswarden(client) || CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
+	{
+	if (RoundLimits == 0)
 	{
 	StartZombie = true;
 	RoundLimits = GetConVarInt(RoundLimitsc);
 	votecount = 0;
 	CPrintToChatAll("%t %t", "zombie_tag" , "zombie_next");
-	}
+	}else CPrintToChat(client, "%t %t", "zombie_tag" , "zombie_wait", RoundLimits);
+	}else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
 	}
 }
 

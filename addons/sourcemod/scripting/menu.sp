@@ -4,6 +4,7 @@
 #include <cstrike>
 #include <wardn>
 #include <colors>
+#include <autoexecconfig>
 
 new Handle:cvar_ff;
 ConVar gc_bTagEnabled;
@@ -45,8 +46,15 @@ public OnPluginStart()
 	
 	RegConsoleCmd("buyammo1", JbMenu);
 	
+	AutoExecConfig_SetFile("MyJailbreak_menu");
+	AutoExecConfig_SetCreateFile(true);
 	
-	gc_bTagEnabled = CreateConVar("sm_menu_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	gc_bTagEnabled = AutoExecConfig_CreateConVar("sm_menu_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	
+	AutoExecConfig_CacheConvars();
+	AutoExecConfig_ExecuteFile();
+	AutoExecConfig_CleanFile();
+	AutoExecConfig(true, "MyJailbreak_menu");
 	
 	cvar_ff = FindConVar("mp_teammates_are_enemies");
 }

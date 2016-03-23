@@ -72,6 +72,10 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_warden", BecomeWarden);
 	RegConsoleCmd("sm_uw", ExitWarden);
 	RegConsoleCmd("sm_unwarden", ExitWarden);
+	RegConsoleCmd("sm_hg", BecomeWarden);
+	RegConsoleCmd("sm_headguard", BecomeWarden);
+	RegConsoleCmd("sm_uhg", ExitWarden);
+	RegConsoleCmd("sm_unheadguard", ExitWarden);
 	RegConsoleCmd("sm_c", BecomeWarden);
 	RegConsoleCmd("sm_commander", BecomeWarden);
 	RegConsoleCmd("sm_uc", ExitWarden);
@@ -113,15 +117,15 @@ public void OnPluginStart()
 	g_colorenabled = AutoExecConfig_CreateConVar("sm_wardencolor_enable", "1", "0 - disabled, 1 - enable warden colored");
 	g_openenabled = AutoExecConfig_CreateConVar("sm_wardenopen_enable", "1", "0 - disabled, 1 - warden can open/close cells");
 	g_sounds = AutoExecConfig_CreateConVar("sm_wardensounds_enable", "1", "0 - disabled, 1 - enable warden sounds");
-	cvSndWarden = AutoExecConfig_CreateConVar("warden_sounds_path", "music/myjailbreak/warden.mp3", "Path to the sound which should be played for a new warden.");
+	cvSndWarden = AutoExecConfig_CreateConVar("sm_warden_sounds_path", "music/myjailbreak/warden.mp3", "Path to the sound which should be played for a new warden.");
 	GetConVarString(cvSndWarden, sSndWarden, sizeof(sSndWarden));
 	HookConVarChange(cvSndWarden, OnSettingChanged);
-	cvSndWardenDied = AutoExecConfig_CreateConVar("warden_sounds_path2", "music/myjailbreak/unwarden.mp3", "Path to the sound which should be played when there is no warden anymore.");
+	cvSndWardenDied = AutoExecConfig_CreateConVar("sm_warden_sounds_path2", "music/myjailbreak/unwarden.mp3", "Path to the sound which should be played when there is no warden anymore.");
 	GetConVarString(cvSndWardenDied, sSndWardenDied, sizeof(sSndWardenDied));
 	HookConVarChange(cvSndWardenDied, OnSettingChanged);
 	g_opentimer = AutoExecConfig_CreateConVar("sm_wardenopen_time", "60", "Time in seconds for open doors on round start automaticly");
 	g_opentimerenable = AutoExecConfig_CreateConVar("sm_wardenopen_time_enable", "1", "should doors open automatic 0- no 1 yes");   // TODO: DONT WORK
-	g_opentimerwarden = AutoExecConfig_CreateConVar("sm_wardenopen_time_warden", "1", "should doors open automatic after sm_wardenopen_time when there is a warden? needs sm_wardenopen_time_enable 1");   // TODO: DONT WORK
+	g_opentimerwarden = AutoExecConfig_CreateConVar("sm_wardenopen_time_warden", "1", "should doors open automatic after sm_wardenopen_time when there is a warden? needs sm_wardenopen_time_enable 1"); 
 	g_iWardenColorRed = AutoExecConfig_CreateConVar("sm_wardencolor_red", "0","What color to turn the warden into (set R, G and B values to 255 to disable) (Rgb): x - red value", 0, true, 0.0, true, 255.0);
 	g_iWardenColorGreen = AutoExecConfig_CreateConVar("sm_wardencolor_green", "0","What color to turn the warden into (rGb): x - green value", 0, true, 0.0, true, 255.0);
 	g_iWardenColorBlue = AutoExecConfig_CreateConVar("sm_wardencolor_blue", "255","What color to turn the warden into (rgB): x - blue value", 0, true, 0.0, true, 255.0);

@@ -71,7 +71,7 @@
 	"warden_notwarden"
 	{
 		"#format"	""
-		"en"		"you  must be the warden to use this command"
+		"en"		"you must be the warden to use this command"
 
 	}
 	

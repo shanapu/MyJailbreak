@@ -5,6 +5,7 @@
 #include <sdktools>
 #include <smartjaildoors>
 #include <wardn>
+#include <autoexecconfig>
 
 //Compiler Options
 #pragma semicolon 1
@@ -56,19 +57,20 @@ public Plugin myinfo = {
 public OnPluginStart()
 {
 	// Translation
+	LoadTranslations("MyJailbreakWarden.phrases");
 	LoadTranslations("MyJailbreakWar.phrases");
 	
-	RegAdminCmd("sm_setwar", SetWar, ADMFLAG_GENERIC);
+	RegConsoleCmd("sm_setwar", SetWar);
 	
-	CreateConVar("sm_war_version", "PLUGIN_VERSION", "The version of the SourceMod plugin MyJailBreak - War", FCVAR_PLUGIN|FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
-	g_wenabled = CreateConVar("sm_war_enable", "1", "0 - disabled, 1 - enable war");
-	g_wspawncell = CreateConVar("sm_war_spawn", "1", "0 - teleport to ct and freeze, 1 - stay in cell open cell doors with aw/weapon menu - need sjd");
-	roundtimec = CreateConVar("sm_war_roundtime", "5", "Round time for a single war round");
-	roundtimenormalc = CreateConVar("sm_nowar_roundtime", "12", "set round time after a war round");    //TODO: https://wiki.alliedmods.net/ConVars_(SourceMod_Scripting)#Using.2FChanging_Values
-	freezetimec = CreateConVar("sm_war_freezetime", "30", "Time freeze T");
-	nodamagetimerc = CreateConVar("sm_war_nodamage", "30", "Time after freezetime damage disbaled");
-	RoundLimitsc = CreateConVar("sm_war_roundsnext", "3", "Runden nach Krieg oder Mapstart bis Krieg gestartet werden kann");
-	gc_bTagEnabled = CreateConVar("sm_war_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	AutoExecConfig_CreateConVar("sm_war_version", "PLUGIN_VERSION", "The version of the SourceMod plugin MyJailBreak - War", FCVAR_PLUGIN|FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
+	g_wenabled = AutoExecConfig_CreateConVar("sm_war_enable", "1", "0 - disabled, 1 - enable war");
+	g_wspawncell = AutoExecConfig_CreateConVar("sm_war_spawn", "1", "0 - teleport to ct and freeze, 1 - stay in cell open cell doors with aw/weapon menu - need sjd");
+	roundtimec = AutoExecConfig_CreateConVar("sm_war_roundtime", "5", "Round time for a single war round");
+	roundtimenormalc = AutoExecConfig_CreateConVar("sm_nowar_roundtime", "12", "set round time after a war round");    //TODO: https://wiki.alliedmods.net/ConVars_(SourceMod_Scripting)#Using.2FChanging_Values
+	freezetimec = AutoExecConfig_CreateConVar("sm_war_freezetime", "30", "Time freeze T");
+	nodamagetimerc = AutoExecConfig_CreateConVar("sm_war_nodamage", "30", "Time after freezetime damage disbaled");
+	RoundLimitsc = AutoExecConfig_CreateConVar("sm_war_roundsnext", "3", "Rounds until event can be started again.");
+	gc_bTagEnabled = AutoExecConfig_CreateConVar("sm_war_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	
 	
 	
@@ -178,7 +180,9 @@ public Action SetWar(int client,int args)
 {
 	if(GetConVarInt(g_wenabled) == 1)	
 	{	
-	if (warden_iswarden(client)) 
+	if (warden_iswarden(client) || CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
+	{
+	if (RoundLimits == 0)
 	{
 	StartWar = true;
 	RoundLimits = GetConVarInt(RoundLimitsc);
@@ -191,7 +195,8 @@ public Action SetWar(int client,int args)
 	SetCvar("sm_catch_enable", 0);
 	
 	CPrintToChatAll("%t %t", "war_tag" , "war_next");
-	}
+	}else CPrintToChat(client, "%t %t", "war_tag" , "war_wait", RoundLimits);
+	}else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
 	}
 }
 
