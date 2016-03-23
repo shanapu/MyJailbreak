@@ -193,5 +193,17 @@
 		"#format"	""
 		"en"		"the warden set noblock off!"
 	}
+				"warden_need"
+	{
+		"#format"	"{1:i}"
+		"en"		"{1} votes left to {darkred}kick warden"
+		"de"		"noch {1} votes bis der {darkred}warden{default} geht"
+	}
+				"warden_voted"
+		{
+		"#format"	""
+		"en"		"You allready voted for kick warden"
+		
+	}
 	
 }
