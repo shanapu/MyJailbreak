@@ -451,8 +451,7 @@ CheckStatus()
 {
 	new number = 0;
 	for (new i = 1; i <= MaxClients; i++)
-		if(IsClientInGame(i) && IsPlayerAlive(i) && GetClientTeam(i) == CS_TEAM_T && !catched[i]) number++;
-		
+	if(IsClientInGame(i) && IsPlayerAlive(i) && GetClientTeam(i) == CS_TEAM_T && !catched[i]) number++;
 	if(number == 0) CS_TerminateRound(5.0, CSRoundEnd_CTWin);
 	CPrintToChatAll("%t %t", "catch_tag" , "catch_end");
 }

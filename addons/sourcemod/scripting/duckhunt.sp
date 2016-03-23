@@ -8,6 +8,9 @@
 #include <sdkhooks>
 #include <autoexecconfig>
 
+char model[256] = "models/player/custom_player/legacy/tm_phoenix_heavy.mdl";
+
+
 //Compiler Options
 #pragma semicolon 1
 
@@ -90,10 +93,10 @@ public OnPluginStart()
 	AddFileToDownloadsTable("models/chicken/chicken.phy");
 	AddFileToDownloadsTable("models/chicken/chicken.vvd");
 	AddFileToDownloadsTable("models/chicken/chicken.mdl");
-	PrecacheModel("models/chicken/chicken.mdl", true);
-	PrecacheModel("models/player/custom_player/legacy/tm_phoenix_heavy.mdl", true);
+
 
 }
+
 
 
 public OnMapStart()
@@ -109,6 +112,9 @@ public OnMapStart()
 	preparetime = GetConVarInt(preparetimec);
 	roundtime = GetConVarInt(roundtimec);
 	roundtimenormal = GetConVarInt(roundtimenormalc);
+	
+	PrecacheModel("models/chicken/chicken.mdl", true);
+	PrecacheModel("models/player/custom_player/legacy/tm_phoenix_heavy.mdl", true);
 	
 }
 
@@ -214,7 +220,7 @@ public Action:OnWeaponCanUse(client, weapon)
 		decl String:sWeapon[32];
 		GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
 
-		if(StrEqual(sWeapon, "weapon_hegrenade") || StrEqual(sWeapon, "weapon_knife") || (GetClientTeam(client) == 3 && StrEqual(sWeapon, "weapon_nova")))
+		if((GetClientTeam(client) == 2 && StrEqual(sWeapon, "weapon_hegrenade")) || (GetClientTeam(client) == 3 && StrEqual(sWeapon, "weapon_nova")))
 		{
 		
 			if (IsClientInGame(client) && IsPlayerAlive(client))
@@ -223,8 +229,7 @@ public Action:OnWeaponCanUse(client, weapon)
 			}
 		}
 		return Plugin_Handled;
-		}
-	return Plugin_Continue;
+		}return Plugin_Continue;
 }
 
 
@@ -275,7 +280,7 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 					{
 						if (GetClientTeam(client) == 3)
 						{
-						SetEntityModel(client, "models/player/custom_player/legacy/tm_phoenix_heavy.mdl");
+						SetEntityModel(client, model);
 						SetEntityHealth(client, 600);
 						GivePlayerItem(client, "weapon_nova");
 						}
@@ -285,7 +290,6 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 						SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.2);
 						SetEntityGravity(client, 0.3);
 						SetEntityHealth(client, 150);
-						CS_DropWeapon(client, index, true, false);
 						GivePlayerItem(client, "weapon_hegrenade");
 						}
 					}

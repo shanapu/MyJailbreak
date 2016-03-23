@@ -156,12 +156,11 @@ public RoundEnd(Handle:event, String:name[], bool:dontBroadcast)
 		SetCvar("sm_duckhunt_enable", 1);
 		SetCvar("sm_ffa_enable", 1);
 		SetCvar("sm_beacon_enabled", 0);
-		SetCvar("sv_infinite_ammo", 0);
 		SetCvar("sm_warden_enable", 1);
 		SetCvar("mp_roundtime", roundtimenormal);
 		SetCvar("mp_roundtime_hostage", roundtimenormal);
 		SetCvar("mp_roundtime_defuse", roundtimenormal);
-		PrintToChatAll("%t %t", "noscope_tag" , "noscope_end");
+		CPrintToChatAll("%t %t", "noscope_tag" , "noscope_end");
 		
 	}
 	if (StartNoScope)
@@ -186,7 +185,7 @@ public Action SetNoScope(int client,int args)
 	StartNoScope = true;
 	RoundLimits = GetConVarInt(RoundLimitsc);
 	votecount = 0;
-	PrintToChatAll("%t %t", "noscope_tag" , "noscope_next");
+	CPrintToChatAll("%t %t", "noscope_tag" , "noscope_next");
 	}else CPrintToChat(client, "%t %t", "noscope_tag" , "noscope_wait", RoundLimits);
 	}else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
 	}
@@ -216,7 +215,7 @@ public Action:OnWeaponCanUse(client, weapon)
 		}
 		return Plugin_Handled;
 		}return Plugin_Continue;
-		}
+}
 
 public Action:OnPreThink(client)
 {
@@ -255,7 +254,6 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("sm_hide_enable", 0);
 		SetCvar("dice_enable", 0);
-		SetCvar("sv_infinite_ammo", 1);
 		IsNoScope = true;
 		NoScopeRound++;
 		StartNoScope = false;
@@ -359,7 +357,7 @@ public Action:NoScope(Handle:timer)
 		}
 	}
 	PrintCenterTextAll("%t", "noscope_start");
-	PrintToChatAll("%t %t", "noscope_tag" , "noscope_start");
+	CPrintToChatAll("%t %t", "noscope_tag" , "noscope_start");
 	
 	NoScopeTimer = INVALID_HANDLE;
 	
@@ -403,20 +401,20 @@ public PlayerSay(Handle:event, String:name[], bool:dontBroadcast)
 							RoundLimits = GetConVarInt(RoundLimitsc);
 							votecount = 0;
 							
-							PrintToChatAll("%t %t", "noscope_tag" , "noscope_next");
+							CPrintToChatAll("%t %t", "noscope_tag" , "noscope_next");
 						}
-						else PrintToChatAll("%t %t", "noscope_tag" , "noscope_need", Missing);
+						else CPrintToChatAll("%t %t", "noscope_tag" , "noscope_need", Missing);
 						
 					}
-					else PrintToChat(client, "%t %t", "noscope_tag" , "noscope_voted");
+					else CPrintToChat(client, "%t %t", "noscope_tag" , "noscope_voted");
 				}
-				else PrintToChat(client, "%t %t", "noscope_tag" , "noscope_progress");
+				else CPrintToChat(client, "%t %t", "noscope_tag" , "noscope_progress");
 			}
-			else PrintToChat(client, "%t %t", "noscope_tag" , "noscope_wait", RoundLimits);
+			else CPrintToChat(client, "%t %t", "noscope_tag" , "noscope_wait", RoundLimits);
 		}
-		else PrintToChat(client, "%t %t", "noscope_tag" , "noscope_minct");
+		else CPrintToChat(client, "%t %t", "noscope_tag" , "noscope_minct");
 	}
-	else PrintToChat(client, "%t %t", "noscope_tag" , "noscope_disabled");
+	else CPrintToChat(client, "%t %t", "noscope_tag" , "noscope_disabled");
 	}
 }
 
