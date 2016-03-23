@@ -13,17 +13,20 @@ based/merged/idea plugins:
 - https://github.com/Franc1sco/Franug-JailBreak/blob/Only-Days-And-Captain/addons/sourcemod/scripting/jailbreak_open.sp
 
 This plugins allows players to take control over the prison as Warden/Headguard/Commander.
-Chat, Hud & sound notifications about warden/no warden, colorize warden, open/close cell doors, automatic open cells doors & toggle noblock.
+Chat, Hud & sound notifications about warden/no warden, colorize warden, open/close cell doors, automatic open cells doors, unvote warden & toggle noblock.
 
 ##### Commands // why so many cmds for same action? my players are dump.
 
 - sm_w / sm_warden - Allows the player taking the charge over prisoners
 - sm_c / sm_commander - Allows the player taking the charge over prisoners
 - sm_hg / sm_headguard - Allows the player taking the charge over prisoners
-- sm_uhg / sm_unheadguard - Allows the player to retire from the position
+- sm_uw / sm_unwarden - Allows the player to retire from the position
 - sm_uc / sm_uncommander - Allows the player to retire from the position
+- sm_uhg / sm_unheadguard - Allows the player to retire from the position
+- !vw / !votewarden - Allows the player to vote to retire warden
 - sm_open - Allows the warden to open the cell doors
 - sm_close - Allows the warden to close the cell doors
+
 - sm_noblockon - Allows the warden to enable no block (for the warden ?)
 - sm_noblockon - Allows the warden to disable no block (for the warden ?)
 
