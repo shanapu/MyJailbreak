@@ -6,6 +6,7 @@
 #include <clientprefs>
 #include <wardn>
 #include <colors>
+#include <autoexecconfig>
 
 #define VERSION "0.x"
 
@@ -23,6 +24,11 @@ new Handle:optionsMenu4 = INVALID_HANDLE;
 
 new String:primaryWeapon[MAXPLAYERS + 1][24];
 new String:secondaryWeapon[MAXPLAYERS + 1][24];
+
+ConVar gc_bTagEnabled;
+new Handle:g_enabled=INVALID_HANDLE;
+new Handle:g_Tenabled=INVALID_HANDLE;
+new Handle:g_CTenabled=INVALID_HANDLE;
 
 enum weapons
 {
@@ -63,6 +69,19 @@ public OnPluginStart()
 	
 	HookEvent("player_spawn", Event_PlayerSpawn);
 
+	AutoExecConfig_SetFile("MyJailbreak_weapons");
+	AutoExecConfig_SetCreateFile(true);
+	
+	g_enabled = AutoExecConfig_CreateConVar("sm_weapons_enable", "1", "0 - disabled, 1 - enable weapons");
+	g_Tenabled = AutoExecConfig_CreateConVar("sm_weapons_t", "0", "0 - disabled, 1 - enable weapons for T");
+	g_CTenabled = AutoExecConfig_CreateConVar("sm_weapons_ct", "1", "0 - disabled, 1 - enable weapons for CT");
+	gc_bTagEnabled = AutoExecConfig_CreateConVar("sm_weapons_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+
+	AutoExecConfig_CacheConvars();
+	AutoExecConfig_ExecuteFile();
+	AutoExecConfig_CleanFile();
+	AutoExecConfig(true, "MyJailbreak_weapons");
+	
 	
 	AddCommandListener(Event_Say, "say");
 	AddCommandListener(Event_Say, "say_team");
@@ -70,6 +89,22 @@ public OnPluginStart()
 	weapons1 = RegClientCookie("Primary Weapons", "", CookieAccess_Private);
 	weapons2 = RegClientCookie("Secondary Weapons", "", CookieAccess_Private);
 	//remember = RegClientCookie("Remember Weapons", "", CookieAccess_Private);
+}
+
+public OnConfigsExecuted()
+{
+	
+	if (gc_bTagEnabled.BoolValue)
+	{
+		ConVar hTags = FindConVar("sv_tags");
+		char sTags[128];
+		hTags.GetString(sTags, sizeof(sTags));
+		if (StrContains(sTags, "MyJailbreak", false) == -1)
+		{
+			StrCat(sTags, sizeof(sTags), ", MyJailbreak");
+			hTags.SetString(sTags);
+		}
+	}
 }
 
 Handle:BuildOptionsMenu(bool:sameWeaponsEnabled)
@@ -238,6 +273,11 @@ public Action:GetWeapons(Handle:timer, any:clientIndex)
 	Timers[clientIndex] = INVALID_HANDLE;
 	if (GetClientTeam(clientIndex) > 1 && IsPlayerAlive(clientIndex))
 	{
+	if(GetConVarInt(g_enabled) == 1)	
+	{
+	if(GetConVarInt(g_Tenabled) == 1)	
+	{
+	
 	
 		// Give weapons or display menu.
 		weaponsGivenThisRound[clientIndex] = false;
@@ -254,6 +294,28 @@ public Action:GetWeapons(Handle:timer, any:clientIndex)
 		{
 			DisplayOptionsMenu(clientIndex);
 		}
+	}else if(GetClientTeam(clientIndex) == 3)
+	{
+	if(GetConVarInt(g_CTenabled) == 1)	
+	{
+	// Give weapons or display menu.
+		weaponsGivenThisRound[clientIndex] = false;
+		if (newWeaponsSelected[clientIndex])
+		{
+			GiveSavedWeapons(clientIndex);
+			newWeaponsSelected[clientIndex] = false;
+		}
+		else if (rememberChoice[clientIndex])
+		{
+			GiveSavedWeapons(clientIndex);
+		}
+		else
+		{
+			DisplayOptionsMenu(clientIndex);
+		}
+	}
+	}
+	}
 	}
 }
 
@@ -270,6 +332,12 @@ GiveSavedWeaponsFix(clientIndex)
 {
 	if (IsPlayerAlive(clientIndex))
 	{		
+		if(GetConVarInt(g_enabled) == 1)
+		{
+		if(GetConVarInt(g_Tenabled) == 1)
+		{
+		
+		
 		//StripAllWeapons(clientIndex);
 		if(GetPlayerWeaponSlot(clientIndex, CS_SLOT_PRIMARY) == -1)
 		{
@@ -309,6 +377,52 @@ GiveSavedWeaponsFix(clientIndex)
 		//GivePlayerItem(clientIndex, "weapon_flashbang");
 		//GivePlayerItem(clientIndex, "weapon_molotov");
 		weaponsGivenThisRound[clientIndex] = true;
+		}
+		else if(GetClientTeam(clientIndex) == 3)
+	{
+	if(GetConVarInt(g_CTenabled) == 1)	
+	{
+	if(GetPlayerWeaponSlot(clientIndex, CS_SLOT_PRIMARY) == -1)
+		{
+			if (StrEqual(primaryWeapon[clientIndex], "random"))
+			{
+				// Select random menu item (excluding "Random" option)
+				new random = GetRandomInt(0, GetArraySize(array_primary)-1);
+				new Items[weapons];
+				GetArrayArray(array_primary, random, Items[0]);
+				GivePlayerItem(clientIndex, Items[ItemName]);
+			}
+			else
+				GivePlayerItem(clientIndex, primaryWeapon[clientIndex]);
+		}
+			
+		if(GetPlayerWeaponSlot(clientIndex, CS_SLOT_SECONDARY) == -1)
+		{
+			if (StrEqual(secondaryWeapon[clientIndex], "random"))
+			{
+				// Select random menu item (excluding "Random" option)
+				new random = GetRandomInt(0, GetArraySize(array_secondary)-1);
+				new Items[weapons];
+				GetArrayArray(array_secondary, random, Items[0]);
+				GivePlayerItem(clientIndex, Items[ItemName]);
+			}
+			else
+				GivePlayerItem(clientIndex, secondaryWeapon[clientIndex]);
+		}
+
+
+		if(GetPlayerWeaponSlot(clientIndex, CS_SLOT_GRENADE) == -1) GivePlayerItem(clientIndex, "weapon_hegrenade");
+		//GivePlayerItem(clientIndex, "weapon_hegrenade");
+		//GivePlayerItem(clientIndex, "weapon_decoy");
+		//GivePlayerItem(clientIndex, "weapon_flashbang");
+		//GivePlayerItem(clientIndex, "weapon_molotov");
+		//GivePlayerItem(clientIndex, "weapon_decoy");
+		//GivePlayerItem(clientIndex, "weapon_flashbang");
+		//GivePlayerItem(clientIndex, "weapon_molotov");
+		weaponsGivenThisRound[clientIndex] = true;
+	}
+	}
+	}
 	}
 }
 
