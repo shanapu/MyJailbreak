@@ -38,6 +38,8 @@ public OnConfigsExecuted()
 
 public OnPluginStart()
 {
+
+	LoadTranslations("MyJailbreakMenu.phrases");
 	RegConsoleCmd("sm_menu", JbMenu);
 	RegConsoleCmd("sm_menus", JbMenu);
 
@@ -252,12 +254,12 @@ public JBMenuHandler(Handle:menu, MenuAction:action, client, itemNum)
 		}
 		else if ( strcmp(info,"getwarden") == 0 ) 
 		{
-			FakeClientCommand(client, "sm_governor");
+			FakeClientCommand(client, "sm_warden");
 			JbMenu(client,0);
 		}
 		else if ( strcmp(info,"unwarden") == 0 ) 
 		{
-			FakeClientCommand(client, "sm_ungovernor");
+			FakeClientCommand(client, "sm_unwarden");
 			
 		}
 		else if ( strcmp(info,"cellopen") == 0 ) 

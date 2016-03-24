@@ -131,6 +131,11 @@
 		"#format"		""
 		"en"			"you are not the warden"
 	}
+		"menu_admin"
+	{
+		"#format"		""
+		"en"			"Admin Menu"
+	}
 	"menu_israndomdead"
 	{
 		"#format"		"{1:n}"
