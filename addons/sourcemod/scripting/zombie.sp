@@ -146,6 +146,8 @@ public RoundEnd(Handle:event, String:name[], bool:dontBroadcast)
 		Format(voted, sizeof(voted), "");
 		SetCvar("sm_hosties_lr", 1);
 		SetCvar("sm_war_enable", 1);
+		SetCvar("sm_weapons_t", 0);
+		SetCvar("sm_weapons_ct", 1);
 		SetCvar("sm_noscope_enable", 1);
 		SetCvar("sm_hide_enable", 1);
 		SetCvar("sm_duckhunt_enable", 1);
@@ -179,6 +181,16 @@ public Action SetZombie(int client,int args)
 	StartZombie = true;
 	RoundLimits = GetConVarInt(RoundLimitsc);
 	votecount = 0;
+	
+	
+		SetCvar("sm_hide_enable", 0);
+		SetCvar("sm_ffa_enable", 0);
+		SetCvar("sm_war_enable", 0);
+		SetCvar("sm_duckhunt_enable", 0);
+		SetCvar("sm_catch_enable", 0);
+		SetCvar("sm_noscope_enable", 0);
+		
+	
 	CPrintToChatAll("%t %t", "zombie_tag" , "zombie_next");
 	}else CPrintToChat(client, "%t %t", "zombie_tag" , "zombie_wait", RoundLimits);
 	}else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
@@ -221,6 +233,8 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("sm_beacon_enabled", 1);
+		SetCvar("sm_weapons_t", 1);
+		SetCvar("sm_weapons_ct", 0);
 		SetCvar("sv_infinite_ammo", 1);
 		SetCvar("dice_enable", 0);
 		IsZombie = true;
@@ -256,19 +270,19 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 					
 					if (IsClientInGame(client))
 					{
-						if (GetClientTeam(client) == 3)
-						{
-						SetEntityModel(client, "models/player/custom_player/zombie/revenant/revenant_v2.mdl");
-						SetEntityMoveType(client, MOVETYPE_NONE);
-						SetEntityHealth(client, 10000);
-						}
-						if (GetClientTeam(client) == 2)
-						{
-						SetEntityHealth(client, 65);
-						GivePlayerItem(client, "weapon_negev");
-						GivePlayerItem(client, "weapon_tec9");
-						GivePlayerItem(client, "weapon_hegrenade");
-						}
+	if (GetClientTeam(client) == 3)
+	{
+	SetEntityModel(client, "models/player/custom_player/zombie/revenant/revenant_v2.mdl");
+	SetEntityMoveType(client, MOVETYPE_NONE);
+	SetEntityHealth(client, 10000);
+	}
+	if (GetClientTeam(client) == 2)
+	{
+	SetEntityHealth(client, 65);
+	GivePlayerItem(client, "weapon_negev");
+	GivePlayerItem(client, "weapon_tec9");
+	GivePlayerItem(client, "weapon_hegrenade");
+	}
 					}
 					if (IsClientInGame(client))
 					{
@@ -300,13 +314,13 @@ public Action:Zombie(Handle:timer)
 		if (IsClientInGame(client) && IsPlayerAlive(client))
 			{
 		if (GetClientTeam(client) == 3)
-						{
-						PrintCenterText(client,"%t", "zombie_timetounfreeze", freezetime);
-						}
+	{
+	PrintCenterText(client,"%t", "zombie_timetounfreeze", freezetime);
+	}
 		if (GetClientTeam(client) == 2)
-						{
-						PrintCenterText(client,"%t", "zombie_timetozombie", freezetime);
-						}
+	{
+	PrintCenterText(client,"%t", "zombie_timetozombie", freezetime);
+	}
 		}
 		return Plugin_Continue;
 	}
@@ -358,32 +372,32 @@ public PlayerSay(Handle:event, String:name[], bool:dontBroadcast)
 				{
 					if (StrContains(voted, steamid, true) == -1)
 					{
-						new playercount = (GetClientCount(true) / 2);
-						
-						votecount++;
-						
-						new Missing = playercount - votecount + 1;
-						
-						Format(voted, sizeof(voted), "%s,%s", voted, steamid);
-						
-						if (votecount > playercount)
-						{
-							StartZombie = true;
-							
-							SetCvar("sm_hide_enable", 0);
-							SetCvar("sm_ffa_enable", 0);
-							SetCvar("sm_war_enable", 0);
-							SetCvar("sm_duckhunt_enable", 0);
-							SetCvar("sm_catch_enable", 0);
-							SetCvar("sm_noscope_enable", 0);
-							
-							RoundLimits = GetConVarInt(RoundLimitsc);
-							votecount = 0;
-							
-							CPrintToChatAll("%t %t", "zombie_tag" , "zombie_next");
-						}
-						else CPrintToChatAll("%t %t", "zombie_tag" , "zombie_need", Missing);
-						
+	new playercount = (GetClientCount(true) / 2);
+	
+	votecount++;
+	
+	new Missing = playercount - votecount + 1;
+	
+	Format(voted, sizeof(voted), "%s,%s", voted, steamid);
+	
+	if (votecount > playercount)
+	{
+		StartZombie = true;
+		
+		SetCvar("sm_hide_enable", 0);
+		SetCvar("sm_ffa_enable", 0);
+		SetCvar("sm_war_enable", 0);
+		SetCvar("sm_duckhunt_enable", 0);
+		SetCvar("sm_catch_enable", 0);
+		SetCvar("sm_noscope_enable", 0);
+		
+		RoundLimits = GetConVarInt(RoundLimitsc);
+		votecount = 0;
+		
+		CPrintToChatAll("%t %t", "zombie_tag" , "zombie_next");
+	}
+	else CPrintToChatAll("%t %t", "zombie_tag" , "zombie_need", Missing);
+	
 					}
 					else CPrintToChat(client, "%t %t", "zombie_tag" , "zombie_voted");
 				}

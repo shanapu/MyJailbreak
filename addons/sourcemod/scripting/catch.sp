@@ -147,6 +147,7 @@ public RoundEnd(Handle:event, String:name[], bool:dontBroadcast)
 		SetCvar("sm_hosties_lr", 1);
 		SetCvar("sm_war_enable", 1);
 		SetCvar("sm_hide_enable", 1);
+		SetCvar("sm_weapons_enable", 1);
 		SetCvar("sm_zombie_enable", 1);
 		SetCvar("sm_duckhunt_enable", 1);
 		SetCvar("dice_enable", 1);
@@ -178,6 +179,14 @@ public Action SetCatch(int client,int args)
 	StartCatch = true;
 	RoundLimits = GetConVarInt(RoundLimitsc);
 	votecount = 0;
+	
+	SetCvar("sm_hide_enable", 0);
+		SetCvar("sm_ffa_enable", 0);
+		SetCvar("sm_zombie_enable", 0);
+		SetCvar("sm_duckhunt_enable", 0);
+		SetCvar("sm_war_enable", 0);
+		SetCvar("sm_noscope_enable", 0);
+	
 	CPrintToChatAll("%t %t", "catch_tag" , "catch_next");
 	}else CPrintToChat(client, "%t %t", "catch_tag" , "catch_wait", RoundLimits);
 	}else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
@@ -250,6 +259,7 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("sm_beacon_enabled", 1);
 		SetCvar("sv_infinite_ammo", 1);
+		SetCvar("sm_weapons_enable", 0);
 		SetCvar("dice_enable", 0);
 		IsCatch = true;
 		CatchRound++;
@@ -283,14 +293,14 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 					
 					if (IsClientInGame(client))
 					{
-						if (GetClientTeam(client) == 3) //ct
-						{
+	if (GetClientTeam(client) == 3) //ct
+	{
 
-						}
-						if (GetClientTeam(client) == 2) //t
-						{
-						catched[client] = false;
-						}
+	}
+	if (GetClientTeam(client) == 2) //t
+	{
+	catched[client] = false;
+	}
 					}
 					if (IsClientInGame(client))
 					{
@@ -334,31 +344,32 @@ public PlayerSay(Handle:event, String:name[], bool:dontBroadcast)
 				{
 					if (StrContains(voted, steamid, true) == -1)
 					{
-						new playercount = (GetClientCount(true) / 2);
-						
-						votecount++;
-						
-						new Missing = playercount - votecount + 1;
-						
-						Format(voted, sizeof(voted), "%s,%s", voted, steamid);
-						
-						if (votecount > playercount)
-						{
-							StartCatch = true;
-							
-							RoundLimits = GetConVarInt(RoundLimitsc);
-							votecount = 0;
-							
-							SetCvar("sm_hide_enable", 0);
-							SetCvar("sm_ffa_enable", 0);
-							SetCvar("sm_zombie_enable", 0);
-							SetCvar("sm_duckhunt_enable", 0);
-							SetCvar("sm_war_enable", 0);
-							
-							CPrintToChatAll("%t %t", "catch_tag" , "catch_next");
-						}
-						else CPrintToChatAll("%t %t", "catch_tag" , "catch_need", Missing);
-						
+	new playercount = (GetClientCount(true) / 2);
+	
+	votecount++;
+	
+	new Missing = playercount - votecount + 1;
+	
+	Format(voted, sizeof(voted), "%s,%s", voted, steamid);
+	
+	if (votecount > playercount)
+	{
+		StartCatch = true;
+		
+		RoundLimits = GetConVarInt(RoundLimitsc);
+		votecount = 0;
+		
+		SetCvar("sm_hide_enable", 0);
+		SetCvar("sm_ffa_enable", 0);
+		SetCvar("sm_zombie_enable", 0);
+		SetCvar("sm_duckhunt_enable", 0);
+		SetCvar("sm_war_enable", 0);
+		SetCvar("sm_noscope_enable", 0);
+		
+		CPrintToChatAll("%t %t", "catch_tag" , "catch_next");
+	}
+	else CPrintToChatAll("%t %t", "catch_tag" , "catch_need", Missing);
+	
 					}
 					else CPrintToChat(client, "%t %t", "catch_tag" , "catch_voted");
 				}

@@ -151,6 +151,7 @@ public RoundEnd(Handle:event, String:name[], bool:dontBroadcast)
 		SetCvar("sm_hosties_lr", 1);
 		SetCvar("sm_war_enable", 1);
 		SetCvar("dice_enable", 1);
+		SetCvar("sm_weapons_enable", 1);
 		SetCvar("sm_zombie_enable", 1);
 		SetCvar("sm_hide_enable", 1);
 		SetCvar("sm_duckhunt_enable", 1);
@@ -185,6 +186,14 @@ public Action SetNoScope(int client,int args)
 	StartNoScope = true;
 	RoundLimits = GetConVarInt(RoundLimitsc);
 	votecount = 0;
+	
+		SetCvar("sm_war_enable", 0);
+		SetCvar("sm_zombie_enable", 0);
+		SetCvar("sm_ffa_enable", 0);
+		SetCvar("sm_hide_enable", 0);
+		SetCvar("sm_catch_enable", 0);
+		SetCvar("sm_duckhunt_enable", 0);
+	
 	CPrintToChatAll("%t %t", "noscope_tag" , "noscope_next");
 	}else CPrintToChat(client, "%t %t", "noscope_tag" , "noscope_wait", RoundLimits);
 	}else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
@@ -247,12 +256,11 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 	{
 		decl String:info1[255], String:info2[255], String:info3[255], String:info4[255], String:info5[255], String:info6[255], String:info7[255], String:info8[255];
 		SetCvar("sm_hosties_lr", 0);
-		SetCvar("sm_war_enable", 0);
-		SetCvar("sm_zombie_enable", 0);
-		SetCvar("sm_ffa_enable", 0);
+
+		SetCvar("sm_weapons_enable", 0);
 		SetCvar("sm_beacon_enabled", 1);
 		SetCvar("sm_warden_enable", 0);
-		SetCvar("sm_hide_enable", 0);
+
 		SetCvar("dice_enable", 0);
 		IsNoScope = true;
 		NoScopeRound++;
@@ -403,6 +411,13 @@ public PlayerSay(Handle:event, String:name[], bool:dontBroadcast)
 							
 							RoundLimits = GetConVarInt(RoundLimitsc);
 							votecount = 0;
+							
+									SetCvar("sm_war_enable", 0);
+		SetCvar("sm_zombie_enable", 0);
+		SetCvar("sm_ffa_enable", 0);
+		SetCvar("sm_hide_enable", 0);
+		SetCvar("sm_catch_enable", 0);
+		SetCvar("sm_duckhunt_enable", 0);
 							
 							CPrintToChatAll("%t %t", "noscope_tag" , "noscope_next");
 						}

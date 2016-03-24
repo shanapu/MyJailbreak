@@ -176,6 +176,8 @@ public RoundEnd(Handle:event, String:name[], bool:dontBroadcast)
 			SetCvar("sm_hide_enable", 1);
 			SetCvar("sm_noscope_enable", 1);
 			SetCvar("sm_zombie_enable", 1);
+			SetCvar("sm_weapons_t", 0);
+			SetCvar("sm_weapons_ct", 1);
 			SetCvar("sm_war_enable", 1);
 			SetCvar("sm_duckhunt_enable", 1);
 			SetCvar("sm_catch_enable", 1);
@@ -206,6 +208,14 @@ public Action Setffa(int client,int args)
 	Startffa = true;
 	RoundLimits = GetConVarInt(RoundLimitsc);
 	votecount = 0;
+								
+	SetCvar("sm_hide_enable", 0);
+	SetCvar("sm_war_enable", 0);
+	SetCvar("sm_zombie_enable", 0);
+	SetCvar("sm_duckhunt_enable", 0);
+	SetCvar("sm_noscope_enable", 0);
+	SetCvar("sm_catch_enable", 0);
+							
 	CPrintToChatAll("%t %t", "ffa_tag" , "ffa_next");
 	}else CPrintToChat(client, "%t %t", "ffa_tag" , "ffa_wait", RoundLimits);
 	}else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
@@ -223,6 +233,8 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("sm_beacon_enabled", 1);
+		SetCvar("sm_weapons_t", 1);
+		SetCvar("sm_weapons_ct", 1);
 		SetCvar("mp_teammates_are_enemies", 1);
 		SetCvar("mp_friendlyfire", 1);
 		ffaRound++;

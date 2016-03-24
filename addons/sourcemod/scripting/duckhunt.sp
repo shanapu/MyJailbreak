@@ -166,6 +166,7 @@ public RoundEnd(Handle:event, String:name[], bool:dontBroadcast)
 		SetCvar("sm_war_enable", 1);
 		SetCvar("sm_noscope_enable", 1);
 		SetCvar("dice_enable", 1);
+		SetCvar("sm_weapons_enable", 1);
 		SetCvar("sm_zombie_enable", 1);
 		SetCvar("sm_catch_enable", 1);
 		SetCvar("sm_hide_enable", 1);
@@ -199,6 +200,14 @@ public Action SetDuckHunt(int client,int args)
 	StartDuckHunt = true;
 	RoundLimits = GetConVarInt(RoundLimitsc);
 	votecount = 0;
+	
+	SetCvar("sm_war_enable", 0);
+		SetCvar("sm_zombie_enable", 0);
+		SetCvar("sm_ffa_enable", 0);
+		SetCvar("sm_hide_enable", 0);
+		SetCvar("sm_catch_enable", 0);
+		SetCvar("sm_noscope_enable", 0);
+		
 	CPrintToChatAll("%t %t", "duckhunt_tag" , "duckhunt_next");
 	}else CPrintToChat(client, "%t %t", "duckhunt_tag" , "duckhunt_wait", RoundLimits);
 	}else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
@@ -245,6 +254,7 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("sm_beacon_enabled", 1);
 		SetCvar("dice_enable", 0);
+		SetCvar("sm_weapons_enable", 1);
 		SetCvar("sv_infinite_ammo", 1);
 		IsDuckHunt = true;
 		DuckHuntRound++;
@@ -278,20 +288,20 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 					
 					if (IsClientInGame(client))
 					{
-						if (GetClientTeam(client) == 3)
-						{
-						SetEntityModel(client, model);
-						SetEntityHealth(client, 600);
-						GivePlayerItem(client, "weapon_nova");
-						}
-						if (GetClientTeam(client) == 2)
-						{
-						SetEntityModel(client, "models/chicken/chicken.mdl");
-						SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.2);
-						SetEntityGravity(client, 0.3);
-						SetEntityHealth(client, 150);
-						GivePlayerItem(client, "weapon_hegrenade");
-						}
+	if (GetClientTeam(client) == 3)
+	{
+	SetEntityModel(client, model);
+	SetEntityHealth(client, 600);
+	GivePlayerItem(client, "weapon_nova");
+	}
+	if (GetClientTeam(client) == 2)
+	{
+	SetEntityModel(client, "models/chicken/chicken.mdl");
+	SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.2);
+	SetEntityGravity(client, 0.3);
+	SetEntityHealth(client, 150);
+	GivePlayerItem(client, "weapon_hegrenade");
+	}
 					}
 					if (IsClientInGame(client))
 					{
@@ -325,7 +335,7 @@ public Action:DuckHunt(Handle:timer)
 		if (IsClientInGame(client) && IsPlayerAlive(client))
 			{
 		
-						PrintCenterText(client,"%t", "duckhunt_timetounfreeze", preparetime);
+	PrintCenterText(client,"%t", "duckhunt_timetounfreeze", preparetime);
 			}
 		return Plugin_Continue;
 	}
@@ -383,31 +393,31 @@ public PlayerSay(Handle:event, String:name[], bool:dontBroadcast)
 				{
 					if (StrContains(voted, steamid, true) == -1)
 					{
-						new playercount = (GetClientCount(true) / 2);
-						
-						votecount++;
-						
-						new Missing = playercount - votecount + 1;
-						
-						Format(voted, sizeof(voted), "%s,%s", voted, steamid);
-						
-						if (votecount > playercount)
-						{
-							StartDuckHunt = true;
-							
-							SetCvar("sm_war_enable", 0);
-							SetCvar("sm_zombie_enable", 0);
-							SetCvar("sm_ffa_enable", 0);
-							SetCvar("sm_hide_enable", 0);
-							SetCvar("sm_catch_enable", 0);
-							SetCvar("sm_noscope_enable", 0);
-							RoundLimits = GetConVarInt(RoundLimitsc);
-							votecount = 0;
-							
-							CPrintToChatAll("%t %t", "duckhunt_tag" , "duckhunt_next");
-						}
-						else CPrintToChatAll("%t %t", "duckhunt_tag" , "duckhunt_need", Missing);
-						
+	new playercount = (GetClientCount(true) / 2);
+	
+	votecount++;
+	
+	new Missing = playercount - votecount + 1;
+	
+	Format(voted, sizeof(voted), "%s,%s", voted, steamid);
+	
+	if (votecount > playercount)
+	{
+		StartDuckHunt = true;
+		
+		SetCvar("sm_war_enable", 0);
+		SetCvar("sm_zombie_enable", 0);
+		SetCvar("sm_ffa_enable", 0);
+		SetCvar("sm_hide_enable", 0);
+		SetCvar("sm_catch_enable", 0);
+		SetCvar("sm_noscope_enable", 0);
+		RoundLimits = GetConVarInt(RoundLimitsc);
+		votecount = 0;
+		
+		CPrintToChatAll("%t %t", "duckhunt_tag" , "duckhunt_next");
+	}
+	else CPrintToChatAll("%t %t", "duckhunt_tag" , "duckhunt_need", Missing);
+	
 					}
 					else CPrintToChat(client, "%t %t", "duckhunt_tag" , "duckhunt_voted");
 				}

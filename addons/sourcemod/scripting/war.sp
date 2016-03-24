@@ -155,6 +155,8 @@ public RoundEnd(Handle:event, String:name[], bool:dontBroadcast)
 			SetCvar("sm_hosties_lr", 1);
 			SetCvar("sm_warden_enable", 1);
 			SetCvar("sm_hide_enable", 1);
+			SetCvar("sm_weapons_t", 0);
+			SetCvar("sm_weapons_ct", 1);
 			SetCvar("sm_zombie_enable", 1);
 			SetCvar("sm_noscope_enable", 1);
 			SetCvar("dice_enable", 1);
@@ -187,7 +189,7 @@ public Action SetWar(int client,int args)
 	StartWar = true;
 	RoundLimits = GetConVarInt(RoundLimitsc);
 	votecount = 0;
-	
+	SetCvar("sm_noscope_enable", 0);
 	SetCvar("sm_hide_enable", 0);
 	SetCvar("sm_ffa_enable", 0);
 	SetCvar("sm_zombie_enable", 0);
@@ -211,6 +213,8 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("dice_enable", 0);
 		SetCvar("sm_beacon_enabled", 1);
+		SetCvar("sm_weapons_t", 1);
+		SetCvar("sm_weapons_ct", 1);
 		WarRound++;
 		IsWar = true;
 		StartWar = false;

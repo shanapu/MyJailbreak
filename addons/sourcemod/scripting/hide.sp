@@ -171,6 +171,8 @@ public RoundEnd(Handle:event, String:name[], bool:dontBroadcast)
 		SetCvar("sm_ffa_enable", 1);
 		SetCvar("sm_noscope_enable", 1);
 		SetCvar("sm_duckhunt_enable", 1);
+		SetCvar("sm_weapons_t", 0);
+		SetCvar("sm_weapons_ct", 1);
 		SetCvar("sm_catch_enable", 1);
 		SetCvar("sm_warden_enable", 1);
 		SetCvar("dice_enable", 1);
@@ -200,6 +202,14 @@ public Action SetHide(int client,int args)
 	{
 	StartHide = true;
 	RoundLimits = GetConVarInt(RoundLimitsc);
+	
+	SetCvar("sm_war_enable", 0);
+	SetCvar("sm_ffa_enable", 0);
+	SetCvar("sm_zombie_enable", 0);
+	SetCvar("sm_duckhunt_enable", 0);
+	SetCvar("sm_catch_enable", 0);
+	SetCvar("sm_noscope_enable", 0);
+		
 	votecount = 0;
 	CPrintToChatAll("%t %t", "hide_tag" , "hide_next");
 	}else CPrintToChat(client, "%t %t", "hide_tag" , "hide_wait", RoundLimits);
@@ -216,6 +226,8 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("dice_enable", 0);
+		SetCvar("sm_weapons_t", 0);
+		SetCvar("sm_weapons_ct", 1);
 		IsHide = true;
 		HideRound++;
 		StartHide = false;
@@ -249,11 +261,11 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 					
 					if (IsClientInGame(client))
 					{
-						if (GetClientTeam(client) == 3)
-						{
-						SetEntityMoveType(client, MOVETYPE_NONE);
-						GivePlayerItem(client, "weapon_tagrenade");
-						}
+	if (GetClientTeam(client) == 3)
+	{
+	SetEntityMoveType(client, MOVETYPE_NONE);
+	GivePlayerItem(client, "weapon_tagrenade");
+	}
 					}
 					if (IsClientInGame(client))
 					{
@@ -286,13 +298,13 @@ public Action:Hide(Handle:timer)
 		if (IsClientInGame(client) && IsPlayerAlive(client))
 			{
 		if (GetClientTeam(client) == 3)
-						{
-						PrintCenterText(client,"%t", "hide_timetounfreeze", freezetime);
-						}
+	{
+	PrintCenterText(client,"%t", "hide_timetounfreeze", freezetime);
+	}
 		if (GetClientTeam(client) == 2)
-						{
-						PrintCenterText(client,"%t", "hide_timetohide", freezetime);
-						}
+	{
+	PrintCenterText(client,"%t", "hide_timetohide", freezetime);
+	}
 		}
 		return Plugin_Continue;
 	}
@@ -363,32 +375,32 @@ public PlayerSay(Handle:event, String:name[], bool:dontBroadcast)
 				{
 					if (StrContains(voted, steamid, true) == -1)
 					{
-						new playercount = (GetClientCount(true) / 2);
-						
-						votecount++;
-						
-						new Missing = playercount - votecount + 1;
-						
-						Format(voted, sizeof(voted), "%s,%s", voted, steamid);
-						
-						if (votecount > playercount)
-						{
-							StartHide = true;
-							
-							SetCvar("sm_war_enable", 0);
-							SetCvar("sm_ffa_enable", 0);
-							SetCvar("sm_zombie_enable", 0);
-							SetCvar("sm_duckhunt_enable", 0);
-							SetCvar("sm_catch_enable", 0);
-							SetCvar("sm_noscope_enable", 0);
-							
-							RoundLimits = GetConVarInt(RoundLimitsc);
-							votecount = 0;
-							
-							CPrintToChatAll("%t %t", "hide_tag" , "hide_next");
-						}
-						else CPrintToChatAll("%t %t", "hide_tag" , "hide_need", Missing);
-						
+	new playercount = (GetClientCount(true) / 2);
+	
+	votecount++;
+	
+	new Missing = playercount - votecount + 1;
+	
+	Format(voted, sizeof(voted), "%s,%s", voted, steamid);
+	
+	if (votecount > playercount)
+	{
+		StartHide = true;
+		
+		SetCvar("sm_war_enable", 0);
+		SetCvar("sm_ffa_enable", 0);
+		SetCvar("sm_zombie_enable", 0);
+		SetCvar("sm_duckhunt_enable", 0);
+		SetCvar("sm_catch_enable", 0);
+		SetCvar("sm_noscope_enable", 0);
+		
+		RoundLimits = GetConVarInt(RoundLimitsc);
+		votecount = 0;
+		
+		CPrintToChatAll("%t %t", "hide_tag" , "hide_next");
+	}
+	else CPrintToChatAll("%t %t", "hide_tag" , "hide_need", Missing);
+	
 					}
 					else CPrintToChat(client, "%t %t", "hide_tag" , "hide_voted");
 				}
