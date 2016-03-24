@@ -137,6 +137,7 @@ public void OnPluginStart()
 
 	HookEvent("round_start", Event_RoundStart);
 	HookEvent("player_say", PlayerSay);
+	HookEvent("player_death", playerDeath);
 	
 	AutoExecConfig_CacheConvars();
 	AutoExecConfig_ExecuteFile();
@@ -411,11 +412,11 @@ if(GetConVarInt(g_nextround) == 0)
 	}
 }
 
-public Action playerDeath(Handle event, const char[] name, bool dontBroadcast) 
+public Action:playerDeath(Handle:event, const String:name[], bool:dontBroadcast) 
 {
-	int client = GetClientOfUserId(GetEventInt(event, "userid"));
+	new client = GetClientOfUserId(GetEventInt(event, "userid")); // Get the dead clients id
 	
-	if(warden_iswarden(client))
+	if(client == Warden) // Aww damn , he is the warden
 	{
 		CPrintToChatAll("%t %t", "warden_tag" , "warden_dead", client);
 		
@@ -425,7 +426,8 @@ public Action playerDeath(Handle event, const char[] name, bool dontBroadcast)
 			PrintHintTextToAll("%t", "warden_dead_nc", client);
 		}
 		
-		RemoveTheWarden(client);
+		
+		Warden = -1;
 		Call_StartForward(gF_OnWardenDeath);
 		Call_PushCell(client);
 		Call_Finish();
