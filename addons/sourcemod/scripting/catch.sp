@@ -302,6 +302,9 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 				PrintCenterTextAll("%t", "catch_start");
 				CPrintToChatAll("%t %t", "catch_tag" , "catch_start");
 				}
+	}else
+	{
+		if (RoundLimits > 0) RoundLimits--;
 	}
 }
 

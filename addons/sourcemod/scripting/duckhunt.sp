@@ -114,7 +114,7 @@ public OnMapStart()
 	roundtimenormal = GetConVarInt(roundtimenormalc);
 	
 	PrecacheModel("models/chicken/chicken.mdl", true);
-	PrecacheModel("models/player/custom_player/legacy/tm_phoenix_heavy.mdl", true);
+	PrecacheModel(model, true);
 	
 }
 
@@ -303,6 +303,9 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 				preparetime--;
 				DuckHuntTimer = CreateTimer(1.0, DuckHunt, _, TIMER_REPEAT);
 			}
+	}else
+	{
+		if (RoundLimits > 0) RoundLimits--;
 	}
 }
 

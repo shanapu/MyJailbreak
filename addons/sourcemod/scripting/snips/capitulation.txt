@@ -1,0 +1,39 @@
+"Phrases"
+{
+	
+	"MESSAGE_CAPITULATION"
+	{
+		"#format"	"{1:s}"
+		"en"		"{green}[Capitulation]{default} {1} {lightgreen}has capitulated!"
+		"de"		"{green}[Ergeben]{default} {1} {lightgreen}hat sich ergeben!"
+	}
+	
+	"MESSAGE_ALREADYCAPITULATED"
+	{
+		"#format"	""
+		"en"		"{green}[Capitulation]{lightgreen} You have already capitulated."
+		"de"		"{green}[Ergeben]{lightgreen} Du hast dich schon ergeben."
+	}
+	
+	"MESSAGE_NOTORDEATH"
+	{
+		"#format"	""
+		"en"		"{green}[Capitulation]{lightgreen} You are not alive or CT."
+		"de"		"{green}[Ergeben]{lightgreen} Du bist tot oder ein CT."
+	}
+	
+	"CENTERMESSAGE_CAPITULATION"
+	{
+		"#format"	"{1:s}"
+		"en"		"[Capitulation] {1} has capitulated!"
+		"de"		"[Ergeben] {1} ergibt sich!"
+	}
+	
+	"MESSAGE_KNIFEBACK"
+	{
+		"#format"	""
+		"en"		"{green}[Capitulation]{lightgreen} You got your knife back."
+		"de"		"{green}[Ergeben]{lightgreen} Du hast dein Messer erhalten."
+	}
+
+}

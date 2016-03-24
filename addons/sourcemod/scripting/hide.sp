@@ -266,6 +266,9 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 				HideTimer = CreateTimer(1.0, Hide, _, TIMER_REPEAT);
 			}
 		{AcceptEntityInput(FogIndex, "TurnOn");}
+	}else
+	{
+		if (RoundLimits > 0) RoundLimits--;
 	}
 }
 

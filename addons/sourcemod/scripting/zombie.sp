@@ -280,6 +280,9 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 				freezetime--;
 				ZombieTimer = CreateTimer(1.0, Zombie, _, TIMER_REPEAT);
 				}
+	}else
+	{
+		if (RoundLimits > 0) RoundLimits--;
 	}
 }
 

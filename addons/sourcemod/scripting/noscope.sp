@@ -311,6 +311,9 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 			}
 		for(new i = 1; i <= MaxClients; i++)
 		if(IsClientInGame(i)) SDKHook(i, SDKHook_PreThink, OnPreThink);
+	}else
+	{
+		if (RoundLimits > 0) RoundLimits--;
 	}
 }
 
