@@ -38,7 +38,7 @@ public OnConfigsExecuted()
 
 public OnPluginStart()
 {
-
+	LoadTranslations("MyJailbreakWarden.phrases");
 	LoadTranslations("MyJailbreakMenu.phrases");
 	RegConsoleCmd("sm_menu", JbMenu);
 	RegConsoleCmd("sm_menus", JbMenu);
@@ -72,7 +72,7 @@ public Action:JbMenu(client,args)
 	
 	Format(menuinfo1, sizeof(menuinfo1), "%T", "menu_info_Title", LANG_SERVER);
 	SetMenuTitle(menu, menuinfo1);
-	if (warden_iswarden(client)) 
+	if (warden_iswarden(client))
 	{
 	Format(menuinfo2, sizeof(menuinfo2), "%T", "menu_overlays", LANG_SERVER);
 	AddMenuItem(menu, "overlays", menuinfo2);
@@ -171,7 +171,7 @@ public Action:EventDays(client, args)
 
 	SetMenuExitButton(menu, true);
 	DisplayMenu(menu, client, MENU_TIME_FOREVER);
-	} else CPrintToChat(client, "%t %t", "menu_tag", "menu_notwarden" );
+	} else CPrintToChat(client, "%t %t", "warden_tag", "warden_notwarden" );
 }
 
 
@@ -271,13 +271,13 @@ public JBMenuHandler(Handle:menu, MenuAction:action, client, itemNum)
 		else if ( strcmp(info,"ffa1") == 0 ) 
 		{
 			SetCvar("mp_teammates_are_enemies", 1);
-			CPrintToChatAll("%t %t", "menu_tag", "menu_ffison" );
+			CPrintToChatAll("%t %t", "warden_tag", "menu_ffison" );
 			JbMenu(client,0);
 		}
 		else if ( strcmp(info,"ffa2") == 0 ) 
 		{
 			SetCvar("mp_teammates_are_enemies", 0);
-			CPrintToChatAll("%t %t", "menu_tag", "menu_ffisoff" );
+			CPrintToChatAll("%t %t", "warden_tag", "menu_ffisoff" );
 			JbMenu(client,0);
 		}
 		else if ( strcmp(info,"kill") == 0 ) 
@@ -286,7 +286,7 @@ public JBMenuHandler(Handle:menu, MenuAction:action, client, itemNum)
 			if(clientV > 0)
 			{
 				ForcePlayerSuicide(clientV);
-				CPrintToChatAll("%t %t", "menu_tag", "menu_israndomdead", clientV); 
+				CPrintToChatAll("%t %t", "warden_tag", "menu_israndomdead", clientV); 
 				
 			}
 			JbMenu(client,0);

@@ -26,7 +26,7 @@
 		"#format"		""
 		"en"			"team games"
 	}	
-	"menu_eventgames"
+	"menu_eventdays"
 	{
 		"#format"		""
 		"en"			"Event Days"
@@ -45,7 +45,17 @@
 	{
 		"#format"		""
 		"en"			"disable FF for Ts"
+	}
+	"menu_ffison"
+	{
+		"#format"		""
+		"en"			"friendly fire enabled"
 	}	
+	"menu_ffisoff"
+	{
+		"#format"		""
+		"en"			"friendly fire disabled"
+	}		
 	"menu_randomdead"
 	{
 		"#format"		""

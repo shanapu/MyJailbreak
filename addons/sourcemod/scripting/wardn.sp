@@ -3,6 +3,7 @@
 #include <sourcemod>
 #include <sdktools>
 #include <cstrike>
+#include <sdkhooks>
 #include <wardn>
 #include <multicolors>
 #include <emitsoundany>
@@ -409,11 +410,12 @@ if(GetConVarInt(g_nextround) == 0)
 			Warden = -1;
 	}
 }
+
 public Action playerDeath(Handle event, const char[] name, bool dontBroadcast) 
 {
 	int client = GetClientOfUserId(GetEventInt(event, "userid"));
 	
-	if(client == Warden)
+	if(warden_iswarden(client))
 	{
 		CPrintToChatAll("%t %t", "warden_tag" , "warden_dead", client);
 		
