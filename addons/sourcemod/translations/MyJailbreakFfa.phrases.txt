@@ -124,8 +124,8 @@
 	
 	"ffa_info_Line3"
 	{
-		"en"		"you can move and exit the wk in nodamge phase"
-		"de"		"Während der no damge phase kannst du aus der zelle/waffenkammer"
+		"en"		"you can move and exit the wk in nodamge phase and he map is darken"
+		"de"		"Während der no damge phase is die map zum eingedunkelt"
 	}
 	
 	"ffa_info_Line4"
