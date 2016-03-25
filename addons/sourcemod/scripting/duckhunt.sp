@@ -146,7 +146,11 @@ public RoundEnd(Handle:event, String:name[], bool:dontBroadcast)
 	{
 		for(new client=1; client <= MaxClients; client++)
 		{
-			if (IsClientInGame(client)) SetEntData(client, FindSendPropOffs("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
+			if (IsClientInGame(client))
+				{
+			SetEntData(client, FindSendPropOffs("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
+			FP(client);
+				}
 		}
 		
 		if (LimitTimer != INVALID_HANDLE) KillTimer(LimitTimer);
@@ -178,7 +182,7 @@ public RoundEnd(Handle:event, String:name[], bool:dontBroadcast)
 		SetCvar("mp_roundtime_hostage", roundtimenormal);
 		SetCvar("mp_roundtime_defuse", roundtimenormal);
 		CPrintToChatAll("%t %t", "duckhunt_tag" , "duckhunt_end");
-		
+
 	}
 	if (StartDuckHunt)
 	{
@@ -295,19 +299,21 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 	GivePlayerItem(client, "weapon_nova");
 	}
 	if (GetClientTeam(client) == 2)
-	{
-	SetEntityModel(client, "models/chicken/chicken.mdl");
-	SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.2);
-	SetEntityGravity(client, 0.3);
-	SetEntityHealth(client, 150);
-	GivePlayerItem(client, "weapon_hegrenade");
-	}
+		{
+						SetEntityModel(client, "models/chicken/chicken.mdl");
+						SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.2);
+						SetEntityGravity(client, 0.3);
+						SetEntityHealth(client, 150);
+						GivePlayerItem(client, "weapon_hegrenade");
+						ClientCommand(client, "thirdperson");
+		}
 					}
 					if (IsClientInGame(client))
 					{
 					SetEntData(client, FindSendPropOffs("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
 					SendPanelToClient(DuckHuntMenu, client, Pass, 15);
 					SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
+					
 					}
 				}
 				preparetime--;
@@ -319,7 +325,10 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 	}
 }
 
-
+public FP(client)
+{
+ClientCommand(client, "firstperson");
+}
 
 public Pass(Handle:menu, MenuAction:action, param1, param2)
 {
