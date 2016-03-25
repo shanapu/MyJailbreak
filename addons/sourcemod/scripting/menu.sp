@@ -8,6 +8,13 @@
 
 new Handle:cvar_ff;
 ConVar gc_bTagEnabled;
+new Handle:g_enabled=INVALID_HANDLE;
+new Handle:g_tenabled=INVALID_HANDLE;
+new Handle:g_cenabled=INVALID_HANDLE;
+new Handle:g_wenabled=INVALID_HANDLE;
+new Handle:g_denabled=INVALID_HANDLE;
+new Handle:g_kenabled=INVALID_HANDLE;
+
 
 #pragma semicolon 1
 
@@ -52,7 +59,12 @@ public OnPluginStart()
 	AutoExecConfig_SetCreateFile(true);
 	
 	gc_bTagEnabled = AutoExecConfig_CreateConVar("sm_menu_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	
+	g_enabled = AutoExecConfig_CreateConVar("sm_menu_enable", "1", "0 - disabled, 1 - enable jailbrek menu");
+	g_cenabled = AutoExecConfig_CreateConVar("sm_menu_ct", "1", "0 - disabled, 1 - enable ct jailbreak menu");
+	g_tenabled = AutoExecConfig_CreateConVar("sm_menu_t", "1", "0 - disabled, 1 - enable t jailbreak menu");
+	g_wenabled = AutoExecConfig_CreateConVar("sm_menu_warden", "1", "0 - disabled, 1 - enable warden jailbreak menu");
+	g_denabled = AutoExecConfig_CreateConVar("sm_menu_days", "1", "0 - disabled, 1 - enable eventdays menu for warden and admin");
+	g_kenabled = AutoExecConfig_CreateConVar("sm_menu_kill", "1", "0 - disabled, 1 - enable kill random T for warden");
 	
 	AutoExecConfig_CacheConvars();
 	AutoExecConfig_ExecuteFile();
@@ -64,6 +76,9 @@ public OnPluginStart()
 
 public Action:JbMenu(client,args)
 {
+		if(GetConVarInt(g_enabled) == 1)	
+	{
+	
 	decl String:menuinfo1[255], String:menuinfo2[255], String:menuinfo3[255], String:menuinfo4[255], String:menuinfo5[255], String:menuinfo6[255], String:menuinfo7[255], String:menuinfo8[255];
 	decl String:menuinfo9[255], String:menuinfo10[255], String:menuinfo11[255], String:menuinfo12[255], String:menuinfo13[255], String:menuinfo14[255], String:menuinfo15[255], String:menuinfo16[255];
 	decl String:menuinfo17[255], String:menuinfo177[255]; 
@@ -74,14 +89,19 @@ public Action:JbMenu(client,args)
 	SetMenuTitle(menu, menuinfo1);
 	if (warden_iswarden(client))
 	{
+	if(GetConVarInt(g_wenabled) == 1)	
+	{
 	Format(menuinfo2, sizeof(menuinfo2), "%T", "menu_overlays", LANG_SERVER);
 	AddMenuItem(menu, "overlays", menuinfo2);
 	Format(menuinfo3, sizeof(menuinfo3), "%T", "menu_opencell", LANG_SERVER);
 	AddMenuItem(menu, "cellopen", menuinfo3);
 	Format(menuinfo4, sizeof(menuinfo4), "%T", "menu_teamgames", LANG_SERVER);
 	AddMenuItem(menu, "teams", menuinfo4);
+	if(GetConVarInt(g_denabled) == 1)
+	{
 	Format(menuinfo5, sizeof(menuinfo5), "%T", "menu_eventdays", LANG_SERVER);
 	AddMenuItem(menu, "days", menuinfo5);
+	}
 	Format(menuinfo6, sizeof(menuinfo6), "%T", "menu_guns", LANG_SERVER);
 	AddMenuItem(menu, "guns", menuinfo6);
 	
@@ -96,16 +116,19 @@ public Action:JbMenu(client,args)
 	Format(menuinfo8, sizeof(menuinfo8), "%T", "menu_ffoff", LANG_SERVER);
 	AddMenuItem(menu, "ffa2", menuinfo8);
 	}
-	
+	if(GetConVarInt(g_kenabled) == 1)	
+	{
 	Format(menuinfo9, sizeof(menuinfo9), "%T", "menu_randomdead", LANG_SERVER);
 	AddMenuItem(menu, "kill", menuinfo9);
-	
+	}
 	
 	Format(menuinfo10, sizeof(menuinfo10), "%T", "menu_unwarden", LANG_SERVER);
 	AddMenuItem(menu, "unwarden", menuinfo10);
 	}
-	
+	}
 	else if(GetClientTeam(client) == CS_TEAM_CT) 
+	{
+	if(GetConVarInt(g_tenabled) == 1)	
 	{
 	Format(menuinfo11, sizeof(menuinfo11), "%T", "menu_getwarden", LANG_SERVER);
 	AddMenuItem(menu, "getwarden", menuinfo11);
@@ -113,19 +136,21 @@ public Action:JbMenu(client,args)
 	AddMenuItem(menu, "guns", menuinfo12);
 	Format(menuinfo13, sizeof(menuinfo13), "%T", "menu_joint", LANG_SERVER);
 	AddMenuItem(menu, "joinT", menuinfo13);
-	
+	}
 	}	
  	else if(GetClientTeam(client) == CS_TEAM_T) 
-	{	
+	{
+	if(GetConVarInt(g_cenabled) == 1)	
+	{
 	Format(menuinfo14, sizeof(menuinfo14), "%T", "menu_dice", LANG_SERVER);
-	AddMenuItem(menu, "jbdice", menuinfo14);	
+	AddMenuItem(menu, "jbdice", menuinfo14);
 	Format(menuinfo15, sizeof(menuinfo15), "%T", "menu_joinct", LANG_SERVER);
 	AddMenuItem(menu, "joinCT", menuinfo15);
 	Format(menuinfo16, sizeof(menuinfo16), "%T", "menu_votect", LANG_SERVER);
-	AddMenuItem(menu, "votewarden", menuinfo16);	
+	AddMenuItem(menu, "votewarden", menuinfo16);
 	Format(menuinfo17, sizeof(menuinfo17), "%T", "menu_votewarden", LANG_SERVER);
-	AddMenuItem(menu, "voteCT", menuinfo17);	
-	
+	AddMenuItem(menu, "voteCT", menuinfo17);
+	}
 	}
 	if (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
 	{
@@ -141,11 +166,14 @@ public Action:JbMenu(client,args)
 	SetMenuExitButton(menu, true);
 	DisplayMenu(menu, client, 15);
 }
+}
 
 
 public Action:EventDays(client, args)
 {
-	if (warden_iswarden(client))  
+	if(GetConVarInt(g_denabled) == 1)	
+	{
+	if (warden_iswarden(client) || (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true)))  
 	{
 	
 	new Handle:menu = CreateMenu(EventMenuHandler);
@@ -172,6 +200,7 @@ public Action:EventDays(client, args)
 	SetMenuExitButton(menu, true);
 	DisplayMenu(menu, client, MENU_TIME_FOREVER);
 	} else CPrintToChat(client, "%t %t", "warden_tag", "warden_notwarden" );
+}
 }
 
 
@@ -214,7 +243,7 @@ public JBMenuHandler(Handle:menu, MenuAction:action, client, itemNum)
 		} 
 		else if ( strcmp(info,"votewarden") == 0 ) 
 		{
-			FakeClientCommand(client, "say !votect");
+			FakeClientCommand(client, "say !votewarden");
 		} 
 		else if ( strcmp(info,"voteCT") == 0 ) 
 		{
@@ -270,15 +299,21 @@ public JBMenuHandler(Handle:menu, MenuAction:action, client, itemNum)
 	
 		else if ( strcmp(info,"ffa1") == 0 ) 
 		{
+			if (warden_iswarden(client))
+			{
 			SetCvar("mp_teammates_are_enemies", 1);
 			CPrintToChatAll("%t %t", "warden_tag", "menu_ffison" );
 			JbMenu(client,0);
+			}
 		}
 		else if ( strcmp(info,"ffa2") == 0 ) 
 		{
+			if (warden_iswarden(client))
+			{
 			SetCvar("mp_teammates_are_enemies", 0);
 			CPrintToChatAll("%t %t", "warden_tag", "menu_ffisoff" );
 			JbMenu(client,0);
+			}
 		}
 		else if ( strcmp(info,"kill") == 0 ) 
 		{
