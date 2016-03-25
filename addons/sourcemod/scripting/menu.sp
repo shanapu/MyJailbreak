@@ -49,11 +49,12 @@ public OnPluginStart()
 	LoadTranslations("MyJailbreakMenu.phrases");
 	RegConsoleCmd("sm_menu", JbMenu);
 	RegConsoleCmd("sm_menus", JbMenu);
+	RegConsoleCmd("buyammo1", JbMenu);
 
 	RegConsoleCmd("sm_days", EventDays);
 	RegConsoleCmd("sm_events", EventDays);
 	
-	RegConsoleCmd("buyammo1", JbMenu);
+	
 	
 	AutoExecConfig_SetFile("MyJailbreak_menu");
 	AutoExecConfig_SetCreateFile(true);
