@@ -10,25 +10,25 @@
 
 #define VERSION "0.x"
 
-new Handle:Timers[MAXPLAYERS + 1] = INVALID_HANDLE;
+Handle Timers[MAXPLAYERS + 1] = null;
 
-new bool:newWeaponsSelected[MAXPLAYERS+1];
-new bool:rememberChoice[MAXPLAYERS+1];
-new bool:weaponsGivenThisRound[MAXPLAYERS + 1] = { false, ... };
+bool newWeaponsSelected[MAXPLAYERS+1];
+bool rememberChoice[MAXPLAYERS+1];
+bool weaponsGivenThisRound[MAXPLAYERS + 1] = { false, ... };
 
 // Menus
-new Handle:optionsMenu1 = INVALID_HANDLE;
-new Handle:optionsMenu2 = INVALID_HANDLE;
-new Handle:optionsMenu3 = INVALID_HANDLE;
-new Handle:optionsMenu4 = INVALID_HANDLE;
+Handle optionsMenu1 = null;
+Handle optionsMenu2 = null;
+Handle optionsMenu3 = null;
+Handle optionsMenu4 = null;
 
-new String:primaryWeapon[MAXPLAYERS + 1][24];
-new String:secondaryWeapon[MAXPLAYERS + 1][24];
+char primaryWeapon[MAXPLAYERS + 1][24];
+char secondaryWeapon[MAXPLAYERS + 1][24];
 
-ConVar gc_bTagEnabled;
-new Handle:g_enabled=INVALID_HANDLE;
-new Handle:g_Tenabled=INVALID_HANDLE;
-new Handle:g_CTenabled=INVALID_HANDLE;
+ConVar gc_bTag;
+Handle g_enabled=null;
+Handle g_Tenabled=null;
+Handle g_CTenabled=null;
 
 enum weapons
 {
@@ -36,8 +36,8 @@ enum weapons
 	String:desc[64]
 }
 
-new Handle:array_primary;
-new Handle:array_secondary;
+Handle array_primary;
+Handle array_secondary;
 
 public Plugin:myinfo =
 {
@@ -48,11 +48,11 @@ public Plugin:myinfo =
 	url = "http://www.shanapu.de/"
 };
 
-new Handle:weapons1 = INVALID_HANDLE;
-new Handle:weapons2 = INVALID_HANDLE;
-//new Handle:remember = INVALID_HANDLE;
+Handle weapons1 = null;
+Handle weapons2 = null;
+//Handle remember = null;
 
-public OnPluginStart()
+public void OnPluginStart()
 {
 	
 	LoadTranslations("MyJailbreakWeapons.phrases");
@@ -75,26 +75,34 @@ public OnPluginStart()
 	g_enabled = AutoExecConfig_CreateConVar("sm_weapons_enable", "1", "0 - disabled, 1 - enable weapons");
 	g_Tenabled = AutoExecConfig_CreateConVar("sm_weapons_t", "0", "0 - disabled, 1 - enable weapons for T");
 	g_CTenabled = AutoExecConfig_CreateConVar("sm_weapons_ct", "1", "0 - disabled, 1 - enable weapons for CT");
-	gc_bTagEnabled = AutoExecConfig_CreateConVar("sm_weapons_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	gc_bTag = AutoExecConfig_CreateConVar("sm_weapons_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 
 	AutoExecConfig_CacheConvars();
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
 	AutoExecConfig(true, "MyJailbreak_weapons");
 	
-	
-	AddCommandListener(Event_Say, "say");
-	AddCommandListener(Event_Say, "say_team");
+	RegConsoleCmd("sm_guns", Cmd_Weapons);
+	RegConsoleCmd("sm_gun", Cmd_Weapons);
+	RegConsoleCmd("sm_weapon", Cmd_Weapons);
+	RegConsoleCmd("sm_weapons", Cmd_Weapons);
+	RegConsoleCmd("sm_arms", Cmd_Weapons);
+	RegConsoleCmd("sm_firearms", Cmd_Weapons);
+	RegConsoleCmd("sm_gunmenu", Cmd_Weapons);
+	RegConsoleCmd("sm_weaponmenu", Cmd_Weapons);
+	RegConsoleCmd("sm_give", Cmd_Weapons);
+	RegConsoleCmd("sm_giveweapon", Cmd_Weapons);
+
 	
 	weapons1 = RegClientCookie("Primary Weapons", "", CookieAccess_Private);
 	weapons2 = RegClientCookie("Secondary Weapons", "", CookieAccess_Private);
 	//remember = RegClientCookie("Remember Weapons", "", CookieAccess_Private);
 }
 
-public OnConfigsExecuted()
+public void OnConfigsExecuted()
 {
 	
-	if (gc_bTagEnabled.BoolValue)
+	if (gc_bTag.BoolValue)
 	{
 		ConVar hTags = FindConVar("sv_tags");
 		char sTags[128];
@@ -109,11 +117,11 @@ public OnConfigsExecuted()
 
 Handle:BuildOptionsMenu(bool:sameWeaponsEnabled)
 {
-	decl String:info1[255], String:info2[255], String:info3[255], String:info4[255], String:info5[255], String:info6[255];
+	char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255];
 
 
-	new sameWeaponsStyle = (sameWeaponsEnabled) ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED;
-	new Handle:menu3 = CreateMenu(Menu_Options);
+	int sameWeaponsStyle = (sameWeaponsEnabled) ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED;
+	Handle menu3 = CreateMenu(Menu_Options);
 	Format(info1, sizeof(info1), "%T\n ", "weapons_info_Title", LANG_SERVER);
 	SetMenuTitle(menu3, info1);
 	SetMenuExitButton(menu3, true);
@@ -140,16 +148,16 @@ DisplayOptionsMenu(clientIndex)
 
 Handle:BuildOptionsMenuWeapons(bool:primary)
 {
-	decl String:info7[255], String:info8[255];
-	new Handle:menu;
-	new Items[weapons];
+	char info7[255], info8[255];
+	Handle menu;
+	int Items[weapons];
 	if(primary)
 	{
 		menu = CreateMenu(Menu_Primary);
 		Format(info7, sizeof(info7), "%T\n ", "weapons_info_prim", LANG_SERVER);
 		SetMenuTitle(menu, info7);
 		SetMenuExitButton(menu, true);
-		for(new i=0;i<GetArraySize(array_primary);++i)
+		for(int i=0;i<GetArraySize(array_primary);++i)
 		{
 			GetArrayArray(array_primary, i, Items[0]);
 			AddMenuItem(menu, Items[ItemName], Items[desc]);
@@ -161,7 +169,7 @@ Handle:BuildOptionsMenuWeapons(bool:primary)
 		Format(info8, sizeof(info8), "%T\n ", "weapons_info_sec", LANG_SERVER);
 		SetMenuTitle(menu, info8);
 		SetMenuExitButton(menu, true);
-		for(new i=0;i<GetArraySize(array_secondary);++i)
+		for(int i=0;i<GetArraySize(array_secondary);++i)
 		{
 			GetArrayArray(array_secondary, i, Items[0]);
 			AddMenuItem(menu, Items[ItemName], Items[desc]);
@@ -177,7 +185,7 @@ public Menu_Options(Handle:menu, MenuAction:action, param1, param2)
 {
 	if (action == MenuAction_Select)
 	{
-		decl String:info[24];
+		char info[24];
 		GetMenuItem(menu, param2, info, sizeof(info));
 		
 		if (StrEqual(info, "New"))
@@ -232,7 +240,7 @@ public Menu_Primary(Handle:menu, MenuAction:action, param1, param2)
 {
 	if (action == MenuAction_Select)
 	{
-		decl String:info[24];
+		char info[24];
 		GetMenuItem(menu, param2, info, sizeof(info));
 		primaryWeapon[param1] = info;
 		DisplayMenu(optionsMenu4, param1, MENU_TIME_FOREVER);
@@ -243,7 +251,7 @@ public Menu_Secondary(Handle:menu, MenuAction:action, param1, param2)
 {
 	if (action == MenuAction_Select)
 	{
-		decl String:info[24];
+		char info[24];
 		GetMenuItem(menu, param2, info, sizeof(info));
 		secondaryWeapon[param1] = info;
 		GiveSavedWeapons(param1);
@@ -254,14 +262,14 @@ public Menu_Secondary(Handle:menu, MenuAction:action, param1, param2)
 	}
 }
 
-public OnMapStart()
+public void OnMapStart()
 {
 	SetBuyZones("Disable");
 }
 
-public Event_PlayerSpawn(Handle:event, const String:name[], bool:dontBroadcast)
+public Event_PlayerSpawn(Handle:event, const char[] name, bool:dontBroadcast)
 {
-	new clientIndex = GetClientOfUserId(GetEventInt(event, "userid"));
+	int clientIndex = GetClientOfUserId(GetEventInt(event, "userid"));
 	
 	//CancelClientMenu(clientIndex);
 	DeathTimer(clientIndex);
@@ -270,7 +278,7 @@ public Event_PlayerSpawn(Handle:event, const String:name[], bool:dontBroadcast)
 
 public Action:GetWeapons(Handle:timer, any:clientIndex)
 {
-	Timers[clientIndex] = INVALID_HANDLE;
+	Timers[clientIndex] = null;
 	if (GetClientTeam(clientIndex) > 1 && IsPlayerAlive(clientIndex))
 	{
 	if(GetConVarInt(g_enabled) == 1)	
@@ -321,7 +329,7 @@ public Action:GetWeapons(Handle:timer, any:clientIndex)
 
 public Action:Fix(Handle:timer, any:clientIndex)
 {
-	Timers[clientIndex] = INVALID_HANDLE;
+	Timers[clientIndex] = null;
 	if (GetClientTeam(clientIndex) > 1 && IsPlayerAlive(clientIndex))
 	{
 		GiveSavedWeaponsFix(clientIndex);
@@ -344,8 +352,8 @@ GiveSavedWeaponsFix(clientIndex)
 			if (StrEqual(primaryWeapon[clientIndex], "random"))
 			{
 				// Select random menu item (excluding "Random" option)
-				new random = GetRandomInt(0, GetArraySize(array_primary)-1);
-				new Items[weapons];
+				int random = GetRandomInt(0, GetArraySize(array_primary)-1);
+				int Items[weapons];
 				GetArrayArray(array_primary, random, Items[0]);
 				GivePlayerItem(clientIndex, Items[ItemName]);
 			}
@@ -358,8 +366,8 @@ GiveSavedWeaponsFix(clientIndex)
 			if (StrEqual(secondaryWeapon[clientIndex], "random"))
 			{
 				// Select random menu item (excluding "Random" option)
-				new random = GetRandomInt(0, GetArraySize(array_secondary)-1);
-				new Items[weapons];
+				int random = GetRandomInt(0, GetArraySize(array_secondary)-1);
+				int Items[weapons];
 				GetArrayArray(array_secondary, random, Items[0]);
 				GivePlayerItem(clientIndex, Items[ItemName]);
 			}
@@ -387,22 +395,21 @@ GiveSavedWeaponsFix(clientIndex)
 			if (StrEqual(primaryWeapon[clientIndex], "random"))
 			{
 				// Select random menu item (excluding "Random" option)
-				new random = GetRandomInt(0, GetArraySize(array_primary)-1);
-				new Items[weapons];
+				int random = GetRandomInt(0, GetArraySize(array_primary)-1);
+				int Items[weapons];
 				GetArrayArray(array_primary, random, Items[0]);
 				GivePlayerItem(clientIndex, Items[ItemName]);
 			}
 			else
 				GivePlayerItem(clientIndex, primaryWeapon[clientIndex]);
 		}
-			
 		if(GetPlayerWeaponSlot(clientIndex, CS_SLOT_SECONDARY) == -1)
 		{
 			if (StrEqual(secondaryWeapon[clientIndex], "random"))
 			{
 				// Select random menu item (excluding "Random" option)
-				new random = GetRandomInt(0, GetArraySize(array_secondary)-1);
-				new Items[weapons];
+				int random = GetRandomInt(0, GetArraySize(array_secondary)-1);
+				int Items[weapons];
 				GetArrayArray(array_secondary, random, Items[0]);
 				GivePlayerItem(clientIndex, Items[ItemName]);
 			}
@@ -426,12 +433,12 @@ GiveSavedWeaponsFix(clientIndex)
 	}
 }
 
-SetBuyZones(const String:status[])
+SetBuyZones(const char[] status)
 {
-	new maxEntities = GetMaxEntities();
-	decl String:class[24];
+	int maxEntities = GetMaxEntities();
+	char class[24];
 	
-	for (new i = MaxClients + 1; i < maxEntities; i++)
+	for (int i = MaxClients + 1; i < maxEntities; i++)
 	{
 		if (IsValidEdict(i))
 		{
@@ -442,27 +449,14 @@ SetBuyZones(const String:status[])
 	}
 }
 
-public Action:Event_Say(clientIndex, const String:command[], arg)
+public Action Cmd_Weapons(int client,int args)
 {
-	static String:menuTriggers[][] = { "gun", "!gun", "/gun", "guns", "!guns", "/guns", "weapon", "!weapon", "/weapon", "weapons", "!weapons", "/weapons" };
 	
-	if (clientIndex != 0 && IsClientInGame(clientIndex))
+	if (client != 0 && IsClientInGame(client))
 	{
-		// Retrieve and clean up text.
-		decl String:text[24];
-		GetCmdArgString(text, sizeof(text));
-		StripQuotes(text);
-		TrimString(text);
-	
-		for(new i = 0; i < sizeof(menuTriggers); i++)
-		{
-			if (StrEqual(text, menuTriggers[i], false))
-			{
-				rememberChoice[clientIndex] = false;
-				DisplayOptionsMenu(clientIndex);
+				rememberChoice[client] = false;
+				DisplayOptionsMenu(client);
 				return Plugin_Handled;
-			}
-		}
 	}
 	return Plugin_Continue;
 }
@@ -477,8 +471,8 @@ GiveSavedWeapons(clientIndex)
 		if (StrEqual(primaryWeapon[clientIndex], "random"))
 		{
 			// Select random menu item (excluding "Random" option)
-			new random = GetRandomInt(0, GetArraySize(array_primary)-1);
-			new Items[weapons];
+			int random = GetRandomInt(0, GetArraySize(array_primary)-1);
+			int Items[weapons];
 			GetArrayArray(array_primary, random, Items[0]);
 			GivePlayerItem(clientIndex, Items[ItemName]);
 		}
@@ -488,8 +482,8 @@ GiveSavedWeapons(clientIndex)
 		if (StrEqual(secondaryWeapon[clientIndex], "random"))
 		{
 			// Select random menu item (excluding "Random" option)
-			new random = GetRandomInt(0, GetArraySize(array_secondary)-1);
-			new Items[weapons];
+			int random = GetRandomInt(0, GetArraySize(array_secondary)-1);
+			int Items[weapons];
 			GetArrayArray(array_secondary, random, Items[0]);
 			GivePlayerItem(clientIndex, Items[ItemName]);
 		}
@@ -512,7 +506,7 @@ GiveSavedWeapons(clientIndex)
 		
 		GivePlayerItem(clientIndex, "weapon_knife");
 		//FakeClientCommand(clientIndex,"use weapon_knife");
-		FakeClientCommand(clientIndex,"sm_menu");
+		//FakeClientCommand(clientIndex,"sm_menu");
 		
 		Timers[clientIndex] = CreateTimer(6.0, Fix, clientIndex);
 	}
@@ -520,8 +514,8 @@ GiveSavedWeapons(clientIndex)
 
 stock StripAllWeapons(iClient)
 {
-    new iEnt;
-    for (new i = 0; i <= 4; i++)
+    int iEnt;
+    for (int i = 0; i <= 4; i++)
     {
         while ((iEnt = GetPlayerWeaponSlot(iClient, i)) != -1)
         {
@@ -563,10 +557,10 @@ public OnClientDisconnect(clientIndex)
 
 DeathTimer(client)
 {
-	if (Timers[client] != INVALID_HANDLE)
+	if (Timers[client] != null)
     {
 		KillTimer(Timers[client]);
-		Timers[client] = INVALID_HANDLE;
+		Timers[client] = null;
 	}
 }
 
@@ -576,7 +570,7 @@ ListWeapons()
 	ClearArray(array_primary);
 	ClearArray(array_secondary);
 	
-	new Items[weapons];
+	int Items[weapons];
 	
 	Format(Items[ItemName], 64, "weapon_m4a1");
 	Format(Items[desc], 64, "M4A1");
@@ -714,7 +708,7 @@ ListWeapons()
 
 /* bool:GetCookie(client)
 {
-	decl String:buffer[10];
+	char buffer[10];
 	GetClientCookie(client, remember, buffer, sizeof(buffer));
 	
 	return StrEqual(buffer, "On");

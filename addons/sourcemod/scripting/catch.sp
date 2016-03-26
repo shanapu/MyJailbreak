@@ -13,29 +13,34 @@
 
 #define PLUGIN_VERSION   "0.x"
 
-new roundtime;
-new roundtimenormal;
-new votecount;
-new CatchRound;
-new RoundLimits;
-
-new bool:catched[MAXPLAYERS+1];
 
 
-ConVar gc_bTagEnabled;
+int VoteCount;
+int CatchRound;
 
 
-new Handle:CatchMenu;
-new Handle:roundtimec;
-new Handle:roundtimenormalc;
-new Handle:RoundLimitsc;
-new Handle:g_wenabled=INVALID_HANDLE;
-new Handle:usecvar;
+bool catched[MAXPLAYERS+1];
 
-new bool:IsCatch;
-new bool:StartCatch;
+ConVar gc_bPlugin;
+ConVar gc_bTag;
+ConVar gc_iRoundLimits;
+ConVar gc_iRoundTime;
 
-new String:voted[1500];
+ConVar g_iSetRoundTime;
+
+int g_iOldRoundTime;
+int g_iRoundLimits;
+
+Handle CatchMenu;
+
+
+
+Handle UseCvar;
+
+bool IsCatch;
+bool StartCatch;
+
+char voted[1500];
 
 
 
@@ -49,23 +54,26 @@ public Plugin myinfo = {
 
 
 
-public OnPluginStart()
+public void OnPluginStart()
 {
 	// Translation
 	LoadTranslations("MyJailbreakWarden.phrases");
 	LoadTranslations("MyJailbreakCatch.phrases");
 	
 	RegConsoleCmd("sm_setcatch", SetCatch);
+	RegConsoleCmd("sm_catch", VoteCatch);
+	RegConsoleCmd("sm_catchfreeze", VoteCatch);
 	
 	AutoExecConfig_SetFile("MyJailbreak_catch");
 	AutoExecConfig_SetCreateFile(true);
 	
-	AutoExecConfig_CreateConVar("sm_catch_version", "PLUGIN_VERSION", "The version of the SourceMod plugin MyJailBreak - War", FCVAR_PLUGIN|FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
-	g_wenabled = AutoExecConfig_CreateConVar("sm_catch_enable", "1", "0 - disabled, 1 - enable war");
-	roundtimec = AutoExecConfig_CreateConVar("sm_catch_roundtime", "5", "Round time for a single war round");
-	roundtimenormalc = AutoExecConfig_CreateConVar("sm_nocatch_roundtime", "12", "set round time after a war round zour normal mp_roudntime");
-	RoundLimitsc = AutoExecConfig_CreateConVar("sm_catch_roundsnext", "3", "Rounds until event can be started again.");
-	gc_bTagEnabled = AutoExecConfig_CreateConVar("sm_hide_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	AutoExecConfig_CreateConVar("sm_catch_version", "PLUGIN_VERSION", "The version of the SourceMod plugin MyJailBreak - War", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
+	gc_bPlugin = AutoExecConfig_CreateConVar("sm_catch_enable", "1", "0 - disabled, 1 - enable war");
+	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_catch_roundtime", "5", "Round time for a single war round");
+	g_iSetRoundTime = FindConVar("mp_roundtime");
+	gc_iRoundLimits = AutoExecConfig_CreateConVar("sm_catch_roundsnext", "3", "Rounds until event can be started again.");
+	g_iRoundLimits = gc_iRoundLimits.IntValue;
+	gc_bTag = AutoExecConfig_CreateConVar("sm_hide_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 
 	AutoExecConfig_CacheConvars();
 	AutoExecConfig_ExecuteFile();
@@ -74,43 +82,36 @@ public OnPluginStart()
 	
 	IsCatch = false;
 	StartCatch = false;
-	votecount = 0;
+	VoteCount = 0;
 	CatchRound = 0;
 	
 	HookEvent("round_start", RoundStart);
-	HookEvent("player_say", PlayerSay);
+	
 	HookEvent("round_end", RoundEnd);
 	HookEvent("player_team", EventPlayerTeam);
 	HookEvent("player_death", EventPlayerTeam);
 	
-	for(new i = 1; i <= MaxClients; i++)
+	for(int i = 1; i <= MaxClients; i++)
 		if(IsClientInGame(i)) OnClientPutInServer(i);
 }
 
 
-public OnMapStart()
+public void OnMapStart()
 {
-	//new String:voted[1500];
 
-	votecount = 0;
+
+	VoteCount = 0;
 	CatchRound = 0;
 	IsCatch = false;
 	StartCatch = false;
-	RoundLimits = 0;
-	
-	
-
-	roundtime = GetConVarInt(roundtimec);
-	roundtimenormal = GetConVarInt(roundtimenormalc);
+	g_iRoundLimits = 0;
 }
 
-public OnConfigsExecuted()
+public void OnConfigsExecuted()
 {
-	roundtime = GetConVarInt(roundtimec);
-	roundtimenormal = GetConVarInt(roundtimenormalc);
-	RoundLimits = 0;
+	g_iRoundLimits = 0;
 	
-	if (gc_bTagEnabled.BoolValue)
+	if (gc_bTag.BoolValue)
 	{
 		ConVar hTags = FindConVar("sv_tags");
 		char sTags[128];
@@ -123,20 +124,17 @@ public OnConfigsExecuted()
 	}
 }
 
-public RoundEnd(Handle:event, String:name[], bool:dontBroadcast)
+public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 {
-	new winner = GetEventInt(event, "winner");
+	int winner = GetEventInt(event, "winner");
 	
 	if (IsCatch)
 	{
-		for(new client=1; client <= MaxClients; client++)
+		for(int client=1; client <= MaxClients; client++)
 		{
-			if (IsClientInGame(client)) SetEntData(client, FindSendPropOffs("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
+			if (IsClientInGame(client)) SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
 		}
 		
-		
-		roundtime = GetConVarInt(roundtimec);
-		roundtimenormal = GetConVarInt(roundtimenormalc);
 		
 		if (winner == 2) PrintCenterTextAll("%t", "catch_twin");
 		if (winner == 3) PrintCenterTextAll("%t", "catch_ctwin");
@@ -155,40 +153,35 @@ public RoundEnd(Handle:event, String:name[], bool:dontBroadcast)
 		SetCvar("sv_infinite_ammo", 0);
 		SetCvar("sm_ffa_enable", 1);
 		SetCvar("sm_warden_enable", 1);
-		SetCvar("mp_roundtime", roundtimenormal);
-		SetCvar("mp_roundtime_hostage", roundtimenormal);
-		SetCvar("mp_roundtime_defuse", roundtimenormal);
+		g_iSetRoundTime.IntValue = g_iOldRoundTime;
 		CPrintToChatAll("%t %t", "catch_tag" , "catch_end");
 	}
 	if (StartCatch)
 	{
-	SetCvar("mp_roundtime", roundtime);
-	SetCvar("mp_roundtime_hostage", roundtime);
-	SetCvar("mp_roundtime_defuse", roundtime);
+	g_iOldRoundTime = g_iSetRoundTime.IntValue;
+	g_iSetRoundTime.IntValue = gc_iRoundTime.IntValue;
 	}
 }
 
 public Action SetCatch(int client,int args)
 {
-	if(GetConVarInt(g_wenabled) == 1)	
+	if (gc_bPlugin.BoolValue)	
 	{
 	if (warden_iswarden(client) || CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
 	{
-	if (RoundLimits == 0)
+	if (g_iRoundLimits == 0)
 	{
 	StartCatch = true;
-	RoundLimits = GetConVarInt(RoundLimitsc);
-	votecount = 0;
-	
+	g_iRoundLimits = gc_iRoundLimits.IntValue;
+	VoteCount = 0;
 	SetCvar("sm_hide_enable", 0);
-		SetCvar("sm_ffa_enable", 0);
-		SetCvar("sm_zombie_enable", 0);
-		SetCvar("sm_duckhunt_enable", 0);
-		SetCvar("sm_war_enable", 0);
-		SetCvar("sm_noscope_enable", 0);
-	
+	SetCvar("sm_ffa_enable", 0);
+	SetCvar("sm_zombie_enable", 0);
+	SetCvar("sm_duckhunt_enable", 0);
+	SetCvar("sm_war_enable", 0);
+	SetCvar("sm_noscope_enable", 0);
 	CPrintToChatAll("%t %t", "catch_tag" , "catch_next");
-	}else CPrintToChat(client, "%t %t", "catch_tag" , "catch_wait", RoundLimits);
+	}else CPrintToChat(client, "%t %t", "catch_tag" , "catch_wait", g_iRoundLimits);
 	}else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
 	}
 }
@@ -202,7 +195,7 @@ public OnClientPutInServer(client)
 
 public Action:OnWeaponCanUse(client, weapon)
 {
-	decl String:sWeapon[32];
+	char sWeapon[32];
 	GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
 
 	if(!StrEqual(sWeapon, "weapon_knife"))
@@ -249,11 +242,11 @@ public IsValidClient( client )
 	return true; 
 }
 
-public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
+public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 {
 	if (StartCatch)
 	{
-		decl String:info1[255], String:info2[255], String:info3[255], String:info4[255], String:info5[255], String:info6[255], String:info7[255], String:info8[255];
+		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
 		
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_warden_enable", 0);
@@ -288,7 +281,7 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 		
 		if (CatchRound > 0)
 			{
-				for(new client=1; client <= MaxClients; client++)
+				for(int client=1; client <= MaxClients; client++)
 				{
 					
 					if (IsClientInGame(client))
@@ -304,7 +297,7 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 					}
 					if (IsClientInGame(client))
 					{
-					SetEntData(client, FindSendPropOffs("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
+					SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
 					SendPanelToClient(CatchMenu, client, Pass, 15);
 					}
 				}
@@ -314,7 +307,7 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 				}
 	}else
 	{
-		if (RoundLimits > 0) RoundLimits--;
+		if (g_iRoundLimits > 0) g_iRoundLimits--;
 	}
 }
 
@@ -322,42 +315,35 @@ public Pass(Handle:menu, MenuAction:action, param1, param2)
 {
 }
 
-
-public PlayerSay(Handle:event, String:name[], bool:dontBroadcast)
+public Action VoteCatch(int client,int args)
 {
-	decl String:text[256];
-	decl String:steamid[64];
-	new client = GetClientOfUserId(GetEventInt(event, "userid"));
+	char steamid[64];
+	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
 	
-	GetClientAuthString(client, steamid, sizeof(steamid));
-	GetEventString(event, "text", text, sizeof(text));
-	
-	if (StrEqual(text, "!fangen") || StrEqual(text, "!catch"))
-	{
-	if(GetConVarInt(g_wenabled) == 1)
+	if (gc_bPlugin.BoolValue)
 	{	
 		if (GetTeamClientCount(3) > 0)
 		{
-			if (RoundLimits == 0)
+			if (g_iRoundLimits == 0)
 			{
 				if (!IsCatch && !StartCatch)
 				{
 					if (StrContains(voted, steamid, true) == -1)
 					{
-	new playercount = (GetClientCount(true) / 2);
+	int playercount = (GetClientCount(true) / 2);
 	
-	votecount++;
+	VoteCount++;
 	
-	new Missing = playercount - votecount + 1;
+	int Missing = playercount - VoteCount + 1;
 	
 	Format(voted, sizeof(voted), "%s,%s", voted, steamid);
 	
-	if (votecount > playercount)
+	if (VoteCount > playercount)
 	{
 		StartCatch = true;
 		
-		RoundLimits = GetConVarInt(RoundLimitsc);
-		votecount = 0;
+		g_iRoundLimits = gc_iRoundLimits.IntValue;
+		VoteCount = 0;
 		
 		SetCvar("sm_hide_enable", 0);
 		SetCvar("sm_ffa_enable", 0);
@@ -375,51 +361,50 @@ public PlayerSay(Handle:event, String:name[], bool:dontBroadcast)
 				}
 				else CPrintToChat(client, "%t %t", "catch_tag" , "catch_progress");
 			}
-			else CPrintToChat(client, "%t %t", "catch_tag" , "war_wait", RoundLimits);
+			else CPrintToChat(client, "%t %t", "catch_tag" , "war_wait", g_iRoundLimits);
 		}
 		else CPrintToChat(client, "%t %t", "catch_tag" , "catch_minct");
 	}
 	else CPrintToChat(client, "%t %t", "catch_tag" , "catch_disabled");
-	}
 }
 
 
 
-public SetCvar(String:cvarName[64], value)
+public SetCvar(char cvarName[64], value)
 {
-	usecvar = FindConVar(cvarName);
-	if(usecvar == INVALID_HANDLE) return;
+	UseCvar = FindConVar(cvarName);
+	if(UseCvar == null) return;
 	
-	new flags = GetConVarFlags(usecvar);
+	int flags = GetConVarFlags(UseCvar);
 	flags &= ~FCVAR_NOTIFY;
-	SetConVarFlags(usecvar, flags);
+	SetConVarFlags(UseCvar, flags);
 
-	SetConVarInt(usecvar, value);
+	SetConVarInt(UseCvar, value);
 
 	flags |= FCVAR_NOTIFY;
-	SetConVarFlags(usecvar, flags);
+	SetConVarFlags(UseCvar, flags);
 }
 
-public SetCvarF(String:cvarName[64], Float:value)
+public SetCvarF(char cvarName[64], Float:value)
 {
-	usecvar = FindConVar(cvarName);
-	if(usecvar == INVALID_HANDLE) return;
+	UseCvar = FindConVar(cvarName);
+	if(UseCvar == null) return;
 
-	new flags = GetConVarFlags(usecvar);
+	int flags = GetConVarFlags(UseCvar);
 	flags &= ~FCVAR_NOTIFY;
-	SetConVarFlags(usecvar, flags);
+	SetConVarFlags(UseCvar, flags);
 
-	SetConVarFloat(usecvar, value);
+	SetConVarFloat(UseCvar, value);
 
 	flags |= FCVAR_NOTIFY;
-	SetConVarFlags(usecvar, flags);
+	SetConVarFlags(UseCvar, flags);
 }
 
 public OnMapEnd()
 {
 	IsCatch = false;
 	StartCatch = false;
-	votecount = 0;
+	VoteCount = 0;
 	CatchRound = 0;
 	
 	voted[0] = '\0';
@@ -433,7 +418,7 @@ public OnClientDisconnect_Post(client)
 	}
 	CheckStatus();
 }
-public Action:EventPlayerTeam(Handle:event, const String:name[], bool:dontBroadcast)
+public Action:EventPlayerTeam(Handle:event, const char[] name, bool:dontBroadcast)
 {
 	if(IsCatch == false)
 	{
@@ -463,8 +448,8 @@ FreeEm(client, attacker)
 
 CheckStatus()
 {
-	new number = 0;
-	for (new i = 1; i <= MaxClients; i++)
+	int number = 0;
+	for (int i = 1; i <= MaxClients; i++)
 	if(IsClientInGame(i) && IsPlayerAlive(i) && GetClientTeam(i) == CS_TEAM_T && !catched[i]) number++;
 	if(number == 0) CS_TerminateRound(5.0, CSRoundEnd_CTWin);
 	CPrintToChatAll("%t %t", "catch_tag" , "catch_end");

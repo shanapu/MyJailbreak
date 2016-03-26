@@ -17,9 +17,9 @@ int g_iBeaconValidation = 1;
 bool g_bBeaconOn = false;
 char sFilePath[255];
 
-ConVar gc_bPluginEnabled;
+ConVar gc_bPlugin;
 
-ConVar gc_bTagEnabled;
+ConVar gc_bTag;
 
 ConVar gc_iMinimumBeacon;
 
@@ -48,7 +48,7 @@ public Plugin myinfo =
 
 public void OnConfigsExecuted()
 {
-	if (gc_bTagEnabled.BoolValue)
+	if (gc_bTag.BoolValue)
 	{
 		ConVar hTags = FindConVar("sv_tags");
 		char sTags[128];
@@ -66,11 +66,11 @@ public void OnPluginStart()
 	AutoExecConfig_SetFile("sm_beacon");
 	AutoExecConfig_SetCreateFile(true);
 
-	AutoExecConfig_CreateConVar("beacon_version", PLUGIN_VERSION, "Headline's Beacon Plugin: Version", FCVAR_PLUGIN|FCVAR_NOTIFY);
+	AutoExecConfig_CreateConVar("beacon_version", PLUGIN_VERSION, "Headline's Beacon Plugin: Version", FCVAR_NOTIFY);
 	
-	gc_bPluginEnabled = AutoExecConfig_CreateConVar("sm_beacon_enabled", "1", "Enables and disables the beacon plugin", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	gc_bPlugin = AutoExecConfig_CreateConVar("sm_beacon_enabled", "1", "Enables and disables the beacon plugin", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	
-	gc_bTagEnabled = AutoExecConfig_CreateConVar("sm_tag_enabled", "0", "Allow \"Headline\" to be added to the server tags?", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	gc_bTag = AutoExecConfig_CreateConVar("sm_tag_enabled", "0", "Allow \"Headline\" to be added to the server tags?", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 
 	gc_iMinimumBeacon = AutoExecConfig_CreateConVar("sm_players_for_beacon", "2", "Sets the ammount of players for when the beacon should start", FCVAR_NOTIFY, true, 0.0, true, 32.0);
 
@@ -120,7 +120,7 @@ public void OnMapStart()
 
 public void OnClientDisconnected(int client)
 {
-	if (!gc_bPluginEnabled.BoolValue)
+	if (!gc_bPlugin.BoolValue)
 	{
 		return;
 	}
@@ -134,7 +134,7 @@ public void OnClientDisconnected(int client)
 
 public Action Event_PlayerDeath(Handle hEvent, const char[] sName, bool bDontBroadcast)
 {
-	if (!gc_bPluginEnabled.BoolValue)
+	if (!gc_bPlugin.BoolValue)
 	{
 		return Plugin_Continue;
 	}
@@ -159,7 +159,7 @@ public Action Event_PlayerDeath(Handle hEvent, const char[] sName, bool bDontBro
 
 public Action Event_RoundStart(Handle hEvent, const char[] sName, bool bDontBroadcast)
 {
-	if (!gc_bPluginEnabled.BoolValue)
+	if (!gc_bPlugin.BoolValue)
 	{
 		return Plugin_Continue;
 	}
@@ -184,7 +184,7 @@ public Action beacon_all_timelimit(Handle hTimer, any iValidation)
 
 public Action Event_RoundEnd(Handle hEvent, const char[] sName, bool bDontBroadcast)
 {
-	if (!gc_bPluginEnabled.BoolValue)
+	if (!gc_bPlugin.BoolValue)
 	{
 		return Plugin_Continue;
 	}
@@ -210,7 +210,7 @@ public Action Command_StopBeacon(int client, int iArgs)
 	{
 		ReplyToCommand(client, "[SM] Usage : sm_stopbeacon");
 	}
-	if (!gc_bPluginEnabled.BoolValue)
+	if (!gc_bPlugin.BoolValue)
 	{
 		ReplyToCommand(client, "Hunger Games Beacon is Disabled");
 		return Plugin_Handled;
@@ -234,7 +234,7 @@ public Action Command_BeaconAll(int client, int iArgs)
 	{
 		ReplyToCommand(client, "[SM] Usage : sm_beaconall");
 	}
-	if (!gc_bPluginEnabled.BoolValue)
+	if (!gc_bPlugin.BoolValue)
 	{
 		ReplyToCommand(client, "Hunger Games Beacon is Disabled");
 		return Plugin_Handled;

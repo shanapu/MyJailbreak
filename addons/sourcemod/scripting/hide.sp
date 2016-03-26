@@ -10,35 +10,41 @@
 //Compiler Options
 #pragma semicolon 1
 
+//Defines
 #define PLUGIN_VERSION   "0.x"
-ConVar gc_bTagEnabled;
-new freezetime;
-new roundtime;
-new roundtimenormal;
-new votecount;
-new HideRound;
-new RoundLimits;
 
-new FogIndex = -1;
-new Float:mapFogStart = 0.0;
-new Float:mapFogEnd = 150.0;
-new Float:mapFogDensity = 0.99;
+//Booleans
+bool IsHide = false; 
+bool StartHide = false; 
 
-new Handle:LimitTimer;
-new Handle:HideTimer;
-new Handle:WeaponTimer;
-new Handle:HideMenu;
-new Handle:roundtimec;
-new Handle:roundtimenormalc;
-new Handle:freezetimec;
-new Handle:RoundLimitsc;
-new Handle:g_wenabled=INVALID_HANDLE;
-new Handle:usecvar;
+//ConVars
+ConVar gc_bPlugin;
+ConVar gc_bTag;
+ConVar gc_iRoundTime;
+ConVar gc_iRoundLimits;
+ConVar gc_iFreezeTime;
+ConVar g_iSetRoundTime;
 
-new bool:IsHide;
-new bool:StartHide;
+//Integers
+int g_iOldRoundTime;
+int g_iFreezeTime;
+int g_iRoundLimits;
+int VoteCount = 0;
+int HideRound = 0;
+int FogIndex = -1;
 
-new String:voted[1500];
+//Handles
+Handle FreezeTimer;
+Handle HideMenu;
+Handle UseCvar;
+
+//Characters
+char voted[1500];
+
+//Float
+float mapFogStart = 0.0;
+float mapFogEnd = 150.0;
+float mapFogDensity = 0.99;
 
 
 public Plugin myinfo = {
@@ -49,60 +55,57 @@ public Plugin myinfo = {
 	url = ""
 };
 
-
-
-public OnPluginStart()
+public void OnPluginStart()
 {
 	// Translation
 	LoadTranslations("MyJailbreakWarden.phrases");
 	LoadTranslations("MyJailbreakHide.phrases");
 	
+	//Client Commands
 	RegConsoleCmd("sm_sethide", SetHide);
+	RegConsoleCmd("sm_hide", VoteHide);
+	RegConsoleCmd("sm_hideindark", VoteHide);
 	
+	//ConVars with AutoExecConfig	
 	AutoExecConfig_SetFile("MyJailbreak_hide");
 	AutoExecConfig_SetCreateFile(true);
-	
-	AutoExecConfig_CreateConVar("sm_hide_version", "PLUGIN_VERSION", "The version of the SourceMod plugin MyJailBreak - War", FCVAR_PLUGIN|FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
-	g_wenabled = AutoExecConfig_CreateConVar("sm_hide_enable", "1", "0 - disabled, 1 - enable war");
-	roundtimec = AutoExecConfig_CreateConVar("sm_hide_roundtime", "8", "Round time for a single war round");
-	roundtimenormalc = AutoExecConfig_CreateConVar("sm_nohide_roundtime", "12", "set round time after a war round zour normal mp_roudntime");
-	freezetimec = AutoExecConfig_CreateConVar("sm_hide_freezetime", "30", "Time freeze T");
-	RoundLimitsc = AutoExecConfig_CreateConVar("sm_hide_roundsnext", "3", "Rounds until event can be started again.");
-	gc_bTagEnabled = AutoExecConfig_CreateConVar("sm_hide_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-
-	
+	AutoExecConfig_CreateConVar("sm_hide_version", "PLUGIN_VERSION", "The version of the SourceMod plugin MyJailBreak - War", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
+	gc_bPlugin = AutoExecConfig_CreateConVar("sm_hide_enable", "1", "0 - disabled, 1 - enable war");
+	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_hide_roundtime", "5", "Round time for a single war round");
+	g_iSetRoundTime = FindConVar("mp_roundtime");
+	gc_iFreezeTime = AutoExecConfig_CreateConVar("sm_hide_g_iFreezeTime", "30", "Time freeze T");
+	g_iFreezeTime = gc_iFreezeTime.IntValue;
+	gc_iRoundLimits = AutoExecConfig_CreateConVar("sm_hide_roundsnext", "3", "Rounds until event can be started again.");
+	g_iRoundLimits = gc_iRoundLimits.IntValue;
+	gc_bTag = AutoExecConfig_CreateConVar("sm_hide_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	AutoExecConfig_CacheConvars();
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
 	AutoExecConfig(true, "MyJailbreak_Hide");
 	
+	//Hooks
+	HookEvent("round_start", RoundStart);
+	HookEvent("round_end", RoundEnd);
+	
 	IsHide = false;
 	StartHide = false;
-	votecount = 0;
+	VoteCount = 0;
 	HideRound = 0;
-	
-	HookEvent("round_start", RoundStart);
-	HookEvent("player_say", PlayerSay);
-	HookEvent("round_end", RoundEnd);
 }
 
 
-public OnMapStart()
+public void OnMapStart()
 {
-	//new String:voted[1500];
 
-	votecount = 0;
+
+	VoteCount = 0;
 	HideRound = 0;
 	IsHide = false;
 	StartHide = false;
-	RoundLimits = 0;
-	
-	
-	freezetime = GetConVarInt(freezetimec);
-	roundtime = GetConVarInt(roundtimec);
-	roundtimenormal = GetConVarInt(roundtimenormalc);
-	
-	new ent; 
+	g_iRoundLimits = 0;
+	g_iFreezeTime = gc_iFreezeTime.IntValue;
+
+	int ent; 
 	ent = FindEntityByClassname(-1, "env_fog_controller");
 	if (ent != -1) 
 	{
@@ -117,14 +120,12 @@ public OnMapStart()
 	AcceptEntityInput(FogIndex, "TurnOff");
 }
 
-public OnConfigsExecuted()
+public void OnConfigsExecuted()
 {
-	roundtime = GetConVarInt(roundtimec);
-	roundtimenormal = GetConVarInt(roundtimenormalc);
-	freezetime = GetConVarInt(freezetimec);
-	RoundLimits = 0;
+	g_iFreezeTime = gc_iFreezeTime.IntValue;
+	g_iRoundLimits = 0;
 	
-	if (gc_bTagEnabled.BoolValue)
+	if (gc_bTag.BoolValue)
 	{
 		ConVar hTags = FindConVar("sv_tags");
 		char sTags[128];
@@ -137,27 +138,23 @@ public OnConfigsExecuted()
 	}
 }
 
-public RoundEnd(Handle:event, String:name[], bool:dontBroadcast)
+public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 {
-	new winner = GetEventInt(event, "winner");
+	int winner = GetEventInt(event, "winner");
 	
 	if (IsHide)
 	{
-		for(new client=1; client <= MaxClients; client++)
+		for(int client=1; client <= MaxClients; client++)
 		{
 			if (IsClientInGame(client)) 
 			{
-			SetEntData(client, FindSendPropOffs("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
+			SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
 			SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
 			}
 		}
 		
-		if (LimitTimer != INVALID_HANDLE) KillTimer(LimitTimer);
-		if (HideTimer != INVALID_HANDLE) KillTimer(HideTimer);
-		if (WeaponTimer != INVALID_HANDLE) KillTimer(WeaponTimer);
-		
-		roundtime = GetConVarInt(roundtimec);
-		roundtimenormal = GetConVarInt(roundtimenormalc);
+		if (FreezeTimer != null) KillTimer(FreezeTimer);
+
 		
 		if (winner == 2) PrintCenterTextAll("%t", "hide_twin");
 		if (winner == 3) PrintCenterTextAll("%t", "hide_ctwin");
@@ -176,9 +173,7 @@ public RoundEnd(Handle:event, String:name[], bool:dontBroadcast)
 		SetCvar("sm_catch_enable", 1);
 		SetCvar("sm_warden_enable", 1);
 		SetCvar("dice_enable", 1);
-		SetCvar("mp_roundtime", roundtimenormal);
-		SetCvar("mp_roundtime_hostage", roundtimenormal);
-		SetCvar("mp_roundtime_defuse", roundtimenormal);
+		g_iSetRoundTime.IntValue = g_iOldRoundTime;
 		CPrintToChatAll("%t %t", "hide_tag" , "hide_end");
 		DoFog();
 		AcceptEntityInput(FogIndex, "TurnOff");
@@ -186,22 +181,21 @@ public RoundEnd(Handle:event, String:name[], bool:dontBroadcast)
 	}
 	if (StartHide)
 	{
-	SetCvar("mp_roundtime", roundtime);
-	SetCvar("mp_roundtime_hostage", roundtime);
-	SetCvar("mp_roundtime_defuse", roundtime);
+	g_iOldRoundTime = g_iSetRoundTime.IntValue;
+	g_iSetRoundTime.IntValue = gc_iRoundTime.IntValue;
 	}
 }
 
 public Action SetHide(int client,int args)
 {
-	if(GetConVarInt(g_wenabled) == 1)	
+	if (gc_bPlugin.BoolValue)	
 	{
 	if (warden_iswarden(client) || CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
 	{
-	if (RoundLimits == 0)
+	if (g_iRoundLimits == 0)
 	{
 	StartHide = true;
-	RoundLimits = GetConVarInt(RoundLimitsc);
+	g_iRoundLimits = gc_iRoundLimits.IntValue;
 	
 	SetCvar("sm_war_enable", 0);
 	SetCvar("sm_ffa_enable", 0);
@@ -210,18 +204,18 @@ public Action SetHide(int client,int args)
 	SetCvar("sm_catch_enable", 0);
 	SetCvar("sm_noscope_enable", 0);
 		
-	votecount = 0;
+	VoteCount = 0;
 	CPrintToChatAll("%t %t", "hide_tag" , "hide_next");
-	}else CPrintToChat(client, "%t %t", "hide_tag" , "hide_wait", RoundLimits);
+	}else CPrintToChat(client, "%t %t", "hide_tag" , "hide_wait", g_iRoundLimits);
 	}else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
 	}
 }
 
-public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
+public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 {
 	if (StartHide)
 	{
-		decl String:info1[255], String:info2[255], String:info3[255], String:info4[255], String:info5[255], String:info6[255], String:info7[255], String:info8[255];
+		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
 		
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_warden_enable", 0);
@@ -256,7 +250,7 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 		
 		if (HideRound > 0)
 			{
-				for(new client=1; client <= MaxClients; client++)
+				for(int client=1; client <= MaxClients; client++)
 				{
 					
 					if (IsClientInGame(client))
@@ -269,18 +263,18 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 					}
 					if (IsClientInGame(client))
 					{
-					SetEntData(client, FindSendPropOffs("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
+					SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
 					SendPanelToClient(HideMenu, client, Pass, 15);
 					SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 					}
 				}
-				freezetime--;
-				HideTimer = CreateTimer(1.0, Hide, _, TIMER_REPEAT);
+				g_iFreezeTime--;
+				FreezeTimer = CreateTimer(1.0, Freezed, _, TIMER_REPEAT);
 			}
 		{AcceptEntityInput(FogIndex, "TurnOn");}
 	}else
 	{
-		if (RoundLimits > 0) RoundLimits--;
+		if (g_iRoundLimits > 0) g_iRoundLimits--;
 	}
 }
 
@@ -289,31 +283,31 @@ public Pass(Handle:menu, MenuAction:action, param1, param2)
 }
 
 
-public Action:Hide(Handle:timer)
+public Action:Freezed(Handle:timer)
 {
-	if (freezetime > 1)
+	if (g_iFreezeTime > 1)
 	{
-		freezetime--;
-		for (new client=1; client <= MaxClients; client++)
+		g_iFreezeTime--;
+		for (int client=1; client <= MaxClients; client++)
 		if (IsClientInGame(client) && IsPlayerAlive(client))
 			{
 		if (GetClientTeam(client) == 3)
 	{
-	PrintCenterText(client,"%t", "hide_timetounfreeze", freezetime);
+	PrintCenterText(client,"%t", "hide_timetounfreeze", g_iFreezeTime);
 	}
 		if (GetClientTeam(client) == 2)
 	{
-	PrintCenterText(client,"%t", "hide_timetohide", freezetime);
+	PrintCenterText(client,"%t", "hide_timetohide", g_iFreezeTime);
 	}
 		}
 		return Plugin_Continue;
 	}
 	
-	freezetime = GetConVarInt(freezetimec);
+	g_iFreezeTime = gc_iFreezeTime.IntValue;
 	
 	if (HideRound > 0)
 	{
-		for (new client=1; client <= MaxClients; client++)
+		for (int client=1; client <= MaxClients; client++)
 		{
 			if (IsClientInGame(client) && IsPlayerAlive(client))
 			{
@@ -336,7 +330,7 @@ public Action:Hide(Handle:timer)
 
 
 	
-	HideTimer = INVALID_HANDLE;
+	FreezeTimer = null;
 	
 	return Plugin_Stop;
 }
@@ -354,36 +348,30 @@ DoFog()
 	}
 }
 
-public PlayerSay(Handle:event, String:name[], bool:dontBroadcast)
+public Action VoteHide(int client,int args)
 {
-	decl String:text[256];
-	decl String:steamid[64];
-	new client = GetClientOfUserId(GetEventInt(event, "userid"));
+	char steamid[64];
+	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
 	
-	GetClientAuthString(client, steamid, sizeof(steamid));
-	GetEventString(event, "text", text, sizeof(text));
-	
-	if (StrEqual(text, "!verstecken") || StrEqual(text, "!hide"))
-	{
-	if(GetConVarInt(g_wenabled) == 1)
+	if (gc_bPlugin.BoolValue)
 	{	
 		if (GetTeamClientCount(3) > 0)
 		{
-			if (RoundLimits == 0)
+			if (g_iRoundLimits == 0)
 			{
 				if (!IsHide && !StartHide)
 				{
 					if (StrContains(voted, steamid, true) == -1)
 					{
-	new playercount = (GetClientCount(true) / 2);
+	int playercount = (GetClientCount(true) / 2);
 	
-	votecount++;
+	VoteCount++;
 	
-	new Missing = playercount - votecount + 1;
+	int Missing = playercount - VoteCount + 1;
 	
 	Format(voted, sizeof(voted), "%s,%s", voted, steamid);
 	
-	if (votecount > playercount)
+	if (VoteCount > playercount)
 	{
 		StartHide = true;
 		
@@ -394,8 +382,8 @@ public PlayerSay(Handle:event, String:name[], bool:dontBroadcast)
 		SetCvar("sm_catch_enable", 0);
 		SetCvar("sm_noscope_enable", 0);
 		
-		RoundLimits = GetConVarInt(RoundLimitsc);
-		votecount = 0;
+		g_iRoundLimits = gc_iRoundLimits.IntValue;
+		VoteCount = 0;
 		
 		CPrintToChatAll("%t %t", "hide_tag" , "hide_next");
 	}
@@ -406,51 +394,50 @@ public PlayerSay(Handle:event, String:name[], bool:dontBroadcast)
 				}
 				else CPrintToChat(client, "%t %t", "hide_tag" , "hide_progress");
 			}
-			else CPrintToChat(client, "%t %t", "hide_tag" , "hide_wait", RoundLimits);
+			else CPrintToChat(client, "%t %t", "hide_tag" , "hide_wait", g_iRoundLimits);
 		}
 		else CPrintToChat(client, "%t %t", "hide_tag" , "hide_minct");
 	}
 	else CPrintToChat(client, "%t %t", "hide_tag" , "hide_disabled");
-	}
 }
 
 
 
-public SetCvar(String:cvarName[64], value)
+public SetCvar(char cvarName[64], value)
 {
-	usecvar = FindConVar(cvarName);
-	if(usecvar == INVALID_HANDLE) return;
+	UseCvar = FindConVar(cvarName);
+	if(UseCvar == null) return;
 	
-	new flags = GetConVarFlags(usecvar);
+	int flags = GetConVarFlags(UseCvar);
 	flags &= ~FCVAR_NOTIFY;
-	SetConVarFlags(usecvar, flags);
+	SetConVarFlags(UseCvar, flags);
 
-	SetConVarInt(usecvar, value);
+	SetConVarInt(UseCvar, value);
 
 	flags |= FCVAR_NOTIFY;
-	SetConVarFlags(usecvar, flags);
+	SetConVarFlags(UseCvar, flags);
 }
 
-public SetCvarF(String:cvarName[64], Float:value)
+public SetCvarF(char cvarName[64], Float:value)
 {
-	usecvar = FindConVar(cvarName);
-	if(usecvar == INVALID_HANDLE) return;
+	UseCvar = FindConVar(cvarName);
+	if(UseCvar == null) return;
 
-	new flags = GetConVarFlags(usecvar);
+	int flags = GetConVarFlags(UseCvar);
 	flags &= ~FCVAR_NOTIFY;
-	SetConVarFlags(usecvar, flags);
+	SetConVarFlags(UseCvar, flags);
 
-	SetConVarFloat(usecvar, value);
+	SetConVarFloat(UseCvar, value);
 
 	flags |= FCVAR_NOTIFY;
-	SetConVarFlags(usecvar, flags);
+	SetConVarFlags(UseCvar, flags);
 }
 
-public OnMapEnd()
+public void OnMapEnd()
 {
 	IsHide = false;
 	StartHide = false;
-	votecount = 0;
+	VoteCount = 0;
 	HideRound = 0;
 	
 	voted[0] = '\0';

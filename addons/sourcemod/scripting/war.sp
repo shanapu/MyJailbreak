@@ -1,4 +1,4 @@
-//includes
+//Includes
 #include <cstrike>
 #include <colors>
 #include <sourcemod>
@@ -10,38 +10,42 @@
 //Compiler Options
 #pragma semicolon 1
 
+//Defines
 #define PLUGIN_VERSION		"0.x"
-ConVar gc_bTagEnabled;
-new freezetime;
-new nodamagetimer;
-new roundtime;
-new roundtimenormal;
-new votecount;
-new WarRound;
-new RoundLimits;
 
-new Handle:LimitTimer;
-new Handle:HideTimer;
-new Handle:WeaponTimer;
-new Handle:WarMenu;
-new Handle:roundtimec;
-new Handle:roundtimenormalc;
-new Handle:freezetimec;
-new Handle:nodamagetimerc;
-new Handle:RoundLimitsc;
-new Handle:g_wenabled=INVALID_HANDLE;
-new Handle:g_wspawncell=INVALID_HANDLE;
-new Handle:usecvar;
+//Booleans
+bool IsWar = false;
+bool StartWar = false;
 
-new bool:IsWar;
-new bool:StartWar;
+//ConVars
+ConVar gc_bPlugin;
+ConVar gc_bTag;
+ConVar gc_bSpawnCell;
+ConVar gc_iRoundTime;
+ConVar gc_iRoundLimits;
+ConVar gc_iFreezeTime;
+ConVar gc_iTruceTime;
+ConVar g_iSetRoundTime;
 
-new String:voted[1500];
+//Integers
+int g_iOldRoundTime;
+int g_iRoundLimits;
+int g_iFreezeTime;
+int g_iTruceTime;
+int VoteCount = 0;
+int WarRound = 0;
 
+//Handles
+Handle FreezeTimer;
+Handle TruceTimer;
+Handle WarMenu;
+Handle UseCvar;
 
+//Characters
+char voted[1500];
 
-
-new Float:Pos[3];
+//Floats
+float Pos[3];
 
 
 public Plugin myinfo = {
@@ -52,68 +56,65 @@ public Plugin myinfo = {
 	url = ""
 };
 
-
-
-public OnPluginStart()
+public void OnPluginStart()
 {
-	// Translation
+	//Translation
 	LoadTranslations("MyJailbreakWarden.phrases");
 	LoadTranslations("MyJailbreakWar.phrases");
 	
+	//Client Commands
 	RegConsoleCmd("sm_setwar", SetWar);
+	RegConsoleCmd("sm_war", VoteWar);
+	RegConsoleCmd("sm_krieg", VoteWar);
 	
-	AutoExecConfig_CreateConVar("sm_war_version", "PLUGIN_VERSION", "The version of the SourceMod plugin MyJailBreak - War", FCVAR_PLUGIN|FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
-	g_wenabled = AutoExecConfig_CreateConVar("sm_war_enable", "1", "0 - disabled, 1 - enable war");
-	g_wspawncell = AutoExecConfig_CreateConVar("sm_war_spawn", "1", "0 - teleport to ct and freeze, 1 - stay in cell open cell doors with aw/weapon menu - need sjd");
-	roundtimec = AutoExecConfig_CreateConVar("sm_war_roundtime", "5", "Round time for a single war round");
-	roundtimenormalc = AutoExecConfig_CreateConVar("sm_nowar_roundtime", "12", "set round time after a war round");    //TODO: https://wiki.alliedmods.net/ConVars_(SourceMod_Scripting)#Using.2FChanging_Values
-	freezetimec = AutoExecConfig_CreateConVar("sm_war_freezetime", "30", "Time freeze T");
-	nodamagetimerc = AutoExecConfig_CreateConVar("sm_war_nodamage", "30", "Time after freezetime damage disbaled");
-	RoundLimitsc = AutoExecConfig_CreateConVar("sm_war_roundsnext", "3", "Rounds until event can be started again.");
-	gc_bTagEnabled = AutoExecConfig_CreateConVar("sm_war_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	
-	
-	
+	//ConVars with AutoExecConfig
+	AutoExecConfig_SetFile("MyJailbreak_war");
+	AutoExecConfig_SetCreateFile(true);
+	AutoExecConfig_CreateConVar("sm_war_version", "PLUGIN_VERSION", "The version of the SourceMod plugin MyJailBreak - War", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
+	gc_bPlugin = AutoExecConfig_CreateConVar("sm_war_enable", "1", "0 - disabled, 1 - enable war", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	gc_bSpawnCell = AutoExecConfig_CreateConVar("sm_war_spawn", "1", "0 - teleport to ct and freeze, 1 - stay in cell open cell doors with aw/weapon menu - need sjd", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	gc_iFreezeTime = AutoExecConfig_CreateConVar("sm_war_g_iFreezeTime", "30", "Time freeze T", FCVAR_NOTIFY, true, 0.0, true, 999.0);
+	g_iFreezeTime = gc_iFreezeTime.IntValue;
+	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_war_nodamage", "30", "Time after g_iFreezeTime; damage disbaled", FCVAR_NOTIFY, true, 0.0, true, 999.0);
+	g_iTruceTime = gc_iTruceTime.IntValue;
+	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_war_roundtime", "5", "Round time for a single war round", FCVAR_NOTIFY, true, 0.0, true, 999.0);
+	g_iSetRoundTime = FindConVar("mp_roundtime");
+	gc_iRoundLimits = AutoExecConfig_CreateConVar("sm_war_roundsnext", "3", "Rounds until event can be started again.", FCVAR_NOTIFY, true, 0.0, true, 255.0);
+	g_iRoundLimits = gc_iRoundLimits.IntValue;
+	gc_bTag = AutoExecConfig_CreateConVar("sm_war_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	AutoExecConfig_CacheConvars();
+	AutoExecConfig_ExecuteFile();
+	AutoExecConfig_CleanFile();
 	AutoExecConfig(true, "MyJailbreak_War");
 	
-	IsWar = false;
-	StartWar = false;
-	votecount = 0;
-	WarRound = 0;
-	
+	//Hooks
 	HookEvent("round_start", RoundStart);
-	HookEvent("player_say", PlayerSay);
 	HookEvent("round_end", RoundEnd);
-}
-
-
-public OnMapStart()
-{
-	//new String:voted[1500];
-
-	votecount = 0;
+	
+	VoteCount = 0;
 	WarRound = 0;
 	IsWar = false;
 	StartWar = false;
-	RoundLimits = 0;
-	
-	
-	freezetime = GetConVarInt(freezetimec);
-	nodamagetimer = GetConVarInt(nodamagetimerc);
-	roundtime = GetConVarInt(roundtimec);
-	roundtimenormal = GetConVarInt(roundtimenormalc);
-
 }
 
-public OnConfigsExecuted()
+public void OnMapStart()
 {
-	roundtime = GetConVarInt(roundtimec);
-	roundtimenormal = GetConVarInt(roundtimenormalc);
-	freezetime = GetConVarInt(freezetimec);
-	nodamagetimer = GetConVarInt(nodamagetimerc);
-	RoundLimits = 0;
+	VoteCount = 0;
+	WarRound = 0;
+	IsWar = false;
+	StartWar = false;
+	g_iRoundLimits = 0;
+	g_iFreezeTime = gc_iFreezeTime.IntValue;
+	g_iTruceTime = gc_iTruceTime.IntValue;
+}
+
+public void OnConfigsExecuted()
+{
+	g_iFreezeTime = gc_iFreezeTime.IntValue;
+	g_iTruceTime = gc_iTruceTime.IntValue;
+	g_iRoundLimits = 0;
 	
-	if (gc_bTagEnabled.BoolValue)
+	if (gc_bTag.BoolValue)
 	{
 		ConVar hTags = FindConVar("sv_tags");
 		char sTags[128];
@@ -126,27 +127,22 @@ public OnConfigsExecuted()
 	}
 }
 
-public RoundEnd(Handle:event, String:name[], bool:dontBroadcast)
+public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 {
-	new winner = GetEventInt(event, "winner");
+	int winner = GetEventInt(event, "winner");
 	
 	if (IsWar)
 	{
-		for(new client=1; client <= MaxClients; client++)
+		for(int client=1; client <= MaxClients; client++)
 		{
-			if (IsClientInGame(client)) SetEntData(client, FindSendPropOffs("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
+			if (IsClientInGame(client)) SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
 		}
 		
-		if (LimitTimer != INVALID_HANDLE) KillTimer(LimitTimer);
-		if (HideTimer != INVALID_HANDLE) KillTimer(HideTimer);
-		if (WeaponTimer != INVALID_HANDLE) KillTimer(WeaponTimer);
-		
-		roundtime = GetConVarInt(roundtimec);
-		roundtimenormal = GetConVarInt(roundtimenormalc);
-		
+		if (FreezeTimer != null) KillTimer(FreezeTimer);
+		if (TruceTimer != null) KillTimer(TruceTimer);
 		if (winner == 2) PrintCenterTextAll("%t", "war_twin"); 
 		if (winner == 3) PrintCenterTextAll("%t", "war_ctwin");
-
+		
 		if (WarRound == 3)
 		{
 			IsWar = false;
@@ -164,51 +160,48 @@ public RoundEnd(Handle:event, String:name[], bool:dontBroadcast)
 			SetCvar("sm_ffa_enable", 1);
 			SetCvar("sm_duckhunt_enable", 1);
 			SetCvar("sm_catch_enable", 1);
-			SetCvar("mp_roundtime", roundtimenormal);
-			SetCvar("mp_roundtime_hostage", roundtimenormal);
-			SetCvar("mp_roundtime_defuse", roundtimenormal);
+			g_iSetRoundTime.IntValue = g_iOldRoundTime;
 			CPrintToChatAll("%t %t", "war_tag" , "war_end");
 		}
 	}
 	if (StartWar)
 	{
-	SetCvar("mp_roundtime", roundtime);
-	SetCvar("mp_roundtime_hostage", roundtime);
-	SetCvar("mp_roundtime_defuse", roundtime);
+		g_iOldRoundTime = g_iSetRoundTime.IntValue;
+		g_iSetRoundTime.IntValue = gc_iRoundTime.IntValue;
 	}
 }
 
 public Action SetWar(int client,int args)
 {
-	if(GetConVarInt(g_wenabled) == 1)	
+	if (gc_bPlugin.BoolValue)	
 	{	
-	if (warden_iswarden(client) || CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
-	{
-	if (RoundLimits == 0)
-	{
-	StartWar = true;
-	RoundLimits = GetConVarInt(RoundLimitsc);
-	votecount = 0;
-	SetCvar("sm_noscope_enable", 0);
-	SetCvar("sm_hide_enable", 0);
-	SetCvar("sm_ffa_enable", 0);
-	SetCvar("sm_zombie_enable", 0);
-	SetCvar("sm_duckhunt_enable", 0);
-	SetCvar("sm_catch_enable", 0);
-	
-	CPrintToChatAll("%t %t", "war_tag" , "war_next");
-	}else CPrintToChat(client, "%t %t", "war_tag" , "war_wait", RoundLimits);
-	}else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
+		if (warden_iswarden(client) || CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
+		{
+			if (g_iRoundLimits == 0)
+			{
+				StartWar = true;
+				g_iRoundLimits = gc_iRoundLimits.IntValue;
+				VoteCount = 0;
+				SetCvar("sm_noscope_enable", 0);
+				SetCvar("sm_hide_enable", 0);
+				SetCvar("sm_ffa_enable", 0);
+				SetCvar("sm_zombie_enable", 0);
+				SetCvar("sm_duckhunt_enable", 0);
+				SetCvar("sm_catch_enable", 0);
+				CPrintToChatAll("%t %t", "war_tag" , "war_next");
+			}
+			else CPrintToChat(client, "%t %t", "war_tag" , "war_wait", g_iRoundLimits);
+		}
+		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
 	}
 }
 
-public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
+public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 {
 	if (StartWar || IsWar)
 	{
-		
-		decl String:info1[255], String:info2[255], String:info3[255], String:info4[255], String:info5[255], String:info6[255], String:info7[255], String:info8[255];
-		decl String:info9[255], String:info10[255], String:info11[255], String:info12[255];
+		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
+		char info9[255], info10[255], info11[255], info12[255];
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("dice_enable", 0);
@@ -218,10 +211,11 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 		WarRound++;
 		IsWar = true;
 		StartWar = false;
-		if(GetConVarInt(g_wspawncell) == 1)
+		
+		if (gc_bSpawnCell.BoolValue)
 		{
-		SJD_OpenDoors();
-		freezetime = 0;
+			SJD_OpenDoors();
+			g_iFreezeTime = 0;
 		}
 		WarMenu = CreatePanel();
 		Format(info1, sizeof(info1), "%T", "war_info_Title", LANG_SERVER);
@@ -234,46 +228,48 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 		Format(info12, sizeof(info12), "%T", "RoundThree", LANG_SERVER);
 		if (WarRound == 3) DrawPanelText(WarMenu, info12);
 		DrawPanelText(WarMenu, "                                   ");
-		if(GetConVarInt(g_wspawncell) == 0)
+		if (!gc_bSpawnCell.BoolValue)
 		{
-		Format(info2, sizeof(info2), "%T", "war_info_Tele", LANG_SERVER);
-		DrawPanelText(WarMenu, info2);
-		DrawPanelText(WarMenu, "-----------------------------------");
-		Format(info3, sizeof(info3), "%T", "war_info_Line2", LANG_SERVER);
-		DrawPanelText(WarMenu, info3);
-		Format(info4, sizeof(info4), "%T", "war_info_Line3", LANG_SERVER);
-		DrawPanelText(WarMenu, info4);
-		Format(info5, sizeof(info5), "%T", "war_info_Line4", LANG_SERVER);
-		DrawPanelText(WarMenu, info5);
-		Format(info6, sizeof(info6), "%T", "war_info_Line5", LANG_SERVER);
-		DrawPanelText(WarMenu, info6);
-		Format(info7, sizeof(info7), "%T", "war_info_Line6", LANG_SERVER);
-		DrawPanelText(WarMenu, info7);
-		Format(info8, sizeof(info8), "%T", "war_info_Line7", LANG_SERVER);
-		DrawPanelText(WarMenu, info8);
-		DrawPanelText(WarMenu, "-----------------------------------");
-		}else{
-		Format(info9, sizeof(info9), "%T", "war_info_Spawn", LANG_SERVER);
-		DrawPanelText(WarMenu, info9);
-		DrawPanelText(WarMenu, "-----------------------------------");
-		Format(info3, sizeof(info3), "%T", "war_info_Line2", LANG_SERVER);
-		DrawPanelText(WarMenu, info3);
-		Format(info4, sizeof(info4), "%T", "war_info_Line3", LANG_SERVER);
-		DrawPanelText(WarMenu, info4);
-		Format(info5, sizeof(info5), "%T", "war_info_Line4", LANG_SERVER);
-		DrawPanelText(WarMenu, info5);
-		Format(info6, sizeof(info6), "%T", "war_info_Line5", LANG_SERVER);
-		DrawPanelText(WarMenu, info6);
-		Format(info7, sizeof(info7), "%T", "war_info_Line6", LANG_SERVER);
-		DrawPanelText(WarMenu, info7);
-		Format(info8, sizeof(info8), "%T", "war_info_Line7", LANG_SERVER);
-		DrawPanelText(WarMenu, info8);
-		DrawPanelText(WarMenu, "-----------------------------------");
+			Format(info2, sizeof(info2), "%T", "war_info_Tele", LANG_SERVER);
+			DrawPanelText(WarMenu, info2);
+			DrawPanelText(WarMenu, "-----------------------------------");
+			Format(info3, sizeof(info3), "%T", "war_info_Line2", LANG_SERVER);
+			DrawPanelText(WarMenu, info3);
+			Format(info4, sizeof(info4), "%T", "war_info_Line3", LANG_SERVER);
+			DrawPanelText(WarMenu, info4);
+			Format(info5, sizeof(info5), "%T", "war_info_Line4", LANG_SERVER);
+			DrawPanelText(WarMenu, info5);
+			Format(info6, sizeof(info6), "%T", "war_info_Line5", LANG_SERVER);
+			DrawPanelText(WarMenu, info6);
+			Format(info7, sizeof(info7), "%T", "war_info_Line6", LANG_SERVER);
+			DrawPanelText(WarMenu, info7);
+			Format(info8, sizeof(info8), "%T", "war_info_Line7", LANG_SERVER);
+			DrawPanelText(WarMenu, info8);
+			DrawPanelText(WarMenu, "-----------------------------------");
+		}
+		else
+		{
+			Format(info9, sizeof(info9), "%T", "war_info_Spawn", LANG_SERVER);
+			DrawPanelText(WarMenu, info9);
+			DrawPanelText(WarMenu, "-----------------------------------");
+			Format(info3, sizeof(info3), "%T", "war_info_Line2", LANG_SERVER);
+			DrawPanelText(WarMenu, info3);
+			Format(info4, sizeof(info4), "%T", "war_info_Line3", LANG_SERVER);
+			DrawPanelText(WarMenu, info4);
+			Format(info5, sizeof(info5), "%T", "war_info_Line4", LANG_SERVER);
+			DrawPanelText(WarMenu, info5);
+			Format(info6, sizeof(info6), "%T", "war_info_Line5", LANG_SERVER);
+			DrawPanelText(WarMenu, info6);
+			Format(info7, sizeof(info7), "%T", "war_info_Line6", LANG_SERVER);
+			DrawPanelText(WarMenu, info7);
+			Format(info8, sizeof(info8), "%T", "war_info_Line7", LANG_SERVER);
+			DrawPanelText(WarMenu, info8);
+			DrawPanelText(WarMenu, "-----------------------------------");
 		}
 		
-		new RandomCT = 0;
+		int RandomCT = 0;
 		
-		for(new client=1; client <= MaxClients; client++)
+		for(int client=1; client <= MaxClients; client++)
 		{
 			if (IsClientInGame(client))
 			{
@@ -286,74 +282,77 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 		}
 		if (RandomCT)
 		{	
-			new Float:Pos1[3];
+			float Pos1[3];
 			
 			GetClientAbsOrigin(RandomCT, Pos);
 			GetClientAbsOrigin(RandomCT, Pos1);
 			
 			Pos[2] = Pos[2] + 45;
-
+			
 			if (WarRound > 0)
 			{
-				for(new client=1; client <= MaxClients; client++)
+				for(int client=1; client <= MaxClients; client++)
 				{
-					if(GetConVarInt(g_wspawncell) == 1)
+					if (gc_bSpawnCell.BoolValue)
 					{
-					if (IsClientInGame(client))
-					{
-						if (GetClientTeam(client) == 3)
+						if (IsClientInGame(client))
 						{
-							GivePlayerItem(client, "weapon_m4a1");
-							GivePlayerItem(client, "weapon_deagle");
-							GivePlayerItem(client, "weapon_hegrenade");
-						}
-						if (GetClientTeam(client) == 2)
-						{
-						GivePlayerItem(client, "weapon_ak47");
-						GivePlayerItem(client, "weapon_deagle");
-						GivePlayerItem(client, "weapon_hegrenade");
-						}
-					}
-					}else
-					{
-					if (IsClientInGame(client))
-					{
-						if (GetClientTeam(client) == 3)
-						{
-							TeleportEntity(client, Pos1, NULL_VECTOR, NULL_VECTOR);
-						}
-						if (GetClientTeam(client) == 2)
-						{
-						SetEntityMoveType(client, MOVETYPE_NONE);
-						TeleportEntity(client, Pos, NULL_VECTOR, NULL_VECTOR);
+							if (GetClientTeam(client) == 3)
+							{
+								GivePlayerItem(client, "weapon_m4a1");
+								GivePlayerItem(client, "weapon_deagle");
+								GivePlayerItem(client, "weapon_hegrenade");
+							}
+							if (GetClientTeam(client) == 2)
+							{
+								GivePlayerItem(client, "weapon_ak47");
+								GivePlayerItem(client, "weapon_deagle");
+								GivePlayerItem(client, "weapon_hegrenade");
+							}
 						}
 					}
+					else
+					{
+						if (IsClientInGame(client))
+						{
+							if (GetClientTeam(client) == 3)
+							{
+								TeleportEntity(client, Pos1, NULL_VECTOR, NULL_VECTOR);
+							}
+							if (GetClientTeam(client) == 2)
+							{
+								SetEntityMoveType(client, MOVETYPE_NONE);
+								TeleportEntity(client, Pos, NULL_VECTOR, NULL_VECTOR);
+							}
+						}
 					}
 				}CPrintToChatAll("%t %t", "war_tag" ,"war_rounds", WarRound);
 			}
-			for(new client=1; client <= MaxClients; client++)
+			for(int client=1; client <= MaxClients; client++)
 			{
 				if (IsClientInGame(client))
 				{
-					SetEntData(client, FindSendPropOffs("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
+					SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
 					SendPanelToClient(WarMenu, client, Pass, 15);
 					SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 				}
 			}
 			
-			freezetime--;
+			g_iFreezeTime--;
 			
-			if(GetConVarInt(g_wspawncell) == 0)
+			if (!gc_bSpawnCell.BoolValue)
 			{
-			HideTimer = CreateTimer(1.0, Hide, _, TIMER_REPEAT);
-			}else{
-			WeaponTimer = CreateTimer(1.0, NoWeapon, _, TIMER_REPEAT);
+				FreezeTimer = CreateTimer(1.0, Freezed, _, TIMER_REPEAT);
+			}
+			else
+			{
+				TruceTimer = CreateTimer(1.0, NoDamage, _, TIMER_REPEAT);
 			}
 		}
 	}
 	else
 	{
-		if (RoundLimits > 0) RoundLimits--;
+		if (g_iRoundLimits > 0) g_iRoundLimits--;
 	}
 }
 
@@ -361,25 +360,24 @@ public Pass(Handle:menu, MenuAction:action, param1, param2)
 {
 }
 
-
-public Action:Hide(Handle:timer)
+public Action:Freezed(Handle:timer)
 {
-	if (freezetime > 1)
+	if (g_iFreezeTime > 1)
 	{
-		freezetime--;
+		g_iFreezeTime--;
 		
-		PrintCenterTextAll("%t", "war_timetohide", freezetime);
+		PrintCenterTextAll("%t", "war_timetohide", g_iFreezeTime);
 		
 		return Plugin_Continue;
 	}
 	
 	Pos[2] = Pos[2] - 45;
 	
-	freezetime = GetConVarInt(freezetimec);
+	g_iFreezeTime = gc_iFreezeTime.IntValue;
 	
 	if (WarRound > 0)
 	{
-		for (new client=1; client <= MaxClients; client++)
+		for (int client=1; client <= MaxClients; client++)
 		{
 			if (IsClientInGame(client) && IsPlayerAlive(client))
 			{
@@ -396,75 +394,70 @@ public Action:Hide(Handle:timer)
 		}
 	}
 	
-	WeaponTimer = CreateTimer(1.0, NoWeapon, _, TIMER_REPEAT);
+	TruceTimer = CreateTimer(1.0, NoDamage, _, TIMER_REPEAT);
 	
-	HideTimer = INVALID_HANDLE;
+	FreezeTimer = null;
 	
 	return Plugin_Stop;
 }
 
-public Action:NoWeapon(Handle:timer)
+public Action:NoDamage(Handle:timer)
 {
-	if (nodamagetimer > 1)
+	if (g_iTruceTime > 1)
 	{
-		nodamagetimer--;
+		g_iTruceTime--;
 		
-		PrintCenterTextAll("%t", "war_damage", nodamagetimer);
+		PrintCenterTextAll("%t", "war_damage", g_iTruceTime);
 		
 		return Plugin_Continue;
 	}
 	
-	nodamagetimer = GetConVarInt(nodamagetimerc);
+	g_iTruceTime = gc_iTruceTime.IntValue;
 	
 	PrintCenterTextAll("%t", "war_start");
 	
-	for(new client=1; client <= MaxClients; client++) 
+	for(int client=1; client <= MaxClients; client++) 
 	{
 		if (IsClientInGame(client) && IsPlayerAlive(client)) SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
 	}
 
 	CPrintToChatAll("%t %t", "war_tag" , "war_start");
 	
-	WeaponTimer = INVALID_HANDLE;
+	TruceTimer = null;
 	
 	return Plugin_Stop;
 }
 
-public PlayerSay(Handle:event, String:name[], bool:dontBroadcast)
+public Action VoteWar(int client,int args)
 {
-	decl String:text[256];
-	decl String:steamid[64];
-	new client = GetClientOfUserId(GetEventInt(event, "userid"));
+	char steamid[64];
+
+	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
 	
-	GetClientAuthString(client, steamid, sizeof(steamid));
-	GetEventString(event, "text", text, sizeof(text));
-	
-	if (StrEqual(text, "!war") || StrEqual(text, "!krieg"))
-	{
-	if(GetConVarInt(g_wenabled) == 1)
+	if (gc_bPlugin.BoolValue)
 	{	
 		if (GetTeamClientCount(3) > 0)
 		{
-			if (RoundLimits == 0)
+			if (g_iRoundLimits == 0)
 			{
 				if (!IsWar && !StartWar)
 				{
 					if (StrContains(voted, steamid, true) == -1)
 					{
-						new playercount = (GetClientCount(true) / 2);
+						int playercount = (GetClientCount(true) / 2);
 						
-						votecount++;
+						VoteCount++;
 						
-						new Missing = playercount - votecount + 1;
+						int Missing = playercount - VoteCount + 1;
 						
 						Format(voted, sizeof(voted), "%s,%s", voted, steamid);
 						
-						if (votecount > playercount)
+						if (VoteCount > playercount)
 						{
 							StartWar = true;
 							
-							RoundLimits = GetConVarInt(RoundLimitsc);
-							votecount = 0;
+							g_iRoundLimits = gc_iRoundLimits.IntValue;
+							VoteCount = 0;
 							
 							SetCvar("sm_hide_enable", 0);
 							SetCvar("sm_ffa_enable", 0);
@@ -482,51 +475,50 @@ public PlayerSay(Handle:event, String:name[], bool:dontBroadcast)
 				}
 				else CPrintToChat(client, "%t %t", "war_tag" , "war_progress");
 			}
-			else CPrintToChat(client, "%t %t", "war_tag" , "war_wait", RoundLimits);
+			else CPrintToChat(client, "%t %t", "war_tag" , "war_wait", g_iRoundLimits);
 		}
 		else CPrintToChat(client, "%t %t", "war_tag" , "war_minct");
 	}
 	else CPrintToChat(client, "%t %t", "war_tag" , "war_disabled");
-	}
 }
 
 
 
-public SetCvar(String:cvarName[64], value)
+public SetCvar(char cvarName[64], value)
 {
-	usecvar = FindConVar(cvarName);
-	if(usecvar == INVALID_HANDLE) return;
+	UseCvar = FindConVar(cvarName);
+	if(UseCvar == null) return;
 	
-	new flags = GetConVarFlags(usecvar);
+	int flags = GetConVarFlags(UseCvar);
 	flags &= ~FCVAR_NOTIFY;
-	SetConVarFlags(usecvar, flags);
+	SetConVarFlags(UseCvar, flags);
 
-	SetConVarInt(usecvar, value);
+	SetConVarInt(UseCvar, value);
 
 	flags |= FCVAR_NOTIFY;
-	SetConVarFlags(usecvar, flags);
+	SetConVarFlags(UseCvar, flags);
 }
 
-public SetCvarF(String:cvarName[64], Float:value)
+public SetCvarF(char cvarName[64], Float:value)
 {
-	usecvar = FindConVar(cvarName);
-	if(usecvar == INVALID_HANDLE) return;
+	UseCvar = FindConVar(cvarName);
+	if(UseCvar == null) return;
 
-	new flags = GetConVarFlags(usecvar);
+	int flags = GetConVarFlags(UseCvar);
 	flags &= ~FCVAR_NOTIFY;
-	SetConVarFlags(usecvar, flags);
+	SetConVarFlags(UseCvar, flags);
 
-	SetConVarFloat(usecvar, value);
+	SetConVarFloat(UseCvar, value);
 
 	flags |= FCVAR_NOTIFY;
-	SetConVarFlags(usecvar, flags);
+	SetConVarFlags(UseCvar, flags);
 }
 
-public OnMapEnd()
+public void OnMapEnd()
 {
 	IsWar = false;
 	StartWar = false;
-	votecount = 0;
+	VoteCount = 0;
 	WarRound = 0;
 	
 	voted[0] = '\0';

@@ -11,38 +11,43 @@
 #pragma semicolon 1
 
 #define PLUGIN_VERSION   "0.x"
-ConVar gc_bTagEnabled;
-new nodamagetimer;
-new roundtime;
-new roundtimenormal;
-new votecount;
-new ffaRound;
-new RoundLimits;
 
-new FogIndex = -1;
-new Float:mapFogStart = 0.0;
-new Float:mapFogEnd = 150.0;
-new Float:mapFogDensity = 0.99;
+ConVar gc_bPlugin;
+ConVar gc_bTag;
+ConVar gc_bSpawnCell;
+ConVar gc_iRoundTime;
+ConVar gc_iRoundLimits;
+ConVar gc_iTruceTime;
 
-new Handle:LimitTimer;
-new Handle:HideTimer;
-new Handle:WeaponTimer;
-new Handle:ffaMenu;
-new Handle:roundtimec;
-new Handle:roundtimenormalc;
-new Handle:nodamagetimerc;
-new Handle:RoundLimitsc;
-new Handle:g_wenabled=INVALID_HANDLE;
-new Handle:g_wspawncell=INVALID_HANDLE;
-new Handle:usecvar;
-
-new bool:Isffa;
-new bool:Startffa;
-
-new String:voted[1500];
+ConVar g_iSetRoundTime;
 
 
-new Float:Pos[3];
+int g_iOldRoundTime;
+int g_iRoundLimits;
+int g_iTruceTime;
+
+
+int VoteCount;
+int FFARound;
+
+
+int FogIndex = -1;
+float mapFogStart = 0.0;
+float mapFogEnd = 150.0;
+float mapFogDensity = 0.99;
+
+Handle FreezeTimer;
+Handle TruceTimer;
+Handle FFAMenu;
+Handle UseCvar;
+
+bool IsFFA = false;
+bool StartFFA = false;
+
+char voted[1500];
+
+
+float Pos[3];
 
 
 public Plugin myinfo = {
@@ -55,58 +60,60 @@ public Plugin myinfo = {
 
 
 
-public OnPluginStart()
+public void OnPluginStart()
 {
 	// Translation
 	LoadTranslations("MyJailbreakWarden.phrases");
 	LoadTranslations("MyJailbreakFfa.phrases");
 	
 	RegConsoleCmd("sm_setffa", Setffa);
+	RegConsoleCmd("sm_ffa", VoteFFA);
+	RegConsoleCmd("sm_warffa", VoteFFA);
 	
 	AutoExecConfig_SetFile("MyJailbreak_ffa");
 	AutoExecConfig_SetCreateFile(true);
 	
-	AutoExecConfig_CreateConVar("sm_ffa_version", "PLUGIN_VERSION", "The version of the SourceMod plugin MyJailBreak - War", FCVAR_PLUGIN|FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
-	g_wenabled = AutoExecConfig_CreateConVar("sm_ffa_enable", "1", "0 - disabled, 1 - enable ffa");
-	g_wspawncell = AutoExecConfig_CreateConVar("sm_ffa_spawn", "1", "0 - teleport to weaponroom, 1 - standart spawn - cell doors auto open");
-	roundtimec = AutoExecConfig_CreateConVar("sm_ffa_roundtime", "5", "Round time for a single ffa round");
-	roundtimenormalc = AutoExecConfig_CreateConVar("sm_noffa_roundtime", "12", "set round time after a ffa round");
-	nodamagetimerc = AutoExecConfig_CreateConVar("sm_ffa_nodamage", "30", "Time damage disbaled");
-	RoundLimitsc = AutoExecConfig_CreateConVar("sm_ffa_roundsnext", "3", "Rounds until event can be started again.");
-	gc_bTagEnabled = AutoExecConfig_CreateConVar("sm_ffa_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	AutoExecConfig_CreateConVar("sm_ffa_version", "PLUGIN_VERSION", "The version of the SourceMod plugin MyJailBreak - War", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
+	gc_bPlugin = AutoExecConfig_CreateConVar("sm_ffa_enable", "1", "0 - disabled, 1 - enable FFA");
+	gc_bSpawnCell = AutoExecConfig_CreateConVar("sm_ffa_spawn", "1", "0 - teleport to weaponroom, 1 - standart spawn - cell doors auto open");
+	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_ffa_roundtime", "5", "Round time for a single war round");
+	g_iSetRoundTime = FindConVar("mp_roundtime");
+	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_ffa_nodamage", "30", "Time after g_iFreezeTime; damage disbaled");
+	g_iTruceTime = gc_iTruceTime.IntValue;
+	gc_iRoundLimits = AutoExecConfig_CreateConVar("sm_ffa_roundsnext", "3", "Rounds until event can be started again.");
+	g_iRoundLimits = gc_iRoundLimits.IntValue;
+	gc_bTag = AutoExecConfig_CreateConVar("sm_ffa_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 
 	AutoExecConfig_CacheConvars();
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
 	AutoExecConfig(true, "MyJailbreak_ffa");
 	
-	Isffa = false;
-	Startffa = false;
-	votecount = 0;
-	ffaRound = 0;
+	IsFFA = false;
+	StartFFA = false;
+	VoteCount = 0;
+	FFARound = 0;
 	
 	HookEvent("round_start", RoundStart);
-	HookEvent("player_say", PlayerSay);
+	
 	HookEvent("round_end", RoundEnd);
 }
 
 
-public OnMapStart()
+public void OnMapStart()
 {
-	//new String:voted[1500];
 
-	votecount = 0;
-	ffaRound = 0;
-	Isffa = false;
-	Startffa = false;
-	RoundLimits = 0;
+
+	VoteCount = 0;
+	FFARound = 0;
+	IsFFA = false;
+	StartFFA = false;
+	g_iRoundLimits = 0;
 	
 
-	nodamagetimer = GetConVarInt(nodamagetimerc);
-	roundtime = GetConVarInt(roundtimec);
-	roundtimenormal = GetConVarInt(roundtimenormalc);
-
-	new ent; 
+	g_iTruceTime = gc_iTruceTime.IntValue;
+	
+	int ent; 
 	ent = FindEntityByClassname(-1, "env_fog_controller");
 	if (ent != -1) 
 	{
@@ -121,15 +128,13 @@ public OnMapStart()
 	AcceptEntityInput(FogIndex, "TurnOff");
 }
 
-public OnConfigsExecuted()
+public void OnConfigsExecuted()
 {
-	roundtime = GetConVarInt(roundtimec);
-	roundtimenormal = GetConVarInt(roundtimenormalc);
-
-	nodamagetimer = GetConVarInt(nodamagetimerc);
-	RoundLimits = 0;
 	
-	if (gc_bTagEnabled.BoolValue)
+	g_iTruceTime = gc_iTruceTime.IntValue;
+	g_iRoundLimits = 0;
+	
+	if (gc_bTag.BoolValue)
 	{
 		ConVar hTags = FindConVar("sv_tags");
 		char sTags[128];
@@ -142,32 +147,29 @@ public OnConfigsExecuted()
 	}
 }
 
-public RoundEnd(Handle:event, String:name[], bool:dontBroadcast)
+public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 {
-	new winner = GetEventInt(event, "winner");
+	int winner = GetEventInt(event, "winner");
 	
-	if (Isffa)
+	if (IsFFA)
 	{
 	
-		for(new client=1; client <= MaxClients; client++)
+		for(int client=1; client <= MaxClients; client++)
 		{
-			if (IsClientInGame(client)) SetEntData(client, FindSendPropOffs("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
+			if (IsClientInGame(client)) SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
 		}
+
+		if (FreezeTimer != null) KillTimer(FreezeTimer);
+		if (TruceTimer != null) KillTimer(TruceTimer);
 		
-		if (LimitTimer != INVALID_HANDLE) KillTimer(LimitTimer);
-		if (HideTimer != INVALID_HANDLE) KillTimer(HideTimer);
-		if (WeaponTimer != INVALID_HANDLE) KillTimer(WeaponTimer);
-		
-		roundtime = GetConVarInt(roundtimec);
-		roundtimenormal = GetConVarInt(roundtimenormalc);
 		
 		if (winner == 2) PrintCenterTextAll("%t", "ffa_twin"); 
 		if (winner == 3) PrintCenterTextAll("%t", "ffa_ctwin");
 
-		if (ffaRound == 3)
+		if (FFARound == 3)
 		{
-			Isffa = false;
-			ffaRound = 0;
+			IsFFA = false;
+			FFARound = 0;
 			Format(voted, sizeof(voted), "");
 			SetCvar("sm_hosties_lr", 1);
 			SetCvar("dice_enable", 1);
@@ -183,31 +185,28 @@ public RoundEnd(Handle:event, String:name[], bool:dontBroadcast)
 			SetCvar("sm_catch_enable", 1);
 			SetCvar("mp_teammates_are_enemies", 0);
 			SetCvar("mp_friendlyfire", 0);
-			SetCvar("mp_roundtime", roundtimenormal);
-			SetCvar("mp_roundtime_hostage", roundtimenormal);
-			SetCvar("mp_roundtime_defuse", roundtimenormal);
+			g_iSetRoundTime.IntValue = g_iOldRoundTime;
 			CPrintToChatAll("%t %t", "ffa_tag" , "ffa_end");
 		}
 	}
-	if (Startffa)
+	if (StartFFA)
 	{
-	SetCvar("mp_roundtime", roundtime);
-	SetCvar("mp_roundtime_hostage", roundtime);
-	SetCvar("mp_roundtime_defuse", roundtime);
+	g_iOldRoundTime = g_iSetRoundTime.IntValue;
+	g_iSetRoundTime.IntValue = gc_iRoundTime.IntValue;
 	}
 }
 
 public Action Setffa(int client,int args)
 {
-	if(GetConVarInt(g_wenabled) == 1)	
+	if (gc_bPlugin.BoolValue)	
 	{
 	if (warden_iswarden(client) || CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
 	{
-	if (RoundLimits == 0)
+	if (g_iRoundLimits == 0)
 	{
-	Startffa = true;
-	RoundLimits = GetConVarInt(RoundLimitsc);
-	votecount = 0;
+	StartFFA = true;
+	g_iRoundLimits = gc_iRoundLimits.IntValue;
+	VoteCount = 0;
 								
 	SetCvar("sm_hide_enable", 0);
 	SetCvar("sm_war_enable", 0);
@@ -217,18 +216,18 @@ public Action Setffa(int client,int args)
 	SetCvar("sm_catch_enable", 0);
 							
 	CPrintToChatAll("%t %t", "ffa_tag" , "ffa_next");
-	}else CPrintToChat(client, "%t %t", "ffa_tag" , "ffa_wait", RoundLimits);
+	}else CPrintToChat(client, "%t %t", "ffa_tag" , "ffa_wait", g_iRoundLimits);
 	}else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
 	}
 }
 
-public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
+public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 {
-	if (Startffa || Isffa)
-	{	{AcceptEntityInput(FogIndex, "TurnOn");}
-		decl String:info1[255], String:info2[255], String:info3[255], String:info4[255], String:info5[255], String:info6[255], String:info7[255], String:info8[255];
-		decl String:info9[255], String:info10[255], String:info11[255], String:info12[255];
-		
+	if (StartFFA || IsFFA)
+	{
+		{AcceptEntityInput(FogIndex, "TurnOn");}
+		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
+		char info9[255], info10[255], info11[255], info12[255];
 		SetCvar("dice_enable", 0);
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_warden_enable", 0);
@@ -237,64 +236,64 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 		SetCvar("sm_weapons_ct", 1);
 		SetCvar("mp_teammates_are_enemies", 1);
 		SetCvar("mp_friendlyfire", 1);
-		ffaRound++;
-		Isffa = true;
-		Startffa = false;
-		if(GetConVarInt(g_wspawncell) == 1)
+		FFARound++;
+		IsFFA = true;
+		StartFFA = false;
+		if (gc_bSpawnCell.BoolValue)
 		{
 		SJD_OpenDoors();
 		}
-		ffaMenu = CreatePanel();
+		FFAMenu = CreatePanel();
 		Format(info1, sizeof(info1), "%T", "ffa_info_Title", LANG_SERVER);
-		SetPanelTitle(ffaMenu, info1);
-		DrawPanelText(ffaMenu, "                                   ");
+		SetPanelTitle(FFAMenu, info1);
+		DrawPanelText(FFAMenu, "                                   ");
 		Format(info10, sizeof(info10), "%T", "RoundOne", LANG_SERVER);
-		if (ffaRound == 1) DrawPanelText(ffaMenu, info10);
+		if (FFARound == 1) DrawPanelText(FFAMenu, info10);
 		Format(info11, sizeof(info11), "%T", "RoundTwo", LANG_SERVER);
-		if (ffaRound == 2) DrawPanelText(ffaMenu, info11);
+		if (FFARound == 2) DrawPanelText(FFAMenu, info11);
 		Format(info12, sizeof(info12), "%T", "RoundThree", LANG_SERVER);
-		if (ffaRound == 3) DrawPanelText(ffaMenu, info12);
-		DrawPanelText(ffaMenu, "                                   ");
-		if(GetConVarInt(g_wspawncell) == 0)
+		if (FFARound == 3) DrawPanelText(FFAMenu, info12);
+		DrawPanelText(FFAMenu, "                                   ");
+		if (!gc_bSpawnCell.BoolValue)
 		{
 		Format(info2, sizeof(info2), "%T", "ffa_info_Tele", LANG_SERVER);
-		DrawPanelText(ffaMenu, info2);
-		DrawPanelText(ffaMenu, "-----------------------------------");
+		DrawPanelText(FFAMenu, info2);
+		DrawPanelText(FFAMenu, "-----------------------------------");
 		Format(info3, sizeof(info3), "%T", "ffa_info_Line2", LANG_SERVER);
-		DrawPanelText(ffaMenu, info3);
+		DrawPanelText(FFAMenu, info3);
 		Format(info4, sizeof(info4), "%T", "ffa_info_Line3", LANG_SERVER);
-		DrawPanelText(ffaMenu, info4);
+		DrawPanelText(FFAMenu, info4);
 		Format(info5, sizeof(info5), "%T", "ffa_info_Line4", LANG_SERVER);
-		DrawPanelText(ffaMenu, info5);
+		DrawPanelText(FFAMenu, info5);
 		Format(info6, sizeof(info6), "%T", "ffa_info_Line5", LANG_SERVER);
-		DrawPanelText(ffaMenu, info6);
+		DrawPanelText(FFAMenu, info6);
 		Format(info7, sizeof(info7), "%T", "ffa_info_Line6", LANG_SERVER);
-		DrawPanelText(ffaMenu, info7);
+		DrawPanelText(FFAMenu, info7);
 		Format(info8, sizeof(info8), "%T", "ffa_info_Line7", LANG_SERVER);
-		DrawPanelText(ffaMenu, info8);
-		DrawPanelText(ffaMenu, "-----------------------------------");
+		DrawPanelText(FFAMenu, info8);
+		DrawPanelText(FFAMenu, "-----------------------------------");
 		}else{
 		Format(info9, sizeof(info9), "%T", "ffa_info_Spawn", LANG_SERVER);
-		DrawPanelText(ffaMenu, info9);
-		DrawPanelText(ffaMenu, "-----------------------------------");
+		DrawPanelText(FFAMenu, info9);
+		DrawPanelText(FFAMenu, "-----------------------------------");
 		Format(info3, sizeof(info3), "%T", "ffa_info_Line2", LANG_SERVER);
-		DrawPanelText(ffaMenu, info3);
+		DrawPanelText(FFAMenu, info3);
 		Format(info4, sizeof(info4), "%T", "ffa_info_Line3", LANG_SERVER);
-		DrawPanelText(ffaMenu, info4);
+		DrawPanelText(FFAMenu, info4);
 		Format(info5, sizeof(info5), "%T", "ffa_info_Line4", LANG_SERVER);
-		DrawPanelText(ffaMenu, info5);
+		DrawPanelText(FFAMenu, info5);
 		Format(info6, sizeof(info6), "%T", "ffa_info_Line5", LANG_SERVER);
-		DrawPanelText(ffaMenu, info6);
+		DrawPanelText(FFAMenu, info6);
 		Format(info7, sizeof(info7), "%T", "ffa_info_Line6", LANG_SERVER);
-		DrawPanelText(ffaMenu, info7);
+		DrawPanelText(FFAMenu, info7);
 		Format(info8, sizeof(info8), "%T", "ffa_info_Line7", LANG_SERVER);
-		DrawPanelText(ffaMenu, info8);
-		DrawPanelText(ffaMenu, "-----------------------------------");
+		DrawPanelText(FFAMenu, info8);
+		DrawPanelText(FFAMenu, "-----------------------------------");
 		}
 		
-		new RandomCT = 0;
+		int RandomCT = 0;
 		
-		for(new client=1; client <= MaxClients; client++)
+		for(int client=1; client <= MaxClients; client++)
 		{
 			if (IsClientInGame(client))
 			{
@@ -307,18 +306,18 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 		}
 		if (RandomCT)
 		{	
-			new Float:Pos1[3];
+			float Pos1[3];
 			
 			GetClientAbsOrigin(RandomCT, Pos);
 			GetClientAbsOrigin(RandomCT, Pos1);
 			
 			Pos[2] = Pos[2] + 45;
 
-			if (ffaRound > 0)
+			if (FFARound > 0)
 			{
-				for(new client=1; client <= MaxClients; client++)
+				for(int client=1; client <= MaxClients; client++)
 				{
-					if(GetConVarInt(g_wspawncell) == 1)
+					if (gc_bSpawnCell.BoolValue)
 					{
 					if (IsClientInGame(client))
 					{
@@ -349,27 +348,23 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 						}
 					}
 					}
-				}CPrintToChatAll("%t %t", "ffa_tag" ,"ffa_rounds", ffaRound);
+				}CPrintToChatAll("%t %t", "ffa_tag" ,"ffa_rounds", FFARound);
 			}
-			for(new client=1; client <= MaxClients; client++)
+			for(int client=1; client <= MaxClients; client++)
 			{
 				if (IsClientInGame(client))
 				{
-					SetEntData(client, FindSendPropOffs("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
-					SendPanelToClient(ffaMenu, client, Pass, 15);
+					SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
+					SendPanelToClient(FFAMenu, client, Pass, 15);
 					SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 				}
 			}
-			
-
-
-			WeaponTimer = CreateTimer(1.0, NoWeapon, _, TIMER_REPEAT);
-
+			TruceTimer = CreateTimer(1.0, NoDamage, _, TIMER_REPEAT);
 		}
 	}
 	else
 	{
-		if (RoundLimits > 0) RoundLimits--;
+		if (g_iRoundLimits > 0) g_iRoundLimits--;
 	}
 }
 
@@ -377,23 +372,22 @@ public Pass(Handle:menu, MenuAction:action, param1, param2)
 {
 }
 
-
-public Action:NoWeapon(Handle:timer)
+public Action:NoDamage(Handle:timer)
 {
-	if (nodamagetimer > 1)
+	if (g_iTruceTime > 1)
 	{
-		nodamagetimer--;
+		g_iTruceTime--;
 		
-		PrintCenterTextAll("%t", "ffa_damage", nodamagetimer);
+		PrintCenterTextAll("%t", "ffa_damage", g_iTruceTime);
 		
 		return Plugin_Continue;
 	}
 	
-	nodamagetimer = GetConVarInt(nodamagetimerc);
+	g_iTruceTime = gc_iTruceTime.IntValue;
 	
 	PrintCenterTextAll("%t", "ffa_start");
 	
-	for(new client=1; client <= MaxClients; client++) 
+	for(int client=1; client <= MaxClients; client++) 
 	{
 		if (IsClientInGame(client) && IsPlayerAlive(client)) SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
 	}
@@ -401,7 +395,7 @@ public Action:NoWeapon(Handle:timer)
 	CPrintToChatAll("%t %t", "ffa_tag" , "ffa_start");
 	DoFog();
 	AcceptEntityInput(FogIndex, "TurnOff");
-	WeaponTimer = INVALID_HANDLE;
+	TruceTimer = null;
 	
 	return Plugin_Stop;
 }
@@ -419,38 +413,32 @@ DoFog()
 	}
 }
 
-public PlayerSay(Handle:event, String:name[], bool:dontBroadcast)
+public Action VoteFFA(int client,int args)
 {
-	decl String:text[256];
-	decl String:steamid[64];
-	new client = GetClientOfUserId(GetEventInt(event, "userid"));
+	char steamid[64];
+	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
 	
-	GetClientAuthString(client, steamid, sizeof(steamid));
-	GetEventString(event, "text", text, sizeof(text));
-	
-	if (StrEqual(text, "!ffa") || StrEqual(text, "!warffa"))
-	{
-	if(GetConVarInt(g_wenabled) == 1)
+	if (gc_bPlugin.BoolValue)
 	{	
 		if (GetTeamClientCount(3) > 0)
 		{
-			if (RoundLimits == 0)
+			if (g_iRoundLimits == 0)
 			{
-				if (!Isffa && !Startffa)
+				if (!IsFFA && !StartFFA)
 				{
 					if (StrContains(voted, steamid, true) == -1)
 					{
-						new playercount = (GetClientCount(true) / 2);
+						int playercount = (GetClientCount(true) / 2);
 						
-						votecount++;
+						VoteCount++;
 						
-						new Missing = playercount - votecount + 1;
+						int Missing = playercount - VoteCount + 1;
 						
 						Format(voted, sizeof(voted), "%s,%s", voted, steamid);
 						
-						if (votecount > playercount)
+						if (VoteCount > playercount)
 						{
-							Startffa = true;
+							StartFFA = true;
 							
 							SetCvar("sm_hide_enable", 0);
 							SetCvar("sm_war_enable", 0);
@@ -459,8 +447,8 @@ public PlayerSay(Handle:event, String:name[], bool:dontBroadcast)
 							SetCvar("sm_catch_enable", 0);
 							SetCvar("sm_noscope_enable", 0);
 							
-							RoundLimits = GetConVarInt(RoundLimitsc);
-							votecount = 0;
+							g_iRoundLimits = gc_iRoundLimits.IntValue;
+							VoteCount = 0;
 							
 							CPrintToChatAll("%t %t", "ffa_tag" , "ffa_next");
 						}
@@ -471,52 +459,51 @@ public PlayerSay(Handle:event, String:name[], bool:dontBroadcast)
 				}
 				else CPrintToChat(client, "%t %t", "ffa_tag" , "ffa_progress");
 			}
-			else CPrintToChat(client, "%t %t", "ffa_tag" , "ffa_wait", RoundLimits);
+			else CPrintToChat(client, "%t %t", "ffa_tag" , "ffa_wait", g_iRoundLimits);
 		}
 		else CPrintToChat(client, "%t %t", "ffa_tag" , "ffa_minct");
 	}
 	else CPrintToChat(client, "%t %t", "ffa_tag" , "ffa_disabled");
-	}
 }
 
 
 
-public SetCvar(String:cvarName[64], value)
+public SetCvar(char cvarName[64], value)
 {
-	usecvar = FindConVar(cvarName);
-	if(usecvar == INVALID_HANDLE) return;
+	UseCvar = FindConVar(cvarName);
+	if(UseCvar == null) return;
 	
-	new flags = GetConVarFlags(usecvar);
+	int flags = GetConVarFlags(UseCvar);
 	flags &= ~FCVAR_NOTIFY;
-	SetConVarFlags(usecvar, flags);
+	SetConVarFlags(UseCvar, flags);
 
-	SetConVarInt(usecvar, value);
+	SetConVarInt(UseCvar, value);
 
 	flags |= FCVAR_NOTIFY;
-	SetConVarFlags(usecvar, flags);
+	SetConVarFlags(UseCvar, flags);
 }
 
-public SetCvarF(String:cvarName[64], Float:value)
+public SetCvarF(char cvarName[64], Float:value)
 {
-	usecvar = FindConVar(cvarName);
-	if(usecvar == INVALID_HANDLE) return;
+	UseCvar = FindConVar(cvarName);
+	if(UseCvar == null) return;
 
-	new flags = GetConVarFlags(usecvar);
+	int flags = GetConVarFlags(UseCvar);
 	flags &= ~FCVAR_NOTIFY;
-	SetConVarFlags(usecvar, flags);
+	SetConVarFlags(UseCvar, flags);
 
-	SetConVarFloat(usecvar, value);
+	SetConVarFloat(UseCvar, value);
 
 	flags |= FCVAR_NOTIFY;
-	SetConVarFlags(usecvar, flags);
+	SetConVarFlags(UseCvar, flags);
 }
 
-public OnMapEnd()
+public void OnMapEnd()
 {
-	Isffa = false;
-	Startffa = false;
-	votecount = 0;
-	ffaRound = 0;
+	IsFFA = false;
+	StartFFA = false;
+	VoteCount = 0;
+	FFARound = 0;
 	
 	voted[0] = '\0';
 }

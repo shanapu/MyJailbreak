@@ -11,33 +11,36 @@
 //Compiler Options
 #pragma semicolon 1
 
+//Defines
 #define PLUGIN_VERSION   "0.1"
 
-ConVar gc_bTagEnabled;
-new preparetime;
-new roundtime;
-new roundtimenormal;
-new votecount;
-new NoScopeRound;
-new RoundLimits;
-new m_flNextSecondaryAttack;
+//Booleans
+bool IsNoScope = false; 
+bool StartNoScope = false; 
 
-new Handle:LimitTimer;
-new Handle:NoScopeTimer;
-new Handle:WeaponTimer;
-new Handle:NoScopeMenu;
-new Handle:roundtimec;
-new Handle:roundtimenormalc;
-new Handle:preparetimec;
-new Handle:RoundLimitsc;
-new Handle:g_wenabled=INVALID_HANDLE;
-new Handle:usecvar;
+//ConVars
+ConVar gc_bPlugin;
+ConVar gc_bTag;
+ConVar gc_iRoundLimits;
+ConVar gc_iRoundTime;
+ConVar gc_iTruceTime;
+ConVar g_iSetRoundTime;
 
-new bool:IsNoScope;
-new bool:StartNoScope;
+//Integers
+int g_iOldRoundTime;
+int g_iRoundLimits;
+int g_iTruceTime;
+int VoteCount = 0;
+int NoScopeRound = 0;
+int m_flNextSecondaryAttack;
 
-new String:voted[1500];
+//Handles
+Handle TruceTimer;
+Handle NoScopeMenu;
+Handle UseCvar;
 
+//Characters
+char voted[1500];
 
 
 public Plugin myinfo = {
@@ -48,26 +51,30 @@ public Plugin myinfo = {
 	url = ""
 };
 
-
-
-public OnPluginStart()
+public void OnPluginStart()
 {
 	// Translation
 	LoadTranslations("MyJailbreakWarden.phrases");
 	LoadTranslations("MyJailbreakNoScope.phrases");
 	
 	RegConsoleCmd("sm_setnoscope", SetNoScope);
+	RegConsoleCmd("sm_noscope", VoteNoScope);
+	RegConsoleCmd("sm_scout", VoteNoScope);
 	
 	AutoExecConfig_SetFile("MyJailbreak_noscope");
 	AutoExecConfig_SetCreateFile(true);
 	
-	AutoExecConfig_CreateConVar("sm_noscope_version", "PLUGIN_VERSION", "The version of the SourceMod plugin MyJailBreak - War", FCVAR_PLUGIN|FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
-	g_wenabled = AutoExecConfig_CreateConVar("sm_noscope_enable", "1", "0 - disabled, 1 - enable war");
-	roundtimec = AutoExecConfig_CreateConVar("sm_noscope_roundtime", "5", "Round time for a single war round");
-	roundtimenormalc = AutoExecConfig_CreateConVar("sm_nonoscope_roundtime", "12", "set round time after a war round zour normal mp_roudntime");
-	preparetimec = AutoExecConfig_CreateConVar("sm_noscope_preparetime", "15", "Time freeze noscopes");
-	RoundLimitsc = AutoExecConfig_CreateConVar("sm_noscope_roundsnext", "3", "Rounds until event can be started again.");
-	gc_bTagEnabled = AutoExecConfig_CreateConVar("sm_noscope_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	AutoExecConfig_CreateConVar("sm_noscope_version", "PLUGIN_VERSION", "The version of the SourceMod plugin MyJailBreak - War", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
+	gc_bPlugin = AutoExecConfig_CreateConVar("sm_noscope_enable", "1", "0 - disabled, 1 - enable war");
+	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_noscope_roundtime", "5", "Round time for a single war round");
+	g_iSetRoundTime = FindConVar("mp_roundtime");
+	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_noscope_g_iTruceTime", "15", "Time freeze noscopes");
+	g_iTruceTime = gc_iTruceTime.IntValue;
+	gc_iRoundLimits = AutoExecConfig_CreateConVar("sm_noscope_roundsnext", "3", "Rounds until event can be started again.");
+	g_iRoundLimits = gc_iRoundLimits.IntValue;
+	gc_bTag = AutoExecConfig_CreateConVar("sm_noscope_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	
+	g_iSetRoundTime = FindConVar("mp_roundtime");
 
 	AutoExecConfig_CacheConvars();
 	AutoExecConfig_ExecuteFile();
@@ -76,42 +83,38 @@ public OnPluginStart()
 	
 	IsNoScope = false;
 	StartNoScope = false;
-	votecount = 0;
+	VoteCount = 0;
 	NoScopeRound = 0;
 	
 	HookEvent("round_start", RoundStart);
-	HookEvent("player_say", PlayerSay);
+	
 	HookEvent("round_end", RoundEnd);
 	
 	
-	m_flNextSecondaryAttack = FindSendPropOffs("CBaseCombatWeapon", "m_flNextSecondaryAttack");
+	m_flNextSecondaryAttack = FindSendPropInfo("CBaseCombatWeapon", "m_flNextSecondaryAttack");
 }
 
 
-public OnMapStart()
+public void OnMapStart()
 {
-	//new String:voted[1500];
 
-	votecount = 0;
+
+	VoteCount = 0;
 	NoScopeRound = 0;
 	IsNoScope = false;
 	StartNoScope = false;
-	RoundLimits = 0;
+	g_iRoundLimits = 0;
 	
-	preparetime = GetConVarInt(preparetimec);
-	roundtime = GetConVarInt(roundtimec);
-	roundtimenormal = GetConVarInt(roundtimenormalc);
+	g_iTruceTime = gc_iTruceTime.IntValue;
 	
 }
 
-public OnConfigsExecuted()
+public void OnConfigsExecuted()
 {
-	roundtime = GetConVarInt(roundtimec);
-	roundtimenormal = GetConVarInt(roundtimenormalc);
-	preparetime = GetConVarInt(preparetimec);
-	RoundLimits = 0;
+	g_iTruceTime = gc_iTruceTime.IntValue;
+	g_iRoundLimits = 0;
 	
-	if (gc_bTagEnabled.BoolValue)
+	if (gc_bTag.BoolValue)
 	{
 		ConVar hTags = FindConVar("sv_tags");
 		char sTags[128];
@@ -124,23 +127,20 @@ public OnConfigsExecuted()
 	}
 }
 
-public RoundEnd(Handle:event, String:name[], bool:dontBroadcast)
+public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 {
-	new winner = GetEventInt(event, "winner");
+	int winner = GetEventInt(event, "winner");
 	
 	if (IsNoScope)
 	{
-		for(new client=1; client <= MaxClients; client++)
+		for(int client=1; client <= MaxClients; client++)
 		{
-			if (IsClientInGame(client)) SetEntData(client, FindSendPropOffs("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
+			if (IsClientInGame(client)) SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
 		}
 		
-		if (LimitTimer != INVALID_HANDLE) KillTimer(LimitTimer);
-		if (NoScopeTimer != INVALID_HANDLE) KillTimer(NoScopeTimer);
-		if (WeaponTimer != INVALID_HANDLE) KillTimer(WeaponTimer);
+		if (TruceTimer != null) KillTimer(TruceTimer);
+
 		
-		roundtime = GetConVarInt(roundtimec);
-		roundtimenormal = GetConVarInt(roundtimenormalc);
 		
 		if (winner == 2) PrintCenterTextAll("%t", "noscope_twin");
 		if (winner == 3) PrintCenterTextAll("%t", "noscope_ctwin");
@@ -158,44 +158,39 @@ public RoundEnd(Handle:event, String:name[], bool:dontBroadcast)
 		SetCvar("sm_ffa_enable", 1);
 		SetCvar("sm_beacon_enabled", 0);
 		SetCvar("sm_warden_enable", 1);
-		SetCvar("mp_roundtime", roundtimenormal);
-		SetCvar("mp_roundtime_hostage", roundtimenormal);
-		SetCvar("mp_roundtime_defuse", roundtimenormal);
+		g_iSetRoundTime.IntValue = g_iOldRoundTime;
 		CPrintToChatAll("%t %t", "noscope_tag" , "noscope_end");
 		
 	}
 	if (StartNoScope)
 	{
-	SetCvar("mp_roundtime", roundtime);
-	SetCvar("mp_roundtime_hostage", roundtime);
-	SetCvar("mp_roundtime_defuse", roundtime);
+	g_iOldRoundTime = g_iSetRoundTime.IntValue;
+	g_iSetRoundTime.IntValue = gc_iRoundTime.IntValue;
 	}
 	
-	for(new i = 1; i <= MaxClients; i++)
+	for(int i = 1; i <= MaxClients; i++)
 	if(IsClientInGame(i)) SDKUnhook(i, SDKHook_PreThink, OnPreThink);
 }
 
 public Action SetNoScope(int client,int args)
 {
-	if(GetConVarInt(g_wenabled) == 1)	
+	if (gc_bPlugin.BoolValue)	
 	{
 	if (warden_iswarden(client) || CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
 	{
-	if (RoundLimits == 0)
+	if (g_iRoundLimits == 0)
 	{
 	StartNoScope = true;
-	RoundLimits = GetConVarInt(RoundLimitsc);
-	votecount = 0;
-	
-		SetCvar("sm_war_enable", 0);
-		SetCvar("sm_zombie_enable", 0);
-		SetCvar("sm_ffa_enable", 0);
-		SetCvar("sm_hide_enable", 0);
-		SetCvar("sm_catch_enable", 0);
-		SetCvar("sm_duckhunt_enable", 0);
-	
+	g_iRoundLimits = gc_iRoundLimits.IntValue;
+	VoteCount = 0;
+	SetCvar("sm_war_enable", 0);
+	SetCvar("sm_zombie_enable", 0);
+	SetCvar("sm_ffa_enable", 0);
+	SetCvar("sm_hide_enable", 0);
+	SetCvar("sm_catch_enable", 0);
+	SetCvar("sm_duckhunt_enable", 0);
 	CPrintToChatAll("%t %t", "noscope_tag" , "noscope_next");
-	}else CPrintToChat(client, "%t %t", "noscope_tag" , "noscope_wait", RoundLimits);
+	}else CPrintToChat(client, "%t %t", "noscope_tag" , "noscope_wait", g_iRoundLimits);
 	}else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
 	}
 }
@@ -209,9 +204,9 @@ public OnClientPutInServer(client)
 public Action:OnWeaponCanUse(client, weapon)
 {
 	if(IsNoScope == true)
-		{
+	{
 
-		decl String:sWeapon[32];
+		char sWeapon[32];
 		GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
 
 		if(StrEqual(sWeapon, "weapon_ssg08") || StrEqual(sWeapon, "weapon_knife"))
@@ -221,14 +216,13 @@ public Action:OnWeaponCanUse(client, weapon)
 			{
 			return Plugin_Continue;
 			}
-		}
-		return Plugin_Handled;
-		}return Plugin_Continue;
+		}return Plugin_Handled;
+	}return Plugin_Continue;
 }
 
 public Action:OnPreThink(client)
 {
-	new iWeapon = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
+	int iWeapon = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
 	MakeNoScope(iWeapon);
 	return Plugin_Continue;
 }
@@ -237,7 +231,7 @@ stock MakeNoScope(weapon)
 {
 	if(IsValidEdict(weapon))
 	{
-		decl String:classname[MAX_NAME_LENGTH];
+		char classname[MAX_NAME_LENGTH];
 
 		if (GetEdictClassname(weapon, classname, sizeof(classname))
 		|| StrEqual(classname[7], "ssg08")  || StrEqual(classname[7], "aug")
@@ -250,11 +244,11 @@ stock MakeNoScope(weapon)
 	}
 }
 
-public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
+public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 {
 	if (StartNoScope)
 	{
-		decl String:info1[255], String:info2[255], String:info3[255], String:info4[255], String:info5[255], String:info6[255], String:info7[255], String:info8[255];
+		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
 		SetCvar("sm_hosties_lr", 0);
 
 		SetCvar("sm_weapons_enable", 0);
@@ -291,7 +285,7 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 		
 		if (NoScopeRound > 0)
 			{
-				for(new client=1; client <= MaxClients; client++)
+				for(int client=1; client <= MaxClients; client++)
 				{
 					
 					if (IsClientInGame(client))
@@ -309,19 +303,19 @@ public RoundStart(Handle:event, String:name[], bool:dontBroadcast)
 					}
 					if (IsClientInGame(client))
 					{
-					SetEntData(client, FindSendPropOffs("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
+					SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
 					SendPanelToClient(NoScopeMenu, client, Pass, 15);
 					SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 					}
 				}
-				preparetime--;
-				NoScopeTimer = CreateTimer(1.0, NoScope, _, TIMER_REPEAT);
+				g_iTruceTime--;
+				TruceTimer = CreateTimer(1.0, NoScope, _, TIMER_REPEAT);
 			}
-		for(new i = 1; i <= MaxClients; i++)
+		for(int i = 1; i <= MaxClients; i++)
 		if(IsClientInGame(i)) SDKHook(i, SDKHook_PreThink, OnPreThink);
 	}else
 	{
-		if (RoundLimits > 0) RoundLimits--;
+		if (g_iRoundLimits > 0) g_iRoundLimits--;
 	}
 }
 
@@ -334,23 +328,23 @@ public Pass(Handle:menu, MenuAction:action, param1, param2)
 
 public Action:NoScope(Handle:timer)
 {
-	if (preparetime > 1)
+	if (g_iTruceTime > 1)
 	{
-		preparetime--;
-		for (new client=1; client <= MaxClients; client++)
+		g_iTruceTime--;
+		for (int client=1; client <= MaxClients; client++)
 		if (IsClientInGame(client) && IsPlayerAlive(client))
 			{
 		
-						PrintCenterText(client,"%t", "noscope_timetounfreeze", preparetime);
+						PrintCenterText(client,"%t", "noscope_timetounfreeze", g_iTruceTime);
 			}
 		return Plugin_Continue;
 	}
 	
-	preparetime = GetConVarInt(preparetimec);
+	g_iTruceTime = gc_iTruceTime.IntValue;
 	
 	if (NoScopeRound > 0)
 	{
-		for (new client=1; client <= MaxClients; client++)
+		for (int client=1; client <= MaxClients; client++)
 		{
 			if (IsClientInGame(client) && IsPlayerAlive(client))
 			{
@@ -370,109 +364,97 @@ public Action:NoScope(Handle:timer)
 	PrintCenterTextAll("%t", "noscope_start");
 	CPrintToChatAll("%t %t", "noscope_tag" , "noscope_start");
 	
-	NoScopeTimer = INVALID_HANDLE;
+	TruceTimer = null;
 	
 	return Plugin_Stop;
 }
 
-
-public PlayerSay(Handle:event, String:name[], bool:dontBroadcast)
+public Action VoteNoScope(int client,int args)
 {
-	decl String:text[256];
-	decl String:steamid[64];
-	new client = GetClientOfUserId(GetEventInt(event, "userid"));
+	char steamid[64];
+	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
 	
-	GetClientAuthString(client, steamid, sizeof(steamid));
-	GetEventString(event, "text", text, sizeof(text));
-	
-	if (StrEqual(text, "!scout") || StrEqual(text, "!noscope"))
-	{
-	if(GetConVarInt(g_wenabled) == 1)
+	if (gc_bPlugin.BoolValue)
 	{	
 		if (GetTeamClientCount(3) > 0)
 		{
-			if (RoundLimits == 0)
+			if (g_iRoundLimits == 0)
 			{
 				if (!IsNoScope && !StartNoScope)
 				{
 					if (StrContains(voted, steamid, true) == -1)
 					{
-						new playercount = (GetClientCount(true) / 2);
+						int playercount = (GetClientCount(true) / 2);
 						
-						votecount++;
+						VoteCount++;
 						
-						new Missing = playercount - votecount + 1;
+						int Missing = playercount - VoteCount + 1;
 						
 						Format(voted, sizeof(voted), "%s,%s", voted, steamid);
 						
-						if (votecount > playercount)
+						if (VoteCount > playercount)
 						{
 							StartNoScope = true;
 							
-							RoundLimits = GetConVarInt(RoundLimitsc);
-							votecount = 0;
-							
-									SetCvar("sm_war_enable", 0);
-		SetCvar("sm_zombie_enable", 0);
-		SetCvar("sm_ffa_enable", 0);
-		SetCvar("sm_hide_enable", 0);
-		SetCvar("sm_catch_enable", 0);
-		SetCvar("sm_duckhunt_enable", 0);
-							
+							g_iRoundLimits = gc_iRoundLimits.IntValue;
+							VoteCount = 0;
+							SetCvar("sm_war_enable", 0);
+							SetCvar("sm_zombie_enable", 0);
+							SetCvar("sm_ffa_enable", 0);
+							SetCvar("sm_hide_enable", 0);
+							SetCvar("sm_catch_enable", 0);
+							SetCvar("sm_duckhunt_enable", 0);
 							CPrintToChatAll("%t %t", "noscope_tag" , "noscope_next");
-						}
-						else CPrintToChatAll("%t %t", "noscope_tag" , "noscope_need", Missing);
-						
+						}else CPrintToChatAll("%t %t", "noscope_tag" , "noscope_need", Missing);
 					}
 					else CPrintToChat(client, "%t %t", "noscope_tag" , "noscope_voted");
 				}
 				else CPrintToChat(client, "%t %t", "noscope_tag" , "noscope_progress");
 			}
-			else CPrintToChat(client, "%t %t", "noscope_tag" , "noscope_wait", RoundLimits);
+			else CPrintToChat(client, "%t %t", "noscope_tag" , "noscope_wait", g_iRoundLimits);
 		}
 		else CPrintToChat(client, "%t %t", "noscope_tag" , "noscope_minct");
 	}
 	else CPrintToChat(client, "%t %t", "noscope_tag" , "noscope_disabled");
-	}
 }
 
 
 
-public SetCvar(String:cvarName[64], value)
+public SetCvar(char cvarName[64], value)
 {
-	usecvar = FindConVar(cvarName);
-	if(usecvar == INVALID_HANDLE) return;
+	UseCvar = FindConVar(cvarName);
+	if(UseCvar == null) return;
 	
-	new flags = GetConVarFlags(usecvar);
+	int flags = GetConVarFlags(UseCvar);
 	flags &= ~FCVAR_NOTIFY;
-	SetConVarFlags(usecvar, flags);
+	SetConVarFlags(UseCvar, flags);
 
-	SetConVarInt(usecvar, value);
+	SetConVarInt(UseCvar, value);
 
 	flags |= FCVAR_NOTIFY;
-	SetConVarFlags(usecvar, flags);
+	SetConVarFlags(UseCvar, flags);
 }
 
-public SetCvarF(String:cvarName[64], Float:value)
+public SetCvarF(char cvarName[64], Float:value)
 {
-	usecvar = FindConVar(cvarName);
-	if(usecvar == INVALID_HANDLE) return;
+	UseCvar = FindConVar(cvarName);
+	if(UseCvar == null) return;
 
-	new flags = GetConVarFlags(usecvar);
+	int flags = GetConVarFlags(UseCvar);
 	flags &= ~FCVAR_NOTIFY;
-	SetConVarFlags(usecvar, flags);
+	SetConVarFlags(UseCvar, flags);
 
-	SetConVarFloat(usecvar, value);
+	SetConVarFloat(UseCvar, value);
 
 	flags |= FCVAR_NOTIFY;
-	SetConVarFlags(usecvar, flags);
+	SetConVarFlags(UseCvar, flags);
 }
 
 public OnMapEnd()
 {
 	IsNoScope = false;
 	StartNoScope = false;
-	votecount = 0;
+	VoteCount = 0;
 	NoScopeRound = 0;
 	
 	voted[0] = '\0';
