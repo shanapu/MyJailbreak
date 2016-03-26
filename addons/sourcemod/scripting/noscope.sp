@@ -156,6 +156,7 @@ public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 		SetCvar("sm_hide_enable", 1);
 		SetCvar("sm_duckhunt_enable", 1);
 		SetCvar("sm_ffa_enable", 1);
+		SetCvar("mp_teammates_are_enemies", 0);
 		SetCvar("sm_beacon_enabled", 0);
 		SetCvar("sm_warden_enable", 1);
 		g_iSetRoundTime.IntValue = g_iOldRoundTime;
@@ -254,6 +255,7 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 		SetCvar("sm_weapons_enable", 0);
 		SetCvar("sm_beacon_enabled", 1);
 		SetCvar("sm_warden_enable", 0);
+		SetCvar("mp_teammates_are_enemies", 1);
 
 		SetCvar("dice_enable", 0);
 		IsNoScope = true;

@@ -368,6 +368,8 @@ DiceNow(client)
 	new number;
 	new count;
 
+	if(GetConVarInt(c_DiceEnable) == 1)
+	{
 	CPrintToChat(client, "[%t] %t", "dice", "rolling", ClientDiced[client], DiceCount);
 
 	number = count = GetRandomInt(1, DICES);
@@ -531,6 +533,7 @@ DiceNow(client)
 	}
 	
 	ShowText(client, number);
+	}
 }
 
 public Action:NclipTimer(Handle:timer, any:client)
@@ -822,7 +825,7 @@ public Action:SetOnFireTimer(Handle:timer, any:client)
 
 						AcceptEntityInput(view, "StartFire");
 						
-						GetClientAuthString(client, steamid, sizeof(steamid));
+						GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
 						DispatchKeyValue(client, "targetname", steamid);
 						
 						SetVariantString(steamid);

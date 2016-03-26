@@ -13,14 +13,14 @@
 	"noscope_twin"
 	{
 		"#format"	""
-		"en"		"Terroist surived"
+		"en"		"a Terrorist surived"
 		
 	}
 	
 	"noscope_ctwin"
 	{
 		"#format"	""
-		"en"		"all ducks got hunted"
+		"en"		"a CT wins"
 		
 	}
 	
@@ -95,8 +95,7 @@
 	}
 	"noscope_info_Line2"
 	{
-		"en"		"In warround ct play against t"
-		"de"		"In Kriegrunden spielen CT's gegen T's"
+		"en"		"In noscope ther is ffa scout noscope low grav"
 	}
 	
 	"noscope_info_Line3"

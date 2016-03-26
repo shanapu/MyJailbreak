@@ -329,9 +329,9 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 						}
 						if (GetClientTeam(client) == 2)
 						{
-						GivePlayerItem(client, "weapon_ak47");
-						GivePlayerItem(client, "weapon_deagle");
-						GivePlayerItem(client, "weapon_hegrenade");
+							GivePlayerItem(client, "weapon_ak47");
+							GivePlayerItem(client, "weapon_deagle");
+							GivePlayerItem(client, "weapon_hegrenade");
 						}
 					}
 					}else
@@ -344,7 +344,7 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 						}
 						if (GetClientTeam(client) == 2)
 						{
-						TeleportEntity(client, Pos1, NULL_VECTOR, NULL_VECTOR);
+							TeleportEntity(client, Pos1, NULL_VECTOR, NULL_VECTOR);
 						}
 					}
 					}

@@ -6,15 +6,15 @@
 #include <colors>
 #include <autoexecconfig>
 
-new Handle:cvar_ff;
-ConVar gc_bTagEnabled;
-new Handle:g_enabled=INVALID_HANDLE;
-new Handle:g_tenabled=INVALID_HANDLE;
-new Handle:g_cenabled=INVALID_HANDLE;
-new Handle:g_wenabled=INVALID_HANDLE;
-new Handle:g_denabled=INVALID_HANDLE;
-new Handle:g_kenabled=INVALID_HANDLE;
 
+ConVar gc_bTag;
+ConVar gc_bPlugin;
+ConVar gc_bTerror;
+ConVar gc_bCTerror;
+ConVar gc_bWarden;
+ConVar gc_bDays;
+ConVar gc_bKill;
+ConVar g_bFF;
 
 #pragma semicolon 1
 
@@ -30,7 +30,7 @@ public Plugin myinfo = {
 
 public OnConfigsExecuted()
 {
-	if (gc_bTagEnabled.BoolValue)
+	if (gc_bTag.BoolValue)
 	{
 		ConVar hTags = FindConVar("sv_tags");
 		char sTags[128];
@@ -53,44 +53,45 @@ public OnPluginStart()
 
 	RegConsoleCmd("sm_days", EventDays);
 	RegConsoleCmd("sm_events", EventDays);
-	
-	
+	RegConsoleCmd("sm_event", EventDays);
 	
 	AutoExecConfig_SetFile("MyJailbreak_menu");
 	AutoExecConfig_SetCreateFile(true);
 	
-	gc_bTagEnabled = AutoExecConfig_CreateConVar("sm_menu_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	g_enabled = AutoExecConfig_CreateConVar("sm_menu_enable", "1", "0 - disabled, 1 - enable jailbrek menu");
-	g_cenabled = AutoExecConfig_CreateConVar("sm_menu_ct", "1", "0 - disabled, 1 - enable ct jailbreak menu");
-	g_tenabled = AutoExecConfig_CreateConVar("sm_menu_t", "1", "0 - disabled, 1 - enable t jailbreak menu");
-	g_wenabled = AutoExecConfig_CreateConVar("sm_menu_warden", "1", "0 - disabled, 1 - enable warden jailbreak menu");
-	g_denabled = AutoExecConfig_CreateConVar("sm_menu_days", "1", "0 - disabled, 1 - enable eventdays menu for warden and admin");
-	g_kenabled = AutoExecConfig_CreateConVar("sm_menu_kill", "1", "0 - disabled, 1 - enable kill random T for warden");
+	gc_bTag = AutoExecConfig_CreateConVar("sm_menu_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	gc_bPlugin = AutoExecConfig_CreateConVar("sm_menu_enable", "1", "0 - disabled, 1 - enable jailbrek menu");
+	gc_bCTerror = AutoExecConfig_CreateConVar("sm_menu_ct", "1", "0 - disabled, 1 - enable ct jailbreak menu");
+	gc_bTerror = AutoExecConfig_CreateConVar("sm_menu_t", "1", "0 - disabled, 1 - enable t jailbreak menu");
+	gc_bWarden = AutoExecConfig_CreateConVar("sm_menu_warden", "1", "0 - disabled, 1 - enable warden jailbreak menu");
+	gc_bDays = AutoExecConfig_CreateConVar("sm_menu_days", "1", "0 - disabled, 1 - enable eventdays menu for warden and admin");
+	gc_bKill = AutoExecConfig_CreateConVar("sm_menu_kill", "1", "0 - disabled, 1 - enable kill random T for warden");
+	g_bFF = AutoExecConfig_CreateConVar("sm_menu_ff", "1", "0 - disabled, 1 - enable switch ff for T ");
+	g_bFF = FindConVar("mp_teammates_are_enemies");
 	
 	AutoExecConfig_CacheConvars();
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
 	AutoExecConfig(true, "MyJailbreak_menu");
 	
-	cvar_ff = FindConVar("mp_teammates_are_enemies");
+	
 }
 
 public Action:JbMenu(client,args)
 {
-		if(GetConVarInt(g_enabled) == 1)	
+		if(gc_bPlugin.BoolValue)	
 	{
 	
-	decl String:menuinfo1[255], String:menuinfo2[255], String:menuinfo3[255], String:menuinfo4[255], String:menuinfo5[255], String:menuinfo6[255], String:menuinfo7[255], String:menuinfo8[255];
-	decl String:menuinfo9[255], String:menuinfo10[255], String:menuinfo11[255], String:menuinfo12[255], String:menuinfo13[255], String:menuinfo14[255], String:menuinfo15[255], String:menuinfo16[255];
-	decl String:menuinfo17[255], String:menuinfo177[255]; 
+	char menuinfo1[255], menuinfo2[255], menuinfo3[255], menuinfo4[255], menuinfo5[255], menuinfo6[255], menuinfo7[255], menuinfo8[255];
+	char menuinfo9[255], menuinfo10[255], menuinfo11[255], menuinfo12[255], menuinfo13[255], menuinfo14[255], menuinfo15[255], menuinfo16[255];
+	char menuinfo17[255], menuinfo177[255]; 
 	
-	new Handle:menu = CreateMenu(JBMenuHandler);
+	Handle menu = CreateMenu(JBMenuHandler);
 	
 	Format(menuinfo1, sizeof(menuinfo1), "%T", "menu_info_Title", LANG_SERVER);
 	SetMenuTitle(menu, menuinfo1);
 	if (warden_iswarden(client))
 	{
-	if(GetConVarInt(g_wenabled) == 1)	
+	if(gc_bWarden.BoolValue)	
 	{
 	Format(menuinfo2, sizeof(menuinfo2), "%T", "menu_overlays", LANG_SERVER);
 	AddMenuItem(menu, "overlays", menuinfo2);
@@ -98,7 +99,7 @@ public Action:JbMenu(client,args)
 	AddMenuItem(menu, "cellopen", menuinfo3);
 	Format(menuinfo4, sizeof(menuinfo4), "%T", "menu_teamgames", LANG_SERVER);
 	AddMenuItem(menu, "teams", menuinfo4);
-	if(GetConVarInt(g_denabled) == 1)
+	if(gc_bDays.BoolValue)
 	{
 	Format(menuinfo5, sizeof(menuinfo5), "%T", "menu_eventdays", LANG_SERVER);
 	AddMenuItem(menu, "days", menuinfo5);
@@ -107,7 +108,7 @@ public Action:JbMenu(client,args)
 	AddMenuItem(menu, "guns", menuinfo6);
 	
 	
-	if(!GetConVarBool(cvar_ff)) 
+	if(!g_bFF.BoolValue) 
 	{
 	Format(menuinfo7, sizeof(menuinfo7), "%T", "menu_ffon", LANG_SERVER);
 	AddMenuItem(menu, "ffa1", menuinfo7);
@@ -117,7 +118,7 @@ public Action:JbMenu(client,args)
 	Format(menuinfo8, sizeof(menuinfo8), "%T", "menu_ffoff", LANG_SERVER);
 	AddMenuItem(menu, "ffa2", menuinfo8);
 	}
-	if(GetConVarInt(g_kenabled) == 1)	
+	if(gc_bKill.BoolValue)	
 	{
 	Format(menuinfo9, sizeof(menuinfo9), "%T", "menu_randomdead", LANG_SERVER);
 	AddMenuItem(menu, "kill", menuinfo9);
@@ -129,7 +130,7 @@ public Action:JbMenu(client,args)
 	}
 	else if(GetClientTeam(client) == CS_TEAM_CT) 
 	{
-	if(GetConVarInt(g_tenabled) == 1)	
+	if(gc_bTerror.BoolValue)	
 	{
 	Format(menuinfo11, sizeof(menuinfo11), "%T", "menu_getwarden", LANG_SERVER);
 	AddMenuItem(menu, "getwarden", menuinfo11);
@@ -141,7 +142,7 @@ public Action:JbMenu(client,args)
 	}	
  	else if(GetClientTeam(client) == CS_TEAM_T) 
 	{
-	if(GetConVarInt(g_cenabled) == 1)	
+	if(gc_bCTerror.BoolValue)	
 	{
 	Format(menuinfo14, sizeof(menuinfo14), "%T", "menu_dice", LANG_SERVER);
 	AddMenuItem(menu, "jbdice", menuinfo14);
@@ -172,14 +173,14 @@ public Action:JbMenu(client,args)
 
 public Action:EventDays(client, args)
 {
-	if(GetConVarInt(g_denabled) == 1)	
+	if(gc_bDays.BoolValue)	
 	{
 	if (warden_iswarden(client) || (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true)))  
 	{
 	
-	new Handle:menu = CreateMenu(EventMenuHandler);
+	Handle menu = CreateMenu(EventMenuHandler);
 	
-	decl String:menuinfo18[255], String:menuinfo19[255], String:menuinfo20[255], String:menuinfo21[255], String:menuinfo22[255], String:menuinfo23[255], String:menuinfo24[255], String:menuinfo25[255];
+	char menuinfo18[255], menuinfo19[255], menuinfo20[255], menuinfo21[255], menuinfo22[255], menuinfo23[255], menuinfo24[255], menuinfo25[255];
 		
 	Format(menuinfo18, sizeof(menuinfo18), "%T", "menu_event_Title", LANG_SERVER);
 	SetMenuTitle(menu, menuinfo18);
@@ -210,7 +211,7 @@ public JBMenuHandler(Handle:menu, MenuAction:action, client, itemNum)
 {
 	if ( action == MenuAction_Select ) 
 	{
-		new String:info[32];
+		char info[32];
 		
 		GetMenuItem(menu, itemNum, info, sizeof(info));
 		
@@ -338,39 +339,39 @@ public EventMenuHandler(Handle:menu, MenuAction:action, client, itemNum)
 {
 	if ( action == MenuAction_Select ) 
 	{
-		new String:info[32];
+		char info[32];
 		
 		GetMenuItem(menu, itemNum, info, sizeof(info));
 		
 		if ( strcmp(info,"war") == 0 ) 
-		{
-			FakeClientCommand(client, "sm_setwar");
-		} 
-		else if ( strcmp(info,"ffa") == 0 ) 
-		{
-			FakeClientCommand(client, "sm_setffa");
-		} 
-		else if ( strcmp(info,"zombie") == 0 ) 
-		{
-			FakeClientCommand(client, "sm_setzombie");
-		} 
-			else if ( strcmp(info,"catch") == 0 ) 
-		{
-			FakeClientCommand(client, "sm_setcatch");
-		} 
-		else if ( strcmp(info,"noscope") == 0 ) 
-		{
-			FakeClientCommand(client, "sm_setnoscope");
-		} 
-		else if ( strcmp(info,"duckhunt") == 0 ) 
-		{
-			FakeClientCommand(client, "sm_setduckhunt");
-		}
-		else if ( strcmp(info,"hide") == 0 ) 
-		{
-			FakeClientCommand(client, "sm_sethide");
-		}
-			JbMenu(client,0);
+			{
+				FakeClientCommand(client, "sm_setwar");
+			} 
+			else if ( strcmp(info,"ffa") == 0 ) 
+			{
+				FakeClientCommand(client, "sm_setffa");
+			} 
+			else if ( strcmp(info,"zombie") == 0 ) 
+			{
+				FakeClientCommand(client, "sm_setzombie");
+			} 
+			else if ( strcmp(info,"catch") == 0 )
+			{
+				FakeClientCommand(client, "sm_setcatch");
+			}
+			else if ( strcmp(info,"noscope") == 0 )
+			{
+				FakeClientCommand(client, "sm_setnoscope");
+			}
+			else if ( strcmp(info,"duckhunt") == 0 )
+			{
+				FakeClientCommand(client, "sm_setduckhunt");
+			}
+			else if ( strcmp(info,"hide") == 0 )
+			{
+				FakeClientCommand(client, "sm_sethide");
+			}
+		JbMenu(client,0);
 	}
 	else if (action == MenuAction_End)
 	{
@@ -382,7 +383,7 @@ public EventMenuHandler(Handle:menu, MenuAction:action, client, itemNum)
 
 public SetCvar(String:cvarName[64], value)
 {
-	new Handle:cvar;
+	Handle cvar;
 	cvar = FindConVar(cvarName);
 
 	new flags = GetConVarFlags(cvar);
