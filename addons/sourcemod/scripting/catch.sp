@@ -148,7 +148,7 @@ public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 		SetCvar("sm_weapons_enable", 1);
 		SetCvar("sm_zombie_enable", 1);
 		SetCvar("sm_duckhunt_enable", 1);
-		SetCvar("dice_enable", 1);
+		SetCvar("sm_dice_enable", 1);
 		SetCvar("sm_beacon_enabled", 0);
 		SetCvar("sv_infinite_ammo", 0);
 		SetCvar("sm_ffa_enable", 1);
@@ -253,7 +253,7 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 		SetCvar("sm_beacon_enabled", 1);
 		SetCvar("sv_infinite_ammo", 1);
 		SetCvar("sm_weapons_enable", 0);
-		SetCvar("dice_enable", 0);
+		SetCvar("sm_dice_enable", 0);
 		IsCatch = true;
 		CatchRound++;
 		StartCatch = false;

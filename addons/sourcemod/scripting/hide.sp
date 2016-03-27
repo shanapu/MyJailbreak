@@ -172,7 +172,7 @@ public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 		SetCvar("sm_weapons_ct", 1);
 		SetCvar("sm_catch_enable", 1);
 		SetCvar("sm_warden_enable", 1);
-		SetCvar("dice_enable", 1);
+		SetCvar("sm_dice_enable", 1);
 		g_iSetRoundTime.IntValue = g_iOldRoundTime;
 		CPrintToChatAll("%t %t", "hide_tag" , "hide_end");
 		DoFog();
@@ -219,7 +219,7 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 		
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_warden_enable", 0);
-		SetCvar("dice_enable", 0);
+		SetCvar("sm_dice_enable", 0);
 		SetCvar("sm_weapons_t", 0);
 		SetCvar("sm_weapons_ct", 1);
 		IsHide = true;

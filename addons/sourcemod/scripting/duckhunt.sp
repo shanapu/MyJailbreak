@@ -164,7 +164,7 @@ public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 		SetCvar("sm_hosties_lr", 1);
 		SetCvar("sm_war_enable", 1);
 		SetCvar("sm_noscope_enable", 1);
-		SetCvar("dice_enable", 1);
+		SetCvar("sm_dice_enable", 1);
 		SetCvar("sm_weapons_enable", 1);
 		SetCvar("sm_zombie_enable", 1);
 		SetCvar("sm_catch_enable", 1);
@@ -246,7 +246,7 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("sm_beacon_enabled", 1);
-		SetCvar("dice_enable", 0);
+		SetCvar("sm_dice_enable", 0);
 		SetCvar("sm_weapons_enable", 0);
 		SetCvar("sv_infinite_ammo", 1);
 		IsDuckHunt = true;

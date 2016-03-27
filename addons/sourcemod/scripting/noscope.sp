@@ -150,7 +150,7 @@ public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 		Format(voted, sizeof(voted), "");
 		SetCvar("sm_hosties_lr", 1);
 		SetCvar("sm_war_enable", 1);
-		SetCvar("dice_enable", 1);
+		SetCvar("sm_dice_enable", 1);
 		SetCvar("sm_weapons_enable", 1);
 		SetCvar("sm_zombie_enable", 1);
 		SetCvar("sm_hide_enable", 1);
@@ -257,7 +257,7 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("mp_teammates_are_enemies", 1);
 
-		SetCvar("dice_enable", 0);
+		SetCvar("sm_dice_enable", 0);
 		IsNoScope = true;
 		NoScopeRound++;
 		StartNoScope = false;

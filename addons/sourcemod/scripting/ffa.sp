@@ -172,7 +172,7 @@ public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 			FFARound = 0;
 			Format(voted, sizeof(voted), "");
 			SetCvar("sm_hosties_lr", 1);
-			SetCvar("dice_enable", 1);
+			SetCvar("sm_dice_enable", 1);
 			SetCvar("sm_beacon_enabled", 0);
 			SetCvar("sm_warden_enable", 1);
 			SetCvar("sm_hide_enable", 1);
@@ -228,7 +228,7 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 		{AcceptEntityInput(FogIndex, "TurnOn");}
 		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
 		char info9[255], info10[255], info11[255], info12[255];
-		SetCvar("dice_enable", 0);
+		SetCvar("sm_dice_enable", 0);
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("sm_beacon_enabled", 1);
