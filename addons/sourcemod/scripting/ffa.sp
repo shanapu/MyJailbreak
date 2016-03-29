@@ -93,10 +93,8 @@ public void OnPluginStart()
 	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_ffa_overlaystart_path", "overlays/MyJailbreak/ansage3" , "Path to the start Overlay DONT TYPE .vmt or .vft");
 	gc_bTag = AutoExecConfig_CreateConVar("sm_ffa_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	
-	AutoExecConfig_CacheConvars();
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
-	AutoExecConfig(true, "MyJailbreak_ffa");
 	
 	//Hooks
 	HookEvent("round_start", RoundStart);
@@ -280,7 +278,7 @@ void StartNextRound()
 	SetCvar("sm_noscope_enable", 0);
 	SetCvar("sm_catch_enable", 0);
 	CPrintToChatAll("%t %t", "ffa_tag" , "ffa_next");
-	PrintCenterTextAll("%t", "ffa_next_nc");
+	PrintHintTextToAll("%t", "ffa_next_nc");
 }
 
 public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
@@ -444,14 +442,14 @@ public Action:NoDamage(Handle:timer)
 	{
 		g_iTruceTime--;
 		
-		PrintCenterTextAll("%t", "ffa_damage", g_iTruceTime);
+		PrintHintTextToAll("%t", "ffa_damage", g_iTruceTime);
 		
 		return Plugin_Continue;
 	}
 	
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	
-	PrintCenterTextAll("%t", "ffa_start");
+	PrintHintTextToAll("%t", "ffa_start");
 	
 	for(int client=1; client <= MaxClients; client++) 
 	{
@@ -483,8 +481,8 @@ public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 		
 		if (FreezeTimer != null) KillTimer(FreezeTimer);
 		if (TruceTimer != null) KillTimer(TruceTimer);
-		if (winner == 2) PrintCenterTextAll("%t", "ffa_twin"); 
-		if (winner == 3) PrintCenterTextAll("%t", "ffa_ctwin");
+		if (winner == 2) PrintHintTextToAll("%t", "ffa_twin"); 
+		if (winner == 3) PrintHintTextToAll("%t", "ffa_ctwin");
 		if (FFARound == 3)
 		{
 			IsFFA = false;

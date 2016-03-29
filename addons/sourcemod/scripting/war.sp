@@ -92,10 +92,8 @@ public void OnPluginStart()
 	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_war_overlaystart_path", "overlays/MyJailbreak/ansage3" , "Path to the start Overlay DONT TYPE .vmt or .vft");
 	gc_bTag = AutoExecConfig_CreateConVar("sm_war_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	
-	AutoExecConfig_CacheConvars();
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
-	AutoExecConfig(true, "MyJailbreak_War");
 	
 	//Hooks
 	HookEvent("round_start", RoundStart);
@@ -267,7 +265,7 @@ void StartNextRound()
 	SetCvar("sm_freeday_enable", 0);
 	SetCvar("sm_catch_enable", 0);
 	CPrintToChatAll("%t %t", "war_tag" , "war_next");
-	PrintCenterTextAll("%t", "war_next_nc");
+	PrintHintTextToAll("%t", "war_next_nc");
 }
 
 public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
@@ -438,7 +436,7 @@ public Action:Freezed(Handle:timer)
 	{
 		g_iFreezeTime--;
 		
-		PrintCenterTextAll("%t", "war_timetohide", g_iFreezeTime);
+		PrintHintTextToAll("%t", "war_timetohide", g_iFreezeTime);
 		
 		return Plugin_Continue;
 	}
@@ -477,14 +475,14 @@ public Action:NoDamage(Handle:timer)
 	{
 		g_iTruceTime--;
 		
-		PrintCenterTextAll("%t", "war_damage", g_iTruceTime);
+		PrintHintTextToAll("%t", "war_damage", g_iTruceTime);
 		
 		return Plugin_Continue;
 	}
 	
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	
-	PrintCenterTextAll("%t", "war_start");
+	PrintHintTextToAll("%t", "war_start");
 	
 	for(int client=1; client <= MaxClients; client++) 
 	{
@@ -512,8 +510,8 @@ public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 		
 		if (FreezeTimer != null) KillTimer(FreezeTimer);
 		if (TruceTimer != null) KillTimer(TruceTimer);
-		if (winner == 2) PrintCenterTextAll("%t", "war_twin"); 
-		if (winner == 3) PrintCenterTextAll("%t", "war_ctwin");
+		if (winner == 2) PrintHintTextToAll("%t", "war_twin"); 
+		if (winner == 3) PrintHintTextToAll("%t", "war_ctwin");
 		if (WarRound == 3)
 		{
 			IsWar = false;

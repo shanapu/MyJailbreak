@@ -78,10 +78,8 @@ public void OnPluginStart()
 	gc_iRoundLimits = AutoExecConfig_CreateConVar("sm_freeday_roundsnext", "3", "Rounds until event can be started again.");
 	gc_bTag = AutoExecConfig_CreateConVar("sm_freeday_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	
-	AutoExecConfig_CacheConvars();
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
-	AutoExecConfig(true, "MyJailbreak_FreeDay");
 	
 	//Hooks
 	HookEvent("round_start", RoundStart);
@@ -224,7 +222,7 @@ void StartNextRound()
 	SetCvar("sm_catch_enable", 0);
 	SetCvar("sm_duckhunt_enable", 0);
 	CPrintToChatAll("%t %t", "freeday_tag" , "freeday_next");
-	PrintCenterTextAll("%t", "freeday_next_nc");
+	PrintHintTextToAll("%t", "freeday_next_nc");
 }
 
 
@@ -279,7 +277,7 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 					SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 				}
 			}
-		PrintCenterTextAll("%t", "freeday_start");
+		PrintHintTextToAll("%t", "freeday_start");
 		CPrintToChatAll("%t %t", "freeday_tag" , "freeday_start");
 	}
 	else

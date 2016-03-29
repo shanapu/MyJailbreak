@@ -85,10 +85,8 @@ public void OnPluginStart()
 	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_duckhunt_overlaystart_path", "overlays/MyJailbreak/ansage3" , "Path to the start Overlay DONT TYPE .vmt or .vft");
 	gc_bTag = AutoExecConfig_CreateConVar("sm_duckhunt_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	
-	AutoExecConfig_CacheConvars();
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
-	AutoExecConfig(true, "MyJailbreak_duckhunt");
 	
 	//Hooks
 	HookEvent("round_start", RoundStart);
@@ -272,7 +270,7 @@ void StartNextRound()
 	SetCvar("sm_catch_enable", 0);
 	SetCvar("sm_noscope_enable", 0);
 	CPrintToChatAll("%t %t", "duckhunt_tag" , "duckhunt_next");
-	PrintCenterTextAll("%t", "duckhunt_next_nc");
+	PrintHintTextToAll("%t", "duckhunt_next_nc");
 }
 
 public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
@@ -402,7 +400,7 @@ public Action:DuckHunt(Handle:timer)
 			CreateTimer( 0.0, ShowOverlayStart, client);
 		}
 	}
-	PrintCenterTextAll("%t", "duckhunt_start");
+	PrintHintTextToAll("%t", "duckhunt_start");
 	CPrintToChatAll("%t %t", "duckhunt_tag" , "duckhunt_start");
 	SJD_OpenDoors();
 	TruceTimer = null;
@@ -425,8 +423,8 @@ public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 		}
 		if (TruceTimer != null) KillTimer(TruceTimer);
 		
-		if (winner == 2) PrintCenterTextAll("%t", "duckhunt_twin");
-		if (winner == 3) PrintCenterTextAll("%t", "duckhunt_ctwin");
+		if (winner == 2) PrintHintTextToAll("%t", "duckhunt_twin");
+		if (winner == 3) PrintHintTextToAll("%t", "duckhunt_ctwin");
 		IsDuckHunt = false;
 		StartDuckHunt = false;
 		DuckHuntRound = 0;

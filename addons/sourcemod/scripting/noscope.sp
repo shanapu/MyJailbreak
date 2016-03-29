@@ -85,10 +85,8 @@ public void OnPluginStart()
 	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_noscope_overlaystart_path", "overlays/MyJailbreak/ansage3" , "Path to the start Overlay DONT TYPE .vmt or .vft");
 	gc_bTag = AutoExecConfig_CreateConVar("sm_noscope_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	
-	AutoExecConfig_CacheConvars();
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
-	AutoExecConfig(true, "MyJailbreak_NoScope");
 	
 	//Hooks
 	HookEvent("round_start", RoundStart);
@@ -263,7 +261,7 @@ void StartNextRound()
 	SetCvar("sm_catch_enable", 0);
 	SetCvar("sm_duckhunt_enable", 0);
 	CPrintToChatAll("%t %t", "noscope_tag" , "noscope_next");
-	PrintCenterTextAll("%t", "noscope_next_nc");
+	PrintHintTextToAll("%t", "noscope_next_nc");
 
 }
 
@@ -419,7 +417,7 @@ public Action:NoScope(Handle:timer)
 			CreateTimer( 0.0, ShowOverlayStart, client);
 		}
 	}
-	PrintCenterTextAll("%t", "noscope_start");
+	PrintHintTextToAll("%t", "noscope_start");
 	CPrintToChatAll("%t %t", "noscope_tag" , "noscope_start");
 	
 	TruceTimer = null;
@@ -439,8 +437,8 @@ public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 		}
 		
 		if (TruceTimer != null) KillTimer(TruceTimer);
-		if (winner == 2) PrintCenterTextAll("%t", "noscope_twin");
-		if (winner == 3) PrintCenterTextAll("%t", "noscope_ctwin");
+		if (winner == 2) PrintHintTextToAll("%t", "noscope_twin");
+		if (winner == 3) PrintHintTextToAll("%t", "noscope_ctwin");
 		IsNoScope = false;
 		StartNoScope = false;
 		NoScopeRound = 0;

@@ -3,8 +3,7 @@ bugs:
 - [ ] can use weapon menu on first round with plugin disabled?!´
 
 must:
-- [ ] zombie: knockbackfix
-- [x] zombie: define zombie model
+
 - [ ] customizeable jailbreak menu
 - [x] duckhunt: chicken thirdperson
 - [x] all days: remember mp_roundtime for end // https://wiki.alliedmods.net/ConVars_(SourceMod_Scripting)#Using.2FChanging_Values
@@ -17,6 +16,8 @@ must:
 - [ ] new day: decoy/flash 1hp
 - [x] catch: freeze sound & overlay
 - [x] catch: sprint build in
+- [ ] zombie: knockbackfix
+- [x] zombie: define zombie model
 - [x] warden: unvote
 - [x] warden: model
 - [x] warden: allow unvote

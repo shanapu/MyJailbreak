@@ -88,10 +88,8 @@ public void OnPluginStart()
 	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_zombie_overlaystart_path", "overlays/MyJailbreak/ansage3" , "Path to the start Overlay DONT TYPE .vmt or .vft");
 	gc_bTag = AutoExecConfig_CreateConVar("sm_zombie_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	
-	AutoExecConfig_CacheConvars();
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
-	AutoExecConfig(true, "MyJailbreak_Zombie");
 	
 	//Hooks
 	HookEvent("round_start", RoundStart);
@@ -273,7 +271,7 @@ void StartNextRound()
 	SetCvar("sm_catch_enable", 0);
 	SetCvar("sm_noscope_enable", 0);
 	CPrintToChatAll("%t %t", "zombie_tag" , "zombie_next");
-	PrintCenterTextAll("%t", "zombie_next_nc");
+	PrintHintTextToAll("%t", "zombie_next_nc");
 }
 
 public Action:OnWeaponCanUse(client, weapon)
@@ -408,7 +406,7 @@ public Action:Zombie(Handle:timer)
 			CreateTimer( 0.0, ShowOverlayStart, client);
 		}
 	}
-	PrintCenterTextAll("%t", "zombie_start");
+	PrintHintTextToAll("%t", "zombie_start");
 	CPrintToChatAll("%t %t", "zombie_tag" , "zombie_start");
 	FreezeTimer = null;
 	
@@ -429,8 +427,8 @@ public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 		if (FreezeTimer != null) KillTimer(FreezeTimer);
 		
 		
-		if (winner == 2) PrintCenterTextAll("%t", "zombie_twin");
-		if (winner == 3) PrintCenterTextAll("%t", "zombie_ctwin");
+		if (winner == 2) PrintHintTextToAll("%t", "zombie_twin");
+		if (winner == 3) PrintHintTextToAll("%t", "zombie_ctwin");
 		IsZombie = false;
 		StartZombie = false;
 		ZombieRound = 0;

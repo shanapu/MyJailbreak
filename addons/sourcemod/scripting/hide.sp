@@ -91,10 +91,8 @@ public void OnPluginStart()
 	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_hide_overlaystart_path", "overlays/MyJailbreak/ansage3" , "Path to the start Overlay DONT TYPE .vmt or .vft");
 	gc_bTag = AutoExecConfig_CreateConVar("sm_hide_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	
-	AutoExecConfig_CacheConvars();
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
-	AutoExecConfig(true, "MyJailbreak_Hide");
 	
 	//Hooks
 	HookEvent("round_start", RoundStart);
@@ -277,7 +275,7 @@ void StartNextRound()
 	SetCvar("sm_noscope_enable", 0);
 	g_iVoteCount = 0;
 	CPrintToChatAll("%t %t", "hide_tag" , "hide_next");
-	PrintCenterTextAll("%t", "hide_next_nc");
+	PrintHintTextToAll("%t", "hide_next_nc");
 }
 
 public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
@@ -396,7 +394,7 @@ public Action:Freezed(Handle:timer)
 			CreateTimer( 0.0, ShowOverlayStart, client);
 		}
 	}
-	PrintCenterTextAll("%t", "hide_start");
+	PrintHintTextToAll("%t", "hide_start");
 	CPrintToChatAll("%t %t", "hide_tag" , "hide_start");
 	FreezeTimer = null;
 	return Plugin_Stop;
@@ -420,8 +418,8 @@ public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 		if (FreezeTimer != null) KillTimer(FreezeTimer);
 
 		
-		if (winner == 2) PrintCenterTextAll("%t", "hide_twin");
-		if (winner == 3) PrintCenterTextAll("%t", "hide_ctwin");
+		if (winner == 2) PrintHintTextToAll("%t", "hide_twin");
+		if (winner == 3) PrintHintTextToAll("%t", "hide_ctwin");
 		IsHide = false;
 		StartHide = false;
 		HideRound = 0;

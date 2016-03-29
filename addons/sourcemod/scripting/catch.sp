@@ -104,10 +104,8 @@ public void OnPluginStart()
 	0, true, 1.0, true, 30.0);
 	gc_bTag = AutoExecConfig_CreateConVar("sm_catch_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	
-	AutoExecConfig_CacheConvars();
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
-	AutoExecConfig(true, "MyJailbreak_Catch");
 	
 	//Hooks
 	HookEvent("round_start", RoundStart);
@@ -314,7 +312,7 @@ void StartNextRound()
 	SetCvar("sm_war_enable", 0);
 	SetCvar("sm_noscope_enable", 0);
 	CPrintToChatAll("%t %t", "catch_tag" , "catch_next");
-	PrintCenterTextAll("%t", "catch_next_nc");
+	PrintHintTextToAll("%t", "catch_next_nc");
 }
 
 public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
@@ -372,7 +370,7 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 						SendPanelToClient(CatchMenu, client, Pass, 15);
 					}
 				}
-				PrintCenterTextAll("%t", "catch_start");
+				PrintHintTextToAll("%t", "catch_start");
 				CPrintToChatAll("%t %t", "catch_tag" , "catch_start");
 			}
 	}
@@ -493,8 +491,8 @@ public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 			
 		}
 		
-		if (winner == 2) PrintCenterTextAll("%t", "catch_twin");
-		if (winner == 3) PrintCenterTextAll("%t", "catch_ctwin");
+		if (winner == 2) PrintHintTextToAll("%t", "catch_twin");
+		if (winner == 3) PrintHintTextToAll("%t", "catch_ctwin");
 		IsCatch = false;
 		StartCatch = false;
 		CatchRound = 0;
