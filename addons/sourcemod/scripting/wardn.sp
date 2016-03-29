@@ -142,10 +142,8 @@ public void OnPluginStart()
 	gc_sModelPath = AutoExecConfig_CreateConVar("sm_warden_model_path", "models/player/custom_player/legacy/security.mdl", "Path to the model for zombies.");
 	gc_bTag = AutoExecConfig_CreateConVar("sm_warden_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", 0, true, 0.0, true, 1.0);
 	
-	AutoExecConfig_CacheConvars();
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
-	AutoExecConfig(true, "MyJailbreak_warden");
 	
 	//Hooks
 	HookEvent("round_start", Event_RoundStart);
