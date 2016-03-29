@@ -4,7 +4,6 @@
 #include <cstrike>
 #include <sdkhooks>
 #include <wardn>
-#include <multicolors>
 #include <emitsoundany>
 #include <smartjaildoors>
 #include <smlib>
