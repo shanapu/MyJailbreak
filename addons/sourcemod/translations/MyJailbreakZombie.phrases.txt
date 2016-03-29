@@ -16,7 +16,25 @@
 		"en"		"Terroist surived"
 		
 	}
+		"zombie_voting"
+	{
+	"#format"	""
+		"en"		"Player Voting for zombie is disabled"
+		
+	}
+	"zombie_setbywarden"
+	{
+	"#format"	""
+		"en"		"Set zombie by Warden is disabled"
+		
+	}
 	
+	"zombie_setbyadmin"
+	{
+	"#format"	""
+		"en"		"Set zombie by admin is disabled"
+		
+	}
 	"zombie_ctwin"
 	{
 		"#format"	""
@@ -32,6 +50,12 @@
 	}
 	
 	"zombie_next"
+	{
+		"#format"	""
+		"en"		"Next round is zombie"
+		
+	}
+		"zombie_next_nc"
 	{
 		"#format"	""
 		"en"		"Next round is zombie"

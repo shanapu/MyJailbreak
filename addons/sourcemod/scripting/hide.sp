@@ -20,10 +20,17 @@ bool StartHide = false;
 //ConVars
 ConVar gc_bPlugin;
 ConVar gc_bTag;
+ConVar gc_bSetW;
+ConVar gc_bSetA;
+ConVar gc_bVote;
+ConVar gc_bOverlays;
+ConVar gc_bFreezeHider;
 ConVar gc_iRoundTime;
 ConVar gc_iRoundLimits;
+ConVar gc_iRoundWait;
 ConVar gc_iFreezeTime;
 ConVar g_iSetRoundTime;
+ConVar gc_sOverlayStart;
 
 //Integers
 int g_iOldRoundTime;
@@ -40,6 +47,7 @@ Handle UseCvar;
 
 //Characters
 char voted[1500];
+char g_sOverlayStart[256];
 
 //Float
 float mapFogStart = 0.0;
@@ -71,13 +79,24 @@ public void OnPluginStart()
 	AutoExecConfig_SetCreateFile(true);
 	AutoExecConfig_CreateConVar("sm_hide_version", "PLUGIN_VERSION", "The version of the SourceMod plugin MyJailBreak - War", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_hide_enable", "1", "0 - disabled, 1 - enable war");
+	gc_bSetW = AutoExecConfig_CreateConVar("sm_hide_setw", "1", "0 - disabled, 1 - allow warden to set hide round", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	gc_bSetA = AutoExecConfig_CreateConVar("sm_hide_seta", "1", "0 - disabled, 1 - allow admin to set hide round", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	gc_bVote = AutoExecConfig_CreateConVar("sm_hide_vote", "1", "0 - disabled, 1 - allow player to vote for hide round", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	gc_bFreezeHider = AutoExecConfig_CreateConVar("sm_hide_freezehider", "1", "0 - disabled, 1 - enable freeze hider when hidetime gone");
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_hide_roundtime", "5", "Round time for a single war round");
 	g_iSetRoundTime = FindConVar("mp_roundtime");
-	gc_iFreezeTime = AutoExecConfig_CreateConVar("sm_hide_g_iFreezeTime", "30", "Time freeze T");
+	gc_iFreezeTime = AutoExecConfig_CreateConVar("sm_hide_hidetime", "30", "Hide freeze T");
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
 	gc_iRoundLimits = AutoExecConfig_CreateConVar("sm_hide_roundsnext", "3", "Rounds until event can be started again.");
 	g_iRoundLimits = gc_iRoundLimits.IntValue;
+	gc_iRoundWait = AutoExecConfig_CreateConVar("sm_hide_roundwait", "3", "Rounds until event can be started after mapchange.", FCVAR_NOTIFY, true, 0.0, true, 255.0);
 	gc_bTag = AutoExecConfig_CreateConVar("sm_hide_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	gc_bOverlays = AutoExecConfig_CreateConVar("sm_hide_overlays", "1", "0 - disabled, 1 - enable overlays", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	gc_sOverlayStart = AutoExecConfig_CreateConVar("sm_hide_overlaystart_path", "overlays/MyJailbreak/ansage3" , "Path to the start Overlay DONT TYPE .vmt or .vft");
+	gc_sOverlayStart.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
+	HookConVarChange(gc_sOverlayStart, OnSettingChanged);
+	
+	
 	AutoExecConfig_CacheConvars();
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
@@ -93,16 +112,61 @@ public void OnPluginStart()
 	HideRound = 0;
 }
 
+void PrecacheOverlayAnyDownload(char[] sOverlay)
+{
+	if(gc_bOverlays.BoolValue)	
+	{
+	char sBufferVmt[256];
+	char sBufferVtf[256];
+	Format(sBufferVmt, sizeof(sBufferVmt), "%s.vmt", sOverlay);
+	Format(sBufferVtf, sizeof(sBufferVtf), "%s.vtf", sOverlay);
+	PrecacheDecal(sBufferVmt, true);
+	PrecacheDecal(sBufferVtf, true);
+	Format(sBufferVmt, sizeof(sBufferVmt), "materials/%s.vmt", sOverlay);
+	Format(sBufferVtf, sizeof(sBufferVtf), "materials/%s.vtf", sOverlay);
+	AddFileToDownloadsTable(sBufferVmt);
+	AddFileToDownloadsTable(sBufferVtf);
+	}
+}
 
+public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
+{
+	if(convar == gc_sOverlayStart)
+	{
+		strcopy(g_sOverlayStart, sizeof(g_sOverlayStart), newValue);
+	}
+}
+
+public Action ShowOverlayStart( Handle timer, any client ) {
+	
+	if(gc_bOverlays.BoolValue)
+	{
+	int iFlag = GetCommandFlags( "r_screenoverlay" ) & ( ~FCVAR_CHEAT ); 
+	SetCommandFlags( "r_screenoverlay", iFlag ); 
+	ClientCommand( client, "r_screenoverlay \"%s.vtf\"", g_sOverlayStart);
+	
+	 CreateTimer( 2.0, DeleteOverlay, client );
+	}
+	return Plugin_Continue;
+	
+}
+
+public Action  DeleteOverlay( Handle timer, any client ) {
+	int iFlag = GetCommandFlags( "r_screenoverlay" ) & ( ~FCVAR_CHEAT ); 
+	SetCommandFlags( "r_screenoverlay", iFlag ); 
+	ClientCommand( client, "r_screenoverlay \"\"" );
+	
+	return Plugin_Continue;
+}
 public void OnMapStart()
 {
 
-
+	PrecacheOverlayAnyDownload(g_sOverlayStart);
 	VoteCount = 0;
 	HideRound = 0;
 	IsHide = false;
 	StartHide = false;
-	g_iRoundLimits = 0;
+	g_iRoundLimits = gc_iRoundWait.IntValue;
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
 
 	int ent; 
@@ -123,7 +187,7 @@ public void OnMapStart()
 public void OnConfigsExecuted()
 {
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
-	g_iRoundLimits = 0;
+	g_iRoundLimits = gc_iRoundWait.IntValue;
 	
 	if (gc_bTag.BoolValue)
 	{
@@ -183,6 +247,7 @@ public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 	{
 	g_iOldRoundTime = g_iSetRoundTime.IntValue;
 	g_iSetRoundTime.IntValue = gc_iRoundTime.IntValue;
+
 	}
 }
 
@@ -190,25 +255,50 @@ public Action SetHide(int client,int args)
 {
 	if (gc_bPlugin.BoolValue)	
 	{
-	if (warden_iswarden(client) || CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
+	if (warden_iswarden(client))
 	{
+	if (gc_bSetW.BoolValue)	
+	{
+	if (!IsHide && !StartHide)
+				{
 	if (g_iRoundLimits == 0)
 	{
+		StartNextRound();
+	}else CPrintToChat(client, "%t %t", "hide_tag" , "hide_wait", g_iRoundLimits);
+	}
+				else CPrintToChat(client, "%t %t", "hide_tag" , "hide_progress");
+	}else CPrintToChat(client, "%t %t", "hide_tag" , "hide_setbywarden");
+	}else if (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
+	if (warden_iswarden(client))
+	{
+	if (gc_bSetA.BoolValue)	
+	{
+	if (!IsHide && !StartHide)
+				{
+	if (g_iRoundLimits == 0)
+	{
+		StartNextRound();
+	}else CPrintToChat(client, "%t %t", "hide_tag" , "hide_wait", g_iRoundLimits);
+	}
+				else CPrintToChat(client, "%t %t", "hide_tag" , "hide_progress");
+	}else CPrintToChat(client, "%t %t", "hide_tag" , "hide_setbyadmin");
+	}else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
+	}else CPrintToChat(client, "%t %t", "hide_tag" , "hide_disabled");
+}
+
+void StartNextRound()
+{
 	StartHide = true;
 	g_iRoundLimits = gc_iRoundLimits.IntValue;
-	
 	SetCvar("sm_war_enable", 0);
 	SetCvar("sm_ffa_enable", 0);
 	SetCvar("sm_zombie_enable", 0);
 	SetCvar("sm_duckhunt_enable", 0);
 	SetCvar("sm_catch_enable", 0);
 	SetCvar("sm_noscope_enable", 0);
-		
 	VoteCount = 0;
 	CPrintToChatAll("%t %t", "hide_tag" , "hide_next");
-	}else CPrintToChat(client, "%t %t", "hide_tag" , "hide_wait", g_iRoundLimits);
-	}else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
-	}
+	PrintCenterTextAll("%t", "hide_next_nc");
 }
 
 public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
@@ -318,11 +408,18 @@ public Action:Freezed(Handle:timer)
 				}
 				if (GetClientTeam(client) == 2)
 				{
-				SetEntityMoveType(client, MOVETYPE_NONE);
-				SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
-				SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 0.4);
+					if (gc_bFreezeHider)
+					{
+						SetEntityMoveType(client, MOVETYPE_NONE);
+					}
+					else
+					{
+						SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 0.5);
+					}
+					SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
 				}
 			}
+			CreateTimer( 0.0, ShowOverlayStart, client);
 		}
 	}
 	PrintCenterTextAll("%t", "hide_start");
@@ -354,13 +451,14 @@ public Action VoteHide(int client,int args)
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
 	
 	if (gc_bPlugin.BoolValue)
-	{	
+	{	if (gc_bVote.BoolValue)
+		{	
 		if (GetTeamClientCount(3) > 0)
 		{
-			if (g_iRoundLimits == 0)
+			if (!IsHide && !StartHide)
+				{if (g_iRoundLimits == 0)
 			{
-				if (!IsHide && !StartHide)
-				{
+				
 					if (StrContains(voted, steamid, true) == -1)
 					{
 	int playercount = (GetClientCount(true) / 2);
@@ -373,32 +471,21 @@ public Action VoteHide(int client,int args)
 	
 	if (VoteCount > playercount)
 	{
-		StartHide = true;
-		
-		SetCvar("sm_war_enable", 0);
-		SetCvar("sm_ffa_enable", 0);
-		SetCvar("sm_zombie_enable", 0);
-		SetCvar("sm_duckhunt_enable", 0);
-		SetCvar("sm_catch_enable", 0);
-		SetCvar("sm_noscope_enable", 0);
-		
-		g_iRoundLimits = gc_iRoundLimits.IntValue;
-		VoteCount = 0;
-		
-		CPrintToChatAll("%t %t", "hide_tag" , "hide_next");
+		StartNextRound();
 	}
-	else CPrintToChatAll("%t %t", "hide_tag" , "hide_need", Missing);
+	else CPrintToChatAll("%t %t", "hide_tag" , "hide_need", Missing, client);
 	
 					}
 					else CPrintToChat(client, "%t %t", "hide_tag" , "hide_voted");
 				}
-				else CPrintToChat(client, "%t %t", "hide_tag" , "hide_progress");
-			}
 			else CPrintToChat(client, "%t %t", "hide_tag" , "hide_wait", g_iRoundLimits);
+				}
+				else CPrintToChat(client, "%t %t", "hide_tag" , "hide_progress");
+			
 		}
 		else CPrintToChat(client, "%t %t", "hide_tag" , "hide_minct");
-	}
-	else CPrintToChat(client, "%t %t", "hide_tag" , "hide_disabled");
+	}else CPrintToChat(client, "%t %t", "hide_tag" , "hide_voting");
+	}else CPrintToChat(client, "%t %t", "hide_tag" , "hide_disabled");
 }
 
 

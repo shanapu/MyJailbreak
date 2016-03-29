@@ -7,9 +7,9 @@
 	
 	"war_need"  //{default}, {darkred}, {green}, {lightgreen}, "{darkred}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
 	{
-		"#format"	"{1:i}"
+		"#format"	"{1:i},{2:N}"
 		"en"		"{1} votes left to {darkred}war"
-		"de"		"noch {1} votes bis {darkred}krieg{default} beginnt"
+		"de"		"{2} hat gevotet. jetzt noch {1} votes bis {darkred}krieg{default} beginnt"
 	}
 	"war_twin"
 	{
@@ -39,7 +39,11 @@
 		"#format"	""
 		"en"		"Next round is {darkred}war"
 	}
-	
+		"war_next_nc" 
+	{
+		"#format"	""
+		"en"		"Next round is war"
+	}
 	
 	"war_start" //{default}, {darkred}, {green}, {lightgreen}, "{darkred}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
 	{
@@ -81,6 +85,25 @@
 	{
 	"#format"	"{1:i}"
 		"en"		"{1} seconds until damage enabled"
+		
+	}
+	"war_voting"
+	{
+	"#format"	""
+		"en"		"Player Voting for war is disabled"
+		
+	}
+	"war_setbywarden"
+	{
+	"#format"	""
+		"en"		"Set war by Warden is disabled"
+		
+	}
+	
+	"war_setbyadmin"
+	{
+	"#format"	""
+		"en"		"Set war by admin is disabled"
 		
 	}
 	"war_timetohide"

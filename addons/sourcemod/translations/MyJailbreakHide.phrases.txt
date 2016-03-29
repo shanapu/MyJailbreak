@@ -30,7 +30,13 @@
 		"en"		"hideinthedark ended"
 		
 	}
-	
+		
+	"hide_next_nc"
+	{
+		"#format"	""
+		"en"		"Next round is hideinthedark"
+		
+	}
 	"hide_next"
 	{
 		"#format"	""
@@ -73,8 +79,25 @@
 		"en"		"hideinthedark is disabled."
 		
 	}
+	"hide_voting"
+	{
+	"#format"	""
+		"en"		"Player Voting for hide is disabled"
+		
+	}
+	"hide_setbywarden"
+	{
+	"#format"	""
+		"en"		"Set hide by Warden is disabled"
+		
+	}
 	
-
+	"hide_setbyadmin"
+	{
+	"#format"	""
+		"en"		"Set hide by admin is disabled"
+		
+	}
 	"hide_timetohide"
 	{
 	"#format"	"{1:i}"

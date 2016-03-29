@@ -18,11 +18,18 @@ char model[256] = "models/player/custom_player/legacy/tm_phoenix_heavy.mdl";
 
 ConVar gc_bPlugin;
 ConVar gc_bTag;
+ConVar gc_bSetW;
+ConVar gc_bSetA;
+ConVar gc_bVote;
+
 ConVar gc_iRoundLimits;
 ConVar gc_iRoundTime;
+ConVar gc_iRoundWait;
 ConVar gc_iTruceTime;
 ConVar g_iSetRoundTime;
-
+ConVar gc_bOverlays;
+ConVar gc_sOverlayStart;
+char g_sOverlayStart[256];
 int g_iOldRoundTime;
 
 
@@ -67,16 +74,25 @@ public void OnPluginStart()
 	AutoExecConfig_SetFile("MyJailbreak_duckhunt");
 	AutoExecConfig_SetCreateFile(true);
 	
-	AutoExecConfig_CreateConVar("sm_duckhunt_version", "PLUGIN_VERSION", "The version of the SourceMod plugin MyJailBreak - War", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
-	gc_bPlugin = AutoExecConfig_CreateConVar("sm_duckhunt_enable", "1", "0 - disabled, 1 - enable war");
-	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_duckhunt_roundtime", "5", "Round time for a single war round");
+	AutoExecConfig_CreateConVar("sm_duckhunt_version", "PLUGIN_VERSION", "The version of the SourceMod plugin MyJailBreak - duckhunt", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
+	gc_bPlugin = AutoExecConfig_CreateConVar("sm_duckhunt_enable", "1", "0 - disabled, 1 - enable duckhunt");
+	gc_bSetW = AutoExecConfig_CreateConVar("sm_duckhunt_setw", "1", "0 - disabled, 1 - allow warden to set duckhunt round", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	gc_bSetA = AutoExecConfig_CreateConVar("sm_duckhunt_seta", "1", "0 - disabled, 1 - allow admin to set duckhunt round", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	gc_bVote = AutoExecConfig_CreateConVar("sm_duckhunt_vote", "1", "0 - disabled, 1 - allow player to vote for duckhunt", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_duckhunt_roundtime", "5", "Round time for a single duckhunt round");
 	g_iSetRoundTime = FindConVar("mp_roundtime");
 	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_duckhunt_nodamage", "15", "Time freeze duckhunts");
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	gc_iRoundLimits = AutoExecConfig_CreateConVar("sm_duckhunt_roundsnext", "3", "Rounds until event can be started again.");
 	g_iRoundLimits = gc_iRoundLimits.IntValue;
+	gc_iRoundWait = AutoExecConfig_CreateConVar("sm_duckhunt_roundwait", "3", "Rounds until event can be started after mapchange.", FCVAR_NOTIFY, true, 0.0, true, 255.0);
 	gc_bTag = AutoExecConfig_CreateConVar("sm_duckhunt_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-
+	gc_bOverlays = AutoExecConfig_CreateConVar("sm_duckhunt_overlays", "1", "0 - disabled, 1 - enable overlays", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	gc_sOverlayStart = AutoExecConfig_CreateConVar("sm_duckhunt_overlaystart_path", "overlays/MyJailbreak/ansage3" , "Path to the start Overlay DONT TYPE .vmt or .vft");
+	gc_sOverlayStart.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
+	HookConVarChange(gc_sOverlayStart, OnSettingChanged);
+	
+	
 	AutoExecConfig_CacheConvars();
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
@@ -102,7 +118,52 @@ public void OnPluginStart()
 
 }
 
+void PrecacheOverlayAnyDownload(char[] sOverlay)
+{
+	if(gc_bOverlays.BoolValue)	
+	{
+	char sBufferVmt[256];
+	char sBufferVtf[256];
+	Format(sBufferVmt, sizeof(sBufferVmt), "%s.vmt", sOverlay);
+	Format(sBufferVtf, sizeof(sBufferVtf), "%s.vtf", sOverlay);
+	PrecacheDecal(sBufferVmt, true);
+	PrecacheDecal(sBufferVtf, true);
+	Format(sBufferVmt, sizeof(sBufferVmt), "materials/%s.vmt", sOverlay);
+	Format(sBufferVtf, sizeof(sBufferVtf), "materials/%s.vtf", sOverlay);
+	AddFileToDownloadsTable(sBufferVmt);
+	AddFileToDownloadsTable(sBufferVtf);
+	}
+}
 
+public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
+{
+	if(convar == gc_sOverlayStart)
+	{
+		strcopy(g_sOverlayStart, sizeof(g_sOverlayStart), newValue);
+	}
+}
+
+public Action ShowOverlayStart( Handle timer, any client ) {
+	
+	if(gc_bOverlays.BoolValue)
+	{
+	int iFlag = GetCommandFlags( "r_screenoverlay" ) & ( ~FCVAR_CHEAT ); 
+	SetCommandFlags( "r_screenoverlay", iFlag ); 
+	ClientCommand( client, "r_screenoverlay \"%s.vtf\"", g_sOverlayStart);
+	
+	 CreateTimer( 2.0, DeleteOverlay, client );
+	}
+	return Plugin_Continue;
+	
+}
+
+public Action  DeleteOverlay( Handle timer, any client ) {
+	int iFlag = GetCommandFlags( "r_screenoverlay" ) & ( ~FCVAR_CHEAT ); 
+	SetCommandFlags( "r_screenoverlay", iFlag ); 
+	ClientCommand( client, "r_screenoverlay \"\"" );
+	
+	return Plugin_Continue;
+}
 
 public void OnMapStart()
 {
@@ -112,17 +173,17 @@ public void OnMapStart()
 	DuckHuntRound = 0;
 	IsDuckHunt = false;
 	StartDuckHunt = false;
-	g_iRoundLimits = 0;
+	g_iRoundLimits = gc_iRoundWait.IntValue;
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	PrecacheModel("models/chicken/chicken.mdl", true);
 	PrecacheModel(model, true);
-	
+	PrecacheOverlayAnyDownload(g_sOverlayStart);
 }
 
 public void OnConfigsExecuted()
 {
 	g_iTruceTime = gc_iTruceTime.IntValue;
-	g_iRoundLimits = 0;
+	g_iRoundLimits = gc_iRoundWait.IntValue;
 	
 	if (gc_bTag.BoolValue)
 	{
@@ -181,6 +242,7 @@ public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 	{
 	g_iOldRoundTime = g_iSetRoundTime.IntValue;
 	g_iSetRoundTime.IntValue = gc_iRoundTime.IntValue;
+
 	}
 	
 }
@@ -189,11 +251,37 @@ public Action SetDuckHunt(int client,int args)
 {
 	if (gc_bPlugin.BoolValue)	
 	{
-	if (warden_iswarden(client) || CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true)) 
+	if (warden_iswarden(client)) 
+	{
+	if (gc_bSetW.BoolValue)	
+	{
+	if (!IsDuckHunt && !StartDuckHunt)
 	{
 	if (g_iRoundLimits == 0)
 	{
-	StartDuckHunt = true;
+	StartNextRound();
+	}else CPrintToChat(client, "%t %t", "duckhunt_tag" , "duckhunt_wait", g_iRoundLimits);
+	}else CPrintToChat(client, "%t %t", "duckhunt_tag" , "duckhunt_progress");
+	}else CPrintToChat(client, "%t %t", "warden_tag" , "duckhunt_setbywarden");
+	}else if (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true)) 
+	{
+	if (gc_bSetA.BoolValue)	
+	{
+	if (!IsDuckHunt && !StartDuckHunt)
+	{
+	if (g_iRoundLimits == 0)
+	{
+	StartNextRound();
+	}else CPrintToChat(client, "%t %t", "duckhunt_tag" , "duckhunt_wait", g_iRoundLimits);
+	}else CPrintToChat(client, "%t %t", "duckhunt_tag" , "duckhunt_progress");
+	}else CPrintToChat(client, "%t %t", "duckhunt_tag" , "duckhunt_setbyadmin");
+	}else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
+	}else CPrintToChat(client, "%t %t", "duckhunt_tag" , "duckhunt_disabled");
+}
+
+void StartNextRound()
+{
+StartDuckHunt = true;
 	g_iRoundLimits = gc_iRoundLimits.IntValue;
 	VoteCount = 0;
 	SetCvar("sm_war_enable", 0);
@@ -203,12 +291,9 @@ public Action SetDuckHunt(int client,int args)
 	SetCvar("sm_catch_enable", 0);
 	SetCvar("sm_noscope_enable", 0);
 	CPrintToChatAll("%t %t", "duckhunt_tag" , "duckhunt_next");
-	}else CPrintToChat(client, "%t %t", "duckhunt_tag" , "duckhunt_wait", g_iRoundLimits);
-	}else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
-	}
+	PrintCenterTextAll("%t", "duckhunt_next_nc");
+
 }
-
-
 
 public OnClientPutInServer(client)
 {
@@ -356,11 +441,13 @@ public Action:DuckHunt(Handle:timer)
 				SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
 				}
 			}
+			CreateTimer( 0.0, ShowOverlayStart, client);
 		}
 	}
 	PrintCenterTextAll("%t", "duckhunt_start");
 	CPrintToChatAll("%t %t", "duckhunt_tag" , "duckhunt_start");
 	SJD_OpenDoors();
+	
 
 
 	
@@ -375,7 +462,8 @@ public Action VoteDuckHunt(int client,int args)
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
 	
 	if (gc_bPlugin.BoolValue)
-	{	
+	{	if (gc_bVote.BoolValue)
+		{
 		if (GetTeamClientCount(3) > 0)
 		{
 			if (g_iRoundLimits == 0)
@@ -394,18 +482,7 @@ public Action VoteDuckHunt(int client,int args)
 	
 	if (VoteCount > playercount)
 	{
-		StartDuckHunt = true;
-		
-		SetCvar("sm_war_enable", 0);
-		SetCvar("sm_zombie_enable", 0);
-		SetCvar("sm_ffa_enable", 0);
-		SetCvar("sm_hide_enable", 0);
-		SetCvar("sm_catch_enable", 0);
-		SetCvar("sm_noscope_enable", 0);
-		g_iRoundLimits = gc_iRoundLimits.IntValue;
-		VoteCount = 0;
-		
-		CPrintToChatAll("%t %t", "duckhunt_tag" , "duckhunt_next");
+		StartNextRound();
 	}
 	else CPrintToChatAll("%t %t", "duckhunt_tag" , "duckhunt_need", Missing);
 	
@@ -417,8 +494,8 @@ public Action VoteDuckHunt(int client,int args)
 			else CPrintToChat(client, "%t %t", "duckhunt_tag" , "duckhunt_wait", g_iRoundLimits);
 		}
 		else CPrintToChat(client, "%t %t", "duckhunt_tag" , "duckhunt_minct");
-	}
-	else CPrintToChat(client, "%t %t", "duckhunt_tag" , "duckhunt_disabled");
+		}else CPrintToChat(client, "%t %t", "duckhunt_tag" , "duckhunt_voting");
+	}else CPrintToChat(client, "%t %t", "duckhunt_tag" , "duckhunt_disabled");
 }
 
 

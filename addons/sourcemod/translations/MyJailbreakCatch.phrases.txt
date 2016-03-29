@@ -31,14 +31,43 @@
 		"en"		"catch ended"
 		
 	}
+	"catch_voting"
+	{
+	"#format"	""
+		"en"		"Player Voting for war is disabled"
+		
+	}
+	"catch_setbywarden"
+	{
+	"#format"	""
+		"en"		"Set war by Warden is disabled"
+		
+	}
 	
+	"catch_setbyadmin"
+	{
+	"#format"	""
+		"en"		"Set war by admin is disabled"
+		
+	}
 	"catch_next"
 	{
 		"#format"	""
 		"en"		"Next round is catch"
 		
 	}
-	
+		"catch_sprint"
+	{
+		"#format"	""
+		"en"		"You are now using {blue}Sprint!"
+		
+	}
+		"catch_next_nc"
+	{
+		"#format"	""
+		"en"		"Next round is catch"
+		
+	}
 	
 	"catch_start"
 	{
@@ -127,7 +156,7 @@
 		"en"		"you must wait {1} more rounds"
 		"de"		"Du musst noch {1} Runden warten"
 	}
-	"catch_end"
+	"catch_win"
 	{
 		"#format"	"{1:i}"
 		"en"		"All prisoners catched"

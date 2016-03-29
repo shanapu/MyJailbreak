@@ -30,6 +30,8 @@ ConVar gc_bSpawn;
 ConVar gc_bPlugin;
 ConVar gc_bTerror;
 ConVar gc_bCTerror;
+ConVar gc_bTA;
+ConVar gc_bHealth;
 
 enum weapons
 {
@@ -77,6 +79,8 @@ public void OnPluginStart()
 	gc_bTerror = AutoExecConfig_CreateConVar("sm_weapons_t", "0", "0 - disabled, 1 - enable weapons for T");
 	gc_bCTerror = AutoExecConfig_CreateConVar("sm_weapons_ct", "1", "0 - disabled, 1 - enable weapons for CT");
 	gc_bSpawn = AutoExecConfig_CreateConVar("sm_weapons_spawnmenu", "1", "0 - disabled, 1 - enable open menu on spawn");
+	gc_bTA = AutoExecConfig_CreateConVar("sm_weapons_warden_tagrenade", "1", "0 - disabled, 1 - enable open menu on spawn");
+	gc_bHealth = AutoExecConfig_CreateConVar("sm_weapons_warden_healthshot", "1", "0 - disabled, 1 - enable open menu on spawn");
 	gc_bTag = AutoExecConfig_CreateConVar("sm_weapons_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 
 	AutoExecConfig_CacheConvars();
@@ -480,8 +484,16 @@ GiveSavedWeapons(clientIndex)
 
 		if (warden_iswarden(clientIndex))
 		{
+		if (gc_bHealth .BoolValue)
+		{
 		GivePlayerItem(clientIndex, "weapon_healthshot");
+		CPrintToChat(clientIndex, "%t %t", "weapons_tag", "weapons_health");
+		}
+		if (gc_bTA.BoolValue)
+		{
 		GivePlayerItem(clientIndex, "weapon_tagrenade");
+		CPrintToChat(clientIndex, "%t %t", "weapons_tag", "weapons_ta");
+		}
 		}
 		
 		//GivePlayerItem(clientIndex, "weapon_decoy");

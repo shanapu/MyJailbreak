@@ -16,7 +16,25 @@
 		"en"		"a Terrorist surived"
 		
 	}
+		"noscope_voting"
+	{
+	"#format"	""
+		"en"		"Player Voting for noscope is disabled"
+		
+	}
+	"noscope_setbywarden"
+	{
+	"#format"	""
+		"en"		"Set noscope by Warden is disabled"
+		
+	}
 	
+	"noscope_setbyadmin"
+	{
+	"#format"	""
+		"en"		"Set noscope by admin is disabled"
+		
+	}
 	"noscope_ctwin"
 	{
 		"#format"	""
@@ -37,7 +55,12 @@
 		"en"		"Next round is noscope"
 		
 	}
-	
+		"noscope_next_nc"
+	{
+		"#format"	""
+		"en"		"Next round is noscope"
+		
+	}
 	
 	"noscope_start"
 	{

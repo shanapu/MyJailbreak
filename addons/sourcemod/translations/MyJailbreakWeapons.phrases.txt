@@ -35,6 +35,18 @@
 		"en"		"You will get your {purple} new weapon{default} next round"
 		"de"		"Du bekommst {purple}deine neue Waffe{default} in der nächsten Runde."
 	}
+		"weapons_ta"  //{default}, {darkred}, {green}, {lightgreen}, "{darkred}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
+	{
+		"#format"	""
+		"en"		"You've got a {purple} TA grenade{default}"
+		"de"		"Du haste eine {purple}TA Granate{default} bekommen."
+	}
+		"weapons_health"  //{default}, {darkred}, {green}, {lightgreen}, "{darkred}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
+	{
+		"#format"	""
+		"en"		"You've got a {purple} healthshot{default}"
+		"de"		"Du haste eine {purple}healthshot{default} bekommen."
+	}
 	"weapons_info_Title"
 	{
 		"#format"	""

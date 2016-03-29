@@ -21,6 +21,10 @@ bool StartNoScope = false;
 //ConVars
 ConVar gc_bPlugin;
 ConVar gc_bTag;
+ConVar gc_bSetW;
+ConVar gc_iRoundWait;
+ConVar gc_bSetA;
+ConVar gc_bVote;
 ConVar gc_iRoundLimits;
 ConVar gc_iRoundTime;
 ConVar gc_iTruceTime;
@@ -42,6 +46,9 @@ Handle UseCvar;
 //Characters
 char voted[1500];
 
+ConVar gc_bOverlays;
+ConVar gc_sOverlayStart;
+char g_sOverlayStart[256];
 
 public Plugin myinfo = {
 	name = "MyJailbreak - NoScope",
@@ -64,15 +71,25 @@ public void OnPluginStart()
 	AutoExecConfig_SetFile("MyJailbreak_noscope");
 	AutoExecConfig_SetCreateFile(true);
 	
-	AutoExecConfig_CreateConVar("sm_noscope_version", "PLUGIN_VERSION", "The version of the SourceMod plugin MyJailBreak - War", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
-	gc_bPlugin = AutoExecConfig_CreateConVar("sm_noscope_enable", "1", "0 - disabled, 1 - enable war");
-	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_noscope_roundtime", "5", "Round time for a single war round");
+	AutoExecConfig_CreateConVar("sm_noscope_version", "PLUGIN_VERSION", "The version of the SourceMod plugin MyJailBreak - noscope", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
+	gc_bPlugin = AutoExecConfig_CreateConVar("sm_noscope_enable", "1", "0 - disabled, 1 - enable noscope");
+	gc_bSetW = AutoExecConfig_CreateConVar("sm_noscope_setw", "1", "0 - disabled, 1 - allow warden to set noscope round", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	gc_bSetA = AutoExecConfig_CreateConVar("sm_noscope_seta", "1", "0 - disabled, 1 - allow admin to set noscope round", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	gc_bVote = AutoExecConfig_CreateConVar("sm_noscope_vote", "1", "0 - disabled, 1 - allow player to vote for noscope", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_noscope_roundtime", "5", "Round time for a single noscope round");
 	g_iSetRoundTime = FindConVar("mp_roundtime");
 	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_noscope_g_iTruceTime", "15", "Time freeze noscopes");
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	gc_iRoundLimits = AutoExecConfig_CreateConVar("sm_noscope_roundsnext", "3", "Rounds until event can be started again.");
 	g_iRoundLimits = gc_iRoundLimits.IntValue;
+	gc_iRoundWait = AutoExecConfig_CreateConVar("sm_noscope_roundwait", "3", "Rounds until event can be started after mapchange.", FCVAR_NOTIFY, true, 0.0, true, 255.0);
 	gc_bTag = AutoExecConfig_CreateConVar("sm_noscope_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	gc_bOverlays = AutoExecConfig_CreateConVar("sm_noscope_overlays", "1", "0 - disabled, 1 - enable overlays", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	gc_sOverlayStart = AutoExecConfig_CreateConVar("sm_noscope_overlaystart_path", "overlays/MyJailbreak/ansage3" , "Path to the start Overlay DONT TYPE .vmt or .vft");
+	gc_sOverlayStart.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
+	HookConVarChange(gc_sOverlayStart, OnSettingChanged);
+	
+	
 	
 	g_iSetRoundTime = FindConVar("mp_roundtime");
 
@@ -94,16 +111,61 @@ public void OnPluginStart()
 	m_flNextSecondaryAttack = FindSendPropInfo("CBaseCombatWeapon", "m_flNextSecondaryAttack");
 }
 
+void PrecacheOverlayAnyDownload(char[] sOverlay)
+{
+	if(gc_bOverlays.BoolValue)	
+	{
+	char sBufferVmt[256];
+	char sBufferVtf[256];
+	Format(sBufferVmt, sizeof(sBufferVmt), "%s.vmt", sOverlay);
+	Format(sBufferVtf, sizeof(sBufferVtf), "%s.vtf", sOverlay);
+	PrecacheDecal(sBufferVmt, true);
+	PrecacheDecal(sBufferVtf, true);
+	Format(sBufferVmt, sizeof(sBufferVmt), "materials/%s.vmt", sOverlay);
+	Format(sBufferVtf, sizeof(sBufferVtf), "materials/%s.vtf", sOverlay);
+	AddFileToDownloadsTable(sBufferVmt);
+	AddFileToDownloadsTable(sBufferVtf);
+	}
+}
 
+public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
+{
+	if(convar == gc_sOverlayStart)
+	{
+		strcopy(g_sOverlayStart, sizeof(g_sOverlayStart), newValue);
+	}
+}
+
+public Action ShowOverlayStart( Handle timer, any client ) {
+	
+	if(gc_bOverlays.BoolValue)
+	{
+	int iFlag = GetCommandFlags( "r_screenoverlay" ) & ( ~FCVAR_CHEAT ); 
+	SetCommandFlags( "r_screenoverlay", iFlag ); 
+	ClientCommand( client, "r_screenoverlay \"%s.vtf\"", g_sOverlayStart);
+	
+	 CreateTimer( 2.0, DeleteOverlay, client );
+	}
+	return Plugin_Continue;
+	
+}
+
+public Action  DeleteOverlay( Handle timer, any client ) {
+	int iFlag = GetCommandFlags( "r_screenoverlay" ) & ( ~FCVAR_CHEAT ); 
+	SetCommandFlags( "r_screenoverlay", iFlag ); 
+	ClientCommand( client, "r_screenoverlay \"\"" );
+	
+	return Plugin_Continue;
+}
 public void OnMapStart()
 {
-
+	PrecacheOverlayAnyDownload(g_sOverlayStart);
 
 	VoteCount = 0;
 	NoScopeRound = 0;
 	IsNoScope = false;
 	StartNoScope = false;
-	g_iRoundLimits = 0;
+	g_iRoundLimits = gc_iRoundWait.IntValue;
 	
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	
@@ -112,7 +174,7 @@ public void OnMapStart()
 public void OnConfigsExecuted()
 {
 	g_iTruceTime = gc_iTruceTime.IntValue;
-	g_iRoundLimits = 0;
+	g_iRoundLimits = gc_iRoundWait.IntValue;
 	
 	if (gc_bTag.BoolValue)
 	{
@@ -167,20 +229,47 @@ public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 	{
 	g_iOldRoundTime = g_iSetRoundTime.IntValue;
 	g_iSetRoundTime.IntValue = gc_iRoundTime.IntValue;
-	}
-	
+
 	for(int i = 1; i <= MaxClients; i++)
 	if(IsClientInGame(i)) SDKUnhook(i, SDKHook_PreThink, OnPreThink);
+	}
 }
 
 public Action SetNoScope(int client,int args)
 {
-	if (gc_bPlugin.BoolValue)	
+	if (gc_bPlugin.BoolValue)
 	{
-	if (warden_iswarden(client) || CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
+	if (warden_iswarden(client))
 	{
+	if (gc_bSetW.BoolValue)
+	{
+	if (!IsNoScope && !StartNoScope)
+				{
 	if (g_iRoundLimits == 0)
 	{
+		StartNextRound();
+	}else CPrintToChat(client, "%t %t", "noscope_tag" , "noscope_wait", g_iRoundLimits);
+	}else CPrintToChat(client, "%t %t", "noscope_tag" , "noscope_progress");
+	}else CPrintToChat(client, "%t %t", "warden_tag" , "nocscope_setbywarden");
+		
+	}else if (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
+	{
+	if (gc_bSetA.BoolValue)
+	{
+	if (!IsNoScope && !StartNoScope)
+				{
+	if (g_iRoundLimits == 0)
+	{
+		StartNextRound();
+	}else CPrintToChat(client, "%t %t", "noscope_tag" , "noscope_wait", g_iRoundLimits);
+	}else CPrintToChat(client, "%t %t", "noscope_tag" , "noscope_progress");
+	}else CPrintToChat(client, "%t %t", "nocscope_tag" , "noscope_setbyadmin");
+	}else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
+	}else CPrintToChat(client, "%t %t", "noscope_tag" , "noscope_disabled");
+}
+
+void StartNextRound()
+{
 	StartNoScope = true;
 	g_iRoundLimits = gc_iRoundLimits.IntValue;
 	VoteCount = 0;
@@ -191,9 +280,8 @@ public Action SetNoScope(int client,int args)
 	SetCvar("sm_catch_enable", 0);
 	SetCvar("sm_duckhunt_enable", 0);
 	CPrintToChatAll("%t %t", "noscope_tag" , "noscope_next");
-	}else CPrintToChat(client, "%t %t", "noscope_tag" , "noscope_wait", g_iRoundLimits);
-	}else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
-	}
+	PrintCenterTextAll("%t", "noscope_next_nc");
+
 }
 
 public OnClientPutInServer(client)
@@ -230,6 +318,8 @@ public Action:OnPreThink(client)
 
 stock MakeNoScope(weapon)
 {
+	if (IsNoScope == true)
+	{
 	if(IsValidEdict(weapon))
 	{
 		char classname[MAX_NAME_LENGTH];
@@ -242,6 +332,7 @@ stock MakeNoScope(weapon)
 		{
 			SetEntDataFloat(weapon, m_flNextSecondaryAttack, GetGameTime() + 1.0);
 		}
+	}
 	}
 }
 
@@ -361,6 +452,7 @@ public Action:NoScope(Handle:timer)
 				SetEntityGravity(client, 0.3);
 				}
 			}
+			CreateTimer( 0.0, ShowOverlayStart, client);
 		}
 	}
 	PrintCenterTextAll("%t", "noscope_start");
@@ -378,12 +470,15 @@ public Action VoteNoScope(int client,int args)
 	
 	if (gc_bPlugin.BoolValue)
 	{	
+		if (gc_bVote.BoolValue)
+		{	
 		if (GetTeamClientCount(3) > 0)
 		{
-			if (g_iRoundLimits == 0)
-			{
-				if (!IsNoScope && !StartNoScope)
+			if (!IsNoScope && !StartNoScope)
 				{
+				if (g_iRoundLimits == 0)
+			{
+				
 					if (StrContains(voted, steamid, true) == -1)
 					{
 						int playercount = (GetClientCount(true) / 2);
@@ -396,26 +491,18 @@ public Action VoteNoScope(int client,int args)
 						
 						if (VoteCount > playercount)
 						{
-							StartNoScope = true;
-							
-							g_iRoundLimits = gc_iRoundLimits.IntValue;
-							VoteCount = 0;
-							SetCvar("sm_war_enable", 0);
-							SetCvar("sm_zombie_enable", 0);
-							SetCvar("sm_ffa_enable", 0);
-							SetCvar("sm_hide_enable", 0);
-							SetCvar("sm_catch_enable", 0);
-							SetCvar("sm_duckhunt_enable", 0);
-							CPrintToChatAll("%t %t", "noscope_tag" , "noscope_next");
-						}else CPrintToChatAll("%t %t", "noscope_tag" , "noscope_need", Missing);
+							StartNextRound();
+						}else CPrintToChatAll("%t %t", "noscope_tag" , "noscope_need", Missing, client);
 					}
 					else CPrintToChat(client, "%t %t", "noscope_tag" , "noscope_voted");
 				}
-				else CPrintToChat(client, "%t %t", "noscope_tag" , "noscope_progress");
-			}
 			else CPrintToChat(client, "%t %t", "noscope_tag" , "noscope_wait", g_iRoundLimits);
+				}
+				else CPrintToChat(client, "%t %t", "noscope_tag" , "noscope_progress");
+			
 		}
 		else CPrintToChat(client, "%t %t", "noscope_tag" , "noscope_minct");
+	}else CPrintToChat(client, "%t %t", "noscope_tag" , "noscope_voting");
 	}
 	else CPrintToChat(client, "%t %t", "noscope_tag" , "noscope_disabled");
 }

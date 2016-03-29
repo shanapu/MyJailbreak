@@ -18,10 +18,19 @@ bool StartZombie = false;
 
 ConVar gc_bPlugin;
 ConVar gc_bTag;
+ConVar gc_bSetW;
+ConVar gc_bSetA;
+ConVar gc_iRoundWait;
+ConVar gc_bVote;
 ConVar gc_iRoundTime;
 ConVar gc_iRoundLimits;
 ConVar gc_iFreezeTime;
 ConVar g_iSetRoundTime;
+ConVar gc_sModelPath;
+
+ConVar gc_bOverlays;
+ConVar gc_sOverlayStart;
+char g_sOverlayStart[256];
 
 int g_iOldRoundTime;
 int g_iFreezeTime;
@@ -36,7 +45,7 @@ Handle ZombieMenu;
 Handle UseCvar;
 
 
-
+char g_sZombieModel[256];
 char voted[1500];
 
 
@@ -63,16 +72,30 @@ public void OnPluginStart()
 	AutoExecConfig_SetFile("MyJailbreak_zombie");
 	AutoExecConfig_SetCreateFile(true);
 	
-	AutoExecConfig_CreateConVar("sm_zombie_version", "PLUGIN_VERSION", "The version of the SourceMod plugin MyJailBreak - War", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
-	gc_bPlugin = AutoExecConfig_CreateConVar("sm_zombie_enable", "1", "0 - disabled, 1 - enable war");
-	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_zombie_roundtime", "5", "Round time for a single war round");
+	
+	AutoExecConfig_CreateConVar("sm_zombie_version", "PLUGIN_VERSION", "The version of the SourceMod plugin MyJailBreak - zombie", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
+	gc_bPlugin = AutoExecConfig_CreateConVar("sm_zombie_enable", "1", "0 - disabled, 1 - enable zombie");
+	gc_bSetW = AutoExecConfig_CreateConVar("sm_zombie_setw", "1", "0 - disabled, 1 - allow warden to set zombie round", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	gc_bSetA = AutoExecConfig_CreateConVar("sm_zombie_seta", "1", "0 - disabled, 1 - allow admin to set zombie round", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	gc_bVote = AutoExecConfig_CreateConVar("sm_zombie_vote", "1", "0 - disabled, 1 - allow player to vote for zombie", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_zombie_roundtime", "5", "Round time for a single zombie round");
 	g_iSetRoundTime = FindConVar("mp_roundtime");
-	gc_iFreezeTime = AutoExecConfig_CreateConVar("sm_zombie_g_iFreezeTime", "35", "Time freeze zombies");
+	gc_iFreezeTime = AutoExecConfig_CreateConVar("sm_zombie_freezetime", "35", "Time freeze zombies");
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
 	gc_iRoundLimits = AutoExecConfig_CreateConVar("sm_zombie_roundsnext", "3", "Rounds until event can be started again.");
 	g_iRoundLimits = gc_iRoundLimits.IntValue;
+	gc_iRoundWait = AutoExecConfig_CreateConVar("sm_zombie_roundwait", "3", "Rounds until event can be started after mapchange.", FCVAR_NOTIFY, true, 0.0, true, 255.0);
 	gc_bTag = AutoExecConfig_CreateConVar("sm_zombie_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-
+	gc_sModelPath = AutoExecConfig_CreateConVar("sm_zombie_model", "models/player/custom_player/zombie/revenant/revenant_v2.mdl", "Path to the model for zombies.");
+	gc_sModelPath.GetString(g_sZombieModel, sizeof(g_sZombieModel));
+	HookConVarChange(gc_sModelPath, OnSettingChanged);
+	gc_bOverlays = AutoExecConfig_CreateConVar("sm_zombie_overlays", "1", "0 - disabled, 1 - enable overlays", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	gc_sOverlayStart = AutoExecConfig_CreateConVar("sm_zombie_overlaystart_path", "overlays/MyJailbreak/ansage3" , "Path to the start Overlay DONT TYPE .vmt or .vft");
+	gc_sOverlayStart.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
+	HookConVarChange(gc_sOverlayStart, OnSettingChanged);
+	
+	
+	
 	AutoExecConfig_CacheConvars();
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
@@ -87,6 +110,58 @@ public void OnPluginStart()
 	HookEvent("round_end", RoundEnd);
 }
 
+public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
+{
+	if(convar == gc_sModelPath)
+	{
+		strcopy(g_sZombieModel, sizeof(g_sZombieModel), newValue);
+	}else if(convar == gc_sOverlayStart)
+	{
+		strcopy(g_sOverlayStart, sizeof(g_sOverlayStart), newValue);
+	}
+
+}
+
+void PrecacheOverlayAnyDownload(char[] sOverlay)
+{
+	if(gc_bOverlays.BoolValue)	
+	{
+	char sBufferVmt[256];
+	char sBufferVtf[256];
+	Format(sBufferVmt, sizeof(sBufferVmt), "%s.vmt", sOverlay);
+	Format(sBufferVtf, sizeof(sBufferVtf), "%s.vtf", sOverlay);
+	PrecacheDecal(sBufferVmt, true);
+	PrecacheDecal(sBufferVtf, true);
+	Format(sBufferVmt, sizeof(sBufferVmt), "materials/%s.vmt", sOverlay);
+	Format(sBufferVtf, sizeof(sBufferVtf), "materials/%s.vtf", sOverlay);
+	AddFileToDownloadsTable(sBufferVmt);
+	AddFileToDownloadsTable(sBufferVtf);
+	}
+}
+
+
+public Action ShowOverlayStart( Handle timer, any client ) {
+	
+	if(gc_bOverlays.BoolValue)
+	{
+	int iFlag = GetCommandFlags( "r_screenoverlay" ) & ( ~FCVAR_CHEAT ); 
+	SetCommandFlags( "r_screenoverlay", iFlag ); 
+	ClientCommand( client, "r_screenoverlay \"%s.vtf\"", g_sOverlayStart);
+	
+	 CreateTimer( 2.0, DeleteOverlay, client );
+	}
+	return Plugin_Continue;
+	
+}
+
+public Action  DeleteOverlay( Handle timer, any client ) {
+	int iFlag = GetCommandFlags( "r_screenoverlay" ) & ( ~FCVAR_CHEAT ); 
+	SetCommandFlags( "r_screenoverlay", iFlag ); 
+	ClientCommand( client, "r_screenoverlay \"\"" );
+	
+	return Plugin_Continue;
+}
+
 
 public void OnMapStart()
 {
@@ -94,10 +169,10 @@ public void OnMapStart()
 	ZombieRound = 0;
 	IsZombie = false;
 	StartZombie = false;
-	g_iRoundLimits = 0;
+	g_iRoundLimits = gc_iRoundWait.IntValue;
 	
-	PrecacheModel("models/player/custom_player/zombie/revenant/revenant_v2.mdl");
-	
+	PrecacheModel(g_sZombieModel);
+	PrecacheOverlayAnyDownload(g_sOverlayStart);
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
 	
 }
@@ -105,7 +180,7 @@ public void OnMapStart()
 public void OnConfigsExecuted()
 {
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
-	g_iRoundLimits = 0;
+	g_iRoundLimits = gc_iRoundWait.IntValue;
 	
 	if (gc_bTag.BoolValue)
 	{
@@ -167,10 +242,39 @@ public Action SetZombie(int client,int args)
 {
 	if (gc_bPlugin.BoolValue)	
 	{
-	if (warden_iswarden(client) || CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
+	if (warden_iswarden(client))
 	{
+	if (gc_bSetW.BoolValue)	
+	{
+	if (!IsZombie && !StartZombie)
+				{
 	if (g_iRoundLimits == 0)
 	{
+	StartNextRound();
+		
+	}else CPrintToChat(client, "%t %t", "zombie_tag" , "zombie_wait", g_iRoundLimits);
+	}
+				else CPrintToChat(client, "%t %t", "zombie_tag" , "zombie_progress")
+	}else CPrintToChat(client, "%t %t", "warden_tag" , "zombie_setbywarden");
+	}else if (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
+	{
+	if (gc_bSetA.BoolValue)	
+	{
+	if (!IsZombie && !StartZombie)
+				{
+	if (g_iRoundLimits == 0)
+	{
+	StartNextRound();
+		
+	}else CPrintToChat(client, "%t %t", "zombie_tag" , "zombie_wait", g_iRoundLimits);
+	}
+				else CPrintToChat(client, "%t %t", "zombie_tag" , "zombie_progress")
+	}else CPrintToChat(client, "%t %t", "zombie_tag" , "zombie_setbyadmin");
+	}else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
+	}else CPrintToChat(client, "%t %t", "zombie_tag" , "zombie_disabled");
+}
+void StartNextRound()
+{	
 	StartZombie = true;
 	g_iRoundLimits = gc_iRoundLimits.IntValue;
 	VoteCount = 0;
@@ -181,10 +285,7 @@ public Action SetZombie(int client,int args)
 	SetCvar("sm_catch_enable", 0);
 	SetCvar("sm_noscope_enable", 0);
 	CPrintToChatAll("%t %t", "zombie_tag" , "zombie_next");
-		
-	}else CPrintToChat(client, "%t %t", "zombie_tag" , "zombie_wait", g_iRoundLimits);
-	}else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
-	}
+	PrintCenterTextAll("%t", "zombie_next_nc");
 }
 
 public OnClientPutInServer(client)
@@ -262,7 +363,7 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 					{
 	if (GetClientTeam(client) == 3)
 	{
-	SetEntityModel(client, "models/player/custom_player/zombie/revenant/revenant_v2.mdl");
+	SetEntityModel(client, g_sZombieModel);
 	SetEntityMoveType(client, MOVETYPE_NONE);
 	SetEntityHealth(client, 10000);
 	}
@@ -330,6 +431,7 @@ public Action:Zombie(Handle:timer)
 				}
 				SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
 			}
+			CreateTimer( 0.0, ShowOverlayStart, client);
 		}
 	}
 	PrintCenterTextAll("%t", "zombie_start");
@@ -348,12 +450,15 @@ public Action VoteZombie(int client,int args)
 	
 	if (gc_bPlugin.BoolValue)
 	{	
+		if (gc_bVote.BoolValue)
+		{
 		if (GetTeamClientCount(3) > 0)
 		{
-			if (g_iRoundLimits == 0)
-			{
-				if (!IsZombie && !StartZombie)
+			if (!IsZombie && !StartZombie)
 				{
+				if (g_iRoundLimits == 0)
+			{
+			
 					if (StrContains(voted, steamid, true) == -1)
 					{
 	int playercount = (GetClientCount(true) / 2);
@@ -366,30 +471,19 @@ public Action VoteZombie(int client,int args)
 	
 	if (VoteCount > playercount)
 	{
-		StartZombie = true;
-		
-		SetCvar("sm_hide_enable", 0);
-		SetCvar("sm_ffa_enable", 0);
-		SetCvar("sm_war_enable", 0);
-		SetCvar("sm_duckhunt_enable", 0);
-		SetCvar("sm_catch_enable", 0);
-		SetCvar("sm_noscope_enable", 0);
-		
-		g_iRoundLimits = gc_iRoundLimits.IntValue;
-		VoteCount = 0;
-		
-		CPrintToChatAll("%t %t", "zombie_tag" , "zombie_next");
+		StartNextRound();
 	}
-	else CPrintToChatAll("%t %t", "zombie_tag" , "zombie_need", Missing);
+	else CPrintToChatAll("%t %t", "zombie_tag" , "zombie_need", Missing, client);
 	
 					}
 					else CPrintToChat(client, "%t %t", "zombie_tag" , "zombie_voted");
 				}
-				else CPrintToChat(client, "%t %t", "zombie_tag" , "zombie_progress");
-			}
 			else CPrintToChat(client, "%t %t", "zombie_tag" , "zombie_wait", g_iRoundLimits);
 		}
+				else CPrintToChat(client, "%t %t", "zombie_tag" , "zombie_progress");
+			}
 		else CPrintToChat(client, "%t %t", "zombie_tag" , "zombie_minct");
+		}else CPrintToChat(client, "%t %t", "zombie_tag" , "zombie_voting");
 	}
 	else CPrintToChat(client, "%t %t", "zombie_tag" , "zombie_disabled");
 }

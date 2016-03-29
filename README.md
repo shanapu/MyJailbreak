@@ -1,9 +1,30 @@
 # MyJailbreak 
 
-## Jailbreak plugin mashup (or patchwork?) pack
+** work in progress! AlphaVersion - 
 
-### Plugins: [Wardn](https://git.tf/shanapu/MyJailbreak#wardn), [War](https://git.tf/shanapu/MyJailbreak#eventday-war), [FFA](https://git.tf/shanapu/MyJailbreak#eventday-ffa), [Zombie](https://git.tf/shanapu/MyJailbreak#eventday-zombie), [Noscope](https://git.tf/shanapu/MyJailbreak#eventday-noscope), [Catch](https://git.tf/shanapu/MyJailbreak#eventday-catch), [Hide](https://git.tf/shanapu/MyJailbreak#eventday-hide), [Duckhunt](https://git.tf/shanapu/MyJailbreak#eventday-duckhunt)... 
+A "rewrite" version of [Franugs Special Jailbreak](https://github.com/Franc1sco/Franug-JailBreak/) and  [eccas, ESK0s & zipcores Jailbreak Warden](http://www.sourcemod.net/plugins.php?cat=0&mod=-1&title=warden&author=&description=&search=1)
 
+## Jailbreak plugin pack for CS:GO Jailserver
+
+### Included Plugins: 
+
+- [Warden](https://github.com/shanapu/MyJailbreak/wiki/Warden) (set/become warden, open cells, set eventdays/FF/nobock,... )
+- Menu - (Player menus for T, CT, Warden & Admin)
+- Weapons - (weapon menus for CT / T in event rounds)
+- Event Days (set/vote a Event for next round)
+    - War (CT vs T TDM)
+    - FFA (FFA DM)
+    - Zombie (CT(zombie) vs T(Human))
+    - Noscope (FFA Scout LowGravity NoScope)
+    - Hide - (HideNseek in the Dark)
+    - Catch - (CT must catch all T (freeze tag))
+    - Duckhunt - (CT(hunter) with nova vs T(chicken))
+    - Freeday - (auto on first round/damage disabled)
+- ((Dice - (Roll the dice for good/bad presents)))
+
+### [todo list](https://github.com/shanapu/MyJailbreak/blob/master/TODO.md)
+
+/*
 #### Wardn
 based/merged/idea plugins: 
 > https://github.com/ecca/SourceMod-Plugins/tree/sourcemod/Warden
@@ -17,7 +38,7 @@ based/merged/idea plugins:
 > https://github.com/Franc1sco/Franug-JailBreak/blob/Only-Days-And-Captain/addons/sourcemod/scripting/jailbreak_open.sp
 
 This plugins allows players to take control over the prison as Warden/Headguard/Commander.
-Chat, Hud & sound notifications about warden/no warden, colorize warden, open/close cell doors, automatic open cells doors, unvote warden & toggle noblock.
+Chat, Hud & sound notifications about warden/no warden, colorize warden, open/close cell doors, automatic open cells doors, unvote warden & toggle FF/noblock.
 
 ##### Commands // why so many cmds for same action? my players are dump.
 ```
@@ -27,11 +48,13 @@ Chat, Hud & sound notifications about warden/no warden, colorize warden, open/cl
 - sm_uw / sm_unwarden - Allows the player to retire from the position
 - sm_uc / sm_uncommander - Allows the player to retire from the position
 - sm_uhg / sm_unheadguard - Allows the player to retire from the position
-- !vw / !votewarden - Allows the player to vote to retire warden
+- sm_vw / sm_votewarden - Allows the player to vote to retire warden
 - sm_open - Allows the warden to open the cell doors
 - sm_close - Allows the warden to close the cell doors
 - sm_noblockon - Allows the warden to enable no block (for the warden ?)
 - sm_noblockon - Allows the warden to disable no block (for the warden ?)
+- sm_setff - Allows the warden to toggle friendly fire
+
 ```
 ##### AdminCommands // ADMFLAG_GENERIC
 ```
@@ -57,6 +80,8 @@ Chat, Hud & sound notifications about warden/no warden, colorize warden, open/cl
 - sm_wardenopen_time - Time in seconds for open doors on round start automaticly. Default 60
 - sm_wardenopen_time_warden: 0 - disabled, 1 - doors open automatic after - sm_wardenopen_time although there is a warden. needs - sm_wardenopen_time_enable 1. Default 1
 - sm_warden_tag: 0 - disabled, 1 - Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch your sv_tags. Default 1
+
+and more 
 ```
 ##### Features
 
@@ -77,7 +102,7 @@ Or on Round start Ts spawn in open cells with weapons. No Freezetime.
 
 ##### Commands
 ```
-- !war / !krieg - Allows players to vote for a war 
+- sm_war / sm_krieg - Allows players to vote for a war 
 - sm_setwar - Allows the Admin(sm_map) or Warden to set a war for next rounds
 ```
 ##### Cvars
@@ -90,7 +115,8 @@ Or on Round start Ts spawn in open cells with weapons. No Freezetime.
 - sm_war_nodamage - Time in seconds after freezetime damage is disbaled. Default 30
 - sm_war_roundsnext - Rounds until event can be started again. Default 3
 - sm_war_tag: 0 - disabled, 1 - Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch your sv_tags. Default 1
-- (sm_nowar_roundtime - set round time after a war round (mp_roundtime)) todo undo
+
+and more 
 ```
 ##### Features
 
@@ -114,7 +140,7 @@ Or on Round start Ts spawn in open cells with weapons.
 
 ##### Commands
 ```
-- !ffa / !warffa - Allows players to vote for a FFA 
+- sm_ffa / sm_warffa - Allows players to vote for a FFA 
 - sm_setffa - Allows the Admin(sm_map) or Warden to set a ffa for next rounds
 ```
 ##### Cvars
@@ -126,7 +152,8 @@ Or on Round start Ts spawn in open cells with weapons.
 - sm_ffa_nodamage - Time in seconds after freezetime damage is disbaled. Default 30
 - sm_ffa_roundsnext - Rounds until event can be started again. Default 3
 - sm_ffa_tag: 0 - disabled, 1 - Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch your sv_tags. Default 1
-- (sm_noffa_roundtime - set round time after a war round (mp_roundtime)) todo undo
+
+and more 
 ```
 ##### Features
 
@@ -150,7 +177,7 @@ Zombies freezed for default 35sec so T can hide or climb.
 
 ##### Commands
 ```
-- !zombie / !undead - Allows players to vote for a Zombie 
+- sm_zombie / sm_undead - Allows players to vote for a Zombie 
 - sm_setzombie - Allows the Admin(sm_map) or Warden to set Zombie as next round
 ```
 ##### Cvars
@@ -162,6 +189,8 @@ Zombies freezed for default 35sec so T can hide or climb.
 - sm_zombie_roundsnext - Rounds until event can be started again. Default 3
 - sm_zombie_tag: 0 - disabled, 1 - Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch your sv_tags. Default 1
 - (sm_nozombie_roundtime - set round time after a war round (mp_roundtime)) todo undo
+
+and more 
 ```
 ##### Features
 
@@ -205,7 +234,7 @@ based/merged/idea plugins:
 
 This plugin allows players to vote and warden to set next round to a duckhunt
 
-#### beacon
+#### (beacon)
 > https://github.com/Headline22/Hunger-Games-Beacon/
 
 #### dice
@@ -213,14 +242,15 @@ This plugin allows players to vote and warden to set next round to a duckhunt
 
 ### requires plugins
 - Smart Jail Doors https://github.com/Kailo97/smartjaildoors
+- sm hosties
 
 ### recomment plugins
 - [CS:GO] Flashlight (1.3.62) https://forums.alliedmods.net/showthread.php?p=2042310
+*/
 
 # Credits: 
 
-**used code from: ecca, Zipcore, ESK0, Floody.de, franug, bara** 
-and many snipptes and inspiration by so many other I cant remember
+**used code from: ecca, Zipcore, ESK0, Floody.de, franug, bara** and many snipptes and inspiration by so many other I cant remember
 # THANKS FOR MAKING FREE SOFTWARE!
 
 

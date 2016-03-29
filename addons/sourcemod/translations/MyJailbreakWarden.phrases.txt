@@ -181,13 +181,32 @@
 		"#format"	""
 		"en"		"Now, the cell doors should be open"
 	}
-	
+	"warden_startcountdown"
+	{
+		"#format"		""
+		"en"			"Warden start a Countdown!"
+	}	
+	"warden_ffison"
+	{
+		"#format"		""
+		"en"			"friendly fire enabled"
+	}	
+	"warden_ffisoff"
+	{
+		"#format"		""
+		"en"			"friendly fire disabled"
+	}		
 		"warden_noblockon"
 	{
 		"#format"	""
 		"en"		"the warden set noblock on!"
 	}
-	
+		"warden_voting"
+	{
+	"#format"	""
+		"en"		"Voting for kick warden is disabled"
+		
+	}
 			"warden_noblockoff"
 	{
 		"#format"	""

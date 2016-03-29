@@ -14,6 +14,7 @@ ConVar gc_bCTerror;
 ConVar gc_bWarden;
 ConVar gc_bDays;
 ConVar gc_bKill;
+ConVar gc_bFF;
 ConVar g_bFF;
 
 #pragma semicolon 1
@@ -65,7 +66,7 @@ public OnPluginStart()
 	gc_bWarden = AutoExecConfig_CreateConVar("sm_menu_warden", "1", "0 - disabled, 1 - enable warden jailbreak menu");
 	gc_bDays = AutoExecConfig_CreateConVar("sm_menu_days", "1", "0 - disabled, 1 - enable eventdays menu for warden and admin");
 	gc_bKill = AutoExecConfig_CreateConVar("sm_menu_kill", "1", "0 - disabled, 1 - enable kill random T for warden");
-	g_bFF = AutoExecConfig_CreateConVar("sm_menu_ff", "1", "0 - disabled, 1 - enable switch ff for T ");
+	gc_bFF = AutoExecConfig_CreateConVar("sm_menu_ff", "1", "0 - disabled, 1 - enable switch ff for T ");
 	g_bFF = FindConVar("mp_teammates_are_enemies");
 	
 	AutoExecConfig_CacheConvars();
@@ -107,16 +108,18 @@ public Action:JbMenu(client,args)
 	Format(menuinfo6, sizeof(menuinfo6), "%T", "menu_guns", LANG_SERVER);
 	AddMenuItem(menu, "guns", menuinfo6);
 	
-	
+	if(!gc_bFF.BoolValue) 
+	{
 	if(!g_bFF.BoolValue) 
 	{
 	Format(menuinfo7, sizeof(menuinfo7), "%T", "menu_ffon", LANG_SERVER);
-	AddMenuItem(menu, "ffa1", menuinfo7);
+	AddMenuItem(menu, "ffa", menuinfo7);
 	}
 	else 
 	{
 	Format(menuinfo8, sizeof(menuinfo8), "%T", "menu_ffoff", LANG_SERVER);
-	AddMenuItem(menu, "ffa2", menuinfo8);
+	AddMenuItem(menu, "ffa", menuinfo8);
+	}
 	}
 	if(gc_bKill.BoolValue)	
 	{
@@ -299,21 +302,11 @@ public JBMenuHandler(Handle:menu, MenuAction:action, client, itemNum)
 			JbMenu(client,0);
 		}
 	
-		else if ( strcmp(info,"ffa1") == 0 ) 
+		else if ( strcmp(info,"ffa") == 0 ) 
 		{
 			if (warden_iswarden(client))
 			{
-			SetCvar("mp_teammates_are_enemies", 1);
-			CPrintToChatAll("%t %t", "warden_tag", "menu_ffison" );
-			JbMenu(client,0);
-			}
-		}
-		else if ( strcmp(info,"ffa2") == 0 ) 
-		{
-			if (warden_iswarden(client))
-			{
-			SetCvar("mp_teammates_are_enemies", 0);
-			CPrintToChatAll("%t %t", "warden_tag", "menu_ffisoff" );
+			FakeClientCommand(client, "say !ff");
 			JbMenu(client,0);
 			}
 		}

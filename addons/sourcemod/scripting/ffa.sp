@@ -14,8 +14,13 @@
 
 ConVar gc_bPlugin;
 ConVar gc_bTag;
+ConVar gc_bSetW;
+ConVar gc_bSetA;
+ConVar gc_bVote;
+ConVar gc_iRoundWait;
 ConVar gc_bSpawnCell;
 ConVar gc_iRoundTime;
+ConVar gc_bOverlays;
 ConVar gc_iRoundLimits;
 ConVar gc_iTruceTime;
 
@@ -25,7 +30,7 @@ ConVar g_iSetRoundTime;
 int g_iOldRoundTime;
 int g_iRoundLimits;
 int g_iTruceTime;
-
+ConVar gc_sOverlayStart;
 
 int VoteCount;
 int FFARound;
@@ -45,7 +50,7 @@ bool IsFFA = false;
 bool StartFFA = false;
 
 char voted[1500];
-
+char g_sOverlayStart[256];
 
 float Pos[3];
 
@@ -73,17 +78,25 @@ public void OnPluginStart()
 	AutoExecConfig_SetFile("MyJailbreak_ffa");
 	AutoExecConfig_SetCreateFile(true);
 	
-	AutoExecConfig_CreateConVar("sm_ffa_version", "PLUGIN_VERSION", "The version of the SourceMod plugin MyJailBreak - War", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
+	AutoExecConfig_CreateConVar("sm_ffa_version", "PLUGIN_VERSION", "The version of the SourceMod plugin MyJailBreak - ffa", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_ffa_enable", "1", "0 - disabled, 1 - enable FFA");
+	gc_bSetW = AutoExecConfig_CreateConVar("sm_ffa_setw", "1", "0 - disabled, 1 - allow warden to set ffa round", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	gc_bSetA = AutoExecConfig_CreateConVar("sm_ffa_seta", "1", "0 - disabled, 1 - allow admin to set ffa round", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	gc_bVote = AutoExecConfig_CreateConVar("sm_ffa_vote", "1", "0 - disabled, 1 - allow player to vote for ffa", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	gc_bSpawnCell = AutoExecConfig_CreateConVar("sm_ffa_spawn", "1", "0 - teleport to weaponroom, 1 - standart spawn - cell doors auto open");
-	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_ffa_roundtime", "5", "Round time for a single war round");
+	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_ffa_roundtime", "5", "Round time for a single ffa round");
 	g_iSetRoundTime = FindConVar("mp_roundtime");
 	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_ffa_nodamage", "30", "Time after g_iFreezeTime; damage disbaled");
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	gc_iRoundLimits = AutoExecConfig_CreateConVar("sm_ffa_roundsnext", "3", "Rounds until event can be started again.");
 	g_iRoundLimits = gc_iRoundLimits.IntValue;
+	gc_iRoundWait = AutoExecConfig_CreateConVar("sm_ffa_roundwait", "3", "Rounds until event can be started after mapchange.", FCVAR_NOTIFY, true, 0.0, true, 255.0);
 	gc_bTag = AutoExecConfig_CreateConVar("sm_ffa_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-
+	gc_bOverlays = AutoExecConfig_CreateConVar("sm_ffa_overlays", "1", "0 - disabled, 1 - enable overlays", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	gc_sOverlayStart = AutoExecConfig_CreateConVar("sm_ffa_overlaystart_path", "overlays/MyJailbreak/ansage3" , "Path to the start Overlay DONT TYPE .vmt or .vft");
+	gc_sOverlayStart.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
+	HookConVarChange(gc_sOverlayStart, OnSettingChanged);
+	
 	AutoExecConfig_CacheConvars();
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
@@ -99,16 +112,62 @@ public void OnPluginStart()
 	HookEvent("round_end", RoundEnd);
 }
 
+void PrecacheOverlayAnyDownload(char[] sOverlay)
+{
+	if(gc_bOverlays.BoolValue)	
+	{
+	char sBufferVmt[256];
+	char sBufferVtf[256];
+	Format(sBufferVmt, sizeof(sBufferVmt), "%s.vmt", sOverlay);
+	Format(sBufferVtf, sizeof(sBufferVtf), "%s.vtf", sOverlay);
+	PrecacheDecal(sBufferVmt, true);
+	PrecacheDecal(sBufferVtf, true);
+	Format(sBufferVmt, sizeof(sBufferVmt), "materials/%s.vmt", sOverlay);
+	Format(sBufferVtf, sizeof(sBufferVtf), "materials/%s.vtf", sOverlay);
+	AddFileToDownloadsTable(sBufferVmt);
+	AddFileToDownloadsTable(sBufferVtf);
+	}
+}
+
+public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
+{
+	if(convar == gc_sOverlayStart)
+	{
+		strcopy(g_sOverlayStart, sizeof(g_sOverlayStart), newValue);
+	}
+}
+
+public Action ShowOverlayStart( Handle timer, any client ) {
+	
+	if(gc_bOverlays.BoolValue)
+	{
+	int iFlag = GetCommandFlags( "r_screenoverlay" ) & ( ~FCVAR_CHEAT ); 
+	SetCommandFlags( "r_screenoverlay", iFlag ); 
+	ClientCommand( client, "r_screenoverlay \"%s.vtf\"", g_sOverlayStart);
+	
+	 CreateTimer( 2.0, DeleteOverlay, client );
+	}
+	return Plugin_Continue;
+	
+}
+
+public Action  DeleteOverlay( Handle timer, any client ) {
+	int iFlag = GetCommandFlags( "r_screenoverlay" ) & ( ~FCVAR_CHEAT ); 
+	SetCommandFlags( "r_screenoverlay", iFlag ); 
+	ClientCommand( client, "r_screenoverlay \"\"" );
+	
+	return Plugin_Continue;
+}
 
 public void OnMapStart()
 {
 
-
+	PrecacheOverlayAnyDownload(g_sOverlayStart);
 	VoteCount = 0;
 	FFARound = 0;
 	IsFFA = false;
 	StartFFA = false;
-	g_iRoundLimits = 0;
+	g_iRoundLimits = gc_iRoundWait.IntValue;
 	
 
 	g_iTruceTime = gc_iTruceTime.IntValue;
@@ -132,7 +191,7 @@ public void OnConfigsExecuted()
 {
 	
 	g_iTruceTime = gc_iTruceTime.IntValue;
-	g_iRoundLimits = 0;
+	g_iRoundLimits = gc_iRoundWait.IntValue;
 	
 	if (gc_bTag.BoolValue)
 	{
@@ -193,6 +252,8 @@ public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 	{
 	g_iOldRoundTime = g_iSetRoundTime.IntValue;
 	g_iSetRoundTime.IntValue = gc_iRoundTime.IntValue;
+
+
 	}
 }
 
@@ -200,10 +261,38 @@ public Action Setffa(int client,int args)
 {
 	if (gc_bPlugin.BoolValue)	
 	{
-	if (warden_iswarden(client) || CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
+	if (warden_iswarden(client))
 	{
+	if (gc_bSetW.BoolValue)
+	{if (!IsFFA && !StartFFA)
+				{
 	if (g_iRoundLimits == 0)
 	{
+		StartNextRound();
+	}else CPrintToChat(client, "%t %t", "ffa_tag" , "ffa_wait", g_iRoundLimits);
+	}
+				else CPrintToChat(client, "%t %t", "ffa_tag" , "ffa_progress");
+	}else CPrintToChat(client, "%t %t", "warden_tag" , "war_setbywarden");
+		}else if (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
+	{
+	if (gc_bSetA.BoolValue)
+	{if (!IsFFA && !StartFFA)
+				{
+	if (g_iRoundLimits == 0)
+	{
+		StartNextRound();
+	}else CPrintToChat(client, "%t %t", "ffa_tag" , "ffa_wait", g_iRoundLimits);
+	}
+				else CPrintToChat(client, "%t %t", "ffa_tag" , "ffa_progress");
+	}else CPrintToChat(client, "%t %t", "ffa_tag" , "war_setbyadmin");
+		}else
+		
+		CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
+	}else CPrintToChat(client, "%t %t", "ffa_tag" , "ffa_disabled");
+}
+
+void StartNextRound()
+{ 
 	StartFFA = true;
 	g_iRoundLimits = gc_iRoundLimits.IntValue;
 	VoteCount = 0;
@@ -216,9 +305,8 @@ public Action Setffa(int client,int args)
 	SetCvar("sm_catch_enable", 0);
 							
 	CPrintToChatAll("%t %t", "ffa_tag" , "ffa_next");
-	}else CPrintToChat(client, "%t %t", "ffa_tag" , "ffa_wait", g_iRoundLimits);
-	}else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
-	}
+	
+	PrintCenterTextAll("%t", "ffa_next_nc");
 }
 
 public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
@@ -389,7 +477,11 @@ public Action:NoDamage(Handle:timer)
 	
 	for(int client=1; client <= MaxClients; client++) 
 	{
-		if (IsClientInGame(client) && IsPlayerAlive(client)) SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
+		if (IsClientInGame(client) && IsPlayerAlive(client)) 
+		{
+		SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
+		CreateTimer( 0.0, ShowOverlayStart, client);
+		}
 	}
 
 	CPrintToChatAll("%t %t", "ffa_tag" , "ffa_start");
@@ -420,12 +512,15 @@ public Action VoteFFA(int client,int args)
 	
 	if (gc_bPlugin.BoolValue)
 	{	
+	if (gc_bVote.BoolValue)
+		{
 		if (GetTeamClientCount(3) > 0)
 		{
+							if (!IsFFA && !StartFFA)
+				{
 			if (g_iRoundLimits == 0)
 			{
-				if (!IsFFA && !StartFFA)
-				{
+
 					if (StrContains(voted, steamid, true) == -1)
 					{
 						int playercount = (GetClientCount(true) / 2);
@@ -438,30 +533,20 @@ public Action VoteFFA(int client,int args)
 						
 						if (VoteCount > playercount)
 						{
-							StartFFA = true;
-							
-							SetCvar("sm_hide_enable", 0);
-							SetCvar("sm_war_enable", 0);
-							SetCvar("sm_zombie_enable", 0);
-							SetCvar("sm_duckhunt_enable", 0);
-							SetCvar("sm_catch_enable", 0);
-							SetCvar("sm_noscope_enable", 0);
-							
-							g_iRoundLimits = gc_iRoundLimits.IntValue;
-							VoteCount = 0;
-							
-							CPrintToChatAll("%t %t", "ffa_tag" , "ffa_next");
+							StartNextRound();
 						}
-						else CPrintToChatAll("%t %t", "ffa_tag" , "ffa_need", Missing);
-						
+						else CPrintToChatAll("%t %t", "ffa_tag" , "ffa_need", Missing, client);
 					}
 					else CPrintToChat(client, "%t %t", "ffa_tag" , "ffa_voted");
 				}
-				else CPrintToChat(client, "%t %t", "ffa_tag" , "ffa_progress");
-			}
 			else CPrintToChat(client, "%t %t", "ffa_tag" , "ffa_wait", g_iRoundLimits);
+				
+				}
+				else CPrintToChat(client, "%t %t", "ffa_tag" , "ffa_progress");
+			
 		}
 		else CPrintToChat(client, "%t %t", "ffa_tag" , "ffa_minct");
+		}else CPrintToChat(client, "%t %t", "war_tag" , "war_voting");
 	}
 	else CPrintToChat(client, "%t %t", "ffa_tag" , "ffa_disabled");
 }

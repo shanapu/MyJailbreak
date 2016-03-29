@@ -1,0 +1,144 @@
+"Phrases"
+{
+	"freeday_tag"
+	{
+		"en"		"[{green}freeday{default}]"
+	}
+	
+	"freeday_end"
+	{
+		"#format"	""
+		"en"		"freeday ended"
+		
+	}
+	"freeday_need"  //{default}, {darkred}, {green}, {lightgreen}, "{darkred}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
+	{
+			"#format"	"{1:i}"
+		"en"		"votes left to {darkred}freeday"
+		"de"		"noch {1} votes bis {darkred}freeday{default} beginnt"
+	}
+	"freeday_next"
+	{
+		"#format"	""
+		"en"		"Next round is freeday"
+		
+	}
+		"freeday_next_nc"
+	{
+		"#format"	""
+		"en"		"Next round is freeday"
+		
+	}
+	
+		"freeday_voting"
+	{
+	"#format"	""
+		"en"		"Player Voting for freeday is disabled"
+		
+	}
+	"freeday_setbywarden"
+	{
+	"#format"	""
+		"en"		"Set freeday by Warden is disabled"
+		
+	}
+	
+	"freeday_setbyadmin"
+	{
+	"#format"	""
+		"en"		"Set freeday by admin is disabled"
+		
+	}
+	
+	
+	
+	"freeday_start"
+	{
+		"#format"	""
+		"en"		"The freeday has started!"
+		
+	}
+	
+	"freeday_voted"{
+		"#format"	""
+		"en"		"You allready voted for freeday"
+		
+	}
+	
+	"freeday_progress"
+	{
+		"#format"	""
+		"en"		"freeday is allready in progress"
+		
+	}
+	
+	"freeday_minct"
+	{
+		"#format"	""
+		"en"		"For a freeday you need a least one CT"
+		
+	}
+	
+	
+	"freeday_disabled"
+	{
+		"#format"	""
+		"en"		"freeday is disabled."
+		
+	}
+	
+
+
+	
+	"freeday_info_Title"
+	{
+		"en"		"FreeDaY"
+		"de"		"FreeDaY"
+	}
+	
+	"freeday_info_Line1"
+	{
+		"en"		"Do not be surprised if ported in wk"
+		"de"		"Nicht wundern falls ihr in die wk geportet wurdet"
+	}
+	"freeday_info_Line2"
+	{
+		"en"		"In freeday ther is ffa scout freeday low grav"
+	}
+	
+	"freeday_info_Line3"
+	{
+		"en"		"you can move and exit the wk in nodamge phase"
+		"de"		"Während der no damge phase kannst du aus der zelle/waffenkammer"
+	}
+	
+	"freeday_info_Line4"
+	{
+		"en"		"All normal jailRules are repealed"
+		"de"		"Alle normalen Jailregeln sind aufgehoben!"
+	}
+	
+	"freeday_info_Line5"
+	{
+		"en"		"There is no last request!"
+		"de"		"Der letzte Terrorist hat keinen Wunsch!"
+	}
+	
+	"freeday_info_Line6"
+	{
+		"en"		"Everyone is allowed to go everywhere where he wants"
+		"de"		"Jeder darf überall hin wo er will!"
+	}
+	
+	"freeday_info_Line7"
+	{
+		"en"		"dont be an asshole!"
+		"de"		"bau keine scheisse!"
+	}
+		"freeday_wait"
+	{
+		"#format"	"{1:i}"
+		"en"		"you must wait {1} more rounds"
+		"de"		"Du musst noch {1} Runden warten"
+	}
+}

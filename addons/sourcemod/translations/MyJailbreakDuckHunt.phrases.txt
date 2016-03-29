@@ -16,7 +16,25 @@
 		"en"		"The duckhunter died"
 		
 	}
+	"duckhunt_voting"
+	{
+	"#format"	""
+		"en"		"Player Voting for duckhunt is disabled"
+		
+	}
+	"duckhunt_setbywarden"
+	{
+	"#format"	""
+		"en"		"Set duckhunt by Warden is disabled"
+		
+	}
 	
+	"duckhunt_setbyadmin"
+	{
+	"#format"	""
+		"en"		"Set duckhunt by admin is disabled"
+		
+	}
 	"duckhunt_ctwin"
 	{
 		"#format"	""
@@ -38,6 +56,13 @@
 		
 	}
 	
+		
+	"duckhunt_next_nc"
+	{
+		"#format"	""
+		"en"		"Next round is duckhunt"
+		
+	}
 	
 	"duckhunt_start"
 	{

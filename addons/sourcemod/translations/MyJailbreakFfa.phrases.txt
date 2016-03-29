@@ -17,7 +17,25 @@
 		"en"		"a Terrorist win"
 		
 	}
+	"ffa_voting"
+	{
+	"#format"	""
+		"en"		"Player Voting for ffa is disabled"
+		
+	}
+	"ffa_setbywarden"
+	{
+	"#format"	""
+		"en"		"Set ffa by Warden is disabled"
+		
+	}
 	
+	"ffa_setbyadmin"
+	{
+	"#format"	""
+		"en"		"Set ffa by admin is disabled"
+		
+	}
 	"ffa_ctwin"
 	{
 		"#format"	""
@@ -37,7 +55,13 @@
 		"en"		"Next round is ffa"
 		
 	}
-	
+		
+	"ffa_next_nc"
+	{
+		"#format"	""
+		"en"		"Next round is ffa"
+		
+	}
 	"ffa_rounds" //{default}, {darkred}, {green}, {lightgreen}, "{darkred}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
 	{
 		"#format"	"{1:i}"
