@@ -1,6 +1,7 @@
 # MyJailbreak 
 
-** work in progress! AlphaVersion - 
+## work in progress! AlphaVersion 
+### [todo list](https://github.com/shanapu/MyJailbreak/blob/master/TODO.md)
 
 A "rewrite" version of [Franugs Special Jailbreak](https://github.com/Franc1sco/Franug-JailBreak/) and  [eccas, ESK0s & zipcores Jailbreak Warden](http://www.sourcemod.net/plugins.php?cat=0&mod=-1&title=warden&author=&description=&search=1)
 
@@ -22,9 +23,7 @@ A "rewrite" version of [Franugs Special Jailbreak](https://github.com/Franc1sco/
     - Freeday - (auto on first round/damage disabled)
 - ((Dice - (Roll the dice for good/bad presents)))
 
-### [todo list](https://github.com/shanapu/MyJailbreak/blob/master/TODO.md)
 
-/*
 #### Wardn
 based/merged/idea plugins: 
 > https://github.com/ecca/SourceMod-Plugins/tree/sourcemod/Warden
@@ -246,7 +245,7 @@ This plugin allows players to vote and warden to set next round to a duckhunt
 
 ### recomment plugins
 - [CS:GO] Flashlight (1.3.62) https://forums.alliedmods.net/showthread.php?p=2042310
-*/
+
 
 # Credits: 
 
