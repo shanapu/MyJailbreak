@@ -11,6 +11,7 @@
 		"en"		"votes left to {darkred}catch"
 		"de"		"noch {1} votes bis {darkred}fangen{default} beginnt"
 	}
+	
 	"catch_twin"
 	{
 		"#format"	""
@@ -158,7 +159,7 @@
 	}
 	"catch_win"
 	{
-		"#format"	"{1:i}"
+		"#format"	""
 		"en"		"All prisoners catched"
 		"de"		"Alle Häftlinge wurden eingefangen"
 	}

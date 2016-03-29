@@ -1,2 +1,7 @@
 *.dat
 *.exe
+*.smx
+cfg\
+addons\sourcemod\plugins
+addons\sourcemod\scripting\snips
+addons\sourcemod\scripting\compiled

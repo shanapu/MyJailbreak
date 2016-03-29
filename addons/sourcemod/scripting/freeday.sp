@@ -12,7 +12,7 @@
 #pragma semicolon 1
 
 //Defines
-#define PLUGIN_VERSION   "0.1"
+#define PLUGIN_VERSION "0.1"
 
 //Booleans
 bool IsFreeDay = false; 
@@ -33,16 +33,15 @@ ConVar g_iSetRoundTime;
 //Integers
 int g_iOldRoundTime;
 int g_iRoundLimits;
-int VoteCount = 0;
+int g_iVoteCount = 0;
 int FreeDayRound = 0;
-
 
 //Handles
 Handle FreeDayMenu;
 Handle UseCvar;
 
-//Characters
-char voted[1500];
+//Strings
+char g_sHasVoted[1500];
 
 
 public Plugin myinfo = {
@@ -59,14 +58,16 @@ public void OnPluginStart()
 	LoadTranslations("MyJailbreakWarden.phrases");
 	LoadTranslations("MyJailbreakFreeDay.phrases");
 	
+	//Client Commands
 	RegConsoleCmd("sm_setfreeday", SetFreeDay);
 	RegConsoleCmd("sm_freeday", VoteFreeDay);
 	RegConsoleCmd("sm_fd", VoteFreeDay);
 	
+	//AutoExecConfig
 	AutoExecConfig_SetFile("MyJailbreak_freeday");
 	AutoExecConfig_SetCreateFile(true);
 	
-	AutoExecConfig_CreateConVar("sm_freeday_version", "PLUGIN_VERSION", "The version of the SourceMod plugin MyJailBreak - freeday", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
+	AutoExecConfig_CreateConVar("sm_freeday_version", PLUGIN_VERSION, "The version of the SourceMod plugin MyJailBreak - freeday", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_freeday_enable", "1", "0 - disabled, 1 - enable freeday");
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_freeday_setw", "1", "0 - disabled, 1 - allow warden to set freeday round", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	gc_bSetA = AutoExecConfig_CreateConVar("sm_freeday_seta", "1", "0 - disabled, 1 - allow admin to set freeday round", FCVAR_NOTIFY, true, 0.0, true, 1.0);
@@ -74,39 +75,41 @@ public void OnPluginStart()
 	gc_bFirst = AutoExecConfig_CreateConVar("sm_freeday_firstround", "1", "0 - disabled, 1 - auto freeday first round", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	gc_bDamage = AutoExecConfig_CreateConVar("sm_freeday_damage", "1", "0 - disabled, 1 - auto freeday first round", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_freeday_roundtime", "5", "Round time for a single freeday round");
-	g_iSetRoundTime = FindConVar("mp_roundtime");
 	gc_iRoundLimits = AutoExecConfig_CreateConVar("sm_freeday_roundsnext", "3", "Rounds until event can be started again.");
-	g_iRoundLimits = gc_iRoundLimits.IntValue;
 	gc_bTag = AutoExecConfig_CreateConVar("sm_freeday_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	g_iSetRoundTime = FindConVar("mp_roundtime");
-
+	
 	AutoExecConfig_CacheConvars();
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
 	AutoExecConfig(true, "MyJailbreak_FreeDay");
 	
-	IsFreeDay = false;
-	StartFreeDay = false;
-	VoteCount = 0;
-	FreeDayRound = 0;
-	
+	//Hooks
 	HookEvent("round_start", RoundStart);
-	
 	HookEvent("round_end", RoundEnd);
 	
+	//FindConVar
+	g_iSetRoundTime = FindConVar("mp_roundtime");
+	g_iRoundLimits = gc_iRoundLimits.IntValue;
 	
+	
+	IsFreeDay = false;
+	StartFreeDay = false;
+	g_iVoteCount = 0;
+	FreeDayRound = 0;
 }
 
 public void OnMapStart()
 {
-	VoteCount = 0;
+	g_iVoteCount = 0;
 	FreeDayRound = 0;
+	
 	if (gc_bFirst.BoolValue)
 	{
-	StartFreeDay = true;
-	}else
+		StartFreeDay = true;
+	}
+	else
 	{
-	StartFreeDay = false;	
+		StartFreeDay = false;	
 	}
 	IsFreeDay = false;
 }
@@ -126,83 +129,95 @@ public void OnConfigsExecuted()
 	}
 }
 
-public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
-{
-	
-	if (IsFreeDay)
-	{
-		
-		IsFreeDay = false;
-		StartFreeDay = false;
-		FreeDayRound = 0;
-		Format(voted, sizeof(voted), "");
-		SetCvar("sm_hosties_lr", 1);
-		SetCvar("sm_war_enable", 1);
-		SetCvar("sm_dice_enable", 1);
-		SetCvar("sm_weapons_enable", 1);
-		SetCvar("sm_zombie_enable", 1);
-		SetCvar("sm_hide_enable", 1);
-		SetCvar("sm_duckhunt_enable", 1);
-		SetCvar("sm_ffa_enable", 1);
-		SetCvar("mp_teammates_are_enemies", 0);
-		SetCvar("sm_beacon_enabled", 0);
-		SetCvar("sm_warden_enable", 1);
-		g_iSetRoundTime.IntValue = g_iOldRoundTime;
-		CPrintToChatAll("%t %t", "freeday_tag" , "freeday_end");
-		
-	}
-	if (StartFreeDay)
-	{
-	g_iOldRoundTime = g_iSetRoundTime.IntValue;
-	g_iSetRoundTime.IntValue = gc_iRoundTime.IntValue;
-	
-	}
-}
-
 public Action SetFreeDay(int client,int args)
 {
 	if (gc_bPlugin.BoolValue)
 	{
-	if (warden_iswarden(client))
-	{
-	if (gc_bSetW.BoolValue)
-	{
-	if (!IsFreeDay && !StartFreeDay)
+		if (warden_iswarden(client))
+		{
+			if (gc_bSetW.BoolValue)
+			{
+				if (!IsFreeDay && !StartFreeDay)
 				{
-	if (g_iRoundLimits == 0)
-	{
-		StartNextRound();
-	}else CPrintToChat(client, "%t %t", "freeday_tag" , "freeday_wait", g_iRoundLimits);
-	}
+					if (g_iRoundLimits == 0)
+					{
+						StartNextRound();
+					}
+					else CPrintToChat(client, "%t %t", "freeday_tag" , "freeday_wait", g_iRoundLimits);
+				}
 				else CPrintToChat(client, "%t %t", "freeday_tag" , "freeday_progress");
-	}
-	else CPrintToChat(client, "%t %t", "warden_tag" , "freeday_setbywarden");
-		
-	}else if (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
-	{
-	if (gc_bSetA.BoolValue)
-	{
-	if (!IsFreeDay && !StartFreeDay)
+			}
+			else CPrintToChat(client, "%t %t", "warden_tag" , "freeday_setbywarden");
+		}
+		else if (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
+			{
+				if (gc_bSetA.BoolValue)
 				{
-	if (g_iRoundLimits == 0)
-	{
-		StartNextRound();
-	}else CPrintToChat(client, "%t %t", "freeday_tag" , "freeday_wait", g_iRoundLimits);
+					if (!IsFreeDay && !StartFreeDay)
+					{
+						if (g_iRoundLimits == 0)
+						{
+							StartNextRound();
+						}
+						else CPrintToChat(client, "%t %t", "freeday_tag" , "freeday_wait", g_iRoundLimits);
+					}
+					else CPrintToChat(client, "%t %t", "freeday_tag" , "freeday_progress");
+				}
+				else CPrintToChat(client, "%t %t", "freeday_tag" , "freeday_setbyadmin");
+			}
+			else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
 	}
+	else CPrintToChat(client, "%t %t", "freeday_tag" , "freeday_disabled");
+}
+
+public Action VoteFreeDay(int client,int args)
+{
+	char steamid[64];
+	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
+	
+	if (gc_bPlugin.BoolValue)
+	{	
+		if (gc_bVote.BoolValue)
+		{	
+			if (GetTeamClientCount(3) > 0)
+			{
+				if (!IsFreeDay && !StartFreeDay)
+				{
+					if (g_iRoundLimits == 0)
+					{
+						if (StrContains(g_sHasVoted, steamid, true) == -1)
+						{
+							int playercount = (GetClientCount(true) / 2);
+							g_iVoteCount++;
+							int Missing = playercount - g_iVoteCount + 1;
+							Format(g_sHasVoted, sizeof(g_sHasVoted), "%s,%s", g_sHasVoted, steamid);
+							
+							if (g_iVoteCount > playercount)
+							{
+								StartNextRound();
+							}
+							else CPrintToChatAll("%t %t", "freeday_tag" , "freeday_need", Missing, client);
+						}
+						else CPrintToChat(client, "%t %t", "freeday_tag" , "freeday_voted");
+					}
+					else CPrintToChat(client, "%t %t", "freeday_tag" , "freeday_wait", g_iRoundLimits);
+				}
 				else CPrintToChat(client, "%t %t", "freeday_tag" , "freeday_progress");
+			}
+			else CPrintToChat(client, "%t %t", "freeday_tag" , "freeday_minct");
+		}
+		else CPrintToChat(client, "%t %t", "freeday_tag" , "freeday_voting");
 	}
-	else CPrintToChat(client, "%t %t", "freeday_tag" , "freeday_setbyadmin");
-		
-	}else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
-	}else CPrintToChat(client, "%t %t", "freeday_tag" , "freeday_disabled");
+	else CPrintToChat(client, "%t %t", "freeday_tag" , "freeday_disabled");
 }
 
 void StartNextRound()
 {
 	StartFreeDay = true;
 	g_iRoundLimits = gc_iRoundLimits.IntValue;
-	VoteCount = 0;
+	g_iVoteCount = 0;
 	SetCvar("sm_war_enable", 0);
+	SetCvar("sm_noscope_enable", 0);
 	SetCvar("sm_zombie_enable", 0);
 	SetCvar("sm_ffa_enable", 0);
 	SetCvar("sm_hide_enable", 0);
@@ -218,19 +233,23 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 	if (StartFreeDay)
 	{
 		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
+		
 		SetCvar("sm_hosties_lr", 0);
-
 		SetCvar("sm_weapons_enable", 0);
+		SetCvar("sm_weapons_t", 0);
 		SetCvar("sm_warden_enable", 0);
-
-
 		SetCvar("sm_dice_enable", 0);
+		SetCvar("sm_war_enable", 0);
+		SetCvar("sm_noscope_enable", 0);
+		SetCvar("sm_zombie_enable", 0);
+		SetCvar("sm_ffa_enable", 0);
+		SetCvar("sm_hide_enable", 0);
+		SetCvar("sm_catch_enable", 0);
+		SetCvar("sm_duckhunt_enable", 0);
 		IsFreeDay = true;
 		FreeDayRound++;
 		StartFreeDay = false;
-		
 		SJD_OpenDoors();
-		
 		FreeDayMenu = CreatePanel();
 		Format(info1, sizeof(info1), "%T", "freeday_info_Title", LANG_SERVER);
 		SetPanelTitle(FreeDayMenu, info1);
@@ -252,76 +271,57 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 		DrawPanelText(FreeDayMenu, info8);
 		DrawPanelText(FreeDayMenu, "-----------------------------------");
 		for(int client=1; client <= MaxClients; client++)
-				{
+			{
+				SendPanelToClient(FreeDayMenu, client, Pass, 15);
 				
-		SendPanelToClient(FreeDayMenu, client, Pass, 15);
-		
-		if (!gc_bDamage.BoolValue)
-		{	
-		SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
-		}
-		}
+				if (!gc_bDamage.BoolValue)
+				{
+					SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
+				}
+			}
 		PrintCenterTextAll("%t", "freeday_start");
 		CPrintToChatAll("%t %t", "freeday_tag" , "freeday_start");
-		}else
+	}
+	else
 	{
 		if (g_iRoundLimits > 0) g_iRoundLimits--;
 	}
 }
 
-
+public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
+{
+	if (IsFreeDay)
+	{
+		IsFreeDay = false;
+		StartFreeDay = false;
+		FreeDayRound = 0;
+		Format(g_sHasVoted, sizeof(g_sHasVoted), "");
+		SetCvar("sm_hosties_lr", 1);
+		SetCvar("sm_war_enable", 1);
+		SetCvar("sm_dice_enable", 1);
+		SetCvar("sm_noscope_enable", 1);
+		SetCvar("sm_weapons_enable", 1);
+		SetCvar("sm_zombie_enable", 1);
+		SetCvar("sm_hide_enable", 1);
+		SetCvar("sm_duckhunt_enable", 1);
+		SetCvar("sm_ffa_enable", 1);
+		SetCvar("mp_teammates_are_enemies", 0);
+		SetCvar("sm_beacon_enabled", 0);
+		SetCvar("sm_warden_enable", 1);
+		SetCvar("sm_catch_enable", 1);
+		g_iSetRoundTime.IntValue = g_iOldRoundTime;
+		CPrintToChatAll("%t %t", "freeday_tag" , "freeday_end");
+	}
+	if (StartFreeDay)
+	{
+		g_iOldRoundTime = g_iSetRoundTime.IntValue;
+		g_iSetRoundTime.IntValue = gc_iRoundTime.IntValue;
+	}
+}
 
 public Pass(Handle:menu, MenuAction:action, param1, param2)
 {
 }
-
-
-
-public Action VoteFreeDay(int client,int args)
-{
-	char steamid[64];
-	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
-	
-	if (gc_bPlugin.BoolValue)
-	{	
-		if (gc_bVote.BoolValue)
-		{	
-		if (GetTeamClientCount(3) > 0)
-		{
-							if (!IsFreeDay && !StartFreeDay)
-				{
-			if (g_iRoundLimits == 0)
-			{
-
-					if (StrContains(voted, steamid, true) == -1)
-					{
-						int playercount = (GetClientCount(true) / 2);
-						
-						VoteCount++;
-						
-						int Missing = playercount - VoteCount + 1;
-						
-						Format(voted, sizeof(voted), "%s,%s", voted, steamid);
-						
-						if (VoteCount > playercount)
-						{
-							StartNextRound();
-						}else CPrintToChatAll("%t %t", "freeday_tag" , "freeday_need", Missing, client);
-					}
-					else CPrintToChat(client, "%t %t", "freeday_tag" , "freeday_voted");
-						}
-			else CPrintToChat(client, "%t %t", "freeday_tag" , "freeday_wait", g_iRoundLimits);
-				}
-				else CPrintToChat(client, "%t %t", "freeday_tag" , "freeday_progress");
-	
-		}
-		else CPrintToChat(client, "%t %t", "freeday_tag" , "freeday_minct");
-	}else CPrintToChat(client, "%t %t", "freeday_tag" , "freeday_voting");
-	}
-	else CPrintToChat(client, "%t %t", "freeday_tag" , "freeday_disabled");
-}
-
-
 
 public SetCvar(char cvarName[64], value)
 {
@@ -355,17 +355,16 @@ public SetCvarF(char cvarName[64], Float:value)
 
 public OnMapEnd()
 {
-
 	if (gc_bFirst.BoolValue)
 	{
-	StartFreeDay = true;
-	}else
-	{
-	StartFreeDay = false;
+		StartFreeDay = true;
 	}
-		IsFreeDay = false;
-	VoteCount = 0;
+	else
+	{
+		StartFreeDay = false;
+	}
+	IsFreeDay = false;
+	g_iVoteCount = 0;
 	FreeDayRound = 0;
-	
-	voted[0] = '\0';
+	g_sHasVoted[0] = '\0';
 }

@@ -1,6 +1,6 @@
 bugs:
-  [ ] noscope check all round?
 
+-[x] none known
 
 must:
 - [ ] zombie: knockbackfix
@@ -27,10 +27,13 @@ must:
 - [x] switch FF from menu to warden
 - [x] hide: freeze hide bool
 - [x] Freeday: Damage disbaled 
+  [ ] clean up
+  [ ] comments
   [ ] 
 
 
 want:
+- [ ] AddFileToDownloadsTable
 - [ ] warden: unwarden roundstart and delay old warden.
 - [ ] warden: icon above head (material or model?)
 - [ ] warden: markers
