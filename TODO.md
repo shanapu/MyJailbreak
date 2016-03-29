@@ -1,6 +1,6 @@
 bugs:
 
--[x] none known
+- [ ] can use weapon menu on first round with plugin disabled?!´
 
 must:
 - [ ] zombie: knockbackfix
@@ -14,7 +14,6 @@ must:
 - [x] all days: start overlay
 - [x] all days: msg when deactivated by set
 - [ ] 1.7 syntax
-- [ ] all change SetCvar to https://wiki.alliedmods.net/ConVars_(SourceMod_Scripting)#Using.2FChanging_Values
 - [ ] new day: decoy/flash 1hp
 - [x] catch: freeze sound & overlay
 - [x] catch: sprint build in
@@ -27,7 +26,7 @@ must:
 - [x] switch FF from menu to warden
 - [x] hide: freeze hide bool
 - [x] Freeday: Damage disbaled 
-  [ ] clean up
+  [x] clean up
   [ ] comments
   [ ] 
 
@@ -58,14 +57,15 @@ want:
 - [ ] (all days: cfg to add sm_ for event start end)
 - [ ] all change SetCvar to https://wiki.alliedmods.net/ConVars_(SourceMod_Scripting)#Using.2FChanging_Values
 - [ ] hide: MovementValue hider/seeker
-- [ ] new day: all player Molotov rain https://forums.alliedmods.net/showthread.php?p=2398902
+- [ ] new day: Tron like - all player Molotov rain https://forums.alliedmods.net/showthread.php?p=2398902
+- [ ] all change SetCvar to https://wiki.alliedmods.net/ConVars_(SourceMod_Scripting)#Using.2FChanging_Values
 - [ ] 
 
 
 maybe:
 - [ ] beacon for days
 - [ ] all days: admin force end days
-- [ ] warden: color prisioners (color roulette)
+- [ ] warden: color prisioners (& color roulette)
 - [ ] all days: start instant not next round
 - [ ] dice: verweigern 2x (native?)
 - [ ] dice: freeze sound & overlay
