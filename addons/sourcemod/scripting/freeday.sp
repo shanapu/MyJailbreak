@@ -272,7 +272,7 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 			{
 				SendPanelToClient(FreeDayMenu, client, Pass, 15);
 				
-				if (!gc_bDamage.BoolValue)
+				if (!gc_bDamage.BoolValue && IsClientInGame(client) && IsClientConnected(client) && !IsFakeClient(client))
 				{
 					SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 				}

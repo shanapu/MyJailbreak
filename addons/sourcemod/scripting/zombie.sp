@@ -115,10 +115,12 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 	if(convar == gc_sModelPath)
 	{
 		strcopy(g_sZombieModel, sizeof(g_sZombieModel), newValue);
+		PrecacheModel(g_sZombieModel);
 	}
 	else if(convar == gc_sOverlayStartPath)
 	{
 		strcopy(g_sOverlayStart, sizeof(g_sOverlayStart), newValue);
+		PrecacheOverlayAnyDownload(g_sOverlayStart);
 	}
 }
 

@@ -111,6 +111,7 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 	if(convar == gc_sOverlayStartPath)
 	{
 		strcopy(g_sOverlayStart, sizeof(g_sOverlayStart), newValue);
+		PrecacheOverlayAnyDownload(g_sOverlayStart);
 	}
 }
 
