@@ -207,6 +207,36 @@
 		"en"		"Voting for kick warden is disabled"
 		
 	}
+			"warden_countdown_nc"
+	{
+	"#format"	"{1:i}"
+		"en"		"Start in {1} seconds!"
+	}
+			"warden_countdown"
+	{
+	"#format"	"{1:i}"
+		"en"		"Start in {purple}{1}{default} seconds!"
+	}
+		"warden_countdownhint_nc"
+	{
+	"#format"	""
+		"en"		"Attention! The Warden {purple}Started a CountDown!"
+	}
+			"warden_countdownhint"
+	{
+	"#format"	""
+		"en"		"Attention! The Warden Started a CountDown!"
+	}
+			"warden_countdownstart"
+	{
+	"#format"	""
+		"en"		"{purple}GO! {darkred}START!"
+	}
+			"warden_countdownstart_nc"
+	{
+	"#format"	""
+		"en"		"GO! START!"
+	}
 			"warden_noblockoff"
 	{
 		"#format"	""

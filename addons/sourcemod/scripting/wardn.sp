@@ -28,6 +28,9 @@ ConVar gc_bColor;
 ConVar gc_bOpen;
 ConVar gc_bSounds;
 ConVar gc_bFF;
+ConVar gc_bCountDown;
+ConVar gc_bOverlays;
+ConVar gc_sOverlayStartPath;
 ConVar gc_sSoundPath1;
 ConVar gc_sSoundPath2;
 ConVar gc_sModelPath;
@@ -42,6 +45,7 @@ int Warden = -1;
 int tempwarden[MAXPLAYERS+1] = -1;
 int g_CollisionOffset;
 int opentimer;
+int g_iCountTime = 9;
 
 //Handles
 Handle g_fward_onBecome;
@@ -64,6 +68,7 @@ char g_sHasVoted[1500];
 char g_sWardenModel[256];
 char g_sSoundPath2[256];
 char g_sSoundPath1[256];
+char g_sOverlayStart[256];
 
 public Plugin myinfo = {
 	name = "MyJailbreak - Warden",
@@ -98,6 +103,7 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_vw", VoteWarden);
 	RegConsoleCmd("sm_votewarden", VoteWarden);
 	RegConsoleCmd("sm_setff", ToggleFF);
+	RegConsoleCmd("sm_countdown", SetCountDown);
 	
 	//Admin commands
 	RegAdminCmd("sm_sw", SetWarden, ADMFLAG_GENERIC);
@@ -126,6 +132,9 @@ public void OnPluginStart()
 	gc_bStayWarden = AutoExecConfig_CreateConVar("sm_warden_stay", "1", "0 - disabled, 1 - enable warden stay after round end");	
 	gc_bNoBlock = AutoExecConfig_CreateConVar("sm_warden_noblock", "1", "0 - disabled, 1 - enable setable noblock for warden");	
 	gc_bFF = AutoExecConfig_CreateConVar("sm_warden_ff", "1", "0 - disabled, 1 - enable switch ff for T ");
+	gc_bCountDown = AutoExecConfig_CreateConVar("sm_warden_countdown", "1", "0 - disabled, 1 - enable countdown for warden");
+	gc_bOverlays = AutoExecConfig_CreateConVar("sm_warden_overlays", "1", "0 - disabled, 1 - enable overlays", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_warden_overlaystart_path", "overlays/MyJailbreak/ansage3" , "Path to the start Overlay DONT TYPE .vmt or .vft");
 	gc_bOpen = AutoExecConfig_CreateConVar("sm_wardenopen_enable", "1", "0 - disabled, 1 - warden can open/close cells");
 	g_hOpenTimer = AutoExecConfig_CreateConVar("sm_wardenopen_time", "60", "Time in seconds for open doors on round start automaticly");
 	gc_bOpenTimer = AutoExecConfig_CreateConVar("sm_wardenopen_time_enable", "1", "should doors open automatic 0- no 1 yes");	 // TODO: DONT WORK
@@ -156,6 +165,7 @@ public void OnPluginStart()
 	gc_sSoundPath1.GetString(g_sSoundPath1, sizeof(g_sSoundPath1));
 	gc_sSoundPath2.GetString(g_sSoundPath2, sizeof(g_sSoundPath2));
 	gc_sModelPath.GetString(g_sWardenModel, sizeof(g_sWardenModel));
+	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
 	
 	
 	AddCommandListener(HookPlayerChat, "say");
@@ -227,7 +237,25 @@ public void OnMapStart()
 	g_iVoteCount = 0;
 	PrecacheModel(g_sWardenModel);
 	PrecacheModel("models/player/ctm_gsg9.mdl");
+	PrecacheOverlayAnyDownload(g_sOverlayStart);
 
+}
+
+void PrecacheOverlayAnyDownload(char[] sOverlay)
+{
+	if(gc_bOverlays.BoolValue)	
+	{
+		char sBufferVmt[256];
+		char sBufferVtf[256];
+		Format(sBufferVmt, sizeof(sBufferVmt), "%s.vmt", sOverlay);
+		Format(sBufferVtf, sizeof(sBufferVtf), "%s.vtf", sOverlay);
+		PrecacheDecal(sBufferVmt, true);
+		PrecacheDecal(sBufferVtf, true);
+		Format(sBufferVmt, sizeof(sBufferVmt), "materials/%s.vmt", sOverlay);
+		Format(sBufferVtf, sizeof(sBufferVtf), "materials/%s.vtf", sOverlay);
+		AddFileToDownloadsTable(sBufferVmt);
+		AddFileToDownloadsTable(sBufferVtf);
+	}
 }
 
 public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
@@ -245,6 +273,12 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 	else if(convar == gc_sModelPath)
 	{
 		strcopy(g_sWardenModel, sizeof(g_sWardenModel), newValue);
+		PrecacheModel(g_sWardenModel);
+	}
+	else if(convar == gc_sOverlayStartPath)
+	{
+		strcopy(g_sOverlayStart, sizeof(g_sOverlayStart), newValue);
+		PrecacheOverlayAnyDownload(g_sOverlayStart);
 	}
 }
 
@@ -590,6 +624,73 @@ void RemoveTheWarden(int client)
 	Call_PushCell(client);
 	Call_Finish();
 	Forward_OnWardenRemoved(client);
+}
+
+public Action:SetCountDown(client, args)
+{
+	if(gc_bCountDown.BoolValue)
+	{
+		if (warden_iswarden(client))
+		{
+			g_iCountTime = 9;
+			CreateTimer( 1.0, StartCountdown, client, TIMER_REPEAT);
+			PrintHintTextToAll("%t", "warden_countdownhint");
+			CPrintToChatAll("%t %t", "warden_tag" , "warden_countdownhint");
+		}
+		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
+	}
+}
+
+public Action StartCountdown( Handle timer, any client ) 
+{
+	if (g_iCountTime > 0)
+	{
+		if (IsClientInGame(client) && IsPlayerAlive(client))
+		{
+			if (g_iCountTime < 6) 
+			{
+				PrintCenterText(client,"%t", "warden_countdown_nc", g_iCountTime);
+				CPrintToChatAll("%t %t", "warden_tag" , "warden_countdown", g_iCountTime);
+			}
+		}
+		g_iCountTime--;
+		return Plugin_Continue;
+	}
+	if (g_iCountTime == 0)
+	{
+		if(IsClientInGame(client) && IsClientConnected(client) && !IsFakeClient(client))
+		{
+			PrintCenterText(client, "%t", "warden_countdownstart_nc");
+			CPrintToChatAll("%t %t", "warden_tag" , "warden_countdownstart");
+			g_iCountTime = 9;
+			if(gc_bOverlays.BoolValue)
+			{
+				CreateTimer( 0.0, ShowOverlayStart, client);
+			}
+			return Plugin_Stop;
+		}
+	}
+	return Plugin_Continue;
+}
+
+public Action ShowOverlayStart( Handle timer, any client ) 
+{
+	if(IsClientInGame(client) && IsClientConnected(client) && !IsFakeClient(client))
+	{
+		int iFlag = GetCommandFlags( "r_screenoverlay" ) & ( ~FCVAR_CHEAT ); 
+		SetCommandFlags( "r_screenoverlay", iFlag ); 
+		ClientCommand( client, "r_screenoverlay \"%s.vtf\"", g_sOverlayStart);
+		CreateTimer( 2.0, DeleteOverlay, client );
+	}
+	return Plugin_Continue;
+}
+
+public Action  DeleteOverlay( Handle timer, any client ) {
+	int iFlag = GetCommandFlags( "r_screenoverlay" ) & ( ~FCVAR_CHEAT ); 
+	SetCommandFlags( "r_screenoverlay", iFlag ); 
+	ClientCommand( client, "r_screenoverlay \"\"" );
+	
+	return Plugin_Continue;
 }
 
 EnableNoBlock(client)
