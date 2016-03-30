@@ -1,7 +1,7 @@
 # MyJailbreak 
 
 ## work in progress! AlphaVersion 
-### [todo list](https://github.com/shanapu/MyJailbreak/blob/master/TODO.md)
+### [todo list](https://git.tf/shanapu/MyJailbreak/blob/master/TODO.md)
 
 A "rewrite" version of [Franugs Special Jailbreak](https://github.com/Franc1sco/Franug-JailBreak/) and  [eccas, ESK0s & zipcores Jailbreak Warden](http://www.sourcemod.net/plugins.php?cat=0&mod=-1&title=warden&author=&description=&search=1)
 
