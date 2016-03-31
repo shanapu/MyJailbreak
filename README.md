@@ -1,9 +1,11 @@
 # MyJailbreak 
 
 ## work in progress! a rough AlphaVersion 
-### see [todo list](https://git.tf/shanapu/MyJailbreak/blob/master/TODO.md) the "must" part is todo before first relase on AM
+### This is my first public project. please note that the code may is messy, stupid and miscarriage.
+### I would be happy and very pleased if you wannt to join this project as equal collaborator.
+### see [todo list](https://git.tf/shanapu/MyJailbreak/blob/master/TODO.md) the "must" part is todo before first release on AM
 ### help me by posting bugs and feature ideas in [Issue list](https://git.tf/shanapu/MyJailbreak/issues)
-
+### forks and merge requests are welcome
 
 A "rewrite" version of [Franugs Special Jailbreak](https://github.com/Franc1sco/Franug-JailBreak/) and  [eccas, ESK0s & zipcores Jailbreak Warden](http://www.sourcemod.net/plugins.php?cat=0&mod=-1&title=warden&author=&description=&search=1)
 
