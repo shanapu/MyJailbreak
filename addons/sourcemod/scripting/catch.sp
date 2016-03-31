@@ -149,6 +149,7 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 	else if(convar == gc_sOverlayFreeze)
 	{
 		strcopy(g_sOverlayFreeze, sizeof(g_sOverlayFreeze), newValue);
+		PrecacheOverlayAnyDownload(g_sOverlayFreeze);
 	}
 }
 
@@ -491,8 +492,8 @@ public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 			
 		}
 		
-		if (winner == 2) PrintHintTextToAll("%t", "catch_twin");
-		if (winner == 3) PrintHintTextToAll("%t", "catch_ctwin");
+		if (winner == 2) PrintHintTextToAll("%t", "catch_twin_nc");
+		if (winner == 3) PrintHintTextToAll("%t", "catch_ctwin_nc");
 		IsCatch = false;
 		StartCatch = false;
 		CatchRound = 0;
