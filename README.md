@@ -21,8 +21,14 @@ A "rewrite" version of [Franugs Special Jailbreak](https://github.com/Franc1sco/
     - Noscope (FFA Scout LowGravity NoScope)
     - Hide in the Dark - (kind of HideNseek)
     - Catch - (CT must catch all T (freeze tag))
-    - Duckhunt - (CT(hunter) with nova vs T(chicken))
+    - Duckhunt - (CT(hunter) with nova vs T(chicken in 3th person))
     - Freeday - (auto on first round/damage disabled)
+
+# Credits: 
+
+## **used code from: ecca, Zipcore, ESK0, Floody.de, franug, bara, headline, ReFlexPoison** and many other I cant remember!
+# THANKS FOR MAKING FREE SOFTWARE!
+
 
 #### Wardn
 
@@ -432,10 +438,5 @@ based/merged/used code/idea plugins:
 - [CS:GO] Flashlight (1.3.62) https://forums.alliedmods.net/showthread.php?p=2042310
 - [CS:GO] Hunger Games Beacon https://github.com/AG-Headline/Hunger-Games-Beacon
 
-
-# Credits: 
-
-## **used code from: ecca, Zipcore, ESK0, Floody.de, franug, bara, headline, ReFlexPoison** and many other I cant remember!
-# THANKS FOR MAKING FREE SOFTWARE!
 
 
