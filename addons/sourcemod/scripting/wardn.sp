@@ -28,6 +28,8 @@ ConVar gc_bColor;
 ConVar gc_bOpen;
 ConVar gc_bSounds;
 ConVar gc_bFF;
+ConVar gc_bMarker;
+ConVar gc_iMarkerKey;
 ConVar gc_bCountDown;
 ConVar gc_bOverlays;
 ConVar gc_sOverlayStartPath;
@@ -46,6 +48,10 @@ int tempwarden[MAXPLAYERS+1] = -1;
 int g_CollisionOffset;
 int opentimer;
 int g_iCountTime = 9;
+int g_MarkerColor[] = {255,1,1,255};
+int g_iBeamSprite = -1;
+int g_iHaloSprite = -1;
+
 
 //Handles
 Handle g_fward_onBecome;
@@ -69,6 +75,9 @@ char g_sWardenModel[256];
 char g_sSoundPath2[256];
 char g_sSoundPath1[256];
 char g_sOverlayStart[256];
+
+//float
+float g_fMakerPos[3];
 
 public Plugin myinfo = {
 	name = "MyJailbreak - Warden",
@@ -132,6 +141,8 @@ public void OnPluginStart()
 	gc_bStayWarden = AutoExecConfig_CreateConVar("sm_warden_stay", "1", "0 - disabled, 1 - enable warden stay after round end");	
 	gc_bNoBlock = AutoExecConfig_CreateConVar("sm_warden_noblock", "1", "0 - disabled, 1 - enable setable noblock for warden");	
 	gc_bFF = AutoExecConfig_CreateConVar("sm_warden_ff", "1", "0 - disabled, 1 - enable switch ff for T ");
+	gc_bMarker = AutoExecConfig_CreateConVar("sm_warden_marker", "1", "0 - disabled, 1 - enable switch ff for T ");
+	gc_iMarkerKey = AutoExecConfig_CreateConVar("sm_warden_markerkey", "3", "1 - Look weapon / 2 - Use and shoot / 3 - walk and shoot");
 	gc_bCountDown = AutoExecConfig_CreateConVar("sm_warden_countdown", "1", "0 - disabled, 1 - enable countdown for warden");
 	gc_bOverlays = AutoExecConfig_CreateConVar("sm_warden_overlays", "1", "0 - disabled, 1 - enable overlays", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_warden_overlaystart_path", "overlays/MyJailbreak/ansage3" , "Path to the start Overlay DONT TYPE .vmt or .vft");
@@ -156,6 +167,7 @@ public void OnPluginStart()
 	//Hooks
 	HookEvent("round_start", Event_RoundStart);
 	HookEvent("player_death", playerDeath);
+	HookEvent("bullet_impact", Event_BulletImpact);
 	HookConVarChange(gc_sModelPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundPath2, OnSettingChanged);
 	HookConVarChange(gc_sSoundPath1, OnSettingChanged);
@@ -167,14 +179,144 @@ public void OnPluginStart()
 	gc_sModelPath.GetString(g_sWardenModel, sizeof(g_sWardenModel));
 	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
 	
-	
 	AddCommandListener(HookPlayerChat, "say");
+	AddCommandListener(Command_LAW, "+lookatweapon");
 	
 	g_CollisionOffset = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
 	
 	g_iVoteCount = 0;
+	
+	CreateTimer(1.0, Timer_DrawMakers, _, TIMER_REPEAT);
 }
 
+public Action Command_LAW(int client, const char[] command, int argc)
+{
+	if(!gc_bMarker.BoolValue)
+		return Plugin_Continue;
+	
+	if(!client || !IsClientInGame(client) || !IsPlayerAlive(client))
+		return Plugin_Continue;
+		
+	if(!warden_iswarden(client))
+		return Plugin_Continue;
+	
+	if(gc_iMarkerKey.IntValue == 1)
+	{
+		GetClientAimTargetPos(client, g_fMakerPos);
+		g_fMakerPos[2] += 5.0;
+	}
+	
+	return Plugin_Continue;
+}
+
+
+public Action:Event_BulletImpact(Handle:hEvent,const String:sName[],bool:bDontBroadcast)
+{
+	if(gc_bMarker.BoolValue)	
+	{
+		new client = GetClientOfUserId(GetEventInt(hEvent, "userid"));
+		
+		if (Client_IsIngame(client) && IsPlayerAlive(client) && warden_iswarden(client))
+		{
+			if (GetClientButtons(client) & IN_USE) 
+			{
+				if(gc_iMarkerKey.IntValue == 2)
+				{
+					GetClientAimTargetPos(client, g_fMakerPos);
+					g_fMakerPos[2] += 5.0;
+					CPrintToChat(client, "{darkred}[Warden]{lime}New marker set.");
+				}
+			}
+			else if (GetClientButtons(client) & IN_SPEED) 
+				{
+					if(gc_iMarkerKey.IntValue == 3)
+					{
+						GetClientAimTargetPos(client, g_fMakerPos);
+						g_fMakerPos[2] += 5.0;
+						CPrintToChat(client, "{darkred}[Warden]{lime}New marker 222222set.");
+					}
+				}
+		}
+	}
+}
+
+int GetClientAimTargetPos(int client, float pos[3]) 
+{
+	if (!client) 
+		return -1;
+	
+	float vAngles[3]; float vOrigin[3];
+	
+	GetClientEyePosition(client,vOrigin);
+	GetClientEyeAngles(client, vAngles);
+	
+	Handle trace = TR_TraceRayFilterEx(vOrigin, vAngles, MASK_SHOT, RayType_Infinite, TraceFilterAllEntities, client);
+	
+	TR_GetEndPosition(pos, trace);
+	pos[2] += 5.0;
+	
+	int entity = TR_GetEntityIndex(trace);
+	
+	CloseHandle(trace);
+	
+	return entity;
+}
+
+void ResetMarker()
+{
+	for(int i = 0; i < 3; i++)
+		g_fMakerPos[i] = 0.0;
+}
+
+public bool TraceFilterAllEntities(int entity, int contentsMask, any client)
+{
+	if (entity == client)
+		return false;
+	if (entity > MaxClients)
+		return false;
+	if(!IsClientInGame(entity))
+		return false;
+	if(!IsPlayerAlive(entity))
+		return false;
+	
+	return true;
+}
+
+public Action Timer_DrawMakers(Handle timer, any data)
+{
+	Draw_Markers();
+	return Plugin_Continue;
+}
+
+void Draw_Markers()
+{
+	if (!gc_bMarker.BoolValue)
+		return;
+	
+	if (g_fMakerPos[0] == 0.0)
+		return;
+	
+	if(!warden_exist())
+		return;
+		
+	// Show the ring
+	
+	TE_SetupBeamRingPoint(g_fMakerPos, 155.0, 155.0+0.1, g_iBeamSprite, g_iHaloSprite, 0, 10, 1.0, 6.0, 0.0, g_MarkerColor, 2, 0);
+	TE_SendToAll();
+	
+	// Show the arrow
+	
+	float fStart[3];
+	AddVectors(fStart, g_fMakerPos, fStart);
+	fStart[2] += 0.0;
+	
+	float fEnd[3];
+	AddVectors(fEnd, fStart, fEnd);
+	fEnd[2] += 200.0;
+	
+	TE_SetupBeamPoints(fStart, fEnd, g_iBeamSprite, g_iHaloSprite, 0, 10, 1.0, 4.0, 16.0, 1, 0.0, g_MarkerColor, 5);
+	TE_SendToAll();
+}
 
 public Action:Event_RoundStart(Handle:event, const char[] name, bool:dontBroadcast)
 {
@@ -238,6 +380,8 @@ public void OnMapStart()
 	PrecacheModel(g_sWardenModel);
 	PrecacheModel("models/player/ctm_gsg9.mdl");
 	PrecacheOverlayAnyDownload(g_sOverlayStart);
+	g_iBeamSprite = PrecacheModel("materials/sprites/laserbeam.vmt");
+	g_iHaloSprite = PrecacheModel("materials/sprites/glow01.vmt");
 
 }
 
@@ -936,6 +1080,7 @@ public void warden_OnWardenCreated(int client)
 	{
 	EmitSoundToAllAny(g_sSoundPath1);
 	}
+	ResetMarker();
 }
 
 public void warden_OnWardenRemoved(int client)
@@ -944,6 +1089,7 @@ public void warden_OnWardenRemoved(int client)
 	{
 	EmitSoundToAllAny(g_sSoundPath2);
 	}
+	ResetMarker();
 }
 
 void PrecacheSoundAnyDownload(char[] sSound)
