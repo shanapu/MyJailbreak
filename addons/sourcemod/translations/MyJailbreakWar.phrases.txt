@@ -1,202 +1,193 @@
-"Phrases"    
+"Phrases"		// working color tags {default}, {darkred}, {red}, {green}, {lightgreen}, {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
 {
 	"war_tag"
 	{
-		"en"		"[{green}war{default}]"
+		"en"		"[{green}MyJB.war{default}]"
 	}
 	
-	"war_need"  //{default}, {darkred}, {green}, {lightgreen}, "{darkred}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
+	"war_need"
 	{
 		"#format"	"{1:i},{2:N}"
-		"en"		"{1} votes left to {darkred}war"
-		"de"		"{2} hat gevotet. jetzt noch {1} votes bis {darkred}krieg{default} beginnt"
-	}
-	"war_twin"
-	{
-		"#format"	""
-		"en"		"Terrorists win"
-	}
-		"war_ctwin"
-	{
-		"#format"	""
-		"en"		"Counter-Terrorists win"
-	}
-	"war_end" //{default}, {darkred}, {green}, {lightgreen}, "{darkred}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
-	{
-		"#format"	""
-		"en"		"War ended"
+		"en"		"{purple}{2}{default} has votet. {purple}{1}{default} votes left to {darkred}war"
+		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}krieg{default} beginnt"
 	}
 	
-	"war_rounds" //{default}, {darkred}, {green}, {lightgreen}, "{darkred}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
+	"war_twin_nc"		// no colors!
+	{
+		"en"		"Terrorist win"
+		"de"		"Terrorist haben gewonnen"
+	}
+	
+	"war_ctwin_nc"		// no colors!
+	{
+		"en"		"Counter-Terrorist win"
+		"de"		"Counter-Terrorist haben gewonnen"
+	}
+	
+	"war_end" 
+	{
+		"en"		"{purple}War{default} ended"
+		"de"		"{purple}War{default} beendet"
+	}
+	
+	"war_rounds" 
 	{
 		"#format"	"{1:i}"
-		"en"		"Round {1} of 3"
-		"de"		"Runde {1} von 3"
+		"en"		"Round {purple}{1}{default} of {purple}3"
+		"de"		"Runde {purple}{1}{default} von {purple}3"
 	}
 	
-	"war_next" //{default}, {darkred}, {green}, {lightgreen}, "{darkred}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
+	"war_next" 
 	{
-		"#format"	""
-		"en"		"Next round is {darkred}war"
-	}
-		"war_next_nc" 
-	{
-		"#format"	""
-		"en"		"Next round is war"
+		"en"		"Next round is {purple}War"
+		"de"		"Nächste Runde ist {purple}War"
 	}
 	
-	"war_start" //{default}, {darkred}, {green}, {lightgreen}, "{darkred}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
+	"war_next_nc" 		// no colors!
 	{
-		"#format"	""
-		"en"		"The War has started!"
-		
+		"en"		"Next round is War"
+		"de"		"Nächste Runde ist War"
 	}
 	
-	"war_voted" //{default}, {darkred}, {green}, {lightgreen}, "{darkred}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
+	"war_start" 
 	{
-		"#format"	""
-		"en"		"You allready voted for war"
-		
+		"en"		"The {purple}War{default} has started!"
+		"de"		"{purple}War{default} ist gestartet!"
 	}
 	
-	"war_progress"  //{default}, {darkred}, {green}, {lightgreen}, "{darkred}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
+	"war_voted" 
 	{
-		"#format"	""
-		"en"		"War is allready in progress"
-		
+		"en"		"The {purple}War{default} has started!"
+		"de"		"{purple}War{default} ist gestartet!"
 	}
 	
-	"war_minct"//{default}, {darkred}, {green}, {lightgreen}, "{darkred}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
+	"war_progress"  
 	{
-		"#format"	""
-		"en"		"For a war you need a least one CT"
-		
+		"en"		"War is {purple}allready in progress"
+		"de"		"War ist {purple}bereits gesetzt"
 	}
 	
-	
-	"war_disabled"//{default}, {darkred}, {green}, {lightgreen}, "{darkred}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
+	"war_minct"
 	{
-		"#format"	""
-		"en"		"War is disabled."
-		
+		"en"		"For a Duckhunt you need a least {purple}one CT"
+		"de"		"Für Duckhunt brauchen wir mindestens {purple}einen CT"
 	}
 	
-	"war_damage"
+	"war_disabled"
 	{
-	"#format"	"{1:i}"
+		"en"		"War is {purple}disabled."
+		"de"		"War ist {purple}deaktiviert."
+	}
+	
+	"war_damage_nc"		// no colors!
+	{
+		"#format"	"{1:i}"
 		"en"		"{1} seconds until damage enabled"
-		
+		"de"		"{1} Sekunden bis Schaden aktiv ist"
 	}
+	
 	"war_voting"
 	{
-	"#format"	""
-		"en"		"Player Voting for war is disabled"
-		
+		"#format"	""
+		"en"		"Player Voting for War is {purple}disabled"
+		"de"		"Voting für War ist {purple}ausgeschaltet"
 	}
+	
 	"war_setbywarden"
 	{
-	"#format"	""
-		"en"		"Set war by Warden is disabled"
-		
+		"en"		"Set War by Warden is {purple}disabled"
+		"de"		"War Aktivierung durch den Warden ist {purple}ausgeschaltet"
 	}
 	
 	"war_setbyadmin"
 	{
-	"#format"	""
-		"en"		"Set war by admin is disabled"
-		
+		"en"		"Set War by admin is {purple}disabled"
+		"de"		"War Aktivierung durch den Admin ist {purple}ausgeschaltet"
 	}
-	"war_timetohide"
+	
+	"war_timetohide_nc"		// no colors!
 	{
 		"#format"	"{1:i}"
 		"en"		"{1} seconds until unfreeze"
+		"de"		"{1} Sekunden bis zum unfreeze"
 	}
-	"war_info_Title"
+	
+	"war_info_Title"		// no colors!
 	{
-		"en"		"war is activ"
+		"en"		"War is activ"
 		"de"		"Krieg ist aktiv"
 	}
 	
-	"war_info_Tele"
+	"war_info_Tele"		// no colors!
 	{
 		"en"		"Do not be surprised if you hangs in the air and freezed"
 		"de"		"Nicht wundern falls ihr in der Luft hängt und dich nicht bewegen kannst"
 	}
 	
-	"war_info_Spawn"
+	"war_info_Spawn"		// no colors!
 	{
-		"en"		"Do not wonder if you spawn with weapon and the cells are open"
-		"de"		"Nicht wundern warum ihr mit waffe und offenen Zelle spawnt"
-	}
-	"war_info_TeleT"
-	{
-		"en"		"Do not be surprised if teleportet to weaponcamber"
-		"de"		"Nicht wundern weil du in die waffenkammer geportet wurdest"
+		"en"		"Do not be surprised if you spawn with weapon and the cells are open"
+		"de"		"Nicht wundern wenn ihr mit Waffe und offenen Zelle spawnt"
 	}
 	
-	"war_info_SpawnT"
-	{
-		"en"		"Do not wonder if you spawn in the open cell"
-		"de"		"Nicht wundern warum ihr in der offenen Zelle spawnt"
-	}
-	
-	"war_info_Line2"
+	"war_info_Line2"		// no colors!
 	{
 		"en"		"In warround ct play against t"
 		"de"		"In Kriegrunden spielen CT's gegen T's"
 	}
 	
-	"war_info_Line3"
+	"war_info_Line3"		// no colors!
 	{
-		"en"		"you can move and exit the wk in nodamge phase"
-		"de"		"Während der no damge phase kannst du aus der zelle/waffenkammer"
+		"en"		"While nodamge time you can move and get in position"
+		"de"		"Während der NoDamge Phase darfst du dich bewegen und in Position gehen"
 	}
 	
-	"war_info_Line4"
+	"war_info_Line4"		// no colors!
 	{
 		"en"		"All normal jailRules are repealed"
 		"de"		"Alle normalen Jailregeln sind aufgehoben!"
 	}
 	
-	"war_info_Line5"
+	"war_info_Line5"		// no colors!
 	{
 		"en"		"There is no last request!"
 		"de"		"Der letzte Terrorist hat keinen Wunsch!"
 	}
 	
-	"war_info_Line6"
+	"war_info_Line6"		// no colors!
 	{
 		"en"		"Everyone is allowed to go everywhere where he wants"
 		"de"		"Jeder darf überall hin wo er will!"
 	}
 	
-	"war_info_Line7"
+	"war_info_Line7"		// no colors!
 	{
 		"en"		"dont be an asshole!"
 		"de"		"bau keine scheisse!"
 	}
-		
+	
 	"RoundOne"
 	{
-		"en"		"Round 1 of 3"
-		"de"		"Runde 1 von 3"
+		"en"		"Round {purple}1{default} of {purple}3{default}"
+		"de"		"Runde {purple}1{default} von {purple}3{default}"
 	}
-		
+	
 	"RoundTwo"
 	{
-		"en"		"Round 2 of 3"
-		"de"		"Runde 2 von 3"
+		"en"		"Round {purple}2{default} of {purple}3{default}"
+		"de"		"Runde {purple}2{default} von {purple}3{default}"
 	}
-		
+	
 	"RoundThree"
 	{
-		"en"		"last round"
-		"de"		"letzte war runde"
+		"en"		"{purple}last{default} War round"
+		"de"		"{purple}letzte{default} War runde"
 	}
+	
 	"war_wait"
 	{
 		"#format"	"{1:i}"
-		"en"		"you must wait {1} more rounds"
-		"de"		"Du musst noch {1} Runden warten"
+		"en"		"you must wait {purple}{1}{default} more rounds"
+		"de"		"Du musst noch {purple}{1}{default} Runden warten"
 	}
 }

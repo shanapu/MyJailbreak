@@ -1,178 +1,178 @@
-"Phrases"
+"Phrases"		// working color tags {default}, {darkred}, {red}, {green}, {lightgreen}, {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
 {
 	"catch_tag"
 	{
-		"en"		"[{green}catch{default}]"
+		"en"		"[{green}MyJB.catch{default}]"
 	}
 
-	"catch_need"  //{default}, {darkred}, {green}, {lightgreen}, "{darkred}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
+	"catch_need"  
 	{
-		"#format"	"{1:i}"
-		"en"		"votes left to {darkred}catch"
-		"de"		"noch {1} votes bis {darkred}fangen{default} beginnt"
+		"#format"	"{1:i},{2:N}"
+		"en"		"{purple}{2}{default} has votet. {purple}{1}{default} votes left to {darkred}catch"
+		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}catch{default} beginnt"
 	}
 	
-	"catch_twin"
+	"catch_twin_nc"		// no colors!
 	{
-		"#format"	""
+
 		"en"		"Terrorist escaped"
-		
+		"de"		"Terroristen sind entkommen"
 	}
 	
-	"catch_ctwin"
+	"catch_ctwin_nc"		// no colors!
 	{
-		"#format"	""
-		"en"		"all Terrors catched"
-		
+
+		"en"		"All Terrors catched"
+		"de"		"Alle Terroristen wurden wieder eingefangen"
 	}
 	
 	"catch_end"
 	{
-		"#format"	""
-		"en"		"catch ended"
-		
+
+		"en"		"{purple}catch{default} ended"
+		"de"		"{purple}catch{default} beendet"
 	}
+	
 	"catch_voting"
 	{
-	"#format"	""
-		"en"		"Player Voting for war is disabled"
-		
+		"en"		"Player Voting for catch is {purple}disabled"
+		"de"		"Voting für catch ist {purple}ausgeschaltet"
 	}
+	
 	"catch_setbywarden"
 	{
-	"#format"	""
-		"en"		"Set war by Warden is disabled"
-		
+		"en"		"Set catch by Warden is {purple}disabled"
+		"de"		"catch Aktivierung durch den Warden ist {purple}ausgeschaltet"
 	}
 	
 	"catch_setbyadmin"
 	{
-	"#format"	""
-		"en"		"Set war by admin is disabled"
-		
+		"en"		"Set catch by admin is {purple}disabled"
+		"de"		"catch Aktivierung durch den Admin ist {purple}ausgeschaltet"
 	}
+	
 	"catch_next"
 	{
-		"#format"	""
-		"en"		"Next round is catch"
-		
+		"en"		"Next round is {purple}catch"
+		"de"		"Nächste Runde ist {purple}catch"
 	}
-		"catch_sprint"
-	{
-		"#format"	""
-		"en"		"You are now using {blue}Sprint!"
-		
-	}
+
 		"catch_next_nc"
 	{
-		"#format"	""
 		"en"		"Next round is catch"
-		
+		"de"		"Nächste Runde ist catch"
 	}
 	
 	"catch_start"
 	{
-		"#format"	""
-		"en"		"The catch has started!"
+		"en"		"The {purple}catch{default} has started!"
+		"de"		"{purple}catch{default} ist gestartet!"
 		
 	}
 	
-	"catch_voted"{
-		"#format"	""
-		"en"		"You allready voted for catch"
-		
+	"catch_voted"
+	{
+		"en"		"You allready voted for {purple}catch"
+		"de"		"Du hast schon für {purple}catch {default}gevotet"
 	}
 	
 	"catch_progress"
 	{
-		"#format"	""
-		"en"		"catch is allready in progress"
-		
+		"en"		"catch is {purple}allready in progress"
+		"de"		"catch ist {purple}bereits gesetzt"
 	}
 	
 	"catch_minct"
 	{
-		"#format"	""
-		"en"		"For a catch you need a least one CT"
-		
+		"en"		"For a Duckhunt you need a least {purple}one CT"
+		"de"		"Für Duckhunt brauchen wir mindestens {purple}einen CT"
 	}
 	
+	"catch_sprint"
+	{
+
+		"en"		"You are now using {blue}Sprint!"
+		"de"		"Du {blue}sprintest!"
+	}
 	
 	"catch_disabled"
 	{
-		"#format"	""
-		"en"		"catch is disabled."
-		
+		"en"		"catch is {purple}disabled."
+		"de"		"catch ist {purple}deaktiviert."
 	}
 
-	"catch_info_Title"
+	"catch_info_Title"		// no colors!
 	{
-		"en"		"catch is activ"
+		"en"		"Catch & Freeze is activ"
 		"de"		"Fangen ist aktiv"
 	}
 	
-	"catch_info_Line1"
+	"catch_info_Line1"		// no colors!
 	{
 		"en"		"CTs must catch & freeze all Ts by knifing"
-		"de"		"Die Ct müssen alle T mit dem messer einfangen und freezen"
+		"de"		"Die CT müssen alle T mit dem Messer einfangen und freezen"
 	}
-	"catch_info_Line2"
+	"catch_info_Line2"		// no colors!
 	{
 		"en"		"T can unfreeze catched Ts with knife"
 		"de"		"T können gefreezte T mit dem messer befreien"
 	}
 	
-	"catch_info_Line3"
+	"catch_info_Line3"		// no colors!
 	{
-		"en"		"round end when all T catched or roud time left"
-		"de"		"Die runde endet wenn alle T gefangen sind oder die zeit abgelaufen ist"
+		"en"		"with USE-Key you can Sprint!"
+		"de"		"mit der BENUTZEN-Taste kannst du sprinten"
 	}
 	
-	"catch_info_Line4"
+	"catch_info_Line4"		// no colors!
 	{
 		"en"		"All normal jailRules are repealed"
 		"de"		"Alle normalen Jailregeln sind aufgehoben!"
 	}
 	
-	"catch_info_Line5"
+	"catch_info_Line5"		// no colors!
 	{
 		"en"		"There is no last request!"
 		"de"		"Der letzte Terrorist hat keinen Wunsch!"
 	}
 	
-	"catch_info_Line6"
+	"catch_info_Line6"		// no colors!
 	{
 		"en"		"Everyone is allowed to go everywhere where he wants"
 		"de"		"Jeder darf überall hin wo er will!"
 	}
 	
-	"catch_info_Line7"
+	"catch_info_Line7"		// no colors!
 	{
 		"en"		"dont be an asshole!"
 		"de"		"bau keine scheisse!"
 	}
+	
 	"catch_wait"
 	{
 		"#format"	"{1:i}"
-		"en"		"you must wait {1} more rounds"
-		"de"		"Du musst noch {1} Runden warten"
+		"en"		"you must wait {purple}{1}{default} more rounds"
+		"de"		"Du musst noch {purple}{1}{default} Runden warten"
 	}
-	"catch_win"
-	{
-		"#format"	""
-		"en"		"All prisoners catched"
-		"de"		"Alle Häftlinge wurden eingefangen"
-	}
+	
 	"catch_unfreeze"
 	{
 		"#format"	"{1:N},{2:N}"
-		"en"		"prisoner {1} unfreezed {2}"
-		"de"		"Häftling {1} hat {2} befreit"
+		"en"		"prisoner {purple}{1}{default} unfreezed {blue}{2}"
+		"de"		"Häftling {purple}{1}{default} hat {blue}{2}{default} befreit"
 	}
+	
 	"catch_catch"
 	{
 		"#format"	"{1:N},{2:N}"
-		"en"		"Guard {1} freezed {2}"
-		"de"		"Wärter {1} hat {2} gefangen"
+		"en"		"Guard {purple}{1}{default} freezed {blue}{2}{default}"
+		"de"		"Wärter {purple}{1}{default} hat {blue}{2}{default} gefangen"
+	}
+	
+	"catch_win"
+	{
+
+		"en"		"All prisoners {purple}catched"
+		"de"		"Alle Häftlinge wurden {purple}eingefangen"
 	}
 }

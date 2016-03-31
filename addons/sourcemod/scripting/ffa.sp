@@ -235,32 +235,28 @@ public Action VoteFFA(int client,int args)
 	{	
 		if (gc_bVote.BoolValue)
 		{
-			if (GetTeamClientCount(3) > 0)
+			if (!IsFFA && !StartFFA)
 			{
-				if (!IsFFA && !StartFFA)
+				if (g_iRoundLimits == 0)
 				{
-					if (g_iRoundLimits == 0)
+					if (StrContains(g_sHasVoted, steamid, true) == -1)
 					{
-						if (StrContains(g_sHasVoted, steamid, true) == -1)
+						int playercount = (GetClientCount(true) / 2);
+						g_iVoteCount++;
+						int Missing = playercount - g_iVoteCount + 1;
+						Format(g_sHasVoted, sizeof(g_sHasVoted), "%s,%s", g_sHasVoted, steamid);
+						
+						if (g_iVoteCount > playercount)
 						{
-							int playercount = (GetClientCount(true) / 2);
-							g_iVoteCount++;
-							int Missing = playercount - g_iVoteCount + 1;
-							Format(g_sHasVoted, sizeof(g_sHasVoted), "%s,%s", g_sHasVoted, steamid);
-							
-							if (g_iVoteCount > playercount)
-							{
-								StartNextRound();
-							}
-							else CPrintToChatAll("%t %t", "ffa_tag" , "ffa_need", Missing, client);
+							StartNextRound();
 						}
-						else CPrintToChat(client, "%t %t", "ffa_tag" , "ffa_voted");
+						else CPrintToChatAll("%t %t", "ffa_tag" , "ffa_need", Missing, client);
 					}
-					else CPrintToChat(client, "%t %t", "ffa_tag" , "ffa_wait", g_iRoundLimits);
+					else CPrintToChat(client, "%t %t", "ffa_tag" , "ffa_voted");
 				}
-				else CPrintToChat(client, "%t %t", "ffa_tag" , "ffa_progress");
+				else CPrintToChat(client, "%t %t", "ffa_tag" , "ffa_wait", g_iRoundLimits);
 			}
-			else CPrintToChat(client, "%t %t", "ffa_tag" , "ffa_minct");
+			else CPrintToChat(client, "%t %t", "ffa_tag" , "ffa_progress");
 		}
 		else CPrintToChat(client, "%t %t", "war_tag" , "war_voting");
 	}
@@ -443,14 +439,14 @@ public Action:NoDamage(Handle:timer)
 	{
 		g_iTruceTime--;
 		
-		PrintHintTextToAll("%t", "ffa_damage", g_iTruceTime);
+		PrintHintTextToAll("%t", "ffa_damage_nc", g_iTruceTime);
 		
 		return Plugin_Continue;
 	}
 	
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	
-	PrintHintTextToAll("%t", "ffa_start");
+	PrintHintTextToAll("%t", "ffa_start_nc");
 	
 	for(int client=1; client <= MaxClients; client++) 
 	{
@@ -482,8 +478,8 @@ public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 		
 		if (FreezeTimer != null) KillTimer(FreezeTimer);
 		if (TruceTimer != null) KillTimer(TruceTimer);
-		if (winner == 2) PrintHintTextToAll("%t", "ffa_twin"); 
-		if (winner == 3) PrintHintTextToAll("%t", "ffa_ctwin");
+		if (winner == 2) PrintHintTextToAll("%t", "ffa_twin_nc"); 
+		if (winner == 3) PrintHintTextToAll("%t", "ffa_ctwin_nc");
 		if (FFARound == 3)
 		{
 			IsFFA = false;

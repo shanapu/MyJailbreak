@@ -437,7 +437,7 @@ public Action:Freezed(Handle:timer)
 	{
 		g_iFreezeTime--;
 		
-		PrintHintTextToAll("%t", "war_timetohide", g_iFreezeTime);
+		PrintHintTextToAll("%t", "war_timetohide_nc", g_iFreezeTime);
 		
 		return Plugin_Continue;
 	}
@@ -476,7 +476,7 @@ public Action:NoDamage(Handle:timer)
 	{
 		g_iTruceTime--;
 		
-		PrintHintTextToAll("%t", "war_damage", g_iTruceTime);
+		PrintHintTextToAll("%t", "war_damage_nc", g_iTruceTime);
 		
 		return Plugin_Continue;
 	}
@@ -511,8 +511,8 @@ public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 		
 		if (FreezeTimer != null) KillTimer(FreezeTimer);
 		if (TruceTimer != null) KillTimer(TruceTimer);
-		if (winner == 2) PrintHintTextToAll("%t", "war_twin"); 
-		if (winner == 3) PrintHintTextToAll("%t", "war_ctwin");
+		if (winner == 2) PrintHintTextToAll("%t", "war_twin_nc"); 
+		if (winner == 3) PrintHintTextToAll("%t", "war_ctwin_nc");
 		if (WarRound == 3)
 		{
 			IsWar = false;

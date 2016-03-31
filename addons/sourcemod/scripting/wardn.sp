@@ -502,7 +502,7 @@ public Action VoteWarden(int client,int args)
 						RemoveTheWarden(client);
 						g_iVoteCount = 0;
 					}
-					else CPrintToChatAll("%t %t", "warden_tag" , "warden_need", Missing);
+					else CPrintToChatAll("%t %t", "warden_tag" , "warden_need", Missing, client);
 				}
 				else CPrintToChat(client, "%t %t", "warden_tag" , "warden_voted");
 			}
@@ -742,8 +742,6 @@ void SetTheWarden(int client)
 		Warden = client;
 		CreateTimer(0.5, Timer_WardenFixColor, client, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 		SetClientListeningFlags(client, VOICE_NORMAL);
-		GivePlayerItem(client, "weapon_healthshot");
-		GivePlayerItem(client, "weapon_healthshot");
 		
 		Forward_OnWardenCreation(client);
 	}
@@ -778,7 +776,7 @@ public Action:SetCountDown(client, args)
 		{
 			g_iCountTime = 9;
 			CreateTimer( 1.0, StartCountdown, client, TIMER_REPEAT);
-			PrintHintTextToAll("%t", "warden_countdownhint");
+			PrintHintTextToAll("%t", "warden_countdownhint_nc");
 			CPrintToChatAll("%t %t", "warden_tag" , "warden_countdownhint");
 		}
 		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");

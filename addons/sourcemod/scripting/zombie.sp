@@ -380,11 +380,11 @@ public Action:Zombie(Handle:timer)
 			{
 				if (GetClientTeam(client) == 3)
 				{
-					PrintCenterText(client,"%t", "zombie_timetounfreeze", g_iFreezeTime);
+					PrintCenterText(client,"%t", "zombie_timetounfreeze_nc", g_iFreezeTime);
 				}
 				if (GetClientTeam(client) == 2)
 				{
-					PrintCenterText(client,"%t", "zombie_timetozombie", g_iFreezeTime);
+					PrintCenterText(client,"%t", "zombie_timetozombie_nc", g_iFreezeTime);
 				}
 		}
 		return Plugin_Continue;
@@ -408,7 +408,7 @@ public Action:Zombie(Handle:timer)
 			CreateTimer( 0.0, ShowOverlayStart, client);
 		}
 	}
-	PrintHintTextToAll("%t", "zombie_start");
+	PrintHintTextToAll("%t", "zombie_start_nc");
 	CPrintToChatAll("%t %t", "zombie_tag" , "zombie_start");
 	FreezeTimer = null;
 	
@@ -429,8 +429,8 @@ public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 		if (FreezeTimer != null) KillTimer(FreezeTimer);
 		
 		
-		if (winner == 2) PrintHintTextToAll("%t", "zombie_twin");
-		if (winner == 3) PrintHintTextToAll("%t", "zombie_ctwin");
+		if (winner == 2) PrintHintTextToAll("%t", "zombie_twin_nc");
+		if (winner == 3) PrintHintTextToAll("%t", "zombie_ctwin_nc");
 		IsZombie = false;
 		StartZombie = false;
 		ZombieRound = 0;

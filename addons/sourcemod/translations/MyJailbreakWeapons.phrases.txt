@@ -1,99 +1,113 @@
-"Phrases"
+"Phrases"		// working color tags {default}, {darkred}, {red}, {green}, {lightgreen}, {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
 {
 	"weapons_tag"
 	{
-		"en"		"[{green}weapons{default}]"
+		"en"		"[{green}MyJB.weapons{default}]"
 	}
 	
-	"weapons_same"  //{default}, {darkred}, {green}, {lightgreen}, "{darkred}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
+	"weapons_same"
 	{
-		"#format"	""
+
 		"en"		"You will get the {purple} same weapon{default} next round"
 		"de"		"Du bekommst {purple}die gleiche Waffe{default} in der nächsten Runde."
 	}
-	"weapons_sameall"  //{default}, {darkred}, {green}, {lightgreen}, "{darkred}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
+	
+	"weapons_sameall"
 	{
-		"#format"	""
+
 		"en"		"You will get the {purple} same weapon{default} next rounds"
 		"de"		"Du bekommst {purple}die gleiche Waffe{default} in den nächsten Runden."
 	}
-		"weapons_random"  //{default}, {darkred}, {green}, {lightgreen}, "{darkred}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
+	
+	"weapons_random"
 	{
-		"#format"	""
+
 		"en"		"You will get a {purple} random weapon{default} next round"
 		"de"		"Du bekommst {purple}eine Zufalls Waffe{default} in der nächsten Runde."
 	}
-	"weapons_randomall"  //{default}, {darkred}, {green}, {lightgreen}, "{darkred}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
+	
+	"weapons_randomall"
 	{
-		"#format"	""
+
 		"en"		"You will get a {purple} random weapon{default} next rounds"
 		"de"		"Du bekommst {purple}eine Zufalls Waffe{default} in den nächsten Runden."
 	}
-	"weapons_next"  //{default}, {darkred}, {green}, {lightgreen}, "{darkred}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
+	
+	"weapons_next"
 	{
-		"#format"	""
+
 		"en"		"You will get your {purple} new weapon{default} next round"
 		"de"		"Du bekommst {purple}deine neue Waffe{default} in der nächsten Runde."
 	}
-		"weapons_ta"  //{default}, {darkred}, {green}, {lightgreen}, "{darkred}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
+	
+	"weapons_ta"
 	{
-		"#format"	""
+
 		"en"		"You've got a {purple} TA grenade{default}"
 		"de"		"Du haste eine {purple}TA Granate{default} bekommen."
 	}
-		"weapons_health"  //{default}, {darkred}, {green}, {lightgreen}, "{darkred}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
+	
+	"weapons_health"
 	{
-		"#format"	""
+
 		"en"		"You've got a {purple} healthshot{default}"
 		"de"		"Du haste eine {purple}healthshot{default} bekommen."
 	}
-	"weapons_info_Title"
+	
+	"weapons_info_Title"	// no colors!
 	{
-		"#format"	""
+
 		"en"		"MyJailbreak Weapon Menu"
 		"de"		"MyJailbreak Waffen Menu"
 	}
-	"weapons_info_choose"
+	
+	"weapons_info_choose"	// no colors!
 	{
-		"#format"	""
+
 		"en"		"choose weapon"
 		"de"		"Waffe wählen"
 	}
-	"weapons_info_same"
+	
+	"weapons_info_same"		// no colors!
 	{
-		"#format"	""
+
 		"en"		"same weapon"
 		"de"		"Gleiche Waffe"
 	}
-	"weapons_info_sameall"
+	
+	"weapons_info_sameall"	// no colors!
 	{
-		"#format"	""
+
 		"en"		"same weapon everytime"
 		"de"		"Jedesmal gleiche Waffe"
-	}	
-	"weapons_info_random"
+	}
+	
+	"weapons_info_random"	// no colors!
 	{
-		"#format"	""
+
 		"en"		"random weapon"
 		"de"		"Zufalls Waffe"
 	}
-	"weapons_info_randomall"
+	
+	"weapons_info_randomall"	// no colors!
 	{
-		"#format"	""
+
 		"en"		"random weapon everytime"
 		"de"		"Jedesmal zufalls Waffe"
-	}	
-	"weapons_info_prim"
+	}
+	
+	"weapons_info_prim"		// no colors!
 	{
-		"#format"	""
+
 		"en"		"Primary weapon:"
 		"de"		"Hauptwaffe:"
-	}	
-	"weapons_info_sec"
+	}
+	
+	"weapons_info_sec"		// no colors!
 	{
-		"#format"	""
+
 		"en"		"Secondary weapon:"
 		"de"		"Handwaffe:"
 	}
-
+	
 }

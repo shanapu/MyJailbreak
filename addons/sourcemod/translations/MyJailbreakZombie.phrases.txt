@@ -1,165 +1,167 @@
-"Phrases"
+"Phrases"		// working color tags {default}, {darkred}, {red}, {green}, {lightgreen}, {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
 {
 	"zombie_tag"
 	{
-		"en"		"[{green}zombie{default}]"
+		"en"		"[{green}MyJB.Zombie{default}]"
 	}
-	"zombie_need"  //{default}, {darkred}, {green}, {lightgreen}, "{darkred}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
+	
+	"zombie_need"
 	{
-		"#format"	"{1:i}"
-		"en"		"votes left to {darkred}zombie"
-		"de"		"noch {1} votes bis {darkred}zombie{default} beginnt"
+		"#format"	"{1:i},{2:N}"
+		"en"		"{purple}{2}{default} has votet. {purple}{1}{default} votes left to {darkred}Zombie"
+		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}Zombie{default} beginnt"
 	}
-	"zombie_twin"
+	
+	"zombie_voting"
 	{
-		"#format"	""
-		"en"		"Terroist surived"
-		
+		"en"		"Player Voting for Zombie is {purple}disabled"
+		"de"		"Voting für Zombie ist {purple}ausgeschaltet"
 	}
-		"zombie_voting"
-	{
-	"#format"	""
-		"en"		"Player Voting for zombie is disabled"
-		
-	}
+	
 	"zombie_setbywarden"
 	{
-	"#format"	""
-		"en"		"Set zombie by Warden is disabled"
-		
+		"en"		"Set Zombie by Warden is {purple}disabled"
+		"de"		"Zombie Aktivierung durch den Warden ist {purple}ausgeschaltet"
 	}
 	
 	"zombie_setbyadmin"
 	{
-	"#format"	""
-		"en"		"Set zombie by admin is disabled"
-		
+		"en"		"Set Zombie by admin is {purple}disabled"
+		"de"		"Zombie Aktivierung durch den Admin ist {purple}ausgeschaltet"
 	}
-	"zombie_ctwin"
+	
+	"zombie_ctwin_nc"		// no colors!
 	{
-		"#format"	""
-		"en"		"Zombies killed all"
-		
+		"en"		"Zombies killed all Human"
+		"de"		"Die Zombies haben die Menschen ausgelöscht"
+	}
+	
+	"zombie_twin_nc"		// no colors!
+	{
+		"en"		"Humans has surrived"
+		"de"		"Die Menschen haben überlebt"
 	}
 	
 	"zombie_end"
 	{
-		"#format"	""
-		"en"		"zombie ended"
-		
+		"en"		"{purple}Zombie{default} ended"
+		"de"		"{purple}Zombie{default} beendet"
 	}
 	
 	"zombie_next"
 	{
-		"#format"	""
-		"en"		"Next round is zombie"
-		
-	}
-		"zombie_next_nc"
-	{
-		"#format"	""
-		"en"		"Next round is zombie"
-		
+		"en"		"Next round is Zombie"
+		"de"		"Nächste Runde ist Zombie"
 	}
 	
+	"zombie_next_nc"		// no colors!
+	{
+		"en"		"Next round is {purple}Zombie"
+		"de"		"Nächste Runde ist {purple}Zombie"
+	}
 	
 	"zombie_start"
 	{
-		"#format"	""
-		"en"		"The zombie has started!"
-		
+		"en"		"The {purple}Zombie{default} has started!"
+		"de"		"{purple}Zombie{default} ist gestartet!"
 	}
 	
-	"zombie_voted"{
-		"#format"	""
-		"en"		"You allready voted for zombie"
-		
+	"zombie_start_nc"		// no colors!
+	{
+		"en"		"The Zombie has started!"
+		"de"		"Zombie ist gestartet!"
+	}
+	
+	"zombie_voted"
+	{
+		"en"		"You allready voted for {purple}Zombie"
+		"de"		"Du hast schon für {purple}Zombie {default}gevotet"
 	}
 	
 	"zombie_progress"
 	{
-		"#format"	""
-		"en"		"zombie is allready in progress"
-		
+		"en"		"Zombie is {purple}allready in progress"
+		"de"		"Zombie ist {purple}bereits gesetzt"
 	}
 	
 	"zombie_minct"
 	{
-		"#format"	""
-		"en"		"For a zombie you need a least one CT"
-		
+		"en"		"For a Zombie you need a least {purple}one CT"
+		"de"		"Für Zombie brauchen wir mindestens {purple}einen CT"
 	}
-	
 	
 	"zombie_disabled"
 	{
-		"#format"	""
-		"en"		"zombie is disabled."
-		
+		"en"		"Zombie is {purple}disabled."
+		"de"		"Zombie ist {purple}deaktiviert."
 	}
 	
-	"zombie_timetozombie"
+	"zombie_timetozombie_nc"	// no colors!
 	{
 		"#format"	"{1:i}"
 		"en"		"{1} seconds to hide "
-		
+		"de"		"{1} Sekunden zum verstecken"
 	}
-	"zombie_timetounfreeze"
+	
+	"zombie_timetounfreeze_nc"	// no colors!
 	{
 		"#format"	"{1:i}"
 		"en"		"{1} seconds until unfreeze"
-		
-	}
-			"zombie_info_Title"
-	{
-		"en"		"zombie is activ"
-		"de"		"zombie ist aktiv"
+		"de"		"{1} Sekunden bis zum unfreeze"
 	}
 	
-	"zombie_info_Line1"
+	"zombie_info_Title"		// no colors!
+	{
+		"en"		"Zombie is activ"
+		"de"		"Zombie ist aktiv"
+	}
+	
+	"zombie_info_Line1"		// no colors!
 	{
 		"en"		"Zombies(ct) against Humans(t)"
 		"de"		"Zombies(ct) gegen Humans(t)"
 	}
-	"zombie_info_Line2"
+	
+	"zombie_info_Line2"		// no colors!
 	{
 		"en"		"Zombies freezed and Human can hide"
-		"de"		"Zombies sind eine zeit gefreezt damit die T sich verstcken können"
+		"de"		"Zombies sind eine zeit gefreezt damit die T sich verstecken können"
 	}
 	
-	"zombie_info_Line3"
+	"zombie_info_Line3"		// no colors!
 	{
 		"en"		"you can move and exit the wk in nodamge phase"
 		"de"		"Während der no damge phase kannst du aus der zelle/waffenkammer"
 	}
 	
-	"zombie_info_Line4"
+	"zombie_info_Line4"		// no colors!
 	{
 		"en"		"All normal jailRules are repealed"
 		"de"		"Alle normalen Jailregeln sind aufgehoben!"
 	}
 	
-	"zombie_info_Line5"
+	"zombie_info_Line5"		// no colors!
 	{
 		"en"		"There is no last request!"
 		"de"		"Der letzte Terrorist hat keinen Wunsch!"
 	}
 	
-	"zombie_info_Line6"
+	"zombie_info_Line6"		// no colors!
 	{
 		"en"		"Everyone is allowed to go everywhere where he wants"
 		"de"		"Jeder darf überall hin wo er will!"
 	}
 	
-	"zombie_info_Line7"
+	"zombie_info_Line7"		// no colors!
 	{
 		"en"		"dont be an asshole!"
 		"de"		"bau keine scheisse!"
 	}
+	
 		"zombie_wait"
 	{
 		"#format"	"{1:i}"
-		"en"		"you must wait {1} more rounds"
-		"de"		"Du musst noch {1} Runden warten"
+		"en"		"you must wait {purple}{1}{default} more rounds"
+		"de"		"Du musst noch {purple}{1}{default} Runden warten"
 	}
 }

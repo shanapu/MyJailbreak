@@ -1,8 +1,8 @@
-"Phrases"
+"Phrases"		// working color tags {default}, {darkred}, {red}, {green}, {lightgreen}, {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
 {
 	"warden_tag"
 	{
-		"en"		"[{green}warden{default}]"
+		"en"		"[{green}MyJB.warden{default}]"
 	}
 	
 	"warden_new"
@@ -12,33 +12,37 @@
 		"es"		"{purple}{1}{default} Es ahora el AlcÃ¡ide de esta PrisiÃ³n."
 		"pt"		"{purple}{1}{default} Agora, o diretor da prisão.."
 		"sv"		"{purple}{1}{default} har blivit fängelsedirektör över detta fängelse."
+		"de"		"{purple}{1}{default} ist der neue Warden dieses Gefängnisses."
 	}
 	
-	"warden_new_nc"
+	"warden_new_nc"		// no colors!
 	{
 		"#format"	"{1:N}"
 		"en"		"{1} has become the warden of this prison."
 		"es"		"{1} Es ahora el AlcÃ¡ide de esta PrisiÃ³n."
 		"pt"		"{1} Agora, o diretor da prisão.."
 		"sv"		"{1} har blivit fängelsedirektör över detta fängelse."
+		"de"		"{1} ist der neue Warden dieses Gefängnisses."
 	}
 	
 	"warden_playerdead"
 	{
-		"#format"	""
-		"en"		"only alive players may become warden."
-		"es"		"SÃ³lo los jugadores vivos, pueden ser el AlcÃ¡ide."
-		"pt"		"Apenas os jogadores podem viver o diretor.."
+
+		"en"		"only {purple}alive players{default} may become warden."
+		"es"		"SÃ³lo los {purple}jugadores vivos{default}, pueden ser el AlcÃ¡ide."
+		"pt"		"Apenas os {purple}jogadores podem{default} viver o diretor.."
 		"sv"		"Endast levande spelare kan bli fängelsedirektör."
+		"de"		"nur {purple}lebende Spieler{default} können Warden werden."
 	}
 	
 	"warden_ctsonly"
 	{
-		"#format"	""
-		"en"		"only Counter-Terrorists may become warden."
-		"es"		"SÃ³lo los Anti-Terroristas pueden ser el AlcÃ¡ide."
-		"pt"		"Apenas o diretor pode ser AntiTerrorista."
-		"sv"		"Endast Anti-Terrorister kan bli fängelsedirektör."
+
+		"en"		"only {purple}Counter-Terrorists{default} may become warden."
+		"es"		"SÃ³lo los {purple}Anti-Terroristas{default} pueden ser el AlcÃ¡ide."
+		"pt"		"Apenas o diretor pode ser {purple}AntiTerrorista{default}."
+		"sv"		"Endast {purple}Anti-Terrorister{default} kan bli fängelsedirektör."
+		"de"		"nur {purple}Counter-Terrorists{default} können Warden werden."
 	}
 	
 	"warden_exist"
@@ -48,6 +52,7 @@
 		"es"		"AlcÃ¡ide Actual: {purple}{1}{default}"
 		"pt"		"Atual diretor: {purple}{1}{default}"
 		"sv"		"nuvarande fängelsedirektör är: {purple}{1}{default}"
+		"de"		"Derzeitiger Warden ist {purple}{1}{default}"
 	}
 	
 	"warden_retire"
@@ -57,57 +62,64 @@
 		"es"		"{purple}{1}{default} ha decidido jubilarse. Ahora toca elegir uno nuevo."
 		"pt"		"{purple}{1}{default} o atual diretor, decidiu se aposentar. Agora começa a escolher um novo.."
 		"sv"		"{purple}{1}{default} har bestämt sig för att avgå. Ni bör nu välja en ny."
+		"de"		"{purple}{1}{default} ist zurückgetreten. Wir brauchen einen neuen Warden!"
 	}
-		
-	"warden_retire_nc"
+	
+	"warden_retire_nc"	// no colors!
 	{
 		"#format"	"{1:N}"
 		"en"		"{1} has decided to retire. You may now choose a new one."
 		"es"		"{1} ha decidido jubilarse. Ahora toca elegir uno nuevo."
 		"pt"		"{1} o atual diretor, decidiu se aposentar. Agora começa a escolher um novo.."
 		"sv"		"{1} har bestämt sig för att avgå. Ni bör nu välja en ny."
+		"de"		"{1} ist zurückgetreten. Wir brauchen einen neuen Warden!"
 	}
 	
 	"warden_notwarden"
 	{
-		"#format"	""
-		"en"		"you must be the warden to use this command"
 
+		"en"		"You must be the {purple}Warden{default} to use this command."
+		"de"		"Du musst {purple}Warden{default} sein um diesen Befehl zu benutzten."
 	}
 	
 	"warden_dead"
 	{
-		"#format"	""
+
 		"en"		"the warden are now {darkred}dead{default}. You may now choose a new one."
 		"es"		"El AlcÃ¡ide ha {darkred}dead{default}! Ahora toca elegir uno juevo."
 		"pt"		"O diretor está {darkred}dead{default}, agora começa a escolher um novo."
 		"sv"		"fängelsedirektören är död. Ni bör nu välja en ny."
+		"de"		"der Warden ist {darkred}Tod{default}! Ihr solltet jetzt einen neuen wählen!"
 	}
-		
-	"warden_dead_nc"
+	
+	"warden_dead_nc"	// no colors!
 	{
-		"#format"	""
+
 		"en"		"the warden are now dead. You may now choose a new one."
 		"es"		"El AlcÃ¡ide ha muerto! Ahora toca elegir uno juevo."
 		"pt"		"O diretor está morto, agora começa a escolher um novo."
 		"sv"		"fängelsedirektören är död. Ni bör nu välja en ny."
+		"de"		"der Warden ist Tod! Ihr solltet jetzt einen neuen wählen!"
 	}
+	
 	"warden_disconnected"
 	{
-		"#format"	""
+
 		"en"		"the warden has {purple}disconnected{default}. You may now choose a new one."
 		"es"		"El AlcÃ¡ide ha desertado. Ahora toca elegir uno nuevo."
 		"pt"		"O diretor deixou o jogo. Agora começa a escolher um novo."
 		"sv"		"fängelsedirektören har lämnat. Ni bör nu välja en ny."
+		"de"		"Der Warden ist {purple}disconnected{default}. Wir brauchen einen neuen Warden!"
 	}
-		
-	"warden_disconnected_nc"
+	
+	"warden_disconnected_nc"	// no colors!
 	{
-		"#format"	""
+
 		"en"		"the warden has disconnected. You may now choose a new one."
 		"es"		"El AlcÃ¡ide ha desertado. Ahora toca elegir uno nuevo."
 		"pt"		"O diretor deixou o jogo. Agora começa a escolher um novo."
 		"sv"		"fängelsedirektören har lämnat. Ni bör nu välja en ny."
+		"de"		"Der Warden ist disconnected. Wir brauchen einen neuen Warden!"
 	}
 	
 	"warden_removed"
@@ -117,142 +129,160 @@
 		"es"		"Administrador: {purple}{1}{default} ha prejubilado al AlcÃ¡ide: {2}"
 		"pt"		"O Administrador do: {purple}{1}{default} o diretor se aposentou cedo: {2}"
 		"sv"		"Admin: {purple}{1}{default} avskedade Fängelsedirektören: {2}"
+		"de"		"Admin {purple}{1}{default} hat Warden {2} seines Amtes enthoben."
 	}
-		"warden_removed_nc"
+	
+	"warden_removed_nc"		// no colors!
 	{
 		"#format"	"{1:N},{2:N}"
 		"en"		"Admin: {1} fired Warden: {2}"
 		"es"		"Administrador: {1} ha prejubilado al AlcÃ¡ide: {2}"
 		"pt"		"O Administrador do: {{1} o diretor se aposentou cedo: {2}"
 		"sv"		"Admin: {1} avskedade Fängelsedirektören: {2}"
+		"de"		"Admin {1} hat Warden {2} seines Amtes enthoben."
 	}
 	
 	"warden_noexist"
 	{
-		"#format"	""
-		"en"		"there was no warden to fire."
+
+		"en"		"there was {purple}no warden{default} to fire."
 		"es"		"Actualmente no existe ningÃºn AlcÃ¡ide en la prisiÃ³n."
 		"pt"		"Atualmente não há carcereiro na prisão."
 		"sv"		"det fanns ingen fängelsedirektör att avskeda."
+		"de"		"es gibt {purple}keinen Warden{default} zum entlassen."
 	}
 	
 	"warden_disabled"
 	{
-		"#format"	""
-		"en"		"Warden is disabled."
 
+		"en"		"Warden is {purple}disabled{default}."
+		"de"		"Warden ist {purple}ausgeschaltet{default}."
 	}
 	
 	"warden_adminset"
 	{
 		"#format"	"{1:N}"
 		"en"		"Admin: {purple}{1}{default} set as Warden"
-
+		"de"		"Admin: {purple}{1}{default} wurde zum Warden ernannt"
 	}
 	
-	"warden_replace"
-	{
-		"#format"	"{1:N}"
-		"en"		"{1} is Warden, want replace him?"
-
-	}
 	"warden_dooropen"
 	{
-		"#format"	""
-		"en"		"Warden has open the cells."
+
+		"en"		"Warden has {purple}open{default} the cells."
+		"de"		"Warden hat hat die Zellentüren {purple}geöffnet{default}."
 	}
-		"warden_doorclose"
+	
+	"warden_doorclose"
 	{
-		"#format"	""
-		"en"		"Warden has close the cells."
+
+		"en"		"Warden has {purple}close{default} the cells."
+		"de"		"Warden hat hat die Zellentüren {purple}geschlossen{default}."
 	}
-	"warden_notwarden"
+	
+	"warden_openauto"
 	{
-		"#format"	""
-		"en"		"you are not the warden of this prison"
+
+		"en"		"cell doors {purple}open automaticly{default}"
+		"de"		"Zellentüren wurden {purple}automatisch geöffnet{default}"
 	}
-		"warden_openauto"
+	
+	"warden_opentime"
 	{
-		"#format"	""
-		"en"		"cell doors open automaticly"
+
+		"en"		"Now, the {purple}cell doors{default} should be open"
+		"de"		"jetzt sollten zeitlich die {purple}Zellen{default} geöffnet werden"
 	}
-		"warden_opentime"
-	{
-		"#format"	""
-		"en"		"Now, the cell doors should be open"
-	}
-	"warden_startcountdown"
-	{
-		"#format"		""
-		"en"			"Warden start a Countdown!"
-	}	
+	
 	"warden_ffison"
 	{
-		"#format"		""
-		"en"			"friendly fire enabled"
-	}	
+
+		"en"		"friendly fire {purple}enabled"
+		"de"		"Friendly Fire {purple}ist AN!"
+	}
+	
 	"warden_ffisoff"
 	{
 		"#format"		""
-		"en"			"friendly fire disabled"
-	}		
-		"warden_noblockon"
-	{
-		"#format"	""
-		"en"		"the warden set noblock on!"
+		"en"			"friendly fire {purple}disabled"
+		"de"			"Friendly Fire {purple}ist AUS!"
 	}
-		"warden_voting"
+	
+	"warden_voting"
 	{
-	"#format"	""
-		"en"		"Voting for kick warden is disabled"
-		
+
+		"en"		"Voting for kick {purple}warden{default} is disabled"
+		"de"		"Voting gegen den {purple}Warden{default} ist ausgeschaltet!"
 	}
-			"warden_countdown_nc"
+	
+	"warden_countdown_nc"	// no colors!
 	{
-	"#format"	"{1:i}"
+		"#format"	"{1:i}"
 		"en"		"Start in {1} seconds!"
+		"de"		"Start in {1} Sekunden!"
 	}
-			"warden_countdown"
+	
+	"warden_countdown"
 	{
-	"#format"	"{1:i}"
+		"#format"	"{1:i}"
 		"en"		"Start in {purple}{1}{default} seconds!"
+		"de"		"Start in {purple}{1}{default} Sekunden!"
 	}
-		"warden_countdownhint_nc"
+	
+	"warden_countdownhint"
 	{
-	"#format"	""
+
 		"en"		"Attention! The Warden {purple}Started a CountDown!"
+		"de"		"Aufgepasst! Der Warden hat einen{purple}CountDown gestartet!"
 	}
-			"warden_countdownhint"
+	
+	"warden_countdownhint_nc"	// no colors!
 	{
-	"#format"	""
+
 		"en"		"Attention! The Warden Started a CountDown!"
+		"de"		"Aufgepasst! Der Warden hat einen CountDown gestartet!"
 	}
-			"warden_countdownstart"
+	
+	"warden_countdownstart"
 	{
-	"#format"	""
+
 		"en"		"{purple}GO! {darkred}START!"
+		"de"		"{purple}GO! {darkred}START! {green}LOS!"
 	}
-			"warden_countdownstart_nc"
+	
+	"warden_countdownstart_nc"		// no colors!
 	{
-	"#format"	""
+
 		"en"		"GO! START!"
+		"de"		"GO! START! LOS!"
 	}
-			"warden_noblockoff"
+	
+	"warden_noblockoff"
 	{
-		"#format"	""
-		"en"		"the warden set noblock off!"
+
+		"en"		"the warden set {purple}noblock off!"
+		"de"		"der Warden hat {purple}noblock ausgeschaltet!"
 	}
-				"warden_need"
+	
+	"warden_noblockon"
+	{
+
+		"en"		"the warden set {purple}noblock on!"
+		"de"		"der Warden hat {purple}noblock eingeschaltet!"
+	}
+	
+	"warden_need"
 	{
 		"#format"	"{1:i}"
 		"en"		"{1} votes left to {darkred}kick warden"
 		"de"		"noch {1} votes bis der {darkred}warden{default} geht"
 	}
-				"warden_voted"
-		{
-		"#format"	""
-		"en"		"You allready voted for kick warden"
-		
+	
+	"warden_voted"
+	{
+
+		"en"		"You allready voted for {purple}kick warden{default}"
+		"en"		"du hast schon {purple}gegen den Warden{default} gestimmt"
 	}
 	
 }

@@ -1,161 +1,167 @@
-"Phrases"
+"Phrases"		// working color tags {default}, {darkred}, {red}, {green}, {lightgreen}, {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
 {
 	"duckhunt_tag"
 	{
-		"en"		"[{green}duckhunt{default}]"
+		"en"		"[{green}MyJB.Duckhunt{default}]"
 	}
-	"duckhunt_need"  //{default}, {darkred}, {green}, {lightgreen}, "{darkred}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
+	
+	"duckhunt_need"
 	{
-		"#format"	"{1:i}"
-		"en"		"votes left to {darkred}duckhunht"
-		"de"		"noch {1} votes bis {darkred}entenjagd{default} beginnt"
+		"#format"	"{1:i},{2:N}"
+		"en"		"{purple}{2}{default} has votet. {purple}{1}{default} votes left to {darkred}duckhunt"
+		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}duckhunt{default} beginnt"
 	}
-	"duckhunt_twin"
-	{
-		"#format"	""
-		"en"		"The duckhunter died"
-		
-	}
+	
 	"duckhunt_voting"
 	{
-	"#format"	""
-		"en"		"Player Voting for duckhunt is disabled"
-		
+
+		"en"		"Player Voting for Duckhunt is {purple}disabled"
+		"de"		"Voting für duckhuntt ist {purple}ausgeschaltet"
 	}
+	
 	"duckhunt_setbywarden"
 	{
-	"#format"	""
-		"en"		"Set duckhunt by Warden is disabled"
-		
+
+		"en"		"Set Duckhunt by Warden is {purple}isabled"
+		"de"		"Duckhunt Aktivierung durch den Warden ist {purple}ausgeschaltet"
 	}
 	
 	"duckhunt_setbyadmin"
 	{
-	"#format"	""
-		"en"		"Set duckhunt by admin is disabled"
-		
+
+		"en"		"Set Duckhunt by admin is {purple}disabled"
+		"de"		"Duckhunt Aktivierung durch den Admin ist {purple}ausgeschaltet"
 	}
-	"duckhunt_ctwin"
+	
+	"duckhunt_ctwin_nc"
 	{
-		"#format"	""
-		"en"		"all ducks got hunted"
-		
+
+		"en"		"All ducks got hunted"
+		"de"		"Alle Enten wurden geschossen"
+	}
+	
+		"duckhunt_twin_nc"
+	{
+
+		"en"		"The duckhunter died"
+		"de"		"Der Jäger wurde zum Gejagdten"
 	}
 	
 	"duckhunt_end"
 	{
-		"#format"	""
-		"en"		"duckhunt ended"
-		
+
+		"en"		"{purple}Duckhunt{default} ended"
+		"de"		"{purple}Duckhunt{default} beendet"
 	}
 	
 	"duckhunt_next"
 	{
-		"#format"	""
-		"en"		"Next round is duckhunt"
-		
+
+		"en"		"Next round is {purple}Duckhunt"
+		"de"		"Nächste Runde ist {purple}Duckhunt"
 	}
 	
 		
 	"duckhunt_next_nc"
 	{
-		"#format"	""
-		"en"		"Next round is duckhunt"
-		
+
+		"en"		"Next round is Duckhunt"
+		"de"		"Nächste Runde ist Duckhunt"
 	}
 	
 	"duckhunt_start"
 	{
-		"#format"	""
-		"en"		"The duckhunt has started!"
-		
+
+		"en"		"The {purple}Duckhunt{default} has started!"
+		"de"		"{purple}Duckhunt{default} ist gestartet!"
 	}
 	
-	"duckhunt_voted"{
-		"#format"	""
-		"en"		"You allready voted for duckhunt"
-		
+	"duckhunt_voted"
+	{
+
+		"en"		"You allready voted for {purple}Duckhunt"
+		"de"		"Du hast schon für {purple}Duckhunt {default}gevotet"
 	}
 	
 	"duckhunt_progress"
 	{
-		"#format"	""
-		"en"		"duckhunt is allready in progress"
-		
+
+		"en"		"Duckhunt is {purple}allready in progress"
+		"de"		"Duckhunt ist {purple}bereits gesetzt"
 	}
 	
 	"duckhunt_minct"
 	{
-		"#format"	""
-		"en"		"For a duckhunt you need a least one CT"
-		
+
+		"en"		"For a Duckhunt you need a least {purple}one CT"
+		"de"		"Für Duckhunt brauchen wir mindestens {purple}einen CT"
 	}
-	
 	
 	"duckhunt_disabled"
 	{
-		"#format"	""
-		"en"		"duckhunt is disabled."
-		
-	}
 
-	"duckhunt_timetounfreeze"
+		"en"		"Duckhunt is {purple}disabled."
+		"de"		"Duckhunt ist {purple}deaktiviert."
+	}
+	
+	"duckhunt_timetounfreeze_nc"		// no colors!
 	{
 		"#format"	"{1:i}"
 		"en"		"{1} seconds until start"
-		
+		"de"		"{1} Sekunden bis zum Start"
 	}
 	
-	"duckhunt_info_Title"
+	"duckhunt_info_Title"		// no colors!
 	{
 		"en"		"Duckhunt is activ"
-		"de"		"Entenjagd ist aktiv"
+		"de"		"Duckhunt ist aktiv"
 	}
 	
-	"duckhunt_info_Line1"
+	"duckhunt_info_Line1"		// no colors!
 	{
 		"en"		"a kind of Clay pigeon shooting"
 		"de"		"Eine Art Tontaubenschiessen"
 	}
-	"duckhunt_info_Line2"
+	"duckhunt_info_Line2"		// no colors!
 	{
 		"en"		"Cts got novas"
 		"de"		"Counter Terrorist haben Nova"
 	}
 	
-	"duckhunt_info_Line3"
+	"duckhunt_info_Line3"		// no colors!
 	{
 		"en"		"Ts are chickens and got knife and greante"
 		"de"		"terroristen sind chicken haben Knife und Granten"
 	}
 	
-	"duckhunt_info_Line4"
+	"duckhunt_info_Line4"		// no colors!
 	{
 		"en"		"All normal jailRules are repealed"
 		"de"		"Alle normalen Jailregeln sind aufgehoben!"
 	}
 	
-	"duckhunt_info_Line5"
+	"duckhunt_info_Line5"		// no colors!
 	{
 		"en"		"There is no last request!"
 		"de"		"Der letzte Terrorist hat keinen Wunsch!"
 	}
 	
-	"duckhunt_info_Line6"
+	"duckhunt_info_Line6"		// no colors!
 	{
 		"en"		"Everyone is allowed to go everywhere where he wants"
 		"de"		"Jeder darf überall hin wo er will!"
 	}
 	
-	"duckhunt_info_Line7"
+	"duckhunt_info_Line7"		// no colors!
 	{
 		"en"		"dont be an asshole!"
 		"de"		"bau keine scheisse!"
 	}
-		"duckhunt_wait"
+	
+	"duckhunt_wait"
 	{
 		"#format"	"{1:i}"
-		"en"		"you must wait {1} more rounds"
-		"de"		"Du musst noch {1} Runden warten"
+		"en"		"you must wait {purple}{1}{default} more rounds"
+		"de"		"Du musst noch {purple}{1}{default} Runden warten"
 	}
 }

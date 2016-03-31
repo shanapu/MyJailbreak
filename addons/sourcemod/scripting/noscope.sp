@@ -391,7 +391,7 @@ public Action:NoScope(Handle:timer)
 		for (int client=1; client <= MaxClients; client++)
 		if (IsClientInGame(client) && IsPlayerAlive(client))
 			{
-				PrintCenterText(client,"%t", "noscope_timetounfreeze", g_iTruceTime);
+				PrintCenterText(client,"%t", "noscope_timetounfreeze_nc", g_iTruceTime);
 			}
 		return Plugin_Continue;
 	}
@@ -438,8 +438,8 @@ public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 		}
 		
 		if (TruceTimer != null) KillTimer(TruceTimer);
-		if (winner == 2) PrintHintTextToAll("%t", "noscope_twin");
-		if (winner == 3) PrintHintTextToAll("%t", "noscope_ctwin");
+		if (winner == 2) PrintHintTextToAll("%t", "noscope_twin_nc");
+		if (winner == 3) PrintHintTextToAll("%t", "noscope_ctwin_nc");
 		IsNoScope = false;
 		StartNoScope = false;
 		NoScopeRound = 0;

@@ -356,11 +356,11 @@ public Action:Freezed(Handle:timer)
 			{
 				if (GetClientTeam(client) == 3)
 				{
-					PrintCenterText(client,"%t", "hide_timetounfreeze", g_iFreezeTime);
+					PrintCenterText(client,"%t", "hide_timetounfreeze_nc", g_iFreezeTime);
 				}
 				if (GetClientTeam(client) == 2)
 				{
-				PrintCenterText(client,"%t", "hide_timetohide", g_iFreezeTime);
+				PrintCenterText(client,"%t", "hide_timetohide_nc", g_iFreezeTime);
 				}
 			}
 		return Plugin_Continue;
@@ -419,8 +419,8 @@ public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 		if (FreezeTimer != null) KillTimer(FreezeTimer);
 
 		
-		if (winner == 2) PrintHintTextToAll("%t", "hide_twin");
-		if (winner == 3) PrintHintTextToAll("%t", "hide_ctwin");
+		if (winner == 2) PrintHintTextToAll("%t", "hide_twin_nc");
+		if (winner == 3) PrintHintTextToAll("%t", "hide_ctwin_nc");
 		IsHide = false;
 		StartHide = false;
 		HideRound = 0;

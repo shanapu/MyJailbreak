@@ -2,164 +2,160 @@
 {
 	"hide_tag"
 	{
-		"en"		"[{green}hide{default}]"
+		"en"		"[{green}MyJB.hide{default}]"
 	}
-	"hide_need"  //{default}, {darkred}, {green}, {lightgreen}, "{darkred}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
+	"hide_need"
 	{
 		"#format"	"{1:i}"
-		"en"		"votes left to {darkred}war"
+		"en"		"votes left to {darkred}Hide in the Dark"
 		"de"		"noch {1} votes bis {darkred}krieg{default} beginnt"
 	}
-	"hide_twin"
+	"hide_twin_nc"		// no colors!
 	{
-		"#format"	""
-		"en"		"Hider win"
-		
+		"en"		"Hiders win"
+		"de"		"Hiders haben gewonnen"
 	}
 	
-	"hide_ctwin"
+	"hide_ctwin_nc"		// no colors!
 	{
-		"#format"	""
 		"en"		"Seeker win"
-		
+		"de"		"Seeker haben gewonnen"
 	}
 	
 	"hide_end"
 	{
-		"#format"	""
-		"en"		"hideinthedark ended"
-		
+		"en"		"{purple}Hide in the Dark{default} ended"
+		"de"		"{purple}Hide in the Dark{default} beendet"
 	}
 		
-	"hide_next_nc"
+	"hide_next_nc"		// no colors!
 	{
-		"#format"	""
-		"en"		"Next round is hideinthedark"
-		
-	}
-	"hide_next"
-	{
-		"#format"	""
-		"en"		"Next round is hideinthedark"
-		
+		"en"		"Next round is Hide in the Dark"
+		"de"		"Nächste Runde ist Hide in the Dark"
 	}
 	
+	"hide_next"
+	{
+		"en"		"Next round is {purple}Hide in the Dark"
+		"de"		"Nächste Runde ist {purple}Hide in the Dark"
+	}
 	
 	"hide_start"
 	{
-		"#format"	""
-		"en"		"The hideinthedark has started!"
-		
+		"en"		"The {purple}Hide in the Dark{default} has started!"
+		"de"		"{purple}Hide in the Dark{default} ist gestartet!"
 	}
 	
-	"hide_voted"{
-		"#format"	""
-		"en"		"You allready voted for hideinthedark"
-		
+	"hide_voted"
+	{
+		"en"		"The {purple}Hide in the Dark{default} has started!"
+		"de"		"{purple}Hide in the Dark{default} ist gestartet!"
 	}
 	
 	"hide_progress"
 	{
-		"#format"	""
-		"en"		"hideinthedark is allready in progress"
-		
+		"en"		"Hide in the Dark is {purple}allready in progress"
+		"de"		"Hide in the Dark ist {purple}bereits gesetzt"
 	}
 	
 	"hide_minct"
 	{
-		"#format"	""
-		"en"		"For a hideinthedark you need a least one CT"
-		
+		"en"		"For a Hide in the Dark you need a least {purple}one CT"
+		"de"		"Für Hide in the Dark brauchen wir mindestens {purple}einen CT"
 	}
 	
 	
 	"hide_disabled"
 	{
-		"#format"	""
-		"en"		"hideinthedark is disabled."
-		
+		"en"		"Hide in the Dark is {purple}disabled."
+		"de"		"Hide in the Dark ist {purple}deaktiviert."
 	}
+	
 	"hide_voting"
 	{
-	"#format"	""
-		"en"		"Player Voting for hide is disabled"
-		
+		"en"		"Player Voting for Hide in the Dark is {purple}disabled"
+		"de"		"Voting für Hide in the Dark ist {purple}ausgeschaltet"
 	}
-	"hide_setbywarden"
+	
+	"hide_setbyHide in the Darkden"
 	{
-	"#format"	""
-		"en"		"Set hide by Warden is disabled"
-		
+		"en"		"Set Hide in the Dark by Hide in the Darkden is {purple}disabled"
+		"de"		"Hide in the Dark Aktivierung durch den Hide in the Darkden ist {purple}ausgeschaltet"
 	}
 	
 	"hide_setbyadmin"
 	{
-	"#format"	""
-		"en"		"Set hide by admin is disabled"
-		
+		"en"		"Set Hide in the Dark by admin is {purple}disabled"
+		"de"		"Hide in the Dark Aktivierung durch den Admin ist {purple}ausgeschaltet"
 	}
-	"hide_timetohide"
+	
+	"hide_timetohide_nc"		// no colors!
 	{
-	"#format"	"{1:i}"
-		"en"		"{1} seconds to hide and until freeze"
+		"#format"	"{1:i}"
+		"en"		"{1} seconds to hide"
+		"de"		"{1} Sekunden zum verstecken"
 		
 	}
-	"hide_timetounfreeze"
+	
+	"hide_timetounfreeze_nc"		// no colors!
 	{
 		"#format"	"{1:i}"
 		"en"		"{1} seconds until unfreeze"
+		"de"		"{1} Sekunden bis zum unfreeze"
 		
 	}
-		"hide_info_Title"
+	
+	"hide_info_Title"		// no colors!
 	{
 		"en"		"FFA is activ"
 		"de"		"FFA ist aktiv"
 	}
 	
-	"hide_info_Line1"
+	"hide_info_Line1"		// no colors!
 	{
-		"en"		"Do not be surprised if ported in wk"
-		"de"		"Nicht wundern falls ihr in die wk geportet wurdet"
+		"en"		"Do not be surprised if portedto CT Spawn"
+		"de"		"Nicht wundern falls ihr zum CT Spawngeportet wurdet"
 	}
-	"hide_info_Line2"
+	"hide_info_Line2"		// no colors!
 	{
-		"en"		"In warround ct play against t"
+		"en"		"In Hide in the Darkround ct play against t"
 		"de"		"In Kriegrunden spielen CT's gegen T's"
 	}
 	
-	"hide_info_Line3"
+	"hide_info_Line3"		// no colors!
 	{
 		"en"		"you can move and exit the wk in nodamge phase"
 		"de"		"Während der no damge phase kannst du aus der zelle/waffenkammer"
 	}
 	
-	"hide_info_Line4"
+	"hide_info_Line4"		// no colors!
 	{
 		"en"		"All normal jailRules are repealed"
 		"de"		"Alle normalen Jailregeln sind aufgehoben!"
 	}
 	
-	"hide_info_Line5"
+	"hide_info_Line5"		// no colors!
 	{
 		"en"		"There is no last request!"
 		"de"		"Der letzte Terrorist hat keinen Wunsch!"
 	}
 	
-	"hide_info_Line6"
+	"hide_info_Line6"		// no colors!
 	{
 		"en"		"Everyone is allowed to go everywhere where he wants"
 		"de"		"Jeder darf überall hin wo er will!"
 	}
 	
-	"hide_info_Line7"
+	"hide_info_Line7"		// no colors!
 	{
 		"en"		"dont be an asshole!"
 		"de"		"bau keine scheisse!"
 	}
-		"hide_wait"
+	
+	"hide_wait"
 	{
 		"#format"	"{1:i}"
-		"en"		"you must wait {1} more rounds"
-		"de"		"Du musst noch {1} Runden warten"
+		"en"		"you must wait {purple}{1}{default} more rounds"
+		"de"		"Du musst noch {purple}{1}{default} Runden Hide in the Darkten"
 	}
 }

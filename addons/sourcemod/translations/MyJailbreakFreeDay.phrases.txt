@@ -2,135 +2,125 @@
 {
 	"freeday_tag"
 	{
-		"en"		"[{green}freeday{default}]"
+		"en"		"[{green}MyJB.freeday{default}]"
 	}
 	
 	"freeday_end"
 	{
-		"#format"	""
-		"en"		"freeday ended"
-		
+		"en"		"{purple}FreeDay{default} ended"
+		"de"		"{purple}FreeDay{default} beendet"
 	}
-	"freeday_need"  //{default}, {darkred}, {green}, {lightgreen}, "{darkred}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
+	"freeday_need"  
 	{
-			"#format"	"{1:i}"
-		"en"		"votes left to {darkred}freeday"
-		"de"		"noch {1} votes bis {darkred}freeday{default} beginnt"
-	}
-	"freeday_next"
-	{
-		"#format"	""
-		"en"		"Next round is freeday"
-		
-	}
-		"freeday_next_nc"
-	{
-		"#format"	""
-		"en"		"Next round is freeday"
-		
+		"#format"	"{1:i},{2:N}"
+		"en"		"{purple}{2}{default} has votet. {purple}{1}{default} votes left to {darkred}FreeDay"
+		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}krieg{default} beginnt"
 	}
 	
-		"freeday_voting"
+	"freeday_next"
 	{
-	"#format"	""
-		"en"		"Player Voting for freeday is disabled"
-		
+		"en"		"Next round is {purple}FreeDay"
+		"de"		"Nächste Runde ist {purple}FreeDay"
+	}
+	
+	"freeday_next_nc"
+	{
+		"en"		"Next round is FreeDay"
+		"de"		"Nächste Runde ist FreeDay"
+	}
+	
+	"freeday_voting"
+	{
+		"#format"	""
+		"en"		"Player Voting for FreeDay is {purple}disabled"
+		"de"		"Voting für FreeDay ist {purple}ausgeschaltet"
 	}
 	"freeday_setbywarden"
 	{
-	"#format"	""
-		"en"		"Set freeday by Warden is disabled"
-		
+		"en"		"Set FreeDay by Warden is {purple}disabled"
+		"de"		"FreeDay Aktivierung durch den Warden ist {purple}ausgeschaltet"
 	}
 	
 	"freeday_setbyadmin"
 	{
-	"#format"	""
-		"en"		"Set freeday by admin is disabled"
-		
+			"en"		"Set FreeDay by admin is {purple}disabled"
+		"de"		"FreeDay Aktivierung durch den Admin ist {purple}ausgeschaltet"
 	}
 	
 	
 	
 	"freeday_start"
 	{
-		"#format"	""
-		"en"		"The freeday has started!"
-		
+		"en"		"The {purple}FreeDay{default} has started!"
+		"de"		"{purple}FreeDay{default} ist gestartet!"
 	}
 	
-	"freeday_voted"{
-		"#format"	""
-		"en"		"You allready voted for freeday"
-		
+	"freeday_voted"
+	{
+		"en"		"The {purple}FreeDay{default} has started!"
+		"de"		"{purple}FreeDay{default} ist gestartet!"
 	}
 	
 	"freeday_progress"
 	{
-		"#format"	""
-		"en"		"freeday is allready in progress"
-		
+		"en"		"FreeDay is {purple}allready in progress"
+		"de"		"FreeDay ist {purple}bereits gesetzt"
 	}
 	
 	"freeday_minct"
 	{
-		"#format"	""
-		"en"		"For a freeday you need a least one CT"
-		
+		"en"		"For a Duckhunt you need a least {purple}one CT"
+		"de"		"Für Duckhunt brauchen wir mindestens {purple}einen CT"
 	}
-	
 	
 	"freeday_disabled"
 	{
-		"#format"	""
-		"en"		"freeday is disabled."
-		
+		"en"		"FreeDay is {purple}disabled."
+		"de"		"FreeDay ist {purple}deaktiviert."
 	}
 	
-
-
 	
-	"freeday_info_Title"
+	"freeday_info_Title"		// no colors!
 	{
 		"en"		"FreeDaY"
 		"de"		"FreeDaY"
 	}
 	
-	"freeday_info_Line1"
+	"freeday_info_Line1"		// no colors!
 	{
-		"en"		"Do not be surprised if ported in wk"
-		"de"		"Nicht wundern falls ihr in die wk geportet wurdet"
+		"en"		"Do not be surprised if portedto CT Spawn"
+		"de"		"Nicht wundern falls ihr zum CT Spawngeportet wurdet"
 	}
-	"freeday_info_Line2"
+	"freeday_info_Line2"		// no colors!
 	{
 		"en"		"In freeday ther is ffa scout freeday low grav"
 	}
 	
-	"freeday_info_Line3"
+	"freeday_info_Line3"		// no colors!
 	{
 		"en"		"you can move and exit the wk in nodamge phase"
 		"de"		"Während der no damge phase kannst du aus der zelle/waffenkammer"
 	}
 	
-	"freeday_info_Line4"
+	"freeday_info_Line4"		// no colors!
 	{
 		"en"		"All normal jailRules are repealed"
 		"de"		"Alle normalen Jailregeln sind aufgehoben!"
 	}
 	
-	"freeday_info_Line5"
+	"freeday_info_Line5"		// no colors!
 	{
 		"en"		"There is no last request!"
 		"de"		"Der letzte Terrorist hat keinen Wunsch!"
 	}
 	
-	"freeday_info_Line6"
+	"freeday_info_Line6"		// no colors!
 	{
 		"en"		"Everyone is allowed to go everywhere where he wants"
 		"de"		"Jeder darf überall hin wo er will!"
 	}
 	
-	"freeday_info_Line7"
+	"freeday_info_Line7"		// no colors!
 	{
 		"en"		"dont be an asshole!"
 		"de"		"bau keine scheisse!"

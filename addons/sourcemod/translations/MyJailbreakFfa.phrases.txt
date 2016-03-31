@@ -1,176 +1,173 @@
-"Phrases"
+"Phrases"		// working color tags {default}, {darkred}, {red}, {green}, {lightgreen}, {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
 {
 	"ffa_tag"
 	{
-		"en"		"[{green}ffa{default}]"
+		"en"		"[{green}MyJB.FFA{default}]"
 	}
 	
-	"ffa_need"  //{default}, {darkred}, {green}, {lightgreen}, "{darkred}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
+	"ffa_need"
 	{
-		"#format"	"{1:i}"
-		"en"		"{1} votes left to {darkred}ffa"
-		"de"		"noch {1} votes bis {darkred}ffa{default} beginnt"
+		"#format"	"{1:i},{2:N}"
+		"en"		"{purple}{2}{default} has votet. {purple}{1}{default} votes left to {darkred}FFA"
+		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}FFA{default} beginnt"
 	}
-	"ffa_twin"
-	{
-		"#format"	""
-		"en"		"a Terrorist win"
-		
-	}
+	
 	"ffa_voting"
 	{
-	"#format"	""
-		"en"		"Player Voting for ffa is disabled"
-		
+
+		"en"		"Player Voting for FFA is {purple}disabled"
+		"de"		"Voting für FFA ist {purple}ausgeschaltet"
 	}
+	
 	"ffa_setbywarden"
 	{
-	"#format"	""
-		"en"		"Set ffa by Warden is disabled"
-		
+
+		"en"		"Set FFA by Warden is {purple}disabled"
+		"de"		"FFA Aktivierung durch den Warden ist {purple}ausgeschaltet"
 	}
 	
 	"ffa_setbyadmin"
 	{
-	"#format"	""
-		"en"		"Set ffa by admin is disabled"
-		
+
+		"en"		"Set FFA by admin is {purple}disabled"
+		"de"		"FFA Aktivierung durch den Admin ist {purple}ausgeschaltet"
 	}
-	"ffa_ctwin"
+	
+	"ffa_ctwin_nc"		// no colors!
 	{
-		"#format"	""
-		"en"		"a Counter-Terrorist win"
+
+		"en"		"A Counter-Terrorist has surrived"
+		"de"		"Ein Counter-Terrorist hat als einziger überlebt"
+	}
+	
+	"ffa_twin_nc"		// no colors!
+	{
+
+		"en"		"A Terrorist has surrived"
+		"de"		"Ein Terrorist hat als einziger überlebt"
 	}
 	
 	"ffa_end"
 	{
-		"#format"	""
-		"en"		"ffa ended"
-		
+
+		"en"		"{purple}FFA{default} ended"
+		"de"		"{purple}FFA{default} beendet"
 	}
 	
 	"ffa_next"
 	{
-		"#format"	""
-		"en"		"Next round is ffa"
-		
-	}
-		
-	"ffa_next_nc"
-	{
-		"#format"	""
-		"en"		"Next round is ffa"
-		
-	}
-	"ffa_rounds" //{default}, {darkred}, {green}, {lightgreen}, "{darkred}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
-	{
-		"#format"	"{1:i}"
-		"en"		"Round {1} of 3"
-		"de"		"Runde {1} von 3"
+
+		"en"		"Next round is {purple}FFA"
+		"de"		"Nächste Runde ist {purple}FFA"
 	}
 	
+	"ffa_next_nc"		// no colors!
+	{
+
+		"en"		"Next round is FFA"
+		"de"		"Nächste Runde ist FFA"
+	}
+	
+	"ffa_rounds" 
+	{
+		"#format"	"{1:i}"
+		"en"		"Round {purple}{1}{default} of {purple}3"
+		"de"		"Runde {purple}{1}{default} von {purple}3"
+	}
 	
 	"ffa_start"
 	{
-		"#format"	""
-		"en"		"The ffa has started!"
-		
+
+		"en"		"The {purple}FFA{default} has started!"
+		"de"		"{purple}FFA{default} ist gestartet!"
 	}
 	
-	"ffa_voted"{
-		"#format"	""
-		"en"		"You allready voted for ffa"
+	"ffa_start_nc"		// no colors!
+	{
+
+		"en"		"The FFA has started!"
+		"de"		"FFA ist gestartet!"
+	}
+	
+	"ffa_voted"
+	{
+
+		"en"		"You allready voted for {purple}FFA"
+		"de"		"Du hast schon für {purple}FFA {default}gevotet"
 		
 	}
 	
 	"ffa_progress"
 	{
-		"#format"	""
-		"en"		"ffa is allready in progress"
+
+		"en"		"FFA is {purple}allready in progress"
+		"de"		"FFA ist {purple}bereits gesetzt"
 		
 	}
-	
-	"ffa_minct"
-	{
-		"#format"	""
-		"en"		"For a ffa you need a least one CT"
-		
-	}
-	
 	
 	"ffa_disabled"
 	{
-		"#format"	""
-		"en"		"ffa is disabled."
-		
+
+		"en"		"FFA is {purple}disabled."
+		"de"		"FFA ist {purple}deaktiviert."
 	}
 	
-	"ffa_damage"
+	"ffa_damage_nc"		// no colors!
 	{
-	"#format"	"{1:i}"
+		"#format"	"{1:i}"
 		"en"		"{1} seconds until damage enabled"
-		
-	}
-	"ffa_info_Title"
-	{
-		"en"		"FFA is activ"
-		"de"		"FFA ist aktiv"
+		"de"		"{1} Sekunden bis Schaden aktiv ist"
 	}
 	
-	"ffa_info_Tele"
+	"ffa_info_Title"		// no colors!
 	{
-		"en"		"Do not be surprised if ported in wk"
-		"de"		"Nicht wundern falls ihr in die wk geportet wurdet"
+		"en"		"Free for All Deathmatch is activ"
+		"de"		"Free for All Deathmatch ist aktiv"
 	}
 	
-	"ffa_info_Spawn"
+	"ffa_info_Tele"		// no colors!
 	{
-		"en"		"Do not wonder if you spawn with weapon and the cells are open"
-		"de"		"Nicht wundern warum ihr mit waffe und offenen Zelle spawnt"
-	}
-	"ffa_info_TeleT"
-	{
-		"en"		"Do not be surprised if teleportet to weaponcamber"
-		"de"		"Nicht wundern weil du in die waffenkammer geportet wurdest"
+		"en"		"Do not be surprised if portedto CT Spawn"
+		"de"		"Nicht wundern falls ihr zum CT Spawn geportet wurdet"
 	}
 	
-	"ffa_info_SpawnT"
+	"ffa_info_Spawn"		// no colors!
 	{
-		"en"		"Do not wonder if you spawn in the open cell"
-		"de"		"Nicht wundern warum ihr in der offenen Zelle spawnt"
+		"en"		"Do not be surprised if you spawn with weapon and the cells are open"
+		"de"		"Nicht wundern wenn ihr mit Waffe und offenen Zelle spawnt"
 	}
 	
-	"ffa_info_Line2"
+	"ffa_info_Line2"		// no colors!
 	{
-		"en"		"In warround ct play against t"
-		"de"		"In Kriegrunden spielen CT's gegen T's"
+		"en"		"Free for All - player vs player - Last man standing"
+		"de"		"Free for All - Jeder gegen Jeden - Nur einer überlebt"
 	}
 	
-	"ffa_info_Line3"
+	"ffa_info_Line3"		// no colors!
 	{
-		"en"		"you can move and exit the wk in nodamge phase and he map is darken"
-		"de"		"Während der no damge phase is die map zum eingedunkelt"
+		"en"		"While nodamge time the map is shady"
+		"de"		"Während der NoDamge Phase is die map zum eingedunkelt"
 	}
 	
-	"ffa_info_Line4"
+	"ffa_info_Line4"		// no colors!
 	{
-		"en"		"All normal jailRules are repealed"
+		"en"		"All normal jailrules are repealed"
 		"de"		"Alle normalen Jailregeln sind aufgehoben!"
 	}
 	
-	"ffa_info_Line5"
+	"ffa_info_Line5"		// no colors!
 	{
 		"en"		"There is no last request!"
 		"de"		"Der letzte Terrorist hat keinen Wunsch!"
 	}
 	
-	"ffa_info_Line6"
+	"ffa_info_Line6"		// no colors!
 	{
 		"en"		"Everyone is allowed to go everywhere where he wants"
 		"de"		"Jeder darf überall hin wo er will!"
 	}
 	
-	"ffa_info_Line7"
+	"ffa_info_Line7"		// no colors!
 	{
 		"en"		"dont be an asshole!"
 		"de"		"bau keine scheisse!"
@@ -178,26 +175,26 @@
 		
 	"RoundOne"
 	{
-		"en"		"Round 1 of 3"
-		"de"		"Runde 1 von 3"
+		"en"		"Round {purple}1{default} of {purple}3{default}"
+		"de"		"Runde {purple}1{default} von {purple}3{default}"
 	}
 		
 	"RoundTwo"
 	{
-		"en"		"Round 2 of 3"
-		"de"		"Runde 2 von 3"
+		"en"		"Round {purple}2{default} of {purple}3{default}"
+		"de"		"Runde {purple}2{default} von {purple}3{default}"
 	}
 		
 	"RoundThree"
 	{
-		"en"		"last ffa round"
-		"de"		"letzte ffa runde"
+		"en"		"{purple}last{default} FFA round"
+		"de"		"{purple}letzte{default} FFA runde"
 	}
 		"ffa_wait"
 	{
 		"#format"	"{1:i}"
-		"en"		"you must wait {1} more rounds"
-		"de"		"Du musst noch {1} Runden warten"
+		"en"		"you must wait {purple}{1}{default} more rounds"
+		"de"		"Du musst noch {purple}{1}{default} Runden warten"
 	}
 
 }

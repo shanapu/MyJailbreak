@@ -2,17 +2,16 @@
 {
 	"noscope_tag"
 	{
-		"en"		"[{green}noscope{default}]"
+		"en"		"[{green}MyJB.noscope{default}]"
 	}
-	"noscope_need"  //{default}, {darkred}, {green}, {lightgreen}, "{darkred}", {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
 	{
-			"#format"	"{1:i}"
-		"en"		"votes left to {darkred}noscope"
-		"de"		"noch {1} votes bis {darkred}noscope{default} beginnt"
+		"#format"	"{1:i},{2:N}"
+		"en"		"{purple}{2}{default} has votet. {purple}{1}{default} votes left to {darkred}noscope"
+		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}noscope{default} beginnt"
 	}
-	"noscope_twin"
+	"noscope_twin_nc"
 	{
-		"#format"	""
+
 		"en"		"a Terrorist surived"
 		
 	}
@@ -35,56 +34,56 @@
 		"en"		"Set noscope by admin is disabled"
 		
 	}
-	"noscope_ctwin"
+	"noscope_ctwin_nc"
 	{
-		"#format"	""
+
 		"en"		"a CT wins"
 		
 	}
 	
 	"noscope_end"
 	{
-		"#format"	""
+
 		"en"		"noscope ended"
 		
 	}
 	
 	"noscope_next"
 	{
-		"#format"	""
+
 		"en"		"Next round is noscope"
 		
 	}
 		"noscope_next_nc"
 	{
-		"#format"	""
+
 		"en"		"Next round is noscope"
 		
 	}
 	
 	"noscope_start"
 	{
-		"#format"	""
+
 		"en"		"The noscope has started!"
 		
 	}
 	
 	"noscope_voted"{
-		"#format"	""
+
 		"en"		"You allready voted for noscope"
 		
 	}
 	
 	"noscope_progress"
 	{
-		"#format"	""
+
 		"en"		"noscope is allready in progress"
 		
 	}
 	
 	"noscope_minct"
 	{
-		"#format"	""
+
 		"en"		"For a noscope you need a least one CT"
 		
 	}
@@ -92,13 +91,13 @@
 	
 	"noscope_disabled"
 	{
-		"#format"	""
+
 		"en"		"noscope is disabled."
 		
 	}
 	
 
-	"noscope_timetounfreeze"
+	"noscope_timetounfreeze_nc"
 	{
 		"#format"	"{1:i}"
 		"en"		"{1} seconds until start"
@@ -113,8 +112,8 @@
 	
 	"noscope_info_Line1"
 	{
-		"en"		"Do not be surprised if ported in wk"
-		"de"		"Nicht wundern falls ihr in die wk geportet wurdet"
+		"en"		"Do not be surprised if portedto CT Spawn"
+		"de"		"Nicht wundern falls ihr zum CT Spawngeportet wurdet"
 	}
 	"noscope_info_Line2"
 	{

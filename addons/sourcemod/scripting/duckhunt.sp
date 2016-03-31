@@ -243,7 +243,7 @@ public Action VoteDuckHunt(int client,int args)
 							{
 								StartNextRound();
 							}
-							else CPrintToChatAll("%t %t", "duckhunt_tag" , "duckhunt_need", Missing);
+							else CPrintToChatAll("%t %t", "duckhunt_tag" , "duckhunt_need", Missing, client);
 						}
 						else CPrintToChat(client, "%t %t", "duckhunt_tag" , "duckhunt_voted");
 					}
@@ -375,7 +375,7 @@ public Action:DuckHunt(Handle:timer)
 		for (int client=1; client <= MaxClients; client++)
 		if (IsClientInGame(client) && IsPlayerAlive(client))
 			{
-				PrintCenterText(client,"%t", "duckhunt_timetounfreeze", g_iTruceTime);
+				PrintCenterText(client,"%t", "duckhunt_timetounfreeze_nc", g_iTruceTime);
 			}
 		return Plugin_Continue;
 	}
@@ -424,8 +424,8 @@ public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 		}
 		if (TruceTimer != null) KillTimer(TruceTimer);
 		
-		if (winner == 2) PrintHintTextToAll("%t", "duckhunt_twin");
-		if (winner == 3) PrintHintTextToAll("%t", "duckhunt_ctwin");
+		if (winner == 2) PrintHintTextToAll("%t", "duckhunt_twin_nc");
+		if (winner == 3) PrintHintTextToAll("%t", "duckhunt_ctwin_nc");
 		IsDuckHunt = false;
 		StartDuckHunt = false;
 		DuckHuntRound = 0;
