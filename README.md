@@ -25,6 +25,10 @@ A "rewrite" version of [Franugs Special Jailbreak](https://github.com/Franc1sco/
     - Freeday - (auto on first round/damage disabled)
 
 #### Wardn
+
+This plugins allows players to take control over the prison as Warden/Headguard/Commander.
+Chat, Hud & sound notifications about warden/no warden, colorize warden, open/close cell doors, automatic open cells doors, unvote warden, start countdown & toggle FF/noblock.
+
 based/merged/used code/idea plugins: 
 * https://github.com/ecca/SourceMod-Plugins/tree/sourcemod/Warden
 * https://github.com/ESK0/ESK0s_JailBreak_Warden/
@@ -35,9 +39,6 @@ based/merged/used code/idea plugins:
 * https://forums.alliedmods.net/showthread.php?t=231473
 * https://github.com/AG-Headline/Hunger-Games-Beacon
 * if I missed someone, please tell me!
-
-This plugins allows players to take control over the prison as Warden/Headguard/Commander.
-Chat, Hud & sound notifications about warden/no warden, colorize warden, open/close cell doors, automatic open cells doors, unvote warden, start countdown & toggle FF/noblock.
 
 ##### Commands // why so many cmds for same action? my players are dump.
 ```
@@ -98,16 +99,17 @@ Chat, Hud & sound notifications about warden/no warden, colorize warden, open/cl
 - Colors
 
 #### EventDay - War
+
+This plugin allows to vote or set a war CT vs T for next 3 rounds.
+On Round start Ts spawn freezed next to CT. After unfreeze time (def. 30sec) Ts can Move. After nodamage time (def. 30sec) the war CT vs T starts.
+Or on Round start Ts spawn in open cells with weapons. No Freeze/-time.
+
 based/merged/used code/idea plugins: 
 * https://forums.alliedmods.net/showpost.php?p=1657893&postcount=11?p=1657893&postcount=11
 * https://github.com/Franc1sco/Franug-JailBreak/blob/Only-Days-And-Captain/addons/sourcemod/scripting/jailbreak_open.sp
 * https://forums.alliedmods.net/showthread.php?t=231473
 * https://github.com/AG-Headline/Hunger-Games-Beacon
 * if I missed someone, please tell me!
-
-This plugin allows to vote or set a war CT vs T for next 3 rounds.
-On Round start Ts spawn freezed next to CT. After unfreeze time (def. 30sec) Ts can Move. After nodamage time (def. 30sec) the war CT vs T starts.
-Or on Round start Ts spawn in open cells with weapons. No Freeze/-time.
 
 ##### Commands
 ```
@@ -143,6 +145,11 @@ and more
 - Custom chat [Tag]
 
 #### EventDay - FFA
+
+This plugin allows to vote or set a FFA war for next 3 rounds
+On Round start Ts spawn next to CT. CTs & Ts can get Weapon an Move. MapFog is on for better hiding. After nodamage time (def. 30sec) the war CT vs T starts and MapFog disabled.
+Or on Round start Ts spawn in open cells with weapons. 
+
 based/merged/used code/idea plugins: 
 * https://forums.alliedmods.net/showpost.php?p=1657893&postcount=11?p=1657893&postcount=11
 * https://github.com/Franc1sco/Franug-JailBreak/blob/Only-Days-And-Captain/addons/sourcemod/scripting/jailbreak_wartotal.sp
@@ -151,10 +158,6 @@ based/merged/used code/idea plugins:
 * https://github.com/AG-Headline/Hunger-Games-Beacon
 * https://github.com/Franc1sco/Franug-JailBreak/blob/Only-Days-And-Captain/addons/sourcemod/scripting/oscuridad.sp
 * if I missed someone, please tell me!
-
-This plugin allows to vote or set a FFA war for next 3 rounds
-On Round start Ts spawn next to CT. CTs & Ts can get Weapon an Move. MapFog is on for better hiding. After nodamage time (def. 30sec) the war CT vs T starts and MapFog disabled.
-Or on Round start Ts spawn in open cells with weapons. 
 
 ##### Commands
 ```
@@ -189,6 +192,11 @@ Or on Round start Ts spawn in open cells with weapons.
 
 
 #### EventDay -  Zombie
+
+This plugin allows players to vote and warden to set next round to zombie escape
+On Round start Ts spawn in open cells with weapons. CT are zombies with a zombie skin, and with 10000 HP.
+Zombies freezed for default 35sec so T can hide or climb.
+
 based/merged/used code/idea plugins: 
 * https://forums.alliedmods.net/showpost.php?p=1657893&postcount=11?p=1657893&postcount=11
 * https://github.com/Franc1sco/Franug-JailBreak/blob/Only-Days-And-Captain/addons/sourcemod/scripting/jailbreak_zombies.sp
@@ -196,10 +204,6 @@ based/merged/used code/idea plugins:
 * https://forums.alliedmods.net/showthread.php?t=231473
 * https://github.com/AG-Headline/Hunger-Games-Beacon
 * if I missed someone, please tell me!
-
-This plugin allows players to vote and warden to set next round to zombie escape
-On Round start Ts spawn in open cells with weapons. CT are zombies with a zombie skin, and with 10000 HP.
-Zombies freezed for default 35sec so T can hide or climb.
 
 ##### Commands
 ```
@@ -234,6 +238,10 @@ Zombies freezed for default 35sec so T can hide or climb.
 
 
 #### EventDay -  Noscope
+
+This plugin allows players to vote and warden to set next round to noscope
+open cells noscope scout low gravity. no reload
+
 based/merged/used code/idea plugins: 
 * https://forums.alliedmods.net/showpost.php?p=1657893&postcount=11?p=1657893&postcount=11
 * https://github.com/Franc1sco/Franug-JailBreak/blob/Only-Days-And-Captain/addons/sourcemod/scripting/jailbreak_noscope.sp
@@ -241,9 +249,6 @@ based/merged/used code/idea plugins:
 * https://forums.alliedmods.net/showthread.php?t=231473
 * https://github.com/AG-Headline/Hunger-Games-Beacon
 * if I missed someone, please tell me!
-
-This plugin allows players to vote and warden to set next round to noscope
-open cells noscope scout low gravity. no reload
 
 ##### Commands
 ```
@@ -276,6 +281,11 @@ open cells noscope scout low gravity. no reload
 - Custom chat [Tag]
 
 #### EventDay -  catch
+
+This plugin allows players to vote and warden to set next round to catch
+open cells-  CT must catch and freeze all Ts by knifing.
+Ts can unfreeze Freezed Ts by knife them again.
+
 based/merged/used code/idea plugins: 
 * https://forums.alliedmods.net/showpost.php?p=1657893&postcount=11?p=1657893&postcount=11
 * https://github.com/Franc1sco/Franug-JailBreak/blob/Only-Days-And-Captain/addons/sourcemod/scripting/jailbreak_pilla.sp
@@ -283,10 +293,6 @@ based/merged/used code/idea plugins:
 * https://forums.alliedmods.net/showthread.php?t=231473
 * https://github.com/AG-Headline/Hunger-Games-Beacon
 * if I missed someone, please tell me!
-
-This plugin allows players to vote and warden to set next round to catch
-open cells-  CT must catch and freeze all Ts by knifing.
-Ts can unfreeze Freezed Ts by knife them again.
 
 ##### Commands
 ```
@@ -320,6 +326,10 @@ Ts can unfreeze Freezed Ts by knife them again.
 
 
 #### EventDay -  Hide in the Dark
+
+This plugin allows players to vote and warden to set next round to hide in the dark
+Map is darken. CTs freezed, Cells open and Ts got time to hide on map. When CT got unfreed Ts get freezed (if u like)
+
 based/merged/used code/idea plugins: 
 * https://forums.alliedmods.net/showpost.php?p=1657893&postcount=11?p=1657893&postcount=11
 * https://github.com/Franc1sco/Franug-JailBreak/blob/Only-Days-And-Captain/addons/sourcemod/scripting/jailbreak_escondite.sp
@@ -329,9 +339,6 @@ based/merged/used code/idea plugins:
 * https://github.com/Franc1sco/Franug-JailBreak/blob/Only-Days-And-Captain/addons/sourcemod/scripting/oscuridad.sphttps://github.com/Franc1sco/Franug-JailBreak/blob/Only-Days-And-Captain/addons/sourcemod/scripting/oscuridad.sp
 * https://github.com/AG-Headline/Hunger-Games-Beacon
 * if I missed someone, please tell me!
-
-This plugin allows players to vote and warden to set next round to hide in the dark
-Map is darken. CTs freezed, Cells open and Ts got time to hide on map. When CT got unfreed Ts get freezed (if u like)
 
 ##### Commands
 ```
@@ -365,15 +372,16 @@ Map is darken. CTs freezed, Cells open and Ts got time to hide on map. When CT g
 - Custom chat [Tag]
 
 #### EventDay -  Duckhunt
+
+This plugin allows players to vote and warden to set next round to duckhunt
+open cells duckhunt scout low gravity. no reload
+
 based/merged/used code/idea plugins: 
 * https://forums.alliedmods.net/showpost.php?p=1657893&postcount=11?p=1657893&postcount=11
 * https://github.com/Franc1sco/Franug-JailBreak/blob/Only-Days-And-Captain/addons/sourcemod/scripting/jailbreak_open.sp
 * https://forums.alliedmods.net/showthread.php?t=231473
 * https://github.com/AG-Headline/Hunger-Games-Beacon
 * if I missed someone, please tell me!
-
-This plugin allows players to vote and warden to set next round to duckhunt
-open cells duckhunt scout low gravity. no reload
 
 ##### Commands
 ```
