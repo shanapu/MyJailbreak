@@ -324,6 +324,15 @@ based/merged/used code/idea plugins:
 - sm_catch_sounds_unfreeze: Path to the sound which should be played on unfreeze. Default "music/myjailbreak/unfreeze.mp3"
 - sm_catch_tag: 0 - disabled, 1 - Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch your sv_tags. Default 1
 
+```
+##### Features
+
+- disable warden, other eventdays, lastrequest, dice
+- enable beacon for last players (need Hg beacon)
+- autoopen celldoors (need smartjaildoors)
+- Multilingual support
+- Colors
+- Custom chat [Tag]
 
 #### EventDay -  Hide in the Dark
 
