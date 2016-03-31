@@ -21,7 +21,7 @@ must:
 - [x] warden: unvote
 - [x] warden: model
 - [x] warden: allow unvote
-- [ ] warden: countdown menu
+- [x] warden: countdown
 - [ ] warden: ff not for ct
 - [ ] warden: clean changeback model unwarden
 - [x] switch FF from menu to warden
@@ -36,10 +36,12 @@ want:
 - [ ] AddFileToDownloadsTable
 - [ ] warden: unwarden roundstart and delay old warden.
 - [ ] warden: icon above head (material or model?)
-- [ ] warden: markers
+- [x] warden: markers
+- [x] warden: improve markers (2 kind)
 - [ ] warden: limits
 - [ ] warden: talkpower
 - [ ] warden: bomb toss
+- [ ] warden: countdown set time - or menu with differnt times?!?!
 - [ ] warden: mathboard
 - [ ] warden: color prisioners (color roulette)
 - [x] weapons: open menu on spawn bool
