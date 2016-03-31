@@ -1,7 +1,9 @@
 # MyJailbreak 
 
-## work in progress! AlphaVersion 
-### [todo list](https://git.tf/shanapu/MyJailbreak/blob/master/TODO.md)
+## work in progress! a rough AlphaVersion 
+### see [todo list](https://git.tf/shanapu/MyJailbreak/blob/master/TODO.md) the "must" part is todo before first relase on AM
+### help me by posting bugs and feature ideas in [Issue list](https://git.tf/shanapu/MyJailbreak/issues)
+
 
 A "rewrite" version of [Franugs Special Jailbreak](https://github.com/Franc1sco/Franug-JailBreak/) and  [eccas, ESK0s & zipcores Jailbreak Warden](http://www.sourcemod.net/plugins.php?cat=0&mod=-1&title=warden&author=&description=&search=1)
 
@@ -9,35 +11,33 @@ A "rewrite" version of [Franugs Special Jailbreak](https://github.com/Franc1sco/
 
 ### Included Plugins: 
 
-- [Warden](https://github.com/shanapu/MyJailbreak/wiki/Warden) (set/become warden, open cells, set eventdays/FF/nobock,... )
+- Warden - (set/become warden,vote against warden, open cells, set eventdays/countdown/FF/nobock)
 - Menu - (Player menus for T, CT, Warden & Admin)
 - Weapons - (weapon menus for CT / T in event rounds)
 - Event Days (set/vote a Event for next round)
     - War (CT vs T TDM)
-    - FFA (FFA DM)
+    - Free For All (FFA DM)
     - Zombie (CT(zombie) vs T(Human))
     - Noscope (FFA Scout LowGravity NoScope)
-    - Hide - (HideNseek in the Dark)
+    - Hide in the Dark - (kind of HideNseek)
     - Catch - (CT must catch all T (freeze tag))
     - Duckhunt - (CT(hunter) with nova vs T(chicken))
     - Freeday - (auto on first round/damage disabled)
-- ((Dice - (Roll the dice for good/bad presents)))
-
 
 #### Wardn
-based/merged/idea plugins: 
+based/merged/used code/idea plugins: 
 > https://github.com/ecca/SourceMod-Plugins/tree/sourcemod/Warden
-
 > https://github.com/ESK0/ESK0s_JailBreak_Warden/
-
 > https://git.tf/Zipcore/Warden
-
 > https://git.tf/Zipcore/Warden-Sounds
-
+> https://git.tf/Zipcore/Warden-SimpleMarkers
 > https://github.com/Franc1sco/Franug-JailBreak/blob/Only-Days-And-Captain/addons/sourcemod/scripting/jailbreak_open.sp
+> https://forums.alliedmods.net/showthread.php?t=231473
+> https://github.com/AG-Headline/Hunger-Games-Beacon
+> if I missed someone, please tell me!
 
 This plugins allows players to take control over the prison as Warden/Headguard/Commander.
-Chat, Hud & sound notifications about warden/no warden, colorize warden, open/close cell doors, automatic open cells doors, unvote warden & toggle FF/noblock.
+Chat, Hud & sound notifications about warden/no warden, colorize warden, open/close cell doors, automatic open cells doors, unvote warden, start countdown & toggle FF/noblock.
 
 ##### Commands // why so many cmds for same action? my players are dump.
 ```
@@ -53,6 +53,7 @@ Chat, Hud & sound notifications about warden/no warden, colorize warden, open/cl
 - sm_noblockon - Allows the warden to enable no block (for the warden ?)
 - sm_noblockon - Allows the warden to disable no block (for the warden ?)
 - sm_setff - Allows the warden to toggle friendly fire
+- sm_countdown - Allows the warden to start a Countdown
 
 ```
 ##### AdminCommands // ADMFLAG_GENERIC
@@ -65,8 +66,15 @@ Chat, Hud & sound notifications about warden/no warden, colorize warden, open/cl
 - sm_warden_version - Shows the version of the SourceMod plugin MyJailBreak - Warden
 - sm_warden_better_notifications: 0 - disabled , 1 - will use hint and center say for better notifications. Default 1
 - sm_warden_enable: 0 - disabled, 1 - enable the warden plugin. Default 1
-- sm_warden_nextround: 0 - disabled, 1 - warden will stay after round end. Default 1
+- sm_warden_stay: 0 - disabled, 1 - warden will stay after round end. Default 1
+- sm_warden_vote: 0 - disabled, 1 - enable player vote against warden. Default 1
 - sm_warden_noblock: 0 - disabled, 1 - enable setable noblock for warden. Default 1
+- sm_warden_ff: 0 - disabled, 1 - enable Warden switch friendly fire. Default 1
+- sm_warden_marker: 0 - disabled, 1 - enable Warden simple markers. Default 1
+- sm_warden_markerkey: Key to set Makrer - 1 - Look weapon / 2 - Use and shoot / 3 - walk and shoot. Default 3
+- sm_warden_countdown: 0 - disabled, 1 - enable countdown for warden. Default 1
+- sm_warden_overlays: 0 - disabled, 1 - enable overlay for countdown. Default 1
+- sm_warden_overlaystart_path: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
 - sm_wardencolor_enable: 0 - disabled, 1 - enable colored warden. Default 1
 - sm_wardencolor_red - What color to turn the warden into (set R, G and B values to 0 to disable). Default 0
 - sm_wardencolor_green - What color to turn the warden into (rGb): x - green value. Default 0
@@ -80,24 +88,26 @@ Chat, Hud & sound notifications about warden/no warden, colorize warden, open/cl
 - sm_wardenopen_time_warden: 0 - disabled, 1 - doors open automatic after - sm_wardenopen_time although there is a warden. needs - sm_wardenopen_time_enable 1. Default 1
 - sm_warden_tag: 0 - disabled, 1 - Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch your sv_tags. Default 1
 
-and more 
 ```
 ##### Features
 
+- Custom chat [Tag]
 - Multilingual support
 - Forwards
 - Natives
 - Colors
-- Custom chat [Tag]
 
 #### EventDay - War
-based/merged/idea plugins: 
+based/merged/used code/idea plugins: 
 > https://forums.alliedmods.net/showpost.php?p=1657893&postcount=11?p=1657893&postcount=11
 > https://github.com/Franc1sco/Franug-JailBreak/blob/Only-Days-And-Captain/addons/sourcemod/scripting/jailbreak_open.sp
+> https://forums.alliedmods.net/showthread.php?t=231473
+> https://github.com/AG-Headline/Hunger-Games-Beacon
+> if I missed someone, please tell me!
 
-This plugin allows players to vote and warden to set a war CT vs T for next 3 rounds
-On Round start Ts spawn freezed next to CT. After unfreeze time (def. 30sec). Ts can get Weapon an Move. After nodamage time (def. 30sec) the war CT vs T starts.
-Or on Round start Ts spawn in open cells with weapons. No Freezetime.
+This plugin allows to vote or set a war CT vs T for next 3 rounds.
+On Round start Ts spawn freezed next to CT. After unfreeze time (def. 30sec) Ts can Move. After nodamage time (def. 30sec) the war CT vs T starts.
+Or on Round start Ts spawn in open cells with weapons. No Freeze/-time.
 
 ##### Commands
 ```
@@ -108,11 +118,17 @@ Or on Round start Ts spawn in open cells with weapons. No Freezetime.
 ```
 - sm_war_version - Shows the version of the SourceMod plugin MyJailBreak - War
 - sm_war_enable: 0 - disabled, 1 - enable the war plugin. Default 1
-- sm_war_spawn: 0 - teleport Ts to CT and freeze, 1 - open cell doors an get weapons (need smartjaildoors). Default 1
+- sm_war_setw: 0 - disabled, 1 - allow warden to set next round war. Default 1
+- sm_war_seta: 0 - disabled, 1 - allow admin to set next round war round. Default 1
+- sm_war_vote: 0 - disabled, 1 - allow player to vote for war. Default 1
+- sm_war_spawn: 0 - teleport Ts to CT and freeze, 1 - open cell doors an get weapons. Default 1
 - sm_war_roundtime - Roundtime for a single war round in minutes. Default 5
 - sm_war_freezetime- Time in seconds Ts are freezed. time to hide on map for CT (need sm_war_spawn: 0). Default 30
 - sm_war_nodamage - Time in seconds after freezetime damage is disbaled. Default 30
+- sm_war_roundwait - Rounds until event can be started after mapchange. Default 3
 - sm_war_roundsnext - Rounds until event can be started again. Default 3
+- sm_war_overlays: 0 - disabled, 1 - enable start overlay. Default 1
+- sm_war_overlaystart_path: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
 - sm_war_tag: 0 - disabled, 1 - Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch your sv_tags. Default 1
 
 and more 
@@ -120,20 +136,23 @@ and more
 ##### Features
 
 - disable warden, other eventdays, lastrequest, dice
-- enable beacon for last players
-- autoopen celldoors (need smartjaildoors)
+- enable beacon for last players (need Hg beacon)
+- autoopen celldoors
 - Multilingual support
 - Colors
 - Custom chat [Tag]
 
 #### EventDay - FFA
-based/merged/idea plugins: 
+based/merged/used code/idea plugins: 
 > https://forums.alliedmods.net/showpost.php?p=1657893&postcount=11?p=1657893&postcount=11
 > https://github.com/Franc1sco/Franug-JailBreak/blob/Only-Days-And-Captain/addons/sourcemod/scripting/jailbreak_wartotal.sp
 > https://github.com/Franc1sco/Franug-JailBreak/blob/Only-Days-And-Captain/addons/sourcemod/scripting/oscuridad.sp
 > https://github.com/Franc1sco/Franug-JailBreak/blob/Only-Days-And-Captain/addons/sourcemod/scripting/jailbreak_open.sp
+> https://github.com/AG-Headline/Hunger-Games-Beacon
+> https://github.com/Franc1sco/Franug-JailBreak/blob/Only-Days-And-Captain/addons/sourcemod/scripting/oscuridad.sp
+> if I missed someone, please tell me!
 
-This plugin allows players to vote and warden to set a FFA war for next 3 rounds
+This plugin allows to vote or set a FFA war for next 3 rounds
 On Round start Ts spawn next to CT. CTs & Ts can get Weapon an Move. MapFog is on for better hiding. After nodamage time (def. 30sec) the war CT vs T starts and MapFog disabled.
 Or on Round start Ts spawn in open cells with weapons. 
 
@@ -145,19 +164,24 @@ Or on Round start Ts spawn in open cells with weapons.
 ##### Cvars
 ```
 - sm_ffa_version - Shows the version of the SourceMod plugin MyJailBreak - FFA
-- sm_ffa_enable: 0 - disabled, 1 - enable the war plugin. Default 1
+- sm_ffa_enable: 0 - disabled, 1 - enable the ffa plugin. Default 1
+- sm_ffa_setw: 0 - disabled, 1 - allow warden to set next round ffa. Default 1
+- sm_ffa_seta: 0 - disabled, 1 - allow admin to set next round ffa round. Default 1
+- sm_ffa_vote: 0 - disabled, 1 - allow player to vote for ffa. Default 1
 - sm_ffa_spawn: 0 - teleport Ts to CT and freeze, 1 - open cell doors an get weapons (need smartjaildoors). Default 1
-- sm_ffa_roundtime - Roundtime for a single war round in minutes. Default 5
+- sm_ffa_roundtime - Roundtime for a single ffa round in minutes. Default 5
 - sm_ffa_nodamage - Time in seconds after freezetime damage is disbaled. Default 30
+- sm_ffa_roundwait - Rounds until event can be started after mapchange. Default 3
 - sm_ffa_roundsnext - Rounds until event can be started again. Default 3
+- sm_ffa_overlays: 0 - disabled, 1 - enable start overlay. Default 1
+- sm_ffa_overlaystart_path: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
 - sm_ffa_tag: 0 - disabled, 1 - Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch your sv_tags. Default 1
 
-and more 
 ```
 ##### Features
 
 - disable warden, other eventdays, lastrequest, dice
-- enable beacon for last players
+- enable beacon for last players (need Hgbeacon)
 - autoopen celldoors (need smartjaildoors)
 - Multilingual support
 - Colors
@@ -165,10 +189,13 @@ and more
 
 
 #### EventDay -  Zombie
-based/merged/idea plugins: 
+based/merged/used code/idea plugins: 
 > https://forums.alliedmods.net/showpost.php?p=1657893&postcount=11?p=1657893&postcount=11
 > https://github.com/Franc1sco/Franug-JailBreak/blob/Only-Days-And-Captain/addons/sourcemod/scripting/jailbreak_zombies.sp
 > https://github.com/Franc1sco/Franug-JailBreak/blob/Only-Days-And-Captain/addons/sourcemod/scripting/jailbreak_open.sp
+> https://forums.alliedmods.net/showthread.php?t=231473
+> https://github.com/AG-Headline/Hunger-Games-Beacon
+> if I missed someone, please tell me!
 
 This plugin allows players to vote and warden to set next round to zombie escape
 On Round start Ts spawn in open cells with weapons. CT are zombies with a zombie skin, and with 10000 HP.
@@ -182,19 +209,24 @@ Zombies freezed for default 35sec so T can hide or climb.
 ##### Cvars
 ```
 - sm_zombie_version - Shows the version of the SourceMod plugin MyJailBreak - Zombie
+- sm_zombie_setw: 0 - disabled, 1 - allow warden to set next round ffa. Default 1
+- sm_zombie_seta: 0 - disabled, 1 - allow admin to set next round ffa round. Default 1
+- sm_zombie_vote: 0 - disabled, 1 - allow player to vote for ffa. Default 1
 - sm_zombie_enable: 0 - disabled, 1 - enable the zombie plugin. Default 1
-- sm_zombie_roundtime - Roundtime for a single war round in minutes. Default 5
+- sm_zombie_roundtime - Roundtime for a single zombie round in minutes. Default 5
 - sm_zombie_freezetime - Time in seconds Zombies freezed. Default 35
+- sm_zombie_roundwait - Rounds until event can be started after mapchange. Default 3
 - sm_zombie_roundsnext - Rounds until event can be started again. Default 3
+- sm_zombie_overlays: 0 - disabled, 1 - enable start overlay. Default 1
+- sm_zombie_overlaystart_path: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
+- sm_zombie_model: Path to the model for zombies. Default "models/player/custom_player/zombie/revenant/revenant_v2.mdl"
 - sm_zombie_tag: 0 - disabled, 1 - Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch your sv_tags. Default 1
-- (sm_nozombie_roundtime - set round time after a war round (mp_roundtime)) todo undo
 
-and more 
 ```
 ##### Features
 
 - disable warden, other eventdays, lastrequest, dice
-- enable beacon for last players
+- enable beacon for last players (need Hg beacon)
 - autoopen celldoors (need smartjaildoors)
 - Multilingual support
 - Colors
@@ -202,54 +234,191 @@ and more
 
 
 #### EventDay -  Noscope
-based/merged/idea plugins: 
+based/merged/used code/idea plugins: 
 > https://forums.alliedmods.net/showpost.php?p=1657893&postcount=11?p=1657893&postcount=11
 > https://github.com/Franc1sco/Franug-JailBreak/blob/Only-Days-And-Captain/addons/sourcemod/scripting/jailbreak_noscope.sp
 > https://github.com/Franc1sco/Franug-JailBreak/blob/Only-Days-And-Captain/addons/sourcemod/scripting/jailbreak_open.sp
+> https://forums.alliedmods.net/showthread.php?t=231473
+> https://github.com/AG-Headline/Hunger-Games-Beacon
+> if I missed someone, please tell me!
 
-This plugin allows players to vote and warden to set next round to scout noscope
+This plugin allows players to vote and warden to set next round to noscope
+open cells noscope scout low gravity. no reload
+
+##### Commands
+```
+- sm_noscope / sm_undead - Allows players to vote for a noscope 
+- sm_setnoscope - Allows the Admin(sm_map) or Warden to set noscope as next round
+```
+##### Cvars
+```
+- sm_noscope_version - Shows the version of the SourceMod plugin MyJailBreak - noscope
+- sm_noscope_setw: 0 - disabled, 1 - allow warden to set next round ffa. Default 1
+- sm_noscope_seta: 0 - disabled, 1 - allow admin to set next round ffa round. Default 1
+- sm_noscope_vote: 0 - disabled, 1 - allow player to vote for ffa. Default 1
+- sm_noscope_enable: 0 - disabled, 1 - enable the noscope plugin. Default 1
+- sm_noscope_roundtime - Roundtime for a single noscope round in minutes. Default 5
+- sm_noscope_nodamage - Time in seconds damage is disbaled. Default 15
+- sm_noscope_roundwait - Rounds until event can be started after mapchange. Default 3
+- sm_noscope_roundsnext - Rounds until event can be started again. Default 3
+- sm_noscope_overlays: 0 - disabled, 1 - enable start overlay. Default 1
+- sm_noscope_overlaystart_path: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
+- sm_noscope_tag: 0 - disabled, 1 - Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch your sv_tags. Default 1
+
+```
+##### Features
+
+- disable warden, other eventdays, lastrequest, dice
+- enable beacon for last players (need Hg beacon)
+- autoopen celldoors (need smartjaildoors)
+- Multilingual support
+- Colors
+- Custom chat [Tag]
 
 #### EventDay -  catch
-based/merged/idea plugins: 
+based/merged/used code/idea plugins: 
 > https://forums.alliedmods.net/showpost.php?p=1657893&postcount=11?p=1657893&postcount=11
 > https://github.com/Franc1sco/Franug-JailBreak/blob/Only-Days-And-Captain/addons/sourcemod/scripting/jailbreak_pilla.sp
 > https://github.com/Franc1sco/Franug-JailBreak/blob/Only-Days-And-Captain/addons/sourcemod/scripting/jailbreak_open.sp
+> https://forums.alliedmods.net/showthread.php?t=231473
+> https://github.com/AG-Headline/Hunger-Games-Beacon
+> if I missed someone, please tell me!
 
-This plugin allows players to vote and warden to set next round to catch & freeze
+This plugin allows players to vote and warden to set next round to catch
+open cells-  CT must catch and freeze all Ts by knifing.
+Ts can unfreeze Freezed Ts by knife them again.
 
-#### EventDay -  Hide
-based/merged/idea plugins: 
+##### Commands
+```
+- sm_catch / sm_catchfreeze - Allows players to vote for a catch 
+- sm_setcatch - Allows the Admin(sm_map) or Warden to set catch as next round
+- sm_sprint - Start sprinting!
+
+```
+##### Cvars
+```
+- sm_catch_version - Shows the version of the SourceMod plugin MyJailBreak - catch
+- sm_catch_setw: 0 - disabled, 1 - allow warden to set next round ffa. Default 1
+- sm_catch_seta: 0 - disabled, 1 - allow admin to set next round ffa round. Default 1
+- sm_catch_vote: 0 - disabled, 1 - allow player to vote for ffa. Default 1
+- sm_catch_enable: 0 - disabled, 1 - enable the catch plugin. Default 1
+- sm_catch_sprint_enable", "1","Enable/Disable ShortSprint. Default 1
+- sm_catch_sprint_button: 0 - disabled, 1 - enable +use button support or use/bind sm_sprint. Default 1
+- sm_catch_sprint_cooldown: Time in seconds the player must wait for the next sprint. Default 10
+- sm_catch_sprint_speed: Ratio for how fast the player will sprint. Default 1.25
+- sm_catch_sprint_time: Time in seconds the player will sprint. Default 3.5
+- sm_catch_roundtime - Roundtime for a single catch round in minutes. Default 5
+- sm_catch_nodamage - Time in seconds damage is disbaled. Default 15
+- sm_catch_roundwait - Rounds until event can be started after mapchange. Default 3
+- sm_catch_roundsnext - Rounds until event can be started again. Default 3
+- sm_catch_overlays: 0 - disabled, 1 - enable freezed overlays. Default 1
+- sm_catch_overlayfreeze_path: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/freeze"
+- sm_catch_sounds_enable: 0 - disabled, 1 - enable un/-Freeze sounds");
+- sm_catch_sounds_freeze: Path to the sound which should be played on freeze. Default "music/myjailbreak/freeze.mp3"
+- sm_catch_sounds_unfreeze: Path to the sound which should be played on unfreeze. Default "music/myjailbreak/unfreeze.mp3"
+- sm_catch_tag: 0 - disabled, 1 - Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch your sv_tags. Default 1
+
+
+#### EventDay -  Hide in the Dark
+based/merged/used code/idea plugins: 
 > https://forums.alliedmods.net/showpost.php?p=1657893&postcount=11?p=1657893&postcount=11
 > https://github.com/Franc1sco/Franug-JailBreak/blob/Only-Days-And-Captain/addons/sourcemod/scripting/jailbreak_escondite.sp
 > https://github.com/Franc1sco/Franug-JailBreak/blob/Only-Days-And-Captain/addons/sourcemod/scripting/oscuridad.sp
 > https://github.com/Franc1sco/Franug-JailBreak/blob/Only-Days-And-Captain/addons/sourcemod/scripting/jailbreak_open.sp
+> https://forums.alliedmods.net/showthread.php?t=231473
+> https://github.com/Franc1sco/Franug-JailBreak/blob/Only-Days-And-Captain/addons/sourcemod/scripting/oscuridad.sphttps://github.com/Franc1sco/Franug-JailBreak/blob/Only-Days-And-Captain/addons/sourcemod/scripting/oscuridad.sp
+> https://github.com/AG-Headline/Hunger-Games-Beacon
+> if I missed someone, please tell me!
 
-This plugin allows players to vote and warden to set next round to hide and seek
+This plugin allows players to vote and warden to set next round to hide in the dark
+Map is darken. CTs freezed, Cells open and Ts got time to hide on map. When CT got unfreed Ts get freezed (if u like)
+
+##### Commands
+```
+- sm_hide / sm_undead - Allows players to vote for a hide 
+- sm_sethide - Allows the Admin(sm_map) or Warden to set hide as next round
+```
+##### Cvars
+```
+- sm_hide_version - Shows the version of the SourceMod plugin MyJailBreak - hide
+- sm_hide_setw: 0 - disabled, 1 - allow warden to set next round ffa. Default 1
+- sm_hide_seta: 0 - disabled, 1 - allow admin to set next round ffa round. Default 1
+- sm_hide_vote: 0 - disabled, 1 - allow player to vote for ffa. Default 1
+- sm_hide_enable: 0 - disabled, 1 - enable the hide plugin. Default 1
+- sm_hide_roundtime - Roundtime for a single hide round in minutes. Default 5
+- sm_hide_hidetime - Time in seconds to hide. Default 30
+- sm_hide_freezehider: 0 - disabled, 1 - enable freeze hider when hidetime gone. Default 1
+- sm_hide_roundwait - Rounds until event can be started after mapchange. Default 3
+- sm_hide_roundsnext - Rounds until event can be started again. Default 3
+- sm_hide_overlays: 0 - disabled, 1 - enable start overlay. Default 1
+- sm_hide_overlaystart_path: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
+- sm_hide_tag: 0 - disabled, 1 - Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch your sv_tags. Default 1
+
+```
+##### Features
+
+- disable warden, other eventdays, lastrequest, dice
+- enable beacon for last players (need Hg beacon)
+- autoopen celldoors (need smartjaildoors)
+- Multilingual support
+- Colors
+- Custom chat [Tag]
 
 #### EventDay -  Duckhunt
-based/merged/idea plugins: 
+based/merged/used code/idea plugins: 
 > https://forums.alliedmods.net/showpost.php?p=1657893&postcount=11?p=1657893&postcount=11
 > https://github.com/Franc1sco/Franug-JailBreak/blob/Only-Days-And-Captain/addons/sourcemod/scripting/jailbreak_open.sp
+> https://forums.alliedmods.net/showthread.php?t=231473
+> https://github.com/AG-Headline/Hunger-Games-Beacon
+> if I missed someone, please tell me!
 
-This plugin allows players to vote and warden to set next round to a duckhunt
+This plugin allows players to vote and warden to set next round to duckhunt
+open cells duckhunt scout low gravity. no reload
 
-#### (beacon)
-> https://github.com/Headline22/Hunger-Games-Beacon/
+##### Commands
+```
+- sm_duckhunt / sm_undead - Allows players to vote for a duckhunt 
+- sm_setduckhunt - Allows the Admin(sm_map) or Warden to set duckhunt as next round
+```
+##### Cvars
+```
+- sm_duckhunt_version - Shows the version of the SourceMod plugin MyJailBreak - duckhunt
+- sm_duckhunt_setw: 0 - disabled, 1 - allow warden to set next round ffa. Default 1
+- sm_duckhunt_seta: 0 - disabled, 1 - allow admin to set next round ffa round. Default 1
+- sm_duckhunt_vote: 0 - disabled, 1 - allow player to vote for ffa. Default 1
+- sm_duckhunt_enable: 0 - disabled, 1 - enable the duckhunt plugin. Default 1
+- sm_duckhunt_roundtime - Roundtime for a single duckhunt round in minutes. Default 5
+- sm_duckhunt_nodamage - Time in seconds damage is disbaled. Default 15
+- sm_duckhunt_roundwait - Rounds until event can be started after mapchange. Default 3
+- sm_duckhunt_roundsnext - Rounds until event can be started again. Default 3
+- sm_duckhunt_overlays: 0 - disabled, 1 - enable start overlay. Default 1
+- sm_duckhunt_overlaystart_path: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
+- sm_duckhunt_tag: 0 - disabled, 1 - Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch your sv_tags. Default 1
 
-#### dice
-> https://forums.alliedmods.net/showthread.php?p=1427232
+```
+##### Features
+
+- disable warden, other eventdays, lastrequest, dice
+- enable beacon for last players (need Hg beacon)
+- autoopen celldoors (need smartjaildoors)
+- Multilingual support
+- Colors
+- Custom chat [Tag]
+
 
 ### requires plugins
 - Smart Jail Doors https://github.com/Kailo97/smartjaildoors
-- sm hosties
+- sm hosties https://github.com/dataviruset/sm-hosties
+- SM File/Folder Downloader and Precacher https://forums.alliedmods.net/showthread.php?p=602270 for model download
 
 ### recomment plugins
 - [CS:GO] Flashlight (1.3.62) https://forums.alliedmods.net/showthread.php?p=2042310
+- [CS:GO] Hunger Games Beacon https://github.com/AG-Headline/Hunger-Games-Beacon
 
 
 # Credits: 
 
-**used code from: ecca, Zipcore, ESK0, Floody.de, franug, bara** and many snipptes and inspiration by so many other I cant remember
+## **used code from: ecca, Zipcore, ESK0, Floody.de, franug, bara, headline, ReFlexPoison** and many other I cant remember!
 # THANKS FOR MAKING FREE SOFTWARE!
 
 

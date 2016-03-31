@@ -35,8 +35,8 @@ ConVar gc_bOverlays;
 ConVar gc_sOverlayStartPath;
 ConVar gc_sSoundPath1;
 ConVar gc_sSoundPath2;
-ConVar gc_sModelPath;
-ConVar gc_bModel;
+//ConVar gc_sModelPath;
+//ConVar gc_bModel;
 ConVar gc_bTag;
 ConVar gc_bBetterNotes;
 ConVar g_bFF;
@@ -71,7 +71,7 @@ Handle countertime = null;
 //Strings
 char g_sHasVoted[1500];
 //char g_sModelPath[256]; // change model back on unwarden
-char g_sWardenModel[256];
+//char g_sWardenModel[256];
 char g_sSoundPath2[256];
 char g_sSoundPath1[256];
 char g_sOverlayStart[256];
@@ -137,15 +137,15 @@ public void OnPluginStart()
 	AutoExecConfig_CreateConVar("sm_warden_version", PLUGIN_VERSION,	"The version of the SourceMod plugin MyJailBreak - Warden", FCVAR_REPLICATED|FCVAR_SPONLY|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_warden_enable", "1", "0 - disabled, 1 - enable warden");	
 	gc_bBetterNotes = AutoExecConfig_CreateConVar("sm_warden_better_notifications", "1", "0 - disabled, 1 - Will use hint and center text", _, true, 0.0, true, 1.0);
-	gc_bVote = AutoExecConfig_CreateConVar("sm_warden_vote", "1", "0 - disabled, 1 - enable player vote aginst warden");	
+	gc_bVote = AutoExecConfig_CreateConVar("sm_warden_vote", "1", "0 - disabled, 1 - enable player vote against warden");	
 	gc_bStayWarden = AutoExecConfig_CreateConVar("sm_warden_stay", "1", "0 - disabled, 1 - enable warden stay after round end");	
 	gc_bNoBlock = AutoExecConfig_CreateConVar("sm_warden_noblock", "1", "0 - disabled, 1 - enable setable noblock for warden");	
 	gc_bFF = AutoExecConfig_CreateConVar("sm_warden_ff", "1", "0 - disabled, 1 - enable switch ff for T ");
-	gc_bMarker = AutoExecConfig_CreateConVar("sm_warden_marker", "1", "0 - disabled, 1 - enable switch ff for T ");
+	gc_bMarker = AutoExecConfig_CreateConVar("sm_warden_marker", "1", "0 - disabled, 1 - enable Warden simple markers ");
 	gc_iMarkerKey = AutoExecConfig_CreateConVar("sm_warden_markerkey", "3", "1 - Look weapon / 2 - Use and shoot / 3 - walk and shoot");
 	gc_bCountDown = AutoExecConfig_CreateConVar("sm_warden_countdown", "1", "0 - disabled, 1 - enable countdown for warden");
 	gc_bOverlays = AutoExecConfig_CreateConVar("sm_warden_overlays", "1", "0 - disabled, 1 - enable overlays", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_warden_overlaystart_path", "overlays/MyJailbreak/ansage3" , "Path to the start Overlay DONT TYPE .vmt or .vft");
+	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_warden_overlaystart_path", "overlays/MyJailbreak/start" , "Path to the start Overlay DONT TYPE .vmt or .vft");
 	gc_bOpen = AutoExecConfig_CreateConVar("sm_wardenopen_enable", "1", "0 - disabled, 1 - warden can open/close cells");
 	g_hOpenTimer = AutoExecConfig_CreateConVar("sm_wardenopen_time", "60", "Time in seconds for open doors on round start automaticly");
 	gc_bOpenTimer = AutoExecConfig_CreateConVar("sm_wardenopen_time_enable", "1", "should doors open automatic 0- no 1 yes");	 // TODO: DONT WORK
@@ -157,8 +157,8 @@ public void OnPluginStart()
 	gc_bSounds = AutoExecConfig_CreateConVar("sm_wardensounds_enable", "1", "0 - disabled, 1 - enable warden sounds");
 	gc_sSoundPath1 = AutoExecConfig_CreateConVar("sm_warden_sounds_path", "music/myjailbreak/warden.mp3", "Path to the sound which should be played for a int warden.");
 	gc_sSoundPath2 = AutoExecConfig_CreateConVar("sm_warden_sounds_path2", "music/myjailbreak/unwarden.mp3", "Path to the sound which should be played when there is no warden anymore.");
-	gc_bModel = AutoExecConfig_CreateConVar("sm_warden_model", "1", "0 - disabled, 1 - enable warden model", 0, true, 0.0, true, 1.0);
-	gc_sModelPath = AutoExecConfig_CreateConVar("sm_warden_model_path", "models/player/custom_player/legacy/security.mdl", "Path to the model for zombies.");
+//	gc_bModel = AutoExecConfig_CreateConVar("sm_warden_model", "1", "0 - disabled, 1 - enable warden model", 0, true, 0.0, true, 1.0);
+//	gc_sModelPath = AutoExecConfig_CreateConVar("sm_warden_model_path", "models/player/custom_player/legacy/security.mdl", "Path to the model for zombies.");
 	gc_bTag = AutoExecConfig_CreateConVar("sm_warden_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", 0, true, 0.0, true, 1.0);
 	
 	AutoExecConfig_ExecuteFile();
@@ -168,7 +168,7 @@ public void OnPluginStart()
 	HookEvent("round_start", Event_RoundStart);
 	HookEvent("player_death", playerDeath);
 	HookEvent("bullet_impact", Event_BulletImpact);
-	HookConVarChange(gc_sModelPath, OnSettingChanged);
+//	HookConVarChange(gc_sModelPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundPath2, OnSettingChanged);
 	HookConVarChange(gc_sSoundPath1, OnSettingChanged);
 	
@@ -176,7 +176,7 @@ public void OnPluginStart()
 	g_bFF = FindConVar("mp_teammates_are_enemies");
 	gc_sSoundPath1.GetString(g_sSoundPath1, sizeof(g_sSoundPath1));
 	gc_sSoundPath2.GetString(g_sSoundPath2, sizeof(g_sSoundPath2));
-	gc_sModelPath.GetString(g_sWardenModel, sizeof(g_sWardenModel));
+//	gc_sModelPath.GetString(g_sWardenModel, sizeof(g_sWardenModel));
 	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
 	
 	AddCommandListener(HookPlayerChat, "say");
@@ -208,7 +208,6 @@ public Action Command_LAW(int client, const char[] command, int argc)
 	
 	return Plugin_Continue;
 }
-
 
 public Action:Event_BulletImpact(Handle:hEvent,const String:sName[],bool:bDontBroadcast)
 {
@@ -377,8 +376,8 @@ public void OnMapStart()
 		PrecacheSoundAnyDownload(g_sSoundPath2);
 	}	
 	g_iVoteCount = 0;
-	PrecacheModel(g_sWardenModel);
-	PrecacheModel("models/player/ctm_gsg9.mdl");
+//	PrecacheModel(g_sWardenModel);
+//	PrecacheModel("models/player/ctm_gsg9.mdl");
 	PrecacheOverlayAnyDownload(g_sOverlayStart);
 	g_iBeamSprite = PrecacheModel("materials/sprites/laserbeam.vmt");
 	g_iHaloSprite = PrecacheModel("materials/sprites/glow01.vmt");
@@ -414,11 +413,11 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 		strcopy(g_sSoundPath2, sizeof(g_sSoundPath2), newValue);
 		PrecacheSoundAnyDownload(g_sSoundPath2);
 	}
-	else if(convar == gc_sModelPath)
-	{
-		strcopy(g_sWardenModel, sizeof(g_sWardenModel), newValue);
-		PrecacheModel(g_sWardenModel);
-	}
+//else if(convar == gc_sModelPath)
+//{
+//	strcopy(g_sWardenModel, sizeof(g_sWardenModel), newValue);
+//	PrecacheModel(g_sWardenModel);
+//}
 	else if(convar == gc_sOverlayStartPath)
 	{
 		strcopy(g_sOverlayStart, sizeof(g_sOverlayStart), newValue);
@@ -454,7 +453,8 @@ public Action BecomeWarden(int client, int args)
 			else CPrintToChat(client, "%t %t", "warden_tag" , "warden_ctsonly");
 		}
 		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_exist", Warden);
-	}else CPrintToChat(client, "%t %t", "warden_tag" , "warden_disabled");
+	}
+	else CPrintToChat(client, "%t %t", "warden_tag" , "warden_disabled");
 }
 
 public Action ExitWarden(int client, int args) 
@@ -473,7 +473,7 @@ public Action ExitWarden(int client, int args)
 			Warden = -1;
 			Forward_OnWardenRemoved(client);
 			SetEntityRenderColor(client, 255, 255, 255, 255);
-			SetEntityModel(client, "models/player/ctm_gsg9.mdl");
+//			SetEntityModel(client, "models/player/ctm_gsg9.mdl");
 		}
 		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
 	}
@@ -644,12 +644,12 @@ public Action Timer_WardenFixColor(Handle timer,any client)
 				{
 					SetEntityRenderColor(client, g_iWardenColorRedw, g_iWardenColorGreenw, g_iWardenColorBluew, 255);
 				}
-				if(gc_bModel.BoolValue)
-				{
-					//GetClientModel(client, g_sModelPath, sizeof(g_sModelPath));
-					//GetEntPropString(client, Prop_Data, "m_ModelName",g_sModelPath, sizeof(g_sModelPath));
-					SetEntityModel(client, g_sWardenModel);
-				}
+//				if(gc_bModel.BoolValue)
+//				{
+//					//GetClientModel(client, g_sModelPath, sizeof(g_sModelPath));
+//					//GetEntPropString(client, Prop_Data, "m_ModelName",g_sModelPath, sizeof(g_sModelPath));
+//					SetEntityModel(client, g_sWardenModel);
+//				}
 			}
 		}
 		else
@@ -760,7 +760,7 @@ void RemoveTheWarden(int client)
 	
 	if(IsClientInGame(client) && IsPlayerAlive(client))
 	SetEntityRenderColor(Warden, 255, 255, 255, 255);
-	SetEntityModel(client, "models/player/ctm_gsg9.mdl");
+//	SetEntityModel(client, "models/player/ctm_gsg9.mdl");
 	Warden = -1;
 	Call_StartForward(gF_OnWardenRemovedBySelf);
 	Call_PushCell(client);

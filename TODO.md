@@ -1,10 +1,12 @@
 bugs:
 
-- [ ] can use weapon menu on first round with plugin disabled?!´
+- [ ] can use weapon menu on sometimes first round with plugin disabled?!´
+- [ ] warden model glitch sometimes through floor? (blackscreen)
 
 must:
 
-- [ ] customizeable jailbreak menu
+- [ ] clean/translate ConVars 
+- [ ] jailbreak user Menu
 - [x] duckhunt: chicken thirdperson
 - [x] all days: remember mp_roundtime for end // https://wiki.alliedmods.net/ConVars_(SourceMod_Scripting)#Using.2FChanging_Values
 - [x] all days: dis/enable set day as admin / warden
@@ -16,6 +18,7 @@ must:
 - [ ] new day: decoy/flash 1hp
 - [x] catch: freeze sound & overlay
 - [x] catch: sprint build in
+- [ ] catch: freeze overlay stay or just 2sek. bool
 - [ ] zombie: knockbackfix
 - [x] zombie: define zombie model
 - [x] warden: unvote
@@ -23,22 +26,25 @@ must:
 - [x] warden: allow unvote
 - [x] warden: countdown
 - [ ] warden: ff not for ct
+- [ ] catch: T win wenn time run out
 - [ ] warden: clean changeback model unwarden
 - [x] switch FF from menu to warden
 - [x] hide: freeze hide bool
 - [x] Freeday: Damage disbaled 
-  [x] clean up
+  [x] clean up code 
   [ ] comments
   [ ] 
 
 
 want:
 - [ ] AddFileToDownloadsTable
+- [ ] make jailbreak menu customizeable
 - [ ] warden: unwarden roundstart and delay old warden.
 - [ ] warden: icon above head (material or model?)
 - [x] warden: markers
 - [x] warden: improve markers (2 kind)
 - [ ] warden: limits
+- [ ] randomkill from menu to warden
 - [ ] warden: talkpower
 - [ ] warden: bomb toss
 - [ ] warden: countdown set time - or menu with differnt times?!?!
@@ -64,6 +70,8 @@ want:
 - [ ] all change SetCvar to https://wiki.alliedmods.net/ConVars_(SourceMod_Scripting)#Using.2FChanging_Values
 - [ ] 
 
+future:
+- [ ] rewrite/merge to one master plugin (e.g. hosties,ttt..)
 
 maybe:
 - [ ] beacon for days
@@ -74,10 +82,10 @@ maybe:
 - [ ] dice: freeze sound & overlay
 - [ ] dice: healthshot
 - [ ] dice: third person
+- [ ] catch: enable/disbale sprint
 - [ ] dice: switch wsad
 - [ ] refuse: chickensound
 - [ ] capitulate: punish if rebel again
-- [ ] rewrite/merge to one master plugin (e.g. hosties,ttt..)
 - [ ] hide: include flashlight?
 - [ ] new day: "rats" size player in cell
 - [ ] new day: save the T vip
