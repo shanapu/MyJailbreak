@@ -79,7 +79,6 @@
 		"de"		"FreeDay ist {purple}deaktiviert."
 	}
 	
-	
 	"freeday_info_Title"		// no colors!
 	{
 		"en"		"FreeDaY"

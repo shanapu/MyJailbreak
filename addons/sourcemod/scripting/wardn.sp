@@ -761,7 +761,7 @@ void RemoveTheWarden(int client)
 		PrintHintTextToAll("%t", "warden_removed_nc", client, Warden);
 	}
 	
-	if(IsClientInGame(client) && IsPlayerAlive(client))
+	if(IsClientInGame(client) && IsPlayerAlive(client) && warden_iswarden(client))
 	SetEntityRenderColor(Warden, 255, 255, 255, 255);
 //	SetEntityModel(client, "models/player/ctm_gsg9.mdl");
 	Warden = -1;

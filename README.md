@@ -3,7 +3,9 @@
 ## work in progress! a rough AlphaVersion 
 ### This is my first public project. please note that the code may is messy, stupid and miscarriage.
 ### I would be happy and very pleased if you wannt to join this project as equal collaborator.
+### If you own a feature or extention for Jail/Warden that would fit in, i would be happy when you share it with us.
 ### see [todo list](https://git.tf/shanapu/MyJailbreak/blob/master/TODO.md) the "must" part is todo before first release on AM
+### "future dreams" make it to a allinone plugin.
 ### help me by posting bugs and feature ideas in [Issue list](https://git.tf/shanapu/MyJailbreak/issues)
 ### forks and merge requests are welcome
 
