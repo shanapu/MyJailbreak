@@ -6,7 +6,8 @@ bugs:
 must:
 
 - [ ] clean/translate ConVars 
-- [ ] jailbreak user Menu
+- [x] jailbreak user menu
+- [ ] make jailbreak menu customizeable (ADD OWN COMMANDS)
 - [x] duckhunt: chicken thirdperson
 - [x] all days: remember mp_roundtime for end // https://wiki.alliedmods.net/ConVars_(SourceMod_Scripting)#Using.2FChanging_Values
 - [x] all days: dis/enable set day as admin / warden
@@ -28,7 +29,8 @@ must:
 - [ ] warden: ff not for ct
 - [ ] catch: T win wenn time run out
 - [ ] warden: clean changeback model unwarden
-- [x] switch FF from menu to warden
+- [x] move FF from menu to warden
+- [x] move randomkill from menu to warden
 - [x] hide: freeze hide bool
 - [x] Freeday: Damage disbaled 
   [x] clean up code 
@@ -38,7 +40,7 @@ must:
 
 want:
 - [ ] AddFileToDownloadsTable
-- [ ] make jailbreak menu customizeable
+- [ ] randomkill from sucide to make bomb
 - [ ] warden: unwarden roundstart and delay old warden.
 - [ ] warden: icon above head (material or model?)
 - [x] warden: markers
@@ -46,7 +48,9 @@ want:
 - [ ] warden: limits
 - [ ] randomkill from menu to warden
 - [ ] warden: talkpower
-- [ ] warden: bomb toss
+- [ ] menu: set menu time
+- [ ] warden: bomb toss https://github.com/KissLick/TeamGames/blob/master/addons/sourcemod/scripting/modules/TG_BombToss.sp
+- [ ] warden: extend roundtime 
 - [ ] warden: countdown set time - or menu with differnt times?!?!
 - [ ] warden: mathboard
 - [ ] warden: color prisioners (color roulette)

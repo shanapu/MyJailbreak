@@ -32,10 +32,11 @@ A "rewrite" version of [Franugs Special Jailbreak](https://github.com/Franc1sco/
 # THANKS FOR MAKING FREE SOFTWARE!
 
 
-#### Wardn
+#### Menu
 
-This plugins allows players to take control over the prison as Warden/Headguard/Commander.
-Chat, Hud & sound notifications about warden/no warden, colorize warden, open/close cell doors, automatic open cells doors, unvote warden, start countdown & toggle FF/noblock.
+This plugins allows players to open a menu with , (buyammo) Key or command.
+It will show different menus for Terrorist, Counter-Terrorist & Warden.
+Menu wil 
 
 based/merged/used code/idea plugins: 
 * https://github.com/ecca/SourceMod-Plugins/tree/sourcemod/Warden
@@ -63,6 +64,7 @@ based/merged/used code/idea plugins:
 - sm_noblockon - Allows the warden to disable no block (for the warden ?)
 - sm_setff - Allows the warden to toggle friendly fire
 - sm_countdown - Allows the warden to start a Countdown
+- sm_killrandom - Allows the warden to kill a random T
 
 ```
 ##### AdminCommands // ADMFLAG_GENERIC
@@ -79,6 +81,7 @@ based/merged/used code/idea plugins:
 - sm_warden_vote: 0 - disabled, 1 - enable player vote against warden. Default 1
 - sm_warden_noblock: 0 - disabled, 1 - enable setable noblock for warden. Default 1
 - sm_warden_ff: 0 - disabled, 1 - enable Warden switch friendly fire. Default 1
+- sm_warden_random: 0 - disabled, 1 - enable kill a random t for warden. Default 1
 - sm_warden_marker: 0 - disabled, 1 - enable Warden simple markers. Default 1
 - sm_warden_markerkey: Key to set Makrer - 1 - Look weapon / 2 - Use and shoot / 3 - walk and shoot. Default 3
 - sm_warden_countdown: 0 - disabled, 1 - enable countdown for warden. Default 1
