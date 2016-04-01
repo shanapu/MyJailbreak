@@ -332,6 +332,7 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 		CatchRound++;
 		StartCatch = false;
 		SJD_OpenDoors();
+		ServerCommand("sm_removewarden");
 		CatchMenu = CreatePanel();
 		Format(info1, sizeof(info1), "%T", "catch_info_Title", LANG_SERVER);
 		SetPanelTitle(CatchMenu, info1);
@@ -357,7 +358,6 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 			{
 				for(int client=1; client <= MaxClients; client++)
 				{
-					
 					if (IsClientInGame(client))
 					{
 						if (GetClientTeam(client) == 2) //t

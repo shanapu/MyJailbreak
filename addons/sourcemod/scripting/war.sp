@@ -285,7 +285,7 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 		WarRound++;
 		IsWar = true;
 		StartWar = false;
-		
+		ServerCommand("sm_removewarden");
 		if (gc_bSpawnCell.BoolValue)
 		{
 			SJD_OpenDoors();

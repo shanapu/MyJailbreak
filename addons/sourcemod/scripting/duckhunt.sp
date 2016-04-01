@@ -289,6 +289,7 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 		IsDuckHunt = true;
 		DuckHuntRound++;
 		StartDuckHunt = false;
+		ServerCommand("sm_removewarden");
 		DuckHuntMenu = CreatePanel();
 		Format(info1, sizeof(info1), "%T", "duckhunt_info_Title", LANG_SERVER);
 		SetPanelTitle(DuckHuntMenu, info1);
@@ -419,6 +420,7 @@ public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 			if (IsClientInGame(client))
 				{
 					SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
+					SetEntityGravity(client, 1.0);
 					FP(client);
 				}
 		}

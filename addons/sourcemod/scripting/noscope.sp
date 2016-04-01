@@ -218,31 +218,27 @@ public Action VoteNoScope(int client,int args)
 	{	
 		if (gc_bVote.BoolValue)
 		{	
-			if (GetTeamClientCount(3) > 0)
+			if (!IsNoScope && !StartNoScope)
 			{
-				if (!IsNoScope && !StartNoScope)
+				if (g_iRoundLimits == 0)
 				{
-					if (g_iRoundLimits == 0)
+					if (StrContains(g_sHasVoted, steamid, true) == -1)
 					{
-						if (StrContains(g_sHasVoted, steamid, true) == -1)
+						int playercount = (GetClientCount(true) / 2);
+						g_iVoteCount++;
+						int Missing = playercount - g_iVoteCount + 1;
+						Format(g_sHasVoted, sizeof(g_sHasVoted), "%s,%s", g_sHasVoted, steamid);
+						
+						if (g_iVoteCount > playercount)
 						{
-							int playercount = (GetClientCount(true) / 2);
-							g_iVoteCount++;
-							int Missing = playercount - g_iVoteCount + 1;
-							Format(g_sHasVoted, sizeof(g_sHasVoted), "%s,%s", g_sHasVoted, steamid);
-							
-							if (g_iVoteCount > playercount)
-							{
-								StartNextRound();
-							}else CPrintToChatAll("%t %t", "noscope_tag" , "noscope_need", Missing, client);
-						}
-						else CPrintToChat(client, "%t %t", "noscope_tag" , "noscope_voted");
+							StartNextRound();
+						}else CPrintToChatAll("%t %t", "noscope_tag" , "noscope_need", Missing, client);
 					}
-					else CPrintToChat(client, "%t %t", "noscope_tag" , "noscope_wait", g_iRoundLimits);
+					else CPrintToChat(client, "%t %t", "noscope_tag" , "noscope_voted");
 				}
-				else CPrintToChat(client, "%t %t", "noscope_tag" , "noscope_progress");
+				else CPrintToChat(client, "%t %t", "noscope_tag" , "noscope_wait", g_iRoundLimits);
 			}
-			else CPrintToChat(client, "%t %t", "noscope_tag" , "noscope_minct");
+			else CPrintToChat(client, "%t %t", "noscope_tag" , "noscope_progress");
 		}
 		else CPrintToChat(client, "%t %t", "noscope_tag" , "noscope_voting");
 	}
@@ -278,6 +274,7 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 		SetCvar("mp_teammates_are_enemies", 1);
 		SetCvar("sm_dice_enable", 0);
 		IsNoScope = true;
+		ServerCommand("sm_removewarden");
 		NoScopeRound++;
 		StartNoScope = false;
 		SJD_OpenDoors();
@@ -306,7 +303,6 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 			{
 				for(int client=1; client <= MaxClients; client++)
 				{
-					
 					if (IsClientInGame(client))
 					{
 						if (GetClientTeam(client) == 3)
@@ -435,6 +431,7 @@ public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 		for(int client=1; client <= MaxClients; client++)
 		{
 			if (IsClientInGame(client)) SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
+			SetEntityGravity(client, 1.0);
 		}
 		
 		if (TruceTimer != null) KillTimer(TruceTimer);

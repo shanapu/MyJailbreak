@@ -248,6 +248,7 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 		FreeDayRound++;
 		StartFreeDay = false;
 		SJD_OpenDoors();
+		ServerCommand("sm_removewarden");
 		FreeDayMenu = CreatePanel();
 		Format(info1, sizeof(info1), "%T", "freeday_info_Title", LANG_SERVER);
 		SetPanelTitle(FreeDayMenu, info1);
@@ -271,7 +272,6 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 		for(int client=1; client <= MaxClients; client++)
 			{
 				SendPanelToClient(FreeDayMenu, client, Pass, 15);
-				
 				if (!gc_bDamage.BoolValue && IsClientInGame(client) && IsClientConnected(client) && !IsFakeClient(client))
 				{
 					SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);

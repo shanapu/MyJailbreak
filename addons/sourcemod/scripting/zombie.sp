@@ -314,6 +314,7 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 		ZombieRound++;
 		StartZombie = false;
 		SJD_OpenDoors();
+		ServerCommand("sm_removewarden");
 		ZombieMenu = CreatePanel();
 		Format(info1, sizeof(info1), "%T", "zombie_info_Title", LANG_SERVER);
 		SetPanelTitle(ZombieMenu, info1);
@@ -339,7 +340,6 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 			{
 				for(int client=1; client <= MaxClients; client++)
 				{
-					
 					if (IsClientInGame(client))
 					{
 						if (GetClientTeam(client) == 3)

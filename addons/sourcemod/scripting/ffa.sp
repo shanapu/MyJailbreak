@@ -295,10 +295,10 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 		SetCvar("sm_weapons_ct", 1);
 		SetCvar("mp_teammates_are_enemies", 1);
 		SetCvar("mp_friendlyfire", 1);
+		ServerCommand("sm_removewarden");
 		FFARound++;
 		IsFFA = true;
 		StartFFA = false;
-		
 		if (gc_bSpawnCell.BoolValue)
 		{
 			SJD_OpenDoors();

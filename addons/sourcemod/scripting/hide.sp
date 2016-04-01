@@ -294,6 +294,7 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 		HideRound++;
 		StartHide = false;
 		SJD_OpenDoors();
+		ServerCommand("sm_removewarden");
 		HideMenu = CreatePanel();
 		Format(info1, sizeof(info1), "%T", "hide_info_Title", LANG_SERVER);
 		SetPanelTitle(HideMenu, info1);
@@ -319,7 +320,6 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 			{
 				for(int client=1; client <= MaxClients; client++)
 				{
-					
 					if (IsClientInGame(client))
 					{
 						if (GetClientTeam(client) == 3)
