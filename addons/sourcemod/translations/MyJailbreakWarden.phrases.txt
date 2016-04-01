@@ -233,7 +233,7 @@
 	{
 
 		"en"		"Attention! The Warden {purple}Started a CountDown!"
-		"de"		"Aufgepasst! Der Warden hat einen{purple}CountDown gestartet!"
+		"de"		"Aufgepasst! Der Warden hat einen {purple}CountDown gestartet!"
 	}
 	
 	"warden_countdownhint_nc"	// no colors!
