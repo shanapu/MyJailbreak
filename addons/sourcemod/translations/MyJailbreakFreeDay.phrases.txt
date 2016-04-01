@@ -47,7 +47,11 @@
 		"de"		"FreeDay Aktivierung durch den Admin ist {purple}ausgeschaltet"
 	}
 	
-	
+	"freeday_start_nc"
+	{
+		"en"		"The FreeDay has started!"
+		"de"		"FreeDay ist gestartet!"
+	}
 	
 	"freeday_start"
 	{

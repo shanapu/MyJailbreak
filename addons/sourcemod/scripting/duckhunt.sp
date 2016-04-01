@@ -402,7 +402,7 @@ public Action:DuckHunt(Handle:timer)
 			CreateTimer( 0.0, ShowOverlayStart, client);
 		}
 	}
-	PrintHintTextToAll("%t", "duckhunt_start");
+	PrintHintTextToAll("%t", "duckhunt_start_nc");
 	CPrintToChatAll("%t %t", "duckhunt_tag" , "duckhunt_start");
 	SJD_OpenDoors();
 	TruceTimer = null;

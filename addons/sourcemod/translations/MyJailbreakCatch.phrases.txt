@@ -70,6 +70,12 @@
 		
 	}
 	
+	"catch_start_nc"
+	{
+		"en"		"The catch has started!"
+		"de"		"Fangen ist gestartet!"
+	}
+	
 	"catch_voted"
 	{
 		"en"		"You allready voted for {purple}catch"

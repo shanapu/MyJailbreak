@@ -61,6 +61,13 @@
 		"de"		"{purple}NoScope{default} ist gestartet!"
 	}
 	
+	"noscope_start_nc"
+	{
+
+		"en"		"The NoScope started!"
+		"de"		"NoScope ist gestartet!"
+	}
+	
 	"noscope_voted"
 	{
 		"en"		"You allready voted for {purple}NoScope"

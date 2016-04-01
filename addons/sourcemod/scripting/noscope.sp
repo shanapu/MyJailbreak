@@ -414,7 +414,7 @@ public Action:NoScope(Handle:timer)
 			CreateTimer( 0.0, ShowOverlayStart, client);
 		}
 	}
-	PrintHintTextToAll("%t", "noscope_start");
+	PrintHintTextToAll("%t", "noscope_start_ns");
 	CPrintToChatAll("%t %t", "noscope_tag" , "noscope_start");
 	
 	TruceTimer = null;

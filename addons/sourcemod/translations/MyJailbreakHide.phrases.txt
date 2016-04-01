@@ -46,6 +46,12 @@
 		"de"		"{purple}Hide in the Dark{default} ist gestartet!"
 	}
 	
+	"hide_start_nc"
+	{
+		"en"		"The Hide in the Dark has started!"
+		"de"		"Hide in the Dark ist gestartet!"
+	}
+	
 	"hide_voted"
 	{
 		"en"		"The {purple}Hide in the Dark{default} has started!"

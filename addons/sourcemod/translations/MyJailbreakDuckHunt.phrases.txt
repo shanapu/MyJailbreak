@@ -76,6 +76,12 @@
 		"de"		"{purple}Duckhunt{default} ist gestartet!"
 	}
 	
+	"duckhunt_start_nc"
+	{
+
+		"en"		"The Duckhunt has started!"
+		"de"		"Duckhunt ist gestartet!"
+	}
 	"duckhunt_voted"
 	{
 

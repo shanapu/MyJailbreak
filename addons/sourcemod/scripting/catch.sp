@@ -371,7 +371,7 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 						SendPanelToClient(CatchMenu, client, Pass, 15);
 					}
 				}
-				PrintHintTextToAll("%t", "catch_start");
+				PrintHintTextToAll("%t", "catch_start_nc");
 				CPrintToChatAll("%t %t", "catch_tag" , "catch_start");
 			}
 	}

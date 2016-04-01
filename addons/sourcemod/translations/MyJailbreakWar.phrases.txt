@@ -55,6 +55,12 @@
 		"de"		"{purple}War{default} ist gestartet!"
 	}
 	
+	"war_start_nc" 
+	{
+		"en"		"The War has started!"
+		"de"		"War ist gestartet!"
+	}
+	
 	"war_voted" 
 	{
 		"en"		"The {purple}War{default} has started!"

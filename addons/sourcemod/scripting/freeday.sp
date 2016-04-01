@@ -277,7 +277,7 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 					SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 				}
 			}
-		PrintHintTextToAll("%t", "freeday_start");
+		PrintHintTextToAll("%t", "freeday_start_nc");
 		CPrintToChatAll("%t %t", "freeday_tag" , "freeday_start");
 	}
 	else

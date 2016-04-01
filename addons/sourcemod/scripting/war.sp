@@ -483,7 +483,7 @@ public Action:NoDamage(Handle:timer)
 	
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	
-	PrintHintTextToAll("%t", "war_start");
+	PrintHintTextToAll("%t", "war_start_nc");
 	
 	for(int client=1; client <= MaxClients; client++) 
 	{

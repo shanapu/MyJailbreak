@@ -395,7 +395,7 @@ public Action:Freezed(Handle:timer)
 			CreateTimer( 0.0, ShowOverlayStart, client);
 		}
 	}
-	PrintHintTextToAll("%t", "hide_start");
+	PrintHintTextToAll("%t", "hide_start_nc");
 	CPrintToChatAll("%t %t", "hide_tag" , "hide_start");
 	FreezeTimer = null;
 	return Plugin_Stop;

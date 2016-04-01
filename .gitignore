@@ -6,3 +6,10 @@ addons/sourcemod/plugins
 addons/sourcemod/scripting/snips
 addons/sourcemod/scripting/compiled
 addons/sourcemod/scripting/*.exe
+addons/sourcemod/scripting/include/logging.inc
+addons/sourcemod/scripting/include/admin.inc
+addons/sourcemod/scripting/include/commandline.inc
+addons/sourcemod/scripting/include/bitbuffer.inc
+addons/sourcemod/scripting/include/datapack.inc
+addons/sourcemod/scripting/include/timers.inc
+addons/sourcemod/scripting/include/vector.inc
