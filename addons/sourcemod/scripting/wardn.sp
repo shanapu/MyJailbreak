@@ -28,6 +28,7 @@ ConVar gc_bColor;
 ConVar gc_bOpen;
 ConVar gc_bSounds;
 ConVar gc_bFF;
+ConVar gc_bRandom;
 ConVar gc_bMarker;
 ConVar gc_iMarkerKey;
 ConVar gc_bCountDown;
@@ -112,7 +113,8 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_vw", VoteWarden);
 	RegConsoleCmd("sm_votewarden", VoteWarden);
 	RegConsoleCmd("sm_setff", ToggleFF);
-	RegConsoleCmd("sm_countdown", SetCountDown);
+	RegConsoleCmd("sm_countdown", SetCountDown);	
+	RegConsoleCmd("sm_killrandom", KillRandom);
 	
 	//Admin commands
 	RegAdminCmd("sm_sw", SetWarden, ADMFLAG_GENERIC);
@@ -141,6 +143,7 @@ public void OnPluginStart()
 	gc_bStayWarden = AutoExecConfig_CreateConVar("sm_warden_stay", "1", "0 - disabled, 1 - enable warden stay after round end");	
 	gc_bNoBlock = AutoExecConfig_CreateConVar("sm_warden_noblock", "1", "0 - disabled, 1 - enable setable noblock for warden");	
 	gc_bFF = AutoExecConfig_CreateConVar("sm_warden_ff", "1", "0 - disabled, 1 - enable switch ff for T ");
+	gc_bRandom = AutoExecConfig_CreateConVar("sm_warden_random", "1", "0 - disabled, 1 - enable kill a random t for warden");
 	gc_bMarker = AutoExecConfig_CreateConVar("sm_warden_marker", "1", "0 - disabled, 1 - enable Warden simple markers ");
 	gc_iMarkerKey = AutoExecConfig_CreateConVar("sm_warden_markerkey", "3", "1 - Look weapon / 2 - Use and shoot / 3 - walk and shoot");
 	gc_bCountDown = AutoExecConfig_CreateConVar("sm_warden_countdown", "1", "0 - disabled, 1 - enable countdown for warden");
@@ -827,11 +830,14 @@ public Action ShowOverlayStart( Handle timer, any client )
 	return Plugin_Continue;
 }
 
-public Action  DeleteOverlay( Handle timer, any client ) {
+public Action  DeleteOverlay( Handle timer, any client ) 
+{
+	if(IsClientInGame(client) && IsClientConnected(client) && !IsFakeClient(client))
+	{
 	int iFlag = GetCommandFlags( "r_screenoverlay" ) & ( ~FCVAR_CHEAT ); 
 	SetCommandFlags( "r_screenoverlay", iFlag ); 
 	ClientCommand( client, "r_screenoverlay \"\"" );
-	
+	}
 	return Plugin_Continue;
 }
 
@@ -886,26 +892,52 @@ public Action:noblockoff(client, args)
 
 public Action:ToggleFF(client, args)
 {
-if(gc_bFF.BoolValue) 
+	if (gc_bFF.BoolValue) 
 	{
-	if (g_bFF.BoolValue) 
-	{
-		if (warden_iswarden(client))
+		if (g_bFF.BoolValue) 
 		{
-			g_bFF.BoolValue = false;
-			CPrintToChatAll("%t %t", "warden_tag", "warden_ffisoff" );
-		}else CPrintToChatAll("%t %t", "warden_tag", "warden_ffison" );
-		
-	}else
-	{	
-		if (warden_iswarden(client))
-		{
-			g_bFF.BoolValue = true;
-			CPrintToChatAll("%t %t", "warden_tag", "warden_ffison" );
-		}else CPrintToChatAll("%t %t", "warden_tag", "warden_ffisoff" );
-		
+			if (warden_iswarden(client))
+			{
+				g_bFF.BoolValue = false;
+				CPrintToChatAll("%t %t", "warden_tag", "warden_ffisoff" );
+			}else CPrintToChatAll("%t %t", "warden_tag", "warden_ffison" );
+			
+		}else
+		{	
+			if (warden_iswarden(client))
+			{
+				g_bFF.BoolValue = true;
+				CPrintToChatAll("%t %t", "warden_tag", "warden_ffison" );
+			}
+			else CPrintToChatAll("%t %t", "warden_tag", "warden_ffisoff" );
+		}
 	}
-	}	
+}
+
+public Action KillRandom(client, args)
+{
+	if (gc_bRandom.BoolValue) 
+	{
+		if (warden_iswarden(client))
+		{
+			new clientV = GetRandomPlayer(CS_TEAM_T);
+			if(clientV > 0)
+			{
+				ForcePlayerSuicide(clientV);
+				CPrintToChatAll("%t %t", "warden_tag", "warden_israndomdead", clientV); 
+			}
+		}
+		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden"); 
+	}
+}
+
+GetRandomPlayer(team)
+{
+	new clients[MaxClients+1], clientCount;
+	for (new i = 1; i <= MaxClients; i++)
+		if (IsClientInGame(i) && GetClientTeam(i) == team) clients[clientCount++] = i;
+		
+	return (clientCount == 0) ? -1 : clients[GetRandomInt(0, clientCount-1)];
 }
 
 public Action:ccounter(Handle:timer, Handle:pack)
