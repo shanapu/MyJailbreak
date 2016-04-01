@@ -103,16 +103,9 @@ public OnPluginStart()
 	AutoExecConfig_CleanFile();
 	
 	
-	HookConVarChange(g_bGunsCT, OnSettingChanged);
 }
 
-public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
-{
-	if(convar == FindConVar("sm_weapons_ct"))
-	{
-		g_bGunsCT = FindConVar("sm_weapons_ct");
-	}
-}
+
 
 
 

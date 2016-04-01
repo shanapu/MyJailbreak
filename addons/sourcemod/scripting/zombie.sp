@@ -476,11 +476,14 @@ public Action ShowOverlayStart( Handle timer, any client ) {
 	
 }
 
-public Action  DeleteOverlay( Handle timer, any client ) {
+public Action  DeleteOverlay( Handle timer, any client ) 
+{
+	if(IsClientInGame(client) && IsClientConnected(client) && !IsFakeClient(client))
+	{
 	int iFlag = GetCommandFlags( "r_screenoverlay" ) & ( ~FCVAR_CHEAT ); 
 	SetCommandFlags( "r_screenoverlay", iFlag ); 
 	ClientCommand( client, "r_screenoverlay \"\"" );
-	
+	}
 	return Plugin_Continue;
 }
 
