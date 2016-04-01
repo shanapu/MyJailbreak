@@ -285,4 +285,11 @@
 		"en"		"du hast schon {purple}gegen den Warden{default} gestimmt"
 	}
 	
+	"warden_israndomdead"
+	{
+		"#format"		"{1:n}"
+		"en"			"{1} was killed randomly"
+		"en"			"{1} wurde als Zufallskanidat getötet"
+	}
+
 }

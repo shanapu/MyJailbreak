@@ -4,6 +4,7 @@
 	{
 		"en"		"[{green}MyJB.noscope{default}]"
 	}
+	"noscope_need"
 	{
 		"#format"	"{1:i},{2:N}"
 		"en"		"{purple}{2}{default} has votet. {purple}{1}{default} votes left to {darkred}noscope"
@@ -11,89 +12,72 @@
 	}
 	"noscope_twin_nc"
 	{
-
-		"en"		"a Terrorist surived"
-		
+		"en"		"A Terrorist has surrived"
+		"de"		"Ein Terrorist hat als einziger überlebt"
 	}
 		"noscope_voting"
 	{
-	"#format"	""
-		"en"		"Player Voting for noscope is disabled"
-		
+		"en"		"Player Voting for NoScope is {purple}disabled"
+		"de"		"Voting für NoScope ist {purple}ausgeschaltet"
 	}
 	"noscope_setbywarden"
 	{
-	"#format"	""
-		"en"		"Set noscope by Warden is disabled"
-		
+		"en"		"Set NoScope by Warden is {purple}disabled"
+		"de"		"NoScope Aktivierung durch den Warden ist {purple}ausgeschaltet"
 	}
 	
 	"noscope_setbyadmin"
 	{
-	"#format"	""
-		"en"		"Set noscope by admin is disabled"
-		
+		"en"		"Set NoScope by admin is {purple}disabled"
+		"de"		"NoScope Aktivierung durch den Admin ist {purple}ausgeschaltet"
 	}
 	"noscope_ctwin_nc"
 	{
-
-		"en"		"a CT wins"
-		
+		"en"		"A Counter-Terrorist has surrived"
+		"de"		"Ein Counter-Terrorist hat als einziger überlebt"
 	}
 	
 	"noscope_end"
 	{
-
-		"en"		"noscope ended"
-		
+		"en"		"{purple}NoScope{default} ended"
+		"de"		"{purple}NoScope{default} beendet"
 	}
 	
 	"noscope_next"
 	{
-
-		"en"		"Next round is noscope"
-		
+		"en"		"Next round is {purple}NoScope"
+		"de"		"Nächste Runde ist {purple}NoScope"
 	}
 		"noscope_next_nc"
 	{
-
-		"en"		"Next round is noscope"
-		
+		"en"		"Next round is NoScope"
+		"de"		"Nächste Runde ist NoScope"
 	}
 	
 	"noscope_start"
 	{
 
-		"en"		"The noscope has started!"
-		
+		"en"		"The {purple}NoScope{default} has started!"
+		"de"		"{purple}NoScope{default} ist gestartet!"
 	}
 	
-	"noscope_voted"{
-
-		"en"		"You allready voted for noscope"
-		
+	"noscope_voted"
+	{
+		"en"		"You allready voted for {purple}NoScope"
+		"de"		"Du hast schon für {purple}NoScope {default}gevotet"
 	}
 	
 	"noscope_progress"
 	{
-
-		"en"		"noscope is allready in progress"
-		
+		"en"		"NoScope is {purple}allready in progress"
+		"de"		"NoScope ist {purple}bereits gesetzt"
 	}
-	
-	"noscope_minct"
-	{
-
-		"en"		"For a noscope you need a least one CT"
-		
-	}
-	
 	
 	"noscope_disabled"
 	{
 
-		"en"		"noscope is disabled."
-		
+		"en"		"NoScope is {purple}disabled."
+		"de"		"NoScope ist {purple}deaktiviert."
 	}
 	
 
@@ -101,13 +85,13 @@
 	{
 		"#format"	"{1:i}"
 		"en"		"{1} seconds until start"
-		
+		"de"		"{1} Sekunden bis zum Start"
 	}
 	
 	"noscope_info_Title"
 	{
-		"en"		"FFA is activ"
-		"de"		"FFA ist aktiv"
+		"en"		"Scout NoScope NoScope is activ"
+		"de"		"Scout NoScope NoScope ist aktiv"
 	}
 	
 	"noscope_info_Line1"
@@ -117,7 +101,8 @@
 	}
 	"noscope_info_Line2"
 	{
-		"en"		"In noscope ther is ffa scout noscope low grav"
+		"en"		"In noscope ther is FFA scout noscope low grav"
+		"de"		"FFA NoScope scout noscope low grav"
 	}
 	
 	"noscope_info_Line3"

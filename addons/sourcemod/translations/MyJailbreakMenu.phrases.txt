@@ -11,10 +11,10 @@
 		"#format"		""
 		"en"			"MyJailbreak Menu"
 	}	
-	"menu_overlays"
+	"menu_countdown"
 	{
 		"#format"		""
-		"en"			"Call Overlays"
+		"en"			"Start a Countdown"
 	}	
 	"menu_opencell"
 	{
@@ -126,19 +126,15 @@
 		"#format"		""
 		"en"			"Start duckhunt next round"
 	}
-	"menu_notwarden"
+	"menu_freeday"
 	{
 		"#format"		""
-		"en"			"you are not the warden"
+		"en"			"Start duckhunt next round"
 	}
 		"menu_admin"
 	{
 		"#format"		""
 		"en"			"Admin Menu"
 	}
-	"menu_israndomdead"
-	{
-		"#format"		"{1:n}"
-		"en"			"{1} was killed randomly"
-	}
+
 }

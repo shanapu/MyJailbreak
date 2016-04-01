@@ -48,13 +48,13 @@
 		"de"		"{purple}Zombie{default} beendet"
 	}
 	
-	"zombie_next"
+	"zombie_next_nc"
 	{
 		"en"		"Next round is Zombie"
 		"de"		"Nächste Runde ist Zombie"
 	}
 	
-	"zombie_next_nc"		// no colors!
+	"zombie_next"		// no colors!
 	{
 		"en"		"Next round is {purple}Zombie"
 		"de"		"Nächste Runde ist {purple}Zombie"
