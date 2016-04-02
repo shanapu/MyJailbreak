@@ -334,7 +334,7 @@ GiveSavedWeaponsFix(clientIndex)
 	{
 		if(gc_bPlugin.BoolValue)
 		{
-			if(gc_bTerror.BoolValue)
+			if((gc_bTerror.BoolValue && GetClientTeam(clientIndex) == 2) || (gc_bCTerror.BoolValue && GetClientTeam(clientIndex) == 3))
 			{
 				//StripAllWeapons(clientIndex);
 				if(GetPlayerWeaponSlot(clientIndex, CS_SLOT_PRIMARY) == -1)
@@ -364,39 +364,7 @@ GiveSavedWeaponsFix(clientIndex)
 				if(GetPlayerWeaponSlot(clientIndex, CS_SLOT_GRENADE) == -1) GivePlayerItem(clientIndex, "weapon_hegrenade");
 				weaponsGivenThisRound[clientIndex] = true;
 			}
-			else if(GetClientTeam(clientIndex) == 3)
-			{
-			if(gc_bCTerror.BoolValue)	
-			{
-			if(GetPlayerWeaponSlot(clientIndex, CS_SLOT_PRIMARY) == -1)
-			{
-				if (StrEqual(primaryWeapon[clientIndex], "random"))
-				{
-					// Select random menu item (excluding "Random" option)
-					int random = GetRandomInt(0, GetArraySize(array_primary)-1);
-					int Items[weapons];
-					GetArrayArray(array_primary, random, Items[0]);
-					GivePlayerItem(clientIndex, Items[ItemName]);
-				}
-				else GivePlayerItem(clientIndex, primaryWeapon[clientIndex]);
-			}
-			if(GetPlayerWeaponSlot(clientIndex, CS_SLOT_SECONDARY) == -1)
-			{
-				if (StrEqual(secondaryWeapon[clientIndex], "random"))
-				{
-					// Select random menu item (excluding "Random" option)
-					int random = GetRandomInt(0, GetArraySize(array_secondary)-1);
-					int Items[weapons];
-					GetArrayArray(array_secondary, random, Items[0]);
-					GivePlayerItem(clientIndex, Items[ItemName]);
-				}
-				else GivePlayerItem(clientIndex, secondaryWeapon[clientIndex]);
-			}
-			if(GetPlayerWeaponSlot(clientIndex, CS_SLOT_GRENADE) == -1) GivePlayerItem(clientIndex, "weapon_hegrenade");
-			weaponsGivenThisRound[clientIndex] = true;
-	}
-	}
-	}
+		}
 	}
 }
 
