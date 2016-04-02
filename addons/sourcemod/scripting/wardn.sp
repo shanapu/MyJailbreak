@@ -705,7 +705,7 @@ public Action RemoveWarden(int client, int args)
 		Call_PushCell(client);
 		Call_Finish();
 	}
-	else CPrintToChatAll("%t %t", "warden_tag" , "warden_noexist");
+//	else CPrintToChatAll("%t %t", "warden_tag" , "warden_noexist");
 	return Plugin_Handled;
 	}
 

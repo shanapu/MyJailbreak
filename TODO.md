@@ -1,7 +1,7 @@
 bugs:
 
-- [ ] can use weapon menu on sometimes first round with plugin disabled?!´
-- [ ] warden model glitch sometimes through floor? (blackscreen)
+- [ ] can use sometimes weapon menu onfirst round with plugin disabled?!´
+- [ ] warden model glitch sometimes through floor? (blackscreen) model feature rmeoved
 
 must:
 
@@ -15,7 +15,7 @@ must:
 - [x] all days: set rounds to wait after mapstart
 - [x] all days: start overlay
 - [x] all days: msg when deactivated by set
-- [ ] 1.7 syntax
+- [ ] 1.7 syntax ?
 - [ ] new day: decoy/flash 1hp
 - [x] catch: freeze sound & overlay
 - [x] catch: sprint build in
@@ -46,17 +46,20 @@ want:
 - [x] warden: markers
 - [x] warden: improve markers (2 kind)
 - [ ] warden: limits
-- [ ] randomkill from menu to warden
+- [ ] noscope: dis/enable lowgrav
+- [ ] noscope: set grav
 - [ ] warden: talkpower
-- [ ] menu: set menu time
 - [ ] warden: bomb toss https://github.com/KissLick/TeamGames/blob/master/addons/sourcemod/scripting/modules/TG_BombToss.sp
 - [ ] warden: extend roundtime 
 - [ ] warden: countdown set time - or menu with differnt times?!?!
 - [ ] warden: mathboard
 - [ ] warden: color prisioners (color roulette)
 - [x] weapons: open menu on spawn bool
-- [ ] weapons: set menu time/delay
+- [ ] weapons: set menu delay
+- [ ] weapons: set menu time
 - [x] weapons: give warden ta&health bool
+- [x] menu: set menu time
+- [ ] menu: set menu delay
 - [ ] weapons: menu spawn timing
 - [ ] duckhunt: hunter hp
 - [ ] duckhunt: chicken hp
@@ -66,7 +69,7 @@ want:
 - [ ] zombie: atmo sounds
 - [x] zombie: define model
 - [ ] war&ffa/all?: define how many rounds to play
-- [ ] all days: set menu time/delay
+- [ ] all days: set panel time/delay
 - [ ] (all days: cfg to add sm_ for event start end)
 - [ ] all change SetCvar to https://wiki.alliedmods.net/ConVars_(SourceMod_Scripting)#Using.2FChanging_Values
 - [ ] hide: MovementValue hider/seeker

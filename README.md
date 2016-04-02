@@ -38,7 +38,7 @@ A "rewrite" version of [Franugs Special Jailbreak](https://github.com/Franc1sco/
 
 This plugins allows players to open a menu with , (buyammo) Key or command.
 It will show different menus for Terrorist, Counter-Terrorist & Warden.
-Menu wil 
+
 
 based/merged/used code/idea plugins: 
 * https://github.com/ecca/SourceMod-Plugins/tree/sourcemod/Warden
