@@ -15,8 +15,6 @@ ConVar gc_bWarden;
 ConVar gc_bDays;
 ConVar gc_bClose;
 ConVar gc_bStart;
-ConVar gc_bTime;
-ConVar g_bTime;
 ConVar g_bFF;
 ConVar g_bsetFF;
 ConVar g_bWar;
@@ -61,6 +59,26 @@ public OnConfigsExecuted()
 			hTags.SetString(sTags);
 		}
 	}
+	
+	g_bWarden = FindConVar("sm_warden_enable");
+	g_bWar = FindConVar("sm_war_enable");
+	g_bFFA = FindConVar("sm_ffa_enable");
+	g_bZombie = FindConVar("sm_zombie_enable");
+	g_bNoScope = FindConVar("sm_noscope_enable");
+	g_bHide = FindConVar("sm_hide_enable");
+	g_bCatch = FindConVar("sm_catch_enable");
+	g_bFreeDay = FindConVar("sm_freeday_enable");
+	g_bDuckHunt = FindConVar("sm_duckhunt_enable");
+	g_bCountdown = FindConVar("sm_warden_countdown");
+	g_bVote = FindConVar("sm_warden_vote");
+	g_bGunsCT = FindConVar("sm_weapons_ct");
+	g_bGunsT = FindConVar("sm_weapons_t");
+	g_bGuns = FindConVar("sm_weapons_enable");
+	g_bOpen = FindConVar("sm_wardenopen_enable");
+	g_bsetFF = FindConVar("sm_warden_ff");
+	g_bRandom = FindConVar("sm_warden_random");
+	g_bFF = FindConVar("mp_teammates_are_enemies");
+
 }
 
 public OnPluginStart()
@@ -85,7 +103,6 @@ public OnPluginStart()
 	gc_bDays = AutoExecConfig_CreateConVar("sm_menu_days", "1", "0 - disabled, 1 - enable eventdays menu for warden and admin");
 	gc_bClose = AutoExecConfig_CreateConVar("sm_menu_close", "1", "0 - disabled, 1 - enable close menu after action");
 	gc_bStart = AutoExecConfig_CreateConVar("sm_menu_start", "1", "0 - disabled, 1 - enable open menu on every roundstart");
-	gc_iTime = AutoExecConfig_CreateConVar("sm_menu_time", "30", "time until menu auto close", FCVAR_NOTIFY, true, 0.0, true, 999.0);
 	gc_bTag = AutoExecConfig_CreateConVar("sm_menu_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	
 	
@@ -94,40 +111,19 @@ public OnPluginStart()
 	
 
 	
-	HookEvent("round_start", Event_RoundStart);
+	HookEvent("player_spawn", Event_OnPlayerSpawn);
 }
 
 
 
-public Action:Event_RoundStart(Handle:event, const char[] name, bool:dontBroadcast)
+public Action:Event_OnPlayerSpawn(Handle:event, const String:name[], bool:dontBroadcast)
 {
+	new client = GetClientOfUserId(GetEventInt(event, "userid"));
+	
 	if(gc_bStart.BoolValue)
 	{
 		JbMenu(client,0);
 	}
-}
-
-public void OnConfigsExecuted()
-{
-	g_bWarden = FindConVar("sm_warden_enable");
-	g_bWar = FindConVar("sm_war_enable");
-	g_bFFA = FindConVar("sm_ffa_enable");
-	g_bZombie = FindConVar("sm_zombie_enable");
-	g_bNoScope = FindConVar("sm_noscope_enable");
-	g_bHide = FindConVar("sm_hide_enable");
-	g_bCatch = FindConVar("sm_catch_enable");
-	g_bFreeDay = FindConVar("sm_freeday_enable");
-	g_bDuckHunt = FindConVar("sm_duckhunt_enable");
-	g_bCountdown = FindConVar("sm_warden_countdown");
-	g_bVote = FindConVar("sm_warden_vote");
-	g_bGunsCT = FindConVar("sm_weapons_ct");
-	g_bGunsT = FindConVar("sm_weapons_t");
-	g_bGuns = FindConVar("sm_weapons_enable");
-	g_bOpen = FindConVar("sm_wardenopen_enable");
-	g_bsetFF = FindConVar("sm_warden_ff");
-	g_bRandom = FindConVar("sm_warden_random");
-	g_bFF = FindConVar("mp_teammates_are_enemies");
-	g_iTime = gc_iTime.IntValue;
 }
 
 public Action:JbMenu(client,args)
@@ -252,7 +248,7 @@ public Action:JbMenu(client,args)
 			AddMenuItem(menu, "admin", menuinfo17);
 		}
 		SetMenuExitButton(menu, true);
-		DisplayMenu(menu, client, g_iTime);
+		DisplayMenu(menu, client, MENU_TIME_FOREVER);
 	}
 }
 
@@ -311,7 +307,7 @@ public Action:EventDays(client, args)
 				AddMenuItem(menu, "freeday", menuinfo26);
 			}
 			SetMenuExitButton(menu, true);
-			DisplayMenu(menu, client, g_iTime);
+			DisplayMenu(menu, client, MENU_TIME_FOREVER);
 		}
 		else CPrintToChat(client, "%t %t", "warden_tag", "warden_notwarden" );
 	}
@@ -341,7 +337,7 @@ public JBMenuHandler(Handle:menu, MenuAction:action, client, itemNum)
 		else if ( strcmp(info,"votewarden") == 0 ) 
 		{
 			FakeClientCommand(client, "sm_votewarden");
-			if(g_bClose.BoolValue)
+			if(gc_bClose.BoolValue)
 			{
 				CloseHandle(menu);
 			}else JbMenu(client,0);
@@ -361,7 +357,7 @@ public JBMenuHandler(Handle:menu, MenuAction:action, client, itemNum)
 		else if ( strcmp(info,"countdown") == 0 ) 
 		{
 			FakeClientCommand(client, "sm_countdown");
-			if(g_bClose.BoolValue)
+			if(gc_bClose.BoolValue)
 			{
 				CloseHandle(menu);
 			}else JbMenu(client,0);
@@ -379,7 +375,7 @@ public JBMenuHandler(Handle:menu, MenuAction:action, client, itemNum)
 		else if ( strcmp(info,"cellopen") == 0 ) 
 		{
 			FakeClientCommand(client, "sm_open");
-			if(g_bClose.BoolValue)
+			if(gc_bClose.BoolValue)
 			{
 				CloseHandle(menu);
 			}else JbMenu(client,0);
@@ -387,7 +383,7 @@ public JBMenuHandler(Handle:menu, MenuAction:action, client, itemNum)
 		else if ( strcmp(info,"setff") == 0 ) 
 		{
 			FakeClientCommand(client, "sm_setff");
-			if(g_bClose.BoolValue)
+			if(gc_bClose.BoolValue)
 			{
 				CloseHandle(menu);
 			}else JbMenu(client,0);
@@ -395,7 +391,7 @@ public JBMenuHandler(Handle:menu, MenuAction:action, client, itemNum)
 		else if ( strcmp(info,"kill") == 0 ) 
 		{
 			FakeClientCommand(client, "sm_killrandom");
-			if(g_bClose.BoolValue)
+			if(gc_bClose.BoolValue)
 			{
 				CloseHandle(menu);
 			}else JbMenu(client,0);
@@ -418,7 +414,7 @@ public EventMenuHandler(Handle:menu, MenuAction:action, client, itemNum)
 		if ( strcmp(info,"war") == 0 ) 
 		{
 			FakeClientCommand(client, "sm_setwar");
-			if(g_bClose.BoolValue)
+			if(gc_bClose.BoolValue)
 			{
 				CloseHandle(menu);
 			}else JbMenu(client,0);
@@ -426,7 +422,7 @@ public EventMenuHandler(Handle:menu, MenuAction:action, client, itemNum)
 		else if ( strcmp(info,"ffa") == 0 ) 
 		{
 			FakeClientCommand(client, "sm_setffa");
-			if(g_bClose.BoolValue)
+			if(gc_bClose.BoolValue)
 			{
 				CloseHandle(menu);
 			}else JbMenu(client,0);
@@ -434,7 +430,7 @@ public EventMenuHandler(Handle:menu, MenuAction:action, client, itemNum)
 		else if ( strcmp(info,"zombie") == 0 ) 
 		{
 			FakeClientCommand(client, "sm_setzombie");
-			if(g_bClose.BoolValue)
+			if(gc_bClose.BoolValue)
 			{
 				CloseHandle(menu);
 			}else JbMenu(client,0);
@@ -442,7 +438,7 @@ public EventMenuHandler(Handle:menu, MenuAction:action, client, itemNum)
 		else if ( strcmp(info,"catch") == 0 )
 		{
 			FakeClientCommand(client, "sm_setcatch");
-			if(g_bClose.BoolValue)
+			if(gc_bClose.BoolValue)
 			{
 				CloseHandle(menu);
 			}else JbMenu(client,0);
@@ -450,7 +446,7 @@ public EventMenuHandler(Handle:menu, MenuAction:action, client, itemNum)
 		else if ( strcmp(info,"noscope") == 0 )
 		{
 			FakeClientCommand(client, "sm_setnoscope");
-			if(g_bClose.BoolValue)
+			if(gc_bClose.BoolValue)
 			{
 				CloseHandle(menu);
 			}else JbMenu(client,0);
@@ -458,7 +454,7 @@ public EventMenuHandler(Handle:menu, MenuAction:action, client, itemNum)
 		else if ( strcmp(info,"duckhunt") == 0 )
 		{
 			FakeClientCommand(client, "sm_setduckhunt");
-			if(g_bClose.BoolValue)
+			if(gc_bClose.BoolValue)
 			{
 				CloseHandle(menu);
 			}else JbMenu(client,0);
@@ -466,7 +462,7 @@ public EventMenuHandler(Handle:menu, MenuAction:action, client, itemNum)
 		else if ( strcmp(info,"hide") == 0 )
 		{
 			FakeClientCommand(client, "sm_sethide");
-			if(g_bClose.BoolValue)
+			if(gc_bClose.BoolValue)
 			{
 				CloseHandle(menu);
 			}else JbMenu(client,0);
@@ -474,7 +470,7 @@ public EventMenuHandler(Handle:menu, MenuAction:action, client, itemNum)
 		else if ( strcmp(info,"freeday") == 0 )
 		{
 			FakeClientCommand(client, "sm_setfreeday");
-			if(g_bClose.BoolValue)
+			if(gc_bClose.BoolValue)
 			{
 				CloseHandle(menu);
 			}else JbMenu(client,0);
