@@ -322,7 +322,7 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 				{
 					if (IsClientInGame(client))
 					{
-						if (GetClientTeam(client) == 3)
+						(GetClientTeam(client) == CS_TEAM_CT)
 						{
 							SetEntityMoveType(client, MOVETYPE_NONE);
 							GivePlayerItem(client, "weapon_tagrenade");
@@ -354,11 +354,11 @@ public Action:Freezed(Handle:timer)
 		for (int client=1; client <= MaxClients; client++)
 		if (IsClientInGame(client) && IsPlayerAlive(client))
 			{
-				if (GetClientTeam(client) == 3)
+				(GetClientTeam(client) == CS_TEAM_CT)
 				{
 					PrintCenterText(client,"%t", "hide_timetounfreeze_nc", g_iFreezeTime);
 				}
-				if (GetClientTeam(client) == 2)
+				(GetClientTeam(client) == CS_TEAM_T)
 				{
 				PrintCenterText(client,"%t", "hide_timetohide_nc", g_iFreezeTime);
 				}
@@ -374,12 +374,12 @@ public Action:Freezed(Handle:timer)
 		{
 			if (IsClientInGame(client) && IsPlayerAlive(client))
 			{
-				if (GetClientTeam(client) == 3)
+				(GetClientTeam(client) == CS_TEAM_CT)
 				{
 					SetEntityMoveType(client, MOVETYPE_WALK);
 					SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.4);
 				}
-				if (GetClientTeam(client) == 2)
+				(GetClientTeam(client) == CS_TEAM_T)
 				{
 					if (gc_bFreezeHider)
 					{

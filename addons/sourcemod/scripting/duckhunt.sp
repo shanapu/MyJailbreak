@@ -317,13 +317,13 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 				{
 					if (IsClientInGame(client))
 					{
-						if (GetClientTeam(client) == 3)
+						(GetClientTeam(client) == CS_TEAM_CT)
 						{
 							SetEntityModel(client, model);
 							SetEntityHealth(client, 600);
 							GivePlayerItem(client, "weapon_nova");
 						}
-						if (GetClientTeam(client) == 2)
+						(GetClientTeam(client) == CS_TEAM_T)
 						{
 							SetEntityModel(client, "models/chicken/chicken.mdl");
 							SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.2);
@@ -389,12 +389,12 @@ public Action:DuckHunt(Handle:timer)
 		{
 			if (IsClientInGame(client) && IsPlayerAlive(client))
 			{
-				if (GetClientTeam(client) == 2)
+				(GetClientTeam(client) == CS_TEAM_T)
 					{
 						SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
 						SetEntityGravity(client, 0.3);
 					}
-				if (GetClientTeam(client) == 3)
+				(GetClientTeam(client) == CS_TEAM_CT)
 					{
 						SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
 					}

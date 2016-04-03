@@ -347,7 +347,7 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 		{
 			if (IsClientInGame(client))
 			{
-				if (GetClientTeam(client) == 3)
+				(GetClientTeam(client) == CS_TEAM_CT)
 				{
 					RandomCT = client;
 					break;
@@ -371,13 +371,13 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 					{
 						if (IsClientInGame(client))
 						{
-							if (GetClientTeam(client) == 3)
+							(GetClientTeam(client) == CS_TEAM_CT)
 							{
 								GivePlayerItem(client, "weapon_m4a1");
 								GivePlayerItem(client, "weapon_deagle");
 								GivePlayerItem(client, "weapon_hegrenade");
 							}
-							if (GetClientTeam(client) == 2)
+							(GetClientTeam(client) == CS_TEAM_T)
 							{
 								GivePlayerItem(client, "weapon_ak47");
 								GivePlayerItem(client, "weapon_deagle");
@@ -389,11 +389,11 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 					{
 						if (IsClientInGame(client))
 						{
-							if (GetClientTeam(client) == 3)
+							(GetClientTeam(client) == CS_TEAM_CT)
 							{
 								TeleportEntity(client, Pos1, NULL_VECTOR, NULL_VECTOR);
 							}
-							if (GetClientTeam(client) == 2)
+							(GetClientTeam(client) == CS_TEAM_T)
 							{
 								SetEntityMoveType(client, MOVETYPE_NONE);
 								TeleportEntity(client, Pos, NULL_VECTOR, NULL_VECTOR);
@@ -452,7 +452,7 @@ public Action:Freezed(Handle:timer)
 		{
 			if (IsClientInGame(client) && IsPlayerAlive(client))
 			{
-				if (GetClientTeam(client) == 2)
+				(GetClientTeam(client) == CS_TEAM_T)
 				{
 					SetEntityMoveType(client, MOVETYPE_WALK);
 					TeleportEntity(client, Pos, NULL_VECTOR, NULL_VECTOR);

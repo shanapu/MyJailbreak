@@ -50,8 +50,7 @@ int g_iRoundLimits;
 int CatchRound;
 
 //Handles
-Handle SprintTimer[MAXP
-ConVar gc_bStayOverlay;LAYERS+1];
+Handle SprintTimer[MAXPLAYERS+1];
 Handle CatchMenu;
 Handle UseCvar;
 
@@ -375,7 +374,7 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 				{
 					if (IsClientInGame(client))
 					{
-						if (GetClientTeam(client) == 2) //t
+						(GetClientTeam(client) == CS_TEAM_T) //t
 					
 					ConVar gc_bStayOverlay;	{
 							catched[client] = false;
