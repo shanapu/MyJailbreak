@@ -113,7 +113,7 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_vw", VoteWarden);
 	RegConsoleCmd("sm_votewarden", VoteWarden);
 	RegConsoleCmd("sm_setff", ToggleFF);
-	RegConsoleCmd("sm_countdown", SetCountDown);	
+	RegConsoleCmd("sm_countdown", SetCountDown);
 	RegConsoleCmd("sm_killrandom", KillRandom);
 	
 	//Admin commands
@@ -477,6 +477,11 @@ public Action ExitWarden(int client, int args)
 			Forward_OnWardenRemoved(client);
 			SetEntityRenderColor(client, 255, 255, 255, 255);
 //			SetEntityModel(client, "models/player/ctm_gsg9.mdl");
+			if(gc_bSounds.BoolValue)	
+			{
+				EmitSoundToAllAny(g_sSoundPath2);
+			}
+			ResetMarker();
 		}
 		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
 	}
@@ -693,6 +698,11 @@ public void OnClientDisconnect(int client)
 		Call_StartForward(gF_OnWardenDisconnected);
 		Call_PushCell(client);
 		Call_Finish();
+		if(gc_bSounds.BoolValue)	
+		{
+			EmitSoundToAllAny(g_sSoundPath2);
+		}
+		ResetMarker();
 	}
 }
 
@@ -745,8 +755,12 @@ void SetTheWarden(int client)
 		Warden = client;
 		CreateTimer(0.5, Timer_WardenFixColor, client, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 		SetClientListeningFlags(client, VOICE_NORMAL);
-		
 		Forward_OnWardenCreation(client);
+		if(gc_bSounds.BoolValue)	
+		{
+			EmitSoundToAllAny(g_sSoundPath1);
+		}
+		ResetMarker();
 	}
 	else CPrintToChat(client, "%t %t", "warden_tag" , "warden_disabled");
 }
@@ -769,6 +783,11 @@ void RemoveTheWarden(int client)
 	Call_PushCell(client);
 	Call_Finish();
 	Forward_OnWardenRemoved(client);
+	if(gc_bSounds.BoolValue)	
+	{
+		EmitSoundToAllAny(g_sSoundPath2);
+	}
+	ResetMarker();
 }
 
 public Action:SetCountDown(client, args)
@@ -1106,20 +1125,7 @@ stock bool IsValidClient(int client, bool alive = false)
 
 public void warden_OnWardenCreated(int client)
 {
-	if(gc_bSounds.BoolValue)	
-	{
-	EmitSoundToAllAny(g_sSoundPath1);
-	}
-	ResetMarker();
-}
 
-public void warden_OnWardenRemoved(int client)
-{
-	if(gc_bSounds.BoolValue)	
-	{
-	EmitSoundToAllAny(g_sSoundPath2);
-	}
-	ResetMarker();
 }
 
 void PrecacheSoundAnyDownload(char[] sSound)

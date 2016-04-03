@@ -1,0 +1,32 @@
+"Phrases"		
+{
+	"tags_TA"
+	{
+		"en"		"[Terror.Admin]"
+	}
+	
+	"tags_T"
+	{
+		"en"		"[Terror]"
+	}
+	
+	"tags_CTA"
+	{
+		"en"		"[Guard.Admin]"
+	}
+	
+	"tags_CT"
+	{
+		"en"		"[Guard]"
+	}
+	
+	"tags_WA"
+	{
+		"en"		"[Warden.Admin]"
+	}
+	
+	"tags_W"
+	{
+		"en"		"[Warden]"
+	}
+}

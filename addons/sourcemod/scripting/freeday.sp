@@ -73,7 +73,7 @@ public void OnPluginStart()
 	gc_bSetA = AutoExecConfig_CreateConVar("sm_freeday_seta", "1", "0 - disabled, 1 - allow admin to set freeday round", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	gc_bVote = AutoExecConfig_CreateConVar("sm_freeday_vote", "1", "0 - disabled, 1 - allow player to vote for freeday", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	gc_bFirst = AutoExecConfig_CreateConVar("sm_freeday_firstround", "1", "0 - disabled, 1 - auto freeday first round", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	gc_bDamage = AutoExecConfig_CreateConVar("sm_freeday_damage", "1", "0 - disabled, 1 - auto freeday first round", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	gc_bDamage = AutoExecConfig_CreateConVar("sm_freeday_damage", "1", "0 - disabled, 1 - enable damage on freedays", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_freeday_roundtime", "5", "Round time for a single freeday round");
 	gc_iRoundLimits = AutoExecConfig_CreateConVar("sm_freeday_roundsnext", "3", "Rounds until event can be started again.");
 	gc_bTag = AutoExecConfig_CreateConVar("sm_freeday_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster", FCVAR_NOTIFY, true, 0.0, true, 1.0);
