@@ -52,7 +52,7 @@ based/merged/used code/idea plugins:
 ```
 ##### Cvars
 ```
-- sm_warden_version - Shows the version of the SourceMod plugin MyJailBreak - Warden
+- sm_menu_version - Shows the version of the SourceMod plugin MyJailBreak - Menu
 - sm_menu_enable: 0 - disabled, 1 - enable jailbreak menu
 - sm_menu_ct: 0 - disabled, 1 - enable jailbreak menu for CT
 - sm_menu_t: 0 - disabled, 1 - enable jailbreak menu for terrorist
@@ -289,6 +289,7 @@ based/merged/used code/idea plugins:
 - sm_catch_roundwait - Rounds until event can be started after mapchange. Default 3
 - sm_catch_roundsnext - Rounds until event can be started again. Default 3
 - sm_catch_overlays: 0 - disabled, 1 - enable freezed overlays. Default 1
+- sm_catch_stayoverlay: 0 - overlays will removed after 3sec. , 1 - overlays will stay until unfreeze
 - sm_catch_overlayfreeze_path: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/freeze"
 - sm_catch_sounds_enable: 0 - disabled, 1 - enable un/-Freeze sounds");
 - sm_catch_sounds_freeze: Path to the sound which should be played on freeze. Default "music/myjailbreak/freeze.mp3"
