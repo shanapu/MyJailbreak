@@ -38,34 +38,30 @@ public Action:checkTag(Handle:event, String:name[], bool:dontBroadcast)
 HandleTag(client)
 
 { 
-    if (GetClientTeam(client) == 2) 
+    if (GetClientTeam(client) == CS_TEAM_T) 
     { 
-        CS_SetClientClanTag(client, "Terror"); 
-    }
-    else
-		if (GetClientTeam(client) == 3)
-		{ 
-			CS_SetClientClanTag(client, "CT"); 
-			if (GetUserFlagBits(client) & ADMFLAG_GENERIC)
+        
+        if (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
 			{ 
-				CS_SetClientClanTag(client, "[ADMIN]"); 
-			}
-		}else if (GetUserFlagBits(client) & ADMFLAG_CUSTOM4)
-				{ 
-				CS_SetClientClanTag(client, "[ULTRA VIP]"); 
-				}
-				else
-					if (GetUserFlagBits(client) & ADMFLAG_CUSTOM5)
-					{ 
-						CS_SetClientClanTag(client, "[SUPER VIP]"); 
-					}
-					else
-						if (GetUserFlagBits(client) & ADMFLAG_RESERVATION)
-						{ 
-							CS_SetClientClanTag(client, "[VIP]"); 
-						}	
-						else
-							{ 
-								CS_SetClientClanTag(client, ""); 
-							}						
+				CS_SetClientClanTag(client, "[TerrorAdmin]"); 
+			} 
+			else CS_SetClientClanTag(client, "[Terror]");
+    }
+    else if (GetClientTeam(client) == CS_TEAM_CT)
+		{ 
+			if (warden_iswarden(client))
+			{ 
+				if (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
+		    	{ 
+			       	CS_SetClientClanTag(client, "[WardenAdmin]"); 
+		       	} 
+		    	else CS_SetClientClanTag(client, "[warden]"); 
+			} 
+			else if (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
+			{ 
+				CS_SetClientClanTag(client, "[GuardAdmin]"); 
+			} 
+			else CS_SetClientClanTag(client, "[Guard]"); 
+			 
+								
 }
