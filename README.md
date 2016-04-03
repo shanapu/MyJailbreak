@@ -41,75 +41,33 @@ It will show different menus for Terrorist, Counter-Terrorist & Warden.
 
 
 based/merged/used code/idea plugins: 
-* https://github.com/ecca/SourceMod-Plugins/tree/sourcemod/Warden
-* https://github.com/ESK0/ESK0s_JailBreak_Warden/
-* https://git.tf/Zipcore/Warden
-* https://git.tf/Zipcore/Warden-Sounds
-* https://git.tf/Zipcore/Warden-SimpleMarkers
-* https://github.com/Franc1sco/Franug-JailBreak/blob/Only-Days-And-Captain/addons/sourcemod/scripting/jailbreak_open.sp
-* https://forums.alliedmods.net/showthread.php?t=231473
+* https://github.com/Franc1sco/Franug-JailBreak/blob/Only-Days-And-Captain/addons/sourcemod/scripting/jailbreak_menu.sp
 * https://github.com/AG-Headline/Hunger-Games-Beacon
 * if I missed someone, please tell me!
 
-##### Commands // why so many cmds for same action? my players are dump.
+##### Commands 
 ```
-- sm_w / sm_warden - Allows the player taking the charge over prisoners
-- sm_c / sm_commander - Allows the player taking the charge over prisoners
-- sm_hg / sm_headguard - Allows the player taking the charge over prisoners
-- sm_uw / sm_unwarden - Allows the player to retire from the position
-- sm_uc / sm_uncommander - Allows the player to retire from the position
-- sm_uhg / sm_unheadguard - Allows the player to retire from the position
-- sm_vw / sm_votewarden - Allows the player to vote to retire warden
-- sm_open - Allows the warden to open the cell doors
-- sm_close - Allows the warden to close the cell doors
-- sm_noblockon - Allows the warden to enable no block (for the warden ?)
-- sm_noblockon - Allows the warden to disable no block (for the warden ?)
-- sm_setff - Allows the warden to toggle friendly fire
-- sm_countdown - Allows the warden to start a Countdown
-- sm_killrandom - Allows the warden to kill a random T
-
-```
-##### AdminCommands // ADMFLAG_GENERIC
-```
-- sm_sw / sm_setwarden - Allows the Admin to set a player to warden
-- sm_rw / sm_removewarden - Allows the Admin to remove a player from warden
+- sm_menu / sm_menus - open the player menu
+- sm_days / sm_event / sm _events - open the Event Days menu for warden/admin
 ```
 ##### Cvars
 ```
 - sm_warden_version - Shows the version of the SourceMod plugin MyJailBreak - Warden
-- sm_warden_better_notifications: 0 - disabled , 1 - will use hint and center say for better notifications. Default 1
-- sm_warden_enable: 0 - disabled, 1 - enable the warden plugin. Default 1
-- sm_warden_stay: 0 - disabled, 1 - warden will stay after round end. Default 1
-- sm_warden_vote: 0 - disabled, 1 - enable player vote against warden. Default 1
-- sm_warden_noblock: 0 - disabled, 1 - enable setable noblock for warden. Default 1
-- sm_warden_ff: 0 - disabled, 1 - enable Warden switch friendly fire. Default 1
-- sm_warden_random: 0 - disabled, 1 - enable kill a random t for warden. Default 1
-- sm_warden_marker: 0 - disabled, 1 - enable Warden simple markers. Default 1
-- sm_warden_markerkey: Key to set Makrer - 1 - Look weapon / 2 - Use and shoot / 3 - walk and shoot. Default 3
-- sm_warden_countdown: 0 - disabled, 1 - enable countdown for warden. Default 1
-- sm_warden_overlays: 0 - disabled, 1 - enable overlay for countdown. Default 1
-- sm_warden_overlaystart_path: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
-- sm_wardencolor_enable: 0 - disabled, 1 - enable colored warden. Default 1
-- sm_wardencolor_red - What color to turn the warden into (set R, G and B values to 0 to disable). Default 0
-- sm_wardencolor_green - What color to turn the warden into (rGb): x - green value. Default 0
-- sm_wardencolor_blue - What color to turn the warden into (rgB): x - blue value. Default 255
-- sm_wardensounds_enable: 0 - disabled, 1 - Play a sound when a player become warden or warden leaves. Default 1
-- sm_warden_sounds_path - Path to the sound which should be played for a new warden. Default "music/myjailbreak/warden.mp3"
-- sm_warden_sounds_path2 - Path to the sound which should be played when there is no warden anymore. Default "music/myjailbreak/unwarden.mp3"
-- sm_wardenopen_enable: 0 - disabled, 1 - warden can open/close cell doors. Default 1
-- sm_wardenopen_time_enable: 0 - disabled, 1 - cell doors will open automatic after - sm_wardenopen_time. Default 1
-- sm_wardenopen_time - Time in seconds for open doors on round start automaticly. Default 60
-- sm_wardenopen_time_warden: 0 - disabled, 1 - doors open automatic after - sm_wardenopen_time although there is a warden. needs - sm_wardenopen_time_enable 1. Default 1
-- sm_warden_tag: 0 - disabled, 1 - Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch your sv_tags. Default 1
-
+- sm_menu_enable: 0 - disabled, 1 - enable jailbreak menu
+- sm_menu_ct: 0 - disabled, 1 - enable jailbreak menu for CT
+- sm_menu_t: 0 - disabled, 1 - enable jailbreak menu for terrorist
+- sm_menu_warden: disabled, 1 - enable Jailbreak menu for warden
+- sm_menu_days: 0 - disabled, 1 - enable eventdays menu for warden and admin
+- sm_menu_close: 0 - disabled, 1 - enable close menu after action
+- sm_menu_start: 0 - disabled, 1 - enable open menu on every roundstart
+- sm_menu_tag: 0 - disabled, 1 - Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch your sv_tags. Default 1
 ```
 ##### Features
 
 - Custom chat [Tag]
 - Multilingual support
-- Forwards
-- Natives
 - Colors
+- only shows enabled features
 
 #### EventDay - War
 
