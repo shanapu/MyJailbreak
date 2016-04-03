@@ -1,7 +1,7 @@
 bugs:
 
 - [ ] can use sometimes weapon menu onfirst round with plugin disabled?!´
-- [ ] warden model glitch sometimes through floor? (blackscreen) model feature rmeoved
+- [ ] warden model glitch sometimes through floor? (blackscreen) model feature removed
 
 must:
 
@@ -17,6 +17,7 @@ must:
 - [x] all days: msg when deactivated by set
 - [ ] 1.7 syntax ?
 - [ ] new day: decoy/flash 1hp
+- [ ] countdown: is CD running? no double 
 - [x] catch: freeze sound & overlay
 - [x] catch: sprint build in
 - [ ] catch: freeze overlay stay or just 2sek. bool
@@ -27,15 +28,15 @@ must:
 - [x] warden: allow unvote
 - [x] warden: countdown
 - [ ] warden: ff not for ct
-- [ ] catch: T win wenn time run out
+- [ ] catch: T win when time run out
 - [ ] warden: clean changeback model unwarden
 - [x] move FF from menu to warden
 - [x] move randomkill from menu to warden
 - [x] hide: freeze hide bool
 - [x] Freeday: Damage disbaled 
-  [x] clean up code 
-  [ ] comments
-  [ ] 
+- [ ] clean up code 
+- [ ] comments
+- [ ] 
 
 
 want:
