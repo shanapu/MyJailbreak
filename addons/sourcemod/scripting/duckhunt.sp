@@ -1,8 +1,9 @@
 //includes
-#include <cstrike>
+
 #include <sourcemod>
 #include <colors>
 #include <sdktools>
+#include <cstrike>
 #include <wardn>
 #include <smartjaildoors>
 #include <sdkhooks>
@@ -153,7 +154,7 @@ public void OnConfigsExecuted()
 
 void PrecacheOverlayAnyDownload(char[] sOverlay)
 {
-	if(gc_bOverlays.BoolValue)	
+	if(gc_bOverlays.BoolValue)
 	{
 		char sBufferVmt[256];
 		char sBufferVtf[256];
@@ -175,11 +176,11 @@ public OnClientPutInServer(client)
 
 public Action SetDuckHunt(int client,int args)
 {
-	if (gc_bPlugin.BoolValue)	
+	if (gc_bPlugin.BoolValue)
 	{
-		if (warden_iswarden(client)) 
+		if (warden_iswarden(client))
 		{
-			if (gc_bSetW.BoolValue)	
+			if (gc_bSetW.BoolValue)
 			{
 				if (!IsDuckHunt && !StartDuckHunt)
 				{
@@ -195,7 +196,7 @@ public Action SetDuckHunt(int client,int args)
 		}
 		else if (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true)) 
 			{
-				if (gc_bSetA.BoolValue)	
+				if (gc_bSetA.BoolValue)
 				{
 					if (!IsDuckHunt && !StartDuckHunt)
 					{
@@ -317,13 +318,13 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 				{
 					if (IsClientInGame(client))
 					{
-						(GetClientTeam(client) == CS_TEAM_CT)
+						if (GetClientTeam(client) == CS_TEAM_CT)
 						{
 							SetEntityModel(client, model);
 							SetEntityHealth(client, 600);
 							GivePlayerItem(client, "weapon_nova");
 						}
-						(GetClientTeam(client) == CS_TEAM_T)
+						if (GetClientTeam(client) == CS_TEAM_T)
 						{
 							SetEntityModel(client, "models/chicken/chicken.mdl");
 							SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.2);
@@ -389,12 +390,12 @@ public Action:DuckHunt(Handle:timer)
 		{
 			if (IsClientInGame(client) && IsPlayerAlive(client))
 			{
-				(GetClientTeam(client) == CS_TEAM_T)
+				if (GetClientTeam(client) == CS_TEAM_T)
 					{
 						SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
 						SetEntityGravity(client, 0.3);
 					}
-				(GetClientTeam(client) == CS_TEAM_CT)
+				if (GetClientTeam(client) == CS_TEAM_CT)
 					{
 						SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
 					}

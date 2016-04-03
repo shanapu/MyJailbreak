@@ -342,13 +342,13 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 				{
 					if (IsClientInGame(client))
 					{
-						(GetClientTeam(client) == CS_TEAM_CT)
+						if (GetClientTeam(client) == CS_TEAM_CT)
 						{
 							SetEntityModel(client, g_sZombieModel);
 							SetEntityMoveType(client, MOVETYPE_NONE);
 							SetEntityHealth(client, 10000);
 						}
-						(GetClientTeam(client) == CS_TEAM_T)
+						if (GetClientTeam(client) == CS_TEAM_T)
 						{
 							SetEntityHealth(client, 65);
 							GivePlayerItem(client, "weapon_negev");
@@ -378,11 +378,11 @@ public Action:Zombie(Handle:timer)
 		for (int client=1; client <= MaxClients; client++)
 		if (IsClientInGame(client) && IsPlayerAlive(client))
 			{
-				(GetClientTeam(client) == CS_TEAM_CT)
+				if (GetClientTeam(client) == CS_TEAM_CT)
 				{
 					PrintCenterText(client,"%t", "zombie_timetounfreeze_nc", g_iFreezeTime);
 				}
-				(GetClientTeam(client) == CS_TEAM_T)
+				if (GetClientTeam(client) == CS_TEAM_T)
 				{
 					PrintCenterText(client,"%t", "zombie_timetozombie_nc", g_iFreezeTime);
 				}
@@ -398,7 +398,7 @@ public Action:Zombie(Handle:timer)
 		{
 			if (IsClientInGame(client) && IsPlayerAlive(client))
 			{
-				(GetClientTeam(client) == CS_TEAM_CT)
+				if (GetClientTeam(client) == CS_TEAM_CT)
 				{
 					SetEntityMoveType(client, MOVETYPE_WALK);
 					SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.4);

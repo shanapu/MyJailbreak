@@ -19,6 +19,7 @@
 //Booleans
 bool IsCatch;
 bool StartCatch;
+bool IsSprint;
 bool catched[MAXPLAYERS+1];
 
 //ConVars
@@ -60,6 +61,8 @@ char g_sSoundPath1[256];
 char g_sHasVoted[1500];
 char g_sOverlayFreeze[256];
 
+
+
 public Plugin myinfo = {
 	name = "MyJailbreak - Catch & Freeze",
 	author = "shanapu & Floody.de, fransico",
@@ -75,7 +78,7 @@ public void OnPluginStart()
 	LoadTranslations("MyJailbreakCatch.phrases");
 	
 	//Client Commands
-	ConVar gc_bStayOverlay;
+
 	RegConsoleCmd("sm_setcatch", SetCatch);
 	RegConsoleCmd("sm_catch", VoteCatch);
 	RegConsoleCmd("sm_catchfreeze", VoteCatch);
@@ -100,12 +103,10 @@ public void OnPluginStart()
 	gc_sSoundPath1 = AutoExecConfig_CreateConVar("sm_catch_sounds_freeze", "music/myjailbreak/freeze.mp3", "Path to the sound which should be played on freeze.");
 	gc_sSoundPath2 = AutoExecConfig_CreateConVar("sm_catch_sounds_unfreeze", "music/myjailbreak/unfreeze.mp3", "Path to the sound which should be played on unfreeze.");
 	gc_bSprintUse = AutoExecConfig_CreateConVar("sm_catch_sprint_button", "1", "Enable/Disable +use button support", 0, true, 0.0, true, 1.0);
-	gc_fCooldown= AutoE
-	ConVar gc_bStayOverlay;xecConfig_CreateConVar("sm_catch_sprint_cooldown", "10","Time in seconds the player must wait for the next sprint", 0, true, 1.0, true, 15.0);
+	gc_fCooldown= AutoExecConfig_CreateConVar("sm_catch_sprint_cooldown", "10","Time in seconds the player must wait for the next sprint", 0, true, 1.0, true, 15.0);
 	gc_bSprint= AutoExecConfig_CreateConVar("sm_catch_sprint_enable", "1","Enable/Disable ShortSprint", 0, true, 0.0, true, 1.0);
 	gc_fSpeed= AutoExecConfig_CreateConVar("sm_catch_sprint_speed", "1.25","Ratio for how fast the player will sprint", 0, true, 1.01, true, 5.00);
-	gc_fTime= AutoExecConfig_CreateConVar("sm_catch_sprint_time", "3.5", "Time in seconds the player will sprint",
-	0, true, 1.0, true, 30.0);
+	gc_fTime= AutoExecConfig_CreateConVar("sm_catch_sprint_time", "3.0", "Time in seconds the player will sprint",0, true, 1.0, true, 30.0);
 	gc_bTag = AutoExecConfig_CreateConVar("sm_catch_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	
 	AutoExecConfig_ExecuteFile();
@@ -125,11 +126,10 @@ public void OnPluginStart()
 	g_iSetRoundTime = FindConVar("mp_roundtime");
 	g_iRoundLimits = gc_iRoundLimits.IntValue;
 	gc_sSoundPath1.GetString(g_sSoundPath1, sizeof(g_sSoundPath1));
-	gc_sSoundPath2.GetS
-	ConVar gc_bStayOverlay;tring(g_sSoundPath2, sizeof(g_sSoundPath2));
+	gc_sSoundPath2.GetString(g_sSoundPath2, sizeof(g_sSoundPath2));
 	gc_sOverlayFreeze.GetString(g_sOverlayFreeze , sizeof(g_sOverlayFreeze));
 	
-	
+	IsSprint = false;
 	IsCatch = false;
 	StartCatch = false;
 	g_iVoteCount = 0;
@@ -151,7 +151,7 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 		strcopy(g_sSoundPath2, sizeof(g_sSoundPath2), newValue);
 		PrecacheSoundAnyDownload(g_sSoundPath2);
 	}
-	ConVar gc_bStayOverlay;
+
 	else if(convar == gc_sOverlayFreeze)
 	{
 		strcopy(g_sOverlayFreeze, sizeof(g_sOverlayFreeze), newValue);
@@ -168,6 +168,7 @@ public void OnMapStart()
 	g_iVoteCount = 0;
 	CatchRound = 0;
 	IsCatch = false;
+	IsSprint = false;
 	StartCatch = false;
 	g_iRoundLimits = gc_iRoundWait.IntValue;
 }
@@ -176,7 +177,7 @@ public void OnConfigsExecuted()
 {
 	g_iRoundLimits = gc_iRoundWait.IntValue;
 	
-	ConVar gc_bStayOverlay;
+
 	if (gc_bTag.BoolValue)
 	{
 		ConVar hTags = FindConVar("sv_tags");
@@ -201,7 +202,7 @@ void PrecacheSoundAnyDownload(char[] sSound)
 	AddFileToDownloadsTable(sBuffer);
 	}
 }
-ConVar gc_bStayOverlay;
+
 void PrecacheOverlayAnyDownload(char[] sOverlay)
 {
 	if(gc_bOverlays.BoolValue)	
@@ -226,7 +227,7 @@ public OnClientPutInServer(client)
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 }
 
-ConVar gc_bStayOverlay;
+
 public Action SetCatch(int client,int args)
 {
 	if (gc_bPlugin.BoolValue)	
@@ -249,9 +250,8 @@ public Action SetCatch(int client,int args)
 		}
 		else if (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
 			{
-				if (gc_bSetA.BoolValue)	
+				if (gc_bSetA.BoolValue)
 				{
-				ConVar gc_bStayOverlay;
 					if (!IsCatch && !StartCatch)
 					{
 						if (g_iRoundLimits == 0)
@@ -276,7 +276,6 @@ public Action VoteCatch(int client,int args)
 	
 	if (gc_bPlugin.BoolValue)
 	{
-	ConVar gc_bStayOverlay;
 		if (gc_bVote.BoolValue)
 		{	
 			if (GetTeamClientCount(3) > 0)
@@ -300,8 +299,7 @@ public Action VoteCatch(int client,int args)
 						}
 						else CPrintToChat(client, "%t %t", "catch_tag" , "catch_voted");
 					}
-					els
-					ConVar gc_bStayOverlay;e CPrintToChat(client, "%t %t", "catch_tag" , "war_wait", g_iRoundLimits);
+					else CPrintToChat(client, "%t %t", "catch_tag" , "war_wait", g_iRoundLimits);
 				}
 				else CPrintToChat(client, "%t %t", "catch_tag" , "catch_progress");
 			}
@@ -325,8 +323,7 @@ void StartNextRound()
 	SetCvar("sm_war_enable", 0);
 	SetCvar("sm_noscope_enable", 0);
 	CPrintToChatAll("%t %t", "catch_tag" , "catch_next");
-	PrintHintTextToAll(
-	ConVar gc_bStayOverlay;"%t", "catch_next_nc");
+	PrintHintTextToAll("%t", "catch_next_nc");
 }
 
 public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
@@ -350,8 +347,7 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 		Format(info1, sizeof(info1), "%T", "catch_info_Title", LANG_SERVER);
 		SetPanelTitle(CatchMenu, info1);
 		DrawPanelText(CatchMenu, "                                   ");
-		Format(info2, s
-		ConVar gc_bStayOverlay;izeof(info2), "%T", "catch_info_Line1", LANG_SERVER);
+		Format(info2, sizeof(info2), "%T", "catch_info_Line1", LANG_SERVER);
 		DrawPanelText(CatchMenu, info2);
 		DrawPanelText(CatchMenu, "-----------------------------------");
 		Format(info3, sizeof(info3), "%T", "catch_info_Line2", LANG_SERVER);
@@ -374,9 +370,8 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 				{
 					if (IsClientInGame(client))
 					{
-						(GetClientTeam(client) == CS_TEAM_T) //t
-					
-					ConVar gc_bStayOverlay;	{
+						if (GetClientTeam(client) == CS_TEAM_T) //t
+						{
 							catched[client] = false;
 						}
 					}
@@ -401,7 +396,6 @@ public Action:OnWeaponCanUse(client, weapon)
 	char sWeapon[32];
 	GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
 
-ConVar gc_bStayOverlay;
 	if(!StrEqual(sWeapon, "weapon_knife"))
 		{
 			if (IsClientInGame(client) && IsPlayerAlive(client))
@@ -426,7 +420,6 @@ public Action:OnTakeDamage(victim, &attacker, &inflictor, &Float:damage, &damage
 	
 	if(GetClientTeam(victim) == CS_TEAM_T && GetClientTeam(attacker) == CS_TEAM_CT && !catched[victim])
 	{
-	ConVar gc_bStayOverlay;
 		CatchEm(victim, attacker);
 		CheckStatus();
 	}
@@ -451,7 +444,6 @@ public Action:EventPlayerTeam(Handle:event, const char[] name, bool:dontBroadcas
 	if(IsCatch == false)
 	{
 		return;
-		ConVar gc_bStayOverlay;
 	}
 	CheckStatus();
 	
@@ -476,7 +468,6 @@ CatchEm(client, attacker)
 	CPrintToChatAll("%t %t", "catch_tag" , "catch_catch", attacker, client);
 }
 
-ConVar gc_bStayOverlay;
 FreeEm(client, attacker)
 {
 	SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
@@ -497,14 +488,12 @@ CheckStatus()
 	if(IsClientInGame(i) && IsPlayerAlive(i) && GetClientTeam(i) == CS_TEAM_T && !catched[i]) number++;
 	if(number == 0)
 	{
-	CS_TerminateRound(5.0, CSRoundEnd_CTWin);
 	CPrintToChatAll("%t %t", "catch_tag" , "catch_win");
+	CS_TerminateRound(5.0, CSRoundEnd_CTWin);
 	CreateTimer( 1.0, DeleteOverlay);
 	}
-	ConVar gc_bStayOverlay;
 }
 
-ConVar gc_bStayOverlay;
 public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 {
 	int winner = GetEventInt(event, "winner");
@@ -617,14 +606,18 @@ public Action:Command_StartSprint(client, args)
 {
 	if (IsCatch)
 	{
-		if(gc_bSprint.BoolValue && client > 0 && IsClientInGame(client) && IsPlayerAlive(client) && GetClientTeam(client) > 1)
+		if (!IsSprint)
 		{
-			SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", gc_fSpeed.FloatValue);
-			EmitSoundToClient(client, "player/suit_sprint.wav", SOUND_FROM_PLAYER, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, 0.8);
-			CPrintToChat(client, "%t %t", "catch_tag" ,"catch_sprint");
-			SprintTimer[client] = CreateTimer(gc_fTime.FloatValue, Timer_SprintEnd, client);
+			if(gc_bSprint.BoolValue && client > 0 && IsClientInGame(client) && IsPlayerAlive(client) && GetClientTeam(client) > 1)
+			{
+				IsSprint = true;
+				SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", gc_fSpeed.FloatValue);
+				EmitSoundToClient(client, "player/suit_sprint.wav", SOUND_FROM_PLAYER, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, 0.8);
+				CPrintToChat(client, "%t %t", "catch_tag" ,"catch_sprint");
+				SprintTimer[client] = CreateTimer(gc_fTime.FloatValue, Timer_SprintEnd, client);
+			}
+			return(Plugin_Handled);
 		}
-		return(Plugin_Handled);
 	}
 	else CPrintToChat(client, "%t %t", "catch_tag" , "catch_disabled");
 	return(Plugin_Handled);
@@ -655,6 +648,7 @@ ResetSprint(client)
 	{
 		KillTimer(SprintTimer[client]);
 		SprintTimer[client] = null;
+		IsSprint = false;
 	}
 
 	if(GetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue") != 1)
@@ -667,7 +661,8 @@ ResetSprint(client)
 public Action:Timer_SprintEnd(Handle:timer, any:client)
 {
 	SprintTimer[client] = null;
-
+	
+	
 	if(IsClientInGame(client))
 	{
 		SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
@@ -683,6 +678,7 @@ public Action:Timer_SprintEnd(Handle:timer, any:client)
 public Action:Timer_SprintCooldown(Handle:timer, any:client)
 {
 	SprintTimer[client] = null;
+	IsSprint = false;
 	return;
 }
 

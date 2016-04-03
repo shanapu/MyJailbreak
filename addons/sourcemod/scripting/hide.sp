@@ -322,13 +322,13 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 				{
 					if (IsClientInGame(client))
 					{
-						(GetClientTeam(client) == CS_TEAM_CT)
+						if (GetClientTeam(client) == CS_TEAM_CT)
 						{
 							SetEntityMoveType(client, MOVETYPE_NONE);
 							GivePlayerItem(client, "weapon_tagrenade");
 						}
 					}
-					if (IsClientInGame(client))
+					if (GetClientTeam(client) == CS_TEAM_T)
 					{
 						SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
 						SendPanelToClient(HideMenu, client, Pass, 15);
@@ -354,11 +354,11 @@ public Action:Freezed(Handle:timer)
 		for (int client=1; client <= MaxClients; client++)
 		if (IsClientInGame(client) && IsPlayerAlive(client))
 			{
-				(GetClientTeam(client) == CS_TEAM_CT)
+				if (GetClientTeam(client) == CS_TEAM_CT)
 				{
 					PrintCenterText(client,"%t", "hide_timetounfreeze_nc", g_iFreezeTime);
 				}
-				(GetClientTeam(client) == CS_TEAM_T)
+				if (GetClientTeam(client) == CS_TEAM_T)
 				{
 				PrintCenterText(client,"%t", "hide_timetohide_nc", g_iFreezeTime);
 				}
@@ -374,12 +374,12 @@ public Action:Freezed(Handle:timer)
 		{
 			if (IsClientInGame(client) && IsPlayerAlive(client))
 			{
-				(GetClientTeam(client) == CS_TEAM_CT)
+				if (GetClientTeam(client) == CS_TEAM_CT)
 				{
 					SetEntityMoveType(client, MOVETYPE_WALK);
 					SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.4);
 				}
-				(GetClientTeam(client) == CS_TEAM_T)
+				if (GetClientTeam(client) == CS_TEAM_T)
 				{
 					if (gc_bFreezeHider)
 					{

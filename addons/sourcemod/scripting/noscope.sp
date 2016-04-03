@@ -305,12 +305,12 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 				{
 					if (IsClientInGame(client))
 					{
-						(GetClientTeam(client) == CS_TEAM_CT)
+						if (GetClientTeam(client) == CS_TEAM_CT)
 						{
 							GivePlayerItem(client, "weapon_ssg08");
 							SetEntityGravity(client, 0.3);
 						}
-						(GetClientTeam(client) == CS_TEAM_T)
+						if (GetClientTeam(client) == CS_TEAM_T)
 						{
 							GivePlayerItem(client, "weapon_ssg08");
 							SetEntityGravity(client, 0.3);
@@ -400,12 +400,12 @@ public Action:NoScope(Handle:timer)
 		{
 			if (IsClientInGame(client) && IsPlayerAlive(client))
 			{
-				(GetClientTeam(client) == CS_TEAM_T)
+				if (GetClientTeam(client) == CS_TEAM_T)
 					{
 					SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
 					SetEntityGravity(client, 0.3);
 					}
-				(GetClientTeam(client) == CS_TEAM_CT)
+				if (GetClientTeam(client) == CS_TEAM_CT)
 					{
 					SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
 					SetEntityGravity(client, 0.3);

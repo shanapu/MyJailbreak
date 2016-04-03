@@ -365,9 +365,9 @@ based/merged/used code/idea plugins:
 - sm_catch_roundwait - Rounds until event can be started after mapchange. Default 3
 - sm_catch_roundsnext - Rounds until event can be started again. Default 3
 - sm_catch_overlays: 0 - disabled, 1 - enable freezed overlays. Default 1
-- sm_catch_stayoverlay: 0 - overlays will removed after 3sec. , 1 - overlays will stay until unfreeze
+- sm_catch_stayoverlay: 0 - overlays will removed after 3sec. , 1 - overlays will stay until unfreeze. Default 1
 - sm_catch_overlayfreeze_path: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/freeze"
-- sm_catch_sounds_enable: 0 - disabled, 1 - enable un/-Freeze sounds");
+- sm_catch_sounds_enable: 0 - disabled, 1 - enable un/-Freeze sounds. Default 1
 - sm_catch_sounds_freeze: Path to the sound which should be played on freeze. Default "music/myjailbreak/freeze.mp3"
 - sm_catch_sounds_unfreeze: Path to the sound which should be played on unfreeze. Default "music/myjailbreak/unfreeze.mp3"
 - sm_catch_tag: 0 - disabled, 1 - Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch your sv_tags. Default 1
@@ -474,7 +474,7 @@ based/merged/used code/idea plugins:
 ### requires plugins
 - Smart Jail Doors https://github.com/Kailo97/smartjaildoors
 - sm hosties https://github.com/dataviruset/sm-hosties
-- SM File/Folder Downloader and Precacher https://forums.alliedmods.net/showthread.php?p=602270 for model download
+- SM File/Folder Downloader and Precacher https://forums.alliedmods.net/showthread.php?p=602270 for zombie/warden model download (overlays auto added)
 
 ### recomment plugins
 - [CS:GO] Flashlight (1.3.62) https://forums.alliedmods.net/showthread.php?p=2042310

@@ -257,7 +257,7 @@ public Action:EventDays(client, args)
 {
 	if(gc_bDays.BoolValue)
 	{
-		if (warden_iswarden(client) || (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true)))  
+		if (warden_iswarden(client) || (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true)))
 		{
 			Handle menu = CreateMenu(EventMenuHandler);
 			

@@ -359,7 +359,7 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 		{
 			if (IsClientInGame(client))
 			{
-				(GetClientTeam(client) == CS_TEAM_CT)
+				if (GetClientTeam(client) == CS_TEAM_CT)
 				{
 					RandomCT = client;
 					break;
@@ -383,13 +383,13 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 					{
 						if (IsClientInGame(client))
 						{
-							(GetClientTeam(client) == CS_TEAM_CT)
+							if (GetClientTeam(client) == CS_TEAM_CT)
 							{
 								GivePlayerItem(client, "weapon_m4a1");
 								GivePlayerItem(client, "weapon_deagle");
 								GivePlayerItem(client, "weapon_hegrenade");
 							}
-							(GetClientTeam(client) == CS_TEAM_T)
+							if (GetClientTeam(client) == CS_TEAM_T)
 							{
 								GivePlayerItem(client, "weapon_ak47");
 								GivePlayerItem(client, "weapon_deagle");
@@ -401,11 +401,11 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 					{
 						if (IsClientInGame(client))
 						{
-							(GetClientTeam(client) == CS_TEAM_CT)
+							if (GetClientTeam(client) == CS_TEAM_CT)
 							{
 								TeleportEntity(client, Pos1, NULL_VECTOR, NULL_VECTOR);
 							}
-							(GetClientTeam(client) == CS_TEAM_T)
+							if (GetClientTeam(client) == CS_TEAM_T)
 							{
 								TeleportEntity(client, Pos1, NULL_VECTOR, NULL_VECTOR);
 							}
