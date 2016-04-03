@@ -482,8 +482,13 @@ CheckStatus()
 
 public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 {
-	int winner = GetEventInt(event, "winner");
+	if(GetEventInt(event, "winner") != CS_TEAM_CT)
+	{ 
+        CS_TerminateRound(0.0, CSRoundEnd_TerroristWin); 
+    }
 	
+	int winner = GetEventInt(event, "winner");
+    	
 	if (IsCatch)
 	{
 		for(int client=1; client <= MaxClients; client++)
