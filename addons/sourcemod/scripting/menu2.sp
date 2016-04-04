@@ -21,6 +21,7 @@ ConVar g_bWar;
 ConVar g_bFFA;
 ConVar g_bZombie;
 ConVar g_bNoScope;
+ConVar g_bDodgeBall
 ConVar g_bHide;
 ConVar g_bCatch;
 ConVar g_bFreeDay;
@@ -67,6 +68,7 @@ public OnConfigsExecuted()
 	g_bNoScope = FindConVar("sm_noscope_enable");
 	g_bHide = FindConVar("sm_hide_enable");
 	g_bCatch = FindConVar("sm_catch_enable");
+	g_bDodgeBall = FindConVar("sm_dodgeball_enable");
 	g_bFreeDay = FindConVar("sm_freeday_enable");
 	g_bDuckHunt = FindConVar("sm_duckhunt_enable");
 	g_bCountdown = FindConVar("sm_warden_countdown");
@@ -261,7 +263,7 @@ public Action:EventDays(client, args)
 		{
 			Handle menu = CreateMenu(EventMenuHandler);
 			
-			char menuinfo18[255], menuinfo19[255], menuinfo20[255], menuinfo21[255], menuinfo22[255], menuinfo23[255], menuinfo24[255], menuinfo25[255], menuinfo26[255];
+			char menuinfo18[255], menuinfo19[255], menuinfo20[255], menuinfo21[255], menuinfo22[255], menuinfo23[255], menuinfo24[255], menuinfo25[255], menuinfo26[255], menuinfo27[255];
 			
 			Format(menuinfo18, sizeof(menuinfo18), "%T", "menu_event_Title", LANG_SERVER);
 			SetMenuTitle(menu, menuinfo18);
@@ -290,6 +292,11 @@ public Action:EventDays(client, args)
 			{
 				Format(menuinfo23, sizeof(menuinfo23), "%T", "menu_catch", LANG_SERVER);
 				AddMenuItem(menu, "catch", menuinfo23);
+			}
+			if(g_bDodgeBall.BoolValue)
+			{
+				Format(menuinfo27, sizeof(menuinfo27), "%T", "menu_dodgeball", LANG_SERVER);
+				AddMenuItem(menu, "dodgeball", menuinfo27);
 			}
 			if(g_bNoScope.BoolValue)
 			{
@@ -446,6 +453,14 @@ public EventMenuHandler(Handle:menu, MenuAction:action, client, itemNum)
 		else if ( strcmp(info,"noscope") == 0 )
 		{
 			FakeClientCommand(client, "sm_setnoscope");
+			if(gc_bClose.BoolValue)
+			{
+				CloseHandle(menu);
+			}else JbMenu(client,0);
+		}
+		else if ( strcmp(info,"dodgeball") == 0 )
+		{
+			FakeClientCommand(client, "sm_setdodgeball");
 			if(gc_bClose.BoolValue)
 			{
 				CloseHandle(menu);

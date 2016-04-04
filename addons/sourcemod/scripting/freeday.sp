@@ -218,6 +218,7 @@ void StartNextRound()
 	SetCvar("sm_noscope_enable", 0);
 	SetCvar("sm_zombie_enable", 0);
 	SetCvar("sm_ffa_enable", 0);
+	SetCvar("sm_dodgeball_enable", 1);
 	SetCvar("sm_hide_enable", 0);
 	SetCvar("sm_catch_enable", 0);
 	SetCvar("sm_duckhunt_enable", 0);
@@ -306,6 +307,7 @@ public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 		SetCvar("mp_teammates_are_enemies", 0);
 		SetCvar("sm_beacon_enabled", 0);
 		SetCvar("sm_warden_enable", 1);
+		SetCvar("sm_dodgeball_enable", 1);
 		SetCvar("sm_catch_enable", 1);
 		g_iSetRoundTime.IntValue = g_iOldRoundTime;
 		CPrintToChatAll("%t %t", "freeday_tag" , "freeday_end");

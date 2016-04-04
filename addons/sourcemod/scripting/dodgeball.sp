@@ -255,6 +255,7 @@ void StartNextRound()
 	SetCvar("sm_zombie_enable", 0);
 	SetCvar("sm_ffa_enable", 0);
 	SetCvar("sm_freeday_enable", 0);
+	SetCvar("sm_noscope_enable", 0);
 	SetCvar("sm_hide_enable", 0);
 	SetCvar("sm_catch_enable", 0);
 	SetCvar("sm_duckhunt_enable", 0);
@@ -434,6 +435,7 @@ public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 		SetCvar("sm_zombie_enable", 1);
 		SetCvar("sm_freeday_enable", 1);
 		SetCvar("sm_hide_enable", 1);
+		SetCvar("sm_noscope_enable", 1);
 		SetCvar("sm_duckhunt_enable", 1);
 		SetCvar("sm_ffa_enable", 1);
 		SetCvar("mp_teammates_are_enemies", 0);
