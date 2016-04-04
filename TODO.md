@@ -1,3 +1,5 @@
+sorry for bad spelling and loose cues
+
 bugs:
 
 - [ ] can use sometimes weapon menu onfirst round with plugin disabled?!´
@@ -28,6 +30,8 @@ must:
 - [x] warden: allow unvote
 - [x] warden: countdown
 - [ ] warden: ff not for ct
+- [ ] playertags: as chat tag
+- [ ] add VIP flag
 - [ ] catch: T win when time run out
 - [ ] warden: clean changeback model unwarden
 - [x] move FF from menu to warden
@@ -37,7 +41,7 @@ must:
 - [ ] clean up code 
 - [ ] comments
 - [ ] 
-
+- [ ] some polishing
 
 want:
 - [ ] AddFileToDownloadsTable
