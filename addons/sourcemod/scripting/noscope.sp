@@ -401,21 +401,12 @@ public Action:NoScope(Handle:timer)
 		{
 			if (IsClientInGame(client) && IsPlayerAlive(client))
 			{
-				if (GetClientTeam(client) == CS_TEAM_T)
-					{
-						SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
-						SetEntityGravity(client, 0.3);
-					}
-				if (GetClientTeam(client) == CS_TEAM_CT)
-					{
-						SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
-						SetEntityGravity(client, 0.3);
-					}
+				SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
 			}
 			CreateTimer( 0.0, ShowOverlayStart, client);
 		}
 	}
-	PrintHintTextToAll("%t", "noscope_start_ns");
+	PrintHintTextToAll("%t", "noscope_start_nc");
 	CPrintToChatAll("%t %t", "noscope_tag" , "noscope_start");
 	
 	TruceTimer = null;

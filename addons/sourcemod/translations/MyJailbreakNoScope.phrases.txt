@@ -15,7 +15,7 @@
 		"en"		"A Terrorist has surrived"
 		"de"		"Ein Terrorist hat als einziger überlebt"
 	}
-		"noscope_voting"
+	"noscope_voting"
 	{
 		"en"		"Player Voting for NoScope is {purple}disabled"
 		"de"		"Voting für NoScope ist {purple}ausgeschaltet"
@@ -48,7 +48,7 @@
 		"en"		"Next round is {purple}NoScope"
 		"de"		"Nächste Runde ist {purple}NoScope"
 	}
-		"noscope_next_nc"
+	"noscope_next_nc"
 	{
 		"en"		"Next round is NoScope"
 		"de"		"Nächste Runde ist NoScope"
