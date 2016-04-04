@@ -1,6 +1,7 @@
 # MyJailbreak 
 
-## work in progress! a rough AlphaVersion 
+## work in progress! a rough AlphaVersion
+## Files been updated ~daily so have a look at the last commits. Upgrad you installation by overwrite translations & smx. no need delete you rcfgs
 ### This is my first public project. please note that the code may is messy, stupid and miscarriage.
 ### I would be happy and very pleased if you wannt to join this project as equal collaborator.
 ### If you own a feature or extention for Jail/Warden that would fit in, i would be happy when you share it with us.
@@ -24,6 +25,7 @@ A "rewrite" version of [Franugs Special Jailbreak](https://github.com/Franc1sco/
     - Free For All (FFA DM)
     - Zombie (CT(zombie) vs T(Human))
     - Noscope (FFA Scout LowGravity NoScope)
+    - DodgeBall (FFA 1HP LowGravity Decoy Battle)
     - Hide in the Dark - (kind of HideNseek)
     - Catch - (CT must catch all T (freeze tag))
     - Duckhunt - (CT(hunter) with nova vs T(chicken in 3th person))
@@ -280,9 +282,9 @@ based/merged/used code/idea plugins:
 ##### Cvars
 ```
 - sm_zombie_version - Shows the version of the SourceMod plugin MyJailBreak - Zombie
-- sm_zombie_setw: 0 - disabled, 1 - allow warden to set next round ffa. Default 1
-- sm_zombie_seta: 0 - disabled, 1 - allow admin to set next round ffa round. Default 1
-- sm_zombie_vote: 0 - disabled, 1 - allow player to vote for ffa. Default 1
+- sm_zombie_setw: 0 - disabled, 1 - allow warden to set next round zombie. Default 1
+- sm_zombie_seta: 0 - disabled, 1 - allow admin to set next round zombie round. Default 1
+- sm_zombie_vote: 0 - disabled, 1 - allow player to vote for zombie. Default 1
 - sm_zombie_enable: 0 - disabled, 1 - enable the zombie plugin. Default 1
 - sm_zombie_roundtime - Roundtime for a single zombie round in minutes. Default 5
 - sm_zombie_freezetime - Time in seconds Zombies freezed. Default 35
@@ -326,9 +328,9 @@ based/merged/used code/idea plugins:
 ```
 - sm_noscope_version - Shows the version of the SourceMod plugin MyJailBreak - noscope
 - sm_noscope_enable: 0 - disabled, 1 - enable the noscope plugin. Default 1
-- sm_noscope_setw: 0 - disabled, 1 - allow warden to set next round ffa. Default 1
-- sm_noscope_seta: 0 - disabled, 1 - allow admin to set next round ffa round. Default 1
-- sm_noscope_vote: 0 - disabled, 1 - allow player to vote for ffa. Default 1
+- sm_noscope_setw: 0 - disabled, 1 - allow warden to set next round noscope. Default 1
+- sm_noscope_seta: 0 - disabled, 1 - allow admin to set next round noscope round. Default 1
+- sm_noscope_vote: 0 - disabled, 1 - allow player to vote for noscope. Default 1
 - sm_noscope_gravity: 0 - disabled, 1 - enable low Gravity for noscope. Default 1
 - sm_noscope_gravity_value - Ratio for Gravity 1.0 earth 0.5 moon. Default 0.3
 - sm_noscope_roundtime - Roundtime for a single noscope round in minutes. Default 5
@@ -338,6 +340,50 @@ based/merged/used code/idea plugins:
 - sm_noscope_overlays: 0 - disabled, 1 - enable start overlay. Default 1
 - sm_noscope_overlaystart_path: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
 - sm_noscope_tag: 0 - disabled, 1 - Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch your sv_tags. Default 1
+
+```
+##### Features
+
+- disable warden, other eventdays, lastrequest, dice
+- enable beacon for last players (need Hg beacon)
+- autoopen celldoors (need smartjaildoors)
+- Multilingual support
+- Colors
+- Custom chat [Tag]
+
+#### EventDay - Dodgeball
+
+This plugin allows players to vote and warden to set next round to Dodgeball
+open cells Dodgeball low gravity.
+
+based/merged/used code/idea plugins: 
+* https://forums.alliedmods.net/showpost.php?p=1657893&postcount=11?p=1657893&postcount=11
+* https://github.com/Franc1sco/Franug-JailBreak/blob/Only-Days-And-Captain/addons/sourcemod/scripting/jailbreak_open.sp
+* https://forums.alliedmods.net/showthread.php?t=231473
+* https://github.com/AG-Headline/Hunger-Games-Beacon
+* if I missed someone, please tell me!
+
+##### Commands
+```
+- sm_dodgeball / sm_undead - Allows players to vote for a dodgeball 
+- sm_setdodgeball - Allows the Admin(sm_map) or Warden to set dodgeball as next round
+```
+##### Cvars
+```
+- sm_dodgeball_version - Shows the version of the SourceMod plugin MyJailBreak - dodgeball
+- sm_dodgeball_enable: 0 - disabled, 1 - enable the dodgeball plugin. Default 1
+- sm_dodgeball_setw: 0 - disabled, 1 - allow warden to set next round Dodgeball. Default 1
+- sm_dodgeball_seta: 0 - disabled, 1 - allow admin to set next round Dodgeball round. Default 1
+- sm_dodgeball_vote: 0 - disabled, 1 - allow player to vote for Dodgeball. Default 1
+- sm_dodgeball_gravity: 0 - disabled, 1 - enable low Gravity for dodgeball. Default 1
+- sm_dodgeball_gravity_value - Ratio for Gravity 1.0 earth 0.5 moon. Default 0.3
+- sm_dodgeball_roundtime - Roundtime for a single dodgeball round in minutes. Default 5
+- sm_dodgeball_nodamage - Time in seconds damage is disbaled. Default 15
+- sm_dodgeball_roundwait - Rounds until event can be started after mapchange. Default 3
+- sm_dodgeball_roundsnext - Rounds until event can be started again. Default 3
+- sm_dodgeball_overlays: 0 - disabled, 1 - enable start overlay. Default 1
+- sm_dodgeball_overlaystart_path: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
+- sm_dodgeball_tag: 0 - disabled, 1 - Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch your sv_tags. Default 1
 
 ```
 ##### Features
