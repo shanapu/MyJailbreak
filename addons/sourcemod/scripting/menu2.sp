@@ -21,7 +21,7 @@ ConVar g_bWar;
 ConVar g_bFFA;
 ConVar g_bZombie;
 ConVar g_bNoScope;
-ConVar g_bDodgeBall
+ConVar g_bDodgeBall;
 ConVar g_bHide;
 ConVar g_bCatch;
 ConVar g_bFreeDay;

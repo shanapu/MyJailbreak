@@ -5,6 +5,8 @@ cfg/
 addons/sourcemod/plugins/*
 addons/sourcemod/scripting/snips/*
 addons/sourcemod/scripting/compiled
+addons/sourcemod/scripting/compile.exe
+addons/sourcemod/scripting/spcomp.exe
 addons/sourcemod/scripting/include/admin.inc
 addons/sourcemod/scripting/include/adminmenu.inc
 addons/sourcemod/scripting/include/adt.inc
