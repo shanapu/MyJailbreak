@@ -22,6 +22,8 @@ bool StartNoScope = false;
 ConVar gc_bPlugin;
 ConVar gc_bTag;
 ConVar gc_bSetW;
+ConVar gc_bGrav;
+ConVar gc_fGravValue;
 ConVar gc_iRoundWait;
 ConVar gc_bSetA;
 ConVar gc_bVote;
