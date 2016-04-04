@@ -18,6 +18,7 @@ A "rewrite" version of [Franugs Special Jailbreak](https://github.com/Franc1sco/
 - Warden - (set/become warden,vote against warden, open cells, set eventdays/countdown/FF/nobock)
 - Menu - (Player menus for T, CT, Warden & Admin)
 - Weapons - (weapon menus for CT / T in event rounds)
+- PlayerTags - (add player Tags for T, T.Admin, CT, CT.Admin, W, WA.Admin)
 - Event Days (set/vote a Event for next round)
     - War (CT vs T TDM)
     - Free For All (FFA DM)
@@ -144,6 +145,22 @@ based/merged/used code/idea plugins:
 - Multilingual support
 - Colors
 - only shows enabled features
+
+#### PlayerTags
+
+This plugins give players Tags for team (T,CT) and "rank" (admin/warden)
+
+based/merged/used code/idea plugins: 
+* https://forums.alliedmods.net/showthread.php?t=198272
+* https://github.com/AG-Headline/Hunger-Games-Beacon
+* if I missed someone, please tell me!
+
+##### Cvars
+```
+- sm_playertag_version - Shows the version of the SourceMod plugin MyJailBreak - PlayerTags
+- sm_playertag_enable: 0 - disabled, 1 - enable Player Tag
+
+```
 
 #### EventDay - War
 
