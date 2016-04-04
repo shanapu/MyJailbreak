@@ -185,7 +185,7 @@ public void OnPluginStart()
 //	gc_sModelPath.GetString(g_sWardenModel, sizeof(g_sWardenModel));
 	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
 	
-	AddCommandListener(HookPlayerChat, "say");
+//	AddCommandListener(HookPlayerChat, "say");
 	AddCommandListener(Command_LAW, "+lookatweapon");
 	
 	g_CollisionOffset = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
