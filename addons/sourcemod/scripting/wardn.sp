@@ -17,6 +17,9 @@
 #define LoopAliveClients(%1) for(int %1 = 1;%1 <= MaxClients;%1++) if(IsValidClient(%1, true))
 #define PLUGIN_VERSION "0.1"
 
+//Bools
+bool IsCountDown = false;
+
 //ConVars
 ConVar gc_bOpenTimer;
 ConVar gc_bOpenTimerWarden;
@@ -340,6 +343,7 @@ public Action:Event_RoundStart(Handle:event, const char[] name, bool:dontBroadca
 	{
 			Warden = -1;
 	}
+	IsCountDown = false;
 
 }
 
@@ -798,10 +802,15 @@ public Action:SetCountDown(client, args)
 	{
 		if (warden_iswarden(client))
 		{
-			g_iCountTime = 9;
-			CreateTimer( 1.0, StartCountdown, client, TIMER_REPEAT);
-			PrintHintTextToAll("%t", "warden_countdownhint_nc");
-			CPrintToChatAll("%t %t", "warden_tag" , "warden_countdownhint");
+			if (!IsCountDown)
+			{
+				g_iCountTime = 9;
+				CreateTimer( 1.0, StartCountdown, client, TIMER_REPEAT);
+				PrintHintTextToAll("%t", "warden_countdownhint_nc");
+				CPrintToChatAll("%t %t", "warden_tag" , "warden_countdownhint");
+				IsCountDown = true;
+			}
+			else CPrintToChat(client, "%t %t", "warden_tag" , "warden_countdownrunning");
 		}
 		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
 	}
@@ -833,6 +842,7 @@ public Action StartCountdown( Handle timer, any client )
 			{
 				CreateTimer( 0.0, ShowOverlayStart, client);
 			}
+			IsCountDown = false;
 			return Plugin_Stop;
 		}
 	}

@@ -15,11 +15,11 @@ A "rewrite" version of [Franugs Special Jailbreak](https://github.com/Franc1sco/
 
 ### Included Plugins: 
 
-- Warden - (set/become warden,vote against warden, open cells, set eventdays/countdown/FF/nobock)
+- Warden - (set/become warden,vote against warden, open cells, set eventdays/countdown/FF/nobock) - need [sjd](https://git.tf/shanapu/MyJailbreak#requires-plugins)
 - Menu - (Player menus for T, CT, Warden & Admin)
 - Weapons - (weapon menus for CT / T in event rounds)
-- PlayerTags - (add player Tags for T, T.Admin, CT, CT.Admin, W, WA.Admin)
-- Event Days (set/vote a Event for next round)
+- PlayerTags - (add player Tags for T, T.Admin, CT, CT.Admin, W, WA.Admin - need [scp](https://git.tf/shanapu/MyJailbreak#requires-plugins)
+- Event Days (set/vote a Event for next round) - all need [sjd](https://git.tf/shanapu/MyJailbreak#requires-plugins)
     - War (CT vs T TDM)
     - Free For All (FFA DM)
     - Zombie (CT(zombie) vs T(Human))
@@ -495,6 +495,7 @@ based/merged/used code/idea plugins:
 - Smart Jail Doors https://github.com/Kailo97/smartjaildoors
 - sm hosties https://github.com/dataviruset/sm-hosties
 - SM File/Folder Downloader and Precacher https://forums.alliedmods.net/showthread.php?p=602270 for zombie/warden model download (overlays auto added)
+- Simple Chat Prozessor https://bitbucket.org/minimoney1/simple-chat-processor
 
 ### recomment plugins
 - [CS:GO] Flashlight (1.3.62) https://forums.alliedmods.net/showthread.php?p=2042310

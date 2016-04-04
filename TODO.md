@@ -19,10 +19,10 @@ must:
 - [x] all days: msg when deactivated by set
 - [ ] 1.7 syntax ?
 - [ ] new day: decoy/flash 1hp
-- [ ] countdown: is CD running? no double 
+- [x] countdown: is CD running? no double 
 - [x] catch: freeze sound & overlay
 - [x] catch: sprint build in
-- [ ] catch: freeze overlay stay or just 2sek. bool
+- [x] catch: freeze overlay stay or just 2sek. bool
 - [ ] zombie: knockbackfix
 - [x] zombie: define zombie model
 - [x] warden: unvote

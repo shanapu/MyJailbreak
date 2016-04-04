@@ -245,9 +245,14 @@
 	
 	"warden_countdownstart"
 	{
-
 		"en"		"{purple}GO! {darkred}START!"
 		"de"		"{purple}GO! {darkred}START! {green}LOS!"
+	}
+	
+	"warden_countdownstartrunning"
+	{
+		"en"		"a Countdown is {purple}allready in progress"
+		"de"		"Ein Countdown ist {purple}läuft bereits"
 	}
 	
 	"warden_countdownstart_nc"		// no colors!
