@@ -9,7 +9,7 @@ must:
 
 - [ ] clean/translate ConVars 
 - [x] jailbreak user menu
-- [ ] make jailbreak menu customizeable (ADD OWN COMMANDS)
+- [ ] make jailbreak menu customizeable (ADD OWN COMMANDS & OWN ORDER)
 - [x] duckhunt: chicken thirdperson
 - [x] all days: remember mp_roundtime for end // https://wiki.alliedmods.net/ConVars_(SourceMod_Scripting)#Using.2FChanging_Values
 - [x] all days: dis/enable set day as admin / warden
@@ -56,7 +56,6 @@ want:
 - [x] noscope: set grav
 - [ ] warden: talkpower
 - [ ] warden: bomb toss https://github.com/KissLick/TeamGames/blob/master/addons/sourcemod/scripting/modules/TG_BombToss.sp
-- [ ] warden: extend roundtime 
 - [ ] warden: countdown set time - or menu with differnt times?!?!
 - [ ] warden: mathboard
 - [ ] warden: color prisioners (color roulette)
@@ -88,6 +87,7 @@ future:
 
 maybe:
 - [ ] beacon for days
+- [ ] warden: extend roundtime (possible)
 - [ ] all days: admin force end days
 - [ ] warden: color prisioners (& color roulette)
 - [ ] all days: start instant not next round
