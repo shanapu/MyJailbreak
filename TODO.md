@@ -18,7 +18,8 @@ must:
 - [x] all days: start overlay
 - [x] all days: msg when deactivated by set
 - [ ] 1.7 syntax ?
-- [ ] new day: decoy/flash 1hp
+- [x] new day: decoy/flash 1hp -> dodgeball
+- [ ] dodgeball: remove decoy (sound)
 - [x] countdown: is CD running? no double 
 - [x] catch: freeze sound & overlay
 - [x] catch: sprint build in
