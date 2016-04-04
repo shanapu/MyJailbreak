@@ -51,7 +51,7 @@ char g_sOverlayStart[256];
 
 public Plugin myinfo = {
 	name = "MyJailbreak - NoScope",
-	author = "shanapu & Floody.de, fransico",
+	author = "shanapu & Floody.de, Franc1sco",
 	description = "Jailbreak NoScope script",
 	version = PLUGIN_VERSION,
 	url = ""

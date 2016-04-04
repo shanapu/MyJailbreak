@@ -52,7 +52,7 @@ char g_sHasVoted[1500];
 
 public Plugin myinfo = {
 	name = "MyJailbreak - Zombie",
-	author = "shanapu & Floody.de, fransico",
+	author = "shanapu & Floody.de, Franc1sco",
 	description = "Jailbreak Zombie script",
 	version = PLUGIN_VERSION,
 	url = ""

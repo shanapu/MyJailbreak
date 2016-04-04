@@ -52,7 +52,7 @@ char model[256] = "models/player/custom_player/legacy/tm_phoenix_heavy.mdl";
 
 public Plugin myinfo = {
 	name = "MyJailbreak - DuckHunt",
-	author = "shanapu & Floody.de, fransico",
+	author = "shanapu & Floody.de, Franc1sco",
 	description = "Jailbreak DuckHunt script",
 	version = PLUGIN_VERSION,
 	url = ""

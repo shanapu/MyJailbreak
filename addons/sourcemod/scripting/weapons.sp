@@ -45,7 +45,7 @@ Handle array_secondary;
 public Plugin:myinfo =
 {
 	name = "Jailbreak Weapons",
-	author = "shanapu, franug",
+	author = "shanapu, Franc1sco",
 	description = "plugin",
 	version = VERSION,
 	url = "http://www.shanapu.de/"

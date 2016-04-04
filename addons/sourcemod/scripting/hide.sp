@@ -56,7 +56,7 @@ float mapFogDensity = 0.99;
 
 public Plugin myinfo = {
 	name = "MyJailbreak - HideInTheDark",
-	author = "shanapu & Floody.de, fransico",
+	author = "shanapu & Floody.de, Franc1sco",
 	description = "Jailbreak Hide script",
 	version = PLUGIN_VERSION,
 	url = ""

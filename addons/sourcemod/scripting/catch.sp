@@ -65,7 +65,7 @@ char g_sOverlayFreeze[256];
 
 public Plugin myinfo = {
 	name = "MyJailbreak - Catch & Freeze",
-	author = "shanapu & Floody.de, fransico",
+	author = "shanapu & Floody.de, Franc1sco",
 	description = "Jailbreak Catch script",
 	version = PLUGIN_VERSION,
 	url = ""

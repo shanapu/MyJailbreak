@@ -31,7 +31,7 @@ A "rewrite" version of [Franugs Special Jailbreak](https://github.com/Franc1sco/
 
 # Credits: 
 
-## **used code from: ecca, Zipcore, ESK0, Floody.de, franug, bara, headline, ReFlexPoison** and many other I cant remember!
+## **used code from: ecca, Zipcore, ESK0, Floody.de, Franc1sco, bara, headline, ReFlexPoison** and many other I cant remember!
 # THANKS FOR MAKING FREE SOFTWARE!
 
 

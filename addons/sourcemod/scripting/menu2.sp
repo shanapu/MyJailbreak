@@ -40,7 +40,7 @@ ConVar g_bWarden;
 
 public Plugin myinfo = {
 	name = "MyJailbreak - Menus",
-	author = "shanapu, fransico",
+	author = "shanapu, Franc1sco",
 	description = "Jailbreak Menu",
 	version = PLUGIN_VERSION,
 	url = ""
