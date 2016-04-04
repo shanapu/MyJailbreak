@@ -402,6 +402,10 @@ public Action:NoScope(Handle:timer)
 			if (IsClientInGame(client) && IsPlayerAlive(client))
 			{
 				SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
+				if (gc_bGrav.BoolValue)
+				{
+					SetEntityGravity(client, gc_fGravValue.FloatValue);	
+				}
 			}
 			CreateTimer( 0.0, ShowOverlayStart, client);
 		}
