@@ -91,18 +91,19 @@
 	
 	"freeday_info_Line1"		// no colors!
 	{
-		"en"		"Do not be surprised if portedto CT Spawn"
-		"de"		"Nicht wundern falls ihr zum CT Spawngeportet wurdet"
+		"en"		"it's Freeday"
+		"de"		"es ist Freeday"
 	}
 	"freeday_info_Line2"		// no colors!
 	{
-		"en"		"In freeday ther is ffa scout freeday low grav"
+		"en"		"--------------"
+		"en"		"--------------"
 	}
 	
 	"freeday_info_Line3"		// no colors!
 	{
-		"en"		"you can move and exit the wk in nodamge phase"
-		"de"		"Während der no damge phase kannst du aus der zelle/waffenkammer"
+		"en"		"--------------"
+		"de"		"--------------"
 	}
 	
 	"freeday_info_Line4"		// no colors!
