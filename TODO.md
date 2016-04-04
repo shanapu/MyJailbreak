@@ -31,7 +31,7 @@ must:
 - [x] warden: countdown
 - [ ] warden: ff not for ct
 - [ ] playertags: as chat tag
-- [ ] add VIP flag
+- [ ] playertags: add VIP flag
 - [ ] catch: T win when time run out
 - [ ] warden: clean changeback model unwarden
 - [x] move FF from menu to warden

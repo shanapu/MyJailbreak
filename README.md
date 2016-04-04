@@ -115,6 +115,7 @@ based/merged/used code/idea plugins:
 
 This plugins allows players to open a menu with , (buyammo) Key or command.
 It will show different menus for Terrorist, Counter-Terrorist & Warden.
+the menu shows only features that are turned on (e.g at event days)
 
 
 based/merged/used code/idea plugins: 
