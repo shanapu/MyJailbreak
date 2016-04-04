@@ -30,7 +30,8 @@ must:
 - [x] warden: allow unvote
 - [x] warden: countdown
 - [ ] warden: ff not for ct
-- [ ] playertags: as chat tag
+- [x] playertags: as chat tag
+- [ ] playertags: define colorize chat tag
 - [ ] playertags: add VIP flag
 - [ ] catch: T win when time run out
 - [ ] warden: clean changeback model unwarden

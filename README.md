@@ -149,7 +149,7 @@ based/merged/used code/idea plugins:
 
 #### PlayerTags
 
-This plugins give players Tags for team (T,CT) and "rank" (admin/warden)
+This plugins give players Tags for team (T,CT) and "rank" (admin/warden) in stats &/or chat
 
 based/merged/used code/idea plugins: 
 * https://forums.alliedmods.net/showthread.php?t=198272
@@ -160,6 +160,8 @@ based/merged/used code/idea plugins:
 ```
 - sm_playertag_version - Shows the version of the SourceMod plugin MyJailBreak - PlayerTags
 - sm_playertag_enable: 0 - disabled, 1 - enable Player Tag
+- sm_playertag_stats: 0 - disabled, 1 - enable PlayerTag in stats	
+- sm_playertag_chat: 0 - disabled, 1 - enable PlayerTag in Chat
 
 ```
 

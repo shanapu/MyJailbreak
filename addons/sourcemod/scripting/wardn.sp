@@ -719,6 +719,7 @@ public Action RemoveWarden(int client, int args)
 	return Plugin_Handled;
 	}
 
+/*
 public Action HookPlayerChat(int client, const char[] command, int args)
 {
 	if(Warden == client && client)
@@ -740,6 +741,7 @@ public Action HookPlayerChat(int client, const char[] command, int args)
 	
 	return Plugin_Continue;
 }
+*/
 
 void SetTheWarden(int client)
 {
