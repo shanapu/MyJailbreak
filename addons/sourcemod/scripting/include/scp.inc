@@ -67,25 +67,10 @@ $Copyright: (c) Simple Plugins 2008-2009$
 forward Action:OnChatMessage(&author, Handle:recipients, String:name[], String:message[]);
 
 
-/**********************************************************************
- * Called after all OnChatMessage forwards have been fired and the message is being broadcast.
- *
- * NOTES:
- * Use MAXLENGTH_  constants above for formating the strings
- * Do not rely on the recipients handle to exist beyond the forward
- *
- * @param 		author							The client index of the player who sent the chat message
- * @param 		recipients					The handle to the client index adt array of the players who are receiting the chat message
- * @param 		name							The client's name of the player who sent the chat message (after any replacements)
- * @param 		message						The contents of the chat message (after any replacements)
- * @noreturn
- **********************************************************************/
-forward OnChatMessage_Post(author, Handle:recipients, const String:name[], const String:message[]);
-
 
 /**********************************************************************
  * Gets the current flags for the chat message
- * Should only be called within OnChatMessage() or OnChatMessage_Post()
+ * Should only be called within OnChatMessage()
  *
  * @return		The current type of chat message (see constants) 
  **********************************************************************/
