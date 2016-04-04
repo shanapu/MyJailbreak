@@ -52,8 +52,8 @@ want:
 - [x] warden: markers
 - [x] warden: improve markers (2 kind)
 - [ ] warden: limits
-- [ ] noscope: dis/enable lowgrav
-- [ ] noscope: set grav
+- [x] noscope: dis/enable lowgrav
+- [x] noscope: set grav
 - [ ] warden: talkpower
 - [ ] warden: bomb toss https://github.com/KissLick/TeamGames/blob/master/addons/sourcemod/scripting/modules/TG_BombToss.sp
 - [ ] warden: extend roundtime 

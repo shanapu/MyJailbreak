@@ -77,6 +77,8 @@ public void OnPluginStart()
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_noscope_setw", "1", "0 - disabled, 1 - allow warden to set noscope round", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	gc_bSetA = AutoExecConfig_CreateConVar("sm_noscope_seta", "1", "0 - disabled, 1 - allow admin to set noscope round", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	gc_bVote = AutoExecConfig_CreateConVar("sm_noscope_vote", "1", "0 - disabled, 1 - allow player to vote for noscope", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	gc_bGrav = AutoExecConfig_CreateConVar("sm_noscope_gravity", "1", "0 - disabled, 1 - enable low Gravity for noscope", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	gc_fGravValue= AutoExecConfig_CreateConVar("sm_noscope_gravity_value", "0.3","Ratio for Gravity 1.0 earth 0.5 moon", 0, true, 0.1, true, 1.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_noscope_roundtime", "5", "Round time for a single noscope round");
 	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_noscope_nodamage", "15", "Time for no damage");
 	gc_iRoundLimits = AutoExecConfig_CreateConVar("sm_noscope_roundsnext", "3", "Rounds until event can be started again.");
@@ -305,16 +307,13 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 				{
 					if (IsClientInGame(client))
 					{
-						if (GetClientTeam(client) == CS_TEAM_CT)
+						GivePlayerItem(client, "weapon_ssg08");
+						
+						if (gc_bGrav.BoolValue)
 						{
-							GivePlayerItem(client, "weapon_ssg08");
-							SetEntityGravity(client, 0.3);
+							SetEntityGravity(client, gc_fGravValue.FloatValue);	
 						}
-						if (GetClientTeam(client) == CS_TEAM_T)
-						{
-							GivePlayerItem(client, "weapon_ssg08");
-							SetEntityGravity(client, 0.3);
-						}
+						
 						SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
 						SendPanelToClient(NoScopeMenu, client, Pass, 15);
 						SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
@@ -402,13 +401,13 @@ public Action:NoScope(Handle:timer)
 			{
 				if (GetClientTeam(client) == CS_TEAM_T)
 					{
-					SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
-					SetEntityGravity(client, 0.3);
+						SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
+						SetEntityGravity(client, 0.3);
 					}
 				if (GetClientTeam(client) == CS_TEAM_CT)
 					{
-					SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
-					SetEntityGravity(client, 0.3);
+						SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
+						SetEntityGravity(client, 0.3);
 					}
 			}
 			CreateTimer( 0.0, ShowOverlayStart, client);

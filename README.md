@@ -325,10 +325,12 @@ based/merged/used code/idea plugins:
 ##### Cvars
 ```
 - sm_noscope_version - Shows the version of the SourceMod plugin MyJailBreak - noscope
+- sm_noscope_enable: 0 - disabled, 1 - enable the noscope plugin. Default 1
 - sm_noscope_setw: 0 - disabled, 1 - allow warden to set next round ffa. Default 1
 - sm_noscope_seta: 0 - disabled, 1 - allow admin to set next round ffa round. Default 1
 - sm_noscope_vote: 0 - disabled, 1 - allow player to vote for ffa. Default 1
-- sm_noscope_enable: 0 - disabled, 1 - enable the noscope plugin. Default 1
+- sm_noscope_gravity: 0 - disabled, 1 - enable low Gravity for noscope. Default 1
+- sm_noscope_gravity_value - Ratio for Gravity 1.0 earth 0.5 moon. Default 0.3
 - sm_noscope_roundtime - Roundtime for a single noscope round in minutes. Default 5
 - sm_noscope_nodamage - Time in seconds damage is disbaled. Default 15
 - sm_noscope_roundwait - Rounds until event can be started after mapchange. Default 3
@@ -366,8 +368,8 @@ based/merged/used code/idea plugins:
 - sm_catch / sm_catchfreeze - Allows players to vote for a catch 
 - sm_setcatch - Allows the Admin(sm_map) or Warden to set catch as next round
 - sm_sprint - Start sprinting!
-
 ```
+
 ##### Cvars
 ```
 - sm_catch_version - Shows the version of the SourceMod plugin MyJailBreak - catch
