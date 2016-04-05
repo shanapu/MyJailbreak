@@ -32,7 +32,6 @@ must:
 - [x] warden: countdown
 - [ ] warden: ff not for ct
 - [x] playertags: as chat tag
-- [ ] playertags: define colorize chat tag
 - [ ] playertags: add VIP flag
 - [ ] catch: T win when time run out
 - [ ] warden: clean changeback model unwarden
@@ -53,9 +52,12 @@ want:
 - [x] warden: markers
 - [x] warden: improve markers (2 kind)
 - [ ] warden: limits
+- [ ] playertags: define colorize chat tag
 - [x] noscope: dis/enable lowgrav
 - [x] noscope: set grav
 - [ ] warden: talkpower
+- [ ] countdown: start stop sound
+- [ ] countdown: menu
 - [ ] warden: bomb toss https://github.com/KissLick/TeamGames/blob/master/addons/sourcemod/scripting/modules/TG_BombToss.sp
 - [ ] warden: countdown set time - or menu with differnt times?!?!
 - [ ] warden: mathboard
