@@ -83,10 +83,10 @@
 		"de"		"Voting für Hide in the Dark ist {purple}ausgeschaltet"
 	}
 	
-	"hide_setbyHide in the Darkden"
+	"hide_setbyWarden"
 	{
-		"en"		"Set Hide in the Dark by Hide in the Darkden is {purple}disabled"
-		"de"		"Hide in the Dark Aktivierung durch den Hide in the Darkden ist {purple}ausgeschaltet"
+		"en"		"Set Hide in the Dark by Warden is {purple}disabled"
+		"de"		"Hide in the Dark Aktivierung durch den Warden ist {purple}ausgeschaltet"
 	}
 	
 	"hide_setbyadmin"
@@ -162,6 +162,6 @@
 	{
 		"#format"	"{1:i}"
 		"en"		"you must wait {purple}{1}{default} more rounds"
-		"de"		"Du musst noch {purple}{1}{default} Runden Hide in the Darkten"
+		"de"		"Du musst noch {purple}{1}{default} Runden Warten"
 	}
 }

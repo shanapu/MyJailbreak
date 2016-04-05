@@ -69,6 +69,7 @@ based/merged/used code/idea plugins:
 - sm_setff - Allows the warden to toggle friendly fire
 - sm_startcountdown - Allows the warden to start a START! Countdown
 - sm_stopcountdown - Allows the warden to start a STOP! Countdown
+- sm_startstopcountdown - Allows the warden to start a START! STOP! Countdown
 - sm_startstopcountdown - Allows the warden to start a START! / STOP! Countdown
 - sm_killrandom - Allows the warden to kill a random T
 

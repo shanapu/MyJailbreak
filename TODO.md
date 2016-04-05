@@ -20,6 +20,7 @@ must:
 - [ ] 1.7 syntax ?
 - [x] new day: decoy/flash 1hp -> dodgeball
 - [ ] dodgeball: remove decoy (sound)
+- [ ] dodgeball: disbable knife
 - [x] countdown: is CD running? no double 
 - [x] catch: freeze sound & overlay
 - [x] catch: sprint build in
@@ -57,10 +58,10 @@ want:
 - [x] noscope: set grav
 - [ ] warden: talkpower
 - [ ] countdown: start stop sound
-- [ ] countdown: menu
 - [ ] warden: bomb toss https://github.com/KissLick/TeamGames/blob/master/addons/sourcemod/scripting/modules/TG_BombToss.sp
-- [ ] warden: countdown set time - or menu with differnt times?!?!
+- [ ] countdown: set time - or menu with differnt times?!?!
 - [ ] warden: mathboard
+- [ ] warden: !w or random warden
 - [ ] warden: color prisioners (color roulette)
 - [x] weapons: open menu on spawn bool
 - [ ] weapons: set menu delay
