@@ -338,7 +338,7 @@ public Action:OnWeaponCanUse(client, weapon)
 		char sWeapon[32];
 		GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
 
-		if(StrEqual(sWeapon, "weapon_decoy") || StrEqual(sWeapon, "weapon_knife"))
+		if(StrEqual(sWeapon, "weapon_decoy"))
 		{
 		
 			if (IsClientInGame(client) && IsPlayerAlive(client))

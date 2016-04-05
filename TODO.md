@@ -28,6 +28,7 @@ must:
 - [x] catch: sprint build in
 - [x] catch: freeze overlay stay or just 2sek. bool
 - [ ] zombie: knockbackfix
+- [ ] alldays: cooldown cross days
 - [x] zombie: define zombie model
 - [x] warden: unvote
 - [ ] Marker: timer disaprears

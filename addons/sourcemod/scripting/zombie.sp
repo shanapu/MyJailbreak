@@ -350,7 +350,6 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 							SetEntityHealth(client, 10000);
 							StripAllWeapons(client);
 							GivePlayerItem(client, "weapon_knife");
-
 						}
 						if (GetClientTeam(client) == CS_TEAM_T)
 						{

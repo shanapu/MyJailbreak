@@ -323,6 +323,7 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 				{
 					if (IsClientInGame(client))
 					{
+						StripAllWeapons(client);
 						if (GetClientTeam(client) == CS_TEAM_CT)
 						{
 							SetEntityMoveType(client, MOVETYPE_NONE);
@@ -334,7 +335,6 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 							SendPanelToClient(HideMenu, client, Pass, 15);
 							SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 						}
-						StripAllWeapons(client);
 						GivePlayerItem(client, "weapon_knife");
 					}
 				}

@@ -371,7 +371,7 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 				{
 					if (IsClientInGame(client))
 					{
-						if (GetClientTeam(client) == CS_TEAM_T) //t
+						if (GetClientTeam(client) == CS_TEAM_T)
 						{
 							catched[client] = false;
 						}
