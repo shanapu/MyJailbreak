@@ -310,13 +310,13 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 				{
 					if (IsClientInGame(client))
 					{
-						GivePlayerItem(client, "weapon_ssg08");
-						
+
 						if (gc_bGrav.BoolValue)
 						{
 							SetEntityGravity(client, gc_fGravValue.FloatValue);	
 						}
-						
+						StripAllWeapons(client);
+						GivePlayerItem(client, "weapon_ssg08");
 						SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
 						SendPanelToClient(NoScopeMenu, client, Pass, 15);
 						SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
@@ -342,7 +342,7 @@ public Action:OnWeaponCanUse(client, weapon)
 		char sWeapon[32];
 		GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
 
-		if(StrEqual(sWeapon, "weapon_ssg08") || StrEqual(sWeapon, "weapon_knife"))
+		if(StrEqual(sWeapon, "weapon_ssg08"))
 		{
 		
 			if (IsClientInGame(client) && IsPlayerAlive(client))
@@ -369,11 +369,7 @@ stock MakeNoScope(weapon)
 		if(IsValidEdict(weapon))
 		{
 			char classname[MAX_NAME_LENGTH];
-			if (GetEdictClassname(weapon, classname, sizeof(classname))
-			|| StrEqual(classname[7], "ssg08")  || StrEqual(classname[7], "aug")
-			|| StrEqual(classname[7], "sg550")  || StrEqual(classname[7], "sg552")
-			|| StrEqual(classname[7], "sg556")  || StrEqual(classname[7], "awp")
-			|| StrEqual(classname[7], "scar20") || StrEqual(classname[7], "g3sg1"))
+			if (GetEdictClassname(weapon, classname, sizeof(classname)) || StrEqual(classname[7], "ssg08"))
 			{
 				SetEntDataFloat(weapon, m_flNextSecondaryAttack, GetGameTime() + 1.0);
 			}
@@ -427,8 +423,11 @@ public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 	{
 		for(int client=1; client <= MaxClients; client++)
 		{
-			if (IsClientInGame(client)) SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
-			SetEntityGravity(client, 1.0);
+			if (IsClientInGame(client))
+			{
+				SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
+				SetEntityGravity(client, 1.0);
+			}
 		}
 		
 		if (TruceTimer != null) KillTimer(TruceTimer);
@@ -492,7 +491,18 @@ public Action  DeleteOverlay( Handle timer, any client )
 	return Plugin_Continue;
 }
 
-
+stock StripAllWeapons(iClient)
+{
+	int iEnt;
+	for (int i = 0; i <= 4; i++)
+	{
+		while ((iEnt = GetPlayerWeaponSlot(iClient, i)) != -1)
+		{
+			RemovePlayerItem(iClient, iEnt);
+			AcceptEntityInput(iEnt, "Kill");
+		}
+	}
+}
 
 public SetCvar(char cvarName[64], value)
 {
