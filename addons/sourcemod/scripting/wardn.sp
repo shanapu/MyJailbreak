@@ -54,6 +54,7 @@ int g_CollisionOffset;
 int opentimer;
 int g_iCountStartTime = 9;
 int g_iCountStopTime = 9;
+int g_iCountStartStopTime = 9;
 int g_MarkerColor[] = {255,1,1,255};
 int g_iBeamSprite = -1;
 int g_iHaloSprite = -1;
@@ -120,6 +121,7 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_votewarden", VoteWarden);
 	RegConsoleCmd("sm_setff", ToggleFF);
 	RegConsoleCmd("sm_startcountdown", SetStartCountDown);
+	RegConsoleCmd("sm_startstopcountdown", SetStartStopCountDown);
 	RegConsoleCmd("sm_stopcountdown", SetStopCountDown);
 	RegConsoleCmd("sm_killrandom", KillRandom);
 	
@@ -828,6 +830,26 @@ public Action:SetStartCountDown(client, args)
 	}
 }
 
+public Action:SetStartStopCountDown(client, args)
+{
+	if(gc_bCountDown.BoolValue)
+	{
+		if (warden_iswarden(client))
+		{
+			if (!IsCountDown)
+			{
+				g_iCountStartStopTime = 9;
+				CreateTimer( 1.0, StartStopCountdown, client, TIMER_REPEAT);
+				PrintHintTextToAll("%t", "warden_startstopcountdownhint_nc");
+				CPrintToChatAll("%t %t", "warden_tag" , "warden_startstopcountdownhint");
+				IsCountDown = true;
+			}
+			else CPrintToChat(client, "%t %t", "warden_tag" , "warden_countdownrunning");
+		}
+		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
+	}
+}
+
 public Action:SetStopCountDown(client, args)
 {
 	if(gc_bCountDown.BoolValue)
@@ -837,7 +859,7 @@ public Action:SetStopCountDown(client, args)
 			if (!IsCountDown)
 			{
 				g_iCountStopTime = 20;
-				CreateTimer( 1.0, StartStopCountdown, client, TIMER_REPEAT);
+				CreateTimer( 1.0, StopCountdown, client, TIMER_REPEAT);
 				PrintHintTextToAll("%t", "warden_stopcountdownhint_nc");
 				CPrintToChatAll("%t %t", "warden_tag" , "warden_stopcountdownhint");
 				IsCountDown = true;
@@ -883,6 +905,39 @@ public Action StartCountdown( Handle timer, any client )
 
 public Action StartStopCountdown( Handle timer, any client ) 
 {
+	if (g_iCountStartStopTime > 0)
+	{
+		if (IsClientInGame(client) && IsPlayerAlive(client))
+		{
+			if (g_iCountStartStopTime < 6) 
+			{
+				PrintCenterText(client,"%t", "warden_startcountdown_nc", g_iCountStartStopTime);
+				CPrintToChatAll("%t %t", "warden_tag" , "warden_startcountdown", g_iCountStartStopTime);
+			}
+		}
+		g_iCountStartStopTime--;
+		return Plugin_Continue;
+	}
+	if (g_iCountStartStopTime == 0)
+	{
+		if(IsClientInGame(client) && IsClientConnected(client) && !IsFakeClient(client))
+		{
+			PrintCenterText(client, "%t", "warden_countdownstart_nc");
+			CPrintToChatAll("%t %t", "warden_tag" , "warden_countdownstart");
+			g_iCountStartStopTime = 20;
+			CreateTimer( 1.0, StopCountdown, client, TIMER_REPEAT);
+			if(gc_bOverlays.BoolValue)
+			{
+				CreateTimer( 0.0, ShowOverlayStart, client);
+			}
+			return Plugin_Stop;
+		}
+	}
+	return Plugin_Continue;
+}
+
+public Action StopCountdown( Handle timer, any client ) 
+{
 	if (g_iCountStopTime > 0)
 	{
 		if (IsClientInGame(client) && IsPlayerAlive(client))
@@ -903,6 +958,7 @@ public Action StartStopCountdown( Handle timer, any client )
 			PrintCenterText(client, "%t", "warden_countdownstop_nc");
 			CPrintToChatAll("%t %t", "warden_tag" , "warden_countdownstop");
 			g_iCountStopTime = 20;
+			g_iCountStartStopTime = 9;
 			if(gc_bOverlays.BoolValue)
 			{
 				CreateTimer( 0.0, ShowOverlayStop, client);
@@ -939,7 +995,7 @@ public Action ShowOverlayStop( Handle timer, any client )
 }
 
 
-public Action  DeleteOverlay( Handle timer, any client ) 
+public Action DeleteOverlay( Handle timer, any client ) 
 {
 	if(IsClientInGame(client) && IsClientConnected(client) && !IsFakeClient(client))
 	{

@@ -67,8 +67,9 @@ based/merged/used code/idea plugins:
 - sm_noblockon - Allows the warden to enable no block (for the warden ?)
 - sm_noblockon - Allows the warden to disable no block (for the warden ?)
 - sm_setff - Allows the warden to toggle friendly fire
-- sm_startcountdown - Allows the warden to start a GO! Countdown
+- sm_startcountdown - Allows the warden to start a START! Countdown
 - sm_stopcountdown - Allows the warden to start a STOP! Countdown
+- sm_startstopcountdown - Allows the warden to start a START! / STOP! Countdown
 - sm_killrandom - Allows the warden to kill a random T
 
 ```
