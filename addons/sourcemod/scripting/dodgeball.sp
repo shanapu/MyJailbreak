@@ -317,6 +317,7 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 						
 						SendPanelToClient(DodgeBallMenu, client, Pass, 15);
 						SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
+						StripAllWeapons(client);
 					}
 				}
 				g_iTruceTime--;
@@ -479,7 +480,18 @@ public Action  DeleteOverlay( Handle timer, any client )
 	return Plugin_Continue;
 }
 
-
+stock StripAllWeapons(iClient)
+{
+	int iEnt;
+	for (int i = 0; i <= 4; i++)
+	{
+		while ((iEnt = GetPlayerWeaponSlot(iClient, i)) != -1)
+		{
+			RemovePlayerItem(iClient, iEnt);
+			AcceptEntityInput(iEnt, "Kill");
+		}
+	}
+}
 
 public SetCvar(char cvarName[64], value)
 {

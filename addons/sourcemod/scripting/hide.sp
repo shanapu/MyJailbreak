@@ -328,12 +328,13 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 							SetEntityMoveType(client, MOVETYPE_NONE);
 							GivePlayerItem(client, "weapon_tagrenade");
 						}
-					}
-					if (GetClientTeam(client) == CS_TEAM_T)
-					{
-						SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
-						SendPanelToClient(HideMenu, client, Pass, 15);
-						SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
+						if (GetClientTeam(client) == CS_TEAM_T)
+						{
+							SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
+							SendPanelToClient(HideMenu, client, Pass, 15);
+							SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
+						}
+						StripAllWeapons(client);
 					}
 				}
 				g_iFreezeTime--;
@@ -491,6 +492,19 @@ public Action  DeleteOverlay( Handle timer, any client )
 	ClientCommand( client, "r_screenoverlay \"\"" );
 	}
 	return Plugin_Continue;
+}
+
+stock StripAllWeapons(iClient)
+{
+	int iEnt;
+	for (int i = 0; i <= 4; i++)
+	{
+		while ((iEnt = GetPlayerWeaponSlot(iClient, i)) != -1)
+		{
+			RemovePlayerItem(iClient, iEnt);
+			AcceptEntityInput(iEnt, "Kill");
+		}
+	}
 }
 
 public SetCvar(char cvarName[64], value)

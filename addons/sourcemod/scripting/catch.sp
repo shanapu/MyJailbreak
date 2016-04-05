@@ -375,13 +375,12 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 						{
 							catched[client] = false;
 						}
-					}
-					if (IsClientInGame(client))
-					{
+						StripAllWeapons(client);
 						SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
 						SendPanelToClient(CatchMenu, client, Pass, 15);
 					}
 				}
+				
 				PrintHintTextToAll("%t", "catch_start_nc");
 				CPrintToChatAll("%t %t", "catch_tag" , "catch_start");
 			}
@@ -689,6 +688,19 @@ public Event_PlayerSpawn(Handle:event,const String:name[],bool:dontBroadcast)
 	new iClient = GetClientOfUserId(GetEventInt(event, "userid"));
 	ResetSprint(iClient);
 	return;
+}
+
+stock StripAllWeapons(iClient)
+{
+	int iEnt;
+	for (int i = 0; i <= 4; i++)
+	{
+		while ((iEnt = GetPlayerWeaponSlot(iClient, i)) != -1)
+		{
+			RemovePlayerItem(iClient, iEnt);
+			AcceptEntityInput(iEnt, "Kill");
+		}
+	}
 }
 
 public OnMapEnd()
