@@ -116,6 +116,11 @@
 		"#format"		""
 		"en"			"Start catch next round"
 	}
+		"menu_dodgeball"
+	{
+		"#format"		""
+		"en"			"Start dodgeball next round"
+	}
 	"menu_noscope"
 	{
 		"#format"		""
@@ -129,7 +134,7 @@
 	"menu_freeday"
 	{
 		"#format"		""
-		"en"			"Start duckhunt next round"
+		"en"			"Start freeday next round"
 	}
 		"menu_admin"
 	{
