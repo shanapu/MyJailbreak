@@ -1,6 +1,5 @@
 *.dat
 *.exe
-*.smx
 cfg/
 addons/sourcemod/scripting/snips/*
 addons/sourcemod/scripting/compiled
