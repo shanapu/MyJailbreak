@@ -246,29 +246,29 @@
 	"warden_startcountdownhint"
 	{
 
-		"en"		"Attention! The Warden {purple}Started a GO! CountDown!"
-		"de"		"Aufgepasst! Der Warden hat einen {purple}GO! CountDown gestartet!"
+		"en"		"Attention! The Warden {purple}Started a START! CountDown!"
+		"de"		"Aufgepasst! Der Warden hat einen {purple}START! CountDown gestartet!"
 	}
 	
 	"warden_startcountdownhint_nc"	// no colors!
 	{
 
-		"en"		"Attention! The Warden Started a GO! CountDown!"
-		"de"		"Aufgepasst! Der Warden hat einen GO! CountDown gestartet!"
+		"en"		"Attention! The Warden Started a START! CountDown!"
+		"de"		"Aufgepasst! Der Warden hat einen START! CountDown gestartet!"
 	}
 	
 	"warden_startstopcountdownhint"
 	{
 
-		"en"		"Attention! The Warden {purple}Started a GO! / STOP! CountDown!"
-		"de"		"Aufgepasst! Der Warden hat einen {purple}GO! / STOP! CountDown gestartet!"
+		"en"		"Attention! The Warden {purple}Started a START! / STOP! CountDown!"
+		"de"		"Aufgepasst! Der Warden hat einen {purple}START! / STOP! CountDown gestartet!"
 	}
 	
 	"warden_startstopcountdownhint_nc"	// no colors!
 	{
 
-		"en"		"Attention! The Warden Started a GO! / STOP! CountDown!"
-		"de"		"Aufgepasst! Der Warden hat einen GO! / STOP! CountDown gestartet!"
+		"en"		"Attention! The Warden Started a START! / STOP! CountDown!"
+		"de"		"Aufgepasst! Der Warden hat einen START! / STOP! CountDown gestartet!"
 	}
 	"warden_stopcountdownhint"
 	{
