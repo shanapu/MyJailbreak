@@ -1,5 +1,7 @@
 sorry for bad spelling and loose cues
 
+test: is sm_hosties_startweapons_on and catch fixed?
+
 bugs:
 
 - [ ] can use sometimes weapon menu onfirst round with plugin disabled?!´
@@ -28,6 +30,7 @@ must:
 - [ ] zombie: knockbackfix
 - [x] zombie: define zombie model
 - [x] warden: unvote
+- [ ] Marker: timer disaprears
 - [x] warden: model
 - [x] warden: allow unvote
 - [x] warden: countdown
