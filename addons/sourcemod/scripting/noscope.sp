@@ -423,11 +423,9 @@ public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 	{
 		for(int client=1; client <= MaxClients; client++)
 		{
-			if (IsClientInGame(client))
-			{
-				SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
-				SetEntityGravity(client, 1.0);
-			}
+			if (IsClientInGame(client)) SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
+			if (IsClientInGame(client)) SetEntityGravity(client, 1.0);
+			
 		}
 		
 		if (TruceTimer != null) KillTimer(TruceTimer);
