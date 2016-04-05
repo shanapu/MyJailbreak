@@ -93,6 +93,7 @@ public void OnPluginStart()
 	HookEvent("round_start", RoundStart);
 	HookEvent("round_end", RoundEnd);
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
+	HookEvent("hegrenade_detonate", HE_Detonate);
 	
 	//FindConVar
 	g_iSetRoundTime = FindConVar("mp_roundtime");
@@ -287,7 +288,6 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 		SetCvar("sm_beacon_enabled", 1);
 		SetCvar("sm_dice_enable", 0);
 		SetCvar("sm_weapons_enable", 0);
-		SetCvar("sv_infinite_ammo", 1);
 		IsDuckHunt = true;
 		DuckHuntRound++;
 		StartDuckHunt = false;
@@ -319,6 +319,7 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 				{
 					if (IsClientInGame(client))
 					{
+						StripAllWeapons(client);
 						if (GetClientTeam(client) == CS_TEAM_CT)
 						{
 							SetEntityModel(client, model);
@@ -446,7 +447,6 @@ public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 		SetCvar("sm_hide_enable", 1);
 		SetCvar("sm_ffa_enable", 1);
 		SetCvar("sm_beacon_enabled", 0);
-		SetCvar("sv_infinite_ammo", 0);
 		SetCvar("sm_warden_enable", 1);
 		g_iSetRoundTime.IntValue = g_iOldRoundTime;
 		CPrintToChatAll("%t %t", "duckhunt_tag" , "duckhunt_end");
@@ -456,6 +456,26 @@ public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 		g_iOldRoundTime = g_iSetRoundTime.IntValue;
 		g_iSetRoundTime.IntValue = gc_iRoundTime.IntValue;
 	}
+}
+
+public HE_Detonate(Handle:event, const String:name[], bool:dontBroadcast)
+{
+	if (IsDuckHunt == true)
+	{
+	new target = GetClientOfUserId(GetEventInt(event, "userid"));
+	if (GetClientTeam(target) == 1 && !IsPlayerAlive(target))
+	{
+		return;
+	}
+	new iWeapon4 = GetPlayerWeaponSlot(target, 3);
+	if (IsValidEdict(iWeapon4))
+	{			
+		RemovePlayerItem(target, iWeapon4);
+		RemoveEdict(iWeapon4);
+	}
+	GivePlayerItem(target, "weapon_hegrenade");
+	}
+	return;
 }
 
 public Pass(Handle:menu, MenuAction:action, param1, param2)
@@ -489,6 +509,20 @@ public Action  DeleteOverlay( Handle timer, any client )
 	}
 	return Plugin_Continue;
 }
+
+stock StripAllWeapons(iClient)
+{
+	int iEnt;
+	for (int i = 0; i <= 4; i++)
+	{
+		while ((iEnt = GetPlayerWeaponSlot(iClient, i)) != -1)
+		{
+			RemovePlayerItem(iClient, iEnt);
+			AcceptEntityInput(iEnt, "Kill");
+		}
+	}
+}
+
 public SetCvar(char cvarName[64], value)
 {
 	UseCvar = FindConVar(cvarName);
