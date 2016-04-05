@@ -307,8 +307,6 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 				{
 					if (IsClientInGame(client))
 					{
-						GivePlayerItem(client, "weapon_decoy");
-						SetEntityHealth(client, 1);
 						
 						if (gc_bGrav.BoolValue)
 						{
@@ -318,6 +316,8 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 						SendPanelToClient(DodgeBallMenu, client, Pass, 15);
 						SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 						StripAllWeapons(client);
+						GivePlayerItem(client, "weapon_decoy");
+						SetEntityHealth(client, 1);
 					}
 				}
 				g_iTruceTime--;

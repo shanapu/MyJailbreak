@@ -228,7 +228,7 @@ public Action VoteZombie(int client,int args)
 	{	
 		if (gc_bVote.BoolValue)
 		{
-			if (GetTeamClientCount(3) > 0)
+			if (GetTeamClientCount(CS_TEAM_CT) > 0)
 			{
 				if (!IsZombie && !StartZombie)
 				{
@@ -349,6 +349,8 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 							SetEntityMoveType(client, MOVETYPE_NONE);
 							SetEntityHealth(client, 10000);
 							StripAllWeapons(client);
+							GivePlayerItem(client, "weapon_knife");
+
 						}
 						if (GetClientTeam(client) == CS_TEAM_T)
 						{

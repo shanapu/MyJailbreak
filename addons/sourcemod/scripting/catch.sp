@@ -278,7 +278,7 @@ public Action VoteCatch(int client,int args)
 	{
 		if (gc_bVote.BoolValue)
 		{	
-			if (GetTeamClientCount(3) > 0)
+			if (GetTeamClientCount(CS_TEAM_CT) > 0)
 			{
 				if (!IsCatch && !StartCatch)
 				{	
@@ -376,6 +376,7 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 							catched[client] = false;
 						}
 						StripAllWeapons(client);
+						GivePlayerItem(client, "weapon_knife");
 						SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
 						SendPanelToClient(CatchMenu, client, Pass, 15);
 					}

@@ -231,7 +231,7 @@ public Action VoteHide(int client,int args)
 	{
 		if (gc_bVote.BoolValue)
 		{	
-			if (GetTeamClientCount(3) > 0)
+			if (GetTeamClientCount(CS_TEAM_CT) > 0)
 			{
 				if (!IsHide && !StartHide)
 				{
@@ -335,6 +335,7 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 							SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 						}
 						StripAllWeapons(client);
+						GivePlayerItem(client, "weapon_knife");
 					}
 				}
 				g_iFreezeTime--;
