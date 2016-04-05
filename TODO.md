@@ -1,7 +1,5 @@
 sorry for bad spelling and loose cues
 
-test: is sm_hosties_startweapons_on and catch fixed?
-
 bugs:
 
 - [ ] can use sometimes weapon menu onfirst round with plugin disabled?!´
@@ -21,8 +19,8 @@ must:
 - [x] all days: msg when deactivated by set
 - [ ] 1.7 syntax ?
 - [x] new day: decoy/flash 1hp -> dodgeball
-- [ ] dodgeball: remove decoy (sound)
-- [ ] dodgeball: disbable knife
+- [ ] dodgeball: remove decoy (sound) / make it >flash AHAH
+- [x] dodgeball: disbable knife
 - [x] countdown: is CD running? no double 
 - [x] catch: freeze sound & overlay
 - [x] catch: sprint build in
@@ -38,6 +36,7 @@ must:
 - [ ] warden: ff not for ct
 - [x] playertags: as chat tag
 - [ ] playertags: add VIP flag
+- [ ] all days: restrict map heal station
 - [ ] catch: T win when time run out
 - [ ] warden: clean changeback model unwarden
 - [x] move FF from menu to warden
