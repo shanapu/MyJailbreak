@@ -246,7 +246,7 @@ public Action:Event_BulletImpact(Handle:hEvent,const String:sName[],bool:bDontBr
 					{
 						GetClientAimTargetPos(client, g_fMakerPos);
 						g_fMakerPos[2] += 5.0;
-						CPrintToChat(client, "{darkred}[Warden]{lime}New marker 222222set.");
+						CPrintToChat(client, "{darkred}[Warden]{lime}New marker set.");
 					}
 				}
 		}

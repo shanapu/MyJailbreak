@@ -224,7 +224,7 @@ public Action VoteDuckHunt(int client,int args)
 	{	
 		if (gc_bVote.BoolValue)
 		{
-			if (GetTeamClientCount(3) > 0)
+			if (GetTeamClientCount(CS_TEAM_CT) > 0)
 			{
 				if (g_iRoundLimits == 0)
 				{

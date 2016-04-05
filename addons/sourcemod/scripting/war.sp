@@ -223,7 +223,7 @@ public Action VoteWar(int client,int args)
 		{	
 			if (!IsWar && !StartWar)
 			{
-				if (GetTeamClientCount(3) > 0)
+				if (GetTeamClientCount(CS_TEAM_CT) > 0)
 				{
 					if (g_iRoundLimits == 0)
 					{
