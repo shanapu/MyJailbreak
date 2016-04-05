@@ -145,56 +145,28 @@ public Action:JbMenu(client,args)
 		{
 			if(gc_bWarden.BoolValue)
 			{
-				if(g_bCountdown.BoolValue)
+				if(g_bCountdown != null)
 				{
-					Format(menuinfo2, sizeof(menuinfo2), "%T", "menu_countdown", LANG_SERVER);
-					AddMenuItem(menu, "countdown", menuinfo2);
+					if(g_bCountdown.BoolValue)
+					{
+						Format(menuinfo2, sizeof(menuinfo2), "%T", "menu_countdown", LANG_SERVER);
+						AddMenuItem(menu, "countdown", menuinfo2);
+					}
 				}
-				if(g_bOpen.BoolValue)
+				if(g_bOpen != null)
 				{
-					Format(menuinfo3, sizeof(menuinfo3), "%T", "menu_opencell", LANG_SERVER);
-					AddMenuItem(menu, "cellopen", menuinfo3);
+					if(g_bOpen.BoolValue)
+					{
+						Format(menuinfo3, sizeof(menuinfo3), "%T", "menu_opencell", LANG_SERVER);
+						AddMenuItem(menu, "cellopen", menuinfo3);
+					}
 				}
 				if(gc_bDays.BoolValue)
 				{
 					Format(menuinfo5, sizeof(menuinfo5), "%T", "menu_eventdays", LANG_SERVER);
 					AddMenuItem(menu, "days", menuinfo5);
 				}
-				if(g_bGuns.BoolValue)
-				{
-					if(g_bGunsCT.BoolValue)
-					{
-						Format(menuinfo6, sizeof(menuinfo6), "%T", "menu_guns", LANG_SERVER);
-						AddMenuItem(menu, "guns", menuinfo6);
-					}
-				}
-				
-				if(g_bsetFF.BoolValue)
-				{
-					if(!g_bFF.BoolValue)
-					{
-						Format(menuinfo7, sizeof(menuinfo7), "%T", "menu_ffon", LANG_SERVER);
-						AddMenuItem(menu, "setff", menuinfo7);
-					}
-					else
-					{
-						Format(menuinfo8, sizeof(menuinfo8), "%T", "menu_ffoff", LANG_SERVER);
-						AddMenuItem(menu, "setff", menuinfo8);
-					}
-				}
-				if(g_bRandom.BoolValue)
-				{
-					Format(menuinfo9, sizeof(menuinfo9), "%T", "menu_randomdead", LANG_SERVER);
-					AddMenuItem(menu, "kill", menuinfo9);
-				}
-				
-				Format(menuinfo10, sizeof(menuinfo10), "%T", "menu_unwarden", LANG_SERVER);
-				AddMenuItem(menu, "unwarden", menuinfo10);
-			}
-		}
-		else if(GetClientTeam(client) == CS_TEAM_CT) 
-			{
-				if(gc_bCTerror.BoolValue)	
+				if(g_bGuns != null)
 				{
 					if(g_bGuns.BoolValue)
 					{
@@ -204,12 +176,60 @@ public Action:JbMenu(client,args)
 							AddMenuItem(menu, "guns", menuinfo6);
 						}
 					}
-					if(!warden_exist())
+				}
+				if(g_bsetFF != null)
+				{
+					if(g_bsetFF.BoolValue)
 					{
-						if(g_bWarden.BoolValue)
+						if(!g_bFF.BoolValue)
 						{
-							Format(menuinfo11, sizeof(menuinfo11), "%T", "menu_getwarden", LANG_SERVER);
-							AddMenuItem(menu, "getwarden", menuinfo11);
+							Format(menuinfo7, sizeof(menuinfo7), "%T", "menu_ffon", LANG_SERVER);
+							AddMenuItem(menu, "setff", menuinfo7);
+						}
+						else
+						{
+							Format(menuinfo8, sizeof(menuinfo8), "%T", "menu_ffoff", LANG_SERVER);
+							AddMenuItem(menu, "setff", menuinfo8);
+						}
+					}
+				}
+				if(g_bRandom != null)
+				{
+					if(g_bRandom.BoolValue)
+					{
+						Format(menuinfo9, sizeof(menuinfo9), "%T", "menu_randomdead", LANG_SERVER);
+						AddMenuItem(menu, "kill", menuinfo9);
+					}
+					
+					Format(menuinfo10, sizeof(menuinfo10), "%T", "menu_unwarden", LANG_SERVER);
+					AddMenuItem(menu, "unwarden", menuinfo10);
+				}
+			}
+		}
+		else if(GetClientTeam(client) == CS_TEAM_CT) 
+			{
+				if(gc_bCTerror.BoolValue)	
+				{
+					if(g_bGuns != null)
+					{
+						if(g_bGuns.BoolValue)
+						{
+							if(g_bGunsCT.BoolValue)
+							{
+								Format(menuinfo6, sizeof(menuinfo6), "%T", "menu_guns", LANG_SERVER);
+								AddMenuItem(menu, "guns", menuinfo6);
+							}
+						}
+					}
+					if(g_bWarden != null)
+					{
+						if(!warden_exist())
+						{
+							if(g_bWarden.BoolValue)
+							{
+								Format(menuinfo11, sizeof(menuinfo11), "%T", "menu_getwarden", LANG_SERVER);
+								AddMenuItem(menu, "getwarden", menuinfo11);
+							}
 						}
 					}
 					Format(menuinfo13, sizeof(menuinfo13), "%T", "menu_joint", LANG_SERVER);
@@ -220,25 +240,30 @@ public Action:JbMenu(client,args)
 			{
 				if(gc_bTerror.BoolValue)	
 				{
-					if(g_bGuns.BoolValue)
+					if(g_bGuns != null)
 					{
-						if(g_bGunsT.BoolValue)
+						if(g_bGuns.BoolValue)
 						{
-							Format(menuinfo6, sizeof(menuinfo6), "%T", "menu_guns", LANG_SERVER);
-							AddMenuItem(menu, "guns", menuinfo6);
+							if(g_bGunsT.BoolValue)
+							{
+								Format(menuinfo6, sizeof(menuinfo6), "%T", "menu_guns", LANG_SERVER);
+								AddMenuItem(menu, "guns", menuinfo6);
+							}
 						}
 					}
 					Format(menuinfo15, sizeof(menuinfo15), "%T", "menu_joinct", LANG_SERVER);
 					AddMenuItem(menu, "joinCT", menuinfo15);
-					
-					if(!warden_exist())
+					if(g_bWarden != null)
 					{
-						if(g_bWarden.BoolValue)
+						if(!warden_exist())
 						{
-							if(g_bVote.BoolValue)
+							if(g_bWarden.BoolValue)
 							{
-								Format(menuinfo16, sizeof(menuinfo16), "%T", "menu_votewarden", LANG_SERVER);
-								AddMenuItem(menu, "votewarden", menuinfo16);
+								if(g_bVote.BoolValue)
+								{
+									Format(menuinfo16, sizeof(menuinfo16), "%T", "menu_votewarden", LANG_SERVER);
+									AddMenuItem(menu, "votewarden", menuinfo16);
+								}
 							}
 						}
 					}
@@ -268,50 +293,77 @@ public Action:EventDays(client, args)
 			Format(menuinfo18, sizeof(menuinfo18), "%T", "menu_event_Title", LANG_SERVER);
 			SetMenuTitle(menu, menuinfo18);
 			
-			if(g_bWar.BoolValue)
+			if(g_bWar != null)
 			{
-				Format(menuinfo19, sizeof(menuinfo19), "%T", "menu_war", LANG_SERVER);
-				AddMenuItem(menu, "war", menuinfo19);
+				if(g_bWar.BoolValue)
+				{
+					Format(menuinfo19, sizeof(menuinfo19), "%T", "menu_war", LANG_SERVER);
+					AddMenuItem(menu, "war", menuinfo19);
+				}
 			}
-			if(g_bFFA.BoolValue)
+			if(g_bFFA != null)
 			{
-				Format(menuinfo20, sizeof(menuinfo20), "%T", "menu_ffa", LANG_SERVER);
-				AddMenuItem(menu, "ffa", menuinfo20);
+				if(g_bFFA.BoolValue)
+				{
+					Format(menuinfo20, sizeof(menuinfo20), "%T", "menu_ffa", LANG_SERVER);
+					AddMenuItem(menu, "ffa", menuinfo20);
+				}
 			}
-			if(g_bZombie.BoolValue)
+			if(g_bZombie != null)
 			{
-				Format(menuinfo21, sizeof(menuinfo21), "%T", "menu_zombie", LANG_SERVER);
-				AddMenuItem(menu, "zombie", menuinfo21);
+				if(g_bZombie.BoolValue)
+				{
+					Format(menuinfo21, sizeof(menuinfo21), "%T", "menu_zombie", LANG_SERVER);
+					AddMenuItem(menu, "zombie", menuinfo21);
+				}
 			}
-			if(g_bHide.BoolValue)
+			if(g_bHide != null)
 			{
-				Format(menuinfo22, sizeof(menuinfo22), "%T", "menu_hide", LANG_SERVER);
-				AddMenuItem(menu, "hide", menuinfo22);
+				if(g_bHide.BoolValue)
+				{
+					Format(menuinfo22, sizeof(menuinfo22), "%T", "menu_hide", LANG_SERVER);
+					AddMenuItem(menu, "hide", menuinfo22);
+				}
 			}
-			if(g_bCatch.BoolValue)
+			if(g_bCatch != null)
 			{
-				Format(menuinfo23, sizeof(menuinfo23), "%T", "menu_catch", LANG_SERVER);
-				AddMenuItem(menu, "catch", menuinfo23);
+				if(g_bCatch.BoolValue)
+				{
+					Format(menuinfo23, sizeof(menuinfo23), "%T", "menu_catch", LANG_SERVER);
+					AddMenuItem(menu, "catch", menuinfo23);
+				}
 			}
-			if(g_bDodgeBall.BoolValue)
+			if(g_bDodgeBall != null)
 			{
-				Format(menuinfo27, sizeof(menuinfo27), "%T", "menu_dodgeball", LANG_SERVER);
-				AddMenuItem(menu, "dodgeball", menuinfo27);
+				if(g_bDodgeBall.BoolValue)
+				{
+					Format(menuinfo27, sizeof(menuinfo27), "%T", "menu_dodgeball", LANG_SERVER);
+					AddMenuItem(menu, "dodgeball", menuinfo27);
+				}
 			}
-			if(g_bNoScope.BoolValue)
+			if(g_bNoScope != null)
 			{
-				Format(menuinfo24, sizeof(menuinfo24), "%T", "menu_noscope", LANG_SERVER);
-				AddMenuItem(menu, "noscope", menuinfo24);
+				if(g_bNoScope.BoolValue)
+				{
+					Format(menuinfo24, sizeof(menuinfo24), "%T", "menu_noscope", LANG_SERVER);
+					AddMenuItem(menu, "noscope", menuinfo24);
+				}
 			}
-			if(g_bDuckHunt.BoolValue)
+			if(g_bDuckHunt != null)
 			{
-				Format(menuinfo25, sizeof(menuinfo25), "%T", "menu_duckhunt", LANG_SERVER);
-				AddMenuItem(menu, "duckhunt", menuinfo25);
+				if(g_bDuckHunt.BoolValue)
+				{
+					Format(menuinfo25, sizeof(menuinfo25), "%T", "menu_duckhunt", LANG_SERVER);
+					AddMenuItem(menu, "duckhunt", menuinfo25);
+				}
 			}
-			if(g_bFreeDay.BoolValue)
+			if(g_bFreeDay != null)
 			{
-				Format(menuinfo26, sizeof(menuinfo26), "%T", "menu_freeday", LANG_SERVER);
-				AddMenuItem(menu, "freeday", menuinfo26);
+				if(g_bFreeDay.BoolValue)
+				{
+					Format(menuinfo26, sizeof(menuinfo26), "%T", "menu_freeday", LANG_SERVER);
+					AddMenuItem(menu, "freeday", menuinfo26);
+				}
 			}
 			SetMenuExitButton(menu, true);
 			DisplayMenu(menu, client, MENU_TIME_FOREVER);
