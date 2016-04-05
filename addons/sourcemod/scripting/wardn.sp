@@ -37,6 +37,7 @@ ConVar gc_iMarkerKey;
 ConVar gc_bCountDown;
 ConVar gc_bOverlays;
 ConVar gc_sOverlayStartPath;
+ConVar gc_sOverlayStopPath;
 ConVar gc_sSoundPath1;
 ConVar gc_sSoundPath2;
 //ConVar gc_sModelPath;
@@ -51,7 +52,8 @@ int Warden = -1;
 int tempwarden[MAXPLAYERS+1] = -1;
 int g_CollisionOffset;
 int opentimer;
-int g_iCountTime = 9;
+int g_iCountStartTime = 9;
+int g_iCountStopTime = 9;
 int g_MarkerColor[] = {255,1,1,255};
 int g_iBeamSprite = -1;
 int g_iHaloSprite = -1;
@@ -79,6 +81,7 @@ char g_sHasVoted[1500];
 char g_sSoundPath2[256];
 char g_sSoundPath1[256];
 char g_sOverlayStart[256];
+char g_sOverlayStop[256];
 
 //float
 float g_fMakerPos[3];
@@ -116,7 +119,8 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_vw", VoteWarden);
 	RegConsoleCmd("sm_votewarden", VoteWarden);
 	RegConsoleCmd("sm_setff", ToggleFF);
-	RegConsoleCmd("sm_countdown", SetCountDown);
+	RegConsoleCmd("sm_startcountdown", SetStartCountDown);
+	RegConsoleCmd("sm_stopcountdown", SetStopCountDown);
 	RegConsoleCmd("sm_killrandom", KillRandom);
 	
 	//Admin commands
@@ -152,6 +156,7 @@ public void OnPluginStart()
 	gc_bCountDown = AutoExecConfig_CreateConVar("sm_warden_countdown", "1", "0 - disabled, 1 - enable countdown for warden");
 	gc_bOverlays = AutoExecConfig_CreateConVar("sm_warden_overlays", "1", "0 - disabled, 1 - enable overlays", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_warden_overlaystart_path", "overlays/MyJailbreak/start" , "Path to the start Overlay DONT TYPE .vmt or .vft");
+	gc_sOverlayStopPath = AutoExecConfig_CreateConVar("sm_warden_overlaystop_path", "overlays/MyJailbreak/stop" , "Path to the stop Overlay DONT TYPE .vmt or .vft");
 	gc_bOpen = AutoExecConfig_CreateConVar("sm_wardenopen_enable", "1", "0 - disabled, 1 - warden can open/close cells");
 	g_hOpenTimer = AutoExecConfig_CreateConVar("sm_wardenopen_time", "60", "Time in seconds for open doors on round start automaticly");
 	gc_bOpenTimer = AutoExecConfig_CreateConVar("sm_wardenopen_time_enable", "1", "should doors open automatic 0- no 1 yes");	 // TODO: DONT WORK
@@ -184,6 +189,7 @@ public void OnPluginStart()
 	gc_sSoundPath2.GetString(g_sSoundPath2, sizeof(g_sSoundPath2));
 //	gc_sModelPath.GetString(g_sWardenModel, sizeof(g_sWardenModel));
 	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
+	gc_sOverlayStopPath.GetString(g_sOverlayStop , sizeof(g_sOverlayStop));
 	
 //	AddCommandListener(HookPlayerChat, "say");
 	AddCommandListener(Command_LAW, "+lookatweapon");
@@ -386,6 +392,7 @@ public void OnMapStart()
 //	PrecacheModel(g_sWardenModel);
 //	PrecacheModel("models/player/ctm_gsg9.mdl");
 	PrecacheOverlayAnyDownload(g_sOverlayStart);
+	PrecacheOverlayAnyDownload(g_sOverlayStop);
 	g_iBeamSprite = PrecacheModel("materials/sprites/laserbeam.vmt");
 	g_iHaloSprite = PrecacheModel("materials/sprites/glow01.vmt");
 
@@ -429,6 +436,11 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 	{
 		strcopy(g_sOverlayStart, sizeof(g_sOverlayStart), newValue);
 		PrecacheOverlayAnyDownload(g_sOverlayStart);
+	}
+	else if(convar == gc_sOverlayStopPath)
+	{
+		strcopy(g_sOverlayStop, sizeof(g_sOverlayStop), newValue);
+		PrecacheOverlayAnyDownload(g_sOverlayStop);
 	}
 }
 
@@ -796,7 +808,7 @@ void RemoveTheWarden(int client)
 	ResetMarker();
 }
 
-public Action:SetCountDown(client, args)
+public Action:SetStartCountDown(client, args)
 {
 	if(gc_bCountDown.BoolValue)
 	{
@@ -804,10 +816,30 @@ public Action:SetCountDown(client, args)
 		{
 			if (!IsCountDown)
 			{
-				g_iCountTime = 9;
+				g_iCountStopTime = 9;
 				CreateTimer( 1.0, StartCountdown, client, TIMER_REPEAT);
-				PrintHintTextToAll("%t", "warden_countdownhint_nc");
-				CPrintToChatAll("%t %t", "warden_tag" , "warden_countdownhint");
+				PrintHintTextToAll("%t", "warden_startcountdownhint_nc");
+				CPrintToChatAll("%t %t", "warden_tag" , "warden_startcountdownhint");
+				IsCountDown = true;
+			}
+			else CPrintToChat(client, "%t %t", "warden_tag" , "warden_countdownrunning");
+		}
+		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
+	}
+}
+
+public Action:SetStopCountDown(client, args)
+{
+	if(gc_bCountDown.BoolValue)
+	{
+		if (warden_iswarden(client))
+		{
+			if (!IsCountDown)
+			{
+				g_iCountStopTime = 20;
+				CreateTimer( 1.0, StartStopCountdown, client, TIMER_REPEAT);
+				PrintHintTextToAll("%t", "warden_stopcountdownhint_nc");
+				CPrintToChatAll("%t %t", "warden_tag" , "warden_stopcountdownhint");
 				IsCountDown = true;
 			}
 			else CPrintToChat(client, "%t %t", "warden_tag" , "warden_countdownrunning");
@@ -818,29 +850,62 @@ public Action:SetCountDown(client, args)
 
 public Action StartCountdown( Handle timer, any client ) 
 {
-	if (g_iCountTime > 0)
+	if (g_iCountStartTime > 0)
 	{
 		if (IsClientInGame(client) && IsPlayerAlive(client))
 		{
-			if (g_iCountTime < 6) 
+			if (g_iCountStartTime < 6) 
 			{
-				PrintCenterText(client,"%t", "warden_countdown_nc", g_iCountTime);
-				CPrintToChatAll("%t %t", "warden_tag" , "warden_countdown", g_iCountTime);
+				PrintCenterText(client,"%t", "warden_startcountdown_nc", g_iCountStartTime);
+				CPrintToChatAll("%t %t", "warden_tag" , "warden_startcountdown", g_iCountStartTime);
 			}
 		}
-		g_iCountTime--;
+		g_iCountStartTime--;
 		return Plugin_Continue;
 	}
-	if (g_iCountTime == 0)
+	if (g_iCountStartTime == 0)
 	{
 		if(IsClientInGame(client) && IsClientConnected(client) && !IsFakeClient(client))
 		{
 			PrintCenterText(client, "%t", "warden_countdownstart_nc");
 			CPrintToChatAll("%t %t", "warden_tag" , "warden_countdownstart");
-			g_iCountTime = 9;
+			g_iCountStartTime = 9;
 			if(gc_bOverlays.BoolValue)
 			{
 				CreateTimer( 0.0, ShowOverlayStart, client);
+			}
+			IsCountDown = false;
+			return Plugin_Stop;
+		}
+	}
+	return Plugin_Continue;
+}
+
+public Action StartStopCountdown( Handle timer, any client ) 
+{
+	if (g_iCountStopTime > 0)
+	{
+		if (IsClientInGame(client) && IsPlayerAlive(client))
+		{
+			if (g_iCountStopTime < 16) 
+			{
+				PrintCenterText(client,"%t", "warden_stopcountdown_nc", g_iCountStopTime);
+				CPrintToChatAll("%t %t", "warden_tag" , "warden_startcountdown", g_iCountStopTime);
+			}
+		}
+		g_iCountStopTime--;
+		return Plugin_Continue;
+	}
+	if (g_iCountStopTime == 0)
+	{
+		if(IsClientInGame(client) && IsClientConnected(client) && !IsFakeClient(client))
+		{
+			PrintCenterText(client, "%t", "warden_countdownstop_nc");
+			CPrintToChatAll("%t %t", "warden_tag" , "warden_countdownstop");
+			g_iCountStopTime = 20;
+			if(gc_bOverlays.BoolValue)
+			{
+				CreateTimer( 0.0, ShowOverlayStop, client);
 			}
 			IsCountDown = false;
 			return Plugin_Stop;
@@ -860,6 +925,19 @@ public Action ShowOverlayStart( Handle timer, any client )
 	}
 	return Plugin_Continue;
 }
+
+public Action ShowOverlayStop( Handle timer, any client ) 
+{
+	if(IsClientInGame(client) && IsClientConnected(client) && !IsFakeClient(client))
+	{
+		int iFlag = GetCommandFlags( "r_screenoverlay" ) & ( ~FCVAR_CHEAT ); 
+		SetCommandFlags( "r_screenoverlay", iFlag ); 
+		ClientCommand( client, "r_screenoverlay \"%s.vtf\"", g_sOverlayStop);
+		CreateTimer( 2.0, DeleteOverlay, client );
+	}
+	return Plugin_Continue;
+}
+
 
 public Action  DeleteOverlay( Handle timer, any client ) 
 {

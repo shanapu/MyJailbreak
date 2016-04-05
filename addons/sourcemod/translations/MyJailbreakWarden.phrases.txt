@@ -215,32 +215,60 @@
 		"de"		"Voting gegen den {purple}Warden{default} ist ausgeschaltet!"
 	}
 	
-	"warden_countdown_nc"	// no colors!
+	"warden_startcountdown_nc"	// no colors!
 	{
 		"#format"	"{1:i}"
 		"en"		"Start in {1} seconds!"
 		"de"		"Start in {1} Sekunden!"
 	}
 	
-	"warden_countdown"
+		"warden_stopcountdown_nc"	// no colors!
+	{
+		"#format"	"{1:i}"
+		"en"		"Stop/End in {1} seconds!"
+		"de"		"Stop/Ende in {1} Sekunden!"
+	}
+	
+	"warden_startcountdown"
 	{
 		"#format"	"{1:i}"
 		"en"		"Start in {purple}{1}{default} seconds!"
 		"de"		"Start in {purple}{1}{default} Sekunden!"
 	}
 	
-	"warden_countdownhint"
+	"warden_stopcountdown"
+	{
+		"#format"	"{1:i}"
+		"en"		"Stop in {purple}{1}{default} seconds!"
+		"de"		"Stop in {purple}{1}{default} Sekunden!"
+	}
+	
+	"warden_startcountdownhint"
 	{
 
 		"en"		"Attention! The Warden {purple}Started a CountDown!"
 		"de"		"Aufgepasst! Der Warden hat einen {purple}CountDown gestartet!"
 	}
 	
-	"warden_countdownhint_nc"	// no colors!
+	"warden_startcountdownhint_nc"	// no colors!
 	{
 
 		"en"		"Attention! The Warden Started a CountDown!"
 		"de"		"Aufgepasst! Der Warden hat einen CountDown gestartet!"
+	}
+	
+	"warden_stopcountdownhint"
+	{
+
+		"en"		"Attention! The Warden {purple}Started a GO! CountDown!"
+		"de"		"Aufgepasst! Der Warden hat einen {purple}GO! CountDown gestartet!"
+	}
+	
+	"warden_stopcountdownhint_nc"	// no colors!
+	{
+
+		"en"		"Attention! The Warden Started a STOP! CountDown! Hurry up!"
+		"de"		"Aufgepasst! Der Warden hat einen STOP! CountDown gestartet! Beeilt euch!"
 	}
 	
 	"warden_countdownstart"
@@ -248,8 +276,14 @@
 		"en"		"{purple}GO! {darkred}START!"
 		"de"		"{purple}GO! {darkred}START! {green}LOS!"
 	}
+		"warden_countdownstop"
+	{
+		"en"		"{purple}STOP! {darkred}END!"
+		"de"		"{purple}ENDE! {darkred}STOP! {green}Fertig!"
+	}
 	
-	"warden_countdownstartrunning"
+	
+	"warden_countdownrunning"
 	{
 		"en"		"a Countdown is {purple}allready in progress"
 		"de"		"Ein Countdown ist {purple}läuft bereits"
@@ -260,6 +294,13 @@
 
 		"en"		"GO! START!"
 		"de"		"GO! START! LOS!"
+	}
+	
+		"warden_countdownstop_nc"		// no colors!
+	{
+
+		"en"		"STOP! END!"
+		"de"		"HALT ENDE FERTIG!"
 	}
 	
 	"warden_noblockoff"

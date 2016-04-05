@@ -67,7 +67,8 @@ based/merged/used code/idea plugins:
 - sm_noblockon - Allows the warden to enable no block (for the warden ?)
 - sm_noblockon - Allows the warden to disable no block (for the warden ?)
 - sm_setff - Allows the warden to toggle friendly fire
-- sm_countdown - Allows the warden to start a Countdown
+- sm_startcountdown - Allows the warden to start a GO! Countdown
+- sm_stopcountdown - Allows the warden to start a STOP! Countdown
 - sm_killrandom - Allows the warden to kill a random T
 
 ```
@@ -91,6 +92,7 @@ based/merged/used code/idea plugins:
 - sm_warden_countdown: 0 - disabled, 1 - enable countdown for warden. Default 1
 - sm_warden_overlays: 0 - disabled, 1 - enable overlay for countdown. Default 1
 - sm_warden_overlaystart_path: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
+- sm_warden_overlaystop_path: Path to the stop Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/stop"
 - sm_wardencolor_enable: 0 - disabled, 1 - enable colored warden. Default 1
 - sm_wardencolor_red - What color to turn the warden into (set R, G and B values to 0 to disable). Default 0
 - sm_wardencolor_green - What color to turn the warden into (rGb): x - green value. Default 0
