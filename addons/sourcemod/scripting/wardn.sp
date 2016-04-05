@@ -237,7 +237,7 @@ public Action:Event_BulletImpact(Handle:hEvent,const String:sName[],bool:bDontBr
 				{
 					GetClientAimTargetPos(client, g_fMakerPos);
 					g_fMakerPos[2] += 5.0;
-					CPrintToChat(client, "{darkred}[Warden]{lime}New marker set.");
+					CPrintToChat(client, "%t %t", "warden_tag" , "warden_marker");
 				}
 			}
 			else if (GetClientButtons(client) & IN_SPEED) 
@@ -246,7 +246,7 @@ public Action:Event_BulletImpact(Handle:hEvent,const String:sName[],bool:bDontBr
 					{
 						GetClientAimTargetPos(client, g_fMakerPos);
 						g_fMakerPos[2] += 5.0;
-						CPrintToChat(client, "{darkred}[Warden]{lime}New marker set.");
+						CPrintToChat(client, "%t %t", "warden_tag" , "warden_marker");
 					}
 				}
 		}
@@ -500,6 +500,9 @@ public Action ExitWarden(int client, int args)
 				EmitSoundToAllAny(g_sSoundPath2);
 			}
 			ResetMarker();
+			g_iVoteCount = 0;
+			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
+			g_sHasVoted[0] = '\0';
 		}
 		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
 	}
@@ -526,7 +529,6 @@ public Action VoteWarden(int client,int args)
 					if (g_iVoteCount > playercount)
 					{
 						RemoveTheWarden(client);
-						g_iVoteCount = 0;
 					}
 					else CPrintToChatAll("%t %t", "warden_tag" , "warden_need", Missing, client);
 				}
@@ -808,6 +810,9 @@ void RemoveTheWarden(int client)
 		EmitSoundToAllAny(g_sSoundPath2);
 	}
 	ResetMarker();
+	g_iVoteCount = 0;
+	Format(g_sHasVoted, sizeof(g_sHasVoted), "");
+	g_sHasVoted[0] = '\0';
 }
 
 public Action:SetStartCountDown(client, args)

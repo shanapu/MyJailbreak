@@ -215,6 +215,13 @@
 		"de"		"Voting gegen den {purple}Warden{default} ist ausgeschaltet!"
 	}
 	
+	"warden_marker"
+	{
+
+		"en"		"New marker set."
+		"de"		"Neuer Marker wurde gesetzt."
+	}
+	
 	"warden_startcountdown_nc"	// no colors!
 	{
 		"#format"	"{1:i}"
