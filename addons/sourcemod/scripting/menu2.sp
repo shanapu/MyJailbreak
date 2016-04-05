@@ -415,7 +415,7 @@ public JBMenuHandler(Handle:menu, MenuAction:action, client, itemNum)
 		}
 		else if ( strcmp(info,"countdown") == 0 ) 
 		{
-			FakeClientCommand(client, "sm_countdown");
+			FakeClientCommand(client, "sm_startcountdown");
 			if(gc_bClose.BoolValue)
 			{
 				CloseHandle(menu);
