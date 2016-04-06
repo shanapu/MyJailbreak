@@ -99,7 +99,7 @@ public void OnPluginStart()
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_jihad_setw", "1", "0 - disabled, 1 - allow warden to set jihad round", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	gc_bSetA = AutoExecConfig_CreateConVar("sm_jihad_seta", "1", "0 - disabled, 1 - allow admin to set jihad round", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	gc_bVote = AutoExecConfig_CreateConVar("sm_jihad_vote", "1", "0 - disabled, 1 - allow player to vote for jihad", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	gc_iKey = AutoExecConfig_CreateConVar("sm_jihad_key", "2", "1 - Look weapon / 2 - walk / 3 - Secondary Attack");
+	gc_iKey = AutoExecConfig_CreateConVar("sm_jihad_key", "1", "1 - Look weapon / 2 - walk / 3 - Secondary Attack");
 	gc_iFreezeTime = AutoExecConfig_CreateConVar("sm_zombie_freezetime", "35", "Time freeze zombies");
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_jihad_roundtime", "5", "Round time for a single jihad round");
 	gc_iRoundLimits = AutoExecConfig_CreateConVar("sm_jihad_roundsnext", "3", "Rounds until event can be started again.");
