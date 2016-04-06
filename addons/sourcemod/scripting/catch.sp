@@ -610,15 +610,18 @@ public Action:Command_StartSprint(client, args)
 	{
 		if (!IsSprint)
 		{
-			if(gc_bSprint.BoolValue && client > 0 && IsClientInGame(client) && IsPlayerAlive(client) && GetClientTeam(client) > 1)
+			if (catched[client] = false;)
 			{
-				IsSprint = true;
-				SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", gc_fSpeed.FloatValue);
-				EmitSoundToClient(client, "player/suit_sprint.wav", SOUND_FROM_PLAYER, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, 0.8);
-				CPrintToChat(client, "%t %t", "catch_tag" ,"catch_sprint");
-				SprintTimer[client] = CreateTimer(gc_fTime.FloatValue, Timer_SprintEnd, client);
+				if(gc_bSprint.BoolValue && client > 0 && IsClientInGame(client) && IsPlayerAlive(client) && GetClientTeam(client) > 1)
+				{
+					IsSprint = true;
+					SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", gc_fSpeed.FloatValue);
+					EmitSoundToClient(client, "player/suit_sprint.wav", SOUND_FROM_PLAYER, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, 0.8);
+					CPrintToChat(client, "%t %t", "catch_tag" ,"catch_sprint");
+					SprintTimer[client] = CreateTimer(gc_fTime.FloatValue, Timer_SprintEnd, client);
+				}
+				return(Plugin_Handled);
 			}
-			return(Plugin_Handled);
 		}
 	}
 	else CPrintToChat(client, "%t %t", "catch_tag" , "catch_disabled");
