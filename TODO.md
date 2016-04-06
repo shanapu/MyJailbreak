@@ -36,6 +36,7 @@ must:
 - [x] warden: allow unvote
 - [x] new day: suicid bomber
 - [ ] jihad: sound to client
+- [ ] jihad: burn dead bodies
 - [x] warden: countdown
 - [ ] warden: ff not for ct
 - [x] playertags: as chat tag
@@ -51,6 +52,7 @@ must:
 - [x] Freeday: Damage disbaled 
 - [ ] clean up code 
 - [ ] comments
+- [ ] jihad: body counter
 - [ ] 
 - [ ] some polishing
 
@@ -67,6 +69,7 @@ want:
 - [x] noscope: dis/enable lowgrav
 - [x] noscope: set grav
 - [ ] warden: talkpower
+- [ ] jihad: set radius
 - [ ] countdown: start stop sound
 - [ ] warden: bomb toss https://github.com/KissLick/TeamGames/blob/master/addons/sourcemod/scripting/modules/TG_BombToss.sp
 - [ ] countdown: set time - or menu with differnt times?!?!

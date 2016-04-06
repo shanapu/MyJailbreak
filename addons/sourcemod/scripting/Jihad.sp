@@ -28,6 +28,7 @@ ConVar gc_bTag;
 ConVar gc_bSetW;
 ConVar gc_bSetA;
 ConVar gc_bVote;
+ConVar gc_iKey;
 ConVar gc_bSounds;
 ConVar gc_bOverlays;
 ConVar gc_iRoundLimits;
@@ -87,7 +88,7 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_jihad", VoteJiHad);
 	RegConsoleCmd("sm_jihadfreeze", VoteJiHad);
 	RegConsoleCmd("sm_sprint", Command_StartSprint, "Starts the sprint.");
-	RegConsoleCmd("sm_bombjihad", Command_BombJihad, "Starts the bomb.");
+	RegConsoleCmd("sm_makeboom", Command_BombJihad, "Starts the bomb.");
 	
 	//AutoExecConfig
 	AutoExecConfig_SetFile("MyJailbreak_jihad");
@@ -98,6 +99,7 @@ public void OnPluginStart()
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_jihad_setw", "1", "0 - disabled, 1 - allow warden to set jihad round", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	gc_bSetA = AutoExecConfig_CreateConVar("sm_jihad_seta", "1", "0 - disabled, 1 - allow admin to set jihad round", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	gc_bVote = AutoExecConfig_CreateConVar("sm_jihad_vote", "1", "0 - disabled, 1 - allow player to vote for jihad", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	gc_iKey = AutoExecConfig_CreateConVar("sm_jihad_key", "2", "1 - Look weapon / 2 - walk / 3 - Secondary Attack");
 	gc_iFreezeTime = AutoExecConfig_CreateConVar("sm_zombie_freezetime", "35", "Time freeze zombies");
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_jihad_roundtime", "5", "Round time for a single jihad round");
 	gc_iRoundLimits = AutoExecConfig_CreateConVar("sm_jihad_roundsnext", "3", "Rounds until event can be started again.");
@@ -135,6 +137,7 @@ public void OnPluginStart()
 	gc_sOverlayFreeze.GetString(g_sOverlayFreeze , sizeof(g_sOverlayFreeze));
 	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
 	
+	AddCommandListener(Command_LAW, "+lookatweapon");
 	
 	IsSprint = false;
 	IsJiHad = false;
@@ -145,6 +148,8 @@ public void OnPluginStart()
 	for(int i = 1; i <= MaxClients; i++)
 		if(IsClientInGame(i)) OnClientPutInServer(i);
 }
+
+
 
 public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
@@ -409,6 +414,19 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 	{
 		if (g_iRoundLimits > 0) g_iRoundLimits--;
 	}
+}
+
+public Action Command_LAW(int client, const char[] command, int argc)
+{
+	if(IsJiHad)
+	{
+		if(gc_iKey.IntValue == 1)
+		{
+			Command_BombJihad(client, 0);
+		}
+	}
+	
+	return Plugin_Continue;
 }
 
 public Action:JiHad(Handle:timer)
@@ -692,9 +710,23 @@ public OnGameFrame()
 {
 	if (IsJiHad)
 	{
-		if(gc_bSprintUse.BoolValue)
+		for(new i = 1; i <= MaxClients; i++)
 		{
-			for(new i = 1; i <= MaxClients; i++)
+			if(gc_iKey.IntValue == 2)
+			{
+				if(IsClientInGame(i) && (GetClientButtons(i) & IN_SPEED))
+				{
+					Command_BombJihad(i, 0);
+				}
+			}
+			else if(gc_iKey.IntValue == 3)
+			{
+				if(IsClientInGame(i) && (GetClientButtons(i) & IN_ATTACK2))
+				{
+					Command_BombJihad(i, 0);
+				}
+			}
+			if(gc_bSprintUse.BoolValue)
 			{
 				if(IsClientInGame(i) && (GetClientButtons(i) & IN_USE))
 				{
@@ -702,9 +734,9 @@ public OnGameFrame()
 				}
 			}
 		}
-		return;
 	}
 	return;
+
 }
 
 ResetSprint(client)
