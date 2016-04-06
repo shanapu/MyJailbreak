@@ -15,12 +15,14 @@
 
 //Defines
 #define PLUGIN_VERSION "0.1"
+#define CLIENT_SPRINTUSING   (1<<0)
+#define CLIENT_SPRINTUNABLE  (1<<1)
 
 //Booleans
 bool IsJiHad;
 bool StartJiHad;
 bool BombActive;
-bool IsSprint;
+
 
 //ConVars
 ConVar gc_bPlugin;
@@ -52,6 +54,7 @@ int g_iOldRoundTime;
 int g_iRoundLimits;
 int g_iFreezeTime;
 int JiHadRound;
+int iCLIENT_STATUS[MAXPLAYERS+1];
 
 //Handles
 Handle SprintTimer[MAXPLAYERS+1];
@@ -139,7 +142,7 @@ public void OnPluginStart()
 	
 	AddCommandListener(Command_LAW, "+lookatweapon");
 	
-	IsSprint = false;
+
 	IsJiHad = false;
 	StartJiHad = false;
 	BombActive = false;
@@ -187,7 +190,7 @@ public void OnMapStart()
 	g_iVoteCount = 0;
 	JiHadRound = 0;
 	IsJiHad = false;
-	IsSprint = false;
+
 	StartJiHad = false;
 	BombActive = false;
 	g_iRoundLimits = gc_iRoundWait.IntValue;
@@ -392,7 +395,7 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 					if (IsClientInGame(client))
 					{
 						StripAllWeapons(client);
-						
+						iCLIENT_STATUS[client] = 0;
 						SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
 						SendPanelToClient(JiHadMenu, client, Pass, 15);
 						
@@ -586,7 +589,7 @@ public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 		for(int client=1; client <= MaxClients; client++)
 		{
 			if (IsClientInGame(client)) SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
-			
+			iCLIENT_STATUS[client] = 0;
 		}
 		if (FreezeTimer != null) KillTimer(FreezeTimer);
 		
@@ -596,6 +599,7 @@ public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 		StartJiHad = false;
 		BombActive = false;
 		JiHadRound = 0;
+		
 		Format(g_sHasVoted, sizeof(g_sHasVoted), "");
 		SetCvar("sm_hosties_lr", 1);
 		SetCvar("sm_war_enable", 1);
@@ -692,18 +696,15 @@ public Action:Command_StartSprint(client, args)
 {
 	if (IsJiHad)
 	{
-		if (!IsSprint)
+		if(gc_bSprint.BoolValue && client > 0 && IsClientInGame(client) && IsPlayerAlive(client) && GetClientTeam(client) > 1 && !(iCLIENT_STATUS[client] & CLIENT_SPRINTUSING) && !(iCLIENT_STATUS[client] & CLIENT_SPRINTUNABLE))
 		{
-			if(gc_bSprint.BoolValue && client > 0 && IsClientInGame(client) && IsPlayerAlive(client) && GetClientTeam(client) > 1)
-			{
-				IsSprint = true;
-				SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", gc_fSpeed.FloatValue);
-				EmitSoundToClient(client, "player/suit_sprint.wav", SOUND_FROM_PLAYER, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, 0.8);
-				CPrintToChat(client, "%t %t", "jihad_tag" ,"jihad_sprint");
-				SprintTimer[client] = CreateTimer(gc_fTime.FloatValue, Timer_SprintEnd, client);
-			}
-			return(Plugin_Handled);
+			iCLIENT_STATUS[client] |= CLIENT_SPRINTUSING | CLIENT_SPRINTUNABLE;
+			SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", gc_fSpeed.FloatValue);
+			EmitSoundToClient(client, "player/suit_sprint.wav", SOUND_FROM_PLAYER, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, 0.8);
+			CPrintToChat(client, "%t %t", "jihad_tag" ,"jihad_sprint");
+			SprintTimer[client] = CreateTimer(gc_fTime.FloatValue, Timer_SprintEnd, client);
 		}
+		return(Plugin_Handled);
 	}
 	else CPrintToChat(client, "%t %t", "jihad_tag" , "jihad_disabled");
 	return(Plugin_Handled);
@@ -748,13 +749,18 @@ ResetSprint(client)
 	{
 		KillTimer(SprintTimer[client]);
 		SprintTimer[client] = null;
-		IsSprint = false;
 	}
 
 	if(GetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue") != 1)
 	{
 		SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
 	}
+	
+	if(iCLIENT_STATUS[client] & CLIENT_SPRINTUSING)
+	{
+		iCLIENT_STATUS[client] &= ~ CLIENT_SPRINTUSING;
+	}
+
 	return;
 }
 
@@ -763,10 +769,10 @@ public Action:Timer_SprintEnd(Handle:timer, any:client)
 	SprintTimer[client] = null;
 	
 	
-	if(IsClientInGame(client))
+	if(IsClientInGame(client) && (iCLIENT_STATUS[client] & CLIENT_SPRINTUSING))
 	{
 		SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
-		
+		iCLIENT_STATUS[client] &= ~ CLIENT_SPRINTUSING;
 		if(IsPlayerAlive(client) && GetClientTeam(client) > 1)
 		{
 			SprintTimer[client] = CreateTimer(gc_fCooldown.FloatValue, Timer_SprintCooldown, client);
@@ -778,7 +784,11 @@ public Action:Timer_SprintEnd(Handle:timer, any:client)
 public Action:Timer_SprintCooldown(Handle:timer, any:client)
 {
 	SprintTimer[client] = null;
-	IsSprint = false;
+	
+	if(IsClientInGame(client) && (iCLIENT_STATUS[client] & CLIENT_SPRINTUNABLE))
+	{
+		iCLIENT_STATUS[client] &= ~ CLIENT_SPRINTUNABLE;
+	}
 	return;
 }
 
@@ -786,7 +796,9 @@ public Event_PlayerSpawn(Handle:event,const String:name[],bool:dontBroadcast)
 {
 	new iClient = GetClientOfUserId(GetEventInt(event, "userid"));
 	ResetSprint(iClient);
+	iCLIENT_STATUS[iClient] &= ~ CLIENT_SPRINTUNABLE;
 	return;
+
 }
 
 stock StripAllWeapons(iClient)
