@@ -4,6 +4,7 @@ bugs:
 
 - [ ] can use sometimes weapon menu onfirst round with plugin disabled?!´
 - [ ] warden model glitch sometimes through floor? (blackscreen) model feature removed
+- [ ] catch: sprint bug release T
 
 must:
 
@@ -32,6 +33,7 @@ must:
 - [ ] Marker: timer disaprears
 - [x] warden: model
 - [x] warden: allow unvote
+- [x] new day: suicid bomber
 - [x] warden: countdown
 - [ ] warden: ff not for ct
 - [x] playertags: as chat tag
@@ -54,6 +56,7 @@ want:
 - [ ] warden: unwarden roundstart and delay old warden.
 - [ ] warden: icon above head (material or model?)
 - [x] warden: markers
+- [ ] new day: A day where you spawn with one single low random weapon and get 500 HP :D
 - [x] warden: improve markers (2 kind)
 - [ ] warden: limits
 - [ ] playertags: define colorize chat tag

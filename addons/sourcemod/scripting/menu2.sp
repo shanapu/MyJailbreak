@@ -545,6 +545,7 @@ public EventMenuHandler(Handle:menu, MenuAction:action, client, itemNum)
 	}
 	else if (action == MenuAction_End)
 	{
-		CloseHandle(menu);
+		CloseHandle(menu);       //todo: Displaying call stack trace for plugin "MyJailbreak/menu2.smx": L 04/06/2016 - 01:13:24: [SM]   [0]  Line 548, menu2.sp::EventMenuHandler()
+
 	}
 }

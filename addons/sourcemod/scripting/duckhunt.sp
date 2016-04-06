@@ -358,7 +358,7 @@ public Action:OnWeaponCanUse(client, weapon)
 		char sWeapon[32];
 		GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
 
-		if((GetClientTeam(client) == 2 && StrEqual(sWeapon, "weapon_hegrenade")) || (GetClientTeam(client) == 3 && StrEqual(sWeapon, "weapon_nova")) || StrEqual(sWeapon, "weapon_knife"))
+		if((GetClientTeam(client) == 2 && StrEqual(sWeapon, "weapon_hegrenade")) || (GetClientTeam(client) == 3 && StrEqual(sWeapon, "weapon_nova")))
 		{
 		
 			if (IsClientInGame(client) && IsPlayerAlive(client))

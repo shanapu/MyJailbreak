@@ -36,6 +36,8 @@ A "rewrite" version of [Franugs Special Jailbreak](https://github.com/Franc1sco/
 ## **used code from: ecca, Zipcore, ESK0, Floody.de, Franc1sco, bara, headline, ReFlexPoison** and many other I cant remember!
 # THANKS FOR MAKING FREE SOFTWARE!
 
+# Much Thanks: 
+## UartigZone, Got Sw4g? for bughunting and great ideas!
 
 #### Warden
 
