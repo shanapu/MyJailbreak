@@ -35,6 +35,7 @@ must:
 - [x] warden: model
 - [x] warden: allow unvote
 - [x] new day: suicid bomber
+- [ ] jihad: activate bomb when cells open 
 - [ ] jihad: sound to client
 - [ ] jihad: burn dead bodies
 - [x] warden: countdown
