@@ -494,6 +494,9 @@ public Action DoDaBomb( Handle timer, any client )
 			//Formula used: damage = 200 - (d/2)
 			int damage = RoundToFloor(200.0 - (distance / 2.0));
 			
+			if (damage <= 0) //this player was not damaged 
+			continue;
+			
 			//Damage the surrounding players
 			int curHP = GetClientHealth(i);
 			if (curHP - damage <= 0) 
@@ -504,7 +507,7 @@ public Action DoDaBomb( Handle timer, any client )
 			else
 			{ //Survivor
 				SetEntityHealth(i, curHP - damage);
-				IgniteEntity(i, 5.0);
+				IgniteEntity(i, 2.0);
 			}
 		}
 	}

@@ -4,8 +4,8 @@ bugs:
 
 - [ ] can use sometimes weapon menu onfirst round with plugin disabled?!´
 - [ ] warden model glitch sometimes through floor? (blackscreen) model feature removed
-- [ ] catch: sprint bug release T
-- [ ] jihad: Hp & burn for not nearby
+- [x] catch: sprint bug release T
+- [x] jihad: Hp & burn for not nearby
 
 must:
 
@@ -35,6 +35,7 @@ must:
 - [x] warden: model
 - [x] warden: allow unvote
 - [x] new day: suicid bomber
+- [ ] jihad: sound to client
 - [x] warden: countdown
 - [ ] warden: ff not for ct
 - [x] playertags: as chat tag
@@ -42,6 +43,7 @@ must:
 - [ ] all days: restrict map heal station
 - [ ] catch: T win when time run out
 - [ ] hide: T win when time run out
+- [ ] jihad: CT win when time run out
 - [ ] warden: clean changeback model unwarden
 - [x] move FF from menu to warden
 - [x] move randomkill from menu to warden
