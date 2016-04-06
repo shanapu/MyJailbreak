@@ -169,7 +169,11 @@ void PrecacheOverlayAnyDownload(char[] sOverlay)
 public OnClientPutInServer(client)
 {
 	SDKHook(client, SDKHook_WeaponCanUse, OnWeaponCanUse);
-	SDKHook(client, SDKHook_PreThink, OnPreThink);
+
+	if (IsNoScope)
+	{
+		SDKHook(client, SDKHook_PreThink, OnPreThink);
+	}
 }
 
 public Action SetNoScope(int client,int args)
@@ -336,22 +340,19 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 
 public Action:OnWeaponCanUse(client, weapon)
 {
-	if(IsNoScope == true)
-	{
+	char sWeapon[32];
+	GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
 
-		char sWeapon[32];
-		GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
-
-		if(StrEqual(sWeapon, "weapon_ssg08"))
+	if(!StrEqual(sWeapon, "weapon_ssg08"))
 		{
-		
 			if (IsClientInGame(client) && IsPlayerAlive(client))
 			{
-				return Plugin_Continue;
+				if(IsNoScope)
+				{
+					return Plugin_Handled;
+				}
 			}
 		}
-		return Plugin_Handled;
-	}
 	return Plugin_Continue;
 }
 
@@ -442,6 +443,7 @@ public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 		SetCvar("sm_zombie_enable", 1);
 		SetCvar("sm_freeday_enable", 1);
 		SetCvar("sm_hide_enable", 1);
+		SetCvar("sm_catch_enable", 1);
 		SetCvar("sm_dodgeball_enable", 1);
 		SetCvar("sm_duckhunt_enable", 1);
 		SetCvar("sm_ffa_enable", 1);

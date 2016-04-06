@@ -610,7 +610,7 @@ public Action:Command_StartSprint(client, args)
 	{
 		if (!IsSprint)
 		{
-			if (catched[client] = false;)
+			if (catched[client] == false)
 			{
 				if(gc_bSprint.BoolValue && client > 0 && IsClientInGame(client) && IsPlayerAlive(client) && GetClientTeam(client) > 1)
 				{
