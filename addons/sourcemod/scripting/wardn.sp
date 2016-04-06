@@ -1112,40 +1112,43 @@ GetRandomPlayer(team)
 
 public Action:ccounter(Handle:timer, Handle:pack)
 {
-	--opentimer;
-	if(opentimer < 1)
+	if(gc_bPlugin.BoolValue)
 	{
-	if(warden_exist() != 1)	
-	{
-		if(gc_bOpenTimer.BoolValue)	
+		--opentimer;
+		if(opentimer < 1)
 		{
-		SJD_OpenDoors(); 
-		CPrintToChatAll("%t %t", "warden_tag" , "warden_openauto");
-		
-		if (countertime != null)
+		if(warden_exist() != 1)	
+		{
+			if(gc_bOpenTimer.BoolValue)	
+			{
+			SJD_OpenDoors(); 
+			CPrintToChatAll("%t %t", "warden_tag" , "warden_openauto");
+			
+			if (countertime != null)
+				KillTimer(countertime);
+			
+			countertime = null;
+			}
+			
+		}else 
+		if(gc_bOpenTimer.BoolValue)
+			{
+			if(gc_bOpenTimerWarden.BoolValue)
+			{
+			SJD_OpenDoors(); 
+			CPrintToChatAll("%t %t", "warden_tag" , "warden_openauto");
+			
+			if (countertime != null)
+				KillTimer(countertime);
+			
+			countertime = null;
+			}else
+		CPrintToChatAll("%t %t", "warden_tag" , "warden_opentime"); 
+			if (countertime != null)
 			KillTimer(countertime);
-		
-		countertime = null;
+			countertime = null;
+			} 
 		}
-		
-	}else 
-	if(gc_bOpenTimer.BoolValue)
-		{
-		if(gc_bOpenTimerWarden.BoolValue)
-		{
-		SJD_OpenDoors(); 
-		CPrintToChatAll("%t %t", "warden_tag" , "warden_openauto");
-		
-		if (countertime != null)
-			KillTimer(countertime);
-		
-		countertime = null;
-		}else
-	CPrintToChatAll("%t %t", "warden_tag" , "warden_opentime"); 
-		if (countertime != null)
-		KillTimer(countertime);
-		countertime = null;
-		} 
 	}
 }
 
