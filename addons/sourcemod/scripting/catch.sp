@@ -299,7 +299,7 @@ public Action VoteCatch(int client,int args)
 						}
 						else CPrintToChat(client, "%t %t", "catch_tag" , "catch_voted");
 					}
-					else CPrintToChat(client, "%t %t", "catch_tag" , "war_wait", g_iRoundLimits);
+					else CPrintToChat(client, "%t %t", "catch_tag" , "catch_wait", g_iRoundLimits);
 				}
 				else CPrintToChat(client, "%t %t", "catch_tag" , "catch_progress");
 			}
