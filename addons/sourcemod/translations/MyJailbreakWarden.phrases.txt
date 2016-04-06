@@ -8,6 +8,7 @@
 	"warden_new"
 	{
 		"#format"	"{1:N}"
+		"da"		"{purple}{1}{default} er nu warden!"	
 		"en"		"{purple}{1}{default} has become the warden of this prison."
 		"es"		"{purple}{1}{default} Es ahora el AlcÃ¡ide de esta PrisiÃ³n."
 		"pt"		"{purple}{1}{default} Agora, o diretor da prisão.."
@@ -18,6 +19,7 @@
 	"warden_new_nc"		// no colors!
 	{
 		"#format"	"{1:N}"
+		"da"		"{1} er nu warden!"		
 		"en"		"{1} has become the warden of this prison."
 		"es"		"{1} Es ahora el AlcÃ¡ide de esta PrisiÃ³n."
 		"pt"		"{1} Agora, o diretor da prisão.."
@@ -27,7 +29,7 @@
 	
 	"warden_playerdead"
 	{
-
+		"da"		"Kun {purple}spillere i live{default} kan blive warden."
 		"en"		"only {purple}alive players{default} may become warden."
 		"es"		"SÃ³lo los {purple}jugadores vivos{default}, pueden ser el AlcÃ¡ide."
 		"pt"		"Apenas os {purple}jogadores podem{default} viver o diretor.."
@@ -37,7 +39,7 @@
 	
 	"warden_ctsonly"
 	{
-
+		"da"		"Kun {purple}Counter-Terrorister{default} kan blive warden."
 		"en"		"only {purple}Counter-Terrorists{default} may become warden."
 		"es"		"SÃ³lo los {purple}Anti-Terroristas{default} pueden ser el AlcÃ¡ide."
 		"pt"		"Apenas o diretor pode ser {purple}AntiTerrorista{default}."
@@ -48,6 +50,7 @@
 	"warden_exist"
 	{
 		"#format"	"{1:N}"
+		"da"		"Nuværende Warden er: {purple}{1}{default}"		
 		"en"		"current warden is: {purple}{1}{default}"
 		"es"		"AlcÃ¡ide Actual: {purple}{1}{default}"
 		"pt"		"Atual diretor: {purple}{1}{default}"
@@ -58,6 +61,7 @@
 	"warden_retire"
 	{
 		"#format"	"{1:N}"
+		"da"		"{purple}{1}{default} har valgt at stoppe som warden. Andre CT kan skrive !w for at blive warden."		
 		"en"		"{purple}{1}{default} has decided to retire. You may now choose a new one."
 		"es"		"{purple}{1}{default} ha decidido jubilarse. Ahora toca elegir uno nuevo."
 		"pt"		"{purple}{1}{default} o atual diretor, decidiu se aposentar. Agora começa a escolher um novo.."
@@ -68,6 +72,7 @@
 	"warden_retire_nc"	// no colors!
 	{
 		"#format"	"{1:N}"
+		"da"		"{1} har valgt at stoppe som warden. Andre CT kan skrive !w for at blive warden."			
 		"en"		"{1} has decided to retire. You may now choose a new one."
 		"es"		"{1} ha decidido jubilarse. Ahora toca elegir uno nuevo."
 		"pt"		"{1} o atual diretor, decidiu se aposentar. Agora começa a escolher um novo.."
@@ -77,7 +82,7 @@
 	
 	"warden_notwarden"
 	{
-
+		"da"		"Du SKAL være {purple}Warden{default} for at bruge denne command."
 		"en"		"You must be the {purple}Warden{default} to use this command."
 		"de"		"Du musst {purple}Warden{default} sein um diesen Befehl zu benutzten."
 	}
@@ -85,6 +90,7 @@
 	"warden_dead"
 	{
 
+		"da"		"Warden er nu {darkred}DØD{default}. Andre CT kan skrive !w for at blive warden."	
 		"en"		"the warden are now {darkred}dead{default}. You may now choose a new one."
 		"es"		"El AlcÃ¡ide ha {darkred}dead{default}! Ahora toca elegir uno juevo."
 		"pt"		"O diretor está {darkred}dead{default}, agora começa a escolher um novo."
@@ -94,7 +100,7 @@
 	
 	"warden_dead_nc"	// no colors!
 	{
-
+		"da"		"Warden er nu DØD. Andre CT kan skrive !w for at blive warden."	
 		"en"		"the warden are now dead. You may now choose a new one."
 		"es"		"El AlcÃ¡ide ha muerto! Ahora toca elegir uno juevo."
 		"pt"		"O diretor está morto, agora começa a escolher um novo."
@@ -104,7 +110,7 @@
 	
 	"warden_disconnected"
 	{
-
+		"da"		"Warden har {purple}disconnected{default}. Andre CT kan skrive !w for at blive warden."
 		"en"		"the warden has {purple}disconnected{default}. You may now choose a new one."
 		"es"		"El AlcÃ¡ide ha desertado. Ahora toca elegir uno nuevo."
 		"pt"		"O diretor deixou o jogo. Agora começa a escolher um novo."
@@ -114,7 +120,7 @@
 	
 	"warden_disconnected_nc"	// no colors!
 	{
-
+		"da"		"Warden har disconnected. Andre CT kan skrive !w for at blive warden."
 		"en"		"the warden has disconnected. You may now choose a new one."
 		"es"		"El AlcÃ¡ide ha desertado. Ahora toca elegir uno nuevo."
 		"pt"		"O diretor deixou o jogo. Agora começa a escolher um novo."
@@ -125,6 +131,7 @@
 	"warden_removed"
 	{
 		"#format"	"{1:N},{2:N}"
+		"da"		"Admin: {purple}{1}{default} har fyret Warden: {2}"		
 		"en"		"Admin: {purple}{1}{default} fired Warden: {2}"
 		"es"		"Administrador: {purple}{1}{default} ha prejubilado al AlcÃ¡ide: {2}"
 		"pt"		"O Administrador do: {purple}{1}{default} o diretor se aposentou cedo: {2}"
@@ -135,6 +142,7 @@
 	"warden_removed_nc"		// no colors!
 	{
 		"#format"	"{1:N},{2:N}"
+		"da"		"Admin: {1} har fyret Warden: {2}"		
 		"en"		"Admin: {1} fired Warden: {2}"
 		"es"		"Administrador: {1} ha prejubilado al AlcÃ¡ide: {2}"
 		"pt"		"O Administrador do: {{1} o diretor se aposentou cedo: {2}"
@@ -144,7 +152,7 @@
 	
 	"warden_noexist"
 	{
-
+		"da"		"Der var {purple}ingen warden{default} at fyre."
 		"en"		"there was {purple}no warden{default} to fire."
 		"es"		"Actualmente no existe ningÃºn AlcÃ¡ide en la prisiÃ³n."
 		"pt"		"Atualmente não há carcereiro na prisão."
@@ -154,7 +162,7 @@
 	
 	"warden_disabled"
 	{
-
+		"da"		"Warden er {purple}deaktiveret{default}."
 		"en"		"Warden is {purple}disabled{default}."
 		"de"		"Warden ist {purple}ausgeschaltet{default}."
 	}
@@ -162,41 +170,42 @@
 	"warden_adminset"
 	{
 		"#format"	"{1:N}"
+		"da"		"Admin: {purple}{1}{default} er warden - Valgt af admin!"		
 		"en"		"Admin: {purple}{1}{default} set as Warden"
 		"de"		"Admin: {purple}{1}{default} wurde zum Warden ernannt"
 	}
 	
 	"warden_dooropen"
 	{
-
+		"da"		"Warden har {purple}åbnet{default} cellerne."
 		"en"		"Warden has {purple}open{default} the cells."
 		"de"		"Warden hat hat die Zellentüren {purple}geöffnet{default}."
 	}
 	
 	"warden_doorclose"
 	{
-
+		"da"		"Warden har {purple}lukket{default} cellerne."
 		"en"		"Warden has {purple}close{default} the cells."
 		"de"		"Warden hat hat die Zellentüren {purple}geschlossen{default}."
 	}
 	
 	"warden_openauto"
 	{
-
+		"da"		"Dørene har {purple}åbnet automatisk{default}"
 		"en"		"cell doors {purple}open automaticly{default}"
 		"de"		"Zellentüren wurden {purple}automatisch geöffnet{default}"
 	}
 	
 	"warden_opentime"
 	{
-
+		"da"		"Nu skulle {purple}celle dørene{default} være åbne!"
 		"en"		"Now, the {purple}cell doors{default} should be open"
 		"de"		"jetzt sollten zeitlich die {purple}Zellen{default} geöffnet werden"
 	}
 	
 	"warden_ffison"
 	{
-
+		"da"		"friendly fire {purple}aktiveret!"
 		"en"		"friendly fire {purple}enabled"
 		"de"		"Friendly Fire {purple}ist AN!"
 	}
@@ -204,20 +213,21 @@
 	"warden_ffisoff"
 	{
 		"#format"		""
+		"da"			"friendly fire {purple}deaktiveret!"		
 		"en"			"friendly fire {purple}disabled"
 		"de"			"Friendly Fire {purple}ist AUS!"
 	}
 	
 	"warden_voting"
 	{
-
+		"da"		"Afstemning om at kick {purple}warden{default} er deaktiveret!"
 		"en"		"Voting for kick {purple}warden{default} is disabled"
 		"de"		"Voting gegen den {purple}Warden{default} ist ausgeschaltet!"
 	}
 	
 	"warden_marker"
 	{
-
+		"da"		"Nyt område er sat!"
 		"en"		"New marker set."
 		"de"		"Neuer Marker wurde gesetzt."
 	}
@@ -225,6 +235,7 @@
 	"warden_startcountdown_nc"	// no colors!
 	{
 		"#format"	"{1:i}"
+		"da"		"Starter om {1} sekunder!"		
 		"en"		"Start in {1} seconds!"
 		"de"		"Start in {1} Sekunden!"
 	}
@@ -232,6 +243,7 @@
 		"warden_stopcountdown_nc"	// no colors!
 	{
 		"#format"	"{1:i}"
+		"da"		"Stopper om {1} sekunder!"		
 		"en"		"Stop/End in {1} seconds!"
 		"de"		"Stop/Ende in {1} Sekunden!"
 	}
@@ -239,6 +251,7 @@
 	"warden_startcountdown"
 	{
 		"#format"	"{1:i}"
+		"da"		"Starter om {purple}{1}{default} sekunder!"		
 		"en"		"Start in {purple}{1}{default} seconds!"
 		"de"		"Start in {purple}{1}{default} Sekunden!"
 	}
@@ -246,58 +259,61 @@
 	"warden_stopcountdown"
 	{
 		"#format"	"{1:i}"
+		"da"		"Stopper om {purple}{1}{default} sekunder!"		
 		"en"		"Stop in {purple}{1}{default} seconds!"
 		"de"		"Stop in {purple}{1}{default} Sekunden!"
 	}
 	
 	"warden_startcountdownhint"
 	{
-
+		"da"		"ADVARSEL! Warden har {purple}startet en CountDown!"
 		"en"		"Attention! The Warden {purple}Started a START! CountDown!"
 		"de"		"Aufgepasst! Der Warden hat einen {purple}START! CountDown gestartet!"
 	}
 	
 	"warden_startcountdownhint_nc"	// no colors!
 	{
-
+		"da"		"ADVARSEL! Warden har startet en CountDown!"
 		"en"		"Attention! The Warden Started a START! CountDown!"
 		"de"		"Aufgepasst! Der Warden hat einen START! CountDown gestartet!"
 	}
 	
 	"warden_startstopcountdownhint"
 	{
-
+		"da"		"ADVARSEL! Warden har {purple}startet en START/STOP CountDown!"
 		"en"		"Attention! The Warden {purple}Started a START! / STOP! CountDown!"
 		"de"		"Aufgepasst! Der Warden hat einen {purple}START! / STOP! CountDown gestartet!"
 	}
 	
 	"warden_startstopcountdownhint_nc"	// no colors!
 	{
-
+		"da"		"ADVARSEL! Warden har startet en START/STOP CountDown!"
 		"en"		"Attention! The Warden Started a START! / STOP! CountDown!"
 		"de"		"Aufgepasst! Der Warden hat einen START! / STOP! CountDown gestartet!"
 	}
 	"warden_stopcountdownhint"
 	{
-
+		"da"		"ADVARSEL! Warden har {purple}STOPPET en CountDown!"
 		"en"		"Attention! The Warden {purple}Started a STOP! CountDown!"
 		"de"		"Aufgepasst! Der Warden hat einen {purple}STOP! CountDown gestartet!"
 	}
 	
 	"warden_stopcountdownhint_nc"	// no colors!
 	{
-
+		"da"		"ADVARSEL! Warden har startet et STOP CountDown. Skynd dig!"
 		"en"		"Attention! The Warden Started a STOP! CountDown! Hurry up!"
 		"de"		"Aufgepasst! Der Warden hat einen STOP! CountDown gestartet! Beeilt euch!"
 	}
 	
 	"warden_countdownstart"
 	{
+		"da"		"{purple}GO! {darkred}START! {green}AFSTED!"	
 		"en"		"{purple}GO! {darkred}START!"
 		"de"		"{purple}GO! {darkred}START! {green}LOS!"
 	}
 		"warden_countdownstop"
 	{
+		"da"		"{purple}STOP! {darkred}SLUT! {green}AFSLUTTET!"	
 		"en"		"{purple}STOP! {darkred}END!"
 		"de"		"{purple}ENDE! {darkred}STOP! {green}Fertig!"
 	}
@@ -305,34 +321,35 @@
 	
 	"warden_countdownrunning"
 	{
-		"en"		"a Countdown is {purple}allready in progress"
+		"da"		"En countdown er {purple}allerede i gang!"	
+		"en"		"a Countdown is {purple}already in progress"
 		"de"		"Ein Countdown ist {purple}läuft bereits"
 	}
 	
 	"warden_countdownstart_nc"		// no colors!
 	{
-
+		"da"		"GO! START!"
 		"en"		"GO! START!"
 		"de"		"GO! START! LOS!"
 	}
 	
 		"warden_countdownstop_nc"		// no colors!
 	{
-
+		"da"		"STOP! SLUT!"
 		"en"		"STOP! END!"
 		"de"		"HALT ENDE FERTIG!"
 	}
 	
 	"warden_noblockoff"
 	{
-
+		"da"		"Warden har {purple}deaktiveret NOBLOCK!"
 		"en"		"the warden set {purple}noblock off!"
 		"de"		"der Warden hat {purple}noblock ausgeschaltet!"
 	}
 	
 	"warden_noblockon"
 	{
-
+		"da"		"Warden har {purple}aktiveret NOBLOCK!"
 		"en"		"the warden set {purple}noblock on!"
 		"de"		"der Warden hat {purple}noblock eingeschaltet!"
 	}
@@ -340,41 +357,47 @@
 	"warden_need"
 	{
 		"#format"	"{1:i}"
+		"da"		"{1} afstemninger tilbage til {darkred}kick warden"		
 		"en"		"{1} votes left to {darkred}kick warden"
 		"de"		"noch {1} votes bis der {darkred}warden{default} geht"
 	}
 	
 	"warden_voted"
 	{
-
-		"en"		"You allready voted against the {purple}warden{default}"
+		"da"		"Du har allerede stemt på at kicke {purple}warden{default}"
+		"en"		"You already voted against the {purple}warden{default}"
 		"de"		"du hast schon {purple}gegen den Warden{default} gestimmt"
 	}
 	
 	"warden_israndomdead"
 	{
 		"#format"		"{1:n}"
+		"da"			"{1} blev dræbt af warden - Random!"		
 		"en"			"{1} was killed randomly"
 		"de"			"{1} wurde als Zufallskanidat getötet"
 	}
 	
 	"warden_cdmenu_Title"
 	{
+		"da"		"Countdown Menu"	
 		"en"		"Countdown Menu"
 		"de"		"Countdown Menu"
 	}
 		"warden_cdmenu_start"
 	{
+		"da"		"Start Countdown"	
 		"en"		"Start Countdown"
 		"de"		"Start Countdown"
 	}
 		"warden_cdmenu_stop"
 	{
+		"da"		"Stop Countdown"	
 		"en"		"Stop Countdown"
 		"de"		"Stop Countdown"
 	}
 		"warden_cdmenu_startstop"
 	{
+		"da"		"Start Stop Countdown"	
 		"en"		"Start Stop Countdown"
 		"de"		"Start Stop Countdown"
 	}

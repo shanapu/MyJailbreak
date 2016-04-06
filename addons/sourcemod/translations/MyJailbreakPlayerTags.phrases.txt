@@ -2,31 +2,37 @@
 {
 	"tags_TA"
 	{
-		"en"		"[Terror.Admin]"
+		"da"		"[Fange & Admin]"	
+		"en"		"[Prisoner & Admin]"
 	}
 	
 	"tags_T"
 	{
-		"en"		"[Terror]"
+		"en"		"[Fange]"	
+		"en"		"[Prisoner]"
 	}
 	
 	"tags_CTA"
 	{
-		"en"		"[Guard.Admin]"
+		"da"		"[Vagt & Admin]"	
+		"en"		"[Guard & Admin]"
 	}
 	
 	"tags_CT"
 	{
+		"da"		"[Vagt]"	
 		"en"		"[Guard]"
 	}
 	
 	"tags_WA"
 	{
-		"en"		"[Warden.Admin]"
+		"da"		"[Warden & Admin]"	
+		"en"		"[Warden & Admin]"
 	}
 	
 	"tags_W"
 	{
+		"da"		"[Warden]"	
 		"en"		"[Warden]"
 	}
 }

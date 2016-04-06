@@ -7,82 +7,93 @@
 	"noscope_need"
 	{
 		"#format"	"{1:i},{2:N}"
-		"en"		"{purple}{2}{default} has votet. {purple}{1}{default} votes left to {darkred}noscope"
+		"da"		"{purple}{2}{default} har afstemt!. {purple}{1}{default} afstemninger tilbage til {darkred}noscope"		
+		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes left to {darkred}noscope"
 		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}noscope{default} beginnt"
 	}
 	"noscope_twin_nc"
 	{
+		"da"		"En Terrorist har overlevet!"	
 		"en"		"A Terrorist has surrived"
 		"de"		"Ein Terrorist hat als einziger überlebt"
 	}
 	"noscope_voting"
 	{
+		"da"		"Afstemninger for No Scope er {purple}slået fra"	
 		"en"		"Player Voting for NoScope is {purple}disabled"
 		"de"		"Voting für NoScope ist {purple}ausgeschaltet"
 	}
 	"noscope_setbywarden"
 	{
+		"da"		"Warden bestemmer runde for No Scope er {purple}slået fra"	
 		"en"		"Set NoScope by Warden is {purple}disabled"
 		"de"		"NoScope Aktivierung durch den Warden ist {purple}ausgeschaltet"
 	}
 	
 	"noscope_setbyadmin"
 	{
+		"da"		"Admin bestemmer runde for No Scope er {purple}slået fra"		
 		"en"		"Set NoScope by admin is {purple}disabled"
 		"de"		"NoScope Aktivierung durch den Admin ist {purple}ausgeschaltet"
 	}
 	"noscope_ctwin_nc"
 	{
+		"da"		"En Counter-Terrorist har overlevet!"
 		"en"		"A Counter-Terrorist has surrived"
 		"de"		"Ein Counter-Terrorist hat als einziger überlebt"
 	}
 	
 	"noscope_end"
 	{
+		"da"		"{purple}NoScope{default} er afsluttet!"	
 		"en"		"{purple}NoScope{default} ended"
 		"de"		"{purple}NoScope{default} beendet"
 	}
 	
 	"noscope_next"
 	{
+		"da"		"Næste runde er {purple}NoScope"	
 		"en"		"Next round is {purple}NoScope"
 		"de"		"Nächste Runde ist {purple}NoScope"
 	}
 	"noscope_next_nc"
 	{
+		"da"		"Næste runde er NoScope"	
 		"en"		"Next round is NoScope"
 		"de"		"Nächste Runde ist NoScope"
 	}
 	
 	"noscope_start"
 	{
-
+		"da"		"{purple}NoScope{default} er startet!"
 		"en"		"The {purple}NoScope{default} has started!"
 		"de"		"{purple}NoScope{default} ist gestartet!"
 	}
 	
 	"noscope_start_nc"
 	{
-
+		"da"		"No Scope er startet!"
 		"en"		"The NoScope started!"
 		"de"		"NoScope ist gestartet!"
 	}
 	
 	"noscope_voted"
 	{
-		"en"		"You allready voted for {purple}NoScope"
+		"da"		"Du har allerede stemt for {purple}NoScope!"	
+		"en"		"You already voted for {purple}NoScope"
 		"de"		"Du hast schon für {purple}NoScope {default}gevotet"
 	}
 	
 	"noscope_progress"
 	{
-		"en"		"NoScope is {purple}allready in progress"
+		"da"		"NoScope er {purple}allerede i gang!"	
+		"en"		"NoScope is {purple}already in progress"
 		"de"		"NoScope ist {purple}bereits gesetzt"
 	}
 	
 	"noscope_disabled"
 	{
-
+		"da"		"NoScope er {purple}slået fra."
 		"en"		"NoScope is {purple}disabled."
 		"de"		"NoScope ist {purple}deaktiviert."
 	}
@@ -91,59 +102,69 @@
 	"noscope_timetounfreeze_nc"
 	{
 		"#format"	"{1:i}"
+		"da"		"{1} sekunder til runden starter!"	
 		"en"		"{1} seconds until start"
 		"de"		"{1} Sekunden bis zum Start"
 	}
 	
 	"noscope_info_Title"
 	{
-		"en"		"Scout NoScope NoScope is activ"
+		"en"		"Scout NoScope er aktiveret!"	
+		"en"		"Scout NoScop is activ"
 		"de"		"Scout NoScope NoScope ist aktiv"
 	}
 	
 	"noscope_info_Line1"
 	{
+		"da"		"Scout NoScope er hold mod hold!"
 		"en"		"Do not be surprised if portedto CT Spawn"
 		"de"		"Nicht wundern falls ihr zum CT Spawngeportet wurdet"
 	}
 	"noscope_info_Line2"
 	{
+		"da"		"I NoScope er det FFA og lav gravity!"	
 		"en"		"In noscope ther is FFA scout noscope low grav"
 		"de"		"FFA NoScope scout noscope low grav"
 	}
 	
 	"noscope_info_Line3"
 	{
+		"da"		"Den sidste som overlever vinder runden!"	
 		"en"		"you can move and exit the wk in nodamge phase"
 		"de"		"Während der no damge phase kannst du aus der zelle/waffenkammer"
 	}
 	
 	"noscope_info_Line4"
 	{
+		"da"		"Alle jail regler er ophævet!"	
 		"en"		"All normal jailRules are repealed"
 		"de"		"Alle normalen Jailregeln sind aufgehoben!"
 	}
 	
 	"noscope_info_Line5"
 	{
+		"da"		"Der kan ikke laves Last Request i denne runde!"	
 		"en"		"There is no last request!"
 		"de"		"Der letzte Terrorist hat keinen Wunsch!"
 	}
 	
 	"noscope_info_Line6"
 	{
+		"da"		"Alle kan gå der hen hvor de har lyst til at gå hen!"	
 		"en"		"Everyone is allowed to go everywhere where he wants"
 		"de"		"Jeder darf überall hin wo er will!"
 	}
 	
 	"noscope_info_Line7"
 	{
+		"da"		"Alle server regler skal overholdes!"	
 		"en"		"dont be an asshole!"
 		"de"		"bau keine scheisse!"
 	}
 		"noscope_wait"
 	{
 		"#format"	"{1:i}"
+		"da"		"Du skal vente {1} flere runder!"		
 		"en"		"you must wait {1} more rounds"
 		"de"		"Du musst noch {1} Runden warten"
 	}

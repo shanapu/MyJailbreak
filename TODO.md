@@ -41,6 +41,7 @@ must:
 - [ ] playertags: add VIP flag
 - [ ] all days: restrict map heal station
 - [ ] catch: T win when time run out
+- [ ] hide: T win when time run out
 - [ ] warden: clean changeback model unwarden
 - [x] move FF from menu to warden
 - [x] move randomkill from menu to warden

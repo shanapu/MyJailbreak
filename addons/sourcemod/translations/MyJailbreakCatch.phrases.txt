@@ -8,13 +8,15 @@
 	"catch_need"  
 	{
 		"#format"	"{1:i},{2:N}"
-		"en"		"{purple}{2}{default} has votet. {purple}{1}{default} votes left to {darkred}catch"
+		"da"		"{purple}{2}{default} har stemt. {purple}{1}{default} stemmer tilbage til {darkred}Catch{default} starter!"		
+		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes left to {darkred}catch"
 		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}catch{default} beginnt"
 	}
 	
 	"catch_twin_nc"		// no colors!
 	{
-
+	
+		"da"		"Terroristerne slap væk og vandt!"
 		"en"		"Terrorist escaped"
 		"de"		"Terroristen sind entkommen"
 	}
@@ -22,6 +24,7 @@
 	"catch_ctwin_nc"		// no colors!
 	{
 
+		"da"		"Alle terrorister er blevet fanget!"
 		"en"		"All Terrors catched"
 		"de"		"Alle Terroristen wurden wieder eingefangen"
 	}
@@ -29,42 +32,49 @@
 	"catch_end"
 	{
 
+		"da"		"{purple}Catch{default} er afsluttet!"	
 		"en"		"{purple}catch{default} ended"
 		"de"		"{purple}catch{default} beendet"
 	}
 	
 	"catch_voting"
 	{
+		"da"		"Afstemning for catch er {purple}slået fra"	
 		"en"		"Player Voting for catch is {purple}disabled"
 		"de"		"Voting für catch ist {purple}ausgeschaltet"
 	}
 	
 	"catch_setbywarden"
 	{
+		"da"		"Start catch som Warden er {purple}slået fra"	
 		"en"		"Set catch by Warden is {purple}disabled"
 		"de"		"catch Aktivierung durch den Warden ist {purple}ausgeschaltet"
 	}
 	
 	"catch_setbyadmin"
 	{
+		"da"		"Start catch som Admin er {purple}slået fra"	
 		"en"		"Set catch by admin is {purple}disabled"
 		"de"		"catch Aktivierung durch den Admin ist {purple}ausgeschaltet"
 	}
 	
 	"catch_next"
 	{
+		"da"		"Næste runde er {purple}catch"	
 		"en"		"Next round is {purple}catch"
 		"de"		"Nächste Runde ist {purple}catch"
 	}
 
 		"catch_next_nc"
 	{
+		"da"		"Næste runde er catch"	
 		"en"		"Next round is catch"
 		"de"		"Nächste Runde ist catch"
 	}
 	
 	"catch_start"
 	{
+		"da"		"{purple}Catch{default} er startet!"	
 		"en"		"The {purple}catch{default} has started!"
 		"de"		"{purple}catch{default} ist gestartet!"
 		
@@ -72,24 +82,28 @@
 	
 	"catch_start_nc"
 	{
+		"da"		"Catch er startet!"	
 		"en"		"The catch has started!"
 		"de"		"Fangen ist gestartet!"
 	}
 	
 	"catch_voted"
 	{
-		"en"		"You allready voted for {purple}catch"
+		"da"		"Du har allerede stemt på {purple}Catch"	
+		"en"		"You already voted for {purple}catch"
 		"de"		"Du hast schon für {purple}catch {default}gevotet"
 	}
 	
 	"catch_progress"
 	{
-		"en"		"catch is {purple}allready in progress"
+		"da"		"Catch er {purple}allerede i gang"	
+		"en"		"catch is {purple}already in progress"
 		"de"		"catch ist {purple}bereits gesetzt"
 	}
 	
 	"catch_minct"
 	{
+		"da"		"For Catch mangler du mindst {purple}en CT"	
 		"en"		"For a Duckhunt you need a least {purple}one CT"
 		"de"		"Für Duckhunt brauchen wir mindestens {purple}einen CT"
 	}
@@ -97,66 +111,77 @@
 	"catch_sprint"
 	{
 
+		"da"		"Du bruger nu {blue}Sprint!"	
 		"en"		"You are now using {blue}Sprint!"
 		"de"		"Du {blue}sprintest!"
 	}
 	
 	"catch_disabled"
 	{
+		"da"		"Catch er {purple}slået fra."	
 		"en"		"catch is {purple}disabled."
 		"de"		"catch ist {purple}deaktiviert."
 	}
 
 	"catch_info_Title"		// no colors!
 	{
-		"en"		"Catch & Freeze is activ"
+		"da"		"Catch er aktiveret!"	
+		"en"		"Catch is activated!"
 		"de"		"Fangen ist aktiv"
 	}
 	
 	"catch_info_Line1"		// no colors!
 	{
-		"en"		"CTs must catch & freeze all Ts by knifing"
+		"da"		"CTs skal fange & fryse alle T ved at knife dem"	
+		"en"		"The CT must catch all T with the knife and freeze them"
 		"de"		"Die CT müssen alle T mit dem Messer einfangen und freezen"
 	}
 	"catch_info_Line2"		// no colors!
 	{
-		"en"		"T can unfreeze catched Ts with knife"
+		"da"		"T kan unfreeze fanget Ts med kniv"	
+		"en"		"T can unfreeze T - Just knife them!"
 		"de"		"T können gefreezte T mit dem messer befreien"
 	}
 	
 	"catch_info_Line3"		// no colors!
 	{
-		"en"		"with USE-Key you can Sprint!"
+		"da"		"Brug E til at Sprint!"	
+		"en"		"Press E to sprint!"
 		"de"		"mit der BENUTZEN-Taste kannst du sprinten"
 	}
 	
 	"catch_info_Line4"		// no colors!
 	{
-		"en"		"All normal jailRules are repealed"
+		"da"		"Ingen jail regler gælder i denne runde!"	
+		"en"		"No jail rules apply in this round!"
 		"de"		"Alle normalen Jailregeln sind aufgehoben!"
 	}
 	
 	"catch_info_Line5"		// no colors!
 	{
-		"en"		"There is no last request!"
+		"da"		"Der kan ikke laves !lr"	
+		"en"		"You cannot use !lr in this round!"
 		"de"		"Der letzte Terrorist hat keinen Wunsch!"
 	}
 	
 	"catch_info_Line6"		// no colors!
 	{
-		"en"		"Everyone is allowed to go everywhere where he wants"
+		"da"		"Alle må gå hvor hen de har lyst til!"	
+		"en"		"All can go where they feel like!"
 		"de"		"Jeder darf überall hin wo er will!"
 	}
 	
 	"catch_info_Line7"		// no colors!
 	{
-		"en"		"dont be an asshole!"
+		"da"		"Server Reglerne skal stadig holdes!"	
+		"en"		"Server Rules must be kept!"
 		"de"		"bau keine scheisse!"
 	}
 	
 	"catch_wait"
 	{
 		"#format"	"{1:i}"
+		"da"		"Du skal vente {purple}{1}{default} flere runder"		
 		"en"		"you must wait {purple}{1}{default} more rounds"
 		"de"		"Du musst noch {purple}{1}{default} Runden warten"
 	}
@@ -164,6 +189,7 @@
 	"catch_unfreeze"
 	{
 		"#format"	"{1:N},{2:N}"
+		"da"		"Fangen {purple}{1}{default} har unfreezet {blue}{2}"		
 		"en"		"prisoner {purple}{1}{default} unfreezed {blue}{2}"
 		"de"		"Häftling {purple}{1}{default} hat {blue}{2}{default} befreit"
 	}
@@ -171,13 +197,14 @@
 	"catch_catch"
 	{
 		"#format"	"{1:N},{2:N}"
+		"da"		"Vagten {purple}{1}{default} har frosset {blue}{2}{default}"		
 		"en"		"Guard {purple}{1}{default} freezed {blue}{2}{default}"
 		"de"		"Wärter {purple}{1}{default} hat {blue}{2}{default} gefangen"
 	}
 	
 	"catch_win"
 	{
-
+		"da"		"Alle fanger er {purple}FANGET!"
 		"en"		"All prisoners {purple}catched"
 		"de"		"Alle Häftlinge wurden {purple}eingefangen"
 	}

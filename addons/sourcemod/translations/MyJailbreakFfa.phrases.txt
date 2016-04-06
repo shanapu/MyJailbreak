@@ -8,62 +8,63 @@
 	"ffa_need"
 	{
 		"#format"	"{1:i},{2:N}"
+		"da"		"{purple}{2}{default} har afstemt. {purple}{1}{default} stemmer tilbage til {darkred}FFA runde"		
 		"en"		"{purple}{2}{default} has votet. {purple}{1}{default} votes left to {darkred}FFA"
 		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}FFA{default} beginnt"
 	}
 	
 	"ffa_voting"
 	{
-
+		"da"		"Afstemning for FFA er {purple}slået fra"
 		"en"		"Player Voting for FFA is {purple}disabled"
 		"de"		"Voting für FFA ist {purple}ausgeschaltet"
 	}
 	
 	"ffa_setbywarden"
 	{
-
+		"da"		"Warden kan vælge FFA runde er {purple}slået fra"
 		"en"		"Set FFA by Warden is {purple}disabled"
 		"de"		"FFA Aktivierung durch den Warden ist {purple}ausgeschaltet"
 	}
 	
 	"ffa_setbyadmin"
 	{
-
+		"da"		"Admin kan vælge FFA runde er {purple}slået fra"
 		"en"		"Set FFA by admin is {purple}disabled"
 		"de"		"FFA Aktivierung durch den Admin ist {purple}ausgeschaltet"
 	}
 	
 	"ffa_ctwin_nc"		// no colors!
 	{
-
+		"da"		"En Counter-Terrorist har overlevet!"
 		"en"		"A Counter-Terrorist has surrived"
 		"de"		"Ein Counter-Terrorist hat als einziger überlebt"
 	}
 	
 	"ffa_twin_nc"		// no colors!
 	{
-
+		"da"		"En Terrorist har overlevet!"
 		"en"		"A Terrorist has surrived"
 		"de"		"Ein Terrorist hat als einziger überlebt"
 	}
 	
 	"ffa_end"
 	{
-
+		"da"		"{purple}FFA{default} er afsluttet!"
 		"en"		"{purple}FFA{default} ended"
 		"de"		"{purple}FFA{default} beendet"
 	}
 	
 	"ffa_next"
 	{
-
+		"da"		"Næste runde er {purple}FFA"
 		"en"		"Next round is {purple}FFA"
 		"de"		"Nächste Runde ist {purple}FFA"
 	}
 	
 	"ffa_next_nc"		// no colors!
 	{
-
+		"da"		"Næste runde er FFA"
 		"en"		"Next round is FFA"
 		"de"		"Nächste Runde ist FFA"
 	}
@@ -71,35 +72,36 @@
 	"ffa_rounds" 
 	{
 		"#format"	"{1:i}"
+		"da"		"Runde {purple}{1}{default} af {purple}3"		
 		"en"		"Round {purple}{1}{default} of {purple}3"
 		"de"		"Runde {purple}{1}{default} von {purple}3"
 	}
 	
 	"ffa_start"
 	{
-
+		"da"		"{purple}FFA{default} er startet!"
 		"en"		"The {purple}FFA{default} has started!"
 		"de"		"{purple}FFA{default} ist gestartet!"
 	}
 	
 	"ffa_start_nc"		// no colors!
 	{
-
+		"da"		"FFA er startet!"
 		"en"		"The FFA has started!"
 		"de"		"FFA ist gestartet!"
 	}
 	
 	"ffa_voted"
 	{
-
-		"en"		"You allready voted for {purple}FFA"
+		"da"		"Du har allerede stemt for {purple}FFA runde!"
+		"en"		"You already voted for {purple}FFA"
 		"de"		"Du hast schon für {purple}FFA {default}gevotet"
 		
 	}
 	
 	"ffa_progress"
 	{
-
+		"da"		"FFA er {purple}allerede i gang!"
 		"en"		"FFA is {purple}allready in progress"
 		"de"		"FFA ist {purple}bereits gesetzt"
 		
@@ -107,7 +109,7 @@
 	
 	"ffa_disabled"
 	{
-
+		"da"		"FFA er {purple}slået fra."
 		"en"		"FFA is {purple}disabled."
 		"de"		"FFA ist {purple}deaktiviert."
 	}
@@ -115,84 +117,98 @@
 	"ffa_damage_nc"		// no colors!
 	{
 		"#format"	"{1:i}"
+		"da"		"{1} sekunder til man kan skade hinanden!"		
 		"en"		"{1} seconds until damage enabled"
 		"de"		"{1} Sekunden bis Schaden aktiv ist"
 	}
 	
 	"ffa_info_Title"		// no colors!
 	{
+		"en"		"Free for All Deathmatch er aktiveret!"	
 		"en"		"Free for All Deathmatch is activ"
 		"de"		"Free for All Deathmatch ist aktiv"
 	}
 	
 	"ffa_info_Tele"		// no colors!
 	{
+		"da"		"Bliv ikke overrasket hvis du starter i CT spawn!"	
 		"en"		"Do not be surprised if portedto CT Spawn"
 		"de"		"Nicht wundern falls ihr zum CT Spawn geportet wurdet"
 	}
 	
 	"ffa_info_Spawn"		// no colors!
 	{
+		"da"		"Bliv ikke overasket hvis du spawner med våben og cellerne åbne!"	
 		"en"		"Do not be surprised if you spawn with weapon and the cells are open"
 		"de"		"Nicht wundern wenn ihr mit Waffe und offenen Zelle spawnt"
 	}
 	
 	"ffa_info_Line2"		// no colors!
 	{
+		"da"		"Free for All - alle mod alle - Sidste man vinder!"	
 		"en"		"Free for All - player vs player - Last man standing"
 		"de"		"Free for All - Jeder gegen Jeden - Nur einer überlebt"
 	}
 	
 	"ffa_info_Line3"		// no colors!
 	{
+		"da"		"Du kan ikke skade andre spillere når mappet er mørkt!"	
 		"en"		"While nodamge time the map is shady"
 		"de"		"Während der NoDamge Phase is die map zum eingedunkelt"
 	}
 	
 	"ffa_info_Line4"		// no colors!
 	{
+		"da"		"Alle jail regler er ophævet!"	
 		"en"		"All normal jailrules are repealed"
 		"de"		"Alle normalen Jailregeln sind aufgehoben!"
 	}
 	
 	"ffa_info_Line5"		// no colors!
 	{
+		"da"		"!lr er deaktiveret i denne runde!"	
 		"en"		"There is no last request!"
 		"de"		"Der letzte Terrorist hat keinen Wunsch!"
 	}
 	
 	"ffa_info_Line6"		// no colors!
 	{
+		"da"		"Alle må gå der hen de har lyst til !"	
 		"en"		"Everyone is allowed to go everywhere where he wants"
 		"de"		"Jeder darf überall hin wo er will!"
 	}
 	
 	"ffa_info_Line7"		// no colors!
 	{
+		"da"		"Alle server regler skal overholdes!"	
 		"en"		"dont be an asshole!"
 		"de"		"bau keine scheisse!"
 	}
 		
 	"RoundOne"
 	{
+		"da"		"Runde {purple}1{default} af {purple}3{default}"	
 		"en"		"Round {purple}1{default} of {purple}3{default}"
 		"de"		"Runde {purple}1{default} von {purple}3{default}"
 	}
 		
 	"RoundTwo"
 	{
+		"da"		"Runde {purple}2{default} af {purple}3{default}"	
 		"en"		"Round {purple}2{default} of {purple}3{default}"
 		"de"		"Runde {purple}2{default} von {purple}3{default}"
 	}
 		
 	"RoundThree"
 	{
+		"da"		"{purple}Sidste{default} FFA runde!"	
 		"en"		"{purple}last{default} FFA round"
 		"de"		"{purple}letzte{default} FFA runde"
 	}
 		"ffa_wait"
 	{
 		"#format"	"{1:i}"
+		"da"		"Du skal vente {purple}{1}{default} flere runder!"		
 		"en"		"you must wait {purple}{1}{default} more rounds"
 		"de"		"Du musst noch {purple}{1}{default} Runden warten"
 	}

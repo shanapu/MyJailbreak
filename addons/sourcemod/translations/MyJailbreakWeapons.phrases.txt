@@ -7,105 +7,105 @@
 	
 	"weapons_same"
 	{
-
+		"da"		"Du vil få {purple}samme våben{default} næste runde."
 		"en"		"You will get the {purple} same weapon{default} next round"
 		"de"		"Du bekommst {purple}die gleiche Waffe{default} in der nächsten Runde."
 	}
 	
 	"weapons_sameall"
 	{
-
+		"da"		"Du vil få det {purple} samme våben{default} næste runde."
 		"en"		"You will get the {purple} same weapon{default} next rounds"
 		"de"		"Du bekommst {purple}die gleiche Waffe{default} in den nächsten Runden."
 	}
 	
 	"weapons_random"
 	{
-
+		"da"		"Du vil få et {purple} tilfældigt våben{default} næste runde."
 		"en"		"You will get a {purple} random weapon{default} next round"
 		"de"		"Du bekommst {purple}eine Zufalls Waffe{default} in der nächsten Runde."
 	}
 	
 	"weapons_randomall"
 	{
-
+		"da"		"Du vil få et {purple} tilfældigt våben{default} næste runde."
 		"en"		"You will get a {purple} random weapon{default} next rounds"
 		"de"		"Du bekommst {purple}eine Zufalls Waffe{default} in den nächsten Runden."
 	}
 	
 	"weapons_next"
 	{
-
+		"da"		"Du vil få det {purple} nye våben{default} næste runde."
 		"en"		"You will get your {purple} new weapon{default} next round"
 		"de"		"Du bekommst {purple}deine neue Waffe{default} in der nächsten Runde."
 	}
 	
 	"weapons_ta"
 	{
-
+		"da"		"Du har fået en {purple} TA grenade{default}"
 		"en"		"You've got a {purple} TA grenade{default}"
 		"de"		"Du haste eine {purple}TA Granate{default} bekommen."
 	}
 	
 	"weapons_health"
 	{
-
+		"da"		"Du har fået et {purple} healthshot{default}"
 		"en"		"You've got a {purple} healthshot{default}"
 		"de"		"Du haste eine {purple}healthshot{default} bekommen."
 	}
 	
 	"weapons_info_Title"	// no colors!
 	{
-
+		"da"		"MyJailbreak Våben Menu"
 		"en"		"MyJailbreak Weapon Menu"
 		"de"		"MyJailbreak Waffen Menu"
 	}
 	
 	"weapons_info_choose"	// no colors!
 	{
-
+		"da"		"Vælg våben"
 		"en"		"choose weapon"
 		"de"		"Waffe wählen"
 	}
 	
 	"weapons_info_same"		// no colors!
 	{
-
+		"da"		"Samme våben"
 		"en"		"same weapon"
 		"de"		"Gleiche Waffe"
 	}
 	
 	"weapons_info_sameall"	// no colors!
 	{
-
+		"da"		"Samme våben hver gang"
 		"en"		"same weapon everytime"
 		"de"		"Jedesmal gleiche Waffe"
 	}
 	
 	"weapons_info_random"	// no colors!
 	{
-
+		"da"		"Random våben"
 		"en"		"random weapon"
 		"de"		"Zufalls Waffe"
 	}
 	
 	"weapons_info_randomall"	// no colors!
 	{
-
+		"da"		"Tilfældigt våben hver gang"
 		"en"		"random weapon everytime"
 		"de"		"Jedesmal zufalls Waffe"
 	}
 	
 	"weapons_info_prim"		// no colors!
 	{
-
+		"da"		"Primær våben:"
 		"en"		"Primary weapon:"
 		"de"		"Hauptwaffe:"
 	}
 	
 	"weapons_info_sec"		// no colors!
 	{
-
+		"da"		"Sekundært våben:"
 		"en"		"Secondary weapon:"
 		"de"		"Handwaffe:"
 	}

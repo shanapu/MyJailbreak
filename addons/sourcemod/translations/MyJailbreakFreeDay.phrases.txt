@@ -7,24 +7,28 @@
 	
 	"freeday_end"
 	{
+		"da"		"{purple}FreeDay{default} er afsluttet!"	
 		"en"		"{purple}FreeDay{default} ended"
 		"de"		"{purple}FreeDay{default} beendet"
 	}
 	"freeday_need"  
 	{
 		"#format"	"{1:i},{2:N}"
-		"en"		"{purple}{2}{default} has votet. {purple}{1}{default} votes left to {darkred}FreeDay"
+		"da"		"{purple}{2}{default} har afstemt. {purple}{1}{default} afstemninger tilbage til {darkred}FreeDay"		
+		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes left to {darkred}FreeDay"
 		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}krieg{default} beginnt"
 	}
 	
 	"freeday_next"
 	{
+		"da"		"Næste runde er {purple}FreeDay"	
 		"en"		"Next round is {purple}FreeDay"
 		"de"		"Nächste Runde ist {purple}FreeDay"
 	}
 	
 	"freeday_next_nc"
 	{
+		"da"		"Næste runde er FreeDay"	
 		"en"		"Next round is FreeDay"
 		"de"		"Nächste Runde ist FreeDay"
 	}
@@ -32,106 +36,124 @@
 	"freeday_voting"
 	{
 		"#format"	""
+		"da"		"Afstemninger er {purple}slået fra"		
 		"en"		"Player Voting for FreeDay is {purple}disabled"
 		"de"		"Voting für FreeDay ist {purple}ausgeschaltet"
 	}
 	"freeday_setbywarden"
 	{
+		"da"		"Warden vælger runde er {purple}slået fra"	
 		"en"		"Set FreeDay by Warden is {purple}disabled"
 		"de"		"FreeDay Aktivierung durch den Warden ist {purple}ausgeschaltet"
 	}
 	
 	"freeday_setbyadmin"
 	{
-			"en"		"Set FreeDay by admin is {purple}disabled"
+		"da"		"Admin vælger runde er {purple}slået fra"		
+		"en"		"Set FreeDay by admin is {purple}disabled"
 		"de"		"FreeDay Aktivierung durch den Admin ist {purple}ausgeschaltet"
 	}
 	
 	"freeday_start_nc"
 	{
+		"da"		"FreeDay er startet!"	
 		"en"		"The FreeDay has started!"
 		"de"		"FreeDay ist gestartet!"
 	}
 	
 	"freeday_start"
 	{
+		"da"		"{purple}FreeDay{default} er startet!"	
 		"en"		"The {purple}FreeDay{default} has started!"
 		"de"		"{purple}FreeDay{default} ist gestartet!"
 	}
 	
 	"freeday_voted"
 	{
+		"da"		"{purple}FreeDay{default} er startet!"	
 		"en"		"The {purple}FreeDay{default} has started!"
 		"de"		"{purple}FreeDay{default} ist gestartet!"
 	}
 	
 	"freeday_progress"
 	{
-		"en"		"FreeDay is {purple}allready in progress"
+		"da"		"FreeDay er {purple}allerede i gang!"	
+		"en"		"FreeDay is {purple}already in progress"
 		"de"		"FreeDay ist {purple}bereits gesetzt"
 	}
 	
 	"freeday_minct"
 	{
+		"da"		"For Freeday skal der mindst være {purple}en CT"	
 		"en"		"For a Duckhunt you need a least {purple}one CT"
 		"de"		"Für Duckhunt brauchen wir mindestens {purple}einen CT"
 	}
 	
 	"freeday_disabled"
 	{
+		"da"		"FreeDay er {purple}slået fra."	
 		"en"		"FreeDay is {purple}disabled."
 		"de"		"FreeDay ist {purple}deaktiviert."
 	}
 	
 	"freeday_info_Title"		// no colors!
 	{
-		"en"		"FreeDaY"
-		"de"		"FreeDaY"
+		"da"		"FreeDay"	
+		"en"		"FreeDay"
+		"de"		"FreeDay"
 	}
 	
 	"freeday_info_Line1"		// no colors!
 	{
+		"da"		"Det er Freeday!"	
 		"en"		"it's Freeday"
 		"de"		"es ist Freeday"
 	}
 	"freeday_info_Line2"		// no colors!
 	{
+		"da"		"--------------"	
 		"en"		"--------------"
 		"en"		"--------------"
 	}
 	
 	"freeday_info_Line3"		// no colors!
 	{
+		"da"		"--------------"	
 		"en"		"--------------"
 		"de"		"--------------"
 	}
 	
 	"freeday_info_Line4"		// no colors!
 	{
+		"da"		"Alle jail regler er ophævet!"	
 		"en"		"All normal jailRules are repealed"
 		"de"		"Alle normalen Jailregeln sind aufgehoben!"
 	}
 	
 	"freeday_info_Line5"		// no colors!
 	{
+		"da"		"Der kan ikke laves !lr i Freeday"	
 		"en"		"There is no last request!"
 		"de"		"Der letzte Terrorist hat keinen Wunsch!"
 	}
 	
 	"freeday_info_Line6"		// no colors!
 	{
-		"en"		"Everyone is allowed to go everywhere where he wants"
+		"da"		"T kan gå hvor hen de vil - De må bare ikke have våben!"	
+		"en"		"Everyone is allowed to go everywhere where they wants"
 		"de"		"Jeder darf überall hin wo er will!"
 	}
 	
 	"freeday_info_Line7"		// no colors!
 	{
+		"da"		"Serverne regler skal overholdes!"	
 		"en"		"dont be an asshole!"
 		"de"		"bau keine scheisse!"
 	}
 		"freeday_wait"
 	{
 		"#format"	"{1:i}"
+		"en"		"Du skal vente {1} flere runder!"	
 		"en"		"you must wait {1} more rounds"
 		"de"		"Du musst noch {1} Runden warten"
 	}

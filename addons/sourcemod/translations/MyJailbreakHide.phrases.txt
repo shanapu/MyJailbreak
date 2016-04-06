@@ -7,65 +7,76 @@
 	"hide_need"
 	{
 		"#format"	"{1:i}"
+		"da"		"Afstemninger tilbage til {darkred}Hide in the Dark"		
 		"en"		"votes left to {darkred}Hide in the Dark"
 		"de"		"noch {1} votes bis {darkred}krieg{default} beginnt"
 	}
 	"hide_twin_nc"		// no colors!
 	{
+		"da"		"T vinder runden!"	
 		"en"		"Hiders win"
 		"de"		"Hiders haben gewonnen"
 	}
 	
 	"hide_ctwin_nc"		// no colors!
 	{
+		"da"		"CT vinder runden!"	
 		"en"		"Seeker win"
 		"de"		"Seeker haben gewonnen"
 	}
 	
 	"hide_end"
 	{
+		"en"		"{purple}Hide in the Dark{default} er afsluttet!"	
 		"en"		"{purple}Hide in the Dark{default} ended"
 		"de"		"{purple}Hide in the Dark{default} beendet"
 	}
 		
 	"hide_next_nc"		// no colors!
 	{
+		"da"		"Næste runde er Hide in the Dark"	
 		"en"		"Next round is Hide in the Dark"
 		"de"		"Nächste Runde ist Hide in the Dark"
 	}
 	
 	"hide_next"
 	{
+		"da"		"Næste runde er {purple}Hide in the Dark"	
 		"en"		"Next round is {purple}Hide in the Dark"
 		"de"		"Nächste Runde ist {purple}Hide in the Dark"
 	}
 	
 	"hide_start"
 	{
+		"da"		"{purple}Hide in the Dark{default} er startet!"	
 		"en"		"The {purple}Hide in the Dark{default} has started!"
 		"de"		"{purple}Hide in the Dark{default} ist gestartet!"
 	}
 	
 	"hide_start_nc"
 	{
+		"da"		"Hide in the Dark er startet!"	
 		"en"		"The Hide in the Dark has started!"
 		"de"		"Hide in the Dark ist gestartet!"
 	}
 	
 	"hide_voted"
 	{
+		"da"		"{purple}Hide in the Dark{default} er startet!"	
 		"en"		"The {purple}Hide in the Dark{default} has started!"
 		"de"		"{purple}Hide in the Dark{default} ist gestartet!"
 	}
 	
 	"hide_progress"
 	{
-		"en"		"Hide in the Dark is {purple}allready in progress"
+		"da"		"Hide in the Dark er {purple}allerede i gang!"	
+		"en"		"Hide in the Dark is {purple}already in progress"
 		"de"		"Hide in the Dark ist {purple}bereits gesetzt"
 	}
 	
 	"hide_minct"
 	{
+		"da"		"For Hide in the Dark skal der mindst være {purple}en CT"	
 		"en"		"For a Hide in the Dark you need a least {purple}one CT"
 		"de"		"Für Hide in the Dark brauchen wir mindestens {purple}einen CT"
 	}
@@ -73,24 +84,28 @@
 	
 	"hide_disabled"
 	{
+		"en"		"Hide in the Dark er {purple}deaktiveret."	
 		"en"		"Hide in the Dark is {purple}disabled."
 		"de"		"Hide in the Dark ist {purple}deaktiviert."
 	}
 	
 	"hide_voting"
 	{
+		"da"		"Afstemning for Hide in the Dark er {purple}slået fra"	
 		"en"		"Player Voting for Hide in the Dark is {purple}disabled"
 		"de"		"Voting für Hide in the Dark ist {purple}ausgeschaltet"
 	}
 	
 	"hide_setbyWarden"
 	{
+		"da"		"Warden vælger runden for Hide in the Dark er {purple}slået fra"	
 		"en"		"Set Hide in the Dark by Warden is {purple}disabled"
 		"de"		"Hide in the Dark Aktivierung durch den Warden ist {purple}ausgeschaltet"
 	}
 	
 	"hide_setbyadmin"
 	{
+		"da"		"Admin vælger runden for Hide in the Dark er {purple}slået fra"		
 		"en"		"Set Hide in the Dark by admin is {purple}disabled"
 		"de"		"Hide in the Dark Aktivierung durch den Admin ist {purple}ausgeschaltet"
 	}
@@ -98,6 +113,7 @@
 	"hide_timetohide_nc"		// no colors!
 	{
 		"#format"	"{1:i}"
+		"en"		"{1} sekunder til at gemme dig i!"		
 		"en"		"{1} seconds to hide"
 		"de"		"{1} Sekunden zum verstecken"
 		
@@ -106,6 +122,7 @@
 	"hide_timetounfreeze_nc"		// no colors!
 	{
 		"#format"	"{1:i}"
+		"en"		"{1} sekunder til du bliver unfreezet!"		
 		"en"		"{1} seconds until unfreeze"
 		"de"		"{1} Sekunden bis zum unfreeze"
 		
@@ -113,47 +130,55 @@
 	
 	"hide_info_Title"		// no colors!
 	{
+		"en"		"Hide In The Dark er aktiveret!"	
 		"en"		"FFA is activ"
 		"de"		"FFA ist aktiv"
 	}
 	
 	"hide_info_Line1"		// no colors!
 	{
+		"da"		"T skal gemme sig inden CT bliver unfreezet og fanger dem!"	
 		"en"		"Do not be surprised if portedto CT Spawn"
 		"de"		"Nicht wundern falls ihr zum CT Spawngeportet wurdet"
 	}
 	"hide_info_Line2"		// no colors!
 	{
+		"da"		"I Hide in the Darkround skal CT fange T ved at dræbe dem"	
 		"en"		"In Hide in the Darkround ct play against t"
 		"de"		"In Kriegrunden spielen CT's gegen T's"
 	}
 	
 	"hide_info_Line3"		// no colors!
 	{
+		"da"		"Når CT bliver unfreezet bliver T freezet og ikke kan røre sig!"	
 		"en"		"you can move and exit the wk in nodamge phase"
 		"de"		"Während der no damge phase kannst du aus der zelle/waffenkammer"
 	}
 	
 	"hide_info_Line4"		// no colors!
 	{
+		"da"		"Alle jail regler er ophævet!"	
 		"en"		"All normal jailRules are repealed"
 		"de"		"Alle normalen Jailregeln sind aufgehoben!"
 	}
 	
 	"hide_info_Line5"		// no colors!
 	{
+		"da"		"Last Request er deaktiveret i denne runde!"	
 		"en"		"There is no last request!"
 		"de"		"Der letzte Terrorist hat keinen Wunsch!"
 	}
 	
 	"hide_info_Line6"		// no colors!
 	{
+		"da"		"Alle må gå der hen som de har lyst!"	
 		"en"		"Everyone is allowed to go everywhere where he wants"
 		"de"		"Jeder darf überall hin wo er will!"
 	}
 	
 	"hide_info_Line7"		// no colors!
 	{
+		"da"		"Alle server reglerne skal overholdes!"	
 		"en"		"dont be an asshole!"
 		"de"		"bau keine scheisse!"
 	}
@@ -161,6 +186,7 @@
 	"hide_wait"
 	{
 		"#format"	"{1:i}"
+		"da"		"Du skal vente {purple}{1}{default} flere runder!"	
 		"en"		"you must wait {purple}{1}{default} more rounds"
 		"de"		"Du musst noch {purple}{1}{default} Runden Warten"
 	}

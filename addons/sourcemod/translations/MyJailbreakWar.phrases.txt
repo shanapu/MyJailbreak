@@ -8,24 +8,28 @@
 	"war_need"
 	{
 		"#format"	"{1:i},{2:N}"
-		"en"		"{purple}{2}{default} has votet. {purple}{1}{default} votes left to {darkred}war"
+		"da"		"{purple}{2}{default} har stemt! {purple}{1}{default} stemmer tilbage til {darkred}war"		
+		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes left to {darkred}war"
 		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}krieg{default} beginnt"
 	}
 	
 	"war_twin_nc"		// no colors!
 	{
+		"da"		"Terroristerne vinder!"	
 		"en"		"Terrorist win"
 		"de"		"Terrorist haben gewonnen"
 	}
 	
 	"war_ctwin_nc"		// no colors!
 	{
+		"da"		"Counter-Terroristerne vinder"
 		"en"		"Counter-Terrorist win"
 		"de"		"Counter-Terrorist haben gewonnen"
 	}
 	
 	"war_end" 
 	{
+		"da"		"{purple}War{default} er afsluttet!"	
 		"en"		"{purple}War{default} ended"
 		"de"		"{purple}War{default} beendet"
 	}
@@ -33,54 +37,63 @@
 	"war_rounds" 
 	{
 		"#format"	"{1:i}"
+		"da"		"Runde {purple}{1}{default} af {purple}3"		
 		"en"		"Round {purple}{1}{default} of {purple}3"
 		"de"		"Runde {purple}{1}{default} von {purple}3"
 	}
 	
 	"war_next" 
 	{
+		"da"		"Næste runde er {purple}War"	
 		"en"		"Next round is {purple}War"
 		"de"		"Nächste Runde ist {purple}War"
 	}
 	
 	"war_next_nc" 		// no colors!
 	{
+		"da"		"Næste runde er War"	
 		"en"		"Next round is War"
 		"de"		"Nächste Runde ist War"
 	}
 	
 	"war_start" 
 	{
+		"da"		"{purple}War{default} er startet!"	
 		"en"		"The {purple}War{default} has started!"
 		"de"		"{purple}War{default} ist gestartet!"
 	}
 	
 	"war_start_nc" 
 	{
+		"da"		"War er startet!"	
 		"en"		"The War has started!"
 		"de"		"War ist gestartet!"
 	}
 	
 	"war_voted" 
 	{
+		"da"		"{purple}War{default} er startet!"	
 		"en"		"The {purple}War{default} has started!"
 		"de"		"{purple}War{default} ist gestartet!"
 	}
 	
 	"war_progress"  
 	{
-		"en"		"War is {purple}allready in progress"
+		"da"		"War er {purple}allerede i gang!"	
+		"en"		"War is {purple}already in progress"
 		"de"		"War ist {purple}bereits gesetzt"
 	}
 	
 	"war_minct"
 	{
+		"da"		"For war skal der mindst være {purple}en CT"	
 		"en"		"For a Duckhunt you need a least {purple}one CT"
 		"de"		"Für Duckhunt brauchen wir mindestens {purple}einen CT"
 	}
 	
 	"war_disabled"
 	{
+		"da"		"War er {purple}slået fra."	
 		"en"		"War is {purple}disabled."
 		"de"		"War ist {purple}deaktiviert."
 	}
@@ -88,6 +101,7 @@
 	"war_damage_nc"		// no colors!
 	{
 		"#format"	"{1:i}"
+		"da"		"{1} sekunder til man kan skyde hinanden!"		
 		"en"		"{1} seconds until damage enabled"
 		"de"		"{1} Sekunden bis Schaden aktiv ist"
 	}
@@ -95,18 +109,21 @@
 	"war_voting"
 	{
 		"#format"	""
+		"en"		"Afstemning for war er {purple}slået fra"		
 		"en"		"Player Voting for War is {purple}disabled"
 		"de"		"Voting für War ist {purple}ausgeschaltet"
 	}
 	
 	"war_setbywarden"
 	{
+		"da"		"Warden bestemmer runde er {purple}slået fra"	
 		"en"		"Set War by Warden is {purple}disabled"
 		"de"		"War Aktivierung durch den Warden ist {purple}ausgeschaltet"
 	}
 	
 	"war_setbyadmin"
 	{
+		"da"		"Admin bestemmer runde er {purple}slået fra"	
 		"en"		"Set War by admin is {purple}disabled"
 		"de"		"War Aktivierung durch den Admin ist {purple}ausgeschaltet"
 	}
@@ -114,78 +131,91 @@
 	"war_timetohide_nc"		// no colors!
 	{
 		"#format"	"{1:i}"
+		"da"		"{1} sekunder til du bliver unfreezet!"		
 		"en"		"{1} seconds until unfreeze"
 		"de"		"{1} Sekunden bis zum unfreeze"
 	}
 	
 	"war_info_Title"		// no colors!
 	{
+		"da"		"War er aktiveret!"	
 		"en"		"War is activ"
 		"de"		"Krieg ist aktiv"
 	}
 	
 	"war_info_Tele"		// no colors!
 	{
+		"da"		"Ikke bliv overrasket hvis du sidder fast i luften og frosset!"	
 		"en"		"Do not be surprised if you hangs in the air and freezed"
 		"de"		"Nicht wundern falls ihr in der Luft hängt und dich nicht bewegen kannst"
 	}
 	
 	"war_info_Spawn"		// no colors!
 	{
+		"da"		"Ikke bliv overrasket hvis du spawner med våben og cellerne er åbne!"	
 		"en"		"Do not be surprised if you spawn with weapon and the cells are open"
 		"de"		"Nicht wundern wenn ihr mit Waffe und offenen Zelle spawnt"
 	}
 	
 	"war_info_Line2"		// no colors!
 	{
+		"da"		"I war skal CT og T spille mod hinanden."	
 		"en"		"In warround ct play against t"
 		"de"		"In Kriegrunden spielen CT's gegen T's"
 	}
 	
 	"war_info_Line3"		// no colors!
 	{
+		"da"		"Indtil runden begynder, kan du finde et godt sted at starte!"	
 		"en"		"While nodamge time you can move and get in position"
 		"de"		"Während der NoDamge Phase darfst du dich bewegen und in Position gehen"
 	}
 	
 	"war_info_Line4"		// no colors!
 	{
+		"da"		"Alle jail regler er ophævet!"	
 		"en"		"All normal jailRules are repealed"
 		"de"		"Alle normalen Jailregeln sind aufgehoben!"
 	}
 	
 	"war_info_Line5"		// no colors!
 	{
+		"da"		"Last Request er deaktiveret i denne runde!"	
 		"en"		"There is no last request!"
 		"de"		"Der letzte Terrorist hat keinen Wunsch!"
 	}
 	
 	"war_info_Line6"		// no colors!
 	{
+		"da"		"Alle kan gå hen hvor de har lyst eller starte!"
 		"en"		"Everyone is allowed to go everywhere where he wants"
 		"de"		"Jeder darf überall hin wo er will!"
 	}
 	
 	"war_info_Line7"		// no colors!
 	{
+		"da"		"Alle server regler skal overholdes!"	
 		"en"		"dont be an asshole!"
 		"de"		"bau keine scheisse!"
 	}
 	
 	"RoundOne"
 	{
+		"da"		"Runde {purple}1{default} af {purple}3{default}"	
 		"en"		"Round {purple}1{default} of {purple}3{default}"
 		"de"		"Runde {purple}1{default} von {purple}3{default}"
 	}
 	
 	"RoundTwo"
 	{
+		"da"		"Runde {purple}2{default} af {purple}3{default}"	
 		"en"		"Round {purple}2{default} of {purple}3{default}"
 		"de"		"Runde {purple}2{default} von {purple}3{default}"
 	}
 	
 	"RoundThree"
 	{
+		"da"		"{purple}Sidste{default} War runde!"	
 		"en"		"{purple}last{default} War round"
 		"de"		"{purple}letzte{default} War runde"
 	}
@@ -193,6 +223,7 @@
 	"war_wait"
 	{
 		"#format"	"{1:i}"
+		"da"		"Du skal vente i {purple}{1}{default} runder!"		
 		"en"		"you must wait {purple}{1}{default} more rounds"
 		"de"		"Du musst noch {purple}{1}{default} Runden warten"
 	}
