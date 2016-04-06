@@ -328,12 +328,13 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 						{
 							SetEntityMoveType(client, MOVETYPE_NONE);
 							GivePlayerItem(client, "weapon_tagrenade");
+							SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 						}
 						if (GetClientTeam(client) == CS_TEAM_T)
 						{
 							SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
 							SendPanelToClient(HideMenu, client, Pass, 15);
-							SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
+							
 						}
 						GivePlayerItem(client, "weapon_knife");
 					}
@@ -392,7 +393,6 @@ public Action:Freezed(Handle:timer)
 					{
 						SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 0.5);
 					}
-					SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
 				}
 			}
 			CreateTimer( 0.0, ShowOverlayStart, client);
@@ -402,6 +402,27 @@ public Action:Freezed(Handle:timer)
 	CPrintToChatAll("%t %t", "hide_tag" , "hide_start");
 	FreezeTimer = null;
 	return Plugin_Stop;
+}
+
+public Action:OnWeaponCanUse(client, weapon)
+{
+	if(IsHide == true)
+	{
+
+		char sWeapon[32];
+		GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
+
+		if((GetClientTeam(client) == CS_TEAM_T && StrEqual(sWeapon, "weapon_knife")) || (GetClientTeam(client) == CS_TEAM_CT))
+		{
+		
+			if (IsClientInGame(client) && IsPlayerAlive(client))
+			{
+				return Plugin_Continue;
+			}
+		}
+		return Plugin_Handled;
+	}
+	return Plugin_Continue;
 }
 
 public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
