@@ -5,6 +5,7 @@ bugs:
 - [ ] can use sometimes weapon menu onfirst round with plugin disabled?!´
 - [ ] warden model glitch sometimes through floor? (blackscreen) model feature removed
 - [ ] catch: sprint bug release T
+- [ ] jihad: Hp & burn for not nearby
 
 must:
 
