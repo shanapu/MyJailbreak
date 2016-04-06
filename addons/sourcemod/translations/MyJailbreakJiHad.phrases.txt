@@ -1,0 +1,164 @@
+"Phrases"
+{
+	"jihad_tag"
+	{
+		"en"		"[{green}MyJB.jihad{default}]"
+	}
+	"jihad_need"
+	{
+		"#format"	"{1:i},{2:N}"
+		"en"		"{purple}{2}{default} has votet. {purple}{1}{default} votes left to {darkred}jihad"
+		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}jihad{default} beginnt"
+	}
+	"jihad_twin_nc"
+	{
+		"en"		"All CTS Died"
+		"de"		"Alle CT sind Tod"
+	}
+	"jihad_voting"
+	{
+		"en"		"Player Voting for JiHad is {purple}disabled"
+		"de"		"Voting für JiHad ist {purple}ausgeschaltet"
+	}
+	"jihad_setbywarden"
+	{
+		"en"		"Set JiHad by Warden is {purple}disabled"
+		"de"		"JiHad Aktivierung durch den Warden ist {purple}ausgeschaltet"
+	}
+	
+	"jihad_setbyadmin"
+	{
+		"en"		"Set JiHad by admin is {purple}disabled"
+		"de"		"JiHad Aktivierung durch den Admin ist {purple}ausgeschaltet"
+	}
+	"jihad_ctwin_nc"
+	{
+		"en"		"Counter-Terrorists has surrived"
+		"de"		"Die Counter-Terrorist haben überlebt"
+	}
+	
+	"jihad_end"
+	{
+		"en"		"{purple}JiHad{default} ended"
+		"de"		"{purple}JiHad{default} beendet"
+	}
+	
+	"jihad_next"
+	{
+		"en"		"Next round is {purple}JiHad"
+		"de"		"Nächste Runde ist {purple}JiHad"
+	}
+	"jihad_next_nc"
+	{
+		"en"		"Next round is JiHad"
+		"de"		"Nächste Runde ist JiHad"
+	}
+	
+	"jihad_start"
+	{
+
+		"en"		"The {purple}JiHad{default} has started!"
+		"de"		"{purple}JiHad{default} ist gestartet!"
+	}
+	
+	"jihad_start_nc"
+	{
+
+		"en"		"The JiHad started!"
+		"de"		"JiHad ist gestartet!"
+	}
+	
+	"jihad_voted"
+	{
+		"en"		"You allready voted for {purple}JiHad"
+		"de"		"Du hast schon für {purple}JiHad {default}gevotet"
+	}
+	
+	"jihad_progress"
+	{
+		"en"		"JiHad is {purple}allready in progress"
+		"de"		"JiHad ist {purple}bereits gesetzt"
+	}
+	
+	"jihad_disabled"
+	{
+
+		"en"		"JiHad is {purple}disabled."
+		"de"		"JiHad ist {purple}deaktiviert."
+	}
+	
+		
+	"jihad_sprint"
+	{
+
+		"en"		"You are now using {blue}Sprint!"
+		"de"		"Du {blue}sprintest!"
+	}
+	
+	
+	"jihad_timetojihad_nc"
+	{
+		"#format"	"{1:i}"
+		"en"		"{1} seconds to hide"
+		"de"		"{1} Sekunden to hide"
+	}
+	"jihad_timetoopen_nc"
+	{
+		"#format"	"{1:i}"
+		"en"		"{1} seconds until cells open"
+		"de"		"{1} Sekunden bis die Zellen öffnen"
+	}
+	
+	"jihad_info_Title"
+	{
+		"en"		"Scout JiHad JiHad is activ"
+		"de"		"Scout JiHad JiHad ist aktiv"
+	}
+	
+	"jihad_info_Line1"
+	{
+		"en"		"ALLAH AKBHAR!"
+		"de"		"ALLAH AKBHAR!"
+	}
+	"jihad_info_Line2"
+	{
+		"en"		"Terrors got c4 and can suicde wit USE key"
+		"de"		"Terrors haben c4 und können mit der USE Taste suizid begehen"
+	}
+	
+	"jihad_info_Line3"
+	{
+		"en"		"CT better hide"
+		"de"		"ct sollten sich verstecken"
+	}
+	
+	"jihad_info_Line4"
+	{
+		"en"		"All normal jailRules are repealed"
+		"de"		"Alle normalen Jailregeln sind aufgehoben!"
+	}
+	
+	"jihad_info_Line5"
+	{
+		"en"		"There is no last request!"
+		"de"		"Der letzte Terrorist hat keinen Wunsch!"
+	}
+	
+	"jihad_info_Line6"
+	{
+		"en"		"Everyone is allowed to go everywhere where he wants"
+		"de"		"Jeder darf überall hin wo er will!"
+	}
+	
+	"jihad_info_Line7"
+	{
+		"en"		"dont be an asshole!"
+		"de"		"bau keine scheisse!"
+	}
+		"jihad_wait"
+	{
+		"#format"	"{1:i}"
+		"en"		"you must wait {1} more rounds"
+		"de"		"Du musst noch {1} Runden warten"
+	}
+}
