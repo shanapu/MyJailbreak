@@ -14,9 +14,9 @@
 #pragma semicolon 1
 
 //Defines
-#define PLUGIN_VERSION "0.1"
-#define CLIENT_SPRINTUSING   (1<<0)
-#define CLIENT_SPRINTUNABLE  (1<<1)
+#define PLUGIN_VERSION "0.1.1"
+#define IsSprintUsing   (1<<0)
+#define IsSprintCoolDown  (1<<1)
 
 //Booleans
 bool IsJiHad;
@@ -54,7 +54,7 @@ int g_iOldRoundTime;
 int g_iRoundLimits;
 int g_iFreezeTime;
 int JiHadRound;
-int iCLIENT_STATUS[MAXPLAYERS+1];
+int ClientSprintStatus[MAXPLAYERS+1];
 
 //Handles
 Handle SprintTimer[MAXPLAYERS+1];
@@ -395,7 +395,7 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 					if (IsClientInGame(client))
 					{
 						StripAllWeapons(client);
-						iCLIENT_STATUS[client] = 0;
+						ClientSprintStatus[client] = 0;
 						SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
 						SendPanelToClient(JiHadMenu, client, Pass, 15);
 						
@@ -589,7 +589,7 @@ public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 		for(int client=1; client <= MaxClients; client++)
 		{
 			if (IsClientInGame(client)) SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
-			iCLIENT_STATUS[client] = 0;
+			ClientSprintStatus[client] = 0;
 		}
 		if (FreezeTimer != null) KillTimer(FreezeTimer);
 		
@@ -696,9 +696,9 @@ public Action:Command_StartSprint(client, args)
 {
 	if (IsJiHad)
 	{
-		if(gc_bSprint.BoolValue && client > 0 && IsClientInGame(client) && IsPlayerAlive(client) && GetClientTeam(client) > 1 && !(iCLIENT_STATUS[client] & CLIENT_SPRINTUSING) && !(iCLIENT_STATUS[client] & CLIENT_SPRINTUNABLE))
+		if(gc_bSprint.BoolValue && client > 0 && IsClientInGame(client) && IsPlayerAlive(client) && GetClientTeam(client) > 1 && !(ClientSprintStatus[client] & IsSprintUsing) && !(ClientSprintStatus[client] & IsSprintCoolDown))
 		{
-			iCLIENT_STATUS[client] |= CLIENT_SPRINTUSING | CLIENT_SPRINTUNABLE;
+			ClientSprintStatus[client] |= IsSprintUsing | IsSprintCoolDown;
 			SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", gc_fSpeed.FloatValue);
 			EmitSoundToClient(client, "player/suit_sprint.wav", SOUND_FROM_PLAYER, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, 0.8);
 			CPrintToChat(client, "%t %t", "jihad_tag" ,"jihad_sprint");
@@ -750,17 +750,15 @@ ResetSprint(client)
 		KillTimer(SprintTimer[client]);
 		SprintTimer[client] = null;
 	}
-
 	if(GetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue") != 1)
 	{
 		SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
 	}
 	
-	if(iCLIENT_STATUS[client] & CLIENT_SPRINTUSING)
+	if(ClientSprintStatus[client] & IsSprintUsing)
 	{
-		iCLIENT_STATUS[client] &= ~ CLIENT_SPRINTUSING;
+		ClientSprintStatus[client] &= ~ IsSprintUsing;
 	}
-
 	return;
 }
 
@@ -769,10 +767,10 @@ public Action:Timer_SprintEnd(Handle:timer, any:client)
 	SprintTimer[client] = null;
 	
 	
-	if(IsClientInGame(client) && (iCLIENT_STATUS[client] & CLIENT_SPRINTUSING))
+	if(IsClientInGame(client) && (ClientSprintStatus[client] & IsSprintUsing))
 	{
 		SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
-		iCLIENT_STATUS[client] &= ~ CLIENT_SPRINTUSING;
+		ClientSprintStatus[client] &= ~ IsSprintUsing;
 		if(IsPlayerAlive(client) && GetClientTeam(client) > 1)
 		{
 			SprintTimer[client] = CreateTimer(gc_fCooldown.FloatValue, Timer_SprintCooldown, client);
@@ -784,10 +782,9 @@ public Action:Timer_SprintEnd(Handle:timer, any:client)
 public Action:Timer_SprintCooldown(Handle:timer, any:client)
 {
 	SprintTimer[client] = null;
-	
-	if(IsClientInGame(client) && (iCLIENT_STATUS[client] & CLIENT_SPRINTUNABLE))
+	if(IsClientInGame(client) && (ClientSprintStatus[client] & IsSprintCoolDown))
 	{
-		iCLIENT_STATUS[client] &= ~ CLIENT_SPRINTUNABLE;
+		ClientSprintStatus[client] &= ~ IsSprintCoolDown;
 	}
 	return;
 }
@@ -796,7 +793,7 @@ public Event_PlayerSpawn(Handle:event,const String:name[],bool:dontBroadcast)
 {
 	new iClient = GetClientOfUserId(GetEventInt(event, "userid"));
 	ResetSprint(iClient);
-	iCLIENT_STATUS[iClient] &= ~ CLIENT_SPRINTUNABLE;
+	ClientSprintStatus[iClient] &= ~ IsSprintCoolDown;
 	return;
 
 }

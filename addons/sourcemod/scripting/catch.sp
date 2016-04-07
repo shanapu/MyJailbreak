@@ -14,12 +14,13 @@
 #pragma semicolon 1
 
 //Defines
-#define PLUGIN_VERSION "0.1"
+#define PLUGIN_VERSION "0.1.1"
+#define IsSprintUsing   (1<<0)
+#define IsSprintCoolDown  (1<<1)
 
 //Booleans
 bool IsCatch;
 bool StartCatch;
-bool IsSprint;
 bool catched[MAXPLAYERS+1];
 
 //ConVars
@@ -49,6 +50,7 @@ int g_iVoteCount;
 int g_iOldRoundTime;
 int g_iRoundLimits;
 int CatchRound;
+int ClientSprintStatus[MAXPLAYERS+1];
 
 //Handles
 Handle SprintTimer[MAXPLAYERS+1];
@@ -129,7 +131,7 @@ public void OnPluginStart()
 	gc_sSoundPath2.GetString(g_sSoundPath2, sizeof(g_sSoundPath2));
 	gc_sOverlayFreeze.GetString(g_sOverlayFreeze , sizeof(g_sOverlayFreeze));
 	
-	IsSprint = false;
+
 	IsCatch = false;
 	StartCatch = false;
 	g_iVoteCount = 0;
@@ -168,7 +170,7 @@ public void OnMapStart()
 	g_iVoteCount = 0;
 	CatchRound = 0;
 	IsCatch = false;
-	IsSprint = false;
+
 	StartCatch = false;
 	g_iRoundLimits = gc_iRoundWait.IntValue;
 }
@@ -376,6 +378,7 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 							catched[client] = false;
 						}
 						StripAllWeapons(client);
+						ClientSprintStatus[client] = 0;
 						GivePlayerItem(client, "weapon_knife");
 						SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
 						SendPanelToClient(CatchMenu, client, Pass, 15);
@@ -504,7 +507,7 @@ public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 		for(int client=1; client <= MaxClients; client++)
 		{
 			if (IsClientInGame(client)) SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
-			
+			ClientSprintStatus[client] = 0;
 		}
 		
 		if (winner == 2) PrintHintTextToAll("%t", "catch_twin_nc");
@@ -608,13 +611,12 @@ public Action:Command_StartSprint(client, args)
 {
 	if (IsCatch)
 	{
-		if (!IsSprint)
 		{
 			if (catched[client] == false)
 			{
-				if(gc_bSprint.BoolValue && client > 0 && IsClientInGame(client) && IsPlayerAlive(client) && GetClientTeam(client) > 1)
+				if(gc_bSprint.BoolValue && client > 0 && IsClientInGame(client) && IsPlayerAlive(client) && GetClientTeam(client) > 1 && !(ClientSprintStatus[client] & IsSprintUsing) && !(ClientSprintStatus[client] & IsSprintCoolDown))
 				{
-					IsSprint = true;
+					ClientSprintStatus[client] |= IsSprintUsing | IsSprintCoolDown;
 					SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", gc_fSpeed.FloatValue);
 					EmitSoundToClient(client, "player/suit_sprint.wav", SOUND_FROM_PLAYER, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, 0.8);
 					CPrintToChat(client, "%t %t", "catch_tag" ,"catch_sprint");
@@ -653,12 +655,14 @@ ResetSprint(client)
 	{
 		KillTimer(SprintTimer[client]);
 		SprintTimer[client] = null;
-		IsSprint = false;
 	}
-
 	if(GetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue") != 1)
 	{
 		SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
+	}
+	if(ClientSprintStatus[client] & IsSprintUsing)
+	{
+		ClientSprintStatus[client] &= ~ IsSprintUsing;
 	}
 	return;
 }
@@ -668,10 +672,10 @@ public Action:Timer_SprintEnd(Handle:timer, any:client)
 	SprintTimer[client] = null;
 	
 	
-	if(IsClientInGame(client))
+	if(IsClientInGame(client) && (ClientSprintStatus[client] & IsSprintUsing))
 	{
 		SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
-		
+		ClientSprintStatus[client] &= ~ IsSprintUsing;
 		if(IsPlayerAlive(client) && GetClientTeam(client) > 1)
 		{
 			SprintTimer[client] = CreateTimer(gc_fCooldown.FloatValue, Timer_SprintCooldown, client);
@@ -683,7 +687,10 @@ public Action:Timer_SprintEnd(Handle:timer, any:client)
 public Action:Timer_SprintCooldown(Handle:timer, any:client)
 {
 	SprintTimer[client] = null;
-	IsSprint = false;
+	if(IsClientInGame(client) && (ClientSprintStatus[client] & IsSprintCoolDown))
+	{
+		ClientSprintStatus[client] &= ~ IsSprintCoolDown;
+	}
 	return;
 }
 
@@ -691,6 +698,7 @@ public Event_PlayerSpawn(Handle:event,const String:name[],bool:dontBroadcast)
 {
 	new iClient = GetClientOfUserId(GetEventInt(event, "userid"));
 	ResetSprint(iClient);
+	ClientSprintStatus[iClient] &= ~ IsSprintCoolDown;
 	return;
 }
 

@@ -63,6 +63,7 @@ want:
 - [ ] warden: unwarden roundstart and delay old warden.
 - [ ] warden: icon above head (material or model?)
 - [x] warden: markers
+- [ ] jihad: freeze by activate bool
 - [ ] new day: A day where you spawn with one single low random weapon and get 500 HP :D
 - [x] warden: improve markers (2 kind)
 - [ ] warden: limits
