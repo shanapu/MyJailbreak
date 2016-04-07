@@ -1,7 +1,7 @@
 # MyJailbreak 
 
 ## work in progress! a rough AlphaVersion
-## Files been updated ~daily so have a look at the last commits. Upgrad you installation by overwrite translations & smx. no need delete you rcfgs
+## Files been updated ~daily so have a look at the last commits. No guarantee everything works well, but it should ;)
 ### This is my first public project. please note that the code may is messy, stupid and miscarriage.
 ### I would be happy and very pleased if you wannt to join this project as equal collaborator.
 ### If you own a feature or extention for Jail/Warden that would fit in, i would be happy when you share it with us.

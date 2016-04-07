@@ -95,7 +95,7 @@ public void OnPluginStart()
 	HookEvent("round_start", RoundStart);
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookEvent("round_end", RoundEnd);
-	HookEvent("decoy_started", Decoy_Detonate);
+	HookEvent("flashbang_detonate", flash_Detonate);
 	
 	//Find
 	g_iSetRoundTime = FindConVar("mp_roundtime");
@@ -312,11 +312,11 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 						{
 							SetEntityGravity(client, gc_fGravValue.FloatValue);	
 						}
-						
+						SetEntPropFloat(client, Prop_Send, "m_flFlashMaxAlpha", 0.5);
 						SendPanelToClient(DodgeBallMenu, client, Pass, 15);
 						SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 						StripAllWeapons(client);
-						GivePlayerItem(client, "weapon_decoy");
+						GivePlayerItem(client, "weapon_flashbang");
 						SetEntityHealth(client, 1);
 					}
 				}
@@ -338,7 +338,7 @@ public Action:OnWeaponCanUse(client, weapon)
 		char sWeapon[32];
 		GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
 
-		if(StrEqual(sWeapon, "weapon_decoy"))
+		if(StrEqual(sWeapon, "weapon_flashbang"))
 		{
 		
 			if (IsClientInGame(client) && IsPlayerAlive(client))
@@ -352,7 +352,7 @@ public Action:OnWeaponCanUse(client, weapon)
 }
 
 
-public Decoy_Detonate(Handle:event, const String:name[], bool:dontBroadcast)
+public flash_Detonate(Handle:event, const String:name[], bool:dontBroadcast)
 {
 	if (IsDodgeBall == true)
 	{
@@ -361,13 +361,7 @@ public Decoy_Detonate(Handle:event, const String:name[], bool:dontBroadcast)
 	{
 		return;
 	}
-	new iWeapon4 = GetPlayerWeaponSlot(target, 3);
-	if (IsValidEdict(iWeapon4))
-	{			
-		RemovePlayerItem(target, iWeapon4);
-		RemoveEdict(iWeapon4);
-	}
-	GivePlayerItem(target, "weapon_decoy");
+	GivePlayerItem(target, "weapon_flashbang");
 	}
 	return;
 }

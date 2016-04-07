@@ -469,12 +469,6 @@ public HE_Detonate(Handle:event, const String:name[], bool:dontBroadcast)
 	{
 		return;
 	}
-	new iWeapon4 = GetPlayerWeaponSlot(target, 3);
-	if (IsValidEdict(iWeapon4))
-	{			
-		RemovePlayerItem(target, iWeapon4);
-		RemoveEdict(iWeapon4);
-	}
 	GivePlayerItem(target, "weapon_hegrenade");
 	}
 	return;

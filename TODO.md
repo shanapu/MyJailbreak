@@ -2,10 +2,11 @@ sorry for bad spelling and loose cues
 
 bugs:
 
-- [ ] can use sometimes weapon menu onfirst round with plugin disabled?!´
+- [ ] can use sometimes weapon menu on first round with plugin disabled?!´
 - [ ] warden model glitch sometimes through floor? (blackscreen) model feature removed
 - [x] catch: sprint bug release T
 - [x] jihad: Hp & burn for not nearby
+- [ ] mp_roundtime 1 after switch from event to event
 
 must:
 
@@ -31,21 +32,20 @@ must:
 - [ ] alldays: cooldown cross days
 - [x] zombie: define zombie model
 - [x] warden: unvote
-- [ ] Marker: timer disaprears
+- [x] duckhunt: infi ammo
+- [x] Marker: timer disaprears
 - [x] warden: model
 - [x] warden: allow unvote
 - [x] new day: suicid bomber
-- [ ] jihad: activate bomb when cells open 
-- [ ] jihad: sound to client
+- [x] jihad: activate bomb when cells open 
+- [ ] jihad: sound from client position
 - [ ] jihad: burn dead bodies
 - [x] warden: countdown
-- [ ] warden: ff not for ct
 - [x] playertags: as chat tag
-- [ ] playertags: add VIP flag
 - [ ] all days: restrict map heal station
-- [ ] catch: T win when time run out
-- [ ] hide: T win when time run out
-- [ ] jihad: CT win when time run out
+- [x] catch: T win when time run out
+- [x] hide: T win when time run out
+- [x] jihad: CT win when time run out
 - [ ] warden: clean changeback model unwarden
 - [x] move FF from menu to warden
 - [x] move randomkill from menu to warden
@@ -67,11 +67,14 @@ want:
 - [ ] new day: A day where you spawn with one single low random weapon and get 500 HP :D
 - [x] warden: improve markers (2 kind)
 - [ ] warden: limits
+- [ ] warden: ff not for ct
+- [ ] playertags: add VIP flag
 - [ ] playertags: define colorize chat tag
 - [x] noscope: dis/enable lowgrav
 - [x] noscope: set grav
 - [ ] warden: talkpower
-- [ ] jihad: set radius
+- [x] jihad: set radius
+- [x] jihad: bool movement on bomb activate
 - [ ] countdown: start stop sound
 - [ ] warden: bomb toss https://github.com/KissLick/TeamGames/blob/master/addons/sourcemod/scripting/modules/TG_BombToss.sp
 - [ ] countdown: set time - or menu with differnt times?!?!

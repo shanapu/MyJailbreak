@@ -17,6 +17,7 @@
 #define PLUGIN_VERSION "0.1.1"
 #define IsSprintUsing   (1<<0)
 #define IsSprintCoolDown  (1<<1)
+#define IsBombing  (1<<2)
 
 //Booleans
 bool IsJiHad;
@@ -31,6 +32,8 @@ ConVar gc_bSetW;
 ConVar gc_bSetA;
 ConVar gc_bVote;
 ConVar gc_iKey;
+ConVar gc_bStandStill;
+ConVar gc_fBombRadius;
 ConVar gc_bSounds;
 ConVar gc_bOverlays;
 ConVar gc_iRoundLimits;
@@ -103,6 +106,8 @@ public void OnPluginStart()
 	gc_bSetA = AutoExecConfig_CreateConVar("sm_jihad_seta", "1", "0 - disabled, 1 - allow admin to set jihad round", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	gc_bVote = AutoExecConfig_CreateConVar("sm_jihad_vote", "1", "0 - disabled, 1 - allow player to vote for jihad", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	gc_iKey = AutoExecConfig_CreateConVar("sm_jihad_key", "1", "1 - Inspect(look) weapon / 2 - walk / 3 - Secondary Attack");
+	gc_bStandStill = AutoExecConfig_CreateConVar("sm_jihad_standstill", "1", "0 - disabled, 1 - standstill(cant move) on Activate bomb");
+	gc_fBombRadius = AutoExecConfig_CreateConVar("sm_jihad_bomb_radius", "200.0","Radius for bomb damage", 0, true, 10.0, true, 999.0);
 	gc_iFreezeTime = AutoExecConfig_CreateConVar("sm_zombie_freezetime", "35", "Time freeze zombies");
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_jihad_roundtime", "5", "Round time for a single jihad round");
 	gc_iRoundLimits = AutoExecConfig_CreateConVar("sm_jihad_roundsnext", "3", "Rounds until event can be started again.");
@@ -117,7 +122,7 @@ public void OnPluginStart()
 	gc_fCooldown= AutoExecConfig_CreateConVar("sm_jihad_sprint_cooldown", "10","Time in seconds the player must wait for the next sprint", 0, true, 1.0, true, 15.0);
 	gc_bSprint= AutoExecConfig_CreateConVar("sm_jihad_sprint_enable", "1","Enable/Disable ShortSprint", 0, true, 0.0, true, 1.0);
 	gc_fSpeed= AutoExecConfig_CreateConVar("sm_jihad_sprint_speed", "1.25","Ratio for how fast the player will sprint", 0, true, 1.01, true, 5.00);
-	gc_fTime= AutoExecConfig_CreateConVar("sm_jihad_sprint_time", "1.0", "Time in seconds the player will sprint",0, true, 1.0, true, 30.0);
+	gc_fTime = AutoExecConfig_CreateConVar("sm_jihad_sprint_time", "1.0", "Time in seconds the player will sprint",0, true, 1.0, true, 30.0);
 	gc_bTag = AutoExecConfig_CreateConVar("sm_jihad_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	
 	AutoExecConfig_ExecuteFile();
@@ -178,6 +183,20 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 		strcopy(g_sOverlayStart, sizeof(g_sOverlayStart), newValue);
 		PrecacheOverlayAnyDownload(g_sOverlayStart);
 	}
+}
+
+public Action:CS_OnTerminateRound(&Float:delay, &CSRoundEndReason:reason)
+{
+	if (IsJiHad)
+	{
+		if (reason == CSRoundEnd_Draw)
+		{
+			reason = CSRoundEnd_CTWin;
+			return Plugin_Changed;
+		}
+		return Plugin_Continue;
+	}
+	return Plugin_Continue;
 }
 
 public void OnMapStart()
@@ -484,8 +503,11 @@ public Action:Command_BombJihad(client, args)
 		if (IsClientInGame(client) && IsPlayerAlive(client) && (GetClientTeam(client) == CS_TEAM_T))
 		{
 			EmitSoundToAllAny(g_sSoundPath1);
-			SetEntityMoveType(client, MOVETYPE_NONE);
 			CreateTimer( 2.0, DoDaBomb, client);
+			if (gc_bStandStill.BoolValue)
+			{
+				SetEntityMoveType(client, MOVETYPE_NONE);
+			}
 		}
 	}
 }
@@ -515,7 +537,7 @@ public Action DoDaBomb( Handle timer, any client )
 			
 			//If CT was in explosion radius, damage or kill them
 			//Formula used: damage = 200 - (d/2)
-			int damage = RoundToFloor(200.0 - (distance / 2.0));
+			int damage = RoundToFloor(gc_fBombRadius.FloatValue - (distance / 2.0));
 			
 			if (damage <= 0) //this player was not damaged 
 			continue;
@@ -525,7 +547,7 @@ public Action DoDaBomb( Handle timer, any client )
 			if (curHP - damage <= 0) 
 			{
 				deathList[numKilledPlayers] = i;
-				++numKilledPlayers;
+				numKilledPlayers++;
 			}
 			else
 			{ //Survivor
@@ -534,10 +556,8 @@ public Action DoDaBomb( Handle timer, any client )
 			}
 		}
 	}
-	//Kill any players that may have died
 	if (numKilledPlayers > 0) 
 	{
-		//Kill all players on death list
 		for (int i = 0; i < numKilledPlayers; ++i)
 		{
 			ForcePlayerSuicide(deathList[i]);

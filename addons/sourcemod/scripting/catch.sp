@@ -498,6 +498,20 @@ CheckStatus()
 	}
 }
 
+public Action:CS_OnTerminateRound(&Float:delay, &CSRoundEndReason:reason)
+{
+	if (IsCatch)
+	{
+		if (reason == CSRoundEnd_Draw)
+		{
+			reason = CSRoundEnd_TerroristWin;
+			return Plugin_Changed;
+		}
+		return Plugin_Continue;
+	}
+	return Plugin_Continue;
+}
+
 public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 {
 	int winner = GetEventInt(event, "winner");
