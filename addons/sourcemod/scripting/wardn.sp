@@ -34,6 +34,7 @@ ConVar gc_bFF;
 ConVar gc_bRandom;
 ConVar gc_bMarker;
 ConVar gc_iMarkerKey;
+ConVar gc_fMarkerTime;
 ConVar gc_bCountDown;
 ConVar gc_bOverlays;
 ConVar gc_sOverlayStartPath;
@@ -155,7 +156,7 @@ public void OnPluginStart()
 	gc_bRandom = AutoExecConfig_CreateConVar("sm_warden_random", "1", "0 - disabled, 1 - enable kill a random t for warden");
 	gc_bMarker = AutoExecConfig_CreateConVar("sm_warden_marker", "1", "0 - disabled, 1 - enable Warden simple markers ");
 	gc_iMarkerKey = AutoExecConfig_CreateConVar("sm_warden_markerkey", "3", "1 - Look weapon / 2 - Use and shoot / 3 - walk and shoot");
-	gc_bCountDown = AutoExecConfig_CreateConVar("sm_warden_countdown", "1", "0 - disabled, 1 - enable countdown for warden");
+	gc_fMarkerTime = AutoExecConfig_CreateConVar("sm_warden_marker_time", "20.0", "Time in seconds marker will disappears");
 	gc_bOverlays = AutoExecConfig_CreateConVar("sm_warden_overlays", "1", "0 - disabled, 1 - enable overlays", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_warden_overlaystart_path", "overlays/MyJailbreak/start" , "Path to the start Overlay DONT TYPE .vmt or .vft");
 	gc_sOverlayStopPath = AutoExecConfig_CreateConVar("sm_warden_overlaystop_path", "overlays/MyJailbreak/stop" , "Path to the stop Overlay DONT TYPE .vmt or .vft");
@@ -329,6 +330,13 @@ void Draw_Markers()
 	
 	TE_SetupBeamPoints(fStart, fEnd, g_iBeamSprite, g_iHaloSprite, 0, 10, 1.0, 4.0, 16.0, 1, 0.0, g_MarkerColor, 5);
 	TE_SendToAll();
+	
+	CreateTimer(gc_fMarkerTime.FloatValue, DeleteMarker);
+}
+
+public Action DeleteMarker( Handle timer) 
+{
+	ResetMarker();
 }
 
 public Action:Event_RoundStart(Handle:event, const char[] name, bool:dontBroadcast)
