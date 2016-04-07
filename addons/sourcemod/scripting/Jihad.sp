@@ -500,17 +500,27 @@ public Action:Command_BombJihad(client, args)
 {
 	if (IsJiHad && BombActive)
 	{
+		char weaponName[64];
+		GetEdictClassname(weapon, weaponName, sizeof(weaponName));
+		
+		
 		if (IsClientInGame(client) && IsPlayerAlive(client) && (GetClientTeam(client) == CS_TEAM_T))
 		{
-			EmitSoundToAllAny(g_sSoundPath1);
-			CreateTimer( 2.0, DoDaBomb, client);
-			if (gc_bStandStill.BoolValue)
+			if(StrEqual(weaponName, "weapon_c4"))
 			{
-				SetEntityMoveType(client, MOVETYPE_NONE);
+				EmitSoundToAllAny(g_sSoundPath1);
+				CreateTimer( 2.0, DoDaBomb, client);
+				if (gc_bStandStill.BoolValue)
+				{
+					SetEntityMoveType(client, MOVETYPE_NONE);
+				}
 			}
+			else CPrintToChat(client, "%t %t", "jihad_tag" , "jihad_needc4");
 		}
 	}
 }
+
+
 
 public Action DoDaBomb( Handle timer, any client ) 
 {

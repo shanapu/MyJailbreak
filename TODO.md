@@ -6,7 +6,8 @@ bugs:
 - [ ] warden model glitch sometimes through floor? (blackscreen) model feature removed
 - [x] catch: sprint bug release T
 - [x] jihad: Hp & burn for not nearby
-- [ ] mp_roundtime 1 after switch from event to event
+- [ ] mp_roundtime 1 after set event on a eventend
+- [ ] catch: Just, sometimes they don't freeze
 
 must:
 
@@ -40,6 +41,7 @@ must:
 - [x] jihad: activate bomb when cells open 
 - [ ] jihad: sound from client position
 - [ ] jihad: burn dead bodies
+- [x] jihad: need equit bomb to use jihad
 - [x] warden: countdown
 - [x] playertags: as chat tag
 - [ ] all days: restrict map heal station
