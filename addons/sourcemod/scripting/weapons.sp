@@ -31,6 +31,7 @@ ConVar gc_bPlugin;
 ConVar gc_bTerror;
 ConVar gc_bCTerror;
 ConVar gc_bTA;
+ConVar gc_bJBmenu;
 ConVar gc_bHealth;
 
 enum weapons
@@ -81,6 +82,7 @@ public void OnPluginStart()
 	gc_bSpawn = AutoExecConfig_CreateConVar("sm_weapons_spawnmenu", "1", "0 - disabled, 1 - enable open menu on spawn");
 	gc_bTA = AutoExecConfig_CreateConVar("sm_weapons_warden_tagrenade", "1", "0 - disabled, 1 - enable open menu on spawn");
 	gc_bHealth = AutoExecConfig_CreateConVar("sm_weapons_warden_healthshot", "1", "0 - disabled, 1 - enable open menu on spawn");
+	gc_bJBmenu = AutoExecConfig_CreateConVar("sm_weapons_jbmenu", "1", "0 - disabled, 1 - enable open the MyJailbreak menu after give weapon.");
 	gc_bTag = AutoExecConfig_CreateConVar("sm_weapons_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 
 	AutoExecConfig_CacheConvars();
@@ -449,8 +451,11 @@ GiveSavedWeapons(clientIndex)
 		
 		GivePlayerItem(clientIndex, "weapon_knife");
 		//FakeClientCommand(clientIndex,"use weapon_knife");
-		//FakeClientCommand(clientIndex,"sm_menu");
 		
+		if (gc_bJBmenu.BoolValue)
+		{
+		FakeClientCommand(clientIndex,"sm_menu");
+		}
 		Timers[clientIndex] = CreateTimer(6.0, Fix, clientIndex);
 	}
 }
