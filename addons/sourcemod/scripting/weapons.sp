@@ -32,6 +32,8 @@ ConVar gc_bTerror;
 ConVar gc_bCTerror;
 ConVar gc_bTA;
 ConVar gc_bJBmenu;
+ConVar gc_bAWP;
+ConVar gc_bAutoSniper;
 ConVar gc_bHealth;
 
 enum weapons
@@ -80,6 +82,8 @@ public void OnPluginStart()
 	gc_bTerror = AutoExecConfig_CreateConVar("sm_weapons_t", "0", "0 - disabled, 1 - enable weapons for T - you shouldn't touch these, cause events days will handle them");
 	gc_bCTerror = AutoExecConfig_CreateConVar("sm_weapons_ct", "1", "0 - disabled, 1 - enable weapons for CT - you shouldn't touch these, cause events days will handle them");
 	gc_bSpawn = AutoExecConfig_CreateConVar("sm_weapons_spawnmenu", "1", "0 - disabled, 1 - enable open menu on spawn");
+	gc_bAWP = AutoExecConfig_CreateConVar("sm_weapons_awp", "1", "0 - disabled, 1 - enable AWP in menu");
+	gc_bAutoSniper = AutoExecConfig_CreateConVar("sm_weapons_autosniper", "1", "0 - disabled, 1 - enable scar20 & g3sg1 in menu");
 	gc_bTA = AutoExecConfig_CreateConVar("sm_weapons_warden_tagrenade", "1", "0 - disabled, 1 - enable open menu on spawn");
 	gc_bHealth = AutoExecConfig_CreateConVar("sm_weapons_warden_healthshot", "1", "0 - disabled, 1 - enable open menu on spawn");
 	gc_bJBmenu = AutoExecConfig_CreateConVar("sm_weapons_jbmenu", "1", "0 - disabled, 1 - enable open the MyJailbreak menu after give weapon.");
@@ -454,7 +458,7 @@ GiveSavedWeapons(clientIndex)
 		
 		if (gc_bJBmenu.BoolValue)
 		{
-		FakeClientCommand(clientIndex,"sm_menu");
+			FakeClientCommand(clientIndex,"sm_menu");
 		}
 		Timers[clientIndex] = CreateTimer(6.0, Fix, clientIndex);
 	}
@@ -540,9 +544,12 @@ ListWeapons()
 	Format(Items[desc], 64, "Galil AR");
 	PushArrayArray(array_primary, Items[0]);
 	
- 	Format(Items[ItemName], 64, "weapon_awp");
-	Format(Items[desc], 64, "AWP");
-	PushArrayArray(array_primary, Items[0]); 
+	if (gc_bAWP.BoolValue)
+	{
+		Format(Items[ItemName], 64, "weapon_awp");
+		Format(Items[desc], 64, "AWP");
+		PushArrayArray(array_primary, Items[0]); 
+	}
 	
 	Format(Items[ItemName], 64, "weapon_sg556");
 	Format(Items[desc], 64, "SG 553");
@@ -564,13 +571,16 @@ ListWeapons()
 	Format(Items[desc], 64, "P90");
 	PushArrayArray(array_primary, Items[0]);
 	
- 	Format(Items[ItemName], 64, "weapon_scar20");
-	Format(Items[desc], 64, "SCAR-20");
-	PushArrayArray(array_primary, Items[0]);
-	
-	Format(Items[ItemName], 64, "weapon_g3sg1");
-	Format(Items[desc], 64, "G3SG1");
-	PushArrayArray(array_primary, Items[0]); 
+	if (gc_bAutoSniper.BoolValue)
+	{
+		Format(Items[ItemName], 64, "weapon_scar20");
+		Format(Items[desc], 64, "SCAR-20");
+		PushArrayArray(array_primary, Items[0]);
+		
+		Format(Items[ItemName], 64, "weapon_g3sg1");
+		Format(Items[desc], 64, "G3SG1");
+		PushArrayArray(array_primary, Items[0]); 
+	}
 	
 	Format(Items[ItemName], 64, "weapon_ump45");
 	Format(Items[desc], 64, "UMP-45");
@@ -592,7 +602,7 @@ ListWeapons()
 	Format(Items[desc], 64, "MAC-10");
 	PushArrayArray(array_primary, Items[0]);
 	
- 	Format(Items[ItemName], 64, "weapon_ssg08");
+	Format(Items[ItemName], 64, "weapon_ssg08");
 	Format(Items[desc], 64, "SSG 08");
 	PushArrayArray(array_primary, Items[0]); 
 	
