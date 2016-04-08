@@ -7,6 +7,7 @@
 #include <colors>
 #include <sdkhooks>
 #include <autoexecconfig>
+#include <myjailbreak>
 
 //Compiler Options
 #pragma semicolon 1
@@ -38,7 +39,7 @@ int FreeDayRound = 0;
 
 //Handles
 Handle FreeDayMenu;
-Handle UseCvar;
+
 
 //Strings
 char g_sHasVoted[1500];
@@ -319,39 +320,6 @@ public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 	}
 }
 
-public Pass(Handle:menu, MenuAction:action, param1, param2)
-{
-}
-
-public SetCvar(char cvarName[64], value)
-{
-	UseCvar = FindConVar(cvarName);
-	if(UseCvar == null) return;
-	
-	int flags = GetConVarFlags(UseCvar);
-	flags &= ~FCVAR_NOTIFY;
-	SetConVarFlags(UseCvar, flags);
-
-	SetConVarInt(UseCvar, value);
-
-	flags |= FCVAR_NOTIFY;
-	SetConVarFlags(UseCvar, flags);
-}
-
-public SetCvarF(char cvarName[64], Float:value)
-{
-	UseCvar = FindConVar(cvarName);
-	if(UseCvar == null) return;
-
-	int flags = GetConVarFlags(UseCvar);
-	flags &= ~FCVAR_NOTIFY;
-	SetConVarFlags(UseCvar, flags);
-
-	SetConVarFloat(UseCvar, value);
-
-	flags |= FCVAR_NOTIFY;
-	SetConVarFlags(UseCvar, flags);
-}
 
 public OnMapEnd()
 {

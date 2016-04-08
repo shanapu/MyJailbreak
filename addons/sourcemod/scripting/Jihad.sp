@@ -9,6 +9,7 @@
 #include <emitsoundany>
 #include <autoexecconfig>
 #include <clientprefs>
+#include <myjailbreak>
 
 //Compiler Options
 #pragma semicolon 1
@@ -62,7 +63,7 @@ int ClientSprintStatus[MAXPLAYERS+1];
 //Handles
 Handle SprintTimer[MAXPLAYERS+1];
 Handle JiHadMenu;
-Handle UseCvar;
+
 Handle FreezeTimer;
 
 //Strings
@@ -70,7 +71,7 @@ char g_sSoundPath2[256];
 char g_sSoundPath1[256];
 char g_sHasVoted[1500];
 char g_sOverlayFreeze[256];
-char g_sOverlayStart[256];
+
 
 
 
@@ -165,25 +166,26 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 	if(convar == gc_sSoundPath1)
 	{
 		strcopy(g_sSoundPath1, sizeof(g_sSoundPath1), newValue);
-		PrecacheSoundAnyDownload(g_sSoundPath1);
+		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundPath1);
 	}
 	else if(convar == gc_sSoundPath2)
 	{
 		strcopy(g_sSoundPath2, sizeof(g_sSoundPath2), newValue);
-		PrecacheSoundAnyDownload(g_sSoundPath2);
+		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundPath2);
 	}
 
 	else if(convar == gc_sOverlayFreeze)
 	{
 		strcopy(g_sOverlayFreeze, sizeof(g_sOverlayFreeze), newValue);
-		PrecacheOverlayAnyDownload(g_sOverlayFreeze);
+		if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayFreeze);
 	}
 	else if(convar == gc_sOverlayStartPath)
 	{
 		strcopy(g_sOverlayStart, sizeof(g_sOverlayStart), newValue);
-		PrecacheOverlayAnyDownload(g_sOverlayStart);
+		if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStart);
 	}
 }
+
 
 public Action:CS_OnTerminateRound(&Float:delay, &CSRoundEndReason:reason)
 {
@@ -201,10 +203,10 @@ public Action:CS_OnTerminateRound(&Float:delay, &CSRoundEndReason:reason)
 
 public void OnMapStart()
 {
-	PrecacheSoundAnyDownload(g_sSoundPath1);
-	PrecacheSoundAnyDownload(g_sSoundPath2);
-	PrecacheOverlayAnyDownload(g_sOverlayStart);
-	PrecacheOverlayAnyDownload(g_sOverlayFreeze);
+	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundPath1);
+	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundPath2);
+	if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStart);
+	if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayFreeze);
 	PrecacheSound("player/suit_sprint.wav", true);
 	g_iVoteCount = 0;
 	JiHadRound = 0;
@@ -231,35 +233,6 @@ public void OnConfigsExecuted()
 			StrCat(sTags, sizeof(sTags), ", MyJailbreak");
 			hTags.SetString(sTags);
 		}
-	}
-}
-
-void PrecacheSoundAnyDownload(char[] sSound)
-{
-	if(gc_bSounds.BoolValue)	
-	{
-	PrecacheSoundAny(sSound);
-	
-	char sBuffer[256];
-	Format(sBuffer, sizeof(sBuffer), "sound/%s", sSound);
-	AddFileToDownloadsTable(sBuffer);
-	}
-}
-
-void PrecacheOverlayAnyDownload(char[] sOverlay)
-{
-	if(gc_bOverlays.BoolValue)	
-	{
-	char sBufferVmt[256];
-	char sBufferVtf[256];
-	Format(sBufferVmt, sizeof(sBufferVmt), "%s.vmt", sOverlay);
-	Format(sBufferVtf, sizeof(sBufferVtf), "%s.vtf", sOverlay);
-	PrecacheDecal(sBufferVmt, true);
-	PrecacheDecal(sBufferVtf, true);
-	Format(sBufferVmt, sizeof(sBufferVmt), "materials/%s.vmt", sOverlay);
-	Format(sBufferVtf, sizeof(sBufferVtf), "materials/%s.vtf", sOverlay);
-	AddFileToDownloadsTable(sBufferVmt);
-	AddFileToDownloadsTable(sBufferVtf);
 	}
 }
 
@@ -500,6 +473,7 @@ public Action:Command_BombJihad(client, args)
 {
 	if (IsJiHad && BombActive)
 	{
+		int weapon = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
 		char weaponName[64];
 		GetEdictClassname(weapon, weaponName, sizeof(weaponName));
 		
@@ -578,19 +552,6 @@ public Action DoDaBomb( Handle timer, any client )
 	
 }
 
-public Action ShowOverlayStart( Handle timer, any client ) 
-{
-	if(gc_bOverlays.BoolValue && IsClientInGame(client) && IsClientConnected(client) && !IsFakeClient(client))
-		{
-			int iFlag = GetCommandFlags( "r_screenoverlay" ) & ( ~FCVAR_CHEAT ); 
-			SetCommandFlags( "r_screenoverlay", iFlag ); 
-			ClientCommand( client, "r_screenoverlay \"%s.vtf\"", g_sOverlayStart);
-			CreateTimer( 2.0, DeleteOverlay, client );
-		}
-	return Plugin_Continue;
-}
-
-
 public Action:OnWeaponCanUse(client, weapon)
 {
 	char sWeapon[32];
@@ -654,10 +615,6 @@ public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 	}
 }
 
-public Pass(Handle:menu, MenuAction:action, param1, param2)
-{
-}
-
 public Action ShowOverlayFreeze( Handle timer, any client ) {
 	
 	if(gc_bOverlays.BoolValue && IsClientInGame(client) && IsClientConnected(client) && !IsFakeClient(client))
@@ -672,47 +629,6 @@ public Action ShowOverlayFreeze( Handle timer, any client ) {
 	
 }
 
-public Action  DeleteOverlay( Handle timer, any client ) 
-{
-	if(IsClientInGame(client) && IsClientConnected(client) && !IsFakeClient(client))
-	{
-	int iFlag = GetCommandFlags( "r_screenoverlay" ) & ( ~FCVAR_CHEAT ); 
-	SetCommandFlags( "r_screenoverlay", iFlag ); 
-	ClientCommand( client, "r_screenoverlay \"\"" );
-	}
-	return Plugin_Continue;
-}
-
-
-public SetCvar(char cvarName[64], value)
-{
-	UseCvar = FindConVar(cvarName);
-	if(UseCvar == null) return;
-	
-	int flags = GetConVarFlags(UseCvar);
-	flags &= ~FCVAR_NOTIFY;
-	SetConVarFlags(UseCvar, flags);
-
-	SetConVarInt(UseCvar, value);
-
-	flags |= FCVAR_NOTIFY;
-	SetConVarFlags(UseCvar, flags);
-}
-
-public SetCvarF(char cvarName[64], Float:value)
-{
-	UseCvar = FindConVar(cvarName);
-	if(UseCvar == null) return;
-
-	int flags = GetConVarFlags(UseCvar);
-	flags &= ~FCVAR_NOTIFY;
-	SetConVarFlags(UseCvar, flags);
-
-	SetConVarFloat(UseCvar, value);
-
-	flags |= FCVAR_NOTIFY;
-	SetConVarFlags(UseCvar, flags);
-}
 
 public IsValidClient( client ) 
 {
@@ -826,19 +742,6 @@ public Event_PlayerSpawn(Handle:event,const String:name[],bool:dontBroadcast)
 	ClientSprintStatus[iClient] &= ~ IsSprintCoolDown;
 	return;
 
-}
-
-stock StripAllWeapons(iClient)
-{
-	int iEnt;
-	for (int i = 0; i <= 4; i++)
-	{
-		while ((iEnt = GetPlayerWeaponSlot(iClient, i)) != -1)
-		{
-			RemovePlayerItem(iClient, iEnt);
-			AcceptEntityInput(iEnt, "Kill");
-		}
-	}
 }
 
 public OnMapEnd()

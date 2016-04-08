@@ -23,7 +23,7 @@ must:
 - [x] all days: msg when deactivated by set
 - [ ] 1.7 syntax ?
 - [x] new day: decoy/flash 1hp -> dodgeball
-- [ ] dodgeball: remove decoy (sound) / make it >flash AHAH
+- [ ] dodgeball: remove decoy (sound) / make it >flash AHAH make it HE?
 - [x] dodgeball: disbable knife
 - [x] countdown: is CD running? no double 
 - [x] catch: freeze sound & overlay
@@ -40,11 +40,9 @@ must:
 - [x] new day: suicid bomber
 - [x] jihad: activate bomb when cells open 
 - [ ] jihad: sound from client position
-- [ ] jihad: burn dead bodies
 - [x] jihad: need equit bomb to use jihad
 - [x] warden: countdown
 - [x] playertags: as chat tag
-- [ ] all days: restrict map heal station
 - [x] catch: T win when time run out
 - [x] hide: T win when time run out
 - [x] jihad: CT win when time run out
@@ -66,10 +64,14 @@ want:
 - [ ] warden: icon above head (material or model?)
 - [x] warden: markers
 - [ ] jihad: freeze by activate bool
+- [ ] new day: knife only (ice skate?)
 - [ ] new day: A day where you spawn with one single low random weapon and get 500 HP :D
-- [x] warden: improve markers (2 kind)
+- [0] warden: improve markers (2 kind)
 - [ ] warden: limits
+- [ ] warden: pick random if no given/always
+- [ ] all days: restrict map heal station
 - [ ] warden: ff not for ct
+- [ ] jihad: burn dead bodies
 - [ ] playertags: add VIP flag
 - [ ] playertags: define colorize chat tag
 - [x] noscope: dis/enable lowgrav

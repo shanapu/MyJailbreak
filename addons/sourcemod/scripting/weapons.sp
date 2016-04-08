@@ -7,6 +7,7 @@
 #include <wardn>
 #include <colors>
 #include <autoexecconfig>
+#include <myjailbreak>
 
 #define VERSION "0.x"
 
@@ -463,19 +464,6 @@ GiveSavedWeapons(clientIndex)
 		Timers[clientIndex] = CreateTimer(6.0, Fix, clientIndex);
 	}
 }
-
-stock StripAllWeapons(iClient)
-{
-    int iEnt;
-    for (int i = 0; i <= 4; i++)
-    {
-        while ((iEnt = GetPlayerWeaponSlot(iClient, i)) != -1)
-        {
-            RemovePlayerItem(iClient, iEnt);
-            AcceptEntityInput(iEnt, "Kill");
-        }
-    }
-}  
 
 public OnClientPutInServer(client)
 {

@@ -9,6 +9,7 @@
 #include <smlib>
 #include <colors>
 #include <autoexecconfig>
+#include <myjailbreak>
 
 //Compiler Options
 #pragma semicolon 1
@@ -82,7 +83,7 @@ char g_sHasVoted[1500];
 //char g_sWardenModel[256];
 char g_sSoundPath2[256];
 char g_sSoundPath1[256];
-char g_sOverlayStart[256];
+
 char g_sOverlayStop[256];
 
 //float
@@ -157,6 +158,7 @@ public void OnPluginStart()
 	gc_bMarker = AutoExecConfig_CreateConVar("sm_warden_marker", "1", "0 - disabled, 1 - enable Warden simple markers ");
 	gc_iMarkerKey = AutoExecConfig_CreateConVar("sm_warden_markerkey", "3", "1 - Look weapon / 2 - Use and shoot / 3 - walk and shoot");
 	gc_fMarkerTime = AutoExecConfig_CreateConVar("sm_warden_marker_time", "20.0", "Time in seconds marker will disappears");
+	gc_bCountDown = AutoExecConfig_CreateConVar("sm_warden_countdown", "1", "0 - disabled, 1 - enable countdown for warden");
 	gc_bOverlays = AutoExecConfig_CreateConVar("sm_warden_overlays", "1", "0 - disabled, 1 - enable overlays", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_warden_overlaystart_path", "overlays/MyJailbreak/start" , "Path to the start Overlay DONT TYPE .vmt or .vft");
 	gc_sOverlayStopPath = AutoExecConfig_CreateConVar("sm_warden_overlaystop_path", "overlays/MyJailbreak/stop" , "Path to the stop Overlay DONT TYPE .vmt or .vft");
@@ -401,28 +403,11 @@ public void OnMapStart()
 	g_iVoteCount = 0;
 //	PrecacheModel(g_sWardenModel);
 //	PrecacheModel("models/player/ctm_gsg9.mdl");
-	PrecacheOverlayAnyDownload(g_sOverlayStart);
-	PrecacheOverlayAnyDownload(g_sOverlayStop);
+	if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStart);
+	if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStop);
 	g_iBeamSprite = PrecacheModel("materials/sprites/laserbeam.vmt");
 	g_iHaloSprite = PrecacheModel("materials/sprites/glow01.vmt");
 
-}
-
-void PrecacheOverlayAnyDownload(char[] sOverlay)
-{
-	if(gc_bOverlays.BoolValue)	
-	{
-		char sBufferVmt[256];
-		char sBufferVtf[256];
-		Format(sBufferVmt, sizeof(sBufferVmt), "%s.vmt", sOverlay);
-		Format(sBufferVtf, sizeof(sBufferVtf), "%s.vtf", sOverlay);
-		PrecacheDecal(sBufferVmt, true);
-		PrecacheDecal(sBufferVtf, true);
-		Format(sBufferVmt, sizeof(sBufferVmt), "materials/%s.vmt", sOverlay);
-		Format(sBufferVtf, sizeof(sBufferVtf), "materials/%s.vtf", sOverlay);
-		AddFileToDownloadsTable(sBufferVmt);
-		AddFileToDownloadsTable(sBufferVtf);
-	}
 }
 
 public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
@@ -430,12 +415,12 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 	if(convar == gc_sSoundPath1)
 	{
 		strcopy(g_sSoundPath1, sizeof(g_sSoundPath1), newValue);
-		PrecacheSoundAnyDownload(g_sSoundPath1);
+		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundPath1);
 	}
 	else if(convar == gc_sSoundPath2)
 	{
 		strcopy(g_sSoundPath2, sizeof(g_sSoundPath2), newValue);
-		PrecacheSoundAnyDownload(g_sSoundPath2);
+		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundPath2);
 	}
 //else if(convar == gc_sModelPath)
 //{
@@ -445,12 +430,12 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 	else if(convar == gc_sOverlayStartPath)
 	{
 		strcopy(g_sOverlayStart, sizeof(g_sOverlayStart), newValue);
-		PrecacheOverlayAnyDownload(g_sOverlayStart);
+		if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStart);
 	}
 	else if(convar == gc_sOverlayStopPath)
 	{
 		strcopy(g_sOverlayStop, sizeof(g_sOverlayStop), newValue);
-		PrecacheOverlayAnyDownload(g_sOverlayStop);
+		if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStop);
 	}
 }
 
@@ -958,7 +943,7 @@ public Action StopCountdown( Handle timer, any client )
 			if (g_iCountStopTime < 16) 
 			{
 				PrintCenterText(client,"%t", "warden_stopcountdown_nc", g_iCountStopTime);
-				CPrintToChatAll("%t %t", "warden_tag" , "warden_startcountdown", g_iCountStopTime);
+				CPrintToChatAll("%t %t", "warden_tag" , "warden_stopcountdown", g_iCountStopTime);
 			}
 		}
 		g_iCountStopTime--;
@@ -983,17 +968,7 @@ public Action StopCountdown( Handle timer, any client )
 	return Plugin_Continue;
 }
 
-public Action ShowOverlayStart( Handle timer, any client ) 
-{
-	if(IsClientInGame(client) && IsClientConnected(client) && !IsFakeClient(client))
-	{
-		int iFlag = GetCommandFlags( "r_screenoverlay" ) & ( ~FCVAR_CHEAT ); 
-		SetCommandFlags( "r_screenoverlay", iFlag ); 
-		ClientCommand( client, "r_screenoverlay \"%s.vtf\"", g_sOverlayStart);
-		CreateTimer( 2.0, DeleteOverlay, client );
-	}
-	return Plugin_Continue;
-}
+
 
 public Action ShowOverlayStop( Handle timer, any client ) 
 {
@@ -1008,16 +983,6 @@ public Action ShowOverlayStop( Handle timer, any client )
 }
 
 
-public Action DeleteOverlay( Handle timer, any client ) 
-{
-	if(IsClientInGame(client) && IsClientConnected(client) && !IsFakeClient(client))
-	{
-	int iFlag = GetCommandFlags( "r_screenoverlay" ) & ( ~FCVAR_CHEAT ); 
-	SetCommandFlags( "r_screenoverlay", iFlag ); 
-	ClientCommand( client, "r_screenoverlay \"\"" );
-	}
-	return Plugin_Continue;
-}
 
 EnableNoBlock(client)
 {
@@ -1290,14 +1255,3 @@ public void warden_OnWardenCreated(int client)
 
 }
 
-void PrecacheSoundAnyDownload(char[] sSound)
-{
-	if(gc_bSounds.BoolValue)	
-	{
-	PrecacheSoundAny(sSound);
-	
-	char sBuffer[256];
-	Format(sBuffer, sizeof(sBuffer), "sound/%s", sSound);
-	AddFileToDownloadsTable(sBuffer);
-	}
-}
