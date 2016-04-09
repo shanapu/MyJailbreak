@@ -39,7 +39,7 @@ ConVar g_bWarden;
 
 #pragma semicolon 1
 
-#define PLUGIN_VERSION   "0.x"
+#define PLUGIN_VERSION "0.2"
 
 public Plugin myinfo = {
 	name = "MyJailbreak - Menus",
@@ -565,6 +565,5 @@ public EventMenuHandler(Handle:menu, MenuAction:action, client, itemNum)
 	else if (action == MenuAction_End)
 	{
 		CloseHandle(menu);       //todo: Displaying call stack trace for plugin "MyJailbreak/menu2.smx": L 04/06/2016 - 01:13:24: [SM]   [0]  Line 548, menu2.sp::EventMenuHandler()
-
 	}
 }

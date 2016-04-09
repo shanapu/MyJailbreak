@@ -12,7 +12,7 @@
 #pragma semicolon 1
 
 //Defines
-#define PLUGIN_VERSION "0.1"
+#define PLUGIN_VERSION "0.2"
 
 //Booleans
 bool IsWar = false;
@@ -26,8 +26,8 @@ ConVar gc_bSetA;
 ConVar gc_bVote;
 ConVar gc_bSpawnCell;
 ConVar gc_iRoundTime;
-ConVar gc_iRoundLimits;
-ConVar gc_iRoundWait;
+ConVar gc_iCooldownDay;
+ConVar gc_iCooldownStart;
 ConVar gc_iFreezeTime;
 ConVar gc_iTruceTime;
 ConVar gc_bOverlays;
@@ -36,7 +36,7 @@ ConVar g_iSetRoundTime;
 
 //Integers
 int g_iOldRoundTime;
-int g_iRoundLimits;
+int g_iCoolDown;
 int g_iFreezeTime;
 int g_iTruceTime;
 int g_iVoteCount = 0;
@@ -80,15 +80,15 @@ public void OnPluginStart()
 	
 	AutoExecConfig_CreateConVar("sm_war_version", PLUGIN_VERSION, "The version of the SourceMod plugin MyJailBreak - War", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_war_enable", "1", "0 - disabled, 1 - enable war", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	gc_bSetW = AutoExecConfig_CreateConVar("sm_war_setw", "1", "0 - disabled, 1 - allow warden to set war round", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	gc_bSetA = AutoExecConfig_CreateConVar("sm_war_seta", "1", "0 - disabled, 1 - allow admin to set war round", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	gc_bSetW = AutoExecConfig_CreateConVar("sm_war_warden", "1", "0 - disabled, 1 - allow warden to set war round", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	gc_bSetA = AutoExecConfig_CreateConVar("sm_war_admin", "1", "0 - disabled, 1 - allow admin to set war round", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	gc_bVote = AutoExecConfig_CreateConVar("sm_war_vote", "1", "0 - disabled, 1 - allow player to vote for war", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	gc_bSpawnCell = AutoExecConfig_CreateConVar("sm_war_spawn", "1", "0 - teleport to ct and freeze, 1 - stay in cell open cell doors with aw/weapon menu - need sjd", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	gc_iFreezeTime = AutoExecConfig_CreateConVar("sm_war_freezetime", "30", "Time freeze T", FCVAR_NOTIFY, true, 0.0, true, 999.0);
-	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_war_nodamage", "30", "Time after freezetime damage disbaled", FCVAR_NOTIFY, true, 0.0, true, 999.0);
+	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_war_trucetime", "30", "Time after freezetime damage disbaled", FCVAR_NOTIFY, true, 0.0, true, 999.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_war_roundtime", "5", "Round time for a single war round", FCVAR_NOTIFY, true, 0.0, true, 999.0);
-	gc_iRoundLimits = AutoExecConfig_CreateConVar("sm_war_roundsnext", "3", "Rounds until event can be started again.", FCVAR_NOTIFY, true, 0.0, true, 255.0);
-	gc_iRoundWait = AutoExecConfig_CreateConVar("sm_war_roundwait", "3", "Rounds until event can be started after mapchange.", FCVAR_NOTIFY, true, 0.0, true, 255.0);
+	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_war_cooldown_day", "3", "Rounds cooldown after a event until this event can startet", FCVAR_NOTIFY, true, 0.0, true, 255.0);
+	gc_iCooldownStart = AutoExecConfig_CreateConVar("sm_war_cooldown_start", "3", "Rounds until event can be started after mapchange.", FCVAR_NOTIFY, true, 0.0, true, 255.0);
 	gc_bOverlays = AutoExecConfig_CreateConVar("sm_war_overlays", "1", "0 - disabled, 1 - enable overlays", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_war_overlaystart_path", "overlays/MyJailbreak/start" , "Path to the start Overlay DONT TYPE .vmt or .vft");
 	gc_bTag = AutoExecConfig_CreateConVar("sm_war_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster", FCVAR_NOTIFY, true, 0.0, true, 1.0);
@@ -105,7 +105,7 @@ public void OnPluginStart()
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	g_iSetRoundTime = FindConVar("mp_roundtime");
-	g_iRoundLimits = gc_iRoundLimits.IntValue;
+	g_iCoolDown = gc_iCooldownDay.IntValue;
 	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
 	
 	
@@ -130,7 +130,7 @@ public void OnMapStart()
 	WarRound = 0;
 	IsWar = false;
 	StartWar = false;
-	g_iRoundLimits = gc_iRoundWait.IntValue;
+	g_iCoolDown = gc_iCooldownStart.IntValue;
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStart);
@@ -140,7 +140,7 @@ public void OnConfigsExecuted()
 {
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
 	g_iTruceTime = gc_iTruceTime.IntValue;
-	g_iRoundLimits = gc_iRoundWait.IntValue;
+	g_iCoolDown = gc_iCooldownStart.IntValue;
 	
 	if (gc_bTag.BoolValue)
 	{
@@ -163,15 +163,20 @@ public Action SetWar(int client,int args)
 		{
 			if (gc_bSetW.BoolValue)
 			{
-				if (!IsWar && !StartWar)
+				decl String:EventDay[64];
+				GetEventDay(EventDay);
+				
+				if(StrEqual(EventDay, "none", false))
+
+
 				{
-					if (g_iRoundLimits == 0)
+					if (g_iCoolDown == 0)
 					{
 						StartNextRound();
 					}
-					else CPrintToChat(client, "%t %t", "war_tag" , "war_wait", g_iRoundLimits);
+					else CPrintToChat(client, "%t %t", "war_tag" , "war_wait", g_iCoolDown);
 				}
-				else CPrintToChat(client, "%t %t", "war_tag" , "war_progress");
+				else CPrintToChat(client, "%t %t", "war_tag" , "war_progress" , EventDay);
 			}
 			else CPrintToChat(client, "%t %t", "warden_tag" , "war_setbywarden");
 		}
@@ -179,15 +184,19 @@ public Action SetWar(int client,int args)
 			{
 				if (gc_bSetA.BoolValue)	
 				{
-					if (!IsWar && !StartWar)
+					decl String:EventDay[64];
+					GetEventDay(EventDay);
+					
+					if(StrEqual(EventDay, "none", false))
+
 					{
-						if (g_iRoundLimits == 0)
+						if (g_iCoolDown == 0)
 						{
 							StartNextRound();
 						}
-						else CPrintToChat(client, "%t %t", "war_tag" , "war_wait", g_iRoundLimits);
+						else CPrintToChat(client, "%t %t", "war_tag" , "war_wait", g_iCoolDown);
 					}
-					else CPrintToChat(client, "%t %t", "war_tag" , "war_progress");
+					else CPrintToChat(client, "%t %t", "war_tag" , "war_progress" , EventDay);
 				}
 				else CPrintToChat(client, "%t %t", "war_tag" , "war_setbyadmin");
 			}
@@ -205,11 +214,16 @@ public Action VoteWar(int client,int args)
 	{
 		if (gc_bVote.BoolValue)
 		{	
-			if (!IsWar && !StartWar)
+
+			if (GetTeamClientCount(CS_TEAM_CT) > 0)
 			{
-				if (GetTeamClientCount(CS_TEAM_CT) > 0)
+				decl String:EventDay[64];
+				GetEventDay(EventDay);
+				
+				if(StrEqual(EventDay, "none", false))
+
 				{
-					if (g_iRoundLimits == 0)
+					if (g_iCoolDown == 0)
 					{
 						if (StrContains(g_sHasVoted, steamid, true) == -1)
 						{
@@ -226,9 +240,9 @@ public Action VoteWar(int client,int args)
 						}
 						else CPrintToChat(client, "%t %t", "war_tag" , "war_voted");
 					}
-					else CPrintToChat(client, "%t %t", "war_tag" , "war_wait", g_iRoundLimits);
+					else CPrintToChat(client, "%t %t", "war_tag" , "war_wait", g_iCoolDown);
 				}
-				else CPrintToChat(client, "%t %t", "war_tag" , "war_progress");
+				else CPrintToChat(client, "%t %t", "war_tag" , "war_progress" , EventDay);
 			}
 			else CPrintToChat(client, "%t %t", "war_tag" , "war_minct");
 		}
@@ -240,16 +254,12 @@ public Action VoteWar(int client,int args)
 void StartNextRound()
 {
 	StartWar = true;
-	g_iRoundLimits = gc_iRoundLimits.IntValue;
+	g_iCoolDown = gc_iCooldownDay.IntValue;
 	g_iVoteCount = 0;
-	SetCvar("sm_noscope_enable", 0);
-	SetCvar("sm_hide_enable", 0);
-	SetCvar("sm_ffa_enable", 0);
-	SetCvar("sm_zombie_enable", 0);
-	SetCvar("sm_dodgeball_enable", 0);
-	SetCvar("sm_duckhunt_enable", 0);
-	SetCvar("sm_freeday_enable", 0);
-	SetCvar("sm_catch_enable", 0);
+
+	SetEventDay("war");
+
+	
 	CPrintToChatAll("%t %t", "war_tag" , "war_next");
 	PrintHintTextToAll("%t", "war_next_nc");
 }
@@ -263,8 +273,8 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 		
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_warden_enable", 0);
-		SetCvar("sm_dice_enable", 0);
-		SetCvar("sm_beacon_enabled", 1);
+		
+		
 		SetCvar("sm_weapons_t", 1);
 		SetCvar("sm_weapons_ct", 1);
 		WarRound++;
@@ -412,7 +422,14 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 	}
 	else
 	{
-		if (g_iRoundLimits > 0) g_iRoundLimits--;
+		decl String:EventDay[64];
+		GetEventDay(EventDay);
+	
+		if(!StrEqual(EventDay, "none", false))
+		{
+			g_iCoolDown = gc_iCooldownDay.IntValue + 1;
+		}
+		else if (g_iCoolDown > 0) g_iCoolDown--;
 	}
 }
 
@@ -505,18 +522,14 @@ public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
 			SetCvar("sm_hosties_lr", 1);
 			SetCvar("sm_warden_enable", 1);
-			SetCvar("sm_hide_enable", 1);
+
 			SetCvar("sm_weapons_t", 0);
-			SetCvar("sm_freeday_enable", 1);
+
 			SetCvar("sm_weapons_ct", 1);
-			SetCvar("sm_zombie_enable", 1);
-			SetCvar("sm_noscope_enable", 1);
-			SetCvar("sm_dice_enable", 1);
-			SetCvar("sm_dodgeball_enable", 1);
-			SetCvar("sm_beacon_enabled", 0);
-			SetCvar("sm_ffa_enable", 1);
-			SetCvar("sm_duckhunt_enable", 1);
-			SetCvar("sm_catch_enable", 1);
+
+			SetEventDay("none");
+			
+			
 			g_iSetRoundTime.IntValue = g_iOldRoundTime;
 			CPrintToChatAll("%t %t", "war_tag" , "war_end");
 		}

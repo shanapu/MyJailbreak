@@ -101,9 +101,10 @@
 	
 	"ffa_progress"
 	{
+		"#format"	"{1:s}"
 		"da"		"FFA er {purple}allerede i gang!"
-		"en"		"FFA is {purple}allready in progress"
-		"de"		"FFA ist {purple}bereits gesetzt"
+		"en"		"A Event is {purple}already in progress. {darkred}{1}"
+		"de"		"Ein Event ist {purple}bereits gesetzt. {darkred}{1}"
 		
 	}
 	
@@ -185,25 +186,25 @@
 		"de"		"bau keine scheisse!"
 	}
 		
-	"RoundOne"
+	"RoundOne"		// no colors!
 	{
-		"da"		"Runde {purple}1{default} af {purple}3{default}"	
-		"en"		"Round {purple}1{default} of {purple}3{default}"
-		"de"		"Runde {purple}1{default} von {purple}3{default}"
+		"da"		"Runde 1 af 3"	
+		"en"		"Round 1 of 3"
+		"de"		"Runde 1 von 3"
 	}
 		
-	"RoundTwo"
+	"RoundTwo"		// no colors!
 	{
-		"da"		"Runde {purple}2{default} af {purple}3{default}"	
-		"en"		"Round {purple}2{default} of {purple}3{default}"
-		"de"		"Runde {purple}2{default} von {purple}3{default}"
+		"da"		"Runde 2 af 3"	
+		"en"		"Round 2 of 3"
+		"de"		"Runde 2 von 3"
 	}
 		
-	"RoundThree"
+	"RoundThree"		// no colors!
 	{
-		"da"		"{purple}Sidste{default} FFA runde!"	
-		"en"		"{purple}last{default} FFA round"
-		"de"		"{purple}letzte{default} FFA runde"
+		"da"		"Sidste FFA runde!"	
+		"en"		"last FFA round"
+		"de"		"letzte FFA runde"
 	}
 		"ffa_wait"
 	{

@@ -9,14 +9,14 @@
 #include <smlib>
 #include <colors>
 #include <autoexecconfig>
-#include <myjailbreak>
+
 
 //Compiler Options
 #pragma semicolon 1
 
 //Defines
-#define LoopAliveClients(%1) for(int %1 = 1;%1 <= MaxClients;%1++) if(IsValidClient(%1, true))
-#define PLUGIN_VERSION "0.1"
+#define LoopAliveClients(%1) for(int %1 = 1;%1 <= MaxClients;%1++) if(IsValidClient(%1, true))    //TODO all
+#define PLUGIN_VERSION "0.2"
 
 //Bools
 bool IsCountDown = false;
@@ -83,7 +83,7 @@ char g_sHasVoted[1500];
 //char g_sWardenModel[256];
 char g_sSoundPath2[256];
 char g_sSoundPath1[256];
-
+char g_sOverlayStart[256];
 char g_sOverlayStop[256];
 
 //float
@@ -1255,3 +1255,48 @@ public void warden_OnWardenCreated(int client)
 
 }
 
+stock PrecacheOverlayAnyDownload(char[] sOverlay)
+{
+	char sBufferVmt[256];
+	char sBufferVtf[256];
+	Format(sBufferVmt, sizeof(sBufferVmt), "%s.vmt", sOverlay);
+	Format(sBufferVtf, sizeof(sBufferVtf), "%s.vtf", sOverlay);
+	PrecacheDecal(sBufferVmt, true);
+	PrecacheDecal(sBufferVtf, true);
+	Format(sBufferVmt, sizeof(sBufferVmt), "materials/%s.vmt", sOverlay);
+	Format(sBufferVtf, sizeof(sBufferVtf), "materials/%s.vtf", sOverlay);
+	AddFileToDownloadsTable(sBufferVmt);
+	AddFileToDownloadsTable(sBufferVtf);
+}
+
+stock PrecacheSoundAnyDownload(char[] sSound)
+{
+	PrecacheSoundAny(sSound);
+	char sBuffer[256];
+	Format(sBuffer, sizeof(sBuffer), "sound/%s", sSound);
+	AddFileToDownloadsTable(sBuffer);
+	
+}
+
+public Action ShowOverlayStart( Handle timer, any client ) 
+{
+	if(IsClientInGame(client) && IsClientConnected(client) && !IsFakeClient(client))
+	{
+		int iFlag = GetCommandFlags( "r_screenoverlay" ) & ( ~FCVAR_CHEAT ); 
+		SetCommandFlags( "r_screenoverlay", iFlag ); 
+		ClientCommand( client, "r_screenoverlay \"%s.vtf\"", g_sOverlayStart);
+		CreateTimer( 2.0, DeleteOverlay, client );
+	}
+	return Plugin_Continue;
+}
+
+public Action DeleteOverlay( Handle timer, any client ) 
+{
+	if(IsClientInGame(client) && IsClientConnected(client) && !IsFakeClient(client))
+	{
+	int iFlag = GetCommandFlags( "r_screenoverlay" ) & ( ~FCVAR_CHEAT ); 
+	SetCommandFlags( "r_screenoverlay", iFlag ); 
+	ClientCommand( client, "r_screenoverlay \"\"" );
+	}
+	return Plugin_Continue;
+}

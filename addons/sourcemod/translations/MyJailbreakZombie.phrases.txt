@@ -92,9 +92,10 @@
 	
 	"zombie_progress"
 	{
+		"#format"	"{1:s}"
 		"da"		"Zombie er {purple}allerede i gang!"	
-		"en"		"Zombie is {purple}already in progress"
-		"de"		"Zombie ist {purple}bereits gesetzt"
+		"en"		"A Event is {purple}already in progress. {darkred}{1}."
+		"de"		"Ein Event ist {purple}bereits gesetzt. {darkred}{1}"
 	}
 	
 	"zombie_minct"

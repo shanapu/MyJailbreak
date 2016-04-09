@@ -76,8 +76,9 @@
 	
 	"jihad_progress"
 	{
-		"en"		"JiHad is {purple}allready in progress"
-		"de"		"JiHad ist {purple}bereits gesetzt"
+		"#format"	"{1:s}"
+		"en"		"A Event is {purple}already in progress. {darkred}{1}"
+		"de"		"Ein Event ist {purple}bereits gesetzt. {darkred}{1}"
 	}
 	
 	"jihad_disabled"

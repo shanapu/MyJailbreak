@@ -86,9 +86,10 @@
 	
 	"noscope_progress"
 	{
+		"#format"	"{1:s}"
 		"da"		"NoScope er {purple}allerede i gang!"	
-		"en"		"NoScope is {purple}already in progress"
-		"de"		"NoScope ist {purple}bereits gesetzt"
+		"en"		"A Event is {purple}already in progress. {darkred}{1}"
+		"de"		"Ein Event ist {purple}bereits gesetzt. {darkred}{1}"
 	}
 	
 	"noscope_disabled"

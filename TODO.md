@@ -64,12 +64,12 @@ want:
 - [ ] warden: icon above head (material or model?)
 - [x] warden: markers
 - [ ] jihad: freeze by activate bool
-- [ ] new day: knife only (ice skate?)
+- [ ] new day: knife only (ice skate/third person?)
 - [ ] new day: A day where you spawn with one single low random weapon and get 500 HP :D
-- [0] warden: improve markers (2 kind)
+- [ ] warden: improve markers (2 kind)
 - [ ] warden: limits
 - [ ] warden: pick random if no given/always
-- [ ] all days: restrict map heal station
+
 - [ ] warden: ff not for ct
 - [ ] jihad: burn dead bodies
 - [ ] playertags: add VIP flag
@@ -113,6 +113,7 @@ future:
 
 maybe:
 - [ ] beacon for days
+- [ ] all days: restrict map heal station
 - [ ] warden: extend roundtime (possible)
 - [ ] all days: admin force end days
 - [ ] warden: color prisioners (& color roulette)

@@ -323,7 +323,7 @@
 	{
 		"da"		"En countdown er {purple}allerede i gang!"	
 		"en"		"a Countdown is {purple}already in progress"
-		"de"		"Ein Countdown ist {purple}läuft bereits"
+		"de"		"Ein Countdown {purple}läuft bereits"
 	}
 	
 	"warden_countdownstart_nc"		// no colors!

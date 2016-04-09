@@ -4,8 +4,19 @@
 #define _myjailbreak_included_
 
 Handle UseCvar;
-
 char g_sOverlayStart[256];
+
+
+
+
+native SetEventDay(const String:name[]);
+
+
+
+
+native GetEventDay(String:CurrentEventDay[]);
+
+
 
 stock PrecacheOverlayAnyDownload(char[] sOverlay)
 {

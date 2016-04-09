@@ -64,15 +64,7 @@ public void OnPluginStart()
 	
 	LoadTranslations("MyJailbreakWeapons.phrases");
 
-	array_primary = CreateArray(128);
-	array_secondary = CreateArray(128);
-	ListWeapons();
-	
-	// Create menus
-	optionsMenu1 = BuildOptionsMenu(true);
-	optionsMenu2 = BuildOptionsMenu(false);
-	optionsMenu3 = BuildOptionsMenuWeapons(true);
-	optionsMenu4 = BuildOptionsMenuWeapons(false);
+
 	
 	HookEvent("player_spawn", Event_PlayerSpawn);
 
@@ -110,6 +102,18 @@ public void OnPluginStart()
 	weapons1 = RegClientCookie("Primary Weapons", "", CookieAccess_Private);
 	weapons2 = RegClientCookie("Secondary Weapons", "", CookieAccess_Private);
 	//remember = RegClientCookie("Remember Weapons", "", CookieAccess_Private);
+	
+	
+	
+	array_primary = CreateArray(128);
+	array_secondary = CreateArray(128);
+	ListWeapons();
+	
+	// Create menus
+	optionsMenu1 = BuildOptionsMenu(true);
+	optionsMenu2 = BuildOptionsMenu(false);
+	optionsMenu3 = BuildOptionsMenuWeapons(true);
+	optionsMenu4 = BuildOptionsMenuWeapons(false);
 }
 
 public void OnConfigsExecuted()
