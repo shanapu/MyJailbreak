@@ -148,7 +148,7 @@ public void OnPluginStart()
 
 	//FindConVar
 	g_iSetRoundTime = FindConVar("mp_roundtime");
-	g_iCoolDown = gc_iCooldownDay.IntValue + 1;;
+	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 
 	gc_sSoundPath1.GetString(g_sSoundPath1, sizeof(g_sSoundPath1));
 	gc_sSoundPath2.GetString(g_sSoundPath2, sizeof(g_sSoundPath2));
@@ -210,7 +210,7 @@ public void OnMapStart()
 public void OnConfigsExecuted()
 {
 
-	g_iCoolDown = gc_iCooldownStart.IntValue + 1;;
+	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	
 
 	if (gc_bTag.BoolValue)
@@ -356,7 +356,7 @@ void StartNextRound()
 {
 
 	StartCatch = true;
-	g_iCoolDown = gc_iCooldownDay.IntValue + 1;;
+	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iVoteCount = 0;
 	
 	SetEventDay("catch");
