@@ -1,3 +1,4 @@
+//includes
 #include <sourcemod>
 #include <sdktools>
 #include <sdkhooks>
@@ -7,7 +8,14 @@
 #include <autoexecconfig>
 #include <myjailbreak>
 
+//Compiler Options
+#pragma semicolon 1
 
+
+//Defines
+#define PLUGIN_VERSION "0.2"
+
+//ConVars
 ConVar gc_bTag;
 ConVar gc_bPlugin;
 ConVar gc_bTerror;
@@ -37,10 +45,6 @@ ConVar g_bOpen;
 ConVar g_bRandom;
 ConVar g_bWarden;
 
-#pragma semicolon 1
-
-#define PLUGIN_VERSION "0.2"
-
 public Plugin myinfo = {
 	name = "MyJailbreak - Menus",
 	author = "shanapu, Franc1sco",
@@ -49,7 +53,42 @@ public Plugin myinfo = {
 	url = ""
 };
 
-public OnConfigsExecuted()
+public void OnPluginStart()
+{
+	// Translation
+	LoadTranslations("MyJailbreakWarden.phrases");
+	LoadTranslations("MyJailbreakMenu.phrases");
+	
+	//Client Commands
+	RegConsoleCmd("sm_menu", JbMenu);
+	RegConsoleCmd("sm_menus", JbMenu);
+	RegConsoleCmd("buyammo1", JbMenu);
+	RegConsoleCmd("sm_days", EventDays);
+	RegConsoleCmd("sm_events", EventDays);
+	RegConsoleCmd("sm_event", EventDays);
+	
+	//AutoExecConfig
+	AutoExecConfig_SetFile("MyJailbreak_menu");
+	AutoExecConfig_SetCreateFile(true);
+	
+	AutoExecConfig_CreateConVar("sm_menu_version", PLUGIN_VERSION, "The version of the SourceMod plugin MyJailBreak - Menu", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
+	gc_bPlugin = AutoExecConfig_CreateConVar("sm_menu_enable", "1", "0 - disabled, 1 - enable jailbrek menu");
+	gc_bCTerror = AutoExecConfig_CreateConVar("sm_menu_ct", "1", "0 - disabled, 1 - enable ct jailbreak menu");
+	gc_bTerror = AutoExecConfig_CreateConVar("sm_menu_t", "1", "0 - disabled, 1 - enable t jailbreak menu");
+	gc_bWarden = AutoExecConfig_CreateConVar("sm_menu_warden", "1", "0 - disabled, 1 - enable warden jailbreak menu");
+	gc_bDays = AutoExecConfig_CreateConVar("sm_menu_days", "1", "0 - disabled, 1 - enable eventdays menu for warden and admin");
+	gc_bClose = AutoExecConfig_CreateConVar("sm_menu_close", "1", "0 - disabled, 1 - enable close menu after action");
+	gc_bStart = AutoExecConfig_CreateConVar("sm_menu_start", "1", "0 - disabled, 1 - enable open menu on every roundstart");
+	gc_bTag = AutoExecConfig_CreateConVar("sm_menu_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	
+	AutoExecConfig_ExecuteFile();
+	AutoExecConfig_CleanFile();
+	
+	//Hooks
+	HookEvent("player_spawn", Event_OnPlayerSpawn);
+}
+
+public void OnConfigsExecuted()
 {
 	if (gc_bTag.BoolValue)
 	{
@@ -83,47 +122,11 @@ public OnConfigsExecuted()
 	g_bsetFF = FindConVar("sm_warden_ff");
 	g_bRandom = FindConVar("sm_warden_random");
 	g_bFF = FindConVar("mp_teammates_are_enemies");
-
 }
 
-public OnPluginStart()
+public Action Event_OnPlayerSpawn(Event event, const char[] name, bool dontBroadcast)
 {
-	LoadTranslations("MyJailbreakWarden.phrases");
-	LoadTranslations("MyJailbreakMenu.phrases");
-	RegConsoleCmd("sm_menu", JbMenu);
-	RegConsoleCmd("sm_menus", JbMenu);
-	RegConsoleCmd("buyammo1", JbMenu);
-
-	RegConsoleCmd("sm_days", EventDays);
-	RegConsoleCmd("sm_events", EventDays);
-	RegConsoleCmd("sm_event", EventDays);
-	
-	AutoExecConfig_SetFile("MyJailbreak_menu");
-	AutoExecConfig_SetCreateFile(true);
-	
-	gc_bPlugin = AutoExecConfig_CreateConVar("sm_menu_enable", "1", "0 - disabled, 1 - enable jailbrek menu");
-	gc_bCTerror = AutoExecConfig_CreateConVar("sm_menu_ct", "1", "0 - disabled, 1 - enable ct jailbreak menu");
-	gc_bTerror = AutoExecConfig_CreateConVar("sm_menu_t", "1", "0 - disabled, 1 - enable t jailbreak menu");
-	gc_bWarden = AutoExecConfig_CreateConVar("sm_menu_warden", "1", "0 - disabled, 1 - enable warden jailbreak menu");
-	gc_bDays = AutoExecConfig_CreateConVar("sm_menu_days", "1", "0 - disabled, 1 - enable eventdays menu for warden and admin");
-	gc_bClose = AutoExecConfig_CreateConVar("sm_menu_close", "1", "0 - disabled, 1 - enable close menu after action");
-	gc_bStart = AutoExecConfig_CreateConVar("sm_menu_start", "1", "0 - disabled, 1 - enable open menu on every roundstart");
-	gc_bTag = AutoExecConfig_CreateConVar("sm_menu_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	
-	
-	AutoExecConfig_ExecuteFile();
-	AutoExecConfig_CleanFile();
-	
-
-	
-	HookEvent("player_spawn", Event_OnPlayerSpawn);
-}
-
-
-
-public Action:Event_OnPlayerSpawn(Handle:event, const String:name[], bool:dontBroadcast)
-{
-	new client = GetClientOfUserId(GetEventInt(event, "userid"));
+	int client = GetClientOfUserId(GetEventInt(event, "userid"));
 	
 	if(gc_bStart.BoolValue)
 	{
@@ -131,7 +134,7 @@ public Action:Event_OnPlayerSpawn(Handle:event, const String:name[], bool:dontBr
 	}
 }
 
-public Action:JbMenu(client,args)
+public Action JbMenu(int client, int args)
 {
 	if(gc_bPlugin.BoolValue)	
 	{
@@ -140,10 +143,11 @@ public Action:JbMenu(client,args)
 		char menuinfo17[255]; 
 //		char menuinfo4[255], menuinfo12[255], menuinfo14[255]; 
 		
-		Handle menu = CreateMenu(JBMenuHandler);
+		
 		
 		Format(menuinfo1, sizeof(menuinfo1), "%T", "menu_info_Title", LANG_SERVER);
-		SetMenuTitle(menu, menuinfo1);
+		Menu mainmenu = new Menu(JBMenuHandler);
+		mainmenu.SetTitle(menuinfo1);
 		if (warden_iswarden(client))
 		{
 			if(gc_bWarden.BoolValue)
@@ -153,7 +157,7 @@ public Action:JbMenu(client,args)
 					if(g_bCountdown.BoolValue)
 					{
 						Format(menuinfo2, sizeof(menuinfo2), "%T", "menu_countdown", LANG_SERVER);
-						AddMenuItem(menu, "countdown", menuinfo2);
+						mainmenu.AddItem("countdown", menuinfo2);
 					}
 				}
 				if(g_bOpen != null)
@@ -161,13 +165,13 @@ public Action:JbMenu(client,args)
 					if(g_bOpen.BoolValue)
 					{
 						Format(menuinfo3, sizeof(menuinfo3), "%T", "menu_opencell", LANG_SERVER);
-						AddMenuItem(menu, "cellopen", menuinfo3);
+						mainmenu.AddItem("cellopen", menuinfo3);
 					}
 				}
 				if(gc_bDays.BoolValue)
 				{
 					Format(menuinfo5, sizeof(menuinfo5), "%T", "menu_eventdays", LANG_SERVER);
-					AddMenuItem(menu, "days", menuinfo5);
+					mainmenu.AddItem("days", menuinfo5);
 				}
 				if(g_bGuns != null)
 				{
@@ -176,7 +180,7 @@ public Action:JbMenu(client,args)
 						if(g_bGunsCT.BoolValue)
 						{
 							Format(menuinfo6, sizeof(menuinfo6), "%T", "menu_guns", LANG_SERVER);
-							AddMenuItem(menu, "guns", menuinfo6);
+							mainmenu.AddItem("guns", menuinfo6);
 						}
 					}
 				}
@@ -187,12 +191,12 @@ public Action:JbMenu(client,args)
 						if(!g_bFF.BoolValue)
 						{
 							Format(menuinfo7, sizeof(menuinfo7), "%T", "menu_ffon", LANG_SERVER);
-							AddMenuItem(menu, "setff", menuinfo7);
+							mainmenu.AddItem("setff", menuinfo7);
 						}
 						else
 						{
 							Format(menuinfo8, sizeof(menuinfo8), "%T", "menu_ffoff", LANG_SERVER);
-							AddMenuItem(menu, "setff", menuinfo8);
+							mainmenu.AddItem("setff", menuinfo8);
 						}
 					}
 				}
@@ -201,17 +205,17 @@ public Action:JbMenu(client,args)
 					if(g_bRandom.BoolValue)
 					{
 						Format(menuinfo9, sizeof(menuinfo9), "%T", "menu_randomdead", LANG_SERVER);
-						AddMenuItem(menu, "kill", menuinfo9);
+						mainmenu.AddItem("kill", menuinfo9);
 					}
 					
 					Format(menuinfo10, sizeof(menuinfo10), "%T", "menu_unwarden", LANG_SERVER);
-					AddMenuItem(menu, "unwarden", menuinfo10);
+					mainmenu.AddItem("unwarden", menuinfo10);
 				}
 			}
 		}
 		else if(GetClientTeam(client) == CS_TEAM_CT) 
 			{
-				if(gc_bCTerror.BoolValue)	
+				if(gc_bCTerror.BoolValue)
 				{
 					if(g_bGuns != null)
 					{
@@ -220,7 +224,7 @@ public Action:JbMenu(client,args)
 							if(g_bGunsCT.BoolValue)
 							{
 								Format(menuinfo6, sizeof(menuinfo6), "%T", "menu_guns", LANG_SERVER);
-								AddMenuItem(menu, "guns", menuinfo6);
+								mainmenu.AddItem("guns", menuinfo6);
 							}
 						}
 					}
@@ -231,12 +235,12 @@ public Action:JbMenu(client,args)
 							if(g_bWarden.BoolValue)
 							{
 								Format(menuinfo11, sizeof(menuinfo11), "%T", "menu_getwarden", LANG_SERVER);
-								AddMenuItem(menu, "getwarden", menuinfo11);
+								mainmenu.AddItem("getwarden", menuinfo11);
 							}
 						}
 					}
 					Format(menuinfo13, sizeof(menuinfo13), "%T", "menu_joint", LANG_SERVER);
-					AddMenuItem(menu, "joinT", menuinfo13);
+					mainmenu.AddItem("joinT", menuinfo13);
 				}
 			}	
 			else if(GetClientTeam(client) == CS_TEAM_T) 
@@ -250,12 +254,12 @@ public Action:JbMenu(client,args)
 							if(g_bGunsT.BoolValue)
 							{
 								Format(menuinfo6, sizeof(menuinfo6), "%T", "menu_guns", LANG_SERVER);
-								AddMenuItem(menu, "guns", menuinfo6);
+								mainmenu.AddItem("guns", menuinfo6);
 							}
 						}
 					}
 					Format(menuinfo15, sizeof(menuinfo15), "%T", "menu_joinct", LANG_SERVER);
-					AddMenuItem(menu, "joinCT", menuinfo15);
+					mainmenu.AddItem("joinCT", menuinfo15);
 					if(g_bWarden != null)
 					{
 						if(!warden_exist())
@@ -265,7 +269,7 @@ public Action:JbMenu(client,args)
 								if(g_bVote.BoolValue)
 								{
 									Format(menuinfo16, sizeof(menuinfo16), "%T", "menu_votewarden", LANG_SERVER);
-									AddMenuItem(menu, "votewarden", menuinfo16);
+									mainmenu.AddItem("votewarden", menuinfo16);
 								}
 							}
 						}
@@ -275,33 +279,34 @@ public Action:JbMenu(client,args)
 		if (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
 		{
 			Format(menuinfo17, sizeof(menuinfo17), "%T", "menu_admin", LANG_SERVER);
-			AddMenuItem(menu, "admin", menuinfo17);
+			mainmenu.AddItem("admin", menuinfo17);
 		}
-		SetMenuExitButton(menu, true);
-		DisplayMenu(menu, client, MENU_TIME_FOREVER);
+		mainmenu.ExitButton = true;
+		mainmenu.Display(client, MENU_TIME_FOREVER);
+
 	}
 }
 
 
-public Action:EventDays(client, args)
+public Action EventDays(int client, int args)
 {
 	if(gc_bDays.BoolValue)
 	{
 		if (warden_iswarden(client) || (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true)))
 		{
-			Handle menu = CreateMenu(EventMenuHandler);
+			Menu daysmenu = new Menu(EventMenuHandler);
 			
 			char menuinfo18[255], menuinfo19[255], menuinfo20[255], menuinfo21[255], menuinfo22[255], menuinfo23[255], menuinfo24[255], menuinfo25[255], menuinfo26[255], menuinfo27[255];
 			
 			Format(menuinfo18, sizeof(menuinfo18), "%T", "menu_event_Title", LANG_SERVER);
-			SetMenuTitle(menu, menuinfo18);
+			daysmenu.SetTitle(menuinfo18);
 			
 			if(g_bWar != null)
 			{
 				if(g_bWar.BoolValue)
 				{
 					Format(menuinfo19, sizeof(menuinfo19), "%T", "menu_war", LANG_SERVER);
-					AddMenuItem(menu, "war", menuinfo19);
+					daysmenu.AddItem("war", menuinfo19);
 				}
 			}
 			if(g_bFFA != null)
@@ -309,7 +314,7 @@ public Action:EventDays(client, args)
 				if(g_bFFA.BoolValue)
 				{
 					Format(menuinfo20, sizeof(menuinfo20), "%T", "menu_ffa", LANG_SERVER);
-					AddMenuItem(menu, "ffa", menuinfo20);
+					daysmenu.AddItem("ffa", menuinfo20);
 				}
 			}
 			if(g_bZombie != null)
@@ -317,7 +322,7 @@ public Action:EventDays(client, args)
 				if(g_bZombie.BoolValue)
 				{
 					Format(menuinfo21, sizeof(menuinfo21), "%T", "menu_zombie", LANG_SERVER);
-					AddMenuItem(menu, "zombie", menuinfo21);
+					daysmenu.AddItem("zombie", menuinfo21);
 				}
 			}
 			if(g_bHide != null)
@@ -325,7 +330,7 @@ public Action:EventDays(client, args)
 				if(g_bHide.BoolValue)
 				{
 					Format(menuinfo22, sizeof(menuinfo22), "%T", "menu_hide", LANG_SERVER);
-					AddMenuItem(menu, "hide", menuinfo22);
+					daysmenu.AddItem("hide", menuinfo22);
 				}
 			}
 			if(g_bCatch != null)
@@ -333,7 +338,7 @@ public Action:EventDays(client, args)
 				if(g_bCatch.BoolValue)
 				{
 					Format(menuinfo23, sizeof(menuinfo23), "%T", "menu_catch", LANG_SERVER);
-					AddMenuItem(menu, "catch", menuinfo23);
+					daysmenu.AddItem("catch", menuinfo23);
 				}
 			}
 			if(g_bJiHad != null)
@@ -341,7 +346,7 @@ public Action:EventDays(client, args)
 				if(g_bJiHad.BoolValue)
 				{
 					Format(menuinfo23, sizeof(menuinfo23), "%T", "menu_jihad", LANG_SERVER);
-					AddMenuItem(menu, "jihad", menuinfo23);
+					daysmenu.AddItem("jihad", menuinfo23);
 				}
 			}
 			if(g_bDodgeBall != null)
@@ -349,7 +354,7 @@ public Action:EventDays(client, args)
 				if(g_bDodgeBall.BoolValue)
 				{
 					Format(menuinfo27, sizeof(menuinfo27), "%T", "menu_dodgeball", LANG_SERVER);
-					AddMenuItem(menu, "dodgeball", menuinfo27);
+					daysmenu.AddItem("dodgeball", menuinfo27);
 				}
 			}
 			if(g_bNoScope != null)
@@ -357,7 +362,7 @@ public Action:EventDays(client, args)
 				if(g_bNoScope.BoolValue)
 				{
 					Format(menuinfo24, sizeof(menuinfo24), "%T", "menu_noscope", LANG_SERVER);
-					AddMenuItem(menu, "noscope", menuinfo24);
+					daysmenu.AddItem("noscope", menuinfo24);
 				}
 			}
 			if(g_bDuckHunt != null)
@@ -365,7 +370,7 @@ public Action:EventDays(client, args)
 				if(g_bDuckHunt.BoolValue)
 				{
 					Format(menuinfo25, sizeof(menuinfo25), "%T", "menu_duckhunt", LANG_SERVER);
-					AddMenuItem(menu, "duckhunt", menuinfo25);
+					daysmenu.AddItem("duckhunt", menuinfo25);
 				}
 			}
 			if(g_bFreeDay != null)
@@ -373,11 +378,11 @@ public Action:EventDays(client, args)
 				if(g_bFreeDay.BoolValue)
 				{
 					Format(menuinfo26, sizeof(menuinfo26), "%T", "menu_freeday", LANG_SERVER);
-					AddMenuItem(menu, "freeday", menuinfo26);
+					daysmenu.AddItem("freeday", menuinfo26);
 				}
 			}
-			SetMenuExitButton(menu, true);
-			DisplayMenu(menu, client, MENU_TIME_FOREVER);
+			daysmenu.ExitButton = true;
+			daysmenu.Display(client, MENU_TIME_FOREVER);
 		}
 		else CPrintToChat(client, "%t %t", "warden_tag", "warden_notwarden" );
 	}
@@ -385,31 +390,30 @@ public Action:EventDays(client, args)
 
 
 
-public JBMenuHandler(Handle:menu, MenuAction:action, client, itemNum) 
+public void JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selection)
 {
-	if ( action == MenuAction_Select ) 
+	if (action == MenuAction_Select)
 	{
 		char info[32];
-		
-		GetMenuItem(menu, itemNum, info, sizeof(info));
+		mainmenu.GetItem(selection, info, sizeof(info));
 		
 		if ( strcmp(info,"joinT") == 0 ) 
 		{
 			ClientCommand(client, "jointeam %i", CS_TEAM_T);
-			CloseHandle(menu);
+			delete mainmenu;
 			
 		}
 		else if ( strcmp(info,"joinCT") == 0 ) 
 		{
 			ClientCommand(client, "jointeam %i", CS_TEAM_CT);
-			CloseHandle(menu);
+			delete mainmenu;
 		} 
 		else if ( strcmp(info,"votewarden") == 0 ) 
 		{
 			FakeClientCommand(client, "sm_votewarden");
 			if(gc_bClose.BoolValue)
 			{
-				CloseHandle(menu);
+				delete mainmenu;
 			}else JbMenu(client,0);
 		} 
 		else if ( strcmp(info,"guns") == 0 ) 
@@ -429,7 +433,7 @@ public JBMenuHandler(Handle:menu, MenuAction:action, client, itemNum)
 			FakeClientCommand(client, "sm_startcountdown");
 			if(gc_bClose.BoolValue)
 			{
-				CloseHandle(menu);
+				delete mainmenu;
 			}else JbMenu(client,0);
 		}
 		else if ( strcmp(info,"getwarden") == 0 ) 
@@ -447,7 +451,7 @@ public JBMenuHandler(Handle:menu, MenuAction:action, client, itemNum)
 			FakeClientCommand(client, "sm_open");
 			if(gc_bClose.BoolValue)
 			{
-				CloseHandle(menu);
+				delete mainmenu;
 			}else JbMenu(client,0);
 		}
 		else if ( strcmp(info,"setff") == 0 ) 
@@ -455,7 +459,7 @@ public JBMenuHandler(Handle:menu, MenuAction:action, client, itemNum)
 			FakeClientCommand(client, "sm_setff");
 			if(gc_bClose.BoolValue)
 			{
-				CloseHandle(menu);
+				delete mainmenu;
 			}else JbMenu(client,0);
 		}
 		else if ( strcmp(info,"kill") == 0 ) 
@@ -463,30 +467,30 @@ public JBMenuHandler(Handle:menu, MenuAction:action, client, itemNum)
 			FakeClientCommand(client, "sm_killrandom");
 			if(gc_bClose.BoolValue)
 			{
-				CloseHandle(menu);
+				delete mainmenu;
 			}else JbMenu(client,0);
 		}
 		else if (action == MenuAction_End)
 		{
-			CloseHandle(menu);
+		delete mainmenu;
 		}
 }
 }
 
-public EventMenuHandler(Handle:menu, MenuAction:action, client, itemNum) 
+public void EventMenuHandler(Menu daysmenu, MenuAction action, int client, int selection)
 {
-	if ( action == MenuAction_Select ) 
+	if (action == MenuAction_Select)
 	{
 		char info[32];
 		
-		GetMenuItem(menu, itemNum, info, sizeof(info));
+		daysmenu.GetItem(selection, info, sizeof(info));
 		
 		if ( strcmp(info,"war") == 0 ) 
 		{
 			FakeClientCommand(client, "sm_setwar");
 			if(gc_bClose.BoolValue)
 			{
-				CloseHandle(menu);
+				delete daysmenu;
 			}else JbMenu(client,0);
 		} 
 		else if ( strcmp(info,"ffa") == 0 ) 
@@ -494,7 +498,7 @@ public EventMenuHandler(Handle:menu, MenuAction:action, client, itemNum)
 			FakeClientCommand(client, "sm_setffa");
 			if(gc_bClose.BoolValue)
 			{
-				CloseHandle(menu);
+				delete daysmenu;
 			}else JbMenu(client,0);
 		} 
 		else if ( strcmp(info,"zombie") == 0 ) 
@@ -502,7 +506,7 @@ public EventMenuHandler(Handle:menu, MenuAction:action, client, itemNum)
 			FakeClientCommand(client, "sm_setzombie");
 			if(gc_bClose.BoolValue)
 			{
-				CloseHandle(menu);
+				delete daysmenu;
 			}else JbMenu(client,0);
 		} 
 		else if ( strcmp(info,"catch") == 0 )
@@ -510,7 +514,7 @@ public EventMenuHandler(Handle:menu, MenuAction:action, client, itemNum)
 			FakeClientCommand(client, "sm_setcatch");
 			if(gc_bClose.BoolValue)
 			{
-				CloseHandle(menu);
+				delete daysmenu;
 			}else JbMenu(client,0);
 		}
 		else if ( strcmp(info,"jihad") == 0 )
@@ -518,7 +522,7 @@ public EventMenuHandler(Handle:menu, MenuAction:action, client, itemNum)
 			FakeClientCommand(client, "sm_setjihad");
 			if(gc_bClose.BoolValue)
 			{
-				CloseHandle(menu);
+				delete daysmenu;
 			}else JbMenu(client,0);
 		}
 		else if ( strcmp(info,"noscope") == 0 )
@@ -526,7 +530,7 @@ public EventMenuHandler(Handle:menu, MenuAction:action, client, itemNum)
 			FakeClientCommand(client, "sm_setnoscope");
 			if(gc_bClose.BoolValue)
 			{
-				CloseHandle(menu);
+				delete daysmenu;
 			}else JbMenu(client,0);
 		}
 		else if ( strcmp(info,"dodgeball") == 0 )
@@ -534,7 +538,7 @@ public EventMenuHandler(Handle:menu, MenuAction:action, client, itemNum)
 			FakeClientCommand(client, "sm_setdodgeball");
 			if(gc_bClose.BoolValue)
 			{
-				CloseHandle(menu);
+				delete daysmenu;
 			}else JbMenu(client,0);
 		}
 		else if ( strcmp(info,"duckhunt") == 0 )
@@ -542,7 +546,7 @@ public EventMenuHandler(Handle:menu, MenuAction:action, client, itemNum)
 			FakeClientCommand(client, "sm_setduckhunt");
 			if(gc_bClose.BoolValue)
 			{
-				CloseHandle(menu);
+				delete daysmenu;
 			}else JbMenu(client,0);
 		}
 		else if ( strcmp(info,"hide") == 0 )
@@ -550,7 +554,7 @@ public EventMenuHandler(Handle:menu, MenuAction:action, client, itemNum)
 			FakeClientCommand(client, "sm_sethide");
 			if(gc_bClose.BoolValue)
 			{
-				CloseHandle(menu);
+				delete daysmenu;
 			}else JbMenu(client,0);
 		}
 		else if ( strcmp(info,"freeday") == 0 )
@@ -558,12 +562,12 @@ public EventMenuHandler(Handle:menu, MenuAction:action, client, itemNum)
 			FakeClientCommand(client, "sm_setfreeday");
 			if(gc_bClose.BoolValue)
 			{
-				CloseHandle(menu);
+				delete daysmenu;
 			}else JbMenu(client,0);
 		}
 	}
 	else if (action == MenuAction_End)
 	{
-		CloseHandle(menu);       //todo: Displaying call stack trace for plugin "MyJailbreak/menu2.smx": L 04/06/2016 - 01:13:24: [SM]   [0]  Line 548, menu2.sp::EventMenuHandler()
+		delete daysmenu;
 	}
 }
