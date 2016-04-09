@@ -92,9 +92,10 @@
 	
 	"duckhunt_progress"
 	{
+		"#format"	"{1:s}"
 		"da"		"Duckhunt er {purple}allerede i gang!"
-		"en"		"Duckhunt is {purple}allready in progress"
-		"de"		"Duckhunt ist {purple}bereits gesetzt"
+		"en"		"A Event is {purple}already in progress. {darkred}{1}"
+		"de"		"Ein Event ist {purple}bereits gesetzt. {darkred}{1}"
 	}
 	
 	"duckhunt_minct"

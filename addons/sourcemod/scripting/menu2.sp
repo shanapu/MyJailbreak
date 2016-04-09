@@ -5,6 +5,7 @@
 #include <wardn>
 #include <colors>
 #include <autoexecconfig>
+#include <myjailbreak>
 
 
 ConVar gc_bTag;
@@ -18,6 +19,7 @@ ConVar gc_bStart;
 ConVar g_bFF;
 ConVar g_bsetFF;
 ConVar g_bWar;
+ConVar g_bJiHad;
 ConVar g_bFFA;
 ConVar g_bZombie;
 ConVar g_bNoScope;
@@ -37,7 +39,7 @@ ConVar g_bWarden;
 
 #pragma semicolon 1
 
-#define PLUGIN_VERSION   "0.x"
+#define PLUGIN_VERSION "0.2"
 
 public Plugin myinfo = {
 	name = "MyJailbreak - Menus",
@@ -67,6 +69,7 @@ public OnConfigsExecuted()
 	g_bZombie = FindConVar("sm_zombie_enable");
 	g_bNoScope = FindConVar("sm_noscope_enable");
 	g_bHide = FindConVar("sm_hide_enable");
+	g_bJiHad = FindConVar("sm_jihad_enable");
 	g_bCatch = FindConVar("sm_catch_enable");
 	g_bDodgeBall = FindConVar("sm_dodgeball_enable");
 	g_bFreeDay = FindConVar("sm_freeday_enable");
@@ -333,6 +336,14 @@ public Action:EventDays(client, args)
 					AddMenuItem(menu, "catch", menuinfo23);
 				}
 			}
+			if(g_bJiHad != null)
+			{
+				if(g_bJiHad.BoolValue)
+				{
+					Format(menuinfo23, sizeof(menuinfo23), "%T", "menu_jihad", LANG_SERVER);
+					AddMenuItem(menu, "jihad", menuinfo23);
+				}
+			}
 			if(g_bDodgeBall != null)
 			{
 				if(g_bDodgeBall.BoolValue)
@@ -502,6 +513,14 @@ public EventMenuHandler(Handle:menu, MenuAction:action, client, itemNum)
 				CloseHandle(menu);
 			}else JbMenu(client,0);
 		}
+		else if ( strcmp(info,"jihad") == 0 )
+		{
+			FakeClientCommand(client, "sm_setjihad");
+			if(gc_bClose.BoolValue)
+			{
+				CloseHandle(menu);
+			}else JbMenu(client,0);
+		}
 		else if ( strcmp(info,"noscope") == 0 )
 		{
 			FakeClientCommand(client, "sm_setnoscope");
@@ -546,6 +565,5 @@ public EventMenuHandler(Handle:menu, MenuAction:action, client, itemNum)
 	else if (action == MenuAction_End)
 	{
 		CloseHandle(menu);       //todo: Displaying call stack trace for plugin "MyJailbreak/menu2.smx": L 04/06/2016 - 01:13:24: [SM]   [0]  Line 548, menu2.sp::EventMenuHandler()
-
 	}
 }

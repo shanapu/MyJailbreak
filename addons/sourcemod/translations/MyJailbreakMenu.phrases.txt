@@ -111,6 +111,11 @@
 		"#format"		""
 		"en"			"Start hide next round"
 	}
+	"menu_jihad"
+	{
+		"#format"		""
+		"en"			"Start jihad next round"
+	}
 	"menu_catch"
 	{
 		"#format"		""

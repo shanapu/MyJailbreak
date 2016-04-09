@@ -7,12 +7,13 @@
 #include <colors>
 #include <sdkhooks>
 #include <autoexecconfig>
+#include <myjailbreak>
 
 //Compiler Options
 #pragma semicolon 1
 
 //Defines
-#define PLUGIN_VERSION "0.1"
+#define PLUGIN_VERSION "0.2"
 
 //Booleans
 bool IsDodgeBall = false; 
@@ -24,10 +25,10 @@ ConVar gc_bTag;
 ConVar gc_bSetW;
 ConVar gc_bGrav;
 ConVar gc_fGravValue;
-ConVar gc_iRoundWait;
+ConVar gc_iCooldownStart;
 ConVar gc_bSetA;
 ConVar gc_bVote;
-ConVar gc_iRoundLimits;
+ConVar gc_iCooldownDay;
 ConVar gc_iRoundTime;
 ConVar gc_iTruceTime;
 ConVar gc_bOverlays;
@@ -36,7 +37,7 @@ ConVar g_iSetRoundTime;
 
 //Integers
 int g_iOldRoundTime;
-int g_iRoundLimits;
+int g_iCoolDown;
 int g_iTruceTime;
 int g_iVoteCount = 0;
 int DodgeBallRound = 0;
@@ -44,11 +45,11 @@ int DodgeBallRound = 0;
 //Handles
 Handle TruceTimer;
 Handle DodgeBallMenu;
-Handle UseCvar;
+
 
 //Strings
 char g_sHasVoted[1500];
-char g_sOverlayStart[256];
+
 
 public Plugin myinfo = {
 	name = "MyJailbreak - DodgeBall",
@@ -67,7 +68,7 @@ public void OnPluginStart()
 	//Client Commands
 	RegConsoleCmd("sm_setdodgeball", SetDodgeBall);
 	RegConsoleCmd("sm_dodgeball", VoteDodgeBall);
-	RegConsoleCmd("sm_scout", VoteDodgeBall);
+
 	
 	//AutoExecConfig
 	AutoExecConfig_SetFile("MyJailbreak_dodgeball");
@@ -75,15 +76,15 @@ public void OnPluginStart()
 	
 	AutoExecConfig_CreateConVar("sm_dodgeball_version", PLUGIN_VERSION, "The version of the SourceMod plugin MyJailBreak - dodgeball", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_dodgeball_enable", "1", "0 - disabled, 1 - enable dodgeball");
-	gc_bSetW = AutoExecConfig_CreateConVar("sm_dodgeball_setw", "1", "0 - disabled, 1 - allow warden to set dodgeball round", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	gc_bSetA = AutoExecConfig_CreateConVar("sm_dodgeball_seta", "1", "0 - disabled, 1 - allow admin to set dodgeball round", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	gc_bSetW = AutoExecConfig_CreateConVar("sm_dodgeball_warden", "1", "0 - disabled, 1 - allow warden to set dodgeball round", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	gc_bSetA = AutoExecConfig_CreateConVar("sm_dodgeball_admin", "1", "0 - disabled, 1 - allow admin to set dodgeball round", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	gc_bVote = AutoExecConfig_CreateConVar("sm_dodgeball_vote", "1", "0 - disabled, 1 - allow player to vote for dodgeball", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	gc_bGrav = AutoExecConfig_CreateConVar("sm_dodgeball_gravity", "1", "0 - disabled, 1 - enable low Gravity for dodgeball", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	gc_fGravValue= AutoExecConfig_CreateConVar("sm_dodgeball_gravity_value", "0.3","Ratio for Gravity 1.0 earth 0.5 moon", 0, true, 0.1, true, 1.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_dodgeball_roundtime", "5", "Round time for a single dodgeball round");
-	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_dodgeball_nodamage", "15", "Time for no damage");
-	gc_iRoundLimits = AutoExecConfig_CreateConVar("sm_dodgeball_roundsnext", "3", "Rounds until event can be started again.");
-	gc_iRoundWait = AutoExecConfig_CreateConVar("sm_dodgeball_roundwait", "3", "Rounds until event can be started after mapchange.", FCVAR_NOTIFY, true, 0.0, true, 255.0);
+	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_dodgeball_trucetime", "15", "Time for no damage");
+	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_dodgeball_cooldown_day", "3", "Rounds cooldown after a event until this event can startet");
+	gc_iCooldownStart = AutoExecConfig_CreateConVar("sm_dodgeball_cooldown_start", "3", "Rounds until event can be started after mapchange.", FCVAR_NOTIFY, true, 0.0, true, 255.0);
 	gc_bOverlays = AutoExecConfig_CreateConVar("sm_dodgeball_overlays", "1", "0 - disabled, 1 - enable overlays", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_dodgeball_overlaystart_path", "overlays/MyJailbreak/start" , "Path to the start Overlay DONT TYPE .vmt or .vft");
 	gc_bTag = AutoExecConfig_CreateConVar("sm_dodgeball_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster", FCVAR_NOTIFY, true, 0.0, true, 1.0);
@@ -99,7 +100,7 @@ public void OnPluginStart()
 	
 	//Find
 	g_iSetRoundTime = FindConVar("mp_roundtime");
-	g_iRoundLimits = gc_iRoundLimits.IntValue;
+	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
 	IsDodgeBall = false;
@@ -113,18 +114,18 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 	if(convar == gc_sOverlayStartPath)
 	{
 		strcopy(g_sOverlayStart, sizeof(g_sOverlayStart), newValue);
-		PrecacheOverlayAnyDownload(g_sOverlayStart);
+		if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStart);
 	}
 }
 
 public void OnMapStart()
 {
-	PrecacheOverlayAnyDownload(g_sOverlayStart);
+	if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStart);
 	g_iVoteCount = 0;
 	DodgeBallRound = 0;
 	IsDodgeBall = false;
 	StartDodgeBall = false;
-	g_iRoundLimits = gc_iRoundWait.IntValue;
+	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	
 }
@@ -132,7 +133,7 @@ public void OnMapStart()
 public void OnConfigsExecuted()
 {
 	g_iTruceTime = gc_iTruceTime.IntValue;
-	g_iRoundLimits = gc_iRoundWait.IntValue;
+	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	
 	if (gc_bTag.BoolValue)
 	{
@@ -144,23 +145,6 @@ public void OnConfigsExecuted()
 			StrCat(sTags, sizeof(sTags), ", MyJailbreak");
 			hTags.SetString(sTags);
 		}
-	}
-}
-
-void PrecacheOverlayAnyDownload(char[] sOverlay)
-{
-	if(gc_bOverlays.BoolValue)	
-	{
-		char sBufferVmt[256];
-		char sBufferVtf[256];
-		Format(sBufferVmt, sizeof(sBufferVmt), "%s.vmt", sOverlay);
-		Format(sBufferVtf, sizeof(sBufferVtf), "%s.vtf", sOverlay);
-		PrecacheDecal(sBufferVmt, true);
-		PrecacheDecal(sBufferVtf, true);
-		Format(sBufferVmt, sizeof(sBufferVmt), "materials/%s.vmt", sOverlay);
-		Format(sBufferVtf, sizeof(sBufferVtf), "materials/%s.vtf", sOverlay);
-		AddFileToDownloadsTable(sBufferVmt);
-		AddFileToDownloadsTable(sBufferVtf);
 	}
 }
 
@@ -177,15 +161,19 @@ public Action SetDodgeBall(int client,int args)
 		{
 			if (gc_bSetW.BoolValue)
 			{
-				if (!IsDodgeBall && !StartDodgeBall)
+				decl String:EventDay[64];
+				GetEventDay(EventDay);
+				
+				if(StrEqual(EventDay, "none", false))
+
 				{
-					if (g_iRoundLimits == 0)
+					if (g_iCoolDown == 0)
 					{
 						StartNextRound();
 					}
-					else CPrintToChat(client, "%t %t", "dodgeball_tag" , "dodgeball_wait", g_iRoundLimits);
+					else CPrintToChat(client, "%t %t", "dodgeball_tag" , "dodgeball_wait", g_iCoolDown);
 				}
-				else CPrintToChat(client, "%t %t", "dodgeball_tag" , "dodgeball_progress");
+				else CPrintToChat(client, "%t %t", "dodgeball_tag" , "dodgeball_progress" , EventDay);
 			}
 			else CPrintToChat(client, "%t %t", "warden_tag" , "nocscope_setbywarden");
 		}
@@ -193,15 +181,18 @@ public Action SetDodgeBall(int client,int args)
 			{
 				if (gc_bSetA.BoolValue)
 				{
-					if (!IsDodgeBall && !StartDodgeBall)
+					decl String:EventDay[64];
+					GetEventDay(EventDay);
+					
+					if(StrEqual(EventDay, "none", false))
 					{
-						if (g_iRoundLimits == 0)
+						if (g_iCoolDown == 0)
 						{
 							StartNextRound();
 						}
-						else CPrintToChat(client, "%t %t", "dodgeball_tag" , "dodgeball_wait", g_iRoundLimits);
+						else CPrintToChat(client, "%t %t", "dodgeball_tag" , "dodgeball_wait", g_iCoolDown);
 					}
-					else CPrintToChat(client, "%t %t", "dodgeball_tag" , "dodgeball_progress");
+					else CPrintToChat(client, "%t %t", "dodgeball_tag" , "dodgeball_progress" , EventDay);
 				}
 				else CPrintToChat(client, "%t %t", "nocscope_tag" , "dodgeball_setbyadmin");
 			}
@@ -219,9 +210,12 @@ public Action VoteDodgeBall(int client,int args)
 	{	
 		if (gc_bVote.BoolValue)
 		{	
-			if (!IsDodgeBall && !StartDodgeBall)
+			decl String:EventDay[64];
+			GetEventDay(EventDay);
+			
+			if(StrEqual(EventDay, "none", false))
 			{
-				if (g_iRoundLimits == 0)
+				if (g_iCoolDown == 0)
 				{
 					if (StrContains(g_sHasVoted, steamid, true) == -1)
 					{
@@ -237,9 +231,9 @@ public Action VoteDodgeBall(int client,int args)
 					}
 					else CPrintToChat(client, "%t %t", "dodgeball_tag" , "dodgeball_voted");
 				}
-				else CPrintToChat(client, "%t %t", "dodgeball_tag" , "dodgeball_wait", g_iRoundLimits);
+				else CPrintToChat(client, "%t %t", "dodgeball_tag" , "dodgeball_wait", g_iCoolDown);
 			}
-			else CPrintToChat(client, "%t %t", "dodgeball_tag" , "dodgeball_progress");
+			else CPrintToChat(client, "%t %t", "dodgeball_tag" , "dodgeball_progress" , EventDay);
 		}
 		else CPrintToChat(client, "%t %t", "dodgeball_tag" , "dodgeball_voting");
 	}
@@ -249,16 +243,11 @@ public Action VoteDodgeBall(int client,int args)
 void StartNextRound()
 {
 	StartDodgeBall = true;
-	g_iRoundLimits = gc_iRoundLimits.IntValue;
+	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iVoteCount = 0;
-	SetCvar("sm_war_enable", 0);
-	SetCvar("sm_zombie_enable", 0);
-	SetCvar("sm_ffa_enable", 0);
-	SetCvar("sm_freeday_enable", 0);
-	SetCvar("sm_noscope_enable", 0);
-	SetCvar("sm_hide_enable", 0);
-	SetCvar("sm_catch_enable", 0);
-	SetCvar("sm_duckhunt_enable", 0);
+	
+	SetEventDay("dodgeball");
+	
 	CPrintToChatAll("%t %t", "dodgeball_tag" , "dodgeball_next");
 	PrintHintTextToAll("%t", "dodgeball_next_nc");
 
@@ -271,10 +260,11 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_weapons_enable", 0);
-		SetCvar("sm_beacon_enabled", 1);
+		
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("mp_teammates_are_enemies", 1);
-		SetCvar("sm_dice_enable", 0);
+		
+		
 		IsDodgeBall = true;
 		ServerCommand("sm_removewarden");
 		DodgeBallRound++;
@@ -326,7 +316,14 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 	}
 	else
 	{
-		if (g_iRoundLimits > 0) g_iRoundLimits--;
+		decl String:EventDay[64];
+		GetEventDay(EventDay);
+	
+		if(!StrEqual(EventDay, "none", false))
+		{
+			g_iCoolDown = gc_iCooldownDay.IntValue + 1;
+		}
+		else if (g_iCoolDown > 0) g_iCoolDown--;
 	}
 }
 
@@ -424,18 +421,14 @@ public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 		DodgeBallRound = 0;
 		Format(g_sHasVoted, sizeof(g_sHasVoted), "");
 		SetCvar("sm_hosties_lr", 1);
-		SetCvar("sm_war_enable", 1);
-		SetCvar("sm_dice_enable", 1);
+		
 		SetCvar("sm_weapons_enable", 1);
-		SetCvar("sm_zombie_enable", 1);
-		SetCvar("sm_freeday_enable", 1);
-		SetCvar("sm_hide_enable", 1);
-		SetCvar("sm_noscope_enable", 1);
-		SetCvar("sm_duckhunt_enable", 1);
-		SetCvar("sm_ffa_enable", 1);
 		SetCvar("mp_teammates_are_enemies", 0);
-		SetCvar("sm_beacon_enabled", 0);
+		
 		SetCvar("sm_warden_enable", 1);
+		
+		SetEventDay("none");
+		
 		g_iSetRoundTime.IntValue = g_iOldRoundTime;
 		CPrintToChatAll("%t %t", "dodgeball_tag" , "dodgeball_end");
 	}
@@ -446,76 +439,8 @@ public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 	}
 }
 
-public Pass(Handle:menu, MenuAction:action, param1, param2)
-{
-}
 
-public Action ShowOverlayStart( Handle timer, any client ) {
-	
-	if(gc_bOverlays.BoolValue && IsClientInGame(client) && IsClientConnected(client) && !IsFakeClient(client))
-	{
-		int iFlag = GetCommandFlags( "r_screenoverlay" ) & ( ~FCVAR_CHEAT ); 
-		SetCommandFlags( "r_screenoverlay", iFlag ); 
-		ClientCommand( client, "r_screenoverlay \"%s.vtf\"", g_sOverlayStart);
-		CreateTimer( 2.0, DeleteOverlay, client );
-	}
-	return Plugin_Continue;
-	
-}
 
-public Action  DeleteOverlay( Handle timer, any client ) 
-{
-	if(IsClientInGame(client) && IsClientConnected(client) && !IsFakeClient(client))
-	{
-	int iFlag = GetCommandFlags( "r_screenoverlay" ) & ( ~FCVAR_CHEAT ); 
-	SetCommandFlags( "r_screenoverlay", iFlag ); 
-	ClientCommand( client, "r_screenoverlay \"\"" );
-	}
-	return Plugin_Continue;
-}
-
-stock StripAllWeapons(iClient)
-{
-	int iEnt;
-	for (int i = 0; i <= 4; i++)
-	{
-		while ((iEnt = GetPlayerWeaponSlot(iClient, i)) != -1)
-		{
-			RemovePlayerItem(iClient, iEnt);
-			AcceptEntityInput(iEnt, "Kill");
-		}
-	}
-}
-
-public SetCvar(char cvarName[64], value)
-{
-	UseCvar = FindConVar(cvarName);
-	if(UseCvar == null) return;
-	
-	int flags = GetConVarFlags(UseCvar);
-	flags &= ~FCVAR_NOTIFY;
-	SetConVarFlags(UseCvar, flags);
-
-	SetConVarInt(UseCvar, value);
-
-	flags |= FCVAR_NOTIFY;
-	SetConVarFlags(UseCvar, flags);
-}
-
-public SetCvarF(char cvarName[64], Float:value)
-{
-	UseCvar = FindConVar(cvarName);
-	if(UseCvar == null) return;
-
-	int flags = GetConVarFlags(UseCvar);
-	flags &= ~FCVAR_NOTIFY;
-	SetConVarFlags(UseCvar, flags);
-
-	SetConVarFloat(UseCvar, value);
-
-	flags |= FCVAR_NOTIFY;
-	SetConVarFlags(UseCvar, flags);
-}
 
 public OnMapEnd()
 {

@@ -77,9 +77,10 @@
 	
 	"freeday_progress"
 	{
+		"#format"	"{1:s}"
 		"da"		"FreeDay er {purple}allerede i gang!"	
-		"en"		"FreeDay is {purple}already in progress"
-		"de"		"FreeDay ist {purple}bereits gesetzt"
+		"en"		"A Event is {purple}already in progress. {darkred}{1}"
+		"de"		"Ein Event ist {purple}bereits gesetzt. {darkred}{1}"
 	}
 	
 	"freeday_minct"

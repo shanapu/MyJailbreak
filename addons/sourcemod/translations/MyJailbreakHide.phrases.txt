@@ -7,9 +7,10 @@
 	"hide_need"
 	{
 		"#format"	"{1:i}"
-		"da"		"Afstemninger tilbage til {darkred}Hide in the Dark"		
-		"en"		"votes left to {darkred}Hide in the Dark"
-		"de"		"noch {1} votes bis {darkred}krieg{default} beginnt"
+		"#format"	"{1:i},{2:N}"
+		"da"		"{purple}{2}{default} har stemt. {purple}{1}{default} stemmer tilbage for {darkred}Hide in the Dark"		
+		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes left to {darkred}Hide in the Dark"
+		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}Hide in the Dark{default} beginnt"
 	}
 	"hide_twin_nc"		// no colors!
 	{
@@ -69,9 +70,10 @@
 	
 	"hide_progress"
 	{
+		"#format"	"{1:s}"
 		"da"		"Hide in the Dark er {purple}allerede i gang!"	
-		"en"		"Hide in the Dark is {purple}already in progress"
-		"de"		"Hide in the Dark ist {purple}bereits gesetzt"
+		"en"		"A Event is {purple}already in progress. {darkred}{1}"
+		"de"		"Ein Event ist {purple}bereits gesetzt. {darkred}{1}"
 	}
 	
 	"hide_minct"

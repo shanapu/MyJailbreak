@@ -96,9 +96,10 @@
 	
 	"catch_progress"
 	{
+		"#format"	"{1:s}"
 		"da"		"Catch er {purple}allerede i gang"	
-		"en"		"catch is {purple}already in progress"
-		"de"		"catch ist {purple}bereits gesetzt"
+		"en"		"A Event is {purple}already in progress. {darkred}{1}"
+		"de"		"Ein Event ist {purple}bereits gesetzt. {darkred}{1}"
 	}
 	
 	"catch_minct"

@@ -7,6 +7,7 @@
 #include <wardn>
 #include <colors>
 #include <autoexecconfig>
+#include <myjailbreak>
 
 #define VERSION "0.x"
 
@@ -31,6 +32,9 @@ ConVar gc_bPlugin;
 ConVar gc_bTerror;
 ConVar gc_bCTerror;
 ConVar gc_bTA;
+ConVar gc_bJBmenu;
+ConVar gc_bAWP;
+ConVar gc_bAutoSniper;
 ConVar gc_bHealth;
 
 enum weapons
@@ -60,15 +64,7 @@ public void OnPluginStart()
 	
 	LoadTranslations("MyJailbreakWeapons.phrases");
 
-	array_primary = CreateArray(128);
-	array_secondary = CreateArray(128);
-	ListWeapons();
-	
-	// Create menus
-	optionsMenu1 = BuildOptionsMenu(true);
-	optionsMenu2 = BuildOptionsMenu(false);
-	optionsMenu3 = BuildOptionsMenuWeapons(true);
-	optionsMenu4 = BuildOptionsMenuWeapons(false);
+
 	
 	HookEvent("player_spawn", Event_PlayerSpawn);
 
@@ -79,8 +75,11 @@ public void OnPluginStart()
 	gc_bTerror = AutoExecConfig_CreateConVar("sm_weapons_t", "0", "0 - disabled, 1 - enable weapons for T - you shouldn't touch these, cause events days will handle them");
 	gc_bCTerror = AutoExecConfig_CreateConVar("sm_weapons_ct", "1", "0 - disabled, 1 - enable weapons for CT - you shouldn't touch these, cause events days will handle them");
 	gc_bSpawn = AutoExecConfig_CreateConVar("sm_weapons_spawnmenu", "1", "0 - disabled, 1 - enable open menu on spawn");
+	gc_bAWP = AutoExecConfig_CreateConVar("sm_weapons_awp", "1", "0 - disabled, 1 - enable AWP in menu");
+	gc_bAutoSniper = AutoExecConfig_CreateConVar("sm_weapons_autosniper", "1", "0 - disabled, 1 - enable scar20 & g3sg1 in menu");
 	gc_bTA = AutoExecConfig_CreateConVar("sm_weapons_warden_tagrenade", "1", "0 - disabled, 1 - enable open menu on spawn");
 	gc_bHealth = AutoExecConfig_CreateConVar("sm_weapons_warden_healthshot", "1", "0 - disabled, 1 - enable open menu on spawn");
+	gc_bJBmenu = AutoExecConfig_CreateConVar("sm_weapons_jbmenu", "1", "0 - disabled, 1 - enable open the MyJailbreak menu after give weapon.");
 	gc_bTag = AutoExecConfig_CreateConVar("sm_weapons_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 
 	AutoExecConfig_CacheConvars();
@@ -103,6 +102,18 @@ public void OnPluginStart()
 	weapons1 = RegClientCookie("Primary Weapons", "", CookieAccess_Private);
 	weapons2 = RegClientCookie("Secondary Weapons", "", CookieAccess_Private);
 	//remember = RegClientCookie("Remember Weapons", "", CookieAccess_Private);
+	
+	
+	
+	array_primary = CreateArray(128);
+	array_secondary = CreateArray(128);
+	ListWeapons();
+	
+	// Create menus
+	optionsMenu1 = BuildOptionsMenu(true);
+	optionsMenu2 = BuildOptionsMenu(false);
+	optionsMenu3 = BuildOptionsMenuWeapons(true);
+	optionsMenu4 = BuildOptionsMenuWeapons(false);
 }
 
 public void OnConfigsExecuted()
@@ -449,24 +460,14 @@ GiveSavedWeapons(clientIndex)
 		
 		GivePlayerItem(clientIndex, "weapon_knife");
 		//FakeClientCommand(clientIndex,"use weapon_knife");
-		//FakeClientCommand(clientIndex,"sm_menu");
 		
+		if (gc_bJBmenu.BoolValue)
+		{
+			FakeClientCommand(clientIndex,"sm_menu");
+		}
 		Timers[clientIndex] = CreateTimer(6.0, Fix, clientIndex);
 	}
 }
-
-stock StripAllWeapons(iClient)
-{
-    int iEnt;
-    for (int i = 0; i <= 4; i++)
-    {
-        while ((iEnt = GetPlayerWeaponSlot(iClient, i)) != -1)
-        {
-            RemovePlayerItem(iClient, iEnt);
-            AcceptEntityInput(iEnt, "Kill");
-        }
-    }
-}  
 
 public OnClientPutInServer(client)
 {
@@ -535,9 +536,12 @@ ListWeapons()
 	Format(Items[desc], 64, "Galil AR");
 	PushArrayArray(array_primary, Items[0]);
 	
- 	Format(Items[ItemName], 64, "weapon_awp");
-	Format(Items[desc], 64, "AWP");
-	PushArrayArray(array_primary, Items[0]); 
+	if (gc_bAWP.BoolValue)
+	{
+		Format(Items[ItemName], 64, "weapon_awp");
+		Format(Items[desc], 64, "AWP");
+		PushArrayArray(array_primary, Items[0]); 
+	}
 	
 	Format(Items[ItemName], 64, "weapon_sg556");
 	Format(Items[desc], 64, "SG 553");
@@ -559,13 +563,16 @@ ListWeapons()
 	Format(Items[desc], 64, "P90");
 	PushArrayArray(array_primary, Items[0]);
 	
- 	Format(Items[ItemName], 64, "weapon_scar20");
-	Format(Items[desc], 64, "SCAR-20");
-	PushArrayArray(array_primary, Items[0]);
-	
-	Format(Items[ItemName], 64, "weapon_g3sg1");
-	Format(Items[desc], 64, "G3SG1");
-	PushArrayArray(array_primary, Items[0]); 
+	if (gc_bAutoSniper.BoolValue)
+	{
+		Format(Items[ItemName], 64, "weapon_scar20");
+		Format(Items[desc], 64, "SCAR-20");
+		PushArrayArray(array_primary, Items[0]);
+		
+		Format(Items[ItemName], 64, "weapon_g3sg1");
+		Format(Items[desc], 64, "G3SG1");
+		PushArrayArray(array_primary, Items[0]); 
+	}
 	
 	Format(Items[ItemName], 64, "weapon_ump45");
 	Format(Items[desc], 64, "UMP-45");
@@ -587,7 +594,7 @@ ListWeapons()
 	Format(Items[desc], 64, "MAC-10");
 	PushArrayArray(array_primary, Items[0]);
 	
- 	Format(Items[ItemName], 64, "weapon_ssg08");
+	Format(Items[ItemName], 64, "weapon_ssg08");
 	Format(Items[desc], 64, "SSG 08");
 	PushArrayArray(array_primary, Items[0]); 
 	
