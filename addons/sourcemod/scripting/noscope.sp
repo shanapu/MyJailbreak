@@ -40,19 +40,15 @@ int g_iOldRoundTime;
 int g_iCoolDown;
 int g_iTruceTime;
 int g_iVoteCount = 0;
-
 int NoScopeRound = 0;
 int m_flNextSecondaryAttack;
 
 //Handles
 Handle TruceTimer;
-
 Handle NoScopeMenu;
-
 
 //Strings
 char g_sHasVoted[1500];
-
 
 public Plugin myinfo = {
 	name = "MyJailbreak - NoScope",
@@ -71,7 +67,6 @@ public void OnPluginStart()
 	//Client Commands
 	RegConsoleCmd("sm_setnoscope", SetNoScope);
 	RegConsoleCmd("sm_noscope", VoteNoScope);
-
 	RegConsoleCmd("sm_scout", VoteNoScope);
 	
 	//AutoExecConfig
@@ -100,21 +95,17 @@ public void OnPluginStart()
 	HookEvent("round_start", RoundStart);
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookEvent("round_end", RoundEnd);
-
 	
 	//Find
 	g_iSetRoundTime = FindConVar("mp_roundtime");
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
-
-
 	m_flNextSecondaryAttack = FindSendPropInfo("CBaseCombatWeapon", "m_flNextSecondaryAttack");
 	
 	IsNoScope = false;
 	StartNoScope = false;
 	g_iVoteCount = 0;
-
 	NoScopeRound = 0;
 }
 
@@ -131,15 +122,11 @@ public void OnMapStart()
 {
 	if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStart);
 	g_iVoteCount = 0;
-
-
-
 	NoScopeRound = 0;
 	IsNoScope = false;
 	StartNoScope = false;
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iTruceTime = gc_iTruceTime.IntValue;
-	
 }
 
 public void OnConfigsExecuted()
@@ -163,7 +150,7 @@ public void OnConfigsExecuted()
 public OnClientPutInServer(client)
 {
 	SDKHook(client, SDKHook_WeaponCanUse, OnWeaponCanUse);
-
+	
 	if (IsNoScope)
 	{
 		SDKHook(client, SDKHook_PreThink, OnPreThink);
@@ -178,17 +165,10 @@ public Action SetNoScope(int client,int args)
 		{
 			if (gc_bSetW.BoolValue)
 			{
-
-
-
-
-
 				decl String:EventDay[64];
 				GetEventDay(EventDay);
 				
 				if(StrEqual(EventDay, "none", false))
-
-
 				{
 					if (g_iCoolDown == 0)
 					{
@@ -204,15 +184,10 @@ public Action SetNoScope(int client,int args)
 			{
 				if (gc_bSetA.BoolValue)
 				{
-
-
-
-
 					decl String:EventDay[64];
 					GetEventDay(EventDay);
 					
 					if(StrEqual(EventDay, "none", false))
-
 					{
 						if (g_iCoolDown == 0)
 						{
@@ -238,15 +213,10 @@ public Action VoteNoScope(int client,int args)
 	{	
 		if (gc_bVote.BoolValue)
 		{	
-
-
-
-
 			decl String:EventDay[64];
 			GetEventDay(EventDay);
 			
 			if(StrEqual(EventDay, "none", false))
-
 			{
 				if (g_iCoolDown == 0)
 				{
@@ -279,17 +249,15 @@ void StartNextRound()
 	StartNoScope = true;
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iVoteCount = 0;
-
+	
 	SetEventDay("noscope");
 	
 	CPrintToChatAll("%t %t", "noscope_tag" , "noscope_next");
 	PrintHintTextToAll("%t", "noscope_next_nc");
-
 }
 
 public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 {
-
 	if (StartNoScope)
 	{
 		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
@@ -300,19 +268,14 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("mp_teammates_are_enemies", 1);
 		
-
-
 		IsNoScope = true;
 		ServerCommand("sm_removewarden");
-
-
 		NoScopeRound++;
 		StartNoScope = false;
 		SJD_OpenDoors();
 		NoScopeMenu = CreatePanel();
 		Format(info1, sizeof(info1), "%T", "noscope_info_Title", LANG_SERVER);
 		SetPanelTitle(NoScopeMenu, info1);
-
 		DrawPanelText(NoScopeMenu, "                                   ");
 		Format(info2, sizeof(info2), "%T", "noscope_info_Line1", LANG_SERVER);
 		DrawPanelText(NoScopeMenu, info2);
@@ -331,25 +294,18 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 		DrawPanelText(NoScopeMenu, info8);
 		DrawPanelText(NoScopeMenu, "-----------------------------------");
 		
-
 		if (NoScopeRound > 0)
 			{
 				for(int client=1; client <= MaxClients; client++)
 				{
 					if (IsClientInGame(client))
 					{
-
-
 						if (gc_bGrav.BoolValue)
 						{
 							SetEntityGravity(client, gc_fGravValue.FloatValue);	
 						}
-
-
-
 						StripAllWeapons(client);
 						GivePlayerItem(client, "weapon_ssg08");
-
 						SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
 						SendPanelToClient(NoScopeMenu, client, Pass, 15);
 						SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
@@ -372,20 +328,15 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 		}
 		else if (g_iCoolDown > 0) g_iCoolDown--;
 	}
-
 }
 
 public Action:OnWeaponCanUse(client, weapon)
 {
-
-
-
 	char sWeapon[32];
 	GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
-
+	
 	if(!StrEqual(sWeapon, "weapon_ssg08"))
 		{
-
 			if (IsClientInGame(client) && IsPlayerAlive(client))
 			{
 				if(IsNoScope)
@@ -394,8 +345,6 @@ public Action:OnWeaponCanUse(client, weapon)
 				}
 			}
 		}
-
-
 	return Plugin_Continue;
 }
 
@@ -410,13 +359,7 @@ public Action:OnPreThink(client)
 stock MakeNoScope(weapon)
 {
 	if (IsNoScope == true)
-
-
-
 	{
-
-
-
 		if(IsValidEdict(weapon))
 		{
 			char classname[MAX_NAME_LENGTH];
@@ -426,7 +369,6 @@ stock MakeNoScope(weapon)
 			}
 		}
 	}
-
 }
 
 public Action:NoScope(Handle:timer)
@@ -444,7 +386,6 @@ public Action:NoScope(Handle:timer)
 	
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	
-
 	if (NoScopeRound > 0)
 	{
 		for (int client=1; client <= MaxClients; client++)
@@ -458,7 +399,6 @@ public Action:NoScope(Handle:timer)
 				}
 			}
 			CreateTimer( 0.0, ShowOverlayStart, client);
-
 		}
 	}
 	PrintHintTextToAll("%t", "noscope_start_nc");
@@ -473,7 +413,6 @@ public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 {
 	int winner = GetEventInt(event, "winner");
 	
-
 	if (IsNoScope)
 	{
 		for(int client=1; client <= MaxClients; client++)
@@ -486,9 +425,6 @@ public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 		if (TruceTimer != null) KillTimer(TruceTimer);
 		if (winner == 2) PrintHintTextToAll("%t", "noscope_twin_nc");
 		if (winner == 3) PrintHintTextToAll("%t", "noscope_ctwin_nc");
-
-
-
 		IsNoScope = false;
 		StartNoScope = false;
 		NoScopeRound = 0;
@@ -499,34 +435,24 @@ public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 		SetCvar("mp_teammates_are_enemies", 0);
 		
 		SetCvar("sm_warden_enable", 1);
-
 		SetEventDay("none");
-
 		g_iSetRoundTime.IntValue = g_iOldRoundTime;
 		CPrintToChatAll("%t %t", "noscope_tag" , "noscope_end");
 	}
-
 	if (StartNoScope)
 	{
-	g_iOldRoundTime = g_iSetRoundTime.IntValue;
-	g_iSetRoundTime.IntValue = gc_iRoundTime.IntValue;
-
-	for(int i = 1; i <= MaxClients; i++)
-	if(IsClientInGame(i)) SDKUnhook(i, SDKHook_PreThink, OnPreThink);
+		g_iOldRoundTime = g_iSetRoundTime.IntValue;
+		g_iSetRoundTime.IntValue = gc_iRoundTime.IntValue;
+		for(int i = 1; i <= MaxClients; i++)
+		if(IsClientInGame(i)) SDKUnhook(i, SDKHook_PreThink, OnPreThink);
 	}
 }
 
-
-
-
 public OnMapEnd()
 {
-
-
 	IsNoScope = false;
 	StartNoScope = false;
 	g_iVoteCount = 0;
-
 	NoScopeRound = 0;
 	g_sHasVoted[0] = '\0';
 }

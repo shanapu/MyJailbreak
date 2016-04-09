@@ -1,4 +1,3 @@
-
 #include <cstrike>
 #include <colors>
 #include <sourcemod>
@@ -47,10 +46,8 @@ Handle FreezeTimer;
 Handle TruceTimer;
 Handle WarMenu;
 
-
 //Strings
 char g_sHasVoted[1500];
-
 
 //Floats
 float Pos[3];
@@ -107,7 +104,6 @@ public void OnPluginStart()
 	g_iSetRoundTime = FindConVar("mp_roundtime");
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
-	
 	
 	g_iVoteCount = 0;
 	WarRound = 0;
@@ -167,8 +163,6 @@ public Action SetWar(int client,int args)
 				GetEventDay(EventDay);
 				
 				if(StrEqual(EventDay, "none", false))
-
-
 				{
 					if (g_iCoolDown == 0)
 					{
@@ -188,7 +182,6 @@ public Action SetWar(int client,int args)
 					GetEventDay(EventDay);
 					
 					if(StrEqual(EventDay, "none", false))
-
 					{
 						if (g_iCoolDown == 0)
 						{
@@ -214,14 +207,12 @@ public Action VoteWar(int client,int args)
 	{
 		if (gc_bVote.BoolValue)
 		{	
-
 			if (GetTeamClientCount(CS_TEAM_CT) > 0)
 			{
 				decl String:EventDay[64];
 				GetEventDay(EventDay);
 				
 				if(StrEqual(EventDay, "none", false))
-
 				{
 					if (g_iCoolDown == 0)
 					{
@@ -256,9 +247,7 @@ void StartNextRound()
 	StartWar = true;
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iVoteCount = 0;
-
 	SetEventDay("war");
-
 	
 	CPrintToChatAll("%t %t", "war_tag" , "war_next");
 	PrintHintTextToAll("%t", "war_next_nc");
@@ -273,8 +262,6 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 		
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_warden_enable", 0);
-		
-		
 		SetCvar("sm_weapons_t", 1);
 		SetCvar("sm_weapons_ct", 1);
 		WarRound++;
@@ -335,7 +322,6 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 			DrawPanelText(WarMenu, info8);
 			DrawPanelText(WarMenu, "-----------------------------------");
 		}
-		
 		int RandomCT = 0;
 		
 		for(int client=1; client <= MaxClients; client++)
@@ -350,7 +336,7 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 			}
 		}
 		if (RandomCT)
-		{	
+		{
 			float Pos1[3];
 			
 			GetClientAbsOrigin(RandomCT, Pos);
@@ -491,8 +477,8 @@ public Action:NoDamage(Handle:timer)
 	{
 		if (IsClientInGame(client) && IsPlayerAlive(client)) 
 		{
-		SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
-		CreateTimer( 0.0, ShowOverlayStart, client);
+			SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
+			CreateTimer( 0.0, ShowOverlayStart, client);
 		}
 	}
 	CPrintToChatAll("%t %t", "war_tag" , "war_start");
@@ -522,13 +508,9 @@ public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
 			SetCvar("sm_hosties_lr", 1);
 			SetCvar("sm_warden_enable", 1);
-
 			SetCvar("sm_weapons_t", 0);
-
 			SetCvar("sm_weapons_ct", 1);
-
 			SetEventDay("none");
-			
 			
 			g_iSetRoundTime.IntValue = g_iOldRoundTime;
 			CPrintToChatAll("%t %t", "war_tag" , "war_end");
@@ -540,8 +522,6 @@ public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 		g_iSetRoundTime.IntValue = gc_iRoundTime.IntValue;
 	}
 }
-
-
 
 public void OnMapEnd()
 {

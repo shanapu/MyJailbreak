@@ -107,6 +107,14 @@ public SetCvarF(char cvarName[64], Float:value)
 	SetConVarFlags(UseCvar, flags);
 }
 
+public IsValidClient( client ) 
+{
+	if ( !( 1 <= client <= MaxClients ) || !IsClientInGame(client) ) 
+	return false; 
+	
+	return true; 
+}
+
 public Pass(Handle:menu, MenuAction:action, param1, param2)
 {
 }

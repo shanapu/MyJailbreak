@@ -121,7 +121,6 @@ HandleTag(client)
 
 public Action:OnChatMessage(&author, Handle:recipients, String:name[], String:message[])
 {
-
 	if(gc_bPlugin.BoolValue)
 	{
 		if(gc_bChat.BoolValue)

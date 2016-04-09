@@ -2,8 +2,6 @@
 #include <cstrike>
 #include <sourcemod>
 #include <sdktools>
-
-
 #include <colors>
 #include <smartjaildoors>
 #include <sdkhooks>
@@ -25,13 +23,9 @@ bool StartZombie = false;
 ConVar gc_bPlugin;
 ConVar gc_bTag;
 ConVar gc_bSetW;
-
-
-
 ConVar gc_bSetA;
 ConVar gc_iCooldownStart;
 ConVar gc_bVote;
-
 ConVar gc_iRoundTime;
 ConVar gc_iCooldownDay;
 ConVar gc_iFreezeTime;
@@ -44,20 +38,14 @@ ConVar g_iSetRoundTime;
 int g_iOldRoundTime;
 int g_iFreezeTime;
 int g_iCoolDown;
-
 int g_iVoteCount = 0;
-
 int ZombieRound = 0;
 
 //Handles
 Handle FreezeTimer;
-
 Handle ZombieMenu;
 
-
 //Strings
-
-
 char g_sZombieModel[256];
 char g_sHasVoted[1500];
 
@@ -78,7 +66,6 @@ public void OnPluginStart()
 	//Client Commands
 	RegConsoleCmd("sm_setzombie", SetZombie);
 	RegConsoleCmd("sm_zombie", VoteZombie);
-
 	RegConsoleCmd("sm_undead", VoteZombie);
 	
 	//AutoExecConfig
@@ -90,8 +77,6 @@ public void OnPluginStart()
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_zombie_warden", "1", "0 - disabled, 1 - allow warden to set zombie round", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	gc_bSetA = AutoExecConfig_CreateConVar("sm_zombie_admin", "1", "0 - disabled, 1 - allow admin to set zombie round", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	gc_bVote = AutoExecConfig_CreateConVar("sm_zombie_vote", "1", "0 - disabled, 1 - allow player to vote for zombie", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-
-
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_zombie_roundtime", "5", "Round time for a single zombie round");
 	gc_iFreezeTime = AutoExecConfig_CreateConVar("sm_zombie_freezetime", "35", "Time freeze zombies");
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_zombie_cooldown_day", "3", "Rounds cooldown after a event until this event can startet");
@@ -107,26 +92,19 @@ public void OnPluginStart()
 	
 	//Hooks
 	HookEvent("round_start", RoundStart);
-
 	HookEvent("round_end", RoundEnd);
-
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sModelPath, OnSettingChanged);
 	
-
 	//FindConVar
 	g_iSetRoundTime = FindConVar("mp_roundtime");
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
 	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
-
-
-	
 	
 	IsZombie = false;
 	StartZombie = false;
 	g_iVoteCount = 0;
-
 	ZombieRound = 0;
 }
 
@@ -151,11 +129,7 @@ public OnClientPutInServer(client)
 
 public void OnMapStart()
 {
-
 	g_iVoteCount = 0;
-
-
-
 	ZombieRound = 0;
 	IsZombie = false;
 	StartZombie = false;
@@ -185,11 +159,6 @@ public void OnConfigsExecuted()
 	}
 }
 
-
-
-
-
-
 public Action SetZombie(int client,int args)
 {
 	if (gc_bPlugin.BoolValue)
@@ -198,17 +167,10 @@ public Action SetZombie(int client,int args)
 		{
 			if (gc_bSetW.BoolValue)
 			{
-
-
-
-
-
 				decl String:EventDay[64];
 				GetEventDay(EventDay);
 				
 				if(StrEqual(EventDay, "none", false))
-
-
 				{
 					if (g_iCoolDown == 0)
 					{
@@ -224,24 +186,14 @@ public Action SetZombie(int client,int args)
 		{
 			if (gc_bSetA.BoolValue)
 			{
-
 				decl String:EventDay[64];
 				GetEventDay(EventDay);
 				
 				if(StrEqual(EventDay, "none", false))
-
 				{
-
-
-
-
 					if (g_iCoolDown == 0)
 					{
-
-
 						StartNextRound();
-
-
 					}
 					else CPrintToChat(client, "%t %t", "zombie_tag" , "zombie_wait", g_iCoolDown);
 				}
@@ -262,31 +214,16 @@ public Action VoteZombie(int client,int args)
 	if (gc_bPlugin.BoolValue)
 	{	
 		if (gc_bVote.BoolValue)
-
-
-
-
-
 		{
 			if (GetTeamClientCount(CS_TEAM_CT) > 0)
 			{
-
 				decl String:EventDay[64];
 				GetEventDay(EventDay);
 			
 				if(StrEqual(EventDay, "none", false))
-
-
 				{
-
 					if (g_iCoolDown == 0)
 					{
-
-
-
-
-
-
 						if (StrContains(g_sHasVoted, steamid, true) == -1)
 						{
 							int playercount = (GetClientCount(true) / 2);
@@ -315,11 +252,9 @@ public Action VoteZombie(int client,int args)
 
 void StartNextRound()
 {
-
 	StartZombie = true;
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iVoteCount = 0;
-
 	SetEventDay("zombie");
 	
 	CPrintToChatAll("%t %t", "zombie_tag" , "zombie_next");
@@ -349,25 +284,17 @@ public Action:OnWeaponCanUse(client, weapon)
 
 public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 {
-
 	if (StartZombie)
 	{
 		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
-
-
 		
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_warden_enable", 0);
-
 		
 		SetCvar("sm_weapons_t", 1);
 		SetCvar("sm_weapons_ct", 0);
 		SetCvar("sv_infinite_ammo", 1);
 		
-
-
-
-
 		IsZombie = true;
 		ZombieRound++;
 		StartZombie = false;
@@ -376,7 +303,6 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 		ZombieMenu = CreatePanel();
 		Format(info1, sizeof(info1), "%T", "zombie_info_Title", LANG_SERVER);
 		SetPanelTitle(ZombieMenu, info1);
-
 		DrawPanelText(ZombieMenu, "                                   ");
 		Format(info2, sizeof(info2), "%T", "zombie_info_Line1", LANG_SERVER);
 		DrawPanelText(ZombieMenu, info2);
@@ -395,25 +321,20 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 		DrawPanelText(ZombieMenu, info8);
 		DrawPanelText(ZombieMenu, "-----------------------------------");
 		
-
 		if (ZombieRound > 0)
 			{
 				for(int client=1; client <= MaxClients; client++)
 				{
 					if (IsClientInGame(client))
 					{
-
-
 						if (GetClientTeam(client) == CS_TEAM_CT)
 						{
-
 							SetEntityModel(client, g_sZombieModel);
 							SetEntityMoveType(client, MOVETYPE_NONE);
 							SetEntityHealth(client, 10000);
 							StripAllWeapons(client);
 							GivePlayerItem(client, "weapon_knife");
 						}
-
 						if (GetClientTeam(client) == CS_TEAM_T)
 						{
 							SetEntityHealth(client, 65);
@@ -424,12 +345,8 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 						SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
 						SendPanelToClient(ZombieMenu, client, Pass, 15);
 						SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
-
-
-
 					}
 				}
-
 				g_iFreezeTime--;
 				FreezeTimer = CreateTimer(1.0, Zombie, _, TIMER_REPEAT);
 			}
@@ -447,47 +364,10 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 	}
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 public Action:Zombie(Handle:timer)
 {
 	if (g_iFreezeTime > 1)
 	{
-
 		g_iFreezeTime--;
 		for (int client=1; client <= MaxClients; client++)
 		if (IsClientInGame(client) && IsPlayerAlive(client))
@@ -495,7 +375,6 @@ public Action:Zombie(Handle:timer)
 				if (GetClientTeam(client) == CS_TEAM_CT)
 				{
 					PrintCenterText(client,"%t", "zombie_timetounfreeze_nc", g_iFreezeTime);
-
 				}
 				if (GetClientTeam(client) == CS_TEAM_T)
 				{
@@ -507,31 +386,24 @@ public Action:Zombie(Handle:timer)
 	
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
 	
-
 	if (ZombieRound > 0)
 	{
 		for (int client=1; client <= MaxClients; client++)
 		{
 			if (IsClientInGame(client) && IsPlayerAlive(client))
 			{
-
-
 				if (GetClientTeam(client) == CS_TEAM_CT)
 				{
-
 					SetEntityMoveType(client, MOVETYPE_WALK);
 					SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.4);
 				}
 				SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
 			}
 			CreateTimer( 0.0, ShowOverlayStart, client);
-
 		}
 	}
 	PrintHintTextToAll("%t", "zombie_start_nc");
 	CPrintToChatAll("%t %t", "zombie_tag" , "zombie_start");
-
-
 	FreezeTimer = null;
 	
 	return Plugin_Stop;
@@ -541,7 +413,6 @@ public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 {
 	int winner = GetEventInt(event, "winner");
 	
-
 	if (IsZombie)
 	{
 		for(int client=1; client <= MaxClients; client++)
@@ -554,9 +425,6 @@ public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 		
 		if (winner == 2) PrintHintTextToAll("%t", "zombie_twin_nc");
 		if (winner == 3) PrintHintTextToAll("%t", "zombie_ctwin_nc");
-
-
-
 		IsZombie = false;
 		StartZombie = false;
 		ZombieRound = 0;
@@ -566,35 +434,24 @@ public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 		SetCvar("sm_weapons_ct", 1);
 		
 		SetCvar("sv_infinite_ammo", 0);
-
 		SetCvar("sm_warden_enable", 1);
 		
 		SetEventDay("none");
-
-
-
 		g_iSetRoundTime.IntValue = g_iOldRoundTime;
 		CPrintToChatAll("%t %t", "zombie_tag" , "zombie_end");
 	}
-
 	if (StartZombie)
 	{
-	g_iOldRoundTime = g_iSetRoundTime.IntValue;
-	g_iSetRoundTime.IntValue = gc_iRoundTime.IntValue;
+		g_iOldRoundTime = g_iSetRoundTime.IntValue;
+		g_iSetRoundTime.IntValue = gc_iRoundTime.IntValue;
 	}
 }
 
-
-
-
 public OnMapEnd()
 {
-
-
 	IsZombie = false;
 	StartZombie = false;
 	g_iVoteCount = 0;
-
 	ZombieRound = 0;
 	g_sHasVoted[0] = '\0';
 }

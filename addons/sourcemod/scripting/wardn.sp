@@ -10,7 +10,6 @@
 #include <colors>
 #include <autoexecconfig>
 
-
 //Compiler Options
 #pragma semicolon 1
 
@@ -60,7 +59,6 @@ int g_iCountStartStopTime = 9;
 int g_MarkerColor[] = {255,1,1,255};
 int g_iBeamSprite = -1;
 int g_iHaloSprite = -1;
-
 
 //Handles
 Handle g_fward_onBecome;
@@ -341,7 +339,7 @@ public Action DeleteMarker( Handle timer)
 	ResetMarker();
 }
 
-public Action:Event_RoundStart(Handle:event, const char[] name, bool:dontBroadcast)
+public Action:Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
 	if (countertime != null)
 		KillTimer(countertime);
@@ -439,7 +437,7 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 	}
 }
 
-public Action:Event_RoundEnd(Handle:event, const char[] name, bool:dontbroadcast)
+public Action:Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 {
 		LOOP_CLIENTS(i, CLIENTFILTER_TEAMONE)
 				{
@@ -534,7 +532,7 @@ public Action VoteWarden(int client,int args)
 	else CPrintToChat(client, "%t %t", "warden_tag" , "warden_disabled");
 }
 
-public Action:playerDeath(Handle:event, const char[] name, bool:dontBroadcast) 
+public Action:playerDeath(Event event, const char[] name, bool dontBroadcast) 
 {
 	int client = GetClientOfUserId(GetEventInt(event, "userid")); // Get the dead clients id
 	

@@ -69,7 +69,8 @@ want:
 - [ ] warden: improve markers (2 kind)
 - [ ] warden: limits
 - [ ] warden: pick random if no given/always
-
+- [ ] make ShowOverlayFreeze/start/delete to once
+- [ ] valid client and co to inc
 - [ ] warden: ff not for ct
 - [ ] jihad: burn dead bodies
 - [ ] playertags: add VIP flag

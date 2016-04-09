@@ -46,10 +46,8 @@ int DodgeBallRound = 0;
 Handle TruceTimer;
 Handle DodgeBallMenu;
 
-
 //Strings
 char g_sHasVoted[1500];
-
 
 public Plugin myinfo = {
 	name = "MyJailbreak - DodgeBall",
@@ -68,7 +66,6 @@ public void OnPluginStart()
 	//Client Commands
 	RegConsoleCmd("sm_setdodgeball", SetDodgeBall);
 	RegConsoleCmd("sm_dodgeball", VoteDodgeBall);
-
 	
 	//AutoExecConfig
 	AutoExecConfig_SetFile("MyJailbreak_dodgeball");
@@ -103,6 +100,7 @@ public void OnPluginStart()
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
+	
 	IsDodgeBall = false;
 	StartDodgeBall = false;
 	g_iVoteCount = 0;
@@ -127,7 +125,6 @@ public void OnMapStart()
 	StartDodgeBall = false;
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iTruceTime = gc_iTruceTime.IntValue;
-	
 }
 
 public void OnConfigsExecuted()
@@ -165,7 +162,6 @@ public Action SetDodgeBall(int client,int args)
 				GetEventDay(EventDay);
 				
 				if(StrEqual(EventDay, "none", false))
-
 				{
 					if (g_iCoolDown == 0)
 					{
@@ -207,9 +203,9 @@ public Action VoteDodgeBall(int client,int args)
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
 	
 	if (gc_bPlugin.BoolValue)
-	{	
+	{
 		if (gc_bVote.BoolValue)
-		{	
+		{
 			decl String:EventDay[64];
 			GetEventDay(EventDay);
 			
@@ -227,7 +223,8 @@ public Action VoteDodgeBall(int client,int args)
 						if (g_iVoteCount > playercount)
 						{
 							StartNextRound();
-						}else CPrintToChatAll("%t %t", "dodgeball_tag" , "dodgeball_need", Missing, client);
+						}
+						else CPrintToChatAll("%t %t", "dodgeball_tag" , "dodgeball_need", Missing, client);
 					}
 					else CPrintToChat(client, "%t %t", "dodgeball_tag" , "dodgeball_voted");
 				}
@@ -260,11 +257,8 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_weapons_enable", 0);
-		
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("mp_teammates_are_enemies", 1);
-		
-		
 		IsDodgeBall = true;
 		ServerCommand("sm_removewarden");
 		DodgeBallRound++;
@@ -318,7 +312,7 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 	{
 		decl String:EventDay[64];
 		GetEventDay(EventDay);
-	
+		
 		if(!StrEqual(EventDay, "none", false))
 		{
 			g_iCoolDown = gc_iCooldownDay.IntValue + 1;
@@ -331,13 +325,10 @@ public Action:OnWeaponCanUse(client, weapon)
 {
 	if(IsDodgeBall == true)
 	{
-
 		char sWeapon[32];
 		GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
-
 		if(StrEqual(sWeapon, "weapon_flashbang"))
 		{
-		
 			if (IsClientInGame(client) && IsPlayerAlive(client))
 			{
 				return Plugin_Continue;
@@ -353,12 +344,12 @@ public flash_Detonate(Handle:event, const String:name[], bool:dontBroadcast)
 {
 	if (IsDodgeBall == true)
 	{
-	new target = GetClientOfUserId(GetEventInt(event, "userid"));
-	if (GetClientTeam(target) == 1 && !IsPlayerAlive(target))
-	{
-		return;
-	}
-	GivePlayerItem(target, "weapon_flashbang");
+		new target = GetClientOfUserId(GetEventInt(event, "userid"));
+		if (GetClientTeam(target) == 1 && !IsPlayerAlive(target))
+		{
+			return;
+		}
+		GivePlayerItem(target, "weapon_flashbang");
 	}
 	return;
 }
@@ -421,10 +412,8 @@ public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 		DodgeBallRound = 0;
 		Format(g_sHasVoted, sizeof(g_sHasVoted), "");
 		SetCvar("sm_hosties_lr", 1);
-		
 		SetCvar("sm_weapons_enable", 1);
 		SetCvar("mp_teammates_are_enemies", 0);
-		
 		SetCvar("sm_warden_enable", 1);
 		
 		SetEventDay("none");
@@ -434,13 +423,10 @@ public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 	}
 	if (StartDodgeBall)
 	{
-	g_iOldRoundTime = g_iSetRoundTime.IntValue;
-	g_iSetRoundTime.IntValue = gc_iRoundTime.IntValue;
+		g_iOldRoundTime = g_iSetRoundTime.IntValue;
+		g_iSetRoundTime.IntValue = gc_iRoundTime.IntValue;
 	}
 }
-
-
-
 
 public OnMapEnd()
 {

@@ -3,10 +3,8 @@
 #include <sourcemod>
 #include <colors>
 #include <sdktools>
-
 #include <wardn>
 #include <smartjaildoors>
-
 #include <autoexecconfig>
 #include <myjailbreak>
 
@@ -24,15 +22,11 @@ bool StartFFA = false;
 ConVar gc_bPlugin;
 ConVar gc_bTag;
 ConVar gc_bSetW;
-
-
-
 ConVar gc_bSetA;
 ConVar gc_bVote;
 ConVar gc_iCooldownStart;
 ConVar gc_bSpawnCell;
 ConVar gc_iRoundTime;
-
 ConVar gc_bOverlays;
 ConVar gc_sOverlayStartPath;
 ConVar gc_iCooldownDay;
@@ -44,7 +38,6 @@ int g_iOldRoundTime;
 int g_iCoolDown;
 int g_iTruceTime;
 int g_iVoteCount;
-
 int FFARound;
 int FogIndex = -1;
 
@@ -57,15 +50,13 @@ float Pos[3];
 //Handles
 Handle FreezeTimer;
 Handle TruceTimer;
-
 Handle FFAMenu;
-
 
 //Strings
 char g_sHasVoted[1500];
 
-
-public Plugin myinfo = {
+public Plugin myinfo = 
+{
 	name = "MyJailbreak - War FFA",
 	author = "shanapu & Floody.de",
 	description = "Jailbreak War FFA script",
@@ -82,7 +73,6 @@ public void OnPluginStart()
 	//Client Commands
 	RegConsoleCmd("sm_setffa", Setffa);
 	RegConsoleCmd("sm_ffa", VoteFFA);
-
 	RegConsoleCmd("sm_warffa", VoteFFA);
 	
 	//AutoExecConfig
@@ -94,8 +84,6 @@ public void OnPluginStart()
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_ffa_warden", "1", "0 - disabled, 1 - allow warden to set ffa round", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	gc_bSetA = AutoExecConfig_CreateConVar("sm_ffa_admin", "1", "0 - disabled, 1 - allow admin to set ffa round", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	gc_bVote = AutoExecConfig_CreateConVar("sm_ffa_vote", "1", "0 - disabled, 1 - allow player to vote for ffa", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-
-
 	gc_bSpawnCell = AutoExecConfig_CreateConVar("sm_ffa_spawn", "1", "0 - teleport to weaponroom, 1 - standart spawn - cell doors auto open");
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_ffa_roundtime", "5", "Round time for a single ffa round");
 	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_ffa_trucetime", "30", "Time after g_iFreezeTime; damage disbaled");
@@ -110,29 +98,19 @@ public void OnPluginStart()
 	
 	//Hooks
 	HookEvent("round_start", RoundStart);
-
 	HookEvent("round_end", RoundEnd);
-
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	
-
 	//FindConVar
 	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
 	g_iSetRoundTime = FindConVar("mp_roundtime");
-
 	g_iTruceTime = gc_iTruceTime.IntValue;
-
-
-
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
-	
 	
 	IsFFA = false;
 	StartFFA = false;
 	g_iVoteCount = 0;
-
 	FFARound = 0;
-
 }
 
 public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
@@ -148,9 +126,6 @@ public void OnMapStart()
 {
 	if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStart);
 	g_iVoteCount = 0;
-
-
-
 	FFARound = 0;
 	IsFFA = false;
 	StartFFA = false;
@@ -191,11 +166,6 @@ public void OnConfigsExecuted()
 	}
 }
 
-
-
-
-
-
 public Action Setffa(int client,int args)
 {
 	if (gc_bPlugin.BoolValue)
@@ -209,10 +179,8 @@ public Action Setffa(int client,int args)
 				
 				if(StrEqual(EventDay, "none", false))
 				{
-				
 					if (g_iCoolDown == 0)
 					{
-					
 						StartNextRound();
 					}
 					else CPrintToChat(client, "%t %t", "ffa_tag" , "ffa_wait", g_iCoolDown);
@@ -229,7 +197,6 @@ public Action Setffa(int client,int args)
 					GetEventDay(EventDay);
 					
 					if(StrEqual(EventDay, "none", false))
-
 					{
 						if (g_iCoolDown == 0)
 						{
@@ -254,18 +221,11 @@ public Action VoteFFA(int client,int args)
 	if (gc_bPlugin.BoolValue)
 	{	
 		if (gc_bVote.BoolValue)
-
-
-
-
-
 		{
 			decl String:EventDay[64];
 			GetEventDay(EventDay);
 			
 			if(StrEqual(EventDay, "none", false))
-
-
 			{
 				if (g_iCoolDown == 0)
 				{
@@ -294,8 +254,7 @@ public Action VoteFFA(int client,int args)
 }
 
 void StartNextRound()
-{ 
-
+{
 	StartFFA = true;
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iVoteCount = 0;
@@ -304,33 +263,23 @@ void StartNextRound()
 	
 	CPrintToChatAll("%t %t", "ffa_tag" , "ffa_next");
 	PrintHintTextToAll("%t", "ffa_next_nc");
-
 }
 
 public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 {
-
 	if (StartFFA || IsFFA)
 	{
 		{AcceptEntityInput(FogIndex, "TurnOn");}
 		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
 		char info9[255], info10[255], info11[255], info12[255];
 		
-		
 		SetCvar("sm_hosties_lr", 0);
-
-
 		SetCvar("sm_warden_enable", 0);
-		
 		SetCvar("sm_weapons_t", 1);
 		SetCvar("sm_weapons_ct", 1);
 		SetCvar("mp_teammates_are_enemies", 1);
 		SetCvar("mp_friendlyfire", 1);
-
-
 		ServerCommand("sm_removewarden");
-
-
 		FFARound++;
 		IsFFA = true;
 		StartFFA = false;
@@ -341,7 +290,6 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 		FFAMenu = CreatePanel();
 		Format(info1, sizeof(info1), "%T", "ffa_info_Title", LANG_SERVER);
 		SetPanelTitle(FFAMenu, info1);
-
 		DrawPanelText(FFAMenu, "                                   ");
 		Format(info10, sizeof(info10), "%T", "RoundOne", LANG_SERVER);
 		if (FFARound == 1) DrawPanelText(FFAMenu, info10);
@@ -389,7 +337,6 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 			DrawPanelText(FFAMenu, "-----------------------------------");
 		}
 		
-
 		int RandomCT = 0;
 		
 		for(int client=1; client <= MaxClients; client++)
@@ -416,14 +363,10 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 			{
 				for(int client=1; client <= MaxClients; client++)
 				{
-
 					if (gc_bSpawnCell.BoolValue)
 					{
-
-
 						if (IsClientInGame(client))
 						{
-
 							if (GetClientTeam(client) == CS_TEAM_CT)
 							{
 								GivePlayerItem(client, "weapon_m4a1");
@@ -437,12 +380,6 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 								GivePlayerItem(client, "weapon_hegrenade");
 							}
 						}
-
-
-
-
-
-
 					}
 					else
 					{
@@ -459,32 +396,10 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 						}
 					}
 				}
-
-
 				CPrintToChatAll("%t %t", "ffa_tag" ,"ffa_rounds", FFARound);
 			}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 			for(int client=1; client <= MaxClients; client++)
 			{
-
 				if (IsClientInGame(client))
 				{
 					SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
@@ -494,23 +409,9 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 			}
 			TruceTimer = CreateTimer(1.0, NoDamage, _, TIMER_REPEAT);
 		}
-
 	}
-
-
-
-
-
-
-
-
-
-
 	else
 	{
-
-
-
 		decl String:EventDay[64];
 		GetEventDay(EventDay);
 	
@@ -520,20 +421,13 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 		}
 		else if (g_iCoolDown > 0) g_iCoolDown--;
 	}
-
 }
-
 
 public Action:NoDamage(Handle:timer)
 {
 	if (g_iTruceTime > 1)
 	{
 		g_iTruceTime--;
-
-
-
-
-
 		
 		PrintHintTextToAll("%t", "ffa_damage_nc", g_iTruceTime);
 		
@@ -542,30 +436,17 @@ public Action:NoDamage(Handle:timer)
 	
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	
-
 	PrintHintTextToAll("%t", "ffa_start_nc");
 	
 	for(int client=1; client <= MaxClients; client++) 
 	{
-
 		if (IsClientInGame(client) && IsPlayerAlive(client)) 
 		{
-
-
 		SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
-
-
-
-
-
 		CreateTimer( 0.0, ShowOverlayStart, client);
-
 		}
 	}
-
-
 	CPrintToChatAll("%t %t", "ffa_tag" , "ffa_start");
-
 	DoFog();
 	AcceptEntityInput(FogIndex, "TurnOff");
 	TruceTimer = null;
@@ -577,7 +458,6 @@ public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 {
 	int winner = GetEventInt(event, "winner");
 	
-
 	if (IsFFA)
 	{
 		for(int client=1; client <= MaxClients; client++)
@@ -589,23 +469,15 @@ public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 		if (TruceTimer != null) KillTimer(TruceTimer);
 		if (winner == 2) PrintHintTextToAll("%t", "ffa_twin_nc"); 
 		if (winner == 3) PrintHintTextToAll("%t", "ffa_ctwin_nc");
-
-
-
 		if (FFARound == 3)
 		{
 			IsFFA = false;
 			FFARound = 0;
 			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
 			SetCvar("sm_hosties_lr", 1);
-			
-			
 			SetCvar("sm_warden_enable", 1);
 			SetCvar("sm_weapons_t", 0);
 			SetCvar("sm_weapons_ct", 1);
-
-
-
 			SetCvar("mp_teammates_are_enemies", 0);
 			SetCvar("mp_friendlyfire", 0);
 			
@@ -615,7 +487,6 @@ public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 			CPrintToChatAll("%t %t", "ffa_tag" , "ffa_end");
 		}
 	}
-
 	if (StartFFA)
 	{
 		g_iOldRoundTime = g_iSetRoundTime.IntValue;
@@ -636,16 +507,11 @@ DoFog()
 	}
 }
 
-
-
 public void OnMapEnd()
 {
-
-
 	IsFFA = false;
 	StartFFA = false;
 	g_iVoteCount = 0;
-
 	FFARound = 0;
 	g_sHasVoted[0] = '\0';
 }

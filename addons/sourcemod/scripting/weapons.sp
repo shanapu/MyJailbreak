@@ -1,5 +1,4 @@
-#pragma semicolon 1
-
+//includes
 #include <sourcemod>
 #include <sdktools>
 #include <cstrike>
@@ -9,23 +8,30 @@
 #include <autoexecconfig>
 #include <myjailbreak>
 
-#define VERSION "0.x"
+//Compiler Options
+#pragma semicolon 1
 
-Handle Timers[MAXPLAYERS + 1] = null;
+//Defines
+#define PLUGIN_VERSION "0.2"
 
+//Booleans
 bool newWeaponsSelected[MAXPLAYERS+1];
 bool rememberChoice[MAXPLAYERS+1];
 bool weaponsGivenThisRound[MAXPLAYERS + 1] = { false, ... };
 
-// Menus
+//Handles
 Handle optionsMenu1 = null;
 Handle optionsMenu2 = null;
 Handle optionsMenu3 = null;
 Handle optionsMenu4 = null;
+Handle Timers[MAXPLAYERS + 1] = null;
+Handle array_primary;
+Handle array_secondary;
+Handle weapons1 = null;
+Handle weapons2 = null;
+//Handle remember = null;
 
-char primaryWeapon[MAXPLAYERS + 1][24];
-char secondaryWeapon[MAXPLAYERS + 1][24];
-
+//ConVars
 ConVar gc_bTag;
 ConVar gc_bSpawn;
 ConVar gc_bPlugin;
@@ -37,56 +43,31 @@ ConVar gc_bAWP;
 ConVar gc_bAutoSniper;
 ConVar gc_bHealth;
 
+//Strings
+char primaryWeapon[MAXPLAYERS + 1][24];
+char secondaryWeapon[MAXPLAYERS + 1][24];
+
 enum weapons
 {
 	String:ItemName[64],
 	String:desc[64]
 }
 
-Handle array_primary;
-Handle array_secondary;
-
 public Plugin:myinfo =
 {
 	name = "Jailbreak Weapons",
 	author = "shanapu, Franc1sco",
 	description = "plugin",
-	version = VERSION,
+	version = PLUGIN_VERSION,
 	url = "http://www.shanapu.de/"
 };
 
-Handle weapons1 = null;
-Handle weapons2 = null;
-//Handle remember = null;
-
 public void OnPluginStart()
 {
-	
+	// Translation
 	LoadTranslations("MyJailbreakWeapons.phrases");
-
-
 	
-	HookEvent("player_spawn", Event_PlayerSpawn);
-
-	AutoExecConfig_SetFile("MyJailbreak_weapons");
-	AutoExecConfig_SetCreateFile(true);
-	
-	gc_bPlugin = AutoExecConfig_CreateConVar("sm_weapons_enable", "1", "0 - disabled, 1 - enable weapons - you shouldn't touch these, cause events days will handle them ");
-	gc_bTerror = AutoExecConfig_CreateConVar("sm_weapons_t", "0", "0 - disabled, 1 - enable weapons for T - you shouldn't touch these, cause events days will handle them");
-	gc_bCTerror = AutoExecConfig_CreateConVar("sm_weapons_ct", "1", "0 - disabled, 1 - enable weapons for CT - you shouldn't touch these, cause events days will handle them");
-	gc_bSpawn = AutoExecConfig_CreateConVar("sm_weapons_spawnmenu", "1", "0 - disabled, 1 - enable open menu on spawn");
-	gc_bAWP = AutoExecConfig_CreateConVar("sm_weapons_awp", "1", "0 - disabled, 1 - enable AWP in menu");
-	gc_bAutoSniper = AutoExecConfig_CreateConVar("sm_weapons_autosniper", "1", "0 - disabled, 1 - enable scar20 & g3sg1 in menu");
-	gc_bTA = AutoExecConfig_CreateConVar("sm_weapons_warden_tagrenade", "1", "0 - disabled, 1 - enable open menu on spawn");
-	gc_bHealth = AutoExecConfig_CreateConVar("sm_weapons_warden_healthshot", "1", "0 - disabled, 1 - enable open menu on spawn");
-	gc_bJBmenu = AutoExecConfig_CreateConVar("sm_weapons_jbmenu", "1", "0 - disabled, 1 - enable open the MyJailbreak menu after give weapon.");
-	gc_bTag = AutoExecConfig_CreateConVar("sm_weapons_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-
-	AutoExecConfig_CacheConvars();
-	AutoExecConfig_ExecuteFile();
-	AutoExecConfig_CleanFile();
-	AutoExecConfig(true, "MyJailbreak_weapons");
-	
+	//Client Commands
 	RegConsoleCmd("sm_guns", Cmd_Weapons);
 	RegConsoleCmd("sm_gun", Cmd_Weapons);
 	RegConsoleCmd("sm_weapon", Cmd_Weapons);
@@ -97,13 +78,33 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_weaponmenu", Cmd_Weapons);
 	RegConsoleCmd("sm_give", Cmd_Weapons);
 	RegConsoleCmd("sm_giveweapon", Cmd_Weapons);
-
+	
+	//AutoExecConfig
+	AutoExecConfig_SetFile("MyJailbreak_weapons");
+	AutoExecConfig_SetCreateFile(true);
+	
+	AutoExecConfig_CreateConVar("sm_weapons_version", PLUGIN_VERSION, "The version of the SourceMod plugin MyJailBreak - Weapons", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
+	gc_bPlugin = AutoExecConfig_CreateConVar("sm_weapons_enable", "1", "0 - disabled, 1 - enable weapons - you shouldn't touch these, cause events days will handle them ");
+	gc_bTerror = AutoExecConfig_CreateConVar("sm_weapons_t", "0", "0 - disabled, 1 - enable weapons for T - you shouldn't touch these, cause events days will handle them");
+	gc_bCTerror = AutoExecConfig_CreateConVar("sm_weapons_ct", "1", "0 - disabled, 1 - enable weapons for CT - you shouldn't touch these, cause events days will handle them");
+	gc_bSpawn = AutoExecConfig_CreateConVar("sm_weapons_spawnmenu", "1", "0 - disabled, 1 - enable open menu on spawn");
+	gc_bAWP = AutoExecConfig_CreateConVar("sm_weapons_awp", "1", "0 - disabled, 1 - enable AWP in menu");
+	gc_bAutoSniper = AutoExecConfig_CreateConVar("sm_weapons_autosniper", "1", "0 - disabled, 1 - enable scar20 & g3sg1 in menu");
+	gc_bTA = AutoExecConfig_CreateConVar("sm_weapons_warden_tagrenade", "1", "0 - disabled, 1 - enable open menu on spawn");
+	gc_bHealth = AutoExecConfig_CreateConVar("sm_weapons_warden_healthshot", "1", "0 - disabled, 1 - enable open menu on spawn");
+	gc_bJBmenu = AutoExecConfig_CreateConVar("sm_weapons_jbmenu", "1", "0 - disabled, 1 - enable open the MyJailbreak menu after give weapon.");
+	gc_bTag = AutoExecConfig_CreateConVar("sm_weapons_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	
+	AutoExecConfig_ExecuteFile();
+	AutoExecConfig_CleanFile();
+	AutoExecConfig(true, "MyJailbreak_weapons");
+	
+	//Hooks
+	HookEvent("player_spawn", Event_PlayerSpawn);
 	
 	weapons1 = RegClientCookie("Primary Weapons", "", CookieAccess_Private);
 	weapons2 = RegClientCookie("Secondary Weapons", "", CookieAccess_Private);
 	//remember = RegClientCookie("Remember Weapons", "", CookieAccess_Private);
-	
-	
 	
 	array_primary = CreateArray(128);
 	array_secondary = CreateArray(128);
@@ -197,11 +198,8 @@ Handle:BuildOptionsMenuWeapons(bool:primary)
 			AddMenuItem(menu, Items[ItemName], Items[desc]);
 		}
 	}
-	
 	return menu;
-
 }
-
 
 public Menu_Options(Handle:menu, MenuAction:action, param1, param2)
 {
@@ -289,7 +287,7 @@ public void OnMapStart()
 	SetBuyZones("Disable");
 }
 
-public Event_PlayerSpawn(Handle:event, const char[] name, bool:dontBroadcast)
+public Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast)
 {
 	int clientIndex = GetClientOfUserId(GetEventInt(event, "userid"));
 	
