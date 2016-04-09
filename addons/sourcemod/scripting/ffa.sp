@@ -124,7 +124,7 @@ public void OnPluginStart()
 
 
 
-	g_iCoolDown = gc_iCooldownDay.IntValue;
+	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	
 	
 	IsFFA = false;
@@ -154,7 +154,7 @@ public void OnMapStart()
 	FFARound = 0;
 	IsFFA = false;
 	StartFFA = false;
-	g_iCoolDown = gc_iCooldownStart.IntValue;
+	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	
 	int ent; 
@@ -176,7 +176,7 @@ public void OnConfigsExecuted()
 {
 	
 	g_iTruceTime = gc_iTruceTime.IntValue;
-	g_iCoolDown = gc_iCooldownStart.IntValue;
+	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	
 	if (gc_bTag.BoolValue)
 	{
@@ -297,7 +297,7 @@ void StartNextRound()
 { 
 
 	StartFFA = true;
-	g_iCoolDown = gc_iCooldownDay.IntValue;
+	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iVoteCount = 0;
 	
 	SetEventDay("ffa");

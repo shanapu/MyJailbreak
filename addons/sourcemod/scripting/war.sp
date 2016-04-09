@@ -105,7 +105,7 @@ public void OnPluginStart()
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	g_iSetRoundTime = FindConVar("mp_roundtime");
-	g_iCoolDown = gc_iCooldownDay.IntValue;
+	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
 	
 	
@@ -130,7 +130,7 @@ public void OnMapStart()
 	WarRound = 0;
 	IsWar = false;
 	StartWar = false;
-	g_iCoolDown = gc_iCooldownStart.IntValue;
+	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStart);
@@ -140,7 +140,7 @@ public void OnConfigsExecuted()
 {
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
 	g_iTruceTime = gc_iTruceTime.IntValue;
-	g_iCoolDown = gc_iCooldownStart.IntValue;
+	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	
 	if (gc_bTag.BoolValue)
 	{
@@ -254,7 +254,7 @@ public Action VoteWar(int client,int args)
 void StartNextRound()
 {
 	StartWar = true;
-	g_iCoolDown = gc_iCooldownDay.IntValue;
+	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iVoteCount = 0;
 
 	SetEventDay("war");

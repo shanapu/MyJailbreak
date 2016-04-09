@@ -100,7 +100,7 @@ public void OnPluginStart()
 	
 	//Find
 	g_iSetRoundTime = FindConVar("mp_roundtime");
-	g_iCoolDown = gc_iCooldownDay.IntValue;
+	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
 	IsDodgeBall = false;
@@ -125,7 +125,7 @@ public void OnMapStart()
 	DodgeBallRound = 0;
 	IsDodgeBall = false;
 	StartDodgeBall = false;
-	g_iCoolDown = gc_iCooldownStart.IntValue;
+	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	
 }
@@ -133,7 +133,7 @@ public void OnMapStart()
 public void OnConfigsExecuted()
 {
 	g_iTruceTime = gc_iTruceTime.IntValue;
-	g_iCoolDown = gc_iCooldownStart.IntValue;
+	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	
 	if (gc_bTag.BoolValue)
 	{
@@ -243,7 +243,7 @@ public Action VoteDodgeBall(int client,int args)
 void StartNextRound()
 {
 	StartDodgeBall = true;
-	g_iCoolDown = gc_iCooldownDay.IntValue;
+	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iVoteCount = 0;
 	
 	SetEventDay("dodgeball");

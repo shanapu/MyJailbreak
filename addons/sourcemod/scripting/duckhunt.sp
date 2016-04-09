@@ -114,7 +114,7 @@ public void OnPluginStart()
 	g_iSetRoundTime = FindConVar("mp_roundtime");
 
 	g_iTruceTime = gc_iTruceTime.IntValue;
-	g_iCoolDown = gc_iCooldownDay.IntValue;
+	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
 
 
@@ -145,7 +145,7 @@ public void OnMapStart()
 	DuckHuntRound = 0;
 	IsDuckHunt = false;
 	StartDuckHunt = false;
-	g_iCoolDown = gc_iCooldownStart.IntValue;
+	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iTruceTime = gc_iTruceTime.IntValue;
 
 	PrecacheModel("models/chicken/chicken.mdl", true);
@@ -162,7 +162,7 @@ public void OnMapStart()
 public void OnConfigsExecuted()
 {
 	g_iTruceTime = gc_iTruceTime.IntValue;
-	g_iCoolDown = gc_iCooldownStart.IntValue;
+	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	
 	if (gc_bTag.BoolValue)
 	{
@@ -295,7 +295,7 @@ void StartNextRound()
 {
 
 	StartDuckHunt = true;
-	g_iCoolDown = gc_iCooldownDay.IntValue;
+	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iVoteCount = 0;
 	
 	SetEventDay("duckhunt");

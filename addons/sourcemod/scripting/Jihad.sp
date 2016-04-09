@@ -155,7 +155,7 @@ public void OnPluginStart()
 
 	//FindConVar
 	g_iSetRoundTime = FindConVar("mp_roundtime");
-	g_iCoolDown = gc_iCooldownDay.IntValue;
+	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
 	gc_sSoundPath1.GetString(g_sSoundPath1, sizeof(g_sSoundPath1));
 	gc_sSoundPath2.GetString(g_sSoundPath2, sizeof(g_sSoundPath2));
@@ -236,7 +236,7 @@ public void OnMapStart()
 
 	StartJiHad = false;
 	BombActive = false;
-	g_iCoolDown = gc_iCooldownStart.IntValue;
+	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
 
 }
@@ -244,7 +244,7 @@ public void OnMapStart()
 public void OnConfigsExecuted()
 {
 
-	g_iCoolDown = gc_iCooldownStart.IntValue;
+	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
 
@@ -389,7 +389,7 @@ void StartNextRound()
 {
 
 	StartJiHad = true;
-	g_iCoolDown = gc_iCooldownDay.IntValue;
+	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iVoteCount = 0;
 
 	SetEventDay("jihad");

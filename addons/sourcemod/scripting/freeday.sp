@@ -104,7 +104,7 @@ public void OnPluginStart()
 
 	//FindConVar
 	g_iSetRoundTime = FindConVar("mp_roundtime");
-	g_iCoolDown = gc_iCooldownDay.IntValue;
+	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 
 
 
@@ -292,7 +292,7 @@ void StartNextRound()
 {
 
 	StartFreeDay = true;
-	g_iCoolDown = gc_iCooldownDay.IntValue;
+	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iVoteCount = 0;
 
 	SetEventDay("freeday");
