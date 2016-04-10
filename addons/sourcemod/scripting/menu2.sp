@@ -11,7 +11,6 @@
 //Compiler Options
 #pragma semicolon 1
 
-
 //Defines
 #define PLUGIN_VERSION "0.2"
 
@@ -146,6 +145,7 @@ public Action JbMenu(int client, int args)
 		
 		
 		Format(menuinfo1, sizeof(menuinfo1), "%T", "menu_info_Title", LANG_SERVER);
+		
 		Menu mainmenu = new Menu(JBMenuHandler);
 		mainmenu.SetTitle(menuinfo1);
 		if (warden_iswarden(client))
@@ -390,7 +390,7 @@ public Action EventDays(int client, int args)
 
 
 
-public void JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selection)
+public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selection)
 {
 	if (action == MenuAction_Select)
 	{
@@ -477,7 +477,7 @@ public void JBMenuHandler(Menu mainmenu, MenuAction action, int client, int sele
 }
 }
 
-public void EventMenuHandler(Menu daysmenu, MenuAction action, int client, int selection)
+public int EventMenuHandler(Menu daysmenu, MenuAction action, int client, int selection)
 {
 	if (action == MenuAction_Select)
 	{
