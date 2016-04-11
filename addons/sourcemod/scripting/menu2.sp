@@ -13,7 +13,7 @@
 #pragma newdecls required
 
 //Defines
-#define PLUGIN_VERSION "0.2"
+#define PLUGIN_VERSION "0.3"
 
 //ConVars
 ConVar gc_bTag;

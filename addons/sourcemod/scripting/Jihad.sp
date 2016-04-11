@@ -16,7 +16,7 @@
 #pragma newdecls required
 
 //Defines
-#define PLUGIN_VERSION "0.2"
+#define PLUGIN_VERSION "0.3"
 #define IsSprintUsing   (1<<0)
 #define IsSprintCoolDown  (1<<1)
 #define IsBombing  (1<<2)
@@ -548,7 +548,7 @@ public Action OnWeaponCanUse(int client, int weapon)
 	char sWeapon[32];
 	GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
 	
-	if((GetClientTeam(client) == 2 && !StrEqual(sWeapon, "weapon_c4")) || (GetClientTeam(client) == 3 && !StrEqual(sWeapon, "weapon_knife")))
+	if((GetClientTeam(client) == CS_TEAM_T && !StrEqual(sWeapon, "weapon_c4")) || (GetClientTeam(client) == CS_TEAM_CT && !StrEqual(sWeapon, "weapon_knife")))
 		{
 			if (IsClientInGame(client) && IsPlayerAlive(client))
 			{

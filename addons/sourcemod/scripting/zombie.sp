@@ -14,7 +14,7 @@
 #pragma newdecls required
 
 //Defines
-#define PLUGIN_VERSION "0.2"
+#define PLUGIN_VERSION "0.3"
 
 //Booleans
 bool IsZombie = false;
@@ -269,7 +269,7 @@ public Action OnWeaponCanUse(int client, int weapon)
 	
 	if(!StrEqual(sWeapon, "weapon_knife"))
 		{
-			if(GetClientTeam(client) == 3 )
+			if(GetClientTeam(client) == CS_TEAM_CT )
 			{
 				if (IsClientInGame(client) && IsPlayerAlive(client))
 				{

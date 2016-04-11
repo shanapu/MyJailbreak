@@ -16,7 +16,7 @@
 
 //Defines
 #define LoopAliveClients(%1) for(int %1 = 1;%1 <= MaxClients;%1++) if(IsValidClient(%1, true))    //TODO all
-#define PLUGIN_VERSION "0.2"
+#define PLUGIN_VERSION "0.3"
 
 //Bools
 bool IsCountDown = false;

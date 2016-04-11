@@ -92,20 +92,6 @@ public SetCvar(char cvarName[64], value)
 	SetConVarFlags(UseCvar, flags);
 }
 
-public SetCvarF(char cvarName[64], Float:value)
-{
-	UseCvar = FindConVar(cvarName);
-	if(UseCvar == null) return;
-
-	int flags = GetConVarFlags(UseCvar);
-	flags &= ~FCVAR_NOTIFY;
-	SetConVarFlags(UseCvar, flags);
-
-	SetConVarFloat(UseCvar, value);
-
-	flags |= FCVAR_NOTIFY;
-	SetConVarFlags(UseCvar, flags);
-}
 
 public IsValidClient( client ) 
 {

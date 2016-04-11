@@ -17,8 +17,8 @@
 #define PLUGIN_VERSION "0.3"
 
 //Booleans
-bool IsDodgeBall = false; 
-bool StartDodgeBall = false; 
+bool IsKnifeFight = false; 
+bool StartKnifeFight = false; 
 
 //ConVars
 ConVar gc_bPlugin;
@@ -41,19 +41,19 @@ int g_iOldRoundTime;
 int g_iCoolDown;
 int g_iTruceTime;
 int g_iVoteCount = 0;
-int DodgeBallRound = 0;
+int KnifeFightRound = 0;
 
 //Handles
 Handle TruceTimer;
-Handle DodgeBallMenu;
+Handle KnifeFightMenu;
 
 //Strings
 char g_sHasVoted[1500];
 
 public Plugin myinfo = {
-	name = "MyJailbreak - DodgeBall",
+	name = "MyJailbreak - KnifeFight",
 	author = "shanapu & Floody.de, Franc1sco",
-	description = "Jailbreak DodgeBall script",
+	description = "Jailbreak KnifeFight script",
 	version = PLUGIN_VERSION,
 	url = ""
 };
@@ -62,30 +62,30 @@ public void OnPluginStart()
 {
 	// Translation
 	LoadTranslations("MyJailbreakWarden.phrases");
-	LoadTranslations("MyJailbreakDodgeBall.phrases");
+	LoadTranslations("MyJailbreakKnifeFight.phrases");
 	
 	//Client Commands
-	RegConsoleCmd("sm_setdodgeball", SetDodgeBall);
-	RegConsoleCmd("sm_dodgeball", VoteDodgeBall);
+	RegConsoleCmd("sm_setknifefight", SetKnifeFight);
+	RegConsoleCmd("sm_knifefight", VoteKnifeFight);
 	
 	//AutoExecConfig
-	AutoExecConfig_SetFile("MyJailbreak_dodgeball");
+	AutoExecConfig_SetFile("MyJailbreak_knifefight");
 	AutoExecConfig_SetCreateFile(true);
 	
-	AutoExecConfig_CreateConVar("sm_dodgeball_version", PLUGIN_VERSION, "The version of the SourceMod plugin MyJailBreak - dodgeball", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
-	gc_bPlugin = AutoExecConfig_CreateConVar("sm_dodgeball_enable", "1", "0 - disabled, 1 - enable dodgeball");
-	gc_bSetW = AutoExecConfig_CreateConVar("sm_dodgeball_warden", "1", "0 - disabled, 1 - allow warden to set dodgeball round", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	gc_bSetA = AutoExecConfig_CreateConVar("sm_dodgeball_admin", "1", "0 - disabled, 1 - allow admin to set dodgeball round", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	gc_bVote = AutoExecConfig_CreateConVar("sm_dodgeball_vote", "1", "0 - disabled, 1 - allow player to vote for dodgeball", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	gc_bGrav = AutoExecConfig_CreateConVar("sm_dodgeball_gravity", "1", "0 - disabled, 1 - enable low Gravity for dodgeball", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	gc_fGravValue= AutoExecConfig_CreateConVar("sm_dodgeball_gravity_value", "0.3","Ratio for Gravity 1.0 earth 0.5 moon", 0, true, 0.1, true, 1.0);
-	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_dodgeball_roundtime", "5", "Round time for a single dodgeball round");
-	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_dodgeball_trucetime", "15", "Time for no damage");
-	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_dodgeball_cooldown_day", "3", "Rounds cooldown after a event until this event can startet");
-	gc_iCooldownStart = AutoExecConfig_CreateConVar("sm_dodgeball_cooldown_start", "3", "Rounds until event can be started after mapchange.", FCVAR_NOTIFY, true, 0.0, true, 255.0);
-	gc_bOverlays = AutoExecConfig_CreateConVar("sm_dodgeball_overlays", "1", "0 - disabled, 1 - enable overlays", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_dodgeball_overlaystart_path", "overlays/MyJailbreak/start" , "Path to the start Overlay DONT TYPE .vmt or .vft");
-	gc_bTag = AutoExecConfig_CreateConVar("sm_dodgeball_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	AutoExecConfig_CreateConVar("sm_knifefight_version", PLUGIN_VERSION, "The version of the SourceMod plugin MyJailBreak - knifefight", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
+	gc_bPlugin = AutoExecConfig_CreateConVar("sm_knifefight_enable", "1", "0 - disabled, 1 - enable knifefight");
+	gc_bSetW = AutoExecConfig_CreateConVar("sm_knifefight_warden", "1", "0 - disabled, 1 - allow warden to set knifefight round", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	gc_bSetA = AutoExecConfig_CreateConVar("sm_knifefight_admin", "1", "0 - disabled, 1 - allow admin to set knifefight round", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	gc_bVote = AutoExecConfig_CreateConVar("sm_knifefight_vote", "1", "0 - disabled, 1 - allow player to vote for knifefight", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	gc_bGrav = AutoExecConfig_CreateConVar("sm_knifefight_gravity", "1", "0 - disabled, 1 - enable low Gravity for knifefight", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	gc_fGravValue= AutoExecConfig_CreateConVar("sm_knifefight_gravity_value", "0.3","Ratio for Gravity 1.0 earth 0.5 moon", 0, true, 0.1, true, 1.0);
+	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_knifefight_roundtime", "5", "Round time for a single knifefight round");
+	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_knifefight_trucetime", "15", "Time for no damage");
+	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_knifefight_cooldown_day", "3", "Rounds cooldown after a event until this event can startet");
+	gc_iCooldownStart = AutoExecConfig_CreateConVar("sm_knifefight_cooldown_start", "3", "Rounds until event can be started after mapchange.", FCVAR_NOTIFY, true, 0.0, true, 255.0);
+	gc_bOverlays = AutoExecConfig_CreateConVar("sm_knifefight_overlays", "1", "0 - disabled, 1 - enable overlays", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_knifefight_overlaystart_path", "overlays/MyJailbreak/start" , "Path to the start Overlay DONT TYPE .vmt or .vft");
+	gc_bTag = AutoExecConfig_CreateConVar("sm_knifefight_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
@@ -94,7 +94,6 @@ public void OnPluginStart()
 	HookEvent("round_start", RoundStart);
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookEvent("round_end", RoundEnd);
-	HookEvent("hegrenade_detonate", HE_Detonate);
 	
 	//Find
 	g_iSetRoundTime = FindConVar("mp_roundtime");
@@ -102,10 +101,10 @@ public void OnPluginStart()
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
 	
-	IsDodgeBall = false;
-	StartDodgeBall = false;
+	IsKnifeFight = false;
+	StartKnifeFight = false;
 	g_iVoteCount = 0;
-	DodgeBallRound = 0;
+	KnifeFightRound = 0;
 }
 
 public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
@@ -121,9 +120,9 @@ public void OnMapStart()
 {
 	if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStart);
 	g_iVoteCount = 0;
-	DodgeBallRound = 0;
-	IsDodgeBall = false;
-	StartDodgeBall = false;
+	KnifeFightRound = 0;
+	IsKnifeFight = false;
+	StartKnifeFight = false;
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iTruceTime = gc_iTruceTime.IntValue;
 }
@@ -151,7 +150,7 @@ public void OnClientPutInServer(int client)
 	SDKHook(client, SDKHook_WeaponCanUse, OnWeaponCanUse);
 }
 
-public Action SetDodgeBall(int client,int args)
+public Action SetKnifeFight(int client,int args)
 {
 	if (gc_bPlugin.BoolValue)
 	{
@@ -168,9 +167,9 @@ public Action SetDodgeBall(int client,int args)
 					{
 						StartNextRound();
 					}
-					else CPrintToChat(client, "%t %t", "dodgeball_tag" , "dodgeball_wait", g_iCoolDown);
+					else CPrintToChat(client, "%t %t", "knifefight_tag" , "knifefight_wait", g_iCoolDown);
 				}
-				else CPrintToChat(client, "%t %t", "dodgeball_tag" , "dodgeball_progress" , EventDay);
+				else CPrintToChat(client, "%t %t", "knifefight_tag" , "knifefight_progress" , EventDay);
 			}
 			else CPrintToChat(client, "%t %t", "warden_tag" , "nocscope_setbywarden");
 		}
@@ -187,18 +186,18 @@ public Action SetDodgeBall(int client,int args)
 						{
 							StartNextRound();
 						}
-						else CPrintToChat(client, "%t %t", "dodgeball_tag" , "dodgeball_wait", g_iCoolDown);
+						else CPrintToChat(client, "%t %t", "knifefight_tag" , "knifefight_wait", g_iCoolDown);
 					}
-					else CPrintToChat(client, "%t %t", "dodgeball_tag" , "dodgeball_progress" , EventDay);
+					else CPrintToChat(client, "%t %t", "knifefight_tag" , "knifefight_progress" , EventDay);
 				}
-				else CPrintToChat(client, "%t %t", "nocscope_tag" , "dodgeball_setbyadmin");
+				else CPrintToChat(client, "%t %t", "nocscope_tag" , "knifefight_setbyadmin");
 			}
 			else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
 	}
-	else CPrintToChat(client, "%t %t", "dodgeball_tag" , "dodgeball_disabled");
+	else CPrintToChat(client, "%t %t", "knifefight_tag" , "knifefight_disabled");
 }
 
-public Action VoteDodgeBall(int client,int args)
+public Action VoteKnifeFight(int client,int args)
 {
 	char steamid[64];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
@@ -225,68 +224,68 @@ public Action VoteDodgeBall(int client,int args)
 						{
 							StartNextRound();
 						}
-						else CPrintToChatAll("%t %t", "dodgeball_tag" , "dodgeball_need", Missing, client);
+						else CPrintToChatAll("%t %t", "knifefight_tag" , "knifefight_need", Missing, client);
 					}
-					else CPrintToChat(client, "%t %t", "dodgeball_tag" , "dodgeball_voted");
+					else CPrintToChat(client, "%t %t", "knifefight_tag" , "knifefight_voted");
 				}
-				else CPrintToChat(client, "%t %t", "dodgeball_tag" , "dodgeball_wait", g_iCoolDown);
+				else CPrintToChat(client, "%t %t", "knifefight_tag" , "knifefight_wait", g_iCoolDown);
 			}
-			else CPrintToChat(client, "%t %t", "dodgeball_tag" , "dodgeball_progress" , EventDay);
+			else CPrintToChat(client, "%t %t", "knifefight_tag" , "knifefight_progress" , EventDay);
 		}
-		else CPrintToChat(client, "%t %t", "dodgeball_tag" , "dodgeball_voting");
+		else CPrintToChat(client, "%t %t", "knifefight_tag" , "knifefight_voting");
 	}
-	else CPrintToChat(client, "%t %t", "dodgeball_tag" , "dodgeball_disabled");
+	else CPrintToChat(client, "%t %t", "knifefight_tag" , "knifefight_disabled");
 }
 
 void StartNextRound()
 {
-	StartDodgeBall = true;
+	StartKnifeFight = true;
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iVoteCount = 0;
 	
-	SetEventDay("dodgeball");
+	SetEventDay("knifefight");
 	
-	CPrintToChatAll("%t %t", "dodgeball_tag" , "dodgeball_next");
-	PrintHintTextToAll("%t", "dodgeball_next_nc");
+	CPrintToChatAll("%t %t", "knifefight_tag" , "knifefight_next");
+	PrintHintTextToAll("%t", "knifefight_next_nc");
 
 }
 
 public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
-	if (StartDodgeBall)
+	if (StartKnifeFight)
 	{
 		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_weapons_enable", 0);
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("mp_teammates_are_enemies", 1);
-		IsDodgeBall = true;
+		IsKnifeFight = true;
 		ServerCommand("sm_removewarden");
-		DodgeBallRound++;
-		StartDodgeBall = false;
+		KnifeFightRound++;
+		StartKnifeFight = false;
 		SJD_OpenDoors();
-		DodgeBallMenu = CreatePanel();
-		Format(info1, sizeof(info1), "%T", "dodgeball_info_Title", LANG_SERVER);
-		SetPanelTitle(DodgeBallMenu, info1);
-		DrawPanelText(DodgeBallMenu, "                                   ");
-		Format(info2, sizeof(info2), "%T", "dodgeball_info_Line1", LANG_SERVER);
-		DrawPanelText(DodgeBallMenu, info2);
-		DrawPanelText(DodgeBallMenu, "-----------------------------------");
-		Format(info3, sizeof(info3), "%T", "dodgeball_info_Line2", LANG_SERVER);
-		DrawPanelText(DodgeBallMenu, info3);
-		Format(info4, sizeof(info4), "%T", "dodgeball_info_Line3", LANG_SERVER);
-		DrawPanelText(DodgeBallMenu, info4);
-		Format(info5, sizeof(info5), "%T", "dodgeball_info_Line4", LANG_SERVER);
-		DrawPanelText(DodgeBallMenu, info5);
-		Format(info6, sizeof(info6), "%T", "dodgeball_info_Line5", LANG_SERVER);
-		DrawPanelText(DodgeBallMenu, info6);
-		Format(info7, sizeof(info7), "%T", "dodgeball_info_Line6", LANG_SERVER);
-		DrawPanelText(DodgeBallMenu, info7);
-		Format(info8, sizeof(info8), "%T", "dodgeball_info_Line7", LANG_SERVER);
-		DrawPanelText(DodgeBallMenu, info8);
-		DrawPanelText(DodgeBallMenu, "-----------------------------------");
+		KnifeFightMenu = CreatePanel();
+		Format(info1, sizeof(info1), "%T", "knifefight_info_Title", LANG_SERVER);
+		SetPanelTitle(KnifeFightMenu, info1);
+		DrawPanelText(KnifeFightMenu, "                                   ");
+		Format(info2, sizeof(info2), "%T", "knifefight_info_Line1", LANG_SERVER);
+		DrawPanelText(KnifeFightMenu, info2);
+		DrawPanelText(KnifeFightMenu, "-----------------------------------");
+		Format(info3, sizeof(info3), "%T", "knifefight_info_Line2", LANG_SERVER);
+		DrawPanelText(KnifeFightMenu, info3);
+		Format(info4, sizeof(info4), "%T", "knifefight_info_Line3", LANG_SERVER);
+		DrawPanelText(KnifeFightMenu, info4);
+		Format(info5, sizeof(info5), "%T", "knifefight_info_Line4", LANG_SERVER);
+		DrawPanelText(KnifeFightMenu, info5);
+		Format(info6, sizeof(info6), "%T", "knifefight_info_Line5", LANG_SERVER);
+		DrawPanelText(KnifeFightMenu, info6);
+		Format(info7, sizeof(info7), "%T", "knifefight_info_Line6", LANG_SERVER);
+		DrawPanelText(KnifeFightMenu, info7);
+		Format(info8, sizeof(info8), "%T", "knifefight_info_Line7", LANG_SERVER);
+		DrawPanelText(KnifeFightMenu, info8);
+		DrawPanelText(KnifeFightMenu, "-----------------------------------");
 		
-		if (DodgeBallRound > 0)
+		if (KnifeFightRound > 0)
 			{
 				for(int client=1; client <= MaxClients; client++)
 				{
@@ -297,15 +296,15 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 						{
 							SetEntityGravity(client, gc_fGravValue.FloatValue);	
 						}
-						SendPanelToClient(DodgeBallMenu, client, Pass, 15);
+						SendPanelToClient(KnifeFightMenu, client, Pass, 15);
 						SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 						StripAllWeapons(client);
-						GivePlayerItem(client, "weapon_hegrenade");
+						GivePlayerItem(client, "weapon_knife");
 						SetEntityHealth(client, 10);
 					}
 				}
 				g_iTruceTime--;
-				TruceTimer = CreateTimer(1.0, DodgeBall, _, TIMER_REPEAT);
+				TruceTimer = CreateTimer(1.0, KnifeFight, _, TIMER_REPEAT);
 			}
 	}
 	else
@@ -323,11 +322,11 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 
 public Action OnWeaponCanUse(int client, int weapon)
 {
-	if(IsDodgeBall == true)
+	if(IsKnifeFight == true)
 	{
 		char sWeapon[32];
 		GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
-		if(StrEqual(sWeapon, "weapon_hegrenade"))
+		if(StrEqual(sWeapon, "weapon_knife"))
 		{
 			if (IsClientInGame(client) && IsPlayerAlive(client))
 			{
@@ -339,21 +338,7 @@ public Action OnWeaponCanUse(int client, int weapon)
 	return Plugin_Continue;
 }
 
-public Action HE_Detonate(Handle event, const char[] name, bool dontBroadcast)
-{
-	if (IsDodgeBall == true)
-	{
-		int  target = GetClientOfUserId(GetEventInt(event, "userid"));
-		if (GetClientTeam(target) == 1 && !IsPlayerAlive(target))
-		{
-			return;
-		}
-		GivePlayerItem(target, "weapon_hegrenade");
-	}
-	return;
-}
-
-public Action DodgeBall(Handle timer)
+public Action KnifeFight(Handle timer)
 {
 	if (g_iTruceTime > 1)
 	{
@@ -361,14 +346,14 @@ public Action DodgeBall(Handle timer)
 		for (int client=1; client <= MaxClients; client++)
 		if (IsClientInGame(client) && IsPlayerAlive(client))
 			{
-				PrintCenterText(client,"%t", "dodgeball_timetounfreeze_nc", g_iTruceTime);
+				PrintCenterText(client,"%t", "knifefight_timetounfreeze_nc", g_iTruceTime);
 			}
 		return Plugin_Continue;
 	}
 	
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	
-	if (DodgeBallRound > 0)
+	if (KnifeFightRound > 0)
 	{
 		for (int client=1; client <= MaxClients; client++)
 		{
@@ -384,8 +369,8 @@ public Action DodgeBall(Handle timer)
 			
 		}
 	}
-	PrintHintTextToAll("%t", "dodgeball_start_nc");
-	CPrintToChatAll("%t %t", "dodgeball_tag" , "dodgeball_start");
+	PrintHintTextToAll("%t", "knifefight_start_nc");
+	CPrintToChatAll("%t %t", "knifefight_tag" , "knifefight_start");
 	
 	TruceTimer = null;
 	
@@ -396,7 +381,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 {
 	int winner = GetEventInt(event, "winner");
 	
-	if (IsDodgeBall)
+	if (IsKnifeFight)
 	{
 		for(int client=1; client <= MaxClients; client++)
 		{
@@ -404,11 +389,11 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 		}
 		
 		if (TruceTimer != null) KillTimer(TruceTimer);
-		if (winner == 2) PrintHintTextToAll("%t", "dodgeball_twin_nc");
-		if (winner == 3) PrintHintTextToAll("%t", "dodgeball_ctwin_nc");
-		IsDodgeBall = false;
-		StartDodgeBall = false;
-		DodgeBallRound = 0;
+		if (winner == 2) PrintHintTextToAll("%t", "knifefight_twin_nc");
+		if (winner == 3) PrintHintTextToAll("%t", "knifefight_ctwin_nc");
+		IsKnifeFight = false;
+		StartKnifeFight = false;
+		KnifeFightRound = 0;
 		Format(g_sHasVoted, sizeof(g_sHasVoted), "");
 		SetCvar("sm_hosties_lr", 1);
 		SetCvar("sm_weapons_enable", 1);
@@ -418,9 +403,9 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 		SetEventDay("none");
 		
 		g_iSetRoundTime.IntValue = g_iOldRoundTime;
-		CPrintToChatAll("%t %t", "dodgeball_tag" , "dodgeball_end");
+		CPrintToChatAll("%t %t", "knifefight_tag" , "knifefight_end");
 	}
-	if (StartDodgeBall)
+	if (StartKnifeFight)
 	{
 		g_iOldRoundTime = g_iSetRoundTime.IntValue;
 		g_iSetRoundTime.IntValue = gc_iRoundTime.IntValue;
@@ -429,9 +414,9 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 
 public void OnMapEnd()
 {
-	IsDodgeBall = false;
-	StartDodgeBall = false;
+	IsKnifeFight = false;
+	StartKnifeFight = false;
 	g_iVoteCount = 0;
-	DodgeBallRound = 0;
+	KnifeFightRound = 0;
 	g_sHasVoted[0] = '\0';
 }

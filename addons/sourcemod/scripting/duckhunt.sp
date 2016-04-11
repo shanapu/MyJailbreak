@@ -15,7 +15,7 @@
 #pragma newdecls required
 
 //Defines
-#define PLUGIN_VERSION "0.2"
+#define PLUGIN_VERSION "0.3"
 
 //Booleans
 bool IsDuckHunt;
@@ -355,7 +355,7 @@ public Action OnWeaponCanUse(int client, int weapon)
 	{
 		char sWeapon[32];
 		GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
-		if((GetClientTeam(client) == 2 && StrEqual(sWeapon, "weapon_hegrenade")) || (GetClientTeam(client) == 3 && StrEqual(sWeapon, "weapon_nova")))
+		if((GetClientTeam(client) == CS_TEAM_T && StrEqual(sWeapon, "weapon_hegrenade")) || (GetClientTeam(client) == CS_TEAM_CT && StrEqual(sWeapon, "weapon_nova")))
 		{
 		
 			if (IsClientInGame(client) && IsPlayerAlive(client))

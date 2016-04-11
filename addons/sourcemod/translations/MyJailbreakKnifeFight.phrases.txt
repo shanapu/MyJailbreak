@@ -1,0 +1,172 @@
+"Phrases"
+{
+	"knifefight_tag"
+	{
+		"en"		"[{green}MyJB.knifefight{default}]"
+	}
+	"knifefight_need"
+	{
+		"#format"	"{1:i},{2:N}"
+		"da"		"{purple}{2}{default} har stemt. {purple}{1}{default} afstemninger tilbage til {darkred}knifefight"		
+		"en"		"{purple}{2}{default} has votet. {purple}{1}{default} votes left to {darkred}knifefight"
+		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}knifefight{default} beginnt"
+	}
+	"knifefight_twin_nc"
+	{
+		"da"		"En terrorist har overlevet!"	
+		"en"		"A Terrorist has surrived"
+		"de"		"Ein Terrorist hat als einziger überlebt"
+	}
+	"knifefight_voting"
+	{
+		"da"		"Afstemninger for knifefight er {purple}slået fra"	
+		"en"		"Player Voting for knifefight is {purple}disabled"
+		"de"		"Voting für knifefight ist {purple}ausgeschaltet"
+	}
+	"knifefight_setbywarden"
+	{
+		"da"		"knifefight for Warden er {purple}slået fra"	
+		"en"		"Set knifefight by Warden is {purple}disabled"
+		"de"		"knifefight Aktivierung durch den Warden ist {purple}ausgeschaltet"
+	}
+	
+	"knifefight_setbyadmin"
+	{
+		"da"		"knifefight for Admin er {purple}slået fra"	
+		"en"		"Set knifefight by admin is {purple}disabled"
+		"de"		"knifefight Aktivierung durch den Admin ist {purple}ausgeschaltet"
+	}
+	"knifefight_ctwin_nc"
+	{
+		"da"		"En Counter-Terrorist har overlevet"	
+		"en"		"A Counter-Terrorist has surrived"
+		"de"		"Ein Counter-Terrorist hat als einziger überlebt"
+	}
+	
+	"knifefight_end"
+	{
+		"da"		"{purple}knifefight{default} er afsluttet!"	
+		"en"		"{purple}knifefight{default} ended"
+		"de"		"{purple}knifefight{default} beendet"
+	}
+	
+	"knifefight_next"
+	{
+		"da"		"Næste runde er {purple}knifefight"
+		"en"		"Next round is {purple}knifefight"
+		"de"		"Nächste Runde ist {purple}knifefight"
+	}
+	"knifefight_next_nc"
+	{
+		"da"		"Næste runde er knifefight"
+		"en"		"Next round is knifefight"
+		"de"		"Nächste Runde ist knifefight"
+	}
+	
+	"knifefight_start"
+	{
+		"da"		"{purple}knifefight{default} er startet!"
+		"en"		"The {purple}knifefight{default} has started!"
+		"de"		"{purple}knifefight{default} ist gestartet!"
+	}
+	
+	"knifefight_start_nc"
+	{
+		"da"		"knifefight er startet!"	
+		"en"		"The knifefight started!"
+		"de"		"knifefight ist gestartet!"
+	}
+	
+	"knifefight_voted"
+	{
+		"en"		"Du har allerede stemt på {purple}knifefight"	
+		"en"		"You already voted for {purple}knifefight"
+		"de"		"Du hast schon für {purple}knifefight {default}gevotet"
+	}
+	
+	"knifefight_progress"
+	{
+		"#format"	"{1:s}"
+		"da"		"knifefight er {purple}allerede i gang"	
+		"en"		"A Event is {purple}already in progress. {darkred}{1}"
+		"de"		"Ein Event ist {purple}bereits gesetzt. {darkred}{1}"
+	}
+	
+	"knifefight_disabled"
+	{
+		"da"		"knifefight er {purple}slået fra."
+		"en"		"knifefight is {purple}disabled."
+		"de"		"knifefight ist {purple}deaktiviert."
+	}
+	
+
+	"knifefight_timetounfreeze_nc"
+	{
+		"#format"	"{1:i}"
+		"da"		"{1} sekunder til runden starter!"
+		"en"		"{1} seconds until start"
+		"de"		"{1} Sekunden bis zum Start"
+	}
+	
+	"knifefight_info_Title"
+	{
+		"da"		"Scout knifefighter aktiv"	
+		"en"		"Scout knifefight knifefight is activ"
+		"de"		"Scout knifefight knifefight ist aktiv"
+	}
+	
+	"knifefight_info_Line1"
+	{
+		"da"		"Bliv ikke overrasket hvis du bliver teleportet til CT Spawn!"	
+		"en"		"Do not be surprised if ported to CT Spawn"
+		"de"		"Nicht wundern falls ihr zum CT Spawngeportet wurdet"
+	}
+	"knifefight_info_Line2"
+	{
+		"da"		"I høvdingebold er det FFA høvdingebold"	
+		"en"		"In knifefight ther is FFA knifefight"
+		"de"		"FFA knifefight scout knifefight"
+	}
+	
+	"knifefight_info_Line3"
+	{
+		"da"		"Du kan ikke skade andre spillere indtil runden starter"	
+		"en"		"you can move and exit the wk in nodamge phase"
+		"de"		"Während der no damge phase kannst du aus der zelle/waffenkammer"
+	}
+	
+	"knifefight_info_Line4"
+	{
+		"da"		"Alle jail regler er ophævet!"	
+		"en"		"All normal jailRules are repealed"
+		"de"		"Alle normalen Jailregeln sind aufgehoben!"
+	}
+	
+	"knifefight_info_Line5"
+	{
+		"da"		"Der kan ikke laves !lr i denne runde!"	
+		"en"		"There is no last request!"
+		"de"		"Der letzte Terrorist hat keinen Wunsch!"
+	}
+	
+	"knifefight_info_Line6"
+	{
+		"da"		"Alle må gå der hen de har lyst til!"	
+		"en"		"Everyone is allowed to go everywhere where he wants"
+		"de"		"Jeder darf überall hin wo er will!"
+	}
+	
+	"knifefight_info_Line7"
+	{
+		"da"		"Alle server regler skal holdes!"	
+		"en"		"dont be an asshole!"
+		"de"		"bau keine scheisse!"
+	}
+		"knifefight_wait"
+	{
+		"#format"	"{1:i}"
+		"da"		"Du skal vente {1} flere runder"	
+		"en"		"you must wait {1} more rounds"
+		"de"		"Du musst noch {1} Runden warten"
+	}
+}

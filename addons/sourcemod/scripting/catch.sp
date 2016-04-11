@@ -16,7 +16,7 @@
 #pragma newdecls required
 
 //Defines
-#define PLUGIN_VERSION "0.2"
+#define PLUGIN_VERSION "0.3"
 #define IsSprintUsing   (1<<0)
 #define IsSprintCoolDown  (1<<1)
 
