@@ -511,9 +511,11 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 		SetCvar("sm_hosties_lr", 1);
 		SetCvar("sm_weapons_enable", 1);
 		SetCvar("sm_warden_enable", 1);
-		SetEventDay("none");
 		
 		g_iSetRoundTime.IntValue = g_iOldRoundTime;
+		SetEventDay("none");
+		
+
 		CPrintToChatAll("%t %t", "catch_tag" , "catch_end");
 	}
 	if (StartCatch)

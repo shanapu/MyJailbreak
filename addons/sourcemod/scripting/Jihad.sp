@@ -41,7 +41,6 @@ ConVar gc_iCooldownDay;
 ConVar gc_iCooldownStart;
 ConVar gc_iRoundTime;
 ConVar gc_iFreezeTime;
-ConVar gc_sOverlayFreeze;
 ConVar gc_sOverlayStartPath;
 ConVar gc_bSprintUse;
 ConVar gc_fCooldown;
@@ -69,7 +68,7 @@ Handle FreezeTimer;
 char g_sSoundPath2[256];
 char g_sSoundPath1[256];
 char g_sHasVoted[1500];
-char g_sOverlayFreeze[256];
+char g_sOverlaystart[256];
 
 public Plugin myinfo = {
 	name = "MyJailbreak - JiHad & Freeze",
@@ -88,7 +87,7 @@ public void OnPluginStart()
 	//Client Commands
 	RegConsoleCmd("sm_setjihad", SetJiHad);
 	RegConsoleCmd("sm_jihad", VoteJiHad);
-	RegConsoleCmd("sm_jihadfreeze", VoteJiHad);
+	RegConsoleCmd("sm_allahakbar", VoteJiHad);
 	RegConsoleCmd("sm_sprint", Command_StartSprint, "Starts the sprint.");
 	RegConsoleCmd("sm_makeboom", Command_BombJihad, "Starts the bomb.");
 	
@@ -104,13 +103,12 @@ public void OnPluginStart()
 	gc_iKey = AutoExecConfig_CreateConVar("sm_jihad_key", "1", "1 - Inspect(look) weapon / 2 - walk / 3 - Secondary Attack");
 	gc_bStandStill = AutoExecConfig_CreateConVar("sm_jihad_standstill", "1", "0 - disabled, 1 - standstill(cant move) on Activate bomb");
 	gc_fBombRadius = AutoExecConfig_CreateConVar("sm_jihad_bomb_radius", "200.0","Radius for bomb damage", 0, true, 10.0, true, 999.0);
-	gc_iFreezeTime = AutoExecConfig_CreateConVar("sm_zombie_freezetime", "35", "Time freeze zombies");
+	gc_iFreezeTime = AutoExecConfig_CreateConVar("sm_jihad_freezetime", "35", "Time freeze to hide");
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_jihad_roundtime", "5", "Round time for a single jihad round");
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_jihad_cooldown_day", "3", "Rounds cooldown after a event until this event can startet");
 	gc_iCooldownStart = AutoExecConfig_CreateConVar("sm_jihad_cooldown_start", "3", "Rounds until event can be started after mapchange.", FCVAR_NOTIFY, true, 0.0, true, 255.0);
 	gc_bOverlays = AutoExecConfig_CreateConVar("sm_jihad_overlays", "1", "0 - disabled, 1 - enable overlays", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_zombie_overlaystart_path", "overlays/MyJailbreak/start" , "Path to the start Overlay DONT TYPE .vmt or .vft");
-	gc_sOverlayFreeze = AutoExecConfig_CreateConVar("sm_jihad_overlayfreeze_path", "overlays/MyJailbreak/freeze" , "Path to the Freeze Overlay DONT TYPE .vmt or .vft");
+	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_start_overlaystart_path", "overlays/MyJailbreak/start" , "Path to the start Overlay DONT TYPE .vmt or .vft");
 	gc_bSounds = AutoExecConfig_CreateConVar("sm_jihad_sounds_enable", "1", "0 - disabled, 1 - enable warden sounds");
 	gc_sSoundPath1 = AutoExecConfig_CreateConVar("sm_jihad_sounds_jihad", "music/myjailbreak/jihad.mp3", "Path to the sound which should be played on freeze.");
 	gc_sSoundPath2 = AutoExecConfig_CreateConVar("sm_jihad_sounds_boom", "music/myjailbreak/bombe.mp3", "Path to the sound which should be played on unfreeze.");
@@ -128,7 +126,8 @@ public void OnPluginStart()
 	HookEvent("round_start", RoundStart);
 	HookEvent("player_spawn", Event_PlayerSpawn);
 	HookEvent("round_end", RoundEnd);
-	HookConVarChange(gc_sOverlayFreeze, OnSettingChanged);
+	
+	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundPath1, OnSettingChanged);
 	HookConVarChange(gc_sSoundPath2, OnSettingChanged);
 	
@@ -138,7 +137,6 @@ public void OnPluginStart()
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
 	gc_sSoundPath1.GetString(g_sSoundPath1, sizeof(g_sSoundPath1));
 	gc_sSoundPath2.GetString(g_sSoundPath2, sizeof(g_sSoundPath2));
-	gc_sOverlayFreeze.GetString(g_sOverlayFreeze , sizeof(g_sOverlayFreeze));
 	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
 	
 	AddCommandListener(Command_LAW, "+lookatweapon");
@@ -165,11 +163,7 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 		strcopy(g_sSoundPath2, sizeof(g_sSoundPath2), newValue);
 		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundPath2);
 	}
-	else if(convar == gc_sOverlayFreeze)
-	{
-		strcopy(g_sOverlayFreeze, sizeof(g_sOverlayFreeze), newValue);
-		if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayFreeze);
-	}
+	
 	else if(convar == gc_sOverlayStartPath)
 	{
 		strcopy(g_sOverlayStart, sizeof(g_sOverlayStart), newValue);
@@ -196,7 +190,6 @@ public void OnMapStart()
 	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundPath1);
 	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundPath2);
 	if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStart);
-	if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayFreeze);
 	PrecacheSound("player/suit_sprint.wav", true);
 	g_iVoteCount = 0;
 	JiHadRound = 0;
@@ -588,8 +581,8 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 		SetCvar("sv_infinite_ammo", 0);
 		SetCvar("sm_warden_enable", 1);
 		
-		SetEventDay("none");
 		g_iSetRoundTime.IntValue = g_iOldRoundTime;
+		SetEventDay("none");
 		CPrintToChatAll("%t %t", "jihad_tag" , "jihad_end");
 	}
 	if (StartJiHad)

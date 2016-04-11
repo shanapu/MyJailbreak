@@ -400,9 +400,8 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 		SetCvar("mp_teammates_are_enemies", 0);
 		SetCvar("sm_warden_enable", 1);
 		
-		SetEventDay("none");
-		
 		g_iSetRoundTime.IntValue = g_iOldRoundTime;
+		SetEventDay("none");
 		CPrintToChatAll("%t %t", "knifefight_tag" , "knifefight_end");
 	}
 	if (StartKnifeFight)

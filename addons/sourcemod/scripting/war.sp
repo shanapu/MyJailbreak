@@ -511,9 +511,8 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 			SetCvar("sm_warden_enable", 1);
 			SetCvar("sm_weapons_t", 0);
 			SetCvar("sm_weapons_ct", 1);
-			SetEventDay("none");
-			
 			g_iSetRoundTime.IntValue = g_iOldRoundTime;
+			SetEventDay("none");
 			CPrintToChatAll("%t %t", "war_tag" , "war_end");
 		}
 	}

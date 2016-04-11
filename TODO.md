@@ -6,7 +6,7 @@ bugs:
 - [ ] warden model glitch sometimes through floor? (blackscreen) model feature removed
 - [x] catch: sprint bug release T
 - [x] jihad: Hp & burn for not nearby
-- [ ] mp_roundtime 1 after set event on a eventend
+- [x] mp_roundtime 1 after set event on a eventend
 - [ ] catch: Just, sometimes they don't freeze
 
 must:
@@ -21,9 +21,9 @@ must:
 - [x] all days: set rounds to wait after mapstart
 - [x] all days: start overlay
 - [x] all days: msg when deactivated by set
-- [ ] 1.7 syntax ?
+- [x] 1.7 syntax (ausser weapons)
 - [x] new day: decoy/flash 1hp -> dodgeball
-- [ ] dodgeball: remove decoy (sound) / make it >flash AHAH make it HE?
+- [x] dodgeball: make it HE
 - [x] dodgeball: disbable knife
 - [x] countdown: is CD running? no double 
 - [x] catch: freeze sound & overlay
@@ -39,7 +39,6 @@ must:
 - [x] warden: allow unvote
 - [x] new day: suicid bomber
 - [x] jihad: activate bomb when cells open 
-- [ ] jihad: sound from client position
 - [x] jihad: need equit bomb to use jihad
 - [x] warden: countdown
 - [x] playertags: as chat tag

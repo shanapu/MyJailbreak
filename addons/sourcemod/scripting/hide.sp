@@ -456,9 +456,8 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 		SetCvar("sm_weapons_t", 0);
 		SetCvar("sm_weapons_ct", 1);
 		SetCvar("sm_warden_enable", 1);
-		SetEventDay("none");
-		
 		g_iSetRoundTime.IntValue = g_iOldRoundTime;
+		SetEventDay("none");
 		CPrintToChatAll("%t %t", "hide_tag" , "hide_end");
 		DoFog();
 		AcceptEntityInput(FogIndex, "TurnOff");

@@ -300,8 +300,8 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 		SetCvar("sm_weapons_enable", 1);
 		SetCvar("mp_teammates_are_enemies", 0);
 		SetCvar("sm_warden_enable", 1);
-		SetEventDay("none");
 		g_iSetRoundTime.IntValue = g_iOldRoundTime;
+		SetEventDay("none");
 		CPrintToChatAll("%t %t", "freeday_tag" , "freeday_end");
 	}
 	if (StartFreeDay)

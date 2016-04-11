@@ -431,7 +431,7 @@ public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selec
 		}
 		else if ( strcmp(info,"countdown") == 0 ) 
 		{
-			FakeClientCommand(client, "sm_startcountdown");
+			FakeClientCommand(client, "sm_cdmenu");
 			if(gc_bClose.BoolValue)
 			{
 				delete mainmenu;

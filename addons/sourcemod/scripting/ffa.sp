@@ -482,9 +482,8 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 			SetCvar("mp_teammates_are_enemies", 0);
 			SetCvar("mp_friendlyfire", 0);
 			
-			SetEventDay("none");
-			
 			g_iSetRoundTime.IntValue = g_iOldRoundTime;
+			SetEventDay("none");
 			CPrintToChatAll("%t %t", "ffa_tag" , "ffa_end");
 		}
 	}
