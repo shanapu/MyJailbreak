@@ -13,9 +13,6 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-//Defines
-#define PLUGIN_VERSION "0.3"
-
 //Booleans
 bool IsKnifeFight = false; 
 bool StartKnifeFight = false; 
@@ -26,6 +23,8 @@ ConVar gc_bTag;
 ConVar gc_bSetW;
 ConVar gc_bGrav;
 ConVar gc_fGravValue;
+ConVar gc_bIce;
+ConVar gc_fIceValue;
 ConVar gc_iCooldownStart;
 ConVar gc_bSetA;
 ConVar gc_bVote;
@@ -79,6 +78,8 @@ public void OnPluginStart()
 	gc_bVote = AutoExecConfig_CreateConVar("sm_knifefight_vote", "1", "0 - disabled, 1 - allow player to vote for knifefight", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	gc_bGrav = AutoExecConfig_CreateConVar("sm_knifefight_gravity", "1", "0 - disabled, 1 - enable low Gravity for knifefight", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	gc_fGravValue= AutoExecConfig_CreateConVar("sm_knifefight_gravity_value", "0.3","Ratio for Gravity 1.0 earth 0.5 moon", 0, true, 0.1, true, 1.0);
+	gc_bIce = AutoExecConfig_CreateConVar("sm_knifefight_gravity", "1", "0 - disabled, 1 - enable low Gravity for knifefight", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	gc_fIceValue= AutoExecConfig_CreateConVar("sm_knifefight_gravity_value", "1.0","Ratio iceskate (5.2 normal)", 0, true, 0.5, true, 5.2);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_knifefight_roundtime", "5", "Round time for a single knifefight round");
 	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_knifefight_trucetime", "15", "Time for no damage");
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_knifefight_cooldown_day", "3", "Rounds cooldown after a event until this event can startet");
@@ -296,6 +297,10 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 						{
 							SetEntityGravity(client, gc_fGravValue.FloatValue);	
 						}
+						if (gc_bIce.BoolValue)
+						{
+							SetCvarFloat("sv_friction", gc_fIceValue.FloatValue);
+						}
 						SendPanelToClient(KnifeFightMenu, client, Pass, 15);
 						SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 						StripAllWeapons(client);
@@ -399,6 +404,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 		SetCvar("sm_weapons_enable", 1);
 		SetCvar("mp_teammates_are_enemies", 0);
 		SetCvar("sm_warden_enable", 1);
+		SetCvarFloat("sv_friction", 5.2);
 		
 		g_iSetRoundTime.IntValue = g_iOldRoundTime;
 		SetEventDay("none");

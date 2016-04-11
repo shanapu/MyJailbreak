@@ -11,7 +11,9 @@ bugs:
 
 must:
 
-- [ ] countdown: translation and 10sek fix more times
+- [ ] CHANGE START STOP SOUND!
+- [x] Finsih ice stake knife
+- [x] countdown: translation and 10sek fix more times
 - [ ] clean/translate ConVars 
 - [x] jailbreak user menu
 - [ ] make jailbreak menu customizeable (ADD OWN COMMANDS & OWN ORDER)
@@ -21,6 +23,7 @@ must:
 - [x] all days: dis/enable vote by player
 - [x] all days: set rounds to wait after mapstart
 - [x] all days: start overlay
+- [ ] all days: start sound
 - [x] all days: msg when deactivated by set
 - [x] 1.7 syntax (ausser weapons)
 - [x] new day: decoy/flash 1hp -> dodgeball

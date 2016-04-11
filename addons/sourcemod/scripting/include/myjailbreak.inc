@@ -1,9 +1,13 @@
 #if defined _myjailbreak_included_
-  #endinput
+	#endinput
 #endif
 #define _myjailbreak_included_
 
-Handle UseCvar;
+#define PLUGIN_VERSION "0.3"
+
+
+Handle IntCvar;
+Handle FloatCvar;
 char g_sOverlayStart[256];
 
 
@@ -77,28 +81,43 @@ public Action DeleteOverlay( Handle timer, any client )
 	return Plugin_Continue;
 }
 
-public SetCvar(char cvarName[64], value)
+public SetCvar(char cvarName[64],int value)
 {
-	UseCvar = FindConVar(cvarName);
-	if(UseCvar == null) return;
+	IntCvar = FindConVar(cvarName);
+	if(IntCvar == null) return;
 	
-	int flags = GetConVarFlags(UseCvar);
+	int flags = GetConVarFlags(IntCvar);
 	flags &= ~FCVAR_NOTIFY;
-	SetConVarFlags(UseCvar, flags);
+	SetConVarFlags(IntCvar, flags);
 
-	SetConVarInt(UseCvar, value);
+	SetConVarInt(IntCvar, value);
 
 	flags |= FCVAR_NOTIFY;
-	SetConVarFlags(UseCvar, flags);
+	SetConVarFlags(IntCvar, flags);
 }
 
-
-public IsValidClient( client ) 
+public SetCvarFloat(char cvarName[64], float value)
 {
-	if ( !( 1 <= client <= MaxClients ) || !IsClientInGame(client) ) 
-	return false; 
-	
-	return true; 
+	FloatCvar = FindConVar(cvarName);
+	if(FloatCvar == INVALID_HANDLE) return;
+
+	new flags = GetConVarFlags(FloatCvar);
+	flags &= ~FCVAR_NOTIFY;
+	SetConVarFlags(FloatCvar, flags);
+
+	SetConVarFloat(FloatCvar, value);
+
+	flags |= FCVAR_NOTIFY;
+	SetConVarFlags(FloatCvar, flags);
+}
+
+stock bool IsValidClient(int client, bool alive = false)
+{
+	if(client >= 1 && client <= MaxClients && IsClientConnected(client) && IsClientInGame(client) && (alive == false || IsPlayerAlive(client)))
+	{
+	return true;
+	}
+	return false;
 }
 
 public Pass(Handle:menu, MenuAction:action, param1, param2)

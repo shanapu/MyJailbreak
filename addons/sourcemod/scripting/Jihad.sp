@@ -16,7 +16,6 @@
 #pragma newdecls required
 
 //Defines
-#define PLUGIN_VERSION "0.3"
 #define IsSprintUsing   (1<<0)
 #define IsSprintCoolDown  (1<<1)
 #define IsBombing  (1<<2)
@@ -68,7 +67,7 @@ Handle FreezeTimer;
 char g_sSoundPath2[256];
 char g_sSoundPath1[256];
 char g_sHasVoted[1500];
-char g_sOverlaystart[256];
+
 
 public Plugin myinfo = {
 	name = "MyJailbreak - JiHad & Freeze",

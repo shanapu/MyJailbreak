@@ -28,6 +28,7 @@ ConVar g_bFF;
 ConVar g_bsetFF;
 ConVar g_bWar;
 ConVar g_bJiHad;
+ConVar g_bKnife;
 ConVar g_bFFA;
 ConVar g_bZombie;
 ConVar g_bNoScope;
@@ -108,6 +109,7 @@ public void OnConfigsExecuted()
 	g_bZombie = FindConVar("sm_zombie_enable");
 	g_bNoScope = FindConVar("sm_noscope_enable");
 	g_bHide = FindConVar("sm_hide_enable");
+	g_bKnife = FindConVar("sm_knifefight_enable");
 	g_bJiHad = FindConVar("sm_jihad_enable");
 	g_bCatch = FindConVar("sm_catch_enable");
 	g_bDodgeBall = FindConVar("sm_dodgeball_enable");
@@ -297,7 +299,7 @@ public Action EventDays(int client, int args)
 		{
 			Menu daysmenu = new Menu(EventMenuHandler);
 			
-			char menuinfo18[255], menuinfo19[255], menuinfo20[255], menuinfo21[255], menuinfo22[255], menuinfo23[255], menuinfo24[255], menuinfo25[255], menuinfo26[255], menuinfo27[255];
+			char menuinfo18[255], menuinfo19[255], menuinfo20[255], menuinfo21[255], menuinfo22[255], menuinfo23[255], menuinfo24[255], menuinfo25[255], menuinfo26[255], menuinfo27[255], menuinfo28[255];
 			
 			Format(menuinfo18, sizeof(menuinfo18), "%T", "menu_event_Title", LANG_SERVER);
 			daysmenu.SetTitle(menuinfo18);
@@ -372,6 +374,14 @@ public Action EventDays(int client, int args)
 				{
 					Format(menuinfo25, sizeof(menuinfo25), "%T", "menu_duckhunt", LANG_SERVER);
 					daysmenu.AddItem("duckhunt", menuinfo25);
+				}
+			}
+			if(g_bKnife != null)
+			{
+				if(g_bKnife.BoolValue)
+				{
+					Format(menuinfo28, sizeof(menuinfo28), "%T", "menu_knifefight", LANG_SERVER);
+					daysmenu.AddItem("knife", menuinfo28);
 				}
 			}
 			if(g_bFreeDay != null)
@@ -475,7 +485,7 @@ public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selec
 		{
 		delete mainmenu;
 		}
-}
+	}
 }
 
 public int EventMenuHandler(Menu daysmenu, MenuAction action, int client, int selection)
@@ -553,6 +563,14 @@ public int EventMenuHandler(Menu daysmenu, MenuAction action, int client, int se
 		else if ( strcmp(info,"hide") == 0 )
 		{
 			FakeClientCommand(client, "sm_sethide");
+			if(gc_bClose.BoolValue)
+			{
+				delete daysmenu;
+			}else JbMenu(client,0);
+		}
+		else if ( strcmp(info,"knife") == 0 )
+		{
+			FakeClientCommand(client, "sm_setknifefight");
 			if(gc_bClose.BoolValue)
 			{
 				delete daysmenu;

@@ -7,9 +7,6 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-//Defines
-#define PLUGIN_VERSION "0.3"
-
 //Strings
 char IsEventDay[128] = "none";
 

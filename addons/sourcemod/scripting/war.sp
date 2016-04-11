@@ -11,9 +11,6 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-//Defines
-#define PLUGIN_VERSION "0.3"
-
 //Booleans
 bool IsWar = false;
 bool StartWar = false;

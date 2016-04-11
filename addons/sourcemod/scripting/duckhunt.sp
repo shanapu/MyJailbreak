@@ -1,5 +1,4 @@
 //includes
-
 #include <sourcemod>
 #include <colors>
 #include <sdktools>
@@ -13,9 +12,6 @@
 //Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
-
-//Defines
-#define PLUGIN_VERSION "0.3"
 
 //Booleans
 bool IsDuckHunt;
@@ -49,7 +45,7 @@ Handle DuckHuntMenu;
 //Strings
 
 char g_sHasVoted[1500];
-char model[256] = "models/player/custom_player/legacy/tm_phoenix_heavy.mdl";
+char huntermodel[256] = "models/player/custom_player/legacy/tm_phoenix_heavy.mdl";
 
 public Plugin myinfo = {
 	name = "MyJailbreak - DuckHunt",
@@ -126,7 +122,7 @@ public void OnMapStart()
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	PrecacheModel("models/chicken/chicken.mdl", true);
-	PrecacheModel(model, true);
+	PrecacheModel(huntermodel, true);
 	if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStart);
 	AddFileToDownloadsTable("materials/models/props_farm/chicken_white.vmt");
 	AddFileToDownloadsTable("materials/models/props_farm/chicken_white.vtf");
@@ -314,7 +310,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 						StripAllWeapons(client);
 						if (GetClientTeam(client) == CS_TEAM_CT)
 						{
-							SetEntityModel(client, model);
+							SetEntityModel(client, huntermodel);
 							SetEntityHealth(client, 600);
 							GivePlayerItem(client, "weapon_nova");
 						}

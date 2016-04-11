@@ -11,9 +11,6 @@
 //Compiler Options
 #pragma semicolon 1
 
-//Defines
-#define PLUGIN_VERSION "0.2"
-
 //Booleans
 bool newWeaponsSelected[MAXPLAYERS+1];
 bool rememberChoice[MAXPLAYERS+1];
