@@ -11,6 +11,7 @@ bugs:
 
 must:
 
+- [ ] countdown: translation and 10sek fix more times
 - [ ] clean/translate ConVars 
 - [x] jailbreak user menu
 - [ ] make jailbreak menu customizeable (ADD OWN COMMANDS & OWN ORDER)
