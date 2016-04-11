@@ -383,23 +383,65 @@
 		"en"		"Countdown Menu"
 		"de"		"Countdown Menu"
 	}
-		"warden_cdmenu_start"
+	"warden_cdmenu_start"
 	{
-		"da"		"Start Countdown"	
-		"en"		"Start Countdown"
-		"de"		"Start Countdown"
+		"en"		"Beginn a Start Countdown"
+		"de"		"Beginne einen Start Countdown"
 	}
-		"warden_cdmenu_stop"
+	"warden_cdmenu_stop"
 	{
-		"da"		"Stop Countdown"	
-		"en"		"Stop Countdown"
-		"de"		"Stop Countdown"
+		"en"		"Beginn a Stop Countdown"
+		"de"		"Beginne einen Stop Countdown"
 	}
-		"warden_cdmenu_startstop"
+	"warden_cdmenu_startstop"
 	{
-		"da"		"Start Stop Countdown"	
-		"en"		"Start Stop Countdown"
-		"de"		"Start Stop Countdown"
+		"en"		"set a Start/Stop Countdown"
+		"de"		"Setzte einen Start/Stop Countdown"
+	}
+	"warden_cdmenu_Title2"
+	{
+		"en"		"Time between Start & Stop"
+		"de"		"Zeit zwischen Start & Stop"
+	}
+	"warden_cdmenu_15"
+	{
+		"en"		"15 seconds"
+		"de"		"15 Sekunden"
+	}
+	"warden_cdmenu_30"
+	{
+		"en"		"30 seconds"
+		"de"		"30 Sekunden"
+	}
+	"warden_cdmenu_45"
+	{
+		"en"		"45 seconds"
+		"de"		"45 Sekunden"
+	}
+	"warden_cdmenu_60"
+	{
+		"en"		"1 Minute"
+		"de"		"1 Minute"
+	}
+	"warden_cdmenu_90"
+	{
+		"en"		"1 Minute 30 seconds"
+		"de"		"1 Minute 30 Sekunden"
+	}
+	"warden_cdmenu_120"
+	{
+		"en"		"2 Minutes"
+		"de"		"2 Minuten"
+	}
+	"warden_cdmenu_180"
+	{
+		"en"		"3 Minutes"
+		"de"		"3 Minuten"
+	}
+	"warden_cdmenu_300"
+	{
+		"en"		"5 Minutes"
+		"de"		"5 Minuten"
 	}
 
 }

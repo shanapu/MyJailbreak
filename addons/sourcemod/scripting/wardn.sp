@@ -6,16 +6,13 @@
 #include <wardn>
 #include <emitsoundany>
 #include <smartjaildoors>
-#include <smlib>
 #include <colors>
 #include <autoexecconfig>
+#include <myjailbreak>
 
 //Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
-
-//Defines
-#define PLUGIN_VERSION "0.3"
 
 //Bools
 bool IsCountDown = false;
@@ -85,7 +82,6 @@ char g_sUnWarden[256];
 char g_sWarden[256];
 char g_sStart[256];
 char g_sStop[256];
-char g_sOverlayStart[256];
 char g_sOverlayStop[256];
 
 //float
@@ -218,141 +214,6 @@ public void OnPluginStart()
 	CreateTimer(1.0, Timer_DrawMakers, _, TIMER_REPEAT);
 }
 
-public Action Command_LAW(int client, const char[] command, int argc)
-{
-	if(!gc_bMarker.BoolValue)
-		return Plugin_Continue;
-	
-	if(!client || !IsClientInGame(client) || !IsPlayerAlive(client))
-		return Plugin_Continue;
-		
-	if(!warden_iswarden(client))
-		return Plugin_Continue;
-	
-	if(gc_iMarkerKey.IntValue == 1)
-	{
-		GetClientAimTargetPos(client, g_fMakerPos);
-		g_fMakerPos[2] += 5.0;
-	}
-	
-	return Plugin_Continue;
-}
-
-public Action Event_BulletImpact(Handle hEvent,const char [] sName, bool bDontBroadcast)
-{
-	if(gc_bMarker.BoolValue)	
-	{
-		int client = GetClientOfUserId(GetEventInt(hEvent, "userid"));
-		
-		if (Client_IsIngame(client) && IsPlayerAlive(client) && warden_iswarden(client))
-		{
-			if (GetClientButtons(client) & IN_USE) 
-			{
-				if(gc_iMarkerKey.IntValue == 2)
-				{
-					GetClientAimTargetPos(client, g_fMakerPos);
-					g_fMakerPos[2] += 5.0;
-					CPrintToChat(client, "%t %t", "warden_tag" , "warden_marker");
-				}
-			}
-			else if (GetClientButtons(client) & IN_SPEED) 
-				{
-					if(gc_iMarkerKey.IntValue == 3)
-					{
-						GetClientAimTargetPos(client, g_fMakerPos);
-						g_fMakerPos[2] += 5.0;
-						CPrintToChat(client, "%t %t", "warden_tag" , "warden_marker");
-					}
-				}
-		}
-	}
-}
-
-int GetClientAimTargetPos(int client, float pos[3]) 
-{
-	if (!client) 
-		return -1;
-	
-	float vAngles[3]; float vOrigin[3];
-	
-	GetClientEyePosition(client,vOrigin);
-	GetClientEyeAngles(client, vAngles);
-	
-	Handle trace = TR_TraceRayFilterEx(vOrigin, vAngles, MASK_SHOT, RayType_Infinite, TraceFilterAllEntities, client);
-	
-	TR_GetEndPosition(pos, trace);
-	pos[2] += 5.0;
-	
-	int entity = TR_GetEntityIndex(trace);
-	
-	CloseHandle(trace);
-	
-	return entity;
-}
-
-void ResetMarker()
-{
-	for(int i = 0; i < 3; i++)
-		g_fMakerPos[i] = 0.0;
-}
-
-public bool TraceFilterAllEntities(int entity, int contentsMask, any client)
-{
-	if (entity == client)
-		return false;
-	if (entity > MaxClients)
-		return false;
-	if(!IsClientInGame(entity))
-		return false;
-	if(!IsPlayerAlive(entity))
-		return false;
-	
-	return true;
-}
-
-public Action Timer_DrawMakers(Handle timer, any data)
-{
-	Draw_Markers();
-	return Plugin_Continue;
-}
-
-void Draw_Markers()
-{
-	if (!gc_bMarker.BoolValue)
-		return;
-	
-	if (g_fMakerPos[0] == 0.0)
-		return;
-	
-	if(!warden_exist())
-		return;
-		
-	// Show the ring
-	
-	TE_SetupBeamRingPoint(g_fMakerPos, 155.0, 155.0+0.1, g_iBeamSprite, g_iHaloSprite, 0, 10, 1.0, 6.0, 0.0, g_MarkerColor, 2, 0);
-	TE_SendToAll();
-	
-	// Show the arrow
-	
-	float fStart[3];
-	AddVectors(fStart, g_fMakerPos, fStart);
-	fStart[2] += 0.0;
-	
-	float fEnd[3];
-	AddVectors(fEnd, fStart, fEnd);
-	fEnd[2] += 200.0;
-	
-	TE_SetupBeamPoints(fStart, fEnd, g_iBeamSprite, g_iHaloSprite, 0, 10, 1.0, 4.0, 16.0, 1, 0.0, g_MarkerColor, 5);
-	TE_SendToAll();
-	
-	CreateTimer(gc_fMarkerTime.FloatValue, DeleteMarker);
-}
-
-public Action DeleteMarker( Handle timer) 
-{
-	ResetMarker();
-}
-
 public Action Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
 	if (countertime != null)
@@ -441,16 +302,11 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 		strcopy(g_sStart, sizeof(g_sStart), newValue);
 		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sStart);
 	}
-		else if(convar == gc_sStop)
+	else if(convar == gc_sStop)
 	{
 		strcopy(g_sStop, sizeof(g_sStop), newValue);
 		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sStop);
 	}
-	//else if(convar == gc_sModelPath)
-	//{
-	//	strcopy(g_sWardenModel, sizeof(g_sWardenModel), newValue);
-	//	PrecacheModel(g_sWardenModel);
-	//}
 	else if(convar == gc_sOverlayStartPath)
 	{
 		strcopy(g_sOverlayStart, sizeof(g_sOverlayStart), newValue);
@@ -461,14 +317,19 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 		strcopy(g_sOverlayStop, sizeof(g_sOverlayStop), newValue);
 		if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStop);
 	}
+	//else if(convar == gc_sModelPath)
+	//{
+	//	strcopy(g_sWardenModel, sizeof(g_sWardenModel), newValue);
+	//	PrecacheModel(g_sWardenModel);
+	//}
 }
 
 public Action Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 {
-		LOOP_CLIENTS(i, CLIENTFILTER_TEAMONE)
-				{
-						EnableBlock(i);
-				}
+	for(int client=1; client <= MaxClients; client++)
+	{
+		EnableBlock(client);
+	}
 }
 
 public Action BecomeWarden(int client, int args)
@@ -832,15 +693,164 @@ void RemoveTheWarden(int client)
 	g_sHasVoted[0] = '\0';
 }
 
+public Action Command_LAW(int client, const char[] command, int argc)
+{
+	if(!gc_bMarker.BoolValue)
+		return Plugin_Continue;
+	
+	if(!client || !IsClientInGame(client) || !IsPlayerAlive(client))
+		return Plugin_Continue;
+		
+	if(!warden_iswarden(client))
+		return Plugin_Continue;
+	
+	if(gc_iMarkerKey.IntValue == 1)
+	{
+		GetClientAimTargetPos(client, g_fMakerPos);
+		g_fMakerPos[2] += 5.0;
+	}
+	
+	return Plugin_Continue;
+}
+
+public Action Event_BulletImpact(Handle hEvent,const char [] sName, bool bDontBroadcast)
+{
+	if(gc_bMarker.BoolValue)	
+	{
+		int client = GetClientOfUserId(GetEventInt(hEvent, "userid"));
+		
+		if (IsValidClient(client) && IsPlayerAlive(client) && warden_iswarden(client))
+		{
+			if (GetClientButtons(client) & IN_USE) 
+			{
+				if(gc_iMarkerKey.IntValue == 2)
+				{
+					GetClientAimTargetPos(client, g_fMakerPos);
+					g_fMakerPos[2] += 5.0;
+					CPrintToChat(client, "%t %t", "warden_tag" , "warden_marker");
+				}
+			}
+			else if (GetClientButtons(client) & IN_SPEED) 
+				{
+					if(gc_iMarkerKey.IntValue == 3)
+					{
+						GetClientAimTargetPos(client, g_fMakerPos);
+						g_fMakerPos[2] += 5.0;
+						CPrintToChat(client, "%t %t", "warden_tag" , "warden_marker");
+					}
+				}
+		}
+	}
+}
+
+int GetClientAimTargetPos(int client, float pos[3]) 
+{
+	if (!client) 
+		return -1;
+	
+	float vAngles[3]; float vOrigin[3];
+	
+	GetClientEyePosition(client,vOrigin);
+	GetClientEyeAngles(client, vAngles);
+	
+	Handle trace = TR_TraceRayFilterEx(vOrigin, vAngles, MASK_SHOT, RayType_Infinite, TraceFilterAllEntities, client);
+	
+	TR_GetEndPosition(pos, trace);
+	pos[2] += 5.0;
+	
+	int entity = TR_GetEntityIndex(trace);
+	
+	CloseHandle(trace);
+	
+	return entity;
+}
+
+void ResetMarker()
+{
+	for(int i = 0; i < 3; i++)
+		g_fMakerPos[i] = 0.0;
+}
+
+public bool TraceFilterAllEntities(int entity, int contentsMask, any client)
+{
+	if (entity == client)
+		return false;
+	if (entity > MaxClients)
+		return false;
+	if(!IsClientInGame(entity))
+		return false;
+	if(!IsPlayerAlive(entity))
+		return false;
+	
+	return true;
+}
+
+public Action Timer_DrawMakers(Handle timer, any data)
+{
+	Draw_Markers();
+	return Plugin_Continue;
+}
+
+void Draw_Markers()
+{
+	if (!gc_bMarker.BoolValue)
+		return;
+	
+	if (g_fMakerPos[0] == 0.0)
+		return;
+	
+	if(!warden_exist())
+		return;
+		
+	// Show the ring
+	
+	TE_SetupBeamRingPoint(g_fMakerPos, 155.0, 155.0+0.1, g_iBeamSprite, g_iHaloSprite, 0, 10, 1.0, 6.0, 0.0, g_MarkerColor, 2, 0);
+	TE_SendToAll();
+	
+	// Show the arrow
+	
+	float fStart[3];
+	AddVectors(fStart, g_fMakerPos, fStart);
+	fStart[2] += 0.0;
+	
+	float fEnd[3];
+	AddVectors(fEnd, fStart, fEnd);
+	fEnd[2] += 200.0;
+	
+	TE_SetupBeamPoints(fStart, fEnd, g_iBeamSprite, g_iHaloSprite, 0, 10, 1.0, 4.0, 16.0, 1, 0.0, g_MarkerColor, 5);
+	TE_SendToAll();
+	
+	CreateTimer(gc_fMarkerTime.FloatValue, DeleteMarker);
+}
+
+public Action DeleteMarker( Handle timer) 
+{
+	ResetMarker();
+}
+
+
 public Action CDMenu(int client, int args)
 {
-	Menu menu = new Menu(CDHandler);
-	menu.SetTitle("Choose A Countdown");
-	menu.AddItem("start", "Start Countdown");
-	menu.AddItem("stop", "Stop Countdown");
-	menu.AddItem("startstop", "Start/Stop Countdown");
-	menu.ExitButton = false;
-	menu.Display(client, 20);
+	if(gc_bCountDown.BoolValue)
+	{
+		if (warden_iswarden(client))
+		{
+			char menuinfo1[255], menuinfo2[255], menuinfo3[255], menuinfo4[255];
+			Format(menuinfo1, sizeof(menuinfo1), "%T", "warden_cdmenu_Title", LANG_SERVER);
+			Format(menuinfo2, sizeof(menuinfo2), "%T", "warden_cdmenu_start", LANG_SERVER);
+			Format(menuinfo3, sizeof(menuinfo3), "%T", "warden_cdmenu_stop", LANG_SERVER);
+			Format(menuinfo4, sizeof(menuinfo4), "%T", "warden_cdmenu_startstop", LANG_SERVER);
+			
+			Menu menu = new Menu(CDHandler);
+			menu.SetTitle(menuinfo1);
+			menu.AddItem("start", menuinfo2);
+			menu.AddItem("stop", menuinfo3);
+			menu.AddItem("startstop", menuinfo4);
+			menu.ExitButton = false;
+			menu.Display(client, 20);
+		}
+		else CPrintToChat(client, "%t %t", "warden_tag", "warden_notwarden" );
+	}
 	return Plugin_Handled;
 }
 
@@ -872,15 +882,38 @@ public int CDHandler(Menu menu, MenuAction action, int client, int selection)
 
 public Action StartStopCDMenu(int client, int args)
 {
-	Menu menu = new Menu(StartStopCDHandler);
-	menu.SetTitle("Time between Start & Stop");
-	menu.AddItem("10", "10 Sek.");
-	menu.AddItem("30", "30 Sek.");
-	menu.AddItem("60", "1 Min.");
-	menu.AddItem("120", "2 Min.");
-	menu.AddItem("180", "3 Min.");
-	menu.ExitButton = false;
-	menu.Display(client, 20);
+
+	if(gc_bCountDown.BoolValue)
+	{
+		if (warden_iswarden(client))
+		{
+			char menuinfo5[255], menuinfo6[255], menuinfo7[255], menuinfo8[255], menuinfo9[255], menuinfo10[255], menuinfo11[255], menuinfo12[255], menuinfo13[255];
+			Format(menuinfo5, sizeof(menuinfo5), "%T", "warden_cdmenu_Title2", LANG_SERVER);
+			Format(menuinfo6, sizeof(menuinfo6), "%T", "warden_cdmenu_15", LANG_SERVER);
+			Format(menuinfo7, sizeof(menuinfo7), "%T", "warden_cdmenu_30", LANG_SERVER);
+			Format(menuinfo8, sizeof(menuinfo8), "%T", "warden_cdmenu_45", LANG_SERVER);
+			Format(menuinfo9, sizeof(menuinfo9), "%T", "warden_cdmenu_60", LANG_SERVER);
+			Format(menuinfo10, sizeof(menuinfo10), "%T", "warden_cdmenu_90", LANG_SERVER);
+			Format(menuinfo11, sizeof(menuinfo11), "%T", "warden_cdmenu_120", LANG_SERVER);
+			Format(menuinfo12, sizeof(menuinfo12), "%T", "warden_cdmenu_180", LANG_SERVER);
+			Format(menuinfo13, sizeof(menuinfo13), "%T", "warden_cdmenu_300", LANG_SERVER);
+			
+			Menu menu = new Menu(StartStopCDHandler);
+			menu.SetTitle(menuinfo5);
+			menu.AddItem("15", menuinfo6);
+			menu.AddItem("30", menuinfo7);
+			menu.AddItem("45", menuinfo8);
+			menu.AddItem("60", menuinfo9);
+			menu.AddItem("90", menuinfo10);
+			menu.AddItem("120", menuinfo11);
+			menu.AddItem("180", menuinfo12);
+			menu.AddItem("300", menuinfo13);
+			
+			menu.ExitButton = false;
+			menu.Display(client, 20);
+		}
+		else CPrintToChat(client, "%t %t", "warden_tag", "warden_notwarden" );
+	}
 	return Plugin_Handled;
 }
 
@@ -891,9 +924,9 @@ public int StartStopCDHandler(Menu menu, MenuAction action, int client, int sele
 		char info[32];
 		menu.GetItem(selection, info, sizeof(info));
 		
-		if ( strcmp(info,"10") == 0 ) 
+		if ( strcmp(info,"15") == 0 ) 
 		{
-			g_iSetCountStartStopTime = 20;
+			g_iSetCountStartStopTime = 25;
 			SetStartStopCountDown(client, 0);
 		}
 		else if ( strcmp(info,"30") == 0 ) 
@@ -901,9 +934,19 @@ public int StartStopCDHandler(Menu menu, MenuAction action, int client, int sele
 			g_iSetCountStartStopTime = 40;
 			SetStartStopCountDown(client, 0);
 		}
+		else if ( strcmp(info,"45") == 0 ) 
+		{
+			g_iSetCountStartStopTime = 55;
+			SetStartStopCountDown(client, 0);
+		}
 		else if ( strcmp(info,"60") == 0 ) 
 		{
 			g_iSetCountStartStopTime = 70;
+			SetStartStopCountDown(client, 0);
+		}
+		else if ( strcmp(info,"90") == 0 ) 
+		{
+			g_iSetCountStartStopTime = 100;
 			SetStartStopCountDown(client, 0);
 		}
 		else if ( strcmp(info,"120") == 0 ) 
@@ -914,6 +957,11 @@ public int StartStopCDHandler(Menu menu, MenuAction action, int client, int sele
 		else if ( strcmp(info,"180") == 0 ) 
 		{
 			g_iSetCountStartStopTime = 190;
+			SetStartStopCountDown(client, 0);
+		}
+		else if ( strcmp(info,"300") == 0 ) 
+		{
+			g_iSetCountStartStopTime = 310;
 			SetStartStopCountDown(client, 0);
 		}
 	}
@@ -1065,7 +1113,7 @@ public Action StopStartStopCountdown( Handle timer, any client )
 	{
 		if (IsClientInGame(client) && IsPlayerAlive(client))
 		{
-			if ( g_iSetCountStartStopTime < 16) 
+			if ( g_iSetCountStartStopTime < 11) 
 			{
 				PrintCenterText(client,"%t", "warden_stopcountdown_nc", g_iSetCountStartStopTime);
 				CPrintToChatAll("%t %t", "warden_tag" , "warden_stopcountdown", g_iSetCountStartStopTime);
@@ -1124,18 +1172,15 @@ public Action EnableBlock(int client)
 
 public Action noblockon(int client, int args)
 {
-	if(gc_bNoBlock.BoolValue)	
+	if(gc_bNoBlock.BoolValue)
 	{
 		if (warden_iswarden(client))
 		{
-	
-		LOOP_CLIENTS(i, CLIENTFILTER_TEAMONE)
-				{
-						
-						EnableNoBlock(i);	
-				}
-
-		CPrintToChatAll("%t %t", "warden_tag" , "warden_noblockon");
+			for(int i=1; i <= MaxClients; i++)
+			{
+				EnableNoBlock(i);
+			}
+			CPrintToChatAll("%t %t", "warden_tag" , "warden_noblockon");
 		}
 		else
 		{
@@ -1148,13 +1193,12 @@ public Action noblockoff(int client, int args)
 { 
 	if (warden_iswarden(client))
 	{
-	LOOP_CLIENTS(i, CLIENTFILTER_TEAMONE)
-				{
-					
-						EnableBlock(i);	
-				}
-	CPrintToChatAll("%t %t", "warden_tag" , "warden_noblockoff");	
+		for(int i=1; i <= MaxClients; i++)
+		{
+			EnableBlock(i);	
 		}
+		CPrintToChatAll("%t %t", "warden_tag" , "warden_noblockoff");
+	}
 	else
 	{
 		CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden"); 
@@ -1191,11 +1235,11 @@ public Action KillRandom(int client, int args)
 	{
 		if (warden_iswarden(client))
 		{
-			int clientV = GetRandomPlayer(CS_TEAM_T);
-			if(clientV > 0)
+			int i = GetRandomPlayer(CS_TEAM_T);
+			if(i > 0)
 			{
-				ForcePlayerSuicide(clientV);
-				CPrintToChatAll("%t %t", "warden_tag", "warden_israndomdead", clientV); 
+				ForcePlayerSuicide(i);
+				CPrintToChatAll("%t %t", "warden_tag", "warden_israndomdead", i); 
 			}
 		}
 		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden"); 
@@ -1208,7 +1252,7 @@ stock int GetRandomPlayer(int team)
 	int clientCount;
 	for (int i = 1; i <= MaxClients; i++)
 	{
-		if (Client_IsIngame(i) && (GetClientTeam(i) == team))
+		if (IsValidClient(i) && (GetClientTeam(i) == team))
 		{
 			clients[clientCount++] = i;
 		}
@@ -1262,16 +1306,15 @@ public Action OpenDoors(int client, int args)
 {
 	if(gc_bPlugin.BoolValue)	
 	{
-	if(gc_bOpen.BoolValue)
-	{
-	if (warden_iswarden(client))
-	{
-	CPrintToChatAll("%t %t", "warden_tag" , "warden_dooropen"); 
-	SJD_OpenDoors();
-	}
-	else
-	CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden"); 
-	}
+		if(gc_bOpen.BoolValue)
+		{
+			if (warden_iswarden(client))
+			{
+				CPrintToChatAll("%t %t", "warden_tag" , "warden_dooropen"); 
+				SJD_OpenDoors();
+			}
+			else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden"); 
+		}
 	}
 }
 
@@ -1374,62 +1417,8 @@ stock bool IsClientWarden(int client)
 	return false;
 }
 
-stock bool IsValidClient(int client, bool alive = false)
-{
-	if(client >= 1 && client <= MaxClients && IsClientConnected(client) && IsClientInGame(client) && (alive == false || IsPlayerAlive(client)))
-	{
-	return true;
-	}
-	return false;
-}
-
 public void warden_OnWardenCreated(int client)
 {
 
 }
 
-stock void PrecacheOverlayAnyDownload(char [] sOverlay)
-{
-	char sBufferVmt[256];
-	char sBufferVtf[256];
-	Format(sBufferVmt, sizeof(sBufferVmt), "%s.vmt", sOverlay);
-	Format(sBufferVtf, sizeof(sBufferVtf), "%s.vtf", sOverlay);
-	PrecacheDecal(sBufferVmt, true);
-	PrecacheDecal(sBufferVtf, true);
-	Format(sBufferVmt, sizeof(sBufferVmt), "materials/%s.vmt", sOverlay);
-	Format(sBufferVtf, sizeof(sBufferVtf), "materials/%s.vtf", sOverlay);
-	AddFileToDownloadsTable(sBufferVmt);
-	AddFileToDownloadsTable(sBufferVtf);
-}
-
-stock void PrecacheSoundAnyDownload(char [] sSound)
-{
-	PrecacheSoundAny(sSound);
-	char sBuffer[256];
-	Format(sBuffer, sizeof(sBuffer), "sound/%s", sSound);
-	AddFileToDownloadsTable(sBuffer);
-	
-}
-
-public Action ShowOverlayStart( Handle timer, any client ) 
-{
-	if(IsClientInGame(client) && IsClientConnected(client) && !IsFakeClient(client))
-	{
-		int iFlag = GetCommandFlags( "r_screenoverlay" ) & ( ~FCVAR_CHEAT ); 
-		SetCommandFlags( "r_screenoverlay", iFlag ); 
-		ClientCommand( client, "r_screenoverlay \"%s.vtf\"", g_sOverlayStart);
-		CreateTimer( 2.0, DeleteOverlay, client );
-	}
-	return Plugin_Continue;
-}
-
-public Action DeleteOverlay( Handle timer, any client ) 
-{
-	if(IsClientInGame(client) && IsClientConnected(client) && !IsFakeClient(client))
-	{
-	int iFlag = GetCommandFlags( "r_screenoverlay" ) & ( ~FCVAR_CHEAT ); 
-	SetCommandFlags( "r_screenoverlay", iFlag ); 
-	ClientCommand( client, "r_screenoverlay \"\"" );
-	}
-	return Plugin_Continue;
-}
