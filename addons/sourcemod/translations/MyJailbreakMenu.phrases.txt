@@ -121,7 +121,12 @@
 		"#format"		""
 		"en"			"Start catch next round"
 	}
-		"menu_dodgeball"
+	"menu_knifefight"
+	{
+		"#format"		""
+		"en"			"Start knifefight next round"
+	}
+	"menu_dodgeball"
 	{
 		"#format"		""
 		"en"			"Start dodgeball next round"
@@ -141,7 +146,7 @@
 		"#format"		""
 		"en"			"Start freeday next round"
 	}
-		"menu_admin"
+	"menu_admin"
 	{
 		"#format"		""
 		"en"			"Admin Menu"
