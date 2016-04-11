@@ -7,6 +7,7 @@
 
 //Compiler Options
 #pragma semicolon 1
+#pragma newdecls required
 
 //Defines
 #define PLUGIN_VERSION "0.2"
@@ -16,7 +17,7 @@ ConVar gc_bPlugin;
 ConVar gc_bStats;
 ConVar gc_bChat;
 
-public Plugin:myinfo =
+public Plugin myinfo =
 {
 	name = "MyJailbreak - PlayerTags",
 	description = "define player tags for JB",
@@ -25,7 +26,7 @@ public Plugin:myinfo =
 	url = ""
 }
 
-public OnPluginStart()
+public void OnPluginStart()
 {
 	LoadTranslations("MyJailbreakPlayerTags.phrases");
 	
@@ -40,35 +41,35 @@ public OnPluginStart()
 	return;
 }
 
-public OnClientPutInServer(client)
+public void OnClientPutInServer(int client)
 {
 	HandleTag(client);
 	return;
 }
 
-public warden_OnWardenCreated(client)
+public int warden_OnWardenCreated(int client)
 {
 	HandleTag(client);
 	return;
 }
 
-public warden_OnWardenRemoved(client)
+public int warden_OnWardenRemoved(int client)
 {
 	HandleTag(client);
 	return;
 }
 
-public Action:checkTag(Handle:event, String:name[], bool:dontBroadcast)
+public Action checkTag(Handle event, char[] name, bool dontBroadcast)
 {
-	new client = GetClientOfUserId(GetEventInt(event, "userid"));
+	int client = GetClientOfUserId(GetEventInt(event, "userid"));
 	if (0 < client)
 	{
 		HandleTag(client);
 	}
-	return Action:0;
+	return Action;
 }
 
-HandleTag(client)
+public int HandleTag(int client)
 {
 	if(gc_bPlugin.BoolValue)
 	{
@@ -119,7 +120,7 @@ HandleTag(client)
 	}
 }
 
-public Action:OnChatMessage(&author, Handle:recipients, String:name[], String:message[])
+public Action OnChatMessage(int &author, Handle recipients, char[] name, char[] message)
 {
 	if(gc_bPlugin.BoolValue)
 	{

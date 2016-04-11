@@ -10,6 +10,7 @@
 
 //Compiler Options
 #pragma semicolon 1
+#pragma newdecls required
 
 //Defines
 #define PLUGIN_VERSION "0.2"
@@ -174,7 +175,7 @@ public Action Setffa(int client,int args)
 		{
 			if (gc_bSetW.BoolValue)
 			{
-				decl String:EventDay[64];
+				char EventDay[64];
 				GetEventDay(EventDay);
 				
 				if(StrEqual(EventDay, "none", false))
@@ -193,7 +194,7 @@ public Action Setffa(int client,int args)
 			{
 				if (gc_bSetA.BoolValue)
 				{
-					decl String:EventDay[64];
+					char EventDay[64];
 					GetEventDay(EventDay);
 					
 					if(StrEqual(EventDay, "none", false))
@@ -222,7 +223,7 @@ public Action VoteFFA(int client,int args)
 	{	
 		if (gc_bVote.BoolValue)
 		{
-			decl String:EventDay[64];
+			char EventDay[64];
 			GetEventDay(EventDay);
 			
 			if(StrEqual(EventDay, "none", false))
@@ -265,7 +266,7 @@ void StartNextRound()
 	PrintHintTextToAll("%t", "ffa_next_nc");
 }
 
-public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
+public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
 	if (StartFFA || IsFFA)
 	{
@@ -412,7 +413,7 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 	}
 	else
 	{
-		decl String:EventDay[64];
+		char EventDay[64];
 		GetEventDay(EventDay);
 	
 		if(!StrEqual(EventDay, "none", false))
@@ -423,7 +424,7 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 	}
 }
 
-public Action:NoDamage(Handle:timer)
+public Action NoDamage(Handle timer)
 {
 	if (g_iTruceTime > 1)
 	{
@@ -454,7 +455,7 @@ public Action:NoDamage(Handle:timer)
 	return Plugin_Stop;
 }
 
-public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
+public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 {
 	int winner = GetEventInt(event, "winner");
 	
@@ -494,7 +495,7 @@ public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 	}
 }
 
-DoFog()
+public Action DoFog()
 {
 	if(FogIndex != -1)
 	{

@@ -11,6 +11,7 @@
 
 //Compiler Options
 #pragma semicolon 1
+#pragma newdecls required
 
 //Defines
 #define PLUGIN_VERSION "0.2"
@@ -147,7 +148,7 @@ public void OnConfigsExecuted()
 	}
 }
 
-public OnClientPutInServer(client)
+public void OnClientPutInServer(int client)
 {
 	SDKHook(client, SDKHook_WeaponCanUse, OnWeaponCanUse);
 	
@@ -165,7 +166,7 @@ public Action SetNoScope(int client,int args)
 		{
 			if (gc_bSetW.BoolValue)
 			{
-				decl String:EventDay[64];
+				char EventDay[64];
 				GetEventDay(EventDay);
 				
 				if(StrEqual(EventDay, "none", false))
@@ -184,7 +185,7 @@ public Action SetNoScope(int client,int args)
 			{
 				if (gc_bSetA.BoolValue)
 				{
-					decl String:EventDay[64];
+					char EventDay[64];
 					GetEventDay(EventDay);
 					
 					if(StrEqual(EventDay, "none", false))
@@ -213,7 +214,7 @@ public Action VoteNoScope(int client,int args)
 	{	
 		if (gc_bVote.BoolValue)
 		{	
-			decl String:EventDay[64];
+			char EventDay[64];
 			GetEventDay(EventDay);
 			
 			if(StrEqual(EventDay, "none", false))
@@ -256,7 +257,7 @@ void StartNextRound()
 	PrintHintTextToAll("%t", "noscope_next_nc");
 }
 
-public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
+public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
 	if (StartNoScope)
 	{
@@ -319,7 +320,7 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 	}
 	else
 	{
-		decl String:EventDay[64];
+		char EventDay[64];
 		GetEventDay(EventDay);
 	
 		if(!StrEqual(EventDay, "none", false))
@@ -330,7 +331,7 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 	}
 }
 
-public Action:OnWeaponCanUse(client, weapon)
+public Action OnWeaponCanUse(int client, int weapon)
 {
 	char sWeapon[32];
 	GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
@@ -348,7 +349,7 @@ public Action:OnWeaponCanUse(client, weapon)
 	return Plugin_Continue;
 }
 
-public Action:OnPreThink(client)
+public Action OnPreThink(int client)
 {
 	int iWeapon = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
 	MakeNoScope(iWeapon);
@@ -356,7 +357,7 @@ public Action:OnPreThink(client)
 }
 
 
-stock MakeNoScope(weapon)
+stock void MakeNoScope(int weapon)
 {
 	if (IsNoScope == true)
 	{
@@ -371,7 +372,7 @@ stock MakeNoScope(weapon)
 	}
 }
 
-public Action:NoScope(Handle:timer)
+public Action NoScope(Handle timer)
 {
 	if (g_iTruceTime > 1)
 	{
@@ -409,7 +410,7 @@ public Action:NoScope(Handle:timer)
 	return Plugin_Stop;
 }
 
-public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
+public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 {
 	int winner = GetEventInt(event, "winner");
 	
@@ -448,7 +449,7 @@ public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 	}
 }
 
-public OnMapEnd()
+public void OnMapEnd()
 {
 	IsNoScope = false;
 	StartNoScope = false;

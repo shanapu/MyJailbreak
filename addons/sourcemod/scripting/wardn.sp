@@ -12,6 +12,7 @@
 
 //Compiler Options
 #pragma semicolon 1
+#pragma newdecls required
 
 //Defines
 #define LoopAliveClients(%1) for(int %1 = 1;%1 <= MaxClients;%1++) if(IsValidClient(%1, true))    //TODO all
@@ -224,11 +225,11 @@ public Action Command_LAW(int client, const char[] command, int argc)
 	return Plugin_Continue;
 }
 
-public Action:Event_BulletImpact(Handle:hEvent,const String:sName[],bool:bDontBroadcast)
+public Action Event_BulletImpact(Handle hEvent,const char [] sName, bool bDontBroadcast)
 {
 	if(gc_bMarker.BoolValue)	
 	{
-		new client = GetClientOfUserId(GetEventInt(hEvent, "userid"));
+		int client = GetClientOfUserId(GetEventInt(hEvent, "userid"));
 		
 		if (Client_IsIngame(client) && IsPlayerAlive(client) && warden_iswarden(client))
 		{
@@ -339,7 +340,7 @@ public Action DeleteMarker( Handle timer)
 	ResetMarker();
 }
 
-public Action:Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
+public Action Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
 	if (countertime != null)
 		KillTimer(countertime);
@@ -379,7 +380,7 @@ public void OnConfigsExecuted()
 	}
 }
 
-public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, interr_max)
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	CreateNative("warden_exist", Native_ExistWarden);
 	CreateNative("warden_iswarden", Native_IsWarden);
@@ -437,7 +438,7 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 	}
 }
 
-public Action:Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
+public Action Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 {
 		LOOP_CLIENTS(i, CLIENTFILTER_TEAMONE)
 				{
@@ -532,7 +533,7 @@ public Action VoteWarden(int client,int args)
 	else CPrintToChat(client, "%t %t", "warden_tag" , "warden_disabled");
 }
 
-public Action:playerDeath(Event event, const char[] name, bool dontBroadcast) 
+public Action playerDeath(Event event, const char[] name, bool dontBroadcast) 
 {
 	int client = GetClientOfUserId(GetEventInt(event, "userid")); // Get the dead clients id
 	
@@ -806,7 +807,7 @@ void RemoveTheWarden(int client)
 	g_sHasVoted[0] = '\0';
 }
 
-public Action:SetStartCountDown(client, args)
+public Action SetStartCountDown(int client, int args)
 {
 	if(gc_bCountDown.BoolValue)
 	{
@@ -826,7 +827,7 @@ public Action:SetStartCountDown(client, args)
 	}
 }
 
-public Action:SetStartStopCountDown(client, args)
+public Action SetStartStopCountDown(int client, int args)
 {
 	if(gc_bCountDown.BoolValue)
 	{
@@ -846,7 +847,7 @@ public Action:SetStartStopCountDown(client, args)
 	}
 }
 
-public Action:SetStopCountDown(client, args)
+public Action SetStopCountDown(int client, int args)
 {
 	if(gc_bCountDown.BoolValue)
 	{
@@ -982,17 +983,17 @@ public Action ShowOverlayStop( Handle timer, any client )
 
 
 
-EnableNoBlock(client)
+public Action EnableNoBlock(int client)
 {
 	SetEntData(client, g_CollisionOffset, 2, 4, true);
 }
 
-EnableBlock(client)
+public Action EnableBlock(int client)
 {
 	SetEntData(client, g_CollisionOffset, 5, 4, true);
 }
 
-public Action:noblockon(client, args)
+public Action noblockon(int client, int args)
 {
 	if(gc_bNoBlock.BoolValue)	
 	{
@@ -1014,7 +1015,7 @@ public Action:noblockon(client, args)
 	}
 }
 
-public Action:noblockoff(client, args)
+public Action noblockoff(int client, int args)
 { 
 	if (warden_iswarden(client))
 	{
@@ -1031,7 +1032,7 @@ public Action:noblockoff(client, args)
 	}
 }
 
-public Action:ToggleFF(client, args)
+public Action ToggleFF(int client, int args)
 {
 	if (gc_bFF.BoolValue) 
 	{
@@ -1055,13 +1056,13 @@ public Action:ToggleFF(client, args)
 	}
 }
 
-public Action KillRandom(client, args)
+public Action KillRandom(int client, int args)
 {
 	if (gc_bRandom.BoolValue) 
 	{
 		if (warden_iswarden(client))
 		{
-			new clientV = GetRandomPlayer(CS_TEAM_T);
+			int clientV = GetRandomPlayer(CS_TEAM_T);
 			if(clientV > 0)
 			{
 				ForcePlayerSuicide(clientV);
@@ -1072,16 +1073,21 @@ public Action KillRandom(client, args)
 	}
 }
 
-GetRandomPlayer(team)
+stock int GetRandomPlayer(int team) 
 {
-	new clients[MaxClients+1], clientCount;
-	for (new i = 1; i <= MaxClients; i++)
-		if (IsClientInGame(i) && GetClientTeam(i) == team) clients[clientCount++] = i;
-		
+	int[] clients = new int[MaxClients];
+	int clientCount;
+	for (int i = 1; i <= MaxClients; i++)
+	{
+		if (Client_IsIngame(i) && (GetClientTeam(i) == team))
+		{
+			clients[clientCount++] = i;
+		}
+	}
 	return (clientCount == 0) ? -1 : clients[GetRandomInt(0, clientCount-1)];
 }
 
-public Action:ccounter(Handle:timer, Handle:pack)
+public Action ccounter(Handle timer, Handle pack)
 {
 	if(gc_bPlugin.BoolValue)
 	{
@@ -1123,7 +1129,7 @@ public Action:ccounter(Handle:timer, Handle:pack)
 	}
 }
 
-public Action:OpenDoors(client, args)
+public Action OpenDoors(int client, int args)
 {
 	if(gc_bPlugin.BoolValue)	
 	{
@@ -1140,7 +1146,7 @@ public Action:OpenDoors(client, args)
 	}
 }
 
-public Action:CloseDoors(client, args)
+public Action CloseDoors(int client, int args)
 {
 	if(gc_bPlugin.BoolValue)	
 	{
@@ -1202,7 +1208,7 @@ public int Native_RemoveWarden(Handle plugin, int numParams)
 		RemoveTheWarden(client);
 }
 
-public int Native_GetWarden(Handle:plugin, argc)
+public int Native_GetWarden(Handle plugin, int argc)
 {	
 		return Warden;
 }
@@ -1253,7 +1259,7 @@ public void warden_OnWardenCreated(int client)
 
 }
 
-stock PrecacheOverlayAnyDownload(char[] sOverlay)
+stock void PrecacheOverlayAnyDownload(char [] sOverlay)
 {
 	char sBufferVmt[256];
 	char sBufferVtf[256];
@@ -1267,7 +1273,7 @@ stock PrecacheOverlayAnyDownload(char[] sOverlay)
 	AddFileToDownloadsTable(sBufferVtf);
 }
 
-stock PrecacheSoundAnyDownload(char[] sSound)
+stock void PrecacheSoundAnyDownload(char [] sSound)
 {
 	PrecacheSoundAny(sSound);
 	char sBuffer[256];

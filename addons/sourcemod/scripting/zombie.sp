@@ -11,6 +11,7 @@
 
 //Compiler Options
 #pragma semicolon 1
+#pragma newdecls required
 
 //Defines
 #define PLUGIN_VERSION "0.2"
@@ -122,7 +123,7 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 	}
 }
 
-public OnClientPutInServer(client)
+public void OnClientPutInServer(int client)
 {
 	SDKHook(client, SDKHook_WeaponCanUse, OnWeaponCanUse);
 }
@@ -167,7 +168,7 @@ public Action SetZombie(int client,int args)
 		{
 			if (gc_bSetW.BoolValue)
 			{
-				decl String:EventDay[64];
+				char EventDay[64];
 				GetEventDay(EventDay);
 				
 				if(StrEqual(EventDay, "none", false))
@@ -186,7 +187,7 @@ public Action SetZombie(int client,int args)
 		{
 			if (gc_bSetA.BoolValue)
 			{
-				decl String:EventDay[64];
+				char EventDay[64];
 				GetEventDay(EventDay);
 				
 				if(StrEqual(EventDay, "none", false))
@@ -217,7 +218,7 @@ public Action VoteZombie(int client,int args)
 		{
 			if (GetTeamClientCount(CS_TEAM_CT) > 0)
 			{
-				decl String:EventDay[64];
+				char EventDay[64];
 				GetEventDay(EventDay);
 			
 				if(StrEqual(EventDay, "none", false))
@@ -261,7 +262,7 @@ void StartNextRound()
 	PrintHintTextToAll("%t", "zombie_next_nc");
 }
 
-public Action:OnWeaponCanUse(client, weapon)
+public Action OnWeaponCanUse(int client, int weapon)
 {
 	char sWeapon[32];
 	GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
@@ -282,7 +283,7 @@ public Action:OnWeaponCanUse(client, weapon)
 	return Plugin_Continue;
 }
 
-public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
+public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
 	if (StartZombie)
 	{
@@ -353,7 +354,7 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 	}
 	else
 	{
-		decl String:EventDay[64];
+		char EventDay[64];
 		GetEventDay(EventDay);
 	
 		if(!StrEqual(EventDay, "none", false))
@@ -364,7 +365,7 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 	}
 }
 
-public Action:Zombie(Handle:timer)
+public Action Zombie(Handle timer)
 {
 	if (g_iFreezeTime > 1)
 	{
@@ -409,7 +410,7 @@ public Action:Zombie(Handle:timer)
 	return Plugin_Stop;
 }
 
-public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
+public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 {
 	int winner = GetEventInt(event, "winner");
 	
@@ -447,7 +448,7 @@ public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 	}
 }
 
-public OnMapEnd()
+public void OnMapEnd()
 {
 	IsZombie = false;
 	StartZombie = false;

@@ -11,6 +11,7 @@
 
 //Compiler Options
 #pragma semicolon 1
+#pragma newdecls required
 
 //Defines
 #define PLUGIN_VERSION "0.2"
@@ -93,7 +94,7 @@ public void OnPluginStart()
 	HookEvent("round_start", RoundStart);
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookEvent("round_end", RoundEnd);
-	HookEvent("flashbang_detonate", flash_Detonate);
+	HookEvent("hegrenade_detonate", HE_Detonate);
 	
 	//Find
 	g_iSetRoundTime = FindConVar("mp_roundtime");
@@ -145,7 +146,7 @@ public void OnConfigsExecuted()
 	}
 }
 
-public OnClientPutInServer(client)
+public void OnClientPutInServer(int client)
 {
 	SDKHook(client, SDKHook_WeaponCanUse, OnWeaponCanUse);
 }
@@ -158,7 +159,7 @@ public Action SetDodgeBall(int client,int args)
 		{
 			if (gc_bSetW.BoolValue)
 			{
-				decl String:EventDay[64];
+				char EventDay[64];
 				GetEventDay(EventDay);
 				
 				if(StrEqual(EventDay, "none", false))
@@ -177,7 +178,7 @@ public Action SetDodgeBall(int client,int args)
 			{
 				if (gc_bSetA.BoolValue)
 				{
-					decl String:EventDay[64];
+					char EventDay[64];
 					GetEventDay(EventDay);
 					
 					if(StrEqual(EventDay, "none", false))
@@ -206,7 +207,7 @@ public Action VoteDodgeBall(int client,int args)
 	{
 		if (gc_bVote.BoolValue)
 		{
-			decl String:EventDay[64];
+			char EventDay[64];
 			GetEventDay(EventDay);
 			
 			if(StrEqual(EventDay, "none", false))
@@ -250,7 +251,7 @@ void StartNextRound()
 
 }
 
-public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
+public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
 	if (StartDodgeBall)
 	{
@@ -296,11 +297,10 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 						{
 							SetEntityGravity(client, gc_fGravValue.FloatValue);	
 						}
-						SetEntPropFloat(client, Prop_Send, "m_flFlashMaxAlpha", 0.5);
 						SendPanelToClient(DodgeBallMenu, client, Pass, 15);
 						SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 						StripAllWeapons(client);
-						GivePlayerItem(client, "weapon_flashbang");
+						GivePlayerItem(client, "weapon_hegrenade");
 						SetEntityHealth(client, 1);
 					}
 				}
@@ -310,7 +310,7 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 	}
 	else
 	{
-		decl String:EventDay[64];
+		char EventDay[64];
 		GetEventDay(EventDay);
 		
 		if(!StrEqual(EventDay, "none", false))
@@ -321,13 +321,13 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 	}
 }
 
-public Action:OnWeaponCanUse(client, weapon)
+public Action OnWeaponCanUse(int client, int weapon)
 {
 	if(IsDodgeBall == true)
 	{
 		char sWeapon[32];
 		GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
-		if(StrEqual(sWeapon, "weapon_flashbang"))
+		if(StrEqual(sWeapon, "weapon_hegrenade"))
 		{
 			if (IsClientInGame(client) && IsPlayerAlive(client))
 			{
@@ -339,22 +339,21 @@ public Action:OnWeaponCanUse(client, weapon)
 	return Plugin_Continue;
 }
 
-
-public flash_Detonate(Handle:event, const String:name[], bool:dontBroadcast)
+public Action HE_Detonate(Handle event, const char[] name, bool dontBroadcast)
 {
 	if (IsDodgeBall == true)
 	{
-		new target = GetClientOfUserId(GetEventInt(event, "userid"));
+		int  target = GetClientOfUserId(GetEventInt(event, "userid"));
 		if (GetClientTeam(target) == 1 && !IsPlayerAlive(target))
 		{
 			return;
 		}
-		GivePlayerItem(target, "weapon_flashbang");
+		GivePlayerItem(target, "weapon_hegrenade");
 	}
 	return;
 }
 
-public Action:DodgeBall(Handle:timer)
+public Action DodgeBall(Handle timer)
 {
 	if (g_iTruceTime > 1)
 	{
@@ -393,7 +392,7 @@ public Action:DodgeBall(Handle:timer)
 	return Plugin_Stop;
 }
 
-public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
+public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 {
 	int winner = GetEventInt(event, "winner");
 	
@@ -428,7 +427,7 @@ public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 	}
 }
 
-public OnMapEnd()
+public void OnMapEnd()
 {
 	IsDodgeBall = false;
 	StartDodgeBall = false;

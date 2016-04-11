@@ -30,7 +30,7 @@ must:
 - [x] catch: sprint build in
 - [x] catch: freeze overlay stay or just 2sek. bool
 - [ ] zombie: knockbackfix
-- [ ] alldays: cooldown cross days
+- [x] alldays: cooldown cross days
 - [x] zombie: define zombie model
 - [x] warden: unvote
 - [x] duckhunt: infi ammo
@@ -53,7 +53,7 @@ must:
 - [x] Freeday: Damage disbaled 
 - [ ] clean up code 
 - [ ] comments
-- [ ] jihad: body counter
+
 - [ ] 
 - [ ] some polishing
 
@@ -73,6 +73,7 @@ want:
 - [ ] valid client and co to inc
 - [ ] warden: ff not for ct
 - [ ] jihad: burn dead bodies
+- [ ] jihad: body counter
 - [ ] playertags: add VIP flag
 - [ ] playertags: define colorize chat tag
 - [x] noscope: dis/enable lowgrav

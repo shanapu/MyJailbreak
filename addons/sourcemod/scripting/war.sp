@@ -9,6 +9,7 @@
 
 //Compiler Options
 #pragma semicolon 1
+#pragma newdecls required
 
 //Defines
 #define PLUGIN_VERSION "0.2"
@@ -159,7 +160,7 @@ public Action SetWar(int client,int args)
 		{
 			if (gc_bSetW.BoolValue)
 			{
-				decl String:EventDay[64];
+				char EventDay[64];
 				GetEventDay(EventDay);
 				
 				if(StrEqual(EventDay, "none", false))
@@ -178,7 +179,7 @@ public Action SetWar(int client,int args)
 			{
 				if (gc_bSetA.BoolValue)	
 				{
-					decl String:EventDay[64];
+					char EventDay[64];
 					GetEventDay(EventDay);
 					
 					if(StrEqual(EventDay, "none", false))
@@ -209,7 +210,7 @@ public Action VoteWar(int client,int args)
 		{	
 			if (GetTeamClientCount(CS_TEAM_CT) > 0)
 			{
-				decl String:EventDay[64];
+				char EventDay[64];
 				GetEventDay(EventDay);
 				
 				if(StrEqual(EventDay, "none", false))
@@ -253,7 +254,7 @@ void StartNextRound()
 	PrintHintTextToAll("%t", "war_next_nc");
 }
 
-public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
+public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
 	if (StartWar || IsWar)
 	{
@@ -408,7 +409,7 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 	}
 	else
 	{
-		decl String:EventDay[64];
+		char EventDay[64];
 		GetEventDay(EventDay);
 	
 		if(!StrEqual(EventDay, "none", false))
@@ -419,7 +420,7 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 	}
 }
 
-public Action:Freezed(Handle:timer)
+public Action Freezed(Handle timer)
 {
 	if (g_iFreezeTime > 1)
 	{
@@ -458,7 +459,7 @@ public Action:Freezed(Handle:timer)
 	return Plugin_Stop;
 }
 
-public Action:NoDamage(Handle:timer)
+public Action NoDamage(Handle timer)
 {
 	if (g_iTruceTime > 1)
 	{
@@ -486,7 +487,7 @@ public Action:NoDamage(Handle:timer)
 	return Plugin_Stop;
 }
 
-public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
+public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 {
 	int winner = GetEventInt(event, "winner");
 	

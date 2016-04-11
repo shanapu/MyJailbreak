@@ -13,6 +13,7 @@
 
 //Compiler Options
 #pragma semicolon 1
+#pragma newdecls required
 
 //Defines
 #define PLUGIN_VERSION "0.2"
@@ -176,7 +177,7 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 	}
 }
 
-public Action:CS_OnTerminateRound(&Float:delay, &CSRoundEndReason:reason)
+public Action CS_OnTerminateRound( float &delay, CSRoundEndReason &reason)
 {
 	if (IsJiHad)
 	{
@@ -224,7 +225,7 @@ public void OnConfigsExecuted()
 	}
 }
 
-public OnClientPutInServer(client)
+public void OnClientPutInServer(int client)
 {
 	SDKHook(client, SDKHook_WeaponCanUse, OnWeaponCanUse);
 }
@@ -238,7 +239,7 @@ public Action SetJiHad(int client,int args)
 		{
 			if (gc_bSetW.BoolValue)	
 			{
-				decl String:EventDay[64];
+				char EventDay[64];
 				GetEventDay(EventDay);
 				
 				if(StrEqual(EventDay, "none", false))
@@ -257,7 +258,7 @@ public Action SetJiHad(int client,int args)
 			{
 				if (gc_bSetA.BoolValue)
 				{
-					decl String:EventDay[64];
+					char EventDay[64];
 					GetEventDay(EventDay);
 					
 					if(StrEqual(EventDay, "none", false))
@@ -288,7 +289,7 @@ public Action VoteJiHad(int client,int args)
 		{	
 			if (GetTeamClientCount(CS_TEAM_CT) > 0)
 			{
-				decl String:EventDay[64];
+				char EventDay[64];
 				GetEventDay(EventDay);
 				
 				if(StrEqual(EventDay, "none", false))
@@ -332,7 +333,7 @@ void StartNextRound()
 	PrintHintTextToAll("%t", "jihad_next_nc");
 }
 
-public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
+public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
 	if (StartJiHad)
 	{
@@ -396,7 +397,7 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 	}
 	else
 	{
-		decl String:EventDay[64];
+		char EventDay[64];
 		GetEventDay(EventDay);
 		
 		if(!StrEqual(EventDay, "none", false))
@@ -420,7 +421,7 @@ public Action Command_LAW(int client, const char[] command, int argc)
 	return Plugin_Continue;
 }
 
-public Action:JiHad(Handle:timer)
+public Action JiHad(Handle timer)
 {
 	if (g_iFreezeTime > 1)
 	{
@@ -464,7 +465,7 @@ public Action:JiHad(Handle:timer)
 	return Plugin_Stop;
 }
 
-public Action:Command_BombJihad(client, args)
+public Action Command_BombJihad(int client, int args)
 {
 	if (IsJiHad && BombActive)
 	{
@@ -542,7 +543,7 @@ public Action DoDaBomb( Handle timer, any client )
 	ForcePlayerSuicide(client);
 }
 
-public Action:OnWeaponCanUse(client, weapon)
+public Action OnWeaponCanUse(int client, int weapon)
 {
 	char sWeapon[32];
 	GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
@@ -561,7 +562,7 @@ public Action:OnWeaponCanUse(client, weapon)
 }
 
 
-public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
+public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 {
 	int winner = GetEventInt(event, "winner");
 	
@@ -598,7 +599,7 @@ public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 	}
 }
 
-public Action:Command_StartSprint(client, args)
+public Action Command_StartSprint(int client, int args)
 {
 	if (IsJiHad)
 	{
@@ -616,11 +617,11 @@ public Action:Command_StartSprint(client, args)
 	return(Plugin_Handled);
 }
 
-public OnGameFrame()
+public void OnGameFrame()
 {
 	if (IsJiHad)
 	{
-		for(new i = 1; i <= MaxClients; i++)
+		for(int i = 1; i <= MaxClients; i++)
 		{
 			if(gc_iKey.IntValue == 2)
 			{
@@ -648,7 +649,7 @@ public OnGameFrame()
 	return;
 }
 
-ResetSprint(client)
+public Action ResetSprint(int client)
 {
 	if(SprintTimer[client] != null)
 	{
@@ -667,7 +668,7 @@ ResetSprint(client)
 	return;
 }
 
-public Action:Timer_SprintEnd(Handle:timer, any:client)
+public Action Timer_SprintEnd(Handle timer, any client)
 {
 	SprintTimer[client] = null;
 	
@@ -684,7 +685,7 @@ public Action:Timer_SprintEnd(Handle:timer, any:client)
 	return;
 }
 
-public Action:Timer_SprintCooldown(Handle:timer, any:client)
+public Action Timer_SprintCooldown(Handle timer, any client)
 {
 	SprintTimer[client] = null;
 	if(IsClientInGame(client) && (ClientSprintStatus[client] & IsSprintCoolDown))
@@ -694,15 +695,15 @@ public Action:Timer_SprintCooldown(Handle:timer, any:client)
 	return;
 }
 
-public Event_PlayerSpawn(Handle:event,const String:name[],bool:dontBroadcast)
+public Action Event_PlayerSpawn(Handle event, const char[] name, bool dontBroadcast)
 {
-	new iClient = GetClientOfUserId(GetEventInt(event, "userid"));
+	int iClient = GetClientOfUserId(GetEventInt(event, "userid"));
 	ResetSprint(iClient);
 	ClientSprintStatus[iClient] &= ~ IsSprintCoolDown;
 	return;
 }
 
-public OnMapEnd()
+public void OnMapEnd()
 {
 	IsJiHad = false;
 	StartJiHad = false;

@@ -5,6 +5,7 @@
 
 //Compiler Options
 #pragma semicolon 1
+#pragma newdecls required
 
 //Defines
 #define PLUGIN_VERSION "0.2"
@@ -20,21 +21,21 @@ public Plugin myinfo = {
 	url = ""
 };
 
-public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	CreateNative("SetEventDay", Native_SetEventDay);
 	CreateNative("GetEventDay", Native_GetEventDay);
 }
 
-public Native_SetEventDay(Handle:plugin, argc)
+public int Native_SetEventDay(Handle plugin,int argc)
 {
-	decl String:buffer[64];
+	char buffer[64];
 	GetNativeString(1, buffer, 64);
 	
 	Format(IsEventDay, sizeof(IsEventDay), buffer);
 }
 
-public Native_GetEventDay(Handle:plugin, argc)
+public int Native_GetEventDay(Handle plugin,int argc)
 {
 	SetNativeString(1, IsEventDay, sizeof(IsEventDay));
 }

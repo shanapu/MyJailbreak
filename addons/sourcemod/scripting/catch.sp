@@ -13,6 +13,7 @@
 
 //Compiler Options
 #pragma semicolon 1
+#pragma newdecls required
 
 //Defines
 #define PLUGIN_VERSION "0.2"
@@ -186,7 +187,7 @@ public void OnConfigsExecuted()
 	}
 }
 
-public OnClientPutInServer(client)
+public void OnClientPutInServer(int client)
 {
 	catched[client] = false;
 	SDKHook(client, SDKHook_WeaponCanUse, OnWeaponCanUse);
@@ -201,7 +202,7 @@ public Action SetCatch(int client,int args)
 		{
 			if (gc_bSetW.BoolValue)	
 			{
-				decl String:EventDay[64];
+				char EventDay[64];
 				GetEventDay(EventDay);
 				
 				if(StrEqual(EventDay, "none", false))
@@ -220,7 +221,7 @@ public Action SetCatch(int client,int args)
 			{
 				if (gc_bSetA.BoolValue)
 				{
-					decl String:EventDay[64];
+					char EventDay[64];
 					GetEventDay(EventDay);
 					
 					if(StrEqual(EventDay, "none", false))
@@ -251,7 +252,7 @@ public Action VoteCatch(int client,int args)
 		{
 			if (GetTeamClientCount(CS_TEAM_CT) > 0)
 			{
-				decl String:EventDay[64];
+				char EventDay[64];
 				GetEventDay(EventDay);
 			
 				if(StrEqual(EventDay, "none", false))
@@ -297,7 +298,7 @@ void StartNextRound()
 
 }
 
-public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
+public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
 
 	if (StartCatch)
@@ -358,7 +359,7 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 	}
 	else
 	{
-		decl String:EventDay[64];
+		char EventDay[64];
 		GetEventDay(EventDay);
 	
 		if(!StrEqual(EventDay, "none", false))
@@ -369,7 +370,7 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 	}
 }
 
-public Action:OnWeaponCanUse(client, weapon)
+public Action OnWeaponCanUse(int client, int weapon)
 {
 	char sWeapon[32];
 	GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
@@ -387,7 +388,7 @@ public Action:OnWeaponCanUse(client, weapon)
 	return Plugin_Continue;
 }
 
-public Action:OnTakeDamage(victim, &attacker, &inflictor, &Float:damage, &damagetype)
+public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if(!IsValidClient(victim) || attacker == victim || !IsValidClient(attacker)) return Plugin_Continue;
 	
@@ -409,7 +410,7 @@ public Action:OnTakeDamage(victim, &attacker, &inflictor, &Float:damage, &damage
 }
 
 
-public OnClientDisconnect_Post(client)
+public void OnClientDisconnect_Post(int client)
 {
 
 	if(IsCatch == false)
@@ -419,7 +420,7 @@ public OnClientDisconnect_Post(client)
 	CheckStatus();
 }
 
-public Action:EventPlayerTeam(Event event, const char[] name, bool dontBroadcast)
+public Action EventPlayerTeam(Event event, const char[] name, bool dontBroadcast)
 {
 	if(IsCatch == false)
 	{
@@ -427,11 +428,11 @@ public Action:EventPlayerTeam(Event event, const char[] name, bool dontBroadcast
 	}
 	CheckStatus();
 	
-	new iClient = GetClientOfUserId(GetEventInt(event, "userid"));
+	int iClient = GetClientOfUserId(GetEventInt(event, "userid"));
 	ResetSprint(iClient);
 }
 
-CatchEm(client, attacker)
+public Action CatchEm(int client, int attacker)
 {
 	SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 0.0);
 	SetEntityRenderColor(client, 0, 0, 255, 255);
@@ -449,7 +450,7 @@ CatchEm(client, attacker)
 }
 
 
-FreeEm(client, attacker)
+public Action FreeEm(int client, int attacker)
 {
 	SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
 	SetEntityRenderColor(client, 255, 255, 255, 0);
@@ -462,7 +463,7 @@ FreeEm(client, attacker)
 	CPrintToChatAll("%t %t", "catch_tag" , "catch_unfreeze", attacker, client);
 }
 
-CheckStatus()
+public Action CheckStatus()
 {
 	int number = 0;
 	for (int i = 1; i <= MaxClients; i++)
@@ -475,7 +476,7 @@ CheckStatus()
 	}
 }
 
-public Action:CS_OnTerminateRound(&Float:delay, &CSRoundEndReason:reason)
+public Action CS_OnTerminateRound( float &delay,  CSRoundEndReason &reason)
 {
 	if (IsCatch)
 	{
@@ -489,7 +490,7 @@ public Action:CS_OnTerminateRound(&Float:delay, &CSRoundEndReason:reason)
 	return Plugin_Continue;
 }
 
-public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
+public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 {
 	int winner = GetEventInt(event, "winner");
 	
@@ -534,7 +535,7 @@ public Action ShowOverlayFreeze( Handle timer, any client ) {
 }
 
 
-public Action:Command_StartSprint(client, args)
+public Action Command_StartSprint(int client, int args)
 {
 	if (IsCatch)
 	{
@@ -557,13 +558,13 @@ public Action:Command_StartSprint(client, args)
 	return(Plugin_Handled);
 }
 
-public OnGameFrame()
+public void OnGameFrame()
 {
 	if (IsCatch)
 	{
 		if(gc_bSprintUse.BoolValue)
 		{
-			for(new i = 1; i <= MaxClients; i++)
+			for(int i = 1; i <= MaxClients; i++)
 			{
 				if(IsClientInGame(i) && (GetClientButtons(i) & IN_USE))
 				{
@@ -576,7 +577,7 @@ public OnGameFrame()
 	return;
 }
 
-ResetSprint(client)
+public Action ResetSprint(int client)
 {
 	if(SprintTimer[client] != null)
 	{
@@ -594,7 +595,7 @@ ResetSprint(client)
 	return;
 }
 
-public Action:Timer_SprintEnd(Handle:timer, any:client)
+public Action Timer_SprintEnd(Handle timer, any client)
 {
 	SprintTimer[client] = null;
 	
@@ -611,7 +612,7 @@ public Action:Timer_SprintEnd(Handle:timer, any:client)
 	return;
 }
 
-public Action:Timer_SprintCooldown(Handle:timer, any:client)
+public Action Timer_SprintCooldown(Handle timer, any client)
 {
 	SprintTimer[client] = null;
 	if(IsClientInGame(client) && (ClientSprintStatus[client] & IsSprintCoolDown))
@@ -621,15 +622,15 @@ public Action:Timer_SprintCooldown(Handle:timer, any:client)
 	return;
 }
 
-public Event_PlayerSpawn(Handle:event,const String:name[],bool:dontBroadcast)
+public void Event_PlayerSpawn(Handle event, const char[] name, bool dontBroadcast)
 {
-	new iClient = GetClientOfUserId(GetEventInt(event, "userid"));
+	int iClient = GetClientOfUserId(GetEventInt(event, "userid"));
 	ResetSprint(iClient);
 	ClientSprintStatus[iClient] &= ~ IsSprintCoolDown;
 	return;
 }
 
-public OnMapEnd()
+public void OnMapEnd()
 {
 	IsCatch = false;
 	StartCatch = false;

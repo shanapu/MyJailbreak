@@ -12,6 +12,7 @@
 
 //Compiler Options
 #pragma semicolon 1
+#pragma newdecls required
 
 //Defines
 #define PLUGIN_VERSION "0.2"
@@ -153,7 +154,7 @@ public void OnConfigsExecuted()
 	}
 }
 
-public OnClientPutInServer(client)
+public void OnClientPutInServer(int client)
 {
 	SDKHook(client, SDKHook_WeaponCanUse, OnWeaponCanUse);
 }
@@ -166,7 +167,7 @@ public Action SetDuckHunt(int client,int args)
 		{
 			if (gc_bSetW.BoolValue)
 			{
-				decl String:EventDay[64];
+				char EventDay[64];
 				GetEventDay(EventDay);
 				
 				if(StrEqual(EventDay, "none", false))
@@ -185,7 +186,7 @@ public Action SetDuckHunt(int client,int args)
 			{
 				if (gc_bSetA.BoolValue)
 				{
-					decl String:EventDay[64];
+					char EventDay[64];
 					GetEventDay(EventDay);
 					
 					if(StrEqual(EventDay, "none", false))
@@ -216,7 +217,7 @@ public Action VoteDuckHunt(int client,int args)
 		{
 			if (GetTeamClientCount(CS_TEAM_CT) > 0)
 			{
-				decl String:EventDay[64];
+				char EventDay[64];
 				GetEventDay(EventDay);
 			
 				if(StrEqual(EventDay, "none", false))
@@ -266,7 +267,7 @@ void StartNextRound()
 	PrintHintTextToAll("%t", "duckhunt_next_nc");
 }
 
-public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
+public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
 
 	if (StartDuckHunt)
@@ -337,7 +338,7 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 	}
 	else
 	{
-		decl String:EventDay[64];
+		char EventDay[64];
 		GetEventDay(EventDay);
 		
 		if(!StrEqual(EventDay, "none", false))
@@ -348,7 +349,7 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 	}
 }
 
-public Action:OnWeaponCanUse(client, weapon)
+public Action OnWeaponCanUse(int client, int weapon)
 {
 	if(IsDuckHunt == true)
 	{
@@ -367,7 +368,7 @@ public Action:OnWeaponCanUse(client, weapon)
 	return Plugin_Continue;
 }
 
-public Action:DuckHunt(Handle:timer)
+public Action DuckHunt(Handle timer)
 {
 	if (g_iTruceTime > 1)
 	{
@@ -408,7 +409,7 @@ public Action:DuckHunt(Handle:timer)
 	return Plugin_Stop;
 }
 
-public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
+public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 {
 	int winner = GetEventInt(event, "winner");
 	
@@ -446,11 +447,11 @@ public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 	}
 }
 
-public HE_Detonate(Handle:event, const String:name[], bool:dontBroadcast)
+public Action HE_Detonate(Handle event, const char[] name, bool dontBroadcast)
 {
 	if (IsDuckHunt == true)
 	{
-	new target = GetClientOfUserId(GetEventInt(event, "userid"));
+	int target = GetClientOfUserId(GetEventInt(event, "userid"));
 	if (GetClientTeam(target) == 1 && !IsPlayerAlive(target))
 	{
 		return;
@@ -460,12 +461,12 @@ public HE_Detonate(Handle:event, const String:name[], bool:dontBroadcast)
 	return;
 }
 
-public FP(client)
+public Action FP(int client)
 {
 	ClientCommand(client, "firstperson");
 }
 
-public OnMapEnd()
+public void OnMapEnd()
 {
 	IsDuckHunt = false;
 	StartDuckHunt = false;

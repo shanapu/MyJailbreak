@@ -10,6 +10,7 @@
 
 //Compiler Options
 #pragma semicolon 1
+#pragma newdecls required
 
 //Defines
 #define PLUGIN_VERSION "0.2"
@@ -169,7 +170,7 @@ public Action SetHide(int client,int args)
 			{
 				if (gc_bSetW.BoolValue)	
 				{
-					decl String:EventDay[64];
+					char EventDay[64];
 					GetEventDay(EventDay);
 					
 					if(StrEqual(EventDay, "none", false))
@@ -188,7 +189,7 @@ public Action SetHide(int client,int args)
 				{
 					if (gc_bSetA.BoolValue)
 					{
-						decl String:EventDay[64];
+						char EventDay[64];
 						GetEventDay(EventDay);
 						
 						if(StrEqual(EventDay, "none", false))
@@ -219,7 +220,7 @@ public Action VoteHide(int client,int args)
 		{
 			if (GetTeamClientCount(CS_TEAM_CT) > 0)
 			{
-				decl String:EventDay[64];
+				char EventDay[64];
 				GetEventDay(EventDay);
 				
 				if(StrEqual(EventDay, "none", false))
@@ -264,7 +265,7 @@ void StartNextRound()
 	PrintHintTextToAll("%t", "hide_next_nc");
 }
 
-public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
+public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
 	if (StartHide)
 	{
@@ -329,7 +330,7 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 	}
 	else
 	{
-		decl String:EventDay[64];
+		char EventDay[64];
 		GetEventDay(EventDay);
 		
 		if(!StrEqual(EventDay, "none", false))
@@ -340,7 +341,7 @@ public void RoundStart(Handle:event, char[] name, bool:dontBroadcast)
 	}
 }
 
-public Action:Freezed(Handle:timer)
+public Action Freezed(Handle timer)
 {
 	if (g_iFreezeTime > 1)
 	{
@@ -394,7 +395,7 @@ public Action:Freezed(Handle:timer)
 	return Plugin_Stop;
 }
 
-public Action:OnWeaponCanUse(client, weapon)
+public Action OnWeaponCanUse(int client, int weapon)
 {
 	if(IsHide == true)
 	{
@@ -413,7 +414,7 @@ public Action:OnWeaponCanUse(client, weapon)
 	return Plugin_Continue;
 }
 
-public Action:CS_OnTerminateRound(&Float:delay, &CSRoundEndReason:reason)
+public Action CS_OnTerminateRound(float &delay, CSRoundEndReason &reason)
 {
 	if (IsHide)
 	{
@@ -427,7 +428,7 @@ public Action:CS_OnTerminateRound(&Float:delay, &CSRoundEndReason:reason)
 	return Plugin_Continue;
 }
 
-public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
+public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 {
 	
 	int winner = GetEventInt(event, "winner");
@@ -469,7 +470,7 @@ public void RoundEnd(Handle:event, char[] name, bool:dontBroadcast)
 	}
 }
 
-DoFog()
+public Action DoFog()
 {
 	if(FogIndex != -1)
 	{

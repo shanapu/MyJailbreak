@@ -9,12 +9,12 @@ char g_sOverlayStart[256];
 
 
 
-native SetEventDay(const String:name[]);
+native SetEventDay(const char[] name);
 
 
 
 
-native GetEventDay(String:CurrentEventDay[]);
+native GetEventDay(char[] CurrentEventDay);
 
 
 
@@ -41,7 +41,7 @@ stock PrecacheSoundAnyDownload(char[] sSound)
 	
 }
 
-stock StripAllWeapons(iClient)
+stock StripAllWeapons(int iClient)
 {
 	int iEnt;
 	for (int i = 0; i <= 4; i++)

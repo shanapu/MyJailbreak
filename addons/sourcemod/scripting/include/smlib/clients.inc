@@ -43,7 +43,7 @@
  * @param 1		Name of the client index variable (will be only valid in the loop).
  * @param 2		CLIENTFILTER_ flags to check.
  */
-#define LOOP_CLIENTS(%1,%2) for (new %1=Client_GetNext(%2); %1 >= 1 && %1 <= MaxClients; %1=Client_GetNext(%2, ++%1))
+#define LOOP_CLIENTS(%1,%2) for (int %1=Client_GetNext(%2); %1 >= 1 && %1 <= MaxClients; %1=Client_GetNext(%2, ++%1))
 	
 /**
  * Macro for iterating trough all observers of a player.
@@ -52,7 +52,7 @@
  * @param 2		Name of the observer client index variable (will be only valid in the loop).
  * @param 3		CLIENTFILTER_ flags to check.
  */
-#define LOOP_OBSERVERS(%1,%2,%3) for (new %2=Client_GetNextObserver(%1, 1, %3); %2 >= 1 && %2 <= MaxClients; %2=Client_GetNextObserver(%1, ++%2, %3))
+#define LOOP_OBSERVERS(%1,%2,%3) for (int %2=Client_GetNextObserver(%1, 1, %3); %2 >= 1 && %2 <= MaxClients; %2=Client_GetNextObserver(%1, ++%2, %3))
 
 /**
  * Very useful macro to iterate all weapons of a client.
@@ -61,7 +61,7 @@
  * @param 2		Name of the weapon index variable (will be only valid in the loop).
  * @param 3		Name of the client's weapon index variable (will be only valid in the loop).
  */
-#define LOOP_CLIENTWEAPONS(%1,%2,%3) for (new %3, %2=Client_GetNextWeapon(%1, %3); %2 != -1; %2=Client_GetNextWeapon(%1, %3))
+#define LOOP_CLIENTWEAPONS(%1,%2,%3) for (int %3, %2=Client_GetNextWeapon(%1, %3); %2 != -1; %2=Client_GetNextWeapon(%1, %3))
 
 // Hud Element hiding flags (possibly outdated)
 #define	HIDEHUD_WEAPONSELECTION		( 1<<0 )	// Hide ammo count & weapon selection
@@ -154,7 +154,7 @@ stock bool:Client_IsIngameAuthorized(client)
 stock Client_FindBySteamId(const String:auth[])
 {
 	new String:clientAuth[MAX_STEAMAUTH_LENGTH];
-	for (new client=1; client <= MaxClients; client++) {
+	for (int client=1; client <= MaxClients; client++) {
 		if (!IsClientAuthorized(client)) {
 			continue;
 		}
@@ -181,7 +181,7 @@ stock Client_FindBySteamId(const String:auth[])
 stock Client_FindByName(const String:name[], bool:partOfName=true, bool:caseSensitive=false)
 {
 	new String:clientName[MAX_NAME_LENGTH];
-	for (new client=1; client <= MaxClients; client++) {
+	for (int client=1; client <= MaxClients; client++) {
 		if (!IsClientAuthorized(client)) {
 			continue;
 		}
@@ -539,7 +539,7 @@ stock Client_GetClones(client, cloneList[])
 	
 	GetClientIP(client, ip_client, sizeof(client));
 	
-	for (new player=1; player <= MaxClients; player++) {
+	for (int player=1; player <= MaxClients; player++) {
 		
 		if (IsClientInGame(player)) {
 			GetClientIP(player, ip_player, sizeof(ip_player));
@@ -624,7 +624,7 @@ stock Client_GetCount(bool:countInGameOnly=true, bool:countFakeClients=true)
 {
 	new numClients = 0;
 	
-	for (new client=1; client <= MaxClients; client++) {
+	for (int client=1; client <= MaxClients; client++) {
 		
 		if (!IsClientConnected(client)) {
 			continue;
@@ -1268,7 +1268,7 @@ stock bool:Client_RemoveWeapon(client, const String:className[], bool:firstOnly=
 {
 	new offset = Client_GetWeaponsOffset(client) - 4;
 
-	for (new i=0; i < MAX_WEAPONS; i++) {
+	for (int i=0; i < MAX_WEAPONS; i++) {
 		offset += 4;
 
 		new weapon = GetEntDataEnt2(client, offset);
@@ -1316,7 +1316,7 @@ stock Client_RemoveAllWeapons(client, const String:exclude[]="", bool:clearAmmo=
 	new offset = Client_GetWeaponsOffset(client) - 4;
 	
 	new numWeaponsRemoved = 0;
-	for (new i=0; i < MAX_WEAPONS; i++) {
+	for (int i=0; i < MAX_WEAPONS; i++) {
 		offset += 4;
 
 		new weapon = GetEntDataEnt2(client, offset);
@@ -1369,7 +1369,7 @@ stock Client_GetWeapon(client, const String:className[])
 {
 	new offset = Client_GetWeaponsOffset(client) - 4;
 	new weapon = INVALID_ENT_REFERENCE;
-	for (new i=0; i < MAX_WEAPONS; i++) {
+	for (int i=0; i < MAX_WEAPONS; i++) {
 		offset += 4;
 		
 		weapon = GetEntDataEnt2(client, offset);
@@ -1447,7 +1447,7 @@ stock Client_GetFirstWeapon(client)
 {
 	new offset = Client_GetWeaponsOffset(client) - 4;
 
-	for (new i=0; i < MAX_WEAPONS; i++) {
+	for (int i=0; i < MAX_WEAPONS; i++) {
 		offset += 4;
 
 		new weapon = GetEntDataEnt2(client, offset);
@@ -1474,7 +1474,7 @@ stock Client_GetWeaponCount(client)
 	
 	new offset = Client_GetWeaponsOffset(client) - 4;
 
-	for (new i=0; i < MAX_WEAPONS; i++) {
+	for (int i=0; i < MAX_WEAPONS; i++) {
 		offset += 4;
 
 		new weapon = GetEntDataEnt2(client, offset);
@@ -1745,7 +1745,7 @@ stock Client_PrintHintTextToAll(const String:format[], any:...)
 {
 	decl String:buffer[254];
 	
-	for (new client=1; client <= MaxClients; client++) {
+	for (int client=1; client <= MaxClients; client++) {
 
 		if (!IsClientInGame(client)) {
 			continue;
@@ -1808,7 +1808,7 @@ stock Client_PrintKeyHintTextToAll(const String:format[], any:...)
 {
 	decl String:buffer[254];
 	
-	for (new client=1; client <= MaxClients; client++) {
+	for (int client=1; client <= MaxClients; client++) {
 
 		if (!IsClientInGame(client)) {
 			continue;
@@ -1957,7 +1957,7 @@ stock Client_PrintToChatAll(bool:isChat, const String:format[], any:...)
 		language,
 		lastLanguage = -1;
 
-	for (new client=1; client <= MaxClients; client++) {
+	for (int client=1; client <= MaxClients; client++) {
 
 		if (!IsClientInGame(client)) {
 			continue;
@@ -2007,7 +2007,7 @@ stock Client_PrintToChatEx(clients[], numClients, bool:isChat, const String:form
 		language,
 		lastLanguage = -1;
 
-	for (new i=0; i < numClients; i++) {
+	for (int i=0; i < numClients; i++) {
 
 		client = clients[i];
 
@@ -2266,7 +2266,7 @@ stock bool:Client_IsInAdminGroup(client, const String:groupName[], bool:caseSens
 	decl String:groupname[64];
 
 	// Loop through each group.
-	for (new i = 0; i < count; i++) {
+	for (int i = 0; i < count; i++) {
 		// Get group name.
 		GetAdminGroup(adminId, i, groupname, sizeof(groupname));
 		
@@ -2672,7 +2672,7 @@ stock bool:Client_MatchesFilter(client, flags)
 stock Client_Get(clients[], flags=CLIENTFILTER_ALL)
 {
 	new x=0;
-	for (new client = 1; client <= MaxClients; client++) {
+	for (int client = 1; client <= MaxClients; client++) {
 
 		if (!Client_MatchesFilter(client, flags)) {
 			continue;
@@ -2716,7 +2716,7 @@ stock Client_GetRandom(flags=CLIENTFILTER_ALL)
  */
 stock Client_GetNext(flags, start=1)
 {
-	for (new client=start; client <= MaxClients; client++) {
+	for (int client=start; client <= MaxClients; client++) {
 
 		if (Client_MatchesFilter(client, flags)) {
 			return client;
@@ -2845,7 +2845,7 @@ public __smlib_GetPlayersInRadius_Sort(player1, player2, const clients[], Handle
  */
 stock Client_GetNextObserver(client, start=1, flags=CLIENTFILTER_ALL)
 {
-	for (new player=start; player <= MaxClients; player++) {
+	for (int player=start; player <= MaxClients; player++) {
 
 		if (Client_MatchesFilter(player, CLIENTFILTER_OBSERVERS | flags)) {
 
@@ -2880,7 +2880,7 @@ stock Client_GetPlayerManager()
 
 	new maxEntities = GetMaxEntities();
 
-	for (new entity=0; entity < maxEntities; entity++) {
+	for (int entity=0; entity < maxEntities; entity++) {
 
 		if (!Entity_IsValid(entity)) {
 			continue;
@@ -3019,7 +3019,7 @@ stock Client_PrintToTopAll(r=255, g=255, b=255, a=255, Float:duration=10.0, cons
 		language,
 		lastLanguage = -1;
 	
-	for (new client=1; client <= MaxClients; client++) {
+	for (int client=1; client <= MaxClients; client++) {
 		
 		if (!IsClientInGame(client)) {
 			continue;
@@ -3068,7 +3068,7 @@ stock Client_PrintToTopEx(clients[], numClients, r=255, g=255, b=255, a=255, Flo
 		language,
 		lastLanguage = -1;
 
-	for (new i=0; i < numClients; i++) {
+	for (int i=0; i < numClients; i++) {
 
 		client = clients[i];
 
