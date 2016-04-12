@@ -26,6 +26,8 @@ ConVar gc_bStayWarden;
 ConVar gc_bNoBlock;
 ConVar gc_bColor;
 ConVar gc_bOpen;
+ConVar gc_bBecomeWarden;
+ConVar gc_bChooseRandom;
 ConVar gc_bSounds;
 ConVar gc_bFF;
 ConVar gc_bRandom;
@@ -52,6 +54,7 @@ int Warden = -1;
 int tempwarden[MAXPLAYERS+1] = -1;
 int g_CollisionOffset;
 int opentimer;
+int randomtime;
 int g_iCountStartTime = 9;
 int g_iCountStopTime = 9;
 int g_MarkerColor[] = {255,1,1,255};
@@ -69,10 +72,12 @@ Handle gF_OnWardenDeath = null;
 Handle gF_OnWardenRemovedBySelf = null;
 Handle gF_OnWardenRemovedByAdmin = null;
 Handle g_hOpenTimer=null;
+Handle g_hRandomTimer=null;
 Handle g_iWardenColorRed;
 Handle g_iWardenColorGreen;
 Handle g_iWardenColorBlue;
 Handle countertime = null;
+Handle randomtimer = null;
 
 //Strings
 char g_sHasVoted[1500];
@@ -150,6 +155,9 @@ public void OnPluginStart()
 	AutoExecConfig_CreateConVar("sm_warden_version", PLUGIN_VERSION,	"The version of the SourceMod plugin MyJailBreak - Warden", FCVAR_REPLICATED|FCVAR_SPONLY|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_warden_enable", "1", "0 - disabled, 1 - enable warden");	
 	gc_bBetterNotes = AutoExecConfig_CreateConVar("sm_warden_better_notifications", "1", "0 - disabled, 1 - Will use hint and center text", _, true, 0.0, true, 1.0);
+	gc_bBecomeWarden = AutoExecConfig_CreateConVar("sm_warden_become", "1", "0 - disabled, 1 - enable !w... - player can be warden byself");	
+	gc_bChooseRandom = AutoExecConfig_CreateConVar("sm_warden_choose_random", "1", "0 - disabled, 1 - enable pic random warden after random choose time and there is still no warden");	
+	g_hRandomTimer = AutoExecConfig_CreateConVar("sm_warden_choose_time", "15", "Time in seconds a random warden will picked when no warden was set");
 	gc_bVote = AutoExecConfig_CreateConVar("sm_warden_vote", "1", "0 - disabled, 1 - enable player vote against warden");	
 	gc_bStayWarden = AutoExecConfig_CreateConVar("sm_warden_stay", "1", "0 - disabled, 1 - enable warden stay after round end");	
 	gc_bNoBlock = AutoExecConfig_CreateConVar("sm_warden_noblock", "1", "0 - disabled, 1 - enable setable noblock for warden");	
@@ -221,12 +229,19 @@ public Action Event_RoundStart(Event event, const char[] name, bool dontBroadcas
 		
 	countertime = null;
 	
+	if (randomtimer != null)
+		KillTimer(randomtimer);
+			
+	randomtimer = null;
+	
 	if(gc_bPlugin.BoolValue)	
 	{
 		opentimer = GetConVarInt(g_hOpenTimer);
-		countertime = CreateTimer(1.0, ccounter, _, TIMER_REPEAT);
+		countertime = CreateTimer(1.0, OpenCounter, _, TIMER_REPEAT);
+		randomtime = GetConVarInt(g_hRandomTimer);
+		randomtimer = CreateTimer(1.0, ChooseRandom, _, TIMER_REPEAT);
 	}
-	else if(!gc_bPlugin.BoolValue)
+	else
 	{
 			Warden = -1;
 	}
@@ -338,18 +353,22 @@ public Action BecomeWarden(int client, int args)
 	{
 		if (Warden == -1)
 		{
-			if (GetClientTeam(client) == CS_TEAM_CT)
+			if (gc_bBecomeWarden.BoolValue)
 			{
-				if (IsPlayerAlive(client))
+				if (GetClientTeam(client) == CS_TEAM_CT)
 				{
-				SetTheWarden(client);
-				Call_StartForward(gF_OnWardenCreatedByUser);
-				Call_PushCell(client);
-				Call_Finish();
+					if (IsPlayerAlive(client))
+					{
+					SetTheWarden(client);
+					Call_StartForward(gF_OnWardenCreatedByUser);
+					Call_PushCell(client);
+					Call_Finish();
+					}
+					else CPrintToChat(client, "%t %t", "warden_tag" , "warden_playerdead");
 				}
-				else CPrintToChat(client, "%t %t", "warden_tag" , "warden_playerdead");
+				else CPrintToChat(client, "%t %t", "warden_tag" , "warden_ctsonly");
 			}
-			else CPrintToChat(client, "%t %t", "warden_tag" , "warden_ctsonly");
+			else CPrintToChat(client, "%t %t", "warden_tag" , "warden_nobecome", Warden);
 		}
 		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_exist", Warden);
 	}
@@ -372,6 +391,8 @@ public Action ExitWarden(int client, int args)
 			Warden = -1;
 			Forward_OnWardenRemoved(client);
 			SetEntityRenderColor(client, 255, 255, 255, 255);
+			randomtime = GetConVarInt(g_hRandomTimer);
+			randomtimer = CreateTimer(1.0, ChooseRandom, _, TIMER_REPEAT);
 //			SetEntityModel(client, "models/player/ctm_gsg9.mdl");
 			if(gc_bSounds.BoolValue)	
 			{
@@ -436,7 +457,8 @@ public Action playerDeath(Event event, const char[] name, bool dontBroadcast)
 			PrintCenterTextAll("%t", "warden_dead_nc", client);
 			PrintHintTextToAll("%t", "warden_dead_nc", client);
 		}
-		
+		randomtime = GetConVarInt(g_hRandomTimer);
+		randomtimer = CreateTimer(1.0, ChooseRandom, _, TIMER_REPEAT);
 		Warden = -1;
 		Call_StartForward(gF_OnWardenDeath);
 		Call_PushCell(client);
@@ -658,6 +680,8 @@ void RemoveTheWarden(int client)
 		SetEntityRenderColor(Warden, 255, 255, 255, 255);
 	//	SetEntityModel(client, "models/player/ctm_gsg9.mdl");
 		Warden = -1;
+		randomtime = GetConVarInt(g_hRandomTimer);
+		randomtimer = CreateTimer(1.0, ChooseRandom, _, TIMER_REPEAT);
 		Call_StartForward(gF_OnWardenRemovedBySelf);
 		Call_PushCell(client);
 		Call_Finish();
@@ -1232,7 +1256,7 @@ stock int GetRandomPlayer(int team)
 	int clientCount;
 	for (int i = 1; i <= MaxClients; i++)
 	{
-		if (IsValidClient(i) && (GetClientTeam(i) == team))
+		if (IsPlayerAlive(i) && (GetClientTeam(i) == team))
 		{
 			clients[clientCount++] = i;
 		}
@@ -1240,43 +1264,67 @@ stock int GetRandomPlayer(int team)
 	return (clientCount == 0) ? -1 : clients[GetRandomInt(0, clientCount-1)];
 }
 
-public Action ccounter(Handle timer, Handle pack)
+public Action ChooseRandom(Handle timer, Handle pack)
+{
+	if(gc_bPlugin.BoolValue)
+	{
+		--randomtime;
+		if(randomtime < 1)
+		{
+			if(warden_exist() != 1)
+			{
+				if(gc_bChooseRandom.BoolValue)
+				{
+					int i = GetRandomPlayer(CS_TEAM_CT);
+					if(i > 0)
+					{
+						SetTheWarden(i);
+						CPrintToChatAll("%t %t", "warden_tag", "warden_israndomwarden", i); 
+					}
+				}
+			}
+			if (randomtimer != null)
+				KillTimer(randomtimer);
+			
+			randomtimer = null;
+		}
+	}
+}
+
+public Action OpenCounter(Handle timer, Handle pack)
 {
 	if(gc_bPlugin.BoolValue)
 	{
 		--opentimer;
 		if(opentimer < 1)
 		{
-		if(warden_exist() != 1)	
-		{
-			if(gc_bOpenTimer.BoolValue)	
+			if(warden_exist() != 1)	
 			{
-			SJD_OpenDoors(); 
-			CPrintToChatAll("%t %t", "warden_tag" , "warden_openauto");
-			
-			if (countertime != null)
-				KillTimer(countertime);
-			
-			countertime = null;
+				if(gc_bOpenTimer.BoolValue)	
+				{
+				SJD_OpenDoors(); 
+				CPrintToChatAll("%t %t", "warden_tag" , "warden_openauto");
+				
+				if (countertime != null)
+					KillTimer(countertime);
+				
+				countertime = null;
+				}
+				
 			}
-			
-		}else 
-		if(gc_bOpenTimer.BoolValue)
+			else if(gc_bOpenTimer.BoolValue)
 			{
-			if(gc_bOpenTimerWarden.BoolValue)
-			{
-			SJD_OpenDoors(); 
-			CPrintToChatAll("%t %t", "warden_tag" , "warden_openauto");
-			
-			if (countertime != null)
+				if(gc_bOpenTimerWarden.BoolValue)
+				{
+					SJD_OpenDoors(); 
+					CPrintToChatAll("%t %t", "warden_tag" , "warden_openauto");
+					
+					
+				}
+				else CPrintToChatAll("%t %t", "warden_tag" , "warden_opentime"); 
+				if (countertime != null)
 				KillTimer(countertime);
-			
-			countertime = null;
-			}else
-		CPrintToChatAll("%t %t", "warden_tag" , "warden_opentime"); 
-			if (countertime != null)
-			KillTimer(countertime);
-			countertime = null;
+				countertime = null;
 			} 
 		}
 	}
@@ -1292,6 +1340,9 @@ public Action OpenDoors(int client, int args)
 			{
 				CPrintToChatAll("%t %t", "warden_tag" , "warden_dooropen"); 
 				SJD_OpenDoors();
+				if (countertime != null)
+				KillTimer(countertime);
+				countertime = null;
 			}
 			else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden"); 
 		}
@@ -1302,18 +1353,15 @@ public Action CloseDoors(int client, int args)
 {
 	if(gc_bPlugin.BoolValue)	
 	{
-	if(gc_bOpen.BoolValue)
-	{
-		if (warden_iswarden(client))
+		if(gc_bOpen.BoolValue)
 		{
-			CPrintToChatAll("%t %t", "warden_tag" , "warden_doorclose"); 
-			SJD_CloseDoors();
-			if (countertime != null)
-			KillTimer(countertime);
-			countertime = null;
+			if (warden_iswarden(client))
+			{
+				CPrintToChatAll("%t %t", "warden_tag" , "warden_doorclose"); 
+				SJD_CloseDoors();
+			}
+			else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden"); 
 		}
-		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden"); 
-	}
 	}
 }
 
