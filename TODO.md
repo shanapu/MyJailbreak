@@ -8,6 +8,7 @@ bugs:
 - [x] jihad: Hp & burn for not nearby
 - [x] mp_roundtime 1 after set event on a eventend
 - [ ] catch: Just, sometimes they don't freeze
+- [ ] menu: message on first spawn
 
 must:
 
@@ -56,8 +57,7 @@ must:
 - [x] Freeday: Damage disbaled 
 - [ ] clean up code 
 - [ ] comments
-
-- [ ] 
+- [ ] register plugins to core
 - [ ] some polishing
 
 want:
@@ -111,6 +111,7 @@ want:
 - [ ] 
 
 need?
+- [ ] events on random days? no voting/set
 - [ ] silent mp_roundtime?
 - [ ] jihad: burn dead bodies?
 - [ ] jihad: body counter?

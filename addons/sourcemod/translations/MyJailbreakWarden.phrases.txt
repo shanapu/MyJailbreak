@@ -176,7 +176,7 @@
 	"warden_adminset"
 	{
 		"#format"	"{1:N}"
-		"da"		"Admin: {purple}{1}{default} er warden - Valgt af admin!"		
+		"da"		"Admin: {purple}{1}{default} er warden - Valgt af admin!"
 		"en"		"Admin: {purple}{1}{default} set as Warden"
 		"de"		"Admin: {purple}{1}{default} wurde zum Warden ernannt"
 	}

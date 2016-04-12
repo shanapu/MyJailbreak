@@ -291,7 +291,6 @@ public Action JbMenu(int client, int args)
 		}
 		mainmenu.ExitButton = true;
 		mainmenu.Display(client, MENU_TIME_FOREVER);
-
 	}
 }
 
