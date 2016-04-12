@@ -1,10 +1,9 @@
 "Phrases"
 {
-	
-	"menu_tag"
+	"menu_info" // only color line! working color tags {default}, {darkred}, {red}, {green}, {lightgreen}, {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
 	{
 		"#format"		""
-		"en"			"[MyJailbreak Menu]"
+		"en"			"[{green}MyJailbreak Menu{default}] To open the jailbreak menu press , or type !menu"
 	}	
 	"menu_info_Title"
 	{
