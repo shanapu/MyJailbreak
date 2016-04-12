@@ -30,6 +30,7 @@ ConVar gc_iTruceTime;
 ConVar gc_bOverlays;
 ConVar gc_sOverlayStartPath;
 ConVar g_iSetRoundTime;
+ConVar g_bAllowTP;
 
 //Integers
 int g_iOldRoundTime;
@@ -91,12 +92,19 @@ public void OnPluginStart()
 	HookEvent("round_end", RoundEnd);
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookEvent("hegrenade_detonate", HE_Detonate);
+
 	
 	//FindConVar
+	g_bAllowTP = FindConVar("sv_allow_thirdperson");
 	g_iSetRoundTime = FindConVar("mp_roundtime");
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
+	
+	if(g_bAllowTP == INVALID_HANDLE)
+	{
+		SetFailState("sv_allow_thirdperson not found!");
+	}
 	
 	IsDuckHunt = false;
 	StartDuckHunt = false;
@@ -270,16 +278,19 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 	{
 		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
 		
+		ServerCommand("sm_removewarden");
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_warden_enable", 0);
 		
 		SetCvar("sv_infinite_ammo", 2);
 		
 		SetCvar("sm_weapons_enable", 0);
+		SetConVarInt(g_bAllowTP, 1);
+		
 		IsDuckHunt = true;
 		DuckHuntRound++;
 		StartDuckHunt = false;
-		ServerCommand("sm_removewarden");
+
 		DuckHuntMenu = CreatePanel();
 		Format(info1, sizeof(info1), "%T", "duckhunt_info_Title", LANG_SERVER);
 		SetPanelTitle(DuckHuntMenu, info1);
@@ -427,10 +438,12 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 		StartDuckHunt = false;
 		DuckHuntRound = 0;
 		Format(g_sHasVoted, sizeof(g_sHasVoted), "");
+		
 		SetCvar("sm_hosties_lr", 1);
 		SetCvar("sm_weapons_enable", 1);
 		SetCvar("sv_infinite_ammo", 0);
 		SetCvar("sm_warden_enable", 1);
+		SetConVarInt(g_bAllowTP, 0);
 		g_iSetRoundTime.IntValue = g_iOldRoundTime;
 		SetEventDay("none");
 		CPrintToChatAll("%t %t", "duckhunt_tag" , "duckhunt_end");

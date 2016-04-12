@@ -24,6 +24,7 @@ ConVar gc_bSetW;
 ConVar gc_bGrav;
 ConVar gc_fGravValue;
 ConVar gc_bIce;
+ConVar gc_bThirdPerson;
 ConVar gc_fIceValue;
 ConVar gc_iCooldownStart;
 ConVar gc_bSetA;
@@ -34,6 +35,7 @@ ConVar gc_iTruceTime;
 ConVar gc_bOverlays;
 ConVar gc_sOverlayStartPath;
 ConVar g_iSetRoundTime;
+ConVar g_bAllowTP;
 
 //Integers
 int g_iOldRoundTime;
@@ -76,6 +78,7 @@ public void OnPluginStart()
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_knifefight_warden", "1", "0 - disabled, 1 - allow warden to set knifefight round", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	gc_bSetA = AutoExecConfig_CreateConVar("sm_knifefight_admin", "1", "0 - disabled, 1 - allow admin to set knifefight round", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	gc_bVote = AutoExecConfig_CreateConVar("sm_knifefight_vote", "1", "0 - disabled, 1 - allow player to vote for knifefight", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	gc_bThirdPerson = AutoExecConfig_CreateConVar("sm_knifefight_Thirdperson", "1", "0 - disabled, 1 - enable third person for knifefight", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	gc_bGrav = AutoExecConfig_CreateConVar("sm_knifefight_gravity", "1", "0 - disabled, 1 - enable low Gravity for knifefight", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	gc_fGravValue= AutoExecConfig_CreateConVar("sm_knifefight_gravity_value", "0.3","Ratio for Gravity 1.0 earth 0.5 moon", 0, true, 0.1, true, 1.0);
 	gc_bIce = AutoExecConfig_CreateConVar("sm_knifefight_gravity", "1", "0 - disabled, 1 - enable low Gravity for knifefight", FCVAR_NOTIFY, true, 0.0, true, 1.0);
@@ -97,10 +100,16 @@ public void OnPluginStart()
 	HookEvent("round_end", RoundEnd);
 	
 	//Find
+	g_bAllowTP = FindConVar("sv_allow_thirdperson");
 	g_iSetRoundTime = FindConVar("mp_roundtime");
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
+	
+	if(g_bAllowTP == INVALID_HANDLE)
+	{
+		SetFailState("sv_allow_thirdperson not found!");
+	}
 	
 	IsKnifeFight = false;
 	StartKnifeFight = false;
@@ -256,12 +265,13 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 	if (StartKnifeFight)
 	{
 		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
+		ServerCommand("sm_removewarden");
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_weapons_enable", 0);
 		SetCvar("sm_warden_enable", 0);
-		SetCvar("mp_teammates_are_enemies", 1);
+		SetConVarInt(g_bAllowTP, 1);
 		IsKnifeFight = true;
-		ServerCommand("sm_removewarden");
+		
 		KnifeFightRound++;
 		StartKnifeFight = false;
 		SJD_OpenDoors();
@@ -292,20 +302,30 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 				{
 					if (IsClientInGame(client))
 					{
-						
 						if (gc_bGrav.BoolValue)
 						{
-							SetEntityGravity(client, gc_fGravValue.FloatValue);	
+							SetEntityGravity(client, gc_fGravValue.FloatValue);
 						}
 						if (gc_bIce.BoolValue)
 						{
 							SetCvarFloat("sv_friction", gc_fIceValue.FloatValue);
 						}
+						if (gc_bThirdPerson.BoolValue)
+						{
+							ClientCommand(client, "thirdperson");
+						}
 						SendPanelToClient(KnifeFightMenu, client, Pass, 15);
 						SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 						StripAllWeapons(client);
 						GivePlayerItem(client, "weapon_knife");
-						SetEntityHealth(client, 10);
+						if (GetClientTeam(client) == CS_TEAM_CT)
+						{
+							SetEntityHealth(client, 45);
+						}
+						if (GetClientTeam(client) == CS_TEAM_T)
+						{
+							SetEntityHealth(client, 15);
+						}
 					}
 				}
 				g_iTruceTime--;
@@ -390,7 +410,11 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 	{
 		for(int client=1; client <= MaxClients; client++)
 		{
-			if (IsClientInGame(client)) SetEntityGravity(client, 1.0);
+			if (IsClientInGame(client))
+			{
+				SetEntityGravity(client, 1.0);
+				FP(client);
+			}
 		}
 		
 		if (TruceTimer != null) KillTimer(TruceTimer);
@@ -402,9 +426,9 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 		Format(g_sHasVoted, sizeof(g_sHasVoted), "");
 		SetCvar("sm_hosties_lr", 1);
 		SetCvar("sm_weapons_enable", 1);
-		SetCvar("mp_teammates_are_enemies", 0);
 		SetCvar("sm_warden_enable", 1);
 		SetCvarFloat("sv_friction", 5.2);
+		SetConVarInt(g_bAllowTP, 0);
 		
 		g_iSetRoundTime.IntValue = g_iOldRoundTime;
 		SetEventDay("none");
@@ -415,6 +439,11 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 		g_iOldRoundTime = g_iSetRoundTime.IntValue;
 		g_iSetRoundTime.IntValue = gc_iRoundTime.IntValue;
 	}
+}
+
+public Action FP(int client)
+{
+	ClientCommand(client, "firstperson");
 }
 
 public void OnMapEnd()

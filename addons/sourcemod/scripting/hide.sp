@@ -268,6 +268,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 	{
 		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
 		
+		ServerCommand("sm_removewarden");
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("sm_weapons_t", 0);

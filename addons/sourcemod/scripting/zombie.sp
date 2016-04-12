@@ -285,7 +285,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 	if (StartZombie)
 	{
 		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
-		
+		ServerCommand("sm_removewarden");
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_warden_enable", 0);
 		
@@ -297,7 +297,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		ZombieRound++;
 		StartZombie = false;
 		SJD_OpenDoors();
-		ServerCommand("sm_removewarden");
+
 		ZombieMenu = CreatePanel();
 		Format(info1, sizeof(info1), "%T", "zombie_info_Title", LANG_SERVER);
 		SetPanelTitle(ZombieMenu, info1);

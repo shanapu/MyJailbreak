@@ -296,6 +296,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 		StartFreeDay = false;
 		FreeDayRound = 0;
 		Format(g_sHasVoted, sizeof(g_sHasVoted), "");
+		ServerCommand("sm_removewarden");
 		SetCvar("sm_hosties_lr", 1);
 		SetCvar("sm_weapons_enable", 1);
 		SetCvar("mp_teammates_are_enemies", 0);

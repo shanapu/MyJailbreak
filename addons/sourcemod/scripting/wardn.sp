@@ -608,6 +608,7 @@ public Action RemoveWarden(int client, int args)
 {
 	if(Warden != -1)
 	{
+		SetEntityRenderColor(Warden, 255, 255, 255, 255);
 		RemoveTheWarden(client);
 		Call_StartForward(gF_OnWardenRemovedByAdmin);
 		Call_PushCell(client);
@@ -617,29 +618,6 @@ public Action RemoveWarden(int client, int args)
 	return Plugin_Handled;
 	}
 
-/*
-public Action HookPlayerChat(int client, const char[] command, int args)
-{
-	if(Warden == client && client)
-	{
-		char szText[256];
-		GetCmdArg(1, szText, sizeof(szText));
-		
-		if(szText[0] == '/' || szText[0] == '@' || IsChatTrigger())
-			return Plugin_Handled;
-		if(szText[0] == '!')
-			return Plugin_Continue;
-		
-		if(IsClientInGame(client) && IsPlayerAlive(client) && GetClientTeam(client) == CS_TEAM_CT)
-		{
-			CPrintToChatAll("%t {blue}%N{default}: %s", "warden_tag", client, szText);
-			return Plugin_Handled;
-		}
-	}
-	
-	return Plugin_Continue;
-}
-*/
 
 void SetTheWarden(int client)
 {
@@ -676,21 +654,23 @@ void RemoveTheWarden(int client)
 	}
 	
 	if(IsClientInGame(client) && IsPlayerAlive(client) && warden_iswarden(client))
-	SetEntityRenderColor(Warden, 255, 255, 255, 255);
-//	SetEntityModel(client, "models/player/ctm_gsg9.mdl");
-	Warden = -1;
-	Call_StartForward(gF_OnWardenRemovedBySelf);
-	Call_PushCell(client);
-	Call_Finish();
-	Forward_OnWardenRemoved(client);
-	if(gc_bSounds.BoolValue)	
 	{
-		EmitSoundToAllAny(g_sUnWarden);
+		SetEntityRenderColor(Warden, 255, 255, 255, 255);
+	//	SetEntityModel(client, "models/player/ctm_gsg9.mdl");
+		Warden = -1;
+		Call_StartForward(gF_OnWardenRemovedBySelf);
+		Call_PushCell(client);
+		Call_Finish();
+		Forward_OnWardenRemoved(client);
+		if(gc_bSounds.BoolValue)	
+		{
+			EmitSoundToAllAny(g_sUnWarden);
+		}
+		ResetMarker();
+		g_iVoteCount = 0;
+		Format(g_sHasVoted, sizeof(g_sHasVoted), "");
+		g_sHasVoted[0] = '\0';
 	}
-	ResetMarker();
-	g_iVoteCount = 0;
-	Format(g_sHasVoted, sizeof(g_sHasVoted), "");
-	g_sHasVoted[0] = '\0';
 }
 
 public Action Command_LAW(int client, const char[] command, int argc)

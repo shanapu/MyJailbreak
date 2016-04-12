@@ -61,6 +61,7 @@ must:
 - [ ] some polishing
 
 want:
+- [ ] knife: vote on roundstart for grav skate tp or all
 - [ ] AddFileToDownloadsTable
 - [ ] randomkill from sucide to make bomb
 - [ ] warden: unwarden roundstart and delay old warden.

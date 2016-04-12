@@ -270,14 +270,14 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		{AcceptEntityInput(FogIndex, "TurnOn");}
 		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
 		char info9[255], info10[255], info11[255], info12[255];
-		
+
+		ServerCommand("sm_removewarden");
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("sm_weapons_t", 1);
 		SetCvar("sm_weapons_ct", 1);
 		SetCvar("mp_teammates_are_enemies", 1);
 		SetCvar("mp_friendlyfire", 1);
-		ServerCommand("sm_removewarden");
 		FFARound++;
 		IsFFA = true;
 		StartFFA = false;
