@@ -67,29 +67,27 @@ want:
 - [ ] warden: unwarden roundstart and delay old warden.
 - [ ] warden: icon above head (material or model?)
 - [x] warden: markers
-- [ ] jihad: freeze by activate bool
-- [ ] new day: knife only (ice skate/third person?)
+- [x] jihad: freeze by activate bool
+- [x] new day: knife only (ice skate/third person?)
 - [ ] new day: A day where you spawn with one single low random weapon and get 500 HP :D
 - [ ] warden: improve markers (2 kind)
 - [ ] warden: limits
-- [ ] warden: pick random if no given/always
+- [x] warden: pick random if there is no warden
 - [ ] make ShowOverlayFreeze/start/delete to once
-- [ ] valid client and co to inc
+- [x] valid client and co to inc
 - [ ] warden: ff not for ct
-- [ ] jihad: burn dead bodies
-- [ ] jihad: body counter
 - [ ] playertags: add VIP flag
 - [ ] playertags: define colorize chat tag
 - [x] noscope: dis/enable lowgrav
 - [x] noscope: set grav
-- [ ] warden: talkpower
+- [ ] warden: talkpower per menu only some sec https://forums.alliedmods.net/showthread.php?t=257229
 - [x] jihad: set radius
 - [x] jihad: bool movement on bomb activate
-- [ ] countdown: start stop sound
+- [x] countdown: start stop sound
 - [ ] warden: bomb toss https://github.com/KissLick/TeamGames/blob/master/addons/sourcemod/scripting/modules/TG_BombToss.sp
-- [ ] countdown: set time - or menu with differnt times?!?!
+- [x] countdown: set time - or menu with differnt times?!?!
 - [ ] warden: mathboard
-- [ ] warden: !w or random warden
+- [x] warden: !w or random warden
 - [ ] warden: color prisioners (color roulette)
 - [x] weapons: open menu on spawn bool
 - [ ] weapons: set menu delay
@@ -98,12 +96,10 @@ want:
 - [x] menu: set menu time
 - [ ] menu: set menu delay
 - [ ] weapons: menu spawn timing
-- [ ] duckhunt: hunter hp
-- [ ] duckhunt: chicken hp
 - [ ] duckhunt: chicken only secAttack
 - [ ] duckhunt: chicken size
 - [ ] zombie: hp
-- [ ] zombie: atmo sounds
+- [ ] zombie: atmo sounds <- start soudn ;)
 - [x] zombie: define model
 - [ ] war&ffa/all?: define how many rounds to play
 - [ ] all days: set panel time/delay
@@ -111,8 +107,15 @@ want:
 - [ ] all change SetCvar to https://wiki.alliedmods.net/ConVars_(SourceMod_Scripting)#Using.2FChanging_Values
 - [ ] hide: MovementValue hider/seeker
 - [ ] new day: Tron like - all player Molotov rain https://forums.alliedmods.net/showthread.php?p=2398902
-- [ ] all change SetCvar to https://wiki.alliedmods.net/ConVars_(SourceMod_Scripting)#Using.2FChanging_Values
+- [ ] all change SetCvar to https://wiki.alliedmods.nwwet/ConVars_(SourceMod_Scripting)#Using.2FChanging_Values
 - [ ] 
+
+need?
+- [ ] silent mp_roundtime?
+- [ ] jihad: burn dead bodies?
+- [ ] jihad: body counter?
+- [ ] duckhunt: hunter hp
+- [ ] duckhunt: chicken hp
 
 future:
 - [ ] rewrite/merge to one master plugin (e.g. hosties,ttt..)

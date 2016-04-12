@@ -2,37 +2,43 @@
 {
 	"tags_TA"
 	{
-		"da"		"[Fange & Admin]"	
-		"en"		"[Prisoner & Admin]"
+		"da"		"[Fange&Admin]"	
+		"en"		"[Prisoner&Admin]"
+		"de"		"[Häftling&Admin]"
 	}
 	
 	"tags_T"
 	{
 		"en"		"[Fange]"	
 		"en"		"[Prisoner]"
+		"de"		"[Häftling]"
 	}
 	
 	"tags_CTA"
 	{
-		"da"		"[Vagt & Admin]"	
-		"en"		"[Guard & Admin]"
+		"da"		"[Vagt&Admin]"	
+		"en"		"[Guard&Admin]"
+		"de"		"[Wärter&Admin]"
 	}
 	
 	"tags_CT"
 	{
 		"da"		"[Vagt]"	
 		"en"		"[Guard]"
+		"de"		"[Wärter]"
 	}
 	
 	"tags_WA"
 	{
-		"da"		"[Warden & Admin]"	
-		"en"		"[Warden & Admin]"
+		"da"		"[Warden&Admin]"	
+		"en"		"[Warden&Admin]"
+		"de"		"[Warden&Admin]"
 	}
 	
 	"tags_W"
 	{
 		"da"		"[Warden]"	
 		"en"		"[Warden]"
+		"de"		"[Warden]"
 	}
 }
