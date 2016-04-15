@@ -435,6 +435,7 @@ public Action EventPlayerTeam(Event event, const char[] name, bool dontBroadcast
 
 public Action CatchEm(int client, int attacker)
 {
+	SetEntityMoveType(client, MOVETYPE_NONE);
 	SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 0.0);
 	SetEntityRenderColor(client, 0, 0, 255, 255);
 	catched[client] = true;
@@ -453,6 +454,7 @@ public Action CatchEm(int client, int attacker)
 
 public Action FreeEm(int client, int attacker)
 {
+	SetEntityMoveType(client, MOVETYPE_WALK);
 	SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
 	SetEntityRenderColor(client, 255, 255, 255, 0);
 	catched[client] = false;
