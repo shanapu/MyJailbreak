@@ -128,11 +128,6 @@ public void OnConfigsExecuted()
 	}
 }
 
-
-
-
-
-
 public Action SetFreeDay(int client,int args)
 {
 	if (gc_bPlugin.BoolValue)
@@ -326,4 +321,5 @@ public void OnMapEnd()
 	g_iVoteCount = 0;
 	FreeDayRound = 0;
 	g_sHasVoted[0] = '\0';
+	SetEventDay("none");
 }

@@ -511,4 +511,5 @@ public void OnMapEnd()
 	g_iVoteCount = 0;
 	FFARound = 0;
 	g_sHasVoted[0] = '\0';
+	SetEventDay("none");
 }
