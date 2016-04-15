@@ -514,7 +514,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 		SetCvar("sm_hosties_lr", 1);
 		SetCvar("sm_weapons_enable", 1);
 		SetCvar("sm_warden_enable", 1);
-		
+		CreateTimer( 0.0, DeleteOverlay, client );
 		g_iSetRoundTime.IntValue = g_iOldRoundTime;
 		SetEventDay("none");
 		
