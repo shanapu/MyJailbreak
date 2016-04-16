@@ -61,6 +61,7 @@ must:
 - [ ] some polishing
 
 want:
+- [ ] all days: restrict map heal station https://forums.alliedmods.net/showthread.php?t=267167
 - [ ] knife: vote on roundstart for grav skate tp or all
 - [ ] AddFileToDownloadsTable
 - [ ] randomkill from sucide to make bomb
@@ -123,7 +124,7 @@ future:
 
 maybe:
 - [ ] beacon for days
-- [ ] all days: restrict map heal station
+
 - [ ] warden: extend roundtime (possible)
 - [ ] all days: admin force end days
 - [ ] warden: color prisioners (& color roulette)
