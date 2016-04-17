@@ -1152,7 +1152,7 @@ public Action StopStartStopCountdown( Handle timer, any client )
 
 public Action ShowOverlayStop( Handle timer, any client ) 
 {
-	if(IsClientInGame(client) && IsClientConnected(client) && !IsFakeClient(client))
+	if(gc_bOverlays.BoolValue && IsClientInGame(client) && IsClientConnected(client) && !IsFakeClient(client))
 	{
 		int iFlag = GetCommandFlags( "r_screenoverlay" ) & ( ~FCVAR_CHEAT ); 
 		SetCommandFlags( "r_screenoverlay", iFlag ); 

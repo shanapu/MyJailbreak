@@ -413,7 +413,7 @@ public Action Zombie(Handle timer)
 				}
 				SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
 			}
-			CreateTimer( 0.0, ShowOverlayStart, client);
+			if(gc_bOverlays.BoolValue) CreateTimer( 0.0, ShowOverlayStart, client);
 			if(gc_bSounds.BoolValue)	
 			{
 				EmitSoundToAllAny(g_sStart);

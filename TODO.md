@@ -2,7 +2,6 @@ sorry for bad spelling and loose cues
 
 bugs:
 
-gc_bOverlays.BoolValue miss
 
 - [ ] can use sometimes weapon menu on first round with plugin disabled?!´
 - [ ] warden model glitch sometimes through floor? (blackscreen) model feature removed

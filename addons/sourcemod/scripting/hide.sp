@@ -404,7 +404,7 @@ public Action Freezed(Handle timer)
 					EmitSoundToAllAny(g_sStart);
 				}
 			}
-			CreateTimer( 0.0, ShowOverlayStart, client);
+			if(gc_bOverlays.BoolValue) CreateTimer( 0.0, ShowOverlayStart, client);
 		}
 	}
 	PrintHintTextToAll("%t", "hide_start_nc");

@@ -407,7 +407,7 @@ public Action KnifeFight(Handle timer)
 					SetEntityGravity(client, gc_fGravValue.FloatValue);	
 				}
 			}
-			CreateTimer( 0.0, ShowOverlayStart, client);
+			if(gc_bOverlays.BoolValue) CreateTimer( 0.0, ShowOverlayStart, client);
 			if(gc_bSounds.BoolValue)	
 			{
 				EmitSoundToAllAny(g_sStart);
