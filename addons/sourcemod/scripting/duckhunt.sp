@@ -4,6 +4,7 @@
 #include <sdktools>
 #include <cstrike>
 #include <wardn>
+#include <emitsoundany>
 #include <smartjaildoors>
 #include <sdkhooks>
 #include <autoexecconfig>
@@ -23,6 +24,8 @@ ConVar gc_bTag;
 ConVar gc_bSetW;
 ConVar gc_bSetA;
 ConVar gc_bVote;
+ConVar gc_bSounds;
+ConVar gc_sSoundStartPath;
 ConVar gc_iCooldownDay;
 ConVar gc_iRoundTime;
 ConVar gc_iCooldownStart;
@@ -46,6 +49,7 @@ Handle DuckHuntMenu;
 //Strings
 
 char g_sHasVoted[1500];
+char g_sSoundStartPath[256];
 char huntermodel[256] = "models/player/custom_player/legacy/tm_phoenix_heavy.mdl";
 
 public Plugin myinfo = {
@@ -65,7 +69,6 @@ public void OnPluginStart()
 	//Client Commands
 	RegConsoleCmd("sm_setduckhunt", SetDuckHunt);
 	RegConsoleCmd("sm_duckhunt", VoteDuckHunt);
-	RegConsoleCmd("sm_duck", VoteDuckHunt);
 	
 	//AutoExecConfig
 	AutoExecConfig_SetFile("MyJailbreak_duckhunt");
@@ -80,8 +83,10 @@ public void OnPluginStart()
 	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_duckhunt_trucetime", "15", "Time freeze duckhunts");
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_duckhunt_cooldown_day", "3", "Rounds cooldown after a event until this event can startet");
 	gc_iCooldownStart = AutoExecConfig_CreateConVar("sm_duckhunt_cooldown_start", "3", "Rounds until event can be started after mapchange.", FCVAR_NOTIFY, true, 0.0, true, 255.0);
-	gc_bOverlays = AutoExecConfig_CreateConVar("sm_duckhunt_overlays", "1", "0 - disabled, 1 - enable overlays", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_duckhunt_overlaystart_path", "overlays/MyJailbreak/start" , "Path to the start Overlay DONT TYPE .vmt or .vft");
+	gc_bSounds = AutoExecConfig_CreateConVar("sm_duckhunt_sounds_enable", "1", "0 - disabled, 1 - enable warden sounds");
+	gc_sSoundStartPath = AutoExecConfig_CreateConVar("sm_duckhunt_sounds_start", "music/myjailbreak/start.mp3", "Path to the soundfile which should be played for a start countdown.");
+	gc_bOverlays = AutoExecConfig_CreateConVar("sm_duckhunt_overlays_enable", "1", "0 - disabled, 1 - enable overlays", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_duckhunt_overlays_start", "overlays/MyJailbreak/start" , "Path to the start Overlay DONT TYPE .vmt or .vft");
 	gc_bTag = AutoExecConfig_CreateConVar("sm_duckhunt_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	
 	AutoExecConfig_ExecuteFile();
@@ -92,7 +97,8 @@ public void OnPluginStart()
 	HookEvent("round_end", RoundEnd);
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookEvent("hegrenade_detonate", HE_Detonate);
-
+	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
+	
 	
 	//FindConVar
 	g_bAllowTP = FindConVar("sv_allow_thirdperson");
@@ -100,6 +106,7 @@ public void OnPluginStart()
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
+	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 	
 	if(g_bAllowTP == INVALID_HANDLE)
 	{
@@ -119,6 +126,11 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 		strcopy(g_sOverlayStart, sizeof(g_sOverlayStart), newValue);
 		if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStart);
 	}
+	else if(convar == gc_sSoundStartPath)
+	{
+		strcopy(g_sSoundStartPath, sizeof(g_sSoundStartPath), newValue);
+		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
+	}
 }
 
 public void OnMapStart()
@@ -132,6 +144,10 @@ public void OnMapStart()
 	PrecacheModel("models/chicken/chicken.mdl", true);
 	PrecacheModel(huntermodel, true);
 	if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStart);
+	if(gc_bSounds.BoolValue)	
+	{
+		PrecacheSoundAnyDownload(g_sSoundStartPath);
+	}	
 	AddFileToDownloadsTable("materials/models/props_farm/chicken_white.vmt");
 	AddFileToDownloadsTable("materials/models/props_farm/chicken_white.vtf");
 	AddFileToDownloadsTable("models/chicken/chicken.dx90.vtx");
@@ -407,6 +423,10 @@ public Action DuckHunt(Handle timer)
 					}
 			}
 			CreateTimer( 0.0, ShowOverlayStart, client);
+			if(gc_bSounds.BoolValue)	
+			{
+				EmitSoundToAllAny(g_sSoundStartPath);
+			}
 		}
 	}
 	PrintHintTextToAll("%t", "duckhunt_start_nc");

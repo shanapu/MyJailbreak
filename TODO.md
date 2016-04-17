@@ -13,7 +13,8 @@ bugs:
 
 must:
 
-- [ ] CHANGE START STOP SOUND!
+- [ ] find better STOP SOUND!
+- [ ] make zeus day
 - [x] Finsih ice skate knife
 - [x] countdown: translation and 10sek fix more times
 - [ ] clean/translate ConVars 
@@ -35,7 +36,6 @@ must:
 - [x] catch: freeze sound & overlay
 - [x] catch: sprint build in
 - [x] catch: freeze overlay stay or just 2sek. bool
-- [ ] zombie: knockbackfix
 - [x] alldays: cooldown cross days
 - [x] zombie: define zombie model
 - [x] warden: unvote
@@ -56,24 +56,29 @@ must:
 - [x] move randomkill from menu to warden
 - [x] hide: freeze hide bool
 - [x] Freeday: Damage disbaled 
+- [ ] duckhunt: chicken only secAttack
 - [ ] clean up code 
 - [ ] comments
 - [ ] register plugins to core
 - [ ] some polishing
+- [ ] custom command support
 
 want:
 - [ ] all days: restrict map heal station https://forums.alliedmods.net/showthread.php?t=267167
 - [ ] knife: vote on roundstart for grav skate tp or all
+- [ ] menu: bool show on days
 - [ ] AddFileToDownloadsTable
 - [ ] randomkill from sucide to make bomb
 - [ ] warden: unwarden roundstart and delay old warden.
 - [ ] warden: icon above head (material or model?)
 - [x] warden: markers
+- [ ] warden: killrandom - are you sure?
+- [ ] zombie: knockbackfix
 - [x] jihad: freeze by activate bool
 - [x] new day: knife only (ice skate/third person?)
 - [ ] new day: A day where you spawn with one single low random weapon and get 500 HP :D
-- [ ] warden: improve markers (2 kind)
-- [ ] warden: limits
+- [ ] warden: improve markers (2 kind)  https://github.com/KissLick/TeamGames/blob/master/addons/sourcemod/scripting/Marks.sp
+- [ ] warden: limits (max x.times in row)
 - [x] warden: pick random if there is no warden
 - [ ] make ShowOverlayFreeze/start/delete to once
 - [x] valid client and co to inc
@@ -98,10 +103,11 @@ want:
 - [x] menu: set menu time
 - [ ] menu: set menu delay
 - [ ] weapons: menu spawn timing
-- [ ] duckhunt: chicken only secAttack
 - [ ] duckhunt: chicken size
 - [ ] zombie: hp
-- [ ] zombie: atmo sounds <- start soudn ;)
+- [ ] duckhunt: hunter hp
+- [ ] duckhunt: chicken hp
+- [x] zombie: atmo sounds <- start soudn ;)
 - [x] zombie: define model
 - [ ] war&ffa/all?: define how many rounds to play
 - [ ] all days: set panel time/delay
@@ -113,19 +119,17 @@ want:
 - [ ] 
 
 need?
-- [ ] events on random days? no voting/set
+- [ ] events on random days? no voting/set - core2
 - [ ] silent mp_roundtime?
 - [ ] jihad: burn dead bodies?
 - [ ] jihad: body counter?
-- [ ] duckhunt: hunter hp
-- [ ] duckhunt: chicken hp
+
 
 future:
 - [ ] rewrite/merge to one master plugin (e.g. hosties,ttt..)
 
 maybe:
 - [ ] beacon for days
-
 - [ ] warden: extend roundtime (possible)
 - [ ] all days: admin force end days
 - [ ] warden: color prisioners (& color roulette)

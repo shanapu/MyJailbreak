@@ -32,7 +32,7 @@ ConVar gc_iFreezeTime;
 ConVar g_iSetRoundTime;
 ConVar gc_sOverlayStartPath;
 ConVar gc_bSounds;
-ConVar gc_sStart;
+ConVar gc_sSoundStartPath;
 
 //Integers
 int g_iOldRoundTime;
@@ -48,7 +48,7 @@ Handle HideMenu;
 
 //Strings
 char g_sHasVoted[1500];
-char g_sStart[256];
+char g_sSoundStartPath[256];
 
 //Float
 float mapFogStart = 0.0;
@@ -72,7 +72,7 @@ public void OnPluginStart()
 	//Client Commands
 	RegConsoleCmd("sm_sethide", SetHide);
 	RegConsoleCmd("sm_hide", VoteHide);
-	RegConsoleCmd("sm_hideindark", VoteHide);
+
 	
 	//AutoExecConfig
 	AutoExecConfig_SetFile("MyJailbreak_hide");
@@ -88,9 +88,9 @@ public void OnPluginStart()
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_hide_cooldown_day", "3", "Rounds cooldown after a event until this event can startet");
 	gc_iCooldownStart = AutoExecConfig_CreateConVar("sm_hide_cooldown_start", "3", "Rounds until event can be started after mapchange.", FCVAR_NOTIFY, true, 0.0, true, 255.0);
 	gc_bSounds = AutoExecConfig_CreateConVar("sm_hide_sounds_enable", "1", "0 - disabled, 1 - enable warden sounds");
-	gc_sStart = AutoExecConfig_CreateConVar("sm_hide_sounds_start", "music/myjailbreak/start.mp3", "Path to the sound which should be played for a start countdown.");
-	gc_bOverlays = AutoExecConfig_CreateConVar("sm_hide_overlays", "1", "0 - disabled, 1 - enable overlays", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_hide_overlaystart_path", "overlays/MyJailbreak/start" , "Path to the start Overlay DONT TYPE .vmt or .vft");
+	gc_sSoundStartPath = AutoExecConfig_CreateConVar("sm_hide_sounds_start", "music/myjailbreak/start.mp3", "Path to the soundfile which should be played for a start countdown.");
+	gc_bOverlays = AutoExecConfig_CreateConVar("sm_hide_overlays_enable", "1", "0 - disabled, 1 - enable overlays", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_hide_overlays_start", "overlays/MyJailbreak/start" , "Path to the start Overlay DONT TYPE .vmt or .vft");
 	gc_bTag = AutoExecConfig_CreateConVar("sm_hide_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	
 	AutoExecConfig_ExecuteFile();
@@ -100,14 +100,14 @@ public void OnPluginStart()
 	HookEvent("round_start", RoundStart);
 	HookEvent("round_end", RoundEnd);
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
-	HookConVarChange(gc_sStart, OnSettingChanged);
+	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
 	
 	//FindConVar
 	g_iSetRoundTime = FindConVar("mp_roundtime");
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
-	gc_sStart.GetString(g_sStart, sizeof(g_sStart));
+	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 	
 	IsHide = false;
 	StartHide = false;
@@ -122,10 +122,10 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 		strcopy(g_sOverlayStart, sizeof(g_sOverlayStart), newValue);
 		if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStart);
 	}
-	else if(convar == gc_sStart)
+	else if(convar == gc_sSoundStartPath)
 	{
-		strcopy(g_sStart, sizeof(g_sStart), newValue);
-		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sStart);
+		strcopy(g_sSoundStartPath, sizeof(g_sSoundStartPath), newValue);
+		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
 	}
 }
 
@@ -140,7 +140,7 @@ public void OnMapStart()
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
 	if(gc_bSounds.BoolValue)	
 	{
-		PrecacheSoundAnyDownload(g_sStart);
+		PrecacheSoundAnyDownload(g_sSoundStartPath);
 	}
 	int ent; 
 	ent = FindEntityByClassname(-1, "env_fog_controller");
@@ -150,7 +150,7 @@ public void OnMapStart()
 	}
 	else
 	{
-		FogIndex = CreateEntityByName("env_fog_controller");
+		FogIndex += CreateEntityByName("env_fog_controller");
 		DispatchSpawn(FogIndex);
 	}
 	DoFog();
@@ -401,7 +401,7 @@ public Action Freezed(Handle timer)
 				}
 				if(gc_bSounds.BoolValue)	
 				{
-					EmitSoundToAllAny(g_sStart);
+					EmitSoundToAllAny(g_sSoundStartPath);
 				}
 			}
 			if(gc_bOverlays.BoolValue) CreateTimer( 0.0, ShowOverlayStart, client);

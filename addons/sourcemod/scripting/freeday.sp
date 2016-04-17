@@ -62,7 +62,7 @@ public void OnPluginStart()
 	//Client Commands
 	RegConsoleCmd("sm_setfreeday", SetFreeDay);
 	RegConsoleCmd("sm_freeday", VoteFreeDay);
-	RegConsoleCmd("sm_fd", VoteFreeDay);
+
 	
 	//AutoExecConfig
 	AutoExecConfig_SetFile("MyJailbreak_freeday");
@@ -73,7 +73,7 @@ public void OnPluginStart()
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_freeday_warden", "1", "0 - disabled, 1 - allow warden to set freeday round", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	gc_bSetA = AutoExecConfig_CreateConVar("sm_freeday_admin", "1", "0 - disabled, 1 - allow admin to set freeday round", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	gc_bVote = AutoExecConfig_CreateConVar("sm_freeday_vote", "1", "0 - disabled, 1 - allow player to vote for freeday", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	gc_bFirst = AutoExecConfig_CreateConVar("sm_freeday_firstround", "1", "0 - disabled, 1 - auto freeday first round", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	gc_bFirst = AutoExecConfig_CreateConVar("sm_freeday_firstround", "1", "0 - disabled, 1 - auto freeday first round after mapstart", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	gc_bDamage = AutoExecConfig_CreateConVar("sm_freeday_damage", "1", "0 - disabled, 1 - enable damage on freedays", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_freeday_roundtime", "5", "Round time for a single freeday round");
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_freeday_cooldown_day", "3", "Rounds until freeday can be started again.");

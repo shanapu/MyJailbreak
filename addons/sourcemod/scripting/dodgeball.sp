@@ -31,7 +31,7 @@ ConVar gc_iCooldownDay;
 ConVar gc_iRoundTime;
 ConVar gc_iTruceTime;
 ConVar gc_bSounds;
-ConVar gc_sStart;
+ConVar gc_sSoundStartPath;
 ConVar gc_bOverlays;
 ConVar gc_sOverlayStartPath;
 ConVar g_iSetRoundTime;
@@ -49,7 +49,7 @@ Handle DodgeBallMenu;
 
 //Strings
 char g_sHasVoted[1500];
-char g_sStart[256];
+char g_sSoundStartPath[256];
 
 public Plugin myinfo = {
 	name = "MyJailbreak - DodgeBall",
@@ -85,9 +85,9 @@ public void OnPluginStart()
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_dodgeball_cooldown_day", "3", "Rounds cooldown after a event until this event can startet");
 	gc_iCooldownStart = AutoExecConfig_CreateConVar("sm_dodgeball_cooldown_start", "3", "Rounds until event can be started after mapchange.", FCVAR_NOTIFY, true, 0.0, true, 255.0);
 	gc_bSounds = AutoExecConfig_CreateConVar("sm_dodgeball_sounds_enable", "1", "0 - disabled, 1 - enable warden sounds");
-	gc_sStart = AutoExecConfig_CreateConVar("sm_dodgeball_sounds_start", "music/myjailbreak/start.mp3", "Path to the sound which should be played for a start countdown.");
-	gc_bOverlays = AutoExecConfig_CreateConVar("sm_dodgeball_overlays", "1", "0 - disabled, 1 - enable overlays", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_dodgeball_overlaystart_path", "overlays/MyJailbreak/start" , "Path to the start Overlay DONT TYPE .vmt or .vft");
+	gc_sSoundStartPath = AutoExecConfig_CreateConVar("sm_dodgeball_sounds_start", "music/myjailbreak/start.mp3", "Path to the soundfile which should be played for a start countdown.");
+	gc_bOverlays = AutoExecConfig_CreateConVar("sm_dodgeball_overlays_enable", "1", "0 - disabled, 1 - enable overlays", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_dodgeball_overlays_start", "overlays/MyJailbreak/start" , "Path to the start Overlay DONT TYPE .vmt or .vft");
 	gc_bTag = AutoExecConfig_CreateConVar("sm_dodgeball_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	
 	AutoExecConfig_ExecuteFile();
@@ -98,14 +98,14 @@ public void OnPluginStart()
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookEvent("round_end", RoundEnd);
 	HookEvent("hegrenade_detonate", HE_Detonate);
-	HookConVarChange(gc_sStart, OnSettingChanged);
+	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
 	
 	//Find
 	g_iSetRoundTime = FindConVar("mp_roundtime");
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
-	gc_sStart.GetString(g_sStart, sizeof(g_sStart));
+	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 	
 	IsDodgeBall = false;
 	StartDodgeBall = false;
@@ -120,10 +120,10 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 		strcopy(g_sOverlayStart, sizeof(g_sOverlayStart), newValue);
 		if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStart);
 	}
-	else if(convar == gc_sStart)
+	else if(convar == gc_sSoundStartPath)
 	{
-		strcopy(g_sStart, sizeof(g_sStart), newValue);
-		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sStart);
+		strcopy(g_sSoundStartPath, sizeof(g_sSoundStartPath), newValue);
+		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
 	}
 }
 
@@ -132,7 +132,7 @@ public void OnMapStart()
 	if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStart);
 	if(gc_bSounds.BoolValue)	
 	{
-		PrecacheSoundAnyDownload(g_sStart);
+		PrecacheSoundAnyDownload(g_sSoundStartPath);
 	}
 	g_iVoteCount = 0;
 	DodgeBallRound = 0;
@@ -399,7 +399,7 @@ public Action DodgeBall(Handle timer)
 			if(gc_bOverlays.BoolValue) CreateTimer( 0.0, ShowOverlayStart, client);
 			if(gc_bSounds.BoolValue)	
 			{
-				EmitSoundToAllAny(g_sStart);
+				EmitSoundToAllAny(g_sSoundStartPath);
 			}
 		}
 	}

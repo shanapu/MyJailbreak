@@ -36,7 +36,7 @@ ConVar gc_iTruceTime;
 ConVar gc_bOverlays;
 ConVar gc_sOverlayStartPath;
 ConVar gc_bSounds;
-ConVar gc_sStart;
+ConVar gc_sSoundStartPath;
 ConVar g_iSetRoundTime;
 ConVar g_bAllowTP;
 
@@ -53,7 +53,7 @@ Handle KnifeFightMenu;
 
 //Strings
 char g_sHasVoted[1500];
-char g_sStart[256];
+char g_sSoundStartPath[256];
 
 public Plugin myinfo = {
 	name = "MyJailbreak - KnifeFight",
@@ -82,19 +82,19 @@ public void OnPluginStart()
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_knifefight_warden", "1", "0 - disabled, 1 - allow warden to set knifefight round", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	gc_bSetA = AutoExecConfig_CreateConVar("sm_knifefight_admin", "1", "0 - disabled, 1 - allow admin to set knifefight round", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	gc_bVote = AutoExecConfig_CreateConVar("sm_knifefight_vote", "1", "0 - disabled, 1 - allow player to vote for knifefight", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	gc_bThirdPerson = AutoExecConfig_CreateConVar("sm_knifefight_Thirdperson", "1", "0 - disabled, 1 - enable third person for knifefight", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	gc_bThirdPerson = AutoExecConfig_CreateConVar("sm_knifefight_thirdperson", "1", "0 - disabled, 1 - enable thirdperson for knifefight", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	gc_bGrav = AutoExecConfig_CreateConVar("sm_knifefight_gravity", "1", "0 - disabled, 1 - enable low Gravity for knifefight", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	gc_fGravValue= AutoExecConfig_CreateConVar("sm_knifefight_gravity_value", "0.3","Ratio for Gravity 1.0 earth 0.5 moon", 0, true, 0.1, true, 1.0);
-	gc_bIce = AutoExecConfig_CreateConVar("sm_knifefight_gravity", "1", "0 - disabled, 1 - enable low Gravity for knifefight", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	gc_fIceValue= AutoExecConfig_CreateConVar("sm_knifefight_gravity_value", "1.0","Ratio iceskate (5.2 normal)", 0, true, 0.5, true, 5.2);
+	gc_bIce = AutoExecConfig_CreateConVar("sm_knifefight_iceskate", "1", "0 - disabled, 1 - enable iceskate for knifefight", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	gc_fIceValue= AutoExecConfig_CreateConVar("sm_knifefight_iceskate_value", "1.0","Ratio iceskate (5.2 normal)", 0, true, 0.5, true, 5.2);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_knifefight_roundtime", "5", "Round time for a single knifefight round");
 	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_knifefight_trucetime", "15", "Time for no damage");
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_knifefight_cooldown_day", "3", "Rounds cooldown after a event until this event can startet");
 	gc_iCooldownStart = AutoExecConfig_CreateConVar("sm_knifefight_cooldown_start", "3", "Rounds until event can be started after mapchange.", FCVAR_NOTIFY, true, 0.0, true, 255.0);
 	gc_bSounds = AutoExecConfig_CreateConVar("sm_knifefight_sounds_enable", "1", "0 - disabled, 1 - enable warden sounds");
-	gc_sStart = AutoExecConfig_CreateConVar("sm_knifefight_sounds_start", "music/myjailbreak/start.mp3", "Path to the sound which should be played for a start.");
-	gc_bOverlays = AutoExecConfig_CreateConVar("sm_knifefight_overlays", "1", "0 - disabled, 1 - enable overlays", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_knifefight_overlaystart_path", "overlays/MyJailbreak/start" , "Path to the start Overlay DONT TYPE .vmt or .vft");
+	gc_sSoundStartPath = AutoExecConfig_CreateConVar("sm_knifefight_sounds_start", "music/myjailbreak/start.mp3", "Path to the soundfile which should be played for a start.");
+	gc_bOverlays = AutoExecConfig_CreateConVar("sm_knifefight_overlays_enable", "1", "0 - disabled, 1 - enable overlays", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_knifefight_overlays_start", "overlays/MyJailbreak/start" , "Path to the start Overlay DONT TYPE .vmt or .vft");
 	gc_bTag = AutoExecConfig_CreateConVar("sm_knifefight_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	
 	AutoExecConfig_ExecuteFile();
@@ -104,7 +104,7 @@ public void OnPluginStart()
 	HookEvent("round_start", RoundStart);
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookEvent("round_end", RoundEnd);
-	HookConVarChange(gc_sStart, OnSettingChanged);
+	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
 	
 	//Find
 	g_bAllowTP = FindConVar("sv_allow_thirdperson");
@@ -112,7 +112,7 @@ public void OnPluginStart()
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
-	gc_sStart.GetString(g_sStart, sizeof(g_sStart));
+	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 	
 	if(g_bAllowTP == INVALID_HANDLE)
 	{
@@ -132,10 +132,10 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 		strcopy(g_sOverlayStart, sizeof(g_sOverlayStart), newValue);
 		if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStart);
 	}
-	else if(convar == gc_sStart)
+	else if(convar == gc_sSoundStartPath)
 	{
-		strcopy(g_sStart, sizeof(g_sStart), newValue);
-		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sStart);
+		strcopy(g_sSoundStartPath, sizeof(g_sSoundStartPath), newValue);
+		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
 	}
 }
 
@@ -150,7 +150,7 @@ public void OnMapStart()
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	if(gc_bSounds.BoolValue)	
 	{
-		PrecacheSoundAnyDownload(g_sStart);
+		PrecacheSoundAnyDownload(g_sSoundStartPath);
 	}
 }
 
@@ -410,7 +410,7 @@ public Action KnifeFight(Handle timer)
 			if(gc_bOverlays.BoolValue) CreateTimer( 0.0, ShowOverlayStart, client);
 			if(gc_bSounds.BoolValue)	
 			{
-				EmitSoundToAllAny(g_sStart);
+				EmitSoundToAllAny(g_sSoundStartPath);
 			}
 			
 		}
