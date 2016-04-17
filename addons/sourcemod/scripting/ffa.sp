@@ -4,6 +4,7 @@
 #include <colors>
 #include <sdktools>
 #include <wardn>
+#include <emitsoundany>
 #include <smartjaildoors>
 #include <autoexecconfig>
 #include <myjailbreak>
@@ -27,6 +28,8 @@ ConVar gc_bSpawnCell;
 ConVar gc_iRoundTime;
 ConVar gc_bOverlays;
 ConVar gc_sOverlayStartPath;
+ConVar gc_bSounds;
+ConVar gc_sStart;
 ConVar gc_iCooldownDay;
 ConVar gc_iTruceTime;
 ConVar g_iSetRoundTime;
@@ -52,6 +55,7 @@ Handle FFAMenu;
 
 //Strings
 char g_sHasVoted[1500];
+char g_sStart[256];
 
 public Plugin myinfo = 
 {
@@ -87,6 +91,8 @@ public void OnPluginStart()
 	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_ffa_trucetime", "30", "Time after g_iFreezeTime; damage disbaled");
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_ffa_cooldown_day", "3", "Rounds cooldown after a event until this event can startet");
 	gc_iCooldownStart = AutoExecConfig_CreateConVar("sm_ffa_cooldown_start", "3", "Rounds until event can be started after mapchange.", FCVAR_NOTIFY, true, 0.0, true, 255.0);
+	gc_bSounds = AutoExecConfig_CreateConVar("sm_ffa_sounds_enable", "1", "0 - disabled, 1 - enable start sounds");
+	gc_sStart = AutoExecConfig_CreateConVar("sm_ffa_sounds_start", "music/myjailbreak/start.mp3", "Path to the sound which should be played for a start.");
 	gc_bOverlays = AutoExecConfig_CreateConVar("sm_ffa_overlays", "1", "0 - disabled, 1 - enable overlays", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_ffa_overlaystart_path", "overlays/MyJailbreak/start" , "Path to the start Overlay DONT TYPE .vmt or .vft");
 	gc_bTag = AutoExecConfig_CreateConVar("sm_ffa_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", FCVAR_NOTIFY, true, 0.0, true, 1.0);
@@ -98,12 +104,14 @@ public void OnPluginStart()
 	HookEvent("round_start", RoundStart);
 	HookEvent("round_end", RoundEnd);
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
+	HookConVarChange(gc_sStart, OnSettingChanged);
 	
 	//FindConVar
 	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
 	g_iSetRoundTime = FindConVar("mp_roundtime");
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
+	gc_sStart.GetString(g_sStart, sizeof(g_sStart));
 	
 	IsFFA = false;
 	StartFFA = false;
@@ -118,6 +126,11 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 		strcopy(g_sOverlayStart, sizeof(g_sOverlayStart), newValue);
 		if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStart);
 	}
+	else if(convar == gc_sStart)
+	{
+		strcopy(g_sStart, sizeof(g_sStart), newValue);
+		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sStart);
+	}
 }
 
 public void OnMapStart()
@@ -129,7 +142,10 @@ public void OnMapStart()
 	StartFFA = false;
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iTruceTime = gc_iTruceTime.IntValue;
-	
+	if(gc_bSounds.BoolValue)	
+	{
+		PrecacheSoundAnyDownload(g_sStart);
+	}	
 	int ent; 
 	ent = FindEntityByClassname(-1, "env_fog_controller");
 	if (ent != -1) 
@@ -440,8 +456,12 @@ public Action NoDamage(Handle timer)
 	{
 		if (IsClientInGame(client) && IsPlayerAlive(client)) 
 		{
-		SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
-		CreateTimer( 0.0, ShowOverlayStart, client);
+			SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
+			CreateTimer( 0.0, ShowOverlayStart, client);
+			if(gc_bSounds.BoolValue)	
+			{
+				EmitSoundToAllAny(g_sStart);
+			}
 		}
 	}
 	CPrintToChatAll("%t %t", "ffa_tag" , "ffa_start");

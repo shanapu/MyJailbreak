@@ -4,6 +4,7 @@
 #include <sdktools>
 #include <smartjaildoors>
 #include <wardn>
+#include <emitsoundany>
 #include <autoexecconfig>
 #include <myjailbreak>
 
@@ -27,6 +28,8 @@ ConVar gc_iCooldownDay;
 ConVar gc_iCooldownStart;
 ConVar gc_iFreezeTime;
 ConVar gc_iTruceTime;
+ConVar gc_bSounds;
+ConVar gc_sStart;
 ConVar gc_bOverlays;
 ConVar gc_sOverlayStartPath;
 ConVar g_iSetRoundTime;
@@ -46,6 +49,7 @@ Handle WarMenu;
 
 //Strings
 char g_sHasVoted[1500];
+char g_sStart[256];
 
 //Floats
 float Pos[3];
@@ -84,6 +88,8 @@ public void OnPluginStart()
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_war_roundtime", "5", "Round time for a single war round", FCVAR_NOTIFY, true, 0.0, true, 999.0);
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_war_cooldown_day", "3", "Rounds cooldown after a event until this event can startet", FCVAR_NOTIFY, true, 0.0, true, 255.0);
 	gc_iCooldownStart = AutoExecConfig_CreateConVar("sm_war_cooldown_start", "3", "Rounds until event can be started after mapchange.", FCVAR_NOTIFY, true, 0.0, true, 255.0);
+	gc_bSounds = AutoExecConfig_CreateConVar("sm_war_sounds_enable", "1", "0 - disabled, 1 - enable warden sounds");
+	gc_sStart = AutoExecConfig_CreateConVar("sm_war_sounds_start", "music/myjailbreak/start.mp3", "Path to the sound which should be played for a start countdown.");
 	gc_bOverlays = AutoExecConfig_CreateConVar("sm_war_overlays", "1", "0 - disabled, 1 - enable overlays", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_war_overlaystart_path", "overlays/MyJailbreak/start" , "Path to the start Overlay DONT TYPE .vmt or .vft");
 	gc_bTag = AutoExecConfig_CreateConVar("sm_war_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster", FCVAR_NOTIFY, true, 0.0, true, 1.0);
@@ -95,6 +101,7 @@ public void OnPluginStart()
 	HookEvent("round_start", RoundStart);
 	HookEvent("round_end", RoundEnd);
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
+	HookConVarChange(gc_sStart, OnSettingChanged);
 	
 	//FindConVar
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
@@ -102,6 +109,7 @@ public void OnPluginStart()
 	g_iSetRoundTime = FindConVar("mp_roundtime");
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
+	gc_sStart.GetString(g_sStart, sizeof(g_sStart));
 	
 	g_iVoteCount = 0;
 	WarRound = 0;
@@ -116,10 +124,19 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 		strcopy(g_sOverlayStart, sizeof(g_sOverlayStart), newValue);
 		if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStart);
 	}
+	else if(convar == gc_sStart)
+	{
+		strcopy(g_sStart, sizeof(g_sStart), newValue);
+		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sStart);
+	}
 }
 
 public void OnMapStart()
 {
+	if(gc_bSounds.BoolValue)	
+	{
+		PrecacheSoundAnyDownload(g_sStart);
+	}
 	g_iVoteCount = 0;
 	WarRound = 0;
 	IsWar = false;
@@ -478,6 +495,10 @@ public Action NoDamage(Handle timer)
 		{
 			SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
 			CreateTimer( 0.0, ShowOverlayStart, client);
+			if(gc_bSounds.BoolValue)	
+			{
+				EmitSoundToAllAny(g_sStart);
+			}
 		}
 	}
 	CPrintToChatAll("%t %t", "war_tag" , "war_start");

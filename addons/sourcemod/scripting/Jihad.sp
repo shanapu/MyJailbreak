@@ -46,6 +46,7 @@ ConVar gc_fCooldown;
 ConVar gc_bSprint;
 ConVar gc_fSpeed;
 ConVar gc_fTime;
+ConVar gc_sStart;
 ConVar gc_sSoundPath1;
 ConVar gc_sSoundPath2;
 ConVar g_iSetRoundTime;
@@ -67,6 +68,7 @@ Handle FreezeTimer;
 char g_sSoundPath2[256];
 char g_sSoundPath1[256];
 char g_sHasVoted[1500];
+char g_sStart[256];
 
 
 public Plugin myinfo = {
@@ -109,6 +111,7 @@ public void OnPluginStart()
 	gc_bOverlays = AutoExecConfig_CreateConVar("sm_jihad_overlays", "1", "0 - disabled, 1 - enable overlays", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_start_overlaystart_path", "overlays/MyJailbreak/start" , "Path to the start Overlay DONT TYPE .vmt or .vft");
 	gc_bSounds = AutoExecConfig_CreateConVar("sm_jihad_sounds_enable", "1", "0 - disabled, 1 - enable warden sounds");
+	gc_sStart = AutoExecConfig_CreateConVar("sm_jihad_sounds_start", "music/myjailbreak/start.mp3", "Path to the sound which should be played for a start countdown.");
 	gc_sSoundPath1 = AutoExecConfig_CreateConVar("sm_jihad_sounds_jihad", "music/myjailbreak/jihad.mp3", "Path to the sound which should be played on freeze.");
 	gc_sSoundPath2 = AutoExecConfig_CreateConVar("sm_jihad_sounds_boom", "music/myjailbreak/bombe.mp3", "Path to the sound which should be played on unfreeze.");
 	gc_bSprintUse = AutoExecConfig_CreateConVar("sm_jihad_sprint_button", "1", "Enable/Disable +use button support", 0, true, 0.0, true, 1.0);
@@ -125,6 +128,7 @@ public void OnPluginStart()
 	HookEvent("round_start", RoundStart);
 	HookEvent("player_spawn", Event_PlayerSpawn);
 	HookEvent("round_end", RoundEnd);
+	HookConVarChange(gc_sStart, OnSettingChanged);
 	
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundPath1, OnSettingChanged);
@@ -137,7 +141,8 @@ public void OnPluginStart()
 	gc_sSoundPath1.GetString(g_sSoundPath1, sizeof(g_sSoundPath1));
 	gc_sSoundPath2.GetString(g_sSoundPath2, sizeof(g_sSoundPath2));
 	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
-	
+	gc_sStart.GetString(g_sStart, sizeof(g_sStart));
+
 	AddCommandListener(Command_LAW, "+lookatweapon");
 	
 	IsJiHad = false;
@@ -168,6 +173,11 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 		strcopy(g_sOverlayStart, sizeof(g_sOverlayStart), newValue);
 		if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStart);
 	}
+	else if(convar == gc_sStart)
+	{
+		strcopy(g_sStart, sizeof(g_sStart), newValue);
+		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sStart);
+	}
 }
 
 public Action CS_OnTerminateRound( float &delay, CSRoundEndReason &reason)
@@ -186,8 +196,12 @@ public Action CS_OnTerminateRound( float &delay, CSRoundEndReason &reason)
 
 public void OnMapStart()
 {
-	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundPath1);
-	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundPath2);
+	if(gc_bSounds.BoolValue)	
+	{
+		PrecacheSoundAnyDownload(g_sSoundPath1);
+		PrecacheSoundAnyDownload(g_sSoundPath2);
+		PrecacheSoundAnyDownload(g_sStart);
+	}
 	if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStart);
 	PrecacheSound("player/suit_sprint.wav", true);
 	g_iVoteCount = 0;
@@ -420,15 +434,15 @@ public Action JiHad(Handle timer)
 		g_iFreezeTime--;
 		for (int client=1; client <= MaxClients; client++)
 		if (IsClientInGame(client) && IsPlayerAlive(client))
+		{
+			if (GetClientTeam(client) == CS_TEAM_CT)
 			{
-				if (GetClientTeam(client) == CS_TEAM_CT)
-				{
-					PrintCenterText(client,"%t", "jihad_timetojihad_nc", g_iFreezeTime);
-				}
-				if (GetClientTeam(client) == CS_TEAM_T)
-				{
-					PrintCenterText(client,"%t", "jihad_timetoopen_nc", g_iFreezeTime);
-				}
+				PrintCenterText(client,"%t", "jihad_timetojihad_nc", g_iFreezeTime);
+			}
+			if (GetClientTeam(client) == CS_TEAM_T)
+			{
+				PrintCenterText(client,"%t", "jihad_timetoopen_nc", g_iFreezeTime);
+			}
 		}
 		return Plugin_Continue;
 	}
@@ -445,6 +459,10 @@ public Action JiHad(Handle timer)
 						
 			}
 			CreateTimer( 0.0, ShowOverlayStart, client);
+			if(gc_bSounds.BoolValue)	
+			{
+				EmitSoundToAllAny(g_sStart);
+			}
 		}
 	}
 	SJD_OpenDoors();

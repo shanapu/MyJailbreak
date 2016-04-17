@@ -2,6 +2,8 @@ sorry for bad spelling and loose cues
 
 bugs:
 
+gc_bOverlays.BoolValue miss
+
 - [ ] can use sometimes weapon menu on first round with plugin disabled?!´
 - [ ] warden model glitch sometimes through floor? (blackscreen) model feature removed
 - [x] catch: sprint bug release T
@@ -13,7 +15,7 @@ bugs:
 must:
 
 - [ ] CHANGE START STOP SOUND!
-- [x] Finsih ice stake knife
+- [x] Finsih ice skate knife
 - [x] countdown: translation and 10sek fix more times
 - [ ] clean/translate ConVars 
 - [x] jailbreak user menu
@@ -24,7 +26,7 @@ must:
 - [x] all days: dis/enable vote by player
 - [x] all days: set rounds to wait after mapstart
 - [x] all days: start overlay
-- [ ] all days: start sound
+- [x] all days: start sound
 - [x] all days: msg when deactivated by set
 - [x] 1.7 syntax (ausser weapons)
 - [x] new day: decoy/flash 1hp -> dodgeball

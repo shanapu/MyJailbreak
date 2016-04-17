@@ -4,6 +4,7 @@
 #include <sdktools>
 #include <smartjaildoors>
 #include <wardn>
+#include <emitsoundany>
 #include <colors>
 #include <sdkhooks>
 #include <autoexecconfig>
@@ -34,6 +35,8 @@ ConVar gc_iRoundTime;
 ConVar gc_iTruceTime;
 ConVar gc_bOverlays;
 ConVar gc_sOverlayStartPath;
+ConVar gc_bSounds;
+ConVar gc_sStart;
 ConVar g_iSetRoundTime;
 ConVar g_bAllowTP;
 
@@ -50,6 +53,7 @@ Handle KnifeFightMenu;
 
 //Strings
 char g_sHasVoted[1500];
+char g_sStart[256];
 
 public Plugin myinfo = {
 	name = "MyJailbreak - KnifeFight",
@@ -87,6 +91,8 @@ public void OnPluginStart()
 	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_knifefight_trucetime", "15", "Time for no damage");
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_knifefight_cooldown_day", "3", "Rounds cooldown after a event until this event can startet");
 	gc_iCooldownStart = AutoExecConfig_CreateConVar("sm_knifefight_cooldown_start", "3", "Rounds until event can be started after mapchange.", FCVAR_NOTIFY, true, 0.0, true, 255.0);
+	gc_bSounds = AutoExecConfig_CreateConVar("sm_knifefight_sounds_enable", "1", "0 - disabled, 1 - enable warden sounds");
+	gc_sStart = AutoExecConfig_CreateConVar("sm_knifefight_sounds_start", "music/myjailbreak/start.mp3", "Path to the sound which should be played for a start.");
 	gc_bOverlays = AutoExecConfig_CreateConVar("sm_knifefight_overlays", "1", "0 - disabled, 1 - enable overlays", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_knifefight_overlaystart_path", "overlays/MyJailbreak/start" , "Path to the start Overlay DONT TYPE .vmt or .vft");
 	gc_bTag = AutoExecConfig_CreateConVar("sm_knifefight_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster", FCVAR_NOTIFY, true, 0.0, true, 1.0);
@@ -98,6 +104,7 @@ public void OnPluginStart()
 	HookEvent("round_start", RoundStart);
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookEvent("round_end", RoundEnd);
+	HookConVarChange(gc_sStart, OnSettingChanged);
 	
 	//Find
 	g_bAllowTP = FindConVar("sv_allow_thirdperson");
@@ -105,6 +112,7 @@ public void OnPluginStart()
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
+	gc_sStart.GetString(g_sStart, sizeof(g_sStart));
 	
 	if(g_bAllowTP == INVALID_HANDLE)
 	{
@@ -124,6 +132,11 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 		strcopy(g_sOverlayStart, sizeof(g_sOverlayStart), newValue);
 		if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStart);
 	}
+	else if(convar == gc_sStart)
+	{
+		strcopy(g_sStart, sizeof(g_sStart), newValue);
+		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sStart);
+	}
 }
 
 public void OnMapStart()
@@ -135,6 +148,10 @@ public void OnMapStart()
 	StartKnifeFight = false;
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iTruceTime = gc_iTruceTime.IntValue;
+	if(gc_bSounds.BoolValue)	
+	{
+		PrecacheSoundAnyDownload(g_sStart);
+	}
 }
 
 public void OnConfigsExecuted()
@@ -391,6 +408,10 @@ public Action KnifeFight(Handle timer)
 				}
 			}
 			CreateTimer( 0.0, ShowOverlayStart, client);
+			if(gc_bSounds.BoolValue)	
+			{
+				EmitSoundToAllAny(g_sStart);
+			}
 			
 		}
 	}
