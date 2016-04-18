@@ -60,7 +60,7 @@ public Plugin myinfo = {
 	author = "shanapu & Floody.de, Franc1sco",
 	description = "Jailbreak KnifeFight script",
 	version = PLUGIN_VERSION,
-	url = ""
+	url = "shanapu.de"
 };
 
 public void OnPluginStart()
@@ -467,6 +467,14 @@ public Action FP(int client)
 	ClientCommand(client, "firstperson");
 }
 
+public void OnClientDisconnect(int client)
+{
+	if (IsKnifeFight == true)
+	{
+		FP(client);
+	}
+}
+
 public void OnMapEnd()
 {
 	IsKnifeFight = false;
@@ -475,4 +483,8 @@ public void OnMapEnd()
 	KnifeFightRound = 0;
 	g_sHasVoted[0] = '\0';
 	SetEventDay("none");
+	for(int client=1; client <= MaxClients; client++)
+	{
+		FP(client);
+	}
 }

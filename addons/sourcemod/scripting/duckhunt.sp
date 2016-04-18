@@ -10,6 +10,7 @@
 #include <autoexecconfig>
 #include <myjailbreak>
 
+
 //Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
@@ -57,7 +58,7 @@ public Plugin myinfo = {
 	author = "shanapu & Floody.de, Franc1sco",
 	description = "Jailbreak DuckHunt script",
 	version = PLUGIN_VERSION,
-	url = ""
+	url = "shanapu.de"
 };
 
 public void OnPluginStart()
@@ -98,6 +99,7 @@ public void OnPluginStart()
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookEvent("hegrenade_detonate", HE_Detonate);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
+//	HookEvent("weapon_reload", Reloadweapon);
 	
 	
 	//FindConVar
@@ -298,8 +300,6 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_warden_enable", 0);
 		
-		SetCvar("sv_infinite_ammo", 2);
-		
 		SetCvar("sm_weapons_enable", 0);
 		SetConVarInt(g_bAllowTP, 1);
 		
@@ -340,6 +340,9 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 							SetEntityModel(client, huntermodel);
 							SetEntityHealth(client, 600);
 							GivePlayerItem(client, "weapon_nova");
+//							int iEnt = GivePlayerItem(client, "weapon_nova");
+//							lib_SetWeaponAmmo(iEnt,8,120);
+							
 						}
 						if (GetClientTeam(client) == CS_TEAM_T)
 						{
@@ -371,6 +374,23 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		else if (g_iCoolDown > 0) g_iCoolDown--;
 	}
 }
+
+/* 
+public Action Reloadweapon(Handle event, const char[] name, bool dontBroadcast)
+{
+	if(IsDuckHunt == true)
+	{
+		
+		int iClient = GetClientOfUserId(GetEventInt(event, "userid"));
+		int weapon = GivePlayerItem(iClient, "weapon_nova");
+		
+		if(GetClientTeam(iClient) == CS_TEAM_CT)
+		{
+			SetEntProp(weapon, Prop_Send, "m_iPrimaryReserveAmmoCount", 32);
+		}
+	}
+}
+*/
 
 public Action OnWeaponCanUse(int client, int weapon)
 {
@@ -461,7 +481,6 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 		
 		SetCvar("sm_hosties_lr", 1);
 		SetCvar("sm_weapons_enable", 1);
-		SetCvar("sv_infinite_ammo", 0);
 		SetCvar("sm_warden_enable", 1);
 		SetConVarInt(g_bAllowTP, 0);
 		g_iSetRoundTime.IntValue = g_iOldRoundTime;
@@ -480,12 +499,12 @@ public Action HE_Detonate(Handle event, const char[] name, bool dontBroadcast)
 {
 	if (IsDuckHunt == true)
 	{
-	int target = GetClientOfUserId(GetEventInt(event, "userid"));
-	if (GetClientTeam(target) == 1 && !IsPlayerAlive(target))
-	{
-		return;
-	}
-	GivePlayerItem(target, "weapon_hegrenade");
+		int target = GetClientOfUserId(GetEventInt(event, "userid"));
+		if (GetClientTeam(target) == 1 && !IsPlayerAlive(target))
+		{
+			return;
+		}
+		GivePlayerItem(target, "weapon_hegrenade");
 	}
 	return;
 }
@@ -495,6 +514,14 @@ public Action FP(int client)
 	ClientCommand(client, "firstperson");
 }
 
+public void OnClientDisconnect(int client)
+{
+	if (IsDuckHunt == true)
+	{
+		FP(client);
+	}
+}
+
 public void OnMapEnd()
 {
 	IsDuckHunt = false;
@@ -502,4 +529,8 @@ public void OnMapEnd()
 	g_iVoteCount = 0;
 	DuckHuntRound = 0;
 	g_sHasVoted[0] = '\0';
+	for(int client=1; client <= MaxClients; client++)
+	{
+		FP(client);
+	}
 }
