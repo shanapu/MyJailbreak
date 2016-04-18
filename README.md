@@ -1,17 +1,17 @@
 # MyJailbreak 
 
+A rewrite version of [Franugs Special Jailbreak](https://github.com/Franc1sco/Franug-JailBreak/) and  [eccas, ESK0s & zipcores Jailbreak Warden](http://www.sourcemod.net/plugins.php?cat=0&mod=-1&title=warden&author=&description=&search=1)
+
+## Jailbreak plugin pack for CS:GO Jailserver
+
 ## work in progress! a rough AlphaVersion
 ## Files been updated ~daily so have a look at the last commits. No guarantee everything works well, but it should ;)
-### This is my first public project. please note that the code may is messy, stupid and miscarriage.
+### This is my first public project. please note that the code may is messy, stupid and inconseqent.
 ### I would be happy and very pleased if you wannt to join this project as equal collaborator.
 ### If you own a feature or extention for Jail/Warden that would fit in, i would be happy when you share it with us.
 ### see [todo list](https://git.tf/shanapu/MyJailbreak/blob/master/TODO.md) the "must" part is todo before first release on AM
 ### help me by posting bugs and feature ideas in [Issue list](https://git.tf/shanapu/MyJailbreak/issues)
 ### forks and merge requests are welcome!
-
-A "rewrite" version of [Franugs Special Jailbreak](https://github.com/Franc1sco/Franug-JailBreak/) and  [eccas, ESK0s & zipcores Jailbreak Warden](http://www.sourcemod.net/plugins.php?cat=0&mod=-1&title=warden&author=&description=&search=1)
-
-## Jailbreak plugin pack for CS:GO Jailserver
 
 ### Included Plugins: 
 
@@ -29,7 +29,7 @@ A "rewrite" version of [Franugs Special Jailbreak](https://github.com/Franc1sco/
     - Catch - (CT must catch all T (freeze tag))
     - Duckhunt - (CT(hunter) with nova vs T(chicken in 3th person))
     - Jihad - (Ts got suicde bombs to kill all CTs)
-	- Knife - (Knifefight with switchable grav, ice, and TP)
+	- Knife - (FFA Knifefight with switchable grav, ice, and TP)
 	- Freeday - (auto on first round/damage disabled)
 	
 

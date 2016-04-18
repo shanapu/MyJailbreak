@@ -63,7 +63,7 @@ public Plugin myinfo =
 	author = "shanapu & Floody.de",
 	description = "Jailbreak War FFA script",
 	version = PLUGIN_VERSION,
-	url = ""
+	url = "shanapu.de"
 };
 
 public void OnPluginStart()

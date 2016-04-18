@@ -76,7 +76,7 @@ public Plugin myinfo = {
 	author = "shanapu & Floody.de, Franc1sco",
 	description = "Jailbreak JiHad script",
 	version = PLUGIN_VERSION,
-	url = ""
+	url = "shanapu.de"
 };
 
 public void OnPluginStart()

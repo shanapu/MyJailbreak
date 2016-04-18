@@ -59,7 +59,7 @@ public Plugin myinfo = {
 	author = "shanapu & Floody.de",
 	description = "Jailbreak War script",
 	version = PLUGIN_VERSION,
-	url = ""
+	url = "shanapu.de"
 };
 
 public void OnPluginStart()

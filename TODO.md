@@ -2,18 +2,17 @@ sorry for bad spelling and loose cues
 
 bugs:
 
-
-- [ ] can use sometimes weapon menu on first round with plugin disabled?!´
-- [ ] warden model glitch sometimes through floor? (blackscreen) model feature removed
 - [x] catch: sprint bug release T
 - [x] jihad: Hp & burn for not nearby
 - [x] mp_roundtime 1 after set event on a eventend
 - [ ] catch: Just, sometimes they don't freeze
-- [ ] menu: message on first spawn
+- [ ] menu: infomessage on first spawn
+- [x] Thirdperson: on disconnect make fp
 
 must:
 
 - [ ] find better STOP SOUND!
+- [ ] duckhunt: more ammo for CT
 - [ ] make zeus day
 - [x] Finsih ice skate knife
 - [x] countdown: translation and 10sek fix more times
@@ -41,7 +40,7 @@ must:
 - [x] warden: unvote
 - [x] duckhunt: infi ammo
 - [x] Marker: timer disaprears
-- [x] warden: model
+- [ ] warden: model
 - [x] warden: allow unvote
 - [x] new day: suicid bomber
 - [x] jihad: activate bomb when cells open 

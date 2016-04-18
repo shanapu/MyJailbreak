@@ -98,7 +98,7 @@ public Plugin myinfo = {
 	author = "shanapu, ecca, ESKO & .#zipcore",
 	description = "Jailbreak Warden script",
 	version = PLUGIN_VERSION,
-	url = ""
+	url = "shanapu.de"
 };
 
 public void OnPluginStart() 

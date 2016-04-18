@@ -51,7 +51,7 @@ public Plugin myinfo = {
 	author = "shanapu, Franc1sco",
 	description = "Jailbreak Menu",
 	version = PLUGIN_VERSION,
-	url = ""
+	url = "shanapu.de"
 };
 
 public void OnPluginStart()
