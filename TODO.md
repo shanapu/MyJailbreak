@@ -8,17 +8,17 @@ bugs:
 - [ ] catch: Just, sometimes they don't freeze
 - [ ] menu: infomessage on first spawn
 - [x] Thirdperson: on disconnect make fp
+- [ ] randomkill lighting bold missing
 
 must:
 
 - [ ] find better STOP SOUND!
 - [ ] duckhunt: more ammo for CT
-- [ ] make zeus day
 - [x] Finsih ice skate knife
 - [x] countdown: translation and 10sek fix more times
 - [ ] clean/translate ConVars 
 - [x] jailbreak user menu
-- [ ] make jailbreak menu customizeable (ADD OWN COMMANDS & OWN ORDER)
+- [ ] make jailbreak menu customizeable (ADD OWN COMMANDS & OWN ORDER) -> keyvalues
 - [x] duckhunt: chicken thirdperson
 - [x] all days: remember mp_roundtime for end // https://wiki.alliedmods.net/ConVars_(SourceMod_Scripting)#Using.2FChanging_Values
 - [x] all days: dis/enable set day as admin / warden
@@ -63,11 +63,13 @@ must:
 - [ ] custom command support
 
 want:
+- [ ] make centertext formating PrintCenterText(client, "<font size='30' color='#FF00FF'>test</font>");
 - [ ] all days: restrict map heal station https://forums.alliedmods.net/showthread.php?t=267167
 - [ ] knife: vote on roundstart for grav skate tp or all
 - [ ] menu: bool show on days
 - [ ] AddFileToDownloadsTable
-- [ ] randomkill from sucide to make bomb
+- [ ] make zeus day
+- [x] randomkill smite
 - [ ] warden: unwarden roundstart and delay old warden.
 - [ ] warden: icon above head (material or model?)
 - [x] warden: markers
@@ -93,7 +95,9 @@ want:
 - [ ] warden: bomb toss https://github.com/KissLick/TeamGames/blob/master/addons/sourcemod/scripting/modules/TG_BombToss.sp
 - [x] countdown: set time - or menu with differnt times?!?!
 - [ ] warden: mathboard
+- [x] catch: enable/disbale sprint
 - [x] warden: !w or random warden
+- [ ] menu: noblock insert
 - [ ] warden: color prisioners (color roulette)
 - [x] weapons: open menu on spawn bool
 - [ ] weapons: set menu delay
@@ -127,6 +131,7 @@ need?
 future:
 - [ ] rewrite/merge to one master plugin (e.g. hosties,ttt..)
 
+
 maybe:
 - [ ] beacon for days
 - [ ] warden: extend roundtime (possible)
@@ -137,7 +142,6 @@ maybe:
 - [ ] dice: freeze sound & overlay
 - [ ] dice: healthshot
 - [ ] dice: third person
-- [ ] catch: enable/disbale sprint
 - [ ] dice: switch wsad
 - [ ] refuse: chickensound
 - [ ] capitulate: punish if rebel again

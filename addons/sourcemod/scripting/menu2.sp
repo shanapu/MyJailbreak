@@ -120,7 +120,7 @@ public void OnConfigsExecuted()
 	g_bGunsCT = FindConVar("sm_weapons_ct");
 	g_bGunsT = FindConVar("sm_weapons_t");
 	g_bGuns = FindConVar("sm_weapons_enable");
-	g_bOpen = FindConVar("sm_wardenopen_enable");
+	g_bOpen = FindConVar("sm_warden_open_enable");
 	g_bsetFF = FindConVar("sm_warden_ff");
 	g_bRandom = FindConVar("sm_warden_random");
 	g_bFF = FindConVar("mp_teammates_are_enemies");

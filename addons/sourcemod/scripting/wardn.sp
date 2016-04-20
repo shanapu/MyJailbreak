@@ -14,6 +14,8 @@
 #pragma semicolon 1
 #pragma newdecls required
 
+#define SOUND_THUNDER "ambient/weather/thunder3.wav"
+
 //Bools
 bool IsCountDown = false;
 
@@ -61,6 +63,8 @@ int g_MarkerColor[] = {255,1,1,255};
 int g_iBeamSprite = -1;
 int g_iHaloSprite = -1;
 int g_iSetCountStartStopTime;
+int g_SmokeSprite;
+int g_LightningSprite;
 
 //Handles
 Handle g_fward_onBecome;
@@ -91,6 +95,10 @@ char g_sOverlayStop[256];
 
 //float
 float g_fMakerPos[3];
+
+
+
+
 
 
 public Plugin myinfo = {
@@ -297,7 +305,9 @@ public void OnMapStart()
 	if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStop);
 	g_iBeamSprite = PrecacheModel("materials/sprites/laserbeam.vmt");
 	g_iHaloSprite = PrecacheModel("materials/sprites/glow01.vmt");
-
+	g_SmokeSprite = PrecacheModel("materials/sprites/steam1.vmt");
+	g_LightningSprite = g_iBeamSprite;
+	PrecacheSound(SOUND_THUNDER, true);
 }
 
 public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
@@ -1242,7 +1252,7 @@ public Action KillRandom(int client, int args)
 			int i = GetRandomPlayer(CS_TEAM_T);
 			if(i > 0)
 			{
-				ForcePlayerSuicide(i);
+				PerformSmite(client, i);
 				CPrintToChatAll("%t %t", "warden_tag", "warden_israndomdead", i); 
 			}
 		}
@@ -1256,12 +1266,52 @@ stock int GetRandomPlayer(int team)
 	int clientCount;
 	for (int i = 1; i <= MaxClients; i++)
 	{
-		if (IsPlayerAlive(i) && (GetClientTeam(i) == team))
+		if (IsClientInGame(i) && (GetClientTeam(i) == team))
 		{
 			clients[clientCount++] = i;
 		}
 	}
 	return (clientCount == 0) ? -1 : clients[GetRandomInt(0, clientCount-1)];
+}
+
+public Action PerformSmite(int client, int target)
+{
+	// define where the lightning strike ends
+	float clientpos[3];
+	GetClientAbsOrigin(target, clientpos);
+	clientpos[2] -= 26; // increase y-axis by 26 to strike at player's chest instead of the ground
+	
+	// get random numbers for the x and y starting positions
+	int randomx = GetRandomInt(-500, 500);
+	int randomy = GetRandomInt(-500, 500);
+	
+	// define where the lightning strike starts
+	float startpos[3];
+	startpos[0] = clientpos[0] + randomx;
+	startpos[1] = clientpos[1] + randomy;
+	startpos[2] = clientpos[2] + 800;
+	
+	// define the color of the strike
+	int color[4] = {255, 255, 255, 255};
+	
+	// define the direction of the sparks
+	float dir[3] = {0.0, 0.0, 0.0};
+	
+	TE_SetupBeamPoints(startpos, clientpos, g_LightningSprite, 0, 0, 0, 0.2, 20.0, 10.0, 0, 1.0, color, 3);
+	TE_SendToAll();
+	
+	TE_SetupSparks(clientpos, dir, 5000, 1000);
+	TE_SendToAll();
+	
+	TE_SetupEnergySplash(clientpos, dir, false);
+	TE_SendToAll();
+	
+	TE_SetupSmoke(clientpos, g_SmokeSprite, 5.0, 10);
+	TE_SendToAll();
+	
+	EmitAmbientSound(SOUND_THUNDER, startpos, client, SNDLEVEL_GUNFIRE);
+	
+	ForcePlayerSuicide(target);
 }
 
 public Action ChooseRandom(Handle timer, Handle pack)

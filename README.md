@@ -57,8 +57,8 @@ Chat, Hud & sound notifications about warden/no warden, colorize warden, open/cl
 - sm_vw / sm_votewarden - Allows the player to vote to retire warden
 - sm_open - Allows the warden to open the cell doors
 - sm_close - Allows the warden to close the cell doors
-- sm_noblockon - Allows the warden to enable no block (for the warden ?)
-- sm_noblockon - Allows the warden to disable no block (for the warden ?)
+- sm_noblockon - Allows the warden to enable no block 
+- sm_noblockoff - Allows the warden to disable no block
 - sm_setff - Allows the warden to toggle friendly fire
 - sm_cdmenu - Allows the warden to open the Countdown Menu
 - sm_cdstart - Allows the warden to start a START! Countdown without menu
@@ -622,4 +622,5 @@ based/merged/used code/idea plugins:
 * https://github.com/walmar/ShortSprint
 * https://github.com/KissLick/TeamGames/
 * https://github.com/AG-Headline/Hunger-Games-Beacon
+* https://forums.alliedmods.net/showthread.php?p=1086127
 * if I missed someone, please tell me!
