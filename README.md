@@ -16,7 +16,8 @@ A rewrite version of [Franugs Special Jailbreak](https://github.com/Franc1sco/Fr
 
 ### Included Plugins: 
 
-- Warden - (set/become warden,vote against warden, open cells, set eventdays/countdown/FF/nobock) - need [sjd](https://git.tf/shanapu/MyJailbreak#requires-plugins)
+- Warden - (set/become warden,vote against warden, open cells, set marker/quiz/eventdays/countdown/FF/nobock) - need [scp](https://git.tf/shanapu/MyJailbreak#requires-plugins)
+- Event Days (set/vote a Event for next round) - all need [sjd](https://git.tf/shanapu/MyJailbreak#requires-plugins)&[sjd](https://git.tf/shanapu/MyJailbreak#requires-plugins)
 - Menu - (Player menus for T, CT, Warden & Admin)
 - Weapons - (weapon menus for CT / T in event rounds)
 - PlayerTags - (add player Tags for T, T.Admin, CT, CT.Admin, W, WA.Admin - need [scp](https://git.tf/shanapu/MyJailbreak#requires-plugins)
@@ -66,7 +67,7 @@ Chat, Hud & sound notifications about warden/no warden, colorize warden, open/cl
 - sm_cdstop - Allows the warden to start a STOP! Countdown without menu
 - sm_cdstartstop - Allows the warden to start a START! STOP! Countdown without menu
 - sm_killrandom - Allows the warden to kill a random T
-
+- sm_math  Allows the warden to start a MathQuiz 
 ```
 ##### AdminCommands // ADMFLAG_GENERIC
 ```
@@ -89,6 +90,10 @@ Chat, Hud & sound notifications about warden/no warden, colorize warden, open/cl
 - sm_warden_marker: 0 - disabled, 1 - enable Warden simple markers. Default 1
 - sm_warden_marker_time: Time in seconds marker will disappears. Default 20
 - sm_warden_markerkey: Key to set Makrer - 1 - Look weapon / 2 - Use and shoot / 3 - walk and shoot. Default 3
+- sm_warden_math: 0 - disabled, 1 - enable mathquiz for warden. Default 1	
+- sm_warden_math_min: What should be the minimum number for questions. Default 1
+- sm_warden_math_max: What should be the maximum number for questions. Default 100
+- sm_warden_math_time: Time in seconds to give a answer to a question. Default 10
 - sm_warden_countdown: 0 - disabled, 1 - enable countdown for warden. Default 1
 - sm_warden_overlays_enable: 0 - disabled, 1 - enable overlay for countdown. Default 1
 - sm_warden_overlays_start: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"

@@ -22,6 +22,7 @@ ConVar gc_bTerror;
 ConVar gc_bCTerror;
 ConVar gc_bWarden;
 ConVar gc_bDays;
+ConVar g_bMath;
 ConVar gc_bClose;
 ConVar gc_bStart;
 ConVar g_bFF;
@@ -104,6 +105,7 @@ public void OnConfigsExecuted()
 	}
 	
 	g_bWarden = FindConVar("sm_warden_enable");
+	g_bMath = FindConVar("sm_warden_math");
 	g_bWar = FindConVar("sm_war_enable");
 	g_bFFA = FindConVar("sm_ffa_enable");
 	g_bZombie = FindConVar("sm_zombie_enable");
@@ -176,11 +178,20 @@ public Action JbMenu(int client, int args)
 						mainmenu.AddItem("cellopen", menuinfo3);
 					}
 				}
+				if(g_bMath != null)
+				{
+					if(g_bMath.BoolValue)
+					{
+						Format(menuinfo3, sizeof(menuinfo3), "%T", "menu_math", LANG_SERVER);
+						mainmenu.AddItem("math", menuinfo3);
+					}
+				}
 				if(gc_bDays.BoolValue)
 				{
 					Format(menuinfo5, sizeof(menuinfo5), "%T", "menu_eventdays", LANG_SERVER);
 					mainmenu.AddItem("days", menuinfo5);
 				}
+				
 				if(g_bGuns != null)
 				{
 					if(g_bGuns.BoolValue)
@@ -435,6 +446,14 @@ public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selec
 		else if ( strcmp(info,"days") == 0 ) 
 		{
 			FakeClientCommand(client, "sm_events");
+		}
+		else if ( strcmp(info,"math") == 0 ) 
+		{
+			FakeClientCommand(client, "sm_math");
+			if(!gc_bClose.BoolValue)
+			{
+				JbMenu(client,0);
+			}
 		}
 		else if ( strcmp(info,"admin") == 0 ) 
 		{

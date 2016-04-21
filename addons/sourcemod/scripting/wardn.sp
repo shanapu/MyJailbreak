@@ -9,15 +9,22 @@
 #include <colors>
 #include <autoexecconfig>
 #include <myjailbreak>
+#include <scp>
 
 //Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
 
+//Defines
 #define SOUND_THUNDER "ambient/weather/thunder3.wav"
+#define PLUS				"+"
+#define MINUS				"-"
+#define DIVISOR				"/"
+#define MULTIPL				"*"
 
 //Bools
 bool IsCountDown = false;
+bool IsMathQuiz = false;
 
 //ConVars
 ConVar gc_bOpenTimer;
@@ -33,6 +40,7 @@ ConVar gc_bChooseRandom;
 ConVar gc_bSounds;
 ConVar gc_bFF;
 ConVar gc_bRandom;
+ConVar gc_bMath;
 ConVar gc_bMarker;
 ConVar gc_iMarkerKey;
 ConVar gc_fMarkerTime;
@@ -49,6 +57,10 @@ ConVar gc_sStop;
 ConVar gc_bTag;
 ConVar gc_bBetterNotes;
 ConVar g_bFF;
+ConVar gc_iMinimumNumber;
+ConVar gc_iMaximumNumber;
+ConVar gc_iTimeAnswer;
+
 
 //Integers
 int g_iVoteCount;
@@ -65,6 +77,9 @@ int g_iHaloSprite = -1;
 int g_iSetCountStartStopTime;
 int g_SmokeSprite;
 int g_LightningSprite;
+int g_MathMin;
+int g_MathMax;
+int g_MathResult;
 
 //Handles
 Handle g_fward_onBecome;
@@ -82,6 +97,7 @@ Handle g_iWardenColorGreen;
 Handle g_iWardenColorBlue;
 Handle countertime = null;
 Handle randomtimer = null;
+Handle mathtimer = null;
 
 //Strings
 char g_sHasVoted[1500];
@@ -92,13 +108,11 @@ char g_sWarden[256];
 char g_sSoundStartPath[256];
 char g_sStop[256];
 char g_sOverlayStop[256];
+char g_op[32];
+char g_operators[4][2] = {"+", "-", "/", "*"};
 
 //float
 float g_fMakerPos[3];
-
-
-
-
 
 
 public Plugin myinfo = {
@@ -139,6 +153,7 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_cdstartstop", StartStopCDMenu);
 	RegConsoleCmd("sm_cdstop", SetStopCountDown);
 	RegConsoleCmd("sm_killrandom", KillRandom);
+	RegConsoleCmd("sm_math", CreateMathQuestion);
 	
 	//Admin commands
 	RegAdminCmd("sm_sw", SetWarden, ADMFLAG_GENERIC);
@@ -183,6 +198,10 @@ public void OnPluginStart()
 	gc_bOpenTimer = AutoExecConfig_CreateConVar("sm_warden_open_time_enable", "1", "should doors open automatic 0- no 1 yes");	 // TODO: DONT WORK
 	gc_bOpenTimerWarden = AutoExecConfig_CreateConVar("sm_warden_open_time_warden", "1", "should doors open automatic after sm_warden_open_time when there is a warden? needs sm_warden_open_time_enable 1"); 
 	gc_bColor = AutoExecConfig_CreateConVar("sm_warden_color_enable", "1", "0 - disabled, 1 - enable warden colored");
+	gc_bMath = AutoExecConfig_CreateConVar("sm_warden_math", "1", "0 - disabled, 1 - enable mathquiz for warden");	
+	gc_iMinimumNumber = AutoExecConfig_CreateConVar("sm_warden_math_min", "1", "What should be the minimum number for questions ?");
+	gc_iMaximumNumber = AutoExecConfig_CreateConVar("sm_warden_math_max", "100", "What should be the maximum number for questions ?");
+	gc_iTimeAnswer = AutoExecConfig_CreateConVar("sm_warden_math_time", "10", "Time in seconds to give a answer to a question.");
 	g_iWardenColorRed = AutoExecConfig_CreateConVar("sm_warden_color_red", "0","What color to turn the warden into (set R, G and B values to 255 to disable) (Rgb): x - red value", 0, true, 0.0, true, 255.0);
 	g_iWardenColorGreen = AutoExecConfig_CreateConVar("sm_warden_color_green", "0","What color to turn the warden into (rGb): x - green value", 0, true, 0.0, true, 255.0);
 	g_iWardenColorBlue = AutoExecConfig_CreateConVar("sm_warden_color_blue", "255","What color to turn the warden into (rgB): x - blue value", 0, true, 0.0, true, 255.0);
@@ -195,6 +214,7 @@ public void OnPluginStart()
 //	gc_sModelPath = AutoExecConfig_CreateConVar("sm_warden_model_path", "models/player/custom_player/legacy/security.mdl", "Path to the model for zombies.");
 	gc_bTag = AutoExecConfig_CreateConVar("sm_warden_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", 0, true, 0.0, true, 1.0);
 	
+		
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
 	
@@ -275,6 +295,8 @@ public void OnConfigsExecuted()
 			hTags.SetString(sTags);
 		}
 	}
+	g_MathMin = GetConVarInt(gc_iMinimumNumber);
+	g_MathMax = GetConVarInt(gc_iMaximumNumber);
 }
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
@@ -707,6 +729,109 @@ void RemoveTheWarden(int client)
 	}
 }
 
+public Action EndMathQuestion(Handle timer)
+{
+	SendEndMathQuestion(-1);
+}
+
+public Action CreateMathQuestion(int client, int args)
+{
+	if(gc_bMath.BoolValue)	
+	{
+		if(client == Warden)
+		{
+			int NumOne = GetRandomInt(g_MathMin, g_MathMax);
+			int NumTwo = GetRandomInt(g_MathMin, g_MathMax);
+			
+			Format(g_op, sizeof(g_op), g_operators[GetRandomInt(0,3)]);
+			
+			if(StrEqual(g_op, PLUS))
+			{
+				g_MathResult = NumOne + NumTwo;
+			}
+			else if(StrEqual(g_op, MINUS))
+			{
+				g_MathResult = NumOne - NumTwo;
+			}
+			else if(StrEqual(g_op, DIVISOR))
+			{
+				do
+				{
+					NumOne = GetRandomInt(g_MathMin, g_MathMax);
+					NumTwo = GetRandomInt(g_MathMin, g_MathMax);
+				}
+				while(NumOne % NumTwo != 0);
+				g_MathResult = NumOne / NumTwo;
+			}
+			else if(StrEqual(g_op, MULTIPL))
+			{
+				g_MathResult = NumOne * NumTwo;
+			}
+			
+			CPrintToChatAll("%t %N: %i %s %i = ?? ", "warden_tag", client, NumOne, g_op, NumTwo);
+			IsMathQuiz = true;
+			
+			mathtimer = CreateTimer(GetConVarFloat(gc_iTimeAnswer), EndMathQuestion);
+		}
+		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
+	}
+}
+
+public Action OnChatMessage(int &author, Handle recipients, char[] name, char[] message)
+{
+	if(IsMathQuiz)
+	{
+		char bit[1][5];
+		ExplodeString(message, " ", bit, sizeof bit, sizeof bit[]);
+
+		if(ProcessSolution(author, StringToInt(bit[0])))
+			SendEndMathQuestion(author);
+	}
+}
+
+public bool ProcessSolution(int client, int number)
+{
+	if(g_MathResult == number)
+	{		
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+public void SendEndMathQuestion(int client)
+{
+	if(mathtimer != INVALID_HANDLE)
+	{
+		KillTimer(mathtimer);
+		mathtimer = INVALID_HANDLE;
+	}
+	
+	char answer[100];
+	
+	if(client != -1)
+		Format(answer, sizeof(answer), "%t %t", "warden_tag", "warden_math_correct", client);
+	else
+		Format(answer, sizeof(answer), "%t %t", "warden_tag", "warden_math_time");
+		
+	Handle pack = CreateDataPack();
+	CreateDataTimer(0.3, AnswerQuestion, pack);
+	WritePackString(pack, answer);
+	
+	IsMathQuiz = false;
+}
+
+public Action AnswerQuestion(Handle timer, Handle pack)
+{
+	char str[100];
+	ResetPack(pack);
+	ReadPackString(pack, str, sizeof(str));
+ 
+	CPrintToChatAll(str);
+}
+
 public Action Command_LAW(int client, const char[] command, int argc)
 {
 	if(!gc_bMarker.BoolValue)
@@ -715,7 +840,7 @@ public Action Command_LAW(int client, const char[] command, int argc)
 	if(!client || !IsClientInGame(client) || !IsPlayerAlive(client))
 		return Plugin_Continue;
 		
-	if(!warden_iswarden(client))
+	if(client != Warden)
 		return Plugin_Continue;
 	
 	if(gc_iMarkerKey.IntValue == 1)
@@ -842,12 +967,11 @@ public Action DeleteMarker( Handle timer)
 	ResetMarker();
 }
 
-
 public Action CDMenu(int client, int args)
 {
 	if(gc_bCountDown.BoolValue)
 	{
-		if (warden_iswarden(client))
+		if (client == Warden)
 		{
 			char menuinfo1[255], menuinfo2[255], menuinfo3[255], menuinfo4[255];
 			Format(menuinfo1, sizeof(menuinfo1), "%T", "warden_cdmenu_Title", LANG_SERVER);
@@ -899,7 +1023,7 @@ public Action StartStopCDMenu(int client, int args)
 
 	if(gc_bCountDown.BoolValue)
 	{
-		if (warden_iswarden(client))
+		if (client == Warden)
 		{
 			char menuinfo5[255], menuinfo6[255], menuinfo7[255], menuinfo8[255], menuinfo9[255], menuinfo10[255], menuinfo11[255], menuinfo12[255], menuinfo13[255];
 			Format(menuinfo5, sizeof(menuinfo5), "%T", "warden_cdmenu_Title2", LANG_SERVER);
@@ -989,7 +1113,7 @@ public Action SetStartCountDown(int client, int args)
 {
 	if(gc_bCountDown.BoolValue)
 	{
-		if (warden_iswarden(client))
+		if (client == Warden)
 		{
 			if (!IsCountDown)
 			{
@@ -1009,7 +1133,7 @@ public Action SetStopCountDown(int client, int args)
 {
 	if(gc_bCountDown.BoolValue)
 	{
-		if (warden_iswarden(client))
+		if (client == Warden)
 		{
 			if (!IsCountDown)
 			{
@@ -1029,7 +1153,7 @@ public Action SetStartStopCountDown(int client, int args)
 {
 	if(gc_bCountDown.BoolValue)
 	{
-		if (warden_iswarden(client))
+		if (client == Warden)
 		{
 			if (!IsCountDown)
 			{
@@ -1188,7 +1312,7 @@ public Action noblockon(int client, int args)
 {
 	if(gc_bNoBlock.BoolValue)
 	{
-		if (warden_iswarden(client))
+		if (client == Warden)
 		{
 			for(int i=1; i <= MaxClients; i++) if(IsValidClient(i, true))
 			{
@@ -1205,7 +1329,7 @@ public Action noblockon(int client, int args)
 
 public Action noblockoff(int client, int args)
 { 
-	if (warden_iswarden(client))
+	if (client == Warden)
 	{
 		for(int i=1; i <= MaxClients; i++) if(IsValidClient(i, true))
 		{
@@ -1225,7 +1349,7 @@ public Action ToggleFF(int client, int args)
 	{
 		if (g_bFF.BoolValue) 
 		{
-			if (warden_iswarden(client))
+			if (client == Warden)
 			{
 				g_bFF.BoolValue = false;
 				CPrintToChatAll("%t %t", "warden_tag", "warden_ffisoff" );
@@ -1233,7 +1357,7 @@ public Action ToggleFF(int client, int args)
 			
 		}else
 		{	
-			if (warden_iswarden(client))
+			if (client == Warden)
 			{
 				g_bFF.BoolValue = true;
 				CPrintToChatAll("%t %t", "warden_tag", "warden_ffison" );
@@ -1247,7 +1371,7 @@ public Action KillRandom(int client, int args)
 {
 	if (gc_bRandom.BoolValue) 
 	{
-		if (warden_iswarden(client))
+		if (client == Warden)
 		{
 			int i = GetRandomPlayer(CS_TEAM_T);
 			if(i > 0)
@@ -1386,7 +1510,7 @@ public Action OpenDoors(int client, int args)
 	{
 		if(gc_bOpen.BoolValue)
 		{
-			if (warden_iswarden(client))
+			if (client == Warden)
 			{
 				CPrintToChatAll("%t %t", "warden_tag" , "warden_dooropen"); 
 				SJD_OpenDoors();
@@ -1405,7 +1529,7 @@ public Action CloseDoors(int client, int args)
 	{
 		if(gc_bOpen.BoolValue)
 		{
-			if (warden_iswarden(client))
+			if (client == Warden)
 			{
 				CPrintToChatAll("%t %t", "warden_tag" , "warden_doorclose"); 
 				SJD_CloseDoors();

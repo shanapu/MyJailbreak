@@ -454,5 +454,33 @@
 		"en"		"5 Minutes"
 		"de"		"5 Minuten"
 	}
+	
+	"warden_math_correct"
+	{
+		"#format"	"{1:N}"
+		"en"		"{1} has given a{green} correct answer!"
+		"de"		"{1} hat die{green} richtige Antwort!"
+	}
+	
+	"warden_math_time"
+	{
+		"en"		"Time end! No answer."
+		"de"		"Zeit vorbei! Keine richitige Antwort."
+	}
+	"warden_kill_title"
+	{
+		"en"		"are you sure?"
+		"de"		"bist du dir sicher?"
+	}
+	"warden_kill_yes"
+	{
+		"en"		"yes"
+		"de"		"ja"
+	}
+	"warden_kill_no"
+	{
+		"en"		"no"
+		"de"		"nein"
+	}
 
 }

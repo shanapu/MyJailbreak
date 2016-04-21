@@ -30,6 +30,11 @@
 		"#format"		""
 		"en"			"Event Days"
 	}	
+	"menu_math"
+	{
+		"#format"		""
+		"en"			"Math Quiz"
+	}
 	"menu_guns"
 	{
 		"#format"		""
