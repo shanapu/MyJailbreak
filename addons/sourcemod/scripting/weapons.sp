@@ -52,9 +52,9 @@ enum weapons
 
 public Plugin:myinfo =
 {
-	name = "Jailbreak Weapons",
+	name = "MyJailbreak - Weapons",
 	author = "shanapu, Franc1sco",
-	description = "plugin",
+	description = "Jailbreak weapons script",
 	version = PLUGIN_VERSION,
 	url = "http://www.shanapu.de/"
 };

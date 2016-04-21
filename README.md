@@ -6,6 +6,7 @@ A rewrite version of [Franugs Special Jailbreak](https://github.com/Franc1sco/Fr
 
 ## work in progress! a rough AlphaVersion
 ## Files been updated ~daily so have a look at the last commits. No guarantee everything works well, but it should ;)
+## the uploaded compiled smxs may no uptodate! hav a look to the commits!
 ### This is my first public project. please note that the code may is messy, stupid and inconseqent.
 ### I would be happy and very pleased if you wannt to join this project as equal collaborator.
 ### If you own a feature or extention for Jail/Warden that would fit in, i would be happy when you share it with us.
@@ -35,7 +36,7 @@ A rewrite version of [Franugs Special Jailbreak](https://github.com/Franc1sco/Fr
 
 # Credits: 
 
-## **used code from: ecca, Zipcore, ESK0, Floody.de, Franc1sco, walmar, bara, KissLick, headline, ReFlexPoison** and many other I cant remember unfortunately!
+## **used code from: ecca, Zipcore, ESK0, Floody.de, Franc1sco, walmar, bara, KissLick, headline, Hipster, ReFlexPoison** and many other I cant remember unfortunately!
 # THANKS FOR MAKING FREE SOFTWARE!
 
 # Much Thanks: 
@@ -59,7 +60,7 @@ Chat, Hud & sound notifications about warden/no warden, colorize warden, open/cl
 - sm_close - Allows the warden to close the cell doors
 - sm_noblockon - Allows the warden to enable no block 
 - sm_noblockoff - Allows the warden to disable no block
-- sm_setff - Allows the warden to toggle friendly fire
+- sm_ff - Allows player to see the state and the warden to toggle friendly fire
 - sm_cdmenu - Allows the warden to open the Countdown Menu
 - sm_cdstart - Allows the warden to start a START! Countdown without menu
 - sm_cdstop - Allows the warden to start a STOP! Countdown without menu

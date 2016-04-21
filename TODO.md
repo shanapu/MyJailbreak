@@ -5,10 +5,10 @@ bugs:
 - [x] catch: sprint bug release T
 - [x] jihad: Hp & burn for not nearby
 - [x] mp_roundtime 1 after set event on a eventend
-- [ ] catch: Just, sometimes they don't freeze
+- [x] catch: Just, sometimes they don't freeze
 - [ ] menu: infomessage on first spawn
 - [x] Thirdperson: on disconnect make fp
-- [ ] randomkill lighting bold missing
+- [x] randomkill lighting bold missing
 
 must:
 
@@ -70,6 +70,7 @@ want:
 - [ ] AddFileToDownloadsTable
 - [ ] make zeus day
 - [x] randomkill smite
+- [ ] randomkill switchable bomb, fire....
 - [ ] warden: unwarden roundstart and delay old warden.
 - [ ] warden: icon above head (material or model?)
 - [x] warden: markers
@@ -130,6 +131,7 @@ need?
 
 future:
 - [ ] rewrite/merge to one master plugin (e.g. hosties,ttt..)
+- [ ] remove feature they are still in TG by kisslick 
 
 
 maybe:

@@ -133,7 +133,7 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_close", CloseDoors);
 	RegConsoleCmd("sm_vw", VoteWarden);
 	RegConsoleCmd("sm_votewarden", VoteWarden);
-	RegConsoleCmd("sm_setff", ToggleFF);
+	RegConsoleCmd("sm_ff", ToggleFF);
 	RegConsoleCmd("sm_cdstart", SetStartCountDown);
 	RegConsoleCmd("sm_cdmenu", CDMenu);
 	RegConsoleCmd("sm_cdstartstop", StartStopCDMenu);
@@ -1190,7 +1190,7 @@ public Action noblockon(int client, int args)
 	{
 		if (warden_iswarden(client))
 		{
-			for(int i=1; i <= MaxClients; i++)
+			for(int i=1; i <= MaxClients; i++) if(IsValidClient(i, true))
 			{
 				EnableNoBlock(i);
 			}
@@ -1207,7 +1207,7 @@ public Action noblockoff(int client, int args)
 { 
 	if (warden_iswarden(client))
 	{
-		for(int i=1; i <= MaxClients; i++)
+		for(int i=1; i <= MaxClients; i++) if(IsValidClient(i, true))
 		{
 			EnableBlock(i);	
 		}
