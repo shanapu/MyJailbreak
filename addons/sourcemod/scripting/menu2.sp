@@ -25,6 +25,7 @@ ConVar gc_bDays;
 ConVar g_bMath;
 ConVar gc_bClose;
 ConVar gc_bStart;
+ConVar gc_bWelcome;
 ConVar g_bFF;
 ConVar g_bsetFF;
 ConVar g_bWar;
@@ -81,6 +82,7 @@ public void OnPluginStart()
 	gc_bDays = AutoExecConfig_CreateConVar("sm_menu_days", "1", "0 - disabled, 1 - enable eventdays menu for warden and admin");
 	gc_bClose = AutoExecConfig_CreateConVar("sm_menu_close", "1", "0 - disabled, 1 - enable close menu after action");
 	gc_bStart = AutoExecConfig_CreateConVar("sm_menu_start", "1", "0 - disabled, 1 - enable open menu on every roundstart");
+	gc_bWelcome = AutoExecConfig_CreateConVar("sm_menu_welcome", "1", "Show welcome message to newly connected users.");
 	gc_bTag = AutoExecConfig_CreateConVar("sm_menu_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	
 	AutoExecConfig_ExecuteFile();
@@ -130,7 +132,18 @@ public void OnConfigsExecuted()
 
 public void OnClientPutInServer(int client)
 {
-	CPrintToChat(client, "%t", "menu_info");
+	if (gc_bWelcome.BoolValue)
+	{
+		CreateTimer(30.0, Timer_WelcomeMessage, client);
+	}
+}
+
+public Action Timer_WelcomeMessage(Handle timer, any client)
+{	
+	if (gc_bWelcome.BoolValue && IsClientConnected(client) && IsClientInGame(client) && !IsFakeClient(client))
+	{	
+		CPrintToChat(client, "%t", "menu_info");
+	}
 }
 
 public Action Event_OnPlayerSpawn(Event event, const char[] name, bool dontBroadcast)

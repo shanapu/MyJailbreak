@@ -6,11 +6,12 @@ bugs:
 - [x] jihad: Hp & burn for not nearby
 - [x] mp_roundtime 1 after set event on a eventend
 - [x] catch: Just, sometimes they don't freeze
-- [ ] menu: infomessage on first spawn
 - [x] Thirdperson: on disconnect make fp
 - [x] randomkill lighting bold missing
+- [x] menu: infomessage on first spawn
 
 must:
+
 
 - [ ] find better STOP SOUND!
 - [ ] duckhunt: more ammo for CT
