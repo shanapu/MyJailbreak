@@ -19,7 +19,6 @@ must:
 - [x] countdown: translation and 10sek fix more times
 - [ ] clean/translate ConVars 
 - [x] jailbreak user menu
-- [ ] make jailbreak menu customizeable (ADD OWN COMMANDS & OWN ORDER) -> keyvalues
 - [x] duckhunt: chicken thirdperson
 - [x] all days: remember mp_roundtime for end // https://wiki.alliedmods.net/ConVars_(SourceMod_Scripting)#Using.2FChanging_Values
 - [x] all days: dis/enable set day as admin / warden
@@ -41,7 +40,6 @@ must:
 - [x] warden: unvote
 - [x] duckhunt: infi ammo
 - [x] Marker: timer disaprears
-- [ ] warden: model
 - [x] warden: allow unvote
 - [x] new day: suicid bomber
 - [x] jihad: activate bomb when cells open 
@@ -51,7 +49,6 @@ must:
 - [x] catch: T win when time run out
 - [x] hide: T win when time run out
 - [x] jihad: CT win when time run out
-- [ ] warden: clean changeback model unwarden
 - [x] move FF from menu to warden
 - [x] move randomkill from menu to warden
 - [x] hide: freeze hide bool
@@ -61,9 +58,13 @@ must:
 - [ ] comments
 - [ ] register plugins to core
 - [ ] some polishing
-- [ ] custom command support
+
 
 want:
+- [ ] warden: model
+- [ ] custom command support
+- [ ] warden: clean changeback model unwarden
+- [ ] make jailbreak menu customizeable (ADD OWN COMMANDS & OWN ORDER) -> keyvalues
 - [ ] make centertext formating PrintCenterText(client, "<font size='30' color='#FF00FF'>test</font>");
 - [ ] all days: restrict map heal station https://forums.alliedmods.net/showthread.php?t=267167
 - [ ] knife: vote on roundstart for grav skate tp or all
@@ -85,7 +86,6 @@ want:
 - [x] warden: pick random if there is no warden
 - [ ] make ShowOverlayFreeze/start/delete to once
 - [x] valid client and co to inc
-- [ ] warden: ff not for ct
 - [ ] playertags: add VIP flag
 - [ ] playertags: define colorize chat tag
 - [x] noscope: dis/enable lowgrav
@@ -94,7 +94,6 @@ want:
 - [x] jihad: set radius
 - [x] jihad: bool movement on bomb activate
 - [x] countdown: start stop sound
-- [ ] warden: bomb toss https://github.com/KissLick/TeamGames/blob/master/addons/sourcemod/scripting/modules/TG_BombToss.sp
 - [x] countdown: set time - or menu with differnt times?!?!
 - [ ] warden: mathboard
 - [x] catch: enable/disbale sprint
@@ -108,7 +107,6 @@ want:
 - [x] menu: set menu time
 - [ ] menu: set menu delay
 - [ ] weapons: menu spawn timing
-- [ ] duckhunt: chicken size
 - [ ] zombie: hp
 - [ ] duckhunt: hunter hp
 - [ ] duckhunt: chicken hp
@@ -117,10 +115,9 @@ want:
 - [ ] war&ffa/all?: define how many rounds to play
 - [ ] all days: set panel time/delay
 - [ ] (all days: cfg to add sm_ for event start end)
-- [ ] all change SetCvar to https://wiki.alliedmods.net/ConVars_(SourceMod_Scripting)#Using.2FChanging_Values
 - [ ] hide: MovementValue hider/seeker
 - [ ] new day: Tron like - all player Molotov rain https://forums.alliedmods.net/showthread.php?p=2398902
-- [ ] all change SetCvar to https://wiki.alliedmods.nwwet/ConVars_(SourceMod_Scripting)#Using.2FChanging_Values
+- [ ] warden: bomb toss https://github.com/KissLick/TeamGames/blob/master/addons/sourcemod/scripting/modules/TG_BombToss.sp
 - [ ] 
 
 need?
@@ -128,11 +125,12 @@ need?
 - [ ] silent mp_roundtime?
 - [ ] jihad: burn dead bodies?
 - [ ] jihad: body counter?
+- [ ] warden: ff not for ct?
 
 
 future:
 - [ ] rewrite/merge to one master plugin (e.g. hosties,ttt..)
-- [ ] remove feature they are still in TG by kisslick 
+- [ ] remove features they are still in TG by kisslick 
 
 
 maybe:

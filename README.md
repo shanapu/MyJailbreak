@@ -37,7 +37,7 @@ A rewrite version of [Franugs Special Jailbreak](https://github.com/Franc1sco/Fr
 
 # Credits: 
 
-## **used code from: ecca, Zipcore, ESK0, Floody.de, Franc1sco, walmar, bara, KissLick, headline, Hipster, ReFlexPoison** and many other I cant remember unfortunately!
+## **used code from: ecca, Zipcore, ESK0, Floody.de, Franc1sco, walmar, bara, Arkarr, KissLick, headline, Hipster, ReFlexPoison** and many other I cant remember unfortunately!
 # THANKS FOR MAKING FREE SOFTWARE!
 
 # Much Thanks: 
@@ -623,6 +623,7 @@ based/merged/used code/idea plugins:
 * https://git.tf/Zipcore/Warden
 * https://git.tf/Zipcore/Warden-Sounds
 * https://git.tf/Zipcore/Warden-SimpleMarkers
+* https://forums.alliedmods.net/showthread.php?t=264848
 * https://github.com/Franc1sco/Franug-JailBreak/
 * https://forums.alliedmods.net/showthread.php?t=231473
 * https://github.com/walmar/ShortSprint
