@@ -4,7 +4,7 @@ A rewrite version of [Franugs Special Jailbreak](https://github.com/Franc1sco/Fr
 
 ## Jailbreak plugin pack for CS:GO Jailserver
 
-## work in progress! a rough AlphaVersion
+## work in progress!
 ## Files been updated ~daily so have a look at the last commits. No guarantee everything works well, but it should ;)
 ## the uploaded compiled smxs may no uptodate! hav a look to the commits!
 ### This is my first public project. please note that the code may is messy, stupid and inconseqent.

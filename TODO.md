@@ -15,6 +15,7 @@ must:
 
 - [ ] find better STOP SOUND!
 - [ ] duckhunt: more ammo for CT
+- [ ] duckhunt: chicken only secAttack
 - [x] Finsih ice skate knife
 - [x] countdown: translation and 10sek fix more times
 - [ ] clean/translate ConVars 
@@ -53,7 +54,6 @@ must:
 - [x] move randomkill from menu to warden
 - [x] hide: freeze hide bool
 - [x] Freeday: Damage disbaled 
-- [ ] duckhunt: chicken only secAttack
 - [ ] clean up code 
 - [ ] comments
 - [ ] register plugins to core

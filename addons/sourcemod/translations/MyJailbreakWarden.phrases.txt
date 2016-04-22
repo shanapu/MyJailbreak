@@ -467,6 +467,21 @@
 		"en"		"Time end! No answer."
 		"de"		"Zeit vorbei! Keine richitige Antwort."
 	}
+	
+	"warden_startmathquiz"
+	{
+		"da"		"ADVARSEL! Warden har {purple}startet en  Math Quiz!"
+		"en"		"Attention! The Warden {purple}Started a Math Quiz!"
+		"de"		"Aufgepasst! Der Warden hat ein {purple} Mathe Quiz gestartet!"
+	}
+	
+	"warden_startmathquiz_nc"	// no colors!
+	{
+		"da"		"ADVARSEL! Warden har startet en Math Quiz!"
+		"en"		"Attention! The Warden Started a  Math Quiz!"
+		"de"		"Aufgepasst! Der Warden hat einen Mathe Quiz gestartet!"
+	}
+	
 	"warden_kill_title"
 	{
 		"en"		"are you sure?"

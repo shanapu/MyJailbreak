@@ -60,6 +60,9 @@ ConVar g_bFF;
 ConVar gc_iMinimumNumber;
 ConVar gc_iMaximumNumber;
 ConVar gc_iTimeAnswer;
+ConVar gc_iWardenColorRed;
+ConVar gc_iWardenColorGreen;
+ConVar gc_iWardenColorBlue;
 
 
 //Integers
@@ -92,9 +95,6 @@ Handle gF_OnWardenRemovedBySelf = null;
 Handle gF_OnWardenRemovedByAdmin = null;
 Handle g_hOpenTimer=null;
 Handle g_hRandomTimer=null;
-Handle g_iWardenColorRed;
-Handle g_iWardenColorGreen;
-Handle g_iWardenColorBlue;
 Handle countertime = null;
 Handle randomtimer = null;
 Handle mathtimer = null;
@@ -153,7 +153,7 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_cdstartstop", StartStopCDMenu);
 	RegConsoleCmd("sm_cdstop", SetStopCountDown);
 	RegConsoleCmd("sm_killrandom", KillRandom);
-	RegConsoleCmd("sm_math", CreateMathQuestion);
+	RegConsoleCmd("sm_math", StartMathQuestion);
 	
 	//Admin commands
 	RegAdminCmd("sm_sw", SetWarden, ADMFLAG_GENERIC);
@@ -202,9 +202,9 @@ public void OnPluginStart()
 	gc_iMinimumNumber = AutoExecConfig_CreateConVar("sm_warden_math_min", "1", "What should be the minimum number for questions ?");
 	gc_iMaximumNumber = AutoExecConfig_CreateConVar("sm_warden_math_max", "100", "What should be the maximum number for questions ?");
 	gc_iTimeAnswer = AutoExecConfig_CreateConVar("sm_warden_math_time", "10", "Time in seconds to give a answer to a question.");
-	g_iWardenColorRed = AutoExecConfig_CreateConVar("sm_warden_color_red", "0","What color to turn the warden into (set R, G and B values to 255 to disable) (Rgb): x - red value", 0, true, 0.0, true, 255.0);
-	g_iWardenColorGreen = AutoExecConfig_CreateConVar("sm_warden_color_green", "0","What color to turn the warden into (rGb): x - green value", 0, true, 0.0, true, 255.0);
-	g_iWardenColorBlue = AutoExecConfig_CreateConVar("sm_warden_color_blue", "255","What color to turn the warden into (rgB): x - blue value", 0, true, 0.0, true, 255.0);
+	gc_iWardenColorRed = AutoExecConfig_CreateConVar("sm_warden_color_red", "0","What color to turn the warden into (set R, G and B values to 255 to disable) (Rgb): x - red value", 0, true, 0.0, true, 255.0);
+	gc_iWardenColorGreen = AutoExecConfig_CreateConVar("sm_warden_color_green", "0","What color to turn the warden into (rGb): x - green value", 0, true, 0.0, true, 255.0);
+	gc_iWardenColorBlue = AutoExecConfig_CreateConVar("sm_warden_color_blue", "255","What color to turn the warden into (rgB): x - blue value", 0, true, 0.0, true, 255.0);
 	gc_bSounds = AutoExecConfig_CreateConVar("sm_warden_sounds_enable", "1", "0 - disabled, 1 - enable warden sounds");
 	gc_sWarden = AutoExecConfig_CreateConVar("sm_warden_sounds_warden", "music/myjailbreak/warden.mp3", "Path to the soundfile which should be played for a int warden.");
 	gc_sUnWarden = AutoExecConfig_CreateConVar("sm_warden_sounds_unwarden", "music/myjailbreak/unwarden.mp3", "Path to the soundfile which should be played when there is no warden anymore.");
@@ -295,8 +295,8 @@ public void OnConfigsExecuted()
 			hTags.SetString(sTags);
 		}
 	}
-	g_MathMin = GetConVarInt(gc_iMinimumNumber);
-	g_MathMax = GetConVarInt(gc_iMaximumNumber);
+	g_MathMin = gc_iMinimumNumber.IntValue;
+	g_MathMax = gc_iMaximumNumber.IntValue;
 }
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
@@ -552,7 +552,13 @@ public int m_SetWarden(Menu menu, MenuAction action, int client, int Position)
 					else
 					{
 						Warden = i;
-						CPrintToChatAll("%t %t", "warden_tag" , "warden_new", Warden);
+						CPrintToChatAll("%t %t", "warden_tag" , "warden_new", client);
+		
+						if(gc_bBetterNotes.BoolValue)
+						{
+							PrintCenterTextAll("%t", "warden_new_nc", client);
+							PrintHintTextToAll("%t", "warden_new_nc", client);
+						}
 						CreateTimer(0.5, Timer_WardenFixColor, i, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 						Call_StartForward(gF_OnWardenCreatedByAdmin);
 						Call_PushCell(i);
@@ -576,6 +582,12 @@ public int m_WardenOverwrite(Menu menu, MenuAction action, int client, int Posit
 			int newwarden = GetClientOfUserId(tempwarden[client]);
 			CPrintToChatAll("%t %t", "warden_tag" , "warden_removed", Warden);
 			CPrintToChatAll("%t %t", "warden_tag" , "warden_new", newwarden);
+		
+			if(gc_bBetterNotes.BoolValue)
+			{
+				PrintCenterTextAll("%t", "warden_new_nc", newwarden);
+				PrintHintTextToAll("%t", "warden_new_nc", newwarden);
+			}
 			Warden = newwarden;
 			CreateTimer(0.5, Timer_WardenFixColor, newwarden, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 			Call_StartForward(gF_OnWardenCreatedByAdmin);
@@ -589,12 +601,12 @@ public Action Timer_WardenFixColor(Handle timer,any client)
 {
 	if(IsValidClient(client, true))
 	{
-		int g_iWardenColorRedw;
-		int g_iWardenColorGreenw;
-		int g_iWardenColorBluew;
-		g_iWardenColorRedw = GetConVarInt(g_iWardenColorRed);
-		g_iWardenColorGreenw = GetConVarInt(g_iWardenColorGreen);
-		g_iWardenColorBluew = GetConVarInt(g_iWardenColorBlue);
+		int iWardenColorRed;								// Need this way on new syntax ? 				
+		int iWardenColorGreen;								// Need this way on new syntax ? 	
+		int iWardenColorBlue;								// Need this way on new syntax ? 	
+		iWardenColorRed = gc_iWardenColorRed.IntValue;		// Need this way on new syntax ? 	
+		iWardenColorGreen = gc_iWardenColorGreen.IntValue;	// Need this way on new syntax ? 	
+		iWardenColorBlue = gc_iWardenColorBlue.IntValue;	// Need this way on new syntax ? 		
 
 		if(IsClientWarden(client))
 		{
@@ -602,7 +614,7 @@ public Action Timer_WardenFixColor(Handle timer,any client)
 			{ 
 				if(gc_bColor.BoolValue)	
 				{
-					SetEntityRenderColor(client, g_iWardenColorRedw, g_iWardenColorGreenw, g_iWardenColorBluew, 255);
+					SetEntityRenderColor(client, iWardenColorRed, iWardenColorGreen, iWardenColorBlue, 255);
 				}
 //				if(gc_bModel.BoolValue)
 //				{
@@ -734,7 +746,32 @@ public Action EndMathQuestion(Handle timer)
 	SendEndMathQuestion(-1);
 }
 
-public Action CreateMathQuestion(int client, int args)
+public Action StartMathQuestion(int client, int args)
+{
+	if(gc_bMath.BoolValue)	
+	{
+		if(client == Warden)
+		{
+			if (!IsMathQuiz)
+			{
+				CreateTimer( 4.0, CreateMathQuestion, client);
+							
+				CPrintToChatAll("%t %t", "warden_tag" , "warden_startmathquiz");
+		
+				if(gc_bBetterNotes.BoolValue)
+				{
+					PrintCenterTextAll("%t", "warden_startmathquiz_nc");
+					PrintHintTextToAll("%t", "warden_startmathquiz_nc");
+				}
+						
+				IsMathQuiz = true;
+			}
+		}
+		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
+	}
+}
+
+public Action CreateMathQuestion( Handle timer, any client )
 {
 	if(gc_bMath.BoolValue)	
 	{
@@ -768,10 +805,17 @@ public Action CreateMathQuestion(int client, int args)
 				g_MathResult = NumOne * NumTwo;
 			}
 			
-			CPrintToChatAll("%t %N: %i %s %i = ?? ", "warden_tag", client, NumOne, g_op, NumTwo);
-			IsMathQuiz = true;
 			
-			mathtimer = CreateTimer(GetConVarFloat(gc_iTimeAnswer), EndMathQuestion);
+			CPrintToChatAll("%t %N: %i %s %i = ?? ", "warden_tag", client, NumOne, g_op, NumTwo);
+		
+			if(gc_bBetterNotes.BoolValue)
+			{
+				PrintCenterTextAll("%i %s %i = ?? ", NumOne, g_op, NumTwo);
+				PrintHintTextToAll("%i %s %i = ?? ", NumOne, g_op, NumTwo);
+			}
+			
+			
+			mathtimer = CreateTimer(gc_iTimeAnswer.FloatValue, EndMathQuestion);
 		}
 		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
 	}
@@ -1119,8 +1163,16 @@ public Action SetStartCountDown(int client, int args)
 			{
 				g_iCountStopTime = 9;
 				CreateTimer( 1.0, StartCountdown, client, TIMER_REPEAT);
-				PrintHintTextToAll("%t", "warden_startcountdownhint_nc");
+				
 				CPrintToChatAll("%t %t", "warden_tag" , "warden_startcountdownhint");
+		
+				if(gc_bBetterNotes.BoolValue)
+				{
+					PrintCenterTextAll("%t", "warden_startcountdownhint_nc");
+					PrintHintTextToAll("%t", "warden_startcountdownhint_nc");
+				}
+	
+			
 				IsCountDown = true;
 			}
 			else CPrintToChat(client, "%t %t", "warden_tag" , "warden_countdownrunning");
@@ -1139,8 +1191,16 @@ public Action SetStopCountDown(int client, int args)
 			{
 				g_iCountStopTime = 20;
 				CreateTimer( 1.0, StopCountdown, client, TIMER_REPEAT);
-				PrintHintTextToAll("%t", "warden_stopcountdownhint_nc");
+				
+				
 				CPrintToChatAll("%t %t", "warden_tag" , "warden_stopcountdownhint");
+		
+				if(gc_bBetterNotes.BoolValue)
+				{
+					PrintCenterTextAll("%t", "warden_stopcountdownhint_nc");
+					PrintHintTextToAll("%t", "warden_stopcountdownhint_nc");
+				}
+												
 				IsCountDown = true;
 			}
 			else CPrintToChat(client, "%t %t", "warden_tag" , "warden_countdownrunning");
@@ -1160,8 +1220,15 @@ public Action SetStartStopCountDown(int client, int args)
 				g_iCountStartTime = 9;
 				CreateTimer( 1.0, StartCountdown, client, TIMER_REPEAT);
 				CreateTimer( 1.0, StopStartStopCountdown, client, TIMER_REPEAT);
-				PrintHintTextToAll("%t", "warden_startstopcountdownhint_nc");
+				
 				CPrintToChatAll("%t %t", "warden_tag" , "warden_startstopcountdownhint");
+		
+				if(gc_bBetterNotes.BoolValue)
+				{
+					PrintCenterTextAll("%t", "warden_startstopcountdownhint_nc");
+					PrintHintTextToAll("%t", "warden_startstopcountdownhint_nc");
+				}
+
 				IsCountDown = true;
 			}
 			else CPrintToChat(client, "%t %t", "warden_tag" , "warden_countdownrunning");
