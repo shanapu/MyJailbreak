@@ -13,9 +13,9 @@ bugs:
 must:
 
 
-- [ ] find better STOP SOUND!
+- [x] find better STOP SOUND!
 - [ ] duckhunt: more ammo for CT
-- [ ] duckhunt: chicken only secAttack
+- [x] duckhunt: chicken only secAttack
 - [x] Finsih ice skate knife
 - [x] countdown: translation and 10sek fix more times
 - [ ] clean/translate ConVars 

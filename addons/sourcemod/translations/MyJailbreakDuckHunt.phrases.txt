@@ -142,9 +142,9 @@
 	
 	"duckhunt_info_Line3"		// no colors!
 	{
-		"da"		"T er kyllinger og har kun knive og nades"	
-		"en"		"Ts are chickens and got knife and greante"
-		"de"		"terroristen sind chicken haben Knife und Granten"
+		"da"		"T er kyllinger og har nades. SecAttack Only"	
+		"en"		"Ts are chickens and got greante. SecAttack Only"
+		"de"		"Terroristen sind chicken haben Granten. SecAttack Only"
 	}
 	
 	"duckhunt_info_Line4"		// no colors!

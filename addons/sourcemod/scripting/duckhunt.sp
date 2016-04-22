@@ -13,7 +13,7 @@
 
 //Compiler Options
 #pragma semicolon 1
-#pragma newdecls required
+//#pragma newdecls required
 
 //Booleans
 bool IsDuckHunt;
@@ -409,6 +409,18 @@ public Action OnWeaponCanUse(int client, int weapon)
 		return Plugin_Handled;
 	}
 	return Plugin_Continue;
+}
+
+public Action OnPlayerRunCmd(client, &buttons, &impulse, Float:vel[3], Float:angles[3], &weapon) 
+{
+    if(IsDuckHunt == true)
+	{
+		if((GetClientTeam(client) == CS_TEAM_T) && IsClientInGame(client) && IsPlayerAlive(client) && buttons & IN_ATTACK)
+		{
+			return Plugin_Handled;
+		}
+    }
+    return Plugin_Continue;
 }
 
 public Action DuckHunt(Handle timer)
