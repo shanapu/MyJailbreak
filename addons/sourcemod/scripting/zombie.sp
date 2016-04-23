@@ -34,6 +34,7 @@ ConVar gc_sSoundStartPath;
 ConVar gc_bOverlays;
 ConVar gc_sOverlayStartPath;
 ConVar g_iSetRoundTime;
+ConVar g_sOldSkyName;
 
 //Integers
 int g_iOldRoundTime;
@@ -46,10 +47,12 @@ int ZombieRound = 0;
 Handle FreezeTimer;
 Handle ZombieMenu;
 
+
 //Strings
 char g_sZombieModel[256];
 char g_sHasVoted[1500];
 char g_sSoundStartPath[256];
+char g_sSkyName[256];
 
 public Plugin myinfo = {
 	name = "MyJailbreak - Zombie",
@@ -102,11 +105,13 @@ public void OnPluginStart()
 	
 	//FindConVar
 	g_iSetRoundTime = FindConVar("mp_roundtime");
+	
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
 	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
 	gc_sModelPath.GetString(g_sZombieModel, sizeof(g_sZombieModel));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
+
 	
 	IsZombie = false;
 	StartZombie = false;
@@ -152,6 +157,8 @@ public void OnMapStart()
 	PrecacheModel(g_sZombieModel);
 	if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStart);
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
+	g_sOldSkyName = FindConVar("sv_skyname");
+	g_sOldSkyName.GetString(g_sSkyName, sizeof(g_sSkyName));
 	
 }
 
@@ -304,7 +311,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		ServerCommand("sm_removewarden");
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_warden_enable", 0);
-		
+		SetCvarString("sv_skyname", "cs_baggage_skybox_");
 		SetCvar("sm_weapons_t", 1);
 		SetCvar("sm_weapons_ct", 0);
 		SetCvar("sv_infinite_ammo", 1);
@@ -450,7 +457,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 		SetCvar("sm_hosties_lr", 1);
 		SetCvar("sm_weapons_t", 0);
 		SetCvar("sm_weapons_ct", 1);
-		
+		SetCvarString("sv_skyname", g_sSkyName);
 		SetCvar("sv_infinite_ammo", 0);
 		SetCvar("sm_warden_enable", 1);
 		

@@ -12,13 +12,16 @@ bugs:
 
 must:
 
-
+- [ ] clean up code 
+- [ ] comments
+- [ ] register plugins to core
+- [ ] some polishing
+- [ ] clean/translate ConVars 
 - [x] find better STOP SOUND!
-- [ ] duckhunt: more ammo for CT
+- [x] duckhunt: more ammo for CT
 - [x] duckhunt: chicken only secAttack
 - [x] Finsih ice skate knife
 - [x] countdown: translation and 10sek fix more times
-- [ ] clean/translate ConVars 
 - [x] jailbreak user menu
 - [x] duckhunt: chicken thirdperson
 - [x] all days: remember mp_roundtime for end // https://wiki.alliedmods.net/ConVars_(SourceMod_Scripting)#Using.2FChanging_Values
@@ -54,10 +57,7 @@ must:
 - [x] move randomkill from menu to warden
 - [x] hide: freeze hide bool
 - [x] Freeday: Damage disbaled 
-- [ ] clean up code 
-- [ ] comments
-- [ ] register plugins to core
-- [ ] some polishing
+
 
 
 want:
@@ -65,7 +65,6 @@ want:
 - [ ] warden: model
 - [ ] duckhunt: +attack -> not block. change to attack2
 - [ ] custom command support
-- [ ] warden: clean changeback model unwarden
 - [ ] make jailbreak menu customizeable (ADD OWN COMMANDS & OWN ORDER) -> keyvalues
 - [ ] make centertext formating PrintCenterText(client, "<font size='30' color='#FF00FF'>test</font>");
 - [ ] all days: restrict map heal station https://forums.alliedmods.net/showthread.php?t=267167
@@ -73,6 +72,7 @@ want:
 - [ ] menu: bool show on days
 - [ ] AddFileToDownloadsTable
 - [ ] make zeus day
+- [x] zombie: change skybox
 - [x] randomkill smite
 - [ ] randomkill switchable bomb, fire....
 - [ ] warden: unwarden roundstart and delay old warden.

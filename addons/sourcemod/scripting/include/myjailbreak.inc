@@ -111,6 +111,12 @@ public SetCvarFloat(char cvarName[64], float value)
 	SetConVarFlags(FloatCvar, flags);
 }
 
+stock SetCvarString(String:scvar[], String:svalue[])
+{
+	new Handle:cvar = FindConVar(scvar);
+	SetConVarString(cvar, svalue, true);
+}
+
 stock bool IsValidClient(int client, bool alive = false)
 {
 	if(client >= 1 && client <= MaxClients && IsClientConnected(client) && IsClientInGame(client) && (alive == false || IsPlayerAlive(client)))
