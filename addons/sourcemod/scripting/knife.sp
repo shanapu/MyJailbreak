@@ -464,7 +464,10 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 
 public Action FP(int client)
 {
-	ClientCommand(client, "firstperson");
+	if(IsClientInGame(client) && IsClientConnected(client) && !IsFakeClient(client))
+	{
+		ClientCommand(client, "firstperson");
+	}
 }
 
 public void OnClientDisconnect(int client)

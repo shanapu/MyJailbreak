@@ -61,7 +61,9 @@ must:
 
 
 want:
+- [ ] updater
 - [ ] warden: model
+- [ ] duckhunt: +attack -> not block. change to attack2
 - [ ] custom command support
 - [ ] warden: clean changeback model unwarden
 - [ ] make jailbreak menu customizeable (ADD OWN COMMANDS & OWN ORDER) -> keyvalues

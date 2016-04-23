@@ -1457,7 +1457,7 @@ stock int GetRandomPlayer(int team)
 	int clientCount;
 	for (int i = 1; i <= MaxClients; i++)
 	{
-		if (IsClientInGame(i) && (GetClientTeam(i) == team))
+		if (IsClientInGame(i) && (GetClientTeam(i) == team))    // IsPlayerAlive(i) ???
 		{
 			clients[clientCount++] = i;
 		}

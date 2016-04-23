@@ -13,7 +13,7 @@
 
 //Compiler Options
 #pragma semicolon 1
-//#pragma newdecls required
+#pragma newdecls required
 
 //Booleans
 bool IsDuckHunt;
@@ -46,6 +46,7 @@ int DuckHuntRound = 0;
 //Handles
 Handle TruceTimer;
 Handle DuckHuntMenu;
+Handle AmmoTimer[MAXPLAYERS+1];
 
 //Strings
 
@@ -119,6 +120,7 @@ public void OnPluginStart()
 	StartDuckHunt = false;
 	g_iVoteCount = 0;
 	DuckHuntRound = 0;
+
 }
 
 public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
@@ -340,8 +342,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 							SetEntityModel(client, huntermodel);
 							SetEntityHealth(client, 600);
 							GivePlayerItem(client, "weapon_nova");
-//							int iEnt = GivePlayerItem(client, "weapon_nova");
-//							lib_SetWeaponAmmo(iEnt,8,120);
+							AmmoTimer[client] = CreateTimer(5.0, AmmoRefill, client, TIMER_REPEAT);
 							
 						}
 						if (GetClientTeam(client) == CS_TEAM_T)
@@ -375,23 +376,6 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 	}
 }
 
-/* 
-public Action Reloadweapon(Handle event, const char[] name, bool dontBroadcast)
-{
-	if(IsDuckHunt == true)
-	{
-		
-		int iClient = GetClientOfUserId(GetEventInt(event, "userid"));
-		int weapon = GivePlayerItem(iClient, "weapon_nova");
-		
-		if(GetClientTeam(iClient) == CS_TEAM_CT)
-		{
-			SetEntProp(weapon, Prop_Send, "m_iPrimaryReserveAmmoCount", 32);
-		}
-	}
-}
-*/
-
 public Action OnWeaponCanUse(int client, int weapon)
 {
 	if(IsDuckHunt == true)
@@ -411,7 +395,7 @@ public Action OnWeaponCanUse(int client, int weapon)
 	return Plugin_Continue;
 }
 
-public Action OnPlayerRunCmd(client, &buttons, &impulse, Float:vel[3], Float:angles[3], &weapon) 
+public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon) 
 {
     if(IsDuckHunt == true)
 	{
@@ -476,6 +460,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 	{
 		for(int client=1; client <= MaxClients; client++)
 		{
+			if (AmmoTimer[client] != null) KillTimer(AmmoTimer[client]);
 			if (IsClientInGame(client))
 				{
 					SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
@@ -521,9 +506,21 @@ public Action HE_Detonate(Handle event, const char[] name, bool dontBroadcast)
 	return;
 }
 
+public Action AmmoRefill(Handle timer, any client)
+{
+	if(IsPlayerAlive(client))
+	{
+		int weapon = GetEntPropEnt(client, Prop_Data, "m_hActiveWeapon");
+		SetEntProp(weapon, Prop_Send, "m_iPrimaryReserveAmmoCount", 32);
+	}
+}
+
 public Action FP(int client)
 {
-	ClientCommand(client, "firstperson");
+	if(IsClientInGame(client) && IsClientConnected(client) && !IsFakeClient(client))
+	{
+		ClientCommand(client, "firstperson");
+	}
 }
 
 public void OnClientDisconnect(int client)
