@@ -111,10 +111,10 @@ public SetCvarFloat(char cvarName[64], float value)
 	SetConVarFlags(FloatCvar, flags);
 }
 
-stock SetCvarString(String:scvar[], String:svalue[])
+public SetCvarString(char cvarName[64], char[] value)
 {
-	new Handle:cvar = FindConVar(scvar);
-	SetConVarString(cvar, svalue, true);
+	Handle cvar = FindConVar(cvarName);
+	SetConVarString(cvar, value, true);
 }
 
 stock bool IsValidClient(int client, bool alive = false)

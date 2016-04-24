@@ -475,10 +475,7 @@ public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selec
 		else if ( strcmp(info,"countdown") == 0 ) 
 		{
 			FakeClientCommand(client, "sm_cdmenu");
-			if(!gc_bClose.BoolValue)
-			{
-				JbMenu(client,0);
-			}
+
 		}
 		else if ( strcmp(info,"getwarden") == 0 ) 
 		{
@@ -509,10 +506,6 @@ public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selec
 		else if ( strcmp(info,"kill") == 0 ) 
 		{
 			FakeClientCommand(client, "sm_killrandom");
-			if(!gc_bClose.BoolValue)
-			{
-				JbMenu(client,0);
-			}
 		}
 		else if (action == MenuAction_End)
 		{

@@ -341,7 +341,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 						}
 						if (GetClientTeam(client) == CS_TEAM_T)
 						{
-							SetEntityHealth(client, 15);
+							SetEntityHealth(client, 20);
 						}
 					}
 				}

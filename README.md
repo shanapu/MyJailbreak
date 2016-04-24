@@ -17,11 +17,10 @@ A rewrite version of [Franugs Special Jailbreak](https://github.com/Franc1sco/Fr
 ### Included Plugins: 
 
 - Warden - (set/become warden,vote against warden, open cells, set marker/quiz/eventdays/countdown/FF/nobock) - need [scp](https://git.tf/shanapu/MyJailbreak#requires-plugins)
-- Event Days (set/vote a Event for next round) - all need [sjd](https://git.tf/shanapu/MyJailbreak#requires-plugins)&[sjd](https://git.tf/shanapu/MyJailbreak#requires-plugins)
 - Menu - (Player menus for T, CT, Warden & Admin)
 - Weapons - (weapon menus for CT / T in event rounds)
 - PlayerTags - (add player Tags for T, T.Admin, CT, CT.Admin, W, WA.Admin - need [scp](https://git.tf/shanapu/MyJailbreak#requires-plugins)
-- Event Days (set/vote a Event for next round) - all need [sjd](https://git.tf/shanapu/MyJailbreak#requires-plugins)
+- Event Days (set/vote a Event for next round) - all need [sjd](https://git.tf/shanapu/MyJailbreak#requires-plugins)&[scp](https://git.tf/shanapu/MyJailbreak#requires-plugins)
     - War (CT vs T TDM)
     - Free For All (FFA DM)
     - Zombie (CT(zombie) vs T(Human))
@@ -45,8 +44,8 @@ A rewrite version of [Franugs Special Jailbreak](https://github.com/Franc1sco/Fr
 
 #### Warden
 
-This plugins allows players to take control over the prison as Warden/Headguard/Commander.
-Chat, Hud & sound notifications about warden/no warden, colorize warden, open/close cell doors, automatic open cells doors, unvote warden, start countdown & toggle FF/noblock.
+This plugins allows players to take control over the prison as Warden/Headguard/Commander. 
+Chat, Hud & sound notifications about warden/no warden, colorize warden, open/close cell doors, automatic open cells doors, unvote warden, start different countdowns, start a Math Quiz & toggle FF/noblock.
 
 ##### Commands // why so many cmds for same action? my players are dump.
 ```

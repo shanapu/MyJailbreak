@@ -98,6 +98,9 @@ Handle g_hRandomTimer=null;
 Handle countertime = null;
 Handle randomtimer = null;
 Handle mathtimer = null;
+Handle StartTimer = null;
+Handle StopTimer = null;
+Handle StartStopTimer = null;
 
 //Strings
 char g_sHasVoted[1500];
@@ -147,11 +150,12 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_close", CloseDoors);
 	RegConsoleCmd("sm_vw", VoteWarden);
 	RegConsoleCmd("sm_votewarden", VoteWarden);
-	RegConsoleCmd("sm_ff", ToggleFF);
+	RegConsoleCmd("sm_setff", ToggleFF);
 	RegConsoleCmd("sm_cdstart", SetStartCountDown);
 	RegConsoleCmd("sm_cdmenu", CDMenu);
 	RegConsoleCmd("sm_cdstartstop", StartStopCDMenu);
 	RegConsoleCmd("sm_cdstop", SetStopCountDown);
+	RegConsoleCmd("sm_cdcancel", CancelCountDown);
 	RegConsoleCmd("sm_killrandom", KillRandom);
 	RegConsoleCmd("sm_math", StartMathQuestion);
 	
@@ -219,9 +223,10 @@ public void OnPluginStart()
 	AutoExecConfig_CleanFile();
 	
 	//Hooks
-	HookEvent("round_start", Event_RoundStart);
+	HookEvent("round_start", RoundStart);
 	HookEvent("player_death", playerDeath);
 	HookEvent("bullet_impact", Event_BulletImpact);
+	HookEvent("round_end", RoundEnd);
 //	HookConVarChange(gc_sModelPath, OnSettingChanged);
 	HookConVarChange(gc_sUnWarden, OnSettingChanged);
 	HookConVarChange(gc_sWarden, OnSettingChanged);
@@ -250,7 +255,7 @@ public void OnPluginStart()
 	CreateTimer(1.0, Timer_DrawMakers, _, TIMER_REPEAT);
 }
 
-public Action Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
+public void RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
 	if (countertime != null)
 		KillTimer(countertime);
@@ -277,8 +282,6 @@ public Action Event_RoundStart(Event event, const char[] name, bool dontBroadcas
 	{
 			Warden = -1;
 	}
-	IsCountDown = false;
-
 }
 
 public void OnConfigsExecuted()
@@ -371,12 +374,29 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 	//}
 }
 
-public Action Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
+public void RoundEnd(Event event, const char[] name, bool dontBroadcast)
 {
-	for(int client=1; client <= MaxClients; client++)
+	if(gc_bPlugin.BoolValue)
 	{
-		EnableBlock(client);
+		if (g_bFF.BoolValue) 
+		{
+			SetCvar("mp_teammates_are_enemies", 0);
+			g_bFF = FindConVar("mp_teammates_are_enemies");
+			CPrintToChatAll("%t %t", "warden_tag", "warden_ffisoff" );
+		}
 	}
+	if(gc_bPlugin.BoolValue)
+	{
+		for(int client=1; client <= MaxClients; client++) if(IsValidClient(client, true))
+		{
+			EnableBlock(client);
+			CancelCountDown(client, 0);
+		}
+	}
+	if (StopTimer != null) KillTimer(StopTimer);
+	if (StartTimer != null) KillTimer(StartTimer);
+	if (StartStopTimer != null) KillTimer(StartStopTimer);
+
 }
 
 public Action BecomeWarden(int client, int args)
@@ -472,7 +492,7 @@ public Action VoteWarden(int client,int args)
 	else CPrintToChat(client, "%t %t", "warden_tag" , "warden_disabled");
 }
 
-public Action playerDeath(Event event, const char[] name, bool dontBroadcast) 
+public void playerDeath(Event event, const char[] name, bool dontBroadcast) 
 {
 	int client = GetClientOfUserId(GetEventInt(event, "userid")); // Get the dead clients id
 	
@@ -504,8 +524,10 @@ public Action SetWarden(int client,int args)
 	{
 		if(IsValidClient(client))
 		{
+			char info1[255];
 			Menu menu = CreateMenu(m_SetWarden);
-			menu.SetTitle("Select players");
+			Format(info1, sizeof(info1), "%T", "warden_choose", LANG_SERVER);
+			menu.SetTitle(info1);
 			for(int i = 1;i <= MaxClients;i++) if(IsValidClient(i, true))
 			{
 				if(GetClientTeam(i) == CS_TEAM_CT && IsClientWarden(i) == false)
@@ -530,10 +552,12 @@ public int m_SetWarden(Menu menu, MenuAction action, int client, int Position)
 	{
 		char Item[11];
 		menu.GetItem(Position,Item,sizeof(Item));
+		
 		for(int i = 1;i <= MaxClients;i++) if(IsValidClient(i, true))
 		{
 			if(GetClientTeam(i) == CS_TEAM_CT && IsClientWarden(i) == false)
 			{
+				char info4[255], info2[255], info3[255];
 				int userid = GetClientUserId(i);
 				if(userid == StringToInt(Item))
 				{
@@ -541,23 +565,24 @@ public int m_SetWarden(Menu menu, MenuAction action, int client, int Position)
 					{
 						tempwarden[client] = userid;
 						Menu menu1 = CreateMenu(m_WardenOverwrite);
-						char buffer[64];
-						Format(buffer,sizeof(buffer), "Kick warden %N?", Warden);
-						menu1.SetTitle(buffer);
-						menu1.AddItem("1", "Yes");
-						menu1.AddItem("0", "No");
+						Format(info4, sizeof(info4), "%T", "warden_remove", Warden, LANG_SERVER);
+						menu1.SetTitle(info4);
+						Format(info3, sizeof(info3), "%T", "warden_yes", LANG_SERVER);
+						Format(info2, sizeof(info2), "%T", "warden_no", LANG_SERVER);
+						menu1.AddItem("1", info3);
+						menu1.AddItem("0", info2);
 						menu1.ExitButton = false;
 						menu1.Display(client,MENU_TIME_FOREVER);
 					}
 					else
 					{
 						Warden = i;
-						CPrintToChatAll("%t %t", "warden_tag" , "warden_new", client);
+						CPrintToChatAll("%t %t", "warden_tag" , "warden_new", i);
 		
 						if(gc_bBetterNotes.BoolValue)
 						{
-							PrintCenterTextAll("%t", "warden_new_nc", client);
-							PrintHintTextToAll("%t", "warden_new_nc", client);
+							PrintCenterTextAll("%t", "warden_new_nc", i);
+							PrintHintTextToAll("%t", "warden_new_nc", i);
 						}
 						CreateTimer(0.5, Timer_WardenFixColor, i, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 						Call_StartForward(gF_OnWardenCreatedByAdmin);
@@ -572,7 +597,7 @@ public int m_SetWarden(Menu menu, MenuAction action, int client, int Position)
 
 public int m_WardenOverwrite(Menu menu, MenuAction action, int client, int Position)
 {
-	if(action == MenuAction_Select && IsClientWarden(client))
+	if(action == MenuAction_Select)
 	{
 		char Item[11];
 		menu.GetItem(Position,Item,sizeof(Item));
@@ -580,7 +605,7 @@ public int m_WardenOverwrite(Menu menu, MenuAction action, int client, int Posit
 		if(choice == 1)
 		{
 			int newwarden = GetClientOfUserId(tempwarden[client]);
-			CPrintToChatAll("%t %t", "warden_tag" , "warden_removed", Warden);
+			CPrintToChatAll("%t %t", "warden_tag" , "warden_removed", client, Warden);
 			CPrintToChatAll("%t %t", "warden_tag" , "warden_new", newwarden);
 		
 			if(gc_bBetterNotes.BoolValue)
@@ -674,11 +699,11 @@ public Action RemoveWarden(int client, int args)
 {
 	if(Warden != -1)
 	{
-		SetEntityRenderColor(Warden, 255, 255, 255, 255);
 		RemoveTheWarden(client);
 		Call_StartForward(gF_OnWardenRemovedByAdmin);
 		Call_PushCell(client);
 		Call_Finish();
+		
 	}
 //	else CPrintToChatAll("%t %t", "warden_tag" , "warden_noexist");
 	return Plugin_Handled;
@@ -719,7 +744,7 @@ void RemoveTheWarden(int client)
 		PrintHintTextToAll("%t", "warden_removed_nc", client, Warden);
 	}
 	
-	if(IsClientInGame(client) && IsPlayerAlive(client) && warden_iswarden(client))
+	if(IsClientInGame(client) && IsPlayerAlive(client))
 	{
 		SetEntityRenderColor(Warden, 255, 255, 255, 255);
 	//	SetEntityModel(client, "models/player/ctm_gsg9.mdl");
@@ -1062,6 +1087,22 @@ public int CDHandler(Menu menu, MenuAction action, int client, int selection)
 	}
 }
 
+public Action CancelCountDown(int client, int args)
+{
+	if (IsCountDown)
+	{
+		g_iCountStopTime = -1;
+		g_iCountStartTime = -1;
+		StartTimer = null;
+		StartStopTimer = null;
+		StopTimer = null;
+		IsCountDown = false;
+		CPrintToChatAll("%t %t", "warden_tag", "warden_countdowncanceled" );
+		
+
+	}
+}
+
 public Action StartStopCDMenu(int client, int args)
 {
 
@@ -1162,7 +1203,7 @@ public Action SetStartCountDown(int client, int args)
 			if (!IsCountDown)
 			{
 				g_iCountStopTime = 9;
-				CreateTimer( 1.0, StartCountdown, client, TIMER_REPEAT);
+				StartTimer = CreateTimer( 1.0, StartCountdown, client, TIMER_REPEAT);
 				
 				CPrintToChatAll("%t %t", "warden_tag" , "warden_startcountdownhint");
 		
@@ -1190,7 +1231,7 @@ public Action SetStopCountDown(int client, int args)
 			if (!IsCountDown)
 			{
 				g_iCountStopTime = 20;
-				CreateTimer( 1.0, StopCountdown, client, TIMER_REPEAT);
+				StopTimer = CreateTimer( 1.0, StopCountdown, client, TIMER_REPEAT);
 				
 				
 				CPrintToChatAll("%t %t", "warden_tag" , "warden_stopcountdownhint");
@@ -1218,8 +1259,8 @@ public Action SetStartStopCountDown(int client, int args)
 			if (!IsCountDown)
 			{
 				g_iCountStartTime = 9;
-				CreateTimer( 1.0, StartCountdown, client, TIMER_REPEAT);
-				CreateTimer( 1.0, StopStartStopCountdown, client, TIMER_REPEAT);
+				StartTimer = CreateTimer( 1.0, StartCountdown, client, TIMER_REPEAT);
+				StartStopTimer = CreateTimer( 1.0, StopStartStopCountdown, client, TIMER_REPEAT);
 				
 				CPrintToChatAll("%t %t", "warden_tag" , "warden_startstopcountdownhint");
 		
@@ -1258,7 +1299,7 @@ public Action StartCountdown( Handle timer, any client )
 		{
 			PrintCenterText(client, "%t", "warden_countdownstart_nc");
 			CPrintToChatAll("%t %t", "warden_tag" , "warden_countdownstart");
-			g_iCountStartTime = 9;
+			
 			if(gc_bOverlays.BoolValue)
 			{
 				CreateTimer( 0.0, ShowOverlayStart, client);
@@ -1267,7 +1308,10 @@ public Action StartCountdown( Handle timer, any client )
 			{
 				EmitSoundToAllAny(g_sSoundStartPath);
 			}
+			StartTimer = null;
 			IsCountDown = false;
+			g_iCountStopTime = 20;
+			g_iCountStartTime = 9;
 			return Plugin_Stop;
 		}
 	}
@@ -1295,8 +1339,7 @@ public Action StopCountdown( Handle timer, any client )
 		{
 			PrintCenterText(client, "%t", "warden_countdownstop_nc");
 			CPrintToChatAll("%t %t", "warden_tag" , "warden_countdownstop");
-			g_iCountStopTime = 20;
-			g_iCountStartTime = 9;
+
 			if(gc_bOverlays.BoolValue)
 			{
 				CreateTimer( 0.0, ShowOverlayStop, client);
@@ -1305,7 +1348,10 @@ public Action StopCountdown( Handle timer, any client )
 			{
 				EmitSoundToAllAny(g_sStop);
 			}
+			StopTimer = null;
 			IsCountDown = false;
+			g_iCountStopTime = 20;
+			g_iCountStartTime = 9;
 			return Plugin_Stop;
 		}
 	}
@@ -1325,6 +1371,7 @@ public Action StopStartStopCountdown( Handle timer, any client )
 			}
 		}
 		g_iSetCountStartStopTime--;
+		IsCountDown = true;
 		return Plugin_Continue;
 	}
 	if ( g_iSetCountStartStopTime == 0)
@@ -1333,7 +1380,7 @@ public Action StopStartStopCountdown( Handle timer, any client )
 		{
 			PrintCenterText(client, "%t", "warden_countdownstop_nc");
 			CPrintToChatAll("%t %t", "warden_tag" , "warden_countdownstop");
-			g_iCountStartTime = 9;
+			
 			if(gc_bOverlays.BoolValue)
 			{
 				CreateTimer( 0.0, ShowOverlayStop, client);
@@ -1342,10 +1389,14 @@ public Action StopStartStopCountdown( Handle timer, any client )
 			{
 				EmitSoundToAllAny(g_sStop);
 			}
+			StartStopTimer = null;
 			IsCountDown = false;
+			g_iCountStopTime = 20;
+			g_iCountStartTime = 9;
 			return Plugin_Stop;
 		}
 	}
+	
 	return Plugin_Continue;
 }
 
@@ -1418,7 +1469,8 @@ public Action ToggleFF(int client, int args)
 		{
 			if (client == Warden)
 			{
-				g_bFF.BoolValue = false;
+				SetCvar("mp_teammates_are_enemies", 0);
+				g_bFF = FindConVar("mp_teammates_are_enemies");
 				CPrintToChatAll("%t %t", "warden_tag", "warden_ffisoff" );
 			}else CPrintToChatAll("%t %t", "warden_tag", "warden_ffison" );
 			
@@ -1426,7 +1478,8 @@ public Action ToggleFF(int client, int args)
 		{	
 			if (client == Warden)
 			{
-				g_bFF.BoolValue = true;
+				SetCvar("mp_teammates_are_enemies", 1);
+				g_bFF = FindConVar("mp_teammates_are_enemies");
 				CPrintToChatAll("%t %t", "warden_tag", "warden_ffison" );
 			}
 			else CPrintToChatAll("%t %t", "warden_tag", "warden_ffisoff" );
@@ -1440,15 +1493,43 @@ public Action KillRandom(int client, int args)
 	{
 		if (client == Warden)
 		{
-			int i = GetRandomPlayer(CS_TEAM_T);
-			if(i > 0)
-			{
-				PerformSmite(client, i);
-				CPrintToChatAll("%t %t", "warden_tag", "warden_israndomdead", i); 
-			}
+			char info5[255], info6[255], info7[255];
+			Menu menu1 = CreateMenu(killmenu);
+			Format(info5, sizeof(info5), "%T", "warden_sure", Warden, LANG_SERVER);
+			menu1.SetTitle(info5);
+			Format(info6, sizeof(info6), "%T", "warden_yes", LANG_SERVER);
+			Format(info7, sizeof(info7), "%T", "warden_no", LANG_SERVER);
+			menu1.AddItem("1", info6);
+			menu1.AddItem("0", info7);
+			menu1.ExitButton = false;
+			menu1.Display(client,MENU_TIME_FOREVER);
 		}
 		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden"); 
 	}
+}
+
+public int killmenu(Menu menu, MenuAction action, int client, int Position)
+{
+	if(action == MenuAction_Select)
+	{
+		char Item[11];
+		menu.GetItem(Position,Item,sizeof(Item));
+		int choice = StringToInt(Item);
+		if(choice == 1)
+		{
+			DoKillRandom(client, 0);
+		}
+	}
+}
+
+public Action DoKillRandom(int client, int args)
+{
+		int i = GetRandomPlayer(CS_TEAM_T);
+		if(i > 0)
+		{
+			PerformSmite(client, i);
+			CPrintToChatAll("%t %t", "warden_tag", "warden_israndomdead", i); 
+		}
 }
 
 stock int GetRandomPlayer(int team) 

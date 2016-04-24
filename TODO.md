@@ -9,14 +9,17 @@ bugs:
 - [x] Thirdperson: on disconnect make fp
 - [x] randomkill lighting bold missing
 - [x] menu: infomessage on first spawn
+- [ ] countdown: start-cancel-start- bug?
 
 must:
 
+- [ ] disbale FF on roundend
 - [ ] clean up code 
 - [ ] comments
 - [ ] register plugins to core
 - [ ] some polishing
 - [ ] clean/translate ConVars 
+- [x] warden:translate menu set
 - [x] find better STOP SOUND!
 - [x] duckhunt: more ammo for CT
 - [x] duckhunt: chicken only secAttack
@@ -61,6 +64,9 @@ must:
 
 
 want:
+- [ ] playertags: only admin only warden...
+- [ ] disarm
+- [ ] add LR to menu - !rules !lastrequest !checkplayers - !stoplr 
 - [ ] updater
 - [ ] warden: model
 - [ ] duckhunt: +attack -> not block. change to attack2
@@ -70,6 +76,7 @@ want:
 - [ ] all days: restrict map heal station https://forums.alliedmods.net/showthread.php?t=267167
 - [ ] knife: vote on roundstart for grav skate tp or all
 - [ ] menu: bool show on days
+- [ ] toggle noblock
 - [ ] AddFileToDownloadsTable
 - [ ] make zeus day
 - [x] zombie: change skybox
@@ -96,6 +103,9 @@ want:
 - [x] jihad: set radius
 - [x] jihad: bool movement on bomb activate
 - [x] countdown: start stop sound
+- [x] countdown: stop roundend
+- [x] countdown cancel all running
+- [ ] countdown cancel in menu
 - [x] countdown: set time - or menu with differnt times?!?!
 - [ ] warden: mathboard
 - [x] catch: enable/disbale sprint
@@ -128,6 +138,7 @@ need?
 - [ ] jihad: burn dead bodies?
 - [ ] jihad: body counter?
 - [ ] warden: ff not for ct?
+- [ ] SetCvarString flags?
 
 
 future:

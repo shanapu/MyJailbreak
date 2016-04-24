@@ -243,6 +243,12 @@
 		"de"		"Neuer Marker wurde gesetzt."
 	}
 	
+	"warden_countdowncanceled"
+	{
+		"en"		"The Counddown was {darkred}canceled"
+		"de"		"Der Countdown wurde {darkred}abgebrochen"
+	}
+	
 	"warden_startcountdown_nc"	// no colors!
 	{
 		"#format"	"{1:i}"
@@ -382,15 +388,26 @@
 	
 	"warden_israndomdead"
 	{
-		"#format"		"{1:n}"
+		"#format"		"{1:N}"
 		"da"			"{1} blev dræbt af warden - Random!"		
 		"en"			"{1} was killed randomly"
 		"de"			"{1} wurde als Zufallskanidat getötet"
 	}
+	"warden_choose"
+	{
+		"en"		"Select Player"
+		"de"		"Wähle Spieler"
+	}
+	"warden_remove"
+	{
+		"#format"	"{1:N}"
+		"en"		"Remove {1} as Warden?"
+		"de"		"Warden {1} entfernen?"
+	}
 	
 	"warden_cdmenu_Title"
 	{
-		"da"		"Countdown Menu"	
+		"da"		"Countdown Menu"
 		"en"		"Countdown Menu"
 		"de"		"Countdown Menu"
 	}
@@ -482,17 +499,17 @@
 		"de"		"Aufgepasst! Der Warden hat einen Mathe Quiz gestartet!"
 	}
 	
-	"warden_kill_title"
+	"warden_sure"
 	{
 		"en"		"are you sure?"
 		"de"		"bist du dir sicher?"
 	}
-	"warden_kill_yes"
+	"warden_yes"
 	{
 		"en"		"yes"
 		"de"		"ja"
 	}
-	"warden_kill_no"
+	"warden_no"
 	{
 		"en"		"no"
 		"de"		"nein"
