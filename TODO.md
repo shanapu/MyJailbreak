@@ -10,15 +10,16 @@ bugs:
 - [x] randomkill lighting bold missing
 - [x] menu: infomessage on first spawn
 - [ ] countdown: start-cancel-start- bug?
+- [ ] warden:autoOpen broke
 
 must:
 
-- [ ] disbale FF on roundend
+- [x] disbale FF on roundend
 - [ ] clean up code 
 - [ ] comments
-- [ ] register plugins to core
 - [ ] some polishing
 - [ ] clean/translate ConVars 
+- [ ] sv_tags to core
 - [x] warden:translate menu set
 - [x] find better STOP SOUND!
 - [x] duckhunt: more ammo for CT
@@ -64,6 +65,7 @@ must:
 
 
 want:
+- [ ] register plugins to core
 - [ ] playertags: only admin only warden...
 - [ ] disarm
 - [ ] add LR to menu - !rules !lastrequest !checkplayers - !stoplr 

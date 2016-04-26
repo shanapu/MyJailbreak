@@ -36,7 +36,7 @@ A rewrite version of [Franugs Special Jailbreak](https://github.com/Franc1sco/Fr
 
 # Credits: 
 
-## **used code from: ecca, Zipcore, ESK0, Floody.de, Franc1sco, walmar, bara, Arkarr, KissLick, headline, Hipster, ReFlexPoison** and many other I cant remember unfortunately!
+## **used code from: ecca, Zipcore, ESK0, Floody.de, Franc1sco, walmar, KeepCalm, bara, Arkarr, KissLick, headline, Hipster, ReFlexPoison** and many other I cant remember unfortunately!
 # THANKS FOR MAKING FREE SOFTWARE!
 
 # Much Thanks: 
@@ -187,7 +187,7 @@ Or on Round start Ts spawn in open cells with weapons. No Freeze/-time.
 - sm_war_roundtime - Roundtime for a single war round in minutes. Default 5
 - sm_war_freezetime- Time in seconds Ts are freezed. time to hide on map for CT (need sm_war_spawn: 0). Default 30
 - sm_war_trucetime - Time in seconds after freezetime damage is disbaled. Default 30
-- sm_war_cooldown_start - Rounds until event can be started after mapchange. Default 3
+- sm_war_cooldown_start - Rounds until event can be start after mapchange. Default 3
 - sm_war_cooldown_day - Rounds until event can be started again. Default 3
 - sm_war_sounds_enable: 0 - disabled, 1 - enable sounds. Default 1
 - sm_war_sounds_start: Path to the soundfile which should be played on start. Default "music/myjailbreak/start.mp3"
@@ -226,7 +226,7 @@ Or on Round start Ts spawn in open cells with weapons.
 - sm_ffa_spawn: 0 - teleport Ts to CT and freeze, 1 - open cell doors an get weapons (need smartjaildoors). Default 1
 - sm_ffa_roundtime - Roundtime for a single ffa round in minutes. Default 5
 - sm_ffa_trucetime - Time in seconds after freezetime damage is disbaled. Default 30
-- sm_ffa_cooldown_start - Rounds until event can be started after mapchange. Default 3
+- sm_ffa_cooldown_start - Rounds until event can be start after mapchange. Default 3
 - sm_ffa_cooldown_day - Rounds until event can be started again. Default 3
 - sm_ffa_sounds_enable: 0 - disabled, 1 - enable sounds. Default 1
 - sm_ffa_sounds_start: Path to the soundfile which should be played on start. Default "music/myjailbreak/start.mp3"
@@ -264,7 +264,7 @@ Zombies freezed for default 35sec so T can hide or climb.
 - sm_zombie_enable: 0 - disabled, 1 - enable the zombie plugin. Default 1
 - sm_zombie_roundtime - Roundtime for a single zombie round in minutes. Default 5
 - sm_zombie_freezetime - Time in seconds Zombies freezed. Default 35
-- sm_zombie_cooldown_start - Rounds until event can be started after mapchange. Default 3
+- sm_zombie_cooldown_start - Rounds until event can be start after mapchange. Default 3
 - sm_zombie_cooldown_day - Rounds until event can be started again. Default 3
 - sm_zombie_sounds_enable: 0 - disabled, 1 - enable sounds. Default 1
 - sm_zombie_sounds_start: Path to the soundfile which should be played on start. Default "music/myjailbreak/start.mp3"
@@ -304,7 +304,7 @@ On Round start cells open everybody got a scout but noscope in low gravity.
 - sm_noscope_gravity_value - Ratio for Gravity 1.0 earth 0.5 moon. Default 0.3
 - sm_noscope_roundtime - Roundtime for a single noscope round in minutes. Default 5
 - sm_noscope_trucetime - Time in seconds damage is disbaled. Default 15
-- sm_noscope_cooldown_start - Rounds until event can be started after mapchange. Default 3
+- sm_noscope_cooldown_start - Rounds until event can be start after mapchange. Default 3
 - sm_noscope_cooldown_day - Rounds until event can be started again. Default 3
 - sm_noscope_sounds_enable: 0 - disabled, 1 - enable sounds. Default 1
 - sm_noscope_sounds_start: Path to the soundfile which should be played on start. Default "music/myjailbreak/start.mp3"
@@ -342,7 +342,7 @@ open cells Dodgeball low gravity.
 - sm_dodgeball_gravity_value - Ratio for Gravity 1.0 earth 0.5 moon. Default 0.3
 - sm_dodgeball_roundtime - Roundtime for a single dodgeball round in minutes. Default 5
 - sm_dodgeball_trucetime - Time in seconds damage is disbaled. Default 15
-- sm_dodgeball_cooldown_start - Rounds until event can be started after mapchange. Default 3
+- sm_dodgeball_cooldown_start - Rounds until event can be start after mapchange. Default 3
 - sm_dodgeball_cooldown_day - Rounds until event can be started again. Default 3
 - sm_dodgeball_sounds_enable: 0 - disabled, 1 - enable sounds. Default 1
 - sm_dodgeball_sounds_start: Path to the soundfile which should be played on start. Default "music/myjailbreak/start.mp3"
@@ -385,7 +385,7 @@ Ts can unfreeze Freezed Ts by knife them again.
 - sm_catch_sprint_speed: Ratio for how fast the player will sprint. Default 1.25
 - sm_catch_sprint_time: Time in seconds the player will sprint. Default 3.5
 - sm_catch_roundtime - Roundtime for a single catch round in minutes. Default 5
-- sm_catch_cooldown_start - Rounds until event can be started after mapchange. Default 3
+- sm_catch_cooldown_start - Rounds until event can be start after mapchange. Default 3
 - sm_catch_cooldown_day - Rounds until event can be started again. Default 3
 - sm_catch_overlays_enable: 0 - disabled, 1 - enable freezed overlays. Default 1
 - sm_catch_stayoverlay: 0 - overlays will removed after 3sec. , 1 - overlays will stay until unfreeze. Default 1
@@ -425,7 +425,7 @@ Map is darken. CTs freezed, Cells open and Ts got time to hide on map. When CT g
 - sm_hide_roundtime - Roundtime for a single hide round in minutes. Default 5
 - sm_hide_hidetime - Time in seconds to hide. Default 30
 - sm_hide_freezehider: 0 - disabled, 1 - enable freeze hider when hidetime gone. Default 1
-- sm_hide_cooldown_start - Rounds until event can be started after mapchange. Default 3
+- sm_hide_cooldown_start - Rounds until event can be start after mapchange. Default 3
 - sm_hide_cooldown_day - Rounds until event can be started again. Default 3
 - sm_hide_sounds_enable: 0 - disabled, 1 - enable sounds. Default 1
 - sm_hide_sounds_start: Path to the soundfile which should be played on start. Default "music/myjailbreak/start.mp3"
@@ -462,7 +462,7 @@ T are Chicken in Thirdperson. After turcetime the cells open and T got He agains
 - sm_duckhunt_enable: 0 - disabled, 1 - enable the duckhunt plugin. Default 1
 - sm_duckhunt_roundtime - Roundtime for a single duckhunt round in minutes. Default 5
 - sm_duckhunt_trucetime - Time in seconds damage is disbaled. Default 15
-- sm_duckhunt_cooldown_start - Rounds until event can be started after mapchange. Default 3
+- sm_duckhunt_cooldown_start - Rounds until event can be start after mapchange. Default 3
 - sm_duckhunt_cooldown_day - Rounds until event can be started again. Default 3
 - sm_duckhunt_sounds_enable: 0 - disabled, 1 - enable sounds. Default 1
 - sm_duckhunt_sounds_start: Path to the soundfile which should be played on start. Default "music/myjailbreak/start.mp3"
@@ -511,7 +511,7 @@ CTs got time to hide before cells open and Ts got Suicide bombs to kill all CT.
 - sm_jihad_sprint_time: Time in seconds the player will sprint. Default 3.5
 - sm_jihad_roundtime - Roundtime for a single jihad round in minutes. Default 5
 - sm_jihad_hidetime - Time to hide. Default 20
-- sm_jihad_cooldown_start - Rounds until event can be started after mapchange. Default 3
+- sm_jihad_cooldown_start - Rounds until event can be start after mapchange. Default 3
 - sm_jihad_cooldown_day - Rounds until event can be started again. Default 3
 - sm_jihad_sounds_enable: 0 - disabled, 1 - enable sounds. Default 1
 - sm_jihad_sounds_start: Path to the soundfile which should be played on start. Default "music/myjailbreak/start.mp3"
@@ -555,7 +555,7 @@ Last man standing Knife fight with Thirdperson low gravity and iceskates
 - sm_knifefight_iceskate_value - Ratio iceskate (5.2 normal). Default 1.0
 - sm_knifefight_roundtime - Roundtime for a single knifefight round in minutes. Default 5
 - sm_knifefight_trucetime - Time in seconds damage is disbaled. Default 15
-- sm_knifefight_cooldown_start - Rounds until event can be started after mapchange. Default 3
+- sm_knifefight_cooldown_start - Rounds until event can be start after mapchange. Default 3
 - sm_knifefight_cooldown_day - Rounds until event can be started again. Default 3
 - sm_knifefight_sounds_enable: 0 - disabled, 1 - enable sounds. Default 1
 - sm_knifefight_sounds_start: Path to the soundfile which should be played on start. Default "music/myjailbreak/start.mp3"
@@ -625,6 +625,7 @@ based/merged/used code/idea plugins:
 * https://forums.alliedmods.net/showthread.php?t=264848
 * https://github.com/Franc1sco/Franug-JailBreak/
 * https://forums.alliedmods.net/showthread.php?t=231473
+* https://forums.alliedmods.net/showthread.php?p=1922088
 * https://github.com/walmar/ShortSprint
 * https://github.com/KissLick/TeamGames/
 * https://github.com/AG-Headline/Hunger-Games-Beacon
