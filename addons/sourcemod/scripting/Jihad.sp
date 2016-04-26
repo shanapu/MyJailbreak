@@ -73,8 +73,8 @@ char g_sSoundStartPath[256];
 
 public Plugin myinfo = {
 	name = "MyJailbreak - JiHad & Freeze",
-	author = "shanapu & Floody.de, Franc1sco",
-	description = "Jailbreak JiHad script",
+	author = "shanapu",
+	description = "Event Day for Jailbreak Server",
 	version = PLUGIN_VERSION,
 	url = "shanapu.de"
 };
@@ -82,8 +82,8 @@ public Plugin myinfo = {
 public void OnPluginStart()
 {
 	// Translation
-	LoadTranslations("MyJailbreakWarden.phrases");
-	LoadTranslations("MyJailbreakJiHad.phrases");
+	LoadTranslations("MyJailbreak.Warden.phrases");
+	LoadTranslations("MyJailbreak.JiHad.phrases");
 	
 	//Client Commands
 	RegConsoleCmd("sm_setjihad", SetJiHad);
@@ -92,33 +92,33 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_makeboom", Command_BombJihad, "Starts the bomb.");
 	
 	//AutoExecConfig
-	AutoExecConfig_SetFile("MyJailbreak_jihad");
+	AutoExecConfig_SetFile("MyJailbreak.JiHad");
 	AutoExecConfig_SetCreateFile(true);
 	
-	AutoExecConfig_CreateConVar("sm_jihad_version", PLUGIN_VERSION, "The version of the SourceMod plugin MyJailBreak - jihad", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
-	gc_bPlugin = AutoExecConfig_CreateConVar("sm_jihad_enable", "1", "0 - disabled, 1 - enable jihad");
-	gc_bSetW = AutoExecConfig_CreateConVar("sm_jihad_warden", "1", "0 - disabled, 1 - allow warden to set jihad round", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	gc_bSetA = AutoExecConfig_CreateConVar("sm_jihad_admin", "1", "0 - disabled, 1 - allow admin to set jihad round", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	gc_bVote = AutoExecConfig_CreateConVar("sm_jihad_vote", "1", "0 - disabled, 1 - allow player to vote for jihad", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	gc_iKey = AutoExecConfig_CreateConVar("sm_jihad_key", "1", "1 - Inspect(look) weapon / 2 - walk / 3 - Secondary Attack");
-	gc_bStandStill = AutoExecConfig_CreateConVar("sm_jihad_standstill", "1", "0 - disabled, 1 - standstill(cant move) on Activate bomb");
-	gc_fBombRadius = AutoExecConfig_CreateConVar("sm_jihad_bomb_radius", "200.0","Radius for bomb damage", 0, true, 10.0, true, 999.0);
-	gc_iFreezeTime = AutoExecConfig_CreateConVar("sm_jihad_hidetime", "20", "Time to hide for CTs");
-	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_jihad_roundtime", "5", "Round time for a single jihad round");
-	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_jihad_cooldown_day", "3", "Rounds cooldown after a event until this event can startet");
-	gc_iCooldownStart = AutoExecConfig_CreateConVar("sm_jihad_cooldown_start", "3", "Rounds until event can be started after mapchange.", FCVAR_NOTIFY, true, 0.0, true, 255.0);
-	gc_bOverlays = AutoExecConfig_CreateConVar("sm_jihad_overlays_enable", "1", "0 - disabled, 1 - enable overlays", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	AutoExecConfig_CreateConVar("sm_jihad_version", PLUGIN_VERSION, "The version of this MyJailBreak SourceMod plugin", FCVAR_SPONLY|FCVAR_PLUGIN|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
+	gc_bPlugin = AutoExecConfig_CreateConVar("sm_jihad_enable", "1", "0 - disabled, 1 - enable this MyJailBreak SourceMod plugin", _, true,  0.0, true, 1.0);
+	gc_bSetW = AutoExecConfig_CreateConVar("sm_jihad_warden", "1", "0 - disabled, 1 - allow warden to set jihad round", _, true,  0.0, true, 1.0);
+	gc_bSetA = AutoExecConfig_CreateConVar("sm_jihad_admin", "1", "0 - disabled, 1 - allow admin to set jihad round", _, true,  0.0, true, 1.0);
+	gc_bVote = AutoExecConfig_CreateConVar("sm_jihad_vote", "1", "0 - disabled, 1 - allow player to vote for jihad", _, true,  0.0, true, 1.0);
+	gc_iKey = AutoExecConfig_CreateConVar("sm_jihad_key", "1", "1 - Inspect(look) weapon / 2 - walk / 3 - Secondary Attack", _, true,  1.0, true, 3.0);
+	gc_bStandStill = AutoExecConfig_CreateConVar("sm_jihad_standstill", "1", "0 - disabled, 1 - standstill(cant move) on Activate bomb", _, true,  0.0, true, 1.0);
+	gc_fBombRadius = AutoExecConfig_CreateConVar("sm_jihad_bomb_radius", "200.0","Radius for bomb damage", _, true, 10.0, true, 999.0);
+	gc_iFreezeTime = AutoExecConfig_CreateConVar("sm_jihad_hidetime", "20", "Time to hide for CTs", _, true,  0.0);
+	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_jihad_roundtime", "5", "Round time in minutes for a single jihad round", _, true, 1.0);
+	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_jihad_cooldown_day", "3", "Rounds cooldown after a event until event can be start again", _, true, 0.0);
+	gc_iCooldownStart = AutoExecConfig_CreateConVar("sm_jihad_cooldown_start", "3", "Rounds until event can be start after mapchange.", _, true, 0.0);
+	gc_bOverlays = AutoExecConfig_CreateConVar("sm_jihad_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true,  0.0, true, 1.0);
 	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_jihad_overlays_start", "overlays/MyJailbreak/start" , "Path to the start Overlay DONT TYPE .vmt or .vft");
-	gc_bSounds = AutoExecConfig_CreateConVar("sm_jihad_sounds_enable", "1", "0 - disabled, 1 - enable warden sounds");
-	gc_sSoundStartPath = AutoExecConfig_CreateConVar("sm_jihad_sounds_start", "music/myjailbreak/start.mp3", "Path to the soundfile which should be played for a start countdown.");
+	gc_bSounds = AutoExecConfig_CreateConVar("sm_jihad_sounds_enable", "1", "0 - disabled, 1 - enable sounds ", _, true,  0.0, true, 1.0);
+	gc_sSoundStartPath = AutoExecConfig_CreateConVar("sm_jihad_sounds_start", "music/myjailbreak/start.mp3", "Path to the soundfile which should be played for start.");
 	gc_sSoundJihadPath = AutoExecConfig_CreateConVar("sm_jihad_sounds_jihad", "music/myjailbreak/jihad.mp3", "Path to the soundfile which should be played on activatebomb.");
 	gc_sSoundBoomPath = AutoExecConfig_CreateConVar("sm_jihad_sounds_boom", "music/myjailbreak/bombe.mp3", "Path to the soundfile which should be played on detonation.");
-	gc_bSprintUse = AutoExecConfig_CreateConVar("sm_jihad_sprint_button", "1", "Enable/Disable +use button support", 0, true, 0.0, true, 1.0);
-	gc_fSprintCooldown = AutoExecConfig_CreateConVar("sm_jihad_sprint_cooldown", "10","Time in seconds the player must wait for the next sprint", 0, true, 1.0, true, 15.0);
-	gc_bSprint = AutoExecConfig_CreateConVar("sm_jihad_sprint_enable", "1", "0 - disabled, 1 - enable ShortSprint", 0, true, 0.0, true, 1.0);
-	gc_fSprintSpeed = AutoExecConfig_CreateConVar("sm_jihad_sprint_speed", "1.25","Ratio for how fast the player will sprint", 0, true, 1.01, true, 5.00);
-	gc_fSprintTime = AutoExecConfig_CreateConVar("sm_jihad_sprint_time", "1.0", "Time in seconds the player will sprint",0, true, 1.0, true, 30.0);
-	gc_bTag = AutoExecConfig_CreateConVar("sm_jihad_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	gc_bSprintUse = AutoExecConfig_CreateConVar("sm_jihad_sprint_button", "1", "0 - disabled, 1 - enable +use button for sprint", _, true,  0.0, true, 1.0);
+	gc_fSprintCooldown = AutoExecConfig_CreateConVar("sm_jihad_sprint_cooldown", "10","Time in seconds the player must wait for the next sprint", _, true,  0.0);
+	gc_bSprint = AutoExecConfig_CreateConVar("sm_jihad_sprint_enable", "1", "0 - disabled, 1 - enable ShortSprint", _, true,  0.0, true, 1.0);
+	gc_fSprintSpeed = AutoExecConfig_CreateConVar("sm_jihad_sprint_speed", "1.25","Ratio for how fast the player will sprint", _, true, 1.01, true, 5.00);
+	gc_fSprintTime = AutoExecConfig_CreateConVar("sm_jihad_sprint_time", "1.0", "Time in seconds the player will sprint", _, true, 1.0);
+	gc_bTag = AutoExecConfig_CreateConVar("sm_jihad_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", _, true,  0.0, true, 1.0);
 	
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
@@ -143,12 +143,6 @@ public void OnPluginStart()
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 
 	AddCommandListener(Command_LAW, "+lookatweapon");
-	
-	IsJiHad = false;
-	StartJiHad = false;
-	BombActive = false;
-	g_iVoteCount = 0;
-	JiHadRound = 0;
 	
 	for(int i = 1; i <= MaxClients; i++)
 		if(IsClientInGame(i)) OnClientPutInServer(i);
