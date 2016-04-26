@@ -189,21 +189,23 @@ public Action CS_OnTerminateRound( float &delay, CSRoundEndReason &reason)
 
 public void OnMapStart()
 {
+	g_iVoteCount = 0;
+	JiHadRound = 0;
+	IsJiHad = false;
+	StartJiHad = false;
+	BombActive = false;
+	
+	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
+	g_iFreezeTime = gc_iFreezeTime.IntValue;
+	
+	if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStart);
 	if(gc_bSounds.BoolValue)	
 	{
 		PrecacheSoundAnyDownload(g_sSoundJihadPath);
 		PrecacheSoundAnyDownload(g_sSoundBoomPath);
 		PrecacheSoundAnyDownload(g_sSoundStartPath);
 	}
-	if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStart);
 	PrecacheSound("player/suit_sprint.wav", true);
-	g_iVoteCount = 0;
-	JiHadRound = 0;
-	IsJiHad = false;
-	StartJiHad = false;
-	BombActive = false;
-	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
-	g_iFreezeTime = gc_iFreezeTime.IntValue;
 }
 
 public void OnConfigsExecuted()

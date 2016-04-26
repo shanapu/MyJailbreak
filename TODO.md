@@ -18,7 +18,7 @@ must:
 - [ ] clean up code 
 - [ ] comments
 - [ ] some polishing
-- [ ] clean/translate ConVars 
+- [x] clean/translate ConVars 
 - [ ] sv_tags to core
 - [x] warden:translate menu set
 - [x] find better STOP SOUND!

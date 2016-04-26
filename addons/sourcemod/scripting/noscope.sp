@@ -126,17 +126,16 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 
 public void OnMapStart()
 {
-	if(gc_bSounds.BoolValue)	
-	{
-		PrecacheSoundAnyDownload(g_sSoundStartPath);
-	}	
-	if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStart);
 	g_iVoteCount = 0;
 	NoScopeRound = 0;
 	IsNoScope = false;
 	StartNoScope = false;
+	
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iTruceTime = gc_iTruceTime.IntValue;
+	
+	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
+	if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStart);
 }
 
 public void OnConfigsExecuted()

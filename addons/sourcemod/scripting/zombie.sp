@@ -141,17 +141,15 @@ public void OnMapStart()
 	ZombieRound = 0;
 	IsZombie = false;
 	StartZombie = false;
+	
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
-	if(gc_bSounds.BoolValue)	
-	{
-		PrecacheSoundAnyDownload(g_sSoundStartPath);
-	}
-	PrecacheModel(g_sZombieModel);
-	if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStart);
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
 	g_sOldSkyName = FindConVar("sv_skyname");
 	g_sOldSkyName.GetString(g_sSkyName, sizeof(g_sSkyName));
 	
+	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
+	if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStart);
+	PrecacheModel(g_sZombieModel);
 }
 
 public void OnConfigsExecuted()

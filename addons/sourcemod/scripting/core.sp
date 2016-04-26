@@ -22,6 +22,10 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 {
 	CreateNative("SetEventDay", Native_SetEventDay);
 	CreateNative("GetEventDay", Native_GetEventDay);
+	
+//	RegPluginLibrary("MyJB");
+ 
+//	return APLRes_Success;
 }
 
 public int Native_SetEventDay(Handle plugin,int argc)

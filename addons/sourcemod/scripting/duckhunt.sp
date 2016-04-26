@@ -137,15 +137,14 @@ public void OnMapStart()
 	DuckHuntRound = 0;
 	IsDuckHunt = false;
 	StartDuckHunt = false;
+	
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iTruceTime = gc_iTruceTime.IntValue;
+	
+	if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStart);
+	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
 	PrecacheModel("models/chicken/chicken.mdl", true);
 	PrecacheModel(huntermodel, true);
-	if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStart);
-	if(gc_bSounds.BoolValue)	
-	{
-		PrecacheSoundAnyDownload(g_sSoundStartPath);
-	}	
 	AddFileToDownloadsTable("materials/models/props_farm/chicken_white.vmt");
 	AddFileToDownloadsTable("materials/models/props_farm/chicken_white.vtf");
 	AddFileToDownloadsTable("models/chicken/chicken.dx90.vtx");

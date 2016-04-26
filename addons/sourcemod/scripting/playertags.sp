@@ -4,6 +4,7 @@
 #include <wardn>
 #include <scp>
 #include <myjailbreak>
+#include <autoexecconfig>
 
 //Compiler Options
 #pragma semicolon 1

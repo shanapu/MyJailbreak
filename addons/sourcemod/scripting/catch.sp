@@ -153,15 +153,17 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 
 public void OnMapStart()
 {
-	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundFreezePath);
-	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundUnFreezePath);
-	if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayFreeze);
-	PrecacheSound("player/suit_sprint.wav", true);
 	g_iVoteCount = 0;
 	CatchRound = 0;
 	IsCatch = false;
 	StartCatch = false;
+	
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
+	
+	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundFreezePath);
+	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundUnFreezePath);
+	if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayFreeze);
+	PrecacheSound("player/suit_sprint.wav", true);
 }
 
 public void OnConfigsExecuted()
