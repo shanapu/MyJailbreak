@@ -6,7 +6,7 @@ A rewrite version of [Franugs Special Jailbreak](https://github.com/Franc1sco/Fr
 
 see [todo list](/TODO.md) the "must" part is todo before first release on AM
 
-help me by posting bugs and feature ideas in [Issue list](/issues)
+help me by posting bugs and feature ideas in [Issue list](https://github.com/shanapu/MyJailbreak/issues) (on github)
 
 forks and merge requests are welcome!
 
@@ -29,12 +29,12 @@ forks and merge requests are welcome!
     - Knife - (FFA Knifefight with switchable grav, ice, and TP)
     - Freeday - (auto on first round/damage disabled)
 
-work in progress!
-Files been updated ~daily so have a look at the last commits. No guarantee everything works well, but it should ;)
-the uploaded compiled smxs may no uptodate! hav a look to the commits!
-This is my first public project. please note that the code may is messy, stupid and inconseqent.
-I would be happy and very pleased if you wannt to join this project as equal collaborator.
-If you own a feature or extention for Jail/Warden that would fit in, i would be happy when you share it with us.
+work in progress! 
+Files been updated ~daily so have a look at the last commits. No guarantee everything works well, but it should ;) 
+the uploaded compiled smxs may no uptodate! hav a look to the commits! 
+This is my first public project. please note that the code may is messy, stupid and inconseqent. 
+I would be happy and very pleased if you wannt to join this project as equal collaborator. 
+If you own a feature or extention for Jail/Warden that would fit in, i would be happy when you share it with us. 
 
 
 ### Credits: 
