@@ -59,8 +59,8 @@ public Plugin myinfo = {
 public void OnPluginStart()
 {
 	// Translation
-	LoadTranslations("MyJailbreakWarden.phrases");
-	LoadTranslations("MyJailbreakMenu.phrases");
+	LoadTranslations("MyJailbreak.Warden.phrases");
+	LoadTranslations("MyJailbreak.Menu.phrases");
 	
 	//Client Commands
 	RegConsoleCmd("sm_menu", JbMenu);
