@@ -27,7 +27,6 @@ bool BombActive;
 
 //ConVars
 ConVar gc_bPlugin;
-ConVar gc_bTag;
 ConVar gc_bSetW;
 ConVar gc_bSetA;
 ConVar gc_bVote;
@@ -86,10 +85,10 @@ public void OnPluginStart()
 	LoadTranslations("MyJailbreak.JiHad.phrases");
 	
 	//Client Commands
-	RegConsoleCmd("sm_setjihad", SetJiHad);
-	RegConsoleCmd("sm_jihad", VoteJiHad);
-	RegConsoleCmd("sm_sprint", Command_StartSprint, "Starts the sprint.");
-	RegConsoleCmd("sm_makeboom", Command_BombJihad, "Starts the bomb.");
+	RegConsoleCmd("sm_setjihad", SetJiHad, "Allows the Admin or Warden to set jihad as next round");
+	RegConsoleCmd("sm_jihad", VoteJiHad, "Allows players to vote for a duckhunt");
+	RegConsoleCmd("sm_sprint", Command_StartSprint, "Starts the sprint");
+	RegConsoleCmd("sm_makeboom", Command_BombJihad, "Suicide with bomb");
 	
 	//AutoExecConfig
 	AutoExecConfig_SetFile("MyJailbreak.JiHad");
@@ -118,7 +117,6 @@ public void OnPluginStart()
 	gc_bSprint = AutoExecConfig_CreateConVar("sm_jihad_sprint_enable", "1", "0 - disabled, 1 - enable ShortSprint", _, true,  0.0, true, 1.0);
 	gc_fSprintSpeed = AutoExecConfig_CreateConVar("sm_jihad_sprint_speed", "1.25","Ratio for how fast the player will sprint", _, true, 1.01, true, 5.00);
 	gc_fSprintTime = AutoExecConfig_CreateConVar("sm_jihad_sprint_time", "1.0", "Time in seconds the player will sprint", _, true, 1.0);
-	gc_bTag = AutoExecConfig_CreateConVar("sm_jihad_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", _, true,  0.0, true, 1.0);
 	
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
@@ -212,18 +210,6 @@ public void OnConfigsExecuted()
 {
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
-	
-	if (gc_bTag.BoolValue)
-	{
-		ConVar hTags = FindConVar("sv_tags");
-		char sTags[128];
-		hTags.GetString(sTags, sizeof(sTags));
-		if (StrContains(sTags, "MyJailbreak", false) == -1)
-		{
-			StrCat(sTags, sizeof(sTags), ", MyJailbreak");
-			hTags.SetString(sTags);
-		}
-	}
 }
 
 public void OnClientPutInServer(int client)

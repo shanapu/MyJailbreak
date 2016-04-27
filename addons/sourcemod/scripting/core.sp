@@ -7,6 +7,9 @@
 #pragma semicolon 1
 #pragma newdecls required
 
+//ConVars
+ConVar gc_bTag;
+
 //Strings
 char IsEventDay[128] = "none";
 
@@ -18,14 +21,30 @@ public Plugin myinfo = {
 	url = ""
 };
 
+public void OnPluginStart()
+{
+	gc_bTag = CreateConVar("sm_myjb_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", _, true,  0.0, true, 1.0);
+}
+
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	CreateNative("SetEventDay", Native_SetEventDay);
 	CreateNative("GetEventDay", Native_GetEventDay);
-	
-//	RegPluginLibrary("MyJB");
- 
-//	return APLRes_Success;
+}
+
+public void OnConfigsExecuted()
+{
+	if (gc_bTag.BoolValue)
+	{
+		ConVar hTags = FindConVar("sv_tags");
+		char sTags[128];
+		hTags.GetString(sTags, sizeof(sTags));
+		if (StrContains(sTags, "MyJailbreak", false) == -1)
+		{
+			StrCat(sTags, sizeof(sTags), ", MyJailbreak");
+			hTags.SetString(sTags);
+		}
+	}
 }
 
 public int Native_SetEventDay(Handle plugin,int argc)

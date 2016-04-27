@@ -18,7 +18,6 @@ bool StartWar = false;
 
 //ConVars
 ConVar gc_bPlugin;
-ConVar gc_bTag;
 ConVar gc_bSetW;
 ConVar gc_bSetA;
 ConVar gc_bVote;
@@ -69,8 +68,8 @@ public void OnPluginStart()
 	LoadTranslations("MyJailbreak.War.phrases");
 	
 	//Client Commands
-	RegConsoleCmd("sm_setwar", SetWar);
-	RegConsoleCmd("sm_war", VoteWar);
+	RegConsoleCmd("sm_setwar", SetWar, "Allows the Admin or Warden to set a war for next rounds");
+	RegConsoleCmd("sm_war", VoteWar, "Allows players to vote for a war");
 	
 	//AutoExecConfig
 	AutoExecConfig_SetFile("MyJailbreak.War");
@@ -91,7 +90,6 @@ public void OnPluginStart()
 	gc_sSoundStartPath = AutoExecConfig_CreateConVar("sm_war_sounds_start", "music/myjailbreak/start.mp3", "Path to the soundfile which should be played for start.");
 	gc_bOverlays = AutoExecConfig_CreateConVar("sm_war_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true,  0.0, true, 1.0);
 	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_war_overlays_start", "overlays/MyJailbreak/start" , "Path to the start Overlay DONT TYPE .vmt or .vft");
-	gc_bTag = AutoExecConfig_CreateConVar("sm_war_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster", _, true,  0.0, true, 1.0);
 	
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
@@ -145,18 +143,6 @@ public void OnConfigsExecuted()
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
-	
-	if (gc_bTag.BoolValue)
-	{
-		ConVar hTags = FindConVar("sv_tags");
-		char sTags[128];
-		hTags.GetString(sTags, sizeof(sTags));
-		if (StrContains(sTags, "MyJailbreak", false) == -1)
-		{
-			StrCat(sTags, sizeof(sTags), ", MyJailbreak");
-			hTags.SetString(sTags);
-		}
-	}
 }
 
 public Action SetWar(int client,int args)

@@ -50,7 +50,6 @@ addons/sourcemod/scripting/include/nextmap.inc
 addons/sourcemod/scripting/include/profiler.inc
 addons/sourcemod/scripting/include/protobuf.inc
 addons/sourcemod/scripting/include/regex.inc
-
 addons/sourcemod/scripting/include/sdkhooks.inc
 addons/sourcemod/scripting/include/sdktools.inc
 addons/sourcemod/scripting/include/sdktools_client.inc

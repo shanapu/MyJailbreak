@@ -29,7 +29,6 @@ Handle weapons2 = null;
 //Handle remember = null;
 
 //ConVars
-ConVar gc_bTag;
 ConVar gc_bSpawn;
 ConVar gc_bPlugin;
 ConVar gc_bTerror;
@@ -65,32 +64,30 @@ public void OnPluginStart()
 	LoadTranslations("MyJailbreak.Weapons.phrases");
 	
 	//Client Commands
-	RegConsoleCmd("sm_guns", Cmd_Weapons);
-	RegConsoleCmd("sm_gun", Cmd_Weapons);
-	RegConsoleCmd("sm_weapon", Cmd_Weapons);
-	RegConsoleCmd("sm_weapons", Cmd_Weapons);
-	RegConsoleCmd("sm_arms", Cmd_Weapons);
-	RegConsoleCmd("sm_firearms", Cmd_Weapons);
-	RegConsoleCmd("sm_gunmenu", Cmd_Weapons);
-	RegConsoleCmd("sm_weaponmenu", Cmd_Weapons);
-	RegConsoleCmd("sm_give", Cmd_Weapons);
-	RegConsoleCmd("sm_giveweapon", Cmd_Weapons);
+	RegConsoleCmd("sm_guns", Cmd_Weapons, "Open the weapon menu if enabled (in EventDays/for CT)");
+	RegConsoleCmd("sm_gun", Cmd_Weapons, "Open the weapon menu if enabled (in EventDays/for CT)");
+	RegConsoleCmd("sm_weapon", Cmd_Weapons, "Open the weapon menu if enabled (in EventDays/for CT)");
+	RegConsoleCmd("sm_weapons", Cmd_Weapons, "Open the weapon menu if enabled (in EventDays/for CT)");
+	RegConsoleCmd("sm_arms", Cmd_Weapons, "Open the weapon menu if enabled (in EventDays/for CT)");
+	RegConsoleCmd("sm_firearms", Cmd_Weapons, "Open the weapon menu if enabled (in EventDays/for CT)");
+	RegConsoleCmd("sm_gunmenu", Cmd_Weapons, "Open the weapon menu if enabled (in EventDays/for CT)");
+	RegConsoleCmd("sm_weaponmenu", Cmd_Weapons, "Open the weapon menu if enabled (in EventDays/for CT)");
+	RegConsoleCmd("sm_giveweapon", Cmd_Weapons, "Open the weapon menu if enabled (in EventDays/for CT)");
 	
 	//AutoExecConfig
 	AutoExecConfig_SetFile("MyJailbreak.Weapons");
 	AutoExecConfig_SetCreateFile(true);
 	
 	AutoExecConfig_CreateConVar("sm_weapons_version", PLUGIN_VERSION, "The version of this MyJailBreak SourceMod plugin", FCVAR_SPONLY|FCVAR_PLUGIN|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
-	gc_bPlugin = AutoExecConfig_CreateConVar("sm_weapons_enable", "1", "0 - disabled, 1 - enable weapons - you shouldn't touch these, cause events days will handle them ", _, true,  0.0, true, 1.0);
-	gc_bTerror = AutoExecConfig_CreateConVar("sm_weapons_t", "0", "0 - disabled, 1 - enable weapons for T - you shouldn't touch these, cause events days will handle them", _, true,  0.0, true, 1.0);
-	gc_bCTerror = AutoExecConfig_CreateConVar("sm_weapons_ct", "1", "0 - disabled, 1 - enable weapons for CT - you shouldn't touch these, cause events days will handle them", _, true,  0.0, true, 1.0);
-	gc_bSpawn = AutoExecConfig_CreateConVar("sm_weapons_spawnmenu", "1", "0 - disabled, 1 - enable autoopen menu on spawn", _, true,  0.0, true, 1.0);
+	gc_bPlugin = AutoExecConfig_CreateConVar("sm_weapons_enable", "1", "0 - disabled, 1 - enable weapons menu - you shouldn't touch these, cause events days will handle them", _, true,  0.0, true, 1.0);
+	gc_bTerror = AutoExecConfig_CreateConVar("sm_weapons_t", "0", "0 - disabled, 1 - enable weapons menu for T - you shouldn't touch these, cause events days will handle them", _, true,  0.0, true, 1.0);
+	gc_bCTerror = AutoExecConfig_CreateConVar("sm_weapons_ct", "1", "0 - disabled, 1 - enable weapons menu for CT - you shouldn't touch these, cause events days will handle them", _, true,  0.0, true, 1.0);
+	gc_bSpawn = AutoExecConfig_CreateConVar("sm_weapons_spawnmenu", "1", "0 - disabled, 1 -  enable autoopen weapon menu on spawn if enabled", _, true,  0.0, true, 1.0);
 	gc_bAWP = AutoExecConfig_CreateConVar("sm_weapons_awp", "1", "0 - disabled, 1 - enable AWP in menu", _, true,  0.0, true, 1.0);
 	gc_bAutoSniper = AutoExecConfig_CreateConVar("sm_weapons_autosniper", "1", "0 - disabled, 1 - enable scar20 & g3sg1 in menu", _, true,  0.0, true, 1.0);
 	gc_bTA = AutoExecConfig_CreateConVar("sm_weapons_warden_tagrenade", "1", "0 - disabled, 1 - warden get a TA grenade with weapons", _, true,  0.0, true, 1.0);
 	gc_bHealth = AutoExecConfig_CreateConVar("sm_weapons_warden_healthshot", "1", "0 - disabled, 1 - warden get a healthshot with weapons", _, true,  0.0, true, 1.0);
-	gc_bJBmenu = AutoExecConfig_CreateConVar("sm_weapons_jbmenu", "1", "0 - disabled, 1 - enable autoopen the MyJailbreak menu after give weapon.", _, true,  0.0, true, 1.0);
-	gc_bTag = AutoExecConfig_CreateConVar("sm_weapons_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", _, true,  0.0, true, 1.0);
+	gc_bJBmenu = AutoExecConfig_CreateConVar("sm_weapons_jbmenu", "1", "0 - disabled, 1 - enable autoopen the MyJailbreak !menu after weapon given.", _, true,  0.0, true, 1.0);
 	
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
@@ -112,21 +109,6 @@ public void OnPluginStart()
 	optionsMenu2 = BuildOptionsMenu(false);
 	optionsMenu3 = BuildOptionsMenuWeapons(true);
 	optionsMenu4 = BuildOptionsMenuWeapons(false);
-}
-
-public void OnConfigsExecuted()
-{
-	if (gc_bTag.BoolValue)
-	{
-		ConVar hTags = FindConVar("sv_tags");
-		char sTags[128];
-		hTags.GetString(sTags, sizeof(sTags));
-		if (StrContains(sTags, "MyJailbreak", false) == -1)
-		{
-			StrCat(sTags, sizeof(sTags), ", MyJailbreak");
-			hTags.SetString(sTags);
-		}
-	}
 }
 
 Handle:BuildOptionsMenu(bool:sameWeaponsEnabled)

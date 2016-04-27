@@ -20,7 +20,6 @@ bool StartZombie = false;
 
 //ConVars
 ConVar gc_bPlugin;
-ConVar gc_bTag;
 ConVar gc_bSetW;
 ConVar gc_bSetA;
 ConVar gc_iCooldownStart;
@@ -68,8 +67,8 @@ public void OnPluginStart()
 	LoadTranslations("MyJailbreak.Zombie.phrases");
 	
 	//Client Commands
-	RegConsoleCmd("sm_setzombie", SetZombie);
-	RegConsoleCmd("sm_zombie", VoteZombie);
+	RegConsoleCmd("sm_setzombie", SetZombie, "Allows the Admin or Warden to set Zombie as next round");
+	RegConsoleCmd("sm_zombie", VoteZombie, "Allows players to vote for a Zombie");
 
 	
 	//AutoExecConfig
@@ -90,7 +89,6 @@ public void OnPluginStart()
 	gc_bOverlays = AutoExecConfig_CreateConVar("sm_zombie_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true, 0.0, true, 1.0);
 	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_zombie_overlays_start", "overlays/MyJailbreak/start" , "Path to the start Overlay DONT TYPE .vmt or .vft");
 	gc_sModelPath = AutoExecConfig_CreateConVar("sm_zombie_model", "models/player/custom_player/zombie/revenant/revenant_v2.mdl", "Path to the model for zombies.");
-	gc_bTag = AutoExecConfig_CreateConVar("sm_zombie_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", _, true, 0.0, true, 1.0);
 	
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
@@ -156,18 +154,6 @@ public void OnConfigsExecuted()
 {
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
-	
-	if (gc_bTag.BoolValue)
-	{
-		ConVar hTags = FindConVar("sv_tags");
-		char sTags[128];
-		hTags.GetString(sTags, sizeof(sTags));
-		if (StrContains(sTags, "MyJailbreak", false) == -1)
-		{
-			StrCat(sTags, sizeof(sTags), ", MyJailbreak");
-			hTags.SetString(sTags);
-		}
-	}
 }
 
 public Action SetZombie(int client,int args)

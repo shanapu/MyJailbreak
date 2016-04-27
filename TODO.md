@@ -14,12 +14,13 @@ bugs:
 
 must:
 
+
 - [x] disbale FF on roundend
 - [ ] clean up code 
 - [ ] comments
 - [ ] some polishing
 - [x] clean/translate ConVars 
-- [ ] sv_tags to core
+- [x] sv_tags to core
 - [x] warden:translate menu set
 - [x] find better STOP SOUND!
 - [x] duckhunt: more ammo for CT
@@ -65,6 +66,8 @@ must:
 
 
 want:
+
+- [ ] fastdl files
 - [ ] menu: add eventdays to admin if enabled
 - [ ] register plugins to core
 - [ ] playertags: only admin only warden...

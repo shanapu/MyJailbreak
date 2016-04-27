@@ -21,7 +21,6 @@ bool StartDuckHunt;
 
 //ConVars
 ConVar gc_bPlugin;
-ConVar gc_bTag;
 ConVar gc_bSetW;
 ConVar gc_bSetA;
 ConVar gc_bVote;
@@ -69,8 +68,8 @@ public void OnPluginStart()
 	LoadTranslations("MyJailbreak.DuckHunt.phrases");
 	
 	//Client Commands
-	RegConsoleCmd("sm_setduckhunt", SetDuckHunt);
-	RegConsoleCmd("sm_duckhunt", VoteDuckHunt);
+	RegConsoleCmd("sm_setduckhunt", SetDuckHunt, "Allows the Admin or Warden to set duckhunt as next round");
+	RegConsoleCmd("sm_duckhunt", VoteDuckHunt, "Allows players to vote for a duckhunt");
 	
 	//AutoExecConfig
 	AutoExecConfig_SetFile("MyJailbreak.DuckHunt");
@@ -86,10 +85,9 @@ public void OnPluginStart()
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_duckhunt_cooldown_day", "3", "Rounds cooldown after a event until event can be start again", _, true,  0.0);
 	gc_iCooldownStart = AutoExecConfig_CreateConVar("sm_duckhunt_cooldown_start", "3", "Rounds until event can be start after mapchange.", _, true,  0.0);
 	gc_bSounds = AutoExecConfig_CreateConVar("sm_duckhunt_sounds_enable", "1", "0 - disabled, 1 - enable sounds ", _, true,  0.0, true, 1.0);
-	gc_sSoundStartPath = AutoExecConfig_CreateConVar("sm_duckhunt_sounds_start", "music/myjailbreak/start.mp3", "Path to the soundfile which should be played for start");
+	gc_sSoundStartPath = AutoExecConfig_CreateConVar("sm_duckhunt_sounds_start", "music/myjailbreak/duckhunt.mp3", "Path to the soundfile which should be played for start");
 	gc_bOverlays = AutoExecConfig_CreateConVar("sm_duckhunt_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true,  0.0, true, 1.0);
 	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_duckhunt_overlays_start", "overlays/MyJailbreak/start" , "Path to the start Overlay DONT TYPE .vmt or .vft");
-	gc_bTag = AutoExecConfig_CreateConVar("sm_duckhunt_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster", _, true,  0.0, true, 1.0);
 	
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
@@ -157,18 +155,6 @@ public void OnConfigsExecuted()
 {
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
-	
-	if (gc_bTag.BoolValue)
-	{
-		ConVar hTags = FindConVar("sv_tags");
-		char sTags[128];
-		hTags.GetString(sTags, sizeof(sTags));
-		if (StrContains(sTags, "MyJailbreak", false) == -1)
-		{
-			StrCat(sTags, sizeof(sTags), ", MyJailbreak");
-			hTags.SetString(sTags);
-		}
-	}
 }
 
 public void OnClientPutInServer(int client)

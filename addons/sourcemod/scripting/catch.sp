@@ -27,7 +27,6 @@ bool catched[MAXPLAYERS+1];
 
 //ConVars
 ConVar gc_bPlugin;
-ConVar gc_bTag;
 ConVar gc_bSetW;
 ConVar gc_bSetA;
 ConVar gc_bVote;
@@ -79,9 +78,9 @@ public void OnPluginStart()
 	LoadTranslations("MyJailbreak.Catch.phrases");
 	
 	//Client Commands
-	RegConsoleCmd("sm_setcatch", SetCatch);
-	RegConsoleCmd("sm_catch", VoteCatch);
-	RegConsoleCmd("sm_sprint", Command_StartSprint, "Starts the sprint.");
+	RegConsoleCmd("sm_setcatch", SetCatch, "Allows the Admin or Warden to set catch as next round");
+	RegConsoleCmd("sm_catch", VoteCatch, "Allows players to vote for a catch ");
+	RegConsoleCmd("sm_sprint", Command_StartSprint, "Start sprinting!");
 	
 	//AutoExecConfig
 	AutoExecConfig_SetFile("MyJailbreak.Catch");
@@ -106,7 +105,6 @@ public void OnPluginStart()
 	gc_fSprintCooldown= AutoExecConfig_CreateConVar("sm_catch_sprint_cooldown", "10", "Time in seconds the player must wait for the next sprint", _, true, 0.0);
 	gc_fSprintSpeed = AutoExecConfig_CreateConVar("sm_catch_sprint_speed", "1.25", "Ratio for how fast the player will sprint", _, true, 1.01);
 	gc_fSprintTime = AutoExecConfig_CreateConVar("sm_catch_sprint_time", "3.0", "Time in seconds the player will sprint", _, true, 1.0);
-	gc_bTag = AutoExecConfig_CreateConVar("sm_catch_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", _, true, 0.0, true, 1.0);
 	
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
@@ -169,18 +167,6 @@ public void OnMapStart()
 public void OnConfigsExecuted()
 {
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
-	
-	if (gc_bTag.BoolValue)
-	{
-		ConVar hTags = FindConVar("sv_tags");
-		char sTags[128];
-		hTags.GetString(sTags, sizeof(sTags));
-		if (StrContains(sTags, "MyJailbreak", false) == -1)
-		{
-			StrCat(sTags, sizeof(sTags), ", MyJailbreak");
-			hTags.SetString(sTags);
-		}
-	}
 }
 
 public void OnClientPutInServer(int client)

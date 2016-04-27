@@ -1,6 +1,6 @@
 # MyJailbreak 
 
-A rewrite version of [Franugs Special Jailbreak](https://github.com/Franc1sco/Franug-Jailbreak/) and  [eccas, ESK0s & zipcores Jailbreak Warden](http://www.sourcemod.net/plugins.php?cat=0&mod=-1&title=Warden&author=&description=&search=1)
+A rewrite of [Franugs Special Jailbreak](https://github.com/Franc1sco/Franug-Jailbreak/) and merge of [eccas, ESK0s & zipcores Jailbreak Warden](http://www.sourcemod.net/plugins.php?cat=0&mod=-1&title=Warden&author=&description=&search=1)
 
 ## Jailbreak plugin pack for CS:GO Jailserver
 
@@ -14,7 +14,7 @@ help, ideas, forks and merge requests are welcome!
 - [Menu](#menu) - (Player menus for T, CT, Warden & Admin)
 - [Weapons](#weapons) - (weapon menus for CT / T in event rounds)
 - [PlayerTags](#playertags) - (add player Tags for T, T.Admin, CT, CT.Admin, W, WA.Admin - need [scp](#requires-plugins)
-- EventDays (vote/set a Event for next round with cooldowns, sounds & overlays) - all need [sjd](#requires-plugins)&[scp](#requires-plugins)
+- [EventDays](#eventdays-core) (vote/set a Event for next round with cooldowns, sounds & overlays) - all need [sjd](#requires-plugins)&[scp](#requires-plugins)
     - [War](#war) (CT vs T TDM)
     - [Free For All](#freeforall) (FFA DM)
     - [Zombie](#zombie) (CT(zombie) vs T(Human))
@@ -27,9 +27,12 @@ help, ideas, forks and merge requests are welcome!
     - [Knife](#knifefight) - (CT vs T Knifefight with switchable grav, ice, and TP)
     - [FreeDay](#freeday) - (auto FreeDay on first round/damage disabled)
 
+
 work in progress!  
 Files been updated ~daily so have a look at the last commits.  
 **the uploaded compiled smxs may no uptodate! hav a look to the commits!** have a look for [requires plugins](#requires-plugins)  
+I recommend until full release, when update to overwrite all files (plugins, translations, sounds, Overlays,...).
+
 This is my first public project. please note that the code may is messy, stupid and inconseqent.  
 I would be happy and very pleased if you wannt to join this project as equal collaborator.  
 If you own a feature or extention for Jail/Warden that would fit in, i would be happy when you share it with us.  
@@ -37,7 +40,7 @@ If you own a feature or extention for Jail/Warden that would fit in, i would be 
 
 ### Credits: 
 
-**used code from: ecca, Zipcore, ESK0, Floody.de, Franc1sco, walmar, KeepCalm, bara, Arkarr, KissLick, headline, Hipster, ReFlexPoison** and many other I cant remember unfortunately!
+**used code from: ecca, Zipcore, ESK0, Floody.de, Franc1sco, walmar, KeepCalm, bara, Arkarr, KissLick, headline, Hipster, ReFlexPoison** and many other I cant remember unfortunately! [detailed](#detailed-credits)
 # THANKS FOR MAKING FREE SOFTWARE!
 
 #### Much Thanks: 
@@ -65,11 +68,12 @@ Colorize Warden, open/close cell doors, automatic open cells doors, vote retire 
 - sm_close - Allows the Warden to close the cell doors
 - sm_noblockon - Allows the Warden to enable no block 
 - sm_noblockoff - Allows the Warden to disable no block
-- sm_ff - Allows player to see the state and the Warden to toggle friendly fire
+- sm_setff - Allows player to see the state and the Warden to toggle friendly fire
 - sm_cdmenu - Allows the Warden to open the Countdown Menu
-- sm_cdstart - Allows the Warden to start a START Countdown! (start after 10sec.) - Countdown without menu
-- sm_cdstop - Allows the Warden to start a STOP Countdown! (stop after 20sec.) - Countdown without menu
-- sm_cdstartstop - Allows the Warden to start a START/STOP Countdown! (start after 10sec./stop after 20sec.) - Countdown without menu
+- sm_cdstart - Allows the Warden to start a START Countdown! (start after 10sec.) - start without menu
+- sm_cdstop - Allows the Warden to start a STOP Countdown! (stop after 20sec.) - start without menu
+- sm_cdstartstop - Allows the Warden to start a START/STOP Countdown! (start after 10sec./stop after 20sec.) - start without menu
+- sm_cdcancel - Allows the Warden to cancel a running Countdown
 - sm_killrandom - Allows the Warden to kill a random T
 - sm_math  Allows the Warden to start a MathQuiz. Show player with first right Answer
 ```
@@ -94,7 +98,7 @@ Colorize Warden, open/close cell doors, automatic open cells doors, vote retire 
 - sm_warden_marker: 0 - disabled, 1 - enable Warden simple markers. Default 1
 - sm_warden_marker_time: Time in seconds marker will disappears. Default 20
 - sm_warden_markerkey: Key to set Makrer - 1 - Look weapon / 2 - Use and shoot / 3 - walk and shoot. Default 3
-- sm_warden_math: 0 - disabled, 1 - enable mathquiz for Warden. Default 1	
+- sm_warden_math: 0 - disabled, 1 - enable mathquiz for Warden. Default 1
 - sm_warden_math_min: What should be the minimum number for questions. Default 1
 - sm_warden_math_max: What should be the maximum number for questions. Default 100
 - sm_warden_math_time: Time in seconds to give a answer to a question. Default 10
@@ -135,7 +139,7 @@ The menu shows only features that are enabled per round (e.g at EventDays no War
 
 ##### Commands 
 ```
-- sm_menu / sm_menus - open the player menu
+- sm_menu / sm_menus - opens the menu depends on players team/rank
 - sm_days / sm_event / sm _events - open the EventDays menu for Warden/Admin
 ```
 ##### Cvars
@@ -157,6 +161,37 @@ The menu shows only features that are enabled per round (e.g at EventDays no War
 - Colors
 - only shows available features
 
+#### Weapons
+
+This plugins open a Gunmenu to players if weapons are enabled for EventDays.
+
+##### Commands 
+```
+- sm_gun / sm_guns / sm_gunmenu - Open the weapon menu if enabled (in EventDays/for CT)
+- sm_weapon / sm_weapons / sm_weaponsmenu - Open the weapon menu if enabled (in EventDays/for CT)
+- sm_arms / sm_firearms - Open the weapon menu if enabled (in EventDays/for CT)
+- sm_giveweapon - Open the weapon menu if enabled (in EventDays/for CT)
+```
+##### Cvars
+```
+- sm_weapons_version - Shows the version of the SourceMod plugin MyJailbreak - Weapons
+- sm_weapons_enable: 0 - disabled, 1 - enable weapons menu - you shouldn't touch these, cause events days will handle them
+- sm_weapons_ct: 0 - disabled, 1 - enable weapons menu for CT - you shouldn't touch these, cause events days will handle them
+- sm_weapons_t: 0 - disabled, 1 - enable weapons menu for T - you shouldn't touch these, cause events days will handle them
+- sm_weapons_spawnmenu: disabled, 1 - enable autoopen weapon menu on spawn if enabled
+- sm_weapons_awp: 0 - disabled, 1 - enable AWP in weapon menu
+- sm_weapons_autosniper: 0 - disabled, 1 - enable scar20 & g3sg1 in menu
+- sm_weapons_tagrenade: 0 - disabled, 1 - warden get a TA grenade with weapons
+- sm_weapons_warden_healthshot: 0 - disabled, 1 - warden get a healthshot with weapons
+- sm_weapons_jbmenu: 0 - disabled, 1 - enable autoopen the MyJailbreak menu after weapon given.
+```
+##### Features
+
+- Custom chat [Tag]
+- Multilingual support
+- Colors
+- only shows in available EventDays
+
 #### PlayerTags
 
 This plugins give players Tags for team (T,CT) and "rank" (Admin/Warden) in stats &/or chat
@@ -165,8 +200,18 @@ This plugins give players Tags for team (T,CT) and "rank" (Admin/Warden) in stat
 ```
 - sm_playertag_version - Shows the version of the SourceMod plugin MyJailbreak - PlayerTags
 - sm_playertag_enable: 0 - disabled, 1 - enable Player Tag
-- sm_playertag_stats: 0 - disabled, 1 - enable PlayerTag in stats	
+- sm_playertag_stats: 0 - disabled, 1 - enable PlayerTag in stats
 - sm_playertag_chat: 0 - disabled, 1 - enable PlayerTag in Chat
+
+```
+
+#### EventDays core
+
+This plugins is the "interface" between Eventdays. need for cooldowns and disable other days on running Eventday.
+
+##### Cvars
+```
+- sm_myjb_tag: 0 - disabled, 1 - Allow "MyJailbreak" to be added to your server tags. So player will find servers with MyJB faster. it dont touch youR sv_tags
 
 ```
 
@@ -178,8 +223,8 @@ Or on Round start Ts spawn in open cells with weapons and weaponmenu. No Freeze/
 
 ##### Commands
 ```
-- sm_war - Allows players to vote for a war 
-- sm_setwar - Allows the Admin(sm_map) or Warden to set a war for next rounds
+- sm_war - Allows players to vote for a war
+- sm_setwar - Allows the Admin or Warden to set a war for next rounds
 ```
 ##### Cvars
 ```
@@ -218,8 +263,8 @@ Or on Round start Ts spawn in open cells with weapons & weaponmenu. (Default)
 
 ##### Commands
 ```
-- sm_ffa / sm_warffa - Allows players to vote for a FFA 
-- sm_setffa - Allows the Admin(sm_map) or Warden to set a ffa for next rounds
+- sm_ffa - Allows players to vote for a FFA 
+- sm_setffa - Allows the Admin or Warden to set a ffa for next rounds
 ```
 ##### Cvars
 ```
@@ -257,8 +302,8 @@ Zombies freezed for 35sec (default) so T can hide &/or climb.
 
 ##### Commands
 ```
-- sm_zombie / sm_undead - Allows players to vote for a Zombie 
-- sm_setzombie - Allows the Admin(sm_map) or Warden to set Zombie as next round
+- sm_zombie - Allows players to vote for a Zombie 
+- sm_setzombie - Allows the Admin or Warden to set Zombie as next round
 ```
 ##### Cvars
 ```
@@ -295,8 +340,8 @@ On Round start cells open everybody got a scout with noscope in low gravity. Nod
 
 ##### Commands
 ```
-- sm_noscope / sm_undead - Allows players to vote for a noscope 
-- sm_setnoscope - Allows the Admin(sm_map) or Warden to set noscope as next round
+- sm_noscope - Allows players to vote for a noscope
+- sm_setnoscope - Allows the Admin or Warden to set noscope as next round
 ```
 ##### Cvars
 ```
@@ -333,8 +378,8 @@ On Round start cells open everybody got HE grenate with low gravity(Default) and
 
 ##### Commands
 ```
-- sm_dodgeball / sm_undead - Allows players to vote for a dodgeball 
-- sm_setdodgeball - Allows the Admin(sm_map) or Warden to set dodgeball as next round
+- sm_dodgeball - Allows players to vote for a dodgeball
+- sm_setdodgeball - Allows the Admin or Warden to set dodgeball as next round
 ```
 ##### Cvars
 ```
@@ -373,7 +418,7 @@ Ts can unfreeze Freezed Ts by knife them again.
 ##### Commands
 ```
 - sm_catch - Allows players to vote for a catch 
-- sm_setcatch - Allows the Admin(sm_map) or Warden to set catch as next round
+- sm_setcatch - Allows the Admin or Warden to set catch as next round
 - sm_sprint - Start sprinting!
 ```
 
@@ -418,8 +463,8 @@ When CT unfreezed (30sec. default) Ts get freezed (default).
 
 ##### Commands
 ```
-- sm_hide / sm_undead - Allows players to vote for a hide 
-- sm_sethide - Allows the Admin(sm_map) or Warden to set hide as next round
+- sm_hide - Allows players to vote for a hide
+- sm_sethide - Allows the Admin or Warden to set hide as next round
 ```
 ##### Cvars
 ```
@@ -443,7 +488,6 @@ When CT unfreezed (30sec. default) Ts get freezed (default).
 ##### Features
 
 - disable Warden, other EventDays, lastrequest
-
 - autoopen celldoors (need smartjaildoors)
 - Multilingual support
 - Colors
@@ -456,8 +500,8 @@ T are Chicken in Thirdperson. After trucetime the cells open and T got HE grenad
 
 ##### Commands
 ```
-- sm_duckhunt / sm_undead - Allows players to vote for a duckhunt 
-- sm_setduckhunt - Allows the Admin(sm_map) or Warden to set duckhunt as next round
+- sm_duckhunt - Allows players to vote for a duckhunt
+- sm_setduckhunt - Allows the Admin or Warden to set duckhunt as next round
 ```
 ##### Cvars
 ```
@@ -494,8 +538,8 @@ On Round start CTs got time to hide before cells open and Ts got Suicide bombs t
 
 ##### Commands
 ```
-- sm_jihad - Allows players to vote for a duckhunt 
-- sm_setjihad - Allows the Admin(sm_map) or Warden to set jihad as next round
+- sm_jihad - Allows players to vote for a duckhunt
+- sm_setjihad - Allows the Admin or Warden to set jihad as next round
 - sm_sprint - Start sprinting!
 - sm_makeboom - Suicide with bomb.
 
@@ -545,7 +589,7 @@ On Round start cells open everybody KnifeOnly with thirdperson, low gravity(Defa
 ##### Commands
 ```
 - sm_knifefight - Allows players to vote for a knifefight 
-- sm_setknifefight - Allows the Admin(sm_map) or Warden to set knifefight as next round
+- sm_setknifefight - Allows the Admin or Warden to set knifefight as next round
 ```
 ##### Cvars
 ```
@@ -588,7 +632,7 @@ On Round start cells open for freeday and enabled Damage (Default).
 ##### Commands
 ```
 - sm_freeday - Allows players to vote for a freeday 
-- sm_setfreeday - Allows the Admin(sm_map) or Warden to set freeday as next round
+- sm_setfreeday - Allows the Admin or Warden to set freeday as next round
 ```
 ##### Cvars
 ```
@@ -615,14 +659,29 @@ On Round start cells open for freeday and enabled Damage (Default).
 
 ### requires plugins
 - Smart Jail Doors https://github.com/Kailo97/smartjaildoors
-- sm hosties https://github.com/dataviruset/sm-hosties
-- SM File/Folder Downloader and Precacher https://forums.alliedmods.net/showthread.php?p=602270 only for zombie/(Warden) model download (overlays & sounds will be auto added)
+- SM File/Folder Downloader and Precacher https://forums.alliedmods.net/showthread.php?p=602270 only for [zombie/(Warden) model download (download.ini)](/downloads.ini) (overlays & sounds will be auto added)
 - Simple Chat Prozessor https://bitbucket.org/minimoney1/simple-chat-processor
+
+### files needed for compilation, besides the sourcemods standards 
+- [autoexecconfig.inc](https://forums.alliedmods.net/showthread.php?t=204254)
+- [colors.inc](https://forums.alliedmods.net/showthread.php?t=96831)
+- [emitsoundany.inc](https://forums.alliedmods.net/showthread.php?t=237045)
+- [myjailbreak.inc](/addons/sourcemod/scripting/include/myjailbreak.inc)
+- [scp.inc](https://forums.alliedmods.net/showthread.php?t=198501)
+- [smartjaildoors.inc](https://forums.alliedmods.net/showthread.php?p=2306289)
+- [wardn.inc](/addons/sourcemod/scripting/include/wardn.inc)
+
 
 ### recomment plugins
 - [CS:GO] Flashlight (1.3.62) https://forums.alliedmods.net/showthread.php?p=2042310
 
+##### dependencies within MyJailbreak:
+- warden - you can use warden as standalone. no need to use Eventdays(core), menu... please tell me if not!
+- menu - if you dont wanna use the menu, make sm_weapons_jbmenu 0
+- weapons - if you dont wanna use the weapons menu, on EventDays player get "standart weapons".
+....more
 
+### detailed credits
 based/merged/used code/idea plugins:
 * https://github.com/ecca/SourceMod-Plugins/tree/sourcemod/Warden
 * https://github.com/ESK0/ESK0s_Jailbreak_warden/
@@ -637,5 +696,8 @@ based/merged/used code/idea plugins:
 * https://github.com/KissLick/TeamGames/
 * https://github.com/AG-Headline/Hunger-Games-Beacon
 * https://forums.alliedmods.net/showthread.php?p=1086127
++ https://github.com/Zipcore/Timer/ (sounds)
+* https://git.tf/TTT/Plugin (sounds)
+
 * if I missed someone, please tell me!
 * THANK YOU ALL! 

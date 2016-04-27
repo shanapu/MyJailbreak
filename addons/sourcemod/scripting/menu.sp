@@ -16,7 +16,6 @@
 #define PLUGIN_VERSION "0.3"
 
 //ConVars
-ConVar gc_bTag;
 ConVar gc_bPlugin;
 ConVar gc_bTerror;
 ConVar gc_bCTerror;
@@ -63,12 +62,12 @@ public void OnPluginStart()
 	LoadTranslations("MyJailbreak.Menu.phrases");
 	
 	//Client Commands
-	RegConsoleCmd("sm_menu", JbMenu);
-	RegConsoleCmd("sm_menus", JbMenu);
-	RegConsoleCmd("buyammo1", JbMenu);
-	RegConsoleCmd("sm_days", EventDays);
-	RegConsoleCmd("sm_events", EventDays);
-	RegConsoleCmd("sm_event", EventDays);
+	RegConsoleCmd("sm_menu", JbMenu, "opens the menu depends on players team/rank");
+	RegConsoleCmd("sm_menus", JbMenu, "opens the menu depends on players team/rank");
+	RegConsoleCmd("buyammo1", JbMenu, "opens the menu depends on players team/rank");
+	RegConsoleCmd("sm_days", EventDays, "open the EventDays menu for Warden/Admin");
+	RegConsoleCmd("sm_events", EventDays, "open the EventDays menu for Warden/Admin");
+	RegConsoleCmd("sm_event", EventDays, "open the EventDays menu for Warden/Admin");
 	
 	//AutoExecConfig
 	AutoExecConfig_SetFile("MyJailbreak_menu");
@@ -83,7 +82,6 @@ public void OnPluginStart()
 	gc_bClose = AutoExecConfig_CreateConVar("sm_menu_close", "1", "0 - disabled, 1 - enable close menu after action");
 	gc_bStart = AutoExecConfig_CreateConVar("sm_menu_start", "1", "0 - disabled, 1 - enable open menu on every roundstart");
 	gc_bWelcome = AutoExecConfig_CreateConVar("sm_menu_welcome", "1", "Show welcome message to newly connected users.");
-	gc_bTag = AutoExecConfig_CreateConVar("sm_menu_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
@@ -94,18 +92,6 @@ public void OnPluginStart()
 
 public void OnConfigsExecuted()
 {
-	if (gc_bTag.BoolValue)
-	{
-		ConVar hTags = FindConVar("sv_tags");
-		char sTags[128];
-		hTags.GetString(sTags, sizeof(sTags));
-		if (StrContains(sTags, "MyJailbreak", false) == -1)
-		{
-			StrCat(sTags, sizeof(sTags), ", MyJailbreak");
-			hTags.SetString(sTags);
-		}
-	}
-	
 	g_bWarden = FindConVar("sm_warden_enable");
 	g_bMath = FindConVar("sm_warden_math");
 	g_bWar = FindConVar("sm_war_enable");

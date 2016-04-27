@@ -54,7 +54,7 @@ ConVar gc_sSoundStartPath;
 ConVar gc_sStop;
 //ConVar gc_sModelPath;
 //ConVar gc_bModel;
-ConVar gc_bTag;
+
 ConVar gc_bBetterNotes;
 ConVar g_bFF;
 ConVar gc_iMinimumNumber;
@@ -132,32 +132,32 @@ public void OnPluginStart()
 	LoadTranslations("MyJailbreak.Warden.phrases");
 	
 	//Client commands
-	RegConsoleCmd("sm_noblockon", noblockon); 
-	RegConsoleCmd("sm_noblockoff", noblockoff); 
-	RegConsoleCmd("sm_w", BecomeWarden);
-	RegConsoleCmd("sm_warden", BecomeWarden);
-	RegConsoleCmd("sm_uw", ExitWarden);
-	RegConsoleCmd("sm_unwarden", ExitWarden);
-	RegConsoleCmd("sm_hg", BecomeWarden);
-	RegConsoleCmd("sm_headguard", BecomeWarden);
-	RegConsoleCmd("sm_uhg", ExitWarden);
-	RegConsoleCmd("sm_unheadguard", ExitWarden);
-	RegConsoleCmd("sm_c", BecomeWarden);
-	RegConsoleCmd("sm_commander", BecomeWarden);
-	RegConsoleCmd("sm_uc", ExitWarden);
-	RegConsoleCmd("sm_uncommander", ExitWarden);
-	RegConsoleCmd("sm_open", OpenDoors);
-	RegConsoleCmd("sm_close", CloseDoors);
-	RegConsoleCmd("sm_vw", VoteWarden);
-	RegConsoleCmd("sm_votewarden", VoteWarden);
-	RegConsoleCmd("sm_setff", ToggleFF);
-	RegConsoleCmd("sm_cdstart", SetStartCountDown);
-	RegConsoleCmd("sm_cdmenu", CDMenu);
-	RegConsoleCmd("sm_cdstartstop", StartStopCDMenu);
-	RegConsoleCmd("sm_cdstop", SetStopCountDown);
-	RegConsoleCmd("sm_cdcancel", CancelCountDown);
-	RegConsoleCmd("sm_killrandom", KillRandom);
-	RegConsoleCmd("sm_math", StartMathQuestion);
+	RegConsoleCmd("sm_noblockon", noblockon, "Allows the Warden to enable no block"); 
+	RegConsoleCmd("sm_noblockoff", noblockoff, "Allows the Warden to disable no block"); 
+	RegConsoleCmd("sm_w", BecomeWarden, "Allows the player taking the charge over prisoners");
+	RegConsoleCmd("sm_warden", BecomeWarden, "Allows the player taking the charge over prisoners");
+	RegConsoleCmd("sm_uw", ExitWarden, "Allows the player to retire from the position");
+	RegConsoleCmd("sm_unwarden", ExitWarden, "Allows the player to retire from the position");
+	RegConsoleCmd("sm_hg", BecomeWarden, "Allows the player taking the charge over prisoners");
+	RegConsoleCmd("sm_headguard", BecomeWarden, "Allows the player taking the charge over prisoners");
+	RegConsoleCmd("sm_uhg", ExitWarden, "Allows the player to retire from the position");
+	RegConsoleCmd("sm_unheadguard", ExitWarden, "Allows the player to retire from the position");
+	RegConsoleCmd("sm_c", BecomeWarden, "Allows the player taking the charge over prisoners");
+	RegConsoleCmd("sm_commander", BecomeWarden, "Allows the player taking the charge over prisoners");
+	RegConsoleCmd("sm_uc", ExitWarden, "Allows the player to retire from the position");
+	RegConsoleCmd("sm_uncommander", ExitWarden, "Allows the player to retire from the position");
+	RegConsoleCmd("sm_open", OpenDoors, "Allows the Warden to open the cell doors");
+	RegConsoleCmd("sm_close", CloseDoors, "Allows the Warden to close the cell doors");
+	RegConsoleCmd("sm_vw", VoteWarden, "Allows the player to vote to retire Warden");
+	RegConsoleCmd("sm_votewarden", VoteWarden, "Allows the player to vote to retire Warden");
+	RegConsoleCmd("sm_setff", ToggleFF, "Allows player to see the state and the Warden to toggle friendly fire");
+	RegConsoleCmd("sm_cdstart", SetStartCountDown, "Allows the Warden to start a START Countdown! (start after 10sec.) - start without menu");
+	RegConsoleCmd("sm_cdmenu", CDMenu, "Allows the Warden to open the Countdown Menu");
+	RegConsoleCmd("sm_cdstartstop", StartStopCDMenu, "Allows the Warden to start a START/STOP Countdown! (start after 10sec./stop after 20sec.) - start without menu");
+	RegConsoleCmd("sm_cdstop", SetStopCountDown, "Allows the Warden to start a STOP Countdown! (stop after 20sec.) - start without menu");
+	RegConsoleCmd("sm_cdcancel", CancelCountDown, "Allows the Warden to cancel a running Countdown");
+	RegConsoleCmd("sm_killrandom", KillRandom, "Allows the Warden to kill a random T");
+	RegConsoleCmd("sm_math", StartMathQuestion, "Allows the Warden to start a MathQuiz. Show player with first right Answer");
 	
 	//Admin commands
 	RegAdminCmd("sm_sw", SetWarden, ADMFLAG_GENERIC);
@@ -216,9 +216,7 @@ public void OnPluginStart()
 	gc_sStop = AutoExecConfig_CreateConVar("sm_warden_sounds_stop", "music/myjailbreak/stop.mp3", "Path to the soundfile which should be played for stop countdown.");
 //	gc_bModel = AutoExecConfig_CreateConVar("sm_warden_model", "1", "0 - disabled, 1 - enable warden model", 0, true, 0.0, true, 1.0);
 //	gc_sModelPath = AutoExecConfig_CreateConVar("sm_warden_model_path", "models/player/custom_player/legacy/security.mdl", "Path to the model for zombies.");
-	gc_bTag = AutoExecConfig_CreateConVar("sm_warden_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", 0, true, 0.0, true, 1.0);
 	
-		
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
 	
@@ -286,18 +284,6 @@ public void RoundStart(Event event, const char[] name, bool dontBroadcast)
 
 public void OnConfigsExecuted()
 {
-	
-	if (gc_bTag.BoolValue)
-	{
-		ConVar hTags = FindConVar("sv_tags");
-		char sTags[128];
-		hTags.GetString(sTags, sizeof(sTags));
-		if (StrContains(sTags, "MyJailbreak", false) == -1)
-		{
-			StrCat(sTags, sizeof(sTags), ", MyJailbreak");
-			hTags.SetString(sTags);
-		}
-	}
 	g_MathMin = gc_iMinimumNumber.IntValue;
 	g_MathMax = gc_iMaximumNumber.IntValue;
 }

@@ -22,7 +22,6 @@ bool StartFreeDay = false;
 
 //ConVars
 ConVar gc_bPlugin;
-ConVar gc_bTag;
 ConVar gc_bSetW;
 ConVar gc_bFirst;
 ConVar gc_bDamage;
@@ -60,8 +59,8 @@ public void OnPluginStart()
 	LoadTranslations("MyJailbreak.FreeDay.phrases");
 	
 	//Client Commands
-	RegConsoleCmd("sm_setfreeday", SetFreeDay);
-	RegConsoleCmd("sm_freeday", VoteFreeDay);
+	RegConsoleCmd("sm_setfreeday", SetFreeDay, "Allows the Admin or Warden to set freeday as next round");
+	RegConsoleCmd("sm_freeday", VoteFreeDay, "Allows players to vote for a freeday");
 
 	
 	//AutoExecConfig
@@ -77,7 +76,6 @@ public void OnPluginStart()
 	gc_bDamage = AutoExecConfig_CreateConVar("sm_freeday_damage", "1", "0 - disabled, 1 - enable damage on freedays", _, true,  0.0, true, 1.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_freeday_roundtime", "5", "Round time in minutes for a single freeday round", _, true,  1.0);
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_freeday_cooldown_day", "3", "Rounds until freeday can be started again.", _, true,  0.0);
-	gc_bTag = AutoExecConfig_CreateConVar("sm_freeday_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster", _, true,  0.0, true, 1.0);
 	
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
@@ -106,21 +104,6 @@ public void OnMapStart()
 		StartFreeDay = false;	
 	}
 	IsFreeDay = false;
-}
-
-public void OnConfigsExecuted()
-{
-	if (gc_bTag.BoolValue)
-	{
-		ConVar hTags = FindConVar("sv_tags");
-		char sTags[128];
-		hTags.GetString(sTags, sizeof(sTags));
-		if (StrContains(sTags, "MyJailbreak", false) == -1)
-		{
-			StrCat(sTags, sizeof(sTags), ", MyJailbreak");
-			hTags.SetString(sTags);
-		}
-	}
 }
 
 public Action SetFreeDay(int client,int args)
