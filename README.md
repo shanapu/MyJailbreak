@@ -4,7 +4,7 @@ A rewrite version of [Franugs Special Jailbreak](https://github.com/Franc1sco/Fr
 
 ## Jailbreak plugin pack for CS:GO Jailserver
 
-see [todo list](/blob/master/TODO.md) the "must" part is todo before first release on AM
+see [todo list](/TODO.md) the "must" part is todo before first release on AM
 
 help me by posting bugs and feature ideas in [Issue list](/issues)
 
