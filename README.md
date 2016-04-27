@@ -4,31 +4,19 @@ A rewrite version of [Franugs Special Jailbreak](https://github.com/Franc1sco/Fr
 
 ## Jailbreak plugin pack for CS:GO Jailserver
 
-work in progress!
+see [todo list](/blob/master/TODO.md) the "must" part is todo before first release on AM
 
-Files been updated ~daily so have a look at the last commits. No guarantee everything works well, but it should ;)
-
-the uploaded compiled smxs may no uptodate! hav a look to the commits!
-
-This is my first public project. please note that the code may is messy, stupid and inconseqent.
-
-I would be happy and very pleased if you wannt to join this project as equal collaborator.
-
-If you own a feature or extention for Jail/Warden that would fit in, i would be happy when you share it with us.
-
-see [todo list](https://git.tf/shanapu/MyJailbreak/blob/master/TODO.md) the "must" part is todo before first release on AM
-
-help me by posting bugs and feature ideas in [Issue list](https://git.tf/shanapu/MyJailbreak/issues)
+help me by posting bugs and feature ideas in [Issue list](/issues)
 
 forks and merge requests are welcome!
 
 ### Included Plugins: 
 
-- Warden - (set/become warden,vote against warden, open cells, set marker/quiz/eventdays/countdown/FF/nobock) - need [scp](https://git.tf/shanapu/MyJailbreak#requires-plugins)
+- Warden - (set/become warden,vote against warden, open cells, set marker/quiz/eventdays/countdown/FF/nobock) - need [scp](#requires-plugins)
 - Menu - (Player menus for T, CT, Warden & Admin)
 - Weapons - (weapon menus for CT / T in event rounds)
-- PlayerTags - (add player Tags for T, T.Admin, CT, CT.Admin, W, WA.Admin - need [scp](https://git.tf/shanapu/MyJailbreak#requires-plugins)
-- Event Days (set/vote a Event for next round) - all need [sjd](https://git.tf/shanapu/MyJailbreak#requires-plugins)&[scp](https://git.tf/shanapu/MyJailbreak#requires-plugins)
+- PlayerTags - (add player Tags for T, T.Admin, CT, CT.Admin, W, WA.Admin - need [scp](#requires-plugins)
+- Event Days (set/vote a Event for next round) - all need [sjd](#requires-plugins)&[scp](#requires-plugins)
     - War (CT vs T TDM)
     - Free For All (FFA DM)
     - Zombie (CT(zombie) vs T(Human))
@@ -40,6 +28,13 @@ forks and merge requests are welcome!
     - Jihad - (Ts got suicde bombs to kill all CTs)
     - Knife - (FFA Knifefight with switchable grav, ice, and TP)
     - Freeday - (auto on first round/damage disabled)
+
+work in progress!
+Files been updated ~daily so have a look at the last commits. No guarantee everything works well, but it should ;)
+the uploaded compiled smxs may no uptodate! hav a look to the commits!
+This is my first public project. please note that the code may is messy, stupid and inconseqent.
+I would be happy and very pleased if you wannt to join this project as equal collaborator.
+If you own a feature or extention for Jail/Warden that would fit in, i would be happy when you share it with us.
 
 
 ### Credits: 
