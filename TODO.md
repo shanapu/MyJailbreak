@@ -67,6 +67,7 @@ must:
 
 want:
 
+- [x] wiki
 - [ ] fastdl files
 - [ ] menu: add eventdays to admin if enabled
 - [ ] register plugins to core
@@ -92,7 +93,7 @@ want:
 - [ ] warden: unwarden roundstart and delay old warden.
 - [ ] warden: icon above head (material or model?)
 - [x] warden: markers
-- [ ] warden: killrandom - are you sure?
+- [x] warden: killrandom - are you sure?
 - [ ] zombie: knockbackfix
 - [x] jihad: freeze by activate bool
 - [x] new day: knife only (ice skate/third person?)
@@ -170,6 +171,5 @@ maybe:
 - [ ] refuse: chickensound
 - [ ] capitulate: punish if rebel again
 - [ ] hide: include flashlight?
-- [ ] new day: "rats" size player in cell
 - [ ] new day: save the T vip
 - [ ] 
