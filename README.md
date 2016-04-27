@@ -10,22 +10,22 @@ help, ideas, forks and merge requests are welcome!
 
 ### Included Plugins: 
 
-- [Warden](#Warden) - (set/become Warden,vote against Warden, open cells, set marker/quiz/EventDays/countdown/FF/nobock) - need [scp](#requires-plugins)
-- [Menu](#Menu) - (Player menus for T, CT, Warden & Admin)
-- [Weapons](#Weapons) - (weapon menus for CT / T in event rounds)
-- [PlayerTags](#PlayerTags) - (add player Tags for T, T.Admin, CT, CT.Admin, W, WA.Admin - need [scp](#requires-plugins)
+- [Warden](#warden) - (set/become Warden,vote against Warden, open cells, set marker/quiz/EventDays/countdown/FF/nobock) - need [scp](#requires-plugins)
+- [Menu](#menu) - (Player menus for T, CT, Warden & Admin)
+- [Weapons](#weapons) - (weapon menus for CT / T in event rounds)
+- [PlayerTags](#playertags) - (add player Tags for T, T.Admin, CT, CT.Admin, W, WA.Admin - need [scp](#requires-plugins)
 - EventDays (vote/set a Event for next round with cooldowns, sounds & overlays) - all need [sjd](#requires-plugins)&[scp](#requires-plugins)
-    - [War](#War) (CT vs T TDM)
-    - [Free For All](#FreeForAll) (FFA DM)
-    - [Zombie](#Zombie) (CT(zombie) vs T(Human))
-    - [NoScope](#NoScope) (FFA Scout LowGravity NoScope)
-    - [DodgeBall](#DodgeBall) (FFA LowHP LowGravity HE Battle)
-    - [Hide in the Dark](#HideInTheDark) - (kind of HideNseek)
-    - [Catch & Freeze](#Catch&Freeze) - (CT must catch all T (freeze tag))
-    - [DuckHunt](#DuckHunt) - (CT(hunter) with nova vs T(chicken in 3th person))
-    - [JiHad](#JiHad) - (Ts got suicde bombs to kill all CTs)
-    - [Knife](#KnifeFight) - (CT vs T Knifefight with switchable grav, ice, and TP)
-    - [FreeDay](#FreeDay) - (auto FreeDay on first round/damage disabled)
+    - [War](#war) (CT vs T TDM)
+    - [Free For All](#freeforall) (FFA DM)
+    - [Zombie](#zombie) (CT(zombie) vs T(Human))
+    - [NoScope](#noscope) (FFA Scout LowGravity NoScope)
+    - [DodgeBall](#dodgeball) (FFA LowHP LowGravity HE Battle)
+    - [Hide in the Dark](#hideinthedark) - (kind of HideNseek)
+    - [Catch & Freeze](#catchfreeze) - (CT must catch all T (freeze tag))
+    - [DuckHunt](#duckHunt) - (CT(hunter) with nova vs T(chicken in 3th person))
+    - [JiHad](#jihad) - (Ts got suicde bombs to kill all CTs)
+    - [Knife](#knifefight) - (CT vs T Knifefight with switchable grav, ice, and TP)
+    - [FreeDay](#freeday) - (auto FreeDay on first round/damage disabled)
 
 work in progress!  
 Files been updated ~daily so have a look at the last commits.  
