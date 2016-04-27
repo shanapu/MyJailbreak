@@ -65,9 +65,11 @@ must:
 
 
 want:
+- [ ] menu: add eventdays to admin if enabled
 - [ ] register plugins to core
 - [ ] playertags: only admin only warden...
-- [ ] disarm
+- [ ] disarm for ct/warden
+- [ ] No scope choose weapon (scout/awp/auto)
 - [ ] add LR to menu - !rules !lastrequest !checkplayers - !stoplr 
 - [ ] updater
 - [ ] warden: model
@@ -108,6 +110,7 @@ want:
 - [x] countdown: stop roundend
 - [x] countdown cancel all running
 - [ ] countdown cancel in menu
+- [ ] countdown set time until start / stop
 - [x] countdown: set time - or menu with differnt times?!?!
 - [ ] warden: mathboard
 - [x] catch: enable/disbale sprint
@@ -141,7 +144,9 @@ need?
 - [ ] jihad: body counter?
 - [ ] warden: ff not for ct?
 - [ ] SetCvarString flags?
-
+- [ ] warden: add sm_simon? 
+- [ ] duckhunt: allow leftclick per bool?
+- [ ] knifefight: FFA? -> set HP
 
 future:
 - [ ] rewrite/merge to one master plugin (e.g. hosties,ttt..)
