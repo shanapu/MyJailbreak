@@ -483,9 +483,13 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 	{
 		for(int client=1; client <= MaxClients; client++)
 		{
-			if (IsClientInGame(client)) SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
+			SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
 			ClientSprintStatus[client] = 0;
 			CreateTimer( 0.0, DeleteOverlay, client );
+			SetEntityMoveType(client, MOVETYPE_WALK);
+			SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
+			SetEntityRenderColor(client, 255, 255, 255, 0);
+			catched[client] = false;
 		}
 		
 		if (winner == 2) PrintHintTextToAll("%t", "catch_twin_nc");

@@ -44,7 +44,7 @@ If you own a feature or extention for Jail/Warden that would fit in, i would be 
 # THANKS FOR MAKING FREE SOFTWARE!
 
 #### Much Thanks: 
-UartigZone, Got Sw4g? & terminator18 for bughunting / great ideas!
+UartigZone, Got Sw4g? terminator18, Skelexes, 0dieter0, maks for bughunting / great ideas!
 
 
 ### Plugin descriptions: 
@@ -233,7 +233,7 @@ Or on Round start Ts spawn in open cells with weapons and weaponmenu. No Freeze/
 - sm_war_setw: 0 - disabled, 1 - allow Warden to set next round war. Default 1
 - sm_war_seta: 0 - disabled, 1 - allow Admin to set next round war round. Default 1
 - sm_war_vote: 0 - disabled, 1 - allow player to vote for war. Default 1
-- sm_war_spawn: 0 - teleport Ts to CT and freeze, 1 - open cell doors an get weapons. Default 1
+- sm_war_spawn: 0 - teleport Ts to CT and freeze, 1 - open cell doors an get weapons. Default 0
 - sm_war_roundtime - Roundtime for a single war round in minutes. Default 5
 - sm_war_freezetime- Time in seconds Ts are freezed. time to hide on map for CT (need sm_war_spawn: 0). Default 30
 - sm_war_trucetime - Time in seconds after freezetime damage is disbaled. Default 30
@@ -273,7 +273,7 @@ Or on Round start Ts spawn in open cells with weapons & weaponmenu. (Default)
 - sm_ffa_setw: 0 - disabled, 1 - allow Warden to set next round ffa. Default 1
 - sm_ffa_seta: 0 - disabled, 1 - allow Admin to set next round ffa round. Default 1
 - sm_ffa_vote: 0 - disabled, 1 - allow player to vote for ffa. Default 1
-- sm_ffa_spawn: 0 - teleport Ts to CT and freeze, 1 - open cell doors an get weapons (need smartjaildoors). Default 1
+- sm_ffa_spawn: 0 - teleport Ts to CT and freeze, 1 - open cell doors an get weapons (need smartjaildoors). Default 0
 - sm_ffa_roundtime - Roundtime for a single ffa round in minutes. Default 5
 - sm_ffa_trucetime - Time in seconds after freezetime damage is disbaled. Default 30
 - sm_ffa_cooldown_start - Rounds until event can be start after mapchange. Default 3
@@ -566,7 +566,7 @@ On Round start CTs got time to hide before cells open and Ts got Suicide bombs t
 - sm_jihad_sounds_enable: 0 - disabled, 1 - enable sounds. Default 1
 - sm_jihad_sounds_start: Path to the soundfile which should be played on start. Default "music/myJailbreak/start.mp3"
 - sm_jihad_sounds_jihad - Path to the soundfile which should be played on activate bomb. Default "music/myJailbreak/jihad.mp3"
-- sm_jihad_sounds_boom - Path to the soundfile which should be played on detonation. Default "music/myJailbreak/bombe.mp3"
+- sm_jihad_sounds_boom - Path to the soundfile which should be played on detonation. Default "music/myJailbreak/boom.mp3"
 - sm_jihad_overlays_enable: 0 - disabled, 1 - enable start overlay. Default 1
 - sm_jihad_overlays_start: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
 - sm_jihad_tag: 0 - disabled, 1 - Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch your sv_tags. Default 1

@@ -80,7 +80,7 @@ public void OnPluginStart()
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_war_warden", "1", "0 - disabled, 1 - allow warden to set war round", _, true,  0.0, true, 1.0);
 	gc_bSetA = AutoExecConfig_CreateConVar("sm_war_admin", "1", "0 - disabled, 1 - allow admin to set war round", _, true,  0.0, true, 1.0);
 	gc_bVote = AutoExecConfig_CreateConVar("sm_war_vote", "1", "0 - disabled, 1 - allow player to vote for war", _, true,  0.0, true, 1.0);
-	gc_bSpawnCell = AutoExecConfig_CreateConVar("sm_war_spawn", "1", "0 - teleport to ct and freeze, 1 - stay in cell open cell doors with aw/weapon menu - need sjd", _, true,  0.0, true, 1.0);
+	gc_bSpawnCell = AutoExecConfig_CreateConVar("sm_war_spawn", "0", "0 - teleport to ct and freeze, 1 - stay in cell open cell doors with aw/weapon menu - need sjd", _, true,  0.0, true, 1.0);
 	gc_iFreezeTime = AutoExecConfig_CreateConVar("sm_war_freezetime", "30", "Time in seconds the terrorist freezed - need sm_war_spawn 0", _, true,  0.0);
 	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_war_trucetime", "30", "Time after freezetime damage disbaled", _, true,  0.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_war_roundtime", "5", "Round time in minutes for a single war round", _, true,  1.0);
@@ -254,15 +254,16 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
 		char info9[255], info10[255], info11[255], info12[255];
 		
-		ServerCommand("sm_removewarden");
+		
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("sm_weapons_t", 1);
 		SetCvar("sm_weapons_ct", 1);
+		SetCvar("sm_menu_enable", 0);
 		WarRound++;
 		IsWar = true;
 		StartWar = false;
-		ServerCommand("sm_removewarden");
+		
 		if (gc_bSpawnCell.BoolValue)
 		{
 			SJD_OpenDoors();
@@ -509,6 +510,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 			SetCvar("sm_warden_enable", 1);
 			SetCvar("sm_weapons_t", 0);
 			SetCvar("sm_weapons_ct", 1);
+			SetCvar("sm_menu_enable", 1);
 			g_iSetRoundTime.IntValue = g_iOldRoundTime;
 			SetEventDay("none");
 			CPrintToChatAll("%t %t", "war_tag" , "war_end");

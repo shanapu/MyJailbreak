@@ -161,12 +161,15 @@ public Action JbMenu(int client, int args)
 		{
 			if(gc_bWarden.BoolValue)
 			{
-				if(g_bCountdown != null)
+				if(g_bGuns != null)
 				{
-					if(g_bCountdown.BoolValue)
+					if(g_bGuns.BoolValue)
 					{
-						Format(menuinfo2, sizeof(menuinfo2), "%T", "menu_countdown", LANG_SERVER);
-						mainmenu.AddItem("countdown", menuinfo2);
+						if(g_bGunsCT.BoolValue)
+						{
+							Format(menuinfo6, sizeof(menuinfo6), "%T", "menu_guns", LANG_SERVER);
+							mainmenu.AddItem("guns", menuinfo6);
+						}
 					}
 				}
 				if(g_bOpen != null)
@@ -175,6 +178,14 @@ public Action JbMenu(int client, int args)
 					{
 						Format(menuinfo3, sizeof(menuinfo3), "%T", "menu_opencell", LANG_SERVER);
 						mainmenu.AddItem("cellopen", menuinfo3);
+					}
+				}
+				if(g_bCountdown != null)
+				{
+					if(g_bCountdown.BoolValue)
+					{
+						Format(menuinfo2, sizeof(menuinfo2), "%T", "menu_countdown", LANG_SERVER);
+						mainmenu.AddItem("countdown", menuinfo2);
 					}
 				}
 				if(g_bMath != null)
@@ -191,17 +202,7 @@ public Action JbMenu(int client, int args)
 					mainmenu.AddItem("days", menuinfo5);
 				}
 				
-				if(g_bGuns != null)
-				{
-					if(g_bGuns.BoolValue)
-					{
-						if(g_bGunsCT.BoolValue)
-						{
-							Format(menuinfo6, sizeof(menuinfo6), "%T", "menu_guns", LANG_SERVER);
-							mainmenu.AddItem("guns", menuinfo6);
-						}
-					}
-				}
+				
 				if(g_bsetFF != null)
 				{
 					if(g_bsetFF.BoolValue)
@@ -276,8 +277,6 @@ public Action JbMenu(int client, int args)
 							}
 						}
 					}
-					Format(menuinfo15, sizeof(menuinfo15), "%T", "menu_joinct", LANG_SERVER);
-					mainmenu.AddItem("joinCT", menuinfo15);
 					if(g_bWarden != null)
 					{
 						if(warden_exist())
@@ -292,10 +291,19 @@ public Action JbMenu(int client, int args)
 							}
 						}
 					}
+					Format(menuinfo15, sizeof(menuinfo15), "%T", "menu_joinct", LANG_SERVER);
+					mainmenu.AddItem("joinCT", menuinfo15);
+					
 				}
 			}
 		if (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
 		{
+			if(gc_bDays.BoolValue)
+			{
+				Format(menuinfo5, sizeof(menuinfo5), "%T", "menu_eventdays", LANG_SERVER);
+				mainmenu.AddItem("days", menuinfo5);
+			}
+			
 			Format(menuinfo17, sizeof(menuinfo17), "%T", "menu_admin", LANG_SERVER);
 			mainmenu.AddItem("admin", menuinfo17);
 		}

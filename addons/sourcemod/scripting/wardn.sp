@@ -274,11 +274,16 @@ public void RoundStart(Event event, const char[] name, bool dontBroadcast)
 	}
 	else
 	{
-			Warden = -1;
+		SetEntityRenderColor(Warden, 255, 255, 255, 255);
+		Warden = -1;
 	}
-	if(!gc_bStayWarden.BoolValue)
+	char EventDay[64];
+	GetEventDay(EventDay);
+	
+	if(!StrEqual(EventDay, "none", false) || !gc_bStayWarden.BoolValue)
 	{
-			Warden = -1;
+		SetEntityRenderColor(Warden, 255, 255, 255, 255);
+		Warden = -1;
 	}
 }
 
@@ -1524,7 +1529,7 @@ stock int GetRandomPlayer(int team)
 	int clientCount;
 	for (int i = 1; i <= MaxClients; i++)
 	{
-		if (IsClientInGame(i) && (GetClientTeam(i) == team))    // IsPlayerAlive(i) ???
+		if (IsClientInGame(i) && (GetClientTeam(i) == team) && IsPlayerAlive(i))
 		{
 			clients[clientCount++] = i;
 		}

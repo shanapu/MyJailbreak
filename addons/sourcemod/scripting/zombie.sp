@@ -284,14 +284,14 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 	if (StartZombie)
 	{
 		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
-		ServerCommand("sm_removewarden");
+		
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_warden_enable", 0);
 		SetCvarString("sv_skyname", "cs_baggage_skybox_");
 		SetCvar("sm_weapons_t", 1);
 		SetCvar("sm_weapons_ct", 0);
-		SetCvar("sv_infinite_ammo", 1);
-		
+		SetCvar("sv_infinite_ammo", 2);
+		SetCvar("sm_menu_enable", 0);
 		IsZombie = true;
 		ZombieRound++;
 		StartZombie = false;
@@ -436,7 +436,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 		SetCvarString("sv_skyname", g_sSkyName);
 		SetCvar("sv_infinite_ammo", 0);
 		SetCvar("sm_warden_enable", 1);
-		
+		SetCvar("sm_menu_enable", 1);
 		g_iSetRoundTime.IntValue = g_iOldRoundTime;
 		SetEventDay("none");
 		

@@ -262,10 +262,11 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 	if (StartKnifeFight)
 	{
 		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
-		ServerCommand("sm_removewarden");
+		
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_weapons_enable", 0);
 		SetCvar("sm_warden_enable", 0);
+		SetCvar("sm_menu_enable", 0);
 		SetConVarInt(g_bAllowTP, 1);
 		IsKnifeFight = true;
 		
@@ -428,6 +429,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 		SetCvar("sm_hosties_lr", 1);
 		SetCvar("sm_weapons_enable", 1);
 		SetCvar("sm_warden_enable", 1);
+		SetCvar("sm_menu_enable", 0);
 		SetCvarFloat("sv_friction", 5.2);
 		SetConVarInt(g_bAllowTP, 0);
 		

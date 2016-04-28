@@ -2,6 +2,7 @@
 #include <sourcemod>
 #include <cstrike>
 #include <myjailbreak>
+#include <wardn>
 
 //Compiler Options
 #pragma semicolon 1
@@ -21,10 +22,14 @@ public Plugin myinfo = {
 	url = ""
 };
 
+
+
 public void OnPluginStart()
 {
 	gc_bTag = CreateConVar("sm_myjb_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", _, true,  0.0, true, 1.0);
-}
+	
+	HookEvent("round_start", RoundStart);
+	}
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -43,6 +48,30 @@ public void OnConfigsExecuted()
 		{
 			StrCat(sTags, sizeof(sTags), ", MyJailbreak");
 			hTags.SetString(sTags);
+		}
+	}
+}
+
+public void RoundStart(Handle event, char[] name, bool dontBroadcast)
+{
+	for(int client=1; client <= MaxClients; client++)
+	{
+		if (IsClientInGame(client))
+		{
+			char EventDay[64];
+			GetEventDay(EventDay);
+			
+			if(StrEqual(EventDay, "none", false))
+			{
+				if (GetClientTeam(client) == CS_TEAM_T)
+				{
+					StripAllWeapons(client);
+				}
+			}
+			else
+			{
+				warden_remove(client);
+			}
 		}
 	}
 }

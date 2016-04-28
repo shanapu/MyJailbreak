@@ -6,6 +6,8 @@
 #define PLUGIN_VERSION "0.3"
 
 
+#include <sdktools>
+
 Handle IntCvar;
 Handle FloatCvar;
 char g_sOverlayStart[256];
@@ -60,7 +62,7 @@ stock StripAllWeapons(int iClient)
 
 public Action ShowOverlayStart( Handle timer, any client ) 
 {
-	if(IsClientInGame(client) && IsClientConnected(client) && !IsFakeClient(client))
+	if(IsClientConnected(client) && !IsFakeClient(client))
 	{
 		int iFlag = GetCommandFlags( "r_screenoverlay" ) & ( ~FCVAR_CHEAT ); 
 		SetCommandFlags( "r_screenoverlay", iFlag ); 
@@ -72,7 +74,7 @@ public Action ShowOverlayStart( Handle timer, any client )
 
 public Action DeleteOverlay( Handle timer, any client ) 
 {
-	if(IsClientInGame(client) && IsClientConnected(client) && !IsFakeClient(client))
+	if(IsClientConnected(client) && !IsFakeClient(client))
 	{
 	int iFlag = GetCommandFlags( "r_screenoverlay" ) & ( ~FCVAR_CHEAT ); 
 	SetCommandFlags( "r_screenoverlay", iFlag ); 

@@ -111,7 +111,7 @@ public void OnPluginStart()
 	gc_bSounds = AutoExecConfig_CreateConVar("sm_jihad_sounds_enable", "1", "0 - disabled, 1 - enable sounds ", _, true,  0.0, true, 1.0);
 	gc_sSoundStartPath = AutoExecConfig_CreateConVar("sm_jihad_sounds_start", "music/myjailbreak/start.mp3", "Path to the soundfile which should be played for start.");
 	gc_sSoundJihadPath = AutoExecConfig_CreateConVar("sm_jihad_sounds_jihad", "music/myjailbreak/jihad.mp3", "Path to the soundfile which should be played on activatebomb.");
-	gc_sSoundBoomPath = AutoExecConfig_CreateConVar("sm_jihad_sounds_boom", "music/myjailbreak/bombe.mp3", "Path to the soundfile which should be played on detonation.");
+	gc_sSoundBoomPath = AutoExecConfig_CreateConVar("sm_jihad_sounds_boom", "music/myjailbreak/boom.mp3", "Path to the soundfile which should be played on detonation.");
 	gc_bSprintUse = AutoExecConfig_CreateConVar("sm_jihad_sprint_button", "1", "0 - disabled, 1 - enable +use button for sprint", _, true,  0.0, true, 1.0);
 	gc_fSprintCooldown = AutoExecConfig_CreateConVar("sm_jihad_sprint_cooldown", "10","Time in seconds the player must wait for the next sprint", _, true,  0.0);
 	gc_bSprint = AutoExecConfig_CreateConVar("sm_jihad_sprint_enable", "1", "0 - disabled, 1 - enable ShortSprint", _, true,  0.0, true, 1.0);
@@ -216,7 +216,6 @@ public void OnClientPutInServer(int client)
 {
 	SDKHook(client, SDKHook_WeaponCanUse, OnWeaponCanUse);
 }
-
 
 public Action SetJiHad(int client,int args)
 {
@@ -326,10 +325,10 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 	{
 		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
 		
-		ServerCommand("sm_removewarden");
+		
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_warden_enable", 0);
-		
+		SetCvar("sm_menu_enable", 0);
 		SetCvar("sm_weapons_enable", 0);
 		
 		IsJiHad = true;
@@ -440,7 +439,7 @@ public Action JiHad(Handle timer)
 						
 			}
 			if(gc_bOverlays.BoolValue) CreateTimer( 0.0, ShowOverlayStart, client);
-			if(gc_bSounds.BoolValue)	
+			if(gc_bSounds.BoolValue)
 			{
 				EmitSoundToAllAny(g_sSoundStartPath);
 			}
@@ -462,22 +461,23 @@ public Action Command_BombJihad(int client, int args)
 	{
 		int weapon = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
 		char weaponName[64];
+		
 		GetEdictClassname(weapon, weaponName, sizeof(weaponName));
 		
-		
-		if (IsClientInGame(client) && IsPlayerAlive(client) && (GetClientTeam(client) == CS_TEAM_T))
+		if (IsValidEdict(weapon) && IsClientInGame(client) && IsPlayerAlive(client) && (GetClientTeam(client) == CS_TEAM_T))
 		{
 			if(StrEqual(weaponName, "weapon_c4"))
 			{
 				EmitSoundToAllAny(g_sSoundJihadPath);
-				CreateTimer( 2.0, DoDaBomb, client);
+				CreateTimer( 1.0, DoDaBomb, client);
 				if (gc_bStandStill.BoolValue)
 				{
 					SetEntityMoveType(client, MOVETYPE_NONE);
 				}
 			}
-			else CPrintToChat(client, "%t %t", "jihad_tag" , "jihad_needc4");
+			//else CPrintToChat(client, "%t %t", "jihad_tag" , "jihad_needc4");
 		}
+		else CPrintToChat(client, "%t %t", "jihad_tag" , "jihad_needc4");
 	}
 }
 
@@ -532,6 +532,14 @@ public Action DoDaBomb( Handle timer, any client )
 		}
 	}
 	ForcePlayerSuicide(client);
+	int number = 0;
+	for (int i = 1; i <= MaxClients; i++)
+	if(IsClientInGame(i) && IsPlayerAlive(i) && GetClientTeam(i) == CS_TEAM_CT) number++;
+	if(number == 0)
+	{
+	CPrintToChatAll("%t %t", "jihad_tag" , "jihad_win");
+	CS_TerminateRound(5.0, CSRoundEnd_TerroristWin);
+	}
 }
 
 public Action OnWeaponCanUse(int client, int weapon)
@@ -578,7 +586,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 		SetCvar("sm_weapons_enable", 1);
 		SetCvar("sv_infinite_ammo", 0);
 		SetCvar("sm_warden_enable", 1);
-		
+		SetCvar("sm_menu_enable", 1);
 		g_iSetRoundTime.IntValue = g_iOldRoundTime;
 		SetEventDay("none");
 		CPrintToChatAll("%t %t", "jihad_tag" , "jihad_end");

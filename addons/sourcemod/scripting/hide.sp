@@ -265,16 +265,17 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 	{
 		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
 		
-		ServerCommand("sm_removewarden");
+		
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("sm_weapons_t", 0);
-		SetCvar("sm_weapons_ct", 1);
+		SetCvar("sm_weapons_ct", 0);
+		SetCvar("sm_menu_enable", 0);
 		IsHide = true;
 		HideRound++;
 		StartHide = false;
 		SJD_OpenDoors();
-		ServerCommand("sm_removewarden");
+		
 		HideMenu = CreatePanel();
 		Format(info1, sizeof(info1), "%T", "hide_info_Title", LANG_SERVER);
 		SetPanelTitle(HideMenu, info1);
@@ -302,20 +303,24 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 				{
 					if (IsClientInGame(client))
 					{
-						StripAllWeapons(client);
+						
 						if (GetClientTeam(client) == CS_TEAM_CT)
 						{
+							StripAllWeapons(client);
 							SetEntityMoveType(client, MOVETYPE_NONE);
 							GivePlayerItem(client, "weapon_tagrenade");
+							GivePlayerItem(client, "weapon_tagrenade");
 							SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
+							GivePlayerItem(client, "weapon_knife");
 						}
 						if (GetClientTeam(client) == CS_TEAM_T)
 						{
+							StripAllWeapons(client);
 							SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
 							SendPanelToClient(HideMenu, client, Pass, 15);
-							
+							GivePlayerItem(client, "weapon_knife");
 						}
-						GivePlayerItem(client, "weapon_knife");
+						
 					}
 				}
 				g_iFreezeTime--;
@@ -455,6 +460,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 		SetCvar("sm_weapons_t", 0);
 		SetCvar("sm_weapons_ct", 1);
 		SetCvar("sm_warden_enable", 1);
+		SetCvar("sm_menu_enable", 1);
 		g_iSetRoundTime.IntValue = g_iOldRoundTime;
 		SetEventDay("none");
 		CPrintToChatAll("%t %t", "hide_tag" , "hide_end");

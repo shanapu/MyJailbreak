@@ -219,11 +219,12 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		SetCvar("sm_weapons_enable", 0);
 		SetCvar("sm_weapons_t", 0);
 		SetCvar("sm_warden_enable", 0);
+		SetCvar("sm_menu_enable", 0);
 		IsFreeDay = true;
 		FreeDayRound++;
 		StartFreeDay = false;
 		SJD_OpenDoors();
-		ServerCommand("sm_removewarden");
+		
 		FreeDayMenu = CreatePanel();
 		Format(info1, sizeof(info1), "%T", "freeday_info_Title", LANG_SERVER);
 		SetPanelTitle(FreeDayMenu, info1);
@@ -269,11 +270,12 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 		StartFreeDay = false;
 		FreeDayRound = 0;
 		Format(g_sHasVoted, sizeof(g_sHasVoted), "");
-		ServerCommand("sm_removewarden");
+		
 		SetCvar("sm_hosties_lr", 1);
 		SetCvar("sm_weapons_enable", 1);
 		SetCvar("mp_teammates_are_enemies", 0);
 		SetCvar("sm_warden_enable", 1);
+		SetCvar("sm_menu_enable", 1);
 		g_iSetRoundTime.IntValue = g_iOldRoundTime;
 		SetEventDay("none");
 		CPrintToChatAll("%t %t", "freeday_tag" , "freeday_end");

@@ -85,7 +85,7 @@ public void OnPluginStart()
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_ffa_warden", "1", "0 - disabled, 1 - allow warden to set ffa round", _, true,  0.0, true, 1.0);
 	gc_bSetA = AutoExecConfig_CreateConVar("sm_ffa_admin", "1", "0 - disabled, 1 - allow admin to set ffa round", _, true,  0.0, true, 1.0);
 	gc_bVote = AutoExecConfig_CreateConVar("sm_ffa_vote", "1", "0 - disabled, 1 - allow player to vote for ffa", _, true,  0.0, true, 1.0);
-	gc_bSpawnCell = AutoExecConfig_CreateConVar("sm_ffa_spawn", "1", "0 - teleport to CT spawn, 1 - standart spawn & cell doors auto open", _, true,  0.0, true, 1.0);
+	gc_bSpawnCell = AutoExecConfig_CreateConVar("sm_ffa_spawn", "0", "0 - teleport to CT spawn, 1 - standart spawn & cell doors auto open", _, true,  0.0, true, 1.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_ffa_roundtime", "5", "Round time in minutes for a single ffa round", _, true, 1.0);
 	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_ffa_trucetime", "30", "Time in seconds players can't deal damage", _, true,  0.0);
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_ffa_cooldown_day", "3", "Rounds cooldown after a event until event can be start again", _, true,  0.0);
@@ -268,13 +268,14 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
 		char info9[255], info10[255], info11[255], info12[255];
 
-		ServerCommand("sm_removewarden");
+		
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("sm_weapons_t", 1);
 		SetCvar("sm_weapons_ct", 1);
 		SetCvar("mp_teammates_are_enemies", 1);
 		SetCvar("mp_friendlyfire", 1);
+		SetCvar("sm_menu_enable", 0);
 		FFARound++;
 		IsFFA = true;
 		StartFFA = false;
@@ -479,7 +480,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 			SetCvar("sm_weapons_ct", 1);
 			SetCvar("mp_teammates_are_enemies", 0);
 			SetCvar("mp_friendlyfire", 0);
-			
+			SetCvar("sm_menu_enable", 1);
 			g_iSetRoundTime.IntValue = g_iOldRoundTime;
 			SetEventDay("none");
 			CPrintToChatAll("%t %t", "ffa_tag" , "ffa_end");
