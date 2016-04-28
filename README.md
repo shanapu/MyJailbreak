@@ -24,6 +24,7 @@ help, ideas, forks and merge requests are welcome!
     - [Catch & Freeze](#catchfreeze) - (CT must catch all T (freeze tag))
     - [DuckHunt](#duckHunt) - (CT(hunter) with nova vs T(chicken in 3th person))
     - [JiHad](#jihad) - (Ts got suicde bombs to kill all CTs)
+    - [Zeus](#zeus) - (FFA ZeusRound - get a new Zeus on Kill)
     - [Knife](#knifefight) - (CT vs T Knifefight with switchable grav, ice, and TP)
     - [FreeDay](#freeday) - (auto FreeDay on first round/damage disabled)
 
@@ -119,12 +120,12 @@ Colorize Warden, open/close cell doors, automatic open cells doors, vote retire 
 - sm_warden_open_time_enable: 0 - disabled, 1 - cell doors will open automatic after - sm_warden_open_time. Default 1
 - sm_warden_open_time - Time in seconds for open doors on round start automaticly. Default 60
 - sm_warden_open_time_warden: 0 - disabled, 1 - doors open automatic after - sm_warden_open_time although there is a Warden. needs - sm_warden_open_time_enable 1. Default 1
-- sm_warden_tag: 0 - disabled, 1 - Allow "MyJailbreak" to be added to the server tags? So player will find servers with MyJB faster. it dont touch your sv_tags. Default 1
 
 ```
 ##### Features
 
 - Custom chat [Tag]
+- 1.7 SourcePawn Transitional Syntax
 - Multilingual support
 - Forwards
 - Natives
@@ -152,11 +153,11 @@ The menu shows only features that are enabled per round (e.g at EventDays no War
 - sm_menu_days: 0 - disabled, 1 - enable EventDays menu for Warden and Admin
 - sm_menu_close: 0 - disabled, 1 - close menu after action
 - sm_menu_start: 0 - disabled, 1 - open menu on every roundstart
-- sm_menu_tag: 0 - disabled, 1 - Allow "MyJailbreak" to be added to the server tags? So player will find servers with MyJB faster. it dont touch your sv_tags. Default 1
 ```
 ##### Features
 
 - Custom chat [Tag]
+- 1.7 SourcePawn Transitional Syntax
 - Multilingual support
 - Colors
 - only shows available features
@@ -204,6 +205,10 @@ This plugins give players Tags for team (T,CT) and "rank" (Admin/Warden) in stat
 - sm_playertag_chat: 0 - disabled, 1 - enable PlayerTag in Chat
 
 ```
+##### Features
+
+- 1.7 SourcePawn Transitional Syntax
+- Multilingual support
 
 #### EventDays core
 
@@ -214,6 +219,10 @@ This plugins is the "interface" between Eventdays. need for cooldowns and disabl
 - sm_myjb_tag: 0 - disabled, 1 - Allow "MyJailbreak" to be added to your server tags. So player will find servers with MyJB faster. it dont touch youR sv_tags
 
 ```
+##### Features
+
+- 1.7 SourcePawn Transitional Syntax
+- Natives
 
 #### War
 
@@ -243,13 +252,13 @@ Or on Round start Ts spawn in open cells with weapons and weaponmenu. No Freeze/
 - sm_war_sounds_start: Path to the soundfile which should be played on start. Default "music/myJailbreak/start.mp3"
 - sm_war_overlays_enable: 0 - disabled, 1 - enable start overlay. Default 1
 - sm_war_overlays_start: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
-- sm_war_tag: 0 - disabled, 1 - Allow "MyJailbreak" to be added to the server tags? So player will find servers with MyJB faster. it dont touch your sv_tags. Default 1
 
 and more 
 ```
 ##### Features
 
 - disable Warden, other EventDays, lastrequest
+- 1.7 SourcePawn Transitional Syntax
 - autoopen celldoors
 - Multilingual support
 - Colors
@@ -282,12 +291,12 @@ Or on Round start Ts spawn in open cells with weapons & weaponmenu. (Default)
 - sm_ffa_sounds_start: Path to the soundfile which should be played on start. Default "music/myJailbreak/start.mp3"
 - sm_ffa_overlays_enable: 0 - disabled, 1 - enable start overlay. Default 1
 - sm_ffa_overlays_start: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
-- sm_ffa_tag: 0 - disabled, 1 - Allow "MyJailbreak" to be added to the server tags? So player will find servers with MyJB faster. it dont touch your sv_tags. Default 1
 
 ```
 ##### Features
 
 - disable Warden, other EventDays, lastrequest
+- 1.7 SourcePawn Transitional Syntax
 - autoopen celldoors (need smartjaildoors)
 - Multilingual support
 - Colors
@@ -321,12 +330,12 @@ Zombies freezed for 35sec (default) so T can hide &/or climb.
 - sm_zombie_overlays_enable: 0 - disabled, 1 - enable start overlay. Default 1
 - sm_zombie_overlays_start: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
 - sm_zombie_model: Path to the model for zombies. Default "models/player/custom_player/zombie/revenant/revenant_v2.mdl"
-- sm_zombie_tag: 0 - disabled, 1 - Allow "MyJailbreak" to be added to the server tags? So player will find servers with MyJB faster. it dont touch your sv_tags. Default 1
 
 ```
 ##### Features
 
 - disable Warden, other EventDays, lastrequest
+- 1.7 SourcePawn Transitional Syntax
 - autoopen celldoors (need smartjaildoors)
 - Multilingual support
 - Colors
@@ -360,12 +369,12 @@ On Round start cells open everybody got a scout with noscope in low gravity. Nod
 - sm_noscope_sounds_start: Path to the soundfile which should be played on start. Default "music/myJailbreak/start.mp3"
 - sm_noscope_overlays_enable: 0 - disabled, 1 - enable start overlay. Default 1
 - sm_noscope_overlays_start: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
-- sm_noscope_tag: 0 - disabled, 1 - Allow "MyJailbreak" to be added to the server tags? So player will find servers with MyJB faster. it dont touch your sv_tags. Default 1
 
 ```
 ##### Features
 
 - disable Warden, other EventDays, lastrequest
+- 1.7 SourcePawn Transitional Syntax
 - autoopen celldoors (need smartjaildoors)
 - Multilingual support
 - Colors
@@ -398,12 +407,12 @@ On Round start cells open everybody got HE grenate with low gravity(Default) and
 - sm_dodgeball_sounds_start: Path to the soundfile which should be played on start. Default "music/myJailbreak/start.mp3"
 - sm_dodgeball_overlays_enable: 0 - disabled, 1 - enable start overlay. Default 1
 - sm_dodgeball_overlays_start: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
-- sm_dodgeball_tag: 0 - disabled, 1 - Allow "MyJailbreak" to be added to the server tags? So player will find servers with MyJB faster. it dont touch your sv_tags. Default 1
 
 ```
 ##### Features
 
 - disable Warden, other EventDays, lastrequest
+- 1.7 SourcePawn Transitional Syntax
 - autoopen celldoors (need smartjaildoors)
 - Multilingual support
 - Colors
@@ -444,13 +453,12 @@ CT and T can Sprint with USE-Key (default).
 - sm_catch_sounds_enable: 0 - disabled, 1 - enable un/-Freeze sounds. Default 1
 - sm_catch_sounds_freeze: Path to the soundfile which should be played on freeze. Default "music/myJailbreak/freeze.mp3"
 - sm_catch_sounds_unfreeze: Path to the soundfile which should be played on unfreeze. Default "music/myJailbreak/unfreeze.mp3"
-- sm_catch_tag: 0 - disabled, 1 - Allow "MyJailbreak" to be added to the server tags? So player will find servers with MyJB faster. it dont touch your sv_tags. Default 1
 
 ```
 ##### Features
 
 - disable Warden, other EventDays, lastrequest
-
+- 1.7 SourcePawn Transitional Syntax
 - autoopen celldoors (need smartjaildoors)
 - Multilingual support
 - Colors
@@ -483,12 +491,12 @@ When CT unfreezed (30sec. default) Ts get freezed (default).
 - sm_hide_sounds_start: Path to the soundfile which should be played on start. Default "music/myJailbreak/start.mp3"
 - sm_hide_overlays_enable: 0 - disabled, 1 - enable start overlay. Default 1
 - sm_hide_overlays_start: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
-- sm_hide_tag: 0 - disabled, 1 - Allow "MyJailbreak" to be added to the server tags? So player will find servers with MyJB faster. it dont touch your sv_tags. Default 1
 
 ```
 ##### Features
 
 - disable Warden, other EventDays, lastrequest
+- 1.7 SourcePawn Transitional Syntax
 - autoopen celldoors (need smartjaildoors)
 - Multilingual support
 - Colors
@@ -519,13 +527,12 @@ T are Chicken in Thirdperson. After trucetime the cells open and T got HE grenad
 - sm_duckhunt_sounds_start: Path to the soundfile which should be played on start. Default "music/myJailbreak/start.mp3"
 - sm_duckhunt_overlays_enable: 0 - disabled, 1 - enable start overlay. Default 1
 - sm_duckhunt_overlays_start: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
-- sm_duckhunt_tag: 0 - disabled, 1 - Allow "MyJailbreak" to be added to the server tags? So player will find servers with MyJB faster. it dont touch your sv_tags. Default 1
 
 ```
 ##### Features
 
 - disable Warden, other EventDays, lastrequest
-
+- 1.7 SourcePawn Transitional Syntax
 - autoopen celldoors (need smartjaildoors)
 - Multilingual support
 - Colors
@@ -571,13 +578,48 @@ CT and T can Sprint with USE-Key (default).
 - sm_jihad_sounds_boom - Path to the soundfile which should be played on detonation. Default "music/myJailbreak/boom.mp3"
 - sm_jihad_overlays_enable: 0 - disabled, 1 - enable start overlay. Default 1
 - sm_jihad_overlays_start: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
-- sm_jihad_tag: 0 - disabled, 1 - Allow "MyJailbreak" to be added to the server tags? So player will find servers with MyJB faster. it dont touch your sv_tags. Default 1
 
 ```
 ##### Features
 
 - disable Warden, other EventDays, lastrequest
+- 1.7 SourcePawn Transitional Syntax
+- autoopen celldoors (need smartjaildoors)
+- Multilingual support
+- Colors
+- Custom chat [Tag]
 
+#### Zeus
+
+This plugin allows players to vote and Warden to set next round to zeus  
+On Round start cells open everybody got a scout with zeus in low gravity. Nodamage time (def. 30sec).
+
+##### Commands
+```
+- sm_zeus - Allows players to vote for a zeus round
+- sm_setzeus - Allows the Admin or Warden to set zeus as next round
+```
+##### Cvars
+```
+- sm_zeus_version - Shows the version of the SourceMod plugin MyJailbreak - zeus
+- sm_zeus_enable: 0 - disabled, 1 - enable the zeus plugin. Default 1
+- sm_zeus_setw: 0 - disabled, 1 - allow Warden to set next round zeus. Default 1
+- sm_zeus_seta: 0 - disabled, 1 - allow Admin to set next round zeus round. Default 1
+- sm_zeus_vote: 0 - disabled, 1 - allow player to vote for zeus. Default 1
+- sm_zeus_roundtime - Roundtime for a single zeus round in minutes. Default 5
+- sm_zeus_trucetime - Time in seconds damage is disbaled. Default 15
+- sm_zeus_cooldown_start - Rounds until event can be start after mapchange. Default 3
+- sm_zeus_cooldown_day - Rounds until event can be started again. Default 3
+- sm_zeus_sounds_enable: 0 - disabled, 1 - enable sounds. Default 1
+- sm_zeus_sounds_start: Path to the soundfile which should be played on start. Default "music/myJailbreak/start.mp3"
+- sm_zeus_overlays_enable: 0 - disabled, 1 - enable start overlay. Default 1
+- sm_zeus_overlays_start: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
+
+```
+##### Features
+
+- disable Warden, other EventDays, lastrequest
+- 1.7 SourcePawn Transitional Syntax
 - autoopen celldoors (need smartjaildoors)
 - Multilingual support
 - Colors
@@ -613,13 +655,12 @@ On Round start cells open everybody KnifeOnly with thirdperson, low gravity(Defa
 - sm_knifefight_sounds_start: Path to the soundfile which should be played on start. Default "music/myJailbreak/start.mp3"
 - sm_knifefight_overlays_enable: 0 - disabled, 1 - enable start overlay. Default 1
 - sm_knifefight_overlays_start: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
-- sm_knifefight_tag: 0 - disabled, 1 - Allow "MyJailbreak" to be added to the server tags? So player will find servers with MyJB faster. it dont touch your sv_tags. Default 1
 
 ```
 ##### Features
 
 - disable Warden, other EventDays, lastrequest
-
+- 1.7 SourcePawn Transitional Syntax
 - autoopen celldoors (need smartjaildoors)
 - Multilingual support
 - Colors
@@ -647,12 +688,12 @@ On Round start cells open for freeday and enabled Damage (Default).
 - sm_freeday_firstround - auto freeday first round after mapstart. Default 1
 - sm_freeday_damage: 0 - disabled, 1 - enable damage on freedays. Default 1
 - sm_freeday_cooldown_day - Rounds until event can be started again. Default 3
-- sm_freeday_tag: 0 - disabled, 1 - Allow "MyJailbreak" to be added to the server tags? So player will find servers with MyJB faster. it dont touch your sv_tags. Default 1
 
 ```
 ##### Features
 
 - disable Warden, other EventDays, lastrequest
+- 1.7 SourcePawn Transitional Syntax
 - autoopen celldoors (need smartjaildoors)
 - Multilingual support
 - Colors

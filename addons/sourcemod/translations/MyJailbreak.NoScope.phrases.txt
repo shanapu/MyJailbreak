@@ -89,7 +89,7 @@
 		"#format"	"{1:s}"
 		"da"		"NoScope er {purple}allerede i gang!"	
 		"en"		"A Event is {purple}already in progress. {darkred}{1}"
-		"de"		"Ein Event ist {purple}bereits gesetzt. {darkred}{1}"
+		"de"		"Es ist bereits {purple}ein Event {default}gesetzt. {darkred}{1}"
 	}
 	
 	"noscope_disabled"
@@ -111,21 +111,21 @@
 	"noscope_info_Title"
 	{
 		"en"		"Scout NoScope er aktiveret!"	
-		"en"		"Scout NoScop is activ"
-		"de"		"Scout NoScope NoScope ist aktiv"
+		"en"		"Scout NoScope is activ"
+		"de"		"Scout NoScope ist aktiv"
 	}
 	
 	"noscope_info_Line1"
 	{
-		"da"		"Scout NoScope er hold mod hold!"
-		"en"		"Do not be surprised if portedto CT Spawn"
-		"de"		"Nicht wundern falls ihr zum CT Spawngeportet wurdet"
+		"da"		"Scout NoScope er hver mod hver!"
+		"en"		"Scout NoScope Free for All"
+		"de"		"Scout NoScope Jeder gegen Jeden"
 	}
 	"noscope_info_Line2"
 	{
 		"da"		"I NoScope er det FFA og lav gravity!"	
-		"en"		"In noscope ther is FFA scout noscope low grav"
-		"de"		"FFA NoScope scout noscope low grav"
+		"en"		"Its Low gravity"
+		"de"		"Es ist Low gravity"
 	}
 	
 	"noscope_info_Line3"

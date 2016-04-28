@@ -3,7 +3,7 @@
 	"menu_info" // only color line! working color tags {default}, {darkred}, {red}, {green}, {lightgreen}, {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
 	{
 		"#format"		""
-		"en"			"[{green}MyJailbreak Menu{default}] To open the jailbreak menu press , or type !menu"
+		"en"			"[{green}MyJB.Menu{default}] To open the jailbreak menu press , or type !menu"
 	}	
 	"menu_info_Title"
 	{
@@ -18,12 +18,7 @@
 	"menu_opencell"
 	{
 		"#format"		""
-		"en"			"open cell doors"
-	}	
-	"menu_teamgames"
-	{
-		"#format"		""
-		"en"			"team games"
+		"en"			"Open cell doors"
 	}	
 	"menu_eventdays"
 	{
@@ -38,17 +33,17 @@
 	"menu_guns"
 	{
 		"#format"		""
-		"en"			"weapon Menu"
+		"en"			"Weapon Menu"
 	}	
 	"menu_ffon"
 	{
 		"#format"		""
-		"en"			"enable FF for Ts"
+		"en"			"Enable FF for Ts"
 	}	
 	"menu_ffoff"
 	{
 		"#format"		""
-		"en"			"disable FF for Ts"
+		"en"			"Disable FF for Ts"
 	}
 	"menu_randomdead"
 	{
@@ -63,22 +58,32 @@
 	"menu_getwarden"
 	{
 		"#format"		""
-		"en"			"become warden"
+		"en"			"Become warden"
 	}	
 	"menu_joint"
 	{
 		"#format"		""
-		"en"			"join Terror"
+		"en"			"Join Terror"
 	}
-	"menu_dice"
+	"menu_check"
 	{
 		"#format"		""
-		"en"			"roll the dice"
+		"en"			"Check Players"
+	}
+	"menu_lr"
+	{
+		"#format"		""
+		"en"			"Last Request"
+	}
+	"menu_rules"
+	{
+		"#format"		""
+		"en"			"Rules"
 	}
 	"menu_joinct"
 	{
 		"#format"		""
-		"en"			"join Counter Terror"
+		"en"			"Join Counter-Terror"
 	}
 	"menu_votect"
 	{
@@ -103,57 +108,57 @@
 	"menu_war"
 	{
 		"#format"		""
-		"en"			"war"
+		"en"			"War"
 	}
 	"menu_ffa"
 	{
 		"#format"		""
-		"en"			"ffa"
+		"en"			"Free for All"
 	}
 	"menu_zombie"
 	{
 		"#format"		""
-		"en"			"zombie"
+		"en"			"Zombie Day"
 	}
 	"menu_hide"
 	{
 		"#format"		""
-		"en"			"hide"
+		"en"			"Hide in The Dark"
 	}
 	"menu_jihad"
 	{
 		"#format"		""
-		"en"			"jihad"
+		"en"			"JiHad Day"
 	}
 	"menu_catch"
 	{
 		"#format"		""
-		"en"			"catch"
+		"en"			"Catch & Freeze"
 	}
 	"menu_knifefight"
 	{
 		"#format"		""
-		"en"			"knifefight"
+		"en"			"KnifeFight"
 	}
 	"menu_dodgeball"
 	{
 		"#format"		""
-		"en"			"dodgeball"
+		"en"			"HE DodgeBall"
 	}
 	"menu_noscope"
 	{
 		"#format"		""
-		"en"			"noscope"
+		"en"			"NoScope"
 	}	
 	"menu_duckhunt"
 	{
 		"#format"		""
-		"en"			"duckhunt"
+		"en"			"DuckHunt"
 	}
 	"menu_freeday"
 	{
 		"#format"		""
-		"en"			"freeday"
+		"en"			"FreeDay"
 	}
 	"menu_admin"
 	{

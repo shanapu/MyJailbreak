@@ -1,0 +1,170 @@
+"Phrases"
+{
+	"zeus_tag"
+	{
+		"en"		"[{green}MyJB.zeus{default}]"
+	}
+	"zeus_need"
+	{
+		"#format"	"{1:i},{2:N}"
+		"da"		"{purple}{2}{default} har afstemt!. {purple}{1}{default} afstemninger tilbage til {darkred}zeus"		
+		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes left to {darkred}zeus"
+		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}zeus{default} beginnt"
+	}
+	"zeus_twin_nc"
+	{
+		"da"		"En Terrorist har overlevet!"	
+		"en"		"A Terrorist has surrived"
+		"de"		"Ein Terrorist hat als einziger überlebt"
+	}
+	"zeus_voting"
+	{
+		"da"		"Afstemninger for No Scope er {purple}slået fra"	
+		"en"		"Player Voting for ZeusDay is {purple}disabled"
+		"de"		"Voting für ZeusDay ist {purple}ausgeschaltet"
+	}
+	"zeus_setbywarden"
+	{
+		"da"		"Warden bestemmer runde for No Scope er {purple}slået fra"	
+		"en"		"Set ZeusDay by Warden is {purple}disabled"
+		"de"		"ZeusDay Aktivierung durch den Warden ist {purple}ausgeschaltet"
+	}
+	
+	"zeus_setbyadmin"
+	{
+		"da"		"Admin bestemmer runde for No Scope er {purple}slået fra"		
+		"en"		"Set ZeusDay by admin is {purple}disabled"
+		"de"		"ZeusDay Aktivierung durch den Admin ist {purple}ausgeschaltet"
+	}
+	"zeus_ctwin_nc"
+	{
+		"da"		"En Counter-Terrorist har overlevet!"
+		"en"		"A Counter-Terrorist has surrived"
+		"de"		"Ein Counter-Terrorist hat als einziger überlebt"
+	}
+	
+	"zeus_end"
+	{
+		"da"		"{purple}ZeusDay{default} er afsluttet!"	
+		"en"		"{purple}ZeusDay{default} ended"
+		"de"		"{purple}ZeusDay{default} beendet"
+	}
+	
+	"zeus_next"
+	{
+		"da"		"Næste runde er {purple}ZeusDay"	
+		"en"		"Next round is {purple}ZeusDay"
+		"de"		"Nächste Runde ist {purple}ZeusDay"
+	}
+	"zeus_next_nc"
+	{
+		"da"		"Næste runde er ZeusDay"	
+		"en"		"Next round is ZeusDay"
+		"de"		"Nächste Runde ist ZeusDay"
+	}
+	
+	"zeus_start"
+	{
+		"da"		"{purple}ZeusDay{default} er startet!"
+		"en"		"The {purple}ZeusDay{default} has started!"
+		"de"		"{purple}ZeusDay{default} ist gestartet!"
+	}
+	
+	"zeus_start_nc"
+	{
+		"da"		"No Scope er startet!"
+		"en"		"The ZeusDay started!"
+		"de"		"ZeusDay ist gestartet!"
+	}
+	
+	"zeus_voted"
+	{
+		"da"		"Du har allerede stemt for {purple}ZeusDay!"	
+		"en"		"You already voted for {purple}ZeusDay"
+		"de"		"Du hast schon für {purple}ZeusDay {default}gevotet"
+	}
+	
+	"zeus_progress"
+	{
+		"#format"	"{1:s}"
+		"da"		"ZeusDay er {purple}allerede i gang!"	
+		"en"		"A Event is {purple}already in progress. {darkred}{1}"
+		"de"		"Ein Event ist {purple}bereits gesetzt. {darkred}{1}"
+	}
+	
+	"zeus_disabled"
+	{
+		"da"		"ZeusDay er {purple}slået fra."
+		"en"		"ZeusDay is {purple}disabled."
+		"de"		"ZeusDay ist {purple}deaktiviert."
+	}
+	
+
+	"zeus_timetounfreeze_nc"
+	{
+		"#format"	"{1:i}"
+		"da"		"{1} sekunder til runden starter!"	
+		"en"		"{1} seconds until start"
+		"de"		"{1} Sekunden bis zum Start"
+	}
+	
+	"zeus_info_Title"
+	{
+		"en"		"ZeusDay er aktiveret!"	
+		"en"		"ZeusDay is activ"
+		"de"		"ZeusDay ist aktiv"
+	}
+	
+	"zeus_info_Line1"
+	{
+		"da"		"ZeusDay er hvor mod hvor!"
+		"en"		"ZeusDay Free for All"
+		"de"		"ZeusDay Jeder gegen Jeden"
+	}
+	"zeus_info_Line2"
+	{
+		"en"		"You got only one shot on Zeus"
+		"de"		"Du hast in der Zeus nur einen Schuss"
+	}
+	
+	"zeus_info_Line3"
+	{
+		"en"		"On kill with Zeus or Knife you get a new Zeus"
+		"de"		"Bei einem Kill mit Zeus oder Messer bekommst du einen neue Zeus"
+	}
+	
+	"zeus_info_Line4"
+	{
+		"da"		"Alle jail regler er ophævet!"	
+		"en"		"All normal jailRules are repealed"
+		"de"		"Alle normalen Jailregeln sind aufgehoben!"
+	}
+	
+	"zeus_info_Line5"
+	{
+		"da"		"Der kan ikke laves Last Request i denne runde!"	
+		"en"		"There is no last request!"
+		"de"		"Der letzte Terrorist hat keinen Wunsch!"
+	}
+	
+	"zeus_info_Line6"
+	{
+		"da"		"Alle kan gå der hen hvor de har lyst til at gå hen!"	
+		"en"		"Everyone is allowed to go everywhere where he wants"
+		"de"		"Jeder darf überall hin wo er will!"
+	}
+	
+	"zeus_info_Line7"
+	{
+		"da"		"Alle server regler skal overholdes!"	
+		"en"		"dont be an asshole!"
+		"de"		"bau keine scheisse!"
+	}
+		"zeus_wait"
+	{
+		"#format"	"{1:i}"
+		"da"		"Du skal vente {1} flere runder!"		
+		"en"		"you must wait {1} more rounds"
+		"de"		"Du musst noch {1} Runden warten"
+	}
+}

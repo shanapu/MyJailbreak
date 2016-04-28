@@ -10,11 +10,12 @@ bugs:
 - [x] randomkill lighting bold missing
 - [x] menu: infomessage on first spawn
 - [ ] countdown: start-cancel-start- bug?
-- [ ] warden:autoOpen broke
+- [x] warden:autoOpen broke
+- [x] after catch no damage. weapon strip T
 - [x] warden: uncolor on disbaled
-- [?] end catch unblue - freeze ClientInGameaame
+- [x] end catch unblue - freeze ClientInGameaame
 - [x] unstrip weapon after win zombie T
-- [ ] change team Join ct sure?
+- [x] change team Join ct sure?
 - [x] hide missing ta grenade?
 - [ ] jihad t win wenn all ct dead or better  mp_default_team_winner_no_objective?
 - [x] GetEdictClassname" reported: Invalid edict  /  Command_BombJihad
@@ -23,6 +24,7 @@ bugs:
 
 must:
 
+- [ ] translations timetounfreeze-> trucetime
 - [x] sprint msg
 - [x] jihad no bomb drop
 - [x] disbale FF on roundend
@@ -46,7 +48,7 @@ must:
 - [x] all days: start overlay
 - [x] all days: start sound
 - [x] all days: msg when deactivated by set
-- [x] 1.7 syntax (ausser weapons)
+- [~] 1.7 syntax (**except weapons**)
 - [x] new day: decoy/flash 1hp -> dodgeball
 - [x] dodgeball: make it HE
 - [x] dodgeball: disbable knife
@@ -87,7 +89,7 @@ want:
 - [ ] playertags: only admin only warden...
 - [ ] disarm for ct/warden
 - [ ] No scope choose weapon (scout/awp/auto)
-- [ ] add LR to menu - !rules !lastrequest !checkplayers - !stoplr 
+- [x] add LR to menu - !rules !lastrequest !checkplayers - !stoplr 
 - [ ] updater
 - [ ] warden: model
 - [ ] duckhunt: +attack -> not block. change to attack2
@@ -132,6 +134,7 @@ want:
 - [ ] warden: mathboard
 - [x] catch: enable/disbale sprint
 - [x] warden: !w or random warden
+- [ ] warden: toggle noblock 
 - [ ] menu: noblock insert
 - [ ] warden: color prisioners (color roulette)
 - [x] weapons: open menu on spawn bool

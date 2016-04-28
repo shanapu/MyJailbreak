@@ -101,7 +101,7 @@ public void OnPluginStart()
 	gc_sSoundUnFreezePath = AutoExecConfig_CreateConVar("sm_catch_sounds_unfreeze", "music/myjailbreak/unfreeze.mp3", "Path to the soundfile which should be played on unfreeze.");
 	gc_bSprint = AutoExecConfig_CreateConVar("sm_catch_sprint_enable", "1", "0 - disabled, 1 - enable ShortSprint", _, true, 0.0, true, 1.0);
 	gc_bSprintUse = AutoExecConfig_CreateConVar("sm_catch_sprint_button", "1", "0 - disabled, 1 - enable +use button for sprint", _, true, 0.0, true, 1.0);
-	gc_fSprintCooldown= AutoExecConfig_CreateConVar("sm_catch_sprint_cooldown", "10", "Time in seconds the player must wait for the next sprint", _, true, 0.0);
+	gc_iSprintCooldown= AutoExecConfig_CreateConVar("sm_catch_sprint_cooldown", "10", "Time in seconds the player must wait for the next sprint", _, true, 0.0);
 	gc_fSprintSpeed = AutoExecConfig_CreateConVar("sm_catch_sprint_speed", "1.25", "Ratio for how fast the player will sprint", _, true, 1.01);
 	gc_fSprintTime = AutoExecConfig_CreateConVar("sm_catch_sprint_time", "3.0", "Time in seconds the player will sprint", _, true, 1.0);
 	
@@ -454,9 +454,9 @@ public Action CheckStatus()
 	if(IsClientInGame(i) && IsPlayerAlive(i) && GetClientTeam(i) == CS_TEAM_T && !catched[i]) number++;
 	if(number == 0)
 	{
-	CPrintToChatAll("%t %t", "catch_tag" , "catch_win");
-	CS_TerminateRound(5.0, CSRoundEnd_CTWin);
-	CreateTimer( 1.0, DeleteOverlay);
+		CPrintToChatAll("%t %t", "catch_tag" , "catch_win");
+		CS_TerminateRound(5.0, CSRoundEnd_CTWin);
+		CreateTimer( 1.0, DeleteOverlay);
 	}
 }
 
@@ -489,6 +489,10 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 				CreateTimer( 0.0, DeleteOverlay, client );
 				SetEntityRenderColor(client, 255, 255, 255, 0);
 				catched[client] = false;
+				if (GetClientTeam(client) == CS_TEAM_T)
+				{
+					StripAllWeapons(client);
+				}
 			}
 		}
 		
@@ -598,7 +602,7 @@ public Action Timer_SprintEnd(Handle timer, any client)
 		ClientSprintStatus[client] &= ~ IsSprintUsing;
 		if(IsPlayerAlive(client) && GetClientTeam(client) > 1)
 		{
-			SprintTimer[client] = CreateTimer(gc_fSprintCooldown.FloatValue, Timer_SprintCooldown, client);
+			SprintTimer[client] = CreateTimer(gc_iSprintCooldown.FloatValue, Timer_SprintCooldown, client);
 			CPrintToChat(client, "%t %t", "catch_tag" ,"catch_sprintend", gc_iSprintCooldown.IntValue);
 		}
 	}

@@ -7,6 +7,8 @@
 #include <colors>
 #include <autoexecconfig>
 #include <myjailbreak>
+#include <lastrequest>
+
 
 //Compiler Options
 #pragma semicolon 1
@@ -19,10 +21,13 @@ ConVar gc_bCTerror;
 ConVar gc_bWarden;
 ConVar gc_bDays;
 ConVar g_bMath;
+ConVar g_bCheck;
 ConVar gc_bClose;
 ConVar gc_bStart;
 ConVar gc_bWelcome;
 ConVar g_bFF;
+ConVar g_bZeus;
+ConVar g_bRules;
 ConVar g_bsetFF;
 ConVar g_bWar;
 ConVar g_bJiHad;
@@ -90,8 +95,11 @@ public void OnPluginStart()
 public void OnConfigsExecuted()
 {
 	g_bWarden = FindConVar("sm_warden_enable");
+	g_bRules = FindConVar("sm_hosties_rules_enable");
+	g_bCheck = FindConVar("sm_hosties_checkplayers_enable");
 	g_bMath = FindConVar("sm_warden_math");
 	g_bWar = FindConVar("sm_war_enable");
+	g_bZeus = FindConVar("sm_zeus_enable");
 	g_bFFA = FindConVar("sm_ffa_enable");
 	g_bZombie = FindConVar("sm_zombie_enable");
 	g_bNoScope = FindConVar("sm_noscope_enable");
@@ -145,8 +153,8 @@ public Action JbMenu(int client, int args)
 	{
 		char menuinfo1[255], menuinfo2[255], menuinfo3[255], menuinfo5[255], menuinfo6[255], menuinfo7[255], menuinfo8[255];
 		char menuinfo9[255], menuinfo10[255], menuinfo11[255], menuinfo13[255], menuinfo15[255], menuinfo16[255];
-		char menuinfo17[255]; 
-//		char menuinfo4[255], menuinfo12[255], menuinfo14[255]; 
+		char menuinfo17[255], menuinfo14[255], menuinfo4[255];
+		//, menuinfo12[255]
 		
 		
 		
@@ -198,8 +206,14 @@ public Action JbMenu(int client, int args)
 					Format(menuinfo5, sizeof(menuinfo5), "%T", "menu_eventdays", LANG_SERVER);
 					mainmenu.AddItem("days", menuinfo5);
 				}
-				
-				
+				if(g_bCheck != null)
+				{
+					if(g_bCheck.BoolValue)
+					{
+						Format(menuinfo4, sizeof(menuinfo4), "%T", "menu_check", LANG_SERVER);
+						mainmenu.AddItem("check", menuinfo4);
+					}
+				}
 				if(g_bsetFF != null)
 				{
 					if(g_bsetFF.BoolValue)
@@ -230,79 +244,94 @@ public Action JbMenu(int client, int args)
 			}
 		}
 		else if(GetClientTeam(client) == CS_TEAM_CT) 
+		{
+			if(gc_bCTerror.BoolValue)
 			{
-				if(gc_bCTerror.BoolValue)
+				if(g_bGuns != null)
 				{
-					if(g_bGuns != null)
+					if(g_bGuns.BoolValue)
 					{
-						if(g_bGuns.BoolValue)
+						if(g_bGunsCT.BoolValue)
 						{
-							if(g_bGunsCT.BoolValue)
-							{
-								Format(menuinfo6, sizeof(menuinfo6), "%T", "menu_guns", LANG_SERVER);
-								mainmenu.AddItem("guns", menuinfo6);
-							}
+							Format(menuinfo6, sizeof(menuinfo6), "%T", "menu_guns", LANG_SERVER);
+							mainmenu.AddItem("guns", menuinfo6);
 						}
 					}
-					if(g_bWarden != null)
-					{
-						if(!warden_exist() && IsPlayerAlive(client))
-						{
-							if(g_bWarden.BoolValue)
-							{
-								Format(menuinfo11, sizeof(menuinfo11), "%T", "menu_getwarden", LANG_SERVER);
-								mainmenu.AddItem("getwarden", menuinfo11);
-							}
-						}
-					}
-					if(gc_bDays.BoolValue)
-					{
-						Format(menuinfo5, sizeof(menuinfo5), "%T", "menu_eventdays", LANG_SERVER);
-						mainmenu.AddItem("days", menuinfo5);
-					}
-					Format(menuinfo13, sizeof(menuinfo13), "%T", "menu_joint", LANG_SERVER);
-					mainmenu.AddItem("joinT", menuinfo13);
 				}
-			}	
-			else if(GetClientTeam(client) == CS_TEAM_T) 
-			{
-				if(gc_bTerror.BoolValue)
+				if(g_bWarden != null)
 				{
-					if(g_bGuns != null)
+					if(!warden_exist() && IsPlayerAlive(client))
 					{
-						if(g_bGuns.BoolValue)
+						if(g_bWarden.BoolValue)
 						{
-							if(g_bGunsT.BoolValue)
-							{
-								Format(menuinfo6, sizeof(menuinfo6), "%T", "menu_guns", LANG_SERVER);
-								mainmenu.AddItem("guns", menuinfo6);
-							}
+							Format(menuinfo11, sizeof(menuinfo11), "%T", "menu_getwarden", LANG_SERVER);
+							mainmenu.AddItem("getwarden", menuinfo11);
 						}
 					}
-					if(g_bWarden != null)
-					{
-						if(warden_exist())
-						{
-							if(g_bWarden.BoolValue)
-							{
-								if(g_bVote.BoolValue)
-								{
-									Format(menuinfo16, sizeof(menuinfo16), "%T", "menu_votewarden", LANG_SERVER);
-									mainmenu.AddItem("votewarden", menuinfo16);
-								}
-							}
-						}
-					}
-					if(gc_bDays.BoolValue)
-					{
-						Format(menuinfo5, sizeof(menuinfo5), "%T", "menu_eventdays", LANG_SERVER);
-						mainmenu.AddItem("days", menuinfo5);
-					}
-					Format(menuinfo15, sizeof(menuinfo15), "%T", "menu_joinct", LANG_SERVER);
-					mainmenu.AddItem("joinCT", menuinfo15);
-					
 				}
+				if(gc_bDays.BoolValue)
+				{
+					Format(menuinfo5, sizeof(menuinfo5), "%T", "menu_eventdays", LANG_SERVER);
+					mainmenu.AddItem("days", menuinfo5);
+				}
+				if(g_bCheck != null)
+				{
+					if(g_bCheck.BoolValue)
+					{
+						Format(menuinfo4, sizeof(menuinfo4), "%T", "menu_check", LANG_SERVER);
+						mainmenu.AddItem("check", menuinfo4);
+					}
+				}
+				Format(menuinfo13, sizeof(menuinfo13), "%T", "menu_joint", LANG_SERVER);
+				mainmenu.AddItem("joinT", menuinfo13);
 			}
+		}
+		else if(GetClientTeam(client) == CS_TEAM_T) 
+		{
+			if(gc_bTerror.BoolValue)
+			{
+				if(g_bGuns != null)
+				{
+					if(g_bGuns.BoolValue)
+					{
+						if(g_bGunsT.BoolValue)
+						{
+							Format(menuinfo6, sizeof(menuinfo6), "%T", "menu_guns", LANG_SERVER);
+							mainmenu.AddItem("guns", menuinfo6);
+						}
+					}
+				}
+				if(g_bWarden != null)
+				{
+					if(warden_exist())
+					{
+						if(g_bWarden.BoolValue)
+						{
+							if(g_bVote.BoolValue)
+							{
+								Format(menuinfo16, sizeof(menuinfo16), "%T", "menu_votewarden", LANG_SERVER);
+								mainmenu.AddItem("votewarden", menuinfo16);
+							}
+						}
+					}
+				}
+				if(gc_bDays.BoolValue)
+				{
+					Format(menuinfo5, sizeof(menuinfo5), "%T", "menu_eventdays", LANG_SERVER);
+					mainmenu.AddItem("days", menuinfo5);
+				}
+				Format(menuinfo15, sizeof(menuinfo15), "%T", "menu_joinct", LANG_SERVER);
+				mainmenu.AddItem("joinCT", menuinfo15);
+			}
+		}
+		if(g_bRules != null)
+		{
+			if(g_bRules.BoolValue)
+			{
+				Format(menuinfo14, sizeof(menuinfo14), "%T", "menu_rules", LANG_SERVER);
+				mainmenu.AddItem("rules", menuinfo14);
+			}
+		}
 		if (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
 		{
 			Format(menuinfo17, sizeof(menuinfo17), "%T", "menu_admin", LANG_SERVER);
@@ -321,6 +350,7 @@ public Action EventDays(int client, int args)
 			Menu daysmenu = new Menu(EventMenuHandler);
 			
 			char menuinfo18[255], menuinfo19[255], menuinfo20[255], menuinfo21[255], menuinfo22[255], menuinfo23[255], menuinfo24[255], menuinfo25[255], menuinfo26[255], menuinfo27[255], menuinfo28[255], menuinfo29[255];
+			char menuinfo17[255];
 			
 			if (warden_iswarden(client) || (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true)))
 			{
@@ -405,6 +435,14 @@ public Action EventDays(int client, int args)
 					daysmenu.AddItem("duckhunt", menuinfo25);
 				}
 			}
+			if(g_bZeus != null)
+			{
+				if(g_bZeus.BoolValue)
+				{
+					Format(menuinfo17, sizeof(menuinfo17), "%T", "menu_zeus", LANG_SERVER);
+					daysmenu.AddItem("knife", menuinfo17);
+				}
+			}
 			if(g_bKnife != null)
 			{
 				if(g_bKnife.BoolValue)
@@ -440,9 +478,17 @@ public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selec
 		{
 			ChangeTeam(client,0);
 		}
-		else if ( strcmp(info,"joinCT") == 0 ) 
+		else if ( strcmp(info,"lastR") == 0 ) 
 		{
-			ChangeTeam(client,0);
+			FakeClientCommand(client, "sm_lr");
+		}
+		else if ( strcmp(info,"check") == 0 ) 
+		{
+			FakeClientCommand(client, "sm_checkplayers");
+		}
+		else if ( strcmp(info,"rules") == 0 ) 
+		{
+			FakeClientCommand(client, "sm_rules");
 		}
 		else if ( strcmp(info,"votewarden") == 0 ) 
 		{
@@ -573,6 +619,25 @@ public int EventMenuHandler(Menu daysmenu, MenuAction action, int client, int se
 			else
 			{
 				FakeClientCommand(client, "sm_zombie");
+				if(!gc_bClose.BoolValue)
+				{
+					JbMenu(client,0);
+				}
+			}
+		} 
+		else if ( strcmp(info,"zeus") == 0 ) 
+		{
+			if (warden_iswarden(client) || (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true)))
+			{
+				FakeClientCommand(client, "sm_setzeus");
+				if(!gc_bClose.BoolValue)
+				{
+					JbMenu(client,0);
+				}
+			}
+			else
+			{
+				FakeClientCommand(client, "sm_zeus");
 				if(!gc_bClose.BoolValue)
 				{
 					JbMenu(client,0);
