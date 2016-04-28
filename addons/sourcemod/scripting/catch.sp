@@ -37,7 +37,7 @@ ConVar gc_iCooldownStart;
 ConVar gc_iRoundTime;
 ConVar gc_sOverlayFreeze;
 ConVar gc_bSprintUse;
-ConVar gc_fSprintCooldown;
+ConVar gc_iSprintCooldown;
 ConVar gc_bSprint;
 ConVar gc_fSprintSpeed;
 ConVar gc_fSprintTime;
@@ -612,7 +612,7 @@ public Action Timer_SprintCooldown(Handle timer, any client)
 	{
 		ClientSprintStatus[client] &= ~ IsSprintCoolDown;
 		CPrintToChat(client, "%t %t", "catch_tag" ,"catch_sprintagain", gc_iSprintCooldown.IntValue);
-	}}
+	}
 	return;
 }
 

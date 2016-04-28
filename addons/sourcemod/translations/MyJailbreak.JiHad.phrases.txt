@@ -99,8 +99,14 @@
 	"jihad_sprintend"
 	{
 		"#format"	"{1:i}"
-		"en"		"{blue}Sprint endet!{default} Cooldown {1} Seconds"
-		"de"		"Du kannst nicht mehr{blue}sprinten! {default}warte {1} Sekunden!"
+		"en"		"{blue}Sprint ended!{default} Cooldown {1} Seconds"
+		"de"		"Du kannst nicht mehr {blue}sprinten! {default}warte {1} Sekunden!"
+	}
+		
+	"jihad_sprintagain"
+	{
+		"en"		"You can{blue}Sprint again!{default}"
+		"de"		"Du kannst wieder {blue}sprinten!"
 	}
 	
 	"jihad_timetojihad_nc"
