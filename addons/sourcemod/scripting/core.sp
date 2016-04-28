@@ -63,15 +63,19 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 			
 			if(StrEqual(EventDay, "none", false))
 			{
+				SetCvar("sm_menu_enable", 1);
+				
 				if (GetClientTeam(client) == CS_TEAM_T)
 				{
 					StripAllWeapons(client);
+					GivePlayerItem(client, "weapon_knife");
 				}
 			}
 			else
 			{
-				warden_remove(client);
+				ServerCommand("sm_removewarden");
 			}
+		
 		}
 	}
 }

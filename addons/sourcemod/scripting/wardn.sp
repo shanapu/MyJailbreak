@@ -274,16 +274,22 @@ public void RoundStart(Event event, const char[] name, bool dontBroadcast)
 	}
 	else
 	{
+		if (Warden == 1)
+		{
 		SetEntityRenderColor(Warden, 255, 255, 255, 255);
 		Warden = -1;
+		}
 	}
 	char EventDay[64];
 	GetEventDay(EventDay);
 	
 	if(!StrEqual(EventDay, "none", false) || !gc_bStayWarden.BoolValue)
 	{
+		if (Warden == 1)
+		{
 		SetEntityRenderColor(Warden, 255, 255, 255, 255);
 		Warden = -1;
+		}
 	}
 }
 

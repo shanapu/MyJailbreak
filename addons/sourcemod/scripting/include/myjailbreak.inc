@@ -3,7 +3,7 @@
 #endif
 #define _myjailbreak_included_
 
-#define PLUGIN_VERSION "0.3"
+#define PLUGIN_VERSION "0.4"
 
 
 #include <sdktools>

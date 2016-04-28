@@ -119,7 +119,7 @@ Colorize Warden, open/close cell doors, automatic open cells doors, vote retire 
 - sm_warden_open_time_enable: 0 - disabled, 1 - cell doors will open automatic after - sm_warden_open_time. Default 1
 - sm_warden_open_time - Time in seconds for open doors on round start automaticly. Default 60
 - sm_warden_open_time_warden: 0 - disabled, 1 - doors open automatic after - sm_warden_open_time although there is a Warden. needs - sm_warden_open_time_enable 1. Default 1
-- sm_warden_tag: 0 - disabled, 1 - Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch your sv_tags. Default 1
+- sm_warden_tag: 0 - disabled, 1 - Allow "MyJailbreak" to be added to the server tags? So player will find servers with MyJB faster. it dont touch your sv_tags. Default 1
 
 ```
 ##### Features
@@ -152,7 +152,7 @@ The menu shows only features that are enabled per round (e.g at EventDays no War
 - sm_menu_days: 0 - disabled, 1 - enable EventDays menu for Warden and Admin
 - sm_menu_close: 0 - disabled, 1 - close menu after action
 - sm_menu_start: 0 - disabled, 1 - open menu on every roundstart
-- sm_menu_tag: 0 - disabled, 1 - Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch your sv_tags. Default 1
+- sm_menu_tag: 0 - disabled, 1 - Allow "MyJailbreak" to be added to the server tags? So player will find servers with MyJB faster. it dont touch your sv_tags. Default 1
 ```
 ##### Features
 
@@ -243,7 +243,7 @@ Or on Round start Ts spawn in open cells with weapons and weaponmenu. No Freeze/
 - sm_war_sounds_start: Path to the soundfile which should be played on start. Default "music/myJailbreak/start.mp3"
 - sm_war_overlays_enable: 0 - disabled, 1 - enable start overlay. Default 1
 - sm_war_overlays_start: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
-- sm_war_tag: 0 - disabled, 1 - Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch your sv_tags. Default 1
+- sm_war_tag: 0 - disabled, 1 - Allow "MyJailbreak" to be added to the server tags? So player will find servers with MyJB faster. it dont touch your sv_tags. Default 1
 
 and more 
 ```
@@ -282,7 +282,7 @@ Or on Round start Ts spawn in open cells with weapons & weaponmenu. (Default)
 - sm_ffa_sounds_start: Path to the soundfile which should be played on start. Default "music/myJailbreak/start.mp3"
 - sm_ffa_overlays_enable: 0 - disabled, 1 - enable start overlay. Default 1
 - sm_ffa_overlays_start: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
-- sm_ffa_tag: 0 - disabled, 1 - Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch your sv_tags. Default 1
+- sm_ffa_tag: 0 - disabled, 1 - Allow "MyJailbreak" to be added to the server tags? So player will find servers with MyJB faster. it dont touch your sv_tags. Default 1
 
 ```
 ##### Features
@@ -321,7 +321,7 @@ Zombies freezed for 35sec (default) so T can hide &/or climb.
 - sm_zombie_overlays_enable: 0 - disabled, 1 - enable start overlay. Default 1
 - sm_zombie_overlays_start: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
 - sm_zombie_model: Path to the model for zombies. Default "models/player/custom_player/zombie/revenant/revenant_v2.mdl"
-- sm_zombie_tag: 0 - disabled, 1 - Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch your sv_tags. Default 1
+- sm_zombie_tag: 0 - disabled, 1 - Allow "MyJailbreak" to be added to the server tags? So player will find servers with MyJB faster. it dont touch your sv_tags. Default 1
 
 ```
 ##### Features
@@ -360,7 +360,7 @@ On Round start cells open everybody got a scout with noscope in low gravity. Nod
 - sm_noscope_sounds_start: Path to the soundfile which should be played on start. Default "music/myJailbreak/start.mp3"
 - sm_noscope_overlays_enable: 0 - disabled, 1 - enable start overlay. Default 1
 - sm_noscope_overlays_start: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
-- sm_noscope_tag: 0 - disabled, 1 - Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch your sv_tags. Default 1
+- sm_noscope_tag: 0 - disabled, 1 - Allow "MyJailbreak" to be added to the server tags? So player will find servers with MyJB faster. it dont touch your sv_tags. Default 1
 
 ```
 ##### Features
@@ -398,7 +398,7 @@ On Round start cells open everybody got HE grenate with low gravity(Default) and
 - sm_dodgeball_sounds_start: Path to the soundfile which should be played on start. Default "music/myJailbreak/start.mp3"
 - sm_dodgeball_overlays_enable: 0 - disabled, 1 - enable start overlay. Default 1
 - sm_dodgeball_overlays_start: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
-- sm_dodgeball_tag: 0 - disabled, 1 - Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch your sv_tags. Default 1
+- sm_dodgeball_tag: 0 - disabled, 1 - Allow "MyJailbreak" to be added to the server tags? So player will find servers with MyJB faster. it dont touch your sv_tags. Default 1
 
 ```
 ##### Features
@@ -443,7 +443,7 @@ Ts can unfreeze Freezed Ts by knife them again.
 - sm_catch_sounds_enable: 0 - disabled, 1 - enable un/-Freeze sounds. Default 1
 - sm_catch_sounds_freeze: Path to the soundfile which should be played on freeze. Default "music/myJailbreak/freeze.mp3"
 - sm_catch_sounds_unfreeze: Path to the soundfile which should be played on unfreeze. Default "music/myJailbreak/unfreeze.mp3"
-- sm_catch_tag: 0 - disabled, 1 - Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch your sv_tags. Default 1
+- sm_catch_tag: 0 - disabled, 1 - Allow "MyJailbreak" to be added to the server tags? So player will find servers with MyJB faster. it dont touch your sv_tags. Default 1
 
 ```
 ##### Features
@@ -482,7 +482,7 @@ When CT unfreezed (30sec. default) Ts get freezed (default).
 - sm_hide_sounds_start: Path to the soundfile which should be played on start. Default "music/myJailbreak/start.mp3"
 - sm_hide_overlays_enable: 0 - disabled, 1 - enable start overlay. Default 1
 - sm_hide_overlays_start: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
-- sm_hide_tag: 0 - disabled, 1 - Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch your sv_tags. Default 1
+- sm_hide_tag: 0 - disabled, 1 - Allow "MyJailbreak" to be added to the server tags? So player will find servers with MyJB faster. it dont touch your sv_tags. Default 1
 
 ```
 ##### Features
@@ -518,7 +518,7 @@ T are Chicken in Thirdperson. After trucetime the cells open and T got HE grenad
 - sm_duckhunt_sounds_start: Path to the soundfile which should be played on start. Default "music/myJailbreak/start.mp3"
 - sm_duckhunt_overlays_enable: 0 - disabled, 1 - enable start overlay. Default 1
 - sm_duckhunt_overlays_start: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
-- sm_duckhunt_tag: 0 - disabled, 1 - Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch your sv_tags. Default 1
+- sm_duckhunt_tag: 0 - disabled, 1 - Allow "MyJailbreak" to be added to the server tags? So player will find servers with MyJB faster. it dont touch your sv_tags. Default 1
 
 ```
 ##### Features
@@ -569,7 +569,7 @@ On Round start CTs got time to hide before cells open and Ts got Suicide bombs t
 - sm_jihad_sounds_boom - Path to the soundfile which should be played on detonation. Default "music/myJailbreak/boom.mp3"
 - sm_jihad_overlays_enable: 0 - disabled, 1 - enable start overlay. Default 1
 - sm_jihad_overlays_start: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
-- sm_jihad_tag: 0 - disabled, 1 - Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch your sv_tags. Default 1
+- sm_jihad_tag: 0 - disabled, 1 - Allow "MyJailbreak" to be added to the server tags? So player will find servers with MyJB faster. it dont touch your sv_tags. Default 1
 
 ```
 ##### Features
@@ -602,7 +602,7 @@ On Round start cells open everybody KnifeOnly with thirdperson, low gravity(Defa
 - sm_knifefight_gravity: 0 - disabled, 1 - enable low Gravity for knifefight. Default 1
 - sm_knifefight_gravity_value - Ratio for Gravity 1.0 earth 0.5 moon. Default 0.3
 - sm_knifefight_iceskate: 0 - disabled, 1 - enable iceskate for knifefight. Default 1
-- sm_knifefight_iceskate_value - Ratio iceskate (5.2 normal). Default 1.0
+- sm_knifefight_iceskate_value - Ratio iceskate (5.2 normal). Default 0.8
 - sm_knifefight_roundtime - Roundtime for a single knifefight round in minutes. Default 5
 - sm_knifefight_trucetime - Time in seconds damage is disbaled. Default 15
 - sm_knifefight_cooldown_start - Rounds until event can be start after mapchange. Default 3
@@ -611,7 +611,7 @@ On Round start cells open everybody KnifeOnly with thirdperson, low gravity(Defa
 - sm_knifefight_sounds_start: Path to the soundfile which should be played on start. Default "music/myJailbreak/start.mp3"
 - sm_knifefight_overlays_enable: 0 - disabled, 1 - enable start overlay. Default 1
 - sm_knifefight_overlays_start: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
-- sm_knifefight_tag: 0 - disabled, 1 - Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch your sv_tags. Default 1
+- sm_knifefight_tag: 0 - disabled, 1 - Allow "MyJailbreak" to be added to the server tags? So player will find servers with MyJB faster. it dont touch your sv_tags. Default 1
 
 ```
 ##### Features
@@ -645,7 +645,7 @@ On Round start cells open for freeday and enabled Damage (Default).
 - sm_freeday_firstround - auto freeday first round after mapstart. Default 1
 - sm_freeday_damage: 0 - disabled, 1 - enable damage on freedays. Default 1
 - sm_freeday_cooldown_day - Rounds until event can be started again. Default 3
-- sm_freeday_tag: 0 - disabled, 1 - Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch your sv_tags. Default 1
+- sm_freeday_tag: 0 - disabled, 1 - Allow "MyJailbreak" to be added to the server tags? So player will find servers with MyJB faster. it dont touch your sv_tags. Default 1
 
 ```
 ##### Features

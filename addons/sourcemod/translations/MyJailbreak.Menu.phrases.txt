@@ -90,65 +90,70 @@
 		"#format"		""
 		"en"			"vote against warden"
 	}
-	"menu_event_Title"
+	"menu_event_Titlestart"
 	{
 		"#format"		""
-		"en"			"MyJailbreak EventDays Menu"
+		"en"			"Start EventDays next round"
+	}
+	"menu_event_Titlevote"
+	{
+		"#format"		""
+		"en"			"Vote for a EventDays"
 	}
 	"menu_war"
 	{
 		"#format"		""
-		"en"			"Start war next round"
+		"en"			"war"
 	}
 	"menu_ffa"
 	{
 		"#format"		""
-		"en"			"Start ffa next round"
+		"en"			"ffa"
 	}
 	"menu_zombie"
 	{
 		"#format"		""
-		"en"			"Start zombie next round"
+		"en"			"zombie"
 	}
 	"menu_hide"
 	{
 		"#format"		""
-		"en"			"Start hide next round"
+		"en"			"hide"
 	}
 	"menu_jihad"
 	{
 		"#format"		""
-		"en"			"Start jihad next round"
+		"en"			"jihad"
 	}
 	"menu_catch"
 	{
 		"#format"		""
-		"en"			"Start catch next round"
+		"en"			"catch"
 	}
 	"menu_knifefight"
 	{
 		"#format"		""
-		"en"			"Start knifefight next round"
+		"en"			"knifefight"
 	}
 	"menu_dodgeball"
 	{
 		"#format"		""
-		"en"			"Start dodgeball next round"
+		"en"			"dodgeball"
 	}
 	"menu_noscope"
 	{
 		"#format"		""
-		"en"			"Start noscope next round"
+		"en"			"noscope"
 	}	
 	"menu_duckhunt"
 	{
 		"#format"		""
-		"en"			"Start duckhunt next round"
+		"en"			"duckhunt"
 	}
 	"menu_freeday"
 	{
 		"#format"		""
-		"en"			"Start freeday next round"
+		"en"			"freeday"
 	}
 	"menu_admin"
 	{

@@ -12,9 +12,6 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-//Defines
-#define PLUGIN_VERSION "0.3"
-
 //ConVars
 ConVar gc_bPlugin;
 ConVar gc_bTerror;
@@ -65,9 +62,9 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_menu", JbMenu, "opens the menu depends on players team/rank");
 	RegConsoleCmd("sm_menus", JbMenu, "opens the menu depends on players team/rank");
 	RegConsoleCmd("buyammo1", JbMenu, "opens the menu depends on players team/rank");
-	RegConsoleCmd("sm_days", EventDays, "open the EventDays menu for Warden/Admin");
-	RegConsoleCmd("sm_events", EventDays, "open the EventDays menu for Warden/Admin");
-	RegConsoleCmd("sm_event", EventDays, "open the EventDays menu for Warden/Admin");
+	RegConsoleCmd("sm_days", EventDays, "open a Set EventDays menu for Warden/Admin & vote EventDays menu for player");
+	RegConsoleCmd("sm_events", EventDays, "open a Set EventDays menu for Warden/Admin & vote EventDays menu for player");
+	RegConsoleCmd("sm_event", EventDays, "open a Set EventDays menu for Warden/Admin & vote EventDays menu for player");
 	
 	//AutoExecConfig
 	AutoExecConfig_SetFile("MyJailbreak_menu");
@@ -78,7 +75,7 @@ public void OnPluginStart()
 	gc_bCTerror = AutoExecConfig_CreateConVar("sm_menu_ct", "1", "0 - disabled, 1 - enable ct jailbreak menu");
 	gc_bTerror = AutoExecConfig_CreateConVar("sm_menu_t", "1", "0 - disabled, 1 - enable t jailbreak menu");
 	gc_bWarden = AutoExecConfig_CreateConVar("sm_menu_warden", "1", "0 - disabled, 1 - enable warden jailbreak menu");
-	gc_bDays = AutoExecConfig_CreateConVar("sm_menu_days", "1", "0 - disabled, 1 - enable eventdays menu for warden and admin");
+	gc_bDays = AutoExecConfig_CreateConVar("sm_menu_days", "1", "0 - disabled, 1 - enable vote/set eventdays menu");
 	gc_bClose = AutoExecConfig_CreateConVar("sm_menu_close", "1", "0 - disabled, 1 - enable close menu after action");
 	gc_bStart = AutoExecConfig_CreateConVar("sm_menu_start", "1", "0 - disabled, 1 - enable open menu on every roundstart");
 	gc_bWelcome = AutoExecConfig_CreateConVar("sm_menu_welcome", "1", "Show welcome message to newly connected users.");
@@ -258,6 +255,11 @@ public Action JbMenu(int client, int args)
 							}
 						}
 					}
+					if(gc_bDays.BoolValue)
+					{
+						Format(menuinfo5, sizeof(menuinfo5), "%T", "menu_eventdays", LANG_SERVER);
+						mainmenu.AddItem("days", menuinfo5);
+					}
 					Format(menuinfo13, sizeof(menuinfo13), "%T", "menu_joint", LANG_SERVER);
 					mainmenu.AddItem("joinT", menuinfo13);
 				}
@@ -291,6 +293,11 @@ public Action JbMenu(int client, int args)
 							}
 						}
 					}
+					if(gc_bDays.BoolValue)
+					{
+						Format(menuinfo5, sizeof(menuinfo5), "%T", "menu_eventdays", LANG_SERVER);
+						mainmenu.AddItem("days", menuinfo5);
+					}
 					Format(menuinfo15, sizeof(menuinfo15), "%T", "menu_joinct", LANG_SERVER);
 					mainmenu.AddItem("joinCT", menuinfo15);
 					
@@ -298,7 +305,7 @@ public Action JbMenu(int client, int args)
 			}
 		if (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
 		{
-			if(gc_bDays.BoolValue)
+			if(gc_bDays.BoolValue && !warden_iswarden(client))
 			{
 				Format(menuinfo5, sizeof(menuinfo5), "%T", "menu_eventdays", LANG_SERVER);
 				mainmenu.AddItem("days", menuinfo5);
@@ -317,14 +324,20 @@ public Action EventDays(int client, int args)
 {
 	if(gc_bDays.BoolValue)
 	{
-		if (warden_iswarden(client) || (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true)))
-		{
 			Menu daysmenu = new Menu(EventMenuHandler);
 			
-			char menuinfo18[255], menuinfo19[255], menuinfo20[255], menuinfo21[255], menuinfo22[255], menuinfo23[255], menuinfo24[255], menuinfo25[255], menuinfo26[255], menuinfo27[255], menuinfo28[255];
+			char menuinfo18[255], menuinfo19[255], menuinfo20[255], menuinfo21[255], menuinfo22[255], menuinfo23[255], menuinfo24[255], menuinfo25[255], menuinfo26[255], menuinfo27[255], menuinfo28[255], menuinfo29[255];
 			
-			Format(menuinfo18, sizeof(menuinfo18), "%T", "menu_event_Title", LANG_SERVER);
+			if (warden_iswarden(client) || (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true)))
+			{
+			Format(menuinfo18, sizeof(menuinfo18), "%T", "menu_event_Titlestart", LANG_SERVER);
 			daysmenu.SetTitle(menuinfo18);
+			}
+			else
+			{
+			Format(menuinfo29, sizeof(menuinfo29), "%T", "menu_event_Titlevote", LANG_SERVER);
+			daysmenu.SetTitle(menuinfo29);
+			}
 			
 			if(g_bWar != null)
 			{
@@ -416,8 +429,7 @@ public Action EventDays(int client, int args)
 			}
 			daysmenu.ExitButton = true;
 			daysmenu.Display(client, MENU_TIME_FOREVER);
-		}
-		else CPrintToChat(client, "%t %t", "warden_tag", "warden_notwarden" );
+
 	}
 }
 
@@ -518,90 +530,213 @@ public int EventMenuHandler(Menu daysmenu, MenuAction action, int client, int se
 		
 		if ( strcmp(info,"war") == 0 ) 
 		{
-			FakeClientCommand(client, "sm_setwar");
-			if(!gc_bClose.BoolValue)
+			if (warden_iswarden(client) || (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true)))
 			{
-				JbMenu(client,0);
+				FakeClientCommand(client, "sm_setwar");
+				if(!gc_bClose.BoolValue)
+				{
+					JbMenu(client,0);
+				}
+			}
+			else
+			{
+				FakeClientCommand(client, "sm_war");
+				if(!gc_bClose.BoolValue)
+				{
+					JbMenu(client,0);
+				}
 			}
 		} 
 		else if ( strcmp(info,"ffa") == 0 ) 
 		{
-			FakeClientCommand(client, "sm_setffa");
-			if(!gc_bClose.BoolValue)
+			if (warden_iswarden(client) || (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true)))
 			{
-				JbMenu(client,0);
+				FakeClientCommand(client, "sm_setffa");
+				if(!gc_bClose.BoolValue)
+				{
+					JbMenu(client,0);
+				}
+			}
+			else
+			{
+				FakeClientCommand(client, "sm_ffa");
+				if(!gc_bClose.BoolValue)
+				{
+					JbMenu(client,0);
+				}
 			}
 		} 
 		else if ( strcmp(info,"zombie") == 0 ) 
 		{
-			FakeClientCommand(client, "sm_setzombie");
-			if(!gc_bClose.BoolValue)
+			if (warden_iswarden(client) || (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true)))
 			{
-				JbMenu(client,0);
+				FakeClientCommand(client, "sm_setzombie");
+				if(!gc_bClose.BoolValue)
+				{
+					JbMenu(client,0);
+				}
+			}
+			else
+			{
+				FakeClientCommand(client, "sm_zombie");
+				if(!gc_bClose.BoolValue)
+				{
+					JbMenu(client,0);
+				}
 			}
 		} 
 		else if ( strcmp(info,"catch") == 0 )
 		{
-			FakeClientCommand(client, "sm_setcatch");
-			if(!gc_bClose.BoolValue)
+			if (warden_iswarden(client) || (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true)))
 			{
-				JbMenu(client,0);
+				FakeClientCommand(client, "sm_setcatch");
+				if(!gc_bClose.BoolValue)
+				{
+					JbMenu(client,0);
+				}
+			}
+			else
+			{
+				FakeClientCommand(client, "sm_catch");
+				if(!gc_bClose.BoolValue)
+				{
+					JbMenu(client,0);
+				}
 			}
 		}
 		else if ( strcmp(info,"jihad") == 0 )
 		{
-			FakeClientCommand(client, "sm_setjihad");
-			if(!gc_bClose.BoolValue)
+			if (warden_iswarden(client) || (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true)))
 			{
-				JbMenu(client,0);
+				FakeClientCommand(client, "sm_setjihad");
+				if(!gc_bClose.BoolValue)
+				{
+					JbMenu(client,0);
+				}
+			}
+			else
+			{
+				FakeClientCommand(client, "sm_jihad");
+				if(!gc_bClose.BoolValue)
+				{
+					JbMenu(client,0);
+				}
 			}
 		}
 		else if ( strcmp(info,"noscope") == 0 )
 		{
-			FakeClientCommand(client, "sm_setnoscope");
-			if(!gc_bClose.BoolValue)
+			
+			if (warden_iswarden(client) || (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true)))
 			{
-				JbMenu(client,0);
+				FakeClientCommand(client, "sm_setnoscope");
+				if(!gc_bClose.BoolValue)
+				{
+					JbMenu(client,0);
+				}
 			}
+			else
+			{
+				FakeClientCommand(client, "sm_noscope");
+				if(!gc_bClose.BoolValue)
+				{
+					JbMenu(client,0);
+				}
+			}
+		
 		}
 		else if ( strcmp(info,"dodgeball") == 0 )
 		{
-			FakeClientCommand(client, "sm_setdodgeball");
-			if(!gc_bClose.BoolValue)
+			if (warden_iswarden(client) || (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true)))
 			{
-				JbMenu(client,0);
+				FakeClientCommand(client, "sm_setdodgeball");
+				if(!gc_bClose.BoolValue)
+				{
+					JbMenu(client,0);
+				}
+			}
+			else
+			{
+				FakeClientCommand(client, "sm_dodgeball");
+				if(!gc_bClose.BoolValue)
+				{
+					JbMenu(client,0);
+				}
 			}
 		}
 		else if ( strcmp(info,"duckhunt") == 0 )
 		{
-			FakeClientCommand(client, "sm_setduckhunt");
-			if(!gc_bClose.BoolValue)
+			if (warden_iswarden(client) || (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true)))
 			{
-				JbMenu(client,0);
+				FakeClientCommand(client, "sm_setduckhunht");
+				if(!gc_bClose.BoolValue)
+				{
+					JbMenu(client,0);
+				}
+			}
+			else
+			{
+				FakeClientCommand(client, "sm_duckhunt");
+				if(!gc_bClose.BoolValue)
+				{
+					JbMenu(client,0);
+				}
 			}
 		}
 		else if ( strcmp(info,"hide") == 0 )
 		{
-			FakeClientCommand(client, "sm_sethide");
-			if(!gc_bClose.BoolValue)
+			if (warden_iswarden(client) || (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true)))
 			{
-				JbMenu(client,0);
+				FakeClientCommand(client, "sm_sethide");
+				if(!gc_bClose.BoolValue)
+				{
+					JbMenu(client,0);
+				}
+			}
+			else
+			{
+				FakeClientCommand(client, "sm_hide");
+				if(!gc_bClose.BoolValue)
+				{
+					JbMenu(client,0);
+				}
 			}
 		}
 		else if ( strcmp(info,"knife") == 0 )
 		{
-			FakeClientCommand(client, "sm_setknifefight");
-			if(!gc_bClose.BoolValue)
+			if (warden_iswarden(client) || (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true)))
 			{
-				JbMenu(client,0);
+				FakeClientCommand(client, "sm_setknifefight");
+				if(!gc_bClose.BoolValue)
+				{
+					JbMenu(client,0);
+				}
+			}
+			else
+			{
+				FakeClientCommand(client, "sm_knifefight");
+				if(!gc_bClose.BoolValue)
+				{
+					JbMenu(client,0);
+				}
 			}
 		}
 		else if ( strcmp(info,"freeday") == 0 )
 		{
-			FakeClientCommand(client, "sm_setfreeday");
-			if(!gc_bClose.BoolValue)
+			if (warden_iswarden(client) || (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true)))
 			{
-				JbMenu(client,0);
+				FakeClientCommand(client, "sm_setfreeday");
+				if(!gc_bClose.BoolValue)
+				{
+					JbMenu(client,0);
+				}
+			}
+			else
+			{
+				FakeClientCommand(client, "sm_freeday");
+				if(!gc_bClose.BoolValue)
+				{
+					JbMenu(client,0);
+				}
 			}
 		}
 	}

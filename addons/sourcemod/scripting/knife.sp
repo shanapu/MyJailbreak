@@ -85,7 +85,7 @@ public void OnPluginStart()
 	gc_bGrav = AutoExecConfig_CreateConVar("sm_knifefight_gravity", "1", "0 - disabled, 1 - enable low gravity", _, true,  0.0, true, 1.0);
 	gc_fGravValue= AutoExecConfig_CreateConVar("sm_knifefight_gravity_value", "0.3","Ratio for Gravity 1.0 earth 0.5 moon", _, true, 0.1, true, 1.0);
 	gc_bIce = AutoExecConfig_CreateConVar("sm_knifefight_iceskate", "1", "0 - disabled, 1 - enable iceskate", _, true,  0.0, true, 1.0);
-	gc_fIceValue= AutoExecConfig_CreateConVar("sm_knifefight_iceskate_value", "1.0","Ratio iceskate (5.2 normal)", _, true, 0.1, true, 5.2);
+	gc_fIceValue= AutoExecConfig_CreateConVar("sm_knifefight_iceskate_value", "c","Ratio iceskate (5.2 normal)", _, true, 0.1, true, 5.2);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_knifefight_roundtime", "5", "Round time in minutes for a single knifefight round", _, true, 1.0);
 	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_knifefight_trucetime", "15", "Time in seconds players can't deal damage", _, true, 0.0);
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_knifefight_cooldown_day", "3", "Rounds cooldown after a event until event can be start again", _, true, 0.0);

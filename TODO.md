@@ -11,16 +11,17 @@ bugs:
 - [x] menu: infomessage on first spawn
 - [ ] countdown: start-cancel-start- bug?
 - [ ] warden:autoOpen broke
-- [?] warden: uncolor on disbaled
+- [x] warden: uncolor on disbaled
 - [?] end catch unblue - freeze ClientInGameaame
-- [?] unstrip weapon after win zombie T
+- [x] unstrip weapon after win zombie T
 - [ ] change team Join ct sure?
 - [?] hide missing ta grenade?
 - [?] jihad t win wenn all ct dead or better  mp_default_team_winner_no_objective?
 - [?] GetEdictClassname" reported: Invalid edict  /  Command_BombJihad
 - [?] catch IsClientInGame" reported: Client index 0 is invalid overlay
-must:
+- [x] menu Event adsm double by admin/warden
 
+must:
 
 - [x] disbale FF on roundend
 - [ ] clean up code 
@@ -76,8 +77,7 @@ want:
 
 - [x] wiki
 - [ ] fastdl files
-- [ ] fastdl files
-- [ ] set weapon menu enable on EventDays
+- [x] set weapon menu enable on need EventDays
 - [x] enu: add eventdays to admin if enabled
 - [ ] register plugins to core
 - [ ] playertags: only admin only warden...
