@@ -62,7 +62,7 @@ stock StripAllWeapons(int iClient)
 
 public Action ShowOverlayStart( Handle timer, any client ) 
 {
-	if(IsClientConnected(client) && !IsFakeClient(client))
+	if(IsValidClient(client, false, true))
 	{
 		int iFlag = GetCommandFlags( "r_screenoverlay" ) & ( ~FCVAR_CHEAT ); 
 		SetCommandFlags( "r_screenoverlay", iFlag ); 
@@ -74,7 +74,7 @@ public Action ShowOverlayStart( Handle timer, any client )
 
 public Action DeleteOverlay( Handle timer, any client ) 
 {
-	if(IsClientConnected(client) && !IsFakeClient(client))
+	if(IsValidClient(client, false, true))
 	{
 	int iFlag = GetCommandFlags( "r_screenoverlay" ) & ( ~FCVAR_CHEAT ); 
 	SetCommandFlags( "r_screenoverlay", iFlag ); 
@@ -119,13 +119,13 @@ public SetCvarString(char cvarName[64], char[] value)
 	SetConVarString(cvar, value, true);
 }
 
-stock bool IsValidClient(int client, bool alive = false)
+stock bool IsValidClient(int client, bool bAllowBots = false, bool bAllowDead = true)
 {
-	if(client >= 1 && client <= MaxClients && IsClientConnected(client) && IsClientInGame(client) && (alive == false || IsPlayerAlive(client)))
+	if(!(1 <= client <= MaxClients) || !IsClientInGame(client) || (IsFakeClient(client) && !bAllowBots) || IsClientSourceTV(client) || IsClientReplay(client) || (!bAllowDead && !IsPlayerAlive(client)))
 	{
-		return true;
+		return false;
 	}
-	return false;
+	return true;
 }
 
 public Pass(Handle:menu, MenuAction:action, param1, param2)

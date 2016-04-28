@@ -96,6 +96,12 @@
 		"de"		"Du {blue}sprintest!"
 	}
 	
+	"jihad_sprintend"
+	{
+		"#format"	"{1:i}"
+		"en"		"{blue}Sprint endet!{default} Cooldown {1} Seconds"
+		"de"		"Du kannst nicht mehr{blue}sprinten! {default}warte {1} Sekunden!"
+	}
 	
 	"jihad_timetojihad_nc"
 	{

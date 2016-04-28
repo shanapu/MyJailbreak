@@ -41,10 +41,10 @@ ConVar gc_iRoundTime;
 ConVar gc_iFreezeTime;
 ConVar gc_sOverlayStartPath;
 ConVar gc_bSprintUse;
-ConVar gc_fSprintCooldown;
+ConVar gc_iSprintCooldown;
 ConVar gc_bSprint;
 ConVar gc_fSprintSpeed;
-ConVar gc_fSprintTime;
+ConVar gc_iSprintTime;
 ConVar gc_sSoundStartPath;
 ConVar gc_sSoundJihadPath;
 ConVar gc_sSoundBoomPath;
@@ -113,10 +113,10 @@ public void OnPluginStart()
 	gc_sSoundJihadPath = AutoExecConfig_CreateConVar("sm_jihad_sounds_jihad", "music/myjailbreak/jihad.mp3", "Path to the soundfile which should be played on activatebomb.");
 	gc_sSoundBoomPath = AutoExecConfig_CreateConVar("sm_jihad_sounds_boom", "music/myjailbreak/boom.mp3", "Path to the soundfile which should be played on detonation.");
 	gc_bSprintUse = AutoExecConfig_CreateConVar("sm_jihad_sprint_button", "1", "0 - disabled, 1 - enable +use button for sprint", _, true,  0.0, true, 1.0);
-	gc_fSprintCooldown = AutoExecConfig_CreateConVar("sm_jihad_sprint_cooldown", "10","Time in seconds the player must wait for the next sprint", _, true,  0.0);
+	gc_iSprintCooldown = AutoExecConfig_CreateConVar("sm_jihad_sprint_cooldown", "10","Time in seconds the player must wait for the next sprint", _, true,  0.0);
 	gc_bSprint = AutoExecConfig_CreateConVar("sm_jihad_sprint_enable", "1", "0 - disabled, 1 - enable ShortSprint", _, true,  0.0, true, 1.0);
 	gc_fSprintSpeed = AutoExecConfig_CreateConVar("sm_jihad_sprint_speed", "1.25","Ratio for how fast the player will sprint", _, true, 1.01, true, 5.00);
-	gc_fSprintTime = AutoExecConfig_CreateConVar("sm_jihad_sprint_time", "1.0", "Time in seconds the player will sprint", _, true, 1.0);
+	gc_iSprintTime = AutoExecConfig_CreateConVar("sm_jihad_sprint_time", "2.0", "Time in seconds the player will sprint", _, true, 1.0);
 	
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
@@ -185,6 +185,12 @@ public Action CS_OnTerminateRound( float &delay, CSRoundEndReason &reason)
 	return Plugin_Continue;
 }
 
+public void OnClientPutInServer(int client)
+{
+	SDKHook(client, SDKHook_WeaponCanUse, OnWeaponCanUse);
+	SDKHook(client, SDKHook_WeaponDrop, OnWeaponDrop);
+}
+
 public void OnMapStart()
 {
 	g_iVoteCount = 0;
@@ -210,11 +216,6 @@ public void OnConfigsExecuted()
 {
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
-}
-
-public void OnClientPutInServer(int client)
-{
-	SDKHook(client, SDKHook_WeaponCanUse, OnWeaponCanUse);
 }
 
 public Action SetJiHad(int client,int args)
@@ -413,7 +414,7 @@ public Action JiHad(Handle timer)
 	{
 		g_iFreezeTime--;
 		for (int client=1; client <= MaxClients; client++)
-		if (IsClientInGame(client) && IsPlayerAlive(client))
+		if (IsValidClient(client, false, false))
 		{
 			if (GetClientTeam(client) == CS_TEAM_CT)
 			{
@@ -433,7 +434,7 @@ public Action JiHad(Handle timer)
 	{
 		for (int client=1; client <= MaxClients; client++)
 		{
-			if (IsClientInGame(client) && IsPlayerAlive(client))
+			if (IsValidClient(client, true, true))
 			{
 				SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
 						
@@ -455,16 +456,33 @@ public Action JiHad(Handle timer)
 	return Plugin_Stop;
 }
 
+public Action OnWeaponDrop(int client, int weapon)
+{
+	if (IsJiHad && IsValidClient(client, false, false))
+	{
+		char g_sWeaponName[80];
+		if (weapon > MaxClients && GetClientTeam(client) == CS_TEAM_T && GetEntityClassname(weapon, g_sWeaponName, sizeof(g_sWeaponName)))
+		{
+			if (StrEqual("weapon_c4", g_sWeaponName, false))
+			{
+				LogMessage("%L tried to drop their C4 - entity [%i]", client, weapon);
+				return Plugin_Handled;
+			}
+		}
+	}
+	return Plugin_Continue;
+}
+
 public Action Command_BombJihad(int client, int args)
 {
-	if (IsJiHad && BombActive)
+	if (IsJiHad && BombActive && IsValidClient(client, false, false))
 	{
 		int weapon = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
 		char weaponName[64];
 		
 		GetEdictClassname(weapon, weaponName, sizeof(weaponName));
 		
-		if (IsValidEdict(weapon) && IsClientInGame(client) && IsPlayerAlive(client) && (GetClientTeam(client) == CS_TEAM_T))
+		if (GetClientTeam(client) == CS_TEAM_T)
 		{
 			if(StrEqual(weaponName, "weapon_c4"))
 			{
@@ -537,8 +555,8 @@ public Action DoDaBomb( Handle timer, any client )
 	if(IsClientInGame(i) && IsPlayerAlive(i) && GetClientTeam(i) == CS_TEAM_CT) number++;
 	if(number == 0)
 	{
-	CPrintToChatAll("%t %t", "jihad_tag" , "jihad_win");
-	CS_TerminateRound(5.0, CSRoundEnd_TerroristWin);
+	CPrintToChatAll("%t %t", "jihad_tag" , "jihad_twin_nc");
+	CS_TerminateRound(0.0, CSRoundEnd_TerroristWin);
 	}
 }
 
@@ -549,7 +567,7 @@ public Action OnWeaponCanUse(int client, int weapon)
 	
 	if((GetClientTeam(client) == CS_TEAM_T && !StrEqual(sWeapon, "weapon_c4")) || (GetClientTeam(client) == CS_TEAM_CT && !StrEqual(sWeapon, "weapon_knife")))
 		{
-			if (IsClientInGame(client) && IsPlayerAlive(client))
+			if (IsValidClient(client, true, false))
 			{
 				if(IsJiHad == true)
 				{
@@ -608,7 +626,7 @@ public Action Command_StartSprint(int client, int args)
 			SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", gc_fSprintSpeed.FloatValue);
 			EmitSoundToClient(client, "player/suit_sprint.wav", SOUND_FROM_PLAYER, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, 0.8);
 			CPrintToChat(client, "%t %t", "jihad_tag" ,"jihad_sprint");
-			SprintTimer[client] = CreateTimer(gc_fSprintTime.FloatValue, Timer_SprintEnd, client);
+			SprintTimer[client] = CreateTimer(gc_iSprintTime.FloatValue, Timer_SprintEnd, client);
 		}
 		return(Plugin_Handled);
 	}
@@ -678,7 +696,8 @@ public Action Timer_SprintEnd(Handle timer, any client)
 		ClientSprintStatus[client] &= ~ IsSprintUsing;
 		if(IsPlayerAlive(client) && GetClientTeam(client) > 1)
 		{
-			SprintTimer[client] = CreateTimer(gc_fSprintCooldown.FloatValue, Timer_SprintCooldown, client);
+			SprintTimer[client] = CreateTimer(gc_iSprintCooldown.FloatValue, Timer_SprintCooldown, client);
+			CPrintToChat(client, "%t %t", "jihad_tag" ,"jihad_sprintend", gc_iSprintCooldown.IntValue);
 		}
 	}
 	return;
@@ -690,6 +709,7 @@ public Action Timer_SprintCooldown(Handle timer, any client)
 	if(IsClientInGame(client) && (ClientSprintStatus[client] & IsSprintCoolDown))
 	{
 		ClientSprintStatus[client] &= ~ IsSprintCoolDown;
+		CPrintToChat(client, "%t %t", "jihad_tag" ,"jihad_sprintagain", gc_iSprintCooldown.IntValue);
 	}
 	return;
 }

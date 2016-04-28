@@ -418,7 +418,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 	{
 		for(int client=1; client <= MaxClients; client++)
 		{
-			if (IsClientInGame(client)) SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
+			if (IsValidClient(client, false, true)) SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
 		}
 		
 		if (FreezeTimer != null) KillTimer(FreezeTimer);

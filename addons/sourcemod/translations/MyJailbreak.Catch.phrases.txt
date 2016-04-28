@@ -116,7 +116,18 @@
 		"en"		"You are now using {blue}Sprint!"
 		"de"		"Du {blue}sprintest!"
 	}
+	"catch_sprintend"
+	{
+		"#format"	"{1:i}"
+		"en"		"{blue}Sprint ended!{default} Cooldown {1} Seconds"
+		"de"		"Du kannst nicht mehr {blue}sprinten! {default}warte {1} Sekunden!"
+	}
 	
+	"catch_sprintagain"
+	{
+		"en"		"You can{blue}Sprint again!{default}"
+		"de"		"Du kannst wieder {blue}sprinten!"
+	}
 	"catch_disabled"
 	{
 		"da"		"Catch er {purple}slået fra."	

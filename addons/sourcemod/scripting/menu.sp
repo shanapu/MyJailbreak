@@ -123,7 +123,7 @@ public void OnClientPutInServer(int client)
 
 public Action Timer_WelcomeMessage(Handle timer, any client)
 {	
-	if (gc_bWelcome.BoolValue && IsClientConnected(client) && IsClientInGame(client) && !IsFakeClient(client))
+	if (gc_bWelcome.BoolValue && IsValidClient(client, false, true))
 	{	
 		CPrintToChat(client, "%t", "menu_info");
 	}
@@ -266,7 +266,7 @@ public Action JbMenu(int client, int args)
 			}	
 			else if(GetClientTeam(client) == CS_TEAM_T) 
 			{
-				if(gc_bTerror.BoolValue)	
+				if(gc_bTerror.BoolValue)
 				{
 					if(g_bGuns != null)
 					{
@@ -305,12 +305,6 @@ public Action JbMenu(int client, int args)
 			}
 		if (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
 		{
-			if(gc_bDays.BoolValue && !warden_iswarden(client))
-			{
-				Format(menuinfo5, sizeof(menuinfo5), "%T", "menu_eventdays", LANG_SERVER);
-				mainmenu.AddItem("days", menuinfo5);
-			}
-			
 			Format(menuinfo17, sizeof(menuinfo17), "%T", "menu_admin", LANG_SERVER);
 			mainmenu.AddItem("admin", menuinfo17);
 		}
@@ -444,11 +438,11 @@ public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selec
 		
 		if ( strcmp(info,"joinT") == 0 ) 
 		{
-			ClientCommand(client, "jointeam %i", CS_TEAM_T);
+			ChangeTeam(client,0);
 		}
 		else if ( strcmp(info,"joinCT") == 0 ) 
 		{
-			ClientCommand(client, "jointeam %i", CS_TEAM_CT);
+			ChangeTeam(client,0);
 		}
 		else if ( strcmp(info,"votewarden") == 0 ) 
 		{
@@ -743,5 +737,40 @@ public int EventMenuHandler(Menu daysmenu, MenuAction action, int client, int se
 	else if (action == MenuAction_End)
 	{
 		delete daysmenu;
+	}
+}
+
+public Action ChangeTeam(int client, int args)
+{
+			char info5[255], info6[255], info7[255];
+			Menu menu1 = CreateMenu(changemenu);
+			Format(info5, sizeof(info5), "%T", "warden_sure", LANG_SERVER);
+			menu1.SetTitle(info5);
+			Format(info6, sizeof(info6), "%T", "warden_yes", LANG_SERVER);
+			Format(info7, sizeof(info7), "%T", "warden_no", LANG_SERVER);
+			menu1.AddItem("1", info6);
+			menu1.AddItem("0", info7);
+			menu1.ExitButton = false;
+			menu1.Display(client,MENU_TIME_FOREVER);
+}
+
+public int changemenu(Menu menu, MenuAction action, int client, int Position)
+{
+	if(action == MenuAction_Select)
+	{
+		char Item[11];
+		menu.GetItem(Position,Item,sizeof(Item));
+		int choice = StringToInt(Item);
+		if(choice == 1)
+		{
+			if (GetClientTeam(client) == CS_TEAM_T)
+			{
+			ClientCommand(client, "jointeam %i", CS_TEAM_CT);
+			}
+			if (GetClientTeam(client) == CS_TEAM_CT)
+			{
+			ClientCommand(client, "jointeam %i", CS_TEAM_T);
+			}
+		}
 	}
 }

@@ -446,7 +446,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 
 public Action FP(int client)
 {
-	if(IsClientInGame(client) && IsClientConnected(client) && !IsFakeClient(client))
+	if(IsValidClient(client, false, false))
 	{
 		ClientCommand(client, "firstperson");
 	}

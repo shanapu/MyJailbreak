@@ -384,7 +384,7 @@ public void RoundEnd(Event event, const char[] name, bool dontBroadcast)
 	}
 	if(gc_bPlugin.BoolValue)
 	{
-		for(int client=1; client <= MaxClients; client++) if(IsValidClient(client, true))
+		for(int client=1; client <= MaxClients; client++) if(IsValidClient(client, true, true))
 		{
 			EnableBlock(client);
 			CancelCountDown(client, 0);
@@ -519,7 +519,7 @@ public Action SetWarden(int client,int args)
 {
 	if(gc_bPlugin.BoolValue)	
 	{
-		if(IsValidClient(client))
+		if(IsValidClient(client, false, false))
 		{
 			char info1[255];
 			Menu menu = CreateMenu(m_SetWarden);
@@ -621,7 +621,7 @@ public int m_WardenOverwrite(Menu menu, MenuAction action, int client, int Posit
 
 public Action Timer_WardenFixColor(Handle timer,any client)
 {
-	if(IsValidClient(client, true))
+	if(IsValidClient(client, false, false))
 	{
 		int iWardenColorRed;								// Need this way on new syntax ? 				
 		int iWardenColorGreen;								// Need this way on new syntax ? 	
@@ -924,7 +924,7 @@ public Action Event_BulletImpact(Handle hEvent,const char [] sName, bool bDontBr
 	{
 		int client = GetClientOfUserId(GetEventInt(hEvent, "userid"));
 		
-		if (IsValidClient(client) && IsPlayerAlive(client) && warden_iswarden(client))
+		if (IsValidClient(client, false, false) && warden_iswarden(client))
 		{
 			if (GetClientButtons(client) & IN_USE) 
 			{
@@ -1401,7 +1401,7 @@ public Action StopStartStopCountdown( Handle timer, any client )
 
 public Action ShowOverlayStop( Handle timer, any client ) 
 {
-	if(gc_bOverlays.BoolValue && IsClientInGame(client) && IsClientConnected(client) && !IsFakeClient(client))
+	if(gc_bOverlays.BoolValue && IsValidClient(client, false, true))
 	{
 		int iFlag = GetCommandFlags( "r_screenoverlay" ) & ( ~FCVAR_CHEAT ); 
 		SetCommandFlags( "r_screenoverlay", iFlag ); 

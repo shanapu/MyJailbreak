@@ -15,14 +15,16 @@ bugs:
 - [?] end catch unblue - freeze ClientInGameaame
 - [x] unstrip weapon after win zombie T
 - [ ] change team Join ct sure?
-- [?] hide missing ta grenade?
-- [?] jihad t win wenn all ct dead or better  mp_default_team_winner_no_objective?
-- [?] GetEdictClassname" reported: Invalid edict  /  Command_BombJihad
+- [x] hide missing ta grenade?
+- [ ] jihad t win wenn all ct dead or better  mp_default_team_winner_no_objective?
+- [x] GetEdictClassname" reported: Invalid edict  /  Command_BombJihad
 - [?] catch IsClientInGame" reported: Client index 0 is invalid overlay
 - [x] menu Event adsm double by admin/warden
 
 must:
 
+- [x] sprint msg
+- [x] jihad no bomb drop
 - [x] disbale FF on roundend
 - [ ] clean up code 
 - [ ] comments
@@ -75,6 +77,8 @@ must:
 
 want:
 
+- [ ] whistle for hider
+- [ ] hide: seeker more TA pecvar?
 - [x] wiki
 - [ ] fastdl files
 - [x] set weapon menu enable on need EventDays

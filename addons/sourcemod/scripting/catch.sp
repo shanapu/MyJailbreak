@@ -16,7 +16,6 @@
 #pragma newdecls required
 
 //Defines
-#define PLUGIN_VERSION "0.3"
 #define IsSprintUsing   (1<<0)
 #define IsSprintCoolDown  (1<<1)
 
@@ -360,7 +359,7 @@ public Action OnWeaponCanUse(int client, int weapon)
 	
 	if(!StrEqual(sWeapon, "weapon_knife"))
 		{
-			if (IsClientInGame(client) && IsPlayerAlive(client))
+			if (IsValidClient(client, true, false))
 			{
 				if(IsCatch == true)
 				{
@@ -373,7 +372,7 @@ public Action OnWeaponCanUse(int client, int weapon)
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if(!IsValidClient(victim) || attacker == victim || !IsValidClient(attacker)) return Plugin_Continue;
+	if(!IsValidClient(victim, true, false)|| attacker == victim || !IsValidClient(attacker, true, false)) return Plugin_Continue;
 	
 	if(IsCatch == false)
 	{
@@ -483,13 +482,14 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 	{
 		for(int client=1; client <= MaxClients; client++)
 		{
-			SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
-			ClientSprintStatus[client] = 0;
-			CreateTimer( 0.0, DeleteOverlay, client );
-			SetEntityMoveType(client, MOVETYPE_WALK);
-			SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
-			SetEntityRenderColor(client, 255, 255, 255, 0);
-			catched[client] = false;
+			if(IsValidClient(client, true, true))
+			{
+				SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
+				ClientSprintStatus[client] = 0;
+				CreateTimer( 0.0, DeleteOverlay, client );
+				SetEntityRenderColor(client, 255, 255, 255, 0);
+				catched[client] = false;
+			}
 		}
 		
 		if (winner == 2) PrintHintTextToAll("%t", "catch_twin_nc");
@@ -517,7 +517,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 
 public Action ShowOverlayFreeze( Handle timer, any client ) {
 	
-	if(gc_bOverlays.BoolValue && IsClientInGame(client) && IsClientConnected(client) && !IsFakeClient(client))
+	if(gc_bOverlays.BoolValue && IsValidClient(client, false, true))
 	{
 	int iFlag = GetCommandFlags( "r_screenoverlay" ) & ( ~FCVAR_CHEAT ); 
 	SetCommandFlags( "r_screenoverlay", iFlag ); 
@@ -599,6 +599,7 @@ public Action Timer_SprintEnd(Handle timer, any client)
 		if(IsPlayerAlive(client) && GetClientTeam(client) > 1)
 		{
 			SprintTimer[client] = CreateTimer(gc_fSprintCooldown.FloatValue, Timer_SprintCooldown, client);
+			CPrintToChat(client, "%t %t", "catch_tag" ,"catch_sprintend", gc_iSprintCooldown.IntValue);
 		}
 	}
 	return;
@@ -610,7 +611,8 @@ public Action Timer_SprintCooldown(Handle timer, any client)
 	if(IsClientInGame(client) && (ClientSprintStatus[client] & IsSprintCoolDown))
 	{
 		ClientSprintStatus[client] &= ~ IsSprintCoolDown;
-	}
+		CPrintToChat(client, "%t %t", "catch_tag" ,"catch_sprintagain", gc_iSprintCooldown.IntValue);
+	}}
 	return;
 }
 

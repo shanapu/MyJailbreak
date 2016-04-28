@@ -414,6 +414,7 @@ On Round start cells open everybody got HE grenate with low gravity(Default) and
 This plugin allows players to vote and Warden to set next round to catch.  
 On Round start cells open an Ts must "runaway". CT must catch and freeze all Ts by knifing.  
 Ts can unfreeze Freezed Ts by knife them again.  
+CT and T can Sprint with USE-Key (default). 
 
 ##### Commands
 ```
@@ -458,7 +459,7 @@ Ts can unfreeze Freezed Ts by knife them again.
 #### HideInTheDark
 
 This plugin allows players to vote and Warden to set next round to hide in the dark.  
-Map is darken. CTs freezed, Cells open and Ts got time to hide on map. CT got a TA Grenade.  
+Map is darken. CTs freezed, Cells open and Ts got time to hide on map. CT got a TA Grenade & more movement speed.  
 When CT unfreezed (30sec. default) Ts get freezed (default).  
 
 ##### Commands
@@ -535,6 +536,7 @@ T are Chicken in Thirdperson. After trucetime the cells open and T got HE grenad
 
 This plugin allows players to vote and Warden to set next round to Jihad.  
 On Round start CTs got time to hide before cells open and Ts got Suicide bombs to kill all CT.  
+CT and T can Sprint with USE-Key (default).  
 
 ##### Commands
 ```

@@ -440,7 +440,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 		for(int client=1; client <= MaxClients; client++)
 		{
 			if (AmmoTimer[client] != null) KillTimer(AmmoTimer[client]);
-			if (IsClientInGame(client))
+			if (IsValidClient(client, false, true))
 				{
 					SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
 					SetEntityGravity(client, 1.0);
@@ -497,7 +497,7 @@ public Action AmmoRefill(Handle timer, any client)
 
 public Action FP(int client)
 {
-	if(IsClientInGame(client) && IsClientConnected(client) && !IsFakeClient(client))
+	if(IsValidClient(client, false, true))
 	{
 		ClientCommand(client, "firstperson");
 	}

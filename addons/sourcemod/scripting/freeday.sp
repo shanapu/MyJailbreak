@@ -216,7 +216,6 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		SetCvar("sm_weapons_enable", 0);
 		SetCvar("sm_weapons_t", 0);
 		SetCvar("sm_warden_enable", 0);
-		SetCvar("sm_menu_enable", 0);
 		IsFreeDay = true;
 		FreeDayRound++;
 		StartFreeDay = false;
@@ -245,7 +244,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		for(int client=1; client <= MaxClients; client++)
 			{
 				SendPanelToClient(FreeDayMenu, client, Pass, 15);
-				if (!gc_bDamage.BoolValue && IsClientInGame(client) && IsClientConnected(client) && !IsFakeClient(client))
+				if (!gc_bDamage.BoolValue && IsValidClient(client))
 				{
 					SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 				}
@@ -272,7 +271,6 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 		SetCvar("sm_weapons_enable", 1);
 		SetCvar("mp_teammates_are_enemies", 0);
 		SetCvar("sm_warden_enable", 1);
-		SetCvar("sm_menu_enable", 1);
 		g_iSetRoundTime.IntValue = g_iOldRoundTime;
 		SetEventDay("none");
 		CPrintToChatAll("%t %t", "freeday_tag" , "freeday_end");
