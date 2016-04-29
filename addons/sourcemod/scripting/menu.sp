@@ -337,9 +337,9 @@ public Action JbMenu(int client, int args)
 		{
 			if(g_bWarden != null)
 			{
-				if(warden_exist() && IsPlayerAlive(client))
+				if(g_bWarden.BoolValue)
 				{
-					if(g_bWarden.BoolValue)
+					if(warden_exist())
 					{
 						Format(menuinfo19, sizeof(menuinfo19), "%T", "menu_removewarden", LANG_SERVER);
 						mainmenu.AddItem("removewarden", menuinfo19);

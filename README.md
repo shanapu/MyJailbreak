@@ -10,7 +10,7 @@ help, ideas, forks and merge requests are welcome!
 
 ### Included Plugins: 
 
-- [Warden](#warden) - (set/become Warden,vote against Warden, open cells, set marker/quiz/EventDays/countdown/FF/nobock) - need [scp](#requires-plugins)
+- [Warden](#warden) - (set/become Warden,vote against Warden, Model, open cells, set marker/quiz/EventDays/countdown/FF/nobock) - need [scp](#requires-plugins)
 - [Menu](#menu) - (Player menus for T, CT, Warden & Admin)
 - [Weapons](#weapons) - (weapon menus for CT / T in event rounds)
 - [PlayerTags](#playertags) - (add player Tags for T, T.Admin, CT, CT.Admin, W, WA.Admin - need [scp](#requires-plugins)
@@ -38,10 +38,11 @@ This is my first public project. please note that the code may is messy, stupid 
 I would be happy and very pleased if you wannt to join this project as equal collaborator.  
 If you own a feature or extention for Jail/Warden that would fit in, i would be happy when you share it with us.  
 
+####coded with ![alt text](http://shanapu.de/githearth-small.png "LOVE") free software
 
 ### Credits: 
 
-**used code from: ecca, Zipcore, ESK0, Floody.de, Franc1sco, walmar, KeepCalm, bara, Arkarr, KissLick, headline, Hipster, ReFlexPoison** and many other I cant remember unfortunately! [detailed](#detailed-credits)
+**used code & stuff from: ecca, Zipcore, ESK0, Floody.de, Franc1sco, walmar, KeepCalm, bara, Arkarr, KissLick, headline, Hipster, ReFlexPoison, Kaesar, andi67** and many other I cant remember unfortunately! [detailed](#detailed-credits)
 # THANKS FOR MAKING FREE SOFTWARE!
 
 #### Much Thanks: 
@@ -54,7 +55,7 @@ UartigZone, Got Sw4g? terminator18, Skelexes, 0dieter0, maks for bughunting / gr
 
 This plugins allows players to take control over the prison as Warden/Headguard/Commander.  
 Chat, Hud & sound notifications about Warden/no Warden.  
-Colorize Warden, open/close cell doors, automatic open cells doors, vote retire Warden, different countdowns(start/stop) with overlays & sound,  MathQuiz & toggle FF/noblock.
+Colorize Warden, Warden Model, open/close cell doors, automatic open cells doors, vote retire Warden, different countdowns(start/stop) with overlays & sound,  MathQuiz & toggle FF/noblock.
 
 ##### Commands ~~// why so many cmds for same action? some JB players are dump assholes ;D~~
 ```
@@ -107,6 +108,8 @@ Colorize Warden, open/close cell doors, automatic open cells doors, vote retire 
 - sm_warden_overlays_enable: 0 - disabled, 1 - enable overlay for countdown. Default 1
 - sm_warden_overlays_start: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
 - sm_warden_overlays_stop: Path to the stop Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/stop"
+- sm_warden_model: 0 - disabled, 1 - enable warden model. Default 1
+- sm_warden_model_path:Path to the model for zombies. Default "models/player/custom_player/legacy/security/security.mdl"
 - sm_warden_color_enable: 0 - disabled, 1 - enable colored Warden. Default 1
 - sm_warden_color_red - What color to turn the Warden into (set R, G and B values to 0 to disable). Default 0
 - sm_warden_color_green - What color to turn the Warden into (rGb): x - green value. Default 0
@@ -836,8 +839,10 @@ based/merged/used code/idea plugins:
 * https://github.com/KissLick/TeamGames/
 * https://github.com/AG-Headline/Hunger-Games-Beacon
 * https://forums.alliedmods.net/showthread.php?p=1086127
-+ https://github.com/Zipcore/Timer/ (sounds)
-* https://git.tf/TTT/Plugin (sounds)
++ https://github.com/Zipcore/Timer/ (sound)
+* https://git.tf/TTT/Plugin (sound)
+* https://forums.alliedmods.net/showthread.php?t=262170 (model)
+* http://www.andi67.bplaced.net/Forum/viewtopic.php?f=40&t=342 (model)
 
 * if I missed someone, please tell me!
 * THANK YOU ALL! 

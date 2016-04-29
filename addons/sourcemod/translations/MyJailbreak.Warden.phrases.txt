@@ -400,9 +400,8 @@
 	}
 	"warden_remove"
 	{
-		"#format"	"{1:N}"
-		"en"		"Remove {1} as Warden?"
-		"de"		"Warden {1} entfernen?"
+		"en"		"Remove the current Warden?"
+		"de"		"Derzeitigen Warden entfernen?"
 	}
 	
 	"warden_cdmenu_Title"

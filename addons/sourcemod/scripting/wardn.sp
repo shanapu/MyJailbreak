@@ -52,8 +52,8 @@ ConVar gc_sWarden;
 ConVar gc_sUnWarden;
 ConVar gc_sSoundStartPath;
 ConVar gc_sStop;
-//ConVar gc_sModelPath;
-//ConVar gc_bModel;
+ConVar gc_sModelPath;
+ConVar gc_bModel;
 
 ConVar gc_bBetterNotes;
 ConVar g_bFF;
@@ -104,8 +104,8 @@ Handle StartStopTimer = null;
 
 //Strings
 char g_sHasVoted[1500];
-//char g_sModelPath[256]; // change model back on unwarden
-//char g_sWardenModel[256];
+char g_sModelPath[256]; // change model back on unwarden
+char g_sWardenModel[256];
 char g_sUnWarden[256];
 char g_sWarden[256];
 char g_sSoundStartPath[256];
@@ -201,11 +201,13 @@ public void OnPluginStart()
 	g_hOpenTimer = AutoExecConfig_CreateConVar("sm_warden_open_time", "60", "Time in seconds for open doors on round start automaticly", _, true, 0.0); 
 	gc_bOpenTimer = AutoExecConfig_CreateConVar("sm_warden_open_time_enable", "1", "should doors open automatic 0- no 1 yes", _, true,  0.0, true, 1.0); //todo dont wokr
 	gc_bOpenTimerWarden = AutoExecConfig_CreateConVar("sm_warden_open_time_warden", "1", "should doors open automatic after sm_warden_open_time when there is a warden? needs sm_warden_open_time_enable 1", _, true,  0.0, true, 1.0);
-	gc_bColor = AutoExecConfig_CreateConVar("sm_warden_color_enable", "1", "0 - disabled, 1 - enable warden colored", _, true,  0.0, true, 1.0);
 	gc_bMath = AutoExecConfig_CreateConVar("sm_warden_math", "1", "0 - disabled, 1 - enable mathquiz for warden", _, true,  0.0, true, 1.0);
 	gc_iMinimumNumber = AutoExecConfig_CreateConVar("sm_warden_math_min", "1", "What should be the minimum number for questions ?", _, true,  1.0);
 	gc_iMaximumNumber = AutoExecConfig_CreateConVar("sm_warden_math_max", "100", "What should be the maximum number for questions ?", _, true,  2.0);
 	gc_iTimeAnswer = AutoExecConfig_CreateConVar("sm_warden_math_time", "10", "Time in seconds to give a answer to a question.", _, true,  3.0);
+	gc_bModel = AutoExecConfig_CreateConVar("sm_warden_model", "1", "0 - disabled, 1 - enable warden model", 0, true, 0.0, true, 1.0);
+	gc_sModelPath = AutoExecConfig_CreateConVar("sm_warden_model_path", "models/player/custom_player/legacy/security/security.mdl", "Path to the model for warden.");
+	gc_bColor = AutoExecConfig_CreateConVar("sm_warden_color_enable", "1", "0 - disabled, 1 - enable warden colored", _, true,  0.0, true, 1.0);
 	gc_iWardenColorRed = AutoExecConfig_CreateConVar("sm_warden_color_red", "0","What color to turn the warden into (set R, G and B values to 255 to disable) (Rgb): x - red value", _, true, 0.0, true, 255.0);
 	gc_iWardenColorGreen = AutoExecConfig_CreateConVar("sm_warden_color_green", "0","What color to turn the warden into (rGb): x - green value", _, true, 0.0, true, 255.0);
 	gc_iWardenColorBlue = AutoExecConfig_CreateConVar("sm_warden_color_blue", "255","What color to turn the warden into (rgB): x - blue value", _, true, 0.0, true, 255.0);
@@ -214,8 +216,6 @@ public void OnPluginStart()
 	gc_sUnWarden = AutoExecConfig_CreateConVar("sm_warden_sounds_unwarden", "music/myjailbreak/unwarden.mp3", "Path to the soundfile which should be played when there is no warden anymore.");
 	gc_sSoundStartPath = AutoExecConfig_CreateConVar("sm_warden_sounds_start", "music/myjailbreak/start.mp3", "Path to the soundfile which should be played for a start countdown.");
 	gc_sStop = AutoExecConfig_CreateConVar("sm_warden_sounds_stop", "music/myjailbreak/stop.mp3", "Path to the soundfile which should be played for stop countdown.");
-//	gc_bModel = AutoExecConfig_CreateConVar("sm_warden_model", "1", "0 - disabled, 1 - enable warden model", 0, true, 0.0, true, 1.0);
-//	gc_sModelPath = AutoExecConfig_CreateConVar("sm_warden_model_path", "models/player/custom_player/legacy/security.mdl", "Path to the model for zombies.");
 	
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
@@ -225,7 +225,7 @@ public void OnPluginStart()
 	HookEvent("player_death", playerDeath);
 	HookEvent("bullet_impact", Event_BulletImpact);
 	HookEvent("round_end", RoundEnd);
-//	HookConVarChange(gc_sModelPath, OnSettingChanged);
+	HookConVarChange(gc_sModelPath, OnSettingChanged);
 	HookConVarChange(gc_sUnWarden, OnSettingChanged);
 	HookConVarChange(gc_sWarden, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
@@ -239,11 +239,10 @@ public void OnPluginStart()
 	gc_sUnWarden.GetString(g_sUnWarden, sizeof(g_sUnWarden));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 	gc_sStop.GetString(g_sStop, sizeof(g_sStop));
-//	gc_sModelPath.GetString(g_sWardenModel, sizeof(g_sWardenModel));
+	gc_sModelPath.GetString(g_sWardenModel, sizeof(g_sWardenModel));
 	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
 	gc_sOverlayStopPath.GetString(g_sOverlayStop , sizeof(g_sOverlayStop));
 	
-//	AddCommandListener(HookPlayerChat, "say");
 	AddCommandListener(Command_LAW, "+lookatweapon");
 	
 	g_CollisionOffset = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
@@ -265,6 +264,17 @@ public void RoundStart(Event event, const char[] name, bool dontBroadcast)
 			
 	randomtimer = null;
 	
+	if(gc_bModel.BoolValue)
+	{
+		for(int client=1; client <= MaxClients; client++) if(IsValidClient(client, true, true))
+		{
+			if (client == Warden)
+			{
+				SetEntityModel(Warden, g_sWardenModel);
+			}
+		}
+	}
+	
 	if(gc_bPlugin.BoolValue)	
 	{
 		opentimer = GetConVarInt(g_hOpenTimer);
@@ -277,6 +287,7 @@ public void RoundStart(Event event, const char[] name, bool dontBroadcast)
 		if (Warden == 1)
 		{
 		SetEntityRenderColor(Warden, 255, 255, 255, 255);
+		SetEntityModel(Warden, g_sModelPath);
 		Warden = -1;
 		}
 	}
@@ -288,6 +299,7 @@ public void RoundStart(Event event, const char[] name, bool dontBroadcast)
 		if (Warden == 1)
 		{
 		SetEntityRenderColor(Warden, 255, 255, 255, 255);
+		SetEntityModel(Warden, g_sModelPath);
 		Warden = -1;
 		}
 	}
@@ -321,8 +333,7 @@ public void OnMapStart()
 		PrecacheSoundAnyDownload(g_sSoundStartPath);
 	}	
 	g_iVoteCount = 0;
-//	PrecacheModel(g_sWardenModel);
-//	PrecacheModel("models/player/ctm_gsg9.mdl");
+	PrecacheModel(g_sWardenModel);
 	if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStart);
 	if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStop);
 	g_iBeamSprite = PrecacheModel("materials/sprites/laserbeam.vmt");
@@ -364,11 +375,11 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 		strcopy(g_sOverlayStop, sizeof(g_sOverlayStop), newValue);
 		if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStop);
 	}
-	//else if(convar == gc_sModelPath)
-	//{
-	//	strcopy(g_sWardenModel, sizeof(g_sWardenModel), newValue);
-	//	PrecacheModel(g_sWardenModel);
-	//}
+	else if(convar == gc_sModelPath)
+	{
+		strcopy(g_sWardenModel, sizeof(g_sWardenModel), newValue);
+		PrecacheModel(g_sWardenModel);
+	}
 }
 
 public void RoundEnd(Event event, const char[] name, bool dontBroadcast)
@@ -440,9 +451,9 @@ public Action ExitWarden(int client, int args)
 			Warden = -1;
 			Forward_OnWardenRemoved(client);
 			SetEntityRenderColor(client, 255, 255, 255, 255);
+			SetEntityModel(client, g_sModelPath);
 			randomtime = GetConVarInt(g_hRandomTimer);
 			randomtimer = CreateTimer(1.0, ChooseRandom, _, TIMER_REPEAT);
-//			SetEntityModel(client, "models/player/ctm_gsg9.mdl");
 			if(gc_bSounds.BoolValue)	
 			{
 				EmitSoundToAllAny(g_sUnWarden);
@@ -562,7 +573,7 @@ public int m_SetWarden(Menu menu, MenuAction action, int client, int Position)
 					{
 						tempwarden[client] = userid;
 						Menu menu1 = CreateMenu(m_WardenOverwrite);
-						Format(info4, sizeof(info4), "%T", "warden_remove", Warden, LANG_SERVER);
+						Format(info4, sizeof(info4), "%T", "warden_remove", LANG_SERVER);
 						menu1.SetTitle(info4);
 						Format(info3, sizeof(info3), "%T", "warden_yes", LANG_SERVER);
 						Format(info2, sizeof(info2), "%T", "warden_no", LANG_SERVER);
@@ -575,13 +586,22 @@ public int m_SetWarden(Menu menu, MenuAction action, int client, int Position)
 					{
 						Warden = i;
 						CPrintToChatAll("%t %t", "warden_tag" , "warden_new", i);
-		
+						
 						if(gc_bBetterNotes.BoolValue)
 						{
 							PrintCenterTextAll("%t", "warden_new_nc", i);
 							PrintHintTextToAll("%t", "warden_new_nc", i);
 						}
+						if(gc_bSounds.BoolValue)
+						{
+							EmitSoundToAllAny(g_sWarden);
+						}
 						CreateTimer(0.5, Timer_WardenFixColor, i, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
+						GetEntPropString(client, Prop_Data, "m_ModelName", g_sModelPath, sizeof(g_sModelPath));
+						if(gc_bModel.BoolValue)
+						{
+							SetEntityModel(client, g_sWardenModel);
+						}
 						Call_StartForward(gF_OnWardenCreatedByAdmin);
 						Call_PushCell(i);
 						Call_Finish();
@@ -604,7 +624,10 @@ public int m_WardenOverwrite(Menu menu, MenuAction action, int client, int Posit
 			int newwarden = GetClientOfUserId(tempwarden[client]);
 			CPrintToChatAll("%t %t", "warden_tag" , "warden_removed", client, Warden);
 			CPrintToChatAll("%t %t", "warden_tag" , "warden_new", newwarden);
-		
+			if(gc_bSounds.BoolValue)	
+			{
+				EmitSoundToAllAny(g_sWarden);
+			}
 			if(gc_bBetterNotes.BoolValue)
 			{
 				PrintCenterTextAll("%t", "warden_new_nc", newwarden);
@@ -612,6 +635,11 @@ public int m_WardenOverwrite(Menu menu, MenuAction action, int client, int Posit
 			}
 			Warden = newwarden;
 			CreateTimer(0.5, Timer_WardenFixColor, newwarden, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
+			GetEntPropString(newwarden, Prop_Data, "m_ModelName", g_sModelPath, sizeof(g_sModelPath));
+			if(gc_bModel.BoolValue)
+			{
+				SetEntityModel(client, g_sWardenModel);
+			}
 			Call_StartForward(gF_OnWardenCreatedByAdmin);
 			Call_PushCell(newwarden);
 			Call_Finish();
@@ -638,12 +666,7 @@ public Action Timer_WardenFixColor(Handle timer,any client)
 				{
 					SetEntityRenderColor(client, iWardenColorRed, iWardenColorGreen, iWardenColorBlue, 255);
 				}
-//				if(gc_bModel.BoolValue)
-//				{
-//					//GetClientModel(client, g_sModelPath, sizeof(g_sModelPath));
-//					//GetEntPropString(client, Prop_Data, "m_ModelName",g_sModelPath, sizeof(g_sModelPath));
-//					SetEntityModel(client, g_sWardenModel);
-//				}
+
 			}
 		}
 		else
@@ -720,6 +743,11 @@ void SetTheWarden(int client)
 		}
 		Warden = client;
 		CreateTimer(0.5, Timer_WardenFixColor, client, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
+		GetEntPropString(client, Prop_Data, "m_ModelName", g_sModelPath, sizeof(g_sModelPath));
+		if(gc_bModel.BoolValue)
+		{
+			SetEntityModel(client, g_sWardenModel);
+		}
 		SetClientListeningFlags(client, VOICE_NORMAL);
 		Forward_OnWardenCreation(client);
 		if(gc_bSounds.BoolValue)	
@@ -744,7 +772,7 @@ void RemoveTheWarden(int client)
 	if(IsClientInGame(client) && IsPlayerAlive(client))
 	{
 		SetEntityRenderColor(Warden, 255, 255, 255, 255);
-	//	SetEntityModel(client, "models/player/ctm_gsg9.mdl");
+		SetEntityModel(client, g_sModelPath);
 		Warden = -1;
 		randomtime = GetConVarInt(g_hRandomTimer);
 		randomtimer = CreateTimer(1.0, ChooseRandom, _, TIMER_REPEAT);
