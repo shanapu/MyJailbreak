@@ -153,8 +153,8 @@ public Action JbMenu(int client, int args)
 	{
 		char menuinfo1[255], menuinfo2[255], menuinfo3[255], menuinfo5[255], menuinfo6[255], menuinfo7[255], menuinfo8[255];
 		char menuinfo9[255], menuinfo10[255], menuinfo11[255], menuinfo13[255], menuinfo15[255], menuinfo16[255];
-		char menuinfo17[255], menuinfo14[255], menuinfo12[255], menuinfo4[255], menuinfo17[255], menuinfo18[255];
-
+		char menuinfo17[255], menuinfo14[255], menuinfo4[255], menuinfo19[255], menuinfo18[255];
+//menuinfo12[255],
 		
 		
 		
@@ -340,8 +340,8 @@ public Action JbMenu(int client, int args)
 				{
 					if(g_bWarden.BoolValue)
 					{
-						Format(menuinfo17, sizeof(menuinfo17), "%T", "menu_removewarden", LANG_SERVER);
-						mainmenu.AddItem("removewarden", menuinfo17);
+						Format(menuinfo19, sizeof(menuinfo19), "%T", "menu_removewarden", LANG_SERVER);
+						mainmenu.AddItem("removewarden", menuinfo19);
 						
 						Format(menuinfo18, sizeof(menuinfo18), "%T", "menu_setwarden", LANG_SERVER);
 						mainmenu.AddItem("setwarden", menuinfo18);
