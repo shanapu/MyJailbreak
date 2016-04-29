@@ -28,6 +28,7 @@ ConVar gc_bThirdPerson;
 ConVar gc_fIceValue;
 ConVar gc_iCooldownStart;
 ConVar gc_bSetA;
+ConVar gc_bSpawnCell;
 ConVar gc_bVote;
 ConVar gc_iCooldownDay;
 ConVar gc_iRoundTime;
@@ -47,6 +48,9 @@ int g_iTruceTime;
 int g_iVoteCount = 0;
 int g_iRound;
 int g_iMaxRound;
+
+//Floats
+float Pos[3];
 
 //Handles
 Handle TruceTimer;
@@ -83,6 +87,7 @@ public void OnPluginStart()
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_knifefight_warden", "1", "0 - disabled, 1 - allow warden to set knifefight round", _, true,  0.0, true, 1.0);
 	gc_bSetA = AutoExecConfig_CreateConVar("sm_knifefight_admin", "1", "0 - disabled, 1 - allow admin to set knifefight round", _, true,  0.0, true, 1.0);
 	gc_bVote = AutoExecConfig_CreateConVar("sm_knifefight_vote", "1", "0 - disabled, 1 - allow player to vote for knifefight", _, true,  0.0, true, 1.0);
+	gc_bSpawnCell = AutoExecConfig_CreateConVar("sm_knifefight_spawn", "0", "0 - T teleport to CT spawn, 1 - cell doors auto open", _, true,  0.0, true, 1.0);
 	gc_iRounds = AutoExecConfig_CreateConVar("sm_knifefight_rounds", "1", "Rounds to play in a row", _, true, 1.0);
 	gc_bThirdPerson = AutoExecConfig_CreateConVar("sm_knifefight_thirdperson", "1", "0 - disabled, 1 - enable thirdperson", _, true,  0.0, true, 1.0);
 	gc_bGrav = AutoExecConfig_CreateConVar("sm_knifefight_gravity", "1", "0 - disabled, 1 - enable low gravity", _, true,  0.0, true, 1.0);
@@ -298,41 +303,68 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		DrawPanelText(KnifeFightMenu, info8);
 		DrawPanelText(KnifeFightMenu, "-----------------------------------");
 		
-		if (g_iRound > 0)
+		int RandomCT = 0;
+		
+		for(int client=1; client <= MaxClients; client++)
 		{
-			for(int client=1; client <= MaxClients; client++)
+			if (IsClientInGame(client))
 			{
-				if (IsClientInGame(client))
+				if (GetClientTeam(client) == CS_TEAM_CT)
 				{
-					if (gc_bGrav.BoolValue)
-					{
-						SetEntityGravity(client, gc_fGravValue.FloatValue);
-					}
-					if (gc_bIce.BoolValue)
-					{
-						SetCvarFloat("sv_friction", gc_fIceValue.FloatValue);
-					}
-					if (gc_bThirdPerson.BoolValue)
-					{
-						ClientCommand(client, "thirdperson");
-					}
-					SendPanelToClient(KnifeFightMenu, client, NullHandler, 15);
-					SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
-					StripAllWeapons(client);
-					GivePlayerItem(client, "weapon_knife");
-					if (GetClientTeam(client) == CS_TEAM_CT)
-					{
-						SetEntityHealth(client, 45);
-					}
-					if (GetClientTeam(client) == CS_TEAM_T)
-					{
-						SetEntityHealth(client, 20);
-					}
+					RandomCT = client;
+					break;
 				}
 			}
-			g_iTruceTime--;
-			TruceTimer = CreateTimer(1.0, KnifeFight, _, TIMER_REPEAT);
-			CPrintToChatAll("%t %t", "ffa_tag" ,"ffa_rounds", g_iRound, g_iMaxRound);
+		}
+		if (RandomCT)
+		{	
+			float Pos1[3];
+			
+			GetClientAbsOrigin(RandomCT, Pos);
+			GetClientAbsOrigin(RandomCT, Pos1);
+			
+			Pos[2] = Pos[2] + 45;
+			
+			if (g_iRound > 0)
+			{
+				for(int client=1; client <= MaxClients; client++)
+				{
+					if (IsClientInGame(client))
+					{
+						if (gc_bGrav.BoolValue)
+						{
+							SetEntityGravity(client, gc_fGravValue.FloatValue);
+						}
+						if (gc_bIce.BoolValue)
+						{
+							SetCvarFloat("sv_friction", gc_fIceValue.FloatValue);
+						}
+						if (gc_bThirdPerson.BoolValue)
+						{
+							ClientCommand(client, "thirdperson");
+						}
+						SendPanelToClient(KnifeFightMenu, client, NullHandler, 15);
+						SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
+						StripAllWeapons(client);
+						GivePlayerItem(client, "weapon_knife");
+						if (GetClientTeam(client) == CS_TEAM_CT)
+						{
+							SetEntityHealth(client, 45);
+						}
+						if (GetClientTeam(client) == CS_TEAM_T)
+						{
+							SetEntityHealth(client, 20);
+						}
+						if (!gc_bSpawnCell.BoolValue)
+						{
+							TeleportEntity(client, Pos1, NULL_VECTOR, NULL_VECTOR);
+						}
+					}
+				}
+				g_iTruceTime--;
+				TruceTimer = CreateTimer(1.0, KnifeFight, _, TIMER_REPEAT);
+				CPrintToChatAll("%t %t", "knifefight_tag" ,"knifefight_rounds", g_iRound, g_iMaxRound);
+			}
 		}
 	}
 	else

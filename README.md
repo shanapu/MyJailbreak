@@ -425,6 +425,7 @@ Zombies freezed for 35sec (default) so T can hide &/or climb.
 - sm_zombie_seta: 0 - disabled, 1 - allow Admin to set next round zombie round. Default 1
 - sm_zombie_vote: 0 - disabled, 1 - allow player to vote for zombie. Default 1
 - sm_zombie_enable: 0 - disabled, 1 - enable the zombie plugin. Default 1
+- sm_zombie_spawn: 0 - teleport Ts to CT and freeze, 1 - open cell doors an get weapons. Default 0
 - sm_zombie_rounds: Rounds to play in a row
 - sm_zombie_roundtime - Roundtime for a single zombie round in minutes. Default 5
 - sm_zombie_freezetime - Time in seconds Zombies freezed. Default 35
@@ -463,6 +464,7 @@ On Round start cells open everybody got a scout with noscope in low gravity. Nod
 - sm_noscope_enable: 0 - disabled, 1 - enable the noscope plugin. Default 1
 - sm_noscope_setw: 0 - disabled, 1 - allow Warden to set next round noscope. Default 1
 - sm_noscope_seta: 0 - disabled, 1 - allow Admin to set next round noscope round. Default 1
+- sm_noscope_spawn: 0 - teleport Ts to CT and freeze, 1 - open cell doors an get weapons. Default 0
 - sm_noscope_vote: 0 - disabled, 1 - allow player to vote for noscope. Default 1
 - sm_noscope_rounds: Rounds to play in a row
 - sm_noscope_gravity: 0 - disabled, 1 - enable low Gravity for noscope. Default 1
@@ -502,6 +504,7 @@ On Round start cells open everybody got HE grenate with low gravity(Default) and
 - sm_hebattle_enable: 0 - disabled, 1 - enable the hebattle plugin. Default 1
 - sm_hebattle_setw: 0 - disabled, 1 - allow Warden to set next round HEbattle. Default 1
 - sm_hebattle_seta: 0 - disabled, 1 - allow Admin to set next round HEbattle round. Default 1
+- sm_hebattle_spawn: 0 - teleport Ts to CT and freeze, 1 - open cell doors an get weapons. Default 0
 - sm_hebattle_vote: 0 - disabled, 1 - allow player to vote for HEbattle. Default 1
 - sm_hebattle_rounds: Rounds to play in a row
 - sm_hebattle_gravity: 0 - disabled, 1 - enable low Gravity for hebattle. Default 1
@@ -717,6 +720,7 @@ On Round start cells open everybody got a scout with zeus in low gravity. Nodama
 - sm_zeus_setw: 0 - disabled, 1 - allow Warden to set next round zeus. Default 1
 - sm_zeus_seta: 0 - disabled, 1 - allow Admin to set next round zeus round. Default 1
 - sm_zeus_vote: 0 - disabled, 1 - allow player to vote for zeus. Default 1
+- sm_zeus_spawn: 0 - teleport Ts to CT and freeze, 1 - open cell doors an get weapons. Default 0
 - sm_zeus_rounds: Rounds to play in a row
 - sm_zeus_roundtime - Roundtime for a single zeus round in minutes. Default 5
 - sm_zeus_trucetime - Time in seconds damage is disbaled. Default 15
@@ -754,6 +758,7 @@ On Round start cells open everybody KnifeOnly with thirdperson, low gravity(Defa
 - sm_knifefight_setw: 0 - disabled, 1 - allow Warden to set next round knifefight. Default 1
 - sm_knifefight_seta: 0 - disabled, 1 - allow Admin to set next round knifefight round. Default 1
 - sm_knifefight_vote: 0 - disabled, 1 - allow player to vote for knifefight. Default 1
+- sm_knifefight_spawn: 0 - teleport Ts to CT and freeze, 1 - open cell doors an get weapons. Default 0
 - sm_knifefight_thirdperson: 0 - disabled, 1 - enable thirdperson for knifefight. Default 1
 - sm_knifefight_rounds: Rounds to play in a row
 - sm_knifefight_gravity: 0 - disabled, 1 - enable low Gravity for knifefight. Default 1

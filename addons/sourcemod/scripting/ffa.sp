@@ -2,7 +2,6 @@
 #include <cstrike>
 #include <sourcemod>
 #include <colors>
-
 #include <wardn>
 #include <emitsoundany>
 #include <smartjaildoors>
@@ -45,10 +44,11 @@ int FogIndex = -1;
 int g_iMaxRound;
 
 //Floats
+float Pos[3];
 float mapFogStart = 0.0;
 float mapFogEnd = 150.0;
 float mapFogDensity = 0.99;
-float Pos[3];
+
 
 //Handles
 Handle FreezeTimer;
@@ -112,7 +112,6 @@ public void OnPluginStart()
 	
 	
 	g_iTruceTime = gc_iTruceTime.IntValue;
-
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iGetRoundTime = FindConVar("mp_roundtime");
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
@@ -286,10 +285,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		g_iRound++;
 		IsFFA = true;
 		StartFFA = false;
-		if (gc_bSpawnCell.BoolValue)
-		{
-			SJD_OpenDoors();
-		}
+		SJD_OpenDoors();
 		FFAMenu = CreatePanel();
 		Format(info1, sizeof(info1), "%T", "ffa_info_Title", LANG_SERVER);
 		SetPanelTitle(FFAMenu, info1);

@@ -1,7 +1,6 @@
 //includes
 #include <cstrike>
 #include <sourcemod>
-
 #include <smartjaildoors>
 #include <wardn>
 #include <emitsoundany>
@@ -25,6 +24,7 @@ ConVar gc_bGrav;
 ConVar gc_fGravValue;
 ConVar gc_iCooldownStart;
 ConVar gc_bSetA;
+ConVar gc_bSpawnCell;
 ConVar gc_bVote;
 ConVar gc_iCooldownDay;
 ConVar gc_iRoundTime;
@@ -48,6 +48,9 @@ int g_iMaxRound;
 //Handles
 Handle TruceTimer;
 Handle NoScopeMenu;
+
+//Floats
+float Pos[3];
 
 //Strings
 char g_sHasVoted[1500];
@@ -81,6 +84,7 @@ public void OnPluginStart()
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_noscope_warden", "1", "0 - disabled, 1 - allow warden to set noscope round", _, true,  0.0, true, 1.0);
 	gc_bSetA = AutoExecConfig_CreateConVar("sm_noscope_admin", "1", "0 - disabled, 1 - allow admin to set noscope round", _, true,  0.0, true, 1.0);
 	gc_bVote = AutoExecConfig_CreateConVar("sm_noscope_vote", "1", "0 - disabled, 1 - allow player to vote for noscope", _, true,  0.0, true, 1.0);
+	gc_bSpawnCell = AutoExecConfig_CreateConVar("sm_noscope_spawn", "0", "0 - T teleport to CT spawn, 1 - cell doors auto open", _, true,  0.0, true, 1.0);
 	gc_iRounds = AutoExecConfig_CreateConVar("sm_noscope_rounds", "1", "Rounds to play in a row", _, true, 1.0);
 	gc_bGrav = AutoExecConfig_CreateConVar("sm_noscope_gravity", "1", "0 - disabled, 1 - enable low Gravity for noscope", _, true,  0.0, true, 1.0);
 	gc_fGravValue= AutoExecConfig_CreateConVar("sm_noscope_gravity_value", "0.3","Ratio for Gravity 1.0 earth 0.5 moon", _, true, 0.1, true, 1.0);
@@ -98,14 +102,14 @@ public void OnPluginStart()
 	
 	//Hooks
 	HookEvent("round_start", RoundStart);
-	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookEvent("round_end", RoundEnd);
+	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
 	
 	//Find
-	g_iGetRoundTime = FindConVar("mp_roundtime");
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iTruceTime = gc_iTruceTime.IntValue;
+	g_iGetRoundTime = FindConVar("mp_roundtime");
 	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
 	m_flNextSecondaryAttack = FindSendPropInfo("CBaseCombatWeapon", "m_flNextSecondaryAttack");
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
@@ -295,7 +299,29 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		DrawPanelText(NoScopeMenu, info8);
 		DrawPanelText(NoScopeMenu, "-----------------------------------");
 		
-		if (g_iRound > 0)
+		int RandomCT = 0;
+		
+		for(int client=1; client <= MaxClients; client++)
+		{
+			if (IsClientInGame(client))
+			{
+				if (GetClientTeam(client) == CS_TEAM_CT)
+				{
+					RandomCT = client;
+					break;
+				}
+			}
+		}
+		if (RandomCT)
+		{	
+			float Pos1[3];
+			
+			GetClientAbsOrigin(RandomCT, Pos);
+			GetClientAbsOrigin(RandomCT, Pos1);
+			
+			Pos[2] = Pos[2] + 45;
+			
+			if (g_iRound > 0)
 			{
 				for(int client=1; client <= MaxClients; client++)
 				{
@@ -310,15 +336,19 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 						SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
 						SendPanelToClient(NoScopeMenu, client, NullHandler, 15);
 						SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
+						if (!gc_bSpawnCell.BoolValue)
+						{
+							TeleportEntity(client, Pos1, NULL_VECTOR, NULL_VECTOR);
+						}
 					}
 				}
 				g_iTruceTime--;
 				TruceTimer = CreateTimer(1.0, NoScope, _, TIMER_REPEAT);
 				CPrintToChatAll("%t %t", "noscope_tag" ,"noscope_rounds", g_iRound, g_iMaxRound);
-
 			}
-		for(int i = 1; i <= MaxClients; i++)
-		if(IsClientInGame(i)) SDKHook(i, SDKHook_PreThink, OnPreThink);
+			for(int i = 1; i <= MaxClients; i++)
+			if(IsClientInGame(i)) SDKHook(i, SDKHook_PreThink, OnPreThink);
+		}
 	}
 	else
 	{

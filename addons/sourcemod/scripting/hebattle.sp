@@ -27,6 +27,7 @@ ConVar gc_iCooldownStart;
 ConVar gc_bSetA;
 ConVar gc_bVote;
 ConVar gc_iCooldownDay;
+ConVar gc_bSpawnCell;
 ConVar gc_iRoundTime;
 ConVar gc_iTruceTime;
 ConVar gc_bSounds;
@@ -47,6 +48,9 @@ int g_iMaxRound;
 //Handles
 Handle TruceTimer;
 Handle HEbattleMenu;
+
+//Floats
+float Pos[3];
 
 //Strings
 char g_sHasVoted[1500];
@@ -79,6 +83,7 @@ public void OnPluginStart()
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_hebattle_warden", "1", "0 - disabled, 1 - allow warden to set hebattle round", _, true,  0.0, true, 1.0);
 	gc_bSetA = AutoExecConfig_CreateConVar("sm_hebattle_admin", "1", "0 - disabled, 1 - allow admin to set hebattle round", _, true,  0.0, true, 1.0);
 	gc_bVote = AutoExecConfig_CreateConVar("sm_hebattle_vote", "1", "0 - disabled, 1 - allow player to vote for hebattle", _, true,  0.0, true, 1.0);
+	gc_bSpawnCell = AutoExecConfig_CreateConVar("sm_hebattle_spawn", "0", "0 - T teleport to CT spawn, 1 - cell doors auto open", _, true,  0.0, true, 1.0);
 	gc_bGrav = AutoExecConfig_CreateConVar("sm_hebattle_gravity", "1", "0 - disabled, 1 - enable low gravity", _, true,  0.0, true, 1.0);
 	gc_fGravValue= AutoExecConfig_CreateConVar("sm_hebattle_gravity_value", "0.3","Ratio for gravity 0.5 moon / 1.0 earth ", _, true,  0.1, true, 1.0);
 	gc_iRounds = AutoExecConfig_CreateConVar("sm_hebattle_rounds", "1", "Rounds to play in a row", _, true, 1.0);
@@ -254,7 +259,6 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 	if (StartHEbattle || IsHEbattle)
 	{
 		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
-
 		
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_weapons_enable", 0);
@@ -287,7 +291,29 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		DrawPanelText(HEbattleMenu, info8);
 		DrawPanelText(HEbattleMenu, "-----------------------------------");
 		
-		if (g_iRound > 0)
+		int RandomCT = 0;
+		
+		for(int client=1; client <= MaxClients; client++)
+		{
+			if (IsClientInGame(client))
+			{
+				if (GetClientTeam(client) == CS_TEAM_CT)
+				{
+					RandomCT = client;
+					break;
+				}
+			}
+		}
+		if (RandomCT)
+		{	
+			float Pos1[3];
+			
+			GetClientAbsOrigin(RandomCT, Pos);
+			GetClientAbsOrigin(RandomCT, Pos1);
+			
+			Pos[2] = Pos[2] + 45;
+			
+			if (g_iRound > 0)
 			{
 				for(int client=1; client <= MaxClients; client++)
 				{
@@ -303,12 +329,17 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 						StripAllWeapons(client);
 						GivePlayerItem(client, "weapon_hegrenade");
 						SetEntityHealth(client, 85);
+						if (!gc_bSpawnCell.BoolValue)
+						{
+							TeleportEntity(client, Pos1, NULL_VECTOR, NULL_VECTOR);
+						}
 					}
 				}
 				g_iTruceTime--;
 				TruceTimer = CreateTimer(1.0, HEbattle, _, TIMER_REPEAT);
 				CPrintToChatAll("%t %t", "hebattle_tag" ,"hebattle_rounds", g_iRound, g_iMaxRound);
 			}
+		}
 	}
 	else
 	{

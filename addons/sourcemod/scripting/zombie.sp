@@ -1,7 +1,6 @@
 //includes
 #include <cstrike>
 #include <sourcemod>
-
 #include <colors>
 #include <smartjaildoors>
 #include <sdkhooks>
@@ -27,6 +26,7 @@ ConVar gc_bVote;
 ConVar gc_iRoundTime;
 ConVar gc_iCooldownDay;
 ConVar gc_iFreezeTime;
+ConVar gc_bSpawnCell;
 ConVar gc_sModelPath;
 ConVar gc_bSounds;
 ConVar gc_sSoundStartPath;
@@ -47,6 +47,9 @@ int g_iMaxRound;
 //Handles
 Handle FreezeTimer;
 Handle ZombieMenu;
+
+//Floats
+float Pos[3];
 
 //Strings
 char g_sZombieModel[256];
@@ -82,6 +85,7 @@ public void OnPluginStart()
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_zombie_warden", "1", "0 - disabled, 1 - allow warden to set zombie round", _, true, 0.0, true, 1.0);
 	gc_bSetA = AutoExecConfig_CreateConVar("sm_zombie_admin", "1", "0 - disabled, 1 - allow admin to set zombie round", _, true, 0.0, true, 1.0);
 	gc_bVote = AutoExecConfig_CreateConVar("sm_zombie_vote", "1", "0 - disabled, 1 - allow player to vote for zombie", _, true, 0.0, true, 1.0);
+	gc_bSpawnCell = AutoExecConfig_CreateConVar("sm_zombie_spawn", "0", "0 - T teleport to CT spawn, 1 - cell doors auto open", _, true,  0.0, true, 1.0);
 	gc_iRounds = AutoExecConfig_CreateConVar("sm_zombie_rounds", "1", "Rounds to play in a row", _, true, 1.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_zombie_roundtime", "5", "Round time in minutes for a single zombie round", _, true, 1.0);
 	gc_iFreezeTime = AutoExecConfig_CreateConVar("sm_zombie_freezetime", "35", "Time in seconds the zombies freezed", _, true, 0.0);
@@ -322,7 +326,29 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		DrawPanelText(ZombieMenu, info8);
 		DrawPanelText(ZombieMenu, "-----------------------------------");
 		
-		if (g_iRound > 0)
+		int RandomCT = 0;
+		
+		for(int client=1; client <= MaxClients; client++)
+		{
+			if (IsClientInGame(client))
+			{
+				if (GetClientTeam(client) == CS_TEAM_CT)
+				{
+					RandomCT = client;
+					break;
+				}
+			}
+		}
+		if (RandomCT)
+		{
+			float Pos1[3];
+			
+			GetClientAbsOrigin(RandomCT, Pos);
+			GetClientAbsOrigin(RandomCT, Pos1);
+			
+			Pos[2] = Pos[2] + 46;
+			
+			if (g_iRound > 0)
 			{
 				for(int client=1; client <= MaxClients; client++)
 				{
@@ -346,18 +372,23 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 						SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
 						SendPanelToClient(ZombieMenu, client, NullHandler, 15);
 						SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
+						if (!gc_bSpawnCell.BoolValue)
+						{
+							TeleportEntity(client, Pos1, NULL_VECTOR, NULL_VECTOR);
+						}
 					}
 				}
-				g_iFreezeTime--;
-				FreezeTimer = CreateTimer(1.0, Zombie, _, TIMER_REPEAT);
-				CPrintToChatAll("%t %t", "zombie_tag" ,"zombie_rounds", g_iRound, g_iMaxRound);
 			}
+			g_iFreezeTime--;
+			FreezeTimer = CreateTimer(1.0, Zombie, _, TIMER_REPEAT);
+			CPrintToChatAll("%t %t", "zombie_tag" ,"zombie_rounds", g_iRound, g_iMaxRound);
+		}
 	}
 	else
 	{
 		char EventDay[64];
 		GetEventDay(EventDay);
-	
+		
 		if(!StrEqual(EventDay, "none", false))
 		{
 			g_iCoolDown = gc_iCooldownDay.IntValue + 1;

@@ -386,7 +386,7 @@ public Action Freezed(Handle timer)
 					}
 					else
 					{
-						SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 0.5);
+						SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 0.9);
 					}
 				}
 				if(gc_bSounds.BoolValue)	
