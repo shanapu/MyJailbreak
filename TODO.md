@@ -1,7 +1,73 @@
-sorry for bad spelling and loose cues
+know bugs:
+- [ ] countdown: Start -> Cancel -> Start - bug? (which countdowns?)
+- [ ] jihad: If all CT are dead -> T win round - mp_default_team_winner_no_objective?
 
+want:
+- [ ] hide: seeker more TA -> convar set how many
+- [ ] warden: disarm when shot on Arms/hand (all CT?)
+- [ ] Noscope: choose weapon an round start (scout/awp/auto)
+- [ ] updater support
+- [ ] duckhunt: change +attack to +secAttack
+- [ ] all: custom command support !mycommand
+- [ ] all: format centertext <font size='30' color='#FF00FF'>test</font>
+- [ ] all: restrict map heal station https://forums.alliedmods.net/showthread.php?t=267167
+- [ ] knife: vote on roundstart for grav skate tp or all
+- [ ] warden: toggle noblock
+- [ ] warden: randomkill set/random bomb, fire, smite...
+- [ ] warden: icon above head (material or model?)
+- [ ] warden: limits (max x.times in row)
+- [ ] inc: merge ShowOverlayFreeze/start/delete to once
+- [ ] playertags: add VIP flag
+- [ ] playertags: define color chat tag
+- [ ] warden: talkpower per menu only some sec https://forums.alliedmods.net/showthread.php?t=257229
+- [ ] countdown: insert cancel in menu
+- [ ] countdown: force stop
+- [ ] warden: toggle noblock 
+- [ ] menu: insert noblock
+- [ ] warden: color prisioners (color roulette)
+- [ ] zombie: hp convar
+- [ ] all: beacon last player for days
+- [ ] duckhunt: hunter hp convar
+- [ ] duckhunt: chicken hp convar
+- [ ] all: notify on roundend next round
+- [ ] hide: MovementValue hider/seeker convar
+- [ ] new day: Tron like - all player Molotov rain https://forums.alliedmods.net/showthread.php?p=2398902
+- [ ] merge Transltions
+
+need?
+- [ ] zombie: knockbackfix?
+- [ ] whistle for hider?
+- [ ] events on random days? no voting/set - core2
+- [ ] silent mp_roundtime?
+- [ ] jihad: burn dead bodies?
+- [ ] jihad: body counter?
+- [ ] warden: ff not for ct?
+- [ ] SetCvarString flags?
+- [ ] warden: add sm_simon? 
+- [ ] duckhunt: allow leftclick per bool?
+- [ ] knifefight: FFA? -> set HP
+- [ ] warden: improve markers (2 kind)  https://github.com/KissLick/TeamGames/blob/master/addons/sourcemod/scripting/Marks.sp
+* [ ] warden: bomb toss https://github.com/KissLick/TeamGames/blob/master/addons/sourcemod/scripting/modules/TG_BombToss.sp
+
+future:
+- [ ] make jailbreak high customizeable - keyvalues cfg file like DonorMenu
+- [ ] rewrite/merge to one master plugin (e.g. hosties,ttt..)
+- [ ] remove features they are still in TG by kisslick 
+
+maybe:
+
+- [ ] warden: extend roundtime (possible?)
+- [ ] all days: admin force end days
+- [ ] dice
+- [ ] refuse
+- [ ] capitulate
+- [ ] hide: include flashlight?
+- [ ] new day: save the VIP
+- [ ] 
+
+###### DONE 
+lose cues bad spelling  
 bugs:
-
 - [x] catch: sprint bug release T
 - [x] jihad: Hp & burn for not nearby
 - [x] mp_roundtime 1 after set event on a eventend
@@ -9,7 +75,6 @@ bugs:
 - [x] Thirdperson: on disconnect make fp
 - [x] randomkill lighting bold missing
 - [x] menu: infomessage on first spawn
-- [ ] countdown: start-cancel-start- bug?
 - [x] warden:autoOpen broke
 - [x] after catch no damage. weapon strip T
 - [x] warden: uncolor on disbaled
@@ -17,20 +82,10 @@ bugs:
 - [x] unstrip weapon after win zombie T
 - [x] change team Join ct sure?
 - [x] hide missing ta grenade?
-- [ ] jihad t win wenn all ct dead or better  mp_default_team_winner_no_objective?
 - [x] GetEdictClassname" reported: Invalid edict  /  Command_BombJihad
-- [?] catch IsClientInGame" reported: Client index 0 is invalid overlay
+- [x] catch IsClientInGame" reported: Client index 0 is invalid overlay
 - [x] menu Event adsm double by admin/warden
-
-must:
-
-- [ ] translations timetounfreeze-> trucetime
-- [x] sprint msg
-- [x] jihad no bomb drop
-- [x] disbale FF on roundend
-- [ ] clean up code 
-- [ ] comments
-- [ ] some polishing
+must/want:
 - [x] clean/translate ConVars 
 - [x] sv_tags to core
 - [x] warden:translate menu set
@@ -73,121 +128,42 @@ must:
 - [x] move FF from menu to warden
 - [x] move randomkill from menu to warden
 - [x] hide: freeze hide bool
-- [x] Freeday: Damage disbaled 
-
-
-
-want:
-
-- [ ] whistle for hider
-- [ ] hide: seeker more TA pecvar?
+- [x] Freeday: Damage disbaled
+- [x] sprint msg
+- [x] jihad no bomb drop
+- [x] disbale FF on roundend
 - [x] wiki
-- [ ] template
-- [ ] 
-- [ ] fastdl files
+- [x] template
+- [X] fastdl files
 - [x] set weapon menu enable on need EventDays
 - [x] enu: add eventdays to admin if enabled
-- [ ] register plugins to core
-- [ ] playertags: only admin only warden...
-- [ ] disarm for ct/warden
-- [ ] No scope choose weapon (scout/awp/auto)
-- [x] add LR to menu - !rules !lastrequest !checkplayers - !stoplr 
-- [ ] updater
+- [x] register plugins to core
 - [x] warden: model
-- [ ] duckhunt: +attack -> not block. change to attack2
-- [ ] custom command support
-- [ ] make jailbreak menu customizeable (ADD OWN COMMANDS & OWN ORDER) -> keyvalues
-- [ ] make centertext formating PrintCenterText(client, "<font size='30' color='#FF00FF'>test</font>");
-- [ ] all days: restrict map heal station https://forums.alliedmods.net/showthread.php?t=267167
-- [ ] knife: vote on roundstart for grav skate tp or all
-- [ ] menu: bool show on days
-- [ ] toggle noblock
-- [ ] AddFileToDownloadsTable
+- [x] add LR to menu - !rules !checkplayers
 - [x] make zeus day
 - [x] zombie: change skybox
 - [x] randomkill smite
-- [ ] randomkill switchable bomb, fire....
-- [ ] warden: unwarden roundstart and delay old warden.
-- [ ] warden: icon above head (material or model?)
 - [x] warden: markers
 - [x] warden: killrandom - are you sure?
-- [ ] zombie: knockbackfix
 - [x] jihad: freeze by activate bool
+- [x] translations timetounfreeze-> trucetime
 - [x] new day: knife only (ice skate/third person?)
-- [ ] new day: A day where you spawn with one single low random weapon and get 500 HP :D
-- [ ] warden: improve markers (2 kind)  https://github.com/KissLick/TeamGames/blob/master/addons/sourcemod/scripting/Marks.sp
-- [ ] warden: limits (max x.times in row)
 - [x] warden: pick random if there is no warden
-- [ ] make ShowOverlayFreeze/start/delete to once
 - [x] valid client and co to inc
-- [ ] playertags: add VIP flag
-- [ ] playertags: define colorize chat tag
 - [x] noscope: dis/enable lowgrav
 - [x] noscope: set grav
-- [ ] warden: talkpower per menu only some sec https://forums.alliedmods.net/showthread.php?t=257229
 - [x] jihad: set radius
 - [x] jihad: bool movement on bomb activate
 - [x] countdown: start stop sound
 - [x] countdown: stop roundend
 - [x] countdown cancel all running
-- [ ] countdown cancel in menu
-- [ ] countdown set time until start / stop
 - [x] countdown: menu with differnt times
 - [x] warden: mathboard
 - [x] catch: enable/disbale sprint
 - [x] warden: !w or random warden
-- [ ] warden: toggle noblock 
-- [ ] menu: noblock insert
-- [ ] warden: color prisioners (color roulette)
 - [x] weapons: open menu on spawn bool
-- [ ] weapons: set menu delay
-- [ ] weapons: set menu time
 - [x] weapons: give warden ta&health bool
 - [x] menu: set menu time
-- [ ] menu: set menu delay
-- [ ] weapons: menu spawn timing
-- [ ] zombie: hp
-- [ ] duckhunt: hunter hp
-- [ ] duckhunt: chicken hp
 - [x] zombie: atmo sounds <- start soudn ;)
 - [x] zombie: define model
 - [x] war&ffa/all?: define how many rounds to play
-- [ ] all days: set panel time/delay
-- [ ] (all days: cfg to add sm_ for event start end)
-- [ ] hide: MovementValue hider/seeker
-- [ ] new day: Tron like - all player Molotov rain https://forums.alliedmods.net/showthread.php?p=2398902
-- [ ] warden: bomb toss https://github.com/KissLick/TeamGames/blob/master/addons/sourcemod/scripting/modules/TG_BombToss.sp
-- [ ] 
-
-need?
-- [ ] events on random days? no voting/set - core2
-- [ ] silent mp_roundtime?
-- [ ] jihad: burn dead bodies?
-- [ ] jihad: body counter?
-- [ ] warden: ff not for ct?
-- [ ] SetCvarString flags?
-- [ ] warden: add sm_simon? 
-- [ ] duckhunt: allow leftclick per bool?
-- [ ] knifefight: FFA? -> set HP
-
-future:
-- [ ] rewrite/merge to one master plugin (e.g. hosties,ttt..)
-- [ ] remove features they are still in TG by kisslick 
-
-
-maybe:
-- [ ] beacon for days
-- [ ] warden: extend roundtime (possible)
-- [ ] all days: admin force end days
-- [ ] warden: color prisioners (& color roulette)
-- [ ] all days: start instant not next round
-- [ ] dice: verweigern 2x (native?)
-- [ ] dice: freeze sound & overlay
-- [ ] dice: healthshot
-- [ ] dice: third person
-- [ ] dice: switch wsad
-- [ ] refuse: chickensound
-- [ ] capitulate: punish if rebel again
-- [ ] hide: include flashlight?
-- [ ] new day: save the T vip
-- [ ] 

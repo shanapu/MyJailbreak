@@ -1,6 +1,6 @@
 # MyJailbreak 
 
-A rewrite of [Franugs Special Jailbreak](https://github.com/Franc1sco/Franug-Jailbreak/) and merge of [eccas, ESK0s & zipcores Jailbreak Warden](http://www.sourcemod.net/plugins.php?cat=0&mod=-1&title=Warden&author=&description=&search=1)
+A rewrite of [Franugs Special Jailbreak](https://github.com/Franc1sco/Franug-Jailbreak/) and merge/redux of [eccas, ESK0s & zipcores Jailbreak Warden](http://www.sourcemod.net/plugins.php?cat=0&mod=-1&title=Warden&author=&description=&search=1)
 
 ## Jailbreak plugin pack for CS:GO Jailserver
 

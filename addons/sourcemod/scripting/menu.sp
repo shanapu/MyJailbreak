@@ -159,7 +159,7 @@ public Action JbMenu(int client, int args)
 		
 		
 		
-		Format(menuinfo1, sizeof(menuinfo1), "%T", "menu_info_Title", LANG_SERVER);
+		Format(menuinfo1, sizeof(menuinfo1), "%T", "menu_info_title", LANG_SERVER);
 		
 		Menu mainmenu = new Menu(JBMenuHandler);
 		mainmenu.SetTitle(menuinfo1);

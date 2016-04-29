@@ -15,8 +15,8 @@
 #pragma newdecls required
 
 //Booleans
-bool IsZeus = false; 
-bool StartZeus = false; 
+bool IsZeus; 
+bool StartZeus; 
 
 //ConVars
 ConVar gc_bPlugin;
@@ -39,7 +39,7 @@ ConVar gc_sSoundStartPath;
 int g_iOldRoundTime;
 int g_iCoolDown;
 int g_iTruceTime;
-int g_iVoteCount = 0;
+int g_iVoteCount;
 int g_iRound;
 int g_iMaxRound;
 
@@ -270,23 +270,23 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		StartZeus = false;
 		SJD_OpenDoors();
 		ZeusMenu = CreatePanel();
-		Format(info1, sizeof(info1), "%T", "zeus_info_Title", LANG_SERVER);
+		Format(info1, sizeof(info1), "%T", "zeus_info_title", LANG_SERVER);
 		SetPanelTitle(ZeusMenu, info1);
 		DrawPanelText(ZeusMenu, "                                   ");
-		Format(info2, sizeof(info2), "%T", "zeus_info_Line1", LANG_SERVER);
+		Format(info2, sizeof(info2), "%T", "zeus_info_line1", LANG_SERVER);
 		DrawPanelText(ZeusMenu, info2);
 		DrawPanelText(ZeusMenu, "-----------------------------------");
-		Format(info3, sizeof(info3), "%T", "zeus_info_Line2", LANG_SERVER);
+		Format(info3, sizeof(info3), "%T", "zeus_info_line2", LANG_SERVER);
 		DrawPanelText(ZeusMenu, info3);
-		Format(info4, sizeof(info4), "%T", "zeus_info_Line3", LANG_SERVER);
+		Format(info4, sizeof(info4), "%T", "zeus_info_line3", LANG_SERVER);
 		DrawPanelText(ZeusMenu, info4);
-		Format(info5, sizeof(info5), "%T", "zeus_info_Line4", LANG_SERVER);
+		Format(info5, sizeof(info5), "%T", "zeus_info_line4", LANG_SERVER);
 		DrawPanelText(ZeusMenu, info5);
-		Format(info6, sizeof(info6), "%T", "zeus_info_Line5", LANG_SERVER);
+		Format(info6, sizeof(info6), "%T", "zeus_info_line5", LANG_SERVER);
 		DrawPanelText(ZeusMenu, info6);
-		Format(info7, sizeof(info7), "%T", "zeus_info_Line6", LANG_SERVER);
+		Format(info7, sizeof(info7), "%T", "zeus_info_line6", LANG_SERVER);
 		DrawPanelText(ZeusMenu, info7);
-		Format(info8, sizeof(info8), "%T", "zeus_info_Line7", LANG_SERVER);
+		Format(info8, sizeof(info8), "%T", "zeus_info_line7", LANG_SERVER);
 		DrawPanelText(ZeusMenu, info8);
 		DrawPanelText(ZeusMenu, "-----------------------------------");
 		
@@ -373,7 +373,7 @@ public Action ZeusNoDamage(Handle timer)
 		for (int client=1; client <= MaxClients; client++)
 		if (IsClientInGame(client) && IsPlayerAlive(client))
 			{
-				PrintCenterText(client,"%t", "zeus_timetounfreeze_nc", g_iTruceTime);
+				PrintCenterText(client,"%t", "zeus_timeuntilstart_nc", g_iTruceTime);
 			}
 		return Plugin_Continue;
 	}

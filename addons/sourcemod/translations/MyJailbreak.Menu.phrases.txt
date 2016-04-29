@@ -5,7 +5,7 @@
 		"#format"		""
 		"en"			"[{green}MyJB.Menu{default}] To open the jailbreak menu press , or type !menu"
 	}	
-	"menu_info_Title"
+	"menu_info_title"
 	{
 		"#format"		""
 		"en"			"MyJailbreak Menu"

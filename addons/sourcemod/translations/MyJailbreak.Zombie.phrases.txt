@@ -99,9 +99,8 @@
 	"zombie_progress"
 	{
 		"#format"	"{1:s}"
-		"da"		"Zombie er {purple}allerede i gang!"	
-		"en"		"A Event is {purple}already in progress. {darkred}{1}."
-		"de"		"Ein Event ist {purple}bereits gesetzt. {darkred}{1}"
+		"en"		"Event ({darkred}{1}) {default}is {purple}already in progress."
+		"de"		"Event {darkred}{1}) {default}ist {purple}bereits gesetzt."
 	}
 	
 	"zombie_minct"
@@ -118,7 +117,7 @@
 		"de"		"Zombie ist {purple}deaktiviert."
 	}
 	
-	"zombie_timetozombie_nc"	// no colors!
+	"zombie_timeuntilzombie_nc"	// no colors!
 	{
 		"#format"	"{1:i}"
 		"da"		"{1} sekunder til at gemme dig i "	
@@ -134,56 +133,55 @@
 		"de"		"{1} Sekunden bis zum unfreeze"
 	}
 	
-	"zombie_info_Title"		// no colors!
+	"zombie_info_title"		// no colors!
 	{
 		"da"		"Zombie runde er aktiveret!"	
 		"en"		"Zombie is activ"
 		"de"		"Zombie ist aktiv"
 	}
 	
-	"zombie_info_Line1"		// no colors!
+	"zombie_info_line1"		// no colors!
 	{
 		"da"		"Zombier(CT) mod Humans(T)"	
 		"en"		"Zombies(ct) against Humans(t)"
 		"de"		"Zombies(ct) gegen Humans(t)"
 	}
 	
-	"zombie_info_Line2"		// no colors!
+	"zombie_info_line2"		// no colors!
 	{
 		"da"		"Zombierne er frosset og mennesker skal gemme sig!"
 		"en"		"Zombies freezed and Human can hide"
 		"de"		"Zombies sind eine zeit gefreezt damit die T sich verstecken können"
 	}
 	
-	"zombie_info_Line3"		// no colors!
+	"zombie_info_line3"		// no colors!
 	{
-		"da"		"Du kan frit bevæge dig rundt mens zombierne er frosset!"	
-		"en"		"you can move and exit the wk in nodamge phase"
-		"de"		"Während der no damge phase kannst du aus der zelle/waffenkammer"
+		"en"		"Zombies got much more HP."
+		"de"		"Zombies haben mehr HP"
 	}
 	
-	"zombie_info_Line4"		// no colors!
+	"zombie_info_line4"		// no colors!
 	{
 		"da"		"Alle jail regler er ophævet!"	
 		"en"		"All normal jailRules are repealed"
 		"de"		"Alle normalen Jailregeln sind aufgehoben!"
 	}
 	
-	"zombie_info_Line5"		// no colors!
+	"zombie_info_line5"		// no colors!
 	{
 		"da"		"Last Request er deaktiveret i denne runde!"	
 		"en"		"There is no last request!"
 		"de"		"Der letzte Terrorist hat keinen Wunsch!"
 	}
 	
-	"zombie_info_Line6"		// no colors!
+	"zombie_info_line6"		// no colors!
 	{
 		"da"		"Man må gå der hen hvor man har lyst - Ingen begrænsninger"	
 		"en"		"Everyone is allowed to go everywhere where he wants"
 		"de"		"Jeder darf überall hin wo er will!"
 	}
 	
-	"zombie_info_Line7"		// no colors!
+	"zombie_info_line7"		// no colors!
 	{
 		"da"		"Alle server regler skal overholdes!"	
 		"en"		"dont be an asshole!"

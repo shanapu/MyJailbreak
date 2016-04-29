@@ -58,7 +58,7 @@
 		"de"		"Du haste eine {purple}healthshot{default} bekommen."
 	}
 	
-	"weapons_info_Title"	// no colors!
+	"weapons_info_title"	// no colors!
 	{
 		"da"		"MyJailbreak Våben Menu"
 		"en"		"MyJailbreak Weapon Menu"

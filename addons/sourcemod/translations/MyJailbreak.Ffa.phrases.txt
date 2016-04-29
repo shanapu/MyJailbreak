@@ -102,9 +102,8 @@
 	"ffa_progress"
 	{
 		"#format"	"{1:s}"
-		"da"		"FFA er {purple}allerede i gang!"
-		"en"		"A Event is {purple}already in progress. {darkred}{1}"
-		"de"		"Ein Event ist {purple}bereits gesetzt. {darkred}{1}"
+		"en"		"Event ({darkred}{1}) {default}is {purple}already in progress."
+		"de"		"Event {darkred}{1}) {default}ist {purple}bereits gesetzt."
 		
 	}
 	
@@ -123,63 +122,56 @@
 		"de"		"{1} Sekunden bis Schaden aktiv ist"
 	}
 	
-	"ffa_info_Title"		// no colors!
+	"ffa_info_title"		// no colors!
 	{
 		"en"		"Free for All Deathmatch er aktiveret!"	
 		"en"		"Free for All Deathmatch is activ"
 		"de"		"Free for All Deathmatch ist aktiv"
 	}
 	
-	"ffa_info_Tele"		// no colors!
+	"ffa_info_line1"		// no colors!
 	{
 		"da"		"Bliv ikke overrasket hvis du starter i CT spawn!"	
 		"en"		"Do not be surprised if portedto CT Spawn"
 		"de"		"Nicht wundern falls ihr zum CT Spawn geportet wurdet"
 	}
 	
-	"ffa_info_Spawn"		// no colors!
-	{
-		"da"		"Bliv ikke overasket hvis du spawner med våben og cellerne åbne!"	
-		"en"		"Do not be surprised if you spawn with weapon and the cells are open"
-		"de"		"Nicht wundern wenn ihr mit Waffe und offenen Zelle spawnt"
-	}
-	
-	"ffa_info_Line2"		// no colors!
+	"ffa_info_line2"		// no colors!
 	{
 		"da"		"Free for All - alle mod alle - Sidste man vinder!"	
 		"en"		"Free for All - player vs player - Last man standing"
 		"de"		"Free for All - Jeder gegen Jeden - Nur einer überlebt"
 	}
 	
-	"ffa_info_Line3"		// no colors!
+	"ffa_info_line3"		// no colors!
 	{
 		"da"		"Du kan ikke skade andre spillere når mappet er mørkt!"	
 		"en"		"While nodamge time the map is shady"
 		"de"		"Während der NoDamge Phase is die map zum eingedunkelt"
 	}
 	
-	"ffa_info_Line4"		// no colors!
+	"ffa_info_line4"		// no colors!
 	{
 		"da"		"Alle jail regler er ophævet!"	
 		"en"		"All normal jailrules are repealed"
 		"de"		"Alle normalen Jailregeln sind aufgehoben!"
 	}
 	
-	"ffa_info_Line5"		// no colors!
+	"ffa_info_line5"		// no colors!
 	{
 		"da"		"!lr er deaktiveret i denne runde!"	
 		"en"		"There is no last request!"
 		"de"		"Der letzte Terrorist hat keinen Wunsch!"
 	}
 	
-	"ffa_info_Line6"		// no colors!
+	"ffa_info_line6"		// no colors!
 	{
 		"da"		"Alle må gå der hen de har lyst til !"	
 		"en"		"Everyone is allowed to go everywhere where he wants"
 		"de"		"Jeder darf überall hin wo er will!"
 	}
 	
-	"ffa_info_Line7"		// no colors!
+	"ffa_info_line7"		// no colors!
 	{
 		"da"		"Alle server regler skal overholdes!"	
 		"en"		"dont be an asshole!"

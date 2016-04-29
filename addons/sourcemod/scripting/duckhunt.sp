@@ -40,7 +40,7 @@ ConVar gc_iRounds;
 int g_iOldRoundTime;
 int g_iCoolDown;
 int g_iTruceTime;
-int g_iVoteCount = 0;
+int g_iVoteCount;
 int g_iRound;
 int g_iMaxRound;
 
@@ -291,23 +291,23 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		StartDuckHunt = false;
 		
 		DuckHuntMenu = CreatePanel();
-		Format(info1, sizeof(info1), "%T", "duckhunt_info_Title", LANG_SERVER);
+		Format(info1, sizeof(info1), "%T", "duckhunt_info_title", LANG_SERVER);
 		SetPanelTitle(DuckHuntMenu, info1);
 		DrawPanelText(DuckHuntMenu, "                                   ");
-		Format(info2, sizeof(info2), "%T", "duckhunt_info_Line1", LANG_SERVER);
+		Format(info2, sizeof(info2), "%T", "duckhunt_info_line1", LANG_SERVER);
 		DrawPanelText(DuckHuntMenu, info2);
 		DrawPanelText(DuckHuntMenu, "-----------------------------------");
-		Format(info3, sizeof(info3), "%T", "duckhunt_info_Line2", LANG_SERVER);
+		Format(info3, sizeof(info3), "%T", "duckhunt_info_line2", LANG_SERVER);
 		DrawPanelText(DuckHuntMenu, info3);
-		Format(info4, sizeof(info4), "%T", "duckhunt_info_Line3", LANG_SERVER);
+		Format(info4, sizeof(info4), "%T", "duckhunt_info_line3", LANG_SERVER);
 		DrawPanelText(DuckHuntMenu, info4);
-		Format(info5, sizeof(info5), "%T", "duckhunt_info_Line4", LANG_SERVER);
+		Format(info5, sizeof(info5), "%T", "duckhunt_info_line4", LANG_SERVER);
 		DrawPanelText(DuckHuntMenu, info5);
-		Format(info6, sizeof(info6), "%T", "duckhunt_info_Line5", LANG_SERVER);
+		Format(info6, sizeof(info6), "%T", "duckhunt_info_line5", LANG_SERVER);
 		DrawPanelText(DuckHuntMenu, info6);
-		Format(info7, sizeof(info7), "%T", "duckhunt_info_Line6", LANG_SERVER);
+		Format(info7, sizeof(info7), "%T", "duckhunt_info_line6", LANG_SERVER);
 		DrawPanelText(DuckHuntMenu, info7);
-		Format(info8, sizeof(info8), "%T", "duckhunt_info_Line7", LANG_SERVER);
+		Format(info8, sizeof(info8), "%T", "duckhunt_info_line7", LANG_SERVER);
 		DrawPanelText(DuckHuntMenu, info8);
 		DrawPanelText(DuckHuntMenu, "-----------------------------------");
 		
@@ -397,7 +397,7 @@ public Action DuckHunt(Handle timer)
 		for (int client=1; client <= MaxClients; client++)
 		if (IsClientInGame(client) && IsPlayerAlive(client))
 			{
-				PrintCenterText(client,"%t", "duckhunt_timetounfreeze_nc", g_iTruceTime);
+				PrintCenterText(client,"%t", "duckhunt_timeuntilstart_nc", g_iTruceTime);
 			}
 		return Plugin_Continue;
 	}

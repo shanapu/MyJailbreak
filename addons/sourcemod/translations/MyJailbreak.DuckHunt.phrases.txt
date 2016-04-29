@@ -100,9 +100,8 @@
 	"duckhunt_progress"
 	{
 		"#format"	"{1:s}"
-		"da"		"Duckhunt er {purple}allerede i gang!"
-		"en"		"A Event is {purple}already in progress. {darkred}{1}"
-		"de"		"Ein Event ist {purple}bereits gesetzt. {darkred}{1}"
+		"en"		"Event ({darkred}{1}) {default}is {purple}already in progress."
+		"de"		"Event {darkred}{1}) {default}ist {purple}bereits gesetzt."
 	}
 	
 	"duckhunt_minct"
@@ -119,7 +118,7 @@
 		"de"		"Duckhunt ist {purple}deaktiviert."
 	}
 	
-	"duckhunt_timetounfreeze_nc"		// no colors!
+	"duckhunt_timeuntilstart_nc"		// no colors!
 	{
 		"#format"	"{1:i}"
 		"da"		"{1} sekunder til start!"		
@@ -127,55 +126,55 @@
 		"de"		"{1} Sekunden bis zum Start"
 	}
 	
-	"duckhunt_info_Title"		// no colors!
+	"duckhunt_info_title"		// no colors!
 	{
 		"da"		"Duckhunt er aktiveret!"	
 		"en"		"Duckhunt is activ"
 		"de"		"Duckhunt ist aktiv"
 	}
 	
-	"duckhunt_info_Line1"		// no colors!
+	"duckhunt_info_line1"		// no colors!
 	{
 		"da"		"en slags lerdueskydning"	
 		"en"		"a kind of Clay pigeon shooting"
 		"de"		"Eine Art Tontaubenschiessen"
 	}
-	"duckhunt_info_Line2"		// no colors!
+	"duckhunt_info_line2"		// no colors!
 	{
 		"da"		"CT har kun shotgun at skyde med!"	
 		"en"		"Cts got novas"
 		"de"		"Counter Terrorist haben Nova"
 	}
 	
-	"duckhunt_info_Line3"		// no colors!
+	"duckhunt_info_line3"		// no colors!
 	{
 		"da"		"T er kyllinger og har nades. SecAttack Only"	
 		"en"		"Ts are chickens and got greante. SecAttack Only"
 		"de"		"Terroristen sind chicken haben Granten. SecAttack Only"
 	}
 	
-	"duckhunt_info_Line4"		// no colors!
+	"duckhunt_info_line4"		// no colors!
 	{
 		"da"		"Alle jail regler er ophævet!"	
 		"en"		"All normal jailRules are repealed"
 		"de"		"Alle normalen Jailregeln sind aufgehoben!"
 	}
 	
-	"duckhunt_info_Line5"		// no colors!
+	"duckhunt_info_line5"		// no colors!
 	{
 		"da"		"!lr er deaktiveret i denne runde!"	
 		"en"		"There is no last request!"
 		"de"		"Der letzte Terrorist hat keinen Wunsch!"
 	}
 	
-	"duckhunt_info_Line6"		// no colors!
+	"duckhunt_info_line6"		// no colors!
 	{
 		"da"		"Begge hold må gå der hen de har lyst til!"	
 		"en"		"Everyone is allowed to go everywhere where he wants"
 		"de"		"Jeder darf überall hin wo er will!"
 	}
 	
-	"duckhunt_info_Line7"		// no colors!
+	"duckhunt_info_line7"		// no colors!
 	{
 		"da"		"Alle server regler skal overholdes!"	
 		"en"		"dont be an asshole!"

@@ -2,7 +2,7 @@
 {
 	"hebattle_tag"
 	{
-		"en"		"[{green}MyJB.hebattle{default}]"
+		"en"		"[{green}MyJB.HEBattle{default}]"
 	}
 	"hebattle_need"
 	{
@@ -11,7 +11,6 @@
 		"en"		"{purple}{2}{default} has votet. {purple}{1}{default} votes left to {darkred}hebattle"
 		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}hebattle{default} beginnt"
 	}
-	
 	"hebattle_rounds" 
 	{
 		"#format"	"{1:i},{2:i}"
@@ -27,22 +26,22 @@
 	}
 	"hebattle_voting"
 	{
-		"da"		"Afstemninger for HEbattle er {purple}slået fra"	
-		"en"		"Player Voting for HEbattle is {purple}disabled"
-		"de"		"Voting für HEbattle ist {purple}ausgeschaltet"
+		"da"		"Afstemninger for HE Battle er {purple}slået fra"	
+		"en"		"Player Voting for HE Battle is {purple}disabled"
+		"de"		"Voting für HE Battle ist {purple}ausgeschaltet"
 	}
 	"hebattle_setbywarden"
 	{
-		"da"		"HEbattle for Warden er {purple}slået fra"	
-		"en"		"Set HEbattle by Warden is {purple}disabled"
-		"de"		"HEbattle Aktivierung durch den Warden ist {purple}ausgeschaltet"
+		"da"		"HE Battle for Warden er {purple}slået fra"	
+		"en"		"Set HE Battle by Warden is {purple}disabled"
+		"de"		"HE Battle Aktivierung durch den Warden ist {purple}ausgeschaltet"
 	}
 	
 	"hebattle_setbyadmin"
 	{
-		"da"		"HEbattle for Admin er {purple}slået fra"	
-		"en"		"Set HEbattle by admin is {purple}disabled"
-		"de"		"HEbattle Aktivierung durch den Admin ist {purple}ausgeschaltet"
+		"da"		"HE Battle for Admin er {purple}slået fra"	
+		"en"		"Set HE Battle by admin is {purple}disabled"
+		"de"		"HE Battle Aktivierung durch den Admin ist {purple}ausgeschaltet"
 	}
 	"hebattle_ctwin_nc"
 	{
@@ -50,121 +49,118 @@
 		"en"		"A Counter-Terrorist has surrived"
 		"de"		"Ein Counter-Terrorist hat als einziger überlebt"
 	}
-	
 	"hebattle_end"
 	{
-		"da"		"{purple}HEbattle{default} er afsluttet!"	
-		"en"		"{purple}HEbattle{default} ended"
-		"de"		"{purple}HEbattle{default} beendet"
+		"da"		"{purple}HE Battle{default} er afsluttet!"	
+		"en"		"{purple}HE Battle{default} ended"
+		"de"		"{purple}HE Battle{default} beendet"
 	}
 	
 	"hebattle_next"
 	{
-		"da"		"Næste runde er {purple}HEbattle"
-		"en"		"Next round is {purple}HEbattle"
-		"de"		"Nächste Runde ist {purple}HEbattle"
+		"da"		"Næste runde er {purple}HE Battle"
+		"en"		"Next round is {purple}HE Battle"
+		"de"		"Nächste Runde ist {purple}HE Battle"
 	}
 	"hebattle_next_nc"
 	{
-		"da"		"Næste runde er HEbattle"
-		"en"		"Next round is HEbattle"
-		"de"		"Nächste Runde ist HEbattle"
+		"da"		"Næste runde er HE Battle"
+		"en"		"Next round is HE Battle"
+		"de"		"Nächste Runde ist HE Battle"
 	}
 	
 	"hebattle_start"
 	{
-		"da"		"{purple}HEbattle{default} er startet!"
-		"en"		"The {purple}HEbattle{default} has started!"
-		"de"		"{purple}HEbattle{default} ist gestartet!"
+		"da"		"{purple}HE Battle{default} er startet!"
+		"en"		"The {purple}HE Battle{default} has started!"
+		"de"		"{purple}HE Battle{default} ist gestartet!"
 	}
 	
 	"hebattle_start_nc"
 	{
-		"da"		"HEbattle er startet!"	
-		"en"		"The HEbattle started!"
-		"de"		"HEbattle ist gestartet!"
+		"da"		"HE Battle er startet!"	
+		"en"		"The HE Battle started!"
+		"de"		"HE Battle ist gestartet!"
 	}
 	
 	"hebattle_voted"
 	{
-		"en"		"Du har allerede stemt på {purple}HEbattle"	
-		"en"		"You already voted for {purple}HEbattle"
-		"de"		"Du hast schon für {purple}HEbattle {default}gevotet"
+		"en"		"Du har allerede stemt på {purple}HE Battle"	
+		"en"		"You already voted for {purple}HE Battle"
+		"de"		"Du hast schon für {purple}HE Battle {default}gevotet"
 	}
 	
 	"hebattle_progress"
 	{
 		"#format"	"{1:s}"
-		"da"		"HEbattle er {purple}allerede i gang"	
-		"en"		"A Event is {purple}already in progress. {darkred}{1}"
-		"de"		"Ein Event ist {purple}bereits gesetzt. {darkred}{1}"
+		"en"		"Event ({darkred}{1}) {default}is {purple}already in progress."
+		"de"		"Event {darkred}{1}) {default}ist {purple}bereits gesetzt."
 	}
 	
 	"hebattle_disabled"
 	{
-		"da"		"HEbattle er {purple}slået fra."
-		"en"		"HEbattle is {purple}disabled."
-		"de"		"HEbattle ist {purple}deaktiviert."
+		"da"		"HE Battle er {purple}slået fra."
+		"en"		"HE Battle is {purple}disabled."
+		"de"		"HE Battle ist {purple}deaktiviert."
 	}
 	
 
-	"hebattle_timetounfreeze_nc"
+	"hebattle_timeuntilstart_nc"
 	{
 		"#format"	"{1:i}"
 		"da"		"{1} sekunder til runden starter!"
-		"en"		"{1} seconds until start"
-		"de"		"{1} Sekunden bis zum Start"
+		"en"		"{1} seconds until start!"
+		"de"		"{1} Sekunden bis zum Start!"
 	}
 	
-	"hebattle_info_Title"
+	"hebattle_info_title"
 	{
-		"da"		"HEbattleer aktiv"	
-		"en"		"HEbattle is activ"
-		"de"		"HEbattle ist aktiv"
+		"da"		"HE Battleer aktiv"	
+		"en"		"HE Battle is activ"
+		"de"		"HE Battle ist aktiv"
 	}
 	
-	"hebattle_info_Line1"
-	{
-		"da"		"Bliv ikke overrasket hvis du bliver teleportet til CT Spawn!"	
-		"en"		"Do not be surprised if ported to CT Spawn"
-		"de"		"Nicht wundern falls ihr zum CT Spawngeportet wurdet"
-	}
-	"hebattle_info_Line2"
+	"hebattle_info_line1"
 	{
 		"da"		"I høvdingebold er det FFA høvdingebold"	
-		"en"		"In hebattle ther is FFA hebattle"
-		"de"		"FFA HEbattle hebattle"
+		"en"		"FFA HE Battle with Low Grawity"
+		"de"		"FFA HE Battle mit Low Grawity"
 	}
-	
-	"hebattle_info_Line3"
+	"hebattle_info_line2"
 	{
-		"da"		"Du kan ikke skade andre spillere indtil runden starter"	
-		"en"		"you can move and exit the wk in nodamge phase"
-		"de"		"Während der no damge phase kannst du aus der zelle/waffenkammer"
+		"da"		"Bliv ikke overrasket hvis du bliver teleportet til CT Spawn!"	
+		"en"		"Do not be surprised if ported to CT Spawn!"
+		"de"		"Nicht wundern falls ihr zum CT Spawngeportet wurdet!"
 	}
 	
-	"hebattle_info_Line4"
+	"hebattle_info_line3"
+	{
+		"en"		"You don't make Damage until start"
+		"de"		"Du machst bis zum Start keinen Schaden"
+	}
+	
+	"hebattle_info_line4"
 	{
 		"da"		"Alle jail regler er ophævet!"	
 		"en"		"All normal jailRules are repealed"
 		"de"		"Alle normalen Jailregeln sind aufgehoben!"
 	}
 	
-	"hebattle_info_Line5"
+	"hebattle_info_line5"
 	{
 		"da"		"Der kan ikke laves !lr i denne runde!"	
 		"en"		"There is no last request!"
 		"de"		"Der letzte Terrorist hat keinen Wunsch!"
 	}
 	
-	"hebattle_info_Line6"
+	"hebattle_info_line6"
 	{
 		"da"		"Alle må gå der hen de har lyst til!"	
 		"en"		"Everyone is allowed to go everywhere where he wants"
 		"de"		"Jeder darf überall hin wo er will!"
 	}
 	
-	"hebattle_info_Line7"
+	"hebattle_info_line7"
 	{
 		"da"		"Alle server regler skal holdes!"	
 		"en"		"dont be an asshole!"

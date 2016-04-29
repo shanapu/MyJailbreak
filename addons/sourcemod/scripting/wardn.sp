@@ -104,7 +104,7 @@ Handle StartStopTimer = null;
 
 //Strings
 char g_sHasVoted[1500];
-char g_sModelPath[256]; // change model back on unwarden
+char g_sModelPath[256];
 char g_sWardenModel[256];
 char g_sUnWarden[256];
 char g_sWarden[256];
@@ -651,20 +651,20 @@ public Action Timer_WardenFixColor(Handle timer,any client)
 {
 	if(IsValidClient(client, false, false))
 	{
-		int iWardenColorRed;								// Need this way on new syntax ? 				
+	/*	int iWardenColorRed;								// Need this way on new syntax ? 				
 		int iWardenColorGreen;								// Need this way on new syntax ? 	
 		int iWardenColorBlue;								// Need this way on new syntax ? 	
 		iWardenColorRed = gc_iWardenColorRed.IntValue;		// Need this way on new syntax ? 	
 		iWardenColorGreen = gc_iWardenColorGreen.IntValue;	// Need this way on new syntax ? 	
-		iWardenColorBlue = gc_iWardenColorBlue.IntValue;	// Need this way on new syntax ? 		
+		iWardenColorBlue = gc_iWardenColorBlue.IntValue;	// Need this way on new syntax ? 		*/
 
 		if(IsClientWarden(client))
 		{
-			if(gc_bPlugin.BoolValue)	
+			if(gc_bPlugin.BoolValue)
 			{ 
-				if(gc_bColor.BoolValue)	
+				if(gc_bColor.BoolValue)
 				{
-					SetEntityRenderColor(client, iWardenColorRed, iWardenColorGreen, iWardenColorBlue, 255);
+					SetEntityRenderColor(client, gc_iWardenColorRed.IntValue, gc_iWardenColorGreen.IntValue, gc_iWardenColorBlue.IntValue, 255);
 				}
 
 			}
@@ -754,7 +754,7 @@ void SetTheWarden(int client)
 		{
 			EmitSoundToAllAny(g_sWarden);
 		}
-		ResetMarker();
+		ResetMarker(); 
 	}
 	else CPrintToChat(client, "%t %t", "warden_tag" , "warden_disabled");
 }
@@ -769,8 +769,8 @@ void RemoveTheWarden(int client)
 		PrintHintTextToAll("%t", "warden_removed_nc", client, Warden);
 	}
 	
-	if(IsClientInGame(client))
-	{
+	//if(IsClientInGame(client))
+	//{
 		SetEntityRenderColor(Warden, 255, 255, 255, 255);
 		SetEntityModel(client, g_sModelPath);
 		Warden = -1;
@@ -788,7 +788,7 @@ void RemoveTheWarden(int client)
 		g_iVoteCount = 0;
 		Format(g_sHasVoted, sizeof(g_sHasVoted), "");
 		g_sHasVoted[0] = '\0';
-	}
+	//}
 }
 
 public Action EndMathQuestion(Handle timer)

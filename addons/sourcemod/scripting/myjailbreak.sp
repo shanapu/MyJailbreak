@@ -33,6 +33,14 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 {
 	CreateNative("SetEventDay", Native_SetEventDay);
 	CreateNative("GetEventDay", Native_GetEventDay);
+	
+	if (GetEngineVersion() != Engine_CSGO)
+	{
+		SetFailState("Game is not supported. CS:GO ONLY");
+	}
+	RegPluginLibrary("myjailbreak");
+	return APLRes_Success;
+	
 }
 
 public void OnConfigsExecuted()

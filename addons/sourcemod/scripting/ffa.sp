@@ -272,7 +272,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 	if (StartFFA || IsFFA)
 	{
 		{AcceptEntityInput(FogIndex, "TurnOn");}
-		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255], info9[255];
+		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
 		
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_warden_enable", 0);
@@ -281,38 +281,29 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		SetCvar("mp_teammates_are_enemies", 1);
 		SetCvar("mp_friendlyfire", 1);
 		SetCvar("sm_menu_enable", 0);
-
+		
 		g_iRound++;
 		IsFFA = true;
 		StartFFA = false;
 		SJD_OpenDoors();
 		FFAMenu = CreatePanel();
-		Format(info1, sizeof(info1), "%T", "ffa_info_Title", LANG_SERVER);
+		Format(info1, sizeof(info1), "%T", "ffa_info_title", LANG_SERVER);
 		SetPanelTitle(FFAMenu, info1);
 		DrawPanelText(FFAMenu, "                                   ");
-		if (!gc_bSpawnCell.BoolValue)
-		{
-			Format(info2, sizeof(info2), "%T", "ffa_info_Tele", LANG_SERVER);
-			DrawPanelText(FFAMenu, info2);
-			DrawPanelText(FFAMenu, "-----------------------------------");
-		}
-		else
-		{
-			Format(info9, sizeof(info9), "%T", "ffa_info_Spawn", LANG_SERVER);
-			DrawPanelText(FFAMenu, info9);
-			DrawPanelText(FFAMenu, "-----------------------------------");
-		}
-		Format(info3, sizeof(info3), "%T", "ffa_info_Line2", LANG_SERVER);
+		Format(info2, sizeof(info2), "%T", "ffa_info_line1", LANG_SERVER);
+		DrawPanelText(FFAMenu, info2);
+		DrawPanelText(FFAMenu, "-----------------------------------");
+		Format(info3, sizeof(info3), "%T", "ffa_info_line2", LANG_SERVER);
 		DrawPanelText(FFAMenu, info3);
-		Format(info4, sizeof(info4), "%T", "ffa_info_Line3", LANG_SERVER);
+		Format(info4, sizeof(info4), "%T", "ffa_info_line3", LANG_SERVER);
 		DrawPanelText(FFAMenu, info4);
-		Format(info5, sizeof(info5), "%T", "ffa_info_Line4", LANG_SERVER);
+		Format(info5, sizeof(info5), "%T", "ffa_info_line4", LANG_SERVER);
 		DrawPanelText(FFAMenu, info5);
-		Format(info6, sizeof(info6), "%T", "ffa_info_Line5", LANG_SERVER);
+		Format(info6, sizeof(info6), "%T", "ffa_info_line5", LANG_SERVER);
 		DrawPanelText(FFAMenu, info6);
-		Format(info7, sizeof(info7), "%T", "ffa_info_Line6", LANG_SERVER);
+		Format(info7, sizeof(info7), "%T", "ffa_info_line6", LANG_SERVER);
 		DrawPanelText(FFAMenu, info7);
-		Format(info8, sizeof(info8), "%T", "ffa_info_Line7", LANG_SERVER);
+		Format(info8, sizeof(info8), "%T", "ffa_info_line7", LANG_SERVER);
 		DrawPanelText(FFAMenu, info8);
 		DrawPanelText(FFAMenu, "-----------------------------------");
 		

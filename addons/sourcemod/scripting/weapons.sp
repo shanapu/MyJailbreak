@@ -118,7 +118,7 @@ Handle BuildOptionsMenu(bool sameWeaponsEnabled)
 	
 	int sameWeaponsStyle = (sameWeaponsEnabled) ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED;
 	Handle menu3 = CreateMenu(Menu_Options);
-	Format(info1, sizeof(info1), "%T\n ", "weapons_info_Title", LANG_SERVER);
+	Format(info1, sizeof(info1), "%T\n ", "weapons_info_title", LANG_SERVER);
 	SetMenuTitle(menu3, info1);
 	SetMenuExitButton(menu3, true);
 	Format(info2, sizeof(info2), "%T", "weapons_info_choose", LANG_SERVER);

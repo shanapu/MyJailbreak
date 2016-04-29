@@ -1,4 +1,4 @@
-"Phrases"		// working color tags {default}, {darkred}, {red}, {green}, {lightgreen}, {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
+"Phrases"
 {
 	"freeday_tag"
 	{
@@ -78,9 +78,8 @@
 	"freeday_progress"
 	{
 		"#format"	"{1:s}"
-		"da"		"FreeDay er {purple}allerede i gang!"	
-		"en"		"A Event is {purple}already in progress. {darkred}{1}"
-		"de"		"Ein Event ist {purple}bereits gesetzt. {darkred}{1}"
+		"en"		"Event ({darkred}{1}) {default}is {purple}already in progress."
+		"de"		"Event {darkred}{1}) {default}ist {purple}bereits gesetzt."
 	}
 	
 	"freeday_minct"
@@ -97,55 +96,52 @@
 		"de"		"FreeDay ist {purple}deaktiviert."
 	}
 	
-	"freeday_info_Title"		// no colors!
+	"freeday_info_title"		// no colors!
 	{
-		"da"		"FreeDay"	
-		"en"		"FreeDay"
-		"de"		"FreeDay"
+		"en"		"It's FreeDay!"
+		"de"		"Es ist FreeDay!"
 	}
 	
-	"freeday_info_Line1"		// no colors!
+	"freeday_info_line1"		// no colors!
 	{
-		"da"		"Det er Freeday!"	
 		"en"		"it's Freeday"
 		"de"		"es ist Freeday"
 	}
-	"freeday_info_Line2"		// no colors!
+	"freeday_info_line2"		// no colors!
 	{
-		"da"		"--------------"	
-		"en"		"--------------"
-		"en"		"--------------"
+		"en"		"-----------------------------------"
+		"de"		"-----------------------------------"
 	}
 	
-	"freeday_info_Line3"		// no colors!
+	"freeday_info_line3"		// no colors!
 	{
-		"da"		"--------------"	
-		"en"		"--------------"
-		"de"		"--------------"
+
+		"en"		"-----------------------------------"
+		"de"		"-----------------------------------"
 	}
 	
-	"freeday_info_Line4"		// no colors!
+	"freeday_info_line4"		// no colors!
 	{
 		"da"		"Alle jail regler er ophævet!"	
 		"en"		"All normal jailRules are repealed"
 		"de"		"Alle normalen Jailregeln sind aufgehoben!"
 	}
 	
-	"freeday_info_Line5"		// no colors!
+	"freeday_info_line5"		// no colors!
 	{
 		"da"		"Der kan ikke laves !lr i Freeday"	
 		"en"		"There is no last request!"
 		"de"		"Der letzte Terrorist hat keinen Wunsch!"
 	}
 	
-	"freeday_info_Line6"		// no colors!
+	"freeday_info_line6"		// no colors!
 	{
 		"da"		"T kan gå hvor hen de vil - De må bare ikke have våben!"	
 		"en"		"Everyone is allowed to go everywhere where they wants"
 		"de"		"Jeder darf überall hin wo er will!"
 	}
 	
-	"freeday_info_Line7"		// no colors!
+	"freeday_info_line7"		// no colors!
 	{
 		"da"		"Serverne regler skal overholdes!"	
 		"en"		"dont be an asshole!"

@@ -103,9 +103,8 @@
 	"catch_progress"
 	{
 		"#format"	"{1:s}"
-		"da"		"Catch er {purple}allerede i gang"	
-		"en"		"A Event is {purple}already in progress. {darkred}{1}"
-		"de"		"Ein Event ist {purple}bereits gesetzt. {darkred}{1}"
+		"en"		"Event ({darkred}{1}) {default}is {purple}already in progress."
+		"de"		"Event {darkred}{1}) {default}ist {purple}bereits gesetzt."
 	}
 	
 	"catch_minct"
@@ -141,55 +140,55 @@
 		"de"		"catch ist {purple}deaktiviert."
 	}
 
-	"catch_info_Title"		// no colors!
+	"catch_info_title"		// no colors!
 	{
 		"da"		"Catch er aktiveret!"	
 		"en"		"Catch is activated!"
 		"de"		"Fangen ist aktiv"
 	}
 	
-	"catch_info_Line1"		// no colors!
+	"catch_info_line1"		// no colors!
 	{
 		"da"		"CTs skal fange & fryse alle T ved at knife dem"	
 		"en"		"The CT must catch all T with the knife and freeze them"
 		"de"		"Die CT müssen alle T mit dem Messer einfangen und freezen"
 	}
-	"catch_info_Line2"		// no colors!
+	"catch_info_line2"		// no colors!
 	{
 		"da"		"T kan unfreeze fanget Ts med kniv"	
 		"en"		"T can unfreeze T - Just knife them!"
 		"de"		"T können gefreezte T mit dem messer befreien"
 	}
 	
-	"catch_info_Line3"		// no colors!
+	"catch_info_line3"		// no colors!
 	{
 		"da"		"Brug E til at Sprint!"	
 		"en"		"Press E to sprint!"
 		"de"		"mit der BENUTZEN-Taste kannst du sprinten"
 	}
 	
-	"catch_info_Line4"		// no colors!
+	"catch_info_line4"		// no colors!
 	{
 		"da"		"Ingen jail regler gælder i denne runde!"	
 		"en"		"No jail rules apply in this round!"
 		"de"		"Alle normalen Jailregeln sind aufgehoben!"
 	}
 	
-	"catch_info_Line5"		// no colors!
+	"catch_info_line5"		// no colors!
 	{
 		"da"		"Der kan ikke laves !lr"	
 		"en"		"You cannot use !lr in this round!"
 		"de"		"Der letzte Terrorist hat keinen Wunsch!"
 	}
 	
-	"catch_info_Line6"		// no colors!
+	"catch_info_line6"		// no colors!
 	{
 		"da"		"Alle må gå hvor hen de har lyst til!"	
 		"en"		"All can go where they feel like!"
 		"de"		"Jeder darf überall hin wo er will!"
 	}
 	
-	"catch_info_Line7"		// no colors!
+	"catch_info_line7"		// no colors!
 	{
 		"da"		"Server Reglerne skal stadig holdes!"	
 		"en"		"Server Rules must be kept!"

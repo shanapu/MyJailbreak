@@ -14,8 +14,8 @@
 #pragma newdecls required
 
 //Booleans
-bool IsZombie = false;
-bool StartZombie = false;
+bool IsZombie;
+bool StartZombie;
 
 //ConVars
 ConVar gc_bPlugin;
@@ -40,7 +40,7 @@ ConVar gc_iRounds;
 int g_iOldRoundTime;
 int g_iFreezeTime;
 int g_iCoolDown;
-int g_iVoteCount = 0;
+int g_iVoteCount;
 int g_iRound;
 int g_iMaxRound;
 
@@ -306,23 +306,23 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		SJD_OpenDoors();
 
 		ZombieMenu = CreatePanel();
-		Format(info1, sizeof(info1), "%T", "zombie_info_Title", LANG_SERVER);
+		Format(info1, sizeof(info1), "%T", "zombie_info_title", LANG_SERVER);
 		SetPanelTitle(ZombieMenu, info1);
 		DrawPanelText(ZombieMenu, "                                   ");
-		Format(info2, sizeof(info2), "%T", "zombie_info_Line1", LANG_SERVER);
+		Format(info2, sizeof(info2), "%T", "zombie_info_line1", LANG_SERVER);
 		DrawPanelText(ZombieMenu, info2);
 		DrawPanelText(ZombieMenu, "-----------------------------------");
-		Format(info3, sizeof(info3), "%T", "zombie_info_Line2", LANG_SERVER);
+		Format(info3, sizeof(info3), "%T", "zombie_info_line2", LANG_SERVER);
 		DrawPanelText(ZombieMenu, info3);
-		Format(info4, sizeof(info4), "%T", "zombie_info_Line3", LANG_SERVER);
+		Format(info4, sizeof(info4), "%T", "zombie_info_line3", LANG_SERVER);
 		DrawPanelText(ZombieMenu, info4);
-		Format(info5, sizeof(info5), "%T", "zombie_info_Line4", LANG_SERVER);
+		Format(info5, sizeof(info5), "%T", "zombie_info_line4", LANG_SERVER);
 		DrawPanelText(ZombieMenu, info5);
-		Format(info6, sizeof(info6), "%T", "zombie_info_Line5", LANG_SERVER);
+		Format(info6, sizeof(info6), "%T", "zombie_info_line5", LANG_SERVER);
 		DrawPanelText(ZombieMenu, info6);
-		Format(info7, sizeof(info7), "%T", "zombie_info_Line6", LANG_SERVER);
+		Format(info7, sizeof(info7), "%T", "zombie_info_line6", LANG_SERVER);
 		DrawPanelText(ZombieMenu, info7);
-		Format(info8, sizeof(info8), "%T", "zombie_info_Line7", LANG_SERVER);
+		Format(info8, sizeof(info8), "%T", "zombie_info_line7", LANG_SERVER);
 		DrawPanelText(ZombieMenu, info8);
 		DrawPanelText(ZombieMenu, "-----------------------------------");
 		
@@ -411,7 +411,7 @@ public Action Zombie(Handle timer)
 				}
 				if (GetClientTeam(client) == CS_TEAM_T)
 				{
-					PrintCenterText(client,"%t", "zombie_timetozombie_nc", g_iFreezeTime);
+					PrintCenterText(client,"%t", "zombie_timeuntilzombie_nc", g_iFreezeTime);
 				}
 		}
 		return Plugin_Continue;

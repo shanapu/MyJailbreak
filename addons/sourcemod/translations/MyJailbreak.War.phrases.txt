@@ -86,9 +86,8 @@
 	"war_progress"  
 	{
 		"#format"	"{1:s}"
-		"da"		"War er {purple}allerede i gang!"	
-		"en"		"A Event is {purple}already in progress. {darkred}{1}"
-		"de"		"Ein Event ist {purple}bereits gesetzt. {darkred}{1}"
+		"en"		"Event ({darkred}{1}) {default}is {purple}already in progress."
+		"de"		"Event {darkred}{1}) {default}ist {purple}bereits gesetzt."
 	}
 	
 	"war_minct"
@@ -143,63 +142,56 @@
 		"de"		"{1} Sekunden bis zum unfreeze"
 	}
 	
-	"war_info_Title"		// no colors!
+	"war_info_title"		// no colors!
 	{
 		"da"		"War er aktiveret!"	
 		"en"		"War is activ"
 		"de"		"Krieg ist aktiv"
 	}
 	
-	"war_info_Tele"		// no colors!
+	"war_info_line1"		// no colors!
 	{
 		"da"		"Ikke bliv overrasket hvis du sidder fast i luften og frosset!"	
 		"en"		"Do not be surprised if you hangs in the air and freezed"
 		"de"		"Nicht wundern falls ihr in der Luft hängt und dich nicht bewegen kannst"
 	}
 	
-	"war_info_Spawn"		// no colors!
-	{
-		"da"		"Ikke bliv overrasket hvis du spawner med våben og cellerne er åbne!"	
-		"en"		"Do not be surprised if you spawn with weapon and the cells are open"
-		"de"		"Nicht wundern wenn ihr mit Waffe und offenen Zelle spawnt"
-	}
-	
-	"war_info_Line2"		// no colors!
+	"war_info_line2"		// no colors!
 	{
 		"da"		"I war skal CT og T spille mod hinanden."	
 		"en"		"In warround ct play against t"
 		"de"		"In Kriegrunden spielen CT's gegen T's"
 	}
 	
-	"war_info_Line3"		// no colors!
+	"war_info_line3"		// no colors!
 	{
 		"da"		"Indtil runden begynder, kan du finde et godt sted at starte!"	
 		"en"		"While nodamge time you can move and get in position"
 		"de"		"Während der NoDamge Phase darfst du dich bewegen und in Position gehen"
 	}
 	
-	"war_info_Line4"		// no colors!
+	"war_info_line4"		// no colors!
 	{
 		"da"		"Alle jail regler er ophævet!"	
 		"en"		"All normal jailRules are repealed"
 		"de"		"Alle normalen Jailregeln sind aufgehoben!"
 	}
 	
-	"war_info_Line5"		// no colors!
+	"war_info_line5"		// no colors!
 	{
 		"da"		"Last Request er deaktiveret i denne runde!"	
 		"en"		"There is no last request!"
 		"de"		"Der letzte Terrorist hat keinen Wunsch!"
 	}
 	
-	"war_info_Line6"		// no colors!
+	"war_info_line6"		// no colors!
 	{
 		"da"		"Alle kan gå hen hvor de har lyst eller starte!"
 		"en"		"Everyone is allowed to go everywhere where he wants"
 		"de"		"Jeder darf überall hin wo er will!"
 	}
 	
-	"war_info_Line7"		// no colors!
+	"war_info_line7"		// no colors!
 	{
 		"da"		"Alle server regler skal overholdes!"	
 		"en"		"dont be an asshole!"

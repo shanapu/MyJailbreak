@@ -14,8 +14,8 @@
 #pragma newdecls required
 
 //Booleans
-bool IsNoScope = false; 
-bool StartNoScope = false; 
+bool IsNoScope; 
+bool StartNoScope; 
 
 //ConVars
 ConVar gc_bPlugin;
@@ -40,7 +40,7 @@ ConVar gc_iRounds;
 int g_iOldRoundTime;
 int g_iCoolDown;
 int g_iTruceTime;
-int g_iVoteCount = 0;
+int g_iVoteCount;
 int g_iRound;
 int m_flNextSecondaryAttack;
 int g_iMaxRound;
@@ -279,23 +279,23 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		StartNoScope = false;
 		SJD_OpenDoors();
 		NoScopeMenu = CreatePanel();
-		Format(info1, sizeof(info1), "%T", "noscope_info_Title", LANG_SERVER);
+		Format(info1, sizeof(info1), "%T", "noscope_info_title", LANG_SERVER);
 		SetPanelTitle(NoScopeMenu, info1);
 		DrawPanelText(NoScopeMenu, "                                   ");
-		Format(info2, sizeof(info2), "%T", "noscope_info_Line1", LANG_SERVER);
+		Format(info2, sizeof(info2), "%T", "noscope_info_line1", LANG_SERVER);
 		DrawPanelText(NoScopeMenu, info2);
 		DrawPanelText(NoScopeMenu, "-----------------------------------");
-		Format(info3, sizeof(info3), "%T", "noscope_info_Line2", LANG_SERVER);
+		Format(info3, sizeof(info3), "%T", "noscope_info_line2", LANG_SERVER);
 		DrawPanelText(NoScopeMenu, info3);
-		Format(info4, sizeof(info4), "%T", "noscope_info_Line3", LANG_SERVER);
+		Format(info4, sizeof(info4), "%T", "noscope_info_line3", LANG_SERVER);
 		DrawPanelText(NoScopeMenu, info4);
-		Format(info5, sizeof(info5), "%T", "noscope_info_Line4", LANG_SERVER);
+		Format(info5, sizeof(info5), "%T", "noscope_info_line4", LANG_SERVER);
 		DrawPanelText(NoScopeMenu, info5);
-		Format(info6, sizeof(info6), "%T", "noscope_info_Line5", LANG_SERVER);
+		Format(info6, sizeof(info6), "%T", "noscope_info_line5", LANG_SERVER);
 		DrawPanelText(NoScopeMenu, info6);
-		Format(info7, sizeof(info7), "%T", "noscope_info_Line6", LANG_SERVER);
+		Format(info7, sizeof(info7), "%T", "noscope_info_line6", LANG_SERVER);
 		DrawPanelText(NoScopeMenu, info7);
-		Format(info8, sizeof(info8), "%T", "noscope_info_Line7", LANG_SERVER);
+		Format(info8, sizeof(info8), "%T", "noscope_info_line7", LANG_SERVER);
 		DrawPanelText(NoScopeMenu, info8);
 		DrawPanelText(NoScopeMenu, "-----------------------------------");
 		
@@ -412,7 +412,7 @@ public Action NoScope(Handle timer)
 		for (int client=1; client <= MaxClients; client++)
 		if (IsClientInGame(client) && IsPlayerAlive(client))
 			{
-				PrintCenterText(client,"%t", "noscope_timetounfreeze_nc", g_iTruceTime);
+				PrintCenterText(client,"%t", "noscope_timeuntilstart_nc", g_iTruceTime);
 			}
 		return Plugin_Continue;
 	}

@@ -3,7 +3,7 @@
 #endif
 #define _myjailbreak_included_
 
-#define PLUGIN_VERSION "0.5"
+#define PLUGIN_VERSION "0.6b"
 #define URL_LINK "https://github.com/shanapu/MyJailbreak"
 
 #include <sdktools>
@@ -11,6 +11,17 @@
 Handle IntCvar;
 Handle FloatCvar;
 char g_sOverlayStart[256];
+
+public SharedPlugin:__pl_myjailbreak =
+{
+	name = "myjailbreak",
+	file = "myjailbreak.smx",
+	#if defined REQUIRE_PLUGIN
+	required = 1,
+	#else
+	required = 0,
+	#endif
+};
 
 native SetEventDay(const char[] name);
 
@@ -36,7 +47,6 @@ stock PrecacheSoundAnyDownload(char[] sSound)
 	char sBuffer[256];
 	Format(sBuffer, sizeof(sBuffer), "sound/%s", sSound);
 	AddFileToDownloadsTable(sBuffer);
-	
 }
 
 stock StripAllWeapons(int iClient)
@@ -68,9 +78,9 @@ public Action DeleteOverlay( Handle timer, any client )
 {
 	if(IsValidClient(client, false, true))
 	{
-	int iFlag = GetCommandFlags( "r_screenoverlay" ) & ( ~FCVAR_CHEAT ); 
-	SetCommandFlags( "r_screenoverlay", iFlag ); 
-	ClientCommand( client, "r_screenoverlay \"\"" );
+		int iFlag = GetCommandFlags( "r_screenoverlay" ) & ( ~FCVAR_CHEAT ); 
+		SetCommandFlags( "r_screenoverlay", iFlag ); 
+		ClientCommand( client, "r_screenoverlay \"\"" );
 	}
 	return Plugin_Continue;
 }
@@ -83,9 +93,9 @@ public SetCvar(char cvarName[64],int value)
 	int flags = GetConVarFlags(IntCvar);
 	flags &= ~FCVAR_NOTIFY;
 	SetConVarFlags(IntCvar, flags);
-
+	
 	SetConVarInt(IntCvar, value);
-
+	
 	flags |= FCVAR_NOTIFY;
 	SetConVarFlags(IntCvar, flags);
 }
@@ -94,13 +104,13 @@ public SetCvarFloat(char cvarName[64], float value)
 {
 	FloatCvar = FindConVar(cvarName);
 	if(FloatCvar == INVALID_HANDLE) return;
-
+	
 	new flags = GetConVarFlags(FloatCvar);
 	flags &= ~FCVAR_NOTIFY;
 	SetConVarFlags(FloatCvar, flags);
-
+	
 	SetConVarFloat(FloatCvar, value);
-
+	
 	flags |= FCVAR_NOTIFY;
 	SetConVarFlags(FloatCvar, flags);
 }

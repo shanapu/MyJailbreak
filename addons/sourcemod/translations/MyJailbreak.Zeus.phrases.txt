@@ -94,9 +94,8 @@
 	"zeus_progress"
 	{
 		"#format"	"{1:s}"
-		"da"		"ZeusDay er {purple}allerede i gang!"	
-		"en"		"A Event is {purple}already in progress. {darkred}{1}"
-		"de"		"Ein Event ist {purple}bereits gesetzt. {darkred}{1}"
+		"en"		"Event ({darkred}{1}) {default}is {purple}already in progress."
+		"de"		"Event {darkred}{1}) {default}ist {purple}bereits gesetzt."
 	}
 	
 	"zeus_disabled"
@@ -107,7 +106,7 @@
 	}
 	
 
-	"zeus_timetounfreeze_nc"
+	"zeus_timeuntilstart_nc"
 	{
 		"#format"	"{1:i}"
 		"da"		"{1} sekunder til runden starter!"	
@@ -115,53 +114,53 @@
 		"de"		"{1} Sekunden bis zum Start"
 	}
 	
-	"zeus_info_Title"
+	"zeus_info_title"
 	{
 		"en"		"ZeusDay er aktiveret!"	
 		"en"		"ZeusDay is activ"
 		"de"		"ZeusDay ist aktiv"
 	}
 	
-	"zeus_info_Line1"
+	"zeus_info_line1"
 	{
 		"da"		"ZeusDay er hvor mod hvor!"
 		"en"		"ZeusDay Free for All"
 		"de"		"ZeusDay Jeder gegen Jeden"
 	}
-	"zeus_info_Line2"
+	"zeus_info_line2"
 	{
 		"en"		"You got only one shot on Zeus"
 		"de"		"Du hast in der Zeus nur einen Schuss"
 	}
 	
-	"zeus_info_Line3"
+	"zeus_info_line3"
 	{
 		"en"		"On kill with Zeus or Knife you get a new Zeus"
 		"de"		"Bei einem Kill mit Zeus oder Messer bekommst du einen neue Zeus"
 	}
 	
-	"zeus_info_Line4"
+	"zeus_info_line4"
 	{
 		"da"		"Alle jail regler er ophævet!"	
 		"en"		"All normal jailRules are repealed"
 		"de"		"Alle normalen Jailregeln sind aufgehoben!"
 	}
 	
-	"zeus_info_Line5"
+	"zeus_info_line5"
 	{
 		"da"		"Der kan ikke laves Last Request i denne runde!"	
 		"en"		"There is no last request!"
 		"de"		"Der letzte Terrorist hat keinen Wunsch!"
 	}
 	
-	"zeus_info_Line6"
+	"zeus_info_line6"
 	{
 		"da"		"Alle kan gå der hen hvor de har lyst til at gå hen!"	
 		"en"		"Everyone is allowed to go everywhere where he wants"
 		"de"		"Jeder darf überall hin wo er will!"
 	}
 	
-	"zeus_info_Line7"
+	"zeus_info_line7"
 	{
 		"da"		"Alle server regler skal overholdes!"	
 		"en"		"dont be an asshole!"

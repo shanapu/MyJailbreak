@@ -301,23 +301,23 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		SJD_OpenDoors();
 
 		CatchMenu = CreatePanel();
-		Format(info1, sizeof(info1), "%T", "catch_info_Title", LANG_SERVER);
+		Format(info1, sizeof(info1), "%T", "catch_info_title", LANG_SERVER);
 		SetPanelTitle(CatchMenu, info1);
 		DrawPanelText(CatchMenu, "                                   ");
-		Format(info2, sizeof(info2), "%T", "catch_info_Line1", LANG_SERVER);
+		Format(info2, sizeof(info2), "%T", "catch_info_line1", LANG_SERVER);
 		DrawPanelText(CatchMenu, info2);
 		DrawPanelText(CatchMenu, "-----------------------------------");
-		Format(info3, sizeof(info3), "%T", "catch_info_Line2", LANG_SERVER);
+		Format(info3, sizeof(info3), "%T", "catch_info_line2", LANG_SERVER);
 		DrawPanelText(CatchMenu, info3);
-		Format(info4, sizeof(info4), "%T", "catch_info_Line3", LANG_SERVER);
+		Format(info4, sizeof(info4), "%T", "catch_info_line3", LANG_SERVER);
 		DrawPanelText(CatchMenu, info4);
-		Format(info5, sizeof(info5), "%T", "catch_info_Line4", LANG_SERVER);
+		Format(info5, sizeof(info5), "%T", "catch_info_line4", LANG_SERVER);
 		DrawPanelText(CatchMenu, info5);
-		Format(info6, sizeof(info6), "%T", "catch_info_Line5", LANG_SERVER);
+		Format(info6, sizeof(info6), "%T", "catch_info_line5", LANG_SERVER);
 		DrawPanelText(CatchMenu, info6);
-		Format(info7, sizeof(info7), "%T", "catch_info_Line6", LANG_SERVER);
+		Format(info7, sizeof(info7), "%T", "catch_info_line6", LANG_SERVER);
 		DrawPanelText(CatchMenu, info7);
-		Format(info8, sizeof(info8), "%T", "catch_info_Line7", LANG_SERVER);
+		Format(info8, sizeof(info8), "%T", "catch_info_line7", LANG_SERVER);
 		DrawPanelText(CatchMenu, info8);
 		DrawPanelText(CatchMenu, "-----------------------------------");
 		

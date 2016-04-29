@@ -94,9 +94,8 @@
 	"noscope_progress"
 	{
 		"#format"	"{1:s}"
-		"da"		"NoScope er {purple}allerede i gang!"	
-		"en"		"A Event is {purple}already in progress. {darkred}{1}"
-		"de"		"Es ist bereits {purple}ein Event {default}gesetzt. {darkred}{1}"
+		"en"		"Event ({darkred}{1}) {default}is {purple}already in progress."
+		"de"		"Event {darkred}{1}) {default}ist {purple}bereits gesetzt."
 	}
 	
 	"noscope_disabled"
@@ -107,7 +106,7 @@
 	}
 	
 
-	"noscope_timetounfreeze_nc"
+	"noscope_timeuntilstart_nc"
 	{
 		"#format"	"{1:i}"
 		"da"		"{1} sekunder til runden starter!"	
@@ -115,55 +114,55 @@
 		"de"		"{1} Sekunden bis zum Start"
 	}
 	
-	"noscope_info_Title"
+	"noscope_info_title"
 	{
-		"en"		"Scout NoScope er aktiveret!"	
-		"en"		"Scout NoScope is activ"
-		"de"		"Scout NoScope ist aktiv"
+		"en"		"NoScope er aktiveret!"	
+		"en"		"NoScope is activ"
+		"de"		NoScope ist aktiv"
 	}
 	
-	"noscope_info_Line1"
+	"noscope_info_line1"
 	{
-		"da"		"Scout NoScope er hver mod hver!"
-		"en"		"Scout NoScope Free for All"
-		"de"		"Scout NoScope Jeder gegen Jeden"
+		"da"		"Scout NoScope - er hver mod hver!"
+		"en"		"Scout NoScope - Free for All"
+		"de"		"Scout NoScope - Jeder gegen Jeden"
 	}
-	"noscope_info_Line2"
+	"noscope_info_line2"
 	{
 		"da"		"I NoScope er det FFA og lav gravity!"	
 		"en"		"Its Low gravity"
 		"de"		"Es ist Low gravity"
 	}
 	
-	"noscope_info_Line3"
+	"noscope_info_line3"
 	{
 		"da"		"Den sidste som overlever vinder runden!"	
 		"en"		"you can move and exit the wk in nodamge phase"
 		"de"		"Während der no damge phase kannst du aus der zelle/waffenkammer"
 	}
 	
-	"noscope_info_Line4"
+	"noscope_info_line4"
 	{
 		"da"		"Alle jail regler er ophævet!"	
 		"en"		"All normal jailRules are repealed"
 		"de"		"Alle normalen Jailregeln sind aufgehoben!"
 	}
 	
-	"noscope_info_Line5"
+	"noscope_info_line5"
 	{
 		"da"		"Der kan ikke laves Last Request i denne runde!"	
 		"en"		"There is no last request!"
 		"de"		"Der letzte Terrorist hat keinen Wunsch!"
 	}
 	
-	"noscope_info_Line6"
+	"noscope_info_line6"
 	{
 		"da"		"Alle kan gå der hen hvor de har lyst til at gå hen!"	
 		"en"		"Everyone is allowed to go everywhere where he wants"
 		"de"		"Jeder darf überall hin wo er will!"
 	}
 	
-	"noscope_info_Line7"
+	"noscope_info_line7"
 	{
 		"da"		"Alle server regler skal overholdes!"	
 		"en"		"dont be an asshole!"

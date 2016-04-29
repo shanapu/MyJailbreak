@@ -2,7 +2,6 @@
 #include <cstrike>
 #include <sourcemod>
 #include <colors>
-
 #include <smartjaildoors>
 #include <sdkhooks>
 #include <wardn>
@@ -339,23 +338,23 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		IsJiHad = true;
 		StartJiHad = false;
 		JiHadMenu = CreatePanel();
-		Format(info1, sizeof(info1), "%T", "jihad_info_Title", LANG_SERVER);
+		Format(info1, sizeof(info1), "%T", "jihad_info_title", LANG_SERVER);
 		SetPanelTitle(JiHadMenu, info1);
 		DrawPanelText(JiHadMenu, "                                   ");
-		Format(info2, sizeof(info2), "%T", "jihad_info_Line1", LANG_SERVER);
+		Format(info2, sizeof(info2), "%T", "jihad_info_line1", LANG_SERVER);
 		DrawPanelText(JiHadMenu, info2);
 		DrawPanelText(JiHadMenu, "-----------------------------------");
-		Format(info3, sizeof(info3), "%T", "jihad_info_Line2", LANG_SERVER);
+		Format(info3, sizeof(info3), "%T", "jihad_info_line2", LANG_SERVER);
 		DrawPanelText(JiHadMenu, info3);
-		Format(info4, sizeof(info4), "%T", "jihad_info_Line3", LANG_SERVER);
+		Format(info4, sizeof(info4), "%T", "jihad_info_line3", LANG_SERVER);
 		DrawPanelText(JiHadMenu, info4);
-		Format(info5, sizeof(info5), "%T", "jihad_info_Line4", LANG_SERVER);
+		Format(info5, sizeof(info5), "%T", "jihad_info_line4", LANG_SERVER);
 		DrawPanelText(JiHadMenu, info5);
-		Format(info6, sizeof(info6), "%T", "jihad_info_Line5", LANG_SERVER);
+		Format(info6, sizeof(info6), "%T", "jihad_info_line5", LANG_SERVER);
 		DrawPanelText(JiHadMenu, info6);
-		Format(info7, sizeof(info7), "%T", "jihad_info_Line6", LANG_SERVER);
+		Format(info7, sizeof(info7), "%T", "jihad_info_line6", LANG_SERVER);
 		DrawPanelText(JiHadMenu, info7);
-		Format(info8, sizeof(info8), "%T", "jihad_info_Line7", LANG_SERVER);
+		Format(info8, sizeof(info8), "%T", "jihad_info_line7", LANG_SERVER);
 		DrawPanelText(JiHadMenu, info8);
 		DrawPanelText(JiHadMenu, "-----------------------------------");
 		
@@ -421,11 +420,11 @@ public Action JiHad(Handle timer)
 		{
 			if (GetClientTeam(client) == CS_TEAM_CT)
 			{
-				PrintCenterText(client,"%t", "jihad_timetojihad_nc", g_iFreezeTime);
+				PrintCenterText(client,"%t", "jihad_timetohide_nc", g_iFreezeTime);
 			}
 			if (GetClientTeam(client) == CS_TEAM_T)
 			{
-				PrintCenterText(client,"%t", "jihad_timetoopen_nc", g_iFreezeTime);
+				PrintCenterText(client,"%t", "jihad_timeuntilopen_nc", g_iFreezeTime);
 			}
 		}
 		return Plugin_Continue;

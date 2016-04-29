@@ -85,8 +85,8 @@
 	"jihad_progress"
 	{
 		"#format"	"{1:s}"
-		"en"		"A Event is {purple}already in progress. {darkred}{1}"
-		"de"		"Ein Event ist {purple}bereits gesetzt. {darkred}{1}"
+		"en"		"Event ({darkred}{1}) {default}is {purple}already in progress."
+		"de"		"Event {darkred}{1}) {default}ist {purple}bereits gesetzt."
 	}
 	
 	"jihad_disabled"
@@ -117,61 +117,61 @@
 		"de"		"Du kannst wieder {blue}sprinten!"
 	}
 	
-	"jihad_timetojihad_nc"
+	"jihad_timetohide_nc"
 	{
 		"#format"	"{1:i}"
 		"en"		"{1} seconds to hide"
 		"de"		"{1} Sekunden to hide"
 	}
-	"jihad_timetoopen_nc"
+	"jihad_timeuntilopen_nc"
 	{
 		"#format"	"{1:i}"
 		"en"		"{1} seconds until cells open"
 		"de"		"{1} Sekunden bis die Zellen öffnen"
 	}
 	
-	"jihad_info_Title"
+	"jihad_info_title"
 	{
 		"en"		"JiHad JiHad is activ"
 		"de"		"JiHad JiHad ist aktiv"
 	}
 	
-	"jihad_info_Line1"
+	"jihad_info_line1"
 	{
 		"en"		"ALLAH AKBHAR!"
 		"de"		"ALLAH AKBHAR!"
 	}
-	"jihad_info_Line2"
+	"jihad_info_line2"
 	{
 		"en"		"Terrors got c4 and can suicde wit USE key"
 		"de"		"Terrors haben c4 und können mit der USE Taste suizid begehen"
 	}
 	
-	"jihad_info_Line3"
+	"jihad_info_line3"
 	{
 		"en"		"CT better hide"
 		"de"		"ct sollten sich verstecken"
 	}
 	
-	"jihad_info_Line4"
+	"jihad_info_line4"
 	{
 		"en"		"All normal jailRules are repealed"
 		"de"		"Alle normalen Jailregeln sind aufgehoben!"
 	}
 	
-	"jihad_info_Line5"
+	"jihad_info_line5"
 	{
 		"en"		"There is no last request!"
 		"de"		"Der letzte Terrorist hat keinen Wunsch!"
 	}
 	
-	"jihad_info_Line6"
+	"jihad_info_line6"
 	{
 		"en"		"Everyone is allowed to go everywhere where he wants"
 		"de"		"Jeder darf überall hin wo er will!"
 	}
 	
-	"jihad_info_Line7"
+	"jihad_info_line7"
 	{
 		"en"		"dont be an asshole!"
 		"de"		"bau keine scheisse!"

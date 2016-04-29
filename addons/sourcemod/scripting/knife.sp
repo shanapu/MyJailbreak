@@ -15,8 +15,8 @@
 #pragma newdecls required
 
 //Booleans
-bool IsKnifeFight = false; 
-bool StartKnifeFight = false; 
+bool IsKnifeFight; 
+bool StartKnifeFight; 
 
 //ConVars
 ConVar gc_bPlugin;
@@ -45,7 +45,7 @@ ConVar gc_iRounds;
 int g_iOldRoundTime;
 int g_iCoolDown;
 int g_iTruceTime;
-int g_iVoteCount = 0;
+int g_iVoteCount;
 int g_iRound;
 int g_iMaxRound;
 
@@ -283,23 +283,23 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		StartKnifeFight = false;
 		SJD_OpenDoors();
 		KnifeFightMenu = CreatePanel();
-		Format(info1, sizeof(info1), "%T", "knifefight_info_Title", LANG_SERVER);
+		Format(info1, sizeof(info1), "%T", "knifefight_info_title", LANG_SERVER);
 		SetPanelTitle(KnifeFightMenu, info1);
 		DrawPanelText(KnifeFightMenu, "                                   ");
-		Format(info2, sizeof(info2), "%T", "knifefight_info_Line1", LANG_SERVER);
+		Format(info2, sizeof(info2), "%T", "knifefight_info_line1", LANG_SERVER);
 		DrawPanelText(KnifeFightMenu, info2);
 		DrawPanelText(KnifeFightMenu, "-----------------------------------");
-		Format(info3, sizeof(info3), "%T", "knifefight_info_Line2", LANG_SERVER);
+		Format(info3, sizeof(info3), "%T", "knifefight_info_line2", LANG_SERVER);
 		DrawPanelText(KnifeFightMenu, info3);
-		Format(info4, sizeof(info4), "%T", "knifefight_info_Line3", LANG_SERVER);
+		Format(info4, sizeof(info4), "%T", "knifefight_info_line3", LANG_SERVER);
 		DrawPanelText(KnifeFightMenu, info4);
-		Format(info5, sizeof(info5), "%T", "knifefight_info_Line4", LANG_SERVER);
+		Format(info5, sizeof(info5), "%T", "knifefight_info_line4", LANG_SERVER);
 		DrawPanelText(KnifeFightMenu, info5);
-		Format(info6, sizeof(info6), "%T", "knifefight_info_Line5", LANG_SERVER);
+		Format(info6, sizeof(info6), "%T", "knifefight_info_line5", LANG_SERVER);
 		DrawPanelText(KnifeFightMenu, info6);
-		Format(info7, sizeof(info7), "%T", "knifefight_info_Line6", LANG_SERVER);
+		Format(info7, sizeof(info7), "%T", "knifefight_info_line6", LANG_SERVER);
 		DrawPanelText(KnifeFightMenu, info7);
-		Format(info8, sizeof(info8), "%T", "knifefight_info_Line7", LANG_SERVER);
+		Format(info8, sizeof(info8), "%T", "knifefight_info_line7", LANG_SERVER);
 		DrawPanelText(KnifeFightMenu, info8);
 		DrawPanelText(KnifeFightMenu, "-----------------------------------");
 		
@@ -406,7 +406,7 @@ public Action KnifeFight(Handle timer)
 		for (int client=1; client <= MaxClients; client++)
 		if (IsClientInGame(client) && IsPlayerAlive(client))
 			{
-				PrintCenterText(client,"%t", "knifefight_timetounfreeze_nc", g_iTruceTime);
+				PrintCenterText(client,"%t", "knifefight_timeuntilstart_nc", g_iTruceTime);
 			}
 		return Plugin_Continue;
 	}

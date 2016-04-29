@@ -13,8 +13,8 @@
 #pragma newdecls required
 
 //Booleans
-bool IsWar = false;
-bool StartWar = false;
+bool IsWar;
+bool StartWar;
 
 //ConVars
 ConVar gc_bPlugin;
@@ -39,7 +39,7 @@ int g_iOldRoundTime;
 int g_iCoolDown;
 int g_iFreezeTime;
 int g_iTruceTime;
-int g_iVoteCount = 0;
+int g_iVoteCount;
 int g_iRound;
 int g_iMaxRound;
 
@@ -256,7 +256,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
 	if (StartWar || IsWar)
 	{
-		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255], info9[255];
+		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
 		
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_warden_enable", 0);
@@ -266,39 +266,29 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		g_iRound++;
 		IsWar = true;
 		StartWar = false;
-		
 		if (gc_bSpawnCell.BoolValue)
 		{
 			SJD_OpenDoors();
 			g_iFreezeTime = 0;
 		}
 		WarMenu = CreatePanel();
-		Format(info1, sizeof(info1), "%T", "war_info_Title", LANG_SERVER);
+		Format(info1, sizeof(info1), "%T", "war_info_title", LANG_SERVER);
 		SetPanelTitle(WarMenu, info1);
 		DrawPanelText(WarMenu, "                                   ");
-		if (!gc_bSpawnCell.BoolValue)
-		{
-			Format(info2, sizeof(info2), "%T", "war_info_Tele", LANG_SERVER);
-			DrawPanelText(WarMenu, info2);
-			DrawPanelText(WarMenu, "-----------------------------------");
-		}
-		else
-		{
-			Format(info9, sizeof(info9), "%T", "war_info_Spawn", LANG_SERVER);
-			DrawPanelText(WarMenu, info9);
-		}
+		Format(info2, sizeof(info2), "%T", "war_info_line1", LANG_SERVER);
+		DrawPanelText(WarMenu, info2);
 		DrawPanelText(WarMenu, "-----------------------------------");
-		Format(info3, sizeof(info3), "%T", "war_info_Line2", LANG_SERVER);
+		Format(info3, sizeof(info3), "%T", "war_info_line2", LANG_SERVER);
 		DrawPanelText(WarMenu, info3);
-		Format(info4, sizeof(info4), "%T", "war_info_Line3", LANG_SERVER);
+		Format(info4, sizeof(info4), "%T", "war_info_line3", LANG_SERVER);
 		DrawPanelText(WarMenu, info4);
-		Format(info5, sizeof(info5), "%T", "war_info_Line4", LANG_SERVER);
+		Format(info5, sizeof(info5), "%T", "war_info_line4", LANG_SERVER);
 		DrawPanelText(WarMenu, info5);
-		Format(info6, sizeof(info6), "%T", "war_info_Line5", LANG_SERVER);
+		Format(info6, sizeof(info6), "%T", "war_info_line5", LANG_SERVER);
 		DrawPanelText(WarMenu, info6);
-		Format(info7, sizeof(info7), "%T", "war_info_Line6", LANG_SERVER);
+		Format(info7, sizeof(info7), "%T", "war_info_line6", LANG_SERVER);
 		DrawPanelText(WarMenu, info7);
-		Format(info8, sizeof(info8), "%T", "war_info_Line7", LANG_SERVER);
+		Format(info8, sizeof(info8), "%T", "war_info_line7", LANG_SERVER);
 		DrawPanelText(WarMenu, info8);
 		DrawPanelText(WarMenu, "-----------------------------------");
 		

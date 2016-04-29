@@ -1,7 +1,6 @@
 //includes
 #include <cstrike>
 #include <sourcemod>
-
 #include <smartjaildoors>
 #include <wardn>
 #include <colors>
@@ -14,8 +13,8 @@
 #pragma newdecls required
 
 //Booleans
-bool IsFreeDay = false; 
-bool StartFreeDay = false; 
+bool IsFreeDay; 
+bool StartFreeDay; 
 
 //ConVars
 ConVar gc_bPlugin;
@@ -31,7 +30,7 @@ ConVar g_iGetRoundTime;
 //Integers
 int g_iOldRoundTime;
 int g_iCoolDown;
-int g_iVoteCount = 0;
+int g_iVoteCount;
 int FreeDayRound = 0;
 
 //Handles
@@ -95,6 +94,7 @@ public void OnMapStart()
 	if (gc_bFirst.BoolValue)
 	{
 		StartFreeDay = true;
+		SetEventDay("freeday");
 	}
 	else
 	{
@@ -222,23 +222,23 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		SJD_OpenDoors();
 		
 		FreeDayMenu = CreatePanel();
-		Format(info1, sizeof(info1), "%T", "freeday_info_Title", LANG_SERVER);
+		Format(info1, sizeof(info1), "%T", "freeday_info_title", LANG_SERVER);
 		SetPanelTitle(FreeDayMenu, info1);
 		DrawPanelText(FreeDayMenu, "                                   ");
-		Format(info2, sizeof(info2), "%T", "freeday_info_Line1", LANG_SERVER);
+		Format(info2, sizeof(info2), "%T", "freeday_info_line1", LANG_SERVER);
 		DrawPanelText(FreeDayMenu, info2);
 		DrawPanelText(FreeDayMenu, "-----------------------------------");
-		Format(info3, sizeof(info3), "%T", "freeday_info_Line2", LANG_SERVER);
+		Format(info3, sizeof(info3), "%T", "freeday_info_line2", LANG_SERVER);
 		DrawPanelText(FreeDayMenu, info3);
-		Format(info4, sizeof(info4), "%T", "freeday_info_Line3", LANG_SERVER);
+		Format(info4, sizeof(info4), "%T", "freeday_info_line3", LANG_SERVER);
 		DrawPanelText(FreeDayMenu, info4);
-		Format(info5, sizeof(info5), "%T", "freeday_info_Line4", LANG_SERVER);
+		Format(info5, sizeof(info5), "%T", "freeday_info_line4", LANG_SERVER);
 		DrawPanelText(FreeDayMenu, info5);
-		Format(info6, sizeof(info6), "%T", "freeday_info_Line5", LANG_SERVER);
+		Format(info6, sizeof(info6), "%T", "freeday_info_line5", LANG_SERVER);
 		DrawPanelText(FreeDayMenu, info6);
-		Format(info7, sizeof(info7), "%T", "freeday_info_Line6", LANG_SERVER);
+		Format(info7, sizeof(info7), "%T", "freeday_info_line6", LANG_SERVER);
 		DrawPanelText(FreeDayMenu, info7);
-		Format(info8, sizeof(info8), "%T", "freeday_info_Line7", LANG_SERVER);
+		Format(info8, sizeof(info8), "%T", "freeday_info_line7", LANG_SERVER);
 		DrawPanelText(FreeDayMenu, info8);
 		DrawPanelText(FreeDayMenu, "-----------------------------------");
 		for(int client=1; client <= MaxClients; client++)

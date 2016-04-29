@@ -94,9 +94,8 @@
 	"knifefight_progress"
 	{
 		"#format"	"{1:s}"
-		"da"		"knifefight er {purple}allerede i gang"	
-		"en"		"A Event is {purple}already in progress. {darkred}{1}"
-		"de"		"Ein Event ist {purple}bereits gesetzt. {darkred}{1}"
+		"en"		"Event ({darkred}{1}) {default}is {purple}already in progress."
+		"de"		"Event {darkred}{1}) {default}ist {purple}bereits gesetzt."
 	}
 	
 	"knifefight_disabled"
@@ -107,7 +106,7 @@
 	}
 	
 
-	"knifefight_timetounfreeze_nc"
+	"knifefight_timeuntilstart_nc"
 	{
 		"#format"	"{1:i}"
 		"da"		"{1} sekunder til runden starter!"
@@ -115,55 +114,54 @@
 		"de"		"{1} Sekunden bis zum Start"
 	}
 	
-	"knifefight_info_Title"
+	"knifefight_info_title"
 	{
 		"da"		"Knifefighter aktiv"	
 		"en"		"Knifefight is activ"
 		"de"		"Knifefight ist aktiv"
 	}
 	
-	"knifefight_info_Line1"
+	"knifefight_info_line1"
 	{
 		"da"		"Bliv ikke overrasket hvis du bliver teleportet til CT Spawn!"	
 		"en"		"Do not be surprised if ported to CT Spawn"
 		"de"		"Nicht wundern falls ihr zum CT Spawngeportet wurdet"
 	}
-	"knifefight_info_Line2"
+	"knifefight_info_line2"
 	{
-		"da"		"I høvdingebold er det FFA høvdingebold"	
-		"en"		"In knifefight ther is FFA knifefight"
-		"de"		"FFA knifefight"
+		"en"		"IceSkates, Thirdperson & Low Gravity activatet."
+		"de"		"IceSkates, Thirdperson & Low Gravity sind an."
 	}
 	
-	"knifefight_info_Line3"
+	"knifefight_info_line3"
 	{
 		"da"		"Du kan ikke skade andre spillere indtil runden starter"	
 		"en"		"you can move and exit the wk in nodamge phase"
 		"de"		"Während der no damge phase kannst du aus der zelle/waffenkammer"
 	}
 	
-	"knifefight_info_Line4"
+	"knifefight_info_line4"
 	{
 		"da"		"Alle jail regler er ophævet!"	
 		"en"		"All normal jailRules are repealed"
 		"de"		"Alle normalen Jailregeln sind aufgehoben!"
 	}
 	
-	"knifefight_info_Line5"
+	"knifefight_info_line5"
 	{
 		"da"		"Der kan ikke laves !lr i denne runde!"	
 		"en"		"There is no last request!"
 		"de"		"Der letzte Terrorist hat keinen Wunsch!"
 	}
 	
-	"knifefight_info_Line6"
+	"knifefight_info_line6"
 	{
 		"da"		"Alle må gå der hen de har lyst til!"	
 		"en"		"Everyone is allowed to go everywhere where he wants"
 		"de"		"Jeder darf überall hin wo er will!"
 	}
 	
-	"knifefight_info_Line7"
+	"knifefight_info_line7"
 	{
 		"da"		"Alle server regler skal holdes!"	
 		"en"		"dont be an asshole!"

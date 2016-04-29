@@ -77,9 +77,8 @@
 	"hide_progress"
 	{
 		"#format"	"{1:s}"
-		"da"		"Hide in the Dark er {purple}allerede i gang!"	
-		"en"		"A Event is {purple}already in progress. {darkred}{1}"
-		"de"		"Ein Event ist {purple}bereits gesetzt. {darkred}{1}"
+		"en"		"Event ({darkred}{1}) {default}is {purple}already in progress."
+		"de"		"Event {darkred}{1}) {default}ist {purple}bereits gesetzt."
 	}
 	
 	"hide_minct"
@@ -136,55 +135,55 @@
 		
 	}
 	
-	"hide_info_Title"		// no colors!
+	"hide_info_title"		// no colors!
 	{
 		"en"		"Hide In The Dark er aktiveret!"	
 		"en"		"FFA is activ"
 		"de"		"FFA ist aktiv"
 	}
 	
-	"hide_info_Line1"		// no colors!
+	"hide_info_line1"		// no colors!
 	{
 		"da"		"T skal gemme sig inden CT bliver unfreezet og fanger dem!"	
 		"en"		"Do not be surprised if portedto CT Spawn"
 		"de"		"Nicht wundern falls ihr zum CT Spawngeportet wurdet"
 	}
-	"hide_info_Line2"		// no colors!
+	"hide_info_line2"		// no colors!
 	{
 		"da"		"I Hide in the Darkround skal CT fange T ved at dræbe dem"	
 		"en"		"In Hide in the Darkround ct play against t"
 		"de"		"In Kriegrunden spielen CT's gegen T's"
 	}
 	
-	"hide_info_Line3"		// no colors!
+	"hide_info_line3"		// no colors!
 	{
 		"da"		"Når CT bliver unfreezet bliver T freezet og ikke kan røre sig!"	
 		"en"		"you can move and exit the wk in nodamge phase"
 		"de"		"Während der no damge phase kannst du aus der zelle/waffenkammer"
 	}
 	
-	"hide_info_Line4"		// no colors!
+	"hide_info_line4"		// no colors!
 	{
 		"da"		"Alle jail regler er ophævet!"	
 		"en"		"All normal jailRules are repealed"
 		"de"		"Alle normalen Jailregeln sind aufgehoben!"
 	}
 	
-	"hide_info_Line5"		// no colors!
+	"hide_info_line5"		// no colors!
 	{
 		"da"		"Last Request er deaktiveret i denne runde!"	
 		"en"		"There is no last request!"
 		"de"		"Der letzte Terrorist hat keinen Wunsch!"
 	}
 	
-	"hide_info_Line6"		// no colors!
+	"hide_info_line6"		// no colors!
 	{
 		"da"		"Alle må gå der hen som de har lyst!"	
 		"en"		"Everyone is allowed to go everywhere where he wants"
 		"de"		"Jeder darf überall hin wo er will!"
 	}
 	
-	"hide_info_Line7"		// no colors!
+	"hide_info_line7"		// no colors!
 	{
 		"da"		"Alle server reglerne skal overholdes!"	
 		"en"		"dont be an asshole!"
