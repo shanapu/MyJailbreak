@@ -118,7 +118,7 @@
 	{
 		"en"		"NoScope er aktiveret!"	
 		"en"		"NoScope is activ"
-		"de"		NoScope ist aktiv"
+		"de"		"NoScope ist aktiv"
 	}
 	
 	"noscope_info_line1"
