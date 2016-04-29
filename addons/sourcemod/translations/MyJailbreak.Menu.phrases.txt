@@ -125,6 +125,11 @@
 		"#format"		""
 		"en"			"Free for All"
 	}
+	"menu_zeus"
+	{
+		"#format"		""
+		"en"			"Zeus"
+	}
 	"menu_zombie"
 	{
 		"#format"		""
@@ -150,10 +155,10 @@
 		"#format"		""
 		"en"			"KnifeFight"
 	}
-	"menu_dodgeball"
+	"menu_hebattle"
 	{
 		"#format"		""
-		"en"			"HE DodgeBall"
+		"en"			"HE Battle"
 	}
 	"menu_noscope"
 	{

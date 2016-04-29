@@ -1,7 +1,7 @@
 //includes
 #include <cstrike>
 #include <sourcemod>
-#include <sdktools>
+
 #include <smartjaildoors>
 #include <wardn>
 #include <emitsoundany>
@@ -31,17 +31,19 @@ ConVar gc_iRoundTime;
 ConVar gc_iTruceTime;
 ConVar gc_bOverlays;
 ConVar gc_sOverlayStartPath;
-ConVar g_iSetRoundTime;
+ConVar g_iGetRoundTime;
 ConVar gc_bSounds;
 ConVar gc_sSoundStartPath;
+ConVar gc_iRounds;
 
 //Integers
 int g_iOldRoundTime;
 int g_iCoolDown;
 int g_iTruceTime;
 int g_iVoteCount = 0;
-int NoScopeRound = 0;
+int g_iRound;
 int m_flNextSecondaryAttack;
+int g_iMaxRound;
 
 //Handles
 Handle TruceTimer;
@@ -56,7 +58,7 @@ public Plugin myinfo = {
 	author = "shanapu",
 	description = "Event Day for Jailbreak Server",
 	version = PLUGIN_VERSION,
-	url = "shanapu.de"
+	url = URL_LINK
 };
 
 public void OnPluginStart()
@@ -79,6 +81,7 @@ public void OnPluginStart()
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_noscope_warden", "1", "0 - disabled, 1 - allow warden to set noscope round", _, true,  0.0, true, 1.0);
 	gc_bSetA = AutoExecConfig_CreateConVar("sm_noscope_admin", "1", "0 - disabled, 1 - allow admin to set noscope round", _, true,  0.0, true, 1.0);
 	gc_bVote = AutoExecConfig_CreateConVar("sm_noscope_vote", "1", "0 - disabled, 1 - allow player to vote for noscope", _, true,  0.0, true, 1.0);
+	gc_iRounds = AutoExecConfig_CreateConVar("sm_noscope_rounds", "1", "Rounds to play in a row", _, true, 1.0);
 	gc_bGrav = AutoExecConfig_CreateConVar("sm_noscope_gravity", "1", "0 - disabled, 1 - enable low Gravity for noscope", _, true,  0.0, true, 1.0);
 	gc_fGravValue= AutoExecConfig_CreateConVar("sm_noscope_gravity_value", "0.3","Ratio for Gravity 1.0 earth 0.5 moon", _, true, 0.1, true, 1.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_noscope_roundtime", "5", "Round time in minutes for a single noscope round", _, true, 1.0);
@@ -100,7 +103,7 @@ public void OnPluginStart()
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
 	
 	//Find
-	g_iSetRoundTime = FindConVar("mp_roundtime");
+	g_iGetRoundTime = FindConVar("mp_roundtime");
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
@@ -125,7 +128,7 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 public void OnMapStart()
 {
 	g_iVoteCount = 0;
-	NoScopeRound = 0;
+	g_iRound = 0;
 	IsNoScope = false;
 	StartNoScope = false;
 	
@@ -140,6 +143,7 @@ public void OnConfigsExecuted()
 {
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
+	g_iMaxRound = gc_iRounds.IntValue;
 }
 
 public void OnClientPutInServer(int client)
@@ -253,7 +257,7 @@ void StartNextRound()
 
 public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
-	if (StartNoScope)
+	if (StartNoScope || IsNoScope)
 	{
 		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
 		
@@ -267,7 +271,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		
 		IsNoScope = true;
 		
-		NoScopeRound++;
+		g_iRound++;
 		StartNoScope = false;
 		SJD_OpenDoors();
 		NoScopeMenu = CreatePanel();
@@ -291,7 +295,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		DrawPanelText(NoScopeMenu, info8);
 		DrawPanelText(NoScopeMenu, "-----------------------------------");
 		
-		if (NoScopeRound > 0)
+		if (g_iRound > 0)
 			{
 				for(int client=1; client <= MaxClients; client++)
 				{
@@ -304,12 +308,14 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 						StripAllWeapons(client);
 						GivePlayerItem(client, "weapon_ssg08");
 						SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
-						SendPanelToClient(NoScopeMenu, client, Pass, 15);
+						SendPanelToClient(NoScopeMenu, client, NullHandler, 15);
 						SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 					}
 				}
 				g_iTruceTime--;
 				TruceTimer = CreateTimer(1.0, NoScope, _, TIMER_REPEAT);
+				CPrintToChatAll("%t %t", "noscope_tag" ,"noscope_rounds", g_iRound, g_iMaxRound);
+
 			}
 		for(int i = 1; i <= MaxClients; i++)
 		if(IsClientInGame(i)) SDKHook(i, SDKHook_PreThink, OnPreThink);
@@ -383,7 +389,7 @@ public Action NoScope(Handle timer)
 	
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	
-	if (NoScopeRound > 0)
+	if (g_iRound > 0)
 	{
 		for (int client=1; client <= MaxClients; client++)
 		{
@@ -426,24 +432,27 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 		if (TruceTimer != null) KillTimer(TruceTimer);
 		if (winner == 2) PrintHintTextToAll("%t", "noscope_twin_nc");
 		if (winner == 3) PrintHintTextToAll("%t", "noscope_ctwin_nc");
-		IsNoScope = false;
-		StartNoScope = false;
-		NoScopeRound = 0;
-		Format(g_sHasVoted, sizeof(g_sHasVoted), "");
-		SetCvar("sm_hosties_lr", 1);
-		SetCvar("sm_weapons_enable", 1);
-		SetCvar("sv_infinite_ammo", 0);
-		SetCvar("mp_teammates_are_enemies", 0);
-		SetCvar("sm_menu_enable", 1);
-		SetCvar("sm_warden_enable", 1);
-		g_iSetRoundTime.IntValue = g_iOldRoundTime;
-		SetEventDay("none");
-		CPrintToChatAll("%t %t", "noscope_tag" , "noscope_end");
+		if (g_iRound == g_iMaxRound)
+		{
+			IsNoScope = false;
+			StartNoScope = false;
+			g_iRound = 0;
+			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
+			SetCvar("sm_hosties_lr", 1);
+			SetCvar("sm_weapons_enable", 1);
+			SetCvar("sv_infinite_ammo", 0);
+			SetCvar("mp_teammates_are_enemies", 0);
+			SetCvar("sm_menu_enable", 1);
+			SetCvar("sm_warden_enable", 1);
+			g_iGetRoundTime.IntValue = g_iOldRoundTime;
+			SetEventDay("none");
+			CPrintToChatAll("%t %t", "noscope_tag" , "noscope_end");
+		}
 	}
 	if (StartNoScope)
 	{
-		g_iOldRoundTime = g_iSetRoundTime.IntValue;
-		g_iSetRoundTime.IntValue = gc_iRoundTime.IntValue;
+		g_iOldRoundTime = g_iGetRoundTime.IntValue;
+		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;
 		for(int i = 1; i <= MaxClients; i++)
 		if(IsClientInGame(i)) SDKUnhook(i, SDKHook_PreThink, OnPreThink);
 	}
@@ -454,7 +463,7 @@ public void OnMapEnd()
 	IsNoScope = false;
 	StartNoScope = false;
 	g_iVoteCount = 0;
-	NoScopeRound = 0;
+	g_iRound = 0;
 	g_sHasVoted[0] = '\0';
 	SetEventDay("none");
 }

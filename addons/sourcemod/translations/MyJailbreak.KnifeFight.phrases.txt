@@ -11,6 +11,13 @@
 		"en"		"{purple}{2}{default} has votet. {purple}{1}{default} votes left to {darkred}knifefight"
 		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}knifefight{default} beginnt"
 	}
+	"knifefight_rounds" 
+	{
+		"#format"	"{1:i},{2:i}"
+		"da"		"Runde {purple}{1}{default} af {purple}{2}"		
+		"en"		"Round {purple}{1}{default} of {purple}{2}"
+		"de"		"Runde {purple}{1}{default} von {purple}{2}"
+	}
 	"knifefight_twin_nc"
 	{
 		"da"		"En terrorist har overlevet!"	
@@ -110,9 +117,9 @@
 	
 	"knifefight_info_Title"
 	{
-		"da"		"Scout knifefighter aktiv"	
-		"en"		"Scout knifefight knifefight is activ"
-		"de"		"Scout knifefight knifefight ist aktiv"
+		"da"		"Knifefighter aktiv"	
+		"en"		"Knifefight is activ"
+		"de"		"Knifefight ist aktiv"
 	}
 	
 	"knifefight_info_Line1"
@@ -125,7 +132,7 @@
 	{
 		"da"		"I høvdingebold er det FFA høvdingebold"	
 		"en"		"In knifefight ther is FFA knifefight"
-		"de"		"FFA knifefight scout knifefight"
+		"de"		"FFA knifefight"
 	}
 	
 	"knifefight_info_Line3"

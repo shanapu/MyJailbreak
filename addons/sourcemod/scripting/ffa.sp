@@ -2,7 +2,7 @@
 #include <cstrike>
 #include <sourcemod>
 #include <colors>
-#include <sdktools>
+
 #include <wardn>
 #include <emitsoundany>
 #include <smartjaildoors>
@@ -31,15 +31,18 @@ ConVar gc_bSounds;
 ConVar gc_sSoundStartPath;
 ConVar gc_iCooldownDay;
 ConVar gc_iTruceTime;
-ConVar g_iSetRoundTime;
+ConVar gc_iRounds;
+ConVar g_iGetRoundTime;
+
 
 //Integers
 int g_iOldRoundTime;
 int g_iCoolDown;
 int g_iTruceTime;
 int g_iVoteCount;
-int FFARound;
+int g_iRound;
 int FogIndex = -1;
+int g_iMaxRound;
 
 //Floats
 float mapFogStart = 0.0;
@@ -62,7 +65,7 @@ public Plugin myinfo =
 	author = "shanapu",
 	description = "Event Day for Jailbreak Server",
 	version = PLUGIN_VERSION,
-	url = "shanapu.de"
+	url = URL_LINK
 };
 
 public void OnPluginStart()
@@ -85,7 +88,8 @@ public void OnPluginStart()
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_ffa_warden", "1", "0 - disabled, 1 - allow warden to set ffa round", _, true,  0.0, true, 1.0);
 	gc_bSetA = AutoExecConfig_CreateConVar("sm_ffa_admin", "1", "0 - disabled, 1 - allow admin to set ffa round", _, true,  0.0, true, 1.0);
 	gc_bVote = AutoExecConfig_CreateConVar("sm_ffa_vote", "1", "0 - disabled, 1 - allow player to vote for ffa", _, true,  0.0, true, 1.0);
-	gc_bSpawnCell = AutoExecConfig_CreateConVar("sm_ffa_spawn", "0", "0 - teleport to CT spawn, 1 - standart spawn & cell doors auto open", _, true,  0.0, true, 1.0);
+	gc_bSpawnCell = AutoExecConfig_CreateConVar("sm_ffa_spawn", "0", "0 - T teleport to CT spawn, 1 - cell doors auto open", _, true,  0.0, true, 1.0);
+	gc_iRounds = AutoExecConfig_CreateConVar("sm_ffa_rounds", "2", "Rounds to play in a row", _, true, 1.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_ffa_roundtime", "5", "Round time in minutes for a single ffa round", _, true, 1.0);
 	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_ffa_trucetime", "30", "Time in seconds players can't deal damage", _, true,  0.0);
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_ffa_cooldown_day", "3", "Rounds cooldown after a event until event can be start again", _, true,  0.0);
@@ -105,11 +109,14 @@ public void OnPluginStart()
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
 	
 	//FindConVar
-	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
-	g_iSetRoundTime = FindConVar("mp_roundtime");
+	
+	
 	g_iTruceTime = gc_iTruceTime.IntValue;
+
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
+	g_iGetRoundTime = FindConVar("mp_roundtime");
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
+	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
 }
 
 public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
@@ -130,7 +137,7 @@ public void OnMapStart()
 {
 
 	g_iVoteCount = 0;
-	FFARound = 0;
+	g_iRound = 0;
 	IsFFA = false;
 	StartFFA = false;
 	
@@ -159,6 +166,7 @@ public void OnConfigsExecuted()
 {
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
+	g_iMaxRound = gc_iRounds.IntValue;
 }
 
 public Action Setffa(int client,int args)
@@ -265,9 +273,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 	if (StartFFA || IsFFA)
 	{
 		{AcceptEntityInput(FogIndex, "TurnOn");}
-		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
-		char info9[255], info10[255], info11[255], info12[255];
-
+		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255], info9[255];
 		
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_warden_enable", 0);
@@ -276,7 +282,8 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		SetCvar("mp_teammates_are_enemies", 1);
 		SetCvar("mp_friendlyfire", 1);
 		SetCvar("sm_menu_enable", 0);
-		FFARound++;
+
+		g_iRound++;
 		IsFFA = true;
 		StartFFA = false;
 		if (gc_bSpawnCell.BoolValue)
@@ -287,30 +294,10 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		Format(info1, sizeof(info1), "%T", "ffa_info_Title", LANG_SERVER);
 		SetPanelTitle(FFAMenu, info1);
 		DrawPanelText(FFAMenu, "                                   ");
-		Format(info10, sizeof(info10), "%T", "RoundOne", LANG_SERVER);
-		if (FFARound == 1) DrawPanelText(FFAMenu, info10);
-		Format(info11, sizeof(info11), "%T", "RoundTwo", LANG_SERVER);
-		if (FFARound == 2) DrawPanelText(FFAMenu, info11);
-		Format(info12, sizeof(info12), "%T", "RoundThree", LANG_SERVER);
-		if (FFARound == 3) DrawPanelText(FFAMenu, info12);
-		DrawPanelText(FFAMenu, "                                   ");
 		if (!gc_bSpawnCell.BoolValue)
 		{
 			Format(info2, sizeof(info2), "%T", "ffa_info_Tele", LANG_SERVER);
 			DrawPanelText(FFAMenu, info2);
-			DrawPanelText(FFAMenu, "-----------------------------------");
-			Format(info3, sizeof(info3), "%T", "ffa_info_Line2", LANG_SERVER);
-			DrawPanelText(FFAMenu, info3);
-			Format(info4, sizeof(info4), "%T", "ffa_info_Line3", LANG_SERVER);
-			DrawPanelText(FFAMenu, info4);
-			Format(info5, sizeof(info5), "%T", "ffa_info_Line4", LANG_SERVER);
-			DrawPanelText(FFAMenu, info5);
-			Format(info6, sizeof(info6), "%T", "ffa_info_Line5", LANG_SERVER);
-			DrawPanelText(FFAMenu, info6);
-			Format(info7, sizeof(info7), "%T", "ffa_info_Line6", LANG_SERVER);
-			DrawPanelText(FFAMenu, info7);
-			Format(info8, sizeof(info8), "%T", "ffa_info_Line7", LANG_SERVER);
-			DrawPanelText(FFAMenu, info8);
 			DrawPanelText(FFAMenu, "-----------------------------------");
 		}
 		else
@@ -318,20 +305,20 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 			Format(info9, sizeof(info9), "%T", "ffa_info_Spawn", LANG_SERVER);
 			DrawPanelText(FFAMenu, info9);
 			DrawPanelText(FFAMenu, "-----------------------------------");
-			Format(info3, sizeof(info3), "%T", "ffa_info_Line2", LANG_SERVER);
-			DrawPanelText(FFAMenu, info3);
-			Format(info4, sizeof(info4), "%T", "ffa_info_Line3", LANG_SERVER);
-			DrawPanelText(FFAMenu, info4);
-			Format(info5, sizeof(info5), "%T", "ffa_info_Line4", LANG_SERVER);
-			DrawPanelText(FFAMenu, info5);
-			Format(info6, sizeof(info6), "%T", "ffa_info_Line5", LANG_SERVER);
-			DrawPanelText(FFAMenu, info6);
-			Format(info7, sizeof(info7), "%T", "ffa_info_Line6", LANG_SERVER);
-			DrawPanelText(FFAMenu, info7);
-			Format(info8, sizeof(info8), "%T", "ffa_info_Line7", LANG_SERVER);
-			DrawPanelText(FFAMenu, info8);
-			DrawPanelText(FFAMenu, "-----------------------------------");
 		}
+		Format(info3, sizeof(info3), "%T", "ffa_info_Line2", LANG_SERVER);
+		DrawPanelText(FFAMenu, info3);
+		Format(info4, sizeof(info4), "%T", "ffa_info_Line3", LANG_SERVER);
+		DrawPanelText(FFAMenu, info4);
+		Format(info5, sizeof(info5), "%T", "ffa_info_Line4", LANG_SERVER);
+		DrawPanelText(FFAMenu, info5);
+		Format(info6, sizeof(info6), "%T", "ffa_info_Line5", LANG_SERVER);
+		DrawPanelText(FFAMenu, info6);
+		Format(info7, sizeof(info7), "%T", "ffa_info_Line6", LANG_SERVER);
+		DrawPanelText(FFAMenu, info7);
+		Format(info8, sizeof(info8), "%T", "ffa_info_Line7", LANG_SERVER);
+		DrawPanelText(FFAMenu, info8);
+		DrawPanelText(FFAMenu, "-----------------------------------");
 		
 		int RandomCT = 0;
 		
@@ -355,51 +342,26 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 			
 			Pos[2] = Pos[2] + 45;
 			
-			if (FFARound > 0)
+			if (g_iRound > 0)
 			{
 				for(int client=1; client <= MaxClients; client++)
 				{
-					if (gc_bSpawnCell.BoolValue)
+					if (!gc_bSpawnCell.BoolValue)
 					{
 						if (IsClientInGame(client))
 						{
-							if (GetClientTeam(client) == CS_TEAM_CT)
-							{
-								GivePlayerItem(client, "weapon_m4a1");
-								GivePlayerItem(client, "weapon_deagle");
-								GivePlayerItem(client, "weapon_hegrenade");
-							}
-							if (GetClientTeam(client) == CS_TEAM_T)
-							{
-								GivePlayerItem(client, "weapon_ak47");
-								GivePlayerItem(client, "weapon_deagle");
-								GivePlayerItem(client, "weapon_hegrenade");
-							}
-						}
-					}
-					else
-					{
-						if (IsClientInGame(client))
-						{
-							if (GetClientTeam(client) == CS_TEAM_CT)
-							{
-								TeleportEntity(client, Pos1, NULL_VECTOR, NULL_VECTOR);
-							}
-							if (GetClientTeam(client) == CS_TEAM_T)
-							{
-								TeleportEntity(client, Pos1, NULL_VECTOR, NULL_VECTOR);
-							}
+							TeleportEntity(client, Pos1, NULL_VECTOR, NULL_VECTOR);
 						}
 					}
 				}
-				CPrintToChatAll("%t %t", "ffa_tag" ,"ffa_rounds", FFARound);
+				CPrintToChatAll("%t %t", "ffa_tag" ,"ffa_rounds", g_iRound, g_iMaxRound);
 			}
 			for(int client=1; client <= MaxClients; client++)
 			{
 				if (IsClientInGame(client))
 				{
 					SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
-					SendPanelToClient(FFAMenu, client, Pass, 15);
+					SendPanelToClient(FFAMenu, client, NullHandler, 15);
 					SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 				}
 			}
@@ -469,10 +431,10 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 		if (TruceTimer != null) KillTimer(TruceTimer);
 		if (winner == 2) PrintHintTextToAll("%t", "ffa_twin_nc"); 
 		if (winner == 3) PrintHintTextToAll("%t", "ffa_ctwin_nc");
-		if (FFARound == 3)
+		if (g_iRound == g_iMaxRound)
 		{
 			IsFFA = false;
-			FFARound = 0;
+			g_iRound = 0;
 			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
 			SetCvar("sm_hosties_lr", 1);
 			SetCvar("sm_warden_enable", 1);
@@ -481,15 +443,15 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 			SetCvar("mp_teammates_are_enemies", 0);
 			SetCvar("mp_friendlyfire", 0);
 			SetCvar("sm_menu_enable", 1);
-			g_iSetRoundTime.IntValue = g_iOldRoundTime;
+			g_iGetRoundTime.IntValue = g_iOldRoundTime;
 			SetEventDay("none");
 			CPrintToChatAll("%t %t", "ffa_tag" , "ffa_end");
 		}
 	}
 	if (StartFFA)
 	{
-		g_iOldRoundTime = g_iSetRoundTime.IntValue;
-		g_iSetRoundTime.IntValue = gc_iRoundTime.IntValue;
+		g_iOldRoundTime = g_iGetRoundTime.IntValue;
+		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;
 	}
 }
 
@@ -511,7 +473,7 @@ public void OnMapEnd()
 	IsFFA = false;
 	StartFFA = false;
 	g_iVoteCount = 0;
-	FFARound = 0;
+	g_iRound = 0;
 	g_sHasVoted[0] = '\0';
 	SetEventDay("none");
 }

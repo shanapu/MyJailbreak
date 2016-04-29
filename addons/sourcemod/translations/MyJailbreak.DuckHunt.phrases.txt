@@ -5,6 +5,13 @@
 		"en"		"[{green}MyJB.Duckhunt{default}]"
 	}
 	
+	"duckhunt_rounds" 
+	{
+		"#format"	"{1:i},{2:i}"
+		"da"		"Runde {purple}{1}{default} af {purple}{2}"		
+		"en"		"Round {purple}{1}{default} of {purple}{2}"
+		"de"		"Runde {purple}{1}{default} von {purple}{2}"
+	}
 	"duckhunt_need"
 	{
 		"#format"	"{1:i},{2:N}"

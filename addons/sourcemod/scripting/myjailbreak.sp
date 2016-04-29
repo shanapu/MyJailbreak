@@ -15,14 +15,12 @@ ConVar gc_bTag;
 char IsEventDay[128] = "none";
 
 public Plugin myinfo = {
-	name = "MyJailbreak - core",
+	name = "myjailbreak",
 	author = "shanapu",
-	description = "Jailbreak",
+	description = "MyJailbreak - core plugin",
 	version = PLUGIN_VERSION,
-	url = ""
+	url = URL_LINK
 };
-
-
 
 public void OnPluginStart()
 {

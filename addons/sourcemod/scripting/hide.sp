@@ -2,7 +2,7 @@
 #include <cstrike>
 #include <sourcemod>
 #include <colors>
-#include <sdktools>
+
 #include <wardn>
 #include <emitsoundany>
 #include <smartjaildoors>
@@ -28,18 +28,20 @@ ConVar gc_iRoundTime;
 ConVar gc_iCooldownDay;
 ConVar gc_iCooldownStart;
 ConVar gc_iFreezeTime;
-ConVar g_iSetRoundTime;
+ConVar g_iGetRoundTime;
 ConVar gc_sOverlayStartPath;
 ConVar gc_bSounds;
 ConVar gc_sSoundStartPath;
+ConVar gc_iRounds;
 
 //Integers
 int g_iOldRoundTime;
 int g_iFreezeTime;
 int g_iCoolDown;
 int g_iVoteCount = 0;
-int HideRound = 0;
+int g_iRound;
 int FogIndex = -1;
+int g_iMaxRound;
 
 //Handles
 Handle FreezeTimer;
@@ -59,7 +61,7 @@ public Plugin myinfo = {
 	author = "shanapu",
 	description = "Event Day for Jailbreak Server",
 	version = PLUGIN_VERSION,
-	url = "shanapu.de"
+	url = URL_LINK
 };
 
 public void OnPluginStart()
@@ -82,6 +84,7 @@ public void OnPluginStart()
 	gc_bSetA = AutoExecConfig_CreateConVar("sm_hide_admin", "1", "0 - disabled, 1 - allow admin to set hide round", _, true,  0.0, true, 1.0);
 	gc_bVote = AutoExecConfig_CreateConVar("sm_hide_vote", "1", "0 - disabled, 1 - allow player to vote for hide round", _, true,  0.0, true, 1.0);
 	gc_bFreezeHider = AutoExecConfig_CreateConVar("sm_hide_freezehider", "1", "0 - disabled, 1 - enable freeze hider when hidetime gone", _, true,  0.0, true, 1.0);
+	gc_iRounds = AutoExecConfig_CreateConVar("sm_hide_rounds", "1", "Rounds to play in a row", _, true, 1.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_hide_roundtime", "5", "Round time in minutes for a single war round", _, true, 1.0);
 	gc_iFreezeTime = AutoExecConfig_CreateConVar("sm_hide_hidetime", "30", "Time in seconds to hide / CT freezed", _, true,  0.0);
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_hide_cooldown_day", "3", "Rounds cooldown after a event until event can be start again", _, true,  0.0);
@@ -101,7 +104,7 @@ public void OnPluginStart()
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
 	
 	//FindConVar
-	g_iSetRoundTime = FindConVar("mp_roundtime");
+	g_iGetRoundTime = FindConVar("mp_roundtime");
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
@@ -125,7 +128,7 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 public void OnMapStart()
 {
 	g_iVoteCount = 0;
-	HideRound = 0;
+	g_iRound = 0;
 	IsHide = false;
 	StartHide = false;
 	
@@ -154,6 +157,7 @@ public void OnConfigsExecuted()
 {
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
+	g_iMaxRound = gc_iRounds.IntValue;
 }
 
 public Action SetHide(int client,int args)
@@ -261,7 +265,7 @@ void StartNextRound()
 
 public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
-	if (StartHide)
+	if (StartHide || IsHide)
 	{
 		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
 		
@@ -272,7 +276,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		SetCvar("sm_weapons_ct", 0);
 		SetCvar("sm_menu_enable", 0);
 		IsHide = true;
-		HideRound++;
+		g_iRound++;
 		StartHide = false;
 		SJD_OpenDoors();
 		
@@ -297,7 +301,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		DrawPanelText(HideMenu, info8);
 		DrawPanelText(HideMenu, "-----------------------------------");
 		
-		if (HideRound > 0)
+		if (g_iRound > 0)
 			{
 				for(int client=1; client <= MaxClients; client++)
 				{
@@ -317,7 +321,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 						{
 							StripAllWeapons(client);
 							SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
-							SendPanelToClient(HideMenu, client, Pass, 15);
+							SendPanelToClient(HideMenu, client, NullHandler, 15);
 							GivePlayerItem(client, "weapon_knife");
 						}
 						
@@ -363,7 +367,7 @@ public Action Freezed(Handle timer)
 	
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
 	
-	if (HideRound > 0)
+	if (g_iRound > 0)
 	{
 		for (int client=1; client <= MaxClients; client++)
 		{
@@ -452,25 +456,28 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 		
 		if (winner == 2) PrintHintTextToAll("%t", "hide_twin_nc");
 		if (winner == 3) PrintHintTextToAll("%t", "hide_ctwin_nc");
-		IsHide = false;
-		StartHide = false;
-		HideRound = 0;
-		Format(g_sHasVoted, sizeof(g_sHasVoted), "");
-		SetCvar("sm_hosties_lr", 1);
-		SetCvar("sm_weapons_t", 0);
-		SetCvar("sm_weapons_ct", 1);
-		SetCvar("sm_warden_enable", 1);
-		SetCvar("sm_menu_enable", 1);
-		g_iSetRoundTime.IntValue = g_iOldRoundTime;
-		SetEventDay("none");
-		CPrintToChatAll("%t %t", "hide_tag" , "hide_end");
-		DoFog();
-		AcceptEntityInput(FogIndex, "TurnOff");
+		if (g_iRound == g_iMaxRound)
+		{
+			IsHide = false;
+			StartHide = false;
+			g_iRound = 0;
+			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
+			SetCvar("sm_hosties_lr", 1);
+			SetCvar("sm_weapons_t", 0);
+			SetCvar("sm_weapons_ct", 1);
+			SetCvar("sm_warden_enable", 1);
+			SetCvar("sm_menu_enable", 1);
+			g_iGetRoundTime.IntValue = g_iOldRoundTime;
+			SetEventDay("none");
+			CPrintToChatAll("%t %t", "hide_tag" , "hide_end");
+			DoFog();
+			AcceptEntityInput(FogIndex, "TurnOff");
+		}
 	}
 	if (StartHide)
 	{
-		g_iOldRoundTime = g_iSetRoundTime.IntValue;
-		g_iSetRoundTime.IntValue = gc_iRoundTime.IntValue;
+		g_iOldRoundTime = g_iGetRoundTime.IntValue;
+		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;
 	}
 }
 
@@ -492,7 +499,7 @@ public void OnMapEnd()
 	IsHide = false;
 	StartHide = false;
 	g_iVoteCount = 0;
-	HideRound = 0;
+	g_iRound = 0;
 	g_sHasVoted[0] = '\0';
 	SetEventDay("none");
 }

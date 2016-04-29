@@ -1,7 +1,7 @@
 //includes
 #include <sourcemod>
 #include <colors>
-#include <sdktools>
+
 #include <cstrike>
 #include <wardn>
 #include <emitsoundany>
@@ -32,15 +32,17 @@ ConVar gc_iCooldownStart;
 ConVar gc_iTruceTime;
 ConVar gc_bOverlays;
 ConVar gc_sOverlayStartPath;
-ConVar g_iSetRoundTime;
+ConVar g_iGetRoundTime;
 ConVar g_bAllowTP;
+ConVar gc_iRounds;
 
 //Integers
 int g_iOldRoundTime;
 int g_iCoolDown;
 int g_iTruceTime;
 int g_iVoteCount = 0;
-int DuckHuntRound = 0;
+int g_iRound;
+int g_iMaxRound;
 
 //Handles
 Handle TruceTimer;
@@ -58,7 +60,7 @@ public Plugin myinfo = {
 	author = "shanapu",
 	description = "Event Day for Jailbreak Server",
 	version = PLUGIN_VERSION,
-	url = "shanapu.de"
+	url = URL_LINK
 };
 
 public void OnPluginStart()
@@ -80,6 +82,7 @@ public void OnPluginStart()
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_duckhunt_warden", "1", "0 - disabled, 1 - allow warden to set duckhunt round", _, true,  0.0, true, 1.0);
 	gc_bSetA = AutoExecConfig_CreateConVar("sm_duckhunt_admin", "1", "0 - disabled, 1 - allow admin to set duckhunt round", _, true,  0.0, true, 1.0);
 	gc_bVote = AutoExecConfig_CreateConVar("sm_duckhunt_vote", "1", "0 - disabled, 1 - allow player to vote for duckhunt", _, true,  0.0, true, 1.0);
+	gc_iRounds = AutoExecConfig_CreateConVar("sm_duckhunt_rounds", "1", "Rounds to play in a row", _, true, 1.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_duckhunt_roundtime", "5", "Round time in minutes for a single duckhunt round", _, true, 1.0);
 	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_duckhunt_trucetime", "15", "Time in seconds until cells open / players can't deal damage", _, true,  0.0);
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_duckhunt_cooldown_day", "3", "Rounds cooldown after a event until event can be start again", _, true,  0.0);
@@ -95,15 +98,15 @@ public void OnPluginStart()
 	//Hooks
 	HookEvent("round_start", RoundStart);
 	HookEvent("round_end", RoundEnd);
-	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookEvent("hegrenade_detonate", HE_Detonate);
+	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
 //	HookEvent("weapon_reload", Reloadweapon);
 	
 	
 	//FindConVar
 	g_bAllowTP = FindConVar("sv_allow_thirdperson");
-	g_iSetRoundTime = FindConVar("mp_roundtime");
+	g_iGetRoundTime = FindConVar("mp_roundtime");
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
@@ -132,7 +135,7 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 public void OnMapStart()
 {
 	g_iVoteCount = 0;
-	DuckHuntRound = 0;
+	g_iRound = 0;
 	IsDuckHunt = false;
 	StartDuckHunt = false;
 	
@@ -155,6 +158,7 @@ public void OnConfigsExecuted()
 {
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
+	g_iMaxRound = gc_iRounds.IntValue;
 }
 
 public void OnClientPutInServer(int client)
@@ -272,11 +276,9 @@ void StartNextRound()
 
 public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
-
-	if (StartDuckHunt)
+	if (StartDuckHunt || IsDuckHunt)
 	{
 		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
-		
 		
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_warden_enable", 0);
@@ -285,9 +287,9 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		SetConVarInt(g_bAllowTP, 1);
 		
 		IsDuckHunt = true;
-		DuckHuntRound++;
+		g_iRound++;
 		StartDuckHunt = false;
-
+		
 		DuckHuntMenu = CreatePanel();
 		Format(info1, sizeof(info1), "%T", "duckhunt_info_Title", LANG_SERVER);
 		SetPanelTitle(DuckHuntMenu, info1);
@@ -309,7 +311,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		DrawPanelText(DuckHuntMenu, info8);
 		DrawPanelText(DuckHuntMenu, "-----------------------------------");
 		
-		if (DuckHuntRound > 0)
+		if (g_iRound > 0)
 			{
 				for(int client=1; client <= MaxClients; client++)
 				{
@@ -334,10 +336,11 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 							ClientCommand(client, "thirdperson");
 						}
 						SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
-						SendPanelToClient(DuckHuntMenu, client, Pass, 15);
+						SendPanelToClient(DuckHuntMenu, client, NullHandler, 15);
 						SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 					}
 				}
+				CPrintToChatAll("%t %t", "duckhunt_tag" ,"duckhunt_rounds", g_iRound, g_iMaxRound);
 				g_iTruceTime--;
 				TruceTimer = CreateTimer(1.0, DuckHunt, _, TIMER_REPEAT);
 			}
@@ -376,14 +379,14 @@ public Action OnWeaponCanUse(int client, int weapon)
 
 public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon) 
 {
-    if(IsDuckHunt == true)
+	if(IsDuckHunt == true)
 	{
 		if((GetClientTeam(client) == CS_TEAM_T) && IsClientInGame(client) && IsPlayerAlive(client) && buttons & IN_ATTACK)
 		{
 			return Plugin_Handled;
 		}
-    }
-    return Plugin_Continue;
+	}
+	return Plugin_Continue;
 }
 
 public Action DuckHunt(Handle timer)
@@ -401,7 +404,7 @@ public Action DuckHunt(Handle timer)
 	
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	
-	if (DuckHuntRound > 0)
+	if (g_iRound > 0)
 	{
 		for (int client=1; client <= MaxClients; client++)
 		{
@@ -450,25 +453,28 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 		if (TruceTimer != null) KillTimer(TruceTimer);
 		if (winner == 2) PrintHintTextToAll("%t", "duckhunt_twin_nc");
 		if (winner == 3) PrintHintTextToAll("%t", "duckhunt_ctwin_nc");
-		IsDuckHunt = false;
-		StartDuckHunt = false;
-		DuckHuntRound = 0;
-		Format(g_sHasVoted, sizeof(g_sHasVoted), "");
-		
-		SetCvar("sm_hosties_lr", 1);
-		SetCvar("sm_weapons_enable", 1);
-		SetCvar("sm_warden_enable", 1);
-		SetCvar("sm_menu_enable", 1);
-		SetConVarInt(g_bAllowTP, 0);
-		g_iSetRoundTime.IntValue = g_iOldRoundTime;
-		SetEventDay("none");
-		CPrintToChatAll("%t %t", "duckhunt_tag" , "duckhunt_end");
+		if (g_iRound == g_iMaxRound)
+		{
+			IsDuckHunt = false;
+			StartDuckHunt = false;
+			g_iRound = 0;
+			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
+			
+			SetCvar("sm_hosties_lr", 1);
+			SetCvar("sm_weapons_enable", 1);
+			SetCvar("sm_warden_enable", 1);
+			SetCvar("sm_menu_enable", 1);
+			SetConVarInt(g_bAllowTP, 0);
+			g_iGetRoundTime.IntValue = g_iOldRoundTime;
+			SetEventDay("none");
+			CPrintToChatAll("%t %t", "duckhunt_tag" , "duckhunt_end");
+		}
 	}
 
 	if (StartDuckHunt)
 	{
-		g_iOldRoundTime = g_iSetRoundTime.IntValue;
-		g_iSetRoundTime.IntValue = gc_iRoundTime.IntValue;
+		g_iOldRoundTime = g_iGetRoundTime.IntValue;
+		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;
 	}
 }
 
@@ -516,7 +522,7 @@ public void OnMapEnd()
 	IsDuckHunt = false;
 	StartDuckHunt = false;
 	g_iVoteCount = 0;
-	DuckHuntRound = 0;
+	g_iRound = 0;
 	g_sHasVoted[0] = '\0';
 	for(int client=1; client <= MaxClients; client++)
 	{

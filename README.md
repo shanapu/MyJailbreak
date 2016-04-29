@@ -19,7 +19,7 @@ help, ideas, forks and merge requests are welcome!
     - [Free For All](#freeforall) (FFA DM)
     - [Zombie](#zombie) (CT(zombie) vs T(Human))
     - [NoScope](#noscope) (FFA Scout LowGravity NoScope)
-    - [DodgeBall](#dodgeball) (FFA LowHP LowGravity HE Battle)
+    - [HEbattle](#hebattle) (FFA LowHP LowGravity HE Battle)
     - [Hide in the Dark](#hideinthedark) - (kind of HideNseek)
     - [Catch & Freeze](#catchfreeze) - (CT must catch all T (freeze tag))
     - [DuckHunt](#duckHunt) - (CT(hunter) with nova vs T(chicken in 3th person))
@@ -166,6 +166,8 @@ The menu shows only features that are enabled per round (e.g at EventDays no War
 - Colors
 - **only shows available/enabled features**
 
+#### Menu Structure
+
 ##### WardenMenu
 
 * [Gun Menu](/shanapu/MyJailbreak/wiki/Weapons)
@@ -190,7 +192,7 @@ The menu shows only features that are enabled per round (e.g at EventDays no War
     * Hide
     * Catch & Freeze
     * JiHad
-    * DodgeBall
+    * HEbattle
     * NoScope
     * DuckHunt
     * Zeus
@@ -216,7 +218,7 @@ The menu shows only features that are enabled per round (e.g at EventDays no War
     * Hide
     * Catch & Freeze
     * JiHad
-    * DodgeBall
+    * HEbattle
     * NoScope
     * DuckHunt
     * Zeus
@@ -241,7 +243,7 @@ The menu shows only features that are enabled per round (e.g at EventDays no War
     * Hide
     * Catch & Freeze
     * JiHad
-    * DodgeBall
+    * HEbattle
     * NoScope
     * DuckHunt
     * Zeus
@@ -341,6 +343,7 @@ Or on Round start Ts spawn in open cells with weapons and weaponmenu. No Freeze/
 - sm_war_enable: 0 - disabled, 1 - enable the war plugin. Default 1
 - sm_war_setw: 0 - disabled, 1 - allow Warden to set next round war. Default 1
 - sm_war_seta: 0 - disabled, 1 - allow Admin to set next round war round. Default 1
+- sm_war_rounds: Rounds to play in a row
 - sm_war_vote: 0 - disabled, 1 - allow player to vote for war. Default 1
 - sm_war_spawn: 0 - teleport Ts to CT and freeze, 1 - open cell doors an get weapons. Default 0
 - sm_war_roundtime - Roundtime for a single war round in minutes. Default 5
@@ -381,6 +384,7 @@ Or on Round start Ts spawn in open cells with weapons & weaponmenu. (Default)
 - sm_ffa_enable: 0 - disabled, 1 - enable the ffa plugin. Default 1
 - sm_ffa_setw: 0 - disabled, 1 - allow Warden to set next round ffa. Default 1
 - sm_ffa_seta: 0 - disabled, 1 - allow Admin to set next round ffa round. Default 1
+- sm_ffa_rounds: Rounds to play in a row
 - sm_ffa_vote: 0 - disabled, 1 - allow player to vote for ffa. Default 1
 - sm_ffa_spawn: 0 - teleport Ts to CT and freeze, 1 - open cell doors an get weapons (need smartjaildoors). Default 0
 - sm_ffa_roundtime - Roundtime for a single ffa round in minutes. Default 5
@@ -421,6 +425,7 @@ Zombies freezed for 35sec (default) so T can hide &/or climb.
 - sm_zombie_seta: 0 - disabled, 1 - allow Admin to set next round zombie round. Default 1
 - sm_zombie_vote: 0 - disabled, 1 - allow player to vote for zombie. Default 1
 - sm_zombie_enable: 0 - disabled, 1 - enable the zombie plugin. Default 1
+- sm_zombie_rounds: Rounds to play in a row
 - sm_zombie_roundtime - Roundtime for a single zombie round in minutes. Default 5
 - sm_zombie_freezetime - Time in seconds Zombies freezed. Default 35
 - sm_zombie_cooldown_start - Rounds until event can be start after mapchange. Default 3
@@ -459,6 +464,7 @@ On Round start cells open everybody got a scout with noscope in low gravity. Nod
 - sm_noscope_setw: 0 - disabled, 1 - allow Warden to set next round noscope. Default 1
 - sm_noscope_seta: 0 - disabled, 1 - allow Admin to set next round noscope round. Default 1
 - sm_noscope_vote: 0 - disabled, 1 - allow player to vote for noscope. Default 1
+- sm_noscope_rounds: Rounds to play in a row
 - sm_noscope_gravity: 0 - disabled, 1 - enable low Gravity for noscope. Default 1
 - sm_noscope_gravity_value - Ratio for Gravity 1.0 earth 0.5 moon. Default 0.3
 - sm_noscope_roundtime - Roundtime for a single noscope round in minutes. Default 5
@@ -480,33 +486,34 @@ On Round start cells open everybody got a scout with noscope in low gravity. Nod
 - Colors
 - Custom chat [Tag]
 
-#### Dodgeball
+#### HEbattle
 
-This plugin allows players to vote and Warden to set next round to Dodgeball.  
+This plugin allows players to vote and Warden to set next round to HEbattle.  
 On Round start cells open everybody got HE grenate with low gravity(Default) and reduced HP.
 
 ##### Commands
 ```
-- sm_dodgeball - Allows players to vote for a dodgeball
-- sm_setdodgeball - Allows the Admin or Warden to set dodgeball as next round
+- sm_hebattle - Allows players to vote for a hebattle
+- sm_sethebattle - Allows the Admin or Warden to set hebattle as next round
 ```
 ##### Cvars
 ```
-- sm_dodgeball_version - Shows the version of the SourceMod plugin MyJailbreak - dodgeball
-- sm_dodgeball_enable: 0 - disabled, 1 - enable the dodgeball plugin. Default 1
-- sm_dodgeball_setw: 0 - disabled, 1 - allow Warden to set next round Dodgeball. Default 1
-- sm_dodgeball_seta: 0 - disabled, 1 - allow Admin to set next round Dodgeball round. Default 1
-- sm_dodgeball_vote: 0 - disabled, 1 - allow player to vote for Dodgeball. Default 1
-- sm_dodgeball_gravity: 0 - disabled, 1 - enable low Gravity for dodgeball. Default 1
-- sm_dodgeball_gravity_value - Ratio for Gravity 1.0 earth 0.5 moon. Default 0.3
-- sm_dodgeball_roundtime - Roundtime for a single dodgeball round in minutes. Default 5
-- sm_dodgeball_trucetime - Time in seconds damage is disbaled. Default 15
-- sm_dodgeball_cooldown_start - Rounds until event can be start after mapchange. Default 3
-- sm_dodgeball_cooldown_day - Rounds until event can be started again. Default 3
-- sm_dodgeball_sounds_enable: 0 - disabled, 1 - enable sounds. Default 1
-- sm_dodgeball_sounds_start: Path to the soundfile which should be played on start. Default "music/myJailbreak/start.mp3"
-- sm_dodgeball_overlays_enable: 0 - disabled, 1 - enable start overlay. Default 1
-- sm_dodgeball_overlays_start: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
+- sm_hebattle_version - Shows the version of the SourceMod plugin MyJailbreak - hebattle
+- sm_hebattle_enable: 0 - disabled, 1 - enable the hebattle plugin. Default 1
+- sm_hebattle_setw: 0 - disabled, 1 - allow Warden to set next round HEbattle. Default 1
+- sm_hebattle_seta: 0 - disabled, 1 - allow Admin to set next round HEbattle round. Default 1
+- sm_hebattle_vote: 0 - disabled, 1 - allow player to vote for HEbattle. Default 1
+- sm_hebattle_rounds: Rounds to play in a row
+- sm_hebattle_gravity: 0 - disabled, 1 - enable low Gravity for hebattle. Default 1
+- sm_hebattle_gravity_value - Ratio for Gravity 1.0 earth 0.5 moon. Default 0.3
+- sm_hebattle_roundtime - Roundtime for a single hebattle round in minutes. Default 5
+- sm_hebattle_trucetime - Time in seconds damage is disbaled. Default 15
+- sm_hebattle_cooldown_start - Rounds until event can be start after mapchange. Default 3
+- sm_hebattle_cooldown_day - Rounds until event can be started again. Default 3
+- sm_hebattle_sounds_enable: 0 - disabled, 1 - enable sounds. Default 1
+- sm_hebattle_sounds_start: Path to the soundfile which should be played on start. Default "music/myJailbreak/start.mp3"
+- sm_hebattle_overlays_enable: 0 - disabled, 1 - enable start overlay. Default 1
+- sm_hebattle_overlays_start: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
 
 ```
 ##### Features
@@ -538,6 +545,7 @@ CT and T can Sprint with USE-Key (default).
 - sm_catch_setw: 0 - disabled, 1 - allow Warden to set next round ffa. Default 1
 - sm_catch_seta: 0 - disabled, 1 - allow Admin to set next round ffa round. Default 1
 - sm_catch_vote: 0 - disabled, 1 - allow player to vote for ffa. Default 1
+- sm_catch_rounds: Rounds to play in a row
 - sm_catch_enable: 0 - disabled, 1 - enable the catch plugin. Default 1
 - sm_catch_sprint_enable: 0 - disabled, 1 - enable ShortSprint. Default 1
 - sm_catch_sprint_button: 0 - disabled, 1 - enable +use button support. Default 1
@@ -582,6 +590,7 @@ When CT unfreezed (30sec. default) Ts get freezed (default).
 - sm_hide_seta: 0 - disabled, 1 - allow Admin to set next round ffa round. Default 1
 - sm_hide_vote: 0 - disabled, 1 - allow player to vote for ffa. Default 1
 - sm_hide_enable: 0 - disabled, 1 - enable the hide plugin. Default 1
+- sm_hide_rounds: Rounds to play in a row
 - sm_hide_roundtime - Roundtime for a single hide round in minutes. Default 5
 - sm_hide_hidetime - Time in seconds to hide. Default 30
 - sm_hide_freezehider: 0 - disabled, 1 - enable freeze hider when hidetime gone. Default 1
@@ -619,6 +628,7 @@ T are Chicken in Thirdperson. After trucetime the cells open and T got HE grenad
 - sm_duckhunt_seta: 0 - disabled, 1 - allow Admin to set next round ffa round. Default 1
 - sm_duckhunt_vote: 0 - disabled, 1 - allow player to vote for ffa. Default 1
 - sm_duckhunt_enable: 0 - disabled, 1 - enable the duckhunt plugin. Default 1
+- sm_duckhunt_rounds: Rounds to play in a row
 - sm_duckhunt_roundtime - Roundtime for a single duckhunt round in minutes. Default 5
 - sm_duckhunt_trucetime - Time in seconds damage is disbaled. Default 15
 - sm_duckhunt_cooldown_start - Rounds until event can be start after mapchange. Default 3
@@ -660,6 +670,7 @@ CT and T can Sprint with USE-Key (default).
 - sm_jihad_seta: 0 - disabled, 1 - allow Admin to set next round ffa round. Default 1
 - sm_jihad_vote: 0 - disabled, 1 - allow player to vote for ffa. Default 1
 - sm_jihad_enable: 0 - disabled, 1 - enable the plugin. Default 1
+- sm_jihad_rounds: Rounds to play in a row
 - sm_jihad_key: 1 - Inspect(look) weapon / 2 - walk / 3 - Secondary Attack. Default 1
 - sm_jihad_standstill: 0 - disabled, 1 - standstill(cant move) on Activate bomb. Default 0
 - sm_jihad_bomb_radius: Radius for bomb damage. Default 200
@@ -706,6 +717,7 @@ On Round start cells open everybody got a scout with zeus in low gravity. Nodama
 - sm_zeus_setw: 0 - disabled, 1 - allow Warden to set next round zeus. Default 1
 - sm_zeus_seta: 0 - disabled, 1 - allow Admin to set next round zeus round. Default 1
 - sm_zeus_vote: 0 - disabled, 1 - allow player to vote for zeus. Default 1
+- sm_zeus_rounds: Rounds to play in a row
 - sm_zeus_roundtime - Roundtime for a single zeus round in minutes. Default 5
 - sm_zeus_trucetime - Time in seconds damage is disbaled. Default 15
 - sm_zeus_cooldown_start - Rounds until event can be start after mapchange. Default 3
@@ -743,6 +755,7 @@ On Round start cells open everybody KnifeOnly with thirdperson, low gravity(Defa
 - sm_knifefight_seta: 0 - disabled, 1 - allow Admin to set next round knifefight round. Default 1
 - sm_knifefight_vote: 0 - disabled, 1 - allow player to vote for knifefight. Default 1
 - sm_knifefight_thirdperson: 0 - disabled, 1 - enable thirdperson for knifefight. Default 1
+- sm_knifefight_rounds: Rounds to play in a row
 - sm_knifefight_gravity: 0 - disabled, 1 - enable low Gravity for knifefight. Default 1
 - sm_knifefight_gravity_value - Ratio for Gravity 1.0 earth 0.5 moon. Default 0.3
 - sm_knifefight_iceskate: 0 - disabled, 1 - enable iceskate for knifefight. Default 1
@@ -828,6 +841,7 @@ On Round start cells open for freeday and enabled Damage (Default).
 based/merged/used code/idea plugins:
 * https://github.com/ecca/SourceMod-Plugins/tree/sourcemod/Warden
 * https://github.com/ESK0/ESK0s_Jailbreak_warden/
+* https://forums.alliedmods.net/showpost.php?p=1657893&postcount=11?p=1657893&postcount=11
 * https://git.tf/Zipcore/Warden
 * https://git.tf/Zipcore/Warden-Sounds
 * https://git.tf/Zipcore/Warden-SimpleMarkers

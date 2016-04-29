@@ -1,6 +1,6 @@
 //includes
 #include <sourcemod>
-#include <sdktools>
+
 #include <sdkhooks>
 #include <cstrike>
 #include <wardn>
@@ -36,7 +36,7 @@ ConVar g_bKnife;
 ConVar g_bFFA;
 ConVar g_bZombie;
 ConVar g_bNoScope;
-ConVar g_bDodgeBall;
+ConVar g_bHEbattle;
 ConVar g_bHide;
 ConVar g_bCatch;
 ConVar g_bFreeDay;
@@ -55,7 +55,7 @@ public Plugin myinfo = {
 	author = "shanapu, Franc1sco",
 	description = "Jailbreak Menu",
 	version = PLUGIN_VERSION,
-	url = "shanapu.de"
+	url = URL_LINK
 };
 
 public void OnPluginStart()
@@ -108,7 +108,7 @@ public void OnConfigsExecuted()
 	g_bKnife = FindConVar("sm_knifefight_enable");
 	g_bJiHad = FindConVar("sm_jihad_enable");
 	g_bCatch = FindConVar("sm_catch_enable");
-	g_bDodgeBall = FindConVar("sm_dodgeball_enable");
+	g_bHEbattle = FindConVar("sm_hebattle_enable");
 	g_bFreeDay = FindConVar("sm_freeday_enable");
 	g_bDuckHunt = FindConVar("sm_duckhunt_enable");
 	g_bCountdown = FindConVar("sm_warden_countdown");
@@ -425,12 +425,12 @@ public Action EventDays(int client, int args)
 					daysmenu.AddItem("jihad", menuinfo23);
 				}
 			}
-			if(g_bDodgeBall != null)
+			if(g_bHEbattle != null)
 			{
-				if(g_bDodgeBall.BoolValue)
+				if(g_bHEbattle.BoolValue)
 				{
-					Format(menuinfo27, sizeof(menuinfo27), "%T", "menu_dodgeball", LANG_SERVER);
-					daysmenu.AddItem("dodgeball", menuinfo27);
+					Format(menuinfo27, sizeof(menuinfo27), "%T", "menu_hebattle", LANG_SERVER);
+					daysmenu.AddItem("hebattle", menuinfo27);
 				}
 			}
 			if(g_bNoScope != null)
@@ -725,11 +725,11 @@ public int EventMenuHandler(Menu daysmenu, MenuAction action, int client, int se
 			}
 		
 		}
-		else if ( strcmp(info,"dodgeball") == 0 )
+		else if ( strcmp(info,"hebattle") == 0 )
 		{
 			if (warden_iswarden(client) || (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true)))
 			{
-				FakeClientCommand(client, "sm_setdodgeball");
+				FakeClientCommand(client, "sm_sethebattle");
 				if(!gc_bClose.BoolValue)
 				{
 					JbMenu(client,0);
@@ -737,7 +737,7 @@ public int EventMenuHandler(Menu daysmenu, MenuAction action, int client, int se
 			}
 			else
 			{
-				FakeClientCommand(client, "sm_dodgeball");
+				FakeClientCommand(client, "sm_hebattle");
 				if(!gc_bClose.BoolValue)
 				{
 					JbMenu(client,0);

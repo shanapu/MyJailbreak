@@ -3,8 +3,8 @@
 #endif
 #define _myjailbreak_included_
 
-#define PLUGIN_VERSION "0.4"
-
+#define PLUGIN_VERSION "0.5"
+#define URL_LINK "https://github.com/shanapu/MyJailbreak"
 
 #include <sdktools>
 
@@ -12,17 +12,9 @@ Handle IntCvar;
 Handle FloatCvar;
 char g_sOverlayStart[256];
 
-
-
-
 native SetEventDay(const char[] name);
 
-
-
-
 native GetEventDay(char[] CurrentEventDay);
-
-
 
 stock PrecacheOverlayAnyDownload(char[] sOverlay)
 {
@@ -128,6 +120,6 @@ stock bool IsValidClient(int client, bool bAllowBots = false, bool bAllowDead = 
 	return true;
 }
 
-public Pass(Handle:menu, MenuAction:action, param1, param2)
+public NullHandler(Handle:menu, MenuAction:action, param1, param2)
 {
 }

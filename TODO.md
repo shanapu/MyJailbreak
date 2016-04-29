@@ -48,7 +48,7 @@ must:
 - [x] all days: start overlay
 - [x] all days: start sound
 - [x] all days: msg when deactivated by set
-- [~] 1.7 syntax (**except weapons**)
+- [x] 1.7 syntax
 - [x] new day: decoy/flash 1hp -> dodgeball
 - [x] dodgeball: make it HE
 - [x] dodgeball: disbable knife
@@ -82,6 +82,8 @@ want:
 - [ ] whistle for hider
 - [ ] hide: seeker more TA pecvar?
 - [x] wiki
+- [ ] template
+- [ ] 
 - [ ] fastdl files
 - [x] set weapon menu enable on need EventDays
 - [x] enu: add eventdays to admin if enabled
@@ -91,7 +93,7 @@ want:
 - [ ] No scope choose weapon (scout/awp/auto)
 - [x] add LR to menu - !rules !lastrequest !checkplayers - !stoplr 
 - [ ] updater
-- [ ] warden: model
+- [x] warden: model
 - [ ] duckhunt: +attack -> not block. change to attack2
 - [ ] custom command support
 - [ ] make jailbreak menu customizeable (ADD OWN COMMANDS & OWN ORDER) -> keyvalues
@@ -101,7 +103,7 @@ want:
 - [ ] menu: bool show on days
 - [ ] toggle noblock
 - [ ] AddFileToDownloadsTable
-- [ ] make zeus day
+- [x] make zeus day
 - [x] zombie: change skybox
 - [x] randomkill smite
 - [ ] randomkill switchable bomb, fire....
@@ -130,8 +132,8 @@ want:
 - [x] countdown cancel all running
 - [ ] countdown cancel in menu
 - [ ] countdown set time until start / stop
-- [x] countdown: set time - or menu with differnt times?!?!
-- [ ] warden: mathboard
+- [x] countdown: menu with differnt times
+- [x] warden: mathboard
 - [x] catch: enable/disbale sprint
 - [x] warden: !w or random warden
 - [ ] warden: toggle noblock 
@@ -149,7 +151,7 @@ want:
 - [ ] duckhunt: chicken hp
 - [x] zombie: atmo sounds <- start soudn ;)
 - [x] zombie: define model
-- [ ] war&ffa/all?: define how many rounds to play
+- [x] war&ffa/all?: define how many rounds to play
 - [ ] all days: set panel time/delay
 - [ ] (all days: cfg to add sm_ for event start end)
 - [ ] hide: MovementValue hider/seeker

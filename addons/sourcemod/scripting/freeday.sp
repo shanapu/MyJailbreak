@@ -1,7 +1,7 @@
 //includes
 #include <cstrike>
 #include <sourcemod>
-#include <sdktools>
+
 #include <smartjaildoors>
 #include <wardn>
 #include <colors>
@@ -26,7 +26,7 @@ ConVar gc_bSetA;
 ConVar gc_bVote;
 ConVar gc_iCooldownDay;
 ConVar gc_iRoundTime;
-ConVar g_iSetRoundTime;
+ConVar g_iGetRoundTime;
 
 //Integers
 int g_iOldRoundTime;
@@ -46,7 +46,7 @@ public Plugin myinfo =
 	author = "shanapu",
 	description = "Event Day for Jailbreak Server",
 	version = PLUGIN_VERSION,
-	url = "shanapu.de"
+	url = URL_LINK
 };
 
 public void OnPluginStart()
@@ -82,7 +82,7 @@ public void OnPluginStart()
 	HookEvent("round_end", RoundEnd);
 	
 	//FindConVar
-	g_iSetRoundTime = FindConVar("mp_roundtime");
+	g_iGetRoundTime = FindConVar("mp_roundtime");
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 }
 
@@ -243,7 +243,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		DrawPanelText(FreeDayMenu, "-----------------------------------");
 		for(int client=1; client <= MaxClients; client++)
 			{
-				SendPanelToClient(FreeDayMenu, client, Pass, 15);
+				SendPanelToClient(FreeDayMenu, client, NullHandler, 15);
 				if (!gc_bDamage.BoolValue && IsValidClient(client))
 				{
 					SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
@@ -271,14 +271,14 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 		SetCvar("sm_weapons_enable", 1);
 		SetCvar("mp_teammates_are_enemies", 0);
 		SetCvar("sm_warden_enable", 1);
-		g_iSetRoundTime.IntValue = g_iOldRoundTime;
+		g_iGetRoundTime.IntValue = g_iOldRoundTime;
 		SetEventDay("none");
 		CPrintToChatAll("%t %t", "freeday_tag" , "freeday_end");
 	}
 	if (StartFreeDay)
 	{
-		g_iOldRoundTime = g_iSetRoundTime.IntValue;
-		g_iSetRoundTime.IntValue = gc_iRoundTime.IntValue;
+		g_iOldRoundTime = g_iGetRoundTime.IntValue;
+		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;
 	}
 }
 

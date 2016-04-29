@@ -21,7 +21,7 @@ public Plugin myinfo =
 	description = "Define player tags in chat & stats for Jailbreak Server",
 	author = "shanapu",
 	version = PLUGIN_VERSION,
-	url = "shanapu.de"
+	url = URL_LINK
 }
 
 public void OnPluginStart()

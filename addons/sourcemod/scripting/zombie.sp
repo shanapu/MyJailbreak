@@ -1,7 +1,7 @@
 //includes
 #include <cstrike>
 #include <sourcemod>
-#include <sdktools>
+
 #include <colors>
 #include <smartjaildoors>
 #include <sdkhooks>
@@ -32,15 +32,17 @@ ConVar gc_bSounds;
 ConVar gc_sSoundStartPath;
 ConVar gc_bOverlays;
 ConVar gc_sOverlayStartPath;
-ConVar g_iSetRoundTime;
+ConVar g_iGetRoundTime;
 ConVar g_sOldSkyName;
+ConVar gc_iRounds;
 
 //Integers
 int g_iOldRoundTime;
 int g_iFreezeTime;
 int g_iCoolDown;
 int g_iVoteCount = 0;
-int ZombieRound = 0;
+int g_iRound;
+int g_iMaxRound;
 
 //Handles
 Handle FreezeTimer;
@@ -57,7 +59,7 @@ public Plugin myinfo = {
 	author = "shanapu",
 	description = "Event Day for Jailbreak Server",
 	version = PLUGIN_VERSION,
-	url = "shanapu.de"
+	url = URL_LINK
 };
 
 public void OnPluginStart()
@@ -80,6 +82,7 @@ public void OnPluginStart()
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_zombie_warden", "1", "0 - disabled, 1 - allow warden to set zombie round", _, true, 0.0, true, 1.0);
 	gc_bSetA = AutoExecConfig_CreateConVar("sm_zombie_admin", "1", "0 - disabled, 1 - allow admin to set zombie round", _, true, 0.0, true, 1.0);
 	gc_bVote = AutoExecConfig_CreateConVar("sm_zombie_vote", "1", "0 - disabled, 1 - allow player to vote for zombie", _, true, 0.0, true, 1.0);
+	gc_iRounds = AutoExecConfig_CreateConVar("sm_zombie_rounds", "1", "Rounds to play in a row", _, true, 1.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_zombie_roundtime", "5", "Round time in minutes for a single zombie round", _, true, 1.0);
 	gc_iFreezeTime = AutoExecConfig_CreateConVar("sm_zombie_freezetime", "35", "Time in seconds the zombies freezed", _, true, 0.0);
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_zombie_cooldown_day", "3", "Rounds cooldown after a event until event can be start again", _, true, 0.0);
@@ -101,7 +104,7 @@ public void OnPluginStart()
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
 	
 	//FindConVar
-	g_iSetRoundTime = FindConVar("mp_roundtime");
+	g_iGetRoundTime = FindConVar("mp_roundtime");
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
 	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
@@ -136,7 +139,7 @@ public void OnClientPutInServer(int client)
 public void OnMapStart()
 {
 	g_iVoteCount = 0;
-	ZombieRound = 0;
+	g_iRound = 0;
 	IsZombie = false;
 	StartZombie = false;
 	
@@ -154,6 +157,7 @@ public void OnConfigsExecuted()
 {
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
+	g_iMaxRound = gc_iRounds.IntValue;
 }
 
 public Action SetZombie(int client,int args)
@@ -281,7 +285,7 @@ public Action OnWeaponCanUse(int client, int weapon)
 
 public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
-	if (StartZombie)
+	if (StartZombie || IsZombie)
 	{
 		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
 		
@@ -293,7 +297,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		SetCvar("sv_infinite_ammo", 2);
 		SetCvar("sm_menu_enable", 0);
 		IsZombie = true;
-		ZombieRound++;
+		g_iRound++;
 		StartZombie = false;
 		SJD_OpenDoors();
 
@@ -318,7 +322,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		DrawPanelText(ZombieMenu, info8);
 		DrawPanelText(ZombieMenu, "-----------------------------------");
 		
-		if (ZombieRound > 0)
+		if (g_iRound > 0)
 			{
 				for(int client=1; client <= MaxClients; client++)
 				{
@@ -340,12 +344,13 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 							GivePlayerItem(client, "weapon_hegrenade");
 						}
 						SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
-						SendPanelToClient(ZombieMenu, client, Pass, 15);
+						SendPanelToClient(ZombieMenu, client, NullHandler, 15);
 						SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 					}
 				}
 				g_iFreezeTime--;
 				FreezeTimer = CreateTimer(1.0, Zombie, _, TIMER_REPEAT);
+				CPrintToChatAll("%t %t", "zombie_tag" ,"zombie_rounds", g_iRound, g_iMaxRound);
 			}
 	}
 	else
@@ -383,7 +388,7 @@ public Action Zombie(Handle timer)
 	
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
 	
-	if (ZombieRound > 0)
+	if (g_iRound > 0)
 	{
 		for (int client=1; client <= MaxClients; client++)
 		{
@@ -426,26 +431,29 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 		
 		if (winner == 2) PrintHintTextToAll("%t", "zombie_twin_nc");
 		if (winner == 3) PrintHintTextToAll("%t", "zombie_ctwin_nc");
-		IsZombie = false;
-		StartZombie = false;
-		ZombieRound = 0;
-		Format(g_sHasVoted, sizeof(g_sHasVoted), "");
-		SetCvar("sm_hosties_lr", 1);
-		SetCvar("sm_weapons_t", 0);
-		SetCvar("sm_weapons_ct", 1);
-		SetCvarString("sv_skyname", g_sSkyName);
-		SetCvar("sv_infinite_ammo", 0);
-		SetCvar("sm_warden_enable", 1);
-		SetCvar("sm_menu_enable", 1);
-		g_iSetRoundTime.IntValue = g_iOldRoundTime;
-		SetEventDay("none");
-		
-		CPrintToChatAll("%t %t", "zombie_tag" , "zombie_end");
+		if (g_iRound == g_iMaxRound)
+		{
+			IsZombie = false;
+			StartZombie = false;
+			g_iRound = 0;
+			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
+			SetCvar("sm_hosties_lr", 1);
+			SetCvar("sm_weapons_t", 0);
+			SetCvar("sm_weapons_ct", 1);
+			SetCvarString("sv_skyname", g_sSkyName);
+			SetCvar("sv_infinite_ammo", 0);
+			SetCvar("sm_warden_enable", 1);
+			SetCvar("sm_menu_enable", 1);
+			g_iGetRoundTime.IntValue = g_iOldRoundTime;
+			SetEventDay("none");
+			
+			CPrintToChatAll("%t %t", "zombie_tag" , "zombie_end");
+		}
 	}
 	if (StartZombie)
 	{
-		g_iOldRoundTime = g_iSetRoundTime.IntValue;
-		g_iSetRoundTime.IntValue = gc_iRoundTime.IntValue;
+		g_iOldRoundTime = g_iGetRoundTime.IntValue;
+		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;
 	}
 }
 
@@ -454,7 +462,7 @@ public void OnMapEnd()
 	IsZombie = false;
 	StartZombie = false;
 	g_iVoteCount = 0;
-	ZombieRound = 0;
+	g_iRound = 0;
 	g_sHasVoted[0] = '\0';
 	SetEventDay("none");
 }

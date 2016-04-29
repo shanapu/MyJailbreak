@@ -1,6 +1,6 @@
 //includes
 #include <sourcemod>
-#include <sdktools>
+
 #include <cstrike>
 #include <clientprefs>
 #include <wardn>
@@ -375,13 +375,17 @@ public void SetBuyZones(const char[] status)
 
 public Action Cmd_Weapons(int client,int args)
 {
-	
-	if (client != 0 && IsClientInGame(client))
+	if(gc_bPlugin.BoolValue)	
 	{
-				rememberChoice[client] = false;
-				DisplayOptionsMenu(client);
-				return Plugin_Handled;
+		if (client != 0 && IsClientInGame(client))
+		{
+					rememberChoice[client] = false;
+					DisplayOptionsMenu(client);
+					return Plugin_Handled;
+		}
+		return Plugin_Continue;
 	}
+	else CPrintToChat(client, "%t %t", "weapons_tag" , "weapons_disabled");
 	return Plugin_Continue;
 }
 

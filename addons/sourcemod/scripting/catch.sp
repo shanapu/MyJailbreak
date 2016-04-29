@@ -2,7 +2,7 @@
 #include <cstrike>
 #include <sourcemod>
 #include <colors>
-#include <sdktools>
+
 #include <smartjaildoors>
 #include <sdkhooks>
 #include <wardn>
@@ -43,14 +43,16 @@ ConVar gc_fSprintSpeed;
 ConVar gc_fSprintTime;
 ConVar gc_sSoundFreezePath;
 ConVar gc_sSoundUnFreezePath;
-ConVar g_iSetRoundTime;
+ConVar g_iGetRoundTime;
+ConVar gc_iRounds;
 
 //Integers
 int g_iVoteCount;
 int g_iOldRoundTime;
 int g_iCoolDown;
-int CatchRound;
+int g_iRound;
 int ClientSprintStatus[MAXPLAYERS+1];
+int g_iMaxRound;
 
 //Handles
 Handle SprintTimer[MAXPLAYERS+1];
@@ -67,7 +69,7 @@ public Plugin myinfo = {
 	author = "shanapu",
 	description = "Event Day for Jailbreak Server",
 	version = PLUGIN_VERSION,
-	url = "shanapu.de"
+	url = URL_LINK
 };
 
 public void OnPluginStart()
@@ -90,6 +92,7 @@ public void OnPluginStart()
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_catch_warden", "1", "0 - disabled, 1 - allow warden to set catch round", _, true, 0.0, true, 1.0);
 	gc_bSetA = AutoExecConfig_CreateConVar("sm_catch_admin", "1", "0 - disabled, 1 - allow admin to set catch round", _, true, 0.0, true, 1.0);
 	gc_bVote = AutoExecConfig_CreateConVar("sm_catch_vote", "1", "0 - disabled, 1 - allow player to vote for catch", _, true, 0.0, true, 1.0);
+	gc_iRounds = AutoExecConfig_CreateConVar("sm_catch_rounds", "1", "Rounds to play in a row", _, true, 1.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_catch_roundtime", "5", "Round time in minutes for a single catch round", _, true, 1.0);
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_catch_cooldown_day", "3", "Rounds cooldown after a event until event can be start again", _, true, 0.0);
 	gc_iCooldownStart = AutoExecConfig_CreateConVar("sm_catch_cooldown_start", "3", "Rounds until event can be start after mapchange.", _, true, 0.0);
@@ -119,8 +122,9 @@ public void OnPluginStart()
 	HookConVarChange(gc_sSoundUnFreezePath, OnSettingChanged);
 	
 	//FindConVar
-	g_iSetRoundTime = FindConVar("mp_roundtime");
+	g_iMaxRound = gc_iRounds.IntValue;
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
+	g_iGetRoundTime = FindConVar("mp_roundtime");
 	gc_sSoundFreezePath.GetString(g_sSoundFreezePath, sizeof(g_sSoundFreezePath));
 	gc_sSoundUnFreezePath.GetString(g_sSoundUnFreezePath, sizeof(g_sSoundUnFreezePath));
 	gc_sOverlayFreeze.GetString(g_sOverlayFreeze , sizeof(g_sOverlayFreeze));
@@ -151,7 +155,7 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 public void OnMapStart()
 {
 	g_iVoteCount = 0;
-	CatchRound = 0;
+	g_iRound = 0;
 	IsCatch = false;
 	StartCatch = false;
 	
@@ -166,6 +170,7 @@ public void OnMapStart()
 public void OnConfigsExecuted()
 {
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
+	g_iMaxRound = gc_iRounds.IntValue;
 }
 
 public void OnClientPutInServer(int client)
@@ -282,17 +287,16 @@ void StartNextRound()
 public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
 
-	if (StartCatch)
+	if (StartCatch || IsCatch)
 	{
 		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
 		
-		ServerCommand("sm_removewarden");
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("sm_weapons_enable", 0);
 		
 		IsCatch = true;
-		CatchRound++;
+		g_iRound++;
 		StartCatch = false;
 		SJD_OpenDoors();
 
@@ -317,7 +321,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		DrawPanelText(CatchMenu, info8);
 		DrawPanelText(CatchMenu, "-----------------------------------");
 		
-		if (CatchRound > 0)
+		if (g_iRound > 0)
 			{
 				for(int client=1; client <= MaxClients; client++)
 				{
@@ -331,10 +335,10 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 						ClientSprintStatus[client] = 0;
 						GivePlayerItem(client, "weapon_knife");
 						SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
-						SendPanelToClient(CatchMenu, client, Pass, 15);
+						SendPanelToClient(CatchMenu, client, NullHandler, 15);
 					}
 				}
-				
+				CPrintToChatAll("%t %t", "catch_tag" ,"catch_rounds", g_iRound, g_iMaxRound);
 				PrintHintTextToAll("%t", "catch_start_nc");
 				CPrintToChatAll("%t %t", "catch_tag" , "catch_start");
 			}
@@ -498,24 +502,24 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 		
 		if (winner == 2) PrintHintTextToAll("%t", "catch_twin_nc");
 		if (winner == 3) PrintHintTextToAll("%t", "catch_ctwin_nc");
-		IsCatch = false;
-		StartCatch = false;
-		CatchRound = 0;
-		Format(g_sHasVoted, sizeof(g_sHasVoted), "");
-		SetCvar("sm_hosties_lr", 1);
-		SetCvar("sm_weapons_enable", 1);
-		SetCvar("sm_warden_enable", 1);
-		
-		g_iSetRoundTime.IntValue = g_iOldRoundTime;
-		SetEventDay("none");
-		
-
-		CPrintToChatAll("%t %t", "catch_tag" , "catch_end");
+		if (g_iRound == g_iMaxRound)
+		{
+			IsCatch = false;
+			g_iRound = 0;
+			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
+			SetCvar("sm_hosties_lr", 1);
+			SetCvar("sm_weapons_enable", 1);
+			SetCvar("sm_warden_enable", 1);
+			
+			g_iGetRoundTime.IntValue = g_iOldRoundTime;
+			SetEventDay("none");
+			CPrintToChatAll("%t %t", "catch_tag" , "catch_end");
+		}
 	}
 	if (StartCatch)
 	{
-		g_iOldRoundTime = g_iSetRoundTime.IntValue;
-		g_iSetRoundTime.IntValue = gc_iRoundTime.IntValue;
+		g_iOldRoundTime = g_iGetRoundTime.IntValue;
+		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;
 	}
 }
 
@@ -633,7 +637,7 @@ public void OnMapEnd()
 	IsCatch = false;
 	StartCatch = false;
 	g_iVoteCount = 0;
-	CatchRound = 0;
+	g_iRound = 0;
 	g_sHasVoted[0] = '\0';
 	SetEventDay("none");
 }

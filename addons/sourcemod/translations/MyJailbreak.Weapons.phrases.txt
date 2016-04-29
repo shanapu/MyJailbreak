@@ -4,12 +4,16 @@
 	{
 		"en"		"[{green}MyJB.weapons{default}]"
 	}
+	"weapons_disabled"
+	{
+		"en"		"The {purple}weapons menu {default} is disabled."
+	}
 	
 	"weapons_same"
 	{
 		"da"		"Du vil få {purple}samme våben{default} næste runde."
 		"en"		"You will get the {purple} same weapon{default} next round"
-		"de"		"Du bekommst {purple}die gleiche Waffe{default} in der nächsten Runde."
+		"de"		"Du bekommst die gleiche Waffe{default} in der nächsten Runde."
 	}
 	
 	"weapons_sameall"

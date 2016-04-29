@@ -1,7 +1,7 @@
 #include <cstrike>
 #include <colors>
 #include <sourcemod>
-#include <sdktools>
+
 #include <smartjaildoors>
 #include <wardn>
 #include <emitsoundany>
@@ -22,6 +22,7 @@ ConVar gc_bSetW;
 ConVar gc_bSetA;
 ConVar gc_bVote;
 ConVar gc_bSpawnCell;
+ConVar gc_iRounds;
 ConVar gc_iRoundTime;
 ConVar gc_iCooldownDay;
 ConVar gc_iCooldownStart;
@@ -31,7 +32,7 @@ ConVar gc_bSounds;
 ConVar gc_sSoundStartPath;
 ConVar gc_bOverlays;
 ConVar gc_sOverlayStartPath;
-ConVar g_iSetRoundTime;
+ConVar g_iGetRoundTime;
 
 //Integers
 int g_iOldRoundTime;
@@ -39,7 +40,8 @@ int g_iCoolDown;
 int g_iFreezeTime;
 int g_iTruceTime;
 int g_iVoteCount = 0;
-int WarRound = 0;
+int g_iRound;
+int g_iMaxRound;
 
 //Handles
 Handle FreezeTimer;
@@ -58,7 +60,7 @@ public Plugin myinfo = {
 	author = "shanapu",
 	description = "Event Day for Jailbreak Server",
 	version = PLUGIN_VERSION,
-	url = "shanapu.de"
+	url = URL_LINK
 };
 
 public void OnPluginStart()
@@ -80,7 +82,8 @@ public void OnPluginStart()
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_war_warden", "1", "0 - disabled, 1 - allow warden to set war round", _, true,  0.0, true, 1.0);
 	gc_bSetA = AutoExecConfig_CreateConVar("sm_war_admin", "1", "0 - disabled, 1 - allow admin to set war round", _, true,  0.0, true, 1.0);
 	gc_bVote = AutoExecConfig_CreateConVar("sm_war_vote", "1", "0 - disabled, 1 - allow player to vote for war", _, true,  0.0, true, 1.0);
-	gc_bSpawnCell = AutoExecConfig_CreateConVar("sm_war_spawn", "0", "0 - teleport to ct and freeze, 1 - stay in cell open cell doors with aw/weapon menu - need sjd", _, true,  0.0, true, 1.0);
+	gc_bSpawnCell = AutoExecConfig_CreateConVar("sm_war_spawn", "0", "0 - teleport to ct and freeze, 1 - T teleport to CT spawn, 1 - standart spawn & cell doors auto open", _, true,  0.0, true, 1.0);
+	gc_iRounds = AutoExecConfig_CreateConVar("sm_war_rounds", "3", "Rounds to play in a row", _, true, 1.0);
 	gc_iFreezeTime = AutoExecConfig_CreateConVar("sm_war_freezetime", "30", "Time in seconds the terrorist freezed - need sm_war_spawn 0", _, true,  0.0);
 	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_war_trucetime", "30", "Time after freezetime damage disbaled", _, true,  0.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_war_roundtime", "5", "Round time in minutes for a single war round", _, true,  1.0);
@@ -103,8 +106,9 @@ public void OnPluginStart()
 	//FindConVar
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
 	g_iTruceTime = gc_iTruceTime.IntValue;
-	g_iSetRoundTime = FindConVar("mp_roundtime");
+	g_iMaxRound = gc_iRounds.IntValue;
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
+	g_iGetRoundTime = FindConVar("mp_roundtime");
 	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 }
@@ -126,7 +130,7 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 public void OnMapStart()
 {
 	g_iVoteCount = 0;
-	WarRound = 0;
+	g_iRound = 0;
 	IsWar = false;
 	StartWar = false;
 	
@@ -143,6 +147,7 @@ public void OnConfigsExecuted()
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
+	g_iMaxRound = gc_iRounds.IntValue;
 }
 
 public Action SetWar(int client,int args)
@@ -251,16 +256,14 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
 	if (StartWar || IsWar)
 	{
-		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
-		char info9[255], info10[255], info11[255], info12[255];
-		
+		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255], info9[255];
 		
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("sm_weapons_t", 1);
 		SetCvar("sm_weapons_ct", 1);
 		SetCvar("sm_menu_enable", 0);
-		WarRound++;
+		g_iRound++;
 		IsWar = true;
 		StartWar = false;
 		
@@ -273,51 +276,32 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		Format(info1, sizeof(info1), "%T", "war_info_Title", LANG_SERVER);
 		SetPanelTitle(WarMenu, info1);
 		DrawPanelText(WarMenu, "                                   ");
-		Format(info10, sizeof(info10), "%T", "RoundOne", LANG_SERVER);
-		if (WarRound == 1) DrawPanelText(WarMenu, info10);
-		Format(info11, sizeof(info11), "%T", "RoundTwo", LANG_SERVER);
-		if (WarRound == 2) DrawPanelText(WarMenu, info11);
-		Format(info12, sizeof(info12), "%T", "RoundThree", LANG_SERVER);
-		if (WarRound == 3) DrawPanelText(WarMenu, info12);
-		DrawPanelText(WarMenu, "                                   ");
 		if (!gc_bSpawnCell.BoolValue)
 		{
 			Format(info2, sizeof(info2), "%T", "war_info_Tele", LANG_SERVER);
 			DrawPanelText(WarMenu, info2);
-			DrawPanelText(WarMenu, "-----------------------------------");
-			Format(info3, sizeof(info3), "%T", "war_info_Line2", LANG_SERVER);
-			DrawPanelText(WarMenu, info3);
-			Format(info4, sizeof(info4), "%T", "war_info_Line3", LANG_SERVER);
-			DrawPanelText(WarMenu, info4);
-			Format(info5, sizeof(info5), "%T", "war_info_Line4", LANG_SERVER);
-			DrawPanelText(WarMenu, info5);
-			Format(info6, sizeof(info6), "%T", "war_info_Line5", LANG_SERVER);
-			DrawPanelText(WarMenu, info6);
-			Format(info7, sizeof(info7), "%T", "war_info_Line6", LANG_SERVER);
-			DrawPanelText(WarMenu, info7);
-			Format(info8, sizeof(info8), "%T", "war_info_Line7", LANG_SERVER);
-			DrawPanelText(WarMenu, info8);
 			DrawPanelText(WarMenu, "-----------------------------------");
 		}
 		else
 		{
 			Format(info9, sizeof(info9), "%T", "war_info_Spawn", LANG_SERVER);
 			DrawPanelText(WarMenu, info9);
-			DrawPanelText(WarMenu, "-----------------------------------");
-			Format(info3, sizeof(info3), "%T", "war_info_Line2", LANG_SERVER);
-			DrawPanelText(WarMenu, info3);
-			Format(info4, sizeof(info4), "%T", "war_info_Line3", LANG_SERVER);
-			DrawPanelText(WarMenu, info4);
-			Format(info5, sizeof(info5), "%T", "war_info_Line4", LANG_SERVER);
-			DrawPanelText(WarMenu, info5);
-			Format(info6, sizeof(info6), "%T", "war_info_Line5", LANG_SERVER);
-			DrawPanelText(WarMenu, info6);
-			Format(info7, sizeof(info7), "%T", "war_info_Line6", LANG_SERVER);
-			DrawPanelText(WarMenu, info7);
-			Format(info8, sizeof(info8), "%T", "war_info_Line7", LANG_SERVER);
-			DrawPanelText(WarMenu, info8);
-			DrawPanelText(WarMenu, "-----------------------------------");
 		}
+		DrawPanelText(WarMenu, "-----------------------------------");
+		Format(info3, sizeof(info3), "%T", "war_info_Line2", LANG_SERVER);
+		DrawPanelText(WarMenu, info3);
+		Format(info4, sizeof(info4), "%T", "war_info_Line3", LANG_SERVER);
+		DrawPanelText(WarMenu, info4);
+		Format(info5, sizeof(info5), "%T", "war_info_Line4", LANG_SERVER);
+		DrawPanelText(WarMenu, info5);
+		Format(info6, sizeof(info6), "%T", "war_info_Line5", LANG_SERVER);
+		DrawPanelText(WarMenu, info6);
+		Format(info7, sizeof(info7), "%T", "war_info_Line6", LANG_SERVER);
+		DrawPanelText(WarMenu, info7);
+		Format(info8, sizeof(info8), "%T", "war_info_Line7", LANG_SERVER);
+		DrawPanelText(WarMenu, info8);
+		DrawPanelText(WarMenu, "-----------------------------------");
+		
 		int RandomCT = 0;
 		
 		for(int client=1; client <= MaxClients; client++)
@@ -340,52 +324,26 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 			
 			Pos[2] = Pos[2] + 45;
 			
-			if (WarRound > 0)
+			if (g_iRound > 0)
 			{
 				for(int client=1; client <= MaxClients; client++)
 				{
-					if (gc_bSpawnCell.BoolValue)
+					if (!gc_bSpawnCell.BoolValue)
 					{
 						if (IsClientInGame(client))
 						{
-							if (GetClientTeam(client) == CS_TEAM_CT)
-							{
-								GivePlayerItem(client, "weapon_m4a1");
-								GivePlayerItem(client, "weapon_deagle");
-								GivePlayerItem(client, "weapon_hegrenade");
-							}
-							if (GetClientTeam(client) == CS_TEAM_T)
-							{
-								GivePlayerItem(client, "weapon_ak47");
-								GivePlayerItem(client, "weapon_deagle");
-								GivePlayerItem(client, "weapon_hegrenade");
-							}
-						}
-					}
-					else
-					{
-						if (IsClientInGame(client))
-						{
-							if (GetClientTeam(client) == CS_TEAM_CT)
-							{
-								TeleportEntity(client, Pos1, NULL_VECTOR, NULL_VECTOR);
-							}
-							if (GetClientTeam(client) == CS_TEAM_T)
-							{
-								SetEntityMoveType(client, MOVETYPE_NONE);
-								TeleportEntity(client, Pos, NULL_VECTOR, NULL_VECTOR);
-							}
+							TeleportEntity(client, Pos1, NULL_VECTOR, NULL_VECTOR);
 						}
 					}
 				}
-				CPrintToChatAll("%t %t", "war_tag" ,"war_rounds", WarRound);
+				CPrintToChatAll("%t %t", "war_tag" ,"war_rounds", g_iRound, g_iMaxRound);
 			}
 			for(int client=1; client <= MaxClients; client++)
 			{
 				if (IsClientInGame(client))
 				{
 					SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
-					SendPanelToClient(WarMenu, client, Pass, 15);
+					SendPanelToClient(WarMenu, client, NullHandler, 15);
 					SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 				}
 			}
@@ -430,7 +388,7 @@ public Action Freezed(Handle timer)
 	
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
 	
-	if (WarRound > 0)
+	if (g_iRound > 0)
 	{
 		for (int client=1; client <= MaxClients; client++)
 		{
@@ -440,10 +398,6 @@ public Action Freezed(Handle timer)
 				{
 					SetEntityMoveType(client, MOVETYPE_WALK);
 					TeleportEntity(client, Pos, NULL_VECTOR, NULL_VECTOR);
-					GivePlayerItem(client, "weapon_m4a1");
-					GivePlayerItem(client, "weapon_deagle");
-					GivePlayerItem(client, "weapon_hegrenade");
-					GivePlayerItem(client, "weapon_knife");
 				}
 			}
 		}
@@ -501,25 +455,25 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 		if (TruceTimer != null) KillTimer(TruceTimer);
 		if (winner == 2) PrintHintTextToAll("%t", "war_twin_nc"); 
 		if (winner == 3) PrintHintTextToAll("%t", "war_ctwin_nc");
-		if (WarRound == 3)
+		if (g_iRound == g_iMaxRound)
 		{
 			IsWar = false;
-			WarRound = 0;
+			g_iRound = 0;
 			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
 			SetCvar("sm_hosties_lr", 1);
 			SetCvar("sm_warden_enable", 1);
 			SetCvar("sm_weapons_t", 0);
 			SetCvar("sm_weapons_ct", 1);
 			SetCvar("sm_menu_enable", 1);
-			g_iSetRoundTime.IntValue = g_iOldRoundTime;
+			g_iGetRoundTime.IntValue = g_iOldRoundTime;
 			SetEventDay("none");
 			CPrintToChatAll("%t %t", "war_tag" , "war_end");
 		}
 	}
 	if (StartWar)
 	{
-		g_iOldRoundTime = g_iSetRoundTime.IntValue;
-		g_iSetRoundTime.IntValue = gc_iRoundTime.IntValue;
+		g_iOldRoundTime = g_iGetRoundTime.IntValue;
+		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;
 	}
 }
 
@@ -528,7 +482,7 @@ public void OnMapEnd()
 	IsWar = false;
 	StartWar = false;
 	g_iVoteCount = 0;
-	WarRound = 0;
+	g_iRound = 0;
 	g_sHasVoted[0] = '\0';
 	SetEventDay("none");
 }

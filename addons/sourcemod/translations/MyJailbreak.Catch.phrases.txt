@@ -12,7 +12,13 @@
 		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes left to {darkred}catch"
 		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}catch{default} beginnt"
 	}
-	
+	"catch_rounds" 
+	{
+		"#format"	"{1:i},{2:i}"
+		"da"		"Runde {purple}{1}{default} af {purple}{2}"		
+		"en"		"Round {purple}{1}{default} of {purple}{2}"
+		"de"		"Runde {purple}{1}{default} von {purple}{2}"
+	}
 	"catch_twin_nc"		// no colors!
 	{
 	

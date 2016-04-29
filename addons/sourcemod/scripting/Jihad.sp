@@ -2,7 +2,7 @@
 #include <cstrike>
 #include <sourcemod>
 #include <colors>
-#include <sdktools>
+
 #include <smartjaildoors>
 #include <sdkhooks>
 #include <wardn>
@@ -48,15 +48,18 @@ ConVar gc_iSprintTime;
 ConVar gc_sSoundStartPath;
 ConVar gc_sSoundJihadPath;
 ConVar gc_sSoundBoomPath;
-ConVar g_iSetRoundTime;
+ConVar g_iGetRoundTime;
+ConVar gc_iRounds;
+
 
 //Integers
 int g_iVoteCount;
 int g_iOldRoundTime;
 int g_iCoolDown;
 int g_iFreezeTime;
-int JiHadRound;
+int g_iRound;
 int ClientSprintStatus[MAXPLAYERS+1];
+int g_iMaxRound;
 
 //Handles
 Handle SprintTimer[MAXPLAYERS+1];
@@ -75,7 +78,7 @@ public Plugin myinfo = {
 	author = "shanapu",
 	description = "Event Day for Jailbreak Server",
 	version = PLUGIN_VERSION,
-	url = "shanapu.de"
+	url = URL_LINK
 };
 
 public void OnPluginStart()
@@ -101,6 +104,7 @@ public void OnPluginStart()
 	gc_bVote = AutoExecConfig_CreateConVar("sm_jihad_vote", "1", "0 - disabled, 1 - allow player to vote for jihad", _, true,  0.0, true, 1.0);
 	gc_iKey = AutoExecConfig_CreateConVar("sm_jihad_key", "1", "1 - Inspect(look) weapon / 2 - walk / 3 - Secondary Attack", _, true,  1.0, true, 3.0);
 	gc_bStandStill = AutoExecConfig_CreateConVar("sm_jihad_standstill", "1", "0 - disabled, 1 - standstill(cant move) on Activate bomb", _, true,  0.0, true, 1.0);
+	gc_iRounds = AutoExecConfig_CreateConVar("sm_jihad_rounds", "2", "Rounds to play in a row", _, true, 1.0);
 	gc_fBombRadius = AutoExecConfig_CreateConVar("sm_jihad_bomb_radius", "200.0","Radius for bomb damage", _, true, 10.0, true, 999.0);
 	gc_iFreezeTime = AutoExecConfig_CreateConVar("sm_jihad_hidetime", "20", "Time to hide for CTs", _, true,  0.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_jihad_roundtime", "5", "Round time in minutes for a single jihad round", _, true, 1.0);
@@ -126,13 +130,12 @@ public void OnPluginStart()
 	HookEvent("player_spawn", Event_PlayerSpawn);
 	HookEvent("round_end", RoundEnd);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
-	
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundJihadPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundBoomPath, OnSettingChanged);
 	
 	//FindConVar
-	g_iSetRoundTime = FindConVar("mp_roundtime");
+	g_iGetRoundTime = FindConVar("mp_roundtime");
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
 	gc_sSoundJihadPath.GetString(g_sSoundJihadPath, sizeof(g_sSoundJihadPath));
@@ -194,7 +197,7 @@ public void OnClientPutInServer(int client)
 public void OnMapStart()
 {
 	g_iVoteCount = 0;
-	JiHadRound = 0;
+	g_iRound = 0;
 	IsJiHad = false;
 	StartJiHad = false;
 	BombActive = false;
@@ -216,6 +219,7 @@ public void OnConfigsExecuted()
 {
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
+	g_iMaxRound = gc_iRounds.IntValue;
 }
 
 public Action SetJiHad(int client,int args)
@@ -322,18 +326,17 @@ void StartNextRound()
 
 public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
-	if (StartJiHad)
+	if (StartJiHad || IsJiHad)
 	{
 		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
-		
 		
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("sm_menu_enable", 0);
 		SetCvar("sm_weapons_enable", 0);
 		
+		g_iRound++;
 		IsJiHad = true;
-		JiHadRound++;
 		StartJiHad = false;
 		JiHadMenu = CreatePanel();
 		Format(info1, sizeof(info1), "%T", "jihad_info_Title", LANG_SERVER);
@@ -356,7 +359,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		DrawPanelText(JiHadMenu, info8);
 		DrawPanelText(JiHadMenu, "-----------------------------------");
 		
-		if (JiHadRound > 0)
+		if (g_iRound > 0)
 			{
 				for(int client=1; client <= MaxClients; client++)
 				{
@@ -365,7 +368,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 						StripAllWeapons(client);
 						ClientSprintStatus[client] = 0;
 						SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
-						SendPanelToClient(JiHadMenu, client, Pass, 15);
+						SendPanelToClient(JiHadMenu, client, NullHandler, 15);
 						
 						if (GetClientTeam(client) == CS_TEAM_T)
 						{
@@ -379,7 +382,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 				}
 				g_iFreezeTime--;
 				FreezeTimer = CreateTimer(1.0, JiHad, _, TIMER_REPEAT);
-				
+				CPrintToChatAll("%t %t", "jihad_tag" ,"jihad_rounds", g_iRound, g_iMaxRound);
 			}
 	}
 	else
@@ -430,7 +433,7 @@ public Action JiHad(Handle timer)
 	
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
 	
-	if (JiHadRound > 0)
+	if (g_iRound > 0)
 	{
 		for (int client=1; client <= MaxClients; client++)
 		{
@@ -594,25 +597,28 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 		
 		if (winner == 2) PrintHintTextToAll("%t", "jihad_twin_nc");
 		if (winner == 3) PrintHintTextToAll("%t", "jihad_ctwin_nc");
-		IsJiHad = false;
-		StartJiHad = false;
-		BombActive = false;
-		JiHadRound = 0;
-		
-		Format(g_sHasVoted, sizeof(g_sHasVoted), "");
-		SetCvar("sm_hosties_lr", 1);
-		SetCvar("sm_weapons_enable", 1);
-		SetCvar("sv_infinite_ammo", 0);
-		SetCvar("sm_warden_enable", 1);
-		SetCvar("sm_menu_enable", 1);
-		g_iSetRoundTime.IntValue = g_iOldRoundTime;
-		SetEventDay("none");
-		CPrintToChatAll("%t %t", "jihad_tag" , "jihad_end");
+		if (g_iRound == g_iMaxRound)
+		{
+			IsJiHad = false;
+			StartJiHad = false;
+			BombActive = false;
+			g_iRound = 0;
+			
+			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
+			SetCvar("sm_hosties_lr", 1);
+			SetCvar("sm_weapons_enable", 1);
+			SetCvar("sv_infinite_ammo", 0);
+			SetCvar("sm_warden_enable", 1);
+			SetCvar("sm_menu_enable", 1);
+			g_iGetRoundTime.IntValue = g_iOldRoundTime;
+			SetEventDay("none");
+			CPrintToChatAll("%t %t", "jihad_tag" , "jihad_end");
+		}
 	}
 	if (StartJiHad)
 	{
-		g_iOldRoundTime = g_iSetRoundTime.IntValue;
-		g_iSetRoundTime.IntValue = gc_iRoundTime.IntValue;
+		g_iOldRoundTime = g_iGetRoundTime.IntValue;
+		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;
 	}
 }
 
@@ -728,7 +734,7 @@ public void OnMapEnd()
 	StartJiHad = false;
 	BombActive = false;
 	g_iVoteCount = 0;
-	JiHadRound = 0;
+	g_iRound = 0;
 	g_sHasVoted[0] = '\0';
 	SetEventDay("none");
 }

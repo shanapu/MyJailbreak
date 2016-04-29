@@ -18,7 +18,13 @@
 		"en"		"Hiders win"
 		"de"		"Hiders haben gewonnen"
 	}
-	
+		"hide_rounds" 
+	{
+		"#format"	"{1:i},{2:i}"
+		"da"		"Runde {purple}{1}{default} af {purple}{2}"		
+		"en"		"Round {purple}{1}{default} of {purple}{2}"
+		"de"		"Runde {purple}{1}{default} von {purple}{2}"
+	}
 	"hide_ctwin_nc"		// no colors!
 	{
 		"da"		"CT vinder runden!"	

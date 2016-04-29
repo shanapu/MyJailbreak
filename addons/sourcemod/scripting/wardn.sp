@@ -1,6 +1,6 @@
 //Includes
 #include <sourcemod>
-#include <sdktools>
+
 #include <cstrike>
 #include <sdkhooks>
 #include <wardn>
@@ -123,7 +123,7 @@ public Plugin myinfo = {
 	author = "shanapu, ecca, ESKO & .#zipcore",
 	description = "Jailbreak Warden script",
 	version = PLUGIN_VERSION,
-	url = "shanapu.de"
+	url = URL_LINK
 };
 
 public void OnPluginStart() 
@@ -761,7 +761,7 @@ void SetTheWarden(int client)
 
 void RemoveTheWarden(int client)
 {
-	CPrintToChatAll("%t %t", "warden_tag" , "warden_removed", client, Warden);
+	CPrintToChatAll("%t %t", "warden_tag" , "warden_removed", client, Warden);  // if client is console !=
 	
 	if(gc_bBetterNotes.BoolValue)
 	{
@@ -769,7 +769,7 @@ void RemoveTheWarden(int client)
 		PrintHintTextToAll("%t", "warden_removed_nc", client, Warden);
 	}
 	
-	if(IsClientInGame(client) && IsPlayerAlive(client))
+	if(IsClientInGame(client))
 	{
 		SetEntityRenderColor(Warden, 255, 255, 255, 255);
 		SetEntityModel(client, g_sModelPath);
