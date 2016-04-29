@@ -1,4 +1,4 @@
 [submodule "wiki"]
 	path = wiki
+	url = https://github.com/shanapu/MyJailbreak/wiki.git
 [submodule "wiki"]
-	url = https://github.com/shanapu/Myjailbreak/wiki.git

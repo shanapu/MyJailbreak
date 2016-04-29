@@ -413,13 +413,13 @@
 	}
 	"warden_cdmenu_start"
 	{
-		"en"		"Beginn a Start Countdown"
-		"de"		"Beginne einen Start Countdown"
+		"en"		"Beginn a Start Countdown (10sec.)"
+		"de"		"Beginne einen Start Countdown (10Sek.)"
 	}
 	"warden_cdmenu_stop"
 	{
-		"en"		"Beginn a Stop Countdown"
-		"de"		"Beginne einen Stop Countdown"
+		"en"		"Beginn a Stop Countdown (20sec.)"
+		"de"		"Beginne einen Stop Countdown (20Sek.)"
 	}
 	"warden_cdmenu_startstop"
 	{
@@ -501,18 +501,18 @@
 	
 	"warden_sure"
 	{
-		"en"		"are you sure?"
-		"de"		"bist du dir sicher?"
+		"en"		"Are you sure?"
+		"de"		"Bist du dir sicher?"
 	}
 	"warden_yes"
 	{
-		"en"		"yes"
-		"de"		"ja"
+		"en"		"Yes"
+		"de"		"Ja"
 	}
 	"warden_no"
 	{
-		"en"		"no"
-		"de"		"nein"
+		"en"		"No"
+		"de"		"Nein"
 	}
 
 }

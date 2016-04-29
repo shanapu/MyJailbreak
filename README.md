@@ -141,7 +141,7 @@ The menu shows only features that are enabled per round (e.g at EventDays no War
 ##### Commands 
 ```
 - sm_menu / sm_menus - opens the menu depends on players team/rank
-- sm_days / sm_event / sm _events - open the EventDays menu for Warden/Admin
+- sm_days / sm_event / sm _events - open a Set EventDays menu for Warden/Admin & vote EventDays menu for player
 ```
 ##### Cvars
 ```
@@ -150,9 +150,10 @@ The menu shows only features that are enabled per round (e.g at EventDays no War
 - sm_menu_ct: 0 - disabled, 1 - enable Jailbreak menu for CT
 - sm_menu_t: 0 - disabled, 1 - enable Jailbreak menu for terrorist
 - sm_menu_warden: disabled, 1 - enable Jailbreak menu for Warden
-- sm_menu_days: 0 - disabled, 1 - enable EventDays menu for Warden and Admin
+- sm_menu_days: 0 - disabled, 1 - enable vote/set EventDays menu
 - sm_menu_close: 0 - disabled, 1 - close menu after action
 - sm_menu_start: 0 - disabled, 1 - open menu on every roundstart
+- sm_menu_tag: 0 - disabled, 1 - Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch your sv_tags. Default 1
 ```
 ##### Features
 
@@ -160,7 +161,106 @@ The menu shows only features that are enabled per round (e.g at EventDays no War
 - 1.7 SourcePawn Transitional Syntax
 - Multilingual support
 - Colors
-- only shows available features
+- **only shows available/enabled features**
+
+##### WardenMenu
+
+* [Gun Menu](/shanapu/MyJailbreak/wiki/Weapons)
+* Open Cells
+* Countdown
+    * Beginn a Start Countdown
+    * Beginn a Stop Countdown
+    * Set a Start/Stop Countdown
+        * 15 seconds
+        * 30 seconds
+        * 45 seconds
+        * 1 Minute
+        * 1 Minute 30 seconds
+        * 2 Minutes
+        * 3 Minutes
+        * 5 Minutes
+* Math Quiz
+* Set a Event Days
+    * War
+    * FFA
+    * Zombie
+    * Hide
+    * Catch & Freeze
+    * JiHad
+    * DodgeBall
+    * NoScope
+    * DuckHunt
+    * Zeus
+    * Knifefight
+    * FreeDay
+* Checkplayer
+* Toggle Friendly Fire
+* Kill a random Player
+    * Are you sure?
+        * Yes
+        * No
+* Leave Warden
+* Rules
+###### Admin
+* Remove Warden
+* Set new Warden
+* Admin menu
+
+##### Counter-Terrorist Menu
+
+* [Gun Menu](/shanapu/MyJailbreak/wiki/Weapons)
+* Become Warden
+* Vote for Event Days
+    * War
+    * FFA
+    * Zombie
+    * Hide
+    * Catch & Freeze
+    * JiHad
+    * DodgeBall
+    * NoScope
+    * DuckHunt
+    * Zeus
+    * Knifefight
+    * FreeDay
+* Checkplayer
+* Join Terrorists
+    * Are you sure?
+        * Yes
+        * No
+* Rules
+###### Admin
+* Remove Warden
+* Set new Warden
+* Admin menu
+
+
+##### Counter-Terrorist Menu
+
+* [Gun Menu](/shanapu/MyJailbreak/wiki/Weapons)
+* Vote against Warden
+* Vote for Event Days
+    * War
+    * FFA
+    * Zombie
+    * Hide
+    * Catch & Freeze
+    * JiHad
+    * DodgeBall
+    * NoScope
+    * DuckHunt
+    * Zeus
+    * Knifefight
+    * FreeDay
+* Join Counter-Terrorist
+    * Are you sure?
+        * Yes
+        * No
+* Rules
+###### Admin
+* Remove Warden
+* Set new Warden
+* Admin menu
 
 #### Weapons
 

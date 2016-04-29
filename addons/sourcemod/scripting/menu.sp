@@ -153,8 +153,8 @@ public Action JbMenu(int client, int args)
 	{
 		char menuinfo1[255], menuinfo2[255], menuinfo3[255], menuinfo5[255], menuinfo6[255], menuinfo7[255], menuinfo8[255];
 		char menuinfo9[255], menuinfo10[255], menuinfo11[255], menuinfo13[255], menuinfo15[255], menuinfo16[255];
-		char menuinfo17[255], menuinfo14[255], menuinfo4[255];
-		//, menuinfo12[255]
+		char menuinfo17[255], menuinfo14[255], menuinfo12[255], menuinfo4[255], menuinfo17[255], menuinfo18[255];
+
 		
 		
 		
@@ -334,6 +334,20 @@ public Action JbMenu(int client, int args)
 		}
 		if (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
 		{
+			if(g_bWarden != null)
+			{
+				if(!warden_exist() && IsPlayerAlive(client))
+				{
+					if(g_bWarden.BoolValue)
+					{
+						Format(menuinfo17, sizeof(menuinfo17), "%T", "menu_removewarden", LANG_SERVER);
+						mainmenu.AddItem("removewarden", menuinfo17);
+						
+						Format(menuinfo18, sizeof(menuinfo18), "%T", "menu_setwarden", LANG_SERVER);
+						mainmenu.AddItem("setwarden", menuinfo18);
+					}
+				}
+			}
 			Format(menuinfo17, sizeof(menuinfo17), "%T", "menu_admin", LANG_SERVER);
 			mainmenu.AddItem("admin", menuinfo17);
 		}
@@ -481,6 +495,14 @@ public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selec
 		else if ( strcmp(info,"lastR") == 0 ) 
 		{
 			FakeClientCommand(client, "sm_lr");
+		}
+		else if ( strcmp(info,"removewarden") == 0 ) 
+		{
+			FakeClientCommand(client, "sm_rw");
+		}
+		else if ( strcmp(info,"setwarden") == 0 ) 
+		{
+			FakeClientCommand(client, "sm_sw");
 		}
 		else if ( strcmp(info,"check") == 0 ) 
 		{

@@ -75,6 +75,16 @@
 		"#format"		""
 		"en"			"Last Request"
 	}
+	"menu_removewarden"
+	{
+		"#format"		""
+		"en"			"Remove Warden"
+	}
+	"menu_setwarden"
+	{
+		"#format"		""
+		"en"			"Set new Warden"
+	}
 	"menu_rules"
 	{
 		"#format"		""
