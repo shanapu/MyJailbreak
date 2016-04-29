@@ -10,6 +10,7 @@
 
 //Compiler Options
 #pragma semicolon 1
+#pragma newdecls required
 
 //Booleans
 bool newWeaponsSelected[MAXPLAYERS+1];
@@ -49,7 +50,7 @@ enum weapons
 	String:desc[64]
 }
 
-public Plugin:myinfo =
+public Plugin myinfo =
 {
 	name = "MyJailbreak - Weapons",
 	author = "shanapu, Franc1sco",
@@ -111,7 +112,7 @@ public void OnPluginStart()
 	optionsMenu4 = BuildOptionsMenuWeapons(false);
 }
 
-Handle:BuildOptionsMenu(bool:sameWeaponsEnabled)
+Handle BuildOptionsMenu(bool sameWeaponsEnabled)
 {
 	char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255];
 	
@@ -133,7 +134,7 @@ Handle:BuildOptionsMenu(bool:sameWeaponsEnabled)
 	return menu3;
 }
 
-DisplayOptionsMenu(clientIndex)
+public void DisplayOptionsMenu(int clientIndex)
 {
 	if(gc_bPlugin.BoolValue)	
 	{
@@ -147,7 +148,7 @@ DisplayOptionsMenu(clientIndex)
 	}
 }
 
-Handle:BuildOptionsMenuWeapons(bool:primary)
+Handle BuildOptionsMenuWeapons(bool primary)
 {
 	
 	char info7[255], info8[255];
@@ -180,7 +181,7 @@ Handle:BuildOptionsMenuWeapons(bool:primary)
 	return menu;
 }
 
-public Menu_Options(Handle:menu, MenuAction:action, param1, param2)
+public int Menu_Options(Handle menu, MenuAction action, int param1, int param2)
 {
 	if (action == MenuAction_Select)
 	{
@@ -235,7 +236,7 @@ public Menu_Options(Handle:menu, MenuAction:action, param1, param2)
 	}
 }
 
-public Menu_Primary(Handle:menu, MenuAction:action, param1, param2)
+public int Menu_Primary(Handle menu, MenuAction action, int param1, int param2)
 {
 	if (action == MenuAction_Select)
 	{
@@ -246,7 +247,7 @@ public Menu_Primary(Handle:menu, MenuAction:action, param1, param2)
 	}
 }
 
-public Menu_Secondary(Handle:menu, MenuAction:action, param1, param2)
+public int Menu_Secondary(Handle menu, MenuAction action,int param1,int param2)
 {
 	if (action == MenuAction_Select)
 	{
@@ -266,7 +267,7 @@ public void OnMapStart()
 	SetBuyZones("Disable");
 }
 
-public Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast)
+public int Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast)
 {
 	int clientIndex = GetClientOfUserId(GetEventInt(event, "userid"));
 	
@@ -278,7 +279,7 @@ public Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast)
 	}
 }
 
-public Action:GetWeapons(Handle:timer, any:clientIndex)
+public Action GetWeapons(Handle timer, any clientIndex)
 {
 	Timers[clientIndex] = null;
 	if (GetClientTeam(clientIndex) > 1 && IsPlayerAlive(clientIndex))
@@ -307,7 +308,7 @@ public Action:GetWeapons(Handle:timer, any:clientIndex)
 	}
 }
 
-public Action:Fix(Handle:timer, any:clientIndex)
+public Action Fix(Handle timer, any clientIndex)
 {
 	Timers[clientIndex] = null;
 	if (GetClientTeam(clientIndex) > 1 && IsPlayerAlive(clientIndex))
@@ -316,7 +317,7 @@ public Action:Fix(Handle:timer, any:clientIndex)
 	}
 }
 
-GiveSavedWeaponsFix(clientIndex)
+public void GiveSavedWeaponsFix(int clientIndex)
 {
 	if (IsPlayerAlive(clientIndex))
 	{
@@ -356,7 +357,7 @@ GiveSavedWeaponsFix(clientIndex)
 	}
 }
 
-SetBuyZones(const char[] status)
+public void SetBuyZones(const char[] status)
 {
 	int maxEntities = GetMaxEntities();
 	char class[24];
@@ -384,7 +385,7 @@ public Action Cmd_Weapons(int client,int args)
 	return Plugin_Continue;
 }
 
-GiveSavedWeapons(clientIndex)
+public void GiveSavedWeapons(int clientIndex)
 {
 
 	if (!weaponsGivenThisRound[clientIndex] && IsPlayerAlive(clientIndex))
@@ -446,12 +447,12 @@ GiveSavedWeapons(clientIndex)
 	}
 }
 
-public OnClientPutInServer(client)
+public void OnClientPutInServer(int client)
 {
 	ResetClientSettings(client);
 }
 
-public OnClientCookiesCached(client)
+public void OnClientCookiesCached(int client)
 {
 	GetClientCookie(client, weapons1, primaryWeapon[client], 24);
 	GetClientCookie(client, weapons2, secondaryWeapon[client], 24);
@@ -459,13 +460,13 @@ public OnClientCookiesCached(client)
 	rememberChoice[client] = false;
 }
 
-ResetClientSettings(clientIndex)
+public void ResetClientSettings(int clientIndex)
 {
 	weaponsGivenThisRound[clientIndex] = false;
 	newWeaponsSelected[clientIndex] = false;
 }
 
-public OnClientDisconnect(clientIndex)
+public void OnClientDisconnect(int clientIndex)
 {
 	DeathTimer(clientIndex);
 	
@@ -476,7 +477,7 @@ public OnClientDisconnect(clientIndex)
 	else SetClientCookie(clientIndex, remember, "Off"); */
 }
 
-DeathTimer(client)
+public void DeathTimer(int client)
 {
 	if (Timers[client] != null)
     {
@@ -486,7 +487,7 @@ DeathTimer(client)
 }
 
 
-ListWeapons()
+public void ListWeapons()
 {
 	ClearArray(array_primary);
 	ClearArray(array_secondary);
@@ -633,7 +634,7 @@ ListWeapons()
 	
 }
 
-/* bool:GetCookie(client)
+/* bool GetCookie(client)
 {
 	char buffer[10];
 	GetClientCookie(client, remember, buffer, sizeof(buffer));

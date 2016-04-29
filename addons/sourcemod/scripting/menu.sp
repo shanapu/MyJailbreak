@@ -7,8 +7,9 @@
 #include <colors>
 #include <autoexecconfig>
 #include <myjailbreak>
+#undef REQUIRE_PLUGIN
 #include <lastrequest>
-
+#define REQUIRE_PLUGIN
 
 //Compiler Options
 #pragma semicolon 1
@@ -336,17 +337,16 @@ public Action JbMenu(int client, int args)
 		{
 			if(g_bWarden != null)
 			{
-				if(!warden_exist() && IsPlayerAlive(client))
+				if(warden_exist() && IsPlayerAlive(client))
 				{
 					if(g_bWarden.BoolValue)
 					{
 						Format(menuinfo19, sizeof(menuinfo19), "%T", "menu_removewarden", LANG_SERVER);
 						mainmenu.AddItem("removewarden", menuinfo19);
-						
-						Format(menuinfo18, sizeof(menuinfo18), "%T", "menu_setwarden", LANG_SERVER);
-						mainmenu.AddItem("setwarden", menuinfo18);
 					}
 				}
+				Format(menuinfo18, sizeof(menuinfo18), "%T", "menu_setwarden", LANG_SERVER);
+				mainmenu.AddItem("setwarden", menuinfo18);
 			}
 			Format(menuinfo17, sizeof(menuinfo17), "%T", "menu_admin", LANG_SERVER);
 			mainmenu.AddItem("admin", menuinfo17);

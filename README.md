@@ -201,10 +201,6 @@ The menu shows only features that are enabled per round (e.g at EventDays no War
         * No
 * Leave Warden
 * Rules
-###### Admin
-* Remove Warden
-* Set new Warden
-* Admin menu
 
 ##### Counter-Terrorist Menu
 
@@ -229,10 +225,6 @@ The menu shows only features that are enabled per round (e.g at EventDays no War
         * Yes
         * No
 * Rules
-###### Admin
-* Remove Warden
-* Set new Warden
-* Admin menu
 
 
 ##### Counter-Terrorist Menu
@@ -257,9 +249,14 @@ The menu shows only features that are enabled per round (e.g at EventDays no War
         * Yes
         * No
 * Rules
-###### Admin
+
+###### additionally for Admin
 * Remove Warden
 * Set new Warden
+    * Choose Player
+        * sure kick old Warden?
+            * Yes
+            * No
 * Admin menu
 
 #### Weapons
