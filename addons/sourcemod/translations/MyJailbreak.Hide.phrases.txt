@@ -77,8 +77,8 @@
 	"hide_progress"
 	{
 		"#format"	"{1:s}"
-		"en"		"Event ({darkred}{1}) {default}is {purple}already in progress."
-		"de"		"Event {darkred}{1}) {default}ist {purple}bereits gesetzt."
+		"en"		"Event ({darkred}{1} {default}is {purple}already in progress."
+		"de"		"Event {darkred}{1} {default}ist {purple}bereits gesetzt."
 	}
 	
 	"hide_minplayer"

@@ -174,7 +174,7 @@ public Action SetDuckHunt(int client,int args)
 		{
 			if (gc_bSetW.BoolValue)
 			{
-				if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_CT) > 0 ))
+				if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
 				{
 					char EventDay[64];
 					GetEventDay(EventDay);
@@ -197,7 +197,7 @@ public Action SetDuckHunt(int client,int args)
 			{
 				if (gc_bSetA.BoolValue)
 				{
-					if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_CT) > 0 ))
+					if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
 					{
 						char EventDay[64];
 						GetEventDay(EventDay);

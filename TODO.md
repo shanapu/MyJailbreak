@@ -3,8 +3,8 @@ know bugs:
 - [ ] Jihad: If all CT are dead -> T win round - mp_default_team_winner_no_objective?
 - [?] sm_weapons_spawnmenu dont work
 - [ ] weapons.smx "block" stamm vip models?! why?!
-- [?] menu join ct
-- [?] ct vs t check terror>0
+- [x] menu join ct
+- [x] ct vs t check terror>0
 
 
 want:
