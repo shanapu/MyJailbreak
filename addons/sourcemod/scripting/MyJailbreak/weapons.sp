@@ -76,14 +76,14 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_giveweapon", Cmd_Weapons, "Open the weapon menu if enabled (in EventDays/for CT)");
 	
 	//AutoExecConfig
-	AutoExecConfig_SetFile("MyJailbreak.Weapons");
+	AutoExecConfig_SetFile("Weapons", "MyJailbreak");
 	AutoExecConfig_SetCreateFile(true);
 	
-	AutoExecConfig_CreateConVar("sm_weapons_version", PLUGIN_VERSION, "The version of this MyJailBreak SourceMod plugin", FCVAR_SPONLY|FCVAR_PLUGIN|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
+	AutoExecConfig_CreateConVar("sm_weapons_version", PLUGIN_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_PLUGIN|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_weapons_enable", "1", "0 - disabled, 1 - enable weapons menu - you shouldn't touch these, cause events days will handle them", _, true,  0.0, true, 1.0);
 	gc_bTerror = AutoExecConfig_CreateConVar("sm_weapons_t", "0", "0 - disabled, 1 - enable weapons menu for T - you shouldn't touch these, cause events days will handle them", _, true,  0.0, true, 1.0);
 	gc_bCTerror = AutoExecConfig_CreateConVar("sm_weapons_ct", "1", "0 - disabled, 1 - enable weapons menu for CT - you shouldn't touch these, cause events days will handle them", _, true,  0.0, true, 1.0);
-	gc_bSpawn = AutoExecConfig_CreateConVar("sm_weapons_spawnmenu", "1", "0 - disabled, 1 -  enable autoopen weapon menu on spawn if enabled", _, true,  0.0, true, 1.0);
+	gc_bSpawn = AutoExecConfig_CreateConVar("sm_weapons_spawnmenu", "1", "0 - disabled, 1 -  enable autoopen weapon menu on spawn", _, true,  0.0, true, 1.0);
 	gc_bAWP = AutoExecConfig_CreateConVar("sm_weapons_awp", "1", "0 - disabled, 1 - enable AWP in menu", _, true,  0.0, true, 1.0);
 	gc_bAutoSniper = AutoExecConfig_CreateConVar("sm_weapons_autosniper", "1", "0 - disabled, 1 - enable scar20 & g3sg1 in menu", _, true,  0.0, true, 1.0);
 	gc_bTA = AutoExecConfig_CreateConVar("sm_weapons_warden_tagrenade", "1", "0 - disabled, 1 - warden get a TA grenade with weapons", _, true,  0.0, true, 1.0);
@@ -275,7 +275,7 @@ public int Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast)
 	DeathTimer(clientIndex);
 	if(gc_bSpawn.BoolValue)
 	{
-	Timers[clientIndex] = CreateTimer(1.0, GetWeapons, clientIndex);
+		Timers[clientIndex] = CreateTimer(1.0, GetWeapons, clientIndex);
 	}
 }
 
@@ -286,22 +286,25 @@ public Action GetWeapons(Handle timer, any clientIndex)
 	{
 		if(gc_bPlugin.BoolValue)	
 		{
-			if((gc_bTerror.BoolValue && GetClientTeam(clientIndex) == 2) || (gc_bCTerror.BoolValue && GetClientTeam(clientIndex) == 3))
+			if(gc_bSpawn.BoolValue)
 			{
-				// Give weapons or display menu.
-				weaponsGivenThisRound[clientIndex] = false;
-				if (newWeaponsSelected[clientIndex])
+				if((gc_bTerror.BoolValue && GetClientTeam(clientIndex) == 2) || (gc_bCTerror.BoolValue && GetClientTeam(clientIndex) == 3))
 				{
-					GiveSavedWeapons(clientIndex);
-					newWeaponsSelected[clientIndex] = false;
-				}
-				else if (rememberChoice[clientIndex])
-				{
-					GiveSavedWeapons(clientIndex);
-				}
-				else
-				{
-					DisplayOptionsMenu(clientIndex);
+					// Give weapons or display menu.
+					weaponsGivenThisRound[clientIndex] = false;
+					if (newWeaponsSelected[clientIndex])
+					{
+						GiveSavedWeapons(clientIndex);
+						newWeaponsSelected[clientIndex] = false;
+					}
+					else if (rememberChoice[clientIndex])
+					{
+						GiveSavedWeapons(clientIndex);
+					}
+					else
+					{
+						DisplayOptionsMenu(clientIndex);
+					}
 				}
 			}
 		}

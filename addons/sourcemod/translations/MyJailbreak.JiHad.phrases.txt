@@ -25,19 +25,24 @@
 	}
 	"jihad_voting"
 	{
-		"en"		"Player Voting for JiHad is {purple}disabled"
-		"de"		"Voting für JiHad ist {purple}ausgeschaltet"
+		"en"		"Player Voting for Jihad is {purple}disabled"
+		"de"		"Voting für Jihad ist {purple}ausgeschaltet"
 	}
 	"jihad_setbywarden"
 	{
-		"en"		"Set JiHad by Warden is {purple}disabled"
-		"de"		"JiHad Aktivierung durch den Warden ist {purple}ausgeschaltet"
+		"en"		"Set Jihad by Warden is {purple}disabled"
+		"de"		"Jihad Aktivierung durch den Warden ist {purple}ausgeschaltet"
 	}
-	
+	"jihad_minplayer"
+	{
+		"da"		"For jihad skal der mindst være {purple}en CT & en T"	
+		"en"		"For a jihad you need a least {purple}one CT 6 one T"
+		"de"		"Für jihad brauchen wir mindestens {purple}einen CT und einen T"
+	}
 	"jihad_setbyadmin"
 	{
-		"en"		"Set JiHad by admin is {purple}disabled"
-		"de"		"JiHad Aktivierung durch den Admin ist {purple}ausgeschaltet"
+		"en"		"Set Jihad by admin is {purple}disabled"
+		"de"		"Jihad Aktivierung durch den Admin ist {purple}ausgeschaltet"
 	}
 	"jihad_ctwin_nc"
 	{
@@ -47,39 +52,39 @@
 	
 	"jihad_end"
 	{
-		"en"		"{purple}JiHad{default} ended"
-		"de"		"{purple}JiHad{default} beendet"
+		"en"		"{purple}Jihad{default} ended"
+		"de"		"{purple}Jihad{default} beendet"
 	}
 	
 	"jihad_next"
 	{
-		"en"		"Next round is {purple}JiHad"
-		"de"		"Nächste Runde ist {purple}JiHad"
+		"en"		"Next round is {purple}Jihad"
+		"de"		"Nächste Runde ist {purple}Jihad"
 	}
 	"jihad_next_nc"
 	{
-		"en"		"Next round is JiHad"
-		"de"		"Nächste Runde ist JiHad"
+		"en"		"Next round is Jihad"
+		"de"		"Nächste Runde ist Jihad"
 	}
 	
 	"jihad_start"
 	{
 
-		"en"		"The {purple}JiHad{default} has started!"
-		"de"		"{purple}JiHad{default} ist gestartet!"
+		"en"		"The {purple}Jihad{default} has started!"
+		"de"		"{purple}Jihad{default} ist gestartet!"
 	}
 	
 	"jihad_start_nc"
 	{
 
-		"en"		"The JiHad started!"
-		"de"		"JiHad ist gestartet!"
+		"en"		"The Jihad started!"
+		"de"		"Jihad ist gestartet!"
 	}
 	
 	"jihad_voted"
 	{
-		"en"		"You allready voted for {purple}JiHad"
-		"de"		"Du hast schon für {purple}JiHad {default}gevotet"
+		"en"		"You allready voted for {purple}Jihad"
+		"de"		"Du hast schon für {purple}Jihad {default}gevotet"
 	}
 	
 	"jihad_progress"
@@ -92,8 +97,8 @@
 	"jihad_disabled"
 	{
 
-		"en"		"JiHad is {purple}disabled."
-		"de"		"JiHad ist {purple}deaktiviert."
+		"en"		"Jihad is {purple}disabled."
+		"de"		"Jihad ist {purple}deaktiviert."
 	}
 	
 		
@@ -132,8 +137,8 @@
 	
 	"jihad_info_title"
 	{
-		"en"		"JiHad JiHad is activ"
-		"de"		"JiHad JiHad ist aktiv"
+		"en"		"Jihad Jihad is activ"
+		"de"		"Jihad Jihad ist aktiv"
 	}
 	
 	"jihad_info_line1"

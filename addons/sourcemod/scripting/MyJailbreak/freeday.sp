@@ -60,11 +60,11 @@ public void OnPluginStart()
 
 	
 	//AutoExecConfig
-	AutoExecConfig_SetFile("MyJailbreak.FreeDay");
+	AutoExecConfig_SetFile("FreeDay", "MyJailbreak/EventDays");
 	AutoExecConfig_SetCreateFile(true);
 	
-	AutoExecConfig_CreateConVar("sm_freeday_version", PLUGIN_VERSION, "The version of this MyJailBreak SourceMod plugin", FCVAR_SPONLY|FCVAR_PLUGIN|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
-	gc_bPlugin = AutoExecConfig_CreateConVar("sm_freeday_enable", "1", "0 - disabled, 1 - enable this MyJailBreak SourceMod plugin", _, true,  0.0, true, 1.0);
+	AutoExecConfig_CreateConVar("sm_freeday_version", PLUGIN_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_PLUGIN|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
+	gc_bPlugin = AutoExecConfig_CreateConVar("sm_freeday_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true,  0.0, true, 1.0);
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_freeday_warden", "1", "0 - disabled, 1 - allow warden to set freeday round", _, true,  0.0, true, 1.0);
 	gc_bSetA = AutoExecConfig_CreateConVar("sm_freeday_admin", "1", "0 - disabled, 1 - allow admin to set freeday round", _, true,  0.0, true, 1.0);
 	gc_bVote = AutoExecConfig_CreateConVar("sm_freeday_vote", "1", "0 - disabled, 1 - allow player to vote for freeday", _, true,  0.0, true, 1.0);
@@ -158,36 +158,32 @@ public Action VoteFreeDay(int client,int args)
 	if (gc_bPlugin.BoolValue)
 	{	
 		if (gc_bVote.BoolValue)
-		{	
-			if (GetTeamClientCount(CS_TEAM_CT) > 0)
+		{
+			char EventDay[64];
+			GetEventDay(EventDay);
+			
+			if(StrEqual(EventDay, "none", false))
 			{
-				char EventDay[64];
-				GetEventDay(EventDay);
-				
-				if(StrEqual(EventDay, "none", false))
+				if (g_iCoolDown == 0)
 				{
-					if (g_iCoolDown == 0)
+					if (StrContains(g_sHasVoted, steamid, true) == -1)
 					{
-						if (StrContains(g_sHasVoted, steamid, true) == -1)
+						int playercount = (GetClientCount(true) / 2);
+						g_iVoteCount++;
+						int Missing = playercount - g_iVoteCount + 1;
+						Format(g_sHasVoted, sizeof(g_sHasVoted), "%s,%s", g_sHasVoted, steamid);
+						
+						if (g_iVoteCount > playercount)
 						{
-							int playercount = (GetClientCount(true) / 2);
-							g_iVoteCount++;
-							int Missing = playercount - g_iVoteCount + 1;
-							Format(g_sHasVoted, sizeof(g_sHasVoted), "%s,%s", g_sHasVoted, steamid);
-							
-							if (g_iVoteCount > playercount)
-							{
-								StartNextRound();
-							}
-							else CPrintToChatAll("%t %t", "freeday_tag" , "freeday_need", Missing, client);
+							StartNextRound();
 						}
-						else CPrintToChat(client, "%t %t", "freeday_tag" , "freeday_voted");
+						else CPrintToChatAll("%t %t", "freeday_tag" , "freeday_need", Missing, client);
 					}
-					else CPrintToChat(client, "%t %t", "freeday_tag" , "freeday_wait", g_iCoolDown);
+					else CPrintToChat(client, "%t %t", "freeday_tag" , "freeday_voted");
 				}
-				else CPrintToChat(client, "%t %t", "freeday_tag" , "freeday_progress" , EventDay);
+				else CPrintToChat(client, "%t %t", "freeday_tag" , "freeday_wait", g_iCoolDown);
 			}
-			else CPrintToChat(client, "%t %t", "freeday_tag" , "freeday_minct");
+			else CPrintToChat(client, "%t %t", "freeday_tag" , "freeday_progress" , EventDay);
 		}
 		else CPrintToChat(client, "%t %t", "freeday_tag" , "freeday_voting");
 	}

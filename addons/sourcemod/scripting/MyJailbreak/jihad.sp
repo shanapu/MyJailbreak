@@ -20,8 +20,8 @@
 #define IsBombing  (1<<2)
 
 //Booleans
-bool IsJiHad;
-bool StartJiHad;
+bool IsJihad;
+bool StartJihad;
 bool BombActive;
 
 //ConVars
@@ -62,7 +62,7 @@ int g_iMaxRound;
 
 //Handles
 Handle SprintTimer[MAXPLAYERS+1];
-Handle JiHadMenu;
+Handle JihadMenu;
 Handle FreezeTimer;
 
 //Strings
@@ -73,7 +73,7 @@ char g_sSoundStartPath[256];
 
 
 public Plugin myinfo = {
-	name = "MyJailbreak - JiHad & Freeze",
+	name = "MyJailbreak - Jihad",
 	author = "shanapu",
 	description = "Event Day for Jailbreak Server",
 	version = PLUGIN_VERSION,
@@ -84,20 +84,20 @@ public void OnPluginStart()
 {
 	// Translation
 	LoadTranslations("MyJailbreak.Warden.phrases");
-	LoadTranslations("MyJailbreak.JiHad.phrases");
+	LoadTranslations("MyJailbreak.Jihad.phrases");
 	
 	//Client Commands
-	RegConsoleCmd("sm_setjihad", SetJiHad, "Allows the Admin or Warden to set jihad as next round");
-	RegConsoleCmd("sm_jihad", VoteJiHad, "Allows players to vote for a duckhunt");
+	RegConsoleCmd("sm_setjihad", SetJihad, "Allows the Admin or Warden to set jihad as next round");
+	RegConsoleCmd("sm_jihad", VoteJihad, "Allows players to vote for a duckhunt");
 	RegConsoleCmd("sm_sprint", Command_StartSprint, "Starts the sprint");
 	RegConsoleCmd("sm_makeboom", Command_BombJihad, "Suicide with bomb");
 	
 	//AutoExecConfig
-	AutoExecConfig_SetFile("MyJailbreak.JiHad");
+	AutoExecConfig_SetFile("Jihad", "MyJailbreak/EventDays");
 	AutoExecConfig_SetCreateFile(true);
 	
-	AutoExecConfig_CreateConVar("sm_jihad_version", PLUGIN_VERSION, "The version of this MyJailBreak SourceMod plugin", FCVAR_SPONLY|FCVAR_PLUGIN|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
-	gc_bPlugin = AutoExecConfig_CreateConVar("sm_jihad_enable", "1", "0 - disabled, 1 - enable this MyJailBreak SourceMod plugin", _, true,  0.0, true, 1.0);
+	AutoExecConfig_CreateConVar("sm_jihad_version", PLUGIN_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_PLUGIN|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
+	gc_bPlugin = AutoExecConfig_CreateConVar("sm_jihad_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true,  0.0, true, 1.0);
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_jihad_warden", "1", "0 - disabled, 1 - allow warden to set jihad round", _, true,  0.0, true, 1.0);
 	gc_bSetA = AutoExecConfig_CreateConVar("sm_jihad_admin", "1", "0 - disabled, 1 - allow admin to set jihad round", _, true,  0.0, true, 1.0);
 	gc_bVote = AutoExecConfig_CreateConVar("sm_jihad_vote", "1", "0 - disabled, 1 - allow player to vote for jihad", _, true,  0.0, true, 1.0);
@@ -175,7 +175,7 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 
 public Action CS_OnTerminateRound( float &delay, CSRoundEndReason &reason)
 {
-	if (IsJiHad)
+	if (IsJihad)
 	{
 		if (reason == CSRoundEnd_Draw)
 		{
@@ -197,8 +197,8 @@ public void OnMapStart()
 {
 	g_iVoteCount = 0;
 	g_iRound = 0;
-	IsJiHad = false;
-	StartJiHad = false;
+	IsJihad = false;
+	StartJihad = false;
 	BombActive = false;
 	
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
@@ -221,7 +221,7 @@ public void OnConfigsExecuted()
 	g_iMaxRound = gc_iRounds.IntValue;
 }
 
-public Action SetJiHad(int client,int args)
+public Action SetJihad(int client,int args)
 {
 	if (gc_bPlugin.BoolValue)
 	{
@@ -229,24 +229,7 @@ public Action SetJiHad(int client,int args)
 		{
 			if (gc_bSetW.BoolValue)
 			{
-				char EventDay[64];
-				GetEventDay(EventDay);
-				
-				if(StrEqual(EventDay, "none", false))
-				{
-					if (g_iCoolDown == 0)
-					{
-						StartNextRound();
-					}
-					else CPrintToChat(client, "%t %t", "jihad_tag" , "jihad_wait", g_iCoolDown);
-				}
-				else CPrintToChat(client, "%t %t", "jihad_tag" , "jihad_progress" , EventDay);
-			}
-			else CPrintToChat(client, "%t %t", "warden_tag" , "jihad_setbywarden");
-		}
-		else if (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
-			{
-				if (gc_bSetA.BoolValue)
+				if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_CT) > 0 ))
 				{
 					char EventDay[64];
 					GetEventDay(EventDay);
@@ -261,6 +244,31 @@ public Action SetJiHad(int client,int args)
 					}
 					else CPrintToChat(client, "%t %t", "jihad_tag" , "jihad_progress" , EventDay);
 				}
+				else CPrintToChat(client, "%t %t", "jihad_tag" , "jihad_minplayer");
+			}
+			else CPrintToChat(client, "%t %t", "warden_tag" , "jihad_setbywarden");
+		}
+		else if (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
+			{
+				if (gc_bSetA.BoolValue)
+				{
+					if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_CT) > 0 ))
+					{
+						char EventDay[64];
+						GetEventDay(EventDay);
+						
+						if(StrEqual(EventDay, "none", false))
+						{
+							if (g_iCoolDown == 0)
+							{
+								StartNextRound();
+							}
+							else CPrintToChat(client, "%t %t", "jihad_tag" , "jihad_wait", g_iCoolDown);
+						}
+						else CPrintToChat(client, "%t %t", "jihad_tag" , "jihad_progress" , EventDay);
+					}
+					else CPrintToChat(client, "%t %t", "jihad_tag" , "jihad_minplayer");
+				}
 				else CPrintToChat(client, "%t %t", "jihad_tag" , "jihad_setbyadmin");
 			}
 			else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
@@ -268,7 +276,7 @@ public Action SetJiHad(int client,int args)
 	else CPrintToChat(client, "%t %t", "jihad_tag" , "jihad_disabled");
 }
 
-public Action VoteJiHad(int client,int args)
+public Action VoteJihad(int client,int args)
 {
 	char steamid[64];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
@@ -276,8 +284,8 @@ public Action VoteJiHad(int client,int args)
 	if (gc_bPlugin.BoolValue)
 	{
 		if (gc_bVote.BoolValue)
-		{	
-			if (GetTeamClientCount(CS_TEAM_CT) > 0)
+		{
+			if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_CT) > 0 ))
 			{
 				char EventDay[64];
 				GetEventDay(EventDay);
@@ -305,7 +313,7 @@ public Action VoteJiHad(int client,int args)
 				}
 				else CPrintToChat(client, "%t %t", "jihad_tag" , "jihad_progress" , EventDay);
 			}
-			else CPrintToChat(client, "%t %t", "jihad_tag" , "jihad_minct");
+			else CPrintToChat(client, "%t %t", "jihad_tag" , "jihad_minplayer");
 		}
 		else CPrintToChat(client, "%t %t", "jihad_tag" , "jihad_voting");
 	}
@@ -314,7 +322,7 @@ public Action VoteJiHad(int client,int args)
 
 void StartNextRound()
 {
-	StartJiHad = true;
+	StartJihad = true;
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iVoteCount = 0;
 	SetEventDay("jihad");
@@ -325,7 +333,7 @@ void StartNextRound()
 
 public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
-	if (StartJiHad || IsJiHad)
+	if (StartJihad || IsJihad)
 	{
 		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
 		
@@ -335,28 +343,28 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		SetCvar("sm_weapons_enable", 0);
 		
 		g_iRound++;
-		IsJiHad = true;
-		StartJiHad = false;
-		JiHadMenu = CreatePanel();
+		IsJihad = true;
+		StartJihad = false;
+		JihadMenu = CreatePanel();
 		Format(info1, sizeof(info1), "%T", "jihad_info_title", LANG_SERVER);
-		SetPanelTitle(JiHadMenu, info1);
-		DrawPanelText(JiHadMenu, "                                   ");
+		SetPanelTitle(JihadMenu, info1);
+		DrawPanelText(JihadMenu, "                                   ");
 		Format(info2, sizeof(info2), "%T", "jihad_info_line1", LANG_SERVER);
-		DrawPanelText(JiHadMenu, info2);
-		DrawPanelText(JiHadMenu, "-----------------------------------");
+		DrawPanelText(JihadMenu, info2);
+		DrawPanelText(JihadMenu, "-----------------------------------");
 		Format(info3, sizeof(info3), "%T", "jihad_info_line2", LANG_SERVER);
-		DrawPanelText(JiHadMenu, info3);
+		DrawPanelText(JihadMenu, info3);
 		Format(info4, sizeof(info4), "%T", "jihad_info_line3", LANG_SERVER);
-		DrawPanelText(JiHadMenu, info4);
+		DrawPanelText(JihadMenu, info4);
 		Format(info5, sizeof(info5), "%T", "jihad_info_line4", LANG_SERVER);
-		DrawPanelText(JiHadMenu, info5);
+		DrawPanelText(JihadMenu, info5);
 		Format(info6, sizeof(info6), "%T", "jihad_info_line5", LANG_SERVER);
-		DrawPanelText(JiHadMenu, info6);
+		DrawPanelText(JihadMenu, info6);
 		Format(info7, sizeof(info7), "%T", "jihad_info_line6", LANG_SERVER);
-		DrawPanelText(JiHadMenu, info7);
+		DrawPanelText(JihadMenu, info7);
 		Format(info8, sizeof(info8), "%T", "jihad_info_line7", LANG_SERVER);
-		DrawPanelText(JiHadMenu, info8);
-		DrawPanelText(JiHadMenu, "-----------------------------------");
+		DrawPanelText(JihadMenu, info8);
+		DrawPanelText(JihadMenu, "-----------------------------------");
 		
 		if (g_iRound > 0)
 			{
@@ -367,7 +375,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 						StripAllWeapons(client);
 						ClientSprintStatus[client] = 0;
 						SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
-						SendPanelToClient(JiHadMenu, client, NullHandler, 15);
+						SendPanelToClient(JihadMenu, client, NullHandler, 15);
 						
 						if (GetClientTeam(client) == CS_TEAM_T)
 						{
@@ -380,7 +388,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 					}
 				}
 				g_iFreezeTime--;
-				FreezeTimer = CreateTimer(1.0, JiHad, _, TIMER_REPEAT);
+				FreezeTimer = CreateTimer(1.0, Jihad, _, TIMER_REPEAT);
 				CPrintToChatAll("%t %t", "jihad_tag" ,"jihad_rounds", g_iRound, g_iMaxRound);
 			}
 	}
@@ -399,7 +407,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 
 public Action Command_LAW(int client, const char[] command, int argc)
 {
-	if(IsJiHad)
+	if(IsJihad)
 	{
 		if(gc_iKey.IntValue == 1)
 		{
@@ -410,7 +418,7 @@ public Action Command_LAW(int client, const char[] command, int argc)
 	return Plugin_Continue;
 }
 
-public Action JiHad(Handle timer)
+public Action Jihad(Handle timer)
 {
 	if (g_iFreezeTime > 1)
 	{
@@ -460,7 +468,7 @@ public Action JiHad(Handle timer)
 
 public Action OnWeaponDrop(int client, int weapon)
 {
-	if (IsJiHad && IsValidClient(client, false, false))
+	if (IsJihad && IsValidClient(client, false, false))
 	{
 		char g_sWeaponName[80];
 		if (weapon > MaxClients && GetClientTeam(client) == CS_TEAM_T && GetEntityClassname(weapon, g_sWeaponName, sizeof(g_sWeaponName)))
@@ -477,7 +485,7 @@ public Action OnWeaponDrop(int client, int weapon)
 
 public Action Command_BombJihad(int client, int args)
 {
-	if (IsJiHad && BombActive && IsValidClient(client, false, false))
+	if (IsJihad && BombActive && IsValidClient(client, false, false))
 	{
 		int weapon = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
 		char weaponName[64];
@@ -571,7 +579,7 @@ public Action OnWeaponCanUse(int client, int weapon)
 		{
 			if (IsValidClient(client, true, false))
 			{
-				if(IsJiHad == true)
+				if(IsJihad == true)
 				{
 					return Plugin_Handled;
 				}
@@ -585,7 +593,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 {
 	int winner = GetEventInt(event, "winner");
 	
-	if (IsJiHad)
+	if (IsJihad)
 	{
 		for(int client=1; client <= MaxClients; client++)
 		{
@@ -598,8 +606,8 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 		if (winner == 3) PrintHintTextToAll("%t", "jihad_ctwin_nc");
 		if (g_iRound == g_iMaxRound)
 		{
-			IsJiHad = false;
-			StartJiHad = false;
+			IsJihad = false;
+			StartJihad = false;
 			BombActive = false;
 			g_iRound = 0;
 			
@@ -614,7 +622,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 			CPrintToChatAll("%t %t", "jihad_tag" , "jihad_end");
 		}
 	}
-	if (StartJiHad)
+	if (StartJihad)
 	{
 		g_iOldRoundTime = g_iGetRoundTime.IntValue;
 		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;
@@ -623,7 +631,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 
 public Action Command_StartSprint(int client, int args)
 {
-	if (IsJiHad)
+	if (IsJihad)
 	{
 		if(gc_bSprint.BoolValue && client > 0 && IsClientInGame(client) && IsPlayerAlive(client) && GetClientTeam(client) > 1 && !(ClientSprintStatus[client] & IsSprintUsing) && !(ClientSprintStatus[client] & IsSprintCoolDown))
 		{
@@ -641,7 +649,7 @@ public Action Command_StartSprint(int client, int args)
 
 public void OnGameFrame()
 {
-	if (IsJiHad)
+	if (IsJihad)
 	{
 		for(int i = 1; i <= MaxClients; i++)
 		{
@@ -729,8 +737,8 @@ public Action Event_PlayerSpawn(Handle event, const char[] name, bool dontBroadc
 
 public void OnMapEnd()
 {
-	IsJiHad = false;
-	StartJiHad = false;
+	IsJihad = false;
+	StartJihad = false;
 	BombActive = false;
 	g_iVoteCount = 0;
 	g_iRound = 0;

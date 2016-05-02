@@ -49,7 +49,12 @@
 		"en"		"A Counter-Terrorist has surrived"
 		"de"		"Ein Counter-Terrorist hat als einziger überlebt"
 	}
-	
+	"knifefight_minplayer"
+	{
+		"da"		"For knifefight skal der mindst være {purple}en CT & en T"	
+		"en"		"For a knifefight you need a least {purple}one CT 6 one T"
+		"de"		"Für knifefight brauchen wir mindestens {purple}einen CT und einen T"
+	}
 	"knifefight_end"
 	{
 		"da"		"{purple}knifefight{default} er afsluttet!"	

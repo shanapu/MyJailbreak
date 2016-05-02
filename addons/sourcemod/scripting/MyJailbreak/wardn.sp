@@ -176,11 +176,11 @@ public void OnPluginStart()
 	g_fward_onRemove = CreateGlobalForward("warden_OnWardenRemoved", ET_Ignore, Param_Cell);
 	
 	//AutoExecConfig
-	AutoExecConfig_SetFile("MyJailbreak.Warden");
+	AutoExecConfig_SetFile("Warden", "MyJailbreak");
 	AutoExecConfig_SetCreateFile(true);
 	
-	AutoExecConfig_CreateConVar("sm_warden_version", PLUGIN_VERSION, "The version of this MyJailBreak SourceMod plugin", FCVAR_SPONLY|FCVAR_PLUGIN|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
-	gc_bPlugin = AutoExecConfig_CreateConVar("sm_warden_enable", "1", "0 - disabled, 1 - enable this MyJailBreak SourceMod plugin", _, true,  0.0, true, 1.0);
+	AutoExecConfig_CreateConVar("sm_warden_version", PLUGIN_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_PLUGIN|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
+	gc_bPlugin = AutoExecConfig_CreateConVar("sm_warden_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true,  0.0, true, 1.0);
 	gc_bBecomeWarden = AutoExecConfig_CreateConVar("sm_warden_become", "1", "0 - disabled, 1 - enable !w... - player can choose to be warden", _, true,  0.0, true, 1.0);
 	gc_bChooseRandom = AutoExecConfig_CreateConVar("sm_warden_choose_random", "1", "0 - disabled, 1 - enable pic random warden if there is still no warden after sm_warden_choose_time", _, true,  0.0, true, 1.0);
 	g_hRandomTimer = AutoExecConfig_CreateConVar("sm_warden_choose_time", "20", "Time in seconds a random warden will picked when no warden was set. need sm_warden_choose_random 1", _, true,  1.0);
@@ -769,26 +769,23 @@ void RemoveTheWarden(int client)
 		PrintHintTextToAll("%t", "warden_removed_nc", client, Warden);
 	}
 	
-	//if(IsClientInGame(client))
-	//{
-		SetEntityRenderColor(Warden, 255, 255, 255, 255);
-		SetEntityModel(client, g_sModelPath);
-		Warden = -1;
-		randomtime = GetConVarInt(g_hRandomTimer);
-		randomtimer = CreateTimer(1.0, ChooseRandom, _, TIMER_REPEAT);
-		Call_StartForward(gF_OnWardenRemovedBySelf);
-		Call_PushCell(client);
-		Call_Finish();
-		Forward_OnWardenRemoved(client);
-		if(gc_bSounds.BoolValue)	
-		{
-			EmitSoundToAllAny(g_sUnWarden);
-		}
-		ResetMarker();
-		g_iVoteCount = 0;
-		Format(g_sHasVoted, sizeof(g_sHasVoted), "");
-		g_sHasVoted[0] = '\0';
-	//}
+	SetEntityRenderColor(Warden, 255, 255, 255, 255);
+	SetEntityModel(client, g_sModelPath);
+	Warden = -1;
+	randomtime = GetConVarInt(g_hRandomTimer);
+	randomtimer = CreateTimer(1.0, ChooseRandom, _, TIMER_REPEAT);
+	Call_StartForward(gF_OnWardenRemovedBySelf);
+	Call_PushCell(client);
+	Call_Finish();
+	Forward_OnWardenRemoved(client);
+	if(gc_bSounds.BoolValue)	
+	{
+		EmitSoundToAllAny(g_sUnWarden);
+	}
+	ResetMarker();
+	g_iVoteCount = 0;
+	Format(g_sHasVoted, sizeof(g_sHasVoted), "");
+	g_sHasVoted[0] = '\0';
 }
 
 public Action EndMathQuestion(Handle timer)

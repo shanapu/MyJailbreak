@@ -81,11 +81,11 @@
 		"de"		"Event {darkred}{1}) {default}ist {purple}bereits gesetzt."
 	}
 	
-	"hide_minct"
+	"hide_minplayer"
 	{
-		"da"		"For Hide in the Dark skal der mindst være {purple}en CT"	
-		"en"		"For a Hide in the Dark you need a least {purple}one CT"
-		"de"		"Für Hide in the Dark brauchen wir mindestens {purple}einen CT"
+		"da"		"For Hide in the Dark skal der mindst være {purple}en CT & en T"	
+		"en"		"For a Hide in the Dark you need a least {purple}one CT 6 one T"
+		"de"		"Für Hide in the Dark brauchen wir mindestens {purple}einen CT und einen T"
 	}
 	
 	

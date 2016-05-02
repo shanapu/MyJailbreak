@@ -75,11 +75,11 @@ public void OnPluginStart()
 
 	
 	//AutoExecConfig
-	AutoExecConfig_SetFile("MyJailbreak.Zeus");
+	AutoExecConfig_SetFile("Zeus", "MyJailbreak/EventDays");
 	AutoExecConfig_SetCreateFile(true);
 	
-	AutoExecConfig_CreateConVar("sm_zeus_version", PLUGIN_VERSION, "The version of this MyJailBreak SourceMod plugin", FCVAR_SPONLY|FCVAR_PLUGIN|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
-	gc_bPlugin = AutoExecConfig_CreateConVar("sm_zeus_enable", "1", "0 - disabled, 1 - enable this MyJailBreak SourceMod plugin", _, true,  0.0, true, 1.0);
+	AutoExecConfig_CreateConVar("sm_zeus_version", PLUGIN_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_PLUGIN|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
+	gc_bPlugin = AutoExecConfig_CreateConVar("sm_zeus_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true,  0.0, true, 1.0);
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_zeus_warden", "1", "0 - disabled, 1 - allow warden to set zeus round", _, true,  0.0, true, 1.0);
 	gc_bSetA = AutoExecConfig_CreateConVar("sm_zeus_admin", "1", "0 - disabled, 1 - allow admin to set zeus round", _, true,  0.0, true, 1.0);
 	gc_bVote = AutoExecConfig_CreateConVar("sm_zeus_vote", "1", "0 - disabled, 1 - allow player to vote for zeus", _, true,  0.0, true, 1.0);
@@ -174,7 +174,7 @@ public Action SetZeus(int client,int args)
 				}
 				else CPrintToChat(client, "%t %t", "zeus_tag" , "zeus_progress" , EventDay);
 			}
-			else CPrintToChat(client, "%t %t", "warden_tag" , "nocscope_setbywarden");
+			else CPrintToChat(client, "%t %t", "warden_tag" , "zeus_setbywarden");
 		}
 		else if (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
 			{
@@ -193,7 +193,7 @@ public Action SetZeus(int client,int args)
 					}
 					else CPrintToChat(client, "%t %t", "zeus_tag" , "zeus_progress" , EventDay);
 				}
-				else CPrintToChat(client, "%t %t", "nocscope_tag" , "zeus_setbyadmin");
+				else CPrintToChat(client, "%t %t", "zeus_tag" , "zeus_setbyadmin");
 			}
 			else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
 	}

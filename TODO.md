@@ -1,12 +1,18 @@
 know bugs:
 - [ ] countdown: Start -> Cancel -> Start - bug? (which countdowns?)
-- [ ] jihad: If all CT are dead -> T win round - mp_default_team_winner_no_objective?
+- [ ] Jihad: If all CT are dead -> T win round - mp_default_team_winner_no_objective?
+- [?] sm_weapons_spawnmenu dont work
+- [ ] weapons.smx "block" stamm vip models?! why?!
+- [?] menu join ct
+- [?] ct vs t check terror>0
+
 
 want:
 - [ ] hide: seeker more TA -> convar set how many
 - [ ] warden: disarm when shot on Arms/hand (all CT?)
 - [ ] Noscope: choose weapon an round start (scout/awp/auto)
 - [ ] updater support
+- [ ] Event: logging
 - [ ] duckhunt: change +attack to +secAttack
 - [ ] all: custom command support !mycommand
 - [ ] all: format centertext <font size='30' color='#FF00FF'>test</font>
@@ -35,12 +41,13 @@ want:
 - [ ] merge Transltions
 
 need?
+- [ ] rewrite weapons?!
 - [ ] zombie: knockbackfix?
 - [ ] whistle for hider?
 - [ ] events on random days? no voting/set - core2
 - [ ] silent mp_roundtime?
-- [ ] jihad: burn dead bodies?
-- [ ] jihad: body counter?
+- [ ] Jihad: burn dead bodies?
+- [ ] Jihad: body counter?
 - [ ] warden: ff not for ct?
 - [ ] SetCvarString flags?
 - [ ] warden: add sm_simon? 
@@ -69,7 +76,7 @@ maybe:
 lose cues bad spelling  
 bugs:
 - [x] catch: sprint bug release T
-- [x] jihad: Hp & burn for not nearby
+- [x] Jihad: Hp & burn for not nearby
 - [x] mp_roundtime 1 after set event on a eventend
 - [x] catch: Just, sometimes they don't freeze
 - [x] Thirdperson: on disconnect make fp
@@ -86,6 +93,7 @@ bugs:
 - [x] catch IsClientInGame" reported: Client index 0 is invalid overlay
 - [x] menu Event adsm double by admin/warden
 must/want:
+- [x] config folder structure
 - [x] clean/translate ConVars 
 - [x] sv_tags to core
 - [x] warden:translate menu set
@@ -118,19 +126,19 @@ must/want:
 - [x] Marker: timer disaprears
 - [x] warden: allow unvote
 - [x] new day: suicid bomber
-- [x] jihad: activate bomb when cells open 
-- [x] jihad: need equit bomb to use jihad
+- [x] Jihad: activate bomb when cells open 
+- [x] Jihad: need equit bomb to use Jihad
 - [x] warden: countdown
 - [x] playertags: as chat tag
 - [x] catch: T win when time run out
 - [x] hide: T win when time run out
-- [x] jihad: CT win when time run out
+- [x] Jihad: CT win when time run out
 - [x] move FF from menu to warden
 - [x] move randomkill from menu to warden
 - [x] hide: freeze hide bool
 - [x] Freeday: Damage disbaled
 - [x] sprint msg
-- [x] jihad no bomb drop
+- [x] Jihad no bomb drop
 - [x] disbale FF on roundend
 - [x] wiki
 - [x] template
@@ -145,15 +153,15 @@ must/want:
 - [x] randomkill smite
 - [x] warden: markers
 - [x] warden: killrandom - are you sure?
-- [x] jihad: freeze by activate bool
+- [x] Jihad: freeze by activate bool
 - [x] translations timetounfreeze-> trucetime
 - [x] new day: knife only (ice skate/third person?)
 - [x] warden: pick random if there is no warden
 - [x] valid client and co to inc
 - [x] noscope: dis/enable lowgrav
 - [x] noscope: set grav
-- [x] jihad: set radius
-- [x] jihad: bool movement on bomb activate
+- [x] Jihad: set radius
+- [x] Jihad: bool movement on bomb activate
 - [x] countdown: start stop sound
 - [x] countdown: stop roundend
 - [x] countdown cancel all running

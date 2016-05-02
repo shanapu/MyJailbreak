@@ -75,11 +75,11 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_hide", VoteHide, "Allows players to vote for a hide");
 	
 	//AutoExecConfig
-	AutoExecConfig_SetFile("MyJailbreak.Hide");
+	AutoExecConfig_SetFile("Hide", "MyJailbreak/EventDays");
 	AutoExecConfig_SetCreateFile(true);
 	
-	AutoExecConfig_CreateConVar("sm_hide_version", PLUGIN_VERSION, "The version of this MyJailBreak SourceMod plugin", FCVAR_SPONLY|FCVAR_PLUGIN|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
-	gc_bPlugin = AutoExecConfig_CreateConVar("sm_hide_enable", "1", "0 - disabled, 1 - enable this MyJailBreak SourceMod plugin", _, true,  0.0, true, 1.0);
+	AutoExecConfig_CreateConVar("sm_hide_version", PLUGIN_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_PLUGIN|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
+	gc_bPlugin = AutoExecConfig_CreateConVar("sm_hide_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true,  0.0, true, 1.0);
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_hide_warden", "1", "0 - disabled, 1 - allow warden to set hide round", _, true,  0.0, true, 1.0);
 	gc_bSetA = AutoExecConfig_CreateConVar("sm_hide_admin", "1", "0 - disabled, 1 - allow admin to set hide round", _, true,  0.0, true, 1.0);
 	gc_bVote = AutoExecConfig_CreateConVar("sm_hide_vote", "1", "0 - disabled, 1 - allow player to vote for hide round", _, true,  0.0, true, 1.0);
@@ -168,24 +168,7 @@ public Action SetHide(int client,int args)
 			{
 				if (gc_bSetW.BoolValue)	
 				{
-					char EventDay[64];
-					GetEventDay(EventDay);
-					
-					if(StrEqual(EventDay, "none", false))
-					{
-						if (g_iCoolDown == 0)
-						{
-							StartNextRound();
-						}
-						else CPrintToChat(client, "%t %t", "hide_tag" , "hide_wait", g_iCoolDown);
-					}
-					else CPrintToChat(client, "%t %t", "hide_tag" , "hide_progress" , EventDay);
-				}
-				else CPrintToChat(client, "%t %t", "hide_tag" , "hide_setbywarden");
-			}
-			else if (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
-				{
-					if (gc_bSetA.BoolValue)
+					if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_CT) > 0 ))
 					{
 						char EventDay[64];
 						GetEventDay(EventDay);
@@ -199,6 +182,31 @@ public Action SetHide(int client,int args)
 							else CPrintToChat(client, "%t %t", "hide_tag" , "hide_wait", g_iCoolDown);
 						}
 						else CPrintToChat(client, "%t %t", "hide_tag" , "hide_progress" , EventDay);
+					}
+					else CPrintToChat(client, "%t %t", "hide_tag" , "hide_minplayer");
+				}
+				else CPrintToChat(client, "%t %t", "hide_tag" , "hide_setbywarden");
+			}
+			else if (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
+				{
+					if (gc_bSetA.BoolValue)
+					{
+						if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_CT) > 0 ))
+						{
+							char EventDay[64];
+							GetEventDay(EventDay);
+							
+							if(StrEqual(EventDay, "none", false))
+							{
+								if (g_iCoolDown == 0)
+								{
+									StartNextRound();
+								}
+								else CPrintToChat(client, "%t %t", "hide_tag" , "hide_wait", g_iCoolDown);
+							}
+							else CPrintToChat(client, "%t %t", "hide_tag" , "hide_progress" , EventDay);
+						}
+						else CPrintToChat(client, "%t %t", "hide_tag" , "hide_minplayer");
 					}
 					else CPrintToChat(client, "%t %t", "hide_tag" , "hide_setbyadmin");
 				}
@@ -216,7 +224,7 @@ public Action VoteHide(int client,int args)
 	{
 		if (gc_bVote.BoolValue)
 		{
-			if (GetTeamClientCount(CS_TEAM_CT) > 0)
+			if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_CT) > 0 ))
 			{
 				char EventDay[64];
 				GetEventDay(EventDay);
@@ -244,7 +252,7 @@ public Action VoteHide(int client,int args)
 				}
 				else CPrintToChat(client, "%t %t", "hide_tag" , "hide_progress" , EventDay);
 			}
-			else CPrintToChat(client, "%t %t", "hide_tag" , "hide_minct");
+			else CPrintToChat(client, "%t %t", "hide_tag" , "hide_minplayer");
 		}
 		else CPrintToChat(client, "%t %t", "hide_tag" , "hide_voting");
 	}

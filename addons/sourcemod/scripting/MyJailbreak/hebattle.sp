@@ -75,11 +75,11 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_hebattle", VoteHEbattle, "Allows players to vote for a hebattle");
 	
 	//AutoExecConfig
-	AutoExecConfig_SetFile("MyJailbreak.HEbattle");
+	AutoExecConfig_SetFile("HEbattle", "MyJailbreak/EventDays");
 	AutoExecConfig_SetCreateFile(true);
 	
-	AutoExecConfig_CreateConVar("sm_hebattle_version", PLUGIN_VERSION, "The version of this MyJailBreak SourceMod plugin", FCVAR_SPONLY|FCVAR_PLUGIN|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
-	gc_bPlugin = AutoExecConfig_CreateConVar("sm_hebattle_enable", "1", "0 - disabled, 1 - enable this MyJailBreak SourceMod plugin", _, true,  0.0, true, 1.0);
+	AutoExecConfig_CreateConVar("sm_hebattle_version", PLUGIN_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_PLUGIN|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
+	gc_bPlugin = AutoExecConfig_CreateConVar("sm_hebattle_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true,  0.0, true, 1.0);
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_hebattle_warden", "1", "0 - disabled, 1 - allow warden to set hebattle round", _, true,  0.0, true, 1.0);
 	gc_bSetA = AutoExecConfig_CreateConVar("sm_hebattle_admin", "1", "0 - disabled, 1 - allow admin to set hebattle round", _, true,  0.0, true, 1.0);
 	gc_bVote = AutoExecConfig_CreateConVar("sm_hebattle_vote", "1", "0 - disabled, 1 - allow player to vote for hebattle", _, true,  0.0, true, 1.0);
@@ -175,7 +175,7 @@ public Action SetHEbattle(int client,int args)
 				}
 				else CPrintToChat(client, "%t %t", "hebattle_tag" , "hebattle_progress" , EventDay);
 			}
-			else CPrintToChat(client, "%t %t", "warden_tag" , "nocscope_setbywarden");
+			else CPrintToChat(client, "%t %t", "warden_tag" , "hebattle_setbywarden");
 		}
 		else if (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
 			{
@@ -194,7 +194,7 @@ public Action SetHEbattle(int client,int args)
 					}
 					else CPrintToChat(client, "%t %t", "hebattle_tag" , "hebattle_progress" , EventDay);
 				}
-				else CPrintToChat(client, "%t %t", "nocscope_tag" , "hebattle_setbyadmin");
+				else CPrintToChat(client, "%t %t", "hebattle_tag" , "hebattle_setbyadmin");
 			}
 			else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
 	}

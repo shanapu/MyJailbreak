@@ -74,11 +74,11 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_war", VoteWar, "Allows players to vote for a war");
 	
 	//AutoExecConfig
-	AutoExecConfig_SetFile("MyJailbreak.War");
+	AutoExecConfig_SetFile("Warfare", "MyJailbreak/EventDays");
 	AutoExecConfig_SetCreateFile(true);
 	
-	AutoExecConfig_CreateConVar("sm_war_version", PLUGIN_VERSION, "The version of this MyJailBreak SourceMod plugin", FCVAR_SPONLY|FCVAR_PLUGIN|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
-	gc_bPlugin = AutoExecConfig_CreateConVar("sm_war_enable", "1", "0 - disabled, 1 - enable this MyJailBreak SourceMod plugin", _, true,  0.0, true, 1.0);
+	AutoExecConfig_CreateConVar("sm_war_version", PLUGIN_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_PLUGIN|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
+	gc_bPlugin = AutoExecConfig_CreateConVar("sm_war_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true,  0.0, true, 1.0);
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_war_warden", "1", "0 - disabled, 1 - allow warden to set war round", _, true,  0.0, true, 1.0);
 	gc_bSetA = AutoExecConfig_CreateConVar("sm_war_admin", "1", "0 - disabled, 1 - allow admin to set war round", _, true,  0.0, true, 1.0);
 	gc_bVote = AutoExecConfig_CreateConVar("sm_war_vote", "1", "0 - disabled, 1 - allow player to vote for war", _, true,  0.0, true, 1.0);
@@ -158,24 +158,7 @@ public Action SetWar(int client,int args)
 		{
 			if (gc_bSetW.BoolValue)
 			{
-				char EventDay[64];
-				GetEventDay(EventDay);
-				
-				if(StrEqual(EventDay, "none", false))
-				{
-					if (g_iCoolDown == 0)
-					{
-						StartNextRound();
-					}
-					else CPrintToChat(client, "%t %t", "war_tag" , "war_wait", g_iCoolDown);
-				}
-				else CPrintToChat(client, "%t %t", "war_tag" , "war_progress" , EventDay);
-			}
-			else CPrintToChat(client, "%t %t", "warden_tag" , "war_setbywarden");
-		}
-		else if (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
-			{
-				if (gc_bSetA.BoolValue)	
+				if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_CT) > 0 ))
 				{
 					char EventDay[64];
 					GetEventDay(EventDay);
@@ -189,6 +172,31 @@ public Action SetWar(int client,int args)
 						else CPrintToChat(client, "%t %t", "war_tag" , "war_wait", g_iCoolDown);
 					}
 					else CPrintToChat(client, "%t %t", "war_tag" , "war_progress" , EventDay);
+				}
+				else CPrintToChat(client, "%t %t", "war_tag" , "war_minplayer");
+			}
+			else CPrintToChat(client, "%t %t", "warden_tag" , "war_setbywarden");
+		}
+		else if (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
+			{
+				if (gc_bSetA.BoolValue)	
+				{
+					if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_CT) > 0 ))
+					{
+						char EventDay[64];
+						GetEventDay(EventDay);
+						
+						if(StrEqual(EventDay, "none", false))
+						{
+							if (g_iCoolDown == 0)
+							{
+								StartNextRound();
+							}
+							else CPrintToChat(client, "%t %t", "war_tag" , "war_wait", g_iCoolDown);
+						}
+						else CPrintToChat(client, "%t %t", "war_tag" , "war_progress" , EventDay);
+					}
+					else CPrintToChat(client, "%t %t", "war_tag" , "war_minplayer");
 				}
 				else CPrintToChat(client, "%t %t", "war_tag" , "war_setbyadmin");
 			}
@@ -205,8 +213,8 @@ public Action VoteWar(int client,int args)
 	if (gc_bPlugin.BoolValue)
 	{
 		if (gc_bVote.BoolValue)
-		{	
-			if (GetTeamClientCount(CS_TEAM_CT) > 0)
+		{
+			if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_CT) > 0 ))
 			{
 				char EventDay[64];
 				GetEventDay(EventDay);
@@ -234,7 +242,7 @@ public Action VoteWar(int client,int args)
 				}
 				else CPrintToChat(client, "%t %t", "war_tag" , "war_progress" , EventDay);
 			}
-			else CPrintToChat(client, "%t %t", "war_tag" , "war_minct");
+			else CPrintToChat(client, "%t %t", "war_tag" , "war_minplayer");
 		}
 		else CPrintToChat(client, "%t %t", "war_tag" , "war_voting");
 	}

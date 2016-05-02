@@ -82,13 +82,6 @@
 		"de"		"Event {darkred}{1}) {default}ist {purple}bereits gesetzt."
 	}
 	
-	"freeday_minct"
-	{
-		"da"		"For Freeday skal der mindst være {purple}en CT"	
-		"en"		"For a Duckhunt you need a least {purple}one CT"
-		"de"		"Für Duckhunt brauchen wir mindestens {purple}einen CT"
-	}
-	
 	"freeday_disabled"
 	{
 		"da"		"FreeDay er {purple}slået fra."	

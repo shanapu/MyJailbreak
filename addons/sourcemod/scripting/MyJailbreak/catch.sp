@@ -84,11 +84,11 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_sprint", Command_StartSprint, "Start sprinting!");
 	
 	//AutoExecConfig
-	AutoExecConfig_SetFile("MyJailbreak.Catch");
+	AutoExecConfig_SetFile("Catch", "MyJailbreak/EventDays");
 	AutoExecConfig_SetCreateFile(true);
 	
-	AutoExecConfig_CreateConVar("sm_catch_version", PLUGIN_VERSION, "The version of this MyJailBreak SourceMod plugin", FCVAR_SPONLY|FCVAR_PLUGIN|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
-	gc_bPlugin = AutoExecConfig_CreateConVar("sm_catch_enable", "1", "0 - disabled, 1 - enable this MyJailBreak SourceMod plugin", _, true, 0.0, true, 1.0);
+	AutoExecConfig_CreateConVar("sm_catch_version", PLUGIN_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_PLUGIN|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
+	gc_bPlugin = AutoExecConfig_CreateConVar("sm_catch_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true, 0.0, true, 1.0);
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_catch_warden", "1", "0 - disabled, 1 - allow warden to set catch round", _, true, 0.0, true, 1.0);
 	gc_bSetA = AutoExecConfig_CreateConVar("sm_catch_admin", "1", "0 - disabled, 1 - allow admin to set catch round", _, true, 0.0, true, 1.0);
 	gc_bVote = AutoExecConfig_CreateConVar("sm_catch_vote", "1", "0 - disabled, 1 - allow player to vote for catch", _, true, 0.0, true, 1.0);
@@ -188,24 +188,7 @@ public Action SetCatch(int client,int args)
 		{
 			if (gc_bSetW.BoolValue)	
 			{
-				char EventDay[64];
-				GetEventDay(EventDay);
-				
-				if(StrEqual(EventDay, "none", false))
-				{
-					if (g_iCoolDown == 0)
-					{
-						StartNextRound();
-					}
-					else CPrintToChat(client, "%t %t", "catch_tag" , "catch_wait", g_iCoolDown);
-				}
-				else CPrintToChat(client, "%t %t", "catch_tag" , "catch_progress" , EventDay);
-			}
-			else CPrintToChat(client, "%t %t", "warden_tag" , "catch_setbywarden");
-		}
-		else if (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
-			{
-				if (gc_bSetA.BoolValue)
+				if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_CT) > 0 ))
 				{
 					char EventDay[64];
 					GetEventDay(EventDay);
@@ -219,6 +202,31 @@ public Action SetCatch(int client,int args)
 						else CPrintToChat(client, "%t %t", "catch_tag" , "catch_wait", g_iCoolDown);
 					}
 					else CPrintToChat(client, "%t %t", "catch_tag" , "catch_progress" , EventDay);
+				}
+				else CPrintToChat(client, "%t %t", "catch_tag" , "catch_minplayer");
+			}
+			else CPrintToChat(client, "%t %t", "warden_tag" , "catch_setbywarden");
+		}
+		else if (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
+			{
+				if (gc_bSetA.BoolValue)
+				{
+					if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_CT) > 0 ))
+					{
+						char EventDay[64];
+						GetEventDay(EventDay);
+						
+						if(StrEqual(EventDay, "none", false))
+						{
+							if (g_iCoolDown == 0)
+							{
+								StartNextRound();
+							}
+							else CPrintToChat(client, "%t %t", "catch_tag" , "catch_wait", g_iCoolDown);
+						}
+						else CPrintToChat(client, "%t %t", "catch_tag" , "catch_progress" , EventDay);
+					}
+					else CPrintToChat(client, "%t %t", "catch_tag" , "catch_minplayer");
 				}
 				else CPrintToChat(client, "%t %t", "catch_tag" , "catch_setbyadmin");
 			}
@@ -236,11 +244,11 @@ public Action VoteCatch(int client,int args)
 	{
 		if (gc_bVote.BoolValue)
 		{
-			if (GetTeamClientCount(CS_TEAM_CT) > 0)
+			if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_CT) > 0 ))
 			{
 				char EventDay[64];
 				GetEventDay(EventDay);
-			
+				
 				if(StrEqual(EventDay, "none", false))
 				{
 					if (g_iCoolDown == 0)
@@ -264,7 +272,7 @@ public Action VoteCatch(int client,int args)
 				}
 				else CPrintToChat(client, "%t %t", "catch_tag" , "catch_progress" , EventDay);
 			}
-			else CPrintToChat(client, "%t %t", "catch_tag" , "catch_minct");
+			else CPrintToChat(client, "%t %t", "catch_tag" , "catch_minplayer");
 		}
 		else CPrintToChat(client, "%t %t", "catch_tag" , "catch_voting");
 	}

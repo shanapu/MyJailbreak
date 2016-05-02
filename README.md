@@ -23,7 +23,7 @@ help, ideas, forks and merge requests are welcome!
     - [Hide in the Dark](#hideinthedark) - (kind of HideNseek)
     - [Catch & Freeze](#catchfreeze) - (CT must catch all T (freeze tag))
     - [DuckHunt](#duckHunt) - (CT(hunter) with nova vs T(chicken in 3th person))
-    - [JiHad](#jihad) - (Ts got suicde bombs to kill all CTs)
+    - [Jihad](#jihad) - (Ts got suicde bombs to kill all CTs)
     - [Zeus](#zeus) - (FFA ZeusRound - get a new Zeus on Kill)
     - [Knife](#knifefight) - (CT vs T Knifefight with switchable grav, ice, and TP)
     - [FreeDay](#freeday) - (auto FreeDay on first round/damage disabled)
@@ -191,7 +191,7 @@ The menu shows only features that are enabled per round (e.g at EventDays no War
     * Zombie
     * Hide
     * Catch & Freeze
-    * JiHad
+    * Jihad
     * HEbattle
     * NoScope
     * DuckHunt
@@ -217,7 +217,7 @@ The menu shows only features that are enabled per round (e.g at EventDays no War
     * Zombie
     * Hide
     * Catch & Freeze
-    * JiHad
+    * Jihad
     * HEbattle
     * NoScope
     * DuckHunt
@@ -242,7 +242,7 @@ The menu shows only features that are enabled per round (e.g at EventDays no War
     * Zombie
     * Hide
     * Catch & Freeze
-    * JiHad
+    * Jihad
     * HEbattle
     * NoScope
     * DuckHunt
@@ -652,7 +652,7 @@ T are Chicken in Thirdperson. After trucetime the cells open and T got HE grenad
 - Custom chat [Tag]
 
 
-#### JiHad
+#### Jihad
 
 This plugin allows players to vote and Warden to set next round to Jihad.  
 On Round start CTs got time to hide before cells open and Ts got Suicide bombs to kill all CT.  

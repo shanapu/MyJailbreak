@@ -1,0 +1,18 @@
+spcomp MyJailbreak/catch.sp -o../plugins/MyJailbreak/catch.smx 
+spcomp MyJailbreak/duckhunt.sp -o../plugins/MyJailbreak/duckhunt.smx 
+spcomp MyJailbreak/ffa.sp -o../plugins/MyJailbreak/ffa.smx 
+spcomp MyJailbreak/freeday.sp -o../plugins/MyJailbreak/freeday.smx 
+spcomp MyJailbreak/hebattle.sp -o../plugins/MyJailbreak/hebattle.smx 
+spcomp MyJailbreak/hide.sp -o../plugins/MyJailbreak/hide.smx 
+spcomp MyJailbreak/jihad.sp -o../plugins/MyJailbreak/jihad.smx 
+spcomp MyJailbreak/knife.sp -o../plugins/MyJailbreak/knife.smx 
+spcomp MyJailbreak/menu.sp -o../plugins/MyJailbreak/menu.smx 
+spcomp MyJailbreak/myjailbreak.sp -o../plugins/MyJailbreak/myjailbreak.smx 
+spcomp MyJailbreak/noscope.sp -o../plugins/MyJailbreak/noscope.smx 
+spcomp MyJailbreak/playertags.sp -o../plugins/MyJailbreak/playertags.smx 
+spcomp MyJailbreak/war.sp -o../plugins/MyJailbreak/war.smx 
+spcomp MyJailbreak/wardn.sp -o../plugins/MyJailbreak/wardn.smx 
+spcomp MyJailbreak/weapons.sp -o../plugins/MyJailbreak/weapons.smx 
+spcomp MyJailbreak/zeus.sp -o../plugins/MyJailbreak/zeus.smx 
+spcomp MyJailbreak/zombie.sp -o../plugins/MyJailbreak/zombie.smx 
+pause

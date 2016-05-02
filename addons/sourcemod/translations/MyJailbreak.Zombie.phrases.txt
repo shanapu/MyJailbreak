@@ -103,7 +103,7 @@
 		"de"		"Event {darkred}{1}) {default}ist {purple}bereits gesetzt."
 	}
 	
-	"zombie_minct"
+	"zombie_minplayer"
 	{
 		"en"		"For zombie runde skal der mindst være {purple}en CT"	
 		"en"		"For a Zombie you need a least {purple}one CT"

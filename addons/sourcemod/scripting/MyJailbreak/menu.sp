@@ -31,7 +31,7 @@ ConVar g_bZeus;
 ConVar g_bRules;
 ConVar g_bsetFF;
 ConVar g_bWar;
-ConVar g_bJiHad;
+ConVar g_bJihad;
 ConVar g_bKnife;
 ConVar g_bFFA;
 ConVar g_bZombie;
@@ -73,10 +73,10 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_event", EventDays, "open a Set EventDays menu for Warden/Admin & vote EventDays menu for player");
 	
 	//AutoExecConfig
-	AutoExecConfig_SetFile("MyJailbreak_menu");
+	AutoExecConfig_SetFile("Menu", "MyJailbreak");
 	AutoExecConfig_SetCreateFile(true);
 	
-	AutoExecConfig_CreateConVar("sm_menu_version", PLUGIN_VERSION, "The version of the SourceMod plugin MyJailBreak - Menu", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
+	AutoExecConfig_CreateConVar("sm_menu_version", PLUGIN_VERSION, "The version of the SourceMod plugin MyJailbreak - Menu", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_menu_enable", "1", "0 - disabled, 1 - enable jailbrek menu");
 	gc_bCTerror = AutoExecConfig_CreateConVar("sm_menu_ct", "1", "0 - disabled, 1 - enable ct jailbreak menu");
 	gc_bTerror = AutoExecConfig_CreateConVar("sm_menu_t", "1", "0 - disabled, 1 - enable t jailbreak menu");
@@ -106,7 +106,7 @@ public void OnConfigsExecuted()
 	g_bNoScope = FindConVar("sm_noscope_enable");
 	g_bHide = FindConVar("sm_hide_enable");
 	g_bKnife = FindConVar("sm_knifefight_enable");
-	g_bJiHad = FindConVar("sm_jihad_enable");
+	g_bJihad = FindConVar("sm_Jihad_enable");
 	g_bCatch = FindConVar("sm_catch_enable");
 	g_bHEbattle = FindConVar("sm_hebattle_enable");
 	g_bFreeDay = FindConVar("sm_freeday_enable");
@@ -284,7 +284,7 @@ public Action JbMenu(int client, int args)
 					}
 				}
 				Format(menuinfo13, sizeof(menuinfo13), "%T", "menu_joint", LANG_SERVER);
-				mainmenu.AddItem("joinT", menuinfo13);
+				mainmenu.AddItem("ChangeTeam", menuinfo13);
 			}
 		}
 		else if(GetClientTeam(client) == CS_TEAM_T) 
@@ -322,7 +322,7 @@ public Action JbMenu(int client, int args)
 					mainmenu.AddItem("days", menuinfo5);
 				}
 				Format(menuinfo15, sizeof(menuinfo15), "%T", "menu_joinct", LANG_SERVER);
-				mainmenu.AddItem("joinCT", menuinfo15);
+				mainmenu.AddItem("ChangeTeam", menuinfo15);
 			}
 		}
 		if(g_bRules != null)
@@ -344,9 +344,9 @@ public Action JbMenu(int client, int args)
 						Format(menuinfo19, sizeof(menuinfo19), "%T", "menu_removewarden", LANG_SERVER);
 						mainmenu.AddItem("removewarden", menuinfo19);
 					}
+					Format(menuinfo18, sizeof(menuinfo18), "%T", "menu_setwarden", LANG_SERVER);
+					mainmenu.AddItem("setwarden", menuinfo18);
 				}
-				Format(menuinfo18, sizeof(menuinfo18), "%T", "menu_setwarden", LANG_SERVER);
-				mainmenu.AddItem("setwarden", menuinfo18);
 			}
 			Format(menuinfo17, sizeof(menuinfo17), "%T", "menu_admin", LANG_SERVER);
 			mainmenu.AddItem("admin", menuinfo17);
@@ -417,12 +417,12 @@ public Action EventDays(int client, int args)
 					daysmenu.AddItem("catch", menuinfo23);
 				}
 			}
-			if(g_bJiHad != null)
+			if(g_bJihad != null)
 			{
-				if(g_bJiHad.BoolValue)
+				if(g_bJihad.BoolValue)
 				{
-					Format(menuinfo23, sizeof(menuinfo23), "%T", "menu_jihad", LANG_SERVER);
-					daysmenu.AddItem("jihad", menuinfo23);
+					Format(menuinfo23, sizeof(menuinfo23), "%T", "menu_Jihad", LANG_SERVER);
+					daysmenu.AddItem("Jihad", menuinfo23);
 				}
 			}
 			if(g_bHEbattle != null)
@@ -488,7 +488,7 @@ public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selec
 		char info[32];
 		mainmenu.GetItem(selection, info, sizeof(info));
 		
-		if ( strcmp(info,"joinT") == 0 ) 
+		if ( strcmp(info,"ChangeTeam") == 0 ) 
 		{
 			ChangeTeam(client,0);
 		}
@@ -685,11 +685,11 @@ public int EventMenuHandler(Menu daysmenu, MenuAction action, int client, int se
 				}
 			}
 		}
-		else if ( strcmp(info,"jihad") == 0 )
+		else if ( strcmp(info,"Jihad") == 0 )
 		{
 			if (warden_iswarden(client) || (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true)))
 			{
-				FakeClientCommand(client, "sm_setjihad");
+				FakeClientCommand(client, "sm_setJihad");
 				if(!gc_bClose.BoolValue)
 				{
 					JbMenu(client,0);
@@ -697,7 +697,7 @@ public int EventMenuHandler(Menu daysmenu, MenuAction action, int client, int se
 			}
 			else
 			{
-				FakeClientCommand(client, "sm_jihad");
+				FakeClientCommand(client, "sm_Jihad");
 				if(!gc_bClose.BoolValue)
 				{
 					JbMenu(client,0);

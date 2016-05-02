@@ -79,11 +79,11 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_knifefight", VoteKnifeFight, "Allows players to vote for a knifefight");
 	
 	//AutoExecConfig
-	AutoExecConfig_SetFile("MyJailbreak.KnifeFight");
+	AutoExecConfig_SetFile("KnifeFight", "MyJailbreak/EventDays");
 	AutoExecConfig_SetCreateFile(true);
 	
-	AutoExecConfig_CreateConVar("sm_knifefight_version", PLUGIN_VERSION, "The version of this MyJailBreak SourceMod plugin", FCVAR_SPONLY|FCVAR_PLUGIN|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
-	gc_bPlugin = AutoExecConfig_CreateConVar("sm_knifefight_enable", "1", "0 - disabled, 1 - enable this MyJailBreak SourceMod plugin", _, true,  0.0, true, 1.0);
+	AutoExecConfig_CreateConVar("sm_knifefight_version", PLUGIN_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_PLUGIN|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
+	gc_bPlugin = AutoExecConfig_CreateConVar("sm_knifefight_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true,  0.0, true, 1.0);
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_knifefight_warden", "1", "0 - disabled, 1 - allow warden to set knifefight round", _, true,  0.0, true, 1.0);
 	gc_bSetA = AutoExecConfig_CreateConVar("sm_knifefight_admin", "1", "0 - disabled, 1 - allow admin to set knifefight round", _, true,  0.0, true, 1.0);
 	gc_bVote = AutoExecConfig_CreateConVar("sm_knifefight_vote", "1", "0 - disabled, 1 - allow player to vote for knifefight", _, true,  0.0, true, 1.0);
@@ -174,24 +174,7 @@ public Action SetKnifeFight(int client,int args)
 		{
 			if (gc_bSetW.BoolValue)
 			{
-				char EventDay[64];
-				GetEventDay(EventDay);
-				
-				if(StrEqual(EventDay, "none", false))
-				{
-					if (g_iCoolDown == 0)
-					{
-						StartNextRound();
-					}
-					else CPrintToChat(client, "%t %t", "knifefight_tag" , "knifefight_wait", g_iCoolDown);
-				}
-				else CPrintToChat(client, "%t %t", "knifefight_tag" , "knifefight_progress" , EventDay);
-			}
-			else CPrintToChat(client, "%t %t", "warden_tag" , "nocscope_setbywarden");
-		}
-		else if (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
-			{
-				if (gc_bSetA.BoolValue)
+				if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_CT) > 0 ))
 				{
 					char EventDay[64];
 					GetEventDay(EventDay);
@@ -206,7 +189,32 @@ public Action SetKnifeFight(int client,int args)
 					}
 					else CPrintToChat(client, "%t %t", "knifefight_tag" , "knifefight_progress" , EventDay);
 				}
-				else CPrintToChat(client, "%t %t", "nocscope_tag" , "knifefight_setbyadmin");
+				else CPrintToChat(client, "%t %t", "knifefight_tag" , "knifefight_minplayer");
+			}
+			else CPrintToChat(client, "%t %t", "warden_tag" , "knifefight_setbywarden");
+		}
+		else if (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
+			{
+				if (gc_bSetA.BoolValue)
+				{
+					if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_CT) > 0 ))
+					{
+						char EventDay[64];
+						GetEventDay(EventDay);
+						
+						if(StrEqual(EventDay, "none", false))
+						{
+							if (g_iCoolDown == 0)
+							{
+								StartNextRound();
+							}
+							else CPrintToChat(client, "%t %t", "knifefight_tag" , "knifefight_wait", g_iCoolDown);
+						}
+						else CPrintToChat(client, "%t %t", "knifefight_tag" , "knifefight_progress" , EventDay);
+					}
+					else CPrintToChat(client, "%t %t", "knifefight_tag" , "knifefight_minplayer");
+				}
+				else CPrintToChat(client, "%t %t", "knifefight_tag" , "knifefight_setbyadmin");
 			}
 			else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
 	}
@@ -222,31 +230,35 @@ public Action VoteKnifeFight(int client,int args)
 	{
 		if (gc_bVote.BoolValue)
 		{
-			char EventDay[64];
-			GetEventDay(EventDay);
-			
-			if(StrEqual(EventDay, "none", false))
+			if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_CT) > 0 ))
 			{
-				if (g_iCoolDown == 0)
+				char EventDay[64];
+				GetEventDay(EventDay);
+				
+				if(StrEqual(EventDay, "none", false))
 				{
-					if (StrContains(g_sHasVoted, steamid, true) == -1)
+					if (g_iCoolDown == 0)
 					{
-						int playercount = (GetClientCount(true) / 2);
-						g_iVoteCount++;
-						int Missing = playercount - g_iVoteCount + 1;
-						Format(g_sHasVoted, sizeof(g_sHasVoted), "%s,%s", g_sHasVoted, steamid);
-						
-						if (g_iVoteCount > playercount)
+						if (StrContains(g_sHasVoted, steamid, true) == -1)
 						{
-							StartNextRound();
+							int playercount = (GetClientCount(true) / 2);
+							g_iVoteCount++;
+							int Missing = playercount - g_iVoteCount + 1;
+							Format(g_sHasVoted, sizeof(g_sHasVoted), "%s,%s", g_sHasVoted, steamid);
+							
+							if (g_iVoteCount > playercount)
+							{
+								StartNextRound();
+							}
+							else CPrintToChatAll("%t %t", "knifefight_tag" , "knifefight_need", Missing, client);
 						}
-						else CPrintToChatAll("%t %t", "knifefight_tag" , "knifefight_need", Missing, client);
+						else CPrintToChat(client, "%t %t", "knifefight_tag" , "knifefight_voted");
 					}
-					else CPrintToChat(client, "%t %t", "knifefight_tag" , "knifefight_voted");
+					else CPrintToChat(client, "%t %t", "knifefight_tag" , "knifefight_wait", g_iCoolDown);
 				}
-				else CPrintToChat(client, "%t %t", "knifefight_tag" , "knifefight_wait", g_iCoolDown);
+				else CPrintToChat(client, "%t %t", "knifefight_tag" , "knifefight_progress" , EventDay);
 			}
-			else CPrintToChat(client, "%t %t", "knifefight_tag" , "knifefight_progress" , EventDay);
+			else CPrintToChat(client, "%t %t", "knifefight_tag" , "knifefight_minplayer");
 		}
 		else CPrintToChat(client, "%t %t", "knifefight_tag" , "knifefight_voting");
 	}
