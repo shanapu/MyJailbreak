@@ -1,10 +1,9 @@
 know bugs:
 - [ ] countdown: Start -> Cancel -> Start - bug? (which countdowns?)
-- [ ] Jihad: If all CT are dead -> T win round - mp_default_team_winner_no_objective?
-- [?] sm_weapons_spawnmenu dont work
-- [ ] weapons.smx "block" stamm vip models?! why?!
-- [x] menu join ct
-- [x] ct vs t check terror>0
+- [ ] Jihad: If all CT are dead -> T win round - solution: mp_default_team_winner_no_objective?
+- [ ] weapons.smx "block" stamm vip models?!
+
+must:
 
 
 want:
@@ -75,7 +74,10 @@ maybe:
 ###### DONE 
 lose cues bad spelling  
 bugs:
+- [x] sm_weapons_spawnmenu dont work
+- [x] sm_weapons_awp & sm_weapons_autosniper
 - [x] catch: sprint bug release T
+- [x] ct vs t check terror>0
 - [x] Jihad: Hp & burn for not nearby
 - [x] mp_roundtime 1 after set event on a eventend
 - [x] catch: Just, sometimes they don't freeze
@@ -83,6 +85,7 @@ bugs:
 - [x] randomkill lighting bold missing
 - [x] menu: infomessage on first spawn
 - [x] warden:autoOpen broke
+- [x] menu join ct
 - [x] after catch no damage. weapon strip T
 - [x] warden: uncolor on disbaled
 - [x] end catch unblue - freeze ClientInGameaame
@@ -93,6 +96,7 @@ bugs:
 - [x] catch IsClientInGame" reported: Client index 0 is invalid overlay
 - [x] menu Event adsm double by admin/warden
 must/want:
+- [x] menu back button
 - [x] config folder structure
 - [x] clean/translate ConVars 
 - [x] sv_tags to core

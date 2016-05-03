@@ -550,12 +550,18 @@ public Action DoDaBomb( Handle timer, any client )
 				SetEntityHealth(i, curHP - damage);
 				IgniteEntity(i, 2.0);
 			}
+
 		}
 	}
 	if (numKilledPlayers > 0) 
 	{
 		for (int i = 0; i < numKilledPlayers; ++i)
 		{
+			if (numKilledPlayers >= GetTeamClientCount(CS_TEAM_CT))
+			{
+				CPrintToChatAll("%t %t", "jihad_tag" , "jihad_twin_nc");
+				CS_TerminateRound(0.0, CSRoundEnd_TerroristWin);
+			}
 			ForcePlayerSuicide(deathList[i]);
 		}
 	}
@@ -563,11 +569,7 @@ public Action DoDaBomb( Handle timer, any client )
 	int number = 0;
 	for (int i = 1; i <= MaxClients; i++)
 	if(IsClientInGame(i) && IsPlayerAlive(i) && GetClientTeam(i) == CS_TEAM_CT) number++;
-	if(number == 0)
-	{
-	CPrintToChatAll("%t %t", "jihad_tag" , "jihad_twin_nc");
-	CS_TerminateRound(0.0, CSRoundEnd_TerroristWin);
-	}
+	
 }
 
 public Action OnWeaponCanUse(int client, int weapon)

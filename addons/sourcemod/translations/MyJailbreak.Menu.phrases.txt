@@ -108,7 +108,7 @@
 	"menu_event_Titlestart"
 	{
 		"#format"		""
-		"en"			"Start EventDays next round"
+		"en"			"Start Event next round"
 	}
 	"menu_event_Titlevote"
 	{

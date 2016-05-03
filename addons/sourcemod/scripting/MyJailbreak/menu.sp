@@ -421,7 +421,7 @@ public Action EventDays(int client, int args)
 			{
 				if(g_bJihad.BoolValue)
 				{
-					Format(menuinfo23, sizeof(menuinfo23), "%T", "menu_Jihad", LANG_SERVER);
+					Format(menuinfo23, sizeof(menuinfo23), "%T", "menu_jihad", LANG_SERVER);
 					daysmenu.AddItem("Jihad", menuinfo23);
 				}
 			}
@@ -474,6 +474,7 @@ public Action EventDays(int client, int args)
 				}
 			}
 			daysmenu.ExitButton = true;
+			daysmenu.ExitBackButton = true;
 			daysmenu.Display(client, MENU_TIME_FOREVER);
 
 	}
@@ -820,6 +821,10 @@ public int EventMenuHandler(Menu daysmenu, MenuAction action, int client, int se
 				}
 			}
 		}
+	}
+	else if(selection == MenuCancel_ExitBack) 
+	{
+		JbMenu(client,0);
 	}
 	else if (action == MenuAction_End)
 	{

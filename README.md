@@ -8,6 +8,13 @@ see [todo list](/TODO.md) the "must" part is todo before first release on AM
 help me by posting bugs and feature ideas in [Issue list](https://github.com/shanapu/MyJailbreak/issues) (on github)  
 help, ideas, forks and merge requests are welcome!  
 
+This is my first public project. please note that the code may is messy, stupid and inconseqent.  
+I would be happy and very pleased if you wannt to join this project as equal collaborator.  
+If you own a feature or extention for Jail/Warden that would fit in, i would be happy when you share it with us.  
+
+#coded with ![alt text](http://shanapu.de/githearth-small.png "LOVE")  
+# ![alt text](http://shanapu.de/githearth-small.png "LOVE") free software
+
 ### Included Plugins: 
 
 - [Warden](#warden) - (set/become Warden,vote against Warden, Model, open cells, set marker/quiz/EventDays/countdown/FF/nobock) - need [scp](#requires-plugins)
@@ -34,11 +41,23 @@ Files been updated ~daily so have a look at the last commits.
 **the uploaded compiled smxs may no uptodate! hav a look to the commits!** have a look for [requires plugins](#requires-plugins)  
 I recommend until full release, when update to overwrite all files (plugins, translations, sounds, Overlays,...).
 
-This is my first public project. please note that the code may is messy, stupid and inconseqent.  
-I would be happy and very pleased if you wannt to join this project as equal collaborator.  
-If you own a feature or extention for Jail/Warden that would fit in, i would be happy when you share it with us.  
+### Change Log
 
-####coded with ![alt text](http://shanapu.de/githearth-small.png "LOVE") free software
+```
+#### [0.7.2] - 2016-05-03
+### Added
+- initial release with version number.
+- minor fixes
+
+```
+
+### Versioning
+for a better understanding:
+
+0.7.2  
+│ │ └───patch level - fix within major/minior release (you should update for fixes)  
+│ └─────minor release - feature/structure added/removed/changed (you can update if you want for new stuff or paticular changes) 
+└───────major release - stable/release (big new update - recommended) 
 
 ### Credits: 
 
@@ -47,6 +66,7 @@ If you own a feature or extention for Jail/Warden that would fit in, i would be 
 
 #### Much Thanks: 
 UartigZone, Got Sw4g? terminator18, Skelexes, 0dieter0, maks for bughunting / great ideas!
+
 
 
 ### Plugin descriptions: 
@@ -822,6 +842,7 @@ On Round start cells open for freeday and enabled Damage (Default).
 - Smart Jail Doors https://github.com/Kailo97/smartjaildoors
 - SM File/Folder Downloader and Precacher https://forums.alliedmods.net/showthread.php?p=602270 only for [zombie/(Warden) model download (download.ini)](/downloads.ini) (overlays & sounds will be auto added)
 - Simple Chat Prozessor https://bitbucket.org/minimoney1/simple-chat-processor
+- SM hosties 2 https://github.com/dataviruset/sm-hosties/
 
 ### files needed for compilation, besides the sourcemods standards 
 - [autoexecconfig.inc](https://forums.alliedmods.net/showthread.php?t=204254)
@@ -840,7 +861,10 @@ On Round start cells open for freeday and enabled Damage (Default).
 - warden - you can use warden as standalone. no need to use Eventdays(core), menu... please tell me if not!
 - menu - if you dont wanna use the menu, make sm_weapons_jbmenu 0
 - weapons - if you dont wanna use the weapons menu, on EventDays player get "standart weapons".
+- EventDays - you can use only the EventDays you want. you just need MyJailbreak & one EventDay
 ....more
+
+
 
 ### detailed credits
 based/merged/used code/idea plugins:

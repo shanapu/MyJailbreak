@@ -1,6 +1,5 @@
 //includes
 #include <sourcemod>
-
 #include <cstrike>
 #include <clientprefs>
 #include <wardn>
@@ -92,7 +91,7 @@ public void OnPluginStart()
 	
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
-	AutoExecConfig(true, "MyJailbreak_weapons");
+
 	
 	//Hooks
 	HookEvent("player_spawn", Event_PlayerSpawn);
@@ -100,7 +99,11 @@ public void OnPluginStart()
 	weapons1 = RegClientCookie("Primary Weapons", "", CookieAccess_Private);
 	weapons2 = RegClientCookie("Secondary Weapons", "", CookieAccess_Private);
 	//remember = RegClientCookie("Remember Weapons", "", CookieAccess_Private);
-	
+}
+
+
+public void OnConfigsExecuted()
+{
 	array_primary = CreateArray(128);
 	array_secondary = CreateArray(128);
 	ListWeapons();
@@ -272,7 +275,7 @@ public int Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast)
 	int clientIndex = GetClientOfUserId(GetEventInt(event, "userid"));
 	
 	//CancelClientMenu(clientIndex);
-	DeathTimer(clientIndex);
+	KillAllTimer(clientIndex);
 	if(gc_bSpawn.BoolValue)
 	{
 		Timers[clientIndex] = CreateTimer(1.0, GetWeapons, clientIndex);
@@ -475,7 +478,7 @@ public void ResetClientSettings(int clientIndex)
 
 public void OnClientDisconnect(int clientIndex)
 {
-	DeathTimer(clientIndex);
+	KillAllTimer(clientIndex);
 	
 	SetClientCookie(clientIndex, weapons1, primaryWeapon[clientIndex]);
 	SetClientCookie(clientIndex, weapons2, secondaryWeapon[clientIndex]);
@@ -484,7 +487,7 @@ public void OnClientDisconnect(int clientIndex)
 	else SetClientCookie(clientIndex, remember, "Off"); */
 }
 
-public void DeathTimer(int client)
+public void KillAllTimer(int client)
 {
 	if (Timers[client] != null)
     {
@@ -501,6 +504,8 @@ public void ListWeapons()
 	
 	int Items[weapons];
 	
+
+	
 	Format(Items[ItemName], 64, "weapon_m4a1");
 	Format(Items[desc], 64, "M4A1");
 	PushArrayArray(array_primary, Items[0]);
@@ -513,20 +518,17 @@ public void ListWeapons()
 	Format(Items[desc], 64, "AK-47");
 	PushArrayArray(array_primary, Items[0]);
 	
-	Format(Items[ItemName], 64, "weapon_aug");
-	Format(Items[desc], 64, "AUG");
+	Format(Items[ItemName], 64, "weapon_famas");
+	Format(Items[desc], 64, "FAMAS");
 	PushArrayArray(array_primary, Items[0]);
 	
 	Format(Items[ItemName], 64, "weapon_galilar");
 	Format(Items[desc], 64, "Galil AR");
 	PushArrayArray(array_primary, Items[0]);
 	
-	if (gc_bAWP.BoolValue)
-	{
-		Format(Items[ItemName], 64, "weapon_awp");
-		Format(Items[desc], 64, "AWP");
-		PushArrayArray(array_primary, Items[0]); 
-	}
+	Format(Items[ItemName], 64, "weapon_aug");
+	Format(Items[desc], 64, "AUG");
+	PushArrayArray(array_primary, Items[0]);
 	
 	Format(Items[ItemName], 64, "weapon_sg556");
 	Format(Items[desc], 64, "SG 553");
@@ -540,13 +542,12 @@ public void ListWeapons()
 	Format(Items[desc], 64, "M249");
 	PushArrayArray(array_primary, Items[0]);
 	
-	Format(Items[ItemName], 64, "weapon_bizon");
-	Format(Items[desc], 64, "PP-Bizon");
-	PushArrayArray(array_primary, Items[0]);
-	
-	Format(Items[ItemName], 64, "weapon_p90");
-	Format(Items[desc], 64, "P90");
-	PushArrayArray(array_primary, Items[0]);
+	if (gc_bAWP.BoolValue)
+	{
+		Format(Items[ItemName], 64, "weapon_awp");
+		Format(Items[desc], 64, "AWP an");
+		PushArrayArray(array_primary, Items[0]); 
+	}
 	
 	if (gc_bAutoSniper.BoolValue)
 	{
@@ -559,6 +560,14 @@ public void ListWeapons()
 		PushArrayArray(array_primary, Items[0]); 
 	}
 	
+	Format(Items[ItemName], 64, "weapon_bizon");
+	Format(Items[desc], 64, "PP-Bizon");
+	PushArrayArray(array_primary, Items[0]);
+	
+	Format(Items[ItemName], 64, "weapon_p90");
+	Format(Items[desc], 64, "P90");
+	PushArrayArray(array_primary, Items[0]);
+	
 	Format(Items[ItemName], 64, "weapon_ump45");
 	Format(Items[desc], 64, "UMP-45");
 	PushArrayArray(array_primary, Items[0]);
@@ -566,15 +575,11 @@ public void ListWeapons()
 	Format(Items[ItemName], 64, "weapon_mp7");
 	Format(Items[desc], 64, "MP7");
 	PushArrayArray(array_primary, Items[0]);
-
-	Format(Items[ItemName], 64, "weapon_famas");
-	Format(Items[desc], 64, "FAMAS");
-	PushArrayArray(array_primary, Items[0]);
 	
 	Format(Items[ItemName], 64, "weapon_mp9");
 	Format(Items[desc], 64, "MP9");
 	PushArrayArray(array_primary, Items[0]);
-
+	
 	Format(Items[ItemName], 64, "weapon_mac10");
 	Format(Items[desc], 64, "MAC-10");
 	PushArrayArray(array_primary, Items[0]);
@@ -610,7 +615,7 @@ public void ListWeapons()
 	Format(Items[ItemName], 64, "weapon_elite");
 	Format(Items[desc], 64, "Dual Berettas");
 	PushArrayArray(array_secondary, Items[0]);
-
+	
 	Format(Items[ItemName], 64, "weapon_tec9");
 	Format(Items[desc], 64, "Tec-9");
 	PushArrayArray(array_secondary, Items[0]);
@@ -618,8 +623,8 @@ public void ListWeapons()
 	Format(Items[ItemName], 64, "weapon_fiveseven");
 	Format(Items[desc], 64, "Five-SeveN");
 	PushArrayArray(array_secondary, Items[0]);
-
- 	Format(Items[ItemName], 64, "weapon_cz75a");
+	
+	Format(Items[ItemName], 64, "weapon_cz75a");
 	Format(Items[desc], 64, "CZ75-Auto");
 	PushArrayArray(array_secondary, Items[0]); 
 	

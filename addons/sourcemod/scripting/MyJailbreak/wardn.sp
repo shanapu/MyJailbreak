@@ -1075,7 +1075,8 @@ public Action CDMenu(int client, int args)
 			menu.AddItem("start", menuinfo2);
 			menu.AddItem("stop", menuinfo3);
 			menu.AddItem("startstop", menuinfo4);
-			menu.ExitButton = false;
+			menu.ExitButton = true;
+			menu.ExitBackButton = true;
 			menu.Display(client, 20);
 		}
 		else CPrintToChat(client, "%t %t", "warden_tag", "warden_notwarden" );
@@ -1102,6 +1103,10 @@ public int CDHandler(Menu menu, MenuAction action, int client, int selection)
 		{
 		FakeClientCommand(client, "sm_cdstartstop");
 		}
+	}
+	else if(selection == MenuCancel_ExitBack) 
+	{
+		FakeClientCommand(client, "sm_menu");
 	}
 	else if (action == MenuAction_End)
 	{
@@ -1154,7 +1159,8 @@ public Action StartStopCDMenu(int client, int args)
 			menu.AddItem("180", menuinfo12);
 			menu.AddItem("300", menuinfo13);
 			
-			menu.ExitButton = false;
+			menu.ExitButton = true;
+			menu.ExitButton = true;
 			menu.Display(client, 20);
 		}
 		else CPrintToChat(client, "%t %t", "warden_tag", "warden_notwarden" );
@@ -1209,6 +1215,10 @@ public int StartStopCDHandler(Menu menu, MenuAction action, int client, int sele
 			g_iSetCountStartStopTime = 310;
 			SetStartStopCountDown(client, 0);
 		}
+	}
+	else if(selection == MenuCancel_ExitBack) 
+	{
+		FakeClientCommand(client, "sm_cdmenu");
 	}
 	else if (action == MenuAction_End)
 	{
