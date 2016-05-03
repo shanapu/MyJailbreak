@@ -181,7 +181,7 @@ public void OnPluginStart()
 	
 	AutoExecConfig_CreateConVar("sm_warden_version", PLUGIN_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_PLUGIN|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_warden_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true,  0.0, true, 1.0);
-	gc_bBecomeWarden = AutoExecConfig_CreateConVar("sm_warden_become", "1", "0 - disabled, 1 - enable !w... - player can choose to be warden", _, true,  0.0, true, 1.0);
+	gc_bBecomeWarden = AutoExecConfig_CreateConVar("sm_warden_become", "1", "0 - disabled, 1 - enable !w / !warden - player can choose to be warden. If disabled you should need sm_warden_choose_random 1", _, true,  0.0, true, 1.0);
 	gc_bChooseRandom = AutoExecConfig_CreateConVar("sm_warden_choose_random", "1", "0 - disabled, 1 - enable pic random warden if there is still no warden after sm_warden_choose_time", _, true,  0.0, true, 1.0);
 	g_hRandomTimer = AutoExecConfig_CreateConVar("sm_warden_choose_time", "20", "Time in seconds a random warden will picked when no warden was set. need sm_warden_choose_random 1", _, true,  1.0);
 	gc_bVote = AutoExecConfig_CreateConVar("sm_warden_vote", "1", "0 - disabled, 1 - enable player vote against warden", _, true,  0.0, true, 1.0);
@@ -547,6 +547,7 @@ public Action SetWarden(int client,int args)
 					menu.AddItem(userid,username);
 				}
 			}
+			menu.ExitBackButton = true;
 			menu.ExitButton = true;
 			menu.Display(client,MENU_TIME_FOREVER);
 		}
@@ -579,7 +580,8 @@ public int m_SetWarden(Menu menu, MenuAction action, int client, int Position)
 						Format(info2, sizeof(info2), "%T", "warden_no", LANG_SERVER);
 						menu1.AddItem("1", info3);
 						menu1.AddItem("0", info2);
-						menu1.ExitButton = false;
+						menu1.ExitBackButton = true;
+						menu1.ExitButton = true;
 						menu1.Display(client,MENU_TIME_FOREVER);
 					}
 					else
@@ -610,6 +612,17 @@ public int m_SetWarden(Menu menu, MenuAction action, int client, int Position)
 			}
 		}
 	}
+	else if(action == MenuAction_Cancel)
+	{
+		if(Position == MenuCancel_ExitBack) 
+		{
+			FakeClientCommand(client, "sm_menu");
+		}
+	}
+	else if(action == MenuAction_End)
+	{
+		delete menu;
+	}
 }
 
 public int m_WardenOverwrite(Menu menu, MenuAction action, int client, int Position)
@@ -624,7 +637,7 @@ public int m_WardenOverwrite(Menu menu, MenuAction action, int client, int Posit
 			int newwarden = GetClientOfUserId(tempwarden[client]);
 			CPrintToChatAll("%t %t", "warden_tag" , "warden_removed", client, Warden);
 			CPrintToChatAll("%t %t", "warden_tag" , "warden_new", newwarden);
-			if(gc_bSounds.BoolValue)	
+			if(gc_bSounds.BoolValue)
 			{
 				EmitSoundToAllAny(g_sWarden);
 			}
@@ -644,6 +657,21 @@ public int m_WardenOverwrite(Menu menu, MenuAction action, int client, int Posit
 			Call_PushCell(newwarden);
 			Call_Finish();
 		}
+		else if(choice == 0)
+		{
+		FakeClientCommand(client, "sm_menu");
+		}
+	}
+	else if(action == MenuAction_Cancel)
+	{
+		if(Position == MenuCancel_ExitBack) 
+		{
+			FakeClientCommand(client, "sm_menu");
+		}
+	}
+	else if(action == MenuAction_End)
+	{
+		delete menu;
 	}
 }
 
@@ -1159,7 +1187,7 @@ public Action StartStopCDMenu(int client, int args)
 			menu.AddItem("180", menuinfo12);
 			menu.AddItem("300", menuinfo13);
 			
-			menu.ExitButton = true;
+			menu.ExitBackButton = true;
 			menu.ExitButton = true;
 			menu.Display(client, 20);
 		}
@@ -1216,11 +1244,14 @@ public int StartStopCDHandler(Menu menu, MenuAction action, int client, int sele
 			SetStartStopCountDown(client, 0);
 		}
 	}
-	else if(selection == MenuCancel_ExitBack) 
+	else if(action == MenuAction_Cancel)
 	{
-		FakeClientCommand(client, "sm_cdmenu");
+		if(selection == MenuCancel_ExitBack) 
+		{
+			FakeClientCommand(client, "sm_cdmenu");
+		}
 	}
-	else if (action == MenuAction_End)
+	else if(action == MenuAction_End)
 	{
 		delete menu;
 	}
@@ -1529,11 +1560,12 @@ public Action KillRandom(int client, int args)
 			Menu menu1 = CreateMenu(killmenu);
 			Format(info5, sizeof(info5), "%T", "warden_sure", Warden, LANG_SERVER);
 			menu1.SetTitle(info5);
-			Format(info6, sizeof(info6), "%T", "warden_yes", LANG_SERVER);
-			Format(info7, sizeof(info7), "%T", "warden_no", LANG_SERVER);
-			menu1.AddItem("1", info6);
-			menu1.AddItem("0", info7);
-			menu1.ExitButton = false;
+			Format(info6, sizeof(info6), "%T", "warden_no", LANG_SERVER);
+			Format(info7, sizeof(info7), "%T", "warden_yes", LANG_SERVER);
+			menu1.AddItem("0", info6);
+			menu1.AddItem("1", info7);
+			menu1.ExitBackButton = true;
+			menu1.ExitButton = true;
 			menu1.Display(client,MENU_TIME_FOREVER);
 		}
 		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden"); 
@@ -1551,6 +1583,18 @@ public int killmenu(Menu menu, MenuAction action, int client, int Position)
 		{
 			DoKillRandom(client, 0);
 		}
+		
+	}
+	else if(action == MenuAction_Cancel)
+	{
+		if(Position == MenuCancel_ExitBack) 
+		{
+			FakeClientCommand(client, "sm_menu");
+		}
+	}
+	else if(action == MenuAction_End)
+	{
+		delete menu;
 	}
 }
 

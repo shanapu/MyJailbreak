@@ -4,9 +4,12 @@ know bugs:
 - [ ] weapons.smx "block" stamm vip models?!
 
 must:
-
+- [ ] comments to template.sp
+- [ ] install instruction 
+- [ ] thx to all sm 
 
 want:
+- [ ] 
 - [ ] hide: seeker more TA -> convar set how many
 - [ ] warden: disarm when shot on Arms/hand (all CT?)
 - [ ] Noscope: choose weapon an round start (scout/awp/auto)

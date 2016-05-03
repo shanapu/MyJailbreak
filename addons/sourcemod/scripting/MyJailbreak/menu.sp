@@ -822,9 +822,12 @@ public int EventMenuHandler(Menu daysmenu, MenuAction action, int client, int se
 			}
 		}
 	}
-	else if(selection == MenuCancel_ExitBack) 
+	else if(action == MenuAction_Cancel) 
 	{
-		JbMenu(client,0);
+		if(selection == MenuCancel_ExitBack) 
+		{
+			JbMenu(client,0);
+		}
 	}
 	else if (action == MenuAction_End)
 	{
@@ -838,22 +841,27 @@ public Action ChangeTeam(int client, int args)
 			Menu menu1 = CreateMenu(changemenu);
 			Format(info5, sizeof(info5), "%T", "warden_sure", LANG_SERVER);
 			menu1.SetTitle(info5);
-			Format(info6, sizeof(info6), "%T", "warden_yes", LANG_SERVER);
-			Format(info7, sizeof(info7), "%T", "warden_no", LANG_SERVER);
+			Format(info6, sizeof(info6), "%T", "warden_no", LANG_SERVER);
+			Format(info7, sizeof(info7), "%T", "warden_yes", LANG_SERVER);
 			menu1.AddItem("1", info6);
 			menu1.AddItem("0", info7);
-			menu1.ExitButton = false;
+			menu1.ExitBackButton = true;
+			menu1.ExitButton = true;
 			menu1.Display(client,MENU_TIME_FOREVER);
 }
 
-public int changemenu(Menu menu, MenuAction action, int client, int Position)
+public int changemenu(Menu menu, MenuAction action, int client, int selection)
 {
 	if(action == MenuAction_Select)
 	{
 		char Item[11];
-		menu.GetItem(Position,Item,sizeof(Item));
+		menu.GetItem(selection,Item,sizeof(Item));
 		int choice = StringToInt(Item);
 		if(choice == 1)
+		{
+			JbMenu(client,0);
+		}
+		else if(choice == 0)
 		{
 			if (GetClientTeam(client) == CS_TEAM_T)
 			{
@@ -864,5 +872,16 @@ public int changemenu(Menu menu, MenuAction action, int client, int Position)
 			ClientCommand(client, "jointeam %i", CS_TEAM_T);
 			}
 		}
+	}
+	else if(action == MenuAction_Cancel) 
+	{
+		if(selection == MenuCancel_ExitBack) 
+		{
+			FakeClientCommand(client, "sm_menu");
+		}
+	}
+	else if (action == MenuAction_End)
+	{
+		delete menu;
 	}
 }

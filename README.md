@@ -47,27 +47,28 @@ I recommend until full release, when update to overwrite all files (plugins, tra
 #### [0.7.2] - 2016-05-03
 ### Added
 - initial release with version number.
-- minor fixes
-
 ```
 
 ### Versioning
 for a better understanding:
-
+```
 0.7.2  
 │ │ └───patch level - fix within major/minior release (you should update for fixes)  
 │ └─────minor release - feature/structure added/removed/changed (you can update if you want for new stuff or paticular changes) 
 └───────major release - stable/release (big new update - recommended) 
+```
 
 ### Credits: 
 
-**used code & stuff from: ecca, Zipcore, ESK0, Floody.de, Franc1sco, walmar, KeepCalm, bara, Arkarr, KissLick, headline, Hipster, ReFlexPoison, Kaesar, andi67** and many other I cant remember unfortunately! [detailed](#detailed-credits)
+**used code & stuff from: ecca, Zipcore, ESK0, Floody.de, Franc1sco, walmar, KeepCalm, bara, Arkarr, KissLick, headline, Hipster, ReFlexPoison, Kaesar, andi67** and many other I cant remember unfortunately! [detailed](#detailed-credits)  
+**thanks to all sourcemod & metamod developers out there!**
+
 # THANKS FOR MAKING FREE SOFTWARE!
 
 #### Much Thanks: 
 UartigZone, Got Sw4g? terminator18, Skelexes, 0dieter0, maks for bughunting / great ideas!
-
-
+  
+  
 
 ### Plugin descriptions: 
 
@@ -108,7 +109,7 @@ Colorize Warden, Warden Model, open/close cell doors, automatic open cells doors
 ```
 - sm_warden_version - Shows the version of the SourceMod plugin MyJailbreak - Warden
 - sm_warden_enable: 0 - disabled, 1 - enable the Warden plugin. Default 1
-- sm_warden_become: 0 - disabled, 1 - enable !w... - player can choose to be Warden. Default 1
+- sm_warden_become: 0 - disabled, 1 - enable !w / !warden - player can choose to be Warden. If disabled you should need sm_warden_choose_random 1. Default 1
 - sm_warden_choose_random: 0 - disabled, 1 - enable pic random Warden if there is still no Warden after sm_warden_choose_time. Default 1
 - sm_warden_choose_time: Time in seconds a random Warden will picked when no Warden was set. need sm_warden_choose_random 1. Default 20
 - sm_warden_stay: 0 - disabled, 1 - Warden will stay after round end. Default 1

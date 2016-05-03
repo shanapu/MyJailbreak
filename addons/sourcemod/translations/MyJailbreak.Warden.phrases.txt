@@ -131,12 +131,12 @@
 	"warden_removed"
 	{
 		"#format"	"{1:N},{2:N}"
-		"da"		"Admin: {purple}{1}{default} har fyret Warden: {2}"		
-		"en"		"Admin: {purple}{1}{default} fired Warden: {2}"
-		"es"		"Administrador: {purple}{1}{default} ha prejubilado al AlcÃ¡ide: {2}"
-		"pt"		"O Administrador do: {purple}{1}{default} o diretor se aposentou cedo: {2}"
-		"sv"		"Admin: {purple}{1}{default} avskedade Fängelsedirektören: {2}"
-		"de"		"Admin {purple}{1}{default} hat Warden {2} seines Amtes enthoben."
+		"da"		"Admin: {purple}{1}{default} har fyret Warden: {purple}{2}"		
+		"en"		"Admin: {purple}{1}{default} fired Warden:  {purple}{2}"
+		"es"		"Administrador: {purple}{1}{default} ha prejubilado al AlcÃ¡ide:  {purple}{2}"
+		"pt"		"O Administrador do: {purple}{1}{default} o diretor se aposentou cedo:  {purple}{2}"
+		"sv"		"Admin: {purple}{1}{default} avskedade Fängelsedirektören:  {purple}{2}"
+		"de"		"Admin: {purple}{1}{default} hat Warden  {purple}{2}{default} seines Amtes enthoben."
 	}
 	
 	"warden_removed_nc"		// no colors!
