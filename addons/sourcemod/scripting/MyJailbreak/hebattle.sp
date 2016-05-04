@@ -324,7 +324,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 						{
 							SetEntityGravity(client, gc_fGravValue.FloatValue);	
 						}
-						SendPanelToClient(HEbattleMenu, client, NullHandler, 15);
+						SendPanelToClient(HEbattleMenu, client, NullHandler, 20);
 						SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 						StripAllWeapons(client);
 						GivePlayerItem(client, "weapon_hegrenade");

@@ -239,7 +239,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		DrawPanelText(FreeDayMenu, "-----------------------------------");
 		for(int client=1; client <= MaxClients; client++)
 			{
-				SendPanelToClient(FreeDayMenu, client, NullHandler, 15);
+				SendPanelToClient(FreeDayMenu, client, NullHandler, 20);
 				if (!gc_bDamage.BoolValue && IsValidClient(client))
 				{
 					SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);

@@ -378,7 +378,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 							GivePlayerItem(client, "weapon_hegrenade");
 						}
 						SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
-						SendPanelToClient(ZombieMenu, client, NullHandler, 15);
+						SendPanelToClient(ZombieMenu, client, NullHandler, 20);
 						SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 						if (!gc_bSpawnCell.BoolValue)
 						{

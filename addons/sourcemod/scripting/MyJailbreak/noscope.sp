@@ -334,7 +334,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 						StripAllWeapons(client);
 						GivePlayerItem(client, "weapon_ssg08");
 						SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
-						SendPanelToClient(NoScopeMenu, client, NullHandler, 15);
+						SendPanelToClient(NoScopeMenu, client, NullHandler, 20);
 						SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 						if (!gc_bSpawnCell.BoolValue)
 						{

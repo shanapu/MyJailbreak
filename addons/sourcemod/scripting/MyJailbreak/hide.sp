@@ -329,7 +329,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 						{
 							StripAllWeapons(client);
 							SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
-							SendPanelToClient(HideMenu, client, NullHandler, 15);
+							SendPanelToClient(HideMenu, client, NullHandler, 20);
 							GivePlayerItem(client, "weapon_knife");
 						}
 						
