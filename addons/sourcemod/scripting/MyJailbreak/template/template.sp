@@ -374,8 +374,8 @@ public Action EVENTNAMENoDamage(Handle timer)
 			{
 				EmitSoundToAllAny(g_sSoundStartPath);
 			}
-			CPrintToChatAll("%t %t", "eventname_tag" , "eventname_start");
 		}
+		CPrintToChatAll("%t %t", "eventname_tag" , "eventname_start");
 	}
 	
 	

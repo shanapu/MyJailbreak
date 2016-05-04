@@ -394,8 +394,9 @@ public Action ZeusNoDamage(Handle timer)
 			{
 				EmitSoundToAllAny(g_sSoundStartPath);
 			}
-			CPrintToChatAll("%t %t", "zeus_tag" , "zeus_start");
+			
 		}
+		CPrintToChatAll("%t %t", "zeus_tag" , "zeus_start");
 	}
 	
 	TruceTimer = null;

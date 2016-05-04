@@ -392,10 +392,11 @@ public Action NoDamage(Handle timer)
 			{
 				EmitSoundToAllAny(g_sSoundStartPath);
 			}
-			CPrintToChatAll("%t %t", "ffa_tag" , "ffa_start");
+			
 			PrintCenterText(client,"%t", "ffa_start_nc");
 		}
 	}
+	CPrintToChatAll("%t %t", "ffa_tag" , "ffa_start");
 	DoFog();
 	AcceptEntityInput(FogIndex, "TurnOff");
 	TruceTimer = null;

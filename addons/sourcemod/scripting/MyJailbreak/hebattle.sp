@@ -419,8 +419,9 @@ public Action HEbattle(Handle timer)
 			{
 				EmitSoundToAllAny(g_sSoundStartPath);
 			}
-			CPrintToChatAll("%t %t", "hebattle_tag" , "hebattle_start");
+			
 		}
+		CPrintToChatAll("%t %t", "hebattle_tag" , "hebattle_start");
 	}
 	
 	TruceTimer = null;

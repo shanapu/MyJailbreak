@@ -446,8 +446,9 @@ public Action Zombie(Handle timer)
 			{
 				EmitSoundToAllAny(g_sSoundStartPath);
 			}
-			CPrintToChatAll("%t %t", "zombie_tag" , "zombie_start");
+			
 		}
+		CPrintToChatAll("%t %t", "zombie_tag" , "zombie_start");
 	}
 	FreezeTimer = null;
 	

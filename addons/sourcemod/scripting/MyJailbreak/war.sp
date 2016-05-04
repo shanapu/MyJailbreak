@@ -436,10 +436,9 @@ public Action NoDamage(Handle timer)
 				EmitSoundToAllAny(g_sSoundStartPath);
 			}
 			CPrintToChatAll("%t %t", "war_tag" , "war_start");
-			PrintCenterText(client,"%t", "war_start_nc");
 		}
 	}
-	
+	PrintCenterText(client,"%t", "war_start_nc");
 	TruceTimer = null;
 	return Plugin_Stop;
 }
