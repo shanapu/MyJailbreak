@@ -32,7 +32,7 @@ If you own a feature or extention for Jail/Warden that would fit in, i would be 
     - [DuckHunt](#duckHunt) - (CT(hunter) with nova vs T(chicken in 3th person))
     - [Jihad](#jihad) - (Ts got suicde bombs to kill all CTs)
     - [Zeus](#zeus) - (FFA ZeusRound - get a new Zeus on Kill)
-    - [Knife](#knifefight) - (CT vs T Knifefight with switchable grav, ice, and TP)
+    - [Knife](#knifefight) - (FFA Knifefight with switchable grav, ice, and TP)
     - [FreeDay](#freeday) - (auto FreeDay on first round/damage disabled)
 
 
@@ -124,7 +124,7 @@ Colorize Warden, Warden Model, open/close cell doors, automatic open cells doors
 - sm_warden_math: 0 - disabled, 1 - enable mathquiz for Warden. Default 1
 - sm_warden_math_min: What should be the minimum number for questions. Default 1
 - sm_warden_math_max: What should be the maximum number for questions. Default 100
-- sm_warden_math_time: Time in seconds to give a answer to a question. Default 10
+- sm_warden_math_time: Time in seconds to give a answer to a question. Default 20
 - sm_warden_countdown: 0 - disabled, 1 - enable countdown for Warden. Default 1
 - sm_warden_overlays_enable: 0 - disabled, 1 - enable overlay for countdown. Default 1
 - sm_warden_overlays_start: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
@@ -462,6 +462,7 @@ Zombies freezed for 35sec (default) so T can hide &/or climb.
 ##### Features
 
 - disable Warden, other EventDays, lastrequest
+- change the sky of map
 - 1.7 SourcePawn Transitional Syntax
 - autoopen celldoors (need smartjaildoors)
 - Multilingual support

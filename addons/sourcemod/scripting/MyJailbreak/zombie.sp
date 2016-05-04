@@ -439,16 +439,16 @@ public Action Zombie(Handle timer)
 					SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.4);
 				}
 				SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
+				PrintCenterText(client,"%t", "zombie_start_nc");
 			}
 			if(gc_bOverlays.BoolValue) CreateTimer( 0.0, ShowOverlayStart, client);
 			if(gc_bSounds.BoolValue)	
 			{
 				EmitSoundToAllAny(g_sSoundStartPath);
 			}
+			CPrintToChatAll("%t %t", "zombie_tag" , "zombie_start");
 		}
 	}
-	PrintHintTextToAll("%t", "zombie_start_nc");
-	CPrintToChatAll("%t %t", "zombie_tag" , "zombie_start");
 	FreezeTimer = null;
 	
 	return Plugin_Stop;
@@ -500,6 +500,7 @@ public void OnMapEnd()
 {
 	IsZombie = false;
 	StartZombie = false;
+	if (FreezeTimer != null) KillTimer(FreezeTimer);
 	g_iVoteCount = 0;
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0';

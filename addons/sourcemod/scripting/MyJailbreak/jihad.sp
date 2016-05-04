@@ -447,9 +447,10 @@ public Action Jihad(Handle timer)
 			if (IsValidClient(client, true, true))
 			{
 				SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
-						
+				PrintCenterText(client,"%t", "jihad_start_nc");
 			}
 			if(gc_bOverlays.BoolValue) CreateTimer( 0.0, ShowOverlayStart, client);
+			CPrintToChatAll("%t %t", "jihad_tag" , "jihad_start");
 			if(gc_bSounds.BoolValue)
 			{
 				EmitSoundToAllAny(g_sSoundStartPath);
@@ -458,8 +459,7 @@ public Action Jihad(Handle timer)
 	}
 	SJD_OpenDoors();
 	
-	PrintHintTextToAll("%t", "jihad_start_nc");
-	CPrintToChatAll("%t %t", "jihad_tag" , "jihad_start");
+	
 	FreezeTimer = null;
 	BombActive = true;
 	
@@ -557,11 +557,6 @@ public Action DoDaBomb( Handle timer, any client )
 	{
 		for (int i = 0; i < numKilledPlayers; ++i)
 		{
-			if (numKilledPlayers >= GetTeamClientCount(CS_TEAM_CT))
-			{
-				CPrintToChatAll("%t %t", "jihad_tag" , "jihad_twin_nc");
-				CS_TerminateRound(0.0, CSRoundEnd_TerroristWin);
-			}
 			ForcePlayerSuicide(deathList[i]);
 		}
 	}
@@ -603,7 +598,6 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 			ClientSprintStatus[client] = 0;
 		}
 		if (FreezeTimer != null) KillTimer(FreezeTimer);
-		
 		if (winner == 2) PrintHintTextToAll("%t", "jihad_twin_nc");
 		if (winner == 3) PrintHintTextToAll("%t", "jihad_ctwin_nc");
 		if (g_iRound == g_iMaxRound)
@@ -742,6 +736,7 @@ public void OnMapEnd()
 	IsJihad = false;
 	StartJihad = false;
 	BombActive = false;
+	if (FreezeTimer != null) KillTimer(FreezeTimer);
 	g_iVoteCount = 0;
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0';

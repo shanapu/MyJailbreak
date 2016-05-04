@@ -344,11 +344,12 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 						GivePlayerItem(client, "weapon_knife");
 						SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
 						SendPanelToClient(CatchMenu, client, NullHandler, 15);
+						
+						CPrintToChatAll("%t %t", "catch_tag" ,"catch_rounds", g_iRound, g_iMaxRound);
+						PrintCenterText(client,"%t", "catch_start_nc");
+						CPrintToChatAll("%t %t", "catch_tag" , "catch_start");
 					}
 				}
-				CPrintToChatAll("%t %t", "catch_tag" ,"catch_rounds", g_iRound, g_iMaxRound);
-				PrintHintTextToAll("%t", "catch_start_nc");
-				CPrintToChatAll("%t %t", "catch_tag" , "catch_start");
 			}
 	}
 	else

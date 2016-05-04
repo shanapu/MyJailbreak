@@ -121,9 +121,9 @@
 	
 	"knifefight_info_title"
 	{
-		"da"		"Knifefighter aktiv"	
-		"en"		"Knifefight is activ"
-		"de"		"Knifefight ist aktiv"
+		"da"		"FFA Knifefighter- er hver mod hver aktiv!"
+		"en"		"FFA Knifefight - Free for all is activ"
+		"de"		"FFA Knifefight - Jeder gegen Jeden ist aktiv"
 	}
 	
 	"knifefight_info_line1"

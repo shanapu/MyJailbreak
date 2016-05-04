@@ -3,7 +3,7 @@
 	"menu_info" // only color line! working color tags {default}, {darkred}, {red}, {green}, {lightgreen}, {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
 	{
 		"#format"		""
-		"en"			"[{green}MyJB.Menu{default}] To open the jailbreak menu press , or type !menu"
+		"en"			"[{green}MyJB.menu{default}] To open the jailbreak menu press , or type !menu"
 	}	
 	"menu_info_title"
 	{
@@ -19,12 +19,17 @@
 	{
 		"#format"		""
 		"en"			"Open cell doors"
-	}	
-	"menu_eventdays"
+	}
+	"menu_seteventdays"
 	{
 		"#format"		""
-		"en"			"Event Days"
-	}	
+		"en"			"Set EventDays"
+	}
+	"menu_voteeventdays"
+	{
+		"#format"		""
+		"en"			"Vote EventDays"
+	}
 	"menu_math"
 	{
 		"#format"		""
@@ -113,7 +118,7 @@
 	"menu_event_Titlevote"
 	{
 		"#format"		""
-		"en"			"Vote for a EventDays"
+		"en"			"Vote for a Event Day"
 	}
 	"menu_war"
 	{

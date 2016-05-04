@@ -430,16 +430,17 @@ public Action NoScope(Handle timer)
 				{
 					SetEntityGravity(client, gc_fGravValue.FloatValue);	
 				}
+				PrintCenterText(client,"%t", "noscope_start_nc");
+				
 			}
 			if(gc_bOverlays.BoolValue) CreateTimer( 0.0, ShowOverlayStart, client);
 			if(gc_bSounds.BoolValue)	
 			{
 				EmitSoundToAllAny(g_sSoundStartPath);
 			}
+			CPrintToChatAll("%t %t", "noscope_tag" , "noscope_start");
 		}
 	}
-	PrintHintTextToAll("%t", "noscope_start_nc");
-	CPrintToChatAll("%t %t", "noscope_tag" , "noscope_start");
 	
 	TruceTimer = null;
 	
@@ -458,7 +459,6 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 			if (IsClientInGame(client)) SetEntityGravity(client, 1.0);
 			
 		}
-		
 		if (TruceTimer != null) KillTimer(TruceTimer);
 		if (winner == 2) PrintHintTextToAll("%t", "noscope_twin_nc");
 		if (winner == 3) PrintHintTextToAll("%t", "noscope_ctwin_nc");
@@ -492,6 +492,7 @@ public void OnMapEnd()
 {
 	IsNoScope = false;
 	StartNoScope = false;
+	if (TruceTimer != null) KillTimer(TruceTimer);
 	g_iVoteCount = 0;
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0';

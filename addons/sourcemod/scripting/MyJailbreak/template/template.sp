@@ -367,16 +367,17 @@ public Action EVENTNAMENoDamage(Handle timer)
 			if (IsClientInGame(client) && IsPlayerAlive(client))
 			{
 				SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
+				PrintCenterText(client,"%t", "eventname_start_nc");
 			}
 			if(gc_bOverlays.BoolValue) CreateTimer( 0.0, ShowOverlayStart, client);
 			if(gc_bSounds.BoolValue)	
 			{
 				EmitSoundToAllAny(g_sSoundStartPath);
 			}
+			CPrintToChatAll("%t %t", "eventname_tag" , "eventname_start");
 		}
 	}
-	PrintHintTextToAll("%t", "eventname_start_nc");
-	CPrintToChatAll("%t %t", "eventname_tag" , "eventname_start");
+	
 	
 	TruceTimer = null;
 	
@@ -393,7 +394,6 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 		{
 			if (IsClientInGame(client)) SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
 		}
-		
 		if (TruceTimer != null) KillTimer(TruceTimer);
 		if (winner == 2) PrintHintTextToAll("%t", "eventname_twin_nc");
 		if (winner == 3) PrintHintTextToAll("%t", "eventname_ctwin_nc");
@@ -425,6 +425,7 @@ public void OnMapEnd()
 {
 	IsEVENTNAME = false;
 	StartEVENTNAME = false;
+	if (TruceTimer != null) KillTimer(TruceTimer);
 	g_iVoteCount = 0;
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0';

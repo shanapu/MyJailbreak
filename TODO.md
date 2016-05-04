@@ -1,15 +1,33 @@
 know bugs:
 - [ ] countdown: Start -> Cancel -> Start - bug? (which countdowns?)
-- [ ] Jihad: If all CT are dead -> T win round - solution: mp_default_team_winner_no_objective?
 - [ ] weapons.smx "block" stamm vip models?!
+- [?] Jihad win bug _ old variant
+- [ ] jihad win -> T win show wrong - solution: mp_default_team_winner_no_objective?
+- [ ] catch win -> CT win show wrong
+- [ ] hide win -> T win show wrong
+- [x] transöation vote hide (2)
+- [ ] Gravity ?!? -> checktimer ladder ix
+- [x] menu zeus dont work
+- [x] make knife FFA
+- [?] war unfreeze time freeze dont work
+- [x] wartruce timer defaul 15sec
+- [?] center text LOS START missing (1sekunde)
+- [?] wartime kill after mpachage
+- [?] spctator to FP
+- [?] knife end FP
+- [?] duckhunt end FP
+- [x] menu duckhunt
+- [ ] menu events menu = admin!=player
+
 
 must:
 - [ ] comments to template.sp
 - [ ] install instruction 
 - [ ] thx to all sm 
+- [ ] teamgames kompatible
 
 want:
-- [ ] 
+- [ ] darken the sky on hide
 - [ ] hide: seeker more TA -> convar set how many
 - [ ] warden: disarm when shot on Arms/hand (all CT?)
 - [ ] Noscope: choose weapon an round start (scout/awp/auto)

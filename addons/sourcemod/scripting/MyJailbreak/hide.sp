@@ -397,16 +397,16 @@ public Action Freezed(Handle timer)
 						SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 0.9);
 					}
 				}
-				if(gc_bSounds.BoolValue)	
+				if(gc_bOverlays.BoolValue) CreateTimer( 0.0, ShowOverlayStart, client);
+				if(gc_bSounds.BoolValue)
 				{
 					EmitSoundToAllAny(g_sSoundStartPath);
 				}
+				PrintCenterText(client,"%t", "hide_start_nc");
+				CPrintToChatAll("%t %t", "hide_tag" , "hide_start");
 			}
-			if(gc_bOverlays.BoolValue) CreateTimer( 0.0, ShowOverlayStart, client);
 		}
 	}
-	PrintHintTextToAll("%t", "hide_start_nc");
-	CPrintToChatAll("%t %t", "hide_tag" , "hide_start");
 	FreezeTimer = null;
 	return Plugin_Stop;
 }
@@ -506,6 +506,7 @@ public void OnMapEnd()
 {
 	IsHide = false;
 	StartHide = false;
+	if (FreezeTimer != null) KillTimer(FreezeTimer);
 	g_iVoteCount = 0;
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0';

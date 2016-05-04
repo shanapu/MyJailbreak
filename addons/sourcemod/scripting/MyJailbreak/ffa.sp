@@ -51,7 +51,6 @@ float mapFogDensity = 0.99;
 
 
 //Handles
-Handle FreezeTimer;
 Handle TruceTimer;
 Handle FFAMenu;
 
@@ -381,7 +380,7 @@ public Action NoDamage(Handle timer)
 	
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	
-	PrintHintTextToAll("%t", "ffa_start_nc");
+	
 	
 	for(int client=1; client <= MaxClients; client++) 
 	{
@@ -393,9 +392,10 @@ public Action NoDamage(Handle timer)
 			{
 				EmitSoundToAllAny(g_sSoundStartPath);
 			}
+			CPrintToChatAll("%t %t", "ffa_tag" , "ffa_start");
+			PrintCenterText(client,"%t", "ffa_start_nc");
 		}
 	}
-	CPrintToChatAll("%t %t", "ffa_tag" , "ffa_start");
 	DoFog();
 	AcceptEntityInput(FogIndex, "TurnOff");
 	TruceTimer = null;
@@ -413,8 +413,6 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 		{
 			if (IsValidClient(client, false, true)) SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
 		}
-		
-		if (FreezeTimer != null) KillTimer(FreezeTimer);
 		if (TruceTimer != null) KillTimer(TruceTimer);
 		if (winner == 2) PrintHintTextToAll("%t", "ffa_twin_nc"); 
 		if (winner == 3) PrintHintTextToAll("%t", "ffa_ctwin_nc");
@@ -459,6 +457,7 @@ public void OnMapEnd()
 {
 	IsFFA = false;
 	StartFFA = false;
+	if (TruceTimer != null) KillTimer(TruceTimer);
 	g_iVoteCount = 0;
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0';

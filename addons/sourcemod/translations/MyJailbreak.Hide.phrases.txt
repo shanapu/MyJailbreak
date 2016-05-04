@@ -6,7 +6,6 @@
 	}
 	"hide_need"
 	{
-		"#format"	"{1:i}"
 		"#format"	"{1:i},{2:N}"
 		"da"		"{purple}{2}{default} har stemt. {purple}{1}{default} stemmer tilbage for {darkred}Hide in the Dark"		
 		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes left to {darkred}Hide in the Dark"
@@ -69,9 +68,9 @@
 	
 	"hide_voted"
 	{
-		"da"		"{purple}Hide in the Dark{default} er startet!"	
-		"en"		"The {purple}Hide in the Dark{default} has started!"
-		"de"		"{purple}Hide in the Dark{default} ist gestartet!"
+		"da"		"Du har allerede stemt for {purple}hide in the dark runde!"
+		"en"		"You already voted for {purple}hide in the dark"
+		"de"		"Du hast schon für {purple}hide in the dark {default}gevotet"
 	}
 	
 	"hide_progress"

@@ -85,7 +85,7 @@ public void OnPluginStart()
 	gc_bSpawnCell = AutoExecConfig_CreateConVar("sm_war_spawn", "0", "0 - teleport to ct and freeze, 1 - T teleport to CT spawn, 1 - standart spawn & cell doors auto open", _, true,  0.0, true, 1.0);
 	gc_iRounds = AutoExecConfig_CreateConVar("sm_war_rounds", "3", "Rounds to play in a row", _, true, 1.0);
 	gc_iFreezeTime = AutoExecConfig_CreateConVar("sm_war_freezetime", "30", "Time in seconds the terrorist freezed - need sm_war_spawn 0", _, true,  0.0);
-	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_war_trucetime", "30", "Time after freezetime damage disbaled", _, true,  0.0);
+	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_war_trucetime", "15", "Time after freezetime damage disbaled", _, true,  0.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_war_roundtime", "5", "Round time in minutes for a single war round", _, true,  1.0);
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_war_cooldown_day", "3", "Rounds cooldown after a event until event can be start again", _, true,  0.0);
 	gc_iCooldownStart = AutoExecConfig_CreateConVar("sm_war_cooldown_start", "3", "Rounds until event can be start after mapchange.", _, true,  0.0);
@@ -331,6 +331,10 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 						if (IsClientInGame(client))
 						{
 							TeleportEntity(client, Pos1, NULL_VECTOR, NULL_VECTOR);
+							if (!gc_bSpawnCell.BoolValue)
+							{
+								SetEntityMoveType(client, MOVETYPE_NONE);
+							}
 						}
 					}
 				}
@@ -419,7 +423,7 @@ public Action NoDamage(Handle timer)
 	
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	
-	PrintHintTextToAll("%t", "war_start_nc");
+	
 	
 	for(int client=1; client <= MaxClients; client++) 
 	{
@@ -431,9 +435,11 @@ public Action NoDamage(Handle timer)
 			{
 				EmitSoundToAllAny(g_sSoundStartPath);
 			}
+			CPrintToChatAll("%t %t", "war_tag" , "war_start");
+			PrintCenterText(client,"%t", "war_start_nc");
 		}
 	}
-	CPrintToChatAll("%t %t", "war_tag" , "war_start");
+	
 	TruceTimer = null;
 	return Plugin_Stop;
 }
@@ -479,6 +485,8 @@ public void OnMapEnd()
 {
 	IsWar = false;
 	StartWar = false;
+	if (FreezeTimer != null) KillTimer(FreezeTimer);
+	if (TruceTimer != null) KillTimer(TruceTimer);
 	g_iVoteCount = 0;
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0';

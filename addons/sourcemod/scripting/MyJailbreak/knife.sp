@@ -108,8 +108,9 @@ public void OnPluginStart()
 	
 	//Hooks
 	HookEvent("round_start", RoundStart);
-	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookEvent("round_end", RoundEnd);
+	HookEvent("player_death", PlayerDeath);
+	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
 	
 	//Find
@@ -288,6 +289,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		SetCvar("sm_weapons_enable", 0);
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("sm_menu_enable", 0);
+		SetCvar("mp_teammates_are_enemies", 1);
 		SetConVarInt(g_bAllowTP, 1);
 		IsKnifeFight = true;
 		
@@ -351,7 +353,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 						{
 							SetCvarFloat("sv_friction", gc_fIceValue.FloatValue);
 						}
-						if (gc_bThirdPerson.BoolValue)
+						if (gc_bThirdPerson.BoolValue && IsValidClient(client, false, false))
 						{
 							ClientCommand(client, "thirdperson");
 						}
@@ -359,14 +361,6 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 						SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 						StripAllWeapons(client);
 						GivePlayerItem(client, "weapon_knife");
-						if (GetClientTeam(client) == CS_TEAM_CT)
-						{
-							SetEntityHealth(client, 45);
-						}
-						if (GetClientTeam(client) == CS_TEAM_T)
-						{
-							SetEntityHealth(client, 20);
-						}
 						if (!gc_bSpawnCell.BoolValue)
 						{
 							TeleportEntity(client, Pos1, NULL_VECTOR, NULL_VECTOR);
@@ -436,6 +430,7 @@ public Action KnifeFight(Handle timer)
 				{
 					SetEntityGravity(client, gc_fGravValue.FloatValue);	
 				}
+				PrintCenterText(client,"%t", "knifefight_start_nc");
 			}
 			if(gc_bOverlays.BoolValue) CreateTimer( 0.0, ShowOverlayStart, client);
 			if(gc_bSounds.BoolValue)	
@@ -443,10 +438,9 @@ public Action KnifeFight(Handle timer)
 				EmitSoundToAllAny(g_sSoundStartPath);
 			}
 			
+			CPrintToChatAll("%t %t", "knifefight_tag" , "knifefight_start");
 		}
 	}
-	PrintHintTextToAll("%t", "knifefight_start_nc");
-	CPrintToChatAll("%t %t", "knifefight_tag" , "knifefight_start");
 	
 	TruceTimer = null;
 	
@@ -467,7 +461,6 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 				FP(client);
 			}
 		}
-		
 		if (TruceTimer != null) KillTimer(TruceTimer);
 		if (winner == 2) PrintHintTextToAll("%t", "knifefight_twin_nc");
 		if (winner == 3) PrintHintTextToAll("%t", "knifefight_ctwin_nc");
@@ -481,6 +474,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 			SetCvar("sm_weapons_enable", 1);
 			SetCvar("sm_warden_enable", 1);
 			SetCvar("sm_menu_enable", 0);
+			SetCvar("mp_teammates_are_enemies", 0);
 			SetCvarFloat("sv_friction", 5.2);
 			SetConVarInt(g_bAllowTP, 0);
 			
@@ -512,10 +506,20 @@ public void OnClientDisconnect(int client)
 	}
 }
 
+public void PlayerDeath(Handle event, char [] name, bool dontBroadcast)
+{
+	if(IsKnifeFight == true)
+	{
+		int client = GetClientOfUserId(GetEventInt(event, "userid"));
+		FP(client);
+	}
+}
+
 public void OnMapEnd()
 {
 	IsKnifeFight = false;
 	StartKnifeFight = false;
+	if (TruceTimer != null) KillTimer(TruceTimer);
 	g_iVoteCount = 0;
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0';

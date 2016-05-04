@@ -412,16 +412,16 @@ public Action HEbattle(Handle timer)
 				{
 					SetEntityGravity(client, gc_fGravValue.FloatValue);	
 				}
+				PrintCenterText(client,"%t", "hebattle_start_nc");
 			}
 			if(gc_bOverlays.BoolValue) CreateTimer( 0.0, ShowOverlayStart, client);
 			if(gc_bSounds.BoolValue)	
 			{
 				EmitSoundToAllAny(g_sSoundStartPath);
 			}
+			CPrintToChatAll("%t %t", "hebattle_tag" , "hebattle_start");
 		}
 	}
-	PrintHintTextToAll("%t", "hebattle_start_nc");
-	CPrintToChatAll("%t %t", "hebattle_tag" , "hebattle_start");
 	
 	TruceTimer = null;
 	
@@ -438,7 +438,6 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 		{
 			if (IsClientInGame(client)) SetEntityGravity(client, 1.0);
 		}
-		
 		if (TruceTimer != null) KillTimer(TruceTimer);
 		if (winner == 2) PrintHintTextToAll("%t", "hebattle_twin_nc");
 		if (winner == 3) PrintHintTextToAll("%t", "hebattle_ctwin_nc");
@@ -470,6 +469,7 @@ public void OnMapEnd()
 	IsHEbattle = false;
 	StartHEbattle = false;
 	g_iVoteCount = 0;
+	if (TruceTimer != null) KillTimer(TruceTimer);
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0';
 	SetEventDay("none");

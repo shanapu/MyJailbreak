@@ -11,7 +11,7 @@
 		"en"		"{purple}FreeDay{default} ended"
 		"de"		"{purple}FreeDay{default} beendet"
 	}
-	"freeday_need"  
+	"freeday_need"
 	{
 		"#format"	"{1:i},{2:N}"
 		"da"		"{purple}{2}{default} har afstemt. {purple}{1}{default} afstemninger tilbage til {darkred}FreeDay"		
@@ -70,9 +70,9 @@
 	
 	"freeday_voted"
 	{
-		"da"		"{purple}FreeDay{default} er startet!"	
-		"en"		"The {purple}FreeDay{default} has started!"
-		"de"		"{purple}FreeDay{default} ist gestartet!"
+		"da"		"Du har allerede stemt for {purple}freeday runde!"
+		"en"		"You already voted for {purple}freeday"
+		"de"		"Du hast schon für {purple}freeday {default}gevotet"
 	}
 	
 	"freeday_progress"

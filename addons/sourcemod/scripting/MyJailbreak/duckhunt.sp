@@ -98,6 +98,7 @@ public void OnPluginStart()
 	//Hooks
 	HookEvent("round_start", RoundStart);
 	HookEvent("round_end", RoundEnd);
+	HookEvent("player_death", PlayerDeath);
 	HookEvent("hegrenade_detonate", HE_Detonate);
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
@@ -334,7 +335,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 							AmmoTimer[client] = CreateTimer(5.0, AmmoRefill, client, TIMER_REPEAT);
 							
 						}
-						if (GetClientTeam(client) == CS_TEAM_T)
+						if (GetClientTeam(client) == CS_TEAM_T && IsValidClient(client, false, false))
 						{
 							SetEntityModel(client, "models/chicken/chicken.mdl");
 							SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.2);
@@ -419,24 +420,25 @@ public Action DuckHunt(Handle timer)
 			if (IsClientInGame(client) && IsPlayerAlive(client))
 			{
 				if (GetClientTeam(client) == CS_TEAM_T)
-					{
-						SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
-						SetEntityGravity(client, 0.3);
-					}
+				{
+					SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
+					SetEntityGravity(client, 0.3);
+				}
 				if (GetClientTeam(client) == CS_TEAM_CT)
-					{
-						SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
-					}
+				{
+					SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
+				}
+				PrintCenterText(client,"%t", "duckhunt_start_nc");
 			}
-			CreateTimer( 0.0, ShowOverlayStart, client);
+			
+			CPrintToChatAll("%t %t", "duckhunt_tag" , "duckhunt_start");
+			if(gc_bOverlays.BoolValue) CreateTimer( 0.0, ShowOverlayStart, client);
 			if(gc_bSounds.BoolValue)	
 			{
 				EmitSoundToAllAny(g_sSoundStartPath);
 			}
 		}
 	}
-	PrintHintTextToAll("%t", "duckhunt_start_nc");
-	CPrintToChatAll("%t %t", "duckhunt_tag" , "duckhunt_start");
 	SJD_OpenDoors();
 	TruceTimer = null;
 	return Plugin_Stop;
@@ -525,10 +527,20 @@ public void OnClientDisconnect(int client)
 	}
 }
 
+public void PlayerDeath(Handle event, char [] name, bool dontBroadcast)
+{
+	if(IsDuckHunt == true)
+	{
+		int client = GetClientOfUserId(GetEventInt(event, "userid"));
+		FP(client);
+	}
+}
+
 public void OnMapEnd()
 {
 	IsDuckHunt = false;
 	StartDuckHunt = false;
+	if (TruceTimer != null) KillTimer(TruceTimer);
 	g_iVoteCount = 0;
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0';

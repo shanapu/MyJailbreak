@@ -387,17 +387,16 @@ public Action ZeusNoDamage(Handle timer)
 			if (IsClientInGame(client) && IsPlayerAlive(client))
 			{
 				SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
-
+				PrintCenterText(client,"%t", "zeus_start_nc");
 			}
 			if(gc_bOverlays.BoolValue) CreateTimer( 0.0, ShowOverlayStart, client);
 			if(gc_bSounds.BoolValue)	
 			{
 				EmitSoundToAllAny(g_sSoundStartPath);
 			}
+			CPrintToChatAll("%t %t", "zeus_tag" , "zeus_start");
 		}
 	}
-	PrintHintTextToAll("%t", "zeus_start_nc");
-	CPrintToChatAll("%t %t", "zeus_tag" , "zeus_start");
 	
 	TruceTimer = null;
 	
@@ -416,9 +415,11 @@ public void PlayerDeath(Handle event, char [] name, bool dontBroadcast)
 
 public Action Timer_GiveZeus(Handle timer, any client)
 {
-	ClientTimer[client] = INVALID_HANDLE;
-	
-	GivePlayerItem(client, "weapon_taser");
+	if (IsValidClient(client, true, false))
+	{
+		ClientTimer[client] = INVALID_HANDLE;
+		GivePlayerItem(client, "weapon_taser");
+	}
 }
 
 public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
@@ -431,7 +432,6 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 		{
 			if (IsClientInGame(client)) SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
 		}
-		
 		if (TruceTimer != null) KillTimer(TruceTimer);
 		if (winner == 2) PrintHintTextToAll("%t", "zeus_twin_nc");
 		if (winner == 3) PrintHintTextToAll("%t", "zeus_ctwin_nc");
@@ -463,6 +463,7 @@ public void OnMapEnd()
 {
 	IsZeus = false;
 	StartZeus = false;
+	if (TruceTimer != null) KillTimer(TruceTimer);
 	g_iVoteCount = 0;
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0';
