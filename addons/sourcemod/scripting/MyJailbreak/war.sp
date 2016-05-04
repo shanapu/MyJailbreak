@@ -345,7 +345,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 				if (IsClientInGame(client))
 				{
 					SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
-					SendPanelToClient(WarMenu, client, NullHandler, 15);
+					SendPanelToClient(WarMenu, client, NullHandler, 20);
 					SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 				}
 			}
@@ -435,10 +435,10 @@ public Action NoDamage(Handle timer)
 			{
 				EmitSoundToAllAny(g_sSoundStartPath);
 			}
-			CPrintToChatAll("%t %t", "war_tag" , "war_start");
+			PrintCenterText(client,"%t", "war_start_nc");
 		}
 	}
-	PrintCenterText(client,"%t", "war_start_nc");
+	CPrintToChatAll("%t %t", "war_tag" , "war_start");
 	TruceTimer = null;
 	return Plugin_Stop;
 }

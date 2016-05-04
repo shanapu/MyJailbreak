@@ -375,7 +375,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 						StripAllWeapons(client);
 						ClientSprintStatus[client] = 0;
 						SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
-						SendPanelToClient(JihadMenu, client, NullHandler, 15);
+						SendPanelToClient(JihadMenu, client, NullHandler, 20);
 						
 						if (GetClientTeam(client) == CS_TEAM_T)
 						{
@@ -602,6 +602,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 		if (winner == 2) PrintHintTextToAll("%t", "jihad_twin_nc");
 		if (winner == 3) PrintHintTextToAll("%t", "jihad_ctwin_nc");
 		if (g_iRound == g_iMaxRound)
+		BombActive = false;
 		{
 			IsJihad = false;
 			StartJihad = false;

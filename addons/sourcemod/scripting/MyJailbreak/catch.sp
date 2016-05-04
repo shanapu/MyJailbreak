@@ -343,7 +343,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 						ClientSprintStatus[client] = 0;
 						GivePlayerItem(client, "weapon_knife");
 						SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
-						SendPanelToClient(CatchMenu, client, NullHandler, 15);
+						SendPanelToClient(CatchMenu, client, NullHandler, 20);
 						PrintCenterText(client,"%t", "catch_start_nc");
 					}
 				}

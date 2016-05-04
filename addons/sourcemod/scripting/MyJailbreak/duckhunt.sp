@@ -345,7 +345,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 							ClientCommand(client, "thirdperson");
 						}
 						SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
-						SendPanelToClient(DuckHuntMenu, client, NullHandler, 15);
+						SendPanelToClient(DuckHuntMenu, client, NullHandler, 20);
 						SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 					}
 				}

@@ -357,7 +357,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 						{
 							ClientCommand(client, "thirdperson");
 						}
-						SendPanelToClient(KnifeFightMenu, client, NullHandler, 15);
+						SendPanelToClient(KnifeFightMenu, client, NullHandler, 20);
 						SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 						StripAllWeapons(client);
 						GivePlayerItem(client, "weapon_knife");

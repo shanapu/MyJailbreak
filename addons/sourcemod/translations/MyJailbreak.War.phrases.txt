@@ -93,8 +93,8 @@
 	"war_minplayer"
 	{
 		"da"		"For war skal der mindst være {purple}en CT"	
-		"en"		"For a Duckhunt you need a least {purple}one CT"
-		"de"		"Für Duckhunt brauchen wir mindestens {purple}einen CT"
+		"en"		"For a war you need a least {purple}one CT"
+		"de"		"Für war brauchen wir mindestens {purple}einen CT"
 	}
 	
 	"war_disabled"

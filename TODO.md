@@ -9,7 +9,7 @@ know bugs:
 - [ ] Gravity ?!? -> checktimer ladder ix
 - [x] menu zeus dont work
 - [x] make knife FFA
-- [?] war unfreeze time freeze dont work
+- [x] war unfreeze time freeze dont work
 - [x] wartruce timer defaul 15sec
 - [?] center text LOS START missing (1sekunde)
 - [?] wartime kill after mpachage
@@ -17,6 +17,7 @@ know bugs:
 - [?] knife end FP
 - [?] duckhunt end FP
 - [x] menu duckhunt
+- [ß] jihad bombactiv in 2nd round
 - [ ] menu events menu = admin!=player
 
 
@@ -25,6 +26,7 @@ must:
 - [ ] install instruction 
 - [ ] thx to all sm 
 - [ ] teamgames kompatible
+- [ ] show round end next event
 
 want:
 - [ ] darken the sky on hide
