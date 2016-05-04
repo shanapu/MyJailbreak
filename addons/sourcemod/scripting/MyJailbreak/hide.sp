@@ -403,9 +403,9 @@ public Action Freezed(Handle timer)
 					EmitSoundToAllAny(g_sSoundStartPath);
 				}
 				PrintCenterText(client,"%t", "hide_start_nc");
-				CPrintToChatAll("%t %t", "hide_tag" , "hide_start");
 			}
 		}
+		CPrintToChatAll("%t %t", "hide_tag" , "hide_start");
 	}
 	FreezeTimer = null;
 	return Plugin_Stop;

@@ -437,9 +437,8 @@ public Action KnifeFight(Handle timer)
 			{
 				EmitSoundToAllAny(g_sSoundStartPath);
 			}
-			
-			CPrintToChatAll("%t %t", "knifefight_tag" , "knifefight_start");
 		}
+		CPrintToChatAll("%t %t", "knifefight_tag" , "knifefight_start");
 	}
 	
 	TruceTimer = null;

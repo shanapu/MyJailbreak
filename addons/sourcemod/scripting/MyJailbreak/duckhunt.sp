@@ -431,13 +431,13 @@ public Action DuckHunt(Handle timer)
 				PrintCenterText(client,"%t", "duckhunt_start_nc");
 			}
 			
-			CPrintToChatAll("%t %t", "duckhunt_tag" , "duckhunt_start");
 			if(gc_bOverlays.BoolValue) CreateTimer( 0.0, ShowOverlayStart, client);
 			if(gc_bSounds.BoolValue)	
 			{
 				EmitSoundToAllAny(g_sSoundStartPath);
 			}
 		}
+		CPrintToChatAll("%t %t", "duckhunt_tag" , "duckhunt_start");
 	}
 	SJD_OpenDoors();
 	TruceTimer = null;

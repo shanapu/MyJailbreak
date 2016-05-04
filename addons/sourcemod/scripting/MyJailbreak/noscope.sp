@@ -438,8 +438,8 @@ public Action NoScope(Handle timer)
 			{
 				EmitSoundToAllAny(g_sSoundStartPath);
 			}
-			CPrintToChatAll("%t %t", "noscope_tag" , "noscope_start");
 		}
+		CPrintToChatAll("%t %t", "noscope_tag" , "noscope_start");
 	}
 	
 	TruceTimer = null;

@@ -450,12 +450,13 @@ public Action Jihad(Handle timer)
 				PrintCenterText(client,"%t", "jihad_start_nc");
 			}
 			if(gc_bOverlays.BoolValue) CreateTimer( 0.0, ShowOverlayStart, client);
-			CPrintToChatAll("%t %t", "jihad_tag" , "jihad_start");
+			
 			if(gc_bSounds.BoolValue)
 			{
 				EmitSoundToAllAny(g_sSoundStartPath);
 			}
 		}
+		CPrintToChatAll("%t %t", "jihad_tag" , "jihad_start");
 	}
 	SJD_OpenDoors();
 	
