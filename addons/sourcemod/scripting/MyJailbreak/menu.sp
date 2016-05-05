@@ -49,6 +49,7 @@ ConVar g_bGunsCT;
 ConVar g_bOpen;
 ConVar g_bRandom;
 ConVar g_bWarden;
+ConVar gc_bTeam;
 
 public Plugin myinfo = {
 	name = "MyJailbreak - Menus",
@@ -85,6 +86,7 @@ public void OnPluginStart()
 	gc_bDays = AutoExecConfig_CreateConVar("sm_menu_days", "1", "0 - disabled, 1 - enable vote/set eventdays menu");
 	gc_bClose = AutoExecConfig_CreateConVar("sm_menu_close", "1", "0 - disabled, 1 - enable close menu after action");
 	gc_bStart = AutoExecConfig_CreateConVar("sm_menu_start", "1", "0 - disabled, 1 - enable open menu on every roundstart");
+	gc_bTeam = AutoExecConfig_CreateConVar("sm_menu_team", "1", "0 - disabled, 1 - enable join team on menu");
 	gc_bWelcome = AutoExecConfig_CreateConVar("sm_menu_welcome", "1", "Show welcome message to newly connected users.");
 	
 	AutoExecConfig_ExecuteFile();
@@ -284,8 +286,11 @@ public Action JbMenu(int client, int args)
 						mainmenu.AddItem("check", menuinfo4);
 					}
 				}
-				Format(menuinfo13, sizeof(menuinfo13), "%T", "menu_joint", LANG_SERVER);
-				mainmenu.AddItem("ChangeTeam", menuinfo13);
+				if(gc_bTeam.BoolValue)
+				{
+					Format(menuinfo13, sizeof(menuinfo13), "%T", "menu_joint", LANG_SERVER);
+					mainmenu.AddItem("ChangeTeam", menuinfo13);
+				}
 			}
 		}
 		else if(GetClientTeam(client) == CS_TEAM_T) 
@@ -322,8 +327,11 @@ public Action JbMenu(int client, int args)
 					Format(menuinfo5, sizeof(menuinfo5), "%T", "menu_voteeventdays", LANG_SERVER);
 					mainmenu.AddItem("votedays", menuinfo5);
 				}
-				Format(menuinfo15, sizeof(menuinfo15), "%T", "menu_joinct", LANG_SERVER);
-				mainmenu.AddItem("ChangeTeam", menuinfo15);
+				if(gc_bTeam.BoolValue)
+				{
+					Format(menuinfo15, sizeof(menuinfo15), "%T", "menu_joinct", LANG_SERVER);
+					mainmenu.AddItem("ChangeTeam", menuinfo15);
+				}
 			}
 		}
 		if(g_bRules != null)
