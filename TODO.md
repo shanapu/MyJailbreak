@@ -1,32 +1,33 @@
 know bugs:
 - [ ] countdown: Start -> Cancel -> Start - bug? (which countdowns?)
 - [ ] weapons.smx "block" stamm vip models?!
-- [?] Jihad win bug _ old variant
+- [x] Jihad win bug
 - [ ] jihad win -> T win show wrong - solution: mp_default_team_winner_no_objective?
 - [ ] catch win -> CT win show wrong
 - [ ] hide win -> T win show wrong
-- [x] transöation vote hide (2)
-- [ ] Gravity ?!? -> checktimer ladder ix
+- [x] translation vote hide (2)
+- [ ] Gravity ?!? -> checktimer ladder fix
 - [x] menu zeus dont work
 - [x] make knife FFA
 - [x] war unfreeze time freeze dont work
 - [x] wartruce timer defaul 15sec
-- [?] center text LOS START missing (1sekunde)
-- [?] wartime kill after mpachage
-- [?] spctator to FP
-- [?] knife end FP
+- [x] center text LOS START missing (1sekunde)
+- [x] wartime kill after mpachage
+- [x] spctator to FP
+- [x] knife end FP
 - [?] duckhunt end FP
 - [x] menu duckhunt
-- [ß] jihad bombactiv in 2nd round
-- [ ] menu events menu = admin!=player
+- [?] jihad bombactiv in 2nd round
+- [x] menu events menu = admin!=player
+- [ ] hosties missing?
 
 
 must:
 - [ ] comments to template.sp
 - [ ] install instruction 
-- [ ] thx to all sm 
-- [ ] teamgames kompatible
-- [ ] show round end next event
+- [ ] teamgames compatible
+- [ ] new menucmds to wiki
+- [x] show round end next event
 
 want:
 - [ ] darken the sky on hide

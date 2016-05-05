@@ -486,6 +486,9 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 	{
 		g_iOldRoundTime = g_iSetRoundTime.IntValue;
 		g_iSetRoundTime.IntValue = gc_iRoundTime.IntValue;
+		
+		CPrintToChatAll("%t %t", "knifefight_tag" , "knifefight_next");
+		PrintHintTextToAll("%t", "knifefight_next_nc");
 	}
 }
 

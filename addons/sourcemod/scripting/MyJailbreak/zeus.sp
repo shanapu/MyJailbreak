@@ -457,6 +457,9 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 	{
 		g_iOldRoundTime = g_iGetRoundTime.IntValue;
 		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;
+		
+		CPrintToChatAll("%t %t", "zeus_tag" , "zeus_next");
+		PrintHintTextToAll("%t", "zeus_next_nc");
 	}
 }
 

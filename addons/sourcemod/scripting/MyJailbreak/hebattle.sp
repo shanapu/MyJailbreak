@@ -462,6 +462,9 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 	{
 		g_iOldRoundTime = g_iGetRoundTime.IntValue;
 		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;
+		
+		CPrintToChatAll("%t %t", "hebattle_tag" , "hebattle_next");
+		PrintHintTextToAll("%t", "hebattle_next_nc");
 	}
 }
 

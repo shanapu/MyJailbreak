@@ -365,9 +365,9 @@ public Action Freezed(Handle timer)
 				{
 					PrintCenterText(client,"%t", "hide_timetounfreeze_nc", g_iFreezeTime);
 				}
-				if (GetClientTeam(client) == CS_TEAM_T)
+				else if (GetClientTeam(client) == CS_TEAM_T)
 				{
-				PrintCenterText(client,"%t", "hide_timetohide_nc", g_iFreezeTime);
+					PrintCenterText(client,"%t", "hide_timetohide_nc", g_iFreezeTime);
 				}
 			}
 		return Plugin_Continue;
@@ -486,6 +486,9 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 	{
 		g_iOldRoundTime = g_iGetRoundTime.IntValue;
 		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;
+		
+		CPrintToChatAll("%t %t", "hide_tag" , "hide_next");
+		PrintHintTextToAll("%t", "hide_next_nc");
 	}
 }
 
