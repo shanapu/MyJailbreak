@@ -569,7 +569,7 @@ public Action SetEventDays(int client, int args)
 				if(g_bZeus.BoolValue)
 				{
 					Format(menuinfo17, sizeof(menuinfo17), "%T", "menu_zeus", LANG_SERVER);
-					daysmenu.AddItem("setknife", menuinfo17);
+					daysmenu.AddItem("setzeus", menuinfo17);
 				}
 			}
 			if(g_bKnife != null)

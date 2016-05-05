@@ -483,6 +483,10 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 	{
 		g_iOldRoundTime = g_iGetRoundTime.IntValue;
 		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;
+		
+		CPrintToChatAll("%t %t", "noscope_tag" , "noscope_next");
+		PrintHintTextToAll("%t", "noscope_next_nc");
+		
 		for(int i = 1; i <= MaxClients; i++)
 		if(IsClientInGame(i)) SDKUnhook(i, SDKHook_PreThink, OnPreThink);
 	}

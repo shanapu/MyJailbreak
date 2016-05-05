@@ -480,11 +480,13 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 			CPrintToChatAll("%t %t", "duckhunt_tag" , "duckhunt_end");
 		}
 	}
-
 	if (StartDuckHunt)
 	{
 		g_iOldRoundTime = g_iGetRoundTime.IntValue;
 		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;
+		
+		CPrintToChatAll("%t %t", "duckhunt_tag" , "duckhunt_next");
+		PrintHintTextToAll("%t", "duckhunt_next_nc");
 	}
 }
 

@@ -103,7 +103,7 @@ public void OnPluginStart()
 	gc_bVote = AutoExecConfig_CreateConVar("sm_jihad_vote", "1", "0 - disabled, 1 - allow player to vote for jihad", _, true,  0.0, true, 1.0);
 	gc_iKey = AutoExecConfig_CreateConVar("sm_jihad_key", "1", "1 - Inspect(look) weapon / 2 - walk / 3 - Secondary Attack", _, true,  1.0, true, 3.0);
 	gc_bStandStill = AutoExecConfig_CreateConVar("sm_jihad_standstill", "1", "0 - disabled, 1 - standstill(cant move) on Activate bomb", _, true,  0.0, true, 1.0);
-	gc_iRounds = AutoExecConfig_CreateConVar("sm_jihad_rounds", "2", "Rounds to play in a row", _, true, 1.0);
+	gc_iRounds = AutoExecConfig_CreateConVar("sm_jihad_rounds", "1", "Rounds to play in a row", _, true, 1.0);
 	gc_fBombRadius = AutoExecConfig_CreateConVar("sm_jihad_bomb_radius", "200.0","Radius for bomb damage", _, true, 10.0, true, 999.0);
 	gc_iFreezeTime = AutoExecConfig_CreateConVar("sm_jihad_hidetime", "20", "Time to hide for CTs", _, true,  0.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_jihad_roundtime", "5", "Round time in minutes for a single jihad round", _, true, 1.0);
@@ -116,10 +116,10 @@ public void OnPluginStart()
 	gc_sSoundJihadPath = AutoExecConfig_CreateConVar("sm_jihad_sounds_jihad", "music/myjailbreak/jihad.mp3", "Path to the soundfile which should be played on activatebomb.");
 	gc_sSoundBoomPath = AutoExecConfig_CreateConVar("sm_jihad_sounds_boom", "music/myjailbreak/boom.mp3", "Path to the soundfile which should be played on detonation.");
 	gc_bSprintUse = AutoExecConfig_CreateConVar("sm_jihad_sprint_button", "1", "0 - disabled, 1 - enable +use button for sprint", _, true,  0.0, true, 1.0);
-	gc_iSprintCooldown = AutoExecConfig_CreateConVar("sm_jihad_sprint_cooldown", "10","Time in seconds the player must wait for the next sprint", _, true,  0.0);
+	gc_iSprintCooldown = AutoExecConfig_CreateConVar("sm_jihad_sprint_cooldown", "7","Time in seconds the player must wait for the next sprint", _, true,  0.0);
 	gc_bSprint = AutoExecConfig_CreateConVar("sm_jihad_sprint_enable", "1", "0 - disabled, 1 - enable ShortSprint", _, true,  0.0, true, 1.0);
-	gc_fSprintSpeed = AutoExecConfig_CreateConVar("sm_jihad_sprint_speed", "1.25","Ratio for how fast the player will sprint", _, true, 1.01, true, 5.00);
-	gc_iSprintTime = AutoExecConfig_CreateConVar("sm_jihad_sprint_time", "2.0", "Time in seconds the player will sprint", _, true, 1.0);
+	gc_fSprintSpeed = AutoExecConfig_CreateConVar("sm_jihad_sprint_speed", "1.30","Ratio for how fast the player will sprint", _, true, 1.01, true, 5.00);
+	gc_iSprintTime = AutoExecConfig_CreateConVar("sm_jihad_sprint_time", "2.5", "Time in seconds the player will sprint", _, true, 1.0);
 	
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
@@ -562,9 +562,9 @@ public Action DoDaBomb( Handle timer, any client )
 		}
 	}
 	ForcePlayerSuicide(client);
-	int number = 0;
-	for (int i = 1; i <= MaxClients; i++)
-	if(IsClientInGame(i) && IsPlayerAlive(i) && GetClientTeam(i) == CS_TEAM_CT) number++;
+//	int number = 0;
+//	for (int i = 1; i <= MaxClients; i++)
+//	if(IsClientInGame(i) && IsPlayerAlive(i) && GetClientTeam(i) == CS_TEAM_CT) number++;
 	
 }
 
@@ -601,8 +601,8 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 		if (FreezeTimer != null) KillTimer(FreezeTimer);
 		if (winner == 2) PrintHintTextToAll("%t", "jihad_twin_nc");
 		if (winner == 3) PrintHintTextToAll("%t", "jihad_ctwin_nc");
-		if (g_iRound == g_iMaxRound)
 		BombActive = false;
+		if (g_iRound == g_iMaxRound)
 		{
 			IsJihad = false;
 			StartJihad = false;
@@ -624,6 +624,9 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 	{
 		g_iOldRoundTime = g_iGetRoundTime.IntValue;
 		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;
+		
+		CPrintToChatAll("%t %t", "jihad_tag" , "jihad_next");
+		PrintHintTextToAll("%t", "jihad_next_nc");
 	}
 }
 

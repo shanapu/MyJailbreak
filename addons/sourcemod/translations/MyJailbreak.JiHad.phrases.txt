@@ -148,14 +148,15 @@
 	}
 	"jihad_info_line2"
 	{
-		"en"		"Terrors got c4 and can suicde wit USE key"
-		"de"		"Terrors haben c4 und können mit der USE Taste suizid begehen"
+		"en"		"Terrors got c4 and can suicde wit +lookweapon 'F'-key"
+		"de"		"Terrors haben c4 und können mit der +lookweapon 'F'-Taste suizid begehen"
 	}
 	
 	"jihad_info_line3"
 	{
-		"en"		"CT better hide"
-		"de"		"ct sollten sich verstecken"
+		"da"		"Brug E til at Sprint!"	
+		"en"		"Press E to sprint!"
+		"de"		"mit der BENUTZEN-Taste kannst du sprinten"
 	}
 	
 	"jihad_info_line4"
