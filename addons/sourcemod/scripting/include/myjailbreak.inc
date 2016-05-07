@@ -3,10 +3,11 @@
 #endif
 #define _myjailbreak_included_
 
-#define PLUGIN_VERSION "0.7.2"
+#define PLUGIN_VERSION "0.7.4"
 #define URL_LINK "https://github.com/shanapu/MyJailbreak"
 
 #include <sdktools>
+#include <sdkhooks>
 
 Handle IntCvar;
 Handle FloatCvar;
@@ -49,15 +50,14 @@ stock PrecacheSoundAnyDownload(char[] sSound)
 	AddFileToDownloadsTable(sBuffer);
 }
 
-stock StripAllWeapons(int iClient)
+stock StripAllWeapons(int client)
 {
-	int iEnt;
+	int weapon;
 	for (int i = 0; i <= 4; i++)
 	{
-		while ((iEnt = GetPlayerWeaponSlot(iClient, i)) != -1)
-		{
-			RemovePlayerItem(iClient, iEnt);
-			AcceptEntityInput(iEnt, "Kill");
+		if((weapon = GetPlayerWeaponSlot(client, i)) != -1) { 
+		SDKHooks_DropWeapon(client, weapon, NULL_VECTOR, NULL_VECTOR); 
+		AcceptEntityInput(weapon, "Kill"); 
 		}
 	}
 }
