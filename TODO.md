@@ -1,41 +1,32 @@
 know bugs:
 - [ ] countdown: Start -> Cancel -> Start - bug? (which countdowns?)
 - [ ] weapons.smx "block" stamm vip models?!
-- [x] Jihad win bug
 - [ ] jihad win -> T win show wrong - solution: mp_default_team_winner_no_objective?
 - [ ] catch win -> CT win show wrong
 - [ ] hide win -> T win show wrong
-- [x] translation vote hide (2)
-- [ ] Gravity ?!? -> checktimer ladder fix
-- [x] menu zeus dont work
-- [x] make knife FFA
-- [x] war unfreeze time freeze dont work
-- [x] wartruce timer defaul 15sec
-- [x] center text LOS START missing (1sekunde)
-- [x] wartime kill after mpachage
-- [x] spctator to FP
-- [x] knife end FP
+- [x] check for at least one ct
 - [?] duckhunt end FP
-- [x] menu duckhunt
 - [?] jihad bombactiv in 2nd round
-- [x] menu events menu = admin!=player
-- [ ] hosties missing?
-
+- [?] Gravity ?!? -> checktimer ladder fix
 
 must:
-- [ ] comments to template.sp
 - [ ] install instruction 
-- [ ] teamgames compatible
-- [ ] new menucmds to wiki
-- [x] show round end next event
+- [ ] wiki: howto edit -> SetCvars, add menu item,
+- [ ] menu: add placeholder for cutom commands
+- [ ] blood, marker, menu to wiki
+- [?] sm_marker
 
 want:
-- [ ] darken the sky on hide
+- [ ] autofreeday if there is no CT or event
+- [ ] zipcores markers
+- [x] set noscope weapon convar
+- [x] mathquiz: colorize winning player
+- [ ] hide: darken the sky
 - [ ] hide: seeker more TA -> convar set how many
 - [ ] warden: disarm when shot on Arms/hand (all CT?)
 - [ ] Noscope: choose weapon an round start (scout/awp/auto)
 - [ ] updater support
-- [ ] Event: logging
+- [x] Event: logging
 - [ ] duckhunt: change +attack to +secAttack
 - [ ] all: custom command support !mycommand
 - [ ] all: format centertext <font size='30' color='#FF00FF'>test</font>
@@ -51,17 +42,17 @@ want:
 - [ ] warden: talkpower per menu only some sec https://forums.alliedmods.net/showthread.php?t=257229
 - [ ] countdown: insert cancel in menu
 - [ ] countdown: force stop
-- [ ] warden: toggle noblock 
 - [ ] menu: insert noblock
+- [ ] merge double used translation to myjailbreak.phrases
 - [ ] warden: color prisioners (color roulette)
 - [ ] zombie: hp convar
 - [ ] all: beacon last player for days
-- [ ] duckhunt: hunter hp convar
-- [ ] duckhunt: chicken hp convar
-- [ ] all: notify on roundend next round
+- [ ] duckhunt: hunter hp convar or auto higher if more t
+- [ ] duckhunt: chicken hp convar or auto higher if more ct
 - [ ] hide: MovementValue hider/seeker convar
 - [ ] new day: Tron like - all player Molotov rain https://forums.alliedmods.net/showthread.php?p=2398902
 - [ ] merge Transltions
+- [ ] math quiz allow + - * / convars
 
 need?
 - [ ] rewrite weapons?!
@@ -71,18 +62,17 @@ need?
 - [ ] silent mp_roundtime?
 - [ ] Jihad: burn dead bodies?
 - [ ] Jihad: body counter?
+- [ ] Marker color?!
 - [ ] warden: ff not for ct?
 - [ ] SetCvarString flags?
 - [ ] warden: add sm_simon? 
 - [ ] duckhunt: allow leftclick per bool?
-- [ ] knifefight: FFA? -> set HP
 - [ ] warden: improve markers (2 kind)  https://github.com/KissLick/TeamGames/blob/master/addons/sourcemod/scripting/Marks.sp
 * [ ] warden: bomb toss https://github.com/KissLick/TeamGames/blob/master/addons/sourcemod/scripting/modules/TG_BombToss.sp
 
 future:
 - [ ] make jailbreak high customizeable - keyvalues cfg file like DonorMenu
 - [ ] rewrite/merge to one master plugin (e.g. hosties,ttt..)
-- [ ] remove features they are still in TG by kisslick 
 
 maybe:
 
@@ -119,12 +109,31 @@ bugs:
 - [x] GetEdictClassname" reported: Invalid edict  /  Command_BombJihad
 - [x] catch IsClientInGame" reported: Client index 0 is invalid overlay
 - [x] menu Event adsm double by admin/warden
+- [x] translation vote hide (2)
+- [x] menu zeus dont work
+- [x] menu events menu = admin!=player
+- [x] hosties missing?
+- [x] menu duckhunt
+- [x] Jihad win bug
+- [x] make knife FFA
+- [x] war unfreeze time freeze dont work
+- [x] wartruce timer defaul 15sec
+- [x] center text LOS START missing (1sekunde)
+- [x] wartime kill after mpachage
+- [x] spctator to FP
+- [x] knifefight: FFA
+- [x] knife end FP
 must/want:
 - [x] menu back button
 - [x] config folder structure
 - [x] clean/translate ConVars 
 - [x] sv_tags to core
+- [x] catch: hide blood
+- [x] comments to template.sp
 - [x] warden:translate menu set
+- [x] show round end next event
+- [x] warden: toggle noblock 
+- [x] all: notify on roundend next round
 - [x] find better STOP SOUND!
 - [x] duckhunt: more ammo for CT
 - [x] duckhunt: chicken only secAttack
@@ -164,13 +173,13 @@ must/want:
 - [x] move FF from menu to warden
 - [x] move randomkill from menu to warden
 - [x] hide: freeze hide bool
-- [x] Freeday: Damage disbaled
+- [x] Freeday: damage disbaled
 - [x] sprint msg
 - [x] Jihad no bomb drop
 - [x] disbale FF on roundend
 - [x] wiki
 - [x] template
-- [X] fastdl files
+- [x] fastdl files
 - [x] set weapon menu enable on need EventDays
 - [x] enu: add eventdays to admin if enabled
 - [x] register plugins to core

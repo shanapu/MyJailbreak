@@ -3,7 +3,6 @@
 #include <sourcemod>
 #include <colors>
 #include <smartjaildoors>
-#include <sdkhooks>
 #include <wardn>
 #include <emitsoundany>
 #include <autoexecconfig>
@@ -50,7 +49,6 @@ ConVar gc_sSoundBoomPath;
 ConVar g_iGetRoundTime;
 ConVar gc_iRounds;
 
-
 //Integers
 int g_iVoteCount;
 int g_iOldRoundTime;
@@ -70,7 +68,6 @@ char g_sSoundBoomPath[256];
 char g_sSoundJihadPath[256];
 char g_sHasVoted[1500];
 char g_sSoundStartPath[256];
-
 
 public Plugin myinfo = {
 	name = "MyJailbreak - Jihad",
@@ -148,6 +145,8 @@ public void OnPluginStart()
 		if(IsClientInGame(i)) OnClientPutInServer(i);
 }
 
+//ConVar Change for Strings
+
 public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
 	if(convar == gc_sSoundJihadPath)
@@ -160,7 +159,6 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 		strcopy(g_sSoundBoomPath, sizeof(g_sSoundBoomPath), newValue);
 		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundBoomPath);
 	}
-	
 	else if(convar == gc_sOverlayStartPath)
 	{
 		strcopy(g_sOverlayStart, sizeof(g_sOverlayStart), newValue);
@@ -173,25 +171,7 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 	}
 }
 
-public Action CS_OnTerminateRound( float &delay, CSRoundEndReason &reason)
-{
-	if (IsJihad)
-	{
-		if (reason == CSRoundEnd_Draw)
-		{
-			reason = CSRoundEnd_CTWin;
-			return Plugin_Changed;
-		}
-		return Plugin_Continue;
-	}
-	return Plugin_Continue;
-}
-
-public void OnClientPutInServer(int client)
-{
-	SDKHook(client, SDKHook_WeaponCanUse, OnWeaponCanUse);
-	SDKHook(client, SDKHook_WeaponDrop, OnWeaponDrop);
-}
+//Initialize Event
 
 public void OnMapStart()
 {
@@ -221,6 +201,14 @@ public void OnConfigsExecuted()
 	g_iMaxRound = gc_iRounds.IntValue;
 }
 
+public void OnClientPutInServer(int client)
+{
+	SDKHook(client, SDKHook_WeaponCanUse, OnWeaponCanUse);
+	SDKHook(client, SDKHook_WeaponDrop, OnWeaponDrop);
+}
+
+//Admin & Warden set Event
+
 public Action SetJihad(int client,int args)
 {
 	if (gc_bPlugin.BoolValue)
@@ -239,6 +227,7 @@ public Action SetJihad(int client,int args)
 						if (g_iCoolDown == 0)
 						{
 							StartNextRound();
+							LogMessage("Event Jihad was started by Warden %L", client);
 						}
 						else CPrintToChat(client, "%t %t", "jihad_tag" , "jihad_wait", g_iCoolDown);
 					}
@@ -262,6 +251,7 @@ public Action SetJihad(int client,int args)
 							if (g_iCoolDown == 0)
 							{
 								StartNextRound();
+								LogMessage("Event Jihad was started by Admin %L", client);
 							}
 							else CPrintToChat(client, "%t %t", "jihad_tag" , "jihad_wait", g_iCoolDown);
 						}
@@ -275,6 +265,8 @@ public Action SetJihad(int client,int args)
 	}
 	else CPrintToChat(client, "%t %t", "jihad_tag" , "jihad_disabled");
 }
+
+//Voting for Event
 
 public Action VoteJihad(int client,int args)
 {
@@ -304,6 +296,7 @@ public Action VoteJihad(int client,int args)
 							if (g_iVoteCount > playercount)
 							{
 								StartNextRound();
+								LogMessage("Event Jihad was started by voting");
 							}
 							else CPrintToChatAll("%t %t", "jihad_tag" , "jihad_need", Missing, client);
 						}
@@ -320,6 +313,8 @@ public Action VoteJihad(int client,int args)
 	else CPrintToChat(client, "%t %t", "jihad_tag" , "jihad_disabled");
 }
 
+//Prepare Event
+
 void StartNextRound()
 {
 	StartJihad = true;
@@ -330,6 +325,8 @@ void StartNextRound()
 	CPrintToChatAll("%t %t", "jihad_tag" , "jihad_next");
 	PrintHintTextToAll("%t", "jihad_next_nc");
 }
+
+//Round start
 
 public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
@@ -388,7 +385,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 					}
 				}
 				g_iFreezeTime--;
-				FreezeTimer = CreateTimer(1.0, Jihad, _, TIMER_REPEAT);
+				FreezeTimer = CreateTimer(1.0, StartTimer, _, TIMER_REPEAT);
 				CPrintToChatAll("%t %t", "jihad_tag" ,"jihad_rounds", g_iRound, g_iMaxRound);
 			}
 	}
@@ -405,20 +402,84 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 	}
 }
 
-public Action Command_LAW(int client, const char[] command, int argc)
+//Round End
+
+public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 {
-	if(IsJihad)
+	int winner = GetEventInt(event, "winner");
+	
+	if (IsJihad)
 	{
-		if(gc_iKey.IntValue == 1)
+		for(int client=1; client <= MaxClients; client++)
 		{
-			Command_BombJihad(client, 0);
+			if (IsClientInGame(client)) SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
+			ClientSprintStatus[client] = 0;
+		}
+		if (FreezeTimer != null) KillTimer(FreezeTimer);
+		if (winner == 2) PrintHintTextToAll("%t", "jihad_twin_nc");
+		if (winner == 3) PrintHintTextToAll("%t", "jihad_ctwin_nc");
+		BombActive = false;
+		if (g_iRound == g_iMaxRound)
+		{
+			IsJihad = false;
+			StartJihad = false;
+			BombActive = false;
+			g_iRound = 0;
+			
+			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
+			SetCvar("sm_hosties_lr", 1);
+			SetCvar("sm_weapons_enable", 1);
+			SetCvar("sv_infinite_ammo", 0);
+			SetCvar("sm_warden_enable", 1);
+			SetCvar("sm_menu_enable", 1);
+			g_iGetRoundTime.IntValue = g_iOldRoundTime;
+			SetEventDay("none");
+			CPrintToChatAll("%t %t", "jihad_tag" , "jihad_end");
 		}
 	}
-	
+	if (StartJihad)
+	{
+		g_iOldRoundTime = g_iGetRoundTime.IntValue;
+		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;
+		
+		CPrintToChatAll("%t %t", "jihad_tag" , "jihad_next");
+		PrintHintTextToAll("%t", "jihad_next_nc");
+	}
+}
+
+//Counter-Terror win Round if time runs out
+
+public Action CS_OnTerminateRound( float &delay, CSRoundEndReason &reason)
+{
+	if (IsJihad)
+	{
+		if (reason == CSRoundEnd_Draw)
+		{
+			reason = CSRoundEnd_CTWin;
+			return Plugin_Changed;
+		}
+		return Plugin_Continue;
+	}
 	return Plugin_Continue;
 }
 
-public Action Jihad(Handle timer)
+//Map End
+
+public void OnMapEnd()
+{
+	IsJihad = false;
+	StartJihad = false;
+	BombActive = false;
+	if (FreezeTimer != null) KillTimer(FreezeTimer);
+	g_iVoteCount = 0;
+	g_iRound = 0;
+	g_sHasVoted[0] = '\0';
+	SetEventDay("none");
+}
+
+//Start Timer
+
+public Action StartTimer(Handle timer)
 {
 	if (g_iFreezeTime > 1)
 	{
@@ -467,185 +528,19 @@ public Action Jihad(Handle timer)
 	return Plugin_Stop;
 }
 
-public Action OnWeaponDrop(int client, int weapon)
+//Set Button Jihad Bomb
+
+public Action Command_LAW(int client, const char[] command, int argc)
 {
-	if (IsJihad && IsValidClient(client, false, false))
+	if(IsJihad)
 	{
-		char g_sWeaponName[80];
-		if (weapon > MaxClients && GetClientTeam(client) == CS_TEAM_T && GetEntityClassname(weapon, g_sWeaponName, sizeof(g_sWeaponName)))
+		if(gc_iKey.IntValue == 1)
 		{
-			if (StrEqual("weapon_c4", g_sWeaponName, false))
-			{
-				LogMessage("%L tried to drop their C4 - entity [%i]", client, weapon);
-				return Plugin_Handled;
-			}
+			Command_BombJihad(client, 0);
 		}
 	}
+	
 	return Plugin_Continue;
-}
-
-public Action Command_BombJihad(int client, int args)
-{
-	if (IsJihad && BombActive && IsValidClient(client, false, false))
-	{
-		int weapon = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
-		char weaponName[64];
-		
-		GetEdictClassname(weapon, weaponName, sizeof(weaponName));
-		
-		if (GetClientTeam(client) == CS_TEAM_T)
-		{
-			if(StrEqual(weaponName, "weapon_c4"))
-			{
-				EmitSoundToAllAny(g_sSoundJihadPath);
-				CreateTimer( 1.0, DoDaBomb, client);
-				if (gc_bStandStill.BoolValue)
-				{
-					SetEntityMoveType(client, MOVETYPE_NONE);
-				}
-			}
-			//else CPrintToChat(client, "%t %t", "jihad_tag" , "jihad_needc4");
-		}
-		else CPrintToChat(client, "%t %t", "jihad_tag" , "jihad_needc4");
-	}
-}
-
-public Action DoDaBomb( Handle timer, any client ) 
-{
-	EmitSoundToAllAny(g_sSoundBoomPath);
-	
-	float suicide_bomber_vec[3];
-	GetClientAbsOrigin(client, suicide_bomber_vec);
-	
-	int iMaxClients = GetMaxClients();
-	int deathList[MAXPLAYERS+1]; //store players that this bomb kills
-	int numKilledPlayers = 0;
-	
-	for (int i = 1; i <= iMaxClients; ++i)
-	
-	{
-		//Check that client is a real player who is alive and is a CT
-		if (IsClientInGame(i) && IsPlayerAlive(i))
-		{
-			float ct_vec[3];
-			GetClientAbsOrigin(i, ct_vec);
-			
-			float distance = GetVectorDistance(ct_vec, suicide_bomber_vec, false);
-			
-			//If CT was in explosion radius, damage or kill them
-			//Formula used: damage = 200 - (d/2)
-			int damage = RoundToFloor(gc_fBombRadius.FloatValue - (distance / 2.0));
-			
-			if (damage <= 0) //this player was not damaged 
-			continue;
-			
-			//Damage the surrounding players
-			int curHP = GetClientHealth(i);
-			if (curHP - damage <= 0) 
-			{
-				deathList[numKilledPlayers] = i;
-				numKilledPlayers++;
-			}
-			else
-			{ //Survivor
-				SetEntityHealth(i, curHP - damage);
-				IgniteEntity(i, 2.0);
-			}
-
-		}
-	}
-	if (numKilledPlayers > 0) 
-	{
-		for (int i = 0; i < numKilledPlayers; ++i)
-		{
-			ForcePlayerSuicide(deathList[i]);
-		}
-	}
-	ForcePlayerSuicide(client);
-//	int number = 0;
-//	for (int i = 1; i <= MaxClients; i++)
-//	if(IsClientInGame(i) && IsPlayerAlive(i) && GetClientTeam(i) == CS_TEAM_CT) number++;
-	
-}
-
-public Action OnWeaponCanUse(int client, int weapon)
-{
-	char sWeapon[32];
-	GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
-	
-	if((GetClientTeam(client) == CS_TEAM_T && !StrEqual(sWeapon, "weapon_c4")) || (GetClientTeam(client) == CS_TEAM_CT && !StrEqual(sWeapon, "weapon_knife")))
-		{
-			if (IsValidClient(client, true, false))
-			{
-				if(IsJihad == true)
-				{
-					return Plugin_Handled;
-				}
-			}
-		}
-	return Plugin_Continue;
-}
-
-
-public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
-{
-	int winner = GetEventInt(event, "winner");
-	
-	if (IsJihad)
-	{
-		for(int client=1; client <= MaxClients; client++)
-		{
-			if (IsClientInGame(client)) SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
-			ClientSprintStatus[client] = 0;
-		}
-		if (FreezeTimer != null) KillTimer(FreezeTimer);
-		if (winner == 2) PrintHintTextToAll("%t", "jihad_twin_nc");
-		if (winner == 3) PrintHintTextToAll("%t", "jihad_ctwin_nc");
-		BombActive = false;
-		if (g_iRound == g_iMaxRound)
-		{
-			IsJihad = false;
-			StartJihad = false;
-			BombActive = false;
-			g_iRound = 0;
-			
-			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
-			SetCvar("sm_hosties_lr", 1);
-			SetCvar("sm_weapons_enable", 1);
-			SetCvar("sv_infinite_ammo", 0);
-			SetCvar("sm_warden_enable", 1);
-			SetCvar("sm_menu_enable", 1);
-			g_iGetRoundTime.IntValue = g_iOldRoundTime;
-			SetEventDay("none");
-			CPrintToChatAll("%t %t", "jihad_tag" , "jihad_end");
-		}
-	}
-	if (StartJihad)
-	{
-		g_iOldRoundTime = g_iGetRoundTime.IntValue;
-		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;
-		
-		CPrintToChatAll("%t %t", "jihad_tag" , "jihad_next");
-		PrintHintTextToAll("%t", "jihad_next_nc");
-	}
-}
-
-public Action Command_StartSprint(int client, int args)
-{
-	if (IsJihad)
-	{
-		if(gc_bSprint.BoolValue && client > 0 && IsClientInGame(client) && IsPlayerAlive(client) && GetClientTeam(client) > 1 && !(ClientSprintStatus[client] & IsSprintUsing) && !(ClientSprintStatus[client] & IsSprintCoolDown))
-		{
-			ClientSprintStatus[client] |= IsSprintUsing | IsSprintCoolDown;
-			SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", gc_fSprintSpeed.FloatValue);
-			EmitSoundToClient(client, "player/suit_sprint.wav", SOUND_FROM_PLAYER, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, 0.8);
-			CPrintToChat(client, "%t %t", "jihad_tag" ,"jihad_sprint");
-			SprintTimer[client] = CreateTimer(gc_iSprintTime.FloatValue, Timer_SprintEnd, client);
-		}
-		return(Plugin_Handled);
-	}
-	else CPrintToChat(client, "%t %t", "jihad_tag" , "jihad_disabled");
-	return(Plugin_Handled);
 }
 
 public void OnGameFrame()
@@ -678,6 +573,151 @@ public void OnGameFrame()
 		}
 	}
 	return;
+}
+
+//Disable Bomb Drop
+
+public Action OnWeaponDrop(int client, int weapon)
+{
+	if (IsJihad && IsValidClient(client, false, false))
+	{
+		char g_sWeaponName[80];
+		if (weapon > MaxClients && GetClientTeam(client) == CS_TEAM_T && GetEntityClassname(weapon, g_sWeaponName, sizeof(g_sWeaponName)))
+		{
+			if (StrEqual("weapon_c4", g_sWeaponName, false))
+			{
+				return Plugin_Handled;
+			}
+		}
+	}
+	return Plugin_Continue;
+}
+
+//Start Bombtimer
+
+public Action Command_BombJihad(int client, int args)
+{
+	if (IsJihad && BombActive && IsValidClient(client, false, false))
+	{
+		int weapon = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
+		char weaponName[64];
+		
+		GetEdictClassname(weapon, weaponName, sizeof(weaponName));
+		
+		if (GetClientTeam(client) == CS_TEAM_T)
+		{
+			if(StrEqual(weaponName, "weapon_c4"))
+			{
+				EmitSoundToAllAny(g_sSoundJihadPath);
+				CreateTimer( 1.0, DoDaBomb, client);
+				if (gc_bStandStill.BoolValue)
+				{
+					SetEntityMoveType(client, MOVETYPE_NONE);
+				}
+			}
+			//else CPrintToChat(client, "%t %t", "jihad_tag" , "jihad_needc4");
+		}
+		else CPrintToChat(client, "%t %t", "jihad_tag" , "jihad_needc4");
+	}
+}
+
+//Detonate Bomb / Kill Player
+
+public Action DoDaBomb( Handle timer, any client ) 
+{
+	EmitSoundToAllAny(g_sSoundBoomPath);
+	
+	float suicide_bomber_vec[3];
+	GetClientAbsOrigin(client, suicide_bomber_vec);
+	
+	int iMaxClients = GetMaxClients();
+	int deathList[MAXPLAYERS+1]; //store players that this bomb kills
+	int numKilledPlayers = 0;
+	
+	for (int i = 1; i <= iMaxClients; ++i)
+	
+	{
+		//Check that client is a real player who is alive and is a CT
+		if (IsClientInGame(i) && IsPlayerAlive(i))
+		{
+			float ct_vec[3];
+			GetClientAbsOrigin(i, ct_vec);
+			
+			float distance = GetVectorDistance(ct_vec, suicide_bomber_vec, false);
+			
+			//If CT was in explosion radius, damage or kill them
+			//Formula used: damage = 200 - (d/2)
+			int damage = RoundToFloor(gc_fBombRadius.FloatValue - (distance / 2.0));
+			
+			if (damage <= 0) //this player was not damaged 
+			continue;
+			
+			//damage the surrounding players
+			int curHP = GetClientHealth(i);
+			if (curHP - damage <= 0) 
+			{
+				deathList[numKilledPlayers] = i;
+				numKilledPlayers++;
+			}
+			else
+			{ //Survivor
+				SetEntityHealth(i, curHP - damage);
+				IgniteEntity(i, 2.0);
+			}
+
+		}
+	}
+	if (numKilledPlayers > 0) 
+	{
+		for (int i = 0; i < numKilledPlayers; ++i)
+		{
+			ForcePlayerSuicide(deathList[i]);
+		}
+	}
+	ForcePlayerSuicide(client);
+//	int number = 0;
+//	for (int i = 1; i <= MaxClients; i++)
+//	if(IsClientInGame(i) && IsPlayerAlive(i) && GetClientTeam(i) == CS_TEAM_CT) number++;
+}
+
+//Knife & c4 only
+
+public Action OnWeaponCanUse(int client, int weapon)
+{
+	char sWeapon[32];
+	GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
+	
+	if((GetClientTeam(client) == CS_TEAM_T && !StrEqual(sWeapon, "weapon_c4")) || (GetClientTeam(client) == CS_TEAM_CT && !StrEqual(sWeapon, "weapon_knife")))
+		{
+			if (IsValidClient(client, true, false))
+			{
+				if(IsJihad == true)
+				{
+					return Plugin_Handled;
+				}
+			}
+		}
+	return Plugin_Continue;
+}
+
+//Sprint
+
+public Action Command_StartSprint(int client, int args)
+{
+	if (IsJihad)
+	{
+		if(gc_bSprint.BoolValue && client > 0 && IsClientInGame(client) && IsPlayerAlive(client) && GetClientTeam(client) > 1 && !(ClientSprintStatus[client] & IsSprintUsing) && !(ClientSprintStatus[client] & IsSprintCoolDown))
+		{
+			ClientSprintStatus[client] |= IsSprintUsing | IsSprintCoolDown;
+			SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", gc_fSprintSpeed.FloatValue);
+			EmitSoundToClient(client, "player/suit_sprint.wav", SOUND_FROM_PLAYER, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, 0.8);
+			CPrintToChat(client, "%t %t", "jihad_tag" ,"jihad_sprint");
+			SprintTimer[client] = CreateTimer(gc_iSprintTime.FloatValue, Timer_SprintEnd, client);
+		}
+		return(Plugin_Handled);
+	}
+	else CPrintToChat(client, "%t %t", "jihad_tag" , "jihad_disabled");
+	return(Plugin_Handled);
 }
 
 public Action ResetSprint(int client)
@@ -734,16 +774,4 @@ public Action Event_PlayerSpawn(Handle event, const char[] name, bool dontBroadc
 	ResetSprint(iClient);
 	ClientSprintStatus[iClient] &= ~ IsSprintCoolDown;
 	return;
-}
-
-public void OnMapEnd()
-{
-	IsJihad = false;
-	StartJihad = false;
-	BombActive = false;
-	if (FreezeTimer != null) KillTimer(FreezeTimer);
-	g_iVoteCount = 0;
-	g_iRound = 0;
-	g_sHasVoted[0] = '\0';
-	SetEventDay("none");
 }

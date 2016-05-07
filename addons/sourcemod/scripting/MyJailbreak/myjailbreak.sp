@@ -43,6 +43,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	
 }
 
+//Set sv_tags
+
 public void OnConfigsExecuted()
 {
 	if (gc_bTag.BoolValue)

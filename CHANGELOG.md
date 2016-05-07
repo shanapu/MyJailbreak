@@ -1,10 +1,9 @@
 ### Change Log
 
 ```
-#### [0.7.2] - 2016-05-03
+####  ~~[0.7.2]~~ - VERSIONING BEGINNS WITH RELEASE ON ALLIED - sry
 ### Added
-- initial release with version number.
-- minor fixes
+- initial beta release.
 
 ```
 

@@ -117,6 +117,8 @@ public void OnPluginStart()
 	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
 }
 
+//ConVar Change for Strings
+
 public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
 	if(convar == gc_sOverlayStartPath)
@@ -131,9 +133,10 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 	}
 }
 
+//Initialize Event
+
 public void OnMapStart()
 {
-
 	g_iVoteCount = 0;
 	g_iRound = 0;
 	IsFFA = false;
@@ -167,6 +170,8 @@ public void OnConfigsExecuted()
 	g_iMaxRound = gc_iRounds.IntValue;
 }
 
+//Admin & Warden set Event
+
 public Action Setffa(int client,int args)
 {
 	if (gc_bPlugin.BoolValue)
@@ -175,24 +180,7 @@ public Action Setffa(int client,int args)
 		{
 			if (gc_bSetW.BoolValue)
 			{
-				char EventDay[64];
-				GetEventDay(EventDay);
-				
-				if(StrEqual(EventDay, "none", false))
-				{
-					if (g_iCoolDown == 0)
-					{
-						StartNextRound();
-					}
-					else CPrintToChat(client, "%t %t", "ffa_tag" , "ffa_wait", g_iCoolDown);
-				}
-				else CPrintToChat(client, "%t %t", "ffa_tag" , "ffa_progress" , EventDay);
-			}
-			else CPrintToChat(client, "%t %t", "warden_tag" , "war_setbywarden");
-		}
-		else if (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
-			{
-				if (gc_bSetA.BoolValue)
+				if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
 				{
 					char EventDay[64];
 					GetEventDay(EventDay);
@@ -202,10 +190,37 @@ public Action Setffa(int client,int args)
 						if (g_iCoolDown == 0)
 						{
 							StartNextRound();
+							LogMessage("Event FFA was started by Warden %L", client);
 						}
 						else CPrintToChat(client, "%t %t", "ffa_tag" , "ffa_wait", g_iCoolDown);
 					}
 					else CPrintToChat(client, "%t %t", "ffa_tag" , "ffa_progress" , EventDay);
+				}
+				else CPrintToChat(client, "%t %t", "ffa_tag" , "ffa_minplayer");
+			}
+			else CPrintToChat(client, "%t %t", "warden_tag" , "war_setbywarden");
+		}
+		else if (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
+			{
+				if (gc_bSetA.BoolValue)
+				{
+					if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
+					{
+						char EventDay[64];
+						GetEventDay(EventDay);
+						
+						if(StrEqual(EventDay, "none", false))
+						{
+							if (g_iCoolDown == 0)
+							{
+								StartNextRound();
+								LogMessage("Event FFA was started by Admin %L", client);
+							}
+							else CPrintToChat(client, "%t %t", "ffa_tag" , "ffa_wait", g_iCoolDown);
+						}
+						else CPrintToChat(client, "%t %t", "ffa_tag" , "ffa_progress" , EventDay);
+					}
+					else CPrintToChat(client, "%t %t", "ffa_tag" , "ffa_minplayer");
 				}
 				else CPrintToChat(client, "%t %t", "ffa_tag" , "war_setbyadmin");
 			}
@@ -213,6 +228,8 @@ public Action Setffa(int client,int args)
 	}
 	else CPrintToChat(client, "%t %t", "ffa_tag" , "ffa_disabled");
 }
+
+//Voting for Event
 
 public Action VoteFFA(int client,int args)
 {
@@ -223,36 +240,43 @@ public Action VoteFFA(int client,int args)
 	{	
 		if (gc_bVote.BoolValue)
 		{
-			char EventDay[64];
-			GetEventDay(EventDay);
-			
-			if(StrEqual(EventDay, "none", false))
+			if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
 			{
-				if (g_iCoolDown == 0)
+				char EventDay[64];
+				GetEventDay(EventDay);
+				
+				if(StrEqual(EventDay, "none", false))
 				{
-					if (StrContains(g_sHasVoted, steamid, true) == -1)
+					if (g_iCoolDown == 0)
 					{
-						int playercount = (GetClientCount(true) / 2);
-						g_iVoteCount++;
-						int Missing = playercount - g_iVoteCount + 1;
-						Format(g_sHasVoted, sizeof(g_sHasVoted), "%s,%s", g_sHasVoted, steamid);
-						
-						if (g_iVoteCount > playercount)
+						if (StrContains(g_sHasVoted, steamid, true) == -1)
 						{
-							StartNextRound();
+							int playercount = (GetClientCount(true) / 2);
+							g_iVoteCount++;
+							int Missing = playercount - g_iVoteCount + 1;
+							Format(g_sHasVoted, sizeof(g_sHasVoted), "%s,%s", g_sHasVoted, steamid);
+							
+							if (g_iVoteCount > playercount)
+							{
+								StartNextRound();
+								LogMessage("Event FFA was started by voting");
+							}
+							else CPrintToChatAll("%t %t", "ffa_tag" , "ffa_need", Missing, client);
 						}
-						else CPrintToChatAll("%t %t", "ffa_tag" , "ffa_need", Missing, client);
+						else CPrintToChat(client, "%t %t", "ffa_tag" , "ffa_voted");
 					}
-					else CPrintToChat(client, "%t %t", "ffa_tag" , "ffa_voted");
+					else CPrintToChat(client, "%t %t", "ffa_tag" , "ffa_wait", g_iCoolDown);
 				}
-				else CPrintToChat(client, "%t %t", "ffa_tag" , "ffa_wait", g_iCoolDown);
+				else CPrintToChat(client, "%t %t", "ffa_tag" , "ffa_progress" , EventDay);
 			}
-			else CPrintToChat(client, "%t %t", "ffa_tag" , "ffa_progress" , EventDay);
+			else CPrintToChat(client, "%t %t", "ffa_tag" , "ffa_minplayer");
 		}
 		else CPrintToChat(client, "%t %t", "war_tag" , "war_voting");
 	}
 	else CPrintToChat(client, "%t %t", "ffa_tag" , "ffa_disabled");
 }
+
+//Prepare Event
 
 void StartNextRound()
 {
@@ -265,6 +289,8 @@ void StartNextRound()
 	CPrintToChatAll("%t %t", "ffa_tag" , "ffa_next");
 	PrintHintTextToAll("%t", "ffa_next_nc");
 }
+
+//Round start
 
 public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
@@ -351,7 +377,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 					SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 				}
 			}
-			TruceTimer = CreateTimer(1.0, NoDamage, _, TIMER_REPEAT);
+			TruceTimer = CreateTimer(1.0, StartTimer, _, TIMER_REPEAT);
 		}
 	}
 	else
@@ -367,42 +393,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 	}
 }
 
-public Action NoDamage(Handle timer)
-{
-	if (g_iTruceTime > 1)
-	{
-		g_iTruceTime--;
-		
-		PrintHintTextToAll("%t", "ffa_damage_nc", g_iTruceTime);
-		
-		return Plugin_Continue;
-	}
-	
-	g_iTruceTime = gc_iTruceTime.IntValue;
-	
-	
-	
-	for(int client=1; client <= MaxClients; client++) 
-	{
-		if (IsClientInGame(client) && IsPlayerAlive(client)) 
-		{
-			SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
-			if(gc_bOverlays.BoolValue) CreateTimer( 0.0, ShowOverlayStart, client);
-			if(gc_bSounds.BoolValue)	
-			{
-				EmitSoundToAllAny(g_sSoundStartPath);
-			}
-			
-			PrintCenterText(client,"%t", "ffa_start_nc");
-		}
-	}
-	CPrintToChatAll("%t %t", "ffa_tag" , "ffa_start");
-	DoFog();
-	AcceptEntityInput(FogIndex, "TurnOff");
-	TruceTimer = null;
-	
-	return Plugin_Stop;
-}
+//Round End
 
 public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 {
@@ -444,6 +435,60 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 	}
 }
 
+//Map End
+
+public void OnMapEnd()
+{
+	IsFFA = false;
+	StartFFA = false;
+	if (TruceTimer != null) KillTimer(TruceTimer);
+	g_iVoteCount = 0;
+	g_iRound = 0;
+	g_sHasVoted[0] = '\0';
+	SetEventDay("none");
+}
+
+//Start Timer
+
+public Action StartTimer(Handle timer)
+{
+	if (g_iTruceTime > 1)
+	{
+		g_iTruceTime--;
+		
+		PrintHintTextToAll("%t", "ffa_damage_nc", g_iTruceTime);
+		
+		return Plugin_Continue;
+	}
+	
+	g_iTruceTime = gc_iTruceTime.IntValue;
+	
+	
+	
+	for(int client=1; client <= MaxClients; client++) 
+	{
+		if (IsClientInGame(client) && IsPlayerAlive(client)) 
+		{
+			SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
+			if(gc_bOverlays.BoolValue) CreateTimer( 0.0, ShowOverlayStart, client);
+			if(gc_bSounds.BoolValue)	
+			{
+				EmitSoundToAllAny(g_sSoundStartPath);
+			}
+			
+			PrintCenterText(client,"%t", "ffa_start_nc");
+		}
+	}
+	CPrintToChatAll("%t %t", "ffa_tag" , "ffa_start");
+	DoFog();
+	AcceptEntityInput(FogIndex, "TurnOff");
+	TruceTimer = null;
+	
+	return Plugin_Stop;
+}
+
+//Darken the Map
+
 public Action DoFog()
 {
 	if(FogIndex != -1)
@@ -455,15 +500,4 @@ public Action DoFog()
 		DispatchKeyValueFloat(FogIndex, "fogend", mapFogEnd);
 		DispatchKeyValueFloat(FogIndex, "fogmaxdensity", mapFogDensity);
 	}
-}
-
-public void OnMapEnd()
-{
-	IsFFA = false;
-	StartFFA = false;
-	if (TruceTimer != null) KillTimer(TruceTimer);
-	g_iVoteCount = 0;
-	g_iRound = 0;
-	g_sHasVoted[0] = '\0';
-	SetEventDay("none");
 }

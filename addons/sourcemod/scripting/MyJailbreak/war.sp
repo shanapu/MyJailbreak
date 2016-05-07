@@ -1,7 +1,6 @@
 #include <cstrike>
 #include <colors>
 #include <sourcemod>
-
 #include <smartjaildoors>
 #include <wardn>
 #include <emitsoundany>
@@ -84,7 +83,7 @@ public void OnPluginStart()
 	gc_bVote = AutoExecConfig_CreateConVar("sm_war_vote", "1", "0 - disabled, 1 - allow player to vote for war", _, true,  0.0, true, 1.0);
 	gc_bSpawnCell = AutoExecConfig_CreateConVar("sm_war_spawn", "0", "0 - teleport to ct and freeze, 1 - T teleport to CT spawn, 1 - standart spawn & cell doors auto open", _, true,  0.0, true, 1.0);
 	gc_iRounds = AutoExecConfig_CreateConVar("sm_war_rounds", "3", "Rounds to play in a row", _, true, 1.0);
-	gc_iFreezeTime = AutoExecConfig_CreateConVar("sm_war_freezetime", "30", "Time in seconds the terrorist freezed - need sm_war_spawn 0", _, true,  0.0);
+	gc_iFreezeTime = AutoExecConfig_CreateConVar("sm_war_freezetime", "30", "Time in seconds the Terrorists freezed - need sm_war_spawn 0", _, true,  0.0);
 	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_war_trucetime", "15", "Time after freezetime damage disbaled", _, true,  0.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_war_roundtime", "5", "Round time in minutes for a single war round", _, true,  1.0);
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_war_cooldown_day", "3", "Rounds cooldown after a event until event can be start again", _, true,  0.0);
@@ -113,6 +112,8 @@ public void OnPluginStart()
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 }
 
+//ConVar Change for Strings
+
 public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
 	if(convar == gc_sOverlayStartPath)
@@ -126,6 +127,8 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
 	}
 }
+
+//Initialize Event
 
 public void OnMapStart()
 {
@@ -150,6 +153,8 @@ public void OnConfigsExecuted()
 	g_iMaxRound = gc_iRounds.IntValue;
 }
 
+//Admin & Warden set Event
+
 public Action SetWar(int client,int args)
 {
 	if (gc_bPlugin.BoolValue)
@@ -168,6 +173,7 @@ public Action SetWar(int client,int args)
 						if (g_iCoolDown == 0)
 						{
 							StartNextRound();
+							LogMessage("Event war was started by Warden %L", client);
 						}
 						else CPrintToChat(client, "%t %t", "war_tag" , "war_wait", g_iCoolDown);
 					}
@@ -191,6 +197,7 @@ public Action SetWar(int client,int args)
 							if (g_iCoolDown == 0)
 							{
 								StartNextRound();
+								LogMessage("Event war was started by Admin %L", client);
 							}
 							else CPrintToChat(client, "%t %t", "war_tag" , "war_wait", g_iCoolDown);
 						}
@@ -204,6 +211,8 @@ public Action SetWar(int client,int args)
 	}
 	else CPrintToChat(client, "%t %t", "war_tag" , "war_disabled");
 }
+
+//Voting for Event
 
 public Action VoteWar(int client,int args)
 {
@@ -233,6 +242,7 @@ public Action VoteWar(int client,int args)
 							if(g_iVoteCount > playercount)
 							{
 								StartNextRound();
+								LogMessage("Event war was started by voting");
 							}
 							else CPrintToChatAll("%t %t", "war_tag" , "war_need", Missing, client);
 						}
@@ -249,6 +259,8 @@ public Action VoteWar(int client,int args)
 	else CPrintToChat(client, "%t %t", "war_tag" , "war_disabled");
 }
 
+//Prepare Event
+
 void StartNextRound()
 {
 	StartWar = true;
@@ -259,6 +271,8 @@ void StartNextRound()
 	CPrintToChatAll("%t %t", "war_tag" , "war_next");
 	PrintHintTextToAll("%t", "war_next_nc");
 }
+
+//Round start
 
 public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
@@ -354,11 +368,11 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 			
 			if (!gc_bSpawnCell.BoolValue)
 			{
-				FreezeTimer = CreateTimer(1.0, Freezed, _, TIMER_REPEAT);
+				FreezeTimer = CreateTimer(1.0, FreezedTimer, _, TIMER_REPEAT);
 			}
 			else
 			{
-				TruceTimer = CreateTimer(1.0, NoDamage, _, TIMER_REPEAT);
+				TruceTimer = CreateTimer(1.0, StartTimer, _, TIMER_REPEAT);
 			}
 		}
 	}
@@ -375,73 +389,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 	}
 }
 
-public Action Freezed(Handle timer)
-{
-	if (g_iFreezeTime > 1)
-	{
-		g_iFreezeTime--;
-		
-		PrintHintTextToAll("%t", "war_timetohide_nc", g_iFreezeTime);
-		
-		return Plugin_Continue;
-	}
-	
-	Pos[2] = Pos[2] - 45;
-	
-	g_iFreezeTime = gc_iFreezeTime.IntValue;
-	
-	if (g_iRound > 0)
-	{
-		for (int client=1; client <= MaxClients; client++)
-		{
-			if (IsClientInGame(client) && IsPlayerAlive(client))
-			{
-				if (GetClientTeam(client) == CS_TEAM_T)
-				{
-					SetEntityMoveType(client, MOVETYPE_WALK);
-					TeleportEntity(client, Pos, NULL_VECTOR, NULL_VECTOR);
-				}
-			}
-		}
-	}
-	
-	TruceTimer = CreateTimer(1.0, NoDamage, _, TIMER_REPEAT);
-	FreezeTimer = null;
-	return Plugin_Stop;
-}
-
-public Action NoDamage(Handle timer)
-{
-	if (g_iTruceTime > 1)
-	{
-		g_iTruceTime--;
-		
-		PrintHintTextToAll("%t", "war_damage_nc", g_iTruceTime);
-		
-		return Plugin_Continue;
-	}
-	
-	g_iTruceTime = gc_iTruceTime.IntValue;
-	
-	
-	
-	for(int client=1; client <= MaxClients; client++) 
-	{
-		if (IsClientInGame(client) && IsPlayerAlive(client)) 
-		{
-			SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
-			if(gc_bOverlays.BoolValue) CreateTimer( 0.0, ShowOverlayStart, client);
-			if(gc_bSounds.BoolValue)	
-			{
-				EmitSoundToAllAny(g_sSoundStartPath);
-			}
-			PrintCenterText(client,"%t", "war_start_nc");
-		}
-	}
-	CPrintToChatAll("%t %t", "war_tag" , "war_start");
-	TruceTimer = null;
-	return Plugin_Stop;
-}
+//Round End
 
 public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 {
@@ -483,6 +431,8 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 	}
 }
 
+//Map End
+
 public void OnMapEnd()
 {
 	IsWar = false;
@@ -493,4 +443,76 @@ public void OnMapEnd()
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0';
 	SetEventDay("none");
+}
+
+//Freeze Timer
+
+public Action FreezedTimer(Handle timer)
+{
+	if (g_iFreezeTime > 1)
+	{
+		g_iFreezeTime--;
+		
+		PrintHintTextToAll("%t", "war_timetohide_nc", g_iFreezeTime);
+		
+		return Plugin_Continue;
+	}
+	
+	Pos[2] = Pos[2] - 45;
+	
+	g_iFreezeTime = gc_iFreezeTime.IntValue;
+	
+	if (g_iRound > 0)
+	{
+		for (int client=1; client <= MaxClients; client++)
+		{
+			if (IsClientInGame(client) && IsPlayerAlive(client))
+			{
+				if (GetClientTeam(client) == CS_TEAM_T)
+				{
+					SetEntityMoveType(client, MOVETYPE_WALK);
+					TeleportEntity(client, Pos, NULL_VECTOR, NULL_VECTOR);
+				}
+			}
+		}
+	}
+	
+	TruceTimer = CreateTimer(1.0, StartTimer, _, TIMER_REPEAT);
+	FreezeTimer = null;
+	return Plugin_Stop;
+}
+
+//Start Timer
+
+public Action StartTimer(Handle timer)
+{
+	if (g_iTruceTime > 1)
+	{
+		g_iTruceTime--;
+		
+		PrintHintTextToAll("%t", "war_damage_nc", g_iTruceTime);
+		
+		return Plugin_Continue;
+	}
+	
+	g_iTruceTime = gc_iTruceTime.IntValue;
+	
+	
+	
+	for(int client=1; client <= MaxClients; client++) 
+	{
+		if (IsClientInGame(client) && IsPlayerAlive(client)) 
+		{
+			SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
+			if(gc_bOverlays.BoolValue) CreateTimer( 0.0, ShowOverlayStart, client);
+			if(gc_bSounds.BoolValue)	
+			{
+				EmitSoundToAllAny(g_sSoundStartPath);
+			}
+			PrintCenterText(client,"%t", "war_start_nc");
+		}
+	}
+	CPrintToChatAll("%t %t", "war_tag" , "war_start");
+	TruceTimer = null;
+	return Plugin_Stop;
 }

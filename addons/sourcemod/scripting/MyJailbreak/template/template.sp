@@ -5,7 +5,6 @@
 #include <wardn>
 #include <emitsoundany>
 #include <colors>
-#include <sdkhooks>
 #include <autoexecconfig>
 #include <myjailbreak>
 
@@ -14,10 +13,10 @@
 #pragma newdecls required
 
 //Booleans
-bool IsEVENTNAME; 
-bool StartEVENTNAME; 
+bool IsEVENTNAME;
+bool StartEVENTNAME;
 
-//ConVars 
+//ConVars
 ConVar gc_bPlugin;
 ConVar gc_bSetW;
 ConVar gc_iCooldownStart;
@@ -101,12 +100,13 @@ public void OnPluginStart()
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
 	
-	
 	//Find
 	g_iGetRoundTime = FindConVar("mp_roundtime");
 	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 }
+
+//ConVar Change for Strings
 
 public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
@@ -122,43 +122,52 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 	}
 }
 
+//Initialize Event
+
 public void OnMapStart()
 {
+	//set default start values
 	g_iVoteCount = 0;
 	g_iRound = 0;
 	IsEVENTNAME = false;
 	StartEVENTNAME = false;
 	
-	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
+	//Find Convar Times
 	g_iTruceTime = gc_iTruceTime.IntValue;
+	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
+	g_iMaxRound = gc_iRounds.IntValue;
 	
+	//Precache Sound & Overlay
 	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
 	if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStart);
 }
 
 public void OnConfigsExecuted()
 {
+	//Find Convar Times
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iMaxRound = gc_iRounds.IntValue;
 }
 
+//Admin & Warden set Event
+
 public Action SetEVENTNAME(int client,int args)
 {
-	if (gc_bPlugin.BoolValue)
+	if (gc_bPlugin.BoolValue) //is plugin enabled?
 	{
-		if (warden_iswarden(client))
+		if (warden_iswarden(client)) //is player warden?
 		{
-			if (gc_bSetW.BoolValue)
+			if (gc_bSetW.BoolValue) //is warden allowed to set?
 			{
 				char EventDay[64];
 				GetEventDay(EventDay);
 				
-				if(StrEqual(EventDay, "none", false))
+				if(StrEqual(EventDay, "none", false)) //is an other event running or set?
 				{
-					if (g_iCoolDown == 0)
+					if (g_iCoolDown == 0) //is event cooled down?
 					{
-						StartNextRound();
+						StartNextRound(); //prepare Event for next round
 					}
 					else CPrintToChat(client, "%t %t", "eventname_tag" , "eventname_wait", g_iCoolDown);
 				}
@@ -166,18 +175,18 @@ public Action SetEVENTNAME(int client,int args)
 			}
 			else CPrintToChat(client, "%t %t", "warden_tag" , "nocscope_setbywarden");
 		}
-		else if (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
+		else if (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true)) //is player admin?
 			{
-				if (gc_bSetA.BoolValue)
+				if (gc_bSetA.BoolValue) //is admin allowed to set?
 				{
 					char EventDay[64];
 					GetEventDay(EventDay);
 					
-					if(StrEqual(EventDay, "none", false))
+					if(StrEqual(EventDay, "none", false)) //is an other event running or set?
 					{
-						if (g_iCoolDown == 0)
+						if (g_iCoolDown == 0) //is event cooled down?
 						{
-							StartNextRound();
+							StartNextRound(); //prepare Event for next round
 						}
 						else CPrintToChat(client, "%t %t", "eventname_tag" , "eventname_wait", g_iCoolDown);
 					}
@@ -190,23 +199,25 @@ public Action SetEVENTNAME(int client,int args)
 	else CPrintToChat(client, "%t %t", "eventname_tag" , "eventname_disabled");
 }
 
+//Voting for Event
+
 public Action VoteEVENTNAME(int client,int args)
 {
 	char steamid[64];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
 	
-	if (gc_bPlugin.BoolValue)
+	if (gc_bPlugin.BoolValue) //is plugin enabled?
 	{	
-		if (gc_bVote.BoolValue)
+		if (gc_bVote.BoolValue) //is voting enabled?
 		{	
 			char EventDay[64];
 			GetEventDay(EventDay);
 			
-			if(StrEqual(EventDay, "none", false))
+			if(StrEqual(EventDay, "none", false)) //is an other event running or set?
 			{
-				if (g_iCoolDown == 0)
+				if (g_iCoolDown == 0) //is event cooled down?
 				{
-					if (StrContains(g_sHasVoted, steamid, true) == -1)
+					if (StrContains(g_sHasVoted, steamid, true) == -1) //has player already voted
 					{
 						int playercount = (GetClientCount(true) / 2);
 						g_iVoteCount++;
@@ -215,8 +226,9 @@ public Action VoteEVENTNAME(int client,int args)
 						
 						if (g_iVoteCount > playercount)
 						{
-							StartNextRound();
-						}else CPrintToChatAll("%t %t", "eventname_tag" , "eventname_need", Missing, client);
+							StartNextRound(); //prepare Event for next round
+						}
+						else CPrintToChatAll("%t %t", "eventname_tag" , "eventname_need", Missing, client);
 					}
 					else CPrintToChat(client, "%t %t", "eventname_tag" , "eventname_voted");
 				}
@@ -229,18 +241,21 @@ public Action VoteEVENTNAME(int client,int args)
 	else CPrintToChat(client, "%t %t", "eventname_tag" , "eventname_disabled");
 }
 
+//Prepare Event
+
 void StartNextRound()
 {
-
 	StartEVENTNAME = true;
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iVoteCount = 0;
 	
-	SetEventDay("eventname");
+	SetEventDay("eventname"); //tell myjailbreak new event is set
 	
 	CPrintToChatAll("%t %t", "eventname_tag" , "eventname_next");
 	PrintHintTextToAll("%t", "eventname_next_nc");
 }
+
+//Round start
 
 public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
@@ -248,6 +263,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 	{
 		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
 		
+		//disable other plugins
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_weapons_enable", 0);
 		SetCvar("sm_menu_enable", 0);
@@ -256,9 +272,12 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		
 		IsEVENTNAME = true;
 		
-		g_iRound++;
+		g_iRound++; //Add Round number
 		StartEVENTNAME = false;
-		SJD_OpenDoors();
+		SJD_OpenDoors(); //open Jail
+		
+		//Create info Panel
+		
 		EVENTNAMEMenu = CreatePanel();
 		Format(info1, sizeof(info1), "%T", "eventname_info_title", LANG_SERVER);
 		SetPanelTitle(EVENTNAMEMenu, info1);
@@ -279,6 +298,8 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		Format(info8, sizeof(info8), "%T", "eventname_info_line7", LANG_SERVER);
 		DrawPanelText(EVENTNAMEMenu, info8);
 		DrawPanelText(EVENTNAMEMenu, "-----------------------------------");
+		
+		//Find Position in CT Spawn
 		
 		int RandomCT = 0;
 		
@@ -306,35 +327,44 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 			{
 				for(int client=1; client <= MaxClients; client++)
 				{
+					//Give Players Start Equiptment & parameters
+					
 					if (IsClientInGame(client))
 					{
 						StripAllWeapons(client);
 						
-						
-						
-						
-						
-						GivePlayerItem(client, "weapon_knife");
-						SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
-						SendPanelToClient(EVENTNAMEMenu, client, NullHandler, 20);
-						SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
-						if (!gc_bSpawnCell.BoolValue)
+						if (GetClientTeam(client) == CS_TEAM_CT && IsValidClient(client, false, false))
+						{
+							//here start Equiptment & parameters
+						}
+						if (GetClientTeam(client) == CS_TEAM_T && IsValidClient(client, false, false))
+						{
+							//here start Equiptment & parameters
+						}
+						GivePlayerItem(client, "weapon_knife"); //give Knife
+						SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true); //NoBlock
+						SendPanelToClient(EVENTNAMEMenu, client, NullHandler, 20); //open info Panel
+						SetEntProp(client, Prop_Data, "m_takedamage", 0, 1); //disable damage
+						if (!gc_bSpawnCell.BoolValue) //spawn Terrors to CT Spawn
 						{
 							TeleportEntity(client, Pos1, NULL_VECTOR, NULL_VECTOR);
 						}
 					}
 				}
+				//Set Start Timer
 				g_iTruceTime--;
-				TruceTimer = CreateTimer(1.0, EVENTNAMENoDamage, _, TIMER_REPEAT);
+				TruceTimer = CreateTimer(1.0, StartTimer, _, TIMER_REPEAT);
 				CPrintToChatAll("%t %t", "eventname_tag" ,"eventname_rounds", g_iRound, g_iMaxRound);
 			}
 		}
 	}
 	else
 	{
+		//If Event isnt running - subtract cooldown round
+		
 		char EventDay[64];
 		GetEventDay(EventDay);
-	
+		
 		if(!StrEqual(EventDay, "none", false))
 		{
 			g_iCoolDown = gc_iCooldownDay.IntValue + 1;
@@ -343,9 +373,69 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 	}
 }
 
+//Round End
 
+public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
+{
+	int winner = GetEventInt(event, "winner");
+	
+	if (IsEVENTNAME) //if event was running this round
+	{
+		for(int client=1; client <= MaxClients; client++)
+		{
+			if (IsClientInGame(client)) SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true); //disbale noblock
+		}
+		if (TruceTimer != null) KillTimer(TruceTimer); //kill start time if still running
+		if (winner == 2) PrintHintTextToAll("%t", "eventname_twin_nc");
+		if (winner == 3) PrintHintTextToAll("%t", "eventname_ctwin_nc");
+		if (g_iRound == g_iMaxRound) //if this was the last round
+		{
+			//return to default start values
+			IsEVENTNAME = false;
+			StartEVENTNAME = false;
+			g_iRound = 0;
+			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
+			
+			//enable other pluigns
+			SetCvar("sm_hosties_lr", 1);
+			SetCvar("sm_weapons_enable", 1);
+			SetCvar("sv_infinite_ammo", 0);
+			SetCvar("mp_teammates_are_enemies", 0);
+			SetCvar("sm_menu_enable", 1);
+			SetCvar("sm_warden_enable", 1);
+			
+			g_iGetRoundTime.IntValue = g_iOldRoundTime; //return to original round time
+			SetEventDay("none"); //tell myjailbreak event is ended
+			CPrintToChatAll("%t %t", "eventname_tag" , "eventname_end");
+		}
+	}
+	if (StartEVENTNAME)
+	{
+		g_iOldRoundTime = g_iGetRoundTime.IntValue; //save original round time
+		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
+		
+		CPrintToChatAll("%t %t", "eventname_tag" , "eventname_next");
+		PrintHintTextToAll("%t", "eventname_next_nc");
+	}
+}
 
-public Action EVENTNAMENoDamage(Handle timer)
+//Map End
+
+public void OnMapEnd()
+{
+	//return to default start values
+	IsEVENTNAME = false;
+	StartEVENTNAME = false;
+	if (TruceTimer != null) KillTimer(TruceTimer); //kill start time if still running
+	g_iVoteCount = 0;
+	g_iRound = 0;
+	g_sHasVoted[0] = '\0'; 
+	SetEventDay("none");
+}
+
+//Start Timer
+
+public Action StartTimer(Handle timer)
 {
 	if (g_iTruceTime > 1)
 	{
@@ -378,56 +468,7 @@ public Action EVENTNAMENoDamage(Handle timer)
 		CPrintToChatAll("%t %t", "eventname_tag" , "eventname_start");
 	}
 	
-	
 	TruceTimer = null;
 	
 	return Plugin_Stop;
-}
-
-public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
-{
-	int winner = GetEventInt(event, "winner");
-	
-	if (IsEVENTNAME)
-	{
-		for(int client=1; client <= MaxClients; client++)
-		{
-			if (IsClientInGame(client)) SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
-		}
-		if (TruceTimer != null) KillTimer(TruceTimer);
-		if (winner == 2) PrintHintTextToAll("%t", "eventname_twin_nc");
-		if (winner == 3) PrintHintTextToAll("%t", "eventname_ctwin_nc");
-		if (g_iRound == g_iMaxRound)
-		{
-			IsEVENTNAME = false;
-			StartEVENTNAME = false;
-			g_iRound = 0;
-			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
-			SetCvar("sm_hosties_lr", 1);
-			SetCvar("sm_weapons_enable", 1);
-			SetCvar("sv_infinite_ammo", 0);
-			SetCvar("mp_teammates_are_enemies", 0);
-			SetCvar("sm_menu_enable", 1);
-			SetCvar("sm_warden_enable", 1);
-			g_iGetRoundTime.IntValue = g_iOldRoundTime;
-			SetEventDay("none");
-			CPrintToChatAll("%t %t", "eventname_tag" , "eventname_end");
-		}
-	}
-	if (StartEVENTNAME)
-	{
-		g_iOldRoundTime = g_iGetRoundTime.IntValue;
-		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;
-	}
-}
-
-public void OnMapEnd()
-{
-	IsEVENTNAME = false;
-	StartEVENTNAME = false;
-	if (TruceTimer != null) KillTimer(TruceTimer);
-	g_iVoteCount = 0;
-	g_iRound = 0;
-	g_sHasVoted[0] = '\0';
-	SetEventDay("none");
 }

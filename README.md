@@ -8,7 +8,7 @@ see [todo list](/TODO.md) the "must" part is todo before first release on AM
 help me by posting bugs and feature ideas in [Issue list](https://github.com/shanapu/MyJailbreak/issues) (on github)  
 help, ideas, forks and merge requests are welcome!  
 
-This is my first public project. please note that the code may is messy, stupid and inconseqent.  
+This is my first public project. please note that the code may is messy, stupid and inconseqent or mix different coding styles.  
 I would be happy and very pleased if you wannt to join this project as equal collaborator.  
 If you own a feature or extention for Jail/Warden that would fit in, i would be happy when you share it with us.  
 
@@ -33,7 +33,7 @@ If you own a feature or extention for Jail/Warden that would fit in, i would be 
     - [Jihad](#jihad) - (Ts got suicde bombs to kill all CTs)
     - [Zeus](#zeus) - (FFA ZeusRound - get a new Zeus on Kill)
     - [Knife](#knifefight) - (FFA Knifefight with switchable grav, ice, and TP)
-    - [FreeDay](#freeday) - (auto FreeDay on first round/damage disabled)
+    - [Freeday](#freeday) - (auto Freeday on first round/damage disabled)
 
 
 work in progress!  
@@ -44,9 +44,9 @@ I recommend until full release, when update to overwrite all files (plugins, tra
 ### Change Log
 
 ```
-#### [0.7.2] - 2016-05-03
+####  ~~[0.7.2]~~ - VERSIONING BEGINNS WITH RELEASE ON ALLIED - sry
 ### Added
-- initial release with version number.
+- initial beta release.
 ```
 
 ### Versioning
@@ -69,7 +69,7 @@ for a better understanding:
 UartigZone, Got Sw4g? terminator18, Skelexes, 0dieter0, maks for bughunting / great ideas!
   
   
-
+  
 ### Plugin descriptions: 
 
 #### Warden
@@ -158,7 +158,7 @@ Colorize Warden, Warden Model, open/close cell doors, automatic open cells doors
 #### Menu
 
 This plugins allows players to open a menu with ","-Key (buyammo) or command.  
-It will show different menus for Terrorist, Counter-Terrorist Admin & Warden.  
+It will show different menus for Terrorists, Counter-Terrorists Admin & Warden.  
 The menu shows only features that are enabled per round (e.g at EventDays no Warden menu)
 
 
@@ -172,7 +172,7 @@ The menu shows only features that are enabled per round (e.g at EventDays no War
 - sm_menu_version - Shows the version of the SourceMod plugin MyJailbreak - Menu
 - sm_menu_enable: 0 - disabled, 1 - enable Jailbreak menu
 - sm_menu_ct: 0 - disabled, 1 - enable Jailbreak menu for CT
-- sm_menu_t: 0 - disabled, 1 - enable Jailbreak menu for terrorist
+- sm_menu_t: 0 - disabled, 1 - enable Jailbreak menu for Terrorists
 - sm_menu_warden: disabled, 1 - enable Jailbreak menu for Warden
 - sm_menu_days: 0 - disabled, 1 - enable vote/set EventDays menu
 - sm_menu_close: 0 - disabled, 1 - close menu after action
@@ -218,7 +218,7 @@ The menu shows only features that are enabled per round (e.g at EventDays no War
     * DuckHunt
     * Zeus
     * Knifefight
-    * FreeDay
+    * Freeday
 * Checkplayer
 * Toggle Friendly Fire
 * Kill a random Player
@@ -228,7 +228,7 @@ The menu shows only features that are enabled per round (e.g at EventDays no War
 * Leave Warden
 * Rules
 
-##### Counter-Terrorist Menu
+##### Counter-Terrorists Menu
 
 * [Gun Menu](/shanapu/MyJailbreak/wiki/Weapons)
 * Become Warden
@@ -244,7 +244,7 @@ The menu shows only features that are enabled per round (e.g at EventDays no War
     * DuckHunt
     * Zeus
     * Knifefight
-    * FreeDay
+    * Freeday
 * Checkplayer
 * Join Terrorists
     * Are you sure?
@@ -253,7 +253,7 @@ The menu shows only features that are enabled per round (e.g at EventDays no War
 * Rules
 
 
-##### Counter-Terrorist Menu
+##### Counter-Terrorists Menu
 
 * [Gun Menu](/shanapu/MyJailbreak/wiki/Weapons)
 * Vote against Warden
@@ -269,8 +269,8 @@ The menu shows only features that are enabled per round (e.g at EventDays no War
     * DuckHunt
     * Zeus
     * Knifefight
-    * FreeDay
-* Join Counter-Terrorist
+    * Freeday
+* Join Counter-Terrorists
     * Are you sure?
         * Yes
         * No
@@ -586,6 +586,9 @@ CT and T can Sprint with USE-Key (default).
 - sm_catch_sounds_enable: 0 - disabled, 1 - enable un/-Freeze sounds. Default 1
 - sm_catch_sounds_freeze: Path to the soundfile which should be played on freeze. Default "music/myJailbreak/freeze.mp3"
 - sm_catch_sounds_unfreeze: Path to the soundfile which should be played on unfreeze. Default "music/myJailbreak/unfreeze.mp3"
+- sm_catch_noblood: 0 - Disable, 1 - enable No Blood. Default 1
+- sm_catch_noblood_splatter: 0 - Disable, 1 - enable No Blood Splatter. Default 1
+- sm_catch_noblood_splash: 0 - Disable, 1 - enable No Blood Splash. Default 1
 
 ```
 ##### Features
@@ -806,11 +809,11 @@ On Round start cells open everybody KnifeOnly with thirdperson, low gravity(Defa
 - Colors
 - Custom chat [Tag]
 
-#### FreeDay
+#### Freeday
 
 This plugin allows players to vote and Warden to set next round to freeday.  
 Auto Freeday on first round after mapstart (Default).
-On Round start cells open for freeday and enabled Damage (Default).
+On Round start cells open for freeday and enabled damage (Default).
 
 ##### Commands
 ```
@@ -884,6 +887,7 @@ based/merged/used code/idea plugins:
 * https://github.com/KissLick/TeamGames/
 * https://github.com/AG-Headline/Hunger-Games-Beacon
 * https://forums.alliedmods.net/showthread.php?p=1086127
+* https://forums.alliedmods.net/showthread.php?t=234169
 + https://github.com/Zipcore/Timer/ (sound)
 * https://git.tf/TTT/Plugin (sound)
 * https://forums.alliedmods.net/showthread.php?t=262170 (model)

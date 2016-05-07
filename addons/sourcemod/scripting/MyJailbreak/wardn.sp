@@ -1,8 +1,6 @@
 //Includes
 #include <sourcemod>
-
 #include <cstrike>
-#include <sdkhooks>
 #include <wardn>
 #include <emitsoundany>
 #include <smartjaildoors>
@@ -51,10 +49,9 @@ ConVar gc_sOverlayStopPath;
 ConVar gc_sWarden;
 ConVar gc_sUnWarden;
 ConVar gc_sSoundStartPath;
-ConVar gc_sStop;
+ConVar gc_sSoundStopPath;
 ConVar gc_sModelPath;
 ConVar gc_bModel;
-
 ConVar gc_bBetterNotes;
 ConVar g_bFF;
 ConVar gc_iMinimumNumber;
@@ -109,14 +106,13 @@ char g_sWardenModel[256];
 char g_sUnWarden[256];
 char g_sWarden[256];
 char g_sSoundStartPath[256];
-char g_sStop[256];
+char g_sSoundStopPath[256];
 char g_sOverlayStop[256];
 char g_op[32];
 char g_operators[4][2] = {"+", "-", "/", "*"};
 
 //float
 float g_fMakerPos[3];
-
 
 public Plugin myinfo = {
 	name = "MyJailbreak - Warden",
@@ -151,6 +147,7 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_vw", VoteWarden, "Allows the player to vote to retire Warden");
 	RegConsoleCmd("sm_votewarden", VoteWarden, "Allows the player to vote to retire Warden");
 	RegConsoleCmd("sm_setff", ToggleFF, "Allows player to see the state and the Warden to toggle friendly fire");
+	RegConsoleCmd("sm_marker", SpawnMarker, "Allows the warden to set a marker to the position he aiming");
 	RegConsoleCmd("sm_cdstart", SetStartCountDown, "Allows the Warden to start a START Countdown! (start after 10sec.) - start without menu");
 	RegConsoleCmd("sm_cdmenu", CDMenu, "Allows the Warden to open the Countdown Menu");
 	RegConsoleCmd("sm_cdstartstop", StartStopCDMenu, "Allows the Warden to start a START/STOP Countdown! (start after 10sec./stop after 20sec.) - start without menu");
@@ -191,7 +188,7 @@ public void OnPluginStart()
 	gc_bFF = AutoExecConfig_CreateConVar("sm_warden_ff", "1", "0 - disabled, 1 - enable switch ff for T ", _, true,  0.0, true, 1.0);
 	gc_bRandom = AutoExecConfig_CreateConVar("sm_warden_random", "1", "0 - disabled, 1 - enable kill a random t for warden", _, true,  0.0, true, 1.0);
 	gc_bMarker = AutoExecConfig_CreateConVar("sm_warden_marker", "1", "0 - disabled, 1 - enable Warden simple markers ", _, true,  0.0, true, 1.0);
-	gc_iMarkerKey = AutoExecConfig_CreateConVar("sm_warden_markerkey", "3", "1 - Look weapon / 2 - Use and shoot / 3 - walk and shoot", _, true,  1.0, true, 3.0);
+	gc_iMarkerKey = AutoExecConfig_CreateConVar("sm_warden_markerkey", "3", "0 - disabled / 1 - Look weapon / 2 - Use and shoot / 3 - walk and shoot", _, true,  1.0, true, 3.0);
 	gc_fMarkerTime = AutoExecConfig_CreateConVar("sm_warden_marker_time", "20.0", "Time in seconds marker will disappears", _, true,  1.0);
 	gc_bCountDown = AutoExecConfig_CreateConVar("sm_warden_countdown", "1", "0 - disabled, 1 - enable countdown for warden", _, true,  0.0, true, 1.0);
 	gc_bOverlays = AutoExecConfig_CreateConVar("sm_warden_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true,  0.0, true, 1.0);
@@ -215,7 +212,7 @@ public void OnPluginStart()
 	gc_sWarden = AutoExecConfig_CreateConVar("sm_warden_sounds_warden", "music/myjailbreak/warden.mp3", "Path to the soundfile which should be played for a int warden.");
 	gc_sUnWarden = AutoExecConfig_CreateConVar("sm_warden_sounds_unwarden", "music/myjailbreak/unwarden.mp3", "Path to the soundfile which should be played when there is no warden anymore.");
 	gc_sSoundStartPath = AutoExecConfig_CreateConVar("sm_warden_sounds_start", "music/myjailbreak/start.mp3", "Path to the soundfile which should be played for a start countdown.");
-	gc_sStop = AutoExecConfig_CreateConVar("sm_warden_sounds_stop", "music/myjailbreak/stop.mp3", "Path to the soundfile which should be played for stop countdown.");
+	gc_sSoundStopPath = AutoExecConfig_CreateConVar("sm_warden_sounds_stop", "music/myjailbreak/stop.mp3", "Path to the soundfile which should be played for stop countdown.");
 	
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
@@ -229,7 +226,7 @@ public void OnPluginStart()
 	HookConVarChange(gc_sUnWarden, OnSettingChanged);
 	HookConVarChange(gc_sWarden, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
-	HookConVarChange(gc_sStop, OnSettingChanged);
+	HookConVarChange(gc_sSoundStopPath, OnSettingChanged);
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sOverlayStopPath, OnSettingChanged);
 	
@@ -238,7 +235,7 @@ public void OnPluginStart()
 	gc_sWarden.GetString(g_sWarden, sizeof(g_sWarden));
 	gc_sUnWarden.GetString(g_sUnWarden, sizeof(g_sUnWarden));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
-	gc_sStop.GetString(g_sStop, sizeof(g_sStop));
+	gc_sSoundStopPath.GetString(g_sSoundStopPath, sizeof(g_sSoundStopPath));
 	gc_sModelPath.GetString(g_sWardenModel, sizeof(g_sWardenModel));
 	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
 	gc_sOverlayStopPath.GetString(g_sOverlayStop , sizeof(g_sOverlayStop));
@@ -251,6 +248,89 @@ public void OnPluginStart()
 	
 	CreateTimer(1.0, Timer_DrawMakers, _, TIMER_REPEAT);
 }
+
+//ConVar Change for Strings
+
+public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
+{
+	if(convar == gc_sWarden)
+	{
+		strcopy(g_sWarden, sizeof(g_sWarden), newValue);
+		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sWarden);
+	}
+	else if(convar == gc_sUnWarden)
+	{
+		strcopy(g_sUnWarden, sizeof(g_sUnWarden), newValue);
+		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sUnWarden);
+	}
+	else if(convar == gc_sSoundStartPath)
+	{
+		strcopy(g_sSoundStartPath, sizeof(g_sSoundStartPath), newValue);
+		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
+	}
+	else if(convar == gc_sSoundStopPath)
+	{
+		strcopy(g_sSoundStopPath, sizeof(g_sSoundStopPath), newValue);
+		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStopPath);
+	}
+	else if(convar == gc_sOverlayStartPath)
+	{
+		strcopy(g_sOverlayStart, sizeof(g_sOverlayStart), newValue);
+		if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStart);
+	}
+	else if(convar == gc_sOverlayStopPath)
+	{
+		strcopy(g_sOverlayStop, sizeof(g_sOverlayStop), newValue);
+		if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStop);
+	}
+	else if(convar == gc_sModelPath)
+	{
+		strcopy(g_sWardenModel, sizeof(g_sWardenModel), newValue);
+		PrecacheModel(g_sWardenModel);
+	}
+}
+
+//Initialize Plugin
+
+public void OnConfigsExecuted()
+{
+	g_MathMin = gc_iMinimumNumber.IntValue;
+	g_MathMax = gc_iMaximumNumber.IntValue;
+}
+
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+	CreateNative("warden_exist", Native_ExistWarden);
+	CreateNative("warden_iswarden", Native_IsWarden);
+	CreateNative("warden_set", Native_SetWarden);
+	CreateNative("warden_removed", Native_RemoveWarden);
+	CreateNative("warden_get", Native_GetWarden);
+	
+	RegPluginLibrary("warden");
+	return APLRes_Success;
+}
+
+public void OnMapStart()
+{
+	if(gc_bSounds.BoolValue)	
+	{
+		PrecacheSoundAnyDownload(g_sWarden);
+		PrecacheSoundAnyDownload(g_sUnWarden);
+		PrecacheSoundAnyDownload(g_sSoundStopPath);
+		PrecacheSoundAnyDownload(g_sSoundStartPath);
+	}	
+	g_iVoteCount = 0;
+	PrecacheModel(g_sWardenModel);
+	if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStart);
+	if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStop);
+	g_iBeamSprite = PrecacheModel("materials/sprites/laserbeam.vmt");
+	g_iHaloSprite = PrecacheModel("materials/sprites/glow01.vmt");
+	g_SmokeSprite = PrecacheModel("materials/sprites/steam1.vmt");
+	g_LightningSprite = g_iBeamSprite;
+	PrecacheSound(SOUND_THUNDER, true);
+}
+
+//Round Start
 
 public void RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
@@ -286,7 +366,7 @@ public void RoundStart(Event event, const char[] name, bool dontBroadcast)
 	{
 		if (Warden == 1)
 		{
-		SetEntityRenderColor(Warden, 255, 255, 255, 255);
+		CreateTimer( 0.1, RemoveColor, Warden);
 		SetEntityModel(Warden, g_sModelPath);
 		Warden = -1;
 		}
@@ -298,89 +378,14 @@ public void RoundStart(Event event, const char[] name, bool dontBroadcast)
 	{
 		if (Warden == 1)
 		{
-		SetEntityRenderColor(Warden, 255, 255, 255, 255);
+		CreateTimer( 0.1, RemoveColor, Warden);
 		SetEntityModel(Warden, g_sModelPath);
 		Warden = -1;
 		}
 	}
 }
 
-public void OnConfigsExecuted()
-{
-	g_MathMin = gc_iMinimumNumber.IntValue;
-	g_MathMax = gc_iMaximumNumber.IntValue;
-}
-
-public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
-{
-	CreateNative("warden_exist", Native_ExistWarden);
-	CreateNative("warden_iswarden", Native_IsWarden);
-	CreateNative("warden_set", Native_SetWarden);
-	CreateNative("warden_removed", Native_RemoveWarden);
-	CreateNative("warden_get", Native_GetWarden);
-	
-	RegPluginLibrary("warden");
-	return APLRes_Success;
-}
-
-public void OnMapStart()
-{
-	if(gc_bSounds.BoolValue)	
-	{
-		PrecacheSoundAnyDownload(g_sWarden);
-		PrecacheSoundAnyDownload(g_sUnWarden);
-		PrecacheSoundAnyDownload(g_sStop);
-		PrecacheSoundAnyDownload(g_sSoundStartPath);
-	}	
-	g_iVoteCount = 0;
-	PrecacheModel(g_sWardenModel);
-	if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStart);
-	if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStop);
-	g_iBeamSprite = PrecacheModel("materials/sprites/laserbeam.vmt");
-	g_iHaloSprite = PrecacheModel("materials/sprites/glow01.vmt");
-	g_SmokeSprite = PrecacheModel("materials/sprites/steam1.vmt");
-	g_LightningSprite = g_iBeamSprite;
-	PrecacheSound(SOUND_THUNDER, true);
-}
-
-public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
-{
-	if(convar == gc_sWarden)
-	{
-		strcopy(g_sWarden, sizeof(g_sWarden), newValue);
-		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sWarden);
-	}
-	else if(convar == gc_sUnWarden)
-	{
-		strcopy(g_sUnWarden, sizeof(g_sUnWarden), newValue);
-		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sUnWarden);
-	}
-	else if(convar == gc_sSoundStartPath)
-	{
-		strcopy(g_sSoundStartPath, sizeof(g_sSoundStartPath), newValue);
-		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
-	}
-	else if(convar == gc_sStop)
-	{
-		strcopy(g_sStop, sizeof(g_sStop), newValue);
-		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sStop);
-	}
-	else if(convar == gc_sOverlayStartPath)
-	{
-		strcopy(g_sOverlayStart, sizeof(g_sOverlayStart), newValue);
-		if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStart);
-	}
-	else if(convar == gc_sOverlayStopPath)
-	{
-		strcopy(g_sOverlayStop, sizeof(g_sOverlayStop), newValue);
-		if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStop);
-	}
-	else if(convar == gc_sModelPath)
-	{
-		strcopy(g_sWardenModel, sizeof(g_sWardenModel), newValue);
-		PrecacheModel(g_sWardenModel);
-	}
-}
+//Round End
 
 public void RoundEnd(Event event, const char[] name, bool dontBroadcast)
 {
@@ -404,8 +409,9 @@ public void RoundEnd(Event event, const char[] name, bool dontBroadcast)
 	if (StopTimer != null) KillTimer(StopTimer);
 	if (StartTimer != null) KillTimer(StartTimer);
 	if (StartStopTimer != null) KillTimer(StartStopTimer);
-
 }
+
+//!w
 
 public Action BecomeWarden(int client, int args)
 {
@@ -435,6 +441,8 @@ public Action BecomeWarden(int client, int args)
 	else CPrintToChat(client, "%t %t", "warden_tag" , "warden_disabled");
 }
 
+//!uw
+
 public Action ExitWarden(int client, int args) 
 {
 	if(gc_bPlugin.BoolValue)
@@ -450,7 +458,7 @@ public Action ExitWarden(int client, int args)
 			}
 			Warden = -1;
 			Forward_OnWardenRemoved(client);
-			SetEntityRenderColor(client, 255, 255, 255, 255);
+			CreateTimer( 0.1, RemoveColor, Warden);
 			SetEntityModel(client, g_sModelPath);
 			randomtime = GetConVarInt(g_hRandomTimer);
 			randomtimer = CreateTimer(1.0, ChooseRandom, _, TIMER_REPEAT);
@@ -467,6 +475,8 @@ public Action ExitWarden(int client, int args)
 	}
 	else CPrintToChat(client, "%t %t", "warden_tag" , "warden_disabled");
 }
+
+//!vw
 
 public Action VoteWarden(int client,int args)
 {
@@ -487,6 +497,7 @@ public Action VoteWarden(int client,int args)
 					
 					if (g_iVoteCount > playercount)
 					{
+						LogMessage("[MyJB] Player %L was kick as warden by voting", Warden);
 						RemoveTheWarden(client);
 					}
 					else CPrintToChatAll("%t %t", "warden_tag" , "warden_need", Missing, client);
@@ -500,22 +511,24 @@ public Action VoteWarden(int client,int args)
 	else CPrintToChat(client, "%t %t", "warden_tag" , "warden_disabled");
 }
 
+//Warden died
+
 public void playerDeath(Event event, const char[] name, bool dontBroadcast) 
 {
 	int client = GetClientOfUserId(GetEventInt(event, "userid")); // Get the dead clients id
 	
 	if(client == Warden) // Aww damn , he is the warden
 	{
-		if(gc_bSounds.BoolValue)
-		{
-			EmitSoundToAllAny(g_sUnWarden);
-		}
 		CPrintToChatAll("%t %t", "warden_tag" , "warden_dead", client);
 		
 		if(gc_bBetterNotes.BoolValue)
 		{
 			PrintCenterTextAll("%t", "warden_dead_nc", client);
 			PrintHintTextToAll("%t", "warden_dead_nc", client);
+		}
+		if(gc_bSounds.BoolValue)
+		{
+			EmitSoundToAllAny(g_sUnWarden);
 		}
 		randomtime = GetConVarInt(g_hRandomTimer);
 		randomtimer = CreateTimer(1.0, ChooseRandom, _, TIMER_REPEAT);
@@ -525,6 +538,8 @@ public void playerDeath(Event event, const char[] name, bool dontBroadcast)
 		Call_Finish();
 	}
 }
+
+//Set new Warden for Admin Menu
 
 public Action SetWarden(int client,int args)
 {
@@ -554,6 +569,8 @@ public Action SetWarden(int client,int args)
 	}
 	return Plugin_Handled;
 }
+
+//Overwrite new Warden for Admin Menu
 
 public int m_SetWarden(Menu menu, MenuAction action, int client, int Position)
 {
@@ -625,6 +642,8 @@ public int m_SetWarden(Menu menu, MenuAction action, int client, int Position)
 	}
 }
 
+//Set/Overwrite new Warden for Admin Handler
+
 public int m_WardenOverwrite(Menu menu, MenuAction action, int client, int Position)
 {
 	if(action == MenuAction_Select)
@@ -646,6 +665,7 @@ public int m_WardenOverwrite(Menu menu, MenuAction action, int client, int Posit
 				PrintCenterTextAll("%t", "warden_new_nc", newwarden);
 				PrintHintTextToAll("%t", "warden_new_nc", newwarden);
 			}
+			LogMessage("[MyJB] Admin %L kick player %N warden and set &N as new", client, Warden, newwarden);
 			Warden = newwarden;
 			CreateTimer(0.5, Timer_WardenFixColor, newwarden, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 			GetEntPropString(newwarden, Prop_Data, "m_ModelName", g_sModelPath, sizeof(g_sModelPath));
@@ -675,6 +695,8 @@ public int m_WardenOverwrite(Menu menu, MenuAction action, int client, int Posit
 	}
 }
 
+//Give Warden color
+
 public Action Timer_WardenFixColor(Handle timer,any client)
 {
 	if(IsValidClient(client, false, false))
@@ -694,7 +716,6 @@ public Action Timer_WardenFixColor(Handle timer,any client)
 				{
 					SetEntityRenderColor(client, gc_iWardenColorRed.IntValue, gc_iWardenColorGreen.IntValue, gc_iWardenColorBlue.IntValue, 255);
 				}
-
 			}
 		}
 		else
@@ -710,6 +731,8 @@ public Action Timer_WardenFixColor(Handle timer,any client)
 	return Plugin_Continue;
 }
 
+//Warden change Team
+
 public Action playerTeam(Handle event, const char[] name, bool dontBroadcast) 
 {
 	int client = GetClientOfUserId(GetEventInt(event, "userid"));
@@ -717,6 +740,8 @@ public Action playerTeam(Handle event, const char[] name, bool dontBroadcast)
 	if(client == Warden)
 		RemoveTheWarden(client);
 }
+
+//Warden disconnect
 
 public void OnClientDisconnect(int client)
 {
@@ -729,7 +754,6 @@ public void OnClientDisconnect(int client)
 			PrintCenterTextAll("%t", "warden_disconnected_nc", client);
 			PrintHintTextToAll("%t", "warden_disconnected_nc", client);
 		}
-		
 		Warden = -1;
 		Forward_OnWardenRemoved(client);
 		Call_StartForward(gF_OnWardenDisconnected);
@@ -743,20 +767,7 @@ public void OnClientDisconnect(int client)
 	}
 }
 
-public Action RemoveWarden(int client, int args)
-{
-	if(Warden != -1)
-	{
-		RemoveTheWarden(client);
-		Call_StartForward(gF_OnWardenRemovedByAdmin);
-		Call_PushCell(client);
-		Call_Finish();
-		
-	}
-//	else CPrintToChatAll("%t %t", "warden_tag" , "warden_noexist");
-	return Plugin_Handled;
-	}
-
+//Set a new warden
 
 void SetTheWarden(int client)
 {
@@ -787,6 +798,22 @@ void SetTheWarden(int client)
 	else CPrintToChat(client, "%t %t", "warden_tag" , "warden_disabled");
 }
 
+//Remove player Warden
+
+public Action RemoveWarden(int client, int args)
+{
+	if(Warden != -1)
+	{
+		RemoveTheWarden(client);
+		Call_StartForward(gF_OnWardenRemovedByAdmin);
+		Call_PushCell(client);
+		Call_Finish();
+		
+	}
+//	else CPrintToChatAll("%t %t", "warden_tag" , "warden_noexist");
+	return Plugin_Handled;
+}
+
 void RemoveTheWarden(int client)
 {
 	CPrintToChatAll("%t %t", "warden_tag" , "warden_removed", client, Warden);  // if client is console !=
@@ -796,8 +823,8 @@ void RemoveTheWarden(int client)
 		PrintCenterTextAll("%t", "warden_removed_nc", client, Warden);
 		PrintHintTextToAll("%t", "warden_removed_nc", client, Warden);
 	}
-	
-	SetEntityRenderColor(Warden, 255, 255, 255, 255);
+	LogMessage("[MyJB] Admin %L removed player %N as warden", client, Warden);
+	CreateTimer( 0.1, RemoveColor, Warden);
 	SetEntityModel(client, g_sModelPath);
 	Warden = -1;
 	randomtime = GetConVarInt(g_hRandomTimer);
@@ -815,6 +842,8 @@ void RemoveTheWarden(int client)
 	Format(g_sHasVoted, sizeof(g_sHasVoted), "");
 	g_sHasVoted[0] = '\0';
 }
+
+//Math Quizz
 
 public Action EndMathQuestion(Handle timer)
 {
@@ -931,10 +960,21 @@ public void SendEndMathQuestion(int client)
 	char answer[100];
 	
 	if(client != -1)
+	{
 		Format(answer, sizeof(answer), "%t %t", "warden_tag", "warden_math_correct", client);
-	else
-		Format(answer, sizeof(answer), "%t %t", "warden_tag", "warden_math_time");
-		
+		CreateTimer( 5.0, RemoveColor, client);
+		SetEntityRenderColor(client, 0, 255, 0, 255);
+	}
+	else Format(answer, sizeof(answer), "%t %t", "warden_tag", "warden_math_time");
+	
+	if(gc_bOverlays.BoolValue)
+	{
+		CreateTimer( 0.5, ShowOverlayStop, client);
+	}
+	if(gc_bSounds.BoolValue)	
+	{
+		EmitSoundToAllAny(g_sSoundStopPath);
+	}
 	Handle pack = CreateDataPack();
 	CreateDataTimer(0.3, AnswerQuestion, pack);
 	WritePackString(pack, answer);
@@ -942,14 +982,20 @@ public void SendEndMathQuestion(int client)
 	IsMathQuiz = false;
 }
 
+public Action RemoveColor( Handle timer, any client ) 
+{
+	SetEntityRenderColor(client, 255, 255, 255, 255);
+}
+
 public Action AnswerQuestion(Handle timer, Handle pack)
 {
 	char str[100];
 	ResetPack(pack);
 	ReadPackString(pack, str, sizeof(str));
- 
 	CPrintToChatAll(str);
 }
+
+//Marker
 
 public Action Command_LAW(int client, const char[] command, int argc)
 {
@@ -958,7 +1004,7 @@ public Action Command_LAW(int client, const char[] command, int argc)
 	
 	if(!client || !IsClientInGame(client) || !IsPlayerAlive(client))
 		return Plugin_Continue;
-		
+	
 	if(client != Warden)
 		return Plugin_Continue;
 	
@@ -967,7 +1013,22 @@ public Action Command_LAW(int client, const char[] command, int argc)
 		GetClientAimTargetPos(client, g_fMakerPos);
 		g_fMakerPos[2] += 5.0;
 	}
+	return Plugin_Continue;
+}
+
+public Action SpawnMarker(int client, int args)
+{
+	if(!gc_bMarker.BoolValue)
+		return Plugin_Continue;
 	
+	if(!client || !IsClientInGame(client) || !IsPlayerAlive(client))
+		return Plugin_Continue;
+	
+	if(client != Warden)
+	{
+		GetClientAimTargetPos(client, g_fMakerPos);
+		g_fMakerPos[2] += 5.0;
+	}
 	return Plugin_Continue;
 }
 
@@ -1086,6 +1147,8 @@ public Action DeleteMarker( Handle timer)
 	ResetMarker();
 }
 
+//Countdown
+
 public Action CDMenu(int client, int args)
 {
 	if(gc_bCountDown.BoolValue)
@@ -1153,14 +1216,11 @@ public Action CancelCountDown(int client, int args)
 		StopTimer = null;
 		IsCountDown = false;
 		CPrintToChatAll("%t %t", "warden_tag", "warden_countdowncanceled" );
-		
-
 	}
 }
 
 public Action StartStopCDMenu(int client, int args)
 {
-
 	if(gc_bCountDown.BoolValue)
 	{
 		if (client == Warden)
@@ -1326,13 +1386,12 @@ public Action SetStartStopCountDown(int client, int args)
 				StartStopTimer = CreateTimer( 1.0, StopStartStopCountdown, client, TIMER_REPEAT);
 				
 				CPrintToChatAll("%t %t", "warden_tag" , "warden_startstopcountdownhint");
-		
+				
 				if(gc_bBetterNotes.BoolValue)
 				{
 					PrintCenterTextAll("%t", "warden_startstopcountdownhint_nc");
 					PrintHintTextToAll("%t", "warden_startstopcountdownhint_nc");
 				}
-
 				IsCountDown = true;
 			}
 			else CPrintToChat(client, "%t %t", "warden_tag" , "warden_countdownrunning");
@@ -1409,7 +1468,7 @@ public Action StopCountdown( Handle timer, any client )
 			}
 			if(gc_bSounds.BoolValue)	
 			{
-				EmitSoundToAllAny(g_sStop);
+				EmitSoundToAllAny(g_sSoundStopPath);
 			}
 			StopTimer = null;
 			IsCountDown = false;
@@ -1450,7 +1509,7 @@ public Action StopStartStopCountdown( Handle timer, any client )
 			}
 			if(gc_bSounds.BoolValue)	
 			{
-				EmitSoundToAllAny(g_sStop);
+				EmitSoundToAllAny(g_sSoundStopPath);
 			}
 			StartStopTimer = null;
 			IsCountDown = false;
@@ -1463,7 +1522,7 @@ public Action StopStartStopCountdown( Handle timer, any client )
 	return Plugin_Continue;
 }
 
-
+//Overlays
 
 public Action ShowOverlayStop( Handle timer, any client ) 
 {
@@ -1477,7 +1536,7 @@ public Action ShowOverlayStop( Handle timer, any client )
 	return Plugin_Continue;
 }
 
-
+//No Block
 
 public Action EnableNoBlock(int client)
 {
@@ -1524,6 +1583,8 @@ public Action noblockoff(int client, int args)
 	}
 }
 
+//Friendy Fire 
+
 public Action ToggleFF(int client, int args)
 {
 	if (gc_bFF.BoolValue) 
@@ -1549,6 +1610,8 @@ public Action ToggleFF(int client, int args)
 		}
 	}
 }
+
+//Kill a Random T
 
 public Action KillRandom(int client, int args)
 {
@@ -1605,6 +1668,7 @@ public Action DoKillRandom(int client, int args)
 		{
 			PerformSmite(client, i);
 			CPrintToChatAll("%t %t", "warden_tag", "warden_israndomdead", i); 
+			LogMessage("[MyJB] Warden %L killed random player %N", client, i);
 		}
 }
 
@@ -1689,6 +1753,8 @@ public Action ChooseRandom(Handle timer, Handle pack)
 	}
 }
 
+//Open Cell Doors
+
 public Action OpenCounter(Handle timer, Handle pack)
 {
 	if(gc_bPlugin.BoolValue)
@@ -1762,6 +1828,8 @@ public Action CloseDoors(int client, int args)
 		}
 	}
 }
+
+//Natives, Forwards & stocks
 
 public int Native_ExistWarden(Handle plugin, int numParams)
 {

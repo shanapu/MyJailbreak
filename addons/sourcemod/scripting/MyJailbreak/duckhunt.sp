@@ -1,12 +1,10 @@
 //includes
 #include <sourcemod>
 #include <colors>
-
 #include <cstrike>
 #include <wardn>
 #include <emitsoundany>
 #include <smartjaildoors>
-#include <sdkhooks>
 #include <autoexecconfig>
 #include <myjailbreak>
 
@@ -102,8 +100,6 @@ public void OnPluginStart()
 	HookEvent("hegrenade_detonate", HE_Detonate);
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
-//	HookEvent("weapon_reload", Reloadweapon);
-	
 	
 	//FindConVar
 	g_bAllowTP = FindConVar("sv_allow_thirdperson");
@@ -119,6 +115,8 @@ public void OnPluginStart()
 	}
 }
 
+//ConVar Change for Strings
+
 public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
 	if(convar == gc_sOverlayStartPath)
@@ -132,6 +130,8 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
 	}
 }
+
+//Initialize Event
 
 public void OnMapStart()
 {
@@ -167,6 +167,8 @@ public void OnClientPutInServer(int client)
 	SDKHook(client, SDKHook_WeaponCanUse, OnWeaponCanUse);
 }
 
+//Admin & Warden set Event
+
 public Action SetDuckHunt(int client,int args)
 {
 	if (gc_bPlugin.BoolValue)
@@ -185,6 +187,7 @@ public Action SetDuckHunt(int client,int args)
 						if (g_iCoolDown == 0)
 						{
 							StartNextRound();
+							LogMessage("Event Duckhunt was started by Warden %L", client);
 						}
 						else CPrintToChat(client, "%t %t", "duckhunt_tag" , "duckhunt_wait", g_iCoolDown);
 					}
@@ -208,6 +211,7 @@ public Action SetDuckHunt(int client,int args)
 							if (g_iCoolDown == 0)
 							{
 								StartNextRound();
+								LogMessage("Event Duckhunt was started by Admin %L", client);
 							}
 							else CPrintToChat(client, "%t %t", "duckhunt_tag" , "duckhunt_wait", g_iCoolDown);
 						}
@@ -221,6 +225,8 @@ public Action SetDuckHunt(int client,int args)
 	}
 	else CPrintToChat(client, "%t %t", "duckhunt_tag" , "duckhunt_disabled");
 }
+
+//Voting for Event
 
 public Action VoteDuckHunt(int client,int args)
 {
@@ -255,6 +261,7 @@ public Action VoteDuckHunt(int client,int args)
 							if (g_iVoteCount > playercount)
 							{
 								StartNextRound();
+								LogMessage("Event Duckhunt was started by voting");
 							}
 							else CPrintToChatAll("%t %t", "duckhunt_tag" , "duckhunt_need", Missing, client);
 						}
@@ -271,6 +278,8 @@ public Action VoteDuckHunt(int client,int args)
 	else CPrintToChat(client, "%t %t", "duckhunt_tag" , "duckhunt_disabled");
 }
 
+//Prepare Event
+
 void StartNextRound()
 {
 	StartDuckHunt = true;
@@ -282,6 +291,8 @@ void StartNextRound()
 	CPrintToChatAll("%t %t", "duckhunt_tag" , "duckhunt_next");
 	PrintHintTextToAll("%t", "duckhunt_next_nc");
 }
+
+//Round start
 
 public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
@@ -327,13 +338,12 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 					if (IsClientInGame(client))
 					{
 						StripAllWeapons(client);
-						if (GetClientTeam(client) == CS_TEAM_CT)
+						if (GetClientTeam(client) == CS_TEAM_CT && IsValidClient(client, false, false))
 						{
 							SetEntityModel(client, huntermodel);
 							SetEntityHealth(client, 600);
 							GivePlayerItem(client, "weapon_nova");
 							AmmoTimer[client] = CreateTimer(5.0, AmmoRefill, client, TIMER_REPEAT);
-							
 						}
 						if (GetClientTeam(client) == CS_TEAM_T && IsValidClient(client, false, false))
 						{
@@ -351,7 +361,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 				}
 				CPrintToChatAll("%t %t", "duckhunt_tag" ,"duckhunt_rounds", g_iRound, g_iMaxRound);
 				g_iTruceTime--;
-				TruceTimer = CreateTimer(1.0, DuckHunt, _, TIMER_REPEAT);
+				TruceTimer = CreateTimer(1.0, StartTimer, _, TIMER_REPEAT);
 			}
 	}
 	else
@@ -367,82 +377,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 	}
 }
 
-public Action OnWeaponCanUse(int client, int weapon)
-{
-	if(IsDuckHunt == true)
-	{
-		char sWeapon[32];
-		GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
-		if((GetClientTeam(client) == CS_TEAM_T && StrEqual(sWeapon, "weapon_hegrenade")) || (GetClientTeam(client) == CS_TEAM_CT && StrEqual(sWeapon, "weapon_nova")))
-		{
-		
-			if (IsClientInGame(client) && IsPlayerAlive(client))
-			{
-				return Plugin_Continue;
-			}
-		}
-		return Plugin_Handled;
-	}
-	return Plugin_Continue;
-}
-
-public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon) 
-{
-	if(IsDuckHunt == true)
-	{
-		if((GetClientTeam(client) == CS_TEAM_T) && IsClientInGame(client) && IsPlayerAlive(client) && buttons & IN_ATTACK)
-		{
-			return Plugin_Handled;
-		}
-	}
-	return Plugin_Continue;
-}
-
-public Action DuckHunt(Handle timer)
-{
-	if (g_iTruceTime > 1)
-	{
-		g_iTruceTime--;
-		for (int client=1; client <= MaxClients; client++)
-		if (IsClientInGame(client) && IsPlayerAlive(client))
-			{
-				PrintCenterText(client,"%t", "duckhunt_timeuntilstart_nc", g_iTruceTime);
-			}
-		return Plugin_Continue;
-	}
-	
-	g_iTruceTime = gc_iTruceTime.IntValue;
-	
-	if (g_iRound > 0)
-	{
-		for (int client=1; client <= MaxClients; client++)
-		{
-			if (IsClientInGame(client) && IsPlayerAlive(client))
-			{
-				if (GetClientTeam(client) == CS_TEAM_T)
-				{
-					SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
-					SetEntityGravity(client, 0.3);
-				}
-				if (GetClientTeam(client) == CS_TEAM_CT)
-				{
-					SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
-				}
-				PrintCenterText(client,"%t", "duckhunt_start_nc");
-			}
-			
-			if(gc_bOverlays.BoolValue) CreateTimer( 0.0, ShowOverlayStart, client);
-			if(gc_bSounds.BoolValue)	
-			{
-				EmitSoundToAllAny(g_sSoundStartPath);
-			}
-		}
-		CPrintToChatAll("%t %t", "duckhunt_tag" , "duckhunt_start");
-	}
-	SJD_OpenDoors();
-	TruceTimer = null;
-	return Plugin_Stop;
-}
+//Round End
 
 public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 {
@@ -490,6 +425,108 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 	}
 }
 
+//Map End
+
+public void OnMapEnd()
+{
+	IsDuckHunt = false;
+	StartDuckHunt = false;
+	if (TruceTimer != null) KillTimer(TruceTimer);
+	g_iVoteCount = 0;
+	g_iRound = 0;
+	g_sHasVoted[0] = '\0';
+	for(int client=1; client <= MaxClients; client++)
+	{
+		FP(client);
+		if (AmmoTimer[client] != null) KillTimer(AmmoTimer[client]);
+	}
+}
+
+//Start Timer
+
+public Action StartTimer(Handle timer)
+{
+	if (g_iTruceTime > 1)
+	{
+		g_iTruceTime--;
+		for (int client=1; client <= MaxClients; client++)
+		if (IsClientInGame(client) && IsPlayerAlive(client))
+			{
+				PrintCenterText(client,"%t", "duckhunt_timeuntilstart_nc", g_iTruceTime);
+			}
+		return Plugin_Continue;
+	}
+	
+	g_iTruceTime = gc_iTruceTime.IntValue;
+	
+	if (g_iRound > 0)
+	{
+		for (int client=1; client <= MaxClients; client++)
+		{
+			if (IsClientInGame(client) && IsPlayerAlive(client))
+			{
+				if (GetClientTeam(client) == CS_TEAM_T)
+				{
+					SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
+					SetEntityGravity(client, 0.3);
+				}
+				if (GetClientTeam(client) == CS_TEAM_CT)
+				{
+					SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
+				}
+				PrintCenterText(client,"%t", "duckhunt_start_nc");
+			}
+			
+			if(gc_bOverlays.BoolValue) CreateTimer( 0.0, ShowOverlayStart, client);
+			if(gc_bSounds.BoolValue)	
+			{
+				EmitSoundToAllAny(g_sSoundStartPath);
+			}
+		}
+		CPrintToChatAll("%t %t", "duckhunt_tag" , "duckhunt_start");
+	}
+	SJD_OpenDoors();
+	TruceTimer = null;
+	return Plugin_Stop;
+}
+
+//Nova & Grenade only
+
+public Action OnWeaponCanUse(int client, int weapon)
+{
+	if(IsDuckHunt == true)
+	{
+		char sWeapon[32];
+		GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
+		if((GetClientTeam(client) == CS_TEAM_T && StrEqual(sWeapon, "weapon_hegrenade")) || (GetClientTeam(client) == CS_TEAM_CT && StrEqual(sWeapon, "weapon_nova")))
+		{
+		
+			if (IsClientInGame(client) && IsPlayerAlive(client))
+			{
+				return Plugin_Continue;
+			}
+		}
+		return Plugin_Handled;
+	}
+	return Plugin_Continue;
+}
+
+// Only right click attack for chicken
+
+public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon) 
+{
+	if(IsDuckHunt == true)
+	{
+		if((GetClientTeam(client) == CS_TEAM_T) && IsClientInGame(client) && IsPlayerAlive(client) && buttons & IN_ATTACK)
+		{
+			return Plugin_Handled;
+		}
+	}
+	return Plugin_Continue;
+}
+
+//Give new Nades after detonation to chicken
+
 public Action HE_Detonate(Handle event, const char[] name, bool dontBroadcast)
 {
 	if (IsDuckHunt == true)
@@ -504,6 +541,8 @@ public Action HE_Detonate(Handle event, const char[] name, bool dontBroadcast)
 	return;
 }
 
+//Give new Ammo to Hunter
+
 public Action AmmoRefill(Handle timer, any client)
 {
 	if(IsPlayerAlive(client))
@@ -512,6 +551,8 @@ public Action AmmoRefill(Handle timer, any client)
 		SetEntProp(weapon, Prop_Send, "m_iPrimaryReserveAmmoCount", 32);
 	}
 }
+
+//Back to First Person
 
 public Action FP(int client)
 {
@@ -534,20 +575,6 @@ public void PlayerDeath(Handle event, char [] name, bool dontBroadcast)
 	if(IsDuckHunt == true)
 	{
 		int client = GetClientOfUserId(GetEventInt(event, "userid"));
-		FP(client);
-	}
-}
-
-public void OnMapEnd()
-{
-	IsDuckHunt = false;
-	StartDuckHunt = false;
-	if (TruceTimer != null) KillTimer(TruceTimer);
-	g_iVoteCount = 0;
-	g_iRound = 0;
-	g_sHasVoted[0] = '\0';
-	for(int client=1; client <= MaxClients; client++)
-	{
 		FP(client);
 	}
 }

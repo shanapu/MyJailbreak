@@ -3,7 +3,6 @@
 #include <sourcemod>
 #include <colors>
 #include <smartjaildoors>
-#include <sdkhooks>
 #include <wardn>
 #include <emitsoundany>
 #include <autoexecconfig>
@@ -116,6 +115,8 @@ public void OnPluginStart()
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 }
 
+//ConVar Change for Strings
+
 public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
 	if(convar == gc_sModelPath)
@@ -135,10 +136,7 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 	}
 }
 
-public void OnClientPutInServer(int client)
-{
-	SDKHook(client, SDKHook_WeaponCanUse, OnWeaponCanUse);
-}
+//Initialize Event
 
 public void OnMapStart()
 {
@@ -164,6 +162,13 @@ public void OnConfigsExecuted()
 	g_iMaxRound = gc_iRounds.IntValue;
 }
 
+public void OnClientPutInServer(int client)
+{
+	SDKHook(client, SDKHook_WeaponCanUse, OnWeaponCanUse);
+}
+
+//Admin & Warden set Event
+
 public Action SetZombie(int client,int args)
 {
 	if (gc_bPlugin.BoolValue)
@@ -182,6 +187,7 @@ public Action SetZombie(int client,int args)
 						if (g_iCoolDown == 0)
 						{
 							StartNextRound();
+							LogMessage("Event Zombie was started by Warden %L", client);
 						}
 						else CPrintToChat(client, "%t %t", "zombie_tag" , "zombie_wait", g_iCoolDown);
 					}
@@ -205,6 +211,7 @@ public Action SetZombie(int client,int args)
 						if (g_iCoolDown == 0)
 						{
 							StartNextRound();
+							LogMessage("Event Zombie was started by Admin %L", client);
 						}
 						else CPrintToChat(client, "%t %t", "zombie_tag" , "zombie_wait", g_iCoolDown);
 					}
@@ -218,6 +225,8 @@ public Action SetZombie(int client,int args)
 	}
 	else CPrintToChat(client, "%t %t", "zombie_tag" , "zombie_disabled");
 }
+
+//Voting for Event
 
 public Action VoteZombie(int client,int args)
 {
@@ -247,6 +256,7 @@ public Action VoteZombie(int client,int args)
 							if (g_iVoteCount > playercount)
 							{
 								StartNextRound();
+								LogMessage("Event Zombie was started by voting");
 							}
 							else CPrintToChatAll("%t %t", "zombie_tag" , "zombie_need", Missing, client);
 						}
@@ -263,6 +273,8 @@ public Action VoteZombie(int client,int args)
 	else CPrintToChat(client, "%t %t", "zombie_tag" , "zombie_disabled");
 }
 
+//Prepare Event
+
 void StartNextRound()
 {
 	StartZombie = true;
@@ -274,26 +286,7 @@ void StartNextRound()
 	PrintHintTextToAll("%t", "zombie_next_nc");
 }
 
-public Action OnWeaponCanUse(int client, int weapon)
-{
-	char sWeapon[32];
-	GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
-	
-	if(!StrEqual(sWeapon, "weapon_knife"))
-		{
-			if(GetClientTeam(client) == CS_TEAM_CT )
-			{
-				if (IsClientInGame(client) && IsPlayerAlive(client))
-				{
-					if(IsZombie == true)
-					{
-						return Plugin_Handled;
-					}
-				}
-			}
-		}
-	return Plugin_Continue;
-}
+//Round start
 
 public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
@@ -312,7 +305,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		g_iRound++;
 		StartZombie = false;
 		SJD_OpenDoors();
-
+		
 		ZombieMenu = CreatePanel();
 		Format(info1, sizeof(info1), "%T", "zombie_info_title", LANG_SERVER);
 		SetPanelTitle(ZombieMenu, info1);
@@ -388,7 +381,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 				}
 			}
 			g_iFreezeTime--;
-			FreezeTimer = CreateTimer(1.0, Zombie, _, TIMER_REPEAT);
+			FreezeTimer = CreateTimer(1.0, StartTimer, _, TIMER_REPEAT);
 			CPrintToChatAll("%t %t", "zombie_tag" ,"zombie_rounds", g_iRound, g_iMaxRound);
 		}
 	}
@@ -405,7 +398,69 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 	}
 }
 
-public Action Zombie(Handle timer)
+//Round End
+
+public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
+{
+	int winner = GetEventInt(event, "winner");
+	
+	if (IsZombie)
+	{
+		for(int client=1; client <= MaxClients; client++)
+		{
+			if (IsValidClient(client, false, true)) SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
+		}
+		
+		if (FreezeTimer != null) KillTimer(FreezeTimer);
+		
+		
+		if (winner == 2) PrintHintTextToAll("%t", "zombie_twin_nc");
+		if (winner == 3) PrintHintTextToAll("%t", "zombie_ctwin_nc");
+		if (g_iRound == g_iMaxRound)
+		{
+			IsZombie = false;
+			StartZombie = false;
+			g_iRound = 0;
+			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
+			SetCvar("sm_hosties_lr", 1);
+			SetCvar("sm_weapons_t", 0);
+			SetCvar("sm_weapons_ct", 1);
+			SetCvarString("sv_skyname", g_sSkyName);
+			SetCvar("sv_infinite_ammo", 0);
+			SetCvar("sm_warden_enable", 1);
+			SetCvar("sm_menu_enable", 1);
+			g_iGetRoundTime.IntValue = g_iOldRoundTime;
+			SetEventDay("none");
+			
+			CPrintToChatAll("%t %t", "zombie_tag" , "zombie_end");
+		}
+	}
+	if (StartZombie)
+	{
+		g_iOldRoundTime = g_iGetRoundTime.IntValue;
+		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;
+		
+		CPrintToChatAll("%t %t", "zombie_tag" , "zombie_next");
+		PrintHintTextToAll("%t", "zombie_next_nc");
+	}
+}
+
+//Map End
+
+public void OnMapEnd()
+{
+	IsZombie = false;
+	StartZombie = false;
+	if (FreezeTimer != null) KillTimer(FreezeTimer);
+	g_iVoteCount = 0;
+	g_iRound = 0;
+	g_sHasVoted[0] = '\0';
+	SetEventDay("none");
+}
+
+//Start Timer
+
+public Action StartTimer(Handle timer)
 {
 	if (g_iFreezeTime > 1)
 	{
@@ -455,58 +510,25 @@ public Action Zombie(Handle timer)
 	return Plugin_Stop;
 }
 
-public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
-{
-	int winner = GetEventInt(event, "winner");
-	
-	if (IsZombie)
-	{
-		for(int client=1; client <= MaxClients; client++)
-		{
-			if (IsValidClient(client, false, true)) SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
-		}
-		
-		if (FreezeTimer != null) KillTimer(FreezeTimer);
-		
-		
-		if (winner == 2) PrintHintTextToAll("%t", "zombie_twin_nc");
-		if (winner == 3) PrintHintTextToAll("%t", "zombie_ctwin_nc");
-		if (g_iRound == g_iMaxRound)
-		{
-			IsZombie = false;
-			StartZombie = false;
-			g_iRound = 0;
-			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
-			SetCvar("sm_hosties_lr", 1);
-			SetCvar("sm_weapons_t", 0);
-			SetCvar("sm_weapons_ct", 1);
-			SetCvarString("sv_skyname", g_sSkyName);
-			SetCvar("sv_infinite_ammo", 0);
-			SetCvar("sm_warden_enable", 1);
-			SetCvar("sm_menu_enable", 1);
-			g_iGetRoundTime.IntValue = g_iOldRoundTime;
-			SetEventDay("none");
-			
-			CPrintToChatAll("%t %t", "zombie_tag" , "zombie_end");
-		}
-	}
-	if (StartZombie)
-	{
-		g_iOldRoundTime = g_iGetRoundTime.IntValue;
-		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;
-		
-		CPrintToChatAll("%t %t", "zombie_tag" , "zombie_next");
-		PrintHintTextToAll("%t", "zombie_next_nc");
-	}
-}
+//Knife only for Zombies
 
-public void OnMapEnd()
+public Action OnWeaponCanUse(int client, int weapon)
 {
-	IsZombie = false;
-	StartZombie = false;
-	if (FreezeTimer != null) KillTimer(FreezeTimer);
-	g_iVoteCount = 0;
-	g_iRound = 0;
-	g_sHasVoted[0] = '\0';
-	SetEventDay("none");
+	char sWeapon[32];
+	GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
+	
+	if(!StrEqual(sWeapon, "weapon_knife"))
+		{
+			if(GetClientTeam(client) == CS_TEAM_CT )
+			{
+				if (IsClientInGame(client) && IsPlayerAlive(client))
+				{
+					if(IsZombie == true)
+					{
+						return Plugin_Handled;
+					}
+				}
+			}
+		}
+	return Plugin_Continue;
 }

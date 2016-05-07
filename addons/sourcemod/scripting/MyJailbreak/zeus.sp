@@ -1,12 +1,10 @@
 //includes
 #include <cstrike>
 #include <sourcemod>
-
 #include <smartjaildoors>
 #include <wardn>
 #include <emitsoundany>
 #include <colors>
-#include <sdkhooks>
 #include <autoexecconfig>
 #include <myjailbreak>
 
@@ -113,6 +111,8 @@ public void OnPluginStart()
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 }
 
+//ConVar Change for Strings
+
 public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
 	if(convar == gc_sOverlayStartPath)
@@ -126,6 +126,8 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
 	}
 }
+
+//Initialize Event
 
 public void OnMapStart()
 {
@@ -153,6 +155,8 @@ public void OnClientPutInServer(int client)
 	SDKHook(client, SDKHook_WeaponCanUse, OnWeaponCanUse);
 }
 
+//Admin & Warden set Event
+
 public Action SetZeus(int client,int args)
 {
 	if (gc_bPlugin.BoolValue)
@@ -161,24 +165,7 @@ public Action SetZeus(int client,int args)
 		{
 			if (gc_bSetW.BoolValue)
 			{
-				char EventDay[64];
-				GetEventDay(EventDay);
-				
-				if(StrEqual(EventDay, "none", false))
-				{
-					if (g_iCoolDown == 0)
-					{
-						StartNextRound();
-					}
-					else CPrintToChat(client, "%t %t", "zeus_tag" , "zeus_wait", g_iCoolDown);
-				}
-				else CPrintToChat(client, "%t %t", "zeus_tag" , "zeus_progress" , EventDay);
-			}
-			else CPrintToChat(client, "%t %t", "warden_tag" , "zeus_setbywarden");
-		}
-		else if (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
-			{
-				if (gc_bSetA.BoolValue)
+				if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
 				{
 					char EventDay[64];
 					GetEventDay(EventDay);
@@ -188,10 +175,37 @@ public Action SetZeus(int client,int args)
 						if (g_iCoolDown == 0)
 						{
 							StartNextRound();
+							LogMessage("Event Zeus was started by Warden %L", client);
 						}
 						else CPrintToChat(client, "%t %t", "zeus_tag" , "zeus_wait", g_iCoolDown);
 					}
 					else CPrintToChat(client, "%t %t", "zeus_tag" , "zeus_progress" , EventDay);
+				}
+				else CPrintToChat(client, "%t %t", "zeus_tag" , "zeus_minplayer");
+			}
+			else CPrintToChat(client, "%t %t", "warden_tag" , "zeus_setbywarden");
+		}
+		else if (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
+			{
+				if (gc_bSetA.BoolValue)
+				{
+					if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
+					{
+						char EventDay[64];
+						GetEventDay(EventDay);
+						
+						if(StrEqual(EventDay, "none", false))
+						{
+							if (g_iCoolDown == 0)
+							{
+								StartNextRound();
+								LogMessage("Event Zeus was started by Admin %L", client);
+							}
+							else CPrintToChat(client, "%t %t", "zeus_tag" , "zeus_wait", g_iCoolDown);
+						}
+						else CPrintToChat(client, "%t %t", "zeus_tag" , "zeus_progress" , EventDay);
+					}
+					else CPrintToChat(client, "%t %t", "zeus_tag" , "zeus_minplayer");
 				}
 				else CPrintToChat(client, "%t %t", "zeus_tag" , "zeus_setbyadmin");
 			}
@@ -199,6 +213,8 @@ public Action SetZeus(int client,int args)
 	}
 	else CPrintToChat(client, "%t %t", "zeus_tag" , "zeus_disabled");
 }
+
+//Voting for Event
 
 public Action VoteZeus(int client,int args)
 {
@@ -208,40 +224,47 @@ public Action VoteZeus(int client,int args)
 	if (gc_bPlugin.BoolValue)
 	{	
 		if (gc_bVote.BoolValue)
-		{	
-			char EventDay[64];
-			GetEventDay(EventDay);
-			
-			if(StrEqual(EventDay, "none", false))
+		{
+			if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
 			{
-				if (g_iCoolDown == 0)
+				char EventDay[64];
+				GetEventDay(EventDay);
+				
+				if(StrEqual(EventDay, "none", false))
 				{
-					if (StrContains(g_sHasVoted, steamid, true) == -1)
+					if (g_iCoolDown == 0)
 					{
-						int playercount = (GetClientCount(true) / 2);
-						g_iVoteCount++;
-						int Missing = playercount - g_iVoteCount + 1;
-						Format(g_sHasVoted, sizeof(g_sHasVoted), "%s,%s", g_sHasVoted, steamid);
-						
-						if (g_iVoteCount > playercount)
+						if (StrContains(g_sHasVoted, steamid, true) == -1)
 						{
-							StartNextRound();
-						}else CPrintToChatAll("%t %t", "zeus_tag" , "zeus_need", Missing, client);
+							int playercount = (GetClientCount(true) / 2);
+							g_iVoteCount++;
+							int Missing = playercount - g_iVoteCount + 1;
+							Format(g_sHasVoted, sizeof(g_sHasVoted), "%s,%s", g_sHasVoted, steamid);
+							
+							if (g_iVoteCount > playercount)
+							{
+								StartNextRound();
+								LogMessage("Event zeus was started by voting");
+							}
+							else CPrintToChatAll("%t %t", "zeus_tag" , "zeus_need", Missing, client);
+						}
+						else CPrintToChat(client, "%t %t", "zeus_tag" , "zeus_voted");
 					}
-					else CPrintToChat(client, "%t %t", "zeus_tag" , "zeus_voted");
+					else CPrintToChat(client, "%t %t", "zeus_tag" , "zeus_wait", g_iCoolDown);
 				}
-				else CPrintToChat(client, "%t %t", "zeus_tag" , "zeus_wait", g_iCoolDown);
+				else CPrintToChat(client, "%t %t", "zeus_tag" , "zeus_progress" , EventDay);
 			}
-			else CPrintToChat(client, "%t %t", "zeus_tag" , "zeus_progress" , EventDay);
+			else CPrintToChat(client, "%t %t", "zeus_tag" , "zeus_minplayer");
 		}
 		else CPrintToChat(client, "%t %t", "zeus_tag" , "zeus_voting");
 	}
 	else CPrintToChat(client, "%t %t", "zeus_tag" , "zeus_disabled");
 }
 
+//Prepare Event
+
 void StartNextRound()
 {
-
 	StartZeus = true;
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iVoteCount = 0;
@@ -251,6 +274,8 @@ void StartNextRound()
 	CPrintToChatAll("%t %t", "zeus_tag" , "zeus_next");
 	PrintHintTextToAll("%t", "zeus_next_nc");
 }
+
+//Round start
 
 public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
@@ -331,9 +356,8 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 					}
 				}
 				g_iTruceTime--;
-				TruceTimer = CreateTimer(1.0, ZeusNoDamage, _, TIMER_REPEAT);
+				TruceTimer = CreateTimer(1.0, StartTimer, _, TIMER_REPEAT);
 				CPrintToChatAll("%t %t", "zeus_tag" ,"zeus_rounds", g_iRound, g_iMaxRound);
-
 			}
 		}
 	}
@@ -350,22 +374,9 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 	}
 }
 
-public Action OnWeaponCanUse(int client, int weapon)
-{
-	if(IsZeus == true)
-	{
-		char sWeapon[32];
-		GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
-		if(StrEqual(sWeapon, "weapon_knife", false) || StrEqual(sWeapon, "weapon_taser", false))
-		{
-			return Plugin_Continue;
-		}
-		else return Plugin_Handled;
-	}
-	else return Plugin_Continue;
-}
+//Start Timer
 
-public Action ZeusNoDamage(Handle timer)
+public Action StartTimer(Handle timer)
 {
 	if (g_iTruceTime > 1)
 	{
@@ -404,24 +415,7 @@ public Action ZeusNoDamage(Handle timer)
 	return Plugin_Stop;
 }
 
-public void PlayerDeath(Handle event, char [] name, bool dontBroadcast)
-{
-	if(IsZeus == true)
-	{
-		int killer = GetClientOfUserId(GetEventInt(event, "attacker"));
-		
-		ClientTimer[killer] = CreateTimer(0.5, Timer_GiveZeus, killer);
-	}
-}
-
-public Action Timer_GiveZeus(Handle timer, any client)
-{
-	if (IsValidClient(client, true, false))
-	{
-		ClientTimer[client] = INVALID_HANDLE;
-		GivePlayerItem(client, "weapon_taser");
-	}
-}
+//Round End
 
 public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 {
@@ -463,6 +457,8 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 	}
 }
 
+//Map End
+
 public void OnMapEnd()
 {
 	IsZeus = false;
@@ -472,4 +468,42 @@ public void OnMapEnd()
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0';
 	SetEventDay("none");
+}
+
+//Knife & Taser only
+
+public Action OnWeaponCanUse(int client, int weapon)
+{
+	if(IsZeus == true)
+	{
+		char sWeapon[32];
+		GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
+		if(StrEqual(sWeapon, "weapon_knife", false) || StrEqual(sWeapon, "weapon_taser", false))
+		{
+			return Plugin_Continue;
+		}
+		else return Plugin_Handled;
+	}
+	else return Plugin_Continue;
+}
+
+//Give new Zeus on Kill
+
+public void PlayerDeath(Handle event, char [] name, bool dontBroadcast)
+{
+	if(IsZeus == true)
+	{
+		int killer = GetClientOfUserId(GetEventInt(event, "attacker"));
+		
+		ClientTimer[killer] = CreateTimer(0.5, Timer_GiveZeus, killer);
+	}
+}
+
+public Action Timer_GiveZeus(Handle timer, any client)
+{
+	if (IsValidClient(client, true, false))
+	{
+		ClientTimer[client] = INVALID_HANDLE;
+		GivePlayerItem(client, "weapon_taser");
+	}
 }

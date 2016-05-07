@@ -2,7 +2,6 @@
 #include <cstrike>
 #include <sourcemod>
 #include <colors>
-
 #include <wardn>
 #include <emitsoundany>
 #include <smartjaildoors>
@@ -14,8 +13,8 @@
 #pragma newdecls required
 
 //Booleans
-bool IsHide; 
-bool StartHide; 
+bool IsHide;
+bool StartHide;
 
 //ConVars
 ConVar gc_bPlugin;
@@ -111,6 +110,8 @@ public void OnPluginStart()
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 }
 
+//ConVar Change for Strings
+
 public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
 	if(convar == gc_sOverlayStartPath)
@@ -124,6 +125,8 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
 	}
 }
+
+//Initialize Event
 
 public void OnMapStart()
 {
@@ -160,6 +163,8 @@ public void OnConfigsExecuted()
 	g_iMaxRound = gc_iRounds.IntValue;
 }
 
+//Admin & Warden set Event
+
 public Action SetHide(int client,int args)
 {
 	if (gc_bPlugin.BoolValue)	
@@ -178,6 +183,7 @@ public Action SetHide(int client,int args)
 							if (g_iCoolDown == 0)
 							{
 								StartNextRound();
+								LogMessage("Event Hide was started by Warden %L", client);
 							}
 							else CPrintToChat(client, "%t %t", "hide_tag" , "hide_wait", g_iCoolDown);
 						}
@@ -201,6 +207,7 @@ public Action SetHide(int client,int args)
 								if (g_iCoolDown == 0)
 								{
 									StartNextRound();
+									LogMessage("Event Hide was started by Admin %L", client);
 								}
 								else CPrintToChat(client, "%t %t", "hide_tag" , "hide_wait", g_iCoolDown);
 							}
@@ -214,6 +221,8 @@ public Action SetHide(int client,int args)
 		}
 		else CPrintToChat(client, "%t %t", "hide_tag" , "hide_disabled");
 }
+
+//Voting for Event
 
 public Action VoteHide(int client,int args)
 {
@@ -243,6 +252,7 @@ public Action VoteHide(int client,int args)
 							if (g_iVoteCount > playercount)
 							{
 								StartNextRound();
+								LogMessage("Event Hide was started by voting");
 							}
 							else CPrintToChatAll("%t %t", "hide_tag" , "hide_need", Missing, client);
 						}
@@ -259,6 +269,8 @@ public Action VoteHide(int client,int args)
 	else CPrintToChat(client, "%t %t", "hide_tag" , "hide_disabled");
 }
 
+//Prepare Event
+
 void StartNextRound()
 {
 	StartHide = true;
@@ -270,6 +282,8 @@ void StartNextRound()
 	CPrintToChatAll("%t %t", "hide_tag" , "hide_next");
 	PrintHintTextToAll("%t", "hide_next_nc");
 }
+
+//Round start
 
 public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
@@ -336,7 +350,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 					}
 				}
 				g_iFreezeTime--;
-				FreezeTimer = CreateTimer(1.0, Freezed, _, TIMER_REPEAT);
+				FreezeTimer = CreateTimer(1.0, StartTimer, _, TIMER_REPEAT);
 			}
 		{AcceptEntityInput(FogIndex, "TurnOn");}
 	}
@@ -353,7 +367,9 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 	}
 }
 
-public Action Freezed(Handle timer)
+//Start Timer
+
+public Action StartTimer(Handle timer)
 {
 	if (g_iFreezeTime > 1)
 	{
@@ -411,38 +427,7 @@ public Action Freezed(Handle timer)
 	return Plugin_Stop;
 }
 
-public Action OnWeaponCanUse(int client, int weapon)
-{
-	if(IsHide == true)
-	{
-		char sWeapon[32];
-		GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
-		if((GetClientTeam(client) == CS_TEAM_T && StrEqual(sWeapon, "weapon_knife")) || (GetClientTeam(client) == CS_TEAM_CT))
-		{
-		
-			if (IsClientInGame(client) && IsPlayerAlive(client))
-			{
-				return Plugin_Continue;
-			}
-		}
-		return Plugin_Handled;
-	}
-	return Plugin_Continue;
-}
-
-public Action CS_OnTerminateRound(float &delay, CSRoundEndReason &reason)
-{
-	if (IsHide)
-	{
-		if (reason == CSRoundEnd_Draw)
-		{
-			reason = CSRoundEnd_TerroristWin;
-			return Plugin_Changed;
-		}
-		return Plugin_Continue;
-	}
-	return Plugin_Continue;
-}
+//Round End
 
 public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 {
@@ -492,17 +477,20 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 	}
 }
 
-public Action DoFog()
+//Terror win Round if time runs out
+
+public Action CS_OnTerminateRound(float &delay, CSRoundEndReason &reason)
 {
-	if(FogIndex != -1)
+	if (IsHide)
 	{
-		DispatchKeyValue(FogIndex, "fogblend", "0");
-		DispatchKeyValue(FogIndex, "fogcolor", "0 0 0");
-		DispatchKeyValue(FogIndex, "fogcolor2", "0 0 0");
-		DispatchKeyValueFloat(FogIndex, "fogstart", mapFogStart);
-		DispatchKeyValueFloat(FogIndex, "fogend", mapFogEnd);
-		DispatchKeyValueFloat(FogIndex, "fogmaxdensity", mapFogDensity);
+		if (reason == CSRoundEnd_Draw)
+		{
+			reason = CSRoundEnd_TerroristWin;
+			return Plugin_Changed;
+		}
+		return Plugin_Continue;
 	}
+	return Plugin_Continue;
 }
 
 public void OnMapEnd()
@@ -514,4 +502,40 @@ public void OnMapEnd()
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0';
 	SetEventDay("none");
+}
+
+//Knife only for Terrorists
+
+public Action OnWeaponCanUse(int client, int weapon)
+{
+	if(IsHide == true)
+	{
+		char sWeapon[32];
+		GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
+		if((GetClientTeam(client) == CS_TEAM_T && StrEqual(sWeapon, "weapon_knife")) || (GetClientTeam(client) == CS_TEAM_CT))
+		{
+		
+			if (IsClientInGame(client) && IsPlayerAlive(client))
+			{
+				return Plugin_Continue;
+			}
+		}
+		return Plugin_Handled;
+	}
+	return Plugin_Continue;
+}
+
+//Darken the Map
+
+public Action DoFog()
+{
+	if(FogIndex != -1)
+	{
+		DispatchKeyValue(FogIndex, "fogblend", "0");
+		DispatchKeyValue(FogIndex, "fogcolor", "0 0 0");
+		DispatchKeyValue(FogIndex, "fogcolor2", "0 0 0");
+		DispatchKeyValueFloat(FogIndex, "fogstart", mapFogStart);
+		DispatchKeyValueFloat(FogIndex, "fogend", mapFogEnd);
+		DispatchKeyValueFloat(FogIndex, "fogmaxdensity", mapFogDensity);
+	}
 }

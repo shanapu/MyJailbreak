@@ -1,7 +1,5 @@
 //includes
 #include <sourcemod>
-
-#include <sdkhooks>
 #include <cstrike>
 #include <wardn>
 #include <colors>
@@ -39,7 +37,7 @@ ConVar g_bNoScope;
 ConVar g_bHEbattle;
 ConVar g_bHide;
 ConVar g_bCatch;
-ConVar g_bFreeDay;
+ConVar g_bFreeday;
 ConVar g_bDuckHunt;
 ConVar g_bCountdown;
 ConVar g_bVote;
@@ -96,6 +94,8 @@ public void OnPluginStart()
 	HookEvent("player_spawn", Event_OnPlayerSpawn);
 }
 
+//FindConVar
+
 public void OnConfigsExecuted()
 {
 	g_bWarden = FindConVar("sm_warden_enable");
@@ -112,7 +112,7 @@ public void OnConfigsExecuted()
 	g_bJihad = FindConVar("sm_jihad_enable");
 	g_bCatch = FindConVar("sm_catch_enable");
 	g_bHEbattle = FindConVar("sm_hebattle_enable");
-	g_bFreeDay = FindConVar("sm_freeday_enable");
+	g_bFreeday = FindConVar("sm_Freeday_enable");
 	g_bDuckHunt = FindConVar("sm_duckhunt_enable");
 	g_bCountdown = FindConVar("sm_warden_countdown");
 	g_bVote = FindConVar("sm_warden_vote");
@@ -124,6 +124,8 @@ public void OnConfigsExecuted()
 	g_bRandom = FindConVar("sm_warden_random");
 	g_bFF = FindConVar("mp_teammates_are_enemies");
 }
+
+//Welcome/Info Message
 
 public void OnClientPutInServer(int client)
 {
@@ -141,6 +143,8 @@ public Action Timer_WelcomeMessage(Handle timer, any client)
 	}
 }
 
+//Open Menu on Spawn
+
 public Action Event_OnPlayerSpawn(Event event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(GetEventInt(event, "userid"));
@@ -151,6 +155,8 @@ public Action Event_OnPlayerSpawn(Event event, const char[] name, bool dontBroad
 	}
 }
 
+//Main Menu
+
 public Action JbMenu(int client, int args)
 {
 	if(gc_bPlugin.BoolValue)	
@@ -158,7 +164,7 @@ public Action JbMenu(int client, int args)
 		char menuinfo1[255], menuinfo2[255], menuinfo3[255], menuinfo5[255], menuinfo6[255], menuinfo7[255], menuinfo8[255];
 		char menuinfo9[255], menuinfo10[255], menuinfo11[255], menuinfo13[255], menuinfo15[255], menuinfo16[255];
 		char menuinfo17[255], menuinfo14[255], menuinfo4[255], menuinfo19[255], menuinfo18[255];
-//menuinfo12[255],
+		//menuinfo12[255],
 		
 		
 		
@@ -373,6 +379,113 @@ public Action JbMenu(int client, int args)
 	}
 }
 
+//Main Handle
+
+public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selection)
+{
+	if (action == MenuAction_Select)
+	{
+		char info[32];
+		mainmenu.GetItem(selection, info, sizeof(info));
+		
+		if ( strcmp(info,"ChangeTeam") == 0 ) 
+		{
+			ChangeTeam(client,0);
+		}
+		else if ( strcmp(info,"lastR") == 0 ) 
+		{
+			FakeClientCommand(client, "sm_lr");
+		}
+		else if ( strcmp(info,"removewarden") == 0 ) 
+		{
+			FakeClientCommand(client, "sm_rw");
+		}
+		else if ( strcmp(info,"setwarden") == 0 ) 
+		{
+			FakeClientCommand(client, "sm_sw");
+		}
+		else if ( strcmp(info,"check") == 0 ) 
+		{
+			FakeClientCommand(client, "sm_checkplayers");
+		}
+		else if ( strcmp(info,"rules") == 0 ) 
+		{
+			FakeClientCommand(client, "sm_rules");
+		}
+		else if ( strcmp(info,"votewarden") == 0 ) 
+		{
+			FakeClientCommand(client, "sm_votewarden");
+			if(!gc_bClose.BoolValue)
+			{
+				JbMenu(client,0);
+			}
+		} 
+		else if ( strcmp(info,"guns") == 0 ) 
+		{
+			FakeClientCommand(client, "sm_guns");
+		}
+		else if ( strcmp(info,"votedays") == 0 ) 
+		{
+			FakeClientCommand(client, "sm_days");
+		}
+		else if ( strcmp(info,"setdays") == 0 ) 
+		{
+			FakeClientCommand(client, "sm_setdays");
+		}
+		else if ( strcmp(info,"math") == 0 ) 
+		{
+			FakeClientCommand(client, "sm_math");
+			if(!gc_bClose.BoolValue)
+			{
+				JbMenu(client,0);
+			}
+		}
+		else if ( strcmp(info,"admin") == 0 ) 
+		{
+			FakeClientCommand(client, "sm_admin");
+		}
+		else if ( strcmp(info,"countdown") == 0 ) 
+		{
+			FakeClientCommand(client, "sm_cdmenu");
+		}
+		else if ( strcmp(info,"getwarden") == 0 ) 
+		{
+			FakeClientCommand(client, "sm_warden");
+			JbMenu(client,0);
+		}
+		else if ( strcmp(info,"unwarden") == 0 ) 
+		{
+			FakeClientCommand(client, "sm_unwarden");
+			JbMenu(client,0);
+		}
+		else if ( strcmp(info,"cellopen") == 0 ) 
+		{
+			FakeClientCommand(client, "sm_open");
+			if(!gc_bClose.BoolValue)
+			{
+				JbMenu(client,0);
+			}
+		}
+		else if ( strcmp(info,"setff") == 0 ) 
+		{
+			FakeClientCommand(client, "sm_setff");
+			if(!gc_bClose.BoolValue)
+			{
+				JbMenu(client,0);
+			}
+		}
+		else if ( strcmp(info,"kill") == 0 ) 
+		{
+			FakeClientCommand(client, "sm_killrandom");
+		}
+		else if (action == MenuAction_End)
+		{
+		delete mainmenu;
+		}
+	}
+}
+
+//Event Day Voting Menu
 
 public Action VoteEventDays(int client, int args)
 {
@@ -474,12 +587,12 @@ public Action VoteEventDays(int client, int args)
 					daysmenu.AddItem("voteknife", menuinfo28);
 				}
 			}
-			if(g_bFreeDay != null)
+			if(g_bFreeday != null)
 			{
-				if(g_bFreeDay.BoolValue)
+				if(g_bFreeday.BoolValue)
 				{
-					Format(menuinfo26, sizeof(menuinfo26), "%T", "menu_freeday", LANG_SERVER);
-					daysmenu.AddItem("votefreeday", menuinfo26);
+					Format(menuinfo26, sizeof(menuinfo26), "%T", "menu_Freeday", LANG_SERVER);
+					daysmenu.AddItem("voteFreeday", menuinfo26);
 				}
 			}
 			daysmenu.ExitButton = true;
@@ -487,6 +600,128 @@ public Action VoteEventDays(int client, int args)
 			daysmenu.Display(client, MENU_TIME_FOREVER);
 	}
 }
+
+//Event Day Voting Handler
+
+public int VoteEventMenuHandler(Menu daysmenu, MenuAction action, int client, int selection)
+{
+	if (action == MenuAction_Select)
+	{
+		char info[32];
+		
+		daysmenu.GetItem(selection, info, sizeof(info));
+		
+		if ( strcmp(info,"votewar") == 0 ) 
+		{
+			FakeClientCommand(client, "sm_war");
+			if(!gc_bClose.BoolValue)
+			{
+				JbMenu(client,0);
+			}
+		} 
+		else if ( strcmp(info,"voteffa") == 0 ) 
+		{
+			FakeClientCommand(client, "sm_ffa");
+			if(!gc_bClose.BoolValue)
+			{
+				JbMenu(client,0);
+			}
+		} 
+		else if ( strcmp(info,"votezombie") == 0 ) 
+		{
+			FakeClientCommand(client, "sm_zombie");
+			if(!gc_bClose.BoolValue)
+			{
+				JbMenu(client,0);
+			}
+		} 
+		else if ( strcmp(info,"votezeus") == 0 )
+		{
+			FakeClientCommand(client, "sm_zeus");
+			if(!gc_bClose.BoolValue)
+			{
+					JbMenu(client,0);
+			}
+		} 
+		else if ( strcmp(info,"votecatch") == 0 )
+		{
+			FakeClientCommand(client, "sm_catch");
+			if(!gc_bClose.BoolValue)
+			{
+				JbMenu(client,0);
+			}
+		}
+		else if ( strcmp(info,"voteJihad") == 0 )
+		{
+			FakeClientCommand(client, "sm_jihad");
+			if(!gc_bClose.BoolValue)
+			{
+				JbMenu(client,0);
+			}
+		}
+		else if ( strcmp(info,"votenoscope") == 0 )
+		{
+			FakeClientCommand(client, "sm_noscope");
+			if(!gc_bClose.BoolValue)
+			{
+				JbMenu(client,0);
+			}
+		}
+		else if ( strcmp(info,"votehebattle") == 0 )
+		{
+			FakeClientCommand(client, "sm_hebattle");
+			if(!gc_bClose.BoolValue)
+			{
+				JbMenu(client,0);
+			}
+		}
+		else if ( strcmp(info,"voteduckhunt") == 0 )
+		{
+			FakeClientCommand(client, "sm_duckhunt");
+			if(!gc_bClose.BoolValue)
+			{
+				JbMenu(client,0);
+			}
+		}
+		else if ( strcmp(info,"votehide") == 0 )
+		{
+			FakeClientCommand(client, "sm_hide");
+			if(!gc_bClose.BoolValue)
+			{
+				JbMenu(client,0);
+			}
+		}
+		else if ( strcmp(info,"voteknife") == 0 )
+		{
+			FakeClientCommand(client, "sm_knifefight");
+			if(!gc_bClose.BoolValue)
+			{
+				JbMenu(client,0);
+			}
+		}
+		else if ( strcmp(info,"voteFreeday") == 0 )
+		{
+			FakeClientCommand(client, "sm_Freeday");
+			if(!gc_bClose.BoolValue)
+			{
+				JbMenu(client,0);
+			}
+		}
+	}
+	else if(action == MenuAction_Cancel) 
+	{
+		if(selection == MenuCancel_ExitBack) 
+		{
+			JbMenu(client,0);
+		}
+	}
+	else if (action == MenuAction_End)
+	{
+		delete daysmenu;
+	}
+}
+
+// Event Days Set Menu
 
 public Action SetEventDays(int client, int args)
 {
@@ -588,12 +823,12 @@ public Action SetEventDays(int client, int args)
 					daysmenu.AddItem("setknife", menuinfo28);
 				}
 			}
-			if(g_bFreeDay != null)
+			if(g_bFreeday != null)
 			{
-				if(g_bFreeDay.BoolValue)
+				if(g_bFreeday.BoolValue)
 				{
-					Format(menuinfo26, sizeof(menuinfo26), "%T", "menu_freeday", LANG_SERVER);
-					daysmenu.AddItem("setfreeday", menuinfo26);
+					Format(menuinfo26, sizeof(menuinfo26), "%T", "menu_Freeday", LANG_SERVER);
+					daysmenu.AddItem("setFreeday", menuinfo26);
 				}
 			}
 			daysmenu.ExitButton = true;
@@ -602,229 +837,7 @@ public Action SetEventDays(int client, int args)
 	}
 }
 
-
-public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selection)
-{
-	if (action == MenuAction_Select)
-	{
-		char info[32];
-		mainmenu.GetItem(selection, info, sizeof(info));
-		
-		if ( strcmp(info,"ChangeTeam") == 0 ) 
-		{
-			ChangeTeam(client,0);
-		}
-		else if ( strcmp(info,"lastR") == 0 ) 
-		{
-			FakeClientCommand(client, "sm_lr");
-		}
-		else if ( strcmp(info,"removewarden") == 0 ) 
-		{
-			FakeClientCommand(client, "sm_rw");
-		}
-		else if ( strcmp(info,"setwarden") == 0 ) 
-		{
-			FakeClientCommand(client, "sm_sw");
-		}
-		else if ( strcmp(info,"check") == 0 ) 
-		{
-			FakeClientCommand(client, "sm_checkplayers");
-		}
-		else if ( strcmp(info,"rules") == 0 ) 
-		{
-			FakeClientCommand(client, "sm_rules");
-		}
-		else if ( strcmp(info,"votewarden") == 0 ) 
-		{
-			FakeClientCommand(client, "sm_votewarden");
-			if(!gc_bClose.BoolValue)
-			{
-				JbMenu(client,0);
-			}
-		} 
-		else if ( strcmp(info,"guns") == 0 ) 
-		{
-			FakeClientCommand(client, "sm_guns");
-		}
-		else if ( strcmp(info,"votedays") == 0 ) 
-		{
-			FakeClientCommand(client, "sm_days");
-		}
-		else if ( strcmp(info,"setdays") == 0 ) 
-		{
-			FakeClientCommand(client, "sm_setdays");
-		}
-		else if ( strcmp(info,"math") == 0 ) 
-		{
-			FakeClientCommand(client, "sm_math");
-			if(!gc_bClose.BoolValue)
-			{
-				JbMenu(client,0);
-			}
-		}
-		else if ( strcmp(info,"admin") == 0 ) 
-		{
-			FakeClientCommand(client, "sm_admin");
-		}
-		else if ( strcmp(info,"countdown") == 0 ) 
-		{
-			FakeClientCommand(client, "sm_cdmenu");
-
-		}
-		else if ( strcmp(info,"getwarden") == 0 ) 
-		{
-			FakeClientCommand(client, "sm_warden");
-			JbMenu(client,0);
-		}
-		else if ( strcmp(info,"unwarden") == 0 ) 
-		{
-			FakeClientCommand(client, "sm_unwarden");
-			JbMenu(client,0);
-		}
-		else if ( strcmp(info,"cellopen") == 0 ) 
-		{
-			FakeClientCommand(client, "sm_open");
-			if(!gc_bClose.BoolValue)
-			{
-				JbMenu(client,0);
-			}
-		}
-		else if ( strcmp(info,"setff") == 0 ) 
-		{
-			FakeClientCommand(client, "sm_setff");
-			if(!gc_bClose.BoolValue)
-			{
-				JbMenu(client,0);
-			}
-		}
-		else if ( strcmp(info,"kill") == 0 ) 
-		{
-			FakeClientCommand(client, "sm_killrandom");
-		}
-		else if (action == MenuAction_End)
-		{
-		delete mainmenu;
-		}
-	}
-}
-
-public int VoteEventMenuHandler(Menu daysmenu, MenuAction action, int client, int selection)
-{
-	if (action == MenuAction_Select)
-	{
-		char info[32];
-		
-		daysmenu.GetItem(selection, info, sizeof(info));
-		
-		if ( strcmp(info,"votewar") == 0 ) 
-		{
-			FakeClientCommand(client, "sm_war");
-			if(!gc_bClose.BoolValue)
-			{
-				JbMenu(client,0);
-			}
-		} 
-		else if ( strcmp(info,"voteffa") == 0 ) 
-		{
-			FakeClientCommand(client, "sm_ffa");
-			if(!gc_bClose.BoolValue)
-			{
-				JbMenu(client,0);
-			}
-		} 
-		else if ( strcmp(info,"votezombie") == 0 ) 
-		{
-			FakeClientCommand(client, "sm_zombie");
-			if(!gc_bClose.BoolValue)
-			{
-				JbMenu(client,0);
-			}
-		} 
-		else if ( strcmp(info,"votezeus") == 0 )
-		{
-			FakeClientCommand(client, "sm_zeus");
-			if(!gc_bClose.BoolValue)
-			{
-					JbMenu(client,0);
-			}
-		} 
-		else if ( strcmp(info,"votecatch") == 0 )
-		{
-			FakeClientCommand(client, "sm_catch");
-			if(!gc_bClose.BoolValue)
-			{
-				JbMenu(client,0);
-			}
-		}
-		else if ( strcmp(info,"voteJihad") == 0 )
-		{
-			FakeClientCommand(client, "sm_jihad");
-			if(!gc_bClose.BoolValue)
-			{
-				JbMenu(client,0);
-			}
-		}
-		else if ( strcmp(info,"votenoscope") == 0 )
-		{
-			FakeClientCommand(client, "sm_noscope");
-			if(!gc_bClose.BoolValue)
-			{
-				JbMenu(client,0);
-			}
-		}
-		else if ( strcmp(info,"votehebattle") == 0 )
-		{
-			FakeClientCommand(client, "sm_hebattle");
-			if(!gc_bClose.BoolValue)
-			{
-				JbMenu(client,0);
-			}
-		}
-		else if ( strcmp(info,"voteduckhunt") == 0 )
-		{
-			FakeClientCommand(client, "sm_duckhunt");
-			if(!gc_bClose.BoolValue)
-			{
-				JbMenu(client,0);
-			}
-		}
-		else if ( strcmp(info,"votehide") == 0 )
-		{
-			FakeClientCommand(client, "sm_hide");
-			if(!gc_bClose.BoolValue)
-			{
-				JbMenu(client,0);
-			}
-		}
-		else if ( strcmp(info,"voteknife") == 0 )
-		{
-			FakeClientCommand(client, "sm_knifefight");
-			if(!gc_bClose.BoolValue)
-			{
-				JbMenu(client,0);
-			}
-		}
-		else if ( strcmp(info,"votefreeday") == 0 )
-		{
-			FakeClientCommand(client, "sm_freeday");
-			if(!gc_bClose.BoolValue)
-			{
-				JbMenu(client,0);
-			}
-		}
-	}
-	else if(action == MenuAction_Cancel) 
-	{
-		if(selection == MenuCancel_ExitBack) 
-		{
-			JbMenu(client,0);
-		}
-	}
-	else if (action == MenuAction_End)
-	{
-		delete daysmenu;
-	}
-}
+// Event Days Set Handler
 
 public int SetEventMenuHandler(Menu daysmenu, MenuAction action, int client, int selection)
 {
@@ -956,11 +969,11 @@ public int SetEventMenuHandler(Menu daysmenu, MenuAction action, int client, int
 				}
 			}
 		}
-		else if ( strcmp(info,"setfreeday") == 0 )
+		else if ( strcmp(info,"setFreeday") == 0 )
 		{
 			if (warden_iswarden(client) || (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true)))
 			{
-				FakeClientCommand(client, "sm_setfreeday");
+				FakeClientCommand(client, "sm_setFreeday");
 				if(!gc_bClose.BoolValue)
 				{
 					JbMenu(client,0);
@@ -981,6 +994,8 @@ public int SetEventMenuHandler(Menu daysmenu, MenuAction action, int client, int
 	}
 }
 
+//Switch Team Menu
+
 public Action ChangeTeam(int client, int args)
 {
 			char info5[255], info6[255], info7[255];
@@ -995,6 +1010,8 @@ public Action ChangeTeam(int client, int args)
 			menu1.ExitButton = true;
 			menu1.Display(client,MENU_TIME_FOREVER);
 }
+
+//Switch Team Handler
 
 public int changemenu(Menu menu, MenuAction action, int client, int selection)
 {

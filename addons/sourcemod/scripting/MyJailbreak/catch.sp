@@ -2,9 +2,7 @@
 #include <cstrike>
 #include <sourcemod>
 #include <colors>
-
 #include <smartjaildoors>
-#include <sdkhooks>
 #include <wardn>
 #include <emitsoundany>
 #include <autoexecconfig>
@@ -45,6 +43,9 @@ ConVar gc_sSoundFreezePath;
 ConVar gc_sSoundUnFreezePath;
 ConVar g_iGetRoundTime;
 ConVar gc_iRounds;
+ConVar g_bNoBloodSplatter;
+ConVar g_bNoBloodSplash;
+ConVar g_bNoBlood;
 
 //Integers
 int g_iVoteCount;
@@ -107,7 +108,10 @@ public void OnPluginStart()
 	gc_iSprintCooldown= AutoExecConfig_CreateConVar("sm_catch_sprint_cooldown", "10", "Time in seconds the player must wait for the next sprint", _, true, 0.0);
 	gc_fSprintSpeed = AutoExecConfig_CreateConVar("sm_catch_sprint_speed", "1.25", "Ratio for how fast the player will sprint", _, true, 1.01);
 	gc_fSprintTime = AutoExecConfig_CreateConVar("sm_catch_sprint_time", "3.0", "Time in seconds the player will sprint", _, true, 1.0);
-	
+	g_bNoBlood = CreateConVar("sm_catch_noblood", "1", "Enable / Disable No Blood", _, true, 0.0, true, 1.0);
+	g_bNoBloodSplatter = CreateConVar("sm_catch_noblood_splatter", "1", "Enable / Disable No Blood Splatter", _, true, 0.0, true, 1.0);
+	g_bNoBloodSplash = CreateConVar("sm_catch_noblood_splash", "1", "Enable / Disable No Blood Splash", _, true, 0.0, true, 1.0);
+
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
 	
@@ -117,6 +121,8 @@ public void OnPluginStart()
 	HookEvent("round_end", RoundEnd);
 	HookEvent("player_team", EventPlayerTeam);
 	HookEvent("player_death", EventPlayerTeam);
+	AddTempEntHook("EffectDispatch", TE_OnEffectDispatch);
+	AddTempEntHook("World Decal", TE_OnWorldDecal);
 	HookConVarChange(gc_sOverlayFreeze, OnSettingChanged);
 	HookConVarChange(gc_sSoundFreezePath, OnSettingChanged);
 	HookConVarChange(gc_sSoundUnFreezePath, OnSettingChanged);
@@ -132,6 +138,8 @@ public void OnPluginStart()
 	for(int i = 1; i <= MaxClients; i++)
 		if(IsClientInGame(i)) OnClientPutInServer(i);
 }
+
+//ConVar Change for Strings
 
 public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
@@ -151,6 +159,8 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 		if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayFreeze);
 	}
 }
+
+//Initialize Event
 
 public void OnMapStart()
 {
@@ -177,8 +187,10 @@ public void OnClientPutInServer(int client)
 {
 	catched[client] = false;
 	SDKHook(client, SDKHook_WeaponCanUse, OnWeaponCanUse);
-	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
+	SDKHook(client, SDKHook_OnTakeDamage, OnTakedamage);
 }
+
+//Admin & Warden set Event
 
 public Action SetCatch(int client,int args)
 {
@@ -198,6 +210,7 @@ public Action SetCatch(int client,int args)
 						if (g_iCoolDown == 0)
 						{
 							StartNextRound();
+							LogMessage("Event Catch was started by Warden %L", client);
 						}
 						else CPrintToChat(client, "%t %t", "catch_tag" , "catch_wait", g_iCoolDown);
 					}
@@ -221,6 +234,7 @@ public Action SetCatch(int client,int args)
 							if (g_iCoolDown == 0)
 							{
 								StartNextRound();
+								LogMessage("Event Catch was started by Admin %L", client);
 							}
 							else CPrintToChat(client, "%t %t", "catch_tag" , "catch_wait", g_iCoolDown);
 						}
@@ -234,6 +248,8 @@ public Action SetCatch(int client,int args)
 	}
 	else CPrintToChat(client, "%t %t", "catch_tag" , "catch_disabled");
 }
+
+//Voting for Event
 
 public Action VoteCatch(int client,int args)
 {
@@ -263,6 +279,7 @@ public Action VoteCatch(int client,int args)
 							if (g_iVoteCount > playercount)
 							{
 								StartNextRound();
+								LogMessage("Event Catch was started by voting");
 							}
 							else CPrintToChatAll("%t %t", "catch_tag" , "catch_need", Missing, client);
 						}
@@ -279,6 +296,8 @@ public Action VoteCatch(int client,int args)
 	else CPrintToChat(client, "%t %t", "catch_tag" , "catch_disabled");
 }
 
+//Prepare Event
+
 void StartNextRound()
 {
 	StartCatch = true;
@@ -289,8 +308,9 @@ void StartNextRound()
 	
 	CPrintToChatAll("%t %t", "catch_tag" , "catch_next");
 	PrintHintTextToAll("%t", "catch_next_nc");
-
 }
+
+//Round start
 
 public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
@@ -364,25 +384,87 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 	}
 }
 
-public Action OnWeaponCanUse(int client, int weapon)
+//Round End
+
+public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 {
-	char sWeapon[32];
-	GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
+	int winner = GetEventInt(event, "winner");
 	
-	if(!StrEqual(sWeapon, "weapon_knife"))
+	if (IsCatch)
+	{
+		for(int client=1; client <= MaxClients; client++)
 		{
-			if (IsValidClient(client, true, false))
+			if(IsValidClient(client, true, true))
 			{
-				if(IsCatch == true)
+				SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
+				ClientSprintStatus[client] = 0;
+				CreateTimer( 0.0, DeleteOverlay, client );
+				SetEntityRenderColor(client, 255, 255, 255, 0);
+				catched[client] = false;
+				if (GetClientTeam(client) == CS_TEAM_T)
 				{
-					return Plugin_Handled;
+					StripAllWeapons(client);
 				}
 			}
 		}
+		
+		if (winner == 2) PrintHintTextToAll("%t", "catch_twin_nc");
+		if (winner == 3) PrintHintTextToAll("%t", "catch_ctwin_nc");
+		if (g_iRound == g_iMaxRound)
+		{
+			IsCatch = false;
+			g_iRound = 0;
+			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
+			SetCvar("sm_hosties_lr", 1);
+			SetCvar("sm_weapons_enable", 1);
+			SetCvar("sm_warden_enable", 1);
+			
+			g_iGetRoundTime.IntValue = g_iOldRoundTime;
+			SetEventDay("none");
+			CPrintToChatAll("%t %t", "catch_tag" , "catch_end");
+		}
+	}
+	if (StartCatch)
+	{
+		g_iOldRoundTime = g_iGetRoundTime.IntValue;
+		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;
+		
+		CPrintToChatAll("%t %t", "catch_tag" , "catch_next");
+		PrintHintTextToAll("%t", "catch_next_nc");
+	}
+}
+
+//Terror win Round if time runs out
+
+public Action CS_OnTerminateRound( float &delay,  CSRoundEndReason &reason)
+{
+	if (IsCatch)
+	{
+		if (reason == CSRoundEnd_Draw)
+		{
+			reason = CSRoundEnd_TerroristWin;
+			return Plugin_Changed;
+		}
+		return Plugin_Continue;
+	}
 	return Plugin_Continue;
 }
 
-public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+//Map End
+
+public void OnMapEnd()
+{
+	IsCatch = false;
+	StartCatch = false;
+	g_iVoteCount = 0;
+	g_iRound = 0;
+	g_sHasVoted[0] = '\0';
+	SetEventDay("none");
+}
+
+//Catch & Freeze
+
+public Action OnTakedamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if(!IsValidClient(victim, true, false)|| attacker == victim || !IsValidClient(attacker, true, false)) return Plugin_Continue;
 	
@@ -402,7 +484,6 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	}
 	return Plugin_Handled;
 }
-
 
 public void OnClientDisconnect_Post(int client)
 {
@@ -472,67 +553,27 @@ public Action CheckStatus()
 	}
 }
 
-public Action CS_OnTerminateRound( float &delay,  CSRoundEndReason &reason)
-{
-	if (IsCatch)
-	{
-		if (reason == CSRoundEnd_Draw)
-		{
-			reason = CSRoundEnd_TerroristWin;
-			return Plugin_Changed;
-		}
-		return Plugin_Continue;
-	}
-	return Plugin_Continue;
-}
+//Knife only
 
-public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
+public Action OnWeaponCanUse(int client, int weapon)
 {
-	int winner = GetEventInt(event, "winner");
+	char sWeapon[32];
+	GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
 	
-	if (IsCatch)
-	{
-		for(int client=1; client <= MaxClients; client++)
+	if(!StrEqual(sWeapon, "weapon_knife"))
 		{
-			if(IsValidClient(client, true, true))
+			if (IsValidClient(client, true, false))
 			{
-				SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
-				ClientSprintStatus[client] = 0;
-				CreateTimer( 0.0, DeleteOverlay, client );
-				SetEntityRenderColor(client, 255, 255, 255, 0);
-				catched[client] = false;
-				if (GetClientTeam(client) == CS_TEAM_T)
+				if(IsCatch == true)
 				{
-					StripAllWeapons(client);
+					return Plugin_Handled;
 				}
 			}
 		}
-		
-		if (winner == 2) PrintHintTextToAll("%t", "catch_twin_nc");
-		if (winner == 3) PrintHintTextToAll("%t", "catch_ctwin_nc");
-		if (g_iRound == g_iMaxRound)
-		{
-			IsCatch = false;
-			g_iRound = 0;
-			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
-			SetCvar("sm_hosties_lr", 1);
-			SetCvar("sm_weapons_enable", 1);
-			SetCvar("sm_warden_enable", 1);
-			
-			g_iGetRoundTime.IntValue = g_iOldRoundTime;
-			SetEventDay("none");
-			CPrintToChatAll("%t %t", "catch_tag" , "catch_end");
-		}
-	}
-	if (StartCatch)
-	{
-		g_iOldRoundTime = g_iGetRoundTime.IntValue;
-		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;
-		
-		CPrintToChatAll("%t %t", "catch_tag" , "catch_next");
-		PrintHintTextToAll("%t", "catch_next_nc");
-	}
+	return Plugin_Continue;
 }
+
+//Overlays
 
 public Action ShowOverlayFreeze( Handle timer, any client ) {
 	
@@ -545,6 +586,7 @@ public Action ShowOverlayFreeze( Handle timer, any client ) {
 	return Plugin_Continue;
 }
 
+//Sprint
 
 public Action Command_StartSprint(int client, int args)
 {
@@ -643,12 +685,84 @@ public void Event_PlayerSpawn(Handle event, const char[] name, bool dontBroadcas
 	return;
 }
 
-public void OnMapEnd()
+//No Blood
+
+public Action TE_OnEffectDispatch(const char[] te_name, const Players[], int numClients, float delay)
 {
-	IsCatch = false;
-	StartCatch = false;
-	g_iVoteCount = 0;
-	g_iRound = 0;
-	g_sHasVoted[0] = '\0';
-	SetEventDay("none");
+	int iEffectIndex = TE_ReadNum("m_iEffectName");
+	int nHitBox = TE_ReadNum("m_nHitBox");
+	char sEffectName[64];
+
+	GetEffectName(iEffectIndex, sEffectName, sizeof(sEffectName));
+	
+	if(g_bNoBlood.BoolValue)
+	{
+		if(StrEqual(sEffectName, "csblood"))
+		{
+			if(g_bNoBloodSplatter.BoolValue)
+				return Plugin_Handled;
+		}
+		if(StrEqual(sEffectName, "ParticleEffect"))
+		{
+			if(g_bNoBloodSplash.BoolValue)
+			{
+				char sParticleEffectName[64];
+				GetParticleEffectName(nHitBox, sParticleEffectName, sizeof(sParticleEffectName));
+				
+				if(StrEqual(sParticleEffectName, "impact_helmet_headshot") || StrEqual(sParticleEffectName, "impact_physics_dust"))
+					return Plugin_Handled;
+			}
+		}
+	}
+
+	return Plugin_Continue;
+}
+
+public Action TE_OnWorldDecal(const char[] te_name, const Players[], int numClients, float delay)
+{
+	float vecOrigin[3];
+	int nIndex = TE_ReadNum("m_nIndex");
+	char sDecalName[64];
+
+	TE_ReadVector("m_vecOrigin", vecOrigin);
+	GetDecalName(nIndex, sDecalName, sizeof(sDecalName));
+	
+	if(g_bNoBlood.BoolValue)
+	{
+		if(StrContains(sDecalName, "decals/blood") == 0 && StrContains(sDecalName, "_subrect") != -1)
+			if(g_bNoBloodSplash.BoolValue)
+				return Plugin_Handled;
+	}
+
+	return Plugin_Continue;
+}
+
+stock int GetParticleEffectName(int index, char[] sEffectName, int maxlen)
+{
+	int table = INVALID_STRING_TABLE;
+	
+	if (table == INVALID_STRING_TABLE)
+		table = FindStringTable("ParticleEffectNames");
+	
+	return ReadStringTable(table, index, sEffectName, maxlen);
+}
+
+stock int GetEffectName(int index, char[] sEffectName, int maxlen)
+{
+	int table = INVALID_STRING_TABLE;
+	
+	if (table == INVALID_STRING_TABLE)
+		table = FindStringTable("EffectDispatch");
+	
+	return ReadStringTable(table, index, sEffectName, maxlen);
+}
+
+stock int GetDecalName(int index, char[] sDecalName, int maxlen)
+{
+	int table = INVALID_STRING_TABLE;
+	
+	if (table == INVALID_STRING_TABLE)
+		table = FindStringTable("decalprecache");
+	
+	return ReadStringTable(table, index, sDecalName, maxlen);
 }

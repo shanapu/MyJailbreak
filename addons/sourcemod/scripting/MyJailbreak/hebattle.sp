@@ -1,12 +1,10 @@
 //includes
 #include <cstrike>
 #include <sourcemod>
-
 #include <smartjaildoors>
 #include <wardn>
 #include <emitsoundany>
 #include <colors>
-#include <sdkhooks>
 #include <autoexecconfig>
 #include <myjailbreak>
 
@@ -47,6 +45,7 @@ int g_iMaxRound;
 
 //Handles
 Handle TruceTimer;
+Handle GravityTimer;
 Handle HEbattleMenu;
 
 //Floats
@@ -114,6 +113,8 @@ public void OnPluginStart()
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 }
 
+//ConVar Change for Strings
+
 public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
 	if(convar == gc_sOverlayStartPath)
@@ -127,6 +128,8 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
 	}
 }
+
+//Initialize Event
 
 public void OnMapStart()
 {
@@ -154,6 +157,8 @@ public void OnClientPutInServer(int client)
 	SDKHook(client, SDKHook_WeaponCanUse, OnWeaponCanUse);
 }
 
+//Admin & Warden set Event
+
 public Action SetHEbattle(int client,int args)
 {
 	if (gc_bPlugin.BoolValue)
@@ -162,24 +167,7 @@ public Action SetHEbattle(int client,int args)
 		{
 			if (gc_bSetW.BoolValue)
 			{
-				char EventDay[64];
-				GetEventDay(EventDay);
-				
-				if(StrEqual(EventDay, "none", false))
-				{
-					if (g_iCoolDown == 0)
-					{
-						StartNextRound();
-					}
-					else CPrintToChat(client, "%t %t", "hebattle_tag" , "hebattle_wait", g_iCoolDown);
-				}
-				else CPrintToChat(client, "%t %t", "hebattle_tag" , "hebattle_progress" , EventDay);
-			}
-			else CPrintToChat(client, "%t %t", "warden_tag" , "hebattle_setbywarden");
-		}
-		else if (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
-			{
-				if (gc_bSetA.BoolValue)
+				if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
 				{
 					char EventDay[64];
 					GetEventDay(EventDay);
@@ -189,10 +177,37 @@ public Action SetHEbattle(int client,int args)
 						if (g_iCoolDown == 0)
 						{
 							StartNextRound();
+							LogMessage("Event HEBattle was started by Warden %L", client);
 						}
 						else CPrintToChat(client, "%t %t", "hebattle_tag" , "hebattle_wait", g_iCoolDown);
 					}
 					else CPrintToChat(client, "%t %t", "hebattle_tag" , "hebattle_progress" , EventDay);
+				}
+				else CPrintToChat(client, "%t %t", "hebattle_tag" , "hebattle_minplayer");
+			}
+			else CPrintToChat(client, "%t %t", "warden_tag" , "hebattle_setbywarden");
+		}
+		else if (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
+			{
+				if (gc_bSetA.BoolValue)
+				{
+					if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
+					{
+						char EventDay[64];
+						GetEventDay(EventDay);
+						
+						if(StrEqual(EventDay, "none", false))
+						{
+							if (g_iCoolDown == 0)
+							{
+								StartNextRound();
+								LogMessage("Event HEbattle was started by Admin %L", client);
+							}
+							else CPrintToChat(client, "%t %t", "hebattle_tag" , "hebattle_wait", g_iCoolDown);
+						}
+						else CPrintToChat(client, "%t %t", "hebattle_tag" , "hebattle_progress" , EventDay);
+					}
+					else CPrintToChat(client, "%t %t", "hebattle_tag" , "hebattle_minplayer");
 				}
 				else CPrintToChat(client, "%t %t", "hebattle_tag" , "hebattle_setbyadmin");
 			}
@@ -200,6 +215,8 @@ public Action SetHEbattle(int client,int args)
 	}
 	else CPrintToChat(client, "%t %t", "hebattle_tag" , "hebattle_disabled");
 }
+
+//Voting for Event
 
 public Action VoteHEbattle(int client,int args)
 {
@@ -210,36 +227,44 @@ public Action VoteHEbattle(int client,int args)
 	{
 		if (gc_bVote.BoolValue)
 		{
-			char EventDay[64];
-			GetEventDay(EventDay);
-			
-			if(StrEqual(EventDay, "none", false))
+			if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
 			{
-				if (g_iCoolDown == 0)
+				char EventDay[64];
+				GetEventDay(EventDay);
+				
+				if(StrEqual(EventDay, "none", false))
 				{
-					if (StrContains(g_sHasVoted, steamid, true) == -1)
+					if (g_iCoolDown == 0)
 					{
-						int playercount = (GetClientCount(true) / 2);
-						g_iVoteCount++;
-						int Missing = playercount - g_iVoteCount + 1;
-						Format(g_sHasVoted, sizeof(g_sHasVoted), "%s,%s", g_sHasVoted, steamid);
-						
-						if (g_iVoteCount > playercount)
+						if (StrContains(g_sHasVoted, steamid, true) == -1)
 						{
-							StartNextRound();
+							int playercount = (GetClientCount(true) / 2);
+							g_iVoteCount++;
+							int Missing = playercount - g_iVoteCount + 1;
+							Format(g_sHasVoted, sizeof(g_sHasVoted), "%s,%s", g_sHasVoted, steamid);
+							
+							if (g_iVoteCount > playercount)
+							{
+								StartNextRound();
+								LogMessage("Event Zombie was started by voting");
+							}
+							else CPrintToChatAll("%t %t", "hebattle_tag" , "hebattle_need", Missing, client);
 						}
-						else CPrintToChatAll("%t %t", "hebattle_tag" , "hebattle_need", Missing, client);
+						else CPrintToChat(client, "%t %t", "hebattle_tag" , "hebattle_voted");
 					}
-					else CPrintToChat(client, "%t %t", "hebattle_tag" , "hebattle_voted");
+					else CPrintToChat(client, "%t %t", "hebattle_tag" , "hebattle_wait", g_iCoolDown);
+					
 				}
-				else CPrintToChat(client, "%t %t", "hebattle_tag" , "hebattle_wait", g_iCoolDown);
+				else CPrintToChat(client, "%t %t", "hebattle_tag" , "hebattle_progress" , EventDay);
 			}
-			else CPrintToChat(client, "%t %t", "hebattle_tag" , "hebattle_progress" , EventDay);
+			else CPrintToChat(client, "%t %t", "hebattle_tag" , "hebattle_minplayer");
 		}
 		else CPrintToChat(client, "%t %t", "hebattle_tag" , "hebattle_voting");
 	}
 	else CPrintToChat(client, "%t %t", "hebattle_tag" , "hebattle_disabled");
 }
+
+//Prepare Event
 
 void StartNextRound()
 {
@@ -253,6 +278,8 @@ void StartNextRound()
 	PrintHintTextToAll("%t", "hebattle_next_nc");
 
 }
+
+//Round start
 
 public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
@@ -336,7 +363,8 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 					}
 				}
 				g_iTruceTime--;
-				TruceTimer = CreateTimer(1.0, HEbattle, _, TIMER_REPEAT);
+				TruceTimer = CreateTimer(1.0, StartTimer, _, TIMER_REPEAT);
+				GravityTimer = CreateTimer(1.0, CheckGravity, _, TIMER_REPEAT);
 				CPrintToChatAll("%t %t", "hebattle_tag" ,"hebattle_rounds", g_iRound, g_iMaxRound);
 			}
 		}
@@ -354,39 +382,65 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 	}
 }
 
-public Action OnWeaponCanUse(int client, int weapon)
+//Round End
+
+public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 {
-	if(IsHEbattle == true)
+	int winner = GetEventInt(event, "winner");
+	
+	if (IsHEbattle)
 	{
-		char sWeapon[32];
-		GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
-		if(StrEqual(sWeapon, "weapon_hegrenade"))
+		for(int client=1; client <= MaxClients; client++)
 		{
-			if (IsClientInGame(client) && IsPlayerAlive(client))
-			{
-				return Plugin_Continue;
-			}
+			if (IsClientInGame(client)) SetEntityGravity(client, 1.0);
 		}
-		return Plugin_Handled;
+		if (TruceTimer != null) KillTimer(TruceTimer);
+		if (GravityTimer != null) KillTimer(GravityTimer);
+		if (winner == 2) PrintHintTextToAll("%t", "hebattle_twin_nc");
+		if (winner == 3) PrintHintTextToAll("%t", "hebattle_ctwin_nc");
+		if (g_iRound == g_iMaxRound)
+		{
+			IsHEbattle = false;
+			StartHEbattle = false;
+			g_iRound = 0;
+			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
+			SetCvar("sm_hosties_lr", 1);
+			SetCvar("sm_weapons_enable", 1);
+			SetCvar("mp_teammates_are_enemies", 0);
+			SetCvar("sm_warden_enable", 1);
+			SetCvar("sm_menu_enable", 1);
+			g_iGetRoundTime.IntValue = g_iOldRoundTime;
+			SetEventDay("none");
+			CPrintToChatAll("%t %t", "hebattle_tag" , "hebattle_end");
+		}
 	}
-	return Plugin_Continue;
+	if (StartHEbattle)
+	{
+		g_iOldRoundTime = g_iGetRoundTime.IntValue;
+		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;
+		
+		CPrintToChatAll("%t %t", "hebattle_tag" , "hebattle_next");
+		PrintHintTextToAll("%t", "hebattle_next_nc");
+	}
 }
 
-public Action HE_Detonate(Handle event, const char[] name, bool dontBroadcast)
+//Map End
+
+public void OnMapEnd()
 {
-	if (IsHEbattle == true)
-	{
-		int  target = GetClientOfUserId(GetEventInt(event, "userid"));
-		if (GetClientTeam(target) == 1 && !IsPlayerAlive(target))
-		{
-			return;
-		}
-		GivePlayerItem(target, "weapon_hegrenade");
-	}
-	return;
+	IsHEbattle = false;
+	StartHEbattle = false;
+	g_iVoteCount = 0;
+	if (TruceTimer != null) KillTimer(TruceTimer);
+	if (GravityTimer != null) KillTimer(GravityTimer);
+	g_iRound = 0;
+	g_sHasVoted[0] = '\0';
+	SetEventDay("none");
 }
 
-public Action HEbattle(Handle timer)
+//Start Timer
+
+public Action StartTimer(Handle timer)
 {
 	if (g_iTruceTime > 1)
 	{
@@ -429,52 +483,52 @@ public Action HEbattle(Handle timer)
 	return Plugin_Stop;
 }
 
-public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
+//HE Grenade only
+
+public Action OnWeaponCanUse(int client, int weapon)
 {
-	int winner = GetEventInt(event, "winner");
-	
-	if (IsHEbattle)
+	if(IsHEbattle == true)
 	{
-		for(int client=1; client <= MaxClients; client++)
+		char sWeapon[32];
+		GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
+		if(StrEqual(sWeapon, "weapon_hegrenade"))
 		{
-			if (IsClientInGame(client)) SetEntityGravity(client, 1.0);
+			if (IsClientInGame(client) && IsPlayerAlive(client))
+			{
+				return Plugin_Continue;
+			}
 		}
-		if (TruceTimer != null) KillTimer(TruceTimer);
-		if (winner == 2) PrintHintTextToAll("%t", "hebattle_twin_nc");
-		if (winner == 3) PrintHintTextToAll("%t", "hebattle_ctwin_nc");
-		if (g_iRound == g_iMaxRound)
-		{
-			IsHEbattle = false;
-			StartHEbattle = false;
-			g_iRound = 0;
-			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
-			SetCvar("sm_hosties_lr", 1);
-			SetCvar("sm_weapons_enable", 1);
-			SetCvar("mp_teammates_are_enemies", 0);
-			SetCvar("sm_warden_enable", 1);
-			SetCvar("sm_menu_enable", 1);
-			g_iGetRoundTime.IntValue = g_iOldRoundTime;
-			SetEventDay("none");
-			CPrintToChatAll("%t %t", "hebattle_tag" , "hebattle_end");
-		}
+		return Plugin_Handled;
 	}
-	if (StartHEbattle)
-	{
-		g_iOldRoundTime = g_iGetRoundTime.IntValue;
-		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;
-		
-		CPrintToChatAll("%t %t", "hebattle_tag" , "hebattle_next");
-		PrintHintTextToAll("%t", "hebattle_next_nc");
-	}
+	return Plugin_Continue;
 }
 
-public void OnMapEnd()
+//Give new Nades after detonation
+
+public Action HE_Detonate(Handle event, const char[] name, bool dontBroadcast)
 {
-	IsHEbattle = false;
-	StartHEbattle = false;
-	g_iVoteCount = 0;
-	if (TruceTimer != null) KillTimer(TruceTimer);
-	g_iRound = 0;
-	g_sHasVoted[0] = '\0';
-	SetEventDay("none");
+	if (IsHEbattle == true)
+	{
+		int  target = GetClientOfUserId(GetEventInt(event, "userid"));
+		if (GetClientTeam(target) == 1 && !IsPlayerAlive(target))
+		{
+			return;
+		}
+		GivePlayerItem(target, "weapon_hegrenade");
+	}
+	return;
+}
+
+//Give back Gravity if it gone -> ladders
+
+public Action CheckGravity(Handle timer)
+{
+	for(int client=1; client <= MaxClients; client++)
+	{
+		if (IsValidClient(client, false, false))
+		{
+			if(GetEntityGravity(client) != 1.0)
+				SetEntityGravity(client, gc_fGravValue.FloatValue);
+		}
+	}
 }

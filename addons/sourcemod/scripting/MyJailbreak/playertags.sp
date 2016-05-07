@@ -41,11 +41,12 @@ public void OnPluginStart()
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
 	
+//Events to give new Tag
+	
 	//Hooks
 	HookEvent("player_connect", checkTag);
 	HookEvent("player_team", checkTag);
 	HookEvent("player_spawn", checkTag);
-
 }
 
 public void OnClientPutInServer(int client)
@@ -75,6 +76,8 @@ public Action checkTag(Handle event, char[] name, bool dontBroadcast)
 	}
 	return Action;
 }
+
+//Give Tag
 
 public int HandleTag(int client)
 {
@@ -126,6 +129,8 @@ public int HandleTag(int client)
 		}
 	}
 }
+
+//Check Chat & add Tag
 
 public Action OnChatMessage(int &author, Handle recipients, char[] name, char[] message)
 {

@@ -1,12 +1,10 @@
 //includes
 #include <cstrike>
 #include <sourcemod>
-
 #include <smartjaildoors>
 #include <wardn>
 #include <emitsoundany>
 #include <colors>
-#include <sdkhooks>
 #include <autoexecconfig>
 #include <myjailbreak>
 
@@ -54,6 +52,7 @@ float Pos[3];
 
 //Handles
 Handle TruceTimer;
+Handle GravityTimer;
 Handle KnifeFightMenu;
 
 //Strings
@@ -120,12 +119,13 @@ public void OnPluginStart()
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
-	
 	if(g_bAllowTP == INVALID_HANDLE)
 	{
 		SetFailState("sv_allow_thirdperson not found!");
 	}
 }
+
+//ConVar Change for Strings
 
 public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
@@ -140,6 +140,8 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
 	}
 }
+
+//Initialize Event
 
 public void OnMapStart()
 {
@@ -167,6 +169,8 @@ public void OnClientPutInServer(int client)
 	SDKHook(client, SDKHook_WeaponCanUse, OnWeaponCanUse);
 }
 
+//Admin & Warden set Event
+
 public Action SetKnifeFight(int client,int args)
 {
 	if (gc_bPlugin.BoolValue)
@@ -185,6 +189,7 @@ public Action SetKnifeFight(int client,int args)
 						if (g_iCoolDown == 0)
 						{
 							StartNextRound();
+							LogMessage("Event KnifeFight was started by Warden %L", client);
 						}
 						else CPrintToChat(client, "%t %t", "knifefight_tag" , "knifefight_wait", g_iCoolDown);
 					}
@@ -208,6 +213,7 @@ public Action SetKnifeFight(int client,int args)
 							if (g_iCoolDown == 0)
 							{
 								StartNextRound();
+								LogMessage("Event KnifeFight was started by Admin %L", client);
 							}
 							else CPrintToChat(client, "%t %t", "knifefight_tag" , "knifefight_wait", g_iCoolDown);
 						}
@@ -221,6 +227,8 @@ public Action SetKnifeFight(int client,int args)
 	}
 	else CPrintToChat(client, "%t %t", "knifefight_tag" , "knifefight_disabled");
 }
+
+//Voting for Event
 
 public Action VoteKnifeFight(int client,int args)
 {
@@ -250,6 +258,7 @@ public Action VoteKnifeFight(int client,int args)
 							if (g_iVoteCount > playercount)
 							{
 								StartNextRound();
+								LogMessage("Event KnifeFight was started by voting");
 							}
 							else CPrintToChatAll("%t %t", "knifefight_tag" , "knifefight_need", Missing, client);
 						}
@@ -266,6 +275,8 @@ public Action VoteKnifeFight(int client,int args)
 	else CPrintToChat(client, "%t %t", "knifefight_tag" , "knifefight_disabled");
 }
 
+//Prepare Event
+
 void StartNextRound()
 {
 	StartKnifeFight = true;
@@ -276,8 +287,9 @@ void StartNextRound()
 	
 	CPrintToChatAll("%t %t", "knifefight_tag" , "knifefight_next");
 	PrintHintTextToAll("%t", "knifefight_next_nc");
-
 }
+
+//Round start
 
 public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
@@ -368,7 +380,11 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 					}
 				}
 				g_iTruceTime--;
-				TruceTimer = CreateTimer(1.0, KnifeFight, _, TIMER_REPEAT);
+				TruceTimer = CreateTimer(1.0, StartTimer, _, TIMER_REPEAT);
+				if (gc_bGrav.BoolValue)
+				{
+					GravityTimer = CreateTimer(1.0, CheckGravity, _, TIMER_REPEAT);
+				}
 				CPrintToChatAll("%t %t", "knifefight_tag" ,"knifefight_rounds", g_iRound, g_iMaxRound);
 			}
 		}
@@ -386,25 +402,76 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 	}
 }
 
-public Action OnWeaponCanUse(int client, int weapon)
+
+//Round End
+
+public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 {
-	if(IsKnifeFight == true)
+	int winner = GetEventInt(event, "winner");
+	
+	if (IsKnifeFight)
 	{
-		char sWeapon[32];
-		GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
-		if(StrEqual(sWeapon, "weapon_knife"))
+		for(int client=1; client <= MaxClients; client++)
 		{
-			if (IsClientInGame(client) && IsPlayerAlive(client))
+			if (IsClientInGame(client))
 			{
-				return Plugin_Continue;
+				SetEntityGravity(client, 1.0);
+				FP(client);
 			}
 		}
-		return Plugin_Handled;
+		if (TruceTimer != null) KillTimer(TruceTimer);
+		if (GravityTimer != null) KillTimer(GravityTimer);
+		if (winner == 2) PrintHintTextToAll("%t", "knifefight_twin_nc");
+		if (winner == 3) PrintHintTextToAll("%t", "knifefight_ctwin_nc");
+		if (g_iRound == g_iMaxRound)
+		{
+			IsKnifeFight = false;
+			StartKnifeFight = false;
+			g_iRound = 0;
+			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
+			SetCvar("sm_hosties_lr", 1);
+			SetCvar("sm_weapons_enable", 1);
+			SetCvar("sm_warden_enable", 1);
+			SetCvar("sm_menu_enable", 0);
+			SetCvar("mp_teammates_are_enemies", 0);
+			SetCvarFloat("sv_friction", 5.2);
+			SetConVarInt(g_bAllowTP, 0);
+			g_iSetRoundTime.IntValue = g_iOldRoundTime;
+			SetEventDay("none");
+			CPrintToChatAll("%t %t", "knifefight_tag" , "knifefight_end");
+		}
 	}
-	return Plugin_Continue;
+	if (StartKnifeFight)
+	{
+		g_iOldRoundTime = g_iSetRoundTime.IntValue;
+		g_iSetRoundTime.IntValue = gc_iRoundTime.IntValue;
+		
+		CPrintToChatAll("%t %t", "knifefight_tag" , "knifefight_next");
+		PrintHintTextToAll("%t", "knifefight_next_nc");
+	}
 }
 
-public Action KnifeFight(Handle timer)
+//Map End
+
+public void OnMapEnd()
+{
+	IsKnifeFight = false;
+	StartKnifeFight = false;
+	if (TruceTimer != null) KillTimer(TruceTimer);
+	if (GravityTimer != null) KillTimer(GravityTimer);
+	g_iVoteCount = 0;
+	g_iRound = 0;
+	g_sHasVoted[0] = '\0';
+	SetEventDay("none");
+	for(int client=1; client <= MaxClients; client++)
+	{
+		FP(client);
+	}
+}
+
+//Start Timer
+
+public Action StartTimer(Handle timer)
 {
 	if (g_iTruceTime > 1)
 	{
@@ -446,51 +513,38 @@ public Action KnifeFight(Handle timer)
 	return Plugin_Stop;
 }
 
-public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
+//Knife only
+
+public Action OnWeaponCanUse(int client, int weapon)
 {
-	int winner = GetEventInt(event, "winner");
-	
-	if (IsKnifeFight)
+	if(IsKnifeFight == true)
 	{
-		for(int client=1; client <= MaxClients; client++)
+		char sWeapon[32];
+		GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
+		if(StrEqual(sWeapon, "weapon_knife"))
 		{
-			if (IsClientInGame(client))
+			if (IsClientInGame(client) && IsPlayerAlive(client))
 			{
-				SetEntityGravity(client, 1.0);
-				FP(client);
+				return Plugin_Continue;
 			}
 		}
-		if (TruceTimer != null) KillTimer(TruceTimer);
-		if (winner == 2) PrintHintTextToAll("%t", "knifefight_twin_nc");
-		if (winner == 3) PrintHintTextToAll("%t", "knifefight_ctwin_nc");
-		if (g_iRound == g_iMaxRound)
-		{
-			IsKnifeFight = false;
-			StartKnifeFight = false;
-			g_iRound = 0;
-			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
-			SetCvar("sm_hosties_lr", 1);
-			SetCvar("sm_weapons_enable", 1);
-			SetCvar("sm_warden_enable", 1);
-			SetCvar("sm_menu_enable", 0);
-			SetCvar("mp_teammates_are_enemies", 0);
-			SetCvarFloat("sv_friction", 5.2);
-			SetConVarInt(g_bAllowTP, 0);
-			
-			g_iSetRoundTime.IntValue = g_iOldRoundTime;
-			SetEventDay("none");
-			CPrintToChatAll("%t %t", "knifefight_tag" , "knifefight_end");
-		}
+		return Plugin_Handled;
 	}
-	if (StartKnifeFight)
+	return Plugin_Continue;
+}
+
+//Give back Gravity if it gone -> ladders
+
+public Action CheckGravity(Handle timer)
+{
+	for(int client=1; client <= MaxClients; client++)
 	{
-		g_iOldRoundTime = g_iSetRoundTime.IntValue;
-		g_iSetRoundTime.IntValue = gc_iRoundTime.IntValue;
-		
-		CPrintToChatAll("%t %t", "knifefight_tag" , "knifefight_next");
-		PrintHintTextToAll("%t", "knifefight_next_nc");
+		if(GetEntityGravity(client) != 1.0)
+			SetEntityGravity(client, gc_fGravValue.FloatValue);
 	}
 }
+
+//Back to First Person
 
 public Action FP(int client)
 {
@@ -513,21 +567,6 @@ public void PlayerDeath(Handle event, char [] name, bool dontBroadcast)
 	if(IsKnifeFight == true)
 	{
 		int client = GetClientOfUserId(GetEventInt(event, "userid"));
-		FP(client);
-	}
-}
-
-public void OnMapEnd()
-{
-	IsKnifeFight = false;
-	StartKnifeFight = false;
-	if (TruceTimer != null) KillTimer(TruceTimer);
-	g_iVoteCount = 0;
-	g_iRound = 0;
-	g_sHasVoted[0] = '\0';
-	SetEventDay("none");
-	for(int client=1; client <= MaxClients; client++)
-	{
 		FP(client);
 	}
 }
