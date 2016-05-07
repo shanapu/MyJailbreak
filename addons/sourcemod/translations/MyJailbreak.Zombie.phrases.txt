@@ -22,14 +22,14 @@
 	"zombie_voting"
 	{
 		"da"		"Afstemninger for zombie er {purple}slået fra"	
-		"en"		"Player Voting for Zombie is {purple}disabled"
+		"en"		"Player voting for Zombie is {purple}disabled"
 		"de"		"Voting für Zombie ist {purple}ausgeschaltet"
 	}
 	
 	"zombie_setbywarden"
 	{
 		"da"		"Warden bestemmer runde er {purple}slået fra"	
-		"en"		"Set Zombie by Warden is {purple}disabled"
+		"en"		"Set Zombie by warden is {purple}disabled"
 		"de"		"Zombie Aktivierung durch den Warden ist {purple}ausgeschaltet"
 	}
 	
@@ -57,7 +57,7 @@
 	"zombie_end"
 	{
 		"da"		"{purple}Zombie{default} er afsluttet!"	
-		"en"		"{purple}Zombie{default} ended"
+		"en"		"{purple}Zombie{default} finished"
 		"de"		"{purple}Zombie{default} beendet"
 	}
 	
@@ -106,7 +106,7 @@
 	"zombie_minplayer"
 	{
 		"en"		"For zombie runde skal der mindst være {purple}en CT"	
-		"en"		"For a Zombie you need a least {purple}one CT"
+		"en"		"For a Zombie you need at least {purple}one CT"
 		"de"		"Für Zombie brauchen wir mindestens {purple}einen CT"
 	}
 	
@@ -136,7 +136,7 @@
 	"zombie_info_title"		// no colors!
 	{
 		"da"		"Zombie runde er aktiveret!"	
-		"en"		"Zombie is activ"
+		"en"		"Zombie is active"
 		"de"		"Zombie ist aktiv"
 	}
 	
@@ -163,7 +163,7 @@
 	"zombie_info_line4"		// no colors!
 	{
 		"da"		"Alle jail regler er ophævet!"	
-		"en"		"All normal jailRules are repealed"
+		"en"		"All normal jail rules are repealed"
 		"de"		"Alle normalen Jailregeln sind aufgehoben!"
 	}
 	
@@ -171,7 +171,7 @@
 	{
 		"da"		"Last Request er deaktiveret i denne runde!"	
 		"en"		"There is no last request!"
-		"de"		"Der letzte Terrorist hat keinen Wunsch!"
+		"de"		"Der letzte Terrorists hat keinen Wunsch!"
 	}
 	
 	"zombie_info_line6"		// no colors!
@@ -184,15 +184,15 @@
 	"zombie_info_line7"		// no colors!
 	{
 		"da"		"Alle server regler skal overholdes!"	
-		"en"		"dont be an asshole!"
-		"de"		"bau keine scheisse!"
+		"en"		"Dont be an asshole!"
+		"de"		"Bau keine Scheisse!"
 	}
 	
 		"zombie_wait"
 	{
 		"#format"	"{1:i}"
 		"da"		"Du skal vente {purple}{1}{default} runder endnu!"	
-		"en"		"you must wait {purple}{1}{default} more rounds"
+		"en"		"You must wait {purple}{1}{default} more rounds"
 		"de"		"Du musst noch {purple}{1}{default} Runden warten"
 	}
 }

@@ -20,20 +20,20 @@
 	}
 	"knifefight_twin_nc"
 	{
-		"da"		"En terrorist har overlevet!"	
-		"en"		"A Terrorist has surrived"
-		"de"		"Ein Terrorist hat als einziger überlebt"
+		"da"		"En Terrorists har overlevet!"	
+		"en"		"A Terrorists has surrived"
+		"de"		"Ein Terrorists hat als einziger überlebt"
 	}
 	"knifefight_voting"
 	{
 		"da"		"Afstemninger for knifefight er {purple}slået fra"	
-		"en"		"Player Voting for knifefight is {purple}disabled"
+		"en"		"Player voting for knifefight is {purple}disabled"
 		"de"		"Voting für knifefight ist {purple}ausgeschaltet"
 	}
 	"knifefight_setbywarden"
 	{
 		"da"		"knifefight for Warden er {purple}slået fra"	
-		"en"		"Set knifefight by Warden is {purple}disabled"
+		"en"		"Set knifefight by warden is {purple}disabled"
 		"de"		"knifefight Aktivierung durch den Warden ist {purple}ausgeschaltet"
 	}
 	
@@ -45,20 +45,20 @@
 	}
 	"knifefight_ctwin_nc"
 	{
-		"da"		"En Counter-Terrorist har overlevet"	
-		"en"		"A Counter-Terrorist has surrived"
-		"de"		"Ein Counter-Terrorist hat als einziger überlebt"
+		"da"		"En Counter-Terrorists har overlevet"	
+		"en"		"A Counter-Terrorists has surrived"
+		"de"		"Ein Counter-Terrorists hat als einziger überlebt"
 	}
 	"knifefight_minplayer"
 	{
 		"da"		"For knifefight skal der mindst være {purple}en CT & en T"	
-		"en"		"For a knifefight you need a least {purple}one CT 6 one T"
-		"de"		"Für knifefight brauchen wir mindestens {purple}einen CT und einen T"
+		"en"		"For a knifefight you need at least {purple}one CT & one T"
+		"de"		"Für knifefight brauchen wir mindestens {purple}einen CT"
 	}
 	"knifefight_end"
 	{
 		"da"		"{purple}knifefight{default} er afsluttet!"	
-		"en"		"{purple}knifefight{default} ended"
+		"en"		"{purple}knifefight{default} finished"
 		"de"		"{purple}knifefight{default} beendet"
 	}
 	
@@ -110,7 +110,6 @@
 		"de"		"knifefight ist {purple}deaktiviert."
 	}
 	
-
 	"knifefight_timeuntilstart_nc"
 	{
 		"#format"	"{1:i}"
@@ -122,7 +121,7 @@
 	"knifefight_info_title"
 	{
 		"da"		"FFA Knifefighter- er hver mod hver aktiv!"
-		"en"		"FFA Knifefight - Free for all is activ"
+		"en"		"FFA Knifefight - Free for all is active"
 		"de"		"FFA Knifefight - Jeder gegen Jeden ist aktiv"
 	}
 	
@@ -141,14 +140,14 @@
 	"knifefight_info_line3"
 	{
 		"da"		"Du kan ikke skade andre spillere indtil runden starter"	
-		"en"		"you can move and exit the wk in nodamge phase"
-		"de"		"Während der no damge phase kannst du aus der zelle/waffenkammer"
+		"en"		"you can move and exit the wk in nodamage phase"
+		"de"		"Während der no damage phase kannst du aus der zelle/waffenkammer"
 	}
 	
 	"knifefight_info_line4"
 	{
 		"da"		"Alle jail regler er ophævet!"	
-		"en"		"All normal jailRules are repealed"
+		"en"		"All normal jail rules are repealed"
 		"de"		"Alle normalen Jailregeln sind aufgehoben!"
 	}
 	
@@ -156,7 +155,7 @@
 	{
 		"da"		"Der kan ikke laves !lr i denne runde!"	
 		"en"		"There is no last request!"
-		"de"		"Der letzte Terrorist hat keinen Wunsch!"
+		"de"		"Der letzte Terrorists hat keinen Wunsch!"
 	}
 	
 	"knifefight_info_line6"
@@ -169,14 +168,14 @@
 	"knifefight_info_line7"
 	{
 		"da"		"Alle server regler skal holdes!"	
-		"en"		"dont be an asshole!"
-		"de"		"bau keine scheisse!"
+		"en"		"Dont be an asshole!"
+		"de"		"Bau keine Scheisse!"
 	}
-		"knifefight_wait"
+	"knifefight_wait"
 	{
 		"#format"	"{1:i}"
 		"da"		"Du skal vente {1} flere runder"	
-		"en"		"you must wait {1} more rounds"
+		"en"		"You must wait {1} more rounds"
 		"de"		"Du musst noch {1} Runden warten"
 	}
 }

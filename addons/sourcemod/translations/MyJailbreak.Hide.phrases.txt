@@ -34,7 +34,7 @@
 	"hide_end"
 	{
 		"en"		"{purple}Hide in the Dark{default} er afsluttet!"	
-		"en"		"{purple}Hide in the Dark{default} ended"
+		"en"		"{purple}Hide in the Dark{default} finished"
 		"de"		"{purple}Hide in the Dark{default} beendet"
 	}
 		
@@ -83,7 +83,7 @@
 	"hide_minplayer"
 	{
 		"da"		"For Hide in the Dark skal der mindst være {purple}en CT & en T"	
-		"en"		"For a Hide in the Dark you need a least {purple}one CT 6 one T"
+		"en"		"For a Hide in the Dark you need at least {purple}one CT & one T"
 		"de"		"Für Hide in the Dark brauchen wir mindestens {purple}einen CT und einen T"
 	}
 	
@@ -98,14 +98,14 @@
 	"hide_voting"
 	{
 		"da"		"Afstemning for Hide in the Dark er {purple}slået fra"	
-		"en"		"Player Voting for Hide in the Dark is {purple}disabled"
+		"en"		"Player voting for Hide in the Dark is {purple}disabled"
 		"de"		"Voting für Hide in the Dark ist {purple}ausgeschaltet"
 	}
 	
 	"hide_setbyWarden"
 	{
 		"da"		"Warden vælger runden for Hide in the Dark er {purple}slået fra"	
-		"en"		"Set Hide in the Dark by Warden is {purple}disabled"
+		"en"		"Set Hide in the Dark by warden is {purple}disabled"
 		"de"		"Hide in the Dark Aktivierung durch den Warden ist {purple}ausgeschaltet"
 	}
 	
@@ -137,7 +137,7 @@
 	"hide_info_title"		// no colors!
 	{
 		"en"		"Hide In The Dark er aktiveret!"	
-		"en"		"FFA is activ"
+		"en"		"FFA is active"
 		"de"		"FFA ist aktiv"
 	}
 	
@@ -157,14 +157,14 @@
 	"hide_info_line3"		// no colors!
 	{
 		"da"		"Når CT bliver unfreezet bliver T freezet og ikke kan røre sig!"	
-		"en"		"you can move and exit the wk in nodamge phase"
-		"de"		"Während der no damge phase kannst du aus der zelle/waffenkammer"
+		"en"		"you can move and exit the wk in nodamage phase"
+		"de"		"Während der no damage phase kannst du aus der zelle/waffenkammer"
 	}
 	
 	"hide_info_line4"		// no colors!
 	{
 		"da"		"Alle jail regler er ophævet!"	
-		"en"		"All normal jailRules are repealed"
+		"en"		"All normal jail rules are repealed"
 		"de"		"Alle normalen Jailregeln sind aufgehoben!"
 	}
 	
@@ -172,7 +172,7 @@
 	{
 		"da"		"Last Request er deaktiveret i denne runde!"	
 		"en"		"There is no last request!"
-		"de"		"Der letzte Terrorist hat keinen Wunsch!"
+		"de"		"Der letzte Terrorists hat keinen Wunsch!"
 	}
 	
 	"hide_info_line6"		// no colors!
@@ -185,15 +185,15 @@
 	"hide_info_line7"		// no colors!
 	{
 		"da"		"Alle server reglerne skal overholdes!"	
-		"en"		"dont be an asshole!"
-		"de"		"bau keine scheisse!"
+		"en"		"Dont be an asshole!"
+		"de"		"Bau keine Scheisse!"
 	}
 	
 	"hide_wait"
 	{
 		"#format"	"{1:i}"
 		"da"		"Du skal vente {purple}{1}{default} flere runder!"	
-		"en"		"you must wait {purple}{1}{default} more rounds"
+		"en"		"You must wait {purple}{1}{default} more rounds"
 		"de"		"Du musst noch {purple}{1}{default} Runden Warten"
 	}
 }

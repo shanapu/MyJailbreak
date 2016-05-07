@@ -16,14 +16,14 @@
 	"ffa_voting"
 	{
 		"da"		"Afstemning for FFA er {purple}slået fra"
-		"en"		"Player Voting for FFA is {purple}disabled"
+		"en"		"Player voting for FFA is {purple}disabled"
 		"de"		"Voting für FFA ist {purple}ausgeschaltet"
 	}
 	
 	"ffa_setbywarden"
 	{
 		"da"		"Warden kan vælge FFA runde er {purple}slået fra"
-		"en"		"Set FFA by Warden is {purple}disabled"
+		"en"		"Set FFA by warden is {purple}disabled"
 		"de"		"FFA Aktivierung durch den Warden ist {purple}ausgeschaltet"
 	}
 	
@@ -36,22 +36,29 @@
 	
 	"ffa_ctwin_nc"		// no colors!
 	{
-		"da"		"En Counter-Terrorist har overlevet!"
-		"en"		"A Counter-Terrorist has surrived"
-		"de"		"Ein Counter-Terrorist hat als einziger überlebt"
+		"da"		"En Counter-Terrorists har overlevet!"
+		"en"		"A Counter-Terrorists has surrived"
+		"de"		"Ein Counter-Terrorists hat als einziger überlebt"
 	}
 	
 	"ffa_twin_nc"		// no colors!
 	{
-		"da"		"En Terrorist har overlevet!"
-		"en"		"A Terrorist has surrived"
-		"de"		"Ein Terrorist hat als einziger überlebt"
+		"da"		"En Terrorists har overlevet!"
+		"en"		"A Terrorists has surrived"
+		"de"		"Ein Terrorists hat als einziger überlebt"
+	}
+	
+	"ffa_minplayer"
+	{
+		"da"		"For FFA skal der mindst være {purple}en CT"	
+		"en"		"For a FFA you need at least {purple}one CT"
+		"de"		"Für FFA brauchen wir mindestens {purple}einen CT"
 	}
 	
 	"ffa_end"
 	{
 		"da"		"{purple}FFA{default} er afsluttet!"
-		"en"		"{purple}FFA{default} ended"
+		"en"		"{purple}FFA{default} finished"
 		"de"		"{purple}FFA{default} beendet"
 	}
 	
@@ -125,14 +132,14 @@
 	"ffa_info_title"		// no colors!
 	{
 		"en"		"Free for All Deathmatch er aktiveret!"	
-		"en"		"Free for All Deathmatch is activ"
+		"en"		"Free for All Deathmatch is active"
 		"de"		"Free for All Deathmatch ist aktiv"
 	}
 	
 	"ffa_info_line1"		// no colors!
 	{
 		"da"		"Bliv ikke overrasket hvis du starter i CT spawn!"	
-		"en"		"Do not be surprised if portedto CT Spawn"
+		"en"		"Do not be surprised if you got ported to the CT Spawn"
 		"de"		"Nicht wundern falls ihr zum CT Spawn geportet wurdet"
 	}
 	
@@ -146,14 +153,14 @@
 	"ffa_info_line3"		// no colors!
 	{
 		"da"		"Du kan ikke skade andre spillere når mappet er mørkt!"	
-		"en"		"While nodamge time the map is shady"
-		"de"		"Während der NoDamge Phase is die map zum eingedunkelt"
+		"en"		"While nodamage time the map is shady"
+		"de"		"Während der Nodamage Phase is die map verdunkelt"
 	}
 	
 	"ffa_info_line4"		// no colors!
 	{
 		"da"		"Alle jail regler er ophævet!"	
-		"en"		"All normal jailrules are repealed"
+		"en"		"All normal jail rules are repealed"
 		"de"		"Alle normalen Jailregeln sind aufgehoben!"
 	}
 	
@@ -161,7 +168,7 @@
 	{
 		"da"		"!lr er deaktiveret i denne runde!"	
 		"en"		"There is no last request!"
-		"de"		"Der letzte Terrorist hat keinen Wunsch!"
+		"de"		"Der letzte Terrorists hat keinen Wunsch!"
 	}
 	
 	"ffa_info_line6"		// no colors!
@@ -174,8 +181,8 @@
 	"ffa_info_line7"		// no colors!
 	{
 		"da"		"Alle server regler skal overholdes!"	
-		"en"		"dont be an asshole!"
-		"de"		"bau keine scheisse!"
+		"en"		"Dont be an asshole!"
+		"de"		"Bau keine Scheisse!"
 	}
 		
 	"RoundOne"		// no colors!
@@ -202,7 +209,7 @@
 	{
 		"#format"	"{1:i}"
 		"da"		"Du skal vente {purple}{1}{default} flere runder!"		
-		"en"		"you must wait {purple}{1}{default} more rounds"
+		"en"		"You must wait {purple}{1}{default} more rounds"
 		"de"		"Du musst noch {purple}{1}{default} Runden warten"
 	}
 

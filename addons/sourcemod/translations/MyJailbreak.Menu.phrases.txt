@@ -175,10 +175,10 @@
 		"#format"		""
 		"en"			"DuckHunt"
 	}
-	"menu_freeday"
+	"menu_Freeday"
 	{
 		"#format"		""
-		"en"			"FreeDay"
+		"en"			"Freeday"
 	}
 	"menu_admin"
 	{

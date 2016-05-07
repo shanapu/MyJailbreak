@@ -20,20 +20,20 @@
 	}
 	"zeus_twin_nc"
 	{
-		"da"		"En Terrorist har overlevet!"	
-		"en"		"A Terrorist has surrived"
-		"de"		"Ein Terrorist hat als einziger überlebt"
+		"da"		"En Terrorists har overlevet!"	
+		"en"		"A Terrorists has surrived"
+		"de"		"Ein Terrorists hat als einziger überlebt"
 	}
 	"zeus_voting"
 	{
 		"da"		"Afstemninger for No Scope er {purple}slået fra"	
-		"en"		"Player Voting for ZeusDay is {purple}disabled"
+		"en"		"Player voting for ZeusDay is {purple}disabled"
 		"de"		"Voting für ZeusDay ist {purple}ausgeschaltet"
 	}
 	"zeus_setbywarden"
 	{
 		"da"		"Warden bestemmer runde for No Scope er {purple}slået fra"	
-		"en"		"Set ZeusDay by Warden is {purple}disabled"
+		"en"		"Set ZeusDay by warden is {purple}disabled"
 		"de"		"ZeusDay Aktivierung durch den Warden ist {purple}ausgeschaltet"
 	}
 	
@@ -43,17 +43,24 @@
 		"en"		"Set ZeusDay by admin is {purple}disabled"
 		"de"		"ZeusDay Aktivierung durch den Admin ist {purple}ausgeschaltet"
 	}
+	
+	"zeus_minplayer"
+	{
+		"da"		"For Zeus skal der mindst være {purple}en CT"	
+		"en"		"For a Zeus you need at least {purple}one CT"
+		"de"		"Für Zeus brauchen wir mindestens {purple}einen CT"
+	}
 	"zeus_ctwin_nc"
 	{
-		"da"		"En Counter-Terrorist har overlevet!"
-		"en"		"A Counter-Terrorist has surrived"
-		"de"		"Ein Counter-Terrorist hat als einziger überlebt"
+		"da"		"En Counter-Terrorists har overlevet!"
+		"en"		"A Counter-Terrorists has surrived"
+		"de"		"Ein Counter-Terrorists hat als einziger überlebt"
 	}
 	
 	"zeus_end"
 	{
 		"da"		"{purple}ZeusDay{default} er afsluttet!"	
-		"en"		"{purple}ZeusDay{default} ended"
+		"en"		"{purple}ZeusDay{default} finished"
 		"de"		"{purple}ZeusDay{default} beendet"
 	}
 	
@@ -117,7 +124,7 @@
 	"zeus_info_title"
 	{
 		"en"		"ZeusDay er aktiveret!"	
-		"en"		"ZeusDay is activ"
+		"en"		"ZeusDay is active"
 		"de"		"ZeusDay ist aktiv"
 	}
 	
@@ -142,7 +149,7 @@
 	"zeus_info_line4"
 	{
 		"da"		"Alle jail regler er ophævet!"	
-		"en"		"All normal jailRules are repealed"
+		"en"		"All normal jail rules are repealed"
 		"de"		"Alle normalen Jailregeln sind aufgehoben!"
 	}
 	
@@ -150,7 +157,7 @@
 	{
 		"da"		"Der kan ikke laves Last Request i denne runde!"	
 		"en"		"There is no last request!"
-		"de"		"Der letzte Terrorist hat keinen Wunsch!"
+		"de"		"Der letzte Terrorists hat keinen Wunsch!"
 	}
 	
 	"zeus_info_line6"
@@ -163,14 +170,14 @@
 	"zeus_info_line7"
 	{
 		"da"		"Alle server regler skal overholdes!"	
-		"en"		"dont be an asshole!"
-		"de"		"bau keine scheisse!"
+		"en"		"Dont be an asshole!"
+		"de"		"Bau keine Scheisse!"
 	}
 		"zeus_wait"
 	{
 		"#format"	"{1:i}"
 		"da"		"Du skal vente {1} flere runder!"		
-		"en"		"you must wait {1} more rounds"
+		"en"		"You must wait {1} more rounds"
 		"de"		"Du musst noch {1} Runden warten"
 	}
 }

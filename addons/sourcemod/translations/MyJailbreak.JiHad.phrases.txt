@@ -25,18 +25,18 @@
 	}
 	"jihad_voting"
 	{
-		"en"		"Player Voting for Jihad is {purple}disabled"
+		"en"		"Player voting for Jihad is {purple}disabled"
 		"de"		"Voting für Jihad ist {purple}ausgeschaltet"
 	}
 	"jihad_setbywarden"
 	{
-		"en"		"Set Jihad by Warden is {purple}disabled"
+		"en"		"Set Jihad by warden is {purple}disabled"
 		"de"		"Jihad Aktivierung durch den Warden ist {purple}ausgeschaltet"
 	}
 	"jihad_minplayer"
 	{
 		"da"		"For jihad skal der mindst være {purple}en CT & en T"	
-		"en"		"For a jihad you need a least {purple}one CT 6 one T"
+		"en"		"For a jihad you need at least {purple}one CT & one T"
 		"de"		"Für jihad brauchen wir mindestens {purple}einen CT und einen T"
 	}
 	"jihad_setbyadmin"
@@ -47,12 +47,12 @@
 	"jihad_ctwin_nc"
 	{
 		"en"		"Counter-Terrorists has surrived"
-		"de"		"Die Counter-Terrorist haben überlebt"
+		"de"		"Die Counter-Terrorists haben überlebt"
 	}
 	
 	"jihad_end"
 	{
-		"en"		"{purple}Jihad{default} ended"
+		"en"		"{purple}Jihad{default} finished"
 		"de"		"{purple}Jihad{default} beendet"
 	}
 	
@@ -137,7 +137,7 @@
 	
 	"jihad_info_title"
 	{
-		"en"		"Jihad Jihad is activ"
+		"en"		"Jihad Jihad is active"
 		"de"		"Jihad Jihad ist aktiv"
 	}
 	
@@ -161,14 +161,14 @@
 	
 	"jihad_info_line4"
 	{
-		"en"		"All normal jailRules are repealed"
+		"en"		"All normal jail rules are repealed"
 		"de"		"Alle normalen Jailregeln sind aufgehoben!"
 	}
 	
 	"jihad_info_line5"
 	{
 		"en"		"There is no last request!"
-		"de"		"Der letzte Terrorist hat keinen Wunsch!"
+		"de"		"Der letzte Terrorists hat keinen Wunsch!"
 	}
 	
 	"jihad_info_line6"
@@ -179,13 +179,13 @@
 	
 	"jihad_info_line7"
 	{
-		"en"		"dont be an asshole!"
-		"de"		"bau keine scheisse!"
+		"en"		"Dont be an asshole!"
+		"de"		"Bau keine Scheisse!"
 	}
 		"jihad_wait"
 	{
 		"#format"	"{1:i}"
-		"en"		"you must wait {purple}{1}{default} more rounds"
+		"en"		"You must wait {purple}{1}{default} more rounds"
 		"de"		"Du musst noch {purple}{1}{default} Runden warten"
 	}
 	"jihad_disabled"

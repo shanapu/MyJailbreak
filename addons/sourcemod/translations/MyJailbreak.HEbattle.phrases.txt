@@ -18,22 +18,28 @@
 		"en"		"Round {purple}{1}{default} of {purple}{2}"
 		"de"		"Runde {purple}{1}{default} von {purple}{2}"
 	}
+	"hebattle_minplayer"
+	{
+		"da"		"For HE Battle skal der mindst være {purple}en CT"	
+		"en"		"For a HE Battle you need at least {purple}one CT"
+		"de"		"Für HE Battle brauchen wir mindestens {purple}einen CT"
+	}
 	"hebattle_twin_nc"
 	{
-		"da"		"En terrorist har overlevet!"	
-		"en"		"A Terrorist has surrived"
+		"da"		"En Terrorists har overlevet!"	
+		"en"		"A Terrorists has surrived"
 		"de"		"Ein Terrorist hat als einziger überlebt"
 	}
 	"hebattle_voting"
 	{
 		"da"		"Afstemninger for HE Battle er {purple}slået fra"	
-		"en"		"Player Voting for HE Battle is {purple}disabled"
+		"en"		"Player voting for HE Battle is {purple}disabled"
 		"de"		"Voting für HE Battle ist {purple}ausgeschaltet"
 	}
 	"hebattle_setbywarden"
 	{
 		"da"		"HE Battle for Warden er {purple}slået fra"	
-		"en"		"Set HE Battle by Warden is {purple}disabled"
+		"en"		"Set HE Battle by warden is {purple}disabled"
 		"de"		"HE Battle Aktivierung durch den Warden ist {purple}ausgeschaltet"
 	}
 	
@@ -45,14 +51,14 @@
 	}
 	"hebattle_ctwin_nc"
 	{
-		"da"		"En Counter-Terrorist har overlevet"	
-		"en"		"A Counter-Terrorist has surrived"
-		"de"		"Ein Counter-Terrorist hat als einziger überlebt"
+		"da"		"En Counter-Terrorists har overlevet"	
+		"en"		"A Counter-Terrorists has surrived"
+		"de"		"Ein Counter-Terrorists hat als einziger überlebt"
 	}
 	"hebattle_end"
 	{
 		"da"		"{purple}HE Battle{default} er afsluttet!"	
-		"en"		"{purple}HE Battle{default} ended"
+		"en"		"{purple}HE Battle{default} finished"
 		"de"		"{purple}HE Battle{default} beendet"
 	}
 	
@@ -72,20 +78,20 @@
 	"hebattle_start"
 	{
 		"da"		"{purple}HE Battle{default} er startet!"
-		"en"		"The {purple}HE Battle{default} has started!"
+		"en"		"{purple}HE Battle{default} has started!"
 		"de"		"{purple}HE Battle{default} ist gestartet!"
 	}
 	
 	"hebattle_start_nc"
 	{
-		"da"		"HE Battle er startet!"	
-		"en"		"The HE Battle started!"
+		"da"		"HE Battle er startet!"
+		"en"		"HE Battle has started!"
 		"de"		"HE Battle ist gestartet!"
 	}
 	
 	"hebattle_voted"
 	{
-		"en"		"Du har allerede stemt på {purple}HE Battle"	
+		"en"		"Du har allerede stemt på {purple}HE Battle"
 		"en"		"You already voted for {purple}HE Battle"
 		"de"		"Du hast schon für {purple}HE Battle {default}gevotet"
 	}
@@ -116,15 +122,15 @@
 	"hebattle_info_title"
 	{
 		"da"		"HE Battleer aktiv"	
-		"en"		"HE Battle is activ"
+		"en"		"HE Battle is active"
 		"de"		"HE Battle ist aktiv"
 	}
 	
 	"hebattle_info_line1"
 	{
 		"da"		"I høvdingebold er det FFA høvdingebold"	
-		"en"		"FFA HE Battle with Low Grawity"
-		"de"		"FFA HE Battle mit Low Grawity"
+		"en"		"FFA HE Battle with low Gravity"
+		"de"		"FFA HE Battle mit low Gravity"
 	}
 	"hebattle_info_line2"
 	{
@@ -135,14 +141,14 @@
 	
 	"hebattle_info_line3"
 	{
-		"en"		"You don't make Damage until start"
+		"en"		"You don't make damage until start"
 		"de"		"Du machst bis zum Start keinen Schaden"
 	}
 	
 	"hebattle_info_line4"
 	{
 		"da"		"Alle jail regler er ophævet!"	
-		"en"		"All normal jailRules are repealed"
+		"en"		"All normal jail rules are repealed"
 		"de"		"Alle normalen Jailregeln sind aufgehoben!"
 	}
 	
@@ -150,7 +156,7 @@
 	{
 		"da"		"Der kan ikke laves !lr i denne runde!"	
 		"en"		"There is no last request!"
-		"de"		"Der letzte Terrorist hat keinen Wunsch!"
+		"de"		"Der letzte Terrorists hat keinen Wunsch!"
 	}
 	
 	"hebattle_info_line6"
@@ -163,14 +169,14 @@
 	"hebattle_info_line7"
 	{
 		"da"		"Alle server regler skal holdes!"	
-		"en"		"dont be an asshole!"
-		"de"		"bau keine scheisse!"
+		"en"		"Dont be an asshole!"
+		"de"		"Bau keine Scheisse!"
 	}
 		"hebattle_wait"
 	{
 		"#format"	"{1:i}"
 		"da"		"Du skal vente {1} flere runder"	
-		"en"		"you must wait {1} more rounds"
+		"en"		"You must wait {1} more rounds"
 		"de"		"Du musst noch {1} Runden warten"
 	}
 }

@@ -23,14 +23,14 @@
 	"duckhunt_voting"
 	{
 		"da"		"Afstemninger for Duckhunt er {purple}slået fra"	
-		"en"		"Player Voting for Duckhunt is {purple}disabled"
+		"en"		"Player voting for Duckhunt is {purple}disabled"
 		"de"		"Voting für duckhuntt ist {purple}ausgeschaltet"
 	}
 	
 	"duckhunt_setbywarden"
 	{
 		"da"		"Duckhunt for Warden er {purple}slået fra"	
-		"en"		"Set Duckhunt by Warden is {purple}isabled"
+		"en"		"Set Duckhunt by warden is {purple}isabled"
 		"de"		"Duckhunt Aktivierung durch den Warden ist {purple}ausgeschaltet"
 	}
 	
@@ -44,7 +44,7 @@
 	"duckhunt_ctwin_nc"
 	{
 		"da"		"Alle ænder er døde!"
-		"en"		"All ducks got hunted"
+		"en"		"All ducks got shot"
 		"de"		"Alle Enten wurden geschossen"
 	}
 	
@@ -58,7 +58,7 @@
 	"duckhunt_end"
 	{
 		"da"		"{purple}Duckhunt{default} er afsluttet!"
-		"en"		"{purple}Duckhunt{default} ended"
+		"en"		"{purple}Duckhunt{default} finished"
 		"de"		"{purple}Duckhunt{default} beendet"
 	}
 	
@@ -107,7 +107,7 @@
 	"duckhunt_minplayer"
 	{
 		"da"		"For at lave Duckhunt skal der mindst være {purple}en CT"
-		"en"		"For a Duckhunt you need a least {purple}one CT"
+		"en"		"For a Duckhunt you need at least {purple}one CT"
 		"de"		"Für Duckhunt brauchen wir mindestens {purple}einen CT"
 	}
 	
@@ -129,34 +129,34 @@
 	"duckhunt_info_title"		// no colors!
 	{
 		"da"		"Duckhunt er aktiveret!"	
-		"en"		"Duckhunt is activ"
+		"en"		"Duckhunt is active"
 		"de"		"Duckhunt ist aktiv"
 	}
 	
 	"duckhunt_info_line1"		// no colors!
 	{
 		"da"		"en slags lerdueskydning"	
-		"en"		"a kind of Clay pigeon shooting"
+		"en"		"A kind of clay pigeon shooting"
 		"de"		"Eine Art Tontaubenschiessen"
 	}
 	"duckhunt_info_line2"		// no colors!
 	{
 		"da"		"CT har kun shotgun at skyde med!"	
 		"en"		"Cts got novas"
-		"de"		"Counter Terrorist haben Nova"
+		"de"		"Counter Terrorists haben Nova"
 	}
 	
 	"duckhunt_info_line3"		// no colors!
 	{
-		"da"		"T er kyllinger og har nades. SecAttack Only"	
-		"en"		"Ts are chickens and got greante. SecAttack Only"
-		"de"		"Terroristen sind chicken haben Granten. SecAttack Only"
+		"da"		"T er kyllinger og har nades. Rightclick Only"	
+		"en"		"Ts are chickens and have got grenades. Rightclick Only"
+		"de"		"Terroristen sind chicken haben Granaten. Rightclick Only"
 	}
 	
 	"duckhunt_info_line4"		// no colors!
 	{
 		"da"		"Alle jail regler er ophævet!"	
-		"en"		"All normal jailRules are repealed"
+		"en"		"All normal jail rules are repealed"
 		"de"		"Alle normalen Jailregeln sind aufgehoben!"
 	}
 	
@@ -164,7 +164,7 @@
 	{
 		"da"		"!lr er deaktiveret i denne runde!"	
 		"en"		"There is no last request!"
-		"de"		"Der letzte Terrorist hat keinen Wunsch!"
+		"de"		"Der letzte Terrorists hat keinen Wunsch!"
 	}
 	
 	"duckhunt_info_line6"		// no colors!
@@ -177,15 +177,15 @@
 	"duckhunt_info_line7"		// no colors!
 	{
 		"da"		"Alle server regler skal overholdes!"	
-		"en"		"dont be an asshole!"
-		"de"		"bau keine scheisse!"
+		"en"		"Dont be an asshole!"
+		"de"		"Bau keine Scheisse!"
 	}
 	
 	"duckhunt_wait"
 	{
 		"#format"	"{1:i}"
 		"en"		"Du skal vente {purple}{1}{default} flere runder!"	
-		"en"		"you must wait {purple}{1}{default} more rounds"
+		"en"		"You must wait {purple}{1}{default} more rounds"
 		"de"		"Du musst noch {purple}{1}{default} Runden warten"
 	}
 }

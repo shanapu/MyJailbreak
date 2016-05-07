@@ -22,21 +22,21 @@
 	"war_twin_nc"		// no colors!
 	{
 		"da"		"Terroristerne vinder!"	
-		"en"		"Terrorist win"
-		"de"		"Terrorist haben gewonnen"
+		"en"		"Terrorists win"
+		"de"		"Terrorists haben gewonnen"
 	}
 	
 	"war_ctwin_nc"		// no colors!
 	{
 		"da"		"Counter-Terroristerne vinder"
-		"en"		"Counter-Terrorist win"
-		"de"		"Counter-Terrorist haben gewonnen"
+		"en"		"Counter-Terrorists win"
+		"de"		"Counter-Terrorists haben gewonnen"
 	}
 	
 	"war_end" 
 	{
 		"da"		"{purple}War{default} er afsluttet!"	
-		"en"		"{purple}War{default} ended"
+		"en"		"{purple}War{default} finished"
 		"de"		"{purple}War{default} beendet"
 	}
 	
@@ -93,7 +93,7 @@
 	"war_minplayer"
 	{
 		"da"		"For war skal der mindst være {purple}en CT"	
-		"en"		"For a war you need a least {purple}one CT"
+		"en"		"For a war you need at least {purple}one CT"
 		"de"		"Für war brauchen wir mindestens {purple}einen CT"
 	}
 	
@@ -116,14 +116,14 @@
 	{
 		"#format"	""
 		"en"		"Afstemning for war er {purple}slået fra"		
-		"en"		"Player Voting for War is {purple}disabled"
+		"en"		"Player voting for War is {purple}disabled"
 		"de"		"Voting für War ist {purple}ausgeschaltet"
 	}
 	
 	"war_setbywarden"
 	{
 		"da"		"Warden bestemmer runde er {purple}slået fra"	
-		"en"		"Set War by Warden is {purple}disabled"
+		"en"		"Set War by warden is {purple}disabled"
 		"de"		"War Aktivierung durch den Warden ist {purple}ausgeschaltet"
 	}
 	
@@ -145,7 +145,7 @@
 	"war_info_title"		// no colors!
 	{
 		"da"		"War er aktiveret!"	
-		"en"		"War is activ"
+		"en"		"War is active"
 		"de"		"Krieg ist aktiv"
 	}
 	
@@ -166,14 +166,14 @@
 	"war_info_line3"		// no colors!
 	{
 		"da"		"Indtil runden begynder, kan du finde et godt sted at starte!"	
-		"en"		"While nodamge time you can move and get in position"
-		"de"		"Während der NoDamge Phase darfst du dich bewegen und in Position gehen"
+		"en"		"While nodamage time you can move and get in position"
+		"de"		"Während der Nodamage Phase darfst du dich bewegen und in Position gehen"
 	}
 	
 	"war_info_line4"		// no colors!
 	{
 		"da"		"Alle jail regler er ophævet!"	
-		"en"		"All normal jailRules are repealed"
+		"en"		"All normal jail rules are repealed"
 		"de"		"Alle normalen Jailregeln sind aufgehoben!"
 	}
 	
@@ -181,7 +181,7 @@
 	{
 		"da"		"Last Request er deaktiveret i denne runde!"	
 		"en"		"There is no last request!"
-		"de"		"Der letzte Terrorist hat keinen Wunsch!"
+		"de"		"Der letzte Terrorists hat keinen Wunsch!"
 	}
 	
 	"war_info_line6"		// no colors!
@@ -194,15 +194,15 @@
 	"war_info_line7"		// no colors!
 	{
 		"da"		"Alle server regler skal overholdes!"	
-		"en"		"dont be an asshole!"
-		"de"		"bau keine scheisse!"
+		"en"		"Dont be an asshole!"
+		"de"		"Bau keine Scheisse!"
 	}
 	
 	"war_wait"
 	{
 		"#format"	"{1:i}"
 		"da"		"Du skal vente i {purple}{1}{default} runder!"		
-		"en"		"you must wait {purple}{1}{default} more rounds"
+		"en"		"You must wait {purple}{1}{default} more rounds"
 		"de"		"Du musst noch {purple}{1}{default} Runden warten"
 	}
 }
