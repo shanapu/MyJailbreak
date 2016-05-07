@@ -43,11 +43,11 @@ I recommend until full release, when update to overwrite all files (plugins, tra
 
 ### Change Log
 
-```
+
 ####  ~~[0.7.2]~~ - VERSIONING BEGINNS WITH RELEASE ON ALLIED - sry
 ### Added
 - initial beta release.
-```
+
 
 ### Versioning
 for a better understanding:
