@@ -35,9 +35,14 @@ ConVar gc_bChooseRandom;
 ConVar gc_bSounds;
 ConVar gc_bFF;
 ConVar gc_bRandom;
+ConVar gc_iRandomKind;
+ConVar gc_hOpenTimer;
+ConVar gc_hRandomTimer;
 ConVar gc_bMath;
 ConVar gc_bMarker;
 ConVar gc_bCountDown;
+ConVar gc_bIcon;
+ConVar gc_sIconPath;
 ConVar gc_bOverlays;
 ConVar gc_sOverlayStartPath;
 ConVar gc_sOverlayStopPath;
@@ -62,14 +67,13 @@ bool IsMathQuiz = false;
 bool g_bMarkerSetup;
 bool g_bCanZoom[MAXPLAYERS + 1];
 bool g_bHasSilencer[MAXPLAYERS + 1];
-bool g_bPrecached = false;
 
 //Integers
 
 int Warden = -1;
 int TempWarden[MAXPLAYERS+1] = -1;
 int g_iVoteCount;
-int g_CollisionOffset;
+int g_iCollisionOffset;
 int g_iOpenTimer;
 int g_iRandomTime;
 int g_iCountStartTime = 9;
@@ -100,8 +104,6 @@ Handle gF_OnWardenDisconnected = null;
 Handle gF_OnWardenDeath = null;
 Handle gF_OnWardenRemovedBySelf = null;
 Handle gF_OnWardenRemovedByAdmin = null;
-Handle g_hOpenTimer=null;
-Handle g_hRandomTimer=null;
 Handle OpenCounterTime = null;
 Handle RandomTimer = null;
 Handle MathTimer = null;
@@ -115,9 +117,10 @@ char g_sModelPath[256];
 char g_sWardenModel[256];
 char g_sUnWarden[256];
 char g_sWarden[256];
+char g_sIconPath[256];
 char g_sSoundStartPath[256];
 char g_sSoundStopPath[256];
-char g_sOverlayStop[256];
+char g_sOverlayStopPath[256];
 char g_sOp[32];
 char g_sOperators[4][2] = {"+", "-", "/", "*"};
 char g_sMarkerNamesRed[64];
@@ -126,19 +129,12 @@ char g_sMarkerNamesGreen[64];
 char g_sMarkerNamesOrange[64];
 char g_sMarkerNames[4][64] ={{""},{""},{""},{""}};
 
-
-#define OVERLAY "materials/decals/MyJailbreak/warden.vmt"
-#define OVERLAY_2 "materials/decals/MyJailbreak/warden.vtf"
-
-
-
-
 //float
 float g_fMarkerRadiusMin = 100.0;
 float g_fMarkerRadiusMax = 500.0;
 float g_fMarkerRangeMax = 1500.0;
 float g_fMarkerArrowHeight = 90.0;
-float g_fMarkerArrowLength = 18.0;
+float g_fMarkerArrowLength = 20.0;
 float g_fMarkerSetupStartOrigin[3];
 float g_fMarkerSetupEndOrigin[3];
 float g_fMarkerOrigin[4][3];
@@ -209,22 +205,25 @@ public void OnPluginStart()
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_warden_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true,  0.0, true, 1.0);
 	gc_bBecomeWarden = AutoExecConfig_CreateConVar("sm_warden_become", "1", "0 - disabled, 1 - enable !w / !warden - player can choose to be warden. If disabled you should need sm_warden_choose_random 1", _, true,  0.0, true, 1.0);
 	gc_bChooseRandom = AutoExecConfig_CreateConVar("sm_warden_choose_random", "1", "0 - disabled, 1 - enable pic random warden if there is still no warden after sm_warden_choose_time", _, true,  0.0, true, 1.0);
-	g_hRandomTimer = AutoExecConfig_CreateConVar("sm_warden_choose_time", "20", "Time in seconds a random warden will picked when no warden was set. need sm_warden_choose_random 1", _, true,  1.0);
+	gc_hRandomTimer = AutoExecConfig_CreateConVar("sm_warden_choose_time", "20", "Time in seconds a random warden will picked when no warden was set. need sm_warden_choose_random 1", _, true,  1.0);
 	gc_bVote = AutoExecConfig_CreateConVar("sm_warden_vote", "1", "0 - disabled, 1 - enable player vote against warden", _, true,  0.0, true, 1.0);
 	gc_bStayWarden = AutoExecConfig_CreateConVar("sm_warden_stay", "1", "0 - disabled, 1 - enable warden stay after round end", _, true,  0.0, true, 1.0);
 	gc_bBetterNotes = AutoExecConfig_CreateConVar("sm_warden_better_notifications", "1", "0 - disabled, 1 - Will use hint and center text", _, true, 0.0, true, 1.0);
 	gc_bNoBlock = AutoExecConfig_CreateConVar("sm_warden_noblock", "1", "0 - disabled, 1 - enable setable noblock for warden", _, true,  0.0, true, 1.0);
 	gc_bFF = AutoExecConfig_CreateConVar("sm_warden_ff", "1", "0 - disabled, 1 - enable switch ff for T ", _, true,  0.0, true, 1.0);
 	gc_bRandom = AutoExecConfig_CreateConVar("sm_warden_random", "1", "0 - disabled, 1 - enable kill a random t for warden", _, true,  0.0, true, 1.0);
+	gc_iRandomKind = AutoExecConfig_CreateConVar("sm_warden_randomkind", "2", "1 - all random / 2 - Thunder / 3 - Timebomb / 4 - Firebomb / 5 - NoKill(1,3,4 needs funncommands.smx enabled)", _, true,  1.0, true, 4.0);
 	gc_bCountDown = AutoExecConfig_CreateConVar("sm_warden_countdown", "1", "0 - disabled, 1 - enable countdown for warden", _, true,  0.0, true, 1.0);
+	gc_bIcon = AutoExecConfig_CreateConVar("sm_warden_icon_enable", "1", "0 - disabled, 1 - enable the icon above the wardens head", _, true,  0.0, true, 1.0);
+	gc_sIconPath = AutoExecConfig_CreateConVar("sm_warden_icon", "decals/MyJailbreak/warden" , "Path to the warden icon DONT TYPE .vmt or .vft");
 	gc_bOverlays = AutoExecConfig_CreateConVar("sm_warden_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true,  0.0, true, 1.0);
 	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_warden_overlays_start", "overlays/MyJailbreak/start" , "Path to the start Overlay DONT TYPE .vmt or .vft");
 	gc_sOverlayStopPath = AutoExecConfig_CreateConVar("sm_warden_overlays_stop", "overlays/MyJailbreak/stop" , "Path to the stop Overlay DONT TYPE .vmt or .vft");
 	gc_bOpen = AutoExecConfig_CreateConVar("sm_warden_open_enable", "1", "0 - disabled, 1 - warden can open/close cells", _, true,  0.0, true, 1.0);
-	g_hOpenTimer = AutoExecConfig_CreateConVar("sm_warden_open_time", "60", "Time in seconds for open doors on round start automaticly", _, true, 0.0); 
+	gc_hOpenTimer = AutoExecConfig_CreateConVar("sm_warden_open_time", "60", "Time in seconds for open doors on round start automaticly", _, true, 0.0); 
 	gc_bOpenTimer = AutoExecConfig_CreateConVar("sm_warden_open_time_enable", "1", "should doors open automatic 0- no 1 yes", _, true,  0.0, true, 1.0); //todo dont wokr
 	gc_bOpenTimerWarden = AutoExecConfig_CreateConVar("sm_warden_open_time_warden", "1", "should doors open automatic after sm_warden_open_time when there is a warden? needs sm_warden_open_time_enable 1", _, true,  0.0, true, 1.0);
-	gc_bMarker = AutoExecConfig_CreateConVar("sm_warden_marker", "1", "0 - disabled, 1 - enable Warden simple markers ", _, true,  0.0, true, 1.0);
+	gc_bMarker = AutoExecConfig_CreateConVar("sm_warden_marker", "1", "0 - disabled, 1 - enable Warden advanced markers ", _, true,  0.0, true, 1.0);
 	gc_bMath = AutoExecConfig_CreateConVar("sm_warden_math", "1", "0 - disabled, 1 - enable mathquiz for warden", _, true,  0.0, true, 1.0);
 	gc_iMinimumNumber = AutoExecConfig_CreateConVar("sm_warden_math_min", "1", "What should be the minimum number for questions?", _, true,  1.0);
 	gc_iMaximumNumber = AutoExecConfig_CreateConVar("sm_warden_math_max", "100", "What should be the maximum number for questions?", _, true,  2.0);
@@ -256,6 +255,7 @@ public void OnPluginStart()
 	HookConVarChange(gc_sSoundStopPath, OnSettingChanged);
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sOverlayStopPath, OnSettingChanged);
+	HookConVarChange(gc_sIconPath, OnSettingChanged);
 	
 	//FindConVar
 	g_bFF = FindConVar("mp_teammates_are_enemies");
@@ -265,11 +265,10 @@ public void OnPluginStart()
 	gc_sSoundStopPath.GetString(g_sSoundStopPath, sizeof(g_sSoundStopPath));
 	gc_sModelPath.GetString(g_sWardenModel, sizeof(g_sWardenModel));
 	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
-	gc_sOverlayStopPath.GetString(g_sOverlayStop , sizeof(g_sOverlayStop));
+	gc_sOverlayStopPath.GetString(g_sOverlayStopPath , sizeof(g_sOverlayStopPath));
+	gc_sIconPath.GetString(g_sIconPath , sizeof(g_sIconPath));
 	
-
-	
-	g_CollisionOffset = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
+	g_iCollisionOffset = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
 	
 	g_iVoteCount = 0;
 	
@@ -318,13 +317,18 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 	}
 	else if(convar == gc_sOverlayStopPath)
 	{
-		strcopy(g_sOverlayStop, sizeof(g_sOverlayStop), newValue);
-		if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStop);
+		strcopy(g_sOverlayStopPath, sizeof(g_sOverlayStopPath), newValue);
+		if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStopPath);
 	}
 	else if(convar == gc_sModelPath)
 	{
 		strcopy(g_sWardenModel, sizeof(g_sWardenModel), newValue);
 		PrecacheModel(g_sWardenModel);
+	}
+	else if(convar == gc_sIconPath)
+	{
+		strcopy(g_sIconPath, sizeof(g_sIconPath), newValue);
+		if(gc_bIcon.BoolValue) PrecacheOverlayAnyDownload(g_sIconPath);
 	}
 }
 
@@ -350,8 +354,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 public void OnMapStart()
 {
-	g_bPrecached = false;
-	
 	if(gc_bSounds.BoolValue)	
 	{
 		PrecacheSoundAnyDownload(g_sWarden);
@@ -362,24 +364,14 @@ public void OnMapStart()
 	g_iVoteCount = 0;
 	PrecacheModel(g_sWardenModel);
 	if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStart);
-	if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStop);
+	if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStopPath);
+	if(gc_bIcon.BoolValue) PrecacheOverlayAnyDownload(g_sIconPath);
 	g_iBeamSprite = PrecacheModel("materials/sprites/laserbeam.vmt");
 	g_iHaloSprite = PrecacheModel("materials/sprites/glow01.vmt");
 	g_iSmokeSprite = PrecacheModel("materials/sprites/steam1.vmt");
 	g_iLightningSprite = g_iBeamSprite;
 	PrecacheSound(SOUND_THUNDER, true);
 	RemoveAllMarkers();
-	
-	AddFileToDownloadsTable(OVERLAY);
-	AddFileToDownloadsTable(OVERLAY_2);
-	
-	if(!PrecacheModel(OVERLAY))
-	{
-		LogMessage("Cannot precache %s", OVERLAY);
-		return;
-	}
-	
-	g_bPrecached = true;
 }
 
 //Round Start
@@ -409,9 +401,9 @@ public void RoundStart(Event event, const char[] name, bool dontBroadcast)
 	
 	if(gc_bPlugin.BoolValue)	
 	{
-		g_iOpenTimer = GetConVarInt(g_hOpenTimer);
+		g_iOpenTimer = GetConVarInt(gc_hOpenTimer);
 		OpenCounterTime = CreateTimer(1.0, OpenCounter, _, TIMER_REPEAT);
-		g_iRandomTime = GetConVarInt(g_hRandomTimer);
+		g_iRandomTime = GetConVarInt(gc_hRandomTimer);
 		RandomTimer = CreateTimer(1.0, ChooseRandom, _, TIMER_REPEAT);
 	}
 	else
@@ -514,13 +506,12 @@ public Action ExitWarden(int client, int args)
 			if(gc_bBetterNotes.BoolValue)
 			{
 				PrintCenterTextAll("%t", "warden_retire_nc", client);
-				PrintHintTextToAll("%t", "warden_retire_nc", client);
 			}
 			Warden = -1;
 			Forward_OnWardenRemoved(client);
 			CreateTimer( 0.1, RemoveColor, Warden);
 			SetEntityModel(client, g_sModelPath);
-			g_iRandomTime = GetConVarInt(g_hRandomTimer);
+			g_iRandomTime = GetConVarInt(gc_hRandomTimer);
 			RandomTimer = CreateTimer(1.0, ChooseRandom, _, TIMER_REPEAT);
 			if(gc_bSounds.BoolValue)	
 			{
@@ -586,13 +577,12 @@ public void playerDeath(Event event, const char[] name, bool dontBroadcast)
 		if(gc_bBetterNotes.BoolValue)
 		{
 			PrintCenterTextAll("%t", "warden_dead_nc", client);
-			PrintHintTextToAll("%t", "warden_dead_nc", client);
 		}
 		if(gc_bSounds.BoolValue)
 		{
 			EmitSoundToAllAny(g_sUnWarden);
 		}
-		g_iRandomTime = GetConVarInt(g_hRandomTimer);
+		g_iRandomTime = GetConVarInt(gc_hRandomTimer);
 		RandomTimer = CreateTimer(1.0, ChooseRandom, _, TIMER_REPEAT);
 		Warden = -1;
 		Call_StartForward(gF_OnWardenDeath);
@@ -673,7 +663,6 @@ public int m_SetWarden(Menu menu, MenuAction action, int client, int Position)
 						if(gc_bBetterNotes.BoolValue)
 						{
 							PrintCenterTextAll("%t", "warden_new_nc", i);
-							PrintHintTextToAll("%t", "warden_new_nc", i);
 						}
 						if(gc_bSounds.BoolValue)
 						{
@@ -728,7 +717,6 @@ public int m_WardenOverwrite(Menu menu, MenuAction action, int client, int Posit
 			if(gc_bBetterNotes.BoolValue)
 			{
 				PrintCenterTextAll("%t", "warden_new_nc", newwarden);
-				PrintHintTextToAll("%t", "warden_new_nc", newwarden);
 			}
 			LogMessage("[MyJB] Admin %L kick player %N warden and set &N as new", client, Warden, newwarden);
 			Warden = newwarden;
@@ -811,7 +799,6 @@ public void OnClientDisconnect(int client)
 		if(gc_bBetterNotes.BoolValue)
 		{
 			PrintCenterTextAll("%t", "warden_disconnected_nc", client);
-			PrintHintTextToAll("%t", "warden_disconnected_nc", client);
 		}
 		Warden = -1;
 		Forward_OnWardenRemoved(client);
@@ -837,7 +824,6 @@ void SetTheWarden(int client)
 		if(gc_bBetterNotes.BoolValue)
 		{
 			PrintCenterTextAll("%t", "warden_new_nc", client);
-			PrintHintTextToAll("%t", "warden_new_nc", client);
 		}
 		Warden = client;
 		CreateTimer(0.5, Timer_WardenFixColor, client, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
@@ -881,13 +867,12 @@ void RemoveTheWarden(int client)
 	if(gc_bBetterNotes.BoolValue)
 	{
 		PrintCenterTextAll("%t", "warden_removed_nc", client, Warden);
-		PrintHintTextToAll("%t", "warden_removed_nc", client, Warden);
 	}
 	LogMessage("[MyJB] Admin %L removed player %N as warden", client, Warden);
 	CreateTimer( 0.1, RemoveColor, Warden);
 	SetEntityModel(client, g_sModelPath);
 	Warden = -1;
-	g_iRandomTime = GetConVarInt(g_hRandomTimer);
+	g_iRandomTime = GetConVarInt(gc_hRandomTimer);
 	RandomTimer = CreateTimer(1.0, ChooseRandom, _, TIMER_REPEAT);
 	Call_StartForward(gF_OnWardenRemovedBySelf);
 	Call_PushCell(client);
@@ -927,7 +912,6 @@ public Action StartMathQuestion(int client, int args)
 				if(gc_bBetterNotes.BoolValue)
 				{
 					PrintCenterTextAll("%t", "warden_startmathquiz_nc");
-					PrintHintTextToAll("%t", "warden_startmathquiz_nc");
 				}
 						
 				IsMathQuiz = true;
@@ -976,7 +960,6 @@ public Action CreateMathQuestion( Handle timer, any client )
 		
 			if(gc_bBetterNotes.BoolValue)
 			{
-				PrintCenterTextAll("%i %s %i = ?? ", NumOne, g_sOp, NumTwo);
 				PrintHintTextToAll("%i %s %i = ?? ", NumOne, g_sOp, NumTwo);
 			}
 			
@@ -1350,12 +1333,9 @@ public bool TraceFilterAllEntities(int entity, int contentsMask, any client)
 
 public Action Create_Model(Handle iTimer, any client)
 {
-	if(g_bPrecached)
-	{
 	SafeDelete(g_iIcon[client]);
 	g_iIcon[client] = CreateIcon();
 	PlaceAndBindIcon(client, g_iIcon[client]);
-	}
 }
 
 stock int CreateIcon()
@@ -1363,13 +1343,16 @@ stock int CreateIcon()
 	int sprite = CreateEntityByName("env_sprite_oriented");
 	
 	if(sprite == -1)	return -1;
-
+	
+	char iconbuffer[256];
+	Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconPath);
+	
 	DispatchKeyValue(sprite, "classname", "env_sprite_oriented");
 	DispatchKeyValue(sprite, "spawnflags", "1");
 	DispatchKeyValue(sprite, "scale", "0.3");
 	DispatchKeyValue(sprite, "rendermode", "1");
 	DispatchKeyValue(sprite, "rendercolor", "255 255 255");
-	DispatchKeyValue(sprite, "model", OVERLAY);
+	DispatchKeyValue(sprite, "model", iconbuffer);
 	if(DispatchSpawn(sprite))	return sprite;
 	
 	return -1;
@@ -1736,7 +1719,6 @@ public Action SetStartCountDown(int client, int args)
 		
 				if(gc_bBetterNotes.BoolValue)
 				{
-					PrintCenterTextAll("%t", "warden_startcountdownhint_nc");
 					PrintHintTextToAll("%t", "warden_startcountdownhint_nc");
 				}
 	
@@ -1765,7 +1747,6 @@ public Action SetStopCountDown(int client, int args)
 		
 				if(gc_bBetterNotes.BoolValue)
 				{
-					PrintCenterTextAll("%t", "warden_stopcountdownhint_nc");
 					PrintHintTextToAll("%t", "warden_stopcountdownhint_nc");
 				}
 												
@@ -1793,7 +1774,6 @@ public Action SetStartStopCountDown(int client, int args)
 				
 				if(gc_bBetterNotes.BoolValue)
 				{
-					PrintCenterTextAll("%t", "warden_startstopcountdownhint_nc");
 					PrintHintTextToAll("%t", "warden_startstopcountdownhint_nc");
 				}
 				IsCountDown = true;
@@ -1812,7 +1792,7 @@ public Action StartCountdown( Handle timer, any client )
 		{
 			if (g_iCountStartTime < 6) 
 			{
-				PrintCenterText(client,"%t", "warden_startcountdown_nc", g_iCountStartTime);
+				PrintHintText(client,"%t", "warden_startcountdown_nc", g_iCountStartTime);
 				CPrintToChatAll("%t %t", "warden_tag" , "warden_startcountdown", g_iCountStartTime);
 			}
 		}
@@ -1823,7 +1803,7 @@ public Action StartCountdown( Handle timer, any client )
 	{
 		if(IsClientInGame(client) && IsClientConnected(client) && !IsFakeClient(client))
 		{
-			PrintCenterText(client, "%t", "warden_countdownstart_nc");
+			PrintHintText(client, "%t", "warden_countdownstart_nc");
 			CPrintToChatAll("%t %t", "warden_tag" , "warden_countdownstart");
 			
 			if(gc_bOverlays.BoolValue)
@@ -1852,7 +1832,7 @@ public Action StopCountdown( Handle timer, any client )
 		{
 			if (g_iCountStopTime < 16) 
 			{
-				PrintCenterText(client,"%t", "warden_stopcountdown_nc", g_iCountStopTime);
+				PrintHintText(client,"%t", "warden_stopcountdown_nc", g_iCountStopTime);
 				CPrintToChatAll("%t %t", "warden_tag" , "warden_stopcountdown", g_iCountStopTime);
 			}
 		}
@@ -1863,7 +1843,7 @@ public Action StopCountdown( Handle timer, any client )
 	{
 		if(IsClientInGame(client) && IsClientConnected(client) && !IsFakeClient(client))
 		{
-			PrintCenterText(client, "%t", "warden_countdownstop_nc");
+			PrintHintText(client, "%t", "warden_countdownstop_nc");
 			CPrintToChatAll("%t %t", "warden_tag" , "warden_countdownstop");
 
 			if(gc_bOverlays.BoolValue)
@@ -1892,7 +1872,7 @@ public Action StopStartStopCountdown( Handle timer, any client )
 		{
 			if ( g_iSetCountStartStopTime < 11) 
 			{
-				PrintCenterText(client,"%t", "warden_stopcountdown_nc", g_iSetCountStartStopTime);
+				PrintHintText(client,"%t", "warden_stopcountdown_nc", g_iSetCountStartStopTime);
 				CPrintToChatAll("%t %t", "warden_tag" , "warden_stopcountdown", g_iSetCountStartStopTime);
 			}
 		}
@@ -1904,7 +1884,7 @@ public Action StopStartStopCountdown( Handle timer, any client )
 	{
 		if(IsClientInGame(client) && IsClientConnected(client) && !IsFakeClient(client))
 		{
-			PrintCenterText(client, "%t", "warden_countdownstop_nc");
+			PrintHintText(client, "%t", "warden_countdownstop_nc");
 			CPrintToChatAll("%t %t", "warden_tag" , "warden_countdownstop");
 			
 			if(gc_bOverlays.BoolValue)
@@ -1934,7 +1914,7 @@ public Action ShowOverlayStop( Handle timer, any client )
 	{
 		int iFlag = GetCommandFlags( "r_screenoverlay" ) & ( ~FCVAR_CHEAT ); 
 		SetCommandFlags( "r_screenoverlay", iFlag ); 
-		ClientCommand( client, "r_screenoverlay \"%s.vtf\"", g_sOverlayStop);
+		ClientCommand( client, "r_screenoverlay \"%s.vtf\"", g_sOverlayStopPath);
 		CreateTimer( 2.0, DeleteOverlay, client );
 	}
 	return Plugin_Continue;
@@ -1944,12 +1924,12 @@ public Action ShowOverlayStop( Handle timer, any client )
 
 public Action EnableNoBlock(int client)
 {
-	SetEntData(client, g_CollisionOffset, 2, 4, true);
+	SetEntData(client, g_iCollisionOffset, 2, 4, true);
 }
 
 public Action EnableBlock(int client)
 {
-	SetEntData(client, g_CollisionOffset, 5, 4, true);
+	SetEntData(client, g_iCollisionOffset, 5, 4, true);
 }
 
 public Action noblockon(int client, int args)
@@ -2048,7 +2028,13 @@ public int killmenu(Menu menu, MenuAction action, int client, int Position)
 		int choice = StringToInt(Item);
 		if(choice == 1)
 		{
-			DoKillRandom(client, 0);
+			int i = GetRandomPlayer(CS_TEAM_T);
+			if(i > 0)
+			{
+				CreateTimer( 1.0, KillPlayer, i);
+				CPrintToChatAll("%t %t", "warden_tag", "warden_israndom", i); 
+				LogMessage("[MyJB] Warden %L killed random player %N", client, i);
+			}
 		}
 		
 	}
@@ -2065,15 +2051,19 @@ public int killmenu(Menu menu, MenuAction action, int client, int Position)
 	}
 }
 
-public Action DoKillRandom(int client, int args)
+public Action KillPlayer( Handle timer, any client) 
 {
-		int i = GetRandomPlayer(CS_TEAM_T);
-		if(i > 0)
-		{
-			PerformSmite(client, i);
-			CPrintToChatAll("%t %t", "warden_tag", "warden_israndomdead", i); 
-			LogMessage("[MyJB] Warden %L killed random player %N", client, i);
-		}
+	if(gc_iRandomKind.IntValue == 1)
+	{
+		int randomnum = GetRandomInt(0, 2);
+		
+		if(randomnum == 0)PerformSmite(0, client);
+		if(randomnum == 1)ServerCommand("sm_timebomb %N 1", client);
+		if(randomnum == 2)ServerCommand("sm_firebomb %N 1", client);
+	}
+	else if(gc_iRandomKind.IntValue == 2)PerformSmite(0, client);
+	else if(gc_iRandomKind.IntValue == 3)ServerCommand("sm_timebomb %N 1", client);
+	else if(gc_iRandomKind.IntValue == 4)ServerCommand("sm_firebomb %N 1", client);
 }
 
 stock int GetRandomPlayer(int team) 
@@ -2125,10 +2115,12 @@ public Action PerformSmite(int client, int target)
 	TE_SetupSmoke(clientpos, g_iSmokeSprite, 5.0, 10);
 	TE_SendToAll();
 	
-	EmitAmbientSound(SOUND_THUNDER, startpos, client, SNDLEVEL_GUNFIRE);
+	EmitAmbientSound(SOUND_THUNDER, startpos, target, SNDLEVEL_GUNFIRE);
 	
 	ForcePlayerSuicide(target);
 }
+
+//choose random warden
 
 public Action ChooseRandom(Handle timer, Handle pack)
 {
