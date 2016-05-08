@@ -2,7 +2,7 @@
 #include <cstrike>
 #include <sourcemod>
 #include <colors>
-#include <wardn>
+#include <warden>
 #include <emitsoundany>
 #include <smartjaildoors>
 #include <autoexecconfig>

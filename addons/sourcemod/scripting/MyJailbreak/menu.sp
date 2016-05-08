@@ -1,7 +1,7 @@
 //includes
 #include <sourcemod>
 #include <cstrike>
-#include <wardn>
+#include <warden>
 #include <colors>
 #include <autoexecconfig>
 #include <myjailbreak>

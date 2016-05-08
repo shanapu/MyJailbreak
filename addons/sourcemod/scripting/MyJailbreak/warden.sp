@@ -1,7 +1,7 @@
 //Includes
 #include <sourcemod>
 #include <cstrike>
-#include <wardn>
+#include <warden>
 #include <emitsoundany>
 #include <smartjaildoors>
 #include <colors>
@@ -48,13 +48,13 @@ ConVar gc_sSoundStopPath;
 ConVar gc_sModelPath;
 ConVar gc_bModel;
 ConVar gc_bBetterNotes;
-ConVar g_bFF;
 ConVar gc_iMinimumNumber;
 ConVar gc_iMaximumNumber;
 ConVar gc_iTimeAnswer;
 ConVar gc_iWardenColorRed;
 ConVar gc_iWardenColorGreen;
 ConVar gc_iWardenColorBlue;
+ConVar g_bFF;
 
 //Bools
 bool IsCountDown = false;
@@ -62,25 +62,28 @@ bool IsMathQuiz = false;
 bool g_bMarkerSetup;
 bool g_bCanZoom[MAXPLAYERS + 1];
 bool g_bHasSilencer[MAXPLAYERS + 1];
+bool g_bPrecached = false;
 
 //Integers
-int g_iVoteCount;
+
 int Warden = -1;
-int tempwarden[MAXPLAYERS+1] = -1;
+int TempWarden[MAXPLAYERS+1] = -1;
+int g_iVoteCount;
 int g_CollisionOffset;
-int opentimer;
-int randomtime;
+int g_iOpenTimer;
+int g_iRandomTime;
 int g_iCountStartTime = 9;
 int g_iCountStopTime = 9;
 int g_iBeamSprite = -1;
 int g_iHaloSprite = -1;
 int g_iSetCountStartStopTime;
-int g_SmokeSprite;
-int g_LightningSprite;
-int g_MathMin;
-int g_MathMax;
-int g_MathResult;
-int g_MarkerColors[4][4] =	
+int g_iSmokeSprite;
+int g_iLightningSprite;
+int g_iMathMin;
+int g_iMathMax;
+int g_iMathResult;
+int g_iIcon[MAXPLAYERS + 1] = {-1, ...};
+int g_iMarkerColors[4][4] = 
 {	
 	{255,25,25,255},
 	{25,25,255,255},
@@ -99,9 +102,9 @@ Handle gF_OnWardenRemovedBySelf = null;
 Handle gF_OnWardenRemovedByAdmin = null;
 Handle g_hOpenTimer=null;
 Handle g_hRandomTimer=null;
-Handle opencountertime = null;
-Handle randomtimer = null;
-Handle mathtimer = null;
+Handle OpenCounterTime = null;
+Handle RandomTimer = null;
+Handle MathTimer = null;
 Handle StartTimer = null;
 Handle StopTimer = null;
 Handle StartStopTimer = null;
@@ -115,13 +118,17 @@ char g_sWarden[256];
 char g_sSoundStartPath[256];
 char g_sSoundStopPath[256];
 char g_sOverlayStop[256];
-char g_op[32];
-char g_operators[4][2] = {"+", "-", "/", "*"};
+char g_sOp[32];
+char g_sOperators[4][2] = {"+", "-", "/", "*"};
 char g_sMarkerNamesRed[64];
 char g_sMarkerNamesBlue[64];
 char g_sMarkerNamesGreen[64];
 char g_sMarkerNamesOrange[64];
 char g_sMarkerNames[4][64] ={{""},{""},{""},{""}};
+
+
+#define OVERLAY "materials/decals/MyJailbreak/warden.vmt"
+#define OVERLAY_2 "materials/decals/MyJailbreak/warden.vtf"
 
 
 
@@ -134,8 +141,8 @@ float g_fMarkerArrowHeight = 90.0;
 float g_fMarkerArrowLength = 18.0;
 float g_fMarkerSetupStartOrigin[3];
 float g_fMarkerSetupEndOrigin[3];
-float g_MarkerOrigin[4][3];
-float g_MarkerRadius[4];
+float g_fMarkerOrigin[4][3];
+float g_fMarkerRadius[4];
 
 public Plugin myinfo = {
 	name = "MyJailbreak - Warden",
@@ -241,7 +248,6 @@ public void OnPluginStart()
 	HookEvent("item_equip", Event_ItemEquip);
 	HookEvent("round_start", RoundStart);
 	HookEvent("player_death", playerDeath);
-
 	HookEvent("round_end", RoundEnd);
 	HookConVarChange(gc_sModelPath, OnSettingChanged);
 	HookConVarChange(gc_sUnWarden, OnSettingChanged);
@@ -326,8 +332,8 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 
 public void OnConfigsExecuted()
 {
-	g_MathMin = gc_iMinimumNumber.IntValue;
-	g_MathMax = gc_iMaximumNumber.IntValue;
+	g_iMathMin = gc_iMinimumNumber.IntValue;
+	g_iMathMax = gc_iMaximumNumber.IntValue;
 }
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
@@ -344,6 +350,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 public void OnMapStart()
 {
+	g_bPrecached = false;
+	
 	if(gc_bSounds.BoolValue)	
 	{
 		PrecacheSoundAnyDownload(g_sWarden);
@@ -357,25 +365,36 @@ public void OnMapStart()
 	if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStop);
 	g_iBeamSprite = PrecacheModel("materials/sprites/laserbeam.vmt");
 	g_iHaloSprite = PrecacheModel("materials/sprites/glow01.vmt");
-	g_SmokeSprite = PrecacheModel("materials/sprites/steam1.vmt");
-	g_LightningSprite = g_iBeamSprite;
+	g_iSmokeSprite = PrecacheModel("materials/sprites/steam1.vmt");
+	g_iLightningSprite = g_iBeamSprite;
 	PrecacheSound(SOUND_THUNDER, true);
 	RemoveAllMarkers();
+	
+	AddFileToDownloadsTable(OVERLAY);
+	AddFileToDownloadsTable(OVERLAY_2);
+	
+	if(!PrecacheModel(OVERLAY))
+	{
+		LogMessage("Cannot precache %s", OVERLAY);
+		return;
+	}
+	
+	g_bPrecached = true;
 }
 
 //Round Start
 
 public void RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
-	if (opencountertime != null)
-		KillTimer(opencountertime);
+	if (OpenCounterTime != null)
+		KillTimer(OpenCounterTime);
 		
-	opencountertime = null;
+	OpenCounterTime = null;
 	
-	if (randomtimer != null)
-		KillTimer(randomtimer);
+	if (RandomTimer != null)
+		KillTimer(RandomTimer);
 			
-	randomtimer = null;
+	RandomTimer = null;
 	
 	if(gc_bModel.BoolValue)
 	{
@@ -390,18 +409,20 @@ public void RoundStart(Event event, const char[] name, bool dontBroadcast)
 	
 	if(gc_bPlugin.BoolValue)	
 	{
-		opentimer = GetConVarInt(g_hOpenTimer);
-		opencountertime = CreateTimer(1.0, OpenCounter, _, TIMER_REPEAT);
-		randomtime = GetConVarInt(g_hRandomTimer);
-		randomtimer = CreateTimer(1.0, ChooseRandom, _, TIMER_REPEAT);
+		g_iOpenTimer = GetConVarInt(g_hOpenTimer);
+		OpenCounterTime = CreateTimer(1.0, OpenCounter, _, TIMER_REPEAT);
+		g_iRandomTime = GetConVarInt(g_hRandomTimer);
+		RandomTimer = CreateTimer(1.0, ChooseRandom, _, TIMER_REPEAT);
 	}
 	else
 	{
 		if (Warden == 1)
 		{
-		CreateTimer( 0.1, RemoveColor, Warden);
+		CreateTimer(0.1, RemoveColor, Warden);
 		SetEntityModel(Warden, g_sModelPath);
 		Warden = -1;
+		SafeDelete(g_iIcon[Warden]);
+		g_iIcon[Warden] = -1;
 		}
 	}
 	char EventDay[64];
@@ -414,7 +435,13 @@ public void RoundStart(Event event, const char[] name, bool dontBroadcast)
 		CreateTimer( 0.1, RemoveColor, Warden);
 		SetEntityModel(Warden, g_sModelPath);
 		Warden = -1;
+		SafeDelete(g_iIcon[Warden]);
+		g_iIcon[Warden] = -1;
 		}
+	}
+	if(gc_bStayWarden.BoolValue && warden_exist())
+	{
+	CreateTimer(0.1, Create_Model, Warden);
 	}
 }
 
@@ -493,8 +520,8 @@ public Action ExitWarden(int client, int args)
 			Forward_OnWardenRemoved(client);
 			CreateTimer( 0.1, RemoveColor, Warden);
 			SetEntityModel(client, g_sModelPath);
-			randomtime = GetConVarInt(g_hRandomTimer);
-			randomtimer = CreateTimer(1.0, ChooseRandom, _, TIMER_REPEAT);
+			g_iRandomTime = GetConVarInt(g_hRandomTimer);
+			RandomTimer = CreateTimer(1.0, ChooseRandom, _, TIMER_REPEAT);
 			if(gc_bSounds.BoolValue)	
 			{
 				EmitSoundToAllAny(g_sUnWarden);
@@ -503,6 +530,8 @@ public Action ExitWarden(int client, int args)
 			g_iVoteCount = 0;
 			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
 			g_sHasVoted[0] = '\0';
+			SafeDelete(g_iIcon[client]);
+			g_iIcon[client] = -1;
 		}
 		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
 	}
@@ -563,12 +592,14 @@ public void playerDeath(Event event, const char[] name, bool dontBroadcast)
 		{
 			EmitSoundToAllAny(g_sUnWarden);
 		}
-		randomtime = GetConVarInt(g_hRandomTimer);
-		randomtimer = CreateTimer(1.0, ChooseRandom, _, TIMER_REPEAT);
+		g_iRandomTime = GetConVarInt(g_hRandomTimer);
+		RandomTimer = CreateTimer(1.0, ChooseRandom, _, TIMER_REPEAT);
 		Warden = -1;
 		Call_StartForward(gF_OnWardenDeath);
 		Call_PushCell(client);
 		Call_Finish();
+		SafeDelete(g_iIcon[client]);
+		g_iIcon[client] = -1;
 	}
 }
 
@@ -622,7 +653,7 @@ public int m_SetWarden(Menu menu, MenuAction action, int client, int Position)
 				{
 					if(IsWarden() == true)
 					{
-						tempwarden[client] = userid;
+						TempWarden[client] = userid;
 						Menu menu1 = CreateMenu(m_WardenOverwrite);
 						Format(info4, sizeof(info4), "%T", "warden_remove", LANG_SERVER);
 						menu1.SetTitle(info4);
@@ -649,6 +680,7 @@ public int m_SetWarden(Menu menu, MenuAction action, int client, int Position)
 							EmitSoundToAllAny(g_sWarden);
 						}
 						CreateTimer(0.5, Timer_WardenFixColor, i, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
+						CreateTimer(0.1, Create_Model, client);
 						GetEntPropString(client, Prop_Data, "m_ModelName", g_sModelPath, sizeof(g_sModelPath));
 						if(gc_bModel.BoolValue)
 						{
@@ -686,7 +718,7 @@ public int m_WardenOverwrite(Menu menu, MenuAction action, int client, int Posit
 		int choice = StringToInt(Item);
 		if(choice == 1)
 		{
-			int newwarden = GetClientOfUserId(tempwarden[client]);
+			int newwarden = GetClientOfUserId(TempWarden[client]);
 			CPrintToChatAll("%t %t", "warden_tag" , "warden_removed", client, Warden);
 			CPrintToChatAll("%t %t", "warden_tag" , "warden_new", newwarden);
 			if(gc_bSounds.BoolValue)
@@ -701,6 +733,7 @@ public int m_WardenOverwrite(Menu menu, MenuAction action, int client, int Posit
 			LogMessage("[MyJB] Admin %L kick player %N warden and set &N as new", client, Warden, newwarden);
 			Warden = newwarden;
 			CreateTimer(0.5, Timer_WardenFixColor, newwarden, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
+			CreateTimer(0.1, Create_Model, newwarden);
 			GetEntPropString(newwarden, Prop_Data, "m_ModelName", g_sModelPath, sizeof(g_sModelPath));
 			if(gc_bModel.BoolValue)
 			{
@@ -808,6 +841,7 @@ void SetTheWarden(int client)
 		}
 		Warden = client;
 		CreateTimer(0.5, Timer_WardenFixColor, client, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
+		CreateTimer(0.1, Create_Model, client);
 		GetEntPropString(client, Prop_Data, "m_ModelName", g_sModelPath, sizeof(g_sModelPath));
 		if(gc_bModel.BoolValue)
 		{
@@ -853,8 +887,8 @@ void RemoveTheWarden(int client)
 	CreateTimer( 0.1, RemoveColor, Warden);
 	SetEntityModel(client, g_sModelPath);
 	Warden = -1;
-	randomtime = GetConVarInt(g_hRandomTimer);
-	randomtimer = CreateTimer(1.0, ChooseRandom, _, TIMER_REPEAT);
+	g_iRandomTime = GetConVarInt(g_hRandomTimer);
+	RandomTimer = CreateTimer(1.0, ChooseRandom, _, TIMER_REPEAT);
 	Call_StartForward(gF_OnWardenRemovedBySelf);
 	Call_PushCell(client);
 	Call_Finish();
@@ -867,6 +901,8 @@ void RemoveTheWarden(int client)
 	g_iVoteCount = 0;
 	Format(g_sHasVoted, sizeof(g_sHasVoted), "");
 	g_sHasVoted[0] = '\0';
+	SafeDelete(g_iIcon[client]);
+	g_iIcon[client] = -1;
 }
 
 //Math Quizz
@@ -907,45 +943,45 @@ public Action CreateMathQuestion( Handle timer, any client )
 	{
 		if(client == Warden)
 		{
-			int NumOne = GetRandomInt(g_MathMin, g_MathMax);
-			int NumTwo = GetRandomInt(g_MathMin, g_MathMax);
+			int NumOne = GetRandomInt(g_iMathMin, g_iMathMax);
+			int NumTwo = GetRandomInt(g_iMathMin, g_iMathMax);
 			
-			Format(g_op, sizeof(g_op), g_operators[GetRandomInt(0,3)]);
+			Format(g_sOp, sizeof(g_sOp), g_sOperators[GetRandomInt(0,3)]);
 			
-			if(StrEqual(g_op, PLUS))
+			if(StrEqual(g_sOp, PLUS))
 			{
-				g_MathResult = NumOne + NumTwo;
+				g_iMathResult = NumOne + NumTwo;
 			}
-			else if(StrEqual(g_op, MINUS))
+			else if(StrEqual(g_sOp, MINUS))
 			{
-				g_MathResult = NumOne - NumTwo;
+				g_iMathResult = NumOne - NumTwo;
 			}
-			else if(StrEqual(g_op, DIVISOR))
+			else if(StrEqual(g_sOp, DIVISOR))
 			{
 				do
 				{
-					NumOne = GetRandomInt(g_MathMin, g_MathMax);
-					NumTwo = GetRandomInt(g_MathMin, g_MathMax);
+					NumOne = GetRandomInt(g_iMathMin, g_iMathMax);
+					NumTwo = GetRandomInt(g_iMathMin, g_iMathMax);
 				}
 				while(NumOne % NumTwo != 0);
-				g_MathResult = NumOne / NumTwo;
+				g_iMathResult = NumOne / NumTwo;
 			}
-			else if(StrEqual(g_op, MULTIPL))
+			else if(StrEqual(g_sOp, MULTIPL))
 			{
-				g_MathResult = NumOne * NumTwo;
+				g_iMathResult = NumOne * NumTwo;
 			}
 			
 			
-			CPrintToChatAll("%t %N: %i %s %i = ?? ", "warden_tag", client, NumOne, g_op, NumTwo);
+			CPrintToChatAll("%t %N: %i %s %i = ?? ", "warden_tag", client, NumOne, g_sOp, NumTwo);
 		
 			if(gc_bBetterNotes.BoolValue)
 			{
-				PrintCenterTextAll("%i %s %i = ?? ", NumOne, g_op, NumTwo);
-				PrintHintTextToAll("%i %s %i = ?? ", NumOne, g_op, NumTwo);
+				PrintCenterTextAll("%i %s %i = ?? ", NumOne, g_sOp, NumTwo);
+				PrintHintTextToAll("%i %s %i = ?? ", NumOne, g_sOp, NumTwo);
 			}
 			
 			
-			mathtimer = CreateTimer(gc_iTimeAnswer.FloatValue, EndMathQuestion);
+			MathTimer = CreateTimer(gc_iTimeAnswer.FloatValue, EndMathQuestion);
 		}
 		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
 	}
@@ -965,7 +1001,7 @@ public Action OnChatMessage(int &author, Handle recipients, char[] name, char[] 
 
 public bool ProcessSolution(int client, int number)
 {
-	if(g_MathResult == number)
+	if(g_iMathResult == number)
 	{		
 		return true;
 	}
@@ -977,10 +1013,10 @@ public bool ProcessSolution(int client, int number)
 
 public void SendEndMathQuestion(int client)
 {
-	if(mathtimer != INVALID_HANDLE)
+	if(MathTimer != INVALID_HANDLE)
 	{
-		KillTimer(mathtimer);
-		mathtimer = INVALID_HANDLE;
+		KillTimer(MathTimer);
+		MathTimer = INVALID_HANDLE;
 	}
 	
 	char answer[100];
@@ -1052,13 +1088,13 @@ stock void Draw_Markers()
 	
 	for(int i = 0; i<4; i++)
 	{
-		if (g_MarkerRadius[i] <= 0.0)
+		if (g_fMarkerRadius[i] <= 0.0)
 			continue;
 		
 		float fHeadGuardOrigin[3];
 		Entity_GetAbsOrigin(Warden, fHeadGuardOrigin);
 		
-		if (GetVectorDistance(fHeadGuardOrigin, g_MarkerOrigin[i]) > g_fMarkerRangeMax)
+		if (GetVectorDistance(fHeadGuardOrigin, g_fMarkerOrigin[i]) > g_fMarkerRangeMax)
 		{
 			CPrintToChat(Warden, "%t %t", "warden_tag", "warden_marker_faraway", g_sMarkerNames[i]);
 			RemoveMarker(i);
@@ -1078,20 +1114,20 @@ stock void Draw_Markers()
 			
 			// Show the ring
 			
-			TE_SetupBeamRingPoint(g_MarkerOrigin[i], g_MarkerRadius[i], g_MarkerRadius[i]+0.1, g_iBeamSprite, g_iHaloSprite, 0, 10, 1.0, 2.0, 0.0, g_MarkerColors[i], 10, 0);
+			TE_SetupBeamRingPoint(g_fMarkerOrigin[i], g_fMarkerRadius[i], g_fMarkerRadius[i]+0.1, g_iBeamSprite, g_iHaloSprite, 0, 10, 1.0, 2.0, 0.0, g_iMarkerColors[i], 10, 0);
 			TE_SendToAll();
 			
 			// Show the arrow
 			
 			float fStart[3];
-			AddVectors(fStart, g_MarkerOrigin[i], fStart);
+			AddVectors(fStart, g_fMarkerOrigin[i], fStart);
 			fStart[2] += g_fMarkerArrowHeight;
 			
 			float fEnd[3];
 			AddVectors(fEnd, fStart, fEnd);
 			fEnd[2] += g_fMarkerArrowLength;
 			
-			TE_SetupBeamPoints(fStart, fEnd, g_iBeamSprite, g_iHaloSprite, 0, 10, 1.0, 2.0, 16.0, 1, 0.0, g_MarkerColors[i], 5);
+			TE_SetupBeamPoints(fStart, fEnd, g_iBeamSprite, g_iHaloSprite, 0, 10, 1.0, 2.0, 16.0, 1, 0.0, g_iMarkerColors[i], 5);
 			TE_SendToAll();
 		}
 	}
@@ -1237,16 +1273,16 @@ public int Handle_MarkerMenu(Handle menu, MenuAction action, int client, int ite
 
 stock void SetupMarker(int client, int marker)
 {
-	g_MarkerOrigin[marker][0] = g_fMarkerSetupStartOrigin[0];
-	g_MarkerOrigin[marker][1] = g_fMarkerSetupStartOrigin[1];
-	g_MarkerOrigin[marker][2] = g_fMarkerSetupStartOrigin[2];
+	g_fMarkerOrigin[marker][0] = g_fMarkerSetupStartOrigin[0];
+	g_fMarkerOrigin[marker][1] = g_fMarkerSetupStartOrigin[1];
+	g_fMarkerOrigin[marker][2] = g_fMarkerSetupStartOrigin[2];
 	
 	float radius = 2*GetVectorDistance(g_fMarkerSetupEndOrigin, g_fMarkerSetupStartOrigin);
 	if (radius > g_fMarkerRadiusMax)
 		radius = g_fMarkerRadiusMax;
 	else if (radius < g_fMarkerRadiusMin)
 		radius = g_fMarkerRadiusMin;
-	g_MarkerRadius[marker] = radius;
+	g_fMarkerRadius[marker] = radius;
 }
 
 stock int GetClientAimTargetPos(int client, float pos[3]) 
@@ -1273,7 +1309,7 @@ stock int GetClientAimTargetPos(int client, float pos[3])
 
 stock void RemoveMarker(int marker)
 {
-	g_MarkerRadius[marker] = 0.0;
+	g_fMarkerRadius[marker] = 0.0;
 }
 
 stock void RemoveAllMarkers()
@@ -1286,10 +1322,10 @@ stock int IsMarkerInRange(float pos[3])
 {
 	for(int i = 0; i < 4;i++)
 	{
-		if (g_MarkerRadius[i] <= 0.0)
+		if (g_fMarkerRadius[i] <= 0.0)
 			continue;
 		
-		if (GetVectorDistance(g_MarkerOrigin[i], pos) < g_MarkerRadius[i])
+		if (GetVectorDistance(g_fMarkerOrigin[i], pos) < g_fMarkerRadius[i])
 			return i;
 	}
 	return -1;
@@ -1308,6 +1344,58 @@ public bool TraceFilterAllEntities(int entity, int contentsMask, any client)
 	
 	return true;
 }
+
+
+//Icon
+
+public Action Create_Model(Handle iTimer, any client)
+{
+	if(g_bPrecached)
+	{
+	SafeDelete(g_iIcon[client]);
+	g_iIcon[client] = CreateIcon();
+	PlaceAndBindIcon(client, g_iIcon[client]);
+	}
+}
+
+stock int CreateIcon()
+{
+	int sprite = CreateEntityByName("env_sprite_oriented");
+	
+	if(sprite == -1)	return -1;
+
+	DispatchKeyValue(sprite, "classname", "env_sprite_oriented");
+	DispatchKeyValue(sprite, "spawnflags", "1");
+	DispatchKeyValue(sprite, "scale", "0.3");
+	DispatchKeyValue(sprite, "rendermode", "1");
+	DispatchKeyValue(sprite, "rendercolor", "255 255 255");
+	DispatchKeyValue(sprite, "model", OVERLAY);
+	if(DispatchSpawn(sprite))	return sprite;
+	
+	return -1;
+}
+
+public Action PlaceAndBindIcon(int client, int entity)
+{
+	float origin[3];
+
+	if(IsValidEntity(entity)) {
+		GetClientAbsOrigin(client, origin);
+		origin[2] = origin[2] + 90.0;
+		TeleportEntity(entity, origin, NULL_VECTOR, NULL_VECTOR);
+
+		SetVariantString("!activator");
+		AcceptEntityInput(entity, "SetParent", client);
+	}
+}
+
+public Action SafeDelete(int entity)
+{
+	if(IsValidEntity(entity)) {
+		AcceptEntityInput(entity, "Kill");
+	}
+}
+
 
 /*/Marker
 
@@ -2025,7 +2113,7 @@ public Action PerformSmite(int client, int target)
 	// define the direction of the sparks
 	float dir[3] = {0.0, 0.0, 0.0};
 	
-	TE_SetupBeamPoints(startpos, clientpos, g_LightningSprite, 0, 0, 0, 0.2, 20.0, 10.0, 0, 1.0, color, 3);
+	TE_SetupBeamPoints(startpos, clientpos, g_iLightningSprite, 0, 0, 0, 0.2, 20.0, 10.0, 0, 1.0, color, 3);
 	TE_SendToAll();
 	
 	TE_SetupSparks(clientpos, dir, 5000, 1000);
@@ -2034,7 +2122,7 @@ public Action PerformSmite(int client, int target)
 	TE_SetupEnergySplash(clientpos, dir, false);
 	TE_SendToAll();
 	
-	TE_SetupSmoke(clientpos, g_SmokeSprite, 5.0, 10);
+	TE_SetupSmoke(clientpos, g_iSmokeSprite, 5.0, 10);
 	TE_SendToAll();
 	
 	EmitAmbientSound(SOUND_THUNDER, startpos, client, SNDLEVEL_GUNFIRE);
@@ -2046,8 +2134,8 @@ public Action ChooseRandom(Handle timer, Handle pack)
 {
 	if(gc_bPlugin.BoolValue)
 	{
-		--randomtime;
-		if(randomtime < 1)
+		--g_iRandomTime;
+		if(g_iRandomTime < 1)
 		{
 			if(warden_exist() != 1)
 			{
@@ -2061,10 +2149,10 @@ public Action ChooseRandom(Handle timer, Handle pack)
 					}
 				}
 			}
-			if (randomtimer != null)
-				KillTimer(randomtimer);
+			if (RandomTimer != null)
+				KillTimer(RandomTimer);
 			
-			randomtimer = null;
+			RandomTimer = null;
 		}
 	}
 }
@@ -2075,8 +2163,8 @@ public Action OpenCounter(Handle timer, Handle pack)
 {
 	if(gc_bPlugin.BoolValue)
 	{
-		--opentimer;
-		if(opentimer < 1)
+		--g_iOpenTimer;
+		if(g_iOpenTimer < 1)
 		{
 			if(warden_exist() != 1)
 			{
@@ -2085,10 +2173,10 @@ public Action OpenCounter(Handle timer, Handle pack)
 				SJD_OpenDoors(); 
 				CPrintToChatAll("%t %t", "warden_tag" , "warden_openauto");
 				
-				if (opencountertime != null)
-					KillTimer(opencountertime);
+				if (OpenCounterTime != null)
+					KillTimer(OpenCounterTime);
 				
-				opencountertime = null;
+				OpenCounterTime = null;
 				}
 				
 			}
@@ -2102,9 +2190,9 @@ public Action OpenCounter(Handle timer, Handle pack)
 					
 				}
 				else CPrintToChatAll("%t %t", "warden_tag" , "warden_opentime"); 
-				if (opencountertime != null)
-				KillTimer(opencountertime);
-				opencountertime = null;
+				if (OpenCounterTime != null)
+				KillTimer(OpenCounterTime);
+				OpenCounterTime = null;
 			} 
 		}
 	}
@@ -2120,9 +2208,9 @@ public Action OpenDoors(int client, int args)
 			{
 				CPrintToChatAll("%t %t", "warden_tag" , "warden_dooropen"); 
 				SJD_OpenDoors();
-				if (opencountertime != null)
-				KillTimer(opencountertime);
-				opencountertime = null;
+				if (OpenCounterTime != null)
+				KillTimer(OpenCounterTime);
+				OpenCounterTime = null;
 			}
 			else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden"); 
 		}
