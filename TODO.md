@@ -4,10 +4,9 @@ know bugs:
 - [ ] jihad win -> T win show wrong - solution: mp_default_team_winner_no_objective?
 - [ ] catch win -> T win show wrong
 - [ ] hide win -> T win show wrong
-
 - [?] duckhunt end FP
 - [?] jihad bombactiv in 2nd round
-- [?] Gravity ?!? -> checktimer ladder fix
+
 
 must:
 - [ ] install instruction 
@@ -16,7 +15,8 @@ must:
 - [ ] menu: add placeholder for cutom commands
 
 want:
-- [ ] autofreeday if there is no CT or event with respawn
+- [x] autofreeday if there is no CT
+- [x] respawn on freeday
 - [ ] hide: darken the sky
 - [ ] hide: seeker more TA -> convar set how many
 - [ ] warden: disarm when shot on Arms/hand (all CT?)
@@ -69,7 +69,6 @@ future:
 - [ ] rewrite/merge to one master plugin (e.g. hosties,ttt..)
 
 maybe:
-
 - [ ] warden: extend roundtime (possible?)
 - [ ] all days: admin force end days
 - [ ] dice
@@ -118,6 +117,7 @@ bugs:
 - [x] spctator to FP
 - [x] knifefight: FFA
 - [x] knife end FP
+- [x] Gravity ?!? -> checktimer ladder fix
 
 must/want:
 - [x] menu back button

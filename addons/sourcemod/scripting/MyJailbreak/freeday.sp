@@ -21,7 +21,7 @@ ConVar gc_bPlugin;
 ConVar gc_bSetW;
 ConVar gc_bFirst;
 ConVar gc_bAuto;
-ConVar gc_iRespawn;
+//ConVar gc_iRespawn;
 ConVar gc_bdamage;
 ConVar gc_bSetA;
 ConVar gc_bVote;
@@ -83,7 +83,7 @@ public void OnPluginStart()
 	//Hooks
 	HookEvent("round_start", RoundStart);
 	HookEvent("round_end", RoundEnd);
-	HookEvent("player_death", PlayerDeath);
+//	HookEvent("player_death", PlayerDeath);
 	
 	//FindConVar
 	g_iGetRoundTime = FindConVar("mp_roundtime");
