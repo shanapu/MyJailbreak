@@ -15,9 +15,11 @@ must:
 - [ ] menu: add placeholder for cutom commands
 
 want:
+- [ ] translate EventDay native
 - [x] autofreeday if there is no CT
-- [x] respawn on freeday
+- [ ] respawn on freeday
 - [ ] hide: darken the sky
+- [ ] Freeze / Stun Gun
 - [ ] hide: seeker more TA -> convar set how many
 - [ ] warden: disarm when shot on Arms/hand (all CT?)
 - [ ] Noscope: choose weapon an round start (scout/awp/auto)

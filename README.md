@@ -154,6 +154,8 @@ Colorize Warden, Warden Model, open/close cell doors, automatic open cells doors
 - Natives
 - Colors
 
+[![HowTo Marker](http://img.youtube.com/vi/tp6k_Q6K37c/0.jpg)](http://www.youtube.com/watch?v=tp6k_Q6K37c)
+
 #### Menu
 
 This plugins allows players to open a menu with ","-Key (buyammo) or command.  
@@ -485,6 +487,7 @@ On Round start cells open everybody got a scout with noscope in low gravity. Nod
 - sm_noscope_spawn: 0 - teleport Ts to CT and freeze, 1 - open cell doors an get weapons. Default 0
 - sm_noscope_vote: 0 - disabled, 1 - allow player to vote for noscope. Default 1
 - sm_noscope_rounds: Rounds to play in a row
+- sm_noscope_weapon: 1 - ssg08 / 2 - awp / 3 - scar20 / 4 - g3sg1. Default 1
 - sm_noscope_gravity: 0 - disabled, 1 - enable low Gravity for noscope. Default 1
 - sm_noscope_gravity_value - Ratio for Gravity 1.0 earth 0.5 moon. Default 0.3
 - sm_noscope_roundtime - Roundtime for a single noscope round in minutes. Default 5
