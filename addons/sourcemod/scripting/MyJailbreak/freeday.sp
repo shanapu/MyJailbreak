@@ -14,12 +14,14 @@
 //Booleans
 bool IsFreeday; 
 bool StartFreeday; 
+bool AutoFreeday; 
 
 //ConVars
 ConVar gc_bPlugin;
 ConVar gc_bSetW;
 ConVar gc_bFirst;
-//ConVar gc_bAuto;
+ConVar gc_bAuto;
+ConVar gc_iRespawn;
 ConVar gc_bdamage;
 ConVar gc_bSetA;
 ConVar gc_bVote;
@@ -68,7 +70,8 @@ public void OnPluginStart()
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_freeday_warden", "1", "0 - disabled, 1 - allow warden to set freeday round", _, true,  0.0, true, 1.0);
 	gc_bSetA = AutoExecConfig_CreateConVar("sm_freeday_admin", "1", "0 - disabled, 1 - allow admin to set freeday round", _, true,  0.0, true, 1.0);
 	gc_bVote = AutoExecConfig_CreateConVar("sm_freeday_vote", "1", "0 - disabled, 1 - allow player to vote for freeday", _, true,  0.0, true, 1.0);
-//	gc_bAuto = AutoExecConfig_CreateConVar("sm_freeday_noct", "1", "0 - disabled, 1 - auto freeday when there is no CT", _, true,  0.0, true, 1.0);
+	gc_bAuto = AutoExecConfig_CreateConVar("sm_freeday_noct", "1", "0 - disabled, 1 - auto freeday when there is no CT", _, true,  0.0, true, 1.0);
+//	gc_iRespawn = AutoExecConfig_CreateConVar("sm_freeday_respawn", "1", "1 - respawn on NoCT Freeday / 2 - respawn on firstround/vote/set Freeday / 3 - Both", _, true,  0.0, true, 1.0);
 	gc_bFirst = AutoExecConfig_CreateConVar("sm_freeday_firstround", "1", "0 - disabled, 1 - auto freeday first round after mapstart", _, true,  0.0, true, 1.0);
 	gc_bdamage = AutoExecConfig_CreateConVar("sm_freeday_damage", "1", "0 - disabled, 1 - enable damage on freedays", _, true,  0.0, true, 1.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_freeday_roundtime", "5", "Round time in minutes for a single freeday round", _, true,  1.0);
@@ -80,6 +83,7 @@ public void OnPluginStart()
 	//Hooks
 	HookEvent("round_start", RoundStart);
 	HookEvent("round_end", RoundEnd);
+	HookEvent("player_death", PlayerDeath);
 	
 	//FindConVar
 	g_iGetRoundTime = FindConVar("mp_roundtime");
@@ -103,6 +107,7 @@ public void OnMapStart()
 		StartFreeday = false;	
 	}
 	IsFreeday = false;
+	AutoFreeday = false;
 }
 
 //Admin & Warden set Event
@@ -212,21 +217,36 @@ void StartNextRound()
 	PrintHintTextToAll("%t", "freeday_next_nc");
 }
 
+/*
+public void PlayerDeath(Event event, const char[] name, bool dontBroadcast) 
+{
+	if((AutoFreeday && gc_iRespawn.IntValue == 1) || (IsFreeday && gc_iRespawn.IntValue == 2) || ((IsFreeday || AutoFreeday) && gc_iRespawn.IntValue == 3))
+	{
+		int client = GetClientOfUserId(GetEventInt(event, "userid")); // Get the dead clients id
+		
+		CS_RespawnPlayer(client);
+	}
+}
+*/
+
 //Round start
 
 public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
-/*	if ((GetTeamClientCount(CS_TEAM_CT) > 0) && gc_bAuto.BoolValue)
+	if ((GetTeamClientCount(CS_TEAM_CT) < 1) && gc_bAuto.BoolValue)
 	{
+		char EventDay[64];
+		GetEventDay(EventDay);
+		
 		if(StrEqual(EventDay, "none", false))
 		{
 			StartFreeday = true;
 			g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 			g_iVoteCount = 0;
 			SetEventDay("freeday");
+			AutoFreeday = true;
 		}
 	}
-*/
 	if (StartFreeday)
 	{
 		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
@@ -287,12 +307,12 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 		StartFreeday = false;
 		FreedayRound = 0;
 		Format(g_sHasVoted, sizeof(g_sHasVoted), "");
-		
 		SetCvar("sm_hosties_lr", 1);
 		SetCvar("sm_weapons_enable", 1);
 		SetCvar("mp_teammates_are_enemies", 0);
 		SetCvar("sm_warden_enable", 1);
-		g_iGetRoundTime.IntValue = g_iOldRoundTime;
+		if(!AutoFreeday) g_iGetRoundTime.IntValue = g_iOldRoundTime;
+		AutoFreeday = false;
 		SetEventDay("none");
 		CPrintToChatAll("%t %t", "freeday_tag" , "freeday_end");
 	}
@@ -319,6 +339,7 @@ public void OnMapEnd()
 		StartFreeday = false;
 	}
 	IsFreeday = false;
+	AutoFreeday = false;
 	g_iVoteCount = 0;
 	FreedayRound = 0;
 	g_sHasVoted[0] = '\0';

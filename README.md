@@ -64,7 +64,7 @@ e.g.
 # THANKS FOR MAKING FREE SOFTWARE!
 
 #### Much Thanks: 
-UartigZone, Got Sw4g? terminator18, Skelexes, 0dieter0, maks for bughunting / great ideas!
+UartigZone, Got Sw4g? terminator18, Skelexes, 0dieter0, maks, zeddy for bughunting / great ideas!
   
   
   
