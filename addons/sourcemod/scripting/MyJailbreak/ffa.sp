@@ -476,7 +476,7 @@ public Action StartTimer(Handle timer)
 				EmitSoundToAllAny(g_sSoundStartPath);
 			}
 			
-			PrintCenterText(client,"%t", "ffa_start_nc");
+			PrintHintText(client,"%t", "ffa_start_nc");
 		}
 	}
 	CPrintToChatAll("%t %t", "ffa_tag" , "ffa_start");

@@ -1,17 +1,17 @@
 "Phrases"
 {
-	"Freeday_tag"
+	"freeday_tag"
 	{
 		"en"		"[{green}MyJB.Freeday{default}]"
 	}
 	
-	"Freeday_end"
+	"freeday_end"
 	{
 		"da"		"{purple}Freeday{default} er afsluttet!"	
 		"en"		"{purple}Freeday{default} finished"
 		"de"		"{purple}Freeday{default} beendet"
 	}
-	"Freeday_need"
+	"freeday_need"
 	{
 		"#format"	"{1:i},{2:N}"
 		"da"		"{purple}{2}{default} har afstemt. {purple}{1}{default} afstemninger tilbage til {darkred}Freeday"		
@@ -19,128 +19,128 @@
 		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}krieg{default} beginnt"
 	}
 	
-	"Freeday_next"
+	"freeday_next"
 	{
 		"da"		"Næste runde er {purple}Freeday"	
 		"en"		"Next round is {purple}Freeday"
 		"de"		"Nächste Runde ist {purple}Freeday"
 	}
 	
-	"Freeday_next_nc"
+	"freeday_next_nc"
 	{
 		"da"		"Næste runde er Freeday"	
 		"en"		"Next round is Freeday"
 		"de"		"Nächste Runde ist Freeday"
 	}
 	
-	"Freeday_voting"
+	"freeday_voting"
 	{
 		"#format"	""
 		"da"		"Afstemninger er {purple}slået fra"		
 		"en"		"Player voting for Freeday is {purple}disabled"
 		"de"		"Voting für Freeday ist {purple}ausgeschaltet"
 	}
-	"Freeday_setbywarden"
+	"freeday_setbywarden"
 	{
 		"da"		"Warden vælger runde er {purple}slået fra"	
 		"en"		"Set Freeday by warden is {purple}disabled"
 		"de"		"Freeday Aktivierung durch den Warden ist {purple}ausgeschaltet"
 	}
 	
-	"Freeday_setbyadmin"
+	"freeday_setbyadmin"
 	{
 		"da"		"Admin vælger runde er {purple}slået fra"		
 		"en"		"Set Freeday by admin is {purple}disabled"
 		"de"		"Freeday Aktivierung durch den Admin ist {purple}ausgeschaltet"
 	}
 	
-	"Freeday_start_nc"
+	"freeday_start_nc"
 	{
 		"da"		"Freeday er startet!"	
 		"en"		"The Freeday has started!"
 		"de"		"Freeday ist gestartet!"
 	}
 	
-	"Freeday_start"
+	"freeday_start"
 	{
 		"da"		"{purple}Freeday{default} er startet!"	
 		"en"		"The {purple}Freeday{default} has started!"
 		"de"		"{purple}Freeday{default} ist gestartet!"
 	}
 	
-	"Freeday_voted"
+	"freeday_voted"
 	{
 		"da"		"Du har allerede stemt for {purple}Freeday runde!"
 		"en"		"You already voted for {purple}Freeday"
 		"de"		"Du hast schon für {purple}Freeday {default}gevotet"
 	}
 	
-	"Freeday_progress"
+	"freeday_progress"
 	{
 		"#format"	"{1:s}"
 		"en"		"Event ({darkred}{1} {default}is {purple}already in progress."
 		"de"		"Event {darkred}{1} {default}ist {purple}bereits gesetzt."
 	}
 	
-	"Freeday_disabled"
+	"freeday_disabled"
 	{
 		"da"		"Freeday er {purple}slået fra."	
 		"en"		"Freeday is {purple}disabled."
 		"de"		"Freeday ist {purple}deaktiviert."
 	}
 	
-	"Freeday_info_title"		// no colors!
+	"freeday_info_title"		// no colors!
 	{
 		"en"		"It's Freeday!"
 		"de"		"Es ist Freeday!"
 	}
 	
-	"Freeday_info_line1"		// no colors!
+	"freeday_info_line1"		// no colors!
 	{
 		"en"		"It's Freeday"
 		"de"		"Es ist Freeday"
 	}
-	"Freeday_info_line2"		// no colors!
+	"freeday_info_line2"		// no colors!
 	{
 		"en"		"-----------------------------------"
 		"de"		"-----------------------------------"
 	}
 	
-	"Freeday_info_line3"		// no colors!
+	"freeday_info_line3"		// no colors!
 	{
 
 		"en"		"-----------------------------------"
 		"de"		"-----------------------------------"
 	}
 	
-	"Freeday_info_line4"		// no colors!
+	"freeday_info_line4"		// no colors!
 	{
 		"da"		"Alle jail regler er ophævet!"	
 		"en"		"All normal jail rules are repealed"
 		"de"		"Alle normalen Jailregeln sind aufgehoben!"
 	}
 	
-	"Freeday_info_line5"		// no colors!
+	"freeday_info_line5"		// no colors!
 	{
 		"da"		"Der kan ikke laves !lr i Freeday"	
 		"en"		"There is no last request!"
 		"de"		"Der letzte Terrorists hat keinen Wunsch!"
 	}
 	
-	"Freeday_info_line6"		// no colors!
+	"freeday_info_line6"		// no colors!
 	{
 		"da"		"T kan gå hvor hen de vil - De må bare ikke have våben!"	
 		"en"		"Everyone is allowed to go everywhere where they wants"
 		"de"		"Jeder darf überall hin wo er will!"
 	}
 	
-	"Freeday_info_line7"		// no colors!
+	"freeday_info_line7"		// no colors!
 	{
 		"da"		"Serverne regler skal overholdes!"	
 		"en"		"Dont be an asshole!"
 		"de"		"Bau keine Scheisse!"
 	}
-		"Freeday_wait"
+		"freeday_wait"
 	{
 		"#format"	"{1:i}"
 		"en"		"Du skal vente {1} flere runder!"	

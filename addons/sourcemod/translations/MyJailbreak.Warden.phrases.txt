@@ -377,12 +377,11 @@
 		"de"		"Du hast schon {purple}gegen den Warden{default} gestimmt"
 	}
 	
-	"warden_israndomdead"
+	"warden_israndom"
 	{
 		"#format"		"{1:N}"
-		"da"			"{1} blev dræbt af warden - Random!"		
-		"en"			"{1} was killed randomly"
-		"de"			"{1} wurde als Zufallskanidat getötet"
+		"en"			"{1} was choosen randomly"
+		"de"			"{1} wurde als Zufallskanidat gewählt"
 	}
 	"warden_choose"
 	{

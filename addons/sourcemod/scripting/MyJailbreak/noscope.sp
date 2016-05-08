@@ -419,7 +419,7 @@ public Action StartTimer(Handle timer)
 		for (int client=1; client <= MaxClients; client++)
 		if (IsClientInGame(client) && IsPlayerAlive(client))
 			{
-				PrintCenterText(client,"%t", "noscope_timeuntilstart_nc", g_iTruceTime);
+				PrintHintText(client,"%t", "noscope_timeuntilstart_nc", g_iTruceTime);
 			}
 		return Plugin_Continue;
 	}
@@ -437,7 +437,7 @@ public Action StartTimer(Handle timer)
 				{
 					SetEntityGravity(client, gc_fGravValue.FloatValue);	
 				}
-				PrintCenterText(client,"%t", "noscope_start_nc");
+				PrintHintText(client,"%t", "noscope_start_nc");
 				
 			}
 			if(gc_bOverlays.BoolValue) CreateTimer( 0.0, ShowOverlayStart, client);

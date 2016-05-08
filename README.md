@@ -12,12 +12,12 @@ This is my first public project. please note that the code may is messy, stupid 
 I would be happy and very pleased if you wannt to join this project as equal collaborator.  
 If you own a feature or extention for Jail/Warden that would fit in, i would be happy when you share it with us.  
 
-#coded with ![alt text](http://shanapu.de/githearth-small.png "LOVE")  
+# coded with ![alt text](http://shanapu.de/githearth-small.png "LOVE")  
 # ![alt text](http://shanapu.de/githearth-small.png "LOVE") free software
 
 ### Included Plugins: 
 
-- [Warden](#warden) - (set/become Warden,vote against Warden, Model, open cells, set marker/quiz/EventDays/countdown/FF/nobock) - need [scp](#requires-plugins)
+- [Warden](#warden) - (set/become Warden,vote against Warden, Model, Icon, open cells, set marker/quiz/EventDays/countdown/FF/nobock) - need [scp](#requires-plugins)
 - [Menu](#menu) - (Player menus for T, CT, Warden & Admin)
 - [Weapons](#weapons) - (weapon menus for CT / T in event rounds)
 - [PlayerTags](#playertags) - (add player Tags for T, T.Admin, CT, CT.Admin, W, WA.Admin - need [scp](#requires-plugins)
@@ -42,15 +42,14 @@ Files been updated ~daily so have a look at the last commits.
 I recommend until full release, when update to overwrite all files (plugins, translations, sounds, Overlays,...).
 
 ### Change Log
-
-
 ####  ~~[0.7.2]~~ - VERSIONING BEGINNS WITH RELEASE ON ALLIED - sry
-
 
 
 ### Versioning
 for a better understanding:
 ```
+e.g.  
+  
 0.7.2  
 │ │ └───patch level - fix within major/minior release (you should update for fixes)  
 │ └─────minor release - feature/structure added/removed/changed (you can update if you want for new stuff or paticular changes) 
@@ -75,7 +74,7 @@ UartigZone, Got Sw4g? terminator18, Skelexes, 0dieter0, maks for bughunting / gr
 
 This plugins allows players to take control over the prison as Warden/Headguard/Commander.  
 Chat, Hud & sound notifications about Warden/no Warden.  
-Colorize Warden, Warden Model, open/close cell doors, automatic open cells doors, vote retire Warden, different countdowns(start/stop) with overlays & sound,  MathQuiz & toggle FF/noblock.
+Colorize Warden, Warden Model, open/close cell doors, automatic open cells doors, vote retire Warden, Icon above Head, different countdowns(start/stop) with overlays & sound, MathQuiz & toggle FF/noblock.
 
 ##### Commands ~~// why so many cmds for same action? some JB players are dump assholes ;D~~
 ```
@@ -114,12 +113,13 @@ Colorize Warden, Warden Model, open/close cell doors, automatic open cells doors
 - sm_warden_stay: 0 - disabled, 1 - Warden will stay after round end. Default 1
 - sm_warden_vote: 0 - disabled, 1 - enable player vote against Warden. Default 1
 - sm_warden_better_notifications: 0 - disabled , 1 - will use hint and center say for better notifications. Default 1
+- sm_warden_icon_enable: 0 - disabled , 1 - enable the icon above the wardens head. Default 1
+- sm_warden_icon: Path to the floating warden icon DONT TYPE .vmt or .vft. Default: "decals/MyJailbreak/warden"
 - sm_warden_noblock: 0 - disabled, 1 - enable setable noblock for Warden. Default 1
 - sm_warden_ff: 0 - disabled, 1 - enable Warden switch friendly fire. Default 1
 - sm_warden_random: 0 - disabled, 1 - enable kill a random t for Warden. Default 1
-- sm_warden_marker: 0 - disabled, 1 - enable Warden simple markers. Default 1
-- sm_warden_marker_time: Time in seconds marker will disappears. Default 20
-- sm_warden_markerkey: Key to set Makrer - 1 - Look weapon / 2 - Use and shoot / 3 - walk and shoot. Default 3
+- sm_warden_randomkind: 1 - all random / 2 - Thunder / 3 - Timebomb / 4 - Firebomb / 5 - NoKill (1,3,4 needs funncommands.smx enabled). Default 2
+- sm_warden_marker: 0 - disabled, 1 - enable Warden advanced markers. Default 1
 - sm_warden_math: 0 - disabled, 1 - enable mathquiz for Warden. Default 1
 - sm_warden_math_min: What should be the minimum number for questions. Default 1
 - sm_warden_math_max: What should be the maximum number for questions. Default 100
@@ -160,7 +160,6 @@ This plugins allows players to open a menu with ","-Key (buyammo) or command.
 It will show different menus for Terrorists, Counter-Terrorists Admin & Warden.  
 The menu shows only features that are enabled per round (e.g at EventDays no Warden menu)
 
-
 ##### Commands 
 ```
 - sm_menu / sm_menus - opens the menu depends on players team/rank
@@ -176,6 +175,7 @@ The menu shows only features that are enabled per round (e.g at EventDays no War
 - sm_menu_days: 0 - disabled, 1 - enable vote/set EventDays menu
 - sm_menu_close: 0 - disabled, 1 - close menu after action
 - sm_menu_start: 0 - disabled, 1 - open menu on every roundstart
+- sm_menu_team: 0 - disabled, 1 - enable join team on menu
 - sm_menu_tag: 0 - disabled, 1 - Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch your sv_tags. Default 1
 ```
 ##### Features
@@ -189,7 +189,6 @@ The menu shows only features that are enabled per round (e.g at EventDays no War
 #### Menu Structure
 
 ##### WardenMenu
-
 * [Gun Menu](/shanapu/MyJailbreak/wiki/Weapons)
 * Open Cells
 * Countdown
@@ -228,7 +227,6 @@ The menu shows only features that are enabled per round (e.g at EventDays no War
 * Rules
 
 ##### Counter-Terrorists Menu
-
 * [Gun Menu](/shanapu/MyJailbreak/wiki/Weapons)
 * Become Warden
 * Vote for Event Days
@@ -253,7 +251,6 @@ The menu shows only features that are enabled per round (e.g at EventDays no War
 
 
 ##### Counter-Terrorists Menu
-
 * [Gun Menu](/shanapu/MyJailbreak/wiki/Weapons)
 * Vote against Warden
 * Vote for Event Days
@@ -589,6 +586,7 @@ CT and T can Sprint with USE-Key (default).
 - sm_catch_noblood_splatter: 0 - Disable, 1 - enable No Blood Splatter. Default 1
 - sm_catch_noblood_splash: 0 - Disable, 1 - enable No Blood Splash. Default 1
 
+
 ```
 ##### Features
 
@@ -858,11 +856,9 @@ On Round start cells open for freeday and enabled damage (Default).
 - [wardn.inc](/addons/sourcemod/scripting/include/wardn.inc)
 
 
-### recomment plugins
-- [CS:GO] Flashlight (1.3.62) https://forums.alliedmods.net/showthread.php?p=2042310
-
 ##### dependencies within MyJailbreak:
-- warden - you can use warden as standalone. no need to use Eventdays(core), menu... please tell me if not!
+- warden - you can use warden as standalone. no need to use Myjailbreak Eventdays(core), menu... please tell me if not!
+- warden - sm_warden_randomkind 1,3,4 needs funncommands.smx enabled
 - menu - if you dont wanna use the menu, make sm_weapons_jbmenu 0
 - weapons - if you dont wanna use the weapons menu, on EventDays player get "standart weapons".
 - EventDays - you can use only the EventDays you want. you just need MyJailbreak & one EventDay
@@ -887,6 +883,7 @@ based/merged/used code/idea plugins:
 * https://github.com/AG-Headline/Hunger-Games-Beacon
 * https://forums.alliedmods.net/showthread.php?p=1086127
 * https://forums.alliedmods.net/showthread.php?t=234169
+* https://forums.alliedmods.net/showpost.php?p=2231099&postcount=22
 + https://github.com/Zipcore/Timer/ (sound)
 * https://git.tf/TTT/Plugin (sound)
 * https://forums.alliedmods.net/showthread.php?t=262170 (model)

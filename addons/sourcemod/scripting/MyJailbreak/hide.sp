@@ -379,11 +379,11 @@ public Action StartTimer(Handle timer)
 			{
 				if (GetClientTeam(client) == CS_TEAM_CT)
 				{
-					PrintCenterText(client,"%t", "hide_timetounfreeze_nc", g_iFreezeTime);
+					PrintHintText(client,"%t", "hide_timetounfreeze_nc", g_iFreezeTime);
 				}
 				else if (GetClientTeam(client) == CS_TEAM_T)
 				{
-					PrintCenterText(client,"%t", "hide_timetohide_nc", g_iFreezeTime);
+					PrintHintText(client,"%t", "hide_timetohide_nc", g_iFreezeTime);
 				}
 			}
 		return Plugin_Continue;
@@ -418,7 +418,7 @@ public Action StartTimer(Handle timer)
 				{
 					EmitSoundToAllAny(g_sSoundStartPath);
 				}
-				PrintCenterText(client,"%t", "hide_start_nc");
+				PrintHintText(client,"%t", "hide_start_nc");
 			}
 		}
 		CPrintToChatAll("%t %t", "hide_tag" , "hide_start");

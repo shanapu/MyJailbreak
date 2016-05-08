@@ -470,11 +470,11 @@ public Action StartTimer(Handle timer)
 			{
 				if (GetClientTeam(client) == CS_TEAM_CT)
 				{
-					PrintCenterText(client,"%t", "zombie_timetounfreeze_nc", g_iFreezeTime);
+					PrintHintText(client,"%t", "zombie_timetounfreeze_nc", g_iFreezeTime);
 				}
 				else if (GetClientTeam(client) == CS_TEAM_T)
 				{
-					PrintCenterText(client,"%t", "zombie_timeuntilzombie_nc", g_iFreezeTime);
+					PrintHintText(client,"%t", "zombie_timeuntilzombie_nc", g_iFreezeTime);
 				}
 		}
 		return Plugin_Continue;
@@ -494,7 +494,7 @@ public Action StartTimer(Handle timer)
 					SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.4);
 				}
 				SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
-				PrintCenterText(client,"%t", "zombie_start_nc");
+				PrintHintText(client,"%t", "zombie_start_nc");
 			}
 			if(gc_bOverlays.BoolValue) CreateTimer( 0.0, ShowOverlayStart, client);
 			if(gc_bSounds.BoolValue)	

@@ -509,7 +509,7 @@ public Action StartTimer(Handle timer)
 			{
 				EmitSoundToAllAny(g_sSoundStartPath);
 			}
-			PrintCenterText(client,"%t", "war_start_nc");
+			PrintHintText(client,"%t", "war_start_nc");
 		}
 	}
 	CPrintToChatAll("%t %t", "war_tag" , "war_start");

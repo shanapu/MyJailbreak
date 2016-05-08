@@ -364,7 +364,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 						GivePlayerItem(client, "weapon_knife");
 						SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
 						SendPanelToClient(CatchMenu, client, NullHandler, 20);
-						PrintCenterText(client,"%t", "catch_start_nc");
+						PrintHintText(client,"%t", "catch_start_nc");
 					}
 				}
 				CPrintToChatAll("%t %t", "catch_tag" ,"catch_rounds", g_iRound, g_iMaxRound);
@@ -511,7 +511,7 @@ public Action CatchEm(int client, int attacker)
 {
 	SetEntityMoveType(client, MOVETYPE_NONE);
 	SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 0.0);
-	SetEntityRenderColor(client, 0, 0, 255, 255);
+	SetEntityRenderColor(client, 0, 0, 205, 255);
 	catched[client] = true;
 	CreateTimer( 0.0, ShowOverlayFreeze, client );
 	if(gc_bSounds.BoolValue)	

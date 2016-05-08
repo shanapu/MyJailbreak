@@ -452,7 +452,7 @@ public Action StartTimer(Handle timer)
 		for (int client=1; client <= MaxClients; client++)
 		if (IsClientInGame(client) && IsPlayerAlive(client))
 			{
-				PrintCenterText(client,"%t", "duckhunt_timeuntilstart_nc", g_iTruceTime);
+				PrintHintText(client,"%t", "duckhunt_timeuntilstart_nc", g_iTruceTime);
 			}
 		return Plugin_Continue;
 	}
@@ -474,7 +474,7 @@ public Action StartTimer(Handle timer)
 				{
 					SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
 				}
-				PrintCenterText(client,"%t", "duckhunt_start_nc");
+				PrintHintText(client,"%t", "duckhunt_start_nc");
 			}
 			
 			if(gc_bOverlays.BoolValue) CreateTimer( 0.0, ShowOverlayStart, client);

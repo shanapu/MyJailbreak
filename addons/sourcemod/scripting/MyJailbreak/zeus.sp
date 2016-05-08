@@ -384,7 +384,7 @@ public Action StartTimer(Handle timer)
 		for (int client=1; client <= MaxClients; client++)
 		if (IsClientInGame(client) && IsPlayerAlive(client))
 			{
-				PrintCenterText(client,"%t", "zeus_timeuntilstart_nc", g_iTruceTime);
+				PrintHintText(client,"%t", "zeus_timeuntilstart_nc", g_iTruceTime);
 			}
 		return Plugin_Continue;
 	}
@@ -398,7 +398,7 @@ public Action StartTimer(Handle timer)
 			if (IsClientInGame(client) && IsPlayerAlive(client))
 			{
 				SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
-				PrintCenterText(client,"%t", "zeus_start_nc");
+				PrintHintText(client,"%t", "zeus_start_nc");
 			}
 			if(gc_bOverlays.BoolValue) CreateTimer( 0.0, ShowOverlayStart, client);
 			if(gc_bSounds.BoolValue)	

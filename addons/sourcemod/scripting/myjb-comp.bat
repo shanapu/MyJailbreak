@@ -11,7 +11,7 @@ spcomp MyJailbreak/myjailbreak.sp -o../plugins/MyJailbreak/myjailbreak.smx
 spcomp MyJailbreak/noscope.sp -o../plugins/MyJailbreak/noscope.smx 
 spcomp MyJailbreak/playertags.sp -o../plugins/MyJailbreak/playertags.smx 
 spcomp MyJailbreak/war.sp -o../plugins/MyJailbreak/war.smx 
-spcomp MyJailbreak/wardn.sp -o../plugins/MyJailbreak/wardn.smx 
+spcomp MyJailbreak/warden.sp -o../plugins/MyJailbreak/warden.smx 
 spcomp MyJailbreak/weapons.sp -o../plugins/MyJailbreak/weapons.smx 
 spcomp MyJailbreak/zeus.sp -o../plugins/MyJailbreak/zeus.smx 
 spcomp MyJailbreak/zombie.sp -o../plugins/MyJailbreak/zombie.smx 

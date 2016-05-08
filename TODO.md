@@ -2,39 +2,32 @@ know bugs:
 - [ ] countdown: Start -> Cancel -> Start - bug? (which countdowns?)
 - [ ] weapons.smx "block" stamm vip models?!
 - [ ] jihad win -> T win show wrong - solution: mp_default_team_winner_no_objective?
-- [ ] catch win -> CT win show wrong
+- [ ] catch win -> T win show wrong
 - [ ] hide win -> T win show wrong
-- [x] check for at least one ct
+
 - [?] duckhunt end FP
 - [?] jihad bombactiv in 2nd round
 - [?] Gravity ?!? -> checktimer ladder fix
 
 must:
 - [ ] install instruction 
+- [ ] add all new things to wiki/readme
 - [ ] wiki: howto edit -> SetCvars, add menu item,
 - [ ] menu: add placeholder for cutom commands
-- [ ] blood, marker, menu to wiki
-- [?] sm_marker
 
 want:
-- [ ] autofreeday if there is no CT or event
-- [ ] zipcores markers
-- [x] set noscope weapon convar
-- [x] mathquiz: colorize winning player
+- [ ] autofreeday if there is no CT or event with respawn
 - [ ] hide: darken the sky
 - [ ] hide: seeker more TA -> convar set how many
 - [ ] warden: disarm when shot on Arms/hand (all CT?)
 - [ ] Noscope: choose weapon an round start (scout/awp/auto)
 - [ ] updater support
-- [x] Event: logging
 - [ ] duckhunt: change +attack to +secAttack
 - [ ] all: custom command support !mycommand
 - [ ] all: format centertext <font size='30' color='#FF00FF'>test</font>
 - [ ] all: restrict map heal station https://forums.alliedmods.net/showthread.php?t=267167
 - [ ] knife: vote on roundstart for grav skate tp or all
 - [ ] warden: toggle noblock
-- [ ] warden: randomkill set/random bomb, fire, smite...
-- [ ] warden: icon above head (material or model?)
 - [ ] warden: limits (max x.times in row)
 - [ ] inc: merge ShowOverlayFreeze/start/delete to once
 - [ ] playertags: add VIP flag
@@ -52,6 +45,7 @@ want:
 - [ ] hide: MovementValue hider/seeker convar
 - [ ] new day: Tron like - all player Molotov rain https://forums.alliedmods.net/showthread.php?p=2398902
 - [ ] merge Transltions
+- [ ] RandomKill: no rebel / last T
 - [ ] math quiz allow + - * / convars
 
 need?
@@ -98,6 +92,7 @@ bugs:
 - [x] Thirdperson: on disconnect make fp
 - [x] randomkill lighting bold missing
 - [x] menu: infomessage on first spawn
+- [x] check for at least one ct
 - [x] warden:autoOpen broke
 - [x] menu join ct
 - [x] after catch no damage. weapon strip T
@@ -123,14 +118,22 @@ bugs:
 - [x] spctator to FP
 - [x] knifefight: FFA
 - [x] knife end FP
+
 must/want:
 - [x] menu back button
 - [x] config folder structure
+- [x] Event: logging
+- [x] warden: icon above head (material)
 - [x] clean/translate ConVars 
 - [x] sv_tags to core
 - [x] catch: hide blood
 - [x] comments to template.sp
 - [x] warden:translate menu set
+- [x] delay smite 1 sek
+- [x] warden: randomkill set/random bomb, fire, smite...
+- [x] zipcores markers
+- [x] set noscope weapon convar
+- [x] mathquiz: colorize winning player
 - [x] show round end next event
 - [x] warden: toggle noblock 
 - [x] all: notify on roundend next round

@@ -489,11 +489,11 @@ public Action StartTimer(Handle timer)
 		{
 			if (GetClientTeam(client) == CS_TEAM_CT)
 			{
-				PrintCenterText(client,"%t", "jihad_timetohide_nc", g_iFreezeTime);
+				PrintHintText(client,"%t", "jihad_timetohide_nc", g_iFreezeTime);
 			}
 			if (GetClientTeam(client) == CS_TEAM_T)
 			{
-				PrintCenterText(client,"%t", "jihad_timeuntilopen_nc", g_iFreezeTime);
+				PrintHintText(client,"%t", "jihad_timeuntilopen_nc", g_iFreezeTime);
 			}
 		}
 		return Plugin_Continue;
@@ -508,7 +508,7 @@ public Action StartTimer(Handle timer)
 			if (IsValidClient(client, true, true))
 			{
 				SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
-				PrintCenterText(client,"%t", "jihad_start_nc");
+				PrintHintText(client,"%t", "jihad_start_nc");
 			}
 			if(gc_bOverlays.BoolValue) CreateTimer( 0.0, ShowOverlayStart, client);
 			

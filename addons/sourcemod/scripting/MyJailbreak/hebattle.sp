@@ -448,7 +448,7 @@ public Action StartTimer(Handle timer)
 		for (int client=1; client <= MaxClients; client++)
 		if (IsClientInGame(client) && IsPlayerAlive(client))
 			{
-				PrintCenterText(client,"%t", "hebattle_timeuntilstart_nc", g_iTruceTime);
+				PrintHintText(client,"%t", "hebattle_timeuntilstart_nc", g_iTruceTime);
 			}
 		return Plugin_Continue;
 	}
@@ -466,7 +466,7 @@ public Action StartTimer(Handle timer)
 				{
 					SetEntityGravity(client, gc_fGravValue.FloatValue);	
 				}
-				PrintCenterText(client,"%t", "hebattle_start_nc");
+				PrintHintText(client,"%t", "hebattle_start_nc");
 			}
 			if(gc_bOverlays.BoolValue) CreateTimer( 0.0, ShowOverlayStart, client);
 			if(gc_bSounds.BoolValue)	
