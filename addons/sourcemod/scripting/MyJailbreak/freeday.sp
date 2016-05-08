@@ -19,6 +19,7 @@ bool StartFreeday;
 ConVar gc_bPlugin;
 ConVar gc_bSetW;
 ConVar gc_bFirst;
+//ConVar gc_bAuto;
 ConVar gc_bdamage;
 ConVar gc_bSetA;
 ConVar gc_bVote;
@@ -67,6 +68,7 @@ public void OnPluginStart()
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_freeday_warden", "1", "0 - disabled, 1 - allow warden to set freeday round", _, true,  0.0, true, 1.0);
 	gc_bSetA = AutoExecConfig_CreateConVar("sm_freeday_admin", "1", "0 - disabled, 1 - allow admin to set freeday round", _, true,  0.0, true, 1.0);
 	gc_bVote = AutoExecConfig_CreateConVar("sm_freeday_vote", "1", "0 - disabled, 1 - allow player to vote for freeday", _, true,  0.0, true, 1.0);
+//	gc_bAuto = AutoExecConfig_CreateConVar("sm_freeday_noct", "1", "0 - disabled, 1 - auto freeday when there is no CT", _, true,  0.0, true, 1.0);
 	gc_bFirst = AutoExecConfig_CreateConVar("sm_freeday_firstround", "1", "0 - disabled, 1 - auto freeday first round after mapstart", _, true,  0.0, true, 1.0);
 	gc_bdamage = AutoExecConfig_CreateConVar("sm_freeday_damage", "1", "0 - disabled, 1 - enable damage on freedays", _, true,  0.0, true, 1.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_freeday_roundtime", "5", "Round time in minutes for a single freeday round", _, true,  1.0);
@@ -214,6 +216,17 @@ void StartNextRound()
 
 public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
+/*	if ((GetTeamClientCount(CS_TEAM_CT) > 0) && gc_bAuto.BoolValue)
+	{
+		if(StrEqual(EventDay, "none", false))
+		{
+			StartFreeday = true;
+			g_iCoolDown = gc_iCooldownDay.IntValue + 1;
+			g_iVoteCount = 0;
+			SetEventDay("freeday");
+		}
+	}
+*/
 	if (StartFreeday)
 	{
 		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
@@ -254,7 +267,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 				{
 					SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 				}
-				PrintCenterText(client,"%t", "freeday_start_nc");
+				PrintHintText(client,"%t", "freeday_start_nc");
 			}
 		CPrintToChatAll("%t %t", "freeday_tag" , "freeday_start");
 	}
