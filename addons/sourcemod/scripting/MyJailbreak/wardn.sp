@@ -8,6 +8,7 @@
 #include <autoexecconfig>
 #include <myjailbreak>
 #include <scp>
+#include <smlib>
 
 //Compiler Options
 #pragma semicolon 1
@@ -19,10 +20,6 @@
 #define MINUS				"-"
 #define DIVISOR				"/"
 #define MULTIPL				"*"
-
-//Bools
-bool IsCountDown = false;
-bool IsMathQuiz = false;
 
 //ConVars
 ConVar gc_bOpenTimer;
@@ -40,8 +37,6 @@ ConVar gc_bFF;
 ConVar gc_bRandom;
 ConVar gc_bMath;
 ConVar gc_bMarker;
-ConVar gc_iMarkerKey;
-ConVar gc_fMarkerTime;
 ConVar gc_bCountDown;
 ConVar gc_bOverlays;
 ConVar gc_sOverlayStartPath;
@@ -61,6 +56,12 @@ ConVar gc_iWardenColorRed;
 ConVar gc_iWardenColorGreen;
 ConVar gc_iWardenColorBlue;
 
+//Bools
+bool IsCountDown = false;
+bool IsMathQuiz = false;
+bool g_bMarkerSetup;
+bool g_bCanZoom[MAXPLAYERS + 1];
+bool g_bHasSilencer[MAXPLAYERS + 1];
 
 //Integers
 int g_iVoteCount;
@@ -71,7 +72,6 @@ int opentimer;
 int randomtime;
 int g_iCountStartTime = 9;
 int g_iCountStopTime = 9;
-int g_MarkerColor[] = {255,1,1,255};
 int g_iBeamSprite = -1;
 int g_iHaloSprite = -1;
 int g_iSetCountStartStopTime;
@@ -80,6 +80,13 @@ int g_LightningSprite;
 int g_MathMin;
 int g_MathMax;
 int g_MathResult;
+int g_MarkerColors[4][4] =	
+{	
+	{255,25,25,255},
+	{25,25,255,255},
+	{25,255,25,255},
+	{255,160,25,255}
+};
 
 //Handles
 Handle g_fward_onBecome;
@@ -110,9 +117,25 @@ char g_sSoundStopPath[256];
 char g_sOverlayStop[256];
 char g_op[32];
 char g_operators[4][2] = {"+", "-", "/", "*"};
+char g_sMarkerNamesRed[64];
+char g_sMarkerNamesBlue[64];
+char g_sMarkerNamesGreen[64];
+char g_sMarkerNamesOrange[64];
+char g_sMarkerNames[4][64] ={{""},{""},{""},{""}};
+
+
+
 
 //float
-float g_fMakerPos[3];
+float g_fMarkerRadiusMin = 100.0;
+float g_fMarkerRadiusMax = 500.0;
+float g_fMarkerRangeMax = 1500.0;
+float g_fMarkerArrowHeight = 90.0;
+float g_fMarkerArrowLength = 18.0;
+float g_fMarkerSetupStartOrigin[3];
+float g_fMarkerSetupEndOrigin[3];
+float g_MarkerOrigin[4][3];
+float g_MarkerRadius[4];
 
 public Plugin myinfo = {
 	name = "MyJailbreak - Warden",
@@ -147,7 +170,6 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_vw", VoteWarden, "Allows the player to vote to retire Warden");
 	RegConsoleCmd("sm_votewarden", VoteWarden, "Allows the player to vote to retire Warden");
 	RegConsoleCmd("sm_setff", ToggleFF, "Allows player to see the state and the Warden to toggle friendly fire");
-	RegConsoleCmd("sm_marker", SpawnMarker, "Allows the warden to set a marker to the position he aiming");
 	RegConsoleCmd("sm_cdstart", SetStartCountDown, "Allows the Warden to start a START Countdown! (start after 10sec.) - start without menu");
 	RegConsoleCmd("sm_cdmenu", CDMenu, "Allows the Warden to open the Countdown Menu");
 	RegConsoleCmd("sm_cdstartstop", StartStopCDMenu, "Allows the Warden to start a START/STOP Countdown! (start after 10sec./stop after 20sec.) - start without menu");
@@ -187,9 +209,6 @@ public void OnPluginStart()
 	gc_bNoBlock = AutoExecConfig_CreateConVar("sm_warden_noblock", "1", "0 - disabled, 1 - enable setable noblock for warden", _, true,  0.0, true, 1.0);
 	gc_bFF = AutoExecConfig_CreateConVar("sm_warden_ff", "1", "0 - disabled, 1 - enable switch ff for T ", _, true,  0.0, true, 1.0);
 	gc_bRandom = AutoExecConfig_CreateConVar("sm_warden_random", "1", "0 - disabled, 1 - enable kill a random t for warden", _, true,  0.0, true, 1.0);
-	gc_bMarker = AutoExecConfig_CreateConVar("sm_warden_marker", "1", "0 - disabled, 1 - enable Warden simple markers ", _, true,  0.0, true, 1.0);
-	gc_iMarkerKey = AutoExecConfig_CreateConVar("sm_warden_markerkey", "3", "0 - disabled / 1 - Look weapon / 2 - Use and shoot / 3 - walk and shoot", _, true,  1.0, true, 3.0);
-	gc_fMarkerTime = AutoExecConfig_CreateConVar("sm_warden_marker_time", "20.0", "Time in seconds marker will disappears", _, true,  1.0);
 	gc_bCountDown = AutoExecConfig_CreateConVar("sm_warden_countdown", "1", "0 - disabled, 1 - enable countdown for warden", _, true,  0.0, true, 1.0);
 	gc_bOverlays = AutoExecConfig_CreateConVar("sm_warden_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true,  0.0, true, 1.0);
 	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_warden_overlays_start", "overlays/MyJailbreak/start" , "Path to the start Overlay DONT TYPE .vmt or .vft");
@@ -198,6 +217,7 @@ public void OnPluginStart()
 	g_hOpenTimer = AutoExecConfig_CreateConVar("sm_warden_open_time", "60", "Time in seconds for open doors on round start automaticly", _, true, 0.0); 
 	gc_bOpenTimer = AutoExecConfig_CreateConVar("sm_warden_open_time_enable", "1", "should doors open automatic 0- no 1 yes", _, true,  0.0, true, 1.0); //todo dont wokr
 	gc_bOpenTimerWarden = AutoExecConfig_CreateConVar("sm_warden_open_time_warden", "1", "should doors open automatic after sm_warden_open_time when there is a warden? needs sm_warden_open_time_enable 1", _, true,  0.0, true, 1.0);
+	gc_bMarker = AutoExecConfig_CreateConVar("sm_warden_marker", "1", "0 - disabled, 1 - enable Warden simple markers ", _, true,  0.0, true, 1.0);
 	gc_bMath = AutoExecConfig_CreateConVar("sm_warden_math", "1", "0 - disabled, 1 - enable mathquiz for warden", _, true,  0.0, true, 1.0);
 	gc_iMinimumNumber = AutoExecConfig_CreateConVar("sm_warden_math_min", "1", "What should be the minimum number for questions?", _, true,  1.0);
 	gc_iMaximumNumber = AutoExecConfig_CreateConVar("sm_warden_math_max", "100", "What should be the maximum number for questions?", _, true,  2.0);
@@ -218,9 +238,10 @@ public void OnPluginStart()
 	AutoExecConfig_CleanFile();
 	
 	//Hooks
+	HookEvent("item_equip", Event_ItemEquip);
 	HookEvent("round_start", RoundStart);
 	HookEvent("player_death", playerDeath);
-	HookEvent("bullet_impact", Event_BulletImpact);
+
 	HookEvent("round_end", RoundEnd);
 	HookConVarChange(gc_sModelPath, OnSettingChanged);
 	HookConVarChange(gc_sUnWarden, OnSettingChanged);
@@ -240,13 +261,24 @@ public void OnPluginStart()
 	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
 	gc_sOverlayStopPath.GetString(g_sOverlayStop , sizeof(g_sOverlayStop));
 	
-	AddCommandListener(Command_LAW, "+lookatweapon");
+
 	
 	g_CollisionOffset = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
 	
 	g_iVoteCount = 0;
 	
 	CreateTimer(1.0, Timer_DrawMakers, _, TIMER_REPEAT);
+	
+	//Prepare translation for marker colors
+	Format(g_sMarkerNamesRed, sizeof(g_sMarkerNamesRed), "{darkred}%T{default}", "warden_marker_red", LANG_SERVER);
+	Format(g_sMarkerNamesBlue, sizeof(g_sMarkerNamesBlue), "{blue}%T{default}", "warden_marker_blue", LANG_SERVER);
+	Format(g_sMarkerNamesGreen, sizeof(g_sMarkerNamesGreen), "{green}%T{default}", "warden_marker_green", LANG_SERVER);
+	Format(g_sMarkerNamesOrange, sizeof(g_sMarkerNamesOrange), "{orange}%T{default}", "warden_marker_orange", LANG_SERVER);
+
+	g_sMarkerNames[0] = g_sMarkerNamesRed;
+	g_sMarkerNames[1] = g_sMarkerNamesBlue;
+	g_sMarkerNames[2] = g_sMarkerNamesGreen;
+	g_sMarkerNames[3] = g_sMarkerNamesOrange;
 }
 
 //ConVar Change for Strings
@@ -328,6 +360,7 @@ public void OnMapStart()
 	g_SmokeSprite = PrecacheModel("materials/sprites/steam1.vmt");
 	g_LightningSprite = g_iBeamSprite;
 	PrecacheSound(SOUND_THUNDER, true);
+	RemoveAllMarkers();
 }
 
 //Round Start
@@ -466,7 +499,7 @@ public Action ExitWarden(int client, int args)
 			{
 				EmitSoundToAllAny(g_sUnWarden);
 			}
-			ResetMarker();
+			RemoveAllMarkers();
 			g_iVoteCount = 0;
 			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
 			g_sHasVoted[0] = '\0';
@@ -701,13 +734,6 @@ public Action Timer_WardenFixColor(Handle timer,any client)
 {
 	if(IsValidClient(client, false, false))
 	{
-	/*	int iWardenColorRed;								// Need this way on new syntax ? 				
-		int iWardenColorGreen;								// Need this way on new syntax ? 	
-		int iWardenColorBlue;								// Need this way on new syntax ? 	
-		iWardenColorRed = gc_iWardenColorRed.IntValue;		// Need this way on new syntax ? 	
-		iWardenColorGreen = gc_iWardenColorGreen.IntValue;	// Need this way on new syntax ? 	
-		iWardenColorBlue = gc_iWardenColorBlue.IntValue;	// Need this way on new syntax ? 		*/
-
 		if(IsClientWarden(client))
 		{
 			if(gc_bPlugin.BoolValue)
@@ -759,11 +785,11 @@ public void OnClientDisconnect(int client)
 		Call_StartForward(gF_OnWardenDisconnected);
 		Call_PushCell(client);
 		Call_Finish();
-		if(gc_bSounds.BoolValue)	
+		if(gc_bSounds.BoolValue)
 		{
 			EmitSoundToAllAny(g_sUnWarden);
 		}
-		ResetMarker();
+		RemoveAllMarkers();
 	}
 }
 
@@ -771,7 +797,7 @@ public void OnClientDisconnect(int client)
 
 void SetTheWarden(int client)
 {
-	if(gc_bPlugin.BoolValue)	
+	if(gc_bPlugin.BoolValue)
 	{
 		CPrintToChatAll("%t %t", "warden_tag" , "warden_new", client);
 		
@@ -789,11 +815,11 @@ void SetTheWarden(int client)
 		}
 		SetClientListeningFlags(client, VOICE_NORMAL);
 		Forward_OnWardenCreation(client);
-		if(gc_bSounds.BoolValue)	
+		if(gc_bSounds.BoolValue)
 		{
 			EmitSoundToAllAny(g_sWarden);
 		}
-		ResetMarker(); 
+		RemoveAllMarkers();
 	}
 	else CPrintToChat(client, "%t %t", "warden_tag" , "warden_disabled");
 }
@@ -833,11 +859,11 @@ void RemoveTheWarden(int client)
 	Call_PushCell(client);
 	Call_Finish();
 	Forward_OnWardenRemoved(client);
-	if(gc_bSounds.BoolValue)	
+	if(gc_bSounds.BoolValue)
 	{
 		EmitSoundToAllAny(g_sUnWarden);
 	}
-	ResetMarker();
+	RemoveAllMarkers();
 	g_iVoteCount = 0;
 	Format(g_sHasVoted, sizeof(g_sHasVoted), "");
 	g_sHasVoted[0] = '\0';
@@ -852,7 +878,7 @@ public Action EndMathQuestion(Handle timer)
 
 public Action StartMathQuestion(int client, int args)
 {
-	if(gc_bMath.BoolValue)	
+	if(gc_bMath.BoolValue)
 	{
 		if(client == Warden)
 		{
@@ -984,7 +1010,10 @@ public void SendEndMathQuestion(int client)
 
 public Action RemoveColor( Handle timer, any client ) 
 {
-	SetEntityRenderColor(client, 255, 255, 255, 255);
+	if(IsValidClient(client, false, true))
+	{
+		SetEntityRenderColor(client, 255, 255, 255, 255);
+	}
 }
 
 public Action AnswerQuestion(Handle timer, Handle pack)
@@ -995,7 +1024,292 @@ public Action AnswerQuestion(Handle timer, Handle pack)
 	CPrintToChatAll(str);
 }
 
-//Marker
+//New Marker thanks zipcore!
+
+public Action Event_ItemEquip(Handle event, const char[] name, bool dontBroadcast)
+{
+	int client = GetClientOfUserId(GetEventInt(event, "userid"));
+	
+	g_bCanZoom[client] = GetEventBool(event, "canzoom");
+	g_bHasSilencer[client] = GetEventBool(event, "hassilencer");
+}
+
+public void OnMapEnd()
+{
+	RemoveAllMarkers();
+}
+
+public Action Timer_DrawMakers(Handle timer, any data)
+{
+	Draw_Markers();
+	return Plugin_Continue;
+}
+
+stock void Draw_Markers()
+{
+	if (Warden == -1)
+		return;
+	
+	for(int i = 0; i<4; i++)
+	{
+		if (g_MarkerRadius[i] <= 0.0)
+			continue;
+		
+		float fHeadGuardOrigin[3];
+		Entity_GetAbsOrigin(Warden, fHeadGuardOrigin);
+		
+		if (GetVectorDistance(fHeadGuardOrigin, g_MarkerOrigin[i]) > g_fMarkerRangeMax)
+		{
+			CPrintToChat(Warden, "%t %t", "warden_tag", "warden_marker_faraway", g_sMarkerNames[i]);
+			RemoveMarker(i);
+			continue;
+		}
+		
+		for(int client=1;client<=MaxClients;client++)
+		{
+			if(!IsClientInGame(client))
+				continue;
+			
+			if (IsFakeClient(client))
+				continue;
+			
+			if(!IsPlayerAlive(client))
+				continue;
+			
+			// Show the ring
+			
+			TE_SetupBeamRingPoint(g_MarkerOrigin[i], g_MarkerRadius[i], g_MarkerRadius[i]+0.1, g_iBeamSprite, g_iHaloSprite, 0, 10, 1.0, 2.0, 0.0, g_MarkerColors[i], 10, 0);
+			TE_SendToAll();
+			
+			// Show the arrow
+			
+			float fStart[3];
+			AddVectors(fStart, g_MarkerOrigin[i], fStart);
+			fStart[2] += g_fMarkerArrowHeight;
+			
+			float fEnd[3];
+			AddVectors(fEnd, fStart, fEnd);
+			fEnd[2] += g_fMarkerArrowLength;
+			
+			TE_SetupBeamPoints(fStart, fEnd, g_iBeamSprite, g_iHaloSprite, 0, 10, 1.0, 2.0, 16.0, 1, 0.0, g_MarkerColors[i], 5);
+			TE_SendToAll();
+		}
+	}
+}
+
+public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
+{
+	if (!client)
+		return Plugin_Continue;
+	
+	if (client != Warden)
+		return Plugin_Continue;
+	
+	if (!IsPlayerAlive(client))
+		return Plugin_Continue;
+	
+	if (!gc_bMarker.BoolValue)
+		return Plugin_Continue;
+	
+	if (GetEngineVersion() == Engine_CSGO)
+	{
+		if(g_bCanZoom[client])
+			return Plugin_Continue;
+		
+		if(g_bHasSilencer[client])
+			return Plugin_Continue;
+	}
+	
+	if (buttons & IN_ATTACK2)
+	{
+		if(!g_bMarkerSetup)
+			GetClientAimTargetPos(client, g_fMarkerSetupStartOrigin);
+		
+		GetClientAimTargetPos(client, g_fMarkerSetupEndOrigin);
+		
+		float radius = 2*GetVectorDistance(g_fMarkerSetupEndOrigin, g_fMarkerSetupStartOrigin);
+		
+		if (radius > g_fMarkerRadiusMax)
+			radius = g_fMarkerRadiusMax;
+		else if (radius < g_fMarkerRadiusMin)
+			radius = g_fMarkerRadiusMin;
+		
+		if (radius > 0)
+		{
+			TE_SetupBeamRingPoint(g_fMarkerSetupStartOrigin, radius, radius+0.1, g_iBeamSprite, g_iHaloSprite, 0, 10, 0.1, 2.0, 0.0, {255,255,255,255}, 10, 0);
+			TE_SendToClient(client);
+		}
+		
+		g_bMarkerSetup = true;
+	}
+	else if (g_bMarkerSetup)
+	{
+		MarkerMenu(client);
+		g_bMarkerSetup = false;
+	}
+	
+	return Plugin_Continue;
+}
+
+stock void MarkerMenu(int client)
+{
+	if(!(0 < client < MaxClients) || client != Warden)
+	{
+		CPrintToChat(client, "%t %t", "warden_tag", "warden_notwarden");
+		return;
+	}
+	
+	int marker = IsMarkerInRange(g_fMarkerSetupStartOrigin);
+	if (marker != -1)
+	{
+		RemoveMarker(marker);
+		CPrintToChat(client, "%t %t", "warden_tag", "warden_marker_remove", g_sMarkerNames[marker]);
+		return;
+	}
+	
+	float radius = 2*GetVectorDistance(g_fMarkerSetupEndOrigin, g_fMarkerSetupStartOrigin);
+	if (radius <= 0.0)
+	{
+		RemoveMarker(marker);
+		CPrintToChat(client, "%t %t", "warden_tag", "warden_wrong");
+		return;
+	}
+	
+	float pos[3];
+	Entity_GetAbsOrigin(Warden, pos);
+	
+	float range = GetVectorDistance(pos, g_fMarkerSetupStartOrigin);
+	if (range > g_fMarkerRangeMax)
+	{
+		CPrintToChat(client, "%t %t", "warden_tag", "warden_range");
+		return;
+	}
+	
+	if (0 < client < MaxClients)
+	{
+		Handle menu = CreateMenu(Handle_MarkerMenu);
+		
+		char menuinfo1[255],menuinfo2[255],menuinfo3[255],menuinfo4[255],menuinfo5[255];
+		Format(menuinfo1, sizeof(menuinfo1), "%T", "warden_marker_Title", LANG_SERVER);
+		Format(menuinfo2, sizeof(menuinfo2), "%T", "warden_marker_red", LANG_SERVER);
+		Format(menuinfo3, sizeof(menuinfo3), "%T", "warden_marker_blue", LANG_SERVER);
+		Format(menuinfo4, sizeof(menuinfo4), "%T", "warden_marker_green", LANG_SERVER);
+		Format(menuinfo5, sizeof(menuinfo5), "%T", "warden_marker_orange", LANG_SERVER);
+		
+		SetMenuTitle(menu, menuinfo1);
+		
+		AddMenuItem(menu, "0", menuinfo2);
+		AddMenuItem(menu, "1", menuinfo3);
+		AddMenuItem(menu, "2", menuinfo4);
+		AddMenuItem(menu, "3", menuinfo5);
+		
+		DisplayMenu(menu, client, 10);
+	}
+}
+
+public int Handle_MarkerMenu(Handle menu, MenuAction action, int client, int itemNum)
+{
+	if(!(0 < client < MaxClients))
+		return;
+	
+	if(!IsPlayerAlive(client))
+		return;
+	
+	if (client != Warden)
+	{
+		CPrintToChat(client, "%t %t", "warden_tag", "warden_notwarden");
+		return;
+	}
+	
+	if (action == MenuAction_Select)
+	{
+		char info[32]; char info2[32];
+		bool found = GetMenuItem(menu, itemNum, info, sizeof(info), _, info2, sizeof(info2));
+		int marker = StringToInt(info);
+		
+		if (found)
+		{
+			SetupMarker(client, marker);
+			CPrintToChatAll("%t %t", "warden_tag", "warden_marker_set", g_sMarkerNames[marker]);
+		}
+	}
+}
+
+stock void SetupMarker(int client, int marker)
+{
+	g_MarkerOrigin[marker][0] = g_fMarkerSetupStartOrigin[0];
+	g_MarkerOrigin[marker][1] = g_fMarkerSetupStartOrigin[1];
+	g_MarkerOrigin[marker][2] = g_fMarkerSetupStartOrigin[2];
+	
+	float radius = 2*GetVectorDistance(g_fMarkerSetupEndOrigin, g_fMarkerSetupStartOrigin);
+	if (radius > g_fMarkerRadiusMax)
+		radius = g_fMarkerRadiusMax;
+	else if (radius < g_fMarkerRadiusMin)
+		radius = g_fMarkerRadiusMin;
+	g_MarkerRadius[marker] = radius;
+}
+
+stock int GetClientAimTargetPos(int client, float pos[3]) 
+{
+	if (client < 1) 
+		return -1;
+	
+	float vAngles[3]; float vOrigin[3];
+	
+	GetClientEyePosition(client,vOrigin);
+	GetClientEyeAngles(client, vAngles);
+	
+	Handle trace = TR_TraceRayFilterEx(vOrigin, vAngles, MASK_SHOT, RayType_Infinite, TraceFilterAllEntities, client);
+	
+	TR_GetEndPosition(pos, trace);
+	pos[2] += 5.0;
+	
+	int entity = TR_GetEntityIndex(trace);
+	
+	CloseHandle(trace);
+	
+	return entity;
+}
+
+stock void RemoveMarker(int marker)
+{
+	g_MarkerRadius[marker] = 0.0;
+}
+
+stock void RemoveAllMarkers()
+{
+	for(int i = 0; i < 4;i++)
+		RemoveMarker(i);
+}
+
+stock int IsMarkerInRange(float pos[3])
+{
+	for(int i = 0; i < 4;i++)
+	{
+		if (g_MarkerRadius[i] <= 0.0)
+			continue;
+		
+		if (GetVectorDistance(g_MarkerOrigin[i], pos) < g_MarkerRadius[i])
+			return i;
+	}
+	return -1;
+}
+
+public bool TraceFilterAllEntities(int entity, int contentsMask, any client)
+{
+	if (entity == client)
+		return false;
+	if (entity > MaxClients)
+		return false;
+	if(!IsClientInGame(entity))
+		return false;
+	if(!IsPlayerAlive(entity))
+		return false;
+	
+	return true;
+}
+
+/*/Marker
 
 public Action Command_LAW(int client, const char[] command, int argc)
 {
@@ -1146,6 +1460,8 @@ public Action DeleteMarker( Handle timer)
 {
 	ResetMarker();
 }
+
+*/
 
 //Countdown
 

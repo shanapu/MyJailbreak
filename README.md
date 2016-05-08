@@ -45,8 +45,7 @@ I recommend until full release, when update to overwrite all files (plugins, tra
 
 
 ####  ~~[0.7.2]~~ - VERSIONING BEGINNS WITH RELEASE ON ALLIED - sry
-### Added
-- initial beta release.
+
 
 
 ### Versioning

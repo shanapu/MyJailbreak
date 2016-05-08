@@ -1,18 +1,18 @@
 "Phrases"		// working color tags {default}, {darkred}, {red}, {green}, {lightgreen}, {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
 {
-	"duckhunt_tag"
+	"Duckhunt_tag"
 	{
 		"en"		"[{green}MyJB.Duckhunt{default}]"
 	}
 	
-	"duckhunt_rounds" 
+	"Duckhunt_rounds" 
 	{
 		"#format"	"{1:i},{2:i}"
 		"da"		"Runde {purple}{1}{default} af {purple}{2}"		
 		"en"		"Round {purple}{1}{default} of {purple}{2}"
 		"de"		"Runde {purple}{1}{default} von {purple}{2}"
 	}
-	"duckhunt_need"
+	"Duckhunt_need"
 	{
 		"#format"	"{1:i},{2:N}"
 		"da"		"{purple}{2}{default} har stemt. {purple}{1}{default} afstemninger tilbage til {darkred}duckhunt"		
@@ -20,49 +20,49 @@
 		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}duckhunt{default} beginnt"
 	}
 	
-	"duckhunt_voting"
+	"Duckhunt_voting"
 	{
 		"da"		"Afstemninger for Duckhunt er {purple}slået fra"	
 		"en"		"Player voting for Duckhunt is {purple}disabled"
 		"de"		"Voting für duckhuntt ist {purple}ausgeschaltet"
 	}
 	
-	"duckhunt_setbywarden"
+	"Duckhunt_setbywarden"
 	{
 		"da"		"Duckhunt for Warden er {purple}slået fra"	
 		"en"		"Set Duckhunt by warden is {purple}isabled"
 		"de"		"Duckhunt Aktivierung durch den Warden ist {purple}ausgeschaltet"
 	}
 	
-	"duckhunt_setbyadmin"
+	"Duckhunt_setbyadmin"
 	{
 		"da"		"Duckhunt for Admin er {purple}slået fra"	
 		"en"		"Set Duckhunt by admin is {purple}disabled"
 		"de"		"Duckhunt Aktivierung durch den Admin ist {purple}ausgeschaltet"
 	}
 	
-	"duckhunt_ctwin_nc"
+	"Duckhunt_ctwin_nc"
 	{
 		"da"		"Alle ænder er døde!"
 		"en"		"All ducks got shot"
 		"de"		"Alle Enten wurden geschossen"
 	}
 	
-		"duckhunt_twin_nc"
+		"Duckhunt_twin_nc"
 	{
 		"da"		"Duckhunterne er slået ihjel!"
 		"en"		"The duckhunter died"
 		"de"		"Der Jäger wurde zum Gejagdten"
 	}
 	
-	"duckhunt_end"
+	"Duckhunt_end"
 	{
 		"da"		"{purple}Duckhunt{default} er afsluttet!"
 		"en"		"{purple}Duckhunt{default} finished"
 		"de"		"{purple}Duckhunt{default} beendet"
 	}
 	
-	"duckhunt_next"
+	"Duckhunt_next"
 	{
 		"da"		"Næste runde er {purple}Duckhunt"
 		"en"		"Next round is {purple}Duckhunt"
@@ -70,55 +70,55 @@
 	}
 	
 		
-	"duckhunt_next_nc"
+	"Duckhunt_next_nc"
 	{
 		"da"		"Næste runde er Duckhunt"
 		"en"		"Next round is Duckhunt"
 		"de"		"Nächste Runde ist Duckhunt"
 	}
 	
-	"duckhunt_start"
+	"Duckhunt_start"
 	{
 		"da"		"{purple}Duckhunt{default} er startet!"
 		"en"		"The {purple}Duckhunt{default} has started!"
 		"de"		"{purple}Duckhunt{default} ist gestartet!"
 	}
 	
-	"duckhunt_start_nc"
+	"Duckhunt_start_nc"
 	{
 		"da"		"Duckhunt er startet!"
 		"en"		"The Duckhunt has started!"
 		"de"		"Duckhunt ist gestartet!"
 	}
-	"duckhunt_voted"
+	"Duckhunt_voted"
 	{
 		"da"		"Du har allerede stemt for {purple}Duckhunt Event!"
 		"en"		"You already voted for {purple}Duckhunt"
 		"de"		"Du hast schon für {purple}Duckhunt {default}gevotet"
 	}
 	
-	"duckhunt_progress"
+	"Duckhunt_progress"
 	{
 		"#format"	"{1:s}"
 		"en"		"Event ({darkred}{1} {default}is {purple}already in progress."
 		"de"		"Event {darkred}{1} {default}ist {purple}bereits gesetzt."
 	}
 	
-	"duckhunt_minplayer"
+	"Duckhunt_minplayer"
 	{
 		"da"		"For at lave Duckhunt skal der mindst være {purple}en CT"
 		"en"		"For a Duckhunt you need at least {purple}one CT"
 		"de"		"Für Duckhunt brauchen wir mindestens {purple}einen CT"
 	}
 	
-	"duckhunt_disabled"
+	"Duckhunt_disabled"
 	{
 		"da"		"Duckhunt er {purple}slået fra."
 		"en"		"Duckhunt is {purple}disabled."
 		"de"		"Duckhunt ist {purple}deaktiviert."
 	}
 	
-	"duckhunt_timeuntilstart_nc"		// no colors!
+	"Duckhunt_timeuntilstart_nc"		// no colors!
 	{
 		"#format"	"{1:i}"
 		"da"		"{1} sekunder til start!"		
@@ -126,62 +126,62 @@
 		"de"		"{1} Sekunden bis zum Start"
 	}
 	
-	"duckhunt_info_title"		// no colors!
+	"Duckhunt_info_title"		// no colors!
 	{
 		"da"		"Duckhunt er aktiveret!"	
 		"en"		"Duckhunt is active"
 		"de"		"Duckhunt ist aktiv"
 	}
 	
-	"duckhunt_info_line1"		// no colors!
+	"Duckhunt_info_line1"		// no colors!
 	{
 		"da"		"en slags lerdueskydning"	
 		"en"		"A kind of clay pigeon shooting"
 		"de"		"Eine Art Tontaubenschiessen"
 	}
-	"duckhunt_info_line2"		// no colors!
+	"Duckhunt_info_line2"		// no colors!
 	{
 		"da"		"CT har kun shotgun at skyde med!"	
 		"en"		"Cts got novas"
 		"de"		"Counter Terrorists haben Nova"
 	}
 	
-	"duckhunt_info_line3"		// no colors!
+	"Duckhunt_info_line3"		// no colors!
 	{
 		"da"		"T er kyllinger og har nades. Rightclick Only"	
 		"en"		"Ts are chickens and have got grenades. Rightclick Only"
 		"de"		"Terroristen sind chicken haben Granaten. Rightclick Only"
 	}
 	
-	"duckhunt_info_line4"		// no colors!
+	"Duckhunt_info_line4"		// no colors!
 	{
 		"da"		"Alle jail regler er ophævet!"	
 		"en"		"All normal jail rules are repealed"
 		"de"		"Alle normalen Jailregeln sind aufgehoben!"
 	}
 	
-	"duckhunt_info_line5"		// no colors!
+	"Duckhunt_info_line5"		// no colors!
 	{
 		"da"		"!lr er deaktiveret i denne runde!"	
 		"en"		"There is no last request!"
 		"de"		"Der letzte Terrorists hat keinen Wunsch!"
 	}
 	
-	"duckhunt_info_line6"		// no colors!
+	"Duckhunt_info_line6"		// no colors!
 	{
 		"da"		"Begge hold må gå der hen de har lyst til!"	
 		"en"		"Everyone is allowed to go everywhere where he wants"
 		"de"		"Jeder darf überall hin wo er will!"
 	}
 	
-	"duckhunt_info_line7"		// no colors!
+	"Duckhunt_info_line7"		// no colors!
 	{
 		"da"		"Alle server regler skal overholdes!"	
 		"en"		"Dont be an asshole!"
 		"de"		"Bau keine Scheisse!"
 	}
 	
-	"duckhunt_wait"
+	"Duckhunt_wait"
 	{
 		"#format"	"{1:i}"
 		"en"		"Du skal vente {purple}{1}{default} flere runder!"	

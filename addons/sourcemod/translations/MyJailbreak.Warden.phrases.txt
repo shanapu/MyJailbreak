@@ -89,29 +89,28 @@
 	
 	"warden_dead"
 	{
-
 		"da"		"Warden er nu {darkred}DØD{default}. Andre CT kan skrive !w for at blive warden."	
-		"en"		"the warden are now {darkred}dead{default}. You may now choose a new one."
+		"en"		"The warden are now {darkred}dead{default}. You may now choose a new one."
 		"es"		"El AlcÃ¡ide ha {darkred}dead{default}! Ahora toca elegir uno juevo."
 		"pt"		"O diretor está {darkred}dead{default}, agora começa a escolher um novo."
 		"sv"		"fängelsedirektören är död. Ni bör nu välja en ny."
-		"de"		"der Warden ist {darkred}Tod{default}! Ihr solltet jetzt einen neuen wählen!"
+		"de"		"Der Warden ist {darkred}Tod{default}! Ihr solltet jetzt einen neuen wählen!"
 	}
 	
 	"warden_dead_nc"	// no colors!
 	{
 		"da"		"Warden er nu DØD. Andre CT kan skrive !w for at blive warden."	
-		"en"		"the warden are now dead. You may now choose a new one."
+		"en"		"The warden are now dead. You may now choose a new one."
 		"es"		"El AlcÃ¡ide ha muerto! Ahora toca elegir uno juevo."
 		"pt"		"O diretor está morto, agora começa a escolher um novo."
 		"sv"		"fängelsedirektören är död. Ni bör nu välja en ny."
-		"de"		"der Warden ist Tod! Ihr solltet jetzt einen neuen wählen!"
+		"de"		"Der Warden ist Tod! Ihr solltet jetzt einen neuen wählen!"
 	}
 	
 	"warden_disconnected"
 	{
 		"da"		"Warden har {purple}disconnected{default}. Andre CT kan skrive !w for at blive warden."
-		"en"		"the warden has {purple}disconnected{default}. You may now choose a new one."
+		"en"		"The warden has {purple}disconnected{default}. You may now choose a new one."
 		"es"		"El AlcÃ¡ide ha desertado. Ahora toca elegir uno nuevo."
 		"pt"		"O diretor deixou o jogo. Agora começa a escolher um novo."
 		"sv"		"fängelsedirektören har lämnat. Ni bör nu välja en ny."
@@ -121,7 +120,7 @@
 	"warden_disconnected_nc"	// no colors!
 	{
 		"da"		"Warden har disconnected. Andre CT kan skrive !w for at blive warden."
-		"en"		"the warden has disconnected. You may now choose a new one."
+		"en"		"The warden has disconnected. You may now choose a new one."
 		"es"		"El AlcÃ¡ide ha desertado. Ahora toca elegir uno nuevo."
 		"pt"		"O diretor deixou o jogo. Agora começa a escolher um novo."
 		"sv"		"fängelsedirektören har lämnat. Ni bör nu välja en ny."
@@ -153,7 +152,7 @@
 	"warden_noexist"
 	{
 		"da"		"Der var {purple}ingen warden{default} at fyre."
-		"en"		"there was {purple}no warden{default} to fire."
+		"en"		"There was {purple}no warden{default} to fire."
 		"es"		"Actualmente no existe ningÃºn AlcÃ¡ide en la prisiÃ³n."
 		"pt"		"Atualmente não há carcereiro na prisão."
 		"sv"		"det fanns ingen fängelsedirektör att avskeda."
@@ -224,8 +223,8 @@
 	"warden_ffisoff"
 	{
 		"#format"		""
-		"da"			"friendly fire {purple}deaktiveret!"		
-		"en"			"friendly fire {purple}disabled"
+		"da"			"Friendly fire {purple}deaktiveret!"		
+		"en"			"Friendly fire {purple}disabled"
 		"de"			"Friendly Fire {purple}ist AUS!"
 	}
 	
@@ -234,13 +233,6 @@
 		"da"		"Afstemning om at kick {purple}warden{default} er deaktiveret!"
 		"en"		"Voting for kick {purple}warden{default} is disabled"
 		"de"		"Voting gegen den {purple}Warden{default} ist ausgeschaltet!"
-	}
-	
-	"warden_marker"
-	{
-		"da"		"Nyt område er sat!"
-		"en"		"New marker set."
-		"de"		"Neuer Marker wurde gesetzt."
 	}
 	
 	"warden_countdowncanceled"
@@ -328,18 +320,17 @@
 		"en"		"{purple}GO! {darkred}START!"
 		"de"		"{purple}GO! {darkred}START! {green}LOS!"
 	}
-		"warden_countdownstop"
+	"warden_countdownstop"
 	{
 		"da"		"{purple}STOP! {darkred}SLUT! {green}AFSLUTTET!"	
 		"en"		"{purple}STOP! {darkred}END!"
 		"de"		"{purple}ENDE! {darkred}STOP! {green}Fertig!"
 	}
 	
-	
 	"warden_countdownrunning"
 	{
 		"da"		"En countdown er {purple}allerede i gang!"	
-		"en"		"a Countdown is {purple}already in progress"
+		"en"		"A Countdown is {purple}already in progress"
 		"de"		"Ein Countdown {purple}läuft bereits"
 	}
 	
@@ -350,7 +341,7 @@
 		"de"		"GO! START! LOS!"
 	}
 	
-		"warden_countdownstop_nc"		// no colors!
+	"warden_countdownstop_nc"		// no colors!
 	{
 		"da"		"STOP! SLUT!"
 		"en"		"STOP! END!"
@@ -360,15 +351,15 @@
 	"warden_noblockoff"
 	{
 		"da"		"Warden har {purple}deaktiveret NOBLOCK!"
-		"en"		"the warden set {purple}noblock off!"
-		"de"		"der Warden hat {purple}noblock ausgeschaltet!"
+		"en"		"The warden set {purple}noblock off!"
+		"de"		"Der Warden hat {purple}noblock ausgeschaltet!"
 	}
 	
 	"warden_noblockon"
 	{
 		"da"		"Warden har {purple}aktiveret NOBLOCK!"
-		"en"		"the warden set {purple}noblock on!"
-		"de"		"der Warden hat {purple}noblock eingeschaltet!"
+		"en"		"The warden set {purple}noblock on!"
+		"de"		"Der Warden hat {purple}noblock eingeschaltet!"
 	}
 	
 	"warden_need"
@@ -376,14 +367,14 @@
 		"#format"	"{1:i}"
 		"da"		"{1} afstemninger tilbage til {darkred}kick warden"		
 		"en"		"{1} votes left to {darkred}kick warden"
-		"de"		"noch {1} votes bis der {darkred}warden{default} geht"
+		"de"		"Noch {1} votes bis der {darkred}warden{default} geht"
 	}
 	
 	"warden_voted"
 	{
 		"da"		"Du har allerede stemt på at kicke {purple}warden{default}"
 		"en"		"You already voted against the {purple}warden{default}"
-		"de"		"du hast schon {purple}gegen den Warden{default} gestimmt"
+		"de"		"Du hast schon {purple}gegen den Warden{default} gestimmt"
 	}
 	
 	"warden_israndomdead"
@@ -402,6 +393,67 @@
 	{
 		"en"		"Remove the current Warden?"
 		"de"		"Derzeitigen Warden entfernen?"
+	}
+	
+	"warden_marker_set"
+	{
+		"#format"	"{1:s}"
+		"da"		"{1} område er sat!"
+		"en"		"{1} marker set."
+		"de"		"Marker {1} gesetzt."
+	}
+	
+	"warden_marker_remove"
+	{
+		"#format"	"{1:s}"
+		"en"		"{1} marker removed!"
+		"de"		"Marker {1} entfernt."
+	}
+	
+	"warden_marker_faraway"
+	{
+		"#format"	"{1:s}"
+		"en"		"{1} marker removed! You were far away from it."
+		"de"		"Marker {1} entfernt. Du warst zu weit davon entfernt."
+	}
+	
+	"warden_marker_Title"
+	{
+		"en"		"Marker Color Selection"
+		"de"		"Marker Farbauswahl"
+	}
+	"warden_marker_red"
+	{
+		"en"		"Red"
+		"de"		"Rot"
+	}
+	"warden_marker_blue"
+	{
+		"en"		"Blue"
+		"de"		"Blau"
+	}
+	"warden_marker_green"
+	{
+		"en"		"Green"
+		"de"		"Grüner"
+	}	
+	
+	"warden_marker_orange"
+	{
+		"en"		"Orange"
+		"de"		"Orange"
+	}
+	
+	"warden_range"
+	{
+		"en"		"Position out of range!"
+		"de"		"Diese Position ist zu weit entfernt!"
+	}
+	
+	"warden_wrong"
+	{
+		"en"		"Something went wrong, try it again!"
+		"de"		"Irgendwas ist schiefgelaufen. Probiere es nochmal!"
 	}
 	
 	"warden_cdmenu_Title"

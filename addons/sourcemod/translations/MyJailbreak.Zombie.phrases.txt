@@ -91,7 +91,7 @@
 	
 	"zombie_voted"
 	{
-		"da"		"du har allerede stemt på {purple}Zombie"	
+		"da"		"Du har allerede stemt på {purple}Zombie"	
 		"en"		"You already voted for {purple}Zombie"
 		"de"		"Du hast schon für {purple}Zombie {default}gevotet"
 	}
