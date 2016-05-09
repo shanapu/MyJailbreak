@@ -871,12 +871,19 @@ On Round start cells open for freeday and enabled damage (Default).
 ### Installation
 > 
 > Make sure you have the latest versions of the [required plugins](#requires-plugins)  
-< Download the [latest release](https://github.com/shanapu/MyJailbreak/archive/master.zip) or [dev version](https://github.com/shanapu/MyJailbreak/archive/master.zip) (same until release on AM)
+>   
+> Download the [latest release](https://github.com/shanapu/MyJailbreak/archive/master.zip) or [dev version](https://github.com/shanapu/MyJailbreak/archive/master.zip) (same until release on AM)  
+>   
 > Copy the folders addons/, cfg/, materials/, models/ & sound/ to your root csgo/ directory  
+>   
 > Copy the folders materials/, models/ & sound/ in the fastDL/ directory to your FastDownload server  
-> Open your downloads.ini in the your csgo/addons/sourcemod/configs directory and add the content of downloads.txt
+>   
+> Open your downloads.ini in the your csgo/addons/sourcemod/configs directory and add the content of downloads.txt..
+>   
 > Run plugin for the first time and all nessasery .cfg files will be generate  
+>   
 > Configure all settings in cfg/MyJailbreak to your needs  
+>   
 >   
 > Have fun! Give feedback!  
 > 
@@ -905,6 +912,5 @@ based/merged/used code/idea plugins:
 * https://git.tf/TTT/Plugin (sound)
 * https://forums.alliedmods.net/showthread.php?t=262170 (model)
 * http://www.andi67.bplaced.net/Forum/viewtopic.php?f=40&t=342 (model)
-
 * if I missed someone, please tell me!
-* THANK YOU ALL! 
+* THANK YOU ALL!

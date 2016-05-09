@@ -9,8 +9,9 @@ know bugs:
 
 
 must:
-- [ ] install instruction 
-- [ ] add all new things to wiki/readme
+- [ ] late precache warden icon
+- [x] install instruction 
+- [?] add all new things to wiki/readme
 - [ ] wiki: howto edit -> SetCvars, add menu item,
 - [ ] menu: add placeholder for cutom commands
 
