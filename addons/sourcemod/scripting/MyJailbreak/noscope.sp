@@ -26,6 +26,7 @@ ConVar gc_bSetA;
 ConVar gc_bSpawnCell;
 ConVar gc_bVote;
 ConVar gc_iWeapon;
+ConVar gc_bRandom;
 ConVar gc_iCooldownDay;
 ConVar gc_iRoundTime;
 ConVar gc_iTruceTime;
@@ -47,6 +48,7 @@ int g_iMaxRound;
 
 //Handles
 Handle TruceTimer;
+Handle GravityTimer;
 Handle NoScopeMenu;
 
 //Floats
@@ -88,6 +90,7 @@ public void OnPluginStart()
 	gc_bSpawnCell = AutoExecConfig_CreateConVar("sm_noscope_spawn", "0", "0 - T teleport to CT spawn, 1 - cell doors auto open", _, true,  0.0, true, 1.0);
 	gc_iRounds = AutoExecConfig_CreateConVar("sm_noscope_rounds", "1", "Rounds to play in a row", _, true, 1.0);
 	gc_iWeapon = AutoExecConfig_CreateConVar("sm_noscope_weapon", "1", "1 - ssg08 / 2 - awp / 3 - scar20 / 4 - g3sg1", _, true,  1.0, true, 4.0);
+	gc_bRandom = AutoExecConfig_CreateConVar("sm_noscope_random", "0", "get a random weapon (ssg08,awp,scar20,g3sg1) ignore: sm_noscope_weapon", _, true,  0.0, true, 1.0);
 	gc_bGrav = AutoExecConfig_CreateConVar("sm_noscope_gravity", "1", "0 - disabled, 1 - enable low Gravity for noscope", _, true,  0.0, true, 1.0);
 	gc_fGravValue= AutoExecConfig_CreateConVar("sm_noscope_gravity_value", "0.3","Ratio for Gravity 1.0 earth 0.5 moon", _, true, 0.1, true, 1.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_noscope_roundtime", "5", "Round time in minutes for a single noscope round", _, true, 1.0);
@@ -156,32 +159,16 @@ public void OnConfigsExecuted()
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iMaxRound = gc_iRounds.IntValue;
 	
-	if (gc_iWeapon.IntValue == 1)
-	{
-		g_sWeapon = "weapon_ssg08";
-	}
-	else if (gc_iWeapon.IntValue == 2)
-	{
-		g_sWeapon = "weapon_awp";
-	}
-	else if (gc_iWeapon.IntValue == 3)
-	{
-		g_sWeapon = "weapon_scar20";
-	}
-	else if (gc_iWeapon.IntValue == 4)
-	{
-		g_sWeapon = "weapon_g3sg1";
-	}
+	if (gc_iWeapon.IntValue == 1) g_sWeapon = "weapon_ssg08";
+	if (gc_iWeapon.IntValue == 2) g_sWeapon = "weapon_awp";
+	if (gc_iWeapon.IntValue == 3) g_sWeapon = "weapon_scar20";
+	if (gc_iWeapon.IntValue == 4) g_sWeapon = "weapon_g3sg1";
 }
 
 public void OnClientPutInServer(int client)
 {
 	SDKHook(client, SDKHook_WeaponCanUse, OnWeaponCanUse);
-	
-//	if (IsNoScope)
-//	{
 	SDKHook(client, SDKHook_PreThink, OnPreThink);
-//	}
 }
 
 //Admin & Warden set Event
@@ -321,6 +308,16 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		
 		IsNoScope = true;
 		
+		if (gc_bRandom.BoolValue)
+		{
+			int randomnum = GetRandomInt(0, 3);
+			
+			if(randomnum == 0)g_sWeapon = "weapon_ssg08";
+			if(randomnum == 1)g_sWeapon = "weapon_awp";
+			if(randomnum == 2)g_sWeapon = "weapon_scar20";
+			if(randomnum == 3)g_sWeapon = "weapon_g3sg1";
+		}
+		
 		g_iRound++;
 		StartNoScope = false;
 		SJD_OpenDoors();
@@ -390,6 +387,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 				}
 				g_iTruceTime--;
 				TruceTimer = CreateTimer(1.0, StartTimer, _, TIMER_REPEAT);
+				GravityTimer = CreateTimer(1.0, CheckGravity, _, TIMER_REPEAT);
 				CPrintToChatAll("%t %t", "noscope_tag" ,"noscope_rounds", g_iRound, g_iMaxRound);
 			}
 			for(int i = 1; i <= MaxClients; i++)
@@ -508,6 +506,7 @@ public void OnMapEnd()
 	IsNoScope = false;
 	StartNoScope = false;
 	if (TruceTimer != null) KillTimer(TruceTimer);
+	if (GravityTimer != null) KillTimer(GravityTimer);
 	g_iVoteCount = 0;
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0';
@@ -554,6 +553,20 @@ stock void MakeNoScope(int weapon)
 			{
 				SetEntDataFloat(weapon, m_flNextSecondaryAttack, GetGameTime() + 1.0);
 			}
+		}
+	}
+}
+
+//Give back Gravity if it gone -> ladders
+
+public Action CheckGravity(Handle timer)
+{
+	for(int client=1; client <= MaxClients; client++)
+	{
+		if (IsValidClient(client, false, false))
+		{
+			if(GetEntityGravity(client) != 1.0)
+				SetEntityGravity(client, gc_fGravValue.FloatValue);
 		}
 	}
 }
