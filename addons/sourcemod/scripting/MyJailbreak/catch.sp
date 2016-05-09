@@ -695,7 +695,7 @@ public Action TE_OnEffectDispatch(const char[] te_name, const Players[], int num
 
 	GetEffectName(iEffectIndex, sEffectName, sizeof(sEffectName));
 	
-	if(g_bNoBlood.BoolValue)
+	if(g_bNoBlood.BoolValue && IsCatch)
 	{
 		if(StrEqual(sEffectName, "csblood"))
 		{
@@ -727,7 +727,7 @@ public Action TE_OnWorldDecal(const char[] te_name, const Players[], int numClie
 	TE_ReadVector("m_vecOrigin", vecOrigin);
 	GetDecalName(nIndex, sDecalName, sizeof(sDecalName));
 	
-	if(g_bNoBlood.BoolValue)
+	if(g_bNoBlood.BoolValue && IsCatch)
 	{
 		if(StrContains(sDecalName, "decals/blood") == 0 && StrContains(sDecalName, "_subrect") != -1)
 			if(g_bNoBloodSplash.BoolValue)
