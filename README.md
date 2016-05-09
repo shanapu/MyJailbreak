@@ -867,6 +867,18 @@ On Round start cells open for freeday and enabled damage (Default).
 - EventDays - you can use only the EventDays you want. you just need MyJailbreak & one EventDay
 ....more
 
+### Installation
+
+> 
+> Make sure you have the latest versions of the [required plugins](#requires-plugins)  
+> Copy the folders addons/, cfg/, materials/, models/ & sound/ to your root csgo/ directory  
+> Copy the folders materials/, models/ & sound/ in the fastDL/ directory to your FastDownload server  
+> Run plugin for the first time and all nessasery .cfg files will be generate  
+> Configure all settings in cfg/MyJailbreak to your needs  
+>   
+> Have fun!  
+> 
+
 
 
 ### detailed credits
