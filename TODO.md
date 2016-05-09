@@ -83,6 +83,7 @@ maybe:
 ###### DONE 
 lose cues bad spelling  
 bugs:
+
 - [x] sm_weapons_spawnmenu dont work
 - [x] sm_weapons_awp & sm_weapons_autosniper
 - [x] catch: sprint bug release T
@@ -122,6 +123,7 @@ bugs:
 - [x] Gravity ?!? -> checktimer ladder fix
 
 must/want:
+- [x] noscope Random weapon
 - [x] menu back button
 - [x] config folder structure
 - [x] Event: logging

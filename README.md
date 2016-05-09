@@ -471,7 +471,7 @@ Zombies freezed for 35sec (default) so T can hide &/or climb.
 #### Noscope
 
 This plugin allows players to vote and Warden to set next round to noscope  
-On Round start cells open everybody got a scout with noscope in low gravity. Nodamage time (def. 30sec).
+On Round start cells open everybody got sniper rifle with noscope and low gravity. Nodamage time (def. 30sec).
 
 ##### Commands
 ```
@@ -486,8 +486,9 @@ On Round start cells open everybody got a scout with noscope in low gravity. Nod
 - sm_noscope_seta: 0 - disabled, 1 - allow Admin to set next round noscope round. Default 1
 - sm_noscope_spawn: 0 - teleport Ts to CT and freeze, 1 - open cell doors an get weapons. Default 0
 - sm_noscope_vote: 0 - disabled, 1 - allow player to vote for noscope. Default 1
-- sm_noscope_rounds: Rounds to play in a row
+- sm_noscope_rounds: Rounds to play in a row. Default 1
 - sm_noscope_weapon: 1 - ssg08 / 2 - awp / 3 - scar20 / 4 - g3sg1. Default 1
+- sm_noscope_random: 0 - disabled, 1 - get a random weapon (ssg08,awp,scar20,g3sg1) ignore: sm_noscope_weapon. Default 0
 - sm_noscope_gravity: 0 - disabled, 1 - enable low Gravity for noscope. Default 1
 - sm_noscope_gravity_value - Ratio for Gravity 1.0 earth 0.5 moon. Default 0.3
 - sm_noscope_roundtime - Roundtime for a single noscope round in minutes. Default 5
@@ -866,6 +867,19 @@ On Round start cells open for freeday and enabled damage (Default).
 - weapons - if you dont wanna use the weapons menu, on EventDays player get "standart weapons".
 - EventDays - you can use only the EventDays you want. you just need MyJailbreak & one EventDay
 ....more
+
+### Installation
+> 
+> Make sure you have the latest versions of the [required plugins](#requires-plugins)  
+< Download the [latest release](https://github.com/shanapu/MyJailbreak/archive/master.zip) or [dev version](https://github.com/shanapu/MyJailbreak/archive/master.zip) (same until release on AM)
+> Copy the folders addons/, cfg/, materials/, models/ & sound/ to your root csgo/ directory  
+> Copy the folders materials/, models/ & sound/ in the fastDL/ directory to your FastDownload server  
+> Open your downloads.ini in the your csgo/addons/sourcemod/configs directory and add the content of downloads.txt
+> Run plugin for the first time and all nessasery .cfg files will be generate  
+> Configure all settings in cfg/MyJailbreak to your needs  
+>   
+> Have fun! Give feedback!  
+> 
 
 
 

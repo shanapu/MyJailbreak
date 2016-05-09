@@ -477,10 +477,10 @@ public Action BecomeWarden(int client, int args)
 				{
 					if (IsPlayerAlive(client))
 					{
-					SetTheWarden(client);
-					Call_StartForward(gF_OnWardenCreatedByUser);
-					Call_PushCell(client);
-					Call_Finish();
+						SetTheWarden(client);
+						Call_StartForward(gF_OnWardenCreatedByUser);
+						Call_PushCell(client);
+						Call_Finish();
 					}
 					else CPrintToChat(client, "%t %t", "warden_tag" , "warden_playerdead");
 				}
