@@ -6,16 +6,23 @@ know bugs:
 - [ ] hide win -> T win show wrong
 - [?] duckhunt end FP
 - [?] jihad bombactiv in 2nd round
-
+- [x] late precache warden icon
+- [ ] warden icon losing head
 
 must:
-- [ ] late precache warden icon
 - [x] install instruction 
 - [?] add all new things to wiki/readme
 - [ ] wiki: howto edit -> SetCvars, add menu item,
 - [ ] menu: add placeholder for cutom commands
+- [?] enable drawer for T
+- [ ] clean up translation files
 
 want:
+- [ ] clean double useless code OnPlayerRunCmd
+- [ ] set custom Laser/Drawer Button
+- [ ] warden capitulate pardon rebel - heal - wdh
+- [x] warden laser pointer
+- [x] warden drawer
 - [ ] translate EventDay native
 - [x] autofreeday if there is no CT
 - [ ] respawn on freeday

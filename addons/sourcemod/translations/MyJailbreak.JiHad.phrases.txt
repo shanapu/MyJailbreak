@@ -148,7 +148,7 @@
 	}
 	"jihad_info_line2"
 	{
-		"en"		"Terrors got c4 and can suicde wit +lookweapon 'F'-key"
+		"en"		"Terrors got c4 and can suicide with +lookweapon 'F'-key"
 		"de"		"Terrors haben c4 und können mit der +lookweapon 'F'-Taste suizid begehen"
 	}
 	

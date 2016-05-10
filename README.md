@@ -58,7 +58,7 @@ e.g.
 
 ### Credits: 
 
-**used code & stuff from: ecca, Zipcore, ESK0, Floody.de, Franc1sco, walmar, KeepCalm, bara, Arkarr, KissLick, headline, Hipster, ReFlexPoison, Kaesar, andi67** and many other I cant remember unfortunately! [detailed](#detailed-credits)  
+**used code & stuff from: ecca, Zipcore, ESK0, Floody.de, Franc1sco, walmar, KeepCalm, bara, Arkarr, KissLick, headline, Hipster, ReFlexPoison, 8guawong, Mitchell, Xines, Kaesar, andi67** and many other I cant remember unfortunately! [detailed](#detailed-credits)  
 **thanks to all sourcemod & metamod developers out there!**
 
 # THANKS FOR MAKING FREE SOFTWARE!
@@ -87,6 +87,8 @@ Colorize Warden, Warden Model, open/close cell doors, automatic open cells doors
 - sm_vw / sm_voteWarden - Allows the player to vote to retire Warden
 - sm_open - Allows the Warden to open the cell doors
 - sm_close - Allows the Warden to close the cell doors
+- sm_laser - Allows Wthe Warden to toggle the wardens Laser pointer
+- sm_drawer - the Warden to toggle the wardens Drawer
 - sm_noblockon - Allows the Warden to enable no block 
 - sm_noblockoff - Allows the Warden to disable no block
 - sm_setff - Allows player to see the state and the Warden to toggle friendly fire
@@ -118,8 +120,11 @@ Colorize Warden, Warden Model, open/close cell doors, automatic open cells doors
 - sm_warden_noblock: 0 - disabled, 1 - enable setable noblock for Warden. Default 1
 - sm_warden_ff: 0 - disabled, 1 - enable Warden switch friendly fire. Default 1
 - sm_warden_random: 0 - disabled, 1 - enable kill a random t for Warden. Default 1
-- sm_warden_randomkind: 1 - all random / 2 - Thunder / 3 - Timebomb / 4 - Firebomb / 5 - NoKill (1,3,4 needs funncommands.smx enabled). Default 2
+- sm_warden_randomkill: 1 - all random / 2 - Thunder / 3 - Timebomb / 4 - Firebomb / 5 - NoKill (1,3,4 needs funncommands.smx enabled). Default 2
 - sm_warden_marker: 0 - disabled, 1 - enable Warden advanced markers. Default 1
+- sm_warden_laser: 0 - disabled, 1 - enable Warden Laser Pointer with +E. Default 1
+- sm_warden_drawer: 0 - disabled, 1 - enable Warden Drawer with +E. Default 1
+- sm_warden_drawer_terror: 0 - disabled, 1 - allow Warden to toggle Drawer for Terrorist. Default 1
 - sm_warden_math: 0 - disabled, 1 - enable mathquiz for Warden. Default 1
 - sm_warden_math_min: What should be the minimum number for questions. Default 1
 - sm_warden_math_max: What should be the maximum number for questions. Default 100
@@ -135,10 +140,10 @@ Colorize Warden, Warden Model, open/close cell doors, automatic open cells doors
 - sm_warden_color_green - What color to turn the Warden into (rGb): x - green value. Default 0
 - sm_warden_color_blue - What color to turn the Warden into (rgB): x - blue value. Default 255
 - sm_warden_sounds_enable: 0 - disabled, 1 - Play a sound when a player become Warden or Warden leaves. Default 1
-- sm_warden_sounds_warden - Path to the soundfile which should be played for a new Warden. Default "music/myJailbreak/Warden.mp3"
-- sm_warden_sounds_unWarden - Path to the soundfile which should be played when there is no Warden anymore. Default "music/myJailbreak/unWarden.mp3"
-- sm_warden_sounds_start - Path to the soundfile which should be played for a start countdown. Default "music/myJailbreak/start.mp3"
-- sm_warden_sounds_stop - Path to the soundfile which should be played for a stop countdown. Default "music/myJailbreak/stop.mp3"
+- sm_warden_sounds_warden - Path to the soundfile which should be played for a new Warden. Default "music/MyJailbreak/Warden.mp3"
+- sm_warden_sounds_unWarden - Path to the soundfile which should be played when there is no Warden anymore. Default "music/MyJailbreak/unWarden.mp3"
+- sm_warden_sounds_start - Path to the soundfile which should be played for a start countdown. Default "music/MyJailbreak/start.mp3"
+- sm_warden_sounds_stop - Path to the soundfile which should be played for a stop countdown. Default "music/MyJailbreak/stop.mp3"
 - sm_warden_open_enable: 0 - disabled, 1 - Warden can open/close cell doors. Default 1
 - sm_warden_open_time_enable: 0 - disabled, 1 - cell doors will open automatic after - sm_warden_open_time. Default 1
 - sm_warden_open_time - Time in seconds for open doors on round start automaticly. Default 60
@@ -371,7 +376,7 @@ Or on Round start Ts spawn in open cells with weapons and weaponmenu. No Freeze/
 - sm_war_cooldown_start - Rounds until event can be start after mapchange. Default 3
 - sm_war_cooldown_day - Rounds until event can be started again. Default 3
 - sm_war_sounds_enable: 0 - disabled, 1 - enable sounds. Default 1
-- sm_war_sounds_start: Path to the soundfile which should be played on start. Default "music/myJailbreak/start.mp3"
+- sm_war_sounds_start: Path to the soundfile which should be played on start. Default "music/MyJailbreak/start.mp3"
 - sm_war_overlays_enable: 0 - disabled, 1 - enable start overlay. Default 1
 - sm_war_overlays_start: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
 
@@ -411,7 +416,7 @@ Or on Round start Ts spawn in open cells with weapons & weaponmenu. (Default)
 - sm_ffa_cooldown_start - Rounds until event can be start after mapchange. Default 3
 - sm_ffa_cooldown_day - Rounds until event can be started again. Default 3
 - sm_ffa_sounds_enable: 0 - disabled, 1 - enable sounds. Default 1
-- sm_ffa_sounds_start: Path to the soundfile which should be played on start. Default "music/myJailbreak/start.mp3"
+- sm_ffa_sounds_start: Path to the soundfile which should be played on start. Default "music/MyJailbreak/start.mp3"
 - sm_ffa_overlays_enable: 0 - disabled, 1 - enable start overlay. Default 1
 - sm_ffa_overlays_start: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
 
@@ -451,7 +456,7 @@ Zombies freezed for 35sec (default) so T can hide &/or climb.
 - sm_zombie_cooldown_start - Rounds until event can be start after mapchange. Default 3
 - sm_zombie_cooldown_day - Rounds until event can be started again. Default 3
 - sm_zombie_sounds_enable: 0 - disabled, 1 - enable sounds. Default 1
-- sm_zombie_sounds_start: Path to the soundfile which should be played on start. Default "music/myJailbreak/start.mp3"
+- sm_zombie_sounds_start: Path to the soundfile which should be played on start. Default "music/MyJailbreak/start.mp3"
 - sm_zombie_overlays_enable: 0 - disabled, 1 - enable start overlay. Default 1
 - sm_zombie_overlays_start: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
 - sm_zombie_model: Path to the model for zombies. Default "models/player/custom_player/zombie/revenant/revenant_v2.mdl"
@@ -496,7 +501,7 @@ On Round start cells open everybody got sniper rifle with noscope and low gravit
 - sm_noscope_cooldown_start - Rounds until event can be start after mapchange. Default 3
 - sm_noscope_cooldown_day - Rounds until event can be started again. Default 3
 - sm_noscope_sounds_enable: 0 - disabled, 1 - enable sounds. Default 1
-- sm_noscope_sounds_start: Path to the soundfile which should be played on start. Default "music/myJailbreak/start.mp3"
+- sm_noscope_sounds_start: Path to the soundfile which should be played on start. Default "music/MyJailbreak/start.mp3"
 - sm_noscope_overlays_enable: 0 - disabled, 1 - enable start overlay. Default 1
 - sm_noscope_overlays_start: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
 
@@ -536,7 +541,7 @@ On Round start cells open everybody got HE grenate with low gravity(Default) and
 - sm_hebattle_cooldown_start - Rounds until event can be start after mapchange. Default 3
 - sm_hebattle_cooldown_day - Rounds until event can be started again. Default 3
 - sm_hebattle_sounds_enable: 0 - disabled, 1 - enable sounds. Default 1
-- sm_hebattle_sounds_start: Path to the soundfile which should be played on start. Default "music/myJailbreak/start.mp3"
+- sm_hebattle_sounds_start: Path to the soundfile which should be played on start. Default "music/MyJailbreak/start.mp3"
 - sm_hebattle_overlays_enable: 0 - disabled, 1 - enable start overlay. Default 1
 - sm_hebattle_overlays_start: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
 
@@ -584,8 +589,8 @@ CT and T can Sprint with USE-Key (default).
 - sm_catch_stayoverlay: 0 - overlays will removed after 3sec. , 1 - overlays will stay until unfreeze. Default 1
 - sm_catch_overlayfreeze_path: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/freeze"
 - sm_catch_sounds_enable: 0 - disabled, 1 - enable un/-Freeze sounds. Default 1
-- sm_catch_sounds_freeze: Path to the soundfile which should be played on freeze. Default "music/myJailbreak/freeze.mp3"
-- sm_catch_sounds_unfreeze: Path to the soundfile which should be played on unfreeze. Default "music/myJailbreak/unfreeze.mp3"
+- sm_catch_sounds_freeze: Path to the soundfile which should be played on freeze. Default "music/MyJailbreak/freeze.mp3"
+- sm_catch_sounds_unfreeze: Path to the soundfile which should be played on unfreeze. Default "music/MyJailbreak/unfreeze.mp3"
 - sm_catch_noblood: 0 - Disable, 1 - enable No Blood. Default 1
 - sm_catch_noblood_splatter: 0 - Disable, 1 - enable No Blood Splatter. Default 1
 - sm_catch_noblood_splash: 0 - Disable, 1 - enable No Blood Splash. Default 1
@@ -626,7 +631,7 @@ When CT unfreezed (30sec. default) Ts get freezed (default).
 - sm_hide_cooldown_start - Rounds until event can be start after mapchange. Default 3
 - sm_hide_cooldown_day - Rounds until event can be started again. Default 3
 - sm_hide_sounds_enable: 0 - disabled, 1 - enable sounds. Default 1
-- sm_hide_sounds_start: Path to the soundfile which should be played on start. Default "music/myJailbreak/start.mp3"
+- sm_hide_sounds_start: Path to the soundfile which should be played on start. Default "music/MyJailbreak/start.mp3"
 - sm_hide_overlays_enable: 0 - disabled, 1 - enable start overlay. Default 1
 - sm_hide_overlays_start: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
 
@@ -663,7 +668,7 @@ T are Chicken in Thirdperson. After trucetime the cells open and T got HE grenad
 - sm_duckhunt_cooldown_start - Rounds until event can be start after mapchange. Default 3
 - sm_duckhunt_cooldown_day - Rounds until event can be started again. Default 3
 - sm_duckhunt_sounds_enable: 0 - disabled, 1 - enable sounds. Default 1
-- sm_duckhunt_sounds_start: Path to the soundfile which should be played on start. Default "music/myJailbreak/start.mp3"
+- sm_duckhunt_sounds_start: Path to the soundfile which should be played on start. Default "music/MyJailbreak/start.mp3"
 - sm_duckhunt_overlays_enable: 0 - disabled, 1 - enable start overlay. Default 1
 - sm_duckhunt_overlays_start: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
 
@@ -713,9 +718,9 @@ CT and T can Sprint with USE-Key (default).
 - sm_jihad_cooldown_start - Rounds until event can be start after mapchange. Default 3
 - sm_jihad_cooldown_day - Rounds until event can be started again. Default 3
 - sm_jihad_sounds_enable: 0 - disabled, 1 - enable sounds. Default 1
-- sm_jihad_sounds_start: Path to the soundfile which should be played on start. Default "music/myJailbreak/start.mp3"
-- sm_jihad_sounds_jihad - Path to the soundfile which should be played on activate bomb. Default "music/myJailbreak/jihad.mp3"
-- sm_jihad_sounds_boom - Path to the soundfile which should be played on detonation. Default "music/myJailbreak/boom.mp3"
+- sm_jihad_sounds_start: Path to the soundfile which should be played on start. Default "music/MyJailbreak/start.mp3"
+- sm_jihad_sounds_jihad - Path to the soundfile which should be played on activate bomb. Default "music/MyJailbreak/jihad.mp3"
+- sm_jihad_sounds_boom - Path to the soundfile which should be played on detonation. Default "music/MyJailbreak/boom.mp3"
 - sm_jihad_overlays_enable: 0 - disabled, 1 - enable start overlay. Default 1
 - sm_jihad_overlays_start: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
 
@@ -753,7 +758,7 @@ On Round start cells open everybody got a scout with zeus in low gravity. Nodama
 - sm_zeus_cooldown_start - Rounds until event can be start after mapchange. Default 3
 - sm_zeus_cooldown_day - Rounds until event can be started again. Default 3
 - sm_zeus_sounds_enable: 0 - disabled, 1 - enable sounds. Default 1
-- sm_zeus_sounds_start: Path to the soundfile which should be played on start. Default "music/myJailbreak/start.mp3"
+- sm_zeus_sounds_start: Path to the soundfile which should be played on start. Default "music/MyJailbreak/start.mp3"
 - sm_zeus_overlays_enable: 0 - disabled, 1 - enable start overlay. Default 1
 - sm_zeus_overlays_start: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
 
@@ -796,7 +801,7 @@ On Round start cells open everybody KnifeOnly with thirdperson, low gravity(Defa
 - sm_knifefight_cooldown_start - Rounds until event can be start after mapchange. Default 3
 - sm_knifefight_cooldown_day - Rounds until event can be started again. Default 3
 - sm_knifefight_sounds_enable: 0 - disabled, 1 - enable sounds. Default 1
-- sm_knifefight_sounds_start: Path to the soundfile which should be played on start. Default "music/myJailbreak/start.mp3"
+- sm_knifefight_sounds_start: Path to the soundfile which should be played on start. Default "music/MyJailbreak/start.mp3"
 - sm_knifefight_overlays_enable: 0 - disabled, 1 - enable start overlay. Default 1
 - sm_knifefight_overlays_start: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
 
@@ -828,7 +833,8 @@ On Round start cells open for freeday and enabled damage (Default).
 - sm_freeday_setw: 0 - disabled, 1 - allow Warden to set next round freeday. Default 1
 - sm_freeday_seta: 0 - disabled, 1 - allow Admin to set next round freeday round. Default 1
 - sm_freeday_vote: 0 - disabled, 1 - allow player to vote for freeday. Default 1
-- sm_freeday_roundtime - Roundtime for a single freeday round in minutes. Default 5
+- sm_freeday_noct: 0 - disabled, 1 - auto freeday when there is no CT. Default 1
+- sm_freeday_roundtime - Roundtime for a single freeday round in minutes (not on sm_freeday_noct). Default 5
 - sm_freeday_firstround - auto freeday first round after mapstart. Default 1
 - sm_freeday_damage: 0 - disabled, 1 - enable damage on freedays. Default 1
 - sm_freeday_cooldown_day - Rounds until event can be started again. Default 3
@@ -857,14 +863,14 @@ On Round start cells open for freeday and enabled damage (Default).
 - [myjailbreak.inc](/addons/sourcemod/scripting/include/myjailbreak.inc)
 - [scp.inc](https://forums.alliedmods.net/showthread.php?t=198501)
 - [smartjaildoors.inc](https://forums.alliedmods.net/showthread.php?p=2306289)
-- [wardn.inc](/addons/sourcemod/scripting/include/wardn.inc)
-
+- [warden.inc](/addons/sourcemod/scripting/include/warden.inc) (myjailbreak)
+- [smlib.inc](https://github.com/bcserv/smlib)
 
 ##### dependencies within MyJailbreak:
 - warden - you can use warden as standalone. no need to use Myjailbreak Eventdays(core), menu... please tell me if not!
-- warden - sm_warden_randomkind 1,3,4 needs funncommands.smx enabled
+- warden - sm_warden_randomkill "1,3,4" - needs funncommands.smx enabled
 - menu - if you dont wanna use the menu, make sm_weapons_jbmenu 0
-- weapons - if you dont wanna use the weapons menu, on EventDays player get "standart weapons".
+- weapons - if you dont wanna use the weapons menu, you should set  sm_*eventname*_spawn "0" so T can get weapons easily
 - EventDays - you can use only the EventDays you want. you just need MyJailbreak & one EventDay
 ....more
 
@@ -878,9 +884,9 @@ On Round start cells open for freeday and enabled damage (Default).
 >   
 > Copy the folders materials/, models/ & sound/ in the fastDL/ directory to your FastDownload server  
 >   
-> Open your downloads.ini in the your csgo/addons/sourcemod/configs directory and add the content of downloads.txt..
+> Open your downloads.ini in your csgo/addons/sourcemod/configs directory and add the content of downloads.txt  
 >   
-> Run plugin for the first time and all nessasery .cfg files will be generate  
+> Run plugin for the first time and all necessary .cfg files will be generated  
 >   
 > Configure all settings in cfg/MyJailbreak to your needs  
 >   
@@ -907,6 +913,9 @@ based/merged/used code/idea plugins:
 * https://github.com/AG-Headline/Hunger-Games-Beacon
 * https://forums.alliedmods.net/showthread.php?p=1086127
 * https://forums.alliedmods.net/showthread.php?t=234169
+* https://forums.alliedmods.net/showthread.php?p=1749220
+* https://forums.alliedmods.net/showthread.php?t=189956
+* https://forums.alliedmods.net/showpost.php?p=2393733&postcount=12
 * https://forums.alliedmods.net/showpost.php?p=2231099&postcount=22
 + https://github.com/Zipcore/Timer/ (sound)
 * https://git.tf/TTT/Plugin (sound)
