@@ -82,6 +82,8 @@ public void OnPluginStart()
 	gc_bVote = AutoExecConfig_CreateConVar("sm_duckhunt_vote", "1", "0 - disabled, 1 - allow player to vote for duckhunt", _, true,  0.0, true, 1.0);
 	gc_iRounds = AutoExecConfig_CreateConVar("sm_duckhunt_rounds", "1", "Rounds to play in a row", _, true, 1.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_duckhunt_roundtime", "5", "Round time in minutes for a single duckhunt round", _, true, 1.0);
+	gc_iChickenHP = AutoExecConfig_CreateConVar("sm_duckhunt_chicken_hp", "100", "THP the chicken got on Spawn", _, true, 1.0);
+	gc_iHunterHP = AutoExecConfig_CreateConVar("sm_duckhunt_hunter_hp", "850", "HP the hunters got on Spawn", _, true, 1.0);
 	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_duckhunt_trucetime", "15", "Time in seconds until cells open / players can't deal damage", _, true,  0.0);
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_duckhunt_cooldown_day", "3", "Rounds cooldown after a event until event can be start again", _, true,  0.0);
 	gc_iCooldownStart = AutoExecConfig_CreateConVar("sm_duckhunt_cooldown_start", "3", "Rounds until event can be start after mapchange.", _, true,  0.0);
@@ -241,11 +243,9 @@ public Action VoteDuckHunt(int client,int args)
 			{
 				char EventDay[64];
 				GetEventDay(EventDay);
-			
+				
 				if(StrEqual(EventDay, "none", false))
 				{
-				
-				
 					if (g_iCoolDown == 0)
 					{
 						if (StrContains(g_sHasVoted, steamid, true) == -1)
@@ -341,7 +341,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 						if (GetClientTeam(client) == CS_TEAM_CT && IsValidClient(client, false, false))
 						{
 							SetEntityModel(client, huntermodel);
-							SetEntityHealth(client, 600);
+							SetEntityHealth(client, gc_iHunterHP.IntValue);
 							GivePlayerItem(client, "weapon_nova");
 							AmmoTimer[client] = CreateTimer(5.0, AmmoRefill, client, TIMER_REPEAT);
 						}
@@ -350,7 +350,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 							SetEntityModel(client, "models/chicken/chicken.mdl");
 							SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.2);
 							SetEntityGravity(client, 0.3);
-							SetEntityHealth(client, 150);
+							SetEntityHealth(client, gc_iChickenHP.IntValue);
 							GivePlayerItem(client, "weapon_hegrenade");
 							ClientCommand(client, "thirdperson");
 						}
