@@ -43,17 +43,12 @@
 	"menu_laser"
 	{
 		"#format"		""
-		"en"			"Toggle Laser on/off"
+		"en"			"Laser Pointer Menu"
 	}	
 	"menu_drawer"
 	{
 		"#format"		""
-		"en"			"Toggle Drawer on/off"
-	}	
-	"menu_drawert"
-	{
-		"#format"		""
-		"en"			"Toggle Drawer for Terrorists"
+		"en"			"Drawer Menu"
 	}	
 	"menu_noblock"
 	{

@@ -64,6 +64,7 @@ ConVar gc_iWardenColorRed;
 ConVar gc_iWardenColorGreen;
 ConVar gc_iWardenColorBlue;
 ConVar g_bFF;
+ConVar g_bMenuClose;
 
 //Bools
 bool IsCountDown = false;
@@ -147,6 +148,7 @@ char g_sColorNamesBlue[64];
 char g_sColorNamesGreen[64];
 char g_sColorNamesOrange[64];
 char g_sColorNamesMagenta[64];
+char g_sColorNamesRainbow[64];
 char g_sColorNamesYellow[64];
 char g_sColorNamesCyan[64];
 char g_sColorNamesWhite[64];
@@ -198,7 +200,6 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_setff", ToggleFF, "Allows player to see the state and the Warden to toggle friendly fire");
 	RegConsoleCmd("sm_laser", LaserMenu, "Allows Warden to toggle on/off the wardens Laser pointer");
 	RegConsoleCmd("sm_drawer", DrawerMenu, "Allows Warden to toggle on/off the wardens Drawer");
-	RegConsoleCmd("sm_drawert", ToggleDrawerT, "Allows Warden to toggle on/off the Drawer for Terrorists");
 	RegConsoleCmd("sm_noblock", ToggleNoBlock, "Allows the Warden to toggle no block"); 
 	RegConsoleCmd("sm_cdstart", SetStartCountDown, "Allows the Warden to start a START Countdown! (start after 10sec.) - start without menu");
 	RegConsoleCmd("sm_cdmenu", CDMenu, "Allows the Warden to open the Countdown Menu");
@@ -288,6 +289,7 @@ public void OnPluginStart()
 	HookConVarChange(gc_sIconPath, OnSettingChanged);
 	
 	//FindConVar
+	g_bMenuClose = FindConVar("sm_menu_close");
 	g_bFF = FindConVar("mp_teammates_are_enemies");
 	gc_sWarden.GetString(g_sWarden, sizeof(g_sWarden));
 	gc_sUnWarden.GetString(g_sUnWarden, sizeof(g_sUnWarden));
@@ -313,6 +315,8 @@ public void OnPluginStart()
 	Format(g_sColorNamesYellow, sizeof(g_sColorNamesYellow), "{orange}%T{default}", "warden_yellow", LANG_SERVER);
 	Format(g_sColorNamesWhite, sizeof(g_sColorNamesWhite), "{default}%T{default}", "warden_white", LANG_SERVER);
 	Format(g_sColorNamesCyan, sizeof(g_sColorNamesCyan), "{blue}%T{default}", "warden_cyan", LANG_SERVER);
+	Format(g_sColorNamesRainbow, sizeof(g_sColorNamesRainbow), "{limegreen}%T{default}", "warden_rainbow", LANG_SERVER);
+
 
 	g_sColorNames[0] = g_sColorNamesWhite;
 	g_sColorNames[1] = g_sColorNamesRed;
@@ -771,9 +775,12 @@ public int m_WardenOverwrite(Menu menu, MenuAction action, int client, int Posit
 			Call_PushCell(newwarden);
 			Call_Finish();
 		}
-		else if(choice == 0)
+		if(g_bMenuClose != null)
 		{
-		FakeClientCommand(client, "sm_menu");
+			if(!g_bMenuClose)
+			{
+				FakeClientCommand(client, "sm_menu");
+			}
 		}
 	}
 	else if(action == MenuAction_Cancel)
@@ -1419,7 +1426,7 @@ public Action LaserMenu(int client, int args)
 	{
 		if (client == Warden)
 		{
-			char menuinfo5[255], menuinfo6[255], menuinfo7[255], menuinfo8[255], menuinfo9[255], menuinfo10[255], menuinfo11[255], menuinfo12[255], menuinfo13[255], menuinfo14[255];
+			char menuinfo5[255], menuinfo6[255], menuinfo7[255], menuinfo8[255], menuinfo9[255], menuinfo10[255], menuinfo11[255], menuinfo12[255], menuinfo13[255], menuinfo14[255], menuinfo15[255];
 			Format(menuinfo5, sizeof(menuinfo5), "%T", "warden_laser_Title", LANG_SERVER);
 			Format(menuinfo6, sizeof(menuinfo6), "%T", "warden_laser_off", LANG_SERVER);
 			Format(menuinfo7, sizeof(menuinfo7), "%T", "warden_rainbow", LANG_SERVER);
@@ -1430,6 +1437,7 @@ public Action LaserMenu(int client, int args)
 			Format(menuinfo12, sizeof(menuinfo12), "%T", "warden_yellow", LANG_SERVER);
 			Format(menuinfo13, sizeof(menuinfo13), "%T", "warden_cyan", LANG_SERVER);
 			Format(menuinfo14, sizeof(menuinfo14), "%T", "warden_magenta", LANG_SERVER);
+			Format(menuinfo15, sizeof(menuinfo15), "%T", "warden_orange", LANG_SERVER);
 			
 			Menu menu = new Menu(LaserHandler);
 			menu.SetTitle(menuinfo5);
@@ -1442,6 +1450,7 @@ public Action LaserMenu(int client, int args)
 			menu.AddItem("yellow", menuinfo12);
 			menu.AddItem("cyan", menuinfo13);
 			menu.AddItem("magenta", menuinfo14);
+			menu.AddItem("orange", menuinfo15);
 			
 			menu.ExitBackButton = true;
 			menu.ExitButton = true;
@@ -1467,12 +1476,14 @@ if (action == MenuAction_Select)
 		else if ( strcmp(info,"rainbow") == 0 ) 
 		{
 			if(!g_bLaser) CPrintToChat(client, "%t %t", "warden_tag", "warden_laseron");
+			CPrintToChat(client, "%t %t", "warden_tag", "warden_laser", g_sColorNamesRainbow);
 			g_bLaser = true;
 			g_bLaserColorRainbow[client] = true;
 		}
 		else if ( strcmp(info,"white") == 0 ) 
 		{
 			if(!g_bLaser) CPrintToChat(client, "%t %t", "warden_tag", "warden_laseron");
+			CPrintToChat(client, "%t %t", "warden_tag", "warden_laser", g_sColorNamesWhite);
 			g_bLaser = true;
 			g_bLaserColorRainbow[client] = false;
 			g_iLaserColor[client] = 0;
@@ -1481,6 +1492,7 @@ if (action == MenuAction_Select)
 		else if ( strcmp(info,"red") == 0 ) 
 		{
 			if(!g_bLaser) CPrintToChat(client, "%t %t", "warden_tag", "warden_laseron");
+			CPrintToChat(client, "%t %t", "warden_tag", "warden_laser", g_sColorNamesRed);
 			g_bLaser = true;
 			g_bLaserColorRainbow[client] = false;
 			g_iLaserColor[client] = 1;
@@ -1489,6 +1501,7 @@ if (action == MenuAction_Select)
 		else if ( strcmp(info,"green") == 0 ) 
 		{
 			if(!g_bLaser) CPrintToChat(client, "%t %t", "warden_tag", "warden_laseron");
+			CPrintToChat(client, "%t %t", "warden_tag", "warden_laser", g_sColorNamesGreen);
 			g_bLaser = true;
 			g_bLaserColorRainbow[client] = false;
 			g_iLaserColor[client] = 2;
@@ -1497,6 +1510,7 @@ if (action == MenuAction_Select)
 		else if ( strcmp(info,"blue") == 0 ) 
 		{
 			if(!g_bLaser) CPrintToChat(client, "%t %t", "warden_tag", "warden_laseron");
+			CPrintToChat(client, "%t %t", "warden_tag", "warden_laser", g_sColorNamesBlue);
 			g_bLaser = true;
 			g_bLaserColorRainbow[client] = false;
 			g_iLaserColor[client] = 3;
@@ -1505,6 +1519,7 @@ if (action == MenuAction_Select)
 		else if ( strcmp(info,"yellow") == 0 ) 
 		{
 			if(!g_bLaser) CPrintToChat(client, "%t %t", "warden_tag", "warden_laseron");
+			CPrintToChat(client, "%t %t", "warden_tag", "warden_laser", g_sColorNamesYellow);
 			g_bLaser = true;
 			g_bLaserColorRainbow[client] = false;
 			g_iLaserColor[client] = 4;
@@ -1513,6 +1528,7 @@ if (action == MenuAction_Select)
 		else if ( strcmp(info,"cyan") == 0 ) 
 		{
 			if(!g_bLaser) CPrintToChat(client, "%t %t", "warden_tag", "warden_laseron");
+			CPrintToChat(client, "%t %t", "warden_tag", "warden_laser", g_sColorNamesCyan);
 			g_bLaser = true;
 			g_bLaserColorRainbow[client] = false;
 			g_iLaserColor[client] = 5;
@@ -1521,12 +1537,28 @@ if (action == MenuAction_Select)
 		else if ( strcmp(info,"magenta") == 0 ) 
 		{
 			if(!g_bLaser) CPrintToChat(client, "%t %t", "warden_tag", "warden_laseron");
+			CPrintToChat(client, "%t %t", "warden_tag", "warden_laser", g_sColorNamesMagenta);
 			g_bLaser = true;
 			g_bLaserColorRainbow[client] = false;
 			g_iLaserColor[client] = 6;
 			
 		}
-		if(!g_bLaser) CPrintToChat(client, "%t %t", "warden_tag", "warden_laseron");
+		else if ( strcmp(info,"orange") == 0 ) 
+		{
+			if(!g_bLaser) CPrintToChat(client, "%t %t", "warden_tag", "warden_laseron");
+			CPrintToChat(client, "%t %t", "warden_tag", "warden_laser", g_sColorNamesOrange);
+			g_bLaser = true;
+			g_bLaserColorRainbow[client] = false;
+			g_iLaserColor[client] = 7;
+			
+		}
+		if(g_bMenuClose != null)
+		{
+			if(!g_bMenuClose)
+			{
+				FakeClientCommand(client, "sm_menu");
+			}
+		}
 	}
 	else if(action == MenuAction_Cancel)
 	{
@@ -1547,8 +1579,9 @@ public Action DrawerMenu(int client, int args)
 	{
 		if ((client == Warden) || ((GetClientTeam(client) == CS_TEAM_T) && gc_bDrawer.BoolValue && g_bDrawerT))
 		{
-			char menuinfo5[255], menuinfo6[255], menuinfo7[255], menuinfo8[255], menuinfo9[255], menuinfo10[255], menuinfo11[255], menuinfo12[255], menuinfo13[255], menuinfo14[255];
+			char menuinfo5[255], menuinfo6[255], menuinfo7[255], menuinfo8[255], menuinfo9[255], menuinfo10[255], menuinfo11[255], menuinfo12[255], menuinfo13[255], menuinfo14[255], menuinfo15[255], menuinfo16[255];
 			Format(menuinfo5, sizeof(menuinfo5), "%T", "warden_drawer_Title", LANG_SERVER);
+			Format(menuinfo15, sizeof(menuinfo15), "%T", "warden_drawert", LANG_SERVER);
 			Format(menuinfo6, sizeof(menuinfo6), "%T", "warden_drawer_off", LANG_SERVER);
 			Format(menuinfo7, sizeof(menuinfo7), "%T", "warden_rainbow", LANG_SERVER);
 			Format(menuinfo8, sizeof(menuinfo8), "%T", "warden_white", LANG_SERVER);
@@ -1558,10 +1591,12 @@ public Action DrawerMenu(int client, int args)
 			Format(menuinfo12, sizeof(menuinfo12), "%T", "warden_yellow", LANG_SERVER);
 			Format(menuinfo13, sizeof(menuinfo13), "%T", "warden_cyan", LANG_SERVER);
 			Format(menuinfo14, sizeof(menuinfo14), "%T", "warden_magenta", LANG_SERVER);
+			Format(menuinfo16, sizeof(menuinfo16), "%T", "warden_orange", LANG_SERVER);
 			
 			Menu menu = new Menu(DrawerHandler);
 			menu.SetTitle(menuinfo5);
 			menu.AddItem("off", menuinfo6);
+			if (GetClientTeam(client) == CS_TEAM_CT) menu.AddItem("terror", menuinfo15);
 			menu.AddItem("rainbow", menuinfo7);
 			menu.AddItem("white", menuinfo8);
 			menu.AddItem("red", menuinfo9);
@@ -1570,6 +1605,7 @@ public Action DrawerMenu(int client, int args)
 			menu.AddItem("yellow", menuinfo12);
 			menu.AddItem("cyan", menuinfo13);
 			menu.AddItem("magenta", menuinfo14);
+			menu.AddItem("orange", menuinfo14);
 			
 			menu.ExitBackButton = true;
 			menu.ExitButton = true;
@@ -1591,9 +1627,14 @@ if (action == MenuAction_Select)
 			g_bDrawer = false;
 			CPrintToChat(client, "%t %t", "warden_tag", "warden_draweroff");
 		}
+		else if ( strcmp(info,"terror") == 0 ) 
+		{
+			ToggleDrawerT(client,0);
+		}
 		else if ( strcmp(info,"rainbow") == 0 ) 
 		{
 			if(!g_bDrawer) CPrintToChat(client, "%t %t", "warden_tag", "warden_draweron");
+			CPrintToChat(client, "%t %t", "warden_tag", "warden_drawer", g_sColorNamesRainbow);
 			g_bDrawer = true;
 			g_bDrawerColorRainbow[client] = true;
 			
@@ -1601,6 +1642,7 @@ if (action == MenuAction_Select)
 		else if ( strcmp(info,"white") == 0 ) 
 		{
 			if(!g_bDrawer) CPrintToChat(client, "%t %t", "warden_tag", "warden_draweron");
+			CPrintToChat(client, "%t %t", "warden_tag", "warden_drawer", g_sColorNamesWhite);
 			g_bDrawer = true;
 			g_bDrawerColorRainbow[client] = false;
 			g_iDrawerColor[client] = 0;
@@ -1609,6 +1651,7 @@ if (action == MenuAction_Select)
 		else if ( strcmp(info,"red") == 0 ) 
 		{
 			if(!g_bDrawer) CPrintToChat(client, "%t %t", "warden_tag", "warden_draweron");
+			CPrintToChat(client, "%t %t", "warden_tag", "warden_drawer", g_sColorNamesRed);
 			g_bDrawer = true;
 			g_bDrawerColorRainbow[client] = false;
 			g_iDrawerColor[client] = 1;
@@ -1617,6 +1660,7 @@ if (action == MenuAction_Select)
 		else if ( strcmp(info,"green") == 0 ) 
 		{
 			if(!g_bDrawer) CPrintToChat(client, "%t %t", "warden_tag", "warden_draweron");
+			CPrintToChat(client, "%t %t", "warden_tag", "warden_drawer", g_sColorNamesGreen);
 			g_bDrawer = true;
 			g_bDrawerColorRainbow[client] = false;
 			g_iDrawerColor[client] = 2;
@@ -1625,6 +1669,7 @@ if (action == MenuAction_Select)
 		else if ( strcmp(info,"blue") == 0 ) 
 		{
 			if(!g_bDrawer) CPrintToChat(client, "%t %t", "warden_tag", "warden_draweron");
+			CPrintToChat(client, "%t %t", "warden_tag", "warden_drawer", g_sColorNamesBlue);
 			g_bDrawer = true;
 			g_bDrawerColorRainbow[client] = false;
 			g_iDrawerColor[client] = 3;
@@ -1633,6 +1678,7 @@ if (action == MenuAction_Select)
 		else if ( strcmp(info,"yellow") == 0 ) 
 		{
 			if(!g_bDrawer) CPrintToChat(client, "%t %t", "warden_tag", "warden_draweron");
+			CPrintToChat(client, "%t %t", "warden_tag", "warden_drawer", g_sColorNamesYellow);
 			g_bDrawer = true;
 			g_bDrawerColorRainbow[client] = false;
 			g_iDrawerColor[client] = 4;
@@ -1641,6 +1687,7 @@ if (action == MenuAction_Select)
 		else if ( strcmp(info,"cyan") == 0 ) 
 		{
 			if(!g_bDrawer) CPrintToChat(client, "%t %t", "warden_tag", "warden_draweron");
+			CPrintToChat(client, "%t %t", "warden_tag", "warden_drawer", g_sColorNamesCyan);
 			g_bDrawer = true;
 			g_bDrawerColorRainbow[client] = false;
 			g_iDrawerColor[client] = 5;
@@ -1649,9 +1696,19 @@ if (action == MenuAction_Select)
 		else if ( strcmp(info,"magenta") == 0 ) 
 		{
 			if(!g_bDrawer) CPrintToChat(client, "%t %t", "warden_tag", "warden_draweron");
+			CPrintToChat(client, "%t %t", "warden_tag", "warden_drawer", g_sColorNamesMagenta);
 			g_bDrawer = true;
 			g_bDrawerColorRainbow[client] = false;
 			g_iDrawerColor[client] = 6;
+			
+		}
+		else if ( strcmp(info,"orange") == 0 ) 
+		{
+			if(!g_bDrawer) CPrintToChat(client, "%t %t", "warden_tag", "warden_draweron");
+			CPrintToChat(client, "%t %t", "warden_tag", "warden_drawer", g_sColorNamesOrange);
+			g_bDrawer = true;
+			g_bDrawerColorRainbow[client] = false;
+			g_iDrawerColor[client] = 7;
 			
 		}
 	}
@@ -1711,6 +1768,11 @@ public Action ToggleDrawerT(int client, int args)
 			{
 				g_bDrawerT = true;
 				CPrintToChatAll("%t %t", "warden_tag", "warden_tdraweron");
+				
+				for(int iClient=1; iClient <= MaxClients; iClient++)
+				{
+					if (GetClientTeam(iClient) == CS_TEAM_T && IsValidClient(client, false, false)) DrawerMenu(iClient,0);
+				}
 			}
 			else
 			{
@@ -1864,11 +1926,27 @@ public int CDHandler(Menu menu, MenuAction action, int client, int selection)
 		
 		if ( strcmp(info,"start") == 0 ) 
 		{
-		FakeClientCommand(client, "sm_cdstart");
+			FakeClientCommand(client, "sm_cdstart");
+			
+			if(g_bMenuClose != null)
+			{
+				if(!g_bMenuClose)
+				{
+					FakeClientCommand(client, "sm_menu");
+				}
+			}
 		}
 		else if ( strcmp(info,"stop") == 0 ) 
 		{
-		FakeClientCommand(client, "sm_cdstop");
+			FakeClientCommand(client, "sm_cdstop");
+			
+			if(g_bMenuClose != null)
+			{
+				if(!g_bMenuClose)
+				{
+					FakeClientCommand(client, "sm_menu");
+				}
+			}
 		}
 		else if ( strcmp(info,"startstop") == 0 ) 
 		{
@@ -1982,6 +2060,13 @@ public int StartStopCDHandler(Menu menu, MenuAction action, int client, int sele
 		{
 			g_iSetCountStartStopTime = 310;
 			SetStartStopCountDown(client, 0);
+		}
+		if(g_bMenuClose != null)
+		{
+			if(!g_bMenuClose)
+			{
+				FakeClientCommand(client, "sm_menu");
+			}
 		}
 	}
 	else if(action == MenuAction_Cancel)
@@ -2311,6 +2396,13 @@ public int killmenu(Menu menu, MenuAction action, int client, int Position)
 				CreateTimer( 1.0, KillPlayer, i);
 				CPrintToChatAll("%t %t", "warden_tag", "warden_israndom", i); 
 				LogMessage("[MyJB] Warden %L killed random player %N", client, i);
+			}
+		}
+		if(g_bMenuClose != null)
+		{
+			if(!g_bMenuClose)
+			{
+				FakeClientCommand(client, "sm_menu");
 			}
 		}
 		

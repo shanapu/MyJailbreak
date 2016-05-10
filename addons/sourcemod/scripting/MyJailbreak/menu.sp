@@ -34,7 +34,6 @@ ConVar g_bKnife;
 ConVar g_bFFA;
 ConVar g_bLaser;
 ConVar g_bDrawer;
-ConVar g_bDrawerT;
 ConVar g_bNoBlock;
 ConVar g_bZombie;
 ConVar g_bNoScope;
@@ -86,7 +85,7 @@ public void OnPluginStart()
 	gc_bTerror = AutoExecConfig_CreateConVar("sm_menu_t", "1", "0 - disabled, 1 - enable t jailbreak menu");
 	gc_bWarden = AutoExecConfig_CreateConVar("sm_menu_warden", "1", "0 - disabled, 1 - enable warden jailbreak menu");
 	gc_bDays = AutoExecConfig_CreateConVar("sm_menu_days", "1", "0 - disabled, 1 - enable vote/set eventdays menu");
-	gc_bClose = AutoExecConfig_CreateConVar("sm_menu_close", "1", "0 - disabled, 1 - enable close menu after action");
+	gc_bClose = AutoExecConfig_CreateConVar("sm_menu_close", "0", "0 - disabled, 1 - enable close menu after action");
 	gc_bStart = AutoExecConfig_CreateConVar("sm_menu_start", "1", "0 - disabled, 1 - enable open menu on every roundstart");
 	gc_bTeam = AutoExecConfig_CreateConVar("sm_menu_team", "1", "0 - disabled, 1 - enable join team on menu");
 	gc_bWelcome = AutoExecConfig_CreateConVar("sm_menu_welcome", "1", "Show welcome message to newly connected users.");
@@ -111,7 +110,6 @@ public void OnConfigsExecuted()
 	g_bZeus = FindConVar("sm_zeus_enable");
 	g_bFFA = FindConVar("sm_ffa_enable");
 	g_bDrawer = FindConVar("sm_warden_drawer");
-	g_bDrawerT = FindConVar("sm_warden_drawer_terror");
 	g_bLaser = FindConVar("sm_warden_laser");
 	g_bZombie = FindConVar("sm_zombie_enable");
 	g_bNoScope = FindConVar("sm_noscope_enable");
@@ -170,10 +168,10 @@ public Action JbMenu(int client, int args)
 	if(gc_bPlugin.BoolValue)	
 	{
 		char menuinfo1[255], menuinfo2[255], menuinfo3[255], menuinfo5[255], menuinfo6[255], menuinfo7[255], menuinfo8[255];
-		char menuinfo9[255], menuinfo10[255], menuinfo11[255], menuinfo12[255], menuinfo13[255], menuinfo15[255], menuinfo16[255];
+		char menuinfo9[255], menuinfo10[255], menuinfo11[255], menuinfo13[255], menuinfo15[255], menuinfo16[255];
 		char menuinfo17[255], menuinfo14[255], menuinfo4[255], menuinfo19[255], menuinfo20[255], menuinfo21[255], menuinfo18[255];
 		char menuinfo22[255];
-		
+		//menuinfo12[255],
 		Format(menuinfo1, sizeof(menuinfo1), "%T", "menu_info_title", LANG_SERVER);
 		
 		Menu mainmenu = new Menu(JBMenuHandler);
@@ -222,6 +220,22 @@ public Action JbMenu(int client, int args)
 					Format(menuinfo5, sizeof(menuinfo5), "%T", "menu_seteventdays", LANG_SERVER);
 					mainmenu.AddItem("setdays", menuinfo5);
 				}
+				if(g_bDrawer != null)
+				{
+					if(g_bDrawer.BoolValue)
+					{
+						Format(menuinfo21, sizeof(menuinfo21), "%T", "menu_drawer", LANG_SERVER);
+						mainmenu.AddItem("drawer", menuinfo21);
+					}
+				}
+				if(g_bLaser != null)
+				{
+					if(g_bLaser.BoolValue)
+					{
+						Format(menuinfo20, sizeof(menuinfo20), "%T", "menu_laser", LANG_SERVER);
+						mainmenu.AddItem("laser", menuinfo20);
+					}
+				}
 				if(g_bCheck != null)
 				{
 					if(g_bCheck.BoolValue)
@@ -244,30 +258,6 @@ public Action JbMenu(int client, int args)
 							Format(menuinfo8, sizeof(menuinfo8), "%T", "menu_ffoff", LANG_SERVER);
 							mainmenu.AddItem("setff", menuinfo8);
 						}
-					}
-				}
-				if(g_bLaser != null)
-				{
-					if(g_bLaser.BoolValue)
-					{
-						Format(menuinfo20, sizeof(menuinfo20), "%T", "menu_laser", LANG_SERVER);
-						mainmenu.AddItem("laser", menuinfo20);
-					}
-				}
-				if(g_bDrawer != null)
-				{
-					if(g_bDrawer.BoolValue)
-					{
-						Format(menuinfo21, sizeof(menuinfo21), "%T", "menu_drawer", LANG_SERVER);
-						mainmenu.AddItem("drawer", menuinfo21);
-					}
-				}
-				if(g_bDrawerT != null)
-				{
-					if(g_bDrawerT.BoolValue)
-					{
-						Format(menuinfo12, sizeof(menuinfo12), "%T", "menu_drawert", LANG_SERVER);
-						mainmenu.AddItem("drawert", menuinfo12);
 					}
 				}
 				if(g_bNoBlock != null)
@@ -492,18 +482,10 @@ public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selec
 		else if ( strcmp(info,"laser") == 0 ) 
 		{
 			FakeClientCommand(client, "sm_laser");
-			if(!gc_bClose.BoolValue)
-			{
-				JbMenu(client,0);
-			}
 		}
 		else if ( strcmp(info,"drawer") == 0 ) 
 		{
 			FakeClientCommand(client, "sm_drawer");
-			if(!gc_bClose.BoolValue)
-			{
-				JbMenu(client,0);
-			}
 		}
 		else if ( strcmp(info,"drawert") == 0 ) 
 		{

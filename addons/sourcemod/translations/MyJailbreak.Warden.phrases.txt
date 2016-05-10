@@ -423,6 +423,12 @@
 		"en"			"Drawer {purple}disabled"
 		"de"			"Drawer {purple}ist deaktiviert!"
 	}
+		
+	"warden_drawert"
+	{
+		"#format"		""
+		"en"			"Toggle Drawer for Terrorists"
+	}
 	
 	"warden_tdraweron"
 	{
@@ -450,6 +456,20 @@
 		"#format"	"{1:s}"
 		"en"		"{1} marker removed!"
 		"de"		"Marker {1} entfernt."
+	}
+	
+	"warden_laser"
+	{
+		"#format"	"{1:s}"
+		"en"		"{1} Laser Pointer equipt!"
+		"de"		"Laser Pointer {1} ausgerüstet."
+	}
+	
+	"warden_drawer"
+	{
+		"#format"	"{1:s}"
+		"en"		"{1} Drawer equipt!"
+		"de"		"Drawer {1} ausgerüstet."
 	}
 	
 	"warden_marker_faraway"
@@ -524,7 +544,7 @@
 	"warden_cyan"
 	{
 		"en"		"Cyan"
-		"de"		"Cyan"
+		"de"		"Türkis"
 	}	
 	
 	"warden_magenta"
