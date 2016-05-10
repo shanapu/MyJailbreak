@@ -306,11 +306,18 @@ public Action JbMenu(int client, int args)
 						}
 					}
 				}
-				if(gc_bDays.BoolValue)
+				char EventDay[64];
+				GetEventDay(EventDay);
+				
+				if(StrEqual(EventDay, "none", false)) //is an other event running or set?
 				{
-					Format(menuinfo5, sizeof(menuinfo5), "%T", "menu_voteeventdays", LANG_SERVER);
-					mainmenu.AddItem("votedays", menuinfo5);
+					if(gc_bDays.BoolValue)
+					{
+						Format(menuinfo5, sizeof(menuinfo5), "%T", "menu_voteeventdays", LANG_SERVER);
+						mainmenu.AddItem("votedays", menuinfo5);
+					}
 				}
+				
 				if(g_bCheck != null)
 				{
 					if(g_bCheck.BoolValue)
@@ -355,10 +362,17 @@ public Action JbMenu(int client, int args)
 						}
 					}
 				}
-				if(gc_bDays.BoolValue)
+				
+				char EventDay[64];
+				GetEventDay(EventDay);
+				
+				if(StrEqual(EventDay, "none", false)) //is an other event running or set?
 				{
-					Format(menuinfo5, sizeof(menuinfo5), "%T", "menu_voteeventdays", LANG_SERVER);
-					mainmenu.AddItem("votedays", menuinfo5);
+					if(gc_bDays.BoolValue)
+					{
+						Format(menuinfo5, sizeof(menuinfo5), "%T", "menu_voteeventdays", LANG_SERVER);
+						mainmenu.AddItem("votedays", menuinfo5);
+					}
 				}
 				if(gc_bTeam.BoolValue)
 				{
@@ -377,12 +391,18 @@ public Action JbMenu(int client, int args)
 		}
 		if (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
 		{
-			if (!warden_iswarden(client))
+			char EventDay[64];
+			GetEventDay(EventDay);
+			
+			if(StrEqual(EventDay, "none", false)) //is an other event running or set?
 			{
-				if(gc_bDays.BoolValue)
+				if (!warden_iswarden(client))
 				{
-					Format(menuinfo5, sizeof(menuinfo5), "%T", "menu_seteventdays", LANG_SERVER);
-					mainmenu.AddItem("setdays", menuinfo5);
+					if(gc_bDays.BoolValue)
+					{
+						Format(menuinfo5, sizeof(menuinfo5), "%T", "menu_seteventdays", LANG_SERVER);
+						mainmenu.AddItem("setdays", menuinfo5);
+					}
 				}
 			}
 			if(g_bWarden != null)
@@ -486,14 +506,6 @@ public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selec
 		else if ( strcmp(info,"drawer") == 0 ) 
 		{
 			FakeClientCommand(client, "sm_drawer");
-		}
-		else if ( strcmp(info,"drawert") == 0 ) 
-		{
-			FakeClientCommand(client, "sm_drawert");
-			if(!gc_bClose.BoolValue)
-			{
-				JbMenu(client,0);
-			}
 		}
 		else if ( strcmp(info,"admin") == 0 ) 
 		{
