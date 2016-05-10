@@ -20,6 +20,7 @@
 #define MINUS				"-"
 #define DIVISOR				"/"
 #define MULTIPL				"*"
+#define MAX_BUTTONS 25
 
 //ConVars
 ConVar gc_bOpenTimer;
@@ -40,6 +41,9 @@ ConVar gc_hOpenTimer;
 ConVar gc_hRandomTimer;
 ConVar gc_bMath;
 ConVar gc_bMarker;
+ConVar gc_bDrawer;
+ConVar gc_bDrawerT;
+ConVar gc_bLaser;
 ConVar gc_bCountDown;
 ConVar gc_bIcon;
 ConVar gc_sIconPath;
@@ -67,6 +71,14 @@ bool IsMathQuiz = false;
 bool g_bMarkerSetup;
 bool g_bCanZoom[MAXPLAYERS + 1];
 bool g_bHasSilencer[MAXPLAYERS + 1];
+bool g_bLaserUse[MAXPLAYERS+1];
+bool g_bDrawerUse[MAXPLAYERS+1] = {false, ...};
+bool g_bLaser = true;
+bool g_bDrawer = true;
+bool g_bDrawerT = false;
+bool g_bNoBlock = false;
+bool g_bLaserColorRainbow[MAXPLAYERS+1] = true;
+bool g_bDrawerColorRainbow[MAXPLAYERS+1] = true;
 
 //Integers
 
@@ -82,18 +94,25 @@ int g_iBeamSprite = -1;
 int g_iHaloSprite = -1;
 int g_iSetCountStartStopTime;
 int g_iSmokeSprite;
-int g_iLightningSprite;
 int g_iMathMin;
 int g_iMathMax;
 int g_iMathResult;
+int g_LastButtons[MAXPLAYERS+1];
 int g_iIcon[MAXPLAYERS + 1] = {-1, ...};
-int g_iMarkerColors[4][4] = 
-{	
-	{255,25,25,255},
-	{25,25,255,255},
-	{25,255,25,255},
-	{255,160,25,255}
+int g_iHaloSpritecolor[4] = {255,255,255,255};
+int g_iColors[8][4] = 
+{
+	{255,255,255,255},  //white
+	{255,0,0,255},  //red
+	{0,255,0,255},  //green
+	{0,0,255,255},  //blue
+	{255,255,0,255},  //yellow
+	{0,255,255,255},  //cyan
+	{255,0,255,255},  //magenta
+	{255,100,25,255}
 };
+int g_iLaserColor[MAXPLAYERS+1];
+int g_iDrawerColor[MAXPLAYERS+1];
 
 //Handles
 Handle g_fward_onBecome;
@@ -123,11 +142,15 @@ char g_sSoundStopPath[256];
 char g_sOverlayStopPath[256];
 char g_sOp[32];
 char g_sOperators[4][2] = {"+", "-", "/", "*"};
-char g_sMarkerNamesRed[64];
-char g_sMarkerNamesBlue[64];
-char g_sMarkerNamesGreen[64];
-char g_sMarkerNamesOrange[64];
-char g_sMarkerNames[4][64] ={{""},{""},{""},{""}};
+char g_sColorNamesRed[64];
+char g_sColorNamesBlue[64];
+char g_sColorNamesGreen[64];
+char g_sColorNamesOrange[64];
+char g_sColorNamesMagenta[64];
+char g_sColorNamesYellow[64];
+char g_sColorNamesCyan[64];
+char g_sColorNamesWhite[64];
+char g_sColorNames[8][64] ={{""},{""},{""},{""},{""},{""},{""},{""}};
 
 //float
 float g_fMarkerRadiusMin = 100.0;
@@ -137,8 +160,9 @@ float g_fMarkerArrowHeight = 90.0;
 float g_fMarkerArrowLength = 20.0;
 float g_fMarkerSetupStartOrigin[3];
 float g_fMarkerSetupEndOrigin[3];
-float g_fMarkerOrigin[4][3];
-float g_fMarkerRadius[4];
+float g_fMarkerOrigin[8][3];
+float g_fMarkerRadius[8];
+float g_fLastDrawer[MAXPLAYERS+1][3];
 
 public Plugin myinfo = {
 	name = "MyJailbreak - Warden",
@@ -154,8 +178,7 @@ public void OnPluginStart()
 	LoadTranslations("MyJailbreak.Warden.phrases");
 	
 	//Client commands
-	RegConsoleCmd("sm_noblockon", noblockon, "Allows the Warden to enable no block"); 
-	RegConsoleCmd("sm_noblockoff", noblockoff, "Allows the Warden to disable no block"); 
+
 	RegConsoleCmd("sm_w", BecomeWarden, "Allows the player taking the charge over prisoners");
 	RegConsoleCmd("sm_warden", BecomeWarden, "Allows the player taking the charge over prisoners");
 	RegConsoleCmd("sm_uw", ExitWarden, "Allows the player to retire from the position");
@@ -173,6 +196,10 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_vw", VoteWarden, "Allows the player to vote to retire Warden");
 	RegConsoleCmd("sm_votewarden", VoteWarden, "Allows the player to vote to retire Warden");
 	RegConsoleCmd("sm_setff", ToggleFF, "Allows player to see the state and the Warden to toggle friendly fire");
+	RegConsoleCmd("sm_laser", LaserMenu, "Allows Warden to toggle on/off the wardens Laser pointer");
+	RegConsoleCmd("sm_drawer", DrawerMenu, "Allows Warden to toggle on/off the wardens Drawer");
+	RegConsoleCmd("sm_drawert", ToggleDrawerT, "Allows Warden to toggle on/off the Drawer for Terrorists");
+	RegConsoleCmd("sm_noblock", ToggleNoBlock, "Allows the Warden to toggle no block"); 
 	RegConsoleCmd("sm_cdstart", SetStartCountDown, "Allows the Warden to start a START Countdown! (start after 10sec.) - start without menu");
 	RegConsoleCmd("sm_cdmenu", CDMenu, "Allows the Warden to open the Countdown Menu");
 	RegConsoleCmd("sm_cdstartstop", StartStopCDMenu, "Allows the Warden to start a START/STOP Countdown! (start after 10sec./stop after 20sec.) - start without menu");
@@ -186,7 +213,7 @@ public void OnPluginStart()
 	RegAdminCmd("sm_setwarden", SetWarden, ADMFLAG_GENERIC);
 	RegAdminCmd("sm_rw", RemoveWarden, ADMFLAG_GENERIC);
 	RegAdminCmd("sm_removewarden", RemoveWarden, ADMFLAG_GENERIC);
-
+	
 	//Forwards
 	gF_OnWardenCreatedByUser = CreateGlobalForward("Warden_OnWardenCreatedByUser", ET_Ignore, Param_Cell);
 	gF_OnWardenCreatedByAdmin = CreateGlobalForward("Warden_OnWardenCreatedByAdmin", ET_Ignore, Param_Cell);
@@ -212,7 +239,7 @@ public void OnPluginStart()
 	gc_bNoBlock = AutoExecConfig_CreateConVar("sm_warden_noblock", "1", "0 - disabled, 1 - enable setable noblock for warden", _, true,  0.0, true, 1.0);
 	gc_bFF = AutoExecConfig_CreateConVar("sm_warden_ff", "1", "0 - disabled, 1 - enable switch ff for T ", _, true,  0.0, true, 1.0);
 	gc_bRandom = AutoExecConfig_CreateConVar("sm_warden_random", "1", "0 - disabled, 1 - enable kill a random t for warden", _, true,  0.0, true, 1.0);
-	gc_iRandomKind = AutoExecConfig_CreateConVar("sm_warden_randomkind", "2", "1 - all random / 2 - Thunder / 3 - Timebomb / 4 - Firebomb / 5 - NoKill(1,3,4 needs funncommands.smx enabled)", _, true,  1.0, true, 4.0);
+	gc_iRandomKind = AutoExecConfig_CreateConVar("sm_warden_randomkill", "2", "1 - all random / 2 - Thunder / 3 - Timebomb / 4 - Firebomb / 5 - NoKill(1,3,4 needs funncommands.smx enabled)", _, true,  1.0, true, 4.0);
 	gc_bCountDown = AutoExecConfig_CreateConVar("sm_warden_countdown", "1", "0 - disabled, 1 - enable countdown for warden", _, true,  0.0, true, 1.0);
 	gc_bIcon = AutoExecConfig_CreateConVar("sm_warden_icon_enable", "1", "0 - disabled, 1 - enable the icon above the wardens head", _, true,  0.0, true, 1.0);
 	gc_sIconPath = AutoExecConfig_CreateConVar("sm_warden_icon", "decals/MyJailbreak/warden" , "Path to the warden icon DONT TYPE .vmt or .vft");
@@ -224,6 +251,9 @@ public void OnPluginStart()
 	gc_bOpenTimer = AutoExecConfig_CreateConVar("sm_warden_open_time_enable", "1", "should doors open automatic 0- no 1 yes", _, true,  0.0, true, 1.0); //todo dont wokr
 	gc_bOpenTimerWarden = AutoExecConfig_CreateConVar("sm_warden_open_time_warden", "1", "should doors open automatic after sm_warden_open_time when there is a warden? needs sm_warden_open_time_enable 1", _, true,  0.0, true, 1.0);
 	gc_bMarker = AutoExecConfig_CreateConVar("sm_warden_marker", "1", "0 - disabled, 1 - enable Warden advanced markers ", _, true,  0.0, true, 1.0);
+	gc_bLaser = AutoExecConfig_CreateConVar("sm_warden_laser", "1", "0 - disabled, 1 - enable Warden Laser Pointer with +E ", _, true,  0.0, true, 1.0);
+	gc_bDrawer = AutoExecConfig_CreateConVar("sm_warden_drawer", "1", "0 - disabled, 1 - enable Warden Drawer with +E ", _, true,  0.0, true, 1.0);
+	gc_bDrawerT= AutoExecConfig_CreateConVar("sm_warden_drawer_terror", "1", "0 - disabled, 1 - allow Warden to toggle Drawer for Terrorist ", _, true,  0.0, true, 1.0);
 	gc_bMath = AutoExecConfig_CreateConVar("sm_warden_math", "1", "0 - disabled, 1 - enable mathquiz for warden", _, true,  0.0, true, 1.0);
 	gc_iMinimumNumber = AutoExecConfig_CreateConVar("sm_warden_math_min", "1", "What should be the minimum number for questions?", _, true,  1.0);
 	gc_iMaximumNumber = AutoExecConfig_CreateConVar("sm_warden_math_max", "100", "What should be the maximum number for questions?", _, true,  2.0);
@@ -235,10 +265,10 @@ public void OnPluginStart()
 	gc_iWardenColorGreen = AutoExecConfig_CreateConVar("sm_warden_color_green", "0","What color to turn the warden into (rGb): x - green value", _, true, 0.0, true, 255.0);
 	gc_iWardenColorBlue = AutoExecConfig_CreateConVar("sm_warden_color_blue", "255","What color to turn the warden into (rgB): x - blue value", _, true, 0.0, true, 255.0);
 	gc_bSounds = AutoExecConfig_CreateConVar("sm_warden_sounds_enable", "1", "0 - disabled, 1 - enable sounds ", _, true,  0.0, true, 1.0);
-	gc_sWarden = AutoExecConfig_CreateConVar("sm_warden_sounds_warden", "music/myjailbreak/warden.mp3", "Path to the soundfile which should be played for a int warden.");
-	gc_sUnWarden = AutoExecConfig_CreateConVar("sm_warden_sounds_unwarden", "music/myjailbreak/unwarden.mp3", "Path to the soundfile which should be played when there is no warden anymore.");
-	gc_sSoundStartPath = AutoExecConfig_CreateConVar("sm_warden_sounds_start", "music/myjailbreak/start.mp3", "Path to the soundfile which should be played for a start countdown.");
-	gc_sSoundStopPath = AutoExecConfig_CreateConVar("sm_warden_sounds_stop", "music/myjailbreak/stop.mp3", "Path to the soundfile which should be played for stop countdown.");
+	gc_sWarden = AutoExecConfig_CreateConVar("sm_warden_sounds_warden", "music/MyJailbreak/warden.mp3", "Path to the soundfile which should be played for a int warden.");
+	gc_sUnWarden = AutoExecConfig_CreateConVar("sm_warden_sounds_unwarden", "music/MyJailbreak/unwarden.mp3", "Path to the soundfile which should be played when there is no warden anymore.");
+	gc_sSoundStartPath = AutoExecConfig_CreateConVar("sm_warden_sounds_start", "music/MyJailbreak/start.mp3", "Path to the soundfile which should be played for a start countdown.");
+	gc_sSoundStopPath = AutoExecConfig_CreateConVar("sm_warden_sounds_stop", "music/MyJailbreak/stop.mp3", "Path to the soundfile which should be played for stop countdown.");
 	
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
@@ -275,15 +305,23 @@ public void OnPluginStart()
 	CreateTimer(1.0, Timer_DrawMakers, _, TIMER_REPEAT);
 	
 	//Prepare translation for marker colors
-	Format(g_sMarkerNamesRed, sizeof(g_sMarkerNamesRed), "{darkred}%T{default}", "warden_marker_red", LANG_SERVER);
-	Format(g_sMarkerNamesBlue, sizeof(g_sMarkerNamesBlue), "{blue}%T{default}", "warden_marker_blue", LANG_SERVER);
-	Format(g_sMarkerNamesGreen, sizeof(g_sMarkerNamesGreen), "{green}%T{default}", "warden_marker_green", LANG_SERVER);
-	Format(g_sMarkerNamesOrange, sizeof(g_sMarkerNamesOrange), "{orange}%T{default}", "warden_marker_orange", LANG_SERVER);
+	Format(g_sColorNamesRed, sizeof(g_sColorNamesRed), "{darkred}%T{default}", "warden_red", LANG_SERVER);
+	Format(g_sColorNamesBlue, sizeof(g_sColorNamesBlue), "{blue}%T{default}", "warden_blue", LANG_SERVER);
+	Format(g_sColorNamesGreen, sizeof(g_sColorNamesGreen), "{green}%T{default}", "warden_green", LANG_SERVER);
+	Format(g_sColorNamesOrange, sizeof(g_sColorNamesOrange), "{lightred}%T{default}", "warden_orange", LANG_SERVER);
+	Format(g_sColorNamesMagenta, sizeof(g_sColorNamesMagenta), "{purple}%T{default}", "warden_magenta", LANG_SERVER);
+	Format(g_sColorNamesYellow, sizeof(g_sColorNamesYellow), "{orange}%T{default}", "warden_yellow", LANG_SERVER);
+	Format(g_sColorNamesWhite, sizeof(g_sColorNamesWhite), "{default}%T{default}", "warden_white", LANG_SERVER);
+	Format(g_sColorNamesCyan, sizeof(g_sColorNamesCyan), "{blue}%T{default}", "warden_cyan", LANG_SERVER);
 
-	g_sMarkerNames[0] = g_sMarkerNamesRed;
-	g_sMarkerNames[1] = g_sMarkerNamesBlue;
-	g_sMarkerNames[2] = g_sMarkerNamesGreen;
-	g_sMarkerNames[3] = g_sMarkerNamesOrange;
+	g_sColorNames[0] = g_sColorNamesWhite;
+	g_sColorNames[1] = g_sColorNamesRed;
+	g_sColorNames[3] = g_sColorNamesBlue;
+	g_sColorNames[2] = g_sColorNamesGreen;
+	g_sColorNames[7] = g_sColorNamesOrange;
+	g_sColorNames[6] = g_sColorNamesMagenta;
+	g_sColorNames[4] = g_sColorNamesYellow;
+	g_sColorNames[5] = g_sColorNamesCyan;
 }
 
 //ConVar Change for Strings
@@ -313,12 +351,12 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 	else if(convar == gc_sOverlayStartPath)
 	{
 		strcopy(g_sOverlayStart, sizeof(g_sOverlayStart), newValue);
-		if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStart);
+		if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStart);
 	}
 	else if(convar == gc_sOverlayStopPath)
 	{
 		strcopy(g_sOverlayStopPath, sizeof(g_sOverlayStopPath), newValue);
-		if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStopPath);
+		if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStopPath);
 	}
 	else if(convar == gc_sModelPath)
 	{
@@ -328,7 +366,7 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 	else if(convar == gc_sIconPath)
 	{
 		strcopy(g_sIconPath, sizeof(g_sIconPath), newValue);
-		if(gc_bIcon.BoolValue) PrecacheOverlayAnyDownload(g_sIconPath);
+		if(gc_bIcon.BoolValue) PrecacheModelAnyDownload(g_sIconPath);
 	}
 }
 
@@ -354,7 +392,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 public void OnMapStart()
 {
-	if(gc_bSounds.BoolValue)	
+	if(gc_bSounds.BoolValue)
 	{
 		PrecacheSoundAnyDownload(g_sWarden);
 		PrecacheSoundAnyDownload(g_sUnWarden);
@@ -363,15 +401,19 @@ public void OnMapStart()
 	}	
 	g_iVoteCount = 0;
 	PrecacheModel(g_sWardenModel);
-	if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStart);
-	if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStopPath);
-	if(gc_bIcon.BoolValue) PrecacheOverlayAnyDownload(g_sIconPath);
+	if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStart);
+	if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStopPath);
+	if(gc_bIcon.BoolValue) PrecacheModelAnyDownload(g_sIconPath);
 	g_iBeamSprite = PrecacheModel("materials/sprites/laserbeam.vmt");
 	g_iHaloSprite = PrecacheModel("materials/sprites/glow01.vmt");
 	g_iSmokeSprite = PrecacheModel("materials/sprites/steam1.vmt");
-	g_iLightningSprite = g_iBeamSprite;
 	PrecacheSound(SOUND_THUNDER, true);
 	RemoveAllMarkers();
+	CreateTimer(0.1, Print_Drawer, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
+	g_bLaser = true;
+	g_bDrawer = true;
+	g_bDrawerT = false;
+
 }
 
 //Round Start
@@ -454,13 +496,13 @@ public void RoundEnd(Event event, const char[] name, bool dontBroadcast)
 	{
 		for(int client=1; client <= MaxClients; client++) if(IsValidClient(client, true, true))
 		{
-			EnableBlock(client);
 			CancelCountDown(client, 0);
 		}
 	}
 	if (StopTimer != null) KillTimer(StopTimer);
 	if (StartTimer != null) KillTimer(StartTimer);
 	if (StartStopTimer != null) KillTimer(StartStopTimer);
+	g_bDrawerT = false;
 }
 
 //!w
@@ -513,16 +555,14 @@ public Action ExitWarden(int client, int args)
 			SetEntityModel(client, g_sModelPath);
 			g_iRandomTime = GetConVarInt(gc_hRandomTimer);
 			RandomTimer = CreateTimer(1.0, ChooseRandom, _, TIMER_REPEAT);
-			if(gc_bSounds.BoolValue)	
-			{
-				EmitSoundToAllAny(g_sUnWarden);
-			}
+			if(gc_bSounds.BoolValue) EmitSoundToAllAny(g_sUnWarden);
 			RemoveAllMarkers();
 			g_iVoteCount = 0;
 			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
 			g_sHasVoted[0] = '\0';
 			SafeDelete(g_iIcon[client]);
 			g_iIcon[client] = -1;
+			g_bDrawerT = false;
 		}
 		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
 	}
@@ -810,7 +850,9 @@ public void OnClientDisconnect(int client)
 			EmitSoundToAllAny(g_sUnWarden);
 		}
 		RemoveAllMarkers();
+		g_bDrawerT = false;
 	}
+	g_LastButtons[client] = 0;
 }
 
 //Set a new warden
@@ -883,6 +925,7 @@ void RemoveTheWarden(int client)
 		EmitSoundToAllAny(g_sUnWarden);
 	}
 	RemoveAllMarkers();
+	g_bDrawerT = false;
 	g_iVoteCount = 0;
 	Format(g_sHasVoted, sizeof(g_sHasVoted), "");
 	g_sHasVoted[0] = '\0';
@@ -1056,6 +1099,7 @@ public Action Event_ItemEquip(Handle event, const char[] name, bool dontBroadcas
 public void OnMapEnd()
 {
 	RemoveAllMarkers();
+	g_bDrawerT = false;
 }
 
 public Action Timer_DrawMakers(Handle timer, any data)
@@ -1069,7 +1113,7 @@ stock void Draw_Markers()
 	if (Warden == -1)
 		return;
 	
-	for(int i = 0; i<4; i++)
+	for(int i = 0; i<8; i++)
 	{
 		if (g_fMarkerRadius[i] <= 0.0)
 			continue;
@@ -1079,7 +1123,7 @@ stock void Draw_Markers()
 		
 		if (GetVectorDistance(fHeadGuardOrigin, g_fMarkerOrigin[i]) > g_fMarkerRangeMax)
 		{
-			CPrintToChat(Warden, "%t %t", "warden_tag", "warden_marker_faraway", g_sMarkerNames[i]);
+			CPrintToChat(Warden, "%t %t", "warden_tag", "warden_marker_faraway", g_sColorNames[i]);
 			RemoveMarker(i);
 			continue;
 		}
@@ -1097,7 +1141,7 @@ stock void Draw_Markers()
 			
 			// Show the ring
 			
-			TE_SetupBeamRingPoint(g_fMarkerOrigin[i], g_fMarkerRadius[i], g_fMarkerRadius[i]+0.1, g_iBeamSprite, g_iHaloSprite, 0, 10, 1.0, 2.0, 0.0, g_iMarkerColors[i], 10, 0);
+			TE_SetupBeamRingPoint(g_fMarkerOrigin[i], g_fMarkerRadius[i], g_fMarkerRadius[i]+0.1, g_iBeamSprite, g_iHaloSprite, 0, 10, 1.0, 2.0, 0.0, g_iColors[i], 10, 0);
 			TE_SendToAll();
 			
 			// Show the arrow
@@ -1110,64 +1154,10 @@ stock void Draw_Markers()
 			AddVectors(fEnd, fStart, fEnd);
 			fEnd[2] += g_fMarkerArrowLength;
 			
-			TE_SetupBeamPoints(fStart, fEnd, g_iBeamSprite, g_iHaloSprite, 0, 10, 1.0, 2.0, 16.0, 1, 0.0, g_iMarkerColors[i], 5);
+			TE_SetupBeamPoints(fStart, fEnd, g_iBeamSprite, g_iHaloSprite, 0, 10, 1.0, 2.0, 16.0, 1, 0.0, g_iColors[i], 5);
 			TE_SendToAll();
 		}
 	}
-}
-
-public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
-{
-	if (!client)
-		return Plugin_Continue;
-	
-	if (client != Warden)
-		return Plugin_Continue;
-	
-	if (!IsPlayerAlive(client))
-		return Plugin_Continue;
-	
-	if (!gc_bMarker.BoolValue)
-		return Plugin_Continue;
-	
-	if (GetEngineVersion() == Engine_CSGO)
-	{
-		if(g_bCanZoom[client])
-			return Plugin_Continue;
-		
-		if(g_bHasSilencer[client])
-			return Plugin_Continue;
-	}
-	
-	if (buttons & IN_ATTACK2)
-	{
-		if(!g_bMarkerSetup)
-			GetClientAimTargetPos(client, g_fMarkerSetupStartOrigin);
-		
-		GetClientAimTargetPos(client, g_fMarkerSetupEndOrigin);
-		
-		float radius = 2*GetVectorDistance(g_fMarkerSetupEndOrigin, g_fMarkerSetupStartOrigin);
-		
-		if (radius > g_fMarkerRadiusMax)
-			radius = g_fMarkerRadiusMax;
-		else if (radius < g_fMarkerRadiusMin)
-			radius = g_fMarkerRadiusMin;
-		
-		if (radius > 0)
-		{
-			TE_SetupBeamRingPoint(g_fMarkerSetupStartOrigin, radius, radius+0.1, g_iBeamSprite, g_iHaloSprite, 0, 10, 0.1, 2.0, 0.0, {255,255,255,255}, 10, 0);
-			TE_SendToClient(client);
-		}
-		
-		g_bMarkerSetup = true;
-	}
-	else if (g_bMarkerSetup)
-	{
-		MarkerMenu(client);
-		g_bMarkerSetup = false;
-	}
-	
-	return Plugin_Continue;
 }
 
 stock void MarkerMenu(int client)
@@ -1182,7 +1172,7 @@ stock void MarkerMenu(int client)
 	if (marker != -1)
 	{
 		RemoveMarker(marker);
-		CPrintToChat(client, "%t %t", "warden_tag", "warden_marker_remove", g_sMarkerNames[marker]);
+		CPrintToChat(client, "%t %t", "warden_tag", "warden_marker_remove", g_sColorNames[marker]);
 		return;
 	}
 	
@@ -1208,21 +1198,29 @@ stock void MarkerMenu(int client)
 	{
 		Handle menu = CreateMenu(Handle_MarkerMenu);
 		
-		char menuinfo1[255],menuinfo2[255],menuinfo3[255],menuinfo4[255],menuinfo5[255];
+		char menuinfo1[255],menuinfo2[255],menuinfo3[255],menuinfo4[255],menuinfo5[255],menuinfo6[255],menuinfo7[255],menuinfo8[255],menuinfo9[255];
 		Format(menuinfo1, sizeof(menuinfo1), "%T", "warden_marker_Title", LANG_SERVER);
-		Format(menuinfo2, sizeof(menuinfo2), "%T", "warden_marker_red", LANG_SERVER);
-		Format(menuinfo3, sizeof(menuinfo3), "%T", "warden_marker_blue", LANG_SERVER);
-		Format(menuinfo4, sizeof(menuinfo4), "%T", "warden_marker_green", LANG_SERVER);
-		Format(menuinfo5, sizeof(menuinfo5), "%T", "warden_marker_orange", LANG_SERVER);
+		Format(menuinfo2, sizeof(menuinfo2), "%T", "warden_red", LANG_SERVER);
+		Format(menuinfo3, sizeof(menuinfo3), "%T", "warden_blue", LANG_SERVER);
+		Format(menuinfo4, sizeof(menuinfo4), "%T", "warden_green", LANG_SERVER);
+		Format(menuinfo5, sizeof(menuinfo5), "%T", "warden_orange", LANG_SERVER);
+		Format(menuinfo6, sizeof(menuinfo6), "%T", "warden_white", LANG_SERVER);
+		Format(menuinfo7, sizeof(menuinfo7), "%T", "warden_cyan", LANG_SERVER);
+		Format(menuinfo8, sizeof(menuinfo8), "%T", "warden_magenta", LANG_SERVER);
+		Format(menuinfo9, sizeof(menuinfo9), "%T", "warden_yellow", LANG_SERVER);
 		
 		SetMenuTitle(menu, menuinfo1);
 		
-		AddMenuItem(menu, "0", menuinfo2);
-		AddMenuItem(menu, "1", menuinfo3);
+		AddMenuItem(menu, "1", menuinfo2);
+		AddMenuItem(menu, "3", menuinfo3);
 		AddMenuItem(menu, "2", menuinfo4);
-		AddMenuItem(menu, "3", menuinfo5);
+		AddMenuItem(menu, "7", menuinfo5);
+		AddMenuItem(menu, "0", menuinfo6);
+		AddMenuItem(menu, "5", menuinfo7);
+		AddMenuItem(menu, "6", menuinfo8);
+		AddMenuItem(menu, "4", menuinfo9);
 		
-		DisplayMenu(menu, client, 10);
+		DisplayMenu(menu, client, 20);
 	}
 }
 
@@ -1249,7 +1247,7 @@ public int Handle_MarkerMenu(Handle menu, MenuAction action, int client, int ite
 		if (found)
 		{
 			SetupMarker(client, marker);
-			CPrintToChatAll("%t %t", "warden_tag", "warden_marker_set", g_sMarkerNames[marker]);
+			CPrintToChatAll("%t %t", "warden_tag", "warden_marker_set", g_sColorNames[marker]);
 		}
 	}
 }
@@ -1297,13 +1295,13 @@ stock void RemoveMarker(int marker)
 
 stock void RemoveAllMarkers()
 {
-	for(int i = 0; i < 4;i++)
+	for(int i = 0; i < 8;i++)
 		RemoveMarker(i);
 }
 
 stock int IsMarkerInRange(float pos[3])
 {
-	for(int i = 0; i < 4;i++)
+	for(int i = 0; i < 8;i++)
 	{
 		if (g_fMarkerRadius[i] <= 0.0)
 			continue;
@@ -1328,6 +1326,456 @@ public bool TraceFilterAllEntities(int entity, int contentsMask, any client)
 	return true;
 }
 
+// check keyboard input -> marker & lasers
+
+public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
+{
+	if (client == Warden)
+	{
+		if (buttons & IN_ATTACK2)
+		{
+			if (gc_bMarker.BoolValue && !g_bCanZoom[client] && !g_bHasSilencer[client])
+			{
+				if(!g_bMarkerSetup)
+					GetClientAimTargetPos(client, g_fMarkerSetupStartOrigin);
+				
+				GetClientAimTargetPos(client, g_fMarkerSetupEndOrigin);
+				
+				float radius = 2*GetVectorDistance(g_fMarkerSetupEndOrigin, g_fMarkerSetupStartOrigin);
+				
+				if (radius > g_fMarkerRadiusMax)
+					radius = g_fMarkerRadiusMax;
+				else if (radius < g_fMarkerRadiusMin)
+					radius = g_fMarkerRadiusMin;
+				
+				if (radius > 0)
+				{
+					TE_SetupBeamRingPoint(g_fMarkerSetupStartOrigin, radius, radius+0.1, g_iBeamSprite, g_iHaloSprite, 0, 10, 0.1, 2.0, 0.0, {255,255,255,255}, 10, 0);
+					TE_SendToClient(client);
+				}
+				
+				g_bMarkerSetup = true;
+			}
+		}
+		else if (g_bMarkerSetup)
+		{
+			MarkerMenu(client);
+			g_bMarkerSetup = false;
+		}
+		if((buttons & IN_USE))
+		{
+			if (gc_bLaser.BoolValue)
+			{
+				if (g_bLaser)
+				{
+					g_bLaserUse[client] = true;
+					if(IsClientInGame(client) && g_bLaserUse[client])
+					{
+						float m_fOrigin[3], m_fImpact[3];
+						
+						if(g_bLaserColorRainbow[client]) g_iLaserColor[client] = GetRandomInt(0,6);
+						
+						GetClientEyePosition(client, m_fOrigin);
+						GetClientSightEnd(client, m_fImpact);
+						TE_SetupBeamPoints(m_fOrigin, m_fImpact, g_iBeamSprite, 0, 0, 0, 0.1, 0.12, 0.0, 1, 0.0, g_iColors[g_iLaserColor[client]], 0);
+						TE_SendToAll();
+						TE_SetupGlowSprite(m_fImpact, g_iHaloSprite, 0.1, 0.25, g_iHaloSpritecolor[3]);
+						TE_SendToAll();
+					}
+				}
+			}
+		}
+		else if(!(buttons & IN_USE))
+		{
+			g_bLaserUse[client] = false;
+		}
+	}
+	if (((client == Warden) && gc_bDrawer.BoolValue && g_bDrawer) || ((GetClientTeam(client) == CS_TEAM_T) && gc_bDrawer.BoolValue && g_bDrawerT))
+	{
+		for (int i = 0; i < MAX_BUTTONS; i++)
+		{
+			int button = (1 << i);
+			
+			if ((buttons & button))
+			{
+				if (!(g_LastButtons[client] & button))
+				{
+					OnButtonPress(client, button);
+				}
+			}
+			else if ((g_LastButtons[client] & button))
+			{
+				OnButtonRelease(client, button);
+			}
+		}
+		g_LastButtons[client] = buttons;
+	}
+	return Plugin_Continue;
+}
+
+public Action LaserMenu(int client, int args)
+{
+	if(gc_bLaser.BoolValue)
+	{
+		if (client == Warden)
+		{
+			char menuinfo5[255], menuinfo6[255], menuinfo7[255], menuinfo8[255], menuinfo9[255], menuinfo10[255], menuinfo11[255], menuinfo12[255], menuinfo13[255], menuinfo14[255];
+			Format(menuinfo5, sizeof(menuinfo5), "%T", "warden_laser_Title", LANG_SERVER);
+			Format(menuinfo6, sizeof(menuinfo6), "%T", "warden_laser_off", LANG_SERVER);
+			Format(menuinfo7, sizeof(menuinfo7), "%T", "warden_rainbow", LANG_SERVER);
+			Format(menuinfo8, sizeof(menuinfo8), "%T", "warden_white", LANG_SERVER);
+			Format(menuinfo9, sizeof(menuinfo9), "%T", "warden_red", LANG_SERVER);
+			Format(menuinfo10, sizeof(menuinfo10), "%T", "warden_green", LANG_SERVER);
+			Format(menuinfo11, sizeof(menuinfo11), "%T", "warden_blue", LANG_SERVER);
+			Format(menuinfo12, sizeof(menuinfo12), "%T", "warden_yellow", LANG_SERVER);
+			Format(menuinfo13, sizeof(menuinfo13), "%T", "warden_cyan", LANG_SERVER);
+			Format(menuinfo14, sizeof(menuinfo14), "%T", "warden_magenta", LANG_SERVER);
+			
+			Menu menu = new Menu(LaserHandler);
+			menu.SetTitle(menuinfo5);
+			menu.AddItem("off", menuinfo6);
+			menu.AddItem("rainbow", menuinfo7);
+			menu.AddItem("white", menuinfo8);
+			menu.AddItem("red", menuinfo9);
+			menu.AddItem("green", menuinfo10);
+			menu.AddItem("blue", menuinfo11);
+			menu.AddItem("yellow", menuinfo12);
+			menu.AddItem("cyan", menuinfo13);
+			menu.AddItem("magenta", menuinfo14);
+			
+			menu.ExitBackButton = true;
+			menu.ExitButton = true;
+			menu.Display(client, 20);
+		}
+		else CPrintToChat(client, "%t %t", "warden_tag", "warden_notwarden" );
+	}
+	return Plugin_Handled;
+}
+
+public int LaserHandler(Menu menu, MenuAction action, int client, int selection)
+{
+if (action == MenuAction_Select)
+	{
+		char info[32];
+		menu.GetItem(selection, info, sizeof(info));
+		
+		if ( strcmp(info,"off") == 0 ) 
+		{
+			g_bLaser = false;
+			CPrintToChat(client, "%t %t", "warden_tag", "warden_laseroff");
+		}
+		else if ( strcmp(info,"rainbow") == 0 ) 
+		{
+			if(!g_bLaser) CPrintToChat(client, "%t %t", "warden_tag", "warden_laseron");
+			g_bLaser = true;
+			g_bLaserColorRainbow[client] = true;
+		}
+		else if ( strcmp(info,"white") == 0 ) 
+		{
+			if(!g_bLaser) CPrintToChat(client, "%t %t", "warden_tag", "warden_laseron");
+			g_bLaser = true;
+			g_bLaserColorRainbow[client] = false;
+			g_iLaserColor[client] = 0;
+			
+		}
+		else if ( strcmp(info,"red") == 0 ) 
+		{
+			if(!g_bLaser) CPrintToChat(client, "%t %t", "warden_tag", "warden_laseron");
+			g_bLaser = true;
+			g_bLaserColorRainbow[client] = false;
+			g_iLaserColor[client] = 1;
+			
+		}
+		else if ( strcmp(info,"green") == 0 ) 
+		{
+			if(!g_bLaser) CPrintToChat(client, "%t %t", "warden_tag", "warden_laseron");
+			g_bLaser = true;
+			g_bLaserColorRainbow[client] = false;
+			g_iLaserColor[client] = 2;
+			
+		}
+		else if ( strcmp(info,"blue") == 0 ) 
+		{
+			if(!g_bLaser) CPrintToChat(client, "%t %t", "warden_tag", "warden_laseron");
+			g_bLaser = true;
+			g_bLaserColorRainbow[client] = false;
+			g_iLaserColor[client] = 3;
+			
+		}
+		else if ( strcmp(info,"yellow") == 0 ) 
+		{
+			if(!g_bLaser) CPrintToChat(client, "%t %t", "warden_tag", "warden_laseron");
+			g_bLaser = true;
+			g_bLaserColorRainbow[client] = false;
+			g_iLaserColor[client] = 4;
+			
+		}
+		else if ( strcmp(info,"cyan") == 0 ) 
+		{
+			if(!g_bLaser) CPrintToChat(client, "%t %t", "warden_tag", "warden_laseron");
+			g_bLaser = true;
+			g_bLaserColorRainbow[client] = false;
+			g_iLaserColor[client] = 5;
+			
+		}
+		else if ( strcmp(info,"magenta") == 0 ) 
+		{
+			if(!g_bLaser) CPrintToChat(client, "%t %t", "warden_tag", "warden_laseron");
+			g_bLaser = true;
+			g_bLaserColorRainbow[client] = false;
+			g_iLaserColor[client] = 6;
+			
+		}
+		if(!g_bLaser) CPrintToChat(client, "%t %t", "warden_tag", "warden_laseron");
+	}
+	else if(action == MenuAction_Cancel)
+	{
+		if(selection == MenuCancel_ExitBack) 
+		{
+			FakeClientCommand(client, "sm_menu");
+		}
+	}
+	else if(action == MenuAction_End)
+	{
+		delete menu;
+	}
+}
+
+public Action DrawerMenu(int client, int args)
+{
+	if(gc_bDrawer.BoolValue)
+	{
+		if ((client == Warden) || ((GetClientTeam(client) == CS_TEAM_T) && gc_bDrawer.BoolValue && g_bDrawerT))
+		{
+			char menuinfo5[255], menuinfo6[255], menuinfo7[255], menuinfo8[255], menuinfo9[255], menuinfo10[255], menuinfo11[255], menuinfo12[255], menuinfo13[255], menuinfo14[255];
+			Format(menuinfo5, sizeof(menuinfo5), "%T", "warden_drawer_Title", LANG_SERVER);
+			Format(menuinfo6, sizeof(menuinfo6), "%T", "warden_drawer_off", LANG_SERVER);
+			Format(menuinfo7, sizeof(menuinfo7), "%T", "warden_rainbow", LANG_SERVER);
+			Format(menuinfo8, sizeof(menuinfo8), "%T", "warden_white", LANG_SERVER);
+			Format(menuinfo9, sizeof(menuinfo9), "%T", "warden_red", LANG_SERVER);
+			Format(menuinfo10, sizeof(menuinfo10), "%T", "warden_green", LANG_SERVER);
+			Format(menuinfo11, sizeof(menuinfo11), "%T", "warden_blue", LANG_SERVER);
+			Format(menuinfo12, sizeof(menuinfo12), "%T", "warden_yellow", LANG_SERVER);
+			Format(menuinfo13, sizeof(menuinfo13), "%T", "warden_cyan", LANG_SERVER);
+			Format(menuinfo14, sizeof(menuinfo14), "%T", "warden_magenta", LANG_SERVER);
+			
+			Menu menu = new Menu(DrawerHandler);
+			menu.SetTitle(menuinfo5);
+			menu.AddItem("off", menuinfo6);
+			menu.AddItem("rainbow", menuinfo7);
+			menu.AddItem("white", menuinfo8);
+			menu.AddItem("red", menuinfo9);
+			menu.AddItem("green", menuinfo10);
+			menu.AddItem("blue", menuinfo11);
+			menu.AddItem("yellow", menuinfo12);
+			menu.AddItem("cyan", menuinfo13);
+			menu.AddItem("magenta", menuinfo14);
+			
+			menu.ExitBackButton = true;
+			menu.ExitButton = true;
+			menu.Display(client, 20);
+		}
+	}
+	return Plugin_Handled;
+}
+
+public int DrawerHandler(Menu menu, MenuAction action, int client, int selection)
+{
+if (action == MenuAction_Select)
+	{
+		char info[32];
+		menu.GetItem(selection, info, sizeof(info));
+		
+		if ( strcmp(info,"off") == 0 ) 
+		{
+			g_bDrawer = false;
+			CPrintToChat(client, "%t %t", "warden_tag", "warden_draweroff");
+		}
+		else if ( strcmp(info,"rainbow") == 0 ) 
+		{
+			if(!g_bDrawer) CPrintToChat(client, "%t %t", "warden_tag", "warden_draweron");
+			g_bDrawer = true;
+			g_bDrawerColorRainbow[client] = true;
+			
+		}
+		else if ( strcmp(info,"white") == 0 ) 
+		{
+			if(!g_bDrawer) CPrintToChat(client, "%t %t", "warden_tag", "warden_draweron");
+			g_bDrawer = true;
+			g_bDrawerColorRainbow[client] = false;
+			g_iDrawerColor[client] = 0;
+			
+		}
+		else if ( strcmp(info,"red") == 0 ) 
+		{
+			if(!g_bDrawer) CPrintToChat(client, "%t %t", "warden_tag", "warden_draweron");
+			g_bDrawer = true;
+			g_bDrawerColorRainbow[client] = false;
+			g_iDrawerColor[client] = 1;
+			
+		}
+		else if ( strcmp(info,"green") == 0 ) 
+		{
+			if(!g_bDrawer) CPrintToChat(client, "%t %t", "warden_tag", "warden_draweron");
+			g_bDrawer = true;
+			g_bDrawerColorRainbow[client] = false;
+			g_iDrawerColor[client] = 2;
+			
+		}
+		else if ( strcmp(info,"blue") == 0 ) 
+		{
+			if(!g_bDrawer) CPrintToChat(client, "%t %t", "warden_tag", "warden_draweron");
+			g_bDrawer = true;
+			g_bDrawerColorRainbow[client] = false;
+			g_iDrawerColor[client] = 3;
+			
+		}
+		else if ( strcmp(info,"yellow") == 0 ) 
+		{
+			if(!g_bDrawer) CPrintToChat(client, "%t %t", "warden_tag", "warden_draweron");
+			g_bDrawer = true;
+			g_bDrawerColorRainbow[client] = false;
+			g_iDrawerColor[client] = 4;
+			
+		}
+		else if ( strcmp(info,"cyan") == 0 ) 
+		{
+			if(!g_bDrawer) CPrintToChat(client, "%t %t", "warden_tag", "warden_draweron");
+			g_bDrawer = true;
+			g_bDrawerColorRainbow[client] = false;
+			g_iDrawerColor[client] = 5;
+			
+		}
+		else if ( strcmp(info,"magenta") == 0 ) 
+		{
+			if(!g_bDrawer) CPrintToChat(client, "%t %t", "warden_tag", "warden_draweron");
+			g_bDrawer = true;
+			g_bDrawerColorRainbow[client] = false;
+			g_iDrawerColor[client] = 6;
+			
+		}
+	}
+	else if(action == MenuAction_Cancel)
+	{
+		if(selection == MenuCancel_ExitBack) 
+		{
+			FakeClientCommand(client, "sm_menu");
+		}
+	}
+	else if(action == MenuAction_End)
+	{
+		delete menu;
+	}
+}
+
+//Lasers
+
+public void OnClientPutInServer(int client)
+{
+	g_bLaserUse[client] = false;
+	g_bDrawerUse[client] = false;
+	g_fLastDrawer[client][0] = 0.0;
+	g_fLastDrawer[client][1] = 0.0;
+	g_fLastDrawer[client][2] = 0.0;
+}
+
+//Laser Pointer
+
+stock void GetClientSightEnd(int client, float out[3])
+{
+	float m_fEyes[3];
+	float m_fAngles[3];
+	GetClientEyePosition(client, m_fEyes);
+	GetClientEyeAngles(client, m_fAngles);
+	TR_TraceRayFilter(m_fEyes, m_fAngles, MASK_PLAYERSOLID, RayType_Infinite, TraceRayDontHitPlayers);
+	if(TR_DidHit())
+		TR_GetEndPosition(out);
+}
+
+public bool TraceRayDontHitPlayers(int entity,int mask, any data)
+{
+	if(0 < entity <= MaxClients)
+		return false;
+	return true;
+}
+
+//Laser drawer
+
+public Action ToggleDrawerT(int client, int args)
+{
+	if (gc_bDrawerT.BoolValue) 
+	{
+		if (client == Warden)
+		{
+			if (!g_bDrawerT) 
+			{
+				g_bDrawerT = true;
+				CPrintToChatAll("%t %t", "warden_tag", "warden_tdraweron");
+			}
+			else
+			{
+				g_bDrawerT = false;
+				CPrintToChatAll("%t %t", "warden_tag", "warden_tdraweroff");
+			}
+		}
+	}
+}
+
+public Action Print_Drawer(Handle timer)
+{
+	float pos[3];
+
+	for(int Y = 1; Y <= MaxClients; Y++) 
+	{
+		if(g_bDrawerColorRainbow[Y]) g_iDrawerColor[Y] = GetRandomInt(0,6);
+		if(IsClientInGame(Y) && g_bDrawerUse[Y])
+		{
+			TraceEye(Y, pos);
+			if(GetVectorDistance(pos, g_fLastDrawer[Y]) > 6.0) {
+				Connect_Drawer(g_fLastDrawer[Y], pos, g_iColors[g_iDrawerColor[Y]]);
+				g_fLastDrawer[Y][0] = pos[0];
+				g_fLastDrawer[Y][1] = pos[1];
+				g_fLastDrawer[Y][2] = pos[2];
+			}
+		} 
+	}
+}
+stock void OnButtonPress(int client,int button)
+{
+	if(button == IN_USE)
+	{
+		TraceEye(client, g_fLastDrawer[client]);
+		g_bDrawerUse[client] = true;
+	}
+}
+
+stock void OnButtonRelease(int client,int button)
+{
+	if(button == IN_USE)
+	{
+		g_fLastDrawer[client][0] = 0.0;
+		g_fLastDrawer[client][1] = 0.0;
+		g_fLastDrawer[client][2] = 0.0;
+		g_bDrawerUse[client] = false;
+	}
+}
+public Action Connect_Drawer(float start[3], float end[3],int color[4])
+{
+	TE_SetupBeamPoints(start, end, g_iBeamSprite, 0, 0, 0, 25.0, 2.0, 2.0, 10, 0.0, color, 0);
+	TE_SendToAll();
+}
+public Action TraceEye(int client, float pos[3]) 
+{
+	float vAngles[3], vOrigin[3];
+	GetClientEyePosition(client, vOrigin);
+	GetClientEyeAngles(client, vAngles);
+	TR_TraceRayFilter(vOrigin, vAngles, MASK_SHOT, RayType_Infinite, TraceEntityFilterPlayer);
+	if(TR_DidHit(INVALID_HANDLE)) TR_GetEndPosition(pos, INVALID_HANDLE);
+	return;
+}
+public bool TraceEntityFilterPlayer(int entity, int contentsMask) {
+	return (entity > GetMaxClients() || !entity);
+}
 
 //Icon
 
@@ -1378,161 +1826,6 @@ public Action SafeDelete(int entity)
 		AcceptEntityInput(entity, "Kill");
 	}
 }
-
-
-/*/Marker
-
-public Action Command_LAW(int client, const char[] command, int argc)
-{
-	if(!gc_bMarker.BoolValue)
-		return Plugin_Continue;
-	
-	if(!client || !IsClientInGame(client) || !IsPlayerAlive(client))
-		return Plugin_Continue;
-	
-	if(client != Warden)
-		return Plugin_Continue;
-	
-	if(gc_iMarkerKey.IntValue == 1)
-	{
-		GetClientAimTargetPos(client, g_fMakerPos);
-		g_fMakerPos[2] += 5.0;
-	}
-	return Plugin_Continue;
-}
-
-public Action SpawnMarker(int client, int args)
-{
-	if(!gc_bMarker.BoolValue)
-		return Plugin_Continue;
-	
-	if(!client || !IsClientInGame(client) || !IsPlayerAlive(client))
-		return Plugin_Continue;
-	
-	if(client != Warden)
-	{
-		GetClientAimTargetPos(client, g_fMakerPos);
-		g_fMakerPos[2] += 5.0;
-	}
-	return Plugin_Continue;
-}
-
-public Action Event_BulletImpact(Handle hEvent,const char [] sName, bool bDontBroadcast)
-{
-	if(gc_bMarker.BoolValue)	
-	{
-		int client = GetClientOfUserId(GetEventInt(hEvent, "userid"));
-		
-		if (IsValidClient(client, false, false) && warden_iswarden(client))
-		{
-			if (GetClientButtons(client) & IN_USE) 
-			{
-				if(gc_iMarkerKey.IntValue == 2)
-				{
-					GetClientAimTargetPos(client, g_fMakerPos);
-					g_fMakerPos[2] += 5.0;
-					CPrintToChat(client, "%t %t", "warden_tag" , "warden_marker");
-				}
-			}
-			else if (GetClientButtons(client) & IN_SPEED) 
-				{
-					if(gc_iMarkerKey.IntValue == 3)
-					{
-						GetClientAimTargetPos(client, g_fMakerPos);
-						g_fMakerPos[2] += 5.0;
-						CPrintToChat(client, "%t %t", "warden_tag" , "warden_marker");
-					}
-				}
-		}
-	}
-}
-
-int GetClientAimTargetPos(int client, float pos[3]) 
-{
-	if (!client) 
-		return -1;
-	
-	float vAngles[3]; float vOrigin[3];
-	
-	GetClientEyePosition(client,vOrigin);
-	GetClientEyeAngles(client, vAngles);
-	
-	Handle trace = TR_TraceRayFilterEx(vOrigin, vAngles, MASK_SHOT, RayType_Infinite, TraceFilterAllEntities, client);
-	
-	TR_GetEndPosition(pos, trace);
-	pos[2] += 5.0;
-	
-	int entity = TR_GetEntityIndex(trace);
-	
-	CloseHandle(trace);
-	
-	return entity;
-}
-
-void ResetMarker()
-{
-	for(int i = 0; i < 3; i++)
-		g_fMakerPos[i] = 0.0;
-}
-
-public bool TraceFilterAllEntities(int entity, int contentsMask, any client)
-{
-	if (entity == client)
-		return false;
-	if (entity > MaxClients)
-		return false;
-	if(!IsClientInGame(entity))
-		return false;
-	if(!IsPlayerAlive(entity))
-		return false;
-	
-	return true;
-}
-
-public Action Timer_DrawMakers(Handle timer, any data)
-{
-	Draw_Markers();
-	return Plugin_Continue;
-}
-
-void Draw_Markers()
-{
-	if (!gc_bMarker.BoolValue)
-		return;
-	
-	if (g_fMakerPos[0] == 0.0)
-		return;
-	
-	if(!warden_exist())
-		return;
-		
-	// Show the ring
-	
-	TE_SetupBeamRingPoint(g_fMakerPos, 155.0, 155.0+0.1, g_iBeamSprite, g_iHaloSprite, 0, 10, 1.0, 6.0, 0.0, g_MarkerColor, 2, 0);
-	TE_SendToAll();
-	
-	// Show the arrow
-	
-	float fStart[3];
-	AddVectors(fStart, g_fMakerPos, fStart);
-	fStart[2] += 0.0;
-	
-	float fEnd[3];
-	AddVectors(fEnd, fStart, fEnd);
-	fEnd[2] += 200.0;
-	
-	TE_SetupBeamPoints(fStart, fEnd, g_iBeamSprite, g_iHaloSprite, 0, 10, 1.0, 4.0, 16.0, 1, 0.0, g_MarkerColor, 5);
-	TE_SendToAll();
-	
-	CreateTimer(gc_fMarkerTime.FloatValue, DeleteMarker);
-}
-
-public Action DeleteMarker( Handle timer) 
-{
-	ResetMarker();
-}
-
-*/
 
 //Countdown
 
@@ -1922,48 +2215,32 @@ public Action ShowOverlayStop( Handle timer, any client )
 
 //No Block
 
-public Action EnableNoBlock(int client)
+public Action ToggleNoBlock(int client, int args)
 {
-	SetEntData(client, g_iCollisionOffset, 2, 4, true);
-}
-
-public Action EnableBlock(int client)
-{
-	SetEntData(client, g_iCollisionOffset, 5, 4, true);
-}
-
-public Action noblockon(int client, int args)
-{
-	if(gc_bNoBlock.BoolValue)
+	if (gc_bNoBlock.BoolValue) 
 	{
 		if (client == Warden)
 		{
-			for(int i=1; i <= MaxClients; i++) if(IsValidClient(i, true))
+			if (!g_bNoBlock) 
 			{
-				EnableNoBlock(i);
+				g_bNoBlock = true;
+				CPrintToChatAll("%t %t", "warden_tag" , "warden_noblockon");
+				for(int i=1; i <= MaxClients; i++) if(IsValidClient(i, true))
+				{
+					SetEntData(i, g_iCollisionOffset, 2, 4, true);
+				}
 			}
-			CPrintToChatAll("%t %t", "warden_tag" , "warden_noblockon");
+			else
+			{
+				g_bNoBlock = false;
+				CPrintToChatAll("%t %t", "warden_tag" , "warden_noblockoff");
+				for(int i=1; i <= MaxClients; i++) if(IsValidClient(i, true))
+				{
+					SetEntData(i, g_iCollisionOffset, 5, 4, true);
+				}
+			}
 		}
-		else
-		{
-		CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
-		}
-	}
-}
-
-public Action noblockoff(int client, int args)
-{ 
-	if (client == Warden)
-	{
-		for(int i=1; i <= MaxClients; i++) if(IsValidClient(i, true))
-		{
-			EnableBlock(i);	
-		}
-		CPrintToChatAll("%t %t", "warden_tag" , "warden_noblockoff");
-	}
-	else
-	{
-		CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden"); 
+		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
 	}
 }
 
@@ -2103,7 +2380,7 @@ public Action PerformSmite(int client, int target)
 	// define the direction of the sparks
 	float dir[3] = {0.0, 0.0, 0.0};
 	
-	TE_SetupBeamPoints(startpos, clientpos, g_iLightningSprite, 0, 0, 0, 0.2, 20.0, 10.0, 0, 1.0, color, 3);
+	TE_SetupBeamPoints(startpos, clientpos, g_iBeamSprite, 0, 0, 0, 0.2, 20.0, 10.0, 0, 1.0, color, 3);
 	TE_SendToAll();
 	
 	TE_SetupSparks(clientpos, dir, 5000, 1000);

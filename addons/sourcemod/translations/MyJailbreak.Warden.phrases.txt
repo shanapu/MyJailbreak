@@ -215,9 +215,9 @@
 	
 	"warden_ffison"
 	{
-		"da"		"friendly fire {purple}aktiveret!"
-		"en"		"friendly fire {purple}enabled"
-		"de"		"Friendly Fire {purple}ist AN!"
+		"da"		"Friendly fire {purple}aktiveret!"
+		"en"		"Friendly fire {purple}enabled"
+		"de"		"Friendly Fire {purple}ist aktiv!"
 	}
 	
 	"warden_ffisoff"
@@ -225,7 +225,7 @@
 		"#format"		""
 		"da"			"Friendly fire {purple}deaktiveret!"		
 		"en"			"Friendly fire {purple}disabled"
-		"de"			"Friendly Fire {purple}ist AUS!"
+		"de"			"Friendly Fire {purple}ist deaktiviert!"
 	}
 	
 	"warden_voting"
@@ -394,6 +394,49 @@
 		"de"		"Derzeitigen Warden entfernen?"
 	}
 	
+	"warden_laseron"
+	{
+		"da"		"Laser {purple}aktiveret!"
+		"en"		"Laser {purple}enabled"
+		"de"		"Laser {purple}ist aktiv!"
+	}
+	
+	"warden_laseroff"
+	{
+		"#format"		""
+		"da"			"Laser {purple}deaktiveret!"		
+		"en"			"Laser {purple}disabled"
+		"de"			"Laser {purple}ist deaktiviert!"
+	}
+	
+	"warden_draweron"
+	{
+		"da"		"Drawer {purple}aktiveret!"
+		"en"		"Drawer {purple}enabled"
+		"de"		"Drawer {purple}ist aktiv!"
+	}
+	
+	"warden_draweroff"
+	{
+		"#format"		""
+		"da"			"Drawer {purple}deaktiveret!"		
+		"en"			"Drawer {purple}disabled"
+		"de"			"Drawer {purple}ist deaktiviert!"
+	}
+	
+	"warden_tdraweron"
+	{
+		"en"		"Drawer for Terrorists is {purple}enabled"
+		"de"		"Drawer für Terristen {purple}ist aktiv!"
+	}
+	
+	"warden_tdraweroff"
+	{
+		"#format"		""
+		"en"			"Drawer for Terrorists is {purple}disabled"
+		"de"			"Drawer für Terristen {purple}ist deaktiviert!"
+	}
+	
 	"warden_marker_set"
 	{
 		"#format"	"{1:s}"
@@ -418,29 +461,76 @@
 	
 	"warden_marker_Title"
 	{
-		"en"		"Marker Color Selection"
+		"en"		"Marker Color"
 		"de"		"Marker Farbauswahl"
 	}
-	"warden_marker_red"
+	"warden_laser_Title"
+	{
+		"en"		"Laser Pointer Color"
+		"de"		"Laser Pointer Farbauswahl"
+	}
+	"warden_drawer_Title"
+	{
+		"en"		"Drawer Color"
+		"de"		"Drawer Farbauswahl"
+	}
+	"warden_laser_off"
+	{
+		"en"		"Deactivate Laser Pointer"
+		"de"		"Laser Pointer ausschalten"
+	}
+	"warden_drawer_off"
+	{
+		"en"		"Deactivate Drawer"
+		"de"		"Laser Pointer ausschalten"
+	}
+	"warden_rainbow"
+	{
+		"en"		"Rainbow"
+		"de"		"Regenbogen"
+	}
+	"warden_red"
 	{
 		"en"		"Red"
 		"de"		"Rot"
 	}
-	"warden_marker_blue"
+	"warden_blue"
 	{
 		"en"		"Blue"
 		"de"		"Blau"
 	}
-	"warden_marker_green"
+	"warden_green"
 	{
 		"en"		"Green"
-		"de"		"Grüner"
+		"de"		"Grün"
 	}	
 	
-	"warden_marker_orange"
+	"warden_orange"
 	{
 		"en"		"Orange"
 		"de"		"Orange"
+	}
+	"warden_yellow"
+	{
+		"en"		"Yellow"
+		"de"		"Geld"
+	}	
+	
+	"warden_white"
+	{
+		"en"		"White"
+		"de"		"Weiß"
+	}
+	"warden_cyan"
+	{
+		"en"		"Cyan"
+		"de"		"Cyan"
+	}	
+	
+	"warden_magenta"
+	{
+		"en"		"Magenta"
+		"de"		"Magenta"
 	}
 	
 	"warden_range"
