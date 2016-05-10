@@ -26,6 +26,8 @@ ConVar gc_iRoundTime;
 ConVar gc_iCooldownDay;
 ConVar gc_iFreezeTime;
 ConVar gc_bSpawnCell;
+ConVar gc_iZombieHP;
+ConVar gc_iHumanHP;
 ConVar gc_sModelPath;
 ConVar gc_bSounds;
 ConVar gc_sSoundStartPath;
@@ -88,6 +90,8 @@ public void OnPluginStart()
 	gc_iRounds = AutoExecConfig_CreateConVar("sm_zombie_rounds", "1", "Rounds to play in a row", _, true, 1.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_zombie_roundtime", "5", "Round time in minutes for a single zombie round", _, true, 1.0);
 	gc_iFreezeTime = AutoExecConfig_CreateConVar("sm_zombie_freezetime", "35", "Time in seconds the zombies freezed", _, true, 0.0);
+	gc_iZombieHP = AutoExecConfig_CreateConVar("sm_zombie_zombie_hp", "850", "HP the Zombies got on Spawn", _, true, 1.0);
+	gc_iHumanHP = AutoExecConfig_CreateConVar("sm_zombie_human_hp", "65", "HP the Humans got on Spawn", _, true, 1.0);
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_zombie_cooldown_day", "3", "Rounds cooldown after a event until event can be start again", _, true, 0.0);
 	gc_iCooldownStart = AutoExecConfig_CreateConVar("sm_zombie_cooldown_start", "3", "Rounds until event can be start after mapchange.", _, true, 0.0);
 	gc_bSounds = AutoExecConfig_CreateConVar("sm_zombie_sounds_enable", "1", "0 - disabled, 1 - enable sounds", _, true, 0.0, true, 1.0);
@@ -359,16 +363,17 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 						{
 							SetEntityModel(client, g_sZombieModel);
 							SetEntityMoveType(client, MOVETYPE_NONE);
-							SetEntityHealth(client, 10000);
+							SetEntityHealth(client, gc_iZombieHP.IntValue);
 							StripAllWeapons(client);
 							GivePlayerItem(client, "weapon_knife");
 						}
 						if (GetClientTeam(client) == CS_TEAM_T)
 						{
-							SetEntityHealth(client, 65);
+							SetEntityHealth(client, gc_iHumanHP.IntValue);
 							GivePlayerItem(client, "weapon_negev");
 							GivePlayerItem(client, "weapon_tec9");
 							GivePlayerItem(client, "weapon_hegrenade");
+							GivePlayerItem(client, "weapon_molotov");
 						}
 						SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
 						SendPanelToClient(ZombieMenu, client, NullHandler, 20);
