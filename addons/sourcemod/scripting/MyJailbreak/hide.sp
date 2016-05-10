@@ -89,7 +89,7 @@ public void OnPluginStart()
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_hide_cooldown_day", "3", "Rounds cooldown after a event until event can be start again", _, true,  0.0);
 	gc_iCooldownStart = AutoExecConfig_CreateConVar("sm_hide_cooldown_start", "3", "Rounds until event can be start after mapchange.", _, true,  0.0);
 	gc_bSounds = AutoExecConfig_CreateConVar("sm_hide_sounds_enable", "1", "0 - disabled, 1 - enable sounds ", _, true,  0.0, true, 1.0);
-	gc_sSoundStartPath = AutoExecConfig_CreateConVar("sm_hide_sounds_start", "music/myjailbreak/start.mp3", "Path to the soundfile which should be played for start");
+	gc_sSoundStartPath = AutoExecConfig_CreateConVar("sm_hide_sounds_start", "music/MyJailbreak/start.mp3", "Path to the soundfile which should be played for start");
 	gc_bOverlays = AutoExecConfig_CreateConVar("sm_hide_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true,  0.0, true, 1.0);
 	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_hide_overlays_start", "overlays/MyJailbreak/start" , "Path to the start Overlay DONT TYPE .vmt or .vft");
 	
@@ -117,7 +117,7 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 	if(convar == gc_sOverlayStartPath)
 	{
 		strcopy(g_sOverlayStart, sizeof(g_sOverlayStart), newValue);
-		if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStart);
+		if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStart);
 	}
 	else if(convar == gc_sSoundStartPath)
 	{
@@ -138,7 +138,7 @@ public void OnMapStart()
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
 	
-	if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStart);
+	if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStart);
 	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
 	
 	int ent; 

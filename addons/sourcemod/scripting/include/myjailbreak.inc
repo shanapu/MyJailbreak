@@ -3,7 +3,7 @@
 #endif
 #define _myjailbreak_included_
 
-#define PLUGIN_VERSION "0.8.2"
+#define PLUGIN_VERSION "0.8.4"
 #define URL_LINK "https://github.com/shanapu/MyJailbreak"
 
 #include <sdktools>
@@ -28,18 +28,30 @@ native SetEventDay(const char[] name);
 
 native GetEventDay(char[] CurrentEventDay);
 
-stock PrecacheOverlayAnyDownload(char[] sOverlay)
+stock PrecacheDecalAnyDownload(char[] sDecal)
 {
 	char sBufferVmt[256];
 	char sBufferVtf[256];
-	Format(sBufferVmt, sizeof(sBufferVmt), "%s.vmt", sOverlay);
-	Format(sBufferVtf, sizeof(sBufferVtf), "%s.vtf", sOverlay);
+	Format(sBufferVmt, sizeof(sBufferVmt), "%s.vmt", sDecal);
+	Format(sBufferVtf, sizeof(sBufferVtf), "%s.vtf", sDecal);
 	PrecacheDecal(sBufferVmt, true);
 	PrecacheDecal(sBufferVtf, true);
-	Format(sBufferVmt, sizeof(sBufferVmt), "materials/%s.vmt", sOverlay);
-	Format(sBufferVtf, sizeof(sBufferVtf), "materials/%s.vtf", sOverlay);
+	Format(sBufferVmt, sizeof(sBufferVmt), "materials/%s.vmt", sDecal);
+	Format(sBufferVtf, sizeof(sBufferVtf), "materials/%s.vtf", sDecal);
 	AddFileToDownloadsTable(sBufferVmt);
 	AddFileToDownloadsTable(sBufferVtf);
+}
+
+stock PrecacheModelAnyDownload(char[] sModel)
+{
+	char sBufferVmt[256];
+	char sBufferVtf[256];
+	Format(sBufferVmt, sizeof(sBufferVmt), "materials/%s.vmt", sModel);
+	Format(sBufferVtf, sizeof(sBufferVtf), "materials/%s.vtf", sModel);
+	AddFileToDownloadsTable(sBufferVmt);
+	AddFileToDownloadsTable(sBufferVtf);
+	PrecacheModel(sBufferVmt, true);
+	PrecacheModel(sBufferVtf, true);
 }
 
 stock PrecacheSoundAnyDownload(char[] sSound)

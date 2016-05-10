@@ -101,8 +101,8 @@ public void OnPluginStart()
 	gc_sOverlayFreeze = AutoExecConfig_CreateConVar("sm_catch_overlayfreeze_path", "overlays/MyJailbreak/freeze" , "Path to the Freeze Overlay DONT TYPE .vmt or .vft");
 	gc_bStayOverlay = AutoExecConfig_CreateConVar("sm_catch_stayoverlay", "1", "0 - overlays will removed after 3sec. , 1 - overlays will stay until unfreeze", _, true, 0.0, true, 1.0);
 	gc_bSounds = AutoExecConfig_CreateConVar("sm_catch_sounds_enable", "1", "0 - disabled, 1 - enable sounds ", _, true, 0.0, true, 1.0);
-	gc_sSoundFreezePath = AutoExecConfig_CreateConVar("sm_catch_sounds_freeze", "music/myjailbreak/freeze.mp3", "Path to the soundfile which should be played on freeze.");
-	gc_sSoundUnFreezePath = AutoExecConfig_CreateConVar("sm_catch_sounds_unfreeze", "music/myjailbreak/unfreeze.mp3", "Path to the soundfile which should be played on unfreeze.");
+	gc_sSoundFreezePath = AutoExecConfig_CreateConVar("sm_catch_sounds_freeze", "music/MyJailbreak/freeze.mp3", "Path to the soundfile which should be played on freeze.");
+	gc_sSoundUnFreezePath = AutoExecConfig_CreateConVar("sm_catch_sounds_unfreeze", "music/MyJailbreak/unfreeze.mp3", "Path to the soundfile which should be played on unfreeze.");
 	gc_bSprint = AutoExecConfig_CreateConVar("sm_catch_sprint_enable", "1", "0 - disabled, 1 - enable ShortSprint", _, true, 0.0, true, 1.0);
 	gc_bSprintUse = AutoExecConfig_CreateConVar("sm_catch_sprint_button", "1", "0 - disabled, 1 - enable +use button for sprint", _, true, 0.0, true, 1.0);
 	gc_iSprintCooldown= AutoExecConfig_CreateConVar("sm_catch_sprint_cooldown", "10", "Time in seconds the player must wait for the next sprint", _, true, 0.0);
@@ -156,7 +156,7 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 	else if(convar == gc_sOverlayFreeze)
 	{
 		strcopy(g_sOverlayFreeze, sizeof(g_sOverlayFreeze), newValue);
-		if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayFreeze);
+		if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayFreeze);
 	}
 }
 
@@ -173,7 +173,7 @@ public void OnMapStart()
 	
 	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundFreezePath);
 	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundUnFreezePath);
-	if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayFreeze);
+	if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayFreeze);
 	PrecacheSound("player/suit_sprint.wav", true);
 }
 

@@ -109,9 +109,9 @@ public void OnPluginStart()
 	gc_bOverlays = AutoExecConfig_CreateConVar("sm_jihad_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true,  0.0, true, 1.0);
 	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_jihad_overlays_start", "overlays/MyJailbreak/start" , "Path to the start Overlay DONT TYPE .vmt or .vft");
 	gc_bSounds = AutoExecConfig_CreateConVar("sm_jihad_sounds_enable", "1", "0 - disabled, 1 - enable sounds ", _, true,  0.0, true, 1.0);
-	gc_sSoundStartPath = AutoExecConfig_CreateConVar("sm_jihad_sounds_start", "music/myjailbreak/start.mp3", "Path to the soundfile which should be played for start.");
-	gc_sSoundJihadPath = AutoExecConfig_CreateConVar("sm_jihad_sounds_jihad", "music/myjailbreak/jihad.mp3", "Path to the soundfile which should be played on activatebomb.");
-	gc_sSoundBoomPath = AutoExecConfig_CreateConVar("sm_jihad_sounds_boom", "music/myjailbreak/boom.mp3", "Path to the soundfile which should be played on detonation.");
+	gc_sSoundStartPath = AutoExecConfig_CreateConVar("sm_jihad_sounds_start", "music/MyJailbreak/start.mp3", "Path to the soundfile which should be played for start.");
+	gc_sSoundJihadPath = AutoExecConfig_CreateConVar("sm_jihad_sounds_jihad", "music/MyJailbreak/jihad.mp3", "Path to the soundfile which should be played on activatebomb.");
+	gc_sSoundBoomPath = AutoExecConfig_CreateConVar("sm_jihad_sounds_boom", "music/MyJailbreak/boom.mp3", "Path to the soundfile which should be played on detonation.");
 	gc_bSprintUse = AutoExecConfig_CreateConVar("sm_jihad_sprint_button", "1", "0 - disabled, 1 - enable +use button for sprint", _, true,  0.0, true, 1.0);
 	gc_iSprintCooldown = AutoExecConfig_CreateConVar("sm_jihad_sprint_cooldown", "7","Time in seconds the player must wait for the next sprint", _, true,  0.0);
 	gc_bSprint = AutoExecConfig_CreateConVar("sm_jihad_sprint_enable", "1", "0 - disabled, 1 - enable ShortSprint", _, true,  0.0, true, 1.0);
@@ -162,7 +162,7 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 	else if(convar == gc_sOverlayStartPath)
 	{
 		strcopy(g_sOverlayStart, sizeof(g_sOverlayStart), newValue);
-		if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStart);
+		if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStart);
 	}
 	else if(convar == gc_sSoundStartPath)
 	{
@@ -184,7 +184,7 @@ public void OnMapStart()
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
 	
-	if(gc_bOverlays.BoolValue) PrecacheOverlayAnyDownload(g_sOverlayStart);
+	if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStart);
 	if(gc_bSounds.BoolValue)	
 	{
 		PrecacheSoundAnyDownload(g_sSoundJihadPath);
@@ -617,7 +617,6 @@ public Action Command_BombJihad(int client, int args)
 			}
 			//else CPrintToChat(client, "%t %t", "jihad_tag" , "jihad_needc4");
 		}
-		else CPrintToChat(client, "%t %t", "jihad_tag" , "jihad_needc4");
 	}
 }
 
