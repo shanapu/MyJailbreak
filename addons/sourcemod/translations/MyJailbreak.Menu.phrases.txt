@@ -40,6 +40,26 @@
 		"#format"		""
 		"en"			"Weapon Menu"
 	}	
+	"menu_laser"
+	{
+		"#format"		""
+		"en"			"Toggle Laser on/off"
+	}	
+	"menu_drawer"
+	{
+		"#format"		""
+		"en"			"Toggle Drawer on/off"
+	}	
+	"menu_drawert"
+	{
+		"#format"		""
+		"en"			"Toggle Drawer for Terrorists"
+	}	
+	"menu_noblock"
+	{
+		"#format"		""
+		"en"			"Toggle No Block"
+	}	
 	"menu_ffon"
 	{
 		"#format"		""
@@ -53,7 +73,7 @@
 	"menu_randomdead"
 	{
 		"#format"		""
-		"en"			"Kill a random T"
+		"en"			"Kill a random Terrorist"
 	}	
 	"menu_unwarden"
 	{
@@ -83,12 +103,12 @@
 	"menu_removewarden"
 	{
 		"#format"		""
-		"en"			"Remove Warden"
+		"en"			"Remove warden"
 	}
 	"menu_setwarden"
 	{
 		"#format"		""
-		"en"			"Set new Warden"
+		"en"			"Set new warden"
 	}
 	"menu_rules"
 	{
@@ -148,7 +168,7 @@
 	"menu_jihad"
 	{
 		"#format"		""
-		"en"			"JiHad Day"
+		"en"			"Jihad Day"
 	}
 	"menu_catch"
 	{

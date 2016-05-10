@@ -19,11 +19,11 @@ ConVar gc_bTerror;
 ConVar gc_bCTerror;
 ConVar gc_bWarden;
 ConVar gc_bDays;
-ConVar g_bMath;
-ConVar g_bCheck;
 ConVar gc_bClose;
 ConVar gc_bStart;
 ConVar gc_bWelcome;
+ConVar g_bMath;
+ConVar g_bCheck;
 ConVar g_bFF;
 ConVar g_bZeus;
 ConVar g_bRules;
@@ -32,6 +32,10 @@ ConVar g_bWar;
 ConVar g_bJihad;
 ConVar g_bKnife;
 ConVar g_bFFA;
+ConVar g_bLaser;
+ConVar g_bDrawer;
+ConVar g_bDrawerT;
+ConVar g_bNoBlock;
 ConVar g_bZombie;
 ConVar g_bNoScope;
 ConVar g_bHEbattle;
@@ -102,9 +106,13 @@ public void OnConfigsExecuted()
 	g_bRules = FindConVar("sm_hosties_rules_enable");
 	g_bCheck = FindConVar("sm_hosties_checkplayers_enable");
 	g_bMath = FindConVar("sm_warden_math");
+	g_bNoBlock = FindConVar("sm_warden_noblock");
 	g_bWar = FindConVar("sm_war_enable");
 	g_bZeus = FindConVar("sm_zeus_enable");
 	g_bFFA = FindConVar("sm_ffa_enable");
+	g_bDrawer = FindConVar("sm_warden_drawer");
+	g_bDrawerT = FindConVar("sm_warden_drawer_terror");
+	g_bLaser = FindConVar("sm_warden_laser");
 	g_bZombie = FindConVar("sm_zombie_enable");
 	g_bNoScope = FindConVar("sm_noscope_enable");
 	g_bHide = FindConVar("sm_hide_enable");
@@ -131,7 +139,7 @@ public void OnClientPutInServer(int client)
 {
 	if (gc_bWelcome.BoolValue)
 	{
-		CreateTimer(30.0, Timer_WelcomeMessage, client);
+		CreateTimer(35.0, Timer_WelcomeMessage, client);
 	}
 }
 
@@ -162,11 +170,9 @@ public Action JbMenu(int client, int args)
 	if(gc_bPlugin.BoolValue)	
 	{
 		char menuinfo1[255], menuinfo2[255], menuinfo3[255], menuinfo5[255], menuinfo6[255], menuinfo7[255], menuinfo8[255];
-		char menuinfo9[255], menuinfo10[255], menuinfo11[255], menuinfo13[255], menuinfo15[255], menuinfo16[255];
-		char menuinfo17[255], menuinfo14[255], menuinfo4[255], menuinfo19[255], menuinfo18[255];
-		//menuinfo12[255],
-		
-		
+		char menuinfo9[255], menuinfo10[255], menuinfo11[255], menuinfo12[255], menuinfo13[255], menuinfo15[255], menuinfo16[255];
+		char menuinfo17[255], menuinfo14[255], menuinfo4[255], menuinfo19[255], menuinfo20[255], menuinfo21[255], menuinfo18[255];
+		char menuinfo22[255];
 		
 		Format(menuinfo1, sizeof(menuinfo1), "%T", "menu_info_title", LANG_SERVER);
 		
@@ -240,6 +246,38 @@ public Action JbMenu(int client, int args)
 						}
 					}
 				}
+				if(g_bLaser != null)
+				{
+					if(g_bLaser.BoolValue)
+					{
+						Format(menuinfo20, sizeof(menuinfo20), "%T", "menu_laser", LANG_SERVER);
+						mainmenu.AddItem("laser", menuinfo20);
+					}
+				}
+				if(g_bDrawer != null)
+				{
+					if(g_bDrawer.BoolValue)
+					{
+						Format(menuinfo21, sizeof(menuinfo21), "%T", "menu_drawer", LANG_SERVER);
+						mainmenu.AddItem("drawer", menuinfo21);
+					}
+				}
+				if(g_bDrawerT != null)
+				{
+					if(g_bDrawerT.BoolValue)
+					{
+						Format(menuinfo12, sizeof(menuinfo12), "%T", "menu_drawert", LANG_SERVER);
+						mainmenu.AddItem("drawert", menuinfo12);
+					}
+				}
+				if(g_bNoBlock != null)
+				{
+					if(g_bNoBlock.BoolValue)
+					{
+						Format(menuinfo22, sizeof(menuinfo22), "%T", "menu_noblock", LANG_SERVER);
+						mainmenu.AddItem("noblock", menuinfo22);
+					}
+				}
 				if(g_bRandom != null)
 				{
 					if(g_bRandom.BoolValue)
@@ -247,10 +285,9 @@ public Action JbMenu(int client, int args)
 						Format(menuinfo9, sizeof(menuinfo9), "%T", "menu_randomdead", LANG_SERVER);
 						mainmenu.AddItem("kill", menuinfo9);
 					}
-					
-					Format(menuinfo10, sizeof(menuinfo10), "%T", "menu_unwarden", LANG_SERVER);
-					mainmenu.AddItem("unwarden", menuinfo10);
 				}
+				Format(menuinfo10, sizeof(menuinfo10), "%T", "menu_unwarden", LANG_SERVER);
+				mainmenu.AddItem("unwarden", menuinfo10);
 			}
 		}
 		else if(GetClientTeam(client) == CS_TEAM_CT) 
@@ -407,6 +444,10 @@ public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selec
 		else if ( strcmp(info,"check") == 0 ) 
 		{
 			FakeClientCommand(client, "sm_checkplayers");
+			if(!gc_bClose.BoolValue)
+			{
+				JbMenu(client,0);
+			}
 		}
 		else if ( strcmp(info,"rules") == 0 ) 
 		{
@@ -435,6 +476,38 @@ public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selec
 		else if ( strcmp(info,"math") == 0 ) 
 		{
 			FakeClientCommand(client, "sm_math");
+			if(!gc_bClose.BoolValue)
+			{
+				JbMenu(client,0);
+			}
+		}
+		else if ( strcmp(info,"noblock") == 0 ) 
+		{
+			FakeClientCommand(client, "sm_noblock");
+			if(!gc_bClose.BoolValue)
+			{
+				JbMenu(client,0);
+			}
+		}
+		else if ( strcmp(info,"laser") == 0 ) 
+		{
+			FakeClientCommand(client, "sm_laser");
+			if(!gc_bClose.BoolValue)
+			{
+				JbMenu(client,0);
+			}
+		}
+		else if ( strcmp(info,"drawer") == 0 ) 
+		{
+			FakeClientCommand(client, "sm_drawer");
+			if(!gc_bClose.BoolValue)
+			{
+				JbMenu(client,0);
+			}
+		}
+		else if ( strcmp(info,"drawert") == 0 ) 
+		{
+			FakeClientCommand(client, "sm_drawert");
 			if(!gc_bClose.BoolValue)
 			{
 				JbMenu(client,0);
