@@ -413,7 +413,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 	{
 		for(int client=1; client <= MaxClients; client++)
 		{
-			if (IsClientInGame(client))
+			if (IsValidClient(client, false, true))
 			{
 				SetEntityGravity(client, 1.0);
 				FP(client);
