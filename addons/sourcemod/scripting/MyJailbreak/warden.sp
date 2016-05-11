@@ -75,7 +75,7 @@ bool g_bHasSilencer[MAXPLAYERS + 1];
 bool g_bLaserUse[MAXPLAYERS+1];
 bool g_bDrawerUse[MAXPLAYERS+1] = {false, ...};
 bool g_bLaser = true;
-bool g_bDrawer = false;
+bool g_bDrawer[MAXPLAYERS+1] = false;
 bool g_bDrawerT = false;
 bool g_bNoBlock = true;
 bool g_bLaserColorRainbow[MAXPLAYERS+1] = true;
@@ -415,9 +415,8 @@ public void OnMapStart()
 	RemoveAllMarkers();
 	CreateTimer(0.1, Print_Drawer, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 	g_bLaser = true;
-	g_bDrawer = false;
+	for(int client=1; client <= MaxClients; client++) g_bDrawer[client] = false;
 	g_bDrawerT = false;
-
 }
 
 //Round Start
@@ -461,6 +460,8 @@ public void RoundStart(Event event, const char[] name, bool dontBroadcast)
 		Warden = -1;
 		SafeDelete(g_iIcon[Warden]);
 		g_iIcon[Warden] = -1;
+		g_bLaser = false;
+		for(int client=1; client <= MaxClients; client++) g_bDrawer[client] = false;
 		}
 	}
 	char EventDay[64];
@@ -475,6 +476,8 @@ public void RoundStart(Event event, const char[] name, bool dontBroadcast)
 		Warden = -1;
 		SafeDelete(g_iIcon[Warden]);
 		g_iIcon[Warden] = -1;
+		g_bLaser = false;
+		for(int client=1; client <= MaxClients; client++) g_bDrawer[client] = false;
 		}
 	}
 	if(gc_bStayWarden.BoolValue && warden_exist())
@@ -1400,7 +1403,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 			g_bLaserUse[client] = false;
 		}
 	}
-	if (((client == Warden) && gc_bDrawer.BoolValue && g_bDrawer) || ((GetClientTeam(client) == CS_TEAM_T) && gc_bDrawer.BoolValue && g_bDrawerT))
+	if (((client == Warden) && gc_bDrawer.BoolValue && g_bDrawer[client]) || ((GetClientTeam(client) == CS_TEAM_T) && gc_bDrawer.BoolValue && g_bDrawerT))
 	{
 		for (int i = 0; i < MAX_BUTTONS; i++)
 		{
@@ -1627,7 +1630,7 @@ if (action == MenuAction_Select)
 		
 		if ( strcmp(info,"off") == 0 ) 
 		{
-			g_bDrawer = false;
+			g_bDrawer[client] = false;
 			CPrintToChat(client, "%t %t", "warden_tag", "warden_draweroff");
 		}
 		else if ( strcmp(info,"terror") == 0 ) 
@@ -1636,80 +1639,80 @@ if (action == MenuAction_Select)
 		}
 		else if ( strcmp(info,"rainbow") == 0 ) 
 		{
-			if(!g_bDrawer) CPrintToChat(client, "%t %t", "warden_tag", "warden_draweron");
+			if(!g_bDrawer[client]) CPrintToChat(client, "%t %t", "warden_tag", "warden_draweron");
 			CPrintToChat(client, "%t %t", "warden_tag", "warden_drawer", g_sColorNamesRainbow);
-			g_bDrawer = true;
+			g_bDrawer[client] = true;
 			g_bDrawerColorRainbow[client] = true;
 			
 		}
 		else if ( strcmp(info,"white") == 0 ) 
 		{
-			if(!g_bDrawer) CPrintToChat(client, "%t %t", "warden_tag", "warden_draweron");
+			if(!g_bDrawer[client]) CPrintToChat(client, "%t %t", "warden_tag", "warden_draweron");
 			CPrintToChat(client, "%t %t", "warden_tag", "warden_drawer", g_sColorNamesWhite);
-			g_bDrawer = true;
+			g_bDrawer[client] = true;
 			g_bDrawerColorRainbow[client] = false;
 			g_iDrawerColor[client] = 0;
 			
 		}
 		else if ( strcmp(info,"red") == 0 ) 
 		{
-			if(!g_bDrawer) CPrintToChat(client, "%t %t", "warden_tag", "warden_draweron");
+			if(!g_bDrawer[client]) CPrintToChat(client, "%t %t", "warden_tag", "warden_draweron");
 			CPrintToChat(client, "%t %t", "warden_tag", "warden_drawer", g_sColorNamesRed);
-			g_bDrawer = true;
+			g_bDrawer[client] = true;
 			g_bDrawerColorRainbow[client] = false;
 			g_iDrawerColor[client] = 1;
 			
 		}
 		else if ( strcmp(info,"green") == 0 ) 
 		{
-			if(!g_bDrawer) CPrintToChat(client, "%t %t", "warden_tag", "warden_draweron");
+			if(!g_bDrawer[client]) CPrintToChat(client, "%t %t", "warden_tag", "warden_draweron");
 			CPrintToChat(client, "%t %t", "warden_tag", "warden_drawer", g_sColorNamesGreen);
-			g_bDrawer = true;
+			g_bDrawer[client] = true;
 			g_bDrawerColorRainbow[client] = false;
 			g_iDrawerColor[client] = 2;
 			
 		}
 		else if ( strcmp(info,"blue") == 0 ) 
 		{
-			if(!g_bDrawer) CPrintToChat(client, "%t %t", "warden_tag", "warden_draweron");
+			if(!g_bDrawer[client]) CPrintToChat(client, "%t %t", "warden_tag", "warden_draweron");
 			CPrintToChat(client, "%t %t", "warden_tag", "warden_drawer", g_sColorNamesBlue);
-			g_bDrawer = true;
+			g_bDrawer[client] = true;
 			g_bDrawerColorRainbow[client] = false;
 			g_iDrawerColor[client] = 3;
 			
 		}
 		else if ( strcmp(info,"yellow") == 0 ) 
 		{
-			if(!g_bDrawer) CPrintToChat(client, "%t %t", "warden_tag", "warden_draweron");
+			if(!g_bDrawer[client]) CPrintToChat(client, "%t %t", "warden_tag", "warden_draweron");
 			CPrintToChat(client, "%t %t", "warden_tag", "warden_drawer", g_sColorNamesYellow);
-			g_bDrawer = true;
+			g_bDrawer[client] = true;
 			g_bDrawerColorRainbow[client] = false;
 			g_iDrawerColor[client] = 4;
 			
 		}
 		else if ( strcmp(info,"cyan") == 0 ) 
 		{
-			if(!g_bDrawer) CPrintToChat(client, "%t %t", "warden_tag", "warden_draweron");
+			if(!g_bDrawer[client]) CPrintToChat(client, "%t %t", "warden_tag", "warden_draweron");
 			CPrintToChat(client, "%t %t", "warden_tag", "warden_drawer", g_sColorNamesCyan);
-			g_bDrawer = true;
+			g_bDrawer[client] = true;
 			g_bDrawerColorRainbow[client] = false;
 			g_iDrawerColor[client] = 5;
 			
 		}
 		else if ( strcmp(info,"magenta") == 0 ) 
 		{
-			if(!g_bDrawer) CPrintToChat(client, "%t %t", "warden_tag", "warden_draweron");
+			if(!g_bDrawer[client]) CPrintToChat(client, "%t %t", "warden_tag", "warden_draweron");
 			CPrintToChat(client, "%t %t", "warden_tag", "warden_drawer", g_sColorNamesMagenta);
-			g_bDrawer = true;
+			g_bDrawer[client] = true;
 			g_bDrawerColorRainbow[client] = false;
 			g_iDrawerColor[client] = 6;
 			
 		}
 		else if ( strcmp(info,"orange") == 0 ) 
 		{
-			if(!g_bDrawer) CPrintToChat(client, "%t %t", "warden_tag", "warden_draweron");
+			if(!g_bDrawer[client]) CPrintToChat(client, "%t %t", "warden_tag", "warden_draweron");
 			CPrintToChat(client, "%t %t", "warden_tag", "warden_drawer", g_sColorNamesOrange);
-			g_bDrawer = true;
+			g_bDrawer[client] = true;
 			g_bDrawerColorRainbow[client] = false;
 			g_iDrawerColor[client] = 7;
 			
