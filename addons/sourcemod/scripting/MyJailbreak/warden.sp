@@ -77,7 +77,7 @@ bool g_bDrawerUse[MAXPLAYERS+1] = {false, ...};
 bool g_bLaser = true;
 bool g_bDrawer = true;
 bool g_bDrawerT = false;
-bool g_bNoBlock = false;
+bool g_bNoBlock = true;
 bool g_bLaserColorRainbow[MAXPLAYERS+1] = true;
 bool g_bDrawerColorRainbow[MAXPLAYERS+1] = true;
 
@@ -1125,10 +1125,10 @@ stock void Draw_Markers()
 		if (g_fMarkerRadius[i] <= 0.0)
 			continue;
 		
-		float fHeadGuardOrigin[3];
-		Entity_GetAbsOrigin(Warden, fHeadGuardOrigin);
+		float fWardenOrigin[3];
+		Entity_GetAbsOrigin(Warden, fWardenOrigin);
 		
-		if (GetVectorDistance(fHeadGuardOrigin, g_fMarkerOrigin[i]) > g_fMarkerRangeMax)
+		if (GetVectorDistance(fWardenOrigin, g_fMarkerOrigin[i]) > g_fMarkerRangeMax)
 		{
 			CPrintToChat(Warden, "%t %t", "warden_tag", "warden_marker_faraway", g_sColorNames[i]);
 			RemoveMarker(i);
@@ -1297,7 +1297,11 @@ stock int GetClientAimTargetPos(int client, float pos[3])
 
 stock void RemoveMarker(int marker)
 {
-	g_fMarkerRadius[marker] = 0.0;
+	if(marker != -1)
+	{
+		PrintToChatAll("Wert: marker on RemoveMarker: %i", marker);
+		g_fMarkerRadius[marker] = 0.0;
+	}
 }
 
 stock void RemoveAllMarkers()
@@ -1731,6 +1735,8 @@ public void OnClientPutInServer(int client)
 {
 	g_bLaserUse[client] = false;
 	g_bDrawerUse[client] = false;
+	g_bDrawerColorRainbow[client] = true;
+	g_bLaserColorRainbow[client] = true;
 	g_fLastDrawer[client][0] = 0.0;
 	g_fLastDrawer[client][1] = 0.0;
 	g_fLastDrawer[client][2] = 0.0;
