@@ -22,6 +22,8 @@ ConVar gc_bPlugin;
 ConVar gc_bSetW;
 ConVar gc_bSetA;
 ConVar gc_bVote;
+ConVar gc_iHunterHP;
+ConVar gc_iChickenHP;
 ConVar gc_bSounds;
 ConVar gc_sSoundStartPath;
 ConVar gc_iCooldownDay;
