@@ -5,7 +5,7 @@ know bugs:
 - [ ] catch win -> T win show wrong
 - [ ] hide win -> T win show wrong
 - [?] duckhunt end FP
-- [?] jihad bombactiv in 2nd round
+- [x] jihad bombactiv in 2nd round
 - [x] late precache warden icon
 - [ ] warden icon losing head
 
@@ -16,6 +16,7 @@ must:
 - [ ] menu: add placeholder for cutom commands
 - [?] enable drawer for T
 - [ ] clean up translation files
+- [ ] new menu order in readme
 
 want:
 - [ ] clean double useless code OnPlayerRunCmd
@@ -37,7 +38,7 @@ want:
 - [ ] all: format centertext <font size='30' color='#FF00FF'>test</font>
 - [ ] all: restrict map heal station https://forums.alliedmods.net/showthread.php?t=267167
 - [ ] knife: vote on roundstart for grav skate tp or all
-- [ ] warden: toggle noblock
+- [x] warden: toggle noblock
 - [ ] warden: limits (max x.times in row)
 - [ ] inc: merge ShowOverlayFreeze/start/delete to once
 - [ ] playertags: add VIP flag
@@ -45,13 +46,13 @@ want:
 - [ ] warden: talkpower per menu only some sec https://forums.alliedmods.net/showthread.php?t=257229
 - [ ] countdown: insert cancel in menu
 - [ ] countdown: force stop
-- [ ] menu: insert noblock
+- [x] menu: insert noblock
 - [ ] merge double used translation to myjailbreak.phrases
 - [ ] warden: color prisioners (color roulette)
-- [ ] zombie: hp convar
+- [x] zombie: hp convar
 - [ ] all: beacon last player for days
-- [ ] duckhunt: hunter hp convar or auto higher if more t
-- [ ] duckhunt: chicken hp convar or auto higher if more ct
+- [ ] duckhunt auto higher if more t
+- [ ] duckhunt auto higher if more ct
 - [ ] hide: MovementValue hider/seeker convar
 - [ ] new day: Tron like - all player Molotov rain https://forums.alliedmods.net/showthread.php?p=2398902
 - [ ] merge Transltions
@@ -136,8 +137,10 @@ must/want:
 - [x] config folder structure
 - [x] Event: logging
 - [x] warden: icon above head (material)
+- [x] duckhunt: hunter hp convar
 - [x] clean/translate ConVars 
 - [x] sv_tags to core
+- [x] duckhunt: chicken hp convar
 - [x] catch: hide blood
 - [x] comments to template.sp
 - [x] warden:translate menu set

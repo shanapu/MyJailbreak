@@ -64,7 +64,7 @@ e.g.
 # THANKS FOR MAKING FREE SOFTWARE!
 
 #### Much Thanks: 
-UartigZone, Got Sw4g? terminator18, Skelexes, 0dieter0, maks, zeddy for bughunting / great ideas!
+Weeeishy, UartigZone, Got Sw4g? terminator18, Skelexes, 0dieter0, maks, zeddy for bughunting / great ideas!
   
   
   
@@ -89,8 +89,7 @@ Colorize Warden, Warden Model, open/close cell doors, automatic open cells doors
 - sm_close - Allows the Warden to close the cell doors
 - sm_laser - Allows Wthe Warden to toggle the wardens Laser pointer
 - sm_drawer - the Warden to toggle the wardens Drawer
-- sm_noblockon - Allows the Warden to enable no block 
-- sm_noblockoff - Allows the Warden to disable no block
+- sm_noblockn - Allows the Warden to toggle no block 
 - sm_setff - Allows player to see the state and the Warden to toggle friendly fire
 - sm_cdmenu - Allows the Warden to open the Countdown Menu
 - sm_cdstart - Allows the Warden to start a START Countdown! (start after 10sec.) - start without menu
@@ -453,6 +452,8 @@ Zombies freezed for 35sec (default) so T can hide &/or climb.
 - sm_zombie_rounds: Rounds to play in a row
 - sm_zombie_roundtime - Roundtime for a single zombie round in minutes. Default 5
 - sm_zombie_freezetime - Time in seconds Zombies freezed. Default 35
+- sm_zombie_hp: HP the Zombies got on Spawn. Default 850
+- sm_zombie_human_hp: HP the Humans got on Spawn. Default 65
 - sm_zombie_cooldown_start - Rounds until event can be start after mapchange. Default 3
 - sm_zombie_cooldown_day - Rounds until event can be started again. Default 3
 - sm_zombie_sounds_enable: 0 - disabled, 1 - enable sounds. Default 1
