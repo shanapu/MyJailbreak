@@ -142,8 +142,8 @@
 	"duckhunt_info_line2"		// no colors!
 	{
 		"da"		"CT har kun shotgun at skyde med!"	
-		"en"		"Cts got novas"
-		"de"		"Counter Terrorists haben Nova"
+		"en"		"Counter-Terrorists got novas"
+		"de"		"Counter-Terrorists haben Nova"
 	}
 	
 	"duckhunt_info_line3"		// no colors!
@@ -169,9 +169,8 @@
 	
 	"duckhunt_info_line6"		// no colors!
 	{
-		"da"		"Begge hold må gå der hen de har lyst til!"	
-		"en"		"Everyone is allowed to go everywhere where he wants"
-		"de"		"Jeder darf überall hin wo er will!"
+		"en"		"Stay in the main jailroom! Don't enter secrets!"
+		"de"		"Bleib' im Haupt Jail Raum! Verstecke sind verboten!"
 	}
 	
 	"duckhunt_info_line7"		// no colors!

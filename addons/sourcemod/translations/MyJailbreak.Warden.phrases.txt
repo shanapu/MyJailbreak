@@ -433,14 +433,14 @@
 	"warden_tdraweron"
 	{
 		"en"		"Drawer for Terrorists is {purple}enabled"
-		"de"		"Drawer für Terristen {purple}ist aktiv!"
+		"de"		"Drawer für Terroristen {purple}ist aktiv!"
 	}
 	
 	"warden_tdraweroff"
 	{
 		"#format"		""
 		"en"			"Drawer for Terrorists is {purple}disabled"
-		"de"			"Drawer für Terristen {purple}ist deaktiviert!"
+		"de"			"Drawer für Terroristen {purple}ist deaktiviert!"
 	}
 	
 	"warden_marker_set"

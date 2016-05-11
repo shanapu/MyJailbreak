@@ -162,9 +162,8 @@
 	
 	"zeus_info_line6"
 	{
-		"da"		"Alle kan gå der hen hvor de har lyst til at gå hen!"	
-		"en"		"Everyone is allowed to go everywhere where he wants"
-		"de"		"Jeder darf überall hin wo er will!"
+		"en"		"Stay in the main jailroom! Don't enter secrets!"
+		"de"		"Bleib' im Haupt Jail Raum! Verstecke sind verboten!"
 	}
 	
 	"zeus_info_line7"
