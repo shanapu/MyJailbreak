@@ -83,8 +83,8 @@ bool g_bDrawerColorRainbow[MAXPLAYERS+1] = true;
 
 //Integers
 
-int Warden = -1;
-int TempWarden[MAXPLAYERS+1] = -1;
+int g_iWarden = -1;
+int g_iTempWarden[MAXPLAYERS+1] = -1;
 int g_iVoteCount;
 int g_iCollisionOffset;
 int g_iOpenTimer;
@@ -437,9 +437,9 @@ public void RoundStart(Event event, const char[] name, bool dontBroadcast)
 	{
 		for(int client=1; client <= MaxClients; client++) if(IsValidClient(client, true, true))
 		{
-			if (client == Warden)
+			if (client == g_iWarden)
 			{
-				SetEntityModel(Warden, g_sWardenModel);
+				SetEntityModel(g_iWarden, g_sWardenModel);
 			}
 		}
 	}
@@ -453,13 +453,13 @@ public void RoundStart(Event event, const char[] name, bool dontBroadcast)
 	}
 	else
 	{
-		if (Warden == 1)
+		if (g_iWarden == 1)
 		{
-		CreateTimer(0.1, RemoveColor, Warden);
-		SetEntityModel(Warden, g_sModelPath);
-		Warden = -1;
-		SafeDelete(g_iIcon[Warden]);
-		g_iIcon[Warden] = -1;
+		CreateTimer(0.1, RemoveColor, g_iWarden);
+		SetEntityModel(g_iWarden, g_sModelPath);
+		g_iWarden = -1;
+		SafeDelete(g_iIcon[g_iWarden]);
+		g_iIcon[g_iWarden] = -1;
 		g_bLaser = false;
 		for(int client=1; client <= MaxClients; client++) g_bDrawer[client] = false;
 		}
@@ -469,20 +469,20 @@ public void RoundStart(Event event, const char[] name, bool dontBroadcast)
 	
 	if(!StrEqual(EventDay, "none", false) || !gc_bStayWarden.BoolValue)
 	{
-		if (Warden == 1)
+		if (g_iWarden == 1)
 		{
-		CreateTimer( 0.1, RemoveColor, Warden);
-		SetEntityModel(Warden, g_sModelPath);
-		Warden = -1;
-		SafeDelete(g_iIcon[Warden]);
-		g_iIcon[Warden] = -1;
+		CreateTimer( 0.1, RemoveColor, g_iWarden);
+		SetEntityModel(g_iWarden, g_sModelPath);
+		g_iWarden = -1;
+		SafeDelete(g_iIcon[g_iWarden]);
+		g_iIcon[g_iWarden] = -1;
 		g_bLaser = false;
 		for(int client=1; client <= MaxClients; client++) g_bDrawer[client] = false;
 		}
 	}
 	if(gc_bStayWarden.BoolValue && warden_exist())
 	{
-		CreateTimer(0.1, Create_Model, Warden);
+		CreateTimer(0.1, Create_Model, g_iWarden);
 	}
 }
 
@@ -518,7 +518,7 @@ public Action BecomeWarden(int client, int args)
 {
 	if(gc_bPlugin.BoolValue)
 	{
-		if (Warden == -1)
+		if (g_iWarden == -1)
 		{
 			if (gc_bBecomeWarden.BoolValue)
 			{
@@ -535,9 +535,9 @@ public Action BecomeWarden(int client, int args)
 				}
 				else CPrintToChat(client, "%t %t", "warden_tag" , "warden_ctsonly");
 			}
-			else CPrintToChat(client, "%t %t", "warden_tag" , "warden_nobecome", Warden);
+			else CPrintToChat(client, "%t %t", "warden_tag" , "warden_nobecome", g_iWarden);
 		}
-		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_exist", Warden);
+		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_exist", g_iWarden);
 	}
 	else CPrintToChat(client, "%t %t", "warden_tag" , "warden_disabled");
 }
@@ -548,7 +548,7 @@ public Action ExitWarden(int client, int args)
 {
 	if(gc_bPlugin.BoolValue)
 	{
-		if(client == Warden)
+		if(client == g_iWarden)
 		{
 			CPrintToChatAll("%t %t", "warden_tag" , "warden_retire", client);
 			
@@ -556,9 +556,9 @@ public Action ExitWarden(int client, int args)
 			{
 				PrintCenterTextAll("%t", "warden_retire_nc", client);
 			}
-			Warden = -1;
+			g_iWarden = -1;
 			Forward_OnWardenRemoved(client);
-			CreateTimer( 0.1, RemoveColor, Warden);
+			CreateTimer( 0.1, RemoveColor, g_iWarden);
 			SetEntityModel(client, g_sModelPath);
 			g_iRandomTime = GetConVarInt(gc_hRandomTimer);
 			RandomTimer = CreateTimer(1.0, ChooseRandom, _, TIMER_REPEAT);
@@ -597,7 +597,7 @@ public Action VoteWarden(int client,int args)
 					
 					if (g_iVoteCount > playercount)
 					{
-						LogMessage("[MyJB] Player %L was kick as warden by voting", Warden);
+						LogMessage("[MyJB] Player %L was kick as warden by voting", g_iWarden);
 						RemoveTheWarden(client);
 					}
 					else CPrintToChatAll("%t %t", "warden_tag" , "warden_need", Missing, client);
@@ -617,7 +617,7 @@ public void playerDeath(Event event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(GetEventInt(event, "userid")); // Get the dead clients id
 	
-	if(client == Warden) // Aww damn , he is the warden
+	if(client == g_iWarden) // Aww damn , he is the warden
 	{
 		CPrintToChatAll("%t %t", "warden_tag" , "warden_dead", client);
 		
@@ -631,7 +631,7 @@ public void playerDeath(Event event, const char[] name, bool dontBroadcast)
 		}
 		g_iRandomTime = GetConVarInt(gc_hRandomTimer);
 		RandomTimer = CreateTimer(1.0, ChooseRandom, _, TIMER_REPEAT);
-		Warden = -1;
+		g_iWarden = -1;
 		Call_StartForward(gF_OnWardenDeath);
 		Call_PushCell(client);
 		Call_Finish();
@@ -690,7 +690,7 @@ public int m_SetWarden(Menu menu, MenuAction action, int client, int Position)
 				{
 					if(IsWarden() == true)
 					{
-						TempWarden[client] = userid;
+						g_iTempWarden[client] = userid;
 						Menu menu1 = CreateMenu(m_WardenOverwrite);
 						Format(info4, sizeof(info4), "%T", "warden_remove", LANG_SERVER);
 						menu1.SetTitle(info4);
@@ -704,7 +704,7 @@ public int m_SetWarden(Menu menu, MenuAction action, int client, int Position)
 					}
 					else
 					{
-						Warden = i;
+						g_iWarden = i;
 						CPrintToChatAll("%t %t", "warden_tag" , "warden_new", i);
 						
 						if(gc_bBetterNotes.BoolValue)
@@ -754,8 +754,8 @@ public int m_WardenOverwrite(Menu menu, MenuAction action, int client, int Posit
 		int choice = StringToInt(Item);
 		if(choice == 1)
 		{
-			int newwarden = GetClientOfUserId(TempWarden[client]);
-			CPrintToChatAll("%t %t", "warden_tag" , "warden_removed", client, Warden);
+			int newwarden = GetClientOfUserId(g_iTempWarden[client]);
+			CPrintToChatAll("%t %t", "warden_tag" , "warden_removed", client, g_iWarden);
 			CPrintToChatAll("%t %t", "warden_tag" , "warden_new", newwarden);
 			if(gc_bSounds.BoolValue)
 			{
@@ -765,8 +765,8 @@ public int m_WardenOverwrite(Menu menu, MenuAction action, int client, int Posit
 			{
 				PrintCenterTextAll("%t", "warden_new_nc", newwarden);
 			}
-			LogMessage("[MyJB] Admin %L kick player %N warden and set &N as new", client, Warden, newwarden);
-			Warden = newwarden;
+			LogMessage("[MyJB] Admin %L kick player %N warden and set &N as new", client, g_iWarden, newwarden);
+			g_iWarden = newwarden;
 			CreateTimer(0.5, Timer_WardenFixColor, newwarden, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 			CreateTimer(0.1, Create_Model, newwarden);
 			GetEntPropString(newwarden, Prop_Data, "m_ModelName", g_sModelPath, sizeof(g_sModelPath));
@@ -834,7 +834,7 @@ public Action PlayerTeam(Handle event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(GetEventInt(event, "userid"));
 	
-	if(client == Warden)
+	if(client == g_iWarden)
 		RemoveTheWarden(client);
 }
 
@@ -842,7 +842,7 @@ public Action PlayerTeam(Handle event, const char[] name, bool dontBroadcast)
 
 public void OnClientDisconnect(int client)
 {
-	if(client == Warden)
+	if(client == g_iWarden)
 	{
 		CPrintToChatAll("%t %t", "warden_tag" , "warden_disconnected");
 		
@@ -850,7 +850,7 @@ public void OnClientDisconnect(int client)
 		{
 			PrintCenterTextAll("%t", "warden_disconnected_nc", client);
 		}
-		Warden = -1;
+		g_iWarden = -1;
 		Forward_OnWardenRemoved(client);
 		Call_StartForward(gF_OnWardenDisconnected);
 		Call_PushCell(client);
@@ -877,7 +877,7 @@ void SetTheWarden(int client)
 		{
 			PrintCenterTextAll("%t", "warden_new_nc", client);
 		}
-		Warden = client;
+		g_iWarden = client;
 		CreateTimer(0.5, Timer_WardenFixColor, client, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 		CreateTimer(0.1, Create_Model, client);
 		GetEntPropString(client, Prop_Data, "m_ModelName", g_sModelPath, sizeof(g_sModelPath));
@@ -900,7 +900,7 @@ void SetTheWarden(int client)
 
 public Action RemoveWarden(int client, int args)
 {
-	if(Warden != -1)
+	if(g_iWarden != -1)
 	{
 		RemoveTheWarden(client);
 		Call_StartForward(gF_OnWardenRemovedByAdmin);
@@ -914,16 +914,16 @@ public Action RemoveWarden(int client, int args)
 
 void RemoveTheWarden(int client)
 {
-	CPrintToChatAll("%t %t", "warden_tag" , "warden_removed", client, Warden);  // if client is console !=
+	CPrintToChatAll("%t %t", "warden_tag" , "warden_removed", client, g_iWarden);  // if client is console !=
 	
 	if(gc_bBetterNotes.BoolValue)
 	{
-		PrintCenterTextAll("%t", "warden_removed_nc", client, Warden);
+		PrintCenterTextAll("%t", "warden_removed_nc", client, g_iWarden);
 	}
-	LogMessage("[MyJB] Admin %L removed player %N as warden", client, Warden);
-	CreateTimer( 0.1, RemoveColor, Warden);
+	LogMessage("[MyJB] Admin %L removed player %N as warden", client, g_iWarden);
+	CreateTimer( 0.1, RemoveColor, g_iWarden);
 	SetEntityModel(client, g_sModelPath);
-	Warden = -1;
+	g_iWarden = -1;
 	g_iRandomTime = GetConVarInt(gc_hRandomTimer);
 	RandomTimer = CreateTimer(1.0, ChooseRandom, _, TIMER_REPEAT);
 	Call_StartForward(gF_OnWardenRemovedBySelf);
@@ -954,7 +954,7 @@ public Action StartMathQuestion(int client, int args)
 {
 	if(gc_bMath.BoolValue)
 	{
-		if(client == Warden)
+		if(client == g_iWarden)
 		{
 			if (!IsMathQuiz)
 			{
@@ -978,7 +978,7 @@ public Action CreateMathQuestion( Handle timer, any client )
 {
 	if(gc_bMath.BoolValue)	
 	{
-		if(client == Warden)
+		if(client == g_iWarden)
 		{
 			int NumOne = GetRandomInt(g_iMathMin, g_iMathMax);
 			int NumTwo = GetRandomInt(g_iMathMin, g_iMathMax);
@@ -1120,7 +1120,7 @@ public Action Timer_DrawMakers(Handle timer, any data)
 
 stock void Draw_Markers()
 {
-	if (Warden == -1)
+	if (g_iWarden == -1)
 		return;
 	
 	for(int i = 0; i<8; i++)
@@ -1129,11 +1129,11 @@ stock void Draw_Markers()
 			continue;
 		
 		float fWardenOrigin[3];
-		Entity_GetAbsOrigin(Warden, fWardenOrigin);
+		Entity_GetAbsOrigin(g_iWarden, fWardenOrigin);
 		
 		if (GetVectorDistance(fWardenOrigin, g_fMarkerOrigin[i]) > g_fMarkerRangeMax)
 		{
-			CPrintToChat(Warden, "%t %t", "warden_tag", "warden_marker_faraway", g_sColorNames[i]);
+			CPrintToChat(g_iWarden, "%t %t", "warden_tag", "warden_marker_faraway", g_sColorNames[i]);
 			RemoveMarker(i);
 			continue;
 		}
@@ -1172,7 +1172,7 @@ stock void Draw_Markers()
 
 stock void MarkerMenu(int client)
 {
-	if(!(0 < client < MaxClients) || client != Warden)
+	if(!(0 < client < MaxClients) || client != g_iWarden)
 	{
 		CPrintToChat(client, "%t %t", "warden_tag", "warden_notwarden");
 		return;
@@ -1195,7 +1195,7 @@ stock void MarkerMenu(int client)
 	}
 	
 	float pos[3];
-	Entity_GetAbsOrigin(Warden, pos);
+	Entity_GetAbsOrigin(g_iWarden, pos);
 	
 	float range = GetVectorDistance(pos, g_fMarkerSetupStartOrigin);
 	if (range > g_fMarkerRangeMax)
@@ -1242,7 +1242,7 @@ public int Handle_MarkerMenu(Handle menu, MenuAction action, int client, int ite
 	if(!IsPlayerAlive(client))
 		return;
 	
-	if (client != Warden)
+	if (client != g_iWarden)
 	{
 		CPrintToChat(client, "%t %t", "warden_tag", "warden_notwarden");
 		return;
@@ -1343,7 +1343,7 @@ public bool TraceFilterAllEntities(int entity, int contentsMask, any client)
 
 public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
 {
-	if (client == Warden)
+	if (client == g_iWarden)
 	{
 		if (buttons & IN_ATTACK2)
 		{
@@ -1403,7 +1403,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 			g_bLaserUse[client] = false;
 		}
 	}
-	if (((client == Warden) && gc_bDrawer.BoolValue && g_bDrawer[client]) || ((GetClientTeam(client) == CS_TEAM_T) && gc_bDrawer.BoolValue && g_bDrawerT))
+	if (((client == g_iWarden) && gc_bDrawer.BoolValue && g_bDrawer[client]) || ((GetClientTeam(client) == CS_TEAM_T) && gc_bDrawer.BoolValue && g_bDrawerT))
 	{
 		for (int i = 0; i < MAX_BUTTONS; i++)
 		{
@@ -1430,7 +1430,7 @@ public Action LaserMenu(int client, int args)
 {
 	if(gc_bLaser.BoolValue)
 	{
-		if (client == Warden)
+		if (client == g_iWarden)
 		{
 			char menuinfo5[255], menuinfo6[255], menuinfo7[255], menuinfo8[255], menuinfo9[255], menuinfo10[255], menuinfo11[255], menuinfo12[255], menuinfo13[255], menuinfo14[255], menuinfo15[255];
 			Format(menuinfo5, sizeof(menuinfo5), "%T", "warden_laser_Title", LANG_SERVER);
@@ -1583,7 +1583,7 @@ public Action DrawerMenu(int client, int args)
 {
 	if(gc_bDrawer.BoolValue)
 	{
-		if ((client == Warden) || ((GetClientTeam(client) == CS_TEAM_T) && gc_bDrawer.BoolValue && g_bDrawerT))
+		if ((client == g_iWarden) || ((GetClientTeam(client) == CS_TEAM_T) && gc_bDrawer.BoolValue && g_bDrawerT))
 		{
 			char menuinfo5[255], menuinfo6[255], menuinfo7[255], menuinfo8[255], menuinfo9[255], menuinfo10[255], menuinfo11[255], menuinfo12[255], menuinfo13[255], menuinfo14[255], menuinfo15[255], menuinfo16[255];
 			Format(menuinfo5, sizeof(menuinfo5), "%T", "warden_drawer_Title", LANG_SERVER);
@@ -1770,7 +1770,7 @@ public Action ToggleDrawerT(int client, int args)
 {
 	if (gc_bDrawerT.BoolValue) 
 	{
-		if (client == Warden)
+		if (client == g_iWarden)
 		{
 			if (!g_bDrawerT) 
 			{
@@ -1913,7 +1913,7 @@ public Action CDMenu(int client, int args)
 {
 	if(gc_bCountDown.BoolValue)
 	{
-		if (client == Warden)
+		if (client == g_iWarden)
 		{
 			char menuinfo1[255], menuinfo2[255], menuinfo3[255], menuinfo4[255];
 			Format(menuinfo1, sizeof(menuinfo1), "%T", "warden_cdmenu_Title", LANG_SERVER);
@@ -1999,7 +1999,7 @@ public Action StartStopCDMenu(int client, int args)
 {
 	if(gc_bCountDown.BoolValue)
 	{
-		if (client == Warden)
+		if (client == g_iWarden)
 		{
 			char menuinfo5[255], menuinfo6[255], menuinfo7[255], menuinfo8[255], menuinfo9[255], menuinfo10[255], menuinfo11[255], menuinfo12[255], menuinfo13[255];
 			Format(menuinfo5, sizeof(menuinfo5), "%T", "warden_cdmenu_Title2", LANG_SERVER);
@@ -2104,7 +2104,7 @@ public Action SetStartCountDown(int client, int args)
 {
 	if(gc_bCountDown.BoolValue)
 	{
-		if (client == Warden)
+		if (client == g_iWarden)
 		{
 			if (!IsCountDown)
 			{
@@ -2131,7 +2131,7 @@ public Action SetStopCountDown(int client, int args)
 {
 	if(gc_bCountDown.BoolValue)
 	{
-		if (client == Warden)
+		if (client == g_iWarden)
 		{
 			if (!IsCountDown)
 			{
@@ -2158,7 +2158,7 @@ public Action SetStartStopCountDown(int client, int args)
 {
 	if(gc_bCountDown.BoolValue)
 	{
-		if (client == Warden)
+		if (client == g_iWarden)
 		{
 			if (!IsCountDown)
 			{
@@ -2322,7 +2322,7 @@ public Action ToggleNoBlock(int client, int args)
 {
 	if (gc_bNoBlock.BoolValue) 
 	{
-		if (client == Warden)
+		if (client == g_iWarden)
 		{
 			if (!g_bNoBlock) 
 			{
@@ -2355,7 +2355,7 @@ public Action ToggleFF(int client, int args)
 	{
 		if (g_bFF.BoolValue) 
 		{
-			if (client == Warden)
+			if (client == g_iWarden)
 			{
 				SetCvar("mp_teammates_are_enemies", 0);
 				g_bFF = FindConVar("mp_teammates_are_enemies");
@@ -2364,7 +2364,7 @@ public Action ToggleFF(int client, int args)
 			
 		}else
 		{	
-			if (client == Warden)
+			if (client == g_iWarden)
 			{
 				SetCvar("mp_teammates_are_enemies", 1);
 				g_bFF = FindConVar("mp_teammates_are_enemies");
@@ -2381,11 +2381,11 @@ public Action KillRandom(int client, int args)
 {
 	if (gc_bRandom.BoolValue) 
 	{
-		if (client == Warden)
+		if (client == g_iWarden)
 		{
 			char info5[255], info6[255], info7[255];
 			Menu menu1 = CreateMenu(killmenu);
-			Format(info5, sizeof(info5), "%T", "warden_sure", Warden, LANG_SERVER);
+			Format(info5, sizeof(info5), "%T", "warden_sure", g_iWarden, LANG_SERVER);
 			menu1.SetTitle(info5);
 			Format(info6, sizeof(info6), "%T", "warden_no", LANG_SERVER);
 			Format(info7, sizeof(info7), "%T", "warden_yes", LANG_SERVER);
@@ -2583,7 +2583,7 @@ public Action OpenDoors(int client, int args)
 	{
 		if(gc_bOpen.BoolValue)
 		{
-			if (client == Warden)
+			if (client == g_iWarden)
 			{
 				CPrintToChatAll("%t %t", "warden_tag" , "warden_dooropen"); 
 				SJD_OpenDoors();
@@ -2602,7 +2602,7 @@ public Action CloseDoors(int client, int args)
 	{
 		if(gc_bOpen.BoolValue)
 		{
-			if (client == Warden)
+			if (client == g_iWarden)
 			{
 				CPrintToChatAll("%t %t", "warden_tag" , "warden_doorclose"); 
 				SJD_CloseDoors();
@@ -2616,7 +2616,7 @@ public Action CloseDoors(int client, int args)
 
 public int Native_ExistWarden(Handle plugin, int numParams)
 {
-	if(Warden != -1)
+	if(g_iWarden != -1)
 		return true;
 	
 	return false;
@@ -2629,7 +2629,7 @@ public int Native_IsWarden(Handle plugin, int numParams)
 	if(!IsClientInGame(client) && !IsClientConnected(client))
 		ThrowNativeError(SP_ERROR_INDEX, "Client index %i is invalid", client);
 	
-	if(client == Warden)
+	if(client == g_iWarden)
 		return true;
 	
 	return false;
@@ -2642,7 +2642,7 @@ public int Native_SetWarden(Handle plugin, int numParams)
 	if (!IsClientInGame(client) && !IsClientConnected(client))
 		ThrowNativeError(SP_ERROR_INDEX, "Client index %i is invalid", client);
 	
-	if(Warden == -1)
+	if(g_iWarden == -1)
 		SetTheWarden(client);
 }
 
@@ -2653,13 +2653,13 @@ public int Native_RemoveWarden(Handle plugin, int numParams)
 	if (!IsClientInGame(client) && !IsClientConnected(client))
 		ThrowNativeError(SP_ERROR_INDEX, "Client index %i is invalid", client);
 	
-	if(client == Warden)
+	if(client == g_iWarden)
 		RemoveTheWarden(client);
 }
 
 public int Native_GetWarden(Handle plugin, int argc)
 {	
-		return Warden;
+		return g_iWarden;
 }
 
 void Forward_OnWardenCreation(int client)
@@ -2678,7 +2678,7 @@ void Forward_OnWardenRemoved(int client)
 
 stock bool IsWarden()
 {
-	if(Warden != -1)
+	if(g_iWarden != -1)
 	{
 	return true;
 	}
@@ -2687,7 +2687,7 @@ stock bool IsWarden()
 
 stock bool IsClientWarden(int client)
 {
-	if(client == Warden)
+	if(client == g_iWarden)
 	{
 	return true;
 	}
