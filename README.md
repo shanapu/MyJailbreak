@@ -223,8 +223,11 @@ The menu shows only features that are enabled per round (e.g at EventDays no War
     * Zeus
     * Knifefight
     * Freeday
+* Drawer Menu
+* Laser Pointer Menu
 * Checkplayer
 * Toggle Friendly Fire
+* Toggle No Block
 * Kill a random Player
     * Are you sure?
         * Yes
@@ -256,7 +259,7 @@ The menu shows only features that are enabled per round (e.g at EventDays no War
 * Rules
 
 
-##### Counter-Terrorists Menu
+##### Terrorists Menu
 * [Gun Menu](/shanapu/MyJailbreak/wiki/Weapons)
 * Vote against Warden
 * Vote for Event Days
@@ -279,6 +282,19 @@ The menu shows only features that are enabled per round (e.g at EventDays no War
 * Rules
 
 ###### additionally for Admin
+* Set a Event Days
+    * War
+    * FFA
+    * Zombie
+    * Hide
+    * Catch & Freeze
+    * Jihad
+    * HEbattle
+    * NoScope
+    * DuckHunt
+    * Zeus
+    * Knifefight
+    * Freeday
 * Remove Warden
 * Set new Warden
     * Choose Player

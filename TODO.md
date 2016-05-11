@@ -16,9 +16,10 @@ must:
 - [ ] menu: add placeholder for cutom commands
 - [?] enable drawer for T
 - [ ] clean up translation files
-- [ ] new menu order in readme
+- [x] new menu order in readme
 
 want:
+- [ ] ClientPrefs
 - [ ] clean double useless code OnPlayerRunCmd
 - [ ] set custom Laser/Drawer Button
 - [ ] warden capitulate pardon rebel - heal - wdh

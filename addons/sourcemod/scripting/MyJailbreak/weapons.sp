@@ -55,7 +55,7 @@ public Plugin myinfo =
 	author = "shanapu, Franc1sco",
 	description = "Jailbreak weapons script",
 	version = PLUGIN_VERSION,
-	url = "http://www.shanapu.de/"
+	url = "https://github.com/shanapu/MyJailbreak"
 };
 
 public void OnPluginStart()
