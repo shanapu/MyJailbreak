@@ -415,6 +415,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 		{
 			if (IsValidClient(client, false, true))
 			{
+				SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
 				SetEntityGravity(client, 1.0);
 				FP(client);
 			}
@@ -432,7 +433,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 			SetCvar("sm_hosties_lr", 1);
 			SetCvar("sm_weapons_enable", 1);
 			SetCvar("sm_warden_enable", 1);
-			SetCvar("sm_menu_enable", 0);
+			SetCvar("sm_menu_enable", 1);
 			SetCvar("mp_teammates_are_enemies", 0);
 			SetCvarFloat("sv_friction", 5.2);
 			SetConVarInt(g_bAllowTP, 0);
@@ -539,8 +540,11 @@ public Action CheckGravity(Handle timer)
 {
 	for(int client=1; client <= MaxClients; client++)
 	{
-		if(GetEntityGravity(client) != 1.0)
-			SetEntityGravity(client, gc_fGravValue.FloatValue);
+		if (IsValidClient(client, false, false))
+		{
+			if(GetEntityGravity(client) != 1.0)
+				SetEntityGravity(client, gc_fGravValue.FloatValue);
+		}
 	}
 }
 
@@ -548,7 +552,7 @@ public Action CheckGravity(Handle timer)
 
 public Action FP(int client)
 {
-	if(IsValidClient(client, false, false))
+	if(IsValidClient(client, false, true))
 	{
 		ClientCommand(client, "firstperson");
 	}
