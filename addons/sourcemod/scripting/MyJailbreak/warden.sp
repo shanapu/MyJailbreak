@@ -1608,7 +1608,7 @@ public Action DrawerMenu(int client, int args)
 			menu.AddItem("yellow", menuinfo12);
 			menu.AddItem("cyan", menuinfo13);
 			menu.AddItem("magenta", menuinfo14);
-			menu.AddItem("orange", menuinfo14);
+			menu.AddItem("orange", menuinfo16);
 			
 			menu.ExitBackButton = true;
 			menu.ExitButton = true;
