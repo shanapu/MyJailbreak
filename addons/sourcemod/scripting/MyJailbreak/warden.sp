@@ -75,7 +75,7 @@ bool g_bHasSilencer[MAXPLAYERS + 1];
 bool g_bLaserUse[MAXPLAYERS+1];
 bool g_bDrawerUse[MAXPLAYERS+1] = {false, ...};
 bool g_bLaser = true;
-bool g_bDrawer = true;
+bool g_bDrawer = false;
 bool g_bDrawerT = false;
 bool g_bNoBlock = true;
 bool g_bLaserColorRainbow[MAXPLAYERS+1] = true;
@@ -415,7 +415,7 @@ public void OnMapStart()
 	RemoveAllMarkers();
 	CreateTimer(0.1, Print_Drawer, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 	g_bLaser = true;
-	g_bDrawer = true;
+	g_bDrawer = false;
 	g_bDrawerT = false;
 
 }
@@ -1781,6 +1781,16 @@ public Action ToggleDrawerT(int client, int args)
 			}
 			else
 			{
+				for(int iClient=1; iClient <= MaxClients; iClient++)
+				{
+					if (GetClientTeam(iClient) == CS_TEAM_T && IsValidClient(iClient, false, false))
+					{
+						g_fLastDrawer[client][0] = 0.0;
+						g_fLastDrawer[client][1] = 0.0;
+						g_fLastDrawer[client][2] = 0.0;
+						g_bDrawerUse[client] = false;
+					}
+				}
 				g_bDrawerT = false;
 				CPrintToChatAll("%t %t", "warden_tag", "warden_tdraweroff");
 			}
