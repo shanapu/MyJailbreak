@@ -110,7 +110,7 @@ int g_iColors[8][4] =
 	{255,255,0,255},  //yellow
 	{0,255,255,255},  //cyan
 	{255,0,255,255},  //magenta
-	{255,100,25,255}
+	{255,90,0,255}
 };
 int g_iLaserColor[MAXPLAYERS+1];
 int g_iDrawerColor[MAXPLAYERS+1];
@@ -233,7 +233,7 @@ public void OnPluginStart()
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_warden_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true,  0.0, true, 1.0);
 	gc_bBecomeWarden = AutoExecConfig_CreateConVar("sm_warden_become", "1", "0 - disabled, 1 - enable !w / !warden - player can choose to be warden. If disabled you should need sm_warden_choose_random 1", _, true,  0.0, true, 1.0);
 	gc_bChooseRandom = AutoExecConfig_CreateConVar("sm_warden_choose_random", "1", "0 - disabled, 1 - enable pic random warden if there is still no warden after sm_warden_choose_time", _, true,  0.0, true, 1.0);
-	gc_hRandomTimer = AutoExecConfig_CreateConVar("sm_warden_choose_time", "20", "Time in seconds a random warden will picked when no warden was set. need sm_warden_choose_random 1", _, true,  1.0);
+	gc_hRandomTimer = AutoExecConfig_CreateConVar("sm_warden_choose_time", "45", "Time in seconds a random warden will picked when no warden was set. need sm_warden_choose_random 1", _, true,  1.0);
 	gc_bVote = AutoExecConfig_CreateConVar("sm_warden_vote", "1", "0 - disabled, 1 - enable player vote against warden", _, true,  0.0, true, 1.0);
 	gc_bStayWarden = AutoExecConfig_CreateConVar("sm_warden_stay", "1", "0 - disabled, 1 - enable warden stay after round end", _, true,  0.0, true, 1.0);
 	gc_bBetterNotes = AutoExecConfig_CreateConVar("sm_warden_better_notifications", "1", "0 - disabled, 1 - Will use hint and center text", _, true, 0.0, true, 1.0);
@@ -258,7 +258,7 @@ public void OnPluginStart()
 	gc_bMath = AutoExecConfig_CreateConVar("sm_warden_math", "1", "0 - disabled, 1 - enable mathquiz for warden", _, true,  0.0, true, 1.0);
 	gc_iMinimumNumber = AutoExecConfig_CreateConVar("sm_warden_math_min", "1", "What should be the minimum number for questions?", _, true,  1.0);
 	gc_iMaximumNumber = AutoExecConfig_CreateConVar("sm_warden_math_max", "100", "What should be the maximum number for questions?", _, true,  2.0);
-	gc_iTimeAnswer = AutoExecConfig_CreateConVar("sm_warden_math_time", "20", "Time in seconds to give a answer to a question.", _, true,  3.0);
+	gc_iTimeAnswer = AutoExecConfig_CreateConVar("sm_warden_math_time", "10", "Time in seconds to give a answer to a question.", _, true,  3.0);
 	gc_bModel = AutoExecConfig_CreateConVar("sm_warden_model", "1", "0 - disabled, 1 - enable warden model", 0, true, 0.0, true, 1.0);
 	gc_sModelPath = AutoExecConfig_CreateConVar("sm_warden_model_path", "models/player/custom_player/legacy/security/security.mdl", "Path to the model for warden.");
 	gc_bColor = AutoExecConfig_CreateConVar("sm_warden_color_enable", "1", "0 - disabled, 1 - enable warden colored", _, true,  0.0, true, 1.0);
@@ -479,7 +479,7 @@ public void RoundStart(Event event, const char[] name, bool dontBroadcast)
 	}
 	if(gc_bStayWarden.BoolValue && warden_exist())
 	{
-	CreateTimer(0.1, Create_Model, Warden);
+		CreateTimer(0.1, Create_Model, Warden);
 	}
 }
 
@@ -827,7 +827,7 @@ public Action Timer_WardenFixColor(Handle timer,any client)
 
 //Warden change Team
 
-public Action playerTeam(Handle event, const char[] name, bool dontBroadcast) 
+public Action PlayerTeam(Handle event, const char[] name, bool dontBroadcast) 
 {
 	int client = GetClientOfUserId(GetEventInt(event, "userid"));
 	
@@ -1776,7 +1776,7 @@ public Action ToggleDrawerT(int client, int args)
 				
 				for(int iClient=1; iClient <= MaxClients; iClient++)
 				{
-					if (GetClientTeam(iClient) == CS_TEAM_T && IsValidClient(client, false, false)) DrawerMenu(iClient,0);
+					if (GetClientTeam(iClient) == CS_TEAM_T && IsValidClient(iClient, false, false)) DrawerMenu(iClient,0);
 				}
 			}
 			else
