@@ -287,7 +287,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 				{
 					SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 				}
-				PrintHintText(client,"%t", "freeday_start_nc");
+				if (IsClientInGame(client) && IsPlayerAlive(client)) PrintHintText(client,"%t", "freeday_start_nc");
 			}
 		CPrintToChatAll("%t %t", "freeday_tag" , "freeday_start");
 	}
