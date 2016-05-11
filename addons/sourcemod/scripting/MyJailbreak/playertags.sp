@@ -47,6 +47,8 @@ public void OnPluginStart()
 	HookEvent("player_connect", checkTag);
 	HookEvent("player_team", checkTag);
 	HookEvent("player_spawn", checkTag);
+	HookEvent("round_start", checkTag);
+	HookEvent("player_death", checkTag);
 }
 
 public void OnClientPutInServer(int client)
