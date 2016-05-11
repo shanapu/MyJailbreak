@@ -1299,7 +1299,6 @@ stock void RemoveMarker(int marker)
 {
 	if(marker != -1)
 	{
-		PrintToChatAll("Wert: marker on RemoveMarker: %i", marker);
 		g_fMarkerRadius[marker] = 0.0;
 	}
 }
