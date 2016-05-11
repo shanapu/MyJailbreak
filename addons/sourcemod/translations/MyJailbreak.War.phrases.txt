@@ -10,7 +10,7 @@
 		"#format"	"{1:i},{2:N}"
 		"da"		"{purple}{2}{default} har stemt! {purple}{1}{default} stemmer tilbage til {darkred}war"		
 		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes left to {darkred}war"
-		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}krieg{default} beginnt"
+		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}War{default} beginnt"
 	}
 	"war_rounds" 
 	{
@@ -146,7 +146,7 @@
 	{
 		"da"		"War er aktiveret!"	
 		"en"		"War is active"
-		"de"		"Krieg ist aktiv"
+		"de"		"War ist aktiv"
 	}
 	
 	"war_info_line1"		// no colors!
