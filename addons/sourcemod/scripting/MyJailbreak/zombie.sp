@@ -28,6 +28,7 @@ ConVar gc_iFreezeTime;
 ConVar gc_bSpawnCell;
 ConVar gc_iZombieHP;
 ConVar gc_iHumanHP;
+ConVar gc_bDark;
 ConVar gc_sModelPath;
 ConVar gc_bSounds;
 ConVar gc_sSoundStartPath;
@@ -44,6 +45,7 @@ int g_iCoolDown;
 int g_iVoteCount;
 int g_iRound;
 int g_iMaxRound;
+int FogIndex = -1;
 
 //Handles
 Handle FreezeTimer;
@@ -51,6 +53,9 @@ Handle ZombieMenu;
 
 //Floats
 float Pos[3];
+float mapFogStart = 0.0;
+float mapFogEnd = 150.0;
+float mapFogDensity = 0.99;
 
 //Strings
 char g_sZombieModel[256];
@@ -92,6 +97,7 @@ public void OnPluginStart()
 	gc_iFreezeTime = AutoExecConfig_CreateConVar("sm_zombie_freezetime", "35", "Time in seconds the zombies freezed", _, true, 0.0);
 	gc_iZombieHP = AutoExecConfig_CreateConVar("sm_zombie_zombie_hp", "850", "HP the Zombies got on Spawn", _, true, 1.0);
 	gc_iHumanHP = AutoExecConfig_CreateConVar("sm_zombie_human_hp", "65", "HP the Humans got on Spawn", _, true, 1.0);
+	gc_bDark = AutoExecConfig_CreateConVar("sm_zombie_dark", "1", "0 - disabled, 1 - enable Map Darkness", _, true,  0.0, true, 1.0);
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_zombie_cooldown_day", "3", "Rounds cooldown after a event until event can be start again", _, true, 0.0);
 	gc_iCooldownStart = AutoExecConfig_CreateConVar("sm_zombie_cooldown_start", "3", "Rounds until event can be start after mapchange.", _, true, 0.0);
 	gc_bSounds = AutoExecConfig_CreateConVar("sm_zombie_sounds_enable", "1", "0 - disabled, 1 - enable sounds", _, true, 0.0, true, 1.0);
@@ -157,6 +163,20 @@ public void OnMapStart()
 	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
 	if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStart);
 	PrecacheModel(g_sZombieModel);
+	
+	int ent; 
+	ent = FindEntityByClassname(-1, "env_fog_controller");
+	if (ent != -1) 
+	{
+		FogIndex = ent;
+	}
+	else
+	{
+		FogIndex += CreateEntityByName("env_fog_controller");
+		DispatchSpawn(FogIndex);
+	}
+	DoFog();
+	AcceptEntityInput(FogIndex, "TurnOff");
 }
 
 public void OnConfigsExecuted()
@@ -436,7 +456,8 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 			SetCvar("sm_menu_enable", 1);
 			g_iGetRoundTime.IntValue = g_iOldRoundTime;
 			SetEventDay("none");
-			
+			DoFog();
+			AcceptEntityInput(FogIndex, "TurnOff");
 			CPrintToChatAll("%t %t", "zombie_tag" , "zombie_end");
 		}
 	}
@@ -511,6 +532,7 @@ public Action StartTimer(Handle timer)
 		CPrintToChatAll("%t %t", "zombie_tag" , "zombie_start");
 	}
 	FreezeTimer = null;
+	if(gc_bDark.BoolValue) {AcceptEntityInput(FogIndex, "TurnOn");}
 	
 	return Plugin_Stop;
 }
@@ -536,4 +558,19 @@ public Action OnWeaponCanUse(int client, int weapon)
 			}
 		}
 	return Plugin_Continue;
+}
+
+//Darken the Map
+
+public Action DoFog()
+{
+	if(FogIndex != -1)
+	{
+		DispatchKeyValue(FogIndex, "fogblend", "0");
+		DispatchKeyValue(FogIndex, "fogcolor", "0 0 0");
+		DispatchKeyValue(FogIndex, "fogcolor2", "0 0 0");
+		DispatchKeyValueFloat(FogIndex, "fogstart", mapFogStart);
+		DispatchKeyValueFloat(FogIndex, "fogend", mapFogEnd);
+		DispatchKeyValueFloat(FogIndex, "fogmaxdensity", mapFogDensity);
+	}
 }
