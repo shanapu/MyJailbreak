@@ -105,8 +105,8 @@ int g_iColors[8][4] =
 {
 	{255,255,255,255},  //white
 	{255,0,0,255},  //red
-	{0,255,0,255},  //green
-	{0,0,255,255},  //blue
+	{42,255,42,255},  //green
+	{0,65,255,255},  //blue
 	{255,255,0,255},  //yellow
 	{0,255,255,255},  //cyan
 	{255,0,255,255},  //magenta
@@ -315,7 +315,7 @@ public void OnPluginStart()
 	Format(g_sColorNamesYellow, sizeof(g_sColorNamesYellow), "{orange}%T{default}", "warden_yellow", LANG_SERVER);
 	Format(g_sColorNamesWhite, sizeof(g_sColorNamesWhite), "{default}%T{default}", "warden_white", LANG_SERVER);
 	Format(g_sColorNamesCyan, sizeof(g_sColorNamesCyan), "{blue}%T{default}", "warden_cyan", LANG_SERVER);
-	Format(g_sColorNamesRainbow, sizeof(g_sColorNamesRainbow), "{limegreen}%T{default}", "warden_rainbow", LANG_SERVER);
+	Format(g_sColorNamesRainbow, sizeof(g_sColorNamesRainbow), "{lightgreen}%T{default}", "warden_rainbow", LANG_SERVER);
 
 
 	g_sColorNames[0] = g_sColorNamesWhite;
@@ -455,13 +455,14 @@ public void RoundStart(Event event, const char[] name, bool dontBroadcast)
 	{
 		if (g_iWarden == 1)
 		{
-		CreateTimer(0.1, RemoveColor, g_iWarden);
-		SetEntityModel(g_iWarden, g_sModelPath);
-		g_iWarden = -1;
-		SafeDelete(g_iIcon[g_iWarden]);
-		g_iIcon[g_iWarden] = -1;
-		g_bLaser = false;
-		for(int client=1; client <= MaxClients; client++) g_bDrawer[client] = false;
+			CreateTimer(0.1, RemoveColor, g_iWarden);
+			SetEntityModel(g_iWarden, g_sModelPath);
+			Forward_OnWardenRemoved(g_iWarden);
+			SafeDelete(g_iIcon[g_iWarden]);
+			g_iIcon[g_iWarden] = -1;
+			g_iWarden = -1;
+			g_bLaser = false;
+			for(int client=1; client <= MaxClients; client++) g_bDrawer[client] = false;
 		}
 	}
 	char EventDay[64];
@@ -471,13 +472,14 @@ public void RoundStart(Event event, const char[] name, bool dontBroadcast)
 	{
 		if (g_iWarden == 1)
 		{
-		CreateTimer( 0.1, RemoveColor, g_iWarden);
-		SetEntityModel(g_iWarden, g_sModelPath);
-		g_iWarden = -1;
-		SafeDelete(g_iIcon[g_iWarden]);
-		g_iIcon[g_iWarden] = -1;
-		g_bLaser = false;
-		for(int client=1; client <= MaxClients; client++) g_bDrawer[client] = false;
+			CreateTimer( 0.1, RemoveColor, g_iWarden);
+			SetEntityModel(g_iWarden, g_sModelPath);
+			Forward_OnWardenRemoved(g_iWarden);
+			SafeDelete(g_iIcon[g_iWarden]);
+			g_iIcon[g_iWarden] = -1;
+			g_iWarden = -1;
+			g_bLaser = false;
+			for(int client=1; client <= MaxClients; client++) g_bDrawer[client] = false;
 		}
 	}
 	if(gc_bStayWarden.BoolValue && warden_exist())
@@ -556,7 +558,6 @@ public Action ExitWarden(int client, int args)
 			{
 				PrintCenterTextAll("%t", "warden_retire_nc", client);
 			}
-			g_iWarden = -1;
 			Forward_OnWardenRemoved(client);
 			CreateTimer( 0.1, RemoveColor, g_iWarden);
 			SetEntityModel(client, g_sModelPath);
@@ -564,6 +565,7 @@ public Action ExitWarden(int client, int args)
 			RandomTimer = CreateTimer(1.0, ChooseRandom, _, TIMER_REPEAT);
 			if(gc_bSounds.BoolValue) EmitSoundToAllAny(g_sUnWarden);
 			RemoveAllMarkers();
+			g_iWarden = -1;
 			g_iVoteCount = 0;
 			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
 			g_sHasVoted[0] = '\0';
@@ -1239,7 +1241,7 @@ public int Handle_MarkerMenu(Handle menu, MenuAction action, int client, int ite
 	if(!(0 < client < MaxClients))
 		return;
 	
-	if(!IsPlayerAlive(client))
+	if(!IsValidClient(client, false, false))
 		return;
 	
 	if (client != g_iWarden)
