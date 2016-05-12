@@ -47,8 +47,8 @@ public void OnPluginStart()
 	HookEvent("player_connect", checkTag);
 	HookEvent("player_team", checkTag);
 	HookEvent("player_spawn", checkTag);
-	HookEvent("round_start", checkTag);
 	HookEvent("player_death", checkTag);
+	HookEvent("round_start", checkTag);
 }
 
 public void OnClientPutInServer(int client)
@@ -71,10 +71,18 @@ public int warden_OnWardenRemoved(int client)
 
 public Action checkTag(Handle event, char[] name, bool dontBroadcast)
 {
-	int client = GetClientOfUserId(GetEventInt(event, "userid"));
-	if (0 < client)
+	CreateTimer(1.0, DelayCheck);
+	return Action;
+}
+
+public Action DelayCheck(Handle timer) 
+{
+	for(int client=1; client <= MaxClients; client++) 
 	{
-		HandleTag(client);
+		if (0 < client)
+		{
+			HandleTag(client);
+		}
 	}
 	return Action;
 }
@@ -85,11 +93,11 @@ public int HandleTag(int client)
 {
 	if(gc_bPlugin.BoolValue)
 	{
-		if(gc_bStats.BoolValue)
+		if(gc_bStats.BoolValue && IsClientInGame(client))
 		{	
 			char tagsTA[255], tagsT[255], tagsCT[255], tagsCTA[255], tagsW[255], tagsWA[255];
 			
-			if (GetClientTeam(client) == CS_TEAM_T) 
+			if (GetClientTeam(client) == CS_TEAM_T)
 			{
 				if (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
 					{
