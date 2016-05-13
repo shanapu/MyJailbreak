@@ -390,6 +390,14 @@
 		"de"		"Wärter {purple}{1}{default} hat eine {green}{2}{default} fallen lassen."
 	}
 	
+	"warden_gunplant"
+	{
+		"#format"	"{1:N},{2:s}"
+		"en"		"Guard {1} dropped weapon {2}."
+		"de"		"Wärter {1} hat eine {2} fallen lassen."
+	}
+	
+	
 	"warden_noplant"
 	{
 		"en"		"It's {darkred}forbitten{default} for CTs to drop weapons!"
