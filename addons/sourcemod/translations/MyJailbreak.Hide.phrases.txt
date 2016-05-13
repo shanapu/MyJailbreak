@@ -119,7 +119,7 @@
 	"hide_timetohide_nc"		// no colors!
 	{
 		"#format"	"{1:i}"
-		"en"		"{1} sekunder til at gemme dig i!"		
+		"da"		"{1} sekunder til at gemme dig i!"		
 		"en"		"{1} seconds to hide"
 		"de"		"{1} Sekunden zum verstecken"
 		
@@ -128,37 +128,45 @@
 	"hide_timetounfreeze_nc"		// no colors!
 	{
 		"#format"	"{1:i}"
-		"en"		"{1} sekunder til du bliver unfreezet!"		
+		"da"		"{1} sekunder til du bliver unfreezet!"		
 		"en"		"{1} seconds until unfreeze"
 		"de"		"{1} Sekunden bis zum unfreeze"
 		
 	}
-	
+		
+	"hide_stillta"
+	{
+		"#format"	"{1:i}"
+		"en"		"You've got {green}{1}{default} TA grenades left."
+		"de"		"Du hast noch {green}{1}{default} TA Granaten übrig."
+	}	
+	"hide_nota"
+	{
+		"en"		"You've got {green}no more{default} TA grenades left."
+		"de"		"Du hast {green}keine{default} TA Granaten mehr übrig."
+	}
 	"hide_info_title"		// no colors!
 	{
-		"en"		"Hide In The Dark er aktiveret!"	
-		"en"		"FFA is active"
-		"de"		"FFA ist aktiv"
+		"da"		"Hide In The Dark er aktiveret!"	
+		"en"		"Hide In The Dark is active"
+		"de"		"Hide In The Dark ist aktiv"
 	}
 	
 	"hide_info_line1"		// no colors!
 	{
-		"da"		"T skal gemme sig inden CT bliver unfreezet og fanger dem!"	
-		"en"		"Do not be surprised if portedto CT Spawn"
-		"de"		"Nicht wundern falls ihr zum CT Spawngeportet wurdet"
+		"en"		"Hider got time on beginn of the round to hide"
+		"de"		"Hider haben zu Runden beginn zeit zum versteken"
 	}
 	"hide_info_line2"		// no colors!
 	{
-		"da"		"I Hide in the Darkround skal CT fange T ved at dræbe dem"	
-		"en"		"In Hide in the Darkround ct play against t"
-		"de"		"In Kriegrunden spielen CT's gegen T's"
+		"en"		"When Seeker get unfreezed Hider get freezed"
+		"de"		"Solbald es für die Seeker losgeht, werden die Seeker gefreezt"
 	}
 	
 	"hide_info_line3"		// no colors!
 	{
-		"da"		"Når CT bliver unfreezet bliver T freezet og ikke kan røre sig!"	
-		"en"		"you can move and exit the wk in nodamage phase"
-		"de"		"Während der no damage phase kannst du aus der zelle/waffenkammer"
+		"en"		"Seeker get some TA grenades"
+		"de"		"Seeker haben ein paar TA Granaten"
 	}
 	
 	"hide_info_line4"		// no colors!

@@ -103,6 +103,7 @@ int g_iBeamSprite = -1;
 int g_iHaloSprite = -1;
 int g_iSetCountStartStopTime;
 int g_iSmokeSprite;
+int g_iKillKind;
 int g_iMathMin;
 int g_iMathMax;
 int g_iMathResult;
@@ -139,6 +140,7 @@ Handle MathTimer = null;
 Handle StartTimer = null;
 Handle StopTimer = null;
 Handle StartStopTimer = null;
+Handle ModelTimer = null;
 
 //Strings
 char g_sHasVoted[1500];
@@ -395,6 +397,7 @@ public void OnConfigsExecuted()
 {
 	g_iMathMin = gc_iMinimumNumber.IntValue;
 	g_iMathMax = gc_iMaximumNumber.IntValue;
+	g_iKillKind = gc_iRandomKind.IntValue;
 }
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
@@ -499,7 +502,7 @@ public void RoundStart(Event event, const char[] name, bool dontBroadcast)
 	}
 	if(gc_bStayWarden.BoolValue && warden_exist())
 	{
-		CreateTimer(0.1, Create_Model, g_iWarden);
+		ModelTimer = CreateTimer(0.5, Create_Model, g_iWarden, TIMER_REPEAT);
 	}
 }
 
@@ -586,6 +589,7 @@ public Action ExitWarden(int client, int args)
 			g_sHasVoted[0] = '\0';
 			SafeDelete(g_iIcon[client]);
 			g_iIcon[client] = -1;
+			delete ModelTimer;
 			g_bDrawerT = false;
 		}
 		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
@@ -654,6 +658,7 @@ public void playerDeath(Event event, const char[] name, bool dontBroadcast)
 		Call_Finish();
 		SafeDelete(g_iIcon[client]);
 		g_iIcon[client] = -1;
+		delete ModelTimer;
 	}
 }
 
@@ -733,7 +738,7 @@ public int m_SetWarden(Menu menu, MenuAction action, int client, int Position)
 							EmitSoundToAllAny(g_sWarden);
 						}
 						CreateTimer(0.5, Timer_WardenFixColor, i, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
-						CreateTimer(0.1, Create_Model, client);
+						ModelTimer = CreateTimer(0.5, Create_Model, client, TIMER_REPEAT);
 						GetEntPropString(client, Prop_Data, "m_ModelName", g_sModelPath, sizeof(g_sModelPath));
 						if(gc_bModel.BoolValue)
 						{
@@ -785,7 +790,7 @@ public int m_WardenOverwrite(Menu menu, MenuAction action, int client, int Posit
 			LogMessage("[MyJB] Admin %L kick player %N warden and set &N as new", client, g_iWarden, newwarden);
 			g_iWarden = newwarden;
 			CreateTimer(0.5, Timer_WardenFixColor, newwarden, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
-			CreateTimer(0.1, Create_Model, newwarden);
+			ModelTimer = CreateTimer(0.5, Create_Model, newwarden, TIMER_REPEAT);
 			GetEntPropString(newwarden, Prop_Data, "m_ModelName", g_sModelPath, sizeof(g_sModelPath));
 			if(gc_bModel.BoolValue)
 			{
@@ -896,7 +901,7 @@ void SetTheWarden(int client)
 		}
 		g_iWarden = client;
 		CreateTimer(0.5, Timer_WardenFixColor, client, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
-		CreateTimer(0.1, Create_Model, client);
+		ModelTimer = CreateTimer(0.5, Create_Model, client, TIMER_REPEAT);
 		GetEntPropString(client, Prop_Data, "m_ModelName", g_sModelPath, sizeof(g_sModelPath));
 		if(gc_bModel.BoolValue)
 		{
@@ -958,6 +963,7 @@ void RemoveTheWarden(int client)
 	g_sHasVoted[0] = '\0';
 	SafeDelete(g_iIcon[client]);
 	g_iIcon[client] = -1;
+	delete ModelTimer;
 }
 
 //Math Quizz
@@ -2478,7 +2484,7 @@ stock int GetAlivePlayersCount(int iTeam)
 
 public Action KillPlayer( Handle timer, any client) 
 {
-	if(gc_iRandomKind.IntValue == 1)
+	if(g_iKillKind == 1)
 	{
 		int randomnum = GetRandomInt(0, 2);
 		
@@ -2486,9 +2492,9 @@ public Action KillPlayer( Handle timer, any client)
 		if(randomnum == 1)ServerCommand("sm_timebomb %N 1", client);
 		if(randomnum == 2)ServerCommand("sm_firebomb %N 1", client);
 	}
-	else if(gc_iRandomKind.IntValue == 2)PerformSmite(0, client);
-	else if(gc_iRandomKind.IntValue == 3)ServerCommand("sm_timebomb %N 1", client);
-	else if(gc_iRandomKind.IntValue == 4)ServerCommand("sm_firebomb %N 1", client);
+	else if(g_iKillKind == 2)PerformSmite(0, client);
+	else if(g_iKillKind == 3)ServerCommand("sm_timebomb %N 1", client);
+	else if(g_iKillKind == 4)ServerCommand("sm_firebomb %N 1", client);
 }
 
 stock int GetRandomPlayer(int team) 
@@ -2669,7 +2675,7 @@ public Action CS_OnCSWeaponDrop(int client, int weapon)
 					
 				g_iWeaponDrop[client] = weapon;
 				
-				if (!g_bWeaponDropped) CreateTimer(0.5, DroppedWeapon, client);
+				if (!g_bWeaponDropped) CreateTimer(0.1, DroppedWeapon, client);
 			}
 		}
 	}

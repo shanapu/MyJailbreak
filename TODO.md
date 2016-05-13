@@ -5,7 +5,7 @@ know bugs:
 - [ ] catch win -> T win show wrong
 - [ ] hide win -> T win show wrong
 - [?] duckhunt&knife end FP
-- [ ] warden icon losing head postion
+- [?] warden icon losing head postion
 
 must:
 - [?] add all new things to wiki/readme
@@ -20,14 +20,12 @@ want:
 - [ ] !refuse !capitalation !repeat !heal !pardon
 - [ ] clean double useless code OnPlayerRunCmd
 - [ ] set custom Laser/Drawer Button
-- [ ] warden capitulate pardon rebel - heal - wdh
 - [ ] translate EventDay native
 - [ ] respawn on freeday
 - [ ] hide: darken the sky
 - [ ] Freeze / Stun Gun
-- [ ] hide: seeker more TA -> convar set how many
+- [x] hide: seeker more TA -> convar set how many
 - [ ] warden: disarm when shot on Arms/hand (all CT?)
-- [ ] Noscope: choose weapon an round start (scout/awp/auto)
 - [ ] updater support
 - [ ] duckhunt: change +attack to +secAttack
 - [ ] all: custom command support !mycommand
@@ -58,6 +56,7 @@ need?
 - [ ] whistle for hider?
 - [ ] events on random days? no voting/set - core2
 - [ ] silent mp_roundtime?
+- [ ] Noscope: choose weapon an round start (scout/awp/auto)?
 - [ ] Suicide Bomber: burn dead bodies?
 - [ ] Suicide Bomber: body counter?
 - [ ] warden: ff not for ct?
