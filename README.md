@@ -118,6 +118,12 @@ Colorize Warden, Warden Model, open/close cell doors, automatic open cells doors
 - sm_warden_icon: Path to the floating warden icon DONT TYPE .vmt or .vft. Default: "decals/MyJailbreak/warden"
 - sm_warden_noblock: 0 - disabled, 1 - enable setable noblock for Warden. Default 1
 - sm_warden_ff: 0 - disabled, 1 - enable Warden switch friendly fire. Default 1
+- sm_warden_gunplant: 0 - disabled, 1 - enable Gun plant prevention. Default 1
+- sm_warden_gunnodrop: 0 - disabled, 1 -  disallow gun dropping for ct. Default 0
+- sm_warden_gunremove: 0 - disabled, 1 - remove planted guns. Default 1
+- sm_gunremove_time: Time in seconds to pick up gun again before. Default 5
+- sm_warden_gunslap: 0 - disabled, 1 - Slap the CT for dropping a gun. Default 1
+- sm_warden_gunslap_dmg: Amoung of HP losing on slap for dropping a gun. Default 10
 - sm_warden_random: 0 - disabled, 1 - enable kill a random t for Warden. Default 1
 - sm_warden_randomkill: 1 - all random / 2 - Thunder / 3 - Timebomb / 4 - Firebomb / 5 - NoKill (1,3,4 needs funncommands.smx enabled). Default 2
 - sm_warden_marker: 0 - disabled, 1 - enable Warden advanced markers. Default 1
@@ -154,6 +160,7 @@ Colorize Warden, Warden Model, open/close cell doors, automatic open cells doors
 - Custom chat [Tag]
 - 1.7 SourcePawn Transitional Syntax
 - Multilingual support
+- old native from orignal plugin to keep compatiblty with private warden modules
 - Forwards
 - Natives
 - Colors
@@ -465,7 +472,7 @@ Zombies freezed for 35sec (default) so T can hide &/or climb.
 - sm_zombie_vote: 0 - disabled, 1 - allow player to vote for zombie. Default 1
 - sm_zombie_enable: 0 - disabled, 1 - enable the zombie plugin. Default 1
 - sm_zombie_spawn: 0 - teleport Ts to CT and freeze, 1 - open cell doors an get weapons. Default 0
-- sm_zombie_rounds: Rounds to play in a row
+- sm_zombie_rounds: Rounds to play in a row. Default 1
 - sm_zombie_roundtime - Roundtime for a single zombie round in minutes. Default 5
 - sm_zombie_freezetime - Time in seconds Zombies freezed. Default 35
 - sm_zombie_hp: HP the Zombies got on Spawn. Default 850
@@ -473,9 +480,9 @@ Zombies freezed for 35sec (default) so T can hide &/or climb.
 - sm_zombie_cooldown_start - Rounds until event can be start after mapchange. Default 3
 - sm_zombie_cooldown_day - Rounds until event can be started again. Default 3
 - sm_zombie_sounds_enable: 0 - disabled, 1 - enable sounds. Default 1
-- sm_zombie_sounds_start: Path to the soundfile which should be played on start. Default "music/MyJailbreak/start.mp3"
+- sm_zombie_sounds_start: Path to the soundfile which should be played on start. Default "music/MyJailbreak/zombie.mp3"
 - sm_zombie_overlays_enable: 0 - disabled, 1 - enable start overlay. Default 1
-- sm_zombie_overlays_start: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
+- sm_zombie_overlays_start: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/zombie"
 - sm_zombie_model: Path to the model for zombies. Default "models/player/custom_player/zombie/revenant/revenant_v2.mdl"
 
 ```
@@ -880,8 +887,9 @@ On Round start cells open for freeday and enabled damage (Default).
 - [myjailbreak.inc](/addons/sourcemod/scripting/include/myjailbreak.inc)
 - [scp.inc](https://forums.alliedmods.net/showthread.php?t=198501)
 - [smartjaildoors.inc](https://forums.alliedmods.net/showthread.php?p=2306289)
-- [warden.inc](/addons/sourcemod/scripting/include/warden.inc) (myjailbreak)
+- [warden.inc](/addons/sourcemod/scripting/include/warden.inc) (myjailbreak version)
 - [smlib.inc](https://github.com/bcserv/smlib)
+- [CustomPlayerSkins.inc](https://forums.alliedmods.net/showthread.php?t=240703)
 
 ##### dependencies within MyJailbreak:
 - warden - you can use warden as standalone. no need to use Myjailbreak Eventdays(core), menu... please tell me if not!
