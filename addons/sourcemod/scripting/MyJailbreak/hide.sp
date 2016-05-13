@@ -31,6 +31,7 @@ ConVar gc_sOverlayStartPath;
 ConVar gc_bSounds;
 ConVar gc_sSoundStartPath;
 ConVar gc_iRounds;
+ConVar gc_iTAgrenades;
 ConVar g_iGetRoundTime;
 
 //Integers
@@ -40,6 +41,8 @@ int g_iCoolDown;
 int g_iVoteCount;
 int g_iRound;
 int g_iMaxRound;
+int g_iMaxTA;
+int g_iTA[MAXPLAYERS + 1];
 int FogIndex = -1;
 
 //Handles
@@ -83,6 +86,7 @@ public void OnPluginStart()
 	gc_bSetA = AutoExecConfig_CreateConVar("sm_hide_admin", "1", "0 - disabled, 1 - allow admin to set hide round", _, true,  0.0, true, 1.0);
 	gc_bVote = AutoExecConfig_CreateConVar("sm_hide_vote", "1", "0 - disabled, 1 - allow player to vote for hide round", _, true,  0.0, true, 1.0);
 	gc_bFreezeHider = AutoExecConfig_CreateConVar("sm_hide_freezehider", "1", "0 - disabled, 1 - enable freeze hider when hidetime gone", _, true,  0.0, true, 1.0);
+	gc_iTAgrenades = AutoExecConfig_CreateConVar("sm_hide_tagrenades", "3", "how many tagrenades a guard have?", _, true, 1.0);
 	gc_iRounds = AutoExecConfig_CreateConVar("sm_hide_rounds", "1", "Rounds to play in a row", _, true, 1.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_hide_roundtime", "5", "Round time in minutes for a single war round", _, true, 1.0);
 	gc_iFreezeTime = AutoExecConfig_CreateConVar("sm_hide_hidetime", "30", "Time in seconds to hide / CT freezed", _, true,  0.0);
@@ -99,6 +103,7 @@ public void OnPluginStart()
 	//Hooks
 	HookEvent("round_start", RoundStart);
 	HookEvent("round_end", RoundEnd);
+	HookEvent("tagrenade_detonate", OnTagrenadeDetonate);
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
 	
@@ -141,6 +146,8 @@ public void OnMapStart()
 	if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStart);
 	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
 	
+	for(int client=1; client <= MaxClients; client++) g_iTA[client] = 0;
+	
 	int ent; 
 	ent = FindEntityByClassname(-1, "env_fog_controller");
 	if (ent != -1) 
@@ -161,6 +168,7 @@ public void OnConfigsExecuted()
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iMaxRound = gc_iRounds.IntValue;
+	g_iMaxTA = gc_iTAgrenades.IntValue - 1;
 }
 
 //Admin & Warden set Event
@@ -301,7 +309,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		g_iRound++;
 		StartHide = false;
 		SJD_OpenDoors();
-		
+				
 		HideMenu = CreatePanel();
 		Format(info1, sizeof(info1), "%T", "hide_info_title", LANG_SERVER);
 		SetPanelTitle(HideMenu, info1);
@@ -334,7 +342,6 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 						{
 							StripAllWeapons(client);
 							SetEntityMoveType(client, MOVETYPE_NONE);
-							GivePlayerItem(client, "weapon_tagrenade");
 							GivePlayerItem(client, "weapon_tagrenade");
 							SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 							GivePlayerItem(client, "weapon_knife");
@@ -440,8 +447,9 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 		{
 			if (IsClientInGame(client)) 
 			{
-			SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
-			SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
+				SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
+				SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
+				g_iTA[client] = 0;
 			}
 		}
 		
@@ -523,6 +531,30 @@ public Action OnWeaponCanUse(int client, int weapon)
 		return Plugin_Handled;
 	}
 	return Plugin_Continue;
+}
+
+//Give new TA
+
+public void OnTagrenadeDetonate(Handle event, const char[] name, bool dontBroadcast)
+{
+	if (IsHide == true)
+	{
+		int target = GetClientOfUserId(GetEventInt(event, "userid"));
+		if (GetClientTeam(target) == 1 && !IsPlayerAlive(target))
+		{
+			return;
+		}
+		if (g_iTA[target] != g_iMaxTA)
+		{
+			GivePlayerItem(target, "weapon_tagrenade");
+			int g_iTAgot = (g_iMaxTA - g_iTA[target]);
+			g_iTA[target]++;
+			
+			CPrintToChat(target,"%t %t", "hide_tag" , "hide_stillta", g_iTAgot);
+		}
+		else CPrintToChat(target,"%t %t", "hide_tag" , "hide_nota");
+	}
+	return;
 }
 
 //Darken the Map
