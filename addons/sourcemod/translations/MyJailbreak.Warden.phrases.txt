@@ -382,6 +382,21 @@
 		"en"			"{1} was choosen randomly"
 		"de"			"{1} wurde als Zufallskanidat gewählt"
 	}
+	
+	"warden_gunplant"
+	{
+		"#format"	"{1:N},{2:s}"
+		"en"		"Guard {purple}{1}{default} dropped weapon {green}{2}"
+		"de"		"Wärter {purple}{1}{default} hat eine {green}{2}{default} fallen lassen."
+	}
+	
+	"warden_noplant"
+	{
+		"en"		"It's {darkred}forbitten{default} for CTs to drop weapons!"
+		"de"		"Es ist für CTs {darkred}verboten{default} Waffen fallen zu lassen!"
+	}
+	
+	
 	"warden_choose"
 	{
 		"en"		"Select Player"

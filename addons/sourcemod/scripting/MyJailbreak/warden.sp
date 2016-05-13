@@ -36,6 +36,11 @@ ConVar gc_bBecomeWarden;
 ConVar gc_bChooseRandom;
 ConVar gc_bSounds;
 ConVar gc_bFF;
+ConVar gc_bGunPlant;
+ConVar gc_bGunRemove;
+ConVar gc_fGunRemoveTime;
+ConVar gc_iGunSlapDamage;
+ConVar gc_bGunSlap;
 ConVar gc_bRandom;
 ConVar gc_iRandomKind;
 ConVar gc_hOpenTimer;
@@ -240,6 +245,11 @@ public void OnPluginStart()
 	gc_bBetterNotes = AutoExecConfig_CreateConVar("sm_warden_better_notifications", "1", "0 - disabled, 1 - Will use hint and center text", _, true, 0.0, true, 1.0);
 	gc_bNoBlock = AutoExecConfig_CreateConVar("sm_warden_noblock", "1", "0 - disabled, 1 - enable setable noblock for warden", _, true,  0.0, true, 1.0);
 	gc_bFF = AutoExecConfig_CreateConVar("sm_warden_ff", "1", "0 - disabled, 1 - enable switch ff for T ", _, true,  0.0, true, 1.0);
+	gc_bGunPlant = AutoExecConfig_CreateConVar("sm_warden_gunplant", "1", "0 - disabled, 1 - enable Gun plant prevention", _, true,  0.0, true, 1.0);
+	gc_bGunRemove = AutoExecConfig_CreateConVar("sm_warden_gunremove", "1", "0 - disabled, 1 - remove planted guns", _, true,  0.0, true, 1.0);
+	gc_fGunRemoveTime = AutoExecConfig_CreateConVar("sm_gunremove_time", "5.0", "Time in seconds to remove planted guns.", _, true,  0.1);
+	gc_bGunSlap = AutoExecConfig_CreateConVar("sm_warden_gunslap", "1", "0 - disabled, 1 - Slap the CT for dropping a gun", _, true,  0.0, true, 1.0);
+	gc_iGunSlapDamage = AutoExecConfig_CreateConVar("sm_warden_gunslap_dmg", "10", "Amoung of HP losing on slap for dropping a gun", _, true,  0.0);
 	gc_bRandom = AutoExecConfig_CreateConVar("sm_warden_random", "1", "0 - disabled, 1 - enable kill a random t for warden", _, true,  0.0, true, 1.0);
 	gc_iRandomKind = AutoExecConfig_CreateConVar("sm_warden_randomkill", "2", "1 - all random / 2 - Thunder / 3 - Timebomb / 4 - Firebomb / 5 - NoKill(1,3,4 needs funncommands.smx enabled)", _, true,  1.0, true, 4.0);
 	gc_bCountDown = AutoExecConfig_CreateConVar("sm_warden_countdown", "1", "0 - disabled, 1 - enable countdown for warden", _, true,  0.0, true, 1.0);
@@ -2634,6 +2644,38 @@ public Action CloseDoors(int client, int args)
 			else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden"); 
 		}
 	}
+}
+
+//GunPlant
+
+public Action CS_OnCSWeaponDrop(int client, int weapon)
+{
+	if(gc_bPlugin.BoolValue)	
+	{
+		if(gc_bGunPlant.BoolValue)
+		{
+			char g_sWeaponName[80];
+			
+			GetEntityClassname(weapon, g_sWeaponName, sizeof(g_sWeaponName));
+			ReplaceString(g_sWeaponName, sizeof(g_sWeaponName), "weapon_", "", false); 
+			
+			if((GetClientTeam(client) == CS_TEAM_CT) && !IsClientInLastRequest(client))
+			{
+				CPrintToChat(client, "%t %t", "warden_tag" , "warden_noplant", client , g_sWeaponName);
+				if(g_iWarden != -1) CPrintToChat(g_iWarden, "%t %t", "warden_tag" , "warden_gunplant", client , g_sWeaponName);
+				if(gc_bGunRemove.BoolValue) CreateTimer(gc_fGunRemoveTime.FloatValue, RemoveWeapon, weapon);
+				if(gc_bGunSlap.BoolValue) SlapPlayer(client, gc_iGunSlapDamage.IntValue, true);
+			}
+		}
+	}
+	return Plugin_Continue;
+}
+
+
+
+public Action RemoveWeapon(Handle timer, any weapon)
+{
+	if(IsValidEdict(weapon)) AcceptEntityInput(weapon, "Kill");
 }
 
 //Natives, Forwards & stocks
