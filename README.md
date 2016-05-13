@@ -17,7 +17,7 @@ If you own a feature or extention for Jail/Warden that would fit in, i would be 
 
 ### Included Plugins: 
 
-- [Warden](#warden) - (set/become Warden,vote against Warden, Model, Icon, open cells, set marker/quiz/EventDays/countdown/FF/nobock) - need [scp](#requires-plugins)
+- [Warden](#warden) - (set/become Warden,vote against Warden, Model, Icon, open cells,gun plant prevention, set marker/quiz/EventDays/countdown/FF/nobock) - need [scp](#requires-plugins)
 - [Menu](#menu) - (Player menus for T, CT, Warden & Admin)
 - [Weapons](#weapons) - (weapon menus for CT / T in event rounds)
 - [PlayerTags](#playertags) - (add player Tags for T, T.Admin, CT, CT.Admin, W, WA.Admin - need [scp](#requires-plugins)
@@ -121,7 +121,7 @@ Colorize Warden, Warden Model, open/close cell doors, automatic open cells doors
 - sm_warden_gunplant: 0 - disabled, 1 - enable Gun plant prevention. Default 1
 - sm_warden_gunnodrop: 0 - disabled, 1 -  disallow gun dropping for ct. Default 0
 - sm_warden_gunremove: 0 - disabled, 1 - remove planted guns. Default 1
-- sm_gunremove_time: Time in seconds to pick up gun again before. Default 5
+- sm_warden_gunremove_time: Time in seconds to pick up gun again before. Default 5
 - sm_warden_gunslap: 0 - disabled, 1 - Slap the CT for dropping a gun. Default 1
 - sm_warden_gunslap_dmg: Amoung of HP losing on slap for dropping a gun. Default 10
 - sm_warden_random: 0 - disabled, 1 - enable kill a random t for Warden. Default 1
