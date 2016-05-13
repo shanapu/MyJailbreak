@@ -19,8 +19,8 @@
 #define IsBombing  (1<<2)
 
 //Booleans
-bool IsJihad;
-bool StartJihad;
+bool IsSuicideBomber;
+bool StartSuicideBomber;
 bool BombActive;
 
 //ConVars
@@ -44,7 +44,7 @@ ConVar gc_bSprint;
 ConVar gc_fSprintSpeed;
 ConVar gc_iSprintTime;
 ConVar gc_sSoundStartPath;
-ConVar gc_sSoundJihadPath;
+ConVar gc_sSoundSuicideBomberPath;
 ConVar gc_sSoundBoomPath;
 ConVar g_iGetRoundTime;
 ConVar gc_iRounds;
@@ -60,17 +60,17 @@ int g_iMaxRound;
 
 //Handles
 Handle SprintTimer[MAXPLAYERS+1];
-Handle JihadMenu;
+Handle SuicideBomberMenu;
 Handle FreezeTimer;
 
 //Strings
 char g_sSoundBoomPath[256];
-char g_sSoundJihadPath[256];
+char g_sSoundSuicideBomberPath[256];
 char g_sHasVoted[1500];
 char g_sSoundStartPath[256];
 
 public Plugin myinfo = {
-	name = "MyJailbreak - Jihad",
+	name = "MyJailbreak - Suicide Bomber",
 	author = "shanapu",
 	description = "Event Day for Jailbreak Server",
 	version = PLUGIN_VERSION,
@@ -81,42 +81,44 @@ public void OnPluginStart()
 {
 	// Translation
 	LoadTranslations("MyJailbreak.Warden.phrases");
-	LoadTranslations("MyJailbreak.Jihad.phrases");
+	LoadTranslations("MyJailbreak.SuicideBomber.phrases");
 	
 	//Client Commands
-	RegConsoleCmd("sm_setjihad", SetJihad, "Allows the Admin or Warden to set jihad as next round");
-	RegConsoleCmd("sm_jihad", VoteJihad, "Allows players to vote for a duckhunt");
+	RegConsoleCmd("sm_setsuicide", SetSuicideBomber, "Allows the Admin or Warden to set Suicide Bomber as next round");
+	RegConsoleCmd("sm_setsuicidebomber", SetSuicideBomber, "Allows the Admin or Warden to set Suicide Bomber as next round");
+	RegConsoleCmd("sm_suicide", VoteSuicideBomber, "Allows players to vote for a duckhunt");
+	RegConsoleCmd("sm_suicidebomber", VoteSuicideBomber, "Allows players to vote for a duckhunt");
 	RegConsoleCmd("sm_sprint", Command_StartSprint, "Starts the sprint");
-	RegConsoleCmd("sm_makeboom", Command_BombJihad, "Suicide with bomb");
+	RegConsoleCmd("sm_makeboom", Command_BombSuicideBomber, "Suicide with bomb");
 	
 	//AutoExecConfig
-	AutoExecConfig_SetFile("Jihad", "MyJailbreak/EventDays");
+	AutoExecConfig_SetFile("SuicideBomber", "MyJailbreak/EventDays");
 	AutoExecConfig_SetCreateFile(true);
 	
-	AutoExecConfig_CreateConVar("sm_jihad_version", PLUGIN_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_PLUGIN|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
-	gc_bPlugin = AutoExecConfig_CreateConVar("sm_jihad_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true,  0.0, true, 1.0);
-	gc_bSetW = AutoExecConfig_CreateConVar("sm_jihad_warden", "1", "0 - disabled, 1 - allow warden to set jihad round", _, true,  0.0, true, 1.0);
-	gc_bSetA = AutoExecConfig_CreateConVar("sm_jihad_admin", "1", "0 - disabled, 1 - allow admin to set jihad round", _, true,  0.0, true, 1.0);
-	gc_bVote = AutoExecConfig_CreateConVar("sm_jihad_vote", "1", "0 - disabled, 1 - allow player to vote for jihad", _, true,  0.0, true, 1.0);
-	gc_iKey = AutoExecConfig_CreateConVar("sm_jihad_key", "1", "1 - Inspect(look) weapon / 2 - walk / 3 - Secondary Attack", _, true,  1.0, true, 3.0);
-	gc_bStandStill = AutoExecConfig_CreateConVar("sm_jihad_standstill", "1", "0 - disabled, 1 - standstill(cant move) on Activate bomb", _, true,  0.0, true, 1.0);
-	gc_iRounds = AutoExecConfig_CreateConVar("sm_jihad_rounds", "1", "Rounds to play in a row", _, true, 1.0);
-	gc_fBombRadius = AutoExecConfig_CreateConVar("sm_jihad_bomb_radius", "200.0","Radius for bomb damage", _, true, 10.0, true, 999.0);
-	gc_iFreezeTime = AutoExecConfig_CreateConVar("sm_jihad_hidetime", "20", "Time to hide for CTs", _, true,  0.0);
-	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_jihad_roundtime", "5", "Round time in minutes for a single jihad round", _, true, 1.0);
-	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_jihad_cooldown_day", "3", "Rounds cooldown after a event until event can be start again", _, true, 0.0);
-	gc_iCooldownStart = AutoExecConfig_CreateConVar("sm_jihad_cooldown_start", "3", "Rounds until event can be start after mapchange.", _, true, 0.0);
-	gc_bOverlays = AutoExecConfig_CreateConVar("sm_jihad_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true,  0.0, true, 1.0);
-	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_jihad_overlays_start", "overlays/MyJailbreak/start" , "Path to the start Overlay DONT TYPE .vmt or .vft");
-	gc_bSounds = AutoExecConfig_CreateConVar("sm_jihad_sounds_enable", "1", "0 - disabled, 1 - enable sounds ", _, true,  0.0, true, 1.0);
-	gc_sSoundStartPath = AutoExecConfig_CreateConVar("sm_jihad_sounds_start", "music/MyJailbreak/start.mp3", "Path to the soundfile which should be played for start.");
-	gc_sSoundJihadPath = AutoExecConfig_CreateConVar("sm_jihad_sounds_jihad", "music/MyJailbreak/jihad.mp3", "Path to the soundfile which should be played on activatebomb.");
-	gc_sSoundBoomPath = AutoExecConfig_CreateConVar("sm_jihad_sounds_boom", "music/MyJailbreak/boom.mp3", "Path to the soundfile which should be played on detonation.");
-	gc_bSprintUse = AutoExecConfig_CreateConVar("sm_jihad_sprint_button", "1", "0 - disabled, 1 - enable +use button for sprint", _, true,  0.0, true, 1.0);
-	gc_iSprintCooldown = AutoExecConfig_CreateConVar("sm_jihad_sprint_cooldown", "7","Time in seconds the player must wait for the next sprint", _, true,  0.0);
-	gc_bSprint = AutoExecConfig_CreateConVar("sm_jihad_sprint_enable", "1", "0 - disabled, 1 - enable ShortSprint", _, true,  0.0, true, 1.0);
-	gc_fSprintSpeed = AutoExecConfig_CreateConVar("sm_jihad_sprint_speed", "1.30","Ratio for how fast the player will sprint", _, true, 1.01, true, 5.00);
-	gc_iSprintTime = AutoExecConfig_CreateConVar("sm_jihad_sprint_time", "2.5", "Time in seconds the player will sprint", _, true, 1.0);
+	AutoExecConfig_CreateConVar("sm_suicidebomber_version", PLUGIN_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_PLUGIN|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
+	gc_bPlugin = AutoExecConfig_CreateConVar("sm_suicidebomber_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true,  0.0, true, 1.0);
+	gc_bSetW = AutoExecConfig_CreateConVar("sm_suicidebomber_warden", "1", "0 - disabled, 1 - allow warden to set Suicide Bomber round", _, true,  0.0, true, 1.0);
+	gc_bSetA = AutoExecConfig_CreateConVar("sm_suicidebomber_admin", "1", "0 - disabled, 1 - allow admin to set Suicide Bomber round", _, true,  0.0, true, 1.0);
+	gc_bVote = AutoExecConfig_CreateConVar("sm_suicidebomber_vote", "1", "0 - disabled, 1 - allow player to vote for Suicide Bomber", _, true,  0.0, true, 1.0);
+	gc_iKey = AutoExecConfig_CreateConVar("sm_suicidebomber_key", "1", "1 - Inspect(look) weapon / 2 - walk / 3 - Secondary Attack", _, true,  1.0, true, 3.0);
+	gc_bStandStill = AutoExecConfig_CreateConVar("sm_suicidebomber_standstill", "1", "0 - disabled, 1 - standstill(cant move) on Activate bomb", _, true,  0.0, true, 1.0);
+	gc_iRounds = AutoExecConfig_CreateConVar("sm_suicidebomber_rounds", "1", "Rounds to play in a row", _, true, 1.0);
+	gc_fBombRadius = AutoExecConfig_CreateConVar("sm_suicidebomber_bomb_radius", "200.0","Radius for bomb damage", _, true, 10.0, true, 999.0);
+	gc_iFreezeTime = AutoExecConfig_CreateConVar("sm_suicidebomber_hidetime", "20", "Time to hide for CTs", _, true,  0.0);
+	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_suicidebomber_roundtime", "5", "Round time in minutes for a single Suicide Bomber round", _, true, 1.0);
+	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_suicidebomber_cooldown_day", "3", "Rounds cooldown after a event until event can be start again", _, true, 0.0);
+	gc_iCooldownStart = AutoExecConfig_CreateConVar("sm_suicidebomber_cooldown_start", "3", "Rounds until event can be start after mapchange.", _, true, 0.0);
+	gc_bOverlays = AutoExecConfig_CreateConVar("sm_suicidebomber_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true,  0.0, true, 1.0);
+	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_suicidebomber_overlays_start", "overlays/MyJailbreak/start" , "Path to the start Overlay DONT TYPE .vmt or .vft");
+	gc_bSounds = AutoExecConfig_CreateConVar("sm_suicidebomber_sounds_enable", "1", "0 - disabled, 1 - enable sounds ", _, true,  0.0, true, 1.0);
+	gc_sSoundStartPath = AutoExecConfig_CreateConVar("sm_suicidebomber_sounds_start", "music/MyJailbreak/start.mp3", "Path to the soundfile which should be played for start.");
+	gc_sSoundSuicideBomberPath = AutoExecConfig_CreateConVar("sm_suicidebomber_sounds_suicidebomber", "music/MyJailbreak/suicidebomber.mp3", "Path to the soundfile which should be played on activatebomb.");
+	gc_sSoundBoomPath = AutoExecConfig_CreateConVar("sm_suicidebomber_sounds_boom", "music/MyJailbreak/boom.mp3", "Path to the soundfile which should be played on detonation.");
+	gc_bSprintUse = AutoExecConfig_CreateConVar("sm_suicidebomber_sprint_button", "1", "0 - disabled, 1 - enable +use button for sprint", _, true,  0.0, true, 1.0);
+	gc_iSprintCooldown = AutoExecConfig_CreateConVar("sm_suicidebomber_sprint_cooldown", "7","Time in seconds the player must wait for the next sprint", _, true,  0.0);
+	gc_bSprint = AutoExecConfig_CreateConVar("sm_suicidebomber_sprint_enable", "1", "0 - disabled, 1 - enable ShortSprint", _, true,  0.0, true, 1.0);
+	gc_fSprintSpeed = AutoExecConfig_CreateConVar("sm_suicidebomber_sprint_speed", "1.30","Ratio for how fast the player will sprint", _, true, 1.01, true, 5.00);
+	gc_iSprintTime = AutoExecConfig_CreateConVar("sm_suicidebomber_sprint_time", "2.5", "Time in seconds the player will sprint", _, true, 1.0);
 	
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
@@ -127,14 +129,14 @@ public void OnPluginStart()
 	HookEvent("round_end", RoundEnd);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
-	HookConVarChange(gc_sSoundJihadPath, OnSettingChanged);
+	HookConVarChange(gc_sSoundSuicideBomberPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundBoomPath, OnSettingChanged);
 	
 	//FindConVar
 	g_iGetRoundTime = FindConVar("mp_roundtime");
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
-	gc_sSoundJihadPath.GetString(g_sSoundJihadPath, sizeof(g_sSoundJihadPath));
+	gc_sSoundSuicideBomberPath.GetString(g_sSoundSuicideBomberPath, sizeof(g_sSoundSuicideBomberPath));
 	gc_sSoundBoomPath.GetString(g_sSoundBoomPath, sizeof(g_sSoundBoomPath));
 	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
@@ -149,10 +151,10 @@ public void OnPluginStart()
 
 public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
-	if(convar == gc_sSoundJihadPath)
+	if(convar == gc_sSoundSuicideBomberPath)
 	{
-		strcopy(g_sSoundJihadPath, sizeof(g_sSoundJihadPath), newValue);
-		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundJihadPath);
+		strcopy(g_sSoundSuicideBomberPath, sizeof(g_sSoundSuicideBomberPath), newValue);
+		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundSuicideBomberPath);
 	}
 	else if(convar == gc_sSoundBoomPath)
 	{
@@ -177,8 +179,8 @@ public void OnMapStart()
 {
 	g_iVoteCount = 0;
 	g_iRound = 0;
-	IsJihad = false;
-	StartJihad = false;
+	IsSuicideBomber = false;
+	StartSuicideBomber = false;
 	BombActive = false;
 	
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
@@ -187,7 +189,7 @@ public void OnMapStart()
 	if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStart);
 	if(gc_bSounds.BoolValue)	
 	{
-		PrecacheSoundAnyDownload(g_sSoundJihadPath);
+		PrecacheSoundAnyDownload(g_sSoundSuicideBomberPath);
 		PrecacheSoundAnyDownload(g_sSoundBoomPath);
 		PrecacheSoundAnyDownload(g_sSoundStartPath);
 	}
@@ -209,7 +211,7 @@ public void OnClientPutInServer(int client)
 
 //Admin & Warden set Event
 
-public Action SetJihad(int client,int args)
+public Action SetSuicideBomber(int client,int args)
 {
 	if (gc_bPlugin.BoolValue)
 	{
@@ -227,15 +229,15 @@ public Action SetJihad(int client,int args)
 						if (g_iCoolDown == 0)
 						{
 							StartNextRound();
-							LogMessage("Event Jihad was started by Warden %L", client);
+							LogMessage("Event Suicide Bomber was started by Warden %L", client);
 						}
-						else CPrintToChat(client, "%t %t", "jihad_tag" , "jihad_wait", g_iCoolDown);
+						else CPrintToChat(client, "%t %t", "suicidebomber_tag" , "suicidebomber_wait", g_iCoolDown);
 					}
-					else CPrintToChat(client, "%t %t", "jihad_tag" , "jihad_progress" , EventDay);
+					else CPrintToChat(client, "%t %t", "suicidebomber_tag" , "suicidebomber_progress" , EventDay);
 				}
-				else CPrintToChat(client, "%t %t", "jihad_tag" , "jihad_minplayer");
+				else CPrintToChat(client, "%t %t", "suicidebomber_tag" , "suicidebomber_minplayer");
 			}
-			else CPrintToChat(client, "%t %t", "warden_tag" , "jihad_setbywarden");
+			else CPrintToChat(client, "%t %t", "warden_tag" , "suicidebomber_setbywarden");
 		}
 		else if (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
 			{
@@ -251,24 +253,24 @@ public Action SetJihad(int client,int args)
 							if (g_iCoolDown == 0)
 							{
 								StartNextRound();
-								LogMessage("Event Jihad was started by Admin %L", client);
+								LogMessage("Event Suicide Bomber was started by Admin %L", client);
 							}
-							else CPrintToChat(client, "%t %t", "jihad_tag" , "jihad_wait", g_iCoolDown);
+							else CPrintToChat(client, "%t %t", "suicidebomber_tag" , "suicidebomber_wait", g_iCoolDown);
 						}
-						else CPrintToChat(client, "%t %t", "jihad_tag" , "jihad_progress" , EventDay);
+						else CPrintToChat(client, "%t %t", "suicidebomber_tag" , "suicidebomber_progress" , EventDay);
 					}
-					else CPrintToChat(client, "%t %t", "jihad_tag" , "jihad_minplayer");
+					else CPrintToChat(client, "%t %t", "suicidebomber_tag" , "suicidebomber_minplayer");
 				}
-				else CPrintToChat(client, "%t %t", "jihad_tag" , "jihad_setbyadmin");
+				else CPrintToChat(client, "%t %t", "suicidebomber_tag" , "suicidebomber_setbyadmin");
 			}
 			else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
 	}
-	else CPrintToChat(client, "%t %t", "jihad_tag" , "jihad_disabled");
+	else CPrintToChat(client, "%t %t", "suicidebomber_tag" , "suicidebomber_disabled");
 }
 
 //Voting for Event
 
-public Action VoteJihad(int client,int args)
+public Action VoteSuicideBomber(int client,int args)
 {
 	char steamid[64];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
@@ -296,41 +298,41 @@ public Action VoteJihad(int client,int args)
 							if (g_iVoteCount > playercount)
 							{
 								StartNextRound();
-								LogMessage("Event Jihad was started by voting");
+								LogMessage("Event Suicide Bomber was started by voting");
 							}
-							else CPrintToChatAll("%t %t", "jihad_tag" , "jihad_need", Missing, client);
+							else CPrintToChatAll("%t %t", "suicidebomber_tag" , "suicidebomber_need", Missing, client);
 						}
-						else CPrintToChat(client, "%t %t", "jihad_tag" , "jihad_voted");
+						else CPrintToChat(client, "%t %t", "suicidebomber_tag" , "suicidebomber_voted");
 					}
-					else CPrintToChat(client, "%t %t", "jihad_tag" , "jihad_wait", g_iCoolDown);
+					else CPrintToChat(client, "%t %t", "suicidebomber_tag" , "suicidebomber_wait", g_iCoolDown);
 				}
-				else CPrintToChat(client, "%t %t", "jihad_tag" , "jihad_progress" , EventDay);
+				else CPrintToChat(client, "%t %t", "suicidebomber_tag" , "suicidebomber_progress" , EventDay);
 			}
-			else CPrintToChat(client, "%t %t", "jihad_tag" , "jihad_minplayer");
+			else CPrintToChat(client, "%t %t", "suicidebomber_tag" , "suicidebomber_minplayer");
 		}
-		else CPrintToChat(client, "%t %t", "jihad_tag" , "jihad_voting");
+		else CPrintToChat(client, "%t %t", "suicidebomber_tag" , "suicidebomber_voting");
 	}
-	else CPrintToChat(client, "%t %t", "jihad_tag" , "jihad_disabled");
+	else CPrintToChat(client, "%t %t", "suicidebomber_tag" , "suicidebomber_disabled");
 }
 
 //Prepare Event
 
 void StartNextRound()
 {
-	StartJihad = true;
+	StartSuicideBomber = true;
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iVoteCount = 0;
-	SetEventDay("jihad");
+	SetEventDay("Suicide Bomber");
 	
-	CPrintToChatAll("%t %t", "jihad_tag" , "jihad_next");
-	PrintHintTextToAll("%t", "jihad_next_nc");
+	CPrintToChatAll("%t %t", "suicidebomber_tag" , "suicidebomber_next");
+	PrintHintTextToAll("%t", "suicidebomber_next_nc");
 }
 
 //Round start
 
 public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
-	if (StartJihad || IsJihad)
+	if (StartSuicideBomber || IsSuicideBomber)
 	{
 		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
 		
@@ -340,28 +342,28 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		SetCvar("sm_weapons_enable", 0);
 		
 		g_iRound++;
-		IsJihad = true;
-		StartJihad = false;
-		JihadMenu = CreatePanel();
-		Format(info1, sizeof(info1), "%T", "jihad_info_title", LANG_SERVER);
-		SetPanelTitle(JihadMenu, info1);
-		DrawPanelText(JihadMenu, "                                   ");
-		Format(info2, sizeof(info2), "%T", "jihad_info_line1", LANG_SERVER);
-		DrawPanelText(JihadMenu, info2);
-		DrawPanelText(JihadMenu, "-----------------------------------");
-		Format(info3, sizeof(info3), "%T", "jihad_info_line2", LANG_SERVER);
-		DrawPanelText(JihadMenu, info3);
-		Format(info4, sizeof(info4), "%T", "jihad_info_line3", LANG_SERVER);
-		DrawPanelText(JihadMenu, info4);
-		Format(info5, sizeof(info5), "%T", "jihad_info_line4", LANG_SERVER);
-		DrawPanelText(JihadMenu, info5);
-		Format(info6, sizeof(info6), "%T", "jihad_info_line5", LANG_SERVER);
-		DrawPanelText(JihadMenu, info6);
-		Format(info7, sizeof(info7), "%T", "jihad_info_line6", LANG_SERVER);
-		DrawPanelText(JihadMenu, info7);
-		Format(info8, sizeof(info8), "%T", "jihad_info_line7", LANG_SERVER);
-		DrawPanelText(JihadMenu, info8);
-		DrawPanelText(JihadMenu, "-----------------------------------");
+		IsSuicideBomber = true;
+		StartSuicideBomber = false;
+		SuicideBomberMenu = CreatePanel();
+		Format(info1, sizeof(info1), "%T", "suicidebomber_info_title", LANG_SERVER);
+		SetPanelTitle(SuicideBomberMenu, info1);
+		DrawPanelText(SuicideBomberMenu, "                                   ");
+		Format(info2, sizeof(info2), "%T", "suicidebomber_info_line1", LANG_SERVER);
+		DrawPanelText(SuicideBomberMenu, info2);
+		DrawPanelText(SuicideBomberMenu, "-----------------------------------");
+		Format(info3, sizeof(info3), "%T", "suicidebomber_info_line2", LANG_SERVER);
+		DrawPanelText(SuicideBomberMenu, info3);
+		Format(info4, sizeof(info4), "%T", "suicidebomber_info_line3", LANG_SERVER);
+		DrawPanelText(SuicideBomberMenu, info4);
+		Format(info5, sizeof(info5), "%T", "suicidebomber_info_line4", LANG_SERVER);
+		DrawPanelText(SuicideBomberMenu, info5);
+		Format(info6, sizeof(info6), "%T", "suicidebomber_info_line5", LANG_SERVER);
+		DrawPanelText(SuicideBomberMenu, info6);
+		Format(info7, sizeof(info7), "%T", "suicidebomber_info_line6", LANG_SERVER);
+		DrawPanelText(SuicideBomberMenu, info7);
+		Format(info8, sizeof(info8), "%T", "suicidebomber_info_line7", LANG_SERVER);
+		DrawPanelText(SuicideBomberMenu, info8);
+		DrawPanelText(SuicideBomberMenu, "-----------------------------------");
 		
 		if (g_iRound > 0)
 			{
@@ -372,7 +374,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 						StripAllWeapons(client);
 						ClientSprintStatus[client] = 0;
 						SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
-						SendPanelToClient(JihadMenu, client, NullHandler, 20);
+						SendPanelToClient(SuicideBomberMenu, client, NullHandler, 20);
 						
 						if (GetClientTeam(client) == CS_TEAM_T)
 						{
@@ -386,7 +388,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 				}
 				g_iFreezeTime--;
 				FreezeTimer = CreateTimer(1.0, StartTimer, _, TIMER_REPEAT);
-				CPrintToChatAll("%t %t", "jihad_tag" ,"jihad_rounds", g_iRound, g_iMaxRound);
+				CPrintToChatAll("%t %t", "suicidebomber_tag" ,"suicidebomber_rounds", g_iRound, g_iMaxRound);
 			}
 	}
 	else
@@ -408,7 +410,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 {
 	int winner = GetEventInt(event, "winner");
 	
-	if (IsJihad)
+	if (IsSuicideBomber)
 	{
 		for(int client=1; client <= MaxClients; client++)
 		{
@@ -416,13 +418,13 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 			ClientSprintStatus[client] = 0;
 		}
 		if (FreezeTimer != null) KillTimer(FreezeTimer);
-		if (winner == 2) PrintHintTextToAll("%t", "jihad_twin_nc");
-		if (winner == 3) PrintHintTextToAll("%t", "jihad_ctwin_nc");
+		if (winner == 2) PrintHintTextToAll("%t", "suicidebomber_twin_nc");
+		if (winner == 3) PrintHintTextToAll("%t", "suicidebomber_ctwin_nc");
 		BombActive = false;
 		if (g_iRound == g_iMaxRound)
 		{
-			IsJihad = false;
-			StartJihad = false;
+			IsSuicideBomber = false;
+			StartSuicideBomber = false;
 			BombActive = false;
 			g_iRound = 0;
 			
@@ -434,16 +436,16 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 			SetCvar("sm_menu_enable", 1);
 			g_iGetRoundTime.IntValue = g_iOldRoundTime;
 			SetEventDay("none");
-			CPrintToChatAll("%t %t", "jihad_tag" , "jihad_end");
+			CPrintToChatAll("%t %t", "suicidebomber_tag" , "suicidebomber_end");
 		}
 	}
-	if (StartJihad)
+	if (StartSuicideBomber)
 	{
 		g_iOldRoundTime = g_iGetRoundTime.IntValue;
 		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;
 		
-		CPrintToChatAll("%t %t", "jihad_tag" , "jihad_next");
-		PrintHintTextToAll("%t", "jihad_next_nc");
+		CPrintToChatAll("%t %t", "suicidebomber_tag" , "suicidebomber_next");
+		PrintHintTextToAll("%t", "suicidebomber_next_nc");
 	}
 }
 
@@ -451,7 +453,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 
 public Action CS_OnTerminateRound( float &delay, CSRoundEndReason &reason)
 {
-	if (IsJihad)
+	if (IsSuicideBomber)
 	{
 		if (reason == CSRoundEnd_Draw)
 		{
@@ -467,8 +469,8 @@ public Action CS_OnTerminateRound( float &delay, CSRoundEndReason &reason)
 
 public void OnMapEnd()
 {
-	IsJihad = false;
-	StartJihad = false;
+	IsSuicideBomber = false;
+	StartSuicideBomber = false;
 	BombActive = false;
 	if (FreezeTimer != null) KillTimer(FreezeTimer);
 	g_iVoteCount = 0;
@@ -489,11 +491,11 @@ public Action StartTimer(Handle timer)
 		{
 			if (GetClientTeam(client) == CS_TEAM_CT)
 			{
-				PrintHintText(client,"%t", "jihad_timetohide_nc", g_iFreezeTime);
+				PrintHintText(client,"%t", "suicidebomber_timetohide_nc", g_iFreezeTime);
 			}
 			if (GetClientTeam(client) == CS_TEAM_T)
 			{
-				PrintHintText(client,"%t", "jihad_timeuntilopen_nc", g_iFreezeTime);
+				PrintHintText(client,"%t", "suicidebomber_timeuntilopen_nc", g_iFreezeTime);
 			}
 		}
 		return Plugin_Continue;
@@ -508,7 +510,7 @@ public Action StartTimer(Handle timer)
 			if (IsValidClient(client, true, true))
 			{
 				SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
-				PrintHintText(client,"%t", "jihad_start_nc");
+				PrintHintText(client,"%t", "suicidebomber_start_nc");
 			}
 			if(gc_bOverlays.BoolValue) CreateTimer( 0.0, ShowOverlayStart, client);
 			
@@ -517,7 +519,7 @@ public Action StartTimer(Handle timer)
 				EmitSoundToAllAny(g_sSoundStartPath);
 			}
 		}
-		CPrintToChatAll("%t %t", "jihad_tag" , "jihad_start");
+		CPrintToChatAll("%t %t", "suicidebomber_tag" , "suicidebomber_start");
 	}
 	SJD_OpenDoors();
 	
@@ -528,15 +530,15 @@ public Action StartTimer(Handle timer)
 	return Plugin_Stop;
 }
 
-//Set Button Jihad Bomb
+//Set Button Suicide Bomber
 
 public Action Command_LAW(int client, const char[] command, int argc)
 {
-	if(IsJihad)
+	if(IsSuicideBomber)
 	{
 		if(gc_iKey.IntValue == 1)
 		{
-			Command_BombJihad(client, 0);
+			Command_BombSuicideBomber(client, 0);
 		}
 	}
 	
@@ -545,7 +547,7 @@ public Action Command_LAW(int client, const char[] command, int argc)
 
 public void OnGameFrame()
 {
-	if (IsJihad)
+	if (IsSuicideBomber)
 	{
 		for(int i = 1; i <= MaxClients; i++)
 		{
@@ -553,14 +555,14 @@ public void OnGameFrame()
 			{
 				if(IsClientInGame(i) && (GetClientButtons(i) & IN_SPEED))
 				{
-					Command_BombJihad(i, 0);
+					Command_BombSuicideBomber(i, 0);
 				}
 			}
 			else if(gc_iKey.IntValue == 3)
 			{
 				if(IsClientInGame(i) && (GetClientButtons(i) & IN_ATTACK2))
 				{
-					Command_BombJihad(i, 0);
+					Command_BombSuicideBomber(i, 0);
 				}
 			}
 			if(gc_bSprintUse.BoolValue)
@@ -579,7 +581,7 @@ public void OnGameFrame()
 
 public Action OnWeaponDrop(int client, int weapon)
 {
-	if (IsJihad && IsValidClient(client, false, false))
+	if (IsSuicideBomber && IsValidClient(client, false, false))
 	{
 		char g_sWeaponName[80];
 		if (weapon > MaxClients && GetClientTeam(client) == CS_TEAM_T && GetEntityClassname(weapon, g_sWeaponName, sizeof(g_sWeaponName)))
@@ -595,9 +597,9 @@ public Action OnWeaponDrop(int client, int weapon)
 
 //Start Bombtimer
 
-public Action Command_BombJihad(int client, int args)
+public Action Command_BombSuicideBomber(int client, int args)
 {
-	if (IsJihad && BombActive && IsValidClient(client, false, false))
+	if (IsSuicideBomber && BombActive && IsValidClient(client, false, false))
 	{
 		int weapon = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
 		char weaponName[64];
@@ -608,14 +610,14 @@ public Action Command_BombJihad(int client, int args)
 		{
 			if(StrEqual(weaponName, "weapon_c4"))
 			{
-				EmitSoundToAllAny(g_sSoundJihadPath);
+				EmitSoundToAllAny(g_sSoundSuicideBomberPath);
 				CreateTimer( 1.0, DoDaBomb, client);
 				if (gc_bStandStill.BoolValue)
 				{
 					SetEntityMoveType(client, MOVETYPE_NONE);
 				}
 			}
-			//else CPrintToChat(client, "%t %t", "jihad_tag" , "jihad_needc4");
+			//else CPrintToChat(client, "%t %t", "suicidebomber_tag" , "suicidebomber_needc4");
 		}
 	}
 }
@@ -690,7 +692,7 @@ public Action OnWeaponCanUse(int client, int weapon)
 		{
 			if (IsValidClient(client, true, false))
 			{
-				if(IsJihad == true)
+				if(IsSuicideBomber == true)
 				{
 					return Plugin_Handled;
 				}
@@ -703,19 +705,19 @@ public Action OnWeaponCanUse(int client, int weapon)
 
 public Action Command_StartSprint(int client, int args)
 {
-	if (IsJihad)
+	if (IsSuicideBomber)
 	{
 		if(gc_bSprint.BoolValue && client > 0 && IsClientInGame(client) && IsPlayerAlive(client) && GetClientTeam(client) > 1 && !(ClientSprintStatus[client] & IsSprintUsing) && !(ClientSprintStatus[client] & IsSprintCoolDown))
 		{
 			ClientSprintStatus[client] |= IsSprintUsing | IsSprintCoolDown;
 			SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", gc_fSprintSpeed.FloatValue);
 			EmitSoundToClient(client, "player/suit_sprint.wav", SOUND_FROM_PLAYER, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, 0.8);
-			CPrintToChat(client, "%t %t", "jihad_tag" ,"jihad_sprint");
+			CPrintToChat(client, "%t %t", "suicidebomber_tag" ,"suicidebomber_sprint");
 			SprintTimer[client] = CreateTimer(gc_iSprintTime.FloatValue, Timer_SprintEnd, client);
 		}
 		return(Plugin_Handled);
 	}
-	else CPrintToChat(client, "%t %t", "jihad_tag" , "jihad_disabled");
+	else CPrintToChat(client, "%t %t", "suicidebomber_tag" , "suicidebomber_disabled");
 	return(Plugin_Handled);
 }
 
@@ -750,7 +752,7 @@ public Action Timer_SprintEnd(Handle timer, any client)
 		if(IsPlayerAlive(client) && GetClientTeam(client) > 1)
 		{
 			SprintTimer[client] = CreateTimer(gc_iSprintCooldown.FloatValue, Timer_SprintCooldown, client);
-			CPrintToChat(client, "%t %t", "jihad_tag" ,"jihad_sprintend", gc_iSprintCooldown.IntValue);
+			CPrintToChat(client, "%t %t", "suicidebomber_tag" ,"suicidebomber_sprintend", gc_iSprintCooldown.IntValue);
 		}
 	}
 	return;
@@ -762,7 +764,7 @@ public Action Timer_SprintCooldown(Handle timer, any client)
 	if(IsClientInGame(client) && (ClientSprintStatus[client] & IsSprintCoolDown))
 	{
 		ClientSprintStatus[client] &= ~ IsSprintCoolDown;
-		CPrintToChat(client, "%t %t", "jihad_tag" ,"jihad_sprintagain", gc_iSprintCooldown.IntValue);
+		CPrintToChat(client, "%t %t", "suicidebomber_tag" ,"suicidebomber_sprintagain", gc_iSprintCooldown.IntValue);
 	}
 	return;
 }

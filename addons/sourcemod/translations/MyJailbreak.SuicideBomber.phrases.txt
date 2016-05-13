@@ -1,0 +1,196 @@
+"Phrases"
+{
+	"suicidebomber_tag"
+	{
+		"en"		"[{green}MyJB.SuicideBomber{default}]"
+	}
+	"suicidebomber_need"
+	{
+		"#format"	"{1:i},{2:N}"
+		"en"		"{purple}{2}{default} has votet. {purple}{1}{default} votes left to {darkred}Suicide Bomber"
+		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}Suicide Bomber{default} beginnt"
+	}
+	
+	"suicidebomber_rounds" 
+	{
+		"#format"	"{1:i},{2:i}"
+		"da"		"Runde {purple}{1}{default} af {purple}{2}"		
+		"en"		"Round {purple}{1}{default} of {purple}{2}"
+		"de"		"Runde {purple}{1}{default} von {purple}{2}"
+	}
+	"suicidebomber_twin_nc"
+	{
+		"en"		"All CTS Died"
+		"de"		"Alle CT sind Tod"
+	}
+	"suicidebomber_voting"
+	{
+		"en"		"Player voting for Suicide Bomber is {purple}disabled"
+		"de"		"Voting für Suicide Bomber ist {purple}ausgeschaltet"
+	}
+	"suicidebomber_setbywarden"
+	{
+		"en"		"Set Suicide Bomber by warden is {purple}disabled"
+		"de"		"Suicide Bomber Aktivierung durch den Warden ist {purple}ausgeschaltet"
+	}
+	"suicidebomber_minplayer"
+	{
+		"da"		"For Suicide Bomber skal der mindst være {purple}en CT & en T"	
+		"en"		"For a Suicide Bomber you need at least {purple}one CT & one T"
+		"de"		"Für Suicide Bomber brauchen wir mindestens {purple}einen CT und einen T"
+	}
+	"suicidebomber_setbyadmin"
+	{
+		"en"		"Set Suicide Bomber by admin is {purple}disabled"
+		"de"		"Suicide Bomber Aktivierung durch den Admin ist {purple}ausgeschaltet"
+	}
+	"suicidebomber_ctwin_nc"
+	{
+		"en"		"Counter-Terrorists has surrived"
+		"de"		"Die Counter-Terrorists haben überlebt"
+	}
+	
+	"suicidebomber_end"
+	{
+		"en"		"{purple}Suicide Bomber{default} finished"
+		"de"		"{purple}Suicide Bomber{default} beendet"
+	}
+	
+	"suicidebomber_next"
+	{
+		"en"		"Next round is {purple}Suicide Bomber"
+		"de"		"Nächste Runde ist {purple}Suicide Bomber"
+	}
+	"suicidebomber_next_nc"
+	{
+		"en"		"Next round is Suicide Bomber"
+		"de"		"Nächste Runde ist Suicide Bomber"
+	}
+	
+	"suicidebomber_start"
+	{
+
+		"en"		"The {purple}Suicide Bomber{default} has started!"
+		"de"		"{purple}Suicide Bomber{default} ist gestartet!"
+	}
+	
+	"suicidebomber_start_nc"
+	{
+
+		"en"		"The Suicide Bomber started!"
+		"de"		"Suicide Bomber ist gestartet!"
+	}
+	
+	"suicidebomber_voted"
+	{
+		"en"		"You allready voted for {purple}Suicide Bomber"
+		"de"		"Du hast schon für {purple}Suicide Bomber {default}gevotet"
+	}
+	
+	"suicidebomber_progress"
+	{
+		"#format"	"{1:s}"
+		"en"		"Event ({darkred}{1} {default}is {purple}already in progress."
+		"de"		"Event {darkred}{1} {default}ist {purple}bereits gesetzt."
+	}
+	
+	"suicidebomber_disabled"
+	{
+
+		"en"		"Suicide Bomber is {purple}disabled."
+		"de"		"Suicide Bomber ist {purple}deaktiviert."
+	}
+	
+		
+	"suicidebomber_sprint"
+	{
+
+		"en"		"You are now using {blue}Sprint!"
+		"de"		"Du {blue}sprintest!"
+	}
+	
+	"suicidebomber_sprintend"
+	{
+		"#format"	"{1:i}"
+		"en"		"{blue}Sprint ended!{default} Cooldown {1} Seconds"
+		"de"		"Du kannst nicht mehr {blue}sprinten! {default}warte {1} Sekunden!"
+	}
+		
+	"suicidebomber_sprintagain"
+	{
+		"en"		"You can{blue}Sprint again!{default}"
+		"de"		"Du kannst wieder {blue}sprinten!"
+	}
+	
+	"suicidebomber_timetohide_nc"
+	{
+		"#format"	"{1:i}"
+		"en"		"{1} seconds to hide"
+		"de"		"{1} Sekunden to hide"
+	}
+	"suicidebomber_timeuntilopen_nc"
+	{
+		"#format"	"{1:i}"
+		"en"		"{1} seconds until cells open"
+		"de"		"{1} Sekunden bis die Zellen öffnen"
+	}
+	
+	"suicidebomber_info_title"
+	{
+		"en"		"Suicide Bomber is active"
+		"de"		"Suicide Bomber ist aktiv"
+	}
+	
+	"suicidebomber_info_line1"
+	{
+		"en"		"ALLAH AKBHAR!"
+		"de"		"ALLAH AKBHAR!"
+	}
+	"suicidebomber_info_line2"
+	{
+		"en"		"Terrors got c4 and can suicide with +lookweapon 'F'-key"
+		"de"		"Terrors haben c4 und können mit der +lookweapon 'F'-Taste suizid begehen"
+	}
+	
+	"suicidebomber_info_line3"
+	{
+		"da"		"Brug E til at Sprint!"	
+		"en"		"Press E to sprint!"
+		"de"		"mit der BENUTZEN-Taste kannst du sprinten"
+	}
+	
+	"suicidebomber_info_line4"
+	{
+		"en"		"All normal jail rules are repealed"
+		"de"		"Alle normalen Jailregeln sind aufgehoben!"
+	}
+	
+	"suicidebomber_info_line5"
+	{
+		"en"		"There is no last request!"
+		"de"		"Der letzte Terrorists hat keinen Wunsch!"
+	}
+	
+	"suicidebomber_info_line6"
+	{
+		"en"		"Everyone is allowed to go everywhere where he wants"
+		"de"		"Jeder darf überall hin wo er will!"
+	}
+	
+	"suicidebomber_info_line7"
+	{
+		"en"		"Dont be an asshole!"
+		"de"		"Bau keine Scheisse!"
+	}
+		"suicidebomber_wait"
+	{
+		"#format"	"{1:i}"
+		"en"		"You must wait {purple}{1}{default} more rounds"
+		"de"		"Du musst noch {purple}{1}{default} Runden warten"
+	}
+	"suicidebomber_disabled"
+	{
+		"en"		"You must equip your {purple}c4"
+		"de"		"Du musst das {purple}c4{default} ausrüsten"
+	}
+}

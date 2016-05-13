@@ -160,10 +160,10 @@
 		"#format"		""
 		"en"			"Hide in The Dark"
 	}
-	"menu_jihad"
+	"menu_suicidebomber"
 	{
 		"#format"		""
-		"en"			"Jihad Day"
+		"en"			"Suicide Bomber"
 	}
 	"menu_catch"
 	{
