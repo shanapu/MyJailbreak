@@ -79,7 +79,6 @@
 		"sv"		"{1} har bestämt sig för att avgå. Ni bör nu välja en ny."
 		"de"		"{1} ist zurückgetreten. Wir brauchen einen neuen Warden!"
 	}
-	
 	"warden_notwarden"
 	{
 		"da"		"Du SKAL være {purple}Warden{default} for at bruge denne command."
@@ -479,17 +478,17 @@
 		"de"		"Marker {1} entfernt. Du warst zu weit davon entfernt."
 	}
 	
-	"warden_marker_Title"
+	"warden_marker_title"
 	{
 		"en"		"Marker Color"
 		"de"		"Marker Farbauswahl"
 	}
-	"warden_laser_Title"
+	"warden_laser_title"
 	{
 		"en"		"Laser Pointer Color"
 		"de"		"Laser Pointer Farbauswahl"
 	}
-	"warden_drawer_Title"
+	"warden_drawer_title"
 	{
 		"en"		"Drawer Color"
 		"de"		"Drawer Farbauswahl"
@@ -564,8 +563,19 @@
 		"en"		"Something went wrong, try it again!"
 		"de"		"Irgendwas ist schiefgelaufen. Probiere es nochmal!"
 	}
-	
-	"warden_cdmenu_Title"
+	"warden_mute"
+	{
+		"#format"	"{1:N},{2:s},{3:s}"
+		"en"		"{2} muted by warden {1} for {3} seconds"
+		"de"		"{2} wurde vom Warden {1} für {3} Sekunden gemutet"
+	}
+	"warden_unmute"
+	{
+		"#format"	"{1:N}"
+		"en"		"{1} unmuted"
+		"de"		"{2} wurde entmutet"
+	}
+	"warden_cdmenu_title"
 	{
 		"da"		"Countdown Menu"
 		"en"		"Countdown Menu"
@@ -586,47 +596,64 @@
 		"en"		"set a Start/Stop Countdown"
 		"de"		"Setzte einen Start/Stop Countdown"
 	}
-	"warden_cdmenu_Title2"
+	"warden_cdmenu_title2"
 	{
 		"en"		"Time between Start & Stop"
 		"de"		"Zeit zwischen Start & Stop"
 	}
-	"warden_cdmenu_15"
+	
+	"warden_time_title"
+	{
+		"en"		"How long?"
+		"de"		"wie lange?"
+	}
+	"warden_allt"
+	{
+		"en"		"All Terrors"
+		"de"		"Alle Terroristen"
+	}
+
+	"warden_roundend"
+	{
+		"en"		"Until round end"
+		"de"		"Bis zum Ende der Runde"
+	}
+	"warden_15"
 	{
 		"en"		"15 seconds"
 		"de"		"15 Sekunden"
 	}
-	"warden_cdmenu_30"
+	"warden_30"
 	{
 		"en"		"30 seconds"
 		"de"		"30 Sekunden"
 	}
-	"warden_cdmenu_45"
+	"warden_45"
 	{
 		"en"		"45 seconds"
 		"de"		"45 Sekunden"
 	}
-	"warden_cdmenu_60"
+	"warden_60"
 	{
 		"en"		"1 Minute"
 		"de"		"1 Minute"
 	}
-	"warden_cdmenu_90"
+	"warden_90"
 	{
 		"en"		"1 Minute 30 seconds"
 		"de"		"1 Minute 30 Sekunden"
 	}
-	"warden_cdmenu_120"
+	"warden_120"
 	{
 		"en"		"2 Minutes"
 		"de"		"2 Minuten"
 	}
-	"warden_cdmenu_180"
+	"warden_180"
 	{
 		"en"		"3 Minutes"
 		"de"		"3 Minuten"
 	}
-	"warden_cdmenu_300"
+	"warden_300"
 	{
 		"en"		"5 Minutes"
 		"de"		"5 Minuten"
@@ -674,5 +701,10 @@
 		"en"		"No"
 		"de"		"Nein"
 	}
-
+	
+	"warden_minrandom"
+	{
+		"en"		"There is only one Terrorist left!"
+		"de"		"Es ist nur noch ein Terrorist am Leben."
+	}
 }
