@@ -8,16 +8,14 @@ know bugs:
 - [ ] warden icon losing head postion
 
 must:
-
 - [?] add all new things to wiki/readme
 - [ ] wiki: howto edit -> SetCvars, add menu item,
 - [ ] menu: add placeholder for cutom commands
-- [?] enable drawer for T
 - [ ] clean up translation files
 
 want:
-- [ ] gunplant prevention
-- [ ] zombie vision/wallhack
+- [/] gunplant prevention
+- [/] zombie vision/wallhack
 - [ ] ClientPrefs
 - [ ] !refuse !capitalation !repeat !heal !pardon
 - [ ] clean double useless code OnPlayerRunCmd
@@ -46,6 +44,7 @@ want:
 - [ ] merge double used translation to myjailbreak.phrases
 - [ ] warden: color prisioners (color roulette)
 - [ ] all: beacon last player for days
+- [ ] OnWeaponDrop -> CS_OnCSWeaponDrop
 - [ ] duckhunt auto higher if more t
 - [ ] duckhunt auto higher if more ct
 - [ ] hide: MovementValue hider/seeker convar
@@ -83,8 +82,8 @@ maybe:
 
 ###### DONE 
 lose cues bad spelling  
-bugs:
 
+bugs:
 - [x] sm_weapons_spawnmenu dont work
 - [x] sm_weapons_awp & sm_weapons_autosniper
 - [x] catch: sprint bug release T
@@ -132,6 +131,7 @@ must/want:
 - [x] warden: toggle noblock
 - [x] autofreeday if there is no CT
 - [x] warden laser pointer
+- [x] enable drawer for T
 - [x] warden drawer
 - [x] noscope Random weapon
 - [x] menu back button
