@@ -2411,7 +2411,7 @@ public int killmenu(Menu menu, MenuAction action, int client, int Position)
 		int choice = StringToInt(Item);
 		if(choice == 1)
 		{
-			if (GetTeamClientCount(CS_TEAM_T) = 1)
+			if (GetAlivePlayersCount(CS_TEAM_T) > 1)
 			{
 				int i = GetRandomPlayer(CS_TEAM_T);
 				if(i > 0)
@@ -2443,6 +2443,17 @@ public int killmenu(Menu menu, MenuAction action, int client, int Position)
 	{
 		delete menu;
 	}
+}
+
+stock int GetAlivePlayersCount(int iTeam)
+{
+	int iCount, i; iCount = 0;
+
+	for( i = 1; i <= MaxClients; i++ )
+		if( IsClientInGame( i ) && IsPlayerAlive( i )  && !IsClientRebel(i) && GetClientTeam( i ) == iTeam )
+		iCount++;
+
+	return iCount;
 }
 
 public Action KillPlayer( Handle timer, any client) 

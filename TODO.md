@@ -19,9 +19,12 @@ must:
 - [ ] clean up translation files
 - [x] new menu order in readme
 
+
 want:
 - [ ] gunplant prevention
+- [ ] zombie vision/wallhack
 - [ ] ClientPrefs
+- [ ] !refuse !capitalation !repeat !heal !pardon
 - [ ] clean double useless code OnPlayerRunCmd
 - [ ] set custom Laser/Drawer Button
 - [ ] warden capitulate pardon rebel - heal - wdh
@@ -59,7 +62,7 @@ want:
 - [ ] hide: MovementValue hider/seeker convar
 - [ ] new day: Tron like - all player Molotov rain https://forums.alliedmods.net/showthread.php?p=2398902
 - [ ] merge Transltions
-- [ ] RandomKill: no rebel / last T
+- [x] RandomKill: no rebel / last T
 - [ ] math quiz allow + - * / convars
 
 need?
