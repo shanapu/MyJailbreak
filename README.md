@@ -30,7 +30,7 @@ If you own a feature or extention for Jail/Warden that would fit in, i would be 
     - [Hide in the Dark](#hideinthedark) - (kind of HideNseek)
     - [Catch & Freeze](#catchfreeze) - (CT must catch all T (freeze tag))
     - [DuckHunt](#duckHunt) - (CT(hunter) with nova vs T(chicken in 3th person))
-    - [Jihad](#jihad) - (Ts got suicde bombs to kill all CTs)
+    - [Suicide Bomber](#suicide-bomber) - (Ts got suicde bombs to kill all CTs)
     - [Zeus](#zeus) - (FFA ZeusRound - get a new Zeus on Kill)
     - [Knife](#knifefight) - (FFA Knifefight with switchable grav, ice, and TP)
     - [Freeday](#freeday) - (auto Freeday on first round/damage disabled)
@@ -216,7 +216,7 @@ The menu shows only features that are enabled per round (e.g at EventDays no War
     * Zombie
     * Hide
     * Catch & Freeze
-    * Jihad
+    * Suicide Bomber
     * HEbattle
     * NoScope
     * DuckHunt
@@ -244,7 +244,7 @@ The menu shows only features that are enabled per round (e.g at EventDays no War
     * Zombie
     * Hide
     * Catch & Freeze
-    * Jihad
+    * Suicide Bomber
     * HEbattle
     * NoScope
     * DuckHunt
@@ -268,7 +268,7 @@ The menu shows only features that are enabled per round (e.g at EventDays no War
     * Zombie
     * Hide
     * Catch & Freeze
-    * Jihad
+    * Suicide Bomber
     * HEbattle
     * NoScope
     * DuckHunt
@@ -288,7 +288,7 @@ The menu shows only features that are enabled per round (e.g at EventDays no War
     * Zombie
     * Hide
     * Catch & Freeze
-    * Jihad
+    * Suicide Bomber
     * HEbattle
     * NoScope
     * DuckHunt
@@ -700,46 +700,46 @@ T are Chicken in Thirdperson. After trucetime the cells open and T got HE grenad
 - Custom chat [Tag]
 
 
-#### Jihad
+#### Suicide Bomber
 
-This plugin allows players to vote and Warden to set next round to Jihad.  
+This plugin allows players to vote and Warden to set next round to Suicide Bomber.  
 On Round start CTs got time to hide before cells open and Ts got Suicide bombs to kill all CT.  
 CT and T can Sprint with USE-Key (default).  
 
 ##### Commands
 ```
-- sm_jihad - Allows players to vote for a duckhunt
-- sm_setjihad - Allows the Admin or Warden to set jihad as next round
+- sm_suicidebomber - Allows players to vote for a duckhunt
+- sm_setsuicidebomber - Allows the Admin or Warden to set Suicide Bomber as next round
 - sm_sprint - Start sprinting!
 - sm_makeboom - Suicide with bomb.
 
 ```
 ##### Cvars
 ```
-- sm_jihad_version - Shows the version of the SourceMod plugin MyJailbreak - jihad
-- sm_jihad_setw: 0 - disabled, 1 - allow Warden to set next round ffa. Default 1
-- sm_jihad_seta: 0 - disabled, 1 - allow Admin to set next round ffa round. Default 1
-- sm_jihad_vote: 0 - disabled, 1 - allow player to vote for ffa. Default 1
-- sm_jihad_enable: 0 - disabled, 1 - enable the plugin. Default 1
-- sm_jihad_rounds: Rounds to play in a row
-- sm_jihad_key: 1 - Inspect(look) weapon / 2 - walk / 3 - Secondary Attack. Default 1
-- sm_jihad_standstill: 0 - disabled, 1 - standstill(cant move) on Activate bomb. Default 0
-- sm_jihad_bomb_radius: Radius for bomb damage. Default 200
-- sm_jihad_sprint_enable: 0 - disabled, 1 - enable ShortSprint. Default 1
-- sm_jihad_sprint_button: 0 - disabled, 1 - enable +use button support. Default 1
-- sm_jihad_sprint_cooldown: Time in seconds the player must wait for the next sprint. Default 10
-- sm_jihad_sprint_speed: Ratio for how fast the player will sprint. Default 1.25
-- sm_jihad_sprint_time: Time in seconds the player will sprint. Default 3.5
-- sm_jihad_roundtime - Roundtime for a single jihad round in minutes. Default 5
-- sm_jihad_hidetime - Time to hide. Default 20
-- sm_jihad_cooldown_start - Rounds until event can be start after mapchange. Default 3
-- sm_jihad_cooldown_day - Rounds until event can be started again. Default 3
-- sm_jihad_sounds_enable: 0 - disabled, 1 - enable sounds. Default 1
-- sm_jihad_sounds_start: Path to the soundfile which should be played on start. Default "music/MyJailbreak/start.mp3"
-- sm_jihad_sounds_jihad - Path to the soundfile which should be played on activate bomb. Default "music/MyJailbreak/jihad.mp3"
-- sm_jihad_sounds_boom - Path to the soundfile which should be played on detonation. Default "music/MyJailbreak/boom.mp3"
-- sm_jihad_overlays_enable: 0 - disabled, 1 - enable start overlay. Default 1
-- sm_jihad_overlays_start: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
+- sm_suicidebomber_version - Shows the version of the SourceMod plugin MyJailbreak - Suicide Bomber
+- sm_suicidebomber_setw: 0 - disabled, 1 - allow Warden to set next round ffa. Default 1
+- sm_suicidebomber_seta: 0 - disabled, 1 - allow Admin to set next round ffa round. Default 1
+- sm_suicidebomber_vote: 0 - disabled, 1 - allow player to vote for ffa. Default 1
+- sm_suicidebomber_enable: 0 - disabled, 1 - enable the plugin. Default 1
+- sm_suicidebomber_rounds: Rounds to play in a row
+- sm_suicidebomber_key: 1 - Inspect(look) weapon / 2 - walk / 3 - Secondary Attack. Default 1
+- sm_suicidebomber_standstill: 0 - disabled, 1 - standstill(cant move) on Activate bomb. Default 0
+- sm_suicidebomber_bomb_radius: Radius for bomb damage. Default 200
+- sm_suicidebomber_sprint_enable: 0 - disabled, 1 - enable ShortSprint. Default 1
+- sm_suicidebomber_sprint_button: 0 - disabled, 1 - enable +use button support. Default 1
+- sm_suicidebomber_sprint_cooldown: Time in seconds the player must wait for the next sprint. Default 10
+- sm_suicidebomber_sprint_speed: Ratio for how fast the player will sprint. Default 1.25
+- sm_suicidebomber_sprint_time: Time in seconds the player will sprint. Default 3.5
+- sm_suicidebomber_roundtime - Roundtime for a single Suicide Bomber round in minutes. Default 5
+- sm_suicidebomber_hidetime - Time to hide. Default 20
+- sm_suicidebomber_cooldown_start - Rounds until event can be start after mapchange. Default 3
+- sm_suicidebomber_cooldown_day - Rounds until event can be started again. Default 3
+- sm_suicidebomber_sounds_enable: 0 - disabled, 1 - enable sounds. Default 1
+- sm_suicidebomber_sounds_start: Path to the soundfile which should be played on start. Default "music/MyJailbreak/start.mp3"
+- sm_suicidebomber_sounds_suicidebomber - Path to the soundfile which should be played on activate bomb. Default "music/MyJailbreak/suicidebomber.mp3"
+- sm_suicidebomber_sounds_boom - Path to the soundfile which should be played on detonation. Default "music/MyJailbreak/boom.mp3"
+- sm_suicidebomber_overlays_enable: 0 - disabled, 1 - enable start overlay. Default 1
+- sm_suicidebomber_overlays_start: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
 
 ```
 ##### Features

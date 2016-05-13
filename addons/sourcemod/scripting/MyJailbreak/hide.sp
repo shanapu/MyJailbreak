@@ -27,11 +27,11 @@ ConVar gc_iRoundTime;
 ConVar gc_iCooldownDay;
 ConVar gc_iCooldownStart;
 ConVar gc_iFreezeTime;
-ConVar g_iGetRoundTime;
 ConVar gc_sOverlayStartPath;
 ConVar gc_bSounds;
 ConVar gc_sSoundStartPath;
 ConVar gc_iRounds;
+ConVar g_iGetRoundTime;
 
 //Integers
 int g_iOldRoundTime;
@@ -39,8 +39,8 @@ int g_iFreezeTime;
 int g_iCoolDown;
 int g_iVoteCount;
 int g_iRound;
-int FogIndex = -1;
 int g_iMaxRound;
+int FogIndex = -1;
 
 //Handles
 Handle FreezeTimer;

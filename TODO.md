@@ -1,15 +1,16 @@
 know bugs:
 - [ ] countdown: Start -> Cancel -> Start - bug? (which countdowns?)
 - [ ] weapons.smx "block" stamm vip models?!
-- [ ] jihad win -> T win show wrong - solution: mp_default_team_winner_no_objective?
+- [ ] Suicide Bomber win -> T win show wrong - solution: mp_default_team_winner_no_objective?
 - [ ] catch win -> T win show wrong
 - [ ] hide win -> T win show wrong
 - [?] duckhunt end FP
-- [x] jihad bombactiv in 2nd round
+- [x] Suicide Bomber bombactiv in 2nd round
 - [x] late precache warden icon
 - [ ] warden icon losing head
 
 must:
+- [ ] empty deagle
 - [x] install instruction 
 - [?] add all new things to wiki/readme
 - [ ] wiki: howto edit -> SetCvars, add menu item,
@@ -19,6 +20,7 @@ must:
 - [x] new menu order in readme
 
 want:
+- [ ] gunplant prevention
 - [ ] ClientPrefs
 - [ ] clean double useless code OnPlayerRunCmd
 - [ ] set custom Laser/Drawer Button
@@ -66,8 +68,8 @@ need?
 - [ ] whistle for hider?
 - [ ] events on random days? no voting/set - core2
 - [ ] silent mp_roundtime?
-- [ ] Jihad: burn dead bodies?
-- [ ] Jihad: body counter?
+- [ ] Suicide Bomber: burn dead bodies?
+- [ ] Suicide Bomber: body counter?
 - [ ] Marker color?!
 - [ ] warden: ff not for ct?
 - [ ] SetCvarString flags?
@@ -98,7 +100,7 @@ bugs:
 - [x] sm_weapons_awp & sm_weapons_autosniper
 - [x] catch: sprint bug release T
 - [x] ct vs t check terror>0
-- [x] Jihad: Hp & burn for not nearby
+- [x] Suicide Bomber: Hp & burn for not nearby
 - [x] mp_roundtime 1 after set event on a eventend
 - [x] catch: Just, sometimes they don't freeze
 - [x] Thirdperson: on disconnect make fp
@@ -113,7 +115,7 @@ bugs:
 - [x] unstrip weapon after win zombie T
 - [x] change team Join ct sure?
 - [x] hide missing ta grenade?
-- [x] GetEdictClassname" reported: Invalid edict  /  Command_BombJihad
+- [x] GetEdictClassname" reported: Invalid edict  /  Command_BombSuicideBomber
 - [x] catch IsClientInGame" reported: Client index 0 is invalid overlay
 - [x] menu Event adsm double by admin/warden
 - [x] translation vote hide (2)
@@ -121,7 +123,7 @@ bugs:
 - [x] menu events menu = admin!=player
 - [x] hosties missing?
 - [x] menu duckhunt
-- [x] Jihad win bug
+- [x] Suicide Bomber win bug
 - [x] make knife FFA
 - [x] war unfreeze time freeze dont work
 - [x] wartruce timer defaul 15sec
@@ -182,19 +184,19 @@ must/want:
 - [x] Marker: timer disaprears
 - [x] warden: allow unvote
 - [x] new day: suicid bomber
-- [x] Jihad: activate bomb when cells open 
-- [x] Jihad: need equit bomb to use Jihad
+- [x] Suicide Bomber: activate bomb when cells open 
+- [x] Suicide Bomber: need equit bomb to use Suicide Bomber
 - [x] warden: countdown
 - [x] playertags: as chat tag
 - [x] catch: T win when time run out
 - [x] hide: T win when time run out
-- [x] Jihad: CT win when time run out
+- [x] Suicide Bomber: CT win when time run out
 - [x] move FF from menu to warden
 - [x] move randomkill from menu to warden
 - [x] hide: freeze hide bool
 - [x] Freeday: damage disbaled
 - [x] sprint msg
-- [x] Jihad no bomb drop
+- [x] Suicide Bomber no bomb drop
 - [x] disbale FF on roundend
 - [x] wiki
 - [x] template
@@ -209,15 +211,15 @@ must/want:
 - [x] randomkill smite
 - [x] warden: markers
 - [x] warden: killrandom - are you sure?
-- [x] Jihad: freeze by activate bool
+- [x] Suicide Bomber: freeze by activate bool
 - [x] translations timetounfreeze-> trucetime
 - [x] new day: knife only (ice skate/third person?)
 - [x] warden: pick random if there is no warden
 - [x] valid client and co to inc
 - [x] noscope: dis/enable lowgrav
 - [x] noscope: set grav
-- [x] Jihad: set radius
-- [x] Jihad: bool movement on bomb activate
+- [x] Suicide Bomber: set radius
+- [x] Suicide Bomber: bool movement on bomb activate
 - [x] countdown: start stop sound
 - [x] countdown: stop roundend
 - [x] countdown cancel all running
