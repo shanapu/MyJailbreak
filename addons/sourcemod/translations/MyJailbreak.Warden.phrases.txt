@@ -704,7 +704,7 @@
 	
 	"warden_minrandom"
 	{
-		"en"		"There is only one Terrorist left!"
-		"de"		"Es ist nur noch ein Terrorist am Leben."
+		"en"		"There is only one (non-rebeling) Terrorist left!"
+		"de"		"Es ist nur noch ein (nicht rebelierender) Terrorist am Leben."
 	}
 }

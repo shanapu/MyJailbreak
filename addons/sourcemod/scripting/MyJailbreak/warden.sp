@@ -1782,19 +1782,25 @@ public Action ToggleDrawerT(int client, int args)
 				
 				for(int iClient=1; iClient <= MaxClients; iClient++)
 				{
-					if (GetClientTeam(iClient) == CS_TEAM_T && IsValidClient(iClient, false, false)) DrawerMenu(iClient,0);
+					if (IsValidClient(iClient, false, false))
+					{
+						if (GetClientTeam(iClient) == CS_TEAM_T) DrawerMenu(iClient,0);
+					}
 				}
 			}
 			else
 			{
 				for(int iClient=1; iClient <= MaxClients; iClient++)
 				{
-					if (GetClientTeam(iClient) == CS_TEAM_T && IsValidClient(iClient, false, false))
+					if (IsValidClient(iClient, false, false))
 					{
-						g_fLastDrawer[client][0] = 0.0;
-						g_fLastDrawer[client][1] = 0.0;
-						g_fLastDrawer[client][2] = 0.0;
-						g_bDrawerUse[client] = false;
+						if (GetClientTeam(iClient) == CS_TEAM_T)
+						{
+							g_fLastDrawer[client][0] = 0.0;
+							g_fLastDrawer[client][1] = 0.0;
+							g_fLastDrawer[client][2] = 0.0;
+							g_bDrawerUse[client] = false;
+						}
 					}
 				}
 				g_bDrawerT = false;
