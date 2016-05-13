@@ -29,7 +29,7 @@ ConVar g_bZeus;
 ConVar g_bRules;
 ConVar g_bsetFF;
 ConVar g_bWar;
-ConVar g_bJihad;
+ConVar g_bSuicideBomber;
 ConVar g_bKnife;
 ConVar g_bFFA;
 ConVar g_bLaser;
@@ -115,7 +115,7 @@ public void OnConfigsExecuted()
 	g_bNoScope = FindConVar("sm_noscope_enable");
 	g_bHide = FindConVar("sm_hide_enable");
 	g_bKnife = FindConVar("sm_knifefight_enable");
-	g_bJihad = FindConVar("sm_jihad_enable");
+	g_bSuicideBomber = FindConVar("sm_suicidebomber_enable");
 	g_bCatch = FindConVar("sm_catch_enable");
 	g_bHEbattle = FindConVar("sm_hebattle_enable");
 	g_bFreeday = FindConVar("sm_Freeday_enable");
@@ -606,12 +606,12 @@ public Action VoteEventDays(int client, int args)
 					daysmenu.AddItem("votecatch", menuinfo23);
 				}
 			}
-			if(g_bJihad != null)
+			if(g_bSuicideBomber != null)
 			{
-				if(g_bJihad.BoolValue)
+				if(g_bSuicideBomber.BoolValue)
 				{
-					Format(menuinfo23, sizeof(menuinfo23), "%T", "menu_jihad", LANG_SERVER);
-					daysmenu.AddItem("voteJihad", menuinfo23);
+					Format(menuinfo23, sizeof(menuinfo23), "%T", "menu_suicidebomber", LANG_SERVER);
+					daysmenu.AddItem("voteSuicideBomber", menuinfo23);
 				}
 			}
 			if(g_bHEbattle != null)
@@ -718,9 +718,9 @@ public int VoteEventMenuHandler(Menu daysmenu, MenuAction action, int client, in
 				JbMenu(client,0);
 			}
 		}
-		else if ( strcmp(info,"voteJihad") == 0 )
+		else if ( strcmp(info,"voteSuicideBomber") == 0 )
 		{
-			FakeClientCommand(client, "sm_jihad");
+			FakeClientCommand(client, "sm_suicidebomber");
 			if(!gc_bClose.BoolValue)
 			{
 				JbMenu(client,0);
@@ -842,12 +842,12 @@ public Action SetEventDays(int client, int args)
 					daysmenu.AddItem("setcatch", menuinfo23);
 				}
 			}
-			if(g_bJihad != null)
+			if(g_bSuicideBomber != null)
 			{
-				if(g_bJihad.BoolValue)
+				if(g_bSuicideBomber.BoolValue)
 				{
-					Format(menuinfo23, sizeof(menuinfo23), "%T", "menu_jihad", LANG_SERVER);
-					daysmenu.AddItem("setJihad", menuinfo23);
+					Format(menuinfo23, sizeof(menuinfo23), "%T", "menu_suicidebomber", LANG_SERVER);
+					daysmenu.AddItem("setSuicideBomber", menuinfo23);
 				}
 			}
 			if(g_bHEbattle != null)
@@ -969,11 +969,11 @@ public int SetEventMenuHandler(Menu daysmenu, MenuAction action, int client, int
 				}
 			}
 		}
-		else if ( strcmp(info,"setJihad") == 0 )
+		else if ( strcmp(info,"setSuicideBomber") == 0 )
 		{
 			if (warden_iswarden(client) || (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true)))
 			{
-				FakeClientCommand(client, "sm_setjihad");
+				FakeClientCommand(client, "sm_setsuicidebomber");
 				if(!gc_bClose.BoolValue)
 				{
 					JbMenu(client,0);
