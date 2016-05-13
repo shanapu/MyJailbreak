@@ -114,7 +114,7 @@ int g_iColors[8][4] =
 {
 	{255,255,255,255},  //white
 	{255,0,0,255},  //red
-	{42,255,42,255},  //green
+	{20,255,20,255},  //green
 	{0,65,255,255},  //blue
 	{255,255,0,255},  //yellow
 	{0,255,255,255},  //cyan
@@ -380,7 +380,7 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 	else if(convar == gc_sModelPath)
 	{
 		strcopy(g_sWardenModel, sizeof(g_sWardenModel), newValue);
-		PrecacheModel(g_sWardenModel);
+		if(gc_bModel.BoolValue) PrecacheModel(g_sWardenModel);
 	}
 	else if(convar == gc_sIconPath)
 	{
@@ -1199,7 +1199,7 @@ stock void MarkerMenu(int client)
 	if (marker != -1)
 	{
 		RemoveMarker(marker);
-		CPrintToChat(client, "%t %t", "warden_tag", "warden_marker_remove", g_sColorNames[marker]);
+		CPrintToChatAll("%t %t", "warden_tag", "warden_marker_remove", g_sColorNames[marker]);
 		return;
 	}
 	

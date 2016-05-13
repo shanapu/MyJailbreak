@@ -400,7 +400,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 							GivePlayerItem(client, "weapon_tec9");
 							GivePlayerItem(client, "weapon_hegrenade");
 							GivePlayerItem(client, "weapon_molotov");
-							if (gc_bGlow.BoolValue) GlowTimer = CreateTimer(1.5, Glow_Timer, client, TIMER_REPEAT);
+							if (gc_bGlow.BoolValue && (IsValidClient(client, false, true))) GlowTimer = CreateTimer(1.5, Glow_Timer, client, TIMER_REPEAT);
 						}
 						SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
 						SendPanelToClient(ZombieMenu, client, NullHandler, 20);
@@ -440,10 +440,16 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 	{
 		for(int client=1; client <= MaxClients; client++)
 		{
-			if (IsValidClient(client, false, true))
+			if (IsValidClient(client, false, false))
 			{
 				if (gc_bVision.BoolValue) SetEntProp(client, Prop_Send, "m_bNightVisionOn",0); 
 				SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
+				char model[PLATFORM_MAX_PATH]; 
+				GetClientModel(client, model, sizeof(model)); 
+				int skin = CPS_SetSkin(client, model, CPS_RENDER);
+				SetEntProp(skin, Prop_Send, "m_bShouldGlow", false, true);
+				SetEntProp(skin, Prop_Send, "m_nGlowStyle", 1);
+				SetEntPropFloat(skin, Prop_Send, "m_flGlowMaxDist", 10000000.0);
 			}
 		}
 		

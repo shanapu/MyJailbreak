@@ -390,7 +390,7 @@
 		"de"		"Wärter {purple}{1}{default} hat eine {green}{2}{default} fallen lassen."
 	}
 	
-	"warden_gunplant"
+	"warden_gunplant_nc"
 	{
 		"#format"	"{1:N},{2:s}"
 		"en"		"Guard {1} dropped weapon {2}."
@@ -498,7 +498,7 @@
 	{
 		"#format"	"{1:s}"
 		"en"		"{1} marker removed! You were far away from it."
-		"de"		"Marker {1} entfernt. Du warst zu weit davon entfernt."
+		"de"		"Marker {1} entfernt. Du warst zu weit weg."
 	}
 	
 	"warden_marker_title"
