@@ -247,7 +247,7 @@ public void OnPluginStart()
 	gc_bFF = AutoExecConfig_CreateConVar("sm_warden_ff", "1", "0 - disabled, 1 - enable switch ff for T ", _, true,  0.0, true, 1.0);
 	gc_bGunPlant = AutoExecConfig_CreateConVar("sm_warden_gunplant", "1", "0 - disabled, 1 - enable Gun plant prevention", _, true,  0.0, true, 1.0);
 	gc_bGunRemove = AutoExecConfig_CreateConVar("sm_warden_gunremove", "1", "0 - disabled, 1 - remove planted guns", _, true,  0.0, true, 1.0);
-	gc_fGunRemoveTime = AutoExecConfig_CreateConVar("sm_gunremove_time", "5.0", "Time in seconds to remove planted guns.", _, true,  0.1);
+	gc_fGunRemoveTime = AutoExecConfig_CreateConVar("sm_gunremove_time", "5.0", "Time in seconds to pick up gun again before.", _, true,  0.1);
 	gc_bGunSlap = AutoExecConfig_CreateConVar("sm_warden_gunslap", "1", "0 - disabled, 1 - Slap the CT for dropping a gun", _, true,  0.0, true, 1.0);
 	gc_iGunSlapDamage = AutoExecConfig_CreateConVar("sm_warden_gunslap_dmg", "10", "Amoung of HP losing on slap for dropping a gun", _, true,  0.0);
 	gc_bRandom = AutoExecConfig_CreateConVar("sm_warden_random", "1", "0 - disabled, 1 - enable kill a random t for warden", _, true,  0.0, true, 1.0);
@@ -2663,6 +2663,7 @@ public Action CS_OnCSWeaponDrop(int client, int weapon)
 			{
 				CPrintToChat(client, "%t %t", "warden_tag" , "warden_noplant", client , g_sWeaponName);
 				if(g_iWarden != -1) CPrintToChat(g_iWarden, "%t %t", "warden_tag" , "warden_gunplant", client , g_sWeaponName);
+				if((g_iWarden != -1) && gc_bBetterNotes.BoolValue) PrintHintText(g_iWarden, "%t", "warden_gunplant_nc", client , g_sWeaponName);
 				if(gc_bGunRemove.BoolValue) CreateTimer(gc_fGunRemoveTime.FloatValue, RemoveWeapon, weapon);
 				if(gc_bGunSlap.BoolValue) SlapPlayer(client, gc_iGunSlapDamage.IntValue, true);
 			}
@@ -2671,11 +2672,12 @@ public Action CS_OnCSWeaponDrop(int client, int weapon)
 	return Plugin_Continue;
 }
 
-
-
 public Action RemoveWeapon(Handle timer, any weapon)
 {
-	if(IsValidEdict(weapon)) AcceptEntityInput(weapon, "Kill");
+	if(Weapon_GetOwner(weapon) == -1)
+	{
+		if(IsValidEdict(weapon)) AcceptEntityInput(weapon, "Kill");
+	}
 }
 
 //Natives, Forwards & stocks
