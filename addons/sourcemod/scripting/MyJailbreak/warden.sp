@@ -87,6 +87,7 @@ bool g_bDrawerT = false;
 bool g_bNoBlock = true;
 bool g_bLaserColorRainbow[MAXPLAYERS+1] = true;
 bool g_bDrawerColorRainbow[MAXPLAYERS+1] = true;
+bool g_bWeaponDropped = false;
 
 //Integers
 
@@ -118,7 +119,7 @@ int g_iColors[8][4] =
 	{255,255,0,255},  //yellow
 	{0,255,255,255},  //cyan
 	{255,0,255,255},  //magenta
-	{255,90,0,255}
+	{255,80,0,255}
 };
 int g_iLaserColor[MAXPLAYERS+1];
 int g_iDrawerColor[MAXPLAYERS+1];
@@ -250,7 +251,7 @@ public void OnPluginStart()
 	gc_bGunPlant = AutoExecConfig_CreateConVar("sm_warden_gunplant", "1", "0 - disabled, 1 - enable Gun plant prevention", _, true,  0.0, true, 1.0);
 	gc_bGunNoDrop = AutoExecConfig_CreateConVar("sm_warden_gunnodrop", "0", "0 - disabled, 1 - disallow gun dropping for ct", _, true,  0.0, true, 1.0);
 	gc_bGunRemove = AutoExecConfig_CreateConVar("sm_warden_gunremove", "1", "0 - disabled, 1 - remove planted guns", _, true,  0.0, true, 1.0);
-	gc_fGunRemoveTime = AutoExecConfig_CreateConVar("sm_gunremove_time", "5.0", "Time in seconds to pick up gun again before.", _, true,  0.1);
+	gc_fGunRemoveTime = AutoExecConfig_CreateConVar("sm_warden_gunremove_time", "5.0", "Time in seconds to pick up gun again before.", _, true,  0.1);
 	gc_bGunSlap = AutoExecConfig_CreateConVar("sm_warden_gunslap", "1", "0 - disabled, 1 - Slap the CT for dropping a gun", _, true,  0.0, true, 1.0);
 	gc_iGunSlapDamage = AutoExecConfig_CreateConVar("sm_warden_gunslap_dmg", "10", "Amoung of HP losing on slap for dropping a gun", _, true,  0.0);
 	gc_bRandom = AutoExecConfig_CreateConVar("sm_warden_random", "1", "0 - disabled, 1 - enable kill a random t for warden", _, true,  0.0, true, 1.0);
@@ -1809,10 +1810,10 @@ public Action ToggleDrawerT(int client, int args)
 					{
 						if (GetClientTeam(iClient) == CS_TEAM_T)
 						{
-							g_fLastDrawer[client][0] = 0.0;
-							g_fLastDrawer[client][1] = 0.0;
-							g_fLastDrawer[client][2] = 0.0;
-							g_bDrawerUse[client] = false;
+							g_fLastDrawer[iClient][0] = 0.0;
+							g_fLastDrawer[iClient][1] = 0.0;
+							g_fLastDrawer[iClient][2] = 0.0;
+							g_bDrawerUse[iClient] = false;
 						}
 					}
 				}
@@ -2651,6 +2652,7 @@ public Action CloseDoors(int client, int args)
 
 //GunPlant
 
+
 public Action CS_OnCSWeaponDrop(int client, int weapon)
 {
 	if(gc_bPlugin.BoolValue)	
@@ -2659,17 +2661,22 @@ public Action CS_OnCSWeaponDrop(int client, int weapon)
 		{
 			if(GetClientTeam(client) == CS_TEAM_CT)
 			{
-				g_iWeaponDrop[client] = weapon;
+				if (g_bWeaponDropped) 
+					return Plugin_Handled;
+					
 				if(gc_bGunNoDrop.BoolValue)
 					return Plugin_Handled;
-				else CreateTimer(0.5, RemoveWeaponCMD, client);
+					
+				g_iWeaponDrop[client] = weapon;
+				
+				if (!g_bWeaponDropped) CreateTimer(0.5, DroppedWeapon, client);
 			}
 		}
 	}
 	return Plugin_Continue;
 }
 
-public Action RemoveWeaponCMD(Handle timer, any client)
+public Action DroppedWeapon(Handle timer, any client)
 {
 	if(Weapon_GetOwner(g_iWeaponDrop[client]) == -1)
 	{
@@ -2679,7 +2686,7 @@ public Action RemoveWeaponCMD(Handle timer, any client)
 			
 			GetEntityClassname(g_iWeaponDrop[client], g_sWeaponName, sizeof(g_sWeaponName));
 			ReplaceString(g_sWeaponName, sizeof(g_sWeaponName), "weapon_", "", false); 
-			
+			g_bWeaponDropped = true;
 			
 			CPrintToChat(client, "%t %t", "warden_tag" , "warden_noplant", client , g_sWeaponName);
 			if(g_iWarden != -1) CPrintToChat(g_iWarden, "%t %t", "warden_tag" , "warden_gunplant", client , g_sWeaponName);
@@ -2692,10 +2699,16 @@ public Action RemoveWeaponCMD(Handle timer, any client)
 
 public Action RemoveWeapon(Handle timer, any client)
 {
-	if(Weapon_GetOwner(g_iWeaponDrop[client]) == -1)
+	if(IsValidEntity(g_iWeaponDrop[client]))
 	{
-		if(IsValidEdict(g_iWeaponDrop[client])) AcceptEntityInput(g_iWeaponDrop[client], "Kill");
+		if(!(Weapon_GetOwner(g_iWeaponDrop[client]) != -1))
+		{
+			if(IsValidEdict(g_iWeaponDrop[client])) AcceptEntityInput(g_iWeaponDrop[client], "Kill");
+			
+		}
+		
 	}
+	g_bWeaponDropped = false;
 }
 
 //Natives, Forwards & stocks
