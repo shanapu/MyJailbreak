@@ -30,6 +30,8 @@ ConVar gc_bSpawnCell;
 ConVar gc_iZombieHP;
 ConVar gc_iHumanHP;
 ConVar gc_bDark;
+ConVar gc_bVision;
+ConVar gc_bGlow;
 ConVar gc_sModelPath;
 ConVar gc_bSounds;
 ConVar gc_sSoundStartPath;
@@ -50,6 +52,7 @@ int FogIndex = -1;
 
 //Handles
 Handle FreezeTimer;
+Handle GlowTimer;
 Handle ZombieMenu;
 
 //Floats
@@ -99,6 +102,8 @@ public void OnPluginStart()
 	gc_iZombieHP = AutoExecConfig_CreateConVar("sm_zombie_zombie_hp", "850", "HP the Zombies got on Spawn", _, true, 1.0);
 	gc_iHumanHP = AutoExecConfig_CreateConVar("sm_zombie_human_hp", "65", "HP the Humans got on Spawn", _, true, 1.0);
 	gc_bDark = AutoExecConfig_CreateConVar("sm_zombie_dark", "1", "0 - disabled, 1 - enable Map Darkness", _, true,  0.0, true, 1.0);
+	gc_bGlow = AutoExecConfig_CreateConVar("sm_zombie_glow", "1", "0 - disabled, 1 - enable Glow effect for humans", _, true,  0.0, true, 1.0);
+	gc_bVision = AutoExecConfig_CreateConVar("sm_zombie_vision", "1", "0 - disabled, 1 - enable NightVision View for Zombies", _, true,  0.0, true, 1.0);
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_zombie_cooldown_day", "3", "Rounds cooldown after a event until event can be start again", _, true, 0.0);
 	gc_iCooldownStart = AutoExecConfig_CreateConVar("sm_zombie_cooldown_start", "3", "Rounds until event can be start after mapchange.", _, true, 0.0);
 	gc_bSounds = AutoExecConfig_CreateConVar("sm_zombie_sounds_enable", "1", "0 - disabled, 1 - enable sounds", _, true, 0.0, true, 1.0);
@@ -395,6 +400,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 							GivePlayerItem(client, "weapon_tec9");
 							GivePlayerItem(client, "weapon_hegrenade");
 							GivePlayerItem(client, "weapon_molotov");
+							if (gc_bGlow.BoolValue) GlowTimer = CreateTimer(1.5, Glow_Timer, client, TIMER_REPEAT);
 						}
 						SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
 						SendPanelToClient(ZombieMenu, client, NullHandler, 20);
@@ -436,13 +442,13 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 		{
 			if (IsValidClient(client, false, true))
 			{
-				SetEntProp(client, Prop_Send, "m_bNightVisionOn",0); 
+				if (gc_bVision.BoolValue) SetEntProp(client, Prop_Send, "m_bNightVisionOn",0); 
 				SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
 			}
 		}
 		
-		if (FreezeTimer != null) KillTimer(FreezeTimer);
-		
+		delete FreezeTimer;
+		delete GlowTimer;
 		
 		if (winner == 2) PrintHintTextToAll("%t", "zombie_twin_nc");
 		if (winner == 3) PrintHintTextToAll("%t", "zombie_ctwin_nc");
@@ -482,11 +488,24 @@ public void OnMapEnd()
 {
 	IsZombie = false;
 	StartZombie = false;
-	if (FreezeTimer != null) KillTimer(FreezeTimer);
+	delete FreezeTimer;
+	delete GlowTimer;
 	g_iVoteCount = 0;
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0';
 	SetEventDay("none");
+}
+
+//glow
+
+public Action Glow_Timer(Handle timer, any client)
+{
+	char model[PLATFORM_MAX_PATH]; 
+	GetClientModel(client, model, sizeof(model)); 
+	int skin = CPS_SetSkin(client, model, CPS_RENDER); 
+	SetEntProp(skin, Prop_Send, "m_bShouldGlow", true, true);
+	SetEntProp(skin, Prop_Send, "m_nGlowStyle", 3);
+	SetEntPropFloat(skin, Prop_Send, "m_flGlowMaxDist", 10000000.0);
 }
 
 //Start Timer
@@ -523,7 +542,7 @@ public Action StartTimer(Handle timer)
 				{
 					SetEntityMoveType(client, MOVETYPE_WALK);
 					SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.4);
-					SetEntProp(client, Prop_Send, "m_bNightVisionOn",1); 
+					if (gc_bVision.BoolValue) SetEntProp(client, Prop_Send, "m_bNightVisionOn",1); 
 				}
 				SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
 				PrintHintText(client,"%t", "zombie_start_nc");
