@@ -7,6 +7,7 @@
 #include <emitsoundany>
 #include <autoexecconfig>
 #include <myjailbreak>
+#include <CustomPlayerSkins>
 
 //Compiler Options
 #pragma semicolon 1
@@ -103,7 +104,7 @@ public void OnPluginStart()
 	gc_bSounds = AutoExecConfig_CreateConVar("sm_zombie_sounds_enable", "1", "0 - disabled, 1 - enable sounds", _, true, 0.0, true, 1.0);
 	gc_sSoundStartPath = AutoExecConfig_CreateConVar("sm_zombie_sounds_start", "music/MyJailbreak/zombie.mp3", "Path to the soundfile which should be played for a start.");
 	gc_bOverlays = AutoExecConfig_CreateConVar("sm_zombie_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true, 0.0, true, 1.0);
-	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_zombie_overlays_start", "overlays/MyJailbreak/start" , "Path to the start Overlay DONT TYPE .vmt or .vft");
+	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_zombie_overlays_start", "overlays/MyJailbreak/zombie" , "Path to the start Overlay DONT TYPE .vmt or .vft");
 	gc_sModelPath = AutoExecConfig_CreateConVar("sm_zombie_model", "models/player/custom_player/zombie/revenant/revenant_v2.mdl", "Path to the model for zombies.");
 	
 	AutoExecConfig_ExecuteFile();
@@ -433,7 +434,11 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 	{
 		for(int client=1; client <= MaxClients; client++)
 		{
-			if (IsValidClient(client, false, true)) SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
+			if (IsValidClient(client, false, true))
+			{
+				SetEntProp(client, Prop_Send, "m_bNightVisionOn",0); 
+				SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
+			}
 		}
 		
 		if (FreezeTimer != null) KillTimer(FreezeTimer);
@@ -518,6 +523,7 @@ public Action StartTimer(Handle timer)
 				{
 					SetEntityMoveType(client, MOVETYPE_WALK);
 					SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.4);
+					SetEntProp(client, Prop_Send, "m_bNightVisionOn",1); 
 				}
 				SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
 				PrintHintText(client,"%t", "zombie_start_nc");
@@ -532,7 +538,7 @@ public Action StartTimer(Handle timer)
 		CPrintToChatAll("%t %t", "zombie_tag" , "zombie_start");
 	}
 	FreezeTimer = null;
-	if(gc_bDark.BoolValue) {AcceptEntityInput(FogIndex, "TurnOn");}
+	if(gc_bDark.BoolValue && (g_iRound = 1)) {AcceptEntityInput(FogIndex, "TurnOn");}
 	
 	return Plugin_Stop;
 }

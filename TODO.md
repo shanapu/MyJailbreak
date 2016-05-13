@@ -4,21 +4,16 @@ know bugs:
 - [ ] Suicide Bomber win -> T win show wrong - solution: mp_default_team_winner_no_objective?
 - [ ] catch win -> T win show wrong
 - [ ] hide win -> T win show wrong
-- [?] duckhunt end FP
-- [x] Suicide Bomber bombactiv in 2nd round
-- [x] late precache warden icon
-- [ ] warden icon losing head
+- [?] duckhunt&knife end FP
+- [ ] warden icon losing head postion
 
 must:
-- [ ] empty deagle
-- [x] install instruction 
+
 - [?] add all new things to wiki/readme
 - [ ] wiki: howto edit -> SetCvars, add menu item,
 - [ ] menu: add placeholder for cutom commands
 - [?] enable drawer for T
 - [ ] clean up translation files
-- [x] new menu order in readme
-
 
 want:
 - [ ] gunplant prevention
@@ -28,10 +23,7 @@ want:
 - [ ] clean double useless code OnPlayerRunCmd
 - [ ] set custom Laser/Drawer Button
 - [ ] warden capitulate pardon rebel - heal - wdh
-- [x] warden laser pointer
-- [x] warden drawer
 - [ ] translate EventDay native
-- [x] autofreeday if there is no CT
 - [ ] respawn on freeday
 - [ ] hide: darken the sky
 - [ ] Freeze / Stun Gun
@@ -44,7 +36,6 @@ want:
 - [ ] all: format centertext <font size='30' color='#FF00FF'>test</font>
 - [ ] all: restrict map heal station https://forums.alliedmods.net/showthread.php?t=267167
 - [ ] knife: vote on roundstart for grav skate tp or all
-- [x] warden: toggle noblock
 - [ ] warden: limits (max x.times in row)
 - [ ] inc: merge ShowOverlayFreeze/start/delete to once
 - [ ] playertags: add VIP flag
@@ -52,17 +43,14 @@ want:
 - [ ] warden: talkpower per menu only some sec https://forums.alliedmods.net/showthread.php?t=257229
 - [ ] countdown: insert cancel in menu
 - [ ] countdown: force stop
-- [x] menu: insert noblock
 - [ ] merge double used translation to myjailbreak.phrases
 - [ ] warden: color prisioners (color roulette)
-- [x] zombie: hp convar
 - [ ] all: beacon last player for days
 - [ ] duckhunt auto higher if more t
 - [ ] duckhunt auto higher if more ct
 - [ ] hide: MovementValue hider/seeker convar
 - [ ] new day: Tron like - all player Molotov rain https://forums.alliedmods.net/showthread.php?p=2398902
 - [ ] merge Transltions
-- [x] RandomKill: no rebel / last T
 - [ ] math quiz allow + - * / convars
 
 need?
@@ -73,13 +61,11 @@ need?
 - [ ] silent mp_roundtime?
 - [ ] Suicide Bomber: burn dead bodies?
 - [ ] Suicide Bomber: body counter?
-- [ ] Marker color?!
 - [ ] warden: ff not for ct?
 - [ ] SetCvarString flags?
 - [ ] warden: add sm_simon? 
 - [ ] duckhunt: allow leftclick per bool?
-- [ ] warden: improve markers (2 kind)  https://github.com/KissLick/TeamGames/blob/master/addons/sourcemod/scripting/Marks.sp
-* [ ] warden: bomb toss https://github.com/KissLick/TeamGames/blob/master/addons/sourcemod/scripting/modules/TG_BombToss.sp
+- [ ] empty deagle? - > bomb toss https://github.com/KissLick/TeamGames/blob/master/addons/sourcemod/scripting/modules/TG_BombToss.sp
 
 future:
 - [ ] make jailbreak high customizeable - keyvalues cfg file like DonorMenu
@@ -136,8 +122,17 @@ bugs:
 - [x] knifefight: FFA
 - [x] knife end FP
 - [x] Gravity ?!? -> checktimer ladder fix
+- [x] Suicide Bomber bombactiv in 2nd round
+- [x] late precache warden icon
 
 must/want:
+- [x] RandomKill: no rebel / last T
+- [x] zombie: hp convar
+- [x] menu: insert noblock
+- [x] warden: toggle noblock
+- [x] autofreeday if there is no CT
+- [x] warden laser pointer
+- [x] warden drawer
 - [x] noscope Random weapon
 - [x] menu back button
 - [x] config folder structure
@@ -185,6 +180,7 @@ must/want:
 - [x] warden: unvote
 - [x] duckhunt: infi ammo
 - [x] Marker: timer disaprears
+- [x] Marker color?!
 - [x] warden: allow unvote
 - [x] new day: suicid bomber
 - [x] Suicide Bomber: activate bomb when cells open 
@@ -235,4 +231,6 @@ must/want:
 - [x] menu: set menu time
 - [x] zombie: atmo sounds <- start soudn ;)
 - [x] zombie: define model
+- [x] install instruction 
+- [x] new menu order in readme
 - [x] war&ffa/all?: define how many rounds to play
