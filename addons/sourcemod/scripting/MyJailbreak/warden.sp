@@ -469,6 +469,14 @@ public void RoundStart(Event event, const char[] name, bool dontBroadcast)
 		OpenCounterTime = CreateTimer(1.0, OpenCounter, _, TIMER_REPEAT);
 		g_iRandomTime = GetConVarInt(gc_hRandomTimer);
 		RandomTimer = CreateTimer(1.0, ChooseRandom, _, TIMER_REPEAT);
+		if ((g_iWarden == -1) && gc_bBecomeWarden.BoolValue)
+		{
+			CPrintToChatAll("%t %t", "warden_tag" , "warden_nowarden", client);
+			if(gc_bBetterNotes.BoolValue)
+			{
+				PrintCenterTextAll("%t", "warden_nowarden_nc", client);
+			}
+		}
 	}
 	else
 	{

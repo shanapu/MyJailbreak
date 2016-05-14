@@ -96,6 +96,19 @@
 		"de"		"Der Warden ist {darkred}Tod{default}! Ihr solltet jetzt einen neuen wählen!"
 	}
 	
+	"warden_nowarden"
+	{
+		"en"		"There is {purple}no warden{default}. Type {green}!w{default} to become new warden!"
+		"de"		"Es gibt zur Zeit {purple}keinen Warden{default}. Schreibe {green}!w{default} um neuer warden zu werden!"
+	}
+	
+	
+	"warden_nowarden_nc"
+	{
+		"en"		"There is no warden. Type !w to become new warden!"
+		"de"		"Es gibt zur Zeit keinen Warden. Schreibe !w um neuer warden zu werden!"
+	}
+	
 	"warden_dead_nc"	// no colors!
 	{
 		"da"		"Warden er nu DØD. Andre CT kan skrive !w for at blive warden."	
