@@ -99,7 +99,7 @@
 	"warden_nowarden"
 	{
 		"en"		"There is {purple}no warden{default}. Type {green}!w{default} to become new warden!"
-		"de"		"Es gibt zur Zeit {purple}keinen Warden{default}. Schreibe {green}!w{default} um neuer warden zu werden!"
+		"de"		"Es gibt zur Zeit {purple}keinen Warden{default}. Schreibe {green}!w{default} um neuer Warden zu werden!"
 	}
 	
 	

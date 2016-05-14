@@ -411,7 +411,7 @@ public Action Command_Heal(int client, int args)
 								g_iHealCounter[client]++;
 								CPrintToChatAll("%t %t", "request_tag", "request_heal", client);
 								SetEntityRenderColor(client, gc_iHealColorRed.IntValue, gc_iHealColorGreen.IntValue, gc_iHealColorBlue.IntValue, 255);
-								HealTimer[client] = CreateTimer(gc_fHealTime.FloatValue, ResetColorRefuse, client);
+								HealTimer[client] = CreateTimer(gc_fHealTime.FloatValue, ResetColorHeal, client);
 								for(int i=1; i <= MaxClients; i++) HealMenu(i);
 							}
 							else CPrintToChat(client, "%t %t", "request_tag", "request_processing");
@@ -554,10 +554,13 @@ public Action OnWeaponCanUse(int client, int weapon)
 
 public Action OnTakedamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if(g_bCapitulated[attacker])
+	if (IsValidClient(attacker, true, false) && GetClientTeam(attacker) == CS_TEAM_T && IsPlayerAlive(attacker))
 	{
-		CPrintToChat(attacker, "%t %t", "request_tag", "request_nodamage");
-		return Plugin_Handled;
+		if(g_bCapitulated[attacker])
+		{
+			CPrintToChat(attacker, "%t %t", "request_tag", "request_nodamage");
+			return Plugin_Handled;
+		}
 	}
 	return Plugin_Continue;
 }

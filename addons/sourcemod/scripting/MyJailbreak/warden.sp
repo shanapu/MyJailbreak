@@ -2636,8 +2636,8 @@ public Action ChooseRandom(Handle timer, Handle pack)
 					int i = GetRandomPlayer(CS_TEAM_CT);
 					if(i > 0)
 					{
-						SetTheWarden(i);
 						CPrintToChatAll("%t %t", "warden_tag", "warden_israndomwarden", i); 
+						SetTheWarden(i);
 					}
 				}
 			}

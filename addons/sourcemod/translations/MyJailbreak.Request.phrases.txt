@@ -50,8 +50,8 @@
 	"request_noaccepted"
 	{
 		"#format"	"{1:N}"
-		"en"		"The Warden has NOT accepted {1}s request. {1} still a Rebel"
-		"de"		"Der Warden hat {1}s Anfrage NICHT akzeptiert. {1} ist weiterhin ein Rebel"
+		"en"		"The Warden has NOT accepted {1}s request."
+		"de"		"Der Warden hat {1}s Anfrage NICHT akzeptiert."
 	}
 	"request_refuser"
 	{
@@ -85,7 +85,7 @@
 		"en"		"You have {purple}request too many healings{default} in this round."
 		"de"		"Du hast in dieser Runde schon {purple}zuviele Heilungen{default} angefragt."
 	}
-	"request_alreadycapitulated"
+	"request_alreadyhealed"
 	{
 		"en"		"You have {purple}already request healing."
 		"de"		"Du hast bereits{purple} nach Heilung gefragt."
