@@ -245,6 +245,7 @@ public Action Command_refuse(int client, int args)
 						CPrintToChatAll("%t %t", "request_tag", "request_refusing", client);
 						RefuseTimer[client] = CreateTimer(gc_fRefuseTime.FloatValue, ResetColorRefuse, client);
 						if (warden_exist()) for(int i=1; i <= MaxClients; i++) RefuseMenu(i);
+						if(gc_bSounds.BoolValue)EmitSoundToAllAny(g_sSoundRefusePath);
 					}
 					else
 					{
@@ -308,6 +309,7 @@ public Action Command_Capitulation(int client, int args)
 						SetEntityRenderColor(client, gc_iCapitulationColorRed.IntValue, gc_iCapitulationColorGreen.IntValue, gc_iCapitulationColorBlue.IntValue, 255);
 						StripAllWeapons(client);
 						for(int i=1; i <= MaxClients; i++) CapitulationMenu(i);
+						if(gc_bSounds.BoolValue)EmitSoundToAllAny(g_sSoundCapitulationPath);
 					}
 					else CPrintToChat(client, "%t %t", "request_tag", "warden_noexist");
 				}
@@ -504,7 +506,16 @@ public Action OnWeaponCanUse(int client, int weapon)
 {
 	if(g_bCapitulated[client])
 	{
-		return Plugin_Handled;
+		char sWeapon[32];
+		GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
+		
+		if(!StrEqual(sWeapon, "weapon_knife"))
+		{
+			if (IsValidClient(client, true, false))
+			{
+				return Plugin_Handled;
+			}
+		}
 	}
 	return Plugin_Continue;
 }
