@@ -471,10 +471,10 @@ public void RoundStart(Event event, const char[] name, bool dontBroadcast)
 		RandomTimer = CreateTimer(1.0, ChooseRandom, _, TIMER_REPEAT);
 		if ((g_iWarden == -1) && gc_bBecomeWarden.BoolValue)
 		{
-			CPrintToChatAll("%t %t", "warden_tag" , "warden_nowarden", client);
+			CPrintToChatAll("%t %t", "warden_tag" , "warden_nowarden");
 			if(gc_bBetterNotes.BoolValue)
 			{
-				PrintCenterTextAll("%t", "warden_nowarden_nc", client);
+				PrintCenterTextAll("%t", "warden_nowarden_nc");
 			}
 		}
 	}

@@ -178,10 +178,10 @@ public Action RoundStart(Handle event, char [] name, bool dontBroadcast)
 				CloseHandle(HealTimer[client]);
 				HealTimer[client] = null;
 			}
-			if (RequestTimer[client] != null)
+			if (RequestTimer != null)
 			{
-				CloseHandle(RequestTimer[client]);
-				RequestTimer[client] = null;
+				CloseHandle(RequestTimer);
+				RequestTimer = null;
 			}
 			g_iRefuseCounter[client] = 0;
 			g_bCapitulated[client] = false;
@@ -226,10 +226,10 @@ public void OnClientDisconnect(int client)
 		CloseHandle(RebelTimer[client]);
 		RebelTimer[client] = null;
 	}
-	if (RequestTimer[client] != null)
+	if (RequestTimer != null)
 	{
-		CloseHandle(RequestTimer[client]);
-		RequestTimer[client] = null;
+		CloseHandle(RequestTimer);
+		RequestTimer = null;
 	}
 	g_bCapitulated[client] = false;
 	g_iRefuseCounter[client] = 0;
@@ -316,7 +316,7 @@ public Action Command_Capitulation(int client, int args)
 						if(!IsRequest)
 						{
 							IsRequest = true;
-							RequestTimer = CreateTimer (warden,gc_fCapitulationTime, IsRequestTimer)
+							RequestTimer = CreateTimer (gc_fCapitulationTime.FloatValue, IsRequestTimer);
 							g_bCapitulated[client] = true;
 							CPrintToChatAll("%t %t", "request_tag", "request_capitulation", client);
 							SetEntityRenderColor(client, gc_iCapitulationColorRed.IntValue, gc_iCapitulationColorGreen.IntValue, gc_iCapitulationColorBlue.IntValue, 255);
@@ -406,7 +406,7 @@ public Action Command_Heal(int client, int args)
 							if(!IsRequest)
 							{
 								IsRequest = true;
-								RequestTimer = CreateTimer (warden,gc_fHealTime, IsRequestTimer)
+								RequestTimer = CreateTimer (gc_fHealTime.FloatValue, IsRequestTimer);
 								g_bHealed[client] = true;
 								g_iHealCounter[client]++;
 								CPrintToChatAll("%t %t", "request_tag", "request_heal", client);
@@ -556,8 +556,8 @@ public Action OnTakedamage(int victim, int &attacker, int &inflictor, float &dam
 {
 	if(g_bCapitulated[attacker])
 	{
-		return Plugin_Handled;
 		CPrintToChat(attacker, "%t %t", "request_tag", "request_nodamage");
+		return Plugin_Handled;
 	}
 	return Plugin_Continue;
 }
