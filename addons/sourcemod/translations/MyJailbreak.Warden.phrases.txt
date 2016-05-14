@@ -150,12 +150,9 @@
 	
 	"warden_noexist"
 	{
-		"da"		"Der var {purple}ingen warden{default} at fyre."
-		"en"		"There was {purple}no warden{default} to fire."
-		"es"		"Actualmente no existe ningÃºn AlcÃ¡ide en la prisiÃ³n."
-		"pt"		"Atualmente não há carcereiro na prisão."
-		"sv"		"det fanns ingen fängelsedirektör att avskeda."
-		"de"		"es gibt {purple}keinen Warden{default} zum entlassen."
+		"da"		"Der var {purple}ingen warden."
+		"en"		"There was {purple}no warden."
+		"de"		"Es gibt {purple}keinen Warden."
 	}
 	
 	"warden_disabled"

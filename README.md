@@ -18,6 +18,7 @@ If you own a feature or extention for Jail/Warden that would fit in, i would be 
 ### Included Plugins: 
 
 - [Warden](#warden) - (set/become Warden,vote against Warden, Model, Icon, open cells,gun plant prevention, set marker/quiz/EventDays/countdown/FF/nobock) - need [scp](#requires-plugins)
+- [Requests](#requests) - (the Terror counterpart to Warden,Refuse a Game, request Capitaluation/pardon, healing request)
 - [Menu](#menu) - (Player menus for T, CT, Warden & Admin)
 - [Weapons](#weapons) - (weapon menus for CT / T in event rounds)
 - [PlayerTags](#playertags) - (add player Tags for T, T.Admin, CT, CT.Admin, W, WA.Admin - need [scp](#requires-plugins)
@@ -74,12 +75,12 @@ Weeeishy, UartigZone, Got Sw4g? terminator18, Skelexes, 0dieter0, maks, zeddy fo
 
 This plugins allows players to take control over the prison as Warden/Headguard/Commander.  
 Chat, Hud & sound notifications about Warden/no Warden.  
-Colorize Warden, Warden Model, open/close cell doors, automatic open cells doors, vote retire Warden, Icon above Head, different countdowns(start/stop) with overlays & sound, MathQuiz & toggle FF/noblock.
+Colorize Warden, Warden Model, open/close cell doors, automatic open cells doors, vote retire Warden, Icon above Head, different countdowns(start/stop) with overlays & sound, MathQuiz & toggle FF/noblock, Kill/pick a random T (excluding rebel and last non rebeling T).
 
 ##### Commands ~~// why so many cmds for same action? some JB players are dump assholes ;D~~
 ```
 - sm_w / sm_warden - Allows the player taking the charge over prisoners
-- sm_c / sm_commander - Allows the player taking the charge over prisoners
+- sm_com / sm_commander - Allows the player taking the charge over prisoners
 - sm_hg / sm_headguard - Allows the player taking the charge over prisoners
 - sm_uw / sm_unWarden - Allows the player to retire from the position
 - sm_uc / sm_uncommander - Allows the player to retire from the position
@@ -166,6 +167,44 @@ Colorize Warden, Warden Model, open/close cell doors, automatic open cells doors
 - Colors
 
 [![HowTo Marker](http://img.youtube.com/vi/tp6k_Q6K37c/0.jpg)](http://www.youtube.com/watch?v=tp6k_Q6K37c)
+
+#### Requests ALPHA!
+
+the Terror counterpart to Warden,Refuse a Game (listing for warden), request Capitaluation/pardon, healing request, more coming
+
+##### Commands 
+```
+- sm_r / sm_refuse - Allows the Terrorist to refuse a game
+- sm_c / sm_capitulation - Allows a rebeling terrorist to request a capitulate
+- sm_p / sm_pardon - Allows a rebeling terrorist to request a capitulate
+- sm_h / sm_heal - Allows a Terrorist request healing
+```
+
+##### Cvars
+```
+- sm_request_enable: 0 - disabled, 1 - Enable or Disable Request Plugin. Default 1
+- sm_request_sounds_enable: 0 - disabled, 1 -  enable sounds. Default 1
+- sm_refuse_enable: 0 - disabled, 1 - Enable Refuse. Default 1
+- sm_refuse_limit: Сount how many times you can use the command
+- sm_refuse_time": Time after the player gets his normal colors back
+- sm_refuse_color_red: What color to turn the refusing Terror into (set R, G and B values to 255 to disable) (Rgb): x - red value
+- sm_refuse_color_green: What color to turn the refusing Terror into (rGb): x - green value
+- sm_refuse_color_blue: What color to turn the refusing Terror into (rgB): x - blue value
+- sm_refuse_sound: Path to the soundfile which should be played for a refusing
+- sm_capitulation_enable: 0 - disabled, 1 - Enable Capitulation. Default 1
+- sm_capitulation_timer: Time to decide to accept the capitulation
+- sm_capitulation_rebel_timer: Time to give a rebel on not accepted capitulation his knife back
+- sm_capitulation_color_red: What color to turn the capitulation Terror into (set R, G and B values to 255 to disable) (Rgb): x - red value
+- sm_capitulation_color_green: What color to turn the capitulation Terror into (rGb): x - green value
+- sm_capitulation_color_blue: What color to turn the capitulation Terror into (rgB): x - blue value
+- sm_capitulation_sound: Path to the soundfile which should be played for a capitulation
+- sm_heal_enable: 0 - disabled, 1 - Enable heal. Default 1
+- sm_heal_limit: Сount how many times you can use the command
+- sm_heal_time: Time after the player gets his normal colors back
+- sm_heal_color_red: What color to turn the heal Terror into (set R, G and B values to 255 to disable) (Rgb): x - red value
+- sm_heal_color_green: What color to turn the heal Terror into (rGb): x - green value
+- sm_heal_color_blue: What color to turn the heal Terror into (rgB): x - blue value
+```
 
 #### Menu
 

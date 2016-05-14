@@ -59,9 +59,9 @@ char g_sSoundCapitulationPath[256];
 
 public Plugin myinfo = 
 {
-	name = "MyJailbreak - Appeal",
+	name = "MyJailbreak - Request",
 	author = "shanapu, Jackmaster",
-	description = "Appeals - refuse, capitulation/pardon, heal",
+	description = "Requests - refuse, capitulation/pardon, heal",
 	version = PLUGIN_VERSION,
 	url = URL_LINK
 }
@@ -70,47 +70,46 @@ public void OnPluginStart()
 {
 	// Translation
 	LoadTranslations("MyJailbreak.Warden.phrases");
-	LoadTranslations("MyJailbreak.Appeal.phrases");
+	LoadTranslations("MyJailbreak.Request.phrases");
 	
 	//Client Commands
-	RegConsoleCmd("sm_r", Command_refuse);
-	RegConsoleCmd("sm_refuse", Command_refuse);
-	RegConsoleCmd("sm_v", Command_refuse);
-	RegConsoleCmd("sm_verweigern", Command_refuse);
+	RegConsoleCmd("sm_r", Command_refuse, "Allows the Terrorist to refuse a game");
+	RegConsoleCmd("sm_refuse", Command_refuse, "Allows the Terrorist to refuse a game");
 	
-	RegConsoleCmd("sm_c", Command_Capitulation);
-	RegConsoleCmd("sm_capitulation", Command_Capitulation);
-	RegConsoleCmd("sm_e", Command_Capitulation);
-	RegConsoleCmd("sm_ergeben", Command_Capitulation);
-	RegConsoleCmd("sm_p", Command_Capitulation);
-	RegConsoleCmd("sm_pardon", Command_Capitulation);
+	RegConsoleCmd("sm_c", Command_Capitulation, "Allows a rebeling terrorist to request a capitulate");
+	RegConsoleCmd("sm_capitulation", Command_Capitulation, "Allows a rebeling terrorist to request a capitulate");
+	RegConsoleCmd("sm_p", Command_Capitulation, "Allows a rebeling terrorist to request a capitulate");
+	RegConsoleCmd("sm_pardon", Command_Capitulation, "Allows a rebeling terrorist to request a capitulate");
+	
+	RegConsoleCmd("sm_h", Command_Heal, "Allows a Terrorist request healing");
+	RegConsoleCmd("sm_heal", Command_Heal, "Allows a Terrorist request healing");
 	
 	//AutoExecConfig
-	AutoExecConfig_SetFile("Appeal", "MyJailbreak");
+	AutoExecConfig_SetFile("Request", "MyJailbreak");
 	AutoExecConfig_SetCreateFile(true);
 	
-	gc_bPlugin = AutoExecConfig_CreateConVar("sm_appeal_enable", "1", "Enable or Disable Appeal Plugin");
+	gc_bPlugin = AutoExecConfig_CreateConVar("sm_request_enable", "1", "Enable or Disable Request Plugin");
+	gc_bSounds = AutoExecConfig_CreateConVar("sm_request_sounds_enable", "1", "0 - disabled, 1 - enable sounds ", _, true,  0.0, true, 1.0);
 	gc_bRefuse = AutoExecConfig_CreateConVar("sm_refuse_enable", "1", "Enable or Disable Refuse");
 	gc_iRefuseLimit = AutoExecConfig_CreateConVar("sm_refuse_limit", "1", "Сount how many times you can use the command");
 	gc_fRefuseTime = AutoExecConfig_CreateConVar("sm_refuse_time", "15.0", "Time after the player gets his normal colors back");
 	gc_iRefuseColorRed = AutoExecConfig_CreateConVar("sm_refuse_color_red", "0","What color to turn the refusing Terror into (set R, G and B values to 255 to disable) (Rgb): x - red value", _, true, 0.0, true, 255.0);
 	gc_iRefuseColorGreen = AutoExecConfig_CreateConVar("sm_refuse_color_green", "250","What color to turn the refusing Terror into (rGb): x - green value", _, true, 0.0, true, 255.0);
 	gc_iRefuseColorBlue = AutoExecConfig_CreateConVar("sm_refuse_color_blue", "250","What color to turn the refusing Terror into (rgB): x - blue value", _, true, 0.0, true, 255.0);
+	gc_sSoundRefusePath = AutoExecConfig_CreateConVar("sm_refuse_sound", "music/MyJailbreak/refuse.mp3", "Path to the soundfile which should be played for a refusing.");
 	gc_bCapitulation = AutoExecConfig_CreateConVar("sm_capitulation_enable", "1", "Enable or Disable Capitulation");
 	gc_fCapitulationTime = AutoExecConfig_CreateConVar("sm_capitulation_timer", "10.0", "Time to decide to accept the capitulation");
 	gc_fRebelTime = AutoExecConfig_CreateConVar("sm_capitulation_rebel_timer", "10.0", "Time to give a rebel on not accepted capitulation his knife back");
 	gc_iCapitulationColorRed = AutoExecConfig_CreateConVar("sm_capitulation_color_red", "0","What color to turn the capitulation Terror into (set R, G and B values to 255 to disable) (Rgb): x - red value", _, true, 0.0, true, 255.0);
 	gc_iCapitulationColorGreen = AutoExecConfig_CreateConVar("sm_capitulation_color_green", "250","What color to turn the capitulation Terror into (rGb): x - green value", _, true, 0.0, true, 255.0);
 	gc_iCapitulationColorBlue = AutoExecConfig_CreateConVar("sm_capitulation_color_blue", "0","What color to turn the capitulation Terror into (rgB): x - blue value", _, true, 0.0, true, 255.0);
+	gc_sSoundCapitulationPath = AutoExecConfig_CreateConVar("sm_capitulation_sound", "music/MyJailbreak/refuse.mp3", "Path to the soundfile which should be played for a capitulation.");
 	gc_bHeal = AutoExecConfig_CreateConVar("sm_heal_enable", "1", "Enable or Disable heal");
 	gc_iHealLimit = AutoExecConfig_CreateConVar("sm_heal_limit", "2", "Сount how many times you can use the command");
 	gc_fHealTime = AutoExecConfig_CreateConVar("sm_heal_time", "10.0", "Time after the player gets his normal colors back");
 	gc_iHealColorRed = AutoExecConfig_CreateConVar("sm_heal_color_red", "0","What color to turn the heal Terror into (set R, G and B values to 255 to disable) (Rgb): x - red value", _, true, 0.0, true, 255.0);
 	gc_iHealColorGreen = AutoExecConfig_CreateConVar("sm_heal_color_green", "250","What color to turn the heal Terror into (rGb): x - green value", _, true, 0.0, true, 255.0);
 	gc_iHealColorBlue = AutoExecConfig_CreateConVar("sm_heal_color_blue", "0","What color to turn the heal Terror into (rgB): x - blue value", _, true, 0.0, true, 255.0);
-	gc_bSounds = AutoExecConfig_CreateConVar("sm_appeal_sounds_enable", "1", "0 - disabled, 1 - enable sounds ", _, true,  0.0, true, 1.0);
-	gc_sSoundRefusePath = AutoExecConfig_CreateConVar("sm_refuse_sound", "music/MyJailbreak/refuse.mp3", "Path to the soundfile which should be played for a refusing.");
-	gc_sSoundCapitulationPath = AutoExecConfig_CreateConVar("sm_capitulation_sound", "music/MyJailbreak/refuse.mp3", "Path to the soundfile which should be played for a capitulation.");
 	
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
@@ -243,23 +242,23 @@ public Action Command_refuse(int client, int args)
 						g_iRefuseCounter[client]++;
 						g_bRefuse[client] = true;
 						SetEntityRenderColor(client, gc_iRefuseColorRed.IntValue, gc_iRefuseColorGreen.IntValue, gc_iRefuseColorBlue.IntValue, 255);
-						CPrintToChatAll("%t %t", "appeal_tag", "appeal_refusing", client);
+						CPrintToChatAll("%t %t", "request_tag", "request_refusing", client);
 						RefuseTimer[client] = CreateTimer(gc_fRefuseTime.FloatValue, ResetColorRefuse, client);
 						if (warden_exist()) for(int i=1; i <= MaxClients; i++) RefuseMenu(i);
 					}
 					else
 					{
-						CPrintToChat(client, "%t %t", "appeal_tag", "appeal_refusedtimes");
+						CPrintToChat(client, "%t %t", "request_tag", "request_refusedtimes");
 					}
 				}
 				else
 				{
-					CPrintToChat(client, "%t %t", "appeal_tag", "appeal_alreadyrefused");
+					CPrintToChat(client, "%t %t", "request_tag", "request_alreadyrefused");
 				}
 			}
 			else
 			{
-				CPrintToChat(client, "%t %t", "appeal_tag", "appeal_notalivect");
+				CPrintToChat(client, "%t %t", "request_tag", "request_notalivect");
 			}
 		}
 	}
@@ -272,7 +271,7 @@ public Action RefuseMenu(int warden)
 	{
 		char info1[255];
 		RefusePanel = CreatePanel();
-		Format(info1, sizeof(info1), "%T", "appeal_refuser", LANG_SERVER);
+		Format(info1, sizeof(info1), "%T", "request_refuser", LANG_SERVER);
 		SetPanelTitle(RefusePanel, info1);
 		DrawPanelText(RefusePanel, "-----------------------------------");
 		for(int i = 1;i <= MaxClients;i++) if(IsValidClient(i, true))
@@ -305,21 +304,21 @@ public Action Command_Capitulation(int client, int args)
 					{
 						g_bCapitulated[client] = true;
 						
-						CPrintToChatAll("%t %t", "appeal_tag", "appeal_capitulation", client);
+						CPrintToChatAll("%t %t", "request_tag", "request_capitulation", client);
 						SetEntityRenderColor(client, gc_iCapitulationColorRed.IntValue, gc_iCapitulationColorGreen.IntValue, gc_iCapitulationColorBlue.IntValue, 255);
 						StripAllWeapons(client);
 						for(int i=1; i <= MaxClients; i++) CapitulationMenu(i);
 					}
-					else CPrintToChat(client, "%t %t", "appeal_tag", "warden_noexist");
+					else CPrintToChat(client, "%t %t", "request_tag", "warden_noexist");
 				}
 				else
 				{
-					CPrintToChat(client, "%t %t", "appeal_tag", "appeal_alreadycapitulated");
+					CPrintToChat(client, "%t %t", "request_tag", "request_alreadycapitulated");
 				}
 			}
 			else
 			{
-				CPrintToChat(client, "%t %t", "appeal_tag", "appeal_notalivect");
+				CPrintToChat(client, "%t %t", "request_tag", "request_notalivect");
 			}
 		}
 	}
@@ -332,7 +331,7 @@ public Action CapitulationMenu(int warden)
 	{
 		char info5[255], info6[255], info7[255];
 		Menu menu1 = CreateMenu(CapitulationMenuHandler);
-		Format(info5, sizeof(info5), "%T", "appeal_acceptcapitulation", LANG_SERVER);
+		Format(info5, sizeof(info5), "%T", "request_acceptcapitulation", LANG_SERVER);
 		menu1.SetTitle(info5);
 		Format(info6, sizeof(info6), "%T", "warden_no", LANG_SERVER);
 		Format(info7, sizeof(info7), "%T", "warden_yes", LANG_SERVER);
@@ -354,7 +353,7 @@ public int CapitulationMenuHandler(Menu menu, MenuAction action, int client, int
 			for(int i=1; i <= MaxClients; i++) if(g_bCapitulated[i])
 			{
 				CapitulationTimer[i] = CreateTimer(gc_fCapitulationTime.FloatValue, GiveKnifeCapitulated, i);
-				CPrintToChatAll("%t %t", "warden_tag", "appeal_accepted", i);
+				CPrintToChatAll("%t %t", "warden_tag", "request_accepted", i);
 			}
 		}
 		if(choice == 0)
@@ -362,7 +361,7 @@ public int CapitulationMenuHandler(Menu menu, MenuAction action, int client, int
 			for(int i=1; i <= MaxClients; i++) if(g_bCapitulated[i])
 			{
 				RebelTimer[i] = CreateTimer(gc_fRebelTime.FloatValue, GiveKnifeRebel, i);
-				CPrintToChatAll("%t %t", "warden_tag", "appeal_noaccepted", i);
+				CPrintToChatAll("%t %t", "warden_tag", "request_noaccepted", i);
 			}
 		}
 	}
@@ -387,26 +386,26 @@ public Action Command_Heal(int client, int args)
 							g_bHealed[client] = true;
 							g_iHealCounter[client]++;
 							
-							CPrintToChatAll("%t %t", "appeal_tag", "appeal_heal", client);
+							CPrintToChatAll("%t %t", "request_tag", "request_heal", client);
 							SetEntityRenderColor(client, gc_iHealColorRed.IntValue, gc_iHealColorGreen.IntValue, gc_iHealColorBlue.IntValue, 255);
 							HealTimer[client] = CreateTimer(gc_fHealTime.FloatValue, ResetColorRefuse, client);
 							for(int i=1; i <= MaxClients; i++) HealMenu(i);
 						}
-						else CPrintToChat(client, "%t %t", "appeal_tag", "warden_noexist");
+						else CPrintToChat(client, "%t %t", "request_tag", "warden_noexist");
 					}
 					else
 					{
-						CPrintToChat(client, "%t %t", "appeal_tag", "appeal_healwstimes");
+						CPrintToChat(client, "%t %t", "request_tag", "request_healtimes");
 					}
 				}
 				else
 				{
-					CPrintToChat(client, "%t %t", "appeal_tag", "appeal_alreadyhealed");
+					CPrintToChat(client, "%t %t", "request_tag", "request_alreadyhealed");
 				}
 			}
 			else
 			{
-				CPrintToChat(client, "%t %t", "appeal_tag", "appeal_notalivect");
+				CPrintToChat(client, "%t %t", "request_tag", "request_notalivect");
 			}
 		}
 	}
@@ -419,7 +418,7 @@ public Action HealMenu(int warden)
 	{
 		char info5[255], info6[255], info7[255];
 		Menu menu1 = CreateMenu(HealMenuHandler);
-		Format(info5, sizeof(info5), "%T", "appeal_acceptheal", LANG_SERVER);
+		Format(info5, sizeof(info5), "%T", "request_acceptheal", LANG_SERVER);
 		menu1.SetTitle(info5);
 		Format(info6, sizeof(info6), "%T", "warden_no", LANG_SERVER);
 		Format(info7, sizeof(info7), "%T", "warden_yes", LANG_SERVER);
@@ -441,8 +440,8 @@ public int HealMenuHandler(Menu menu, MenuAction action, int client, int Positio
 			for(int i=1; i <= MaxClients; i++) if(g_bHealed[i])
 			{
 				GivePlayerItem(i, "weapon_healthshot");
-				CPrintToChat(i, "%t %t", "appeal_tag", "appeal_health");
-				CPrintToChatAll("%t %t", "warden_tag", "appeal_accepted", i);
+				CPrintToChat(i, "%t %t", "request_tag", "request_health");
+				CPrintToChatAll("%t %t", "warden_tag", "request_accepted", i);
 				
 			}
 		}
@@ -450,7 +449,7 @@ public int HealMenuHandler(Menu menu, MenuAction action, int client, int Positio
 		{
 			for(int i=1; i <= MaxClients; i++) if(g_bHealed[i])
 			{
-				CPrintToChatAll("%t %t", "warden_tag", "appeal_noaccepted", i);
+				CPrintToChatAll("%t %t", "warden_tag", "request_noaccepted", i);
 			}
 		}
 	}
@@ -481,7 +480,7 @@ public Action GiveKnifeCapitulated(Handle timer, any client)
 	if (IsClientConnected(client))
 	{
 		GivePlayerItem(client,"weapon_knife");
-		CPrintToChat(client, "%t %t", "appeal_tag", "appeal_knifeback");
+		CPrintToChat(client, "%t %t", "request_tag", "request_knifeback");
 		SetEntityRenderColor(client, 255, 255, 255, 255);
 	}
 	CapitulationTimer[client] = null;
@@ -492,7 +491,7 @@ public Action GiveKnifeRebel(Handle timer, any client)
 	if (IsClientConnected(client))
 	{
 		GivePlayerItem(client,"weapon_knife");
-		CPrintToChat(client, "%t %t", "appeal_tag", "appeal_knifeback");
+		CPrintToChat(client, "%t %t", "request_tag", "request_knifeback");
 		SetEntityRenderColor(client, 255, 0, 0, 255);
 		
 	}

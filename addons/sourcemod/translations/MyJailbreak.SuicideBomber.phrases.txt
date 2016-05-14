@@ -143,8 +143,8 @@
 	
 	"suicidebomber_info_line1"
 	{
-		"en"		"ALLAH AKBHAR!"
-		"de"		"ALLAH AKBHAR!"
+		"en"		"Suicide Bombers everywhere!"
+		"de"		"Überall Selbstmordattentäter!!"
 	}
 	"suicidebomber_info_line2"
 	{

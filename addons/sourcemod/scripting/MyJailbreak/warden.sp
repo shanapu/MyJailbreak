@@ -140,7 +140,7 @@ Handle MathTimer = null;
 Handle StartTimer = null;
 Handle StopTimer = null;
 Handle StartStopTimer = null;
-Handle ModelTimer = null;
+Handle IconTimer = null;
 
 //Strings
 char g_sHasVoted[1500];
@@ -200,7 +200,7 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_headguard", BecomeWarden, "Allows the player taking the charge over prisoners");
 	RegConsoleCmd("sm_uhg", ExitWarden, "Allows the player to retire from the position");
 	RegConsoleCmd("sm_unheadguard", ExitWarden, "Allows the player to retire from the position");
-	RegConsoleCmd("sm_c", BecomeWarden, "Allows the player taking the charge over prisoners");
+	RegConsoleCmd("sm_com", BecomeWarden, "Allows the player taking the charge over prisoners");
 	RegConsoleCmd("sm_commander", BecomeWarden, "Allows the player taking the charge over prisoners");
 	RegConsoleCmd("sm_uc", ExitWarden, "Allows the player to retire from the position");
 	RegConsoleCmd("sm_uncommander", ExitWarden, "Allows the player to retire from the position");
@@ -502,7 +502,7 @@ public void RoundStart(Event event, const char[] name, bool dontBroadcast)
 	}
 	if(gc_bStayWarden.BoolValue && warden_exist())
 	{
-		ModelTimer = CreateTimer(0.5, Create_Model, g_iWarden, TIMER_REPEAT);
+		IconTimer = CreateTimer(0.5, Create_Icon, g_iWarden, TIMER_REPEAT);
 	}
 }
 
@@ -589,7 +589,7 @@ public Action ExitWarden(int client, int args)
 			g_sHasVoted[0] = '\0';
 			SafeDelete(g_iIcon[client]);
 			g_iIcon[client] = -1;
-			delete ModelTimer;
+			IconTimer = null;
 			g_bDrawerT = false;
 		}
 		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
@@ -658,7 +658,7 @@ public void playerDeath(Event event, const char[] name, bool dontBroadcast)
 		Call_Finish();
 		SafeDelete(g_iIcon[client]);
 		g_iIcon[client] = -1;
-		delete ModelTimer;
+		delete IconTimer;
 	}
 }
 
@@ -738,7 +738,7 @@ public int m_SetWarden(Menu menu, MenuAction action, int client, int Position)
 							EmitSoundToAllAny(g_sWarden);
 						}
 						CreateTimer(0.5, Timer_WardenFixColor, i, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
-						ModelTimer = CreateTimer(0.5, Create_Model, client, TIMER_REPEAT);
+						IconTimer = CreateTimer(0.5, Create_Icon, client, TIMER_REPEAT);
 						GetEntPropString(client, Prop_Data, "m_ModelName", g_sModelPath, sizeof(g_sModelPath));
 						if(gc_bModel.BoolValue)
 						{
@@ -790,7 +790,7 @@ public int m_WardenOverwrite(Menu menu, MenuAction action, int client, int Posit
 			LogMessage("[MyJB] Admin %L kick player %N warden and set &N as new", client, g_iWarden, newwarden);
 			g_iWarden = newwarden;
 			CreateTimer(0.5, Timer_WardenFixColor, newwarden, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
-			ModelTimer = CreateTimer(0.5, Create_Model, newwarden, TIMER_REPEAT);
+			IconTimer = CreateTimer(0.5, Create_Icon, newwarden, TIMER_REPEAT);
 			GetEntPropString(newwarden, Prop_Data, "m_ModelName", g_sModelPath, sizeof(g_sModelPath));
 			if(gc_bModel.BoolValue)
 			{
@@ -901,7 +901,7 @@ void SetTheWarden(int client)
 		}
 		g_iWarden = client;
 		CreateTimer(0.5, Timer_WardenFixColor, client, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
-		ModelTimer = CreateTimer(0.5, Create_Model, client, TIMER_REPEAT);
+		IconTimer = CreateTimer(0.5, Create_Icon, client, TIMER_REPEAT);
 		GetEntPropString(client, Prop_Data, "m_ModelName", g_sModelPath, sizeof(g_sModelPath));
 		if(gc_bModel.BoolValue)
 		{
@@ -963,7 +963,7 @@ void RemoveTheWarden(int client)
 	g_sHasVoted[0] = '\0';
 	SafeDelete(g_iIcon[client]);
 	g_iIcon[client] = -1;
-	delete ModelTimer;
+	delete IconTimer;
 }
 
 //Math Quizz
@@ -1133,6 +1133,14 @@ public void OnMapEnd()
 {
 	RemoveAllMarkers();
 	g_bDrawerT = false;
+	delete IconTimer;
+	CreateTimer(0.1, RemoveColor, g_iWarden);
+	Forward_OnWardenRemoved(g_iWarden);
+	SafeDelete(g_iIcon[g_iWarden]);
+	g_iIcon[g_iWarden] = -1;
+	g_iWarden = -1;
+	g_bLaser = false;
+	for(int client=1; client <= MaxClients; client++) g_bDrawer[client] = false;
 }
 
 public Action Timer_DrawMakers(Handle timer, any data)
@@ -1888,11 +1896,14 @@ public bool TraceEntityFilterPlayer(int entity, int contentsMask) {
 
 //Icon
 
-public Action Create_Model(Handle iTimer, any client)
+public Action Create_Icon(Handle iTimer, any client)
 {
-	SafeDelete(g_iIcon[client]);
-	g_iIcon[client] = CreateIcon();
-	PlaceAndBindIcon(client, g_iIcon[client]);
+	if(g_iWarden != -1)
+	{
+		SafeDelete(g_iIcon[client]);
+		g_iIcon[client] = CreateIcon();
+		PlaceAndBindIcon(client, g_iIcon[client]);
+	}
 }
 
 stock int CreateIcon()
@@ -1918,14 +1929,17 @@ stock int CreateIcon()
 public Action PlaceAndBindIcon(int client, int entity)
 {
 	float origin[3];
+	if(IsClientInGame(client)) 
+	{
+		if(IsValidEntity(entity)) 
+		{
+			GetClientAbsOrigin(client, origin);
+			origin[2] = origin[2] + 90.0;
+			TeleportEntity(entity, origin, NULL_VECTOR, NULL_VECTOR);
 
-	if(IsValidEntity(entity)) {
-		GetClientAbsOrigin(client, origin);
-		origin[2] = origin[2] + 90.0;
-		TeleportEntity(entity, origin, NULL_VECTOR, NULL_VECTOR);
-
-		SetVariantString("!activator");
-		AcceptEntityInput(entity, "SetParent", client);
+			SetVariantString("!activator");
+			AcceptEntityInput(entity, "SetParent", client);
+		}
 	}
 }
 

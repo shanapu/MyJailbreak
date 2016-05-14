@@ -69,7 +69,6 @@ public void OnPluginStart()
 	//Client Commands
 	RegConsoleCmd("sm_seteventname", SetEVENTNAME, "Allows the Admin or Warden to set eventname as next round");
 	RegConsoleCmd("sm_eventname", VoteEVENTNAME, "Allows players to vote for a eventname");
-
 	
 	//AutoExecConfig
 	AutoExecConfig_SetFile("EVENTNAME", "MyJailbreak/EventDays");
