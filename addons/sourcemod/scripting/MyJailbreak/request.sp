@@ -107,9 +107,9 @@ public void OnPluginStart()
 	gc_bHeal = AutoExecConfig_CreateConVar("sm_heal_enable", "1", "Enable or Disable heal");
 	gc_iHealLimit = AutoExecConfig_CreateConVar("sm_heal_limit", "2", "Сount how many times you can use the command");
 	gc_fHealTime = AutoExecConfig_CreateConVar("sm_heal_time", "10.0", "Time after the player gets his normal colors back");
-	gc_iHealColorRed = AutoExecConfig_CreateConVar("sm_heal_color_red", "0","What color to turn the heal Terror into (set R, G and B values to 255 to disable) (Rgb): x - red value", _, true, 0.0, true, 255.0);
-	gc_iHealColorGreen = AutoExecConfig_CreateConVar("sm_heal_color_green", "250","What color to turn the heal Terror into (rGb): x - green value", _, true, 0.0, true, 255.0);
-	gc_iHealColorBlue = AutoExecConfig_CreateConVar("sm_heal_color_blue", "0","What color to turn the heal Terror into (rgB): x - blue value", _, true, 0.0, true, 255.0);
+	gc_iHealColorRed = AutoExecConfig_CreateConVar("sm_heal_color_red", "240","What color to turn the heal Terror into (set R, G and B values to 255 to disable) (Rgb): x - red value", _, true, 0.0, true, 255.0);
+	gc_iHealColorGreen = AutoExecConfig_CreateConVar("sm_heal_color_green", "0","What color to turn the heal Terror into (rGb): x - green value", _, true, 0.0, true, 255.0);
+	gc_iHealColorBlue = AutoExecConfig_CreateConVar("sm_heal_color_blue", "100","What color to turn the heal Terror into (rgB): x - blue value", _, true, 0.0, true, 255.0);
 	
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
@@ -233,7 +233,7 @@ public Action Command_refuse(int client, int args)
 	{
 		if (gc_bRefuse.BoolValue)
 		{
-			if (GetClientTeam(client) == CS_TEAM_CT && IsPlayerAlive(client))
+			if (GetClientTeam(client) == CS_TEAM_T && IsPlayerAlive(client))
 			{
 				if (RefuseTimer[client] == null)
 				{
@@ -296,7 +296,7 @@ public Action Command_Capitulation(int client, int args)
 	{
 		if (gc_bCapitulation.BoolValue)
 		{
-			if (GetClientTeam(client) == CS_TEAM_CT && (IsPlayerAlive(client)))
+			if (GetClientTeam(client) == CS_TEAM_T && (IsPlayerAlive(client)))
 			{
 				if (!(g_bCapitulated[client]))
 				{
@@ -375,7 +375,7 @@ public Action Command_Heal(int client, int args)
 	{
 		if (gc_bHeal.BoolValue)
 		{
-			if (GetClientTeam(client) == CS_TEAM_CT && (IsPlayerAlive(client)))
+			if (GetClientTeam(client) == CS_TEAM_T && (IsPlayerAlive(client)))
 			{
 				if (HealTimer[client] == null)
 				{

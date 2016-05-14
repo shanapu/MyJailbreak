@@ -1134,11 +1134,14 @@ public void OnMapEnd()
 	RemoveAllMarkers();
 	g_bDrawerT = false;
 	delete IconTimer;
-	CreateTimer(0.1, RemoveColor, g_iWarden);
-	Forward_OnWardenRemoved(g_iWarden);
-	SafeDelete(g_iIcon[g_iWarden]);
-	g_iIcon[g_iWarden] = -1;
-	g_iWarden = -1;
+	if (g_iWarden != -1)
+	{
+		CreateTimer(0.1, RemoveColor, g_iWarden);
+		Forward_OnWardenRemoved(g_iWarden);
+		SafeDelete(g_iIcon[g_iWarden]);
+		g_iIcon[g_iWarden] = -1;
+		g_iWarden = -1;
+	}
 	g_bLaser = false;
 	for(int client=1; client <= MaxClients; client++) g_bDrawer[client] = false;
 }
