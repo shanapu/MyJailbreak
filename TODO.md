@@ -12,11 +12,13 @@ must:
 - [ ] wiki: howto edit -> SetCvars, add menu item,
 - [ ] menu: add placeholder for cutom commands
 - [ ] clean up translation files
+- [ ] requests menu
 
 want:
 - [/] gunplant prevention
 - [/] zombie vision/wallhack
 - [ ] ClientPrefs
+- [ ] Smart Download Manager https://forums.alliedmods.net/showthread.php?t=206496
 - [ ] !refuse !capitalation !repeat !heal !pardon
 - [ ] clean double useless code OnPlayerRunCmd
 - [ ] set custom Laser/Drawer Button

@@ -18,7 +18,7 @@ If you own a feature or extention for Jail/Warden that would fit in, i would be 
 ### Included Plugins: 
 
 - [Warden](#warden) - (set/become Warden,vote against Warden, Model, Icon, open cells,gun plant prevention, set marker/quiz/EventDays/countdown/FF/nobock) - need [scp](#requires-plugins)
-- [Requests](#requests) - (the Terror counterpart to Warden,Refuse a Game, request Capitaluation/pardon, healing request)
+- [Requests](#requests) - (terror counterpart to Warden, refuse a Game, request Capitulation/Pardon, Healing request)
 - [Menu](#menu) - (Player menus for T, CT, Warden & Admin)
 - [Weapons](#weapons) - (weapon menus for CT / T in event rounds)
 - [PlayerTags](#playertags) - (add player Tags for T, T.Admin, CT, CT.Admin, W, WA.Admin - need [scp](#requires-plugins)
@@ -168,9 +168,9 @@ Colorize Warden, Warden Model, open/close cell doors, automatic open cells doors
 
 [![HowTo Marker](http://img.youtube.com/vi/tp6k_Q6K37c/0.jpg)](http://www.youtube.com/watch?v=tp6k_Q6K37c)
 
-#### Requests ALPHA!
+#### Requests ALPHA! 
 
-the Terror counterpart to Warden,Refuse a Game (listing for warden), request Capitaluation/pardon, healing request, more coming
+The terror counterpart to warden. Refuse a Game - T can refuse a game and get colored & the warden get a listing of all refuser. Request Capitulation/Pardon - T get strip weapons and the warden got Menu to accept this request. Request healing - T get colored and warden gets Menu to accept this request (give Healthshot). more coming
 
 ##### Commands 
 ```
@@ -205,6 +205,13 @@ the Terror counterpart to Warden,Refuse a Game (listing for warden), request Cap
 - sm_heal_color_green: What color to turn the heal Terror into (rGb): x - green value
 - sm_heal_color_blue: What color to turn the heal Terror into (rgB): x - blue value
 ```
+##### Features
+
+- Custom chat [Tag]
+- 1.7 SourcePawn Transitional Syntax
+- Multilingual support
+- Colors
+
 
 #### Menu
 
@@ -958,8 +965,6 @@ On Round start cells open for freeday and enabled damage (Default).
 > Have fun! Give feedback!  
 > 
 
-
-
 ### detailed credits
 based/merged/used code/idea plugins:
 * https://github.com/ecca/SourceMod-Plugins/tree/sourcemod/Warden
@@ -987,3 +992,6 @@ based/merged/used code/idea plugins:
 * http://www.andi67.bplaced.net/Forum/viewtopic.php?f=40&t=342 (model)
 * if I missed someone, please tell me!
 * THANK YOU ALL!
+  
+my golden faucets not finance itself...  
+[![donation](http://sshanapu.de/donate.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=QT8TVRSYWP53J)
