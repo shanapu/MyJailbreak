@@ -669,6 +669,10 @@ public void playerDeath(Event event, const char[] name, bool dontBroadcast)
 		g_iIcon[client] = -1;
 		delete IconTimer;
 	}
+	g_fLastDrawer[client][0] = 0.0;
+	g_fLastDrawer[client][1] = 0.0;
+	g_fLastDrawer[client][2] = 0.0;
+	g_bDrawerUse[client] = false;
 }
 
 //Set new Warden for Admin Menu
@@ -864,7 +868,11 @@ public Action Timer_WardenFixColor(Handle timer,any client)
 public Action PlayerTeam(Handle event, const char[] name, bool dontBroadcast) 
 {
 	int client = GetClientOfUserId(GetEventInt(event, "userid"));
-	
+	g_fLastDrawer[client][0] = 0.0;
+	g_fLastDrawer[client][1] = 0.0;
+	g_fLastDrawer[client][2] = 0.0;
+	g_bDrawerUse[client] = false;
+	g_bDrawer[client] = false;
 	if(client == g_iWarden)
 		RemoveTheWarden(client);
 }
@@ -1180,7 +1188,14 @@ public void OnMapEnd()
 		g_iWarden = -1;
 	}
 	g_bLaser = false;
-	for(int client=1; client <= MaxClients; client++) g_bDrawer[client] = false;
+	for(int client=1; client <= MaxClients; client++) 
+	{
+	g_fLastDrawer[client][0] = 0.0;
+	g_fLastDrawer[client][1] = 0.0;
+	g_fLastDrawer[client][2] = 0.0;
+	g_bDrawerUse[client] = false;
+	g_bDrawer[client] = false;
+	}
 }
 
 public Action Timer_DrawMakers(Handle timer, any data)
