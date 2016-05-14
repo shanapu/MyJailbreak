@@ -90,4 +90,14 @@
 		"en"		"You have {purple}already request healing."
 		"de"		"Du hast bereits{purple} nach Heilung gefragt."
 	}
+	"request_nodamage"
+	{
+		"en"		"You have cant make {purple}damage after capitulation."
+		"de"		"Du kannst nach einer Capitulation {purple}keinen Schaden verteilen."
+	}
+	"request_processing"
+	{
+		"en"		"There is already a {purple}request in processing. Wait a moment"
+		"de"		"Es ist noch eine {purple}Anfrage im Gange. warte einen Moment"
+	}
 }

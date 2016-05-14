@@ -30,6 +30,7 @@ ConVar gc_bSounds;
 ConVar gc_sSoundRefusePath;
 ConVar gc_sSoundCapitulationPath;
 ConVar gc_bHeal;
+ConVar gc_bHealthShot;
 ConVar gc_fHealTime;
 ConVar gc_iHealLimit;
 ConVar gc_iHealColorRed;
@@ -41,6 +42,7 @@ ConVar gc_iHealColorBlue;
 bool g_bHealed[MAXPLAYERS+1];
 bool g_bCapitulated[MAXPLAYERS+1];
 bool g_bRefuse[MAXPLAYERS+1];
+bool IsRequest;
 
 //Integers
 int g_iRefuseCounter[MAXPLAYERS+1];
@@ -52,6 +54,7 @@ Handle RefuseTimer[MAXPLAYERS+1];
 Handle CapitulationTimer[MAXPLAYERS+1];
 Handle HealTimer[MAXPLAYERS+1];
 Handle RefusePanel;
+Handle RequestTimer;
 
 //characters
 char g_sSoundRefusePath[256];
@@ -88,6 +91,7 @@ public void OnPluginStart()
 	AutoExecConfig_SetFile("Request", "MyJailbreak");
 	AutoExecConfig_SetCreateFile(true);
 	
+	AutoExecConfig_CreateConVar("sm_request_version", PLUGIN_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_PLUGIN|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_request_enable", "1", "Enable or Disable Request Plugin");
 	gc_bSounds = AutoExecConfig_CreateConVar("sm_request_sounds_enable", "1", "0 - disabled, 1 - enable sounds ", _, true,  0.0, true, 1.0);
 	gc_bRefuse = AutoExecConfig_CreateConVar("sm_refuse_enable", "1", "Enable or Disable Refuse");
@@ -105,6 +109,7 @@ public void OnPluginStart()
 	gc_iCapitulationColorBlue = AutoExecConfig_CreateConVar("sm_capitulation_color_blue", "0","What color to turn the capitulation Terror into (rgB): x - blue value", _, true, 0.0, true, 255.0);
 	gc_sSoundCapitulationPath = AutoExecConfig_CreateConVar("sm_capitulation_sound", "music/MyJailbreak/refuse.mp3", "Path to the soundfile which should be played for a capitulation.");
 	gc_bHeal = AutoExecConfig_CreateConVar("sm_heal_enable", "1", "Enable or Disable heal");
+	gc_bHealthShot = AutoExecConfig_CreateConVar("sm_heal_healthshot", "1", "Enable or Disable give healthshot on accept to terror");
 	gc_iHealLimit = AutoExecConfig_CreateConVar("sm_heal_limit", "2", "Сount how many times you can use the command");
 	gc_fHealTime = AutoExecConfig_CreateConVar("sm_heal_time", "10.0", "Time after the player gets his normal colors back");
 	gc_iHealColorRed = AutoExecConfig_CreateConVar("sm_heal_color_red", "240","What color to turn the heal Terror into (set R, G and B values to 255 to disable) (Rgb): x - red value", _, true, 0.0, true, 255.0);
@@ -153,7 +158,6 @@ public Action RoundStart(Handle event, char [] name, bool dontBroadcast)
 	{
 		if (IsClientConnected(client))
 		{
-
 			if (RefuseTimer[client] != null)
 			{
 				CloseHandle(RefuseTimer[client]);
@@ -174,10 +178,16 @@ public Action RoundStart(Handle event, char [] name, bool dontBroadcast)
 				CloseHandle(HealTimer[client]);
 				HealTimer[client] = null;
 			}
+			if (RequestTimer[client] != null)
+			{
+				CloseHandle(RequestTimer[client]);
+				RequestTimer[client] = null;
+			}
 			g_iRefuseCounter[client] = 0;
 			g_bCapitulated[client] = false;
 			g_iHealCounter[client] = 0;
 			g_bHealed[client] = false;
+			IsRequest = false;
 		}
 	}
 	return Plugin_Continue;
@@ -216,10 +226,10 @@ public void OnClientDisconnect(int client)
 		CloseHandle(RebelTimer[client]);
 		RebelTimer[client] = null;
 	}
-	if (HealTimer[client] != null)
+	if (RequestTimer[client] != null)
 	{
-		CloseHandle(HealTimer[client]);
-		HealTimer[client] = null;
+		CloseHandle(RequestTimer[client]);
+		RequestTimer[client] = null;
 	}
 	g_bCapitulated[client] = false;
 	g_iRefuseCounter[client] = 0;
@@ -303,13 +313,18 @@ public Action Command_Capitulation(int client, int args)
 				{
 					if (warden_exist())
 					{
-						g_bCapitulated[client] = true;
-						
-						CPrintToChatAll("%t %t", "request_tag", "request_capitulation", client);
-						SetEntityRenderColor(client, gc_iCapitulationColorRed.IntValue, gc_iCapitulationColorGreen.IntValue, gc_iCapitulationColorBlue.IntValue, 255);
-						StripAllWeapons(client);
-						for(int i=1; i <= MaxClients; i++) CapitulationMenu(i);
-						if(gc_bSounds.BoolValue)EmitSoundToAllAny(g_sSoundCapitulationPath);
+						if(!IsRequest)
+						{
+							IsRequest = true;
+							RequestTimer = CreateTimer (warden,gc_fCapitulationTime, IsRequestTimer)
+							g_bCapitulated[client] = true;
+							CPrintToChatAll("%t %t", "request_tag", "request_capitulation", client);
+							SetEntityRenderColor(client, gc_iCapitulationColorRed.IntValue, gc_iCapitulationColorGreen.IntValue, gc_iCapitulationColorBlue.IntValue, 255);
+							StripAllWeapons(client);
+							for(int i=1; i <= MaxClients; i++) CapitulationMenu(i);
+							if(gc_bSounds.BoolValue)EmitSoundToAllAny(g_sSoundCapitulationPath);
+						}
+						else CPrintToChat(client, "%t %t", "request_tag", "request_processing");
 					}
 					else CPrintToChat(client, "%t %t", "request_tag", "warden_noexist");
 				}
@@ -354,6 +369,8 @@ public int CapitulationMenuHandler(Menu menu, MenuAction action, int client, int
 		{
 			for(int i=1; i <= MaxClients; i++) if(g_bCapitulated[i])
 			{
+				IsRequest = false;
+				RequestTimer = null;
 				CapitulationTimer[i] = CreateTimer(gc_fCapitulationTime.FloatValue, GiveKnifeCapitulated, i);
 				CPrintToChatAll("%t %t", "warden_tag", "request_accepted", i);
 			}
@@ -362,6 +379,8 @@ public int CapitulationMenuHandler(Menu menu, MenuAction action, int client, int
 		{
 			for(int i=1; i <= MaxClients; i++) if(g_bCapitulated[i])
 			{
+				IsRequest = false;
+				RequestTimer = null;
 				RebelTimer[i] = CreateTimer(gc_fRebelTime.FloatValue, GiveKnifeRebel, i);
 				CPrintToChatAll("%t %t", "warden_tag", "request_noaccepted", i);
 			}
@@ -370,7 +389,6 @@ public int CapitulationMenuHandler(Menu menu, MenuAction action, int client, int
 }
 
 //heal
-
 public Action Command_Heal(int client, int args)
 {
 	if (gc_bPlugin.BoolValue)
@@ -385,13 +403,18 @@ public Action Command_Heal(int client, int args)
 					{
 						if (warden_exist())
 						{
-							g_bHealed[client] = true;
-							g_iHealCounter[client]++;
-							
-							CPrintToChatAll("%t %t", "request_tag", "request_heal", client);
-							SetEntityRenderColor(client, gc_iHealColorRed.IntValue, gc_iHealColorGreen.IntValue, gc_iHealColorBlue.IntValue, 255);
-							HealTimer[client] = CreateTimer(gc_fHealTime.FloatValue, ResetColorRefuse, client);
-							for(int i=1; i <= MaxClients; i++) HealMenu(i);
+							if(!IsRequest)
+							{
+								IsRequest = true;
+								RequestTimer = CreateTimer (warden,gc_fHealTime, IsRequestTimer)
+								g_bHealed[client] = true;
+								g_iHealCounter[client]++;
+								CPrintToChatAll("%t %t", "request_tag", "request_heal", client);
+								SetEntityRenderColor(client, gc_iHealColorRed.IntValue, gc_iHealColorGreen.IntValue, gc_iHealColorBlue.IntValue, 255);
+								HealTimer[client] = CreateTimer(gc_fHealTime.FloatValue, ResetColorRefuse, client);
+								for(int i=1; i <= MaxClients; i++) HealMenu(i);
+							}
+							else CPrintToChat(client, "%t %t", "request_tag", "request_processing");
 						}
 						else CPrintToChat(client, "%t %t", "request_tag", "warden_noexist");
 					}
@@ -441,20 +464,29 @@ public int HealMenuHandler(Menu menu, MenuAction action, int client, int Positio
 		{
 			for(int i=1; i <= MaxClients; i++) if(g_bHealed[i])
 			{
-				GivePlayerItem(i, "weapon_healthshot");
+				IsRequest = false;
+				RequestTimer = null;
+				if(gc_bHealthShot) GivePlayerItem(i, "weapon_healthshot");
 				CPrintToChat(i, "%t %t", "request_tag", "request_health");
 				CPrintToChatAll("%t %t", "warden_tag", "request_accepted", i);
-				
 			}
 		}
 		if(choice == 0)
 		{
+			IsRequest = false;
+			RequestTimer = null;
 			for(int i=1; i <= MaxClients; i++) if(g_bHealed[i])
 			{
 				CPrintToChatAll("%t %t", "warden_tag", "request_noaccepted", i);
 			}
 		}
 	}
+}
+
+public Action IsRequestTimer(Handle timer, any client)
+{
+	IsRequest = false;
+	RequestTimer = null;
 }
 
 public Action ResetColorRefuse(Handle timer, any client)
@@ -525,6 +557,7 @@ public Action OnTakedamage(int victim, int &attacker, int &inflictor, float &dam
 	if(g_bCapitulated[attacker])
 	{
 		return Plugin_Handled;
+		CPrintToChat(attacker, "%t %t", "request_tag", "request_nodamage");
 	}
 	return Plugin_Continue;
 }
