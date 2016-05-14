@@ -15,6 +15,6 @@ spcomp MyJailbreak/warden.sp -o../plugins/MyJailbreak/warden.smx
 spcomp MyJailbreak/weapons.sp -o../plugins/MyJailbreak/weapons.smx 
 spcomp MyJailbreak/zeus.sp -o../plugins/MyJailbreak/zeus.smx 
 spcomp MyJailbreak/zombie.sp -o../plugins/MyJailbreak/zombie.smx 
-spcomp MyJailbreak/reqeust.sp -o../plugins/MyJailbreak/reqeust.smx 
+spcomp MyJailbreak/request.sp -o../plugins/MyJailbreak/request.smx 
 
 pause
