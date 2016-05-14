@@ -295,6 +295,7 @@ public void OnPluginStart()
 	HookEvent("item_equip", Event_ItemEquip);
 	HookEvent("round_start", RoundStart);
 	HookEvent("player_death", playerDeath);
+	HookEvent("player_team", EventPlayerTeam);
 	HookEvent("round_end", RoundEnd);
 	HookConVarChange(gc_sModelPath, OnSettingChanged);
 	HookConVarChange(gc_sUnWarden, OnSettingChanged);
@@ -871,6 +872,34 @@ public void OnClientDisconnect(int client)
 		if(gc_bBetterNotes.BoolValue)
 		{
 			PrintCenterTextAll("%t", "warden_disconnected_nc", client);
+		}
+		g_iWarden = -1;
+		Forward_OnWardenRemoved(client);
+		Call_StartForward(gF_OnWardenDisconnected);
+		Call_PushCell(client);
+		Call_Finish();
+		if(gc_bSounds.BoolValue)
+		{
+			EmitSoundToAllAny(g_sUnWarden);
+		}
+		RemoveAllMarkers();
+		g_bDrawerT = false;
+	}
+	g_LastButtons[client] = 0;
+}
+
+//warden change team
+
+public Action EventPlayerTeam(Event event, const char[] name, bool dontBroadcast)
+{
+	int client = GetClientOfUserId(GetEventInt(event, "userid"));
+	if(client == g_iWarden)
+	{	
+		CPrintToChatAll("%t %t", "warden_tag" , "warden_retire");
+		
+		if(gc_bBetterNotes.BoolValue)
+		{
+			PrintCenterTextAll("%t", "warden_retire_nc", client);
 		}
 		g_iWarden = -1;
 		Forward_OnWardenRemoved(client);
