@@ -994,4 +994,4 @@ based/merged/used code/idea plugins:
 * THANK YOU ALL!
   
 my golden faucets not finance itself...  
-[![donation](http://sshanapu.de/donate.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=QT8TVRSYWP53J)
+[![donation](http://shanapu.de/donate.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=QT8TVRSYWP53J)
