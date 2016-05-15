@@ -309,27 +309,6 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		g_iRound++;
 		StartHide = false;
 		SJD_OpenDoors();
-				
-		HideMenu = CreatePanel();
-		Format(info1, sizeof(info1), "%T", "hide_info_title", LANG_SERVER);
-		SetPanelTitle(HideMenu, info1);
-		DrawPanelText(HideMenu, "                                   ");
-		Format(info2, sizeof(info2), "%T", "hide_info_line1", LANG_SERVER);
-		DrawPanelText(HideMenu, info2);
-		DrawPanelText(HideMenu, "-----------------------------------");
-		Format(info3, sizeof(info3), "%T", "hide_info_line2", LANG_SERVER);
-		DrawPanelText(HideMenu, info3);
-		Format(info4, sizeof(info4), "%T", "hide_info_line3", LANG_SERVER);
-		DrawPanelText(HideMenu, info4);
-		Format(info5, sizeof(info5), "%T", "hide_info_line4", LANG_SERVER);
-		DrawPanelText(HideMenu, info5);
-		Format(info6, sizeof(info6), "%T", "hide_info_line5", LANG_SERVER);
-		DrawPanelText(HideMenu, info6);
-		Format(info7, sizeof(info7), "%T", "hide_info_line6", LANG_SERVER);
-		DrawPanelText(HideMenu, info7);
-		Format(info8, sizeof(info8), "%T", "hide_info_line7", LANG_SERVER);
-		DrawPanelText(HideMenu, info8);
-		DrawPanelText(HideMenu, "-----------------------------------");
 		
 		if (g_iRound > 0)
 			{
@@ -337,6 +316,27 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 				{
 					if (IsClientInGame(client))
 					{
+						HideMenu = CreatePanel();
+						Format(info1, sizeof(info1), "%T", "hide_info_title", client);
+						SetPanelTitle(HideMenu, info1);
+						DrawPanelText(HideMenu, "                                   ");
+						Format(info2, sizeof(info2), "%T", "hide_info_line1", client);
+						DrawPanelText(HideMenu, info2);
+						DrawPanelText(HideMenu, "-----------------------------------");
+						Format(info3, sizeof(info3), "%T", "hide_info_line2", client);
+						DrawPanelText(HideMenu, info3);
+						Format(info4, sizeof(info4), "%T", "hide_info_line3", client);
+						DrawPanelText(HideMenu, info4);
+						Format(info5, sizeof(info5), "%T", "hide_info_line4", client);
+						DrawPanelText(HideMenu, info5);
+						Format(info6, sizeof(info6), "%T", "hide_info_line5", client);
+						DrawPanelText(HideMenu, info6);
+						Format(info7, sizeof(info7), "%T", "hide_info_line6", client);
+						DrawPanelText(HideMenu, info7);
+						Format(info8, sizeof(info8), "%T", "hide_info_line7", client);
+						DrawPanelText(HideMenu, info8);
+						DrawPanelText(HideMenu, "-----------------------------------");
+						SendPanelToClient(HideMenu, client, NullHandler, 20);
 						
 						if (GetClientTeam(client) == CS_TEAM_CT)
 						{
@@ -350,7 +350,6 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 						{
 							StripAllWeapons(client);
 							SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
-							SendPanelToClient(HideMenu, client, NullHandler, 20);
 							GivePlayerItem(client, "weapon_knife");
 						}
 						

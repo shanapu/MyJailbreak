@@ -24,6 +24,7 @@ ConVar gc_fGravValue;
 ConVar gc_iCooldownStart;
 ConVar gc_bSetA;
 ConVar gc_bVote;
+ConVar gc_iPlayerHP;
 ConVar gc_iCooldownDay;
 ConVar gc_bSpawnCell;
 ConVar gc_iRoundTime;
@@ -83,6 +84,7 @@ public void OnPluginStart()
 	gc_bSetA = AutoExecConfig_CreateConVar("sm_hebattle_admin", "1", "0 - disabled, 1 - allow admin to set hebattle round", _, true,  0.0, true, 1.0);
 	gc_bVote = AutoExecConfig_CreateConVar("sm_hebattle_vote", "1", "0 - disabled, 1 - allow player to vote for hebattle", _, true,  0.0, true, 1.0);
 	gc_bSpawnCell = AutoExecConfig_CreateConVar("sm_hebattle_spawn", "0", "0 - T teleport to CT spawn, 1 - cell doors auto open", _, true,  0.0, true, 1.0);
+	gc_iPlayerHP = AutoExecConfig_CreateConVar("sm_hebattle_hp", "85", "HP a Player get on Spawn", _, true, 1.0);
 	gc_bGrav = AutoExecConfig_CreateConVar("sm_hebattle_gravity", "1", "0 - disabled, 1 - enable low gravity", _, true,  0.0, true, 1.0);
 	gc_fGravValue= AutoExecConfig_CreateConVar("sm_hebattle_gravity_value", "0.3","Ratio for gravity 0.5 moon / 1.0 earth ", _, true,  0.1, true, 1.0);
 	gc_iRounds = AutoExecConfig_CreateConVar("sm_hebattle_rounds", "1", "Rounds to play in a row", _, true, 1.0);
@@ -293,30 +295,9 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		SetCvar("mp_teammates_are_enemies", 1);
 		SetCvar("sm_menu_enable", 0);
 		IsHEbattle = true;
-
 		g_iRound++;
 		StartHEbattle = false;
 		SJD_OpenDoors();
-		HEbattleMenu = CreatePanel();
-		Format(info1, sizeof(info1), "%T", "hebattle_info_title", LANG_SERVER);
-		SetPanelTitle(HEbattleMenu, info1);
-		DrawPanelText(HEbattleMenu, "                                   ");
-		Format(info2, sizeof(info2), "%T", "hebattle_info_line1", LANG_SERVER);
-		DrawPanelText(HEbattleMenu, info2);
-		DrawPanelText(HEbattleMenu, "-----------------------------------");
-		Format(info3, sizeof(info3), "%T", "hebattle_info_line2", LANG_SERVER);
-		DrawPanelText(HEbattleMenu, info3);
-		Format(info4, sizeof(info4), "%T", "hebattle_info_line3", LANG_SERVER);
-		DrawPanelText(HEbattleMenu, info4);
-		Format(info5, sizeof(info5), "%T", "hebattle_info_line4", LANG_SERVER);
-		DrawPanelText(HEbattleMenu, info5);
-		Format(info6, sizeof(info6), "%T", "hebattle_info_line5", LANG_SERVER);
-		DrawPanelText(HEbattleMenu, info6);
-		Format(info7, sizeof(info7), "%T", "hebattle_info_line6", LANG_SERVER);
-		DrawPanelText(HEbattleMenu, info7);
-		Format(info8, sizeof(info8), "%T", "hebattle_info_line7", LANG_SERVER);
-		DrawPanelText(HEbattleMenu, info8);
-		DrawPanelText(HEbattleMenu, "-----------------------------------");
 		
 		int RandomCT = 0;
 		
@@ -346,16 +327,37 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 				{
 					if (IsClientInGame(client))
 					{
+						HEbattleMenu = CreatePanel();
+						Format(info1, sizeof(info1), "%T", "hebattle_info_title", LANG_SERVER);
+						SetPanelTitle(HEbattleMenu, info1);
+						DrawPanelText(HEbattleMenu, "                                   ");
+						Format(info2, sizeof(info2), "%T", "hebattle_info_line1", LANG_SERVER);
+						DrawPanelText(HEbattleMenu, info2);
+						DrawPanelText(HEbattleMenu, "-----------------------------------");
+						Format(info3, sizeof(info3), "%T", "hebattle_info_line2", LANG_SERVER);
+						DrawPanelText(HEbattleMenu, info3);
+						Format(info4, sizeof(info4), "%T", "hebattle_info_line3", LANG_SERVER);
+						DrawPanelText(HEbattleMenu, info4);
+						Format(info5, sizeof(info5), "%T", "hebattle_info_line4", LANG_SERVER);
+						DrawPanelText(HEbattleMenu, info5);
+						Format(info6, sizeof(info6), "%T", "hebattle_info_line5", LANG_SERVER);
+						DrawPanelText(HEbattleMenu, info6);
+						Format(info7, sizeof(info7), "%T", "hebattle_info_line6", LANG_SERVER);
+						DrawPanelText(HEbattleMenu, info7);
+						Format(info8, sizeof(info8), "%T", "hebattle_info_line7", LANG_SERVER);
+						DrawPanelText(HEbattleMenu, info8);
+						DrawPanelText(HEbattleMenu, "-----------------------------------");
+						SendPanelToClient(HEbattleMenu, client, NullHandler, 20);
+						
+						SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
+						StripAllWeapons(client);
+						GivePlayerItem(client, "weapon_hegrenade");
+						SetEntityHealth(client, gc_iPlayerHP.IntValue);
 						
 						if (gc_bGrav.BoolValue)
 						{
 							SetEntityGravity(client, gc_fGravValue.FloatValue);	
 						}
-						SendPanelToClient(HEbattleMenu, client, NullHandler, 20);
-						SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
-						StripAllWeapons(client);
-						GivePlayerItem(client, "weapon_hegrenade");
-						SetEntityHealth(client, 85);
 						if (!gc_bSpawnCell.BoolValue)
 						{
 							TeleportEntity(client, Pos1, NULL_VECTOR, NULL_VECTOR);

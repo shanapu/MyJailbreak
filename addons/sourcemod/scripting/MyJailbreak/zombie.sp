@@ -336,27 +336,6 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		StartZombie = false;
 		SJD_OpenDoors();
 		
-		ZombieMenu = CreatePanel();
-		Format(info1, sizeof(info1), "%T", "zombie_info_title", LANG_SERVER);
-		SetPanelTitle(ZombieMenu, info1);
-		DrawPanelText(ZombieMenu, "                                   ");
-		Format(info2, sizeof(info2), "%T", "zombie_info_line1", LANG_SERVER);
-		DrawPanelText(ZombieMenu, info2);
-		DrawPanelText(ZombieMenu, "-----------------------------------");
-		Format(info3, sizeof(info3), "%T", "zombie_info_line2", LANG_SERVER);
-		DrawPanelText(ZombieMenu, info3);
-		Format(info4, sizeof(info4), "%T", "zombie_info_line3", LANG_SERVER);
-		DrawPanelText(ZombieMenu, info4);
-		Format(info5, sizeof(info5), "%T", "zombie_info_line4", LANG_SERVER);
-		DrawPanelText(ZombieMenu, info5);
-		Format(info6, sizeof(info6), "%T", "zombie_info_line5", LANG_SERVER);
-		DrawPanelText(ZombieMenu, info6);
-		Format(info7, sizeof(info7), "%T", "zombie_info_line6", LANG_SERVER);
-		DrawPanelText(ZombieMenu, info7);
-		Format(info8, sizeof(info8), "%T", "zombie_info_line7", LANG_SERVER);
-		DrawPanelText(ZombieMenu, info8);
-		DrawPanelText(ZombieMenu, "-----------------------------------");
-		
 		int RandomCT = 0;
 		
 		for(int client=1; client <= MaxClients; client++)
@@ -385,6 +364,32 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 				{
 					if (IsClientInGame(client))
 					{
+						
+						ZombieMenu = CreatePanel();
+						Format(info1, sizeof(info1), "%T", "zombie_info_title", client);
+						SetPanelTitle(ZombieMenu, info1);
+						DrawPanelText(ZombieMenu, "                                   ");
+						Format(info2, sizeof(info2), "%T", "zombie_info_line1", client);
+						DrawPanelText(ZombieMenu, info2);
+						DrawPanelText(ZombieMenu, "-----------------------------------");
+						Format(info3, sizeof(info3), "%T", "zombie_info_line2", client);
+						DrawPanelText(ZombieMenu, info3);
+						Format(info4, sizeof(info4), "%T", "zombie_info_line3", client);
+						DrawPanelText(ZombieMenu, info4);
+						Format(info5, sizeof(info5), "%T", "zombie_info_line4", client);
+						DrawPanelText(ZombieMenu, info5);
+						Format(info6, sizeof(info6), "%T", "zombie_info_line5", client);
+						DrawPanelText(ZombieMenu, info6);
+						Format(info7, sizeof(info7), "%T", "zombie_info_line6", client);
+						DrawPanelText(ZombieMenu, info7);
+						Format(info8, sizeof(info8), "%T", "zombie_info_line7", client);
+						DrawPanelText(ZombieMenu, info8);
+						DrawPanelText(ZombieMenu, "-----------------------------------");
+						SendPanelToClient(ZombieMenu, client, NullHandler, 20);
+						
+						SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
+						SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
+						
 						if (GetClientTeam(client) == CS_TEAM_CT)
 						{
 							SetEntityModel(client, g_sZombieModel);
@@ -402,9 +407,6 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 							GivePlayerItem(client, "weapon_molotov");
 							if (gc_bGlow.BoolValue && (IsValidClient(client, false, true))) GlowTimer = CreateTimer(1.5, Glow_Timer, client, TIMER_REPEAT);
 						}
-						SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
-						SendPanelToClient(ZombieMenu, client, NullHandler, 20);
-						SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 						if (!gc_bSpawnCell.BoolValue)
 						{
 							TeleportEntity(client, Pos1, NULL_VECTOR, NULL_VECTOR);

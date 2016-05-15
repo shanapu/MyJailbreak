@@ -327,27 +327,6 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		g_iRound++;
 		StartCatch = false;
 		SJD_OpenDoors();
-
-		CatchMenu = CreatePanel();
-		Format(info1, sizeof(info1), "%T", "catch_info_title", LANG_SERVER);
-		SetPanelTitle(CatchMenu, info1);
-		DrawPanelText(CatchMenu, "                                   ");
-		Format(info2, sizeof(info2), "%T", "catch_info_line1", LANG_SERVER);
-		DrawPanelText(CatchMenu, info2);
-		DrawPanelText(CatchMenu, "-----------------------------------");
-		Format(info3, sizeof(info3), "%T", "catch_info_line2", LANG_SERVER);
-		DrawPanelText(CatchMenu, info3);
-		Format(info4, sizeof(info4), "%T", "catch_info_line3", LANG_SERVER);
-		DrawPanelText(CatchMenu, info4);
-		Format(info5, sizeof(info5), "%T", "catch_info_line4", LANG_SERVER);
-		DrawPanelText(CatchMenu, info5);
-		Format(info6, sizeof(info6), "%T", "catch_info_line5", LANG_SERVER);
-		DrawPanelText(CatchMenu, info6);
-		Format(info7, sizeof(info7), "%T", "catch_info_line6", LANG_SERVER);
-		DrawPanelText(CatchMenu, info7);
-		Format(info8, sizeof(info8), "%T", "catch_info_line7", LANG_SERVER);
-		DrawPanelText(CatchMenu, info8);
-		DrawPanelText(CatchMenu, "-----------------------------------");
 		
 		if (g_iRound > 0)
 			{
@@ -355,16 +334,38 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 				{
 					if (IsClientInGame(client))
 					{
-						if (GetClientTeam(client) == CS_TEAM_T)
-						{
-							catched[client] = false;
-						}
+						CatchMenu = CreatePanel();
+						Format(info1, sizeof(info1), "%T", "catch_info_title", client);
+						SetPanelTitle(CatchMenu, info1);
+						DrawPanelText(CatchMenu, "                                   ");
+						Format(info2, sizeof(info2), "%T", "catch_info_line1", client);
+						DrawPanelText(CatchMenu, info2);
+						DrawPanelText(CatchMenu, "-----------------------------------");
+						Format(info3, sizeof(info3), "%T", "catch_info_line2", client);
+						DrawPanelText(CatchMenu, info3);
+						Format(info4, sizeof(info4), "%T", "catch_info_line3", client);
+						DrawPanelText(CatchMenu, info4);
+						Format(info5, sizeof(info5), "%T", "catch_info_line4", client);
+						DrawPanelText(CatchMenu, info5);
+						Format(info6, sizeof(info6), "%T", "catch_info_line5", client);
+						DrawPanelText(CatchMenu, info6);
+						Format(info7, sizeof(info7), "%T", "catch_info_line6", client);
+						DrawPanelText(CatchMenu, info7);
+						Format(info8, sizeof(info8), "%T", "catch_info_line7", client);
+						DrawPanelText(CatchMenu, info8);
+						DrawPanelText(CatchMenu, "-----------------------------------");
+						
 						StripAllWeapons(client);
 						ClientSprintStatus[client] = 0;
 						GivePlayerItem(client, "weapon_knife");
 						SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
 						SendPanelToClient(CatchMenu, client, NullHandler, 20);
 						PrintHintText(client,"%t", "catch_start_nc");
+						
+						if (GetClientTeam(client) == CS_TEAM_T)
+						{
+							catched[client] = false;
+						}
 					}
 				}
 				CPrintToChatAll("%t %t", "catch_tag" ,"catch_rounds", g_iRound, g_iMaxRound);
@@ -375,7 +376,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 	{
 		char EventDay[64];
 		GetEventDay(EventDay);
-	
+		
 		if(!StrEqual(EventDay, "none", false))
 		{
 			g_iCoolDown = gc_iCooldownDay.IntValue + 1;

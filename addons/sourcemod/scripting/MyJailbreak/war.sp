@@ -293,26 +293,6 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 			SJD_OpenDoors();
 			g_iFreezeTime = 0;
 		}
-		WarMenu = CreatePanel();
-		Format(info1, sizeof(info1), "%T", "war_info_title", LANG_SERVER);
-		SetPanelTitle(WarMenu, info1);
-		DrawPanelText(WarMenu, "                                   ");
-		Format(info2, sizeof(info2), "%T", "war_info_line1", LANG_SERVER);
-		DrawPanelText(WarMenu, info2);
-		DrawPanelText(WarMenu, "-----------------------------------");
-		Format(info3, sizeof(info3), "%T", "war_info_line2", LANG_SERVER);
-		DrawPanelText(WarMenu, info3);
-		Format(info4, sizeof(info4), "%T", "war_info_line3", LANG_SERVER);
-		DrawPanelText(WarMenu, info4);
-		Format(info5, sizeof(info5), "%T", "war_info_line4", LANG_SERVER);
-		DrawPanelText(WarMenu, info5);
-		Format(info6, sizeof(info6), "%T", "war_info_line5", LANG_SERVER);
-		DrawPanelText(WarMenu, info6);
-		Format(info7, sizeof(info7), "%T", "war_info_line6", LANG_SERVER);
-		DrawPanelText(WarMenu, info7);
-		Format(info8, sizeof(info8), "%T", "war_info_line7", LANG_SERVER);
-		DrawPanelText(WarMenu, info8);
-		DrawPanelText(WarMenu, "-----------------------------------");
 		
 		int RandomCT = 0;
 		
@@ -358,8 +338,29 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 			{
 				if (IsClientInGame(client))
 				{
-					SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
+					WarMenu = CreatePanel();
+					Format(info1, sizeof(info1), "%T", "war_info_title", client);
+					SetPanelTitle(WarMenu, info1);
+					DrawPanelText(WarMenu, "                                   ");
+					Format(info2, sizeof(info2), "%T", "war_info_line1", client);
+					DrawPanelText(WarMenu, info2);
+					DrawPanelText(WarMenu, "-----------------------------------");
+					Format(info3, sizeof(info3), "%T", "war_info_line2", client);
+					DrawPanelText(WarMenu, info3);
+					Format(info4, sizeof(info4), "%T", "war_info_line3", client);
+					DrawPanelText(WarMenu, info4);
+					Format(info5, sizeof(info5), "%T", "war_info_line4", client);
+					DrawPanelText(WarMenu, info5);
+					Format(info6, sizeof(info6), "%T", "war_info_line5", client);
+					DrawPanelText(WarMenu, info6);
+					Format(info7, sizeof(info7), "%T", "war_info_line6", client);
+					DrawPanelText(WarMenu, info7);
+					Format(info8, sizeof(info8), "%T", "war_info_line7", client);
+					DrawPanelText(WarMenu, info8);
+					DrawPanelText(WarMenu, "-----------------------------------");
 					SendPanelToClient(WarMenu, client, NullHandler, 20);
+					
+					SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
 					SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 				}
 			}

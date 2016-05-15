@@ -155,12 +155,12 @@
 	"hide_info_line1"		// no colors!
 	{
 		"en"		"Hider got time on beginn of the round to hide"
-		"de"		"Hider haben zu Runden beginn zeit zum versteken"
+		"de"		"Hider haben zu Rundenbeginn Zeit zum verstecken"
 	}
 	"hide_info_line2"		// no colors!
 	{
 		"en"		"When Seeker get unfreezed Hider get freezed"
-		"de"		"Solbald es für die Seeker losgeht, werden die Seeker gefreezt"
+		"de"		"Solbald es für die Seeker losgeht, werden die Hider gefreezt"
 	}
 	
 	"hide_info_line3"		// no colors!

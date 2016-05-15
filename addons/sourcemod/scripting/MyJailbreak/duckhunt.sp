@@ -312,34 +312,38 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		g_iRound++;
 		StartDuckHunt = false;
 		
-		DuckHuntMenu = CreatePanel();
-		Format(info1, sizeof(info1), "%T", "duckhunt_info_title", LANG_SERVER);
-		SetPanelTitle(DuckHuntMenu, info1);
-		DrawPanelText(DuckHuntMenu, "                                   ");
-		Format(info2, sizeof(info2), "%T", "duckhunt_info_line1", LANG_SERVER);
-		DrawPanelText(DuckHuntMenu, info2);
-		DrawPanelText(DuckHuntMenu, "-----------------------------------");
-		Format(info3, sizeof(info3), "%T", "duckhunt_info_line2", LANG_SERVER);
-		DrawPanelText(DuckHuntMenu, info3);
-		Format(info4, sizeof(info4), "%T", "duckhunt_info_line3", LANG_SERVER);
-		DrawPanelText(DuckHuntMenu, info4);
-		Format(info5, sizeof(info5), "%T", "duckhunt_info_line4", LANG_SERVER);
-		DrawPanelText(DuckHuntMenu, info5);
-		Format(info6, sizeof(info6), "%T", "duckhunt_info_line5", LANG_SERVER);
-		DrawPanelText(DuckHuntMenu, info6);
-		Format(info7, sizeof(info7), "%T", "duckhunt_info_line6", LANG_SERVER);
-		DrawPanelText(DuckHuntMenu, info7);
-		Format(info8, sizeof(info8), "%T", "duckhunt_info_line7", LANG_SERVER);
-		DrawPanelText(DuckHuntMenu, info8);
-		DrawPanelText(DuckHuntMenu, "-----------------------------------");
-		
 		if (g_iRound > 0)
 			{
 				for(int client=1; client <= MaxClients; client++)
 				{
 					if (IsClientInGame(client))
 					{
+						DuckHuntMenu = CreatePanel();
+						Format(info1, sizeof(info1), "%T", "duckhunt_info_title", client);
+						SetPanelTitle(DuckHuntMenu, info1);
+						DrawPanelText(DuckHuntMenu, "                                   ");
+						Format(info2, sizeof(info2), "%T", "duckhunt_info_line1", client);
+						DrawPanelText(DuckHuntMenu, info2);
+						DrawPanelText(DuckHuntMenu, "-----------------------------------");
+						Format(info3, sizeof(info3), "%T", "duckhunt_info_line2", client);
+						DrawPanelText(DuckHuntMenu, info3);
+						Format(info4, sizeof(info4), "%T", "duckhunt_info_line3", client);
+						DrawPanelText(DuckHuntMenu, info4);
+						Format(info5, sizeof(info5), "%T", "duckhunt_info_line4", client);
+						DrawPanelText(DuckHuntMenu, info5);
+						Format(info6, sizeof(info6), "%T", "duckhunt_info_line5", client);
+						DrawPanelText(DuckHuntMenu, info6);
+						Format(info7, sizeof(info7), "%T", "duckhunt_info_line6", client);
+						DrawPanelText(DuckHuntMenu, info7);
+						Format(info8, sizeof(info8), "%T", "duckhunt_info_line7", client);
+						DrawPanelText(DuckHuntMenu, info8);
+						DrawPanelText(DuckHuntMenu, "-----------------------------------");
+						SendPanelToClient(DuckHuntMenu, client, NullHandler, 20);
+						
 						StripAllWeapons(client);
+						SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
+						SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
+						
 						if (GetClientTeam(client) == CS_TEAM_CT && IsValidClient(client, false, false))
 						{
 							SetEntityModel(client, huntermodel);
@@ -356,9 +360,6 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 							GivePlayerItem(client, "weapon_hegrenade");
 							ClientCommand(client, "thirdperson");
 						}
-						SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
-						SendPanelToClient(DuckHuntMenu, client, NullHandler, 20);
-						SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 					}
 				}
 				CPrintToChatAll("%t %t", "duckhunt_tag" ,"duckhunt_rounds", g_iRound, g_iMaxRound);

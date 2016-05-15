@@ -172,7 +172,7 @@ public Action JbMenu(int client, int args)
 		char menuinfo17[255], menuinfo14[255], menuinfo4[255], menuinfo19[255], menuinfo20[255], menuinfo21[255], menuinfo18[255];
 		char menuinfo22[255];
 		//menuinfo12[255],
-		Format(menuinfo1, sizeof(menuinfo1), "%T", "menu_info_title", LANG_SERVER);
+		Format(menuinfo1, sizeof(menuinfo1), "%T", "menu_info_title", client);
 		
 		Menu mainmenu = new Menu(JBMenuHandler);
 		mainmenu.SetTitle(menuinfo1);
@@ -186,7 +186,7 @@ public Action JbMenu(int client, int args)
 					{
 						if(g_bGunsCT.BoolValue)
 						{
-							Format(menuinfo6, sizeof(menuinfo6), "%T", "menu_guns", LANG_SERVER);
+							Format(menuinfo6, sizeof(menuinfo6), "%T", "menu_guns", client);
 							mainmenu.AddItem("guns", menuinfo6);
 						}
 					}
@@ -195,7 +195,7 @@ public Action JbMenu(int client, int args)
 				{
 					if(g_bOpen.BoolValue)
 					{
-						Format(menuinfo3, sizeof(menuinfo3), "%T", "menu_opencell", LANG_SERVER);
+						Format(menuinfo3, sizeof(menuinfo3), "%T", "menu_opencell", client);
 						mainmenu.AddItem("cellopen", menuinfo3);
 					}
 				}
@@ -203,7 +203,7 @@ public Action JbMenu(int client, int args)
 				{
 					if(g_bCountdown.BoolValue)
 					{
-						Format(menuinfo2, sizeof(menuinfo2), "%T", "menu_countdown", LANG_SERVER);
+						Format(menuinfo2, sizeof(menuinfo2), "%T", "menu_countdown", client);
 						mainmenu.AddItem("countdown", menuinfo2);
 					}
 				}
@@ -211,20 +211,20 @@ public Action JbMenu(int client, int args)
 				{
 					if(g_bMath.BoolValue)
 					{
-						Format(menuinfo3, sizeof(menuinfo3), "%T", "menu_math", LANG_SERVER);
+						Format(menuinfo3, sizeof(menuinfo3), "%T", "menu_math", client);
 						mainmenu.AddItem("math", menuinfo3);
 					}
 				}
 				if(gc_bDays.BoolValue)
 				{
-					Format(menuinfo5, sizeof(menuinfo5), "%T", "menu_seteventdays", LANG_SERVER);
+					Format(menuinfo5, sizeof(menuinfo5), "%T", "menu_seteventdays", client);
 					mainmenu.AddItem("setdays", menuinfo5);
 				}
 				if(g_bDrawer != null)
 				{
 					if(g_bDrawer.BoolValue)
 					{
-						Format(menuinfo21, sizeof(menuinfo21), "%T", "menu_drawer", LANG_SERVER);
+						Format(menuinfo21, sizeof(menuinfo21), "%T", "menu_drawer", client);
 						mainmenu.AddItem("drawer", menuinfo21);
 					}
 				}
@@ -232,7 +232,7 @@ public Action JbMenu(int client, int args)
 				{
 					if(g_bLaser.BoolValue)
 					{
-						Format(menuinfo20, sizeof(menuinfo20), "%T", "menu_laser", LANG_SERVER);
+						Format(menuinfo20, sizeof(menuinfo20), "%T", "menu_laser", client);
 						mainmenu.AddItem("laser", menuinfo20);
 					}
 				}
@@ -240,7 +240,7 @@ public Action JbMenu(int client, int args)
 				{
 					if(g_bCheck.BoolValue)
 					{
-						Format(menuinfo4, sizeof(menuinfo4), "%T", "menu_check", LANG_SERVER);
+						Format(menuinfo4, sizeof(menuinfo4), "%T", "menu_check", client);
 						mainmenu.AddItem("check", menuinfo4);
 					}
 				}
@@ -250,12 +250,12 @@ public Action JbMenu(int client, int args)
 					{
 						if(!g_bFF.BoolValue)
 						{
-							Format(menuinfo7, sizeof(menuinfo7), "%T", "menu_ffon", LANG_SERVER);
+							Format(menuinfo7, sizeof(menuinfo7), "%T", "menu_ffon", client);
 							mainmenu.AddItem("setff", menuinfo7);
 						}
 						else
 						{
-							Format(menuinfo8, sizeof(menuinfo8), "%T", "menu_ffoff", LANG_SERVER);
+							Format(menuinfo8, sizeof(menuinfo8), "%T", "menu_ffoff", client);
 							mainmenu.AddItem("setff", menuinfo8);
 						}
 					}
@@ -264,7 +264,7 @@ public Action JbMenu(int client, int args)
 				{
 					if(g_bNoBlock.BoolValue)
 					{
-						Format(menuinfo22, sizeof(menuinfo22), "%T", "menu_noblock", LANG_SERVER);
+						Format(menuinfo22, sizeof(menuinfo22), "%T", "menu_noblock", client);
 						mainmenu.AddItem("noblock", menuinfo22);
 					}
 				}
@@ -272,11 +272,11 @@ public Action JbMenu(int client, int args)
 				{
 					if(g_bRandom.BoolValue)
 					{
-						Format(menuinfo9, sizeof(menuinfo9), "%T", "menu_randomdead", LANG_SERVER);
+						Format(menuinfo9, sizeof(menuinfo9), "%T", "menu_randomdead", client);
 						mainmenu.AddItem("kill", menuinfo9);
 					}
 				}
-				Format(menuinfo10, sizeof(menuinfo10), "%T", "menu_unwarden", LANG_SERVER);
+				Format(menuinfo10, sizeof(menuinfo10), "%T", "menu_unwarden", client);
 				mainmenu.AddItem("unwarden", menuinfo10);
 			}
 		}
@@ -290,7 +290,7 @@ public Action JbMenu(int client, int args)
 					{
 						if(g_bGunsCT.BoolValue)
 						{
-							Format(menuinfo6, sizeof(menuinfo6), "%T", "menu_guns", LANG_SERVER);
+							Format(menuinfo6, sizeof(menuinfo6), "%T", "menu_guns", client);
 							mainmenu.AddItem("guns", menuinfo6);
 						}
 					}
@@ -301,7 +301,7 @@ public Action JbMenu(int client, int args)
 					{
 						if(g_bWarden.BoolValue)
 						{
-							Format(menuinfo11, sizeof(menuinfo11), "%T", "menu_getwarden", LANG_SERVER);
+							Format(menuinfo11, sizeof(menuinfo11), "%T", "menu_getwarden", client);
 							mainmenu.AddItem("getwarden", menuinfo11);
 						}
 					}
@@ -313,7 +313,7 @@ public Action JbMenu(int client, int args)
 				{
 					if(gc_bDays.BoolValue)
 					{
-						Format(menuinfo5, sizeof(menuinfo5), "%T", "menu_voteeventdays", LANG_SERVER);
+						Format(menuinfo5, sizeof(menuinfo5), "%T", "menu_voteeventdays", client);
 						mainmenu.AddItem("votedays", menuinfo5);
 					}
 				}
@@ -322,13 +322,13 @@ public Action JbMenu(int client, int args)
 				{
 					if(g_bCheck.BoolValue)
 					{
-						Format(menuinfo4, sizeof(menuinfo4), "%T", "menu_check", LANG_SERVER);
+						Format(menuinfo4, sizeof(menuinfo4), "%T", "menu_check", client);
 						mainmenu.AddItem("check", menuinfo4);
 					}
 				}
 				if(gc_bTeam.BoolValue)
 				{
-					Format(menuinfo13, sizeof(menuinfo13), "%T", "menu_joint", LANG_SERVER);
+					Format(menuinfo13, sizeof(menuinfo13), "%T", "menu_joint", client);
 					mainmenu.AddItem("ChangeTeam", menuinfo13);
 				}
 			}
@@ -343,7 +343,7 @@ public Action JbMenu(int client, int args)
 					{
 						if(g_bGunsT.BoolValue)
 						{
-							Format(menuinfo6, sizeof(menuinfo6), "%T", "menu_guns", LANG_SERVER);
+							Format(menuinfo6, sizeof(menuinfo6), "%T", "menu_guns", client);
 							mainmenu.AddItem("guns", menuinfo6);
 						}
 					}
@@ -356,7 +356,7 @@ public Action JbMenu(int client, int args)
 						{
 							if(g_bVote.BoolValue)
 							{
-								Format(menuinfo16, sizeof(menuinfo16), "%T", "menu_votewarden", LANG_SERVER);
+								Format(menuinfo16, sizeof(menuinfo16), "%T", "menu_votewarden", client);
 								mainmenu.AddItem("votewarden", menuinfo16);
 							}
 						}
@@ -370,13 +370,13 @@ public Action JbMenu(int client, int args)
 				{
 					if(gc_bDays.BoolValue)
 					{
-						Format(menuinfo5, sizeof(menuinfo5), "%T", "menu_voteeventdays", LANG_SERVER);
+						Format(menuinfo5, sizeof(menuinfo5), "%T", "menu_voteeventdays", client);
 						mainmenu.AddItem("votedays", menuinfo5);
 					}
 				}
 				if(gc_bTeam.BoolValue)
 				{
-					Format(menuinfo15, sizeof(menuinfo15), "%T", "menu_joinct", LANG_SERVER);
+					Format(menuinfo15, sizeof(menuinfo15), "%T", "menu_joinct", client);
 					mainmenu.AddItem("ChangeTeam", menuinfo15);
 				}
 			}
@@ -385,7 +385,7 @@ public Action JbMenu(int client, int args)
 		{
 			if(g_bRules.BoolValue)
 			{
-				Format(menuinfo14, sizeof(menuinfo14), "%T", "menu_rules", LANG_SERVER);
+				Format(menuinfo14, sizeof(menuinfo14), "%T", "menu_rules", client);
 				mainmenu.AddItem("rules", menuinfo14);
 			}
 		}
@@ -400,7 +400,7 @@ public Action JbMenu(int client, int args)
 				{
 					if(gc_bDays.BoolValue)
 					{
-						Format(menuinfo5, sizeof(menuinfo5), "%T", "menu_seteventdays", LANG_SERVER);
+						Format(menuinfo5, sizeof(menuinfo5), "%T", "menu_seteventdays", client);
 						mainmenu.AddItem("setdays", menuinfo5);
 					}
 				}
@@ -411,14 +411,14 @@ public Action JbMenu(int client, int args)
 				{
 					if(warden_exist())
 					{
-						Format(menuinfo19, sizeof(menuinfo19), "%T", "menu_removewarden", LANG_SERVER);
+						Format(menuinfo19, sizeof(menuinfo19), "%T", "menu_removewarden", client);
 						mainmenu.AddItem("removewarden", menuinfo19);
 					}
-					Format(menuinfo18, sizeof(menuinfo18), "%T", "menu_setwarden", LANG_SERVER);
+					Format(menuinfo18, sizeof(menuinfo18), "%T", "menu_setwarden", client);
 					mainmenu.AddItem("setwarden", menuinfo18);
 				}
 			}
-			Format(menuinfo17, sizeof(menuinfo17), "%T", "menu_admin", LANG_SERVER);
+			Format(menuinfo17, sizeof(menuinfo17), "%T", "menu_admin", client);
 			mainmenu.AddItem("admin", menuinfo17);
 		}
 		mainmenu.ExitButton = true;
@@ -563,14 +563,14 @@ public Action VoteEventDays(int client, int args)
 			char menuinfo19[255], menuinfo20[255], menuinfo21[255], menuinfo22[255], menuinfo23[255], menuinfo24[255], menuinfo25[255], menuinfo26[255], menuinfo27[255], menuinfo28[255], menuinfo29[255];
 			char menuinfo17[255];
 			
-			Format(menuinfo29, sizeof(menuinfo29), "%T", "menu_event_Titlevote", LANG_SERVER);
+			Format(menuinfo29, sizeof(menuinfo29), "%T", "menu_event_Titlevote", client);
 			daysmenu.SetTitle(menuinfo29);
 			
 			if(g_bWar != null)
 			{
 				if(g_bWar.BoolValue)
 				{
-					Format(menuinfo19, sizeof(menuinfo19), "%T", "menu_war", LANG_SERVER);
+					Format(menuinfo19, sizeof(menuinfo19), "%T", "menu_war", client);
 					daysmenu.AddItem("votewar", menuinfo19);
 				}
 			}
@@ -578,7 +578,7 @@ public Action VoteEventDays(int client, int args)
 			{
 				if(g_bFFA.BoolValue)
 				{
-					Format(menuinfo20, sizeof(menuinfo20), "%T", "menu_ffa", LANG_SERVER);
+					Format(menuinfo20, sizeof(menuinfo20), "%T", "menu_ffa", client);
 					daysmenu.AddItem("voteffa", menuinfo20);
 				}
 			}
@@ -586,7 +586,7 @@ public Action VoteEventDays(int client, int args)
 			{
 				if(g_bZombie.BoolValue)
 				{
-					Format(menuinfo21, sizeof(menuinfo21), "%T", "menu_zombie", LANG_SERVER);
+					Format(menuinfo21, sizeof(menuinfo21), "%T", "menu_zombie", client);
 					daysmenu.AddItem("votezombie", menuinfo21);
 				}
 			}
@@ -594,7 +594,7 @@ public Action VoteEventDays(int client, int args)
 			{
 				if(g_bHide.BoolValue)
 				{
-					Format(menuinfo22, sizeof(menuinfo22), "%T", "menu_hide", LANG_SERVER);
+					Format(menuinfo22, sizeof(menuinfo22), "%T", "menu_hide", client);
 					daysmenu.AddItem("votehide", menuinfo22);
 				}
 			}
@@ -602,7 +602,7 @@ public Action VoteEventDays(int client, int args)
 			{
 				if(g_bCatch.BoolValue)
 				{
-					Format(menuinfo23, sizeof(menuinfo23), "%T", "menu_catch", LANG_SERVER);
+					Format(menuinfo23, sizeof(menuinfo23), "%T", "menu_catch", client);
 					daysmenu.AddItem("votecatch", menuinfo23);
 				}
 			}
@@ -610,7 +610,7 @@ public Action VoteEventDays(int client, int args)
 			{
 				if(g_bSuicideBomber.BoolValue)
 				{
-					Format(menuinfo23, sizeof(menuinfo23), "%T", "menu_suicidebomber", LANG_SERVER);
+					Format(menuinfo23, sizeof(menuinfo23), "%T", "menu_suicidebomber", client);
 					daysmenu.AddItem("voteSuicideBomber", menuinfo23);
 				}
 			}
@@ -618,7 +618,7 @@ public Action VoteEventDays(int client, int args)
 			{
 				if(g_bHEbattle.BoolValue)
 				{
-					Format(menuinfo27, sizeof(menuinfo27), "%T", "menu_hebattle", LANG_SERVER);
+					Format(menuinfo27, sizeof(menuinfo27), "%T", "menu_hebattle", client);
 					daysmenu.AddItem("votehebattle", menuinfo27);
 				}
 			}
@@ -626,7 +626,7 @@ public Action VoteEventDays(int client, int args)
 			{
 				if(g_bNoScope.BoolValue)
 				{
-					Format(menuinfo24, sizeof(menuinfo24), "%T", "menu_noscope", LANG_SERVER);
+					Format(menuinfo24, sizeof(menuinfo24), "%T", "menu_noscope", client);
 					daysmenu.AddItem("votenoscope", menuinfo24);
 				}
 			}
@@ -634,7 +634,7 @@ public Action VoteEventDays(int client, int args)
 			{
 				if(g_bDuckHunt.BoolValue)
 				{
-					Format(menuinfo25, sizeof(menuinfo25), "%T", "menu_duckhunt", LANG_SERVER);
+					Format(menuinfo25, sizeof(menuinfo25), "%T", "menu_duckhunt", client);
 					daysmenu.AddItem("voteduckhunt", menuinfo25);
 				}
 			}
@@ -642,7 +642,7 @@ public Action VoteEventDays(int client, int args)
 			{
 				if(g_bZeus.BoolValue)
 				{
-					Format(menuinfo17, sizeof(menuinfo17), "%T", "menu_zeus", LANG_SERVER);
+					Format(menuinfo17, sizeof(menuinfo17), "%T", "menu_zeus", client);
 					daysmenu.AddItem("votezeus", menuinfo17);
 				}
 			}
@@ -650,7 +650,7 @@ public Action VoteEventDays(int client, int args)
 			{
 				if(g_bKnife.BoolValue)
 				{
-					Format(menuinfo28, sizeof(menuinfo28), "%T", "menu_knifefight", LANG_SERVER);
+					Format(menuinfo28, sizeof(menuinfo28), "%T", "menu_knifefight", client);
 					daysmenu.AddItem("voteknife", menuinfo28);
 				}
 			}
@@ -658,7 +658,7 @@ public Action VoteEventDays(int client, int args)
 			{
 				if(g_bFreeday.BoolValue)
 				{
-					Format(menuinfo26, sizeof(menuinfo26), "%T", "menu_Freeday", LANG_SERVER);
+					Format(menuinfo26, sizeof(menuinfo26), "%T", "menu_Freeday", client);
 					daysmenu.AddItem("voteFreeday", menuinfo26);
 				}
 			}
@@ -799,14 +799,14 @@ public Action SetEventDays(int client, int args)
 			char menuinfo18[255], menuinfo19[255], menuinfo20[255], menuinfo21[255], menuinfo22[255], menuinfo23[255], menuinfo24[255], menuinfo25[255], menuinfo26[255], menuinfo27[255], menuinfo28[255];
 			char menuinfo17[255];
 			
-			Format(menuinfo18, sizeof(menuinfo18), "%T", "menu_event_Titlestart", LANG_SERVER);
+			Format(menuinfo18, sizeof(menuinfo18), "%T", "menu_event_Titlestart", client);
 			daysmenu.SetTitle(menuinfo18);
 			
 			if(g_bWar != null)
 			{
 				if(g_bWar.BoolValue)
 				{
-					Format(menuinfo19, sizeof(menuinfo19), "%T", "menu_war", LANG_SERVER);
+					Format(menuinfo19, sizeof(menuinfo19), "%T", "menu_war", client);
 					daysmenu.AddItem("setwar", menuinfo19);
 				}
 			}
@@ -814,7 +814,7 @@ public Action SetEventDays(int client, int args)
 			{
 				if(g_bFFA.BoolValue)
 				{
-					Format(menuinfo20, sizeof(menuinfo20), "%T", "menu_ffa", LANG_SERVER);
+					Format(menuinfo20, sizeof(menuinfo20), "%T", "menu_ffa", client);
 					daysmenu.AddItem("setffa", menuinfo20);
 				}
 			}
@@ -822,7 +822,7 @@ public Action SetEventDays(int client, int args)
 			{
 				if(g_bZombie.BoolValue)
 				{
-					Format(menuinfo21, sizeof(menuinfo21), "%T", "menu_zombie", LANG_SERVER);
+					Format(menuinfo21, sizeof(menuinfo21), "%T", "menu_zombie", client);
 					daysmenu.AddItem("setzombie", menuinfo21);
 				}
 			}
@@ -830,7 +830,7 @@ public Action SetEventDays(int client, int args)
 			{
 				if(g_bHide.BoolValue)
 				{
-					Format(menuinfo22, sizeof(menuinfo22), "%T", "menu_hide", LANG_SERVER);
+					Format(menuinfo22, sizeof(menuinfo22), "%T", "menu_hide", client);
 					daysmenu.AddItem("sethide", menuinfo22);
 				}
 			}
@@ -838,7 +838,7 @@ public Action SetEventDays(int client, int args)
 			{
 				if(g_bCatch.BoolValue)
 				{
-					Format(menuinfo23, sizeof(menuinfo23), "%T", "menu_catch", LANG_SERVER);
+					Format(menuinfo23, sizeof(menuinfo23), "%T", "menu_catch", client);
 					daysmenu.AddItem("setcatch", menuinfo23);
 				}
 			}
@@ -846,7 +846,7 @@ public Action SetEventDays(int client, int args)
 			{
 				if(g_bSuicideBomber.BoolValue)
 				{
-					Format(menuinfo23, sizeof(menuinfo23), "%T", "menu_suicidebomber", LANG_SERVER);
+					Format(menuinfo23, sizeof(menuinfo23), "%T", "menu_suicidebomber", client);
 					daysmenu.AddItem("setSuicideBomber", menuinfo23);
 				}
 			}
@@ -854,7 +854,7 @@ public Action SetEventDays(int client, int args)
 			{
 				if(g_bHEbattle.BoolValue)
 				{
-					Format(menuinfo27, sizeof(menuinfo27), "%T", "menu_hebattle", LANG_SERVER);
+					Format(menuinfo27, sizeof(menuinfo27), "%T", "menu_hebattle", client);
 					daysmenu.AddItem("sethebattle", menuinfo27);
 				}
 			}
@@ -862,7 +862,7 @@ public Action SetEventDays(int client, int args)
 			{
 				if(g_bNoScope.BoolValue)
 				{
-					Format(menuinfo24, sizeof(menuinfo24), "%T", "menu_noscope", LANG_SERVER);
+					Format(menuinfo24, sizeof(menuinfo24), "%T", "menu_noscope", client);
 					daysmenu.AddItem("setnoscope", menuinfo24);
 				}
 			}
@@ -870,7 +870,7 @@ public Action SetEventDays(int client, int args)
 			{
 				if(g_bDuckHunt.BoolValue)
 				{
-					Format(menuinfo25, sizeof(menuinfo25), "%T", "menu_duckhunt", LANG_SERVER);
+					Format(menuinfo25, sizeof(menuinfo25), "%T", "menu_duckhunt", client);
 					daysmenu.AddItem("setduckhunt", menuinfo25);
 				}
 			}
@@ -878,7 +878,7 @@ public Action SetEventDays(int client, int args)
 			{
 				if(g_bZeus.BoolValue)
 				{
-					Format(menuinfo17, sizeof(menuinfo17), "%T", "menu_zeus", LANG_SERVER);
+					Format(menuinfo17, sizeof(menuinfo17), "%T", "menu_zeus", client);
 					daysmenu.AddItem("setzeus", menuinfo17);
 				}
 			}
@@ -886,7 +886,7 @@ public Action SetEventDays(int client, int args)
 			{
 				if(g_bKnife.BoolValue)
 				{
-					Format(menuinfo28, sizeof(menuinfo28), "%T", "menu_knifefight", LANG_SERVER);
+					Format(menuinfo28, sizeof(menuinfo28), "%T", "menu_knifefight", client);
 					daysmenu.AddItem("setknife", menuinfo28);
 				}
 			}
@@ -894,7 +894,7 @@ public Action SetEventDays(int client, int args)
 			{
 				if(g_bFreeday.BoolValue)
 				{
-					Format(menuinfo26, sizeof(menuinfo26), "%T", "menu_Freeday", LANG_SERVER);
+					Format(menuinfo26, sizeof(menuinfo26), "%T", "menu_Freeday", client);
 					daysmenu.AddItem("setFreeday", menuinfo26);
 				}
 			}
@@ -1067,10 +1067,10 @@ public Action ChangeTeam(int client, int args)
 {
 			char info5[255], info6[255], info7[255];
 			Menu menu1 = CreateMenu(changemenu);
-			Format(info5, sizeof(info5), "%T", "warden_sure", LANG_SERVER);
+			Format(info5, sizeof(info5), "%T", "warden_sure", client);
 			menu1.SetTitle(info5);
-			Format(info6, sizeof(info6), "%T", "warden_no", LANG_SERVER);
-			Format(info7, sizeof(info7), "%T", "warden_yes", LANG_SERVER);
+			Format(info6, sizeof(info6), "%T", "warden_no", client);
+			Format(info7, sizeof(info7), "%T", "warden_yes", client);
 			menu1.AddItem("1", info6);
 			menu1.AddItem("0", info7);
 			menu1.ExitBackButton = true;

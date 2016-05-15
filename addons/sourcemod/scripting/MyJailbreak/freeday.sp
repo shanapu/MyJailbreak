@@ -260,34 +260,38 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		StartFreeday = false;
 		SJD_OpenDoors();
 		
-		FreedayMenu = CreatePanel();
-		Format(info1, sizeof(info1), "%T", "freeday_info_title", LANG_SERVER);
-		SetPanelTitle(FreedayMenu, info1);
-		DrawPanelText(FreedayMenu, "                                   ");
-		Format(info2, sizeof(info2), "%T", "freeday_info_line1", LANG_SERVER);
-		DrawPanelText(FreedayMenu, info2);
-		DrawPanelText(FreedayMenu, "-----------------------------------");
-		Format(info3, sizeof(info3), "%T", "freeday_info_line2", LANG_SERVER);
-		DrawPanelText(FreedayMenu, info3);
-		Format(info4, sizeof(info4), "%T", "freeday_info_line3", LANG_SERVER);
-		DrawPanelText(FreedayMenu, info4);
-		Format(info5, sizeof(info5), "%T", "freeday_info_line4", LANG_SERVER);
-		DrawPanelText(FreedayMenu, info5);
-		Format(info6, sizeof(info6), "%T", "freeday_info_line5", LANG_SERVER);
-		DrawPanelText(FreedayMenu, info6);
-		Format(info7, sizeof(info7), "%T", "freeday_info_line6", LANG_SERVER);
-		DrawPanelText(FreedayMenu, info7);
-		Format(info8, sizeof(info8), "%T", "freeday_info_line7", LANG_SERVER);
-		DrawPanelText(FreedayMenu, info8);
-		DrawPanelText(FreedayMenu, "-----------------------------------");
 		for(int client=1; client <= MaxClients; client++)
 			{
+				FreedayMenu = CreatePanel();
+				Format(info1, sizeof(info1), "%T", "freeday_info_title", client);
+				SetPanelTitle(FreedayMenu, info1);
+				DrawPanelText(FreedayMenu, "                                   ");
+				Format(info2, sizeof(info2), "%T", "freeday_info_line1", client);
+				DrawPanelText(FreedayMenu, info2);
+				DrawPanelText(FreedayMenu, "-----------------------------------");
+				Format(info3, sizeof(info3), "%T", "freeday_info_line2", client);
+				DrawPanelText(FreedayMenu, info3);
+				Format(info4, sizeof(info4), "%T", "freeday_info_line3", client);
+				DrawPanelText(FreedayMenu, info4);
+				Format(info5, sizeof(info5), "%T", "freeday_info_line4", client);
+				DrawPanelText(FreedayMenu, info5);
+				Format(info6, sizeof(info6), "%T", "freeday_info_line5", client);
+				DrawPanelText(FreedayMenu, info6);
+				Format(info7, sizeof(info7), "%T", "freeday_info_line6", client);
+				DrawPanelText(FreedayMenu, info7);
+				Format(info8, sizeof(info8), "%T", "freeday_info_line7", client);
+				DrawPanelText(FreedayMenu, info8);
+				DrawPanelText(FreedayMenu, "-----------------------------------");
 				SendPanelToClient(FreedayMenu, client, NullHandler, 20);
+				
 				if (!gc_bdamage.BoolValue && IsValidClient(client))
 				{
 					SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 				}
-				if (IsClientInGame(client) && IsPlayerAlive(client)) PrintHintText(client,"%t", "freeday_start_nc");
+				if (IsClientInGame(client) && IsPlayerAlive(client)) 
+				{
+					PrintHintText(client,"%t", "freeday_start_nc");
+				}
 			}
 		CPrintToChatAll("%t %t", "freeday_tag" , "freeday_start");
 	}

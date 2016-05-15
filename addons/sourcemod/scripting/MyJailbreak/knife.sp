@@ -308,26 +308,6 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		g_iRound++;
 		StartKnifeFight = false;
 		SJD_OpenDoors();
-		KnifeFightMenu = CreatePanel();
-		Format(info1, sizeof(info1), "%T", "knifefight_info_title", LANG_SERVER);
-		SetPanelTitle(KnifeFightMenu, info1);
-		DrawPanelText(KnifeFightMenu, "                                   ");
-		Format(info2, sizeof(info2), "%T", "knifefight_info_line1", LANG_SERVER);
-		DrawPanelText(KnifeFightMenu, info2);
-		DrawPanelText(KnifeFightMenu, "-----------------------------------");
-		Format(info3, sizeof(info3), "%T", "knifefight_info_line2", LANG_SERVER);
-		DrawPanelText(KnifeFightMenu, info3);
-		Format(info4, sizeof(info4), "%T", "knifefight_info_line3", LANG_SERVER);
-		DrawPanelText(KnifeFightMenu, info4);
-		Format(info5, sizeof(info5), "%T", "knifefight_info_line4", LANG_SERVER);
-		DrawPanelText(KnifeFightMenu, info5);
-		Format(info6, sizeof(info6), "%T", "knifefight_info_line5", LANG_SERVER);
-		DrawPanelText(KnifeFightMenu, info6);
-		Format(info7, sizeof(info7), "%T", "knifefight_info_line6", LANG_SERVER);
-		DrawPanelText(KnifeFightMenu, info7);
-		Format(info8, sizeof(info8), "%T", "knifefight_info_line7", LANG_SERVER);
-		DrawPanelText(KnifeFightMenu, info8);
-		DrawPanelText(KnifeFightMenu, "-----------------------------------");
 		
 		int RandomCT = 0;
 		
@@ -357,6 +337,32 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 				{
 					if (IsClientInGame(client))
 					{
+						KnifeFightMenu = CreatePanel();
+						Format(info1, sizeof(info1), "%T", "knifefight_info_title", LANG_SERVER);
+						SetPanelTitle(KnifeFightMenu, info1);
+						DrawPanelText(KnifeFightMenu, "                                   ");
+						Format(info2, sizeof(info2), "%T", "knifefight_info_line1", LANG_SERVER);
+						DrawPanelText(KnifeFightMenu, info2);
+						DrawPanelText(KnifeFightMenu, "-----------------------------------");
+						Format(info3, sizeof(info3), "%T", "knifefight_info_line2", LANG_SERVER);
+						DrawPanelText(KnifeFightMenu, info3);
+						Format(info4, sizeof(info4), "%T", "knifefight_info_line3", LANG_SERVER);
+						DrawPanelText(KnifeFightMenu, info4);
+						Format(info5, sizeof(info5), "%T", "knifefight_info_line4", LANG_SERVER);
+						DrawPanelText(KnifeFightMenu, info5);
+						Format(info6, sizeof(info6), "%T", "knifefight_info_line5", LANG_SERVER);
+						DrawPanelText(KnifeFightMenu, info6);
+						Format(info7, sizeof(info7), "%T", "knifefight_info_line6", LANG_SERVER);
+						DrawPanelText(KnifeFightMenu, info7);
+						Format(info8, sizeof(info8), "%T", "knifefight_info_line7", LANG_SERVER);
+						DrawPanelText(KnifeFightMenu, info8);
+						DrawPanelText(KnifeFightMenu, "-----------------------------------");
+						SendPanelToClient(KnifeFightMenu, client, NullHandler, 20);
+						
+						SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
+						StripAllWeapons(client);
+						GivePlayerItem(client, "weapon_knife");
+						
 						if (gc_bGrav.BoolValue)
 						{
 							SetEntityGravity(client, gc_fGravValue.FloatValue);
@@ -369,10 +375,6 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 						{
 							ClientCommand(client, "thirdperson");
 						}
-						SendPanelToClient(KnifeFightMenu, client, NullHandler, 20);
-						SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
-						StripAllWeapons(client);
-						GivePlayerItem(client, "weapon_knife");
 						if (!gc_bSpawnCell.BoolValue)
 						{
 							TeleportEntity(client, Pos1, NULL_VECTOR, NULL_VECTOR);

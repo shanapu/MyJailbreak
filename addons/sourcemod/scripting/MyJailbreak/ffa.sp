@@ -311,26 +311,6 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		IsFFA = true;
 		StartFFA = false;
 		SJD_OpenDoors();
-		FFAMenu = CreatePanel();
-		Format(info1, sizeof(info1), "%T", "ffa_info_title", LANG_SERVER);
-		SetPanelTitle(FFAMenu, info1);
-		DrawPanelText(FFAMenu, "                                   ");
-		Format(info2, sizeof(info2), "%T", "ffa_info_line1", LANG_SERVER);
-		DrawPanelText(FFAMenu, info2);
-		DrawPanelText(FFAMenu, "-----------------------------------");
-		Format(info3, sizeof(info3), "%T", "ffa_info_line2", LANG_SERVER);
-		DrawPanelText(FFAMenu, info3);
-		Format(info4, sizeof(info4), "%T", "ffa_info_line3", LANG_SERVER);
-		DrawPanelText(FFAMenu, info4);
-		Format(info5, sizeof(info5), "%T", "ffa_info_line4", LANG_SERVER);
-		DrawPanelText(FFAMenu, info5);
-		Format(info6, sizeof(info6), "%T", "ffa_info_line5", LANG_SERVER);
-		DrawPanelText(FFAMenu, info6);
-		Format(info7, sizeof(info7), "%T", "ffa_info_line6", LANG_SERVER);
-		DrawPanelText(FFAMenu, info7);
-		Format(info8, sizeof(info8), "%T", "ffa_info_line7", LANG_SERVER);
-		DrawPanelText(FFAMenu, info8);
-		DrawPanelText(FFAMenu, "-----------------------------------");
 		
 		int RandomCT = 0;
 		
@@ -372,8 +352,29 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 			{
 				if (IsClientInGame(client))
 				{
-					SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
+					FFAMenu = CreatePanel();
+					Format(info1, sizeof(info1), "%T", "ffa_info_title", client);
+					SetPanelTitle(FFAMenu, info1);
+					DrawPanelText(FFAMenu, "                                   ");
+					Format(info2, sizeof(info2), "%T", "ffa_info_line1", client);
+					DrawPanelText(FFAMenu, info2);
+					DrawPanelText(FFAMenu, "-----------------------------------");
+					Format(info3, sizeof(info3), "%T", "ffa_info_line2", client);
+					DrawPanelText(FFAMenu, info3);
+					Format(info4, sizeof(info4), "%T", "ffa_info_line3", client);
+					DrawPanelText(FFAMenu, info4);
+					Format(info5, sizeof(info5), "%T", "ffa_info_line4", client);
+					DrawPanelText(FFAMenu, info5);
+					Format(info6, sizeof(info6), "%T", "ffa_info_line5", client);
+					DrawPanelText(FFAMenu, info6);
+					Format(info7, sizeof(info7), "%T", "ffa_info_line6", client);
+					DrawPanelText(FFAMenu, info7);
+					Format(info8, sizeof(info8), "%T", "ffa_info_line7", client);
+					DrawPanelText(FFAMenu, info8);
+					DrawPanelText(FFAMenu, "-----------------------------------");
 					SendPanelToClient(FFAMenu, client, NullHandler, 20);
+					
+					SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
 					SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 				}
 			}

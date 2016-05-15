@@ -294,26 +294,6 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		g_iRound++;
 		StartZeus = false;
 		SJD_OpenDoors();
-		ZeusMenu = CreatePanel();
-		Format(info1, sizeof(info1), "%T", "zeus_info_title", LANG_SERVER);
-		SetPanelTitle(ZeusMenu, info1);
-		DrawPanelText(ZeusMenu, "                                   ");
-		Format(info2, sizeof(info2), "%T", "zeus_info_line1", LANG_SERVER);
-		DrawPanelText(ZeusMenu, info2);
-		DrawPanelText(ZeusMenu, "-----------------------------------");
-		Format(info3, sizeof(info3), "%T", "zeus_info_line2", LANG_SERVER);
-		DrawPanelText(ZeusMenu, info3);
-		Format(info4, sizeof(info4), "%T", "zeus_info_line3", LANG_SERVER);
-		DrawPanelText(ZeusMenu, info4);
-		Format(info5, sizeof(info5), "%T", "zeus_info_line4", LANG_SERVER);
-		DrawPanelText(ZeusMenu, info5);
-		Format(info6, sizeof(info6), "%T", "zeus_info_line5", LANG_SERVER);
-		DrawPanelText(ZeusMenu, info6);
-		Format(info7, sizeof(info7), "%T", "zeus_info_line6", LANG_SERVER);
-		DrawPanelText(ZeusMenu, info7);
-		Format(info8, sizeof(info8), "%T", "zeus_info_line7", LANG_SERVER);
-		DrawPanelText(ZeusMenu, info8);
-		DrawPanelText(ZeusMenu, "-----------------------------------");
 		
 		int RandomCT = 0;
 		
@@ -343,12 +323,34 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 				{
 					if (IsClientInGame(client))
 					{
+						ZeusMenu = CreatePanel();
+						Format(info1, sizeof(info1), "%T", "zeus_info_title", client);
+						SetPanelTitle(ZeusMenu, info1);
+						DrawPanelText(ZeusMenu, "                                   ");
+						Format(info2, sizeof(info2), "%T", "zeus_info_line1", client);
+						DrawPanelText(ZeusMenu, info2);
+						DrawPanelText(ZeusMenu, "-----------------------------------");
+						Format(info3, sizeof(info3), "%T", "zeus_info_line2", client);
+						DrawPanelText(ZeusMenu, info3);
+						Format(info4, sizeof(info4), "%T", "zeus_info_line3", client);
+						DrawPanelText(ZeusMenu, info4);
+						Format(info5, sizeof(info5), "%T", "zeus_info_line4", client);
+						DrawPanelText(ZeusMenu, info5);
+						Format(info6, sizeof(info6), "%T", "zeus_info_line5", client);
+						DrawPanelText(ZeusMenu, info6);
+						Format(info7, sizeof(info7), "%T", "zeus_info_line6", client);
+						DrawPanelText(ZeusMenu, info7);
+						Format(info8, sizeof(info8), "%T", "zeus_info_line7", client);
+						DrawPanelText(ZeusMenu, info8);
+						DrawPanelText(ZeusMenu, "-----------------------------------");
+						SendPanelToClient(ZeusMenu, client, NullHandler, 20);
+						
 						StripAllWeapons(client);
 						GivePlayerItem(client, "weapon_knife");
 						SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
-						SendPanelToClient(ZeusMenu, client, NullHandler, 20);
 						SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 						ClientTimer[client] = CreateTimer(0.5, Timer_GiveZeus, client);
+						
 						if (!gc_bSpawnCell.BoolValue)
 						{
 							TeleportEntity(client, Pos1, NULL_VECTOR, NULL_VECTOR);

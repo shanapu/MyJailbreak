@@ -321,26 +321,6 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		g_iRound++;
 		StartNoScope = false;
 		SJD_OpenDoors();
-		NoScopeMenu = CreatePanel();
-		Format(info1, sizeof(info1), "%T", "noscope_info_title", LANG_SERVER);
-		SetPanelTitle(NoScopeMenu, info1);
-		DrawPanelText(NoScopeMenu, "                                   ");
-		Format(info2, sizeof(info2), "%T", "noscope_info_line1", LANG_SERVER);
-		DrawPanelText(NoScopeMenu, info2);
-		DrawPanelText(NoScopeMenu, "-----------------------------------");
-		Format(info3, sizeof(info3), "%T", "noscope_info_line2", LANG_SERVER);
-		DrawPanelText(NoScopeMenu, info3);
-		Format(info4, sizeof(info4), "%T", "noscope_info_line3", LANG_SERVER);
-		DrawPanelText(NoScopeMenu, info4);
-		Format(info5, sizeof(info5), "%T", "noscope_info_line4", LANG_SERVER);
-		DrawPanelText(NoScopeMenu, info5);
-		Format(info6, sizeof(info6), "%T", "noscope_info_line5", LANG_SERVER);
-		DrawPanelText(NoScopeMenu, info6);
-		Format(info7, sizeof(info7), "%T", "noscope_info_line6", LANG_SERVER);
-		DrawPanelText(NoScopeMenu, info7);
-		Format(info8, sizeof(info8), "%T", "noscope_info_line7", LANG_SERVER);
-		DrawPanelText(NoScopeMenu, info8);
-		DrawPanelText(NoScopeMenu, "-----------------------------------");
 		
 		int RandomCT = 0;
 		
@@ -370,15 +350,37 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 				{
 					if (IsClientInGame(client))
 					{
+						NoScopeMenu = CreatePanel();
+						Format(info1, sizeof(info1), "%T", "noscope_info_title", client);
+						SetPanelTitle(NoScopeMenu, info1);
+						DrawPanelText(NoScopeMenu, "                                   ");
+						Format(info2, sizeof(info2), "%T", "noscope_info_line1", client);
+						DrawPanelText(NoScopeMenu, info2);
+						DrawPanelText(NoScopeMenu, "-----------------------------------");
+						Format(info3, sizeof(info3), "%T", "noscope_info_line2", client);
+						DrawPanelText(NoScopeMenu, info3);
+						Format(info4, sizeof(info4), "%T", "noscope_info_line3", client);
+						DrawPanelText(NoScopeMenu, info4);
+						Format(info5, sizeof(info5), "%T", "noscope_info_line4", client);
+						DrawPanelText(NoScopeMenu, info5);
+						Format(info6, sizeof(info6), "%T", "noscope_info_line5", client);
+						DrawPanelText(NoScopeMenu, info6);
+						Format(info7, sizeof(info7), "%T", "noscope_info_line6", client);
+						DrawPanelText(NoScopeMenu, info7);
+						Format(info8, sizeof(info8), "%T", "noscope_info_line7", client);
+						DrawPanelText(NoScopeMenu, info8);
+						DrawPanelText(NoScopeMenu, "-----------------------------------");
+						SendPanelToClient(NoScopeMenu, client, NullHandler, 20);
+						
+						StripAllWeapons(client);
+						GivePlayerItem(client, g_sWeapon);
+						SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
+						SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
+						
 						if (gc_bGrav.BoolValue)
 						{
 							SetEntityGravity(client, gc_fGravValue.FloatValue);	
 						}
-						StripAllWeapons(client);
-						GivePlayerItem(client, g_sWeapon);
-						SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
-						SendPanelToClient(NoScopeMenu, client, NullHandler, 20);
-						SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 						if (!gc_bSpawnCell.BoolValue)
 						{
 							TeleportEntity(client, Pos1, NULL_VECTOR, NULL_VECTOR);

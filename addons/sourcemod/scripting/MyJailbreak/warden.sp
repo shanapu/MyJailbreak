@@ -324,26 +324,6 @@ public void OnPluginStart()
 	
 	CreateTimer(1.0, Timer_DrawMakers, _, TIMER_REPEAT);
 	
-	//Prepare translation for marker colors
-	Format(g_sColorNamesRed, sizeof(g_sColorNamesRed), "{darkred}%T{default}", "warden_red", LANG_SERVER);
-	Format(g_sColorNamesBlue, sizeof(g_sColorNamesBlue), "{blue}%T{default}", "warden_blue", LANG_SERVER);
-	Format(g_sColorNamesGreen, sizeof(g_sColorNamesGreen), "{green}%T{default}", "warden_green", LANG_SERVER);
-	Format(g_sColorNamesOrange, sizeof(g_sColorNamesOrange), "{lightred}%T{default}", "warden_orange", LANG_SERVER);
-	Format(g_sColorNamesMagenta, sizeof(g_sColorNamesMagenta), "{purple}%T{default}", "warden_magenta", LANG_SERVER);
-	Format(g_sColorNamesYellow, sizeof(g_sColorNamesYellow), "{orange}%T{default}", "warden_yellow", LANG_SERVER);
-	Format(g_sColorNamesWhite, sizeof(g_sColorNamesWhite), "{default}%T{default}", "warden_white", LANG_SERVER);
-	Format(g_sColorNamesCyan, sizeof(g_sColorNamesCyan), "{blue}%T{default}", "warden_cyan", LANG_SERVER);
-	Format(g_sColorNamesRainbow, sizeof(g_sColorNamesRainbow), "{lightgreen}%T{default}", "warden_rainbow", LANG_SERVER);
-
-
-	g_sColorNames[0] = g_sColorNamesWhite;
-	g_sColorNames[1] = g_sColorNamesRed;
-	g_sColorNames[3] = g_sColorNamesBlue;
-	g_sColorNames[2] = g_sColorNamesGreen;
-	g_sColorNames[7] = g_sColorNamesOrange;
-	g_sColorNames[6] = g_sColorNamesMagenta;
-	g_sColorNames[4] = g_sColorNamesYellow;
-	g_sColorNames[5] = g_sColorNamesCyan;
 }
 
 //ConVar Change for Strings
@@ -592,13 +572,13 @@ public Action ExitWarden(int client, int args)
 			RandomTimer = CreateTimer(1.0, ChooseRandom, _, TIMER_REPEAT);
 			if(gc_bSounds.BoolValue) EmitSoundToAllAny(g_sUnWarden);
 			RemoveAllMarkers();
-			g_iWarden = -1;
 			g_iVoteCount = 0;
 			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
 			g_sHasVoted[0] = '\0';
 			SafeDelete(g_iIcon[client]);
 			g_iIcon[client] = -1;
 			IconTimer = null;
+			g_iWarden = -1;
 			g_bDrawerT = false;
 		}
 		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
@@ -643,7 +623,7 @@ public Action VoteWarden(int client,int args)
 
 //Warden died
 
-public void playerDeath(Event event, const char[] name, bool dontBroadcast) 
+public Action playerDeath(Event event, const char[] name, bool dontBroadcast) 
 {
 	int client = GetClientOfUserId(GetEventInt(event, "userid")); // Get the dead clients id
 	
@@ -661,13 +641,13 @@ public void playerDeath(Event event, const char[] name, bool dontBroadcast)
 		}
 		g_iRandomTime = GetConVarInt(gc_hRandomTimer);
 		RandomTimer = CreateTimer(1.0, ChooseRandom, _, TIMER_REPEAT);
-		g_iWarden = -1;
 		Call_StartForward(gF_OnWardenDeath);
 		Call_PushCell(client);
 		Call_Finish();
 		SafeDelete(g_iIcon[client]);
 		g_iIcon[client] = -1;
 		delete IconTimer;
+		g_iWarden = -1;
 	}
 	g_fLastDrawer[client][0] = 0.0;
 	g_fLastDrawer[client][1] = 0.0;
@@ -684,8 +664,8 @@ public Action SetWarden(int client,int args)
 		if(IsValidClient(client, false, false))
 		{
 			char info1[255];
-			Menu menu = CreateMenu(m_SetWarden);
-			Format(info1, sizeof(info1), "%T", "warden_choose", LANG_SERVER);
+			Menu menu = CreateMenu(SetWardenHandler);
+			Format(info1, sizeof(info1), "%T", "warden_choose", client);
 			menu.SetTitle(info1);
 			for(int i = 1;i <= MaxClients;i++) if(IsValidClient(i, true))
 			{
@@ -708,7 +688,7 @@ public Action SetWarden(int client,int args)
 
 //Overwrite new Warden for Admin Menu
 
-public int m_SetWarden(Menu menu, MenuAction action, int client, int Position)
+public int SetWardenHandler(Menu menu, MenuAction action, int client, int Position)
 {
 	if(action == MenuAction_Select)
 	{
@@ -727,10 +707,10 @@ public int m_SetWarden(Menu menu, MenuAction action, int client, int Position)
 					{
 						g_iTempWarden[client] = userid;
 						Menu menu1 = CreateMenu(m_WardenOverwrite);
-						Format(info4, sizeof(info4), "%T", "warden_remove", LANG_SERVER);
+						Format(info4, sizeof(info4), "%T", "warden_remove", client);
 						menu1.SetTitle(info4);
-						Format(info3, sizeof(info3), "%T", "warden_yes", LANG_SERVER);
-						Format(info2, sizeof(info2), "%T", "warden_no", LANG_SERVER);
+						Format(info3, sizeof(info3), "%T", "warden_yes", client);
+						Format(info2, sizeof(info2), "%T", "warden_no", client);
 						menu1.AddItem("1", info3);
 						menu1.AddItem("0", info2);
 						menu1.ExitBackButton = true;
@@ -889,7 +869,6 @@ public void OnClientDisconnect(int client)
 		{
 			PrintCenterTextAll("%t", "warden_disconnected_nc", client);
 		}
-		g_iWarden = -1;
 		Forward_OnWardenRemoved(client);
 		Call_StartForward(gF_OnWardenDisconnected);
 		Call_PushCell(client);
@@ -899,6 +878,7 @@ public void OnClientDisconnect(int client)
 			EmitSoundToAllAny(g_sUnWarden);
 		}
 		RemoveAllMarkers();
+		g_iWarden = -1;
 		g_bDrawerT = false;
 	}
 	g_LastButtons[client] = 0;
@@ -990,13 +970,12 @@ void RemoveTheWarden(int client)
 	LogMessage("[MyJB] Admin %L removed player %N as warden", client, g_iWarden);
 	CreateTimer( 0.1, RemoveColor, g_iWarden);
 	SetEntityModel(client, g_sModelPath);
-	g_iWarden = -1;
 	g_iRandomTime = GetConVarInt(gc_hRandomTimer);
 	RandomTimer = CreateTimer(1.0, ChooseRandom, _, TIMER_REPEAT);
 	Call_StartForward(gF_OnWardenRemovedBySelf);
-	Call_PushCell(client);
+	Call_PushCell(g_iWarden);
 	Call_Finish();
-	Forward_OnWardenRemoved(client);
+	Forward_OnWardenRemoved(g_iWarden);
 	if(gc_bSounds.BoolValue)
 	{
 		EmitSoundToAllAny(g_sUnWarden);
@@ -1006,9 +985,10 @@ void RemoveTheWarden(int client)
 	g_iVoteCount = 0;
 	Format(g_sHasVoted, sizeof(g_sHasVoted), "");
 	g_sHasVoted[0] = '\0';
-	SafeDelete(g_iIcon[client]);
-	g_iIcon[client] = -1;
+	SafeDelete(g_iIcon[g_iWarden]);
+	g_iIcon[g_iWarden] = -1;
 	delete IconTimer;
+	g_iWarden = -1;
 }
 
 //Math Quizz
@@ -1258,6 +1238,29 @@ stock void Draw_Markers()
 
 stock void MarkerMenu(int client)
 {
+	for(int iClient=1; iClient <= MaxClients; iClient++)
+	{
+		//Prepare translation for marker colors
+		Format(g_sColorNamesRed, sizeof(g_sColorNamesRed), "{darkred}%T{default}", "warden_red", iClient);
+		Format(g_sColorNamesBlue, sizeof(g_sColorNamesBlue), "{blue}%T{default}", "warden_blue", iClient);
+		Format(g_sColorNamesGreen, sizeof(g_sColorNamesGreen), "{green}%T{default}", "warden_green", iClient);
+		Format(g_sColorNamesOrange, sizeof(g_sColorNamesOrange), "{lightred}%T{default}", "warden_orange", iClient);
+		Format(g_sColorNamesMagenta, sizeof(g_sColorNamesMagenta), "{purple}%T{default}", "warden_magenta", iClient);
+		Format(g_sColorNamesYellow, sizeof(g_sColorNamesYellow), "{orange}%T{default}", "warden_yellow", iClient);
+		Format(g_sColorNamesWhite, sizeof(g_sColorNamesWhite), "{default}%T{default}", "warden_white", iClient);
+		Format(g_sColorNamesCyan, sizeof(g_sColorNamesCyan), "{blue}%T{default}", "warden_cyan", iClient);
+		Format(g_sColorNamesRainbow, sizeof(g_sColorNamesRainbow), "{lightgreen}%T{default}", "warden_rainbow", iClient);
+		
+		g_sColorNames[0] = g_sColorNamesWhite;
+		g_sColorNames[1] = g_sColorNamesRed;
+		g_sColorNames[3] = g_sColorNamesBlue;
+		g_sColorNames[2] = g_sColorNamesGreen;
+		g_sColorNames[7] = g_sColorNamesOrange;
+		g_sColorNames[6] = g_sColorNamesMagenta;
+		g_sColorNames[4] = g_sColorNamesYellow;
+		g_sColorNames[5] = g_sColorNamesCyan;
+	}
+	
 	if(!(0 < client < MaxClients) || client != g_iWarden)
 	{
 		CPrintToChat(client, "%t %t", "warden_tag", "warden_notwarden");
@@ -1295,15 +1298,15 @@ stock void MarkerMenu(int client)
 		Handle menu = CreateMenu(Handle_MarkerMenu);
 		
 		char menuinfo1[255],menuinfo2[255],menuinfo3[255],menuinfo4[255],menuinfo5[255],menuinfo6[255],menuinfo7[255],menuinfo8[255],menuinfo9[255];
-		Format(menuinfo1, sizeof(menuinfo1), "%T", "warden_marker_title", LANG_SERVER);
-		Format(menuinfo2, sizeof(menuinfo2), "%T", "warden_red", LANG_SERVER);
-		Format(menuinfo3, sizeof(menuinfo3), "%T", "warden_blue", LANG_SERVER);
-		Format(menuinfo4, sizeof(menuinfo4), "%T", "warden_green", LANG_SERVER);
-		Format(menuinfo5, sizeof(menuinfo5), "%T", "warden_orange", LANG_SERVER);
-		Format(menuinfo6, sizeof(menuinfo6), "%T", "warden_white", LANG_SERVER);
-		Format(menuinfo7, sizeof(menuinfo7), "%T", "warden_cyan", LANG_SERVER);
-		Format(menuinfo8, sizeof(menuinfo8), "%T", "warden_magenta", LANG_SERVER);
-		Format(menuinfo9, sizeof(menuinfo9), "%T", "warden_yellow", LANG_SERVER);
+		Format(menuinfo1, sizeof(menuinfo1), "%T", "warden_marker_title", client);
+		Format(menuinfo2, sizeof(menuinfo2), "%T", "warden_red", client);
+		Format(menuinfo3, sizeof(menuinfo3), "%T", "warden_blue", client);
+		Format(menuinfo4, sizeof(menuinfo4), "%T", "warden_green", client);
+		Format(menuinfo5, sizeof(menuinfo5), "%T", "warden_orange", client);
+		Format(menuinfo6, sizeof(menuinfo6), "%T", "warden_white", client);
+		Format(menuinfo7, sizeof(menuinfo7), "%T", "warden_cyan", client);
+		Format(menuinfo8, sizeof(menuinfo8), "%T", "warden_magenta", client);
+		Format(menuinfo9, sizeof(menuinfo9), "%T", "warden_yellow", client);
 		
 		SetMenuTitle(menu, menuinfo1);
 		
@@ -1519,17 +1522,17 @@ public Action LaserMenu(int client, int args)
 		if (client == g_iWarden)
 		{
 			char menuinfo5[255], menuinfo6[255], menuinfo7[255], menuinfo8[255], menuinfo9[255], menuinfo10[255], menuinfo11[255], menuinfo12[255], menuinfo13[255], menuinfo14[255], menuinfo15[255];
-			Format(menuinfo5, sizeof(menuinfo5), "%T", "warden_laser_title", LANG_SERVER);
-			Format(menuinfo6, sizeof(menuinfo6), "%T", "warden_laser_off", LANG_SERVER);
-			Format(menuinfo7, sizeof(menuinfo7), "%T", "warden_rainbow", LANG_SERVER);
-			Format(menuinfo8, sizeof(menuinfo8), "%T", "warden_white", LANG_SERVER);
-			Format(menuinfo9, sizeof(menuinfo9), "%T", "warden_red", LANG_SERVER);
-			Format(menuinfo10, sizeof(menuinfo10), "%T", "warden_green", LANG_SERVER);
-			Format(menuinfo11, sizeof(menuinfo11), "%T", "warden_blue", LANG_SERVER);
-			Format(menuinfo12, sizeof(menuinfo12), "%T", "warden_yellow", LANG_SERVER);
-			Format(menuinfo13, sizeof(menuinfo13), "%T", "warden_cyan", LANG_SERVER);
-			Format(menuinfo14, sizeof(menuinfo14), "%T", "warden_magenta", LANG_SERVER);
-			Format(menuinfo15, sizeof(menuinfo15), "%T", "warden_orange", LANG_SERVER);
+			Format(menuinfo5, sizeof(menuinfo5), "%T", "warden_laser_title", client);
+			Format(menuinfo6, sizeof(menuinfo6), "%T", "warden_laser_off", client);
+			Format(menuinfo7, sizeof(menuinfo7), "%T", "warden_rainbow", client);
+			Format(menuinfo8, sizeof(menuinfo8), "%T", "warden_white", client);
+			Format(menuinfo9, sizeof(menuinfo9), "%T", "warden_red", client);
+			Format(menuinfo10, sizeof(menuinfo10), "%T", "warden_green", client);
+			Format(menuinfo11, sizeof(menuinfo11), "%T", "warden_blue", client);
+			Format(menuinfo12, sizeof(menuinfo12), "%T", "warden_yellow", client);
+			Format(menuinfo13, sizeof(menuinfo13), "%T", "warden_cyan", client);
+			Format(menuinfo14, sizeof(menuinfo14), "%T", "warden_magenta", client);
+			Format(menuinfo15, sizeof(menuinfo15), "%T", "warden_orange", client);
 			
 			Menu menu = new Menu(LaserHandler);
 			menu.SetTitle(menuinfo5);
@@ -1672,18 +1675,18 @@ public Action DrawerMenu(int client, int args)
 		if ((client == g_iWarden) || ((GetClientTeam(client) == CS_TEAM_T) && gc_bDrawer.BoolValue && g_bDrawerT))
 		{
 			char menuinfo5[255], menuinfo6[255], menuinfo7[255], menuinfo8[255], menuinfo9[255], menuinfo10[255], menuinfo11[255], menuinfo12[255], menuinfo13[255], menuinfo14[255], menuinfo15[255], menuinfo16[255];
-			Format(menuinfo5, sizeof(menuinfo5), "%T", "warden_drawer_title", LANG_SERVER);
-			Format(menuinfo15, sizeof(menuinfo15), "%T", "warden_drawert", LANG_SERVER);
-			Format(menuinfo6, sizeof(menuinfo6), "%T", "warden_drawer_off", LANG_SERVER);
-			Format(menuinfo7, sizeof(menuinfo7), "%T", "warden_rainbow", LANG_SERVER);
-			Format(menuinfo8, sizeof(menuinfo8), "%T", "warden_white", LANG_SERVER);
-			Format(menuinfo9, sizeof(menuinfo9), "%T", "warden_red", LANG_SERVER);
-			Format(menuinfo10, sizeof(menuinfo10), "%T", "warden_green", LANG_SERVER);
-			Format(menuinfo11, sizeof(menuinfo11), "%T", "warden_blue", LANG_SERVER);
-			Format(menuinfo12, sizeof(menuinfo12), "%T", "warden_yellow", LANG_SERVER);
-			Format(menuinfo13, sizeof(menuinfo13), "%T", "warden_cyan", LANG_SERVER);
-			Format(menuinfo14, sizeof(menuinfo14), "%T", "warden_magenta", LANG_SERVER);
-			Format(menuinfo16, sizeof(menuinfo16), "%T", "warden_orange", LANG_SERVER);
+			Format(menuinfo5, sizeof(menuinfo5), "%T", "warden_drawer_title", client);
+			Format(menuinfo15, sizeof(menuinfo15), "%T", "warden_drawert", client);
+			Format(menuinfo6, sizeof(menuinfo6), "%T", "warden_drawer_off", client);
+			Format(menuinfo7, sizeof(menuinfo7), "%T", "warden_rainbow", client);
+			Format(menuinfo8, sizeof(menuinfo8), "%T", "warden_white", client);
+			Format(menuinfo9, sizeof(menuinfo9), "%T", "warden_red", client);
+			Format(menuinfo10, sizeof(menuinfo10), "%T", "warden_green", client);
+			Format(menuinfo11, sizeof(menuinfo11), "%T", "warden_blue", client);
+			Format(menuinfo12, sizeof(menuinfo12), "%T", "warden_yellow", client);
+			Format(menuinfo13, sizeof(menuinfo13), "%T", "warden_cyan", client);
+			Format(menuinfo14, sizeof(menuinfo14), "%T", "warden_magenta", client);
+			Format(menuinfo16, sizeof(menuinfo16), "%T", "warden_orange", client);
 			
 			Menu menu = new Menu(DrawerHandler);
 			menu.SetTitle(menuinfo5);
@@ -2014,10 +2017,10 @@ public Action CDMenu(int client, int args)
 		if (client == g_iWarden)
 		{
 			char menuinfo1[255], menuinfo2[255], menuinfo3[255], menuinfo4[255];
-			Format(menuinfo1, sizeof(menuinfo1), "%T", "warden_cdmenu_title", LANG_SERVER);
-			Format(menuinfo2, sizeof(menuinfo2), "%T", "warden_cdmenu_start", LANG_SERVER);
-			Format(menuinfo3, sizeof(menuinfo3), "%T", "warden_cdmenu_stop", LANG_SERVER);
-			Format(menuinfo4, sizeof(menuinfo4), "%T", "warden_cdmenu_startstop", LANG_SERVER);
+			Format(menuinfo1, sizeof(menuinfo1), "%T", "warden_cdmenu_title", client);
+			Format(menuinfo2, sizeof(menuinfo2), "%T", "warden_cdmenu_start", client);
+			Format(menuinfo3, sizeof(menuinfo3), "%T", "warden_cdmenu_stop", client);
+			Format(menuinfo4, sizeof(menuinfo4), "%T", "warden_cdmenu_startstop", client);
 			
 			Menu menu = new Menu(CDHandler);
 			menu.SetTitle(menuinfo1);
@@ -2100,15 +2103,15 @@ public Action StartStopCDMenu(int client, int args)
 		if (client == g_iWarden)
 		{
 			char menuinfo5[255], menuinfo6[255], menuinfo7[255], menuinfo8[255], menuinfo9[255], menuinfo10[255], menuinfo11[255], menuinfo12[255], menuinfo13[255];
-			Format(menuinfo5, sizeof(menuinfo5), "%T", "warden_cdmenu_Title2", LANG_SERVER);
-			Format(menuinfo6, sizeof(menuinfo6), "%T", "warden_15", LANG_SERVER);
-			Format(menuinfo7, sizeof(menuinfo7), "%T", "warden_30", LANG_SERVER);
-			Format(menuinfo8, sizeof(menuinfo8), "%T", "warden_45", LANG_SERVER);
-			Format(menuinfo9, sizeof(menuinfo9), "%T", "warden_60", LANG_SERVER);
-			Format(menuinfo10, sizeof(menuinfo10), "%T", "warden_90", LANG_SERVER);
-			Format(menuinfo11, sizeof(menuinfo11), "%T", "warden_120", LANG_SERVER);
-			Format(menuinfo12, sizeof(menuinfo12), "%T", "warden_180", LANG_SERVER);
-			Format(menuinfo13, sizeof(menuinfo13), "%T", "warden_300", LANG_SERVER);
+			Format(menuinfo5, sizeof(menuinfo5), "%T", "warden_cdmenu_Title2", client);
+			Format(menuinfo6, sizeof(menuinfo6), "%T", "warden_15", client);
+			Format(menuinfo7, sizeof(menuinfo7), "%T", "warden_30", client);
+			Format(menuinfo8, sizeof(menuinfo8), "%T", "warden_45", client);
+			Format(menuinfo9, sizeof(menuinfo9), "%T", "warden_60", client);
+			Format(menuinfo10, sizeof(menuinfo10), "%T", "warden_90", client);
+			Format(menuinfo11, sizeof(menuinfo11), "%T", "warden_120", client);
+			Format(menuinfo12, sizeof(menuinfo12), "%T", "warden_180", client);
+			Format(menuinfo13, sizeof(menuinfo13), "%T", "warden_300", client);
 			
 			Menu menu = new Menu(StartStopCDHandler);
 			menu.SetTitle(menuinfo5);
@@ -2483,10 +2486,10 @@ public Action KillRandom(int client, int args)
 		{
 			char info5[255], info6[255], info7[255];
 			Menu menu1 = CreateMenu(killmenu);
-			Format(info5, sizeof(info5), "%T", "warden_sure", g_iWarden, LANG_SERVER);
+			Format(info5, sizeof(info5), "%T", "warden_sure", g_iWarden, client);
 			menu1.SetTitle(info5);
-			Format(info6, sizeof(info6), "%T", "warden_no", LANG_SERVER);
-			Format(info7, sizeof(info7), "%T", "warden_yes", LANG_SERVER);
+			Format(info6, sizeof(info6), "%T", "warden_no", client);
+			Format(info7, sizeof(info7), "%T", "warden_yes", client);
 			menu1.AddItem("0", info6);
 			menu1.AddItem("1", info7);
 			menu1.ExitBackButton = true;
