@@ -334,35 +334,32 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 				}
 				CPrintToChatAll("%t %t", "war_tag" ,"war_rounds", g_iRound, g_iMaxRound);
 			}
-			for(int client=1; client <= MaxClients; client++)
+			LoopClients(client)
 			{
-				if (IsClientInGame(client))
-				{
-					WarMenu = CreatePanel();
-					Format(info1, sizeof(info1), "%T", "war_info_title", client);
-					SetPanelTitle(WarMenu, info1);
-					DrawPanelText(WarMenu, "                                   ");
-					Format(info2, sizeof(info2), "%T", "war_info_line1", client);
-					DrawPanelText(WarMenu, info2);
-					DrawPanelText(WarMenu, "-----------------------------------");
-					Format(info3, sizeof(info3), "%T", "war_info_line2", client);
-					DrawPanelText(WarMenu, info3);
-					Format(info4, sizeof(info4), "%T", "war_info_line3", client);
-					DrawPanelText(WarMenu, info4);
-					Format(info5, sizeof(info5), "%T", "war_info_line4", client);
-					DrawPanelText(WarMenu, info5);
-					Format(info6, sizeof(info6), "%T", "war_info_line5", client);
-					DrawPanelText(WarMenu, info6);
-					Format(info7, sizeof(info7), "%T", "war_info_line6", client);
-					DrawPanelText(WarMenu, info7);
-					Format(info8, sizeof(info8), "%T", "war_info_line7", client);
-					DrawPanelText(WarMenu, info8);
-					DrawPanelText(WarMenu, "-----------------------------------");
-					SendPanelToClient(WarMenu, client, NullHandler, 20);
-					
-					SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
-					SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
-				}
+				WarMenu = CreatePanel();
+				Format(info1, sizeof(info1), "%T", "war_info_title", client);
+				SetPanelTitle(WarMenu, info1);
+				DrawPanelText(WarMenu, "                                   ");
+				Format(info2, sizeof(info2), "%T", "war_info_line1", client);
+				DrawPanelText(WarMenu, info2);
+				DrawPanelText(WarMenu, "-----------------------------------");
+				Format(info3, sizeof(info3), "%T", "war_info_line2", client);
+				DrawPanelText(WarMenu, info3);
+				Format(info4, sizeof(info4), "%T", "war_info_line3", client);
+				DrawPanelText(WarMenu, info4);
+				Format(info5, sizeof(info5), "%T", "war_info_line4", client);
+				DrawPanelText(WarMenu, info5);
+				Format(info6, sizeof(info6), "%T", "war_info_line5", client);
+				DrawPanelText(WarMenu, info6);
+				Format(info7, sizeof(info7), "%T", "war_info_line6", client);
+				DrawPanelText(WarMenu, info7);
+				Format(info8, sizeof(info8), "%T", "war_info_line7", client);
+				DrawPanelText(WarMenu, info8);
+				DrawPanelText(WarMenu, "-----------------------------------");
+				SendPanelToClient(WarMenu, client, NullHandler, 20);
+				
+				SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
+				SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 			}
 			
 			g_iFreezeTime--;
@@ -398,10 +395,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 	
 	if (IsWar)
 	{
-		for(int client=1; client <= MaxClients; client++)
-		{
-			if (IsValidClient(client, false, true)) SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
-		}
+		LoopValidClients(client, false, true) SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
 		
 		if (FreezeTimer != null) KillTimer(FreezeTimer);
 		if (TruceTimer != null) KillTimer(TruceTimer);
@@ -465,15 +459,12 @@ public Action FreezedTimer(Handle timer)
 	
 	if (g_iRound > 0)
 	{
-		for (int client=1; client <= MaxClients; client++)
+		LoopClients(client) if(IsPlayerAlive(client))
 		{
-			if (IsClientInGame(client) && IsPlayerAlive(client))
+			if (GetClientTeam(client) == CS_TEAM_T)
 			{
-				if (GetClientTeam(client) == CS_TEAM_T)
-				{
-					SetEntityMoveType(client, MOVETYPE_WALK);
-					TeleportEntity(client, Pos, NULL_VECTOR, NULL_VECTOR);
-				}
+				SetEntityMoveType(client, MOVETYPE_WALK);
+				TeleportEntity(client, Pos, NULL_VECTOR, NULL_VECTOR);
 			}
 		}
 	}
@@ -500,18 +491,15 @@ public Action StartTimer(Handle timer)
 	
 	
 	
-	for(int client=1; client <= MaxClients; client++) 
+	LoopClients(client) if(IsPlayerAlive(client)) 
 	{
-		if (IsClientInGame(client) && IsPlayerAlive(client)) 
+		SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
+		if(gc_bOverlays.BoolValue) CreateTimer( 0.0, ShowOverlayStart, client);
+		if(gc_bSounds.BoolValue)
 		{
-			SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
-			if(gc_bOverlays.BoolValue) CreateTimer( 0.0, ShowOverlayStart, client);
-			if(gc_bSounds.BoolValue)	
-			{
-				EmitSoundToAllAny(g_sSoundStartPath);
-			}
-			PrintHintText(client,"%t", "war_start_nc");
+			EmitSoundToAllAny(g_sSoundStartPath);
 		}
+		PrintHintText(client,"%t", "war_start_nc");
 	}
 	CPrintToChatAll("%t %t", "war_tag" , "war_start");
 	TruceTimer = null;

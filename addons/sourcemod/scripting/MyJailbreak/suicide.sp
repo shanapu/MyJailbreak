@@ -140,11 +140,8 @@ public void OnPluginStart()
 	gc_sSoundBoomPath.GetString(g_sSoundBoomPath, sizeof(g_sSoundBoomPath));
 	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
-
-	AddCommandListener(Command_LAW, "+lookatweapon");
 	
-	for(int i = 1; i <= MaxClients; i++)
-		if(IsClientInGame(i)) OnClientPutInServer(i);
+	AddCommandListener(Command_LAW, "+lookatweapon");
 }
 
 //ConVar Change for Strings
@@ -347,44 +344,41 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		
 		if (g_iRound > 0)
 			{
-				for(int client=1; client <= MaxClients; client++)
+				LoopClients(client) 
 				{
-					if (IsClientInGame(client))
+					SuicideBomberMenu = CreatePanel();
+					Format(info1, sizeof(info1), "%T", "suicidebomber_info_title", LANG_SERVER);
+					SetPanelTitle(SuicideBomberMenu, info1);
+					DrawPanelText(SuicideBomberMenu, "                                   ");
+					Format(info2, sizeof(info2), "%T", "suicidebomber_info_line1", LANG_SERVER);
+					DrawPanelText(SuicideBomberMenu, info2);
+					DrawPanelText(SuicideBomberMenu, "-----------------------------------");
+					Format(info3, sizeof(info3), "%T", "suicidebomber_info_line2", LANG_SERVER);
+					DrawPanelText(SuicideBomberMenu, info3);
+					Format(info4, sizeof(info4), "%T", "suicidebomber_info_line3", LANG_SERVER);
+					DrawPanelText(SuicideBomberMenu, info4);
+					Format(info5, sizeof(info5), "%T", "suicidebomber_info_line4", LANG_SERVER);
+					DrawPanelText(SuicideBomberMenu, info5);
+					Format(info6, sizeof(info6), "%T", "suicidebomber_info_line5", LANG_SERVER);
+					DrawPanelText(SuicideBomberMenu, info6);
+					Format(info7, sizeof(info7), "%T", "suicidebomber_info_line6", LANG_SERVER);
+					DrawPanelText(SuicideBomberMenu, info7);
+					Format(info8, sizeof(info8), "%T", "suicidebomber_info_line7", LANG_SERVER);
+					DrawPanelText(SuicideBomberMenu, info8);
+					DrawPanelText(SuicideBomberMenu, "-----------------------------------");
+					SendPanelToClient(SuicideBomberMenu, client, NullHandler, 20);
+					
+					StripAllWeapons(client);
+					ClientSprintStatus[client] = 0;
+					SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
+					
+					if (GetClientTeam(client) == CS_TEAM_T)
 					{
-						SuicideBomberMenu = CreatePanel();
-						Format(info1, sizeof(info1), "%T", "suicidebomber_info_title", LANG_SERVER);
-						SetPanelTitle(SuicideBomberMenu, info1);
-						DrawPanelText(SuicideBomberMenu, "                                   ");
-						Format(info2, sizeof(info2), "%T", "suicidebomber_info_line1", LANG_SERVER);
-						DrawPanelText(SuicideBomberMenu, info2);
-						DrawPanelText(SuicideBomberMenu, "-----------------------------------");
-						Format(info3, sizeof(info3), "%T", "suicidebomber_info_line2", LANG_SERVER);
-						DrawPanelText(SuicideBomberMenu, info3);
-						Format(info4, sizeof(info4), "%T", "suicidebomber_info_line3", LANG_SERVER);
-						DrawPanelText(SuicideBomberMenu, info4);
-						Format(info5, sizeof(info5), "%T", "suicidebomber_info_line4", LANG_SERVER);
-						DrawPanelText(SuicideBomberMenu, info5);
-						Format(info6, sizeof(info6), "%T", "suicidebomber_info_line5", LANG_SERVER);
-						DrawPanelText(SuicideBomberMenu, info6);
-						Format(info7, sizeof(info7), "%T", "suicidebomber_info_line6", LANG_SERVER);
-						DrawPanelText(SuicideBomberMenu, info7);
-						Format(info8, sizeof(info8), "%T", "suicidebomber_info_line7", LANG_SERVER);
-						DrawPanelText(SuicideBomberMenu, info8);
-						DrawPanelText(SuicideBomberMenu, "-----------------------------------");
-						SendPanelToClient(SuicideBomberMenu, client, NullHandler, 20);
-						
-						StripAllWeapons(client);
-						ClientSprintStatus[client] = 0;
-						SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
-						
-						if (GetClientTeam(client) == CS_TEAM_T)
-						{
-							GivePlayerItem(client, "weapon_c4");
-						}
-						if (GetClientTeam(client) == CS_TEAM_CT)
-						{
-							GivePlayerItem(client, "weapon_knife");
-						}
+						GivePlayerItem(client, "weapon_c4");
+					}
+					if (GetClientTeam(client) == CS_TEAM_CT)
+					{
+						GivePlayerItem(client, "weapon_knife");
 					}
 				}
 				g_iFreezeTime--;
@@ -413,7 +407,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 	
 	if (IsSuicideBomber)
 	{
-		for(int client=1; client <= MaxClients; client++)
+		LoopClients(client) 
 		{
 			if (IsClientInGame(client)) SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
 			ClientSprintStatus[client] = 0;
@@ -506,7 +500,7 @@ public Action StartTimer(Handle timer)
 	
 	if (g_iRound > 0)
 	{
-		for (int client=1; client <= MaxClients; client++)
+		LoopClients(client) 
 		{
 			if (IsValidClient(client, true, true))
 			{
@@ -550,7 +544,7 @@ public void OnGameFrame()
 {
 	if (IsSuicideBomber)
 	{
-		for(int i = 1; i <= MaxClients; i++)
+		LoopClients(i) 
 		{
 			if(gc_iKey.IntValue == 2)
 			{

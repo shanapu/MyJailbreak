@@ -324,15 +324,12 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		
 		int RandomCT = 0;
 		
-		for(int client=1; client <= MaxClients; client++)
+		LoopClients(client)
 		{
-			if (IsClientInGame(client))
+			if (GetClientTeam(client) == CS_TEAM_CT)
 			{
-				if (GetClientTeam(client) == CS_TEAM_CT)
-				{
-					RandomCT = client;
-					break;
-				}
+				RandomCT = client;
+				break;
 			}
 		}
 		if (RandomCT)
@@ -346,45 +343,42 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 			
 			if (g_iRound > 0)
 			{
-				for(int client=1; client <= MaxClients; client++)
+				LoopClients(client)
 				{
-					if (IsClientInGame(client))
+					NoScopeMenu = CreatePanel();
+					Format(info1, sizeof(info1), "%T", "noscope_info_title", client);
+					SetPanelTitle(NoScopeMenu, info1);
+					DrawPanelText(NoScopeMenu, "                                   ");
+					Format(info2, sizeof(info2), "%T", "noscope_info_line1", client);
+					DrawPanelText(NoScopeMenu, info2);
+					DrawPanelText(NoScopeMenu, "-----------------------------------");
+					Format(info3, sizeof(info3), "%T", "noscope_info_line2", client);
+					DrawPanelText(NoScopeMenu, info3);
+					Format(info4, sizeof(info4), "%T", "noscope_info_line3", client);
+					DrawPanelText(NoScopeMenu, info4);
+					Format(info5, sizeof(info5), "%T", "noscope_info_line4", client);
+					DrawPanelText(NoScopeMenu, info5);
+					Format(info6, sizeof(info6), "%T", "noscope_info_line5", client);
+					DrawPanelText(NoScopeMenu, info6);
+					Format(info7, sizeof(info7), "%T", "noscope_info_line6", client);
+					DrawPanelText(NoScopeMenu, info7);
+					Format(info8, sizeof(info8), "%T", "noscope_info_line7", client);
+					DrawPanelText(NoScopeMenu, info8);
+					DrawPanelText(NoScopeMenu, "-----------------------------------");
+					SendPanelToClient(NoScopeMenu, client, NullHandler, 20);
+					
+					StripAllWeapons(client);
+					GivePlayerItem(client, g_sWeapon);
+					SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
+					SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
+					
+					if (gc_bGrav.BoolValue)
 					{
-						NoScopeMenu = CreatePanel();
-						Format(info1, sizeof(info1), "%T", "noscope_info_title", client);
-						SetPanelTitle(NoScopeMenu, info1);
-						DrawPanelText(NoScopeMenu, "                                   ");
-						Format(info2, sizeof(info2), "%T", "noscope_info_line1", client);
-						DrawPanelText(NoScopeMenu, info2);
-						DrawPanelText(NoScopeMenu, "-----------------------------------");
-						Format(info3, sizeof(info3), "%T", "noscope_info_line2", client);
-						DrawPanelText(NoScopeMenu, info3);
-						Format(info4, sizeof(info4), "%T", "noscope_info_line3", client);
-						DrawPanelText(NoScopeMenu, info4);
-						Format(info5, sizeof(info5), "%T", "noscope_info_line4", client);
-						DrawPanelText(NoScopeMenu, info5);
-						Format(info6, sizeof(info6), "%T", "noscope_info_line5", client);
-						DrawPanelText(NoScopeMenu, info6);
-						Format(info7, sizeof(info7), "%T", "noscope_info_line6", client);
-						DrawPanelText(NoScopeMenu, info7);
-						Format(info8, sizeof(info8), "%T", "noscope_info_line7", client);
-						DrawPanelText(NoScopeMenu, info8);
-						DrawPanelText(NoScopeMenu, "-----------------------------------");
-						SendPanelToClient(NoScopeMenu, client, NullHandler, 20);
-						
-						StripAllWeapons(client);
-						GivePlayerItem(client, g_sWeapon);
-						SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
-						SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
-						
-						if (gc_bGrav.BoolValue)
-						{
-							SetEntityGravity(client, gc_fGravValue.FloatValue);	
-						}
-						if (!gc_bSpawnCell.BoolValue)
-						{
-							TeleportEntity(client, Pos1, NULL_VECTOR, NULL_VECTOR);
-						}
+						SetEntityGravity(client, gc_fGravValue.FloatValue);	
+					}
+					if (!gc_bSpawnCell.BoolValue)
+					{
+						TeleportEntity(client, Pos1, NULL_VECTOR, NULL_VECTOR);
 					}
 				}
 				g_iTruceTime--;
@@ -392,8 +386,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 				GravityTimer = CreateTimer(1.0, CheckGravity, _, TIMER_REPEAT);
 				CPrintToChatAll("%t %t", "noscope_tag" ,"noscope_rounds", g_iRound, g_iMaxRound);
 			}
-			for(int i = 1; i <= MaxClients; i++)
-			if(IsClientInGame(i)) SDKHook(i, SDKHook_PreThink, OnPreThink);
+			LoopClients(i) if (IsPlayerAlive(i)) SDKHook(i, SDKHook_PreThink, OnPreThink);
 		}
 	}
 	else
@@ -416,11 +409,10 @@ public Action StartTimer(Handle timer)
 	if (g_iTruceTime > 1)
 	{
 		g_iTruceTime--;
-		for (int client=1; client <= MaxClients; client++)
-		if (IsClientInGame(client) && IsPlayerAlive(client))
-			{
-				PrintHintText(client,"%t", "noscope_timeuntilstart_nc", g_iTruceTime);
-			}
+		LoopClients(client) if (IsPlayerAlive(client))
+		{
+			PrintHintText(client,"%t", "noscope_timeuntilstart_nc", g_iTruceTime);
+		}
 		return Plugin_Continue;
 	}
 	
@@ -428,27 +420,22 @@ public Action StartTimer(Handle timer)
 	
 	if (g_iRound > 0)
 	{
-		for (int client=1; client <= MaxClients; client++)
+		LoopClients(client) if (IsPlayerAlive(client))
 		{
-			if (IsClientInGame(client) && IsPlayerAlive(client))
+			SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
+			if (gc_bGrav.BoolValue)
 			{
-				SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
-				if (gc_bGrav.BoolValue)
-				{
-					SetEntityGravity(client, gc_fGravValue.FloatValue);	
-				}
-				PrintHintText(client,"%t", "noscope_start_nc");
-				
+				SetEntityGravity(client, gc_fGravValue.FloatValue);	
 			}
+			PrintHintText(client,"%t", "noscope_start_nc");
 			if(gc_bOverlays.BoolValue) CreateTimer( 0.0, ShowOverlayStart, client);
 			if(gc_bSounds.BoolValue)	
 			{
 				EmitSoundToAllAny(g_sSoundStartPath);
 			}
+			CPrintToChatAll("%t %t", "noscope_tag" , "noscope_start");
 		}
-		CPrintToChatAll("%t %t", "noscope_tag" , "noscope_start");
 	}
-	
 	TruceTimer = null;
 	
 	return Plugin_Stop;
@@ -462,11 +449,10 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 	
 	if (IsNoScope)
 	{
-		for(int client=1; client <= MaxClients; client++)
+		LoopClients(client)
 		{
-			if (IsClientInGame(client)) SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
-			if (IsClientInGame(client)) SetEntityGravity(client, 1.0);
-			
+			SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
+			SetEntityGravity(client, 1.0);
 		}
 		
 		delete TruceTimer;
@@ -500,8 +486,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 		CPrintToChatAll("%t %t", "noscope_tag" , "noscope_next");
 		PrintHintTextToAll("%t", "noscope_next_nc");
 		
-		for(int i = 1; i <= MaxClients; i++)
-		if(IsClientInGame(i)) SDKUnhook(i, SDKHook_PreThink, OnPreThink);
+		LoopClients(i) SDKUnhook(i, SDKHook_PreThink, OnPreThink);
 	}
 }
 
@@ -569,12 +554,9 @@ stock void MakeNoScope(int weapon)
 
 public Action CheckGravity(Handle timer)
 {
-	for(int client=1; client <= MaxClients; client++)
+	LoopValidClients(client,false,false)
 	{
-		if (IsValidClient(client, false, false))
-		{
-			if(GetEntityGravity(client) != 1.0)
-				SetEntityGravity(client, gc_fGravValue.FloatValue);
-		}
+		if(GetEntityGravity(client) != 1.0)
+			SetEntityGravity(client, gc_fGravValue.FloatValue);
 	}
 }

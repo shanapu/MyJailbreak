@@ -312,47 +312,43 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		
 		if (g_iRound > 0)
 			{
-				for(int client=1; client <= MaxClients; client++)
+				LoopClients(client)
 				{
-					if (IsClientInGame(client))
+					HideMenu = CreatePanel();
+					Format(info1, sizeof(info1), "%T", "hide_info_title", client);
+					SetPanelTitle(HideMenu, info1);
+					DrawPanelText(HideMenu, "                                   ");
+					Format(info2, sizeof(info2), "%T", "hide_info_line1", client);
+					DrawPanelText(HideMenu, info2);
+					DrawPanelText(HideMenu, "-----------------------------------");
+					Format(info3, sizeof(info3), "%T", "hide_info_line2", client);
+					DrawPanelText(HideMenu, info3);
+					Format(info4, sizeof(info4), "%T", "hide_info_line3", client);
+					DrawPanelText(HideMenu, info4);
+					Format(info5, sizeof(info5), "%T", "hide_info_line4", client);
+					DrawPanelText(HideMenu, info5);
+					Format(info6, sizeof(info6), "%T", "hide_info_line5", client);
+					DrawPanelText(HideMenu, info6);
+					Format(info7, sizeof(info7), "%T", "hide_info_line6", client);
+					DrawPanelText(HideMenu, info7);
+					Format(info8, sizeof(info8), "%T", "hide_info_line7", client);
+					DrawPanelText(HideMenu, info8);
+					DrawPanelText(HideMenu, "-----------------------------------");
+					SendPanelToClient(HideMenu, client, NullHandler, 20);
+					
+					if (GetClientTeam(client) == CS_TEAM_CT)
 					{
-						HideMenu = CreatePanel();
-						Format(info1, sizeof(info1), "%T", "hide_info_title", client);
-						SetPanelTitle(HideMenu, info1);
-						DrawPanelText(HideMenu, "                                   ");
-						Format(info2, sizeof(info2), "%T", "hide_info_line1", client);
-						DrawPanelText(HideMenu, info2);
-						DrawPanelText(HideMenu, "-----------------------------------");
-						Format(info3, sizeof(info3), "%T", "hide_info_line2", client);
-						DrawPanelText(HideMenu, info3);
-						Format(info4, sizeof(info4), "%T", "hide_info_line3", client);
-						DrawPanelText(HideMenu, info4);
-						Format(info5, sizeof(info5), "%T", "hide_info_line4", client);
-						DrawPanelText(HideMenu, info5);
-						Format(info6, sizeof(info6), "%T", "hide_info_line5", client);
-						DrawPanelText(HideMenu, info6);
-						Format(info7, sizeof(info7), "%T", "hide_info_line6", client);
-						DrawPanelText(HideMenu, info7);
-						Format(info8, sizeof(info8), "%T", "hide_info_line7", client);
-						DrawPanelText(HideMenu, info8);
-						DrawPanelText(HideMenu, "-----------------------------------");
-						SendPanelToClient(HideMenu, client, NullHandler, 20);
-						
-						if (GetClientTeam(client) == CS_TEAM_CT)
-						{
-							StripAllWeapons(client);
-							SetEntityMoveType(client, MOVETYPE_NONE);
-							GivePlayerItem(client, "weapon_tagrenade");
-							SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
-							GivePlayerItem(client, "weapon_knife");
-						}
-						if (GetClientTeam(client) == CS_TEAM_T)
-						{
-							StripAllWeapons(client);
-							SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
-							GivePlayerItem(client, "weapon_knife");
-						}
-						
+						StripAllWeapons(client);
+						SetEntityMoveType(client, MOVETYPE_NONE);
+						GivePlayerItem(client, "weapon_tagrenade");
+						SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
+						GivePlayerItem(client, "weapon_knife");
+					}
+					if (GetClientTeam(client) == CS_TEAM_T)
+					{
+						StripAllWeapons(client);
+						SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
+						GivePlayerItem(client, "weapon_knife");
 					}
 				}
 				g_iFreezeTime--;
@@ -380,28 +376,24 @@ public Action StartTimer(Handle timer)
 	if (g_iFreezeTime > 1)
 	{
 		g_iFreezeTime--;
-		for (int client=1; client <= MaxClients; client++)
-		if (IsClientInGame(client) && IsPlayerAlive(client))
-			{
-				if (GetClientTeam(client) == CS_TEAM_CT)
-				{
-					PrintHintText(client,"%t", "hide_timetounfreeze_nc", g_iFreezeTime);
-				}
-				else if (GetClientTeam(client) == CS_TEAM_T)
-				{
-					PrintHintText(client,"%t", "hide_timetohide_nc", g_iFreezeTime);
-				}
-			}
-		return Plugin_Continue;
-	}
-	
-	g_iFreezeTime = gc_iFreezeTime.IntValue;
-	
-	if (g_iRound > 0)
-	{
-		for (int client=1; client <= MaxClients; client++)
+		LoopClients(client)if (IsPlayerAlive(client))
 		{
-			if (IsClientInGame(client) && IsPlayerAlive(client))
+			if (GetClientTeam(client) == CS_TEAM_CT)
+			{
+				PrintHintText(client,"%t", "hide_timetounfreeze_nc", g_iFreezeTime);
+			}
+			else if (GetClientTeam(client) == CS_TEAM_T)
+			{
+				PrintHintText(client,"%t", "hide_timetohide_nc", g_iFreezeTime);
+			}
+			return Plugin_Continue;
+		}
+		
+		g_iFreezeTime = gc_iFreezeTime.IntValue;
+		
+		if (g_iRound > 0)
+		{
+			LoopClients(client) if(IsPlayerAlive(client))
 			{
 				if (GetClientTeam(client) == CS_TEAM_CT)
 				{
@@ -442,14 +434,11 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 	
 	if (IsHide)
 	{
-		for(int client=1; client <= MaxClients; client++)
+		LoopClients(client)
 		{
-			if (IsClientInGame(client)) 
-			{
-				SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
-				SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
-				g_iTA[client] = 0;
-			}
+			SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
+			SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
+			g_iTA[client] = 0;
 		}
 		
 		if (FreezeTimer != null) KillTimer(FreezeTimer);

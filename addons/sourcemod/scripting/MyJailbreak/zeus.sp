@@ -319,42 +319,39 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 			
 			if (g_iRound > 0)
 			{
-				for(int client=1; client <= MaxClients; client++)
+				LoopClients(client)
 				{
-					if (IsClientInGame(client))
+					ZeusMenu = CreatePanel();
+					Format(info1, sizeof(info1), "%T", "zeus_info_title", client);
+					SetPanelTitle(ZeusMenu, info1);
+					DrawPanelText(ZeusMenu, "                                   ");
+					Format(info2, sizeof(info2), "%T", "zeus_info_line1", client);
+					DrawPanelText(ZeusMenu, info2);
+					DrawPanelText(ZeusMenu, "-----------------------------------");
+					Format(info3, sizeof(info3), "%T", "zeus_info_line2", client);
+					DrawPanelText(ZeusMenu, info3);
+					Format(info4, sizeof(info4), "%T", "zeus_info_line3", client);
+					DrawPanelText(ZeusMenu, info4);
+					Format(info5, sizeof(info5), "%T", "zeus_info_line4", client);
+					DrawPanelText(ZeusMenu, info5);
+					Format(info6, sizeof(info6), "%T", "zeus_info_line5", client);
+					DrawPanelText(ZeusMenu, info6);
+					Format(info7, sizeof(info7), "%T", "zeus_info_line6", client);
+					DrawPanelText(ZeusMenu, info7);
+					Format(info8, sizeof(info8), "%T", "zeus_info_line7", client);
+					DrawPanelText(ZeusMenu, info8);
+					DrawPanelText(ZeusMenu, "-----------------------------------");
+					SendPanelToClient(ZeusMenu, client, NullHandler, 20);
+					
+					StripAllWeapons(client);
+					GivePlayerItem(client, "weapon_knife");
+					SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
+					SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
+					ClientTimer[client] = CreateTimer(0.5, Timer_GiveZeus, client);
+					
+					if (!gc_bSpawnCell.BoolValue)
 					{
-						ZeusMenu = CreatePanel();
-						Format(info1, sizeof(info1), "%T", "zeus_info_title", client);
-						SetPanelTitle(ZeusMenu, info1);
-						DrawPanelText(ZeusMenu, "                                   ");
-						Format(info2, sizeof(info2), "%T", "zeus_info_line1", client);
-						DrawPanelText(ZeusMenu, info2);
-						DrawPanelText(ZeusMenu, "-----------------------------------");
-						Format(info3, sizeof(info3), "%T", "zeus_info_line2", client);
-						DrawPanelText(ZeusMenu, info3);
-						Format(info4, sizeof(info4), "%T", "zeus_info_line3", client);
-						DrawPanelText(ZeusMenu, info4);
-						Format(info5, sizeof(info5), "%T", "zeus_info_line4", client);
-						DrawPanelText(ZeusMenu, info5);
-						Format(info6, sizeof(info6), "%T", "zeus_info_line5", client);
-						DrawPanelText(ZeusMenu, info6);
-						Format(info7, sizeof(info7), "%T", "zeus_info_line6", client);
-						DrawPanelText(ZeusMenu, info7);
-						Format(info8, sizeof(info8), "%T", "zeus_info_line7", client);
-						DrawPanelText(ZeusMenu, info8);
-						DrawPanelText(ZeusMenu, "-----------------------------------");
-						SendPanelToClient(ZeusMenu, client, NullHandler, 20);
-						
-						StripAllWeapons(client);
-						GivePlayerItem(client, "weapon_knife");
-						SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
-						SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
-						ClientTimer[client] = CreateTimer(0.5, Timer_GiveZeus, client);
-						
-						if (!gc_bSpawnCell.BoolValue)
-						{
-							TeleportEntity(client, Pos1, NULL_VECTOR, NULL_VECTOR);
-						}
+						TeleportEntity(client, Pos1, NULL_VECTOR, NULL_VECTOR);
 					}
 				}
 				g_iTruceTime--;
@@ -383,11 +380,7 @@ public Action StartTimer(Handle timer)
 	if (g_iTruceTime > 1)
 	{
 		g_iTruceTime--;
-		for (int client=1; client <= MaxClients; client++)
-		if (IsClientInGame(client) && IsPlayerAlive(client))
-			{
-				PrintHintText(client,"%t", "zeus_timeuntilstart_nc", g_iTruceTime);
-			}
+		LoopClients(client) if(IsPlayerAlive(client)) PrintHintText(client,"%t", "zeus_timeuntilstart_nc", g_iTruceTime);
 		return Plugin_Continue;
 	}
 	
@@ -395,13 +388,10 @@ public Action StartTimer(Handle timer)
 	
 	if (g_iRound > 0)
 	{
-		for (int client=1; client <= MaxClients; client++)
+		LoopClients(client) if(IsPlayerAlive(client))
 		{
-			if (IsClientInGame(client) && IsPlayerAlive(client))
-			{
-				SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
-				PrintHintText(client,"%t", "zeus_start_nc");
-			}
+			SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
+			PrintHintText(client,"%t", "zeus_start_nc");
 			if(gc_bOverlays.BoolValue) CreateTimer( 0.0, ShowOverlayStart, client);
 			if(gc_bSounds.BoolValue)	
 			{
@@ -425,10 +415,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 	
 	if (IsZeus)
 	{
-		for(int client=1; client <= MaxClients; client++)
-		{
-			if (IsClientInGame(client)) SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
-		}
+		LoopClients(client) SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
 		if (TruceTimer != null) KillTimer(TruceTimer);
 		if (winner == 2) PrintHintTextToAll("%t", "zeus_twin_nc");
 		if (winner == 3) PrintHintTextToAll("%t", "zeus_ctwin_nc");

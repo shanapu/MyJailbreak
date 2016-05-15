@@ -188,11 +188,10 @@
 		"en"		"Admin: {purple}{1}{default} set as Warden"
 		"de"		"Admin: {purple}{1}{default} wurde zum Warden ernannt"
 	}
-	"warden_israndomwarden"
+	"warden_randomwarden"
 	{
-		"#format"	"{1:N}"
-		"en"		"Choosed a random Warden. {purple}{1}{default} is the new Warden"
-		"de"		"Neuer Warden wurde zufällig gewählt. {purple}{1}{default} wurde zum Warden ernannt"
+		"en"		"Choosed a random Warden."
+		"de"		"Neuer Warden wurde zufällig gewählt."
 	}
 	"warden_dooropen"
 	{

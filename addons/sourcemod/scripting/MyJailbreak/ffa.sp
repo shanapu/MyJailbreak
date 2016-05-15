@@ -314,15 +314,12 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		
 		int RandomCT = 0;
 		
-		for(int client=1; client <= MaxClients; client++)
+		LoopClients(client)
 		{
-			if (IsClientInGame(client))
+			if (GetClientTeam(client) == CS_TEAM_CT)
 			{
-				if (GetClientTeam(client) == CS_TEAM_CT)
-				{
-					RandomCT = client;
-					break;
-				}
+				RandomCT = client;
+				break;
 			}
 		}
 		if (RandomCT)
@@ -336,7 +333,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 			
 			if (g_iRound > 0)
 			{
-				for(int client=1; client <= MaxClients; client++)
+				LoopClients(client)
 				{
 					if (!gc_bSpawnCell.BoolValue)
 					{
@@ -348,35 +345,32 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 				}
 				CPrintToChatAll("%t %t", "ffa_tag" ,"ffa_rounds", g_iRound, g_iMaxRound);
 			}
-			for(int client=1; client <= MaxClients; client++)
+			LoopClients(client)
 			{
-				if (IsClientInGame(client))
-				{
-					FFAMenu = CreatePanel();
-					Format(info1, sizeof(info1), "%T", "ffa_info_title", client);
-					SetPanelTitle(FFAMenu, info1);
-					DrawPanelText(FFAMenu, "                                   ");
-					Format(info2, sizeof(info2), "%T", "ffa_info_line1", client);
-					DrawPanelText(FFAMenu, info2);
-					DrawPanelText(FFAMenu, "-----------------------------------");
-					Format(info3, sizeof(info3), "%T", "ffa_info_line2", client);
-					DrawPanelText(FFAMenu, info3);
-					Format(info4, sizeof(info4), "%T", "ffa_info_line3", client);
-					DrawPanelText(FFAMenu, info4);
-					Format(info5, sizeof(info5), "%T", "ffa_info_line4", client);
-					DrawPanelText(FFAMenu, info5);
-					Format(info6, sizeof(info6), "%T", "ffa_info_line5", client);
-					DrawPanelText(FFAMenu, info6);
-					Format(info7, sizeof(info7), "%T", "ffa_info_line6", client);
-					DrawPanelText(FFAMenu, info7);
-					Format(info8, sizeof(info8), "%T", "ffa_info_line7", client);
-					DrawPanelText(FFAMenu, info8);
-					DrawPanelText(FFAMenu, "-----------------------------------");
-					SendPanelToClient(FFAMenu, client, NullHandler, 20);
-					
-					SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
-					SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
-				}
+				FFAMenu = CreatePanel();
+				Format(info1, sizeof(info1), "%T", "ffa_info_title", client);
+				SetPanelTitle(FFAMenu, info1);
+				DrawPanelText(FFAMenu, "                                   ");
+				Format(info2, sizeof(info2), "%T", "ffa_info_line1", client);
+				DrawPanelText(FFAMenu, info2);
+				DrawPanelText(FFAMenu, "-----------------------------------");
+				Format(info3, sizeof(info3), "%T", "ffa_info_line2", client);
+				DrawPanelText(FFAMenu, info3);
+				Format(info4, sizeof(info4), "%T", "ffa_info_line3", client);
+				DrawPanelText(FFAMenu, info4);
+				Format(info5, sizeof(info5), "%T", "ffa_info_line4", client);
+				DrawPanelText(FFAMenu, info5);
+				Format(info6, sizeof(info6), "%T", "ffa_info_line5", client);
+				DrawPanelText(FFAMenu, info6);
+				Format(info7, sizeof(info7), "%T", "ffa_info_line6", client);
+				DrawPanelText(FFAMenu, info7);
+				Format(info8, sizeof(info8), "%T", "ffa_info_line7", client);
+				DrawPanelText(FFAMenu, info8);
+				DrawPanelText(FFAMenu, "-----------------------------------");
+				SendPanelToClient(FFAMenu, client, NullHandler, 20);
+				
+				SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
+				SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 			}
 			TruceTimer = CreateTimer(1.0, StartTimer, _, TIMER_REPEAT);
 		}
@@ -402,10 +396,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 	
 	if (IsFFA)
 	{
-		for(int client=1; client <= MaxClients; client++)
-		{
-			if (IsValidClient(client, false, true)) SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
-		}
+		LoopValidClients(client, false, true) SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
 		if (TruceTimer != null) KillTimer(TruceTimer);
 		if (winner == 2) PrintHintTextToAll("%t", "ffa_twin_nc"); 
 		if (winner == 3) PrintHintTextToAll("%t", "ffa_ctwin_nc");

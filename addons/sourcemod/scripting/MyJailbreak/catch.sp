@@ -134,9 +134,6 @@ public void OnPluginStart()
 	gc_sSoundFreezePath.GetString(g_sSoundFreezePath, sizeof(g_sSoundFreezePath));
 	gc_sSoundUnFreezePath.GetString(g_sSoundUnFreezePath, sizeof(g_sSoundUnFreezePath));
 	gc_sOverlayFreeze.GetString(g_sOverlayFreeze , sizeof(g_sOverlayFreeze));
-	
-	for(int i = 1; i <= MaxClients; i++)
-		if(IsClientInGame(i)) OnClientPutInServer(i);
 }
 
 //ConVar Change for Strings
@@ -330,42 +327,39 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		
 		if (g_iRound > 0)
 			{
-				for(int client=1; client <= MaxClients; client++)
+				LoopClients(client)
 				{
-					if (IsClientInGame(client))
+					CatchMenu = CreatePanel();
+					Format(info1, sizeof(info1), "%T", "catch_info_title", client);
+					SetPanelTitle(CatchMenu, info1);
+					DrawPanelText(CatchMenu, "                                   ");
+					Format(info2, sizeof(info2), "%T", "catch_info_line1", client);
+					DrawPanelText(CatchMenu, info2);
+					DrawPanelText(CatchMenu, "-----------------------------------");
+					Format(info3, sizeof(info3), "%T", "catch_info_line2", client);
+					DrawPanelText(CatchMenu, info3);
+					Format(info4, sizeof(info4), "%T", "catch_info_line3", client);
+					DrawPanelText(CatchMenu, info4);
+					Format(info5, sizeof(info5), "%T", "catch_info_line4", client);
+					DrawPanelText(CatchMenu, info5);
+					Format(info6, sizeof(info6), "%T", "catch_info_line5", client);
+					DrawPanelText(CatchMenu, info6);
+					Format(info7, sizeof(info7), "%T", "catch_info_line6", client);
+					DrawPanelText(CatchMenu, info7);
+					Format(info8, sizeof(info8), "%T", "catch_info_line7", client);
+					DrawPanelText(CatchMenu, info8);
+					DrawPanelText(CatchMenu, "-----------------------------------");
+					
+					StripAllWeapons(client);
+					ClientSprintStatus[client] = 0;
+					GivePlayerItem(client, "weapon_knife");
+					SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
+					SendPanelToClient(CatchMenu, client, NullHandler, 20);
+					PrintHintText(client,"%t", "catch_start_nc");
+					
+					if (GetClientTeam(client) == CS_TEAM_T)
 					{
-						CatchMenu = CreatePanel();
-						Format(info1, sizeof(info1), "%T", "catch_info_title", client);
-						SetPanelTitle(CatchMenu, info1);
-						DrawPanelText(CatchMenu, "                                   ");
-						Format(info2, sizeof(info2), "%T", "catch_info_line1", client);
-						DrawPanelText(CatchMenu, info2);
-						DrawPanelText(CatchMenu, "-----------------------------------");
-						Format(info3, sizeof(info3), "%T", "catch_info_line2", client);
-						DrawPanelText(CatchMenu, info3);
-						Format(info4, sizeof(info4), "%T", "catch_info_line3", client);
-						DrawPanelText(CatchMenu, info4);
-						Format(info5, sizeof(info5), "%T", "catch_info_line4", client);
-						DrawPanelText(CatchMenu, info5);
-						Format(info6, sizeof(info6), "%T", "catch_info_line5", client);
-						DrawPanelText(CatchMenu, info6);
-						Format(info7, sizeof(info7), "%T", "catch_info_line6", client);
-						DrawPanelText(CatchMenu, info7);
-						Format(info8, sizeof(info8), "%T", "catch_info_line7", client);
-						DrawPanelText(CatchMenu, info8);
-						DrawPanelText(CatchMenu, "-----------------------------------");
-						
-						StripAllWeapons(client);
-						ClientSprintStatus[client] = 0;
-						GivePlayerItem(client, "weapon_knife");
-						SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
-						SendPanelToClient(CatchMenu, client, NullHandler, 20);
-						PrintHintText(client,"%t", "catch_start_nc");
-						
-						if (GetClientTeam(client) == CS_TEAM_T)
-						{
-							catched[client] = false;
-						}
+						catched[client] = false;
 					}
 				}
 				CPrintToChatAll("%t %t", "catch_tag" ,"catch_rounds", g_iRound, g_iMaxRound);
@@ -393,19 +387,16 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 	
 	if (IsCatch)
 	{
-		for(int client=1; client <= MaxClients; client++)
+		LoopValidClients(client, true, true)
 		{
-			if(IsValidClient(client, true, true))
+			SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
+			ClientSprintStatus[client] = 0;
+			CreateTimer( 0.0, DeleteOverlay, client );
+			SetEntityRenderColor(client, 255, 255, 255, 0);
+			catched[client] = false;
+			if (GetClientTeam(client) == CS_TEAM_T)
 			{
-				SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
-				ClientSprintStatus[client] = 0;
-				CreateTimer( 0.0, DeleteOverlay, client );
-				SetEntityRenderColor(client, 255, 255, 255, 0);
-				catched[client] = false;
-				if (GetClientTeam(client) == CS_TEAM_T)
-				{
-					StripAllWeapons(client);
-				}
+				StripAllWeapons(client);
 			}
 		}
 		
@@ -544,8 +535,7 @@ public Action FreeEm(int client, int attacker)
 public Action CheckStatus()
 {
 	int number = 0;
-	for (int i = 1; i <= MaxClients; i++)
-	if(IsClientInGame(i) && IsPlayerAlive(i) && GetClientTeam(i) == CS_TEAM_T && !catched[i]) number++;
+	LoopClients(i) if(IsPlayerAlive(i) && GetClientTeam(i) == CS_TEAM_T && !catched[i]) number++;
 	if(number == 0)
 	{
 		CPrintToChatAll("%t %t", "catch_tag" , "catch_win");
@@ -618,9 +608,9 @@ public void OnGameFrame()
 	{
 		if(gc_bSprintUse.BoolValue)
 		{
-			for(int i = 1; i <= MaxClients; i++)
+			LoopClients(i)
 			{
-				if(IsClientInGame(i) && (GetClientButtons(i) & IN_USE))
+				if(GetClientButtons(i) & IN_USE)
 				{
 					Command_StartSprint(i, 0);
 				}

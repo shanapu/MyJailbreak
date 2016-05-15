@@ -301,15 +301,12 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		
 		int RandomCT = 0;
 		
-		for(int client=1; client <= MaxClients; client++)
+		LoopClients(client)
 		{
-			if (IsClientInGame(client))
+			if (GetClientTeam(client) == CS_TEAM_CT)
 			{
-				if (GetClientTeam(client) == CS_TEAM_CT)
-				{
-					RandomCT = client;
-					break;
-				}
+				RandomCT = client;
+				break;
 			}
 		}
 		if (RandomCT)
@@ -323,45 +320,42 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 			
 			if (g_iRound > 0)
 			{
-				for(int client=1; client <= MaxClients; client++)
+				LoopClients(client)
 				{
-					if (IsClientInGame(client))
+					HEbattleMenu = CreatePanel();
+					Format(info1, sizeof(info1), "%T", "hebattle_info_title", LANG_SERVER);
+					SetPanelTitle(HEbattleMenu, info1);
+					DrawPanelText(HEbattleMenu, "                                   ");
+					Format(info2, sizeof(info2), "%T", "hebattle_info_line1", LANG_SERVER);
+					DrawPanelText(HEbattleMenu, info2);
+					DrawPanelText(HEbattleMenu, "-----------------------------------");
+					Format(info3, sizeof(info3), "%T", "hebattle_info_line2", LANG_SERVER);
+					DrawPanelText(HEbattleMenu, info3);
+					Format(info4, sizeof(info4), "%T", "hebattle_info_line3", LANG_SERVER);
+					DrawPanelText(HEbattleMenu, info4);
+					Format(info5, sizeof(info5), "%T", "hebattle_info_line4", LANG_SERVER);
+					DrawPanelText(HEbattleMenu, info5);
+					Format(info6, sizeof(info6), "%T", "hebattle_info_line5", LANG_SERVER);
+					DrawPanelText(HEbattleMenu, info6);
+					Format(info7, sizeof(info7), "%T", "hebattle_info_line6", LANG_SERVER);
+					DrawPanelText(HEbattleMenu, info7);
+					Format(info8, sizeof(info8), "%T", "hebattle_info_line7", LANG_SERVER);
+					DrawPanelText(HEbattleMenu, info8);
+					DrawPanelText(HEbattleMenu, "-----------------------------------");
+					SendPanelToClient(HEbattleMenu, client, NullHandler, 20);
+					
+					SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
+					StripAllWeapons(client);
+					GivePlayerItem(client, "weapon_hegrenade");
+					SetEntityHealth(client, gc_iPlayerHP.IntValue);
+					
+					if (gc_bGrav.BoolValue)
 					{
-						HEbattleMenu = CreatePanel();
-						Format(info1, sizeof(info1), "%T", "hebattle_info_title", LANG_SERVER);
-						SetPanelTitle(HEbattleMenu, info1);
-						DrawPanelText(HEbattleMenu, "                                   ");
-						Format(info2, sizeof(info2), "%T", "hebattle_info_line1", LANG_SERVER);
-						DrawPanelText(HEbattleMenu, info2);
-						DrawPanelText(HEbattleMenu, "-----------------------------------");
-						Format(info3, sizeof(info3), "%T", "hebattle_info_line2", LANG_SERVER);
-						DrawPanelText(HEbattleMenu, info3);
-						Format(info4, sizeof(info4), "%T", "hebattle_info_line3", LANG_SERVER);
-						DrawPanelText(HEbattleMenu, info4);
-						Format(info5, sizeof(info5), "%T", "hebattle_info_line4", LANG_SERVER);
-						DrawPanelText(HEbattleMenu, info5);
-						Format(info6, sizeof(info6), "%T", "hebattle_info_line5", LANG_SERVER);
-						DrawPanelText(HEbattleMenu, info6);
-						Format(info7, sizeof(info7), "%T", "hebattle_info_line6", LANG_SERVER);
-						DrawPanelText(HEbattleMenu, info7);
-						Format(info8, sizeof(info8), "%T", "hebattle_info_line7", LANG_SERVER);
-						DrawPanelText(HEbattleMenu, info8);
-						DrawPanelText(HEbattleMenu, "-----------------------------------");
-						SendPanelToClient(HEbattleMenu, client, NullHandler, 20);
-						
-						SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
-						StripAllWeapons(client);
-						GivePlayerItem(client, "weapon_hegrenade");
-						SetEntityHealth(client, gc_iPlayerHP.IntValue);
-						
-						if (gc_bGrav.BoolValue)
-						{
-							SetEntityGravity(client, gc_fGravValue.FloatValue);	
-						}
-						if (!gc_bSpawnCell.BoolValue)
-						{
-							TeleportEntity(client, Pos1, NULL_VECTOR, NULL_VECTOR);
-						}
+						SetEntityGravity(client, gc_fGravValue.FloatValue);	
+					}
+					if (!gc_bSpawnCell.BoolValue)
+					{
+						TeleportEntity(client, Pos1, NULL_VECTOR, NULL_VECTOR);
 					}
 				}
 				g_iTruceTime--;
@@ -392,10 +386,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 	
 	if (IsHEbattle)
 	{
-		for(int client=1; client <= MaxClients; client++)
-		{
-			if (IsClientInGame(client)) SetEntityGravity(client, 1.0);
-		}
+		LoopClients(client) SetEntityGravity(client, 1.0);
 		if (TruceTimer != null) KillTimer(TruceTimer);
 		if (GravityTimer != null) KillTimer(GravityTimer);
 		if (winner == 2) PrintHintTextToAll("%t", "hebattle_twin_nc");
@@ -447,11 +438,8 @@ public Action StartTimer(Handle timer)
 	if (g_iTruceTime > 1)
 	{
 		g_iTruceTime--;
-		for (int client=1; client <= MaxClients; client++)
-		if (IsClientInGame(client) && IsPlayerAlive(client))
-			{
-				PrintHintText(client,"%t", "hebattle_timeuntilstart_nc", g_iTruceTime);
-			}
+		LoopClients(client) if(IsPlayerAlive(client))
+			PrintHintText(client,"%t", "hebattle_timeuntilstart_nc", g_iTruceTime);
 		return Plugin_Continue;
 	}
 	
@@ -525,12 +513,9 @@ public Action HE_Detonate(Handle event, const char[] name, bool dontBroadcast)
 
 public Action CheckGravity(Handle timer)
 {
-	for(int client=1; client <= MaxClients; client++)
+	LoopValidClients(client, false, false)
 	{
-		if (IsValidClient(client, false, false))
-		{
-			if(GetEntityGravity(client) != 1.0)
-				SetEntityGravity(client, gc_fGravValue.FloatValue);
-		}
+		if(GetEntityGravity(client) != 1.0)
+			SetEntityGravity(client, gc_fGravValue.FloatValue);
 	}
 }

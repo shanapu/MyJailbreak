@@ -46,6 +46,7 @@ bool g_bHealed[MAXPLAYERS+1];
 bool g_bCapitulated[MAXPLAYERS+1];
 bool g_bRefused[MAXPLAYERS+1];
 bool g_bRepeated[MAXPLAYERS+1];
+//bool g_bAllowRefuse;
 bool IsRequest;
 
 
@@ -177,26 +178,23 @@ public void OnMapStart()
 
 public Action RoundStart(Handle event, char [] name, bool dontBroadcast)
 {
-	for(int client=1; client<=MaxClients; client++)
+	LoopClients(client)
 	{
-		if (IsClientConnected(client))
-		{
-			delete RefuseTimer[client];
-			delete CapitulationTimer[client];
-			delete RebelTimer[client];
-			delete HealTimer[client];
-			delete RepeatTimer[client];
-			delete RequestTimer;
-			
-			g_iRefuseCounter[client] = 0;
-			g_bCapitulated[client] = false;
-			g_iHealCounter[client] = 0;
-			g_bHealed[client] = false;
-			g_bRepeated[client] = false;
-			g_iRepeatCounter[client] = 0;
-			g_bRefused[client] = false;
-			IsRequest = false;
-		}
+		delete RefuseTimer[client];
+		delete CapitulationTimer[client];
+		delete RebelTimer[client];
+		delete HealTimer[client];
+		delete RepeatTimer[client];
+		delete RequestTimer;
+		
+		g_iRefuseCounter[client] = 0;
+		g_bCapitulated[client] = false;
+		g_iHealCounter[client] = 0;
+		g_bHealed[client] = false;
+		g_bRepeated[client] = false;
+		g_iRepeatCounter[client] = 0;
+		g_bRefused[client] = false;
+		IsRequest = false;
 	}
 	return Plugin_Continue;
 }
@@ -249,7 +247,7 @@ public Action Command_refuse(int client, int args)
 						SetEntityRenderColor(client, gc_iRefuseColorRed.IntValue, gc_iRefuseColorGreen.IntValue, gc_iRefuseColorBlue.IntValue, 255);
 						CPrintToChatAll("%t %t", "request_tag", "request_refusing", client);
 						RefuseTimer[client] = CreateTimer(gc_fRefuseTime.FloatValue, ResetColorRefuse, client);
-						if (warden_exist()) for(int i=1; i <= MaxClients; i++) RefuseMenu(i);
+						if (warden_exist()) LoopClients(i) RefuseMenu(i);
 						if(gc_bSounds.BoolValue)EmitSoundToAllAny(g_sSoundRefusePath);
 					}
 					else
@@ -281,7 +279,7 @@ public Action RefuseMenu(int warden)
 		SetPanelTitle(RefusePanel, info1);
 		DrawPanelText(RefusePanel, "-----------------------------------");
 		DrawPanelText(RefusePanel, "                                   ");
-		for(int i = 1;i <= MaxClients;i++) if(IsValidClient(i, true))
+		LoopValidClients(i,true,false)
 		{
 			if(g_bRefused[i])
 			{
@@ -316,7 +314,7 @@ public Action Command_Repeat(int client, int args)
 						g_bRepeated[client] = true;
 						CPrintToChatAll("%t %t", "request_tag", "request_repeatpls", client);
 						RepeatTimer[client] = CreateTimer(10.0, RepeatEnd, client);
-						if (warden_exist()) for(int i=1; i <= MaxClients; i++) RepeatMenu(i);
+						if (warden_exist()) LoopClients(i) RepeatMenu(i);
 						if(gc_bSounds.BoolValue)EmitSoundToAllAny(g_sSoundRepeatPath);
 					}
 					else
@@ -384,8 +382,10 @@ public Action Command_Capitulation(int client, int args)
 							g_bCapitulated[client] = true;
 							CPrintToChatAll("%t %t", "request_tag", "request_capitulation", client);
 							SetEntityRenderColor(client, gc_iCapitulationColorRed.IntValue, gc_iCapitulationColorGreen.IntValue, gc_iCapitulationColorBlue.IntValue, 255);
+							float DoubleTime = (gc_fRebelTime.FloatValue * 2);
+							RebelTimer[client] = CreateTimer(DoubleTime, GiveKnifeRebel, client);
 							StripAllWeapons(client);
-							for(int i=1; i <= MaxClients; i++) CapitulationMenu(i);
+							LoopClients(i) CapitulationMenu(i);
 							if(gc_bSounds.BoolValue)EmitSoundToAllAny(g_sSoundCapitulationPath);
 						}
 						else CPrintToChat(client, "%t %t", "request_tag", "request_processing");
@@ -431,21 +431,23 @@ public int CapitulationMenuHandler(Menu menu, MenuAction action, int client, int
 		int choice = StringToInt(Item);
 		if(choice == 1)
 		{
-			for(int i=1; i <= MaxClients; i++) if(g_bCapitulated[i])
+			LoopClients(i) if(g_bCapitulated[i])
 			{
 				IsRequest = false;
 				RequestTimer = null;
+				RebelTimer[i] = null;
 				CapitulationTimer[i] = CreateTimer(gc_fCapitulationTime.FloatValue, GiveKnifeCapitulated, i);
 				CPrintToChatAll("%t %t", "warden_tag", "request_accepted", i);
 			}
 		}
 		if(choice == 0)
 		{
-			for(int i=1; i <= MaxClients; i++) if(g_bCapitulated[i])
+			LoopClients(i) if(g_bCapitulated[i])
 			{
 				IsRequest = false;
 				RequestTimer = null;
 				SetEntityRenderColor(i, 255, 0, 0, 255);
+				RebelTimer[i] = null;
 				RebelTimer[i] = CreateTimer(gc_fRebelTime.FloatValue, GiveKnifeRebel, i);
 				CPrintToChatAll("%t %t", "warden_tag", "request_noaccepted", i);
 			}
@@ -477,7 +479,7 @@ public Action Command_Heal(int client, int args)
 								CPrintToChatAll("%t %t", "request_tag", "request_heal", client);
 								SetEntityRenderColor(client, gc_iHealColorRed.IntValue, gc_iHealColorGreen.IntValue, gc_iHealColorBlue.IntValue, 255);
 								HealTimer[client] = CreateTimer(gc_fHealTime.FloatValue, ResetColorHeal, client);
-								for(int i=1; i <= MaxClients; i++) HealMenu(i);
+								LoopClients(i) HealMenu(i);
 							}
 							else CPrintToChat(client, "%t %t", "request_tag", "request_processing");
 						}
@@ -527,7 +529,7 @@ public int HealMenuHandler(Menu menu, MenuAction action, int client, int Positio
 		int choice = StringToInt(Item);
 		if(choice == 1)
 		{
-			for(int i=1; i <= MaxClients; i++) if(g_bHealed[i])
+			LoopClients(i) if(g_bHealed[i])
 			{
 				IsRequest = false;
 				RequestTimer = null;
@@ -540,7 +542,7 @@ public int HealMenuHandler(Menu menu, MenuAction action, int client, int Positio
 		{
 			IsRequest = false;
 			RequestTimer = null;
-			for(int i=1; i <= MaxClients; i++) if(g_bHealed[i])
+			LoopClients(i) if(g_bHealed[i])
 			{
 				CPrintToChatAll("%t %t", "warden_tag", "request_noaccepted", i);
 			}
@@ -638,5 +640,5 @@ public Action OnTakedamage(int victim, int &attacker, int &inflictor, float &dam
 
 public int OnAvailableLR(int Announced)
 {
-	for (int i = 1; i <= MaxClients; i++) g_bCapitulated[i] = false;
+	LoopClients(i) g_bCapitulated[i] = false;
 }

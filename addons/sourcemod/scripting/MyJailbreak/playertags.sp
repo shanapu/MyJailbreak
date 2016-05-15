@@ -77,7 +77,7 @@ public Action checkTag(Handle event, char[] name, bool dontBroadcast)
 
 public Action DelayCheck(Handle timer) 
 {
-	for(int client=1; client <= MaxClients; client++) 
+	LoopClients(client)
 	{
 		if (0 < client)
 		{

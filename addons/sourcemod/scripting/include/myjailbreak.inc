@@ -9,6 +9,10 @@
 #include <sdktools>
 #include <sdkhooks>
 
+#define LoopClients(%1) for(int %1 = 1; %1 <= MaxClients; %1++) if(IsClientInGame(%1))
+#define LoopValidClients(%1,%2,%3) for(int %1 = 1; %1 <= MaxClients; %1++) if(IsValidClient(%1, %2, %3))
+
+
 Handle IntCvar;
 Handle FloatCvar;
 char g_sOverlayStart[256];

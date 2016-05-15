@@ -314,52 +314,49 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		
 		if (g_iRound > 0)
 			{
-				for(int client=1; client <= MaxClients; client++)
+				LoopClients(client)
 				{
-					if (IsClientInGame(client))
+					DuckHuntMenu = CreatePanel();
+					Format(info1, sizeof(info1), "%T", "duckhunt_info_title", client);
+					SetPanelTitle(DuckHuntMenu, info1);
+					DrawPanelText(DuckHuntMenu, "                                   ");
+					Format(info2, sizeof(info2), "%T", "duckhunt_info_line1", client);
+					DrawPanelText(DuckHuntMenu, info2);
+					DrawPanelText(DuckHuntMenu, "-----------------------------------");
+					Format(info3, sizeof(info3), "%T", "duckhunt_info_line2", client);
+					DrawPanelText(DuckHuntMenu, info3);
+					Format(info4, sizeof(info4), "%T", "duckhunt_info_line3", client);
+					DrawPanelText(DuckHuntMenu, info4);
+					Format(info5, sizeof(info5), "%T", "duckhunt_info_line4", client);
+					DrawPanelText(DuckHuntMenu, info5);
+					Format(info6, sizeof(info6), "%T", "duckhunt_info_line5", client);
+					DrawPanelText(DuckHuntMenu, info6);
+					Format(info7, sizeof(info7), "%T", "duckhunt_info_line6", client);
+					DrawPanelText(DuckHuntMenu, info7);
+					Format(info8, sizeof(info8), "%T", "duckhunt_info_line7", client);
+					DrawPanelText(DuckHuntMenu, info8);
+					DrawPanelText(DuckHuntMenu, "-----------------------------------");
+					SendPanelToClient(DuckHuntMenu, client, NullHandler, 20);
+					
+					StripAllWeapons(client);
+					SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
+					SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
+					
+					if (GetClientTeam(client) == CS_TEAM_CT && IsValidClient(client, false, false))
 					{
-						DuckHuntMenu = CreatePanel();
-						Format(info1, sizeof(info1), "%T", "duckhunt_info_title", client);
-						SetPanelTitle(DuckHuntMenu, info1);
-						DrawPanelText(DuckHuntMenu, "                                   ");
-						Format(info2, sizeof(info2), "%T", "duckhunt_info_line1", client);
-						DrawPanelText(DuckHuntMenu, info2);
-						DrawPanelText(DuckHuntMenu, "-----------------------------------");
-						Format(info3, sizeof(info3), "%T", "duckhunt_info_line2", client);
-						DrawPanelText(DuckHuntMenu, info3);
-						Format(info4, sizeof(info4), "%T", "duckhunt_info_line3", client);
-						DrawPanelText(DuckHuntMenu, info4);
-						Format(info5, sizeof(info5), "%T", "duckhunt_info_line4", client);
-						DrawPanelText(DuckHuntMenu, info5);
-						Format(info6, sizeof(info6), "%T", "duckhunt_info_line5", client);
-						DrawPanelText(DuckHuntMenu, info6);
-						Format(info7, sizeof(info7), "%T", "duckhunt_info_line6", client);
-						DrawPanelText(DuckHuntMenu, info7);
-						Format(info8, sizeof(info8), "%T", "duckhunt_info_line7", client);
-						DrawPanelText(DuckHuntMenu, info8);
-						DrawPanelText(DuckHuntMenu, "-----------------------------------");
-						SendPanelToClient(DuckHuntMenu, client, NullHandler, 20);
-						
-						StripAllWeapons(client);
-						SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
-						SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
-						
-						if (GetClientTeam(client) == CS_TEAM_CT && IsValidClient(client, false, false))
-						{
-							SetEntityModel(client, huntermodel);
-							SetEntityHealth(client, gc_iHunterHP.IntValue);
-							GivePlayerItem(client, "weapon_nova");
-							AmmoTimer[client] = CreateTimer(5.0, AmmoRefill, client, TIMER_REPEAT);
-						}
-						if (GetClientTeam(client) == CS_TEAM_T && IsValidClient(client, false, false))
-						{
-							SetEntityModel(client, "models/chicken/chicken.mdl");
-							SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.2);
-							SetEntityGravity(client, 0.3);
-							SetEntityHealth(client, gc_iChickenHP.IntValue);
-							GivePlayerItem(client, "weapon_hegrenade");
-							ClientCommand(client, "thirdperson");
-						}
+						SetEntityModel(client, huntermodel);
+						SetEntityHealth(client, gc_iHunterHP.IntValue);
+						GivePlayerItem(client, "weapon_nova");
+						AmmoTimer[client] = CreateTimer(5.0, AmmoRefill, client, TIMER_REPEAT);
+					}
+					if (GetClientTeam(client) == CS_TEAM_T && IsValidClient(client, false, false))
+					{
+						SetEntityModel(client, "models/chicken/chicken.mdl");
+						SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.2);
+						SetEntityGravity(client, 0.3);
+						SetEntityHealth(client, gc_iChickenHP.IntValue);
+						GivePlayerItem(client, "weapon_hegrenade");
+						ClientCommand(client, "thirdperson");
 					}
 				}
 				CPrintToChatAll("%t %t", "duckhunt_tag" ,"duckhunt_rounds", g_iRound, g_iMaxRound);
@@ -388,7 +385,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 	
 	if (IsDuckHunt)
 	{
-		for(int client=1; client <= MaxClients; client++)
+		LoopClients(client)
 		{
 			if (AmmoTimer[client] != null) KillTimer(AmmoTimer[client]);
 			if (IsValidClient(client, false, true))
@@ -438,7 +435,7 @@ public void OnMapEnd()
 	g_iVoteCount = 0;
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0';
-	for(int client=1; client <= MaxClients; client++)
+	LoopClients(client)
 	{
 		FP(client);
 		if (AmmoTimer[client] != null) KillTimer(AmmoTimer[client]);
@@ -452,11 +449,10 @@ public Action StartTimer(Handle timer)
 	if (g_iTruceTime > 1)
 	{
 		g_iTruceTime--;
-		for (int client=1; client <= MaxClients; client++)
-		if (IsClientInGame(client) && IsPlayerAlive(client))
-			{
-				PrintHintText(client,"%t", "duckhunt_timeuntilstart_nc", g_iTruceTime);
-			}
+		LoopClients(client) if (IsPlayerAlive(client))
+		{
+			PrintHintText(client,"%t", "duckhunt_timeuntilstart_nc", g_iTruceTime);
+		}
 		return Plugin_Continue;
 	}
 	
@@ -464,22 +460,18 @@ public Action StartTimer(Handle timer)
 	
 	if (g_iRound > 0)
 	{
-		for (int client=1; client <= MaxClients; client++)
+		LoopClients(client) if(IsPlayerAlive(client))
 		{
-			if (IsClientInGame(client) && IsPlayerAlive(client))
+			if (GetClientTeam(client) == CS_TEAM_T)
 			{
-				if (GetClientTeam(client) == CS_TEAM_T)
-				{
-					SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
-					SetEntityGravity(client, 0.3);
-				}
-				if (GetClientTeam(client) == CS_TEAM_CT)
-				{
-					SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
-				}
-				PrintHintText(client,"%t", "duckhunt_start_nc");
+				SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
+				SetEntityGravity(client, 0.3);
 			}
-			
+			if (GetClientTeam(client) == CS_TEAM_CT)
+			{
+				SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
+			}
+			PrintHintText(client,"%t", "duckhunt_start_nc");
 			if(gc_bOverlays.BoolValue) CreateTimer( 0.0, ShowOverlayStart, client);
 			if(gc_bSounds.BoolValue)	
 			{

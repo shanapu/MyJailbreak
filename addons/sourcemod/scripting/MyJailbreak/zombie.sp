@@ -338,15 +338,12 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		
 		int RandomCT = 0;
 		
-		for(int client=1; client <= MaxClients; client++)
+		LoopClients(client)
 		{
-			if (IsClientInGame(client))
+			if (GetClientTeam(client) == CS_TEAM_CT)
 			{
-				if (GetClientTeam(client) == CS_TEAM_CT)
-				{
-					RandomCT = client;
-					break;
-				}
+				RandomCT = client;
+				break;
 			}
 		}
 		if (RandomCT)
@@ -360,57 +357,53 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 			
 			if (g_iRound > 0)
 			{
-				for(int client=1; client <= MaxClients; client++)
+				LoopClients(client)
 				{
-					if (IsClientInGame(client))
+					ZombieMenu = CreatePanel();
+					Format(info1, sizeof(info1), "%T", "zombie_info_title", client);
+					SetPanelTitle(ZombieMenu, info1);
+					DrawPanelText(ZombieMenu, "                                   ");
+					Format(info2, sizeof(info2), "%T", "zombie_info_line1", client);
+					DrawPanelText(ZombieMenu, info2);
+					DrawPanelText(ZombieMenu, "-----------------------------------");
+					Format(info3, sizeof(info3), "%T", "zombie_info_line2", client);
+					DrawPanelText(ZombieMenu, info3);
+					Format(info4, sizeof(info4), "%T", "zombie_info_line3", client);
+					DrawPanelText(ZombieMenu, info4);
+					Format(info5, sizeof(info5), "%T", "zombie_info_line4", client);
+					DrawPanelText(ZombieMenu, info5);
+					Format(info6, sizeof(info6), "%T", "zombie_info_line5", client);
+					DrawPanelText(ZombieMenu, info6);
+					Format(info7, sizeof(info7), "%T", "zombie_info_line6", client);
+					DrawPanelText(ZombieMenu, info7);
+					Format(info8, sizeof(info8), "%T", "zombie_info_line7", client);
+					DrawPanelText(ZombieMenu, info8);
+					DrawPanelText(ZombieMenu, "-----------------------------------");
+					SendPanelToClient(ZombieMenu, client, NullHandler, 20);
+					
+					SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
+					SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
+					
+					if (GetClientTeam(client) == CS_TEAM_CT)
 					{
-						
-						ZombieMenu = CreatePanel();
-						Format(info1, sizeof(info1), "%T", "zombie_info_title", client);
-						SetPanelTitle(ZombieMenu, info1);
-						DrawPanelText(ZombieMenu, "                                   ");
-						Format(info2, sizeof(info2), "%T", "zombie_info_line1", client);
-						DrawPanelText(ZombieMenu, info2);
-						DrawPanelText(ZombieMenu, "-----------------------------------");
-						Format(info3, sizeof(info3), "%T", "zombie_info_line2", client);
-						DrawPanelText(ZombieMenu, info3);
-						Format(info4, sizeof(info4), "%T", "zombie_info_line3", client);
-						DrawPanelText(ZombieMenu, info4);
-						Format(info5, sizeof(info5), "%T", "zombie_info_line4", client);
-						DrawPanelText(ZombieMenu, info5);
-						Format(info6, sizeof(info6), "%T", "zombie_info_line5", client);
-						DrawPanelText(ZombieMenu, info6);
-						Format(info7, sizeof(info7), "%T", "zombie_info_line6", client);
-						DrawPanelText(ZombieMenu, info7);
-						Format(info8, sizeof(info8), "%T", "zombie_info_line7", client);
-						DrawPanelText(ZombieMenu, info8);
-						DrawPanelText(ZombieMenu, "-----------------------------------");
-						SendPanelToClient(ZombieMenu, client, NullHandler, 20);
-						
-						SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
-						SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
-						
-						if (GetClientTeam(client) == CS_TEAM_CT)
-						{
-							SetEntityModel(client, g_sZombieModel);
-							SetEntityMoveType(client, MOVETYPE_NONE);
-							SetEntityHealth(client, gc_iZombieHP.IntValue);
-							StripAllWeapons(client);
-							GivePlayerItem(client, "weapon_knife");
-						}
-						if (GetClientTeam(client) == CS_TEAM_T)
-						{
-							SetEntityHealth(client, gc_iHumanHP.IntValue);
-							GivePlayerItem(client, "weapon_negev");
-							GivePlayerItem(client, "weapon_tec9");
-							GivePlayerItem(client, "weapon_hegrenade");
-							GivePlayerItem(client, "weapon_molotov");
-							if (gc_bGlow.BoolValue && (IsValidClient(client, false, true))) GlowTimer = CreateTimer(1.5, Glow_Timer, client, TIMER_REPEAT);
-						}
-						if (!gc_bSpawnCell.BoolValue)
-						{
-							TeleportEntity(client, Pos1, NULL_VECTOR, NULL_VECTOR);
-						}
+						SetEntityModel(client, g_sZombieModel);
+						SetEntityMoveType(client, MOVETYPE_NONE);
+						SetEntityHealth(client, gc_iZombieHP.IntValue);
+						StripAllWeapons(client);
+						GivePlayerItem(client, "weapon_knife");
+					}
+					if (GetClientTeam(client) == CS_TEAM_T)
+					{
+						SetEntityHealth(client, gc_iHumanHP.IntValue);
+						GivePlayerItem(client, "weapon_negev");
+						GivePlayerItem(client, "weapon_tec9");
+						GivePlayerItem(client, "weapon_hegrenade");
+						GivePlayerItem(client, "weapon_molotov");
+						if (gc_bGlow.BoolValue && (IsValidClient(client, false, true))) GlowTimer = CreateTimer(1.5, Glow_Timer, client, TIMER_REPEAT);
+					}
+					if (!gc_bSpawnCell.BoolValue)
+					{
+						TeleportEntity(client, Pos1, NULL_VECTOR, NULL_VECTOR);
 					}
 				}
 			}
@@ -440,19 +433,15 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 	
 	if (IsZombie)
 	{
-		for(int client=1; client <= MaxClients; client++)
+		LoopValidClients(client,false,false)
 		{
-			if (IsValidClient(client, false, false))
-			{
-				if (gc_bVision.BoolValue) SetEntProp(client, Prop_Send, "m_bNightVisionOn",0); 
-				SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
-				char model[PLATFORM_MAX_PATH]; 
-				GetClientModel(client, model, sizeof(model)); 
-				int skin = CPS_SetSkin(client, model, CPS_RENDER);
-				SetEntProp(skin, Prop_Send, "m_bShouldGlow", false, true);
-				SetEntProp(skin, Prop_Send, "m_nGlowStyle", 1);
-				SetEntPropFloat(skin, Prop_Send, "m_flGlowMaxDist", 10000000.0);
-			}
+			SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
+			char model[PLATFORM_MAX_PATH]; 
+			GetClientModel(client, model, sizeof(model)); 
+			int skin = CPS_SetSkin(client, model, CPS_RENDER);
+			SetEntProp(skin, Prop_Send, "m_bShouldGlow", false, true);
+			SetEntProp(skin, Prop_Send, "m_nGlowStyle", 1);
+			SetEntPropFloat(skin, Prop_Send, "m_flGlowMaxDist", 10000000.0);
 		}
 		
 		delete FreezeTimer;
@@ -523,17 +512,16 @@ public Action StartTimer(Handle timer)
 	if (g_iFreezeTime > 1)
 	{
 		g_iFreezeTime--;
-		for (int client=1; client <= MaxClients; client++)
-		if (IsClientInGame(client) && IsPlayerAlive(client))
+		LoopClients(client) if (IsPlayerAlive(client))
+		{
+			if (GetClientTeam(client) == CS_TEAM_CT)
 			{
-				if (GetClientTeam(client) == CS_TEAM_CT)
-				{
-					PrintHintText(client,"%t", "zombie_timetounfreeze_nc", g_iFreezeTime);
-				}
-				else if (GetClientTeam(client) == CS_TEAM_T)
-				{
-					PrintHintText(client,"%t", "zombie_timeuntilzombie_nc", g_iFreezeTime);
-				}
+				PrintHintText(client,"%t", "zombie_timetounfreeze_nc", g_iFreezeTime);
+			}
+			else if (GetClientTeam(client) == CS_TEAM_T)
+			{
+				PrintHintText(client,"%t", "zombie_timeuntilzombie_nc", g_iFreezeTime);
+			}
 		}
 		return Plugin_Continue;
 	}
@@ -542,27 +530,23 @@ public Action StartTimer(Handle timer)
 	
 	if (g_iRound > 0)
 	{
-		for (int client=1; client <= MaxClients; client++)
+		LoopClients(client) if (IsPlayerAlive(client))
 		{
-			if (IsClientInGame(client) && IsPlayerAlive(client))
+			if (GetClientTeam(client) == CS_TEAM_CT)
 			{
-				if (GetClientTeam(client) == CS_TEAM_CT)
-				{
-					SetEntityMoveType(client, MOVETYPE_WALK);
-					SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.4);
-					if (gc_bVision.BoolValue) SetEntProp(client, Prop_Send, "m_bNightVisionOn",1); 
-				}
-				SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
-				PrintHintText(client,"%t", "zombie_start_nc");
+				SetEntityMoveType(client, MOVETYPE_WALK);
+				SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.4);
+				if (gc_bVision.BoolValue) SetEntProp(client, Prop_Send, "m_bNightVisionOn",1); 
 			}
+			SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
+			PrintHintText(client,"%t", "zombie_start_nc");
 			if(gc_bOverlays.BoolValue) CreateTimer( 0.0, ShowOverlayStart, client);
 			if(gc_bSounds.BoolValue)	
 			{
 				EmitSoundToAllAny(g_sSoundStartPath);
 			}
-			
+			CPrintToChatAll("%t %t", "zombie_tag" , "zombie_start");
 		}
-		CPrintToChatAll("%t %t", "zombie_tag" , "zombie_start");
 	}
 	FreezeTimer = null;
 	if(gc_bDark.BoolValue && (g_iRound = 1)) {AcceptEntityInput(FogIndex, "TurnOn");}

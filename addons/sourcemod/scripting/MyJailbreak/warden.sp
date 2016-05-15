@@ -432,7 +432,7 @@ public void OnMapStart()
 	CreateTimer(0.1, Print_Drawer, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 	g_bLaser = true;
 	g_bDrawerT = false;
-	for(int client=1; client <= MaxClients; client++) g_bDrawer[client] = false;
+	LoopClients(i) g_bDrawer[i] = false;
 }
 
 //Round Start
@@ -451,9 +451,9 @@ public void RoundStart(Event event, const char[] name, bool dontBroadcast)
 	
 	if(gc_bModel.BoolValue)
 	{
-		for(int client=1; client <= MaxClients; client++) if(IsValidClient(client, true, true))
+		LoopValidClients(i, true, true)
 		{
-			if (client == g_iWarden)
+			if (i == g_iWarden)
 			{
 				SetEntityModel(g_iWarden, g_sWardenModel);
 			}
@@ -488,7 +488,7 @@ public void RoundStart(Event event, const char[] name, bool dontBroadcast)
 			IconTimer = null;
 			delete IconTimer;
 			g_bLaser = false;
-			for(int client=1; client <= MaxClients; client++) g_bDrawer[client] = false;
+			LoopClients(i) g_bDrawer[i] = false;
 		}
 	}
 	char EventDay[64];
@@ -507,7 +507,7 @@ public void RoundStart(Event event, const char[] name, bool dontBroadcast)
 			IconTimer = null;
 			delete IconTimer;
 			g_bLaser = false;
-			for(int client=1; client <= MaxClients; client++) g_bDrawer[client] = false;
+			LoopClients(i) g_bDrawer[i] = false;
 		}
 	}
 	if(gc_bStayWarden.BoolValue && warden_exist())
@@ -531,9 +531,9 @@ public void RoundEnd(Event event, const char[] name, bool dontBroadcast)
 	}
 	if(gc_bPlugin.BoolValue)
 	{
-		for(int client=1; client <= MaxClients; client++) if(IsValidClient(client, true, true))
+		LoopValidClients(i, true, true)
 		{
-			CancelCountDown(client, 0);
+			CancelCountDown(i, 0);
 		}
 	}
 	if (StopTimer != null) KillTimer(StopTimer);
@@ -690,7 +690,7 @@ public Action SetWarden(int client,int args)
 			Menu menu = CreateMenu(SetWardenHandler);
 			Format(info1, sizeof(info1), "%T", "warden_choose", client);
 			menu.SetTitle(info1);
-			for(int i = 1;i <= MaxClients;i++) if(IsValidClient(i, true))
+			LoopValidClients(i, true, false)
 			{
 				if(GetClientTeam(i) == CS_TEAM_CT && IsClientWarden(i) == false)
 				{
@@ -718,7 +718,7 @@ public int SetWardenHandler(Menu menu, MenuAction action, int client, int Positi
 		char Item[11];
 		menu.GetItem(Position,Item,sizeof(Item));
 		
-		for(int i = 1;i <= MaxClients;i++) if(IsValidClient(i, true))
+		LoopValidClients(i, true, false)
 		{
 			if(GetClientTeam(i) == CS_TEAM_CT && IsClientWarden(i) == false)
 			{
@@ -1194,7 +1194,7 @@ public void OnMapEnd()
 		delete IconTimer;
 	}
 	g_bLaser = false;
-	for(int client=1; client <= MaxClients; client++) 
+	LoopClients(client)
 	{
 	g_fLastDrawer[client][0] = 0.0;
 	g_fLastDrawer[client][1] = 0.0;
@@ -1230,16 +1230,8 @@ stock void Draw_Markers()
 			continue;
 		}
 		
-		for(int client=1;client<=MaxClients;client++)
+		LoopValidClients(iClient, false, false)
 		{
-			if(!IsClientInGame(client))
-				continue;
-			
-			if (IsFakeClient(client))
-				continue;
-			
-			if(!IsPlayerAlive(client))
-				continue;
 			
 			// Show the ring
 			
@@ -1869,27 +1861,21 @@ public Action ToggleDrawerT(int client, int args)
 				g_bDrawerT = true;
 				CPrintToChatAll("%t %t", "warden_tag", "warden_tdraweron");
 				
-				for(int iClient=1; iClient <= MaxClients; iClient++)
+				LoopValidClients(iClient, false, false)
 				{
-					if (IsValidClient(iClient, false, false))
-					{
-						if (GetClientTeam(iClient) == CS_TEAM_T) DrawerMenu(iClient,0);
-					}
+					if (GetClientTeam(iClient) == CS_TEAM_T) DrawerMenu(iClient,0);
 				}
 			}
 			else
 			{
-				for(int iClient=1; iClient <= MaxClients; iClient++)
+				LoopValidClients(iClient, false, false)
 				{
-					if (IsValidClient(iClient, false, false))
+					if (GetClientTeam(iClient) == CS_TEAM_T)
 					{
-						if (GetClientTeam(iClient) == CS_TEAM_T)
-						{
-							g_fLastDrawer[iClient][0] = 0.0;
-							g_fLastDrawer[iClient][1] = 0.0;
-							g_fLastDrawer[iClient][2] = 0.0;
-							g_bDrawerUse[iClient] = false;
-						}
+						g_fLastDrawer[iClient][0] = 0.0;
+						g_fLastDrawer[iClient][1] = 0.0;
+						g_fLastDrawer[iClient][2] = 0.0;
+						g_bDrawerUse[iClient] = false;
 					}
 				}
 				g_bDrawerT = false;
@@ -2432,7 +2418,7 @@ public Action ToggleNoBlock(int client, int args)
 			{
 				g_bNoBlock = true;
 				CPrintToChatAll("%t %t", "warden_tag" , "warden_noblockon");
-				for(int i=1; i <= MaxClients; i++) if(IsValidClient(i, true))
+				LoopValidClients(i, true, true)
 				{
 					SetEntData(i, g_iCollisionOffset, 2, 4, true);
 				}
@@ -2441,7 +2427,7 @@ public Action ToggleNoBlock(int client, int args)
 			{
 				g_bNoBlock = false;
 				CPrintToChatAll("%t %t", "warden_tag" , "warden_noblockoff");
-				for(int i=1; i <= MaxClients; i++) if(IsValidClient(i, true))
+				LoopValidClients(i, true, true)
 				{
 					SetEntData(i, g_iCollisionOffset, 5, 4, true);
 				}
@@ -2551,7 +2537,7 @@ stock int GetAlivePlayersCount(int iTeam)
 	int iCount, i; iCount = 0;
 
 	for( i = 1; i <= MaxClients; i++ )
-		if( IsClientInGame( i ) && IsPlayerAlive( i )  && !IsClientRebel(i) && GetClientTeam( i ) == iTeam )
+		if(IsPlayerAlive( i )  && !IsClientRebel(i) && GetClientTeam( i ) == iTeam )
 		iCount++;
 
 	return iCount;
@@ -2576,9 +2562,9 @@ stock int GetRandomPlayer(int team)
 {
 	int[] clients = new int[MaxClients];
 	int clientCount;
-	for (int i = 1; i <= MaxClients; i++)
+	LoopClients(i)
 	{
-		if (IsClientInGame(i) && (GetClientTeam(i) == team) && IsPlayerAlive(i) && !IsClientRebel(i))
+		if ((GetClientTeam(i) == team) && IsPlayerAlive(i) && !IsClientRebel(i))
 		{
 			clients[clientCount++] = i;
 		}

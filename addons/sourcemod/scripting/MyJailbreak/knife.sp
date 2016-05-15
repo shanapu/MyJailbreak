@@ -311,15 +311,12 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		
 		int RandomCT = 0;
 		
-		for(int client=1; client <= MaxClients; client++)
+		LoopClients(client) 
 		{
-			if (IsClientInGame(client))
+			if (GetClientTeam(client) == CS_TEAM_CT)
 			{
-				if (GetClientTeam(client) == CS_TEAM_CT)
-				{
-					RandomCT = client;
-					break;
-				}
+				RandomCT = client;
+				break;
 			}
 		}
 		if (RandomCT)
@@ -333,52 +330,49 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 			
 			if (g_iRound > 0)
 			{
-				for(int client=1; client <= MaxClients; client++)
+				LoopClients(client)
 				{
-					if (IsClientInGame(client))
+					KnifeFightMenu = CreatePanel();
+					Format(info1, sizeof(info1), "%T", "knifefight_info_title", LANG_SERVER);
+					SetPanelTitle(KnifeFightMenu, info1);
+					DrawPanelText(KnifeFightMenu, "                                   ");
+					Format(info2, sizeof(info2), "%T", "knifefight_info_line1", LANG_SERVER);
+					DrawPanelText(KnifeFightMenu, info2);
+					DrawPanelText(KnifeFightMenu, "-----------------------------------");
+					Format(info3, sizeof(info3), "%T", "knifefight_info_line2", LANG_SERVER);
+					DrawPanelText(KnifeFightMenu, info3);
+					Format(info4, sizeof(info4), "%T", "knifefight_info_line3", LANG_SERVER);
+					DrawPanelText(KnifeFightMenu, info4);
+					Format(info5, sizeof(info5), "%T", "knifefight_info_line4", LANG_SERVER);
+					DrawPanelText(KnifeFightMenu, info5);
+					Format(info6, sizeof(info6), "%T", "knifefight_info_line5", LANG_SERVER);
+					DrawPanelText(KnifeFightMenu, info6);
+					Format(info7, sizeof(info7), "%T", "knifefight_info_line6", LANG_SERVER);
+					DrawPanelText(KnifeFightMenu, info7);
+					Format(info8, sizeof(info8), "%T", "knifefight_info_line7", LANG_SERVER);
+					DrawPanelText(KnifeFightMenu, info8);
+					DrawPanelText(KnifeFightMenu, "-----------------------------------");
+					SendPanelToClient(KnifeFightMenu, client, NullHandler, 20);
+					
+					SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
+					StripAllWeapons(client);
+					GivePlayerItem(client, "weapon_knife");
+					
+					if (gc_bGrav.BoolValue)
 					{
-						KnifeFightMenu = CreatePanel();
-						Format(info1, sizeof(info1), "%T", "knifefight_info_title", LANG_SERVER);
-						SetPanelTitle(KnifeFightMenu, info1);
-						DrawPanelText(KnifeFightMenu, "                                   ");
-						Format(info2, sizeof(info2), "%T", "knifefight_info_line1", LANG_SERVER);
-						DrawPanelText(KnifeFightMenu, info2);
-						DrawPanelText(KnifeFightMenu, "-----------------------------------");
-						Format(info3, sizeof(info3), "%T", "knifefight_info_line2", LANG_SERVER);
-						DrawPanelText(KnifeFightMenu, info3);
-						Format(info4, sizeof(info4), "%T", "knifefight_info_line3", LANG_SERVER);
-						DrawPanelText(KnifeFightMenu, info4);
-						Format(info5, sizeof(info5), "%T", "knifefight_info_line4", LANG_SERVER);
-						DrawPanelText(KnifeFightMenu, info5);
-						Format(info6, sizeof(info6), "%T", "knifefight_info_line5", LANG_SERVER);
-						DrawPanelText(KnifeFightMenu, info6);
-						Format(info7, sizeof(info7), "%T", "knifefight_info_line6", LANG_SERVER);
-						DrawPanelText(KnifeFightMenu, info7);
-						Format(info8, sizeof(info8), "%T", "knifefight_info_line7", LANG_SERVER);
-						DrawPanelText(KnifeFightMenu, info8);
-						DrawPanelText(KnifeFightMenu, "-----------------------------------");
-						SendPanelToClient(KnifeFightMenu, client, NullHandler, 20);
-						
-						SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
-						StripAllWeapons(client);
-						GivePlayerItem(client, "weapon_knife");
-						
-						if (gc_bGrav.BoolValue)
-						{
-							SetEntityGravity(client, gc_fGravValue.FloatValue);
-						}
-						if (gc_bIce.BoolValue)
-						{
-							SetCvarFloat("sv_friction", gc_fIceValue.FloatValue);
-						}
-						if (gc_bThirdPerson.BoolValue && IsValidClient(client, false, false))
-						{
-							ClientCommand(client, "thirdperson");
-						}
-						if (!gc_bSpawnCell.BoolValue)
-						{
-							TeleportEntity(client, Pos1, NULL_VECTOR, NULL_VECTOR);
-						}
+						SetEntityGravity(client, gc_fGravValue.FloatValue);
+					}
+					if (gc_bIce.BoolValue)
+					{
+						SetCvarFloat("sv_friction", gc_fIceValue.FloatValue);
+					}
+					if (gc_bThirdPerson.BoolValue && IsValidClient(client, false, false))
+					{
+						ClientCommand(client, "thirdperson");
+					}
+					if (!gc_bSpawnCell.BoolValue)
+					{
+						TeleportEntity(client, Pos1, NULL_VECTOR, NULL_VECTOR);
 					}
 				}
 				g_iTruceTime--;
@@ -413,14 +407,11 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 	
 	if (IsKnifeFight)
 	{
-		for(int client=1; client <= MaxClients; client++)
+		LoopValidClients(client, false, true)
 		{
-			if (IsValidClient(client, false, true))
-			{
-				SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
-				SetEntityGravity(client, 1.0);
-				FP(client);
-			}
+			SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
+			SetEntityGravity(client, 1.0);
+			FP(client);
 		}
 		if (TruceTimer != null) KillTimer(TruceTimer);
 		if (GravityTimer != null) KillTimer(GravityTimer);
@@ -466,10 +457,7 @@ public void OnMapEnd()
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0';
 	SetEventDay("none");
-	for(int client=1; client <= MaxClients; client++)
-	{
-		FP(client);
-	}
+	LoopClients(client) FP(client);
 }
 
 //Start Timer
@@ -479,11 +467,10 @@ public Action StartTimer(Handle timer)
 	if (g_iTruceTime > 1)
 	{
 		g_iTruceTime--;
-		for (int client=1; client <= MaxClients; client++)
-		if (IsClientInGame(client) && IsPlayerAlive(client))
-			{
-				PrintHintText(client,"%t", "knifefight_timeuntilstart_nc", g_iTruceTime);
-			}
+		LoopClients(client) if (IsPlayerAlive(client))
+		{
+			PrintHintText(client,"%t", "knifefight_timeuntilstart_nc", g_iTruceTime);
+		}
 		return Plugin_Continue;
 	}
 	
@@ -491,17 +478,14 @@ public Action StartTimer(Handle timer)
 	
 	if (g_iRound > 0)
 	{
-		for (int client=1; client <= MaxClients; client++)
+		LoopClients(client) if (IsPlayerAlive(client))
 		{
-			if (IsClientInGame(client) && IsPlayerAlive(client))
+			SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
+			if (gc_bGrav.BoolValue)
 			{
-				SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
-				if (gc_bGrav.BoolValue)
-				{
-					SetEntityGravity(client, gc_fGravValue.FloatValue);	
-				}
-				PrintHintText(client,"%t", "knifefight_start_nc");
+				SetEntityGravity(client, gc_fGravValue.FloatValue);	
 			}
+			PrintHintText(client,"%t", "knifefight_start_nc");
 			if(gc_bOverlays.BoolValue) CreateTimer( 0.0, ShowOverlayStart, client);
 			if(gc_bSounds.BoolValue)	
 			{
@@ -510,9 +494,7 @@ public Action StartTimer(Handle timer)
 		}
 		CPrintToChatAll("%t %t", "knifefight_tag" , "knifefight_start");
 	}
-	
 	TruceTimer = null;
-	
 	return Plugin_Stop;
 }
 
@@ -540,13 +522,10 @@ public Action OnWeaponCanUse(int client, int weapon)
 
 public Action CheckGravity(Handle timer)
 {
-	for(int client=1; client <= MaxClients; client++)
+	LoopValidClients(client, false, false)
 	{
-		if (IsValidClient(client, false, false))
-		{
-			if(GetEntityGravity(client) != 1.0)
-				SetEntityGravity(client, gc_fGravValue.FloatValue);
-		}
+		if(GetEntityGravity(client) != 1.0)
+			SetEntityGravity(client, gc_fGravValue.FloatValue);
 	}
 }
 
