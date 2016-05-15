@@ -89,7 +89,7 @@
 	"warden_dead"
 	{
 		"da"		"Warden er nu {darkred}DØD{default}. Andre CT kan skrive !w for at blive warden."	
-		"en"		"The warden are now {darkred}dead{default}. You may now choose a new one."
+		"en"		"The warden is now {darkred}dead{default}. You may now choose a new one."
 		"es"		"El AlcÃ¡ide ha {darkred}dead{default}! Ahora toca elegir uno juevo."
 		"pt"		"O diretor está {darkred}dead{default}, agora começa a escolher um novo."
 		"sv"		"fängelsedirektören är död. Ni bör nu välja en ny."
@@ -196,7 +196,7 @@
 	"warden_dooropen"
 	{
 		"da"		"Warden har {purple}åbnet{default} cellerne."
-		"en"		"Warden has {purple}open{default} the cells."
+		"en"		"Warden has {purple}opened{default} the cells."
 		"de"		"Warden hat hat die Zellentüren {purple}geöffnet{default}."
 	}
 	
@@ -409,7 +409,7 @@
 	
 	"warden_noplant"
 	{
-		"en"		"It's {darkred}forbitten{default} for CTs to drop weapons!"
+		"en"		"It's {darkred}forbidden{default} for CTs to drop weapons!"
 		"de"		"Es ist für CTs {darkred}verboten{default} Waffen fallen zu lassen!"
 	}
 	

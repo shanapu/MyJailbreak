@@ -25,7 +25,7 @@ If you own a feature or extention for Jail/Warden that would fit in, i would be 
 - [EventDays](#eventdays-core) (vote/set a Event for next round with cooldowns, sounds & overlays) - all need [sjd](#requires-plugins)&[scp](#requires-plugins)
     - [War](#war) (CT vs T TDM)
     - [Free For All](#freeforall) (FFA DM)
-    - [Zombie](#zombie) (CT(zombie) vs T(Human))
+    - [Zombie](#zombie) (CT(zombie) vs T(Human)) - need [cps](#requires-plugins)
     - [NoScope](#noscope) (FFA Scout LowGravity NoScope)
     - [HEbattle](#hebattle) (FFA LowHP LowGravity HE Battle)
     - [Hide in the Dark](#hideinthedark) - (kind of HideNseek)
@@ -59,7 +59,7 @@ e.g.
 
 ### Credits: 
 
-**used code & stuff from: ecca, Zipcore, ESK0, Floody.de, Franc1sco, walmar, KeepCalm, bara, Arkarr, KissLick, headline, Hipster, ReFlexPoison, 8guawong, Mitchell, Xines, Kaesar, andi67** and many other I cant remember unfortunately! [detailed](#detailed-credits)  
+**used code & stuff from: ecca, Zipcore, ESK0, Floody.de, Franc1sco, walmar, KeepCalm, bara, Arkarr, KissLick, headline, Hipster, ReFlexPoison, 8guawong, Mitchell, Xines, Jackmaster, Kaesar, andi67** and many other I cant remember unfortunately! [detailed](#detailed-credits)  
 **thanks to all sourcemod & metamod developers out there!**
 
 # THANKS FOR MAKING FREE SOFTWARE!
@@ -168,16 +168,17 @@ Colorize Warden, Warden Model, open/close cell doors, automatic open cells doors
 
 [![HowTo Marker](http://img.youtube.com/vi/tp6k_Q6K37c/0.jpg)](http://www.youtube.com/watch?v=tp6k_Q6K37c)
 
-#### Requests ALPHA! 
+#### Requests - ALPHA! 
 
-The terror counterpart to warden. Refuse a Game - T can refuse a game and get colored & the warden get a listing of all refuser. Request Capitulation/Pardon - T get strip weapons and the warden got Menu to accept this request. Request healing - T get colored and warden gets Menu to accept this request (give Healthshot). more coming
+The "terror counterpart" to warden. Refuse a Game - T can refuse a game and get colored & the warden get a listing of all refuser. Request Capitulation/Pardon - T get strip weapons and the warden got Menu to accept this request. Request healing - T get colored and warden gets Menu to accept this request (give Healthshot). Repeat - T can request a repeat of last call & the warden get a listing of all requester. (more coming)
 
 ##### Commands 
 ```
-- sm_r / sm_refuse - Allows the Terrorist to refuse a game
+- sm_ref / sm_refuse - Allows the Warden start refusing time and Terrorist to refuse a game
 - sm_c / sm_capitulation - Allows a rebeling terrorist to request a capitulate
 - sm_p / sm_pardon - Allows a rebeling terrorist to request a capitulate
 - sm_h / sm_heal - Allows a Terrorist request healing
+- sm_rep / sm_repeat / sm_what - Allows a Terrorist request repeating last call
 ```
 
 ##### Cvars
@@ -925,6 +926,7 @@ On Round start cells open for freeday and enabled damage (Default).
 - SM File/Folder Downloader and Precacher https://forums.alliedmods.net/showthread.php?p=602270 only for [zombie/(Warden) model download (download.ini)](/downloads.ini) (overlays & sounds will be auto added)
 - Simple Chat Prozessor https://bitbucket.org/minimoney1/simple-chat-processor
 - SM hosties 2 https://github.com/dataviruset/sm-hosties/
+- CustomPlayerSkins https://forums.alliedmods.net/showthread.php?t=240703 (may change/glow for zombies)
 
 ### files needed for compilation, besides the sourcemods standards 
 - [autoexecconfig.inc](https://forums.alliedmods.net/showthread.php?t=204254)
@@ -983,7 +985,9 @@ based/merged/used code/idea plugins:
 * https://forums.alliedmods.net/showthread.php?p=1086127
 * https://forums.alliedmods.net/showthread.php?t=234169
 * https://forums.alliedmods.net/showthread.php?p=1749220
+* https://forums.alliedmods.net/showthread.php?t=188799
 * https://forums.alliedmods.net/showthread.php?t=189956
+* https://forums.alliedmods.net/showthread.php?t=188773
 * https://forums.alliedmods.net/showpost.php?p=2393733&postcount=12
 * https://forums.alliedmods.net/showpost.php?p=2231099&postcount=22
 + https://github.com/Zipcore/Timer/ (sound)

@@ -477,7 +477,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 
 public Action CS_OnTerminateRound(float &delay, CSRoundEndReason &reason)
 {
-	if (IsHide)
+	if (IsHide)   //TODO: does this trigger??
 	{
 		if (reason == CSRoundEnd_Draw)
 		{

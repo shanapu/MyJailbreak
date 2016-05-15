@@ -2,15 +2,15 @@ know bugs:
 - [ ] countdown: Start -> Cancel -> Start - bug? (which countdowns?)
 - [ ] weapons.smx "block" stamm vip models?!
 - [ ] Suicide Bomber win -> T win show wrong - solution: mp_default_team_winner_no_objective?
-- [ ] catch win -> T win show wrong
-- [ ] hide win -> T win show wrong
+- [?] catch win -> T win show wrong
+- [?] hide win -> T win show wrong
 - [?] duckhunt&knife end FP
 - [?] warden icon losing head postion
 
 must:
-- [?] add all new things to wiki/readme
+- [ ] add all new stuff to wiki
 - [ ] wiki: howto edit -> SetCvars, add menu item,
-- [ ] menu: add placeholder for cutom commands
+- [ ] menu: add placeholder for custom commands
 - [ ] clean up translation files
 - [ ] requests menu
 
@@ -19,7 +19,7 @@ want:
 - [/] zombie vision/wallhack
 - [ ] ClientPrefs
 - [ ] Smart Download Manager https://forums.alliedmods.net/showthread.php?t=206496
-- [ ] !refuse !capitalation !repeat !heal !pardon
+- [x] !refuse !capitalation !repeat !heal !pardon
 - [ ] clean double useless code OnPlayerRunCmd
 - [ ] set custom Laser/Drawer Button
 - [ ] translate EventDay native
