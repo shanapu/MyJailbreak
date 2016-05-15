@@ -100,4 +100,25 @@
 		"en"		"There is already a {purple}request in processing. Wait a moment"
 		"de"		"Es ist noch eine {purple}Anfrage im Gange. warte einen Moment"
 	}
+	"request_repeatpls"
+	{
+		"#format"	"{1:N}"
+		"en"		"{purple}{1} {default}asks for a {purple}repeat! {default}Or he doesn't know the game rules"
+		"de"		"{purple}{1} {default}bittet um eine {purple}Wiederholung!{default} Oder er kennt die Spielregeln nicht."
+	}
+	"request_repeattimes"
+	{
+		"en"		"You have {purple}request too many repeats{default} in this round."
+		"de"		"Du hast in dieser Runde schon {purple}zuviele Wiederholungen{default} angefragt."
+	}
+	"request_alreadyrepeat"
+	{
+		"en"		"You have {purple}already request a repeat."
+		"de"		"Du hast bereits nach einer {purple}Wiederholung gefragt."
+	}
+	"request_repeat"
+	{
+		"en"		"Player who ask for repeating"
+		"de"		"Spieler die um eine Wiederholung bitten"
+	}
 }

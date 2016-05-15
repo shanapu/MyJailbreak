@@ -23,6 +23,7 @@ ConVar gc_iRefuseColorBlue;
 ConVar gc_fCapitulationTime;
 ConVar gc_fRebelTime;
 ConVar gc_bCapitulation;
+ConVar gc_bCapitulationDamage;
 ConVar gc_iCapitulationColorRed;
 ConVar gc_iCapitulationColorGreen;
 ConVar gc_iCapitulationColorBlue;
@@ -36,28 +37,36 @@ ConVar gc_iHealLimit;
 ConVar gc_iHealColorRed;
 ConVar gc_iHealColorGreen;
 ConVar gc_iHealColorBlue;
-
+ConVar gc_bRepeat;
+ConVar gc_iRepeatLimit;
+ConVar gc_sSoundRepeatPath;
 
 //Bools
 bool g_bHealed[MAXPLAYERS+1];
 bool g_bCapitulated[MAXPLAYERS+1];
-bool g_bRefuse[MAXPLAYERS+1];
+bool g_bRefused[MAXPLAYERS+1];
+bool g_bRepeated[MAXPLAYERS+1];
 bool IsRequest;
+
 
 //Integers
 int g_iRefuseCounter[MAXPLAYERS+1];
 int g_iHealCounter[MAXPLAYERS+1];
+int g_iRepeatCounter[MAXPLAYERS+1];
 
 //Handles
 Handle RebelTimer[MAXPLAYERS+1];
 Handle RefuseTimer[MAXPLAYERS+1];
+Handle RepeatTimer[MAXPLAYERS+1];
 Handle CapitulationTimer[MAXPLAYERS+1];
 Handle HealTimer[MAXPLAYERS+1];
 Handle RefusePanel;
+Handle RepeatPanel;
 Handle RequestTimer;
 
 //characters
 char g_sSoundRefusePath[256];
+char g_sSoundRepeatPath[256];
 char g_sSoundCapitulationPath[256];
 
 public Plugin myinfo = 
@@ -76,7 +85,7 @@ public void OnPluginStart()
 	LoadTranslations("MyJailbreak.Request.phrases");
 	
 	//Client Commands
-	RegConsoleCmd("sm_r", Command_refuse, "Allows the Terrorist to refuse a game");
+	RegConsoleCmd("sm_ref", Command_refuse, "Allows the Terrorist to refuse a game");
 	RegConsoleCmd("sm_refuse", Command_refuse, "Allows the Terrorist to refuse a game");
 	
 	RegConsoleCmd("sm_c", Command_Capitulation, "Allows a rebeling terrorist to request a capitulate");
@@ -87,34 +96,42 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_h", Command_Heal, "Allows a Terrorist request healing");
 	RegConsoleCmd("sm_heal", Command_Heal, "Allows a Terrorist request healing");
 	
+	RegConsoleCmd("sm_rep", Command_Repeat, "Allows a Terrorist request repeat");
+	RegConsoleCmd("sm_repeat", Command_Repeat, "Allows a Terrorist request repeat");
+	RegConsoleCmd("sm_what", Command_Repeat, "Allows a Terrorist request repeat");
+	
 	//AutoExecConfig
 	AutoExecConfig_SetFile("Request", "MyJailbreak");
 	AutoExecConfig_SetCreateFile(true);
 	
 	AutoExecConfig_CreateConVar("sm_request_version", PLUGIN_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_PLUGIN|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
-	gc_bPlugin = AutoExecConfig_CreateConVar("sm_request_enable", "1", "Enable or Disable Request Plugin");
+	gc_bPlugin = AutoExecConfig_CreateConVar("sm_request_enable", "1", "0 - disabled, 1 - enable Request Plugin");
 	gc_bSounds = AutoExecConfig_CreateConVar("sm_request_sounds_enable", "1", "0 - disabled, 1 - enable sounds ", _, true,  0.0, true, 1.0);
-	gc_bRefuse = AutoExecConfig_CreateConVar("sm_refuse_enable", "1", "Enable or Disable Refuse");
+	gc_bRefuse = AutoExecConfig_CreateConVar("sm_refuse_enable", "1", "0 - disabled, 1 - enable Refuse");
 	gc_iRefuseLimit = AutoExecConfig_CreateConVar("sm_refuse_limit", "1", "Сount how many times you can use the command");
 	gc_fRefuseTime = AutoExecConfig_CreateConVar("sm_refuse_time", "15.0", "Time after the player gets his normal colors back");
 	gc_iRefuseColorRed = AutoExecConfig_CreateConVar("sm_refuse_color_red", "0","What color to turn the refusing Terror into (set R, G and B values to 255 to disable) (Rgb): x - red value", _, true, 0.0, true, 255.0);
 	gc_iRefuseColorGreen = AutoExecConfig_CreateConVar("sm_refuse_color_green", "250","What color to turn the refusing Terror into (rGb): x - green value", _, true, 0.0, true, 255.0);
 	gc_iRefuseColorBlue = AutoExecConfig_CreateConVar("sm_refuse_color_blue", "250","What color to turn the refusing Terror into (rgB): x - blue value", _, true, 0.0, true, 255.0);
 	gc_sSoundRefusePath = AutoExecConfig_CreateConVar("sm_refuse_sound", "music/MyJailbreak/refuse.mp3", "Path to the soundfile which should be played for a refusing.");
-	gc_bCapitulation = AutoExecConfig_CreateConVar("sm_capitulation_enable", "1", "Enable or Disable Capitulation");
+	gc_bCapitulation = AutoExecConfig_CreateConVar("sm_capitulation_enable", "1", "0 - disabled, 1 - enable Capitulation");
 	gc_fCapitulationTime = AutoExecConfig_CreateConVar("sm_capitulation_timer", "10.0", "Time to decide to accept the capitulation");
 	gc_fRebelTime = AutoExecConfig_CreateConVar("sm_capitulation_rebel_timer", "10.0", "Time to give a rebel on not accepted capitulation his knife back");
+	gc_bCapitulationDamage = AutoExecConfig_CreateConVar("sm_capitulation_damage", "1", "0 - disabled, 1 - enable Terror make no damage after capitulation");
 	gc_iCapitulationColorRed = AutoExecConfig_CreateConVar("sm_capitulation_color_red", "0","What color to turn the capitulation Terror into (set R, G and B values to 255 to disable) (Rgb): x - red value", _, true, 0.0, true, 255.0);
 	gc_iCapitulationColorGreen = AutoExecConfig_CreateConVar("sm_capitulation_color_green", "250","What color to turn the capitulation Terror into (rGb): x - green value", _, true, 0.0, true, 255.0);
 	gc_iCapitulationColorBlue = AutoExecConfig_CreateConVar("sm_capitulation_color_blue", "0","What color to turn the capitulation Terror into (rgB): x - blue value", _, true, 0.0, true, 255.0);
-	gc_sSoundCapitulationPath = AutoExecConfig_CreateConVar("sm_capitulation_sound", "music/MyJailbreak/refuse.mp3", "Path to the soundfile which should be played for a capitulation.");
-	gc_bHeal = AutoExecConfig_CreateConVar("sm_heal_enable", "1", "Enable or Disable heal");
-	gc_bHealthShot = AutoExecConfig_CreateConVar("sm_heal_healthshot", "1", "Enable or Disable give healthshot on accept to terror");
+	gc_sSoundCapitulationPath = AutoExecConfig_CreateConVar("sm_capitulation_sound", "music/MyJailbreak/capitulation.mp3", "Path to the soundfile which should be played for a capitulation.");
+	gc_bHeal = AutoExecConfig_CreateConVar("sm_heal_enable", "1", "0 - disabled, 1 - enable heal");
+	gc_bHealthShot = AutoExecConfig_CreateConVar("sm_heal_healthshot", "1", "0 - disabled, 1 - enable give healthshot on accept to terror");
 	gc_iHealLimit = AutoExecConfig_CreateConVar("sm_heal_limit", "2", "Сount how many times you can use the command");
 	gc_fHealTime = AutoExecConfig_CreateConVar("sm_heal_time", "10.0", "Time after the player gets his normal colors back");
 	gc_iHealColorRed = AutoExecConfig_CreateConVar("sm_heal_color_red", "240","What color to turn the heal Terror into (set R, G and B values to 255 to disable) (Rgb): x - red value", _, true, 0.0, true, 255.0);
 	gc_iHealColorGreen = AutoExecConfig_CreateConVar("sm_heal_color_green", "0","What color to turn the heal Terror into (rGb): x - green value", _, true, 0.0, true, 255.0);
 	gc_iHealColorBlue = AutoExecConfig_CreateConVar("sm_heal_color_blue", "100","What color to turn the heal Terror into (rgB): x - blue value", _, true, 0.0, true, 255.0);
+	gc_bRepeat = AutoExecConfig_CreateConVar("sm_repeat_enable", "1", "0 - disabled, 1 - enable repeat");
+	gc_iRepeatLimit = AutoExecConfig_CreateConVar("sm_repeat_limit", "2", "Сount how many times you can use the command");
+	gc_sSoundRepeatPath = AutoExecConfig_CreateConVar("sm_repeat_sound", "music/MyJailbreak/repeat.mp3", "Path to the soundfile which should be played for a repeat.");
 	
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
@@ -125,7 +142,7 @@ public void OnPluginStart()
 	//FindConVar
 	gc_sSoundRefusePath.GetString(g_sSoundRefusePath, sizeof(g_sSoundRefusePath));
 	gc_sSoundCapitulationPath.GetString(g_sSoundCapitulationPath, sizeof(g_sSoundCapitulationPath));
-	
+	gc_sSoundRepeatPath.GetString(g_sSoundRepeatPath, sizeof(g_sSoundRepeatPath));
 }
 
 public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
@@ -140,6 +157,11 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 		strcopy(g_sSoundCapitulationPath, sizeof(g_sSoundCapitulationPath), newValue);
 		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundCapitulationPath);
 	}
+	else if(convar == gc_sSoundRepeatPath)
+	{
+		strcopy(g_sSoundRepeatPath, sizeof(g_sSoundRepeatPath), newValue);
+		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundRepeatPath);
+	}
 }
 
 public void OnMapStart()
@@ -148,6 +170,7 @@ public void OnMapStart()
 	{
 		PrecacheSoundAnyDownload(g_sSoundRefusePath);
 		PrecacheSoundAnyDownload(g_sSoundCapitulationPath);
+		PrecacheSoundAnyDownload(g_sSoundRepeatPath);
 	}
 }
 
@@ -158,35 +181,20 @@ public Action RoundStart(Handle event, char [] name, bool dontBroadcast)
 	{
 		if (IsClientConnected(client))
 		{
-			if (RefuseTimer[client] != null)
-			{
-				CloseHandle(RefuseTimer[client]);
-				RefuseTimer[client] = null;
-			}
-			if (CapitulationTimer[client] != null)
-			{
-				CloseHandle(CapitulationTimer[client]);
-				CapitulationTimer[client] = null;
-			}
-			if (RebelTimer[client] != null)
-			{
-				CloseHandle(RebelTimer[client]);
-				RebelTimer[client] = null;
-			}
-			if (HealTimer[client] != null)
-			{
-				CloseHandle(HealTimer[client]);
-				HealTimer[client] = null;
-			}
-			if (RequestTimer != null)
-			{
-				CloseHandle(RequestTimer);
-				RequestTimer = null;
-			}
+			delete RefuseTimer[client];
+			delete CapitulationTimer[client];
+			delete RebelTimer[client];
+			delete HealTimer[client];
+			delete RepeatTimer[client];
+			delete RequestTimer;
+			
 			g_iRefuseCounter[client] = 0;
 			g_bCapitulated[client] = false;
 			g_iHealCounter[client] = 0;
 			g_bHealed[client] = false;
+			g_bRepeated[client] = false;
+			g_iRepeatCounter[client] = 0;
+			g_bRefused[client] = false;
 			IsRequest = false;
 		}
 	}
@@ -196,45 +204,32 @@ public Action RoundStart(Handle event, char [] name, bool dontBroadcast)
 public void OnClientPutInServer(int client)
 {
 	g_bCapitulated[client] = false;
+	g_iRepeatCounter[client] = 0;
 	g_iRefuseCounter[client] = 0;
 	g_iHealCounter[client] = 0;
 	g_bHealed[client] = false;
+	g_bRepeated[client] = false;
+	g_bRefused[client] = false;
 	SDKHook(client, SDKHook_WeaponCanUse, OnWeaponCanUse);
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakedamage);
 }
 
-
 public void OnClientDisconnect(int client)
 {
-	if (RefuseTimer[client] != null)
-	{
-		CloseHandle(RefuseTimer[client]);
-		RefuseTimer[client] = null;
-	}
-	if (CapitulationTimer[client] != null)
-	{
-		CloseHandle(CapitulationTimer[client]);
-		CapitulationTimer[client] = null;
-	}
-	if (HealTimer[client] != null)
-	{
-		CloseHandle(HealTimer[client]);
-		HealTimer[client] = null;
-	}
-	if (RebelTimer[client] != null)
-	{
-		CloseHandle(RebelTimer[client]);
-		RebelTimer[client] = null;
-	}
-	if (RequestTimer != null)
-	{
-		CloseHandle(RequestTimer);
-		RequestTimer = null;
-	}
+	delete RefuseTimer[client];
+	delete CapitulationTimer[client];
+	delete RebelTimer[client];
+	delete HealTimer[client];
+	delete RepeatTimer[client];
+	delete RequestTimer;
+	
+	g_iRepeatCounter[client] = 0;
 	g_bCapitulated[client] = false;
 	g_iRefuseCounter[client] = 0;
 	g_bHealed[client] = false;
 	g_iHealCounter[client] = 0;
+	g_bRefused[client] = false;
+	g_bRepeated[client] = false;
 }
 
 public Action Command_refuse(int client, int args)
@@ -250,7 +245,7 @@ public Action Command_refuse(int client, int args)
 					if (g_iRefuseCounter[client] < gc_iRefuseLimit.IntValue)
 					{
 						g_iRefuseCounter[client]++;
-						g_bRefuse[client] = true;
+						g_bRefused[client] = true;
 						SetEntityRenderColor(client, gc_iRefuseColorRed.IntValue, gc_iRefuseColorGreen.IntValue, gc_iRefuseColorBlue.IntValue, 255);
 						CPrintToChatAll("%t %t", "request_tag", "request_refusing", client);
 						RefuseTimer[client] = CreateTimer(gc_fRefuseTime.FloatValue, ResetColorRefuse, client);
@@ -282,12 +277,13 @@ public Action RefuseMenu(int warden)
 	{
 		char info1[255];
 		RefusePanel = CreatePanel();
-		Format(info1, sizeof(info1), "%T", "request_refuser", LANG_SERVER);
+		Format(info1, sizeof(info1), "%T", "request_refuser", warden);
 		SetPanelTitle(RefusePanel, info1);
 		DrawPanelText(RefusePanel, "-----------------------------------");
+		DrawPanelText(RefusePanel, "                                   ");
 		for(int i = 1;i <= MaxClients;i++) if(IsValidClient(i, true))
 		{
-			if(g_bRefuse[i])
+			if(g_bRefused[i])
 			{
 				char userid[11];
 				char username[MAX_NAME_LENGTH];
@@ -296,8 +292,76 @@ public Action RefuseMenu(int warden)
 				DrawPanelText(RefusePanel,username);
 			}
 		}
+		DrawPanelText(RefusePanel, "                                   ");
 		DrawPanelText(RefusePanel, "-----------------------------------");
 		SendPanelToClient(RefusePanel, warden, NullHandler, 20);
+	}
+}
+
+//repeat
+
+public Action Command_Repeat(int client, int args)
+{
+	if (gc_bPlugin.BoolValue)
+	{
+		if (gc_bRepeat.BoolValue)
+		{
+			if (GetClientTeam(client) == CS_TEAM_T && IsPlayerAlive(client))
+			{
+				if (RepeatTimer[client] == null)
+				{
+					if (g_iRepeatCounter[client] < gc_iRepeatLimit.IntValue)
+					{
+						g_iRepeatCounter[client]++;
+						g_bRepeated[client] = true;
+						CPrintToChatAll("%t %t", "request_tag", "request_repeatpls", client);
+						RepeatTimer[client] = CreateTimer(10.0, RepeatEnd, client);
+						if (warden_exist()) for(int i=1; i <= MaxClients; i++) RepeatMenu(i);
+						if(gc_bSounds.BoolValue)EmitSoundToAllAny(g_sSoundRepeatPath);
+					}
+					else
+					{
+						CPrintToChat(client, "%t %t", "request_tag", "request_repeattimes");
+					}
+				}
+				else
+				{
+					CPrintToChat(client, "%t %t", "request_tag", "request_alreadyrepeat");
+				}
+			}
+			else
+			{
+				CPrintToChat(client, "%t %t", "request_tag", "request_notalivect");
+			}
+		}
+	}
+	return Plugin_Handled;
+}
+
+public Action RepeatMenu(int warden)
+{
+	if (IsValidClient(warden, false, false) && warden_iswarden(warden))
+	{
+		char info1[255];
+		RepeatPanel = CreatePanel();
+		Format(info1, sizeof(info1), "%T", "request_repeat", warden);
+		SetPanelTitle(RepeatPanel, info1);
+		DrawPanelText(RepeatPanel, "-----------------------------------");
+		DrawPanelText(RepeatPanel, "                                   ");
+		for(int i = 1;i <= MaxClients;i++) if(IsValidClient(i, true))
+		{
+			if(g_bRepeated[i])
+			{
+				char userid[11];
+				char username[MAX_NAME_LENGTH];
+				IntToString(GetClientUserId(i), userid, sizeof(userid));
+				Format(username, sizeof(username), "%N", i);
+				DrawPanelText(RepeatPanel,username);
+			}
+		}
+		DrawPanelText(RepeatPanel, "                                   ");
+		DrawPanelText(RepeatPanel, "-----------------------------------");
+		SendPanelToClient(RepeatPanel, warden, NullHandler, 20);
 	}
 }
 
@@ -348,12 +412,12 @@ public Action CapitulationMenu(int warden)
 	{
 		char info5[255], info6[255], info7[255];
 		Menu menu1 = CreateMenu(CapitulationMenuHandler);
-		Format(info5, sizeof(info5), "%T", "request_acceptcapitulation", LANG_SERVER);
+		Format(info5, sizeof(info5), "%T", "request_acceptcapitulation", warden);
 		menu1.SetTitle(info5);
-		Format(info6, sizeof(info6), "%T", "warden_no", LANG_SERVER);
-		Format(info7, sizeof(info7), "%T", "warden_yes", LANG_SERVER);
-		menu1.AddItem("0", info6);
+		Format(info6, sizeof(info6), "%T", "warden_no", warden);
+		Format(info7, sizeof(info7), "%T", "warden_yes", warden);
 		menu1.AddItem("1", info7);
+		menu1.AddItem("0", info6);
 		menu1.Display(warden,gc_fCapitulationTime.IntValue);
 	}
 }
@@ -381,6 +445,7 @@ public int CapitulationMenuHandler(Menu menu, MenuAction action, int client, int
 			{
 				IsRequest = false;
 				RequestTimer = null;
+				SetEntityRenderColor(i, 255, 0, 0, 255);
 				RebelTimer[i] = CreateTimer(gc_fRebelTime.FloatValue, GiveKnifeRebel, i);
 				CPrintToChatAll("%t %t", "warden_tag", "request_noaccepted", i);
 			}
@@ -443,12 +508,12 @@ public Action HealMenu(int warden)
 	{
 		char info5[255], info6[255], info7[255];
 		Menu menu1 = CreateMenu(HealMenuHandler);
-		Format(info5, sizeof(info5), "%T", "request_acceptheal", LANG_SERVER);
+		Format(info5, sizeof(info5), "%T", "request_acceptheal", warden);
 		menu1.SetTitle(info5);
-		Format(info6, sizeof(info6), "%T", "warden_no", LANG_SERVER);
-		Format(info7, sizeof(info7), "%T", "warden_yes", LANG_SERVER);
-		menu1.AddItem("0", info6);
+		Format(info6, sizeof(info6), "%T", "warden_no", warden);
+		Format(info7, sizeof(info7), "%T", "warden_yes", warden);
 		menu1.AddItem("1", info7);
+		menu1.AddItem("0", info6);
 		menu1.Display(warden,gc_fHealTime.IntValue);
 	}
 }
@@ -489,6 +554,12 @@ public Action IsRequestTimer(Handle timer, any client)
 	RequestTimer = null;
 }
 
+public Action RepeatEnd(Handle timer, any client)
+{
+	RepeatTimer[client] = null;
+	g_bRepeated[client] = false;
+}
+
 public Action ResetColorRefuse(Handle timer, any client)
 {
 	if (IsClientConnected(client))
@@ -496,7 +567,7 @@ public Action ResetColorRefuse(Handle timer, any client)
 		SetEntityRenderColor(client, 255, 255, 255, 255);
 	}
 	RefuseTimer[client] = null;
-	g_bRefuse[client] = false;
+	g_bRefused[client] = false;
 }
 
 public Action ResetColorHeal(Handle timer, any client)
@@ -556,7 +627,7 @@ public Action OnTakedamage(int victim, int &attacker, int &inflictor, float &dam
 {
 	if (IsValidClient(attacker, true, false) && GetClientTeam(attacker) == CS_TEAM_T && IsPlayerAlive(attacker))
 	{
-		if(g_bCapitulated[attacker])
+		if(g_bCapitulated[attacker] && gc_bCapitulationDamage.BoolValue)
 		{
 			CPrintToChat(attacker, "%t %t", "request_tag", "request_nodamage");
 			return Plugin_Handled;
