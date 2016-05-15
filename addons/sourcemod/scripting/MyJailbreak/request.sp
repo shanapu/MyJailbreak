@@ -79,7 +79,7 @@ char g_sSoundCapitulationPath[256];
 public Plugin myinfo = 
 {
 	name = "MyJailbreak - Request",
-	author = "shanapu, Jackmaster",
+	author = "shanapu",
 	description = "Requests - refuse, capitulation/pardon, heal",
 	version = PLUGIN_VERSION,
 	url = URL_LINK
@@ -92,8 +92,8 @@ public void OnPluginStart()
 	LoadTranslations("MyJailbreak.Request.phrases");
 	
 	//Client Commands
-	RegConsoleCmd("sm_ref", Command_refuse, "Allows the Terrorist to refuse a game");
-	RegConsoleCmd("sm_refuse", Command_refuse, "Allows the Terrorist to refuse a game");
+	RegConsoleCmd("sm_ref", Command_refuse, "Allows the Warden start refusing time and Terrorist to refuse a game");
+	RegConsoleCmd("sm_refuse", Command_refuse, "Allows the Warden start refusing time and Terrorist to refuse a game");
 	
 	RegConsoleCmd("sm_c", Command_Capitulation, "Allows a rebeling terrorist to request a capitulate");
 	RegConsoleCmd("sm_capitulation", Command_Capitulation, "Allows a rebeling terrorist to request a capitulate");

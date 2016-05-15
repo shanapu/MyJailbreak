@@ -4,6 +4,11 @@
 	{
 		"en"		"[{green}MyJB.requests{default}]"
 	}
+	"request_openrefuse"
+	{
+		"en"		"The warden opend refuse.{purple} type !refuse to refused the game."
+		"de"		"Der Warden hat Verweigerung eröffnet. {purple}!refuse um das Spiel zu verweigern."
+	}
 	"request_refusing"
 	{
 		"#format"	"{1:N}"
@@ -14,6 +19,11 @@
 	{
 		"en"		"You have {purple}already refused."
 		"de"		"Du hast {purple}schon verweigert."
+	}
+	"request_refuseallow"
+	{
+		"en"		"The warden must first {purple}allow refusing by type !refuse "
+		"de"		"Der Warden muss zu erst verweigern {purple}erlauben mit !refuse"
 	}
 	"request_notalivect"
 	{
