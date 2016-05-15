@@ -360,6 +360,12 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 				
 				SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
 				SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
+			
+				if (GetClientTeam(client) == CS_TEAM_CT)
+				{
+					SetEntityMoveType(client, MOVETYPE_WALK);
+					TeleportEntity(client, Pos, NULL_VECTOR, NULL_VECTOR);
+				}
 			}
 			
 			g_iFreezeTime--;
