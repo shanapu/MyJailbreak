@@ -320,10 +320,27 @@ public void OnPluginStart()
 	
 	g_iCollisionOffset = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
 	
-	g_iVoteCount = 0;
-	
 	CreateTimer(1.0, Timer_DrawMakers, _, TIMER_REPEAT);
 	
+	//Prepare translation for marker colors
+	Format(g_sColorNamesRed, sizeof(g_sColorNamesRed), "{darkred}%T{default}", "warden_red", LANG_SERVER);
+	Format(g_sColorNamesBlue, sizeof(g_sColorNamesBlue), "{blue}%T{default}", "warden_blue", LANG_SERVER);
+	Format(g_sColorNamesGreen, sizeof(g_sColorNamesGreen), "{green}%T{default}", "warden_green", LANG_SERVER);
+	Format(g_sColorNamesOrange, sizeof(g_sColorNamesOrange), "{lightred}%T{default}", "warden_orange", LANG_SERVER);
+	Format(g_sColorNamesMagenta, sizeof(g_sColorNamesMagenta), "{purple}%T{default}", "warden_magenta", LANG_SERVER);
+	Format(g_sColorNamesYellow, sizeof(g_sColorNamesYellow), "{orange}%T{default}", "warden_yellow", LANG_SERVER);
+	Format(g_sColorNamesWhite, sizeof(g_sColorNamesWhite), "{default}%T{default}", "warden_white", LANG_SERVER);
+	Format(g_sColorNamesCyan, sizeof(g_sColorNamesCyan), "{blue}%T{default}", "warden_cyan", LANG_SERVER);
+	Format(g_sColorNamesRainbow, sizeof(g_sColorNamesRainbow), "{lightgreen}%T{default}", "warden_rainbow", LANG_SERVER);
+	
+	g_sColorNames[0] = g_sColorNamesWhite;
+	g_sColorNames[1] = g_sColorNamesRed;
+	g_sColorNames[3] = g_sColorNamesBlue;
+	g_sColorNames[2] = g_sColorNamesGreen;
+	g_sColorNames[7] = g_sColorNamesOrange;
+	g_sColorNames[6] = g_sColorNamesMagenta;
+	g_sColorNames[4] = g_sColorNamesYellow;
+	g_sColorNames[5] = g_sColorNamesCyan;
 }
 
 //ConVar Change for Strings
@@ -414,8 +431,8 @@ public void OnMapStart()
 	RemoveAllMarkers();
 	CreateTimer(0.1, Print_Drawer, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 	g_bLaser = true;
-	for(int client=1; client <= MaxClients; client++) g_bDrawer[client] = false;
 	g_bDrawerT = false;
+	for(int client=1; client <= MaxClients; client++) g_bDrawer[client] = false;
 }
 
 //Round Start
@@ -468,6 +485,8 @@ public void RoundStart(Event event, const char[] name, bool dontBroadcast)
 			SafeDelete(g_iIcon[g_iWarden]);
 			g_iIcon[g_iWarden] = -1;
 			g_iWarden = -1;
+			IconTimer = null;
+			delete IconTimer;
 			g_bLaser = false;
 			for(int client=1; client <= MaxClients; client++) g_bDrawer[client] = false;
 		}
@@ -485,6 +504,8 @@ public void RoundStart(Event event, const char[] name, bool dontBroadcast)
 			SafeDelete(g_iIcon[g_iWarden]);
 			g_iIcon[g_iWarden] = -1;
 			g_iWarden = -1;
+			IconTimer = null;
+			delete IconTimer;
 			g_bLaser = false;
 			for(int client=1; client <= MaxClients; client++) g_bDrawer[client] = false;
 		}
@@ -578,6 +599,7 @@ public Action ExitWarden(int client, int args)
 			SafeDelete(g_iIcon[client]);
 			g_iIcon[client] = -1;
 			IconTimer = null;
+			delete IconTimer;
 			g_iWarden = -1;
 			g_bDrawerT = false;
 		}
@@ -646,6 +668,7 @@ public Action playerDeath(Event event, const char[] name, bool dontBroadcast)
 		Call_Finish();
 		SafeDelete(g_iIcon[client]);
 		g_iIcon[client] = -1;
+		IconTimer = null;
 		delete IconTimer;
 		g_iWarden = -1;
 	}
@@ -987,6 +1010,7 @@ void RemoveTheWarden(int client)
 	g_sHasVoted[0] = '\0';
 	SafeDelete(g_iIcon[g_iWarden]);
 	g_iIcon[g_iWarden] = -1;
+	IconTimer = null;
 	delete IconTimer;
 	g_iWarden = -1;
 }
@@ -1166,6 +1190,8 @@ public void OnMapEnd()
 		SafeDelete(g_iIcon[g_iWarden]);
 		g_iIcon[g_iWarden] = -1;
 		g_iWarden = -1;
+		IconTimer = null;
+		delete IconTimer;
 	}
 	g_bLaser = false;
 	for(int client=1; client <= MaxClients; client++) 
@@ -1238,29 +1264,6 @@ stock void Draw_Markers()
 
 stock void MarkerMenu(int client)
 {
-	for(int iClient=1; iClient <= MaxClients; iClient++)
-	{
-		//Prepare translation for marker colors
-		Format(g_sColorNamesRed, sizeof(g_sColorNamesRed), "{darkred}%T{default}", "warden_red", iClient);
-		Format(g_sColorNamesBlue, sizeof(g_sColorNamesBlue), "{blue}%T{default}", "warden_blue", iClient);
-		Format(g_sColorNamesGreen, sizeof(g_sColorNamesGreen), "{green}%T{default}", "warden_green", iClient);
-		Format(g_sColorNamesOrange, sizeof(g_sColorNamesOrange), "{lightred}%T{default}", "warden_orange", iClient);
-		Format(g_sColorNamesMagenta, sizeof(g_sColorNamesMagenta), "{purple}%T{default}", "warden_magenta", iClient);
-		Format(g_sColorNamesYellow, sizeof(g_sColorNamesYellow), "{orange}%T{default}", "warden_yellow", iClient);
-		Format(g_sColorNamesWhite, sizeof(g_sColorNamesWhite), "{default}%T{default}", "warden_white", iClient);
-		Format(g_sColorNamesCyan, sizeof(g_sColorNamesCyan), "{blue}%T{default}", "warden_cyan", iClient);
-		Format(g_sColorNamesRainbow, sizeof(g_sColorNamesRainbow), "{lightgreen}%T{default}", "warden_rainbow", iClient);
-		
-		g_sColorNames[0] = g_sColorNamesWhite;
-		g_sColorNames[1] = g_sColorNamesRed;
-		g_sColorNames[3] = g_sColorNamesBlue;
-		g_sColorNames[2] = g_sColorNamesGreen;
-		g_sColorNames[7] = g_sColorNamesOrange;
-		g_sColorNames[6] = g_sColorNamesMagenta;
-		g_sColorNames[4] = g_sColorNamesYellow;
-		g_sColorNames[5] = g_sColorNamesCyan;
-	}
-	
 	if(!(0 < client < MaxClients) || client != g_iWarden)
 	{
 		CPrintToChat(client, "%t %t", "warden_tag", "warden_notwarden");
@@ -1956,7 +1959,7 @@ public bool TraceEntityFilterPlayer(int entity, int contentsMask) {
 
 public Action Create_Icon(Handle iTimer, any client)
 {
-	if(g_iWarden != -1)
+	if((g_iWarden != -1) && (client == g_iWarden))
 	{
 		SafeDelete(g_iIcon[client]);
 		g_iIcon[client] = CreateIcon();
@@ -2639,7 +2642,7 @@ public Action ChooseRandom(Handle timer, Handle pack)
 					int i = GetRandomPlayer(CS_TEAM_CT);
 					if(i > 0)
 					{
-						CPrintToChatAll("%t %t", "warden_tag", "warden_israndomwarden", i); 
+						CPrintToChatAll("%t %t", "warden_tag", "warden_randomwarden"); 
 						SetTheWarden(i);
 					}
 				}
