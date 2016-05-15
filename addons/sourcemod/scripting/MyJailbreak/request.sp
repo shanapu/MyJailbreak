@@ -16,6 +16,7 @@
 ConVar gc_fRefuseTime;
 ConVar gc_bRefuse;
 ConVar gc_bPlugin;
+ConVar gc_bWardenAllowRefuse;
 ConVar gc_iRefuseLimit;
 ConVar gc_iRefuseColorRed;
 ConVar gc_iRefuseColorGreen;
@@ -29,6 +30,7 @@ ConVar gc_iCapitulationColorGreen;
 ConVar gc_iCapitulationColorBlue;
 ConVar gc_bSounds;
 ConVar gc_sSoundRefusePath;
+ConVar gc_sSoundRefuseStopPath;
 ConVar gc_sSoundCapitulationPath;
 ConVar gc_bHeal;
 ConVar gc_bHealthShot;
@@ -46,7 +48,7 @@ bool g_bHealed[MAXPLAYERS+1];
 bool g_bCapitulated[MAXPLAYERS+1];
 bool g_bRefused[MAXPLAYERS+1];
 bool g_bRepeated[MAXPLAYERS+1];
-//bool g_bAllowRefuse;
+bool g_bAllowRefuse;
 bool IsRequest;
 
 
@@ -54,6 +56,8 @@ bool IsRequest;
 int g_iRefuseCounter[MAXPLAYERS+1];
 int g_iHealCounter[MAXPLAYERS+1];
 int g_iRepeatCounter[MAXPLAYERS+1];
+int g_iCountStopTime;
+
 
 //Handles
 Handle RebelTimer[MAXPLAYERS+1];
@@ -64,9 +68,11 @@ Handle HealTimer[MAXPLAYERS+1];
 Handle RefusePanel;
 Handle RepeatPanel;
 Handle RequestTimer;
+Handle AllowRefuseTimer;
 
 //characters
 char g_sSoundRefusePath[256];
+char g_sSoundRefuseStopPath[256];
 char g_sSoundRepeatPath[256];
 char g_sSoundCapitulationPath[256];
 
@@ -109,12 +115,14 @@ public void OnPluginStart()
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_request_enable", "1", "0 - disabled, 1 - enable Request Plugin");
 	gc_bSounds = AutoExecConfig_CreateConVar("sm_request_sounds_enable", "1", "0 - disabled, 1 - enable sounds ", _, true,  0.0, true, 1.0);
 	gc_bRefuse = AutoExecConfig_CreateConVar("sm_refuse_enable", "1", "0 - disabled, 1 - enable Refuse");
+	gc_bWardenAllowRefuse = AutoExecConfig_CreateConVar("sm_refuse_allow", "1", "0 - disabled, 1 - Warden must allow !refuse before T can use it");
 	gc_iRefuseLimit = AutoExecConfig_CreateConVar("sm_refuse_limit", "1", "Сount how many times you can use the command");
-	gc_fRefuseTime = AutoExecConfig_CreateConVar("sm_refuse_time", "15.0", "Time after the player gets his normal colors back");
+	gc_fRefuseTime = AutoExecConfig_CreateConVar("sm_refuse_time", "10.0", "Time the player gets to refuse after warden open refuse with !refuse / colortime");
 	gc_iRefuseColorRed = AutoExecConfig_CreateConVar("sm_refuse_color_red", "0","What color to turn the refusing Terror into (set R, G and B values to 255 to disable) (Rgb): x - red value", _, true, 0.0, true, 255.0);
 	gc_iRefuseColorGreen = AutoExecConfig_CreateConVar("sm_refuse_color_green", "250","What color to turn the refusing Terror into (rGb): x - green value", _, true, 0.0, true, 255.0);
 	gc_iRefuseColorBlue = AutoExecConfig_CreateConVar("sm_refuse_color_blue", "250","What color to turn the refusing Terror into (rgB): x - blue value", _, true, 0.0, true, 255.0);
 	gc_sSoundRefusePath = AutoExecConfig_CreateConVar("sm_refuse_sound", "music/MyJailbreak/refuse.mp3", "Path to the soundfile which should be played for a refusing.");
+	gc_sSoundRefuseStopPath = AutoExecConfig_CreateConVar("sm_refuse_stop_sound", "music/MyJailbreak/stop.mp3", "Path to the soundfile which should be played after a refusing.");
 	gc_bCapitulation = AutoExecConfig_CreateConVar("sm_capitulation_enable", "1", "0 - disabled, 1 - enable Capitulation");
 	gc_fCapitulationTime = AutoExecConfig_CreateConVar("sm_capitulation_timer", "10.0", "Time to decide to accept the capitulation");
 	gc_fRebelTime = AutoExecConfig_CreateConVar("sm_capitulation_rebel_timer", "10.0", "Time to give a rebel on not accepted capitulation his knife back");
@@ -142,6 +150,7 @@ public void OnPluginStart()
 	
 	//FindConVar
 	gc_sSoundRefusePath.GetString(g_sSoundRefusePath, sizeof(g_sSoundRefusePath));
+	gc_sSoundRefuseStopPath.GetString(g_sSoundRefuseStopPath, sizeof(g_sSoundRefuseStopPath));
 	gc_sSoundCapitulationPath.GetString(g_sSoundCapitulationPath, sizeof(g_sSoundCapitulationPath));
 	gc_sSoundRepeatPath.GetString(g_sSoundRepeatPath, sizeof(g_sSoundRepeatPath));
 }
@@ -153,10 +162,10 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 		strcopy(g_sSoundRefusePath, sizeof(g_sSoundRefusePath), newValue);
 		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundRefusePath);
 	}
-	else if(convar == gc_sSoundCapitulationPath)
+	else if(convar == gc_sSoundRefuseStopPath)
 	{
-		strcopy(g_sSoundCapitulationPath, sizeof(g_sSoundCapitulationPath), newValue);
-		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundCapitulationPath);
+		strcopy(g_sSoundRefuseStopPath, sizeof(g_sSoundRefuseStopPath), newValue);
+		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundRefuseStopPath);
 	}
 	else if(convar == gc_sSoundRepeatPath)
 	{
@@ -170,6 +179,7 @@ public void OnMapStart()
 	if(gc_bSounds.BoolValue)
 	{
 		PrecacheSoundAnyDownload(g_sSoundRefusePath);
+		PrecacheSoundAnyDownload(g_sSoundRefuseStopPath);
 		PrecacheSoundAnyDownload(g_sSoundCapitulationPath);
 		PrecacheSoundAnyDownload(g_sSoundRepeatPath);
 	}
@@ -186,6 +196,7 @@ public Action RoundStart(Handle event, char [] name, bool dontBroadcast)
 		delete HealTimer[client];
 		delete RepeatTimer[client];
 		delete RequestTimer;
+		delete AllowRefuseTimer;
 		
 		g_iRefuseCounter[client] = 0;
 		g_bCapitulated[client] = false;
@@ -195,7 +206,9 @@ public Action RoundStart(Handle event, char [] name, bool dontBroadcast)
 		g_iRepeatCounter[client] = 0;
 		g_bRefused[client] = false;
 		IsRequest = false;
+		g_bAllowRefuse = false;
 	}
+	g_iCountStopTime = gc_fRefuseTime.IntValue;
 	return Plugin_Continue;
 }
 
@@ -219,7 +232,6 @@ public void OnClientDisconnect(int client)
 	delete RebelTimer[client];
 	delete HealTimer[client];
 	delete RepeatTimer[client];
-	delete RequestTimer;
 	
 	g_iRepeatCounter[client] = 0;
 	g_bCapitulated[client] = false;
@@ -236,24 +248,35 @@ public Action Command_refuse(int client, int args)
 	{
 		if (gc_bRefuse.BoolValue)
 		{
+			if(warden_iswarden(client) && gc_bWardenAllowRefuse.BoolValue)
+			{
+				if(!g_bAllowRefuse)
+				{
+					g_bAllowRefuse = true;
+					AllowRefuseTimer = CreateTimer(1.0, NoAllowRefuse, _, TIMER_REPEAT);
+					CPrintToChatAll("%t %t", "request_tag", "request_openrefuse");
+				}
+			}
 			if (GetClientTeam(client) == CS_TEAM_T && IsPlayerAlive(client))
 			{
 				if (RefuseTimer[client] == null)
 				{
-					if (g_iRefuseCounter[client] < gc_iRefuseLimit.IntValue)
+					if(!g_bAllowRefuse || !gc_bWardenAllowRefuse.BoolValue)
 					{
-						g_iRefuseCounter[client]++;
-						g_bRefused[client] = true;
-						SetEntityRenderColor(client, gc_iRefuseColorRed.IntValue, gc_iRefuseColorGreen.IntValue, gc_iRefuseColorBlue.IntValue, 255);
-						CPrintToChatAll("%t %t", "request_tag", "request_refusing", client);
-						RefuseTimer[client] = CreateTimer(gc_fRefuseTime.FloatValue, ResetColorRefuse, client);
-						if (warden_exist()) LoopClients(i) RefuseMenu(i);
-						if(gc_bSounds.BoolValue)EmitSoundToAllAny(g_sSoundRefusePath);
+						if (g_iRefuseCounter[client] < gc_iRefuseLimit.IntValue)
+						{
+							g_iRefuseCounter[client]++;
+							g_bRefused[client] = true;
+							SetEntityRenderColor(client, gc_iRefuseColorRed.IntValue, gc_iRefuseColorGreen.IntValue, gc_iRefuseColorBlue.IntValue, 255);
+							CPrintToChatAll("%t %t", "request_tag", "request_refusing", client);
+							g_iCountStopTime = gc_fRefuseTime.IntValue;
+							RefuseTimer[client] = CreateTimer(gc_fRefuseTime.FloatValue, ResetColorRefuse, client);
+							if (warden_exist()) LoopClients(i) RefuseMenu(i);
+							if(gc_bSounds.BoolValue)EmitSoundToAllAny(g_sSoundRefusePath);
+						}
+						else CPrintToChat(client, "%t %t", "request_tag", "request_refusedtimes");
 					}
-					else
-					{
-						CPrintToChat(client, "%t %t", "request_tag", "request_refusedtimes");
-					}
+					else CPrintToChat(client, "%t %t", "request_tag", "request_refuseallow");
 				}
 				else
 				{
@@ -418,7 +441,7 @@ public Action CapitulationMenu(int warden)
 		Format(info7, sizeof(info7), "%T", "warden_yes", warden);
 		menu1.AddItem("1", info7);
 		menu1.AddItem("0", info6);
-		menu1.Display(warden,gc_fCapitulationTime.IntValue);
+		menu1.Display(warden, gc_fCapitulationTime.IntValue);
 	}
 }
 
@@ -548,6 +571,40 @@ public int HealMenuHandler(Menu menu, MenuAction action, int client, int Positio
 			}
 		}
 	}
+}
+
+public Action NoAllowRefuse(Handle timer)
+{
+	if (g_iCountStopTime > 0)
+	{
+		LoopValidClients(client, false, true)
+		{
+			if (g_iCountStopTime < 4) 
+			{
+				PrintHintText(client,"%t", "warden_stopcountdown_nc", g_iCountStopTime);
+				CPrintToChatAll("%t %t", "warden_tag" , "warden_stopcountdown", g_iCountStopTime);
+			}
+		}
+		g_iCountStopTime--;
+		return Plugin_Continue;
+	}
+	if (g_iCountStopTime == 0)
+	{
+		LoopValidClients(client, false, true)
+		{
+			PrintHintText(client, "%t", "warden_countdownstop_nc");
+			CPrintToChatAll("%t %t", "warden_tag" , "warden_countdownstop");
+			if(gc_bSounds.BoolValue)	
+			{
+				EmitSoundToAllAny(g_sSoundRefuseStopPath);
+			}
+			g_bAllowRefuse = false;
+			AllowRefuseTimer = null;
+			g_iCountStopTime = gc_fRefuseTime.IntValue;
+			return Plugin_Stop;
+		}
+	}
+	return Plugin_Continue;
 }
 
 public Action IsRequestTimer(Handle timer, any client)

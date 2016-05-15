@@ -804,6 +804,10 @@ public int m_WardenOverwrite(Menu menu, MenuAction action, int client, int Posit
 				PrintCenterTextAll("%t", "warden_new_nc", newwarden);
 			}
 			LogMessage("[MyJB] Admin %L kick player %N warden and set &N as new", client, g_iWarden, newwarden);
+			SafeDelete(g_iIcon[g_iWarden]);
+			g_iIcon[g_iWarden] = -1;
+			IconTimer = null;
+			delete IconTimer;
 			g_iWarden = newwarden;
 			CreateTimer(0.5, Timer_WardenFixColor, newwarden, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 			IconTimer = CreateTimer(0.5, Create_Icon, newwarden, TIMER_REPEAT);
@@ -2092,7 +2096,7 @@ public Action StartStopCDMenu(int client, int args)
 		if (client == g_iWarden)
 		{
 			char menuinfo5[255], menuinfo6[255], menuinfo7[255], menuinfo8[255], menuinfo9[255], menuinfo10[255], menuinfo11[255], menuinfo12[255], menuinfo13[255];
-			Format(menuinfo5, sizeof(menuinfo5), "%T", "warden_cdmenu_Title2", client);
+			Format(menuinfo5, sizeof(menuinfo5), "%T", "warden_cdmenu_title2", client);
 			Format(menuinfo6, sizeof(menuinfo6), "%T", "warden_15", client);
 			Format(menuinfo7, sizeof(menuinfo7), "%T", "warden_30", client);
 			Format(menuinfo8, sizeof(menuinfo8), "%T", "warden_45", client);
