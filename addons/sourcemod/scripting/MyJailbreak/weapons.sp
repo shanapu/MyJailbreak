@@ -566,7 +566,7 @@ public void ListWeapons()
 	if (gc_bAWP.BoolValue)
 	{
 		Format(Items[ItemName], 64, "weapon_awp");
-		Format(Items[desc], 64, "AWP an");
+		Format(Items[desc], 64, "AWP");
 		PushArrayArray(array_primary, Items[0]); 
 	}
 	
