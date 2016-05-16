@@ -514,12 +514,15 @@ public void OnMapEnd()
 
 public Action Glow_Timer(Handle timer, any client)
 {
-	char model[PLATFORM_MAX_PATH]; 
-	GetClientModel(client, model, sizeof(model)); 
-	int skin = CPS_SetSkin(client, model, CPS_RENDER); 
-	SetEntProp(skin, Prop_Send, "m_bShouldGlow", true, true);
-	SetEntProp(skin, Prop_Send, "m_nGlowStyle", 1);
-	SetEntPropFloat(skin, Prop_Send, "m_flGlowMaxDist", 10000000.0);
+	if(IsValidClient(client, false, false))
+	{
+		char model[PLATFORM_MAX_PATH]; 
+		GetClientModel(client, model, sizeof(model)); 
+		int skin = CPS_SetSkin(client, model, CPS_RENDER); 
+		SetEntProp(skin, Prop_Send, "m_bShouldGlow", true, true);
+		SetEntProp(skin, Prop_Send, "m_nGlowStyle", 1);
+		SetEntPropFloat(skin, Prop_Send, "m_flGlowMaxDist", 10000000.0);
+	}
 }
 
 //Start Timer
