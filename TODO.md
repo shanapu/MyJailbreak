@@ -13,6 +13,8 @@ must:
 - [ ] menu: add placeholder for custom commands
 - [ ] clean up translation files
 - [ ] requests menu
+- [ ] !guard instead join ct
+- [ ] gun plant prevention timer on roundstart
 
 want:
 - [/] gunplant prevention

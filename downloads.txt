@@ -12,11 +12,6 @@ materials/models/player/custom_player/zombie/revenant/head_n.vtf
 materials/models/player/custom_player/zombie/revenant/head_s.vtf
 materials/models/player/custom_player/zombie/revenant/head_glow.vtf
 
-materials/models/player/custom/security/Diff00_2.vmt
-materials/models/player/custom/security/Diff00_2.vtf
-materials/models/player/custom/security/Norm00_2.vtf
-
-
 models/player/custom_player/zombie/revenant/revenant_v2.mdl
 models/player/custom_player/zombie/revenant/revenant_v2.dx90.vtx
 models/player/custom_player/zombie/revenant/revenant_v2.phy
@@ -30,3 +25,6 @@ models/player/custom_player/legacy/security/security.dx90.vtx
 models/player/custom_player/legacy/security/security.phy
 models/player/custom_player/legacy/security/security.vvd 
 
+materials/models/player/custom/security/Diff00_2.vmt
+materials/models/player/custom/security/Diff00_2.vtf
+materials/models/player/custom/security/Norm00_2.vtf
