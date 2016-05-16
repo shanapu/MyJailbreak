@@ -218,7 +218,7 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_cdmenu", CDMenu, "Allows the Warden to open the Countdown Menu");
 	RegConsoleCmd("sm_cdstartstop", StartStopCDMenu, "Allows the Warden to start a START/STOP Countdown! (start after 10sec./stop after 20sec.) - start without menu");
 	RegConsoleCmd("sm_cdstop", SetStopCountDown, "Allows the Warden to start a STOP Countdown! (stop after 20sec.) - start without menu");
-	RegConsoleCmd("sm_cdcancel", CancelCountDown, "Allows the Warden to cancel a running Countdown");
+//	RegConsoleCmd("sm_cdcancel", CancelCountDown, "Allows the Warden to cancel a running Countdown");
 	RegConsoleCmd("sm_killrandom", KillRandom, "Allows the Warden to kill a random T");
 	RegConsoleCmd("sm_math", StartMathQuestion, "Allows the Warden to start a MathQuiz. Show player with first right Answer");
 	
@@ -262,7 +262,7 @@ public void OnPluginStart()
 	gc_bRandom = AutoExecConfig_CreateConVar("sm_warden_random", "1", "0 - disabled, 1 - enable kill a random t for warden", _, true,  0.0, true, 1.0);
 	gc_iRandomKind = AutoExecConfig_CreateConVar("sm_warden_randomkill", "2", "1 - all random / 2 - Thunder / 3 - Timebomb / 4 - Firebomb / 5 - NoKill(1,3,4 needs funncommands.smx enabled)", _, true,  1.0, true, 4.0);
 	gc_bCountDown = AutoExecConfig_CreateConVar("sm_warden_countdown", "1", "0 - disabled, 1 - enable countdown for warden", _, true,  0.0, true, 1.0);
-	gc_bIcon = AutoExecConfig_CreateConVar("sm_warden_icon_enable", "1", "0 - disabled, 1 - enable the icon above the wardens head", _, true,  0.0, true, 1.0);
+	gc_bIcon = AutoExecConfig_CreateConVar("sm_warden_icon_enable", "0", "0 - disabled, 1 - enable the icon above the wardens head", _, true,  0.0, true, 1.0);
 	gc_sIconPath = AutoExecConfig_CreateConVar("sm_warden_icon", "decals/MyJailbreak/warden" , "Path to the warden icon DONT TYPE .vmt or .vft");
 	gc_bOverlays = AutoExecConfig_CreateConVar("sm_warden_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true,  0.0, true, 1.0);
 	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_warden_overlays_start", "overlays/MyJailbreak/start" , "Path to the start Overlay DONT TYPE .vmt or .vft");
@@ -908,7 +908,7 @@ public void OnClientDisconnect(int client)
 {
 	if(client == g_iWarden)
 	{
-		CPrintToChatAll("%t %t", "warden_tag" , "warden_disconnected");
+		CPrintToChatAll("%t %t", "warden_tag" , "warden_disconnected", client);
 		
 		if(gc_bBetterNotes.BoolValue)
 		{
@@ -936,7 +936,7 @@ public Action EventPlayerTeam(Event event, const char[] name, bool dontBroadcast
 	int client = GetClientOfUserId(GetEventInt(event, "userid"));
 	if(client == g_iWarden)
 	{	
-		CPrintToChatAll("%t %t", "warden_tag" , "warden_retire");
+		CPrintToChatAll("%t %t", "warden_tag" , "warden_retire", client);
 		
 		if(gc_bBetterNotes.BoolValue)
 		{
@@ -2559,7 +2559,7 @@ stock int GetAlivePlayersCount(int iTeam)
 	int iCount, i; iCount = 0;
 
 	for( i = 1; i <= MaxClients; i++ )
-		if(IsPlayerAlive( i )  && !IsClientRebel(i) && GetClientTeam( i ) == iTeam )
+		if(IsValidClient(i,true,false) && !IsClientRebel(i) && GetClientTeam( i ) == iTeam )
 		iCount++;
 
 	return iCount;
@@ -2758,7 +2758,10 @@ public Action CS_OnCSWeaponDrop(int client, int weapon)
 					
 				g_iWeaponDrop[client] = weapon;
 				
-				if (!g_bWeaponDropped) CreateTimer(0.1, DroppedWeapon, client);
+				if(IsValidEntity(weapon))
+				{
+					if (!g_bWeaponDropped) CreateTimer(0.1, DroppedWeapon, client);
+				}
 			}
 		}
 	}
@@ -2769,7 +2772,7 @@ public Action DroppedWeapon(Handle timer, any client)
 {
 	if(Weapon_GetOwner(g_iWeaponDrop[client]) == -1)
 	{
-		if(IsValidClient(client, false, false) && !IsClientInLastRequest(client))
+		if(IsValidClient(client, false, true) && !IsClientInLastRequest(client))
 		{
 			char g_sWeaponName[80];
 			
