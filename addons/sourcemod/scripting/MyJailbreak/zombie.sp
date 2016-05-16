@@ -565,8 +565,8 @@ public Action StartTimer(Handle timer)
 			{
 				EmitSoundToAllAny(g_sSoundStartPath);
 			}
-			CPrintToChatAll("%t %t", "zombie_tag" , "zombie_start");
 		}
+		CPrintToChatAll("%t %t", "zombie_tag" , "zombie_start");
 	}
 	FreezeTimer = null;
 	if(gc_bDark.BoolValue && (g_iRound = 1)) {AcceptEntityInput(FogIndex, "TurnOn");}
