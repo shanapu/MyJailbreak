@@ -28,6 +28,7 @@ ConVar gc_bVote;
 ConVar gc_iCooldownDay;
 ConVar gc_iRoundTime;
 ConVar g_iGetRoundTime;
+ConVar gc_sCustomCommand;
 
 //Integers
 int g_iOldRoundTime;
@@ -40,6 +41,7 @@ Handle FreedayMenu;
 
 //Strings
 char g_sHasVoted[1500];
+char g_sCustomCommand[64];
 
 public Plugin myinfo =
 {
@@ -67,6 +69,7 @@ public void OnPluginStart()
 	
 	AutoExecConfig_CreateConVar("sm_freeday_version", PLUGIN_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_PLUGIN|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_freeday_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true,  0.0, true, 1.0);
+	gc_sCustomCommand = AutoExecConfig_CreateConVar("sm_freeday_cmd", "fd", "Set your custom chat command for Event voting. no need for sm_ or !");
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_freeday_warden", "1", "0 - disabled, 1 - allow warden to set freeday round", _, true,  0.0, true, 1.0);
 	gc_bSetA = AutoExecConfig_CreateConVar("sm_freeday_admin", "1", "0 - disabled, 1 - allow admin to set freeday round", _, true,  0.0, true, 1.0);
 	gc_bVote = AutoExecConfig_CreateConVar("sm_freeday_vote", "1", "0 - disabled, 1 - allow player to vote for freeday", _, true,  0.0, true, 1.0);
@@ -84,13 +87,36 @@ public void OnPluginStart()
 	HookEvent("round_start", RoundStart);
 	HookEvent("round_end", RoundEnd);
 //	HookEvent("player_death", PlayerDeath);
+	HookConVarChange(gc_sCustomCommand, OnSettingChanged);
 	
 	//FindConVar
 	g_iGetRoundTime = FindConVar("mp_roundtime");
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
+	gc_sCustomCommand.GetString(g_sCustomCommand , sizeof(g_sCustomCommand));
 }
 
+//ConVar Change for Strings
+
+public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
+{
+	if(convar == gc_sCustomCommand)
+	{
+		strcopy(g_sCustomCommand, sizeof(g_sCustomCommand), newValue);
+		char sBufferCMD[64];
+		Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommand);
+		if(GetCommandFlags(sBufferCMD) == INVALID_FCVAR_FLAGS)
+			RegConsoleCmd(sBufferCMD, VoteFreeday, "Allows players to vote for a freeday");
+	}
+}
 //Initialize Event
+
+public void OnConfigsExecuted()
+{
+	char sBufferCMD[64];
+	Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommand);
+	if(GetCommandFlags(sBufferCMD) == INVALID_FCVAR_FLAGS)
+		RegConsoleCmd(sBufferCMD, VoteFreeday, "Allows players to vote for a catch freeday");
+}
 
 public void OnMapStart()
 {

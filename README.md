@@ -59,7 +59,7 @@ e.g.
 
 ### Credits: 
 
-**used code & stuff from: ecca, Zipcore, ESK0, Floody.de, Franc1sco, walmar, KeepCalm, bara, Arkarr, KissLick, headline, Hipster, ReFlexPoison, 8guawong, Mitchell, Xines, Jackmaster, Kaesar, andi67** and many other I cant remember unfortunately! [detailed](#detailed-credits)  
+**used code & stuff from: ecca, Zipcore, ESK0, Floody.de, Franc1sco, walmar, KeepCalm, bara, Arkarr, KissLick, headline, Hipster, ReFlexPoison, 8guawong, Mitchell, Xines, Jackmaster, Impact123, Kaesar, andi67** and many other I cant remember unfortunately! [detailed](#detailed-credits)  
 **thanks to all sourcemod & metamod developers out there!**
 
 # THANKS FOR MAKING FREE SOFTWARE!
@@ -96,9 +96,11 @@ Colorize Warden, Warden Model, open/close cell doors, automatic open cells doors
 - sm_cdstart - Allows the Warden to start a START Countdown! (start after 10sec.) - start without menu
 - sm_cdstop - Allows the Warden to start a STOP Countdown! (stop after 20sec.) - start without menu
 - sm_cdstartstop - Allows the Warden to start a START/STOP Countdown! (start after 10sec./stop after 20sec.) - start without menu
-- sm_cdcancel - Allows the Warden to cancel a running Countdown
+- ~~sm_cdcancel - Allows the Warden to cancel a running Countdown~~ disabled / bugged
 - sm_killrandom - Allows the Warden to kill a random T
 - sm_math  Allows the Warden to start a MathQuiz. Show player with first right Answer
+  
+- set your own custom command. take a look at "sm_warden_cmd"
 ```
 ##### AdminCommands // ADMFLAG_GENERIC
 ```
@@ -109,6 +111,7 @@ Colorize Warden, Warden Model, open/close cell doors, automatic open cells doors
 ```
 - sm_warden_version - Shows the version of the SourceMod plugin MyJailbreak - Warden
 - sm_warden_enable: 0 - disabled, 1 - enable the Warden plugin. Default 1
+- sm_warden_cmd: Set your custom chat command for become warden. no need for sm_ or ! . Default "simon" results in !simon /simon & sm_simon
 - sm_warden_become: 0 - disabled, 1 - enable !w / !warden - player can choose to be Warden. If disabled you should need sm_warden_choose_random 1. Default 1
 - sm_warden_choose_random: 0 - disabled, 1 - enable pic random Warden if there is still no Warden after sm_warden_choose_time. Default 1
 - sm_warden_choose_time: Time in seconds a random Warden will picked when no Warden was set. need sm_warden_choose_random 1. Default 20
@@ -174,18 +177,21 @@ The "terror counterpart" to warden. Refuse a Game - T can refuse a game and get 
 
 ##### Commands 
 ```
-- sm_ref / sm_refuse - Allows the Warden start refusing time and Terrorist to refuse a game
+- sm_refuse - Allows the Warden start refusing time and Terrorist to refuse a game
 - sm_c / sm_capitulation - Allows a rebeling terrorist to request a capitulate
 - sm_p / sm_pardon - Allows a rebeling terrorist to request a capitulate
-- sm_h / sm_heal - Allows a Terrorist request healing
-- sm_rep / sm_repeat / sm_what - Allows a Terrorist request repeating last call
+- sm_heal - Allows a Terrorist request healing
+- sm_repeat / sm_what - Allows a Terrorist request repeating last call
+  
+- set your own custom command. take a look at "sm_refuse_cmd" "sm_repeat_cmd" "sm_heal_cmd" "sm_capitulation_cmd"
 ```
 
 ##### Cvars
 ```
-- sm_request_enable: 0 - disabled, 1 - Enable or Disable Request Plugin. Default 1
+- sm_request_enable: 0 - disabled, 1 - enable Request Plugin. Default 1
 - sm_request_sounds_enable: 0 - disabled, 1 -  enable sounds. Default 1
 - sm_refuse_enable: 0 - disabled, 1 - Enable Refuse. Default 1
+- sm_capitulation_cmd: Set your custom chat command for Refuse. no need for sm_ or ! . Default "ref" results in !ref /ref & sm_ref
 - sm_refuse_limit: Сount how many times you can use the command
 - sm_refuse_time": Time after the player gets his normal colors back
 - sm_refuse_color_red: What color to turn the refusing Terror into (set R, G and B values to 255 to disable) (Rgb): x - red value
@@ -193,6 +199,7 @@ The "terror counterpart" to warden. Refuse a Game - T can refuse a game and get 
 - sm_refuse_color_blue: What color to turn the refusing Terror into (rgB): x - blue value
 - sm_refuse_sound: Path to the soundfile which should be played for a refusing
 - sm_capitulation_enable: 0 - disabled, 1 - Enable Capitulation. Default 1
+- sm_capitulation_cmd: Set your custom chat command for capitulation. no need for sm_ or ! . Default "capi" results in !capi /capi & sm_capi
 - sm_capitulation_timer: Time to decide to accept the capitulation
 - sm_capitulation_rebel_timer: Time to give a rebel on not accepted capitulation his knife back
 - sm_capitulation_color_red: What color to turn the capitulation Terror into (set R, G and B values to 255 to disable) (Rgb): x - red value
@@ -200,11 +207,16 @@ The "terror counterpart" to warden. Refuse a Game - T can refuse a game and get 
 - sm_capitulation_color_blue: What color to turn the capitulation Terror into (rgB): x - blue value
 - sm_capitulation_sound: Path to the soundfile which should be played for a capitulation
 - sm_heal_enable: 0 - disabled, 1 - Enable heal. Default 1
+- sm_heal_cmd: Set your custom chat command for heal. no need for sm_ or ! . Default "cure" results in !cure /cure & sm_cure
 - sm_heal_limit: Сount how many times you can use the command
 - sm_heal_time: Time after the player gets his normal colors back
 - sm_heal_color_red: What color to turn the heal Terror into (set R, G and B values to 255 to disable) (Rgb): x - red value
 - sm_heal_color_green: What color to turn the heal Terror into (rGb): x - green value
 - sm_heal_color_blue: What color to turn the heal Terror into (rgB): x - blue value
+- sm_repeat_enable: 0 - disabled, 1 -  enable repeat
+- sm_repeat_cmd: Set your custom chat command for Repeat. no need for sm_ or !. Default "rep" results in !rep /rep & sm_rep
+- sm_repeat_limit: Сount how many times you can use the command. Default 2
+- sm_repeat_sound: Path to the soundfile which should be played for a repeat. Default "music/MyJailbreak/repeat.mp3"
 ```
 ##### Features
 
@@ -365,12 +377,14 @@ This plugins open a Gunmenu to players if weapons are enabled for EventDays.
 ```
 - sm_gun / sm_guns / sm_gunmenu - Open the weapon menu if enabled (in EventDays/for CT)
 - sm_weapon / sm_weapons / sm_weaponsmenu - Open the weapon menu if enabled (in EventDays/for CT)
-- sm_arms / sm_firearms - Open the weapon menu if enabled (in EventDays/for CT)
 - sm_giveweapon - Open the weapon menu if enabled (in EventDays/for CT)
+  
+- set your own custom command. take a look at "sm_weapons_cmd"
 ```
 ##### Cvars
 ```
 - sm_weapons_version - Shows the version of the SourceMod plugin MyJailbreak - Weapons
+- sm_weapons_cmd: Set your custom chat command for weaponmenu. no need for sm_ or ! . Default "arms" results in !arms /arms & sm_arms
 - sm_weapons_enable: 0 - disabled, 1 - enable weapons menu - you shouldn't touch these, cause events days will handle them
 - sm_weapons_ct: 0 - disabled, 1 - enable weapons menu for CT - you shouldn't touch these, cause events days will handle them
 - sm_weapons_t: 0 - disabled, 1 - enable weapons menu for T - you shouldn't touch these, cause events days will handle them
@@ -429,10 +443,13 @@ Or on Round start Ts spawn in open cells with weapons and weaponmenu. No Freeze/
 ```
 - sm_war - Allows players to vote for a war
 - sm_setwar - Allows the Admin or Warden to set a war for next rounds
+  
+- set your own custom command. take a look at "sm_war_cmd"
 ```
 ##### Cvars
 ```
 - sm_war_version - Shows the version of the SourceMod plugin MyJailbreak - War
+- sm_war_cmd: Set your custom chat command for Event voting. no need for sm_ or ! . Default "TDM" results in !TDM /TDM & sm_TDM
 - sm_war_enable: 0 - disabled, 1 - enable the war plugin. Default 1
 - sm_war_setw: 0 - disabled, 1 - allow Warden to set next round war. Default 1
 - sm_war_seta: 0 - disabled, 1 - allow Admin to set next round war round. Default 1
@@ -470,10 +487,13 @@ Or on Round start Ts spawn in open cells with weapons & weaponmenu. (Default)
 ```
 - sm_ffa - Allows players to vote for a FFA 
 - sm_setffa - Allows the Admin or Warden to set a ffa for next rounds
+  
+- set your own custom command. take a look at "sm_ffa_cmd"
 ```
 ##### Cvars
 ```
 - sm_ffa_version - Shows the version of the SourceMod plugin MyJailbreak - FFA
+- sm_ffa_cmd: Set your custom chat command for Event voting. no need for sm_ or ! . Default "DM" results in !DM /DM & sm_DM
 - sm_ffa_enable: 0 - disabled, 1 - enable the ffa plugin. Default 1
 - sm_ffa_setw: 0 - disabled, 1 - allow Warden to set next round ffa. Default 1
 - sm_ffa_seta: 0 - disabled, 1 - allow Admin to set next round ffa round. Default 1
@@ -510,10 +530,13 @@ Zombies freezed for 35sec (default) so T can hide &/or climb.
 ```
 - sm_zombie - Allows players to vote for a Zombie 
 - sm_setzombie - Allows the Admin or Warden to set Zombie as next round
+  
+- set your own custom command. take a look at "sm_zombie_cmd"
 ```
 ##### Cvars
 ```
 - sm_zombie_version - Shows the version of the SourceMod plugin MyJailbreak - Zombie
+- sm_zombie_cmd: Set your custom chat command for Event voting. no need for sm_ or ! . Default "zd" results in !zd /zd & sm_zd
 - sm_zombie_setw: 0 - disabled, 1 - allow Warden to set next round zombie. Default 1
 - sm_zombie_seta: 0 - disabled, 1 - allow Admin to set next round zombie round. Default 1
 - sm_zombie_vote: 0 - disabled, 1 - allow player to vote for zombie. Default 1
@@ -553,10 +576,13 @@ On Round start cells open everybody got sniper rifle with noscope and low gravit
 ```
 - sm_noscope - Allows players to vote for a noscope
 - sm_setnoscope - Allows the Admin or Warden to set noscope as next round
+  
+- set your own custom command. take a look at "sm_noscope_cmd"
 ```
 ##### Cvars
 ```
 - sm_noscope_version - Shows the version of the SourceMod plugin MyJailbreak - noscope
+- sm_noscope_cmd: Set your custom chat command for Event voting. no need for sm_ or ! . Default "scope" results in !scope /scope & sm_scope
 - sm_noscope_enable: 0 - disabled, 1 - enable the noscope plugin. Default 1
 - sm_noscope_setw: 0 - disabled, 1 - allow Warden to set next round noscope. Default 1
 - sm_noscope_seta: 0 - disabled, 1 - allow Admin to set next round noscope round. Default 1
@@ -564,7 +590,7 @@ On Round start cells open everybody got sniper rifle with noscope and low gravit
 - sm_noscope_vote: 0 - disabled, 1 - allow player to vote for noscope. Default 1
 - sm_noscope_rounds: Rounds to play in a row. Default 1
 - sm_noscope_weapon: 1 - ssg08 / 2 - awp / 3 - scar20 / 4 - g3sg1. Default 1
-- sm_noscope_random: 0 - disabled, 1 - get a random weapon (ssg08,awp,scar20,g3sg1) ignore: sm_noscope_weapon. Default 0
+- sm_noscope_random: 0 - disabled, 1 - get a random weapon (ssg08,awp,scar20,g3sg1) ignore: sm_noscope_weapon. Default 1
 - sm_noscope_gravity: 0 - disabled, 1 - enable low Gravity for noscope. Default 1
 - sm_noscope_gravity_value - Ratio for Gravity 1.0 earth 0.5 moon. Default 0.3
 - sm_noscope_roundtime - Roundtime for a single noscope round in minutes. Default 5
@@ -595,11 +621,14 @@ On Round start cells open everybody got HE grenate with low gravity(Default) and
 ```
 - sm_hebattle - Allows players to vote for a hebattle
 - sm_sethebattle - Allows the Admin or Warden to set hebattle as next round
+  
+- set your own custom command. take a look at "sm_hebattle_cmd"
 ```
 ##### Cvars
 ```
 - sm_hebattle_version - Shows the version of the SourceMod plugin MyJailbreak - hebattle
 - sm_hebattle_enable: 0 - disabled, 1 - enable the hebattle plugin. Default 1
+- sm_hebattle_cmd: Set your custom chat command for Event voting. no need for sm_ or ! . Default "he" results in !he /he & sm_he
 - sm_hebattle_setw: 0 - disabled, 1 - allow Warden to set next round HEbattle. Default 1
 - sm_hebattle_seta: 0 - disabled, 1 - allow Admin to set next round HEbattle round. Default 1
 - sm_hebattle_spawn: 0 - teleport Ts to CT and freeze, 1 - open cell doors an get weapons. Default 0
@@ -638,11 +667,14 @@ CT and T can Sprint with USE-Key (default).
 - sm_catch - Allows players to vote for a catch 
 - sm_setcatch - Allows the Admin or Warden to set catch as next round
 - sm_sprint - Start sprinting!
+  
+- set your own custom command. take a look at "sm_catch_cmd"
 ```
 
 ##### Cvars
 ```
 - sm_catch_version - Shows the version of the SourceMod plugin MyJailbreak - catch
+- sm_catch_cmd: Set your custom chat command for Event voting. no need for sm_ or ! . Default "freeze" results in !freeze /freeze & sm_freeze
 - sm_catch_setw: 0 - disabled, 1 - allow Warden to set next round ffa. Default 1
 - sm_catch_seta: 0 - disabled, 1 - allow Admin to set next round ffa round. Default 1
 - sm_catch_vote: 0 - disabled, 1 - allow player to vote for ffa. Default 1
@@ -662,9 +694,9 @@ CT and T can Sprint with USE-Key (default).
 - sm_catch_sounds_enable: 0 - disabled, 1 - enable un/-Freeze sounds. Default 1
 - sm_catch_sounds_freeze: Path to the soundfile which should be played on freeze. Default "music/MyJailbreak/freeze.mp3"
 - sm_catch_sounds_unfreeze: Path to the soundfile which should be played on unfreeze. Default "music/MyJailbreak/unfreeze.mp3"
-- sm_catch_noblood: 0 - Disable, 1 - enable No Blood. Default 1
-- sm_catch_noblood_splatter: 0 - Disable, 1 - enable No Blood Splatter. Default 1
-- sm_catch_noblood_splash: 0 - Disable, 1 - enable No Blood Splash. Default 1
+- sm_catch_noblood: 0 - disabled, 1 - enable No Blood. Default 1
+- sm_catch_noblood_splatter: 0 - disabled, 1 - enable No Blood Splatter. Default 1
+- sm_catch_noblood_splash: 0 - disabled, 1 - enable No Blood Splash. Default 1
 
 
 ```
@@ -687,10 +719,13 @@ When CT unfreezed (30sec. default) Ts get freezed (default).
 ```
 - sm_hide - Allows players to vote for a hide
 - sm_sethide - Allows the Admin or Warden to set hide as next round
+  
+- set your own custom command. take a look at "sm_hide_cmd"
 ```
 ##### Cvars
 ```
 - sm_hide_version - Shows the version of the SourceMod plugin MyJailbreak - hide
+- sm_hide_cmd: Set your custom chat command for Event voting. no need for sm_ or ! . Default "seek" results in !seek /seek & sm_seek
 - sm_hide_setw: 0 - disabled, 1 - allow Warden to set next round ffa. Default 1
 - sm_hide_seta: 0 - disabled, 1 - allow Admin to set next round ffa round. Default 1
 - sm_hide_vote: 0 - disabled, 1 - allow player to vote for ffa. Default 1
@@ -725,10 +760,13 @@ T are Chicken in Thirdperson. After trucetime the cells open and T got HE grenad
 ```
 - sm_duckhunt - Allows players to vote for a duckhunt
 - sm_setduckhunt - Allows the Admin or Warden to set duckhunt as next round
+  
+- set your own custom command. take a look at "sm_duckhunt_cmd"
 ```
 ##### Cvars
 ```
 - sm_duckhunt_version - Shows the version of the SourceMod plugin MyJailbreak - duckhunt
+- sm_duckhunt_cmd: Set your custom chat command for Event voting. no need for sm_ or ! . Default "duck" results in !duck /duck & sm_duck
 - sm_duckhunt_setw: 0 - disabled, 1 - allow Warden to set next round ffa. Default 1
 - sm_duckhunt_seta: 0 - disabled, 1 - allow Admin to set next round ffa round. Default 1
 - sm_duckhunt_vote: 0 - disabled, 1 - allow player to vote for ffa. Default 1
@@ -766,15 +804,18 @@ CT and T can Sprint with USE-Key (default).
 - sm_setsuicidebomber - Allows the Admin or Warden to set Suicide Bomber as next round
 - sm_sprint - Start sprinting!
 - sm_makeboom - Suicide with bomb.
+  
+- set your own custom command. take a look at "sm_suicidebomber_cmd"
 
 ```
 ##### Cvars
 ```
 - sm_suicidebomber_version - Shows the version of the SourceMod plugin MyJailbreak - Suicide Bomber
+- sm_suicidebomber_enable: 0 - disabled, 1 - enable the plugin. Default 1
+- sm_suicidebomber_cmd: Set your custom chat command for Event voting. no need for sm_ or ! . Default "suicide" results in !suicide /suicide & sm_suicide
 - sm_suicidebomber_setw: 0 - disabled, 1 - allow Warden to set next round ffa. Default 1
 - sm_suicidebomber_seta: 0 - disabled, 1 - allow Admin to set next round ffa round. Default 1
 - sm_suicidebomber_vote: 0 - disabled, 1 - allow player to vote for ffa. Default 1
-- sm_suicidebomber_enable: 0 - disabled, 1 - enable the plugin. Default 1
 - sm_suicidebomber_rounds: Rounds to play in a row
 - sm_suicidebomber_key: 1 - Inspect(look) weapon / 2 - walk / 3 - Secondary Attack. Default 1
 - sm_suicidebomber_standstill: 0 - disabled, 1 - standstill(cant move) on Activate bomb. Default 0
@@ -814,11 +855,14 @@ On Round start cells open everybody got a scout with zeus in low gravity. Nodama
 ```
 - sm_zeus - Allows players to vote for a zeus round
 - sm_setzeus - Allows the Admin or Warden to set zeus as next round
+  
+- set your own custom command. take a look at "sm_zeus_cmd"
 ```
 ##### Cvars
 ```
 - sm_zeus_version - Shows the version of the SourceMod plugin MyJailbreak - zeus
 - sm_zeus_enable: 0 - disabled, 1 - enable the zeus plugin. Default 1
+- sm_zeus_cmd: Set your custom chat command for Event voting. no need for sm_ or ! . Default "taser" results in !taser /taser & sm_taser
 - sm_zeus_setw: 0 - disabled, 1 - allow Warden to set next round zeus. Default 1
 - sm_zeus_seta: 0 - disabled, 1 - allow Admin to set next round zeus round. Default 1
 - sm_zeus_vote: 0 - disabled, 1 - allow player to vote for zeus. Default 1
@@ -852,11 +896,14 @@ On Round start cells open everybody KnifeOnly with thirdperson, low gravity(Defa
 ```
 - sm_knifefight - Allows players to vote for a knifefight 
 - sm_setknifefight - Allows the Admin or Warden to set knifefight as next round
+  
+- set your own custom command. take a look at "sm_knifefight_cmd"
 ```
 ##### Cvars
 ```
 - sm_knifefight_version - Shows the version of the SourceMod plugin MyJailbreak - knifefight
 - sm_knifefight_enable: 0 - disabled, 1 - enable the knifefight plugin. Default 1
+- sm_knifefight_cmd: Set your custom chat command for Event voting. no need for sm_ or ! . Default "knife" results in !knife /knife & sm_knife
 - sm_knifefight_setw: 0 - disabled, 1 - allow Warden to set next round knifefight. Default 1
 - sm_knifefight_seta: 0 - disabled, 1 - allow Admin to set next round knifefight round. Default 1
 - sm_knifefight_vote: 0 - disabled, 1 - allow player to vote for knifefight. Default 1
@@ -896,11 +943,14 @@ On Round start cells open for freeday and enabled damage (Default).
 ```
 - sm_freeday - Allows players to vote for a freeday 
 - sm_setfreeday - Allows the Admin or Warden to set freeday as next round
+  
+- set your own custom command. take a look at "sm_freeday_cmd"
 ```
 ##### Cvars
 ```
 - sm_freeday_version - Shows the version of the SourceMod plugin MyJailbreak - freeday
 - sm_freeday_enable: 0 - disabled, 1 - enable the freeday plugin. Default 1
+- sm_freeday_cmd: Set your custom chat command for Event voting. no need for sm_ or ! . Default "fd" results in !fd /fd & sm_fd
 - sm_freeday_setw: 0 - disabled, 1 - allow Warden to set next round freeday. Default 1
 - sm_freeday_seta: 0 - disabled, 1 - allow Admin to set next round freeday round. Default 1
 - sm_freeday_vote: 0 - disabled, 1 - allow player to vote for freeday. Default 1

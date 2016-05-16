@@ -38,10 +38,12 @@ ConVar gc_bJBmenu;
 ConVar gc_bAWP;
 ConVar gc_bAutoSniper;
 ConVar gc_bHealth;
+ConVar gc_sCustomCommand;
 
 //Strings
 char primaryWeapon[MAXPLAYERS + 1][24];
 char secondaryWeapon[MAXPLAYERS + 1][24];
+char g_sCustomCommand[64];
 
 enum weapons
 {
@@ -68,8 +70,6 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_gun", Cmd_Weapons, "Open the weapon menu if enabled (in EventDays/for CT)");
 	RegConsoleCmd("sm_weapon", Cmd_Weapons, "Open the weapon menu if enabled (in EventDays/for CT)");
 	RegConsoleCmd("sm_weapons", Cmd_Weapons, "Open the weapon menu if enabled (in EventDays/for CT)");
-	RegConsoleCmd("sm_arms", Cmd_Weapons, "Open the weapon menu if enabled (in EventDays/for CT)");
-	RegConsoleCmd("sm_firearms", Cmd_Weapons, "Open the weapon menu if enabled (in EventDays/for CT)");
 	RegConsoleCmd("sm_gunmenu", Cmd_Weapons, "Open the weapon menu if enabled (in EventDays/for CT)");
 	RegConsoleCmd("sm_weaponmenu", Cmd_Weapons, "Open the weapon menu if enabled (in EventDays/for CT)");
 	RegConsoleCmd("sm_giveweapon", Cmd_Weapons, "Open the weapon menu if enabled (in EventDays/for CT)");
@@ -80,6 +80,7 @@ public void OnPluginStart()
 	
 	AutoExecConfig_CreateConVar("sm_weapons_version", PLUGIN_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_PLUGIN|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_weapons_enable", "1", "0 - disabled, 1 - enable weapons menu - you shouldn't touch these, cause events days will handle them", _, true,  0.0, true, 1.0);
+	gc_sCustomCommand = AutoExecConfig_CreateConVar("sm_weapons_cmd", "arms", "Set your custom chat command for Event voting. no need for sm_ or !");
 	gc_bTerror = AutoExecConfig_CreateConVar("sm_weapons_t", "0", "0 - disabled, 1 - enable weapons menu for T - you shouldn't touch these, cause events days will handle them", _, true,  0.0, true, 1.0);
 	gc_bCTerror = AutoExecConfig_CreateConVar("sm_weapons_ct", "1", "0 - disabled, 1 - enable weapons menu for CT - you shouldn't touch these, cause events days will handle them", _, true,  0.0, true, 1.0);
 	gc_bSpawn = AutoExecConfig_CreateConVar("sm_weapons_spawnmenu", "1", "0 - disabled, 1 -  enable autoopen weapon menu on spawn", _, true,  0.0, true, 1.0);
@@ -95,12 +96,27 @@ public void OnPluginStart()
 	
 	//Hooks
 	HookEvent("player_spawn", Event_PlayerSpawn);
+	HookConVarChange(gc_sCustomCommand, OnSettingChanged);
 	
 	weapons1 = RegClientCookie("Primary Weapons", "", CookieAccess_Private);
 	weapons2 = RegClientCookie("Secondary Weapons", "", CookieAccess_Private);
 	//remember = RegClientCookie("Remember Weapons", "", CookieAccess_Private);
+	
+	//FindConVar
+	gc_sCustomCommand.GetString(g_sCustomCommand , sizeof(g_sCustomCommand));
 }
 
+public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
+{
+	if(convar == gc_sCustomCommand)
+	{
+		strcopy(g_sCustomCommand, sizeof(g_sCustomCommand), newValue);
+		char sBufferCMD[64];
+		Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommand);
+		if(GetCommandFlags(sBufferCMD) == INVALID_FCVAR_FLAGS)
+			RegConsoleCmd(sBufferCMD, Cmd_Weapons, "Open the weapon menu if enabled (in EventDays/for CT)");
+	}
+}
 
 public void OnConfigsExecuted()
 {
@@ -113,6 +129,11 @@ public void OnConfigsExecuted()
 	optionsMenu2 = BuildOptionsMenu(false);
 	optionsMenu3 = BuildOptionsMenuWeapons(true);
 	optionsMenu4 = BuildOptionsMenuWeapons(false);
+	
+	char sBufferCMD[64];
+	Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommand);
+	if(GetCommandFlags(sBufferCMD) == INVALID_FCVAR_FLAGS)
+		RegConsoleCmd(sBufferCMD, Cmd_Weapons, "Open the weapon menu if enabled (in EventDays/for CT)");
 }
 
 Handle BuildOptionsMenu(bool sameWeaponsEnabled)

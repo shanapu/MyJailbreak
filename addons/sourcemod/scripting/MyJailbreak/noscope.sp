@@ -36,6 +36,7 @@ ConVar g_iGetRoundTime;
 ConVar gc_bSounds;
 ConVar gc_sSoundStartPath;
 ConVar gc_iRounds;
+ConVar gc_sCustomCommand;
 
 //Integers
 int g_iOldRoundTime;
@@ -58,6 +59,7 @@ float Pos[3];
 char g_sHasVoted[1500];
 char g_sSoundStartPath[256];
 char g_sWeapon[32];
+char g_sCustomCommand[64];
 
 public Plugin myinfo = {
 	name = "MyJailbreak - NoScope",
@@ -84,13 +86,14 @@ public void OnPluginStart()
 	
 	AutoExecConfig_CreateConVar("sm_noscope_version", PLUGIN_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_PLUGIN|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_noscope_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true,  0.0, true, 1.0);
+	gc_sCustomCommand = AutoExecConfig_CreateConVar("sm_noscope_cmd", "scope", "Set your custom chat command for Event voting. no need for sm_ or !");
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_noscope_warden", "1", "0 - disabled, 1 - allow warden to set noscope round", _, true,  0.0, true, 1.0);
 	gc_bSetA = AutoExecConfig_CreateConVar("sm_noscope_admin", "1", "0 - disabled, 1 - allow admin to set noscope round", _, true,  0.0, true, 1.0);
 	gc_bVote = AutoExecConfig_CreateConVar("sm_noscope_vote", "1", "0 - disabled, 1 - allow player to vote for noscope", _, true,  0.0, true, 1.0);
 	gc_bSpawnCell = AutoExecConfig_CreateConVar("sm_noscope_spawn", "0", "0 - T teleport to CT spawn, 1 - cell doors auto open", _, true,  0.0, true, 1.0);
 	gc_iRounds = AutoExecConfig_CreateConVar("sm_noscope_rounds", "1", "Rounds to play in a row", _, true, 1.0);
 	gc_iWeapon = AutoExecConfig_CreateConVar("sm_noscope_weapon", "1", "1 - ssg08 / 2 - awp / 3 - scar20 / 4 - g3sg1", _, true,  1.0, true, 4.0);
-	gc_bRandom = AutoExecConfig_CreateConVar("sm_noscope_random", "0", "get a random weapon (ssg08,awp,scar20,g3sg1) ignore: sm_noscope_weapon", _, true,  0.0, true, 1.0);
+	gc_bRandom = AutoExecConfig_CreateConVar("sm_noscope_random", "1", "get a random weapon (ssg08,awp,scar20,g3sg1) ignore: sm_noscope_weapon", _, true,  0.0, true, 1.0);
 	gc_bGrav = AutoExecConfig_CreateConVar("sm_noscope_gravity", "1", "0 - disabled, 1 - enable low Gravity for noscope", _, true,  0.0, true, 1.0);
 	gc_fGravValue= AutoExecConfig_CreateConVar("sm_noscope_gravity_value", "0.3","Ratio for Gravity 1.0 earth 0.5 moon", _, true, 0.1, true, 1.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_noscope_roundtime", "5", "Round time in minutes for a single noscope round", _, true, 1.0);
@@ -110,6 +113,7 @@ public void OnPluginStart()
 	HookEvent("round_end", RoundEnd);
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
+	HookConVarChange(gc_sCustomCommand, OnSettingChanged);
 	
 	//Find
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
@@ -118,6 +122,7 @@ public void OnPluginStart()
 	m_flNextSecondaryAttack = FindSendPropInfo("CBaseCombatWeapon", "m_flNextSecondaryAttack");
 	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
+	gc_sCustomCommand.GetString(g_sCustomCommand , sizeof(g_sCustomCommand));
 	
 }
 
@@ -134,6 +139,14 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 	{
 		strcopy(g_sSoundStartPath, sizeof(g_sSoundStartPath), newValue);
 		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
+	}
+	else if(convar == gc_sCustomCommand)
+	{
+		strcopy(g_sCustomCommand, sizeof(g_sCustomCommand), newValue);
+		char sBufferCMD[64];
+		Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommand);
+		if(GetCommandFlags(sBufferCMD) == INVALID_FCVAR_FLAGS)
+			RegConsoleCmd(sBufferCMD, VoteNoScope, "Allows players to vote for noscope");
 	}
 }
 
@@ -163,6 +176,11 @@ public void OnConfigsExecuted()
 	if (gc_iWeapon.IntValue == 2) g_sWeapon = "weapon_awp";
 	if (gc_iWeapon.IntValue == 3) g_sWeapon = "weapon_scar20";
 	if (gc_iWeapon.IntValue == 4) g_sWeapon = "weapon_g3sg1";
+	
+	char sBufferCMD[64];
+	Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommand);
+	if(GetCommandFlags(sBufferCMD) == INVALID_FCVAR_FLAGS)
+		RegConsoleCmd(sBufferCMD, VoteNoScope, "Allows players to vote for no scope");
 }
 
 public void OnClientPutInServer(int client)

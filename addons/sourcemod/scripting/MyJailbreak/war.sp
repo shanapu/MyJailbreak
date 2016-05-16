@@ -32,6 +32,7 @@ ConVar gc_sSoundStartPath;
 ConVar gc_bOverlays;
 ConVar gc_sOverlayStartPath;
 ConVar g_iGetRoundTime;
+ConVar gc_sCustomCommand;
 
 //Integers
 int g_iOldRoundTime;
@@ -50,6 +51,7 @@ Handle WarMenu;
 //Strings
 char g_sHasVoted[1500];
 char g_sSoundStartPath[256];
+char g_sCustomCommand[64];
 
 //Floats
 float Pos[3];
@@ -78,6 +80,7 @@ public void OnPluginStart()
 	
 	AutoExecConfig_CreateConVar("sm_war_version", PLUGIN_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_PLUGIN|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_war_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true,  0.0, true, 1.0);
+	gc_sCustomCommand = AutoExecConfig_CreateConVar("sm_war_cmd", "TDM", "Set your custom chat command for Event voting. no need for sm_ or !");
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_war_warden", "1", "0 - disabled, 1 - allow warden to set war round", _, true,  0.0, true, 1.0);
 	gc_bSetA = AutoExecConfig_CreateConVar("sm_war_admin", "1", "0 - disabled, 1 - allow admin to set war round", _, true,  0.0, true, 1.0);
 	gc_bVote = AutoExecConfig_CreateConVar("sm_war_vote", "1", "0 - disabled, 1 - allow player to vote for war", _, true,  0.0, true, 1.0);
@@ -101,6 +104,7 @@ public void OnPluginStart()
 	HookEvent("round_end", RoundEnd);
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
+	HookConVarChange(gc_sCustomCommand, OnSettingChanged);
 	
 	//FindConVar
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
@@ -110,6 +114,7 @@ public void OnPluginStart()
 	g_iGetRoundTime = FindConVar("mp_roundtime");
 	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
+	gc_sCustomCommand.GetString(g_sCustomCommand , sizeof(g_sCustomCommand));
 }
 
 //ConVar Change for Strings
@@ -125,6 +130,14 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 	{
 		strcopy(g_sSoundStartPath, sizeof(g_sSoundStartPath), newValue);
 		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
+	}
+	else if(convar == gc_sCustomCommand)
+	{
+		strcopy(g_sCustomCommand, sizeof(g_sCustomCommand), newValue);
+		char sBufferCMD[64];
+		Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommand);
+		if(GetCommandFlags(sBufferCMD) == INVALID_FCVAR_FLAGS)
+			RegConsoleCmd(sBufferCMD, VoteWar, "Allows players to vote for a war");
 	}
 }
 
@@ -151,6 +164,11 @@ public void OnConfigsExecuted()
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iMaxRound = gc_iRounds.IntValue;
+	
+	char sBufferCMD[64];
+	Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommand);
+	if(GetCommandFlags(sBufferCMD) == INVALID_FCVAR_FLAGS)
+		RegConsoleCmd(sBufferCMD, VoteWar, "Allows players to vote for a war");
 }
 
 //Admin & Warden set Event

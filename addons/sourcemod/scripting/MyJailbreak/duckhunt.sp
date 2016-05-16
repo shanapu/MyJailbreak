@@ -35,6 +35,7 @@ ConVar gc_sOverlayStartPath;
 ConVar g_iGetRoundTime;
 ConVar g_bAllowTP;
 ConVar gc_iRounds;
+ConVar gc_sCustomCommand;
 
 //Integers
 int g_iOldRoundTime;
@@ -54,6 +55,7 @@ Handle AmmoTimer[MAXPLAYERS+1];
 char g_sHasVoted[1500];
 char g_sSoundStartPath[256];
 char huntermodel[256] = "models/player/custom_player/legacy/tm_phoenix_heavy.mdl";
+char g_sCustomCommand[64];
 
 public Plugin myinfo = {
 	name = "MyJailbreak - DuckHunt",
@@ -79,6 +81,7 @@ public void OnPluginStart()
 	
 	AutoExecConfig_CreateConVar("sm_duckhunt_version", PLUGIN_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_PLUGIN|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_duckhunt_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true,  0.0, true, 1.0);
+	gc_sCustomCommand = AutoExecConfig_CreateConVar("sm_duckhunt_cmd", "duck", "Set your custom chat command for Event voting. no need for sm_ or !");
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_duckhunt_warden", "1", "0 - disabled, 1 - allow warden to set duckhunt round", _, true,  0.0, true, 1.0);
 	gc_bSetA = AutoExecConfig_CreateConVar("sm_duckhunt_admin", "1", "0 - disabled, 1 - allow admin to set duckhunt round", _, true,  0.0, true, 1.0);
 	gc_bVote = AutoExecConfig_CreateConVar("sm_duckhunt_vote", "1", "0 - disabled, 1 - allow player to vote for duckhunt", _, true,  0.0, true, 1.0);
@@ -104,6 +107,7 @@ public void OnPluginStart()
 	HookEvent("hegrenade_detonate", HE_Detonate);
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
+	HookConVarChange(gc_sCustomCommand, OnSettingChanged);
 	
 	//FindConVar
 	g_bAllowTP = FindConVar("sv_allow_thirdperson");
@@ -112,7 +116,8 @@ public void OnPluginStart()
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
-	
+	gc_sCustomCommand.GetString(g_sCustomCommand , sizeof(g_sCustomCommand));
+
 	if(g_bAllowTP == INVALID_HANDLE)
 	{
 		SetFailState("sv_allow_thirdperson not found!");
@@ -132,6 +137,14 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 	{
 		strcopy(g_sSoundStartPath, sizeof(g_sSoundStartPath), newValue);
 		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
+	}
+	else if(convar == gc_sCustomCommand)
+	{
+		strcopy(g_sCustomCommand, sizeof(g_sCustomCommand), newValue);
+		char sBufferCMD[64];
+		Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommand);
+		if(GetCommandFlags(sBufferCMD) == INVALID_FCVAR_FLAGS)
+			RegConsoleCmd(sBufferCMD, VoteDuckHunt, "Allows players to vote for a duckhunt");
 	}
 }
 
@@ -164,6 +177,11 @@ public void OnConfigsExecuted()
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iMaxRound = gc_iRounds.IntValue;
+	
+	char sBufferCMD[64];
+	Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommand);
+	if(GetCommandFlags(sBufferCMD) == INVALID_FCVAR_FLAGS)
+		RegConsoleCmd(sBufferCMD, VoteDuckHunt, "Allows players to vote for a duckhunt");
 }
 
 public void OnClientPutInServer(int client)

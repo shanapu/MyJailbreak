@@ -72,6 +72,7 @@ ConVar gc_iWardenColorGreen;
 ConVar gc_iWardenColorBlue;
 ConVar g_bFF;
 ConVar g_bMenuClose;
+ConVar gc_sCustomCommand;
 
 //Bools
 bool IsCountDown = false;
@@ -164,6 +165,7 @@ char g_sColorNamesYellow[64];
 char g_sColorNamesCyan[64];
 char g_sColorNamesWhite[64];
 char g_sColorNames[8][64] ={{""},{""},{""},{""},{""},{""},{""},{""}};
+char g_sCustomCommand[64];
 
 //float
 float g_fMarkerRadiusMin = 100.0;
@@ -242,6 +244,7 @@ public void OnPluginStart()
 	
 	AutoExecConfig_CreateConVar("sm_warden_version", PLUGIN_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_PLUGIN|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_warden_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true,  0.0, true, 1.0);
+	gc_sCustomCommand = AutoExecConfig_CreateConVar("sm_warden_cmd", "simon", "Set your custom chat command for become warden. no need for sm_ or !");
 	gc_bBecomeWarden = AutoExecConfig_CreateConVar("sm_warden_become", "1", "0 - disabled, 1 - enable !w / !warden - player can choose to be warden. If disabled you should need sm_warden_choose_random 1", _, true,  0.0, true, 1.0);
 	gc_bChooseRandom = AutoExecConfig_CreateConVar("sm_warden_choose_random", "1", "0 - disabled, 1 - enable pic random warden if there is still no warden after sm_warden_choose_time", _, true,  0.0, true, 1.0);
 	gc_hRandomTimer = AutoExecConfig_CreateConVar("sm_warden_choose_time", "45", "Time in seconds a random warden will picked when no warden was set. need sm_warden_choose_random 1", _, true,  1.0);
@@ -305,6 +308,7 @@ public void OnPluginStart()
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sOverlayStopPath, OnSettingChanged);
 	HookConVarChange(gc_sIconPath, OnSettingChanged);
+	HookConVarChange(gc_sCustomCommand, OnSettingChanged);
 	
 	//FindConVar
 	g_bMenuClose = FindConVar("sm_menu_close");
@@ -317,6 +321,7 @@ public void OnPluginStart()
 	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
 	gc_sOverlayStopPath.GetString(g_sOverlayStopPath , sizeof(g_sOverlayStopPath));
 	gc_sIconPath.GetString(g_sIconPath , sizeof(g_sIconPath));
+	gc_sCustomCommand.GetString(g_sCustomCommand , sizeof(g_sCustomCommand));
 	
 	g_iCollisionOffset = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
 	
@@ -387,6 +392,14 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 		strcopy(g_sIconPath, sizeof(g_sIconPath), newValue);
 		if(gc_bIcon.BoolValue) PrecacheModelAnyDownload(g_sIconPath);
 	}
+	else if(convar == gc_sCustomCommand)
+	{
+		strcopy(g_sCustomCommand, sizeof(g_sCustomCommand), newValue);
+		char sBufferCMD[64];
+		Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommand);
+		if(GetCommandFlags(sBufferCMD) == INVALID_FCVAR_FLAGS)
+			RegConsoleCmd(sBufferCMD, BecomeWarden, "Allows the player taking the charge over prisoners");
+	}
 }
 
 //Initialize Plugin
@@ -396,6 +409,11 @@ public void OnConfigsExecuted()
 	g_iMathMin = gc_iMinimumNumber.IntValue;
 	g_iMathMax = gc_iMaximumNumber.IntValue;
 	g_iKillKind = gc_iRandomKind.IntValue;
+	
+	char sBufferCMD[64];
+	Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommand);
+	if(GetCommandFlags(sBufferCMD) == INVALID_FCVAR_FLAGS)
+		RegConsoleCmd(sBufferCMD, BecomeWarden, "Allows the player taking the charge over prisoners");
 }
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)

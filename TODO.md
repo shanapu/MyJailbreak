@@ -1,9 +1,9 @@
 know bugs:
-- [ ] countdown: Start -> Cancel -> Start - bug? (which countdowns?)
+- [ ] countdown: Start -> Cancel -> Start - bug
 - [ ] weapons.smx "block" stamm vip models?!
 - [ ] Suicide Bomber win -> T win show wrong - solution: mp_default_team_winner_no_objective?
-- [?] catch win -> T win show wrong
-- [?] hide win -> T win show wrong
+- [ ] catch win -> T win show wrong - solution: mp_default_team_winner_no_objective?
+- [ ] hide win -> T win show wrong - solution: mp_default_team_winner_no_objective?
 - [?] duckhunt&knife end FP
 - [?] warden icon losing head postion
 
@@ -30,7 +30,7 @@ want:
 - [ ] warden: disarm when shot on Arms/hand (all CT?)
 - [ ] updater support
 - [ ] duckhunt: change +attack to +secAttack
-- [ ] all: custom command support !mycommand
+- [x] all: custom command support !mycommand
 - [ ] all: format centertext <font size='30' color='#FF00FF'>test</font>
 - [ ] all: restrict map heal station https://forums.alliedmods.net/showthread.php?t=267167
 - [ ] knife: vote on roundstart for grav skate tp or all

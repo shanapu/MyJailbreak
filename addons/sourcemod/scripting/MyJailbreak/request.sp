@@ -42,6 +42,10 @@ ConVar gc_iHealColorBlue;
 ConVar gc_bRepeat;
 ConVar gc_iRepeatLimit;
 ConVar gc_sSoundRepeatPath;
+ConVar gc_sCustomCommandHeal;
+ConVar gc_sCustomCommandCapitulation;
+ConVar gc_sCustomCommandRefuse;
+ConVar gc_sCustomCommandRepeat;
 
 //Bools
 bool g_bHealed[MAXPLAYERS+1];
@@ -75,6 +79,10 @@ char g_sSoundRefusePath[256];
 char g_sSoundRefuseStopPath[256];
 char g_sSoundRepeatPath[256];
 char g_sSoundCapitulationPath[256];
+char g_sCustomCommandHeal[64];
+char g_sCustomCommandCapitulation[64];
+char g_sCustomCommandRepeat[64];
+char g_sCustomCommandRefuse[64];
 
 public Plugin myinfo = 
 {
@@ -92,20 +100,14 @@ public void OnPluginStart()
 	LoadTranslations("MyJailbreak.Request.phrases");
 	
 	//Client Commands
-	RegConsoleCmd("sm_ref", Command_refuse, "Allows the Warden start refusing time and Terrorist to refuse a game");
 	RegConsoleCmd("sm_refuse", Command_refuse, "Allows the Warden start refusing time and Terrorist to refuse a game");
 	
-	RegConsoleCmd("sm_c", Command_Capitulation, "Allows a rebeling terrorist to request a capitulate");
 	RegConsoleCmd("sm_capitulation", Command_Capitulation, "Allows a rebeling terrorist to request a capitulate");
-	RegConsoleCmd("sm_p", Command_Capitulation, "Allows a rebeling terrorist to request a capitulate");
 	RegConsoleCmd("sm_pardon", Command_Capitulation, "Allows a rebeling terrorist to request a capitulate");
 	
-	RegConsoleCmd("sm_h", Command_Heal, "Allows a Terrorist request healing");
 	RegConsoleCmd("sm_heal", Command_Heal, "Allows a Terrorist request healing");
 	
-	RegConsoleCmd("sm_rep", Command_Repeat, "Allows a Terrorist request repeat");
 	RegConsoleCmd("sm_repeat", Command_Repeat, "Allows a Terrorist request repeat");
-	RegConsoleCmd("sm_what", Command_Repeat, "Allows a Terrorist request repeat");
 	
 	//AutoExecConfig
 	AutoExecConfig_SetFile("Request", "MyJailbreak");
@@ -115,6 +117,7 @@ public void OnPluginStart()
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_request_enable", "1", "0 - disabled, 1 - enable Request Plugin");
 	gc_bSounds = AutoExecConfig_CreateConVar("sm_request_sounds_enable", "1", "0 - disabled, 1 - enable sounds ", _, true,  0.0, true, 1.0);
 	gc_bRefuse = AutoExecConfig_CreateConVar("sm_refuse_enable", "1", "0 - disabled, 1 - enable Refuse");
+	gc_sCustomCommandRefuse = AutoExecConfig_CreateConVar("sm_refuse_cmd", "ref", "Set your custom chat command for Refuse. no need for sm_ or !");
 	gc_bWardenAllowRefuse = AutoExecConfig_CreateConVar("sm_refuse_allow", "1", "0 - disabled, 1 - Warden must allow !refuse before T can use it");
 	gc_iRefuseLimit = AutoExecConfig_CreateConVar("sm_refuse_limit", "1", "Сount how many times you can use the command");
 	gc_fRefuseTime = AutoExecConfig_CreateConVar("sm_refuse_time", "10.0", "Time the player gets to refuse after warden open refuse with !refuse / colortime");
@@ -124,6 +127,7 @@ public void OnPluginStart()
 	gc_sSoundRefusePath = AutoExecConfig_CreateConVar("sm_refuse_sound", "music/MyJailbreak/refuse.mp3", "Path to the soundfile which should be played for a refusing.");
 	gc_sSoundRefuseStopPath = AutoExecConfig_CreateConVar("sm_refuse_stop_sound", "music/MyJailbreak/stop.mp3", "Path to the soundfile which should be played after a refusing.");
 	gc_bCapitulation = AutoExecConfig_CreateConVar("sm_capitulation_enable", "1", "0 - disabled, 1 - enable Capitulation");
+	gc_sCustomCommandCapitulation = AutoExecConfig_CreateConVar("sm_capitulation_cmd", "capi", "Set your custom chat command for Capitulation. no need for sm_ or !");
 	gc_fCapitulationTime = AutoExecConfig_CreateConVar("sm_capitulation_timer", "10.0", "Time to decide to accept the capitulation");
 	gc_fRebelTime = AutoExecConfig_CreateConVar("sm_capitulation_rebel_timer", "10.0", "Time to give a rebel on not accepted capitulation his knife back");
 	gc_bCapitulationDamage = AutoExecConfig_CreateConVar("sm_capitulation_damage", "1", "0 - disabled, 1 - enable Terror make no damage after capitulation");
@@ -132,6 +136,7 @@ public void OnPluginStart()
 	gc_iCapitulationColorBlue = AutoExecConfig_CreateConVar("sm_capitulation_color_blue", "0","What color to turn the capitulation Terror into (rgB): x - blue value", _, true, 0.0, true, 255.0);
 	gc_sSoundCapitulationPath = AutoExecConfig_CreateConVar("sm_capitulation_sound", "music/MyJailbreak/capitulation.mp3", "Path to the soundfile which should be played for a capitulation.");
 	gc_bHeal = AutoExecConfig_CreateConVar("sm_heal_enable", "1", "0 - disabled, 1 - enable heal");
+	gc_sCustomCommandHeal = AutoExecConfig_CreateConVar("sm_heal_cmd", "cure", "Set your custom chat command for Heal. no need for sm_ or !");
 	gc_bHealthShot = AutoExecConfig_CreateConVar("sm_heal_healthshot", "1", "0 - disabled, 1 - enable give healthshot on accept to terror");
 	gc_iHealLimit = AutoExecConfig_CreateConVar("sm_heal_limit", "2", "Сount how many times you can use the command");
 	gc_fHealTime = AutoExecConfig_CreateConVar("sm_heal_time", "10.0", "Time after the player gets his normal colors back");
@@ -139,6 +144,7 @@ public void OnPluginStart()
 	gc_iHealColorGreen = AutoExecConfig_CreateConVar("sm_heal_color_green", "0","What color to turn the heal Terror into (rGb): x - green value", _, true, 0.0, true, 255.0);
 	gc_iHealColorBlue = AutoExecConfig_CreateConVar("sm_heal_color_blue", "100","What color to turn the heal Terror into (rgB): x - blue value", _, true, 0.0, true, 255.0);
 	gc_bRepeat = AutoExecConfig_CreateConVar("sm_repeat_enable", "1", "0 - disabled, 1 - enable repeat");
+	gc_sCustomCommandRepeat = AutoExecConfig_CreateConVar("sm_repeat_cmd", "what", "Set your custom chat command for Repeat. no need for sm_ or !");
 	gc_iRepeatLimit = AutoExecConfig_CreateConVar("sm_repeat_limit", "2", "Сount how many times you can use the command");
 	gc_sSoundRepeatPath = AutoExecConfig_CreateConVar("sm_repeat_sound", "music/MyJailbreak/repeat.mp3", "Path to the soundfile which should be played for a repeat.");
 	
@@ -147,12 +153,24 @@ public void OnPluginStart()
 	
 	//Hooks
 	HookEvent("round_start", RoundStart);
+	HookConVarChange(gc_sSoundRefusePath, OnSettingChanged);
+	HookConVarChange(gc_sSoundRefuseStopPath, OnSettingChanged);
+	HookConVarChange(gc_sSoundCapitulationPath, OnSettingChanged);
+	HookConVarChange(gc_sSoundRepeatPath, OnSettingChanged);
+	HookConVarChange(gc_sCustomCommandHeal, OnSettingChanged);
+	HookConVarChange(gc_sCustomCommandRefuse, OnSettingChanged);
+	HookConVarChange(gc_sCustomCommandRepeat, OnSettingChanged);
+	HookConVarChange(gc_sCustomCommandCapitulation, OnSettingChanged);
 	
 	//FindConVar
 	gc_sSoundRefusePath.GetString(g_sSoundRefusePath, sizeof(g_sSoundRefusePath));
 	gc_sSoundRefuseStopPath.GetString(g_sSoundRefuseStopPath, sizeof(g_sSoundRefuseStopPath));
 	gc_sSoundCapitulationPath.GetString(g_sSoundCapitulationPath, sizeof(g_sSoundCapitulationPath));
 	gc_sSoundRepeatPath.GetString(g_sSoundRepeatPath, sizeof(g_sSoundRepeatPath));
+	gc_sCustomCommandHeal.GetString(g_sCustomCommandHeal , sizeof(g_sCustomCommandHeal));
+	gc_sCustomCommandRefuse.GetString(g_sCustomCommandRefuse , sizeof(g_sCustomCommandRefuse));
+	gc_sCustomCommandRepeat.GetString(g_sCustomCommandRepeat , sizeof(g_sCustomCommandRepeat));
+	gc_sCustomCommandCapitulation.GetString(g_sCustomCommandCapitulation , sizeof(g_sCustomCommandCapitulation));
 }
 
 public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
@@ -172,6 +190,43 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 		strcopy(g_sSoundRepeatPath, sizeof(g_sSoundRepeatPath), newValue);
 		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundRepeatPath);
 	}
+	else if(convar == gc_sSoundCapitulationPath)
+	{
+		strcopy(g_sSoundCapitulationPath, sizeof(g_sSoundCapitulationPath), newValue);
+		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundCapitulationPath);
+	}
+	else if(convar == gc_sCustomCommandHeal)
+	{
+		strcopy(g_sCustomCommandHeal, sizeof(g_sCustomCommandHeal), newValue);
+		char sBufferCMD[64];
+		Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommandHeal);
+		if(GetCommandFlags(sBufferCMD) == INVALID_FCVAR_FLAGS)
+			RegConsoleCmd(sBufferCMD, Command_Heal, "Allows a Terrorist request a healing");
+	}
+	else if(convar == gc_sCustomCommandRefuse)
+	{
+		strcopy(g_sCustomCommandRefuse, sizeof(g_sCustomCommandRefuse), newValue);
+		char sBufferCMD[64];
+		Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommandRefuse);
+		if(GetCommandFlags(sBufferCMD) == INVALID_FCVAR_FLAGS)
+			RegConsoleCmd(sBufferCMD, Command_refuse, "Allows the Warden start refusing time and Terrorist to refuse a game");
+	}
+	else if(convar == gc_sCustomCommandRepeat)
+	{
+		strcopy(g_sCustomCommandRepeat, sizeof(g_sCustomCommandRepeat), newValue);
+		char sBufferCMD[64];
+		Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommandRepeat);
+		if(GetCommandFlags(sBufferCMD) == INVALID_FCVAR_FLAGS)
+			RegConsoleCmd(sBufferCMD, Command_Repeat, "Allows a Terrorist request a repeat");
+	}
+	else if(convar == gc_sCustomCommandCapitulation)
+	{
+		strcopy(g_sCustomCommandCapitulation, sizeof(g_sCustomCommandCapitulation), newValue);
+		char sBufferCMD[64];
+		Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommandCapitulation);
+		if(GetCommandFlags(sBufferCMD) == INVALID_FCVAR_FLAGS)
+			RegConsoleCmd(sBufferCMD, Command_Capitulation, "Allows a rebeling terrorist to request a capitulate");
+	}
 }
 
 public void OnMapStart()
@@ -183,6 +238,26 @@ public void OnMapStart()
 		PrecacheSoundAnyDownload(g_sSoundCapitulationPath);
 		PrecacheSoundAnyDownload(g_sSoundRepeatPath);
 	}
+}
+
+public void OnConfigsExecuted()
+{
+	g_iCountStopTime = gc_fRefuseTime.IntValue;
+	
+	char sBufferCMDHeal[64], sBufferCMDRepeat[64], sBufferCMDRefuse[64], sBufferCMDCapitulation[64];
+	
+	Format(sBufferCMDHeal, sizeof(sBufferCMDHeal), "sm_%s", g_sCustomCommandHeal);
+	Format(sBufferCMDRefuse, sizeof(sBufferCMDRefuse), "sm_%s", g_sCustomCommandRefuse);
+	Format(sBufferCMDRepeat, sizeof(sBufferCMDRepeat), "sm_%s", g_sCustomCommandRepeat);
+	Format(sBufferCMDCapitulation, sizeof(sBufferCMDCapitulation), "sm_%s", g_sCustomCommandCapitulation);
+	if(GetCommandFlags(sBufferCMDHeal) == INVALID_FCVAR_FLAGS)
+		RegConsoleCmd(sBufferCMDHeal, Command_Heal, "Allows a Terrorist request healing");
+	if(GetCommandFlags(sBufferCMDRepeat) == INVALID_FCVAR_FLAGS)
+		RegConsoleCmd(sBufferCMDRepeat, Command_Repeat, "Allows a Terrorist request repeat");
+	if(GetCommandFlags(sBufferCMDRefuse) == INVALID_FCVAR_FLAGS)
+		RegConsoleCmd(sBufferCMDRefuse, Command_refuse, "Allows the Warden start refusing time and Terrorist to refuse a game");
+	if(GetCommandFlags(sBufferCMDCapitulation) == INVALID_FCVAR_FLAGS)
+		RegConsoleCmd(sBufferCMDCapitulation, Command_Capitulation, "Allows a rebeling terrorist to request a capitulate");
 }
 
 

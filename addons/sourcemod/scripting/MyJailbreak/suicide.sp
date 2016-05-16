@@ -48,6 +48,7 @@ ConVar gc_sSoundSuicideBomberPath;
 ConVar gc_sSoundBoomPath;
 ConVar g_iGetRoundTime;
 ConVar gc_iRounds;
+ConVar gc_sCustomCommand;
 
 //Integers
 int g_iVoteCount;
@@ -68,6 +69,7 @@ char g_sSoundBoomPath[256];
 char g_sSoundSuicideBomberPath[256];
 char g_sHasVoted[1500];
 char g_sSoundStartPath[256];
+char g_sCustomCommand[64];
 
 public Plugin myinfo = {
 	name = "MyJailbreak - Suicide Bomber",
@@ -84,9 +86,7 @@ public void OnPluginStart()
 	LoadTranslations("MyJailbreak.SuicideBomber.phrases");
 	
 	//Client Commands
-	RegConsoleCmd("sm_setsuicide", SetSuicideBomber, "Allows the Admin or Warden to set Suicide Bomber as next round");
 	RegConsoleCmd("sm_setsuicidebomber", SetSuicideBomber, "Allows the Admin or Warden to set Suicide Bomber as next round");
-	RegConsoleCmd("sm_suicide", VoteSuicideBomber, "Allows players to vote for a duckhunt");
 	RegConsoleCmd("sm_suicidebomber", VoteSuicideBomber, "Allows players to vote for a duckhunt");
 	RegConsoleCmd("sm_sprint", Command_StartSprint, "Starts the sprint");
 	RegConsoleCmd("sm_makeboom", Command_BombSuicideBomber, "Suicide with bomb");
@@ -97,6 +97,7 @@ public void OnPluginStart()
 	
 	AutoExecConfig_CreateConVar("sm_suicidebomber_version", PLUGIN_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_PLUGIN|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_suicidebomber_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true,  0.0, true, 1.0);
+	gc_sCustomCommand = AutoExecConfig_CreateConVar("sm_suicidebomber_cmd", "suicide", "Set your custom chat command for Event voting. no need for sm_ or !");
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_suicidebomber_warden", "1", "0 - disabled, 1 - allow warden to set Suicide Bomber round", _, true,  0.0, true, 1.0);
 	gc_bSetA = AutoExecConfig_CreateConVar("sm_suicidebomber_admin", "1", "0 - disabled, 1 - allow admin to set Suicide Bomber round", _, true,  0.0, true, 1.0);
 	gc_bVote = AutoExecConfig_CreateConVar("sm_suicidebomber_vote", "1", "0 - disabled, 1 - allow player to vote for Suicide Bomber", _, true,  0.0, true, 1.0);
@@ -131,6 +132,7 @@ public void OnPluginStart()
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundSuicideBomberPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundBoomPath, OnSettingChanged);
+	HookConVarChange(gc_sCustomCommand, OnSettingChanged);
 	
 	//FindConVar
 	g_iGetRoundTime = FindConVar("mp_roundtime");
@@ -140,6 +142,7 @@ public void OnPluginStart()
 	gc_sSoundBoomPath.GetString(g_sSoundBoomPath, sizeof(g_sSoundBoomPath));
 	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
+	gc_sCustomCommand.GetString(g_sCustomCommand , sizeof(g_sCustomCommand));
 	
 	AddCommandListener(Command_LAW, "+lookatweapon");
 }
@@ -167,6 +170,14 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 	{
 		strcopy(g_sSoundStartPath, sizeof(g_sSoundStartPath), newValue);
 		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
+	}
+	else if(convar == gc_sCustomCommand)
+	{
+		strcopy(g_sCustomCommand, sizeof(g_sCustomCommand), newValue);
+		char sBufferCMD[64];
+		Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommand);
+		if(GetCommandFlags(sBufferCMD) == INVALID_FCVAR_FLAGS)
+			RegConsoleCmd(sBufferCMD, VoteSuicideBomber, "Allows players to vote for a SuicideBomber ");
 	}
 }
 
@@ -198,6 +209,11 @@ public void OnConfigsExecuted()
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
 	g_iMaxRound = gc_iRounds.IntValue;
+	
+	char sBufferCMD[64];
+	Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommand);
+	if(GetCommandFlags(sBufferCMD) == INVALID_FCVAR_FLAGS)
+		RegConsoleCmd(sBufferCMD, VoteSuicideBomber, "Allows players to vote for a SuicideBomber");
 }
 
 public void OnClientPutInServer(int client)

@@ -46,6 +46,7 @@ ConVar gc_iRounds;
 ConVar g_bNoBloodSplatter;
 ConVar g_bNoBloodSplash;
 ConVar g_bNoBlood;
+ConVar gc_sCustomCommand;
 
 //Integers
 int g_iVoteCount;
@@ -64,6 +65,7 @@ char g_sSoundUnFreezePath[256];
 char g_sSoundFreezePath[256];
 char g_sHasVoted[1500];
 char g_sOverlayFreeze[256];
+char g_sCustomCommand[64];
 
 public Plugin myinfo = {
 	name = "MyJailbreak - Catch & Freeze",
@@ -90,6 +92,7 @@ public void OnPluginStart()
 	
 	AutoExecConfig_CreateConVar("sm_catch_version", PLUGIN_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_PLUGIN|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_catch_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true, 0.0, true, 1.0);
+	gc_sCustomCommand = AutoExecConfig_CreateConVar("sm_catch_cmd", "cat", "Set your custom chat command for Event voting. no need for sm_ or !");
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_catch_warden", "1", "0 - disabled, 1 - allow warden to set catch round", _, true, 0.0, true, 1.0);
 	gc_bSetA = AutoExecConfig_CreateConVar("sm_catch_admin", "1", "0 - disabled, 1 - allow admin to set catch round", _, true, 0.0, true, 1.0);
 	gc_bVote = AutoExecConfig_CreateConVar("sm_catch_vote", "1", "0 - disabled, 1 - allow player to vote for catch", _, true, 0.0, true, 1.0);
@@ -108,9 +111,9 @@ public void OnPluginStart()
 	gc_iSprintCooldown= AutoExecConfig_CreateConVar("sm_catch_sprint_cooldown", "10", "Time in seconds the player must wait for the next sprint", _, true, 0.0);
 	gc_fSprintSpeed = AutoExecConfig_CreateConVar("sm_catch_sprint_speed", "1.25", "Ratio for how fast the player will sprint", _, true, 1.01);
 	gc_fSprintTime = AutoExecConfig_CreateConVar("sm_catch_sprint_time", "3.0", "Time in seconds the player will sprint", _, true, 1.0);
-	g_bNoBlood = CreateConVar("sm_catch_noblood", "1", "Enable / Disable No Blood", _, true, 0.0, true, 1.0);
-	g_bNoBloodSplatter = CreateConVar("sm_catch_noblood_splatter", "1", "Enable / Disable No Blood Splatter", _, true, 0.0, true, 1.0);
-	g_bNoBloodSplash = CreateConVar("sm_catch_noblood_splash", "1", "Enable / Disable No Blood Splash", _, true, 0.0, true, 1.0);
+	g_bNoBlood = CreateConVar("sm_catch_noblood", "1", "0 - disabled, 1 - enable No Blood", _, true, 0.0, true, 1.0);
+	g_bNoBloodSplatter = CreateConVar("sm_catch_noblood_splatter", "1", "0 - disabled, 1 - enable No Blood Splatter", _, true, 0.0, true, 1.0);
+	g_bNoBloodSplash = CreateConVar("sm_catch_noblood_splash", "1", "0 - disabled, 1 - enable No Blood Splash", _, true, 0.0, true, 1.0);
 
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
@@ -126,6 +129,7 @@ public void OnPluginStart()
 	HookConVarChange(gc_sOverlayFreeze, OnSettingChanged);
 	HookConVarChange(gc_sSoundFreezePath, OnSettingChanged);
 	HookConVarChange(gc_sSoundUnFreezePath, OnSettingChanged);
+	HookConVarChange(gc_sCustomCommand, OnSettingChanged);
 	
 	//FindConVar
 	g_iMaxRound = gc_iRounds.IntValue;
@@ -134,6 +138,7 @@ public void OnPluginStart()
 	gc_sSoundFreezePath.GetString(g_sSoundFreezePath, sizeof(g_sSoundFreezePath));
 	gc_sSoundUnFreezePath.GetString(g_sSoundUnFreezePath, sizeof(g_sSoundUnFreezePath));
 	gc_sOverlayFreeze.GetString(g_sOverlayFreeze , sizeof(g_sOverlayFreeze));
+	gc_sCustomCommand.GetString(g_sCustomCommand , sizeof(g_sCustomCommand));
 }
 
 //ConVar Change for Strings
@@ -154,6 +159,14 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 	{
 		strcopy(g_sOverlayFreeze, sizeof(g_sOverlayFreeze), newValue);
 		if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayFreeze);
+	}
+	else if(convar == gc_sCustomCommand)
+	{
+		strcopy(g_sCustomCommand, sizeof(g_sCustomCommand), newValue);
+		char sBufferCMD[64];
+		Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommand);
+		if(GetCommandFlags(sBufferCMD) == INVALID_FCVAR_FLAGS)
+			RegConsoleCmd(sBufferCMD, VoteCatch, "Allows players to vote for a catch ");
 	}
 }
 
@@ -178,6 +191,11 @@ public void OnConfigsExecuted()
 {
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iMaxRound = gc_iRounds.IntValue;
+	
+	char sBufferCMD[64];
+	Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommand);
+	if(GetCommandFlags(sBufferCMD) == INVALID_FCVAR_FLAGS)
+		RegConsoleCmd(sBufferCMD, VoteCatch, "Allows players to vote for a catch ");
 }
 
 public void OnClientPutInServer(int client)
