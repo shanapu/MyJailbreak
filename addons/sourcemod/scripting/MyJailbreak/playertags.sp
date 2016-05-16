@@ -93,7 +93,7 @@ public int HandleTag(int client)
 {
 	if(gc_bPlugin.BoolValue)
 	{
-		if(gc_bStats.BoolValue && IsValidClient(client, false, false))
+		if(gc_bStats.BoolValue && IsValidClient(client, true, true))
 		{	
 			char tagsTA[255], tagsT[255], tagsCT[255], tagsCTA[255], tagsW[255], tagsWA[255];
 			
