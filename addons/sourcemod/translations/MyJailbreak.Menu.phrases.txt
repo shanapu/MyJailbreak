@@ -115,6 +115,11 @@
 		"#format"		""
 		"en"			"Join Counter-Terror"
 	}
+	"menu_guardct"
+	{
+		"#format"		""
+		"en"			"Join CT queue (!guard)"
+	}
 	"menu_votect"
 	{
 		"#format"		""
