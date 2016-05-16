@@ -73,6 +73,7 @@ ConVar gc_iWardenColorBlue;
 ConVar g_bFF;
 ConVar g_bMenuClose;
 ConVar gc_sCustomCommand;
+ConVar gc_fAllowDropTime;
 
 //Bools
 bool IsCountDown = false;
@@ -88,7 +89,8 @@ bool g_bDrawerT = false;
 bool g_bNoBlock = true;
 bool g_bLaserColorRainbow[MAXPLAYERS+1] = true;
 bool g_bDrawerColorRainbow[MAXPLAYERS+1] = true;
-bool g_bWeaponDropped = false;
+bool g_bWeaponDropped[MAXPLAYERS+1] = false;
+bool g_bAllowDrop;
 
 //Integers
 
@@ -254,6 +256,7 @@ public void OnPluginStart()
 	gc_bNoBlock = AutoExecConfig_CreateConVar("sm_warden_noblock", "1", "0 - disabled, 1 - enable setable noblock for warden", _, true,  0.0, true, 1.0);
 	gc_bFF = AutoExecConfig_CreateConVar("sm_warden_ff", "1", "0 - disabled, 1 - enable switch ff for T ", _, true,  0.0, true, 1.0);
 	gc_bGunPlant = AutoExecConfig_CreateConVar("sm_warden_gunplant", "1", "0 - disabled, 1 - enable Gun plant prevention", _, true,  0.0, true, 1.0);
+	gc_fAllowDropTime = AutoExecConfig_CreateConVar("sm_warden_allow_time", "15.0", "Time in seconds CTs allowed to drop weapon on round beginn.", _, true,  0.1);
 	gc_bGunNoDrop = AutoExecConfig_CreateConVar("sm_warden_gunnodrop", "0", "0 - disabled, 1 - disallow gun dropping for ct", _, true,  0.0, true, 1.0);
 	gc_bGunRemove = AutoExecConfig_CreateConVar("sm_warden_gunremove", "1", "0 - disabled, 1 - remove planted guns", _, true,  0.0, true, 1.0);
 	gc_fGunRemoveTime = AutoExecConfig_CreateConVar("sm_warden_gunremove_time", "5.0", "Time in seconds to pick up gun again before.", _, true,  0.1);
@@ -477,7 +480,6 @@ public void RoundStart(Event event, const char[] name, bool dontBroadcast)
 			}
 		}
 	}
-	
 	if(gc_bPlugin.BoolValue)	
 	{
 		g_iOpenTimer = GetConVarInt(gc_hOpenTimer);
@@ -532,6 +534,8 @@ public void RoundStart(Event event, const char[] name, bool dontBroadcast)
 	{
 		IconTimer = CreateTimer(0.5, Create_Icon, g_iWarden, TIMER_REPEAT);
 	}
+	g_bAllowDrop = true;
+	CreateTimer (gc_fAllowDropTime.FloatValue, AllowDropTimer);
 }
 
 //Round End
@@ -2674,7 +2678,7 @@ public Action OpenCounter(Handle timer, Handle pack)
 		{
 			if(warden_exist() != 1)
 			{
-				if(gc_bOpenTimer.BoolValue)	
+				if(gc_bOpenTimer.BoolValue)
 				{
 				SJD_OpenDoors(); 
 				CPrintToChatAll("%t %t", "warden_tag" , "warden_openauto");
@@ -2706,7 +2710,7 @@ public Action OpenCounter(Handle timer, Handle pack)
 
 public Action OpenDoors(int client, int args)
 {
-	if(gc_bPlugin.BoolValue)	
+	if(gc_bPlugin.BoolValue)
 	{
 		if(gc_bOpen.BoolValue)
 		{
@@ -2725,7 +2729,7 @@ public Action OpenDoors(int client, int args)
 
 public Action CloseDoors(int client, int args)
 {
-	if(gc_bPlugin.BoolValue)	
+	if(gc_bPlugin.BoolValue)
 	{
 		if(gc_bOpen.BoolValue)
 		{
@@ -2744,23 +2748,26 @@ public Action CloseDoors(int client, int args)
 
 public Action CS_OnCSWeaponDrop(int client, int weapon)
 {
-	if(gc_bPlugin.BoolValue)	
+	if(gc_bPlugin.BoolValue)
 	{
 		if(gc_bGunPlant.BoolValue)
 		{
 			if(GetClientTeam(client) == CS_TEAM_CT)
 			{
-				if (g_bWeaponDropped) 
-					return Plugin_Handled;
-					
-				if(gc_bGunNoDrop.BoolValue)
-					return Plugin_Handled;
-					
-				g_iWeaponDrop[client] = weapon;
-				
-				if(IsValidEntity(weapon))
+				if(!g_bAllowDrop)
 				{
-					if (!g_bWeaponDropped) CreateTimer(0.1, DroppedWeapon, client);
+					if (g_bWeaponDropped[client]) 
+						return Plugin_Handled;
+						
+					if(gc_bGunNoDrop.BoolValue)
+						return Plugin_Handled;
+						
+					g_iWeaponDrop[client] = weapon;
+					
+					if(IsValidEntity(weapon))
+					{
+						if (!g_bWeaponDropped[client]) CreateTimer(0.1, DroppedWeapon, client);
+					}
 				}
 			}
 		}
@@ -2778,7 +2785,7 @@ public Action DroppedWeapon(Handle timer, any client)
 			
 			GetEntityClassname(g_iWeaponDrop[client], g_sWeaponName, sizeof(g_sWeaponName));
 			ReplaceString(g_sWeaponName, sizeof(g_sWeaponName), "weapon_", "", false); 
-			g_bWeaponDropped = true;
+			g_bWeaponDropped[client] = true;
 			
 			CPrintToChat(client, "%t %t", "warden_tag" , "warden_noplant", client , g_sWeaponName);
 			if(g_iWarden != -1) CPrintToChat(g_iWarden, "%t %t", "warden_tag" , "warden_gunplant", client , g_sWeaponName);
@@ -2800,7 +2807,12 @@ public Action RemoveWeapon(Handle timer, any client)
 		}
 		
 	}
-	g_bWeaponDropped = false;
+	g_bWeaponDropped[client] = false;
+}
+
+public Action AllowDropTimer(Handle timer, any client)
+{
+	g_bAllowDrop = false;
 }
 
 //Natives, Forwards & stocks
