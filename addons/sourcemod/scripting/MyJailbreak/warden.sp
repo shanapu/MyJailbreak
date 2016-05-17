@@ -599,8 +599,10 @@ public Action ExitWarden(int client, int args)
 			Forward_OnWardenRemoved(client);
 			CreateTimer( 0.1, RemoveColor, g_iWarden);
 			SetEntityModel(client, g_sModelPath);
+			if (RandomTimer != null)
+			KillTimer(RandomTimer);
+			
 			RandomTimer = null;
-			delete RandomTimer;
 			RandomTimer = CreateTimer(gc_fRandomTimer.FloatValue, ChooseRandom);
 			if(gc_bSounds.BoolValue) EmitSoundToAllAny(g_sUnWarden);
 			RemoveAllMarkers();
@@ -771,8 +773,10 @@ public int SetWardenHandler(Menu menu, MenuAction action, int client, int Positi
 						Call_StartForward(gF_OnWardenCreatedByAdmin);
 						Call_PushCell(i);
 						Call_Finish();
+						if (RandomTimer != null)
+						KillTimer(RandomTimer);
+			
 						RandomTimer = null;
-						delete RandomTimer;
 					}
 				}
 			}
@@ -826,8 +830,10 @@ public int m_WardenOverwrite(Menu menu, MenuAction action, int client, int Posit
 			Call_StartForward(gF_OnWardenCreatedByAdmin);
 			Call_PushCell(newwarden);
 			Call_Finish();
+			if (RandomTimer != null)
+			KillTimer(RandomTimer);
+			
 			RandomTimer = null;
-			delete RandomTimer;
 		}
 		if(g_bMenuClose != null)
 		{
@@ -1154,11 +1160,11 @@ public void SendEndMathQuestion(int client)
 	
 	if(client != -1)
 	{
-		Format(answer, sizeof(answer), "%t %t", "warden_tag", "warden_math_correct", client);
+		Format(answer, sizeof(answer), "%t %t", "warden_tag", "warden_math_correct", client, g_iMathResult);
 		CreateTimer( 5.0, RemoveColor, client);
 		SetEntityRenderColor(client, 0, 255, 0, 255);
 	}
-	else Format(answer, sizeof(answer), "%t %t", "warden_tag", "warden_math_time");
+	else Format(answer, sizeof(answer), "%t %t", "warden_tag", "warden_math_time", g_iMathResult);
 	
 	if(gc_bOverlays.BoolValue)
 	{
@@ -2824,7 +2830,7 @@ public Action DroppedWeapon(Handle timer, any client)
 {
 	if(Weapon_GetOwner(g_iWeaponDrop[client]) == -1)
 	{
-		if(IsValidClient(client, false, true) && !IsClientInLastRequest(client))
+		if(IsValidClient(client, false, false) && !IsClientInLastRequest(client))
 		{
 			char g_sWeaponName[80];
 			
