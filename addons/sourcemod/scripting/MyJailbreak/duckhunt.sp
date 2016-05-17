@@ -558,7 +558,7 @@ public Action HE_Detonate(Handle event, const char[] name, bool dontBroadcast)
 
 public Action AmmoRefill(Handle timer, any client)
 {
-	if(IsPlayerAlive(client))
+	if(IsValidClient(client, false, false))
 	{
 		int weapon = GetEntPropEnt(client, Prop_Data, "m_hActiveWeapon");
 		SetEntProp(weapon, Prop_Send, "m_iPrimaryReserveAmmoCount", 32);
