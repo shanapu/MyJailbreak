@@ -597,15 +597,21 @@
 	}
 	"warden_mute"
 	{
-		"#format"	"{1:N},{2:s},{3:s}"
+		"#format"	"{1:N},{2:N},{3:i}"
 		"en"		"{2} muted by warden {1} for {3} seconds"
 		"de"		"{2} wurde vom Warden {1} für {3} Sekunden gemutet"
+	}
+	"warden_muteend"
+	{
+		"#format"	"{1:N},{2:N}"
+		"en"		"{2} muted by warden {1} until end of the round"
+		"de"		"{2} wurde vom Warden {1} bis zum Ende de Runde gemutet"
 	}
 	"warden_unmute"
 	{
 		"#format"	"{1:N}"
 		"en"		"{1} unmuted"
-		"de"		"{2} wurde entmutet"
+		"de"		"{1} wurde entmutet"
 	}
 	"warden_cdmenu_title"
 	{

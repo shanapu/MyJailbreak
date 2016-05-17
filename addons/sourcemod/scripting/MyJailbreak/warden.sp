@@ -74,6 +74,8 @@ ConVar g_bFF;
 ConVar g_bMenuClose;
 ConVar gc_sCustomCommand;
 ConVar gc_fAllowDropTime;
+ConVar gc_bMute;
+ConVar gc_bMuteEnd;
 
 //Bools
 bool IsCountDown = false;
@@ -222,6 +224,8 @@ public void OnPluginStart()
 //	RegConsoleCmd("sm_cdcancel", CancelCountDown, "Allows the Warden to cancel a running Countdown");
 	RegConsoleCmd("sm_killrandom", KillRandom, "Allows the Warden to kill a random T");
 	RegConsoleCmd("sm_math", StartMathQuestion, "Allows the Warden to start a MathQuiz. Show player with first right Answer");
+	RegConsoleCmd("sm_wmute", MuteMenuPlayer, "Allows a warden to mute all terrorists for a specified duration or untill the next round.");
+	RegConsoleCmd("sm_wunmute", UnMute_Command, "Allows a warden to unmute the terrorists.");
 	
 	//Admin commands
 	RegAdminCmd("sm_sw", SetWarden, ADMFLAG_GENERIC);
@@ -252,6 +256,8 @@ public void OnPluginStart()
 	gc_bVote = AutoExecConfig_CreateConVar("sm_warden_vote", "1", "0 - disabled, 1 - enable player vote against warden", _, true,  0.0, true, 1.0);
 	gc_bStayWarden = AutoExecConfig_CreateConVar("sm_warden_stay", "1", "0 - disabled, 1 - enable warden stay after round end", _, true,  0.0, true, 1.0);
 	gc_bBetterNotes = AutoExecConfig_CreateConVar("sm_warden_better_notifications", "1", "0 - disabled, 1 - Will use hint and center text", _, true, 0.0, true, 1.0);
+	gc_bMute = AutoExecConfig_CreateConVar("sm_warden_mute", "1", "0 - disabled, 1 - Allow the warden to mute T-side player", _, true, 0.0, true, 1.0);
+	gc_bMuteEnd = AutoExecConfig_CreateConVar("sm_warden_mute_round", "1", "0 - disabled, 1 - Allow the warden to mute a player until roundend", _, true, 0.0, true, 1.0);
 	gc_bNoBlock = AutoExecConfig_CreateConVar("sm_warden_noblock", "1", "0 - disabled, 1 - enable setable noblock for warden", _, true,  0.0, true, 1.0);
 	gc_bFF = AutoExecConfig_CreateConVar("sm_warden_ff", "1", "0 - disabled, 1 - enable switch ff for T ", _, true,  0.0, true, 1.0);
 	gc_bGunPlant = AutoExecConfig_CreateConVar("sm_warden_gunplant", "1", "0 - disabled, 1 - enable Gun plant prevention", _, true,  0.0, true, 1.0);
@@ -544,12 +550,14 @@ public void RoundEnd(Event event, const char[] name, bool dontBroadcast)
 		LoopValidClients(i, true, true)
 		{
 			CancelCountDown(i, 0);
+			UnMuteClient(i);
 		}
 	}
 	if (StopTimer != null) KillTimer(StopTimer);
 	if (StartTimer != null) KillTimer(StartTimer);
 	if (StartStopTimer != null) KillTimer(StartStopTimer);
 	g_bDrawerT = false;
+	
 }
 
 //!w
@@ -2021,62 +2029,6 @@ stock void RemoveIcon(int client)
 	}
 }
 
-
-/*
-public Action Create_Icon(Handle iTimer, any client)
-{
-	if((g_iWarden != -1) && (client == g_iWarden))
-	{
-		SafeDelete(g_iIcon[client]);
-		g_iIcon[client] = CreateIcon();
-		PlaceAndBindIcon(client, g_iIcon[client]);
-	}
-}
-
-stock int CreateIcon()
-{
-	int sprite = CreateEntityByName("env_sprite_oriented");
-	
-	if(sprite == -1)	return -1;
-	
-	char iconbuffer[256];
-	Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconPath);
-	
-	DispatchKeyValue(sprite, "classname", "env_sprite_oriented");
-	DispatchKeyValue(sprite, "spawnflags", "1");
-	DispatchKeyValue(sprite, "scale", "0.3");
-	DispatchKeyValue(sprite, "rendermode", "1");
-	DispatchKeyValue(sprite, "rendercolor", "255 255 255");
-	DispatchKeyValue(sprite, "model", iconbuffer);
-	if(DispatchSpawn(sprite))	return sprite;
-	
-	return -1;
-}
-
-public Action PlaceAndBindIcon(int client, int entity)
-{
-	float origin[3];
-	if(IsClientInGame(client)) 
-	{
-		if(IsValidEntity(entity)) 
-		{
-			GetClientAbsOrigin(client, origin);
-			origin[2] = origin[2] + 90.0;
-			TeleportEntity(entity, origin, NULL_VECTOR, NULL_VECTOR);
-
-			SetVariantString("!activator");
-			AcceptEntityInput(entity, "SetParent", client);
-		}
-	}
-}
-
-public Action SafeDelete(int entity)
-{
-	if(IsValidEntity(entity)) {
-		AcceptEntityInput(entity, "Kill");
-	}
-}
-*/
 //Countdown
 
 public Action CDMenu(int client, int args)
@@ -2953,3 +2905,203 @@ public void warden_OnWardenCreated(int client)
 
 }
 
+
+// Mute
+
+public Action MuteMenuPlayer(int client,int args)
+{
+	if(gc_bPlugin.BoolValue)	
+	{
+		if(IsValidClient(client, false, false) && IsClientWarden(client) && gc_bMute.BoolValue)
+		{
+			char info1[255];
+			Menu menu5 = CreateMenu(MuteMenuTime);
+			Format(info1, sizeof(info1), "%T", "warden_choose", client);
+			menu5.SetTitle(info1);
+			LoopValidClients(i,true,true)
+			{
+				if(GetClientTeam(i) == CS_TEAM_T)
+				{
+					char userid[11];
+					char username[MAX_NAME_LENGTH];
+					IntToString(GetClientUserId(i), userid, sizeof(userid));
+					Format(username, sizeof(username), "%N", i);
+					menu5.AddItem(userid,username);
+				}
+			}
+			menu5.ExitBackButton = true;
+			menu5.ExitButton = true;
+			menu5.Display(client,MENU_TIME_FOREVER);
+		}
+		else CPrintToChat(client, "%t %t", "warden_tag", "warden_notwarden");
+	}
+	return Plugin_Handled;
+}
+
+char g_sMuteUser[32];
+bool IsMuted[MAXPLAYERS+1] = {false, ...};
+
+
+public int MuteMenuTime(Menu menu5, MenuAction action, int client, int Position)
+{
+	if(action == MenuAction_Select)
+	{
+		menu5.GetItem(Position,g_sMuteUser,sizeof(g_sMuteUser));
+		
+		char menuinfo5[255], menuinfo6[255], menuinfo7[255], menuinfo8[255], menuinfo9[255], menuinfo10[255], menuinfo11[255], menuinfo12[255], menuinfo13[255], menuinfo14[255];
+		Format(menuinfo5, sizeof(menuinfo5), "%T", "warden_time_title", client);
+		Format(menuinfo14, sizeof(menuinfo14), "%T", "warden_roundend", client);
+		Format(menuinfo6, sizeof(menuinfo6), "%T", "warden_15", client);
+		Format(menuinfo7, sizeof(menuinfo7), "%T", "warden_30", client);
+		Format(menuinfo8, sizeof(menuinfo8), "%T", "warden_45", client);
+		Format(menuinfo9, sizeof(menuinfo9), "%T", "warden_60", client);
+		Format(menuinfo10, sizeof(menuinfo10), "%T", "warden_90", client);
+		Format(menuinfo11, sizeof(menuinfo11), "%T", "warden_120", client);
+		Format(menuinfo12, sizeof(menuinfo12), "%T", "warden_180", client);
+		Format(menuinfo13, sizeof(menuinfo13), "%T", "warden_300", client);
+		
+		Menu menu3 = new Menu(MuteMenuHandler);
+		menu3.SetTitle(menuinfo5);
+		if(gc_bMuteEnd.BoolValue) menu3.AddItem("0", menuinfo14);
+		menu3.AddItem("15", menuinfo6);
+		menu3.AddItem("30", menuinfo7);
+		menu3.AddItem("45", menuinfo8);
+		menu3.AddItem("60", menuinfo9);
+		menu3.AddItem("90", menuinfo10);
+		menu3.AddItem("120", menuinfo11);
+		menu3.AddItem("180", menuinfo12);
+		menu3.AddItem("300", menuinfo13);
+		menu3.ExitBackButton = true;
+		menu3.ExitButton = true;
+		menu3.Display(client, 20);
+	}
+}
+
+public int MuteMenuHandler(Menu menu3, MenuAction action, int client, int selection)
+{
+	if (action == MenuAction_Select)
+	{
+		char info[32];
+		menu3.GetItem(selection, info, sizeof(info));
+		int duration = StringToInt(info);
+		int user = GetClientOfUserId(StringToInt(g_sMuteUser)); 
+		
+		MuteClient(user,duration);
+		
+		if(g_bMenuClose != null)
+		{
+			if(!g_bMenuClose)
+			{
+				FakeClientCommand(client, "sm_menu");
+			}
+		}
+	}
+	else if(action == MenuAction_Cancel)
+	{
+		if(selection == MenuCancel_ExitBack) 
+		{
+			FakeClientCommand(client, "sm_wmute");
+		}
+	}
+	else if(action == MenuAction_End)
+	{
+		delete menu3;
+	}
+}
+
+public Action UnMute_Command(int client, any args)
+{
+	if(gc_bPlugin.BoolValue)	
+	{
+		if(IsValidClient(client, false, false) && IsClientWarden(client) && gc_bMute.BoolValue)
+		{
+			char info1[255];
+			Menu menu4 = CreateMenu(UnMuteMenuHandler);
+			Format(info1, sizeof(info1), "%T", "warden_choose", client);
+			menu4.SetTitle(info1);
+			LoopValidClients(i,true,true)
+			{
+				if((GetClientTeam(i) == CS_TEAM_T) && IsMuted[i])
+				{
+					char userid[11];
+					char username[MAX_NAME_LENGTH];
+					IntToString(GetClientUserId(i), userid, sizeof(userid));
+					Format(username, sizeof(username), "%N", i);
+					menu4.AddItem(userid,username);
+				}
+			}
+			menu4.ExitBackButton = true;
+			menu4.ExitButton = true;
+			menu4.Display(client,MENU_TIME_FOREVER);
+		}
+		else CPrintToChat(client, "%t %t", "warden_tag", "warden_notwarden");
+	}
+	return Plugin_Handled;
+}
+
+public int UnMuteMenuHandler(Menu menu4, MenuAction action, int client, int selection)
+{
+	if (action == MenuAction_Select)
+	{
+		char info[32];
+		menu4.GetItem(selection, info, sizeof(info));
+		int user = GetClientOfUserId(StringToInt(info)); 
+		
+		UnMuteClient(user);
+		
+		if(g_bMenuClose != null)
+		{
+			if(!g_bMenuClose)
+			{
+				FakeClientCommand(client, "sm_menu");
+			}
+		}
+	}
+	else if(action == MenuAction_Cancel)
+	{
+		if(selection == MenuCancel_ExitBack) 
+		{
+			FakeClientCommand(client, "sm_menu");
+		}
+	}
+	else if(action == MenuAction_End)
+	{
+		delete menu4;
+	}
+}
+
+public Action MuteClient(int client, int time)
+{
+	if(IsValidClient(client,true,true))
+	{
+		if(GetClientTeam(client) == CS_TEAM_T)
+		{
+			SetClientListeningFlags(client, VOICE_MUTED);
+			IsMuted[client] = true;
+			
+			if (time == 0) CPrintToChatAll("%t %t", "warden_tag", "warden_muteend", g_iWarden, client);
+				else CPrintToChatAll("%t %t", "warden_tag", "warden_mute", g_iWarden, client, time);
+		}
+	}
+	if(time > 0)
+	{
+		float timing = float(time);
+		CreateTimer(timing, UnMuteTimer,client);
+	}
+}
+
+public Action UnMuteTimer(Handle timer, any client)
+{
+	UnMuteClient(client);
+}
+
+public int UnMuteClient(any client)
+{
+	if(IsValidClient(client,true,true) && IsMuted[client])
+	{
+		SetClientListeningFlags(client, VOICE_NORMAL);
+		IsMuted[client] = false;
+		CPrintToChat(client,"%t %t", "warden_tag", "warden_unmute", client);
+		CPrintToChat(g_iWarden,"%t %t", "warden_tag", "warden_unmute", client);
+	}
+}
