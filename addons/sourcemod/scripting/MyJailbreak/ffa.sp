@@ -72,7 +72,7 @@ public void OnPluginStart()
 {
 	// Translation
 	LoadTranslations("MyJailbreak.Warden.phrases");
-	LoadTranslations("MyJailbreak.FFA.phrases");
+	LoadTranslations("MyJailbreak.Ffa.phrases");
 	
 	//Client Commands
 	RegConsoleCmd("sm_setffa", Setffa, "Allows the Admin or Warden to set a ffa for next 3 rounds");

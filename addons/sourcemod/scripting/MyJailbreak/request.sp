@@ -532,9 +532,9 @@ public int CapitulationMenuHandler(Menu menu, MenuAction action, int client, int
 			LoopClients(i) if(g_bCapitulated[i])
 			{
 				IsRequest = false;
-				if (RequestTimer[i] != null)
-					KillTimer(RequestTimer[i]);
-				RequestTimer[i] = null;
+				if (RequestTimer != null)
+					KillTimer(RequestTimer);
+				RequestTimer = null;
 				if (RebelTimer[i] != null)
 					KillTimer(RebelTimer[i]);
 				RebelTimer[i] = null;
@@ -548,9 +548,9 @@ public int CapitulationMenuHandler(Menu menu, MenuAction action, int client, int
 			LoopClients(i) if(g_bCapitulated[i])
 			{
 				IsRequest = false;
-				if (RequestTimer[i] != null)
-					KillTimer(RequestTimer[i]);
-				RequestTimer[i] = null;
+				if (RequestTimer != null)
+					KillTimer(RequestTimer);
+				RequestTimer = null;
 				SetEntityRenderColor(i, 255, 0, 0, 255);
 				if (RebelTimer[i] != null)
 					KillTimer(RebelTimer[i]);
