@@ -213,6 +213,7 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_close", CloseDoors, "Allows the Warden to close the cell doors");
 	RegConsoleCmd("sm_vw", VoteWarden, "Allows the player to vote to retire Warden");
 	RegConsoleCmd("sm_votewarden", VoteWarden, "Allows the player to vote to retire Warden");
+	RegConsoleCmd("sm_vetowarden", VoteWarden, "Allows the player to vote to retire Warden");
 	RegConsoleCmd("sm_setff", ToggleFF, "Allows player to see the state and the Warden to toggle friendly fire");
 	RegConsoleCmd("sm_laser", LaserMenu, "Allows Warden to toggle on/off the wardens Laser pointer");
 	RegConsoleCmd("sm_drawer", DrawerMenu, "Allows Warden to toggle on/off the wardens Drawer");
@@ -232,6 +233,7 @@ public void OnPluginStart()
 	RegAdminCmd("sm_setwarden", SetWarden, ADMFLAG_GENERIC);
 	RegAdminCmd("sm_rw", RemoveWarden, ADMFLAG_GENERIC);
 	RegAdminCmd("sm_fw", RemoveWarden, ADMFLAG_GENERIC);
+	RegAdminCmd("sm_firewarden", RemoveWarden, ADMFLAG_GENERIC);
 	RegAdminCmd("sm_removewarden", RemoveWarden, ADMFLAG_GENERIC);
 	
 	//Forwards
@@ -2781,21 +2783,24 @@ public Action CS_OnCSWeaponDrop(int client, int weapon)
 
 public Action DroppedWeapon(Handle timer, any client)
 {
-	if(Weapon_GetOwner(g_iWeaponDrop[client]) == -1)
+	if(IsValidEntity(g_iWeaponDrop[client]))
 	{
-		if(IsValidClient(client, false, false) && !IsClientInLastRequest(client))
+		if(Weapon_GetOwner(g_iWeaponDrop[client]) == -1)
 		{
-			char g_sWeaponName[80];
-			
-			GetEntityClassname(g_iWeaponDrop[client], g_sWeaponName, sizeof(g_sWeaponName));
-			ReplaceString(g_sWeaponName, sizeof(g_sWeaponName), "weapon_", "", false); 
-			g_bWeaponDropped[client] = true;
-			
-			CPrintToChat(client, "%t %t", "warden_tag" , "warden_noplant", client , g_sWeaponName);
-			if(g_iWarden != -1) CPrintToChat(g_iWarden, "%t %t", "warden_tag" , "warden_gunplant", client , g_sWeaponName);
-			if((g_iWarden != -1) && gc_bBetterNotes.BoolValue) PrintHintText(g_iWarden, "%t", "warden_gunplant_nc", client , g_sWeaponName);
-			if(gc_bGunRemove.BoolValue) CreateTimer(gc_fGunRemoveTime.FloatValue, RemoveWeapon, client);
-			if(gc_bGunSlap.BoolValue) SlapPlayer(client, gc_iGunSlapDamage.IntValue, true);
+			if(IsValidClient(client, false, false) && !IsClientInLastRequest(client))
+			{
+				char g_sWeaponName[80];
+				
+				GetEntityClassname(g_iWeaponDrop[client], g_sWeaponName, sizeof(g_sWeaponName));
+				ReplaceString(g_sWeaponName, sizeof(g_sWeaponName), "weapon_", "", false); 
+				g_bWeaponDropped[client] = true;
+				
+				CPrintToChat(client, "%t %t", "warden_tag" , "warden_noplant", client , g_sWeaponName);
+				if(g_iWarden != -1) CPrintToChat(g_iWarden, "%t %t", "warden_tag" , "warden_gunplant", client , g_sWeaponName);
+				if((g_iWarden != -1) && gc_bBetterNotes.BoolValue) PrintHintText(g_iWarden, "%t", "warden_gunplant_nc", client , g_sWeaponName);
+				if(gc_bGunRemove.BoolValue) CreateTimer(gc_fGunRemoveTime.FloatValue, RemoveWeapon, client);
+				if(gc_bGunSlap.BoolValue) SlapPlayer(client, gc_iGunSlapDamage.IntValue, true);
+			}
 		}
 	}
 }

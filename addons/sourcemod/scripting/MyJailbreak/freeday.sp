@@ -56,7 +56,7 @@ public void OnPluginStart()
 {
 	// Translation
 	LoadTranslations("MyJailbreak.Warden.phrases");
-	LoadTranslations("MyJailbreak.Freeday.phrases");
+	LoadTranslations("MyJailbreak.FreeDay.phrases");
 	
 	//Client Commands
 	RegConsoleCmd("sm_setfreeday", SetFreeday, "Allows the Admin or Warden to set freeday as next round");
