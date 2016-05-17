@@ -227,6 +227,7 @@ public void OnPluginStart()
 	RegAdminCmd("sm_sw", SetWarden, ADMFLAG_GENERIC);
 	RegAdminCmd("sm_setwarden", SetWarden, ADMFLAG_GENERIC);
 	RegAdminCmd("sm_rw", RemoveWarden, ADMFLAG_GENERIC);
+	RegAdminCmd("sm_fw", RemoveWarden, ADMFLAG_GENERIC);
 	RegAdminCmd("sm_removewarden", RemoveWarden, ADMFLAG_GENERIC);
 	
 	//Forwards
