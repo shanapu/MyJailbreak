@@ -45,7 +45,7 @@ ConVar gc_bGunNoDrop;
 ConVar gc_bRandom;
 ConVar gc_iRandomKind;
 ConVar gc_hOpenTimer;
-ConVar gc_hRandomTimer;
+ConVar gc_fRandomTimer;
 ConVar gc_bMath;
 ConVar gc_bMarker;
 ConVar gc_bDrawer;
@@ -99,7 +99,6 @@ int g_iTempWarden[MAXPLAYERS+1] = -1;
 int g_iVoteCount;
 int g_iCollisionOffset;
 int g_iOpenTimer;
-int g_iRandomTime;
 int g_iCountStartTime = 9;
 int g_iCountStopTime = 9;
 int g_iBeamSprite = -1;
@@ -143,7 +142,7 @@ Handle MathTimer = null;
 Handle StartTimer = null;
 Handle StopTimer = null;
 Handle StartStopTimer = null;
-Handle IconTimer = null;
+//Handle IconTimer = null;
 
 //Strings
 char g_sHasVoted[1500];
@@ -248,8 +247,8 @@ public void OnPluginStart()
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_warden_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true,  0.0, true, 1.0);
 	gc_sCustomCommand = AutoExecConfig_CreateConVar("sm_warden_cmd", "simon", "Set your custom chat command for become warden. no need for sm_ or !");
 	gc_bBecomeWarden = AutoExecConfig_CreateConVar("sm_warden_become", "1", "0 - disabled, 1 - enable !w / !warden - player can choose to be warden. If disabled you should need sm_warden_choose_random 1", _, true,  0.0, true, 1.0);
-	gc_bChooseRandom = AutoExecConfig_CreateConVar("sm_warden_choose_random", "1", "0 - disabled, 1 - enable pic random warden if there is still no warden after sm_warden_choose_time", _, true,  0.0, true, 1.0);
-	gc_hRandomTimer = AutoExecConfig_CreateConVar("sm_warden_choose_time", "45", "Time in seconds a random warden will picked when no warden was set. need sm_warden_choose_random 1", _, true,  1.0);
+	gc_bChooseRandom = AutoExecConfig_CreateConVar("sm_warden_choose_random", "0", "0 - disabled, 1 - enable pic random warden if there is still no warden after sm_warden_choose_time", _, true,  0.0, true, 1.0);
+	gc_fRandomTimer = AutoExecConfig_CreateConVar("sm_warden_choose_time", "45.0", "Time in seconds a random warden will picked when no warden was set. need sm_warden_choose_random 1", _, true,  1.0);
 	gc_bVote = AutoExecConfig_CreateConVar("sm_warden_vote", "1", "0 - disabled, 1 - enable player vote against warden", _, true,  0.0, true, 1.0);
 	gc_bStayWarden = AutoExecConfig_CreateConVar("sm_warden_stay", "1", "0 - disabled, 1 - enable warden stay after round end", _, true,  0.0, true, 1.0);
 	gc_bBetterNotes = AutoExecConfig_CreateConVar("sm_warden_better_notifications", "1", "0 - disabled, 1 - Will use hint and center text", _, true, 0.0, true, 1.0);
@@ -465,11 +464,6 @@ public void RoundStart(Event event, const char[] name, bool dontBroadcast)
 		
 	OpenCounterTime = null;
 	
-	if (RandomTimer != null)
-		KillTimer(RandomTimer);
-			
-	RandomTimer = null;
-	
 	if(gc_bModel.BoolValue)
 	{
 		LoopValidClients(i, true, true)
@@ -484,10 +478,13 @@ public void RoundStart(Event event, const char[] name, bool dontBroadcast)
 	{
 		g_iOpenTimer = GetConVarInt(gc_hOpenTimer);
 		OpenCounterTime = CreateTimer(1.0, OpenCounter, _, TIMER_REPEAT);
-		g_iRandomTime = GetConVarInt(gc_hRandomTimer);
-		RandomTimer = CreateTimer(1.0, ChooseRandom, _, TIMER_REPEAT);
+		if (RandomTimer != null)
+		KillTimer(RandomTimer);
+			
+		RandomTimer = null;
 		if ((g_iWarden == -1) && gc_bBecomeWarden.BoolValue)
 		{
+			RandomTimer = CreateTimer(gc_fRandomTimer.FloatValue, ChooseRandom);
 			CPrintToChatAll("%t %t", "warden_tag" , "warden_nowarden");
 			if(gc_bBetterNotes.BoolValue)
 			{
@@ -502,11 +499,8 @@ public void RoundStart(Event event, const char[] name, bool dontBroadcast)
 			CreateTimer(0.1, RemoveColor, g_iWarden);
 			SetEntityModel(g_iWarden, g_sModelPath);
 			Forward_OnWardenRemoved(g_iWarden);
-			SafeDelete(g_iIcon[g_iWarden]);
-			g_iIcon[g_iWarden] = -1;
+			RemoveIcon(g_iWarden);
 			g_iWarden = -1;
-			IconTimer = null;
-			delete IconTimer;
 			g_bLaser = false;
 			LoopClients(i) g_bDrawer[i] = false;
 		}
@@ -521,18 +515,15 @@ public void RoundStart(Event event, const char[] name, bool dontBroadcast)
 			CreateTimer( 0.1, RemoveColor, g_iWarden);
 			SetEntityModel(g_iWarden, g_sModelPath);
 			Forward_OnWardenRemoved(g_iWarden);
-			SafeDelete(g_iIcon[g_iWarden]);
-			g_iIcon[g_iWarden] = -1;
+			RemoveIcon(g_iWarden);
 			g_iWarden = -1;
-			IconTimer = null;
-			delete IconTimer;
 			g_bLaser = false;
 			LoopClients(i) g_bDrawer[i] = false;
 		}
 	}
 	if(gc_bStayWarden.BoolValue && warden_exist())
 	{
-		IconTimer = CreateTimer(0.5, Create_Icon, g_iWarden, TIMER_REPEAT);
+		SpawnIcon(g_iWarden);
 	}
 	g_bAllowDrop = true;
 	CreateTimer (gc_fAllowDropTime.FloatValue, AllowDropTimer);
@@ -550,9 +541,6 @@ public void RoundEnd(Event event, const char[] name, bool dontBroadcast)
 			g_bFF = FindConVar("mp_teammates_are_enemies");
 			CPrintToChatAll("%t %t", "warden_tag", "warden_ffisoff" );
 		}
-	}
-	if(gc_bPlugin.BoolValue)
-	{
 		LoopValidClients(i, true, true)
 		{
 			CancelCountDown(i, 0);
@@ -611,17 +599,15 @@ public Action ExitWarden(int client, int args)
 			Forward_OnWardenRemoved(client);
 			CreateTimer( 0.1, RemoveColor, g_iWarden);
 			SetEntityModel(client, g_sModelPath);
-			g_iRandomTime = GetConVarInt(gc_hRandomTimer);
-			RandomTimer = CreateTimer(1.0, ChooseRandom, _, TIMER_REPEAT);
+			RandomTimer = null;
+			delete RandomTimer;
+			RandomTimer = CreateTimer(gc_fRandomTimer.FloatValue, ChooseRandom);
 			if(gc_bSounds.BoolValue) EmitSoundToAllAny(g_sUnWarden);
 			RemoveAllMarkers();
 			g_iVoteCount = 0;
 			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
 			g_sHasVoted[0] = '\0';
-			SafeDelete(g_iIcon[client]);
-			g_iIcon[client] = -1;
-			IconTimer = null;
-			delete IconTimer;
+			RemoveIcon(g_iWarden);
 			g_iWarden = -1;
 			g_bDrawerT = false;
 		}
@@ -683,15 +669,15 @@ public Action playerDeath(Event event, const char[] name, bool dontBroadcast)
 		{
 			EmitSoundToAllAny(g_sUnWarden);
 		}
-		g_iRandomTime = GetConVarInt(gc_hRandomTimer);
-		RandomTimer = CreateTimer(1.0, ChooseRandom, _, TIMER_REPEAT);
+		if (RandomTimer != null)
+		KillTimer(RandomTimer);
+			
+		RandomTimer = null;
+		RandomTimer = CreateTimer(gc_fRandomTimer.FloatValue, ChooseRandom);
 		Call_StartForward(gF_OnWardenDeath);
 		Call_PushCell(client);
 		Call_Finish();
-		SafeDelete(g_iIcon[client]);
-		g_iIcon[client] = -1;
-		IconTimer = null;
-		delete IconTimer;
+		RemoveIcon(g_iWarden);
 		g_iWarden = -1;
 	}
 	g_fLastDrawer[client][0] = 0.0;
@@ -776,7 +762,7 @@ public int SetWardenHandler(Menu menu, MenuAction action, int client, int Positi
 							EmitSoundToAllAny(g_sWarden);
 						}
 						CreateTimer(0.5, Timer_WardenFixColor, i, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
-						IconTimer = CreateTimer(0.5, Create_Icon, client, TIMER_REPEAT);
+						SpawnIcon(client);
 						GetEntPropString(client, Prop_Data, "m_ModelName", g_sModelPath, sizeof(g_sModelPath));
 						if(gc_bModel.BoolValue)
 						{
@@ -785,6 +771,8 @@ public int SetWardenHandler(Menu menu, MenuAction action, int client, int Positi
 						Call_StartForward(gF_OnWardenCreatedByAdmin);
 						Call_PushCell(i);
 						Call_Finish();
+						RandomTimer = null;
+						delete RandomTimer;
 					}
 				}
 			}
@@ -826,13 +814,10 @@ public int m_WardenOverwrite(Menu menu, MenuAction action, int client, int Posit
 				PrintCenterTextAll("%t", "warden_new_nc", newwarden);
 			}
 			LogMessage("[MyJB] Admin %L kick player %N warden and set &N as new", client, g_iWarden, newwarden);
-			SafeDelete(g_iIcon[g_iWarden]);
-			g_iIcon[g_iWarden] = -1;
-			IconTimer = null;
-			delete IconTimer;
+			RemoveIcon(g_iWarden);
 			g_iWarden = newwarden;
 			CreateTimer(0.5, Timer_WardenFixColor, newwarden, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
-			IconTimer = CreateTimer(0.5, Create_Icon, newwarden, TIMER_REPEAT);
+			SpawnIcon(newwarden);
 			GetEntPropString(newwarden, Prop_Data, "m_ModelName", g_sModelPath, sizeof(g_sModelPath));
 			if(gc_bModel.BoolValue)
 			{
@@ -841,6 +826,8 @@ public int m_WardenOverwrite(Menu menu, MenuAction action, int client, int Posit
 			Call_StartForward(gF_OnWardenCreatedByAdmin);
 			Call_PushCell(newwarden);
 			Call_Finish();
+			RandomTimer = null;
+			delete RandomTimer;
 		}
 		if(g_bMenuClose != null)
 		{
@@ -951,6 +938,12 @@ public Action EventPlayerTeam(Event event, const char[] name, bool dontBroadcast
 		Call_StartForward(gF_OnWardenDisconnected);
 		Call_PushCell(client);
 		Call_Finish();
+		
+		if (RandomTimer != null)
+		KillTimer(RandomTimer);
+			
+		RandomTimer = null;
+		RandomTimer = CreateTimer(gc_fRandomTimer.FloatValue, ChooseRandom);
 		if(gc_bSounds.BoolValue)
 		{
 			EmitSoundToAllAny(g_sUnWarden);
@@ -975,7 +968,7 @@ void SetTheWarden(int client)
 		}
 		g_iWarden = client;
 		CreateTimer(0.5, Timer_WardenFixColor, client, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
-		IconTimer = CreateTimer(0.5, Create_Icon, client, TIMER_REPEAT);
+		SpawnIcon(client);
 		GetEntPropString(client, Prop_Data, "m_ModelName", g_sModelPath, sizeof(g_sModelPath));
 		if(gc_bModel.BoolValue)
 		{
@@ -988,6 +981,10 @@ void SetTheWarden(int client)
 			EmitSoundToAllAny(g_sWarden);
 		}
 		RemoveAllMarkers();
+		if (RandomTimer != null)
+		KillTimer(RandomTimer);
+			
+		RandomTimer = null;
 	}
 	else CPrintToChat(client, "%t %t", "warden_tag" , "warden_disabled");
 }
@@ -1004,7 +1001,6 @@ public Action RemoveWarden(int client, int args)
 		Call_Finish();
 		
 	}
-//	else CPrintToChatAll("%t %t", "warden_tag" , "warden_noexist");
 	return Plugin_Handled;
 }
 
@@ -1019,8 +1015,11 @@ void RemoveTheWarden(int client)
 	LogMessage("[MyJB] Admin %L removed player %N as warden", client, g_iWarden);
 	CreateTimer( 0.1, RemoveColor, g_iWarden);
 	SetEntityModel(client, g_sModelPath);
-	g_iRandomTime = GetConVarInt(gc_hRandomTimer);
-	RandomTimer = CreateTimer(1.0, ChooseRandom, _, TIMER_REPEAT);
+	if (RandomTimer != null)
+		KillTimer(RandomTimer);
+			
+	RandomTimer = null;
+	RandomTimer = CreateTimer(gc_fRandomTimer.FloatValue, ChooseRandom);
 	Call_StartForward(gF_OnWardenRemovedBySelf);
 	Call_PushCell(g_iWarden);
 	Call_Finish();
@@ -1034,10 +1033,8 @@ void RemoveTheWarden(int client)
 	g_iVoteCount = 0;
 	Format(g_sHasVoted, sizeof(g_sHasVoted), "");
 	g_sHasVoted[0] = '\0';
-	SafeDelete(g_iIcon[g_iWarden]);
-	g_iIcon[g_iWarden] = -1;
-	IconTimer = null;
-	delete IconTimer;
+
+	RemoveIcon(g_iWarden);
 	g_iWarden = -1;
 }
 
@@ -1208,16 +1205,12 @@ public void OnMapEnd()
 {
 	RemoveAllMarkers();
 	g_bDrawerT = false;
-	delete IconTimer;
 	if (g_iWarden != -1)
 	{
 		CreateTimer(0.1, RemoveColor, g_iWarden);
 		Forward_OnWardenRemoved(g_iWarden);
-		SafeDelete(g_iIcon[g_iWarden]);
-		g_iIcon[g_iWarden] = -1;
+		RemoveIcon(g_iWarden);
 		g_iWarden = -1;
-		IconTimer = null;
-		delete IconTimer;
 	}
 	g_bLaser = false;
 	LoopClients(client)
@@ -1969,6 +1962,61 @@ public bool TraceEntityFilterPlayer(int entity, int contentsMask) {
 
 //Icon
 
+stock int SpawnIcon(int client) 
+{
+	if(!IsClientInGame(client) || !IsPlayerAlive(client)) return -1;
+	
+	char iTarget[16];
+	Format(iTarget, 16, "client%d", client);
+	DispatchKeyValue(client, "targetname", iTarget);
+
+	g_iIcon[client] = CreateEntityByName("env_sprite");
+
+	if(!g_iIcon[client]) return -1;
+	char iconbuffer[256];
+	Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconPath);
+	
+	DispatchKeyValue(g_iIcon[client], "model", iconbuffer);
+	DispatchKeyValue(g_iIcon[client], "classname", "env_sprite");
+	DispatchKeyValue(g_iIcon[client], "spawnflags", "1");
+	DispatchKeyValue(g_iIcon[client], "scale", "0.3");
+	DispatchKeyValue(g_iIcon[client], "rendermode", "1");
+	DispatchKeyValue(g_iIcon[client], "rendercolor", "255 255 255");
+	DispatchSpawn(g_iIcon[client]);
+	
+	float origin[3];
+	GetClientAbsOrigin(client, origin);
+	origin[2] = origin[2] + 90.0;
+	
+	TeleportEntity(g_iIcon[client], origin, NULL_VECTOR, NULL_VECTOR);
+	SetVariantString(iTarget);
+	AcceptEntityInput(g_iIcon[client], "SetParent", g_iIcon[client], g_iIcon[client], 0);
+	SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_Transmit);
+	return g_iIcon[client];
+} 
+
+public Action Should_Transmit(int entity, int client)
+{
+	char m_ModelName[PLATFORM_MAX_PATH];
+	char iconbuffer[256];
+	Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconPath);
+	GetEntPropString(entity, Prop_Data, "m_ModelName", m_ModelName, sizeof(m_ModelName));
+	if (StrEqual( iconbuffer, m_ModelName))
+		return Plugin_Continue;
+	return Plugin_Handled;
+}
+
+stock void RemoveIcon(int client) 
+{
+	if(g_iIcon[client] > 0 && IsValidEdict(g_iIcon[client]))
+	{
+		AcceptEntityInput(g_iIcon[client], "Kill");
+		g_iIcon[client] = -1;
+	}
+}
+
+
+/*
 public Action Create_Icon(Handle iTimer, any client)
 {
 	if((g_iWarden != -1) && (client == g_iWarden))
@@ -2022,7 +2070,7 @@ public Action SafeDelete(int entity)
 		AcceptEntityInput(entity, "Kill");
 	}
 }
-
+*/
 //Countdown
 
 public Action CDMenu(int client, int args)
@@ -2644,27 +2692,24 @@ public Action ChooseRandom(Handle timer, Handle pack)
 {
 	if(gc_bPlugin.BoolValue)
 	{
-		--g_iRandomTime;
-		if(g_iRandomTime < 1)
+		if(warden_exist() != 1)
 		{
-			if(warden_exist() != 1)
+			if(gc_bChooseRandom.BoolValue)
 			{
-				if(gc_bChooseRandom.BoolValue)
+				int i = GetRandomPlayer(CS_TEAM_CT);
+				if(i > 0)
 				{
-					int i = GetRandomPlayer(CS_TEAM_CT);
-					if(i > 0)
-					{
-						CPrintToChatAll("%t %t", "warden_tag", "warden_randomwarden"); 
-						SetTheWarden(i);
-					}
+					CPrintToChatAll("%t %t", "warden_tag", "warden_randomwarden"); 
+					SetTheWarden(i);
+					
 				}
 			}
-			if (RandomTimer != null)
-				KillTimer(RandomTimer);
-			
-			RandomTimer = null;
 		}
 	}
+	if (RandomTimer != null)
+		KillTimer(RandomTimer);
+			
+	RandomTimer = null;
 }
 
 //Open Cell Doors
