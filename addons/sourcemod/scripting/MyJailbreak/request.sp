@@ -532,8 +532,13 @@ public int CapitulationMenuHandler(Menu menu, MenuAction action, int client, int
 			LoopClients(i) if(g_bCapitulated[i])
 			{
 				IsRequest = false;
-				RequestTimer = null;
+				if (RequestTimer[i] != null)
+					KillTimer(RequestTimer[i]);
+				RequestTimer[i] = null;
+				if (RebelTimer[i] != null)
+					KillTimer(RebelTimer[i]);
 				RebelTimer[i] = null;
+				
 				CapitulationTimer[i] = CreateTimer(gc_fCapitulationTime.FloatValue, GiveKnifeCapitulated, i);
 				CPrintToChatAll("%t %t", "warden_tag", "request_accepted", i);
 			}
@@ -543,8 +548,12 @@ public int CapitulationMenuHandler(Menu menu, MenuAction action, int client, int
 			LoopClients(i) if(g_bCapitulated[i])
 			{
 				IsRequest = false;
-				RequestTimer = null;
+				if (RequestTimer[i] != null)
+					KillTimer(RequestTimer[i]);
+				RequestTimer[i] = null;
 				SetEntityRenderColor(i, 255, 0, 0, 255);
+				if (RebelTimer[i] != null)
+					KillTimer(RebelTimer[i]);
 				RebelTimer[i] = null;
 				RebelTimer[i] = CreateTimer(gc_fRebelTime.FloatValue, GiveKnifeRebel, i);
 				CPrintToChatAll("%t %t", "warden_tag", "request_noaccepted", i);
