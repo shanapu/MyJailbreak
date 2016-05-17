@@ -336,7 +336,7 @@ public Action Command_refuse(int client, int args)
 			{
 				if (RefuseTimer[client] == null)
 				{
-					if(!g_bAllowRefuse || !gc_bWardenAllowRefuse.BoolValue)
+					if(g_bAllowRefuse || !gc_bWardenAllowRefuse.BoolValue)
 					{
 						if (g_iRefuseCounter[client] < gc_iRefuseLimit.IntValue)
 						{
