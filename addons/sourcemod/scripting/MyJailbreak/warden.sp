@@ -98,6 +98,7 @@ bool g_bAllowDrop;
 
 int g_iWarden = -1;
 int g_iTempWarden[MAXPLAYERS+1] = -1;
+int g_iWrongWeapon[MAXPLAYERS+1];
 int g_iVoteCount;
 int g_iCollisionOffset;
 int g_iOpenTimer;
@@ -511,7 +512,6 @@ public void RoundStart(Event event, const char[] name, bool dontBroadcast)
 			RemoveIcon(g_iWarden);
 			g_iWarden = -1;
 			g_bLaser = false;
-			LoopClients(i) g_bDrawer[i] = false;
 		}
 	}
 	char EventDay[64];
@@ -527,7 +527,6 @@ public void RoundStart(Event event, const char[] name, bool dontBroadcast)
 			RemoveIcon(g_iWarden);
 			g_iWarden = -1;
 			g_bLaser = false;
-			LoopClients(i) g_bDrawer[i] = false;
 		}
 	}
 	if(gc_bStayWarden.BoolValue && warden_exist())
@@ -559,8 +558,8 @@ public void RoundEnd(Event event, const char[] name, bool dontBroadcast)
 	if (StopTimer != null) KillTimer(StopTimer);
 	if (StartTimer != null) KillTimer(StartTimer);
 	if (StartStopTimer != null) KillTimer(StartStopTimer);
+	LoopClients(i) g_bDrawer[i] = false;
 	g_bDrawerT = false;
-	
 }
 
 //!w
@@ -1216,6 +1215,7 @@ public Action Event_ItemEquip(Handle event, const char[] name, bool dontBroadcas
 	
 	g_bCanZoom[client] = GetEventBool(event, "canzoom");
 	g_bHasSilencer[client] = GetEventBool(event, "hassilencer");
+	g_iWrongWeapon[client] = GetEventInt(event, "weptype");
 }
 
 public void OnMapEnd()
@@ -1467,7 +1467,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	{
 		if (buttons & IN_ATTACK2)
 		{
-			if (gc_bMarker.BoolValue && !g_bCanZoom[client] && !g_bHasSilencer[client])
+			if (gc_bMarker.BoolValue && !g_bCanZoom[client] && !g_bHasSilencer[client] && (g_iWrongWeapon[client] != 0) && (g_iWrongWeapon[client] != 8))
 			{
 				if(!g_bMarkerSetup)
 					GetClientAimTargetPos(client, g_fMarkerSetupStartOrigin);
@@ -2783,7 +2783,7 @@ public Action CS_OnCSWeaponDrop(int client, int weapon)
 
 public Action DroppedWeapon(Handle timer, any client)
 {
-	if(IsValidEntity(g_iWeaponDrop[client]))
+	if(IsValidEdict(g_iWeaponDrop[client]))
 	{
 		if(Weapon_GetOwner(g_iWeaponDrop[client]) == -1)
 		{
@@ -2807,7 +2807,7 @@ public Action DroppedWeapon(Handle timer, any client)
 
 public Action RemoveWeapon(Handle timer, any client)
 {
-	if(IsValidEntity(g_iWeaponDrop[client]))
+	if(IsValidEdict(g_iWeaponDrop[client]))
 	{
 		if(!(Weapon_GetOwner(g_iWeaponDrop[client]) != -1))
 		{
