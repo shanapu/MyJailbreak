@@ -332,7 +332,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 			GetClientAbsOrigin(RandomCT, Pos);
 			GetClientAbsOrigin(RandomCT, Pos1);
 			
-			Pos[2] = Pos[2] + 45;
+			Pos[2] = Pos[2] + 5;
 			
 			if (g_iRound > 0)
 			{
@@ -422,7 +422,9 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 		LoopValidClients(client, false, true) SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
 		
 		if (FreezeTimer != null) KillTimer(FreezeTimer);
+		FreezeTimer = null;
 		if (TruceTimer != null) KillTimer(TruceTimer);
+		TruceTimer = null;
 		if (winner == 2) PrintHintTextToAll("%t", "war_twin_nc"); 
 		if (winner == 3) PrintHintTextToAll("%t", "war_ctwin_nc");
 		if (g_iRound == g_iMaxRound)
@@ -477,7 +479,7 @@ public Action FreezedTimer(Handle timer)
 		return Plugin_Continue;
 	}
 	
-	Pos[2] = Pos[2] - 45;
+	Pos[2] = Pos[2] - 3;
 	
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
 	
@@ -492,9 +494,9 @@ public Action FreezedTimer(Handle timer)
 			}
 		}
 	}
-	
-	TruceTimer = CreateTimer(1.0, StartTimer, _, TIMER_REPEAT);
 	FreezeTimer = null;
+	TruceTimer = CreateTimer(1.0, StartTimer, _, TIMER_REPEAT);
+	
 	return Plugin_Stop;
 }
 

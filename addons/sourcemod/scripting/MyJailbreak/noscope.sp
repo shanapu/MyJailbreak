@@ -357,7 +357,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 			GetClientAbsOrigin(RandomCT, Pos);
 			GetClientAbsOrigin(RandomCT, Pos1);
 			
-			Pos[2] = Pos[2] + 45;
+			Pos[2] = Pos[2] + 5;
 			
 			if (g_iRound > 0)
 			{
@@ -451,8 +451,8 @@ public Action StartTimer(Handle timer)
 			{
 				EmitSoundToAllAny(g_sSoundStartPath);
 			}
-			CPrintToChatAll("%t %t", "noscope_tag" , "noscope_start");
 		}
+		CPrintToChatAll("%t %t", "noscope_tag" , "noscope_start");
 	}
 	TruceTimer = null;
 	

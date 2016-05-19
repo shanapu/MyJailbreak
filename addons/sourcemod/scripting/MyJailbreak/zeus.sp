@@ -333,7 +333,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 			GetClientAbsOrigin(RandomCT, Pos);
 			GetClientAbsOrigin(RandomCT, Pos1);
 			
-			Pos[2] = Pos[2] + 45;
+			Pos[2] = Pos[2] + 5;
 			
 			if (g_iRound > 0)
 			{

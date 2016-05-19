@@ -334,7 +334,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 			GetClientAbsOrigin(RandomCT, Pos);
 			GetClientAbsOrigin(RandomCT, Pos1);
 			
-			Pos[2] = Pos[2] + 45;
+			Pos[2] = Pos[2] + 5;
 			
 			if (g_iRound > 0)
 			{
@@ -406,7 +406,9 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 	{
 		LoopClients(client) SetEntityGravity(client, 1.0);
 		if (TruceTimer != null) KillTimer(TruceTimer);
+		TruceTimer = null;
 		if (GravityTimer != null) KillTimer(GravityTimer);
+		GravityTimer = null;
 		if (winner == 2) PrintHintTextToAll("%t", "hebattle_twin_nc");
 		if (winner == 3) PrintHintTextToAll("%t", "hebattle_ctwin_nc");
 		if (g_iRound == g_iMaxRound)

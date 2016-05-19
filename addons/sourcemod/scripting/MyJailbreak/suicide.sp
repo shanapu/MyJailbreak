@@ -483,7 +483,9 @@ public void OnMapEnd()
 	IsSuicideBomber = false;
 	StartSuicideBomber = false;
 	BombActive = false;
-	if (FreezeTimer != null) KillTimer(FreezeTimer);
+	if (FreezeTimer != null) 
+	KillTimer(FreezeTimer);
+	FreezeTimer = null;
 	g_iVoteCount = 0;
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0';
