@@ -30,6 +30,7 @@ ConVar gc_bPlugin;
 ConVar gc_bVote;
 ConVar gc_bStayWarden;
 ConVar gc_bNoBlock;
+ConVar gc_bNoBlockMode;
 ConVar gc_bColor;
 ConVar gc_bOpen;
 ConVar gc_bBecomeWarden;
@@ -71,6 +72,7 @@ ConVar gc_iWardenColorRed;
 ConVar gc_iWardenColorGreen;
 ConVar gc_iWardenColorBlue;
 ConVar g_bFF;
+ConVar g_bNoBlockSolid;
 ConVar g_bMenuClose;
 ConVar gc_sCustomCommand;
 ConVar gc_fAllowDropTime;
@@ -262,7 +264,8 @@ public void OnPluginStart()
 	gc_bBetterNotes = AutoExecConfig_CreateConVar("sm_warden_better_notifications", "1", "0 - disabled, 1 - Will use hint and center text", _, true, 0.0, true, 1.0);
 	gc_bMute = AutoExecConfig_CreateConVar("sm_warden_mute", "1", "0 - disabled, 1 - Allow the warden to mute T-side player", _, true, 0.0, true, 1.0);
 	gc_bMuteEnd = AutoExecConfig_CreateConVar("sm_warden_mute_round", "1", "0 - disabled, 1 - Allow the warden to mute a player until roundend", _, true, 0.0, true, 1.0);
-	gc_bNoBlock = AutoExecConfig_CreateConVar("sm_warden_noblock", "1", "0 - disabled, 1 - enable setable noblock for warden", _, true,  0.0, true, 1.0);
+	gc_bNoBlock = AutoExecConfig_CreateConVar("sm_warden_noblock", "1", "0 - disabled, 1 - enable noblock toggle for warden", _, true,  0.0, true, 1.0);
+	gc_bNoBlockMode = AutoExecConfig_CreateConVar("sm_warden_noblock_mode", "1", "0 - collision only between CT & T, 1 - collision within a team.", _, true,  0.0, true, 1.0);
 	gc_bFF = AutoExecConfig_CreateConVar("sm_warden_ff", "1", "0 - disabled, 1 - enable switch ff for T ", _, true,  0.0, true, 1.0);
 	gc_bGunPlant = AutoExecConfig_CreateConVar("sm_warden_gunplant", "1", "0 - disabled, 1 - enable Gun plant prevention", _, true,  0.0, true, 1.0);
 	gc_fAllowDropTime = AutoExecConfig_CreateConVar("sm_warden_allow_time", "15.0", "Time in seconds CTs allowed to drop weapon on round beginn.", _, true,  0.1);
@@ -324,6 +327,7 @@ public void OnPluginStart()
 	
 	//FindConVar
 	g_bMenuClose = FindConVar("sm_menu_close");
+	g_bNoBlockSolid = FindConVar("mp_solid_teammates");
 	g_bFF = FindConVar("mp_teammates_are_enemies");
 	gc_sWarden.GetString(g_sWarden, sizeof(g_sWarden));
 	gc_sUnWarden.GetString(g_sUnWarden, sizeof(g_sUnWarden));
@@ -555,6 +559,7 @@ public void RoundEnd(Event event, const char[] name, bool dontBroadcast)
 			UnMuteClient(i);
 		}
 	}
+	SetCvar("mp_solid_teammates", g_bNoBlockSolid.BoolValue);
 	if (StopTimer != null) KillTimer(StopTimer);
 	if (StartTimer != null) KillTimer(StartTimer);
 	if (StartStopTimer != null) KillTimer(StartStopTimer);
@@ -2456,6 +2461,7 @@ public Action ToggleNoBlock(int client, int args)
 				LoopValidClients(i, true, true)
 				{
 					SetEntData(i, g_iCollisionOffset, 2, 4, true);
+					if(gc_bNoBlockMode.BoolValue) SetCvar("mp_solid_teammates", 0);
 				}
 			}
 			else
@@ -2465,6 +2471,7 @@ public Action ToggleNoBlock(int client, int args)
 				LoopValidClients(i, true, true)
 				{
 					SetEntData(i, g_iCollisionOffset, 5, 4, true);
+					if(gc_bNoBlockMode.BoolValue) SetCvar("mp_solid_teammates", 1);
 				}
 			}
 		}
