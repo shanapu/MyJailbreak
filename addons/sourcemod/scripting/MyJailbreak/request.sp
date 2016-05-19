@@ -118,9 +118,9 @@ public void OnPluginStart()
 	gc_bSounds = AutoExecConfig_CreateConVar("sm_request_sounds_enable", "1", "0 - disabled, 1 - enable sounds ", _, true,  0.0, true, 1.0);
 	gc_bRefuse = AutoExecConfig_CreateConVar("sm_refuse_enable", "1", "0 - disabled, 1 - enable Refuse");
 	gc_sCustomCommandRefuse = AutoExecConfig_CreateConVar("sm_refuse_cmd", "ref", "Set your custom chat command for Refuse. no need for sm_ or !");
-	gc_bWardenAllowRefuse = AutoExecConfig_CreateConVar("sm_refuse_allow", "1", "0 - disabled, 1 - Warden must allow !refuse before T can use it");
+	gc_bWardenAllowRefuse = AutoExecConfig_CreateConVar("sm_refuse_allow", "0", "0 - disabled, 1 - Warden must allow !refuse before T can use it");
 	gc_iRefuseLimit = AutoExecConfig_CreateConVar("sm_refuse_limit", "1", "Сount how many times you can use the command");
-	gc_fRefuseTime = AutoExecConfig_CreateConVar("sm_refuse_time", "10.0", "Time the player gets to refuse after warden open refuse with !refuse / colortime");
+	gc_fRefuseTime = AutoExecConfig_CreateConVar("sm_refuse_time", "5.0", "Time the player gets to refuse after warden open refuse with !refuse / colortime");
 	gc_iRefuseColorRed = AutoExecConfig_CreateConVar("sm_refuse_color_red", "0","What color to turn the refusing Terror into (set R, G and B values to 255 to disable) (Rgb): x - red value", _, true, 0.0, true, 255.0);
 	gc_iRefuseColorGreen = AutoExecConfig_CreateConVar("sm_refuse_color_green", "250","What color to turn the refusing Terror into (rGb): x - green value", _, true, 0.0, true, 255.0);
 	gc_iRefuseColorBlue = AutoExecConfig_CreateConVar("sm_refuse_color_blue", "250","What color to turn the refusing Terror into (rgB): x - blue value", _, true, 0.0, true, 255.0);
@@ -332,35 +332,38 @@ public Action Command_refuse(int client, int args)
 					CPrintToChatAll("%t %t", "request_tag", "request_openrefuse");
 				}
 			}
-			if (GetClientTeam(client) == CS_TEAM_T && IsPlayerAlive(client))
+			if(!warden_iswarden(client))
 			{
-				if (RefuseTimer[client] == null)
+				if (GetClientTeam(client) == CS_TEAM_T && IsPlayerAlive(client))
 				{
-					if(g_bAllowRefuse || !gc_bWardenAllowRefuse.BoolValue)
+					if (RefuseTimer[client] == null)
 					{
-						if (g_iRefuseCounter[client] < gc_iRefuseLimit.IntValue)
+						if(g_bAllowRefuse || !gc_bWardenAllowRefuse.BoolValue)
 						{
-							g_iRefuseCounter[client]++;
-							g_bRefused[client] = true;
-							SetEntityRenderColor(client, gc_iRefuseColorRed.IntValue, gc_iRefuseColorGreen.IntValue, gc_iRefuseColorBlue.IntValue, 255);
-							CPrintToChatAll("%t %t", "request_tag", "request_refusing", client);
-							g_iCountStopTime = gc_fRefuseTime.IntValue;
-							RefuseTimer[client] = CreateTimer(gc_fRefuseTime.FloatValue, ResetColorRefuse, client);
-							if (warden_exist()) LoopClients(i) RefuseMenu(i);
-							if(gc_bSounds.BoolValue)EmitSoundToAllAny(g_sSoundRefusePath);
+							if (g_iRefuseCounter[client] < gc_iRefuseLimit.IntValue)
+							{
+								g_iRefuseCounter[client]++;
+								g_bRefused[client] = true;
+								SetEntityRenderColor(client, gc_iRefuseColorRed.IntValue, gc_iRefuseColorGreen.IntValue, gc_iRefuseColorBlue.IntValue, 255);
+								CPrintToChatAll("%t %t", "request_tag", "request_refusing", client);
+								g_iCountStopTime = gc_fRefuseTime.IntValue;
+								RefuseTimer[client] = CreateTimer(gc_fRefuseTime.FloatValue, ResetColorRefuse, client);
+								if (warden_exist()) LoopClients(i) RefuseMenu(i);
+								if(gc_bSounds.BoolValue)EmitSoundToAllAny(g_sSoundRefusePath);
+							}
+							else CPrintToChat(client, "%t %t", "request_tag", "request_refusedtimes");
 						}
-						else CPrintToChat(client, "%t %t", "request_tag", "request_refusedtimes");
+						else CPrintToChat(client, "%t %t", "request_tag", "request_refuseallow");
 					}
-					else CPrintToChat(client, "%t %t", "request_tag", "request_refuseallow");
+					else
+					{
+						CPrintToChat(client, "%t %t", "request_tag", "request_alreadyrefused");
+					}
 				}
 				else
 				{
-					CPrintToChat(client, "%t %t", "request_tag", "request_alreadyrefused");
+					CPrintToChat(client, "%t %t", "request_tag", "request_notalivect");
 				}
-			}
-			else
-			{
-				CPrintToChat(client, "%t %t", "request_tag", "request_notalivect");
 			}
 		}
 	}
@@ -390,7 +393,7 @@ public Action RefuseMenu(int warden)
 		}
 		DrawPanelText(RefusePanel, "                                   ");
 		DrawPanelText(RefusePanel, "-----------------------------------");
-		SendPanelToClient(RefusePanel, warden, NullHandler, 20);
+		SendPanelToClient(RefusePanel, warden, NullHandler, 23);
 	}
 }
 
@@ -661,13 +664,13 @@ public Action NoAllowRefuse(Handle timer)
 {
 	if (g_iCountStopTime > 0)
 	{
-		LoopValidClients(client, false, true)
+		if (g_iCountStopTime < 4)
 		{
-			if (g_iCountStopTime < 4) 
+			LoopValidClients(client, false, true)
 			{
 				PrintHintText(client,"%t", "warden_stopcountdown_nc", g_iCountStopTime);
-				CPrintToChatAll("%t %t", "warden_tag" , "warden_stopcountdown", g_iCountStopTime);
 			}
+			CPrintToChatAll("%t %t", "warden_tag" , "warden_stopcountdown", g_iCountStopTime);
 		}
 		g_iCountStopTime--;
 		return Plugin_Continue;
@@ -677,7 +680,6 @@ public Action NoAllowRefuse(Handle timer)
 		LoopValidClients(client, false, true)
 		{
 			PrintHintText(client, "%t", "warden_countdownstop_nc");
-			CPrintToChatAll("%t %t", "warden_tag" , "warden_countdownstop");
 			if(gc_bSounds.BoolValue)	
 			{
 				EmitSoundToAllAny(g_sSoundRefuseStopPath);
@@ -687,6 +689,7 @@ public Action NoAllowRefuse(Handle timer)
 			g_iCountStopTime = gc_fRefuseTime.IntValue;
 			return Plugin_Stop;
 		}
+		CPrintToChatAll("%t %t", "warden_tag" , "warden_countdownstop");
 	}
 	return Plugin_Continue;
 }
