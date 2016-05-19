@@ -404,38 +404,38 @@ public Action StartTimer(Handle timer)
 			{
 				PrintHintText(client,"%t", "hide_timetohide_nc", g_iFreezeTime);
 			}
-			return Plugin_Continue;
 		}
-		
-		g_iFreezeTime = gc_iFreezeTime.IntValue;
-		
-		if (g_iRound > 0)
+		return Plugin_Continue;
+	}
+	
+	g_iFreezeTime = gc_iFreezeTime.IntValue;
+	
+	if (g_iRound > 0)
+	{
+		LoopClients(client) if(IsPlayerAlive(client))
 		{
-			LoopClients(client) if(IsPlayerAlive(client))
+			if (GetClientTeam(client) == CS_TEAM_CT)
 			{
-				if (GetClientTeam(client) == CS_TEAM_CT)
-				{
-					SetEntityMoveType(client, MOVETYPE_WALK);
-					SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.4);
-				}
-				if (GetClientTeam(client) == CS_TEAM_T)
-				{
-					if (gc_bFreezeHider)
-					{
-						SetEntityMoveType(client, MOVETYPE_NONE);
-					}
-					else
-					{
-						SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 0.9);
-					}
-				}
-				if(gc_bOverlays.BoolValue) CreateTimer( 0.0, ShowOverlayStart, client);
-				if(gc_bSounds.BoolValue)
-				{
-					EmitSoundToAllAny(g_sSoundStartPath);
-				}
-				PrintHintText(client,"%t", "hide_start_nc");
+				SetEntityMoveType(client, MOVETYPE_WALK);
+				SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.4);
 			}
+			if (GetClientTeam(client) == CS_TEAM_T)
+			{
+				if (gc_bFreezeHider)
+				{
+					SetEntityMoveType(client, MOVETYPE_NONE);
+				}
+				else
+				{
+					SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 0.9);
+				}
+			}
+			if(gc_bOverlays.BoolValue) CreateTimer( 0.0, ShowOverlayStart, client);
+			if(gc_bSounds.BoolValue)
+			{
+				EmitSoundToAllAny(g_sSoundStartPath);
+			}
+			PrintHintText(client,"%t", "hide_start_nc");
 		}
 		CPrintToChatAll("%t %t", "hide_tag" , "hide_start");
 	}
