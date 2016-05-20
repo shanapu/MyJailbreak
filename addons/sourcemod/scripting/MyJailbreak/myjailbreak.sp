@@ -60,6 +60,7 @@ public void OnConfigsExecuted()
 	}
 }
 
+/*
 public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
 	for(int client=1; client <= MaxClients; client++)
@@ -89,6 +90,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		}
 	}
 }
+*/
 
 public int Native_SetEventDay(Handle plugin,int argc)
 {
