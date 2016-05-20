@@ -1984,9 +1984,11 @@ public bool TraceEntityFilterPlayer(int entity, int contentsMask) {
 
 //Icon
 
+
+
 stock int SpawnIcon(int client) 
 {
-	if(!IsClientInGame(client) || !IsPlayerAlive(client)) return -1;
+	if(!IsClientInGame(client) || !IsPlayerAlive(client) || !gc_bIcon.BoolValue) return -1;
 	
 	char iTarget[16];
 	Format(iTarget, 16, "client%d", client);
