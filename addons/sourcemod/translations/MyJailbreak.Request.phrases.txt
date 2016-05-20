@@ -30,6 +30,11 @@
 		"en"		"You are not alive or CT."
 		"de"		"Du bist tot oder ein Ct."
 	}
+	"request_fullhp"
+	{
+		"en"		"Nice try, you are full health"
+		"de"		"Netter Versuch, Du bist bei voller Gesundheit"
+	}
 	"request_refusedtimes"
 	{
 		"en"		"You have {purple}refused too many times{default} in this round."

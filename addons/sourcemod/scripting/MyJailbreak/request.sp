@@ -36,6 +36,7 @@ ConVar gc_bHeal;
 ConVar gc_bHealthShot;
 ConVar gc_fHealTime;
 ConVar gc_iHealLimit;
+ConVar gc_bHealthCheck;
 ConVar gc_iHealColorRed;
 ConVar gc_iHealColorGreen;
 ConVar gc_iHealColorBlue;
@@ -138,6 +139,7 @@ public void OnPluginStart()
 	gc_bHeal = AutoExecConfig_CreateConVar("sm_heal_enable", "1", "0 - disabled, 1 - enable heal");
 	gc_sCustomCommandHeal = AutoExecConfig_CreateConVar("sm_heal_cmd", "cure", "Set your custom chat command for Heal. no need for sm_ or !");
 	gc_bHealthShot = AutoExecConfig_CreateConVar("sm_heal_healthshot", "1", "0 - disabled, 1 - enable give healthshot on accept to terror");
+	gc_bHealthCheck = AutoExecConfig_CreateConVar("sm_heal_check", "1", "0 - disabled, 1 - enable check if player is already full health");
 	gc_iHealLimit = AutoExecConfig_CreateConVar("sm_heal_limit", "2", "Сount how many times you can use the command");
 	gc_fHealTime = AutoExecConfig_CreateConVar("sm_heal_time", "10.0", "Time after the player gets his normal colors back");
 	gc_iHealColorRed = AutoExecConfig_CreateConVar("sm_heal_color_red", "240","What color to turn the heal Terror into (set R, G and B values to 255 to disable) (Rgb): x - red value", _, true, 0.0, true, 255.0);
@@ -355,15 +357,9 @@ public Action Command_refuse(int client, int args)
 						}
 						else CPrintToChat(client, "%t %t", "request_tag", "request_refuseallow");
 					}
-					else
-					{
-						CPrintToChat(client, "%t %t", "request_tag", "request_alreadyrefused");
-					}
+					else CPrintToChat(client, "%t %t", "request_tag", "request_alreadyrefused");
 				}
-				else
-				{
-					CPrintToChat(client, "%t %t", "request_tag", "request_notalivect");
-				}
+				else CPrintToChat(client, "%t %t", "request_tag", "request_notalivect");
 			}
 		}
 	}
@@ -418,20 +414,11 @@ public Action Command_Repeat(int client, int args)
 						if (warden_exist()) LoopClients(i) RepeatMenu(i);
 						if(gc_bSounds.BoolValue)EmitSoundToAllAny(g_sSoundRepeatPath);
 					}
-					else
-					{
-						CPrintToChat(client, "%t %t", "request_tag", "request_repeattimes");
-					}
+					else CPrintToChat(client, "%t %t", "request_tag", "request_repeattimes");
 				}
-				else
-				{
-					CPrintToChat(client, "%t %t", "request_tag", "request_alreadyrepeat");
-				}
+				else CPrintToChat(client, "%t %t", "request_tag", "request_alreadyrepeat");
 			}
-			else
-			{
-				CPrintToChat(client, "%t %t", "request_tag", "request_notalivect");
-			}
+			else CPrintToChat(client, "%t %t", "request_tag", "request_notalivect");
 		}
 	}
 	return Plugin_Handled;
@@ -493,15 +480,9 @@ public Action Command_Capitulation(int client, int args)
 					}
 					else CPrintToChat(client, "%t %t", "request_tag", "warden_noexist");
 				}
-				else
-				{
-					CPrintToChat(client, "%t %t", "request_tag", "request_alreadycapitulated");
-				}
+				else CPrintToChat(client, "%t %t", "request_tag", "request_alreadycapitulated");
 			}
-			else
-			{
-				CPrintToChat(client, "%t %t", "request_tag", "request_notalivect");
-			}
+			else CPrintToChat(client, "%t %t", "request_tag", "request_notalivect");
 		}
 	}
 	return Plugin_Handled;
@@ -580,35 +561,30 @@ public Action Command_Heal(int client, int args)
 					{
 						if (warden_exist())
 						{
-							if(!IsRequest)
+							if((GetClientHealth(client) < 100) || !gc_bHealthCheck.BoolValue)
 							{
-								IsRequest = true;
-								RequestTimer = CreateTimer (gc_fHealTime.FloatValue, IsRequestTimer);
-								g_bHealed[client] = true;
-								g_iHealCounter[client]++;
-								CPrintToChatAll("%t %t", "request_tag", "request_heal", client);
-								SetEntityRenderColor(client, gc_iHealColorRed.IntValue, gc_iHealColorGreen.IntValue, gc_iHealColorBlue.IntValue, 255);
-								HealTimer[client] = CreateTimer(gc_fHealTime.FloatValue, ResetColorHeal, client);
-								LoopClients(i) HealMenu(i);
+								if(!IsRequest)
+								{
+									IsRequest = true;
+									RequestTimer = CreateTimer (gc_fHealTime.FloatValue, IsRequestTimer);
+									g_bHealed[client] = true;
+									g_iHealCounter[client]++;
+									CPrintToChatAll("%t %t", "request_tag", "request_heal", client);
+									SetEntityRenderColor(client, gc_iHealColorRed.IntValue, gc_iHealColorGreen.IntValue, gc_iHealColorBlue.IntValue, 255);
+									HealTimer[client] = CreateTimer(gc_fHealTime.FloatValue, ResetColorHeal, client);
+									LoopClients(i) HealMenu(i);
+								}
+								else CPrintToChat(client, "%t %t", "request_tag", "request_processing");
 							}
-							else CPrintToChat(client, "%t %t", "request_tag", "request_processing");
+							else CPrintToChat(client, "%t %t", "request_tag", "request_fullhp");
 						}
 						else CPrintToChat(client, "%t %t", "request_tag", "warden_noexist");
 					}
-					else
-					{
-						CPrintToChat(client, "%t %t", "request_tag", "request_healtimes");
-					}
+					else CPrintToChat(client, "%t %t", "request_tag", "request_healtimes");
 				}
-				else
-				{
-					CPrintToChat(client, "%t %t", "request_tag", "request_alreadyhealed");
-				}
+				else CPrintToChat(client, "%t %t", "request_tag", "request_alreadyhealed");
 			}
-			else
-			{
-				CPrintToChat(client, "%t %t", "request_tag", "request_notalivect");
-			}
+			else CPrintToChat(client, "%t %t", "request_tag", "request_notalivect");
 		}
 	}
 	return Plugin_Handled;
