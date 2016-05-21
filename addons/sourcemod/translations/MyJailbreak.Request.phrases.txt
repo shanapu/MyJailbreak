@@ -136,4 +136,29 @@
 		"en"		"Player who ask for repeating"
 		"de"		"Spieler die um eine Wiederholung bitten"
 	}
+	"request_menu_title"
+	{
+		"en"		"Make a request"
+		"de"		"Anfrage stellen"
+	}
+	"request_menu_repeat"
+	{
+		"en"		"Repeat announcement"
+		"de"		"Ansage wiederholen"
+	}
+	"request_menu_refuse"
+	{
+		"en"		"Refuse a game"
+		"de"		"Spiel verweigern"
+	}
+	"request_menu_heal"
+	{
+		"en"		"Request Healing"
+		"de"		"Heilung anfragen"
+	}
+	"request_menu_capitulation"
+	{
+		"en"		"Capitulation"
+		"de"		"Kapitulation"
+	}
 }

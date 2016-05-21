@@ -120,15 +120,15 @@
 		"#format"		""
 		"en"			"Join CT queue (!guard)"
 	}
-	"menu_votect"
+	"menu_request"
 	{
 		"#format"		""
-		"en"			"Vote against guard"
+		"en"			"Requests"
 	}
 	"menu_votewarden"
 	{
 		"#format"		""
-		"en"			"vote against warden"
+		"en"			"Vote fire warden"
 	}
 	"menu_event_Titlestart"
 	{

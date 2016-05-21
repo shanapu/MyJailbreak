@@ -101,6 +101,8 @@ public void OnPluginStart()
 	LoadTranslations("MyJailbreak.Request.phrases");
 	
 	//Client Commands
+	RegConsoleCmd("sm_request", RequestMenu, "Open the requests menu");
+	
 	RegConsoleCmd("sm_refuse", Command_refuse, "Allows the Warden start refusing time and Terrorist to refuse a game");
 	
 	RegConsoleCmd("sm_capitulation", Command_Capitulation, "Allows a rebeling terrorist to request a capitulate");
@@ -261,7 +263,6 @@ public void OnConfigsExecuted()
 	if(GetCommandFlags(sBufferCMDCapitulation) == INVALID_FCVAR_FLAGS)
 		RegConsoleCmd(sBufferCMDCapitulation, Command_Capitulation, "Allows a rebeling terrorist to request a capitulate");
 }
-
 
 public Action RoundStart(Handle event, char [] name, bool dontBroadcast)
 {
@@ -633,6 +634,87 @@ public int HealMenuHandler(Menu menu, MenuAction action, int client, int Positio
 				CPrintToChatAll("%t %t", "warden_tag", "request_noaccepted", i);
 			}
 		}
+	}
+}
+
+public Action RequestMenu(int client, int args)
+{
+	if(gc_bPlugin.BoolValue)
+	{
+		if (GetClientTeam(client) == CS_TEAM_T && (IsPlayerAlive(client)))
+		{
+			Menu reqmenu = new Menu(RequestMenuHandler);
+			
+			char menuinfo19[255], menuinfo20[255], menuinfo21[255], menuinfo22[255], menuinfo29[255];
+			
+			Format(menuinfo29, sizeof(menuinfo29), "%T", "request_menu_title", client);
+			reqmenu.SetTitle(menuinfo29);
+			
+			if(gc_bRefuse.BoolValue)
+			{
+				Format(menuinfo19, sizeof(menuinfo19), "%T", "request_menu_refuse", client);
+				reqmenu.AddItem("refuse", menuinfo19);
+			}
+			if(gc_bCapitulation.BoolValue)
+			{
+				Format(menuinfo20, sizeof(menuinfo20), "%T", "request_menu_capitulation", client);
+				reqmenu.AddItem("capitulation", menuinfo20);
+			}
+			if(gc_bRepeat.BoolValue)
+			{
+				Format(menuinfo21, sizeof(menuinfo21), "%T", "request_menu_repeat", client);
+				reqmenu.AddItem("repeat", menuinfo21);
+			}
+			if(gc_bHeal.BoolValue)
+			{
+				Format(menuinfo22, sizeof(menuinfo22), "%T", "request_menu_heal", client);
+				reqmenu.AddItem("heal", menuinfo22);
+			}
+			reqmenu.ExitButton = true;
+			reqmenu.ExitBackButton = true;
+			reqmenu.Display(client, MENU_TIME_FOREVER);
+		}
+		else CPrintToChat(client, "%t %t", "request_tag", "request_notalivect");
+	}
+}
+
+//Event Day Voting Handler
+
+public int RequestMenuHandler(Menu reqmenu, MenuAction action, int client, int selection)
+{
+	if (action == MenuAction_Select)
+	{
+		char info[32];
+		
+		reqmenu.GetItem(selection, info, sizeof(info));
+		
+		if ( strcmp(info,"refuse") == 0 ) 
+		{
+			FakeClientCommand(client, "sm_refuse");
+		} 
+		else if ( strcmp(info,"repeat") == 0 ) 
+		{
+			FakeClientCommand(client, "sm_repeat");
+		} 
+		else if ( strcmp(info,"capitulation") == 0 ) 
+		{
+			FakeClientCommand(client, "sm_capitulation");
+		} 
+		else if ( strcmp(info,"heal") == 0 )
+		{
+			FakeClientCommand(client, "sm_heal");
+		}
+	}
+	else if(action == MenuAction_Cancel) 
+	{
+		if(selection == MenuCancel_ExitBack) 
+		{
+			FakeClientCommand(client, "sm_menu");
+		}
+	}
+	else if (action == MenuAction_End)
+	{
+		delete reqmenu;
 	}
 }
 

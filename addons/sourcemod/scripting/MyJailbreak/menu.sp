@@ -49,14 +49,9 @@ ConVar g_bGunsT;
 ConVar g_bGunsCT;
 ConVar g_bOpen;
 ConVar g_bRandom;
+ConVar g_bRequest;
 ConVar gc_bTeam;
 ConVar g_bWarden;
-ConVar g_bRequest;
-/* ConVar g_bHeal;
-ConVar g_bRefuse;
-ConVar g_bRepeat;
-Convar g_bCapitulation;
- */
 
 public Plugin myinfo = {
 	name = "MyJailbreak - Menus",
@@ -136,10 +131,6 @@ public void OnConfigsExecuted()
 	g_bRandom = FindConVar("sm_warden_random");
 	g_bFF = FindConVar("mp_teammates_are_enemies");
 	g_bRequest = FindConVar("sm_request_enable");
-/*	g_bHeal = FindConVar("sm_heal_enable");
-	g_bRefuse = FindConVar("sm_refuse_enable");
-	g_bRepeat = FindConVar("sm_repeat_enable");
-	g_bCapitulation = FindConVar("sm_capitulation_enable");  */
 }
 
 //Welcome/Info Message
@@ -179,10 +170,10 @@ public Action JbMenu(int client, int args)
 	if(gc_bPlugin.BoolValue)	
 	{
 		char menuinfo1[255], menuinfo2[255], menuinfo3[255], menuinfo5[255], menuinfo6[255], menuinfo7[255], menuinfo8[255];
-		char menuinfo9[255], menuinfo10[255], menuinfo11[255], menuinfo13[255], menuinfo15[255], menuinfo16[255];
+		char menuinfo9[255], menuinfo10[255], menuinfo11[255], menuinfo12[255],menuinfo13[255], menuinfo15[255], menuinfo16[255];
 		char menuinfo17[255], menuinfo14[255], menuinfo4[255], menuinfo19[255], menuinfo20[255], menuinfo21[255], menuinfo18[255];
 		char menuinfo22[255], menuinfo23[255];
-		//menuinfo12[255],
+		
 		Format(menuinfo1, sizeof(menuinfo1), "%T", "menu_info_title", client);
 		
 		Menu mainmenu = new Menu(JBMenuHandler);
@@ -359,6 +350,14 @@ public Action JbMenu(int client, int args)
 						}
 					}
 				}
+				if(g_bRequest != null)
+				{
+					if(g_bRequest.BoolValue)
+					{
+						Format(menuinfo12, sizeof(menuinfo12), "%T", "menu_request", client);
+						mainmenu.AddItem("request", menuinfo12);
+					}
+				}
 				if(g_bWarden != null)
 				{
 					if(warden_exist())
@@ -461,6 +460,10 @@ public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selec
 		else if ( strcmp(info,"guard") == 0 ) 
 		{
 			FakeClientCommand(client, "sm_guard");
+		}
+		else if ( strcmp(info,"request") == 0 ) 
+		{
+			FakeClientCommand(client, "sm_request");
 		}
 		else if ( strcmp(info,"lastR") == 0 ) 
 		{
