@@ -44,7 +44,7 @@ ConVar gc_iGunSlapDamage;
 ConVar gc_bGunSlap;
 ConVar gc_bGunNoDrop;
 ConVar gc_bRandom;
-ConVar gc_iRandomKind;
+ConVar gc_iRandomMode;
 ConVar gc_hOpenTimer;
 ConVar gc_fRandomTimer;
 ConVar gc_bMath;
@@ -72,6 +72,7 @@ ConVar gc_iWardenColorRed;
 ConVar gc_iWardenColorGreen;
 ConVar gc_iWardenColorBlue;
 ConVar g_bFF;
+ConVar gc_bOp;
 ConVar g_bNoBlockSolid;
 ConVar g_bMenuClose;
 ConVar gc_sCustomCommand;
@@ -275,7 +276,7 @@ public void OnPluginStart()
 	gc_bGunSlap = AutoExecConfig_CreateConVar("sm_warden_gunslap", "1", "0 - disabled, 1 - Slap the CT for dropping a gun", _, true,  0.0, true, 1.0);
 	gc_iGunSlapDamage = AutoExecConfig_CreateConVar("sm_warden_gunslap_dmg", "10", "Amoung of HP losing on slap for dropping a gun", _, true,  0.0);
 	gc_bRandom = AutoExecConfig_CreateConVar("sm_warden_random", "1", "0 - disabled, 1 - enable kill a random t for warden", _, true,  0.0, true, 1.0);
-	gc_iRandomKind = AutoExecConfig_CreateConVar("sm_warden_randomkill", "2", "1 - all random / 2 - Thunder / 3 - Timebomb / 4 - Firebomb / 5 - NoKill(1,3,4 needs funncommands.smx enabled)", _, true,  1.0, true, 4.0);
+	gc_iRandomMode = AutoExecConfig_CreateConVar("sm_warden_random_mode", "2", "1 - all random / 2 - Thunder / 3 - Timebomb / 4 - Firebomb / 5 - NoKill(1,3,4 needs funncommands.smx enabled)", _, true,  1.0, true, 4.0);
 	gc_bCountDown = AutoExecConfig_CreateConVar("sm_warden_countdown", "1", "0 - disabled, 1 - enable countdown for warden", _, true,  0.0, true, 1.0);
 	gc_bIcon = AutoExecConfig_CreateConVar("sm_warden_icon_enable", "0", "0 - disabled, 1 - enable the icon above the wardens head", _, true,  0.0, true, 1.0);
 	gc_sIconPath = AutoExecConfig_CreateConVar("sm_warden_icon", "decals/MyJailbreak/warden" , "Path to the warden icon DONT TYPE .vmt or .vft");
@@ -293,6 +294,7 @@ public void OnPluginStart()
 	gc_bMath = AutoExecConfig_CreateConVar("sm_warden_math", "1", "0 - disabled, 1 - enable mathquiz for warden", _, true,  0.0, true, 1.0);
 	gc_iMinimumNumber = AutoExecConfig_CreateConVar("sm_warden_math_min", "1", "What should be the minimum number for questions?", _, true,  1.0);
 	gc_iMaximumNumber = AutoExecConfig_CreateConVar("sm_warden_math_max", "100", "What should be the maximum number for questions?", _, true,  2.0);
+	gc_bOp = AutoExecConfig_CreateConVar("sm_warden_math_mode", "1", "0 - only addition & subtraction, 1 -  addition, subtraction, multiplication & division", _, true,  0.0, true, 1.0);
 	gc_iTimeAnswer = AutoExecConfig_CreateConVar("sm_warden_math_time", "10", "Time in seconds to give a answer to a question.", _, true,  3.0);
 	gc_bModel = AutoExecConfig_CreateConVar("sm_warden_model", "1", "0 - disabled, 1 - enable warden model", 0, true, 0.0, true, 1.0);
 	gc_sModelPath = AutoExecConfig_CreateConVar("sm_warden_model_path", "models/player/custom_player/legacy/security/security.mdl", "Path to the model for warden.");
@@ -424,7 +426,7 @@ public void OnConfigsExecuted()
 {
 	g_iMathMin = gc_iMinimumNumber.IntValue;
 	g_iMathMax = gc_iMaximumNumber.IntValue;
-	g_iKillKind = gc_iRandomKind.IntValue;
+	g_iKillKind = gc_iRandomMode.IntValue;
 	
 	char sBufferCMD[64];
 	Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommand);
@@ -1061,11 +1063,6 @@ void RemoveTheWarden(int client)
 
 //Math Quizz
 
-public Action EndMathQuestion(Handle timer)
-{
-	SendEndMathQuestion(-1);
-}
-
 public Action StartMathQuestion(int client, int args)
 {
 	if(gc_bMath.BoolValue)
@@ -1075,9 +1072,9 @@ public Action StartMathQuestion(int client, int args)
 			if (!IsMathQuiz)
 			{
 				CreateTimer( 4.0, CreateMathQuestion, client);
-							
+				
 				CPrintToChatAll("%t %t", "warden_tag" , "warden_startmathquiz");
-		
+				
 				if(gc_bBetterNotes.BoolValue)
 				{
 					PrintCenterTextAll("%t", "warden_startmathquiz_nc");
@@ -1099,7 +1096,11 @@ public Action CreateMathQuestion( Handle timer, any client )
 			int NumOne = GetRandomInt(g_iMathMin, g_iMathMax);
 			int NumTwo = GetRandomInt(g_iMathMin, g_iMathMax);
 			
-			Format(g_sOp, sizeof(g_sOp), g_sOperators[GetRandomInt(0,3)]);
+			if(gc_bOp.BoolValue) 
+			{
+				Format(g_sOp, sizeof(g_sOp), g_sOperators[GetRandomInt(0,3)]);
+			}
+			else Format(g_sOp, sizeof(g_sOp), g_sOperators[GetRandomInt(0,1)]);
 			
 			if(StrEqual(g_sOp, PLUS))
 			{
@@ -1194,6 +1195,11 @@ public void SendEndMathQuestion(int client)
 	WritePackString(pack, answer);
 	
 	IsMathQuiz = false;
+}
+
+public Action EndMathQuestion(Handle timer)
+{
+	SendEndMathQuestion(-1);
 }
 
 public Action RemoveColor( Handle timer, any client ) 
@@ -2671,7 +2677,6 @@ public Action ChooseRandom(Handle timer, Handle pack)
 				{
 					CPrintToChatAll("%t %t", "warden_tag", "warden_randomwarden"); 
 					SetTheWarden(i);
-					
 				}
 			}
 		}
@@ -2703,7 +2708,6 @@ public Action OpenCounter(Handle timer, Handle pack)
 				
 				OpenCounterTime = null;
 				}
-				
 			}
 			else if(gc_bOpenTimer.BoolValue)
 			{
@@ -2879,8 +2883,8 @@ public int Native_RemoveWarden(Handle plugin, int numParams)
 }
 
 public int Native_GetWarden(Handle plugin, int argc)
-{	
-		return g_iWarden;
+{
+	return g_iWarden;
 }
 
 void Forward_OnWardenCreation(int client)
@@ -2914,12 +2918,6 @@ stock bool IsClientWarden(int client)
 	}
 	return false;
 }
-
-public void warden_OnWardenCreated(int client)
-{
-
-}
-
 
 // Mute
 
