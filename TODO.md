@@ -1,38 +1,27 @@
 know bugs:
 - [ ] countdown: Start -> Cancel -> Start - bug
 - [ ] weapons.smx "block" stamm vip models?!
-- [ ] Suicide Bomber win -> T win show wrong - solution: mp_default_team_winner_no_objective?
-- [ ] catch win -> T win show wrong - solution: mp_default_team_winner_no_objective?
-- [ ] hide win -> T win show wrong - solution: mp_default_team_winner_no_objective?
-- [?] duckhunt&knife end FP
-- [?] warden icon losing head postion
+- [ ] duckhunt he battle no more nade throw?
 
 must:
-- [ ] add all new stuff to wiki
 - [ ] wiki: howto edit -> SetCvars, add menu item,
 - [ ] menu: add placeholder for custom commands
 - [ ] clean up translation files
-- [ ] requests menu
-- [ ] !guard instead join ct
-- [ ] gun plant prevention timer on roundstart
+- [ ] move menus to adminmenu
 
 want:
-- [/] gunplant prevention
 - [/] zombie vision/wallhack
 - [ ] ClientPrefs
 - [ ] Smart Download Manager https://forums.alliedmods.net/showthread.php?t=206496
-- [x] !refuse !capitalation !repeat !heal !pardon
 - [ ] clean double useless code OnPlayerRunCmd
 - [ ] set custom Laser/Drawer Button
 - [ ] translate EventDay native
 - [ ] respawn on freeday
 - [ ] hide: darken the sky
 - [ ] Freeze / Stun Gun
-- [x] hide: seeker more TA -> convar set how many
 - [ ] warden: disarm when shot on Arms/hand (all CT?)
 - [ ] updater support
 - [ ] duckhunt: change +attack to +secAttack
-- [x] all: custom command support !mycommand
 - [ ] all: format centertext <font size='30' color='#FF00FF'>test</font>
 - [ ] all: restrict map heal station https://forums.alliedmods.net/showthread.php?t=267167
 - [ ] knife: vote on roundstart for grav skate tp or all
@@ -41,7 +30,7 @@ want:
 - [ ] playertags: add VIP flag
 - [ ] playertags: define color chat tag
 - [ ] warden: talkpower per menu only some sec https://forums.alliedmods.net/showthread.php?t=257229
-- [ ] countdown: insert cancel in menu
+- [ ] countdown: insert cancel in menu / fix first
 - [ ] countdown: force stop
 - [ ] merge double used translation to myjailbreak.phrases
 - [ ] warden: color prisioners (color roulette)
@@ -52,7 +41,7 @@ want:
 - [ ] hide: MovementValue hider/seeker convar
 - [ ] new day: Tron like - all player Molotov rain https://forums.alliedmods.net/showthread.php?p=2398902
 - [ ] merge Transltions
-- [ ] math quiz allow + - * / convars
+- [x] math quiz allow + - * / convars
 
 need?
 - [ ] rewrite weapons?!
@@ -70,7 +59,7 @@ need?
 - [ ] empty deagle? - > bomb toss https://github.com/KissLick/TeamGames/blob/master/addons/sourcemod/scripting/modules/TG_BombToss.sp
 
 future:
-- [ ] make jailbreak high customizeable - keyvalues cfg file like DonorMenu
+- [ ] make menu high customizeable - keyvalues cfg file like DonorMenu
 - [ ] rewrite/merge to one master plugin (e.g. hosties,ttt..)
 
 maybe:
@@ -89,6 +78,11 @@ lose cues bad spelling
 bugs:
 - [x] sm_weapons_spawnmenu dont work
 - [x] sm_weapons_awp & sm_weapons_autosniper
+- [x] duckhunt&knife end FP
+- [x] Suicide Bomber win -> T win show wrong - solution: mp_default_team_winner_no_objective
+- [x] catch win -> T win show wrong - solution: mp_default_team_winner_no_objective
+- [x] hide win -> T win show wrong - solution: mp_default_team_winner_no_objective
+- [x] warden icon losing head postion
 - [x] catch: sprint bug release T
 - [x] ct vs t check terror>0
 - [x] Suicide Bomber: Hp & burn for not nearby
@@ -129,7 +123,15 @@ bugs:
 
 must/want:
 - [x] RandomKill: no rebel / last T
+- [x] !heal check hp
+- [x] requests menu
+- [x] gunplant prevention
+- [x] !refuse !capitalation !repeat !heal !pardon
 - [x] zombie: hp convar
+- [x] hide: seeker more TA -> convar set how many
+- [x] all: custom command support !mycommand
+- [x] !guard instead join ct
+- [x] gun plant prevention timer on roundstart
 - [x] menu: insert noblock
 - [x] warden: toggle noblock
 - [x] autofreeday if there is no CT

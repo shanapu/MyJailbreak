@@ -26,7 +26,7 @@ public void OnPluginStart()
 {
 	gc_bTag = CreateConVar("sm_myjb_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", _, true,  0.0, true, 1.0);
 	
-	HookEvent("round_start", RoundStart);
+//	HookEvent("round_start", RoundStart);
 	}
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
