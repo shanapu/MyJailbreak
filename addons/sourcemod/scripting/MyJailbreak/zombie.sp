@@ -57,7 +57,7 @@ Handle GlowTimer;
 Handle ZombieMenu;
 
 //Floats
-float Pos[3];
+float g_fPos[3];
 float mapFogStart = 0.0;
 float mapFogEnd = 150.0;
 float mapFogDensity = 0.99;
@@ -135,7 +135,7 @@ public void OnPluginStart()
 	gc_sCustomCommand.GetString(g_sCustomCommand , sizeof(g_sCustomCommand));
 }
 
-//ConVar Change for Strings
+//ConVarChange for Strings
 
 public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
@@ -365,12 +365,9 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		}
 		if (RandomCT)
 		{
-			float Pos1[3];
+			GetClientAbsOrigin(RandomCT, g_fPos);
 			
-			GetClientAbsOrigin(RandomCT, Pos);
-			GetClientAbsOrigin(RandomCT, Pos1);
-			
-			Pos[2] = Pos[2] + 6;
+			g_fPos[2] = g_fPos[2] + 6;
 			
 			if (g_iRound > 0)
 			{
@@ -420,7 +417,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 					}
 					if (!gc_bSpawnCell.BoolValue)
 					{
-						TeleportEntity(client, Pos1, NULL_VECTOR, NULL_VECTOR);
+						TeleportEntity(client, g_fPos, NULL_VECTOR, NULL_VECTOR);
 					}
 				}
 			}
@@ -456,9 +453,12 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 			char model[PLATFORM_MAX_PATH]; 
 			GetClientModel(client, model, sizeof(model)); 
 			int skin = CPS_SetSkin(client, model, CPS_RENDER);
-			SetEntProp(skin, Prop_Send, "m_bShouldGlow", false, true);
-			SetEntProp(skin, Prop_Send, "m_nGlowStyle", 1);
-			SetEntPropFloat(skin, Prop_Send, "m_flGlowMaxDist", 10000000.0);
+			if(skin != -1)
+			{
+				SetEntProp(skin, Prop_Send, "m_bShouldGlow", false, true);
+				SetEntProp(skin, Prop_Send, "m_nGlowStyle", 1);
+				SetEntPropFloat(skin, Prop_Send, "m_flGlowMaxDist", 10000000.0);
+			}
 		}
 		
 		delete FreezeTimer;
