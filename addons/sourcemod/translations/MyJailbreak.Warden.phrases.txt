@@ -533,7 +533,7 @@
 	"warden_drawer_off"
 	{
 		"en"		"Deactivate Drawer"
-		"de"		"Laser Pointer ausschalten"
+		"de"		"Drawer ausschalten"
 	}
 	"warden_rainbow"
 	{

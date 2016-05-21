@@ -16,7 +16,7 @@
 bool IsEVENTNAME;
 bool StartEVENTNAME;
 
-//ConVars
+//ConVars    gc_i = global convar integer / gc_i = global convar bool ...
 ConVar gc_bPlugin;
 ConVar gc_bSetW;
 ConVar gc_iCooldownStart;
@@ -28,13 +28,13 @@ ConVar gc_iRoundTime;
 ConVar gc_iTruceTime;
 ConVar gc_bOverlays;
 ConVar gc_sOverlayStartPath;
-ConVar g_iGetRoundTime;
 ConVar gc_bSounds;
 ConVar gc_iRounds;
 ConVar gc_sSoundStartPath;
 ConVar gc_sCustomCommand;
+ConVar g_iGetRoundTime;
 
-//Integers
+//Integers    g_i = global integer
 int g_iOldRoundTime;
 int g_iCoolDown;
 int g_iTruceTime;
@@ -42,24 +42,24 @@ int g_iVoteCount;
 int g_iRound;
 int g_iMaxRound;
 
-//Floats
-float Pos[3];
+//Floats    g_i = global float
+float g_fPos[3];
 
 //Handles
 Handle TruceTimer;
 Handle EVENTNAMEMenu;
 
-//Strings
+//Strings    g_s = global string
 char g_sHasVoted[1500];
 char g_sSoundStartPath[256];
 char g_sCustomCommand[64];
 
 public Plugin myinfo = {
 	name = "MyJailbreak - EVENTNAME",
-	author = "shanapu",
+	author = "yourname",
 	description = "Event Day for Jailbreak Server",
-	version = PLUGIN_VERSION,
-	url = URL_LINK
+	version = "0.x",
+	url = "http://www.sourcemod.net/"
 };
 
 public void OnPluginStart()
@@ -110,21 +110,21 @@ public void OnPluginStart()
 	gc_sCustomCommand.GetString(g_sCustomCommand , sizeof(g_sCustomCommand));
 }
 
-//ConVar Change for Strings
+//ConVarChange for Strings
 
 public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
-	if(convar == gc_sOverlayStartPath)
+	if(convar == gc_sOverlayStartPath)    //Add overlay to download and precache table if changed
 	{
 		strcopy(g_sOverlayStart, sizeof(g_sOverlayStart), newValue);
 		if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStart);
 	}
-	else if(convar == gc_sSoundStartPath)
+	else if(convar == gc_sSoundStartPath)    //Add sound to download and precache table if changed
 	{
 		strcopy(g_sSoundStartPath, sizeof(g_sSoundStartPath), newValue);
 		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
 	}
-	else if(convar == gc_sCustomCommand)
+	else if(convar == gc_sCustomCommand)    //Register the custom command if changed
 	{
 		strcopy(g_sCustomCommand, sizeof(g_sCustomCommand), newValue);
 		char sBufferCMD[64];
@@ -139,15 +139,10 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 public void OnMapStart()
 {
 	//set default start values
-	g_iVoteCount = 0;
+	g_iVoteCount = 0; //how many player voted for the event
 	g_iRound = 0;
 	IsEVENTNAME = false;
 	StartEVENTNAME = false;
-	
-	//Find Convar Times
-	g_iTruceTime = gc_iTruceTime.IntValue;
-	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
-	g_iMaxRound = gc_iRounds.IntValue;
 	
 	//Precache Sound & Overlay
 	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
@@ -161,6 +156,7 @@ public void OnConfigsExecuted()
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iMaxRound = gc_iRounds.IntValue;
 	
+	//Register the custom command
 	char sBufferCMD[64];
 	Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommand);
 	if(GetCommandFlags(sBufferCMD) == INVALID_FCVAR_FLAGS)
@@ -241,7 +237,7 @@ public Action VoteEVENTNAME(int client,int args)
 						int Missing = playercount - g_iVoteCount + 1;
 						Format(g_sHasVoted, sizeof(g_sHasVoted), "%s,%s", g_sHasVoted, steamid);
 						
-						if (g_iVoteCount > playercount)
+						if (g_iVoteCount > playercount) 
 						{
 							StartNextRound(); //prepare Event for next round
 						}
@@ -320,7 +316,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		
 		int RandomCT = 0;
 		
-		for(int client=1; client <= MaxClients; client++)
+		LoopClients(client)
 		{
 			if (IsClientInGame(client))
 			{
@@ -333,16 +329,13 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		}
 		if (RandomCT)
 		{	
-			float Pos1[3];
+			GetClientAbsOrigin(RandomCT, g_fPos);
 			
-			GetClientAbsOrigin(RandomCT, Pos);
-			GetClientAbsOrigin(RandomCT, Pos1);
-			
-			Pos[2] = Pos[2] + 45;
+			g_fPos[2] = g_fPos[2] + 45;
 			
 			if (g_iRound > 0)
 			{
-				for(int client=1; client <= MaxClients; client++)
+				LoopClients(client)
 				{
 					//Give Players Start Equiptment & parameters
 					
@@ -364,7 +357,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 						SetEntProp(client, Prop_Data, "m_takedamage", 0, 1); //disable damage
 						if (!gc_bSpawnCell.BoolValue) //spawn Terrors to CT Spawn
 						{
-							TeleportEntity(client, Pos1, NULL_VECTOR, NULL_VECTOR);
+							TeleportEntity(client, g_fPos, NULL_VECTOR, NULL_VECTOR);
 						}
 					}
 				}
@@ -398,7 +391,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 	
 	if (IsEVENTNAME) //if event was running this round
 	{
-		for(int client=1; client <= MaxClients; client++)
+		LoopClients(client)
 		{
 			if (IsClientInGame(client)) SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true); //disbale noblock
 		}
@@ -454,10 +447,10 @@ public void OnMapEnd()
 
 public Action StartTimer(Handle timer)
 {
-	if (g_iTruceTime > 1)
+	if (g_iTruceTime > 1) //countdown to start
 	{
 		g_iTruceTime--;
-		for (int client=1; client <= MaxClients; client++)
+		LoopClients(client)
 		if (IsClientInGame(client) && IsPlayerAlive(client))
 			{
 				PrintCenterText(client,"%t", "eventname_timeuntilstart_nc", g_iTruceTime);
@@ -469,7 +462,7 @@ public Action StartTimer(Handle timer)
 	
 	if (g_iRound > 0)
 	{
-		for (int client=1; client <= MaxClients; client++)
+		LoopClients(client)
 		{
 			if (IsClientInGame(client) && IsPlayerAlive(client))
 			{

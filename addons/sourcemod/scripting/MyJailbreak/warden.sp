@@ -366,7 +366,7 @@ public void OnPluginStart()
 	g_sColorNames[5] = g_sColorNamesCyan;
 }
 
-//ConVar Change for Strings
+//ConVarChange for Strings
 
 public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
@@ -1325,10 +1325,10 @@ stock void MarkerMenu(int client)
 		return;
 	}
 	
-	float pos[3];
-	Entity_GetAbsOrigin(g_iWarden, pos);
+	float g_fPos[3];
+	Entity_GetAbsOrigin(g_iWarden, g_fPos);
 	
-	float range = GetVectorDistance(pos, g_fMarkerSetupStartOrigin);
+	float range = GetVectorDistance(g_fPos, g_fMarkerSetupStartOrigin);
 	if (range > g_fMarkerRangeMax)
 	{
 		CPrintToChat(client, "%t %t", "warden_tag", "warden_range");
@@ -1407,7 +1407,7 @@ stock void SetupMarker(int client, int marker)
 	g_fMarkerRadius[marker] = radius;
 }
 
-stock int GetClientAimTargetPos(int client, float pos[3]) 
+stock int GetClientAimTargetPos(int client, float g_fPos[3]) 
 {
 	if (client < 1) 
 		return -1;
@@ -1419,8 +1419,8 @@ stock int GetClientAimTargetPos(int client, float pos[3])
 	
 	Handle trace = TR_TraceRayFilterEx(vOrigin, vAngles, MASK_SHOT, RayType_Infinite, TraceFilterAllEntities, client);
 	
-	TR_GetEndPosition(pos, trace);
-	pos[2] += 5.0;
+	TR_GetEndPosition(g_fPos, trace);
+	g_fPos[2] += 5.0;
 	
 	int entity = TR_GetEntityIndex(trace);
 	
@@ -1443,14 +1443,14 @@ stock void RemoveAllMarkers()
 		RemoveMarker(i);
 }
 
-stock int IsMarkerInRange(float pos[3])
+stock int IsMarkerInRange(float g_fPos[3])
 {
 	for(int i = 0; i < 8;i++)
 	{
 		if (g_fMarkerRadius[i] <= 0.0)
 			continue;
 		
-		if (GetVectorDistance(g_fMarkerOrigin[i], pos) < g_fMarkerRadius[i])
+		if (GetVectorDistance(g_fMarkerOrigin[i], g_fPos) < g_fMarkerRadius[i])
 			return i;
 	}
 	return -1;
@@ -1934,19 +1934,19 @@ public Action ToggleDrawerT(int client, int args)
 
 public Action Print_Drawer(Handle timer)
 {
-	float pos[3];
+	float g_fPos[3];
 
 	for(int Y = 1; Y <= MaxClients; Y++) 
 	{
 		if(g_bDrawerColorRainbow[Y]) g_iDrawerColor[Y] = GetRandomInt(0,6);
 		if(IsClientInGame(Y) && g_bDrawerUse[Y])
 		{
-			TraceEye(Y, pos);
-			if(GetVectorDistance(pos, g_fLastDrawer[Y]) > 6.0) {
-				Connect_Drawer(g_fLastDrawer[Y], pos, g_iColors[g_iDrawerColor[Y]]);
-				g_fLastDrawer[Y][0] = pos[0];
-				g_fLastDrawer[Y][1] = pos[1];
-				g_fLastDrawer[Y][2] = pos[2];
+			TraceEye(Y, g_fPos);
+			if(GetVectorDistance(g_fPos, g_fLastDrawer[Y]) > 6.0) {
+				Connect_Drawer(g_fLastDrawer[Y], g_fPos, g_iColors[g_iDrawerColor[Y]]);
+				g_fLastDrawer[Y][0] = g_fPos[0];
+				g_fLastDrawer[Y][1] = g_fPos[1];
+				g_fLastDrawer[Y][2] = g_fPos[2];
 			}
 		} 
 	}
@@ -1975,13 +1975,13 @@ public Action Connect_Drawer(float start[3], float end[3],int color[4])
 	TE_SetupBeamPoints(start, end, g_iBeamSprite, 0, 0, 0, 25.0, 2.0, 2.0, 10, 0.0, color, 0);
 	TE_SendToAll();
 }
-public Action TraceEye(int client, float pos[3]) 
+public Action TraceEye(int client, float g_fPos[3]) 
 {
 	float vAngles[3], vOrigin[3];
 	GetClientEyePosition(client, vOrigin);
 	GetClientEyeAngles(client, vAngles);
 	TR_TraceRayFilter(vOrigin, vAngles, MASK_SHOT, RayType_Infinite, TraceEntityFilterPlayer);
-	if(TR_DidHit(INVALID_HANDLE)) TR_GetEndPosition(pos, INVALID_HANDLE);
+	if(TR_DidHit(INVALID_HANDLE)) TR_GetEndPosition(g_fPos, INVALID_HANDLE);
 	return;
 }
 public bool TraceEntityFilterPlayer(int entity, int contentsMask) {

@@ -44,7 +44,7 @@ int FogIndex = -1;
 int g_iMaxRound;
 
 //Floats
-float Pos[3];
+float g_fPos[3];
 float mapFogStart = 0.0;
 float mapFogEnd = 150.0;
 float mapFogDensity = 0.99;
@@ -121,7 +121,7 @@ public void OnPluginStart()
 	gc_sCustomCommand.GetString(g_sCustomCommand , sizeof(g_sCustomCommand));
 }
 
-//ConVar Change for Strings
+//ConVarChange for Strings
 
 public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
@@ -340,13 +340,10 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 			}
 		}
 		if (RandomCT)
-		{	
-			float Pos1[3];
+		{
+			GetClientAbsOrigin(RandomCT, g_fPos);
 			
-			GetClientAbsOrigin(RandomCT, Pos);
-			GetClientAbsOrigin(RandomCT, Pos1);
-			
-			Pos[2] = Pos[2] + 5;
+			g_fPos[2] = g_fPos[2] + 5;
 			
 			if (g_iRound > 0)
 			{
@@ -356,7 +353,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 					{
 						if (IsClientInGame(client))
 						{
-							TeleportEntity(client, Pos1, NULL_VECTOR, NULL_VECTOR);
+							TeleportEntity(client, g_fPos, NULL_VECTOR, NULL_VECTOR);
 						}
 					}
 				}
