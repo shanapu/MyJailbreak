@@ -3,7 +3,7 @@
 #endif
 #define _myjailbreak_included_
 
-#define PLUGIN_VERSION "0.11"
+#define PLUGIN_VERSION "Beta 1.0"
 #define URL_LINK "https://github.com/shanapu/MyJailbreak"
 
 #include <sdktools>

@@ -2990,14 +2990,14 @@ public int MuteMenuTime(Menu menu5, MenuAction action, int client, int Position)
 	}
 	else if(action == MenuAction_Cancel)
 	{
-		if(selection == MenuCancel_ExitBack) 
+		if(Position == MenuCancel_ExitBack) 
 		{
 			FakeClientCommand(client, "sm_menu");
 		}
 	}
 	else if(action == MenuAction_End)
 	{
-		delete menu3;
+		delete menu5;
 	}
 }
 
