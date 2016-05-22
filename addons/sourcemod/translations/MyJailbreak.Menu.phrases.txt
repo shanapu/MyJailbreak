@@ -173,5 +173,14 @@
 	{
 		"en"			"Admin Menu"
 	}
-
+	"menu_mute"
+	{
+		"en"			"Mute Menu"
+	}
+	/* PLACEHOLDER
+	"menu_PLACEHOLDER"
+	{
+		"en"			"PLACEHOLDER"
+	}
+	*/
 }

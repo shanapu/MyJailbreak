@@ -22,6 +22,9 @@ ConVar gc_bDays;
 ConVar gc_bClose;
 ConVar gc_bStart;
 ConVar gc_bWelcome;
+ConVar gc_bTeam;
+
+//3rd party Convars
 ConVar g_bMath;
 ConVar g_bCheck;
 ConVar g_bFF;
@@ -30,6 +33,7 @@ ConVar g_bCowboy;
 ConVar g_bRules;
 ConVar g_bsetFF;
 ConVar g_bWar;
+ConVar g_bMute;
 ConVar g_bSuicideBomber;
 ConVar g_bKnife;
 ConVar g_bFFA;
@@ -52,8 +56,8 @@ ConVar g_bGunsCT;
 ConVar g_bOpen;
 ConVar g_bRandom;
 ConVar g_bRequest;
-ConVar gc_bTeam;
 ConVar g_bWarden;
+
 
 public Plugin myinfo = {
 	name = "MyJailbreak - Menus",
@@ -112,6 +116,7 @@ public void OnConfigsExecuted()
 	g_bWar = FindConVar("sm_war_enable");
 	g_bZeus = FindConVar("sm_zeus_enable");
 	g_bFFA = FindConVar("sm_ffa_enable");
+	g_bMute = FindConVar("sm_warden_mute");
 	g_bTorch = FindConVar("sm_torch_enable");
 	g_bDrawer = FindConVar("sm_warden_drawer");
 	g_bLaser = FindConVar("sm_warden_laser");
@@ -135,6 +140,7 @@ public void OnConfigsExecuted()
 	g_bRandom = FindConVar("sm_warden_random");
 	g_bFF = FindConVar("mp_teammates_are_enemies");
 	g_bRequest = FindConVar("sm_request_enable");
+	
 }
 
 //Welcome/Info Message
@@ -181,8 +187,12 @@ public Action JbMenu(int client, int args)
 		mainmenu.SetTitle(menuinfo);
 		if (warden_iswarden(client) && IsPlayerAlive(client))
 		{
-			if(gc_bWarden.BoolValue)
+			if(gc_bWarden.BoolValue) // HERE STARTS THE WARDEN MENU
 			{
+				/* Warden PLACEHOLDER
+				Format(menuinfo, sizeof(menuinfo), "%T", "menu_PLACEHOLDER", client);
+				mainmenu.AddItem("PLACEHOLDER", menuinfo);
+				*/
 				if(g_bGuns != null)
 				{
 					if(g_bGuns.BoolValue)
@@ -239,6 +249,14 @@ public Action JbMenu(int client, int args)
 						mainmenu.AddItem("laser", menuinfo);
 					}
 				}
+				if(g_bMute != null)
+				{
+					if(g_bMute.BoolValue)
+					{
+						Format(menuinfo, sizeof(menuinfo), "%T", "menu_mute", client);
+						mainmenu.AddItem("mute", menuinfo);
+					}
+				}
 				if(g_bCheck != null)
 				{
 					if(g_bCheck.BoolValue)
@@ -281,12 +299,16 @@ public Action JbMenu(int client, int args)
 				}
 				Format(menuinfo, sizeof(menuinfo), "%T", "menu_unwarden", client);
 				mainmenu.AddItem("unwarden", menuinfo);
-			}
+			}// HERE END THE WARDEN MENU
 		}
-		else if(GetClientTeam(client) == CS_TEAM_CT) 
+		else if(GetClientTeam(client) == CS_TEAM_CT) // HERE STARTS THE CT MENU
 		{
 			if(gc_bCTerror.BoolValue)
 			{
+				/* CT PLACEHOLDER
+				Format(menuinfo, sizeof(menuinfo), "%T", "menu_PLACEHOLDER", client);
+				mainmenu.AddItem("PLACEHOLDER", menuinfo);
+				*/
 				if(g_bGuns != null)
 				{
 					if(g_bGuns.BoolValue)
@@ -334,12 +356,16 @@ public Action JbMenu(int client, int args)
 					Format(menuinfo, sizeof(menuinfo), "%T", "menu_joint", client);
 					mainmenu.AddItem("ChangeTeam", menuinfo);
 				}
-			}
+			}// HERE END THE CT MENU
 		}
-		else if(GetClientTeam(client) == CS_TEAM_T) 
+		else if(GetClientTeam(client) == CS_TEAM_T) // HERE STARTS THE T MENU
 		{
 			if(gc_bTerror.BoolValue)
 			{
+				/* TERROR PLACEHOLDER
+				Format(menuinfo, sizeof(menuinfo), "%T", "menu_PLACEHOLDER", client);
+				mainmenu.AddItem("PLACEHOLDER", menuinfo);
+				*/
 				if(g_bGuns != null)
 				{
 					if(g_bGuns.BoolValue)
@@ -458,6 +484,12 @@ public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selec
 		{
 			ChangeTeam(client,0);
 		}
+		/* Command PLACEHOLDER
+		else if ( strcmp(info,"PLACEHOLDER") == 0 ) 
+		{
+			FakeClientCommand(client, "sm_YOURCOMMAND");
+		}
+		*/
 		else if ( strcmp(info,"guard") == 0 ) 
 		{
 			FakeClientCommand(client, "sm_guard");
@@ -513,6 +545,11 @@ public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selec
 		else if ( strcmp(info,"getwarden") == 0 ) 
 		{
 			FakeClientCommand(client, "sm_warden");
+			JbMenu(client,0);
+		}
+		else if ( strcmp(info,"mute") == 0 ) 
+		{
+			FakeClientCommand(client, "sm_wmute");
 			JbMenu(client,0);
 		}
 		else if ( strcmp(info,"unwarden") == 0 ) 
