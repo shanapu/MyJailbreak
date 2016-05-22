@@ -4,6 +4,7 @@ a plugin pack for CS:GO jailserver
 MyJailbreak is a redux rewrite of [Franugs Special Jailbreak]("https://github.com/Franc1sco/Franug-Jailbreak/") a merge/redux of [eccas, ESK0s & zipcores Jailbreak warden]("http://www.sourcemod.net/plugins.php?cat=0&mod=-1&title=warden&author=&description=&search=1") and many other plugins.
   
   
+---
 ***Included Plugins:***
   
   
@@ -27,7 +28,7 @@ MyJailbreak is a redux rewrite of [Franugs Special Jailbreak]("https://github.co
     *    [**Knife**](https://github.com/shanapu/MyJailbreak/wiki/Knifefight) - Knife Deathmatch with configurable gravity, iceskate, and thirdperson
     *    [**Freeday**](https://github.com/shanapu/MyJailbreak/wiki/Freeday)- Auto freeday on first round &/or if there is no CT
   
-  
+---
   
 ***Features:***
   
@@ -41,7 +42,7 @@ MyJailbreak is a redux rewrite of [Franugs Special Jailbreak]("https://github.co
 * [Template](https://github.com/shanapu/MyJailbreak/wiki/Eventdays-template) to make your own Eventday
 * some other fancy stuff
   
-  
+---
   
 **I would be happy and very pleased if you want to join this project as equal collaborator. 
 Even if you are a beginner and willing to learn or you just want to help with translations.** 
@@ -51,13 +52,15 @@ This is my first public project. please note that the code may is messy, stupid 
   
 coded with ![](http://shanapu.de/githearth-small.png) free software
   
-  
+---
   
 ***Change Log***
 ```
 [Beta 1.0] - first public beta release
 ```
-
+  
+---
+  
 ***Known Bugs***
 > 
 > Weapons: sm_weapons_ct/sm_weapons_t is blocking ["Stamm - Vip Models Menu"](https://github.com/popoklopsi/Stamm/blob/master/stamm_models.sp) [i]- can anyone tell me why?[/i]
@@ -66,6 +69,7 @@ coded with ![](http://shanapu.de/githearth-small.png) free software
 > you found a bug? tell it please!
 > 
   
+---
   
 ***Recommended plugins***
   
@@ -94,28 +98,20 @@ coded with ![](http://shanapu.de/githearth-small.png) free software
 * smlib.inc https://github.com/bcserv/smlib
 * CustomPlayerSkins.inc https://forums.alliedmods.net/showthread.php?t=240703
   
-  
+---
   
 ***Installation***
-*
+
 * Make sure you have the *latest versions* of the **required plugins**
-* 
 * Download the [latest release]("https://github.com/shanapu/MyJailbreak/archive/master.zip")
-* 
 * Copy the folders ```addons/```,``` cfg/```, ```materials/```, ```models/``` &``` sound/``` to *your root* ```csgo/``` directory  
-* 
 * Copy the folders ```materials/```, ```models/``` & ```sound/``` *in the fastDL/ directory* to *your* ```FastDownload server```  
-* 
 * Open *your* ```downloads.ini``` in ```your csgo/addons/sourcemod/configs``` directory and add the content of ```downloads.txt```  
-* 
 * Run plugin for the first time and **all necessary .cfg files will be generated** 
-* 
 * Configure all settings in ```cfg/MyJailbreak``` to your needs
-* 
 * Have fun! Give feedback!
-*
   
-  
+---
   
 ***Download Latest***  
 https://github.com/shanapu/MyJailbreak/archive/master.zip  
@@ -129,7 +125,7 @@ https://github.com/shanapu/MyJailbreak/issues
 ***Code changes:***  
 https://github.com/shanapu/MyJailbreak/commits/master  
   
-  
+---
   
 ***Credits:***
 used code & stuff from: **ecca, Zipcore, ESK0, Floody.de, Franc1sco, walmar, KeepCalm, bara, Arkarr, KissLick, headline, MasterOfTheXP, Hipster, ReFlexPoison, 8guawong, Mitchell, Xines, Jackmaster, Impact123, Kaesar, andi67** and many other I cant remember unfortunately!
@@ -168,9 +164,11 @@ based/merged/used code/idea plugins:
 # THANKS FOR MAKING FREE SOFTWARE!
 **Much Thanks:**
 Weeeishy, UartigZone, Got Sw4g? terminator18, SkeLeXes, 0dieter0, MaKs, Horoxx, zeddy for bughunting / great ideas!
-
-
-
+  
+---
+    
+---
+  
 
 
 *my golden faucets not finance itself...* [ ![](http://shanapu.de/donate.gif)]("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=QT8TVRSYWP53J")
