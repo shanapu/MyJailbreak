@@ -77,57 +77,43 @@ coded with ![](http://shanapu.de/githearth-small.png) free software
 ***Requires plugins***
   
 * Sourcemod 1.7.0+
-
 * SM hosties 2 https://github.com/dataviruset/sm-hosties/
-
 * Smart Jail Doors https://github.com/Kailo97/smartjaildoors
-
 * SM File/Folder Downloader and Precacher https://forums.alliedmods.net/showthread.php?p=602270 for zombie/warden model download
-
 * Simple Chat Prozessor https://bitbucket.org/minimoney1/simple-chat-processor
-
 * CustomPlayerSkins https://forums.alliedmods.net/showthread.php?t=240703
 
 *Include files needed for compile*
-
 * autoexecconfig.inc https://forums.alliedmods.net/showthread.php?t=204254
-
 * colors.inc https://forums.alliedmods.net/showthread.php?t=96831
-
 * emitsoundany.inc https://forums.alliedmods.net/showthread.php?t=237045
-
 * myjailbreak.inc https://github.com/shanapu/MyJailbreak/blob/master/addons/sourcemod/scripting/include/myjailbreak.inc
-
 * scp.inc https://forums.alliedmods.net/showthread.php?t=198501
-
 * smartjaildoors.inc https://forums.alliedmods.net/showthread.php?p=2306289
-
 * warden.inc https://github.com/shanapu/MyJailbreak/blob/master/addons/sourcemod/scripting/include/warden.inc (myjailbreak version)
-
 * smlib.inc https://github.com/bcserv/smlib
-
 * CustomPlayerSkins.inc https://forums.alliedmods.net/showthread.php?t=240703
   
   
   
 ***Installation***
->
-> Make sure you have the *latest versions* of the **required plugins**
-> 
-> Download the [latest release]("https://github.com/shanapu/MyJailbreak/archive/master.zip")
-> 
-> Copy the folders ```addons/```,``` cfg/```, ```materials/```, ```models/``` &``` sound/``` to *your root* ```csgo/``` directory  
-> 
-> Copy the folders ```materials/```, ```models/``` & ```sound/``` *in the fastDL/ directory* to *your* ```FastDownload server```  
-> 
-> Open *your* ```downloads.ini``` in ```your csgo/addons/sourcemod/configs``` directory and add the content of ```downloads.txt```  
-> 
-> Run plugin for the first time and **all necessary .cfg files will be generated** 
-> 
-> Configure all settings in ```cfg/MyJailbreak``` to your needs
-> 
-> Have fun! Give feedback!
->
+*
+* Make sure you have the *latest versions* of the **required plugins**
+* 
+* Download the [latest release]("https://github.com/shanapu/MyJailbreak/archive/master.zip")
+* 
+* Copy the folders ```addons/```,``` cfg/```, ```materials/```, ```models/``` &``` sound/``` to *your root* ```csgo/``` directory  
+* 
+* Copy the folders ```materials/```, ```models/``` & ```sound/``` *in the fastDL/ directory* to *your* ```FastDownload server```  
+* 
+* Open *your* ```downloads.ini``` in ```your csgo/addons/sourcemod/configs``` directory and add the content of ```downloads.txt```  
+* 
+* Run plugin for the first time and **all necessary .cfg files will be generated** 
+* 
+* Configure all settings in ```cfg/MyJailbreak``` to your needs
+* 
+* Have fun! Give feedback!
+*
   
   
   
