@@ -276,7 +276,7 @@ public void OnPluginStart()
 	gc_bGunSlap = AutoExecConfig_CreateConVar("sm_warden_gunslap", "1", "0 - disabled, 1 - Slap the CT for dropping a gun", _, true,  0.0, true, 1.0);
 	gc_iGunSlapDamage = AutoExecConfig_CreateConVar("sm_warden_gunslap_dmg", "10", "Amoung of HP losing on slap for dropping a gun", _, true,  0.0);
 	gc_bRandom = AutoExecConfig_CreateConVar("sm_warden_random", "1", "0 - disabled, 1 - enable kill a random t for warden", _, true,  0.0, true, 1.0);
-	gc_iRandomMode = AutoExecConfig_CreateConVar("sm_warden_random_mode", "2", "1 - all random / 2 - Thunder / 3 - Timebomb / 4 - Firebomb / 5 - NoKill(1,3,4 needs funncommands.smx enabled)", _, true,  1.0, true, 4.0);
+	gc_iRandomMode = AutoExecConfig_CreateConVar("sm_warden_random_mode", "2", "1 - all random / 2 - Thunder / 3 - Timebomb / 4 - Firebomb / 5 - NoKill(1,3,4 needs funcommands.smx enabled)", _, true,  1.0, true, 4.0);
 	gc_bCountDown = AutoExecConfig_CreateConVar("sm_warden_countdown", "1", "0 - disabled, 1 - enable countdown for warden", _, true,  0.0, true, 1.0);
 	gc_bIcon = AutoExecConfig_CreateConVar("sm_warden_icon_enable", "0", "0 - disabled, 1 - enable the icon above the wardens head", _, true,  0.0, true, 1.0);
 	gc_sIconPath = AutoExecConfig_CreateConVar("sm_warden_icon", "decals/MyJailbreak/warden" , "Path to the warden icon DONT TYPE .vmt or .vft");
@@ -1339,27 +1339,27 @@ stock void MarkerMenu(int client)
 	{
 		Handle menu = CreateMenu(Handle_MarkerMenu);
 		
-		char menuinfo1[255],menuinfo2[255],menuinfo3[255],menuinfo4[255],menuinfo5[255],menuinfo6[255],menuinfo7[255],menuinfo8[255],menuinfo9[255];
-		Format(menuinfo1, sizeof(menuinfo1), "%T", "warden_marker_title", client);
-		Format(menuinfo2, sizeof(menuinfo2), "%T", "warden_red", client);
-		Format(menuinfo3, sizeof(menuinfo3), "%T", "warden_blue", client);
-		Format(menuinfo4, sizeof(menuinfo4), "%T", "warden_green", client);
-		Format(menuinfo5, sizeof(menuinfo5), "%T", "warden_orange", client);
-		Format(menuinfo6, sizeof(menuinfo6), "%T", "warden_white", client);
-		Format(menuinfo7, sizeof(menuinfo7), "%T", "warden_cyan", client);
-		Format(menuinfo8, sizeof(menuinfo8), "%T", "warden_magenta", client);
-		Format(menuinfo9, sizeof(menuinfo9), "%T", "warden_yellow", client);
+		char menuinfo[255];
 		
-		SetMenuTitle(menu, menuinfo1);
+		Format(menuinfo, sizeof(menuinfo), "%T", "warden_marker_title", client);
+		SetMenuTitle(menu, menuinfo);
 		
-		AddMenuItem(menu, "1", menuinfo2);
-		AddMenuItem(menu, "3", menuinfo3);
-		AddMenuItem(menu, "2", menuinfo4);
-		AddMenuItem(menu, "7", menuinfo5);
-		AddMenuItem(menu, "0", menuinfo6);
-		AddMenuItem(menu, "5", menuinfo7);
-		AddMenuItem(menu, "6", menuinfo8);
-		AddMenuItem(menu, "4", menuinfo9);
+		Format(menuinfo, sizeof(menuinfo), "%T", "warden_red", client);
+		AddMenuItem(menu, "1", menuinfo);
+		Format(menuinfo, sizeof(menuinfo), "%T", "warden_blue", client);
+		AddMenuItem(menu, "3", menuinfo);
+		Format(menuinfo, sizeof(menuinfo), "%T", "warden_green", client);
+		AddMenuItem(menu, "2", menuinfo);
+		Format(menuinfo, sizeof(menuinfo), "%T", "warden_orange", client);
+		AddMenuItem(menu, "7", menuinfo);
+		Format(menuinfo, sizeof(menuinfo), "%T", "warden_white", client);
+		AddMenuItem(menu, "0", menuinfo);
+		Format(menuinfo, sizeof(menuinfo), "%T", "warden_cyan", client);
+		AddMenuItem(menu, "5", menuinfo);
+		Format(menuinfo, sizeof(menuinfo), "%T", "warden_magenta", client);
+		AddMenuItem(menu, "6", menuinfo);
+		Format(menuinfo, sizeof(menuinfo), "%T", "warden_yellow", client);
+		AddMenuItem(menu, "4", menuinfo);
 		
 		DisplayMenu(menu, client, 20);
 	}
@@ -1563,31 +1563,31 @@ public Action LaserMenu(int client, int args)
 	{
 		if (client == g_iWarden)
 		{
-			char menuinfo5[255], menuinfo6[255], menuinfo7[255], menuinfo8[255], menuinfo9[255], menuinfo10[255], menuinfo11[255], menuinfo12[255], menuinfo13[255], menuinfo14[255], menuinfo15[255];
-			Format(menuinfo5, sizeof(menuinfo5), "%T", "warden_laser_title", client);
-			Format(menuinfo6, sizeof(menuinfo6), "%T", "warden_laser_off", client);
-			Format(menuinfo7, sizeof(menuinfo7), "%T", "warden_rainbow", client);
-			Format(menuinfo8, sizeof(menuinfo8), "%T", "warden_white", client);
-			Format(menuinfo9, sizeof(menuinfo9), "%T", "warden_red", client);
-			Format(menuinfo10, sizeof(menuinfo10), "%T", "warden_green", client);
-			Format(menuinfo11, sizeof(menuinfo11), "%T", "warden_blue", client);
-			Format(menuinfo12, sizeof(menuinfo12), "%T", "warden_yellow", client);
-			Format(menuinfo13, sizeof(menuinfo13), "%T", "warden_cyan", client);
-			Format(menuinfo14, sizeof(menuinfo14), "%T", "warden_magenta", client);
-			Format(menuinfo15, sizeof(menuinfo15), "%T", "warden_orange", client);
+			char menuinfo[255];
 			
 			Menu menu = new Menu(LaserHandler);
-			menu.SetTitle(menuinfo5);
-			menu.AddItem("off", menuinfo6);
-			menu.AddItem("rainbow", menuinfo7);
-			menu.AddItem("white", menuinfo8);
-			menu.AddItem("red", menuinfo9);
-			menu.AddItem("green", menuinfo10);
-			menu.AddItem("blue", menuinfo11);
-			menu.AddItem("yellow", menuinfo12);
-			menu.AddItem("cyan", menuinfo13);
-			menu.AddItem("magenta", menuinfo14);
-			menu.AddItem("orange", menuinfo15);
+			Format(menuinfo, sizeof(menuinfo), "%T", "warden_laser_title", client);
+			menu.SetTitle(menuinfo);
+			Format(menuinfo, sizeof(menuinfo), "%T", "warden_laser_off", client);
+			menu.AddItem("off", menuinfo);
+			Format(menuinfo, sizeof(menuinfo), "%T", "warden_rainbow", client);
+			menu.AddItem("rainbow", menuinfo);
+			Format(menuinfo, sizeof(menuinfo), "%T", "warden_white", client);
+			menu.AddItem("white", menuinfo);
+			Format(menuinfo, sizeof(menuinfo), "%T", "warden_red", client);
+			menu.AddItem("red", menuinfo);
+			Format(menuinfo, sizeof(menuinfo), "%T", "warden_green", client);
+			menu.AddItem("green", menuinfo);
+			Format(menuinfo, sizeof(menuinfo), "%T", "warden_blue", client);
+			menu.AddItem("blue", menuinfo);
+			Format(menuinfo, sizeof(menuinfo), "%T", "warden_yellow", client);
+			menu.AddItem("yellow", menuinfo);
+			Format(menuinfo, sizeof(menuinfo), "%T", "warden_cyan", client);
+			menu.AddItem("cyan", menuinfo);
+			Format(menuinfo, sizeof(menuinfo), "%T", "warden_magenta", client);
+			menu.AddItem("magenta", menuinfo);
+			Format(menuinfo, sizeof(menuinfo), "%T", "warden_orange", client);
+			menu.AddItem("orange", menuinfo);
 			
 			menu.ExitBackButton = true;
 			menu.ExitButton = true;
@@ -1716,33 +1716,33 @@ public Action DrawerMenu(int client, int args)
 	{
 		if ((client == g_iWarden) || ((GetClientTeam(client) == CS_TEAM_T) && gc_bDrawer.BoolValue && g_bDrawerT))
 		{
-			char menuinfo5[255], menuinfo6[255], menuinfo7[255], menuinfo8[255], menuinfo9[255], menuinfo10[255], menuinfo11[255], menuinfo12[255], menuinfo13[255], menuinfo14[255], menuinfo15[255], menuinfo16[255];
-			Format(menuinfo5, sizeof(menuinfo5), "%T", "warden_drawer_title", client);
-			Format(menuinfo15, sizeof(menuinfo15), "%T", "warden_drawert", client);
-			Format(menuinfo6, sizeof(menuinfo6), "%T", "warden_drawer_off", client);
-			Format(menuinfo7, sizeof(menuinfo7), "%T", "warden_rainbow", client);
-			Format(menuinfo8, sizeof(menuinfo8), "%T", "warden_white", client);
-			Format(menuinfo9, sizeof(menuinfo9), "%T", "warden_red", client);
-			Format(menuinfo10, sizeof(menuinfo10), "%T", "warden_green", client);
-			Format(menuinfo11, sizeof(menuinfo11), "%T", "warden_blue", client);
-			Format(menuinfo12, sizeof(menuinfo12), "%T", "warden_yellow", client);
-			Format(menuinfo13, sizeof(menuinfo13), "%T", "warden_cyan", client);
-			Format(menuinfo14, sizeof(menuinfo14), "%T", "warden_magenta", client);
-			Format(menuinfo16, sizeof(menuinfo16), "%T", "warden_orange", client);
+			char menuinfo[255];
 			
 			Menu menu = new Menu(DrawerHandler);
-			menu.SetTitle(menuinfo5);
-			menu.AddItem("off", menuinfo6);
-			if (GetClientTeam(client) == CS_TEAM_CT) menu.AddItem("terror", menuinfo15);
-			menu.AddItem("rainbow", menuinfo7);
-			menu.AddItem("white", menuinfo8);
-			menu.AddItem("red", menuinfo9);
-			menu.AddItem("green", menuinfo10);
-			menu.AddItem("blue", menuinfo11);
-			menu.AddItem("yellow", menuinfo12);
-			menu.AddItem("cyan", menuinfo13);
-			menu.AddItem("magenta", menuinfo14);
-			menu.AddItem("orange", menuinfo16);
+			Format(menuinfo, sizeof(menuinfo), "%T", "warden_drawer_title", client);
+			menu.SetTitle(menuinfo);
+			Format(menuinfo, sizeof(menuinfo), "%T", "warden_drawer_off", client);
+			menu.AddItem("off", menuinfo);
+			Format(menuinfo, sizeof(menuinfo), "%T", "warden_drawert", client);
+			if (GetClientTeam(client) == CS_TEAM_CT) menu.AddItem("terror", menuinfo);
+			Format(menuinfo, sizeof(menuinfo), "%T", "warden_rainbow", client);
+			menu.AddItem("rainbow", menuinfo);
+			Format(menuinfo, sizeof(menuinfo), "%T", "warden_white", client);
+			menu.AddItem("white", menuinfo);
+			Format(menuinfo, sizeof(menuinfo), "%T", "warden_red", client);
+			menu.AddItem("red", menuinfo);
+			Format(menuinfo, sizeof(menuinfo), "%T", "warden_green", client);
+			menu.AddItem("green", menuinfo);
+			Format(menuinfo, sizeof(menuinfo), "%T", "warden_blue", client);
+			menu.AddItem("blue", menuinfo);
+			Format(menuinfo, sizeof(menuinfo), "%T", "warden_yellow", client);
+			menu.AddItem("yellow", menuinfo);
+			Format(menuinfo, sizeof(menuinfo), "%T", "warden_cyan", client);
+			menu.AddItem("cyan", menuinfo);
+			Format(menuinfo, sizeof(menuinfo), "%T", "warden_magenta", client);
+			menu.AddItem("magenta", menuinfo);
+			Format(menuinfo, sizeof(menuinfo), "%T", "warden_orange", client);
+			menu.AddItem("orange", menuinfo);
 			
 			menu.ExitBackButton = true;
 			menu.ExitButton = true;
@@ -2053,17 +2053,17 @@ public Action CDMenu(int client, int args)
 	{
 		if (client == g_iWarden)
 		{
-			char menuinfo1[255], menuinfo2[255], menuinfo3[255], menuinfo4[255];
-			Format(menuinfo1, sizeof(menuinfo1), "%T", "warden_cdmenu_title", client);
-			Format(menuinfo2, sizeof(menuinfo2), "%T", "warden_cdmenu_start", client);
-			Format(menuinfo3, sizeof(menuinfo3), "%T", "warden_cdmenu_stop", client);
-			Format(menuinfo4, sizeof(menuinfo4), "%T", "warden_cdmenu_startstop", client);
+			char menuinfo[255];
 			
 			Menu menu = new Menu(CDHandler);
-			menu.SetTitle(menuinfo1);
-			menu.AddItem("start", menuinfo2);
-			menu.AddItem("stop", menuinfo3);
-			menu.AddItem("startstop", menuinfo4);
+			Format(menuinfo, sizeof(menuinfo), "%T", "warden_cdmenu_title", client);
+			menu.SetTitle(menuinfo);
+			Format(menuinfo, sizeof(menuinfo), "%T", "warden_cdmenu_start", client);
+			menu.AddItem("start", menuinfo);
+			Format(menuinfo, sizeof(menuinfo), "%T", "warden_cdmenu_stop", client);
+			menu.AddItem("stop", menuinfo);
+			Format(menuinfo, sizeof(menuinfo), "%T", "warden_cdmenu_startstop", client);
+			menu.AddItem("startstop", menuinfo);
 			menu.ExitButton = true;
 			menu.ExitBackButton = true;
 			menu.Display(client, 20);
@@ -2139,27 +2139,27 @@ public Action StartStopCDMenu(int client, int args)
 	{
 		if (client == g_iWarden)
 		{
-			char menuinfo5[255], menuinfo6[255], menuinfo7[255], menuinfo8[255], menuinfo9[255], menuinfo10[255], menuinfo11[255], menuinfo12[255], menuinfo13[255];
-			Format(menuinfo5, sizeof(menuinfo5), "%T", "warden_cdmenu_title2", client);
-			Format(menuinfo6, sizeof(menuinfo6), "%T", "warden_15", client);
-			Format(menuinfo7, sizeof(menuinfo7), "%T", "warden_30", client);
-			Format(menuinfo8, sizeof(menuinfo8), "%T", "warden_45", client);
-			Format(menuinfo9, sizeof(menuinfo9), "%T", "warden_60", client);
-			Format(menuinfo10, sizeof(menuinfo10), "%T", "warden_90", client);
-			Format(menuinfo11, sizeof(menuinfo11), "%T", "warden_120", client);
-			Format(menuinfo12, sizeof(menuinfo12), "%T", "warden_180", client);
-			Format(menuinfo13, sizeof(menuinfo13), "%T", "warden_300", client);
+			char menuinfo[255];
 			
 			Menu menu = new Menu(StartStopCDHandler);
-			menu.SetTitle(menuinfo5);
-			menu.AddItem("15", menuinfo6);
-			menu.AddItem("30", menuinfo7);
-			menu.AddItem("45", menuinfo8);
-			menu.AddItem("60", menuinfo9);
-			menu.AddItem("90", menuinfo10);
-			menu.AddItem("120", menuinfo11);
-			menu.AddItem("180", menuinfo12);
-			menu.AddItem("300", menuinfo13);
+			Format(menuinfo, sizeof(menuinfo), "%T", "warden_cdmenu_title2", client);
+			menu.SetTitle(menuinfo);
+			Format(menuinfo, sizeof(menuinfo), "%T", "warden_15", client);
+			menu.AddItem("15", menuinfo);
+			Format(menuinfo, sizeof(menuinfo), "%T", "warden_30", client);
+			menu.AddItem("30", menuinfo);
+			Format(menuinfo, sizeof(menuinfo), "%T", "warden_45", client);
+			menu.AddItem("45", menuinfo);
+			Format(menuinfo, sizeof(menuinfo), "%T", "warden_60", client);
+			menu.AddItem("60", menuinfo);
+			Format(menuinfo, sizeof(menuinfo), "%T", "warden_90", client);
+			menu.AddItem("90", menuinfo);
+			Format(menuinfo, sizeof(menuinfo), "%T", "warden_120", client);
+			menu.AddItem("120", menuinfo);
+			Format(menuinfo, sizeof(menuinfo), "%T", "warden_180", client);
+			menu.AddItem("180", menuinfo);
+			Format(menuinfo, sizeof(menuinfo), "%T", "warden_300", client);
+			menu.AddItem("300", menuinfo);
 			
 			menu.ExitBackButton = true;
 			menu.ExitButton = true;
@@ -2523,14 +2523,14 @@ public Action KillRandom(int client, int args)
 	{
 		if (client == g_iWarden)
 		{
-			char info5[255], info6[255], info7[255];
+			char info[255];
 			Menu menu1 = CreateMenu(killmenu);
-			Format(info5, sizeof(info5), "%T", "warden_sure", g_iWarden, client);
-			menu1.SetTitle(info5);
-			Format(info6, sizeof(info6), "%T", "warden_no", client);
-			Format(info7, sizeof(info7), "%T", "warden_yes", client);
-			menu1.AddItem("0", info6);
-			menu1.AddItem("1", info7);
+			Format(info, sizeof(info), "%T", "warden_sure", g_iWarden, client);
+			menu1.SetTitle(info);
+			Format(info, sizeof(info), "%T", "warden_no", client);
+			menu1.AddItem("0", info);
+			Format(info, sizeof(info), "%T", "warden_yes", client);
+			menu1.AddItem("1", info);
 			menu1.ExitBackButton = true;
 			menu1.ExitButton = true;
 			menu1.Display(client,MENU_TIME_FOREVER);
@@ -2961,29 +2961,29 @@ public int MuteMenuTime(Menu menu5, MenuAction action, int client, int Position)
 	{
 		menu5.GetItem(Position,g_sMuteUser,sizeof(g_sMuteUser));
 		
-		char menuinfo5[255], menuinfo6[255], menuinfo7[255], menuinfo8[255], menuinfo9[255], menuinfo10[255], menuinfo11[255], menuinfo12[255], menuinfo13[255], menuinfo14[255];
-		Format(menuinfo5, sizeof(menuinfo5), "%T", "warden_time_title", client);
-		Format(menuinfo14, sizeof(menuinfo14), "%T", "warden_roundend", client);
-		Format(menuinfo6, sizeof(menuinfo6), "%T", "warden_15", client);
-		Format(menuinfo7, sizeof(menuinfo7), "%T", "warden_30", client);
-		Format(menuinfo8, sizeof(menuinfo8), "%T", "warden_45", client);
-		Format(menuinfo9, sizeof(menuinfo9), "%T", "warden_60", client);
-		Format(menuinfo10, sizeof(menuinfo10), "%T", "warden_90", client);
-		Format(menuinfo11, sizeof(menuinfo11), "%T", "warden_120", client);
-		Format(menuinfo12, sizeof(menuinfo12), "%T", "warden_180", client);
-		Format(menuinfo13, sizeof(menuinfo13), "%T", "warden_300", client);
+		char menuinfo[255];
 		
 		Menu menu3 = new Menu(MuteMenuHandler);
-		menu3.SetTitle(menuinfo5);
-		if(gc_bMuteEnd.BoolValue) menu3.AddItem("0", menuinfo14);
-		menu3.AddItem("15", menuinfo6);
-		menu3.AddItem("30", menuinfo7);
-		menu3.AddItem("45", menuinfo8);
-		menu3.AddItem("60", menuinfo9);
-		menu3.AddItem("90", menuinfo10);
-		menu3.AddItem("120", menuinfo11);
-		menu3.AddItem("180", menuinfo12);
-		menu3.AddItem("300", menuinfo13);
+		Format(menuinfo, sizeof(menuinfo), "%T", "warden_time_title", client);
+		menu3.SetTitle(menuinfo);
+		Format(menuinfo, sizeof(menuinfo), "%T", "warden_roundend", client);
+		if(gc_bMuteEnd.BoolValue) menu3.AddItem("0", menuinfo);
+		Format(menuinfo, sizeof(menuinfo), "%T", "warden_15", client);
+		menu3.AddItem("15", menuinfo);
+		Format(menuinfo, sizeof(menuinfo), "%T", "warden_30", client);
+		menu3.AddItem("30", menuinfo);
+		Format(menuinfo, sizeof(menuinfo), "%T", "warden_45", client);
+		menu3.AddItem("45", menuinfo);
+		Format(menuinfo, sizeof(menuinfo), "%T", "warden_60", client);
+		menu3.AddItem("60", menuinfo);
+		Format(menuinfo, sizeof(menuinfo), "%T", "warden_90", client);
+		menu3.AddItem("90", menuinfo);
+		Format(menuinfo, sizeof(menuinfo), "%T", "warden_120", client);
+		menu3.AddItem("120", menuinfo);
+		Format(menuinfo, sizeof(menuinfo), "%T", "warden_180", client);
+		menu3.AddItem("180", menuinfo);
+		Format(menuinfo, sizeof(menuinfo), "%T", "warden_300", client);
+		menu3.AddItem("300", menuinfo);
 		menu3.ExitBackButton = true;
 		menu3.ExitButton = true;
 		menu3.Display(client, 20);
