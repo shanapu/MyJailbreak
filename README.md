@@ -63,8 +63,8 @@ coded with ![](http://shanapu.de/githearth-small.png) free software
   
 ***Known Bugs***
 > 
-> Weapons: sm_weapons_ct/sm_weapons_t is blocking ["Stamm - Vip Models Menu"](https://github.com/popoklopsi/Stamm/blob/master/stamm_models.sp) [i]- can anyone tell me why?[/i]
-> Duckhunt & HE Battle: player get new grenade but sometimes rarly can't throw anymore[i] - need help![/i]
+> Weapons: sm_weapons_ct/sm_weapons_t is blocking ["Stamm - Vip Models Menu"](https://github.com/popoklopsi/Stamm/blob/master/stamm_models.sp) - *can anyone tell me why?*
+> Duckhunt & HE Battle: player get new grenade but sometimes rarly can't throw anymore - *need help!*
 > 
 > you found a bug? tell it please!
 > 
