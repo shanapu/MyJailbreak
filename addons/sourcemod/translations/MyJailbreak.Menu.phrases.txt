@@ -148,6 +148,10 @@
 	{
 		"en"			"HE Battle"
 	}
+	"menu_cowboy"
+	{
+		"en"			"Cowboy"
+	}
 	"menu_torch"
 	{
 		"en"			"Torch Relay"

@@ -26,6 +26,7 @@ ConVar g_bMath;
 ConVar g_bCheck;
 ConVar g_bFF;
 ConVar g_bZeus;
+ConVar g_bCowboy;
 ConVar g_bRules;
 ConVar g_bsetFF;
 ConVar g_bWar;
@@ -115,6 +116,7 @@ public void OnConfigsExecuted()
 	g_bDrawer = FindConVar("sm_warden_drawer");
 	g_bLaser = FindConVar("sm_warden_laser");
 	g_bZombie = FindConVar("sm_zombie_enable");
+	g_bZombie = FindConVar("sm_cowboy_enable");
 	g_bNoScope = FindConVar("sm_noscope_enable");
 	g_bHide = FindConVar("sm_hide_enable");
 	g_bKnife = FindConVar("sm_knifefight_enable");
@@ -589,7 +591,7 @@ public Action VoteEventDays(int client, int args)
 			Menu daysmenu = new Menu(VoteEventMenuHandler);
 			
 			char menuinfo19[255], menuinfo20[255], menuinfo21[255], menuinfo22[255], menuinfo23[255], menuinfo24[255], menuinfo25[255], menuinfo26[255], menuinfo27[255], menuinfo28[255], menuinfo29[255];
-			char menuinfo17[255], menuinfo16[255];
+			char menuinfo17[255], menuinfo16[255], menuinfo15[255];
 			
 			Format(menuinfo29, sizeof(menuinfo29), "%T", "menu_event_Titlevote", client);
 			daysmenu.SetTitle(menuinfo29);
@@ -690,6 +692,14 @@ public Action VoteEventDays(int client, int args)
 					daysmenu.AddItem("votetorch", menuinfo16);
 				}
 			}
+			if(g_bCowboy != null)
+			{
+				if(g_bCowboy.BoolValue)
+				{
+					Format(menuinfo15, sizeof(menuinfo15), "%T", "menu_cowboy", client);
+					daysmenu.AddItem("votecowboy", menuinfo15);
+				}
+			}
 			if(g_bFreeday != null)
 			{
 				if(g_bFreeday.BoolValue)
@@ -749,6 +759,14 @@ public int VoteEventMenuHandler(Menu daysmenu, MenuAction action, int client, in
 		else if ( strcmp(info,"votecatch") == 0 )
 		{
 			FakeClientCommand(client, "sm_catch");
+			if(!gc_bClose.BoolValue)
+			{
+				JbMenu(client,0);
+			}
+		}
+		else if ( strcmp(info,"votecowboy") == 0 )
+		{
+			FakeClientCommand(client, "sm_cowboy");
 			if(!gc_bClose.BoolValue)
 			{
 				JbMenu(client,0);
@@ -841,7 +859,7 @@ public Action SetEventDays(int client, int args)
 			Menu daysmenu = new Menu(SetEventMenuHandler);
 			
 			char menuinfo18[255], menuinfo19[255], menuinfo20[255], menuinfo21[255], menuinfo22[255], menuinfo23[255], menuinfo24[255], menuinfo25[255], menuinfo26[255], menuinfo27[255], menuinfo28[255];
-			char menuinfo17[255], menuinfo16[255];
+			char menuinfo17[255], menuinfo16[255], menuinfo15[255];
 			
 			Format(menuinfo18, sizeof(menuinfo18), "%T", "menu_event_Titlestart", client);
 			daysmenu.SetTitle(menuinfo18);
@@ -942,6 +960,14 @@ public Action SetEventDays(int client, int args)
 					daysmenu.AddItem("settorch", menuinfo16);
 				}
 			}
+			if(g_bCowboy != null)
+			{
+				if(g_bCowboy.BoolValue)
+				{
+					Format(menuinfo15, sizeof(menuinfo15), "%T", "menu_cowboy", client);
+					daysmenu.AddItem("setcowboy", menuinfo15);
+				}
+			}
 			if(g_bFreeday != null)
 			{
 				if(g_bFreeday.BoolValue)
@@ -1004,6 +1030,17 @@ public int SetEventMenuHandler(Menu daysmenu, MenuAction action, int client, int
 			if (warden_iswarden(client) || (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true)))
 			{
 				FakeClientCommand(client, "sm_settorch");
+				if(!gc_bClose.BoolValue)
+				{
+					JbMenu(client,0);
+				}
+			}
+		}
+		else if ( strcmp(info,"setcowboy") == 0 )
+		{
+			if (warden_iswarden(client) || (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true)))
+			{
+				FakeClientCommand(client, "sm_setcowboy");
 				if(!gc_bClose.BoolValue)
 				{
 					JbMenu(client,0);
