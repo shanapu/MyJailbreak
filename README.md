@@ -1,11 +1,12 @@
-**MyJailbreak** a plugin pack for CS:GO jailserver
-
+## MyJailbreak
+a plugin pack for CS:GO jailserver
+  
 MyJailbreak is a redux rewrite of [Franugs Special Jailbreak]("https://github.com/Franc1sco/Franug-Jailbreak/") a merge/redux of [eccas, ESK0s & zipcores Jailbreak warden]("http://www.sourcemod.net/plugins.php?cat=0&mod=-1&title=warden&author=&description=&search=1") and many other plugins.
-
-
+  
+  
 ***Included Plugins:***
-
-
+  
+  
 *  [**Warden**](https://github.com/shanapu/MyJailbreak/wiki/Warden) - set/become warden,vote retire warden, model, icon, open cells,gun plant prevention, laser pointer, drawer, set marker/quiz/EventDays/countdown/FF/nobock/mute
 *  [**Request**](https://github.com/shanapu/MyJailbreak/wiki/Request) - terror requests. refuse a game, request Capitulation/Pardon, healing or repeating
 *  [**Menu**](https://github.com/shanapu/MyJailbreak/wiki/Menu) - player menus for T, CT, warden & admin
@@ -25,56 +26,56 @@ MyJailbreak is a redux rewrite of [Franugs Special Jailbreak]("https://github.co
     *    [**Torch Relay**](https://github.com/shanapu/MyJailbreak/wiki/TorchRelay) - Random player set on fire. he must burn other to extinguish the fire
     *    [**Knife**](https://github.com/shanapu/MyJailbreak/wiki/Knifefight) - Knife Deathmatch with configurable gravity, iceskate, and thirdperson
     *    [**Freeday**](https://github.com/shanapu/MyJailbreak/wiki/Freeday)- Auto freeday on first round &/or if there is no CT
-
-
-
+  
+  
+  
 ***Features:***
-
+  
 * SourcePawn Transitional Syntax 1.7
 * Multilingual support
 * Custom chat commands !mycommand
 * Custom chat tags [MyJB.tag]
 * Colors
 * Sounds & overlays
-* Natives from [Franugs Special Jailbreak]("https://github.com/Franc1sco/Franug-Jailbreak/") a merge/redux of [original warden plugins]("http://www.sourcemod.net/plugins.php?cat=0&mod=-1&title=warden&author=&description=&search=1") to keep compatibility
+* Natives from [original warden plugins](http://www.sourcemod.net/plugins.php?cat=0&mod=-1&title=warden&author=&description=&search=1) to keep compatibility
 * [Template](https://github.com/shanapu/MyJailbreak/wiki/Eventdays-template) to make your own Eventday
 * some other fancy stuff
-
-
-
+  
+  
+  
 **I would be happy and very pleased if you want to join this project as equal collaborator. 
 Even if you are a beginner and willing to learn or you just want to help with translations.** 
 If you own a feature or extention for jail or have an idea that would fit in, i would be happy when you *share it with us*.
-
+  
 This is my first public project. please note that the code may is messy, stupid and inconseqent or mix different coding styles.  
-
+  
 coded with ![](http://shanapu.de/githearth-small.png) free software
-
-
-
+  
+  
+  
 ***Change Log***
 ```
 [Beta 1.0] - first public beta release
 ```
 
 ***Known Bugs***
-```
-Weapons: sm_weapons_ct/sm_weapons_t is blocking ["Stamm - Vip Models Menu"](https://github.com/popoklopsi/Stamm/blob/master/stamm_models.sp) [i]- can anyone tell me why?[/i]
-Duckhunt & HE Battle: player get new grenade but sometimes rarly can't throw anymore[i] - need help![/i]
-
-you found a bug? tell it please!
-```
-
-
+> 
+> Weapons: sm_weapons_ct/sm_weapons_t is blocking ["Stamm - Vip Models Menu"](https://github.com/popoklopsi/Stamm/blob/master/stamm_models.sp) [i]- can anyone tell me why?[/i]
+> Duckhunt & HE Battle: player get new grenade but sometimes rarly can't throw anymore[i] - need help![/i]
+> 
+> you found a bug? tell it please!
+> 
+  
+  
 ***Recommended plugins***
-
+  
 * [CS:GO] Flashlight https://forums.alliedmods.net/showthread.php?p=2042310
 
 * [CSS/CS:GO] Disable Radar https://forums.alliedmods.net/showthread.php?p=2138783
-
-
+  
+  
 ***Requires plugins***
-
+  
 * Sourcemod 1.7.0+
 
 * SM hosties 2 https://github.com/dataviruset/sm-hosties/
@@ -106,49 +107,49 @@ you found a bug? tell it please!
 * smlib.inc https://github.com/bcserv/smlib
 
 * CustomPlayerSkins.inc https://forums.alliedmods.net/showthread.php?t=240703
-
-
-
+  
+  
+  
 ***Installation***
-```
-* Make sure you have the *latest versions* of the **required plugins**
+>
+> Make sure you have the *latest versions* of the **required plugins**
+> 
+> Download the [latest release]("https://github.com/shanapu/MyJailbreak/archive/master.zip")
+> 
+> Copy the folders ```addons/```,``` cfg/```, ```materials/```, ```models/``` &``` sound/``` to *your root* ```csgo/``` directory  
+> 
+> Copy the folders ```materials/```, ```models/``` & ```sound/``` *in the fastDL/ directory* to *your* ```FastDownload server```  
+> 
+> Open *your* ```downloads.ini``` in ```your csgo/addons/sourcemod/configs``` directory and add the content of ```downloads.txt```  
+> 
+> Run plugin for the first time and **all necessary .cfg files will be generated** 
+> 
+> Configure all settings in ```cfg/MyJailbreak``` to your needs
+> 
+> Have fun! Give feedback!
+>
   
-* Download the [latest release]("https://github.com/shanapu/MyJailbreak/archive/master.zip")
   
-* Copy the folders ```addons/```,``` cfg/```, ```materials/```, ```models/``` &``` sound/``` to *your root* ```csgo/``` directory  
   
-* Copy the folders ```materials/```, ```models/``` & ```sound/``` *in the fastDL/ directory* to *your* ```FastDownload server```  
+***Download Latest***  
+https://github.com/shanapu/MyJailbreak/archive/master.zip  
   
-* Open *your* ```downloads.ini``` in ```your csgo/addons/sourcemod/configs``` directory and add the content of ```downloads.txt```  
+***Wiki:*** need some work  
+https://github.com/shanapu/MyJailbreak/wiki/  
   
-* Run plugin for the first time and **all necessary .cfg files will be generated** 
+***Report Bugs, Ideas & Requests:***  
+https://github.com/shanapu/MyJailbreak/issues  
   
-* Configure all settings in ```cfg/MyJailbreak``` to your needs
+***Code changes:***  
+https://github.com/shanapu/MyJailbreak/commits/master  
   
-* Have fun! Give feedback!
-```
-
-
-
-***Download Latest***
-https://github.com/shanapu/MyJailbreak/archive/master.zip
-
-***Wiki:*** need some work
-https://github.com/shanapu/MyJailbreak/wiki/
-
-***Report Bugs, Ideas & Requests:***
-https://github.com/shanapu/MyJailbreak/issues
-
-***Code changes:***
-https://github.com/shanapu/MyJailbreak/commits/master
-
-
-
+  
+  
 ***Credits:***
 used code & stuff from: **ecca, Zipcore, ESK0, Floody.de, Franc1sco, walmar, KeepCalm, bara, Arkarr, KissLick, headline, MasterOfTheXP, Hipster, ReFlexPoison, 8guawong, Mitchell, Xines, Jackmaster, Impact123, Kaesar, andi67** and many other I cant remember unfortunately!
 Also thanks to all sourcemod & metamod developers out there!
-
-based/merged/used code/idea plugins:
+  
+based/merged/used code/idea plugins:  
 * https://github.com/ecca/SourceMod-Plugins/tree/sourcemod/Warden
 * https://github.com/ESK0/ESK0s_Jailbreak_warden/
 * https://forums.alliedmods.net/showpost.php?p=1657893&postcount=11?p=1657893&postcount=11
