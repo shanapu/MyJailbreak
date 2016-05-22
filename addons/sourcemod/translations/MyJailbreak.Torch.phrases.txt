@@ -93,9 +93,8 @@
 	
 	"torch_minplayer"
 	{
-		"da"		"For Torch Relay mangler du mindst {purple}en CT & en T"
-		"en"		"For a Torch Relay you need at least {purple}one CT & one T"
-		"de"		"Für Torch Relay brauchen wir mindestens {purple}einen CT und einen T"
+		"en"		"For a Torch Relay you need at least {purple}three player one must be CT"
+		"de"		"Für Torch Relay brauchen wir mindestens {purple}drei Spieler einer davon CT"
 	}
 	
 	"torch_sprint"

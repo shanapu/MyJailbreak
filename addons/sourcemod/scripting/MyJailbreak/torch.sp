@@ -251,7 +251,7 @@ public Action SetTorch(int client,int args)
 		{
 			if (gc_bSetW.BoolValue)	
 			{
-				if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
+				if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ) && (GetClientCount() > 2))
 				{
 					char EventDay[64];
 					GetEventDay(EventDay);
@@ -275,7 +275,7 @@ public Action SetTorch(int client,int args)
 			{
 				if (gc_bSetA.BoolValue)
 				{
-					if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
+					if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ) && (GetClientCount() > 2))
 					{
 						char EventDay[64];
 						GetEventDay(EventDay);
@@ -311,7 +311,7 @@ public Action VoteTorch(int client,int args)
 	{
 		if (gc_bVote.BoolValue)
 		{
-			if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
+			if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ) && (GetClientCount() > 2))
 			{
 				char EventDay[64];
 				GetEventDay(EventDay);
@@ -539,6 +539,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 			SetEntityRenderColor(client, 255, 255, 255, 0);
 			OnTorch[client] = false;
 			ImmuneTorch[client] = false;
+			StripAllWeapons(client);
 		}
 		g_iBurningZero = -1;
 		if (TruceTimer != null) KillTimer(TruceTimer);
@@ -666,7 +667,7 @@ public Action CheckStatus()
 	LoopClients(i) if(IsPlayerAlive(i) && OnTorch[i]) number++;
 	if(number == 0)
 	{
-		CPrintToChatAll("%t %t", "torch_tag" , "torch_win");
+		CPrintToChatAll("%t %t", "torch_tag", "torch_win");
 		CS_TerminateRound(5.0, CSRoundEnd_Draw);
 		CreateTimer( 1.0, DeleteOverlay);
 	}
