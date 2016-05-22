@@ -425,6 +425,11 @@
 		"de"		"Derzeitigen Warden entfernen?"
 	}
 	
+	"warden_nomuted"
+	{
+		"en"		"There is no muted terrorist"
+		"de"		"Es gibt keinen Terror zum unmuten"
+	}
 	"warden_laseron"
 	{
 		"da"		"Laser {purple}aktiveret!"
@@ -618,6 +623,21 @@
 		"da"		"Countdown Menu"
 		"en"		"Countdown Menu"
 		"de"		"Countdown Menu"
+	}
+	"warden_mute_title"
+	{
+		"en"		"Mute Menu"
+		"de"		"Mute Menu"
+	}
+	"warden_menu_mute"
+	{
+		"en"		"Mute a terror"
+		"de"		"Einen Terrorist muten"
+	}
+	"warden_menu_unmute"
+	{
+		"en"		"Unmute a terror"
+		"de"		"Einen Terrorist unmuten"
 	}
 	"warden_cdmenu_start"
 	{

@@ -229,7 +229,7 @@ public void OnPluginStart()
 //	RegConsoleCmd("sm_cdcancel", CancelCountDown, "Allows the Warden to cancel a running Countdown");
 	RegConsoleCmd("sm_killrandom", KillRandom, "Allows the Warden to kill a random T");
 	RegConsoleCmd("sm_math", StartMathQuestion, "Allows the Warden to start a MathQuiz. Show player with first right Answer");
-	RegConsoleCmd("sm_wmute", MuteMenuPlayer, "Allows a warden to mute all terrorists for a specified duration or untill the next round.");
+	RegConsoleCmd("sm_wmute", MuteMenu, "Allows a warden to mute all terrorists for a specified duration or untill the next round.");
 	RegConsoleCmd("sm_wunmute", UnMute_Command, "Allows a warden to unmute the terrorists.");
 	
 	//Admin commands
@@ -2963,7 +2963,7 @@ public int MuteMenuTime(Menu menu5, MenuAction action, int client, int Position)
 		
 		char menuinfo[255];
 		
-		Menu menu3 = new Menu(MuteMenuHandler);
+		Menu menu3 = new Menu(MuteMenuTimeHandler);
 		Format(menuinfo, sizeof(menuinfo), "%T", "warden_time_title", client);
 		menu3.SetTitle(menuinfo);
 		Format(menuinfo, sizeof(menuinfo), "%T", "warden_roundend", client);
@@ -2988,9 +2988,20 @@ public int MuteMenuTime(Menu menu5, MenuAction action, int client, int Position)
 		menu3.ExitButton = true;
 		menu3.Display(client, 20);
 	}
+	else if(action == MenuAction_Cancel)
+	{
+		if(selection == MenuCancel_ExitBack) 
+		{
+			FakeClientCommand(client, "sm_menu");
+		}
+	}
+	else if(action == MenuAction_End)
+	{
+		delete menu3;
+	}
 }
 
-public int MuteMenuHandler(Menu menu3, MenuAction action, int client, int selection)
+public int MuteMenuTimeHandler(Menu menu3, MenuAction action, int client, int selection)
 {
 	if (action == MenuAction_Select)
 	{
@@ -3042,6 +3053,11 @@ public Action UnMute_Command(int client, any args)
 					Format(username, sizeof(username), "%N", i);
 					menu4.AddItem(userid,username);
 				}
+				else
+				{
+					CPrintToChat(client, "%t %t", "warden_tag", "warden_nomuted");
+					FakeClientCommand(client, "sm_wmute");
+				}
 			}
 			menu4.ExitBackButton = true;
 			menu4.ExitButton = true;
@@ -3080,6 +3096,58 @@ public int UnMuteMenuHandler(Menu menu4, MenuAction action, int client, int sele
 	else if(action == MenuAction_End)
 	{
 		delete menu4;
+	}
+}
+
+
+public Action MuteMenu(int client, int args)
+{
+	if (gc_bMute.BoolValue) 
+	{
+		if (client == g_iWarden)
+		{
+			char info[255];
+			Menu menu1 = CreateMenu(MuteMenuHandler);
+			Format(info, sizeof(info), "%T", "warden_mute_title", g_iWarden, client);
+			menu1.SetTitle(info);
+			Format(info, sizeof(info), "%T", "warden_menu_mute", client);
+			menu1.AddItem("0", info);
+			Format(info, sizeof(info), "%T", "warden_menu_unmute", client);
+			menu1.AddItem("1", info);
+			menu1.ExitBackButton = true;
+			menu1.ExitButton = true;
+			menu1.Display(client,MENU_TIME_FOREVER);
+		}
+		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden"); 
+	}
+}
+
+public int MuteMenuHandler(Menu menu, MenuAction action, int client, int Position)
+{
+	if(action == MenuAction_Select)
+	{
+		char Item[11];
+		menu.GetItem(Position,Item,sizeof(Item));
+		int choice = StringToInt(Item);
+		if(choice == 1)
+		{
+			UnMute_Command(client,0);
+		}
+		if(choice == 0)
+		{
+			MuteMenuPlayer(client,0);
+		}
+	}
+	else if(action == MenuAction_Cancel)
+	{
+		if(Position == MenuCancel_ExitBack) 
+		{
+			FakeClientCommand(client, "sm_menu");
+		}
+	}
+	else if(action == MenuAction_End)
+	{
+		delete menu;
 	}
 }
 
