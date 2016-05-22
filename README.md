@@ -1,7 +1,7 @@
 ## MyJailbreak
 a plugin pack for CS:GO jailserver
   
-MyJailbreak is a redux rewrite of [Franugs Special Jailbreak]("https://github.com/Franc1sco/Franug-Jailbreak/") a merge/redux of [eccas, ESK0s & zipcores Jailbreak warden]("http://www.sourcemod.net/plugins.php?cat=0&mod=-1&title=warden&author=&description=&search=1") and many other plugins.
+MyJailbreak is a redux rewrite of [Franugs Special Jailbreak](https://github.com/Franc1sco/Franug-Jailbreak/) a merge/redux of [eccas, ESK0s & zipcores Jailbreak warden](http://www.sourcemod.net/plugins.php?cat=0&mod=-1&title=warden&author=&description=&search=1) and many other plugins.
   
   
 ---
@@ -103,7 +103,7 @@ coded with ![](http://shanapu.de/githearth-small.png) free software
 ***Installation***
 
 * Make sure you have the *latest versions* of the **required plugins**
-* Download the [latest release]("https://github.com/shanapu/MyJailbreak/archive/master.zip")
+* Download the [latest release](https://github.com/shanapu/MyJailbreak/archive/master.zip)
 * Copy the folders ```addons/```,``` cfg/```, ```materials/```, ```models/``` &``` sound/``` to *your root* ```csgo/``` directory  
 * Copy the folders ```materials/```, ```models/``` & ```sound/``` *in the fastDL/ directory* to *your* ```FastDownload server```  
 * Open *your* ```downloads.ini``` in ```your csgo/addons/sourcemod/configs``` directory and add the content of ```downloads.txt```  
@@ -171,4 +171,4 @@ Weeeishy, UartigZone, Got Sw4g? terminator18, SkeLeXes, 0dieter0, MaKs, Horoxx, 
   
 
 
-*my golden faucets not finance itself...* [ ![](http://shanapu.de/donate.gif)]("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=QT8TVRSYWP53J")
+*my golden faucets not finance itself...* [ ![](http://shanapu.de/donate.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=QT8TVRSYWP53J)
