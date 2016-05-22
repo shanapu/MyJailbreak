@@ -1,16 +1,16 @@
-know bugs:
-- [ ] countdown: Start -> Cancel -> Start - bug
-- [ ] weapons.smx "block" stamm vip models?!
-- [ ] duckhunt he battle no more nade throw?
+known bugs:
+- [ ] Weapons: sm_weapons_ct/sm_weapons_t is blocking Stamm - Vip Models Menu - can anyone tell me why?
+- [ ] Duckhunt & HE Battle: player get new grenade but sometimes rarly can't throw anymore
 
 must:
 - [ ] wiki: howto edit -> SetCvars, add menu item,
 - [ ] menu: add placeholder for custom commands
 - [ ] clean up translation files
-- [ ] move menus to adminmenu
 
 want:
+- [ ] until end or !lr bool
 - [/] zombie vision/wallhack
+- [ ] move menus to adminmenu
 - [ ] ClientPrefs
 - [ ] Smart Download Manager https://forums.alliedmods.net/showthread.php?t=206496
 - [ ] clean double useless code OnPlayerRunCmd
@@ -18,6 +18,7 @@ want:
 - [ ] translate EventDay native
 - [ ] respawn on freeday
 - [ ] hide: darken the sky
+- [ ] countdown: Start -> Cancel -> Start - bug
 - [ ] Freeze / Stun Gun
 - [ ] warden: disarm when shot on Arms/hand (all CT?)
 - [ ] updater support
@@ -35,13 +36,12 @@ want:
 - [ ] merge double used translation to myjailbreak.phrases
 - [ ] warden: color prisioners (color roulette)
 - [ ] all: beacon last player for days
-- [ ] OnWeaponDrop -> CS_OnCSWeaponDrop
 - [ ] duckhunt auto higher if more t
 - [ ] duckhunt auto higher if more ct
+- [ ] menu: merge waden & admin check
 - [ ] hide: MovementValue hider/seeker convar
 - [ ] new day: Tron like - all player Molotov rain https://forums.alliedmods.net/showthread.php?p=2398902
 - [ ] merge Transltions
-- [x] math quiz allow + - * / convars
 
 need?
 - [ ] rewrite weapons?!
@@ -54,7 +54,6 @@ need?
 - [ ] Suicide Bomber: body counter?
 - [ ] warden: ff not for ct?
 - [ ] SetCvarString flags?
-- [ ] warden: add sm_simon? 
 - [ ] duckhunt: allow leftclick per bool?
 - [ ] empty deagle? - > bomb toss https://github.com/KissLick/TeamGames/blob/master/addons/sourcemod/scripting/modules/TG_BombToss.sp
 
@@ -124,12 +123,14 @@ bugs:
 must/want:
 - [x] RandomKill: no rebel / last T
 - [x] !heal check hp
+- [x] math quiz allow + - * / convars
 - [x] requests menu
 - [x] gunplant prevention
 - [x] !refuse !capitalation !repeat !heal !pardon
 - [x] zombie: hp convar
 - [x] hide: seeker more TA -> convar set how many
 - [x] all: custom command support !mycommand
+- [x] OnWeaponDrop -> CS_OnCSWeaponDrop
 - [x] !guard instead join ct
 - [x] gun plant prevention timer on roundstart
 - [x] menu: insert noblock
