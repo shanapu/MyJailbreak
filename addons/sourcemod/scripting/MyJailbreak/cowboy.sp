@@ -523,7 +523,6 @@ public Action EventHurt(Handle event, const char [] name, bool dontBroadcast)
 		CreateDataTimer(0.0, Timer_Hitsound, data, TIMER_FLAG_NO_MAPCHANGE);
 		WritePackCell(data, GetEventInt(event, "attacker"));
 		WritePackCell(data, GetEventInt(event, "userid"));
-		WritePackCell(data, GetEventInt(event, "dmg_health"));
 		ResetPack(data);
 	}
 }
@@ -531,10 +530,8 @@ public Action Timer_Hitsound(Handle timer, Handle data)
 {
 	int attacker	= GetClientOfUserId(ReadPackCell(data));
 	int victim		= GetClientOfUserId(ReadPackCell(data));
-	int damage		= ReadPackCell(data);
 	if (attacker <= 0 || attacker > MaxClients || victim <= 0 || victim > MaxClients || attacker == victim) return;
 	ClientCommand(attacker, "playgamesound training/bell_normal.wav");
-	PrintHintText(attacker, "%i", damage);
 }
 
 
