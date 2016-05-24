@@ -74,7 +74,7 @@
 	{
 		"da"		"Torch Relay er startet!"
 		"en"		"The Torch Relay has started!"
-		"de"		"Fackellauf ist gestartet!"
+		"de"		"Torch Relay ist gestartet!"
 	}
 	
 	"torch_voted"
@@ -133,7 +133,7 @@
 	{
 		"da"		"Torch Relay er aktiveret!"
 		"en"		"Torch Relay is activated!"
-		"de"		"Fangen ist aktiv"
+		"de"		"Torch Relay ist aktiv"
 	}
 	
 	"torch_info_line1"		// no colors!
@@ -210,7 +210,7 @@
 	
 	"torch_win"
 	{
-		"en"		"The torch is extinguished
-		"de"		"Die Fackel ist erlöschen
+		"en"		"The torch is extinguished"
+		"de"		"Die Fackel ist erloschen"
 	}
 }
