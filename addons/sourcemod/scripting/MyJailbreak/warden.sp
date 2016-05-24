@@ -80,6 +80,10 @@ ConVar gc_fAllowDropTime;
 ConVar gc_bMute;
 ConVar gc_bMuteEnd;
 
+ConVar gc_sOverlayCuffsPath;
+ConVar gc_bHandCuff;
+ConVar gc_iHandCuffsNumber;
+
 //Bools
 bool IsCountDown = false;
 bool IsMathQuiz = false;
@@ -95,10 +99,10 @@ bool g_bNoBlock = true;
 bool g_bLaserColorRainbow[MAXPLAYERS+1] = true;
 bool g_bDrawerColorRainbow[MAXPLAYERS+1] = true;
 bool g_bWeaponDropped[MAXPLAYERS+1] = false;
+bool g_bCuffed[MAXPLAYERS+1] = false;
 bool g_bAllowDrop;
 
 //Integers
-
 int g_iWarden = -1;
 int g_iTempWarden[MAXPLAYERS+1] = -1;
 int g_iWrongWeapon[MAXPLAYERS+1];
@@ -115,8 +119,8 @@ int g_iKillKind;
 int g_iMathMin;
 int g_iMathMax;
 int g_iMathResult;
-int g_LastButtons[MAXPLAYERS+1];
-int g_iWeaponDrop[MAXPLAYERS+1];
+int g_iLastButtons[MAXPLAYERS+1];
+// int g_iWeaponDrop[MAXPLAYERS+1];
 int g_iIcon[MAXPLAYERS + 1] = {-1, ...};
 int g_iHaloSpritecolor[4] = {255,255,255,255};
 int g_iColors[8][4] = 
@@ -132,6 +136,7 @@ int g_iColors[8][4] =
 };
 int g_iLaserColor[MAXPLAYERS+1];
 int g_iDrawerColor[MAXPLAYERS+1];
+int g_iPlayerHandCuffs[MAXPLAYERS+1];
 
 //Handles
 Handle g_fward_onBecome;
@@ -160,6 +165,7 @@ char g_sIconPath[256];
 char g_sSoundStartPath[256];
 char g_sSoundStopPath[256];
 char g_sOverlayStopPath[256];
+char g_sOverlayCuffsPath[256];
 char g_sOp[32];
 char g_sOperators[4][2] = {"+", "-", "/", "*"};
 char g_sColorNamesRed[64];
@@ -173,6 +179,7 @@ char g_sColorNamesCyan[64];
 char g_sColorNamesWhite[64];
 char g_sColorNames[8][64] ={{""},{""},{""},{""},{""},{""},{""},{""}};
 char g_sCustomCommand[64];
+char g_sEquipWeapon[MAXPLAYERS+1][32];
 
 //float
 float g_fMarkerRadiusMin = 100.0;
@@ -285,7 +292,7 @@ public void OnPluginStart()
 	gc_sOverlayStopPath = AutoExecConfig_CreateConVar("sm_warden_overlays_stop", "overlays/MyJailbreak/stop" , "Path to the stop Overlay DONT TYPE .vmt or .vft");
 	gc_bOpen = AutoExecConfig_CreateConVar("sm_warden_open_enable", "1", "0 - disabled, 1 - warden can open/close cells", _, true,  0.0, true, 1.0);
 	gc_hOpenTimer = AutoExecConfig_CreateConVar("sm_warden_open_time", "60", "Time in seconds for open doors on round start automaticly", _, true, 0.0); 
-	gc_bOpenTimer = AutoExecConfig_CreateConVar("sm_warden_open_time_enable", "1", "should doors open automatic 0- no 1 yes", _, true,  0.0, true, 1.0); //todo dont wokr
+	gc_bOpenTimer = AutoExecConfig_CreateConVar("sm_warden_open_time_enable", "1", "should doors open automatic 0- no 1 yes", _, true,  0.0, true, 1.0);
 	gc_bOpenTimerWarden = AutoExecConfig_CreateConVar("sm_warden_open_time_warden", "1", "should doors open automatic after sm_warden_open_time when there is a warden? needs sm_warden_open_time_enable 1", _, true,  0.0, true, 1.0);
 	gc_bMarker = AutoExecConfig_CreateConVar("sm_warden_marker", "1", "0 - disabled, 1 - enable Warden advanced markers ", _, true,  0.0, true, 1.0);
 	gc_bLaser = AutoExecConfig_CreateConVar("sm_warden_laser", "1", "0 - disabled, 1 - enable Warden Laser Pointer with +E ", _, true,  0.0, true, 1.0);
@@ -308,6 +315,10 @@ public void OnPluginStart()
 	gc_sSoundStartPath = AutoExecConfig_CreateConVar("sm_warden_sounds_start", "music/MyJailbreak/start.mp3", "Path to the soundfile which should be played for a start countdown.");
 	gc_sSoundStopPath = AutoExecConfig_CreateConVar("sm_warden_sounds_stop", "music/MyJailbreak/stop.mp3", "Path to the soundfile which should be played for stop countdown.");
 	
+	gc_sOverlayCuffsPath = AutoExecConfig_CreateConVar("sm_warden_overlays_cuffs", "overlays/MyJailbreak/cuffs" , "Path to the cuffs Overlay DONT TYPE .vmt or .vft");
+	gc_bHandCuff = AutoExecConfig_CreateConVar("sm_warden_handcuffs", "1", "0 - disabled, 1 - enable handcuffs", _, true,  0.0, true, 1.0);
+	gc_iHandCuffsNumber = AutoExecConfig_CreateConVar("sm_warden_handcuffs_number", "2", "How many handcuffs a warden got?", _, true,  1.0);
+	
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
 	
@@ -324,6 +335,7 @@ public void OnPluginStart()
 	HookConVarChange(gc_sSoundStopPath, OnSettingChanged);
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sOverlayStopPath, OnSettingChanged);
+	HookConVarChange(gc_sOverlayCuffsPath, OnSettingChanged);
 	HookConVarChange(gc_sIconPath, OnSettingChanged);
 	HookConVarChange(gc_sCustomCommand, OnSettingChanged);
 	
@@ -337,6 +349,7 @@ public void OnPluginStart()
 	gc_sSoundStopPath.GetString(g_sSoundStopPath, sizeof(g_sSoundStopPath));
 	gc_sModelPath.GetString(g_sWardenModel, sizeof(g_sWardenModel));
 	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
+	gc_sOverlayCuffsPath.GetString(g_sOverlayCuffsPath , sizeof(g_sOverlayCuffsPath));
 	gc_sOverlayStopPath.GetString(g_sOverlayStopPath , sizeof(g_sOverlayStopPath));
 	gc_sIconPath.GetString(g_sIconPath , sizeof(g_sIconPath));
 	gc_sCustomCommand.GetString(g_sCustomCommand , sizeof(g_sCustomCommand));
@@ -400,6 +413,11 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 		strcopy(g_sOverlayStopPath, sizeof(g_sOverlayStopPath), newValue);
 		if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStopPath);
 	}
+	else if(convar == gc_sOverlayCuffsPath)
+	{
+		strcopy(g_sOverlayCuffsPath, sizeof(g_sOverlayCuffsPath), newValue);
+		if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayCuffsPath);
+	}
 	else if(convar == gc_sModelPath)
 	{
 		strcopy(g_sWardenModel, sizeof(g_sWardenModel), newValue);
@@ -459,6 +477,7 @@ public void OnMapStart()
 	PrecacheModel(g_sWardenModel);
 	if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStart);
 	if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStopPath);
+	if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayCuffsPath);
 	if(gc_bIcon.BoolValue) PrecacheModelAnyDownload(g_sIconPath);
 	g_iBeamSprite = PrecacheModel("materials/sprites/laserbeam.vmt");
 	g_iHaloSprite = PrecacheModel("materials/sprites/glow01.vmt");
@@ -540,6 +559,7 @@ public void RoundStart(Event event, const char[] name, bool dontBroadcast)
 		SpawnIcon(g_iWarden);
 	}
 	g_bAllowDrop = true;
+	LoopClients(i) g_iPlayerHandCuffs[i] = gc_iHandCuffsNumber.IntValue;
 	CreateTimer (gc_fAllowDropTime.FloatValue, AllowDropTimer);
 }
 
@@ -781,11 +801,12 @@ public int SetWardenHandler(Menu menu, MenuAction action, int client, int Positi
 							EmitSoundToAllAny(g_sWarden);
 						}
 						CreateTimer(0.5, Timer_WardenFixColor, i, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
-						SpawnIcon(client);
-						GetEntPropString(client, Prop_Data, "m_ModelName", g_sModelPath, sizeof(g_sModelPath));
+						if (gc_bHandCuff.BoolValue) GivePlayerItem(i, "weapon_taser");
+						SpawnIcon(i);
+						GetEntPropString(i, Prop_Data, "m_ModelName", g_sModelPath, sizeof(g_sModelPath));
 						if(gc_bModel.BoolValue)
 						{
-							SetEntityModel(client, g_sWardenModel);
+							SetEntityModel(i, g_sWardenModel);
 						}
 						Call_StartForward(gF_OnWardenCreatedByAdmin);
 						Call_PushCell(i);
@@ -838,6 +859,7 @@ public int m_WardenOverwrite(Menu menu, MenuAction action, int client, int Posit
 			RemoveIcon(g_iWarden);
 			g_iWarden = newwarden;
 			CreateTimer(0.5, Timer_WardenFixColor, newwarden, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
+			if (gc_bHandCuff.BoolValue) GivePlayerItem(newwarden, "weapon_taser");
 			SpawnIcon(newwarden);
 			GetEntPropString(newwarden, Prop_Data, "m_ModelName", g_sModelPath, sizeof(g_sModelPath));
 			if(gc_bModel.BoolValue)
@@ -940,7 +962,7 @@ public void OnClientDisconnect(int client)
 		g_iWarden = -1;
 		g_bDrawerT = false;
 	}
-	g_LastButtons[client] = 0;
+	g_iLastButtons[client] = 0;
 }
 
 //warden change team
@@ -974,7 +996,7 @@ public Action EventPlayerTeam(Event event, const char[] name, bool dontBroadcast
 		RemoveAllMarkers();
 		g_bDrawerT = false;
 	}
-	g_LastButtons[client] = 0;
+	g_iLastButtons[client] = 0;
 }
 
 //Set a new warden
@@ -990,6 +1012,7 @@ void SetTheWarden(int client)
 			PrintCenterTextAll("%t", "warden_new_nc", client);
 		}
 		g_iWarden = client;
+		if (gc_bHandCuff.BoolValue) GivePlayerItem(client, "weapon_taser");
 		CreateTimer(0.5, Timer_WardenFixColor, client, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 		SpawnIcon(client);
 		GetEntPropString(client, Prop_Data, "m_ModelName", g_sModelPath, sizeof(g_sModelPath));
@@ -1227,6 +1250,9 @@ public Action Event_ItemEquip(Handle event, const char[] name, bool dontBroadcas
 	g_bCanZoom[client] = GetEventBool(event, "canzoom");
 	g_bHasSilencer[client] = GetEventBool(event, "hassilencer");
 	g_iWrongWeapon[client] = GetEventInt(event, "weptype");
+	char weapon[32];
+	GetEventString(event, "item", weapon, sizeof(weapon));
+	g_sEquipWeapon[client] = weapon;
 }
 
 public void OnMapEnd()
@@ -1478,7 +1504,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	{
 		if (buttons & IN_ATTACK2)
 		{
-			if (gc_bMarker.BoolValue && !g_bCanZoom[client] && !g_bHasSilencer[client] && (g_iWrongWeapon[client] != 0) && (g_iWrongWeapon[client] != 8))
+			if (gc_bMarker.BoolValue && !g_bCanZoom[client] && !g_bHasSilencer[client] && (g_iWrongWeapon[client] != 0) && (g_iWrongWeapon[client] != 8) && (!StrEqual(g_sEquipWeapon[client], "taser")))
 			{
 				if(!g_bMarkerSetup)
 					GetClientAimTargetPos(client, g_fMarkerSetupStartOrigin);
@@ -1500,6 +1526,28 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 				
 				g_bMarkerSetup = true;
 			}
+			if (gc_bHandCuff.BoolValue && (StrEqual(g_sEquipWeapon[client], "taser")))
+			{
+				int Target = GetClientAimTarget(client, true);
+				if (IsValidClient(Target, true, false) && (g_bCuffed[Target] == true))
+				{
+					
+					float origin[3];
+					GetClientAbsOrigin(client, origin);
+					float location[3];
+					GetClientEyePosition(client, location);
+					float ang[3];
+					GetClientEyeAngles(client, ang);
+					float location2[3];
+					location2[0] = (location[0]+(100*((Cosine(DegToRad(ang[1]))) * (Cosine(DegToRad(ang[0]))))));
+					location2[1] = (location[1]+(100*((Sine(DegToRad(ang[1]))) * (Cosine(DegToRad(ang[0]))))));
+					ang[0] -= (2*ang[0]);
+					location2[2] = origin[2] += 5.0;
+					
+					TeleportEntity(Target, location2, NULL_VECTOR, NULL_VECTOR);
+				}
+			}
+			
 		}
 		else if (g_bMarkerSetup)
 		{
@@ -1542,17 +1590,17 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 			
 			if ((buttons & button))
 			{
-				if (!(g_LastButtons[client] & button))
+				if (!(g_iLastButtons[client] & button))
 				{
 					OnButtonPress(client, button);
 				}
 			}
-			else if ((g_LastButtons[client] & button))
+			else if ((g_iLastButtons[client] & button))
 			{
 				OnButtonRelease(client, button);
 			}
 		}
-		g_LastButtons[client] = buttons;
+		g_iLastButtons[client] = buttons;
 	}
 	return Plugin_Continue;
 }
@@ -1873,6 +1921,8 @@ public void OnClientPutInServer(int client)
 	g_fLastDrawer[client][0] = 0.0;
 	g_fLastDrawer[client][1] = 0.0;
 	g_fLastDrawer[client][2] = 0.0;
+	
+//	SDKHook(client, SDKHook_OnTakeDamage, OnTakedamage);
 }
 
 //Laser Pointer
@@ -2454,6 +2504,18 @@ public Action ShowOverlayStop( Handle timer, any client )
 	return Plugin_Continue;
 }
 
+
+public Action ShowOverlayCuffs( Handle timer, any client ) 
+{
+	if(gc_bOverlays.BoolValue && IsValidClient(client, false, true))
+	{
+		int iFlag = GetCommandFlags( "r_screenoverlay" ) & ( ~FCVAR_CHEAT ); 
+		SetCommandFlags( "r_screenoverlay", iFlag ); 
+		ClientCommand( client, "r_screenoverlay \"%s.vtf\"", g_sOverlayCuffsPath);
+	}
+	return Plugin_Continue;
+}
+
 //No Block
 
 public Action ToggleNoBlock(int client, int args)
@@ -2781,11 +2843,17 @@ public Action CS_OnCSWeaponDrop(int client, int weapon)
 					if(gc_bGunNoDrop.BoolValue)
 						return Plugin_Handled;
 						
-					g_iWeaponDrop[client] = weapon;
+				//	g_iWeaponDrop[client] = weapon;
+					
+					Handle hData = CreateDataPack();
+					WritePackCell(hData, client);
+					WritePackCell(hData, weapon);
+					
+					
 					
 					if(IsValidEntity(weapon))
 					{
-						if (!g_bWeaponDropped[client]) CreateTimer(0.1, DroppedWeapon, client);
+						if (!g_bWeaponDropped[client]) CreateTimer(0.1, DroppedWeapon, hData, TIMER_FLAG_NO_MAPCHANGE);
 					}
 				}
 			}
@@ -2794,45 +2862,57 @@ public Action CS_OnCSWeaponDrop(int client, int weapon)
 	return Plugin_Continue;
 }
 
-public Action DroppedWeapon(Handle timer, any client)
+public Action DroppedWeapon(Handle timer, Handle hData)
 {
-	if(IsValidEdict(g_iWeaponDrop[client]))
+	ResetPack(hData);
+	int client = ReadPackCell(hData);
+	int iWeapon = ReadPackCell(hData);
+	
+	if(IsValidEdict(iWeapon))
 	{
-		if(Weapon_GetOwner(g_iWeaponDrop[client]) == -1)
+		int iOwner = GetEntPropEnt(iWeapon, Prop_Data, "m_hOwnerEntity");
+		if (iOwner == -1)
 		{
 			if(IsValidClient(client, false, false) && !IsClientInLastRequest(client))
 			{
 				char g_sWeaponName[80];
 				
-				GetEntityClassname(g_iWeaponDrop[client], g_sWeaponName, sizeof(g_sWeaponName));
+				GetEntityClassname(iWeapon, g_sWeaponName, sizeof(g_sWeaponName));
 				ReplaceString(g_sWeaponName, sizeof(g_sWeaponName), "weapon_", "", false); 
 				g_bWeaponDropped[client] = true;
+				
+				Handle hData2 = CreateDataPack();
+				WritePackCell(hData2, client);
+				WritePackCell(hData2, iWeapon);
 				
 				CPrintToChat(client, "%t %t", "warden_tag" , "warden_noplant", client , g_sWeaponName);
 				if(g_iWarden != -1) CPrintToChat(g_iWarden, "%t %t", "warden_tag" , "warden_gunplant", client , g_sWeaponName);
 				if((g_iWarden != -1) && gc_bBetterNotes.BoolValue) PrintHintText(g_iWarden, "%t", "warden_gunplant_nc", client , g_sWeaponName);
-				if(gc_bGunRemove.BoolValue) CreateTimer(gc_fGunRemoveTime.FloatValue, RemoveWeapon, client);
+				if(gc_bGunRemove.BoolValue) CreateTimer(gc_fGunRemoveTime.FloatValue, RemoveWeapon, hData2, TIMER_FLAG_NO_MAPCHANGE);
 				if(gc_bGunSlap.BoolValue) SlapPlayer(client, gc_iGunSlapDamage.IntValue, true);
 			}
 		}
 	}
 }
 
-public Action RemoveWeapon(Handle timer, any client)
+public Action RemoveWeapon(Handle timer, Handle hData2)
 {
-	if(IsValidEdict(g_iWeaponDrop[client]))
+	ResetPack(hData2);
+	int client = ReadPackCell(hData2);
+	int iWeapon = ReadPackCell(hData2);
+	
+	if(IsValidEdict(iWeapon))
 	{
-		if(!(Weapon_GetOwner(g_iWeaponDrop[client]) != -1))
+		int iOwner = GetEntPropEnt(iWeapon, Prop_Data, "m_hOwnerEntity");
+		if (iOwner == -1)
 		{
-			if(IsValidEdict(g_iWeaponDrop[client])) AcceptEntityInput(g_iWeaponDrop[client], "Kill");
-			
+			AcceptEntityInput(iWeapon, "Kill");
 		}
-		
 	}
 	g_bWeaponDropped[client] = false;
 }
 
-public Action AllowDropTimer(Handle timer, any client)
+public Action AllowDropTimer(Handle timer)
 {
 	g_bAllowDrop = false;
 }
@@ -3186,3 +3266,76 @@ public int UnMuteClient(any client)
 		CPrintToChat(g_iWarden,"%t %t", "warden_tag", "warden_unmute", client);
 	}
 }
+
+// Handcuffs
+/*
+
+public Action OnTakedamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &weapon, float damageForce[3], float damagePosition[3], int damagecustom)
+{
+	if(!IsValidClient(victim, true, false) || attacker == victim || !IsValidClient(attacker, true, false)) return Plugin_Continue;
+	
+	if(!gc_bPlugin.BoolValue || !gc_bHandCuff.BoolValue || !warden_iswarden(attacker) || !IsValidEdict(weapon))
+	{
+		return Plugin_Continue;
+	}
+	
+	char sWeapon[32];
+	GetEntityClassname(weapon, sWeapon, sizeof(sWeapon));
+	
+	if(!StrEqual(sWeapon, "weapon_taser"))
+	{
+		return Plugin_Continue;
+	}
+	
+	if(g_bCuffed[victim])
+	{
+		FreeEm(victim, attacker);
+	}
+	else CuffsEm(victim, attacker);
+	
+	return Plugin_Handled;
+}
+
+public Action CuffsEm(int client, int attacker)
+{
+	if(g_iPlayerHandCuffs[attacker] > 0)
+	{
+		SetEntityMoveType(client, MOVETYPE_NONE);
+		SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 0.0);
+		SetEntityRenderColor(client, 0, 0, 140, 255);
+		g_bCuffed[client] = true;
+		CreateTimer( 0.5, ShowOverlayCuffs, client);
+		StripAllWeapons(client);
+		g_iPlayerHandCuffs[attacker]--;
+		CreateTimer (0.5, GiveZeus, attacker);
+		
+		CPrintToChatAll("%N hat %N Handschellen angelegt", attacker, client);
+		CPrintToChat(attacker, "du hast noch %i Handschellen", g_iPlayerHandCuffs[attacker]);
+	}
+}
+
+public Action FreeEm(int client, int attacker)
+{
+	SetEntityMoveType(client, MOVETYPE_WALK);
+	SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
+	SetEntityRenderColor(client, 255, 255, 255, 255);
+	g_bCuffed[client] = false;
+	CreateTimer( 0.0, DeleteOverlay, client );
+	if(g_iPlayerHandCuffs[attacker] > 0) CreateTimer (0.5, GiveZeus, attacker);
+	CreateTimer (2.5, GiveKnife, client);
+	CPrintToChatAll("%N hat %N die Handschellen abgenommen", attacker, client);
+}
+
+public Action GiveZeus(Handle timer,any client)
+{
+	GivePlayerItem(client, "weapon_taser");
+}
+
+public Action GiveKnife(Handle timer,any client)
+{
+	GivePlayerItem(client, "weapon_knife");
+}
+
+*/
+
+

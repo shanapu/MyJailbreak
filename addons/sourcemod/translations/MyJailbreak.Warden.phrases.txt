@@ -726,8 +726,8 @@
 	"warden_math_time"
 	{
 		"#format"	"{1:i}"
-		"en"		"Time end! No answer. {purple}The Answer was {2}"
-		"de"		"Zeit vorbei! Keine richitige Antwort. {purple}Die Antwort war {2}"
+		"en"		"Time end! No answer. {purple}The Answer was {1}"
+		"de"		"Zeit vorbei! Keine richitige Antwort. {purple}Die Antwort war {1}"
 	}
 	
 	"warden_startmathquiz"
