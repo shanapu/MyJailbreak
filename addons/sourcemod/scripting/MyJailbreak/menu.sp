@@ -550,7 +550,6 @@ public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selec
 		else if ( strcmp(info,"mute") == 0 ) 
 		{
 			FakeClientCommand(client, "sm_wmute");
-			JbMenu(client,0);
 		}
 		else if ( strcmp(info,"unwarden") == 0 ) 
 		{
