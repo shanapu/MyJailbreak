@@ -8,10 +8,8 @@ must:
 - [ ] clean up translation files
 
 want:
-- [ ] until end or !lr bool
 - [/] zombie vision/wallhack
 - [ ] move menus to adminmenu
-- [ ] ClientPrefs
 - [ ] Smart Download Manager https://forums.alliedmods.net/showthread.php?t=206496
 - [ ] clean double useless code OnPlayerRunCmd
 - [ ] set custom Laser/Drawer Button
@@ -37,13 +35,16 @@ want:
 - [ ] warden: color prisioners (color roulette)
 - [ ] all: beacon last player for days
 - [ ] duckhunt auto higher if more t
+- [ ] duckhunt ammo refill to SetPlayerWeaponAmmo stock
 - [ ] duckhunt auto higher if more ct
 - [ ] menu: merge waden & admin check
 - [ ] hide: MovementValue hider/seeker convar
 - [ ] new day: Tron like - all player Molotov rain https://forums.alliedmods.net/showthread.php?p=2398902
 - [ ] merge Transltions
+- [ ] SDKHook_TraceAttack instead on SDKHook_OnTakeDamage (no blood) https://forums.alliedmods.net/showthread.php?t=248095
 
 need?
+- [ ] ClientPrefs weapons drawerlaser color?
 - [ ] rewrite weapons?!
 - [ ] zombie: knockbackfix?
 - [ ] whistle for hider?
@@ -56,6 +57,7 @@ need?
 - [ ] SetCvarString flags?
 - [ ] duckhunt: allow leftclick per bool?
 - [ ] empty deagle? - > bomb toss https://github.com/KissLick/TeamGames/blob/master/addons/sourcemod/scripting/modules/TG_BombToss.sp
+- [ ] until end or !lr bool - need?
 
 future:
 - [ ] make menu high customizeable - keyvalues cfg file like DonorMenu

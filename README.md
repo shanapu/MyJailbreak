@@ -25,8 +25,9 @@ MyJailbreak is a redux rewrite of [Franugs Special Jailbreak](https://github.com
     *    [**Suicide Bomber**](https://github.com/shanapu/MyJailbreak/wiki/SuicideBomber) - Ts got suicde bombs to kill all CTs
     *    [**Zeus**](https://github.com/shanapu/MyJailbreak/wiki/Zeus) - Taser Deathmatch and get a new Zeus on Kill
     *    [**Torch Relay**](https://github.com/shanapu/MyJailbreak/wiki/TorchRelay) - Random player set on fire. he must burn other to extinguish the fire
+    *    [**Cowboy**](https://github.com/shanapu/MyJailbreak/wiki/Cowboy) - Revolver or Dual Baretta DM
     *    [**Knife**](https://github.com/shanapu/MyJailbreak/wiki/Knifefight) - Knife Deathmatch with configurable gravity, iceskate, and thirdperson
-    *    [**Freeday**](https://github.com/shanapu/MyJailbreak/wiki/Freeday)- Auto freeday on first round &/or if there is no CT
+    *    [**Freeday**](https://github.com/shanapu/MyJailbreak/wiki/Freeday) - Auto freeday on first round &/or if there is no CT
   
 ---
   
@@ -63,7 +64,7 @@ coded with ![](http://shanapu.de/githearth-small.png) free software
   
 ***Known Bugs***
 > 
-> Weapons: sm_weapons_ct/sm_weapons_t is blocking ["Stamm - Vip Models Menu"](https://github.com/popoklopsi/Stamm/blob/master/stamm_models.sp) - *can anyone tell me why?*
+> Weapons: sm_weapons_ct/sm_weapons_t is blocking ["Stamm - Vip Models Menu"](https://github.com/popoklopsi/Stamm/blob/master/stamm_models.sp) - *can anyone tell me why?*  
 > Duckhunt & HE Battle: player get new grenade but sometimes rarly can't throw anymore - *need help!*
 > 
 > you found a bug? tell it please!
@@ -102,14 +103,14 @@ coded with ![](http://shanapu.de/githearth-small.png) free software
   
 ***Installation***
 
-* Make sure you have the *latest versions* of the **required plugins**
-* Download the [latest release](https://github.com/shanapu/MyJailbreak/archive/master.zip)
-* Copy the folders ```addons/```,``` cfg/```, ```materials/```, ```models/``` &``` sound/``` to *your root* ```csgo/``` directory  
-* Copy the folders ```materials/```, ```models/``` & ```sound/``` *in the fastDL/ directory* to *your* ```FastDownload server```  
-* Open *your* ```downloads.ini``` in ```your csgo/addons/sourcemod/configs``` directory and add the content of ```downloads.txt```  
-* Run plugin for the first time and **all necessary .cfg files will be generated** 
-* Configure all settings in ```cfg/MyJailbreak``` to your needs
-* Have fun! Give feedback!
+1. Make sure you have the *latest versions* of the **required plugins**
+2. Download the [latest release](https://github.com/shanapu/MyJailbreak/archive/master.zip)
+3. Copy the folders ```addons/```,``` cfg/```, ```materials/```, ```models/``` &``` sound/``` to *your root* ```csgo/``` directory  
+4. Copy the folders ```materials/```, ```models/``` & ```sound/``` *in the fastDL/ directory* to *your* ```FastDownload server```  
+5. Open *your* ```downloads.ini``` in ```your csgo/addons/sourcemod/configs``` directory and add the content of ```downloads.txt```  
+6. Run plugin for the first time and **all necessary .cfg files will be generated** 
+7. Configure all settings in ```cfg/MyJailbreak``` to your needs
+8. Have fun! Give feedback!
   
 ---
   
