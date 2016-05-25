@@ -148,3 +148,21 @@ stock bool IsValidClient(int client, bool bAllowBots = false, bool bAllowDead = 
 public NullHandler(Handle:menu, MenuAction:action, param1, param2)
 {
 }
+
+stock void SetPlayerWeaponAmmo(int client, int weaponEnt, int clip = -1, int ammo = -1)
+{
+	if (weaponEnt == INVALID_ENT_REFERENCE)
+		return;
+
+	if (clip != -1)
+		SetEntProp(weaponEnt, Prop_Send, "m_iClip1", clip);
+
+	if (ammo != -1) {
+		int iOffset = FindDataMapOffs(client, "m_iAmmo") + (GetEntProp(weaponEnt, Prop_Data, "m_iPrimaryAmmoType") * 4);
+		SetEntData(client, iOffset, ammo, 4, true);
+
+		if (GetEngineVersion() == Engine_CSGO) {
+			SetEntProp(weaponEnt, Prop_Send, "m_iPrimaryReserveAmmoCount", ammo);
+		}
+	}
+}

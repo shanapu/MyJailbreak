@@ -8,7 +8,7 @@ MyJailbreak is a redux rewrite of [Franugs Special Jailbreak](https://github.com
 ***Included Plugins:***
   
   
-*  [**Warden**](https://github.com/shanapu/MyJailbreak/wiki/Warden) - set/become warden,vote retire warden, model, icon, open cells,gun plant prevention, laser pointer, drawer, set marker/quiz/EventDays/countdown/FF/nobock/mute
+*  [**Warden**](https://github.com/shanapu/MyJailbreak/wiki/Warden) - set/become warden,vote retire warden, model, icon, open cells,gun plant prevention, handcuffs, laser pointer, drawer, set marker/quiz/EventDays/countdown/FF/nobock/mute
 *  [**Request**](https://github.com/shanapu/MyJailbreak/wiki/Request) - terror requests. refuse a game, request Capitulation/Pardon, healing or repeating
 *  [**Menu**](https://github.com/shanapu/MyJailbreak/wiki/Menu) - player menus for T, CT, warden & admin
 *  [**Weapons**](https://github.com/shanapu/MyJailbreak/wiki/Weapons) - weapon menus for CT &/or T(in event round)

@@ -101,6 +101,7 @@ bool g_bDrawerColorRainbow[MAXPLAYERS+1] = true;
 bool g_bWeaponDropped[MAXPLAYERS+1] = false;
 bool g_bCuffed[MAXPLAYERS+1] = false;
 bool g_bAllowDrop;
+bool IsMuted[MAXPLAYERS+1] = {false, ...};
 
 //Integers
 int g_iWarden = -1;
@@ -137,6 +138,7 @@ int g_iColors[8][4] =
 int g_iLaserColor[MAXPLAYERS+1];
 int g_iDrawerColor[MAXPLAYERS+1];
 int g_iPlayerHandCuffs[MAXPLAYERS+1];
+int g_iCuffed = 0;
 
 //Handles
 Handle g_fward_onBecome;
@@ -180,6 +182,7 @@ char g_sColorNamesWhite[64];
 char g_sColorNames[8][64] ={{""},{""},{""},{""},{""},{""},{""},{""}};
 char g_sCustomCommand[64];
 char g_sEquipWeapon[MAXPLAYERS+1][32];
+char g_sMuteUser[32];
 
 //float
 float g_fMarkerRadiusMin = 100.0;
@@ -282,11 +285,12 @@ public void OnPluginStart()
 	gc_fGunRemoveTime = AutoExecConfig_CreateConVar("sm_warden_gunremove_time", "5.0", "Time in seconds to pick up gun again before.", _, true,  0.1);
 	gc_bGunSlap = AutoExecConfig_CreateConVar("sm_warden_gunslap", "1", "0 - disabled, 1 - Slap the CT for dropping a gun", _, true,  0.0, true, 1.0);
 	gc_iGunSlapDamage = AutoExecConfig_CreateConVar("sm_warden_gunslap_dmg", "10", "Amoung of HP losing on slap for dropping a gun", _, true,  0.0);
+	gc_bHandCuff = AutoExecConfig_CreateConVar("sm_warden_handcuffs", "1", "0 - disabled, 1 - enable handcuffs", _, true,  0.0, true, 1.0);
+	gc_iHandCuffsNumber = AutoExecConfig_CreateConVar("sm_warden_handcuffs_number", "2", "How many handcuffs a warden got?", _, true,  1.0);
+	gc_sOverlayCuffsPath = AutoExecConfig_CreateConVar("sm_warden_overlays_cuffs", "overlays/MyJailbreak/cuffs" , "Path to the cuffs Overlay DONT TYPE .vmt or .vft");
 	gc_bRandom = AutoExecConfig_CreateConVar("sm_warden_random", "1", "0 - disabled, 1 - enable kill a random t for warden", _, true,  0.0, true, 1.0);
 	gc_iRandomMode = AutoExecConfig_CreateConVar("sm_warden_random_mode", "2", "1 - all random / 2 - Thunder / 3 - Timebomb / 4 - Firebomb / 5 - NoKill(1,3,4 needs funcommands.smx enabled)", _, true,  1.0, true, 4.0);
 	gc_bCountDown = AutoExecConfig_CreateConVar("sm_warden_countdown", "1", "0 - disabled, 1 - enable countdown for warden", _, true,  0.0, true, 1.0);
-	gc_bIcon = AutoExecConfig_CreateConVar("sm_warden_icon_enable", "0", "0 - disabled, 1 - enable the icon above the wardens head", _, true,  0.0, true, 1.0);
-	gc_sIconPath = AutoExecConfig_CreateConVar("sm_warden_icon", "decals/MyJailbreak/warden" , "Path to the warden icon DONT TYPE .vmt or .vft");
 	gc_bOverlays = AutoExecConfig_CreateConVar("sm_warden_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true,  0.0, true, 1.0);
 	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_warden_overlays_start", "overlays/MyJailbreak/start" , "Path to the start Overlay DONT TYPE .vmt or .vft");
 	gc_sOverlayStopPath = AutoExecConfig_CreateConVar("sm_warden_overlays_stop", "overlays/MyJailbreak/stop" , "Path to the stop Overlay DONT TYPE .vmt or .vft");
@@ -303,6 +307,8 @@ public void OnPluginStart()
 	gc_iMaximumNumber = AutoExecConfig_CreateConVar("sm_warden_math_max", "100", "What should be the maximum number for questions?", _, true,  2.0);
 	gc_bOp = AutoExecConfig_CreateConVar("sm_warden_math_mode", "1", "0 - only addition & subtraction, 1 -  addition, subtraction, multiplication & division", _, true,  0.0, true, 1.0);
 	gc_iTimeAnswer = AutoExecConfig_CreateConVar("sm_warden_math_time", "10", "Time in seconds to give a answer to a question.", _, true,  3.0);
+	gc_bIcon = AutoExecConfig_CreateConVar("sm_warden_icon_enable", "1", "0 - disabled, 1 - enable the icon above the wardens head", _, true,  0.0, true, 1.0);
+	gc_sIconPath = AutoExecConfig_CreateConVar("sm_warden_icon", "decals/MyJailbreak/warden" , "Path to the warden icon DONT TYPE .vmt or .vft");
 	gc_bModel = AutoExecConfig_CreateConVar("sm_warden_model", "1", "0 - disabled, 1 - enable warden model", 0, true, 0.0, true, 1.0);
 	gc_sModelPath = AutoExecConfig_CreateConVar("sm_warden_model_path", "models/player/custom_player/legacy/security/security.mdl", "Path to the model for warden.");
 	gc_bColor = AutoExecConfig_CreateConVar("sm_warden_color_enable", "1", "0 - disabled, 1 - enable warden colored", _, true,  0.0, true, 1.0);
@@ -315,19 +321,18 @@ public void OnPluginStart()
 	gc_sSoundStartPath = AutoExecConfig_CreateConVar("sm_warden_sounds_start", "music/MyJailbreak/start.mp3", "Path to the soundfile which should be played for a start countdown.");
 	gc_sSoundStopPath = AutoExecConfig_CreateConVar("sm_warden_sounds_stop", "music/MyJailbreak/stop.mp3", "Path to the soundfile which should be played for stop countdown.");
 	
-	gc_sOverlayCuffsPath = AutoExecConfig_CreateConVar("sm_warden_overlays_cuffs", "overlays/MyJailbreak/cuffs" , "Path to the cuffs Overlay DONT TYPE .vmt or .vft");
-	gc_bHandCuff = AutoExecConfig_CreateConVar("sm_warden_handcuffs", "1", "0 - disabled, 1 - enable handcuffs", _, true,  0.0, true, 1.0);
-	gc_iHandCuffsNumber = AutoExecConfig_CreateConVar("sm_warden_handcuffs_number", "2", "How many handcuffs a warden got?", _, true,  1.0);
+	
 	
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
 	
 	//Hooks
-	HookEvent("item_equip", Event_ItemEquip);
+	HookEvent("item_equip", ItemEquip);
 	HookEvent("round_start", RoundStart);
 	HookEvent("player_death", playerDeath);
 	HookEvent("player_team", EventPlayerTeam);
 	HookEvent("round_end", RoundEnd);
+	HookEvent("weapon_fire", WeaponFire);
 	HookConVarChange(gc_sModelPath, OnSettingChanged);
 	HookConVarChange(gc_sUnWarden, OnSettingChanged);
 	HookConVarChange(gc_sWarden, OnSettingChanged);
@@ -499,16 +504,6 @@ public void RoundStart(Event event, const char[] name, bool dontBroadcast)
 		
 	OpenCounterTime = null;
 	
-	if(gc_bModel.BoolValue)
-	{
-		LoopValidClients(i, true, true)
-		{
-			if (i == g_iWarden)
-			{
-				SetEntityModel(g_iWarden, g_sWardenModel);
-			}
-		}
-	}
 	if(gc_bPlugin.BoolValue)	
 	{
 		g_iOpenTimer = GetConVarInt(gc_hOpenTimer);
@@ -557,8 +552,11 @@ public void RoundStart(Event event, const char[] name, bool dontBroadcast)
 	if(gc_bStayWarden.BoolValue && warden_exist())
 	{
 		SpawnIcon(g_iWarden);
+		if(gc_bModel.BoolValue) SetEntityModel(g_iWarden, g_sWardenModel);
+		if (gc_bHandCuff.BoolValue) GivePlayerItem(g_iWarden, "weapon_taser");
 	}
 	g_bAllowDrop = true;
+	g_iCuffed = 0;
 	LoopClients(i) g_iPlayerHandCuffs[i] = gc_iHandCuffsNumber.IntValue;
 	CreateTimer (gc_fAllowDropTime.FloatValue, AllowDropTimer);
 }
@@ -575,18 +573,19 @@ public void RoundEnd(Event event, const char[] name, bool dontBroadcast)
 			g_bFF = FindConVar("mp_teammates_are_enemies");
 			CPrintToChatAll("%t %t", "warden_tag", "warden_ffisoff" );
 		}
-		LoopValidClients(i, true, true)
-		{
-			CancelCountDown(i, 0);
-			UnMuteClient(i);
-		}
 	}
 	SetCvar("mp_solid_teammates", g_bNoBlockSolid.BoolValue);
 	if (StopTimer != null) KillTimer(StopTimer);
 	if (StartTimer != null) KillTimer(StartTimer);
 	if (StartStopTimer != null) KillTimer(StartStopTimer);
-	LoopClients(i) g_bDrawer[i] = false;
 	g_bDrawerT = false;
+	LoopClients(i)
+	{
+		CancelCountDown(i, 0);
+		if(IsMuted[i]) UnMuteClient(i);
+		if(g_bCuffed[i]) FreeEm(i, 0);
+		if(g_bDrawer[i]) g_bDrawer[i] = false;
+	}
 }
 
 //!w
@@ -719,6 +718,7 @@ public Action playerDeath(Event event, const char[] name, bool dontBroadcast)
 		RemoveIcon(g_iWarden);
 		g_iWarden = -1;
 	}
+	if(g_bCuffed[client]) g_iCuffed--;
 	g_fLastDrawer[client][0] = 0.0;
 	g_fLastDrawer[client][1] = 0.0;
 	g_fLastDrawer[client][2] = 0.0;
@@ -934,8 +934,7 @@ public Action PlayerTeam(Handle event, const char[] name, bool dontBroadcast)
 	g_fLastDrawer[client][2] = 0.0;
 	g_bDrawerUse[client] = false;
 	g_bDrawer[client] = false;
-	if(client == g_iWarden)
-		RemoveTheWarden(client);
+	if(client == g_iWarden) RemoveTheWarden(client);
 }
 
 //Warden disconnect
@@ -962,6 +961,7 @@ public void OnClientDisconnect(int client)
 		g_iWarden = -1;
 		g_bDrawerT = false;
 	}
+	if(g_bCuffed[client]) g_iCuffed--;
 	g_iLastButtons[client] = 0;
 }
 
@@ -1243,7 +1243,7 @@ public Action AnswerQuestion(Handle timer, Handle pack)
 
 //New Marker thanks zipcore!
 
-public Action Event_ItemEquip(Handle event, const char[] name, bool dontBroadcast)
+public Action ItemEquip(Handle event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(GetEventInt(event, "userid"));
 	
@@ -1253,12 +1253,13 @@ public Action Event_ItemEquip(Handle event, const char[] name, bool dontBroadcas
 	char weapon[32];
 	GetEventString(event, "item", weapon, sizeof(weapon));
 	g_sEquipWeapon[client] = weapon;
+	
+	if (StrEqual(weapon, "taser") && warden_iswarden(client) && (g_iPlayerHandCuffs[client] != 0)) PrintHintText(client, "%t", "warden_cuffs");
 }
 
 public void OnMapEnd()
 {
 	RemoveAllMarkers();
-	g_bDrawerT = false;
 	if (g_iWarden != -1)
 	{
 		CreateTimer(0.1, RemoveColor, g_iWarden);
@@ -1267,13 +1268,19 @@ public void OnMapEnd()
 		g_iWarden = -1;
 	}
 	g_bLaser = false;
+	g_bDrawerT = false;
+	
 	LoopClients(client)
 	{
-	g_fLastDrawer[client][0] = 0.0;
-	g_fLastDrawer[client][1] = 0.0;
-	g_fLastDrawer[client][2] = 0.0;
-	g_bDrawerUse[client] = false;
-	g_bDrawer[client] = false;
+		g_fLastDrawer[client][0] = 0.0;
+		g_fLastDrawer[client][1] = 0.0;
+		g_fLastDrawer[client][2] = 0.0;
+		g_bDrawerUse[client] = false;
+		g_bDrawer[client] = false;
+		CancelCountDown(client, 0);
+		if(IsMuted[client]) UnMuteClient(client);
+		if(g_bCuffed[client]) FreeEm(client, 0);
+		if(g_bDrawer[client]) g_bDrawer[client] = false;
 	}
 }
 
@@ -1922,7 +1929,7 @@ public void OnClientPutInServer(int client)
 	g_fLastDrawer[client][1] = 0.0;
 	g_fLastDrawer[client][2] = 0.0;
 	
-//	SDKHook(client, SDKHook_OnTakeDamage, OnTakedamage);
+	SDKHook(client, SDKHook_OnTakeDamage, OnTakedamage);
 }
 
 //Laser Pointer
@@ -2870,10 +2877,9 @@ public Action DroppedWeapon(Handle timer, Handle hData)
 	
 	if(IsValidEdict(iWeapon))
 	{
-		int iOwner = GetEntPropEnt(iWeapon, Prop_Data, "m_hOwnerEntity");
-		if (iOwner == -1)
+		if (Entity_GetOwner(iWeapon) == -1)
 		{
-			if(IsValidClient(client, false, false) && !IsClientInLastRequest(client))
+			if(IsValidClient(client, false, false))  // && !IsClientInLastRequest(client)
 			{
 				char g_sWeaponName[80];
 				
@@ -2903,8 +2909,7 @@ public Action RemoveWeapon(Handle timer, Handle hData2)
 	
 	if(IsValidEdict(iWeapon))
 	{
-		int iOwner = GetEntPropEnt(iWeapon, Prop_Data, "m_hOwnerEntity");
-		if (iOwner == -1)
+		if (Entity_GetOwner(iWeapon) == -1)
 		{
 			AcceptEntityInput(iWeapon, "Kill");
 		}
@@ -2918,6 +2923,16 @@ public Action AllowDropTimer(Handle timer)
 }
 
 //Natives, Forwards & stocks
+
+public int OnAvailableLR(int Announced)
+{
+	LoopClients(i)
+	{
+		if(g_bCuffed[i]) FreeEm(i, 0);
+		if(IsMuted[i]) UnMuteClient(i);
+		g_bAllowDrop = true;
+	}
+}
 
 public int Native_ExistWarden(Handle plugin, int numParams)
 {
@@ -3031,8 +3046,7 @@ public Action MuteMenuPlayer(int client,int args)
 	return Plugin_Handled;
 }
 
-char g_sMuteUser[32];
-bool IsMuted[MAXPLAYERS+1] = {false, ...};
+
 
 
 public int MuteMenuTime(Menu menu5, MenuAction action, int client, int Position)
@@ -3268,7 +3282,7 @@ public int UnMuteClient(any client)
 }
 
 // Handcuffs
-/*
+
 
 public Action OnTakedamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &weapon, float damageForce[3], float damagePosition[3], int damagecustom)
 {
@@ -3282,10 +3296,11 @@ public Action OnTakedamage(int victim, int &attacker, int &inflictor, float &dam
 	char sWeapon[32];
 	GetEntityClassname(weapon, sWeapon, sizeof(sWeapon));
 	
-	if(!StrEqual(sWeapon, "weapon_taser"))
-	{
-		return Plugin_Continue;
-	}
+	if(!StrEqual(sWeapon, "weapon_taser")) return Plugin_Continue;
+	
+	if((g_iPlayerHandCuffs[attacker] == 0) && (g_iCuffed == 0)) return Plugin_Continue;
+	
+	if(g_bCuffed[attacker]) return Plugin_Handled;
 	
 	if(g_bCuffed[victim])
 	{
@@ -3296,21 +3311,36 @@ public Action OnTakedamage(int victim, int &attacker, int &inflictor, float &dam
 	return Plugin_Handled;
 }
 
+public Action WeaponFire(Handle event, char [] name, bool dontBroadcast)
+{
+	int client = GetClientOfUserId(GetEventInt(event, "userid"));
+	
+	if(gc_bPlugin.BoolValue && gc_bHandCuff.BoolValue && warden_iswarden(client) && ((g_iPlayerHandCuffs[client] != 0) || ((g_iPlayerHandCuffs[client] == 0) && (g_iCuffed > 0))))
+	{
+		char sWeapon[64];
+		GetEventString(event, "weapon", sWeapon, sizeof(sWeapon));
+		if (StrEqual(sWeapon, "weapon_taser"))
+		{
+			SetPlayerWeaponAmmo(client, Client_GetActiveWeapon(client), _, 2);
+		}
+	}
+	return Plugin_Continue;
+}
+
 public Action CuffsEm(int client, int attacker)
 {
 	if(g_iPlayerHandCuffs[attacker] > 0)
 	{
 		SetEntityMoveType(client, MOVETYPE_NONE);
 		SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 0.0);
-		SetEntityRenderColor(client, 0, 0, 140, 255);
+		SetEntityRenderColor(client, 0, 190, 0, 255);
 		g_bCuffed[client] = true;
 		CreateTimer( 0.5, ShowOverlayCuffs, client);
-		StripAllWeapons(client);
 		g_iPlayerHandCuffs[attacker]--;
-		CreateTimer (0.5, GiveZeus, attacker);
+		g_iCuffed++;
 		
-		CPrintToChatAll("%N hat %N Handschellen angelegt", attacker, client);
-		CPrintToChat(attacker, "du hast noch %i Handschellen", g_iPlayerHandCuffs[attacker]);
+		CPrintToChatAll("%t %t", "warden_tag" , "warden_cuffson", attacker, client);
+		CPrintToChat(attacker, "%t %t", "warden_tag" , "warden_cuffsgot", g_iPlayerHandCuffs[attacker]);
 	}
 }
 
@@ -3321,21 +3351,9 @@ public Action FreeEm(int client, int attacker)
 	SetEntityRenderColor(client, 255, 255, 255, 255);
 	g_bCuffed[client] = false;
 	CreateTimer( 0.0, DeleteOverlay, client );
-	if(g_iPlayerHandCuffs[attacker] > 0) CreateTimer (0.5, GiveZeus, attacker);
-	CreateTimer (2.5, GiveKnife, client);
-	CPrintToChatAll("%N hat %N die Handschellen abgenommen", attacker, client);
+	g_iCuffed--;
+	if((attacker != 0) && (g_iCuffed == 0) && (g_iPlayerHandCuffs[attacker] < 1)) SetPlayerWeaponAmmo(attacker, Client_GetActiveWeapon(attacker), _, 0);
+	if(attacker != 0) CPrintToChatAll("%t %t", "warden_tag" , "warden_cuffsoff", attacker, client);
 }
-
-public Action GiveZeus(Handle timer,any client)
-{
-	GivePlayerItem(client, "weapon_taser");
-}
-
-public Action GiveKnife(Handle timer,any client)
-{
-	GivePlayerItem(client, "weapon_knife");
-}
-
-*/
 
 
