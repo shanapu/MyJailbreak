@@ -46,6 +46,7 @@ ConVar g_bHEbattle;
 ConVar g_bHide;
 ConVar g_bCatch;
 ConVar g_bTorch;
+ConVar g_bDrunk;
 ConVar g_bFreeday;
 ConVar g_bDuckHunt;
 ConVar g_bCountdown;
@@ -121,6 +122,7 @@ public void OnConfigsExecuted()
 	g_bDrawer = FindConVar("sm_warden_drawer");
 	g_bLaser = FindConVar("sm_warden_laser");
 	g_bZombie = FindConVar("sm_zombie_enable");
+	g_bDrunk = FindConVar("sm_drunk_enable");
 	g_bZombie = FindConVar("sm_cowboy_enable");
 	g_bNoScope = FindConVar("sm_noscope_enable");
 	g_bHide = FindConVar("sm_hide_enable");
@@ -708,6 +710,14 @@ public Action VoteEventDays(int client, int args)
 					daysmenu.AddItem("votezeus", menuinfo);
 				}
 			}
+			if(g_bDrunk != null)
+			{
+				if(g_bDrunk.BoolValue)
+				{
+					Format(menuinfo, sizeof(menuinfo), "%T", "menu_drunk", client);
+					daysmenu.AddItem("votedrunk", menuinfo);
+				}
+			}
 			if(g_bKnife != null)
 			{
 				if(g_bKnife.BoolValue)
@@ -791,6 +801,14 @@ public int VoteEventMenuHandler(Menu daysmenu, MenuAction action, int client, in
 		else if ( strcmp(info,"votecatch") == 0 )
 		{
 			FakeClientCommand(client, "sm_catch");
+			if(!gc_bClose.BoolValue)
+			{
+				JbMenu(client,0);
+			}
+		}
+		else if ( strcmp(info,"votedrunk") == 0 )
+		{
+			FakeClientCommand(client, "sm_drunk");
 			if(!gc_bClose.BoolValue)
 			{
 				JbMenu(client,0);
@@ -975,6 +993,14 @@ public Action SetEventDays(int client, int args)
 					daysmenu.AddItem("setzeus", menuinfo);
 				}
 			}
+			if(g_bDrunk != null)
+			{
+				if(g_bDrunk.BoolValue)
+				{
+					Format(menuinfo, sizeof(menuinfo), "%T", "menu_drunk", client);
+					daysmenu.AddItem("setdrunk", menuinfo);
+				}
+			}
 			if(g_bKnife != null)
 			{
 				if(g_bKnife.BoolValue)
@@ -1094,6 +1120,17 @@ public int SetEventMenuHandler(Menu daysmenu, MenuAction action, int client, int
 			if (warden_iswarden(client) || (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true)))
 			{
 				FakeClientCommand(client, "sm_setcatch");
+				if(!gc_bClose.BoolValue)
+				{
+					JbMenu(client,0);
+				}
+			}
+		} 
+		else if ( strcmp(info,"setdrunk") == 0 )
+		{
+			if (warden_iswarden(client) || (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true)))
+			{
+				FakeClientCommand(client, "sm_setdrunk");
 				if(!gc_bClose.BoolValue)
 				{
 					JbMenu(client,0);

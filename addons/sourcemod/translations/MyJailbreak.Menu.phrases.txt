@@ -152,6 +152,10 @@
 	{
 		"en"			"Cowboy"
 	}
+	"menu_drunk"
+	{
+		"en"			"Drunken"
+	}
 	"menu_torch"
 	{
 		"en"			"Torch Relay"
