@@ -15,6 +15,7 @@ spcomp MyJailbreak/warden.sp -o../plugins/MyJailbreak/warden.smx
 spcomp MyJailbreak/weapons.sp -o../plugins/MyJailbreak/weapons.smx 
 spcomp MyJailbreak/zeus.sp -o../plugins/MyJailbreak/zeus.smx 
 spcomp MyJailbreak/cowboy.sp -o../plugins/MyJailbreak/cowboy.smx 
+spcomp MyJailbreak/drunk.sp -o../plugins/MyJailbreak/drunk.smx 
 spcomp MyJailbreak/torch.sp -o../plugins/MyJailbreak/torch.smx 
 spcomp MyJailbreak/zombie.sp -o../plugins/MyJailbreak/zombie.smx 
 spcomp MyJailbreak/request.sp -o../plugins/MyJailbreak/request.smx 

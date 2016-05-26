@@ -39,7 +39,7 @@ want:
 - [ ] hide: MovementValue hider/seeker convar
 - [ ] new day: Tron like - all player Molotov rain https://forums.alliedmods.net/showthread.php?p=2398902
 - [ ] merge Transltions
-- [ ] SDKHook_TraceAttack instead on SDKHook_OnTakeDamage (no blood) https://forums.alliedmods.net/showthread.php?t=248095
+
 
 need?
 - [ ] ClientPrefs weapons drawerlaser color?
@@ -129,6 +129,7 @@ must/want:
 - [x] gunplant prevention
 - [x] Freeze / Stun Gun  <- handcuffs
 - [x] !refuse !capitalation !repeat !heal !pardon
+- [x] SDKHook_TraceAttack instead on SDKHook_OnTakeDamage (no blood) https://forums.alliedmods.net/showthread.php?t=248095
 - [x] zombie: hp convar
 - [x] hide: seeker more TA -> convar set how many
 - [x] all: custom command support !mycommand
