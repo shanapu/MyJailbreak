@@ -768,8 +768,8 @@
 	
 	"warden_cuffs"
 	{
-		"en"		"USE YOUR TASER AS HANDCUFFS"
-		"de"		"BENUTZE DEN TASER ALS HANDSCHELLEN"
+		"en"		"Use the taser as handcuffs"
+		"de"		"Benutze den Taser als Handschellen"
 	}
 	
 	"warden_cuffson"

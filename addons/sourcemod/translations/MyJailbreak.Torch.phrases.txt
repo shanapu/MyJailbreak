@@ -87,7 +87,7 @@
 	"torch_progress"
 	{
 		"#format"	"{1:s}"
-		"en"		"Event ({darkred}{1} {default}is {purple}already in progress."
+		"en"		"Event {darkred}{1} {default}is {purple}already in progress."
 		"de"		"Event {darkred}{1} {default}ist {purple}bereits gesetzt."
 	}
 	
@@ -204,7 +204,7 @@
 	"torch_untorch"
 	{
 		"#format"	"{1:N}"
-		"en"		"{purple}{1}{default}is no more the torch"
+		"en"		"{purple}{1}{default} is no more the torch"
 		"de"		"{purple}{1}{default} ist nicht mehr die Fackel"
 	}
 	

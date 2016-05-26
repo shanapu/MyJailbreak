@@ -17,8 +17,6 @@ want:
 - [ ] respawn on freeday
 - [ ] hide: darken the sky
 - [ ] countdown: Start -> Cancel -> Start - bug
-- [ ] Freeze / Stun Gun
-- [ ] warden: disarm when shot on Arms/hand (all CT?)
 - [ ] updater support
 - [ ] duckhunt: change +attack to +secAttack
 - [ ] all: format centertext <font size='30' color='#FF00FF'>test</font>
@@ -47,6 +45,7 @@ need?
 - [ ] ClientPrefs weapons drawerlaser color?
 - [ ] rewrite weapons?!
 - [ ] zombie: knockbackfix?
+- [ ] warden: disarm when shot on Arms/hand 
 - [ ] whistle for hider?
 - [ ] events on random days? no voting/set - core2
 - [ ] silent mp_roundtime?
@@ -128,6 +127,7 @@ must/want:
 - [x] math quiz allow + - * / convars
 - [x] requests menu
 - [x] gunplant prevention
+- [x] Freeze / Stun Gun  <- handcuffs
 - [x] !refuse !capitalation !repeat !heal !pardon
 - [x] zombie: hp convar
 - [x] hide: seeker more TA -> convar set how many
