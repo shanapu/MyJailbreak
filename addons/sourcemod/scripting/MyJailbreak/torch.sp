@@ -48,9 +48,6 @@ ConVar gc_sSoundOnTorchPath;
 ConVar gc_sSoundClearTorchPath;
 ConVar g_iGetRoundTime;
 ConVar gc_iRounds;
-ConVar g_bNoBloodSplatter;
-ConVar g_bNoBloodSplash;
-ConVar g_bNoBlood;
 ConVar gc_sCustomCommand;
 
 //Integers
@@ -127,10 +124,7 @@ public void OnPluginStart()
 	gc_iSprintCooldown= AutoExecConfig_CreateConVar("sm_torch_sprint_cooldown", "10", "Time in seconds the player must wait for the next sprint", _, true, 0.0);
 	gc_fSprintSpeed = AutoExecConfig_CreateConVar("sm_torch_sprint_speed", "1.25", "Ratio for how fast the player will sprint", _, true, 1.01);
 	gc_fSprintTime = AutoExecConfig_CreateConVar("sm_torch_sprint_time", "3.0", "Time in seconds the player will sprint", _, true, 1.0);
-	g_bNoBlood = CreateConVar("sm_torch_noblood", "1", "0 - disabled, 1 - enable No Blood", _, true, 0.0, true, 1.0);
-	g_bNoBloodSplatter = CreateConVar("sm_torch_noblood_splatter", "1", "0 - disabled, 1 - enable No Blood Splatter", _, true, 0.0, true, 1.0);
-	g_bNoBloodSplash = CreateConVar("sm_torch_noblood_splash", "1", "0 - disabled, 1 - enable No Blood Splash", _, true, 0.0, true, 1.0);
-
+	
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
 	
@@ -140,8 +134,6 @@ public void OnPluginStart()
 	HookEvent("round_end", RoundEnd);
 	HookEvent("player_team", EventPlayerTeamDeath);
 	HookEvent("player_death", EventPlayerTeamDeath);
-	AddTempEntHook("EffectDispatch", TE_OnEffectDispatch);
-	AddTempEntHook("World Decal", TE_OnWorldDecal);
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sOverlayOnTorch, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
@@ -238,7 +230,7 @@ public void OnClientPutInServer(int client)
 	OnTorch[client] = false;
 	ImmuneTorch[client] = false;
 	SDKHook(client, SDKHook_WeaponCanUse, OnWeaponCanUse);
-	SDKHook(client, SDKHook_OnTakeDamage, OnTakedamage);
+	SDKHook(client, SDKHook_TraceAttack, OnTakedamage);
 }
 
 //Admin & Warden set Event
@@ -803,86 +795,4 @@ public void Event_PlayerSpawn(Handle event, const char[] name, bool dontBroadcas
 	ResetSprint(iClient);
 	ClientSprintStatus[iClient] &= ~ IsSprintCoolDown;
 	return;
-}
-
-//No Blood
-
-public Action TE_OnEffectDispatch(const char[] te_name, const Players[], int numClients, float delay)
-{
-	int iEffectIndex = TE_ReadNum("m_iEffectName");
-	int nHitBox = TE_ReadNum("m_nHitBox");
-	char sEffectName[64];
-
-	GetEffectName(iEffectIndex, sEffectName, sizeof(sEffectName));
-	
-	if(g_bNoBlood.BoolValue && IsTorch)
-	{
-		if(StrEqual(sEffectName, "csblood"))
-		{
-			if(g_bNoBloodSplatter.BoolValue)
-				return Plugin_Handled;
-		}
-		if(StrEqual(sEffectName, "ParticleEffect"))
-		{
-			if(g_bNoBloodSplash.BoolValue)
-			{
-				char sParticleEffectName[64];
-				GetParticleEffectName(nHitBox, sParticleEffectName, sizeof(sParticleEffectName));
-				
-				if(StrEqual(sParticleEffectName, "impact_helmet_headshot") || StrEqual(sParticleEffectName, "impact_physics_dust"))
-					return Plugin_Handled;
-			}
-		}
-	}
-
-	return Plugin_Continue;
-}
-
-public Action TE_OnWorldDecal(const char[] te_name, const Players[], int numClients, float delay)
-{
-	float vecOrigin[3];
-	int nIndex = TE_ReadNum("m_nIndex");
-	char sDecalName[64];
-
-	TE_ReadVector("m_vecOrigin", vecOrigin);
-	GetDecalName(nIndex, sDecalName, sizeof(sDecalName));
-	
-	if(g_bNoBlood.BoolValue && IsTorch)
-	{
-		if(StrContains(sDecalName, "decals/blood") == 0 && StrContains(sDecalName, "_subrect") != -1)
-			if(g_bNoBloodSplash.BoolValue)
-				return Plugin_Handled;
-	}
-
-	return Plugin_Continue;
-}
-
-stock int GetParticleEffectName(int index, char[] sEffectName, int maxlen)
-{
-	int table = INVALID_STRING_TABLE;
-	
-	if (table == INVALID_STRING_TABLE)
-		table = FindStringTable("ParticleEffectNames");
-	
-	return ReadStringTable(table, index, sEffectName, maxlen);
-}
-
-stock int GetEffectName(int index, char[] sEffectName, int maxlen)
-{
-	int table = INVALID_STRING_TABLE;
-	
-	if (table == INVALID_STRING_TABLE)
-		table = FindStringTable("EffectDispatch");
-	
-	return ReadStringTable(table, index, sEffectName, maxlen);
-}
-
-stock int GetDecalName(int index, char[] sDecalName, int maxlen)
-{
-	int table = INVALID_STRING_TABLE;
-	
-	if (table == INVALID_STRING_TABLE)
-		table = FindStringTable("decalprecache");
-	
-	return ReadStringTable(table, index, sDecalName, maxlen);
 }
