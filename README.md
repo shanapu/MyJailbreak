@@ -24,7 +24,7 @@ MyJailbreak is a redux rewrite of [Franugs Special Jailbreak](https://github.com
     *    [**DuckHunt**](https://github.com/shanapu/MyJailbreak/wiki/DuckHunt) - CT(hunter) with nova vs T(chicken in 3th person) with 'nades
     *    [**Suicide Bomber**](https://github.com/shanapu/MyJailbreak/wiki/SuicideBomber) - Ts got suicde bombs to kill all CTs
     *    [**Zeus**](https://github.com/shanapu/MyJailbreak/wiki/Zeus) - Taser Deathmatch and get a new Zeus on Kill
-    *    [**Drunk**](https://github.com/shanapu/MyJailbreak/wiki/Drunk) - Deathmatch under bad condisions
+    *    [**Drunken**](https://github.com/shanapu/MyJailbreak/wiki/Drunk) - Deathmatch under bad condisions
     *    [**Torch Relay**](https://github.com/shanapu/MyJailbreak/wiki/TorchRelay) - Random player set on fire. he must burn other to extinguish the fire
     *    [**Cowboy**](https://github.com/shanapu/MyJailbreak/wiki/Cowboy) - Revolver or Dual Baretta DM
     *    [**Knife**](https://github.com/shanapu/MyJailbreak/wiki/Knifefight) - Knife Deathmatch with configurable gravity, iceskate, and thirdperson

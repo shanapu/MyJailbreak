@@ -62,6 +62,7 @@ ConVar gc_sWarden;
 ConVar gc_sUnWarden;
 ConVar gc_sSoundStartPath;
 ConVar gc_sSoundStopPath;
+ConVar gc_sSoundCuffsPath;
 ConVar gc_sModelPath;
 ConVar gc_bModel;
 ConVar gc_bBetterNotes;
@@ -79,10 +80,10 @@ ConVar gc_sCustomCommand;
 ConVar gc_fAllowDropTime;
 ConVar gc_bMute;
 ConVar gc_bMuteEnd;
-
 ConVar gc_sOverlayCuffsPath;
 ConVar gc_bHandCuff;
 ConVar gc_iHandCuffsNumber;
+ConVar gc_bHandCuffLR;
 
 //Bools
 bool IsCountDown = false;
@@ -166,6 +167,7 @@ char g_sWarden[256];
 char g_sIconPath[256];
 char g_sSoundStartPath[256];
 char g_sSoundStopPath[256];
+char g_sSoundCuffsPath[256];
 char g_sOverlayStopPath[256];
 char g_sOverlayCuffsPath[256];
 char g_sOp[32];
@@ -321,6 +323,7 @@ public void OnPluginStart()
 	gc_sUnWarden = AutoExecConfig_CreateConVar("sm_warden_sounds_unwarden", "music/MyJailbreak/unwarden.mp3", "Path to the soundfile which should be played when there is no warden anymore.");
 	gc_sSoundStartPath = AutoExecConfig_CreateConVar("sm_warden_sounds_start", "music/MyJailbreak/start.mp3", "Path to the soundfile which should be played for a start countdown.");
 	gc_sSoundStopPath = AutoExecConfig_CreateConVar("sm_warden_sounds_stop", "music/MyJailbreak/stop.mp3", "Path to the soundfile which should be played for stop countdown.");
+	gc_sSoundCuffsPath = AutoExecConfig_CreateConVar("sm_warden_sounds_cuffs", "music/MyJailbreak/cuffs.mp3", "Path to the soundfile which should be played for cuffed player.");
 	
 	
 	
@@ -339,6 +342,7 @@ public void OnPluginStart()
 	HookConVarChange(gc_sWarden, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundStopPath, OnSettingChanged);
+	HookConVarChange(gc_sSoundCuffsPath, OnSettingChanged);
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sOverlayStopPath, OnSettingChanged);
 	HookConVarChange(gc_sOverlayCuffsPath, OnSettingChanged);
@@ -353,6 +357,7 @@ public void OnPluginStart()
 	gc_sUnWarden.GetString(g_sUnWarden, sizeof(g_sUnWarden));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 	gc_sSoundStopPath.GetString(g_sSoundStopPath, sizeof(g_sSoundStopPath));
+	gc_sSoundCuffsPath.GetString(g_sSoundCuffsPath, sizeof(g_sSoundCuffsPath));
 	gc_sModelPath.GetString(g_sWardenModel, sizeof(g_sWardenModel));
 	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
 	gc_sOverlayCuffsPath.GetString(g_sOverlayCuffsPath , sizeof(g_sOverlayCuffsPath));
@@ -408,6 +413,11 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 	{
 		strcopy(g_sSoundStopPath, sizeof(g_sSoundStopPath), newValue);
 		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStopPath);
+	}
+	else if(convar == gc_sSoundCuffsPath)
+	{
+		strcopy(g_sSoundCuffsPath, sizeof(g_sSoundCuffsPath), newValue);
+		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundCuffsPath);
 	}
 	else if(convar == gc_sOverlayStartPath)
 	{
@@ -478,6 +488,7 @@ public void OnMapStart()
 		PrecacheSoundAnyDownload(g_sUnWarden);
 		PrecacheSoundAnyDownload(g_sSoundStopPath);
 		PrecacheSoundAnyDownload(g_sSoundStartPath);
+		PrecacheSoundAnyDownload(g_sSoundCuffsPath);
 	}	
 	g_iVoteCount = 0;
 	PrecacheModel(g_sWardenModel);
@@ -2929,7 +2940,7 @@ public int OnAvailableLR(int Announced)
 {
 	LoopClients(i)
 	{
-		if(gc_bHandCuff.BoolValue && g_bCuffed[i]) FreeEm(i, 0);
+		if(gc_bHandCuffLR.BoolValue && g_bCuffed[i]) FreeEm(i, 0);
 		if(IsMuted[i]) UnMuteClient(i);
 		g_bAllowDrop = true;
 	}
@@ -3338,6 +3349,7 @@ public Action CuffsEm(int client, int attacker)
 		CreateTimer( 0.5, ShowOverlayCuffs, client);
 		g_iPlayerHandCuffs[attacker]--;
 		g_iCuffed++;
+		EmitSoundToClientAny(client, g_sSoundCuffsPath);
 		
 		CPrintToChatAll("%t %t", "warden_tag" , "warden_cuffson", attacker, client);
 		CPrintToChat(attacker, "%t %t", "warden_tag" , "warden_cuffsgot", g_iPlayerHandCuffs[attacker]);
@@ -3355,5 +3367,4 @@ public Action FreeEm(int client, int attacker)
 	if((attacker != 0) && (g_iCuffed == 0) && (g_iPlayerHandCuffs[attacker] < 1)) SetPlayerWeaponAmmo(attacker, Client_GetActiveWeapon(attacker), _, 0);
 	if(attacker != 0) CPrintToChatAll("%t %t", "warden_tag" , "warden_cuffsoff", attacker, client);
 }
-
 

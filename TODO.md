@@ -3,9 +3,8 @@ known bugs:
 - [ ] Duckhunt & HE Battle: player get new grenade but sometimes rarly can't throw anymore
 
 must:
-- [ ] wiki: howto edit -> SetCvars, add menu item,
-- [ ] menu: add placeholder for custom commands
-- [ ] clean up translation files
+- [ ] wiki: howto edit -> SetCvars
+- [/] clean up translation files
 
 want:
 - [/] zombie vision/wallhack
@@ -15,9 +14,10 @@ want:
 - [ ] set custom Laser/Drawer Button
 - [ ] translate EventDay native
 - [ ] respawn on freeday
-- [ ] hide: darken the sky
+- [ ] Icon over CTs head
+- [ ] Icon over cuffed T head
+- [ ] hide: darken the sky like in zombie
 - [ ] countdown: Start -> Cancel -> Start - bug
-- [ ] updater support
 - [ ] duckhunt: change +attack to +secAttack
 - [ ] all: format centertext <font size='30' color='#FF00FF'>test</font>
 - [ ] all: restrict map heal station https://forums.alliedmods.net/showthread.php?t=267167
@@ -47,6 +47,7 @@ need?
 - [ ] zombie: knockbackfix?
 - [ ] warden: disarm when shot on Arms/hand 
 - [ ] whistle for hider?
+- [ ] updater support?
 - [ ] events on random days? no voting/set - core2
 - [ ] silent mp_roundtime?
 - [ ] Noscope: choose weapon an round start (scout/awp/auto)?
@@ -138,6 +139,8 @@ must/want:
 - [x] gun plant prevention timer on roundstart
 - [x] menu: insert noblock
 - [x] warden: toggle noblock
+- [x] wiki: howto edit -> add menu item
+- [x] menu: add placeholder for custom commands
 - [x] autofreeday if there is no CT
 - [x] warden laser pointer
 - [x] enable drawer for T
