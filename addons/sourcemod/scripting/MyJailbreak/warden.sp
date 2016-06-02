@@ -3289,7 +3289,7 @@ public int UnMuteClient(any client)
 		SetClientListeningFlags(client, VOICE_NORMAL);
 		IsMuted[client] = false;
 		CPrintToChat(client,"%t %t", "warden_tag", "warden_unmute", client);
-		CPrintToChat(g_iWarden,"%t %t", "warden_tag", "warden_unmute", client);
+		if(g_iWarden != -1) CPrintToChat(g_iWarden,"%t %t", "warden_tag", "warden_unmute", client);
 	}
 }
 
