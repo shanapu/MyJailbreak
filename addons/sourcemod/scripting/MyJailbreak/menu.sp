@@ -347,7 +347,7 @@ public Action JbMenu(int client, int args)
 				
 				if(g_bCheck != null)
 				{
-					if(g_bCheck.BoolValue)
+					if(g_bCheck.BoolValue && IsPlayerAlive(client))
 					{
 						Format(menuinfo, sizeof(menuinfo), "%T", "menu_check", client);
 						mainmenu.AddItem("check", menuinfo);
@@ -1208,7 +1208,7 @@ public int SetEventMenuHandler(Menu daysmenu, MenuAction action, int client, int
 		{
 			if (warden_iswarden(client) || (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true)))
 			{
-				FakeClientCommand(client, "sm_setFreeday");
+				FakeClientCommand(client, "sm_setfreeday");
 				if(!gc_bClose.BoolValue)
 				{
 					JbMenu(client,0);
@@ -1263,11 +1263,11 @@ public int changemenu(Menu menu, MenuAction action, int client, int selection)
 		{
 			if (GetClientTeam(client) == CS_TEAM_T)
 			{
-			ClientCommand(client, "jointeam %i", CS_TEAM_CT);
+				ClientCommand(client, "jointeam %i", CS_TEAM_CT);
 			}
 			if (GetClientTeam(client) == CS_TEAM_CT)
 			{
-			ClientCommand(client, "jointeam %i", CS_TEAM_T);
+				ClientCommand(client, "jointeam %i", CS_TEAM_T);
 			}
 		}
 	}
