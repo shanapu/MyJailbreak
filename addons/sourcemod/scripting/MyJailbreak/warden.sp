@@ -2941,9 +2941,11 @@ public int OnAvailableLR(int Announced)
 	LoopClients(i)
 	{
 		if(gc_bHandCuffLR.BoolValue && g_bCuffed[i]) FreeEm(i, 0);
+		g_iPlayerHandCuffs[i] = 0;
+		if(i == g_iWarden) StripZeus(i);
 		if(IsMuted[i]) UnMuteClient(i);
-		g_bAllowDrop = true;
 	}
+	g_bAllowDrop = true;
 }
 
 public int Native_ExistWarden(Handle plugin, int numParams)
@@ -3057,9 +3059,6 @@ public Action MuteMenuPlayer(int client,int args)
 	}
 	return Plugin_Handled;
 }
-
-
-
 
 public int MuteMenuTime(Menu menu5, MenuAction action, int client, int Position)
 {
@@ -3366,5 +3365,23 @@ public Action FreeEm(int client, int attacker)
 	g_iCuffed--;
 	if((attacker != 0) && (g_iCuffed == 0) && (g_iPlayerHandCuffs[attacker] < 1)) SetPlayerWeaponAmmo(attacker, Client_GetActiveWeapon(attacker), _, 0);
 	if(attacker != 0) CPrintToChatAll("%t %t", "warden_tag" , "warden_cuffsoff", attacker, client);
+}
+
+stock int StripZeus(int client)
+{
+	char sWeapon[64];
+	FakeClientCommand(client,"use weapon_taser");
+	int weapon = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
+	if(weapon != -1)
+	{
+		GetEntityClassname(weapon, sWeapon, sizeof(sWeapon));
+		CPrintToChatAll("user %N weapon %i sWeapon %s", client, weapon, sWeapon);
+		if (StrEqual(sWeapon, "weapon_taser"))
+		{ 
+			SDKHooks_DropWeapon(client, weapon, NULL_VECTOR, NULL_VECTOR); 
+			AcceptEntityInput(weapon, "Kill");
+			CPrintToChatAll("drop & kill");
+		}
+	}
 }
 
