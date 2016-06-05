@@ -1,0 +1,1310 @@
+[SIZE="5"][B]MyJailbreak [/B][/SIZE] a plugin pack for CS:GO jailserver
+
+MyJailbreak is a redux rewrite of [URL="https://github.com/Franc1sco/Franug-Jailbreak/"]Franugs Special Jailbreak[/URL] a merge/redux of [URL="http://www.sourcemod.net/plugins.php?cat=0&mod=-1&title=warden&author=&description=&search=1"]eccas, ESK0s & zipcores Jailbreak warden[/URL] and many other plugins.
+
+
+[B][u]Included Plugins:[/u][/B]
+
+[LIST]
+[*] [B]Warden[/B] - set/become warden,vote retire warden, model, icon, open cells,gun plant prevention, handcuffs, laser pointer, drawer, set marker/quiz/EventDays/countdown/FF/nobock/mute
+[*] [B]Requests[/B] - terror requests. refuse a game, request Capitulation/Pardon, healing or repeating, report freekill
+[*] [B]Menu[/B] - player menus for T, CT, warden & admin
+[*] [B]Weapons[/B] - weapon menus for CT &/or T(in event round)
+[*] [B]Player Tags[/B] - add player tags for T, T.Admin, CT, CT.Admin, W, WA.Admin in chat &/or stats
+[*] [B]Event Days[/B] - vote/set a Event Day for next round with cooldowns, rounds in row, sounds & overlays[/LIST][INDENT][LIST]
+[*][B]War[/B] - CT vs T Team Deathmatch
+[*][B]Free For All[/B] - Deathmatch
+[*][B]Zombie[/B] - CT(zombie) vs T(Human) stripped down zombiereloaded
+[*][B]No Scope[/B] - No Scope Deathmatch with low gravity & configurable or random sniper
+[*][B]HE Battle[/B] - Grenade Deathmatch with low gravity
+[*][B]Hide in the Dark[/B] - CT(Seeker) vs T(Hider) kind of HideNseek
+[*][B]Catch & Freeze[/B] - CT must catch all T (freeze tag)
+[*][B]Duckhunt[/B] - CT(hunter) with nova vs T(chicken in 3th person) with 'nades
+[*][B]Suicide Bomber[/B] - Ts got suicide bombs to kill all CTs
+[*][B]Drunken[/B] - Deathmatch under bad condisions
+[*][B]Zeus[/B] - Taser Deathmatch and get a new Zeus on Kill
+[*][B]Torch Relay[/b] - Random player set on fire. He must burn other to extinguish the fire
+[*][B]Cowboy[/b] - Deatmacth with revolver or dual barettas
+[*][B]Knife[/B] - Knife Deathmatch with configurable gravity, iceskate, and thirdperson
+[*][B]Freeday[/B] - Auto freeday on first round &/or if there is no CT
+[/LIST][/INDENT]
+
+
+
+[B][u]Features:[/u][/B]
+[LIST]
+[*]SourcePawn Transitional Syntax 1.7
+[*]Multilingual support
+[*]Custom chat commands !mycommand
+[*]Custom chat tags [MyJB.tag]
+[*]Colors
+[*]Sounds & overlays
+[*]Natives & forwards of the [URL="http://www.sourcemod.net/plugins.php?cat=0&mod=-1&title=warden&author=&description=&search=1"]original warden plugins[/URL] to keep compatibility
+[*][URL="https://github.com/shanapu/MyJailbreak/wiki/Eventdays-template"]Template[/URL] to make your own Eventday
+[*]some other fancy stuff
+[/LIST]
+
+
+
+[B][u]Plugin descriptions, commands & convars[/u][/B]
+[SPOILER]
+
+
+[U][B]Warden[/B][/U]
+This plugins allows players to take control over the prison as warden/Headguard/Commander.  
+Chat, hud & sound notifications about warden / no warden. Vote to retire the warden. Colorized warden and define the color. Set warden Model and icon above head. Open & close cell doors & automatic open. Mute terroist for a amoung of time or round end. Gun plant prevention - CT can drop weapons only on round beginn without punishment & report to warden. Use Zeus as Handcuffs and move the cuffed T around. Give warden laser pointer & drawer(LaZzZers) with menu to choose color. Warden can toggle drawer for terrorists. Set different countdowns (start/stop) with overlays, sound & chat notifications. Start a MathQuiz with endtimer & show the player with the first right answer. Toggle Friendly Fire & No Block. Kill/pick a random T (excluding rebels & last T) with different kill effects(Lighting,Timebomb,Firebomb).
+
+[b]Commands[/b]
+[SPOILER]
+[CODE]
+sm_w / sm_warden - Allows the player taking the charge over prisoners
+sm_com / sm_commander - Allows the player taking the charge over prisoners
+sm_hg / sm_headguard - Allows the player taking the charge over prisoners
+sm_uw / sm_unwarden - Allows the player to retire from the position
+sm_uc / sm_uncommander - Allows the player to retire from the position
+sm_uhg / sm_unheadguard - Allows the player to retire from the position
+sm_vw / sm_votewarden / sm_vetowarden - Allows the player to vote to retire warden
+sm_open - Allows the warden to open the cell doors
+sm_close - Allows the warden to close the cell doors
+sm_laser - Allows the warden to toggle the wardens Laser pointer
+sm_drawer - Allows the warden to toggle the wardens Drawer
+sm_noblockn - Allows the warden to toggle no block 
+sm_setff - Allows player to see the state and the warden to toggle friendly fire
+sm_cdmenu - Allows the warden to open the Countdown Menu
+sm_cdstart - Allows the warden to start a START Countdown! (start after 10sec.) - start without menu
+sm_cdstop - Allows the warden to start a STOP Countdown! (stop after 20sec.) - start without menu
+sm_cdstartstop - Allows the warden to start a START/STOP Countdown! (start after 10sec./stop after 20sec.) - start without menu
+sm_cdcancel - Allows the warden to cancel a running Countdown disabled / bugged
+sm_killrandom - Allows the warden to kill a random T
+sm_math - Allows the warden to start a MathQuiz. Show player with first right Answer
+sm_wmute - Allows the warden to mute a terrorist
+sm_wunmute - Allows the warden to unmute a muted terrorist
+[/CODE]
+set your own custom command. take a look at "sm_warden_cmd"
+
+[u]AdminCommands // ADMFLAG_GENERIC[/u]
+[CODE]
+sm_sw / sm_setwarden - Allows the Admin to set a player to warden
+sm_rw / sm_removewarden - Allows the Admin to remove a player from warden
+sm_fw / sm_firewarden - Allows the Admin to remove a player from warden
+[/CODE]
+[/SPOILER]
+[b]ConVars[/b]
+[SPOILER]
+[CODE]
+sm_warden_version - Shows the version of the SourceMod plugin MyJailbreak warden
+sm_warden_enable: 0 - disabled, 1 - enable the warden plugin. Default 1
+sm_warden_cmd: Set your custom chat command for become warden. no need for sm_ or ! . Default "simon" results in !simon /simon & sm_simon
+sm_warden_become: 0 - disabled, 1 - enable !w / !warden - player can choose to be warden. If disabled you should need sm_warden_choose_random 1. Default 1
+sm_warden_choose_random: 0 - disabled, 1 - enable pic random warden if there is still no warden after sm_warden_choose_time. Default 1
+sm_warden_choose_time: Time in seconds a random warden will picked when no warden was set. need sm_warden_choose_random 1. Default 20
+sm_warden_stay: 0 - disabled, 1 - warden will stay after round end. Default 1
+sm_warden_vote: 0 - disabled, 1 - enable player vote against warden. Default 1
+sm_warden_better_notifications: 0 - disabled , 1 - will use hint and center say for better notifications. Default 1
+sm_warden_icon_enable: 0 - disabled , 1 - enable the icon above the wardens head. Default 1
+sm_warden_icon: Path to the floating warden icon DONT TYPE .vmt or .vft. Default: "decals/MyJailbreak/warden"
+sm_warden_noblock: 0 - disabled, 1 - enable setable noblock for warden. Default 1
+sm_warden_noblock_mode: 0 - collision only between CT & T , 1 - collision within a team. Default 1
+sm_warden_ff: 0 - disabled, 1 - enable warden switch friendly fire. Default 1
+sm_warden_mute: 0 - disabled, 1 - Allow the warden to mute T-side player. Default 1
+sm_warden_mute_round: 0 - disabled, 1 - Allow the warden to mute a player until roundend. Default 1
+sm_warden_gunplant: 0 - disabled, 1 - enable Gun plant prevention. Default 1
+sm_warden_gunnodrop: 0 - disabled, 1 -  disallow gun dropping for ct. Default 0
+sm_warden_gunremove: 0 - disabled, 1 - remove planted guns. Default 1
+sm_warden_gunremove_time: Time in seconds to pick up gun again before. Default 5
+sm_warden_gunslap: 0 - disabled, 1 - Slap the CT for dropping a gun. Default 1
+sm_warden_gunslap_dmg: Amoung of HP losing on slap for dropping a gun. Default 10
+sm_warden_handcuffs: 0 - disabled, 1 - enable  handcuffs. Default 1
+sm_warden_handcuffs_number: How many handcuffs a warden got? Default 2
+sm_warden_handcuffs_lr: 0 - disabled, 1 - free cuffed terrorists on LR. Default 1
+sm_warden_handcuffs_ct: 0 - disabled, 1 - Warden can also handcuff CTs. Default 1
+sm_warden_overlays_cuffs: Path to the cuffs Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/cuffs"
+sm_warden_random: 0 - disabled, 1 - enable kill a random t for warden. Default 1
+sm_warden_random_mode: 1 - all random / 2 - Thunder / 3 - Timebomb / 4 - Firebomb / 5 - NoKill (1,3,4 needs funcommands.smx enabled). Default 2
+sm_warden_marker: 0 - disabled, 1 - enable warden advanced markers. Default 1
+sm_warden_laser: 0 - disabled, 1 - enable warden Laser Pointer with +E. Default 1
+sm_warden_drawer: 0 - disabled, 1 - enable warden Drawer with +E. Default 1
+sm_warden_drawer_terror: 0 - disabled, 1 - allow warden to toggle Drawer for Terrorist. Default 1
+sm_warden_math: 0 - disabled, 1 - enable mathquiz for warden. Default 1
+sm_warden_math_min: What should be the minimum number for questions. Default 1
+sm_warden_math_max: What should be the maximum number for questions. Default 100
+sm_warden_math_mode: 0 - only addition & subtraction, 1 - addition, subtraction, multiplication & division. Default 1
+sm_warden_countdown: 0 - disabled, 1 - enable countdown for warden. Default 1
+sm_warden_overlays_enable: 0 - disabled, 1 - enable overlay for countdown. Default 1
+sm_warden_overlays_start: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
+sm_warden_overlays_stop: Path to the stop Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/stop"
+sm_warden_model: 0 - disabled, 1 - enable warden model. Default 1
+sm_warden_model_path:Path to the model for zombies. Default "models/player/custom_player/legacy/security/security.mdl"
+sm_warden_color_enable: 0 - disabled, 1 - enable colored warden. Default 1
+sm_warden_color_red - What color to turn the warden into (set R, G and B values to 0 to disable). Default 0
+sm_warden_color_green - What color to turn the warden into (rGb): x - green value. Default 0
+sm_warden_color_blue - What color to turn the warden into (rgB): x - blue value. Default 255
+sm_warden_sounds_enable: 0 - disabled, 1 - Play a sound when a player become warden or warden leaves. Default 1
+sm_warden_sounds_warden - Path to the soundfile which should be played for a new warden. Default "music/MyJailbreak/warden.mp3"
+sm_warden_sounds_unwarden - Path to the soundfile which should be played when there is no warden anymore. Default "music/MyJailbreak/unwarden.mp3"
+sm_warden_sounds_start - Path to the soundfile which should be played for a start countdown. Default "music/MyJailbreak/start.mp3"
+sm_warden_sounds_stop - Path to the soundfile which should be played for a stop countdown. Default "music/MyJailbreak/stop.mp3"
+sm_warden_open_enable: 0 - disabled, 1 - warden can open/close cell doors. Default 1
+sm_warden_open_time_enable: 0 - disabled, 1 - cell doors will open automatic after sm_warden_open_time. Default 1
+sm_warden_open_time - Time in seconds for open doors on round start automaticly. Default 60
+sm_warden_open_time_warden: 0 - disabled, 1 - doors open automatic after sm_warden_open_time although there is a warden. needs sm_warden_open_time_enable 1. Default 1
+[/CODE]
+[/SPOILER]
+[IMG]http://shanapu.de/myjb/warden.jpg[/IMG]
+
+[youtube]tp6k_Q6K37c[/youtube]
+
+[youtube]-KkQ3hs0dsU[/youtube]
+
+
+
+[U][B]Request[/B][/U]
+Allow terrorists to start a request. Refuse a Game - Warden can "open the refusing" and T can refuse a game and get colored & the warden get a listing of all refuser. Request Capitulation/Pardon - T get strip weapons and the warden got Menu to accept this request. Request healing - T get colored and warden gets Menu to accept this request (give Healthshot). Repeat - T can request a repeat of last call & the warden get a listing of all requester. Freekill - a dead terror can report a Freekill. A random admins get the choice of respawn the victim, kill the freekiller, Set freeday next round or swap the freekiller to terrorist. If there is no admin the warden get the report.
+
+[b]Commands[/b]
+[SPOILER]
+[CODE]
+sm_request - Open the request menu
+sm_refuse - Allows the warden start refusing time and Terrorist to refuse a game
+sm_capitulation - Allows a rebeling terrorist to request a capitulate
+sm_pardon - Allows a rebeling terrorist to request a capitulate
+sm_heal - Allows a Terrorist request healing
+sm_repeat - Allows a Terrorist request repeating last call
+sm_freekill - Allows a Terrorist report a freekill
+  
+set your own custom command. take a look at "sm_refuse_cmd" "sm_repeat_cmd" "sm_heal_cmd" "sm_capitulation_cmd"
+[/CODE]
+[/SPOILER]
+[b]ConVars[/b]
+[SPOILER]
+[CODE]
+sm_request_enable: 0 - disabled, 1 - enable Request Plugin. Default 1
+sm_request_sounds_enable: 0 - disabled, 1 -  enable sounds. Default 1
+sm_refuse_enable: 0 - disabled, 1 - Enable Refuse. Default 1
+sm_capitulation_cmd: Set your custom chat command for Refuse. no need for sm_ or ! . Default "ref" results in !ref /ref & sm_ref
+sm_refuse_limit: Сount how many times you can use the command
+sm_refuse_time": Time after the player gets his normal colors back
+sm_refuse_color_red: What color to turn the refusing Terror into (set R, G and B values to 255 to disable) (Rgb): x - red value
+sm_refuse_color_green: What color to turn the refusing Terror into (rGb): x - green value
+sm_refuse_color_blue: What color to turn the refusing Terror into (rgB): x - blue value
+sm_refuse_sound: Path to the soundfile which should be played for a refusing
+sm_capitulation_enable: 0 - disabled, 1 - Enable Capitulation. Default 1
+sm_capitulation_cmd: Set your custom chat command for capitulation. no need for sm_ or ! . Default "capi" results in !capi /capi & sm_capi
+sm_capitulation_timer: Time to decide to accept the capitulation
+sm_capitulation_rebel_timer: Time to give a rebel on not accepted capitulation his knife back
+sm_capitulation_color_red: What color to turn the capitulation Terror into (set R, G and B values to 255 to disable) (Rgb): x - red value
+sm_capitulation_color_green: What color to turn the capitulation Terror into (rGb): x - green value
+sm_capitulation_color_blue: What color to turn the capitulation Terror into (rgB): x - blue value
+sm_capitulation_sound: Path to the soundfile which should be played for a capitulation
+sm_heal_enable: 0 - disabled, 1 - Enable heal. Default 1
+sm_heal_cmd: Set your custom chat command for heal. no need for sm_ or ! . Default "cure" results in !cure /cure & sm_cure
+sm_heal_limit: Сount how many times you can use the command
+sm_heal_check: 0 - disabled, 1 - enable check if player is already full health
+sm_heal_time: Time after the player gets his normal colors back
+sm_heal_color_red: What color to turn the heal Terror into (set R, G and B values to 255 to disable) (Rgb): x - red value
+sm_heal_color_green: What color to turn the heal Terror into (rGb): x - green value
+sm_heal_color_blue: What color to turn the heal Terror into (rgB): x - blue value
+sm_repeat_enable: 0 - disabled, 1 -  enable repeat
+sm_repeat_cmd: Set your custom chat command for Repeat. no need for sm_ or !. Default "rep" results in !rep /rep & sm_rep
+sm_repeat_limit: Сount how many times you can use the command. Default 2
+sm_repeat_sound: Path to the soundfile which should be played for a repeat. Default "music/MyJailbreak/repeat.mp3"
+sm_freekill_enable: 0 - disabled, 1 - Enable freekill report. Default 1
+sm_freekill_cmd: Set your custom chat command for freekill. no need for sm_ or !. Default "fk" results in !fk /fk & sm_fk
+sm_freekill_respawn: 0 - disabled, 1 - Allow the warden to respawn a Freekill victim. Default 1
+sm_freekill_kill: 0 - disabled, 1 - Allow the warden to Kill a Freekiller. Default 1
+sm_freekill_freeday: 0 - disabled, 1 - Allow the admin/warden to set a freeday next round as pardon. Default 1
+sm_freekill_swap: 0 - disabled, 1 - Allow the admin/warden to swap a freekiller to terrorist. Default 1
+sm_freekill_admin: 0 - disabled, 1 - Report will be send to admins - if there is no admin its send to warden. Default 1
+sm_freekill_warden: 0 - disabled, 1 - Report will be send to Warden if there is no admin. Default 1
+[/CODE]
+[/SPOILER]
+
+
+
+[U][B]Menu[/B][/U]
+This plugins allows players to open a menu with ","-Key (buyammo) or command.  
+It will show different menus for Terrorists, Counter-Terrorists, admin & warden. The menu shows only features that are enabled (e.g at EventDays no warden menu).
+
+[b]Commands[/b]
+[SPOILER]
+[CODE]
+sm_menu / sm_menus - opens the menu depends on players team/rank
+sm_days / sm_eventdays - open a vote EventDays menu for player
+sm_setdays / sm_seteventdays - open a set EventDays menu for warden or admins
+[/CODE]
+[/SPOILER]
+[b]ConVars[/b]
+[SPOILER]
+[CODE]
+sm_menu_version - Shows the version of the SourceMod plugin MyJailbreak - Menu
+sm_menu_enable: 0 - disabled, 1 - enable Jailbreak menu
+sm_menu_ct: 0 - disabled, 1 - enable Jailbreak menu for CT
+sm_menu_t: 0 - disabled, 1 - enable Jailbreak menu for Terrorists
+sm_menu_warden: disabled, 1 - enable Jailbreak menu for warden
+sm_menu_days: 0 - disabled, 1 - enable vote/set EventDays menu
+sm_menu_close: 0 - disabled, 1 - close menu after action
+sm_menu_start: 0 - disabled, 1 - open menu on every roundstart
+sm_menu_team: 0 - disabled, 1 - enable join team on menu
+[/CODE]
+[/SPOILER]
+[b]Menu Structure[/b]
+[SPOILER]
+
+[U][B]WardenMenu[/B][/U]
+[LIST]
+[*]Weapon Menu
+[*]Open Cells
+[*]Countdown
+[/LIST]
+[INDENT][LIST]
+[*]Beginn a Start Countdown
+[*]Beginn a Stop Countdown
+[*]Set a Start/Stop Countdown
+[/LIST][/INDENT]
+[INDENT][INDENT][LIST]
+[*]15 seconds
+[*]30 seconds
+[*]45 seconds
+[*]1 Minute
+[*]1 Minute 30 seconds
+[*]2 Minutes
+[*]3 Minutes
+[*]5 Minutes
+[/LIST][/INDENT][/INDENT]
+[LIST]
+[*]Math Quiz
+[*]Set a Event Days
+[/LIST][INDENT]
+[LIST]
+[*]War
+[*]FFA
+[*]Zombie
+[*]Hide
+[*]Catch & Freeze
+[*]Suicide Bomber
+[*]HEbattle
+[*]NoScope
+[*]DuckHunt
+[*]Drunken
+[*]Zeus
+[*]Knifefight
+[*]TorchRelay
+[*]Cowboy
+[*]Freeday
+[/LIST][/INDENT]
+[LIST]
+[*]Drawer Menu
+[/LIST]
+[INDENT][LIST]
+[*]Enable Drawer for terrors
+[*]Disable Drawer
+[*]Rainbow
+[*]White
+[*]Red
+[*]Green
+[*]Blue
+[*]Yellow
+[*]Cyan
+[*]Magenta
+[*]Orange
+[/LIST][/INDENT]
+[LIST]
+[*]Laser Pointer Menu
+[/LIST]
+[INDENT][LIST]
+[*]Disable Laser Pointer
+[*]Rainbow
+[*]White
+[*]Red
+[*]Green
+[*]Blue
+[*]Yellow
+[*]Cyan
+[*]Magenta
+[*]Orange
+[/LIST][/INDENT]
+[LIST]
+[*]Mute Menu
+[INDENT][LIST]
+[*]Mute a Terrorists
+[*]Unute a Terrorists
+[/LIST][/INDENT]
+[*]Checkplayer
+[*]Toggle Friendly Fire
+[*]Toggle No Block
+[*]Kill a random Player
+[/LIST]
+[INDENT][LIST]
+[*]Are you sure?
+[*]Yes
+[*]No
+[/LIST][/INDENT]
+[LIST]
+[*]Leave warden
+[*]Rules
+[/LIST]
+
+[U][B]Counter-Terrorists Menu[/B][/U]
+[LIST]
+[*]Weapon Menu
+[*]Become warden
+[*]Vote for Event Days
+[/LIST]
+[INDENT][LIST]
+[*]War
+[*]FFA
+[*]Zombie
+[*]Hide
+[*]Catch & Freeze
+[*]Suicide Bomber
+[*]HEbattle
+[*]NoScope
+[*]DuckHunt
+[*]Drunken
+[*]Zeus
+[*]Knifefight
+[*]TorchRelay
+[*]Cowboy
+[*]Freeday
+[/LIST][/INDENT]
+[LIST]
+[*]Checkplayer
+[*]Join Terrorists
+[/LIST]
+[INDENT][LIST]
+[*]Are you sure?
+[*]Yes
+[*]No
+[/LIST][/INDENT]
+[LIST]
+[*]Rules
+[/LIST]
+
+[U][B]Terrorists Menu[/B][/U]
+[LIST]
+[*]Weapon Menu
+[*]Request Menu
+[INDENT][LIST]
+[*]Report Freeday
+[*]Repeat announcement
+[*]Refuse a game
+[*]Request Healing
+[*]Capitulation
+[/LIST][/INDENT]
+[*]Vote against warden
+[*]Vote for Event Days
+[/LIST]
+[INDENT][LIST]
+[*]War
+[*]FFA
+[*]Zombie
+[*]Hide
+[*]Catch & Freeze
+[*]Suicide Bomber
+[*]HEbattle
+[*]NoScope
+[*]DuckHunt
+[*]Drunken
+[*]Zeus
+[*]Knifefight
+[*]TorchRelay
+[*]Cowboy
+[*]Freeday
+[/LIST][/INDENT]
+[LIST]
+[*]Join CT queue (!guard)
+or
+[*]Join Counter-Terrorists
+[/LIST]
+[INDENT][LIST]
+[*]Are you sure?
+[*]Yes
+[*]No
+[/LIST][/INDENT]
+[LIST]
+[*]Rules
+[/LIST]
+
+[U][B]Additionally for Admins[/B][/U]
+[LIST]
+[*]Set a Event Days
+[/LIST]
+[INDENT][LIST]
+[*]War
+[*]FFA
+[*]Zombie
+[*]Hide
+[*]Catch & Freeze
+[*]Suicide Bomber
+[*]HEbattle
+[*]NoScope
+[*]DuckHunt
+[*]Drunken
+[*]Zeus
+[*]Knifefight
+[*]TorchRelay
+[*]Cowboy
+[*]Freeday
+[/LIST][/INDENT]
+[LIST]
+[*]Remove warden
+[*]Set new warden
+[/LIST]
+[INDENT][LIST]
+[*]Choose Player
+[/LIST][/INDENT]
+[INDENT][INDENT][LIST]
+[*]sure kick old warden?
+[*]Yes
+[*]No
+[/LIST][/INDENT][/INDENT]
+[LIST]
+[*]Admin menu
+[/LIST]
+[/SPOILER]
+[IMG]http://shanapu.de/myjb/menu.png[/IMG]
+
+
+[U][B]Weapons[/B][/U]
+This plugins open a Gunmenu to players. Terroists only on EventDays.  
+
+[b]Commands[/b]
+[SPOILER]
+[CODE]
+sm_gun / sm_guns / sm_gunmenu - Open the weapon menu if enabled (in EventDays/for CT)
+sm_weapon / sm_weapons / sm_weaponsmenu - Open the weapon menu if enabled (in EventDays/for CT)
+sm_giveweapon - Open the weapon menu if enabled (in EventDays/for CT)
+
+set your own custom command. take a look at "sm_weapons_cmd"
+[/CODE]
+[/SPOILER]
+[b]ConVars[/b]
+[SPOILER]
+[CODE]
+sm_weapons_version - Shows the version of the SourceMod plugin MyJailbreak - Weapons
+sm_weapons_cmd: Set your custom chat command for weaponmenu. no need for sm_ or ! . Default "arms" results in !arms /arms & sm_arms
+sm_weapons_enable: 0 - disabled, 1 - enable weapons menu - you shouldn't touch these, cause events days will handle them
+sm_weapons_ct: 0 - disabled, 1 - enable weapons menu for CT - you shouldn't touch these, cause events days will handle them
+sm_weapons_t: 0 - disabled, 1 - enable weapons menu for T - you shouldn't touch these, cause events days will handle them
+sm_weapons_spawnmenu: disabled, 1 - enable autoopen weapon menu on spawn if enabled
+sm_weapons_awp: 0 - disabled, 1 - enable AWP in weapon menu
+sm_weapons_autosniper: 0 - disabled, 1 - enable scar20 & g3sg1 in menu
+sm_weapons_tagrenade: 0 - disabled, 1 - warden get a TA grenade with weapons
+sm_weapons_warden_healthshot: 0 - disabled, 1 - warden get a healthshot with weapons
+sm_weapons_jbmenu: 0 - disabled, 1 - enable autoopen the MyJailbreak menu after weapon given.
+[/CODE]
+[/SPOILER]
+[IMG]http://shanapu.de/myjb/weapons.jpg[/IMG]
+
+
+
+[B][U]PlayerTags[/U][/B]
+This plugins give players tags for team (T,CT) and "rank" (Admin/warden) in stats &/or chat.  
+
+[b]ConVars[/b]
+[SPOILER]
+[CODE]
+sm_playertag_version - Shows the version of the SourceMod plugin MyJailbreak - PlayerTags
+sm_playertag_enable: 0 - disabled, 1 - enable Player Tag
+sm_playertag_stats: 0 - disabled, 1 - enable PlayerTag in stats
+sm_playertag_chat: 0 - disabled, 1 - enable PlayerTag in chat
+[/CODE]
+[/SPOILER]
+
+
+
+[U][B]EventDays core[/B][/U]
+This plugins is the "interface" between Eventdays. Need for cooldowns and disable other days on running Eventday.
+
+[b]ConVars[/b]
+[SPOILER]
+[CODE]
+sm_myjb_tag: 0 - disabled, 1 - Allow "MyJailbreak" to be added to your server tags. So player will find servers with MyJB faster. it dont touch youR sv_tags
+[/CODE]
+[/SPOILER]
+
+
+
+[U][B]War[/B][/U]
+This plugin allows to vote or set a war CT vs T for next rounds.  
+On Round start Ts spawn freezed next to CT. CTs must leave the spawn and spread on map. After unfreeze time (def. 30sec) Ts can Move. After nodamage time (def. 30sec) the war CT vs T starts.  
+Or on Round start Ts spawn in open cells with weapons and weaponmenu. No Freeze/-time. (Default)  
+
+[b]Commands[/b]
+[SPOILER]
+[CODE]
+sm_war - Allows players to vote for a war
+sm_setwar - Allows the Admin or warden to set a war for next rounds
+  
+set your own custom command. take a look at "sm_war_cmd"
+[/CODE]
+[/SPOILER]
+[b]ConVars[/b]
+[SPOILER]
+[CODE]
+sm_war_version - Shows the version of the SourceMod plugin MyJailbreak - War
+sm_war_cmd: Set your custom chat command for Event voting. no need for sm_ or ! . Default "TDM" results in !TDM /TDM & sm_TDM
+sm_war_enable: 0 - disabled, 1 - enable the war plugin. Default 1
+sm_war_setw: 0 - disabled, 1 - allow warden to set next round war. Default 1
+sm_war_seta: 0 - disabled, 1 - allow Admin to set next round war round. Default 1
+sm_war_rounds: Rounds to play in a row
+sm_war_vote: 0 - disabled, 1 - allow player to vote for war. Default 1
+sm_war_spawn: 0 - teleport Ts to CT and freeze, 1 - open cell doors an get weapons. Default 0
+sm_war_roundtime - Roundtime for a single war round in minutes. Default 5
+sm_war_freezetime- Time in seconds Ts are freezed. time to hide on map for CT (need sm_war_spawn: 0). Default 30
+sm_war_trucetime - Time in seconds after freezetime damage is disbaled. Default 30
+sm_war_cooldown_start - Rounds until event can be start after mapchange. Default 3
+sm_war_cooldown_day - Rounds until event can be started again. Default 3
+sm_war_sounds_enable: 0 - disabled, 1 - enable sounds. Default 1
+sm_war_sounds_start: Path to the soundfile which should be played on start. Default "music/MyJailbreak/start.mp3"
+sm_war_overlays_enable: 0 - disabled, 1 - enable start overlay. Default 1
+sm_war_overlays_start: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
+[/CODE]
+[/SPOILER]
+
+
+
+[U][B]FreeForAll[/B][/U]
+This plugin allows to vote or set a FFA war for next rounds.  
+On Round start Ts spawn next to CT. CTs & Ts can get Weapon an Move. MapFog is on for better hiding. After nodamage time (def. 30sec) the war CT vs T starts and MapFog disabled.  
+Or on Round start Ts spawn in open cells with weapons & weaponmenu. (Default)  
+
+[b]Commands[/b]
+[SPOILER]
+[CODE]
+sm_ffa - Allows players to vote for a FFA 
+sm_setffa - Allows the Admin or warden to set a ffa for next rounds
+  
+set your own custom command. take a look at "sm_ffa_cmd"
+[/CODE]
+[/SPOILER]
+[b]ConVars[/b]
+[SPOILER]
+[CODE]
+sm_ffa_version - Shows the version of the SourceMod plugin MyJailbreak - FFA
+sm_ffa_cmd: Set your custom chat command for Event voting. no need for sm_ or ! . Default "DM" results in !DM /DM & sm_DM
+sm_ffa_enable: 0 - disabled, 1 - enable the ffa plugin. Default 1
+sm_ffa_setw: 0 - disabled, 1 - allow warden to set next round ffa. Default 1
+sm_ffa_seta: 0 - disabled, 1 - allow Admin to set next round ffa round. Default 1
+sm_ffa_rounds: Rounds to play in a row
+sm_ffa_vote: 0 - disabled, 1 - allow player to vote for ffa. Default 1
+sm_ffa_spawn: 0 - teleport Ts to CT and freeze, 1 - open cell doors an get weapons (need smartjaildoors). Default 0
+sm_ffa_roundtime - Roundtime for a single ffa round in minutes. Default 5
+sm_ffa_trucetime - Time in seconds after freezetime damage is disbaled. Default 30
+sm_ffa_cooldown_start - Rounds until event can be start after mapchange. Default 3
+sm_ffa_cooldown_day - Rounds until event can be started again. Default 3
+sm_ffa_sounds_enable: 0 - disabled, 1 - enable sounds. Default 1
+sm_ffa_sounds_start: Path to the soundfile which should be played on start. Default "music/MyJailbreak/start.mp3"
+sm_ffa_overlays_enable: 0 - disabled, 1 - enable start overlay. Default 1
+sm_ffa_overlays_start: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
+[/CODE]
+[/SPOILER]
+
+
+
+[U][B]Zombie[/B][/U]
+This plugin allows players to vote and warden to set next rounds to zombie escape.  
+On Round start Ts spawn in open cells with weapons & weaponmenu. CT are zombies with a zombie model, and with 8500 HP.  
+Zombies freezed for 35sec (default) so T can hide &/or climb.  
+
+[b]Commands[/b]
+[SPOILER]
+[CODE]]
+sm_zombie - Allows players to vote for a Zombie 
+sm_setzombie - Allows the Admin or warden to set Zombie as next round
+  
+set your own custom command. take a look at "sm_zombie_cmd"
+[/CODE]
+[/SPOILER]
+[b]ConVars[/b]
+[SPOILER]
+[CODE]
+sm_zombie_version - Shows the version of the SourceMod plugin MyJailbreak - Zombie
+sm_zombie_cmd: Set your custom chat command for Event voting. no need for sm_ or ! . Default "zd" results in !zd /zd & sm_zd
+sm_zombie_setw: 0 - disabled, 1 - allow warden to set next round zombie. Default 1
+sm_zombie_seta: 0 - disabled, 1 - allow Admin to set next round zombie round. Default 1
+sm_zombie_vote: 0 - disabled, 1 - allow player to vote for zombie. Default 1
+sm_zombie_enable: 0 - disabled, 1 - enable the zombie plugin. Default 1
+sm_zombie_spawn: 0 - teleport Ts to CT and freeze, 1 - open cell doors an get weapons. Default 0
+sm_zombie_rounds: Rounds to play in a row. Default 1
+sm_zombie_roundtime - Roundtime for a single zombie round in minutes. Default 5
+sm_zombie_freezetime - Time in seconds Zombies freezed. Default 35
+sm_zombie_hp: HP the Zombies got on Spawn. Default 8500
+sm_zombie_human_hp: HP the Humans got on Spawn. Default 65
+sm_zombie_cooldown_start - Rounds until event can be start after mapchange. Default 3
+sm_zombie_cooldown_day - Rounds until event can be started again. Default 3
+sm_zombie_sounds_enable: 0 - disabled, 1 - enable sounds. Default 1
+sm_zombie_sounds_start: Path to the soundfile which should be played on start. Default "music/MyJailbreak/zombie.mp3"
+sm_zombie_overlays_enable: 0 - disabled, 1 - enable start overlay. Default 1
+sm_zombie_overlays_start: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/zombie"
+sm_zombie_model: Path to the model for zombies. Default "models/player/custom_player/zombie/revenant/revenant_v2.mdl"
+[/CODE]
+[/SPOILER]
+[IMG]http://shanapu.de/myjb/zombie2.jpg[/IMG][IMG]http://shanapu.de/myjb/zombie1.jpg[/IMG]
+
+
+
+[U][B]Noscope[/B][/U]
+This plugin allows players to vote and warden to set next rounds to noscope  
+On Round start cells open everybody got sniper rifle with noscope and low gravity. Nodamage time (def. 30sec).
+
+[b]Commands[/b]
+[SPOILER]
+[CODE]
+sm_noscope - Allows players to vote for a noscope
+sm_setnoscope - Allows the Admin or warden to set noscope as next round
+  
+set your own custom command. take a look at "sm_noscope_cmd"
+[/CODE]
+[/SPOILER]
+[b]ConVars[/b]
+[SPOILER]
+[CODE]
+sm_noscope_version - Shows the version of the SourceMod plugin MyJailbreak - noscope
+sm_noscope_cmd: Set your custom chat command for Event voting. no need for sm_ or ! . Default "scope" results in !scope /scope & sm_scope
+sm_noscope_enable: 0 - disabled, 1 - enable the noscope plugin. Default 1
+sm_noscope_setw: 0 - disabled, 1 - allow warden to set next round noscope. Default 1
+sm_noscope_seta: 0 - disabled, 1 - allow Admin to set next round noscope round. Default 1
+sm_noscope_spawn: 0 - teleport Ts to CT and freeze, 1 - open cell doors an get weapons. Default 0
+sm_noscope_vote: 0 - disabled, 1 - allow player to vote for noscope. Default 1
+sm_noscope_rounds: Rounds to play in a row. Default 1
+sm_noscope_weapon: 1 - ssg08 / 2 - awp / 3 - scar20 / 4 - g3sg1. Default 1
+sm_noscope_random: 0 - disabled, 1 - get a random weapon (ssg08,awp,scar20,g3sg1) ignore: sm_noscope_weapon. Default 1
+sm_noscope_gravity: 0 - disabled, 1 - enable low Gravity for noscope. Default 1
+sm_noscope_gravity_value - Ratio for Gravity 1.0 earth 0.5 moon. Default 0.3
+sm_noscope_roundtime - Roundtime for a single noscope round in minutes. Default 5
+sm_noscope_trucetime - Time in seconds damage is disbaled. Default 15
+sm_noscope_cooldown_start - Rounds until event can be start after mapchange. Default 3
+sm_noscope_cooldown_day - Rounds until event can be started again. Default 3
+sm_noscope_sounds_enable: 0 - disabled, 1 - enable sounds. Default 1
+sm_noscope_sounds_start: Path to the soundfile which should be played on start. Default "music/MyJailbreak/start.mp3"
+sm_noscope_overlays_enable: 0 - disabled, 1 - enable start overlay. Default 1
+sm_noscope_overlays_start: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
+[/CODE]
+[/SPOILER]
+
+
+
+[B][U]HE Battle[/U][/B]
+This plugin allows players to vote and warden to set next round to HEbattle.  
+On Round start cells open everybody got HE grenate with low gravity(Default) and reduced HP.
+
+[b]Commands[/b]
+[SPOILER]
+[CODE]
+sm_hebattle - Allows players to vote for a hebattle
+sm_sethebattle - Allows the Admin or warden to set hebattle as next round
+  
+set your own custom command. take a look at "sm_hebattle_cmd"
+[/CODE]
+[/SPOILER]
+[b]ConVars[/b]
+[SPOILER]
+[CODE]
+sm_hebattle_version - Shows the version of the SourceMod plugin MyJailbreak - hebattle
+sm_hebattle_enable: 0 - disabled, 1 - enable the hebattle plugin. Default 1
+sm_hebattle_cmd: Set your custom chat command for Event voting. no need for sm_ or ! . Default "he" results in !he /he & sm_he
+sm_hebattle_setw: 0 - disabled, 1 - allow warden to set next round HEbattle. Default 1
+sm_hebattle_seta: 0 - disabled, 1 - allow Admin to set next round HEbattle round. Default 1
+sm_hebattle_spawn: 0 - teleport Ts to CT and freeze, 1 - open cell doors an get weapons. Default 0
+sm_hebattle_vote: 0 - disabled, 1 - allow player to vote for HEbattle. Default 1
+sm_hebattle_hp: HP a Player get on Spawn. Default 85
+sm_hebattle_rounds: Rounds to play in a row
+sm_hebattle_gravity: 0 - disabled, 1 - enable low Gravity for hebattle. Default 1
+sm_hebattle_gravity_value - Ratio for Gravity 1.0 earth 0.5 moon. Default 0.3
+sm_hebattle_roundtime - Roundtime for a single hebattle round in minutes. Default 5
+sm_hebattle_trucetime - Time in seconds damage is disbaled. Default 15
+sm_hebattle_cooldown_start - Rounds until event can be start after mapchange. Default 3
+sm_hebattle_cooldown_day - Rounds until event can be started again. Default 3
+sm_hebattle_sounds_enable: 0 - disabled, 1 - enable sounds. Default 1
+sm_hebattle_sounds_start: Path to the soundfile which should be played on start. Default "music/MyJailbreak/start.mp3"
+sm_hebattle_overlays_enable: 0 - disabled, 1 - enable start overlay. Default 1
+sm_hebattle_overlays_start: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
+[/CODE]
+[/SPOILER]
+
+
+
+[U][B]Catch & Freeze[/B][/U]
+This plugin allows players to vote and warden to set next round to catch.  
+On Round start cells open an Ts must "runaway". CT must catch and freeze all Ts by knifing.  
+Ts can unfreeze Freezed Ts by knife them again.  
+CT and T can Sprint with USE-Key (default). 
+
+[b]Commands[/b]
+[SPOILER]
+[CODE]
+sm_catch - Allows players to vote for a catch 
+sm_setcatch - Allows the Admin or warden to set catch as next round
+sm_sprint - Start sprinting!
+  
+set your own custom command. take a look at "sm_catch_cmd"
+[/CODE]
+[/SPOILER]
+[b]ConVars[/b]
+[SPOILER]
+[CODE]
+sm_catch_version - Shows the version of the SourceMod plugin MyJailbreak - catch
+sm_catch_cmd: Set your custom chat command for Event voting. no need for sm_ or ! . Default "cat" results in !cat /cat & sm_cat
+sm_catch_setw: 0 - disabled, 1 - allow warden to set next round ffa. Default 1
+sm_catch_seta: 0 - disabled, 1 - allow Admin to set next round ffa round. Default 1
+sm_catch_vote: 0 - disabled, 1 - allow player to vote for ffa. Default 1
+sm_catch_rounds: Rounds to play in a row
+sm_catch_enable: 0 - disabled, 1 - enable the catch plugin. Default 1
+sm_catch_sprint_enable: 0 - disabled, 1 - enable ShortSprint. Default 1
+sm_catch_sprint_button: 0 - disabled, 1 - enable +use button support. Default 1
+sm_catch_sprint_cooldown: Time in seconds the player must wait for the next sprint. Default 10
+sm_catch_sprint_speed: Ratio for how fast the player will sprint. Default 1.25
+sm_catch_sprint_time: Time in seconds the player will sprint. Default 3.5
+sm_catch_roundtime - Roundtime for a single catch round in minutes. Default 5
+sm_catch_cooldown_start - Rounds until event can be start after mapchange. Default 3
+sm_catch_cooldown_day - Rounds until event can be started again. Default 3
+sm_catch_overlays_enable: 0 - disabled, 1 - enable freezed overlays. Default 1
+sm_catch_stayoverlay: 0 - overlays will removed after 3sec. , 1 - overlays will stay until unfreeze. Default 1
+sm_catch_overlayfreeze_path: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/freeze"
+sm_catch_sounds_enable: 0 - disabled, 1 - enable un/-Freeze sounds. Default 1
+sm_catch_sounds_freeze: Path to the soundfile which should be played on freeze. Default "music/MyJailbreak/freeze.mp3"
+sm_catch_sounds_unfreeze: Path to the soundfile which should be played on unfreeze. Default "music/MyJailbreak/unfreeze.mp3"
+[/CODE]
+[/SPOILER]
+[IMG]http://shanapu.de/myjb/catch.jpg[/IMG]
+
+
+
+[U][B]Hide in the Dark[/B][/U]
+This plugin allows players to vote and warden to set next round to hide in the dark.  
+Map is darken. CTs freezed, Cells open and Ts got time to hide on map. CT got a TA grenades & more movement speed.  
+When CT unfreezed (30sec. default) Ts get freezed (default).  
+
+[b]Commands[/b]
+[SPOILER]
+[CODE]
+sm_hide - Allows players to vote for a hide
+sm_sethide - Allows the Admin or warden to set hide as next round
+
+set your own custom command. take a look at "sm_hide_cmd"
+[/CODE]
+[/SPOILER]
+[b]ConVars[/b]
+[SPOILER]
+[CODE]
+sm_hide_version - Shows the version of the SourceMod plugin MyJailbreak - hide
+sm_hide_cmd: Set your custom chat command for Event voting. no need for sm_ or ! . Default "seek" results in !seek /seek & sm_seek
+sm_hide_setw: 0 - disabled, 1 - allow warden to set next round ffa. Default 1
+sm_hide_seta: 0 - disabled, 1 - allow Admin to set next round ffa round. Default 1
+sm_hide_vote: 0 - disabled, 1 - allow player to vote for ffa. Default 1
+sm_hide_enable: 0 - disabled, 1 - enable the hide plugin. Default 1
+sm_hide_rounds: Rounds to play in a row
+sm_hide_roundtime - Roundtime for a single hide round in minutes. Default 5
+sm_hide_hidetime - Time in seconds to hide. Default 30
+sm_hide_freezehider: 0 - disabled, 1 - enable freeze hider when hidetime gone. Default 1
+sm_hide_tagrenades: how many tagrenades a guard have? Default 3
+sm_hide_cooldown_start - Rounds until event can be start after mapchange. Default 3
+sm_hide_cooldown_day - Rounds until event can be started again. Default 3
+sm_hide_sounds_enable: 0 - disabled, 1 - enable sounds. Default 1
+sm_hide_sounds_start: Path to the soundfile which should be played on start. Default "music/MyJailbreak/start.mp3"
+sm_hide_overlays_enable: 0 - disabled, 1 - enable start overlay. Default 1
+sm_hide_overlays_start: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
+[/CODE]
+[/SPOILER]
+
+
+
+[U][B]DuckHunt[/B][/U]
+This plugin allows players to vote and warden to set next round to duckhunt.  
+T are Chicken in Thirdperson. After trucetime the cells open and T got HE grenade **but only secondary Attack!** CT as heavy with nova .  
+
+[b]Commands[/b]
+[SPOILER]
+[CODE]
+sm_duckhunt - Allows players to vote for a duckhunt
+sm_setduckhunt - Allows the Admin or warden to set duckhunt as next round
+  
+set your own custom command. take a look at "sm_duckhunt_cmd"
+[/CODE]
+[/SPOILER]
+[b]ConVars[/b]
+[SPOILER]
+[CODE]
+sm_duckhunt_version - Shows the version of the SourceMod plugin MyJailbreak - duckhunt
+sm_duckhunt_cmd: Set your custom chat command for Event voting. no need for sm_ or ! . Default "duck" results in !duck /duck & sm_duck
+sm_duckhunt_setw: 0 - disabled, 1 - allow warden to set next round ffa. Default 1
+sm_duckhunt_seta: 0 - disabled, 1 - allow Admin to set next round ffa round. Default 1
+sm_duckhunt_vote: 0 - disabled, 1 - allow player to vote for ffa. Default 1
+sm_duckhunt_enable: 0 - disabled, 1 - enable the duckhunt plugin. Default 1
+sm_duckhunt_rounds: Rounds to play in a row
+sm_duckhunt_roundtime - Roundtime for a single duckhunt round in minutes. Default 5
+sm_duckhunt_trucetime - Time in seconds damage is disbaled. Default 15
+sm_duckhunt_cooldown_start - Rounds until event can be start after mapchange. Default 3
+sm_duckhunt_cooldown_day - Rounds until event can be started again. Default 3
+sm_duckhunt_sounds_enable: 0 - disabled, 1 - enable sounds. Default 1
+sm_duckhunt_sounds_start: Path to the soundfile which should be played on start. Default "music/MyJailbreak/start.mp3"
+sm_duckhunt_overlays_enable: 0 - disabled, 1 - enable start overlay. Default 1
+sm_duckhunt_overlays_start: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
+[/CODE]
+[/SPOILER]
+
+
+
+[U][B]Suicide Bomber[/B][/U]
+This plugin allows players to vote and warden to set next round to Suicide Bomber.  
+On Round start CTs got time to hide before cells open and Ts got Suicide bombs to kill all CT.  
+CT and T can Sprint with USE-Key (default).  
+
+[b]Commands[/b]
+[SPOILER]
+[CODE]
+sm_suicidebomber - Allows players to vote for a duckhunt
+sm_setsuicidebomber - Allows the Admin or warden to set Suicide Bomber as next round
+sm_sprint - Start sprinting!
+sm_makeboom - Suicide with bomb.
+  
+set your own custom command. take a look at "sm_suicidebomber_cmd"
+[/CODE]
+[/SPOILER]
+[b]ConVars[/b]
+[SPOILER]
+[CODE]
+sm_suicidebomber_version - Shows the version of the SourceMod plugin MyJailbreak - Suicide Bomber
+sm_suicidebomber_enable: 0 - disabled, 1 - enable the plugin. Default 1
+sm_suicidebomber_cmd: Set your custom chat command for Event voting. no need for sm_ or ! . Default "suicide" results in !suicide /suicide & sm_suicide
+sm_suicidebomber_setw: 0 - disabled, 1 - allow warden to set next round ffa. Default 1
+sm_suicidebomber_seta: 0 - disabled, 1 - allow Admin to set next round ffa round. Default 1
+sm_suicidebomber_vote: 0 - disabled, 1 - allow player to vote for ffa. Default 1
+sm_suicidebomber_rounds: Rounds to play in a row
+sm_suicidebomber_key: 1 - Inspect(look) weapon / 2 - walk / 3 - Secondary Attack. Default 1
+sm_suicidebomber_standstill: 0 - disabled, 1 - standstill(cant move) on Activate bomb. Default 0
+sm_suicidebomber_bomb_radius: Radius for bomb damage. Default 200
+sm_suicidebomber_sprint_enable: 0 - disabled, 1 - enable ShortSprint. Default 1
+sm_suicidebomber_sprint_button: 0 - disabled, 1 - enable +use button support. Default 1
+sm_suicidebomber_sprint_cooldown: Time in seconds the player must wait for the next sprint. Default 10
+sm_suicidebomber_sprint_speed: Ratio for how fast the player will sprint. Default 1.25
+sm_suicidebomber_sprint_time: Time in seconds the player will sprint. Default 3.5
+sm_suicidebomber_roundtime - Roundtime for a single Suicide Bomber round in minutes. Default 5
+sm_suicidebomber_hidetime - Time to hide. Default 20
+sm_suicidebomber_cooldown_start - Rounds until event can be start after mapchange. Default 3
+sm_suicidebomber_cooldown_day - Rounds until event can be started again. Default 3
+sm_suicidebomber_sounds_enable: 0 - disabled, 1 - enable sounds. Default 1
+sm_suicidebomber_sounds_start: Path to the soundfile which should be played on start. Default "music/MyJailbreak/start.mp3"
+sm_suicidebomber_sounds_suicidebomber - Path to the soundfile which should be played on activate bomb. Default "music/MyJailbreak/suicidebomber.mp3"
+sm_suicidebomber_sounds_boom - Path to the soundfile which should be played on detonation. Default "music/MyJailbreak/boom.mp3"
+sm_suicidebomber_overlays_enable: 0 - disabled, 1 - enable start overlay. Default 1
+sm_suicidebomber_overlays_start: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
+[/CODE]
+[/SPOILER]
+
+
+
+[U][B]Zeus[/B][/U]
+This plugin allows players to vote and warden to set next round to zeus  
+On Round start cells open everybody got a zeus & knife. On kill you get a new zeus. Nodamage time (def. 30sec).
+
+[b]Commands[/b]
+[SPOILER]
+[CODE]
+sm_zeus - Allows players to vote for a zeus round
+sm_setzeus - Allows the Admin or warden to set zeus as next round
+  
+set your own custom command. take a look at "sm_zeus_cmd"
+[/CODE]
+[/SPOILER]
+[b]ConVars[/b]
+[SPOILER]
+[CODE]
+sm_zeus_version - Shows the version of the SourceMod plugin MyJailbreak - zeus
+sm_zeus_enable: 0 - disabled, 1 - enable the zeus plugin. Default 1
+sm_zeus_cmd: Set your custom chat command for Event voting. no need for sm_ or ! . Default "taser" results in !taser /taser & sm_taser
+sm_zeus_setw: 0 - disabled, 1 - allow warden to set next round zeus. Default 1
+sm_zeus_seta: 0 - disabled, 1 - allow Admin to set next round zeus round. Default 1
+sm_zeus_vote: 0 - disabled, 1 - allow player to vote for zeus. Default 1
+sm_zeus_spawn: 0 - teleport Ts to CT and freeze, 1 - open cell doors an get weapons. Default 0
+sm_zeus_rounds: Rounds to play in a row
+sm_zeus_roundtime - Roundtime for a single zeus round in minutes. Default 5
+sm_zeus_trucetime - Time in seconds damage is disbaled. Default 15
+sm_zeus_cooldown_start - Rounds until event can be start after mapchange. Default 3
+sm_zeus_cooldown_day - Rounds until event can be started again. Default 3
+sm_zeus_sounds_enable: 0 - disabled, 1 - enable sounds. Default 1
+sm_zeus_sounds_start: Path to the soundfile which should be played on start. Default "music/MyJailbreak/start.mp3"
+sm_zeus_overlays_enable: 0 - disabled, 1 - enable start overlay. Default 1
+sm_zeus_overlays_start: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
+[/CODE]
+[/SPOILER]
+
+
+
+[U][B]Drunken[/B][/U]
+This plugin allows players to vote and warden to set next round to drunk day.  
+On Round start cells open everybody got a wiggle screen and inverted movement Keys. Nodamage time (def. 30sec).
+
+[b]Commands[/b]
+[SPOILER]
+[CODE]
+sm_drunk - Allows players to vote for a drunk 
+sm_setdrunk - Allows the Admin or warden to set drunk as next round
+  
+set your own custom command. take a look at "sm_drunk_cmd"
+[/CODE]
+[/SPOILER]
+[b]ConVars[/b]
+[SPOILER]
+[CODE]
+sm_drunk_version - Shows the version of the SourceMod plugin MyJailbreak - drunk
+sm_drunk_enable: 0 - disabled, 1 - enable the drunk plugin. Default 1
+sm_drunk_cmd: Set your custom chat command for Event voting. no need for sm_ or ! . Default "curse" results in !curse /curse & sm_curse
+sm_drunk_setw: 0 - disabled, 1 - allow warden to set next round drunk. Default 1
+sm_drunk_seta: 0 - disabled, 1 - allow Admin to set next round drunk round. Default 1
+sm_drunk_vote: 0 - disabled, 1 - allow player to vote for drunk. Default 1
+sm_drunk_spawn: 0 - teleport Ts to CT and freeze, 1 - open cell doors an get weapons. Default 0
+sm_drunk_invert_x: 0 - disabled, 1 - enable invert movement on the x-axis (left & right). Default 1
+sm_drunk_invert_y: 0 - disabled, 1 - enable invert movement on the y-axis (forward & back). Default 1
+sm_drunk_wiggle: 0 - disabled, 1 - enable wiggle with the screen. Default 1
+sm_drunk_rounds: Rounds to play in a row
+sm_drunk_roundtime - Roundtime for a single drunk round in minutes. Default 5
+sm_drunk_trucetime - Time in seconds damage is disbaled. Default 15
+sm_drunk_cooldown_start - Rounds until event can be start after mapchange. Default 3
+sm_drunk_cooldown_day - Rounds until event can be started again. Default 3
+sm_drunk_overlays_enable: 0 - disabled, 1 - enable  overlays. Default 1
+sm_drunk_overlays_start: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
+sm_drunk_sounds_enable: 0 - disabled, 1 - enable sounds. Default 1
+sm_drunk_sounds_start: Path to the soundfile which should be played for a start. Default "music/MyJailbreak/burn.mp3"
+[/CODE]
+[/SPOILER]
+
+
+
+[U][B]KnifeFight[/B][/U]
+This plugin allows players to vote and warden to set next round to knifefight.  
+On Round start cells open everybody KnifeOnly with thirdperson, low gravity(Default), Iceskates and reduced HP(Default).
+
+[b]Commands[/b]
+[SPOILER]
+[CODE]
+sm_knifefight - Allows players to vote for a knifefight 
+sm_setknifefight - Allows the Admin or warden to set knifefight as next round
+  
+set your own custom command. take a look at "sm_knifefight_cmd"
+[/CODE]
+[/SPOILER]
+[b]ConVars[/b]
+[SPOILER]
+[CODE]
+sm_knifefight_version - Shows the version of the SourceMod plugin MyJailbreak - knifefight
+sm_knifefight_enable: 0 - disabled, 1 - enable the knifefight plugin. Default 1
+sm_knifefight_cmd: Set your custom chat command for Event voting. no need for sm_ or ! . Default "knife" results in !knife /knife & sm_knife
+sm_knifefight_setw: 0 - disabled, 1 - allow warden to set next round knifefight. Default 1
+sm_knifefight_seta: 0 - disabled, 1 - allow Admin to set next round knifefight round. Default 1
+sm_knifefight_vote: 0 - disabled, 1 - allow player to vote for knifefight. Default 1
+sm_knifefight_spawn: 0 - teleport Ts to CT and freeze, 1 - open cell doors an get weapons. Default 0
+sm_knifefight_thirdperson: 0 - disabled, 1 - enable thirdperson for knifefight. Default 1
+sm_knifefight_rounds: Rounds to play in a row
+sm_knifefight_gravity: 0 - disabled, 1 - enable low Gravity for knifefight. Default 1
+sm_knifefight_gravity_value - Ratio for Gravity 1.0 earth 0.5 moon. Default 0.3
+sm_knifefight_iceskate: 0 - disabled, 1 - enable iceskate for knifefight. Default 1
+sm_knifefight_iceskate_value - Ratio iceskate (5.2 normal). Default 0.8
+sm_knifefight_roundtime - Roundtime for a single knifefight round in minutes. Default 5
+sm_knifefight_trucetime - Time in seconds damage is disbaled. Default 15
+sm_knifefight_cooldown_start - Rounds until event can be start after mapchange. Default 3
+sm_knifefight_cooldown_day - Rounds until event can be started again. Default 3
+sm_knifefight_sounds_enable: 0 - disabled, 1 - enable sounds. Default 1
+sm_knifefight_sounds_start: Path to the soundfile which should be played on start. Default "music/MyJailbreak/start.mp3"
+sm_knifefight_overlays_enable: 0 - disabled, 1 - enable start overlay. Default 1
+sm_knifefight_overlays_start: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
+[/CODE]
+[/SPOILER]
+
+
+
+[U][B]Torch Relay[/B][/U]
+This plugin allows players to vote and warden to set next round to torch relay.  
+On Round start after 10 sec (default) one random player gets burned. he got more speed but lose hp. The torch must knife an other player to burn him & extinguish himself. The old torch is immune to be torch against until an other player war the torch. Round end when a player dies as torch.
+
+[b]Commands[/b]
+[SPOILER]
+[CODE]
+sm_torch - Allows players to vote for a torch 
+sm_settorch - Allows the Admin or warden to set torch as next round
+  
+set your own custom command. take a look at "sm_torch_cmd"
+[/CODE]
+[/SPOILER]
+[b]ConVars[/b]
+[SPOILER]
+[CODE]
+sm_torch_version - Shows the version of the SourceMod plugin MyJailbreak - torch
+sm_torch_enable: 0 - disabled, 1 - enable the torch plugin. Default 1
+sm_torch_cmd: Set your custom chat command for Event voting. no need for sm_ or ! . Default "knife" results in !knife /knife & sm_knife
+sm_torch_setw: 0 - disabled, 1 - allow warden to set next round torch. Default 1
+sm_torch_seta: 0 - disabled, 1 - allow Admin to set next round torch round. Default 1
+sm_torch_vote: 0 - disabled, 1 - allow player to vote for torch. Default 1
+sm_torch_spawn: 0 - teleport Ts to CT and freeze, 1 - open cell doors an get weapons. Default 0
+sm_torch_rounds: Rounds to play in a row
+sm_torch_roundtime - Roundtime for a single torch round in minutes. Default 5
+sm_torch_trucetime - Time in seconds damage is disbaled. Default 15
+sm_torch_cooldown_start - Rounds until event can be start after mapchange. Default 3
+sm_torch_cooldown_day - Rounds until event can be started again. Default 3
+sm_torch_overlays_enable: 0 - disabled, 1 - enable  overlays. Default 1
+sm_torch_overlays_start: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
+sm_torch_trucetime: Time in seconds players can't deal damage. Default 10
+sm_torch_stayoverlay: 0 - overlays will removed after 3sec. , 1 - overlays will stay until untorch. Default 1
+sm_torch_sounds_enable: 0 - disabled, 1 - enable sounds. Default 1
+sm_torch_sounds_start: Path to the soundfile which should be played for a start. Default "music/MyJailbreak/burn.mp3"
+sm_torch_sounds_torch: Path to the soundfile which should be played on torch. Default "music/MyJailbreak/fire.mp3"
+sm_torch_sounds_untorch: Path to the soundfile which should be played on untorch. Default "music/MyJailbreak/water.mp3"
+sm_torch_sprint_enable: 0 - disabled, 1 - enable ShortSprint. Default 1
+sm_torch_sprint_button: 0 - disabled, 1 - enable +use button support. Default 1
+sm_torch_sprint_cooldown: Time in seconds the player must wait for the next sprint. Default 10
+sm_torch_sprint_speed: Ratio for how fast the player will sprint. Default 1.25
+sm_torch_sprint_time: Time in seconds the player will sprint. Default 3.0
+[/SPOILER]
+
+
+
+[U][B]Cowboy[/B][/U]
+This plugin allows players to vote and warden to set next rounds to cowboy  
+On Round start cells open everybody got revolver or dual barettas. Nodamage time (def. 30sec).
+
+[b]Commands[/b]
+[SPOILER]
+[CODE]
+sm_cowboy - Allows players to vote for a cowboy
+sm_setcowboy - Allows the Admin or warden to set cowboy as next round
+  
+set your own custom command. take a look at "sm_cowboy_cmd"
+[/CODE]
+[/SPOILER]
+[b]ConVars[/b]
+[SPOILER]
+[CODE]
+sm_cowboy_version - Shows the version of the SourceMod plugin MyJailbreak - cowboy
+sm_cowboy_cmd: Set your custom chat command for Event voting. no need for sm_ or ! . Default "scope" results in !scope /scope & sm_scope
+sm_cowboy_enable: 0 - disabled, 1 - enable the cowboy plugin. Default 1
+sm_cowboy_setw: 0 - disabled, 1 - allow warden to set next round cowboy. Default 1
+sm_cowboy_seta: 0 - disabled, 1 - allow Admin to set next round cowboy round. Default 1
+sm_cowboy_spawn: 0 - teleport Ts to CT and freeze, 1 - open cell doors an get weapons. Default 0
+sm_cowboy_vote: 0 - disabled, 1 - allow player to vote for cowboy. Default 1
+sm_cowboy_rounds: Rounds to play in a row. Default 1
+sm_cowboy_weapon: 1 - Revolver / 2 - Dual Barettas. Default 1
+sm_cowboy_random: 0 - disabled, 1 - get a random weapon (revolver, duals) ignore: sm_cowboy_weapon. Default 1
+sm_cowboy_gravity: 0 - disabled, 1 - enable low Gravity for cowboy. Default 1
+sm_cowboy_gravity_value - Ratio for Gravity 1.0 earth 0.5 moon. Default 0.3
+sm_cowboy_roundtime - Roundtime for a single cowboy round in minutes. Default 5
+sm_cowboy_trucetime - Time in seconds damage is disbaled. Default 15
+sm_cowboy_cooldown_start - Rounds until event can be start after mapchange. Default 3
+sm_cowboy_cooldown_day - Rounds until event can be started again. Default 3
+sm_cowboy_sounds_enable: 0 - disabled, 1 - enable sounds. Default 1
+sm_cowboy_sounds_bling: 0 - disabled, 1 - enable  bling hitsound sounds like tf2. Default 1
+sm_cowboy_sounds_start: Path to the soundfile which should be played on start. Default "music/MyJailbreak/Yeehaw.mp3"
+sm_cowboy_overlays_enable: 0 - disabled, 1 - enable start overlay. Default 1
+sm_cowboy_overlays_start: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
+[/CODE]
+[/SPOILER]
+
+
+
+[U][B]Freeday[/B][/U]
+This plugin allows players to vote and warden to set next round to freeday.  
+Auto Freeday on first round after mapstart (Default).
+On Round start cells open for freeday and enabled damage (Default).
+
+[b]Commands[/b]
+[SPOILER]
+[CODE]
+sm_freeday - Allows players to vote for a freeday 
+sm_setfreeday - Allows the Admin or warden to set freeday as next round
+  
+set your own custom command. take a look at "sm_freeday_cmd"
+[/CODE]
+[/SPOILER]
+[b]ConVars[/b]
+[SPOILER]
+[CODE]
+sm_freeday_version - Shows the version of the SourceMod plugin MyJailbreak - freeday
+sm_freeday_enable: 0 - disabled, 1 - enable the freeday plugin. Default 1
+sm_freeday_cmd: Set your custom chat command for Event voting. no need for sm_ or ! . Default "fd" results in !fd /fd & sm_fd
+sm_freeday_setw: 0 - disabled, 1 - allow warden to set next round freeday. Default 1
+sm_freeday_seta: 0 - disabled, 1 - allow Admin to set next round freeday round. Default 1
+sm_freeday_vote: 0 - disabled, 1 - allow player to vote for freeday. Default 1
+sm_freeday_noct: 0 - disabled, 1 - auto freeday when there is no CT. Default 1
+sm_freeday_roundtime - Roundtime for a single freeday round in minutes (not on sm_freeday_noct). Default 5
+sm_freeday_firstround - auto freeday first round after mapstart. Default 1
+sm_freeday_damage: 0 - disabled, 1 - enable damage on freedays. Default 1
+sm_freeday_cooldown_day - Rounds until event can be started again. Default 0
+[/CODE]
+[/SPOILER]
+[/SPOILER]
+
+[U][B]Recommended plugins[/B][/U]
+[LIST]
+[*][CS:GO] Flashlight [url]https://forums.alliedmods.net/showthread.php?p=2042310[/url]
+
+[*][CSS/CS:GO] Disable Radar [url]https://forums.alliedmods.net/showthread.php?p=2138783[/url]
+[/LIST]
+
+[U][B]Requires plugins[/B][/U]
+[LIST]
+[*]Sourcemod 1.7.0+
+
+[*]SM hosties 2 [url]https://github.com/dataviruset/sm-hosties/[/url]
+
+[*]Smart Jail Doors [url]https://github.com/Kailo97/smartjaildoors[/url]
+
+[*]SM File/Folder Downloader and Precacher [url]https://forums.alliedmods.net/showthread.php?p=602270[/url] for zombie/warden model download
+
+[*]Simple Chat Prozessor [url]https://bitbucket.org/minimoney1/simple-chat-processor[/url]
+
+[*]CustomPlayerSkins [url]https://forums.alliedmods.net/showthread.php?t=240703[/url]
+[/LIST]
+[U]Include files needed for compile[/U][SPOILER]
+[LIST]
+[*]autoexecconfig.inc [url]https://forums.alliedmods.net/showthread.php?t=204254[/url]
+
+[*]colors.inc [url]https://forums.alliedmods.net/showthread.php?t=96831[/url]
+
+[*]emitsoundany.inc [url]https://forums.alliedmods.net/showthread.php?t=237045[/url]
+
+[*]myjailbreak.inc [url]https://github.com/shanapu/MyJailbreak/blob/master/addons/sourcemod/scripting/include/myjailbreak.inc[/url]
+
+[*]scp.inc [url]https://forums.alliedmods.net/showthread.php?t=198501[/url]
+
+[*]smartjaildoors.inc [url]https://forums.alliedmods.net/showthread.php?p=2306289[/url]
+
+[*]warden.inc [url]https://github.com/shanapu/MyJailbreak/blob/master/addons/sourcemod/scripting/include/warden.inc[/url] (myjailbreak version)
+
+[*]smlib.inc [url]https://github.com/bcserv/smlib[/url]
+
+[*]CustomPlayerSkins.inc [url]https://forums.alliedmods.net/showthread.php?t=240703[/url]
+[/LIST]
+[/SPOILER]
+
+
+
+[U][B]Installation[/B][/U]
+[QUOTE]
+[LIST=1]
+[*]Make sure you have the [U]latest versions[/U] of the [B]required plugins[/B]
+[*]Download the [URL="https://github.com/shanapu/MyJailbreak/releases"]latest release[/URL]
+  
+[*]Copy the folders [B]addons/[/B],[B] cfg/[/B], [B]materials/[/B], [B]models/[/B] &[B] sound/[/B] to [U]your root[/U] [B]csgo/[/B] directory  
+  
+[*]Copy the folders [B]materials/[/B], [B]models/[/B] & [B]sound/[/B] [U]in the fastDL/ directory[/U] to [U]your[/U] [B]FastDownload server[/B]  
+  
+[*]Open [U]your[/U] [B]downloads.ini [/B]in [U]your csgo/addons/sourcemod/configs[/U] directory and add the content of [B]downloads.txt[/B]  
+  
+[*]Run plugin for the first time and [U]all necessary .cfg files will be generated[/U]  
+  
+[*]Configure all settings in [U]cfg/MyJailbreak[/U] to your needs
+  
+[*]Have fun! Give feedback!
+[/LIST]
+[/QUOTE]
+
+
+
+[B][u]Change Log[/u][/B]
+[QUOTE]
+[B][Beta 2.0][/B] - introduce freekill report
+[SPOILER]
+[U]Added[/U][LIST]
+[*] Warden: new cvar - sm_warden_handcuffs_ct: 0 - disabled, 1 - Warden can also handcuff CTs. Default 1
+[*] Request: report freekill to random admin or warden - respawn victim, kill freekiller, set freeday next round, move freekiller to terror
+[/LIST][INDENT][LIST]
+[*] new command - sm_freekill - Allows a Dead Terrorist report a Freekill
+[*] new cvar - sm_freekill_enable: 0 - disabled, 1 - Enable freekill report. Default 1
+[*] new cvar - sm_freekill_cmd: Set your custom chat command for freekill. no need for sm_ or !. Default "fk" results in !fk /fk & sm_fk
+[*] new cvar - sm_freekill_respawn: 0 - disabled, 1 - Allow the admin/warden to respawn a Freekill victim. Default 1
+[*] new cvar - sm_freekill_kill: 0 - disabled, 1 - Allow the admin/warden to Kill a Freekiller. Default 1
+[*] new cvar - sm_freekill_freeday: 0 - disabled, 1 - Allow the admin/warden to set a freeday next round as pardon. Default 1
+[*] new cvar - sm_freekill_swap: 0 - disabled, 1 - Allow the admin/warden to swap a freekiller to terrorist. Default 1
+[*] new cvar - sm_freekill_admin: 0 - disabled, 1 - Report will be send to admins - if there is no admin its send to warden. Default 1
+[*] new cvar - sm_freekill_warden: 0 - disabled, 1 - Report will be send to Warden if there is no admin. Default 1
+[/LIST][/INDENT]
+[U]Changed[/U][LIST]
+[*] Request: Capitulation - weaponstrip only when warden accept
+[*] Freeday: default sm_freeday_cooldown_day from "3" to "0"
+[/LIST][U]Fixed[/U][LIST]
+[*] Warden: bug on knife related !lr warden keeps taser (now remove taser on LR)
+[*] Warden: minor error - unmute msg & no warden
+[*] Menu: fix setfreeday, missing cowboy & zombies dont show if cowboy disabled
+[*] Weapons: fix warden lost knife on roundstart when choose new weapon
+[/LIST][U]Bug found[/U][LIST]
+[*] Warden - MathQuiz: Response is not detected if user using Zephyrus stores message color
+[/LIST]  
+[/SPOILER]
+[B][Beta 1.0][/B] - first public beta release
+[/QUOTE]
+
+[B][u]Known Bugs[/u][/B]
+[QUOTE]
+Weapons: sm_weapons_ct/sm_weapons_t is blocking "[url=https://github.com/popoklopsi/Stamm/blob/master/stamm_models.sp]Stamm - Vip Models Menu[/url]" [i]- can anyone tell me why?[/i]
+Duckhunt & HE Battle: player get new grenade but sometimes rarly can't throw anymore[i] - need help![/i]
+Warden - MathQuiz: Response is not detected if user using Zephyrus stores message color
+
+[i]you found a bug? tell me please![/i]
+[/QUOTE]
+
+
+
+[B][U]Credits:[/U][/B]
+used code & stuff from: [B]ecca, Zipcore, ESK0, Floody.de, Franc1sco, walmar, KeepCalm, bara, Arkarr, KissLick, headline, MasterOfTheXP, Hipster, ReFlexPoison, 8guawong, Mitchell, Xines, Jackmaster, Impact123, Kaesar, andi67[/B] and many other I cant remember unfortunately!
+Also thanks to all sourcemod & metamod developers out there!
+[SPOILER]
+based/merged/used code/idea plugins:
+* [url]https://github.com/ecca/SourceMod-Plugins/tree/sourcemod/Warden[/url]
+* [url]https://github.com/ESK0/ESK0s_Jailbreak_warden/[/url]
+* [url]https://forums.alliedmods.net/showpost.php?p=1657893&postcount=11?p=1657893&postcount=11[/url]
+* [url]https://git.tf/Zipcore/Warden[/url]
+* [url]https://git.tf/Zipcore/Warden-Sounds[/url]
+* [url]https://git.tf/Zipcore/Warden-SimpleMarkers[/url]
+* [url]https://forums.alliedmods.net/showthread.php?t=264848[/url]
+* [url]https://github.com/Franc1sco/Franug-Jailbreak/[/url]
+* [url]https://forums.alliedmods.net/showthread.php?t=231473[/url]
+* [url]https://forums.alliedmods.net/showthread.php?p=1922088[/url]
+* [url]https://github.com/walmar/ShortSprint[/url]
+* [url]https://github.com/KissLick/TeamGames/[/url]
+* [url]https://github.com/AG-Headline/Hunger-Games-Beacon[/url]
+* [url]https://forums.alliedmods.net/showthread.php?p=1086127[/url]
+* [url]https://forums.alliedmods.net/showthread.php?t=234169[/url]
+* [url]https://forums.alliedmods.net/showthread.php?p=1749220[/url]
+* [url]https://forums.alliedmods.net/showthread.php?t=188799[/url]
+* [url]https://forums.alliedmods.net/showthread.php?t=189956[/url]
+* [url]https://forums.alliedmods.net/showthread.php?t=188773[/url]
+* [url]https://forums.alliedmods.net/showpost.php?p=2393733&postcount=12[/url]
+* [url]https://forums.alliedmods.net/showthread.php?p=1965643[/url]
+* [url]https://forums.alliedmods.net/showpost.php?p=2231099&postcount=22[/url]
++ [url]https://github.com/Zipcore/Timer/[/url] (sound)
+* [url]https://git.tf/TTT/Plugin[/url] (sound)
+* [url]https://forums.alliedmods.net/showthread.php?t=262170[/url] (model)
+* [url]http://www.andi67.bplaced.net/Forum/viewtopic.php?f=40&t=342[/url] (model)
+* if I missed someone, please tell me!
+* THANK YOU ALL!
+[/SPOILER]
+[SIZE="5"]THANKS FOR MAKING FREE SOFTWARE![/SIZE] :bacon!: :bacon!:
+[U]Much Thanks: [/U]
+Weeeishy, UartigZone, Got Sw4g? terminator18, SkeLeXes, 0dieter0, maKs, TomseN48, Horoxx, zeddy, NrX, ElleVen, Bchewy for bughunting, translation & great ideas!
+
+
+
+[B][U]Download Latest[/U][/B]
+[url]https://github.com/shanapu/MyJailbreak/releases[/url]
+
+[B][U]Wiki:[/U][/B] need some work
+[url]https://github.com/shanapu/MyJailbreak/wiki/[/url]
+
+[U][B]Report Bugs, Ideas & Requests:[/B][/U]
+[url]https://github.com/shanapu/MyJailbreak/issues[/url]
+
+[U][B]Code changes:[/B][/U]
+[url]https://github.com/shanapu/MyJailbreak/commits/master[/url]
+
+
+
+coded with [IMG]http://shanapu.de/githearth-small.png[/IMG] free software
+
+[b]I would be happy and very pleased if you want to join this project as equal collaborator. 
+Even if you are a beginner and willing to learn or you just want to help with translations.[/b] 
+If you own a feature or extention for jail or have an idea that would fit in, i would be happy when you [U]share it with us[/U].
+
+This is my first public project. please note that the code may is messy, stupid and inconseqent or mix different coding styles.  
+
+
+[SIZE="1"]my golden faucets not finance itself...[/SIZE] [URL="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=QT8TVRSYWP53J"] [IMG]http://shanapu.de/donate.gif[/IMG][/URL]

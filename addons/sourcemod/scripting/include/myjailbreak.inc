@@ -3,7 +3,7 @@
 #endif
 #define _myjailbreak_included_
 
-#define PLUGIN_VERSION "0.10.0"
+#define PLUGIN_VERSION "Beta 2.0"
 #define URL_LINK "https://github.com/shanapu/MyJailbreak"
 
 #include <sdktools>
@@ -11,7 +11,6 @@
 
 #define LoopClients(%1) for(int %1 = 1; %1 <= MaxClients; %1++) if(IsClientInGame(%1))
 #define LoopValidClients(%1,%2,%3) for(int %1 = 1; %1 <= MaxClients; %1++) if(IsValidClient(%1, %2, %3))
-
 
 Handle IntCvar;
 Handle FloatCvar;
@@ -75,6 +74,10 @@ stock StripAllWeapons(int client)
 		SDKHooks_DropWeapon(client, weapon, NULL_VECTOR, NULL_VECTOR); 
 		AcceptEntityInput(weapon, "Kill"); 
 		}
+	}
+	if((weapon = GetPlayerWeaponSlot(client, CS_SLOT_KNIFE)) != -1) {    //strip knife slot 2 times for taser
+		SDKHooks_DropWeapon(client, weapon, NULL_VECTOR, NULL_VECTOR); 
+		AcceptEntityInput(weapon, "Kill"); 
 	}
 }
 
@@ -148,4 +151,22 @@ stock bool IsValidClient(int client, bool bAllowBots = false, bool bAllowDead = 
 
 public NullHandler(Handle:menu, MenuAction:action, param1, param2)
 {
+}
+
+stock void SetPlayerWeaponAmmo(int client, int weaponEnt, int clip = -1, int ammo = -1)
+{
+	if (weaponEnt == INVALID_ENT_REFERENCE)
+		return;
+
+	if (clip != -1)
+		SetEntProp(weaponEnt, Prop_Send, "m_iClip1", clip);
+
+	if (ammo != -1) {
+		int iOffset = FindDataMapOffs(client, "m_iAmmo") + (GetEntProp(weaponEnt, Prop_Data, "m_iPrimaryAmmoType") * 4);
+		SetEntData(client, iOffset, ammo, 4, true);
+
+		if (GetEngineVersion() == Engine_CSGO) {
+			SetEntProp(weaponEnt, Prop_Send, "m_iPrimaryReserveAmmoCount", ammo);
+		}
+	}
 }

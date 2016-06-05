@@ -51,7 +51,7 @@ Handle GravityTimer;
 Handle HEbattleMenu;
 
 //Floats
-float Pos[3];
+float g_fPos[3];
 
 //Strings
 char g_sHasVoted[1500];
@@ -120,7 +120,7 @@ public void OnPluginStart()
 	gc_sCustomCommand.GetString(g_sCustomCommand , sizeof(g_sCustomCommand));
 }
 
-//ConVar Change for Strings
+//ConVarChange for Strings
 
 public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
@@ -328,13 +328,10 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 			}
 		}
 		if (RandomCT)
-		{	
-			float Pos1[3];
+		{
+			GetClientAbsOrigin(RandomCT, g_fPos);
 			
-			GetClientAbsOrigin(RandomCT, Pos);
-			GetClientAbsOrigin(RandomCT, Pos1);
-			
-			Pos[2] = Pos[2] + 45;
+			g_fPos[2] = g_fPos[2] + 5;
 			
 			if (g_iRound > 0)
 			{
@@ -373,7 +370,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 					}
 					if (!gc_bSpawnCell.BoolValue)
 					{
-						TeleportEntity(client, Pos1, NULL_VECTOR, NULL_VECTOR);
+						TeleportEntity(client, g_fPos, NULL_VECTOR, NULL_VECTOR);
 					}
 				}
 				g_iTruceTime--;
@@ -406,7 +403,9 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 	{
 		LoopClients(client) SetEntityGravity(client, 1.0);
 		if (TruceTimer != null) KillTimer(TruceTimer);
+		TruceTimer = null;
 		if (GravityTimer != null) KillTimer(GravityTimer);
+		GravityTimer = null;
 		if (winner == 2) PrintHintTextToAll("%t", "hebattle_twin_nc");
 		if (winner == 3) PrintHintTextToAll("%t", "hebattle_ctwin_nc");
 		if (g_iRound == g_iMaxRound)

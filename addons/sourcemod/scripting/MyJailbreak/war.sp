@@ -54,7 +54,7 @@ char g_sSoundStartPath[256];
 char g_sCustomCommand[64];
 
 //Floats
-float Pos[3];
+float g_fPos[3];
 
 public Plugin myinfo = {
 	name = "MyJailbreak - War",
@@ -117,7 +117,7 @@ public void OnPluginStart()
 	gc_sCustomCommand.GetString(g_sCustomCommand , sizeof(g_sCustomCommand));
 }
 
-//ConVar Change for Strings
+//ConVarChange for Strings
 
 public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
@@ -327,12 +327,9 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		}
 		if (RandomCT)
 		{
-			float Pos1[3];
+			GetClientAbsOrigin(RandomCT, g_fPos);
 			
-			GetClientAbsOrigin(RandomCT, Pos);
-			GetClientAbsOrigin(RandomCT, Pos1);
-			
-			Pos[2] = Pos[2] + 45;
+			g_fPos[2] = g_fPos[2] + 5;
 			
 			if (g_iRound > 0)
 			{
@@ -342,7 +339,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 					{
 						if (IsClientInGame(client))
 						{
-							TeleportEntity(client, Pos1, NULL_VECTOR, NULL_VECTOR);
+							TeleportEntity(client, g_fPos, NULL_VECTOR, NULL_VECTOR);
 							if (!gc_bSpawnCell.BoolValue)
 							{
 								SetEntityMoveType(client, MOVETYPE_NONE);
@@ -382,7 +379,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 				if (GetClientTeam(client) == CS_TEAM_CT)
 				{
 					SetEntityMoveType(client, MOVETYPE_WALK);
-					TeleportEntity(client, Pos, NULL_VECTOR, NULL_VECTOR);
+					TeleportEntity(client, g_fPos, NULL_VECTOR, NULL_VECTOR);
 				}
 			}
 			
@@ -422,7 +419,9 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 		LoopValidClients(client, false, true) SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
 		
 		if (FreezeTimer != null) KillTimer(FreezeTimer);
+		FreezeTimer = null;
 		if (TruceTimer != null) KillTimer(TruceTimer);
+		TruceTimer = null;
 		if (winner == 2) PrintHintTextToAll("%t", "war_twin_nc"); 
 		if (winner == 3) PrintHintTextToAll("%t", "war_ctwin_nc");
 		if (g_iRound == g_iMaxRound)
@@ -477,7 +476,7 @@ public Action FreezedTimer(Handle timer)
 		return Plugin_Continue;
 	}
 	
-	Pos[2] = Pos[2] - 45;
+	g_fPos[2] = g_fPos[2] - 3;
 	
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
 	
@@ -488,13 +487,13 @@ public Action FreezedTimer(Handle timer)
 			if (GetClientTeam(client) == CS_TEAM_T)
 			{
 				SetEntityMoveType(client, MOVETYPE_WALK);
-				TeleportEntity(client, Pos, NULL_VECTOR, NULL_VECTOR);
+				TeleportEntity(client, g_fPos, NULL_VECTOR, NULL_VECTOR);
 			}
 		}
 	}
-	
-	TruceTimer = CreateTimer(1.0, StartTimer, _, TIMER_REPEAT);
 	FreezeTimer = null;
+	TruceTimer = CreateTimer(1.0, StartTimer, _, TIMER_REPEAT);
+	
 	return Plugin_Stop;
 }
 

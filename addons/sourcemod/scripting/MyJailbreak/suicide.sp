@@ -147,7 +147,7 @@ public void OnPluginStart()
 	AddCommandListener(Command_LAW, "+lookatweapon");
 }
 
-//ConVar Change for Strings
+//ConVarChange for Strings
 
 public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
@@ -219,7 +219,6 @@ public void OnConfigsExecuted()
 public void OnClientPutInServer(int client)
 {
 	SDKHook(client, SDKHook_WeaponCanUse, OnWeaponCanUse);
-	SDKHook(client, SDKHook_WeaponDrop, OnWeaponDrop);
 }
 
 //Admin & Warden set Event
@@ -483,7 +482,9 @@ public void OnMapEnd()
 	IsSuicideBomber = false;
 	StartSuicideBomber = false;
 	BombActive = false;
-	if (FreezeTimer != null) KillTimer(FreezeTimer);
+	if (FreezeTimer != null) 
+	KillTimer(FreezeTimer);
+	FreezeTimer = null;
 	g_iVoteCount = 0;
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0';
@@ -590,7 +591,7 @@ public void OnGameFrame()
 
 //Disable Bomb Drop
 
-public Action OnWeaponDrop(int client, int weapon)
+public Action CS_OnCSWeaponDrop(int client, int weapon)
 {
 	if (IsSuicideBomber && IsValidClient(client, false, false))
 	{

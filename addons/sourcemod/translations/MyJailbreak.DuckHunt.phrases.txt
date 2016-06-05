@@ -48,7 +48,7 @@
 		"de"		"Alle Enten wurden geschossen"
 	}
 	
-		"duckhunt_twin_nc"
+	"duckhunt_twin_nc"
 	{
 		"da"		"Duckhunterne er slået ihjel!"
 		"en"		"The duckhunter died"
@@ -100,15 +100,15 @@
 	"duckhunt_progress"
 	{
 		"#format"	"{1:s}"
-		"en"		"Event ({darkred}{1} {default}is {purple}already in progress."
+		"en"		"Event {darkred}{1} {default}is {purple}already in progress."
 		"de"		"Event {darkred}{1} {default}ist {purple}bereits gesetzt."
 	}
 	
 	"duckhunt_minplayer"
 	{
-		"da"		"For at lave Duckhunt skal der mindst være {purple}en CT"
-		"en"		"For a Duckhunt you need at least {purple}one CT"
-		"de"		"Für Duckhunt brauchen wir mindestens {purple}einen CT"
+		"da"		"For at lave Duckhunt skal der mindst være {purple}en CT & en T"
+		"en"		"For a Duckhunt you need at least {purple}one CT & one T"
+		"de"		"Für Duckhunt brauchen wir mindestens {purple}einen CT & einen T"
 	}
 	
 	"duckhunt_disabled"

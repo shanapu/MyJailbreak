@@ -36,6 +36,7 @@ ConVar gc_bHeal;
 ConVar gc_bHealthShot;
 ConVar gc_fHealTime;
 ConVar gc_iHealLimit;
+ConVar gc_bHealthCheck;
 ConVar gc_iHealColorRed;
 ConVar gc_iHealColorGreen;
 ConVar gc_iHealColorBlue;
@@ -46,12 +47,21 @@ ConVar gc_sCustomCommandHeal;
 ConVar gc_sCustomCommandCapitulation;
 ConVar gc_sCustomCommandRefuse;
 ConVar gc_sCustomCommandRepeat;
+ConVar gc_sCustomCommandFreekill;
+ConVar gc_bFreeKill;
+ConVar gc_bFreeKillRespawn;
+ConVar gc_bFreeKillKill;
+ConVar gc_bFreeKillFreeDay;
+ConVar gc_bFreeKillSwap;
+ConVar gc_bReportAdmin;
+ConVar gc_bReportWarden;
 
 //Bools
 bool g_bHealed[MAXPLAYERS+1];
 bool g_bCapitulated[MAXPLAYERS+1];
 bool g_bRefused[MAXPLAYERS+1];
 bool g_bRepeated[MAXPLAYERS+1];
+bool g_bFreeKilled[MAXPLAYERS+1];
 bool g_bAllowRefuse;
 bool IsRequest;
 
@@ -60,6 +70,7 @@ bool IsRequest;
 int g_iRefuseCounter[MAXPLAYERS+1];
 int g_iHealCounter[MAXPLAYERS+1];
 int g_iRepeatCounter[MAXPLAYERS+1];
+int g_iKilledBy[MAXPLAYERS+1];
 int g_iCountStopTime;
 
 
@@ -83,6 +94,7 @@ char g_sCustomCommandHeal[64];
 char g_sCustomCommandCapitulation[64];
 char g_sCustomCommandRepeat[64];
 char g_sCustomCommandRefuse[64];
+char g_sCustomCommandFreekill[64];
 
 public Plugin myinfo = 
 {
@@ -100,6 +112,8 @@ public void OnPluginStart()
 	LoadTranslations("MyJailbreak.Request.phrases");
 	
 	//Client Commands
+	RegConsoleCmd("sm_request", RequestMenu, "Open the requests menu");
+	
 	RegConsoleCmd("sm_refuse", Command_refuse, "Allows the Warden start refusing time and Terrorist to refuse a game");
 	
 	RegConsoleCmd("sm_capitulation", Command_Capitulation, "Allows a rebeling terrorist to request a capitulate");
@@ -108,6 +122,8 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_heal", Command_Heal, "Allows a Terrorist request healing");
 	
 	RegConsoleCmd("sm_repeat", Command_Repeat, "Allows a Terrorist request repeat");
+	
+	RegConsoleCmd("sm_freekill", Command_Freekill, "Allows a Dead Terrorist report a Freekill");
 	
 	//AutoExecConfig
 	AutoExecConfig_SetFile("Request", "MyJailbreak");
@@ -118,9 +134,9 @@ public void OnPluginStart()
 	gc_bSounds = AutoExecConfig_CreateConVar("sm_request_sounds_enable", "1", "0 - disabled, 1 - enable sounds ", _, true,  0.0, true, 1.0);
 	gc_bRefuse = AutoExecConfig_CreateConVar("sm_refuse_enable", "1", "0 - disabled, 1 - enable Refuse");
 	gc_sCustomCommandRefuse = AutoExecConfig_CreateConVar("sm_refuse_cmd", "ref", "Set your custom chat command for Refuse. no need for sm_ or !");
-	gc_bWardenAllowRefuse = AutoExecConfig_CreateConVar("sm_refuse_allow", "1", "0 - disabled, 1 - Warden must allow !refuse before T can use it");
+	gc_bWardenAllowRefuse = AutoExecConfig_CreateConVar("sm_refuse_allow", "0", "0 - disabled, 1 - Warden must allow !refuse before T can use it");
 	gc_iRefuseLimit = AutoExecConfig_CreateConVar("sm_refuse_limit", "1", "Сount how many times you can use the command");
-	gc_fRefuseTime = AutoExecConfig_CreateConVar("sm_refuse_time", "10.0", "Time the player gets to refuse after warden open refuse with !refuse / colortime");
+	gc_fRefuseTime = AutoExecConfig_CreateConVar("sm_refuse_time", "5.0", "Time the player gets to refuse after warden open refuse with !refuse / colortime");
 	gc_iRefuseColorRed = AutoExecConfig_CreateConVar("sm_refuse_color_red", "0","What color to turn the refusing Terror into (set R, G and B values to 255 to disable) (Rgb): x - red value", _, true, 0.0, true, 255.0);
 	gc_iRefuseColorGreen = AutoExecConfig_CreateConVar("sm_refuse_color_green", "250","What color to turn the refusing Terror into (rGb): x - green value", _, true, 0.0, true, 255.0);
 	gc_iRefuseColorBlue = AutoExecConfig_CreateConVar("sm_refuse_color_blue", "250","What color to turn the refusing Terror into (rgB): x - blue value", _, true, 0.0, true, 255.0);
@@ -138,6 +154,7 @@ public void OnPluginStart()
 	gc_bHeal = AutoExecConfig_CreateConVar("sm_heal_enable", "1", "0 - disabled, 1 - enable heal");
 	gc_sCustomCommandHeal = AutoExecConfig_CreateConVar("sm_heal_cmd", "cure", "Set your custom chat command for Heal. no need for sm_ or !");
 	gc_bHealthShot = AutoExecConfig_CreateConVar("sm_heal_healthshot", "1", "0 - disabled, 1 - enable give healthshot on accept to terror");
+	gc_bHealthCheck = AutoExecConfig_CreateConVar("sm_heal_check", "1", "0 - disabled, 1 - enable check if player is already full health");
 	gc_iHealLimit = AutoExecConfig_CreateConVar("sm_heal_limit", "2", "Сount how many times you can use the command");
 	gc_fHealTime = AutoExecConfig_CreateConVar("sm_heal_time", "10.0", "Time after the player gets his normal colors back");
 	gc_iHealColorRed = AutoExecConfig_CreateConVar("sm_heal_color_red", "240","What color to turn the heal Terror into (set R, G and B values to 255 to disable) (Rgb): x - red value", _, true, 0.0, true, 255.0);
@@ -148,11 +165,22 @@ public void OnPluginStart()
 	gc_iRepeatLimit = AutoExecConfig_CreateConVar("sm_repeat_limit", "2", "Сount how many times you can use the command");
 	gc_sSoundRepeatPath = AutoExecConfig_CreateConVar("sm_repeat_sound", "music/MyJailbreak/repeat.mp3", "Path to the soundfile which should be played for a repeat.");
 	
+	gc_bFreeKill = AutoExecConfig_CreateConVar("sm_freekill_enable", "1", "0 - disabled, 1 - enable freekill report");
+	gc_sCustomCommandFreekill = AutoExecConfig_CreateConVar("sm_freekill_cmd", "fk", "Set your custom chat command for freekill. no need for sm_ or !");
+	gc_bFreeKillRespawn = AutoExecConfig_CreateConVar("sm_freekill_respawn", "1", "0 - disabled, 1 - Allow the warden to respawn a Freekill victim");
+	gc_bFreeKillKill = AutoExecConfig_CreateConVar("sm_freekill_kill", "1", "0 - disabled, 1 - Allow the warden to Kill a Freekiller");
+	gc_bFreeKillFreeDay = AutoExecConfig_CreateConVar("sm_freekill_freeday", "1", "0 - disabled, 1 - Allow the warden to set a freeday next round as pardon");
+	gc_bFreeKillSwap = AutoExecConfig_CreateConVar("sm_freekill_swap", "1", "0 - disabled, 1 - Allow the warden to swap a freekiller to terrorist");
+	gc_bReportAdmin = AutoExecConfig_CreateConVar("sm_freekill_admin", "1", "0 - disabled, 1 - Report will be send to admins - if there is no admin its send to warden");
+	gc_bReportWarden = AutoExecConfig_CreateConVar("sm_freekill_warden", "1", "0 - disabled, 1 - Report will be send to Warden if there is no admin");
+	
+	
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
 	
 	//Hooks
 	HookEvent("round_start", RoundStart);
+	HookEvent("player_death", playerDeath);
 	HookConVarChange(gc_sSoundRefusePath, OnSettingChanged);
 	HookConVarChange(gc_sSoundRefuseStopPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundCapitulationPath, OnSettingChanged);
@@ -161,6 +189,7 @@ public void OnPluginStart()
 	HookConVarChange(gc_sCustomCommandRefuse, OnSettingChanged);
 	HookConVarChange(gc_sCustomCommandRepeat, OnSettingChanged);
 	HookConVarChange(gc_sCustomCommandCapitulation, OnSettingChanged);
+	HookConVarChange(gc_sCustomCommandFreekill, OnSettingChanged);
 	
 	//FindConVar
 	gc_sSoundRefusePath.GetString(g_sSoundRefusePath, sizeof(g_sSoundRefusePath));
@@ -171,6 +200,7 @@ public void OnPluginStart()
 	gc_sCustomCommandRefuse.GetString(g_sCustomCommandRefuse , sizeof(g_sCustomCommandRefuse));
 	gc_sCustomCommandRepeat.GetString(g_sCustomCommandRepeat , sizeof(g_sCustomCommandRepeat));
 	gc_sCustomCommandCapitulation.GetString(g_sCustomCommandCapitulation , sizeof(g_sCustomCommandCapitulation));
+	gc_sCustomCommandFreekill.GetString(g_sCustomCommandFreekill , sizeof(g_sCustomCommandFreekill));
 }
 
 public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
@@ -227,6 +257,14 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 		if(GetCommandFlags(sBufferCMD) == INVALID_FCVAR_FLAGS)
 			RegConsoleCmd(sBufferCMD, Command_Capitulation, "Allows a rebeling terrorist to request a capitulate");
 	}
+	else if(convar == gc_sCustomCommandCapitulation)
+	{
+		strcopy(g_sCustomCommandFreekill, sizeof(g_sCustomCommandFreekill), newValue);
+		char sBufferCMD[64];
+		Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommandFreekill);
+		if(GetCommandFlags(sBufferCMD) == INVALID_FCVAR_FLAGS)
+			RegConsoleCmd(sBufferCMD, Command_Freekill, "Allows a rebeling terrorist to report a freekill");
+	}
 }
 
 public void OnMapStart()
@@ -244,12 +282,13 @@ public void OnConfigsExecuted()
 {
 	g_iCountStopTime = gc_fRefuseTime.IntValue;
 	
-	char sBufferCMDHeal[64], sBufferCMDRepeat[64], sBufferCMDRefuse[64], sBufferCMDCapitulation[64];
+	char sBufferCMDHeal[64], sBufferCMDRepeat[64], sBufferCMDRefuse[64], sBufferCMDCapitulation[64], sBufferCMDFreekill[64];
 	
 	Format(sBufferCMDHeal, sizeof(sBufferCMDHeal), "sm_%s", g_sCustomCommandHeal);
 	Format(sBufferCMDRefuse, sizeof(sBufferCMDRefuse), "sm_%s", g_sCustomCommandRefuse);
 	Format(sBufferCMDRepeat, sizeof(sBufferCMDRepeat), "sm_%s", g_sCustomCommandRepeat);
 	Format(sBufferCMDCapitulation, sizeof(sBufferCMDCapitulation), "sm_%s", g_sCustomCommandCapitulation);
+	Format(sBufferCMDFreekill, sizeof(sBufferCMDFreekill), "sm_%s", g_sCustomCommandFreekill);
 	if(GetCommandFlags(sBufferCMDHeal) == INVALID_FCVAR_FLAGS)
 		RegConsoleCmd(sBufferCMDHeal, Command_Heal, "Allows a Terrorist request healing");
 	if(GetCommandFlags(sBufferCMDRepeat) == INVALID_FCVAR_FLAGS)
@@ -258,8 +297,9 @@ public void OnConfigsExecuted()
 		RegConsoleCmd(sBufferCMDRefuse, Command_refuse, "Allows the Warden start refusing time and Terrorist to refuse a game");
 	if(GetCommandFlags(sBufferCMDCapitulation) == INVALID_FCVAR_FLAGS)
 		RegConsoleCmd(sBufferCMDCapitulation, Command_Capitulation, "Allows a rebeling terrorist to request a capitulate");
+	if(GetCommandFlags(sBufferCMDFreekill) == INVALID_FCVAR_FLAGS)
+		RegConsoleCmd(sBufferCMDFreekill, Command_Freekill, "Allows a rebeling terrorist to report a freekill");
 }
-
 
 public Action RoundStart(Handle event, char [] name, bool dontBroadcast)
 {
@@ -282,6 +322,8 @@ public Action RoundStart(Handle event, char [] name, bool dontBroadcast)
 		g_bRefused[client] = false;
 		IsRequest = false;
 		g_bAllowRefuse = false;
+		g_iKilledBy[client] = 0;
+		g_bFreeKilled[client] = false;
 	}
 	g_iCountStopTime = gc_fRefuseTime.IntValue;
 	return Plugin_Continue;
@@ -332,35 +374,32 @@ public Action Command_refuse(int client, int args)
 					CPrintToChatAll("%t %t", "request_tag", "request_openrefuse");
 				}
 			}
-			if (GetClientTeam(client) == CS_TEAM_T && IsPlayerAlive(client))
+			if(!warden_iswarden(client))
 			{
-				if (RefuseTimer[client] == null)
+				if (GetClientTeam(client) == CS_TEAM_T && IsPlayerAlive(client))
 				{
-					if(!g_bAllowRefuse || !gc_bWardenAllowRefuse.BoolValue)
+					if (RefuseTimer[client] == null)
 					{
-						if (g_iRefuseCounter[client] < gc_iRefuseLimit.IntValue)
+						if(g_bAllowRefuse || !gc_bWardenAllowRefuse.BoolValue)
 						{
-							g_iRefuseCounter[client]++;
-							g_bRefused[client] = true;
-							SetEntityRenderColor(client, gc_iRefuseColorRed.IntValue, gc_iRefuseColorGreen.IntValue, gc_iRefuseColorBlue.IntValue, 255);
-							CPrintToChatAll("%t %t", "request_tag", "request_refusing", client);
-							g_iCountStopTime = gc_fRefuseTime.IntValue;
-							RefuseTimer[client] = CreateTimer(gc_fRefuseTime.FloatValue, ResetColorRefuse, client);
-							if (warden_exist()) LoopClients(i) RefuseMenu(i);
-							if(gc_bSounds.BoolValue)EmitSoundToAllAny(g_sSoundRefusePath);
+							if (g_iRefuseCounter[client] < gc_iRefuseLimit.IntValue)
+							{
+								g_iRefuseCounter[client]++;
+								g_bRefused[client] = true;
+								SetEntityRenderColor(client, gc_iRefuseColorRed.IntValue, gc_iRefuseColorGreen.IntValue, gc_iRefuseColorBlue.IntValue, 255);
+								CPrintToChatAll("%t %t", "request_tag", "request_refusing", client);
+								g_iCountStopTime = gc_fRefuseTime.IntValue;
+								RefuseTimer[client] = CreateTimer(gc_fRefuseTime.FloatValue, ResetColorRefuse, client);
+								if (warden_exist()) LoopClients(i) RefuseMenu(i);
+								if(gc_bSounds.BoolValue)EmitSoundToAllAny(g_sSoundRefusePath);
+							}
+							else CPrintToChat(client, "%t %t", "request_tag", "request_refusedtimes");
 						}
-						else CPrintToChat(client, "%t %t", "request_tag", "request_refusedtimes");
+						else CPrintToChat(client, "%t %t", "request_tag", "request_refuseallow");
 					}
-					else CPrintToChat(client, "%t %t", "request_tag", "request_refuseallow");
+					else CPrintToChat(client, "%t %t", "request_tag", "request_alreadyrefused");
 				}
-				else
-				{
-					CPrintToChat(client, "%t %t", "request_tag", "request_alreadyrefused");
-				}
-			}
-			else
-			{
-				CPrintToChat(client, "%t %t", "request_tag", "request_notalivect");
+				else CPrintToChat(client, "%t %t", "request_tag", "request_notalivect");
 			}
 		}
 	}
@@ -390,7 +429,7 @@ public Action RefuseMenu(int warden)
 		}
 		DrawPanelText(RefusePanel, "                                   ");
 		DrawPanelText(RefusePanel, "-----------------------------------");
-		SendPanelToClient(RefusePanel, warden, NullHandler, 20);
+		SendPanelToClient(RefusePanel, warden, NullHandler, 23);
 	}
 }
 
@@ -415,20 +454,11 @@ public Action Command_Repeat(int client, int args)
 						if (warden_exist()) LoopClients(i) RepeatMenu(i);
 						if(gc_bSounds.BoolValue)EmitSoundToAllAny(g_sSoundRepeatPath);
 					}
-					else
-					{
-						CPrintToChat(client, "%t %t", "request_tag", "request_repeattimes");
-					}
+					else CPrintToChat(client, "%t %t", "request_tag", "request_repeattimes");
 				}
-				else
-				{
-					CPrintToChat(client, "%t %t", "request_tag", "request_alreadyrepeat");
-				}
+				else CPrintToChat(client, "%t %t", "request_tag", "request_alreadyrepeat");
 			}
-			else
-			{
-				CPrintToChat(client, "%t %t", "request_tag", "request_notalivect");
-			}
+			else CPrintToChat(client, "%t %t", "request_tag", "request_notalivect");
 		}
 	}
 	return Plugin_Handled;
@@ -479,10 +509,10 @@ public Action Command_Capitulation(int client, int args)
 							RequestTimer = CreateTimer (gc_fCapitulationTime.FloatValue, IsRequestTimer);
 							g_bCapitulated[client] = true;
 							CPrintToChatAll("%t %t", "request_tag", "request_capitulation", client);
-							SetEntityRenderColor(client, gc_iCapitulationColorRed.IntValue, gc_iCapitulationColorGreen.IntValue, gc_iCapitulationColorBlue.IntValue, 255);
+							
 							float DoubleTime = (gc_fRebelTime.FloatValue * 2);
-							RebelTimer[client] = CreateTimer(DoubleTime, GiveKnifeRebel, client);
-							StripAllWeapons(client);
+							RebelTimer[client] = CreateTimer(DoubleTime, RebelNoAction, client);
+						//	StripAllWeapons(client);
 							LoopClients(i) CapitulationMenu(i);
 							if(gc_bSounds.BoolValue)EmitSoundToAllAny(g_sSoundCapitulationPath);
 						}
@@ -490,15 +520,9 @@ public Action Command_Capitulation(int client, int args)
 					}
 					else CPrintToChat(client, "%t %t", "request_tag", "warden_noexist");
 				}
-				else
-				{
-					CPrintToChat(client, "%t %t", "request_tag", "request_alreadycapitulated");
-				}
+				else CPrintToChat(client, "%t %t", "request_tag", "request_alreadycapitulated");
 			}
-			else
-			{
-				CPrintToChat(client, "%t %t", "request_tag", "request_notalivect");
-			}
+			else CPrintToChat(client, "%t %t", "request_tag", "request_notalivect");
 		}
 	}
 	return Plugin_Handled;
@@ -527,27 +551,37 @@ public int CapitulationMenuHandler(Menu menu, MenuAction action, int client, int
 		char Item[11];
 		menu.GetItem(Position,Item,sizeof(Item));
 		int choice = StringToInt(Item);
-		if(choice == 1)
+		if(choice == 1)  //yes
 		{
 			LoopClients(i) if(g_bCapitulated[i])
 			{
 				IsRequest = false;
+				if (RequestTimer != null)
+					KillTimer(RequestTimer);
 				RequestTimer = null;
+				if (RebelTimer[i] != null)
+					KillTimer(RebelTimer[i]);
 				RebelTimer[i] = null;
+				StripAllWeapons(i);
+				SetEntityRenderColor(client, gc_iCapitulationColorRed.IntValue, gc_iCapitulationColorGreen.IntValue, gc_iCapitulationColorBlue.IntValue, 255);
 				CapitulationTimer[i] = CreateTimer(gc_fCapitulationTime.FloatValue, GiveKnifeCapitulated, i);
-				CPrintToChatAll("%t %t", "warden_tag", "request_accepted", i);
+				CPrintToChatAll("%t %t", "warden_tag", "request_accepted", i, client);
 			}
 		}
-		if(choice == 0)
+		if(choice == 0)  //no
 		{
 			LoopClients(i) if(g_bCapitulated[i])
 			{
 				IsRequest = false;
+				if (RequestTimer != null)
+					KillTimer(RequestTimer);
 				RequestTimer = null;
 				SetEntityRenderColor(i, 255, 0, 0, 255);
+				g_bCapitulated[i] = false;
+				if (RebelTimer[i] != null)
+					KillTimer(RebelTimer[i]);
 				RebelTimer[i] = null;
-				RebelTimer[i] = CreateTimer(gc_fRebelTime.FloatValue, GiveKnifeRebel, i);
-				CPrintToChatAll("%t %t", "warden_tag", "request_noaccepted", i);
+				CPrintToChatAll("%t %t", "warden_tag", "request_noaccepted", i, client);
 			}
 		}
 	}
@@ -568,35 +602,30 @@ public Action Command_Heal(int client, int args)
 					{
 						if (warden_exist())
 						{
-							if(!IsRequest)
+							if((GetClientHealth(client) < 100) || !gc_bHealthCheck.BoolValue)
 							{
-								IsRequest = true;
-								RequestTimer = CreateTimer (gc_fHealTime.FloatValue, IsRequestTimer);
-								g_bHealed[client] = true;
-								g_iHealCounter[client]++;
-								CPrintToChatAll("%t %t", "request_tag", "request_heal", client);
-								SetEntityRenderColor(client, gc_iHealColorRed.IntValue, gc_iHealColorGreen.IntValue, gc_iHealColorBlue.IntValue, 255);
-								HealTimer[client] = CreateTimer(gc_fHealTime.FloatValue, ResetColorHeal, client);
-								LoopClients(i) HealMenu(i);
+								if(!IsRequest)
+								{
+									IsRequest = true;
+									RequestTimer = CreateTimer (gc_fHealTime.FloatValue, IsRequestTimer);
+									g_bHealed[client] = true;
+									g_iHealCounter[client]++;
+									CPrintToChatAll("%t %t", "request_tag", "request_heal", client);
+									SetEntityRenderColor(client, gc_iHealColorRed.IntValue, gc_iHealColorGreen.IntValue, gc_iHealColorBlue.IntValue, 255);
+									HealTimer[client] = CreateTimer(gc_fHealTime.FloatValue, ResetColorHeal, client);
+									LoopClients(i) HealMenu(i);
+								}
+								else CPrintToChat(client, "%t %t", "request_tag", "request_processing");
 							}
-							else CPrintToChat(client, "%t %t", "request_tag", "request_processing");
+							else CPrintToChat(client, "%t %t", "request_tag", "request_fullhp");
 						}
 						else CPrintToChat(client, "%t %t", "request_tag", "warden_noexist");
 					}
-					else
-					{
-						CPrintToChat(client, "%t %t", "request_tag", "request_healtimes");
-					}
+					else CPrintToChat(client, "%t %t", "request_tag", "request_healtimes");
 				}
-				else
-				{
-					CPrintToChat(client, "%t %t", "request_tag", "request_alreadyhealed");
-				}
+				else CPrintToChat(client, "%t %t", "request_tag", "request_alreadyhealed");
 			}
-			else
-			{
-				CPrintToChat(client, "%t %t", "request_tag", "request_notalivect");
-			}
+			else CPrintToChat(client, "%t %t", "request_tag", "request_notalivect");
 		}
 	}
 	return Plugin_Handled;
@@ -633,7 +662,7 @@ public int HealMenuHandler(Menu menu, MenuAction action, int client, int Positio
 				RequestTimer = null;
 				if(gc_bHealthShot) GivePlayerItem(i, "weapon_healthshot");
 				CPrintToChat(i, "%t %t", "request_tag", "request_health");
-				CPrintToChatAll("%t %t", "warden_tag", "request_accepted", i);
+				CPrintToChatAll("%t %t", "warden_tag", "request_accepted", i, client);
 			}
 		}
 		if(choice == 0)
@@ -642,9 +671,100 @@ public int HealMenuHandler(Menu menu, MenuAction action, int client, int Positio
 			RequestTimer = null;
 			LoopClients(i) if(g_bHealed[i])
 			{
-				CPrintToChatAll("%t %t", "warden_tag", "request_noaccepted", i);
+				CPrintToChatAll("%t %t", "warden_tag", "request_noaccepted", i, client);
 			}
 		}
+	}
+}
+
+// Request Menu
+
+public Action RequestMenu(int client, int args)
+{
+	if(gc_bPlugin.BoolValue)
+	{
+		if (GetClientTeam(client) == CS_TEAM_T)
+		{
+			Menu reqmenu = new Menu(RequestMenuHandler);
+			
+			char menuinfo19[255], menuinfo20[255], menuinfo21[255], menuinfo22[255], menuinfo29[255];
+			
+			Format(menuinfo29, sizeof(menuinfo29), "%T", "request_menu_title", client);
+			reqmenu.SetTitle(menuinfo29);
+			
+			if(gc_bFreeKill.BoolValue && (!IsPlayerAlive(client)))
+			{
+				Format(menuinfo19, sizeof(menuinfo19), "%T", "request_menu_freekill", client);
+				reqmenu.AddItem("freekill", menuinfo19);
+			}
+			if(gc_bRefuse.BoolValue && (IsPlayerAlive(client)))
+			{
+				Format(menuinfo19, sizeof(menuinfo19), "%T", "request_menu_refuse", client);
+				reqmenu.AddItem("refuse", menuinfo19);
+			}
+			if(gc_bCapitulation.BoolValue && (IsPlayerAlive(client)))
+			{
+				Format(menuinfo20, sizeof(menuinfo20), "%T", "request_menu_capitulation", client);
+				reqmenu.AddItem("capitulation", menuinfo20);
+			}
+			if(gc_bRepeat.BoolValue && (IsPlayerAlive(client)))
+			{
+				Format(menuinfo21, sizeof(menuinfo21), "%T", "request_menu_repeat", client);
+				reqmenu.AddItem("repeat", menuinfo21);
+			}
+			if(gc_bHeal.BoolValue && (IsPlayerAlive(client)))
+			{
+				Format(menuinfo22, sizeof(menuinfo22), "%T", "request_menu_heal", client);
+				reqmenu.AddItem("heal", menuinfo22);
+			}
+			reqmenu.ExitButton = true;
+			reqmenu.ExitBackButton = true;
+			reqmenu.Display(client, MENU_TIME_FOREVER);
+		}
+		else CPrintToChat(client, "%t %t", "request_tag", "request_notalivect");
+	}
+}
+
+
+public int RequestMenuHandler(Menu reqmenu, MenuAction action, int client, int selection)
+{
+	if (action == MenuAction_Select)
+	{
+		char info[32];
+		
+		reqmenu.GetItem(selection, info, sizeof(info));
+		
+		if ( strcmp(info,"refuse") == 0 ) 
+		{
+			FakeClientCommand(client, "sm_refuse");
+		} 
+		else if ( strcmp(info,"freekill") == 0 ) 
+		{
+			FakeClientCommand(client, "sm_freekill");
+		} 
+		else if ( strcmp(info,"repeat") == 0 ) 
+		{
+			FakeClientCommand(client, "sm_repeat");
+		} 
+		else if ( strcmp(info,"capitulation") == 0 ) 
+		{
+			FakeClientCommand(client, "sm_capitulation");
+		} 
+		else if ( strcmp(info,"heal") == 0 )
+		{
+			FakeClientCommand(client, "sm_heal");
+		}
+	}
+	else if(action == MenuAction_Cancel) 
+	{
+		if(selection == MenuCancel_ExitBack) 
+		{
+			FakeClientCommand(client, "sm_menu");
+		}
+	}
+	else if (action == MenuAction_End)
+	{
+		delete reqmenu;
 	}
 }
 
@@ -652,13 +772,13 @@ public Action NoAllowRefuse(Handle timer)
 {
 	if (g_iCountStopTime > 0)
 	{
-		LoopValidClients(client, false, true)
+		if (g_iCountStopTime < 4)
 		{
-			if (g_iCountStopTime < 4) 
+			LoopValidClients(client, false, true)
 			{
 				PrintHintText(client,"%t", "warden_stopcountdown_nc", g_iCountStopTime);
-				CPrintToChatAll("%t %t", "warden_tag" , "warden_stopcountdown", g_iCountStopTime);
 			}
+			CPrintToChatAll("%t %t", "warden_tag" , "warden_stopcountdown", g_iCountStopTime);
 		}
 		g_iCountStopTime--;
 		return Plugin_Continue;
@@ -668,8 +788,7 @@ public Action NoAllowRefuse(Handle timer)
 		LoopValidClients(client, false, true)
 		{
 			PrintHintText(client, "%t", "warden_countdownstop_nc");
-			CPrintToChatAll("%t %t", "warden_tag" , "warden_countdownstop");
-			if(gc_bSounds.BoolValue)	
+			if(gc_bSounds.BoolValue)
 			{
 				EmitSoundToAllAny(g_sSoundRefuseStopPath);
 			}
@@ -678,14 +797,195 @@ public Action NoAllowRefuse(Handle timer)
 			g_iCountStopTime = gc_fRefuseTime.IntValue;
 			return Plugin_Stop;
 		}
+		CPrintToChatAll("%t %t", "warden_tag" , "warden_countdownstop");
 	}
 	return Plugin_Continue;
+}
+
+//FreeKill
+
+public Action Command_Freekill(int client, int args)
+{
+	if (gc_bPlugin.BoolValue)
+	{
+		if (gc_bFreeKill.BoolValue)
+		{
+			if (GetClientTeam(client) == CS_TEAM_T && (!IsPlayerAlive(client)))
+			{
+				if(!IsRequest)
+				{
+					if(g_iKilledBy[client] != -1)
+					{
+						IsRequest = true;
+						RequestTimer = CreateTimer (20.0, IsRequestTimer);
+						g_bFreeKilled[client] = true;
+						
+						LogMessage("Player %L reports %L for freekilling", client, g_iKilledBy[client]);
+						int a = GetRandomAdmin();
+						if ((a != -1) && gc_bReportAdmin.BoolValue)
+						{
+							FreeKillAcceptMenu(a);
+							CPrintToChatAll("%t %t", "request_tag", "request_freekill", client, g_iKilledBy[client], a);
+						}
+						else LoopClients(i) if (warden_iswarden(i) && gc_bReportWarden.BoolValue)
+						{
+							FreeKillAcceptMenu(i);
+							CPrintToChatAll("%t %t", "request_tag", "request_freekill", client, g_iKilledBy[client], i);
+						}
+					}
+					else CPrintToChat(client, "%t %t", "request_tag", "request_nokiller");
+				}
+				else CPrintToChat(client, "%t %t", "request_tag", "request_processing");
+			}
+			else CPrintToChat(client, "%t %t", "request_tag", "request_aliveorct");
+		}
+	}
+	return Plugin_Handled;
+}
+
+stock int GetRandomAdmin() 
+{
+	int[] admins = new int[MaxClients];
+	int adminsCount;
+	LoopClients(i)
+	{
+		if (CheckCommandAccess(i, "sm_map", ADMFLAG_CHANGEMAP, true))
+		{
+			admins[adminsCount++] = i;
+		}
+	}
+	return (adminsCount == 0) ? -1 : admins[GetRandomInt(0, adminsCount-1)];
+}
+
+public Action FreeKillAcceptMenu(int client)
+{
+	if (IsValidClient(client, false, true))
+	{
+		char info[255];
+		Menu menu1 = CreateMenu(FreeKillAcceptHandler);
+		Format(info, sizeof(info), "%T", "request_pardonfreekill", client);
+		menu1.SetTitle(info);
+		Format(info, sizeof(info), "%T", "warden_no", client);
+		menu1.AddItem("0", info);
+		Format(info, sizeof(info), "%T", "warden_yes", client);
+		menu1.AddItem("1", info);
+		menu1.ExitButton = true;
+		menu1.Display(client, MENU_TIME_FOREVER);
+	}
+}
+
+public int FreeKillAcceptHandler(Menu menu, MenuAction action, int client, int Position)
+{
+	if(action == MenuAction_Select)
+	{
+		char Item[11];
+		menu.GetItem(Position,Item,sizeof(Item));
+		int choice = StringToInt(Item);
+		if(choice == 1) //yes
+		{
+			char info[255];
+			
+			Menu menu1 = CreateMenu(FreeKillHandler);
+			Format(info, sizeof(info), "%T", "request_handlefreekill", client);
+			menu1.SetTitle(info);
+			Format(info, sizeof(info), "%T", "request_respawnvictim", client);
+			if(gc_bFreeKillRespawn.BoolValue) menu1.AddItem("1", info);
+			Format(info, sizeof(info), "%T", "request_killfreekiller", client);
+			if(gc_bFreeKillKill.BoolValue) menu1.AddItem("2", info);
+			Format(info, sizeof(info), "%T", "request_freeday", client);
+			if(gc_bFreeKillFreeDay.BoolValue) menu1.AddItem("3", info);
+			Format(info, sizeof(info), "%T", "request_swapfreekiller", client);
+			if(gc_bFreeKillSwap.BoolValue) menu1.AddItem("4", info);
+			menu1.Display(client, MENU_TIME_FOREVER);
+			LoopClients(i) if(g_bFreeKilled[i]) CPrintToChatAll("%t %t", "warden_tag", "request_accepted", i, client);
+		}
+		if(choice == 0) //no
+		{
+			IsRequest = false;
+			RequestTimer = null;
+			
+			LoopClients(i) if(g_bFreeKilled[i])
+			{
+				CPrintToChatAll("%t %t", "warden_tag", "request_noaccepted", i, client);
+				g_bFreeKilled[i] = false;
+			}
+		}
+	}
+}
+
+public int FreeKillHandler(Menu menu, MenuAction action, int client, int Position)
+{
+	if(action == MenuAction_Select)
+	{
+		char Item[11];
+		menu.GetItem(Position,Item,sizeof(Item));
+		int choice = StringToInt(Item);
+		
+		IsRequest = false;
+		RequestTimer = null;
+		
+		if(choice == 1) //respawn
+		{
+			LoopClients(i) if(g_bFreeKilled[i])
+			{
+				g_bFreeKilled[i] = false;
+				CS_RespawnPlayer(i);
+				LogMessage("Warden %L accept freekill request and respawned %L", client, i);
+				CPrintToChat(i, "%t %t", "request_tag", "request_respawned");
+				CPrintToChatAll("%t %t", "warden_tag", "request_respawnedall", i);
+			}
+		}
+		if(choice == 2) //kill freekiller
+		{
+			LoopClients(i) if(g_bFreeKilled[i])
+			{
+				g_bFreeKilled[i] = false;
+				ForcePlayerSuicide(g_iKilledBy[i]);
+				LogMessage("Warden %L accept freekill request of %L  and killed %L", client, i, g_iKilledBy[i]);
+				CPrintToChat(g_iKilledBy[i], "%t %t", "request_tag", "request_killbcfreekill");
+				CPrintToChatAll("%t %t", "warden_tag", "request_killbcfreekillall", i);
+			}
+		}
+		if(choice == 3) //freeday
+		{
+			LoopClients(i) if(g_bFreeKilled[i])
+			{
+				g_bFreeKilled[i] = false;
+				LogMessage("Warden %L accept freekill request of %L give a freeday", client, i);
+				FakeClientCommand(client, "sm_setfreeday");
+			}
+		}
+		if(choice == 4) //swap freekiller
+		{
+			LoopClients(i) if(g_bFreeKilled[i])
+			{
+				g_bFreeKilled[i] = false;
+				ClientCommand(g_iKilledBy[i], "jointeam %i", CS_TEAM_T);
+				CPrintToChat(g_iKilledBy[i], "%t %t", "request_tag", "request_swapbcfreekill");
+				LogMessage("Warden %L accept freekill request of %L  and swaped %L to T", client, i, g_iKilledBy[i]);
+				CPrintToChatAll("%t %t", "warden_tag", "request_swapbcfreekillall", i);
+			}
+		}
+	}
+	else if (action == MenuAction_End)
+	{
+		delete menu;
+	}
+}
+
+public Action playerDeath(Event event, const char[] name, bool dontBroadcast) 
+{
+	int victim = GetClientOfUserId(GetEventInt(event, "userid")); // Get the dead clients id
+	int attacker = GetClientOfUserId(GetEventInt(event, "attacker")); // Get the attacker clients id
+	
+	if(IsValidClient(attacker, true, false) && (attacker != victim)) g_iKilledBy[victim] = attacker;
 }
 
 public Action IsRequestTimer(Handle timer, any client)
 {
 	IsRequest = false;
 	RequestTimer = null;
+	LoopClients(i) if(g_bFreeKilled[i]) g_bFreeKilled[i] = false;
 }
 
 public Action RepeatEnd(Handle timer, any client)
@@ -725,19 +1025,17 @@ public Action GiveKnifeCapitulated(Handle timer, any client)
 	CapitulationTimer[client] = null;
 }
 
-public Action GiveKnifeRebel(Handle timer, any client)
+
+public Action RebelNoAction(Handle timer, any client)
 {
 	if (IsClientConnected(client))
 	{
-		GivePlayerItem(client,"weapon_knife");
-		CPrintToChat(client, "%t %t", "request_tag", "request_knifeback");
 		SetEntityRenderColor(client, 255, 0, 0, 255);
-		
 	}
 	g_bCapitulated[client] = false;
-	CapitulationTimer[client] = null;
 	RebelTimer[client] = null;
 }
+
 
 public Action OnWeaponCanUse(int client, int weapon)
 {

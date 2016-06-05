@@ -49,7 +49,7 @@ int g_iRound;
 int g_iMaxRound;
 
 //Floats
-float Pos[3];
+float g_fPos[3];
 
 //Handles
 Handle TruceTimer;
@@ -130,7 +130,7 @@ public void OnPluginStart()
 	}
 }
 
-//ConVar Change for Strings
+//ConVarChange for Strings
 
 public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
@@ -338,13 +338,10 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 			}
 		}
 		if (RandomCT)
-		{	
-			float Pos1[3];
+		{
+			GetClientAbsOrigin(RandomCT, g_fPos);
 			
-			GetClientAbsOrigin(RandomCT, Pos);
-			GetClientAbsOrigin(RandomCT, Pos1);
-			
-			Pos[2] = Pos[2] + 45;
+			g_fPos[2] = g_fPos[2] + 5;
 			
 			if (g_iRound > 0)
 			{
@@ -390,7 +387,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 					}
 					if (!gc_bSpawnCell.BoolValue)
 					{
-						TeleportEntity(client, Pos1, NULL_VECTOR, NULL_VECTOR);
+						TeleportEntity(client, g_fPos, NULL_VECTOR, NULL_VECTOR);
 					}
 				}
 				g_iTruceTime--;

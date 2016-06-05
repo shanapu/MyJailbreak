@@ -1,0 +1,183 @@
+"Phrases"
+{
+	"cowboy_tag"
+	{
+		"en"		"[{green}MyJB.cowboy{default}]"
+	}
+	"cowboy_need"
+	{
+		"#format"	"{1:i},{2:N}"
+		"da"		"{purple}{2}{default} har afstemt!. {purple}{1}{default} afstemninger tilbage til {darkred}cowboy"		
+		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes left to {darkred}cowboy"
+		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}cowboy{default} beginnt"
+	}
+	"cowboy_rounds" 
+	{
+		"#format"	"{1:i},{2:i}"
+		"da"		"Runde {purple}{1}{default} af {purple}{2}"		
+		"en"		"Round {purple}{1}{default} of {purple}{2}"
+		"de"		"Runde {purple}{1}{default} von {purple}{2}"
+	}
+	"cowboy_twin_nc"
+	{
+		"da"		"En Terrorists har overlevet!"	
+		"en"		"A Terrorists has surrived"
+		"de"		"Ein Terrorists hat als einziger überlebt"
+	}
+	"cowboy_voting"
+	{
+		"da"		"Afstemninger for No Scope er {purple}slået fra"	
+		"en"		"Player voting for Cowboy is {purple}disabled"
+		"de"		"Voting für Cowboy ist {purple}ausgeschaltet"
+	}
+	"cowboy_setbywarden"
+	{
+		"da"		"Warden bestemmer runde for No Scope er {purple}slået fra"	
+		"en"		"Set Cowboy by warden is {purple}disabled"
+		"de"		"Cowboy Aktivierung durch den Warden ist {purple}ausgeschaltet"
+	}
+	
+	"cowboy_minplayer"
+	{
+		"da"		"For cowboy skal der mindst være {purple}en CT"	
+		"en"		"For a cowboy you need at least {purple}one CT"
+		"de"		"Für cowboy brauchen wir mindestens {purple}einen CT"
+	}
+	
+	"cowboy_setbyadmin"
+	{
+		"da"		"Admin bestemmer runde for No Scope er {purple}slået fra"		
+		"en"		"Set Cowboy by admin is {purple}disabled"
+		"de"		"Cowboy Aktivierung durch den Admin ist {purple}ausgeschaltet"
+	}
+	"cowboy_ctwin_nc"
+	{
+		"da"		"En Counter-Terrorists har overlevet!"
+		"en"		"A Counter-Terrorists has surrived"
+		"de"		"Ein Counter-Terrorists hat als einziger überlebt"
+	}
+	
+	"cowboy_end"
+	{
+		"da"		"{purple}Cowboy{default} er afsluttet!"	
+		"en"		"{purple}Cowboy{default} finished"
+		"de"		"{purple}Cowboy{default} beendet"
+	}
+	
+	"cowboy_next"
+	{
+		"da"		"Næste runde er {purple}Cowboy"	
+		"en"		"Next round is {purple}Cowboy"
+		"de"		"Nächste Runde ist {purple}Cowboy"
+	}
+	"cowboy_next_nc"
+	{
+		"da"		"Næste runde er Cowboy"	
+		"en"		"Next round is Cowboy"
+		"de"		"Nächste Runde ist Cowboy"
+	}
+	
+	"cowboy_start"
+	{
+		"da"		"{purple}Cowboy{default} er startet!"
+		"en"		"The {purple}Cowboy{default} has started!"
+		"de"		"{purple}Cowboy{default} ist gestartet!"
+	}
+	
+	"cowboy_start_nc"
+	{
+		"da"		"No Scope er startet!"
+		"en"		"The Cowboy started!"
+		"de"		"Cowboy ist gestartet!"
+	}
+	
+	"cowboy_voted"
+	{
+		"da"		"Du har allerede stemt for {purple}Cowboy!"	
+		"en"		"You already voted for {purple}Cowboy"
+		"de"		"Du hast schon für {purple}Cowboy {default}gevotet"
+	}
+	
+	"cowboy_progress"
+	{
+		"#format"	"{1:s}"
+		"en"		"Event {darkred}{1} {default}is {purple}already in progress."
+		"de"		"Event {darkred}{1} {default}ist {purple}bereits gesetzt."
+	}
+	
+	"cowboy_disabled"
+	{
+		"da"		"Cowboy er {purple}slået fra."
+		"en"		"Cowboy is {purple}disabled."
+		"de"		"Cowboy ist {purple}deaktiviert."
+	}
+	
+
+	"cowboy_timeuntilstart_nc"
+	{
+		"#format"	"{1:i}"
+		"da"		"{1} sekunder til runden starter!"	
+		"en"		"{1} seconds until start"
+		"de"		"{1} Sekunden bis zum Start"
+	}
+	
+	"cowboy_info_title"
+	{
+		"en"		"Cowboy er aktiveret!"	
+		"en"		"Cowboy is active"
+		"de"		"Cowboy ist aktiv"
+	}
+	
+	"cowboy_info_line1"
+	{
+		"da"		"Cowboy - er hver mod hver!"
+		"en"		"Cowboy - Free for All"
+		"de"		"Cowboy - Jeder gegen Jeden"
+	}
+	"cowboy_info_line2"
+	{
+		"en"		"Pistol Battle - DM"
+		"de"		"Pistol Battle - DM"
+	}
+	
+	"cowboy_info_line3"
+	{
+		"da"		"Den sidste som overlever vinder runden!"	
+		"en"		"you can move and exit the wk in nodamage phase"
+		"de"		"Während der no damage phase kannst du aus der zelle/waffenkammer"
+	}
+	
+	"cowboy_info_line4"
+	{
+		"da"		"Alle jail regler er ophævet!"	
+		"en"		"All normal jail rules are repealed"
+		"de"		"Alle normalen Jailregeln sind aufgehoben!"
+	}
+	
+	"cowboy_info_line5"
+	{
+		"da"		"Der kan ikke laves Last Request i denne runde!"	
+		"en"		"There is no last request!"
+		"de"		"Der letzte Terrorists hat keinen Wunsch!"
+	}
+	
+	"cowboy_info_line6"
+	{
+		"en"		"Stay in the main jailroom! Don't enter secrets!"
+		"de"		"Bleib' im Haupt Jail Raum! Verstecke sind verboten!"
+	}
+	
+	"cowboy_info_line7"
+	{
+		"da"		"Alle server regler skal overholdes!"	
+		"en"		"Dont be an asshole!"
+		"de"		"Bau keine Scheisse!"
+	}
+		"cowboy_wait"
+	{
+		"#format"	"{1:i}"
+		"da"		"Du skal vente {1} flere runder!"		
+		"en"		"You must wait {1} more rounds"
+		"de"		"Du musst noch {1} Runden warten"
+	}
+}

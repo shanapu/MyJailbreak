@@ -18,21 +18,18 @@
 		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes left to {darkred}Freeday"
 		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}krieg{default} beginnt"
 	}
-	
 	"freeday_next"
 	{
 		"da"		"Næste runde er {purple}Freeday"	
 		"en"		"Next round is {purple}Freeday"
 		"de"		"Nächste Runde ist {purple}Freeday"
 	}
-	
 	"freeday_next_nc"
 	{
 		"da"		"Næste runde er Freeday"	
 		"en"		"Next round is Freeday"
 		"de"		"Nächste Runde ist Freeday"
 	}
-	
 	"freeday_voting"
 	{
 		"#format"	""
@@ -78,7 +75,7 @@
 	"freeday_progress"
 	{
 		"#format"	"{1:s}"
-		"en"		"Event ({darkred}{1} {default}is {purple}already in progress."
+		"en"		"Event {darkred}{1} {default}is {purple}already in progress."
 		"de"		"Event {darkred}{1} {default}ist {purple}bereits gesetzt."
 	}
 	

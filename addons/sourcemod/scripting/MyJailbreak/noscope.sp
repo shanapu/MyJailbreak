@@ -53,7 +53,7 @@ Handle GravityTimer;
 Handle NoScopeMenu;
 
 //Floats
-float Pos[3];
+float g_fPos[3];
 
 //Strings
 char g_sHasVoted[1500];
@@ -126,7 +126,7 @@ public void OnPluginStart()
 	
 }
 
-//ConVar Change for Strings
+//ConVarChange for Strings
 
 public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
@@ -162,8 +162,8 @@ public void OnMapStart()
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	
-	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
-	if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStart);
+	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);    //Add sound to download and precache table
+	if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStart);    //Add overlay to download and precache table
 }
 
 public void OnConfigsExecuted()
@@ -177,7 +177,7 @@ public void OnConfigsExecuted()
 	if (gc_iWeapon.IntValue == 3) g_sWeapon = "weapon_scar20";
 	if (gc_iWeapon.IntValue == 4) g_sWeapon = "weapon_g3sg1";
 	
-	char sBufferCMD[64];
+	char sBufferCMD[64];    //Register the custom command 
 	Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommand);
 	if(GetCommandFlags(sBufferCMD) == INVALID_FCVAR_FLAGS)
 		RegConsoleCmd(sBufferCMD, VoteNoScope, "Allows players to vote for no scope");
@@ -351,13 +351,10 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 			}
 		}
 		if (RandomCT)
-		{	
-			float Pos1[3];
+		{
+			GetClientAbsOrigin(RandomCT, g_fPos);
 			
-			GetClientAbsOrigin(RandomCT, Pos);
-			GetClientAbsOrigin(RandomCT, Pos1);
-			
-			Pos[2] = Pos[2] + 45;
+			g_fPos[2] = g_fPos[2] + 5;
 			
 			if (g_iRound > 0)
 			{
@@ -396,7 +393,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 					}
 					if (!gc_bSpawnCell.BoolValue)
 					{
-						TeleportEntity(client, Pos1, NULL_VECTOR, NULL_VECTOR);
+						TeleportEntity(client, g_fPos, NULL_VECTOR, NULL_VECTOR);
 					}
 				}
 				g_iTruceTime--;
@@ -451,8 +448,8 @@ public Action StartTimer(Handle timer)
 			{
 				EmitSoundToAllAny(g_sSoundStartPath);
 			}
-			CPrintToChatAll("%t %t", "noscope_tag" , "noscope_start");
 		}
+		CPrintToChatAll("%t %t", "noscope_tag" , "noscope_start");
 	}
 	TruceTimer = null;
 	

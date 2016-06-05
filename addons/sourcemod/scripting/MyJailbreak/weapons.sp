@@ -39,6 +39,7 @@ ConVar gc_bAWP;
 ConVar gc_bAutoSniper;
 ConVar gc_bHealth;
 ConVar gc_sCustomCommand;
+ConVar g_bTaser;
 
 //Strings
 char primaryWeapon[MAXPLAYERS + 1][24];
@@ -103,6 +104,7 @@ public void OnPluginStart()
 	//remember = RegClientCookie("Remember Weapons", "", CookieAccess_Private);
 	
 	//FindConVar
+	g_bTaser = FindConVar("sm_warden_handcuffs");
 	gc_sCustomCommand.GetString(g_sCustomCommand , sizeof(g_sCustomCommand));
 }
 
@@ -423,6 +425,21 @@ public void GiveSavedWeapons(int clientIndex)
 	{
 		
 		StripAllWeapons(clientIndex);
+		GivePlayerItem(clientIndex, "weapon_knife");
+		if (warden_iswarden(clientIndex))
+		{
+			if (gc_bHealth.BoolValue)
+			{
+				GivePlayerItem(clientIndex, "weapon_healthshot");
+				CPrintToChat(clientIndex, "%t %t", "weapons_tag", "weapons_health");
+			}
+			if (gc_bTA.BoolValue)
+			{
+				GivePlayerItem(clientIndex, "weapon_tagrenade");
+				CPrintToChat(clientIndex, "%t %t", "weapons_tag", "weapons_ta");
+			}
+			if (g_bTaser.BoolValue) GivePlayerItem(clientIndex, "weapon_taser");
+		}
 		if (StrEqual(primaryWeapon[clientIndex], "random"))
 		{
 			// Select random menu item (excluding "Random" option)
@@ -445,19 +462,6 @@ public void GiveSavedWeapons(int clientIndex)
 		else
 			GivePlayerItem(clientIndex, secondaryWeapon[clientIndex]);
 
-		if (warden_iswarden(clientIndex))
-		{
-		if (gc_bHealth .BoolValue)
-		{
-		GivePlayerItem(clientIndex, "weapon_healthshot");
-		CPrintToChat(clientIndex, "%t %t", "weapons_tag", "weapons_health");
-		}
-		if (gc_bTA.BoolValue)
-		{
-		GivePlayerItem(clientIndex, "weapon_tagrenade");
-		CPrintToChat(clientIndex, "%t %t", "weapons_tag", "weapons_ta");
-		}
-		}
 		
 		//GivePlayerItem(clientIndex, "weapon_decoy");
 		//GivePlayerItem(clientIndex, "weapon_flashbang");
@@ -467,7 +471,6 @@ public void GiveSavedWeapons(int clientIndex)
 		//GivePlayerItem(clientIndex, "weapon_molotov");
 		weaponsGivenThisRound[clientIndex] = true;
 		
-		GivePlayerItem(clientIndex, "weapon_knife");
 		//FakeClientCommand(clientIndex,"use weapon_knife");
 		
 		if (gc_bJBmenu.BoolValue)

@@ -1,38 +1,26 @@
-know bugs:
-- [ ] countdown: Start -> Cancel -> Start - bug
-- [ ] weapons.smx "block" stamm vip models?!
-- [ ] Suicide Bomber win -> T win show wrong - solution: mp_default_team_winner_no_objective?
-- [ ] catch win -> T win show wrong - solution: mp_default_team_winner_no_objective?
-- [ ] hide win -> T win show wrong - solution: mp_default_team_winner_no_objective?
-- [?] duckhunt&knife end FP
-- [?] warden icon losing head postion
+known bugs:
+- [ ] Weapons: sm_weapons_ct/sm_weapons_t is blocking Stamm - Vip Models Menu - can anyone tell me why?
+- [ ] Duckhunt & HE Battle: player get new grenade but sometimes rarly can't throw anymore
+- [ ] warden math quiz: answer dont get roconzied wen user using zep store message color 
 
 must:
-- [ ] add all new stuff to wiki
-- [ ] wiki: howto edit -> SetCvars, add menu item,
-- [ ] menu: add placeholder for custom commands
-- [ ] clean up translation files
-- [ ] requests menu
-- [ ] !guard instead join ct
-- [ ] gun plant prevention timer on roundstart
+- [ ] wiki: howto edit -> SetCvars
+- [/] clean up translation files
 
 want:
-- [/] gunplant prevention
 - [/] zombie vision/wallhack
-- [ ] ClientPrefs
+- [ ] beacon last ct
+- [ ] move menus to adminmenu
 - [ ] Smart Download Manager https://forums.alliedmods.net/showthread.php?t=206496
-- [x] !refuse !capitalation !repeat !heal !pardon
 - [ ] clean double useless code OnPlayerRunCmd
 - [ ] set custom Laser/Drawer Button
 - [ ] translate EventDay native
 - [ ] respawn on freeday
-- [ ] hide: darken the sky
-- [ ] Freeze / Stun Gun
-- [x] hide: seeker more TA -> convar set how many
-- [ ] warden: disarm when shot on Arms/hand (all CT?)
-- [ ] updater support
+- [ ] Icon over CTs head
+- [ ] Icon over cuffed T head
+- [ ] hide: darken the sky like in zombie
+- [ ] countdown: Start -> Cancel -> Start - bug
 - [ ] duckhunt: change +attack to +secAttack
-- [x] all: custom command support !mycommand
 - [ ] all: format centertext <font size='30' color='#FF00FF'>test</font>
 - [ ] all: restrict map heal station https://forums.alliedmods.net/showthread.php?t=267167
 - [ ] knife: vote on roundstart for grav skate tp or all
@@ -41,23 +29,28 @@ want:
 - [ ] playertags: add VIP flag
 - [ ] playertags: define color chat tag
 - [ ] warden: talkpower per menu only some sec https://forums.alliedmods.net/showthread.php?t=257229
-- [ ] countdown: insert cancel in menu
+- [ ] countdown: insert cancel in menu / fix first
 - [ ] countdown: force stop
+- [ ] Log to custom logfiles
 - [ ] merge double used translation to myjailbreak.phrases
 - [ ] warden: color prisioners (color roulette)
 - [ ] all: beacon last player for days
-- [ ] OnWeaponDrop -> CS_OnCSWeaponDrop
 - [ ] duckhunt auto higher if more t
+- [ ] duckhunt ammo refill to SetPlayerWeaponAmmo stock
 - [ ] duckhunt auto higher if more ct
+- [ ] menu: merge waden & admin check
 - [ ] hide: MovementValue hider/seeker convar
 - [ ] new day: Tron like - all player Molotov rain https://forums.alliedmods.net/showthread.php?p=2398902
 - [ ] merge Transltions
-- [ ] math quiz allow + - * / convars
+
 
 need?
+- [ ] ClientPrefs weapons drawerlaser color?
 - [ ] rewrite weapons?!
 - [ ] zombie: knockbackfix?
+- [ ] warden: disarm when shot on Arms/hand 
 - [ ] whistle for hider?
+- [ ] updater support?
 - [ ] events on random days? no voting/set - core2
 - [ ] silent mp_roundtime?
 - [ ] Noscope: choose weapon an round start (scout/awp/auto)?
@@ -65,12 +58,12 @@ need?
 - [ ] Suicide Bomber: body counter?
 - [ ] warden: ff not for ct?
 - [ ] SetCvarString flags?
-- [ ] warden: add sm_simon? 
 - [ ] duckhunt: allow leftclick per bool?
 - [ ] empty deagle? - > bomb toss https://github.com/KissLick/TeamGames/blob/master/addons/sourcemod/scripting/modules/TG_BombToss.sp
+- [ ] until end or !lr bool - need?
 
 future:
-- [ ] make jailbreak high customizeable - keyvalues cfg file like DonorMenu
+- [ ] make menu high customizeable - keyvalues cfg file like DonorMenu
 - [ ] rewrite/merge to one master plugin (e.g. hosties,ttt..)
 
 maybe:
@@ -89,6 +82,11 @@ lose cues bad spelling
 bugs:
 - [x] sm_weapons_spawnmenu dont work
 - [x] sm_weapons_awp & sm_weapons_autosniper
+- [x] duckhunt&knife end FP
+- [x] Suicide Bomber win -> T win show wrong - solution: mp_default_team_winner_no_objective
+- [x] catch win -> T win show wrong - solution: mp_default_team_winner_no_objective
+- [x] hide win -> T win show wrong - solution: mp_default_team_winner_no_objective
+- [x] warden icon losing head postion
 - [x] catch: sprint bug release T
 - [x] ct vs t check terror>0
 - [x] Suicide Bomber: Hp & burn for not nearby
@@ -128,10 +126,25 @@ bugs:
 - [x] late precache warden icon
 
 must/want:
+- [x] warden: cuffs for CT bool
 - [x] RandomKill: no rebel / last T
+- [x] !heal check hp
+- [x] math quiz allow + - * / convars
+- [x] requests menu
+- [x] gunplant prevention
+- [x] Freeze / Stun Gun  <- handcuffs
+- [x] !refuse !capitalation !repeat !heal !pardon
+- [x] SDKHook_TraceAttack instead on SDKHook_OnTakeDamage (no blood) https://forums.alliedmods.net/showthread.php?t=248095
 - [x] zombie: hp convar
+- [x] hide: seeker more TA -> convar set how many
+- [x] all: custom command support !mycommand
+- [x] OnWeaponDrop -> CS_OnCSWeaponDrop
+- [x] !guard instead join ct
+- [x] gun plant prevention timer on roundstart
 - [x] menu: insert noblock
 - [x] warden: toggle noblock
+- [x] wiki: howto edit -> add menu item
+- [x] menu: add placeholder for custom commands
 - [x] autofreeday if there is no CT
 - [x] warden laser pointer
 - [x] enable drawer for T
