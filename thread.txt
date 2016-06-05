@@ -1202,6 +1202,16 @@ sm_freeday_cooldown_day - Rounds until event can be started again. Default 0
 
 [B][u]Change Log[/u][/B]
 [QUOTE]
+[B][Beta 2.1][/B] - bug fixes & typos
+[SPOILER]
+[U]Fixed[/U][LIST]
+[*] Warden: No movement on spec when died while cuffed
+[*] Request: typo in freekill menu
+[/LIST]
+[U]Removed[/U][LIST]
+[*] Warden: Debug messages on LR
+[*] File: \fastDL\bz.bat
+[/LIST]
 [B][Beta 2.0][/B] - introduce freekill report
 [SPOILER]
 [U]Added[/U][LIST]

@@ -1,7 +1,17 @@
 ### Change Log
 
+**[Beta 2.1]** - bug fixes & typos  
+*Fixed*  
+* Warden: No movement on spec when died while cuffed
+* Request: typo in freekill menu  
+  
+*Removed*  
+* Warden: Debug messages on LR
+* File: \fastDL\bz.bat
+  
+  
 **[Beta 2.0]** - report freekill & fixes  
- *Added*
+ *Added*  
 * Warden: new cvar - "sm_warden_handcuffs_ct" 0 - disabled, 1 - Warden can also handcuff CTs  
 * Request: report freekill to random admin or warden - respawn victim, kill freekiller, set freeday next round, move freekiller to terror  
     * new command - sm_freekill - Allows a Dead Terrorist report a Freekill
