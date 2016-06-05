@@ -7,7 +7,7 @@ MyJailbreak is a redux rewrite of [URL="https://github.com/Franc1sco/Franug-Jail
 
 [LIST]
 [*] [B]Warden[/B] - set/become warden,vote retire warden, model, icon, open cells,gun plant prevention, handcuffs, laser pointer, drawer, set marker/quiz/EventDays/countdown/FF/nobock/mute
-[*] [B]Requests[/B] - terror requests. refuse a game, request Capitulation/Pardon, healing or repeating
+[*] [B]Requests[/B] - terror requests. refuse a game, request Capitulation/Pardon, healing or repeating, report freekill
 [*] [B]Menu[/B] - player menus for T, CT, warden & admin
 [*] [B]Weapons[/B] - weapon menus for CT &/or T(in event round)
 [*] [B]Player Tags[/B] - add player tags for T, T.Admin, CT, CT.Admin, W, WA.Admin in chat &/or stats
@@ -39,7 +39,7 @@ MyJailbreak is a redux rewrite of [URL="https://github.com/Franc1sco/Franug-Jail
 [*]Custom chat tags [MyJB.tag]
 [*]Colors
 [*]Sounds & overlays
-[*]Natives of the [URL="http://www.sourcemod.net/plugins.php?cat=0&mod=-1&title=warden&author=&description=&search=1"]original warden plugins[/URL] to keep compatibility
+[*]Natives & forwards of the [URL="http://www.sourcemod.net/plugins.php?cat=0&mod=-1&title=warden&author=&description=&search=1"]original warden plugins[/URL] to keep compatibility
 [*][URL="https://github.com/shanapu/MyJailbreak/wiki/Eventdays-template"]Template[/URL] to make your own Eventday
 [*]some other fancy stuff
 [/LIST]
@@ -117,6 +117,7 @@ sm_warden_gunslap_dmg: Amoung of HP losing on slap for dropping a gun. Default 1
 sm_warden_handcuffs: 0 - disabled, 1 - enable  handcuffs. Default 1
 sm_warden_handcuffs_number: How many handcuffs a warden got? Default 2
 sm_warden_handcuffs_lr: 0 - disabled, 1 - free cuffed terrorists on LR. Default 1
+sm_warden_handcuffs_ct: 0 - disabled, 1 - Warden can also handcuff CTs. Default 1
 sm_warden_overlays_cuffs: Path to the cuffs Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/cuffs"
 sm_warden_random: 0 - disabled, 1 - enable kill a random t for warden. Default 1
 sm_warden_random_mode: 1 - all random / 2 - Thunder / 3 - Timebomb / 4 - Firebomb / 5 - NoKill (1,3,4 needs funcommands.smx enabled). Default 2
@@ -158,7 +159,7 @@ sm_warden_open_time_warden: 0 - disabled, 1 - doors open automatic after sm_ward
 
 
 [U][B]Request[/B][/U]
-Allow terrorists to start a request. Refuse a Game - Warden can "open the refusing" and T can refuse a game and get colored & the warden get a listing of all refuser. Request Capitulation/Pardon - T get strip weapons and the warden got Menu to accept this request. Request healing - T get colored and warden gets Menu to accept this request (give Healthshot). Repeat - T can request a repeat of last call & the warden get a listing of all requester. (more coming)
+Allow terrorists to start a request. Refuse a Game - Warden can "open the refusing" and T can refuse a game and get colored & the warden get a listing of all refuser. Request Capitulation/Pardon - T get strip weapons and the warden got Menu to accept this request. Request healing - T get colored and warden gets Menu to accept this request (give Healthshot). Repeat - T can request a repeat of last call & the warden get a listing of all requester. Freekill - a dead terror can report a Freekill. A random admins get the choice of respawn the victim, kill the freekiller, Set freeday next round or swap the freekiller to terrorist. If there is no admin the warden get the report.
 
 [b]Commands[/b]
 [SPOILER]
@@ -169,6 +170,7 @@ sm_capitulation - Allows a rebeling terrorist to request a capitulate
 sm_pardon - Allows a rebeling terrorist to request a capitulate
 sm_heal - Allows a Terrorist request healing
 sm_repeat - Allows a Terrorist request repeating last call
+sm_freekill - Allows a Terrorist report a freekill
   
 set your own custom command. take a look at "sm_refuse_cmd" "sm_repeat_cmd" "sm_heal_cmd" "sm_capitulation_cmd"
 [/CODE]
@@ -206,6 +208,14 @@ sm_repeat_enable: 0 - disabled, 1 -  enable repeat
 sm_repeat_cmd: Set your custom chat command for Repeat. no need for sm_ or !. Default "rep" results in !rep /rep & sm_rep
 sm_repeat_limit: Сount how many times you can use the command. Default 2
 sm_repeat_sound: Path to the soundfile which should be played for a repeat. Default "music/MyJailbreak/repeat.mp3"
+sm_freekill_enable: 0 - disabled, 1 - Enable freekill report. Default 1
+sm_freekill_cmd: Set your custom chat command for freekill. no need for sm_ or !. Default "fk" results in !fk /fk & sm_fk
+sm_freekill_respawn: 0 - disabled, 1 - Allow the warden to respawn a Freekill victim. Default 1
+sm_freekill_kill: 0 - disabled, 1 - Allow the warden to Kill a Freekiller. Default 1
+sm_freekill_freeday: 0 - disabled, 1 - Allow the admin/warden to set a freeday next round as pardon. Default 1
+sm_freekill_swap: 0 - disabled, 1 - Allow the admin/warden to swap a freekiller to terrorist. Default 1
+sm_freekill_admin: 0 - disabled, 1 - Report will be send to admins - if there is no admin its send to warden. Default 1
+sm_freekill_warden: 0 - disabled, 1 - Report will be send to Warden if there is no admin. Default 1
 [/CODE]
 [/SPOILER]
 
@@ -373,6 +383,14 @@ sm_menu_team: 0 - disabled, 1 - enable join team on menu
 [U][B]Terrorists Menu[/B][/U]
 [LIST]
 [*]Weapon Menu
+[*]Request Menu
+[INDENT][LIST]
+[*]Report Freeday
+[*]Repeat announcement
+[*]Refuse a game
+[*]Request Healing
+[*]Capitulation
+[/LIST][/INDENT]
 [*]Vote against warden
 [*]Vote for Event Days
 [/LIST]
@@ -1110,7 +1128,7 @@ sm_freeday_noct: 0 - disabled, 1 - auto freeday when there is no CT. Default 1
 sm_freeday_roundtime - Roundtime for a single freeday round in minutes (not on sm_freeday_noct). Default 5
 sm_freeday_firstround - auto freeday first round after mapstart. Default 1
 sm_freeday_damage: 0 - disabled, 1 - enable damage on freedays. Default 1
-sm_freeday_cooldown_day - Rounds until event can be started again. Default 3
+sm_freeday_cooldown_day - Rounds until event can be started again. Default 0
 [/CODE]
 [/SPOILER]
 [/SPOILER]
@@ -1184,15 +1202,44 @@ sm_freeday_cooldown_day - Rounds until event can be started again. Default 3
 
 [B][u]Change Log[/u][/B]
 [QUOTE]
-[Beta 1.0] - first public beta release
+[B][Beta 2.0][/B] - introduce freekill report
+[SPOILER]
+[U]Added[/U][LIST]
+[*] Warden: new cvar - sm_warden_handcuffs_ct: 0 - disabled, 1 - Warden can also handcuff CTs. Default 1
+[*] Request: report freekill to random admin or warden - respawn victim, kill freekiller, set freeday next round, move freekiller to terror
+[/LIST][INDENT][LIST]
+[*] new command - sm_freekill - Allows a Dead Terrorist report a Freekill
+[*] new cvar - sm_freekill_enable: 0 - disabled, 1 - Enable freekill report. Default 1
+[*] new cvar - sm_freekill_cmd: Set your custom chat command for freekill. no need for sm_ or !. Default "fk" results in !fk /fk & sm_fk
+[*] new cvar - sm_freekill_respawn: 0 - disabled, 1 - Allow the admin/warden to respawn a Freekill victim. Default 1
+[*] new cvar - sm_freekill_kill: 0 - disabled, 1 - Allow the admin/warden to Kill a Freekiller. Default 1
+[*] new cvar - sm_freekill_freeday: 0 - disabled, 1 - Allow the admin/warden to set a freeday next round as pardon. Default 1
+[*] new cvar - sm_freekill_swap: 0 - disabled, 1 - Allow the admin/warden to swap a freekiller to terrorist. Default 1
+[*] new cvar - sm_freekill_admin: 0 - disabled, 1 - Report will be send to admins - if there is no admin its send to warden. Default 1
+[*] new cvar - sm_freekill_warden: 0 - disabled, 1 - Report will be send to Warden if there is no admin. Default 1
+[/LIST][/INDENT]
+[U]Changed[/U][LIST]
+[*] Request: Capitulation - weaponstrip only when warden accept
+[*] Freeday: default sm_freeday_cooldown_day from "3" to "0"
+[/LIST][U]Fixed[/U][LIST]
+[*] Warden: bug on knife related !lr warden keeps taser (now remove taser on LR)
+[*] Warden: minor error - unmute msg & no warden
+[*] Menu: fix setfreeday, missing cowboy & zombies dont show if cowboy disabled
+[*] Weapons: fix warden lost knife on roundstart when choose new weapon
+[/LIST][U]Bug found[/U][LIST]
+[*] Warden - MathQuiz: Response is not detected if user using Zephyrus stores message color
+[/LIST]  
+[/SPOILER]
+[B][Beta 1.0][/B] - first public beta release
 [/QUOTE]
 
 [B][u]Known Bugs[/u][/B]
 [QUOTE]
-Weapons: sm_weapons_ct/sm_weapons_t is blocking [url=https://github.com/popoklopsi/Stamm/blob/master/stamm_models.sp]"Stamm - Vip Models Menu"[/url] [i]- can anyone tell me why?[/i]
+Weapons: sm_weapons_ct/sm_weapons_t is blocking "[url=https://github.com/popoklopsi/Stamm/blob/master/stamm_models.sp]Stamm - Vip Models Menu[/url]" [i]- can anyone tell me why?[/i]
 Duckhunt & HE Battle: player get new grenade but sometimes rarly can't throw anymore[i] - need help![/i]
+Warden - MathQuiz: Response is not detected if user using Zephyrus stores message color
 
-[i]you found a bug? tell it please![/i]
+[i]you found a bug? tell me please![/i]
 [/QUOTE]
 
 
@@ -1233,7 +1280,7 @@ based/merged/used code/idea plugins:
 [/SPOILER]
 [SIZE="5"]THANKS FOR MAKING FREE SOFTWARE![/SIZE] :bacon!: :bacon!:
 [U]Much Thanks: [/U]
-Weeeishy, UartigZone, Got Sw4g? terminator18, SkeLeXes, 0dieter0, maKs, TomseN48, Horoxx, zeddy for bughunting, translation & great ideas!
+Weeeishy, UartigZone, Got Sw4g? terminator18, SkeLeXes, 0dieter0, maKs, TomseN48, Horoxx, zeddy, NrX, ElleVen, Bchewy for bughunting, translation & great ideas!
 
 
 

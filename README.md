@@ -9,7 +9,7 @@ MyJailbreak is a redux rewrite of [Franugs Special Jailbreak](https://github.com
   
   
 *  [**Warden**](https://github.com/shanapu/MyJailbreak/wiki/Warden) - set/become warden,vote retire warden, model, icon, open cells,gun plant prevention, handcuffs, laser pointer, drawer, set marker/quiz/EventDays/countdown/FF/nobock/mute
-*  [**Request**](https://github.com/shanapu/MyJailbreak/wiki/Request) - terror requests. refuse a game, request Capitulation/Pardon, healing or repeating
+*  [**Request**](https://github.com/shanapu/MyJailbreak/wiki/Request) - terror requests. refuse a game, request Capitulation/Pardon, healing or repeating, report freekill.
 *  [**Menu**](https://github.com/shanapu/MyJailbreak/wiki/Menu) - player menus for T, CT, warden & admin
 *  [**Weapons**](https://github.com/shanapu/MyJailbreak/wiki/Weapons) - weapon menus for CT &/or T(in event round)
 *  [**PlayerTags**](https://github.com/shanapu/MyJailbreak/wiki/Playertags) - add player tags for T, T.Admin, CT, CT.Admin, W, WA.Admin in chat &/or stats
@@ -40,7 +40,7 @@ MyJailbreak is a redux rewrite of [Franugs Special Jailbreak](https://github.com
 * Custom chat tags [MyJB.tag]
 * Colors
 * Sounds & overlays
-* Natives from [original warden plugins](http://www.sourcemod.net/plugins.php?cat=0&mod=-1&title=warden&author=&description=&search=1) to keep compatibility
+* Natives & forwards from [original warden plugins](http://www.sourcemod.net/plugins.php?cat=0&mod=-1&title=warden&author=&description=&search=1) to keep compatibility
 * [Template](https://github.com/shanapu/MyJailbreak/wiki/Eventdays-template) to make your own Eventday
 * some other fancy stuff
   
@@ -57,9 +57,37 @@ coded with ![](http://shanapu.de/githearth-small.png) free software
 ---
   
 ***Change Log***
-```
-[Beta 1.0] - first public beta release
-```
+
+**[Beta 2.0]** - report freekill & fixes  
+ *Added*
+* Warden: new cvar - "sm_warden_handcuffs_ct" 0 - disabled, 1 - Warden can also handcuff CTs  
+* Request: report freekill to random admin or warden - respawn victim, kill freekiller, set freeday next round, move freekiller to terror  
+    * new command - sm_freekill - Allows a Dead Terrorist report a Freekill
+    * new cvar - sm_freekill_enable: 0 - disabled, 1 - Enable freekill report. Default 1
+    * new cvar - sm_freekill_cmd: Set your custom chat command for freekill. no need for sm_ or !. Default "fk" results in !fk /fk & sm_fk
+    * new cvar - sm_freekill_respawn: 0 - disabled, 1 - Allow the admin/warden to respawn a Freekill victim. Default 1
+    * new cvar - sm_freekill_kill: 0 - disabled, 1 - Allow the admin/warden to Kill a Freekiller. Default 1
+    * new cvar - sm_freekill_freeday: 0 - disabled, 1 - Allow the admin/warden to set a freeday next round as pardon. Default 1
+    * new cvar - sm_freekill_swap: 0 - disabled, 1 - Allow the admin/warden to swap a freekiller to terrorist. Default 1
+    * new cvar - sm_freekill_admin: 0 - disabled, 1 - Report will be send to admins - if there is no admin its send to warden. Default 1
+    * new cvar - sm_freekill_warden: 0 - disabled, 1 - Report will be send to Warden if there is no admin. Default 1
+  
+ *Changed*  
+* Request: Capitulation - weaponstrip only when warden accept  
+* Freeday: default sm_freeday_cooldown_day from "3" to "0"  
+  
+ *Fixed*  
+* Warden: bug on knife related !lr warden keeps taser (now remove taser on LR)  
+* Warden: minor error - unmute msg & no warden  
+* Menu: fix setfreeday, missing cowboy & zombies dont show if cowboy disabled  
+* Weapons: fix warden lost knife on roundstart when choose new weapon  
+  
+ *Bug found*  
+* Warden - MathQuiz: Response is not detected if user using Zephyrus stores message color  
+  
+  
+**[Beta 1.0]** - first public beta release
+
   
 ---
   
@@ -165,7 +193,7 @@ based/merged/used code/idea plugins:
 
 # THANKS FOR MAKING FREE SOFTWARE!
 **Much Thanks:**
-Weeeishy, UartigZone, Got Sw4g? terminator18, SkeLeXes, 0dieter0, MaKs, Horoxx, zeddy for bughunting / great ideas!
+Weeeishy, UartigZone, Got Sw4g? terminator18, SkeLeXes, 0dieter0, maKs, TomseN48, Horoxx, zeddy, NrX, ElleVen, Bchewy for bughunting, translation & great ideas!
   
 ---
     

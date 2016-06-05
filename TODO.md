@@ -1,6 +1,7 @@
 known bugs:
 - [ ] Weapons: sm_weapons_ct/sm_weapons_t is blocking Stamm - Vip Models Menu - can anyone tell me why?
 - [ ] Duckhunt & HE Battle: player get new grenade but sometimes rarly can't throw anymore
+- [ ] warden math quiz: answer dont get roconzied wen user using zep store message color 
 
 must:
 - [ ] wiki: howto edit -> SetCvars
@@ -8,6 +9,7 @@ must:
 
 want:
 - [/] zombie vision/wallhack
+- [ ] beacon last ct
 - [ ] move menus to adminmenu
 - [ ] Smart Download Manager https://forums.alliedmods.net/showthread.php?t=206496
 - [ ] clean double useless code OnPlayerRunCmd
@@ -29,6 +31,7 @@ want:
 - [ ] warden: talkpower per menu only some sec https://forums.alliedmods.net/showthread.php?t=257229
 - [ ] countdown: insert cancel in menu / fix first
 - [ ] countdown: force stop
+- [ ] Log to custom logfiles
 - [ ] merge double used translation to myjailbreak.phrases
 - [ ] warden: color prisioners (color roulette)
 - [ ] all: beacon last player for days
@@ -123,6 +126,7 @@ bugs:
 - [x] late precache warden icon
 
 must/want:
+- [x] warden: cuffs for CT bool
 - [x] RandomKill: no rebel / last T
 - [x] !heal check hp
 - [x] math quiz allow + - * / convars

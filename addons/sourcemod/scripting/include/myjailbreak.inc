@@ -3,7 +3,7 @@
 #endif
 #define _myjailbreak_included_
 
-#define PLUGIN_VERSION "Beta 1.0"
+#define PLUGIN_VERSION "Beta 2.0"
 #define URL_LINK "https://github.com/shanapu/MyJailbreak"
 
 #include <sdktools>
@@ -74,6 +74,10 @@ stock StripAllWeapons(int client)
 		SDKHooks_DropWeapon(client, weapon, NULL_VECTOR, NULL_VECTOR); 
 		AcceptEntityInput(weapon, "Kill"); 
 		}
+	}
+	if((weapon = GetPlayerWeaponSlot(client, CS_SLOT_KNIFE)) != -1) {    //strip knife slot 2 times for taser
+		SDKHooks_DropWeapon(client, weapon, NULL_VECTOR, NULL_VECTOR); 
+		AcceptEntityInput(weapon, "Kill"); 
 	}
 }
 
