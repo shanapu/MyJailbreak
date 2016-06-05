@@ -58,15 +58,15 @@
 	}
 	"request_accepted"
 	{
-		"#format"	"{1:N}"
-		"en"		"The Warden has accepted {1}s request."
-		"de"		"Der Warden hat {1}s Anfrage akzeptiert."
+		"#format"	"{1:N},{2:N}"
+		"en"		"{purple}{2} {default}has accepted {green}{1}{default}s request."
+		"de"		"{purple}{2} {default}hat {green}{1}{default}s Anfrage akzeptiert."
 	}
 	"request_noaccepted"
 	{
-		"#format"	"{1:N}"
-		"en"		"The Warden has NOT accepted {1}s request."
-		"de"		"Der Warden hat {1}s Anfrage NICHT akzeptiert."
+		"#format"	"{1:N},{2:N}"
+		"en"		"{purple}{2} {default}has {darkred}NOT{default} accepted {green}{1}{default}s request."
+		"de"		"{purple}{2} {default}hat {green}{1}{default}s Anfrage {darkred}NICHT{default} akzeptiert."
 	}
 	"request_refuser"
 	{
@@ -141,6 +141,11 @@
 		"en"		"Make a request"
 		"de"		"Anfrage stellen"
 	}
+	"request_menu_freekill"
+	{
+		"en"		"Report freekill"
+		"de"		"Freekill melden"
+	}
 	"request_menu_repeat"
 	{
 		"en"		"Repeat announcement"
@@ -160,5 +165,84 @@
 	{
 		"en"		"Capitulation"
 		"de"		"Kapitulation"
+	}
+	"request_freekill"
+	{
+		"#format"	"{1:N},{2:N},{3:N}"
+		"en"		"{green}{1{default} send a freekill report of {darkred}{2}{default} to {purple}{3}"
+		"de"		"{green}{1}{default} meldet {darkred}{2}{default} wegen Freekill an {purple}{3}"
+	}
+	"request_pardonfreekill"
+	{
+		"en"		"Was that a Freekill?"
+		"de"		"War es ein unerlaubt Mord?"
+	}
+	"request_handlefreekill"
+	{
+		"en"		"How handle this freekill?"
+		"de"		"Wie möchstest du den Freekill handhaben?"
+	}
+	"request_respawnvictim"
+	{
+		"en"		"Respawn the victim"
+		"de"		"Das Opfer wiederbeleben"
+	}
+	"request_killfreekiller"
+	{
+		"en"		"Kill the freekiller"
+		"de"		"Töte den Freekiller"
+	}
+	"request_freeday"
+	{
+		"en"		"Next round Freeday"
+		"de"		"Nächste Runde Freeday"
+	}
+	"request_swapfreekiller"
+	{
+		"en"		"Swap {darkred}freekiller{default} to T"
+		"de"		"Schiebe den {darkred}Freekiller{default} zu T"
+	}
+	"request_aliveorct"
+	{
+		"en"		"You are not dead or CT."
+		"de"		"Du bist nicht tot oder ein Ct."
+	}
+	"request_nokiller"
+	{
+		"en"		"Sorry, we can't find your killer"
+		"de"		"Wir konnten deinen Mörder nicht finden"
+	}
+	"request_respawned"
+	{
+		"en"		"You respawned"
+		"de"		"Du wurdest wiederbeleben"
+	}
+	"request_respawnedall"
+	{
+		"#format"	"{1:N}"
+		"en"		"{1} was respawned due a {darkred}freekill"
+		"de"		"{1} wurde wegen eines {darkred}Freekills{default} wiederbelebt"
+	}
+	"request_killbcfreekill"
+	{
+		"en"		"You got slayed due a {darkred}freekill"
+		"de"		"Du wurdest wegen eines {darkred}Freekills{default} getötet"
+	}
+	"request_killbcfreekillall"
+	{
+		"#format"	"{1:N}"
+		"en"		"{green}{1}{default} was slayed due a {darkred}freekill"
+		"de"		"{green}{{1}{default} wurdest wegen eines {darkred}Freekills{default} getötet"
+	}
+	"request_swapbcfreekill"
+	{
+		"en"		"You got swaped to terrorist team due a {darkred}freekill"
+		"de"		"Du wurdest wegen eines {darkred}Freekills{default} zu Terror verschoben"
+	}
+	"request_swapbcfreekillall"
+	{
+		"#format"	"{1:N}"
+		"en"		"{green}{{1}{default} was swaped due a {darkred}freekill{default} to terrorist team"
+		"de"		"{green}{{1}{default} wurdest wegen eines {darkred}Freekills{default} zu den Terrors verschoben"
 	}
 }
