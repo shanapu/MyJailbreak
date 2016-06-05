@@ -3,7 +3,8 @@
 	"menu_info" // only color line! working color tags {default}, {darkred}, {red}, {green}, {lightgreen}, {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
 	{
 		"en"			"[{green}MyJB.menu{default}] To open the jailbreak menu press , or type !menu"
-	}	
+		"chi"			"[{green}我监狱.Menu{default}]要打开MENU按，或输入!menu"
+	}		画面
 	"menu_info_title"
 	{
 		"en"			"MyJailbreak Menu"
