@@ -3,7 +3,7 @@
 #endif
 #define _myjailbreak_included_
 
-#define PLUGIN_VERSION "Beta 2.1"
+#define PLUGIN_VERSION "Beta 2.1.x"
 #define URL_LINK "https://github.com/shanapu/MyJailbreak"
 
 #include <sdktools>
@@ -15,6 +15,7 @@
 Handle IntCvar;
 Handle FloatCvar;
 char g_sOverlayStart[256];
+
 
 public SharedPlugin:__pl_myjailbreak =
 {
@@ -153,6 +154,16 @@ public NullHandler(Handle:menu, MenuAction:action, param1, param2)
 {
 }
 
+public Action SetLogFile(char LogFile[PLATFORM_MAX_PATH] , char [] FileName)
+{
+		char sDate[12];
+		FormatTime(sDate, sizeof(sDate), "%y-%m-%d");
+		Format(LogFile, sizeof(LogFile), "logs/MyJailbreak/%s-%s.log", FileName, sDate);
+		
+		BuildPath(Path_SM, LogFile, sizeof(LogFile), LogFile);
+}
+
+
 stock void SetPlayerWeaponAmmo(int client, int weaponEnt, int clip = -1, int ammo = -1)
 {
 	if (weaponEnt == INVALID_ENT_REFERENCE)
@@ -162,7 +173,7 @@ stock void SetPlayerWeaponAmmo(int client, int weaponEnt, int clip = -1, int amm
 		SetEntProp(weaponEnt, Prop_Send, "m_iClip1", clip);
 
 	if (ammo != -1) {
-		int iOffset = FindDataMapOffs(client, "m_iAmmo") + (GetEntProp(weaponEnt, Prop_Data, "m_iPrimaryAmmoType") * 4);
+		int iOffset = FindDataMapInfo(client, "m_iAmmo") + (GetEntProp(weaponEnt, Prop_Data, "m_iPrimaryAmmoType") * 4);
 		SetEntData(client, iOffset, ammo, 4, true);
 
 		if (GetEngineVersion() == Engine_CSGO) {

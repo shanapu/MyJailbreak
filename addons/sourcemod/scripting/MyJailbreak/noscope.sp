@@ -60,6 +60,7 @@ char g_sHasVoted[1500];
 char g_sSoundStartPath[256];
 char g_sWeapon[32];
 char g_sCustomCommand[64];
+char g_sEventsLogFile[PLATFORM_MAX_PATH];
 
 public Plugin myinfo = {
 	name = "MyJailbreak - NoScope",
@@ -84,7 +85,7 @@ public void OnPluginStart()
 	AutoExecConfig_SetFile("NoScope", "MyJailbreak/EventDays");
 	AutoExecConfig_SetCreateFile(true);
 	
-	AutoExecConfig_CreateConVar("sm_noscope_version", PLUGIN_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_PLUGIN|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
+	AutoExecConfig_CreateConVar("sm_noscope_version", PLUGIN_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_noscope_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true,  0.0, true, 1.0);
 	gc_sCustomCommand = AutoExecConfig_CreateConVar("sm_noscope_cmd", "scope", "Set your custom chat command for Event voting. no need for sm_ or !");
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_noscope_warden", "1", "0 - disabled, 1 - allow warden to set noscope round", _, true,  0.0, true, 1.0);
@@ -124,6 +125,7 @@ public void OnPluginStart()
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 	gc_sCustomCommand.GetString(g_sCustomCommand , sizeof(g_sCustomCommand));
 	
+	SetLogFile(g_sEventsLogFile, "Events");
 }
 
 //ConVarChange for Strings
@@ -209,7 +211,7 @@ public Action SetNoScope(int client,int args)
 						if (g_iCoolDown == 0)
 						{
 							StartNextRound();
-							LogMessage("Event NoScope was started by Warden %L", client);
+							LogToFileEx(g_sEventsLogFile, "Event NoScope was started by warden %L", client);
 						}
 						else CPrintToChat(client, "%t %t", "noscope_tag" , "noscope_wait", g_iCoolDown);
 					}
@@ -233,7 +235,7 @@ public Action SetNoScope(int client,int args)
 							if (g_iCoolDown == 0)
 							{
 								StartNextRound();
-								LogMessage("Event NoScope was started by Admin %L", client);
+								LogToFileEx(g_sEventsLogFile, "Event NoScope was started by admin %L", client);
 							}
 							else CPrintToChat(client, "%t %t", "noscope_tag" , "noscope_wait", g_iCoolDown);
 						}
@@ -278,7 +280,7 @@ public Action VoteNoScope(int client,int args)
 							if (g_iVoteCount > playercount)
 							{
 								StartNextRound();
-								LogMessage("Event NoScope was started by voting");
+								LogToFileEx(g_sEventsLogFile, "Event NoScope was started by voting");
 							}
 							else CPrintToChatAll("%t %t", "noscope_tag" , "noscope_need", Missing, client);
 						}

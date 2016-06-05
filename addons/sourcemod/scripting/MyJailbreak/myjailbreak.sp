@@ -10,6 +10,7 @@
 
 //ConVars
 ConVar gc_bTag;
+//ConVar gc_bLogging;
 
 //Strings
 char IsEventDay[128] = "none";
@@ -25,6 +26,7 @@ public Plugin myinfo = {
 public void OnPluginStart()
 {
 	gc_bTag = CreateConVar("sm_myjb_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", _, true,  0.0, true, 1.0);
+//	gc_bLogging = CreateConVar("sm_myjb_logging", "1", "Allow MyJailbreak to log warden, freeday & eventday events in logs/MyJailbreak", _, true,  0.0, true, 1.0);
 	
 //	HookEvent("round_start", RoundStart);
 	}

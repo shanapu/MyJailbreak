@@ -95,6 +95,7 @@ char g_sCustomCommandCapitulation[64];
 char g_sCustomCommandRepeat[64];
 char g_sCustomCommandRefuse[64];
 char g_sCustomCommandFreekill[64];
+char g_sFreeKillLogFile[PLATFORM_MAX_PATH];
 
 public Plugin myinfo = 
 {
@@ -129,7 +130,7 @@ public void OnPluginStart()
 	AutoExecConfig_SetFile("Request", "MyJailbreak");
 	AutoExecConfig_SetCreateFile(true);
 	
-	AutoExecConfig_CreateConVar("sm_request_version", PLUGIN_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_PLUGIN|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
+	AutoExecConfig_CreateConVar("sm_request_version", PLUGIN_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_request_enable", "1", "0 - disabled, 1 - enable Request Plugin");
 	gc_bSounds = AutoExecConfig_CreateConVar("sm_request_sounds_enable", "1", "0 - disabled, 1 - enable sounds ", _, true,  0.0, true, 1.0);
 	gc_bRefuse = AutoExecConfig_CreateConVar("sm_refuse_enable", "1", "0 - disabled, 1 - enable Refuse");
@@ -164,7 +165,6 @@ public void OnPluginStart()
 	gc_sCustomCommandRepeat = AutoExecConfig_CreateConVar("sm_repeat_cmd", "what", "Set your custom chat command for Repeat. no need for sm_ or !");
 	gc_iRepeatLimit = AutoExecConfig_CreateConVar("sm_repeat_limit", "2", "Сount how many times you can use the command");
 	gc_sSoundRepeatPath = AutoExecConfig_CreateConVar("sm_repeat_sound", "music/MyJailbreak/repeat.mp3", "Path to the soundfile which should be played for a repeat.");
-	
 	gc_bFreeKill = AutoExecConfig_CreateConVar("sm_freekill_enable", "1", "0 - disabled, 1 - enable freekill report");
 	gc_sCustomCommandFreekill = AutoExecConfig_CreateConVar("sm_freekill_cmd", "fk", "Set your custom chat command for freekill. no need for sm_ or !");
 	gc_bFreeKillRespawn = AutoExecConfig_CreateConVar("sm_freekill_respawn", "1", "0 - disabled, 1 - Allow the warden to respawn a Freekill victim");
@@ -201,6 +201,8 @@ public void OnPluginStart()
 	gc_sCustomCommandRepeat.GetString(g_sCustomCommandRepeat , sizeof(g_sCustomCommandRepeat));
 	gc_sCustomCommandCapitulation.GetString(g_sCustomCommandCapitulation , sizeof(g_sCustomCommandCapitulation));
 	gc_sCustomCommandFreekill.GetString(g_sCustomCommandFreekill , sizeof(g_sCustomCommandFreekill));
+	
+	SetLogFile(g_sFreeKillLogFile, "Freekills");
 }
 
 public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
@@ -820,17 +822,18 @@ public Action Command_Freekill(int client, int args)
 						RequestTimer = CreateTimer (20.0, IsRequestTimer);
 						g_bFreeKilled[client] = true;
 						
-						LogMessage("Player %L reports %L for freekilling", client, g_iKilledBy[client]);
 						int a = GetRandomAdmin();
 						if ((a != -1) && gc_bReportAdmin.BoolValue)
 						{
 							FreeKillAcceptMenu(a);
 							CPrintToChatAll("%t %t", "request_tag", "request_freekill", client, g_iKilledBy[client], a);
+							LogToFileEx(g_sFreeKillLogFile, "Player %L claiming %L freekilled him. Reported to admin %L", client, g_iKilledBy[client], a);
 						}
 						else LoopClients(i) if (warden_iswarden(i) && gc_bReportWarden.BoolValue)
 						{
 							FreeKillAcceptMenu(i);
 							CPrintToChatAll("%t %t", "request_tag", "request_freekill", client, g_iKilledBy[client], i);
+							LogToFileEx(g_sFreeKillLogFile, "Player %L claiming %L freekilled him. Reported to warden %L", client, g_iKilledBy[client], a);
 						}
 					}
 					else CPrintToChat(client, "%t %t", "request_tag", "request_nokiller");
@@ -930,7 +933,7 @@ public int FreeKillHandler(Menu menu, MenuAction action, int client, int Positio
 			{
 				g_bFreeKilled[i] = false;
 				CS_RespawnPlayer(i);
-				LogMessage("Warden %L accept freekill request and respawned %L", client, i);
+				LogToFileEx(g_sFreeKillLogFile, "Warden %L accept freekill request and respawned %L", client, i);
 				CPrintToChat(i, "%t %t", "request_tag", "request_respawned");
 				CPrintToChatAll("%t %t", "warden_tag", "request_respawnedall", i);
 			}
@@ -941,7 +944,7 @@ public int FreeKillHandler(Menu menu, MenuAction action, int client, int Positio
 			{
 				g_bFreeKilled[i] = false;
 				ForcePlayerSuicide(g_iKilledBy[i]);
-				LogMessage("Warden %L accept freekill request of %L  and killed %L", client, i, g_iKilledBy[i]);
+				LogToFileEx(g_sFreeKillLogFile, "Warden %L accept freekill request of %L  and killed %L", client, i, g_iKilledBy[i]);
 				CPrintToChat(g_iKilledBy[i], "%t %t", "request_tag", "request_killbcfreekill");
 				CPrintToChatAll("%t %t", "warden_tag", "request_killbcfreekillall", i);
 			}
@@ -951,7 +954,7 @@ public int FreeKillHandler(Menu menu, MenuAction action, int client, int Positio
 			LoopClients(i) if(g_bFreeKilled[i])
 			{
 				g_bFreeKilled[i] = false;
-				LogMessage("Warden %L accept freekill request of %L give a freeday", client, i);
+				LogToFileEx(g_sFreeKillLogFile, "Warden %L accept freekill request of %L give a freeday", client, i);
 				FakeClientCommand(client, "sm_setfreeday");
 			}
 		}
@@ -962,7 +965,7 @@ public int FreeKillHandler(Menu menu, MenuAction action, int client, int Positio
 				g_bFreeKilled[i] = false;
 				ClientCommand(g_iKilledBy[i], "jointeam %i", CS_TEAM_T);
 				CPrintToChat(g_iKilledBy[i], "%t %t", "request_tag", "request_swapbcfreekill");
-				LogMessage("Warden %L accept freekill request of %L  and swaped %L to T", client, i, g_iKilledBy[i]);
+				LogToFileEx(g_sFreeKillLogFile, "Warden %L accept freekill request of %L  and swaped %L to T", client, i, g_iKilledBy[i]);
 				CPrintToChatAll("%t %t", "warden_tag", "request_swapbcfreekillall", i);
 			}
 		}
