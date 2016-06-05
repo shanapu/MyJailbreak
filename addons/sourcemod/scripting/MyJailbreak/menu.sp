@@ -123,7 +123,7 @@ public void OnConfigsExecuted()
 	g_bLaser = FindConVar("sm_warden_laser");
 	g_bZombie = FindConVar("sm_zombie_enable");
 	g_bDrunk = FindConVar("sm_drunk_enable");
-	g_bZombie = FindConVar("sm_cowboy_enable");
+	g_bCowboy = FindConVar("sm_cowboy_enable");
 	g_bNoScope = FindConVar("sm_noscope_enable");
 	g_bHide = FindConVar("sm_hide_enable");
 	g_bKnife = FindConVar("sm_knifefight_enable");
