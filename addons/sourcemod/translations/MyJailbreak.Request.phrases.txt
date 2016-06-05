@@ -199,8 +199,8 @@
 	}
 	"request_swapfreekiller"
 	{
-		"en"		"Swap {darkred}freekiller{default} to T"
-		"de"		"Schiebe den {darkred}Freekiller{default} zu T"
+		"en"		"Swap freekiller to T"
+		"de"		"Schiebe den Freekiller zu T"
 	}
 	"request_aliveorct"
 	{
