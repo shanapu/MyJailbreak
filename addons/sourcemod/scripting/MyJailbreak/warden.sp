@@ -3377,12 +3377,10 @@ stock int StripZeus(int client)
 	if(weapon != -1)
 	{
 		GetEntityClassname(weapon, sWeapon, sizeof(sWeapon));
-		CPrintToChatAll("user %N weapon %i sWeapon %s", client, weapon, sWeapon);
 		if (StrEqual(sWeapon, "weapon_taser"))
 		{ 
 			SDKHooks_DropWeapon(client, weapon, NULL_VECTOR, NULL_VECTOR); 
 			AcceptEntityInput(weapon, "Kill");
-			CPrintToChatAll("drop & kill");
 		}
 	}
 }
