@@ -1,0 +1,184 @@
+"Phrases"
+{
+	"lastguard_tag"
+	{
+		"en"		"[{green}MyJB.lastguard{default}]"
+	}
+	"lastguard_need"
+	{
+		"#format"	"{1:i},{2:N}"
+		"da"		"{purple}{2}{default} har afstemt!. {purple}{1}{default} afstemninger tilbage til {darkred}lastguard"		
+		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes left to {darkred}lastguard"
+		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}lastguard{default} beginnt"
+	}
+	"lastguard_twin_nc"
+	{
+		"en"		"Terrorists  surrived"
+		"de"		"Terroristen überleben"
+	}
+	"lastguard_minplayer"
+	{
+		"en"		"For a lastguard you need at maximum {purple}one CT & minimum 2 T"
+	}
+	"lastguard_hp"
+	{
+		"#format"	"{1:i},{2:i},{3:N},{4:i}"
+		"en"		"The {purple}{1} alive terrorists{default} have together {purple}{2} HP{default}. The Last Guard {4} get {purple}{3} HP{default}."
+		"de"		"Die {purple}{1} lebenden Terroristen{default} haben zusammen {purple}{2} HP{default}. Der Last Guard {4} bekommt {purple}{3} HP{default}."
+	}
+	"lastguard_setbyadmin"
+	{
+		"da"		"Admin bestemmer runde for No Scope er {purple}slået fra"		
+		"en"		"Set lastguard by admin is {purple}disabled"
+		"de"		"Last Guard Aktivierung durch den Admin ist {purple}ausgeschaltet"
+	}
+	"lastguard_ctwin_nc"
+	{
+		"en"		"Counter-Terrorists win"
+		"de"		"Counter-Terrorists gewinnen"
+	}
+	
+	"lastguard_end"
+	{
+		"da"		"{purple}Last Guard{default} er afsluttet!"	
+		"en"		"{purple}Last Guard{default} finished"
+		"de"		"{purple}Last Guard{default} beendet"
+	}
+	
+	"lastguard_next"
+	{
+		"da"		"Næste runde er {purple}Last Guard"	
+		"en"		"Next round is {purple}Last Guard"
+		"de"		"Nächste Runde ist {purple}Last Guard"
+	}
+	"lastguard_next_nc"
+	{
+		"da"		"Næste runde er lastguard"	
+		"en"		"Next round is lastguard"
+		"de"		"Nächste Runde ist lastguard"
+	}
+	
+	"lastguard_startnow"
+	{
+		"en"		"Attention! {purple}Last Guard{default} is set!"
+		"de"		"Achtung! {purple}Last Guard{default} startet gleich!"
+	}
+	
+	"lastguard_startnow_nc"
+	{
+		"en"		"Attention! Last Guard is set!"
+		"de"		"Achtung! Last Guard startet gleich!"
+	}
+	"lastguard_start"
+	{
+		"da"		"{purple}Last Guard{default} er startet!"
+		"en"		"The {purple}Last Guard{default} has started!"
+		"de"		"{purple}Last Guard{default} ist gestartet!"
+	}
+	"lastguard_lr"
+	{
+		"en"		"The {purple}Last Request{default} is active! Last Guard not available."
+		"de"		"{purple}Last Request{default} ist aktiv! Last Guard deaktiviert."
+	}
+	"lastguard_start_nc"
+	{
+		"da"		"Last Guard er startet!"
+		"en"		"Last Guard started!"
+		"de"		"Last Guard ist gestartet!"
+	}
+	"lastguard_movenow"
+	{
+		"en"		"You can {purple}move now!"
+		"de"		"Du kannst dich {purple}jetzt bewegen!"
+	}
+	"lastguard_movenow_nc"
+	{
+		"en"		"You can move now!"
+		"de"		"Du kannst dich jetzt bewegen!"
+	}
+	"lastguard_voted"
+	{
+		"da"		"Du har allerede stemt for {purple}Last Guard!"	
+		"en"		"You already voted for {purple}Last Guard"
+		"de"		"Du hast schon für {purple}Last Guard {default}gevotet"
+	}
+	"lastguard_notalive"
+	{
+		"en"		"You {purple}must be alive{default} for this command."
+		"de"		"Du {purple} must am Leben sein {default}für diesen Befehl."
+	}
+	"lastguard_progress"
+	{
+		"#format"	"{1:s}"
+		"en"		"Event {darkred}{1} {default}is {purple}already in progress. Last Guard Rule is disabled"
+		"de"		"Event {darkred}{1} {default}ist {purple}bereits gesetzt. Letzer CT is deaktiviert"
+	}
+	"lastguard_running"
+	{
+		"en"		"Last Guard  {default}is {purple}already in progress."
+		"de"		"Last Guard  {default}ist {purple}läuft bereits."
+	}
+	"lastguard_disabled"
+	{
+		"da"		"Last Guard er {purple}slået fra."
+		"en"		"Last Guard is {purple}disabled."
+		"de"		"Last Guard ist {purple}deaktiviert."
+	}
+	"lastguard_timeuntilstart_nc"
+	{
+		"#format"	"{1:i}"
+		"da"		"{1} sekunder til runden starter!"	
+		"en"		"{1} seconds until start"
+		"de"		"{1} Sekunden bis zum Start"
+	}
+	
+	"lastguard_info_title"
+	{
+		"en"		"Last Guard er aktiveret!"	
+		"en"		"Last Guard is active"
+		"de"		"Last Guard ist aktiv"
+	}
+	
+	"lastguard_info_line1"
+	{
+		"en"		"Last Guard - CT vs T"
+		"de"		"Last Guard - CT gegen T"
+	}
+	"lastguard_info_line2"
+	{
+		"en"		"                                   "
+		"de"		"                                   "
+	}
+	
+	"lastguard_info_line3"
+	{
+		"en"		"                                   "
+		"de"		"                                   "
+	}
+	
+	"lastguard_info_line4"
+	{
+		"en"		"All normal jail rules are repealed"
+		"de"		"Alle normalen Jailregeln sind aufgehoben!"
+	}
+	
+	"lastguard_info_line5"
+	{
+		"da"		"Der kan ikke laves Last Request i denne runde!"	
+		"en"		"There is no last request!"
+		"de"		"Der letzte Terrorists hat keinen Wunsch!"
+	}
+	
+	"lastguard_info_line6"
+	{
+		"en"		"                                   "
+		"de"		"                                   "
+	}
+	
+	"lastguard_info_line7"
+	{
+		"da"		"Alle server regler skal overholdes!"	
+		"en"		"Dont be an asshole!"
+		"de"		"Bau keine Scheisse!"
+	}
+}
