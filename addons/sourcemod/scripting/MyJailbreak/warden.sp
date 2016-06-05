@@ -85,6 +85,7 @@ ConVar gc_bHandCuff;
 ConVar gc_iHandCuffsNumber;
 ConVar gc_bHandCuffLR;
 ConVar gc_bHandCuffCT;
+ConVar gc_bBulletSparks;
 
 //Bools
 bool IsCountDown = false;
@@ -104,6 +105,7 @@ bool g_bWeaponDropped[MAXPLAYERS+1] = false;
 bool g_bCuffed[MAXPLAYERS+1] = false;
 bool g_bAllowDrop;
 bool IsMuted[MAXPLAYERS+1] = {false, ...};
+bool g_bBulletSparks[MAXPLAYERS+1] = true;
 
 //Integers
 int g_iWarden = -1;
@@ -186,6 +188,7 @@ char g_sColorNames[8][64] ={{""},{""},{""},{""},{""},{""},{""},{""}};
 char g_sCustomCommand[64];
 char g_sEquipWeapon[MAXPLAYERS+1][32];
 char g_sMuteUser[32];
+char g_sWardenLogFile[PLATFORM_MAX_PATH];
 
 //float
 float g_fMarkerRadiusMin = 100.0;
@@ -233,6 +236,7 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_vetowarden", VoteWarden, "Allows the player to vote to retire Warden");
 	RegConsoleCmd("sm_setff", ToggleFF, "Allows player to see the state and the Warden to toggle friendly fire");
 	RegConsoleCmd("sm_laser", LaserMenu, "Allows Warden to toggle on/off the wardens Laser pointer");
+	RegConsoleCmd("sm_sparks", BulletSparks, "Allows Warden to toggle on/off the wardens bullet sparks");
 	RegConsoleCmd("sm_drawer", DrawerMenu, "Allows Warden to toggle on/off the wardens Drawer");
 	RegConsoleCmd("sm_noblock", ToggleNoBlock, "Allows the Warden to toggle no block"); 
 	RegConsoleCmd("sm_cdstart", SetStartCountDown, "Allows the Warden to start a START Countdown! (start after 10sec.) - start without menu");
@@ -267,7 +271,7 @@ public void OnPluginStart()
 	AutoExecConfig_SetFile("Warden", "MyJailbreak");
 	AutoExecConfig_SetCreateFile(true);
 	
-	AutoExecConfig_CreateConVar("sm_warden_version", PLUGIN_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_PLUGIN|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
+	AutoExecConfig_CreateConVar("sm_warden_version", PLUGIN_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_warden_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true,  0.0, true, 1.0);
 	gc_sCustomCommand = AutoExecConfig_CreateConVar("sm_warden_cmd", "simon", "Set your custom chat command for become warden. no need for sm_ or !");
 	gc_bBecomeWarden = AutoExecConfig_CreateConVar("sm_warden_become", "1", "0 - disabled, 1 - enable !w / !warden - player can choose to be warden. If disabled you should need sm_warden_choose_random 1", _, true,  0.0, true, 1.0);
@@ -304,6 +308,7 @@ public void OnPluginStart()
 	gc_bOpenTimer = AutoExecConfig_CreateConVar("sm_warden_open_time_enable", "1", "should doors open automatic 0- no 1 yes", _, true,  0.0, true, 1.0);
 	gc_bOpenTimerWarden = AutoExecConfig_CreateConVar("sm_warden_open_time_warden", "1", "should doors open automatic after sm_warden_open_time when there is a warden? needs sm_warden_open_time_enable 1", _, true,  0.0, true, 1.0);
 	gc_bMarker = AutoExecConfig_CreateConVar("sm_warden_marker", "1", "0 - disabled, 1 - enable Warden advanced markers ", _, true,  0.0, true, 1.0);
+	gc_bBulletSparks = AutoExecConfig_CreateConVar("sm_warden_bulletsparks", "1", "0 - disabled, 1 - enable Warden bulletimpact sparks", _, true,  0.0, true, 1.0);
 	gc_bLaser = AutoExecConfig_CreateConVar("sm_warden_laser", "1", "0 - disabled, 1 - enable Warden Laser Pointer with +E ", _, true,  0.0, true, 1.0);
 	gc_bDrawer = AutoExecConfig_CreateConVar("sm_warden_drawer", "1", "0 - disabled, 1 - enable Warden Drawer with +E ", _, true,  0.0, true, 1.0);
 	gc_bDrawerT= AutoExecConfig_CreateConVar("sm_warden_drawer_terror", "1", "0 - disabled, 1 - allow Warden to toggle Drawer for Terrorist ", _, true,  0.0, true, 1.0);
@@ -339,6 +344,7 @@ public void OnPluginStart()
 	HookEvent("player_team", EventPlayerTeam);
 	HookEvent("round_end", RoundEnd);
 	HookEvent("weapon_fire", WeaponFire);
+	HookEvent("bullet_impact", BulletImpact);
 	HookConVarChange(gc_sModelPath, OnSettingChanged);
 	HookConVarChange(gc_sUnWarden, OnSettingChanged);
 	HookConVarChange(gc_sWarden, OnSettingChanged);
@@ -390,6 +396,8 @@ public void OnPluginStart()
 	g_sColorNames[6] = g_sColorNamesMagenta;
 	g_sColorNames[4] = g_sColorNamesYellow;
 	g_sColorNames[5] = g_sColorNamesCyan;
+	
+	SetLogFile(g_sWardenLogFile, "Warden");
 }
 
 //ConVarChange for Strings
@@ -507,6 +515,20 @@ public void OnMapStart()
 	g_bLaser = true;
 	g_bDrawerT = false;
 	LoopClients(i) g_bDrawer[i] = false;
+}
+
+public void OnClientPutInServer(int client)
+{
+	g_bLaserUse[client] = false;
+	g_bDrawerUse[client] = false;
+	g_bDrawerColorRainbow[client] = true;
+	g_bLaserColorRainbow[client] = true;
+	g_bBulletSparks[client] = true;
+	g_fLastDrawer[client][0] = 0.0;
+	g_fLastDrawer[client][1] = 0.0;
+	g_fLastDrawer[client][2] = 0.0;
+	
+	SDKHook(client, SDKHook_OnTakeDamage, OnTakedamage);
 }
 
 //Round Start
@@ -689,7 +711,7 @@ public Action VoteWarden(int client,int args)
 					
 					if (g_iVoteCount > playercount)
 					{
-						LogMessage("[MyJB] Player %L was kick as warden by voting", g_iWarden);
+						LogToFileEx(g_sWardenLogFile, "Player %L was kick as warden by voting", g_iWarden);
 						RemoveTheWarden(client);
 					}
 					else CPrintToChatAll("%t %t", "warden_tag" , "warden_need", Missing, client);
@@ -876,7 +898,7 @@ public int m_WardenOverwrite(Menu menu, MenuAction action, int client, int Posit
 			{
 				PrintCenterTextAll("%t", "warden_new_nc", newwarden);
 			}
-			LogMessage("[MyJB] Admin %L kick player %N warden and set &N as new", client, g_iWarden, newwarden);
+			LogToFileEx(g_sWardenLogFile, "Admin %L kick player %L warden and set %L as new", client, g_iWarden, newwarden);
 			RemoveIcon(g_iWarden);
 			g_iWarden = newwarden;
 			CreateTimer(0.5, Timer_WardenFixColor, newwarden, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
@@ -1079,7 +1101,7 @@ void RemoveTheWarden(int client)
 	{
 		PrintCenterTextAll("%t", "warden_removed_nc", client, g_iWarden);
 	}
-	LogMessage("[MyJB] Admin %L removed player %N as warden", client, g_iWarden);
+	LogToFileEx(g_sWardenLogFile, "Admin %L removed player %L as warden", client, g_iWarden);
 	CreateTimer( 0.1, RemoveColor, g_iWarden);
 	SetEntityModel(client, g_sModelPath);
 	if (RandomTimer != null)
@@ -1938,21 +1960,6 @@ if (action == MenuAction_Select)
 	}
 }
 
-//Lasers
-
-public void OnClientPutInServer(int client)
-{
-	g_bLaserUse[client] = false;
-	g_bDrawerUse[client] = false;
-	g_bDrawerColorRainbow[client] = true;
-	g_bLaserColorRainbow[client] = true;
-	g_fLastDrawer[client][0] = 0.0;
-	g_fLastDrawer[client][1] = 0.0;
-	g_fLastDrawer[client][2] = 0.0;
-	
-	SDKHook(client, SDKHook_OnTakeDamage, OnTakedamage);
-}
-
 //Laser Pointer
 
 stock void GetClientSightEnd(int client, float out[3])
@@ -2645,7 +2652,7 @@ public int killmenu(Menu menu, MenuAction action, int client, int Position)
 				{
 					CreateTimer( 1.0, KillPlayer, i);
 					CPrintToChatAll("%t %t", "warden_tag", "warden_israndom", i); 
-					LogMessage("[MyJB] Warden %L killed random player %N", client, i);
+					LogToFileEx(g_sWardenLogFile, "Warden %L killed random player %L", client, i);
 				}
 			}
 			else CPrintToChatAll("%t %t", "warden_tag", "warden_minrandom"); 
@@ -2750,6 +2757,52 @@ public Action PerformSmite(int client, int target)
 	EmitAmbientSound(SOUND_THUNDER, startpos, target, SNDLEVEL_GUNFIRE);
 	
 	ForcePlayerSuicide(target);
+}
+
+//Bullet sparks
+
+public Action BulletImpact(Handle hEvent, char [] sName, bool bDontBroadcast)
+{
+	int iClient = GetClientOfUserId(GetEventInt(hEvent, "userid"));
+	
+	if (!gc_bBulletSparks || !warden_iswarden(iClient) || !g_bBulletSparks[iClient])
+		return Plugin_Continue;
+	
+	float startpos[3];
+	float dir[3] = {0.0, 0.0, 0.0};
+	
+	startpos[0] = GetEventFloat(hEvent, "x");
+	startpos[1] = GetEventFloat(hEvent, "y");
+	startpos[2] = GetEventFloat(hEvent, "z");
+	
+	TE_SetupSparks(startpos, dir, 5000, 1000);
+	TE_SendToAll();
+
+	return Plugin_Continue;
+}
+
+public Action BulletSparks(int client, int args)
+{
+	if(gc_bPlugin.BoolValue)
+	{
+		if(gc_bBulletSparks.BoolValue)
+		{
+			if (client == g_iWarden)
+			{
+				if (!g_bBulletSparks[client])
+				{
+					g_bBulletSparks[client] = true;
+					CPrintToChat(client, "%t %t", "warden_tag" , "warden_bulletmarkon");
+				}
+				else if (g_bBulletSparks[client])
+				{
+					g_bBulletSparks[client] = false;
+					CPrintToChat(client, "%t %t", "warden_tag" , "warden_bulletmarkoff");
+				}
+			}
+			else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden"); 
+		}
+	}
 }
 
 //choose random warden
@@ -3274,8 +3327,16 @@ public Action MuteClient(int client, int time)
 			SetClientListeningFlags(client, VOICE_MUTED);
 			IsMuted[client] = true;
 			
-			if (time == 0) CPrintToChatAll("%t %t", "warden_tag", "warden_muteend", g_iWarden, client);
-				else CPrintToChatAll("%t %t", "warden_tag", "warden_mute", g_iWarden, client, time);
+			if (time == 0)
+			{
+				CPrintToChatAll("%t %t", "warden_tag", "warden_muteend", g_iWarden, client);
+				LogToFileEx(g_sWardenLogFile, "Warden %L muted player %L until round end", g_iWarden, client);
+			}
+			else
+			{
+				CPrintToChatAll("%t %t", "warden_tag", "warden_mute", g_iWarden, client, time);
+				LogToFileEx(g_sWardenLogFile, "Warden %L muted player %L for %i seconds", g_iWarden, client, time);
+			}
 		}
 	}
 	if(time > 0)

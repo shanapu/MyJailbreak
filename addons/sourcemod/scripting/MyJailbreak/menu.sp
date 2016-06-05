@@ -58,6 +58,7 @@ ConVar g_bOpen;
 ConVar g_bRandom;
 ConVar g_bRequest;
 ConVar g_bWarden;
+ConVar g_bSparks;
 
 
 public Plugin myinfo = {
@@ -121,6 +122,7 @@ public void OnConfigsExecuted()
 	g_bTorch = FindConVar("sm_torch_enable");
 	g_bDrawer = FindConVar("sm_warden_drawer");
 	g_bLaser = FindConVar("sm_warden_laser");
+	g_bSparks = FindConVar("sm_warden_bulletsparks");
 	g_bZombie = FindConVar("sm_zombie_enable");
 	g_bDrunk = FindConVar("sm_drunk_enable");
 	g_bCowboy = FindConVar("sm_cowboy_enable");
@@ -234,6 +236,14 @@ public Action JbMenu(int client, int args)
 				{
 					Format(menuinfo, sizeof(menuinfo), "%T", "menu_seteventdays", client);
 					mainmenu.AddItem("setdays", menuinfo);
+				}
+				if(g_bSparks != null)
+				{
+					if(g_bSparks.BoolValue)
+					{
+						Format(menuinfo, sizeof(menuinfo), "%T", "menu_sparks", client);
+						mainmenu.AddItem("sparks", menuinfo);
+					}
 				}
 				if(g_bDrawer != null)
 				{
@@ -492,10 +502,6 @@ public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selec
 			FakeClientCommand(client, "sm_YOURCOMMAND");
 		}
 		*/
-		else if ( strcmp(info,"guard") == 0 ) 
-		{
-			FakeClientCommand(client, "sm_guard");
-		}
 		else if ( strcmp(info,"request") == 0 ) 
 		{
 			FakeClientCommand(client, "sm_request");
@@ -503,10 +509,6 @@ public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selec
 		else if ( strcmp(info,"lastR") == 0 ) 
 		{
 			FakeClientCommand(client, "sm_lr");
-		}
-		else if ( strcmp(info,"removewarden") == 0 ) 
-		{
-			FakeClientCommand(client, "sm_rw");
 		}
 		else if ( strcmp(info,"setwarden") == 0 ) 
 		{
@@ -544,23 +546,39 @@ public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selec
 		{
 			FakeClientCommand(client, "sm_cdmenu");
 		}
+		else if ( strcmp(info,"mute") == 0 ) 
+		{
+			FakeClientCommand(client, "sm_wmute");
+		}
+		else if ( strcmp(info,"kill") == 0 ) 
+		{
+			FakeClientCommand(client, "sm_killrandom");
+		}
 		else if ( strcmp(info,"getwarden") == 0 ) 
 		{
 			FakeClientCommand(client, "sm_warden");
 			JbMenu(client,0);
-		}
-		else if ( strcmp(info,"mute") == 0 ) 
-		{
-			FakeClientCommand(client, "sm_wmute");
 		}
 		else if ( strcmp(info,"unwarden") == 0 ) 
 		{
 			FakeClientCommand(client, "sm_unwarden");
 			JbMenu(client,0);
 		}
-		else if ( strcmp(info,"kill") == 0 ) 
+		else if ( strcmp(info,"removewarden") == 0 ) 
 		{
-			FakeClientCommand(client, "sm_killrandom");
+			FakeClientCommand(client, "sm_rw");
+			if(!gc_bClose.BoolValue)
+			{
+				JbMenu(client,0);
+			}
+		}
+		else if ( strcmp(info,"sparks") == 0 ) 
+		{
+			FakeClientCommand(client, "sm_sparks");
+			if(!gc_bClose.BoolValue)
+			{
+				JbMenu(client,0);
+			}
 		}
 		else if ( strcmp(info,"setff") == 0 ) 
 		{
@@ -597,6 +615,14 @@ public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selec
 		else if ( strcmp(info,"check") == 0 ) 
 		{
 			FakeClientCommand(client, "sm_checkplayers");
+			if(!gc_bClose.BoolValue)
+			{
+				JbMenu(client,0);
+			}
+		}
+		else if ( strcmp(info,"guard") == 0 ) 
+		{
+			FakeClientCommand(client, "sm_guard");
 			if(!gc_bClose.BoolValue)
 			{
 				JbMenu(client,0);
