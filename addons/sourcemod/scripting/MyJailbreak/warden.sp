@@ -188,7 +188,7 @@ char g_sColorNames[8][64] ={{""},{""},{""},{""},{""},{""},{""},{""}};
 char g_sCustomCommand[64];
 char g_sEquipWeapon[MAXPLAYERS+1][32];
 char g_sMuteUser[32];
-char g_sWardenLogFile[PLATFORM_MAX_PATH];
+char g_sMyJBLogFile[PLATFORM_MAX_PATH];
 
 //float
 float g_fMarkerRadiusMin = 100.0;
@@ -397,7 +397,7 @@ public void OnPluginStart()
 	g_sColorNames[4] = g_sColorNamesYellow;
 	g_sColorNames[5] = g_sColorNamesCyan;
 	
-	SetLogFile(g_sWardenLogFile, "Warden");
+	SetLogFile(g_sMyJBLogFile, "MyJB");
 }
 
 //ConVarChange for Strings
@@ -711,7 +711,7 @@ public Action VoteWarden(int client,int args)
 					
 					if (g_iVoteCount > playercount)
 					{
-						LogToFileEx(g_sWardenLogFile, "Player %L was kick as warden by voting", g_iWarden);
+						LogToFileEx(g_sMyJBLogFile, "Player %L was kick as warden by voting", g_iWarden);
 						RemoveTheWarden(client);
 					}
 					else CPrintToChatAll("%t %t", "warden_tag" , "warden_need", Missing, client);
@@ -898,7 +898,7 @@ public int m_WardenOverwrite(Menu menu, MenuAction action, int client, int Posit
 			{
 				PrintCenterTextAll("%t", "warden_new_nc", newwarden);
 			}
-			LogToFileEx(g_sWardenLogFile, "Admin %L kick player %L warden and set %L as new", client, g_iWarden, newwarden);
+			LogToFileEx(g_sMyJBLogFile, "Admin %L kick player %L warden and set %L as new", client, g_iWarden, newwarden);
 			RemoveIcon(g_iWarden);
 			g_iWarden = newwarden;
 			CreateTimer(0.5, Timer_WardenFixColor, newwarden, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
@@ -1101,7 +1101,7 @@ void RemoveTheWarden(int client)
 	{
 		PrintCenterTextAll("%t", "warden_removed_nc", client, g_iWarden);
 	}
-	LogToFileEx(g_sWardenLogFile, "Admin %L removed player %L as warden", client, g_iWarden);
+	LogToFileEx(g_sMyJBLogFile, "Admin %L removed player %L as warden", client, g_iWarden);
 	CreateTimer( 0.1, RemoveColor, g_iWarden);
 	SetEntityModel(client, g_sModelPath);
 	if (RandomTimer != null)
@@ -2652,7 +2652,7 @@ public int killmenu(Menu menu, MenuAction action, int client, int Position)
 				{
 					CreateTimer( 1.0, KillPlayer, i);
 					CPrintToChatAll("%t %t", "warden_tag", "warden_israndom", i); 
-					LogToFileEx(g_sWardenLogFile, "Warden %L killed random player %L", client, i);
+					LogToFileEx(g_sMyJBLogFile, "Warden %L killed random player %L", client, i);
 				}
 			}
 			else CPrintToChatAll("%t %t", "warden_tag", "warden_minrandom"); 
@@ -3330,12 +3330,12 @@ public Action MuteClient(int client, int time)
 			if (time == 0)
 			{
 				CPrintToChatAll("%t %t", "warden_tag", "warden_muteend", g_iWarden, client);
-				LogToFileEx(g_sWardenLogFile, "Warden %L muted player %L until round end", g_iWarden, client);
+				LogToFileEx(g_sMyJBLogFile, "Warden %L muted player %L until round end", g_iWarden, client);
 			}
 			else
 			{
 				CPrintToChatAll("%t %t", "warden_tag", "warden_mute", g_iWarden, client, time);
-				LogToFileEx(g_sWardenLogFile, "Warden %L muted player %L for %i seconds", g_iWarden, client, time);
+				LogToFileEx(g_sMyJBLogFile, "Warden %L muted player %L for %i seconds", g_iWarden, client, time);
 			}
 		}
 	}
