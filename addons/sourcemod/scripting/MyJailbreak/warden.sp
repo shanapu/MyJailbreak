@@ -340,6 +340,7 @@ public void OnPluginStart()
 	//Hooks
 	HookEvent("item_equip", ItemEquip);
 	HookEvent("round_start", RoundStart);
+	HookEvent("round_poststart", PostRoundStart);
 	HookEvent("player_death", playerDeath);
 	HookEvent("player_team", EventPlayerTeam);
 	HookEvent("round_end", RoundEnd);
@@ -533,21 +534,11 @@ public void OnClientPutInServer(int client)
 
 //Round Start
 
-public void RoundStart(Event event, const char[] name, bool dontBroadcast)
+
+public void PostRoundStart(Event event, const char[] name, bool dontBroadcast)
 {
-	if (OpenCounterTime != null)
-		KillTimer(OpenCounterTime);
-		
-	OpenCounterTime = null;
-	
-	if(gc_bPlugin.BoolValue)	
+	if(gc_bPlugin.BoolValue)
 	{
-		g_iOpenTimer = GetConVarInt(gc_hOpenTimer);
-		OpenCounterTime = CreateTimer(1.0, OpenCounter, _, TIMER_REPEAT);
-		if (RandomTimer != null)
-		KillTimer(RandomTimer);
-			
-		RandomTimer = null;
 		if ((g_iWarden == -1) && gc_bBecomeWarden.BoolValue)
 		{
 			RandomTimer = CreateTimer(gc_fRandomTimer.FloatValue, ChooseRandom);
@@ -557,6 +548,25 @@ public void RoundStart(Event event, const char[] name, bool dontBroadcast)
 				PrintCenterTextAll("%t", "warden_nowarden_nc");
 			}
 		}
+	}
+}
+
+
+public void RoundStart(Event event, const char[] name, bool dontBroadcast)
+{
+	if (OpenCounterTime != null)
+		KillTimer(OpenCounterTime);
+		
+	OpenCounterTime = null;
+	
+	if(gc_bPlugin.BoolValue)
+	{
+		g_iOpenTimer = GetConVarInt(gc_hOpenTimer);
+		OpenCounterTime = CreateTimer(1.0, OpenCounter, _, TIMER_REPEAT);
+		if (RandomTimer != null)
+		KillTimer(RandomTimer);
+		
+		RandomTimer = null;
 	}
 	else
 	{
