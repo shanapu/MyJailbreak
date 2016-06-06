@@ -732,7 +732,14 @@ public Action playerDeath(Event event, const char[] name, bool dontBroadcast)
 		RemoveIcon(g_iWarden);
 		g_iWarden = -1;
 	}
-	if(g_bCuffed[client]) g_iCuffed--;
+	if(g_bCuffed[client])
+	{
+		g_iCuffed--;
+		g_bCuffed[client] = false;
+		SetEntityMoveType(client, MOVETYPE_WALK);
+		SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
+		CreateTimer( 0.0, DeleteOverlay, client );
+	}
 	g_fLastDrawer[client][0] = 0.0;
 	g_fLastDrawer[client][1] = 0.0;
 	g_fLastDrawer[client][2] = 0.0;
@@ -3377,12 +3384,10 @@ stock int StripZeus(int client)
 	if(weapon != -1)
 	{
 		GetEntityClassname(weapon, sWeapon, sizeof(sWeapon));
-		CPrintToChatAll("user %N weapon %i sWeapon %s", client, weapon, sWeapon);
 		if (StrEqual(sWeapon, "weapon_taser"))
 		{ 
 			SDKHooks_DropWeapon(client, weapon, NULL_VECTOR, NULL_VECTOR); 
 			AcceptEntityInput(weapon, "Kill");
-			CPrintToChatAll("drop & kill");
 		}
 	}
 }

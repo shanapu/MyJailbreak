@@ -57,7 +57,17 @@ coded with ![](http://shanapu.de/githearth-small.png) free software
 ---
   
 ***Change Log***
-
+  
+**[Beta 2.1]** - bug fixes & typos  
+*Fixed*  
+* Warden: No movement on spec when died while cuffed
+* Request: typo in freekill menu  
+  
+*Removed*  
+* Warden: Debug messages on LR
+* File: \fastDL\bz.bat
+  
+  
 **[Beta 2.0]** - report freekill & fixes  
  *Added*
 * Warden: new cvar - "sm_warden_handcuffs_ct" 0 - disabled, 1 - Warden can also handcuff CTs  
