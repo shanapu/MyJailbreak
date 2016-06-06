@@ -462,6 +462,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 				SetEntProp(skin, Prop_Send, "m_nGlowStyle", 1);
 				SetEntPropFloat(skin, Prop_Send, "m_flGlowMaxDist", 10000000.0);
 			}
+			SetEntProp(client, Prop_Send, "m_bNightVisionOn", 0);
 		}
 		
 		delete FreezeTimer;
