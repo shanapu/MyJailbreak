@@ -237,7 +237,7 @@ public Action SetZombie(int client,int args)
 						if (g_iCoolDown == 0)
 						{
 							StartNextRound();
-							LogToFileEx(g_sEventsLogFile, "Event Zombie was started by warden %L", client);
+							if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Zombie was started by warden %L", client);
 						}
 						else CPrintToChat(client, "%t %t", "zombie_tag" , "zombie_wait", g_iCoolDown);
 					}
@@ -261,7 +261,7 @@ public Action SetZombie(int client,int args)
 						if (g_iCoolDown == 0)
 						{
 							StartNextRound();
-							LogToFileEx(g_sEventsLogFile, "Event Zombie was started by admin %L", client);
+							if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Zombie was started by admin %L", client);
 						}
 						else CPrintToChat(client, "%t %t", "zombie_tag" , "zombie_wait", g_iCoolDown);
 					}
@@ -306,7 +306,7 @@ public Action VoteZombie(int client,int args)
 							if (g_iVoteCount > playercount)
 							{
 								StartNextRound();
-								LogToFileEx(g_sEventsLogFile, "Event Zombie was started by voting");
+								if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Zombie was started by voting");
 							}
 							else CPrintToChatAll("%t %t", "zombie_tag" , "zombie_need", Missing, client);
 						}

@@ -244,7 +244,7 @@ public Action SetSuicideBomber(int client,int args)
 						if (g_iCoolDown == 0)
 						{
 							StartNextRound();
-							LogToFileEx(g_sEventsLogFile, "Event Suicide Bomber was started by warden %L", client);
+							if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Suicide Bomber was started by warden %L", client);
 						}
 						else CPrintToChat(client, "%t %t", "suicidebomber_tag" , "suicidebomber_wait", g_iCoolDown);
 					}
@@ -268,7 +268,7 @@ public Action SetSuicideBomber(int client,int args)
 							if (g_iCoolDown == 0)
 							{
 								StartNextRound();
-								LogToFileEx(g_sEventsLogFile, "Event Suicide Bomber was started by admin %L", client);
+								if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Suicide Bomber was started by admin %L", client);
 							}
 							else CPrintToChat(client, "%t %t", "suicidebomber_tag" , "suicidebomber_wait", g_iCoolDown);
 						}
@@ -313,7 +313,7 @@ public Action VoteSuicideBomber(int client,int args)
 							if (g_iVoteCount > playercount)
 							{
 								StartNextRound();
-								LogToFileEx(g_sEventsLogFile, "Event Suicide Bomber was started by voting");
+								if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Suicide Bomber was started by voting");
 							}
 							else CPrintToChatAll("%t %t", "suicidebomber_tag" , "suicidebomber_need", Missing, client);
 						}

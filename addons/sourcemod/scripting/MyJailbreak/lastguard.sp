@@ -195,7 +195,7 @@ public Action VoteLastGuard(int client,int args)
 								if (g_iVoteCount > playercount)
 								{
 									StartLastGuard();
-									LogToFileEx(g_sMyJBLogFile, "Last Guard rule was started by voting");
+									if(MyJBLogging(true)) LogToFileEx(g_sMyJBLogFile, "Last Guard rule was started by voting");
 								}
 								else CPrintToChatAll("%t %t", "lastguard_tag" , "lastguard_need", Missing, client);
 							}
@@ -223,7 +223,7 @@ public Action VoteLastGuard(int client,int args)
 						if(!IsLR)
 						{
 							StartLastGuard();
-							LogToFileEx(g_sMyJBLogFile, "Last Guard Rule was started by last CT %L", client);
+							if(MyJBLogging(true)) LogToFileEx(g_sMyJBLogFile, "Last Guard Rule was started by last CT %L", client);
 						}
 						else CPrintToChat(client, "%t %t", "lastguard_tag" , "lastguard_lr");
 					}
@@ -402,7 +402,7 @@ public Action CheckStatus()
 		if ((GetAliveTeamCount(CS_TEAM_CT) == 1) && (GetAliveTeamCount(CS_TEAM_T) > 1 ) && StrEqual(EventDay, "none", false) && !IsLastGuard && !IsLR)
 		{
 			StartLastGuard();
-			LogToFileEx(g_sMyJBLogFile, "Last Guard Rule was started automatic");
+			if(MyJBLogging(true)) LogToFileEx(g_sMyJBLogFile, "Last Guard Rule was started automatic");
 		}
 	}
 }

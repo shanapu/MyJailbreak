@@ -827,13 +827,13 @@ public Action Command_Freekill(int client, int args)
 						{
 							FreeKillAcceptMenu(a);
 							CPrintToChatAll("%t %t", "request_tag", "request_freekill", client, g_iKilledBy[client], a);
-							LogToFileEx(g_sFreeKillLogFile, "Player %L claiming %L freekilled him. Reported to admin %L", client, g_iKilledBy[client], a);
+							if(MyJBLogging(true)) LogToFileEx(g_sFreeKillLogFile, "Player %L claiming %L freekilled him. Reported to admin %L", client, g_iKilledBy[client], a);
 						}
 						else LoopClients(i) if (warden_iswarden(i) && gc_bReportWarden.BoolValue)
 						{
 							FreeKillAcceptMenu(i);
 							CPrintToChatAll("%t %t", "request_tag", "request_freekill", client, g_iKilledBy[client], i);
-							LogToFileEx(g_sFreeKillLogFile, "Player %L claiming %L freekilled him. Reported to warden %L", client, g_iKilledBy[client], a);
+							if(MyJBLogging(true)) LogToFileEx(g_sFreeKillLogFile, "Player %L claiming %L freekilled him. Reported to warden %L", client, g_iKilledBy[client], a);
 						}
 					}
 					else CPrintToChat(client, "%t %t", "request_tag", "request_nokiller");
@@ -933,7 +933,7 @@ public int FreeKillHandler(Menu menu, MenuAction action, int client, int Positio
 			{
 				g_bFreeKilled[i] = false;
 				CS_RespawnPlayer(i);
-				LogToFileEx(g_sFreeKillLogFile, "Warden %L accept freekill request and respawned %L", client, i);
+				if(MyJBLogging(true)) LogToFileEx(g_sFreeKillLogFile, "Warden %L accept freekill request and respawned %L", client, i);
 				CPrintToChat(i, "%t %t", "request_tag", "request_respawned");
 				CPrintToChatAll("%t %t", "warden_tag", "request_respawnedall", i);
 			}
@@ -944,7 +944,7 @@ public int FreeKillHandler(Menu menu, MenuAction action, int client, int Positio
 			{
 				g_bFreeKilled[i] = false;
 				ForcePlayerSuicide(g_iKilledBy[i]);
-				LogToFileEx(g_sFreeKillLogFile, "Warden %L accept freekill request of %L  and killed %L", client, i, g_iKilledBy[i]);
+				if(MyJBLogging(true)) LogToFileEx(g_sFreeKillLogFile, "Warden %L accept freekill request of %L  and killed %L", client, i, g_iKilledBy[i]);
 				CPrintToChat(g_iKilledBy[i], "%t %t", "request_tag", "request_killbcfreekill");
 				CPrintToChatAll("%t %t", "warden_tag", "request_killbcfreekillall", i);
 			}
@@ -954,7 +954,7 @@ public int FreeKillHandler(Menu menu, MenuAction action, int client, int Positio
 			LoopClients(i) if(g_bFreeKilled[i])
 			{
 				g_bFreeKilled[i] = false;
-				LogToFileEx(g_sFreeKillLogFile, "Warden %L accept freekill request of %L give a freeday", client, i);
+				if(MyJBLogging(true)) LogToFileEx(g_sFreeKillLogFile, "Warden %L accept freekill request of %L give a freeday", client, i);
 				FakeClientCommand(client, "sm_setfreeday");
 			}
 		}
@@ -965,7 +965,7 @@ public int FreeKillHandler(Menu menu, MenuAction action, int client, int Positio
 				g_bFreeKilled[i] = false;
 				ClientCommand(g_iKilledBy[i], "jointeam %i", CS_TEAM_T);
 				CPrintToChat(g_iKilledBy[i], "%t %t", "request_tag", "request_swapbcfreekill");
-				LogToFileEx(g_sFreeKillLogFile, "Warden %L accept freekill request of %L  and swaped %L to T", client, i, g_iKilledBy[i]);
+				if(MyJBLogging(true)) LogToFileEx(g_sFreeKillLogFile, "Warden %L accept freekill request of %L  and swaped %L to T", client, i, g_iKilledBy[i]);
 				CPrintToChatAll("%t %t", "warden_tag", "request_swapbcfreekillall", i);
 			}
 		}

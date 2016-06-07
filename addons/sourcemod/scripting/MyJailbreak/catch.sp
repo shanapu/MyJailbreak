@@ -220,7 +220,7 @@ public Action SetCatch(int client,int args)
 						if (g_iCoolDown == 0)
 						{
 							StartNextRound();
-							LogToFileEx(g_sEventsLogFile, "Event Catch was started by warden %L", client);
+							if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Catch was started by warden %L", client);
 						}
 						else CPrintToChat(client, "%t %t", "catch_tag" , "catch_wait", g_iCoolDown);
 					}
@@ -244,7 +244,7 @@ public Action SetCatch(int client,int args)
 							if (g_iCoolDown == 0)
 							{
 								StartNextRound();
-								LogToFileEx(g_sEventsLogFile, "Event Catch was started by admin %L", client);
+								if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Catch was started by admin %L", client);
 							}
 							else CPrintToChat(client, "%t %t", "catch_tag" , "catch_wait", g_iCoolDown);
 						}
@@ -289,7 +289,7 @@ public Action VoteCatch(int client,int args)
 							if (g_iVoteCount > playercount)
 							{
 								StartNextRound();
-								LogToFileEx(g_sEventsLogFile, "Event Catch was started by voting");
+								if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Catch was started by voting");
 							}
 							else CPrintToChatAll("%t %t", "catch_tag" , "catch_need", Missing, client);
 						}

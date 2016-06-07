@@ -184,7 +184,7 @@ public Action SetEVENTNAME(int client,int args)
 					if (g_iCoolDown == 0) //is event cooled down?
 					{
 						StartNextRound(); //prepare Event for next round
-						LogToFileEx(g_sEventsLogFile, "Event EVENTNAME was started by warden %L", client);
+						if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event EVENTNAME was started by warden %L", client);
 					}
 					else CPrintToChat(client, "%t %t", "eventname_tag" , "eventname_wait", g_iCoolDown);
 				}
@@ -204,7 +204,7 @@ public Action SetEVENTNAME(int client,int args)
 						if (g_iCoolDown == 0) //is event cooled down?
 						{
 							StartNextRound(); //prepare Event for next round
-							LogToFileEx(g_sEventsLogFile, "Event EVENTNAME was started by admin %L", client);
+							if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event EVENTNAME was started by admin %L", client);
 						}
 						else CPrintToChat(client, "%t %t", "eventname_tag" , "eventname_wait", g_iCoolDown);
 					}
@@ -245,7 +245,7 @@ public Action VoteEVENTNAME(int client,int args)
 						if (g_iVoteCount > playercount) 
 						{
 							StartNextRound(); //prepare Event for next round
-							LogToFileEx(g_sEventsLogFile, "Event EVENTNAME was started by voting");
+							if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event EVENTNAME was started by voting");
 						}
 						else CPrintToChatAll("%t %t", "eventname_tag" , "eventname_need", Missing, client);
 					}

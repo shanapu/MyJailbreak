@@ -196,7 +196,7 @@ public Action SetZeus(int client,int args)
 						if (g_iCoolDown == 0)
 						{
 							StartNextRound();
-							LogToFileEx(g_sEventsLogFile, "Event Zeus was started by warden %L", client);
+							if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Zeus was started by warden %L", client);
 						}
 						else CPrintToChat(client, "%t %t", "zeus_tag" , "zeus_wait", g_iCoolDown);
 					}
@@ -220,7 +220,7 @@ public Action SetZeus(int client,int args)
 							if (g_iCoolDown == 0)
 							{
 								StartNextRound();
-								LogToFileEx(g_sEventsLogFile, "Event Zeus was started by admin %L", client);
+								if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Zeus was started by admin %L", client);
 							}
 							else CPrintToChat(client, "%t %t", "zeus_tag" , "zeus_wait", g_iCoolDown);
 						}
@@ -265,7 +265,7 @@ public Action VoteZeus(int client,int args)
 							if (g_iVoteCount > playercount)
 							{
 								StartNextRound();
-								LogToFileEx(g_sEventsLogFile, "Event zeus was started by voting");
+								if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event zeus was started by voting");
 							}
 							else CPrintToChatAll("%t %t", "zeus_tag" , "zeus_need", Missing, client);
 						}

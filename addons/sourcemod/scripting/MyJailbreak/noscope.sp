@@ -211,7 +211,7 @@ public Action SetNoScope(int client,int args)
 						if (g_iCoolDown == 0)
 						{
 							StartNextRound();
-							LogToFileEx(g_sEventsLogFile, "Event NoScope was started by warden %L", client);
+							if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event NoScope was started by warden %L", client);
 						}
 						else CPrintToChat(client, "%t %t", "noscope_tag" , "noscope_wait", g_iCoolDown);
 					}
@@ -235,7 +235,7 @@ public Action SetNoScope(int client,int args)
 							if (g_iCoolDown == 0)
 							{
 								StartNextRound();
-								LogToFileEx(g_sEventsLogFile, "Event NoScope was started by admin %L", client);
+								if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event NoScope was started by admin %L", client);
 							}
 							else CPrintToChat(client, "%t %t", "noscope_tag" , "noscope_wait", g_iCoolDown);
 						}
@@ -280,7 +280,7 @@ public Action VoteNoScope(int client,int args)
 							if (g_iVoteCount > playercount)
 							{
 								StartNextRound();
-								LogToFileEx(g_sEventsLogFile, "Event NoScope was started by voting");
+								if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event NoScope was started by voting");
 							}
 							else CPrintToChatAll("%t %t", "noscope_tag" , "noscope_need", Missing, client);
 						}

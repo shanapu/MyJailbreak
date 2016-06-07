@@ -10,7 +10,7 @@
 
 //ConVars
 ConVar gc_bTag;
-//ConVar gc_bLogging;
+ConVar gc_bLogging;
 
 //Strings
 char IsEventDay[128] = "none";
@@ -26,8 +26,9 @@ public Plugin myinfo = {
 public void OnPluginStart()
 {
 	gc_bTag = CreateConVar("sm_myjb_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", _, true,  0.0, true, 1.0);
-//	gc_bLogging = CreateConVar("sm_myjb_logging", "1", "Allow MyJailbreak to log warden, freeday & eventday events in logs/MyJailbreak", _, true,  0.0, true, 1.0);
+	gc_bLogging = CreateConVar("sm_myjb_log", "1", "Allow MyJailbreak to log events, freekills & eventdays in logs/MyJailbreak", _, true,  0.0, true, 1.0);
 	
+	 // no warning on compile
 //	HookEvent("round_start", RoundStart);
 	}
 
@@ -35,6 +36,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 {
 	CreateNative("SetEventDay", Native_SetEventDay);
 	CreateNative("GetEventDay", Native_GetEventDay);
+	CreateNative("MyJBLogging", Native_GetMyJBLogging);
 	
 	if (GetEngineVersion() != Engine_CSGO)
 	{
@@ -62,7 +64,7 @@ public void OnConfigsExecuted()
 	}
 }
 
-/*
+/*   NOT GOOD!!!   work in progress
 public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
 	for(int client=1; client <= MaxClients; client++)
@@ -105,4 +107,10 @@ public int Native_SetEventDay(Handle plugin,int argc)
 public int Native_GetEventDay(Handle plugin,int argc)
 {
 	SetNativeString(1, IsEventDay, sizeof(IsEventDay));
+}
+
+public int Native_GetMyJBLogging(Handle plugin,int argc)
+{
+	if(gc_bLogging.BoolValue) return true;
+	else return false;
 }

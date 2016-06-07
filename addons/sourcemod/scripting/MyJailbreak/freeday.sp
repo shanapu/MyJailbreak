@@ -157,7 +157,7 @@ public Action SetFreeday(int client,int args)
 					if (g_iCoolDown == 0)
 					{
 						StartNextRound();
-						LogToFileEx(g_sEventsLogFile, "Event Freeday was started by warden %L", client);
+						if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Freeday was started by warden %L", client);
 					}
 					else CPrintToChat(client, "%t %t", "freeday_tag" , "freeday_wait", g_iCoolDown);
 				}
@@ -177,7 +177,7 @@ public Action SetFreeday(int client,int args)
 						if (g_iCoolDown == 0)
 						{
 							StartNextRound();
-							LogToFileEx(g_sEventsLogFile, "Event Freeday was started by admin %L", client);
+							if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Freeday was started by admin %L", client);
 						}
 						else CPrintToChat(client, "%t %t", "freeday_tag" , "freeday_wait", g_iCoolDown);
 					}
@@ -218,7 +218,7 @@ public Action VoteFreeday(int client,int args)
 						if (g_iVoteCount > playercount)
 						{
 							StartNextRound();
-							LogToFileEx(g_sEventsLogFile, "Event freeday was started by voting");
+							if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event freeday was started by voting");
 						}
 						else CPrintToChatAll("%t %t", "freeday_tag" , "freeday_need", Missing, client);
 					}

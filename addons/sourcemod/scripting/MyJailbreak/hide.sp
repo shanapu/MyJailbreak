@@ -212,7 +212,7 @@ public Action SetHide(int client,int args)
 							if (g_iCoolDown == 0)
 							{
 								StartNextRound();
-								LogToFileEx(g_sEventsLogFile, "Event Hide was started by warden %L", client);
+								if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Hide was started by warden %L", client);
 							}
 							else CPrintToChat(client, "%t %t", "hide_tag" , "hide_wait", g_iCoolDown);
 						}
@@ -236,7 +236,7 @@ public Action SetHide(int client,int args)
 								if (g_iCoolDown == 0)
 								{
 									StartNextRound();
-									LogToFileEx(g_sEventsLogFile, "Event Hide was started by admin %L", client);
+									if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Hide was started by admin %L", client);
 								}
 								else CPrintToChat(client, "%t %t", "hide_tag" , "hide_wait", g_iCoolDown);
 							}
@@ -281,7 +281,7 @@ public Action VoteHide(int client,int args)
 							if (g_iVoteCount > playercount)
 							{
 								StartNextRound();
-								LogToFileEx(g_sEventsLogFile, "Event Hide was started by voting");
+								if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Hide was started by voting");
 							}
 							else CPrintToChatAll("%t %t", "hide_tag" , "hide_need", Missing, client);
 						}

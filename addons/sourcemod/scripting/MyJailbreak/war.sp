@@ -194,7 +194,7 @@ public Action SetWar(int client,int args)
 						if (g_iCoolDown == 0)
 						{
 							StartNextRound();
-							LogToFileEx(g_sEventsLogFile, "Event war was started by warden %L", client);
+							if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event war was started by warden %L", client);
 						}
 						else CPrintToChat(client, "%t %t", "war_tag" , "war_wait", g_iCoolDown);
 					}
@@ -218,7 +218,7 @@ public Action SetWar(int client,int args)
 							if (g_iCoolDown == 0)
 							{
 								StartNextRound();
-								LogToFileEx(g_sEventsLogFile, "Event war was started by admin %L", client);
+								if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event war was started by admin %L", client);
 							}
 							else CPrintToChat(client, "%t %t", "war_tag" , "war_wait", g_iCoolDown);
 						}
@@ -263,7 +263,7 @@ public Action VoteWar(int client,int args)
 							if(g_iVoteCount > playercount)
 							{
 								StartNextRound();
-								LogToFileEx(g_sEventsLogFile, "Event war was started by voting");
+								if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event war was started by voting");
 							}
 							else CPrintToChatAll("%t %t", "war_tag" , "war_need", Missing, client);
 						}

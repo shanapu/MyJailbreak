@@ -3,7 +3,7 @@
 #endif
 #define _myjailbreak_included_
 
-#define PLUGIN_VERSION "Beta 2.1.x"
+#define PLUGIN_VERSION "Beta 3.0.dev"
 #define URL_LINK "https://github.com/shanapu/MyJailbreak"
 
 #include <sdktools>
@@ -31,6 +31,8 @@ public SharedPlugin:__pl_myjailbreak =
 native SetEventDay(const char[] name);
 
 native GetEventDay(char[] CurrentEventDay);
+
+native bool MyJBLogging(bool IsLogging);
 
 stock PrecacheDecalAnyDownload(char[] sDecal)
 {
@@ -163,7 +165,6 @@ public Action SetLogFile(char LogFile[PLATFORM_MAX_PATH] , char [] FileName)
 		BuildPath(Path_SM, LogFile, sizeof(LogFile), LogFile);
 }
 
-
 stock void SetPlayerWeaponAmmo(int client, int weaponEnt, int clip = -1, int ammo = -1)
 {
 	if (weaponEnt == INVALID_ENT_REFERENCE)
@@ -180,4 +181,12 @@ stock void SetPlayerWeaponAmmo(int client, int weaponEnt, int clip = -1, int amm
 			SetEntProp(weaponEnt, Prop_Send, "m_iPrimaryReserveAmmoCount", ammo);
 		}
 	}
+}
+
+
+stock int GetAliveTeamCount(int team)
+{
+	int number = 0;
+	LoopClients(i) if(IsPlayerAlive(i) && GetClientTeam(i) == team) number++;
+	return number;
 }
