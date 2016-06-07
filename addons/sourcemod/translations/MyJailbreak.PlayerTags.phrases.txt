@@ -10,7 +10,7 @@
 	
 	"tags_T"
 	{
-		"en"		"[Fange]"	
+		"da"		"[Fange]"	
 		"en"		"[Prisoner]"
 		"de"		"[Häftling]"
 		"chi"		"[囚犯]"
