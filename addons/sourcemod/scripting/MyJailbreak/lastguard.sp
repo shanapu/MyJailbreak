@@ -15,6 +15,7 @@
 //Booleans
 bool IsLastGuard;
 bool IsLR;
+bool MinCT = false;
 
 //ConVars
 ConVar gc_bPlugin;
@@ -46,7 +47,7 @@ char g_sCustomCommand[64];
 char g_sMyJBLogFile[PLATFORM_MAX_PATH];
 
 public Plugin myinfo = {
-	name = "MyJailbreak - LastGuard",
+	name = "MyJailbreak - Last Guard Rule",
 	author = "shanapu",
 	description = "Last Guard Rule for Jailbreak Server",
 	version = PLUGIN_VERSION,
@@ -60,7 +61,7 @@ public void OnPluginStart()
 	LoadTranslations("MyJailbreak.LastGuard.phrases");
 	
 	//Client Commands
-	RegConsoleCmd("sm_lastguard", VoteLastGuard, "Allows terrors to vote and last CT to set lastguard");	
+	RegConsoleCmd("sm_lastguard", VoteLastGuard, "Allows terrors to vote and last CT to set Last Guard Rule");	
 	
 	//AutoExecConfig
 	AutoExecConfig_SetFile("LastGuard", "MyJailbreak");
@@ -69,11 +70,11 @@ public void OnPluginStart()
 	AutoExecConfig_CreateConVar("sm_lastguard_version", PLUGIN_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_lastguard_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true,  0.0, true, 1.0);
 	gc_sCustomCommand = AutoExecConfig_CreateConVar("sm_lastguard_cmd", "lg", "Set your custom chat command for Last Guard Rule. no need for sm_ or !");
-	gc_bSetCT = AutoExecConfig_CreateConVar("sm_lastguard_warden", "1", "0 - disabled, 1 - allow last CT to set last guard rule", _, true,  0.0, true, 1.0);
-	gc_bVote = AutoExecConfig_CreateConVar("sm_lastguard_vote", "1", "0 - disabled, 1 - allow alive player to vote for last guard rule", _, true,  0.0, true, 1.0);
-	gc_bAutomatic = AutoExecConfig_CreateConVar("sm_lastguard_auto", "0", "0 - disabled, 1 - Last guard rule will start automatic if there is only 1 ct", _, true,  0.0, true, 1.0);
+	gc_bSetCT = AutoExecConfig_CreateConVar("sm_lastguard_ct", "1", "0 - disabled, 1 - allow last CT to set Last Guard Rule", _, true,  0.0, true, 1.0);
+	gc_bVote = AutoExecConfig_CreateConVar("sm_lastguard_vote", "1", "0 - disabled, 1 - allow alive player to vote for Last Guard Rule", _, true,  0.0, true, 1.0);
+	gc_bAutomatic = AutoExecConfig_CreateConVar("sm_lastguard_auto", "0", "0 - disabled, 1 - Last Guard Rule will start automatic if there is only 1 ct. Disables sm_lastguard_vote & sm_lastguard_ct", _, true,  0.0, true, 1.0);
 	gc_iHPmultipler = AutoExecConfig_CreateConVar("sm_lastguard_hp", "50", "How many percent of the combined Terror Health the CT get? (3 terror alive with 100HP = 300HP / 50% = CT get 150HP", _, true,  0.0);
-	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_lastguard_trucetime", "10", "Time in seconds players can't deal damage", _, true,  0.0);
+	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_lastguard_trucetime", "10", "Time in seconds players can't deal damage. Half of this time you are freezed", _, true,  0.0);
 	gc_bSounds = AutoExecConfig_CreateConVar("sm_lastguard_sounds_enable", "1", "0 - disabled, 1 - enable sounds ", _, true, 0.1, true, 1.0);
 	gc_sSoundStartPath = AutoExecConfig_CreateConVar("sm_lastguard_sounds_start", "music/MyJailbreak/start.mp3", "Path to the soundfile which should be played for LGR beginn.");
 	gc_sSoundLastCTPath = AutoExecConfig_CreateConVar("sm_lastguard_sounds_beginn", "music/MyJailbreak/lastct.mp3", "Path to the soundfile which should be played for LGR anouncment.");
@@ -86,8 +87,8 @@ public void OnPluginStart()
 	//Hooks
 	HookEvent("round_start", RoundStart);
 	HookEvent("round_end", RoundEnd);
-	HookEvent("player_team", EventPlayerTeam);
-	HookEvent("player_death", EventPlayerTeam);
+	HookEvent("player_team", EventPlayer);
+	HookEvent("player_death", EventPlayer);
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundLastCTPath, OnSettingChanged);
@@ -128,7 +129,7 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 		char sBufferCMD[64];
 		Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommand);
 		if(GetCommandFlags(sBufferCMD) == INVALID_FCVAR_FLAGS)
-			RegConsoleCmd(sBufferCMD, VoteLastGuard, "Allows players to vote for lastguard");
+			RegConsoleCmd(sBufferCMD, VoteLastGuard, "Allows players to vote for Last Guard Rule");
 	}
 }
 
@@ -137,7 +138,10 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
 	IsLR = false;
+	IsLastGuard = false;
+	MinCT = false;
 	g_iVoteCount = 0;
+	if (GetAliveTeamCount(CS_TEAM_CT) > 1) MinCT = true;
 }
 
 public void OnMapStart()
@@ -160,7 +164,7 @@ public void OnConfigsExecuted()
 	char sBufferCMD[64];    //Register the custom command 
 	Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommand);
 	if(GetCommandFlags(sBufferCMD) == INVALID_FCVAR_FLAGS)
-		RegConsoleCmd(sBufferCMD, VoteLastGuard, "Allows players to vote for no scope");
+		RegConsoleCmd(sBufferCMD, VoteLastGuard, "Allows players to vote for Last Guard Rule");
 }
 
 //Voting for Event
@@ -195,7 +199,7 @@ public Action VoteLastGuard(int client,int args)
 								if (g_iVoteCount > playercount)
 								{
 									StartLastGuard();
-									if(MyJBLogging(true)) LogToFileEx(g_sMyJBLogFile, "Last Guard rule was started by voting");
+									if(MyJBLogging(true)) LogToFileEx(g_sMyJBLogFile, "Last Guard Rule was started by voting");
 								}
 								else CPrintToChatAll("%t %t", "lastguard_tag" , "lastguard_need", Missing, client);
 							}
@@ -247,6 +251,7 @@ public Action StartLastGuard()
 	
 	SetCvar("sm_hosties_lr", 0);
 	SetCvar("sm_weapons_t", 1);
+	SetCvar("sm_warden_enable", 0);
 	
 	
 	if(gc_bSounds.BoolValue)
@@ -321,11 +326,12 @@ public Action StartTimer(Handle timer)
 		LoopClients(client) if (IsPlayerAlive(client))
 		{
 			PrintHintText(client,"%t", "lastguard_timeuntilstart_nc", g_iTruceTime);
-			if (g_iTruceTime == (gc_iTruceTime.IntValue / 2))
+			if ((g_iTruceTime <= (gc_iTruceTime.IntValue / 2)) && (GetEntityMoveType(client) == MOVETYPE_NONE))
 			{
 				SetEntityMoveType(client, MOVETYPE_WALK);
 				PrintHintText(client,"%t", "lastguard_movenow_nc", g_iTruceTime);
 				CPrintToChat(client, "%t %t", "lastguard_tag" , "lastguard_movenow");
+				
 			}
 		}
 		
@@ -347,7 +353,7 @@ public Action StartTimer(Handle timer)
 	CPrintToChatAll("%t %t", "lastguard_tag" , "lastguard_start");
 	
 	TruceTimer = null;
-	
+	SJD_OpenDoors();
 	return Plugin_Stop;
 }
 
@@ -371,6 +377,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 		IsLastGuard = false;
 		SetCvar("sm_hosties_lr", 1);
 		SetCvar("sm_weapons_t", 0);
+		SetCvar("sm_warden_enable", 1);
 		CPrintToChatAll("%t %t", "lastguard_tag" , "lastguard_end");
 	}
 	IsLR = false;
@@ -387,10 +394,7 @@ public void OnMapEnd()
 	SetEventDay("none");
 }
 
-public void OnClientDisconnect_Post(int client)
-{
-	CheckStatus();
-}
+//check count for automatic 
 
 public Action CheckStatus()
 {
@@ -399,20 +403,26 @@ public Action CheckStatus()
 		char EventDay[64];
 		GetEventDay(EventDay);
 		
-		if ((GetAliveTeamCount(CS_TEAM_CT) == 1) && (GetAliveTeamCount(CS_TEAM_T) > 1 ) && StrEqual(EventDay, "none", false) && !IsLastGuard && !IsLR)
+		if ((GetAliveTeamCount(CS_TEAM_CT) == 1) && (GetAliveTeamCount(CS_TEAM_T) > 1 ) && StrEqual(EventDay, "none", false) && !IsLastGuard && !IsLR && MinCT)
 		{
 			StartLastGuard();
 			if(MyJBLogging(true)) LogToFileEx(g_sMyJBLogFile, "Last Guard Rule was started automatic");
+			MinCT = false;
 		}
 	}
+}
+
+public Action EventPlayer(Event event, const char[] name, bool dontBroadcast)
+{
+	CheckStatus();
+}
+
+public void OnClientDisconnect_Post(int client)
+{
+	CheckStatus();
 }
 
 public int OnAvailableLR(int Announced)
 {
 	IsLR = true;
-}
-
-public Action EventPlayerTeam(Event event, const char[] name, bool dontBroadcast)
-{
-	CheckStatus();
 }

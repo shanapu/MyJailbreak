@@ -2,14 +2,14 @@
 {
 	"lastguard_tag"
 	{
-		"en"		"[{green}MyJB.lastguard{default}]"
+		"en"		"[{green}MyJB.LastGuardRule{default}]"
 	}
 	"lastguard_need"
 	{
 		"#format"	"{1:i},{2:N}"
-		"da"		"{purple}{2}{default} har afstemt!. {purple}{1}{default} afstemninger tilbage til {darkred}lastguard"		
-		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes left to {darkred}lastguard"
-		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}lastguard{default} beginnt"
+		"da"		"{purple}{2}{default} har afstemt!. {purple}{1}{default} afstemninger tilbage til {darkred}Last Guard Rule"		
+		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes left to {darkred}Last Guard Rule"
+		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}Last Guard Rule{default} beginnt"
 	}
 	"lastguard_twin_nc"
 	{
@@ -18,19 +18,19 @@
 	}
 	"lastguard_minplayer"
 	{
-		"en"		"For a lastguard you need at maximum {purple}one CT & minimum 2 T"
+		"en"		"For a Last Guard Rule you need at maximum {purple}one CT & minimum 2 T"
 	}
 	"lastguard_hp"
 	{
 		"#format"	"{1:i},{2:i},{3:N},{4:i}"
-		"en"		"The {purple}{1} alive terrorists{default} have together {purple}{2} HP{default}. The Last Guard {4} get {purple}{3} HP{default}."
-		"de"		"Die {purple}{1} lebenden Terroristen{default} haben zusammen {purple}{2} HP{default}. Der Last Guard {4} bekommt {purple}{3} HP{default}."
+		"en"		"The {purple}{1} alive terrorists{default} have together {purple}{2} HP{default}. The last guard {4} get {purple}{3} HP{default}."
+		"de"		"Die {purple}{1} lebenden Terroristen{default} haben zusammen {purple}{2} HP{default}. Der letzte Wärter {4} bekommt deshalb {purple}{3} HP{default}."
 	}
 	"lastguard_setbyadmin"
 	{
-		"da"		"Admin bestemmer runde for No Scope er {purple}slået fra"		
-		"en"		"Set lastguard by admin is {purple}disabled"
-		"de"		"Last Guard Aktivierung durch den Admin ist {purple}ausgeschaltet"
+		"da"		"Admin bestemmer runde for Last Guard Rule er {purple}slået fra"		
+		"en"		"Set Last Guard Rule by admin is {purple}disabled"
+		"de"		"Last Guard Rule Aktivierung durch den Admin ist {purple}ausgeschaltet"
 	}
 	"lastguard_ctwin_nc"
 	{
@@ -40,28 +40,14 @@
 	
 	"lastguard_end"
 	{
-		"da"		"{purple}Last Guard{default} er afsluttet!"	
-		"en"		"{purple}Last Guard{default} finished"
-		"de"		"{purple}Last Guard{default} beendet"
+		"da"		"{purple}Last Guard Rule{default} er afsluttet!"	
+		"en"		"{purple}Last Guard Rule{default} finished"
+		"de"		"{purple}Last Guard Rule{default} beendet"
 	}
-	
-	"lastguard_next"
-	{
-		"da"		"Næste runde er {purple}Last Guard"	
-		"en"		"Next round is {purple}Last Guard"
-		"de"		"Nächste Runde ist {purple}Last Guard"
-	}
-	"lastguard_next_nc"
-	{
-		"da"		"Næste runde er lastguard"	
-		"en"		"Next round is lastguard"
-		"de"		"Nächste Runde ist lastguard"
-	}
-	
 	"lastguard_startnow"
 	{
-		"en"		"Attention! {purple}Last Guard{default} is set!"
-		"de"		"Achtung! {purple}Last Guard{default} startet gleich!"
+		"en"		"Attention! {purple}Last Guard Rule{default} is set!"
+		"de"		"Achtung! {purple}Last Guard Rule{default} startet gleich!"
 	}
 	
 	"lastguard_startnow_nc"
@@ -71,20 +57,20 @@
 	}
 	"lastguard_start"
 	{
-		"da"		"{purple}Last Guard{default} er startet!"
-		"en"		"The {purple}Last Guard{default} has started!"
-		"de"		"{purple}Last Guard{default} ist gestartet!"
+		"da"		"{purple}Last Guard Rule{default} er startet!"
+		"en"		"The {purple}Last Guard Rule{default} has started!"
+		"de"		"{purple}Last Guard Rule{default} ist gestartet!"
 	}
 	"lastguard_lr"
 	{
-		"en"		"The {purple}Last Request{default} is active! Last Guard not available."
-		"de"		"{purple}Last Request{default} ist aktiv! Last Guard deaktiviert."
+		"en"		"The {purple}Last Request{default} is active! Last Guard Rule not available."
+		"de"		"{purple}Last Request{default} ist aktiv! Last Guard Rule deaktiviert."
 	}
 	"lastguard_start_nc"
 	{
-		"da"		"Last Guard er startet!"
-		"en"		"Last Guard started!"
-		"de"		"Last Guard ist gestartet!"
+		"da"		"Last Guard Rule er startet!"
+		"en"		"Last Guard Rule started!"
+		"de"		"Last Guard Rule ist gestartet!"
 	}
 	"lastguard_movenow"
 	{
@@ -98,9 +84,9 @@
 	}
 	"lastguard_voted"
 	{
-		"da"		"Du har allerede stemt for {purple}Last Guard!"	
-		"en"		"You already voted for {purple}Last Guard"
-		"de"		"Du hast schon für {purple}Last Guard {default}gevotet"
+		"da"		"Du har allerede stemt for {purple}Last Guard Rule!"	
+		"en"		"You already voted for {purple}Last Guard Rule"
+		"de"		"Du hast schon für {purple}Last Guard Rule {default}gevotet"
 	}
 	"lastguard_notalive"
 	{
@@ -110,19 +96,19 @@
 	"lastguard_progress"
 	{
 		"#format"	"{1:s}"
-		"en"		"Event {darkred}{1} {default}is {purple}already in progress. Last Guard Rule is disabled"
+		"en"		"Event {darkred}{1} {default}is {purple}already in progress. Last Guard Rule Rule is disabled"
 		"de"		"Event {darkred}{1} {default}ist {purple}bereits gesetzt. Letzer CT is deaktiviert"
 	}
 	"lastguard_running"
 	{
-		"en"		"Last Guard  {default}is {purple}already in progress."
-		"de"		"Last Guard  {default}ist {purple}läuft bereits."
+		"en"		"Last Guard Rule {default}is {purple}already in progress."
+		"de"		"Last Guard Rule {default}ist {purple}läuft bereits."
 	}
 	"lastguard_disabled"
 	{
-		"da"		"Last Guard er {purple}slået fra."
-		"en"		"Last Guard is {purple}disabled."
-		"de"		"Last Guard ist {purple}deaktiviert."
+		"da"		"Last Guard Rule er {purple}slået fra."
+		"en"		"Last Guard Rule is {purple}disabled."
+		"de"		"Last Guard Rule ist {purple}deaktiviert."
 	}
 	"lastguard_timeuntilstart_nc"
 	{
@@ -134,15 +120,15 @@
 	
 	"lastguard_info_title"
 	{
-		"en"		"Last Guard er aktiveret!"	
-		"en"		"Last Guard is active"
-		"de"		"Last Guard ist aktiv"
+		"en"		"Last Guard Rule er aktiveret!"	
+		"en"		"Last Guard Rule is active"
+		"de"		"Last Guard Rule ist aktiv"
 	}
 	
 	"lastguard_info_line1"
 	{
-		"en"		"Last Guard - CT vs T"
-		"de"		"Last Guard - CT gegen T"
+		"en"		"Last Guard Rule - CT vs T"
+		"de"		"Last Guard Rule - CT gegen T"
 	}
 	"lastguard_info_line2"
 	{
