@@ -3,114 +3,145 @@
 	"menu_info" // only color line! working color tags {default}, {darkred}, {red}, {green}, {lightgreen}, {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
 	{
 		"en"			"[{green}MyJB.menu{default}] To open the jailbreak menu press , or type !menu"
+		"chi"			"[{green}我监狱.Menu{default}]要打开MENU按，或输入!menu"
 	}	
 	"menu_info_title"
 	{
 		"en"			"MyJailbreak Menu"
+		"chi"			"我监狱.Menu"
 	}	
 	"menu_countdown"
 	{
 		"en"			"Start a Countdown"
+		"chi"			"启动倒计时"
 	}	
 	"menu_opencell"
 	{
 		"en"			"Open cell doors"
+		"chi"			"开放式监狱大门"
 	}
 	"menu_seteventdays"
 	{
 		"en"			"Set EventDays"
+		"chi"			"集游戏天"
 	}
 	"menu_voteeventdays"
 	{
 		"en"			"Vote EventDays"
+		"chi"			"投票当天游戏天"
 	}
 	"menu_math"
 	{
 		"en"			"Math Quiz"
+		"chi"			"数学测验"
 	}
 	"menu_guns"
 	{
 		"en"			"Weapon Menu"
+		"chi"			"枪菜单"
 	}	
 	"menu_laser"
 	{
 		"en"			"Laser Pointer Menu"
+		"chi"			"激光菜单"
+		
 	}	
 	"menu_drawer"
 	{
 		"en"			"Drawer Menu"
+		"chi"			"画画菜单"
+		
 	}	
 	"menu_noblock"
 	{
 		"en"			"Toggle No Block"
+		"chi"			"切换No Block"
 	}	
 	"menu_ffon"
 	{
 		"en"			"Enable FF for Ts"
+		"chi"			"启用误伤"
+		
 	}	
 	"menu_ffoff"
 	{
 		"en"			"Disable FF for Ts"
+		"chi"			"关掉误伤"
 	}
 	"menu_randomdead"
 	{
 		"en"			"Kill a random Terrorist"
+		"chi"			"随机杀Terrorist"
 	}	
 	"menu_unwarden"
 	{
 		"en"			"Leave warden"
+		"chi"			"监狱长退休"
 	}	
 	"menu_getwarden"
 	{
 		"en"			"Become warden"
+		"chi"			"成为监狱长"
 	}	
 	"menu_joint"
 	{
 		"en"			"Join Terror"
+		"chi"			"加入恐怖"
 	}
 	"menu_check"
 	{
 		"en"			"Check Players"
+		"chi"			"查Players"
 	}
 	"menu_lr"
 	{
 		"en"			"Last Request"
+		"chi"			"最后一个请求(Last-Request)"
 	}
 	"menu_removewarden"
 	{
 		"en"			"Remove warden"
+		"chi"			"消防队长"
 	}
 	"menu_setwarden"
 	{
 		"en"			"Set new warden"
+		"chi"			"设置新的监狱长"
 	}
 	"menu_rules"
 	{
 		"en"			"Rules"
+		"chi"			"规则"
 	}
 	"menu_joinct"
 	{
 		"en"			"Join Counter-Terror"
+		"chi"			"加入Counter-Terror"
 	}
 	"menu_guardct"
 	{
 		"en"			"Join CT queue (!guard)"
+		"chi"			"排队CT(!guard)"
 	}
 	"menu_request"
 	{
 		"en"			"Requests"
+		"chi"			"要求(Requests)"
 	}
 	"menu_votewarden"
 	{
 		"en"			"Vote fire warden"
+		"chi"			"投票消防队长"
 	}
 	"menu_event_Titlestart"
 	{
 		"en"			"Start Event next round"
+		"chi"			"活动下一轮开始"
 	}
 	"menu_event_Titlevote"
 	{
 		"en"			"Vote for a Event Day"
+		"chi"			"投票游戏天"
 	}
 	"menu_war"
 	{
@@ -176,6 +207,7 @@
 	"menu_admin"
 	{
 		"en"			"Admin Menu"
+		"chi"			"管理菜单"
 	}
 	"menu_mute"
 	{

@@ -5,6 +5,7 @@
 		"da"		"[Fange&Admin]"	
 		"en"		"[Prisoner&Admin]"
 		"de"		"[Häftling&Admin]"
+		"chi"		"[囚犯和管理员]"
 	}
 	
 	"tags_T"
@@ -12,6 +13,7 @@
 		"en"		"[Fange]"	
 		"en"		"[Prisoner]"
 		"de"		"[Häftling]"
+		"chi"		"[囚犯]"
 	}
 	
 	"tags_CTA"
@@ -19,6 +21,7 @@
 		"da"		"[Vagt&Admin]"	
 		"en"		"[Guard&Admin]"
 		"de"		"[Wärter&Admin]"
+		"chi"		"[狱警和管理员]"
 	}
 	
 	"tags_CT"
@@ -26,6 +29,7 @@
 		"da"		"[Vagt]"	
 		"en"		"[Guard]"
 		"de"		"[Wärter]"
+		"chi"		"[狱警]"
 	}
 	
 	"tags_WA"
@@ -33,6 +37,7 @@
 		"da"		"[Warden&Admin]"	
 		"en"		"[Warden&Admin]"
 		"de"		"[Warden&Admin]"
+		"chi"		"[监狱长和管理员]"
 	}
 	
 	"tags_W"
@@ -40,5 +45,6 @@
 		"da"		"[Warden]"	
 		"en"		"[Warden]"
 		"de"		"[Warden]"
+		"chi"		"[监狱长]"
 	}
 }
