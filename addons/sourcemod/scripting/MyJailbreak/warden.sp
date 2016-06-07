@@ -1560,7 +1560,7 @@ public bool TraceFilterAllEntities(int entity, int contentsMask, any client)
 
 public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
 {
-	if (client == g_iWarden)
+	if (client == g_iWarden && gc_bPlugin.BoolValue)
 	{
 		if (buttons & IN_ATTACK2)
 		{
@@ -2775,7 +2775,7 @@ public Action BulletImpact(Handle hEvent, char [] sName, bool bDontBroadcast)
 {
 	int iClient = GetClientOfUserId(GetEventInt(hEvent, "userid"));
 	
-	if (!gc_bBulletSparks || !warden_iswarden(iClient) || !g_bBulletSparks[iClient])
+	if (!gc_bPlugin.BoolValue || !gc_bBulletSparks || !warden_iswarden(iClient) || !g_bBulletSparks[iClient])
 		return Plugin_Continue;
 	
 	float startpos[3];
