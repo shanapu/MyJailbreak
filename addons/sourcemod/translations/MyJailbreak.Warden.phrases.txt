@@ -14,6 +14,7 @@
 		"pt"		"{purple}{1}{default} Agora, o diretor da prisão.."
 		"sv"		"{purple}{1}{default} har blivit fängelsedirektör över detta fängelse."
 		"de"		"{purple}{1}{default} ist der neue Warden dieses Gefängnisses."
+		"pl"		"{purple}{1}{default} zostal Wardenem tego wiezienia."
 	}
 	
 	"warden_new_nc"		// no colors!
@@ -25,6 +26,7 @@
 		"pt"		"{1} Agora, o diretor da prisão.."
 		"sv"		"{1} har blivit fängelsedirektör över detta fängelse."
 		"de"		"{1} ist der neue Warden dieses Gefängnisses."
+		"pl"		"{1} zostal Wardenem tego wiezienia."
 	}
 	
 	"warden_playerdead"
@@ -35,6 +37,7 @@
 		"pt"		"Apenas os {purple}jogadores podem{default} viver o diretor.."
 		"sv"		"Endast levande spelare kan bli fängelsedirektör."
 		"de"		"nur {purple}lebende Spieler{default} können Warden werden."
+		"pl"		"tylko {purple}zyjacy gracze{default} moga zostac Wardenem."
 	}
 	
 	"warden_ctsonly"
@@ -45,6 +48,7 @@
 		"pt"		"Apenas o diretor pode ser {purple}AntiTerrorista{default}."
 		"sv"		"Endast {purple}Anti-Terrorister{default} kan bli fängelsedirektör."
 		"de"		"nur {purple}Counter-Terrorists{default} können Warden werden."
+		"pl"		"tylko  {purple}Counter-Terrorists{default} moze zostac Wardenem."
 	}
 	
 	"warden_exist"
@@ -56,6 +60,7 @@
 		"pt"		"Atual diretor: {purple}{1}{default}"
 		"sv"		"nuvarande fängelsedirektör är: {purple}{1}{default}"
 		"de"		"Derzeitiger Warden ist {purple}{1}{default}"
+		"pl"		"obecnie Wardenem jest: {purple}{1}{default}"
 	}
 	
 	"warden_retire"
@@ -67,6 +72,7 @@
 		"pt"		"{purple}{1}{default} o atual diretor, decidiu se aposentar. Agora começa a escolher um novo.."
 		"sv"		"{purple}{1}{default} har bestämt sig för att avgå. Ni bör nu välja en ny."
 		"de"		"{purple}{1}{default} ist zurückgetreten. Wir brauchen einen neuen Warden!"
+		"pl"		"{purple}{1}{default} odchodzi na emeryture. Mozecie wybrac nowego Wardena."
 	}
 	
 	"warden_retire_nc"	// no colors!
@@ -78,12 +84,14 @@
 		"pt"		"{1} o atual diretor, decidiu se aposentar. Agora começa a escolher um novo.."
 		"sv"		"{1} har bestämt sig för att avgå. Ni bör nu välja en ny."
 		"de"		"{1} ist zurückgetreten. Wir brauchen einen neuen Warden!"
+		"pl"		"{1} odchodzi na emeryture. Mozecie wybrac nowego Wardena."
 	}
 	"warden_notwarden"
 	{
 		"da"		"Du SKAL være {purple}Warden{default} for at bruge denne command."
 		"en"		"You must be the {purple}warden{default} to use this command."
 		"de"		"Du musst {purple}Warden{default} sein um diesen Befehl zu benutzten."
+		"pl"		"Musisz byc {purple}Wardenem{default} by uzyc tej komendy."
 	}
 	
 	"warden_dead"
@@ -94,12 +102,14 @@
 		"pt"		"O diretor está {darkred}dead{default}, agora começa a escolher um novo."
 		"sv"		"fängelsedirektören är död. Ni bör nu välja en ny."
 		"de"		"Der Warden ist {darkred}Tod{default}! Ihr solltet jetzt einen neuen wählen!"
+		"pl"		"Warden wlasnie {darkred}zginal{default}.Mozna wybrac nowego!"
 	}
 	
 	"warden_nowarden"
 	{
 		"en"		"There is {purple}no warden{default}. Type {green}!w{default} to become new warden!"
 		"de"		"Es gibt zur Zeit {purple}keinen Warden{default}. Schreibe {green}!w{default} um neuer Warden zu werden!"
+		"pl"		"Nie ma {purple}Wardena{default}. Wpisz{green}!w{default} zeby zostac nowym Wardenem!"
 	}
 	
 	
@@ -107,6 +117,7 @@
 	{
 		"en"		"There is no warden. Type !w to become new warden!"
 		"de"		"Es gibt zur Zeit keinen Warden. Schreibe !w um neuer Warden zu werden!"
+		"pl"		"Nie ma Wardena. Wpisz !w  zeby zostac nowym Wardenem!"
 	}
 	
 	"warden_dead_nc"	// no colors!
@@ -117,6 +128,7 @@
 		"pt"		"O diretor está morto, agora começa a escolher um novo."
 		"sv"		"fängelsedirektören är död. Ni bör nu välja en ny."
 		"de"		"Der Warden ist Tod! Ihr solltet jetzt einen neuen wählen!"
+		"pl"		"Warden nie zyje, Mozecie wybrac nowego."
 	}
 	
 	"warden_disconnected"
@@ -127,6 +139,7 @@
 		"pt"		"O diretor deixou o jogo. Agora começa a escolher um novo."
 		"sv"		"fängelsedirektören har lämnat. Ni bör nu välja en ny."
 		"de"		"Der Warden ist {purple}disconnected{default}. Wir brauchen einen neuen Warden!"
+		"pl"		"Warden sie {purple}rozlaczyl{default}. Mozecie wybrac nowego."
 	}
 	
 	"warden_disconnected_nc"	// no colors!
@@ -137,6 +150,7 @@
 		"pt"		"O diretor deixou o jogo. Agora começa a escolher um novo."
 		"sv"		"fängelsedirektören har lämnat. Ni bör nu välja en ny."
 		"de"		"Der Warden ist disconnected. Wir brauchen einen neuen Warden!"
+		"pl"		"Warden sie rozlaczyl. Mozecie wybrac nowego."
 	}
 	
 	"warden_removed"
@@ -148,6 +162,7 @@
 		"pt"		"O Administrador do: {purple}{1}{default} o diretor se aposentou cedo:  {purple}{2}"
 		"sv"		"Admin: {purple}{1}{default} avskedade Fängelsedirektören:  {purple}{2}"
 		"de"		"Admin: {purple}{1}{default} hat Warden  {purple}{2}{default} seines Amtes enthoben."
+		"pl"		"Admin: {purple}{1}{default} zwolnil Wardena:  {purple}{2}"
 	}
 	
 	"warden_removed_nc"		// no colors!
@@ -159,6 +174,7 @@
 		"pt"		"O Administrador do: {{1} o diretor se aposentou cedo: {2}"
 		"sv"		"Admin: {1} avskedade Fängelsedirektören: {2}"
 		"de"		"Admin {1} hat Warden {2} seines Amtes enthoben."
+		"pl"		"Admin: {1} zwolnil Wardena: {2}"
 	}
 	
 	"warden_noexist"
@@ -166,6 +182,7 @@
 		"da"		"Der var {purple}ingen warden."
 		"en"		"There is {purple}no warden."
 		"de"		"Es gibt {purple}keinen Warden."
+		"pl"		"Obecnie nie ma {purple}Wardena."
 	}
 	
 	"warden_disabled"
@@ -173,12 +190,14 @@
 		"da"		"Warden er {purple}deaktiveret{default}."
 		"en"		"Warden is {purple}disabled{default}."
 		"de"		"Warden ist {purple}ausgeschaltet{default}."
+		"pl"		"Warden jest {purple}wylaczony{default}."
 	}
 	
 	"warden_nobecome"
 	{
 		"en"		"Warden will be {purple}picked randomly{default}."
 		"de"		"Warden wird {purple}zufällig ausgewählt.{default}."
+		"pl"		"Warden zostanie wybrany  {purple}losowo{default}."
 	}
 	
 	"warden_adminset"
@@ -187,17 +206,20 @@
 		"da"		"Admin: {purple}{1}{default} er warden - Valgt af admin!"
 		"en"		"Admin: {purple}{1}{default} set as warden"
 		"de"		"Admin: {purple}{1}{default} wurde zum Warden ernannt"
+		"pl"		"Admin: {purple}{1}{default} wybiera na wardena"
 	}
 	"warden_randomwarden"
 	{
 		"en"		"Choosed a random warden."
 		"de"		"Neuer Warden wurde zufällig gewählt."
+		"pl"		"Warden wybrany losowo."
 	}
 	"warden_dooropen"
 	{
 		"da"		"Warden har {purple}åbnet{default} cellerne."
 		"en"		"Warden has {purple}opened{default} the cells."
 		"de"		"Warden hat hat die Zellentüren {purple}geöffnet{default}."
+		"pl"		"Warden  {purple}otworzyl{default} cele."
 	}
 	
 	"warden_doorclose"
@@ -205,6 +227,7 @@
 		"da"		"Warden har {purple}lukket{default} cellerne."
 		"en"		"Warden has {purple}close{default} the cells."
 		"de"		"Warden hat hat die Zellentüren {purple}geschlossen{default}."
+		"pl"		"Warden  {purple}zamknal{default} cele."
 	}
 	
 	"warden_openauto"
@@ -212,6 +235,7 @@
 		"da"		"Dørene har {purple}åbnet automatisk{default}"
 		"en"		"cell doors {purple}open automaticly{default}"
 		"de"		"Zellentüren wurden {purple}automatisch geöffnet{default}"
+		"pl"		"Drzwi do cell {purple}zostaly otwarte automatycznie{default}"
 	}
 	
 	"warden_opentime"
@@ -219,6 +243,7 @@
 		"da"		"Nu skulle {purple}celle dørene{default} være åbne!"
 		"en"		"Now, the {purple}cell doors{default} should be open"
 		"de"		"jetzt sollten zeitlich die {purple}Zellen{default} geöffnet werden"
+		"pl"		"Teraz {purple}drzwi do cell {default} powinny byc otwarte"
 	}
 	
 	"warden_ffison"
@@ -226,6 +251,7 @@
 		"da"		"Friendly fire {purple}aktiveret!"
 		"en"		"Friendly fire {purple}enabled"
 		"de"		"Friendly Fire {purple}ist aktiv!"
+		"pl"		"Friendly fire {purple}jest wlaczony"
 	}
 	
 	"warden_ffisoff"
@@ -234,6 +260,7 @@
 		"da"			"Friendly fire {purple}deaktiveret!"		
 		"en"			"Friendly fire {purple}disabled"
 		"de"			"Friendly Fire {purple}ist deaktiviert!"
+		"pl"			"Friendly fire {purple}jest wylaczony"
 	}
 	
 	"warden_voting"
@@ -241,12 +268,14 @@
 		"da"		"Afstemning om at kick {purple}warden{default} er deaktiveret!"
 		"en"		"Voting for kick {purple}warden{default} is disabled"
 		"de"		"Voting gegen den {purple}Warden{default} ist ausgeschaltet!"
+		"pl"		"glosowanie na kickowanie {purple}wardena{default} jest wylaczone"
 	}
 	
 	"warden_countdowncanceled"
 	{
 		"en"		"The Counddown was {darkred}canceled"
 		"de"		"Der Countdown wurde {darkred}abgebrochen"
+		"pl"		"Odliczanie zostalo  {darkred}przerwane"
 	}
 	
 	"warden_startcountdown_nc"	// no colors!
@@ -255,6 +284,7 @@
 		"da"		"Starter om {1} sekunder!"		
 		"en"		"Start in {1} seconds!"
 		"de"		"Start in {1} Sekunden!"
+		"pl"		"Start za {1} sekund!"
 	}
 	
 		"warden_stopcountdown_nc"	// no colors!
@@ -263,6 +293,7 @@
 		"da"		"Stopper om {1} sekunder!"		
 		"en"		"Stop/End in {1} seconds!"
 		"de"		"Stop/Ende in {1} Sekunden!"
+		"pl"		"Stop/koniec  za {1} sekund!"
 	}
 	
 	"warden_startcountdown"
@@ -271,6 +302,7 @@
 		"da"		"Starter om {purple}{1}{default} sekunder!"		
 		"en"		"Start in {purple}{1}{default} seconds!"
 		"de"		"Start in {purple}{1}{default} Sekunden!"
+		"pl"		"Start za {purple}{1}{default} sekund!"
 	}
 	
 	"warden_stopcountdown"
@@ -279,6 +311,7 @@
 		"da"		"Stopper om {purple}{1}{default} sekunder!"		
 		"en"		"Stop in {purple}{1}{default} seconds!"
 		"de"		"Stop in {purple}{1}{default} Sekunden!"
+		"pl"		"Stop za {purple}{1}{default} sekund!"
 	}
 	
 	"warden_startcountdownhint"
@@ -286,6 +319,7 @@
 		"da"		"ADVARSEL! Warden har {purple}startet en CountDown!"
 		"en"		"Attention! The warden {purple}Started a START! CountDown!"
 		"de"		"Aufgepasst! Der Warden hat einen {purple}START! CountDown gestartet!"
+		"pl"		"UWAGA ! Warden{purple}Rozpoczal ODLICZANIE!"
 	}
 	
 	"warden_startcountdownhint_nc"	// no colors!
@@ -293,6 +327,7 @@
 		"da"		"ADVARSEL! Warden har startet en CountDown!"
 		"en"		"Attention! The warden Started a START! CountDown!"
 		"de"		"Aufgepasst! Der Warden hat einen START! CountDown gestartet!"
+		"pl"		"UWAGA ! Warden Rozpoczal ODLICZANIE!"
 	}
 	
 	"warden_startstopcountdownhint"
@@ -300,6 +335,7 @@
 		"da"		"ADVARSEL! Warden har {purple}startet en START/STOP CountDown!"
 		"en"		"Attention! The warden {purple}Started a START! / STOP! CountDown!"
 		"de"		"Aufgepasst! Der Warden hat einen {purple}START! / STOP! CountDown gestartet!"
+		"pl"		"UWAGA! Warden {purple}rozpoczal  START! / STOP! Odliczanie!"
 	}
 	
 	"warden_startstopcountdownhint_nc"	// no colors!
@@ -307,12 +343,14 @@
 		"da"		"ADVARSEL! Warden har startet en START/STOP CountDown!"
 		"en"		"Attention! The warden Started a START! / STOP! CountDown!"
 		"de"		"Aufgepasst! Der Warden hat einen START! / STOP! CountDown gestartet!"
+		"pl"		"UWAGA! Warden  rozpoczal  START! / STOP! Odliczanie!"
 	}
 	"warden_stopcountdownhint"
 	{
 		"da"		"ADVARSEL! Warden har {purple}STOPPET en CountDown!"
 		"en"		"Attention! The warden {purple}Started a STOP! CountDown!"
 		"de"		"Aufgepasst! Der Warden hat einen {purple}STOP! CountDown gestartet!"
+		"pl"		"UWAGA! Warden  rozpoczal {purple} STOP! Odliczanie!"
 	}
 	
 	"warden_stopcountdownhint_nc"	// no colors!
@@ -320,6 +358,7 @@
 		"da"		"ADVARSEL! Warden har startet et STOP CountDown. Skynd dig!"
 		"en"		"Attention! The warden Started a STOP! CountDown! Hurry up!"
 		"de"		"Aufgepasst! Der Warden hat einen STOP! CountDown gestartet! Beeilt euch!"
+		"pl"		"UWAGA! Warden  rozpoczal  STOP! Odliczanie!! Pospiesz SIE !"
 	}
 	
 	"warden_countdownstart"
@@ -327,12 +366,14 @@
 		"da"		"{purple}GO! {darkred}START! {green}AFSTED!"	
 		"en"		"{purple}GO! {darkred}START!"
 		"de"		"{purple}GO! {darkred}START! {green}LOS!"
+		"pl"		"{purple}GO! {darkred}START!"
 	}
 	"warden_countdownstop"
 	{
 		"da"		"{purple}STOP! {darkred}SLUT! {green}AFSLUTTET!"	
 		"en"		"{purple}STOP! {darkred}END!"
 		"de"		"{purple}ENDE! {darkred}STOP! {green}Fertig!"
+		"pl"		"{purple}STOP! {darkred}Koniec!"
 	}
 	
 	"warden_countdownrunning"
@@ -340,6 +381,7 @@
 		"da"		"En countdown er {purple}allerede i gang!"	
 		"en"		"A Countdown is {purple}already in progress"
 		"de"		"Ein Countdown {purple}läuft bereits"
+		"pl"		"Odliczanie {purple}zostalo rozpoczete"
 	}
 	
 	"warden_countdownstart_nc"		// no colors!
@@ -347,6 +389,7 @@
 		"da"		"GO! START!"
 		"en"		"GO! START!"
 		"de"		"GO! START! LOS!"
+		"pl"		"GO! START! JAZDA!"
 	}
 	
 	"warden_countdownstop_nc"		// no colors!
@@ -354,6 +397,7 @@
 		"da"		"STOP! SLUT!"
 		"en"		"STOP! END!"
 		"de"		"HALT ENDE FERTIG!"
+		"pl"		"STOP! KONIEC!"
 	}
 	
 	"warden_noblockoff"
@@ -361,6 +405,7 @@
 		"da"		"Warden har {purple}deaktiveret NOBLOCK!"
 		"en"		"The warden set {purple}noblock off!"
 		"de"		"Der Warden hat {purple}noblock ausgeschaltet!"
+		"pl"		"Warden ustawil {purple}noblock off!"
 	}
 	
 	"warden_noblockon"
@@ -368,6 +413,7 @@
 		"da"		"Warden har {purple}aktiveret NOBLOCK!"
 		"en"		"The warden set {purple}noblock on!"
 		"de"		"Der Warden hat {purple}noblock eingeschaltet!"
+		"pl"		"Warden ustawil {purple}noblock on!"
 	}
 	
 	"warden_need"
@@ -376,6 +422,7 @@
 		"da"		"{1} afstemninger tilbage til {darkred}kick warden"		
 		"en"		"{1} votes left to {darkred}kick warden"
 		"de"		"Noch {1} votes bis der {darkred}warden{default} geht"
+		"pl"		"{1} glosow by  {darkred} usunac wardena"
 	}
 	
 	"warden_voted"
@@ -383,6 +430,7 @@
 		"da"		"Du har allerede stemt på at kicke {purple}warden{default}"
 		"en"		"You already voted against the {purple}warden{default}"
 		"de"		"Du hast schon {purple}gegen den Warden{default} gestimmt"
+		"pl"		"Juz glosowales przeciwko {purple}Wardenowi{default}"
 	}
 	
 	"warden_israndom"
@@ -390,6 +438,7 @@
 		"#format"		"{1:N}"
 		"en"			"{1} was choosen randomly"
 		"de"			"{1} wurde als Zufallskanidat gewählt"
+		"pl"			"{1} zostal wybrany randomowo"
 	}
 	
 	"warden_gunplant"
@@ -397,6 +446,7 @@
 		"#format"	"{1:N},{2:s}"
 		"en"		"Guard {purple}{1}{default} dropped weapon {green}{2}"
 		"de"		"Wärter {purple}{1}{default} hat eine {green}{2}{default} fallen lassen."
+		"pl"		"Straznik  {purple}{1}{default} upuscil bron {green}{2}"
 	}
 	
 	"warden_gunplant_nc"
@@ -404,6 +454,7 @@
 		"#format"	"{1:N},{2:s}"
 		"en"		"Guard {1} dropped weapon {2}."
 		"de"		"Wärter {1} hat eine {2} fallen lassen."
+		"pl"		"Straznik {1} upuscil bron {2}."
 	}
 	
 	
@@ -411,6 +462,7 @@
 	{
 		"en"		"It's {darkred}forbidden{default} for CTs to drop weapons!"
 		"de"		"Es ist für CTs {darkred}verboten{default} Waffen fallen zu lassen!"
+		"pl"		"Upuszczenie BRONI jest {darkred}zakazane{default} dla gracza CT "
 	}
 	
 	
@@ -418,23 +470,27 @@
 	{
 		"en"		"Select Player"
 		"de"		"Wähle Spieler"
+		"pl"		"Wybierz Gracza"
 	}
 	"warden_remove"
 	{
 		"en"		"Remove the current warden?"
 		"de"		"Derzeitigen Warden entfernen?"
+		"pl"		"Usunac obecnego Wardena?"
 	}
 	
 	"warden_nomuted"
 	{
 		"en"		"There is no muted terrorist"
 		"de"		"Es gibt keinen Terror zum unmuten"
+		"pl"		"Nie ma zmutowanego Terrorysty"
 	}
 	"warden_laseron"
 	{
 		"da"		"Laser {purple}aktiveret!"
 		"en"		"Laser {purple}enabled"
 		"de"		"Laser {purple}ist aktiv!"
+		"pl"		"Laser {purple}wlaczony"
 	}
 	
 	"warden_laseroff"
@@ -443,6 +499,7 @@
 		"da"			"Laser {purple}deaktiveret!"		
 		"en"			"Laser {purple}disabled"
 		"de"			"Laser {purple}ist deaktiviert!"
+		"pl"			"Laser {purple}wylaczony"
 	}
 	
 	"warden_draweron"
@@ -450,6 +507,7 @@
 		"da"		"Drawer {purple}aktiveret!"
 		"en"		"Drawer {purple}enabled"
 		"de"		"Drawer {purple}ist aktiv!"
+		"pl"		"Marker {purple}wlaczony"
 	}
 	
 	"warden_draweroff"
@@ -458,18 +516,21 @@
 		"da"			"Drawer {purple}deaktiveret!"		
 		"en"			"Drawer {purple}disabled"
 		"de"			"Drawer {purple}ist deaktiviert!"
+		"pl"			"Marker {purple}wylaczony"
 	}
 		
 	"warden_drawert"
 	{
 		"#format"		""
 		"en"			"Toggle Drawer for Terrorists"
+		"pl"			"Wlacz Markery dla terrorystow"
 	}
 	
 	"warden_tdraweron"
 	{
 		"en"		"Drawer for Terrorists is {purple}enabled"
 		"de"		"Drawer für Terroristen {purple}ist aktiv!"
+		"pl"		"Markery dla Terrorystow {purple}wlaczone"
 	}
 	
 	"warden_tdraweroff"
@@ -477,6 +538,7 @@
 		"#format"		""
 		"en"			"Drawer for Terrorists is {purple}disabled"
 		"de"			"Drawer für Terroristen {purple}ist deaktiviert!"
+		"pl"			"Marker dla Terrorystow jest{purple}wylaczony"
 	}
 	
 	"warden_marker_set"
@@ -485,6 +547,7 @@
 		"da"		"{1} område er sat!"
 		"en"		"{1} marker set."
 		"de"		"Marker {1} gesetzt."
+		"pl"		"{1} Marker ustawiony."
 	}
 	
 	"warden_marker_remove"
@@ -492,6 +555,7 @@
 		"#format"	"{1:s}"
 		"en"		"{1} marker removed!"
 		"de"		"Marker {1} entfernt."
+		"pl"		"{1} Marker jest wylaczony!"
 	}
 	
 	"warden_laser"
@@ -499,6 +563,7 @@
 		"#format"	"{1:s}"
 		"en"		"{1} Laser Pointer equipt!"
 		"de"		"Laser Pointer {1} ausgerüstet."
+		"pl"		"{1} Laser w wyposazeniu!"
 	}
 	
 	"warden_drawer"
@@ -506,6 +571,7 @@
 		"#format"	"{1:s}"
 		"en"		"{1} Drawer equipt!"
 		"de"		"Drawer {1} ausgerüstet."
+		"pl"		"{1} Marker w wyposazeniu!"
 	}
 	
 	"warden_marker_faraway"
@@ -513,207 +579,246 @@
 		"#format"	"{1:s}"
 		"en"		"{1} marker removed! You were far away from it."
 		"de"		"Marker {1} entfernt. Du warst zu weit weg."
+		"pl"		"{1} Marker usuniety! Pisales troche za daleko."
 	}
 	
 	"warden_marker_title"
 	{
 		"en"		"Marker Color"
 		"de"		"Marker Farbauswahl"
+		"pl"		"Kolor Markera"
 	}
 	"warden_laser_title"
 	{
 		"en"		"Laser Pointer Color"
 		"de"		"Laser Pointer Farbauswahl"
+		"pl"		"Kolor Punktera Laserowego"
 	}
 	"warden_drawer_title"
 	{
 		"en"		"Drawer Color"
 		"de"		"Drawer Farbauswahl"
+		"pl"		"Kolor Markera"
 	}
 	"warden_laser_off"
 	{
 		"en"		"Deactivate Laser Pointer"
 		"de"		"Laser Pointer ausschalten"
+		"pl"		"Zdezaktywuj  Punkter Laserowy"
 	}
 	"warden_drawer_off"
 	{
 		"en"		"Deactivate Drawer"
 		"de"		"Drawer ausschalten"
+		"pl"		"Wylacz Marker"
 	}
 	"warden_rainbow"
 	{
 		"en"		"Rainbow"
 		"de"		"Regenbogen"
+		"pl"		"Tecza"
 	}
 	"warden_red"
 	{
 		"en"		"Red"
 		"de"		"Rot"
+		"pl"		"Czerwony"
 	}
 	"warden_blue"
 	{
 		"en"		"Blue"
 		"de"		"Blau"
+		"pl"		"Niebieski"
 	}
 	"warden_green"
 	{
 		"en"		"Green"
 		"de"		"Grün"
+		"pl"		"Zielony"
 	}	
 	
 	"warden_orange"
 	{
 		"en"		"Orange"
 		"de"		"Orange"
+		"pl"		"Pomaranczowy"
 	}
 	"warden_yellow"
 	{
 		"en"		"Yellow"
 		"de"		"Geld"
+		"pl"		"Zolty"
 	}	
 	
 	"warden_white"
 	{
 		"en"		"White"
 		"de"		"Weiß"
+		"pl"		"Bialy"
 	}
 	"warden_cyan"
 	{
 		"en"		"Cyan"
 		"de"		"Türkis"
+		"pl"		"Turkusowy"
 	}	
 	
 	"warden_magenta"
 	{
 		"en"		"Magenta"
 		"de"		"Magenta"
+		"pl"		"Magenta"
 	}
 	
 	"warden_range"
 	{
 		"en"		"Position out of range!"
 		"de"		"Diese Position ist zu weit entfernt!"
+		"pl"		"Pozycja po za zasiegiem"
 	}
 	
 	"warden_wrong"
 	{
 		"en"		"Something went wrong, try it again!"
 		"de"		"Irgendwas ist schiefgelaufen. Probiere es nochmal!"
+		"pl"		"Cos nie wyszlo , sprobuj jeszcze raz !"
 	}
 	"warden_mute"
 	{
 		"#format"	"{1:N},{2:N},{3:i}"
 		"en"		"{2} muted by warden {1} for {3} seconds"
 		"de"		"{2} wurde vom Warden {1} für {3} Sekunden gemutet"
+		"pl"		"{2} Zmutowany przez Wardena{1} na {3} sekund"
 	}
 	"warden_muteend"
 	{
 		"#format"	"{1:N},{2:N}"
 		"en"		"{2} muted by warden {1} until end of the round"
 		"de"		"{2} wurde vom Warden {1} bis zum Ende de Runde gemutet"
+		"pl"		"{2} zmutowany przey Wardena {1} do konca rundy"
 	}
 	"warden_unmute"
 	{
 		"#format"	"{1:N}"
 		"en"		"{1} unmuted"
 		"de"		"{1} wurde entmutet"
+		"pl"		"{1} odmutowany"
 	}
 	"warden_cdmenu_title"
 	{
 		"da"		"Countdown Menu"
 		"en"		"Countdown Menu"
 		"de"		"Countdown Menu"
+		"pl"		"Menu Odliczania"
 	}
 	"warden_mute_title"
 	{
 		"en"		"Mute Menu"
 		"de"		"Mute Menu"
+		"pl"		"Mute Menu"
 	}
 	"warden_menu_mute"
 	{
 		"en"		"Mute a terror"
 		"de"		"Einen Terrorist muten"
+		"pl"		"Mutuj terroryste"
 	}
 	"warden_menu_unmute"
 	{
 		"en"		"Unmute a terror"
 		"de"		"Einen Terrorist unmuten"
+		"pl"		"Odmutuj terroryste"
 	}
 	"warden_cdmenu_start"
 	{
 		"en"		"Beginn a Start Countdown (10sec.)"
 		"de"		"Beginne einen Start Countdown (10Sek.)"
+		"pl"		"Poczatek odliczania za (10sec.)"
 	}
 	"warden_cdmenu_stop"
 	{
 		"en"		"Beginn a Stop Countdown (20sec.)"
 		"de"		"Beginne einen Stop Countdown (20Sek.)"
+		"pl"		"Koniec odliczania za  (20sec.)"
 	}
 	"warden_cdmenu_startstop"
 	{
 		"en"		"set a Start/Stop Countdown"
 		"de"		"Setzte einen Start/Stop Countdown"
+		"pl"		"ustaw Start/Stop Odliczanie"
 	}
 	"warden_cdmenu_title2"
 	{
 		"en"		"Time between Start & Stop"
 		"de"		"Zeit zwischen Start & Stop"
+		"pl"		"Czas Start/Stop odliczania"
 	}
 	
 	"warden_time_title"
 	{
 		"en"		"How long?"
 		"de"		"wie lange?"
+		"pl"		"Jak dlugo?"
 	}
 	"warden_allt"
 	{
 		"en"		"All Terrors"
 		"de"		"Alle Terroristen"
+		"pl"		"Wszyscy Terro"
 	}
 	"warden_roundend"
 	{
 		"en"		"Until round end"
 		"de"		"Bis zum Ende der Runde"
+		"pl"		"Do konca rundy"
 	}
 	"warden_15"
 	{
 		"en"		"15 seconds"
 		"de"		"15 Sekunden"
+		"pl"		"15 sekund"
 	}
 	"warden_30"
 	{
 		"en"		"30 seconds"
 		"de"		"30 Sekunden"
+		"pl"		"30 sekund"
 	}
 	"warden_45"
 	{
 		"en"		"45 seconds"
 		"de"		"45 Sekunden"
+		"pl"		"45 sekund"
 	}
 	"warden_60"
 	{
 		"en"		"1 Minute"
 		"de"		"1 Minute"
+		"pl"		"1 Minuta"
 	}
 	"warden_90"
 	{
 		"en"		"1 Minute 30 seconds"
 		"de"		"1 Minute 30 Sekunden"
+		"pl"		"1 Minuta 30 sekund"
 	}
 	"warden_120"
 	{
 		"en"		"2 Minutes"
 		"de"		"2 Minuten"
+		"pl"		"2 Minuty"
 	}
 	"warden_180"
 	{
 		"en"		"3 Minutes"
 		"de"		"3 Minuten"
+		"pl"		"3 Minuty"
 	}
 	"warden_300"
 	{
 		"en"		"5 Minutes"
 		"de"		"5 Minuten"
+		"pl"		"5 Minut"
 	}
 	
 	"warden_math_correct"
@@ -721,6 +826,7 @@
 		"#format"	"{1:N},{2:i}"
 		"en"		"{1} has given a{green} correct answer!{default} The Answer was {purple}{2}"
 		"de"		"{1} hat die{green} richtige Antwort!{default} Die Antwort war {purple}{2}"
+		"pl"		"{1} udzielil{green}poprawnej odpowiedzi!{default} Odpowiedz to  {purple}{2}"
 	}
 	
 	"warden_math_time"
@@ -728,6 +834,7 @@
 		"#format"	"{1:i}"
 		"en"		"Time end! No answer. {purple}The Answer was {1}"
 		"de"		"Zeit vorbei! Keine richitige Antwort. {purple}Die Antwort war {1}"
+		"pl"		"Koniec Czasu! Brak odpowiedzi. {purple}Odpowiedz to {1}"
 	}
 	
 	"warden_startmathquiz"
@@ -735,6 +842,7 @@
 		"da"		"ADVARSEL! Warden har {purple}startet en  Math Quiz!"
 		"en"		"Attention! The warden {purple}Started a Math Quiz!"
 		"de"		"Aufgepasst! Der Warden hat ein {purple} Mathe Quiz gestartet!"
+		"pl"		"UWAGA! Warden  {purple}Rozpoczyna Quiz Matematyczny!"
 	}
 	
 	"warden_startmathquiz_nc"	// no colors!
@@ -742,34 +850,40 @@
 		"da"		"ADVARSEL! Warden har startet en Math Quiz!"
 		"en"		"Attention! The warden Started a  Math Quiz!"
 		"de"		"Aufgepasst! Der Warden hat einen Mathe Quiz gestartet!"
+		"pl"		"UWAGA! Warden Rozpoczyna Quiz Matematyczny!"
 	}
 	
 	"warden_sure"
 	{
 		"en"		"Are you sure?"
 		"de"		"Bist du dir sicher?"
+		"pl"		"Jestes pewny ?"
 	}
 	"warden_yes"
 	{
 		"en"		"Yes"
 		"de"		"Ja"
+		"pl"		"Tak"
 	}
 	"warden_no"
 	{
 		"en"		"No"
 		"de"		"Nein"
+		"pl"		"Nie"
 	}
 	
 	"warden_minrandom"
 	{
 		"en"		"There is only one (non-rebeling) Terrorist left!"
 		"de"		"Es ist nur noch ein (nicht rebelierender) Terrorist am Leben."
+		"pl"		"Zostal tylko (nie zbuntowany) Terrorysta!"
 	}
 	
 	"warden_cuffs"
 	{
 		"en"		"Use the taser as handcuffs"
 		"de"		"Benutze den Taser als Handschellen"
+		"pl"		"uzyj Zeusa jako Kajdanek"
 	}
 	
 	"warden_cuffson"
@@ -777,6 +891,7 @@
 		"#format"	"{1:N},{2:N}"
 		"en"		"{purple}{1}{default} handcuffed {green}{2}{default}"
 		"de"		"{purple}{1}{default} hat {green}{2}{default} Handschellen angelegt"
+		"pl"		"{purple}{1}{default}Zaobraczkowany! {green}{2}{default}"
 	}
 	
 	"warden_cuffsoff"
@@ -784,6 +899,7 @@
 		"#format"	"{1:N},{2:N}"
 		"en"		"{purple}{1}{default} put {green}{2}s{default} handcuffs off"
 		"de"		"{purple}{1}{default} hat {green}{2}{default} Handschellen abgenommen"
+		"pl"		"{purple}{1}{default} sciaga {green}{2}{default} kajdanki"
 	}
 	
 	"warden_cuffsgot"
@@ -791,5 +907,6 @@
 		"#format"	"{1:i}"
 		"en"		"You've got {green}{1}{default} handcuffs left"
 		"de"		"Du hast noch {green}{1}{default} Handschellen übrig"
+		"pl"		"Masz {green}{1}{default} jedne Kajdanki"
 	}
 }

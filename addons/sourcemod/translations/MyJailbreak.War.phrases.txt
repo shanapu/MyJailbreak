@@ -11,19 +11,23 @@
 		"da"		"{purple}{2}{default} har stemt! {purple}{1}{default} stemmer tilbage til {darkred}war"		
 		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes left to {darkred}war"
 		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}War{default} beginnt"
-	}
+		"pl"		"{purple}{2}{default} zaglosowal {purple}{1}{default} pozostalo glosow do {darkred}Wojny"
+
+		}
 	"war_rounds" 
 	{
 		"#format"	"{1:i},{2:i}"
 		"da"		"Runde {purple}{1}{default} af {purple}{2}"		
 		"en"		"Round {purple}{1}{default} of {purple}{2}"
 		"de"		"Runde {purple}{1}{default} von {purple}{2}"
+		"pl"		"Runda {purple}{1}{default} z {purple}{2}"
 	}
 	"war_twin_nc"		// no colors!
 	{
 		"da"		"Terroristerne vinder!"	
 		"en"		"Terrorists win"
 		"de"		"Terrorists haben gewonnen"
+		"pl"		"Terrorysci WYGRALI"
 	}
 	
 	"war_ctwin_nc"		// no colors!
@@ -31,6 +35,7 @@
 		"da"		"Counter-Terroristerne vinder"
 		"en"		"Counter-Terrorists win"
 		"de"		"Counter-Terrorists haben gewonnen"
+		"pl"		"Counter-Terrorists WYGRALO"
 	}
 	
 	"war_end" 
@@ -38,6 +43,7 @@
 		"da"		"{purple}War{default} er afsluttet!"	
 		"en"		"{purple}War{default} finished"
 		"de"		"{purple}War{default} beendet"
+		"pl"		"{purple}Wojna{default} Zakonczona"
 	}
 	
 	"war_rounds" 
@@ -46,6 +52,7 @@
 		"da"		"Runde {purple}{1}{default} af {purple}3"		
 		"en"		"Round {purple}{1}{default} of {purple}3"
 		"de"		"Runde {purple}{1}{default} von {purple}3"
+		"pl"		"Runda {purple}{1}{default} z {purple}3"
 	}
 	
 	"war_next" 
@@ -53,6 +60,7 @@
 		"da"		"Næste runde er {purple}War"	
 		"en"		"Next round is {purple}War"
 		"de"		"Nächste Runde ist {purple}War"
+		"pl"		"Nastepna runda to  {purple}Wojna"
 	}
 	
 	"war_next_nc" 		// no colors!
@@ -60,6 +68,7 @@
 		"da"		"Næste runde er War"	
 		"en"		"Next round is War"
 		"de"		"Nächste Runde ist War"
+		"pl"		"Nastepna runda to Wojna"
 	}
 	
 	"war_start" 
@@ -67,6 +76,7 @@
 		"da"		"{purple}War{default} er startet!"	
 		"en"		"The {purple}War{default} has started!"
 		"de"		"{purple}War{default} ist gestartet!"
+		"pl"		" {purple}Wojna{default} sie rozpoczela!"
 	}
 	
 	"war_start_nc" 
@@ -74,6 +84,7 @@
 		"da"		"War er startet!"	
 		"en"		"The War has started!"
 		"de"		"War ist gestartet!"
+		"pl"		" Wojna sie rozpoczela!"
 	}
 	
 	"war_voted" 
@@ -81,6 +92,7 @@
 		"da"		"Du har allerede stemt for {purple}War runde!"
 		"en"		"You already voted for {purple}War"
 		"de"		"Du hast schon für {purple}War {default}gevotet"
+		"pl"		"Juz glosowales na {purple}Wojne"
 	}
 	
 	"war_progress"  
@@ -88,6 +100,7 @@
 		"#format"	"{1:s}"
 		"en"		"Event {darkred}{1} {default}is {purple}already in progress."
 		"de"		"Event {darkred}{1} {default}ist {purple}bereits gesetzt."
+		"pl"		"Zabawa  {darkred}{1} {default}sie {purple}rozpoczela"
 	}
 	
 	"war_minplayer"
@@ -95,6 +108,7 @@
 		"da"		"For war skal der mindst være {purple}en CT"	
 		"en"		"For a war you need at least {purple}one CT"
 		"de"		"Für war brauchen wir mindestens {purple}einen CT"
+		"pl"		"Do zabawy Wojna potrzeba przynajmniej {purple}jednego CT"
 	}
 	
 	"war_disabled"
@@ -102,6 +116,7 @@
 		"da"		"War er {purple}slået fra."	
 		"en"		"War is {purple}disabled."
 		"de"		"War ist {purple}deaktiviert."
+		"pl"		"Wojna jest {purple}wylaczona."
 	}
 	
 	"war_damage_nc"		// no colors!
@@ -110,6 +125,7 @@
 		"da"		"{1} sekunder til man kan skyde hinanden!"		
 		"en"		"{1} seconds until damage enabled"
 		"de"		"{1} Sekunden bis Schaden aktiv ist"
+		"pl"		"{1} sekund do ponownegowlaczenie przyjmowania uszkodzen"
 	}
 	
 	"war_voting"
@@ -118,6 +134,7 @@
 		"en"		"Afstemning for war er {purple}slået fra"		
 		"en"		"Player voting for War is {purple}disabled"
 		"de"		"Voting für War ist {purple}ausgeschaltet"
+		"pl"		"Glosowanie graczy na Wojne jest {purple}wylaczone"
 	}
 	
 	"war_setbywarden"
@@ -125,6 +142,7 @@
 		"da"		"Warden bestemmer runde er {purple}slået fra"	
 		"en"		"Set War by warden is {purple}disabled"
 		"de"		"War Aktivierung durch den Warden ist {purple}ausgeschaltet"
+		"pl"		"Glosowanie na Wojne przez Straznika jest {purple}wylaczone"
 	}
 	
 	"war_setbyadmin"
@@ -132,6 +150,8 @@
 		"da"		"Admin bestemmer runde er {purple}slået fra"	
 		"en"		"Set War by admin is {purple}disabled"
 		"de"		"War Aktivierung durch den Admin ist {purple}ausgeschaltet"
+		"pl"		"Wlaczenie Wojny przez admina jest {purple}wylaczone"
+
 	}
 	
 	"war_timetohide_nc"		// no colors!
@@ -140,6 +160,7 @@
 		"da"		"{1} sekunder til du bliver unfreezet!"		
 		"en"		"{1} seconds until unfreeze"
 		"de"		"{1} Sekunden bis zum unfreeze"
+		"pl"		"{1} sekund do odmrozenia"
 	}
 	
 	"war_info_title"		// no colors!
@@ -147,6 +168,7 @@
 		"da"		"War er aktiveret!"	
 		"en"		"War is active"
 		"de"		"War ist aktiv"
+		"pl"		"Wojna jest aktywna"
 	}
 	
 	"war_info_line1"		// no colors!
@@ -154,6 +176,7 @@
 		"da"		"Ikke bliv overrasket hvis du sidder fast i luften og frosset!"	
 		"en"		"Do not be surprised if you hangs in the air and freezed"
 		"de"		"Nicht wundern falls ihr in der Luft hängt und dich nicht bewegen kannst"
+		"pl"		"Nie zdziw sie jak zamrozi cie w powietrzu!! "
 	}
 	
 	"war_info_line2"		// no colors!
@@ -161,6 +184,7 @@
 		"da"		"I war skal CT og T spille mod hinanden."	
 		"en"		"In warround ct play against t"
 		"de"		"In Kriegrunden spielen CT's gegen T's"
+		"pl"		"Podczas Wojny CT gra przeciwko T "
 	}
 	
 	"war_info_line3"		// no colors!
@@ -168,6 +192,7 @@
 		"da"		"Indtil runden begynder, kan du finde et godt sted at starte!"	
 		"en"		"While nodamage time you can move and get in position"
 		"de"		"Während der Nodamage Phase darfst du dich bewegen und in Position gehen"
+		"pl"		"Podczas fazy NODAMAGE mozesz sie przemieszczac i zajac pozycje "
 	}
 	
 	"war_info_line4"		// no colors!
@@ -175,6 +200,8 @@
 		"da"		"Alle jail regler er ophævet!"	
 		"en"		"All normal jail rules are repealed"
 		"de"		"Alle normalen Jailregeln sind aufgehoben!"
+		"pl"		"Wszystkie normalne zasady wiezienia zostaly zastapione"
+
 	}
 	
 	"war_info_line5"		// no colors!
@@ -182,6 +209,8 @@
 		"da"		"Last Request er deaktiveret i denne runde!"	
 		"en"		"There is no last request!"
 		"de"		"Der letzte Terrorists hat keinen Wunsch!"
+		"pl"		"Nie ma ostatniego zyczenia!"
+
 	}
 	
 	"war_info_line6"		// no colors!
@@ -189,6 +218,7 @@
 		"da"		"Alle kan gå hen hvor de har lyst eller starte!"
 		"en"		"Everyone is allowed to go everywhere where he wants"
 		"de"		"Jeder darf überall hin wo er will!"
+		"en"		"Mozna biegac gdzie sie chce!"
 	}
 	
 	"war_info_line7"		// no colors!
@@ -196,6 +226,7 @@
 		"da"		"Alle server regler skal overholdes!"	
 		"en"		"Dont be an asshole!"
 		"de"		"Bau keine Scheisse!"
+		"pl"		"Nie badz DUPKIEM!"
 	}
 	
 	"war_wait"
@@ -204,5 +235,6 @@
 		"da"		"Du skal vente i {purple}{1}{default} runder!"		
 		"en"		"You must wait {purple}{1}{default} more rounds"
 		"de"		"Du musst noch {purple}{1}{default} Runden warten"
+		"pl"		"Musisz poczekac  {1} rund"
 	}
 }

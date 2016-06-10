@@ -3,215 +3,262 @@
 	"menu_info" // only color line! working color tags {default}, {darkred}, {red}, {green}, {lightgreen}, {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
 	{
 		"en"			"[{green}MyJB.menu{default}] To open the jailbreak menu press , or type !menu"
+		"pl"			"[{green}MyJB.menu{default}] Aby otworzyc Menu Jailbreak nacisnij lub wpisz !menu"
 		"chi"			"[{green}我监狱.Menu{default}]要打开MENU按，或输入!menu"
+	}	
 	}	
 	"menu_info_title"
 	{
 		"en"			"MyJailbreak Menu"
+		"pl"			"MyJailbreak Menu"
 		"chi"			"我监狱.Menu"
 	}	
 	"menu_countdown"
 	{
 		"en"			"Start a Countdown"
+		"pl"			"Rozpocznij Odliczanie"
 		"chi"			"启动倒计时"
 	}	
 	"menu_opencell"
 	{
 		"en"			"Open cell doors"
+		"pl"			"Otworz drzwi cell"
 		"chi"			"开放式监狱大门"
 	}
 	"menu_seteventdays"
 	{
 		"en"			"Set EventDays"
+		"pl"			"Ustaw dzien/zabawe"
 		"chi"			"集游戏天"
 	}
 	"menu_voteeventdays"
 	{
 		"en"			"Vote EventDays"
+		"pl"			"Glosuj na zabawe"
 		"chi"			"投票当天游戏天"
 	}
 	"menu_math"
 	{
 		"en"			"Math Quiz"
+		"pl"			"Matematyczny Quiz"
 		"chi"			"数学测验"
 	}
 	"menu_guns"
 	{
 		"en"			"Weapon Menu"
+		"pl"			"Menu Broni"
 		"chi"			"枪菜单"
 	}	
 	"menu_laser"
 	{
 		"en"			"Laser Pointer Menu"
+		"pl"			"Menu Lasera/Markera"
 		"chi"			"激光菜单"
-		
 	}	
 	"menu_drawer"
 	{
 		"en"			"Drawer Menu"
+		"pl"			"Menu Markera"
 		"chi"			"画画菜单"
-		
 	}	
 	"menu_noblock"
 	{
 		"en"			"Toggle No Block"
+		"pl"			"Wlacz No Block"
 		"chi"			"切换No Block"
-	}	
+	}		
+	"menu_sparks"
+	{
+		"en"			"Toggle BulletImpact Sparks"
+	}
 	"menu_ffon"
 	{
 		"en"			"Enable FF for Ts"
+		"pl"			"Wlacz Friendly Fire dla Terro"
 		"chi"			"启用误伤"
-		
 	}	
 	"menu_ffoff"
 	{
 		"en"			"Disable FF for Ts"
+		"pl"			"Wylacz Friendly Fire dla Terro"
 		"chi"			"关掉误伤"
 	}
 	"menu_randomdead"
 	{
 		"en"			"Kill a random Terrorist"
+		"pl"			"Zabij randomowego terroryste"
 		"chi"			"随机杀Terrorist"
 	}	
 	"menu_unwarden"
 	{
 		"en"			"Leave warden"
+		"pl"			"Opusc Straznika"
 		"chi"			"监狱长退休"
 	}	
 	"menu_getwarden"
 	{
 		"en"			"Become warden"
+		"pl"			"Zostan Straznikiem"
 		"chi"			"成为监狱长"
 	}	
 	"menu_joint"
 	{
 		"en"			"Join Terror"
+		"pl"			"Dolacz do terrorystow"
 		"chi"			"加入恐怖"
 	}
 	"menu_check"
 	{
 		"en"			"Check Players"
+		"pl"			"Sprawdz zawodnikow"
 		"chi"			"查Players"
 	}
 	"menu_lr"
 	{
 		"en"			"Last Request"
+		"pl"			"Ostatnie zyczenie"
 		"chi"			"最后一个请求(Last-Request)"
 	}
 	"menu_removewarden"
 	{
 		"en"			"Remove warden"
+		"pl"			"Usun Straznika"
 		"chi"			"消防队长"
 	}
 	"menu_setwarden"
 	{
 		"en"			"Set new warden"
+		"pl"			"Ustal nowego Straznika"
 		"chi"			"设置新的监狱长"
 	}
 	"menu_rules"
 	{
 		"en"			"Rules"
+		"pl"			"Zasady"
 		"chi"			"规则"
 	}
 	"menu_joinct"
 	{
 		"en"			"Join Counter-Terror"
+		"pl"			"Dolacz do Counter Terro"
 		"chi"			"加入Counter-Terror"
 	}
 	"menu_guardct"
 	{
 		"en"			"Join CT queue (!guard)"
+		"pl"			"dolacz do kolejki CT (!guard)"
 		"chi"			"排队CT(!guard)"
 	}
 	"menu_request"
 	{
 		"en"			"Requests"
+		"pl"			"Zadania"
 		"chi"			"要求(Requests)"
 	}
 	"menu_votewarden"
 	{
 		"en"			"Vote fire warden"
+		"pl"			"Glosuj za zmiana Straznika"
 		"chi"			"投票消防队长"
 	}
 	"menu_event_Titlestart"
 	{
 		"en"			"Start Event next round"
+		"pl"			"Rozpocznij zabawe w nastepnej rundzie"
 		"chi"			"活动下一轮开始"
 	}
 	"menu_event_Titlevote"
 	{
 		"en"			"Vote for a Event Day"
+		"pl"			"Glosuj na Zabawe Dnia"
 		"chi"			"投票游戏天"
 	}
 	"menu_war"
 	{
 		"en"			"War"
+		"pl"			"Wojna"
 	}
 	"menu_ffa"
 	{
 		"en"			"Free for All"
+		"pl"			"Free for All"
 	}
 	"menu_zeus"
 	{
 		"en"			"Zeus"
+		"pl"			"Zeus"
 	}
 	"menu_zombie"
 	{
 		"en"			"Zombie Day"
+		"pl"			"Zombie Day"
 	}
 	"menu_hide"
 	{
 		"en"			"Hide in The Dark"
+		"pl"			"Chowanego"
 	}
 	"menu_suicidebomber"
 	{
 		"en"			"Suicide Bomber"
+		"pl"			"Suicide Bomber"
 	}
 	"menu_catch"
 	{
 		"en"			"Catch & Freeze"
+		"pl"			"Goniony"
 	}
 	"menu_knifefight"
 	{
 		"en"			"KnifeFight"
+		"pl"			"KNIFE"
 	}
 	"menu_hebattle"
 	{
 		"en"			"HE Battle"
+		"pl"			"HE Battle"
 	}
 	"menu_cowboy"
 	{
 		"en"			"Cowboy"
+		"pl"			"Cowboy"
 	}
 	"menu_drunk"
 	{
 		"en"			"Drunken"
+		"pl"			"Pijak"
 	}
 	"menu_torch"
 	{
 		"en"			"Torch Relay"
 		"de"			"Fackellauf"
+		"pl"			"Czlowiek Pochodnia"
 	}
 	"menu_noscope"
 	{
-		"en"			"NoScope"
+		"en"			"No Scope"
+		"pl"			"No scope"
 	}
 	"menu_duckhunt"
 	{
 		"en"			"DuckHunt"
+		"pl"			"Polowanie na Kaczki"
 	}
 	"menu_Freeday"
 	{
 		"en"			"Freeday"
+		"pl"			"Freeday"
 	}
 	"menu_admin"
 	{
 		"en"			"Admin Menu"
+		"pl"			"Admin Menu"
 		"chi"			"管理菜单"
 	}
 	"menu_mute"
 	{
 		"en"			"Mute Menu"
+		"pl"			"Mute Menu"
 	}
 	/* PLACEHOLDER
 	"menu_PLACEHOLDER"

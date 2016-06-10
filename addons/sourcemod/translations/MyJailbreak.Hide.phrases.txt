@@ -3,6 +3,7 @@
 	"hide_tag"
 	{
 		"en"		"[{green}MyJB.hide{default}]"
+		"pl"		"[{green}JB.Chowanego{default}]"
 	}
 	"hide_need"
 	{
@@ -10,12 +11,14 @@
 		"da"		"{purple}{2}{default} har stemt. {purple}{1}{default} stemmer tilbage for {darkred}Hide in the Dark"		
 		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes left to {darkred}Hide in the Dark"
 		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}Hide in the Dark{default} beginnt"
+		"pl"		"{purple}{2}{default} zaglosowal {purple}{1}{default} pozostalo glosow do {darkred}Chowanego"
 	}
 	"hide_twin_nc"		// no colors!
 	{
 		"da"		"T vinder runden!"	
 		"en"		"Hiders win"
 		"de"		"Hiders haben gewonnen"
+		"pl"		"Chowajacy sie wygrywaja"
 	}
 	"hide_rounds" 
 	{
@@ -23,12 +26,14 @@
 		"da"		"Runde {purple}{1}{default} af {purple}{2}"		
 		"en"		"Round {purple}{1}{default} of {purple}{2}"
 		"de"		"Runde {purple}{1}{default} von {purple}{2}"
+		"pl"		"Runda {purple}{1}{default} z {purple}{2}"
 	}
 	"hide_ctwin_nc"		// no colors!
 	{
 		"da"		"CT vinder runden!"	
 		"en"		"Seeker win"
 		"de"		"Seeker haben gewonnen"
+		"pl"		"Szukajacy Wygrywa"
 	}
 	
 	"hide_end"
@@ -36,6 +41,7 @@
 		"en"		"{purple}Hide in the Dark{default} er afsluttet!"	
 		"en"		"{purple}Hide in the Dark{default} finished"
 		"de"		"{purple}Hide in the Dark{default} beendet"
+		"pl"		"{purple}Chowany{default} zakonczony"
 	}
 		
 	"hide_next_nc"		// no colors!
@@ -43,6 +49,7 @@
 		"da"		"Næste runde er Hide in the Dark"	
 		"en"		"Next round is Hide in the Dark"
 		"de"		"Nächste Runde ist Hide in the Dark"
+		"pl"		"Nastepna runda to Chowany"
 	}
 	
 	"hide_next"
@@ -50,6 +57,7 @@
 		"da"		"Næste runde er {purple}Hide in the Dark"	
 		"en"		"Next round is {purple}Hide in the Dark"
 		"de"		"Nächste Runde ist {purple}Hide in the Dark"
+		"pl"		"Nastepna runda to {purple}Chowanego"
 	}
 	
 	"hide_start"
@@ -57,6 +65,7 @@
 		"da"		"{purple}Hide in the Dark{default} er startet!"	
 		"en"		"The {purple}Hide in the Dark{default} has started!"
 		"de"		"{purple}Hide in the Dark{default} ist gestartet!"
+		"pl"		" {purple}Chowany{default} sie rozpoczela!"
 	}
 	
 	"hide_start_nc"
@@ -64,6 +73,7 @@
 		"da"		"Hide in the Dark er startet!"	
 		"en"		"The Hide in the Dark has started!"
 		"de"		"Hide in the Dark ist gestartet!"
+		"pl"		"Chowany sie rozpoczal!"
 	}
 	
 	"hide_voted"
@@ -71,6 +81,7 @@
 		"da"		"Du har allerede stemt for {purple}hide in the dark runde!"
 		"en"		"You already voted for {purple}hide in the dark"
 		"de"		"Du hast schon für {purple}hide in the dark {default}gevotet"
+		"pl"		"Juz glosowales na {purple}Chowanego"
 	}
 	
 	"hide_progress"
@@ -78,6 +89,7 @@
 		"#format"	"{1:s}"
 		"en"		"Event {darkred}{1} {default}is {purple}already in progress."
 		"de"		"Event {darkred}{1} {default}ist {purple}bereits gesetzt."
+		"pl"		"Zabawa  {darkred}{1} {default}sie {purple}rozpoczela"
 	}
 	
 	"hide_minplayer"
@@ -85,6 +97,7 @@
 		"da"		"For Hide in the Dark skal der mindst være {purple}en CT & en T"	
 		"en"		"For a Hide in the Dark you need at least {purple}one CT & one T"
 		"de"		"Für Hide in the Dark brauchen wir mindestens {purple}einen CT und einen T"
+		"pl"		"Do zabawy w Chowanego potrzeba przynajmniej {purple}jednego  CT i jednego Terro"
 	}
 	
 	
@@ -93,6 +106,7 @@
 		"en"		"Hide in the Dark er {purple}deaktiveret."	
 		"en"		"Hide in the Dark is {purple}disabled."
 		"de"		"Hide in the Dark ist {purple}deaktiviert."
+		"pl"		"Chowany jest {purple}wylaczony."
 	}
 	
 	"hide_voting"
@@ -100,6 +114,7 @@
 		"da"		"Afstemning for Hide in the Dark er {purple}slået fra"	
 		"en"		"Player voting for Hide in the Dark is {purple}disabled"
 		"de"		"Voting für Hide in the Dark ist {purple}ausgeschaltet"
+		"pl"		"Glosowanie graczy na Chowyny jest {purple}wylaczone"
 	}
 	
 	"hide_setbyWarden"
@@ -107,6 +122,7 @@
 		"da"		"Warden vælger runden for Hide in the Dark er {purple}slået fra"	
 		"en"		"Set Hide in the Dark by warden is {purple}disabled"
 		"de"		"Hide in the Dark Aktivierung durch den Warden ist {purple}ausgeschaltet"
+		"pl"		"Glosowanie na Chowany przez Straznika jest {purple}wylaczone"
 	}
 	
 	"hide_setbyadmin"
@@ -114,6 +130,7 @@
 		"da"		"Admin vælger runden for Hide in the Dark er {purple}slået fra"		
 		"en"		"Set Hide in the Dark by admin is {purple}disabled"
 		"de"		"Hide in the Dark Aktivierung durch den Admin ist {purple}ausgeschaltet"
+		"pl"		"Wlaczenie Chowany przez admina jest {purple}wylaczone"
 	}
 	
 	"hide_timetohide_nc"		// no colors!
@@ -122,6 +139,7 @@
 		"da"		"{1} sekunder til at gemme dig i!"		
 		"en"		"{1} seconds to hide"
 		"de"		"{1} Sekunden zum verstecken"
+		"pl"		"{1} sekund zeby sie schowac!"
 		
 	}
 	
@@ -131,6 +149,7 @@
 		"da"		"{1} sekunder til du bliver unfreezet!"		
 		"en"		"{1} seconds until unfreeze"
 		"de"		"{1} Sekunden bis zum unfreeze"
+		"pl"		"{1} sekund do odmrozenia!"
 		
 	}
 		
@@ -139,34 +158,40 @@
 		"#format"	"{1:i}"
 		"en"		"You've got {green}{1}{default} TA grenades left."
 		"de"		"Du hast noch {green}{1}{default} TA Granaten übrig."
+		"pl"		"Masz jeszcze {green}{1}{default} TA granat."
 	}	
 	"hide_nota"
 	{
 		"en"		"You've got {green}no more{default} TA grenades left."
 		"de"		"Du hast {green}keine{default} TA Granaten mehr übrig."
+		"pl"		"nie masz juz {green}zadnych{default} TA granatow."
 	}
 	"hide_info_title"		// no colors!
 	{
 		"da"		"Hide In The Dark er aktiveret!"	
 		"en"		"Hide In The Dark is active"
 		"de"		"Hide In The Dark ist aktiv"
+		"pl"		"Chowany jest aktywny"
 	}
 	
 	"hide_info_line1"		// no colors!
 	{
 		"en"		"Hider got time on beginn of the round to hide"
 		"de"		"Hider haben zu Rundenbeginn Zeit zum verstecken"
+		"pl"		"Chowajacy sie maja czas na schowanie sie "
 	}
 	"hide_info_line2"		// no colors!
 	{
 		"en"		"When Seeker get unfreezed Hider get freezed"
 		"de"		"Solbald es für die Seeker losgeht, werden die Hider gefreezt"
+		"pl"		"Gdy Szukajacy sie odmrozi , automatycznie zamraza Chowajacych sie"
 	}
 	
 	"hide_info_line3"		// no colors!
 	{
 		"en"		"Seeker get some TA grenades"
 		"de"		"Seeker haben ein paar TA Granaten"
+		"pl"		"Szukajacy zdobadz granaty TA"
 	}
 	
 	"hide_info_line4"		// no colors!
@@ -174,6 +199,7 @@
 		"da"		"Alle jail regler er ophævet!"	
 		"en"		"All normal jail rules are repealed"
 		"de"		"Alle normalen Jailregeln sind aufgehoben!"
+		"pl"		"Wszystkie normalne zasady wiezienia zostaly zastapione"
 	}
 	
 	"hide_info_line5"		// no colors!
@@ -181,6 +207,7 @@
 		"da"		"Last Request er deaktiveret i denne runde!"	
 		"en"		"There is no last request!"
 		"de"		"Der letzte Terrorists hat keinen Wunsch!"
+		"pl"		"Nie ma ostatniego zyczenia!"
 	}
 	
 	"hide_info_line6"		// no colors!
@@ -188,6 +215,7 @@
 		"da"		"Alle må gå der hen som de har lyst!"	
 		"en"		"Everyone is allowed to go everywhere where he wants"
 		"de"		"Jeder darf überall hin wo er will!"
+		"pl"        "Kazdy moze isc gdzie chce "
 	}
 	
 	"hide_info_line7"		// no colors!
@@ -195,6 +223,7 @@
 		"da"		"Alle server reglerne skal overholdes!"	
 		"en"		"Dont be an asshole!"
 		"de"		"Bau keine Scheisse!"
+		"pl"		"Nie badz DUPKIEM!"
 	}
 	
 	"hide_wait"
@@ -203,5 +232,6 @@
 		"da"		"Du skal vente {purple}{1}{default} flere runder!"	
 		"en"		"You must wait {purple}{1}{default} more rounds"
 		"de"		"Du musst noch {purple}{1}{default} Runden Warten"
+		"pl"		"Musisz poczekac  {1} rund"
 	}
 }

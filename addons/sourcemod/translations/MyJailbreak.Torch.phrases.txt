@@ -11,6 +11,8 @@
 		"da"		"{purple}{2}{default} har stemt. {purple}{1}{default} stemmer tilbage til {darkred}Torch Relay{default} starter!"
 		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes left to {darkred}Torch Relay"
 		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}Torch Relay{default} beginnt"
+		"pl"		"{purple}{2}{default} zaglosowal {purple}{1}{default} pozostalo glosow do {darkred}Torch Relay"
+
 	}
 	"torch_rounds" 
 	{
@@ -18,6 +20,7 @@
 		"da"		"Runde {purple}{1}{default} af {purple}{2}"
 		"en"		"Round {purple}{1}{default} of {purple}{2}"
 		"de"		"Runde {purple}{1}{default} von {purple}{2}"
+		"pl"		"Runda {purple}{1}{default} z {purple}{2}"
 	}
 	"torch_end"
 	{
@@ -25,6 +28,7 @@
 		"da"		"{purple}Torch Relay{default} er afsluttet!"
 		"en"		"{purple}Torch Relay{default} finished"
 		"de"		"{purple}Torch Relay{default} beendet"
+		"pl"		"{purple}Torch Relay{default} Zakonczono"
 	}
 	
 	"torch_voting"
@@ -32,6 +36,7 @@
 		"da"		"Afstemning for Torch Relay er {purple}slået fra"
 		"en"		"Player voting for Torch Relay is {purple}disabled"
 		"de"		"Voting für Torch Relay ist {purple}ausgeschaltet"
+		"pl"		"Glosowanie graczy na Torch Relay jest {purple}wylaczone"
 	}
 	
 	"torch_setbywarden"
@@ -39,6 +44,7 @@
 		"da"		"Start Torch Relay som Warden er {purple}slået fra"
 		"en"		"Set Torch Relay by warden is {purple}disabled"
 		"de"		"Torch Relay Aktivierung durch den Warden ist {purple}ausgeschaltet"
+		"pl"		"Glosowanie na Torch Relay przez Straznika jest {purple}wylaczone"
 	}
 	
 	"torch_setbyadmin"
@@ -46,6 +52,7 @@
 		"da"		"Start Torch Relay som Admin er {purple}slået fra"
 		"en"		"Set Torch Relay by admin is {purple}disabled"
 		"de"		"Torch Relay Aktivierung durch den Admin ist {purple}ausgeschaltet"
+		"pl"		"Wlaczenie Torch Relay przez admina jest {purple}wylaczone"
 	}
 	
 	"torch_next"
@@ -53,6 +60,7 @@
 		"da"		"Næste runde er {purple}Torch Relay"
 		"en"		"Next round is {purple}Torch Relay"
 		"de"		"Nächste Runde ist {purple}Torch Relay"
+		"pl"		"Nastepna runda to {purple}Torch Relay"
 	}
 
 		"torch_next_nc"
@@ -60,6 +68,7 @@
 		"da"		"Næste runde er Torch Relay"
 		"en"		"Next round is Torch Relay"
 		"de"		"Nächste Runde ist Torch Relay"
+		"pl"		"Nastepna runda to Torch Relay"
 	}
 	
 	"torch_start"
@@ -67,6 +76,7 @@
 		"da"		"{purple}Torch Relay{default} er startet!"
 		"en"		"The {purple}Torch Relay{default} has started!"
 		"de"		"{purple}Torch Relay{default} ist gestartet!"
+		"pl"		" {purple}Torch Relay{default} sie rozpoczal!"
 		
 	}
 	
@@ -75,6 +85,7 @@
 		"da"		"Torch Relay er startet!"
 		"en"		"The Torch Relay has started!"
 		"de"		"Torch Relay ist gestartet!"
+		"pl"		"Torch Relay sie rozpoczal!"
 	}
 	
 	"torch_voted"
@@ -82,6 +93,7 @@
 		"da"		"Du har allerede stemt på {purple}Torch Relay"
 		"en"		"You already voted for {purple}Torch Relay"
 		"de"		"Du hast schon für {purple}Torch Relay {default}gevotet"
+		"pl"		"Juz glosowales na {purple}Torch Relay"
 	}
 	
 	"torch_progress"
@@ -89,12 +101,14 @@
 		"#format"	"{1:s}"
 		"en"		"Event {darkred}{1} {default}is {purple}already in progress."
 		"de"		"Event {darkred}{1} {default}ist {purple}bereits gesetzt."
+		"pl"		"Zabawa  {darkred}{1} {default}sie {purple}rozpoczela"
 	}
 	
 	"torch_minplayer"
 	{
 		"en"		"For a Torch Relay you need at least {purple}three player one must be CT"
 		"de"		"Für Torch Relay brauchen wir mindestens {purple}drei Spieler einer davon CT"
+		"pl"		"Do zabawy Torch Relay potrzeba przynajmniej {purple}trzech graczy w tym jednego  CT"
 	}
 	
 	"torch_sprint"
@@ -103,30 +117,35 @@
 		"da"		"Du bruger nu {blue}Sprint!"
 		"en"		"You are now using {blue}Sprint!"
 		"de"		"Du {blue}sprintest!"
+		"pl"		"Uzywasz wlasnie {blue}Sprint!"
 	}
 	"torch_sprintend"
 	{
 		"#format"	"{1:i}"
 		"en"		"{blue}Sprint ended!{default} Cooldown {1} Seconds"
 		"de"		"Du kannst nicht mehr {blue}sprinten! {default}warte {1} Sekunden!"
+		"pl"		"{blue}Sprint zakonczony!{default} odpoczniesz za  {1} Sekund"
 	}
 	"torch_random"
 	{
 		"#format"	"{1:N}"
 		"en"		"{darkred}Random Torch Relay is {1}"
 		"de"		"{darkred}{1} wurde Zufälig als fackel gewählt"
+		"pl"		"{darkred}Random Torch to obecnie .. {1}"
 	}
 	
 	"torch_sprintagain"
 	{
 		"en"		"You can{blue}Sprint again!{default}"
 		"de"		"Du kannst wieder {blue}sprinten!"
+		"pl"		"Znowu mozesz uzyc {blue}Sprintu!{default}"
 	}
 	"torch_disabled"
 	{
 		"da"		"Torch Relay er {purple}slået fra."
 		"en"		"Torch Relay is {purple}disabled."
 		"de"		"Torch Relay ist {purple}deaktiviert."
+		"pl"		"Torch Relay jest{purple}wylaczony."
 	}
 
 	"torch_info_title"		// no colors!
@@ -134,23 +153,27 @@
 		"da"		"Torch Relay er aktiveret!"
 		"en"		"Torch Relay is activated!"
 		"de"		"Torch Relay ist aktiv"
+		"pl"		"Torch Relay jest Aktywny!"
 	}
 	
 	"torch_info_line1"		// no colors!
 	{
 		"en"		"A random player will be set on fire"
 		"de"		"Ein zufälliger Spieler wird in Brand gesetzt"
+		"pl"		"Randomowy gracz zostanie podpalony! "
 	}
 	"torch_info_line2"		// no colors!
 	{
 		"en"		"The torch can burn other player by knifing"
 		"de"		"Die Fackel kann per knife übergeben werden"
+		"pl"		"Czlowiek pochodnia moze podpalac innych poprzez zadanie ciosu nozem"
 	}
 	
 	"torch_info_line3"		// no colors!
 	{
 		"en"		"Press E to sprint! The torch is faster than you!"
 		"de"		"mit der E-Taste kannst du sprinten. Die Fackel ist schneller als du"
+		"pl"		"Trzymaj klawisz E by biec sprintem ! Pochodnia jest szybsza od ciebie!"
 	}
 	
 	"torch_info_line4"		// no colors!
@@ -158,6 +181,7 @@
 		"da"		"Ingen jail regler gælder i denne runde!"
 		"en"		"No jail rules apply in this round!"
 		"de"		"Alle normalen Jailregeln sind aufgehoben!"
+		"pl"		"Wszystkie normalne zasady wiezienia zostaly zastapione"
 	}
 	
 	"torch_info_line5"		// no colors!
@@ -165,12 +189,14 @@
 		"da"		"Der kan ikke laves !lr"
 		"en"		"You cannot use !lr in this round!"
 		"de"		"Der letzte Terrorists hat keinen Wunsch!"
+		"pl"		"ie mozesz uzyc !lr  w tej rundzie!"
 	}
 	
 	"torch_info_line6"		// no colors!
 	{
 		"en"		"Stay in the main jailroom! Don't enter secrets!"
 		"de"		"Bleib' im Haupt Jail Raum! Verstecke sind verboten!"
+		"pl"		"Zostan w glownym pomieszczeniu Wiezienia! Zakaz wejsc do SECRETOW!"
 	}
 	
 	"torch_info_line7"		// no colors!
@@ -178,6 +204,7 @@
 		"da"		"Server Reglerne skal stadig holdes!"
 		"en"		"Server Rules must be kept!"
 		"de"		"Bau keine Scheisse!"
+		"pl"		"Pamietaj o zasadach Serwera i Serwerowni!"
 	}
 	
 	"torch_wait"
@@ -186,6 +213,7 @@
 		"da"		"Du skal vente {purple}{1}{default} flere runder"
 		"en"		"You must wait {purple}{1}{default} more rounds"
 		"de"		"Du musst noch {purple}{1}{default} Runden warten"
+		"pl"		"Musisz poczekac  {1} rund"
 	}
 	
 	"torch_damage_nc"
@@ -193,6 +221,7 @@
 		"#format"	"{1:i}"
 		"en"		"A random player will burn in {1} seconds"
 		"de"		"Ein zufälligr Spieler wird in {1} sekunden in Brand gesetzt"
+		"pl"		"randomowy zawodnik zostanie spalony za  {1} sekund"
 	}
 	
 	"torch_torchem"
@@ -200,17 +229,20 @@
 		"#format"	"{1:N}"
 		"en"		"{purple}{1}{default} is the torch"
 		"de"		"{purple}{1}{default} ist jetzt die Fackel"
+		"pl"		"{purple}{1}{default} jest Czlowiekiem Pochodnia"
 	}
 	"torch_untorch"
 	{
 		"#format"	"{1:N}"
 		"en"		"{purple}{1}{default} is no more the torch"
 		"de"		"{purple}{1}{default} ist nicht mehr die Fackel"
+		"pl"		"{purple}{1}{default} nie jest juz  Czlowiekiem Pochodnia"
 	}
 	
 	"torch_win"
 	{
 		"en"		"The torch is extinguished"
 		"de"		"Die Fackel ist erloschen"
+		"pl"		"Pochodnia zostala UGASZONA"
 	}
 }

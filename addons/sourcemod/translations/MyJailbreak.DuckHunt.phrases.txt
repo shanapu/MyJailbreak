@@ -3,6 +3,7 @@
 	"duckhunt_tag"
 	{
 		"en"		"[{green}MyJB.Duckhunt{default}]"
+		"pl"		"[{green}JB.Polowanie na Kaczki{default}]"
 	}
 	
 	"duckhunt_rounds" 
@@ -11,6 +12,7 @@
 		"da"		"Runde {purple}{1}{default} af {purple}{2}"		
 		"en"		"Round {purple}{1}{default} of {purple}{2}"
 		"de"		"Runde {purple}{1}{default} von {purple}{2}"
+		"pl"		"Runda {purple}{1}{default} z {purple}{2}"
 	}
 	"duckhunt_need"
 	{
@@ -18,6 +20,7 @@
 		"da"		"{purple}{2}{default} har stemt. {purple}{1}{default} afstemninger tilbage til {darkred}duckhunt"		
 		"en"		"{purple}{2}{default} has votet. {purple}{1}{default} votes left to {darkred}duckhunt"
 		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}duckhunt{default} beginnt"
+		"pl"		"{purple}{2}{default} zaglosowal. {purple}{1}{default} glos potrzebny do {darkred}Polowania na kaczki"
 	}
 	
 	"duckhunt_voting"
@@ -25,13 +28,15 @@
 		"da"		"Afstemninger for Duckhunt er {purple}slået fra"	
 		"en"		"Player voting for Duckhunt is {purple}disabled"
 		"de"		"Voting für duckhuntt ist {purple}ausgeschaltet"
+		"pl"		"Glosowanie graczy na Polowanie na kaczki jest {purple}wylaczone"
 	}
 	
 	"duckhunt_setbywarden"
 	{
 		"da"		"Duckhunt for Warden er {purple}slået fra"	
-		"en"		"Set Duckhunt by warden is {purple}isabled"
+		"en"		"Set Duckhunt by warden is {purple}disabled"
 		"de"		"Duckhunt Aktivierung durch den Warden ist {purple}ausgeschaltet"
+		"pl"		"Glosowanie na Polowanie na Kaczki przez Straznika jest {purple}wylaczone"
 	}
 	
 	"duckhunt_setbyadmin"
@@ -39,6 +44,7 @@
 		"da"		"Duckhunt for Admin er {purple}slået fra"	
 		"en"		"Set Duckhunt by admin is {purple}disabled"
 		"de"		"Duckhunt Aktivierung durch den Admin ist {purple}ausgeschaltet"
+		"pl"		"Wlaczenie Polowania na Kaczki przez admina jest {purple}wylaczone"
 	}
 	
 	"duckhunt_ctwin_nc"
@@ -46,6 +52,7 @@
 		"da"		"Alle ænder er døde!"
 		"en"		"All ducks got shot"
 		"de"		"Alle Enten wurden geschossen"
+		"pl"		"Wszystkie kaczki ustrzelone"
 	}
 	
 	"duckhunt_twin_nc"
@@ -53,6 +60,7 @@
 		"da"		"Duckhunterne er slået ihjel!"
 		"en"		"The duckhunter died"
 		"de"		"Der Jäger wurde zum Gejagdten"
+		"pl"		"Mysliwy padl na polu walki"
 	}
 	
 	"duckhunt_end"
@@ -60,6 +68,7 @@
 		"da"		"{purple}Duckhunt{default} er afsluttet!"
 		"en"		"{purple}Duckhunt{default} finished"
 		"de"		"{purple}Duckhunt{default} beendet"
+		"pl"		"{purple}Polowanie na kaczki {default} Zakonczone"
 	}
 	
 	"duckhunt_next"
@@ -67,6 +76,7 @@
 		"da"		"Næste runde er {purple}Duckhunt"
 		"en"		"Next round is {purple}Duckhunt"
 		"de"		"Nächste Runde ist {purple}Duckhunt"
+		"pl"		"Nastepna runda to {purple}Polowanie na Kaczki"
 	}
 	
 		
@@ -75,6 +85,7 @@
 		"da"		"Næste runde er Duckhunt"
 		"en"		"Next round is Duckhunt"
 		"de"		"Nächste Runde ist Duckhunt"
+		"pl"		"Nastepna runda to Polowanie na Kaczki"
 	}
 	
 	"duckhunt_start"
@@ -82,6 +93,7 @@
 		"da"		"{purple}Duckhunt{default} er startet!"
 		"en"		"The {purple}Duckhunt{default} has started!"
 		"de"		"{purple}Duckhunt{default} ist gestartet!"
+		"pl"		"{purple}Polowanie na Kaczki{default} sie rozpoczelo!"
 	}
 	
 	"duckhunt_start_nc"
@@ -89,12 +101,14 @@
 		"da"		"Duckhunt er startet!"
 		"en"		"The Duckhunt has started!"
 		"de"		"Duckhunt ist gestartet!"
+		"pl"		"Polowanie na Kaczki sie rozpoczelo!"
 	}
 	"duckhunt_voted"
 	{
 		"da"		"Du har allerede stemt for {purple}Duckhunt Event!"
 		"en"		"You already voted for {purple}Duckhunt"
 		"de"		"Du hast schon für {purple}Duckhunt {default}gevotet"
+		"pl"		"juz glosowales na {purple}Polowanie na Kaczki"
 	}
 	
 	"duckhunt_progress"
@@ -102,6 +116,8 @@
 		"#format"	"{1:s}"
 		"en"		"Event {darkred}{1} {default}is {purple}already in progress."
 		"de"		"Event {darkred}{1} {default}ist {purple}bereits gesetzt."
+		"en"		"Event {darkred}{1} {default}is {purple}already in progress."
+		"pl"		"Zabawa {darkred}{1} {default}jest {purple}juz grana."
 	}
 	
 	"duckhunt_minplayer"
@@ -109,6 +125,7 @@
 		"da"		"For at lave Duckhunt skal der mindst være {purple}en CT & en T"
 		"en"		"For a Duckhunt you need at least {purple}one CT & one T"
 		"de"		"Für Duckhunt brauchen wir mindestens {purple}einen CT & einen T"
+		"pl"		"Do Polowania na kaczki potrzeba minimum {purple}jednego  CT i jednego T"
 	}
 	
 	"duckhunt_disabled"
@@ -116,6 +133,7 @@
 		"da"		"Duckhunt er {purple}slået fra."
 		"en"		"Duckhunt is {purple}disabled."
 		"de"		"Duckhunt ist {purple}deaktiviert."
+		"pl"		"Polowanie na kaczki jest {purple}wylaczone."
 	}
 	
 	"duckhunt_timeuntilstart_nc"		// no colors!
@@ -124,6 +142,7 @@
 		"da"		"{1} sekunder til start!"		
 		"en"		"{1} seconds until start"
 		"de"		"{1} Sekunden bis zum Start"
+		"pl"		"{1} sekund do startu"
 	}
 	
 	"duckhunt_info_title"		// no colors!
@@ -131,6 +150,7 @@
 		"da"		"Duckhunt er aktiveret!"	
 		"en"		"Duckhunt is active"
 		"de"		"Duckhunt ist aktiv"
+		"pl"		"Polowanie na kaczki jest aktywne"
 	}
 	
 	"duckhunt_info_line1"		// no colors!
@@ -138,12 +158,14 @@
 		"da"		"en slags lerdueskydning"	
 		"en"		"A kind of clay pigeon shooting"
 		"de"		"Eine Art Tontaubenschiessen"
+		"pl"		"Cos jak strzelanie do golebi"
 	}
 	"duckhunt_info_line2"		// no colors!
 	{
 		"da"		"CT har kun shotgun at skyde med!"	
 		"en"		"Counter-Terrorists got novas"
 		"de"		"Counter-Terrorists haben Nova"
+		"pl"		"Counter-Terrorists maja bron Nova"
 	}
 	
 	"duckhunt_info_line3"		// no colors!
@@ -151,6 +173,7 @@
 		"da"		"T er kyllinger og har nades. Rightclick Only"	
 		"en"		"Ts are chickens and have got grenades. Rightclick Only"
 		"de"		"Terroristen sind chicken haben Granaten. Rightclick Only"
+		"pl"		"Terrorysci sa kurczakami i maja granaty. Tylko prawy guzik myszki"
 	}
 	
 	"duckhunt_info_line4"		// no colors!
@@ -158,6 +181,7 @@
 		"da"		"Alle jail regler er ophævet!"	
 		"en"		"All normal jail rules are repealed"
 		"de"		"Alle normalen Jailregeln sind aufgehoben!"
+		"pl"		"Zasady Wiezienia nie obowiazuja w tej rundzie!"
 	}
 	
 	"duckhunt_info_line5"		// no colors!
@@ -165,12 +189,14 @@
 		"da"		"!lr er deaktiveret i denne runde!"	
 		"en"		"There is no last request!"
 		"de"		"Der letzte Terrorists hat keinen Wunsch!"
+		"pl"		"Nie ma ostatniego zyczenia!"
 	}
 	
 	"duckhunt_info_line6"		// no colors!
 	{
 		"en"		"Stay in the main jailroom! Don't enter secrets!"
 		"de"		"Bleib' im Haupt Jail Raum! Verstecke sind verboten!"
+		"pl"		"Zostan w glownym pomieszczeniu Wiezienia! Zakaz wejsc do SECRETOW!"
 	}
 	
 	"duckhunt_info_line7"		// no colors!
@@ -178,6 +204,7 @@
 		"da"		"Alle server regler skal overholdes!"	
 		"en"		"Dont be an asshole!"
 		"de"		"Bau keine Scheisse!"
+		"pl"		"Nie badz DUPKIEM!"
 	}
 	
 	"duckhunt_wait"
@@ -186,5 +213,6 @@
 		"en"		"Du skal vente {purple}{1}{default} flere runder!"	
 		"en"		"You must wait {purple}{1}{default} more rounds"
 		"de"		"Du musst noch {purple}{1}{default} Runden warten"
+		"pl"		"Musisz odczekac  {purple}{1}{default} rund"
 	}
 }
