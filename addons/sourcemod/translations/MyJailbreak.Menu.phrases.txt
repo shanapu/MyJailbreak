@@ -6,7 +6,6 @@
 		"pl"			"[{green}MyJB.menu{default}] Aby otworzyc Menu Jailbreak nacisnij lub wpisz !menu"
 		"chi"			"[{green}我监狱.Menu{default}]要打开MENU按，或输入!menu"
 	}	
-	}	
 	"menu_info_title"
 	{
 		"en"			"MyJailbreak Menu"

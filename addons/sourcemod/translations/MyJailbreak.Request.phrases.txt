@@ -193,4 +193,8 @@
 		"de"		"Kapitulation"
 		"pl"		"Zbuntuj Sie"
 	}
+	"request_menu_freekill"
+	{
+		"en"		"Report Freekill"
+	}
 }

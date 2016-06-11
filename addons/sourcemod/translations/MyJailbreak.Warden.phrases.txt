@@ -415,6 +415,17 @@
 		"de"		"Der Warden hat {purple}noblock eingeschaltet!"
 		"pl"		"Warden ustawil {purple}noblock on!"
 	}
+	"warden_bulletmarkoff"
+	{
+		"en"		"Bullet Impact Sparks {purple}deactivated!"
+		"de"		"Bullet Impact Sparks {purple}ausgeschaltet!"
+	}
+	
+	"warden_bulletmarkon"
+	{
+		"en"		"Bullet Impact Sparks {purple}activated!"
+		"de"		"Bullet Impact Sparks {purple}eingeschaltet!"
+	}
 	
 	"warden_need"
 	{

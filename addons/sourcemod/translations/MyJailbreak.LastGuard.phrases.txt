@@ -132,8 +132,8 @@
 	}
 	"lastguard_info_line2"
 	{
-		"en"		"                                   "
-		"de"		"                                   "
+		"en"		"All terrors are rebels!"
+		"de"		"Alle Terrors sind Rebelen!"
 	}
 	
 	"lastguard_info_line3"
