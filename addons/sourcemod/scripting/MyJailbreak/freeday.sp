@@ -15,6 +15,7 @@
 bool IsFreeday; 
 bool StartFreeday; 
 bool AutoFreeday; 
+bool canSet;
 
 //ConVars
 ConVar gc_bPlugin;
@@ -137,13 +138,14 @@ public void OnMapStart()
 	}
 	IsFreeday = false;
 	AutoFreeday = false;
+	canSet = true;
 }
 
 //Admin & Warden set Event
 
 public Action SetFreeday(int client,int args)
 {
-	if (gc_bPlugin.BoolValue)
+	if (gc_bPlugin.BoolValue && canSet)
 	{
 		if (warden_iswarden(client))
 		{
@@ -197,7 +199,7 @@ public Action VoteFreeday(int client,int args)
 	char steamid[64];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
 	
-	if (gc_bPlugin.BoolValue)
+	if (gc_bPlugin.BoolValue && canSet)
 	{	
 		if (gc_bVote.BoolValue)
 		{
@@ -262,6 +264,7 @@ public void PlayerDeath(Event event, const char[] name, bool dontBroadcast)
 
 public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
+	canSet = true;
 	if ((GetTeamClientCount(CS_TEAM_CT) < 1) && gc_bAuto.BoolValue)
 	{
 		char EventDay[64];
@@ -334,6 +337,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 
 public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 {
+	canSet = false;
 	if (IsFreeday)
 	{
 		IsFreeday = false;
@@ -373,6 +377,7 @@ public void OnMapEnd()
 	}
 	IsFreeday = false;
 	AutoFreeday = false;
+	canSet = true;
 	g_iVoteCount = 0;
 	FreedayRound = 0;
 	g_sHasVoted[0] = '\0';

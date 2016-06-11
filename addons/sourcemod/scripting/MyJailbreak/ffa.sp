@@ -15,6 +15,7 @@
 //Booleans
 bool IsFFA = false;
 bool StartFFA = false;
+bool canSet;
 
 //ConVars
 ConVar gc_bPlugin;
@@ -156,6 +157,7 @@ public void OnMapStart()
 	g_iRound = 0;
 	IsFFA = false;
 	StartFFA = false;
+	canSet = true;
 	
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iTruceTime = gc_iTruceTime.IntValue;
@@ -194,7 +196,7 @@ public void OnConfigsExecuted()
 
 public Action Setffa(int client,int args)
 {
-	if (gc_bPlugin.BoolValue)
+	if (gc_bPlugin.BoolValue && canSet)
 	{
 		if (warden_iswarden(client))
 		{
@@ -256,7 +258,7 @@ public Action VoteFFA(int client,int args)
 	char steamid[64];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
 	
-	if (gc_bPlugin.BoolValue)
+	if (gc_bPlugin.BoolValue && canSet)
 	{	
 		if (gc_bVote.BoolValue)
 		{
@@ -314,6 +316,7 @@ void StartNextRound()
 
 public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
+	canSet = true;
 	if (StartFFA || IsFFA)
 	{
 		{AcceptEntityInput(FogIndex, "TurnOn");}
@@ -409,6 +412,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 
 public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 {
+	canSet = false;
 	int winner = GetEventInt(event, "winner");
 	
 	if (IsFFA)

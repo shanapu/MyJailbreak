@@ -16,6 +16,7 @@
 //Booleans
 bool IsZombie;
 bool StartZombie;
+bool canSet;
 
 //ConVars
 ConVar gc_bPlugin;
@@ -175,6 +176,7 @@ public void OnMapStart()
 	g_iRound = 0;
 	IsZombie = false;
 	StartZombie = false;
+	canSet = true;
 	
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
@@ -221,7 +223,7 @@ public void OnClientPutInServer(int client)
 
 public Action SetZombie(int client,int args)
 {
-	if (gc_bPlugin.BoolValue)
+	if (gc_bPlugin.BoolValue && canSet)
 	{
 		if (warden_iswarden(client))
 		{
@@ -283,7 +285,7 @@ public Action VoteZombie(int client,int args)
 	char steamid[64];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
 	
-	if (gc_bPlugin.BoolValue)
+	if (gc_bPlugin.BoolValue && canSet)
 	{	
 		if (gc_bVote.BoolValue)
 		{
@@ -340,6 +342,7 @@ void StartNextRound()
 
 public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
+	canSet = true;
 	if (StartZombie || IsZombie)
 	{
 		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
@@ -446,6 +449,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 
 public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 {
+	canSet = false;
 	int winner = GetEventInt(event, "winner");
 	
 	if (IsZombie)
@@ -506,6 +510,7 @@ public void OnMapEnd()
 {
 	IsZombie = false;
 	StartZombie = false;
+	canSet = true;
 	delete FreezeTimer;
 	delete GlowTimer;
 	g_iVoteCount = 0;

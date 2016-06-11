@@ -15,6 +15,7 @@
 //Booleans
 bool IsNoScope; 
 bool StartNoScope; 
+bool canSet;
 
 //ConVars
 ConVar gc_bPlugin;
@@ -160,6 +161,7 @@ public void OnMapStart()
 	g_iRound = 0;
 	IsNoScope = false;
 	StartNoScope = false;
+	canSet = true;
 	
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iTruceTime = gc_iTruceTime.IntValue;
@@ -195,7 +197,7 @@ public void OnClientPutInServer(int client)
 
 public Action SetNoScope(int client,int args)
 {
-	if (gc_bPlugin.BoolValue)
+	if (gc_bPlugin.BoolValue && canSet)
 	{
 		if (warden_iswarden(client))
 		{
@@ -257,7 +259,7 @@ public Action VoteNoScope(int client,int args)
 	char steamid[64];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
 	
-	if (gc_bPlugin.BoolValue)
+	if (gc_bPlugin.BoolValue && canSet)
 	{	
 		if (gc_bVote.BoolValue)
 		{
@@ -315,6 +317,7 @@ void StartNextRound()
 
 public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
+	canSet = true;
 	if (StartNoScope || IsNoScope)
 	{
 		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
@@ -462,6 +465,7 @@ public Action StartTimer(Handle timer)
 
 public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 {
+	canSet = false;
 	int winner = GetEventInt(event, "winner");
 	
 	if (IsNoScope)
@@ -474,8 +478,6 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 		
 		delete TruceTimer;
 		delete GravityTimer;
-	//	if (TruceTimer != null) KillTimer(TruceTimer);
-	//	if (GravityTimer != null) KillTimer(GravityTimer);
 		if (winner == 2) PrintHintTextToAll("%t", "noscope_twin_nc");
 		if (winner == 3) PrintHintTextToAll("%t", "noscope_ctwin_nc");
 		if (g_iRound == g_iMaxRound)
@@ -513,8 +515,7 @@ public void OnMapEnd()
 {
 	IsNoScope = false;
 	StartNoScope = false;
-//	if (TruceTimer != null) KillTimer(TruceTimer);
-//	if (GravityTimer != null) KillTimer(GravityTimer);
+	canSet = true;
 	delete TruceTimer;
 	delete GravityTimer;
 	g_iVoteCount = 0;

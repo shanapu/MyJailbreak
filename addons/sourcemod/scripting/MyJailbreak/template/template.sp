@@ -15,6 +15,7 @@
 //Booleans
 bool IsEVENTNAME;
 bool StartEVENTNAME;
+bool canSet;
 
 //ConVars    gc_i = global convar integer / gc_i = global convar bool ...
 ConVar gc_bPlugin;
@@ -146,6 +147,7 @@ public void OnMapStart()
 	g_iRound = 0;
 	IsEVENTNAME = false;
 	StartEVENTNAME = false;
+	canSet = true;
 	
 	//Precache Sound & Overlay
 	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
@@ -170,7 +172,7 @@ public void OnConfigsExecuted()
 
 public Action SetEVENTNAME(int client,int args)
 {
-	if (gc_bPlugin.BoolValue) //is plugin enabled?
+	if (gc_bPlugin.BoolValue && canSet) //is plugin enabled?
 	{
 		if (warden_iswarden(client)) //is player warden?
 		{
@@ -224,7 +226,7 @@ public Action VoteEVENTNAME(int client,int args)
 	char steamid[64];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
 	
-	if (gc_bPlugin.BoolValue) //is plugin enabled?
+	if (gc_bPlugin.BoolValue && canSet) //is plugin enabled?
 	{	
 		if (gc_bVote.BoolValue) //is voting enabled?
 		{	
@@ -278,6 +280,7 @@ void StartNextRound()
 
 public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
+	canSet = true;
 	if (StartEVENTNAME || IsEVENTNAME)
 	{
 		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
@@ -393,6 +396,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 
 public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 {
+	canSet = false;
 	int winner = GetEventInt(event, "winner");
 	
 	if (IsEVENTNAME) //if event was running this round
@@ -442,6 +446,7 @@ public void OnMapEnd()
 	//return to default start values
 	IsEVENTNAME = false;
 	StartEVENTNAME = false;
+	canSet = true;
 	if (TruceTimer != null) KillTimer(TruceTimer); //kill start time if still running
 	g_iVoteCount = 0;
 	g_iRound = 0;

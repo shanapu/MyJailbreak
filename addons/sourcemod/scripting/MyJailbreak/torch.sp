@@ -22,6 +22,7 @@ bool IsTorch;
 bool StartTorch;
 bool OnTorch[MAXPLAYERS+1];
 bool ImmuneTorch[MAXPLAYERS+1];
+bool canSet;
 
 //ConVars
 ConVar gc_bPlugin;
@@ -204,6 +205,7 @@ public void OnMapStart()
 	g_iRound = 0;
 	IsTorch = false;
 	StartTorch = false;
+	canSet = true;
 	
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iTruceTime = gc_iTruceTime.IntValue;
@@ -240,7 +242,7 @@ public void OnClientPutInServer(int client)
 
 public Action SetTorch(int client,int args)
 {
-	if (gc_bPlugin.BoolValue)	
+	if (gc_bPlugin.BoolValue && canSet)	
 	{
 		if (warden_iswarden(client))
 		{
@@ -302,7 +304,7 @@ public Action VoteTorch(int client,int args)
 	char steamid[64];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
 	
-	if (gc_bPlugin.BoolValue)
+	if (gc_bPlugin.BoolValue && canSet)
 	{
 		if (gc_bVote.BoolValue)
 		{
@@ -360,7 +362,7 @@ void StartNextRound()
 
 public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
-
+	canSet = true;
 	if (StartTorch || IsTorch)
 	{
 		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
@@ -524,6 +526,7 @@ stock int GetRandomPlayer()
 
 public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 {
+	canSet = false;
 	if (IsTorch)
 	{
 		LoopValidClients(client, true, true)
@@ -568,6 +571,7 @@ public void OnMapEnd()
 {
 	IsTorch = false;
 	StartTorch = false;
+	canSet = true;
 	g_iBurningZero = -1;
 	if (TruceTimer != null) KillTimer(TruceTimer);
 	g_iVoteCount = 0;

@@ -15,6 +15,7 @@
 //Booleans
 bool IsKnifeFight; 
 bool StartKnifeFight; 
+bool canSet;
 
 //ConVars
 ConVar gc_bPlugin;
@@ -165,6 +166,7 @@ public void OnMapStart()
 	g_iRound = 0;
 	IsKnifeFight = false;
 	StartKnifeFight = false;
+	canSet = true;
 	
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iTruceTime = gc_iTruceTime.IntValue;
@@ -194,7 +196,7 @@ public void OnClientPutInServer(int client)
 
 public Action SetKnifeFight(int client,int args)
 {
-	if (gc_bPlugin.BoolValue)
+	if (gc_bPlugin.BoolValue && canSet)
 	{
 		if (warden_iswarden(client))
 		{
@@ -256,7 +258,7 @@ public Action VoteKnifeFight(int client,int args)
 	char steamid[64];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
 	
-	if (gc_bPlugin.BoolValue)
+	if (gc_bPlugin.BoolValue && canSet)
 	{
 		if (gc_bVote.BoolValue)
 		{
@@ -314,6 +316,7 @@ void StartNextRound()
 
 public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
+	canSet = true;
 	if (StartKnifeFight || IsKnifeFight)
 	{
 		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
@@ -421,6 +424,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 
 public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 {
+	canSet = false;
 	int winner = GetEventInt(event, "winner");
 	
 	if (IsKnifeFight)
@@ -469,6 +473,7 @@ public void OnMapEnd()
 {
 	IsKnifeFight = false;
 	StartKnifeFight = false;
+	canSet = true;
 	if (TruceTimer != null) KillTimer(TruceTimer);
 	if (GravityTimer != null) KillTimer(GravityTimer);
 	g_iVoteCount = 0;

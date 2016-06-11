@@ -22,6 +22,7 @@
 bool IsSuicideBomber;
 bool StartSuicideBomber;
 bool BombActive;
+bool canSet;
 
 //ConVars
 ConVar gc_bPlugin;
@@ -193,6 +194,7 @@ public void OnMapStart()
 	IsSuicideBomber = false;
 	StartSuicideBomber = false;
 	BombActive = false;
+	canSet = true;
 	
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
@@ -228,7 +230,7 @@ public void OnClientPutInServer(int client)
 
 public Action SetSuicideBomber(int client,int args)
 {
-	if (gc_bPlugin.BoolValue)
+	if (gc_bPlugin.BoolValue && canSet)
 	{
 		if (warden_iswarden(client))
 		{
@@ -290,7 +292,7 @@ public Action VoteSuicideBomber(int client,int args)
 	char steamid[64];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
 	
-	if (gc_bPlugin.BoolValue)
+	if (gc_bPlugin.BoolValue && canSet)
 	{
 		if (gc_bVote.BoolValue)
 		{
@@ -347,6 +349,7 @@ void StartNextRound()
 
 public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
+	canSet = true;
 	if (StartSuicideBomber || IsSuicideBomber)
 	{
 		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
@@ -421,6 +424,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 
 public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 {
+	canSet = false;
 	int winner = GetEventInt(event, "winner");
 	
 	if (IsSuicideBomber)
@@ -485,6 +489,7 @@ public void OnMapEnd()
 	IsSuicideBomber = false;
 	StartSuicideBomber = false;
 	BombActive = false;
+	canSet = true;
 	if (FreezeTimer != null) 
 	KillTimer(FreezeTimer);
 	FreezeTimer = null;

@@ -15,6 +15,7 @@
 //Booleans
 bool IsHide;
 bool StartHide;
+bool canSet;
 
 //ConVars
 ConVar gc_bPlugin;
@@ -155,6 +156,7 @@ public void OnMapStart()
 	g_iRound = 0;
 	IsHide = false;
 	StartHide = false;
+	canSet = true;
 	
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
@@ -196,7 +198,7 @@ public void OnConfigsExecuted()
 
 public Action SetHide(int client,int args)
 {
-	if (gc_bPlugin.BoolValue)	
+	if (gc_bPlugin.BoolValue && canSet)	
 		{
 			if (warden_iswarden(client))
 			{
@@ -258,7 +260,7 @@ public Action VoteHide(int client,int args)
 	char steamid[64];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
 	
-	if (gc_bPlugin.BoolValue)
+	if (gc_bPlugin.BoolValue && canSet)
 	{
 		if (gc_bVote.BoolValue)
 		{
@@ -316,6 +318,7 @@ void StartNextRound()
 
 public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
+	canSet = true;
 	if (StartHide || IsHide)
 	{
 		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
@@ -450,7 +453,7 @@ public Action StartTimer(Handle timer)
 
 public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 {
-	
+	canSet = false;
 	int winner = GetEventInt(event, "winner");
 	
 	if (IsHide)
@@ -514,6 +517,7 @@ public void OnMapEnd()
 {
 	IsHide = false;
 	StartHide = false;
+	canSet = true;
 	if (FreezeTimer != null) KillTimer(FreezeTimer);
 	g_iVoteCount = 0;
 	g_iRound = 0;
