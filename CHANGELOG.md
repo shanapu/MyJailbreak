@@ -29,9 +29,10 @@
 * Warden: no warden announcement to postroundstart
 *Fixed*  
 * fit for SM 1.8
+* bug where roundtime set to 1 when set new eventday on roundend of a eventday 
 * Zombie: remove nightvision on roundend
 * Translation: typos
-* minor error
+* minor errors
   
   
 **[Beta 2.1]** - bug fixes & typos  

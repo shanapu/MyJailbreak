@@ -175,7 +175,7 @@ public void OnMapStart()
 	else
 	{
 		FogIndex += CreateEntityByName("env_fog_controller");
-		DispatchSpawn(FogIndex);
+		if (FogIndex != -1) DispatchSpawn(FogIndex);
 	}
 	DoFog();
 	AcceptEntityInput(FogIndex, "TurnOff");

@@ -1282,9 +1282,10 @@ sm_freeday_cooldown_day - Rounds until event can be started again. Default 0
 [*] Warden: no warden announcement to postroundstart
 [U]Fixed[/U][LIST]
 [*] fit for SM 1.8
+[*] bug where roundtime set to 1 when set new eventday on roundend of a eventday 
 [*] Zombie: remove nightvision on roundend
 [*] Translation: typos
-[*] minor error
+[*] minor errors
 [/LIST][/SPOILER]
 [B][Beta 2.1][/B] - bug fixes & typos
 [SPOILER]
