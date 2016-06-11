@@ -109,7 +109,7 @@ public int HandleTag(int client)
 					Format(tags, sizeof(tags), "%t" ,"tags_TA", LANG_SERVER);
 					CS_SetClientClanTag(client, tags);
 				}
-				else if (GetUserFlagBits(client) & ADMFLAG_CUSTOM5)
+				else if (GetUserFlagBits(client) & ADMFLAG_CUSTOM6)
 				{
 					Format(tags, sizeof(tags), "%t" ,"tags_TVIP1", LANG_SERVER);
 					CS_SetClientClanTag(client, tags);
@@ -139,7 +139,7 @@ public int HandleTag(int client)
 						Format(tags, sizeof(tags), "%t" ,"tags_WA", LANG_SERVER);
 						CS_SetClientClanTag(client, tags); 
 					}
-					else if (GetUserFlagBits(client) & ADMFLAG_CUSTOM5)
+					else if (GetUserFlagBits(client) & ADMFLAG_CUSTOM6)
 					{
 						Format(tags, sizeof(tags), "%t" ,"tags_WVIP1", LANG_SERVER);
 						CS_SetClientClanTag(client, tags); 
@@ -165,7 +165,7 @@ public int HandleTag(int client)
 					Format(tags, sizeof(tags), "%t" ,"tags_CTA", LANG_SERVER);
 					CS_SetClientClanTag(client, tags);
 				}
-				else if (GetUserFlagBits(client) & ADMFLAG_CUSTOM5)
+				else if (GetUserFlagBits(client) & ADMFLAG_CUSTOM6)
 				{
 					Format(tags, sizeof(tags), "%t" ,"tags_CTVIP1", LANG_SERVER);
 					CS_SetClientClanTag(client, tags); 
@@ -205,7 +205,7 @@ public Action OnChatMessage(int &author, Handle recipients, char[] name, char[] 
 						Format(name, MAXLENGTH_NAME, "%t %s","tags_TA", name);
 						return Plugin_Changed;
 					}
-					else if (GetUserFlagBits(author) & ADMFLAG_CUSTOM5)
+					else if (GetUserFlagBits(author) & ADMFLAG_CUSTOM6)
 					{
 						Format(name, MAXLENGTH_NAME, "%t %s","tags_TVIP1", name);
 						return Plugin_Changed;
@@ -235,7 +235,7 @@ public Action OnChatMessage(int &author, Handle recipients, char[] name, char[] 
 							Format(name, MAXLENGTH_NAME, "%t %s","tags_WA", name);
 							return Plugin_Changed;
 						}
-						else if (GetUserFlagBits(author) & ADMFLAG_CUSTOM5)
+						else if (GetUserFlagBits(author) & ADMFLAG_CUSTOM6)
 						{
 							Format(name, MAXLENGTH_NAME, "%t %s","tags_WVIP1", name);
 							return Plugin_Changed;
@@ -261,7 +261,7 @@ public Action OnChatMessage(int &author, Handle recipients, char[] name, char[] 
 						Format(name, MAXLENGTH_NAME, "%t %s","tags_CTA", name);
 						return Plugin_Changed;
 					}
-					else if (GetUserFlagBits(author) & ADMFLAG_CUSTOM5)
+					else if (GetUserFlagBits(author) & ADMFLAG_CUSTOM6)
 					{
 						Format(name, MAXLENGTH_NAME, "%t %s","tags_CTVIP1", name);
 						return Plugin_Changed;

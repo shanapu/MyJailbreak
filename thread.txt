@@ -8,6 +8,7 @@ MyJailbreak is a redux rewrite of [URL="https://github.com/Franc1sco/Franug-Jail
 [LIST]
 [*] [B]Warden[/B] - set/become warden,vote retire warden, model, icon, open cells,gun plant prevention, handcuffs, laser pointer, drawer, set marker/quiz/EventDays/countdown/FF/nobock/mute
 [*] [B]Requests[/B] - terror requests. refuse a game, request Capitulation/Pardon, healing or repeating, report freekill
+[*] [B]Last Guard Rule[/B] - When Last Guard Rule is set the last CT get more HP and all terrors become rebel
 [*] [B]Menu[/B] - player menus for T, CT, warden & admin
 [*] [B]Weapons[/B] - weapon menus for CT &/or T(in event round)
 [*] [B]Player Tags[/B] - add player tags for T, T.Admin, CT, CT.Admin, W, WA.Admin in chat &/or stats
@@ -66,6 +67,7 @@ sm_uhg / sm_unheadguard - Allows the player to retire from the position
 sm_vw / sm_votewarden / sm_vetowarden - Allows the player to vote to retire warden
 sm_open - Allows the warden to open the cell doors
 sm_close - Allows the warden to close the cell doors
+sm_sparks - Allows Warden to toggle on/off the wardens bullet sparks
 sm_laser - Allows the warden to toggle the wardens Laser pointer
 sm_drawer - Allows the warden to toggle the wardens Drawer
 sm_noblockn - Allows the warden to toggle no block 
@@ -121,6 +123,7 @@ sm_warden_handcuffs_ct: 0 - disabled, 1 - Warden can also handcuff CTs. Default 
 sm_warden_overlays_cuffs: Path to the cuffs Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/cuffs"
 sm_warden_random: 0 - disabled, 1 - enable kill a random t for warden. Default 1
 sm_warden_random_mode: 1 - all random / 2 - Thunder / 3 - Timebomb / 4 - Firebomb / 5 - NoKill (1,3,4 needs funcommands.smx enabled). Default 2
+sm_warden_bulletsparks: 0 - disabled, 1 - enable Warden bulletimpact sparks
 sm_warden_marker: 0 - disabled, 1 - enable warden advanced markers. Default 1
 sm_warden_laser: 0 - disabled, 1 - enable warden Laser Pointer with +E. Default 1
 sm_warden_drawer: 0 - disabled, 1 - enable warden Drawer with +E. Default 1
@@ -151,6 +154,8 @@ sm_warden_open_time_warden: 0 - disabled, 1 - doors open automatic after sm_ward
 [/CODE]
 [/SPOILER]
 [IMG]http://shanapu.de/myjb/warden.jpg[/IMG]
+
+[IMG]http://shanapu.de/myjb/sparks.jpg[/IMG]
 
 [youtube]tp6k_Q6K37c[/youtube]
 
@@ -221,6 +226,37 @@ sm_freekill_warden: 0 - disabled, 1 - Report will be send to Warden if there is 
 
 
 
+[U][B]Last Guard Rule[/B][/U]
+This plugin allow to play the "Last Guard Rule". You can choose between automatic when there is only one CT alive, or T can start a voting on last CT alive or the last CT will set Last Guard Rule. When Last Guard Rule is set the CT get HP in balance of sum of HP of Terrors and all Terrors become rebel
+
+[b]Commands[/b]
+[SPOILER]
+[CODE]
+sm_lastguard - Allows terrors to vote and last CT to set Last Guard Rule
+   
+set your own custom command. take a look at "sm_lastguard_cmd"
+[/CODE]
+[/SPOILER]
+[b]ConVars[/b]
+[SPOILER]
+[CODE]
+sm_lastguard_enable: 0 - disabled, 1 - enable this MyJailbreak SourceMod plugin
+sm_lastguard_cmd: Set your custom chat command for Last Guard Rule. no need for sm_ or !. Default "lg" results in !lg /lg & sm_lg
+sm_lastguard_ct: 0 - disabled, 1 - allow last CT to set Last Guard Rule
+sm_lastguard_vote: 0 - disabled, 1 - allow alive player to vote for Last Guard Rule
+sm_lastguard_auto: 0 - disabled, 1 - Last Guard Rule will start automatic if there is only 1 ct. Disables sm_lastguard_vote & sm_lastguard_ct
+sm_lastguard_hp: How many percent of the combined Terror Health the CT get? (3 terror alive with 100HP = 300HP / 50% = CT get 150HP: Default 50
+sm_lastguard_trucetime: Time in seconds players can't deal damage. Half of this time you are freezed. Default 10
+sm_lastguard_sounds_enable: 0 - disabled, 1 - enable sounds 
+sm_lastguard_sounds_start: Path to the soundfile which should be played for LGR beginn. "music/MyJailbreak/start.mp3"
+sm_lastguard_sounds_beginn: Path to the soundfile which should be played for LGR anouncment. "music/MyJailbreak/lastct.mp3"
+sm_lastguard_overlays_enable: 0 - disabled, 1 - enable overlays. Default 1
+sm_lastguard_overlays_start: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
+[/CODE]
+[/SPOILER]
+
+
+
 [U][B]Menu[/B][/U]
 This plugins allows players to open a menu with ","-Key (buyammo) or command.  
 It will show different menus for Terrorists, Counter-Terrorists, admin & warden. The menu shows only features that are enabled (e.g at EventDays no warden menu).
@@ -231,6 +267,8 @@ It will show different menus for Terrorists, Counter-Terrorists, admin & warden.
 sm_menu / sm_menus - opens the menu depends on players team/rank
 sm_days / sm_eventdays - open a vote EventDays menu for player
 sm_setdays / sm_seteventdays - open a set EventDays menu for warden or admins
+   
+set your own custom command. take a look at "sm_menu_cmd"
 [/CODE]
 [/SPOILER]
 [b]ConVars[/b]
@@ -238,6 +276,7 @@ sm_setdays / sm_seteventdays - open a set EventDays menu for warden or admins
 [CODE]
 sm_menu_version - Shows the version of the SourceMod plugin MyJailbreak - Menu
 sm_menu_enable: 0 - disabled, 1 - enable Jailbreak menu
+sm_menu_cmd: Set your custom chat command for Last Guard Rule. no need for sm_ or !. Default "panel" results in !panel /panel & sm_panel
 sm_menu_ct: 0 - disabled, 1 - enable Jailbreak menu for CT
 sm_menu_t: 0 - disabled, 1 - enable Jailbreak menu for Terrorists
 sm_menu_warden: disabled, 1 - enable Jailbreak menu for warden
@@ -293,6 +332,7 @@ sm_menu_team: 0 - disabled, 1 - enable join team on menu
 [*]Freeday
 [/LIST][/INDENT]
 [LIST]
+[*]Toggle Bullet sparks
 [*]Drawer Menu
 [/LIST]
 [INDENT][LIST]
@@ -499,7 +539,7 @@ sm_weapons_jbmenu: 0 - disabled, 1 - enable autoopen the MyJailbreak menu after 
 
 
 [B][U]PlayerTags[/U][/B]
-This plugins give players tags for team (T,CT) and "rank" (Admin/warden) in stats &/or chat.  
+This plugins give players tags for team (T,CT) and "rank" (VIP/admin/warden) in stats &/or chat.  
 
 [b]ConVars[/b]
 [SPOILER]
@@ -520,6 +560,8 @@ This plugins is the "interface" between Eventdays. Need for cooldowns and disabl
 [SPOILER]
 [CODE]
 sm_myjb_tag: 0 - disabled, 1 - Allow "MyJailbreak" to be added to your server tags. So player will find servers with MyJB faster. it dont touch youR sv_tags
+sm_myjb_log: 0 - disabled, 1 - Allow MyJailbreak to log events, freekills & eventdays in logs/MyJailbreak by day
+```
 [/CODE]
 [/SPOILER]
 
@@ -1202,6 +1244,48 @@ sm_freeday_cooldown_day - Rounds until event can be started again. Default 0
 
 [B][u]Change Log[/u][/B]
 [QUOTE]
+[B][Beta 3.0][/B] - introduce Last Guard Rule & more
+[SPOILER]
+[U]Added[/U][LIST]
+[*] Last Guard Rule: On last CT all terror become rebel
+[/LIST][INDENT][LIST]
+[*] new command - sm_lastguard - Allows terrors to vote and last CT to set Last Guard Rule
+[*] new cvar - sm_lastguard_enable: 0 - disabled, 1 - enable this MyJailbreak SourceMod plugin
+[*] new cvar - sm_lastguard_cmd: Set your custom chat command for Last Guard Rule. no need for sm_ or !. Default "lg" results in !lg /lg & sm_lg
+[*] new cvar - sm_lastguard_ct: 0 - disabled, 1 - allow last CT to set Last Guard Rule
+[*] new cvar - sm_lastguard_vote: 0 - disabled, 1 - allow alive player to vote for Last Guard Rule
+[*] new cvar - sm_lastguard_auto: 0 - disabled, 1 - Last Guard Rule will start automatic if there is only 1 ct. Disables sm_lastguard_vote & sm_lastguard_ct
+[*] new cvar - sm_lastguard_hp: How many percent of the combined Terror Health the CT get? (3 terror alive with 100HP = 300HP / 50% = CT get 150HP: Default 50
+[*] new cvar - sm_lastguard_trucetime: Time in seconds players can't deal damage. Half of this time you are freezed. Default 10
+[*] new cvar - sm_lastguard_sounds_enable: 0 - disabled, 1 - enable sounds 
+[*] new cvar - sm_lastguard_sounds_start: Path to the soundfile which should be played for LGR beginn. "music/MyJailbreak/start.mp3"
+[*] new cvar - sm_lastguard_sounds_beginn: Path to the soundfile which should be played for LGR anouncment. "music/MyJailbreak/lastct.mp3"
+[*] new cvar - sm_lastguard_overlays_enable: 0 - disabled, 1 - enable overlays. Default 1
+[*] new cvar - sm_lastguard_overlays_start: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
+[/LIST][/INDENT][LIST]
+[*] Warden: Bullet impact sparks
+[/LIST][INDENT][LIST]
+[*] new command - sm_sparks - Allows Warden to toggle on/off the wardens bullet sparks
+[*] new cvar - sm_warden_bulletsparks: 0 - disabled, 1 - enable Warden bulletimpact sparks
+[/LIST][/INDENT][LIST]
+[*] Logging for warden, freekills & eventdays in logs/MyJailbreak
+[/LIST][INDENT][LIST]
+[*] sm_myjb_log: 0 - disabled, 1 - Allow MyJailbreak to log events, freekills & eventdays in logs/MyJailbreak by day
+[/LIST][/INDENT][LIST]
+[*] Menu: new cvar - sm_menu_cmd: Set your custom chat command for Last Guard Rule. no need for sm_ or !. Default "panel" results in !panel /panel & sm_panel
+[*] PlayerTags: Added more "ranks" for VIP-& Adminstags (ADMFLAG_ROOT(z), ADMFLAG_CHANGEMAP(g), ADMFLAG_CUSTOM6(t), ADMFLAG_RESERVATION(a))
+[*] Menu: new cvar - sm_lastguard_enable: 0 - disabled, 1 - enable this MyJailbreak SourceMod plugin
+[*] Translation: partially chinese phrases Thx to anon
+[*] Translation: polish phrases ThX to la$ka
+[/LIST]
+[U]Changed[/U][LIST]
+[*] Warden: no warden announcement to postroundstart
+[U]Fixed[/U][LIST]
+[*] fit for SM 1.8
+[*] Zombie: remove nightvision on roundend
+[*] Translation: typos
+[*] minor error
+[/LIST][/SPOILER]
 [B][Beta 2.1][/B] - bug fixes & typos
 [SPOILER]
 [U]Fixed[/U][LIST]
@@ -1211,7 +1295,7 @@ sm_freeday_cooldown_day - Rounds until event can be started again. Default 0
 [U]Removed[/U][LIST]
 [*] Warden: Debug messages on LR
 [*] File: \fastDL\bz.bat
-[/LIST]
+[/LIST][/SPOILER]
 [B][Beta 2.0][/B] - introduce freekill report
 [SPOILER]
 [U]Added[/U][LIST]

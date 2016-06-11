@@ -438,7 +438,7 @@ public void GiveSavedWeapons(int clientIndex)
 				GivePlayerItem(clientIndex, "weapon_tagrenade");
 				CPrintToChat(clientIndex, "%t %t", "weapons_tag", "weapons_ta");
 			}
-			if (g_bTaser.BoolValue) GivePlayerItem(clientIndex, "weapon_taser");
+			if(g_bTaser != null) if(g_bTaser.BoolValue) GivePlayerItem(clientIndex, "weapon_taser");
 		}
 		if (StrEqual(primaryWeapon[clientIndex], "random"))
 		{

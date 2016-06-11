@@ -72,9 +72,9 @@ public void OnPluginStart()
 	gc_sCustomCommand = AutoExecConfig_CreateConVar("sm_lastguard_cmd", "lg", "Set your custom chat command for Last Guard Rule. no need for sm_ or !");
 	gc_bSetCT = AutoExecConfig_CreateConVar("sm_lastguard_ct", "1", "0 - disabled, 1 - allow last CT to set Last Guard Rule", _, true,  0.0, true, 1.0);
 	gc_bVote = AutoExecConfig_CreateConVar("sm_lastguard_vote", "1", "0 - disabled, 1 - allow alive player to vote for Last Guard Rule", _, true,  0.0, true, 1.0);
-	gc_bAutomatic = AutoExecConfig_CreateConVar("sm_lastguard_auto", "0", "0 - disabled, 1 - Last Guard Rule will start automatic if there is only 1 ct. Disables sm_lastguard_vote & sm_lastguard_ct", _, true,  0.0, true, 1.0);
-	gc_iHPmultipler = AutoExecConfig_CreateConVar("sm_lastguard_hp", "50", "How many percent of the combined Terror Health the CT get? (3 terror alive with 100HP = 300HP / 50% = CT get 150HP", _, true,  0.0);
-	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_lastguard_trucetime", "10", "Time in seconds players can't deal damage. Half of this time you are freezed", _, true,  0.0);
+	gc_bAutomatic = AutoExecConfig_CreateConVar("sm_lastguard_auto", "0", "0 - disabled, 1 - Last Guard Rule will start automatic if there is only 1 CT. Disables sm_lastguard_vote & sm_lastguard_ct.", _, true,  0.0, true, 1.0);
+	gc_iHPmultipler = AutoExecConfig_CreateConVar("sm_lastguard_hp", "50", "How many percent of the combined Terror Health the CT get? (3 terror alive with 100HP = 300HP / 50% = CT get 150HP)", _, true,  0.0);
+	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_lastguard_trucetime", "10", "Time in seconds players can't deal damage. Half of this time you are freezed", _, true,  8.0);
 	gc_bSounds = AutoExecConfig_CreateConVar("sm_lastguard_sounds_enable", "1", "0 - disabled, 1 - enable sounds ", _, true, 0.1, true, 1.0);
 	gc_sSoundStartPath = AutoExecConfig_CreateConVar("sm_lastguard_sounds_start", "music/MyJailbreak/start.mp3", "Path to the soundfile which should be played for LGR beginn.");
 	gc_sSoundLastCTPath = AutoExecConfig_CreateConVar("sm_lastguard_sounds_beginn", "music/MyJailbreak/lastct.mp3", "Path to the soundfile which should be played for LGR anouncment.");
@@ -242,6 +242,11 @@ public Action VoteLastGuard(int client,int args)
 	else CPrintToChat(client, "%t %t", "lastguard_tag" , "lastguard_disabled");
 }
 
+public Action LastCTsound(Handle timer)
+{
+	EmitSoundToAllAny(g_sSoundLastCTPath);
+}
+
 //Prepare Event
 
 public Action StartLastGuard()
@@ -256,7 +261,7 @@ public Action StartLastGuard()
 	
 	if(gc_bSounds.BoolValue)
 	{
-		EmitSoundToAllAny(g_sSoundLastCTPath);
+		CreateTimer(0.5, LastCTsound); 
 	}
 	
 	int HPterrors = 0;
