@@ -2,11 +2,37 @@
 {
 	"tags_TA"
 	{
-		"da"		"[Fange&Admin]"
-		"en"		"[Prisoner&Admin]"
-		"de"		"[Häftling&Admin]"
-		"pl"		"[Wiezien&Admin]"
+		"da"		"[Fange.Admin]"
+		"en"		"[Prisoner.Admin]"
+		"de"		"[Häftling.Admin]"
+		"pl"		"[Wiezien.Admin]"
 		"chi"		"[囚犯和管理员]"
+	}
+	"tags_TOWN"
+	{
+		"da"		"[Fange.Owner]"
+		"en"		"[Prisoner.Owner]"
+		"de"		"[Häftling.Owner]"
+		"pl"		"[Wiezien.Owner]"
+		"chi"		"[囚犯和管理员]"
+	}
+	
+	"tags_TVIP1"
+	{
+		"en"		"[Fange.VIP]"
+		"en"		"[Prisoner.VIP]"
+		"de"		"[Häftling.VIP]"
+		"pl"		"[Wiezien.VIP]"
+		"chi"		"[囚犯.VIP]"
+	}
+	
+	"tags_TVIP2"
+	{
+		"en"		"[Fange.sVIP]"
+		"en"		"[Prisoner.sVIP]"
+		"de"		"[Häftling.sVIP]"
+		"pl"		"[Wiezien.sVIP]"
+		"chi"		"[囚犯.sVIP]"
 	}
 	
 	"tags_T"
@@ -20,11 +46,38 @@
 	
 	"tags_CTA"
 	{
-		"da"		"[Vagt&Admin]"
-		"en"		"[Guard&Admin]"
-		"de"		"[Wärter&Admin]"
-		"pl"		"[Straznik&Admin]"
+		"da"		"[Vagt.Admin]"
+		"en"		"[Guard.Admin]"
+		"de"		"[Wärter.Admin]"
+		"pl"		"[Straznik.Admin]"
 		"chi"		"[狱警和管理员]"
+	}
+	
+	"tags_CTOWN"
+	{
+		"da"		"[Vagt.Owner]"
+		"en"		"[Guard.Owner]"
+		"de"		"[Wärter.Owner]"
+		"pl"		"[Straznik.Owner]"
+		"chi"		"[狱警.Owner]"
+	}
+	
+	"tags_CTVIP1"
+	{
+		"da"		"[Vagt.VIP]"	
+		"en"		"[Guard.VIP]"
+		"de"		"[Wärter.VIP]"
+		"pl"		"[Straznik.VIP]"
+		"chi"		"[狱警.VIP]"
+	}
+	
+	"tags_CTVIP2"
+	{
+		"da"		"[Vagt.sVIP]"	
+		"en"		"[Guard.sVIP]"
+		"de"		"[Wärter.sVIP]"
+		"pl"		"[Straznik.sVIP]"
+		"chi"		"[狱警.sVIP]"
 	}
 	
 	"tags_CT"
@@ -38,11 +91,19 @@
 	
 	"tags_WA"
 	{
-		"da"		"[Warden&Admin]"	
-		"en"		"[Warden&Admin]"
-		"de"		"[Warden&Admin]"
-		"pl"		"[Warden&Admin]"
+		"da"		"[Warden.Admin]"	
+		"en"		"[Warden.Admin]"
+		"de"		"[Warden.Admin]"
+		"pl"		"[Warden.Admin]"
 		"chi"		"[监狱长和管理员]"
+	}
+	
+	"tags_WOWN"
+	{
+		"da"		"[Warden.Owner]"	
+		"en"		"[Warden.Owner]"
+		"de"		"[Warden.Owner]"
+		"pl"		"[Warden.Owner]"
 	}
 	
 	"tags_W"
@@ -52,5 +113,21 @@
 		"de"		"[Warden]"
 		"pl"		"[Warden]"
 		"chi"		"[监狱长]"
+	}
+	"tags_WVIP1"
+	{
+		"da"		"[Warden.VIP]"	
+		"en"		"[Warden.VIP]"
+		"de"		"[Warden.VIP]"
+		"pl"		"[Warden.VIP]"
+		"chi"		"[监狱长.VIP]"
+	}
+	"tags_WVIP2"
+	{
+		"da"		"[Warden.sVIP]"	
+		"en"		"[Warden.sVIP]"
+		"de"		"[Warden.sVIP]"
+		"pl"		"[Warden.sVIP]"
+		"chi"		"[监狱长.sVIP]"
 	}
 }
