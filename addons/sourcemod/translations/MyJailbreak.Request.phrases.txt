@@ -197,4 +197,83 @@
 	{
 		"en"		"Report Freekill"
 	}
+	"request_freekill"
+	{
+		"#format"	"{1:N},{2:N},{3:N}"
+		"en"		"{green}{1{default} send a freekill report of {darkred}{2}{default} to {purple}{3}"
+		"de"		"{green}{1}{default} meldet {darkred}{2}{default} wegen Freekill an {purple}{3}"
+	}
+	"request_pardonfreekill"
+	{
+		"en"		"Was that a Freekill?"
+		"de"		"War es ein unerlaubt Mord?"
+	}
+	"request_handlefreekill"
+	{
+		"en"		"How handle this freekill?"
+		"de"		"Wie möchstest du den Freekill handhaben?"
+	}
+	"request_respawnvictim"
+	{
+		"en"		"Respawn the victim"
+		"de"		"Das Opfer wiederbeleben"
+	}
+	"request_killfreekiller"
+	{
+		"en"		"Kill the freekiller"
+		"de"		"Töte den Freekiller"
+	}
+	"request_freeday"
+	{
+		"en"		"Next round Freeday"
+		"de"		"Nächste Runde Freeday"
+	}
+	"request_swapfreekiller"
+	{
+		"en"		"Swap freekiller to T"
+		"de"		"Schiebe den Freekiller zu T"
+	}
+	"request_aliveorct"
+	{
+		"en"		"You are not dead or CT."
+		"de"		"Du bist nicht tot oder ein Ct."
+	}
+	"request_nokiller"
+	{
+		"en"		"Sorry, we can't find your killer"
+		"de"		"Wir konnten deinen Mörder nicht finden"
+	}
+	"request_respawned"
+	{
+		"en"		"You respawned"
+		"de"		"Du wurdest wiederbeleben"
+	}
+	"request_respawnedall"
+	{
+		"#format"	"{1:N}"
+		"en"		"{1} was respawned due a {darkred}freekill"
+		"de"		"{1} wurde wegen eines {darkred}Freekills{default} wiederbelebt"
+	}
+	"request_killbcfreekill"
+	{
+		"en"		"You got slayed due a {darkred}freekill"
+		"de"		"Du wurdest wegen eines {darkred}Freekills{default} getötet"
+	}
+	"request_killbcfreekillall"
+	{
+		"#format"	"{1:N}"
+		"en"		"{green}{1}{default} was slayed due a {darkred}freekill"
+		"de"		"{green}{{1}{default} wurdest wegen eines {darkred}Freekills{default} getötet"
+	}
+	"request_swapbcfreekill"
+	{
+		"en"		"You got swaped to terrorist team due a {darkred}freekill"
+		"de"		"Du wurdest wegen eines {darkred}Freekills{default} zu Terror verschoben"
+	}
+	"request_swapbcfreekillall"
+	{
+		"#format"	"{1:N}"
+		"en"		"{green}{{1}{default} was swaped due a {darkred}freekill{default} to terrorist team"
+		"de"		"{green}{{1}{default} wurdest wegen eines {darkred}Freekills{default} zu den Terrors verschoben"
+	}
 }

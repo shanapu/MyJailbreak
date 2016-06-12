@@ -8,7 +8,7 @@ MyJailbreak is a redux rewrite of [Franugs Special Jailbreak](https://github.com
 ***Included Plugins:***
   
   
-*  [**Warden**](https://github.com/shanapu/MyJailbreak/wiki/Warden) - set/become warden,vote retire warden, model, icon, open cells,gun plant prevention, handcuffs, laser pointer, drawer, set marker/quiz/EventDays/countdown/FF/nobock/mute
+*  [**Warden**](https://github.com/shanapu/MyJailbreak/wiki/Warden) - set/become warden,vote retire warden, model, icon, extend roundtime, open cells,gun plant prevention, handcuffs, laser pointer, drawer, set marker/quiz/EventDays/countdown/FF/nobock/mute
 *  [**Request**](https://github.com/shanapu/MyJailbreak/wiki/Request) - terror requests. refuse a game, request Capitulation/Pardon, healing or repeating, report freekill.
 *  [**Last Guard Rule**](https://github.com/shanapu/MyJailbreak/wiki/LastGuardRule) - When Last Guard Rule is set the last CT get more HP and all terrors become rebel
 *  [**Menu**](https://github.com/shanapu/MyJailbreak/wiki/Menu) - player menus for T, CT, warden & admin

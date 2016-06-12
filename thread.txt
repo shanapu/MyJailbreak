@@ -6,7 +6,7 @@ MyJailbreak is a redux rewrite of [URL="https://github.com/Franc1sco/Franug-Jail
 [B][u]Included Plugins:[/u][/B]
 
 [LIST]
-[*] [B]Warden[/B] - set/become warden,vote retire warden, model, icon, open cells,gun plant prevention, handcuffs, laser pointer, drawer, set marker/quiz/EventDays/countdown/FF/nobock/mute
+[*] [B]Warden[/B] - set/become warden,vote retire warden, model, icon, open cells,gun plant prevention, extend roundtime, handcuffs, laser pointer, drawer, set marker/quiz/EventDays/countdown/FF/nobock/mute
 [*] [B]Requests[/B] - terror requests. refuse a game, request Capitulation/Pardon, healing or repeating, report freekill
 [*] [B]Last Guard Rule[/B] - When Last Guard Rule is set the last CT get more HP and all terrors become rebel
 [*] [B]Menu[/B] - player menus for T, CT, warden & admin
@@ -53,7 +53,7 @@ MyJailbreak is a redux rewrite of [URL="https://github.com/Franc1sco/Franug-Jail
 
 [U][B]Warden[/B][/U]
 This plugins allows players to take control over the prison as warden/Headguard/Commander.  
-Chat, hud & sound notifications about warden / no warden. Vote to retire the warden. Colorized warden and define the color. Set warden Model and icon above head. Open & close cell doors & automatic open. Mute terroist for a amoung of time or round end. Gun plant prevention - CT can drop weapons only on round beginn without punishment & report to warden. Use Zeus as Handcuffs and move the cuffed T around. Give warden laser pointer & drawer(LaZzZers) with menu to choose color. Warden can toggle drawer for terrorists. Set different countdowns (start/stop) with overlays, sound & chat notifications. Start a MathQuiz with endtimer & show the player with the first right answer. Toggle Friendly Fire & No Block. Kill/pick a random T (excluding rebels & last T) with different kill effects(Lighting,Timebomb,Firebomb).
+Chat, hud & sound notifications about warden / no warden. Vote to retire the warden. Colorized warden and define the color. Set warden Model and icon above head. Open & close cell doors & automatic open. Mute terroist for a amoung of time or round end. Extend roundtime. Gun plant prevention - CT can drop weapons only on round beginn without punishment & report to warden. Use Zeus as Handcuffs and move the cuffed T around. Give warden laser pointer & drawer(LaZzZers) with menu to choose color. Warden can toggle drawer for terrorists. Set different countdowns (start/stop) with overlays, sound & chat notifications. Start a MathQuiz with endtimer & show the player with the first right answer. Toggle Friendly Fire & No Block. Kill/pick a random T (excluding rebels & last T) with different kill effects(Lighting,Timebomb,Firebomb).
 
 [b]Commands[/b]
 [SPOILER]
@@ -69,6 +69,7 @@ sm_open - Allows the warden to open the cell doors
 sm_close - Allows the warden to close the cell doors
 sm_sparks - Allows Warden to toggle on/off the wardens bullet sparks
 sm_laser - Allows the warden to toggle the wardens Laser pointer
+sm_extend - Allows the warden to extend the roundtime
 sm_drawer - Allows the warden to toggle the wardens Drawer
 sm_noblockn - Allows the warden to toggle no block 
 sm_setff - Allows player to see the state and the warden to toggle friendly fire
@@ -108,6 +109,7 @@ sm_warden_icon: Path to the floating warden icon DONT TYPE .vmt or .vft. Default
 sm_warden_noblock: 0 - disabled, 1 - enable setable noblock for warden. Default 1
 sm_warden_noblock_mode: 0 - collision only between CT & T , 1 - collision within a team. Default 1
 sm_warden_ff: 0 - disabled, 1 - enable warden switch friendly fire. Default 1
+sm_warden_extend: 0- disabled, 1- Allows the warden to extend the roundtime. Default 1
 sm_warden_mute: 0 - disabled, 1 - Allow the warden to mute T-side player. Default 1
 sm_warden_mute_round: 0 - disabled, 1 - Allow the warden to mute a player until roundend. Default 1
 sm_warden_gunplant: 0 - disabled, 1 - enable Gun plant prevention. Default 1
@@ -139,6 +141,7 @@ sm_warden_overlays_stop: Path to the stop Overlay DONT TYPE .vmt or .vft. Defaul
 sm_warden_model: 0 - disabled, 1 - enable warden model. Default 1
 sm_warden_model_path:Path to the model for zombies. Default "models/player/custom_player/legacy/security/security.mdl"
 sm_warden_color_enable: 0 - disabled, 1 - enable colored warden. Default 1
+sm_warden_color_random: 0 - disabled, 1 - enable warden rainbow colored. Default 1
 sm_warden_color_red - What color to turn the warden into (set R, G and B values to 0 to disable). Default 0
 sm_warden_color_green - What color to turn the warden into (rGb): x - green value. Default 0
 sm_warden_color_blue - What color to turn the warden into (rgB): x - blue value. Default 255
