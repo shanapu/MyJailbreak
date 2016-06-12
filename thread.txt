@@ -1247,6 +1247,21 @@ sm_freeday_cooldown_day - Rounds until event can be started again. Default 0
 
 [B][u]Change Log[/u][/B]
 [QUOTE]
+[B][Beta .3.1][/B] - 
+[SPOILER]
+[U]Added[/U][LIST]
+[*] Warden: extend roundtime
+[/LIST][INDENT][LIST]
+[*] new command - sm_extend - Allows the warden to extend the roundtime
+[*] new cvar - sm_warden_extend: 0- disabled, 1- Allows the warden to extend the roundtime. Default 1
+[/LIST][/INDENT][LIST]
+[*] Warden: rainbow warden colors
+[/LIST][INDENT][LIST]
+[*] new cvar - sm_warden_color_random: 0 - disabled, 1 - enable warden rainbow colored. Default 1
+[/LIST][/INDENT]
+[U]Fixed[/U][LIST]
+[*] Request: missing freekill translation  
+[/LIST][/SPOILER]
 [B][Beta 3.0][/B] - introduce Last Guard Rule & more
 [SPOILER]
 [U]Added[/U][LIST]

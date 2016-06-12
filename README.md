@@ -58,6 +58,17 @@ coded with ![](http://shanapu.de/githearth-small.png) free software
 ---
   
 ***Change Log***
+**[Beta .3.1]** -   
+*Added*  
+* Warden: extend roundtime
+    * new command - sm_extend - Allows the warden to extend the roundtime
+    * new cvar - sm_warden_extend: 0- disabled, 1- Allows the warden to extend the roundtime. Default 1
+* Warden: rainbow warden colors
+    * new cvar - sm_warden_color_random: 0 - disabled, 1 - enable warden rainbow colored. Default 1
+  
+*Fixed*  
+* Request: missing freekill translation  
+  
   
 **[Beta 3.0]** - introduce Last Guard Rule & more  
 *Added*  
