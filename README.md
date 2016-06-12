@@ -59,7 +59,7 @@ coded with ![](http://shanapu.de/githearth-small.png) free software
   
 ***Change Log***
   
-**[Beta 3.0]** - introduce Last Guard Rule & more
+**[Beta 3.0]** - introduce Last Guard Rule & more  
 *Added*  
 * Last Guard Rule: On last CT all terror become rebel
     * new command - sm_lastguard - Allows terrors to vote and last CT to set Last Guard Rule
@@ -82,11 +82,9 @@ coded with ![](http://shanapu.de/githearth-small.png) free software
     * new cvar - sm_myjb_log: 0 - disabled, 1 - Allow MyJailbreak to log events, freekills & eventdays in logs/MyJailbreak by day
 * Menu: new cvar - sm_menu_cmd: Set your custom chat command for Last Guard Rule. no need for sm_ or !. Default "panel" results in !panel /panel & sm_panel
 * PlayerTags: Added more "ranks" for VIP-& Adminstags (ADMFLAG_ROOT(z), ADMFLAG_CHANGEMAP(g), ADMFLAG_CUSTOM6(t), ADMFLAG_RESERVATION(a))
-* Menu: new cvar - sm_lastguard_enable: 0 - disabled, 1 - enable this MyJailbreak SourceMod plugin
 * Translation: partially chinese phrases Thx to anon
-* Translation: polish phrases ThX to la$ka
-*Changed*  
-* Warden: no warden announcement to postroundstart
+* Translation: polish phrases ThX to la$ka  
+  
 *Fixed*  
 * fit for SM 1.8
 * bug where roundtime set to 1 when set new eventday on roundend of a eventday 
@@ -196,7 +194,7 @@ https://github.com/shanapu/MyJailbreak/releases
 ***Wiki:*** need some work  
 https://github.com/shanapu/MyJailbreak/wiki/  
   
-***Report Bugs, Ideas & Requests:***  
+***Report Bugs, Ideas, Requests & see todo:***  
 https://github.com/shanapu/MyJailbreak/issues  
 https://forums.alliedmods.net/showthread.php?t=283212  
   

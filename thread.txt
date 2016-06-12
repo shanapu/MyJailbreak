@@ -227,7 +227,7 @@ sm_freekill_warden: 0 - disabled, 1 - Report will be send to Warden if there is 
 
 
 [U][B]Last Guard Rule[/B][/U]
-This plugin allow to play the "Last Guard Rule". You can choose between automatic when there is only one CT alive, or T can start a voting on last CT alive or the last CT will set Last Guard Rule. When Last Guard Rule is set the CT get HP in balance of sum of HP of Terrors and all Terrors become rebel
+This plugin allow to play the "Last Guard Rule". You can choose between automatic when there is only one CT alive, or T can start a voting on last CT alive or the last CT will set Last Guard Rule. When Last Guard Rule is set the CT get more HP and all Terrors become rebel
 
 [b]Commands[/b]
 [SPOILER]
@@ -1270,16 +1270,13 @@ sm_freeday_cooldown_day - Rounds until event can be started again. Default 0
 [/LIST][/INDENT][LIST]
 [*] Logging for warden, freekills & eventdays in logs/MyJailbreak
 [/LIST][INDENT][LIST]
-[*] sm_myjb_log: 0 - disabled, 1 - Allow MyJailbreak to log events, freekills & eventdays in logs/MyJailbreak by day
+[*] new cvar - sm_myjb_log: 0 - disabled, 1 - Allow MyJailbreak to log events, freekills & eventdays in logs/MyJailbreak by day
 [/LIST][/INDENT][LIST]
-[*] Menu: new cvar - sm_menu_cmd: Set your custom chat command for Last Guard Rule. no need for sm_ or !. Default "panel" results in !panel /panel & sm_panel
+[*] Menu: new cvar - sm_menu_cmd: Set your custom chat command for menu. no need for sm_ or !. Default "panel" results in !panel /panel & sm_panel
 [*] PlayerTags: Added more "ranks" for VIP-& Adminstags (ADMFLAG_ROOT(z), ADMFLAG_CHANGEMAP(g), ADMFLAG_CUSTOM6(t), ADMFLAG_RESERVATION(a))
-[*] Menu: new cvar - sm_lastguard_enable: 0 - disabled, 1 - enable this MyJailbreak SourceMod plugin
 [*] Translation: partially chinese phrases Thx to anon
 [*] Translation: polish phrases ThX to la$ka
 [/LIST]
-[U]Changed[/U][LIST]
-[*] Warden: no warden announcement to postroundstart
 [U]Fixed[/U][LIST]
 [*] fit for SM 1.8
 [*] bug where roundtime set to 1 when set new eventday on roundend of a eventday 
@@ -1385,7 +1382,7 @@ Weeeishy, UartigZone, Got Sw4g? terminator18, SkeLeXes, 0dieter0, maKs, TomseN48
 [B][U]Wiki:[/U][/B] need some work
 [url]https://github.com/shanapu/MyJailbreak/wiki/[/url]
 
-[U][B]Report Bugs, Ideas & Requests:[/B][/U]
+[U][B]Report Bugs, Ideas, Requests & see todo:[/B][/U]
 [url]https://github.com/shanapu/MyJailbreak/issues[/url]
 
 [U][B]Code changes:[/B][/U]
