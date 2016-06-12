@@ -16,7 +16,7 @@ ConVar gc_bLogging;
 char IsEventDay[128] = "none";
 
 public Plugin myinfo = {
-	name = "myjailbreak",
+	name = "MyJailbreak - Core",
 	author = "shanapu",
 	description = "MyJailbreak - core plugin",
 	version = PLUGIN_VERSION,
