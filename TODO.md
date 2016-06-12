@@ -14,6 +14,7 @@
 - [ ] duckhunt auto higher if more t
 - [ ] duckhunt ammo refill to SetPlayerWeaponAmmo stock
 - [ ] menu: merge waden & admin check
+- [ ] events: change canset bool to RoundState_BetweenRounds https://sm.alliedmods.net/new-api/sdktools_gamerules/RoundState
 
 need?
 - [ ] ClientPrefs weapons drawerlaser color?
@@ -32,5 +33,4 @@ future:
 - [ ] rewrite/merge to one master plugin (e.g. hosties,ttt..)
 
 maybe:
-- [ ] warden: extend roundtime (if possible?)
 - [ ] dice / shop mix

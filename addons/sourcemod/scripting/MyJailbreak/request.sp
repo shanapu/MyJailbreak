@@ -933,6 +933,21 @@ public int FreeKillHandler(Menu menu, MenuAction action, int client, int Positio
 			{
 				g_bFreeKilled[i] = false;
 				CS_RespawnPlayer(i);
+				
+					float origin[3];
+					GetClientAbsOrigin(client, origin);
+					float location[3];
+					GetClientEyePosition(client, location);
+					float ang[3];
+					GetClientEyeAngles(client, ang);
+					float location2[3];
+					location2[0] = (location[0]+(100*((Cosine(DegToRad(ang[1]))) * (Cosine(DegToRad(ang[0]))))));
+					location2[1] = (location[1]+(100*((Sine(DegToRad(ang[1]))) * (Cosine(DegToRad(ang[0]))))));
+					ang[0] -= (2*ang[0]);
+					location2[2] = origin[2] += 5.0;
+					
+					TeleportEntity(i, location2, NULL_VECTOR, NULL_VECTOR);
+				
 				if(MyJBLogging(true)) LogToFileEx(g_sFreeKillLogFile, "Warden %L accept freekill request and respawned %L", client, i);
 				CPrintToChat(i, "%t %t", "request_tag", "request_respawned");
 				CPrintToChatAll("%t %t", "warden_tag", "request_respawnedall", i);
