@@ -86,6 +86,7 @@ ConVar gc_iHandCuffsNumber;
 ConVar gc_bHandCuffLR;
 ConVar gc_bHandCuffCT;
 ConVar gc_bBulletSparks;
+ConVar gc_bExtend;
 
 //Bools
 bool IsCountDown = false;
@@ -248,6 +249,7 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_math", StartMathQuestion, "Allows the Warden to start a MathQuiz. Show player with first right Answer");
 	RegConsoleCmd("sm_wmute", MuteMenu, "Allows a warden to mute all terrorists for a specified duration or untill the next round.");
 	RegConsoleCmd("sm_wunmute", UnMute_Command, "Allows a warden to unmute the terrorists.");
+	RegConsoleCmd("sm_extend", ExtendRoundTime, "Allow a warden to extend round time");
 	
 	//Admin commands
 	RegAdminCmd("sm_sw", SetWarden, ADMFLAG_GENERIC);
@@ -285,6 +287,7 @@ public void OnPluginStart()
 	gc_bNoBlock = AutoExecConfig_CreateConVar("sm_warden_noblock", "1", "0 - disabled, 1 - enable noblock toggle for warden", _, true,  0.0, true, 1.0);
 	gc_bNoBlockMode = AutoExecConfig_CreateConVar("sm_warden_noblock_mode", "1", "0 - collision only between CT & T, 1 - collision within a team.", _, true,  0.0, true, 1.0);
 	gc_bFF = AutoExecConfig_CreateConVar("sm_warden_ff", "1", "0 - disabled, 1 - enable switch ff for T ", _, true,  0.0, true, 1.0);
+	gc_bExtend = AutoExecConfig_CreateConVar("sm_warden_extend", "1", "0 - disabled, 1 - Allow the warden to extend roundtime", _, true,  0.0, true, 1.0);
 	gc_bGunPlant = AutoExecConfig_CreateConVar("sm_warden_gunplant", "1", "0 - disabled, 1 - enable Gun plant prevention", _, true,  0.0, true, 1.0);
 	gc_fAllowDropTime = AutoExecConfig_CreateConVar("sm_warden_allow_time", "15.0", "Time in seconds CTs allowed to drop weapon on round beginn.", _, true,  0.1);
 	gc_bGunNoDrop = AutoExecConfig_CreateConVar("sm_warden_gunnodrop", "0", "0 - disabled, 1 - disallow gun dropping for ct", _, true,  0.0, true, 1.0);
@@ -331,8 +334,6 @@ public void OnPluginStart()
 	gc_sSoundStartPath = AutoExecConfig_CreateConVar("sm_warden_sounds_start", "music/MyJailbreak/start.mp3", "Path to the soundfile which should be played for a start countdown.");
 	gc_sSoundStopPath = AutoExecConfig_CreateConVar("sm_warden_sounds_stop", "music/MyJailbreak/stop.mp3", "Path to the soundfile which should be played for stop countdown.");
 	gc_sSoundCuffsPath = AutoExecConfig_CreateConVar("sm_warden_sounds_cuffs", "music/MyJailbreak/cuffs.mp3", "Path to the soundfile which should be played for cuffed player.");
-	
-	
 	
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
@@ -3461,5 +3462,80 @@ stock int StripZeus(int client)
 			AcceptEntityInput(weapon, "Kill");
 		}
 	}
+}
+
+public Action ExtendRoundTime(int client, int args)
+{
+	if(gc_bExtend.BoolValue)
+	{
+		if (client == g_iWarden)
+		{
+			char menuinfo[255];
+			
+			Menu menu = new Menu(ExtendRoundTimeHandler);
+			Format(menuinfo, sizeof(menuinfo), "%T", "warden_time_title", client);
+			menu.SetTitle(menuinfo);
+			Format(menuinfo, sizeof(menuinfo), "%T", "warden_120", client);
+			menu.AddItem("120", menuinfo);
+			Format(menuinfo, sizeof(menuinfo), "%T", "warden_180", client);
+			menu.AddItem("180", menuinfo);
+			Format(menuinfo, sizeof(menuinfo), "%T", "warden_300", client);
+			menu.AddItem("300", menuinfo);
+			
+			menu.ExitBackButton = true;
+			menu.ExitButton = true;
+			menu.Display(client, 20);
+		}
+		else CPrintToChat(client, "%t %t", "warden_tag", "warden_notwarden" );
+	}
+	return Plugin_Handled;
+}
+
+public int ExtendRoundTimeHandler(Menu menu, MenuAction action, int client, int selection)
+{
+	if (action == MenuAction_Select)
+	{
+		char info[32];
+		menu.GetItem(selection, info, sizeof(info));
+		
+		if ( strcmp(info,"120") == 0 ) 
+		{
+			ExtendTime(client, 120);
+		}
+		else if ( strcmp(info,"180") == 0 ) 
+		{
+			ExtendTime(client, 180);
+		}
+		else if ( strcmp(info,"300") == 0 ) 
+		{
+			ExtendTime(client, 300);
+		}
+		if(g_bMenuClose != null)
+		{
+			if(!g_bMenuClose)
+			{
+				FakeClientCommand(client, "sm_menu");
+			}
+		}
+	}
+	else if(action == MenuAction_Cancel)
+	{
+		if(selection == MenuCancel_ExitBack) 
+		{
+			FakeClientCommand(client, "sm_menu");
+		}
+	}
+	else if(action == MenuAction_End)
+	{
+		delete menu;
+	}
+}
+
+public Action ExtendTime(int client, int args)
+{
+		GameRules_SetProp("m_iRoundTime", GameRules_GetProp("m_iRoundTime", 4, 0)+args, 4, 0, true);
+		int extendminute = (args/60);
+		CPrintToChatAll("%t %t", "warden_tag" , "warden_extend", client, extendminute);
+		return Plugin_Handled;
 }
 

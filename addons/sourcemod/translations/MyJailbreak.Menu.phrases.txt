@@ -65,10 +65,14 @@
 		"en"			"Toggle No Block"
 		"pl"			"Wlacz No Block"
 		"chi"			"切换No Block"
-	}		
+	}
 	"menu_sparks"
 	{
 		"en"			"Toggle BulletImpact Sparks"
+	}
+	"menu_extend"
+	{
+		"en"			"Extend round time"
 	}
 	"menu_ffon"
 	{
