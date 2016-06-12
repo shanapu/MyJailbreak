@@ -768,7 +768,7 @@
 	"warden_time_title"
 	{
 		"en"		"How long?"
-		"de"		"wie lange?"
+		"de"		"Für wie lange?"
 		"pl"		"Jak dlugo?"
 	}
 	"warden_allt"
@@ -831,7 +831,12 @@
 		"de"		"5 Minuten"
 		"pl"		"5 Minut"
 	}
-	
+	"warden_extend"
+	{
+		"#format"	"{1:N},{2:i}"
+		"en"		"Warden {1} extended the roundtime by {2} minutes"
+		"de"		"Warden {1} hat die Runde um {2} Minuten verlängert"
+	}
 	"warden_math_correct"
 	{
 		"#format"	"{1:N},{2:i}"

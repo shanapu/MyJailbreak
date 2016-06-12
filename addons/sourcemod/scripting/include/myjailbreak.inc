@@ -3,7 +3,7 @@
 #endif
 #define _myjailbreak_included_
 
-#define PLUGIN_VERSION "Beta 3.0"
+#define PLUGIN_VERSION "Beta 4.0.dev"
 #define URL_LINK "https://github.com/shanapu/MyJailbreak"
 
 #include <sdktools>
@@ -182,7 +182,6 @@ stock void SetPlayerWeaponAmmo(int client, int weaponEnt, int clip = -1, int amm
 		}
 	}
 }
-
 
 stock int GetAliveTeamCount(int team)
 {

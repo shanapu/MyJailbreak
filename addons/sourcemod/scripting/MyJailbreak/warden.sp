@@ -86,6 +86,8 @@ ConVar gc_iHandCuffsNumber;
 ConVar gc_bHandCuffLR;
 ConVar gc_bHandCuffCT;
 ConVar gc_bBulletSparks;
+ConVar gc_bExtend;
+ConVar gc_bWardenColorRandom;
 
 //Bools
 bool IsCountDown = false;
@@ -248,6 +250,7 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_math", StartMathQuestion, "Allows the Warden to start a MathQuiz. Show player with first right Answer");
 	RegConsoleCmd("sm_wmute", MuteMenu, "Allows a warden to mute all terrorists for a specified duration or untill the next round.");
 	RegConsoleCmd("sm_wunmute", UnMute_Command, "Allows a warden to unmute the terrorists.");
+	RegConsoleCmd("sm_extend", ExtendRoundTime, "Allow a warden to extend round time");
 	
 	//Admin commands
 	RegAdminCmd("sm_sw", SetWarden, ADMFLAG_GENERIC);
@@ -285,6 +288,7 @@ public void OnPluginStart()
 	gc_bNoBlock = AutoExecConfig_CreateConVar("sm_warden_noblock", "1", "0 - disabled, 1 - enable noblock toggle for warden", _, true,  0.0, true, 1.0);
 	gc_bNoBlockMode = AutoExecConfig_CreateConVar("sm_warden_noblock_mode", "1", "0 - collision only between CT & T, 1 - collision within a team.", _, true,  0.0, true, 1.0);
 	gc_bFF = AutoExecConfig_CreateConVar("sm_warden_ff", "1", "0 - disabled, 1 - enable switch ff for T ", _, true,  0.0, true, 1.0);
+	gc_bExtend = AutoExecConfig_CreateConVar("sm_warden_extend", "1", "0 - disabled, 1 - Allow the warden to extend roundtime", _, true,  0.0, true, 1.0);
 	gc_bGunPlant = AutoExecConfig_CreateConVar("sm_warden_gunplant", "1", "0 - disabled, 1 - enable Gun plant prevention", _, true,  0.0, true, 1.0);
 	gc_fAllowDropTime = AutoExecConfig_CreateConVar("sm_warden_allow_time", "15.0", "Time in seconds CTs allowed to drop weapon on round beginn.", _, true,  0.1);
 	gc_bGunNoDrop = AutoExecConfig_CreateConVar("sm_warden_gunnodrop", "0", "0 - disabled, 1 - disallow gun dropping for ct", _, true,  0.0, true, 1.0);
@@ -322,6 +326,7 @@ public void OnPluginStart()
 	gc_bModel = AutoExecConfig_CreateConVar("sm_warden_model", "1", "0 - disabled, 1 - enable warden model", 0, true, 0.0, true, 1.0);
 	gc_sModelPath = AutoExecConfig_CreateConVar("sm_warden_model_path", "models/player/custom_player/legacy/security/security.mdl", "Path to the model for warden.");
 	gc_bColor = AutoExecConfig_CreateConVar("sm_warden_color_enable", "1", "0 - disabled, 1 - enable warden colored", _, true,  0.0, true, 1.0);
+	gc_bWardenColorRandom = AutoExecConfig_CreateConVar("sm_warden_color_random", "1", "0 - disabled, 1 - enable warden rainbow colored", _, true,  0.0, true, 1.0);
 	gc_iWardenColorRed = AutoExecConfig_CreateConVar("sm_warden_color_red", "0","What color to turn the warden into (set R, G and B values to 255 to disable) (Rgb): x - red value", _, true, 0.0, true, 255.0);
 	gc_iWardenColorGreen = AutoExecConfig_CreateConVar("sm_warden_color_green", "0","What color to turn the warden into (rGb): x - green value", _, true, 0.0, true, 255.0);
 	gc_iWardenColorBlue = AutoExecConfig_CreateConVar("sm_warden_color_blue", "255","What color to turn the warden into (rgB): x - blue value", _, true, 0.0, true, 255.0);
@@ -331,8 +336,6 @@ public void OnPluginStart()
 	gc_sSoundStartPath = AutoExecConfig_CreateConVar("sm_warden_sounds_start", "music/MyJailbreak/start.mp3", "Path to the soundfile which should be played for a start countdown.");
 	gc_sSoundStopPath = AutoExecConfig_CreateConVar("sm_warden_sounds_stop", "music/MyJailbreak/stop.mp3", "Path to the soundfile which should be played for stop countdown.");
 	gc_sSoundCuffsPath = AutoExecConfig_CreateConVar("sm_warden_sounds_cuffs", "music/MyJailbreak/cuffs.mp3", "Path to the soundfile which should be played for cuffed player.");
-	
-	
 	
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
@@ -853,7 +856,7 @@ public int SetWardenHandler(Menu menu, MenuAction action, int client, int Positi
 						{
 							EmitSoundToAllAny(g_sWarden);
 						}
-						CreateTimer(0.5, Timer_WardenFixColor, i, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
+						CreateTimer(1.0, Timer_WardenFixColor, i, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 						if (gc_bHandCuff.BoolValue) GivePlayerItem(i, "weapon_taser");
 						SpawnIcon(i);
 						GetEntPropString(i, Prop_Data, "m_ModelName", g_sModelPath, sizeof(g_sModelPath));
@@ -911,7 +914,7 @@ public int m_WardenOverwrite(Menu menu, MenuAction action, int client, int Posit
 			if(MyJBLogging(true)) LogToFileEx(g_sMyJBLogFile, "Admin %L kick player %L warden and set %L as new", client, g_iWarden, newwarden);
 			RemoveIcon(g_iWarden);
 			g_iWarden = newwarden;
-			CreateTimer(0.5, Timer_WardenFixColor, newwarden, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
+			CreateTimer(1.0, Timer_WardenFixColor, newwarden, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 			if (gc_bHandCuff.BoolValue) GivePlayerItem(newwarden, "weapon_taser");
 			SpawnIcon(newwarden);
 			GetEntPropString(newwarden, Prop_Data, "m_ModelName", g_sModelPath, sizeof(g_sModelPath));
@@ -960,7 +963,11 @@ public Action Timer_WardenFixColor(Handle timer,any client)
 			{ 
 				if(gc_bColor.BoolValue)
 				{
-					SetEntityRenderColor(client, gc_iWardenColorRed.IntValue, gc_iWardenColorGreen.IntValue, gc_iWardenColorBlue.IntValue, 255);
+					if(gc_bWardenColorRandom.BoolValue)
+					{
+						SetEntityRenderColor(client, GetRandomInt(0, 255), GetRandomInt(0, 255), GetRandomInt(0, 255), 255);
+					}
+					else SetEntityRenderColor(client, gc_iWardenColorRed.IntValue, gc_iWardenColorGreen.IntValue, gc_iWardenColorBlue.IntValue, 255);
 				}
 			}
 		}
@@ -1066,7 +1073,7 @@ void SetTheWarden(int client)
 		}
 		g_iWarden = client;
 		if (gc_bHandCuff.BoolValue) GivePlayerItem(client, "weapon_taser");
-		CreateTimer(0.5, Timer_WardenFixColor, client, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
+		CreateTimer(1.0, Timer_WardenFixColor, client, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 		SpawnIcon(client);
 		GetEntPropString(client, Prop_Data, "m_ModelName", g_sModelPath, sizeof(g_sModelPath));
 		if(gc_bModel.BoolValue)
@@ -3461,5 +3468,80 @@ stock int StripZeus(int client)
 			AcceptEntityInput(weapon, "Kill");
 		}
 	}
+}
+
+public Action ExtendRoundTime(int client, int args)
+{
+	if(gc_bExtend.BoolValue)
+	{
+		if (client == g_iWarden)
+		{
+			char menuinfo[255];
+			
+			Menu menu = new Menu(ExtendRoundTimeHandler);
+			Format(menuinfo, sizeof(menuinfo), "%T", "warden_time_title", client);
+			menu.SetTitle(menuinfo);
+			Format(menuinfo, sizeof(menuinfo), "%T", "warden_120", client);
+			menu.AddItem("120", menuinfo);
+			Format(menuinfo, sizeof(menuinfo), "%T", "warden_180", client);
+			menu.AddItem("180", menuinfo);
+			Format(menuinfo, sizeof(menuinfo), "%T", "warden_300", client);
+			menu.AddItem("300", menuinfo);
+			
+			menu.ExitBackButton = true;
+			menu.ExitButton = true;
+			menu.Display(client, 20);
+		}
+		else CPrintToChat(client, "%t %t", "warden_tag", "warden_notwarden" );
+	}
+	return Plugin_Handled;
+}
+
+public int ExtendRoundTimeHandler(Menu menu, MenuAction action, int client, int selection)
+{
+	if (action == MenuAction_Select)
+	{
+		char info[32];
+		menu.GetItem(selection, info, sizeof(info));
+		
+		if ( strcmp(info,"120") == 0 ) 
+		{
+			ExtendTime(client, 120);
+		}
+		else if ( strcmp(info,"180") == 0 ) 
+		{
+			ExtendTime(client, 180);
+		}
+		else if ( strcmp(info,"300") == 0 ) 
+		{
+			ExtendTime(client, 300);
+		}
+		if(g_bMenuClose != null)
+		{
+			if(!g_bMenuClose)
+			{
+				FakeClientCommand(client, "sm_menu");
+			}
+		}
+	}
+	else if(action == MenuAction_Cancel)
+	{
+		if(selection == MenuCancel_ExitBack) 
+		{
+			FakeClientCommand(client, "sm_menu");
+		}
+	}
+	else if(action == MenuAction_End)
+	{
+		delete menu;
+	}
+}
+
+public Action ExtendTime(int client, int args)
+{
+		GameRules_SetProp("m_iRoundTime", GameRules_GetProp("m_iRoundTime", 4, 0)+args, 4, 0, true);
+		int extendminute = (args/60);
+		CPrintToChatAll("%t %t", "warden_tag" , "warden_extend", client, extendminute);
+		return Plugin_Handled;
 }
 

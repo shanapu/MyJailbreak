@@ -37,6 +37,7 @@ ConVar g_bMute;
 ConVar g_bSuicideBomber;
 ConVar g_bKnife;
 ConVar g_bFFA;
+ConVar g_bExtend;
 ConVar g_bLaser;
 ConVar g_bDrawer;
 ConVar g_bNoBlock;
@@ -136,6 +137,7 @@ public void OnConfigsExecuted()
 	g_bCheck = FindConVar("sm_hosties_checkplayers_enable");
 	g_bMath = FindConVar("sm_warden_math");
 	g_bNoBlock = FindConVar("sm_warden_noblock");
+	g_bExtend = FindConVar("sm_warden_extend");
 	g_bWar = FindConVar("sm_war_enable");
 	g_bZeus = FindConVar("sm_zeus_enable");
 	g_bFFA = FindConVar("sm_ffa_enable");
@@ -284,6 +286,14 @@ public Action JbMenu(int client, int args)
 					{
 						Format(menuinfo, sizeof(menuinfo), "%T", "menu_laser", client);
 						mainmenu.AddItem("laser", menuinfo);
+					}
+				}
+				if(g_bExtend != null)
+				{
+					if(g_bExtend.BoolValue)
+					{
+						Format(menuinfo, sizeof(menuinfo), "%T", "menu_extend", client);
+						mainmenu.AddItem("extend", menuinfo);
 					}
 				}
 				if(g_bMute != null)
@@ -562,6 +572,10 @@ public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selec
 		else if ( strcmp(info,"drawer") == 0 ) 
 		{
 			FakeClientCommand(client, "sm_drawer");
+		}
+		else if ( strcmp(info,"extend") == 0 ) 
+		{
+			FakeClientCommand(client, "sm_extend");
 		}
 		else if ( strcmp(info,"admin") == 0 ) 
 		{
