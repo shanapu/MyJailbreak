@@ -834,7 +834,7 @@ public Action Command_Freekill(int client, int args)
 						{
 							FreeKillAcceptMenu(i);
 							CPrintToChatAll("%t %t", "request_tag", "request_freekill", client, g_iKilledBy[client], i);
-							if(MyJBLogging(true)) LogToFileEx(g_sFreeKillLogFile, "Player %L claiming %L freekilled him. Reported to warden %L", client, g_iKilledBy[client], a);
+							if(MyJBLogging(true)) LogToFileEx(g_sFreeKillLogFile, "Player %L claiming %L freekilled him. Reported to warden %L", client, g_iKilledBy[client], i);
 						}
 					}
 					else CPrintToChat(client, "%t %t", "request_tag", "request_nokiller");
