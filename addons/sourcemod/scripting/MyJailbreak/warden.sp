@@ -3385,6 +3385,17 @@ public Action OnTakedamage(int victim, int &attacker, int &inflictor, float &dam
 {
 	if(!IsValidClient(victim, true, false) || attacker == victim || !IsValidClient(attacker, true, false)) return Plugin_Continue;
 	
+	char sWeapon[32];
+	GetEntityClassname(weapon, sWeapon, sizeof(sWeapon));
+
+	if(IsClientInGame(victim) && IsClientInGame(attacker) && IsClientWarden(victim))
+	{
+		if((StrEqual(sWeapon, "weapon_knife", false)) && (damage > 99.0))
+		{
+			PrintCenterText(attacker, "Backstab protection active");
+			return Plugin_Handled;
+		}
+	}	
 	if(g_bCuffed[attacker]) return Plugin_Handled;
 	
 	if(!gc_bPlugin.BoolValue || !gc_bHandCuff.BoolValue || !warden_iswarden(attacker) || !IsValidEdict(weapon) || (!gc_bHandCuffCT.BoolValue && (GetClientTeam(victim) == CS_TEAM_CT)))
@@ -3392,8 +3403,6 @@ public Action OnTakedamage(int victim, int &attacker, int &inflictor, float &dam
 		return Plugin_Continue;
 	}
 	
-	char sWeapon[32];
-	GetEntityClassname(weapon, sWeapon, sizeof(sWeapon));
 	
 	if(!StrEqual(sWeapon, "weapon_taser")) return Plugin_Continue;
 	
@@ -3470,6 +3479,8 @@ stock int StripZeus(int client)
 	}
 }
 
+//exend time
+
 public Action ExtendRoundTime(int client, int args)
 {
 	if(gc_bExtend.BoolValue)
@@ -3544,4 +3555,6 @@ public Action ExtendTime(int client, int args)
 		CPrintToChatAll("%t %t", "warden_tag" , "warden_extend", client, extendminute);
 		return Plugin_Handled;
 }
+
+
 
