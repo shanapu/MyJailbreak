@@ -4,6 +4,7 @@
 #include <colors>
 #include <warden>
 #include <emitsoundany>
+#include <smartjaildoors>
 #include <autoexecconfig>
 #include <myjailbreak>
 #include <lastrequest>
@@ -108,7 +109,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-	// Translation
+	// Translationw
 	LoadTranslations("MyJailbreak.Warden.phrases");
 	LoadTranslations("MyJailbreak.Request.phrases");
 	
@@ -916,6 +917,8 @@ public int FreeKillAcceptHandler(Menu menu, MenuAction action, int client, int P
 	}
 }
 
+float DeathOrigin[MAXPLAYERS+1][3];
+
 public int FreeKillHandler(Menu menu, MenuAction action, int client, int Position)
 {
 	if(action == MenuAction_Select)
@@ -929,29 +932,18 @@ public int FreeKillHandler(Menu menu, MenuAction action, int client, int Positio
 		
 		if(choice == 1) //respawn
 		{
-			LoopClients(i) if(g_bFreeKilled[i])
-			{
-				g_bFreeKilled[i] = false;
-				CS_RespawnPlayer(i);
-				
-			/*		float origin[3];
-					GetClientAbsOrigin(client, origin);
-					float location[3];
-					GetClientEyePosition(client, location);
-					float ang[3];
-					GetClientEyeAngles(client, ang);
-					float location2[3];
-					location2[0] = (location[0]+(100*((Cosine(DegToRad(ang[1]))) * (Cosine(DegToRad(ang[0]))))));
-					location2[1] = (location[1]+(100*((Sine(DegToRad(ang[1]))) * (Cosine(DegToRad(ang[0]))))));
-					ang[0] -= (2*ang[0]);
-					location2[2] = origin[2] += 5.0;
-					
-					TeleportEntity(i, location2, NULL_VECTOR, NULL_VECTOR);
-			*/	
-				if(MyJBLogging(true)) LogToFileEx(g_sFreeKillLogFile, "Warden %L accept freekill request and respawned %L", client, i);
-				CPrintToChat(i, "%t %t", "request_tag", "request_respawned");
-				CPrintToChatAll("%t %t", "warden_tag", "request_respawnedall", i);
-			}
+			char info[255];
+			
+			Menu menu1 = CreateMenu(RespawnHandler);
+			Format(info, sizeof(info), "%T", "request_handlerespawn", client);
+			menu1.SetTitle(info);
+			Format(info, sizeof(info), "%T", "request_respawnbody", client);
+			if(gc_bFreeKillRespawn.BoolValue) menu1.AddItem("1", info);
+			Format(info, sizeof(info), "%T", "request_respawncell", client);
+			if(gc_bFreeKillKill.BoolValue) menu1.AddItem("2", info);
+			Format(info, sizeof(info), "%T", "request_respawnwarden", client);
+			if(gc_bFreeKillFreeDay.BoolValue) menu1.AddItem("3", info);
+			menu1.Display(client, MENU_TIME_FOREVER);
 		}
 		if(choice == 2) //kill freekiller
 		{
@@ -959,7 +951,7 @@ public int FreeKillHandler(Menu menu, MenuAction action, int client, int Positio
 			{
 				g_bFreeKilled[i] = false;
 				ForcePlayerSuicide(g_iKilledBy[i]);
-				if(MyJBLogging(true)) LogToFileEx(g_sFreeKillLogFile, "Warden %L accept freekill request of %L  and killed %L", client, i, g_iKilledBy[i]);
+				if(MyJBLogging(true)) LogToFileEx(g_sFreeKillLogFile, "Warden/Admin %L accept freekill request of %L  and killed %L", client, i, g_iKilledBy[i]);
 				CPrintToChat(g_iKilledBy[i], "%t %t", "request_tag", "request_killbcfreekill");
 				CPrintToChatAll("%t %t", "warden_tag", "request_killbcfreekillall", i);
 			}
@@ -969,7 +961,7 @@ public int FreeKillHandler(Menu menu, MenuAction action, int client, int Positio
 			LoopClients(i) if(g_bFreeKilled[i])
 			{
 				g_bFreeKilled[i] = false;
-				if(MyJBLogging(true)) LogToFileEx(g_sFreeKillLogFile, "Warden %L accept freekill request of %L give a freeday", client, i);
+				if(MyJBLogging(true)) LogToFileEx(g_sFreeKillLogFile, "Warden/Admin %L accept freekill request of %L give a freeday", client, i);
 				FakeClientCommand(client, "sm_setfreeday");
 			}
 		}
@@ -980,7 +972,7 @@ public int FreeKillHandler(Menu menu, MenuAction action, int client, int Positio
 				g_bFreeKilled[i] = false;
 				ClientCommand(g_iKilledBy[i], "jointeam %i", CS_TEAM_T);
 				CPrintToChat(g_iKilledBy[i], "%t %t", "request_tag", "request_swapbcfreekill");
-				if(MyJBLogging(true)) LogToFileEx(g_sFreeKillLogFile, "Warden %L accept freekill request of %L  and swaped %L to T", client, i, g_iKilledBy[i]);
+				if(MyJBLogging(true)) LogToFileEx(g_sFreeKillLogFile, "Warden/Admin %L accept freekill request of %L  and swaped %L to T", client, i, g_iKilledBy[i]);
 				CPrintToChatAll("%t %t", "warden_tag", "request_swapbcfreekillall", i);
 			}
 		}
@@ -991,12 +983,88 @@ public int FreeKillHandler(Menu menu, MenuAction action, int client, int Positio
 	}
 }
 
+public int RespawnHandler(Menu menu, MenuAction action, int client, int Position)
+{
+	if(action == MenuAction_Select)
+	{
+		char Item[11];
+		menu.GetItem(Position,Item,sizeof(Item));
+		int choice = StringToInt(Item);
+		
+		IsRequest = false;
+		RequestTimer = null;
+		
+		if(choice == 1) //respawnbody
+		{
+			LoopClients(i) if(g_bFreeKilled[i])
+			{
+				g_bFreeKilled[i] = false;
+				CS_RespawnPlayer(i);
+				
+				TeleportEntity(i, DeathOrigin[i], NULL_VECTOR, NULL_VECTOR);
+				
+				if(MyJBLogging(true)) LogToFileEx(g_sFreeKillLogFile, "Warden/Admin %L accept freekill request and respawned %L on his body", client, i);
+				CPrintToChat(i, "%t %t", "request_tag", "request_respawned");
+				CPrintToChatAll("%t %t", "warden_tag", "request_respawnedall", i);
+			}
+		}
+		if(choice == 2) //respawncell
+		{
+			LoopClients(i) if(g_bFreeKilled[i])
+			{
+				g_bFreeKilled[i] = false;
+				
+				SJD_CloseDoors();
+				CS_RespawnPlayer(i);
+				
+				if(MyJBLogging(true)) LogToFileEx(g_sFreeKillLogFile, "Warden/Admin %L accept freekill request and respawned %L in cell", client, i);
+				CPrintToChat(i, "%t %t", "request_tag", "request_respawned");
+				CPrintToChatAll("%t %t", "warden_tag", "request_respawnedall", i);
+			}
+		}
+		if(choice == 3) //respawnwarden
+		{
+			LoopClients(i) if(g_bFreeKilled[i])
+			{
+				g_bFreeKilled[i] = false;
+				CS_RespawnPlayer(i);
+				
+				int warden;
+				warden_get(warden);
+				
+				float origin[3];
+				GetClientAbsOrigin(warden, origin);
+				float location[3];
+				GetClientEyePosition(warden, location);
+				float ang[3];
+				GetClientEyeAngles(warden, ang);
+				float location2[3];
+				location2[0] = (location[0]+(100*((Cosine(DegToRad(ang[1]))) * (Cosine(DegToRad(ang[0]))))));
+				location2[1] = (location[1]+(100*((Sine(DegToRad(ang[1]))) * (Cosine(DegToRad(ang[0]))))));
+				ang[0] -= (2*ang[0]);
+				location2[2] = origin[2] += 5.0;
+				
+				TeleportEntity(i, location2, NULL_VECTOR, NULL_VECTOR);
+				
+				if(MyJBLogging(true)) LogToFileEx(g_sFreeKillLogFile, "Warden/Admin %L accept freekill request and respawned %L in front of warden", client, i);
+				CPrintToChat(i, "%t %t", "request_tag", "request_respawned");
+				CPrintToChatAll("%t %t", "warden_tag", "request_respawnedall", i);
+				CPrintToChatAll("debug warden is %N", warden);
+			}
+		}
+	}
+}
+
 public Action playerDeath(Event event, const char[] name, bool dontBroadcast) 
 {
 	int victim = GetClientOfUserId(GetEventInt(event, "userid")); // Get the dead clients id
 	int attacker = GetClientOfUserId(GetEventInt(event, "attacker")); // Get the attacker clients id
 	
 	if(IsValidClient(attacker, true, false) && (attacker != victim)) g_iKilledBy[victim] = attacker;
+	
+	
+	
+	GetClientAbsOrigin(victim, DeathOrigin[victim]);
 }
 
 public Action IsRequestTimer(Handle timer, any client)
