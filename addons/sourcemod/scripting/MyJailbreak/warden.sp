@@ -88,6 +88,7 @@ ConVar gc_bHandCuffCT;
 ConVar gc_bBulletSparks;
 ConVar gc_bExtend;
 ConVar gc_bWardenColorRandom;
+ConVar gc_bBackstab;
 
 //Bools
 bool IsCountDown = false;
@@ -296,6 +297,7 @@ public void OnPluginStart()
 	gc_fGunRemoveTime = AutoExecConfig_CreateConVar("sm_warden_gunremove_time", "5.0", "Time in seconds to pick up gun again before.", _, true,  0.1);
 	gc_bGunSlap = AutoExecConfig_CreateConVar("sm_warden_gunslap", "1", "0 - disabled, 1 - Slap the CT for dropping a gun", _, true,  0.0, true, 1.0);
 	gc_iGunSlapDamage = AutoExecConfig_CreateConVar("sm_warden_gunslap_dmg", "10", "Amoung of HP losing on slap for dropping a gun", _, true,  0.0);
+	gc_bBackstab = AutoExecConfig_CreateConVar("sm_warden_backstab", "1", "0 - disabled, 1 - enable backstab protection for warden", _, true,  0.0, true, 1.0);
 	gc_bHandCuff = AutoExecConfig_CreateConVar("sm_warden_handcuffs", "1", "0 - disabled, 1 - enable handcuffs", _, true,  0.0, true, 1.0);
 	gc_iHandCuffsNumber = AutoExecConfig_CreateConVar("sm_warden_handcuffs_number", "2", "How many handcuffs a warden got?", _, true,  1.0);
 	gc_bHandCuffLR = AutoExecConfig_CreateConVar("sm_warden_handcuffs_lr", "1", "0 - disabled, 1 - free cuffed terrorists on LR", _, true,  0.0, true, 1.0);
@@ -3387,8 +3389,10 @@ public Action OnTakedamage(int victim, int &attacker, int &inflictor, float &dam
 	
 	char sWeapon[32];
 	GetEntityClassname(weapon, sWeapon, sizeof(sWeapon));
-
-	if(IsClientInGame(victim) && IsClientInGame(attacker) && IsClientWarden(victim))
+	
+	//Backstab protection
+	
+	if(gc_bBackstab.BoolValue && IsClientInGame(victim) && IsClientInGame(attacker) && IsClientWarden(victim))
 	{
 		if((StrEqual(sWeapon, "weapon_knife", false)) && (damage > 99.0))
 		{
@@ -3396,6 +3400,9 @@ public Action OnTakedamage(int victim, int &attacker, int &inflictor, float &dam
 			return Plugin_Handled;
 		}
 	}	
+	
+	//cuffs
+	
 	if(g_bCuffed[attacker]) return Plugin_Handled;
 	
 	if(!gc_bPlugin.BoolValue || !gc_bHandCuff.BoolValue || !warden_iswarden(attacker) || !IsValidEdict(weapon) || (!gc_bHandCuffCT.BoolValue && (GetClientTeam(victim) == CS_TEAM_CT)))
