@@ -35,6 +35,7 @@ ConVar gc_iRounds;
 ConVar gc_iTAgrenades;
 ConVar g_iGetRoundTime;
 ConVar gc_sCustomCommand;
+ConVar g_sOldSkyName;
 
 //Integers
 int g_iOldRoundTime;
@@ -55,6 +56,7 @@ char g_sHasVoted[1500];
 char g_sSoundStartPath[256];
 char g_sCustomCommand[64];
 char g_sEventsLogFile[PLATFORM_MAX_PATH];
+char g_sSkyName[256];
 
 
 public Plugin myinfo = {
@@ -155,6 +157,8 @@ public void OnMapStart()
 	
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
+	g_sOldSkyName = FindConVar("sv_skyname");
+	g_sOldSkyName.GetString(g_sSkyName, sizeof(g_sSkyName));
 	
 	if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStart);
 	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
@@ -307,6 +311,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_warden_enable", 0);
+		SetCvarString("sv_skyname", "cs_baggage_skybox_");
 		SetCvar("sm_weapons_t", 0);
 		SetCvar("sm_weapons_ct", 0);
 		SetCvar("sm_menu_enable", 0);
@@ -459,6 +464,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 			SetCvar("sm_hosties_lr", 1);
 			SetCvar("sm_weapons_t", 0);
 			SetCvar("sm_weapons_ct", 1);
+			SetCvarString("sv_skyname", g_sSkyName);
 			SetCvar("sm_warden_enable", 1);
 			SetCvar("sm_menu_enable", 1);
 			g_iGetRoundTime.IntValue = g_iOldRoundTime;
@@ -550,4 +556,3 @@ public void OnTagrenadeDetonate(Handle event, const char[] name, bool dontBroadc
 	}
 	return;
 }
-
