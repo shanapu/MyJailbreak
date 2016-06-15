@@ -89,6 +89,7 @@ ConVar gc_bBulletSparks;
 ConVar gc_bExtend;
 ConVar gc_bWardenColorRandom;
 ConVar gc_bBackstab;
+ConVar gc_iBackstabNumber;
 
 //Bools
 bool IsCountDown = false;
@@ -146,6 +147,7 @@ int g_iLaserColor[MAXPLAYERS+1];
 int g_iDrawerColor[MAXPLAYERS+1];
 int g_iPlayerHandCuffs[MAXPLAYERS+1];
 int g_iCuffed = 0;
+int g_iBackstabNumber[MAXPLAYERS+1];
 
 //Handles
 Handle g_fward_onBecome;
@@ -298,6 +300,7 @@ public void OnPluginStart()
 	gc_bGunSlap = AutoExecConfig_CreateConVar("sm_warden_gunslap", "1", "0 - disabled, 1 - Slap the CT for dropping a gun", _, true,  0.0, true, 1.0);
 	gc_iGunSlapDamage = AutoExecConfig_CreateConVar("sm_warden_gunslap_dmg", "10", "Amoung of HP losing on slap for dropping a gun", _, true,  0.0);
 	gc_bBackstab = AutoExecConfig_CreateConVar("sm_warden_backstab", "1", "0 - disabled, 1 - enable backstab protection for warden", _, true,  0.0, true, 1.0);
+	gc_iBackstabNumber = AutoExecConfig_CreateConVar("sm_warden_backstab_number", "1", "How many time a warden get protected? 0 - alltime", _, true,  1.0);
 	gc_bHandCuff = AutoExecConfig_CreateConVar("sm_warden_handcuffs", "1", "0 - disabled, 1 - enable handcuffs", _, true,  0.0, true, 1.0);
 	gc_iHandCuffsNumber = AutoExecConfig_CreateConVar("sm_warden_handcuffs_number", "2", "How many handcuffs a warden got?", _, true,  1.0);
 	gc_bHandCuffLR = AutoExecConfig_CreateConVar("sm_warden_handcuffs_lr", "1", "0 - disabled, 1 - free cuffed terrorists on LR", _, true,  0.0, true, 1.0);
@@ -608,7 +611,11 @@ public void RoundStart(Event event, const char[] name, bool dontBroadcast)
 	}
 	g_bAllowDrop = true;
 	g_iCuffed = 0;
-	LoopClients(i) g_iPlayerHandCuffs[i] = gc_iHandCuffsNumber.IntValue;
+	LoopClients(i)
+	{
+		g_iPlayerHandCuffs[i] = gc_iHandCuffsNumber.IntValue;
+		g_iBackstabNumber[i] = gc_iBackstabNumber.IntValue;
+	}
 	CreateTimer (gc_fAllowDropTime.FloatValue, AllowDropTimer);
 }
 
@@ -3390,14 +3397,23 @@ public Action OnTakedamage(int victim, int &attacker, int &inflictor, float &dam
 	
 	//Backstab protection
 	
-	if(gc_bBackstab.BoolValue && IsClientInGame(victim) && IsClientInGame(attacker) && IsClientWarden(victim))
+	if(gc_bBackstab.BoolValue && IsClientInGame(attacker) && IsClientWarden(victim) && !IsClientInLastRequest(victim))
 	{
 		if((StrEqual(sWeapon, "weapon_knife", false)) && (damage > 99.0))
 		{
-			PrintCenterText(attacker, "Backstab protection active");
-			return Plugin_Handled;
+			if (gc_iBackstabNumber.IntValue == 0)
+			{
+				PrintCenterText(attacker,"%t", "warden_backstab");
+				return Plugin_Handled;
+			}
+			else if (g_iBackstabNumber[victim] > 0)
+			{
+				PrintCenterText(attacker,"%t", "warden_backstab");
+				g_iBackstabNumber[victim]--;
+				return Plugin_Handled;
+			}
 		}
-	}	
+	}
 	
 	//cuffs
 	
@@ -3407,7 +3423,6 @@ public Action OnTakedamage(int victim, int &attacker, int &inflictor, float &dam
 	{
 		return Plugin_Continue;
 	}
-	
 	
 	if(!StrEqual(sWeapon, "weapon_taser")) return Plugin_Continue;
 	
