@@ -45,7 +45,6 @@ int g_iRound;
 int g_iMaxRound;
 int g_iMaxTA;
 int g_iTA[MAXPLAYERS + 1];
-int FogIndex = -1;
 
 //Handles
 Handle FreezeTimer;
@@ -57,10 +56,6 @@ char g_sSoundStartPath[256];
 char g_sCustomCommand[64];
 char g_sEventsLogFile[PLATFORM_MAX_PATH];
 
-//Float
-float mapFogStart = 0.0;
-float mapFogEnd = 150.0;
-float mapFogDensity = 0.99;
 
 public Plugin myinfo = {
 	name = "MyJailbreak - HideInTheDark",
@@ -165,20 +160,6 @@ public void OnMapStart()
 	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
 	
 	for(int client=1; client <= MaxClients; client++) g_iTA[client] = 0;
-	
-	int ent; 
-	ent = FindEntityByClassname(-1, "env_fog_controller");
-	if (ent != -1) 
-	{
-		FogIndex = ent;
-	}
-	else
-	{
-		FogIndex += CreateEntityByName("env_fog_controller");
-		if (FogIndex != -1) DispatchSpawn(FogIndex);
-	}
-	DoFog();
-	AcceptEntityInput(FogIndex, "TurnOff");
 }
 
 public void OnConfigsExecuted()
@@ -333,52 +314,52 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		g_iRound++;
 		StartHide = false;
 		SJD_OpenDoors();
+		FogOn();
 		
 		if (g_iRound > 0)
+		{
+			LoopClients(client)
 			{
-				LoopClients(client)
+				HideMenu = CreatePanel();
+				Format(info1, sizeof(info1), "%T", "hide_info_title", client);
+				SetPanelTitle(HideMenu, info1);
+				DrawPanelText(HideMenu, "                                   ");
+				Format(info2, sizeof(info2), "%T", "hide_info_line1", client);
+				DrawPanelText(HideMenu, info2);
+				DrawPanelText(HideMenu, "-----------------------------------");
+				Format(info3, sizeof(info3), "%T", "hide_info_line2", client);
+				DrawPanelText(HideMenu, info3);
+				Format(info4, sizeof(info4), "%T", "hide_info_line3", client);
+				DrawPanelText(HideMenu, info4);
+				Format(info5, sizeof(info5), "%T", "hide_info_line4", client);
+				DrawPanelText(HideMenu, info5);
+				Format(info6, sizeof(info6), "%T", "hide_info_line5", client);
+				DrawPanelText(HideMenu, info6);
+				Format(info7, sizeof(info7), "%T", "hide_info_line6", client);
+				DrawPanelText(HideMenu, info7);
+				Format(info8, sizeof(info8), "%T", "hide_info_line7", client);
+				DrawPanelText(HideMenu, info8);
+				DrawPanelText(HideMenu, "-----------------------------------");
+				SendPanelToClient(HideMenu, client, NullHandler, 20);
+				
+				if (GetClientTeam(client) == CS_TEAM_CT)
 				{
-					HideMenu = CreatePanel();
-					Format(info1, sizeof(info1), "%T", "hide_info_title", client);
-					SetPanelTitle(HideMenu, info1);
-					DrawPanelText(HideMenu, "                                   ");
-					Format(info2, sizeof(info2), "%T", "hide_info_line1", client);
-					DrawPanelText(HideMenu, info2);
-					DrawPanelText(HideMenu, "-----------------------------------");
-					Format(info3, sizeof(info3), "%T", "hide_info_line2", client);
-					DrawPanelText(HideMenu, info3);
-					Format(info4, sizeof(info4), "%T", "hide_info_line3", client);
-					DrawPanelText(HideMenu, info4);
-					Format(info5, sizeof(info5), "%T", "hide_info_line4", client);
-					DrawPanelText(HideMenu, info5);
-					Format(info6, sizeof(info6), "%T", "hide_info_line5", client);
-					DrawPanelText(HideMenu, info6);
-					Format(info7, sizeof(info7), "%T", "hide_info_line6", client);
-					DrawPanelText(HideMenu, info7);
-					Format(info8, sizeof(info8), "%T", "hide_info_line7", client);
-					DrawPanelText(HideMenu, info8);
-					DrawPanelText(HideMenu, "-----------------------------------");
-					SendPanelToClient(HideMenu, client, NullHandler, 20);
-					
-					if (GetClientTeam(client) == CS_TEAM_CT)
-					{
-						StripAllWeapons(client);
-						SetEntityMoveType(client, MOVETYPE_NONE);
-						GivePlayerItem(client, "weapon_tagrenade");
-						SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
-						GivePlayerItem(client, "weapon_knife");
-					}
-					if (GetClientTeam(client) == CS_TEAM_T)
-					{
-						StripAllWeapons(client);
-						SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
-						GivePlayerItem(client, "weapon_knife");
-					}
+					StripAllWeapons(client);
+					SetEntityMoveType(client, MOVETYPE_NONE);
+					GivePlayerItem(client, "weapon_tagrenade");
+					SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
+					GivePlayerItem(client, "weapon_knife");
 				}
-				g_iFreezeTime--;
-				FreezeTimer = CreateTimer(1.0, StartTimer, _, TIMER_REPEAT);
+				if (GetClientTeam(client) == CS_TEAM_T)
+				{
+					StripAllWeapons(client);
+					SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
+					GivePlayerItem(client, "weapon_knife");
+				}
 			}
-		{AcceptEntityInput(FogIndex, "TurnOn");}
+			g_iFreezeTime--;
+			FreezeTimer = CreateTimer(1.0, StartTimer, _, TIMER_REPEAT);
+		}
 	}
 	else
 	{
@@ -483,8 +464,8 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 			g_iGetRoundTime.IntValue = g_iOldRoundTime;
 			SetEventDay("none");
 			CPrintToChatAll("%t %t", "hide_tag" , "hide_end");
-			DoFog();
-			AcceptEntityInput(FogIndex, "TurnOff");
+			
+			FogOff();
 		}
 	}
 	if (StartHide)
@@ -570,17 +551,3 @@ public void OnTagrenadeDetonate(Handle event, const char[] name, bool dontBroadc
 	return;
 }
 
-//Darken the Map
-
-public Action DoFog()
-{
-	if(FogIndex != -1)
-	{
-		DispatchKeyValue(FogIndex, "fogblend", "0");
-		DispatchKeyValue(FogIndex, "fogcolor", "0 0 0");
-		DispatchKeyValue(FogIndex, "fogcolor2", "0 0 0");
-		DispatchKeyValueFloat(FogIndex, "fogstart", mapFogStart);
-		DispatchKeyValueFloat(FogIndex, "fogend", mapFogEnd);
-		DispatchKeyValueFloat(FogIndex, "fogmaxdensity", mapFogDensity);
-	}
-}

@@ -50,7 +50,6 @@ int g_iCoolDown;
 int g_iVoteCount;
 int g_iRound;
 int g_iMaxRound;
-int FogIndex = -1;
 
 //Handles
 Handle FreezeTimer;
@@ -59,9 +58,7 @@ Handle ZombieMenu;
 
 //Floats
 float g_fPos[3];
-float mapFogStart = 0.0;
-float mapFogEnd = 150.0;
-float mapFogDensity = 0.99;
+
 
 //Strings
 char g_sZombieModel[256];
@@ -186,20 +183,6 @@ public void OnMapStart()
 	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
 	if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStart);
 	PrecacheModel(g_sZombieModel);
-	
-	int ent; 
-	ent = FindEntityByClassname(-1, "env_fog_controller");
-	if (ent != -1) 
-	{
-		FogIndex = ent;
-	}
-	else
-	{
-		FogIndex += CreateEntityByName("env_fog_controller");
-		if (FogIndex != -1) DispatchSpawn(FogIndex);
-	}
-	DoFog();
-	AcceptEntityInput(FogIndex, "TurnOff");
 }
 
 public void OnConfigsExecuted()
@@ -489,8 +472,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 			SetCvar("sm_menu_enable", 1);
 			g_iGetRoundTime.IntValue = g_iOldRoundTime;
 			SetEventDay("none");
-			DoFog();
-			AcceptEntityInput(FogIndex, "TurnOff");
+			FogOff();
 			CPrintToChatAll("%t %t", "zombie_tag" , "zombie_end");
 		}
 	}
@@ -578,7 +560,7 @@ public Action StartTimer(Handle timer)
 		CPrintToChatAll("%t %t", "zombie_tag" , "zombie_start");
 	}
 	FreezeTimer = null;
-	if(gc_bDark.BoolValue && (g_iRound = 1)) {AcceptEntityInput(FogIndex, "TurnOn");}
+	if(gc_bDark.BoolValue && (g_iRound = 1)) FogOn();
 	
 	return Plugin_Stop;
 }
@@ -606,17 +588,4 @@ public Action OnWeaponCanUse(int client, int weapon)
 	return Plugin_Continue;
 }
 
-//Darken the Map
 
-public Action DoFog()
-{
-	if(FogIndex != -1)
-	{
-		DispatchKeyValue(FogIndex, "fogblend", "0");
-		DispatchKeyValue(FogIndex, "fogcolor", "0 0 0");
-		DispatchKeyValue(FogIndex, "fogcolor2", "0 0 0");
-		DispatchKeyValueFloat(FogIndex, "fogstart", mapFogStart);
-		DispatchKeyValueFloat(FogIndex, "fogend", mapFogEnd);
-		DispatchKeyValueFloat(FogIndex, "fogmaxdensity", mapFogDensity);
-	}
-}

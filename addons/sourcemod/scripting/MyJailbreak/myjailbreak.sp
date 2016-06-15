@@ -12,6 +12,14 @@
 ConVar gc_bTag;
 ConVar gc_bLogging;
 
+//Integers
+int FogIndex = -1;
+
+//Floats
+float mapFogStart = 0.0;
+float mapFogEnd = 150.0;
+float mapFogDensity = 0.99;
+
 //Strings
 char IsEventDay[128] = "none";
 
@@ -36,6 +44,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 {
 	CreateNative("SetEventDay", Native_SetEventDay);
 	CreateNative("GetEventDay", Native_GetEventDay);
+	CreateNative("FogOn", Native_FogOn);
+	CreateNative("FogOff", Native_FogOff);
 	CreateNative("MyJBLogging", Native_GetMyJBLogging);
 	
 	if (GetEngineVersion() != Engine_CSGO)
@@ -61,6 +71,44 @@ public void OnConfigsExecuted()
 			StrCat(sTags, sizeof(sTags), ", MyJailbreak");
 			hTags.SetString(sTags);
 		}
+	}
+}
+
+//Darken the Map
+
+public void OnMapStart()
+{
+	int ent; 
+	ent = FindEntityByClassname(-1, "env_fog_controller");
+	if (ent != -1) 
+	{
+		FogIndex = ent;
+	}
+	else
+	{
+		FogIndex += CreateEntityByName("env_fog_controller");
+		DispatchSpawn(FogIndex);
+	}
+	DoFog();
+	AcceptEntityInput(FogIndex, "TurnOff");
+}
+
+public int Native_FogOff(Handle plugin,int argc)
+{AcceptEntityInput(FogIndex, "TurnOff");}
+
+public int Native_FogOn(Handle plugin,int argc)
+{AcceptEntityInput(FogIndex, "TurnOn");}
+
+public Action DoFog()
+{
+	if(FogIndex != -1)
+	{
+		DispatchKeyValue(FogIndex, "fogblend", "0");
+		DispatchKeyValue(FogIndex, "fogcolor", "0 0 0");
+		DispatchKeyValue(FogIndex, "fogcolor2", "0 0 0");
+		DispatchKeyValueFloat(FogIndex, "fogstart", mapFogStart);
+		DispatchKeyValueFloat(FogIndex, "fogend", mapFogEnd);
+		DispatchKeyValueFloat(FogIndex, "fogmaxdensity", mapFogDensity);
 	}
 }
 

@@ -3,7 +3,7 @@
 #endif
 #define _myjailbreak_included_
 
-#define PLUGIN_VERSION "Beta 3.1"
+#define PLUGIN_VERSION "Beta 4.0.dev"
 #define URL_LINK "https://github.com/shanapu/MyJailbreak"
 
 #include <sdktools>
@@ -33,6 +33,10 @@ native SetEventDay(const char[] name);
 native GetEventDay(char[] CurrentEventDay);
 
 native bool MyJBLogging(bool IsLogging);
+
+native FogOn();
+
+native FogOff();
 
 stock PrecacheDecalAnyDownload(char[] sDecal)
 {
