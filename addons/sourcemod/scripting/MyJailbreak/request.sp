@@ -50,6 +50,7 @@ ConVar gc_sCustomCommandRefuse;
 ConVar gc_sCustomCommandRepeat;
 ConVar gc_sCustomCommandFreekill;
 ConVar gc_bFreeKill;
+ConVar gc_iFreeKillLimit;
 ConVar gc_bFreeKillRespawn;
 ConVar gc_bFreeKillKill;
 ConVar gc_bFreeKillFreeDay;
@@ -71,6 +72,7 @@ bool IsRequest;
 int g_iRefuseCounter[MAXPLAYERS+1];
 int g_iHealCounter[MAXPLAYERS+1];
 int g_iRepeatCounter[MAXPLAYERS+1];
+int g_iFreeKillCounter[MAXPLAYERS+1];
 int g_iKilledBy[MAXPLAYERS+1];
 int g_iCountStopTime;
 
@@ -168,6 +170,7 @@ public void OnPluginStart()
 	gc_sSoundRepeatPath = AutoExecConfig_CreateConVar("sm_repeat_sound", "music/MyJailbreak/repeat.mp3", "Path to the soundfile which should be played for a repeat.");
 	gc_bFreeKill = AutoExecConfig_CreateConVar("sm_freekill_enable", "1", "0 - disabled, 1 - enable freekill report");
 	gc_sCustomCommandFreekill = AutoExecConfig_CreateConVar("sm_freekill_cmd", "fk", "Set your custom chat command for freekill. no need for sm_ or !");
+	gc_iFreeKillLimit = AutoExecConfig_CreateConVar("sm_freekill_limit", "1", "Сount how many times you can use the command");
 	gc_bFreeKillRespawn = AutoExecConfig_CreateConVar("sm_freekill_respawn", "1", "0 - disabled, 1 - Allow the warden to respawn a Freekill victim");
 	gc_bFreeKillKill = AutoExecConfig_CreateConVar("sm_freekill_kill", "1", "0 - disabled, 1 - Allow the warden to Kill a Freekiller");
 	gc_bFreeKillFreeDay = AutoExecConfig_CreateConVar("sm_freekill_freeday", "1", "0 - disabled, 1 - Allow the warden to set a freeday next round as pardon");
@@ -322,6 +325,7 @@ public Action RoundStart(Handle event, char [] name, bool dontBroadcast)
 		g_bHealed[client] = false;
 		g_bRepeated[client] = false;
 		g_iRepeatCounter[client] = 0;
+		g_iFreeKillCounter[client] = 0;
 		g_bRefused[client] = false;
 		IsRequest = false;
 		g_bAllowRefuse = false;
@@ -341,6 +345,7 @@ public void OnClientPutInServer(int client)
 	g_bHealed[client] = false;
 	g_bRepeated[client] = false;
 	g_bRefused[client] = false;
+	g_iFreeKillCounter[client] = 0;
 	SDKHook(client, SDKHook_WeaponCanUse, OnWeaponCanUse);
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakedamage);
 }
@@ -353,6 +358,7 @@ public void OnClientDisconnect(int client)
 	delete HealTimer[client];
 	delete RepeatTimer[client];
 	
+	/*
 	g_iRepeatCounter[client] = 0;
 	g_bCapitulated[client] = false;
 	g_iRefuseCounter[client] = 0;
@@ -360,6 +366,7 @@ public void OnClientDisconnect(int client)
 	g_iHealCounter[client] = 0;
 	g_bRefused[client] = false;
 	g_bRepeated[client] = false;
+	*/
 }
 
 public Action Command_refuse(int client, int args)
@@ -819,23 +826,30 @@ public Action Command_Freekill(int client, int args)
 				{
 					if(g_iKilledBy[client] != -1)
 					{
-						IsRequest = true;
-						RequestTimer = CreateTimer (20.0, IsRequestTimer);
-						g_bFreeKilled[client] = true;
-						
-						int a = GetRandomAdmin();
-						if ((a != -1) && gc_bReportAdmin.BoolValue)
+						if (g_iFreeKillCounter[client] < gc_iFreeKillLimit.IntValue)
 						{
-							FreeKillAcceptMenu(a);
-							CPrintToChatAll("%t %t", "request_tag", "request_freekill", client, g_iKilledBy[client], a);
-							if(MyJBLogging(true)) LogToFileEx(g_sFreeKillLogFile, "Player %L claiming %L freekilled him. Reported to admin %L", client, g_iKilledBy[client], a);
+							IsRequest = true;
+							RequestTimer = CreateTimer (20.0, IsRequestTimer);
+							g_bFreeKilled[client] = true;
+							
+							
+							int a = GetRandomAdmin();
+							if ((a != -1) && gc_bReportAdmin.BoolValue)
+							{
+								g_iFreeKillCounter[client]++;
+								FreeKillAcceptMenu(a);
+								CPrintToChatAll("%t %t", "request_tag", "request_freekill", client, g_iKilledBy[client], a);
+								if(MyJBLogging(true)) LogToFileEx(g_sFreeKillLogFile, "Player %L claiming %L freekilled him. Reported to admin %L", client, g_iKilledBy[client], a);
+							}
+							else LoopClients(i) if (warden_iswarden(i) && gc_bReportWarden.BoolValue)
+							{
+								g_iFreeKillCounter[client]++;
+								FreeKillAcceptMenu(i);
+								CPrintToChatAll("%t %t", "request_tag", "request_freekill", client, g_iKilledBy[client], i);
+								if(MyJBLogging(true)) LogToFileEx(g_sFreeKillLogFile, "Player %L claiming %L freekilled him. Reported to warden %L", client, g_iKilledBy[client], i);
+							}
 						}
-						else LoopClients(i) if (warden_iswarden(i) && gc_bReportWarden.BoolValue)
-						{
-							FreeKillAcceptMenu(i);
-							CPrintToChatAll("%t %t", "request_tag", "request_freekill", client, g_iKilledBy[client], i);
-							if(MyJBLogging(true)) LogToFileEx(g_sFreeKillLogFile, "Player %L claiming %L freekilled him. Reported to warden %L", client, g_iKilledBy[client], i);
-						}
+						else CPrintToChat(client, "%t %t", "request_tag", "request_freekilltimes");
 					}
 					else CPrintToChat(client, "%t %t", "request_tag", "request_nokiller");
 				}
