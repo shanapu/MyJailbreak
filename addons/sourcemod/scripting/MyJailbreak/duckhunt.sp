@@ -569,7 +569,7 @@ public Action AmmoRefill(Handle timer, any client)
 	if(IsValidClient(client, false, false))
 	{
 		int weapon = GetEntPropEnt(client, Prop_Data, "m_hActiveWeapon");
-		SetEntProp(weapon, Prop_Send, "m_iPrimaryReserveAmmoCount", 32);
+		if (weapon != -1)SetEntProp(weapon, Prop_Send, "m_iPrimaryReserveAmmoCount", 32);
 	}
 }
 
