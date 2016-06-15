@@ -7,6 +7,7 @@
 #include <smartjaildoors>
 #include <autoexecconfig>
 #include <myjailbreak>
+#include <smlib>
 
 
 //Compiler Options
@@ -49,7 +50,6 @@ int g_iMaxRound;
 //Handles
 Handle TruceTimer;
 Handle DuckHuntMenu;
-Handle AmmoTimer[MAXPLAYERS+1];
 
 //Strings
 
@@ -106,6 +106,7 @@ public void OnPluginStart()
 	HookEvent("round_start", RoundStart);
 	HookEvent("round_end", RoundEnd);
 	HookEvent("player_death", PlayerDeath);
+	HookEvent("weapon_reload", WeaponReload);
 	HookEvent("hegrenade_detonate", HE_Detonate);
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
@@ -371,7 +372,6 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 						SetEntityModel(client, huntermodel);
 						SetEntityHealth(client, gc_iHunterHP.IntValue);
 						GivePlayerItem(client, "weapon_nova");
-						AmmoTimer[client] = CreateTimer(5.0, AmmoRefill, client, TIMER_REPEAT);
 					}
 					if (GetClientTeam(client) == CS_TEAM_T && IsValidClient(client, false, false))
 					{
@@ -412,7 +412,6 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 	{
 		LoopClients(client)
 		{
-			if (AmmoTimer[client] != null) KillTimer(AmmoTimer[client]);
 			if (IsValidClient(client, false, true))
 				{
 					SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
@@ -464,7 +463,6 @@ public void OnMapEnd()
 	LoopClients(client)
 	{
 		FP(client);
-		if (AmmoTimer[client] != null) KillTimer(AmmoTimer[client]);
 	}
 }
 
@@ -564,14 +562,18 @@ public Action HE_Detonate(Handle event, const char[] name, bool dontBroadcast)
 
 //Give new Ammo to Hunter
 
-public Action AmmoRefill(Handle timer, any client)
+public void WeaponReload(Handle event, char [] name, bool dontBroadcast)
 {
-	if(IsValidClient(client, false, false))
+	if(IsDuckHunt == true)
 	{
-		int weapon = GetEntPropEnt(client, Prop_Data, "m_hActiveWeapon");
-		if (weapon != -1)SetEntProp(weapon, Prop_Send, "m_iPrimaryReserveAmmoCount", 32);
+		int client = GetClientOfUserId(GetEventInt(event, "userid"));
+		if(IsValidClient(client, false, false) && (GetClientTeam(client) == CS_TEAM_CT))
+		{
+			SetPlayerWeaponAmmo(client, Client_GetActiveWeapon(client), _, 32);
+		}
 	}
 }
+
 
 //Back to First Person
 
