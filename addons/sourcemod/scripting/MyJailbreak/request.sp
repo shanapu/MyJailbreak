@@ -1111,7 +1111,6 @@ public Action GiveKnifeCapitulated(Handle timer, any client)
 	CapitulationTimer[client] = null;
 }
 
-
 public Action RebelNoAction(Handle timer, any client)
 {
 	if (IsClientConnected(client))
@@ -1121,7 +1120,6 @@ public Action RebelNoAction(Handle timer, any client)
 	g_bCapitulated[client] = false;
 	RebelTimer[client] = null;
 }
-
 
 public Action OnWeaponCanUse(int client, int weapon)
 {
@@ -1145,7 +1143,7 @@ public Action OnTakedamage(int victim, int &attacker, int &inflictor, float &dam
 {
 	if (IsValidClient(attacker, true, false) && GetClientTeam(attacker) == CS_TEAM_T && IsPlayerAlive(attacker))
 	{
-		if(g_bCapitulated[attacker] && gc_bCapitulationDamage.BoolValue)
+		if(g_bCapitulated[attacker] && gc_bCapitulationDamage.BoolValue && !IsClientInLastRequest(attacker))
 		{
 			CPrintToChat(attacker, "%t %t", "request_tag", "request_nodamage");
 			return Plugin_Handled;

@@ -2094,8 +2094,6 @@ public bool TraceEntityFilterPlayer(int entity, int contentsMask) {
 
 //Icon
 
-
-
 stock int SpawnIcon(int client) 
 {
 	if(!IsClientInGame(client) || !IsPlayerAlive(client) || !gc_bIcon.BoolValue) return -1;
@@ -2935,7 +2933,7 @@ public Action CS_OnCSWeaponDrop(int client, int weapon)
 		{
 			if(GetClientTeam(client) == CS_TEAM_CT)
 			{
-				if(!g_bAllowDrop)
+				if(!g_bAllowDrop && !IsClientInLastRequest(client))
 				{
 					if (g_bWeaponDropped[client]) 
 						return Plugin_Handled;
