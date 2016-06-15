@@ -901,6 +901,11 @@
 		"de"		"Benutze den Taser als Handschellen"
 		"pl"		"uzyj Zeusa jako Kajdanek"
 	}
+	"warden_backstab"
+	{
+		"en"		"Backstab protection active"
+		"de"		"Backstab protection aktiv"
+	}
 	
 	"warden_cuffson"
 	{
