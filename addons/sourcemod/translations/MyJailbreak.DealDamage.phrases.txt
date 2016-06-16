@@ -1,0 +1,175 @@
+"Phrases"
+{
+	"dealdamage_tag"
+	{
+		"en"		"[{green}MyJB.dealdamage{default}]"
+	}
+	"dealdamage_need"
+	{
+		"#format"	"{1:i},{2:N}"
+		"da"		"{purple}{2}{default} har afstemt!. {purple}{1}{default} afstemninger tilbage til {darkred}dealdamage"		
+		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes left to {darkred}dealdamage"
+		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}dealdamage{default} beginnt"
+	}
+	"dealdamage_rounds" 
+	{
+		"#format"	"{1:i},{2:i}"
+		"da"		"Runde {purple}{1}{default} af {purple}{2}"		
+		"en"		"Round {purple}{1}{default} of {purple}{2}"
+		"de"		"Runde {purple}{1}{default} von {purple}{2}"
+	}
+	"dealdamage_twin_nc"
+	{
+		"#format"	"{1:i}"
+		"en"		"Terrorists win with {1} HP damage"
+		"de"		"Terrorist gewinnen mit {1} HP Schaden"
+	}
+	"dealdamage_voting"
+	{
+		"da"		"Afstemninger for No Scope er {purple}slået fra"	
+		"en"		"Player Voting for DealDamageDay is {purple}disabled"
+		"de"		"Voting für DealDamageDay ist {purple}ausgeschaltet"
+	}
+	"dealdamage_setbywarden"
+	{
+		"da"		"Warden bestemmer runde for No Scope er {purple}slået fra"	
+		"en"		"Set DealDamageDay by Warden is {purple}disabled"
+		"de"		"DealDamageDay Aktivierung durch den Warden ist {purple}ausgeschaltet"
+	}
+	
+	"dealdamage_setbyadmin"
+	{
+		"da"		"Admin bestemmer runde for No Scope er {purple}slået fra"		
+		"en"		"Set DealDamageDay by admin is {purple}disabled"
+		"de"		"DealDamageDay Aktivierung durch den Admin ist {purple}ausgeschaltet"
+	}
+	"dealdamage_ctwin_nc"
+	{
+		"#format"	"{1:i}"
+		"en"		"Counter-Terrorists win with {1} HP damage"
+		"de"		"Counter-Terrorist gewinnen mit {1} HP Schaden"
+	}
+	
+	"dealdamage_end"
+	{
+		"da"		"{purple}DealDamageDay{default} er afsluttet!"	
+		"en"		"{purple}DealDamageDay{default} ended"
+		"de"		"{purple}DealDamageDay{default} beendet"
+	}
+	
+	"dealdamage_next"
+	{
+		"da"		"Næste runde er {purple}DealDamageDay"	
+		"en"		"Next round is {purple}DealDamageDay"
+		"de"		"Nächste Runde ist {purple}DealDamageDay"
+	}
+	"dealdamage_next_nc"
+	{
+		"da"		"Næste runde er DealDamageDay"	
+		"en"		"Next round is DealDamageDay"
+		"de"		"Nächste Runde ist DealDamageDay"
+	}
+	
+	"dealdamage_start"
+	{
+		"da"		"{purple}DealDamageDay{default} er startet!"
+		"en"		"The {purple}DealDamageDay{default} has started!"
+		"de"		"{purple}DealDamageDay{default} ist gestartet!"
+	}
+	
+	"dealdamage_start_nc"
+	{
+		"da"		"No Scope er startet!"
+		"en"		"The DealDamageDay started!"
+		"de"		"DealDamageDay ist gestartet!"
+	}
+	
+	"dealdamage_voted"
+	{
+		"da"		"Du har allerede stemt for {purple}DealDamageDay!"	
+		"en"		"You already voted for {purple}DealDamageDay"
+		"de"		"Du hast schon für {purple}DealDamageDay {default}gevotet"
+	}
+	
+	"dealdamage_progress"
+	{
+		"#format"	"{1:s}"
+		"en"		"Event ({darkred}{1} {default}is {purple}already in progress."
+		"de"		"Event {darkred}{1} {default}ist {purple}bereits gesetzt."
+	}
+	
+	"dealdamage_disabled"
+	{
+		"da"		"DealDamageDay er {purple}slået fra."
+		"en"		"DealDamageDay is {purple}disabled."
+		"de"		"DealDamageDay ist {purple}deaktiviert."
+	}
+	
+
+	"dealdamage_timeuntilstart_nc"
+	{
+		"#format"	"{1:i}"
+		"da"		"{1} sekunder til runden starter!"	
+		"en"		"{1} seconds until start"
+		"de"		"{1} Sekunden bis zum Start"
+	}
+	
+	"dealdamage_info_title"
+	{
+		"en"		"DealDamageDay er aktiveret!"	
+		"en"		"DealDamageDay is activ"
+		"de"		"DealDamageDay ist aktiv"
+	}
+	
+	"dealdamage_info_line1"
+	{
+		"en"		"DealDamageDay is activ"
+		"de"		"DealDamageDay is aktiv!"
+	}
+	"dealdamage_info_line2"
+	{
+		"en"		"-----------------------------------"
+		"de"		"-----------------------------------"
+	}
+	
+	"dealdamage_info_line3"
+	{
+		"en"		"-----------------------------------"
+		"de"		"-----------------------------------"
+	}
+	
+	"dealdamage_info_line4"
+	{
+		"da"		"Alle jail regler er ophævet!"	
+		"en"		"All normal jailRules are repealed"
+		"de"		"Alle normalen Jailregeln sind aufgehoben!"
+	}
+	
+	"dealdamage_info_line5"
+	{
+		"da"		"Der kan ikke laves Last Request i denne runde!"	
+		"en"		"There is no last request!"
+		"de"		"Der letzte Terrorist hat keinen Wunsch!"
+	}
+	
+	"dealdamage_info_line6"
+	{
+		"da"		"Alle kan gå der hen hvor de har lyst til at gå hen!"	
+		"en"		"Everyone is allowed to go everywhere where he wants"
+		"de"		"Jeder darf überall hin wo er will!"
+	}
+	
+	"dealdamage_info_line7"
+	{
+		"da"		"Alle server regler skal overholdes!"	
+		"en"		"dont be an asshole!"
+		"de"		"bau keine scheisse!"
+	}
+		"dealdamage_wait"
+	{
+		"#format"	"{1:i}"
+		"da"		"Du skal vente {1} flere runder!"		
+		"en"		"you must wait {1} more rounds"
+		"de"		"Du musst noch {1} Runden warten"
+	}
+}
