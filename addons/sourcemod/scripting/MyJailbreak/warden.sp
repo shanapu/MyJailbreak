@@ -3393,7 +3393,7 @@ public Action OnTakedamage(int victim, int &attacker, int &inflictor, float &dam
 	if(!IsValidClient(victim, true, false) || attacker == victim || !IsValidClient(attacker, true, false)) return Plugin_Continue;
 	
 	char sWeapon[32];
-	GetEntityClassname(weapon, sWeapon, sizeof(sWeapon));
+	if (weapon != -1) GetEntityClassname(weapon, sWeapon, sizeof(sWeapon));
 	
 	//Backstab protection
 	
