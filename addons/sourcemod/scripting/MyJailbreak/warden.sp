@@ -87,6 +87,7 @@ ConVar gc_bHandCuffLR;
 ConVar gc_bHandCuffCT;
 ConVar gc_bBulletSparks;
 ConVar gc_bExtend;
+ConVar gc_iExtendLimit;
 ConVar gc_bWardenColorRandom;
 ConVar gc_bBackstab;
 ConVar gc_iBackstabNumber;
@@ -148,6 +149,7 @@ int g_iDrawerColor[MAXPLAYERS+1];
 int g_iPlayerHandCuffs[MAXPLAYERS+1];
 int g_iCuffed = 0;
 int g_iBackstabNumber[MAXPLAYERS+1];
+int g_iExtendNumber[MAXPLAYERS+1];
 
 //Handles
 Handle g_fward_onBecome;
@@ -292,6 +294,7 @@ public void OnPluginStart()
 	gc_bNoBlockMode = AutoExecConfig_CreateConVar("sm_warden_noblock_mode", "1", "0 - collision only between CT & T, 1 - collision within a team.", _, true,  0.0, true, 1.0);
 	gc_bFF = AutoExecConfig_CreateConVar("sm_warden_ff", "1", "0 - disabled, 1 - enable switch ff for T ", _, true,  0.0, true, 1.0);
 	gc_bExtend = AutoExecConfig_CreateConVar("sm_warden_extend", "1", "0 - disabled, 1 - Allows the warden to extend the roundtime", _, true,  0.0, true, 1.0);
+	gc_iExtendLimit = AutoExecConfig_CreateConVar("sm_warden_extend_limit", "2", "How many time a warden can extend the round?", _, true,  1.0);
 	gc_bGunPlant = AutoExecConfig_CreateConVar("sm_warden_gunplant", "1", "0 - disabled, 1 - enable Gun plant prevention", _, true,  0.0, true, 1.0);
 	gc_fAllowDropTime = AutoExecConfig_CreateConVar("sm_warden_allow_time", "15.0", "Time in seconds CTs allowed to drop weapon on round beginn.", _, true,  0.1);
 	gc_bGunNoDrop = AutoExecConfig_CreateConVar("sm_warden_gunnodrop", "0", "0 - disabled, 1 - disallow gun dropping for ct", _, true,  0.0, true, 1.0);
@@ -615,6 +618,7 @@ public void RoundStart(Event event, const char[] name, bool dontBroadcast)
 	{
 		g_iPlayerHandCuffs[i] = gc_iHandCuffsNumber.IntValue;
 		g_iBackstabNumber[i] = gc_iBackstabNumber.IntValue;
+		g_iExtendNumber[i] = gc_iExtendLimit.IntValue;
 	}
 	CreateTimer (gc_fAllowDropTime.FloatValue, AllowDropTimer);
 }
@@ -3509,21 +3513,25 @@ public Action ExtendRoundTime(int client, int args)
 	{
 		if (client == g_iWarden)
 		{
-			char menuinfo[255];
-			
-			Menu menu = new Menu(ExtendRoundTimeHandler);
-			Format(menuinfo, sizeof(menuinfo), "%T", "warden_time_title", client);
-			menu.SetTitle(menuinfo);
-			Format(menuinfo, sizeof(menuinfo), "%T", "warden_120", client);
-			menu.AddItem("120", menuinfo);
-			Format(menuinfo, sizeof(menuinfo), "%T", "warden_180", client);
-			menu.AddItem("180", menuinfo);
-			Format(menuinfo, sizeof(menuinfo), "%T", "warden_300", client);
-			menu.AddItem("300", menuinfo);
-			
-			menu.ExitBackButton = true;
-			menu.ExitButton = true;
-			menu.Display(client, 20);
+			if(g_iExtendNumber[client] > 0)
+			{
+				char menuinfo[255];
+				
+				Menu menu = new Menu(ExtendRoundTimeHandler);
+				Format(menuinfo, sizeof(menuinfo), "%T", "warden_time_title", client);
+				menu.SetTitle(menuinfo);
+				Format(menuinfo, sizeof(menuinfo), "%T", "warden_120", client);
+				menu.AddItem("120", menuinfo);
+				Format(menuinfo, sizeof(menuinfo), "%T", "warden_180", client);
+				menu.AddItem("180", menuinfo);
+				Format(menuinfo, sizeof(menuinfo), "%T", "warden_300", client);
+				menu.AddItem("300", menuinfo);
+				
+				menu.ExitBackButton = true;
+				menu.ExitButton = true;
+				menu.Display(client, 20);
+			}
+			else CPrintToChat(client, "%t %t", "warden_tag", "warden_extendtimes", gc_iExtendLimit.IntValue);
 		}
 		else CPrintToChat(client, "%t %t", "warden_tag", "warden_notwarden" );
 	}
@@ -3556,6 +3564,7 @@ public int ExtendRoundTimeHandler(Menu menu, MenuAction action, int client, int 
 				FakeClientCommand(client, "sm_menu");
 			}
 		}
+		g_iExtendNumber[client]--;
 	}
 	else if(action == MenuAction_Cancel)
 	{
