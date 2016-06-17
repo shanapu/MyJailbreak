@@ -526,7 +526,7 @@ public Action OnTakedamage(int victim, int &attacker, int &inflictor, float &dam
 		DamageT = DamageT + RoundToCeil(damage);
 	}
 	LoopClients(i) PrintHintText(i, "<font color='#0055FF'>CT dealed:   </font> %i HP  damage                     <font color='#FF0000'>T dealed:   </font> %i HP  damage                     <font color='#00FF00'>YOU dealed:   </font> %i HP  damage", DamageCT, DamageT, DamageDealed[i]);
-	if((GetClientTeam(attacker) != GetClientTeam(victim))DamageDealed[attacker] = DamageDealed[attacker] + RoundToCeil(damage);
+	if((GetClientTeam(attacker) != GetClientTeam(victim))) DamageDealed[attacker] = DamageDealed[attacker] + RoundToCeil(damage);
 	return Plugin_Handled;
 }
 
