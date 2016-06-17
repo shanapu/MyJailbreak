@@ -974,7 +974,8 @@ public Action Timer_WardenFixColor(Handle timer,any client)
 				{
 					if(gc_bWardenColorRandom.BoolValue)
 					{
-						SetEntityRenderColor(client, GetRandomInt(0, 255), GetRandomInt(0, 255), GetRandomInt(0, 255), 255);
+						int i = GetRandomInt(1, 7);
+						SetEntityRenderColor(client, g_iColors[i][0], g_iColors[i][1], g_iColors[i][2], g_iColors[i][3]);
 					}
 					else SetEntityRenderColor(client, gc_iWardenColorRed.IntValue, gc_iWardenColorGreen.IntValue, gc_iWardenColorBlue.IntValue, 255);
 				}
@@ -3394,7 +3395,7 @@ public Action OnTakedamage(int victim, int &attacker, int &inflictor, float &dam
 	if(!IsValidClient(victim, true, false) || attacker == victim || !IsValidClient(attacker, true, false)) return Plugin_Continue;
 	
 	char sWeapon[32];
-	if (weapon != -1) GetEntityClassname(weapon, sWeapon, sizeof(sWeapon));
+	if(IsValidEntity(weapon)) GetEntityClassname(weapon, sWeapon, sizeof(sWeapon));
 	
 	//Backstab protection
 	
