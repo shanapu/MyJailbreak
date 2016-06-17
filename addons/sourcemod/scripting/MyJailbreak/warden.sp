@@ -1052,6 +1052,7 @@ public Action EventPlayerTeam(Event event, const char[] name, bool dontBroadcast
 		Call_StartForward(gF_OnWardenDisconnected);
 		Call_PushCell(client);
 		Call_Finish();
+		CreateTimer( 0.1, RemoveColor, client);
 		
 		if (RandomTimer != null)
 		KillTimer(RandomTimer);
