@@ -1,13 +1,5 @@
 "Phrases"
 {
-	"request_tag"
-	{
-		"ru"		"[{green}MyJB.вопросы{default}]"
-		"de"		"[{green}MyJB.requests{default}]"
-		"pl"		"[{green}MyJB.Zyczenia{default}]"
-		"en"		"[{green}MyJB.requests{default}]"
-	}
-
 	"request_notalivect"
 	{
 		"ru"		"Вы не мертвы или не КТ"
@@ -230,6 +222,14 @@
 		"en"		"The warden opend refuse.{purple} type !refuse to refused the game."
 	}
 
+	"request_tag"
+	{
+		"de"		"[{green}MyJB.requests{default}]"
+		"ru"		"[{green}MyJB.вопросы{default}]"
+		"pl"		"[{green}MyJB.Zyczenia{default}]"
+		"en"		"[{green}MyJB.requests{default}]"
+	}
+
 	"request_refusing"
 	{
 		"#format"   "{1:N}"
@@ -262,6 +262,12 @@
 		"en"		"How handle this freekill?"
 	}
 
+	"request_respawncell"
+	{
+		"en"		"Respawn in cell"
+		"de"		"In der Zelle wiederbeleben"
+	}
+
 	"request_respawnvictim"
 	{
 		"ru"		"Возродил жертву."
@@ -274,6 +280,12 @@
 		"ru"		"Убить фрикиллера"
 		"de"		"Töte den Freekiller"
 		"en"		"Kill the freekiller"
+	}
+
+	"request_respawnwarden"
+	{
+		"en"		"Respawn in front of warden"
+		"de"		"Vor dem Warden wiederbeleben"
 	}
 
 	"request_freeday"
@@ -299,7 +311,7 @@
 
 	"request_nokiller"
 	{
-		"ru"		"Простите, мы не можем найти Вашего убийцу"
+		"ru"		"Простите, мы не можем найти Вашего убийцу?"
 		"ru"		"Простите, мы не можем найти Вашего убийцу?"
 		"de"		"Wir konnten deinen Mörder nicht finden"
 		"en"		"Sorry, we can't find your killer"
@@ -352,8 +364,8 @@
 
 	"request_menu_freekill"
 	{
-		"ru"		"Пожаловаться на фрикилл"
 		"de"		"Freekill melden"
+		"ru"		"Пожаловаться на фрикилл"
 		"en"		"Report Freekill"
 	}
 
@@ -365,28 +377,28 @@
 		"en"		"{green}{1{default} send a freekill report of {darkred}{2}{default} to {purple}{3}"
 	}
 
+	"request_pardonfreekill"
+	{
+		"ru"		"Был ли это фрикилл?"
+		"de"		"War es ein unerlaubt Mord?"
+		"en"		"Was that a Freekill?"
+	}
+
 	"request_handlerespawn"
 	{
-		"de"		"Wo möchtest du ihn respawnen?"
 		"en"		"Where to respawn?"
+		"de"		"Wo möchtest du ihn respawnen?"
 	}
 
 	"request_respawnbody"
 	{
-		"de"		"An Leiche wiederbeleben"
 		"en"		"Respawn on body"
+		"de"		"An Leiche wiederbeleben"
 	}
-
-	"request_respawncell"
+	
+	"request_freekilltimes"
 	{
-		"de"		"In der Zelle wiederbeleben"
-		"en"		"Respawn in cell"
+		"de"		"Du hast in dieser Runde schon {purple}zuviele Freekills{default} gemeldet."
+		"en"		"You have {purple}report to many freekills{default} in this round."
 	}
-
-	"request_respawnwarden"
-	{
-		"de"		"Vor dem Warden wiederbeleben"
-		"en"		"Respawn in front of warden"
-	}
-
 }
