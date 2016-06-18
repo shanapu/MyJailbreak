@@ -405,7 +405,7 @@ public Action Command_refuse(int client, int args)
 								if (warden_exist()) LoopClients(i) RefuseMenu(i);
 								if(gc_bSounds.BoolValue)EmitSoundToAllAny(g_sSoundRefusePath);
 							}
-							else CPrintToChat(client, "%t %t", "request_tag", "request_refusedtimes");
+							else CPrintToChat(client, "%t %t", "request_tag", "request_refusedtimes", gc_iRefuseLimit.IntValue);
 						}
 						else CPrintToChat(client, "%t %t", "request_tag", "request_refuseallow");
 					}
@@ -466,7 +466,7 @@ public Action Command_Repeat(int client, int args)
 						if (warden_exist()) LoopClients(i) RepeatMenu(i);
 						if(gc_bSounds.BoolValue)EmitSoundToAllAny(g_sSoundRepeatPath);
 					}
-					else CPrintToChat(client, "%t %t", "request_tag", "request_repeattimes");
+					else CPrintToChat(client, "%t %t", "request_tag", "request_repeattimes", gc_iRepeatLimit.IntValue);
 				}
 				else CPrintToChat(client, "%t %t", "request_tag", "request_alreadyrepeat");
 			}
@@ -633,7 +633,7 @@ public Action Command_Heal(int client, int args)
 						}
 						else CPrintToChat(client, "%t %t", "request_tag", "warden_noexist");
 					}
-					else CPrintToChat(client, "%t %t", "request_tag", "request_healtimes");
+					else CPrintToChat(client, "%t %t", "request_tag", "request_healtimes", gc_iHealLimit.IntValue);
 				}
 				else CPrintToChat(client, "%t %t", "request_tag", "request_alreadyhealed");
 			}
@@ -851,7 +851,7 @@ public Action Command_Freekill(int client, int args)
 								if(MyJBLogging(true)) LogToFileEx(g_sFreeKillLogFile, "Player %L claiming %L freekilled him. Reported to warden %L", client, g_iKilledBy[client], i);
 							}
 						}
-						else CPrintToChat(client, "%t %t", "request_tag", "request_freekilltimes");
+						else CPrintToChat(client, "%t %t", "request_tag", "request_freekilltimes", gc_iFreeKillLimit.IntValue);
 					}
 					else CPrintToChat(client, "%t %t", "request_tag", "request_nokiller");
 				}

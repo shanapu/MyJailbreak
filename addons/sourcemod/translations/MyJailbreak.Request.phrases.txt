@@ -18,15 +18,16 @@
 
 	"request_refusedtimes"
 	{
+		"#format"	"{1:i}"
 		"ru"		"Вы {purple}отказывались слишком много раз{default} в этом раунде."
 		"pl"		"juz {purple}odmawiales za duzo razy{default} w tej rundzie."
-		"de"		"Du hast in dieser Runde schon {purple}zu oft verweigert."
-		"en"		"You have {purple}refused too many times{default} in this round."
+		"de"		"Du hast in dieser Runde schon {purple}{1} mal verweigert."
+		"en"		"You have already {purple}refused {1} times{default} in this round."
 	}
 
 	"request_capitulation"
 	{
-		"#format"   "{1:N}"
+		"#format"	"{1:N}"
 		"ru"		"{purple}{1} {purple}капитулировал! {default}Будет ли командир одобрять?"
 		"pl"		"{purple}{1} {default}. {purple}skapitulowal! {default}Czy Warden to zaakceptuje ?"
 		"de"		"{purple}{1} {default}hat {purple}sich ergeben! {default}Wird der Warden akzeptieren?"
@@ -51,7 +52,7 @@
 
 	"request_accepted"
 	{
-		"#format"   "{1:N}"
+		"#format"	"{1:N}"
 		"ru"		"Командир одобрил {1} запрос. "
 		"pl"		"Warden zaakceptowal twoje  {1}zyczenie."
 		"de"		"Der Warden hat {1}s Anfrage akzeptiert."
@@ -60,7 +61,7 @@
 
 	"request_noaccepted"
 	{
-		"#format"   "{1:N}"
+		"#format"	"{1:N}"
 		"ru"		"Командир НЕ одобрил {1} запрос."
 		"pl"		"Warden NIE zaakceptowal twojego  {1}zyczenia."
 		"de"		"Der Warden hat {1}s Anfrage NICHT akzeptiert."
@@ -69,7 +70,7 @@
 
 	"request_refuser"
 	{
-		"ru"		" Игрок, который отказывается"
+		"ru"		"Игрок, который отказывается"
 		"pl"		"Gracz ktory odmawia"
 		"de"		"Spieler die verweigern"
 		"en"		"Player who refusing"
@@ -102,10 +103,11 @@
 
 	"request_healtimes"
 	{
+		"#format"	"{1:i}"
 		"ru"		"Вы запросили {purple}слишком много исцелений{default} в этом раунде."
 		"pl"		"ty juz {purple}skladales zyczenia za duzo razy {default} w tej rundzie."
-		"de"		"Du hast in dieser Runde schon {purple}zuviele Heilungen{default} angefragt."
-		"en"		"You have {purple}request too many healings{default} in this round."
+		"de"		"Du hast in dieser Runde schon {purple}{1} mal Heilungen{default} angefragt."
+		"en"		"You have already {purple}request {1} times healing{default} in this round."
 	}
 
 	"request_nodamage"
@@ -118,7 +120,7 @@
 
 	"request_heal"
 	{
-		"#format"   "{1:N}"
+		"#format"	"{1:N}"
 		"ru"		"{purple}{1} {default}запросил {purple}исцеление! {default}Будет ли командир одобрять?"
 		"pl"		"{purple}{1} {default}ma zyczenie {purple}healing! {default}Czy Warden to zaakceptuje ?"
 		"de"		"{purple}{1} {default}hat {purple}Heilung {default}angefragt. Wird der Warden akzeptieren?"
@@ -143,7 +145,7 @@
 
 	"request_repeatpls"
 	{
-		"#format"   "{1:N}"
+		"#format"	"{1:N}"
 		"ru"		"{purple}{1} {default}просит повторить! {default}Или он не знает правила игры."
 		"pl"		"{purple}{1} {default}prosi o  {purple}Powtorzenie ostatniego zdania  {default}albo nie zna zasad GRY! "
 		"de"		"{purple}{1} {default}bittet um eine {purple}Wiederholung!{default} Oder er kennt die Spielregeln nicht."
@@ -152,10 +154,11 @@
 
 	"request_repeattimes"
 	{
+		"#format"	"{1:i}"
 		"ru"		"Вы запросили {purple}слишком много повторов{default} в этом раунде."
 		"pl"		"ty juz  {purple}miales zbyt wiele zyczen {default} w tej rundzie."
-		"de"		"Du hast in dieser Runde schon {purple}zuviele Wiederholungen{default} angefragt."
-		"en"		"You have {purple}request too many repeats{default} in this round."
+		"de"		"Du hast in dieser Runde schon {purple}{1} mal Wiederholungen{default} angefragt."
+		"en"		"You have already {purple}request repeats {1} times{default} in this round."
 	}
 
 	"request_alreadyrepeat"
@@ -232,7 +235,7 @@
 
 	"request_refusing"
 	{
-		"#format"   "{1:N}"
+		"#format"	"{1:N}"
 		"ru"		"{purple}{1} {purple}Отказался от этой игры."
 		"pl"		"{purple}{1} {default}. {purple}odmawia gry."
 		"de"		"{purple}{1} {default}hat das {purple}Spiel verweigert"
@@ -326,7 +329,7 @@
 
 	"request_respawnedall"
 	{
-		"#format"   "{1:N}"
+		"#format"	"{1:N}"
 		"ru"		"{1} был возрождён из-за {darkred}фрикилла"
 		"de"		"{1} wurde wegen eines {darkred}Freekills{default} wiederbelebt"
 		"en"		"{1} was respawned due a {darkred}freekill"
@@ -341,7 +344,7 @@
 
 	"request_killbcfreekillall"
 	{
-		"#format"   "{1:N}"
+		"#format"	"{1:N}"
 		"ru"		"{green}{1}{default} был убит в из-за {darkred}фрикилла"
 		"de"		"{green}{{1}{default} wurdest wegen eines {darkred}Freekills{default} getötet"
 		"en"		"{green}{1}{default} was slayed due a {darkred}freekill"
@@ -356,7 +359,7 @@
 
 	"request_swapbcfreekillall"
 	{
-		"#format"   "{1:N}"
+		"#format"	"{1:N}"
 		"ru"		"{green}{{1}{default} был переведён из-за {darkred}фрикилла{default} в команду террористов."
 		"de"		"{green}{{1}{default} wurdest wegen eines {darkred}Freekills{default} zu den Terrors verschoben"
 		"en"		"{green}{{1}{default} was swaped due a {darkred}freekill{default} to terrorist team"
@@ -371,7 +374,7 @@
 
 	"request_freekill"
 	{
-		"#format"   "{1:N},{2:N},{3:N}"
+		"#format"	"{1:N},{2:N},{3:N}"
 		"ru"		"{green}{1}{default} Отправил отчёт {darkred}{3}{default} о фрикилле {purple}{2}"
 		"de"		"{green}{1}{default} meldet {darkred}{2}{default} wegen Freekill an {purple}{3}"
 		"en"		"{green}{1{default} send a freekill report of {darkred}{2}{default} to {purple}{3}"
@@ -398,7 +401,8 @@
 	
 	"request_freekilltimes"
 	{
-		"de"		"Du hast in dieser Runde schon {purple}zuviele Freekills{default} gemeldet."
-		"en"		"You have {purple}report to many freekills{default} in this round."
+		"#format"	"{1:i}"
+		"de"		"Du hast in dieser Runde schon {purple}{1} mal Freekills{default} gemeldet."
+		"en"		"You have already {purple}report {1} times freekills{default} in this round."
 	}
 }
