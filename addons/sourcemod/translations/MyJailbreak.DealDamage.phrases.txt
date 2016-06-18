@@ -2,8 +2,9 @@
 {
 	"dealdamage_tag"
 	{
-		"en"		"[{green}MyJB.dealdamage{default}]"
+		"en"		"[{green}MyJB.DealDamage{default}]"
 	}
+
 	"dealdamage_need"
 	{
 		"#format"	"{1:i},{2:N}"
@@ -11,6 +12,7 @@
 		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes left to {darkred}dealdamage"
 		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}dealdamage{default} beginnt"
 	}
+
 	"dealdamage_rounds" 
 	{
 		"#format"	"{1:i},{2:i}"
@@ -18,38 +20,42 @@
 		"en"		"Round {purple}{1}{default} of {purple}{2}"
 		"de"		"Runde {purple}{1}{default} von {purple}{2}"
 	}
+
 	"dealdamage_twin_nc"
 	{
 		"#format"	"{1:i}"
 		"en"		"Terrorists win with {1} HP damage"
 		"de"		"Terrorist gewinnen mit {1} HP Schaden"
 	}
+
 	"dealdamage_voting"
 	{
 		"da"		"Afstemninger for No Scope er {purple}slået fra"	
 		"en"		"Player Voting for DealDamageDay is {purple}disabled"
 		"de"		"Voting für DealDamageDay ist {purple}ausgeschaltet"
 	}
+
 	"dealdamage_setbywarden"
 	{
 		"da"		"Warden bestemmer runde for No Scope er {purple}slået fra"	
 		"en"		"Set DealDamageDay by Warden is {purple}disabled"
 		"de"		"DealDamageDay Aktivierung durch den Warden ist {purple}ausgeschaltet"
 	}
-	
+
 	"dealdamage_setbyadmin"
 	{
 		"da"		"Admin bestemmer runde for No Scope er {purple}slået fra"		
 		"en"		"Set DealDamageDay by admin is {purple}disabled"
 		"de"		"DealDamageDay Aktivierung durch den Admin ist {purple}ausgeschaltet"
 	}
+
 	"dealdamage_ctwin_nc"
 	{
 		"#format"	"{1:i}"
 		"en"		"Counter-Terrorists win with {1} HP damage"
 		"de"		"Counter-Terrorist gewinnen mit {1} HP Schaden"
 	}
-	
+
 	"dealdamage_end"
 	{
 		"da"		"{purple}DealDamageDay{default} er afsluttet!"	
@@ -59,13 +65,13 @@
 	
 	"dealdamage_next"
 	{
-		"da"		"Næste runde er {purple}DealDamageDay"	
+		"da"		"Næste runde er {purple}DealDamageDay"
 		"en"		"Next round is {purple}DealDamageDay"
 		"de"		"Nächste Runde ist {purple}DealDamageDay"
 	}
 	"dealdamage_next_nc"
 	{
-		"da"		"Næste runde er DealDamageDay"	
+		"da"		"Næste runde er DealDamageDay"
 		"en"		"Next round is DealDamageDay"
 		"de"		"Nächste Runde ist DealDamageDay"
 	}
@@ -128,14 +134,14 @@
 	}
 	"dealdamage_info_line2"
 	{
-		"en"		"-----------------------------------"
-		"de"		"-----------------------------------"
+		"en"		"Deal so much damage as you can to the enemey team"
+		"de"		"Mach soviel Schaden du kannst gegen das gegenerische Team"
 	}
 	
 	"dealdamage_info_line3"
 	{
-		"en"		"-----------------------------------"
-		"de"		"-----------------------------------"
+		"en"		"The team with most dealed damage wins"
+		"de"		"Das Team mit dem meist verteilen Schaden gewinnt"
 	}
 	
 	"dealdamage_info_line4"
@@ -165,7 +171,7 @@
 		"en"		"dont be an asshole!"
 		"de"		"bau keine scheisse!"
 	}
-		"dealdamage_wait"
+	"dealdamage_wait"
 	{
 		"#format"	"{1:i}"
 		"da"		"Du skal vente {1} flere runder!"		

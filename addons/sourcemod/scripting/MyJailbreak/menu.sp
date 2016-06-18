@@ -60,6 +60,7 @@ ConVar g_bRandom;
 ConVar g_bRequest;
 ConVar g_bWarden;
 ConVar g_bSparks;
+ConVar g_bDealDamage;
 ConVar gc_sCustomCommand;
 
 //Strings
@@ -167,6 +168,7 @@ public void OnConfigsExecuted()
 	g_bRandom = FindConVar("sm_warden_random");
 	g_bFF = FindConVar("mp_teammates_are_enemies");
 	g_bRequest = FindConVar("sm_request_enable");
+	g_bDealDamage = FindConVar("sm_dealdamge_enable");
 	
 	char sBufferCMD[64];
 	Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommand);
@@ -775,6 +777,14 @@ public Action VoteEventDays(int client, int args)
 					daysmenu.AddItem("votezeus", menuinfo);
 				}
 			}
+			if(g_bDealDamage != null)
+			{
+				if(g_bDealDamage.BoolValue)
+				{
+					Format(menuinfo, sizeof(menuinfo), "%T", "menu_dealdamge", client);
+					daysmenu.AddItem("votedeal", menuinfo);
+				}
+			}
 			if(g_bDrunk != null)
 			{
 				if(g_bDrunk.BoolValue)
@@ -906,6 +916,14 @@ public int VoteEventMenuHandler(Menu daysmenu, MenuAction action, int client, in
 		else if ( strcmp(info,"votetorch") == 0 )
 		{
 			FakeClientCommand(client, "sm_torch");
+			if(!gc_bClose.BoolValue)
+			{
+				JbMenu(client,0);
+			}
+		}
+		else if ( strcmp(info,"votedeal") == 0 )
+		{
+			FakeClientCommand(client, "sm_dealdamage");
 			if(!gc_bClose.BoolValue)
 			{
 				JbMenu(client,0);
@@ -1050,6 +1068,14 @@ public Action SetEventDays(int client, int args)
 					daysmenu.AddItem("setduckhunt", menuinfo);
 				}
 			}
+			if(g_bDealDamage != null)
+			{
+				if(g_bDealDamage.BoolValue)
+				{
+					Format(menuinfo, sizeof(menuinfo), "%T", "menu_dealdamge", client);
+					daysmenu.AddItem("setdeal", menuinfo);
+				}
+			}
 			if(g_bZeus != null)
 			{
 				if(g_bZeus.BoolValue)
@@ -1174,6 +1200,17 @@ public int SetEventMenuHandler(Menu daysmenu, MenuAction action, int client, int
 			if (warden_iswarden(client) || (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true)))
 			{
 				FakeClientCommand(client, "sm_setzeus");
+				if(!gc_bClose.BoolValue)
+				{
+					JbMenu(client,0);
+				}
+			}
+		} 
+		else if ( strcmp(info,"setdeal") == 0 )
+		{
+			if (warden_iswarden(client) || (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true)))
+			{
+				FakeClientCommand(client, "sm_setdealdamage");
 				if(!gc_bClose.BoolValue)
 				{
 					JbMenu(client,0);
