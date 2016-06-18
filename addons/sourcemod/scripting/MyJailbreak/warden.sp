@@ -3035,7 +3035,7 @@ public int OnAvailableLR(int Announced)
 		if(gc_bHandCuffLR.BoolValue && g_bCuffed[i]) FreeEm(i, 0);
 		g_iPlayerHandCuffs[i] = 0;
 		if(i == g_iWarden) StripZeus(i);
-		if(IsMuted[i]) UnMuteClient(i);
+		if(IsMuted[i] && IsPlayerAlive(i)) UnMuteClient(i);
 	}
 	g_bAllowDrop = true;
 }
@@ -3586,6 +3586,4 @@ public Action ExtendTime(int client, int args)
 		CPrintToChatAll("%t %t", "warden_tag" , "warden_extend", client, extendminute);
 		return Plugin_Handled;
 }
-
-
 
