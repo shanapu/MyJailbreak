@@ -109,6 +109,7 @@ bool g_bDrawerColorRainbow[MAXPLAYERS+1] = true;
 bool g_bWeaponDropped[MAXPLAYERS+1] = false;
 bool g_bCuffed[MAXPLAYERS+1] = false;
 bool g_bAllowDrop;
+bool IsLR = false;
 bool IsMuted[MAXPLAYERS+1] = {false, ...};
 bool g_bBulletSparks[MAXPLAYERS+1] = true;
 
@@ -610,9 +611,10 @@ public void RoundStart(Event event, const char[] name, bool dontBroadcast)
 	{
 		SpawnIcon(g_iWarden);
 		if(gc_bModel.BoolValue) SetEntityModel(g_iWarden, g_sWardenModel);
-		if (gc_bHandCuff.BoolValue) GivePlayerItem(g_iWarden, "weapon_taser");
+		if (gc_bHandCuff.BoolValue && !IsLR) GivePlayerItem(g_iWarden, "weapon_taser");
 	}
 	g_bAllowDrop = true;
+	IsLR = false;
 	g_iCuffed = 0;
 	LoopClients(i)
 	{
@@ -641,6 +643,7 @@ public void RoundEnd(Event event, const char[] name, bool dontBroadcast)
 	if (StartTimer != null) KillTimer(StartTimer);
 	if (StartStopTimer != null) KillTimer(StartStopTimer);
 	g_bDrawerT = false;
+	IsLR = false;
 	LoopClients(i)
 	{
 		CancelCountDown(i, 0);
@@ -870,7 +873,7 @@ public int SetWardenHandler(Menu menu, MenuAction action, int client, int Positi
 							EmitSoundToAllAny(g_sWarden);
 						}
 						CreateTimer(1.0, Timer_WardenFixColor, i, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
-						if (gc_bHandCuff.BoolValue) GivePlayerItem(i, "weapon_taser");
+						if (gc_bHandCuff.BoolValue && !IsLR) GivePlayerItem(i, "weapon_taser");
 						SpawnIcon(i);
 						GetEntPropString(i, Prop_Data, "m_ModelName", g_sModelPath, sizeof(g_sModelPath));
 						if(gc_bModel.BoolValue)
@@ -928,7 +931,7 @@ public int m_WardenOverwrite(Menu menu, MenuAction action, int client, int Posit
 			RemoveIcon(g_iWarden);
 			g_iWarden = newwarden;
 			CreateTimer(1.0, Timer_WardenFixColor, newwarden, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
-			if (gc_bHandCuff.BoolValue) GivePlayerItem(newwarden, "weapon_taser");
+			if (gc_bHandCuff.BoolValue && !IsLR) GivePlayerItem(newwarden, "weapon_taser");
 			SpawnIcon(newwarden);
 			GetEntPropString(newwarden, Prop_Data, "m_ModelName", g_sModelPath, sizeof(g_sModelPath));
 			if(gc_bModel.BoolValue)
@@ -1087,7 +1090,7 @@ void SetTheWarden(int client)
 			PrintCenterTextAll("%t", "warden_new_nc", client);
 		}
 		g_iWarden = client;
-		if (gc_bHandCuff.BoolValue) GivePlayerItem(client, "weapon_taser");
+		if (gc_bHandCuff.BoolValue && !IsLR) GivePlayerItem(client, "weapon_taser");
 		CreateTimer(1.0, Timer_WardenFixColor, client, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 		SpawnIcon(client);
 		GetEntPropString(client, Prop_Data, "m_ModelName", g_sModelPath, sizeof(g_sModelPath));
@@ -3032,6 +3035,7 @@ public int OnAvailableLR(int Announced)
 {
 	LoopClients(i)
 	{
+		IsLR = true;
 		if(gc_bHandCuffLR.BoolValue && g_bCuffed[i]) FreeEm(i, 0);
 		g_iPlayerHandCuffs[i] = 0;
 		if(i == g_iWarden) StripZeus(i);
