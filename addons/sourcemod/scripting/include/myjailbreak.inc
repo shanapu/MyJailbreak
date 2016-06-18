@@ -193,3 +193,12 @@ stock int GetAliveTeamCount(int team)
 	LoopClients(i) if(IsPlayerAlive(i) && GetClientTeam(i) == team) number++;
 	return number;
 }
+
+stock bool CheckVipFlag(int client, const char[] flagsNeed)
+{
+	if((GetUserFlagBits(client) & ReadFlagString(flagsNeed) == ReadFlagString(flagsNeed)))
+	{
+		return true;
+	}
+	else return false;
+}
