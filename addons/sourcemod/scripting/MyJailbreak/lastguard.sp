@@ -23,6 +23,7 @@ ConVar gc_bSetCT;
 ConVar gc_bVote;
 ConVar gc_bAutomatic;
 ConVar gc_iTruceTime;
+ConVar gc_bFreeze;
 ConVar gc_iHPmultipler;
 ConVar gc_bOverlays;
 ConVar gc_sOverlayStartPath;
@@ -75,6 +76,7 @@ public void OnPluginStart()
 	gc_bAutomatic = AutoExecConfig_CreateConVar("sm_lastguard_auto", "0", "0 - disabled, 1 - Last Guard Rule will start automatic if there is only 1 CT. Disables sm_lastguard_vote & sm_lastguard_ct.", _, true,  0.0, true, 1.0);
 	gc_iHPmultipler = AutoExecConfig_CreateConVar("sm_lastguard_hp", "50", "How many percent of the combined Terror Health the CT get? (3 terror alive with 100HP = 300HP / 50% = CT get 150HP)", _, true,  0.0);
 	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_lastguard_trucetime", "10", "Time in seconds players can't deal damage. Half of this time you are freezed", _, true,  8.0);
+	gc_bFreeze = AutoExecConfig_CreateConVar("sm_lastguard_freeze", "0", "0 - disabled, 1 - Freeze all players the half of trucetime.", _, true,  0.0, true, 1.0);
 	gc_bSounds = AutoExecConfig_CreateConVar("sm_lastguard_sounds_enable", "1", "0 - disabled, 1 - enable sounds ", _, true, 0.1, true, 1.0);
 	gc_sSoundStartPath = AutoExecConfig_CreateConVar("sm_lastguard_sounds_start", "music/MyJailbreak/start.mp3", "Path to the soundfile which should be played for LGR beginn.");
 	gc_sSoundLastCTPath = AutoExecConfig_CreateConVar("sm_lastguard_sounds_beginn", "music/MyJailbreak/lastct.mp3", "Path to the soundfile which should be played for LGR anouncment.");
@@ -301,7 +303,7 @@ public Action StartLastGuard()
 		SetEntData(iClient, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
 		SetEntProp(iClient, Prop_Data, "m_takedamage", 0, 1);
 		
-		SetEntityMoveType(iClient, MOVETYPE_NONE);
+		if (gc_bFreeze.BoolValue) SetEntityMoveType(iClient, MOVETYPE_NONE);
 		
 		FakeClientCommand(iClient, "sm_guns");
 		
@@ -331,7 +333,7 @@ public Action StartTimer(Handle timer)
 		LoopClients(client) if (IsPlayerAlive(client))
 		{
 			PrintHintText(client,"%t", "lastguard_timeuntilstart_nc", g_iTruceTime);
-			if ((g_iTruceTime <= (gc_iTruceTime.IntValue / 2)) && (GetEntityMoveType(client) == MOVETYPE_NONE))
+			if (gc_bFreeze.BoolValue && (g_iTruceTime <= (gc_iTruceTime.IntValue / 2)) && (GetEntityMoveType(client) == MOVETYPE_NONE))
 			{
 				SetEntityMoveType(client, MOVETYPE_WALK);
 				PrintHintText(client,"%t", "lastguard_movenow_nc", g_iTruceTime);
