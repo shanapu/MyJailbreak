@@ -245,8 +245,8 @@ public Action SetSuicideBomber(int client,int args)
 					{
 						if (g_iCoolDown == 0)
 						{
-							StartNextRound();
-							if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Suicide Bomber was started by warden %L", client);
+	StartNextRound();
+	if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Suicide Bomber was started by warden %L", client);
 						}
 						else CPrintToChat(client, "%t %t", "suicidebomber_tag" , "suicidebomber_wait", g_iCoolDown);
 					}
@@ -267,12 +267,12 @@ public Action SetSuicideBomber(int client,int args)
 						
 						if(StrEqual(EventDay, "none", false))
 						{
-							if (g_iCoolDown == 0)
-							{
-								StartNextRound();
-								if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Suicide Bomber was started by admin %L", client);
-							}
-							else CPrintToChat(client, "%t %t", "suicidebomber_tag" , "suicidebomber_wait", g_iCoolDown);
+	if (g_iCoolDown == 0)
+	{
+		StartNextRound();
+		if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Suicide Bomber was started by admin %L", client);
+	}
+	else CPrintToChat(client, "%t %t", "suicidebomber_tag" , "suicidebomber_wait", g_iCoolDown);
 						}
 						else CPrintToChat(client, "%t %t", "suicidebomber_tag" , "suicidebomber_progress" , EventDay);
 					}
@@ -307,17 +307,17 @@ public Action VoteSuicideBomber(int client,int args)
 					{
 						if (StrContains(g_sHasVoted, steamid, true) == -1)
 						{
-							int playercount = (GetClientCount(true) / 2);
-							g_iVoteCount++;
-							int Missing = playercount - g_iVoteCount + 1;
-							Format(g_sHasVoted, sizeof(g_sHasVoted), "%s,%s", g_sHasVoted, steamid);
-							
-							if (g_iVoteCount > playercount)
-							{
-								StartNextRound();
-								if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Suicide Bomber was started by voting");
-							}
-							else CPrintToChatAll("%t %t", "suicidebomber_tag" , "suicidebomber_need", Missing, client);
+	int playercount = (GetClientCount(true) / 2);
+	g_iVoteCount++;
+	int Missing = playercount - g_iVoteCount + 1;
+	Format(g_sHasVoted, sizeof(g_sHasVoted), "%s,%s", g_sHasVoted, steamid);
+	
+	if (g_iVoteCount > playercount)
+	{
+		StartNextRound();
+		if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Suicide Bomber was started by voting");
+	}
+	else CPrintToChatAll("%t %t", "suicidebomber_tag" , "suicidebomber_need", Missing, client);
 						}
 						else CPrintToChat(client, "%t %t", "suicidebomber_tag" , "suicidebomber_voted");
 					}
@@ -352,8 +352,6 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 	canSet = true;
 	if (StartSuicideBomber || IsSuicideBomber)
 	{
-		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
-		
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("sm_menu_enable", 0);
@@ -367,27 +365,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 			{
 				LoopClients(client) 
 				{
-					SuicideBomberMenu = CreatePanel();
-					Format(info1, sizeof(info1), "%T", "suicidebomber_info_title", LANG_SERVER);
-					SetPanelTitle(SuicideBomberMenu, info1);
-					DrawPanelText(SuicideBomberMenu, "                                   ");
-					Format(info2, sizeof(info2), "%T", "suicidebomber_info_line1", LANG_SERVER);
-					DrawPanelText(SuicideBomberMenu, info2);
-					DrawPanelText(SuicideBomberMenu, "-----------------------------------");
-					Format(info3, sizeof(info3), "%T", "suicidebomber_info_line2", LANG_SERVER);
-					DrawPanelText(SuicideBomberMenu, info3);
-					Format(info4, sizeof(info4), "%T", "suicidebomber_info_line3", LANG_SERVER);
-					DrawPanelText(SuicideBomberMenu, info4);
-					Format(info5, sizeof(info5), "%T", "suicidebomber_info_line4", LANG_SERVER);
-					DrawPanelText(SuicideBomberMenu, info5);
-					Format(info6, sizeof(info6), "%T", "suicidebomber_info_line5", LANG_SERVER);
-					DrawPanelText(SuicideBomberMenu, info6);
-					Format(info7, sizeof(info7), "%T", "suicidebomber_info_line6", LANG_SERVER);
-					DrawPanelText(SuicideBomberMenu, info7);
-					Format(info8, sizeof(info8), "%T", "suicidebomber_info_line7", LANG_SERVER);
-					DrawPanelText(SuicideBomberMenu, info8);
-					DrawPanelText(SuicideBomberMenu, "-----------------------------------");
-					SendPanelToClient(SuicideBomberMenu, client, NullHandler, 20);
+					CreateInfoPanel(client);
 					
 					StripAllWeapons(client);
 					ClientSprintStatus[client] = 0;
@@ -418,6 +396,34 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		}
 		else if (g_iCoolDown > 0) g_iCoolDown--;
 	}
+}
+
+stock void CreateInfoPanel(int client)
+{
+	//Create info Panel
+	char info[255];
+	
+	SuicideBomberMenu = CreatePanel();
+	Format(info, sizeof(info), "%T", "suicidebomber_info_title",client);
+	SetPanelTitle(SuicideBomberMenu, info);
+	DrawPanelText(SuicideBomberMenu, "                                   ");
+	Format(info, sizeof(info), "%T", "suicidebomber_info_line1",client);
+	DrawPanelText(SuicideBomberMenu, info);
+	DrawPanelText(SuicideBomberMenu, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "suicidebomber_info_line2",client);
+	DrawPanelText(SuicideBomberMenu, info);
+	Format(info, sizeof(info), "%T", "suicidebomber_info_line3",client);
+	DrawPanelText(SuicideBomberMenu, info);
+	Format(info, sizeof(info), "%T", "suicidebomber_info_line4",client);
+	DrawPanelText(SuicideBomberMenu, info);
+	Format(info, sizeof(info), "%T", "suicidebomber_info_line5",client);
+	DrawPanelText(SuicideBomberMenu, info);
+	Format(info, sizeof(info), "%T", "suicidebomber_info_line6",client);
+	DrawPanelText(SuicideBomberMenu, info);
+	Format(info, sizeof(info), "%T", "suicidebomber_info_line7",client);
+	DrawPanelText(SuicideBomberMenu, info);
+	DrawPanelText(SuicideBomberMenu, "-----------------------------------");
+	SendPanelToClient(SuicideBomberMenu, client, NullHandler, 20);
 }
 
 //Round End
@@ -458,6 +464,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 	}
 	if (StartSuicideBomber)
 	{
+		LoopClients(i) CreateInfoPanel(i);
 		g_iOldRoundTime = g_iGetRoundTime.IntValue;
 		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;
 		

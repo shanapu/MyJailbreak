@@ -365,8 +365,6 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 	canSet = true;
 	if (StartTorch || IsTorch)
 	{
-		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
-		
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("sm_weapons_enable", 0);
@@ -408,32 +406,14 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 			}
 			LoopClients(client)
 			{
-				TorchMenu = CreatePanel();
-				Format(info1, sizeof(info1), "%T", "torch_info_title", client);
-				SetPanelTitle(TorchMenu, info1);
-				DrawPanelText(TorchMenu, "                                   ");
-				Format(info2, sizeof(info2), "%T", "torch_info_line1", client);
-				DrawPanelText(TorchMenu, info2);
-				DrawPanelText(TorchMenu, "-----------------------------------");
-				Format(info3, sizeof(info3), "%T", "torch_info_line2", client);
-				DrawPanelText(TorchMenu, info3);
-				Format(info4, sizeof(info4), "%T", "torch_info_line3", client);
-				DrawPanelText(TorchMenu, info4);
-				Format(info5, sizeof(info5), "%T", "torch_info_line4", client);
-				DrawPanelText(TorchMenu, info5);
-				Format(info6, sizeof(info6), "%T", "torch_info_line5", client);
-				DrawPanelText(TorchMenu, info6);
-				Format(info7, sizeof(info7), "%T", "torch_info_line6", client);
-				DrawPanelText(TorchMenu, info7);
-				Format(info8, sizeof(info8), "%T", "torch_info_line7", client);
-				DrawPanelText(TorchMenu, info8);
-				DrawPanelText(TorchMenu, "-----------------------------------");
+				
 				
 				StripAllWeapons(client);
 				ClientSprintStatus[client] = 0;
 				GivePlayerItem(client, "weapon_knife");
 				SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
-				SendPanelToClient(TorchMenu, client, NullHandler, 20);
+				
+				CreateInfoPanel(client);
 				OnTorch[client] = false;
 				ImmuneTorch[client] = false;
 			}
@@ -451,6 +431,34 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		}
 		else if (g_iCoolDown > 0) g_iCoolDown--;
 	}
+}
+
+stock void CreateInfoPanel(int client)
+{
+	//Create info Panel
+				char info[255];
+				
+				TorchMenu = CreatePanel();
+				Format(info, sizeof(info), "%T", "torch_info_title", client);
+				SetPanelTitle(TorchMenu, info);
+				DrawPanelText(TorchMenu, "                                   ");
+				Format(info, sizeof(info), "%T", "torch_info_line1", client);
+				DrawPanelText(TorchMenu, info);
+				DrawPanelText(TorchMenu, "-----------------------------------");
+				Format(info, sizeof(info), "%T", "torch_info_line2", client);
+				DrawPanelText(TorchMenu, info);
+				Format(info, sizeof(info), "%T", "torch_info_line3", client);
+				DrawPanelText(TorchMenu, info);
+				Format(info, sizeof(info), "%T", "torch_info_line4", client);
+				DrawPanelText(TorchMenu, info);
+				Format(info, sizeof(info), "%T", "torch_info_line5", client);
+				DrawPanelText(TorchMenu, info);
+				Format(info, sizeof(info), "%T", "torch_info_line6", client);
+				DrawPanelText(TorchMenu, info);
+				Format(info, sizeof(info), "%T", "torch_info_line7", client);
+				DrawPanelText(TorchMenu, info);
+				DrawPanelText(TorchMenu, "-----------------------------------");
+				SendPanelToClient(TorchMenu, client, NullHandler, 20);
 }
 
 public Action StartTimer(Handle timer)
@@ -557,6 +565,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 	}
 	if (StartTorch)
 	{
+		LoopClients(i) CreateInfoPanel(i);
 		g_iOldRoundTime = g_iGetRoundTime.IntValue;
 		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;
 		

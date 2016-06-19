@@ -976,7 +976,7 @@ public Action Timer_WardenFixColor(Handle timer,any client)
 		if(IsClientWarden(client))
 		{
 			if(gc_bPlugin.BoolValue)
-			{ 
+			{
 				if(gc_bColor.BoolValue)
 				{
 					if(gc_bWardenColorRandom.BoolValue)
@@ -2497,7 +2497,7 @@ public Action StopCountdown( Handle timer, any client )
 		{
 			PrintHintText(client, "%t", "warden_countdownstop_nc");
 			CPrintToChatAll("%t %t", "warden_tag" , "warden_countdownstop");
-
+			
 			if(gc_bOverlays.BoolValue)
 			{
 				CreateTimer( 0.0, ShowOverlayStop, client);
@@ -2632,7 +2632,8 @@ public Action ToggleFF(int client, int args)
 				CPrintToChatAll("%t %t", "warden_tag", "warden_ffisoff" );
 			}else CPrintToChatAll("%t %t", "warden_tag", "warden_ffison" );
 			
-		}else
+		}
+		else
 		{	
 			if (client == g_iWarden)
 			{

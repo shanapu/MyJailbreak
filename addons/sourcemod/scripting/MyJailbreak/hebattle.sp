@@ -311,8 +311,6 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 	canSet = true;
 	if (StartHEbattle || IsHEbattle)
 	{
-		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
-		
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_weapons_enable", 0);
 		SetCvar("sm_warden_enable", 0);
@@ -343,27 +341,8 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 			{
 				LoopClients(client)
 				{
-					HEbattleMenu = CreatePanel();
-					Format(info1, sizeof(info1), "%T", "hebattle_info_title", LANG_SERVER);
-					SetPanelTitle(HEbattleMenu, info1);
-					DrawPanelText(HEbattleMenu, "                                   ");
-					Format(info2, sizeof(info2), "%T", "hebattle_info_line1", LANG_SERVER);
-					DrawPanelText(HEbattleMenu, info2);
-					DrawPanelText(HEbattleMenu, "-----------------------------------");
-					Format(info3, sizeof(info3), "%T", "hebattle_info_line2", LANG_SERVER);
-					DrawPanelText(HEbattleMenu, info3);
-					Format(info4, sizeof(info4), "%T", "hebattle_info_line3", LANG_SERVER);
-					DrawPanelText(HEbattleMenu, info4);
-					Format(info5, sizeof(info5), "%T", "hebattle_info_line4", LANG_SERVER);
-					DrawPanelText(HEbattleMenu, info5);
-					Format(info6, sizeof(info6), "%T", "hebattle_info_line5", LANG_SERVER);
-					DrawPanelText(HEbattleMenu, info6);
-					Format(info7, sizeof(info7), "%T", "hebattle_info_line6", LANG_SERVER);
-					DrawPanelText(HEbattleMenu, info7);
-					Format(info8, sizeof(info8), "%T", "hebattle_info_line7", LANG_SERVER);
-					DrawPanelText(HEbattleMenu, info8);
-					DrawPanelText(HEbattleMenu, "-----------------------------------");
-					SendPanelToClient(HEbattleMenu, client, NullHandler, 20);
+
+					CreateInfoPanel(client);
 					
 					SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 					StripAllWeapons(client);
@@ -399,6 +378,34 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 	}
 }
 
+stock void CreateInfoPanel(int client)
+{
+			//Create info Panel
+					char info[255];
+		
+					HEbattleMenu = CreatePanel();
+					Format(info, sizeof(info), "%T", "hebattle_info_title", client);
+					SetPanelTitle(HEbattleMenu, info);
+					DrawPanelText(HEbattleMenu, "                                   ");
+					Format(info, sizeof(info), "%T", "hebattle_info_line1", client);
+					DrawPanelText(HEbattleMenu, info);
+					DrawPanelText(HEbattleMenu, "-----------------------------------");
+					Format(info, sizeof(info), "%T", "hebattle_info_line2", client);
+					DrawPanelText(HEbattleMenu, info);
+					Format(info, sizeof(info), "%T", "hebattle_info_line3", client);
+					DrawPanelText(HEbattleMenu, info);
+					Format(info, sizeof(info), "%T", "hebattle_info_line4", client);
+					DrawPanelText(HEbattleMenu, info);
+					Format(info, sizeof(info), "%T", "hebattle_info_line5", client);
+					DrawPanelText(HEbattleMenu, info);
+					Format(info, sizeof(info), "%T", "hebattle_info_line6", client);
+					DrawPanelText(HEbattleMenu, info);
+					Format(info, sizeof(info), "%T", "hebattle_info_line7", client);
+					DrawPanelText(HEbattleMenu, info);
+					DrawPanelText(HEbattleMenu, "-----------------------------------");
+					SendPanelToClient(HEbattleMenu, client, NullHandler, 20);
+					
+}
 //Round End
 
 public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
@@ -433,6 +440,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 	}
 	if (StartHEbattle)
 	{
+		LoopClients(i) CreateInfoPanel(i);
 		g_iOldRoundTime = g_iGetRoundTime.IntValue;
 		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;
 		

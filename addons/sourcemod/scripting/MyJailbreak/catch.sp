@@ -329,8 +329,6 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 	canSet = true;
 	if (StartCatch || IsCatch)
 	{
-		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
-		
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("sm_weapons_enable", 0);
@@ -344,27 +342,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 			{
 				LoopClients(client)
 				{
-					CatchMenu = CreatePanel();
-					Format(info1, sizeof(info1), "%T", "catch_info_title", client);
-					SetPanelTitle(CatchMenu, info1);
-					DrawPanelText(CatchMenu, "                                   ");
-					Format(info2, sizeof(info2), "%T", "catch_info_line1", client);
-					DrawPanelText(CatchMenu, info2);
-					DrawPanelText(CatchMenu, "-----------------------------------");
-					Format(info3, sizeof(info3), "%T", "catch_info_line2", client);
-					DrawPanelText(CatchMenu, info3);
-					Format(info4, sizeof(info4), "%T", "catch_info_line3", client);
-					DrawPanelText(CatchMenu, info4);
-					Format(info5, sizeof(info5), "%T", "catch_info_line4", client);
-					DrawPanelText(CatchMenu, info5);
-					Format(info6, sizeof(info6), "%T", "catch_info_line5", client);
-					DrawPanelText(CatchMenu, info6);
-					Format(info7, sizeof(info7), "%T", "catch_info_line6", client);
-					DrawPanelText(CatchMenu, info7);
-					Format(info8, sizeof(info8), "%T", "catch_info_line7", client);
-					DrawPanelText(CatchMenu, info8);
-					DrawPanelText(CatchMenu, "-----------------------------------");
-					
+					CreateInfoPanel(client);
 					StripAllWeapons(client);
 					ClientSprintStatus[client] = 0;
 					GivePlayerItem(client, "weapon_knife");
@@ -393,7 +371,34 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		else if (g_iCoolDown > 0) g_iCoolDown--;
 	}
 }
-
+stock void CreateInfoPanel(int client)
+{
+	//Create info Panel
+					char info[255];
+		
+					CatchMenu = CreatePanel();
+					Format(info, sizeof(info), "%T", "catch_info_title", client);
+					SetPanelTitle(CatchMenu, info);
+					DrawPanelText(CatchMenu, "                                   ");
+					Format(info, sizeof(info), "%T", "catch_info_line1", client);
+					DrawPanelText(CatchMenu, info);
+					DrawPanelText(CatchMenu, "-----------------------------------");
+					Format(info, sizeof(info), "%T", "catch_info_line2", client);
+					DrawPanelText(CatchMenu, info);
+					Format(info, sizeof(info), "%T", "catch_info_line3", client);
+					DrawPanelText(CatchMenu, info);
+					Format(info, sizeof(info), "%T", "catch_info_line4", client);
+					DrawPanelText(CatchMenu, info);
+					Format(info, sizeof(info), "%T", "catch_info_line5", client);
+					DrawPanelText(CatchMenu, info);
+					Format(info, sizeof(info), "%T", "catch_info_line6", client);
+					DrawPanelText(CatchMenu, info);
+					Format(info, sizeof(info), "%T", "catch_info_line7", client);
+					DrawPanelText(CatchMenu, info);
+					DrawPanelText(CatchMenu, "-----------------------------------");
+					SendPanelToClient(CatchMenu, client, NullHandler, 20);
+					
+}
 //Round End
 
 public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
@@ -434,6 +439,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 	}
 	if (StartCatch)
 	{
+		LoopClients(i) CreateInfoPanel(i);
 		g_iOldRoundTime = g_iGetRoundTime.IntValue;
 		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;
 		
@@ -441,6 +447,8 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 		PrintHintTextToAll("%t", "catch_next_nc");
 	}
 }
+
+
 
 //Terror win Round if time runs out
 

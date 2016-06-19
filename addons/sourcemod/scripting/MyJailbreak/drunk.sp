@@ -292,8 +292,6 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 	canSet = true;
 	if (StartDrunk || IsDrunk)
 	{
-		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
-		
 		//disable other plugins
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_weapons_enable", 0);
@@ -307,28 +305,6 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		StartDrunk = false;
 		SJD_OpenDoors(); //open Jail
 		
-		//Create info Panel
-		
-		DrunkMenu = CreatePanel();
-		Format(info1, sizeof(info1), "%T", "drunk_info_title", LANG_SERVER);
-		SetPanelTitle(DrunkMenu, info1);
-		DrawPanelText(DrunkMenu, "                                   ");
-		Format(info2, sizeof(info2), "%T", "drunk_info_line1", LANG_SERVER);
-		DrawPanelText(DrunkMenu, info2);
-		DrawPanelText(DrunkMenu, "-----------------------------------");
-		Format(info3, sizeof(info3), "%T", "drunk_info_line2", LANG_SERVER);
-		DrawPanelText(DrunkMenu, info3);
-		Format(info4, sizeof(info4), "%T", "drunk_info_line3", LANG_SERVER);
-		DrawPanelText(DrunkMenu, info4);
-		Format(info5, sizeof(info5), "%T", "drunk_info_line4", LANG_SERVER);
-		DrawPanelText(DrunkMenu, info5);
-		Format(info6, sizeof(info6), "%T", "drunk_info_line5", LANG_SERVER);
-		DrawPanelText(DrunkMenu, info6);
-		Format(info7, sizeof(info7), "%T", "drunk_info_line6", LANG_SERVER);
-		DrawPanelText(DrunkMenu, info7);
-		Format(info8, sizeof(info8), "%T", "drunk_info_line7", LANG_SERVER);
-		DrawPanelText(DrunkMenu, info8);
-		DrawPanelText(DrunkMenu, "-----------------------------------");
 		
 		//Find Position in CT Spawn
 		
@@ -369,6 +345,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 						{
 							//here start Equiptment & parameters
 						}
+						CreateInfoPanel(client);
 						GivePlayerItem(client, "weapon_knife"); //give Knife
 						SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true); //NoBlock
 						SendPanelToClient(DrunkMenu, client, NullHandler, 20); //open info Panel
@@ -400,6 +377,34 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		}
 		else if (g_iCoolDown > 0) g_iCoolDown--;
 	}
+}
+stock void CreateInfoPanel(int client)
+{
+	//Create info Panel
+		char info[255];
+
+		DrunkMenu = CreatePanel();
+		Format(info, sizeof(info), "%T", "drunk_info_title", client);
+		SetPanelTitle(DrunkMenu, info);
+		DrawPanelText(DrunkMenu, "                                   ");
+		Format(info, sizeof(info), "%T", "drunk_info_line1", client);
+		DrawPanelText(DrunkMenu, info);
+		DrawPanelText(DrunkMenu, "-----------------------------------");
+		Format(info, sizeof(info), "%T", "drunk_info_line2", client);
+		DrawPanelText(DrunkMenu, info);
+		Format(info, sizeof(info), "%T", "drunk_info_line3", client);
+		DrawPanelText(DrunkMenu, info);
+		Format(info, sizeof(info), "%T", "drunk_info_line4", client);
+		DrawPanelText(DrunkMenu, info);
+		Format(info, sizeof(info), "%T", "drunk_info_line5", client);
+		DrawPanelText(DrunkMenu, info);
+		Format(info, sizeof(info), "%T", "drunk_info_line6", client);
+		DrawPanelText(DrunkMenu, info);
+		Format(info, sizeof(info), "%T", "drunk_info_line7", client);
+		DrawPanelText(DrunkMenu, info);
+		DrawPanelText(DrunkMenu, "-----------------------------------");
+		SendPanelToClient(DrunkMenu, client, NullHandler, 20); //open info Panel
+		
 }
 
 //Round End
@@ -445,6 +450,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 	}
 	if (StartDrunk)
 	{
+		LoopClients(i) CreateInfoPanel(i);
 		g_iOldRoundTime = g_iGetRoundTime.IntValue; //save original round time
 		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
 		

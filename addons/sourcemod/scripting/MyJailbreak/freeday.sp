@@ -281,8 +281,6 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 	}
 	if (StartFreeday)
 	{
-		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
-		
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_weapons_enable", 0);
 		SetCvar("sm_weapons_t", 0);
@@ -294,27 +292,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		
 		LoopClients(client)
 		{
-			FreedayMenu = CreatePanel();
-			Format(info1, sizeof(info1), "%T", "freeday_info_title", client);
-			SetPanelTitle(FreedayMenu, info1);
-			DrawPanelText(FreedayMenu, "                                   ");
-			Format(info2, sizeof(info2), "%T", "freeday_info_line1", client);
-			DrawPanelText(FreedayMenu, info2);
-			DrawPanelText(FreedayMenu, "-----------------------------------");
-			Format(info3, sizeof(info3), "%T", "freeday_info_line2", client);
-			DrawPanelText(FreedayMenu, info3);
-			Format(info4, sizeof(info4), "%T", "freeday_info_line3", client);
-			DrawPanelText(FreedayMenu, info4);
-			Format(info5, sizeof(info5), "%T", "freeday_info_line4", client);
-			DrawPanelText(FreedayMenu, info5);
-			Format(info6, sizeof(info6), "%T", "freeday_info_line5", client);
-			DrawPanelText(FreedayMenu, info6);
-			Format(info7, sizeof(info7), "%T", "freeday_info_line6", client);
-			DrawPanelText(FreedayMenu, info7);
-			Format(info8, sizeof(info8), "%T", "freeday_info_line7", client);
-			DrawPanelText(FreedayMenu, info8);
-			DrawPanelText(FreedayMenu, "-----------------------------------");
-			SendPanelToClient(FreedayMenu, client, NullHandler, 20);
+			CreateInfoPanel(client);
 			
 			if (!gc_bdamage.BoolValue && IsValidClient(client))
 			{
@@ -333,6 +311,33 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 	}
 }
 
+stock void CreateInfoPanel(int client)
+{
+	//Create info Panel
+			char info[255];
+		
+			FreedayMenu = CreatePanel();
+			Format(info, sizeof(info), "%T", "freeday_info_title", client);
+			SetPanelTitle(FreedayMenu, info);
+			DrawPanelText(FreedayMenu, "                                   ");
+			Format(info, sizeof(info), "%T", "freeday_info_line1", client);
+			DrawPanelText(FreedayMenu, info);
+			DrawPanelText(FreedayMenu, "-----------------------------------");
+			Format(info, sizeof(info), "%T", "freeday_info_line2", client);
+			DrawPanelText(FreedayMenu, info);
+			Format(info, sizeof(info), "%T", "freeday_info_line3", client);
+			DrawPanelText(FreedayMenu, info);
+			Format(info, sizeof(info), "%T", "freeday_info_line4", client);
+			DrawPanelText(FreedayMenu, info);
+			Format(info, sizeof(info), "%T", "freeday_info_line5", client);
+			DrawPanelText(FreedayMenu, info);
+			Format(info, sizeof(info), "%T", "freeday_info_line6", client);
+			DrawPanelText(FreedayMenu, info);
+			Format(info, sizeof(info), "%T", "freeday_info_line7", client);
+			DrawPanelText(FreedayMenu, info);
+			DrawPanelText(FreedayMenu, "-----------------------------------");
+			SendPanelToClient(FreedayMenu, client, NullHandler, 20);
+}
 //Round End
 
 public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
@@ -355,6 +360,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 	}
 	if (StartFreeday)
 	{
+		LoopClients(i) CreateInfoPanel(i);
 		g_iOldRoundTime = g_iGetRoundTime.IntValue;
 		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;
 		

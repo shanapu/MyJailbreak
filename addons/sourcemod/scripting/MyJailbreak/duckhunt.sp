@@ -325,8 +325,6 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 	canSet = true;
 	if (StartDuckHunt || IsDuckHunt)
 	{
-		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
-		
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("sm_menu_enable", 0);
@@ -341,27 +339,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 			{
 				LoopClients(client)
 				{
-					DuckHuntMenu = CreatePanel();
-					Format(info1, sizeof(info1), "%T", "duckhunt_info_title", client);
-					SetPanelTitle(DuckHuntMenu, info1);
-					DrawPanelText(DuckHuntMenu, "                                   ");
-					Format(info2, sizeof(info2), "%T", "duckhunt_info_line1", client);
-					DrawPanelText(DuckHuntMenu, info2);
-					DrawPanelText(DuckHuntMenu, "-----------------------------------");
-					Format(info3, sizeof(info3), "%T", "duckhunt_info_line2", client);
-					DrawPanelText(DuckHuntMenu, info3);
-					Format(info4, sizeof(info4), "%T", "duckhunt_info_line3", client);
-					DrawPanelText(DuckHuntMenu, info4);
-					Format(info5, sizeof(info5), "%T", "duckhunt_info_line4", client);
-					DrawPanelText(DuckHuntMenu, info5);
-					Format(info6, sizeof(info6), "%T", "duckhunt_info_line5", client);
-					DrawPanelText(DuckHuntMenu, info6);
-					Format(info7, sizeof(info7), "%T", "duckhunt_info_line6", client);
-					DrawPanelText(DuckHuntMenu, info7);
-					Format(info8, sizeof(info8), "%T", "duckhunt_info_line7", client);
-					DrawPanelText(DuckHuntMenu, info8);
-					DrawPanelText(DuckHuntMenu, "-----------------------------------");
-					SendPanelToClient(DuckHuntMenu, client, NullHandler, 20);
+					CreateInfoPanel(client);
 					
 					StripAllWeapons(client);
 					SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
@@ -399,6 +377,34 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		}
 		else if (g_iCoolDown > 0) g_iCoolDown--;
 	}
+}
+
+stock void CreateInfoPanel(int client)
+{
+	//Create info Panel
+					char info[255];
+		
+					DuckHuntMenu = CreatePanel();
+					Format(info, sizeof(info), "%T", "duckhunt_info_title", client);
+					SetPanelTitle(DuckHuntMenu, info);
+					DrawPanelText(DuckHuntMenu, "                                   ");
+					Format(info, sizeof(info), "%T", "duckhunt_info_line1", client);
+					DrawPanelText(DuckHuntMenu, info);
+					DrawPanelText(DuckHuntMenu, "-----------------------------------");
+					Format(info, sizeof(info), "%T", "duckhunt_info_line2", client);
+					DrawPanelText(DuckHuntMenu, info);
+					Format(info, sizeof(info), "%T", "duckhunt_info_line3", client);
+					DrawPanelText(DuckHuntMenu, info);
+					Format(info, sizeof(info), "%T", "duckhunt_info_line4", client);
+					DrawPanelText(DuckHuntMenu, info);
+					Format(info, sizeof(info), "%T", "duckhunt_info_line5", client);
+					DrawPanelText(DuckHuntMenu, info);
+					Format(info, sizeof(info), "%T", "duckhunt_info_line6", client);
+					DrawPanelText(DuckHuntMenu, info);
+					Format(info, sizeof(info), "%T", "duckhunt_info_line7", client);
+					DrawPanelText(DuckHuntMenu, info);
+					DrawPanelText(DuckHuntMenu, "-----------------------------------");
+					SendPanelToClient(DuckHuntMenu, client, NullHandler, 20);
 }
 
 //Round End
@@ -441,6 +447,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 	}
 	if (StartDuckHunt)
 	{
+		LoopClients(i) CreateInfoPanel(i);
 		g_iOldRoundTime = g_iGetRoundTime.IntValue;
 		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;
 		

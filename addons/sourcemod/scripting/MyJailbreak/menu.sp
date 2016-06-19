@@ -168,7 +168,7 @@ public void OnConfigsExecuted()
 	g_bRandom = FindConVar("sm_warden_random");
 	g_bFF = FindConVar("mp_teammates_are_enemies");
 	g_bRequest = FindConVar("sm_request_enable");
-	g_bDealDamage = FindConVar("sm_dealdamge_enable");
+	g_bDealDamage = FindConVar("sm_dealdamage_enable");
 	
 	char sBufferCMD[64];
 	Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommand);

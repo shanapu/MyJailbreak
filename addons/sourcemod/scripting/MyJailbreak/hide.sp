@@ -306,9 +306,6 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 	canSet = true;
 	if (StartHide || IsHide)
 	{
-		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
-		
-		
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_warden_enable", 0);
 		SetCvarString("sv_skyname", "cs_baggage_skybox_");
@@ -325,27 +322,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		{
 			LoopClients(client)
 			{
-				HideMenu = CreatePanel();
-				Format(info1, sizeof(info1), "%T", "hide_info_title", client);
-				SetPanelTitle(HideMenu, info1);
-				DrawPanelText(HideMenu, "                                   ");
-				Format(info2, sizeof(info2), "%T", "hide_info_line1", client);
-				DrawPanelText(HideMenu, info2);
-				DrawPanelText(HideMenu, "-----------------------------------");
-				Format(info3, sizeof(info3), "%T", "hide_info_line2", client);
-				DrawPanelText(HideMenu, info3);
-				Format(info4, sizeof(info4), "%T", "hide_info_line3", client);
-				DrawPanelText(HideMenu, info4);
-				Format(info5, sizeof(info5), "%T", "hide_info_line4", client);
-				DrawPanelText(HideMenu, info5);
-				Format(info6, sizeof(info6), "%T", "hide_info_line5", client);
-				DrawPanelText(HideMenu, info6);
-				Format(info7, sizeof(info7), "%T", "hide_info_line6", client);
-				DrawPanelText(HideMenu, info7);
-				Format(info8, sizeof(info8), "%T", "hide_info_line7", client);
-				DrawPanelText(HideMenu, info8);
-				DrawPanelText(HideMenu, "-----------------------------------");
-				SendPanelToClient(HideMenu, client, NullHandler, 20);
+				CreateInfoPanel(client);
 				
 				if (GetClientTeam(client) == CS_TEAM_CT)
 				{
@@ -379,6 +356,33 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 	}
 }
 
+stock void CreateInfoPanel(int client)
+{
+	//Create info Panel
+		char info[255];
+		
+				HideMenu = CreatePanel();
+				Format(info, sizeof(info), "%T", "hide_info_title", client);
+				SetPanelTitle(HideMenu, info);
+				DrawPanelText(HideMenu, "                                   ");
+				Format(info, sizeof(info), "%T", "hide_info_line1", client);
+				DrawPanelText(HideMenu, info);
+				DrawPanelText(HideMenu, "-----------------------------------");
+				Format(info, sizeof(info), "%T", "hide_info_line2", client);
+				DrawPanelText(HideMenu, info);
+				Format(info, sizeof(info), "%T", "hide_info_line3", client);
+				DrawPanelText(HideMenu, info);
+				Format(info, sizeof(info), "%T", "hide_info_line4", client);
+				DrawPanelText(HideMenu, info);
+				Format(info, sizeof(info), "%T", "hide_info_line5", client);
+				DrawPanelText(HideMenu, info);
+				Format(info, sizeof(info), "%T", "hide_info_line6", client);
+				DrawPanelText(HideMenu, info);
+				Format(info, sizeof(info), "%T", "hide_info_line7", client);
+				DrawPanelText(HideMenu, info);
+				DrawPanelText(HideMenu, "-----------------------------------");
+				SendPanelToClient(HideMenu, client, NullHandler, 20);
+}
 //Start Timer
 
 public Action StartTimer(Handle timer)
@@ -476,6 +480,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 	}
 	if (StartHide)
 	{
+		LoopClients(i) CreateInfoPanel(i);
 		g_iOldRoundTime = g_iGetRoundTime.IntValue;
 		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;
 		
