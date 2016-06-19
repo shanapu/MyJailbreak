@@ -35,7 +35,8 @@ public void OnPluginStart()
 {
 	gc_bTag = CreateConVar("sm_myjb_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", _, true,  0.0, true, 1.0);
 	gc_bLogging = CreateConVar("sm_myjb_log", "1", "Allow MyJailbreak to log events, freekills & eventdays in logs/MyJailbreak", _, true,  0.0, true, 1.0);
-	
+//	RegAdminCmd("sm_fogoff", CommandFogOff, ADMFLAG_ROOT, "");
+//	RegAdminCmd("sm_fogon", CommandFogOn, ADMFLAG_ROOT, "");
 	 // no warning on compile
 //	HookEvent("round_start", RoundStart);
 	}
@@ -86,20 +87,32 @@ public void OnMapStart()
 	}
 	else
 	{
-		FogIndex += CreateEntityByName("env_fog_controller");
+		FogIndex = CreateEntityByName("env_fog_controller");
 		DispatchSpawn(FogIndex);
 	}
 	DoFog();
 	AcceptEntityInput(FogIndex, "TurnOff");
 }
+/*
+public Action CommandFogOff(int client, int args)
+{
+	AcceptEntityInput(FogIndex, "TurnOff");
+	PrintToChatAll("fog off");
+}
 
+public Action CommandFogOn(int client, int args)
+{
+	AcceptEntityInput(FogIndex, "TurnOn");
+	PrintToChatAll("fog on");
+}
+*/
 public int Native_FogOff(Handle plugin,int argc)
 {AcceptEntityInput(FogIndex, "TurnOff");}
 
 public int Native_FogOn(Handle plugin,int argc)
 {AcceptEntityInput(FogIndex, "TurnOn");}
 
-public Action DoFog()
+public void DoFog()
 {
 	if(FogIndex != -1)
 	{

@@ -196,7 +196,7 @@ stock int GetAliveTeamCount(int team)
 
 stock bool CheckVipFlag(int client, const char[] flagsNeed)
 {
-	if((GetUserFlagBits(client) & ReadFlagString(flagsNeed) == ReadFlagString(flagsNeed)))
+	if(GetUserFlagBits(client) & ReadFlagString(flagsNeed) == ReadFlagString(flagsNeed))
 	{
 		return true;
 	}
