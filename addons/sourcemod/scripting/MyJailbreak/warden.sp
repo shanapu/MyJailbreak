@@ -92,6 +92,11 @@ ConVar gc_bWardenColorRandom;
 ConVar gc_bBackstab;
 ConVar gc_iBackstabNumber;
 
+ConVar gc_sVIPflagBackstab;
+ConVar gc_sVIPflagBulletSparks;
+ConVar gc_sVIPflagLaser;
+ConVar gc_sVIPflagDrawer;
+
 //Bools
 bool IsCountDown = false;
 bool IsMathQuiz = false;
@@ -197,6 +202,10 @@ char g_sCustomCommand[64];
 char g_sEquipWeapon[MAXPLAYERS+1][32];
 char g_sMuteUser[32];
 char g_sMyJBLogFile[PLATFORM_MAX_PATH];
+char g_sVIPflagBackstab[32];
+char g_sVIPflagBulletSparks[32];
+char g_sVIPflagLaser[32];
+char g_sVIPflagDrawer[32];
 
 //float
 float g_fMarkerRadiusMin = 100.0;
@@ -305,6 +314,7 @@ public void OnPluginStart()
 	gc_iGunSlapDamage = AutoExecConfig_CreateConVar("sm_warden_gunslap_dmg", "10", "Amoung of HP losing on slap for dropping a gun", _, true,  0.0);
 	gc_bBackstab = AutoExecConfig_CreateConVar("sm_warden_backstab", "1", "0 - disabled, 1 - enable backstab protection for warden", _, true,  0.0, true, 1.0);
 	gc_iBackstabNumber = AutoExecConfig_CreateConVar("sm_warden_backstab_number", "1", "How many time a warden get protected? 0 - alltime", _, true,  1.0);
+	gc_sVIPflagBackstab = AutoExecConfig_CreateConVar("sm_warden_backstab_vip", "", "Set flag for VIP to get warden backstab protection. No flag available for all.");
 	gc_bHandCuff = AutoExecConfig_CreateConVar("sm_warden_handcuffs", "1", "0 - disabled, 1 - enable handcuffs", _, true,  0.0, true, 1.0);
 	gc_iHandCuffsNumber = AutoExecConfig_CreateConVar("sm_warden_handcuffs_number", "2", "How many handcuffs a warden got?", _, true,  1.0);
 	gc_bHandCuffLR = AutoExecConfig_CreateConVar("sm_warden_handcuffs_lr", "1", "0 - disabled, 1 - free cuffed terrorists on LR", _, true,  0.0, true, 1.0);
@@ -322,8 +332,11 @@ public void OnPluginStart()
 	gc_bOpenTimerWarden = AutoExecConfig_CreateConVar("sm_warden_open_time_warden", "1", "should doors open automatic after sm_warden_open_time when there is a warden? needs sm_warden_open_time_enable 1", _, true,  0.0, true, 1.0);
 	gc_bMarker = AutoExecConfig_CreateConVar("sm_warden_marker", "1", "0 - disabled, 1 - enable Warden advanced markers ", _, true,  0.0, true, 1.0);
 	gc_bBulletSparks = AutoExecConfig_CreateConVar("sm_warden_bulletsparks", "1", "0 - disabled, 1 - enable Warden bulletimpact sparks", _, true,  0.0, true, 1.0);
+	gc_sVIPflagBulletSparks = AutoExecConfig_CreateConVar("sm_warden_bulletsparks_vip", "", "Set flag for VIP to get warden bulletimpact sparks. No flag available for all.");
 	gc_bLaser = AutoExecConfig_CreateConVar("sm_warden_laser", "1", "0 - disabled, 1 - enable Warden Laser Pointer with +E ", _, true,  0.0, true, 1.0);
+	gc_sVIPflagLaser = AutoExecConfig_CreateConVar("sm_warden_laser_vip", "", "Set flag for VIP to get warden laser pointer. No flag available for all.");
 	gc_bDrawer = AutoExecConfig_CreateConVar("sm_warden_drawer", "1", "0 - disabled, 1 - enable Warden Drawer with +E ", _, true,  0.0, true, 1.0);
+	gc_sVIPflagDrawer = AutoExecConfig_CreateConVar("sm_warden_drawer_vip", "", "Set flag for VIP to get warden bulletimpact sparks. No flag available for all.");
 	gc_bDrawerT= AutoExecConfig_CreateConVar("sm_warden_drawer_terror", "1", "0 - disabled, 1 - allow Warden to toggle Drawer for Terrorist ", _, true,  0.0, true, 1.0);
 	gc_bMath = AutoExecConfig_CreateConVar("sm_warden_math", "1", "0 - disabled, 1 - enable mathquiz for warden", _, true,  0.0, true, 1.0);
 	gc_iMinimumNumber = AutoExecConfig_CreateConVar("sm_warden_math_min", "1", "What should be the minimum number for questions?", _, true,  1.0);
@@ -368,7 +381,10 @@ public void OnPluginStart()
 	HookConVarChange(gc_sOverlayStopPath, OnSettingChanged);
 	HookConVarChange(gc_sOverlayCuffsPath, OnSettingChanged);
 	HookConVarChange(gc_sIconPath, OnSettingChanged);
-	HookConVarChange(gc_sCustomCommand, OnSettingChanged);
+	HookConVarChange(gc_sVIPflagBackstab, OnSettingChanged);
+	HookConVarChange(gc_sVIPflagBulletSparks, OnSettingChanged);
+	HookConVarChange(gc_sVIPflagLaser, OnSettingChanged);
+	HookConVarChange(gc_sVIPflagDrawer, OnSettingChanged);
 	
 	//FindConVar
 	g_bMenuClose = FindConVar("sm_menu_close");
@@ -385,6 +401,10 @@ public void OnPluginStart()
 	gc_sOverlayStopPath.GetString(g_sOverlayStopPath , sizeof(g_sOverlayStopPath));
 	gc_sIconPath.GetString(g_sIconPath , sizeof(g_sIconPath));
 	gc_sCustomCommand.GetString(g_sCustomCommand , sizeof(g_sCustomCommand));
+	gc_sVIPflagBackstab.GetString(g_sVIPflagBackstab , sizeof(g_sVIPflagBackstab));
+	gc_sVIPflagLaser.GetString(g_sVIPflagLaser , sizeof(g_sVIPflagLaser));
+	gc_sVIPflagDrawer.GetString(g_sVIPflagDrawer , sizeof(g_sVIPflagDrawer));
+	gc_sVIPflagBulletSparks.GetString(g_sVIPflagBulletSparks , sizeof(g_sVIPflagBulletSparks));
 	
 	g_iCollisionOffset = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
 	
@@ -466,6 +486,22 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 	{
 		strcopy(g_sIconPath, sizeof(g_sIconPath), newValue);
 		if(gc_bIcon.BoolValue) PrecacheModelAnyDownload(g_sIconPath);
+	}
+	else if(convar == gc_sVIPflagBackstab)
+	{
+		strcopy(g_sVIPflagBackstab, sizeof(g_sVIPflagBackstab), newValue);
+	}
+	else if(convar == gc_sVIPflagBulletSparks)
+	{
+		strcopy(g_sVIPflagBulletSparks, sizeof(g_sVIPflagBulletSparks), newValue);
+	}
+	else if(convar == gc_sVIPflagLaser)
+	{
+		strcopy(g_sVIPflagLaser, sizeof(g_sVIPflagLaser), newValue);
+	}
+	else if(convar == gc_sVIPflagDrawer)
+	{
+		strcopy(g_sVIPflagDrawer, sizeof(g_sVIPflagDrawer), newValue);
 	}
 	else if(convar == gc_sCustomCommand)
 	{
@@ -1641,7 +1677,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 		}
 		if((buttons & IN_USE))
 		{
-			if (gc_bLaser.BoolValue)
+			if (gc_bLaser.BoolValue && CheckVipFlag(client,g_sVIPflagLaser))
 			{
 				if (g_bLaser)
 				{
@@ -1667,7 +1703,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 			g_bLaserUse[client] = false;
 		}
 	}
-	if (((client == g_iWarden) && gc_bDrawer.BoolValue && g_bDrawer[client]) || ((GetClientTeam(client) == CS_TEAM_T) && gc_bDrawer.BoolValue && g_bDrawerT))
+	if (((client == g_iWarden) && gc_bDrawer.BoolValue && g_bDrawer[client] && CheckVipFlag(client,g_sVIPflagDrawer)) || ((GetClientTeam(client) == CS_TEAM_T) && gc_bDrawer.BoolValue && g_bDrawerT))
 	{
 		for (int i = 0; i < MAX_BUTTONS; i++)
 		{
@@ -1696,35 +1732,39 @@ public Action LaserMenu(int client, int args)
 	{
 		if (client == g_iWarden)
 		{
-			char menuinfo[255];
-			
-			Menu menu = new Menu(LaserHandler);
-			Format(menuinfo, sizeof(menuinfo), "%T", "warden_laser_title", client);
-			menu.SetTitle(menuinfo);
-			Format(menuinfo, sizeof(menuinfo), "%T", "warden_laser_off", client);
-			menu.AddItem("off", menuinfo);
-			Format(menuinfo, sizeof(menuinfo), "%T", "warden_rainbow", client);
-			menu.AddItem("rainbow", menuinfo);
-			Format(menuinfo, sizeof(menuinfo), "%T", "warden_white", client);
-			menu.AddItem("white", menuinfo);
-			Format(menuinfo, sizeof(menuinfo), "%T", "warden_red", client);
-			menu.AddItem("red", menuinfo);
-			Format(menuinfo, sizeof(menuinfo), "%T", "warden_green", client);
-			menu.AddItem("green", menuinfo);
-			Format(menuinfo, sizeof(menuinfo), "%T", "warden_blue", client);
-			menu.AddItem("blue", menuinfo);
-			Format(menuinfo, sizeof(menuinfo), "%T", "warden_yellow", client);
-			menu.AddItem("yellow", menuinfo);
-			Format(menuinfo, sizeof(menuinfo), "%T", "warden_cyan", client);
-			menu.AddItem("cyan", menuinfo);
-			Format(menuinfo, sizeof(menuinfo), "%T", "warden_magenta", client);
-			menu.AddItem("magenta", menuinfo);
-			Format(menuinfo, sizeof(menuinfo), "%T", "warden_orange", client);
-			menu.AddItem("orange", menuinfo);
-			
-			menu.ExitBackButton = true;
-			menu.ExitButton = true;
-			menu.Display(client, 20);
+			if(CheckVipFlag(client,g_sVIPflagLaser))
+			{
+				char menuinfo[255];
+				
+				Menu menu = new Menu(LaserHandler);
+				Format(menuinfo, sizeof(menuinfo), "%T", "warden_laser_title", client);
+				menu.SetTitle(menuinfo);
+				Format(menuinfo, sizeof(menuinfo), "%T", "warden_laser_off", client);
+				menu.AddItem("off", menuinfo);
+				Format(menuinfo, sizeof(menuinfo), "%T", "warden_rainbow", client);
+				menu.AddItem("rainbow", menuinfo);
+				Format(menuinfo, sizeof(menuinfo), "%T", "warden_white", client);
+				menu.AddItem("white", menuinfo);
+				Format(menuinfo, sizeof(menuinfo), "%T", "warden_red", client);
+				menu.AddItem("red", menuinfo);
+				Format(menuinfo, sizeof(menuinfo), "%T", "warden_green", client);
+				menu.AddItem("green", menuinfo);
+				Format(menuinfo, sizeof(menuinfo), "%T", "warden_blue", client);
+				menu.AddItem("blue", menuinfo);
+				Format(menuinfo, sizeof(menuinfo), "%T", "warden_yellow", client);
+				menu.AddItem("yellow", menuinfo);
+				Format(menuinfo, sizeof(menuinfo), "%T", "warden_cyan", client);
+				menu.AddItem("cyan", menuinfo);
+				Format(menuinfo, sizeof(menuinfo), "%T", "warden_magenta", client);
+				menu.AddItem("magenta", menuinfo);
+				Format(menuinfo, sizeof(menuinfo), "%T", "warden_orange", client);
+				menu.AddItem("orange", menuinfo);
+				
+				menu.ExitBackButton = true;
+				menu.ExitButton = true;
+				menu.Display(client, 20);
+			}
+			else CPrintToChat(client, "%t %t", "warden_tag", "warden_vipfeature");
 		}
 		else CPrintToChat(client, "%t %t", "warden_tag", "warden_notwarden" );
 	}
@@ -1845,41 +1885,45 @@ if (action == MenuAction_Select)
 
 public Action DrawerMenu(int client, int args)
 {
-	if(gc_bDrawer.BoolValue)
+	if(gc_bDrawer.BoolValue && CheckVipFlag(client,g_sVIPflagDrawer))
 	{
-		if ((client == g_iWarden) || ((GetClientTeam(client) == CS_TEAM_T) && gc_bDrawer.BoolValue && g_bDrawerT))
+		if ((client == g_iWarden) || ((GetClientTeam(client) == CS_TEAM_T) && g_bDrawerT))
 		{
-			char menuinfo[255];
-			
-			Menu menu = new Menu(DrawerHandler);
-			Format(menuinfo, sizeof(menuinfo), "%T", "warden_drawer_title", client);
-			menu.SetTitle(menuinfo);
-			Format(menuinfo, sizeof(menuinfo), "%T", "warden_drawer_off", client);
-			menu.AddItem("off", menuinfo);
-			Format(menuinfo, sizeof(menuinfo), "%T", "warden_drawert", client);
-			if (GetClientTeam(client) == CS_TEAM_CT) menu.AddItem("terror", menuinfo);
-			Format(menuinfo, sizeof(menuinfo), "%T", "warden_rainbow", client);
-			menu.AddItem("rainbow", menuinfo);
-			Format(menuinfo, sizeof(menuinfo), "%T", "warden_white", client);
-			menu.AddItem("white", menuinfo);
-			Format(menuinfo, sizeof(menuinfo), "%T", "warden_red", client);
-			menu.AddItem("red", menuinfo);
-			Format(menuinfo, sizeof(menuinfo), "%T", "warden_green", client);
-			menu.AddItem("green", menuinfo);
-			Format(menuinfo, sizeof(menuinfo), "%T", "warden_blue", client);
-			menu.AddItem("blue", menuinfo);
-			Format(menuinfo, sizeof(menuinfo), "%T", "warden_yellow", client);
-			menu.AddItem("yellow", menuinfo);
-			Format(menuinfo, sizeof(menuinfo), "%T", "warden_cyan", client);
-			menu.AddItem("cyan", menuinfo);
-			Format(menuinfo, sizeof(menuinfo), "%T", "warden_magenta", client);
-			menu.AddItem("magenta", menuinfo);
-			Format(menuinfo, sizeof(menuinfo), "%T", "warden_orange", client);
-			menu.AddItem("orange", menuinfo);
-			
-			menu.ExitBackButton = true;
-			menu.ExitButton = true;
-			menu.Display(client, 20);
+			if(CheckVipFlag(client,g_sVIPflagDrawer) || (GetClientTeam(client) == CS_TEAM_T))
+			{
+				char menuinfo[255];
+				
+				Menu menu = new Menu(DrawerHandler);
+				Format(menuinfo, sizeof(menuinfo), "%T", "warden_drawer_title", client);
+				menu.SetTitle(menuinfo);
+				Format(menuinfo, sizeof(menuinfo), "%T", "warden_drawer_off", client);
+				menu.AddItem("off", menuinfo);
+				Format(menuinfo, sizeof(menuinfo), "%T", "warden_drawert", client);
+				if (GetClientTeam(client) == CS_TEAM_CT) menu.AddItem("terror", menuinfo);
+				Format(menuinfo, sizeof(menuinfo), "%T", "warden_rainbow", client);
+				menu.AddItem("rainbow", menuinfo);
+				Format(menuinfo, sizeof(menuinfo), "%T", "warden_white", client);
+				menu.AddItem("white", menuinfo);
+				Format(menuinfo, sizeof(menuinfo), "%T", "warden_red", client);
+				menu.AddItem("red", menuinfo);
+				Format(menuinfo, sizeof(menuinfo), "%T", "warden_green", client);
+				menu.AddItem("green", menuinfo);
+				Format(menuinfo, sizeof(menuinfo), "%T", "warden_blue", client);
+				menu.AddItem("blue", menuinfo);
+				Format(menuinfo, sizeof(menuinfo), "%T", "warden_yellow", client);
+				menu.AddItem("yellow", menuinfo);
+				Format(menuinfo, sizeof(menuinfo), "%T", "warden_cyan", client);
+				menu.AddItem("cyan", menuinfo);
+				Format(menuinfo, sizeof(menuinfo), "%T", "warden_magenta", client);
+				menu.AddItem("magenta", menuinfo);
+				Format(menuinfo, sizeof(menuinfo), "%T", "warden_orange", client);
+				menu.AddItem("orange", menuinfo);
+				
+				menu.ExitBackButton = true;
+				menu.ExitButton = true;
+				menu.Display(client, 20);
+			}
+			else CPrintToChat(client, "%t %t", "warden_tag", "warden_vipfeature");
 		}
 	}
 	return Plugin_Handled;
@@ -2799,7 +2843,7 @@ public Action BulletImpact(Handle hEvent, char [] sName, bool bDontBroadcast)
 {
 	int iClient = GetClientOfUserId(GetEventInt(hEvent, "userid"));
 	
-	if (!gc_bPlugin.BoolValue || !gc_bBulletSparks || !warden_iswarden(iClient) || !g_bBulletSparks[iClient])
+	if (!gc_bPlugin.BoolValue || !gc_bBulletSparks || !warden_iswarden(iClient) || !g_bBulletSparks[iClient] || !CheckVipFlag(iClient,g_sVIPflagBulletSparks))
 		return Plugin_Continue;
 	
 	float startpos[3];
@@ -2823,15 +2867,18 @@ public Action BulletSparks(int client, int args)
 		{
 			if (client == g_iWarden)
 			{
-				if (!g_bBulletSparks[client])
+				if(CheckVipFlag(client,g_sVIPflagBulletSparks))
 				{
-					g_bBulletSparks[client] = true;
-					CPrintToChat(client, "%t %t", "warden_tag" , "warden_bulletmarkon");
-				}
-				else if (g_bBulletSparks[client])
-				{
-					g_bBulletSparks[client] = false;
-					CPrintToChat(client, "%t %t", "warden_tag" , "warden_bulletmarkoff");
+					if (!g_bBulletSparks[client])
+					{
+						g_bBulletSparks[client] = true;
+						CPrintToChat(client, "%t %t", "warden_tag" , "warden_bulletmarkon");
+					}
+					else if (g_bBulletSparks[client])
+					{
+						g_bBulletSparks[client] = false;
+						CPrintToChat(client, "%t %t", "warden_tag" , "warden_bulletmarkoff");
+					}
 				}
 			}
 			else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden"); 
@@ -3408,7 +3455,7 @@ public Action OnTakedamage(int victim, int &attacker, int &inflictor, float &dam
 	
 	//Backstab protection
 	
-	if(gc_bBackstab.BoolValue && IsClientInGame(attacker) && IsClientWarden(victim) && !IsClientInLastRequest(victim))
+	if(gc_bBackstab.BoolValue && IsClientInGame(attacker) && IsClientWarden(victim) && !IsClientInLastRequest(victim) && CheckVipFlag(victim,g_sVIPflagBackstab))
 	{
 		if((StrEqual(sWeapon, "weapon_knife", false)) && (damage > 99.0))
 		{
