@@ -826,7 +826,7 @@ public Action Command_Freekill(int client, int args)
 			{
 				if(!IsRequest)
 				{
-					if(g_iKilledBy[client] != -1)
+					if(g_iKilledBy[client] > 0)
 					{
 						if (g_iFreeKillCounter[client] < gc_iFreeKillLimit.IntValue)
 						{
