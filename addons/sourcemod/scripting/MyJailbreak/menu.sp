@@ -23,6 +23,7 @@ ConVar gc_bClose;
 ConVar gc_bStart;
 ConVar gc_bWelcome;
 ConVar gc_bTeam;
+ConVar gc_sCustomCommand;
 
 //3rd party Convars
 ConVar g_bMath;
@@ -61,10 +62,16 @@ ConVar g_bRequest;
 ConVar g_bWarden;
 ConVar g_bSparks;
 ConVar g_bDealDamage;
-ConVar gc_sCustomCommand;
+ConVar gc_sVIPflagBulletSparks;
+ConVar gc_sVIPflagLaser;
+ConVar gc_sVIPflagDrawer;
 
 //Strings
 char g_sCustomCommand[64];
+
+char g_sVIPflagBulletSparks[32];
+char g_sVIPflagLaser[32];
+char g_sVIPflagDrawer[32];
 
 
 public Plugin myinfo = {
@@ -169,6 +176,13 @@ public void OnConfigsExecuted()
 	g_bFF = FindConVar("mp_teammates_are_enemies");
 	g_bRequest = FindConVar("sm_request_enable");
 	g_bDealDamage = FindConVar("sm_dealdamage_enable");
+	gc_sVIPflagBulletSparks = FindConVar("sm_warden_bulletsparks_vip");
+	gc_sVIPflagLaser = FindConVar("sm_warden_laser_vip");
+	gc_sVIPflagDrawer = FindConVar("sm_warden_drawer_vip");
+	
+	gc_sVIPflagLaser.GetString(g_sVIPflagLaser , sizeof(g_sVIPflagLaser));
+	gc_sVIPflagDrawer.GetString(g_sVIPflagDrawer , sizeof(g_sVIPflagDrawer));
+	gc_sVIPflagBulletSparks.GetString(g_sVIPflagBulletSparks , sizeof(g_sVIPflagBulletSparks));
 	
 	char sBufferCMD[64];
 	Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommand);
@@ -268,7 +282,7 @@ public Action JbMenu(int client, int args)
 				}
 				if(g_bSparks != null)
 				{
-					if(g_bSparks.BoolValue)
+					if(g_bSparks.BoolValue && CheckVipFlag(client,g_sVIPflagBulletSparks))
 					{
 						Format(menuinfo, sizeof(menuinfo), "%T", "menu_sparks", client);
 						mainmenu.AddItem("sparks", menuinfo);
@@ -276,7 +290,7 @@ public Action JbMenu(int client, int args)
 				}
 				if(g_bDrawer != null)
 				{
-					if(g_bDrawer.BoolValue)
+					if(g_bDrawer.BoolValue && CheckVipFlag(client,g_sVIPflagDrawer))
 					{
 						Format(menuinfo, sizeof(menuinfo), "%T", "menu_drawer", client);
 						mainmenu.AddItem("drawer", menuinfo);
@@ -284,7 +298,7 @@ public Action JbMenu(int client, int args)
 				}
 				if(g_bLaser != null)
 				{
-					if(g_bLaser.BoolValue)
+					if(g_bLaser.BoolValue && CheckVipFlag(client,g_sVIPflagLaser))
 					{
 						Format(menuinfo, sizeof(menuinfo), "%T", "menu_laser", client);
 						mainmenu.AddItem("laser", menuinfo);
