@@ -23,8 +23,8 @@
 	"lastguard_hp"
 	{
 		"#format"	"{1:i},{2:i},{3:N},{4:i}"
-		"en"		"The {purple}{1} alive terrorists{default} have together {purple}{2} HP{default}. The last guard {4} get {purple}{3} HP{default}."
-		"de"		"Die {purple}{1} lebenden Terroristen{default} haben zusammen {purple}{2} HP{default}. Der letzte Wärter {4} bekommt deshalb {purple}{3} HP{default}."
+		"en"		"The {purple}{1} alive terrorists{default} have together {purple}{2} HP{default}. The last guard {3} get {purple}{4} HP{default}."
+		"de"		"Die {purple}{1} lebenden Terroristen{default} haben zusammen {purple}{2} HP{default}. Der letzte Wärter {3} bekommt deshalb {purple}{4} HP{default}."
 	}
 	"lastguard_setbyadmin"
 	{
