@@ -41,15 +41,10 @@ int g_iCoolDown;
 int g_iTruceTime;
 int g_iVoteCount;
 int g_iRound;
-int FogIndex = -1;
 int g_iMaxRound;
 
 //Floats
 float g_fPos[3];
-float mapFogStart = 0.0;
-float mapFogEnd = 150.0;
-float mapFogDensity = 0.99;
-
 
 //Handles
 Handle TruceTimer;
@@ -165,19 +160,6 @@ public void OnMapStart()
 	if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStart);
 	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
 	
-	int ent; 
-	ent = FindEntityByClassname(-1, "env_fog_controller");
-	if (ent != -1) 
-	{
-		FogIndex = ent;
-	}
-	else
-	{
-		FogIndex = CreateEntityByName("env_fog_controller");
-		DispatchSpawn(FogIndex);
-	}
-	DoFog();
-	AcceptEntityInput(FogIndex, "TurnOff");
 }
 
 public void OnConfigsExecuted()
@@ -319,9 +301,6 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 	canSet = true;
 	if (StartFFA || IsFFA)
 	{
-		{AcceptEntityInput(FogIndex, "TurnOn");}
-		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
-		
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("sm_weapons_t", 1);
@@ -329,7 +308,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		SetCvar("mp_teammates_are_enemies", 1);
 		SetCvar("mp_friendlyfire", 1);
 		SetCvar("sm_menu_enable", 0);
-		
+		FogOn();
 		g_iRound++;
 		IsFFA = true;
 		StartFFA = false;
@@ -367,28 +346,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 			}
 			LoopClients(client)
 			{
-				FFAMenu = CreatePanel();
-				Format(info1, sizeof(info1), "%T", "ffa_info_title", client);
-				SetPanelTitle(FFAMenu, info1);
-				DrawPanelText(FFAMenu, "                                   ");
-				Format(info2, sizeof(info2), "%T", "ffa_info_line1", client);
-				DrawPanelText(FFAMenu, info2);
-				DrawPanelText(FFAMenu, "-----------------------------------");
-				Format(info3, sizeof(info3), "%T", "ffa_info_line2", client);
-				DrawPanelText(FFAMenu, info3);
-				Format(info4, sizeof(info4), "%T", "ffa_info_line3", client);
-				DrawPanelText(FFAMenu, info4);
-				Format(info5, sizeof(info5), "%T", "ffa_info_line4", client);
-				DrawPanelText(FFAMenu, info5);
-				Format(info6, sizeof(info6), "%T", "ffa_info_line5", client);
-				DrawPanelText(FFAMenu, info6);
-				Format(info7, sizeof(info7), "%T", "ffa_info_line6", client);
-				DrawPanelText(FFAMenu, info7);
-				Format(info8, sizeof(info8), "%T", "ffa_info_line7", client);
-				DrawPanelText(FFAMenu, info8);
-				DrawPanelText(FFAMenu, "-----------------------------------");
-				SendPanelToClient(FFAMenu, client, NullHandler, 20);
-				
+				CreateInfoPanel(client);
 				SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
 				SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 			}
@@ -407,7 +365,33 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		else if (g_iCoolDown > 0) g_iCoolDown--;
 	}
 }
-
+stock void CreateInfoPanel(int client)
+{
+	//Create info Panel
+				char info[255];
+		
+				FFAMenu = CreatePanel();
+				Format(info, sizeof(info), "%T", "ffa_info_title", client);
+				SetPanelTitle(FFAMenu, info);
+				DrawPanelText(FFAMenu, "                                   ");
+				Format(info, sizeof(info), "%T", "ffa_info_line1", client);
+				DrawPanelText(FFAMenu, info);
+				DrawPanelText(FFAMenu, "-----------------------------------");
+				Format(info, sizeof(info), "%T", "ffa_info_line2", client);
+				DrawPanelText(FFAMenu, info);
+				Format(info, sizeof(info), "%T", "ffa_info_line3", client);
+				DrawPanelText(FFAMenu, info);
+				Format(info, sizeof(info), "%T", "ffa_info_line4", client);
+				DrawPanelText(FFAMenu, info);
+				Format(info, sizeof(info), "%T", "ffa_info_line5", client);
+				DrawPanelText(FFAMenu, info);
+				Format(info, sizeof(info), "%T", "ffa_info_line6", client);
+				DrawPanelText(FFAMenu, info);
+				Format(info, sizeof(info), "%T", "ffa_info_line7", client);
+				DrawPanelText(FFAMenu, info);
+				DrawPanelText(FFAMenu, "-----------------------------------");
+				SendPanelToClient(FFAMenu, client, NullHandler, 20);
+}
 //Round End
 
 public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
@@ -440,6 +424,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 	}
 	if (StartFFA)
 	{
+		LoopClients(i) CreateInfoPanel(i);
 		g_iOldRoundTime = g_iGetRoundTime.IntValue;
 		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;
 		
@@ -493,24 +478,9 @@ public Action StartTimer(Handle timer)
 		}
 	}
 	CPrintToChatAll("%t %t", "ffa_tag" , "ffa_start");
-	DoFog();
-	AcceptEntityInput(FogIndex, "TurnOff");
 	TruceTimer = null;
+	FogOff();
 	
 	return Plugin_Stop;
 }
 
-//Darken the Map
-
-public Action DoFog()
-{
-	if(FogIndex != -1)
-	{
-		DispatchKeyValue(FogIndex, "fogblend", "0");
-		DispatchKeyValue(FogIndex, "fogcolor", "0 0 0");
-		DispatchKeyValue(FogIndex, "fogcolor2", "0 0 0");
-		DispatchKeyValueFloat(FogIndex, "fogstart", mapFogStart);
-		DispatchKeyValueFloat(FogIndex, "fogend", mapFogEnd);
-		DispatchKeyValueFloat(FogIndex, "fogmaxdensity", mapFogDensity);
-	}
-}
