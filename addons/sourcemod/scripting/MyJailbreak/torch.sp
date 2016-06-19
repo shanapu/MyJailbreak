@@ -436,29 +436,29 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 stock void CreateInfoPanel(int client)
 {
 	//Create info Panel
-				char info[255];
-				
-				TorchMenu = CreatePanel();
-				Format(info, sizeof(info), "%T", "torch_info_title", client);
-				SetPanelTitle(TorchMenu, info);
-				DrawPanelText(TorchMenu, "                                   ");
-				Format(info, sizeof(info), "%T", "torch_info_line1", client);
-				DrawPanelText(TorchMenu, info);
-				DrawPanelText(TorchMenu, "-----------------------------------");
-				Format(info, sizeof(info), "%T", "torch_info_line2", client);
-				DrawPanelText(TorchMenu, info);
-				Format(info, sizeof(info), "%T", "torch_info_line3", client);
-				DrawPanelText(TorchMenu, info);
-				Format(info, sizeof(info), "%T", "torch_info_line4", client);
-				DrawPanelText(TorchMenu, info);
-				Format(info, sizeof(info), "%T", "torch_info_line5", client);
-				DrawPanelText(TorchMenu, info);
-				Format(info, sizeof(info), "%T", "torch_info_line6", client);
-				DrawPanelText(TorchMenu, info);
-				Format(info, sizeof(info), "%T", "torch_info_line7", client);
-				DrawPanelText(TorchMenu, info);
-				DrawPanelText(TorchMenu, "-----------------------------------");
-				SendPanelToClient(TorchMenu, client, NullHandler, 20);
+	char info[255];
+	
+	TorchMenu = CreatePanel();
+	Format(info, sizeof(info), "%T", "torch_info_title", client);
+	SetPanelTitle(TorchMenu, info);
+	DrawPanelText(TorchMenu, "                                   ");
+	Format(info, sizeof(info), "%T", "torch_info_line1", client);
+	DrawPanelText(TorchMenu, info);
+	DrawPanelText(TorchMenu, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "torch_info_line2", client);
+	DrawPanelText(TorchMenu, info);
+	Format(info, sizeof(info), "%T", "torch_info_line3", client);
+	DrawPanelText(TorchMenu, info);
+	Format(info, sizeof(info), "%T", "torch_info_line4", client);
+	DrawPanelText(TorchMenu, info);
+	Format(info, sizeof(info), "%T", "torch_info_line5", client);
+	DrawPanelText(TorchMenu, info);
+	Format(info, sizeof(info), "%T", "torch_info_line6", client);
+	DrawPanelText(TorchMenu, info);
+	Format(info, sizeof(info), "%T", "torch_info_line7", client);
+	DrawPanelText(TorchMenu, info);
+	DrawPanelText(TorchMenu, "-----------------------------------");
+	SendPanelToClient(TorchMenu, client, NullHandler, 20);
 }
 
 public Action StartTimer(Handle timer)

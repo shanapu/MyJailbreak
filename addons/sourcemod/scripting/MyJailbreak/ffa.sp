@@ -368,29 +368,29 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 stock void CreateInfoPanel(int client)
 {
 	//Create info Panel
-				char info[255];
-		
-				FFAMenu = CreatePanel();
-				Format(info, sizeof(info), "%T", "ffa_info_title", client);
-				SetPanelTitle(FFAMenu, info);
-				DrawPanelText(FFAMenu, "                                   ");
-				Format(info, sizeof(info), "%T", "ffa_info_line1", client);
-				DrawPanelText(FFAMenu, info);
-				DrawPanelText(FFAMenu, "-----------------------------------");
-				Format(info, sizeof(info), "%T", "ffa_info_line2", client);
-				DrawPanelText(FFAMenu, info);
-				Format(info, sizeof(info), "%T", "ffa_info_line3", client);
-				DrawPanelText(FFAMenu, info);
-				Format(info, sizeof(info), "%T", "ffa_info_line4", client);
-				DrawPanelText(FFAMenu, info);
-				Format(info, sizeof(info), "%T", "ffa_info_line5", client);
-				DrawPanelText(FFAMenu, info);
-				Format(info, sizeof(info), "%T", "ffa_info_line6", client);
-				DrawPanelText(FFAMenu, info);
-				Format(info, sizeof(info), "%T", "ffa_info_line7", client);
-				DrawPanelText(FFAMenu, info);
-				DrawPanelText(FFAMenu, "-----------------------------------");
-				SendPanelToClient(FFAMenu, client, NullHandler, 20);
+	char info[255];
+
+	FFAMenu = CreatePanel();
+	Format(info, sizeof(info), "%T", "ffa_info_title", client);
+	SetPanelTitle(FFAMenu, info);
+	DrawPanelText(FFAMenu, "                                   ");
+	Format(info, sizeof(info), "%T", "ffa_info_line1", client);
+	DrawPanelText(FFAMenu, info);
+	DrawPanelText(FFAMenu, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "ffa_info_line2", client);
+	DrawPanelText(FFAMenu, info);
+	Format(info, sizeof(info), "%T", "ffa_info_line3", client);
+	DrawPanelText(FFAMenu, info);
+	Format(info, sizeof(info), "%T", "ffa_info_line4", client);
+	DrawPanelText(FFAMenu, info);
+	Format(info, sizeof(info), "%T", "ffa_info_line5", client);
+	DrawPanelText(FFAMenu, info);
+	Format(info, sizeof(info), "%T", "ffa_info_line6", client);
+	DrawPanelText(FFAMenu, info);
+	Format(info, sizeof(info), "%T", "ffa_info_line7", client);
+	DrawPanelText(FFAMenu, info);
+	DrawPanelText(FFAMenu, "-----------------------------------");
+	SendPanelToClient(FFAMenu, client, NullHandler, 20);
 }
 //Round End
 

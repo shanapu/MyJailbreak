@@ -401,29 +401,29 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 stock void CreateInfoPanel(int client)
 {
 	//Create info Panel
-					char info[255];
-					
-					KnifeFightMenu = CreatePanel();
-					Format(info, sizeof(info), "%T", "knifefight_info_title", client);
-					SetPanelTitle(KnifeFightMenu, info);
-					DrawPanelText(KnifeFightMenu, "                                   ");
-					Format(info, sizeof(info), "%T", "knifefight_info_line1", client);
-					DrawPanelText(KnifeFightMenu, info);
-					DrawPanelText(KnifeFightMenu, "-----------------------------------");
-					Format(info, sizeof(info), "%T", "knifefight_info_line2", client);
-					DrawPanelText(KnifeFightMenu, info);
-					Format(info, sizeof(info), "%T", "knifefight_info_line3", client);
-					DrawPanelText(KnifeFightMenu, info);
-					Format(info, sizeof(info), "%T", "knifefight_info_line4", client);
-					DrawPanelText(KnifeFightMenu, info);
-					Format(info, sizeof(info), "%T", "knifefight_info_line5", client);
-					DrawPanelText(KnifeFightMenu, info);
-					Format(info, sizeof(info), "%T", "knifefight_info_line6", client);
-					DrawPanelText(KnifeFightMenu, info);
-					Format(info, sizeof(info), "%T", "knifefight_info_line7", client);
-					DrawPanelText(KnifeFightMenu, info);
-					DrawPanelText(KnifeFightMenu, "-----------------------------------");
-					SendPanelToClient(KnifeFightMenu, client, NullHandler, 20);
+	char info[255];
+	
+	KnifeFightMenu = CreatePanel();
+	Format(info, sizeof(info), "%T", "knifefight_info_title", client);
+	SetPanelTitle(KnifeFightMenu, info);
+	DrawPanelText(KnifeFightMenu, "                                   ");
+	Format(info, sizeof(info), "%T", "knifefight_info_line1", client);
+	DrawPanelText(KnifeFightMenu, info);
+	DrawPanelText(KnifeFightMenu, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "knifefight_info_line2", client);
+	DrawPanelText(KnifeFightMenu, info);
+	Format(info, sizeof(info), "%T", "knifefight_info_line3", client);
+	DrawPanelText(KnifeFightMenu, info);
+	Format(info, sizeof(info), "%T", "knifefight_info_line4", client);
+	DrawPanelText(KnifeFightMenu, info);
+	Format(info, sizeof(info), "%T", "knifefight_info_line5", client);
+	DrawPanelText(KnifeFightMenu, info);
+	Format(info, sizeof(info), "%T", "knifefight_info_line6", client);
+	DrawPanelText(KnifeFightMenu, info);
+	Format(info, sizeof(info), "%T", "knifefight_info_line7", client);
+	DrawPanelText(KnifeFightMenu, info);
+	DrawPanelText(KnifeFightMenu, "-----------------------------------");
+	SendPanelToClient(KnifeFightMenu, client, NullHandler, 20);
 }
 
 //Round End

@@ -382,29 +382,29 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 stock void CreateInfoPanel(int client)
 {
 	//Create info Panel
-					char info[255];
-		
-					DuckHuntMenu = CreatePanel();
-					Format(info, sizeof(info), "%T", "duckhunt_info_title", client);
-					SetPanelTitle(DuckHuntMenu, info);
-					DrawPanelText(DuckHuntMenu, "                                   ");
-					Format(info, sizeof(info), "%T", "duckhunt_info_line1", client);
-					DrawPanelText(DuckHuntMenu, info);
-					DrawPanelText(DuckHuntMenu, "-----------------------------------");
-					Format(info, sizeof(info), "%T", "duckhunt_info_line2", client);
-					DrawPanelText(DuckHuntMenu, info);
-					Format(info, sizeof(info), "%T", "duckhunt_info_line3", client);
-					DrawPanelText(DuckHuntMenu, info);
-					Format(info, sizeof(info), "%T", "duckhunt_info_line4", client);
-					DrawPanelText(DuckHuntMenu, info);
-					Format(info, sizeof(info), "%T", "duckhunt_info_line5", client);
-					DrawPanelText(DuckHuntMenu, info);
-					Format(info, sizeof(info), "%T", "duckhunt_info_line6", client);
-					DrawPanelText(DuckHuntMenu, info);
-					Format(info, sizeof(info), "%T", "duckhunt_info_line7", client);
-					DrawPanelText(DuckHuntMenu, info);
-					DrawPanelText(DuckHuntMenu, "-----------------------------------");
-					SendPanelToClient(DuckHuntMenu, client, NullHandler, 20);
+	char info[255];
+
+	DuckHuntMenu = CreatePanel();
+	Format(info, sizeof(info), "%T", "duckhunt_info_title", client);
+	SetPanelTitle(DuckHuntMenu, info);
+	DrawPanelText(DuckHuntMenu, "                                   ");
+	Format(info, sizeof(info), "%T", "duckhunt_info_line1", client);
+	DrawPanelText(DuckHuntMenu, info);
+	DrawPanelText(DuckHuntMenu, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "duckhunt_info_line2", client);
+	DrawPanelText(DuckHuntMenu, info);
+	Format(info, sizeof(info), "%T", "duckhunt_info_line3", client);
+	DrawPanelText(DuckHuntMenu, info);
+	Format(info, sizeof(info), "%T", "duckhunt_info_line4", client);
+	DrawPanelText(DuckHuntMenu, info);
+	Format(info, sizeof(info), "%T", "duckhunt_info_line5", client);
+	DrawPanelText(DuckHuntMenu, info);
+	Format(info, sizeof(info), "%T", "duckhunt_info_line6", client);
+	DrawPanelText(DuckHuntMenu, info);
+	Format(info, sizeof(info), "%T", "duckhunt_info_line7", client);
+	DrawPanelText(DuckHuntMenu, info);
+	DrawPanelText(DuckHuntMenu, "-----------------------------------");
+	SendPanelToClient(DuckHuntMenu, client, NullHandler, 20);
 }
 
 //Round End

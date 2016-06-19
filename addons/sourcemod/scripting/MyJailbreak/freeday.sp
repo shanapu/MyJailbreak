@@ -314,29 +314,29 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 stock void CreateInfoPanel(int client)
 {
 	//Create info Panel
-			char info[255];
-		
-			FreedayMenu = CreatePanel();
-			Format(info, sizeof(info), "%T", "freeday_info_title", client);
-			SetPanelTitle(FreedayMenu, info);
-			DrawPanelText(FreedayMenu, "                                   ");
-			Format(info, sizeof(info), "%T", "freeday_info_line1", client);
-			DrawPanelText(FreedayMenu, info);
-			DrawPanelText(FreedayMenu, "-----------------------------------");
-			Format(info, sizeof(info), "%T", "freeday_info_line2", client);
-			DrawPanelText(FreedayMenu, info);
-			Format(info, sizeof(info), "%T", "freeday_info_line3", client);
-			DrawPanelText(FreedayMenu, info);
-			Format(info, sizeof(info), "%T", "freeday_info_line4", client);
-			DrawPanelText(FreedayMenu, info);
-			Format(info, sizeof(info), "%T", "freeday_info_line5", client);
-			DrawPanelText(FreedayMenu, info);
-			Format(info, sizeof(info), "%T", "freeday_info_line6", client);
-			DrawPanelText(FreedayMenu, info);
-			Format(info, sizeof(info), "%T", "freeday_info_line7", client);
-			DrawPanelText(FreedayMenu, info);
-			DrawPanelText(FreedayMenu, "-----------------------------------");
-			SendPanelToClient(FreedayMenu, client, NullHandler, 20);
+	char info[255];
+
+	FreedayMenu = CreatePanel();
+	Format(info, sizeof(info), "%T", "freeday_info_title", client);
+	SetPanelTitle(FreedayMenu, info);
+	DrawPanelText(FreedayMenu, "                                   ");
+	Format(info, sizeof(info), "%T", "freeday_info_line1", client);
+	DrawPanelText(FreedayMenu, info);
+	DrawPanelText(FreedayMenu, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "freeday_info_line2", client);
+	DrawPanelText(FreedayMenu, info);
+	Format(info, sizeof(info), "%T", "freeday_info_line3", client);
+	DrawPanelText(FreedayMenu, info);
+	Format(info, sizeof(info), "%T", "freeday_info_line4", client);
+	DrawPanelText(FreedayMenu, info);
+	Format(info, sizeof(info), "%T", "freeday_info_line5", client);
+	DrawPanelText(FreedayMenu, info);
+	Format(info, sizeof(info), "%T", "freeday_info_line6", client);
+	DrawPanelText(FreedayMenu, info);
+	Format(info, sizeof(info), "%T", "freeday_info_line7", client);
+	DrawPanelText(FreedayMenu, info);
+	DrawPanelText(FreedayMenu, "-----------------------------------");
+	SendPanelToClient(FreedayMenu, client, NullHandler, 20);
 }
 //Round End
 

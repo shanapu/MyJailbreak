@@ -5,6 +5,7 @@
 #include <scp>
 #include <myjailbreak>
 #include <autoexecconfig>
+#include <colors>
 
 //Compiler Options
 #pragma semicolon 1
@@ -47,10 +48,10 @@ public void OnPluginStart()
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_playertag_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true,  0.0, true, 1.0);
 	gc_bStats = AutoExecConfig_CreateConVar("sm_playertag_stats", "1", "0 - disabled, 1 - enable PlayerTag in stats", _, true,  0.0, true, 1.0);
 	gc_bChat = AutoExecConfig_CreateConVar("sm_playertag_chat", "1", "0 - disabled, 1 - enable PlayerTag in chat", _, true,  0.0, true, 1.0);
-	gc_sOwnerFlag = AutoExecConfig_CreateConVar("sm_playertag_owner", "z", "Set the flag for Owner");
-	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_playertag_admin", "d", "Set the flag for admin");
-	gc_sVIPFlag = AutoExecConfig_CreateConVar("sm_playertag_VIP", "t", "Set the flag for VIP");
-	gc_sVIP2Flag = AutoExecConfig_CreateConVar("sm_playertag_VIP2", "a", "Set the flag for VIP2");
+	gc_sOwnerFlag = AutoExecConfig_CreateConVar("sm_playertag_ownerflag", "z", "Set the flag for Owner");
+	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_playertag_adminflag", "d", "Set the flag for admin");
+	gc_sVIPFlag = AutoExecConfig_CreateConVar("sm_playertag_vipflag", "t", "Set the flag for VIP");
+	gc_sVIP2Flag = AutoExecConfig_CreateConVar("sm_playertag_vip2flag", "a", "Set the flag for VIP2");
 	gc_bNoOverwrite = AutoExecConfig_CreateConVar("sm_playertag_overwrite", "1", "0 - only show tags for warden, admin,vip (no overwrite for prisionor & guards) 1 - enable tags for Prisioner & guards,too", _, true,  0.0, true, 1.0);
 	
 	

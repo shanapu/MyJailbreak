@@ -45,7 +45,7 @@
 	"request_knifeback"
 	{
 		"ru"		"Вы получили {purple}нож обратно."
-		"pl"		"Masz  {purple}swoj noz z powrotem."
+		"pl"		"Masz {purple}swoj noz z powrotem."
 		"de"		"Du hast {purple}dein Messer zurück erhalten."
 		"en"		"You got {purple}your knife back."
 	}
@@ -398,7 +398,7 @@
 		"en"		"Respawn on body"
 		"de"		"An Leiche wiederbeleben"
 	}
-	
+
 	"request_freekilltimes"
 	{
 		"#format"	"{1:i}"

@@ -408,29 +408,29 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 stock void CreateInfoPanel(int client)
 {
 	//Create info Panel
-		char info[255];
-		
-					ZombieMenu = CreatePanel();
-					Format(info, sizeof(info), "%T", "zombie_info_title", client);
-					SetPanelTitle(ZombieMenu, info);
-					DrawPanelText(ZombieMenu, "                                   ");
-					Format(info, sizeof(info), "%T", "zombie_info_line1", client);
-					DrawPanelText(ZombieMenu, info);
-					DrawPanelText(ZombieMenu, "-----------------------------------");
-					Format(info, sizeof(info), "%T", "zombie_info_line2", client);
-					DrawPanelText(ZombieMenu, info);
-					Format(info, sizeof(info), "%T", "zombie_info_line3", client);
-					DrawPanelText(ZombieMenu, info);
-					Format(info, sizeof(info), "%T", "zombie_info_line4", client);
-					DrawPanelText(ZombieMenu, info);
-					Format(info, sizeof(info), "%T", "zombie_info_line5", client);
-					DrawPanelText(ZombieMenu, info);
-					Format(info, sizeof(info), "%T", "zombie_info_line6", client);
-					DrawPanelText(ZombieMenu, info);
-					Format(info, sizeof(info), "%T", "zombie_info_line7", client);
-					DrawPanelText(ZombieMenu, info);
-					DrawPanelText(ZombieMenu, "-----------------------------------");
-					SendPanelToClient(ZombieMenu, client, NullHandler, 20);
+	char info[255];
+	
+	ZombieMenu = CreatePanel();
+	Format(info, sizeof(info), "%T", "zombie_info_title", client);
+	SetPanelTitle(ZombieMenu, info);
+	DrawPanelText(ZombieMenu, "                                   ");
+	Format(info, sizeof(info), "%T", "zombie_info_line1", client);
+	DrawPanelText(ZombieMenu, info);
+	DrawPanelText(ZombieMenu, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "zombie_info_line2", client);
+	DrawPanelText(ZombieMenu, info);
+	Format(info, sizeof(info), "%T", "zombie_info_line3", client);
+	DrawPanelText(ZombieMenu, info);
+	Format(info, sizeof(info), "%T", "zombie_info_line4", client);
+	DrawPanelText(ZombieMenu, info);
+	Format(info, sizeof(info), "%T", "zombie_info_line5", client);
+	DrawPanelText(ZombieMenu, info);
+	Format(info, sizeof(info), "%T", "zombie_info_line6", client);
+	DrawPanelText(ZombieMenu, info);
+	Format(info, sizeof(info), "%T", "zombie_info_line7", client);
+	DrawPanelText(ZombieMenu, info);
+	DrawPanelText(ZombieMenu, "-----------------------------------");
+	SendPanelToClient(ZombieMenu, client, NullHandler, 20);
 }
 //Round End
 

@@ -395,29 +395,29 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 stock void CreateInfoPanel(int client)
 {
 	//Create info Panel
-				char info[255];
-		
-				WarMenu = CreatePanel();
-				Format(info, sizeof(info), "%T", "war_info_title", client);
-				SetPanelTitle(WarMenu, info);
-				DrawPanelText(WarMenu, "                                   ");
-				Format(info, sizeof(info), "%T", "war_info_line1", client);
-				DrawPanelText(WarMenu, info);
-				DrawPanelText(WarMenu, "-----------------------------------");
-				Format(info, sizeof(info), "%T", "war_info_line2", client);
-				DrawPanelText(WarMenu, info);
-				Format(info, sizeof(info), "%T", "war_info_line3", client);
-				DrawPanelText(WarMenu, info);
-				Format(info, sizeof(info), "%T", "war_info_line4", client);
-				DrawPanelText(WarMenu, info);
-				Format(info, sizeof(info), "%T", "war_info_line5", client);
-				DrawPanelText(WarMenu, info);
-				Format(info, sizeof(info), "%T", "war_info_line6", client);
-				DrawPanelText(WarMenu, info);
-				Format(info, sizeof(info), "%T", "war_info_line7", client);
-				DrawPanelText(WarMenu, info);
-				DrawPanelText(WarMenu, "-----------------------------------");
-				SendPanelToClient(WarMenu, client, NullHandler, 20);
+	char info[255];
+
+	WarMenu = CreatePanel();
+	Format(info, sizeof(info), "%T", "war_info_title", client);
+	SetPanelTitle(WarMenu, info);
+	DrawPanelText(WarMenu, "                                   ");
+	Format(info, sizeof(info), "%T", "war_info_line1", client);
+	DrawPanelText(WarMenu, info);
+	DrawPanelText(WarMenu, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "war_info_line2", client);
+	DrawPanelText(WarMenu, info);
+	Format(info, sizeof(info), "%T", "war_info_line3", client);
+	DrawPanelText(WarMenu, info);
+	Format(info, sizeof(info), "%T", "war_info_line4", client);
+	DrawPanelText(WarMenu, info);
+	Format(info, sizeof(info), "%T", "war_info_line5", client);
+	DrawPanelText(WarMenu, info);
+	Format(info, sizeof(info), "%T", "war_info_line6", client);
+	DrawPanelText(WarMenu, info);
+	Format(info, sizeof(info), "%T", "war_info_line7", client);
+	DrawPanelText(WarMenu, info);
+	DrawPanelText(WarMenu, "-----------------------------------");
+	SendPanelToClient(WarMenu, client, NullHandler, 20);
 }
 //Round End
 

@@ -387,29 +387,29 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 stock void CreateInfoPanel(int client)
 {
 	//Create info Panel
-					char info[255];
-		
-					CowBoyMenu = CreatePanel();
-					Format(info, sizeof(info), "%T", "cowboy_info_title", client);
-					SetPanelTitle(CowBoyMenu, info);
-					DrawPanelText(CowBoyMenu, "                                   ");
-					Format(info, sizeof(info), "%T", "cowboy_info_line1", client);
-					DrawPanelText(CowBoyMenu, info);
-					DrawPanelText(CowBoyMenu, "-----------------------------------");
-					Format(info, sizeof(info), "%T", "cowboy_info_line2", client);
-					DrawPanelText(CowBoyMenu, info);
-					Format(info, sizeof(info), "%T", "cowboy_info_line3", client);
-					DrawPanelText(CowBoyMenu, info);
-					Format(info, sizeof(info), "%T", "cowboy_info_line4", client);
-					DrawPanelText(CowBoyMenu, info);
-					Format(info, sizeof(info), "%T", "cowboy_info_line5", client);
-					DrawPanelText(CowBoyMenu, info);
-					Format(info, sizeof(info), "%T", "cowboy_info_line6", client);
-					DrawPanelText(CowBoyMenu, info);
-					Format(info, sizeof(info), "%T", "cowboy_info_line7", client);
-					DrawPanelText(CowBoyMenu, info);
-					DrawPanelText(CowBoyMenu, "-----------------------------------");
-					SendPanelToClient(CowBoyMenu, client, NullHandler, 20);
+	char info[255];
+
+	CowBoyMenu = CreatePanel();
+	Format(info, sizeof(info), "%T", "cowboy_info_title", client);
+	SetPanelTitle(CowBoyMenu, info);
+	DrawPanelText(CowBoyMenu, "                                   ");
+	Format(info, sizeof(info), "%T", "cowboy_info_line1", client);
+	DrawPanelText(CowBoyMenu, info);
+	DrawPanelText(CowBoyMenu, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "cowboy_info_line2", client);
+	DrawPanelText(CowBoyMenu, info);
+	Format(info, sizeof(info), "%T", "cowboy_info_line3", client);
+	DrawPanelText(CowBoyMenu, info);
+	Format(info, sizeof(info), "%T", "cowboy_info_line4", client);
+	DrawPanelText(CowBoyMenu, info);
+	Format(info, sizeof(info), "%T", "cowboy_info_line5", client);
+	DrawPanelText(CowBoyMenu, info);
+	Format(info, sizeof(info), "%T", "cowboy_info_line6", client);
+	DrawPanelText(CowBoyMenu, info);
+	Format(info, sizeof(info), "%T", "cowboy_info_line7", client);
+	DrawPanelText(CowBoyMenu, info);
+	DrawPanelText(CowBoyMenu, "-----------------------------------");
+	SendPanelToClient(CowBoyMenu, client, NullHandler, 20);
 }
 
 //Start Timer

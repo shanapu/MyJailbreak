@@ -374,30 +374,30 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 stock void CreateInfoPanel(int client)
 {
 	//Create info Panel
-					char info[255];
-		
-					CatchMenu = CreatePanel();
-					Format(info, sizeof(info), "%T", "catch_info_title", client);
-					SetPanelTitle(CatchMenu, info);
-					DrawPanelText(CatchMenu, "                                   ");
-					Format(info, sizeof(info), "%T", "catch_info_line1", client);
-					DrawPanelText(CatchMenu, info);
-					DrawPanelText(CatchMenu, "-----------------------------------");
-					Format(info, sizeof(info), "%T", "catch_info_line2", client);
-					DrawPanelText(CatchMenu, info);
-					Format(info, sizeof(info), "%T", "catch_info_line3", client);
-					DrawPanelText(CatchMenu, info);
-					Format(info, sizeof(info), "%T", "catch_info_line4", client);
-					DrawPanelText(CatchMenu, info);
-					Format(info, sizeof(info), "%T", "catch_info_line5", client);
-					DrawPanelText(CatchMenu, info);
-					Format(info, sizeof(info), "%T", "catch_info_line6", client);
-					DrawPanelText(CatchMenu, info);
-					Format(info, sizeof(info), "%T", "catch_info_line7", client);
-					DrawPanelText(CatchMenu, info);
-					DrawPanelText(CatchMenu, "-----------------------------------");
-					SendPanelToClient(CatchMenu, client, NullHandler, 20);
-					
+	char info[255];
+
+	CatchMenu = CreatePanel();
+	Format(info, sizeof(info), "%T", "catch_info_title", client);
+	SetPanelTitle(CatchMenu, info);
+	DrawPanelText(CatchMenu, "                                   ");
+	Format(info, sizeof(info), "%T", "catch_info_line1", client);
+	DrawPanelText(CatchMenu, info);
+	DrawPanelText(CatchMenu, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "catch_info_line2", client);
+	DrawPanelText(CatchMenu, info);
+	Format(info, sizeof(info), "%T", "catch_info_line3", client);
+	DrawPanelText(CatchMenu, info);
+	Format(info, sizeof(info), "%T", "catch_info_line4", client);
+	DrawPanelText(CatchMenu, info);
+	Format(info, sizeof(info), "%T", "catch_info_line5", client);
+	DrawPanelText(CatchMenu, info);
+	Format(info, sizeof(info), "%T", "catch_info_line6", client);
+	DrawPanelText(CatchMenu, info);
+	Format(info, sizeof(info), "%T", "catch_info_line7", client);
+	DrawPanelText(CatchMenu, info);
+	DrawPanelText(CatchMenu, "-----------------------------------");
+	SendPanelToClient(CatchMenu, client, NullHandler, 20);
+	
 }
 //Round End
 

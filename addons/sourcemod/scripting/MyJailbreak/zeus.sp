@@ -374,30 +374,30 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 stock void CreateInfoPanel(int client)
 {
 	//Create info Panel
-					char info[255];
-		
-					ZeusMenu = CreatePanel();
-					Format(info, sizeof(info), "%T", "zeus_info_title", client);
-					SetPanelTitle(ZeusMenu, info);
-					DrawPanelText(ZeusMenu, "                                   ");
-					Format(info, sizeof(info), "%T", "zeus_info_line1", client);
-					DrawPanelText(ZeusMenu, info);
-					DrawPanelText(ZeusMenu, "-----------------------------------");
-					Format(info, sizeof(info), "%T", "zeus_info_line2", client);
-					DrawPanelText(ZeusMenu, info);
-					Format(info, sizeof(info), "%T", "zeus_info_line3", client);
-					DrawPanelText(ZeusMenu, info);
-					Format(info, sizeof(info), "%T", "zeus_info_line4", client);
-					DrawPanelText(ZeusMenu, info);
-					Format(info, sizeof(info), "%T", "zeus_info_line5", client);
-					DrawPanelText(ZeusMenu, info);
-					Format(info, sizeof(info), "%T", "zeus_info_line6", client);
-					DrawPanelText(ZeusMenu, info);
-					Format(info, sizeof(info), "%T", "zeus_info_line7", client);
-					DrawPanelText(ZeusMenu, info);
-					DrawPanelText(ZeusMenu, "-----------------------------------");
-					SendPanelToClient(ZeusMenu, client, NullHandler, 20);
-					
+	char info[255];
+
+	ZeusMenu = CreatePanel();
+	Format(info, sizeof(info), "%T", "zeus_info_title", client);
+	SetPanelTitle(ZeusMenu, info);
+	DrawPanelText(ZeusMenu, "                                   ");
+	Format(info, sizeof(info), "%T", "zeus_info_line1", client);
+	DrawPanelText(ZeusMenu, info);
+	DrawPanelText(ZeusMenu, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "zeus_info_line2", client);
+	DrawPanelText(ZeusMenu, info);
+	Format(info, sizeof(info), "%T", "zeus_info_line3", client);
+	DrawPanelText(ZeusMenu, info);
+	Format(info, sizeof(info), "%T", "zeus_info_line4", client);
+	DrawPanelText(ZeusMenu, info);
+	Format(info, sizeof(info), "%T", "zeus_info_line5", client);
+	DrawPanelText(ZeusMenu, info);
+	Format(info, sizeof(info), "%T", "zeus_info_line6", client);
+	DrawPanelText(ZeusMenu, info);
+	Format(info, sizeof(info), "%T", "zeus_info_line7", client);
+	DrawPanelText(ZeusMenu, info);
+	DrawPanelText(ZeusMenu, "-----------------------------------");
+	SendPanelToClient(ZeusMenu, client, NullHandler, 20);
+	
 }
 //Start Timer
 

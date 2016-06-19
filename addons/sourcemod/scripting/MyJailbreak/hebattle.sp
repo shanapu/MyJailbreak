@@ -380,31 +380,30 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 
 stock void CreateInfoPanel(int client)
 {
-			//Create info Panel
-					char info[255];
-		
-					HEbattleMenu = CreatePanel();
-					Format(info, sizeof(info), "%T", "hebattle_info_title", client);
-					SetPanelTitle(HEbattleMenu, info);
-					DrawPanelText(HEbattleMenu, "                                   ");
-					Format(info, sizeof(info), "%T", "hebattle_info_line1", client);
-					DrawPanelText(HEbattleMenu, info);
-					DrawPanelText(HEbattleMenu, "-----------------------------------");
-					Format(info, sizeof(info), "%T", "hebattle_info_line2", client);
-					DrawPanelText(HEbattleMenu, info);
-					Format(info, sizeof(info), "%T", "hebattle_info_line3", client);
-					DrawPanelText(HEbattleMenu, info);
-					Format(info, sizeof(info), "%T", "hebattle_info_line4", client);
-					DrawPanelText(HEbattleMenu, info);
-					Format(info, sizeof(info), "%T", "hebattle_info_line5", client);
-					DrawPanelText(HEbattleMenu, info);
-					Format(info, sizeof(info), "%T", "hebattle_info_line6", client);
-					DrawPanelText(HEbattleMenu, info);
-					Format(info, sizeof(info), "%T", "hebattle_info_line7", client);
-					DrawPanelText(HEbattleMenu, info);
-					DrawPanelText(HEbattleMenu, "-----------------------------------");
-					SendPanelToClient(HEbattleMenu, client, NullHandler, 20);
-					
+	//Create info Panel
+	char info[255];
+
+	HEbattleMenu = CreatePanel();
+	Format(info, sizeof(info), "%T", "hebattle_info_title", client);
+	SetPanelTitle(HEbattleMenu, info);
+	DrawPanelText(HEbattleMenu, "                                   ");
+	Format(info, sizeof(info), "%T", "hebattle_info_line1", client);
+	DrawPanelText(HEbattleMenu, info);
+	DrawPanelText(HEbattleMenu, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "hebattle_info_line2", client);
+	DrawPanelText(HEbattleMenu, info);
+	Format(info, sizeof(info), "%T", "hebattle_info_line3", client);
+	DrawPanelText(HEbattleMenu, info);
+	Format(info, sizeof(info), "%T", "hebattle_info_line4", client);
+	DrawPanelText(HEbattleMenu, info);
+	Format(info, sizeof(info), "%T", "hebattle_info_line5", client);
+	DrawPanelText(HEbattleMenu, info);
+	Format(info, sizeof(info), "%T", "hebattle_info_line6", client);
+	DrawPanelText(HEbattleMenu, info);
+	Format(info, sizeof(info), "%T", "hebattle_info_line7", client);
+	DrawPanelText(HEbattleMenu, info);
+	DrawPanelText(HEbattleMenu, "-----------------------------------");
+	SendPanelToClient(HEbattleMenu, client, NullHandler, 20);
 }
 //Round End
 
