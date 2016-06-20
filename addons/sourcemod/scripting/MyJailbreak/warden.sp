@@ -92,10 +92,20 @@ ConVar gc_bWardenColorRandom;
 ConVar gc_bBackstab;
 ConVar gc_iBackstabNumber;
 
+ConVar gc_sVIPflagMute;
 ConVar gc_sVIPflagBackstab;
 ConVar gc_sVIPflagBulletSparks;
 ConVar gc_sVIPflagLaser;
 ConVar gc_sVIPflagDrawer;
+ConVar gc_sVIPflagCuffs;
+
+ConVar gc_fUnLockTimeMax;
+ConVar gc_fUnLockTimeMin;
+ConVar gc_iPaperClipUnLockChance;
+ConVar gc_iPaperClipGetChance;
+
+ConVar gc_sSoundBreakCuffsPath;
+ConVar gc_sSoundUnLockCuffsPath;
 
 //Bools
 bool IsCountDown = false;
@@ -206,6 +216,10 @@ char g_sVIPflagBackstab[32];
 char g_sVIPflagBulletSparks[32];
 char g_sVIPflagLaser[32];
 char g_sVIPflagDrawer[32];
+char g_sVIPflagMute[32];
+char g_sVIPflagCuffs[32];
+char g_sSoundBreakCuffsPath[256];
+char g_sSoundUnLockCuffsPath[256];
 
 //float
 float g_fMarkerRadiusMin = 100.0;
@@ -300,6 +314,7 @@ public void OnPluginStart()
 	gc_bBetterNotes = AutoExecConfig_CreateConVar("sm_warden_better_notifications", "1", "0 - disabled, 1 - Will use hint and center text", _, true, 0.0, true, 1.0);
 	gc_bMute = AutoExecConfig_CreateConVar("sm_warden_mute", "1", "0 - disabled, 1 - Allow the warden to mute T-side player", _, true, 0.0, true, 1.0);
 	gc_bMuteEnd = AutoExecConfig_CreateConVar("sm_warden_mute_round", "1", "0 - disabled, 1 - Allow the warden to mute a player until roundend", _, true, 0.0, true, 1.0);
+	gc_sVIPflagMute = AutoExecConfig_CreateConVar("sm_warden_muteimmuntiy", "a", "Set flag for VIP/Admin Mute immunity. No flag immunity for all. so don't leave blank!");
 	gc_bNoBlock = AutoExecConfig_CreateConVar("sm_warden_noblock", "1", "0 - disabled, 1 - enable noblock toggle for warden", _, true,  0.0, true, 1.0);
 	gc_bNoBlockMode = AutoExecConfig_CreateConVar("sm_warden_noblock_mode", "1", "0 - collision only between CT & T, 1 - collision within a team.", _, true,  0.0, true, 1.0);
 	gc_bFF = AutoExecConfig_CreateConVar("sm_warden_ff", "1", "0 - disabled, 1 - enable switch ff for T ", _, true,  0.0, true, 1.0);
@@ -314,11 +329,17 @@ public void OnPluginStart()
 	gc_iGunSlapDamage = AutoExecConfig_CreateConVar("sm_warden_gunslap_dmg", "10", "Amoung of HP losing on slap for dropping a gun", _, true,  0.0);
 	gc_bBackstab = AutoExecConfig_CreateConVar("sm_warden_backstab", "1", "0 - disabled, 1 - enable backstab protection for warden", _, true,  0.0, true, 1.0);
 	gc_iBackstabNumber = AutoExecConfig_CreateConVar("sm_warden_backstab_number", "1", "How many time a warden get protected? 0 - alltime", _, true,  1.0);
-	gc_sVIPflagBackstab = AutoExecConfig_CreateConVar("sm_warden_backstab_vip", "", "Set flag for VIP to get warden backstab protection. No flag available for all.");
+	gc_sVIPflagBackstab = AutoExecConfig_CreateConVar("sm_warden_backstab_vip", "", "Set flag for VIP to get warden backstab protection. No flag feature is available for all players!");
 	gc_bHandCuff = AutoExecConfig_CreateConVar("sm_warden_handcuffs", "1", "0 - disabled, 1 - enable handcuffs", _, true,  0.0, true, 1.0);
 	gc_iHandCuffsNumber = AutoExecConfig_CreateConVar("sm_warden_handcuffs_number", "2", "How many handcuffs a warden got?", _, true,  1.0);
 	gc_bHandCuffLR = AutoExecConfig_CreateConVar("sm_warden_handcuffs_lr", "1", "0 - disabled, 1 - free cuffed terrorists on LR", _, true,  0.0, true, 1.0);
 	gc_bHandCuffCT = AutoExecConfig_CreateConVar("sm_warden_handcuffs_ct", "1", "0 - disabled, 1 - Warden can also handcuff CTs", _, true,  0.0, true, 1.0);
+	gc_fUnLockTimeMax = AutoExecConfig_CreateConVar("sm_warden_handcuffs_unlock_maxtime", "35.0", "Time in seconds Ts need free themself with a paperclip.", _, true, 0.1);
+	gc_iPaperClipGetChance = AutoExecConfig_CreateConVar("sm_warden_handcuffs_paperclip_chance", "5", "Set the chance (1:x) a cuffed Terroris get a paperclip to free themself", _, true,  1.0);
+	gc_iPaperClipUnLockChance = AutoExecConfig_CreateConVar("sm_warden_handcuffs_unlock_chance", "3", "Set the chance (1:x) a cuffed Terroris who has a paperclip to free themself", _, true,  1.0);
+	gc_fUnLockTimeMin = AutoExecConfig_CreateConVar("sm_warden_handcuffs_unlock_mintime", "15.0", "Min. Time in seconds Ts need free themself with a paperclip.", _, true,  1.0);
+	gc_fUnLockTimeMax = AutoExecConfig_CreateConVar("sm_warden_handcuffs_unlock_maxtime", "35.0", "Max. Time in seconds Ts need free themself with a paperclip.", _, true,  1.0);
+	gc_sVIPflagCuffs = AutoExecConfig_CreateConVar("sm_warden_handcuffs_vip", "", "Set flag for VIP must have to get access to paperclip. No flag = feature is available for all players!");
 	gc_sOverlayCuffsPath = AutoExecConfig_CreateConVar("sm_warden_overlays_cuffs", "overlays/MyJailbreak/cuffs" , "Path to the cuffs Overlay DONT TYPE .vmt or .vft");
 	gc_bRandom = AutoExecConfig_CreateConVar("sm_warden_random", "1", "0 - disabled, 1 - enable kill a random t for warden", _, true,  0.0, true, 1.0);
 	gc_iRandomMode = AutoExecConfig_CreateConVar("sm_warden_random_mode", "2", "1 - all random / 2 - Thunder / 3 - Timebomb / 4 - Firebomb / 5 - NoKill(1,3,4 needs funcommands.smx enabled)", _, true,  1.0, true, 4.0);
@@ -332,11 +353,11 @@ public void OnPluginStart()
 	gc_bOpenTimerWarden = AutoExecConfig_CreateConVar("sm_warden_open_time_warden", "1", "should doors open automatic after sm_warden_open_time when there is a warden? needs sm_warden_open_time_enable 1", _, true,  0.0, true, 1.0);
 	gc_bMarker = AutoExecConfig_CreateConVar("sm_warden_marker", "1", "0 - disabled, 1 - enable Warden advanced markers ", _, true,  0.0, true, 1.0);
 	gc_bBulletSparks = AutoExecConfig_CreateConVar("sm_warden_bulletsparks", "1", "0 - disabled, 1 - enable Warden bulletimpact sparks", _, true,  0.0, true, 1.0);
-	gc_sVIPflagBulletSparks = AutoExecConfig_CreateConVar("sm_warden_bulletsparks_vip", "", "Set flag for VIP to get warden bulletimpact sparks. No flag available for all.");
+	gc_sVIPflagBulletSparks = AutoExecConfig_CreateConVar("sm_warden_bulletsparks_vip", "", "Set flag for VIP to get warden bulletimpact sparks. No flag feature is available for all players!");
 	gc_bLaser = AutoExecConfig_CreateConVar("sm_warden_laser", "1", "0 - disabled, 1 - enable Warden Laser Pointer with +E ", _, true,  0.0, true, 1.0);
-	gc_sVIPflagLaser = AutoExecConfig_CreateConVar("sm_warden_laser_vip", "", "Set flag for VIP to get warden laser pointer. No flag available for all.");
+	gc_sVIPflagLaser = AutoExecConfig_CreateConVar("sm_warden_laser_vip", "", "Set flag for VIP to get warden laser pointer. No flag feature is available for all players!");
 	gc_bDrawer = AutoExecConfig_CreateConVar("sm_warden_drawer", "1", "0 - disabled, 1 - enable Warden Drawer with +E ", _, true,  0.0, true, 1.0);
-	gc_sVIPflagDrawer = AutoExecConfig_CreateConVar("sm_warden_drawer_vip", "", "Set flag for VIP to get warden bulletimpact sparks. No flag available for all.");
+	gc_sVIPflagDrawer = AutoExecConfig_CreateConVar("sm_warden_drawer_vip", "", "Set flag for VIP to get warden bulletimpact sparks. No flag feature is available for all players!");
 	gc_bDrawerT= AutoExecConfig_CreateConVar("sm_warden_drawer_terror", "1", "0 - disabled, 1 - allow Warden to toggle Drawer for Terrorist ", _, true,  0.0, true, 1.0);
 	gc_bMath = AutoExecConfig_CreateConVar("sm_warden_math", "1", "0 - disabled, 1 - enable mathquiz for warden", _, true,  0.0, true, 1.0);
 	gc_iMinimumNumber = AutoExecConfig_CreateConVar("sm_warden_math_min", "1", "What should be the minimum number for questions?", _, true,  1.0);
@@ -358,6 +379,8 @@ public void OnPluginStart()
 	gc_sSoundStartPath = AutoExecConfig_CreateConVar("sm_warden_sounds_start", "music/MyJailbreak/start.mp3", "Path to the soundfile which should be played for a start countdown.");
 	gc_sSoundStopPath = AutoExecConfig_CreateConVar("sm_warden_sounds_stop", "music/MyJailbreak/stop.mp3", "Path to the soundfile which should be played for stop countdown.");
 	gc_sSoundCuffsPath = AutoExecConfig_CreateConVar("sm_warden_sounds_cuffs", "music/MyJailbreak/cuffs.mp3", "Path to the soundfile which should be played for cuffed player.");
+	gc_sSoundBreakCuffsPath = AutoExecConfig_CreateConVar("sm_warden_sounds_breakcuffs", "music/MyJailbreak/breakcuffs.mp3", "Path to the soundfile which should be played for break cuffs.");
+	gc_sSoundUnLockCuffsPath = AutoExecConfig_CreateConVar("sm_warden_sounds_unlock", "music/MyJailbreak/unlock.mp3", "Path to the soundfile which should be played for unlocking cuffs.");
 	
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
@@ -377,6 +400,8 @@ public void OnPluginStart()
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundStopPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundCuffsPath, OnSettingChanged);
+	HookConVarChange(gc_sSoundBreakCuffsPath, OnSettingChanged);
+	HookConVarChange(gc_sSoundUnLockCuffsPath, OnSettingChanged);
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sOverlayStopPath, OnSettingChanged);
 	HookConVarChange(gc_sOverlayCuffsPath, OnSettingChanged);
@@ -385,6 +410,8 @@ public void OnPluginStart()
 	HookConVarChange(gc_sVIPflagBulletSparks, OnSettingChanged);
 	HookConVarChange(gc_sVIPflagLaser, OnSettingChanged);
 	HookConVarChange(gc_sVIPflagDrawer, OnSettingChanged);
+	HookConVarChange(gc_sVIPflagMute, OnSettingChanged);
+	HookConVarChange(gc_sVIPflagCuffs, OnSettingChanged);
 	
 	//FindConVar
 	g_bMenuClose = FindConVar("sm_menu_close");
@@ -395,6 +422,8 @@ public void OnPluginStart()
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 	gc_sSoundStopPath.GetString(g_sSoundStopPath, sizeof(g_sSoundStopPath));
 	gc_sSoundCuffsPath.GetString(g_sSoundCuffsPath, sizeof(g_sSoundCuffsPath));
+	gc_sSoundBreakCuffsPath.GetString(g_sSoundBreakCuffsPath, sizeof(g_sSoundBreakCuffsPath));
+	gc_sSoundUnLockCuffsPath.GetString(g_sSoundUnLockCuffsPath, sizeof(g_sSoundUnLockCuffsPath));
 	gc_sModelPath.GetString(g_sWardenModel, sizeof(g_sWardenModel));
 	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
 	gc_sOverlayCuffsPath.GetString(g_sOverlayCuffsPath , sizeof(g_sOverlayCuffsPath));
@@ -404,6 +433,8 @@ public void OnPluginStart()
 	gc_sVIPflagBackstab.GetString(g_sVIPflagBackstab , sizeof(g_sVIPflagBackstab));
 	gc_sVIPflagLaser.GetString(g_sVIPflagLaser , sizeof(g_sVIPflagLaser));
 	gc_sVIPflagDrawer.GetString(g_sVIPflagDrawer , sizeof(g_sVIPflagDrawer));
+	gc_sVIPflagCuffs.GetString(g_sVIPflagCuffs , sizeof(g_sVIPflagCuffs));
+	gc_sVIPflagMute.GetString(g_sVIPflagMute , sizeof(g_sVIPflagMute));
 	gc_sVIPflagBulletSparks.GetString(g_sVIPflagBulletSparks , sizeof(g_sVIPflagBulletSparks));
 	
 	g_iCollisionOffset = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
@@ -462,6 +493,16 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 		strcopy(g_sSoundCuffsPath, sizeof(g_sSoundCuffsPath), newValue);
 		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundCuffsPath);
 	}
+	else if(convar == gc_sSoundBreakCuffsPath)
+	{
+		strcopy(g_sSoundBreakCuffsPath, sizeof(g_sSoundBreakCuffsPath), newValue);
+		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundBreakCuffsPath);
+	}
+	else if(convar == gc_sSoundUnLockCuffsPath)
+	{
+		strcopy(g_sSoundUnLockCuffsPath, sizeof(g_sSoundUnLockCuffsPath), newValue);
+		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundUnLockCuffsPath);
+	}
 	else if(convar == gc_sOverlayStartPath)
 	{
 		strcopy(g_sOverlayStart, sizeof(g_sOverlayStart), newValue);
@@ -502,6 +543,14 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 	else if(convar == gc_sVIPflagDrawer)
 	{
 		strcopy(g_sVIPflagDrawer, sizeof(g_sVIPflagDrawer), newValue);
+	}
+	else if(convar == gc_sVIPflagMute)
+	{
+		strcopy(g_sVIPflagMute, sizeof(g_sVIPflagMute), newValue);
+	}
+	else if(convar == gc_sVIPflagCuffs)
+	{
+		strcopy(g_sVIPflagCuffs, sizeof(g_sVIPflagCuffs), newValue);
 	}
 	else if(convar == gc_sCustomCommand)
 	{
@@ -548,6 +597,8 @@ public void OnMapStart()
 		PrecacheSoundAnyDownload(g_sSoundStopPath);
 		PrecacheSoundAnyDownload(g_sSoundStartPath);
 		PrecacheSoundAnyDownload(g_sSoundCuffsPath);
+		PrecacheSoundAnyDownload(g_sSoundBreakCuffsPath);
+		PrecacheSoundAnyDownload(g_sSoundUnLockCuffsPath);
 	}	
 	g_iVoteCount = 0;
 	PrecacheModel(g_sWardenModel);
@@ -1074,7 +1125,11 @@ public void OnClientDisconnect(int client)
 		g_iWarden = -1;
 		g_bDrawerT = false;
 	}
-	if(g_bCuffed[client]) g_iCuffed--;
+	if(g_bCuffed[client])
+	{
+		g_iCuffed--;
+		
+	}
 	g_iLastButtons[client] = 0;
 }
 
@@ -2843,7 +2898,7 @@ public Action BulletImpact(Handle hEvent, char [] sName, bool bDontBroadcast)
 {
 	int iClient = GetClientOfUserId(GetEventInt(hEvent, "userid"));
 	
-	if (!gc_bPlugin.BoolValue || !gc_bBulletSparks || !warden_iswarden(iClient) || !g_bBulletSparks[iClient] || !CheckVipFlag(iClient,g_sVIPflagBulletSparks))
+	if (!gc_bPlugin.BoolValue || !gc_bBulletSparks.BoolValue || !warden_iswarden(iClient) || !g_bBulletSparks[iClient] || !CheckVipFlag(iClient,g_sVIPflagBulletSparks))
 		return Plugin_Continue;
 	
 	float startpos[3];
@@ -3186,7 +3241,7 @@ public Action MuteMenuPlayer(int client,int args)
 			menu5.SetTitle(info1);
 			LoopValidClients(i,true,true)
 			{
-				if(GetClientTeam(i) == CS_TEAM_T)
+				if((GetClientTeam(i) == CS_TEAM_T) && !CheckVipFlag(i,g_sVIPflagMute))
 				{
 					char userid[11];
 					char username[MAX_NAME_LENGTH];
@@ -3522,12 +3577,59 @@ public Action CuffsEm(int client, int attacker)
 		CreateTimer( 0.5, ShowOverlayCuffs, client);
 		g_iPlayerHandCuffs[attacker]--;
 		g_iCuffed++;
-		EmitSoundToClientAny(client, g_sSoundCuffsPath);
+		if(gc_bSounds)EmitSoundToAllAny(g_sSoundCuffsPath);
 		
 		CPrintToChatAll("%t %t", "warden_tag" , "warden_cuffson", attacker, client);
 		CPrintToChat(attacker, "%t %t", "warden_tag" , "warden_cuffsgot", g_iPlayerHandCuffs[attacker]);
+		if(CheckVipFlag(client,g_sVIPflagCuffs))
+		{
+			CreateTimer (2.5, HasPaperClip, client);
+		}
+	}
+	
+}
+
+public Action HasPaperClip(Handle timer, int client)
+{
+	if(g_bCuffed[client])
+	{
+		int paperclip = GetRandomInt(1,gc_iPaperClipGetChance.IntValue);
+		float unlocktime = GetRandomFloat(gc_fUnLockTimeMin.FloatValue, gc_fUnLockTimeMax.FloatValue);
+		if(paperclip == 1)
+		{
+			CPrintToChat(client, "you have a paperclip");
+			PrintCenterText(client, "you have a paperclip");
+			CreateTimer (unlocktime, BreakTheseCuffs, client);
+			if(gc_bSounds)EmitSoundToClientAny(client, g_sSoundUnLockCuffsPath);
+		}
 	}
 }
+
+public Action BreakTheseCuffs(Handle timer, int client)
+{
+	if(IsValidClient(client,false,false) && g_bCuffed[client])
+	{
+		int unlocked = GetRandomInt(1,gc_iPaperClipUnLockChance.IntValue);
+		if(unlocked == 1)
+		{
+			CPrintToChat(client, "you have been unlocked");
+			PrintCenterText(client, "you have been unlocked");
+			if(gc_bSounds)EmitSoundToAllAny(g_sSoundBreakCuffsPath);
+			SetEntityMoveType(client, MOVETYPE_WALK);
+			SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
+			SetEntityRenderColor(client, 255, 255, 255, 255);
+			g_bCuffed[client] = false;
+			CreateTimer( 0.0, DeleteOverlay, client );
+			g_iCuffed--;
+		}
+		else
+		{
+			CPrintToChat(client, "you have broke paperclip");
+			PrintCenterText(client, "you have broke paperclip");
+		}
+	}
+}
+
 
 public Action FreeEm(int client, int attacker)
 {
@@ -3537,6 +3639,7 @@ public Action FreeEm(int client, int attacker)
 	g_bCuffed[client] = false;
 	CreateTimer( 0.0, DeleteOverlay, client );
 	g_iCuffed--;
+	if(gc_bSounds)StopSoundAny(client,SNDCHAN_AUTO,g_sSoundUnLockCuffsPath);
 	if((attacker != 0) && (g_iCuffed == 0) && (g_iPlayerHandCuffs[attacker] < 1)) SetPlayerWeaponAmmo(attacker, Client_GetActiveWeapon(attacker), _, 0);
 	if(attacker != 0) CPrintToChatAll("%t %t", "warden_tag" , "warden_cuffsoff", attacker, client);
 }
