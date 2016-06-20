@@ -38,6 +38,7 @@ ConVar g_iGetRoundTime;
 ConVar gc_bChat;
 ConVar gc_bConsole;
 ConVar gc_bShowPanel;
+ConVar gc_bSpawnRandom;
 
 //Integers    g_i = global integer
 int g_iOldRoundTime;
@@ -98,7 +99,8 @@ public void OnPluginStart()
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_dealdamage_warden", "1", "0 - disabled, 1 - allow warden to set dealdamage round", _, true,  0.0, true, 1.0);
 	gc_bSetA = AutoExecConfig_CreateConVar("sm_dealdamage_admin", "1", "0 - disabled, 1 - allow admin to set dealdamage round", _, true,  0.0, true, 1.0);
 	gc_bVote = AutoExecConfig_CreateConVar("sm_dealdamage_vote", "1", "0 - disabled, 1 - allow player to vote for dealdamage", _, true,  0.0, true, 1.0);
-	gc_bSpawnCell = AutoExecConfig_CreateConVar("sm_dealdamage_spawn", "0", "0 - T teleport to CT spawn, 1 - cell doors auto open", _, true,  0.0, true, 1.0);
+	gc_bSpawnCell = AutoExecConfig_CreateConVar("sm_dealdamage_spawn", "1", "0 - T teleport to CT spawn, 1 - cell doors auto open", _, true,  0.0, true, 1.0);
+	gc_bSpawnRandom = AutoExecConfig_CreateConVar("sm_dealdamage_randomspawn", "1", "0 - disabled, 1 - use random spawns on map (sm_dealdamage_spawn 1)", _, true,  0.0, true, 1.0);
 	gc_iRounds = AutoExecConfig_CreateConVar("sm_dealdamage_rounds", "2", "Rounds to play in a row", _, true, 1.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_dealdamage_roundtime", "2", "Round time in minutes for a single dealdamage round", _, true, 1.0);
 	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_dealdamage_trucetime", "15", "Time in seconds players can't deal damage", _, true,  0.0);
@@ -294,6 +296,9 @@ void StartNextRound()
 	
 	SetEventDay("dealdamage"); //tell myjailbreak new event is set
 	
+	if(gc_bSpawnRandom.BoolValue)SetCvar("mp_randomspawn", 1);
+	if(gc_bSpawnRandom.BoolValue)SetCvar("mp_randomspawn_los", 1);
+	
 	CPrintToChatAll("%t %t", "dealdamage_tag" , "dealdamage_next");
 	PrintHintTextToAll("%t", "dealdamage_next_nc");
 //	LoopClients(i) CreateInfoPanel(i);
@@ -365,8 +370,6 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 					
 					if (IsClientInGame(client))
 					{
-						
-				//		FakeClientCommand(client, "sm_guns");
 						if (GetClientTeam(client) == CS_TEAM_CT && IsValidClient(client, false, false))
 						{
 							//here start Equiptment & parameters
@@ -472,6 +475,8 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 			SetCvar("sv_infinite_ammo", 0);
 			SetCvar("sm_menu_enable", 1);
 			SetCvar("sm_warden_enable", 1);
+			if(gc_bSpawnRandom.BoolValue)SetCvar("mp_randomspawn", 0);
+			if(gc_bSpawnRandom.BoolValue)SetCvar("mp_randomspawn_los", 0);
 			
 			g_iGetRoundTime.IntValue = g_iOldRoundTime; //return to original round time
 			SetEventDay("none"); //tell myjailbreak event is ended
@@ -558,7 +563,7 @@ public Action OnTakedamage(int victim, int &attacker, int &inflictor, float &dam
 	{
 		DamageT = DamageT + RoundToCeil(damage);
 	}
-	LoopClients(i) PrintHintText(i, "<font color='#0055FF'>%t  </font> %i %t                     <font color='#FF0000'>%t:   </font> %i %t                     <font color='#00FF00'>%t:   </font> %i %t", "dealdamage_ctdealed", DamageCT, "dealdamage_hpdamage", "dealdamage_tdealed", DamageT, "dealdamage_hpdamage", "dealdamage_clientdealed", DamageDealed[i], "dealdamage_hpdamage");
+	LoopClients(i) PrintHintText(i, "<font color='#0055FF'>%t  </font> %i %t                     <font color='#FF0000'>%t   </font> %i %t                    <font color='#00FF00'>%t   </font> %i %t", "dealdamage_ctdealed", DamageCT, "dealdamage_hpdamage", "dealdamage_tdealed", DamageT, "dealdamage_hpdamage", "dealdamage_clientdealed", DamageDealed[i], "dealdamage_hpdamage");
 	if((GetClientTeam(attacker) != GetClientTeam(victim))) DamageDealed[attacker] = DamageDealed[attacker] + RoundToCeil(damage);
 	return Plugin_Handled;
 }
