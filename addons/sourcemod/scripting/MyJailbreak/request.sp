@@ -59,6 +59,10 @@ ConVar gc_bReportAdmin;
 ConVar gc_bReportWarden;
 ConVar gc_bRespawnCellClosed;
 
+ConVar gc_sVIPflagRepeat;
+ConVar gc_sVIPflagRefuse;
+ConVar gc_sVIPflagHeal;
+
 //Bools
 bool g_bHealed[MAXPLAYERS+1];
 bool g_bCapitulated[MAXPLAYERS+1];
@@ -100,6 +104,9 @@ char g_sCustomCommandRepeat[64];
 char g_sCustomCommandRefuse[64];
 char g_sCustomCommandFreekill[64];
 char g_sFreeKillLogFile[PLATFORM_MAX_PATH];
+char g_sVIPflagRepeat[32];
+char g_sVIPflagRefuse[32];
+char g_sVIPflagHeal[32];	
 
 public Plugin myinfo = 
 {
@@ -180,7 +187,10 @@ public void OnPluginStart()
 	gc_bReportAdmin = AutoExecConfig_CreateConVar("sm_freekill_admin", "1", "0 - disabled, 1 - Report will be send to admins - if there is no admin its send to warden");
 	gc_bReportWarden = AutoExecConfig_CreateConVar("sm_freekill_warden", "1", "0 - disabled, 1 - Report will be send to Warden if there is no admin");
 	
-	
+	gc_sVIPflagRepeat = AutoExecConfig_CreateConVar("sm_repeat_vip", "a", "Set flag for VIP to get one more repeat. No flag feature is available for all players!");
+	gc_sVIPflagRefuse = AutoExecConfig_CreateConVar("sm_refuse_vip", "a", "Set flag for VIP to get one more refuse. No flag feature is available for all players!");
+	gc_sVIPflagHeal = AutoExecConfig_CreateConVar("sm_repeat_vip", "a", "Set flag for VIP to get one more heal. No flag feature is available for all players!");
+
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
 	
@@ -196,6 +206,9 @@ public void OnPluginStart()
 	HookConVarChange(gc_sCustomCommandRepeat, OnSettingChanged);
 	HookConVarChange(gc_sCustomCommandCapitulation, OnSettingChanged);
 	HookConVarChange(gc_sCustomCommandFreekill, OnSettingChanged);
+	HookConVarChange(gc_sVIPflagRepeat, OnSettingChanged);
+	HookConVarChange(gc_sVIPflagRefuse, OnSettingChanged);
+	HookConVarChange(gc_sVIPflagHeal, OnSettingChanged);
 	
 	//FindConVar
 	gc_sSoundRefusePath.GetString(g_sSoundRefusePath, sizeof(g_sSoundRefusePath));
@@ -207,6 +220,9 @@ public void OnPluginStart()
 	gc_sCustomCommandRepeat.GetString(g_sCustomCommandRepeat , sizeof(g_sCustomCommandRepeat));
 	gc_sCustomCommandCapitulation.GetString(g_sCustomCommandCapitulation , sizeof(g_sCustomCommandCapitulation));
 	gc_sCustomCommandFreekill.GetString(g_sCustomCommandFreekill , sizeof(g_sCustomCommandFreekill));
+	gc_sVIPflagHeal.GetString(g_sVIPflagHeal , sizeof(g_sVIPflagHeal));
+	gc_sVIPflagRepeat.GetString(g_sVIPflagRepeat , sizeof(g_sVIPflagRepeat));
+	gc_sVIPflagRefuse.GetString(g_sVIPflagRefuse , sizeof(g_sVIPflagRefuse));
 	
 	SetLogFile(g_sFreeKillLogFile, "Freekills");
 }
@@ -273,6 +289,18 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 		if(GetCommandFlags(sBufferCMD) == INVALID_FCVAR_FLAGS)
 			RegConsoleCmd(sBufferCMD, Command_Freekill, "Allows a rebeling terrorist to report a freekill");
 	}
+	else if(convar == gc_sVIPflagRefuse)
+	{
+		strcopy(g_sVIPflagRefuse, sizeof(g_sVIPflagRefuse), newValue);
+	}
+	else if(convar == gc_sVIPflagRepeat)
+	{
+		strcopy(g_sVIPflagRepeat, sizeof(g_sVIPflagRepeat), newValue);
+	}
+	else if(convar == gc_sVIPflagHeal)
+	{
+		strcopy(g_sVIPflagHeal, sizeof(g_sVIPflagHeal), newValue);
+	}
 }
 
 public void OnMapStart()
@@ -333,6 +361,9 @@ public Action RoundStart(Handle event, char [] name, bool dontBroadcast)
 		g_bAllowRefuse = false;
 		g_iKilledBy[client] = 0;
 		g_bFreeKilled[client] = false;
+		if(CheckVipFlag(client,g_sVIPflagRefuse)) g_iRefuseCounter[client] = -1;
+		if(CheckVipFlag(client,g_sVIPflagHeal)) g_iHealCounter[client] = -1;
+		if(CheckVipFlag(client,g_sVIPflagRepeat)) g_iRepeatCounter[client] = -1;
 	}
 	g_iCountStopTime = gc_fRefuseTime.IntValue;
 	return Plugin_Continue;
@@ -344,6 +375,9 @@ public void OnClientPutInServer(int client)
 	g_iRepeatCounter[client] = 0;
 	g_iRefuseCounter[client] = 0;
 	g_iHealCounter[client] = 0;
+	if(CheckVipFlag(client,g_sVIPflagRefuse)) g_iRefuseCounter[client] = -1;
+	if(CheckVipFlag(client,g_sVIPflagHeal)) g_iHealCounter[client] = -1;
+	if(CheckVipFlag(client,g_sVIPflagRepeat)) g_iRepeatCounter[client] = -1;
 	g_bHealed[client] = false;
 	g_bRepeated[client] = false;
 	g_bRefused[client] = false;
