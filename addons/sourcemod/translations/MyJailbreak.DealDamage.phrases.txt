@@ -178,4 +178,63 @@
 		"en"		"you must wait {1} more rounds"
 		"de"		"Du musst noch {1} Runden warten"
 	}
+	
+	"dealdamage_result"
+	{
+		"en"		"Damage Dealed Results"
+	}
+	"dealdamage_total"
+	{
+		"#format"	"{1:i}"
+		"en"		"Total Damage: {1} HP"
+	}
+	"dealdamage_most"
+	{
+		"#format"	"{1:N},{2:i}"
+		"en"		"Most Damage: {1} Damage: {2} HP"
+	}
+	"dealdamage_ct"
+	{
+		"#format"	"{1:i}"
+		"en"		"CT Damage: {1} HP"
+	}
+	"dealdamage_t"
+	{
+		"#format"	"{1:i}"
+		"en"		"T Damage: {1} HP"
+	}
+	"dealdamage_bestct"
+	{
+		"#format"	"{1:N},{2:i}"
+		"en"		"Best CT: {1} Damage: {2} HP"
+	}
+	"dealdamage_bestt"
+	{
+		"#format"	"{1:N},{2:i}"
+		"en"		"Best T: {1} Damage: {2} HP"
+	}
+	"dealdamage_client"
+	{
+		"#format"	"{1:i}"
+		"en"		"Your Damage: {1} HP"
+	}
+	
+	"dealdamage_ctdealed"
+	{
+		"en"		"CT dealed:"
+	}
+	
+	"dealdamage_tdealed"
+	{
+		"en"		"T dealed:"
+	}
+	"dealdamage_clientdealed"
+	{
+		"en"		"You dealed:"
+	}
+	"dealdamage_hpdamage"
+	{
+		"en"		"HP damage"
+	}
+
 }

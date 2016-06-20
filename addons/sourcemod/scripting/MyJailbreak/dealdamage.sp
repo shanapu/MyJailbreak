@@ -99,7 +99,7 @@ public void OnPluginStart()
 	gc_bSetA = AutoExecConfig_CreateConVar("sm_dealdamage_admin", "1", "0 - disabled, 1 - allow admin to set dealdamage round", _, true,  0.0, true, 1.0);
 	gc_bVote = AutoExecConfig_CreateConVar("sm_dealdamage_vote", "1", "0 - disabled, 1 - allow player to vote for dealdamage", _, true,  0.0, true, 1.0);
 	gc_bSpawnCell = AutoExecConfig_CreateConVar("sm_dealdamage_spawn", "0", "0 - T teleport to CT spawn, 1 - cell doors auto open", _, true,  0.0, true, 1.0);
-	gc_iRounds = AutoExecConfig_CreateConVar("sm_dealdamage_rounds", "3", "Rounds to play in a row", _, true, 1.0);
+	gc_iRounds = AutoExecConfig_CreateConVar("sm_dealdamage_rounds", "2", "Rounds to play in a row", _, true, 1.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_dealdamage_roundtime", "2", "Round time in minutes for a single dealdamage round", _, true, 1.0);
 	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_dealdamage_trucetime", "15", "Time in seconds players can't deal damage", _, true,  0.0);
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_dealdamage_cooldown_day", "3", "Rounds cooldown after a event until event can be start again", _, true,  0.0);
@@ -411,29 +411,29 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 stock void CreateInfoPanel(int client)
 {
 	//Create info Panel
-		char info[255];
-		
-		DealDamageMenu = CreatePanel();
-		Format(info, sizeof(info), "%T", "dealdamage_info_title",client );
-		SetPanelTitle(DealDamageMenu, info);
-		DrawPanelText(DealDamageMenu, "                                   ");
-		Format(info, sizeof(info), "%T", "dealdamage_info_line1",client );
-		DrawPanelText(DealDamageMenu, info);
-		DrawPanelText(DealDamageMenu, "-----------------------------------");
-		Format(info, sizeof(info), "%T", "dealdamage_info_line2" ,client);
-		DrawPanelText(DealDamageMenu, info);
-		Format(info, sizeof(info), "%T", "dealdamage_info_line3" ,client);
-		DrawPanelText(DealDamageMenu, info);
-		Format(info, sizeof(info), "%T", "dealdamage_info_line4" ,client);
-		DrawPanelText(DealDamageMenu, info);
-		Format(info, sizeof(info), "%T", "dealdamage_info_line5" ,client);
-		DrawPanelText(DealDamageMenu, info);
-		Format(info, sizeof(info), "%T", "dealdamage_info_line6" ,client);
-		DrawPanelText(DealDamageMenu, info);
-		Format(info, sizeof(info), "%T", "dealdamage_info_line7" ,client);
-		DrawPanelText(DealDamageMenu, info);
-		DrawPanelText(DealDamageMenu, "-----------------------------------");
-		SendPanelToClient(DealDamageMenu, client, NullHandler, 20); //open info Panel
+	char info[255];
+	
+	DealDamageMenu = CreatePanel();
+	Format(info, sizeof(info), "%T", "dealdamage_info_title",client );
+	SetPanelTitle(DealDamageMenu, info);
+	DrawPanelText(DealDamageMenu, "                                   ");
+	Format(info, sizeof(info), "%T", "dealdamage_info_line1",client );
+	DrawPanelText(DealDamageMenu, info);
+	DrawPanelText(DealDamageMenu, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "dealdamage_info_line2" ,client);
+	DrawPanelText(DealDamageMenu, info);
+	Format(info, sizeof(info), "%T", "dealdamage_info_line3" ,client);
+	DrawPanelText(DealDamageMenu, info);
+	Format(info, sizeof(info), "%T", "dealdamage_info_line4" ,client);
+	DrawPanelText(DealDamageMenu, info);
+	Format(info, sizeof(info), "%T", "dealdamage_info_line5" ,client);
+	DrawPanelText(DealDamageMenu, info);
+	Format(info, sizeof(info), "%T", "dealdamage_info_line6" ,client);
+	DrawPanelText(DealDamageMenu, info);
+	Format(info, sizeof(info), "%T", "dealdamage_info_line7" ,client);
+	DrawPanelText(DealDamageMenu, info);
+	DrawPanelText(DealDamageMenu, "-----------------------------------");
+	SendPanelToClient(DealDamageMenu, client, NullHandler, 20); //open info Panel
 }
 
 //Round End
@@ -556,7 +556,7 @@ public Action OnTakedamage(int victim, int &attacker, int &inflictor, float &dam
 	{
 		DamageT = DamageT + RoundToCeil(damage);
 	}
-	LoopClients(i) PrintHintText(i, "<font color='#0055FF'>CT dealed:   </font> %i HP  damage                     <font color='#FF0000'>T dealed:   </font> %i HP  damage                     <font color='#00FF00'>YOU dealed:   </font> %i HP  damage", DamageCT, DamageT, DamageDealed[i]);
+	LoopClients(i) PrintHintText(i, "<font color='#0055FF'>%t  </font> %i %t                     <font color='#FF0000'>%t:   </font> %i %t                     <font color='#00FF00'>%t:   </font> %i %t", "dealdamage_ctdealed", DamageCT, "dealdamage_hpdamage", "dealdamage_tdealed", DamageT, "dealdamage_hpdamage", "dealdamage_clientdealed", DamageDealed[i], "dealdamage_hpdamage");
 	if((GetClientTeam(attacker) != GetClientTeam(victim))) DamageDealed[attacker] = DamageDealed[attacker] + RoundToCeil(damage);
 	return Plugin_Handled;
 }
@@ -606,50 +606,54 @@ public Action EndTheRound(Handle timer)
 
 stock void SendResults(int client)
 {
-		char info[128];
-		
-		DealDamageEndMenu = CreatePanel();
-		Format(info, sizeof(info),"%t", "dealdamage_result");
-		SetPanelTitle(DealDamageEndMenu, info);
-		Format(info, sizeof(info),"%t %t", "dealdamage_tag" , "dealdamage_result");
-		if(gc_bChat.BoolValue) CPrintToChat(client, info);
-		if(gc_bConsole.BoolValue) PrintToConsole(client, info);
-		Format(info, sizeof(info), "%t", "dealdamage_total", TotalDamage);
-		DrawPanelText(DealDamageEndMenu, info);
-		Format(info, sizeof(info), "%t %t", "dealdamage_tag" ,  "dealdamage_total", TotalDamage);
-		if(gc_bChat.BoolValue) CPrintToChat(client, info);
-		if(gc_bConsole.BoolValue) PrintToConsole(client, info);
-		Format(info, sizeof(info), "%t","dealdamage_most", BestPlayer, DamageDealed[BestPlayer]);
-		DrawPanelText(DealDamageEndMenu, info);
-		Format(info, sizeof(info), "%t %t", "dealdamage_tag" ,  "dealdamage_most", BestPlayer, DamageDealed[BestPlayer]);
-		if(gc_bChat.BoolValue) CPrintToChat(client, info);
-		if(gc_bConsole.BoolValue) PrintToConsole(client, info);
-		Format(info, sizeof(info),"t", "dealdamage_ct", DamageCT);
-		DrawPanelText(DealDamageEndMenu, info);
-		Format(info, sizeof(info),"%t %t", "dealdamage_tag" ,  "dealdamage_ct", DamageCT);
-		if(gc_bChat.BoolValue) CPrintToChat(client, info);
-		if(gc_bConsole.BoolValue) PrintToConsole(client, info);
-		Format(info, sizeof(info), "%t", "dealdamage_ct", DamageT);
-		DrawPanelText(DealDamageEndMenu, info);
-		Format(info, sizeof(info), "%t %t", "dealdamage_tag" ,  "dealdamage_ct", DamageT);
-		if(gc_bChat.BoolValue) CPrintToChat(client, info);
-		if(gc_bConsole.BoolValue) PrintToConsole(client, info);
-		Format(info, sizeof(info),"%t", "dealdamage_bestct", BestCT, BestCTdamage);
-		DrawPanelText(DealDamageEndMenu, info);
-		Format(info, sizeof(info),"%t %t", "dealdamage_tag" ,  "dealdamage_bestct", BestCT, BestCTdamage);
-		if(gc_bChat.BoolValue) CPrintToChat(client, info);
-		if(gc_bConsole.BoolValue) PrintToConsole(client, info);
-		Format(info, sizeof(info),"%t", "dealdamage_bestt", BestT, BestTdamage);
-		DrawPanelText(DealDamageEndMenu, info);
-		Format(info, sizeof(info),"%t %t", "dealdamage_tag" , "dealdamage_bestt", BestT, BestTdamage);
-		if(gc_bChat.BoolValue) CPrintToChat(client, info);
-		if(gc_bConsole.BoolValue) PrintToConsole(client, info);
-		Format(info, sizeof(info),"%t", "dealdamage_client", DamageDealed[client]);
-		DrawPanelText(DealDamageEndMenu, info);
-		Format(info, sizeof(info),"%t %t", "dealdamage_tag" , "dealdamage_client", DamageDealed[client]);
-		if(gc_bChat.BoolValue) CPrintToChat(client, info);
-		if(gc_bConsole.BoolValue) PrintToConsole(client, info);
-		
-		if(gc_bShowPanel.BoolValue) SendPanelToClient(DealDamageEndMenu, client, NullHandler, 20); //open info Panel
+	char info[128];
+	
+	DealDamageEndMenu = CreatePanel();
+	Format(info, sizeof(info),"%t", "dealdamage_result");
+	SetPanelTitle(DealDamageEndMenu, info);
+	Format(info, sizeof(info),"%t %t", "dealdamage_tag" , "dealdamage_result");
+	if(gc_bChat.BoolValue) CPrintToChat(client, info);
+	if(gc_bConsole.BoolValue) PrintToConsole(client, info);
+	DrawPanelText(DealDamageMenu, "                                   ");
+	Format(info, sizeof(info), "%t", "dealdamage_total", TotalDamage);
+	DrawPanelText(DealDamageEndMenu, info);
+	Format(info, sizeof(info), "%t %t", "dealdamage_tag" ,  "dealdamage_total", TotalDamage);
+	if(gc_bChat.BoolValue) CPrintToChat(client, info);
+	if(gc_bConsole.BoolValue) PrintToConsole(client, info);
+	Format(info, sizeof(info), "%t","dealdamage_most", BestPlayer, DamageDealed[BestPlayer]);
+	DrawPanelText(DealDamageEndMenu, info);
+	Format(info, sizeof(info), "%t %t", "dealdamage_tag" ,  "dealdamage_most", BestPlayer, DamageDealed[BestPlayer]);
+	if(gc_bChat.BoolValue) CPrintToChat(client, info);
+	if(gc_bConsole.BoolValue) PrintToConsole(client, info);
+	DrawPanelText(DealDamageMenu, "                                   ");
+	Format(info, sizeof(info),"t", "dealdamage_ct", DamageCT);
+	DrawPanelText(DealDamageEndMenu, info);
+	Format(info, sizeof(info),"%t %t", "dealdamage_tag" ,  "dealdamage_ct", DamageCT);
+	if(gc_bChat.BoolValue) CPrintToChat(client, info);
+	if(gc_bConsole.BoolValue) PrintToConsole(client, info);
+	Format(info, sizeof(info), "%t", "dealdamage_ct", DamageT);
+	DrawPanelText(DealDamageEndMenu, info);
+	Format(info, sizeof(info), "%t %t", "dealdamage_tag" ,  "dealdamage_ct", DamageT);
+	if(gc_bChat.BoolValue) CPrintToChat(client, info);
+	if(gc_bConsole.BoolValue) PrintToConsole(client, info);
+	DrawPanelText(DealDamageMenu, "                                   ");
+	Format(info, sizeof(info),"%t", "dealdamage_bestct", BestCT, BestCTdamage);
+	DrawPanelText(DealDamageEndMenu, info);
+	Format(info, sizeof(info),"%t %t", "dealdamage_tag" ,  "dealdamage_bestct", BestCT, BestCTdamage);
+	if(gc_bChat.BoolValue) CPrintToChat(client, info);
+	if(gc_bConsole.BoolValue) PrintToConsole(client, info);
+	Format(info, sizeof(info),"%t", "dealdamage_bestt", BestT, BestTdamage);
+	DrawPanelText(DealDamageEndMenu, info);
+	Format(info, sizeof(info),"%t %t", "dealdamage_tag" , "dealdamage_bestt", BestT, BestTdamage);
+	if(gc_bChat.BoolValue) CPrintToChat(client, info);
+	if(gc_bConsole.BoolValue) PrintToConsole(client, info);
+	Format(info, sizeof(info),"%t", "dealdamage_client", DamageDealed[client]);
+	DrawPanelText(DealDamageEndMenu, info);
+	DrawPanelText(DealDamageMenu, "                                   ");
+	Format(info, sizeof(info),"%t %t", "dealdamage_tag" , "dealdamage_client", DamageDealed[client]);
+	if(gc_bChat.BoolValue) CPrintToChat(client, info);
+	if(gc_bConsole.BoolValue) PrintToConsole(client, info);
+	
+	if(gc_bShowPanel.BoolValue) SendPanelToClient(DealDamageEndMenu, client, NullHandler, 20); //open info Panel
 }
 
