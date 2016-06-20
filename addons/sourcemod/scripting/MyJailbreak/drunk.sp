@@ -381,30 +381,31 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 stock void CreateInfoPanel(int client)
 {
 	//Create info Panel
-		char info[255];
+	char info[255];
 
-		DrunkMenu = CreatePanel();
-		Format(info, sizeof(info), "%T", "drunk_info_title", client);
-		SetPanelTitle(DrunkMenu, info);
-		DrawPanelText(DrunkMenu, "                                   ");
-		Format(info, sizeof(info), "%T", "drunk_info_line1", client);
-		DrawPanelText(DrunkMenu, info);
-		DrawPanelText(DrunkMenu, "-----------------------------------");
-		Format(info, sizeof(info), "%T", "drunk_info_line2", client);
-		DrawPanelText(DrunkMenu, info);
-		Format(info, sizeof(info), "%T", "drunk_info_line3", client);
-		DrawPanelText(DrunkMenu, info);
-		Format(info, sizeof(info), "%T", "drunk_info_line4", client);
-		DrawPanelText(DrunkMenu, info);
-		Format(info, sizeof(info), "%T", "drunk_info_line5", client);
-		DrawPanelText(DrunkMenu, info);
-		Format(info, sizeof(info), "%T", "drunk_info_line6", client);
-		DrawPanelText(DrunkMenu, info);
-		Format(info, sizeof(info), "%T", "drunk_info_line7", client);
-		DrawPanelText(DrunkMenu, info);
-		DrawPanelText(DrunkMenu, "-----------------------------------");
-		SendPanelToClient(DrunkMenu, client, NullHandler, 20); //open info Panel
-		
+	DrunkMenu = CreatePanel();
+	Format(info, sizeof(info), "%T", "drunk_info_title", client);
+	SetPanelTitle(DrunkMenu, info);
+	DrawPanelText(DrunkMenu, "                                   ");
+	Format(info, sizeof(info), "%T", "drunk_info_line1", client);
+	DrawPanelText(DrunkMenu, info);
+	DrawPanelText(DrunkMenu, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "drunk_info_line2", client);
+	DrawPanelText(DrunkMenu, info);
+	Format(info, sizeof(info), "%T", "drunk_info_line3", client);
+	DrawPanelText(DrunkMenu, info);
+	Format(info, sizeof(info), "%T", "drunk_info_line4", client);
+	DrawPanelText(DrunkMenu, info);
+	Format(info, sizeof(info), "%T", "drunk_info_line5", client);
+	DrawPanelText(DrunkMenu, info);
+	Format(info, sizeof(info), "%T", "drunk_info_line6", client);
+	DrawPanelText(DrunkMenu, info);
+	Format(info, sizeof(info), "%T", "drunk_info_line7", client);
+	DrawPanelText(DrunkMenu, info);
+	DrawPanelText(DrunkMenu, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "warden_close", client);
+	DrawPanelItem(DrunkMenu, info); 
+	SendPanelToClient(DrunkMenu, client, NullHandler, 20); //open info Panel
 }
 
 //Round End
@@ -523,7 +524,7 @@ public Action playerDeath(Event event, const char[] name, bool dontBroadcast)
 }
 
 //Switch WSAD
-
+/*
 public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon) 
 {
 	if(IsDrunk)
@@ -562,12 +563,12 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	}
 	return Plugin_Continue;
 }
-
+*/
 // drunk
 
 public Action Timer_Drunk(Handle timer, any client)
 {
-	if(IsDrunk)
+	if(IsDrunk && IsValidClient(client,false,false))
 	{
 		float angs[3];
 		GetClientEyeAngles(client, angs);

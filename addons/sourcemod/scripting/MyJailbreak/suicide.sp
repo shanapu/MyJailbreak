@@ -423,6 +423,8 @@ stock void CreateInfoPanel(int client)
 	Format(info, sizeof(info), "%T", "suicidebomber_info_line7",client);
 	DrawPanelText(SuicideBomberMenu, info);
 	DrawPanelText(SuicideBomberMenu, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "warden_close", client);
+	DrawPanelItem(SuicideBomberMenu, info); 
 	SendPanelToClient(SuicideBomberMenu, client, NullHandler, 20);
 }
 

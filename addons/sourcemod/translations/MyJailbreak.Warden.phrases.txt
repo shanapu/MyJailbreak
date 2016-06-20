@@ -937,4 +937,9 @@
 		"de"		"Du hast in dieser Runde schon {purple}{1} mal verlängert{default}."
 		"en"		"You have already {purple}extend {1} times{default} in this round."
 	}
+	warden_close"
+	{
+		"en"			"Close"
+		"en"			"Schliessen"
+	}
 }

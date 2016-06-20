@@ -298,6 +298,8 @@ public Action StartLastGuard()
 		Format(info, sizeof(info), "%T", "lastguard_info_line7", iClient);
 		DrawPanelText(LastGuardMenu, info);
 		DrawPanelText(LastGuardMenu, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "warden_close", client);
+		DrawPanelItem(LastGuardMenu, info); 
 		SendPanelToClient(LastGuardMenu, iClient, NullHandler, 20);
 		
 		SetEntData(iClient, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);

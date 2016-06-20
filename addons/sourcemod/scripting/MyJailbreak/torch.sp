@@ -458,6 +458,8 @@ stock void CreateInfoPanel(int client)
 	Format(info, sizeof(info), "%T", "torch_info_line7", client);
 	DrawPanelText(TorchMenu, info);
 	DrawPanelText(TorchMenu, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "warden_close", client);
+	DrawPanelItem(TorchMenu, info); 
 	SendPanelToClient(TorchMenu, client, NullHandler, 20);
 }
 

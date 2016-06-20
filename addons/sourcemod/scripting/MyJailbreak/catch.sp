@@ -396,6 +396,8 @@ stock void CreateInfoPanel(int client)
 	Format(info, sizeof(info), "%T", "catch_info_line7", client);
 	DrawPanelText(CatchMenu, info);
 	DrawPanelText(CatchMenu, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "warden_close", client);
+	DrawPanelItem(CatchMenu, info); 
 	SendPanelToClient(CatchMenu, client, NullHandler, 20);
 	
 }

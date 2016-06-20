@@ -475,7 +475,10 @@ public Action RefuseMenu(int warden)
 		}
 		DrawPanelText(RefusePanel, "                                   ");
 		DrawPanelText(RefusePanel, "-----------------------------------");
+		Format(info1, sizeof(info1), "%T", "warden_close", warden);
+		DrawPanelItem(RefusePanel, info1); 
 		SendPanelToClient(RefusePanel, warden, NullHandler, 23);
+		
 	}
 }
 
@@ -533,6 +536,8 @@ public Action RepeatMenu(int warden)
 		}
 		DrawPanelText(RepeatPanel, "                                   ");
 		DrawPanelText(RepeatPanel, "-----------------------------------");
+		Format(info1, sizeof(info1), "%T", "warden_close", warden);
+		DrawPanelItem(RepeatPanel, info1); 
 		SendPanelToClient(RepeatPanel, warden, NullHandler, 20);
 	}
 }

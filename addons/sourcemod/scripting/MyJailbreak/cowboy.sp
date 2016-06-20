@@ -409,6 +409,8 @@ stock void CreateInfoPanel(int client)
 	Format(info, sizeof(info), "%T", "cowboy_info_line7", client);
 	DrawPanelText(CowBoyMenu, info);
 	DrawPanelText(CowBoyMenu, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "warden_close", client);
+	DrawPanelItem(CowBoyMenu, info); 
 	SendPanelToClient(CowBoyMenu, client, NullHandler, 20);
 }
 

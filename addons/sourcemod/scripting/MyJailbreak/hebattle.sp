@@ -403,6 +403,8 @@ stock void CreateInfoPanel(int client)
 	Format(info, sizeof(info), "%T", "hebattle_info_line7", client);
 	DrawPanelText(HEbattleMenu, info);
 	DrawPanelText(HEbattleMenu, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "warden_close", client);
+	DrawPanelItem(HEbattleMenu, info); 
 	SendPanelToClient(HEbattleMenu, client, NullHandler, 20);
 }
 //Round End

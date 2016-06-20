@@ -336,6 +336,8 @@ stock void CreateInfoPanel(int client)
 	Format(info, sizeof(info), "%T", "freeday_info_line7", client);
 	DrawPanelText(FreedayMenu, info);
 	DrawPanelText(FreedayMenu, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "warden_close", client);
+	DrawPanelItem(FreedayMenu, info); 
 	SendPanelToClient(FreedayMenu, client, NullHandler, 20);
 }
 //Round End

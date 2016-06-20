@@ -396,6 +396,8 @@ stock void CreateInfoPanel(int client)
 	Format(info, sizeof(info), "%T", "zeus_info_line7", client);
 	DrawPanelText(ZeusMenu, info);
 	DrawPanelText(ZeusMenu, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "warden_close", client);
+	DrawPanelItem(ZeusMenu, info); 
 	SendPanelToClient(ZeusMenu, client, NullHandler, 20);
 	
 }

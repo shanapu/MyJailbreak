@@ -417,6 +417,8 @@ stock void CreateInfoPanel(int client)
 	Format(info, sizeof(info), "%T", "war_info_line7", client);
 	DrawPanelText(WarMenu, info);
 	DrawPanelText(WarMenu, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "warden_close", client);
+	DrawPanelItem(WarMenu, info); 
 	SendPanelToClient(WarMenu, client, NullHandler, 20);
 }
 //Round End

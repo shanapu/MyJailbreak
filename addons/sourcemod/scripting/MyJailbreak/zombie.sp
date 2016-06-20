@@ -430,6 +430,8 @@ stock void CreateInfoPanel(int client)
 	Format(info, sizeof(info), "%T", "zombie_info_line7", client);
 	DrawPanelText(ZombieMenu, info);
 	DrawPanelText(ZombieMenu, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "warden_close", client);
+	DrawPanelItem(ZombieMenu, info); 
 	SendPanelToClient(ZombieMenu, client, NullHandler, 20);
 }
 //Round End

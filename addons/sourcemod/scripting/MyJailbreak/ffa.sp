@@ -390,6 +390,8 @@ stock void CreateInfoPanel(int client)
 	Format(info, sizeof(info), "%T", "ffa_info_line7", client);
 	DrawPanelText(FFAMenu, info);
 	DrawPanelText(FFAMenu, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "warden_close", client);
+	DrawPanelItem(FFAMenu, info); 
 	SendPanelToClient(FFAMenu, client, NullHandler, 20);
 }
 //Round End

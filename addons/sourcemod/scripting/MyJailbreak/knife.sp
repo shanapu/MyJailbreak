@@ -423,6 +423,8 @@ stock void CreateInfoPanel(int client)
 	Format(info, sizeof(info), "%T", "knifefight_info_line7", client);
 	DrawPanelText(KnifeFightMenu, info);
 	DrawPanelText(KnifeFightMenu, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "warden_close", client);
+	DrawPanelItem(KnifeFightMenu, info); 
 	SendPanelToClient(KnifeFightMenu, client, NullHandler, 20);
 }
 

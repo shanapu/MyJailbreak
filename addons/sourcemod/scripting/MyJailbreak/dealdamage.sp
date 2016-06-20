@@ -315,11 +315,11 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		SetCvar("sm_weapons_ct", 1);
 		SetCvar("sm_menu_enable", 0);
 		SetCvar("sm_warden_enable", 0);
-		BestT = -1;
-		BestCT = -1;
+		BestT = 0;
+		BestCT = 0;
 		BestTdamage = 0;
 		BestCTdamage = 0;
-		BestPlayer = -1;
+		BestPlayer = 0;
 		
 		float RoundTime = (gc_iRoundTime.FloatValue*60-5);
 		CreateTimer (RoundTime, EndTheRound);
@@ -433,6 +433,8 @@ stock void CreateInfoPanel(int client)
 	Format(info, sizeof(info), "%T", "dealdamage_info_line7" ,client);
 	DrawPanelText(DealDamageMenu, info);
 	DrawPanelText(DealDamageMenu, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "warden_close", client);
+	DrawPanelItem(DealDamageMenu, info); 
 	SendPanelToClient(DealDamageMenu, client, NullHandler, 20); //open info Panel
 }
 

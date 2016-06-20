@@ -404,6 +404,8 @@ stock void CreateInfoPanel(int client)
 	Format(info, sizeof(info), "%T", "duckhunt_info_line7", client);
 	DrawPanelText(DuckHuntMenu, info);
 	DrawPanelText(DuckHuntMenu, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "warden_close", client);
+	DrawPanelItem(DuckHuntMenu, info); 
 	SendPanelToClient(DuckHuntMenu, client, NullHandler, 20);
 }
 

@@ -425,6 +425,8 @@ stock void CreateInfoPanel(int client)
 	Format(info, sizeof(info), "%T", "noscope_info_line7", client);
 	DrawPanelText(NoScopeMenu, info);
 	DrawPanelText(NoScopeMenu, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "warden_close", client);
+	DrawPanelItem(NoScopeMenu, info); 
 	SendPanelToClient(NoScopeMenu, client, NullHandler, 20);
 }
 

@@ -381,6 +381,8 @@ stock void CreateInfoPanel(int client)
 	Format(info, sizeof(info), "%T", "hide_info_line7", client);
 	DrawPanelText(HideMenu, info);
 	DrawPanelText(HideMenu, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "warden_close", client);
+	DrawPanelItem(HideMenu, info); 
 	SendPanelToClient(HideMenu, client, NullHandler, 20);
 }
 //Start Timer
