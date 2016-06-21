@@ -172,11 +172,11 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 
 public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 {
-	if (RoundTimer != null) KillTimer(RoundTimer);
+	delete RoundTimer;
 }
 public void OnMapEnd()
 {
-	if (RoundTimer != null) KillTimer(RoundTimer);
+	delete RoundTimer;
 }
 
 public Action RoundTimerHandle(Handle timer)

@@ -1,7 +1,13 @@
+see here the higher priority TODO list
+https://github.com/shanapu/MyJailbreak/issues
+  
+  
+  
+  
+  
 - [ ] wiki: howto edit -> SetCvars
 - [ ] Smart Download Manager https://forums.alliedmods.net/showthread.php?t=206496
 - [ ] translate EventDay native
-- [ ] hide: darken the sky like in zombie
 - [ ] countdown: Start -> Cancel -> Start - bug
 - [ ] duckhunt: change +attack to +secAttack
 - [ ] all: format centertext <font size='30' color='#FF00FF'>test</font>
@@ -12,7 +18,6 @@
 - [ ] countdown: insert cancel in menu / fix first
 - [ ] countdown: force stop
 - [ ] duckhunt auto higher if more t
-- [ ] duckhunt ammo refill to SetPlayerWeaponAmmo stock
 - [ ] menu: merge waden & admin check
 - [ ] events: change canset bool to RoundState_BetweenRounds https://sm.alliedmods.net/new-api/sdktools_gamerules/RoundState
 
