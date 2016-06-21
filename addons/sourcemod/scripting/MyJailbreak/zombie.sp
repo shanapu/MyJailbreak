@@ -42,6 +42,7 @@ ConVar g_iGetRoundTime;
 ConVar g_sOldSkyName;
 ConVar gc_iRounds;
 ConVar gc_sCustomCommand;
+ConVar gc_sAdminFlag;
 
 //Integers
 int g_iOldRoundTime;
@@ -50,7 +51,6 @@ int g_iCoolDown;
 int g_iVoteCount;
 int g_iRound;
 int g_iMaxRound;
-int FogIndex = -1;
 
 //Handles
 Handle FreezeTimer;
@@ -59,9 +59,7 @@ Handle ZombieMenu;
 
 //Floats
 float g_fPos[3];
-float mapFogStart = 0.0;
-float mapFogEnd = 150.0;
-float mapFogDensity = 0.99;
+
 
 //Strings
 char g_sZombieModel[256];
@@ -70,6 +68,7 @@ char g_sSoundStartPath[256];
 char g_sSkyName[256];
 char g_sCustomCommand[64];
 char g_sEventsLogFile[PLATFORM_MAX_PATH];
+char g_sAdminFlag[32];
 
 public Plugin myinfo = {
 	name = "MyJailbreak - Zombie",
@@ -97,7 +96,8 @@ public void OnPluginStart()
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_zombie_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true, 0.0, true, 1.0);
 	gc_sCustomCommand = AutoExecConfig_CreateConVar("sm_zombie_cmd", "zd", "Set your custom chat command for Event voting. no need for sm_ or !");
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_zombie_warden", "1", "0 - disabled, 1 - allow warden to set zombie round", _, true, 0.0, true, 1.0);
-	gc_bSetA = AutoExecConfig_CreateConVar("sm_zombie_admin", "1", "0 - disabled, 1 - allow admin to set zombie round", _, true, 0.0, true, 1.0);
+	gc_bSetA = AutoExecConfig_CreateConVar("sm_zombie_admin", "1", "0 - disabled, 1 - allow admin/vip to set zombie round", _, true, 0.0, true, 1.0);
+	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_zombie_flag", "g", "Set flag for admin/vip to set this Event Day.");
 	gc_bVote = AutoExecConfig_CreateConVar("sm_zombie_vote", "1", "0 - disabled, 1 - allow player to vote for zombie", _, true, 0.0, true, 1.0);
 	gc_bSpawnCell = AutoExecConfig_CreateConVar("sm_zombie_spawn", "0", "0 - T teleport to CT spawn, 1 - cell doors auto open", _, true,  0.0, true, 1.0);
 	gc_iRounds = AutoExecConfig_CreateConVar("sm_zombie_rounds", "1", "Rounds to play in a row", _, true, 1.0);
@@ -106,7 +106,7 @@ public void OnPluginStart()
 	gc_iZombieHP = AutoExecConfig_CreateConVar("sm_zombie_zombie_hp", "8500", "HP the Zombies got on Spawn", _, true, 1.0);
 	gc_iHumanHP = AutoExecConfig_CreateConVar("sm_zombie_human_hp", "65", "HP the Humans got on Spawn", _, true, 1.0);
 	gc_bDark = AutoExecConfig_CreateConVar("sm_zombie_dark", "1", "0 - disabled, 1 - enable Map Darkness", _, true,  0.0, true, 1.0);
-	gc_bGlow = AutoExecConfig_CreateConVar("sm_zombie_glow", "1", "0 - disabled, 1 - enable Glow effect for humans", _, true,  0.0, true, 1.0);
+	gc_bGlow = AutoExecConfig_CreateConVar("sm_zombie_glow", "0", "0 - disabled, 1 - enable Glow effect for humans", _, true,  0.0, true, 1.0);
 	gc_bVision = AutoExecConfig_CreateConVar("sm_zombie_vision", "1", "0 - disabled, 1 - enable NightVision View for Zombies", _, true,  0.0, true, 1.0);
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_zombie_cooldown_day", "3", "Rounds cooldown after a event until event can be start again", _, true, 0.0);
 	gc_iCooldownStart = AutoExecConfig_CreateConVar("sm_zombie_cooldown_start", "3", "Rounds until event can be start after mapchange.", _, true, 0.0);
@@ -126,6 +126,7 @@ public void OnPluginStart()
 	HookConVarChange(gc_sModelPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
 	HookConVarChange(gc_sCustomCommand, OnSettingChanged);
+	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
 	
 	//FindConVar
 	g_iGetRoundTime = FindConVar("mp_roundtime");
@@ -135,6 +136,7 @@ public void OnPluginStart()
 	gc_sModelPath.GetString(g_sZombieModel, sizeof(g_sZombieModel));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 	gc_sCustomCommand.GetString(g_sCustomCommand , sizeof(g_sCustomCommand));
+	gc_sAdminFlag.GetString(g_sAdminFlag , sizeof(g_sAdminFlag));
 	
 	SetLogFile(g_sEventsLogFile, "Events");
 }
@@ -147,6 +149,10 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 	{
 		strcopy(g_sZombieModel, sizeof(g_sZombieModel), newValue);
 		PrecacheModel(g_sZombieModel);
+	}
+	else if(convar == gc_sAdminFlag)
+	{
+		strcopy(g_sAdminFlag, sizeof(g_sAdminFlag), newValue);
 	}
 	else if(convar == gc_sOverlayStartPath)
 	{
@@ -186,20 +192,6 @@ public void OnMapStart()
 	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
 	if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStart);
 	PrecacheModel(g_sZombieModel);
-	
-	int ent; 
-	ent = FindEntityByClassname(-1, "env_fog_controller");
-	if (ent != -1) 
-	{
-		FogIndex = ent;
-	}
-	else
-	{
-		FogIndex += CreateEntityByName("env_fog_controller");
-		if (FogIndex != -1) DispatchSpawn(FogIndex);
-	}
-	DoFog();
-	AcceptEntityInput(FogIndex, "TurnOff");
 }
 
 public void OnConfigsExecuted()
@@ -249,7 +241,7 @@ public Action SetZombie(int client,int args)
 		}
 			else CPrintToChat(client, "%t %t", "warden_tag" , "zombie_setbywarden");
 		}
-		else if (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
+		else if (CheckVipFlag(client,g_sAdminFlag))
 		{
 			if (gc_bSetA.BoolValue)
 			{
@@ -345,8 +337,6 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 	canSet = true;
 	if (StartZombie || IsZombie)
 	{
-		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
-		
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_warden_enable", 0);
 		SetCvarString("sv_skyname", "cs_baggage_skybox_");
@@ -379,28 +369,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 			{
 				LoopClients(client)
 				{
-					ZombieMenu = CreatePanel();
-					Format(info1, sizeof(info1), "%T", "zombie_info_title", client);
-					SetPanelTitle(ZombieMenu, info1);
-					DrawPanelText(ZombieMenu, "                                   ");
-					Format(info2, sizeof(info2), "%T", "zombie_info_line1", client);
-					DrawPanelText(ZombieMenu, info2);
-					DrawPanelText(ZombieMenu, "-----------------------------------");
-					Format(info3, sizeof(info3), "%T", "zombie_info_line2", client);
-					DrawPanelText(ZombieMenu, info3);
-					Format(info4, sizeof(info4), "%T", "zombie_info_line3", client);
-					DrawPanelText(ZombieMenu, info4);
-					Format(info5, sizeof(info5), "%T", "zombie_info_line4", client);
-					DrawPanelText(ZombieMenu, info5);
-					Format(info6, sizeof(info6), "%T", "zombie_info_line5", client);
-					DrawPanelText(ZombieMenu, info6);
-					Format(info7, sizeof(info7), "%T", "zombie_info_line6", client);
-					DrawPanelText(ZombieMenu, info7);
-					Format(info8, sizeof(info8), "%T", "zombie_info_line7", client);
-					DrawPanelText(ZombieMenu, info8);
-					DrawPanelText(ZombieMenu, "-----------------------------------");
-					SendPanelToClient(ZombieMenu, client, NullHandler, 20);
-					
+					CreateInfoPanel(client);
 					SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
 					SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 					
@@ -445,6 +414,35 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 	}
 }
 
+stock void CreateInfoPanel(int client)
+{
+	//Create info Panel
+	char info[255];
+	
+	ZombieMenu = CreatePanel();
+	Format(info, sizeof(info), "%T", "zombie_info_title", client);
+	SetPanelTitle(ZombieMenu, info);
+	DrawPanelText(ZombieMenu, "                                   ");
+	Format(info, sizeof(info), "%T", "zombie_info_line1", client);
+	DrawPanelText(ZombieMenu, info);
+	DrawPanelText(ZombieMenu, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "zombie_info_line2", client);
+	DrawPanelText(ZombieMenu, info);
+	Format(info, sizeof(info), "%T", "zombie_info_line3", client);
+	DrawPanelText(ZombieMenu, info);
+	Format(info, sizeof(info), "%T", "zombie_info_line4", client);
+	DrawPanelText(ZombieMenu, info);
+	Format(info, sizeof(info), "%T", "zombie_info_line5", client);
+	DrawPanelText(ZombieMenu, info);
+	Format(info, sizeof(info), "%T", "zombie_info_line6", client);
+	DrawPanelText(ZombieMenu, info);
+	Format(info, sizeof(info), "%T", "zombie_info_line7", client);
+	DrawPanelText(ZombieMenu, info);
+	DrawPanelText(ZombieMenu, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "warden_close", client);
+	DrawPanelItem(ZombieMenu, info); 
+	SendPanelToClient(ZombieMenu, client, NullHandler, 20);
+}
 //Round End
 
 public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
@@ -460,7 +458,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 			char model[PLATFORM_MAX_PATH]; 
 			GetClientModel(client, model, sizeof(model)); 
 			int skin = CPS_SetSkin(client, model, CPS_RENDER);
-			if(skin != -1)
+			if(skin != -1 && gc_bGlow.BoolValue)
 			{
 				SetEntProp(skin, Prop_Send, "m_bShouldGlow", false, true);
 				SetEntProp(skin, Prop_Send, "m_nGlowStyle", 1);
@@ -489,13 +487,13 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 			SetCvar("sm_menu_enable", 1);
 			g_iGetRoundTime.IntValue = g_iOldRoundTime;
 			SetEventDay("none");
-			DoFog();
-			AcceptEntityInput(FogIndex, "TurnOff");
+			FogOff();
 			CPrintToChatAll("%t %t", "zombie_tag" , "zombie_end");
 		}
 	}
 	if (StartZombie)
 	{
+		LoopClients(i) CreateInfoPanel(i);
 		g_iOldRoundTime = g_iGetRoundTime.IntValue;
 		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;
 		
@@ -570,7 +568,7 @@ public Action StartTimer(Handle timer)
 			SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
 			PrintHintText(client,"%t", "zombie_start_nc");
 			if(gc_bOverlays.BoolValue) CreateTimer( 0.0, ShowOverlayStart, client);
-			if(gc_bSounds.BoolValue)	
+			if(gc_bSounds.BoolValue)
 			{
 				EmitSoundToAllAny(g_sSoundStartPath);
 			}
@@ -578,7 +576,7 @@ public Action StartTimer(Handle timer)
 		CPrintToChatAll("%t %t", "zombie_tag" , "zombie_start");
 	}
 	FreezeTimer = null;
-	if(gc_bDark.BoolValue && (g_iRound = 1)) {AcceptEntityInput(FogIndex, "TurnOn");}
+	if(gc_bDark.BoolValue && (g_iRound = 1)) FogOn();
 	
 	return Plugin_Stop;
 }
@@ -604,19 +602,4 @@ public Action OnWeaponCanUse(int client, int weapon)
 			}
 		}
 	return Plugin_Continue;
-}
-
-//Darken the Map
-
-public Action DoFog()
-{
-	if(FogIndex != -1)
-	{
-		DispatchKeyValue(FogIndex, "fogblend", "0");
-		DispatchKeyValue(FogIndex, "fogcolor", "0 0 0");
-		DispatchKeyValue(FogIndex, "fogcolor2", "0 0 0");
-		DispatchKeyValueFloat(FogIndex, "fogstart", mapFogStart);
-		DispatchKeyValueFloat(FogIndex, "fogend", mapFogEnd);
-		DispatchKeyValueFloat(FogIndex, "fogmaxdensity", mapFogDensity);
-	}
 }

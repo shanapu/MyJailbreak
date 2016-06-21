@@ -901,6 +901,11 @@
 		"de"		"Benutze den Taser als Handschellen"
 		"pl"		"uzyj Zeusa jako Kajdanek"
 	}
+	"warden_backstab"
+	{
+		"en"		"Backstab protection active"
+		"de"		"Backstab protection aktiv"
+	}
 	
 	"warden_cuffson"
 	{
@@ -924,5 +929,17 @@
 		"en"		"You've got {green}{1}{default} handcuffs left"
 		"de"		"Du hast noch {green}{1}{default} Handschellen übrig"
 		"pl"		"Masz {green}{1}{default} jedne Kajdanki"
+	}
+	
+	"warden_extendtimes"
+	{
+		"#format"	"{1:i}"
+		"de"		"Du hast in dieser Runde schon {purple}{1} mal verlängert{default}."
+		"en"		"You have already {purple}extend {1} times{default} in this round."
+	}
+	"warden_close"
+	{
+		"en"			"Close"
+		"de"			"Schliessen"
 	}
 }

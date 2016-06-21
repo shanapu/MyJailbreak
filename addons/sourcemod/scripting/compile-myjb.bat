@@ -20,5 +20,7 @@ spcomp MyJailbreak/drunk.sp -o../plugins/MyJailbreak/drunk.smx
 spcomp MyJailbreak/torch.sp -o../plugins/MyJailbreak/torch.smx 
 spcomp MyJailbreak/zombie.sp -o../plugins/MyJailbreak/zombie.smx 
 spcomp MyJailbreak/request.sp -o../plugins/MyJailbreak/request.smx 
+spcomp MyJailbreak/dealdamage.sp -o../plugins/MyJailbreak/dealdamage.smx 
+spcomp MyJailbreak/ratio.sp -o../plugins/MyJailbreak/ratio.smx 
 
 pause

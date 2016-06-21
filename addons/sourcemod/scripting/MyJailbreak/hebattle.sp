@@ -37,6 +37,7 @@ ConVar gc_sOverlayStartPath;
 ConVar g_iGetRoundTime;
 ConVar gc_iRounds;
 ConVar gc_sCustomCommand;
+ConVar gc_sAdminFlag;
 
 //Integers
 int g_iOldRoundTime;
@@ -59,6 +60,7 @@ char g_sHasVoted[1500];
 char g_sSoundStartPath[256];
 char g_sCustomCommand[64];
 char g_sEventsLogFile[PLATFORM_MAX_PATH];
+char g_sAdminFlag[32];
 
 public Plugin myinfo = {
 	name = "MyJailbreak - HEbattle",
@@ -86,7 +88,8 @@ public void OnPluginStart()
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_hebattle_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true,  0.0, true, 1.0);
 	gc_sCustomCommand = AutoExecConfig_CreateConVar("sm_hebattle_cmd", "he", "Set your custom chat command for Event voting. no need for sm_ or !");
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_hebattle_warden", "1", "0 - disabled, 1 - allow warden to set hebattle round", _, true,  0.0, true, 1.0);
-	gc_bSetA = AutoExecConfig_CreateConVar("sm_hebattle_admin", "1", "0 - disabled, 1 - allow admin to set hebattle round", _, true,  0.0, true, 1.0);
+	gc_bSetA = AutoExecConfig_CreateConVar("sm_hebattle_admin", "1", "0 - disabled, 1 - allow admin/vip to set hebattle round", _, true,  0.0, true, 1.0);
+	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_hebattle_flag", "g", "Set flag for admin/vip to set this Event Day.");
 	gc_bVote = AutoExecConfig_CreateConVar("sm_hebattle_vote", "1", "0 - disabled, 1 - allow player to vote for hebattle", _, true,  0.0, true, 1.0);
 	gc_bSpawnCell = AutoExecConfig_CreateConVar("sm_hebattle_spawn", "0", "0 - T teleport to CT spawn, 1 - cell doors auto open", _, true,  0.0, true, 1.0);
 	gc_iPlayerHP = AutoExecConfig_CreateConVar("sm_hebattle_hp", "85", "HP a Player get on Spawn", _, true, 1.0);
@@ -112,6 +115,7 @@ public void OnPluginStart()
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
 	HookConVarChange(gc_sCustomCommand, OnSettingChanged);
+	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
 	
 	//Find
 	g_iGetRoundTime = FindConVar("mp_roundtime");
@@ -120,6 +124,7 @@ public void OnPluginStart()
 	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 	gc_sCustomCommand.GetString(g_sCustomCommand , sizeof(g_sCustomCommand));
+	gc_sAdminFlag.GetString(g_sAdminFlag , sizeof(g_sAdminFlag));
 	
 	SetLogFile(g_sEventsLogFile, "Events");
 }
@@ -132,6 +137,10 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 	{
 		strcopy(g_sOverlayStart, sizeof(g_sOverlayStart), newValue);
 		if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStart);
+	}
+	else if(convar == gc_sAdminFlag)
+	{
+		strcopy(g_sAdminFlag, sizeof(g_sAdminFlag), newValue);
 	}
 	else if(convar == gc_sSoundStartPath)
 	{
@@ -212,31 +221,31 @@ public Action SetHEbattle(int client,int args)
 			}
 			else CPrintToChat(client, "%t %t", "warden_tag" , "hebattle_setbywarden");
 		}
-		else if (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
+		else if (CheckVipFlag(client,g_sAdminFlag))
+		{
+			if (gc_bSetA.BoolValue)
 			{
-				if (gc_bSetA.BoolValue)
+				if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
 				{
-					if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
+					char EventDay[64];
+					GetEventDay(EventDay);
+					
+					if(StrEqual(EventDay, "none", false))
 					{
-						char EventDay[64];
-						GetEventDay(EventDay);
-						
-						if(StrEqual(EventDay, "none", false))
+						if (g_iCoolDown == 0)
 						{
-							if (g_iCoolDown == 0)
-							{
-								StartNextRound();
-								if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event HEbattle was started by admin %L", client);
-							}
-							else CPrintToChat(client, "%t %t", "hebattle_tag" , "hebattle_wait", g_iCoolDown);
+							StartNextRound();
+							if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event HEbattle was started by admin %L", client);
 						}
-						else CPrintToChat(client, "%t %t", "hebattle_tag" , "hebattle_progress" , EventDay);
+						else CPrintToChat(client, "%t %t", "hebattle_tag" , "hebattle_wait", g_iCoolDown);
 					}
-					else CPrintToChat(client, "%t %t", "hebattle_tag" , "hebattle_minplayer");
+					else CPrintToChat(client, "%t %t", "hebattle_tag" , "hebattle_progress" , EventDay);
 				}
-				else CPrintToChat(client, "%t %t", "hebattle_tag" , "hebattle_setbyadmin");
+				else CPrintToChat(client, "%t %t", "hebattle_tag" , "hebattle_minplayer");
 			}
-			else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
+			else CPrintToChat(client, "%t %t", "hebattle_tag" , "hebattle_setbyadmin");
+		}
+		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
 	}
 	else CPrintToChat(client, "%t %t", "hebattle_tag" , "hebattle_disabled");
 }
@@ -311,8 +320,6 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 	canSet = true;
 	if (StartHEbattle || IsHEbattle)
 	{
-		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
-		
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_weapons_enable", 0);
 		SetCvar("sm_warden_enable", 0);
@@ -343,27 +350,8 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 			{
 				LoopClients(client)
 				{
-					HEbattleMenu = CreatePanel();
-					Format(info1, sizeof(info1), "%T", "hebattle_info_title", LANG_SERVER);
-					SetPanelTitle(HEbattleMenu, info1);
-					DrawPanelText(HEbattleMenu, "                                   ");
-					Format(info2, sizeof(info2), "%T", "hebattle_info_line1", LANG_SERVER);
-					DrawPanelText(HEbattleMenu, info2);
-					DrawPanelText(HEbattleMenu, "-----------------------------------");
-					Format(info3, sizeof(info3), "%T", "hebattle_info_line2", LANG_SERVER);
-					DrawPanelText(HEbattleMenu, info3);
-					Format(info4, sizeof(info4), "%T", "hebattle_info_line3", LANG_SERVER);
-					DrawPanelText(HEbattleMenu, info4);
-					Format(info5, sizeof(info5), "%T", "hebattle_info_line4", LANG_SERVER);
-					DrawPanelText(HEbattleMenu, info5);
-					Format(info6, sizeof(info6), "%T", "hebattle_info_line5", LANG_SERVER);
-					DrawPanelText(HEbattleMenu, info6);
-					Format(info7, sizeof(info7), "%T", "hebattle_info_line6", LANG_SERVER);
-					DrawPanelText(HEbattleMenu, info7);
-					Format(info8, sizeof(info8), "%T", "hebattle_info_line7", LANG_SERVER);
-					DrawPanelText(HEbattleMenu, info8);
-					DrawPanelText(HEbattleMenu, "-----------------------------------");
-					SendPanelToClient(HEbattleMenu, client, NullHandler, 20);
+
+					CreateInfoPanel(client);
 					
 					SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 					StripAllWeapons(client);
@@ -399,6 +387,35 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 	}
 }
 
+stock void CreateInfoPanel(int client)
+{
+	//Create info Panel
+	char info[255];
+
+	HEbattleMenu = CreatePanel();
+	Format(info, sizeof(info), "%T", "hebattle_info_title", client);
+	SetPanelTitle(HEbattleMenu, info);
+	DrawPanelText(HEbattleMenu, "                                   ");
+	Format(info, sizeof(info), "%T", "hebattle_info_line1", client);
+	DrawPanelText(HEbattleMenu, info);
+	DrawPanelText(HEbattleMenu, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "hebattle_info_line2", client);
+	DrawPanelText(HEbattleMenu, info);
+	Format(info, sizeof(info), "%T", "hebattle_info_line3", client);
+	DrawPanelText(HEbattleMenu, info);
+	Format(info, sizeof(info), "%T", "hebattle_info_line4", client);
+	DrawPanelText(HEbattleMenu, info);
+	Format(info, sizeof(info), "%T", "hebattle_info_line5", client);
+	DrawPanelText(HEbattleMenu, info);
+	Format(info, sizeof(info), "%T", "hebattle_info_line6", client);
+	DrawPanelText(HEbattleMenu, info);
+	Format(info, sizeof(info), "%T", "hebattle_info_line7", client);
+	DrawPanelText(HEbattleMenu, info);
+	DrawPanelText(HEbattleMenu, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "warden_close", client);
+	DrawPanelItem(HEbattleMenu, info); 
+	SendPanelToClient(HEbattleMenu, client, NullHandler, 20);
+}
 //Round End
 
 public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
@@ -433,6 +450,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 	}
 	if (StartHEbattle)
 	{
+		LoopClients(i) CreateInfoPanel(i);
 		g_iOldRoundTime = g_iGetRoundTime.IntValue;
 		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;
 		

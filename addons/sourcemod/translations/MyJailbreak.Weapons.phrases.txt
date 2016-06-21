@@ -64,7 +64,7 @@
 		"da"		"Du har fået et {purple} healthshot{default}"
 		"en"		"You've got a {purple} healthshot{default}"
 		"de"		"Du haste eine {purple}healthshot{default} bekommen."
-		"en"		"Posiadasz zastrzyk  {purple} ADRENALINY {default}"
+		"pl"		"Posiadasz zastrzyk  {purple} ADRENALINY {default}"
 	}
 	
 	"weapons_info_title"

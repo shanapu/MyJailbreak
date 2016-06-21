@@ -23,6 +23,7 @@ ConVar gc_bClose;
 ConVar gc_bStart;
 ConVar gc_bWelcome;
 ConVar gc_bTeam;
+ConVar gc_sCustomCommand;
 
 //3rd party Convars
 ConVar g_bMath;
@@ -60,10 +61,17 @@ ConVar g_bRandom;
 ConVar g_bRequest;
 ConVar g_bWarden;
 ConVar g_bSparks;
-ConVar gc_sCustomCommand;
+ConVar g_bDealDamage;
+ConVar gc_sAdminFlagBulletSparks;
+ConVar gc_sAdminFlagLaser;
+ConVar gc_sAdminFlagDrawer;
 
 //Strings
 char g_sCustomCommand[64];
+
+char g_sAdminFlagBulletSparks[32];
+char g_sAdminFlagLaser[32];
+char g_sAdminFlagDrawer[32];
 
 
 public Plugin myinfo = {
@@ -167,6 +175,14 @@ public void OnConfigsExecuted()
 	g_bRandom = FindConVar("sm_warden_random");
 	g_bFF = FindConVar("mp_teammates_are_enemies");
 	g_bRequest = FindConVar("sm_request_enable");
+	g_bDealDamage = FindConVar("sm_dealdamage_enable");
+	gc_sAdminFlagBulletSparks = FindConVar("sm_warden_bulletsparks_flag");
+	gc_sAdminFlagLaser = FindConVar("sm_warden_laser_flag");
+	gc_sAdminFlagDrawer = FindConVar("sm_warden_drawer_flag");
+	
+	gc_sAdminFlagLaser.GetString(g_sAdminFlagLaser, sizeof(g_sAdminFlagLaser));
+	gc_sAdminFlagDrawer.GetString(g_sAdminFlagDrawer, sizeof(g_sAdminFlagDrawer));
+	gc_sAdminFlagBulletSparks.GetString(g_sAdminFlagBulletSparks, sizeof(g_sAdminFlagBulletSparks));
 	
 	char sBufferCMD[64];
 	Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommand);
@@ -266,7 +282,7 @@ public Action JbMenu(int client, int args)
 				}
 				if(g_bSparks != null)
 				{
-					if(g_bSparks.BoolValue)
+					if(g_bSparks.BoolValue && CheckVipFlag(client,g_sAdminFlagBulletSparks))
 					{
 						Format(menuinfo, sizeof(menuinfo), "%T", "menu_sparks", client);
 						mainmenu.AddItem("sparks", menuinfo);
@@ -274,7 +290,7 @@ public Action JbMenu(int client, int args)
 				}
 				if(g_bDrawer != null)
 				{
-					if(g_bDrawer.BoolValue)
+					if(g_bDrawer.BoolValue && CheckVipFlag(client,g_sAdminFlagDrawer))
 					{
 						Format(menuinfo, sizeof(menuinfo), "%T", "menu_drawer", client);
 						mainmenu.AddItem("drawer", menuinfo);
@@ -282,7 +298,7 @@ public Action JbMenu(int client, int args)
 				}
 				if(g_bLaser != null)
 				{
-					if(g_bLaser.BoolValue)
+					if(g_bLaser.BoolValue && CheckVipFlag(client,g_sAdminFlagLaser))
 					{
 						Format(menuinfo, sizeof(menuinfo), "%T", "menu_laser", client);
 						mainmenu.AddItem("laser", menuinfo);
@@ -775,6 +791,14 @@ public Action VoteEventDays(int client, int args)
 					daysmenu.AddItem("votezeus", menuinfo);
 				}
 			}
+			if(g_bDealDamage != null)
+			{
+				if(g_bDealDamage.BoolValue)
+				{
+					Format(menuinfo, sizeof(menuinfo), "%T", "menu_dealdamge", client);
+					daysmenu.AddItem("votedeal", menuinfo);
+				}
+			}
 			if(g_bDrunk != null)
 			{
 				if(g_bDrunk.BoolValue)
@@ -906,6 +930,14 @@ public int VoteEventMenuHandler(Menu daysmenu, MenuAction action, int client, in
 		else if ( strcmp(info,"votetorch") == 0 )
 		{
 			FakeClientCommand(client, "sm_torch");
+			if(!gc_bClose.BoolValue)
+			{
+				JbMenu(client,0);
+			}
+		}
+		else if ( strcmp(info,"votedeal") == 0 )
+		{
+			FakeClientCommand(client, "sm_dealdamage");
 			if(!gc_bClose.BoolValue)
 			{
 				JbMenu(client,0);
@@ -1050,6 +1082,14 @@ public Action SetEventDays(int client, int args)
 					daysmenu.AddItem("setduckhunt", menuinfo);
 				}
 			}
+			if(g_bDealDamage != null)
+			{
+				if(g_bDealDamage.BoolValue)
+				{
+					Format(menuinfo, sizeof(menuinfo), "%T", "menu_dealdamge", client);
+					daysmenu.AddItem("setdeal", menuinfo);
+				}
+			}
 			if(g_bZeus != null)
 			{
 				if(g_bZeus.BoolValue)
@@ -1174,6 +1214,17 @@ public int SetEventMenuHandler(Menu daysmenu, MenuAction action, int client, int
 			if (warden_iswarden(client) || (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true)))
 			{
 				FakeClientCommand(client, "sm_setzeus");
+				if(!gc_bClose.BoolValue)
+				{
+					JbMenu(client,0);
+				}
+			}
+		} 
+		else if ( strcmp(info,"setdeal") == 0 )
+		{
+			if (warden_iswarden(client) || (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true)))
+			{
+				FakeClientCommand(client, "sm_setdealdamage");
 				if(!gc_bClose.BoolValue)
 				{
 					JbMenu(client,0);

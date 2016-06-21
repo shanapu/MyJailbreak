@@ -50,6 +50,7 @@ ConVar gc_sSoundClearTorchPath;
 ConVar g_iGetRoundTime;
 ConVar gc_iRounds;
 ConVar gc_sCustomCommand;
+ConVar gc_sAdminFlag;
 
 //Integers
 int g_iVoteCount;
@@ -74,6 +75,7 @@ char g_sOverlayOnTorch[256];
 char g_sSoundStartPath[256];
 char g_sCustomCommand[64];
 char g_sEventsLogFile[PLATFORM_MAX_PATH];
+char g_sAdminFlag[32];
 
 //Floats
 float g_fPos[3];
@@ -105,7 +107,8 @@ public void OnPluginStart()
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_torch_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true, 0.0, true, 1.0);
 	gc_sCustomCommand = AutoExecConfig_CreateConVar("sm_torch_cmd", "torch", "Set your custom chat command for Event voting. no need for sm_ or !");
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_torch_warden", "1", "0 - disabled, 1 - allow warden to set torch round", _, true, 0.0, true, 1.0);
-	gc_bSetA = AutoExecConfig_CreateConVar("sm_torch_admin", "1", "0 - disabled, 1 - allow admin to set torch round", _, true, 0.0, true, 1.0);
+	gc_bSetA = AutoExecConfig_CreateConVar("sm_torch_admin", "1", "0 - disabled, 1 - allow admin/vip to set torch round", _, true, 0.0, true, 1.0);
+	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_torch_flag", "g", "Set flag for admin/vip to set this Event Day.");
 	gc_bVote = AutoExecConfig_CreateConVar("sm_torch_vote", "1", "0 - disabled, 1 - allow player to vote for torch", _, true, 0.0, true, 1.0);
 	gc_iRounds = AutoExecConfig_CreateConVar("sm_torch_rounds", "3", "Rounds to play in a row", _, true, 1.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_torch_roundtime", "9", "Round time in minutes for a single torch round", _, true, 1.0);
@@ -142,6 +145,7 @@ public void OnPluginStart()
 	HookConVarChange(gc_sSoundOnTorchPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundClearTorchPath, OnSettingChanged);
 	HookConVarChange(gc_sCustomCommand, OnSettingChanged);
+	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
 	
 	//FindConVar
 	g_iTruceTime = gc_iTruceTime.IntValue;
@@ -154,6 +158,7 @@ public void OnPluginStart()
 	gc_sCustomCommand.GetString(g_sCustomCommand , sizeof(g_sCustomCommand));
 	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
+	gc_sAdminFlag.GetString(g_sAdminFlag , sizeof(g_sAdminFlag));
 	
 	SetLogFile(g_sEventsLogFile, "Events");
 }
@@ -166,6 +171,10 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 	{
 		strcopy(g_sSoundOnTorchPath, sizeof(g_sSoundOnTorchPath), newValue);
 		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundOnTorchPath);
+	}
+	else if(convar == gc_sAdminFlag)
+	{
+		strcopy(g_sAdminFlag, sizeof(g_sAdminFlag), newValue);
 	}
 	else if(convar == gc_sSoundClearTorchPath)
 	{
@@ -268,31 +277,31 @@ public Action SetTorch(int client,int args)
 			}
 			else CPrintToChat(client, "%t %t", "warden_tag" , "torch_setbywarden");
 		}
-		else if (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
+		else if (CheckVipFlag(client,g_sAdminFlag))
+		{
+			if (gc_bSetA.BoolValue)
 			{
-				if (gc_bSetA.BoolValue)
+				if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ) && (GetClientCount() > 2))
 				{
-					if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ) && (GetClientCount() > 2))
+					char EventDay[64];
+					GetEventDay(EventDay);
+					
+					if(StrEqual(EventDay, "none", false))
 					{
-						char EventDay[64];
-						GetEventDay(EventDay);
-						
-						if(StrEqual(EventDay, "none", false))
+						if (g_iCoolDown == 0)
 						{
-							if (g_iCoolDown == 0)
-							{
-								StartNextRound();
-								if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Torch was started by admin %L", client);
-							}
-							else CPrintToChat(client, "%t %t", "torch_tag" , "torch_wait", g_iCoolDown);
+							StartNextRound();
+							if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Torch was started by admin %L", client);
 						}
-						else CPrintToChat(client, "%t %t", "torch_tag" , "torch_progress" , EventDay);
+						else CPrintToChat(client, "%t %t", "torch_tag" , "torch_wait", g_iCoolDown);
 					}
-					else CPrintToChat(client, "%t %t", "torch_tag" , "torch_minplayer");
+					else CPrintToChat(client, "%t %t", "torch_tag" , "torch_progress" , EventDay);
 				}
-				else CPrintToChat(client, "%t %t", "torch_tag" , "torch_setbyadmin");
+				else CPrintToChat(client, "%t %t", "torch_tag" , "torch_minplayer");
 			}
-			else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
+			else CPrintToChat(client, "%t %t", "torch_tag" , "torch_setbyadmin");
+		}
+		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
 	}
 	else CPrintToChat(client, "%t %t", "torch_tag" , "torch_disabled");
 }
@@ -365,8 +374,6 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 	canSet = true;
 	if (StartTorch || IsTorch)
 	{
-		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
-		
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("sm_weapons_enable", 0);
@@ -408,32 +415,14 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 			}
 			LoopClients(client)
 			{
-				TorchMenu = CreatePanel();
-				Format(info1, sizeof(info1), "%T", "torch_info_title", client);
-				SetPanelTitle(TorchMenu, info1);
-				DrawPanelText(TorchMenu, "                                   ");
-				Format(info2, sizeof(info2), "%T", "torch_info_line1", client);
-				DrawPanelText(TorchMenu, info2);
-				DrawPanelText(TorchMenu, "-----------------------------------");
-				Format(info3, sizeof(info3), "%T", "torch_info_line2", client);
-				DrawPanelText(TorchMenu, info3);
-				Format(info4, sizeof(info4), "%T", "torch_info_line3", client);
-				DrawPanelText(TorchMenu, info4);
-				Format(info5, sizeof(info5), "%T", "torch_info_line4", client);
-				DrawPanelText(TorchMenu, info5);
-				Format(info6, sizeof(info6), "%T", "torch_info_line5", client);
-				DrawPanelText(TorchMenu, info6);
-				Format(info7, sizeof(info7), "%T", "torch_info_line6", client);
-				DrawPanelText(TorchMenu, info7);
-				Format(info8, sizeof(info8), "%T", "torch_info_line7", client);
-				DrawPanelText(TorchMenu, info8);
-				DrawPanelText(TorchMenu, "-----------------------------------");
+				
 				
 				StripAllWeapons(client);
 				ClientSprintStatus[client] = 0;
 				GivePlayerItem(client, "weapon_knife");
 				SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
-				SendPanelToClient(TorchMenu, client, NullHandler, 20);
+				
+				CreateInfoPanel(client);
 				OnTorch[client] = false;
 				ImmuneTorch[client] = false;
 			}
@@ -451,6 +440,36 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		}
 		else if (g_iCoolDown > 0) g_iCoolDown--;
 	}
+}
+
+stock void CreateInfoPanel(int client)
+{
+	//Create info Panel
+	char info[255];
+	
+	TorchMenu = CreatePanel();
+	Format(info, sizeof(info), "%T", "torch_info_title", client);
+	SetPanelTitle(TorchMenu, info);
+	DrawPanelText(TorchMenu, "                                   ");
+	Format(info, sizeof(info), "%T", "torch_info_line1", client);
+	DrawPanelText(TorchMenu, info);
+	DrawPanelText(TorchMenu, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "torch_info_line2", client);
+	DrawPanelText(TorchMenu, info);
+	Format(info, sizeof(info), "%T", "torch_info_line3", client);
+	DrawPanelText(TorchMenu, info);
+	Format(info, sizeof(info), "%T", "torch_info_line4", client);
+	DrawPanelText(TorchMenu, info);
+	Format(info, sizeof(info), "%T", "torch_info_line5", client);
+	DrawPanelText(TorchMenu, info);
+	Format(info, sizeof(info), "%T", "torch_info_line6", client);
+	DrawPanelText(TorchMenu, info);
+	Format(info, sizeof(info), "%T", "torch_info_line7", client);
+	DrawPanelText(TorchMenu, info);
+	DrawPanelText(TorchMenu, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "warden_close", client);
+	DrawPanelItem(TorchMenu, info); 
+	SendPanelToClient(TorchMenu, client, NullHandler, 20);
 }
 
 public Action StartTimer(Handle timer)
@@ -557,6 +576,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 	}
 	if (StartTorch)
 	{
+		LoopClients(i) CreateInfoPanel(i);
 		g_iOldRoundTime = g_iGetRoundTime.IntValue;
 		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;
 		

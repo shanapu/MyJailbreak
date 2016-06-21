@@ -196,6 +196,10 @@
 		"en"			"Zombie Day"
 		"pl"			"Zombie Day"
 	}
+	"menu_dealdamge"
+	{
+		"en"			"Deal Damage Day"
+	}
 	"menu_hide"
 	{
 		"en"			"Hide in The Dark"

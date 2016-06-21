@@ -7,6 +7,7 @@
 #include <smartjaildoors>
 #include <autoexecconfig>
 #include <myjailbreak>
+#include <smlib>
 
 
 //Compiler Options
@@ -37,6 +38,7 @@ ConVar g_iGetRoundTime;
 ConVar g_bAllowTP;
 ConVar gc_iRounds;
 ConVar gc_sCustomCommand;
+ConVar gc_sAdminFlag;
 
 //Integers
 int g_iOldRoundTime;
@@ -49,7 +51,6 @@ int g_iMaxRound;
 //Handles
 Handle TruceTimer;
 Handle DuckHuntMenu;
-Handle AmmoTimer[MAXPLAYERS+1];
 
 //Strings
 
@@ -58,6 +59,7 @@ char g_sSoundStartPath[256];
 char huntermodel[256] = "models/player/custom_player/legacy/tm_phoenix_heavy.mdl";
 char g_sCustomCommand[64];
 char g_sEventsLogFile[PLATFORM_MAX_PATH];
+char g_sAdminFlag[32];
 
 public Plugin myinfo = {
 	name = "MyJailbreak - DuckHunt",
@@ -85,7 +87,8 @@ public void OnPluginStart()
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_duckhunt_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true,  0.0, true, 1.0);
 	gc_sCustomCommand = AutoExecConfig_CreateConVar("sm_duckhunt_cmd", "duck", "Set your custom chat command for Event voting. no need for sm_ or !");
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_duckhunt_warden", "1", "0 - disabled, 1 - allow warden to set duckhunt round", _, true,  0.0, true, 1.0);
-	gc_bSetA = AutoExecConfig_CreateConVar("sm_duckhunt_admin", "1", "0 - disabled, 1 - allow admin to set duckhunt round", _, true,  0.0, true, 1.0);
+	gc_bSetA = AutoExecConfig_CreateConVar("sm_duckhunt_admin", "1", "0 - disabled, 1 - allow admin/vip to set duckhunt round", _, true,  0.0, true, 1.0);
+	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_duckhunt_flag", "g", "Set flag for admin/vip to set this Event Day.");
 	gc_bVote = AutoExecConfig_CreateConVar("sm_duckhunt_vote", "1", "0 - disabled, 1 - allow player to vote for duckhunt", _, true,  0.0, true, 1.0);
 	gc_iRounds = AutoExecConfig_CreateConVar("sm_duckhunt_rounds", "1", "Rounds to play in a row", _, true, 1.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_duckhunt_roundtime", "5", "Round time in minutes for a single duckhunt round", _, true, 1.0);
@@ -106,10 +109,12 @@ public void OnPluginStart()
 	HookEvent("round_start", RoundStart);
 	HookEvent("round_end", RoundEnd);
 	HookEvent("player_death", PlayerDeath);
+	HookEvent("weapon_reload", WeaponReload);
 	HookEvent("hegrenade_detonate", HE_Detonate);
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
 	HookConVarChange(gc_sCustomCommand, OnSettingChanged);
+	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
 	
 	//FindConVar
 	g_bAllowTP = FindConVar("sv_allow_thirdperson");
@@ -119,6 +124,7 @@ public void OnPluginStart()
 	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 	gc_sCustomCommand.GetString(g_sCustomCommand , sizeof(g_sCustomCommand));
+	gc_sAdminFlag.GetString(g_sAdminFlag , sizeof(g_sAdminFlag));
 
 	if(g_bAllowTP == INVALID_HANDLE)
 	{
@@ -141,6 +147,10 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 	{
 		strcopy(g_sSoundStartPath, sizeof(g_sSoundStartPath), newValue);
 		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
+	}
+	else if(convar == gc_sAdminFlag)
+	{
+		strcopy(g_sAdminFlag, sizeof(g_sAdminFlag), newValue);
 	}
 	else if(convar == gc_sCustomCommand)
 	{
@@ -224,7 +234,7 @@ public Action SetDuckHunt(int client,int args)
 			}
 			else CPrintToChat(client, "%t %t", "warden_tag" , "duckhunt_setbywarden");
 		}
-		else if (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true)) 
+		else if (CheckVipFlag(client,g_sAdminFlag))
 			{
 				if (gc_bSetA.BoolValue)
 				{
@@ -292,9 +302,9 @@ public Action VoteDuckHunt(int client,int args)
 						}
 						else CPrintToChat(client, "%t %t", "duckhunt_tag" , "duckhunt_voted");
 					}
-					else CPrintToChat(client, "%t %t", "duckhunt_tag" , "duckhunt_wait");
+					else CPrintToChat(client, "%t %t", "duckhunt_tag" , "duckhunt_wait", g_iCoolDown);
 				}
-				else CPrintToChat(client, "%t %t", "duckhunt_tag" , "duckhunt_progress", g_iCoolDown);
+				else CPrintToChat(client, "%t %t", "duckhunt_tag" , "duckhunt_progress", EventDay);
 			}
 			else CPrintToChat(client, "%t %t", "duckhunt_tag" , "duckhunt_minplayer");
 		}
@@ -324,8 +334,6 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 	canSet = true;
 	if (StartDuckHunt || IsDuckHunt)
 	{
-		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
-		
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("sm_menu_enable", 0);
@@ -340,27 +348,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 			{
 				LoopClients(client)
 				{
-					DuckHuntMenu = CreatePanel();
-					Format(info1, sizeof(info1), "%T", "duckhunt_info_title", client);
-					SetPanelTitle(DuckHuntMenu, info1);
-					DrawPanelText(DuckHuntMenu, "                                   ");
-					Format(info2, sizeof(info2), "%T", "duckhunt_info_line1", client);
-					DrawPanelText(DuckHuntMenu, info2);
-					DrawPanelText(DuckHuntMenu, "-----------------------------------");
-					Format(info3, sizeof(info3), "%T", "duckhunt_info_line2", client);
-					DrawPanelText(DuckHuntMenu, info3);
-					Format(info4, sizeof(info4), "%T", "duckhunt_info_line3", client);
-					DrawPanelText(DuckHuntMenu, info4);
-					Format(info5, sizeof(info5), "%T", "duckhunt_info_line4", client);
-					DrawPanelText(DuckHuntMenu, info5);
-					Format(info6, sizeof(info6), "%T", "duckhunt_info_line5", client);
-					DrawPanelText(DuckHuntMenu, info6);
-					Format(info7, sizeof(info7), "%T", "duckhunt_info_line6", client);
-					DrawPanelText(DuckHuntMenu, info7);
-					Format(info8, sizeof(info8), "%T", "duckhunt_info_line7", client);
-					DrawPanelText(DuckHuntMenu, info8);
-					DrawPanelText(DuckHuntMenu, "-----------------------------------");
-					SendPanelToClient(DuckHuntMenu, client, NullHandler, 20);
+					CreateInfoPanel(client);
 					
 					StripAllWeapons(client);
 					SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
@@ -371,7 +359,6 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 						SetEntityModel(client, huntermodel);
 						SetEntityHealth(client, gc_iHunterHP.IntValue);
 						GivePlayerItem(client, "weapon_nova");
-						AmmoTimer[client] = CreateTimer(5.0, AmmoRefill, client, TIMER_REPEAT);
 					}
 					if (GetClientTeam(client) == CS_TEAM_T && IsValidClient(client, false, false))
 					{
@@ -401,6 +388,36 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 	}
 }
 
+stock void CreateInfoPanel(int client)
+{
+	//Create info Panel
+	char info[255];
+
+	DuckHuntMenu = CreatePanel();
+	Format(info, sizeof(info), "%T", "duckhunt_info_title", client);
+	SetPanelTitle(DuckHuntMenu, info);
+	DrawPanelText(DuckHuntMenu, "                                   ");
+	Format(info, sizeof(info), "%T", "duckhunt_info_line1", client);
+	DrawPanelText(DuckHuntMenu, info);
+	DrawPanelText(DuckHuntMenu, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "duckhunt_info_line2", client);
+	DrawPanelText(DuckHuntMenu, info);
+	Format(info, sizeof(info), "%T", "duckhunt_info_line3", client);
+	DrawPanelText(DuckHuntMenu, info);
+	Format(info, sizeof(info), "%T", "duckhunt_info_line4", client);
+	DrawPanelText(DuckHuntMenu, info);
+	Format(info, sizeof(info), "%T", "duckhunt_info_line5", client);
+	DrawPanelText(DuckHuntMenu, info);
+	Format(info, sizeof(info), "%T", "duckhunt_info_line6", client);
+	DrawPanelText(DuckHuntMenu, info);
+	Format(info, sizeof(info), "%T", "duckhunt_info_line7", client);
+	DrawPanelText(DuckHuntMenu, info);
+	DrawPanelText(DuckHuntMenu, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "warden_close", client);
+	DrawPanelItem(DuckHuntMenu, info); 
+	SendPanelToClient(DuckHuntMenu, client, NullHandler, 20);
+}
+
 //Round End
 
 public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
@@ -412,7 +429,6 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 	{
 		LoopClients(client)
 		{
-			if (AmmoTimer[client] != null) KillTimer(AmmoTimer[client]);
 			if (IsValidClient(client, false, true))
 				{
 					SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
@@ -442,6 +458,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 	}
 	if (StartDuckHunt)
 	{
+		LoopClients(i) CreateInfoPanel(i);
 		g_iOldRoundTime = g_iGetRoundTime.IntValue;
 		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;
 		
@@ -464,7 +481,6 @@ public void OnMapEnd()
 	LoopClients(client)
 	{
 		FP(client);
-		if (AmmoTimer[client] != null) KillTimer(AmmoTimer[client]);
 	}
 }
 
@@ -564,14 +580,18 @@ public Action HE_Detonate(Handle event, const char[] name, bool dontBroadcast)
 
 //Give new Ammo to Hunter
 
-public Action AmmoRefill(Handle timer, any client)
+public void WeaponReload(Handle event, char [] name, bool dontBroadcast)
 {
-	if(IsValidClient(client, false, false))
+	if(IsDuckHunt == true)
 	{
-		int weapon = GetEntPropEnt(client, Prop_Data, "m_hActiveWeapon");
-		SetEntProp(weapon, Prop_Send, "m_iPrimaryReserveAmmoCount", 32);
+		int client = GetClientOfUserId(GetEventInt(event, "userid"));
+		if(IsValidClient(client, false, false) && (GetClientTeam(client) == CS_TEAM_CT))
+		{
+			SetPlayerWeaponAmmo(client, Client_GetActiveWeapon(client), _, 32);
+		}
 	}
 }
+
 
 //Back to First Person
 
