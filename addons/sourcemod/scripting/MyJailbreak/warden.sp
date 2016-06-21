@@ -92,12 +92,12 @@ ConVar gc_bWardenColorRandom;
 ConVar gc_bBackstab;
 ConVar gc_iBackstabNumber;
 
-ConVar gc_sVIPflagMute;
-ConVar gc_sVIPflagBackstab;
-ConVar gc_sVIPflagBulletSparks;
-ConVar gc_sVIPflagLaser;
-ConVar gc_sVIPflagDrawer;
-ConVar gc_sVIPflagCuffs;
+ConVar gc_sAdminFlagMute;
+ConVar gc_sAdminFlagBackstab;
+ConVar gc_sAdminFlagBulletSparks;
+ConVar gc_sAdminFlagLaser;
+ConVar gc_sAdminFlagDrawer;
+ConVar gc_sAdminFlagCuffs;
 
 ConVar gc_fUnLockTimeMax;
 ConVar gc_fUnLockTimeMin;
@@ -212,12 +212,12 @@ char g_sCustomCommand[64];
 char g_sEquipWeapon[MAXPLAYERS+1][32];
 char g_sMuteUser[32];
 char g_sMyJBLogFile[PLATFORM_MAX_PATH];
-char g_sVIPflagBackstab[32];
-char g_sVIPflagBulletSparks[32];
-char g_sVIPflagLaser[32];
-char g_sVIPflagDrawer[32];
-char g_sVIPflagMute[32];
-char g_sVIPflagCuffs[32];
+char g_sAdminFlagBackstab[32];
+char g_sAdminFlagBulletSparks[32];
+char g_sAdminFlagLaser[32];
+char g_sAdminFlagDrawer[32];
+char g_sAdminFlagMute[32];
+char g_sAdminFlagCuffs[32];
 char g_sSoundBreakCuffsPath[256];
 char g_sSoundUnLockCuffsPath[256];
 
@@ -314,7 +314,7 @@ public void OnPluginStart()
 	gc_bBetterNotes = AutoExecConfig_CreateConVar("sm_warden_better_notifications", "1", "0 - disabled, 1 - Will use hint and center text", _, true, 0.0, true, 1.0);
 	gc_bMute = AutoExecConfig_CreateConVar("sm_warden_mute", "1", "0 - disabled, 1 - Allow the warden to mute T-side player", _, true, 0.0, true, 1.0);
 	gc_bMuteEnd = AutoExecConfig_CreateConVar("sm_warden_mute_round", "1", "0 - disabled, 1 - Allow the warden to mute a player until roundend", _, true, 0.0, true, 1.0);
-	gc_sVIPflagMute = AutoExecConfig_CreateConVar("sm_warden_muteimmuntiy", "a", "Set flag for VIP/Admin Mute immunity. No flag immunity for all. so don't leave blank!");
+	gc_sAdminFlagMute = AutoExecConfig_CreateConVar("sm_warden_muteimmuntiy", "a", "Set flag for admin/vip/Admin Mute immunity. No flag immunity for all. so don't leave blank!");
 	gc_bNoBlock = AutoExecConfig_CreateConVar("sm_warden_noblock", "1", "0 - disabled, 1 - enable noblock toggle for warden", _, true,  0.0, true, 1.0);
 	gc_bNoBlockMode = AutoExecConfig_CreateConVar("sm_warden_noblock_mode", "1", "0 - collision only between CT & T, 1 - collision within a team.", _, true,  0.0, true, 1.0);
 	gc_bFF = AutoExecConfig_CreateConVar("sm_warden_ff", "1", "0 - disabled, 1 - enable switch ff for T ", _, true,  0.0, true, 1.0);
@@ -329,7 +329,7 @@ public void OnPluginStart()
 	gc_iGunSlapDamage = AutoExecConfig_CreateConVar("sm_warden_gunslap_dmg", "10", "Amoung of HP losing on slap for dropping a gun", _, true,  0.0);
 	gc_bBackstab = AutoExecConfig_CreateConVar("sm_warden_backstab", "1", "0 - disabled, 1 - enable backstab protection for warden", _, true,  0.0, true, 1.0);
 	gc_iBackstabNumber = AutoExecConfig_CreateConVar("sm_warden_backstab_number", "1", "How many time a warden get protected? 0 - alltime", _, true,  1.0);
-	gc_sVIPflagBackstab = AutoExecConfig_CreateConVar("sm_warden_backstab_vip", "", "Set flag for VIP to get warden backstab protection. No flag feature is available for all players!");
+	gc_sAdminFlagBackstab = AutoExecConfig_CreateConVar("sm_warden_backstab_flag", "", "Set flag for admin/vip to get warden backstab protection. No flag feature is available for all players!");
 	gc_bHandCuff = AutoExecConfig_CreateConVar("sm_warden_handcuffs", "1", "0 - disabled, 1 - enable handcuffs", _, true,  0.0, true, 1.0);
 	gc_iHandCuffsNumber = AutoExecConfig_CreateConVar("sm_warden_handcuffs_number", "2", "How many handcuffs a warden got?", _, true,  1.0);
 	gc_bHandCuffLR = AutoExecConfig_CreateConVar("sm_warden_handcuffs_lr", "1", "0 - disabled, 1 - free cuffed terrorists on LR", _, true,  0.0, true, 1.0);
@@ -339,7 +339,7 @@ public void OnPluginStart()
 	gc_iPaperClipUnLockChance = AutoExecConfig_CreateConVar("sm_warden_handcuffs_unlock_chance", "3", "Set the chance (1:x) a cuffed Terroris who has a paperclip to free themself", _, true,  1.0);
 	gc_fUnLockTimeMin = AutoExecConfig_CreateConVar("sm_warden_handcuffs_unlock_mintime", "15.0", "Min. Time in seconds Ts need free themself with a paperclip.", _, true,  1.0);
 	gc_fUnLockTimeMax = AutoExecConfig_CreateConVar("sm_warden_handcuffs_unlock_maxtime", "35.0", "Max. Time in seconds Ts need free themself with a paperclip.", _, true,  1.0);
-	gc_sVIPflagCuffs = AutoExecConfig_CreateConVar("sm_warden_handcuffs_vip", "", "Set flag for VIP must have to get access to paperclip. No flag = feature is available for all players!");
+	gc_sAdminFlagCuffs = AutoExecConfig_CreateConVar("sm_warden_handcuffs_flag", "", "Set flag for admin/vip must have to get access to paperclip. No flag = feature is available for all players!");
 	gc_sOverlayCuffsPath = AutoExecConfig_CreateConVar("sm_warden_overlays_cuffs", "overlays/MyJailbreak/cuffs" , "Path to the cuffs Overlay DONT TYPE .vmt or .vft");
 	gc_bRandom = AutoExecConfig_CreateConVar("sm_warden_random", "1", "0 - disabled, 1 - enable kill a random t for warden", _, true,  0.0, true, 1.0);
 	gc_iRandomMode = AutoExecConfig_CreateConVar("sm_warden_random_mode", "2", "1 - all random / 2 - Thunder / 3 - Timebomb / 4 - Firebomb / 5 - NoKill(1,3,4 needs funcommands.smx enabled)", _, true,  1.0, true, 4.0);
@@ -353,11 +353,11 @@ public void OnPluginStart()
 	gc_bOpenTimerWarden = AutoExecConfig_CreateConVar("sm_warden_open_time_warden", "1", "should doors open automatic after sm_warden_open_time when there is a warden? needs sm_warden_open_time_enable 1", _, true,  0.0, true, 1.0);
 	gc_bMarker = AutoExecConfig_CreateConVar("sm_warden_marker", "1", "0 - disabled, 1 - enable Warden advanced markers ", _, true,  0.0, true, 1.0);
 	gc_bBulletSparks = AutoExecConfig_CreateConVar("sm_warden_bulletsparks", "1", "0 - disabled, 1 - enable Warden bulletimpact sparks", _, true,  0.0, true, 1.0);
-	gc_sVIPflagBulletSparks = AutoExecConfig_CreateConVar("sm_warden_bulletsparks_vip", "", "Set flag for VIP to get warden bulletimpact sparks. No flag feature is available for all players!");
+	gc_sAdminFlagBulletSparks = AutoExecConfig_CreateConVar("sm_warden_bulletsparks_flag", "", "Set flag for admin/vip to get warden bulletimpact sparks. No flag feature is available for all players!");
 	gc_bLaser = AutoExecConfig_CreateConVar("sm_warden_laser", "1", "0 - disabled, 1 - enable Warden Laser Pointer with +E ", _, true,  0.0, true, 1.0);
-	gc_sVIPflagLaser = AutoExecConfig_CreateConVar("sm_warden_laser_vip", "", "Set flag for VIP to get warden laser pointer. No flag feature is available for all players!");
+	gc_sAdminFlagLaser = AutoExecConfig_CreateConVar("sm_warden_laser_flag", "", "Set flag for admin/vip to get warden laser pointer. No flag feature is available for all players!");
 	gc_bDrawer = AutoExecConfig_CreateConVar("sm_warden_drawer", "1", "0 - disabled, 1 - enable Warden Drawer with +E ", _, true,  0.0, true, 1.0);
-	gc_sVIPflagDrawer = AutoExecConfig_CreateConVar("sm_warden_drawer_vip", "", "Set flag for VIP to get warden bulletimpact sparks. No flag feature is available for all players!");
+	gc_sAdminFlagDrawer = AutoExecConfig_CreateConVar("sm_warden_drawer_flag", "", "Set flag for admin/vip to get warden bulletimpact sparks. No flag feature is available for all players!");
 	gc_bDrawerT= AutoExecConfig_CreateConVar("sm_warden_drawer_terror", "1", "0 - disabled, 1 - allow Warden to toggle Drawer for Terrorist ", _, true,  0.0, true, 1.0);
 	gc_bMath = AutoExecConfig_CreateConVar("sm_warden_math", "1", "0 - disabled, 1 - enable mathquiz for warden", _, true,  0.0, true, 1.0);
 	gc_iMinimumNumber = AutoExecConfig_CreateConVar("sm_warden_math_min", "1", "What should be the minimum number for questions?", _, true,  1.0);
@@ -406,12 +406,12 @@ public void OnPluginStart()
 	HookConVarChange(gc_sOverlayStopPath, OnSettingChanged);
 	HookConVarChange(gc_sOverlayCuffsPath, OnSettingChanged);
 	HookConVarChange(gc_sIconPath, OnSettingChanged);
-	HookConVarChange(gc_sVIPflagBackstab, OnSettingChanged);
-	HookConVarChange(gc_sVIPflagBulletSparks, OnSettingChanged);
-	HookConVarChange(gc_sVIPflagLaser, OnSettingChanged);
-	HookConVarChange(gc_sVIPflagDrawer, OnSettingChanged);
-	HookConVarChange(gc_sVIPflagMute, OnSettingChanged);
-	HookConVarChange(gc_sVIPflagCuffs, OnSettingChanged);
+	HookConVarChange(gc_sAdminFlagBackstab, OnSettingChanged);
+	HookConVarChange(gc_sAdminFlagBulletSparks, OnSettingChanged);
+	HookConVarChange(gc_sAdminFlagLaser, OnSettingChanged);
+	HookConVarChange(gc_sAdminFlagDrawer, OnSettingChanged);
+	HookConVarChange(gc_sAdminFlagMute, OnSettingChanged);
+	HookConVarChange(gc_sAdminFlagCuffs, OnSettingChanged);
 	
 	//FindConVar
 	g_bMenuClose = FindConVar("sm_menu_close");
@@ -430,12 +430,12 @@ public void OnPluginStart()
 	gc_sOverlayStopPath.GetString(g_sOverlayStopPath , sizeof(g_sOverlayStopPath));
 	gc_sIconPath.GetString(g_sIconPath , sizeof(g_sIconPath));
 	gc_sCustomCommand.GetString(g_sCustomCommand , sizeof(g_sCustomCommand));
-	gc_sVIPflagBackstab.GetString(g_sVIPflagBackstab , sizeof(g_sVIPflagBackstab));
-	gc_sVIPflagLaser.GetString(g_sVIPflagLaser , sizeof(g_sVIPflagLaser));
-	gc_sVIPflagDrawer.GetString(g_sVIPflagDrawer , sizeof(g_sVIPflagDrawer));
-	gc_sVIPflagCuffs.GetString(g_sVIPflagCuffs , sizeof(g_sVIPflagCuffs));
-	gc_sVIPflagMute.GetString(g_sVIPflagMute , sizeof(g_sVIPflagMute));
-	gc_sVIPflagBulletSparks.GetString(g_sVIPflagBulletSparks , sizeof(g_sVIPflagBulletSparks));
+	gc_sAdminFlagBackstab.GetString(g_sAdminFlagBackstab , sizeof(g_sAdminFlagBackstab));
+	gc_sAdminFlagLaser.GetString(g_sAdminFlagLaser , sizeof(g_sAdminFlagLaser));
+	gc_sAdminFlagDrawer.GetString(g_sAdminFlagDrawer , sizeof(g_sAdminFlagDrawer));
+	gc_sAdminFlagCuffs.GetString(g_sAdminFlagCuffs , sizeof(g_sAdminFlagCuffs));
+	gc_sAdminFlagMute.GetString(g_sAdminFlagMute , sizeof(g_sAdminFlagMute));
+	gc_sAdminFlagBulletSparks.GetString(g_sAdminFlagBulletSparks , sizeof(g_sAdminFlagBulletSparks));
 	
 	g_iCollisionOffset = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
 	
@@ -528,29 +528,29 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 		strcopy(g_sIconPath, sizeof(g_sIconPath), newValue);
 		if(gc_bIcon.BoolValue) PrecacheModelAnyDownload(g_sIconPath);
 	}
-	else if(convar == gc_sVIPflagBackstab)
+	else if(convar == gc_sAdminFlagBackstab)
 	{
-		strcopy(g_sVIPflagBackstab, sizeof(g_sVIPflagBackstab), newValue);
+		strcopy(g_sAdminFlagBackstab, sizeof(g_sAdminFlagBackstab), newValue);
 	}
-	else if(convar == gc_sVIPflagBulletSparks)
+	else if(convar == gc_sAdminFlagBulletSparks)
 	{
-		strcopy(g_sVIPflagBulletSparks, sizeof(g_sVIPflagBulletSparks), newValue);
+		strcopy(g_sAdminFlagBulletSparks, sizeof(g_sAdminFlagBulletSparks), newValue);
 	}
-	else if(convar == gc_sVIPflagLaser)
+	else if(convar == gc_sAdminFlagLaser)
 	{
-		strcopy(g_sVIPflagLaser, sizeof(g_sVIPflagLaser), newValue);
+		strcopy(g_sAdminFlagLaser, sizeof(g_sAdminFlagLaser), newValue);
 	}
-	else if(convar == gc_sVIPflagDrawer)
+	else if(convar == gc_sAdminFlagDrawer)
 	{
-		strcopy(g_sVIPflagDrawer, sizeof(g_sVIPflagDrawer), newValue);
+		strcopy(g_sAdminFlagDrawer, sizeof(g_sAdminFlagDrawer), newValue);
 	}
-	else if(convar == gc_sVIPflagMute)
+	else if(convar == gc_sAdminFlagMute)
 	{
-		strcopy(g_sVIPflagMute, sizeof(g_sVIPflagMute), newValue);
+		strcopy(g_sAdminFlagMute, sizeof(g_sAdminFlagMute), newValue);
 	}
-	else if(convar == gc_sVIPflagCuffs)
+	else if(convar == gc_sAdminFlagCuffs)
 	{
-		strcopy(g_sVIPflagCuffs, sizeof(g_sVIPflagCuffs), newValue);
+		strcopy(g_sAdminFlagCuffs, sizeof(g_sAdminFlagCuffs), newValue);
 	}
 	else if(convar == gc_sCustomCommand)
 	{
@@ -1732,7 +1732,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 		}
 		if((buttons & IN_USE))
 		{
-			if (gc_bLaser.BoolValue && CheckVipFlag(client,g_sVIPflagLaser))
+			if (gc_bLaser.BoolValue && CheckVipFlag(client,g_sAdminFlagLaser))
 			{
 				if (g_bLaser)
 				{
@@ -1758,7 +1758,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 			g_bLaserUse[client] = false;
 		}
 	}
-	if (((client == g_iWarden) && gc_bDrawer.BoolValue && g_bDrawer[client] && CheckVipFlag(client,g_sVIPflagDrawer)) || ((GetClientTeam(client) == CS_TEAM_T) && gc_bDrawer.BoolValue && g_bDrawerT))
+	if (((client == g_iWarden) && gc_bDrawer.BoolValue && g_bDrawer[client] && CheckVipFlag(client,g_sAdminFlagDrawer)) || ((GetClientTeam(client) == CS_TEAM_T) && gc_bDrawer.BoolValue && g_bDrawerT))
 	{
 		for (int i = 0; i < MAX_BUTTONS; i++)
 		{
@@ -1787,7 +1787,7 @@ public Action LaserMenu(int client, int args)
 	{
 		if (client == g_iWarden)
 		{
-			if(CheckVipFlag(client,g_sVIPflagLaser))
+			if(CheckVipFlag(client,g_sAdminFlagLaser))
 			{
 				char menuinfo[255];
 				
@@ -1940,11 +1940,11 @@ if (action == MenuAction_Select)
 
 public Action DrawerMenu(int client, int args)
 {
-	if(gc_bDrawer.BoolValue && CheckVipFlag(client,g_sVIPflagDrawer))
+	if(gc_bDrawer.BoolValue && CheckVipFlag(client,g_sAdminFlagDrawer))
 	{
 		if ((client == g_iWarden) || ((GetClientTeam(client) == CS_TEAM_T) && g_bDrawerT))
 		{
-			if(CheckVipFlag(client,g_sVIPflagDrawer) || (GetClientTeam(client) == CS_TEAM_T))
+			if(CheckVipFlag(client,g_sAdminFlagDrawer) || (GetClientTeam(client) == CS_TEAM_T))
 			{
 				char menuinfo[255];
 				
@@ -2898,7 +2898,7 @@ public Action BulletImpact(Handle hEvent, char [] sName, bool bDontBroadcast)
 {
 	int iClient = GetClientOfUserId(GetEventInt(hEvent, "userid"));
 	
-	if (!gc_bPlugin.BoolValue || !gc_bBulletSparks.BoolValue || !warden_iswarden(iClient) || !g_bBulletSparks[iClient] || !CheckVipFlag(iClient,g_sVIPflagBulletSparks))
+	if (!gc_bPlugin.BoolValue || !gc_bBulletSparks.BoolValue || !warden_iswarden(iClient) || !g_bBulletSparks[iClient] || !CheckVipFlag(iClient,g_sAdminFlagBulletSparks))
 		return Plugin_Continue;
 	
 	float startpos[3];
@@ -2922,7 +2922,7 @@ public Action BulletSparks(int client, int args)
 		{
 			if (client == g_iWarden)
 			{
-				if(CheckVipFlag(client,g_sVIPflagBulletSparks))
+				if(CheckVipFlag(client,g_sAdminFlagBulletSparks))
 				{
 					if (!g_bBulletSparks[client])
 					{
@@ -3241,7 +3241,7 @@ public Action MuteMenuPlayer(int client,int args)
 			menu5.SetTitle(info1);
 			LoopValidClients(i,true,true)
 			{
-				if((GetClientTeam(i) == CS_TEAM_T) && !CheckVipFlag(i,g_sVIPflagMute))
+				if((GetClientTeam(i) == CS_TEAM_T) && !CheckVipFlag(i,g_sAdminFlagMute))
 				{
 					char userid[11];
 					char username[MAX_NAME_LENGTH];
@@ -3510,7 +3510,7 @@ public Action OnTakedamage(int victim, int &attacker, int &inflictor, float &dam
 	
 	//Backstab protection
 	
-	if(gc_bBackstab.BoolValue && IsClientInGame(attacker) && IsClientWarden(victim) && !IsClientInLastRequest(victim) && CheckVipFlag(victim,g_sVIPflagBackstab))
+	if(gc_bBackstab.BoolValue && IsClientInGame(attacker) && IsClientWarden(victim) && !IsClientInLastRequest(victim) && CheckVipFlag(victim,g_sAdminFlagBackstab))
 	{
 		if((StrEqual(sWeapon, "weapon_knife", false)) && (damage > 99.0))
 		{
@@ -3581,7 +3581,7 @@ public Action CuffsEm(int client, int attacker)
 		
 		CPrintToChatAll("%t %t", "warden_tag" , "warden_cuffson", attacker, client);
 		CPrintToChat(attacker, "%t %t", "warden_tag" , "warden_cuffsgot", g_iPlayerHandCuffs[attacker]);
-		if(CheckVipFlag(client,g_sVIPflagCuffs))
+		if(CheckVipFlag(client,g_sAdminFlagCuffs))
 		{
 			CreateTimer (2.5, HasPaperClip, client);
 		}

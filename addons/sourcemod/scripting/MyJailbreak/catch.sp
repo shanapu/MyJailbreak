@@ -45,6 +45,7 @@ ConVar gc_sSoundUnFreezePath;
 ConVar g_iGetRoundTime;
 ConVar gc_iRounds;
 ConVar gc_sCustomCommand;
+ConVar gc_sAdminFlag;
 
 //Integers
 int g_iVoteCount;
@@ -65,6 +66,7 @@ char g_sHasVoted[1500];
 char g_sOverlayFreeze[256];
 char g_sCustomCommand[64];
 char g_sEventsLogFile[PLATFORM_MAX_PATH];
+char g_sAdminFlag[32];
 
 public Plugin myinfo = {
 	name = "MyJailbreak - Catch & Freeze",
@@ -93,7 +95,8 @@ public void OnPluginStart()
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_catch_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true, 0.0, true, 1.0);
 	gc_sCustomCommand = AutoExecConfig_CreateConVar("sm_catch_cmd", "cat", "Set your custom chat command for Event voting. no need for sm_ or !");
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_catch_warden", "1", "0 - disabled, 1 - allow warden to set catch round", _, true, 0.0, true, 1.0);
-	gc_bSetA = AutoExecConfig_CreateConVar("sm_catch_admin", "1", "0 - disabled, 1 - allow admin to set catch round", _, true, 0.0, true, 1.0);
+	gc_bSetA = AutoExecConfig_CreateConVar("sm_catch_admin", "1", "0 - disabled, 1 - allow admin/vip to set catch round", _, true, 0.0, true, 1.0);
+	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_catch_flag", "g", "Set flag for admin/vip to set this Event Day.");
 	gc_bVote = AutoExecConfig_CreateConVar("sm_catch_vote", "1", "0 - disabled, 1 - allow player to vote for catch", _, true, 0.0, true, 1.0);
 	gc_iRounds = AutoExecConfig_CreateConVar("sm_catch_rounds", "1", "Rounds to play in a row", _, true, 1.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_catch_roundtime", "5", "Round time in minutes for a single catch round", _, true, 1.0);
@@ -124,6 +127,7 @@ public void OnPluginStart()
 	HookConVarChange(gc_sSoundFreezePath, OnSettingChanged);
 	HookConVarChange(gc_sSoundUnFreezePath, OnSettingChanged);
 	HookConVarChange(gc_sCustomCommand, OnSettingChanged);
+	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
 	
 	//FindConVar
 	g_iMaxRound = gc_iRounds.IntValue;
@@ -133,6 +137,7 @@ public void OnPluginStart()
 	gc_sSoundUnFreezePath.GetString(g_sSoundUnFreezePath, sizeof(g_sSoundUnFreezePath));
 	gc_sOverlayFreeze.GetString(g_sOverlayFreeze , sizeof(g_sOverlayFreeze));
 	gc_sCustomCommand.GetString(g_sCustomCommand , sizeof(g_sCustomCommand));
+	gc_sAdminFlag.GetString(g_sAdminFlag , sizeof(g_sAdminFlag));
 	
 	SetLogFile(g_sEventsLogFile, "Events");
 }
@@ -145,6 +150,10 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 	{
 		strcopy(g_sSoundFreezePath, sizeof(g_sSoundFreezePath), newValue);
 		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundFreezePath);
+	}
+	else if(convar == gc_sAdminFlag)
+	{
+		strcopy(g_sAdminFlag, sizeof(g_sAdminFlag), newValue);
 	}
 	else if(convar == gc_sSoundUnFreezePath)
 	{
@@ -232,7 +241,7 @@ public Action SetCatch(int client,int args)
 			}
 			else CPrintToChat(client, "%t %t", "warden_tag" , "catch_setbywarden");
 		}
-		else if (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
+		else if (CheckVipFlag(client,g_sAdminFlag))
 			{
 				if (gc_bSetA.BoolValue)
 				{

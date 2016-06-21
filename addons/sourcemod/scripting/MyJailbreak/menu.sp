@@ -62,16 +62,16 @@ ConVar g_bRequest;
 ConVar g_bWarden;
 ConVar g_bSparks;
 ConVar g_bDealDamage;
-ConVar gc_sVIPflagBulletSparks;
-ConVar gc_sVIPflagLaser;
-ConVar gc_sVIPflagDrawer;
+ConVar gc_sAdminFlagBulletSparks;
+ConVar gc_sAdminFlagLaser;
+ConVar gc_sAdminFlagDrawer;
 
 //Strings
 char g_sCustomCommand[64];
 
-char g_sVIPflagBulletSparks[32];
-char g_sVIPflagLaser[32];
-char g_sVIPflagDrawer[32];
+char g_sAdminFlagBulletSparks[32];
+char g_sAdminFlagLaser[32];
+char g_sAdminFlagDrawer[32];
 
 
 public Plugin myinfo = {
@@ -176,13 +176,13 @@ public void OnConfigsExecuted()
 	g_bFF = FindConVar("mp_teammates_are_enemies");
 	g_bRequest = FindConVar("sm_request_enable");
 	g_bDealDamage = FindConVar("sm_dealdamage_enable");
-	gc_sVIPflagBulletSparks = FindConVar("sm_warden_bulletsparks_vip");
-	gc_sVIPflagLaser = FindConVar("sm_warden_laser_vip");
-	gc_sVIPflagDrawer = FindConVar("sm_warden_drawer_vip");
+	gc_sAdminFlagBulletSparks = FindConVar("sm_warden_bulletsparks_vip");
+	gc_sAdminFlagLaser = FindConVar("sm_warden_laser_vip");
+	gc_sAdminFlagDrawer = FindConVar("sm_warden_drawer_vip");
 	
-	gc_sVIPflagLaser.GetString(g_sVIPflagLaser , sizeof(g_sVIPflagLaser));
-	gc_sVIPflagDrawer.GetString(g_sVIPflagDrawer , sizeof(g_sVIPflagDrawer));
-	gc_sVIPflagBulletSparks.GetString(g_sVIPflagBulletSparks , sizeof(g_sVIPflagBulletSparks));
+	gc_sAdminFlagLaser.GetString(g_sAdminFlagLaser , sizeof(g_sAdminFlagLaser));
+	gc_sAdminFlagDrawer.GetString(g_sAdminFlagDrawer , sizeof(g_sAdminFlagDrawer));
+	gc_sAdminFlagBulletSparks.GetString(g_sAdminFlagBulletSparks , sizeof(g_sAdminFlagBulletSparks));
 	
 	char sBufferCMD[64];
 	Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommand);
@@ -282,7 +282,7 @@ public Action JbMenu(int client, int args)
 				}
 				if(g_bSparks != null)
 				{
-					if(g_bSparks.BoolValue && CheckVipFlag(client,g_sVIPflagBulletSparks))
+					if(g_bSparks.BoolValue && CheckVipFlag(client,g_sAdminFlagBulletSparks))
 					{
 						Format(menuinfo, sizeof(menuinfo), "%T", "menu_sparks", client);
 						mainmenu.AddItem("sparks", menuinfo);
@@ -290,7 +290,7 @@ public Action JbMenu(int client, int args)
 				}
 				if(g_bDrawer != null)
 				{
-					if(g_bDrawer.BoolValue && CheckVipFlag(client,g_sVIPflagDrawer))
+					if(g_bDrawer.BoolValue && CheckVipFlag(client,g_sAdminFlagDrawer))
 					{
 						Format(menuinfo, sizeof(menuinfo), "%T", "menu_drawer", client);
 						mainmenu.AddItem("drawer", menuinfo);
@@ -298,7 +298,7 @@ public Action JbMenu(int client, int args)
 				}
 				if(g_bLaser != null)
 				{
-					if(g_bLaser.BoolValue && CheckVipFlag(client,g_sVIPflagLaser))
+					if(g_bLaser.BoolValue && CheckVipFlag(client,g_sAdminFlagLaser))
 					{
 						Format(menuinfo, sizeof(menuinfo), "%T", "menu_laser", client);
 						mainmenu.AddItem("laser", menuinfo);

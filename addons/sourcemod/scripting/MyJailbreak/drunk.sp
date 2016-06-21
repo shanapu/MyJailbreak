@@ -34,9 +34,10 @@ ConVar gc_iRounds;
 ConVar gc_sSoundStartPath;
 ConVar gc_sCustomCommand;
 ConVar g_iGetRoundTime;
-ConVar gc_bInvertX;
-ConVar gc_bInvertY;
+//ConVar gc_bInvertX;
+//ConVar gc_bInvertY;
 ConVar gc_bWiggle;
+ConVar gc_sAdminFlag;
 
 //Integers    g_i = global integer
 int g_iOldRoundTime;
@@ -61,6 +62,7 @@ char g_sHasVoted[1500];
 char g_sSoundStartPath[256];
 char g_sCustomCommand[64];
 char g_sEventsLogFile[PLATFORM_MAX_PATH];
+char g_sAdminFlag[32];
 
 public Plugin myinfo = {
 	name = "MyJailbreak - Drunk",
@@ -88,11 +90,12 @@ public void OnPluginStart()
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_drunk_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true,  0.0, true, 1.0);
 	gc_sCustomCommand = AutoExecConfig_CreateConVar("sm_drunk_cmd", "!curse", "Set your custom chat command for Event voting. no need for sm_ or !");
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_drunk_warden", "1", "0 - disabled, 1 - allow warden to set drunk round", _, true,  0.0, true, 1.0);
-	gc_bSetA = AutoExecConfig_CreateConVar("sm_drunk_admin", "1", "0 - disabled, 1 - allow admin to set drunk round", _, true,  0.0, true, 1.0);
+	gc_bSetA = AutoExecConfig_CreateConVar("sm_drunk_admin", "1", "0 - disabled, 1 - allow admin/vip to set drunk round", _, true,  0.0, true, 1.0);
+	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_zombie_flag", "g", "Set flag for admin/vip to set this Event Day.");
 	gc_bVote = AutoExecConfig_CreateConVar("sm_drunk_vote", "1", "0 - disabled, 1 - allow player to vote for drunk", _, true,  0.0, true, 1.0);
 	gc_bSpawnCell = AutoExecConfig_CreateConVar("sm_drunk_spawn", "0", "0 - T teleport to CT spawn, 1 - cell doors auto open", _, true,  0.0, true, 1.0);
-	gc_bInvertX = AutoExecConfig_CreateConVar("sm_drunk_invert_x", "1", "Invert movement on the x-axis (left & right)", _, true, 0.0, true, 1.0);
-	gc_bInvertY = AutoExecConfig_CreateConVar("sm_drunk_invert_y", "1", "Invert movement on the y-axis (forward & back)", _, true, 0.0, true, 1.0);
+//	gc_bInvertX = AutoExecConfig_CreateConVar("sm_drunk_invert_x", "1", "Invert movement on the x-axis (left & right)", _, true, 0.0, true, 1.0);
+//	gc_bInvertY = AutoExecConfig_CreateConVar("sm_drunk_invert_y", "1", "Invert movement on the y-axis (forward & back)", _, true, 0.0, true, 1.0);
 	gc_bWiggle = AutoExecConfig_CreateConVar("sm_drunk_wiggle", "1", "Wiggle with the screen", _, true, 0.0, true, 1.0);
 	gc_iRounds = AutoExecConfig_CreateConVar("sm_drunk_rounds", "1", "Rounds to play in a row", _, true, 1.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_drunk_roundtime", "5", "Round time in minutes for a single drunk round", _, true, 1.0);
@@ -114,12 +117,15 @@ public void OnPluginStart()
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
 	HookConVarChange(gc_sCustomCommand, OnSettingChanged);
+	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
 	
 	//Find
 	g_iGetRoundTime = FindConVar("mp_roundtime");
 	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 	gc_sCustomCommand.GetString(g_sCustomCommand , sizeof(g_sCustomCommand));
+	gc_sAdminFlag.GetString(g_sAdminFlag , sizeof(g_sAdminFlag));
+	
 	SetLogFile(g_sEventsLogFile, "Events");
 }
 
@@ -136,6 +142,10 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 	{
 		strcopy(g_sSoundStartPath, sizeof(g_sSoundStartPath), newValue);
 		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
+	}
+	else if(convar == gc_sAdminFlag)
+	{
+		strcopy(g_sAdminFlag, sizeof(g_sAdminFlag), newValue);
 	}
 	else if(convar == gc_sCustomCommand)    //Register the custom command if changed
 	{
@@ -203,27 +213,27 @@ public Action SetDrunk(int client,int args)
 			}
 			else CPrintToChat(client, "%t %t", "warden_tag" , "nocscope_setbywarden");
 		}
-		else if (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true)) //is player admin?
+		else if (CheckVipFlag(client,g_sAdminFlag))
+		{
+			if (gc_bSetA.BoolValue) //is admin allowed to set?
 			{
-				if (gc_bSetA.BoolValue) //is admin allowed to set?
+				char EventDay[64];
+				GetEventDay(EventDay);
+				
+				if(StrEqual(EventDay, "none", false)) //is an other event running or set?
 				{
-					char EventDay[64];
-					GetEventDay(EventDay);
-					
-					if(StrEqual(EventDay, "none", false)) //is an other event running or set?
+					if (g_iCoolDown == 0) //is event cooled down?
 					{
-						if (g_iCoolDown == 0) //is event cooled down?
-						{
-							StartNextRound(); //prepare Event for next round;
-							if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event drunken was started by admin %L", client);
-						}
-						else CPrintToChat(client, "%t %t", "drunk_tag" , "drunk_wait", g_iCoolDown);
+						StartNextRound(); //prepare Event for next round;
+						if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event drunken was started by admin %L", client);
 					}
-					else CPrintToChat(client, "%t %t", "drunk_tag" , "drunk_progress" , EventDay);
+					else CPrintToChat(client, "%t %t", "drunk_tag" , "drunk_wait", g_iCoolDown);
 				}
-				else CPrintToChat(client, "%t %t", "nocscope_tag" , "drunk_setbyadmin");
+				else CPrintToChat(client, "%t %t", "drunk_tag" , "drunk_progress" , EventDay);
 			}
-			else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
+			else CPrintToChat(client, "%t %t", "nocscope_tag" , "drunk_setbyadmin");
+		}
+		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
 	}
 	else CPrintToChat(client, "%t %t", "drunk_tag" , "drunk_disabled");
 }

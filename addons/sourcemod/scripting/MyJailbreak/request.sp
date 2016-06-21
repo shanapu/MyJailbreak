@@ -58,10 +58,10 @@ ConVar gc_bFreeKillSwap;
 ConVar gc_bReportAdmin;
 ConVar gc_bReportWarden;
 ConVar gc_bRespawnCellClosed;
-
-ConVar gc_sVIPflagRepeat;
-ConVar gc_sVIPflagRefuse;
-ConVar gc_sVIPflagHeal;
+ConVar gc_sAdminFlag;
+ConVar gc_sAdminFlagRepeat;
+ConVar gc_sAdminFlagRefuse;
+ConVar gc_sAdminFlagHeal;
 
 //Bools
 bool g_bHealed[MAXPLAYERS+1];
@@ -104,9 +104,10 @@ char g_sCustomCommandRepeat[64];
 char g_sCustomCommandRefuse[64];
 char g_sCustomCommandFreekill[64];
 char g_sFreeKillLogFile[PLATFORM_MAX_PATH];
-char g_sVIPflagRepeat[32];
-char g_sVIPflagRefuse[32];
-char g_sVIPflagHeal[32];	
+char g_sAdminFlagRepeat[32];
+char g_sAdminFlagRefuse[32];
+char g_sAdminFlagHeal[32];
+char g_sAdminFlag[32];
 
 public Plugin myinfo = 
 {
@@ -185,11 +186,11 @@ public void OnPluginStart()
 	gc_bFreeKillFreeDay = AutoExecConfig_CreateConVar("sm_freekill_freeday", "1", "0 - disabled, 1 - Allow the warden to set a freeday next round as pardon");
 	gc_bFreeKillSwap = AutoExecConfig_CreateConVar("sm_freekill_swap", "1", "0 - disabled, 1 - Allow the warden to swap a freekiller to terrorist");
 	gc_bReportAdmin = AutoExecConfig_CreateConVar("sm_freekill_admin", "1", "0 - disabled, 1 - Report will be send to admins - if there is no admin its send to warden");
+	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_freekill_flag", "g", "Set flag for admin/vip get reported freekills to decide.");
 	gc_bReportWarden = AutoExecConfig_CreateConVar("sm_freekill_warden", "1", "0 - disabled, 1 - Report will be send to Warden if there is no admin");
-	
-	gc_sVIPflagRepeat = AutoExecConfig_CreateConVar("sm_repeat_vip", "a", "Set flag for VIP to get one more repeat. No flag feature is available for all players!");
-	gc_sVIPflagRefuse = AutoExecConfig_CreateConVar("sm_refuse_vip", "a", "Set flag for VIP to get one more refuse. No flag feature is available for all players!");
-	gc_sVIPflagHeal = AutoExecConfig_CreateConVar("sm_repeat_vip", "a", "Set flag for VIP to get one more heal. No flag feature is available for all players!");
+	gc_sAdminFlagRepeat = AutoExecConfig_CreateConVar("sm_repeat_flag", "a", "Set flag for admin/vip to get one more repeat. No flag feature is available for all players!");
+	gc_sAdminFlagRefuse = AutoExecConfig_CreateConVar("sm_refuse_flag", "a", "Set flag for admin/vip to get one more refuse. No flag feature is available for all players!");
+	gc_sAdminFlagHeal = AutoExecConfig_CreateConVar("sm_repeat_flag", "a", "Set flag for admin/vip to get one more heal. No flag feature is available for all players!");
 
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
@@ -206,9 +207,10 @@ public void OnPluginStart()
 	HookConVarChange(gc_sCustomCommandRepeat, OnSettingChanged);
 	HookConVarChange(gc_sCustomCommandCapitulation, OnSettingChanged);
 	HookConVarChange(gc_sCustomCommandFreekill, OnSettingChanged);
-	HookConVarChange(gc_sVIPflagRepeat, OnSettingChanged);
-	HookConVarChange(gc_sVIPflagRefuse, OnSettingChanged);
-	HookConVarChange(gc_sVIPflagHeal, OnSettingChanged);
+	HookConVarChange(gc_sAdminFlagRepeat, OnSettingChanged);
+	HookConVarChange(gc_sAdminFlagRefuse, OnSettingChanged);
+	HookConVarChange(gc_sAdminFlagHeal, OnSettingChanged);
+	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
 	
 	//FindConVar
 	gc_sSoundRefusePath.GetString(g_sSoundRefusePath, sizeof(g_sSoundRefusePath));
@@ -220,9 +222,10 @@ public void OnPluginStart()
 	gc_sCustomCommandRepeat.GetString(g_sCustomCommandRepeat , sizeof(g_sCustomCommandRepeat));
 	gc_sCustomCommandCapitulation.GetString(g_sCustomCommandCapitulation , sizeof(g_sCustomCommandCapitulation));
 	gc_sCustomCommandFreekill.GetString(g_sCustomCommandFreekill , sizeof(g_sCustomCommandFreekill));
-	gc_sVIPflagHeal.GetString(g_sVIPflagHeal , sizeof(g_sVIPflagHeal));
-	gc_sVIPflagRepeat.GetString(g_sVIPflagRepeat , sizeof(g_sVIPflagRepeat));
-	gc_sVIPflagRefuse.GetString(g_sVIPflagRefuse , sizeof(g_sVIPflagRefuse));
+	gc_sAdminFlagHeal.GetString(g_sAdminFlagHeal , sizeof(g_sAdminFlagHeal));
+	gc_sAdminFlagRepeat.GetString(g_sAdminFlagRepeat , sizeof(g_sAdminFlagRepeat));
+	gc_sAdminFlagRefuse.GetString(g_sAdminFlagRefuse , sizeof(g_sAdminFlagRefuse));
+	gc_sAdminFlag.GetString(g_sAdminFlag , sizeof(g_sAdminFlag));
 	
 	SetLogFile(g_sFreeKillLogFile, "Freekills");
 }
@@ -233,6 +236,10 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 	{
 		strcopy(g_sSoundRefusePath, sizeof(g_sSoundRefusePath), newValue);
 		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundRefusePath);
+	}
+	else if(convar == gc_sAdminFlag)
+	{
+		strcopy(g_sAdminFlag, sizeof(g_sAdminFlag), newValue);
 	}
 	else if(convar == gc_sSoundRefuseStopPath)
 	{
@@ -289,17 +296,17 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 		if(GetCommandFlags(sBufferCMD) == INVALID_FCVAR_FLAGS)
 			RegConsoleCmd(sBufferCMD, Command_Freekill, "Allows a rebeling terrorist to report a freekill");
 	}
-	else if(convar == gc_sVIPflagRefuse)
+	else if(convar == gc_sAdminFlagRefuse)
 	{
-		strcopy(g_sVIPflagRefuse, sizeof(g_sVIPflagRefuse), newValue);
+		strcopy(g_sAdminFlagRefuse, sizeof(g_sAdminFlagRefuse), newValue);
 	}
-	else if(convar == gc_sVIPflagRepeat)
+	else if(convar == gc_sAdminFlagRepeat)
 	{
-		strcopy(g_sVIPflagRepeat, sizeof(g_sVIPflagRepeat), newValue);
+		strcopy(g_sAdminFlagRepeat, sizeof(g_sAdminFlagRepeat), newValue);
 	}
-	else if(convar == gc_sVIPflagHeal)
+	else if(convar == gc_sAdminFlagHeal)
 	{
-		strcopy(g_sVIPflagHeal, sizeof(g_sVIPflagHeal), newValue);
+		strcopy(g_sAdminFlagHeal, sizeof(g_sAdminFlagHeal), newValue);
 	}
 }
 
@@ -361,9 +368,9 @@ public Action RoundStart(Handle event, char [] name, bool dontBroadcast)
 		g_bAllowRefuse = false;
 		g_iKilledBy[client] = 0;
 		g_bFreeKilled[client] = false;
-		if(CheckVipFlag(client,g_sVIPflagRefuse)) g_iRefuseCounter[client] = -1;
-		if(CheckVipFlag(client,g_sVIPflagHeal)) g_iHealCounter[client] = -1;
-		if(CheckVipFlag(client,g_sVIPflagRepeat)) g_iRepeatCounter[client] = -1;
+		if(CheckVipFlag(client,g_sAdminFlagRefuse)) g_iRefuseCounter[client] = -1;
+		if(CheckVipFlag(client,g_sAdminFlagHeal)) g_iHealCounter[client] = -1;
+		if(CheckVipFlag(client,g_sAdminFlagRepeat)) g_iRepeatCounter[client] = -1;
 	}
 	g_iCountStopTime = gc_fRefuseTime.IntValue;
 	return Plugin_Continue;
@@ -375,9 +382,9 @@ public void OnClientPutInServer(int client)
 	g_iRepeatCounter[client] = 0;
 	g_iRefuseCounter[client] = 0;
 	g_iHealCounter[client] = 0;
-	if(CheckVipFlag(client,g_sVIPflagRefuse)) g_iRefuseCounter[client] = -1;
-	if(CheckVipFlag(client,g_sVIPflagHeal)) g_iHealCounter[client] = -1;
-	if(CheckVipFlag(client,g_sVIPflagRepeat)) g_iRepeatCounter[client] = -1;
+	if(CheckVipFlag(client,g_sAdminFlagRefuse)) g_iRefuseCounter[client] = -1;
+	if(CheckVipFlag(client,g_sAdminFlagHeal)) g_iHealCounter[client] = -1;
+	if(CheckVipFlag(client,g_sAdminFlagRepeat)) g_iRepeatCounter[client] = -1;
 	g_bHealed[client] = false;
 	g_bRepeated[client] = false;
 	g_bRefused[client] = false;
@@ -734,7 +741,7 @@ public Action RequestMenu(int client, int args)
 {
 	if(gc_bPlugin.BoolValue)
 	{
-		if (GetClientTeam(client) == CS_TEAM_T)
+		if (GetClientTeam(client) == CS_TEAM_T && IsValidClient(client,false,true))
 		{
 			Menu reqmenu = new Menu(RequestMenuHandler);
 			
@@ -908,7 +915,7 @@ stock int GetRandomAdmin()
 	int adminsCount;
 	LoopClients(i)
 	{
-		if (CheckCommandAccess(i, "sm_map", ADMFLAG_CHANGEMAP, true))
+		if (CheckVipFlag(i,g_sAdminFlag))
 		{
 			admins[adminsCount++] = i;
 		}

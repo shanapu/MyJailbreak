@@ -34,6 +34,7 @@ ConVar gc_iTruceTime;
 ConVar gc_iRounds;
 ConVar g_iGetRoundTime;
 ConVar gc_sCustomCommand;
+ConVar gc_sAdminFlag;
 
 //Integers
 int g_iOldRoundTime;
@@ -55,6 +56,7 @@ char g_sHasVoted[1500];
 char g_sSoundStartPath[256];
 char g_sCustomCommand[64];
 char g_sEventsLogFile[PLATFORM_MAX_PATH];
+char g_sAdminFlag[32];
 
 public Plugin myinfo = 
 {
@@ -84,7 +86,8 @@ public void OnPluginStart()
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_ffa_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true,  0.0, true, 1.0);
 	gc_sCustomCommand = AutoExecConfig_CreateConVar("sm_ffa_cmd", "DM", "Set your custom chat command for Event voting. no need for sm_ or !");
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_ffa_warden", "1", "0 - disabled, 1 - allow warden to set ffa round", _, true,  0.0, true, 1.0);
-	gc_bSetA = AutoExecConfig_CreateConVar("sm_ffa_admin", "1", "0 - disabled, 1 - allow admin to set ffa round", _, true,  0.0, true, 1.0);
+	gc_bSetA = AutoExecConfig_CreateConVar("sm_ffa_admin", "1", "0 - disabled, 1 - allow admin/vip to set ffa round", _, true,  0.0, true, 1.0);
+	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_ffa_flag", "g", "Set flag for admin/vip to set this Event Day.");
 	gc_bVote = AutoExecConfig_CreateConVar("sm_ffa_vote", "1", "0 - disabled, 1 - allow player to vote for ffa", _, true,  0.0, true, 1.0);
 	gc_bSpawnCell = AutoExecConfig_CreateConVar("sm_ffa_spawn", "0", "0 - T teleport to CT spawn, 1 - cell doors auto open", _, true,  0.0, true, 1.0);
 	gc_iRounds = AutoExecConfig_CreateConVar("sm_ffa_rounds", "1", "Rounds to play in a row", _, true, 1.0);
@@ -106,6 +109,7 @@ public void OnPluginStart()
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
 	HookConVarChange(gc_sCustomCommand, OnSettingChanged);
+	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
 	
 	//FindConVar
 	
@@ -116,6 +120,7 @@ public void OnPluginStart()
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
 	gc_sCustomCommand.GetString(g_sCustomCommand , sizeof(g_sCustomCommand));
+	gc_sAdminFlag.GetString(g_sAdminFlag , sizeof(g_sAdminFlag));
 	
 	SetLogFile(g_sEventsLogFile, "Events");
 }
@@ -128,6 +133,10 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 	{
 		strcopy(g_sOverlayStart, sizeof(g_sOverlayStart), newValue);
 		if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStart);
+	}
+	else if(convar == gc_sAdminFlag)
+	{
+		strcopy(g_sAdminFlag, sizeof(g_sAdminFlag), newValue);
 	}
 	else if(convar == gc_sSoundStartPath)
 	{
@@ -204,7 +213,7 @@ public Action Setffa(int client,int args)
 			}
 			else CPrintToChat(client, "%t %t", "warden_tag" , "war_setbywarden");
 		}
-		else if (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
+		else if (CheckVipFlag(client,g_sAdminFlag))
 			{
 				if (gc_bSetA.BoolValue)
 				{
