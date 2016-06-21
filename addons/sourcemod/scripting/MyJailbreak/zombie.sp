@@ -106,7 +106,7 @@ public void OnPluginStart()
 	gc_iZombieHP = AutoExecConfig_CreateConVar("sm_zombie_zombie_hp", "8500", "HP the Zombies got on Spawn", _, true, 1.0);
 	gc_iHumanHP = AutoExecConfig_CreateConVar("sm_zombie_human_hp", "65", "HP the Humans got on Spawn", _, true, 1.0);
 	gc_bDark = AutoExecConfig_CreateConVar("sm_zombie_dark", "1", "0 - disabled, 1 - enable Map Darkness", _, true,  0.0, true, 1.0);
-	gc_bGlow = AutoExecConfig_CreateConVar("sm_zombie_glow", "1", "0 - disabled, 1 - enable Glow effect for humans", _, true,  0.0, true, 1.0);
+	gc_bGlow = AutoExecConfig_CreateConVar("sm_zombie_glow", "0", "0 - disabled, 1 - enable Glow effect for humans", _, true,  0.0, true, 1.0);
 	gc_bVision = AutoExecConfig_CreateConVar("sm_zombie_vision", "1", "0 - disabled, 1 - enable NightVision View for Zombies", _, true,  0.0, true, 1.0);
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_zombie_cooldown_day", "3", "Rounds cooldown after a event until event can be start again", _, true, 0.0);
 	gc_iCooldownStart = AutoExecConfig_CreateConVar("sm_zombie_cooldown_start", "3", "Rounds until event can be start after mapchange.", _, true, 0.0);
@@ -458,7 +458,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 			char model[PLATFORM_MAX_PATH]; 
 			GetClientModel(client, model, sizeof(model)); 
 			int skin = CPS_SetSkin(client, model, CPS_RENDER);
-			if(skin != -1)
+			if(skin != -1 && gc_bGlow.BoolValue)
 			{
 				SetEntProp(skin, Prop_Send, "m_bShouldGlow", false, true);
 				SetEntProp(skin, Prop_Send, "m_nGlowStyle", 1);
