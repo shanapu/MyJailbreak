@@ -1,207 +1,221 @@
+// Exported from SourceMod Translator
+// http://translator.mitchdempsey.com/sourcemod_plugins/193
+//
 "Phrases"
 {
+	"hebattle_ctwin_nc"
+	{
+		"pl"		"Counter-Terrorists przetrwal"
+		"de"		"Ein Counter-Terrorists hat als einziger überlebt"
+		"en"		"A Counter-Terrorists has surrived"
+		"da"		"En Counter-Terrorists har overlevet"
+	}
+
+	"hebattle_disabled"
+	{
+		"pl"		"HE Battle jest {purple}wylaczony."
+		"de"		"HE Battle ist {purple}deaktiviert."
+		"en"		"HE Battle is {purple}disabled."
+		"da"		"HE Battle er {purple}slået fra."
+	}
+
+	"hebattle_end"
+	{
+		"pl"		"{purple}HE Battle{default} zakonczony"
+		"de"		"{purple}HE Battle{default} beendet"
+		"en"		"{purple}HE Battle{default} finished"
+		"da"		"{purple}HE Battle{default} er afsluttet!"
+	}
+
+	"hebattle_info_line1"
+	{
+		"pl"		"FFA HE Battle z mala grawitacja"
+		"de"		"FFA HE Battle mit low Gravity"
+		"en"		"FFA HE Battle with low Gravity"
+		"da"		"I høvdingebold er det FFA høvdingebold"
+	}
+
+	"hebattle_info_line2"
+	{
+		"pl"		"Nie zdziw sie jak przeteleportuje cie do spawnu CT!"
+		"de"		"Nicht wundern falls ihr zum CT Spawngeportet wurdet!"
+		"en"		"Do not be surprised if ported to CT Spawn!"
+		"da"		"Bliv ikke overrasket hvis du bliver teleportet til CT Spawn!"
+	}
+
+	"hebattle_info_line3"
+	{
+		"pl"		"mozna poruszac sie i wyjsc z wk podczas fazy nodamage"
+		"de"		"Du machst bis zum Start keinen Schaden"
+		"en"		"You don't make damage until start"
+	}
+
+	"hebattle_info_line4"
+	{
+		"pl"		"Wszystkie normalne zasady wiezienia zostaly zastapione"
+		"de"		"Alle normalen Jailregeln sind aufgehoben!"
+		"en"		"All normal jail rules are repealed"
+		"da"		"Alle jail regler er ophævet!"
+	}
+
+	"hebattle_info_line5"
+	{
+		"pl"		"Nie ma ostatniego zyczenia!"
+		"de"		"Der letzte Terrorists hat keinen Wunsch!"
+		"en"		"There is no last request!"
+		"da"		"Der kan ikke laves !lr i denne runde!"
+	}
+
+	"hebattle_info_line6"
+	{
+		"pl"		"Zostan w glownym pomieszczeniu Wiezienia! Zakaz wejsc do SECRETOW!"
+		"de"		"Bleib' im Haupt Jail Raum! Verstecke sind verboten!"
+		"en"		"Stay in the main jailroom! Don't enter secrets!"
+	}
+
+	"hebattle_info_line7"
+	{
+		"pl"		"Nie badz DUPKIEM!"
+		"de"		"Bau keine Scheisse!"
+		"en"		"Dont be an asshole!"
+		"da"		"Alle server regler skal holdes!"
+	}
+
+	"hebattle_info_title"
+	{
+		"pl"		"HE Battle jest aktywny"
+		"de"		"HE Battle ist aktiv"
+		"en"		"HE Battle is active"
+		"da"		"HE Battleer aktiv"
+	}
+
+	"hebattle_minplayer"
+	{
+		"en"		"Do walki HE Battle potrzebujesz przynajmniej {purple}jednego  CT"
+		"de"		"Für HE Battle brauchen wir mindestens {purple}einen CT"
+		"en"		"For a HE Battle you need at least {purple}one CT"
+		"da"		"For HE Battle skal der mindst være {purple}en CT"
+	}
+
+	"hebattle_need"
+	{
+		"#format"   "{1:i},{2:N}"
+		"pl"		"{purple}{2}{default} zaglosowal {purple}{1}{default} pozostalo glosow do {darkred}hebattle"
+		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}hebattle{default} beginnt"
+		"en"		"{purple}{2}{default} has votet. {purple}{1}{default} votes left to {darkred}hebattle"
+		"da"		"{purple}{2}{default} har stemt. {purple}{1}{default} afstemninger tilbage til {darkred}hebattle"
+	}
+
+	"hebattle_next"
+	{
+		"pl"		"Nastepna runda to {purple}HE Battle"
+		"de"		"Nächste Runde ist {purple}HE Battle"
+		"en"		"Next round is {purple}HE Battle"
+		"da"		"Næste runde er {purple}HE Battle"
+	}
+
+	"hebattle_next_nc"
+	{
+		"pl"		"Nastepna runda to HE Battle"
+		"de"		"Nächste Runde ist HE Battle"
+		"en"		"Next round is HE Battle"
+		"da"		"Næste runde er HE Battle"
+	}
+
+	"hebattle_progress"
+	{
+		"#format"   "{1:s}"
+		"pl"		"Zabawa {darkred}{1} {default}sie {purple}rozpoczela"
+		"de"		"Event {darkred}{1} {default}ist {purple}bereits gesetzt."
+		"en"		"Event {darkred}{1} {default}is {purple}already in progress."
+	}
+
+	"hebattle_rounds"
+	{
+		"#format"   "{1:i},{2:i}"
+		"pl"		"Runda {purple}{1}{default} z {purple}{2}"
+		"de"		"Runde {purple}{1}{default} von {purple}{2}"
+		"en"		"Round {purple}{1}{default} of {purple}{2}"
+		"da"		"Runde {purple}{1}{default} af {purple}{2}"
+	}
+
+	"hebattle_setbyadmin"
+	{
+		"pl"		"Wlaczenie Cowboy przez admina jest {purple}wylaczone"
+		"de"		"HE Battle Aktivierung durch den Admin ist {purple}ausgeschaltet"
+		"en"		"Set HE Battle by admin is {purple}disabled"
+		"da"		"HE Battle for Admin er {purple}slået fra"
+	}
+
+	"hebattle_setbywarden"
+	{
+		"pl"		"Glosowanie na HE Battle przez Straznika jest {purple}wylaczone"
+		"de"		"HE Battle Aktivierung durch den Warden ist {purple}ausgeschaltet"
+		"en"		"Set HE Battle by warden is {purple}disabled"
+		"da"		"HE Battle for Warden er {purple}slået fra"
+	}
+
+	"hebattle_start"
+	{
+		"pl"		"{purple}HE Battle{default} sie rozpoczal!"
+		"de"		"{purple}HE Battle{default} ist gestartet!"
+		"en"		"{purple}HE Battle{default} has started!"
+		"da"		"{purple}HE Battle{default} er startet!"
+	}
+
+	"hebattle_start_nc"
+	{
+		"pl"		"HE Battle sie rozpoczal!"
+		"de"		"HE Battle ist gestartet!"
+		"en"		"HE Battle has started!"
+		"da"		"HE Battle er startet!"
+	}
+
 	"hebattle_tag"
 	{
 		"en"		"[{green}MyJB.HEBattle{default}]"
 	}
-	"hebattle_need"
-	{
-		"#format"	"{1:i},{2:N}"
-		"da"		"{purple}{2}{default} har stemt. {purple}{1}{default} afstemninger tilbage til {darkred}hebattle"		
-		"en"		"{purple}{2}{default} has votet. {purple}{1}{default} votes left to {darkred}hebattle"
-		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}hebattle{default} beginnt"
-		"pl"		"{purple}{2}{default} zaglosowal {purple}{1}{default} pozostalo glosow do {darkred}hebattle"
-	}
-	"hebattle_rounds" 
-	{
-		"#format"	"{1:i},{2:i}"
-		"da"		"Runde {purple}{1}{default} af {purple}{2}"		
-		"en"		"Round {purple}{1}{default} of {purple}{2}"
-		"de"		"Runde {purple}{1}{default} von {purple}{2}"
-		"pl"		"Runda {purple}{1}{default} z {purple}{2}"
-	}
-	"hebattle_minplayer"
-	{
-		"da"		"For HE Battle skal der mindst være {purple}en CT"	
-		"en"		"For a HE Battle you need at least {purple}one CT"
-		"de"		"Für HE Battle brauchen wir mindestens {purple}einen CT"
-		"en"		"Do walki HE Battle potrzebujesz przynajmniej {purple}jednego  CT"
-	}
-	"hebattle_twin_nc"
-	{
-		"da"		"En Terrorists har overlevet!"	
-		"en"		"A Terrorists has surrived"
-		"de"		"Ein Terrorist hat als einziger überlebt"
-		"pl"		"Terrorysta przetrwal"
-	}
-	"hebattle_voting"
-	{
-		"da"		"Afstemninger for HE Battle er {purple}slået fra"	
-		"en"		"Player voting for HE Battle is {purple}disabled"
-		"de"		"Voting für HE Battle ist {purple}ausgeschaltet"
-		"pl"		"Glosowanie graczy na HE Battle jest {purple}wylaczone"
-	}
-	"hebattle_setbywarden"
-	{
-		"da"		"HE Battle for Warden er {purple}slået fra"	
-		"en"		"Set HE Battle by warden is {purple}disabled"
-		"de"		"HE Battle Aktivierung durch den Warden ist {purple}ausgeschaltet"
-		"pl"		"Glosowanie na HE Battle przez Straznika jest {purple}wylaczone"
-	}
-	
-	"hebattle_setbyadmin"
-	{
-		"da"		"HE Battle for Admin er {purple}slået fra"	
-		"en"		"Set HE Battle by admin is {purple}disabled"
-		"de"		"HE Battle Aktivierung durch den Admin ist {purple}ausgeschaltet"
-		"pl"		"Wlaczenie Cowboy przez admina jest {purple}wylaczone"
-	}
-	"hebattle_ctwin_nc"
-	{
-		"da"		"En Counter-Terrorists har overlevet"	
-		"en"		"A Counter-Terrorists has surrived"
-		"de"		"Ein Counter-Terrorists hat als einziger überlebt"
-		"pl"		"Counter-Terrorists przetrwal"
-	}
-	"hebattle_end"
-	{
-		"da"		"{purple}HE Battle{default} er afsluttet!"	
-		"en"		"{purple}HE Battle{default} finished"
-		"de"		"{purple}HE Battle{default} beendet"
-		"pl"		"{purple}HE Battle{default} zakonczony"
-	}
-	
-	"hebattle_next"
-	{
-		"da"		"Næste runde er {purple}HE Battle"
-		"en"		"Next round is {purple}HE Battle"
-		"de"		"Nächste Runde ist {purple}HE Battle"
-		"pl"		"Nastepna runda to {purple}HE Battle"
-	}
-	"hebattle_next_nc"
-	{
-		"da"		"Næste runde er HE Battle"
-		"en"		"Next round is HE Battle"
-		"de"		"Nächste Runde ist HE Battle"
-		"pl"		"Nastepna runda to HE Battle"
-	}
-	
-	"hebattle_start"
-	{
-		"da"		"{purple}HE Battle{default} er startet!"
-		"en"		"{purple}HE Battle{default} has started!"
-		"de"		"{purple}HE Battle{default} ist gestartet!"
-		"pl"		"{purple}HE Battle{default} sie rozpoczal!"
-	}
-	
-	"hebattle_start_nc"
-	{
-		"da"		"HE Battle er startet!"
-		"en"		"HE Battle has started!"
-		"de"		"HE Battle ist gestartet!"
-		"pl"		"HE Battle sie rozpoczal!"
-	}
-	
-	"hebattle_voted"
-	{
-		"en"		"Du har allerede stemt på {purple}HE Battle"
-		"en"		"You already voted for {purple}HE Battle"
-		"de"		"Du hast schon für {purple}HE Battle {default}gevotet"
-		"pl"		"Juz glosowales na {purple}HE Battle"
-	}
-	
-	"hebattle_progress"
-	{
-		"#format"	"{1:s}"
-		"en"		"Event {darkred}{1} {default}is {purple}already in progress."
-		"de"		"Event {darkred}{1} {default}ist {purple}bereits gesetzt."
-		"pl"		"Zabawa {darkred}{1} {default}sie {purple}rozpoczela"
-	}
-	
-	"hebattle_disabled"
-	{
-		"da"		"HE Battle er {purple}slået fra."
-		"en"		"HE Battle is {purple}disabled."
-		"de"		"HE Battle ist {purple}deaktiviert."
-		"pl"		"HE Battle jest {purple}wylaczony."
-	}
-	
 
 	"hebattle_timeuntilstart_nc"
 	{
-		"#format"	"{1:i}"
-		"da"		"{1} sekunder til runden starter!"
-		"en"		"{1} seconds until start!"
-		"de"		"{1} Sekunden bis zum Start!"
+		"#format"   "{1:i}"
 		"pl"		"{1} sekund do startu!"
+		"de"		"{1} Sekunden bis zum Start!"
+		"en"		"{1} seconds until start!"
+		"da"		"{1} sekunder til runden starter!"
 	}
-	
-	"hebattle_info_title"
+
+	"hebattle_twin_nc"
 	{
-		"da"		"HE Battleer aktiv"	
-		"en"		"HE Battle is active"
-		"de"		"HE Battle ist aktiv"
-		"pl"		"HE Battle jest aktywny"
+		"pl"		"Terrorysta przetrwal"
+		"de"		"Ein Terrorist hat als einziger überlebt"
+		"en"		"A Terrorists has surrived"
+		"da"		"En Terrorists har overlevet!"
 	}
-	
-	"hebattle_info_line1"
+
+	"hebattle_voted"
 	{
-		"da"		"I høvdingebold er det FFA høvdingebold"	
-		"en"		"FFA HE Battle with low Gravity"
-		"de"		"FFA HE Battle mit low Gravity"
-		"pl"		"FFA HE Battle z mala grawitacja"
+		"pl"		"Juz glosowales na {purple}HE Battle"
+		"de"		"Du hast schon für {purple}HE Battle {default}gevotet"
+		"en"		"You already voted for {purple}HE Battle"
+		"en"		"Du har allerede stemt på {purple}HE Battle"
 	}
-	"hebattle_info_line2"
+
+	"hebattle_voting"
 	{
-		"da"		"Bliv ikke overrasket hvis du bliver teleportet til CT Spawn!"	
-		"en"		"Do not be surprised if ported to CT Spawn!"
-		"de"		"Nicht wundern falls ihr zum CT Spawngeportet wurdet!"
-		"pl"		"Nie zdziw sie jak przeteleportuje cie do spawnu CT!"
+		"pl"		"Glosowanie graczy na HE Battle jest {purple}wylaczone"
+		"de"		"Voting für HE Battle ist {purple}ausgeschaltet"
+		"en"		"Player voting for HE Battle is {purple}disabled"
+		"da"		"Afstemninger for HE Battle er {purple}slået fra"
 	}
-	
-	"hebattle_info_line3"
+
+	"hebattle_wait"
 	{
-		"en"		"You don't make damage until start"
-		"de"		"Du machst bis zum Start keinen Schaden"
-		"pl"		"mozna poruszac sie i wyjsc z wk podczas fazy nodamage"
-	}
-	
-	"hebattle_info_line4"
-	{
-		"da"		"Alle jail regler er ophævet!"	
-		"en"		"All normal jail rules are repealed"
-		"de"		"Alle normalen Jailregeln sind aufgehoben!"
-		"pl"		"Wszystkie normalne zasady wiezienia zostaly zastapione"
-	}
-	
-	"hebattle_info_line5"
-	{
-		"da"		"Der kan ikke laves !lr i denne runde!"	
-		"en"		"There is no last request!"
-		"de"		"Der letzte Terrorists hat keinen Wunsch!"
-		"pl"		"Nie ma ostatniego zyczenia!"
-	}
-	
-	"hebattle_info_line6"
-	{
-		"en"		"Stay in the main jailroom! Don't enter secrets!"
-		"de"		"Bleib' im Haupt Jail Raum! Verstecke sind verboten!"
-		"pl"		"Zostan w glownym pomieszczeniu Wiezienia! Zakaz wejsc do SECRETOW!"
-	}
-	
-	"hebattle_info_line7"
-	{
-		"da"		"Alle server regler skal holdes!"	
-		"en"		"Dont be an asshole!"
-		"de"		"Bau keine Scheisse!"
-		"pl"		"Nie badz DUPKIEM!"
-	}
-		"hebattle_wait"
-	{
-		"#format"	"{1:i}"
-		"da"		"Du skal vente {1} flere runder"	
-		"en"		"You must wait {1} more rounds"
-		"de"		"Du musst noch {1} Runden warten"
+		"#format"   "{1:i}"
 		"pl"		"Musisz poczekac  {1} rund"
+		"de"		"Du musst noch {1} Runden warten"
+		"en"		"You must wait {1} more rounds"
+		"da"		"Du skal vente {1} flere runder"
 	}
+
 }

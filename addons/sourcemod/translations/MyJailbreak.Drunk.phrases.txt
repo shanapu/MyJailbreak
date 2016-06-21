@@ -1,202 +1,212 @@
+// Exported from SourceMod Translator
+// http://translator.mitchdempsey.com/sourcemod_plugins/191
+//
 "Phrases"
 {
-	"drunk_tag"
-	{
-		"en"		"[{green}MyJB.drunk{default}]"
-		"en"		"[{green}JB.Pijak{default}]"
-	}
-	"drunk_need"
-	{
-		"#format"	"{1:i},{2:N}"
-		"da"		"{purple}{2}{default} har afstemt!. {purple}{1}{default} afstemninger tilbage til {darkred}drunk"		
-		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes left to {darkred}drunk"
-		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}drunk{default} beginnt"
-		"pl"		"{purple}{2}{default} zaglosowal {purple}{1}{default} pozostalo glosow do {darkred}Pijak"
-
-	}
-	"drunk_rounds" 
-	{
-		"#format"	"{1:i},{2:i}"
-		"da"		"Runde {purple}{1}{default} af {purple}{2}"		
-		"en"		"Round {purple}{1}{default} of {purple}{2}"
-		"de"		"Runde {purple}{1}{default} von {purple}{2}"
-		"pl"		"Runda {purple}{1}{default} z {purple}{2}"
-	}
-	"drunk_twin_nc"
-	{
-		"da"		"En Terrorist har overlevet!"	
-		"en"		"A Terrorist has surrived"
-		"de"		"Ein Terrorist hat als einziger überlebt"
-		"pl"		"Terrorysta przetrwal"
-	}
-	"drunk_voting"
-	{
-		"da"		"Afstemninger for No Scope er {purple}slået fra"	
-		"en"		"Player Voting for Drunken Day is {purple}disabled"
-		"de"		"Voting für Drunken Day ist {purple}ausgeschaltet"
-		"pl"		"Glosowanie graczy na Pijaka jest {purple}wylaczone"
-	}
-	"drunk_setbywarden"
-	{
-		"da"		"Warden bestemmer runde for No Scope er {purple}slået fra"	
-		"en"		"Set Drunken Day by Warden is {purple}disabled"
-		"de"		"Drunken Day Aktivierung durch den Warden ist {purple}ausgeschaltet"
-		"pl"		"Glosowanie na Pijaka przez Straznika jest {purple}wylaczone"
-	}
-	
-	"drunk_setbyadmin"
-	{
-		"da"		"Admin bestemmer runde for No Scope er {purple}slået fra"		
-		"en"		"Set Drunken Day by admin is {purple}disabled"
-		"de"		"Drunken Day Aktivierung durch den Admin ist {purple}ausgeschaltet"
-		"pl"		"Glosowanie na Pijaka przez Straznika jest {purple}wylaczone"
-	}
 	"drunk_ctwin_nc"
 	{
-		"da"		"En Counter-Terrorist har overlevet!"
-		"en"		"A Counter-Terrorist has surrived"
-		"de"		"Ein Counter-Terrorist hat als einziger überlebt"
 		"pl"		"Counter-Terrorists przetrwal"
+		"de"		"Ein Counter-Terrorist hat als einziger überlebt"
+		"en"		"A Counter-Terrorist has surrived"
+		"da"		"En Counter-Terrorist har overlevet!"
 	}
-	
-	"drunk_end"
-	{
-		"da"		"{purple}Drunken Day{default} er afsluttet!"	
-		"en"		"{purple}Drunken Day{default} ended"
-		"de"		"{purple}Drunken Day{default} beendet"
-		"pl"		"{purple}Pijak{default} zakonczony"
-	}
-	
-	"drunk_next"
-	{
-		"da"		"Næste runde er {purple}Drunken Day"	
-		"en"		"Next round is {purple}Drunken Day"
-		"de"		"Nächste Runde ist {purple}Drunken Day"
-		"pl"		"Nastepna runda to {purple}Pijak"
-		
-	}
-	"drunk_next_nc"
-	{
-		"da"		"Næste runde er Drunken Day"	
-		"en"		"Next round is Drunken Day"
-		"de"		"Nächste Runde ist Drunken Day"
-		"pl"		"Nastepna runda to Pijak"
-	}
-	
-	"drunk_start"
-	{
-		"da"		"{purple}Drunken Day{default} er startet!"
-		"en"		"The {purple}Drunken Day{default} has started!"
-		"de"		"{purple}Drunken Day{default} ist gestartet!"
-		"pl"		" {purple}Pijak{default} sie rozpoczal!"
-	}
-	
-	"drunk_start_nc"
-	{
-		"da"		"Drunk er startet!"
-		"en"		"The Drunken Day started!"
-		"de"		"Drunken Day ist gestartet!"
-	}
-	
-	"drunk_voted"
-	{
-		"da"		"Du har allerede stemt for {purple}Drunken Day!"	
-		"en"		"You already voted for {purple}Drunken Day"
-		"de"		"Du hast schon für {purple}Drunken Day {default}gevotet"
-		"pl"		"Pijak sie rozpoczal!"
-	}
-	
-	"drunk_progress"
-	{
-		"#format"	"{1:s}"
-		"en"		"Event {darkred}{1} {default}is {purple}already in progress."
-		"de"		"Event {darkred}{1} {default}ist {purple}bereits gesetzt."
-		"pl"		"Zabawa  {darkred}{1} {default}sie {purple}rozpoczela"
-	}
-	
+
 	"drunk_disabled"
 	{
-		"da"		"Drunken Day er {purple}slået fra."
-		"en"		"Drunken Day is {purple}disabled."
-		"de"		"Drunken Day ist {purple}deaktiviert."
 		"pl"		"Pijak jest {purple}wylaczony."
+		"de"		"Drunken Day ist {purple}deaktiviert."
+		"en"		"Drunken Day is {purple}disabled."
+		"da"		"Drunken Day er {purple}slået fra."
 	}
-	
+
+	"drunk_end"
+	{
+		"pl"		"{purple}Pijak{default} zakonczony"
+		"de"		"{purple}Drunken Day{default} beendet"
+		"en"		"{purple}Drunken Day{default} ended"
+		"da"		"{purple}Drunken Day{default} er afsluttet!"
+	}
+
+	"drunk_info_line1"
+	{
+		"pl"		"Pijak jest aktywny"
+		"de"		"Drunken Day is aktiv!"
+		"en"		"Drunken Day is activ"
+	}
+
+	"drunk_info_line2"
+	{
+		"pl"		"-----------------------------------"
+		"de"		"-----------------------------------"
+		"en"		"-----------------------------------"
+	}
+
+	"drunk_info_line3"
+	{
+		"pl"		"-----------------------------------"
+		"de"		"-----------------------------------"
+		"en"		"-----------------------------------"
+	}
+
+	"drunk_info_line4"
+	{
+		"pl"		"Wszystkie normalne zasady wiezienia zostaly zastapione"
+		"de"		"Alle normalen Jailregeln sind aufgehoben!"
+		"en"		"All normal jailRules are repealed"
+		"da"		"Alle jail regler er ophævet!"
+	}
+
+	"drunk_info_line5"
+	{
+		"pl"		"Nie ma ostatniego zyczenia!"
+		"de"		"Der letzte Terrorist hat keinen Wunsch!"
+		"en"		"There is no last request!"
+		"da"		"Der kan ikke laves Last Request i denne runde!"
+	}
+
+	"drunk_info_line6"
+	{
+		"pl"		"Kazdy moze isc gdzie chce!"
+		"de"		"Jeder darf überall hin wo er will!"
+		"en"		"Everyone is allowed to go everywhere where he wants"
+		"da"		"Alle kan gå der hen hvor de har lyst til at gå hen!"
+	}
+
+	"drunk_info_line7"
+	{
+		"pl"		"Nie badz DUPKIEM!"
+		"de"		"bau keine scheisse!"
+		"en"		"dont be an asshole!"
+		"da"		"Alle server regler skal overholdes!"
+	}
+
+	"drunk_info_title"
+	{
+		"en"		"Drunken Day is activ"
+		"pl"		"Pijak jest aktywny"
+		"de"		"Drunken Day ist aktiv"
+		"en"		"Drunken Day er aktiveret!"
+	}
+
+	"drunk_need"
+	{
+		"#format"   "{1:i},{2:N}"
+		"pl"		"{purple}{2}{default} zaglosowal {purple}{1}{default} pozostalo glosow do {darkred}Pijak"
+		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}drunk{default} beginnt"
+		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes left to {darkred}drunk"
+		"da"		"{purple}{2}{default} har afstemt!. {purple}{1}{default} afstemninger tilbage til {darkred}drunk"
+	}
+
+	"drunk_next"
+	{
+		"pl"		"Nastepna runda to {purple}Pijak"
+		"de"		"Nächste Runde ist {purple}Drunken Day"
+		"en"		"Next round is {purple}Drunken Day"
+		"da"		"Næste runde er {purple}Drunken Day"
+	}
+
+	"drunk_next_nc"
+	{
+		"pl"		"Nastepna runda to Pijak"
+		"de"		"Nächste Runde ist Drunken Day"
+		"en"		"Next round is Drunken Day"
+		"da"		"Næste runde er Drunken Day"
+	}
+
+	"drunk_progress"
+	{
+		"#format"   "{1:s}"
+		"pl"		"Zabawa  {darkred}{1} {default}sie {purple}rozpoczela"
+		"de"		"Event {darkred}{1} {default}ist {purple}bereits gesetzt."
+		"en"		"Event {darkred}{1} {default}is {purple}already in progress."
+	}
+
+	"drunk_rounds"
+	{
+		"#format"   "{1:i},{2:i}"
+		"pl"		"Runda {purple}{1}{default} z {purple}{2}"
+		"de"		"Runde {purple}{1}{default} von {purple}{2}"
+		"en"		"Round {purple}{1}{default} of {purple}{2}"
+		"da"		"Runde {purple}{1}{default} af {purple}{2}"
+	}
+
+	"drunk_setbyadmin"
+	{
+		"pl"		"Glosowanie na Pijaka przez Straznika jest {purple}wylaczone"
+		"de"		"Drunken Day Aktivierung durch den Admin ist {purple}ausgeschaltet"
+		"en"		"Set Drunken Day by admin is {purple}disabled"
+		"da"		"Admin bestemmer runde for No Scope er {purple}slået fra"
+	}
+
+	"drunk_setbywarden"
+	{
+		"pl"		"Glosowanie na Pijaka przez Straznika jest {purple}wylaczone"
+		"de"		"Drunken Day Aktivierung durch den Warden ist {purple}ausgeschaltet"
+		"en"		"Set Drunken Day by Warden is {purple}disabled"
+		"da"		"Warden bestemmer runde for No Scope er {purple}slået fra"
+	}
+
+	"drunk_start"
+	{
+		"pl"		" {purple}Pijak{default} sie rozpoczal!"
+		"de"		"{purple}Drunken Day{default} ist gestartet!"
+		"en"		"The {purple}Drunken Day{default} has started!"
+		"da"		"{purple}Drunken Day{default} er startet!"
+	}
+
+	"drunk_start_nc"
+	{
+		"de"		"Drunken Day ist gestartet!"
+		"en"		"The Drunken Day started!"
+		"da"		"Drunk er startet!"
+	}
+
+	"drunk_tag"
+	{
+		"en"		"[{green}JB.Pijak{default}]"
+		"en"		"[{green}MyJB.drunk{default}]"
+	}
 
 	"drunk_timeuntilstart_nc"
 	{
-		"#format"	"{1:i}"
-		"da"		"{1} sekunder til runden starter!"	
-		"en"		"{1} seconds until start"
-		"de"		"{1} Sekunden bis zum Start"
+		"#format"   "{1:i}"
 		"pl"		"{1} sekund do startu!"
+		"de"		"{1} Sekunden bis zum Start"
+		"en"		"{1} seconds until start"
+		"da"		"{1} sekunder til runden starter!"
 	}
-	
-	"drunk_info_title"
+
+	"drunk_twin_nc"
 	{
-		"en"		"Drunken Day er aktiveret!"	
-		"en"		"Drunken Day is activ"
-		"de"		"Drunken Day ist aktiv"
-		"pl"		"Pijak jest aktywny"
+		"pl"		"Terrorysta przetrwal"
+		"de"		"Ein Terrorist hat als einziger überlebt"
+		"en"		"A Terrorist has surrived"
+		"da"		"En Terrorist har overlevet!"
 	}
-	
-	"drunk_info_line1"
+
+	"drunk_voted"
 	{
-		"en"		"Drunken Day is activ"
-		"de"		"Drunken Day is aktiv!"
-		"pl"		"Pijak jest aktywny"
+		"pl"		"Pijak sie rozpoczal!"
+		"de"		"Du hast schon für {purple}Drunken Day {default}gevotet"
+		"en"		"You already voted for {purple}Drunken Day"
+		"da"		"Du har allerede stemt for {purple}Drunken Day!"
 	}
-	"drunk_info_line2"
+
+	"drunk_voting"
 	{
-		"en"		"-----------------------------------"
-		"de"		"-----------------------------------"
-		"pl"		"-----------------------------------"
+		"pl"		"Glosowanie graczy na Pijaka jest {purple}wylaczone"
+		"de"		"Voting für Drunken Day ist {purple}ausgeschaltet"
+		"en"		"Player Voting for Drunken Day is {purple}disabled"
+		"da"		"Afstemninger for No Scope er {purple}slået fra"
 	}
-	
-	"drunk_info_line3"
+
+	"drunk_wait"
 	{
-		"en"		"-----------------------------------"
-		"de"		"-----------------------------------"
-		"pl"		"-----------------------------------"
-	}
-	
-	"drunk_info_line4"
-	{
-		"da"		"Alle jail regler er ophævet!"	
-		"en"		"All normal jailRules are repealed"
-		"de"		"Alle normalen Jailregeln sind aufgehoben!"
-		"pl"		"Wszystkie normalne zasady wiezienia zostaly zastapione"
-	}
-	
-	"drunk_info_line5"
-	{
-		"da"		"Der kan ikke laves Last Request i denne runde!"	
-		"en"		"There is no last request!"
-		"de"		"Der letzte Terrorist hat keinen Wunsch!"
-		"pl"		"Nie ma ostatniego zyczenia!"
-	}
-	
-	"drunk_info_line6"
-	{
-		"da"		"Alle kan gå der hen hvor de har lyst til at gå hen!"	
-		"en"		"Everyone is allowed to go everywhere where he wants"
-		"de"		"Jeder darf überall hin wo er will!"
-		"pl"		"Kazdy moze isc gdzie chce!"
-	}
-	
-	"drunk_info_line7"
-	{
-		"da"		"Alle server regler skal overholdes!"	
-		"en"		"dont be an asshole!"
-		"de"		"bau keine scheisse!"
-		"pl"		"Nie badz DUPKIEM!"
-	}
-		"drunk_wait"
-	{
-		"#format"	"{1:i}"
-		"da"		"Du skal vente {1} flere runder!"		
-		"en"		"you must wait {1} more rounds"
-		"de"		"Du musst noch {1} Runden warten"
+		"#format"   "{1:i}"
 		"pl"		"Musisz poczekac  {1} rund"
+		"de"		"Du musst noch {1} Runden warten"
+		"en"		"you must wait {1} more rounds"
+		"da"		"Du skal vente {1} flere runder!"
 	}
+
 }

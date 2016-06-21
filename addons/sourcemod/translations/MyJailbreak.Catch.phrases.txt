@@ -1,260 +1,263 @@
-"Phrases"		// working color tags {default}, {darkred}, {red}, {green}, {lightgreen}, {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
+// Exported from SourceMod Translator
+// http://translator.mitchdempsey.com/sourcemod_plugins/185
+//
+"Phrases"
 {
 	"catch_tag"
 	{
-		"en"		"[{green}MyJB.Catch{default}]"
 		"pl"		"[{green}JB.Ganiany{default}]"
+		"en"		"[{green}MyJB.Catch{default}]"
 	}
 
-	"catch_need"  
-	{
-		"#format"	"{1:i},{2:N}"
-		"da"		"{purple}{2}{default} har stemt. {purple}{1}{default} stemmer tilbage til {darkred}Catch{default} starter!"
-		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes left to {darkred}Catch"
-		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}Catch{default} beginnt"
-		"pl"		"{purple}{2}{default} zaglosowal. pozostalo {purple}{1}{default} glosow do {darkred}Ganiany{default} Ganianego "
-	}
-	"catch_rounds" 
-	{
-		"#format"	"{1:i},{2:i}"
-		"da"		"Runde {purple}{1}{default} af {purple}{2}"
-		"en"		"Round {purple}{1}{default} of {purple}{2}"
-		"de"		"Runde {purple}{1}{default} von {purple}{2}"
-		"pl"		"Runda {purple}{1}{default} z {purple}{2}"
-	}
-	"catch_twin_nc"		// no colors!
-	{
-	
-		"da"		"Terroristerne slap væk og vandt!"
-		"en"		"Terrorists escaped"
-		"de"		"Terroristen sind entkommen"
-		"pl"		"Terrorysta uciekl"
-	}
-	
-	"catch_ctwin_nc"		// no colors!
-	{
-
-		"da"		"Alle terrorister er blevet fanget!"
-		"en"		"All terrorists caught"
-		"de"		"Alle Terroristen wurden wieder eingefangen"
-		"pl"		"Wszyscy Terrorysci zlapani"
-	}
-	
-	"catch_end"
-	{
-
-		"da"		"{purple}Catch{default} er afsluttet!"
-		"en"		"{purple}Catch{default} finished"
-		"de"		"{purple}Catch{default} beendet"
-		"pl"		"{purple}Ganiany{default} zakonczony"
-	}
-	
-	"catch_voting"
-	{
-		"da"		"Afstemning for Catch er {purple}slået fra"
-		"en"		"Player voting for Catch is {purple}disabled"
-		"de"		"Voting für Catch ist {purple}ausgeschaltet"
-		"pl"		"Glosowanie graczy na Ganianego jest {purple}wylaczone"
-	}
-	
-	"catch_setbywarden"
-	{
-		"da"		"Start Catch som Warden er {purple}slået fra"
-		"en"		"Set Catch by warden is {purple}disabled"
-		"de"		"Catch Aktivierung durch den Warden ist {purple}ausgeschaltet"
-		"pl"		"Glosowanie na Ganianego przez Straznika jest {purple}wylaczone"
-	}
-	
-	"catch_setbyadmin"
-	{
-		"da"		"Start Catch som Admin er {purple}slået fra"
-		"en"		"Set Catch by admin is {purple}disabled"
-		"de"		"Catch Aktivierung durch den Admin ist {purple}ausgeschaltet"
-		"pl"		"Wlaczenie Ganieanego przez admina jest {purple}wylaczone"
-	}
-	
-	"catch_next"
-	{
-		"da"		"Næste runde er {purple}Catch"
-		"en"		"Next round is {purple}Catch"
-		"de"		"Nächste Runde ist {purple}Catch"
-		"pl"		"Nastepna runda to {purple}Ganiany"
-	}
-
-		"catch_next_nc"
-	{
-		"da"		"Næste runde er Catch"
-		"en"		"Next round is Catch"
-		"de"		"Nächste Runde ist Catch"
-		"pl"		"Nastepna runda to Ganiany"
-	}
-	
-	"catch_start"
-	{
-		"da"		"{purple}Catch{default} er startet!"
-		"en"		"The {purple}Catch{default} has started!"
-		"de"		"{purple}Catch{default} ist gestartet!"
-		"pl"		"{purple}Ganiany{default} sie rozpoczal!"
-		
-	}
-	
-	"catch_start_nc"
-	{
-		"da"		"Catch er startet!"
-		"en"		"The Catch has started!"
-		"de"		"Fangen ist gestartet!"
-		"pl"		"Ganiany sie rozpoczal!"
-	}
-	
-	"catch_voted"
-	{
-		"da"		"Du har allerede stemt på {purple}Catch"
-		"en"		"You already voted for {purple}Catch"
-		"de"		"Du hast schon für {purple}Catch {default}gevotet"
-		"pl"		"Juz glosowales na {purple}Ganianego"
-		
-	}
-	
-	"catch_progress"
-	{
-		"#format"	"{1:s}"
-		"en"		"Event {darkred}{1} {default}is {purple}already in progress."
-		"de"		"Event {darkred}{1} {default}ist {purple}bereits gesetzt."
-		"pl"		"Zabawa {darkred}{1} {default}jest {purple}juz grana."
-	}
-	
-	"catch_minplayer"
-	{
-		"da"		"For Catch mangler du mindst {purple}en CT & en T"
-		"en"		"For a Catch you need at least {purple}one CT & one T"
-		"de"		"Für Catch brauchen wir mindestens {purple}einen CT und einen T"
-		"pl"		"Do Ganianego potrzeba minimum {purple}jednego  CT i jednego T"
-	}
-	
-	"catch_sprint"
-	{
-
-		"da"		"Du bruger nu {blue}Sprint!"
-		"en"		"You are now using {blue}Sprint!"
-		"de"		"Du {blue}sprintest!"
-		"pl"		"Uzywasz {blue}Sprintu!"
-	}
 	"catch_sprintend"
 	{
-		"#format"	"{1:i}"
-		"en"		"{blue}Sprint ended!{default} Cooldown {1} Seconds"
-		"de"		"Du kannst nicht mehr {blue}sprinten! {default}warte {1} Sekunden!"
+		"#format"   "{1:i}"
 		"pl"		"{blue}Sprint sie skonczyl{default} odczekaj {1} Sekund"
-	}
-	
-	"catch_sprintagain"
-	{
-		"en"		"You can{blue}Sprint again!{default}"
-		"de"		"Du kannst wieder {blue}sprinten!"
-		"pl"		"Mozesz znowu{blue}biec Sprintem{default}"
-	}
-	"catch_disabled"
-	{
-		"da"		"Catch er {purple}slået fra."
-		"en"		"Catch is {purple}disabled."
-		"de"		"Catch ist {purple}deaktiviert."
-		"pl"		"Ganiany jest {purple}wylaczony."
+		"de"		"Du kannst nicht mehr {blue}sprinten! {default}warte {1} Sekunden!"
+		"en"		"{blue}Sprint ended!{default} Cooldown {1} Seconds"
 	}
 
-	"catch_info_title"		// no colors!
+	"catch_sprintagain"
 	{
-		"da"		"Catch er aktiveret!"
-		"en"		"Catch is activated!"
-		"de"		"Fangen ist aktiv"
+		"pl"		"Mozesz znowu{blue}biec Sprintem{default}"
+		"de"		"Du kannst wieder {blue}sprinten!"
+		"en"		"You can{blue}Sprint again!{default}"
+	}
+
+	"catch_disabled"
+	{
+		"pl"		"Ganiany jest {purple}wylaczony."
+		"de"		"Catch ist {purple}deaktiviert."
+		"en"		"Catch is {purple}disabled."
+		"da"		"Catch er {purple}slået fra."
+	}
+
+	"catch_need"
+	{
+		"#format"   "{1:i},{2:N}"
+		"pl"		"{purple}{2}{default} zaglosowal. pozostalo {purple}{1}{default} glosow do {darkred}Ganiany{default} Ganianego "
+		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}Catch{default} beginnt"
+		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes left to {darkred}Catch"
+		"da"		"{purple}{2}{default} har stemt. {purple}{1}{default} stemmer tilbage til {darkred}Catch{default} starter!"
+	}
+
+	"catch_rounds"
+	{
+		"#format"   "{1:i},{2:i}"
+		"pl"		"Runda {purple}{1}{default} z {purple}{2}"
+		"de"		"Runde {purple}{1}{default} von {purple}{2}"
+		"en"		"Round {purple}{1}{default} of {purple}{2}"
+		"da"		"Runde {purple}{1}{default} af {purple}{2}"
+	}
+
+	"catch_info_title"
+	{
 		"pl"		"Ganiany jest Wlaczony!"
+		"de"		"Fangen ist aktiv"
+		"en"		"Catch is activated!"
+		"da"		"Catch er aktiveret!"
 	}
-	
-	"catch_info_line1"		// no colors!
+
+	"catch_twin_nc"
 	{
-		"da"		"CTs skal fange & fryse alle T ved at knife dem"
-		"en"		"The CTs have to catch all Ts with their knife and freeze them"
-		"de"		"Die CT müssen alle T mit dem Messer einfangen und freezen"
+		"pl"		"Terrorysta uciekl"
+		"de"		"Terroristen sind entkommen"
+		"en"		"Terrorists escaped"
+		"da"		"Terroristerne slap væk og vandt!"
+	}
+
+	"catch_ctwin_nc"
+	{
+		"pl"		"Wszyscy Terrorysci zlapani"
+		"de"		"Alle Terroristen wurden wieder eingefangen"
+		"en"		"All terrorists caught"
+		"da"		"Alle terrorister er blevet fanget!"
+	}
+
+	"catch_info_line1"
+	{
 		"pl"		"CT musza zlapac wszystkich T swoimi nozami by ich zamrozic"
+		"de"		"Die CT müssen alle T mit dem Messer einfangen und freezen"
+		"en"		"The CTs have to catch all Ts with their knife and freeze them"
+		"da"		"CTs skal fange & fryse alle T ved at knife dem"
 	}
-	"catch_info_line2"		// no colors!
+
+	"catch_end"
 	{
-		"da"		"T kan unfreeze fanget Ts med kniv"
-		"en"		"Ts can unfreeze Ts - Just knife them!"
-		"de"		"T können gefreezte T mit dem messer befreien"
+		"pl"		"{purple}Ganiany{default} zakonczony"
+		"de"		"{purple}Catch{default} beendet"
+		"en"		"{purple}Catch{default} finished"
+		"da"		"{purple}Catch{default} er afsluttet!"
+	}
+
+	"catch_info_line2"
+	{
 		"pl"		"T moze odmrozic kolejnego T - uzyj swojego noza !"
+		"de"		"T können gefreezte T mit dem messer befreien"
+		"en"		"Ts can unfreeze Ts - Just knife them!"
+		"da"		"T kan unfreeze fanget Ts med kniv"
 	}
-	
-	"catch_info_line3"		// no colors!
+
+	"catch_voting"
 	{
-		"da"		"Brug E til at Sprint!"
-		"en"		"Press E to sprint!"
-		"de"		"mit der BENUTZEN-Taste kannst du sprinten"
+		"pl"		"Glosowanie graczy na Ganianego jest {purple}wylaczone"
+		"de"		"Voting für Catch ist {purple}ausgeschaltet"
+		"en"		"Player voting for Catch is {purple}disabled"
+		"da"		"Afstemning for Catch er {purple}slået fra"
+	}
+
+	"catch_setbywarden"
+	{
+		"pl"		"Glosowanie na Ganianego przez Straznika jest {purple}wylaczone"
+		"de"		"Catch Aktivierung durch den Warden ist {purple}ausgeschaltet"
+		"en"		"Set Catch by warden is {purple}disabled"
+		"da"		"Start Catch som Warden er {purple}slået fra"
+	}
+
+	"catch_info_line3"
+	{
 		"pl"		"Wcisnij E by uzyc Sprintu!"
+		"de"		"mit der BENUTZEN-Taste kannst du sprinten"
+		"en"		"Press E to sprint!"
+		"da"		"Brug E til at Sprint!"
 	}
-	
-	"catch_info_line4"		// no colors!
+
+	"catch_setbyadmin"
 	{
-		"da"		"Ingen jail regler gælder i denne runde!"
-		"en"		"No jail rules apply in this round!"
-		"de"		"Alle normalen Jailregeln sind aufgehoben!"
+		"pl"		"Wlaczenie Ganieanego przez admina jest {purple}wylaczone"
+		"de"		"Catch Aktivierung durch den Admin ist {purple}ausgeschaltet"
+		"en"		"Set Catch by admin is {purple}disabled"
+		"da"		"Start Catch som Admin er {purple}slået fra"
+	}
+
+	"catch_next"
+	{
+		"pl"		"Nastepna runda to {purple}Ganiany"
+		"de"		"Nächste Runde ist {purple}Catch"
+		"en"		"Next round is {purple}Catch"
+		"da"		"Næste runde er {purple}Catch"
+	}
+
+	"catch_info_line4"
+	{
 		"pl"		"Zasady Wiezienia nie obowiazuja w tej rundzie!"
+		"de"		"Alle normalen Jailregeln sind aufgehoben!"
+		"en"		"No jail rules apply in this round!"
+		"da"		"Ingen jail regler gælder i denne runde!"
 	}
-	
-	"catch_info_line5"		// no colors!
+
+	"catch_next_nc"
 	{
-		"da"		"Der kan ikke laves !lr"
-		"en"		"You cannot use !lr in this round!"
-		"de"		"Der letzte Terrorists hat keinen Wunsch!"
+		"pl"		"Nastepna runda to Ganiany"
+		"de"		"Nächste Runde ist Catch"
+		"en"		"Next round is Catch"
+		"da"		"Næste runde er Catch"
+	}
+
+	"catch_info_line5"
+	{
 		"pl"		"Nie mozna uzyc !lr w tej rundzie"
+		"de"		"Der letzte Terrorists hat keinen Wunsch!"
+		"en"		"You cannot use !lr in this round!"
+		"da"		"Der kan ikke laves !lr"
 	}
-	
-	"catch_info_line6"		// no colors!
+
+	"catch_start"
 	{
-		"en"		"Stay in the main jailroom! Don't enter secrets!"
-		"de"		"Bleib' im Haupt Jail Raum! Verstecke sind verboten!"
+		"pl"		"{purple}Ganiany{default} sie rozpoczal!"
+		"de"		"{purple}Catch{default} ist gestartet!"
+		"en"		"The {purple}Catch{default} has started!"
+		"da"		"{purple}Catch{default} er startet!"
+	}
+
+	"catch_start_nc"
+	{
+		"pl"		"Ganiany sie rozpoczal!"
+		"de"		"Fangen ist gestartet!"
+		"en"		"The Catch has started!"
+		"da"		"Catch er startet!"
+	}
+
+	"catch_info_line6"
+	{
 		"pl"		"Zostan w glownym pomieszczeniu Wiezienia! Zakaz wejsc do SECRETOW!"
+		"de"		"Bleib' im Haupt Jail Raum! Verstecke sind verboten!"
+		"en"		"Stay in the main jailroom! Don't enter secrets!"
 	}
-	
-	"catch_info_line7"		// no colors!
+
+	"catch_voted"
 	{
-		"da"		"Server Reglerne skal stadig holdes!"
-		"en"		"Server Rules must be kept!"
-		"de"		"Bau keine Scheisse!"
-		"pl"		"Pamietaj o zasadach Serwera!"
+		"pl"		"Juz glosowales na {purple}Ganianego"
+		"de"		"Du hast schon für {purple}Catch {default}gevotet"
+		"en"		"You already voted for {purple}Catch"
+		"da"		"Du har allerede stemt på {purple}Catch"
 	}
-	
+
+	"catch_info_line7"
+	{
+		"pl"		"Pamietaj o zasadach Serwera!"
+		"de"		"Bau keine Scheisse!"
+		"en"		"Server Rules must be kept!"
+		"da"		"Server Reglerne skal stadig holdes!"
+	}
+
+	"catch_progress"
+	{
+		"#format"   "{1:s}"
+		"pl"		"Zabawa {darkred}{1} {default}jest {purple}juz grana."
+		"de"		"Event {darkred}{1} {default}ist {purple}bereits gesetzt."
+		"en"		"Event {darkred}{1} {default}is {purple}already in progress."
+	}
+
+	"catch_minplayer"
+	{
+		"pl"		"Do Ganianego potrzeba minimum {purple}jednego  CT i jednego T"
+		"de"		"Für Catch brauchen wir mindestens {purple}einen CT und einen T"
+		"en"		"For a Catch you need at least {purple}one CT & one T"
+		"da"		"For Catch mangler du mindst {purple}en CT & en T"
+	}
+
 	"catch_wait"
 	{
-		"#format"	"{1:i}"
-		"da"		"Du skal vente {purple}{1}{default} flere runder"
-		"en"		"You must wait {purple}{1}{default} more rounds"
-		"de"		"Du musst noch {purple}{1}{default} Runden warten"
+		"#format"   "{1:i}"
 		"pl"		"Musisz odczekac {purple}{1}{default} rund"
+		"de"		"Du musst noch {purple}{1}{default} Runden warten"
+		"en"		"You must wait {purple}{1}{default} more rounds"
+		"da"		"Du skal vente {purple}{1}{default} flere runder"
 	}
-	
+
+	"catch_sprint"
+	{
+		"pl"		"Uzywasz {blue}Sprintu!"
+		"de"		"Du {blue}sprintest!"
+		"en"		"You are now using {blue}Sprint!"
+		"da"		"Du bruger nu {blue}Sprint!"
+	}
+
 	"catch_unfreeze"
 	{
-		"#format"	"{1:N},{2:N}"
-		"da"		"Fangen {purple}{1}{default} har unfreezet {blue}{2}"
-		"en"		"Prisoner {purple}{1}{default} unfreezed {blue}{2}"
-		"de"		"Häftling {purple}{1}{default} hat {blue}{2}{default} befreit"
+		"#format"   "{1:N},{2:N}"
 		"pl"		"Wiezien {purple}{1}{default} odmrozil {blue}{2}"
+		"de"		"Häftling {purple}{1}{default} hat {blue}{2}{default} befreit"
+		"en"		"Prisoner {purple}{1}{default} unfreezed {blue}{2}"
+		"da"		"Fangen {purple}{1}{default} har unfreezet {blue}{2}"
 	}
-	
+
 	"catch_catch"
 	{
-		"#format"	"{1:N},{2:N}"
-		"da"		"Vagten {purple}{1}{default} har frosset {blue}{2}{default}"
-		"en"		"Guard {purple}{1}{default} freezed {blue}{2}{default}"
-		"de"		"Wärter {purple}{1}{default} hat {blue}{2}{default} gefangen"
+		"#format"   "{1:N},{2:N}"
 		"pl"		"Straznik {purple}{1}{default} zamrozil {blue}{2}{default}"
+		"de"		"Wärter {purple}{1}{default} hat {blue}{2}{default} gefangen"
+		"en"		"Guard {purple}{1}{default} freezed {blue}{2}{default}"
+		"da"		"Vagten {purple}{1}{default} har frosset {blue}{2}{default}"
 	}
-	
+
 	"catch_win"
 	{
-		"da"		"Alle fanger er {purple}FANGET!"
-		"en"		"All prisoners {purple}catched"
-		"de"		"Alle Häftlinge wurden {purple}eingefangen"
 		"pl"		"Wszyscy wiezniowie zostali {purple}zlapani"
+		"de"		"Alle Häftlinge wurden {purple}eingefangen"
+		"en"		"All prisoners {purple}catched"
+		"da"		"Alle fanger er {purple}FANGET!"
 	}
+
 }

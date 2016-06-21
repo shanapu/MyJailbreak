@@ -1,242 +1,247 @@
-"Phrases"		// working color tags {default}, {darkred}, {red}, {green}, {lightgreen}, {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
+// Exported from SourceMod Translator
+// http://translator.mitchdempsey.com/sourcemod_plugins/187
+//
+"Phrases"
 {
-	"ffa_tag"
+	"ffa_ctwin_nc"
 	{
-		"en"		"[{green}MyJB.FFA{default}]"
-		"pl"		"[{green}JB.FFA{default}]"
-	}
-	
-	"ffa_need"
-	{
-		"#format"	"{1:i},{2:N}"
-		"da"		"{purple}{2}{default} har afstemt. {purple}{1}{default} stemmer tilbage til {darkred}FFA runde"		
-		"en"		"{purple}{2}{default} has votet. {purple}{1}{default} votes left to {darkred}FFA"
-		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}FFA{default} beginnt"
-		"pl"		"{purple}{2}{default} zaglosowal {purple}{1}{default} pozostalo glosow do {darkred}FFA"
-	}
-	
-	"ffa_voting"
-	{
-		"da"		"Afstemning for FFA er {purple}slået fra"
-		"en"		"Player voting for FFA is {purple}disabled"
-		"de"		"Voting für FFA ist {purple}ausgeschaltet"
-		"pl"		"Glosowanie graczy na FFA jest {purple}wylaczone"
-	}
-	
-	"ffa_setbywarden"
-	{
-		"da"		"Warden kan vælge FFA runde er {purple}slået fra"
-		"en"		"Set FFA by warden is {purple}disabled"
-		"de"		"FFA Aktivierung durch den Warden ist {purple}ausgeschaltet"
-		"pl"		"Glosowanie na FFA przez Straznika jest {purple}wylaczone"
-	}
-	
-	"ffa_setbyadmin"
-	{
-		"da"		"Admin kan vælge FFA runde er {purple}slået fra"
-		"en"		"Set FFA by admin is {purple}disabled"
-		"de"		"FFA Aktivierung durch den Admin ist {purple}ausgeschaltet"
-		"pl"		"Wlaczenie FFA przez admina jest {purple}wylaczone"
-	}
-	
-	"ffa_ctwin_nc"		// no colors!
-	{
-		"da"		"En Counter-Terrorists har overlevet!"
-		"en"		"A Counter-Terrorists has surrived"
-		"de"		"Ein Counter-Terrorists hat als einziger überlebt"
 		"pl"		"Counter-Terrorists przetrwal"
+		"de"		"Ein Counter-Terrorists hat als einziger überlebt"
+		"en"		"A Counter-Terrorists has surrived"
+		"da"		"En Counter-Terrorists har overlevet!"
 	}
-	
-	"ffa_twin_nc"		// no colors!
+
+	"ffa_damage_nc"
 	{
-		"da"		"En Terrorists har overlevet!"
-		"en"		"A Terrorists has surrived"
-		"de"		"Ein Terrorists hat als einziger überlebt"
-		"pl"		"Terrorysta przetrwal"
+		"#format"   "{1:i}"
+		"en"		"{1} sekund do wlaczenia urazow"
+		"de"		"{1} Sekunden bis Schaden aktiv ist"
+		"en"		"{1} seconds until damage enabled"
+		"da"		"{1} sekunder til man kan skade hinanden!"
 	}
-	
-	"ffa_minplayer"
-	{
-		"da"		"For FFA skal der mindst være {purple}en CT"	
-		"en"		"For a FFA you need at least {purple}one CT"
-		"de"		"Für FFA brauchen wir mindestens {purple}einen CT"
-		"pl"		"Do zabawy cowboy potrzeba przynajmniej {purple}jednego CT"
-	}
-	
-	"ffa_end"
-	{
-		"da"		"{purple}FFA{default} er afsluttet!"
-		"en"		"{purple}FFA{default} finished"
-		"de"		"{purple}FFA{default} beendet"
-		"pl"		"{purple}FFA{default} zakonczony"
-	}
-	
-	"ffa_next"
-	{
-		"da"		"Næste runde er {purple}FFA"
-		"en"		"Next round is {purple}FFA"
-		"de"		"Nächste Runde ist {purple}FFA"
-		"pl"		"Nastepna runda to {purple}FFA"
-	}
-	
-	"ffa_next_nc"		// no colors!
-	{
-		"da"		"Næste runde er FFA"
-		"en"		"Next round is FFA"
-		"pl"		"Nastepna runda to FFA"
-	}
-	
-	"ffa_rounds" 
-	{
-		"#format"	"{1:i},{2:i}"
-		"da"		"Runde {purple}{1}{default} af {purple}{2}"		
-		"en"		"Round {purple}{1}{default} of {purple}{2}"
-		"de"		"Runde {purple}{1}{default} von {purple}{2}"
-		"pl"		"Runda {purple}{1}{default} z {purple}{2}"
-	}
-	
-	"ffa_start"
-	{
-		"da"		"{purple}FFA{default} er startet!"
-		"en"		"The {purple}FFA{default} has started!"
-		"de"		"{purple}FFA{default} ist gestartet!"
-		"pl"		" {purple}FFA{default} sie rozpoczal!"
-	}
-	
-	"ffa_start_nc"		// no colors!
-	{
-		"da"		"FFA er startet!"
-		"en"		"The FFA has started!"
-		"de"		"FFA ist gestartet!"
-		"pl"		"FFA sie rozpoczal!"
-	}
-	
-	"ffa_voted"
-	{
-		"da"		"Du har allerede stemt for {purple}FFA runde!"
-		"en"		"You already voted for {purple}FFA"
-		"de"		"Du hast schon für {purple}FFA {default}gevotet"
-		"pl"		"Juz glosowales na {purple}FFA"
-		
-	}
-	
-	"ffa_progress"
-	{
-		"#format"	"{1:s}"
-		"en"		"Event {darkred}{1} {default}is {purple}already in progress."
-		"de"		"Event {darkred}{1} {default}ist {purple}bereits gesetzt."
-		"pl"		"Zabawa  {darkred}{1} {default}sie {purple}rozpoczela"
-		
-	}
-	
+
 	"ffa_disabled"
 	{
-		"da"		"FFA er {purple}slået fra."
-		"en"		"FFA is {purple}disabled."
-		"de"		"FFA ist {purple}deaktiviert."
 		"pl"		"FFA jest {purple}wylaczony."
+		"de"		"FFA ist {purple}deaktiviert."
+		"en"		"FFA is {purple}disabled."
+		"da"		"FFA er {purple}slået fra."
 	}
-	
-	"ffa_damage_nc"		// no colors!
+
+	"ffa_end"
 	{
-		"#format"	"{1:i}"
-		"da"		"{1} sekunder til man kan skade hinanden!"		
-		"en"		"{1} seconds until damage enabled"
-		"de"		"{1} Sekunden bis Schaden aktiv ist"
-		"en"		"{1} sekund do wlaczenia urazow"
+		"pl"		"{purple}FFA{default} zakonczony"
+		"de"		"{purple}FFA{default} beendet"
+		"en"		"{purple}FFA{default} finished"
+		"da"		"{purple}FFA{default} er afsluttet!"
 	}
-	
-	"ffa_info_title"		// no colors!
+
+	"ffa_info_line1"
 	{
-		"en"		"Free for All Deathmatch er aktiveret!"	
-		"en"		"Free for All Deathmatch is active"
-		"de"		"Free for All Deathmatch ist aktiv"
-		"pl"		"Free for All Deathmatch jest aktywny"
-	}
-	
-	"ffa_info_line1"		// no colors!
-	{
-		"da"		"Bliv ikke overrasket hvis du starter i CT spawn!"	
-		"en"		"Do not be surprised if you got ported to the CT Spawn"
-		"de"		"Nicht wundern falls ihr zum CT Spawn geportet wurdet"
 		"pl"		"Nie zdziw sie jak przeniesie cie na Spawn CT "
+		"de"		"Nicht wundern falls ihr zum CT Spawn geportet wurdet"
+		"en"		"Do not be surprised if you got ported to the CT Spawn"
+		"da"		"Bliv ikke overrasket hvis du starter i CT spawn!"
 	}
-	
-	"ffa_info_line2"		// no colors!
+
+	"ffa_info_line2"
 	{
-		"da"		"Free for All - alle mod alle - Sidste man vinder!"	
-		"en"		"Free for All - player vs player - Last man standing"
-		"de"		"Free for All - Jeder gegen Jeden - Nur einer überlebt"
 		"pl"		"Free for All - Jeden na Jednego - Ostatni Zywy"
-		
+		"de"		"Free for All - Jeder gegen Jeden - Nur einer überlebt"
+		"en"		"Free for All - player vs player - Last man standing"
+		"da"		"Free for All - alle mod alle - Sidste man vinder!"
 	}
-	
-	"ffa_info_line3"		// no colors!
+
+	"ffa_info_line3"
 	{
-		"da"		"Du kan ikke skade andre spillere når mappet er mørkt!"	
-		"en"		"While nodamage time the map is shady"
-		"de"		"Während der Nodamage Phase is die map verdunkelt"
 		"pl"		"Podczas NODAMAGE mapa przybiera cieni!!!"
-		
+		"de"		"Während der Nodamage Phase is die map verdunkelt"
+		"en"		"While nodamage time the map is shady"
+		"da"		"Du kan ikke skade andre spillere når mappet er mørkt!"
 	}
-	
-	"ffa_info_line4"		// no colors!
+
+	"ffa_info_line4"
 	{
-		"da"		"Alle jail regler er ophævet!"	
-		"en"		"All normal jail rules are repealed"
-		"de"		"Alle normalen Jailregeln sind aufgehoben!"
 		"pl"		"Wszystkie normalne zasady wiezienia zostaly zastapione"
+		"de"		"Alle normalen Jailregeln sind aufgehoben!"
+		"en"		"All normal jail rules are repealed"
+		"da"		"Alle jail regler er ophævet!"
 	}
-	
-	"ffa_info_line5"		// no colors!
+
+	"ffa_info_line5"
 	{
-		"da"		"!lr er deaktiveret i denne runde!"	
-		"en"		"There is no last request!"
-		"de"		"Der letzte Terrorists hat keinen Wunsch!"
 		"pl"		"Nie ma ostatniego zyczenia!"
+		"de"		"Der letzte Terrorists hat keinen Wunsch!"
+		"en"		"There is no last request!"
+		"da"		"!lr er deaktiveret i denne runde!"
 	}
-	
-	"ffa_info_line6"		// no colors!
+
+	"ffa_info_line6"
 	{
-		"da"		"Alle må gå der hen de har lyst til !"	
-		"en"		"Everyone is allowed to go everywhere where he wants"
-		"de"		"Jeder darf überall hin wo er will!"
 		"pl"		"Kazdy moze isc gdzie chce"
+		"de"		"Jeder darf überall hin wo er will!"
+		"en"		"Everyone is allowed to go everywhere where he wants"
+		"da"		"Alle må gå der hen de har lyst til !"
 	}
-	"ffa_info_line7"		// no colors!
+
+	"ffa_info_line7"
 	{
-		"da"		"Alle server regler skal overholdes!"	
-		"en"		"Dont be an asshole!"
-		"de"		"Bau keine Scheisse!"
 		"pl"		"Nie badz DUPKIEM!"
+		"de"		"Bau keine Scheisse!"
+		"en"		"Dont be an asshole!"
+		"da"		"Alle server regler skal overholdes!"
 	}
-	"RoundOne"		// no colors!
+
+	"ffa_info_title"
 	{
-		"da"		"Runde 1 af 3"	
-		"en"		"Round 1 of 3"
-		"de"		"Runde 1 von 3"
-		"pl"		"Runda  1 z 3"
+		"pl"		"Free for All Deathmatch jest aktywny"
+		"de"		"Free for All Deathmatch ist aktiv"
+		"en"		"Free for All Deathmatch is active"
+		"en"		"Free for All Deathmatch er aktiveret!"
 	}
-	"RoundTwo"		// no colors!
+
+	"ffa_minplayer"
 	{
-		"da"		"Runde 2 af 3"	
-		"en"		"Round 2 of 3"
-		"de"		"Runde 2 von 3"
-		"pl"		"Runda 2 z 3"
+		"pl"		"Do zabawy cowboy potrzeba przynajmniej {purple}jednego CT"
+		"de"		"Für FFA brauchen wir mindestens {purple}einen CT"
+		"en"		"For a FFA you need at least {purple}one CT"
+		"da"		"For FFA skal der mindst være {purple}en CT"
 	}
-	"RoundThree"		// no colors!
+
+	"ffa_need"
 	{
-		"da"		"Sidste FFA runde!"	
-		"en"		"last FFA round"
-		"de"		"letzte FFA runde"
-		"pl"		"ostatnie FFA runda"
+		"#format"   "{1:i},{2:N}"
+		"pl"		"{purple}{2}{default} zaglosowal {purple}{1}{default} pozostalo glosow do {darkred}FFA"
+		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}FFA{default} beginnt"
+		"en"		"{purple}{2}{default} has votet. {purple}{1}{default} votes left to {darkred}FFA"
+		"da"		"{purple}{2}{default} har afstemt. {purple}{1}{default} stemmer tilbage til {darkred}FFA runde"
 	}
+
+	"ffa_next"
+	{
+		"pl"		"Nastepna runda to {purple}FFA"
+		"de"		"Nächste Runde ist {purple}FFA"
+		"en"		"Next round is {purple}FFA"
+		"da"		"Næste runde er {purple}FFA"
+	}
+
+	"ffa_next_nc"
+	{
+		"pl"		"Nastepna runda to FFA"
+		"en"		"Next round is FFA"
+		"da"		"Næste runde er FFA"
+	}
+
+	"ffa_progress"
+	{
+		"#format"   "{1:s}"
+		"pl"		"Zabawa  {darkred}{1} {default}sie {purple}rozpoczela"
+		"de"		"Event {darkred}{1} {default}ist {purple}bereits gesetzt."
+		"en"		"Event {darkred}{1} {default}is {purple}already in progress."
+	}
+
+	"ffa_rounds"
+	{
+		"#format"   "{1:i},{2:i}"
+		"pl"		"Runda {purple}{1}{default} z {purple}{2}"
+		"de"		"Runde {purple}{1}{default} von {purple}{2}"
+		"en"		"Round {purple}{1}{default} of {purple}{2}"
+		"da"		"Runde {purple}{1}{default} af {purple}{2}"
+	}
+
+	"ffa_setbyadmin"
+	{
+		"pl"		"Wlaczenie FFA przez admina jest {purple}wylaczone"
+		"de"		"FFA Aktivierung durch den Admin ist {purple}ausgeschaltet"
+		"en"		"Set FFA by admin is {purple}disabled"
+		"da"		"Admin kan vælge FFA runde er {purple}slået fra"
+	}
+
+	"ffa_setbywarden"
+	{
+		"pl"		"Glosowanie na FFA przez Straznika jest {purple}wylaczone"
+		"de"		"FFA Aktivierung durch den Warden ist {purple}ausgeschaltet"
+		"en"		"Set FFA by warden is {purple}disabled"
+		"da"		"Warden kan vælge FFA runde er {purple}slået fra"
+	}
+
+	"ffa_start"
+	{
+		"pl"		" {purple}FFA{default} sie rozpoczal!"
+		"de"		"{purple}FFA{default} ist gestartet!"
+		"en"		"The {purple}FFA{default} has started!"
+		"da"		"{purple}FFA{default} er startet!"
+	}
+
+	"ffa_start_nc"
+	{
+		"pl"		"FFA sie rozpoczal!"
+		"de"		"FFA ist gestartet!"
+		"en"		"The FFA has started!"
+		"da"		"FFA er startet!"
+	}
+
+	"ffa_tag"
+	{
+		"pl"		"[{green}JB.FFA{default}]"
+		"en"		"[{green}MyJB.FFA{default}]"
+	}
+
+	"ffa_twin_nc"
+	{
+		"pl"		"Terrorysta przetrwal"
+		"de"		"Ein Terrorists hat als einziger überlebt"
+		"en"		"A Terrorists has surrived"
+		"da"		"En Terrorists har overlevet!"
+	}
+
+	"ffa_voted"
+	{
+		"pl"		"Juz glosowales na {purple}FFA"
+		"de"		"Du hast schon für {purple}FFA {default}gevotet"
+		"en"		"You already voted for {purple}FFA"
+		"da"		"Du har allerede stemt for {purple}FFA runde!"
+	}
+
+	"ffa_voting"
+	{
+		"pl"		"Glosowanie graczy na FFA jest {purple}wylaczone"
+		"de"		"Voting für FFA ist {purple}ausgeschaltet"
+		"en"		"Player voting for FFA is {purple}disabled"
+		"da"		"Afstemning for FFA er {purple}slået fra"
+	}
+
 	"ffa_wait"
 	{
-		"#format"	"{1:i}"
-		"da"		"Du skal vente {purple}{1}{default} flere runder!"		
-		"en"		"You must wait {purple}{1}{default} more rounds"
-		"de"		"Du musst noch {purple}{1}{default} Runden warten"
+		"#format"   "{1:i}"
 		"pl"		"Musisz poczekac  {1} rund"
+		"de"		"Du musst noch {purple}{1}{default} Runden warten"
+		"en"		"You must wait {purple}{1}{default} more rounds"
+		"da"		"Du skal vente {purple}{1}{default} flere runder!"
 	}
+
+	"RoundOne"
+	{
+		"pl"		"Runda  1 z 3"
+		"de"		"Runde 1 von 3"
+		"en"		"Round 1 of 3"
+		"da"		"Runde 1 af 3"
+	}
+
+	"RoundThree"
+	{
+		"pl"		"ostatnie FFA runda"
+		"de"		"letzte FFA runde"
+		"en"		"last FFA round"
+		"da"		"Sidste FFA runde!"
+	}
+
+	"RoundTwo"
+	{
+		"pl"		"Runda 2 z 3"
+		"de"		"Runde 2 von 3"
+		"en"		"Round 2 of 3"
+		"da"		"Runde 2 af 3"
+	}
+
 }

@@ -1,3 +1,6 @@
+// Exported from SourceMod Translator
+// http://translator.mitchdempsey.com/sourcemod_plugins/196
+//
 "Phrases"
 {
 	"request_notalivect"
@@ -18,16 +21,16 @@
 
 	"request_refusedtimes"
 	{
-		"#format"	"{1:i}"
+		"#format"   "{1:i}"
+		"de"		"Du hast in dieser Runde schon {purple}{1} mal verweigert."
 		"ru"		"Вы {purple}отказывались слишком много раз{default} в этом раунде."
 		"pl"		"juz {purple}odmawiales za duzo razy{default} w tej rundzie."
-		"de"		"Du hast in dieser Runde schon {purple}{1} mal verweigert."
 		"en"		"You have already {purple}refused {1} times{default} in this round."
 	}
 
 	"request_capitulation"
 	{
-		"#format"	"{1:N}"
+		"#format"   "{1:N}"
 		"ru"		"{purple}{1} {purple}капитулировал! {default}Будет ли командир одобрять?"
 		"pl"		"{purple}{1} {default}. {purple}skapitulowal! {default}Czy Warden to zaakceptuje ?"
 		"de"		"{purple}{1} {default}hat {purple}sich ergeben! {default}Wird der Warden akzeptieren?"
@@ -52,7 +55,7 @@
 
 	"request_accepted"
 	{
-		"#format"	"{1:N}"
+		"#format"   "{1:N}"
 		"ru"		"Командир одобрил {1} запрос. "
 		"pl"		"Warden zaakceptowal twoje  {1}zyczenie."
 		"de"		"Der Warden hat {1}s Anfrage akzeptiert."
@@ -61,7 +64,7 @@
 
 	"request_noaccepted"
 	{
-		"#format"	"{1:N}"
+		"#format"   "{1:N}"
 		"ru"		"Командир НЕ одобрил {1} запрос."
 		"pl"		"Warden NIE zaakceptowal twojego  {1}zyczenia."
 		"de"		"Der Warden hat {1}s Anfrage NICHT akzeptiert."
@@ -103,7 +106,7 @@
 
 	"request_healtimes"
 	{
-		"#format"	"{1:i}"
+		"#format"   "{1:i}"
 		"ru"		"Вы запросили {purple}слишком много исцелений{default} в этом раунде."
 		"pl"		"ty juz {purple}skladales zyczenia za duzo razy {default} w tej rundzie."
 		"de"		"Du hast in dieser Runde schon {purple}{1} mal Heilungen{default} angefragt."
@@ -120,7 +123,7 @@
 
 	"request_heal"
 	{
-		"#format"	"{1:N}"
+		"#format"   "{1:N}"
 		"ru"		"{purple}{1} {default}запросил {purple}исцеление! {default}Будет ли командир одобрять?"
 		"pl"		"{purple}{1} {default}ma zyczenie {purple}healing! {default}Czy Warden to zaakceptuje ?"
 		"de"		"{purple}{1} {default}hat {purple}Heilung {default}angefragt. Wird der Warden akzeptieren?"
@@ -145,7 +148,7 @@
 
 	"request_repeatpls"
 	{
-		"#format"	"{1:N}"
+		"#format"   "{1:N}"
 		"ru"		"{purple}{1} {default}просит повторить! {default}Или он не знает правила игры."
 		"pl"		"{purple}{1} {default}prosi o  {purple}Powtorzenie ostatniego zdania  {default}albo nie zna zasad GRY! "
 		"de"		"{purple}{1} {default}bittet um eine {purple}Wiederholung!{default} Oder er kennt die Spielregeln nicht."
@@ -154,7 +157,7 @@
 
 	"request_repeattimes"
 	{
-		"#format"	"{1:i}"
+		"#format"   "{1:i}"
 		"ru"		"Вы запросили {purple}слишком много повторов{default} в этом раунде."
 		"pl"		"ty juz  {purple}miales zbyt wiele zyczen {default} w tej rundzie."
 		"de"		"Du hast in dieser Runde schon {purple}{1} mal Wiederholungen{default} angefragt."
@@ -235,7 +238,7 @@
 
 	"request_refusing"
 	{
-		"#format"	"{1:N}"
+		"#format"   "{1:N}"
 		"ru"		"{purple}{1} {purple}Отказался от этой игры."
 		"pl"		"{purple}{1} {default}. {purple}odmawia gry."
 		"de"		"{purple}{1} {default}hat das {purple}Spiel verweigert"
@@ -267,6 +270,7 @@
 
 	"request_respawncell"
 	{
+		"ru"		"Возродить в камере"
 		"en"		"Respawn in cell"
 		"de"		"In der Zelle wiederbeleben"
 	}
@@ -287,6 +291,7 @@
 
 	"request_respawnwarden"
 	{
+		"ru"		"Воскрешение перед командиром."
 		"en"		"Respawn in front of warden"
 		"de"		"Vor dem Warden wiederbeleben"
 	}
@@ -307,8 +312,8 @@
 
 	"request_aliveorct"
 	{
-		"ru"		"Вы живы или КТ"
 		"de"		"Du bist nicht tot oder ein CT."
+		"ru"		"Вы живы или КТ"
 		"en"		"You are not dead or a CT."
 	}
 
@@ -329,10 +334,18 @@
 
 	"request_respawnedall"
 	{
-		"#format"	"{1:N}"
+		"#format"   "{1:N}"
 		"ru"		"{1} был возрождён из-за {darkred}фрикилла"
 		"de"		"{1} wurde wegen eines {darkred}Freekills{default} wiederbelebt"
 		"en"		"{1} was respawned due a {darkred}freekill"
+	}
+
+	"request_freekilltimes"
+	{
+		"#format"   "{1:i}"
+		"ru"		"Вы уже отправили {purple} {1} жалоб о фрикилле{default} в этом раунде."
+		"en"		"You have already {purple}report {1} times freekills{default} in this round."
+		"de"		"Du hast in dieser Runde schon {purple}{1} mal Freekills{default} gemeldet."
 	}
 
 	"request_killbcfreekill"
@@ -344,7 +357,7 @@
 
 	"request_killbcfreekillall"
 	{
-		"#format"	"{1:N}"
+		"#format"   "{1:N}"
 		"ru"		"{green}{1}{default} был убит в из-за {darkred}фрикилла"
 		"de"		"{green}{{1}{default} wurdest wegen eines {darkred}Freekills{default} getötet"
 		"en"		"{green}{1}{default} was slayed due a {darkred}freekill"
@@ -359,7 +372,7 @@
 
 	"request_swapbcfreekillall"
 	{
-		"#format"	"{1:N}"
+		"#format"   "{1:N}"
 		"ru"		"{green}{{1}{default} был переведён из-за {darkred}фрикилла{default} в команду террористов."
 		"de"		"{green}{{1}{default} wurdest wegen eines {darkred}Freekills{default} zu den Terrors verschoben"
 		"en"		"{green}{{1}{default} was swaped due a {darkred}freekill{default} to terrorist team"
@@ -374,7 +387,7 @@
 
 	"request_freekill"
 	{
-		"#format"	"{1:N},{2:N},{3:N}"
+		"#format"   "{1:N},{2:N},{3:N}"
 		"ru"		"{green}{1}{default} Отправил отчёт {darkred}{3}{default} о фрикилле {purple}{2}"
 		"de"		"{green}{1}{default} meldet {darkred}{2}{default} wegen Freekill an {purple}{3}"
 		"en"		"{green}{1{default} send a freekill report of {darkred}{2}{default} to {purple}{3}"
@@ -389,20 +402,16 @@
 
 	"request_handlerespawn"
 	{
+		"ru"		"Где возродить?"
 		"en"		"Where to respawn?"
 		"de"		"Wo möchtest du ihn respawnen?"
 	}
 
 	"request_respawnbody"
 	{
+		"ru"		"Возродить в теле"
 		"en"		"Respawn on body"
 		"de"		"An Leiche wiederbeleben"
 	}
 
-	"request_freekilltimes"
-	{
-		"#format"	"{1:i}"
-		"de"		"Du hast in dieser Runde schon {purple}{1} mal Freekills{default} gemeldet."
-		"en"		"You have already {purple}report {1} times freekills{default} in this round."
-	}
 }

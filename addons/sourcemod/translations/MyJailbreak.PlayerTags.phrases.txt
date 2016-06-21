@@ -1,133 +1,152 @@
-"Phrases"		
+// Exported from SourceMod Translator
+// http://translator.mitchdempsey.com/sourcemod_plugins/181
+//
+"Phrases"
 {
-	"tags_TA"
-	{
-		"da"		"[Fange.Admin]"
-		"en"		"[Prisoner.Admin]"
-		"de"		"[Häftling.Admin]"
-		"pl"		"[Wiezien.Admin]"
-		"chi"		"[囚犯和管理员]"
-	}
-	"tags_TOWN"
-	{
-		"da"		"[Fange.Owner]"
-		"en"		"[Prisoner.Owner]"
-		"de"		"[Häftling.Owner]"
-		"pl"		"[Wiezien.Owner]"
-		"chi"		"[囚犯和管理员]"
-	}
-	
-	"tags_TVIP1"
-	{
-		"en"		"[Fange.VIP]"
-		"en"		"[Prisoner.VIP]"
-		"de"		"[Häftling.VIP]"
-		"pl"		"[Wiezien.VIP]"
-		"chi"		"[囚犯.VIP]"
-	}
-	
-	"tags_TVIP2"
-	{
-		"en"		"[Fange.sVIP]"
-		"en"		"[Prisoner.sVIP]"
-		"de"		"[Häftling.sVIP]"
-		"pl"		"[Wiezien.sVIP]"
-		"chi"		"[囚犯.sVIP]"
-	}
-	
-	"tags_T"
-	{
-		"en"		"[Fange]"
-		"en"		"[Prisoner]"
-		"de"		"[Häftling]"
-		"pl"		"[Wiezien]"
-		"chi"		"[囚犯]"
-	}
-	
-	"tags_CTA"
-	{
-		"da"		"[Vagt.Admin]"
-		"en"		"[Guard.Admin]"
-		"de"		"[Wärter.Admin]"
-		"pl"		"[Straznik.Admin]"
-		"chi"		"[狱警和管理员]"
-	}
-	
-	"tags_CTOWN"
-	{
-		"da"		"[Vagt.Owner]"
-		"en"		"[Guard.Owner]"
-		"de"		"[Wärter.Owner]"
-		"pl"		"[Straznik.Owner]"
-		"chi"		"[狱警.Owner]"
-	}
-	
-	"tags_CTVIP1"
-	{
-		"da"		"[Vagt.VIP]"	
-		"en"		"[Guard.VIP]"
-		"de"		"[Wärter.VIP]"
-		"pl"		"[Straznik.VIP]"
-		"chi"		"[狱警.VIP]"
-	}
-	
-	"tags_CTVIP2"
-	{
-		"da"		"[Vagt.sVIP]"	
-		"en"		"[Guard.sVIP]"
-		"de"		"[Wärter.sVIP]"
-		"pl"		"[Straznik.sVIP]"
-		"chi"		"[狱警.sVIP]"
-	}
-	
 	"tags_CT"
 	{
-		"da"		"[Vagt]"	
-		"en"		"[Guard]"
-		"de"		"[Wärter]"
-		"pl"		"[Straznik]"
+		"ru"		"[Охранник]"
 		"chi"		"[狱警]"
+		"pl"		"[Straznik]"
+		"de"		"[Wärter]"
+		"en"		"[Guard]"
+		"da"		"[Vagt]"
 	}
-	
-	"tags_WA"
+
+	"tags_CTA"
 	{
-		"da"		"[Warden.Admin]"	
-		"en"		"[Warden.Admin]"
-		"de"		"[Warden.Admin]"
-		"pl"		"[Warden.Admin]"
-		"chi"		"[监狱长和管理员]"
+		"ru"		"[Охранник.Admin]"
+		"chi"		"[狱警和管理员]"
+		"pl"		"[Straznik.Admin]"
+		"de"		"[Wärter.Admin]"
+		"en"		"[Guard.Admin]"
+		"da"		"[Vagt.Admin]"
 	}
-	
-	"tags_WOWN"
+
+	"tags_CTOWN"
 	{
-		"da"		"[Warden.Owner]"	
-		"en"		"[Warden.Owner]"
-		"de"		"[Warden.Owner]"
-		"pl"		"[Warden.Owner]"
+		"chi"		"[狱警.Owner]"
+		"pl"		"[Straznik.Owner]"
+		"de"		"[Wärter.Owner]"
+		"en"		"[Guard.Owner]"
+		"da"		"[Vagt.Owner]"
 	}
-	
+
+	"tags_CTVIP1"
+	{
+		"ru"		"[Охранник.VIP]"
+		"chi"		"[狱警.VIP]"
+		"pl"		"[Straznik.VIP]"
+		"de"		"[Wärter.VIP]"
+		"en"		"[Guard.VIP]"
+		"da"		"[Vagt.VIP]"
+	}
+
+	"tags_CTVIP2"
+	{
+		"ru"		"[Охранник.sVIP]"
+		"chi"		"[狱警.sVIP]"
+		"pl"		"[Straznik.sVIP]"
+		"de"		"[Wärter.sVIP]"
+		"en"		"[Guard.sVIP]"
+		"da"		"[Vagt.sVIP]"
+	}
+
+	"tags_T"
+	{
+		"en"		"[Prisoner]"
+		"ru"		"[Заключенный]"
+		"chi"		"[囚犯]"
+		"pl"		"[Wiezien]"
+		"de"		"[Häftling]"
+		"en"		"[Fange]"
+	}
+
+	"tags_TA"
+	{
+		"ru"		"[Заключенный.Admin]"
+		"da"		"[Fange.Admin]"
+		"chi"		"[囚犯和管理员]"
+		"pl"		"[Wiezien.Admin]"
+		"de"		"[Häftling.Admin]"
+		"en"		"[Prisoner.Admin]"
+	}
+
+	"tags_TOWN"
+	{
+		"chi"		"[囚犯和管理员]"
+		"pl"		"[Wiezien.Owner]"
+		"de"		"[Häftling.Owner]"
+		"en"		"[Prisoner.Owner]"
+		"da"		"[Fange.Owner]"
+	}
+
+	"tags_TVIP1"
+	{
+		"en"		"[Prisoner.VIP]"
+		"ru"		"[Заключенный.VIP]"
+		"chi"		"[囚犯.VIP]"
+		"pl"		"[Wiezien.VIP]"
+		"de"		"[Häftling.VIP]"
+		"en"		"[Fange.VIP]"
+	}
+
+	"tags_TVIP2"
+	{
+		"ru"		"[Заключенный.sVIP]"
+		"chi"		"[囚犯.sVIP]"
+		"pl"		"[Wiezien.sVIP]"
+		"de"		"[Häftling.sVIP]"
+		"en"		"[Prisoner.sVIP]"
+		"en"		"[Fange.sVIP]"
+	}
+
 	"tags_W"
 	{
-		"da"		"[Warden]"	
-		"en"		"[Warden]"
-		"de"		"[Warden]"
-		"pl"		"[Warden]"
+		"ru"		"[Командир]"
 		"chi"		"[监狱长]"
+		"pl"		"[Warden]"
+		"de"		"[Warden]"
+		"en"		"[Warden]"
+		"da"		"[Warden]"
 	}
+
+	"tags_WA"
+	{
+		"ru"		"[КМД.Admin]"
+		"chi"		"[监狱长和管理员]"
+		"pl"		"[Warden.Admin]"
+		"de"		"[Warden.Admin]"
+		"en"		"[Warden.Admin]"
+		"da"		"[Warden.Admin]"
+	}
+
+	"tags_WOWN"
+	{
+		"pl"		"[Warden.Owner]"
+		"de"		"[Warden.Owner]"
+		"en"		"[Warden.Owner]"
+		"da"		"[Warden.Owner]"
+	}
+
 	"tags_WVIP1"
 	{
-		"da"		"[Warden.VIP]"	
-		"en"		"[Warden.VIP]"
-		"de"		"[Warden.VIP]"
-		"pl"		"[Warden.VIP]"
+		"ru"		"[КМД.VIP]"
 		"chi"		"[监狱长.VIP]"
+		"pl"		"[Warden.VIP]"
+		"de"		"[Warden.VIP]"
+		"en"		"[Warden.VIP]"
+		"da"		"[Warden.VIP]"
 	}
+
 	"tags_WVIP2"
 	{
-		"da"		"[Warden.sVIP]"	
-		"en"		"[Warden.sVIP]"
-		"de"		"[Warden.sVIP]"
-		"pl"		"[Warden.sVIP]"
+		"ru"		"[КМД.sVIP]"
 		"chi"		"[监狱长.sVIP]"
+		"pl"		"[Warden.sVIP]"
+		"de"		"[Warden.sVIP]"
+		"en"		"[Warden.sVIP]"
+		"da"		"[Warden.sVIP]"
 	}
+
 }

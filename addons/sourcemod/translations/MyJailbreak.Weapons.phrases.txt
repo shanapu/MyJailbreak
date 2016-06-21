@@ -1,133 +1,155 @@
-"Phrases"		// working color tags {default}, {darkred}, {red}, {green}, {lightgreen}, {blue}, {olive}, {lime}, {lightred}, {purple}, {grey}, {orange}
+// Exported from SourceMod Translator
+// http://translator.mitchdempsey.com/sourcemod_plugins/188
+//
+"Phrases"
 {
-	"weapons_tag"
-	{
-		"en"		"[{green}MyJB.weapons{default}]"
-	}
 	"weapons_disabled"
 	{
-		"en"		"The {purple}weapons menu {default} is disabled."
+		"ru"		"{purple}Меню оружий {default} отключено."
 		"pl"		"Menu BRONI {purple}jest {default} WYLACZONE."
+		"en"		"The {purple}weapons menu {default} is disabled."
+	}
 
-	}
-	
-	"weapons_same"
-	{
-		"da"		"Du vil få {purple}samme våben{default} næste runde."
-		"en"		"You will get the {purple} same weapon{default} next round"
-		"de"		"Du bekommst die gleiche Waffe{default} in der nächsten Runde."
-		"pl"		"Dostaniesz  {purple} te sama bron {default}w nastepnej rundzie"
-	}
-	
-	"weapons_sameall"
-	{
-		"da"		"Du vil få det {purple} samme våben{default} næste runde."
-		"en"		"You will get the {purple} same weapon{default} next rounds"
-		"de"		"Du bekommst {purple}die gleiche Waffe{default} in den nächsten Runden."
-		"pl"		"Dostaniesz  {purple} te sama bron {default}w nastepnych rundach"
-	}
-	
-	"weapons_random"
-	{
-		"da"		"Du vil få et {purple} tilfældigt våben{default} næste runde."
-		"en"		"You will get a {purple} random weapon{default} next round"
-		"de"		"Du bekommst {purple}eine Zufalls Waffe{default} in der nächsten Runde."
-		"pl"		"Dostaniesz  {purple} randomowo wylosowana bron  {default}w nastepnej rundzie"
-	}
-	
-	"weapons_randomall"
-	{
-		"da"		"Du vil få et {purple} tilfældigt våben{default} næste runde."
-		"en"		"You will get a {purple} random weapon{default} next rounds"
-		"de"		"Du bekommst {purple}eine Zufalls Waffe{default} in den nächsten Runden."
-		"pl"		"Dostaniesz  {purple} randomowo wylosowana bron  {default}w nastepnych rundach"
-	}
-	
-	"weapons_next"
-	{
-		"da"		"Du vil få det {purple} nye våben{default} næste runde."
-		"en"		"You will get your {purple} new weapon{default} next round"
-		"de"		"Du bekommst {purple}deine neue Waffe{default} in der nächsten Runde."
-		"pl"		"Dostaniesz swoja {purple} Nowa Bron {default} w nastepnej rundzie"
-	}
-	
-	"weapons_ta"
-	{
-		"da"		"Du har fået en {purple} TA grenade{default}"
-		"en"		"You've got a {purple} TA grenade{default}"
-		"de"		"Du haste eine {purple}TA Granate{default} bekommen."
-		"pl"		"Posiadasz {purple} Granat TA{default}"
-	}
-	
 	"weapons_health"
 	{
-		"da"		"Du har fået et {purple} healthshot{default}"
-		"en"		"You've got a {purple} healthshot{default}"
-		"de"		"Du haste eine {purple}healthshot{default} bekommen."
 		"pl"		"Posiadasz zastrzyk  {purple} ADRENALINY {default}"
+		"en"		"You've got a {purple} healthshot{default}"
+		"ru"		"У вас есть {purple} шприц адреналина {default}"
+		"de"		"Du haste eine {purple}healthshot{default} bekommen."
+		"en"		"You've got a {purple} healthshot{default}"
+		"da"		"Du har fået et {purple} healthshot{default}"
 	}
-	
+
+	"weapons_info_choose"
+	{
+		"ru"		"Выберите оружие"
+		"pl"		"wybierz bron"
+		"de"		"Waffe wählen"
+		"en"		"Choose weapon"
+		"da"		"Vælg våben"
+	}
+
+	"weapons_info_prim"
+	{
+		"ru"		"Основное оружие:"
+		"pl"		"Glowna Bron:"
+		"de"		"Hauptwaffe:"
+		"en"		"Primary weapon:"
+		"da"		"Primær våben:"
+	}
+
+	"weapons_info_random"
+	{
+		"ru"		"Случайное оружие"
+		"pl"		"randomowa bron"
+		"de"		"Zufalls Waffe"
+		"en"		"Random weapon"
+		"da"		"Random våben"
+	}
+
+	"weapons_info_randomall"
+	{
+		"ru"		"Случайное оружие каждый раунд"
+		"pl"		"randomowa bron zawsze"
+		"de"		"Jedesmal zufalls Waffe"
+		"en"		"Random weapon everytime"
+		"da"		"Tilfældigt våben hver gang"
+	}
+
+	"weapons_info_same"
+	{
+		"ru"		"Одинаковое оружие"
+		"pl"		"ta sama bron"
+		"de"		"Gleiche Waffe"
+		"en"		"Same weapon"
+		"da"		"Samme våben"
+	}
+
+	"weapons_info_sameall"
+	{
+		"ru"		"Одинаковое оружие каждый раунд"
+		"pl"		"ta sama bron zawsze"
+		"de"		"Jedesmal gleiche Waffe"
+		"en"		"Same weapon everytime"
+		"da"		"Samme våben hver gang"
+	}
+
+	"weapons_info_sec"
+	{
+		"ru"		"Второе оружие:"
+		"pl"		"Bron Podreczna:"
+		"de"		"Handwaffe:"
+		"en"		"Secondary weapon:"
+		"da"		"Sekundært våben:"
+	}
+
 	"weapons_info_title"
 	{
-		"da"		"MyJailbreak Våben Menu"
-		"en"		"MyJailbreak Weapon Menu"
-		"de"		"MyJailbreak Waffen Menu"
+		"ru"		"Меню оружий"
 		"pl"		"MyJailbreak Weapon Menu"
+		"de"		"MyJailbreak Waffen Menu"
+		"en"		"MyJailbreak Weapon Menu"
+		"da"		"MyJailbreak Våben Menu"
 	}
-	
-	"weapons_info_choose"	// no colors!
+
+	"weapons_next"
 	{
-		"da"		"Vælg våben"
-		"en"		"Choose weapon"
-		"de"		"Waffe wählen"
-		"pl"		"wybierz bron"
+		"ru"		"Вы получите {purple} новое оружие{default} в следующем раунде"
+		"pl"		"Dostaniesz swoja {purple} Nowa Bron {default} w nastepnej rundzie"
+		"de"		"Du bekommst {purple}deine neue Waffe{default} in der nächsten Runde."
+		"en"		"You will get your {purple} new weapon{default} next round"
+		"da"		"Du vil få det {purple} nye våben{default} næste runde."
 	}
-	
-	"weapons_info_same"		// no colors!
+
+	"weapons_random"
 	{
-		"da"		"Samme våben"
-		"en"		"Same weapon"
-		"de"		"Gleiche Waffe"
-		"pl"		"ta sama bron"
+		"ru"		"Вы получите {purple} случайное оружие{default} в следующем раунде"
+		"pl"		"Dostaniesz  {purple} randomowo wylosowana bron  {default}w nastepnej rundzie"
+		"de"		"Du bekommst {purple}eine Zufalls Waffe{default} in der nächsten Runde."
+		"en"		"You will get a {purple} random weapon{default} next round"
+		"da"		"Du vil få et {purple} tilfældigt våben{default} næste runde."
 	}
-	
-	"weapons_info_sameall"	// no colors!
+
+	"weapons_randomall"
 	{
-		"da"		"Samme våben hver gang"
-		"en"		"Same weapon everytime"
-		"de"		"Jedesmal gleiche Waffe"
-		"pl"		"ta sama bron zawsze"
+		"ru"		"Вы получите {purple} случайное оружие{default} в следующих раундах"
+		"pl"		"Dostaniesz  {purple} randomowo wylosowana bron  {default}w nastepnych rundach"
+		"de"		"Du bekommst {purple}eine Zufalls Waffe{default} in den nächsten Runden."
+		"en"		"You will get a {purple} random weapon{default} next rounds"
+		"da"		"Du vil få et {purple} tilfældigt våben{default} næste runde."
 	}
-	"weapons_info_random"	// no colors!
+
+	"weapons_same"
 	{
-		"da"		"Random våben"
-		"en"		"Random weapon"
-		"de"		"Zufalls Waffe"
-		"pl"		"randomowa bron"
+		"ru"		"Вы получите {purple} это же оружие{default} в следующем раунде"
+		"pl"		"Dostaniesz  {purple} te sama bron {default}w nastepnej rundzie"
+		"de"		"Du bekommst die gleiche Waffe{default} in der nächsten Runde."
+		"en"		"You will get the {purple} same weapon{default} next round"
+		"da"		"Du vil få {purple}samme våben{default} næste runde."
 	}
-	
-	"weapons_info_randomall"	// no colors!
+
+	"weapons_sameall"
 	{
-		"da"		"Tilfældigt våben hver gang"
-		"en"		"Random weapon everytime"
-		"de"		"Jedesmal zufalls Waffe"
-		"pl"		"randomowa bron zawsze"
+		"ru"		"Вы получите {purple} это же оружие{default} в следующих раундах"
+		"pl"		"Dostaniesz  {purple} te sama bron {default}w nastepnych rundach"
+		"de"		"Du bekommst {purple}die gleiche Waffe{default} in den nächsten Runden."
+		"en"		"You will get the {purple} same weapon{default} next rounds"
+		"da"		"Du vil få det {purple} samme våben{default} næste runde."
 	}
-	
-	"weapons_info_prim"		// no colors!
+
+	"weapons_ta"
 	{
-		"da"		"Primær våben:"
-		"en"		"Primary weapon:"
-		"de"		"Hauptwaffe:"
-		"pl"		"Glowna Bron:"
+		"ru"		"У вас есть {purple} TA  граната{default}"
+		"pl"		"Posiadasz {purple} Granat TA{default}"
+		"de"		"Du haste eine {purple}TA Granate{default} bekommen."
+		"en"		"You've got a {purple} TA grenade{default}"
+		"da"		"Du har fået en {purple} TA grenade{default}"
 	}
-	
-	"weapons_info_sec"		// no colors!
+
+	"weapons_tag"
 	{
-		"da"		"Sekundært våben:"
-		"en"		"Secondary weapon:"
-		"de"		"Handwaffe:"
-		"pl"		"Bron Podreczna:"
+		"ru"		"[{green}MyJB.weapons{default}]"
+		"en"		"[{green}MyJB.weapons{default}]"
 	}
-	
+
 }

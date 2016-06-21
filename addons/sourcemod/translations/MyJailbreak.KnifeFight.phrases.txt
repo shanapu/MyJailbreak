@@ -1,207 +1,222 @@
+// Exported from SourceMod Translator
+// http://translator.mitchdempsey.com/sourcemod_plugins/195
+//
 "Phrases"
 {
-	"knifefight_tag"
-	{
-		"en"		"[{green}MyJB.knifefight{default}]"
-		"pl"		"[{green}JB.KNIFE{default}]"
-	}
-	"knifefight_need"
-	{
-		"#format"	"{1:i},{2:N}"
-		"da"		"{purple}{2}{default} har stemt. {purple}{1}{default} afstemninger tilbage til {darkred}knifefight"		
-		"en"		"{purple}{2}{default} has votet. {purple}{1}{default} votes left to {darkred}knifefight"
-		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}knifefight{default} beginnt"
-		"pl"		"{purple}{2}{default} zaglosowal {purple}{1}{default} pozostalo glosow do {darkred}na KNIFE"
-	}
-	"knifefight_rounds" 
-	{
-		"#format"	"{1:i},{2:i}"
-		"da"		"Runde {purple}{1}{default} af {purple}{2}"		
-		"en"		"Round {purple}{1}{default} of {purple}{2}"
-		"de"		"Runde {purple}{1}{default} von {purple}{2}"
-		"pl"		"Runda {purple}{1}{default} z {purple}{2}"
-	}
-	"knifefight_twin_nc"
-	{
-		"da"		"En Terrorists har overlevet!"	
-		"en"		"A Terrorists has surrived"
-		"de"		"Ein Terrorists hat als einziger überlebt"
-		"pl"		"Terrorysta przetrwal"
-	}
-	"knifefight_voting"
-	{
-		"da"		"Afstemninger for knifefight er {purple}slået fra"	
-		"en"		"Player voting for knifefight is {purple}disabled"
-		"de"		"Voting für knifefight ist {purple}ausgeschaltet"
-		"pl"		"Glosowanie graczy na KNIFE jest {purple}wylaczone"
-	}
-	"knifefight_setbywarden"
-	{
-		"da"		"knifefight for Warden er {purple}slået fra"	
-		"en"		"Set knifefight by warden is {purple}disabled"
-		"de"		"knifefight Aktivierung durch den Warden ist {purple}ausgeschaltet"
-		"pl"		"Glosowanie KNIFE przez Straznika jest {purple}wylaczone"
-	}
-	
-	"knifefight_setbyadmin"
-	{
-		"da"		"knifefight for Admin er {purple}slået fra"	
-		"en"		"Set knifefight by admin is {purple}disabled"
-		"de"		"knifefight Aktivierung durch den Admin ist {purple}ausgeschaltet"
-		"pl"		"Wlaczenie KNIFE przez admina jest {purple}wylaczone"
-	}
 	"knifefight_ctwin_nc"
 	{
-		"da"		"En Counter-Terrorists har overlevet"	
-		"en"		"A Counter-Terrorists has surrived"
-		"de"		"Ein Counter-Terrorists hat als einziger überlebt"
 		"pl"		"Counter-Terrorists przetrwal"
+		"de"		"Ein Counter-Terrorists hat als einziger überlebt"
+		"en"		"A Counter-Terrorists has surrived"
+		"da"		"En Counter-Terrorists har overlevet"
 	}
-	"knifefight_minplayer"
-	{
-		"da"		"For knifefight skal der mindst være {purple}en CT & en T"	
-		"en"		"For a knifefight you need at least {purple}one CT & one T"
-		"de"		"Für knifefight brauchen wir mindestens {purple}einen CT"
-		"pl"		"Do zabawy cowboy potrzeba przynajmniej {purple}jednego CT"
-	}
-	"knifefight_end"
-	{
-		"da"		"{purple}knifefight{default} er afsluttet!"	
-		"en"		"{purple}knifefight{default} finished"
-		"de"		"{purple}knifefight{default} beendet"
-		"pl"		"{purple}KNIFE{default} zakonczony"
-	}
-	
-	"knifefight_next"
-	{
-		"da"		"Næste runde er {purple}knifefight"
-		"en"		"Next round is {purple}knifefight"
-		"de"		"Nächste Runde ist {purple}knifefight"
-		"pl"		"Nastepna runda to {purple}KNIFE"
-	}
-	"knifefight_next_nc"
-	{
-		"da"		"Næste runde er knifefight"
-		"en"		"Next round is knifefight"
-		"de"		"Nächste Runde ist knifefight"
-		"pl"		"Nastepna runda to KNIFE"
-	}
-	
-	"knifefight_start"
-	{
-		"da"		"{purple}knifefight{default} er startet!"
-		"en"		"The {purple}knifefight{default} has started!"
-		"de"		"{purple}knifefight{default} ist gestartet!"
-		"pl"		"{purple}KNIFE{default} sie rozpoczal!"
-	}
-	
-	"knifefight_start_nc"
-	{
-		"da"		"knifefight er startet!"	
-		"en"		"The knifefight started!"
-		"de"		"knifefight ist gestartet!"
-		"pl"		"KNIFE sie rozpoczal!"
-	}
-	
-	"knifefight_voted"
-	{
-		"en"		"Du har allerede stemt på {purple}knifefight"	
-		"en"		"You already voted for {purple}knifefight"
-		"de"		"Du hast schon für {purple}knifefight {default}gevotet"
-		"pl"		"Juz glosowales na {purple}KNIFE"
-	}
-	
-	"knifefight_progress"
-	{
-		"#format"	"{1:s}"
-		"en"		"Event {darkred}{1} {default}is {purple}already in progress."
-		"de"		"Event {darkred}{1} {default}ist {purple}bereits gesetzt."
-		"pl"		"Zabawa {darkred}{1} {default}sie {purple}rozpoczela"
-	}
-	
+
 	"knifefight_disabled"
 	{
-		"da"		"knifefight er {purple}slået fra."
-		"en"		"knifefight is {purple}disabled."
-		"de"		"knifefight ist {purple}deaktiviert."
 		"pl"		"KNIFE jest {purple}wylaczony."
+		"de"		"knifefight ist {purple}deaktiviert."
+		"en"		"knifefight is {purple}disabled."
+		"da"		"knifefight er {purple}slået fra."
 	}
-	
-	"knifefight_timeuntilstart_nc"
+
+	"knifefight_end"
 	{
-		"#format"	"{1:i}"
-		"da"		"{1} sekunder til runden starter!"
-		"en"		"{1} seconds until start"
-		"de"		"{1} Sekunden bis zum Start"
-		"pl"		"{1} sekund do startu!"
+		"pl"		"{purple}KNIFE{default} zakonczony"
+		"de"		"{purple}knifefight{default} beendet"
+		"en"		"{purple}knifefight{default} finished"
+		"da"		"{purple}knifefight{default} er afsluttet!"
 	}
-	
-	"knifefight_info_title"
-	{
-		"da"		"FFA Knifefighter- er hver mod hver aktiv!"
-		"en"		"FFA Knifefight - Free for all is active"
-		"de"		"FFA Knifefight - Jeder gegen Jeden ist aktiv"
-		"pl"		"KNIFE jest aktywny"
-	}
-	
+
 	"knifefight_info_line1"
 	{
-		"da"		"Bliv ikke overrasket hvis du bliver teleportet til CT Spawn!"	
-		"en"		"Do not be surprised if ported to CT Spawn"
-		"de"		"Nicht wundern falls ihr zum CT Spawngeportet wurdet"
 		"en"		"Nie zdziw sie jak teleportnie cie na SPAWN CT"
+		"de"		"Nicht wundern falls ihr zum CT Spawngeportet wurdet"
+		"en"		"Do not be surprised if ported to CT Spawn"
+		"da"		"Bliv ikke overrasket hvis du bliver teleportet til CT Spawn!"
 	}
+
 	"knifefight_info_line2"
 	{
-		"en"		"IceSkates, Thirdperson & Low Gravity activatet."
-		"de"		"IceSkates, Thirdperson & Low Gravity sind an."
 		"pl"		"IceSkates, Thirdperson & Low Gravity aktywowana."
+		"de"		"IceSkates, Thirdperson & Low Gravity sind an."
+		"en"		"IceSkates, Thirdperson & Low Gravity activatet."
 	}
-	
+
 	"knifefight_info_line3"
 	{
-		"da"		"Du kan ikke skade andre spillere indtil runden starter"	
-		"en"		"you can move and exit the wk in nodamage phase"
-		"de"		"Während der no damage phase kannst du aus der zelle/waffenkammer"
 		"pl"		"mozna poruszac sie i wyjsc ze zbrojowni podczas fazy nodamage"
+		"de"		"Während der no damage phase kannst du aus der zelle/waffenkammer"
+		"en"		"you can move and exit the wk in nodamage phase"
+		"da"		"Du kan ikke skade andre spillere indtil runden starter"
 	}
-	
+
 	"knifefight_info_line4"
 	{
-		"da"		"Alle jail regler er ophævet!"	
-		"en"		"All normal jail rules are repealed"
-		"de"		"Alle normalen Jailregeln sind aufgehoben!"
 		"pl"		"Wszystkie normalne zasady wiezienia zostaly zastapione"
+		"de"		"Alle normalen Jailregeln sind aufgehoben!"
+		"en"		"All normal jail rules are repealed"
+		"da"		"Alle jail regler er ophævet!"
 	}
-	
+
 	"knifefight_info_line5"
 	{
-		"da"		"Der kan ikke laves !lr i denne runde!"	
-		"en"		"There is no last request!"
-		"de"		"Der letzte Terrorists hat keinen Wunsch!"
 		"pl"		"Nie ma ostatniego zyczenia!"
+		"de"		"Der letzte Terrorists hat keinen Wunsch!"
+		"en"		"There is no last request!"
+		"da"		"Der kan ikke laves !lr i denne runde!"
 	}
-	
+
 	"knifefight_info_line6"
 	{
-		"en"		"Stay in the main jailroom! Don't enter secrets!"
-		"de"		"Bleib' im Haupt Jail Raum! Verstecke sind verboten!"
 		"pl"		"Zostan w glownym pomieszczeniu Wiezienia! Zakaz wejsc do SECRETOW!"
+		"de"		"Bleib' im Haupt Jail Raum! Verstecke sind verboten!"
+		"en"		"Stay in the main jailroom! Don't enter secrets!"
 	}
-	
+
 	"knifefight_info_line7"
 	{
-		"da"		"Alle server regler skal holdes!"	
-		"en"		"Dont be an asshole!"
-		"de"		"Bau keine Scheisse!"
 		"pl"		"Nie badz DUPKIEM!"
+		"de"		"Bau keine Scheisse!"
+		"en"		"Dont be an asshole!"
+		"da"		"Alle server regler skal holdes!"
 	}
+
+	"knifefight_info_title"
+	{
+		"pl"		"KNIFE jest aktywny"
+		"de"		"FFA Knifefight - Jeder gegen Jeden ist aktiv"
+		"en"		"FFA Knifefight - Free for all is active"
+		"da"		"FFA Knifefighter- er hver mod hver aktiv!"
+	}
+
+	"knifefight_minplayer"
+	{
+		"pl"		"Do zabawy cowboy potrzeba przynajmniej {purple}jednego CT"
+		"de"		"Für knifefight brauchen wir mindestens {purple}einen CT"
+		"en"		"For a knifefight you need at least {purple}one CT & one T"
+		"da"		"For knifefight skal der mindst være {purple}en CT & en T"
+	}
+
+	"knifefight_need"
+	{
+		"#format"   "{1:i},{2:N}"
+		"pl"		"{purple}{2}{default} zaglosowal {purple}{1}{default} pozostalo glosow do {darkred}na KNIFE"
+		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}knifefight{default} beginnt"
+		"en"		"{purple}{2}{default} has votet. {purple}{1}{default} votes left to {darkred}knifefight"
+		"da"		"{purple}{2}{default} har stemt. {purple}{1}{default} afstemninger tilbage til {darkred}knifefight"
+	}
+
+	"knifefight_next"
+	{
+		"pl"		"Nastepna runda to {purple}KNIFE"
+		"de"		"Nächste Runde ist {purple}knifefight"
+		"en"		"Next round is {purple}knifefight"
+		"da"		"Næste runde er {purple}knifefight"
+	}
+
+	"knifefight_next_nc"
+	{
+		"pl"		"Nastepna runda to KNIFE"
+		"de"		"Nächste Runde ist knifefight"
+		"en"		"Next round is knifefight"
+		"da"		"Næste runde er knifefight"
+	}
+
+	"knifefight_progress"
+	{
+		"#format"   "{1:s}"
+		"pl"		"Zabawa {darkred}{1} {default}sie {purple}rozpoczela"
+		"de"		"Event {darkred}{1} {default}ist {purple}bereits gesetzt."
+		"en"		"Event {darkred}{1} {default}is {purple}already in progress."
+	}
+
+	"knifefight_rounds"
+	{
+		"#format"   "{1:i},{2:i}"
+		"pl"		"Runda {purple}{1}{default} z {purple}{2}"
+		"de"		"Runde {purple}{1}{default} von {purple}{2}"
+		"en"		"Round {purple}{1}{default} of {purple}{2}"
+		"da"		"Runde {purple}{1}{default} af {purple}{2}"
+	}
+
+	"knifefight_setbyadmin"
+	{
+		"pl"		"Wlaczenie KNIFE przez admina jest {purple}wylaczone"
+		"de"		"knifefight Aktivierung durch den Admin ist {purple}ausgeschaltet"
+		"en"		"Set knifefight by admin is {purple}disabled"
+		"da"		"knifefight for Admin er {purple}slået fra"
+	}
+
+	"knifefight_setbywarden"
+	{
+		"pl"		"Glosowanie KNIFE przez Straznika jest {purple}wylaczone"
+		"de"		"knifefight Aktivierung durch den Warden ist {purple}ausgeschaltet"
+		"en"		"Set knifefight by warden is {purple}disabled"
+		"da"		"knifefight for Warden er {purple}slået fra"
+	}
+
+	"knifefight_start"
+	{
+		"pl"		"{purple}KNIFE{default} sie rozpoczal!"
+		"de"		"{purple}knifefight{default} ist gestartet!"
+		"en"		"The {purple}knifefight{default} has started!"
+		"da"		"{purple}knifefight{default} er startet!"
+	}
+
+	"knifefight_start_nc"
+	{
+		"pl"		"KNIFE sie rozpoczal!"
+		"de"		"knifefight ist gestartet!"
+		"en"		"The knifefight started!"
+		"da"		"knifefight er startet!"
+	}
+
+	"knifefight_tag"
+	{
+		"pl"		"[{green}JB.KNIFE{default}]"
+		"en"		"[{green}MyJB.knifefight{default}]"
+	}
+
+	"knifefight_timeuntilstart_nc"
+	{
+		"#format"   "{1:i}"
+		"pl"		"{1} sekund do startu!"
+		"de"		"{1} Sekunden bis zum Start"
+		"en"		"{1} seconds until start"
+		"da"		"{1} sekunder til runden starter!"
+	}
+
+	"knifefight_twin_nc"
+	{
+		"pl"		"Terrorysta przetrwal"
+		"de"		"Ein Terrorists hat als einziger überlebt"
+		"en"		"A Terrorists has surrived"
+		"da"		"En Terrorists har overlevet!"
+	}
+
+	"knifefight_voted"
+	{
+		"en"		"You already voted for {purple}knifefight"
+		"pl"		"Juz glosowales na {purple}KNIFE"
+		"de"		"Du hast schon für {purple}knifefight {default}gevotet"
+		"en"		"Du har allerede stemt på {purple}knifefight"
+	}
+
+	"knifefight_voting"
+	{
+		"pl"		"Glosowanie graczy na KNIFE jest {purple}wylaczone"
+		"de"		"Voting für knifefight ist {purple}ausgeschaltet"
+		"en"		"Player voting for knifefight is {purple}disabled"
+		"da"		"Afstemninger for knifefight er {purple}slået fra"
+	}
+
 	"knifefight_wait"
 	{
-		"#format"	"{1:i}"
-		"da"		"Du skal vente {1} flere runder"	
-		"en"		"You must wait {1} more rounds"
-		"de"		"Du musst noch {1} Runden warten"
+		"#format"   "{1:i}"
 		"pl"		"Musisz poczekac  {1} rund"
+		"de"		"Du musst noch {1} Runden warten"
+		"en"		"You must wait {1} more rounds"
+		"da"		"Du skal vente {1} flere runder"
 	}
+
 }

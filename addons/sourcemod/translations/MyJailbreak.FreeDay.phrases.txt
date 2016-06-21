@@ -1,168 +1,200 @@
+// Exported from SourceMod Translator
+// http://translator.mitchdempsey.com/sourcemod_plugins/192
+//
 "Phrases"
 {
-	"freeday_tag"
-	{
-		"en"		"[{green}JB.Freeday{default}]"
-	}
-	
-	"freeday_end"
-	{
-		"da"		"{purple}Freeday{default} er afsluttet!"	
-		"en"		"{purple}Freeday{default} finished"
-		"de"		"{purple}Freeday{default} beendet"
-		"pl"		"{purple}Freeday{default}zakonczony"
-	}
-	"freeday_need"
-	{
-		"#format"	"{1:i},{2:N}"
-		"da"		"{purple}{2}{default} har afstemt. {purple}{1}{default} afstemninger tilbage til {darkred}Freeday"		
-		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes left to {darkred}Freeday"
-		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}krieg{default} beginnt"
-		"pl"		"{purple}{2}{default} zaglosowal. pozostalo {purple}{1}{default} glosow do {darkred}Catch{default} Freeday"
-	}
-	"freeday_next"
-	{
-		"da"		"Næste runde er {purple}Freeday"	
-		"en"		"Next round is {purple}Freeday"
-		"de"		"Nächste Runde ist {purple}Freeday"
-		"pl"		"Nastepna runda to {purple}Freeday"
-	}
-	"freeday_next_nc"
-	{
-		"da"		"Næste runde er Freeday"	
-		"en"		"Next round is Freeday"
-		"de"		"Nächste Runde ist Freeday"
-		"pl"		"Nastepna runda to Freeday"
-	}
-	"freeday_voting"
-	{
-		"#format"	""
-		"da"		"Afstemninger er {purple}slået fra"		
-		"en"		"Player voting for Freeday is {purple}disabled"
-		"de"		"Voting für Freeday ist {purple}ausgeschaltet"
-		"pl"		"Glosowanie graczy na Freeday jest {purple}wylaczone"
-	}
-	"freeday_setbywarden"
-	{
-		"da"		"Warden vælger runde er {purple}slået fra"	
-		"en"		"Set Freeday by warden is {purple}disabled"
-		"de"		"Freeday Aktivierung durch den Warden ist {purple}ausgeschaltet"
-		"pl"		"Glosowanie na Freeday przez Straznika jest {purple}wylaczone"
-	}
-	
-	"freeday_setbyadmin"
-	{
-		"da"		"Admin vælger runde er {purple}slået fra"		
-		"en"		"Set Freeday by admin is {purple}disabled"
-		"de"		"Freeday Aktivierung durch den Admin ist {purple}ausgeschaltet"
-		"pl"		"Wlaczenie Freeday przez admina jest {purple}wylaczone"
-	}
-	
-	"freeday_start_nc"
-	{
-		"da"		"Freeday er startet!"	
-		"en"		"The Freeday has started!"
-		"de"		"Freeday ist gestartet!"
-		"pl"		"Freeday sie rozpoczal!"
-	}
-	
-	"freeday_start"
-	{
-		"da"		"{purple}Freeday{default} er startet!"	
-		"en"		"The {purple}Freeday{default} has started!"
-		"de"		"{purple}Freeday{default} ist gestartet!"
-		"pl"		"{purple}Freeday{default} sie rozpoczal!"
-	}
-	
-	"freeday_voted"
-	{
-		"da"		"Du har allerede stemt for {purple}Freeday runde!"
-		"en"		"You already voted for {purple}Freeday"
-		"de"		"Du hast schon für {purple}Freeday {default}gevotet"
-		"pl"		"Juz glosowales na {purple}Freeday"
-	}
-	
-	"freeday_progress"
-	{
-		"#format"	"{1:s}"
-		"en"		"Event {darkred}{1} {default}is {purple}already in progress."
-		"de"		"Event {darkred}{1} {default}ist {purple}bereits gesetzt."
-		"pl"		"Zabawa {darkred}{1} {default}jest {purple}juz grana."
-	}
-	
 	"freeday_disabled"
 	{
-		"da"		"Freeday er {purple}slået fra."	
-		"en"		"Freeday is {purple}disabled."
-		"de"		"Freeday ist {purple}deaktiviert."
+		"ru"		"Фридей {purple}отключен."
 		"pl"		"Freeday jest {purple}wylaczony."
+		"de"		"Freeday ist {purple}deaktiviert."
+		"en"		"Freeday is {purple}disabled."
+		"da"		"Freeday er {purple}slået fra."
 	}
-	
-	"freeday_info_title"		// no colors!
-	{
-		"en"		"It's Freeday!"
-		"de"		"Es ist Freeday!"
-		"pl"		"Jest  Freeday!"
-	}
-	
-	"freeday_info_line1"		// no colors!
-	{
-		"en"		"It's Freeday"
-		"de"		"Es ist Freeday"
-		"pl"		"Jest  Freeday!"
-	}
-	"freeday_info_line2"		// no colors!
-	{
-		"en"		"-----------------------------------"
-		"de"		"-----------------------------------"
-		"pl"		"-----------------------------------"
-	}
-	
-	"freeday_info_line3"		// no colors!
-	{
 
-		"en"		"-----------------------------------"
-		"de"		"-----------------------------------"
+	"freeday_end"
+	{
+		"ru"		"{purple}Фридей {default}закончен"
+		"pl"		"{purple}Freeday{default}zakonczony"
+		"de"		"{purple}Freeday{default} beendet"
+		"en"		"{purple}Freeday{default} finished"
+		"da"		"{purple}Freeday{default} er afsluttet!"
+	}
+
+	"freeday_info_line1"
+	{
+		"ru"		"Это фридей!"
+		"pl"		"Jest  Freeday!"
+		"de"		"Es ist Freeday"
+		"en"		"It's Freeday"
+	}
+
+	"freeday_info_line2"
+	{
+		"ru"		"-----------------------------------"
 		"pl"		"-----------------------------------"
+		"de"		"-----------------------------------"
+		"en"		"-----------------------------------"
 	}
-	
-	"freeday_info_line4"		// no colors!
+
+	"freeday_info_line3"
 	{
-		"da"		"Alle jail regler er ophævet!"	
-		"en"		"All normal jail rules are repealed"
-		"de"		"Alle normalen Jailregeln sind aufgehoben!"
+		"ru"		"-----------------------------------"
+		"pl"		"-----------------------------------"
+		"de"		"-----------------------------------"
+		"en"		"-----------------------------------"
+	}
+
+	"freeday_info_line4"
+	{
+		"ru"		"Все нормальные правила тюрьмы отменены"
 		"pl"		"Zasady Wiezienia nie obowiazuja w tej rundzie!"
+		"de"		"Alle normalen Jailregeln sind aufgehoben!"
+		"en"		"All normal jail rules are repealed"
+		"da"		"Alle jail regler er ophævet!"
 	}
-	
-	"freeday_info_line5"		// no colors!
+
+	"freeday_info_line5"
 	{
-		"da"		"Der kan ikke laves !lr i Freeday"	
-		"en"		"There is no last request!"
-		"de"		"Der letzte Terrorists hat keinen Wunsch!"
+		"ru"		"Нет последних желаний!"
 		"pl"		"Nie ma ostatniego zyczenia!"
+		"de"		"Der letzte Terrorists hat keinen Wunsch!"
+		"en"		"There is no last request!"
+		"da"		"Der kan ikke laves !lr i Freeday"
 	}
-	
-	"freeday_info_line6"		// no colors!
+
+	"freeday_info_line6"
 	{
-		"da"		"T kan gå hvor hen de vil - De må bare ikke have våben!"	
-		"en"		"Everyone is allowed to go everywhere where they wants"
-		"de"		"Jeder darf überall hin wo er will!"
+		"ru"		"Каждому разрешено ходить везде, где хочет"
 		"pl"		"Kazdy moze isc gdzie che i robic co chce"
+		"de"		"Jeder darf überall hin wo er will!"
+		"en"		"Everyone is allowed to go everywhere where they wants"
+		"da"		"T kan gå hvor hen de vil - De må bare ikke have våben!"
 	}
-	
-	"freeday_info_line7"		// no colors!
+
+	"freeday_info_line7"
 	{
-		"da"		"Serverne regler skal overholdes!"	
-		"en"		"Dont be an asshole!"
-		"de"		"Bau keine Scheisse!"
+		"ru"		"Не будь засранцем!"
 		"pl"		"Nie badz DUPKIEM!"
+		"de"		"Bau keine Scheisse!"
+		"en"		"Dont be an asshole!"
+		"da"		"Serverne regler skal overholdes!"
 	}
-		"freeday_wait"
+
+	"freeday_info_title"
 	{
-		"#format"	"{1:i}"
-		"da"		"Du skal vente {1} flere runder!"	
-		"en"		"You must wait {1} more rounds"
-		"de"		"Du musst noch {1} Runden warten"
-		"pl"		"Musisz poczekac  {1} rund"
+		"ru"		"Фридей!"
+		"pl"		"Jest  Freeday!"
+		"de"		"Es ist Freeday!"
+		"en"		"It's Freeday!"
 	}
+
+	"freeday_need"
+	{
+		"#format"   "{1:i},{2:N}"
+		"ru"		"{purple}{2}{default} проголосовал. {purple}{1}{default} голосов осталось до {darkred}Фридея"
+		"pl"		"{purple}{2}{default} zaglosowal. pozostalo {purple}{1}{default} glosow do {darkred}Catch{default} Freeday"
+		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}krieg{default} beginnt"
+		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes left to {darkred}Freeday"
+		"da"		"{purple}{2}{default} har afstemt. {purple}{1}{default} afstemninger tilbage til {darkred}Freeday"
+	}
+
+	"freeday_next"
+	{
+		"ru"		"Следующий раунд {purple}Фридей"
+		"pl"		"Nastepna runda to {purple}Freeday"
+		"de"		"Nächste Runde ist {purple}Freeday"
+		"en"		"Next round is {purple}Freeday"
+		"da"		"Næste runde er {purple}Freeday"
+	}
+
+	"freeday_next_nc"
+	{
+		"ru"		"Следующий раунд Фридей"
+		"pl"		"Nastepna runda to Freeday"
+		"de"		"Nächste Runde ist Freeday"
+		"en"		"Next round is Freeday"
+		"da"		"Næste runde er Freeday"
+	}
+
+	"freeday_progress"
+	{
+		"#format"   "{1:s}"
+		"ru"		"Игра {darkred}{1} {purple}уже началась."
+		"pl"		"Zabawa {darkred}{1} {default}jest {purple}juz grana."
+		"de"		"Event {darkred}{1} {default}ist {purple}bereits gesetzt."
+		"en"		"Event {darkred}{1} {default}is {purple}already in progress."
+	}
+
+	"freeday_setbyadmin"
+	{
+		"ru"		"Фридей отключен {purple}администратором"
+		"pl"		"Wlaczenie Freeday przez admina jest {purple}wylaczone"
+		"de"		"Freeday Aktivierung durch den Admin ist {purple}ausgeschaltet"
+		"en"		"Set Freeday by admin is {purple}disabled"
+		"da"		"Admin vælger runde er {purple}slået fra"
+	}
+
+	"freeday_setbywarden"
+	{
+		"ru"		"Запуск фридея командиром {purple}выключен"
+		"pl"		"Glosowanie na Freeday przez Straznika jest {purple}wylaczone"
+		"de"		"Freeday Aktivierung durch den Warden ist {purple}ausgeschaltet"
+		"en"		"Set Freeday by warden is {purple}disabled"
+		"da"		"Warden vælger runde er {purple}slået fra"
+	}
+
+	"freeday_start"
+	{
+		"ru"		"{purple}Фридей {default}начался!"
+		"pl"		"{purple}Freeday{default} sie rozpoczal!"
+		"de"		"{purple}Freeday{default} ist gestartet!"
+		"en"		"The {purple}Freeday{default} has started!"
+		"da"		"{purple}Freeday{default} er startet!"
+	}
+
+	"freeday_start_nc"
+	{
+		"ru"		"Фридей начался!"
+		"pl"		"Freeday sie rozpoczal!"
+		"de"		"Freeday ist gestartet!"
+		"en"		"The Freeday has started!"
+		"da"		"Freeday er startet!"
+	}
+
+	"freeday_tag"
+	{
+		"ru"		"[{green}JB.Freeday{default}]"
+		"en"		"[{green}JB.Freeday{default}]"
+	}
+
+	"freeday_voted"
+	{
+		"ru"		"Ты уже проголосовал за {purple}Фридей"
+		"pl"		"Juz glosowales na {purple}Freeday"
+		"de"		"Du hast schon für {purple}Freeday {default}gevotet"
+		"en"		"You already voted for {purple}Freeday"
+		"da"		"Du har allerede stemt for {purple}Freeday runde!"
+	}
+
+	"freeday_voting"
+	{
+		"ru"		"Голосование игроков за Фридей {purple}отключено"
+		"pl"		"Glosowanie graczy na Freeday jest {purple}wylaczone"
+		"de"		"Voting für Freeday ist {purple}ausgeschaltet"
+		"en"		"Player voting for Freeday is {purple}disabled"
+		"da"		"Afstemninger er {purple}slået fra"
+	}
+
+	"freeday_wait"
+	{
+		"#format"   "{1:i}"
+		"da"		"Du skal vente {1} flere runder!"
+		"ru"		"Ты должен подождать {1}  раундов"
+		"pl"		"Musisz poczekac  {1} rund"
+		"de"		"Du musst noch {1} Runden warten"
+		"en"		"You must wait {1} more rounds"
+		"en"		"Du skal vente {1} flere runder!"
+	}
+
 }
