@@ -160,7 +160,7 @@
 		"freeday_wait"
 	{
 		"#format"	"{1:i}"
-		"en"		"Du skal vente {1} flere runder!"	
+		"da"		"Du skal vente {1} flere runder!"	
 		"en"		"You must wait {1} more rounds"
 		"de"		"Du musst noch {1} Runden warten"
 		"pl"		"Musisz poczekac  {1} rund"

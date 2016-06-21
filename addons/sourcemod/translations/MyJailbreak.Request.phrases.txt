@@ -5,7 +5,7 @@
 		"ru"		"Вы не мертвы или не КТ"
 		"pl"		"Jestes martwy lub nie w CT."
 		"de"		"Du bist tot oder ein Ct."
-		"en"		"You are not alive or CT."
+		"en"		"You are not alive or a CT."
 	}
 
 	"request_fullhp"
@@ -308,8 +308,8 @@
 	"request_aliveorct"
 	{
 		"ru"		"Вы живы или КТ"
-		"de"		"Du bist nicht tot oder ein Ct."
-		"en"		"You are not dead or CT."
+		"de"		"Du bist nicht tot oder ein CT."
+		"en"		"You are not dead or a CT."
 	}
 
 	"request_nokiller"

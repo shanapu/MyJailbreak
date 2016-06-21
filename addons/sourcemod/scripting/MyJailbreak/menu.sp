@@ -176,13 +176,13 @@ public void OnConfigsExecuted()
 	g_bFF = FindConVar("mp_teammates_are_enemies");
 	g_bRequest = FindConVar("sm_request_enable");
 	g_bDealDamage = FindConVar("sm_dealdamage_enable");
-	gc_sAdminFlagBulletSparks = FindConVar("sm_warden_bulletsparks_vip");
-	gc_sAdminFlagLaser = FindConVar("sm_warden_laser_vip");
-	gc_sAdminFlagDrawer = FindConVar("sm_warden_drawer_vip");
+	gc_sAdminFlagBulletSparks = FindConVar("sm_warden_bulletsparks_flag");
+	gc_sAdminFlagLaser = FindConVar("sm_warden_laser_flag");
+	gc_sAdminFlagDrawer = FindConVar("sm_warden_drawer_flag");
 	
-	gc_sAdminFlagLaser.GetString(g_sAdminFlagLaser , sizeof(g_sAdminFlagLaser));
-	gc_sAdminFlagDrawer.GetString(g_sAdminFlagDrawer , sizeof(g_sAdminFlagDrawer));
-	gc_sAdminFlagBulletSparks.GetString(g_sAdminFlagBulletSparks , sizeof(g_sAdminFlagBulletSparks));
+	gc_sAdminFlagLaser.GetString(g_sAdminFlagLaser, sizeof(g_sAdminFlagLaser));
+	gc_sAdminFlagDrawer.GetString(g_sAdminFlagDrawer, sizeof(g_sAdminFlagDrawer));
+	gc_sAdminFlagBulletSparks.GetString(g_sAdminFlagBulletSparks, sizeof(g_sAdminFlagBulletSparks));
 	
 	char sBufferCMD[64];
 	Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommand);

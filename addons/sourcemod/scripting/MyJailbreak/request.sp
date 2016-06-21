@@ -179,18 +179,18 @@ public void OnPluginStart()
 	gc_sSoundRepeatPath = AutoExecConfig_CreateConVar("sm_repeat_sound", "music/MyJailbreak/repeat.mp3", "Path to the soundfile which should be played for a repeat.");
 	gc_bFreeKill = AutoExecConfig_CreateConVar("sm_freekill_enable", "1", "0 - disabled, 1 - enable freekill report");
 	gc_sCustomCommandFreekill = AutoExecConfig_CreateConVar("sm_freekill_cmd", "fk", "Set your custom chat command for freekill. no need for sm_ or !");
-	gc_iFreeKillLimit = AutoExecConfig_CreateConVar("sm_freekill_limit", "1", "Сount how many times you can use the command");
+	gc_iFreeKillLimit = AutoExecConfig_CreateConVar("sm_freekill_limit", "2", "Сount how many times you can report a freekill");
 	gc_bFreeKillRespawn = AutoExecConfig_CreateConVar("sm_freekill_respawn", "1", "0 - disabled, 1 - Allow the warden to respawn a Freekill victim");
-	gc_bRespawnCellClosed = AutoExecConfig_CreateConVar("sm_freekill_respawn_cell", "1", "0 - cells still open, 1 - cells will close on respawn in cell");
+	gc_bRespawnCellClosed = AutoExecConfig_CreateConVar("sm_freekill_respawn_cell", "1", "0 - cells are still open, 1 - cells will close on respawn in cell");
 	gc_bFreeKillKill = AutoExecConfig_CreateConVar("sm_freekill_kill", "1", "0 - disabled, 1 - Allow the warden to Kill a Freekiller");
 	gc_bFreeKillFreeDay = AutoExecConfig_CreateConVar("sm_freekill_freeday", "1", "0 - disabled, 1 - Allow the warden to set a freeday next round as pardon");
 	gc_bFreeKillSwap = AutoExecConfig_CreateConVar("sm_freekill_swap", "1", "0 - disabled, 1 - Allow the warden to swap a freekiller to terrorist");
 	gc_bReportAdmin = AutoExecConfig_CreateConVar("sm_freekill_admin", "1", "0 - disabled, 1 - Report will be send to admins - if there is no admin its send to warden");
 	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_freekill_flag", "g", "Set flag for admin/vip get reported freekills to decide.");
 	gc_bReportWarden = AutoExecConfig_CreateConVar("sm_freekill_warden", "1", "0 - disabled, 1 - Report will be send to Warden if there is no admin");
-	gc_sAdminFlagRepeat = AutoExecConfig_CreateConVar("sm_repeat_flag", "a", "Set flag for admin/vip to get one more repeat. No flag feature is available for all players!");
-	gc_sAdminFlagRefuse = AutoExecConfig_CreateConVar("sm_refuse_flag", "a", "Set flag for admin/vip to get one more refuse. No flag feature is available for all players!");
-	gc_sAdminFlagHeal = AutoExecConfig_CreateConVar("sm_repeat_flag", "a", "Set flag for admin/vip to get one more heal. No flag feature is available for all players!");
+	gc_sAdminFlagRepeat = AutoExecConfig_CreateConVar("sm_repeat_flag", "a", "Set flag for admin/vip to get one more repeat. No flag = feature is available for all players!");
+	gc_sAdminFlagRefuse = AutoExecConfig_CreateConVar("sm_refuse_flag", "a", "Set flag for admin/vip to get one more refuse. No flag = feature is available for all players!");
+	gc_sAdminFlagHeal = AutoExecConfig_CreateConVar("sm_repeat_flag", "a", "Set flag for admin/vip to get one more heal. No flag = feature is available for all players!");
 
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();

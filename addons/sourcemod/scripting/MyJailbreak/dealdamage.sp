@@ -63,6 +63,7 @@ float g_fPos[3];
 
 //Handles
 Handle TruceTimer;
+Handle RoundTimer;
 Handle DealDamageMenu;
 Handle DealDamageEndMenu;
 
@@ -104,6 +105,9 @@ public void OnPluginStart()
 	gc_bVote = AutoExecConfig_CreateConVar("sm_dealdamage_vote", "1", "0 - disabled, 1 - allow player to vote for dealdamage", _, true,  0.0, true, 1.0);
 	gc_bSpawnCell = AutoExecConfig_CreateConVar("sm_dealdamage_spawn", "1", "0 - T teleport to CT spawn, 1 - cell doors auto open", _, true,  0.0, true, 1.0);
 	gc_bSpawnRandom = AutoExecConfig_CreateConVar("sm_dealdamage_randomspawn", "1", "0 - disabled, 1 - use random spawns on map (sm_dealdamage_spawn 1)", _, true,  0.0, true, 1.0);
+	gc_bShowPanel = AutoExecConfig_CreateConVar("sm_dealdamage_panel", "1", "0 - disabled, 1 - enable show results on a Panel", _, true,  0.0, true, 1.0);
+	gc_bChat = AutoExecConfig_CreateConVar("sm_dealdamage_chat", "1", "0 - disabled, 1 - enable print results in chat", _, true,  0.0, true, 1.0);
+	gc_bConsole = AutoExecConfig_CreateConVar("sm_dealdamage_console", "1", "0 - disabled, 1 - enable print results in client console", _, true,  0.0, true, 1.0);
 	gc_iRounds = AutoExecConfig_CreateConVar("sm_dealdamage_rounds", "2", "Rounds to play in a row", _, true, 1.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_dealdamage_roundtime", "2", "Round time in minutes for a single dealdamage round", _, true, 1.0);
 	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_dealdamage_trucetime", "15", "Time in seconds players can't deal damage", _, true,  0.0);
@@ -113,9 +117,6 @@ public void OnPluginStart()
 	gc_sSoundStartPath = AutoExecConfig_CreateConVar("sm_dealdamage_sounds_start", "music/MyJailbreak/start.mp3", "Path to the soundfile which should be played for a start.");
 	gc_bOverlays = AutoExecConfig_CreateConVar("sm_dealdamage_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true,  0.0, true, 1.0);
 	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_dealdamage_overlays_start", "overlays/MyJailbreak/start" , "Path to the start Overlay DONT TYPE .vmt or .vft");
-	gc_bShowPanel = AutoExecConfig_CreateConVar("sm_dealdamage_panel", "1", "0 - disabled, 1 - enable show results on a Panel", _, true,  0.0, true, 1.0);
-	gc_bChat = AutoExecConfig_CreateConVar("sm_dealdamage_chat", "1", "0 - disabled, 1 - enable print results in chat", _, true,  0.0, true, 1.0);
-	gc_bConsole = AutoExecConfig_CreateConVar("sm_dealdamage_console", "1", "0 - disabled, 1 - enable print results in client console", _, true,  0.0, true, 1.0);
 	
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
@@ -336,7 +337,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		BestPlayer = 0;
 		
 		float RoundTime = (gc_iRoundTime.FloatValue*60-5);
-		CreateTimer (RoundTime, EndTheRound);
+		RoundTimer = CreateTimer (RoundTime, EndTheRound);
 		IsDealDamage = true;
 		IsTruce = true;
 		
@@ -468,6 +469,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 			}
 		}
 		if (TruceTimer != null) KillTimer(TruceTimer); //kill start time if still running
+		if (RoundTimer != null) KillTimer(RoundTimer); //kill start time if still running
 		if (winner == 2) PrintHintTextToAll("%t", "dealdamage_twin_nc", DamageT);
 		if (winner == 3) PrintHintTextToAll("%t", "dealdamage_ctwin_nc", DamageCT);
 		if (g_iRound == g_iMaxRound) //if this was the last round
@@ -513,6 +515,7 @@ public void OnMapEnd()
 	StartDealDamage = false;
 	canSet = true;
 	if (TruceTimer != null) KillTimer(TruceTimer); //kill start time if still running
+	if (RoundTimer != null) KillTimer(RoundTimer); //kill start time if still running
 	g_iVoteCount = 0;
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0'; 
@@ -630,7 +633,7 @@ stock void SendResults(int client)
 	Format(info, sizeof(info),"%t %t", "dealdamage_tag" , "dealdamage_result");
 	if(gc_bChat.BoolValue) CPrintToChat(client, info);
 	if(gc_bConsole.BoolValue) PrintToConsole(client, info);
-	DrawPanelText(DealDamageMenu, "                                   ");
+	DrawPanelText(DealDamageEndMenu, "                                   ");
 	Format(info, sizeof(info), "%t", "dealdamage_total", TotalDamage);
 	DrawPanelText(DealDamageEndMenu, info);
 	Format(info, sizeof(info), "%t %t", "dealdamage_tag" ,  "dealdamage_total", TotalDamage);
@@ -641,18 +644,18 @@ stock void SendResults(int client)
 	Format(info, sizeof(info), "%t %t", "dealdamage_tag" ,  "dealdamage_most", BestPlayer, DamageDealed[BestPlayer]);
 	if(gc_bChat.BoolValue) CPrintToChat(client, info);
 	if(gc_bConsole.BoolValue) PrintToConsole(client, info);
-	DrawPanelText(DealDamageMenu, "                                   ");
-	Format(info, sizeof(info),"t", "dealdamage_ct", DamageCT);
+	DrawPanelText(DealDamageEndMenu, "                                   ");
+	Format(info, sizeof(info),"%t", "dealdamage_ct", DamageCT);
 	DrawPanelText(DealDamageEndMenu, info);
 	Format(info, sizeof(info),"%t %t", "dealdamage_tag" ,  "dealdamage_ct", DamageCT);
 	if(gc_bChat.BoolValue) CPrintToChat(client, info);
 	if(gc_bConsole.BoolValue) PrintToConsole(client, info);
-	Format(info, sizeof(info), "%t", "dealdamage_ct", DamageT);
+	Format(info, sizeof(info), "%t", "dealdamage_t", DamageT);
 	DrawPanelText(DealDamageEndMenu, info);
 	Format(info, sizeof(info), "%t %t", "dealdamage_tag" ,  "dealdamage_ct", DamageT);
 	if(gc_bChat.BoolValue) CPrintToChat(client, info);
 	if(gc_bConsole.BoolValue) PrintToConsole(client, info);
-	DrawPanelText(DealDamageMenu, "                                   ");
+	DrawPanelText(DealDamageEndMenu, "                                   ");
 	Format(info, sizeof(info),"%t", "dealdamage_bestct", BestCT, BestCTdamage);
 	DrawPanelText(DealDamageEndMenu, info);
 	Format(info, sizeof(info),"%t %t", "dealdamage_tag" ,  "dealdamage_bestct", BestCT, BestCTdamage);
@@ -665,7 +668,7 @@ stock void SendResults(int client)
 	if(gc_bConsole.BoolValue) PrintToConsole(client, info);
 	Format(info, sizeof(info),"%t", "dealdamage_client", DamageDealed[client]);
 	DrawPanelText(DealDamageEndMenu, info);
-	DrawPanelText(DealDamageMenu, "                                   ");
+	DrawPanelText(DealDamageEndMenu, "                                   ");
 	Format(info, sizeof(info),"%t %t", "dealdamage_tag" , "dealdamage_client", DamageDealed[client]);
 	if(gc_bChat.BoolValue) CPrintToChat(client, info);
 	if(gc_bConsole.BoolValue) PrintToConsole(client, info);

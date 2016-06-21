@@ -91,14 +91,12 @@ ConVar gc_iExtendLimit;
 ConVar gc_bWardenColorRandom;
 ConVar gc_bBackstab;
 ConVar gc_iBackstabNumber;
-
 ConVar gc_sAdminFlagMute;
 ConVar gc_sAdminFlagBackstab;
 ConVar gc_sAdminFlagBulletSparks;
 ConVar gc_sAdminFlagLaser;
 ConVar gc_sAdminFlagDrawer;
 ConVar gc_sAdminFlagCuffs;
-
 ConVar gc_fUnLockTimeMax;
 ConVar gc_fUnLockTimeMin;
 ConVar gc_iPaperClipUnLockChance;
@@ -314,7 +312,7 @@ public void OnPluginStart()
 	gc_bBetterNotes = AutoExecConfig_CreateConVar("sm_warden_better_notifications", "1", "0 - disabled, 1 - Will use hint and center text", _, true, 0.0, true, 1.0);
 	gc_bMute = AutoExecConfig_CreateConVar("sm_warden_mute", "1", "0 - disabled, 1 - Allow the warden to mute T-side player", _, true, 0.0, true, 1.0);
 	gc_bMuteEnd = AutoExecConfig_CreateConVar("sm_warden_mute_round", "1", "0 - disabled, 1 - Allow the warden to mute a player until roundend", _, true, 0.0, true, 1.0);
-	gc_sAdminFlagMute = AutoExecConfig_CreateConVar("sm_warden_muteimmuntiy", "a", "Set flag for admin/vip/Admin Mute immunity. No flag immunity for all. so don't leave blank!");
+	gc_sAdminFlagMute = AutoExecConfig_CreateConVar("sm_warden_muteimmuntiy", "a", "Set flag for admin/vip Mute immunity. No flag immunity for all. so don't leave blank!");
 	gc_bNoBlock = AutoExecConfig_CreateConVar("sm_warden_noblock", "1", "0 - disabled, 1 - enable noblock toggle for warden", _, true,  0.0, true, 1.0);
 	gc_bNoBlockMode = AutoExecConfig_CreateConVar("sm_warden_noblock_mode", "1", "0 - collision only between CT & T, 1 - collision within a team.", _, true,  0.0, true, 1.0);
 	gc_bFF = AutoExecConfig_CreateConVar("sm_warden_ff", "1", "0 - disabled, 1 - enable switch ff for T ", _, true,  0.0, true, 1.0);
@@ -329,7 +327,7 @@ public void OnPluginStart()
 	gc_iGunSlapDamage = AutoExecConfig_CreateConVar("sm_warden_gunslap_dmg", "10", "Amoung of HP losing on slap for dropping a gun", _, true,  0.0);
 	gc_bBackstab = AutoExecConfig_CreateConVar("sm_warden_backstab", "1", "0 - disabled, 1 - enable backstab protection for warden", _, true,  0.0, true, 1.0);
 	gc_iBackstabNumber = AutoExecConfig_CreateConVar("sm_warden_backstab_number", "1", "How many time a warden get protected? 0 - alltime", _, true,  1.0);
-	gc_sAdminFlagBackstab = AutoExecConfig_CreateConVar("sm_warden_backstab_flag", "", "Set flag for admin/vip to get warden backstab protection. No flag feature is available for all players!");
+	gc_sAdminFlagBackstab = AutoExecConfig_CreateConVar("sm_warden_backstab_flag", "", "Set flag for admin/vip to get warden backstab protection. No flag = feature is available for all players!");
 	gc_bHandCuff = AutoExecConfig_CreateConVar("sm_warden_handcuffs", "1", "0 - disabled, 1 - enable handcuffs", _, true,  0.0, true, 1.0);
 	gc_iHandCuffsNumber = AutoExecConfig_CreateConVar("sm_warden_handcuffs_number", "2", "How many handcuffs a warden got?", _, true,  1.0);
 	gc_bHandCuffLR = AutoExecConfig_CreateConVar("sm_warden_handcuffs_lr", "1", "0 - disabled, 1 - free cuffed terrorists on LR", _, true,  0.0, true, 1.0);
@@ -353,11 +351,11 @@ public void OnPluginStart()
 	gc_bOpenTimerWarden = AutoExecConfig_CreateConVar("sm_warden_open_time_warden", "1", "should doors open automatic after sm_warden_open_time when there is a warden? needs sm_warden_open_time_enable 1", _, true,  0.0, true, 1.0);
 	gc_bMarker = AutoExecConfig_CreateConVar("sm_warden_marker", "1", "0 - disabled, 1 - enable Warden advanced markers ", _, true,  0.0, true, 1.0);
 	gc_bBulletSparks = AutoExecConfig_CreateConVar("sm_warden_bulletsparks", "1", "0 - disabled, 1 - enable Warden bulletimpact sparks", _, true,  0.0, true, 1.0);
-	gc_sAdminFlagBulletSparks = AutoExecConfig_CreateConVar("sm_warden_bulletsparks_flag", "", "Set flag for admin/vip to get warden bulletimpact sparks. No flag feature is available for all players!");
+	gc_sAdminFlagBulletSparks = AutoExecConfig_CreateConVar("sm_warden_bulletsparks_flag", "", "Set flag for admin/vip to get warden bulletimpact sparks. No flag = feature is available for all players!");
 	gc_bLaser = AutoExecConfig_CreateConVar("sm_warden_laser", "1", "0 - disabled, 1 - enable Warden Laser Pointer with +E ", _, true,  0.0, true, 1.0);
-	gc_sAdminFlagLaser = AutoExecConfig_CreateConVar("sm_warden_laser_flag", "", "Set flag for admin/vip to get warden laser pointer. No flag feature is available for all players!");
+	gc_sAdminFlagLaser = AutoExecConfig_CreateConVar("sm_warden_laser_flag", "", "Set flag for admin/vip to get warden laser pointer. No flag = feature is available for all players!");
 	gc_bDrawer = AutoExecConfig_CreateConVar("sm_warden_drawer", "1", "0 - disabled, 1 - enable Warden Drawer with +E ", _, true,  0.0, true, 1.0);
-	gc_sAdminFlagDrawer = AutoExecConfig_CreateConVar("sm_warden_drawer_flag", "", "Set flag for admin/vip to get warden bulletimpact sparks. No flag feature is available for all players!");
+	gc_sAdminFlagDrawer = AutoExecConfig_CreateConVar("sm_warden_drawer_flag", "", "Set flag for admin/vip to get warden bulletimpact sparks. No flag = feature is available for all players!");
 	gc_bDrawerT= AutoExecConfig_CreateConVar("sm_warden_drawer_terror", "1", "0 - disabled, 1 - allow Warden to toggle Drawer for Terrorist ", _, true,  0.0, true, 1.0);
 	gc_bMath = AutoExecConfig_CreateConVar("sm_warden_math", "1", "0 - disabled, 1 - enable mathquiz for warden", _, true,  0.0, true, 1.0);
 	gc_iMinimumNumber = AutoExecConfig_CreateConVar("sm_warden_math_min", "1", "What should be the minimum number for questions?", _, true,  1.0);
