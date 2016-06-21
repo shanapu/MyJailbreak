@@ -50,6 +50,7 @@ ConVar gc_sSoundBoomPath;
 ConVar g_iGetRoundTime;
 ConVar gc_iRounds;
 ConVar gc_sCustomCommand;
+ConVar gc_sAdminFlag;
 
 //Integers
 int g_iVoteCount;
@@ -72,6 +73,7 @@ char g_sHasVoted[1500];
 char g_sSoundStartPath[256];
 char g_sCustomCommand[64];
 char g_sEventsLogFile[PLATFORM_MAX_PATH];
+char g_sAdminFlag[32];
 
 public Plugin myinfo = {
 	name = "MyJailbreak - Suicide Bomber",
@@ -101,7 +103,8 @@ public void OnPluginStart()
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_suicidebomber_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true,  0.0, true, 1.0);
 	gc_sCustomCommand = AutoExecConfig_CreateConVar("sm_suicidebomber_cmd", "suicide", "Set your custom chat command for Event voting. no need for sm_ or !");
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_suicidebomber_warden", "1", "0 - disabled, 1 - allow warden to set Suicide Bomber round", _, true,  0.0, true, 1.0);
-	gc_bSetA = AutoExecConfig_CreateConVar("sm_suicidebomber_admin", "1", "0 - disabled, 1 - allow admin to set Suicide Bomber round", _, true,  0.0, true, 1.0);
+	gc_bSetA = AutoExecConfig_CreateConVar("sm_suicidebomber_admin", "1", "0 - disabled, 1 - allow admin/vip to set Suicide Bomber round", _, true,  0.0, true, 1.0);
+	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_suicidebomber_flag", "g", "Set flag for admin/vip to set this Event Day.");
 	gc_bVote = AutoExecConfig_CreateConVar("sm_suicidebomber_vote", "1", "0 - disabled, 1 - allow player to vote for Suicide Bomber", _, true,  0.0, true, 1.0);
 	gc_iKey = AutoExecConfig_CreateConVar("sm_suicidebomber_key", "1", "1 - Inspect(look) weapon / 2 - walk / 3 - Secondary Attack", _, true,  1.0, true, 3.0);
 	gc_bStandStill = AutoExecConfig_CreateConVar("sm_suicidebomber_standstill", "1", "0 - disabled, 1 - standstill(cant move) on Activate bomb", _, true,  0.0, true, 1.0);
@@ -135,6 +138,7 @@ public void OnPluginStart()
 	HookConVarChange(gc_sSoundSuicideBomberPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundBoomPath, OnSettingChanged);
 	HookConVarChange(gc_sCustomCommand, OnSettingChanged);
+	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
 	
 	//FindConVar
 	g_iGetRoundTime = FindConVar("mp_roundtime");
@@ -145,6 +149,7 @@ public void OnPluginStart()
 	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 	gc_sCustomCommand.GetString(g_sCustomCommand , sizeof(g_sCustomCommand));
+	gc_sAdminFlag.GetString(g_sAdminFlag , sizeof(g_sAdminFlag));
 	
 	AddCommandListener(Command_LAW, "+lookatweapon");
 	
@@ -159,6 +164,10 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 	{
 		strcopy(g_sSoundSuicideBomberPath, sizeof(g_sSoundSuicideBomberPath), newValue);
 		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundSuicideBomberPath);
+	}
+	else if(convar == gc_sAdminFlag)
+	{
+		strcopy(g_sAdminFlag, sizeof(g_sAdminFlag), newValue);
 	}
 	else if(convar == gc_sSoundBoomPath)
 	{
@@ -256,31 +265,31 @@ public Action SetSuicideBomber(int client,int args)
 			}
 			else CPrintToChat(client, "%t %t", "warden_tag" , "suicidebomber_setbywarden");
 		}
-		else if (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
+		else if (CheckVipFlag(client,g_sAdminFlag))
+		{
+			if (gc_bSetA.BoolValue)
 			{
-				if (gc_bSetA.BoolValue)
+				if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
 				{
-					if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
+					char EventDay[64];
+					GetEventDay(EventDay);
+					
+					if(StrEqual(EventDay, "none", false))
 					{
-						char EventDay[64];
-						GetEventDay(EventDay);
-						
-						if(StrEqual(EventDay, "none", false))
+						if (g_iCoolDown == 0)
 						{
-							if (g_iCoolDown == 0)
-							{
-								StartNextRound();
-								if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Suicide Bomber was started by admin %L", client);
-							}
-							else CPrintToChat(client, "%t %t", "suicidebomber_tag" , "suicidebomber_wait", g_iCoolDown);
+							StartNextRound();
+							if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Suicide Bomber was started by admin %L", client);
 						}
-						else CPrintToChat(client, "%t %t", "suicidebomber_tag" , "suicidebomber_progress" , EventDay);
+						else CPrintToChat(client, "%t %t", "suicidebomber_tag" , "suicidebomber_wait", g_iCoolDown);
 					}
-					else CPrintToChat(client, "%t %t", "suicidebomber_tag" , "suicidebomber_minplayer");
+					else CPrintToChat(client, "%t %t", "suicidebomber_tag" , "suicidebomber_progress" , EventDay);
 				}
-				else CPrintToChat(client, "%t %t", "suicidebomber_tag" , "suicidebomber_setbyadmin");
+				else CPrintToChat(client, "%t %t", "suicidebomber_tag" , "suicidebomber_minplayer");
 			}
-			else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
+			else CPrintToChat(client, "%t %t", "suicidebomber_tag" , "suicidebomber_setbyadmin");
+		}
+		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
 	}
 	else CPrintToChat(client, "%t %t", "suicidebomber_tag" , "suicidebomber_disabled");
 }
@@ -307,17 +316,17 @@ public Action VoteSuicideBomber(int client,int args)
 					{
 						if (StrContains(g_sHasVoted, steamid, true) == -1)
 						{
-							int playercount = (GetClientCount(true) / 2);
-							g_iVoteCount++;
-							int Missing = playercount - g_iVoteCount + 1;
-							Format(g_sHasVoted, sizeof(g_sHasVoted), "%s,%s", g_sHasVoted, steamid);
-							
-							if (g_iVoteCount > playercount)
-							{
-								StartNextRound();
-								if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Suicide Bomber was started by voting");
-							}
-							else CPrintToChatAll("%t %t", "suicidebomber_tag" , "suicidebomber_need", Missing, client);
+	int playercount = (GetClientCount(true) / 2);
+	g_iVoteCount++;
+	int Missing = playercount - g_iVoteCount + 1;
+	Format(g_sHasVoted, sizeof(g_sHasVoted), "%s,%s", g_sHasVoted, steamid);
+	
+	if (g_iVoteCount > playercount)
+	{
+		StartNextRound();
+		if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Suicide Bomber was started by voting");
+	}
+	else CPrintToChatAll("%t %t", "suicidebomber_tag" , "suicidebomber_need", Missing, client);
 						}
 						else CPrintToChat(client, "%t %t", "suicidebomber_tag" , "suicidebomber_voted");
 					}
@@ -352,8 +361,6 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 	canSet = true;
 	if (StartSuicideBomber || IsSuicideBomber)
 	{
-		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
-		
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("sm_menu_enable", 0);
@@ -367,27 +374,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 			{
 				LoopClients(client) 
 				{
-					SuicideBomberMenu = CreatePanel();
-					Format(info1, sizeof(info1), "%T", "suicidebomber_info_title", LANG_SERVER);
-					SetPanelTitle(SuicideBomberMenu, info1);
-					DrawPanelText(SuicideBomberMenu, "                                   ");
-					Format(info2, sizeof(info2), "%T", "suicidebomber_info_line1", LANG_SERVER);
-					DrawPanelText(SuicideBomberMenu, info2);
-					DrawPanelText(SuicideBomberMenu, "-----------------------------------");
-					Format(info3, sizeof(info3), "%T", "suicidebomber_info_line2", LANG_SERVER);
-					DrawPanelText(SuicideBomberMenu, info3);
-					Format(info4, sizeof(info4), "%T", "suicidebomber_info_line3", LANG_SERVER);
-					DrawPanelText(SuicideBomberMenu, info4);
-					Format(info5, sizeof(info5), "%T", "suicidebomber_info_line4", LANG_SERVER);
-					DrawPanelText(SuicideBomberMenu, info5);
-					Format(info6, sizeof(info6), "%T", "suicidebomber_info_line5", LANG_SERVER);
-					DrawPanelText(SuicideBomberMenu, info6);
-					Format(info7, sizeof(info7), "%T", "suicidebomber_info_line6", LANG_SERVER);
-					DrawPanelText(SuicideBomberMenu, info7);
-					Format(info8, sizeof(info8), "%T", "suicidebomber_info_line7", LANG_SERVER);
-					DrawPanelText(SuicideBomberMenu, info8);
-					DrawPanelText(SuicideBomberMenu, "-----------------------------------");
-					SendPanelToClient(SuicideBomberMenu, client, NullHandler, 20);
+					CreateInfoPanel(client);
 					
 					StripAllWeapons(client);
 					ClientSprintStatus[client] = 0;
@@ -418,6 +405,36 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		}
 		else if (g_iCoolDown > 0) g_iCoolDown--;
 	}
+}
+
+stock void CreateInfoPanel(int client)
+{
+	//Create info Panel
+	char info[255];
+	
+	SuicideBomberMenu = CreatePanel();
+	Format(info, sizeof(info), "%T", "suicidebomber_info_title",client);
+	SetPanelTitle(SuicideBomberMenu, info);
+	DrawPanelText(SuicideBomberMenu, "                                   ");
+	Format(info, sizeof(info), "%T", "suicidebomber_info_line1",client);
+	DrawPanelText(SuicideBomberMenu, info);
+	DrawPanelText(SuicideBomberMenu, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "suicidebomber_info_line2",client);
+	DrawPanelText(SuicideBomberMenu, info);
+	Format(info, sizeof(info), "%T", "suicidebomber_info_line3",client);
+	DrawPanelText(SuicideBomberMenu, info);
+	Format(info, sizeof(info), "%T", "suicidebomber_info_line4",client);
+	DrawPanelText(SuicideBomberMenu, info);
+	Format(info, sizeof(info), "%T", "suicidebomber_info_line5",client);
+	DrawPanelText(SuicideBomberMenu, info);
+	Format(info, sizeof(info), "%T", "suicidebomber_info_line6",client);
+	DrawPanelText(SuicideBomberMenu, info);
+	Format(info, sizeof(info), "%T", "suicidebomber_info_line7",client);
+	DrawPanelText(SuicideBomberMenu, info);
+	DrawPanelText(SuicideBomberMenu, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "warden_close", client);
+	DrawPanelItem(SuicideBomberMenu, info); 
+	SendPanelToClient(SuicideBomberMenu, client, NullHandler, 20);
 }
 
 //Round End
@@ -458,6 +475,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 	}
 	if (StartSuicideBomber)
 	{
+		LoopClients(i) CreateInfoPanel(i);
 		g_iOldRoundTime = g_iGetRoundTime.IntValue;
 		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;
 		

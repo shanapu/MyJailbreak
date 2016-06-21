@@ -1,5 +1,97 @@
 ### Change Log
-**[Beta .3.1]** -   
+**[Beta 4.0]** - DealDamage,Vip,Backstab,Paperclip...more
+
+*Added*
+*  Request: Admin/warden can choose respawn position on a freekill
+    *  new cvar - sm_freekill_respawn_cell: 0 - cells are still open on respawn, 1 - cells will close on respawn in cell. Default 1
+*  Request: Set bonus request (one more heal-,repeat-& refuserequest) with admin/vip flag.
+    *  new cvar - sm_repeat_vip: Set flag for VIP to get one more repeat. No flag = feature is available for all players! Default a
+    *  new cvar - sm_refuse_vip: Set flag for VIP to get one more refuse. No flag = feature is available for all players! Default a
+    *  new cvar - sm_heal_vip: Set flag for VIP to get one more heal. No flag = feature is available for all players! Default a
+*  Warden: Backstab protection
+    *  new cvar - sm_warden_backstab: 0 - disabled, 1 - enable backstab protection for warden. Default 1
+    *  new cvar - sm_warden_backstab_number: How many time a warden get protected? 0 - alltime. Default 1
+*  Warden: Set features to admin/vip flag
+    *  new cvar - sm_warden_drawer_flag: Set flag for admin/vip to get drawer access. No flag = feature is available for all players! Default ""
+    *  new cvar - sm_warden_laser_flag: Set flag for admin/vip to get warden laser pointer. No flag = feature is available for all players! Default ""
+    *  new cvar - sm_warden_bulletsparks_flag: Set flag for admin/vip to get warden bulletimpact sparks. No flag = feature is available for all players! Default ""
+    *  new cvar - sm_warden_backstab_flag: Set flag for admin/vip to get warden backstab protection. No flag = feature is available for all players! Default ""
+*  Warden: Chance a Terror got a paperclip to unleash when he get cuffed. Also a chance the paperclip break on unleashing attempt.
+    *  new cvar - sm_warden_handcuffs_paperclip_chance: Set the chance (1:x) a cuffed Terroris get a paperclip to free themself. Default 5
+    *  new cvar - sm_warden_handcuffs_unlock_chance: Set the chance (1:x) a cuffed Terroris who has a paperclip to free themself. Default 3
+    *  new cvar - sm_warden_handcuffs_unlock_mintime: Min. Time in seconds Ts need free themself with a paperclip. Default 15
+    *  new cvar - sm_warden_handcuffs_unlock_maxtime: Max. Time in seconds Ts need free themself with a paperclip. Default 35
+    *  new cvar - sm_warden_handcuffs_flag: Set flag for admin/vip must have to get access to paperclip. No flag = feature is available for all players! Default ""
+*  Translation: Russian Thx Murr & Include1!
+*  Translation: Partially Italian Thx alsacchi!
+*  New Day: Deal Damage - Deal so much damage as you can against enemey team. Team with most dealed damage wins.
+    *  new command - sm_setdealdamage: Allows the Admin or Warden to set dealdamage as next round
+    *  new command - sm_dealdamage: Allows players to vote for a dealdamage
+    *  new cvar - sm_dealdamage_enable: 0 - disabled, 1 - enable this MyJailbreak SourceMod plugin. Default 1
+    *  new cvar - sm_dealdamage_cmd: Set your custom chat command for Event voting. no need for sm_ or ! Default "dd" results in !dd /dd sm_dd
+    *  new cvar - sm_dealdamage_warden: 0 - disabled, 1 - allow warden to set dealdamage round. Default 1
+    *  new cvar - sm_dealdamage_admin: 0 - disabled, 1 - allow admin/vip to set dealdamage round. Default 1
+    *  new cvar - sm_dealdamage_flag: Set flag for admin/vip to set this Event Day. Default g
+    *  new cvar - sm_dealdamage_vote: 0 - disabled, 1 - allow player to vote for dealdamage. Default 1
+    *  new cvar - sm_dealdamage_spawn: 0 - T teleport to CT spawn, 1 - cell doors auto open. Default 0
+    *  *new cvar - sm_dealdamage_randomspawn: 0 - disabled, 1 - use random spawns on map (sm_dealdamage_spawn 1). Default 1*
+        *  this is new as a test with random spawn points - if works good implement in other days.
+    *  new cvar - sm_dealdamage_panel: 0 - disabled, 1 - enable show results on a panel. Default 1
+    *  new cvar - sm_dealdamage_chat: 0 - disabled, 1 - enable print results in chat. Default 1
+    *  new cvar - sm_dealdamage_console: 0 - disabled, 1 - enable print results in client console. Default 1
+    *  new cvar - sm_dealdamage_rounds: Rounds to play in a row. Default 2
+    *  new cvar - sm_dealdamage_roundtime: Round time in minutes for a single dealdamage round. Default 2
+    *  new cvar - sm_dealdamage_trucetime: Time in seconds players can't deal damage. Default 15
+    *  new cvar - sm_dealdamage_cooldown_day", "3", "Rounds cooldown after a event until event can be start again. Default 3
+    *  new cvar - sm_dealdamage_cooldown_start", "3", "Rounds until event can be start after mapchange. Default 3
+    *  new cvar - sm_dealdamage_sounds_enable: 0 - disabled, 1 - enable sounds. Default 1
+    *  new cvar - sm_dealdamage_sounds_start: Path to the soundfile which should be played for a start. Default "music/MyJailbreak/start.mp3"
+    *  new cvar - sm_dealdamage_overlays_enable: 0 - disabled, 1 - enable overlays. Default 1
+    *  new cvar - sm_dealdamage_overlays_start: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
+  
+*Changed*
+*  Warden: Limit number of extend rounds
+    *  new cvar - sm_warden_extend_limit: How many time a warden can extend the round?. Default 2
+*  Warden: Mute immunity
+    *  new cvar - sm_warden_muteimmuntiy: Set flag for admin/vip mute immunity. No flag = immunity for all. so don't leave blank! Default a
+*  Request: Limit number of freekill reports
+    *  new cvar - sm_freekill_limit: Сount how many times you can report a freekill. Default 2
+*  LastGuardRule: Cvar for freeze
+    *  new cvar - sm_lastguard_freeze: Freeze all players the half of trucetime. Default 0
+*  PlayerTags: Define your own admin/vip flags
+    *  new cvar - sm_playertag_ownerflag: Set the flag for Owner. Default z
+    *  new cvar - sm_playertag_adminflag: Set the flag for Admin. Default d
+    *  new cvar - sm_playertag_vipflag: Set the flag for VIP. Default t
+    *  new cvar - sm_playertag_vip2flag: Set the flag for VIP2. Default a
+*  PlayerTags: Only overwrite PlayerTags for warden, admin & vip. Prisoner & guards use steamTag
+    *  new cvar - sm_playertag_overwrite: 0 - only show tags for warden, admin & vip (no overwrite for prisoner & guards) 1 - enable tags for Prisioner & guards,too. Default 1
+*  All Eventdays & request: Define your own admin/vip flags to set a Event Day
+    *  new cvars - sm_'eventdayname'_flag: Set flag for admin/vip to set this Event Day. Default g
+    *  new cvar - sm_freekill_flag: Set flag for admin/vip get reported freekills to decide. Default g
+*  All Eventdays: Rules info panel will already shown on round end before a Eventday.
+*  All Eventdays & LastGuard: Added close button to rules info panel
+*  Hide: darken the sky (new skybox)
+*  Duckhunt: Refillammo from a refilltimer to smilib
+*  Warden: Unmute only alive player on LastRequest
+*  Warden: flashing warden colors only main colours (no more brown,...)
+*  Warden: Cuffs sound hearable for all
+*  minor code improvements
+*  minor notification changes
+  
+*Fixed*
+*  Warden: remove warden color an teamchange
+*  Warden: cvar sm_warden_bulletsparks 0
+*  Request: Check for suicide on freekill report.
+*  some translations
+*  minor errors
+*  double check IsClientInLastRequest & IsLastRequest
+*  missing fog
+  
+*Disabled*  
+*  Drunken: disbaled x/y axis invertion cuase unknown bug
+  
+  
+**[Beta .3.1]** - extend roundtime & fixes   
 *Added*  
 * Warden: extend roundtime
     * new command - sm_extend - Allows the warden to extend the roundtime

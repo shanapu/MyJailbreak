@@ -30,6 +30,7 @@ ConVar gc_iCooldownDay;
 ConVar gc_iRoundTime;
 ConVar g_iGetRoundTime;
 ConVar gc_sCustomCommand;
+ConVar gc_sAdminFlag;
 
 //Integers
 int g_iOldRoundTime;
@@ -44,6 +45,7 @@ Handle FreedayMenu;
 char g_sHasVoted[1500];
 char g_sCustomCommand[64];
 char g_sEventsLogFile[PLATFORM_MAX_PATH];
+char g_sAdminFlag[32];
 
 public Plugin myinfo =
 {
@@ -73,7 +75,8 @@ public void OnPluginStart()
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_freeday_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true,  0.0, true, 1.0);
 	gc_sCustomCommand = AutoExecConfig_CreateConVar("sm_freeday_cmd", "fd", "Set your custom chat command for Event voting. no need for sm_ or !");
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_freeday_warden", "1", "0 - disabled, 1 - allow warden to set freeday round", _, true,  0.0, true, 1.0);
-	gc_bSetA = AutoExecConfig_CreateConVar("sm_freeday_admin", "1", "0 - disabled, 1 - allow admin to set freeday round", _, true,  0.0, true, 1.0);
+	gc_bSetA = AutoExecConfig_CreateConVar("sm_freeday_admin", "1", "0 - disabled, 1 - allow admin/vip to set freeday round", _, true,  0.0, true, 1.0);
+	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_freeday_flag", "g", "Set flag for admin/vip to set this Event Day.");
 	gc_bVote = AutoExecConfig_CreateConVar("sm_freeday_vote", "1", "0 - disabled, 1 - allow player to vote for freeday", _, true,  0.0, true, 1.0);
 	gc_bAuto = AutoExecConfig_CreateConVar("sm_freeday_noct", "1", "0 - disabled, 1 - auto freeday when there is no CT", _, true,  0.0, true, 1.0);
 //	gc_iRespawn = AutoExecConfig_CreateConVar("sm_freeday_respawn", "1", "1 - respawn on NoCT Freeday / 2 - respawn on firstround/vote/set Freeday / 3 - Both", _, true,  0.0, true, 1.0);
@@ -90,11 +93,13 @@ public void OnPluginStart()
 	HookEvent("round_end", RoundEnd);
 //	HookEvent("player_death", PlayerDeath);
 	HookConVarChange(gc_sCustomCommand, OnSettingChanged);
+	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
 	
 	//FindConVar
 	g_iGetRoundTime = FindConVar("mp_roundtime");
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	gc_sCustomCommand.GetString(g_sCustomCommand , sizeof(g_sCustomCommand));
+	gc_sAdminFlag.GetString(g_sAdminFlag , sizeof(g_sAdminFlag));
 	
 	SetLogFile(g_sEventsLogFile, "Events");
 }
@@ -110,6 +115,10 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 		Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommand);
 		if(GetCommandFlags(sBufferCMD) == INVALID_FCVAR_FLAGS)
 			RegConsoleCmd(sBufferCMD, VoteFreeday, "Allows players to vote for a freeday");
+	}
+	else if(convar == gc_sAdminFlag)
+	{
+		strcopy(g_sAdminFlag, sizeof(g_sAdminFlag), newValue);
 	}
 }
 //Initialize Event
@@ -167,27 +176,27 @@ public Action SetFreeday(int client,int args)
 			}
 			else CPrintToChat(client, "%t %t", "warden_tag" , "freeday_setbywarden");
 		}
-		else if (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
+		else if (CheckVipFlag(client,g_sAdminFlag))
+		{
+			if (gc_bSetA.BoolValue)
 			{
-				if (gc_bSetA.BoolValue)
+				char EventDay[64];
+				GetEventDay(EventDay);
+				
+				if(StrEqual(EventDay, "none", false))
 				{
-					char EventDay[64];
-					GetEventDay(EventDay);
-					
-					if(StrEqual(EventDay, "none", false))
+					if (g_iCoolDown == 0)
 					{
-						if (g_iCoolDown == 0)
-						{
-							StartNextRound();
-							if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Freeday was started by admin %L", client);
-						}
-						else CPrintToChat(client, "%t %t", "freeday_tag" , "freeday_wait", g_iCoolDown);
+						StartNextRound();
+						if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Freeday was started by admin %L", client);
 					}
-					else CPrintToChat(client, "%t %t", "freeday_tag" , "freeday_progress" , EventDay);
+					else CPrintToChat(client, "%t %t", "freeday_tag" , "freeday_wait", g_iCoolDown);
 				}
-				else CPrintToChat(client, "%t %t", "freeday_tag" , "freeday_setbyadmin");
+				else CPrintToChat(client, "%t %t", "freeday_tag" , "freeday_progress" , EventDay);
 			}
-			else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
+			else CPrintToChat(client, "%t %t", "freeday_tag" , "freeday_setbyadmin");
+		}
+		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
 	}
 	else CPrintToChat(client, "%t %t", "freeday_tag" , "freeday_disabled");
 }
@@ -281,8 +290,6 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 	}
 	if (StartFreeday)
 	{
-		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
-		
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_weapons_enable", 0);
 		SetCvar("sm_weapons_t", 0);
@@ -294,27 +301,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		
 		LoopClients(client)
 		{
-			FreedayMenu = CreatePanel();
-			Format(info1, sizeof(info1), "%T", "freeday_info_title", client);
-			SetPanelTitle(FreedayMenu, info1);
-			DrawPanelText(FreedayMenu, "                                   ");
-			Format(info2, sizeof(info2), "%T", "freeday_info_line1", client);
-			DrawPanelText(FreedayMenu, info2);
-			DrawPanelText(FreedayMenu, "-----------------------------------");
-			Format(info3, sizeof(info3), "%T", "freeday_info_line2", client);
-			DrawPanelText(FreedayMenu, info3);
-			Format(info4, sizeof(info4), "%T", "freeday_info_line3", client);
-			DrawPanelText(FreedayMenu, info4);
-			Format(info5, sizeof(info5), "%T", "freeday_info_line4", client);
-			DrawPanelText(FreedayMenu, info5);
-			Format(info6, sizeof(info6), "%T", "freeday_info_line5", client);
-			DrawPanelText(FreedayMenu, info6);
-			Format(info7, sizeof(info7), "%T", "freeday_info_line6", client);
-			DrawPanelText(FreedayMenu, info7);
-			Format(info8, sizeof(info8), "%T", "freeday_info_line7", client);
-			DrawPanelText(FreedayMenu, info8);
-			DrawPanelText(FreedayMenu, "-----------------------------------");
-			SendPanelToClient(FreedayMenu, client, NullHandler, 20);
+			CreateInfoPanel(client);
 			
 			if (!gc_bdamage.BoolValue && IsValidClient(client))
 			{
@@ -333,6 +320,35 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 	}
 }
 
+stock void CreateInfoPanel(int client)
+{
+	//Create info Panel
+	char info[255];
+
+	FreedayMenu = CreatePanel();
+	Format(info, sizeof(info), "%T", "freeday_info_title", client);
+	SetPanelTitle(FreedayMenu, info);
+	DrawPanelText(FreedayMenu, "                                   ");
+	Format(info, sizeof(info), "%T", "freeday_info_line1", client);
+	DrawPanelText(FreedayMenu, info);
+	DrawPanelText(FreedayMenu, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "freeday_info_line2", client);
+	DrawPanelText(FreedayMenu, info);
+	Format(info, sizeof(info), "%T", "freeday_info_line3", client);
+	DrawPanelText(FreedayMenu, info);
+	Format(info, sizeof(info), "%T", "freeday_info_line4", client);
+	DrawPanelText(FreedayMenu, info);
+	Format(info, sizeof(info), "%T", "freeday_info_line5", client);
+	DrawPanelText(FreedayMenu, info);
+	Format(info, sizeof(info), "%T", "freeday_info_line6", client);
+	DrawPanelText(FreedayMenu, info);
+	Format(info, sizeof(info), "%T", "freeday_info_line7", client);
+	DrawPanelText(FreedayMenu, info);
+	DrawPanelText(FreedayMenu, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "warden_close", client);
+	DrawPanelItem(FreedayMenu, info); 
+	SendPanelToClient(FreedayMenu, client, NullHandler, 20);
+}
 //Round End
 
 public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
@@ -355,6 +371,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 	}
 	if (StartFreeday)
 	{
+		LoopClients(i) CreateInfoPanel(i);
 		g_iOldRoundTime = g_iGetRoundTime.IntValue;
 		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;
 		

@@ -210,7 +210,7 @@
 	"duckhunt_wait"
 	{
 		"#format"	"{1:i}"
-		"en"		"Du skal vente {purple}{1}{default} flere runder!"	
+		"da"		"Du skal vente {purple}{1}{default} flere runder!"	
 		"en"		"You must wait {purple}{1}{default} more rounds"
 		"de"		"Du musst noch {purple}{1}{default} Runden warten"
 		"pl"		"Musisz odczekac  {purple}{1}{default} rund"

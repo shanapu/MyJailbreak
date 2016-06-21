@@ -87,7 +87,23 @@ ConVar gc_bHandCuffLR;
 ConVar gc_bHandCuffCT;
 ConVar gc_bBulletSparks;
 ConVar gc_bExtend;
+ConVar gc_iExtendLimit;
 ConVar gc_bWardenColorRandom;
+ConVar gc_bBackstab;
+ConVar gc_iBackstabNumber;
+ConVar gc_sAdminFlagMute;
+ConVar gc_sAdminFlagBackstab;
+ConVar gc_sAdminFlagBulletSparks;
+ConVar gc_sAdminFlagLaser;
+ConVar gc_sAdminFlagDrawer;
+ConVar gc_sAdminFlagCuffs;
+ConVar gc_fUnLockTimeMax;
+ConVar gc_fUnLockTimeMin;
+ConVar gc_iPaperClipUnLockChance;
+ConVar gc_iPaperClipGetChance;
+
+ConVar gc_sSoundBreakCuffsPath;
+ConVar gc_sSoundUnLockCuffsPath;
 
 //Bools
 bool IsCountDown = false;
@@ -106,6 +122,7 @@ bool g_bDrawerColorRainbow[MAXPLAYERS+1] = true;
 bool g_bWeaponDropped[MAXPLAYERS+1] = false;
 bool g_bCuffed[MAXPLAYERS+1] = false;
 bool g_bAllowDrop;
+bool IsLR = false;
 bool IsMuted[MAXPLAYERS+1] = {false, ...};
 bool g_bBulletSparks[MAXPLAYERS+1] = true;
 
@@ -145,6 +162,8 @@ int g_iLaserColor[MAXPLAYERS+1];
 int g_iDrawerColor[MAXPLAYERS+1];
 int g_iPlayerHandCuffs[MAXPLAYERS+1];
 int g_iCuffed = 0;
+int g_iBackstabNumber[MAXPLAYERS+1];
+int g_iExtendNumber[MAXPLAYERS+1];
 
 //Handles
 Handle g_fward_onBecome;
@@ -191,6 +210,14 @@ char g_sCustomCommand[64];
 char g_sEquipWeapon[MAXPLAYERS+1][32];
 char g_sMuteUser[32];
 char g_sMyJBLogFile[PLATFORM_MAX_PATH];
+char g_sAdminFlagBackstab[32];
+char g_sAdminFlagBulletSparks[32];
+char g_sAdminFlagLaser[32];
+char g_sAdminFlagDrawer[32];
+char g_sAdminFlagMute[32];
+char g_sAdminFlagCuffs[32];
+char g_sSoundBreakCuffsPath[256];
+char g_sSoundUnLockCuffsPath[256];
 
 //float
 float g_fMarkerRadiusMin = 100.0;
@@ -285,10 +312,12 @@ public void OnPluginStart()
 	gc_bBetterNotes = AutoExecConfig_CreateConVar("sm_warden_better_notifications", "1", "0 - disabled, 1 - Will use hint and center text", _, true, 0.0, true, 1.0);
 	gc_bMute = AutoExecConfig_CreateConVar("sm_warden_mute", "1", "0 - disabled, 1 - Allow the warden to mute T-side player", _, true, 0.0, true, 1.0);
 	gc_bMuteEnd = AutoExecConfig_CreateConVar("sm_warden_mute_round", "1", "0 - disabled, 1 - Allow the warden to mute a player until roundend", _, true, 0.0, true, 1.0);
+	gc_sAdminFlagMute = AutoExecConfig_CreateConVar("sm_warden_muteimmuntiy", "a", "Set flag for admin/vip Mute immunity. No flag immunity for all. so don't leave blank!");
 	gc_bNoBlock = AutoExecConfig_CreateConVar("sm_warden_noblock", "1", "0 - disabled, 1 - enable noblock toggle for warden", _, true,  0.0, true, 1.0);
 	gc_bNoBlockMode = AutoExecConfig_CreateConVar("sm_warden_noblock_mode", "1", "0 - collision only between CT & T, 1 - collision within a team.", _, true,  0.0, true, 1.0);
 	gc_bFF = AutoExecConfig_CreateConVar("sm_warden_ff", "1", "0 - disabled, 1 - enable switch ff for T ", _, true,  0.0, true, 1.0);
 	gc_bExtend = AutoExecConfig_CreateConVar("sm_warden_extend", "1", "0 - disabled, 1 - Allows the warden to extend the roundtime", _, true,  0.0, true, 1.0);
+	gc_iExtendLimit = AutoExecConfig_CreateConVar("sm_warden_extend_limit", "2", "How many time a warden can extend the round?", _, true,  1.0);
 	gc_bGunPlant = AutoExecConfig_CreateConVar("sm_warden_gunplant", "1", "0 - disabled, 1 - enable Gun plant prevention", _, true,  0.0, true, 1.0);
 	gc_fAllowDropTime = AutoExecConfig_CreateConVar("sm_warden_allow_time", "15.0", "Time in seconds CTs allowed to drop weapon on round beginn.", _, true,  0.1);
 	gc_bGunNoDrop = AutoExecConfig_CreateConVar("sm_warden_gunnodrop", "0", "0 - disabled, 1 - disallow gun dropping for ct", _, true,  0.0, true, 1.0);
@@ -296,10 +325,19 @@ public void OnPluginStart()
 	gc_fGunRemoveTime = AutoExecConfig_CreateConVar("sm_warden_gunremove_time", "5.0", "Time in seconds to pick up gun again before.", _, true,  0.1);
 	gc_bGunSlap = AutoExecConfig_CreateConVar("sm_warden_gunslap", "1", "0 - disabled, 1 - Slap the CT for dropping a gun", _, true,  0.0, true, 1.0);
 	gc_iGunSlapDamage = AutoExecConfig_CreateConVar("sm_warden_gunslap_dmg", "10", "Amoung of HP losing on slap for dropping a gun", _, true,  0.0);
+	gc_bBackstab = AutoExecConfig_CreateConVar("sm_warden_backstab", "1", "0 - disabled, 1 - enable backstab protection for warden", _, true,  0.0, true, 1.0);
+	gc_iBackstabNumber = AutoExecConfig_CreateConVar("sm_warden_backstab_number", "1", "How many time a warden get protected? 0 - alltime", _, true,  1.0);
+	gc_sAdminFlagBackstab = AutoExecConfig_CreateConVar("sm_warden_backstab_flag", "", "Set flag for admin/vip to get warden backstab protection. No flag = feature is available for all players!");
 	gc_bHandCuff = AutoExecConfig_CreateConVar("sm_warden_handcuffs", "1", "0 - disabled, 1 - enable handcuffs", _, true,  0.0, true, 1.0);
 	gc_iHandCuffsNumber = AutoExecConfig_CreateConVar("sm_warden_handcuffs_number", "2", "How many handcuffs a warden got?", _, true,  1.0);
 	gc_bHandCuffLR = AutoExecConfig_CreateConVar("sm_warden_handcuffs_lr", "1", "0 - disabled, 1 - free cuffed terrorists on LR", _, true,  0.0, true, 1.0);
 	gc_bHandCuffCT = AutoExecConfig_CreateConVar("sm_warden_handcuffs_ct", "1", "0 - disabled, 1 - Warden can also handcuff CTs", _, true,  0.0, true, 1.0);
+	gc_fUnLockTimeMax = AutoExecConfig_CreateConVar("sm_warden_handcuffs_unlock_maxtime", "35.0", "Time in seconds Ts need free themself with a paperclip.", _, true, 0.1);
+	gc_iPaperClipGetChance = AutoExecConfig_CreateConVar("sm_warden_handcuffs_paperclip_chance", "5", "Set the chance (1:x) a cuffed Terroris get a paperclip to free themself", _, true,  1.0);
+	gc_iPaperClipUnLockChance = AutoExecConfig_CreateConVar("sm_warden_handcuffs_unlock_chance", "3", "Set the chance (1:x) a cuffed Terroris who has a paperclip to free themself", _, true,  1.0);
+	gc_fUnLockTimeMin = AutoExecConfig_CreateConVar("sm_warden_handcuffs_unlock_mintime", "15.0", "Min. Time in seconds Ts need free themself with a paperclip.", _, true,  1.0);
+	gc_fUnLockTimeMax = AutoExecConfig_CreateConVar("sm_warden_handcuffs_unlock_maxtime", "35.0", "Max. Time in seconds Ts need free themself with a paperclip.", _, true,  1.0);
+	gc_sAdminFlagCuffs = AutoExecConfig_CreateConVar("sm_warden_handcuffs_flag", "", "Set flag for admin/vip must have to get access to paperclip. No flag = feature is available for all players!");
 	gc_sOverlayCuffsPath = AutoExecConfig_CreateConVar("sm_warden_overlays_cuffs", "overlays/MyJailbreak/cuffs" , "Path to the cuffs Overlay DONT TYPE .vmt or .vft");
 	gc_bRandom = AutoExecConfig_CreateConVar("sm_warden_random", "1", "0 - disabled, 1 - enable kill a random t for warden", _, true,  0.0, true, 1.0);
 	gc_iRandomMode = AutoExecConfig_CreateConVar("sm_warden_random_mode", "2", "1 - all random / 2 - Thunder / 3 - Timebomb / 4 - Firebomb / 5 - NoKill(1,3,4 needs funcommands.smx enabled)", _, true,  1.0, true, 4.0);
@@ -313,8 +351,11 @@ public void OnPluginStart()
 	gc_bOpenTimerWarden = AutoExecConfig_CreateConVar("sm_warden_open_time_warden", "1", "should doors open automatic after sm_warden_open_time when there is a warden? needs sm_warden_open_time_enable 1", _, true,  0.0, true, 1.0);
 	gc_bMarker = AutoExecConfig_CreateConVar("sm_warden_marker", "1", "0 - disabled, 1 - enable Warden advanced markers ", _, true,  0.0, true, 1.0);
 	gc_bBulletSparks = AutoExecConfig_CreateConVar("sm_warden_bulletsparks", "1", "0 - disabled, 1 - enable Warden bulletimpact sparks", _, true,  0.0, true, 1.0);
+	gc_sAdminFlagBulletSparks = AutoExecConfig_CreateConVar("sm_warden_bulletsparks_flag", "", "Set flag for admin/vip to get warden bulletimpact sparks. No flag = feature is available for all players!");
 	gc_bLaser = AutoExecConfig_CreateConVar("sm_warden_laser", "1", "0 - disabled, 1 - enable Warden Laser Pointer with +E ", _, true,  0.0, true, 1.0);
+	gc_sAdminFlagLaser = AutoExecConfig_CreateConVar("sm_warden_laser_flag", "", "Set flag for admin/vip to get warden laser pointer. No flag = feature is available for all players!");
 	gc_bDrawer = AutoExecConfig_CreateConVar("sm_warden_drawer", "1", "0 - disabled, 1 - enable Warden Drawer with +E ", _, true,  0.0, true, 1.0);
+	gc_sAdminFlagDrawer = AutoExecConfig_CreateConVar("sm_warden_drawer_flag", "", "Set flag for admin/vip to get warden bulletimpact sparks. No flag = feature is available for all players!");
 	gc_bDrawerT= AutoExecConfig_CreateConVar("sm_warden_drawer_terror", "1", "0 - disabled, 1 - allow Warden to toggle Drawer for Terrorist ", _, true,  0.0, true, 1.0);
 	gc_bMath = AutoExecConfig_CreateConVar("sm_warden_math", "1", "0 - disabled, 1 - enable mathquiz for warden", _, true,  0.0, true, 1.0);
 	gc_iMinimumNumber = AutoExecConfig_CreateConVar("sm_warden_math_min", "1", "What should be the minimum number for questions?", _, true,  1.0);
@@ -336,6 +377,8 @@ public void OnPluginStart()
 	gc_sSoundStartPath = AutoExecConfig_CreateConVar("sm_warden_sounds_start", "music/MyJailbreak/start.mp3", "Path to the soundfile which should be played for a start countdown.");
 	gc_sSoundStopPath = AutoExecConfig_CreateConVar("sm_warden_sounds_stop", "music/MyJailbreak/stop.mp3", "Path to the soundfile which should be played for stop countdown.");
 	gc_sSoundCuffsPath = AutoExecConfig_CreateConVar("sm_warden_sounds_cuffs", "music/MyJailbreak/cuffs.mp3", "Path to the soundfile which should be played for cuffed player.");
+	gc_sSoundBreakCuffsPath = AutoExecConfig_CreateConVar("sm_warden_sounds_breakcuffs", "music/MyJailbreak/breakcuffs.mp3", "Path to the soundfile which should be played for break cuffs.");
+	gc_sSoundUnLockCuffsPath = AutoExecConfig_CreateConVar("sm_warden_sounds_unlock", "music/MyJailbreak/unlock.mp3", "Path to the soundfile which should be played for unlocking cuffs.");
 	
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
@@ -355,11 +398,18 @@ public void OnPluginStart()
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundStopPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundCuffsPath, OnSettingChanged);
+	HookConVarChange(gc_sSoundBreakCuffsPath, OnSettingChanged);
+	HookConVarChange(gc_sSoundUnLockCuffsPath, OnSettingChanged);
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sOverlayStopPath, OnSettingChanged);
 	HookConVarChange(gc_sOverlayCuffsPath, OnSettingChanged);
 	HookConVarChange(gc_sIconPath, OnSettingChanged);
-	HookConVarChange(gc_sCustomCommand, OnSettingChanged);
+	HookConVarChange(gc_sAdminFlagBackstab, OnSettingChanged);
+	HookConVarChange(gc_sAdminFlagBulletSparks, OnSettingChanged);
+	HookConVarChange(gc_sAdminFlagLaser, OnSettingChanged);
+	HookConVarChange(gc_sAdminFlagDrawer, OnSettingChanged);
+	HookConVarChange(gc_sAdminFlagMute, OnSettingChanged);
+	HookConVarChange(gc_sAdminFlagCuffs, OnSettingChanged);
 	
 	//FindConVar
 	g_bMenuClose = FindConVar("sm_menu_close");
@@ -370,12 +420,20 @@ public void OnPluginStart()
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 	gc_sSoundStopPath.GetString(g_sSoundStopPath, sizeof(g_sSoundStopPath));
 	gc_sSoundCuffsPath.GetString(g_sSoundCuffsPath, sizeof(g_sSoundCuffsPath));
+	gc_sSoundBreakCuffsPath.GetString(g_sSoundBreakCuffsPath, sizeof(g_sSoundBreakCuffsPath));
+	gc_sSoundUnLockCuffsPath.GetString(g_sSoundUnLockCuffsPath, sizeof(g_sSoundUnLockCuffsPath));
 	gc_sModelPath.GetString(g_sWardenModel, sizeof(g_sWardenModel));
 	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
 	gc_sOverlayCuffsPath.GetString(g_sOverlayCuffsPath , sizeof(g_sOverlayCuffsPath));
 	gc_sOverlayStopPath.GetString(g_sOverlayStopPath , sizeof(g_sOverlayStopPath));
 	gc_sIconPath.GetString(g_sIconPath , sizeof(g_sIconPath));
 	gc_sCustomCommand.GetString(g_sCustomCommand , sizeof(g_sCustomCommand));
+	gc_sAdminFlagBackstab.GetString(g_sAdminFlagBackstab , sizeof(g_sAdminFlagBackstab));
+	gc_sAdminFlagLaser.GetString(g_sAdminFlagLaser , sizeof(g_sAdminFlagLaser));
+	gc_sAdminFlagDrawer.GetString(g_sAdminFlagDrawer , sizeof(g_sAdminFlagDrawer));
+	gc_sAdminFlagCuffs.GetString(g_sAdminFlagCuffs , sizeof(g_sAdminFlagCuffs));
+	gc_sAdminFlagMute.GetString(g_sAdminFlagMute , sizeof(g_sAdminFlagMute));
+	gc_sAdminFlagBulletSparks.GetString(g_sAdminFlagBulletSparks , sizeof(g_sAdminFlagBulletSparks));
 	
 	g_iCollisionOffset = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
 	
@@ -433,6 +491,16 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 		strcopy(g_sSoundCuffsPath, sizeof(g_sSoundCuffsPath), newValue);
 		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundCuffsPath);
 	}
+	else if(convar == gc_sSoundBreakCuffsPath)
+	{
+		strcopy(g_sSoundBreakCuffsPath, sizeof(g_sSoundBreakCuffsPath), newValue);
+		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundBreakCuffsPath);
+	}
+	else if(convar == gc_sSoundUnLockCuffsPath)
+	{
+		strcopy(g_sSoundUnLockCuffsPath, sizeof(g_sSoundUnLockCuffsPath), newValue);
+		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundUnLockCuffsPath);
+	}
 	else if(convar == gc_sOverlayStartPath)
 	{
 		strcopy(g_sOverlayStart, sizeof(g_sOverlayStart), newValue);
@@ -457,6 +525,30 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 	{
 		strcopy(g_sIconPath, sizeof(g_sIconPath), newValue);
 		if(gc_bIcon.BoolValue) PrecacheModelAnyDownload(g_sIconPath);
+	}
+	else if(convar == gc_sAdminFlagBackstab)
+	{
+		strcopy(g_sAdminFlagBackstab, sizeof(g_sAdminFlagBackstab), newValue);
+	}
+	else if(convar == gc_sAdminFlagBulletSparks)
+	{
+		strcopy(g_sAdminFlagBulletSparks, sizeof(g_sAdminFlagBulletSparks), newValue);
+	}
+	else if(convar == gc_sAdminFlagLaser)
+	{
+		strcopy(g_sAdminFlagLaser, sizeof(g_sAdminFlagLaser), newValue);
+	}
+	else if(convar == gc_sAdminFlagDrawer)
+	{
+		strcopy(g_sAdminFlagDrawer, sizeof(g_sAdminFlagDrawer), newValue);
+	}
+	else if(convar == gc_sAdminFlagMute)
+	{
+		strcopy(g_sAdminFlagMute, sizeof(g_sAdminFlagMute), newValue);
+	}
+	else if(convar == gc_sAdminFlagCuffs)
+	{
+		strcopy(g_sAdminFlagCuffs, sizeof(g_sAdminFlagCuffs), newValue);
 	}
 	else if(convar == gc_sCustomCommand)
 	{
@@ -503,6 +595,8 @@ public void OnMapStart()
 		PrecacheSoundAnyDownload(g_sSoundStopPath);
 		PrecacheSoundAnyDownload(g_sSoundStartPath);
 		PrecacheSoundAnyDownload(g_sSoundCuffsPath);
+		PrecacheSoundAnyDownload(g_sSoundBreakCuffsPath);
+		PrecacheSoundAnyDownload(g_sSoundUnLockCuffsPath);
 	}	
 	g_iVoteCount = 0;
 	PrecacheModel(g_sWardenModel);
@@ -602,11 +696,17 @@ public void RoundStart(Event event, const char[] name, bool dontBroadcast)
 	{
 		SpawnIcon(g_iWarden);
 		if(gc_bModel.BoolValue) SetEntityModel(g_iWarden, g_sWardenModel);
-		if (gc_bHandCuff.BoolValue) GivePlayerItem(g_iWarden, "weapon_taser");
+		if (gc_bHandCuff.BoolValue && !IsLR) GivePlayerItem(g_iWarden, "weapon_taser");
 	}
 	g_bAllowDrop = true;
+	IsLR = false;
 	g_iCuffed = 0;
-	LoopClients(i) g_iPlayerHandCuffs[i] = gc_iHandCuffsNumber.IntValue;
+	LoopClients(i)
+	{
+		g_iPlayerHandCuffs[i] = gc_iHandCuffsNumber.IntValue;
+		g_iBackstabNumber[i] = gc_iBackstabNumber.IntValue;
+		g_iExtendNumber[i] = gc_iExtendLimit.IntValue;
+	}
 	CreateTimer (gc_fAllowDropTime.FloatValue, AllowDropTimer);
 }
 
@@ -628,6 +728,7 @@ public void RoundEnd(Event event, const char[] name, bool dontBroadcast)
 	if (StartTimer != null) KillTimer(StartTimer);
 	if (StartStopTimer != null) KillTimer(StartStopTimer);
 	g_bDrawerT = false;
+	IsLR = false;
 	LoopClients(i)
 	{
 		CancelCountDown(i, 0);
@@ -857,7 +958,7 @@ public int SetWardenHandler(Menu menu, MenuAction action, int client, int Positi
 							EmitSoundToAllAny(g_sWarden);
 						}
 						CreateTimer(1.0, Timer_WardenFixColor, i, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
-						if (gc_bHandCuff.BoolValue) GivePlayerItem(i, "weapon_taser");
+						if (gc_bHandCuff.BoolValue && !IsLR) GivePlayerItem(i, "weapon_taser");
 						SpawnIcon(i);
 						GetEntPropString(i, Prop_Data, "m_ModelName", g_sModelPath, sizeof(g_sModelPath));
 						if(gc_bModel.BoolValue)
@@ -915,7 +1016,7 @@ public int m_WardenOverwrite(Menu menu, MenuAction action, int client, int Posit
 			RemoveIcon(g_iWarden);
 			g_iWarden = newwarden;
 			CreateTimer(1.0, Timer_WardenFixColor, newwarden, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
-			if (gc_bHandCuff.BoolValue) GivePlayerItem(newwarden, "weapon_taser");
+			if (gc_bHandCuff.BoolValue && !IsLR) GivePlayerItem(newwarden, "weapon_taser");
 			SpawnIcon(newwarden);
 			GetEntPropString(newwarden, Prop_Data, "m_ModelName", g_sModelPath, sizeof(g_sModelPath));
 			if(gc_bModel.BoolValue)
@@ -960,12 +1061,13 @@ public Action Timer_WardenFixColor(Handle timer,any client)
 		if(IsClientWarden(client))
 		{
 			if(gc_bPlugin.BoolValue)
-			{ 
+			{
 				if(gc_bColor.BoolValue)
 				{
 					if(gc_bWardenColorRandom.BoolValue)
 					{
-						SetEntityRenderColor(client, GetRandomInt(0, 255), GetRandomInt(0, 255), GetRandomInt(0, 255), 255);
+						int i = GetRandomInt(1, 7);
+						SetEntityRenderColor(client, g_iColors[i][0], g_iColors[i][1], g_iColors[i][2], g_iColors[i][3]);
 					}
 					else SetEntityRenderColor(client, gc_iWardenColorRed.IntValue, gc_iWardenColorGreen.IntValue, gc_iWardenColorBlue.IntValue, 255);
 				}
@@ -1021,7 +1123,11 @@ public void OnClientDisconnect(int client)
 		g_iWarden = -1;
 		g_bDrawerT = false;
 	}
-	if(g_bCuffed[client]) g_iCuffed--;
+	if(g_bCuffed[client])
+	{
+		g_iCuffed--;
+		
+	}
 	g_iLastButtons[client] = 0;
 }
 
@@ -1043,6 +1149,7 @@ public Action EventPlayerTeam(Event event, const char[] name, bool dontBroadcast
 		Call_StartForward(gF_OnWardenDisconnected);
 		Call_PushCell(client);
 		Call_Finish();
+		CreateTimer( 0.1, RemoveColor, client);
 		
 		if (RandomTimer != null)
 		KillTimer(RandomTimer);
@@ -1072,7 +1179,7 @@ void SetTheWarden(int client)
 			PrintCenterTextAll("%t", "warden_new_nc", client);
 		}
 		g_iWarden = client;
-		if (gc_bHandCuff.BoolValue) GivePlayerItem(client, "weapon_taser");
+		if (gc_bHandCuff.BoolValue && !IsLR) GivePlayerItem(client, "weapon_taser");
 		CreateTimer(1.0, Timer_WardenFixColor, client, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 		SpawnIcon(client);
 		GetEntPropString(client, Prop_Data, "m_ModelName", g_sModelPath, sizeof(g_sModelPath));
@@ -1623,7 +1730,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 		}
 		if((buttons & IN_USE))
 		{
-			if (gc_bLaser.BoolValue)
+			if (gc_bLaser.BoolValue && CheckVipFlag(client,g_sAdminFlagLaser))
 			{
 				if (g_bLaser)
 				{
@@ -1649,7 +1756,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 			g_bLaserUse[client] = false;
 		}
 	}
-	if (((client == g_iWarden) && gc_bDrawer.BoolValue && g_bDrawer[client]) || ((GetClientTeam(client) == CS_TEAM_T) && gc_bDrawer.BoolValue && g_bDrawerT))
+	if (((client == g_iWarden) && gc_bDrawer.BoolValue && g_bDrawer[client] && CheckVipFlag(client,g_sAdminFlagDrawer)) || ((GetClientTeam(client) == CS_TEAM_T) && gc_bDrawer.BoolValue && g_bDrawerT))
 	{
 		for (int i = 0; i < MAX_BUTTONS; i++)
 		{
@@ -1678,35 +1785,39 @@ public Action LaserMenu(int client, int args)
 	{
 		if (client == g_iWarden)
 		{
-			char menuinfo[255];
-			
-			Menu menu = new Menu(LaserHandler);
-			Format(menuinfo, sizeof(menuinfo), "%T", "warden_laser_title", client);
-			menu.SetTitle(menuinfo);
-			Format(menuinfo, sizeof(menuinfo), "%T", "warden_laser_off", client);
-			menu.AddItem("off", menuinfo);
-			Format(menuinfo, sizeof(menuinfo), "%T", "warden_rainbow", client);
-			menu.AddItem("rainbow", menuinfo);
-			Format(menuinfo, sizeof(menuinfo), "%T", "warden_white", client);
-			menu.AddItem("white", menuinfo);
-			Format(menuinfo, sizeof(menuinfo), "%T", "warden_red", client);
-			menu.AddItem("red", menuinfo);
-			Format(menuinfo, sizeof(menuinfo), "%T", "warden_green", client);
-			menu.AddItem("green", menuinfo);
-			Format(menuinfo, sizeof(menuinfo), "%T", "warden_blue", client);
-			menu.AddItem("blue", menuinfo);
-			Format(menuinfo, sizeof(menuinfo), "%T", "warden_yellow", client);
-			menu.AddItem("yellow", menuinfo);
-			Format(menuinfo, sizeof(menuinfo), "%T", "warden_cyan", client);
-			menu.AddItem("cyan", menuinfo);
-			Format(menuinfo, sizeof(menuinfo), "%T", "warden_magenta", client);
-			menu.AddItem("magenta", menuinfo);
-			Format(menuinfo, sizeof(menuinfo), "%T", "warden_orange", client);
-			menu.AddItem("orange", menuinfo);
-			
-			menu.ExitBackButton = true;
-			menu.ExitButton = true;
-			menu.Display(client, 20);
+			if(CheckVipFlag(client,g_sAdminFlagLaser))
+			{
+				char menuinfo[255];
+				
+				Menu menu = new Menu(LaserHandler);
+				Format(menuinfo, sizeof(menuinfo), "%T", "warden_laser_title", client);
+				menu.SetTitle(menuinfo);
+				Format(menuinfo, sizeof(menuinfo), "%T", "warden_laser_off", client);
+				menu.AddItem("off", menuinfo);
+				Format(menuinfo, sizeof(menuinfo), "%T", "warden_rainbow", client);
+				menu.AddItem("rainbow", menuinfo);
+				Format(menuinfo, sizeof(menuinfo), "%T", "warden_white", client);
+				menu.AddItem("white", menuinfo);
+				Format(menuinfo, sizeof(menuinfo), "%T", "warden_red", client);
+				menu.AddItem("red", menuinfo);
+				Format(menuinfo, sizeof(menuinfo), "%T", "warden_green", client);
+				menu.AddItem("green", menuinfo);
+				Format(menuinfo, sizeof(menuinfo), "%T", "warden_blue", client);
+				menu.AddItem("blue", menuinfo);
+				Format(menuinfo, sizeof(menuinfo), "%T", "warden_yellow", client);
+				menu.AddItem("yellow", menuinfo);
+				Format(menuinfo, sizeof(menuinfo), "%T", "warden_cyan", client);
+				menu.AddItem("cyan", menuinfo);
+				Format(menuinfo, sizeof(menuinfo), "%T", "warden_magenta", client);
+				menu.AddItem("magenta", menuinfo);
+				Format(menuinfo, sizeof(menuinfo), "%T", "warden_orange", client);
+				menu.AddItem("orange", menuinfo);
+				
+				menu.ExitBackButton = true;
+				menu.ExitButton = true;
+				menu.Display(client, 20);
+			}
+			else CPrintToChat(client, "%t %t", "warden_tag", "warden_vipfeature");
 		}
 		else CPrintToChat(client, "%t %t", "warden_tag", "warden_notwarden" );
 	}
@@ -1827,41 +1938,45 @@ if (action == MenuAction_Select)
 
 public Action DrawerMenu(int client, int args)
 {
-	if(gc_bDrawer.BoolValue)
+	if(gc_bDrawer.BoolValue && CheckVipFlag(client,g_sAdminFlagDrawer))
 	{
-		if ((client == g_iWarden) || ((GetClientTeam(client) == CS_TEAM_T) && gc_bDrawer.BoolValue && g_bDrawerT))
+		if ((client == g_iWarden) || ((GetClientTeam(client) == CS_TEAM_T) && g_bDrawerT))
 		{
-			char menuinfo[255];
-			
-			Menu menu = new Menu(DrawerHandler);
-			Format(menuinfo, sizeof(menuinfo), "%T", "warden_drawer_title", client);
-			menu.SetTitle(menuinfo);
-			Format(menuinfo, sizeof(menuinfo), "%T", "warden_drawer_off", client);
-			menu.AddItem("off", menuinfo);
-			Format(menuinfo, sizeof(menuinfo), "%T", "warden_drawert", client);
-			if (GetClientTeam(client) == CS_TEAM_CT) menu.AddItem("terror", menuinfo);
-			Format(menuinfo, sizeof(menuinfo), "%T", "warden_rainbow", client);
-			menu.AddItem("rainbow", menuinfo);
-			Format(menuinfo, sizeof(menuinfo), "%T", "warden_white", client);
-			menu.AddItem("white", menuinfo);
-			Format(menuinfo, sizeof(menuinfo), "%T", "warden_red", client);
-			menu.AddItem("red", menuinfo);
-			Format(menuinfo, sizeof(menuinfo), "%T", "warden_green", client);
-			menu.AddItem("green", menuinfo);
-			Format(menuinfo, sizeof(menuinfo), "%T", "warden_blue", client);
-			menu.AddItem("blue", menuinfo);
-			Format(menuinfo, sizeof(menuinfo), "%T", "warden_yellow", client);
-			menu.AddItem("yellow", menuinfo);
-			Format(menuinfo, sizeof(menuinfo), "%T", "warden_cyan", client);
-			menu.AddItem("cyan", menuinfo);
-			Format(menuinfo, sizeof(menuinfo), "%T", "warden_magenta", client);
-			menu.AddItem("magenta", menuinfo);
-			Format(menuinfo, sizeof(menuinfo), "%T", "warden_orange", client);
-			menu.AddItem("orange", menuinfo);
-			
-			menu.ExitBackButton = true;
-			menu.ExitButton = true;
-			menu.Display(client, 20);
+			if(CheckVipFlag(client,g_sAdminFlagDrawer) || (GetClientTeam(client) == CS_TEAM_T))
+			{
+				char menuinfo[255];
+				
+				Menu menu = new Menu(DrawerHandler);
+				Format(menuinfo, sizeof(menuinfo), "%T", "warden_drawer_title", client);
+				menu.SetTitle(menuinfo);
+				Format(menuinfo, sizeof(menuinfo), "%T", "warden_drawer_off", client);
+				menu.AddItem("off", menuinfo);
+				Format(menuinfo, sizeof(menuinfo), "%T", "warden_drawert", client);
+				if (GetClientTeam(client) == CS_TEAM_CT) menu.AddItem("terror", menuinfo);
+				Format(menuinfo, sizeof(menuinfo), "%T", "warden_rainbow", client);
+				menu.AddItem("rainbow", menuinfo);
+				Format(menuinfo, sizeof(menuinfo), "%T", "warden_white", client);
+				menu.AddItem("white", menuinfo);
+				Format(menuinfo, sizeof(menuinfo), "%T", "warden_red", client);
+				menu.AddItem("red", menuinfo);
+				Format(menuinfo, sizeof(menuinfo), "%T", "warden_green", client);
+				menu.AddItem("green", menuinfo);
+				Format(menuinfo, sizeof(menuinfo), "%T", "warden_blue", client);
+				menu.AddItem("blue", menuinfo);
+				Format(menuinfo, sizeof(menuinfo), "%T", "warden_yellow", client);
+				menu.AddItem("yellow", menuinfo);
+				Format(menuinfo, sizeof(menuinfo), "%T", "warden_cyan", client);
+				menu.AddItem("cyan", menuinfo);
+				Format(menuinfo, sizeof(menuinfo), "%T", "warden_magenta", client);
+				menu.AddItem("magenta", menuinfo);
+				Format(menuinfo, sizeof(menuinfo), "%T", "warden_orange", client);
+				menu.AddItem("orange", menuinfo);
+				
+				menu.ExitBackButton = true;
+				menu.ExitButton = true;
+				menu.Display(client, 20);
+			}
+			else CPrintToChat(client, "%t %t", "warden_tag", "warden_vipfeature");
 		}
 	}
 	return Plugin_Handled;
@@ -2091,8 +2206,6 @@ public bool TraceEntityFilterPlayer(int entity, int contentsMask) {
 }
 
 //Icon
-
-
 
 stock int SpawnIcon(int client) 
 {
@@ -2481,7 +2594,7 @@ public Action StopCountdown( Handle timer, any client )
 		{
 			PrintHintText(client, "%t", "warden_countdownstop_nc");
 			CPrintToChatAll("%t %t", "warden_tag" , "warden_countdownstop");
-
+			
 			if(gc_bOverlays.BoolValue)
 			{
 				CreateTimer( 0.0, ShowOverlayStop, client);
@@ -2616,7 +2729,8 @@ public Action ToggleFF(int client, int args)
 				CPrintToChatAll("%t %t", "warden_tag", "warden_ffisoff" );
 			}else CPrintToChatAll("%t %t", "warden_tag", "warden_ffison" );
 			
-		}else
+		}
+		else
 		{	
 			if (client == g_iWarden)
 			{
@@ -2782,7 +2896,7 @@ public Action BulletImpact(Handle hEvent, char [] sName, bool bDontBroadcast)
 {
 	int iClient = GetClientOfUserId(GetEventInt(hEvent, "userid"));
 	
-	if (!gc_bPlugin.BoolValue || !gc_bBulletSparks || !warden_iswarden(iClient) || !g_bBulletSparks[iClient])
+	if (!gc_bPlugin.BoolValue || !gc_bBulletSparks.BoolValue || !warden_iswarden(iClient) || !g_bBulletSparks[iClient] || !CheckVipFlag(iClient,g_sAdminFlagBulletSparks))
 		return Plugin_Continue;
 	
 	float startpos[3];
@@ -2806,15 +2920,18 @@ public Action BulletSparks(int client, int args)
 		{
 			if (client == g_iWarden)
 			{
-				if (!g_bBulletSparks[client])
+				if(CheckVipFlag(client,g_sAdminFlagBulletSparks))
 				{
-					g_bBulletSparks[client] = true;
-					CPrintToChat(client, "%t %t", "warden_tag" , "warden_bulletmarkon");
-				}
-				else if (g_bBulletSparks[client])
-				{
-					g_bBulletSparks[client] = false;
-					CPrintToChat(client, "%t %t", "warden_tag" , "warden_bulletmarkoff");
+					if (!g_bBulletSparks[client])
+					{
+						g_bBulletSparks[client] = true;
+						CPrintToChat(client, "%t %t", "warden_tag" , "warden_bulletmarkon");
+					}
+					else if (g_bBulletSparks[client])
+					{
+						g_bBulletSparks[client] = false;
+						CPrintToChat(client, "%t %t", "warden_tag" , "warden_bulletmarkoff");
+					}
 				}
 			}
 			else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden"); 
@@ -2933,7 +3050,7 @@ public Action CS_OnCSWeaponDrop(int client, int weapon)
 		{
 			if(GetClientTeam(client) == CS_TEAM_CT)
 			{
-				if(!g_bAllowDrop)
+				if(!g_bAllowDrop && !IsClientInLastRequest(client))
 				{
 					if (g_bWeaponDropped[client]) 
 						return Plugin_Handled;
@@ -3019,10 +3136,11 @@ public int OnAvailableLR(int Announced)
 {
 	LoopClients(i)
 	{
+		IsLR = true;
 		if(gc_bHandCuffLR.BoolValue && g_bCuffed[i]) FreeEm(i, 0);
 		g_iPlayerHandCuffs[i] = 0;
 		if(i == g_iWarden) StripZeus(i);
-		if(IsMuted[i]) UnMuteClient(i);
+		if(IsMuted[i] && IsPlayerAlive(i)) UnMuteClient(i);
 	}
 	g_bAllowDrop = true;
 }
@@ -3121,7 +3239,7 @@ public Action MuteMenuPlayer(int client,int args)
 			menu5.SetTitle(info1);
 			LoopValidClients(i,true,true)
 			{
-				if(GetClientTeam(i) == CS_TEAM_T)
+				if((GetClientTeam(i) == CS_TEAM_T) && !CheckVipFlag(i,g_sAdminFlagMute))
 				{
 					char userid[11];
 					char username[MAX_NAME_LENGTH];
@@ -3385,15 +3503,37 @@ public Action OnTakedamage(int victim, int &attacker, int &inflictor, float &dam
 {
 	if(!IsValidClient(victim, true, false) || attacker == victim || !IsValidClient(attacker, true, false)) return Plugin_Continue;
 	
+	char sWeapon[32];
+	if(IsValidEntity(weapon)) GetEntityClassname(weapon, sWeapon, sizeof(sWeapon));
+	
+	//Backstab protection
+	
+	if(gc_bBackstab.BoolValue && IsClientInGame(attacker) && IsClientWarden(victim) && !IsClientInLastRequest(victim) && CheckVipFlag(victim,g_sAdminFlagBackstab))
+	{
+		if((StrEqual(sWeapon, "weapon_knife", false)) && (damage > 99.0))
+		{
+			if (gc_iBackstabNumber.IntValue == 0)
+			{
+				PrintCenterText(attacker,"%t", "warden_backstab");
+				return Plugin_Handled;
+			}
+			else if (g_iBackstabNumber[victim] > 0)
+			{
+				PrintCenterText(attacker,"%t", "warden_backstab");
+				g_iBackstabNumber[victim]--;
+				return Plugin_Handled;
+			}
+		}
+	}
+	
+	//cuffs
+	
 	if(g_bCuffed[attacker]) return Plugin_Handled;
 	
 	if(!gc_bPlugin.BoolValue || !gc_bHandCuff.BoolValue || !warden_iswarden(attacker) || !IsValidEdict(weapon) || (!gc_bHandCuffCT.BoolValue && (GetClientTeam(victim) == CS_TEAM_CT)))
 	{
 		return Plugin_Continue;
 	}
-	
-	char sWeapon[32];
-	GetEntityClassname(weapon, sWeapon, sizeof(sWeapon));
 	
 	if(!StrEqual(sWeapon, "weapon_taser")) return Plugin_Continue;
 	
@@ -3435,12 +3575,59 @@ public Action CuffsEm(int client, int attacker)
 		CreateTimer( 0.5, ShowOverlayCuffs, client);
 		g_iPlayerHandCuffs[attacker]--;
 		g_iCuffed++;
-		EmitSoundToClientAny(client, g_sSoundCuffsPath);
+		if(gc_bSounds)EmitSoundToAllAny(g_sSoundCuffsPath);
 		
 		CPrintToChatAll("%t %t", "warden_tag" , "warden_cuffson", attacker, client);
 		CPrintToChat(attacker, "%t %t", "warden_tag" , "warden_cuffsgot", g_iPlayerHandCuffs[attacker]);
+		if(CheckVipFlag(client,g_sAdminFlagCuffs))
+		{
+			CreateTimer (2.5, HasPaperClip, client);
+		}
+	}
+	
+}
+
+public Action HasPaperClip(Handle timer, int client)
+{
+	if(g_bCuffed[client])
+	{
+		int paperclip = GetRandomInt(1,gc_iPaperClipGetChance.IntValue);
+		float unlocktime = GetRandomFloat(gc_fUnLockTimeMin.FloatValue, gc_fUnLockTimeMax.FloatValue);
+		if(paperclip == 1)
+		{
+			CPrintToChat(client, "you have a paperclip");
+			PrintCenterText(client, "you have a paperclip");
+			CreateTimer (unlocktime, BreakTheseCuffs, client);
+			if(gc_bSounds)EmitSoundToClientAny(client, g_sSoundUnLockCuffsPath);
+		}
 	}
 }
+
+public Action BreakTheseCuffs(Handle timer, int client)
+{
+	if(IsValidClient(client,false,false) && g_bCuffed[client])
+	{
+		int unlocked = GetRandomInt(1,gc_iPaperClipUnLockChance.IntValue);
+		if(unlocked == 1)
+		{
+			CPrintToChat(client, "you have been unlocked");
+			PrintCenterText(client, "you have been unlocked");
+			if(gc_bSounds)EmitSoundToAllAny(g_sSoundBreakCuffsPath);
+			SetEntityMoveType(client, MOVETYPE_WALK);
+			SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
+			SetEntityRenderColor(client, 255, 255, 255, 255);
+			g_bCuffed[client] = false;
+			CreateTimer( 0.0, DeleteOverlay, client );
+			g_iCuffed--;
+		}
+		else
+		{
+			CPrintToChat(client, "you have broke paperclip");
+			PrintCenterText(client, "you have broke paperclip");
+		}
+	}
+}
+
 
 public Action FreeEm(int client, int attacker)
 {
@@ -3450,6 +3637,7 @@ public Action FreeEm(int client, int attacker)
 	g_bCuffed[client] = false;
 	CreateTimer( 0.0, DeleteOverlay, client );
 	g_iCuffed--;
+	if(gc_bSounds)StopSoundAny(client,SNDCHAN_AUTO,g_sSoundUnLockCuffsPath);
 	if((attacker != 0) && (g_iCuffed == 0) && (g_iPlayerHandCuffs[attacker] < 1)) SetPlayerWeaponAmmo(attacker, Client_GetActiveWeapon(attacker), _, 0);
 	if(attacker != 0) CPrintToChatAll("%t %t", "warden_tag" , "warden_cuffsoff", attacker, client);
 }
@@ -3470,27 +3658,33 @@ stock int StripZeus(int client)
 	}
 }
 
+//exend time
+
 public Action ExtendRoundTime(int client, int args)
 {
 	if(gc_bExtend.BoolValue)
 	{
 		if (client == g_iWarden)
 		{
-			char menuinfo[255];
-			
-			Menu menu = new Menu(ExtendRoundTimeHandler);
-			Format(menuinfo, sizeof(menuinfo), "%T", "warden_time_title", client);
-			menu.SetTitle(menuinfo);
-			Format(menuinfo, sizeof(menuinfo), "%T", "warden_120", client);
-			menu.AddItem("120", menuinfo);
-			Format(menuinfo, sizeof(menuinfo), "%T", "warden_180", client);
-			menu.AddItem("180", menuinfo);
-			Format(menuinfo, sizeof(menuinfo), "%T", "warden_300", client);
-			menu.AddItem("300", menuinfo);
-			
-			menu.ExitBackButton = true;
-			menu.ExitButton = true;
-			menu.Display(client, 20);
+			if(g_iExtendNumber[client] > 0)
+			{
+				char menuinfo[255];
+				
+				Menu menu = new Menu(ExtendRoundTimeHandler);
+				Format(menuinfo, sizeof(menuinfo), "%T", "warden_time_title", client);
+				menu.SetTitle(menuinfo);
+				Format(menuinfo, sizeof(menuinfo), "%T", "warden_120", client);
+				menu.AddItem("120", menuinfo);
+				Format(menuinfo, sizeof(menuinfo), "%T", "warden_180", client);
+				menu.AddItem("180", menuinfo);
+				Format(menuinfo, sizeof(menuinfo), "%T", "warden_300", client);
+				menu.AddItem("300", menuinfo);
+				
+				menu.ExitBackButton = true;
+				menu.ExitButton = true;
+				menu.Display(client, 20);
+			}
+			else CPrintToChat(client, "%t %t", "warden_tag", "warden_extendtimes", gc_iExtendLimit.IntValue);
 		}
 		else CPrintToChat(client, "%t %t", "warden_tag", "warden_notwarden" );
 	}
@@ -3523,6 +3717,7 @@ public int ExtendRoundTimeHandler(Menu menu, MenuAction action, int client, int 
 				FakeClientCommand(client, "sm_menu");
 			}
 		}
+		g_iExtendNumber[client]--;
 	}
 	else if(action == MenuAction_Cancel)
 	{

@@ -3,7 +3,7 @@
 #endif
 #define _myjailbreak_included_
 
-#define PLUGIN_VERSION "Beta 3.1"
+#define PLUGIN_VERSION "Beta 4.0"
 #define URL_LINK "https://github.com/shanapu/MyJailbreak"
 
 #include <sdktools>
@@ -33,6 +33,10 @@ native SetEventDay(const char[] name);
 native GetEventDay(char[] CurrentEventDay);
 
 native bool MyJBLogging(bool IsLogging);
+
+native FogOn();
+
+native FogOff();
 
 stock PrecacheDecalAnyDownload(char[] sDecal)
 {
@@ -152,8 +156,18 @@ stock bool IsValidClient(int client, bool bAllowBots = false, bool bAllowDead = 
 	return true;
 }
 
-public NullHandler(Handle:menu, MenuAction:action, param1, param2)
+public NullHandler(Handle menu, MenuAction action, param1, param2)
 {
+	if (action == MenuAction_Select) 
+	{
+		switch (param2) 
+		{
+			default: //cancel
+			{
+				return;
+			}
+		}
+	}
 }
 
 public Action SetLogFile(char LogFile[PLATFORM_MAX_PATH] , char [] FileName)
@@ -188,4 +202,13 @@ stock int GetAliveTeamCount(int team)
 	int number = 0;
 	LoopClients(i) if(IsPlayerAlive(i) && GetClientTeam(i) == team) number++;
 	return number;
+}
+
+stock bool CheckVipFlag(int client, const char[] flagsNeed)
+{
+	if(GetUserFlagBits(client) & ReadFlagString(flagsNeed) == ReadFlagString(flagsNeed))
+	{
+		return true;
+	}
+	else return false;
 }

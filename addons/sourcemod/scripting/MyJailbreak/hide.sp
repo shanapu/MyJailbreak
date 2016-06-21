@@ -35,6 +35,8 @@ ConVar gc_iRounds;
 ConVar gc_iTAgrenades;
 ConVar g_iGetRoundTime;
 ConVar gc_sCustomCommand;
+ConVar g_sOldSkyName;
+ConVar gc_sAdminFlag;
 
 //Integers
 int g_iOldRoundTime;
@@ -45,7 +47,6 @@ int g_iRound;
 int g_iMaxRound;
 int g_iMaxTA;
 int g_iTA[MAXPLAYERS + 1];
-int FogIndex = -1;
 
 //Handles
 Handle FreezeTimer;
@@ -56,11 +57,8 @@ char g_sHasVoted[1500];
 char g_sSoundStartPath[256];
 char g_sCustomCommand[64];
 char g_sEventsLogFile[PLATFORM_MAX_PATH];
-
-//Float
-float mapFogStart = 0.0;
-float mapFogEnd = 150.0;
-float mapFogDensity = 0.99;
+char g_sSkyName[256];
+char g_sAdminFlag[32];
 
 public Plugin myinfo = {
 	name = "MyJailbreak - HideInTheDark",
@@ -88,7 +86,8 @@ public void OnPluginStart()
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_hide_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true,  0.0, true, 1.0);
 	gc_sCustomCommand = AutoExecConfig_CreateConVar("sm_hide_cmd", "seek", "Set your custom chat command for Event voting. no need for sm_ or !");
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_hide_warden", "1", "0 - disabled, 1 - allow warden to set hide round", _, true,  0.0, true, 1.0);
-	gc_bSetA = AutoExecConfig_CreateConVar("sm_hide_admin", "1", "0 - disabled, 1 - allow admin to set hide round", _, true,  0.0, true, 1.0);
+	gc_bSetA = AutoExecConfig_CreateConVar("sm_hide_admin", "1", "0 - disabled, 1 - allow admin/vip to set hide round", _, true,  0.0, true, 1.0);
+	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_hide_flag", "g", "Set flag for admin/vip to set this Event Day.");
 	gc_bVote = AutoExecConfig_CreateConVar("sm_hide_vote", "1", "0 - disabled, 1 - allow player to vote for hide round", _, true,  0.0, true, 1.0);
 	gc_bFreezeHider = AutoExecConfig_CreateConVar("sm_hide_freezehider", "1", "0 - disabled, 1 - enable freeze hider when hidetime gone", _, true,  0.0, true, 1.0);
 	gc_iTAgrenades = AutoExecConfig_CreateConVar("sm_hide_tagrenades", "3", "how many tagrenades a guard have?", _, true, 1.0);
@@ -112,6 +111,7 @@ public void OnPluginStart()
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
 	HookConVarChange(gc_sCustomCommand, OnSettingChanged);
+	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
 	
 	//FindConVar
 	g_iGetRoundTime = FindConVar("mp_roundtime");
@@ -120,6 +120,7 @@ public void OnPluginStart()
 	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 	gc_sCustomCommand.GetString(g_sCustomCommand , sizeof(g_sCustomCommand));
+	gc_sAdminFlag.GetString(g_sAdminFlag , sizeof(g_sAdminFlag));
 	
 	SetLogFile(g_sEventsLogFile, "Events");
 }
@@ -137,6 +138,10 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 	{
 		strcopy(g_sSoundStartPath, sizeof(g_sSoundStartPath), newValue);
 		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
+	}
+	else if(convar == gc_sAdminFlag)
+	{
+		strcopy(g_sAdminFlag, sizeof(g_sAdminFlag), newValue);
 	}
 	else if(convar == gc_sCustomCommand)
 	{
@@ -160,25 +165,13 @@ public void OnMapStart()
 	
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
+	g_sOldSkyName = FindConVar("sv_skyname");
+	g_sOldSkyName.GetString(g_sSkyName, sizeof(g_sSkyName));
 	
 	if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStart);
 	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
 	
 	for(int client=1; client <= MaxClients; client++) g_iTA[client] = 0;
-	
-	int ent; 
-	ent = FindEntityByClassname(-1, "env_fog_controller");
-	if (ent != -1) 
-	{
-		FogIndex = ent;
-	}
-	else
-	{
-		FogIndex += CreateEntityByName("env_fog_controller");
-		if (FogIndex != -1) DispatchSpawn(FogIndex);
-	}
-	DoFog();
-	AcceptEntityInput(FogIndex, "TurnOff");
 }
 
 public void OnConfigsExecuted()
@@ -224,31 +217,31 @@ public Action SetHide(int client,int args)
 				}
 				else CPrintToChat(client, "%t %t", "hide_tag" , "hide_setbywarden");
 			}
-			else if (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
+			else if (CheckVipFlag(client,g_sAdminFlag))
+			{
+				if (gc_bSetA.BoolValue)
 				{
-					if (gc_bSetA.BoolValue)
+					if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
 					{
-						if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
+						char EventDay[64];
+						GetEventDay(EventDay);
+						
+						if(StrEqual(EventDay, "none", false))
 						{
-							char EventDay[64];
-							GetEventDay(EventDay);
-							
-							if(StrEqual(EventDay, "none", false))
+							if (g_iCoolDown == 0)
 							{
-								if (g_iCoolDown == 0)
-								{
-									StartNextRound();
-									if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Hide was started by admin %L", client);
-								}
-								else CPrintToChat(client, "%t %t", "hide_tag" , "hide_wait", g_iCoolDown);
+								StartNextRound();
+								if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Hide was started by admin %L", client);
 							}
-							else CPrintToChat(client, "%t %t", "hide_tag" , "hide_progress" , EventDay);
+							else CPrintToChat(client, "%t %t", "hide_tag" , "hide_wait", g_iCoolDown);
 						}
-						else CPrintToChat(client, "%t %t", "hide_tag" , "hide_minplayer");
+						else CPrintToChat(client, "%t %t", "hide_tag" , "hide_progress" , EventDay);
 					}
-					else CPrintToChat(client, "%t %t", "hide_tag" , "hide_setbyadmin");
+					else CPrintToChat(client, "%t %t", "hide_tag" , "hide_minplayer");
 				}
-				else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
+				else CPrintToChat(client, "%t %t", "hide_tag" , "hide_setbyadmin");
+			}
+			else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
 		}
 		else CPrintToChat(client, "%t %t", "hide_tag" , "hide_disabled");
 }
@@ -321,11 +314,9 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 	canSet = true;
 	if (StartHide || IsHide)
 	{
-		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
-		
-		
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_warden_enable", 0);
+		SetCvarString("sv_skyname", "cs_baggage_skybox_");
 		SetCvar("sm_weapons_t", 0);
 		SetCvar("sm_weapons_ct", 0);
 		SetCvar("sm_menu_enable", 0);
@@ -333,52 +324,32 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		g_iRound++;
 		StartHide = false;
 		SJD_OpenDoors();
+		FogOn();
 		
 		if (g_iRound > 0)
+		{
+			LoopClients(client)
 			{
-				LoopClients(client)
+				CreateInfoPanel(client);
+				
+				if (GetClientTeam(client) == CS_TEAM_CT)
 				{
-					HideMenu = CreatePanel();
-					Format(info1, sizeof(info1), "%T", "hide_info_title", client);
-					SetPanelTitle(HideMenu, info1);
-					DrawPanelText(HideMenu, "                                   ");
-					Format(info2, sizeof(info2), "%T", "hide_info_line1", client);
-					DrawPanelText(HideMenu, info2);
-					DrawPanelText(HideMenu, "-----------------------------------");
-					Format(info3, sizeof(info3), "%T", "hide_info_line2", client);
-					DrawPanelText(HideMenu, info3);
-					Format(info4, sizeof(info4), "%T", "hide_info_line3", client);
-					DrawPanelText(HideMenu, info4);
-					Format(info5, sizeof(info5), "%T", "hide_info_line4", client);
-					DrawPanelText(HideMenu, info5);
-					Format(info6, sizeof(info6), "%T", "hide_info_line5", client);
-					DrawPanelText(HideMenu, info6);
-					Format(info7, sizeof(info7), "%T", "hide_info_line6", client);
-					DrawPanelText(HideMenu, info7);
-					Format(info8, sizeof(info8), "%T", "hide_info_line7", client);
-					DrawPanelText(HideMenu, info8);
-					DrawPanelText(HideMenu, "-----------------------------------");
-					SendPanelToClient(HideMenu, client, NullHandler, 20);
-					
-					if (GetClientTeam(client) == CS_TEAM_CT)
-					{
-						StripAllWeapons(client);
-						SetEntityMoveType(client, MOVETYPE_NONE);
-						GivePlayerItem(client, "weapon_tagrenade");
-						SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
-						GivePlayerItem(client, "weapon_knife");
-					}
-					if (GetClientTeam(client) == CS_TEAM_T)
-					{
-						StripAllWeapons(client);
-						SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
-						GivePlayerItem(client, "weapon_knife");
-					}
+					StripAllWeapons(client);
+					SetEntityMoveType(client, MOVETYPE_NONE);
+					GivePlayerItem(client, "weapon_tagrenade");
+					SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
+					GivePlayerItem(client, "weapon_knife");
 				}
-				g_iFreezeTime--;
-				FreezeTimer = CreateTimer(1.0, StartTimer, _, TIMER_REPEAT);
+				if (GetClientTeam(client) == CS_TEAM_T)
+				{
+					StripAllWeapons(client);
+					SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
+					GivePlayerItem(client, "weapon_knife");
+				}
 			}
-		{AcceptEntityInput(FogIndex, "TurnOn");}
+			g_iFreezeTime--;
+			FreezeTimer = CreateTimer(1.0, StartTimer, _, TIMER_REPEAT);
+		}
 	}
 	else
 	{
@@ -393,6 +364,35 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 	}
 }
 
+stock void CreateInfoPanel(int client)
+{
+	//Create info Panel
+	char info[255];
+
+	HideMenu = CreatePanel();
+	Format(info, sizeof(info), "%T", "hide_info_title", client);
+	SetPanelTitle(HideMenu, info);
+	DrawPanelText(HideMenu, "                                   ");
+	Format(info, sizeof(info), "%T", "hide_info_line1", client);
+	DrawPanelText(HideMenu, info);
+	DrawPanelText(HideMenu, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "hide_info_line2", client);
+	DrawPanelText(HideMenu, info);
+	Format(info, sizeof(info), "%T", "hide_info_line3", client);
+	DrawPanelText(HideMenu, info);
+	Format(info, sizeof(info), "%T", "hide_info_line4", client);
+	DrawPanelText(HideMenu, info);
+	Format(info, sizeof(info), "%T", "hide_info_line5", client);
+	DrawPanelText(HideMenu, info);
+	Format(info, sizeof(info), "%T", "hide_info_line6", client);
+	DrawPanelText(HideMenu, info);
+	Format(info, sizeof(info), "%T", "hide_info_line7", client);
+	DrawPanelText(HideMenu, info);
+	DrawPanelText(HideMenu, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "warden_close", client);
+	DrawPanelItem(HideMenu, info); 
+	SendPanelToClient(HideMenu, client, NullHandler, 20);
+}
 //Start Timer
 
 public Action StartTimer(Handle timer)
@@ -478,17 +478,19 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 			SetCvar("sm_hosties_lr", 1);
 			SetCvar("sm_weapons_t", 0);
 			SetCvar("sm_weapons_ct", 1);
+			SetCvarString("sv_skyname", g_sSkyName);
 			SetCvar("sm_warden_enable", 1);
 			SetCvar("sm_menu_enable", 1);
 			g_iGetRoundTime.IntValue = g_iOldRoundTime;
 			SetEventDay("none");
 			CPrintToChatAll("%t %t", "hide_tag" , "hide_end");
-			DoFog();
-			AcceptEntityInput(FogIndex, "TurnOff");
+			
+			FogOff();
 		}
 	}
 	if (StartHide)
 	{
+		LoopClients(i) CreateInfoPanel(i);
 		g_iOldRoundTime = g_iGetRoundTime.IntValue;
 		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;
 		
@@ -568,19 +570,4 @@ public void OnTagrenadeDetonate(Handle event, const char[] name, bool dontBroadc
 		else CPrintToChat(target,"%t %t", "hide_tag" , "hide_nota");
 	}
 	return;
-}
-
-//Darken the Map
-
-public Action DoFog()
-{
-	if(FogIndex != -1)
-	{
-		DispatchKeyValue(FogIndex, "fogblend", "0");
-		DispatchKeyValue(FogIndex, "fogcolor", "0 0 0");
-		DispatchKeyValue(FogIndex, "fogcolor2", "0 0 0");
-		DispatchKeyValueFloat(FogIndex, "fogstart", mapFogStart);
-		DispatchKeyValueFloat(FogIndex, "fogend", mapFogEnd);
-		DispatchKeyValueFloat(FogIndex, "fogmaxdensity", mapFogDensity);
-	}
 }

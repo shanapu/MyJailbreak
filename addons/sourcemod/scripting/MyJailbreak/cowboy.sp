@@ -37,6 +37,7 @@ ConVar gc_bSounds;
 ConVar gc_sSoundStartPath;
 ConVar gc_iRounds;
 ConVar gc_sCustomCommand;
+ConVar gc_sAdminFlag;
 
 //Integers
 int g_iOldRoundTime;
@@ -59,6 +60,7 @@ char g_sSoundStartPath[256];
 char g_sWeapon[32];
 char g_sCustomCommand[64];
 char g_sEventsLogFile[PLATFORM_MAX_PATH];
+char g_sAdminFlag[32];
 
 public Plugin myinfo = {
 	name = "MyJailbreak - CowBoy",
@@ -87,7 +89,8 @@ public void OnPluginStart()
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_cowboy_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true,  0.0, true, 1.0);
 	gc_sCustomCommand = AutoExecConfig_CreateConVar("sm_cowboy_cmd", "scope", "Set your custom chat command for Event voting. no need for sm_ or !");
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_cowboy_warden", "1", "0 - disabled, 1 - allow warden to set cowboy round", _, true,  0.0, true, 1.0);
-	gc_bSetA = AutoExecConfig_CreateConVar("sm_cowboy_admin", "1", "0 - disabled, 1 - allow admin to set cowboy round", _, true,  0.0, true, 1.0);
+	gc_bSetA = AutoExecConfig_CreateConVar("sm_cowboy_admin", "1", "0 - disabled, 1 - allow admin/vip to set cowboy round", _, true,  0.0, true, 1.0);
+	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_cowboy_flag", "g", "Set flag for admin/vip to set this Event Day.");
 	gc_bVote = AutoExecConfig_CreateConVar("sm_cowboy_vote", "1", "0 - disabled, 1 - allow player to vote for cowboy", _, true,  0.0, true, 1.0);
 	gc_bSpawnCell = AutoExecConfig_CreateConVar("sm_cowboy_spawn", "0", "0 - T teleport to CT spawn, 1 - cell doors auto open", _, true,  0.0, true, 1.0);
 	gc_iRounds = AutoExecConfig_CreateConVar("sm_cowboy_rounds", "1", "Rounds to play in a row", _, true, 1.0);
@@ -113,6 +116,7 @@ public void OnPluginStart()
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
 	HookConVarChange(gc_sCustomCommand, OnSettingChanged);
+	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
 	
 	//Find
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
@@ -121,6 +125,7 @@ public void OnPluginStart()
 	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 	gc_sCustomCommand.GetString(g_sCustomCommand , sizeof(g_sCustomCommand));
+	gc_sAdminFlag.GetString(g_sAdminFlag , sizeof(g_sAdminFlag));
 	
 	SetLogFile(g_sEventsLogFile, "Events");
 }
@@ -138,6 +143,10 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 	{
 		strcopy(g_sSoundStartPath, sizeof(g_sSoundStartPath), newValue);
 		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
+	}
+	else if(convar == gc_sAdminFlag)
+	{
+		strcopy(g_sAdminFlag, sizeof(g_sAdminFlag), newValue);
 	}
 	else if(convar == gc_sCustomCommand)
 	{
@@ -216,7 +225,7 @@ public Action SetCowBoy(int client,int args)
 			}
 			else CPrintToChat(client, "%t %t", "warden_tag" , "nocscope_setbywarden");
 		}
-		else if (CheckCommandAccess(client, "sm_map", ADMFLAG_CHANGEMAP, true))
+		else if (CheckVipFlag(client,g_sAdminFlag))
 			{
 				if (gc_bSetA.BoolValue)
 				{
@@ -313,8 +322,6 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 	canSet = true;
 	if (StartCowBoy || IsCowBoy)
 	{
-		char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255], info7[255], info8[255];
-		
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_weapons_enable", 0);
 		SetCvar("sm_menu_enable", 0);
@@ -356,28 +363,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 			{
 				LoopClients(client)
 				{
-					CowBoyMenu = CreatePanel();
-					Format(info1, sizeof(info1), "%T", "cowboy_info_title", client);
-					SetPanelTitle(CowBoyMenu, info1);
-					DrawPanelText(CowBoyMenu, "                                   ");
-					Format(info2, sizeof(info2), "%T", "cowboy_info_line1", client);
-					DrawPanelText(CowBoyMenu, info2);
-					DrawPanelText(CowBoyMenu, "-----------------------------------");
-					Format(info3, sizeof(info3), "%T", "cowboy_info_line2", client);
-					DrawPanelText(CowBoyMenu, info3);
-					Format(info4, sizeof(info4), "%T", "cowboy_info_line3", client);
-					DrawPanelText(CowBoyMenu, info4);
-					Format(info5, sizeof(info5), "%T", "cowboy_info_line4", client);
-					DrawPanelText(CowBoyMenu, info5);
-					Format(info6, sizeof(info6), "%T", "cowboy_info_line5", client);
-					DrawPanelText(CowBoyMenu, info6);
-					Format(info7, sizeof(info7), "%T", "cowboy_info_line6", client);
-					DrawPanelText(CowBoyMenu, info7);
-					Format(info8, sizeof(info8), "%T", "cowboy_info_line7", client);
-					DrawPanelText(CowBoyMenu, info8);
-					DrawPanelText(CowBoyMenu, "-----------------------------------");
-					SendPanelToClient(CowBoyMenu, client, NullHandler, 20);
-					
+					CreateInfoPanel(client);
 					StripAllWeapons(client);
 					GivePlayerItem(client, g_sWeapon);
 					SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
@@ -405,6 +391,36 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		}
 		else if (g_iCoolDown > 0) g_iCoolDown--;
 	}
+}
+
+stock void CreateInfoPanel(int client)
+{
+	//Create info Panel
+	char info[255];
+
+	CowBoyMenu = CreatePanel();
+	Format(info, sizeof(info), "%T", "cowboy_info_title", client);
+	SetPanelTitle(CowBoyMenu, info);
+	DrawPanelText(CowBoyMenu, "                                   ");
+	Format(info, sizeof(info), "%T", "cowboy_info_line1", client);
+	DrawPanelText(CowBoyMenu, info);
+	DrawPanelText(CowBoyMenu, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "cowboy_info_line2", client);
+	DrawPanelText(CowBoyMenu, info);
+	Format(info, sizeof(info), "%T", "cowboy_info_line3", client);
+	DrawPanelText(CowBoyMenu, info);
+	Format(info, sizeof(info), "%T", "cowboy_info_line4", client);
+	DrawPanelText(CowBoyMenu, info);
+	Format(info, sizeof(info), "%T", "cowboy_info_line5", client);
+	DrawPanelText(CowBoyMenu, info);
+	Format(info, sizeof(info), "%T", "cowboy_info_line6", client);
+	DrawPanelText(CowBoyMenu, info);
+	Format(info, sizeof(info), "%T", "cowboy_info_line7", client);
+	DrawPanelText(CowBoyMenu, info);
+	DrawPanelText(CowBoyMenu, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "warden_close", client);
+	DrawPanelItem(CowBoyMenu, info); 
+	SendPanelToClient(CowBoyMenu, client, NullHandler, 20);
 }
 
 //Start Timer
@@ -478,6 +494,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 	}
 	if (StartCowBoy)
 	{
+		LoopClients(i) CreateInfoPanel(i);
 		g_iOldRoundTime = g_iGetRoundTime.IntValue;
 		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;
 		
