@@ -302,9 +302,9 @@ public Action VoteDuckHunt(int client,int args)
 						}
 						else CPrintToChat(client, "%t %t", "duckhunt_tag" , "duckhunt_voted");
 					}
-					else CPrintToChat(client, "%t %t", "duckhunt_tag" , "duckhunt_wait");
+					else CPrintToChat(client, "%t %t", "duckhunt_tag" , "duckhunt_wait", g_iCoolDown);
 				}
-				else CPrintToChat(client, "%t %t", "duckhunt_tag" , "duckhunt_progress", g_iCoolDown);
+				else CPrintToChat(client, "%t %t", "duckhunt_tag" , "duckhunt_progress", EventDay);
 			}
 			else CPrintToChat(client, "%t %t", "duckhunt_tag" , "duckhunt_minplayer");
 		}
