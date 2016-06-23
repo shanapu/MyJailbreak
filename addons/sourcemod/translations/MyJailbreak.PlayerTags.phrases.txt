@@ -54,12 +54,12 @@
 
 	"tags_T"
 	{
+		"da"		"[Fange]"
 		"en"		"[Prisoner]"
 		"ru"		"[Заключенный]"
 		"chi"		"[囚犯]"
 		"pl"		"[Wiezien]"
 		"de"		"[Häftling]"
-		"en"		"[Fange]"
 	}
 
 	"tags_TA"
@@ -83,22 +83,22 @@
 
 	"tags_TVIP1"
 	{
+		"da"		"[Fange.VIP]"
 		"en"		"[Prisoner.VIP]"
 		"ru"		"[Заключенный.VIP]"
 		"chi"		"[囚犯.VIP]"
 		"pl"		"[Wiezien.VIP]"
 		"de"		"[Häftling.VIP]"
-		"en"		"[Fange.VIP]"
 	}
 
 	"tags_TVIP2"
 	{
+		"da"		"[Fange.sVIP]"
 		"ru"		"[Заключенный.sVIP]"
 		"chi"		"[囚犯.sVIP]"
 		"pl"		"[Wiezien.sVIP]"
 		"de"		"[Häftling.sVIP]"
 		"en"		"[Prisoner.sVIP]"
-		"en"		"[Fange.sVIP]"
 	}
 
 	"tags_W"
