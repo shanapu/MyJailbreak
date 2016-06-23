@@ -232,7 +232,7 @@ public Action JbMenu(int client, int args)
 		
 		Menu mainmenu = new Menu(JBMenuHandler);
 		mainmenu.SetTitle(menuinfo);
-		if (warden_iswarden(client) && IsPlayerAlive(client))
+		if (warden_iswarden(client) && IsValidClient(client))
 		{
 			if(gc_bWarden.BoolValue) // HERE STARTS THE WARDEN MENU
 			{
