@@ -486,6 +486,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 			SetCvar("sv_infinite_ammo", 0);
 			SetCvar("sm_menu_enable", 1);
 			SetCvar("sm_warden_enable", 1);
+			SetCvar("sm_weapons_t", 0);
 			if(gc_bSpawnRandom.BoolValue)SetCvar("mp_randomspawn", 0);
 			if(gc_bSpawnRandom.BoolValue)SetCvar("mp_randomspawn_los", 0);
 			
