@@ -55,7 +55,7 @@ MyJailbreak is a redux rewrite of [URL="https://github.com/Franc1sco/Franug-Jail
 
 [U][B]Warden[/B][/U]
 This plugins allows players to take control over the prison as warden/Headguard/Commander.  
-Chat, hud & sound notifications about warden / no warden. Vote to retire the warden. Colorized warden and define the color. Set warden Model and icon above head. Open & close cell doors & automatic open. Mute terroist for a amoung of time or round end. Extend roundtime. Gun plant prevention - CT can drop weapons only on round beginn without punishment & report to warden. Use Zeus as Handcuffs and move the cuffed T around. Give warden laser pointer & drawer(LaZzZers) with menu to choose color. Warden can toggle drawer for terrorists. Set different countdowns (start/stop) with overlays, sound & chat notifications. Start a MathQuiz with endtimer & show the player with the first right answer. Toggle Friendly Fire & No Block. Kill/pick a random T (excluding rebels & last T) with different kill effects(Lighting,Timebomb,Firebomb).
+Chat, hud & sound notifications about warden / no warden. Vote to retire the warden. Colorized warden and define the color. Set warden Model and icon above head. Open & close cell doors & automatic open. Mute terroist for a amoung of time or round end. Extend roundtime. Gun plant prevention - CT can drop weapons only on round beginn without punishment & report to warden. Use Zeus as Handcuffs and move the cuffed T around. Cuffed T got a chance to get a paperclip to unlock cuffs. Give warden laser pointer & drawer(LaZzZers) with menu to choose color. Warden can toggle drawer for terrorists. Set different countdowns (start/stop) with overlays, sound & chat notifications. Start a MathQuiz with endtimer & show the player with the first right answer. Toggle Friendly Fire & No Block. Kill/pick a random T (excluding rebels & last T) with different kill effects(Lighting,Timebomb,Firebomb).
 
 [b]Commands[/b]
 [SPOILER]
@@ -1336,6 +1336,13 @@ sm_freeday_cooldown_day - Rounds until event can be started again. Default 0
 [B][u]Change Log[/u][/B]
 
 [QUOTE]
+[B][Beta 4.1][/B] - fixes (careless mistakes)
+[SPOILER]
+[U]Fixed[/U][LIST]
+[*] PlayerTags: Prisoner translation fix (fange)
+[*] DealDamage: disable T weapons on roundend
+[*] Menu: minor error
+[/LIST][/SPOILER]
 [B][Beta 4.0][/B] - DealDamage,Vip,Backstab,Paperclip...more
 [SPOILER]
 [U]Added[/U][LIST]

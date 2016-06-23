@@ -59,8 +59,17 @@ coded with ![](http://shanapu.de/githearth-small.png) free software
 ---
   
 ***Change Log***
+  
+**[Beta 4.1]** - fixes (careless mistakes)
+  
+*Fixed*
+*  PlayerTags: Prisoner translation fix (fange)
+*  DealDamage: disable T weapons on roundend
+*  Menu: minor error
+  
+  
 **[Beta 4.0]** - DealDamage,Vip,Backstab,Paperclip...more
-
+  
 *Added*
 *  Request: Admin/warden can choose respawn position on a freekill
     *  new cvar - sm_freekill_respawn_cell: 0 - cells are still open on respawn, 1 - cells will close on respawn in cell. Default 1

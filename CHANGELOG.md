@@ -1,4 +1,13 @@
 ### Change Log
+  
+**[Beta 4.1]** - fixes (careless mistakes)
+  
+*Fixed*
+*  PlayerTags: Prisoner translation fix (fange)
+*  DealDamage: disable T weapons on roundend
+*  Menu: minor error
+  
+  
 **[Beta 4.0]** - DealDamage,Vip,Backstab,Paperclip...more
 
 *Added*
