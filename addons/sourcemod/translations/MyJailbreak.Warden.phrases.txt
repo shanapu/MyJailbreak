@@ -5,8 +5,8 @@
 {
 	"warden_tag"
 	{
-		"ru"		"[{green}MyJB.warden{default}]"
 		"de"		"[{green}MyJB.warden{default}]"
+		"ru"		"[{green}MyJB.warden{default}]"
 		"en"		"[{green}MyJB.warden{default}]"
 	}
 
@@ -686,8 +686,8 @@
 
 	"warden_drawert"
 	{
-		"ru"		"Включить Ящик для Т"
 		"de"		"Drawer für Terroristen ein/ausschalten"
+		"ru"		"Включить Ящик для Т"
 		"pl"		"Wlacz Markery dla terrorystow"
 		"en"		"Toggle Drawer for Terrorists"
 	}
@@ -1117,6 +1117,21 @@
 	{
 		"de"		"Schliessen"
 		"en"		"Close"
+	}
+
+	"warden_gotpaperclip"
+	{
+		"en"		"You have got a paperclip"
+	}
+
+	"warden_brokepaperclip"
+	{
+		"en"		"You have broke your paperclip"
+	}
+
+	"warden_unlock"
+	{
+		"en"		"You have been unlocked"
 	}
 
 }

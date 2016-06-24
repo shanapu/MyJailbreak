@@ -3595,8 +3595,8 @@ public Action HasPaperClip(Handle timer, int client)
 		float unlocktime = GetRandomFloat(gc_fUnLockTimeMin.FloatValue, gc_fUnLockTimeMax.FloatValue);
 		if(paperclip == 1)
 		{
-			CPrintToChat(client, "you have a paperclip");
-			PrintCenterText(client, "you have a paperclip");
+			CPrintToChat(client, "%t", "warden_gotpaperclip");
+			PrintCenterText(client, "%t", "warden_gotpaperclip");
 			CreateTimer (unlocktime, BreakTheseCuffs, client);
 			if(gc_bSounds)EmitSoundToClientAny(client, g_sSoundUnLockCuffsPath);
 		}
@@ -3610,8 +3610,8 @@ public Action BreakTheseCuffs(Handle timer, int client)
 		int unlocked = GetRandomInt(1,gc_iPaperClipUnLockChance.IntValue);
 		if(unlocked == 1)
 		{
-			CPrintToChat(client, "you have been unlocked");
-			PrintCenterText(client, "you have been unlocked");
+			CPrintToChat(client, "%t", "warden_unlock");
+			PrintCenterText(client, "%t", "warden_unlock");
 			if(gc_bSounds)EmitSoundToAllAny(g_sSoundBreakCuffsPath);
 			SetEntityMoveType(client, MOVETYPE_WALK);
 			SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
@@ -3622,8 +3622,8 @@ public Action BreakTheseCuffs(Handle timer, int client)
 		}
 		else
 		{
-			CPrintToChat(client, "you have broke paperclip");
-			PrintCenterText(client, "you have broke paperclip");
+			CPrintToChat(client, "%t", "warden_brokepaperclip");
+			PrintCenterText(client, "%t", "warden_brokepaperclip");
 		}
 	}
 }
