@@ -1,35 +1,45 @@
+// Exported from SourceMod Translator
+// http://translator.mitchdempsey.com/sourcemod_plugins/201
+//
 "Phrases"
 {
-
-	"ratio_tag"
+	"ratio_advip"
 	{
-		"de"		"[MyJB.ratio]"
-		"en"		"[MyJB.ratio]"
+		"en"		"Get {darkred}VIP{default} to be automatically moved to the front of the queue."
 	}
-
-	"ratio_banned"
-	{
-		"#format"	"{1:N}"
-		"de"		"Cannot play on guards because you are CT banned."
-		"en"		"Du kannst nicht als Wärter spielen. Du bist als CT gebanned."
-	}
-
 
 	"ratio_auto"
 	{
 		"en"		"You cannot use auto select to join a team."
 	}
 
+	"ratio_banned"
+	{
+		"#format"   "{1:N}"
+		"en"		"Du kannst nicht als Wärter spielen. Du bist als{green}CT{default} gebanned."
+		"de"		"Cannot play on guards because you are {green}CT{default} banned."
+	}
+
+	"ratio_empty"
+	{
+		"en"		"The queue is currently {green}empty{default}."
+	}
+
+	"ratio_find"
+	{
+		"#format"   "{1:N}"
+		"en"		"Finding the next guard from queue. {green}{1} {default}is the new guard."
+		"de"		"Wähle den nächsten Anwärter aus der Liste. {green}{1} {default}ist neuer Guard"
+	}
 
 	"ratio_full"
 	{
-		"en"		"Guards team full. Type !guard to join the queue."
+		"en"		"Guards team full. Type {green}!guard{default} to join the queue."
 	}
-
 
 	"ratio_fullqueue"
 	{
-		"#format"	"{1:i}"
+		"#format"   "{1:i}"
 		"en"		"Guards team full. You are {green}#%i{default} in the queue."
 	}
 
@@ -38,47 +48,38 @@
 		"en"		"Guard Queue:"
 	}
 
-	"ratio_empty"
-	{
-		"en"		"The queue is currently empty."
-	}
-
-
 	"ratio_noct"
 	{
-		"en"		"You must be a prisoner to join the queue."
+		"en"		"You must be a {green}prisoner{default} to join the queue."
 	}
 
-
-	"ratio_find"
-	{
-		"#format"	"{1:N}"
-		"de"		"Wähle den nächsten Anwärter aus der Liste. {1} ist neuer Guard"
-		"en"		"Finding the next guard from queue. {1} is the new guard."
-	}
-	
-	"ratio_random"
-	{
-		"#format"	"{1:N}"
-		"de"		"Anwärter Liste ist leer. wurde als neuer Zufälliger Guard gewählt"
-		"en"		"Guard queue is empty. {1} was picked as random new guard."
-	}
-	
 	"ratio_novalid"
 	{
-		"en"		"Could not find a valid player to switch to guards. Ratio may be fucked."
+		"en"		"Could not find a{green} valid player{default} to switch to guards. Ratio may be fucked."
 	}
+
 	"ratio_number"
 	{
-		"#format"	"{1:i}"
+		"#format"   "{1:i}"
 		"en"		"You are {green}{1}{default} in the guard queue."
 	}
+
+	"ratio_random"
+	{
+		"#format"   "{1:N}"
+		"en"		"Guard queue is empty. {green}{1} {default}was picked as random new guard."
+		"de"		"Anwärter Liste ist leer. {green}{1} {default}wurde als neuer Zufälliger Guard gewählt"
+	}
+
+	"ratio_tag"
+	{
+		"en"		"[{green}MyJB.ratio{default}]"
+		"de"		"[{green}MyJB.ratio{default}]"
+	}
+
 	"ratio_thxvip"
 	{
 		"en"		"Thank you for being a {darkred}VIP{default}! You have been moved to the {green}front of the queue!{default}"
 	}
-	"ratio_advip"
-	{
-		"en"		"Get {darkred}VIP{default} to be automatically moved to the front of the queue."
-	}
+
 }
