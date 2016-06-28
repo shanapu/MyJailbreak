@@ -47,6 +47,11 @@
 		"en"		"All terrors are rebels!"
 	}
 
+	"lastguard_info_line3"
+	{
+		"en"		"Last CT has more health"
+	}
+
 	"lastguard_info_line4"
 	{
 		"ru"		"Все нормальные правила тюрьмы отменяются"
