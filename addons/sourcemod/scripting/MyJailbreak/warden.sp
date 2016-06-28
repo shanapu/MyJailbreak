@@ -2135,14 +2135,14 @@ public Action ToggleDrawerT(int client, int args)
 				g_bDrawerT = true;
 				CPrintToChatAll("%t %t", "warden_tag", "warden_tdraweron");
 				
-				LoopValidClients(iClient, false, false)
+				LoopValidClients(iClient, false, true)
 				{
 					if (GetClientTeam(iClient) == CS_TEAM_T) DrawerMenu(iClient,0);
 				}
 			}
 			else
 			{
-				LoopValidClients(iClient, false, false)
+				LoopValidClients(iClient, false, true)
 				{
 					if (GetClientTeam(iClient) == CS_TEAM_T)
 					{
