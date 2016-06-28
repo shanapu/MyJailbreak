@@ -1134,4 +1134,10 @@
 		"en"		"You have been unlocked"
 	}
 
+	"warden_remaining"
+	{
+		"en"		"remaining"
+		"de"		"verbleibend"
+	}
+
 }

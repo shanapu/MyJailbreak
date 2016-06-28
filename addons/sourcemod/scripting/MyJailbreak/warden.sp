@@ -101,9 +101,10 @@ ConVar gc_fUnLockTimeMax;
 ConVar gc_fUnLockTimeMin;
 ConVar gc_iPaperClipUnLockChance;
 ConVar gc_iPaperClipGetChance;
-
 ConVar gc_sSoundBreakCuffsPath;
 ConVar gc_sSoundUnLockCuffsPath;
+ConVar gc_bTimer;
+ConVar g_iGetRoundTime;
 
 //Bools
 bool IsCountDown = false;
@@ -164,6 +165,7 @@ int g_iPlayerHandCuffs[MAXPLAYERS+1];
 int g_iCuffed = 0;
 int g_iBackstabNumber[MAXPLAYERS+1];
 int g_iExtendNumber[MAXPLAYERS+1];
+int g_iRoundTime;
 
 //Handles
 Handle g_fward_onBecome;
@@ -180,7 +182,7 @@ Handle MathTimer = null;
 Handle StartTimer = null;
 Handle StopTimer = null;
 Handle StartStopTimer = null;
-//Handle IconTimer = null;
+Handle RoundTimer;
 
 //Strings
 char g_sHasVoted[1500];
@@ -379,6 +381,7 @@ public void OnPluginStart()
 	gc_sSoundCuffsPath = AutoExecConfig_CreateConVar("sm_warden_sounds_cuffs", "music/MyJailbreak/cuffs.mp3", "Path to the soundfile which should be played for cuffed player.");
 	gc_sSoundBreakCuffsPath = AutoExecConfig_CreateConVar("sm_warden_sounds_breakcuffs", "music/MyJailbreak/breakcuffs.mp3", "Path to the soundfile which should be played for break cuffs.");
 	gc_sSoundUnLockCuffsPath = AutoExecConfig_CreateConVar("sm_warden_sounds_unlock", "music/MyJailbreak/unlock.mp3", "Path to the soundfile which should be played for unlocking cuffs.");
+	gc_bTimer = CreateConVar("sm_warden_roundtime_reminder", "1", "0 - disabled, 1 - announce remaining round time in chat & hud 3min,2min,1min,30sec before roundend.", _, true,  0.0, true, 1.0);
 	
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
@@ -598,6 +601,7 @@ public void OnMapStart()
 		PrecacheSoundAnyDownload(g_sSoundBreakCuffsPath);
 		PrecacheSoundAnyDownload(g_sSoundUnLockCuffsPath);
 	}	
+	PrecacheSound("weapons/c4/c4_beep1.wav", true);
 	g_iVoteCount = 0;
 	PrecacheModel(g_sWardenModel);
 	if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStart);
@@ -708,6 +712,10 @@ public void RoundStart(Event event, const char[] name, bool dontBroadcast)
 		g_iExtendNumber[i] = gc_iExtendLimit.IntValue;
 	}
 	CreateTimer (gc_fAllowDropTime.FloatValue, AllowDropTimer);
+	
+	g_iGetRoundTime = FindConVar("mp_roundtime");
+	g_iRoundTime = g_iGetRoundTime.IntValue * 60;
+	if(gc_bTimer.BoolValue)RoundTimer = CreateTimer(1.0, RoundTimerHandle, _, TIMER_REPEAT);
 }
 
 //Round End
@@ -736,6 +744,7 @@ public void RoundEnd(Event event, const char[] name, bool dontBroadcast)
 		if(g_bCuffed[i]) FreeEm(i, 0);
 		if(g_bDrawer[i]) g_bDrawer[i] = false;
 	}
+	delete RoundTimer;
 }
 
 //!w
@@ -1449,6 +1458,7 @@ public void OnMapEnd()
 		if(g_bCuffed[client]) FreeEm(client, 0);
 		if(g_bDrawer[client]) g_bDrawer[client] = false;
 	}
+	delete RoundTimer;
 }
 
 public Action Timer_DrawMakers(Handle timer, any data)
@@ -3736,7 +3746,51 @@ public Action ExtendTime(int client, int args)
 {
 		GameRules_SetProp("m_iRoundTime", GameRules_GetProp("m_iRoundTime", 4, 0)+args, 4, 0, true);
 		int extendminute = (args/60);
+		g_iRoundTime = g_iRoundTime + args;
 		CPrintToChatAll("%t %t", "warden_tag" , "warden_extend", client, extendminute);
 		return Plugin_Handled;
 }
 
+public Action RoundTimerHandle(Handle timer)
+{
+	if(g_iRoundTime >= 1)
+	{
+		g_iRoundTime--;
+		char timeinfo[64];
+		if(g_iRoundTime == 180 && (g_iWarden != -1))
+		{
+			EmitSoundToClient(g_iWarden, "weapons/c4/c4_beep1.wav", SOUND_FROM_PLAYER, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, 1.0);
+			Format(timeinfo, sizeof(timeinfo), "%T %T %T", "warden_tag", g_iWarden, "warden_180", g_iWarden, "warden_remaining", g_iWarden);
+			CPrintToChat(g_iWarden, timeinfo);
+			Format(timeinfo, sizeof(timeinfo), "%T %T", "warden_180", g_iWarden, "warden_remaining", g_iWarden);
+			PrintCenterText(g_iWarden, timeinfo);
+		}
+		if(g_iRoundTime == 120 && (g_iWarden != -1))
+		{
+			EmitSoundToClient(g_iWarden, "weapons/c4/c4_beep1.wav", SOUND_FROM_PLAYER, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, 1.0);
+			Format(timeinfo, sizeof(timeinfo), "%T %T %T", "warden_tag", g_iWarden, "warden_120", g_iWarden, "warden_remaining", g_iWarden);
+			CPrintToChat(g_iWarden, timeinfo);
+			Format(timeinfo, sizeof(timeinfo), "%T %T", "warden_120", g_iWarden, "warden_remaining", g_iWarden);
+			PrintCenterText(g_iWarden, timeinfo);
+		}
+		if(g_iRoundTime == 60 && (g_iWarden != -1))
+		{
+			EmitSoundToClient(g_iWarden, "weapons/c4/c4_beep1.wav", SOUND_FROM_PLAYER, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, 1.0);
+			Format(timeinfo, sizeof(timeinfo), "%T %T %T", "warden_tag", g_iWarden, "warden_60", g_iWarden, "warden_remaining", g_iWarden);
+			CPrintToChat(g_iWarden, timeinfo);
+			Format(timeinfo, sizeof(timeinfo), "%T %T", "warden_60", g_iWarden, "warden_remaining", g_iWarden);
+			PrintCenterText(g_iWarden, timeinfo);
+		}
+		if(g_iRoundTime == 30 && (g_iWarden != -1))
+		{
+			EmitSoundToClient(g_iWarden, "weapons/c4/c4_beep1.wav", SOUND_FROM_PLAYER, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, 1.0);
+			Format(timeinfo, sizeof(timeinfo), "%T %T %T", "warden_tag", g_iWarden, "warden_30", g_iWarden, "warden_remaining", g_iWarden);
+			CPrintToChat(g_iWarden, timeinfo);
+			Format(timeinfo, sizeof(timeinfo), "%T %T", "warden_30", g_iWarden, "warden_remaining", g_iWarden);
+			PrintCenterText(g_iWarden, timeinfo);
+		}
+		return Plugin_Continue;
+	}
+	RoundTimer = null;
+	return Plugin_Stop;
+}
