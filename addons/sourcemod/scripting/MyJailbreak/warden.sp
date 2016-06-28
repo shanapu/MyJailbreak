@@ -83,6 +83,7 @@ ConVar gc_bMuteEnd;
 ConVar gc_sOverlayCuffsPath;
 ConVar gc_bHandCuff;
 ConVar gc_iHandCuffsNumber;
+ConVar gc_iHandCuffsDistance;
 ConVar gc_bHandCuffLR;
 ConVar gc_bHandCuffCT;
 ConVar gc_bBulletSparks;
@@ -332,6 +333,7 @@ public void OnPluginStart()
 	gc_sAdminFlagBackstab = AutoExecConfig_CreateConVar("sm_warden_backstab_flag", "", "Set flag for admin/vip to get warden backstab protection. No flag = feature is available for all players!");
 	gc_bHandCuff = AutoExecConfig_CreateConVar("sm_warden_handcuffs", "1", "0 - disabled, 1 - enable handcuffs", _, true,  0.0, true, 1.0);
 	gc_iHandCuffsNumber = AutoExecConfig_CreateConVar("sm_warden_handcuffs_number", "2", "How many handcuffs a warden got?", _, true,  1.0);
+	gc_iHandCuffsDistance = AutoExecConfig_CreateConVar("sm_warden_handcuffs_distance", "2", "How many meters distance from warden to handcuffed T to pick up?", _, true,  1.0);
 	gc_bHandCuffLR = AutoExecConfig_CreateConVar("sm_warden_handcuffs_lr", "1", "0 - disabled, 1 - free cuffed terrorists on LR", _, true,  0.0, true, 1.0);
 	gc_bHandCuffCT = AutoExecConfig_CreateConVar("sm_warden_handcuffs_ct", "1", "0 - disabled, 1 - Warden can also handcuff CTs", _, true,  0.0, true, 1.0);
 	gc_fUnLockTimeMax = AutoExecConfig_CreateConVar("sm_warden_handcuffs_unlock_maxtime", "35.0", "Time in seconds Ts need free themself with a paperclip.", _, true, 0.1);
@@ -1713,22 +1715,28 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 			if (gc_bHandCuff.BoolValue && (StrEqual(g_sEquipWeapon[client], "taser")))
 			{
 				int Target = GetClientAimTarget(client, true);
+				
 				if (IsValidClient(Target, true, false) && (g_bCuffed[Target] == true))
 				{
+					float distance = Entity_GetDistance(client, Target);
+					distance = Math_UnitsToMeters(distance);
 					
-					float origin[3];
-					GetClientAbsOrigin(client, origin);
-					float location[3];
-					GetClientEyePosition(client, location);
-					float ang[3];
-					GetClientEyeAngles(client, ang);
-					float location2[3];
-					location2[0] = (location[0]+(100*((Cosine(DegToRad(ang[1]))) * (Cosine(DegToRad(ang[0]))))));
-					location2[1] = (location[1]+(100*((Sine(DegToRad(ang[1]))) * (Cosine(DegToRad(ang[0]))))));
-					ang[0] -= (2*ang[0]);
-					location2[2] = origin[2] += 5.0;
-					
-					TeleportEntity(Target, location2, NULL_VECTOR, NULL_VECTOR);
+					if(gc_iHandCuffsDistance.IntValue > distance)
+					{
+						float origin[3];
+						GetClientAbsOrigin(client, origin);
+						float location[3];
+						GetClientEyePosition(client, location);
+						float ang[3];
+						GetClientEyeAngles(client, ang);
+						float location2[3];
+						location2[0] = (location[0]+(100*((Cosine(DegToRad(ang[1]))) * (Cosine(DegToRad(ang[0]))))));
+						location2[1] = (location[1]+(100*((Sine(DegToRad(ang[1]))) * (Cosine(DegToRad(ang[0]))))));
+						ang[0] -= (2*ang[0]);
+						location2[2] = origin[2] += 5.0;
+						
+						TeleportEntity(Target, location2, NULL_VECTOR, NULL_VECTOR);
+					}
 				}
 				
 			}
