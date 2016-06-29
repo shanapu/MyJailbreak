@@ -46,6 +46,11 @@
 		"en"		"Open cell doors"
 	}
 
+	"menu_closecell"
+	{
+		"en"		"Close cell doors"
+	}
+
 	"menu_seteventdays"
 	{
 		"chi"		"集游戏天"

@@ -257,6 +257,8 @@ public Action JbMenu(int client, int args)
 					{
 						Format(menuinfo, sizeof(menuinfo), "%T", "menu_opencell", client);
 						mainmenu.AddItem("cellopen", menuinfo);
+						Format(menuinfo, sizeof(menuinfo), "%T", "menu_closecell", client);
+						mainmenu.AddItem("cellclose", menuinfo);
 					}
 				}
 				if(g_bCountdown != null)
@@ -646,6 +648,14 @@ public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selec
 		else if ( strcmp(info,"math") == 0 ) 
 		{
 			FakeClientCommand(client, "sm_math");
+			if(!gc_bClose.BoolValue)
+			{
+				JbMenu(client,0);
+			}
+		}
+		else if ( strcmp(info,"cellclose") == 0 ) 
+		{
+			FakeClientCommand(client, "sm_close");
 			if(!gc_bClose.BoolValue)
 			{
 				JbMenu(client,0);
