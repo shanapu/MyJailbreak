@@ -106,6 +106,8 @@ ConVar gc_sSoundBreakCuffsPath;
 ConVar gc_sSoundUnLockCuffsPath;
 ConVar gc_bTimer;
 ConVar g_iGetRoundTime;
+ConVar gc_bDisarm;
+ConVar gc_iDisarm;
 
 //Bools
 bool IsCountDown = false;
@@ -167,6 +169,7 @@ int g_iCuffed = 0;
 int g_iBackstabNumber[MAXPLAYERS+1];
 int g_iExtendNumber[MAXPLAYERS+1];
 int g_iRoundTime;
+int g_iDisarm;
 
 //Handles
 Handle g_fward_onBecome;
@@ -330,6 +333,8 @@ public void OnPluginStart()
 	gc_iGunSlapDamage = AutoExecConfig_CreateConVar("sm_warden_gunslap_dmg", "10", "Amoung of HP losing on slap for dropping a gun", _, true,  0.0);
 	gc_bBackstab = AutoExecConfig_CreateConVar("sm_warden_backstab", "1", "0 - disabled, 1 - enable backstab protection for warden", _, true,  0.0, true, 1.0);
 	gc_iBackstabNumber = AutoExecConfig_CreateConVar("sm_warden_backstab_number", "1", "How many time a warden get protected? 0 - alltime", _, true,  1.0);
+	gc_bDisarm = AutoExecConfig_CreateConVar("sm_warden_disarm", "1", "0 - disabled, 1 - enable disarm weapon on shot the arms/hands", _, true,  0.0, true, 1.0);
+	gc_iDisarm = AutoExecConfig_CreateConVar("sm_warden_disarm_mode", "1", "1 - Only warden can disarm, 2 - All CT can disarm, 3 - Everyone can disarm (CT & T)", _, true,  1.0, true, 3.0);
 	gc_sAdminFlagBackstab = AutoExecConfig_CreateConVar("sm_warden_backstab_flag", "", "Set flag for admin/vip to get warden backstab protection. No flag = feature is available for all players!");
 	gc_bHandCuff = AutoExecConfig_CreateConVar("sm_warden_handcuffs", "1", "0 - disabled, 1 - enable handcuffs", _, true,  0.0, true, 1.0);
 	gc_iHandCuffsNumber = AutoExecConfig_CreateConVar("sm_warden_handcuffs_number", "2", "How many handcuffs a warden got?", _, true,  1.0);
@@ -397,6 +402,7 @@ public void OnPluginStart()
 	HookEvent("round_end", RoundEnd);
 	HookEvent("weapon_fire", WeaponFire);
 	HookEvent("bullet_impact", BulletImpact);
+	HookEvent("player_hurt", PlayerHurt);
 	HookConVarChange(gc_sModelPath, OnSettingChanged);
 	HookConVarChange(gc_sUnWarden, OnSettingChanged);
 	HookConVarChange(gc_sWarden, OnSettingChanged);
@@ -717,6 +723,7 @@ public void RoundStart(Event event, const char[] name, bool dontBroadcast)
 	
 	g_iGetRoundTime = FindConVar("mp_roundtime");
 	g_iRoundTime = g_iGetRoundTime.IntValue * 60;
+	g_iDisarm = gc_iDisarm.IntValue;
 	if(gc_bTimer.BoolValue)RoundTimer = CreateTimer(1.0, RoundTimerHandle, _, TIMER_REPEAT);
 }
 
@@ -2924,7 +2931,8 @@ public Action BulletImpact(Handle hEvent, char [] sName, bool bDontBroadcast)
 	startpos[1] = GetEventFloat(hEvent, "y");
 	startpos[2] = GetEventFloat(hEvent, "z");
 	
-	TE_SetupSparks(startpos, dir, 5000, 1000);
+	TE_SetupSparks(startpos, dir, 2500, 500);
+	
 	TE_SendToAll();
 
 	return Plugin_Continue;
@@ -3801,4 +3809,34 @@ public Action RoundTimerHandle(Handle timer)
 	}
 	RoundTimer = null;
 	return Plugin_Stop;
+}
+//disarm weapon
+
+public Action PlayerHurt(Handle event, char[] name, bool dontBroadcast)
+{
+	if(gc_bPlugin.BoolValue && gc_bDisarm.BoolValue)
+	{
+		int victim 			= GetClientOfUserId(GetEventInt(event, "userid"));
+		int attacker 		= GetClientOfUserId(GetEventInt(event, "attacker"));
+		int hitgroup		= GetEventInt(event, "hitgroup");
+		int victimweapon = GetEntPropEnt(victim, Prop_Send, "m_hActiveWeapon");
+		
+		if (IsValidClient(attacker,true,false) && IsValidClient(victim,true,false))
+		{
+			if ((warden_iswarden(attacker) && g_iDisarm == 1) || ((GetClientTeam(attacker) == CS_TEAM_CT) && g_iDisarm == 2) || ((GetClientTeam(attacker) != GetClientTeam(victim)) && g_iDisarm == 3))
+			{
+				if(hitgroup == 4 || hitgroup == 5)
+				{
+					if(victimweapon != -1)
+					{
+						CS_DropWeapon(victim, victimweapon, true, true);
+						CPrintToChatAll("%t %t", "warden_tag", "warden_disarmed", victim, attacker);
+						PrintHintText(victim, "%t", "warden_lostgun");
+						return Plugin_Stop;
+					}
+				}
+			}
+		}
+	}
+	return Plugin_Continue;
 }

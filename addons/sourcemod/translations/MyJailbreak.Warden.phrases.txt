@@ -1134,6 +1134,17 @@
 		"en"		"You have been unlocked"
 	}
 
+	"warden_disarmed"
+	{
+		"#format"   "{1:N},{2:N}"
+		"en"		"{1} disarmed by {2}"
+	}
+
+	"warden_lostgun"
+	{
+		"en"		"Wounded to the arm! You lost your weapon!"
+	}
+
 	"warden_remaining"
 	{
 		"en"		"remaining"
