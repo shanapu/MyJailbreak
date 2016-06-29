@@ -453,8 +453,8 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 			SetEntityGravity(client, 1.0);
 			FP(client);
 		}
-		if (TruceTimer != null) KillTimer(TruceTimer);
-		if (GravityTimer != null) KillTimer(GravityTimer);
+		delete TruceTimer;
+		delete GravityTimer;
 		if (winner == 2) PrintHintTextToAll("%t", "knifefight_twin_nc");
 		if (winner == 3) PrintHintTextToAll("%t", "knifefight_ctwin_nc");
 		if (g_iRound == g_iMaxRound)
@@ -493,8 +493,8 @@ public void OnMapEnd()
 	IsKnifeFight = false;
 	StartKnifeFight = false;
 	canSet = true;
-	if (TruceTimer != null) KillTimer(TruceTimer);
-	if (GravityTimer != null) KillTimer(GravityTimer);
+	delete TruceTimer;
+	delete GravityTimer;
 	g_iVoteCount = 0;
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0';

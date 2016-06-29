@@ -474,7 +474,7 @@ public void OnMapEnd()
 	IsDuckHunt = false;
 	StartDuckHunt = false;
 	canSet = true;
-	if (TruceTimer != null) KillTimer(TruceTimer);
+	delete TruceTimer;
 	g_iVoteCount = 0;
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0';

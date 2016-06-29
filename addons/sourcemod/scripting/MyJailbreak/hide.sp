@@ -465,7 +465,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 			g_iTA[client] = 0;
 		}
 		
-		if (FreezeTimer != null) KillTimer(FreezeTimer);
+		delete FreezeTimer;
 		
 		if (winner == 2) PrintHintTextToAll("%t", "hide_twin_nc");
 		if (winner == 3) PrintHintTextToAll("%t", "hide_ctwin_nc");
@@ -520,7 +520,7 @@ public void OnMapEnd()
 	IsHide = false;
 	StartHide = false;
 	canSet = true;
-	if (FreezeTimer != null) KillTimer(FreezeTimer);
+	delete FreezeTimer;
 	g_iVoteCount = 0;
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0';

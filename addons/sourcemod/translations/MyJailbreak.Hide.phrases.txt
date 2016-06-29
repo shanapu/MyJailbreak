@@ -16,7 +16,6 @@
 		"pl"		"Chowany jest {purple}wylaczony."
 		"de"		"Hide in the Dark ist {purple}deaktiviert."
 		"en"		"Hide in the Dark is {purple}disabled."
-		"en"		"Hide in the Dark er {purple}deaktiveret."
 	}
 
 	"hide_end"

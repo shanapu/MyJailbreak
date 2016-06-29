@@ -468,8 +468,8 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 				
 			}
 		}
-		if (TruceTimer != null) KillTimer(TruceTimer); //kill start time if still running
-		if (RoundTimer != null) KillTimer(RoundTimer); //kill start time if still running
+		delete TruceTimer; //kill start time if still running
+		delete RoundTimer; //kill start time if still running
 		if (winner == 2) PrintHintTextToAll("%t", "dealdamage_twin_nc", DamageT);
 		if (winner == 3) PrintHintTextToAll("%t", "dealdamage_ctwin_nc", DamageCT);
 		if (g_iRound == g_iMaxRound) //if this was the last round
@@ -515,8 +515,8 @@ public void OnMapEnd()
 	IsDealDamage = false;
 	StartDealDamage = false;
 	canSet = true;
-	if (TruceTimer != null) KillTimer(TruceTimer); //kill start time if still running
-	if (RoundTimer != null) KillTimer(RoundTimer); //kill start time if still running
+	delete TruceTimer; //kill start time if still running
+	delete RoundTimer; //kill start time if still running
 	g_iVoteCount = 0;
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0'; 

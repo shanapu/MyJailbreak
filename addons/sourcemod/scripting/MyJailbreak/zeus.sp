@@ -455,7 +455,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 	if (IsZeus)
 	{
 		LoopClients(client) SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
-		if (TruceTimer != null) KillTimer(TruceTimer);
+		delete TruceTimer;
 		if (winner == 2) PrintHintTextToAll("%t", "zeus_twin_nc");
 		if (winner == 3) PrintHintTextToAll("%t", "zeus_ctwin_nc");
 		if (g_iRound == g_iMaxRound)
@@ -493,7 +493,7 @@ public void OnMapEnd()
 	IsZeus = false;
 	StartZeus = false;
 	canSet = true;
-	if (TruceTimer != null) KillTimer(TruceTimer);
+	delete TruceTimer;
 	g_iVoteCount = 0;
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0';

@@ -441,10 +441,9 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 	{
 		LoopValidClients(client, false, true) SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
 		
-		if (FreezeTimer != null) KillTimer(FreezeTimer);
-		FreezeTimer = null;
-		if (TruceTimer != null) KillTimer(TruceTimer);
-		TruceTimer = null;
+		delete FreezeTimer;
+		delete TruceTimer;
+		
 		if (winner == 2) PrintHintTextToAll("%t", "war_twin_nc"); 
 		if (winner == 3) PrintHintTextToAll("%t", "war_ctwin_nc");
 		if (g_iRound == g_iMaxRound)
@@ -480,8 +479,8 @@ public void OnMapEnd()
 	IsWar = false;
 	StartWar = false;
 	canSet = true;
-	if (FreezeTimer != null) KillTimer(FreezeTimer);
-	if (TruceTimer != null) KillTimer(TruceTimer);
+	delete FreezeTimer;
+	delete TruceTimer;
 	g_iVoteCount = 0;
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0';
