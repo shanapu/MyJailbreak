@@ -611,6 +611,10 @@ public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selec
 		{
 			FakeClientCommand(client, "sm_killrandom");
 		}
+		else if ( strcmp(info,"check") == 0 ) 
+		{
+			FakeClientCommand(client, "sm_checkplayers");
+		}
 		else if ( strcmp(info,"getwarden") == 0 ) 
 		{
 			FakeClientCommand(client, "sm_warden");
@@ -672,14 +676,6 @@ public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selec
 		else if ( strcmp(info,"noblock") == 0 ) 
 		{
 			FakeClientCommand(client, "sm_noblock");
-			if(!gc_bClose.BoolValue)
-			{
-				JbMenu(client,0);
-			}
-		}
-		else if ( strcmp(info,"check") == 0 ) 
-		{
-			FakeClientCommand(client, "sm_checkplayers");
 			if(!gc_bClose.BoolValue)
 			{
 				JbMenu(client,0);
