@@ -201,7 +201,12 @@ public Action SetCowBoy(int client,int args)
 {
 	if (gc_bPlugin.BoolValue && canSet)
 	{
-		if (warden_iswarden(client))
+		if(client == 0)
+		{
+			StartNextRound();
+			if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event CowBoy was started by groupvoting");
+		}
+		else if (warden_iswarden(client))
 		{
 			if (gc_bSetW.BoolValue)
 			{
@@ -226,30 +231,31 @@ public Action SetCowBoy(int client,int args)
 			else CPrintToChat(client, "%t %t", "warden_tag" , "nocscope_setbywarden");
 		}
 		else if (CheckVipFlag(client,g_sAdminFlag))
+		{
+			if (gc_bSetA.BoolValue)
 			{
-				if (gc_bSetA.BoolValue)
+				if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
 				{
-					if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
+					char EventDay[64];
+					GetEventDay(EventDay);
+					
+					if(StrEqual(EventDay, "none", false))
 					{
-						char EventDay[64];
-						GetEventDay(EventDay);
-						
-						if(StrEqual(EventDay, "none", false))
+						if (g_iCoolDown == 0)
 						{
-							if (g_iCoolDown == 0)
-							{
-								StartNextRound();
-								if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event CowBoy was started by admin %L", client);
-							}
-							else CPrintToChat(client, "%t %t", "cowboy_tag" , "cowboy_wait", g_iCoolDown);
+							StartNextRound();
+							if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event CowBoy was started by admin %L", client);
 						}
-						else CPrintToChat(client, "%t %t", "cowboy_tag" , "cowboy_progress" , EventDay);
+						else CPrintToChat(client, "%t %t", "cowboy_tag" , "cowboy_wait", g_iCoolDown);
 					}
-					else CPrintToChat(client, "%t %t", "cowboy_tag" , "cowboy_minplayer");
+					else CPrintToChat(client, "%t %t", "cowboy_tag" , "cowboy_progress" , EventDay);
 				}
-				else CPrintToChat(client, "%t %t", "nocscope_tag" , "cowboy_setbyadmin");
+				else CPrintToChat(client, "%t %t", "cowboy_tag" , "cowboy_minplayer");
 			}
-			else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
+			else CPrintToChat(client, "%t %t", "nocscope_tag" , "cowboy_setbyadmin");
+		}
+		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
+		
 	}
 	else CPrintToChat(client, "%t %t", "cowboy_tag" , "cowboy_disabled");
 }
@@ -521,19 +527,16 @@ public void OnMapEnd()
 
 public Action OnWeaponCanUse(int client, int weapon)
 {
-	char sWeapon[32];
-	GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
-	
-	if(!StrEqual(sWeapon, g_sWeapon))
-		{
-			if (IsClientInGame(client) && IsPlayerAlive(client))
-			{
-				if(IsCowBoy)
-				{
-					return Plugin_Handled;
-				}
-			}
-		}
+	if (IsCowBoy)
+	{
+		char sWeapon[32];
+		GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
+		
+		int index = GetEntProp(weapon, Prop_Send, "m_iItemDefinitionIndex");
+			
+			if(index == 64 || (StrEqual(sWeapon, "weapon_elite")))return Plugin_Continue;
+			else return Plugin_Handled;
+	}
 	return Plugin_Continue;
 }
 
