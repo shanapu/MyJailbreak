@@ -46,11 +46,14 @@ public void OnPluginStart()
 	
 	//Client commands
 	RegConsoleCmd("sm_guard", OnGuardQueue,"Allows the prisoners to queue to CT");
-	RegConsoleCmd("sm_viewqueue", ViewGuardQueue);
-	RegConsoleCmd("sm_viewguard", ViewGuardQueue);
+	RegConsoleCmd("sm_viewqueue", ViewGuardQueue,"Allows a player to show queue to CT");
+	RegConsoleCmd("sm_vq", ViewGuardQueue,"Allows a player to show queue to CT");
+	RegConsoleCmd("sm_leavequeue", LeaveQueue,"Allows a player to leave queue to CT");
+	RegConsoleCmd("sm_lq", LeaveQueue,"Allows a player to leave queue to CT");
 	
 	//Admin commands
-	RegAdminCmd("sm_removequeue", RemoveFromQueue, ADMFLAG_GENERIC);
+	RegAdminCmd("sm_removequeue", RemoveFromQueue, ADMFLAG_GENERIC,"Allows the admin to remove player from queue to CT");
+	RegAdminCmd("sm_rq", RemoveFromQueue, ADMFLAG_GENERIC,"Allows the admin to remove player from queue to CT");
 	
 	//AutoExecConfig
 	AutoExecConfig_SetFile("Ratio", "MyJailbreak");
@@ -239,6 +242,23 @@ public Action OnJoinTeam(int client, const char[] szCommand, int iArgCount)
 	return Plugin_Continue;
 }
 
+public Action LeaveQueue(int client, int iArgNum)
+{
+	int iIndex = FindValueInArray(g_aGuardQueue, client);
+	
+	if(iIndex == -1)
+	{
+		CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_notonqueue");
+		return Plugin_Handled;
+	}
+	else
+	{
+		RemovePlayerFromGuardQueue(client);
+		CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_leavedqueue");
+		return Plugin_Handled;
+	}
+}
+
 public Action ViewGuardQueue(int client, int args)
 {
 	if(!IsValidClient(client, true, true))
@@ -318,6 +338,8 @@ public int ViewQueueMenuHandle(Menu hMenu, MenuAction action, int client, int op
 		int user = GetClientOfUserId(StringToInt(info)); 
 		
 		RemovePlayerFromGuardQueue(user);
+		
+		CPrintToChatAll("%t %t", "ratio_tag", "ratio_removed", client, user);
 		
 	}
 	else if(action == MenuAction_Cancel)
@@ -439,7 +461,8 @@ stock void FixTeamRatio()
 		int client = GetRandomClientFromTeam(CS_TEAM_CT, true);
 		if(!client)
 			break;
-		
+			
+		CPrintToChatAll("%t %t", "ratio_tag", "ratio_movetot" ,client);
 		SetClientPendingTeam(client, CS_TEAM_T);
 	}
 }
