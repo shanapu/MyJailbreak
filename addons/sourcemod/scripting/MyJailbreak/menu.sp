@@ -233,8 +233,8 @@ public void OnClientPutInServer(int client)
 public Action Timer_WelcomeMessage(Handle timer, any client)
 {	
 	if (gc_bWelcome.BoolValue && IsValidClient(client, false, true))
-	{	
-		CPrintToChat(client, "%t %t", "menu_tag"), "menu_info");
+	{
+		CPrintToChat(client, "%t %t", "menu_tag", "menu_info");
 	}
 }
 
@@ -1447,7 +1447,7 @@ public void VotingResults(Menu menu, int num_votes, int num_clients, const int[]
 	}
 	char event[64];
 	menu.GetItem(item_info[winner][VOTEINFO_ITEM_INDEX], event, sizeof(event));
-	CPrintToChatAll("%t %t", "menu_tag", "menu_votingwon"  event, num_items);
+	CPrintToChatAll("%t %t", "menu_tag", "menu_votingwon",  event, num_items);
 	ServerCommand("sm_set%s", event);
 }
 
