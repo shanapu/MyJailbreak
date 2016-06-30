@@ -3,252 +3,290 @@
 //
 "Phrases"
 {
-	"dealdamage_bestct"
-	{
-		"#format"   "{1:N},{2:i}"
-		"en"		"Best CT: {1} Damage: {2} HP"
-	}
-
-	"dealdamage_bestt"
-	{
-		"#format"   "{1:N},{2:i}"
-		"en"		"Best T: {1} Damage: {2} HP"
-	}
-
-	"dealdamage_client"
-	{
-		"#format"   "{1:i}"
-		"en"		"Your Damage: {1} HP"
-	}
-
-	"dealdamage_clientdealed"
-	{
-		"en"		"You dealed:"
-	}
-
-	"dealdamage_ct"
-	{
-		"#format"   "{1:i}"
-		"en"		"CT Damage: {1} HP"
-	}
-
-	"dealdamage_ctdealed"
-	{
-		"en"		"CT dealed:"
-	}
-
-	"dealdamage_ctwin_nc"
-	{
-		"#format"   "{1:i}"
-		"de"		"Counter-Terrorist gewinnen mit {1} HP Schaden"
-		"en"		"Counter-Terrorists win with {1} HP damage"
-	}
-
-	"dealdamage_disabled"
-	{
-		"de"		"DealDamageDay ist {purple}deaktiviert."
-		"en"		"DealDamageDay is {purple}disabled."
-		"da"		"DealDamageDay er {purple}slået fra."
-	}
-
-	"dealdamage_end"
-	{
-		"de"		"{purple}DealDamageDay{default} beendet"
-		"en"		"{purple}DealDamageDay{default} ended"
-		"da"		"{purple}DealDamageDay{default} er afsluttet!"
-	}
-
-	"dealdamage_hpdamage"
-	{
-		"en"		"HP damage"
-	}
-
-	"dealdamage_info_line1"
-	{
-		"de"		"DealDamageDay is aktiv!"
-		"en"		"DealDamageDay is activ"
-	}
-
-	"dealdamage_info_line2"
-	{
-		"de"		"Mach soviel Schaden du kannst gegen das gegenerische Team"
-		"en"		"Deal so much damage as you can to the enemey team"
-	}
-
-	"dealdamage_info_line3"
-	{
-		"de"		"Das Team mit dem meist verteilen Schaden gewinnt"
-		"en"		"The team with most dealed damage wins"
-	}
-
-	"dealdamage_info_line4"
-	{
-		"de"		"Alle normalen Jailregeln sind aufgehoben!"
-		"en"		"All normal jailRules are repealed"
-		"da"		"Alle jail regler er ophævet!"
-	}
-
 	"dealdamage_info_line5"
 	{
+		"ru"		"Здесь нету последних желаний!"
 		"de"		"Der letzte Terrorist hat keinen Wunsch!"
-		"en"		"There is no last request!"
+		"en"		"Last Requests are disabled during this round!"
 		"da"		"Der kan ikke laves Last Request i denne runde!"
 	}
 
 	"dealdamage_info_line6"
 	{
+		"ru"		"Каждый может идти туда, куда захочет."
 		"de"		"Jeder darf überall hin wo er will!"
-		"en"		"Everyone is allowed to go everywhere where he wants"
+		"en"		"Everyone is allowed to go anywhere within the map!"
 		"da"		"Alle kan gå der hen hvor de har lyst til at gå hen!"
 	}
 
-	"dealdamage_info_line7"
+	"dealdamage_tag"
 	{
-		"de"		"bau keine scheisse!"
-		"en"		"dont be an asshole!"
-		"da"		"Alle server regler skal overholdes!"
-	}
-
-	"dealdamage_info_title"
-	{
-		"en"		"DealDamageDay is activ"
-		"de"		"DealDamageDay ist aktiv"
-		"en"		"DealDamageDay er aktiveret!"
-	}
-
-	"dealdamage_most"
-	{
-		"#format"   "{1:N},{2:i}"
-		"en"		"Most Damage: {1} Damage: {2} HP"
+		"ru"		"[{green}MyJB.DealDamage{default}]"
+		"en"		"[{green}MyJB.DealDamage{default}]"
 	}
 
 	"dealdamage_need"
 	{
 		"#format"   "{1:i},{2:N}"
+		"ru"		"{purple}{2}{default} проголосовал. {purple}{1}{default} голосов осталось до {darkred}Дня Урона"
 		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}dealdamage{default} beginnt"
-		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes left to {darkred}dealdamage"
+		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} vote(s) required to play {darkred}DealDamage."
 		"da"		"{purple}{2}{default} har afstemt!. {purple}{1}{default} afstemninger tilbage til {darkred}dealdamage"
 	}
 
-	"dealdamage_next"
+	"dealdamage_info_line7"
 	{
-		"de"		"Nächste Runde ist {purple}DealDamageDay"
-		"en"		"Next round is {purple}DealDamageDay"
-		"da"		"Næste runde er {purple}DealDamageDay"
-	}
-
-	"dealdamage_next_nc"
-	{
-		"de"		"Nächste Runde ist DealDamageDay"
-		"en"		"Next round is DealDamageDay"
-		"da"		"Næste runde er DealDamageDay"
-	}
-
-	"dealdamage_progress"
-	{
-		"#format"   "{1:s}"
-		"de"		"Event {darkred}{1} {default}ist {purple}bereits gesetzt."
-		"en"		"Event ({darkred}{1} {default}is {purple}already in progress."
-	}
-
-	"dealdamage_result"
-	{
-		"en"		"Damage Dealed Results"
+		"ru"		"Не будь мудаком!"
+		"de"		"bau keine scheisse!"
+		"en"		"Dont be an Asshole!"
+		"da"		"Alle server regler skal overholdes!"
 	}
 
 	"dealdamage_rounds"
 	{
 		"#format"   "{1:i},{2:i}"
+		"ru"		"Раунд {purple}{1}{default} о {purple}{2}"
 		"de"		"Runde {purple}{1}{default} von {purple}{2}"
-		"en"		"Round {purple}{1}{default} of {purple}{2}"
+		"en"		"Round {purple}{1}{default} of {purple}{2}."
 		"da"		"Runde {purple}{1}{default} af {purple}{2}"
-	}
-
-	"dealdamage_setbyadmin"
-	{
-		"de"		"DealDamageDay Aktivierung durch den Admin ist {purple}ausgeschaltet"
-		"en"		"Set DealDamageDay by admin is {purple}disabled"
-		"da"		"Admin bestemmer runde for No Scope er {purple}slået fra"
-	}
-
-	"dealdamage_setbywarden"
-	{
-		"de"		"DealDamageDay Aktivierung durch den Warden ist {purple}ausgeschaltet"
-		"en"		"Set DealDamageDay by Warden is {purple}disabled"
-		"da"		"Warden bestemmer runde for No Scope er {purple}slået fra"
-	}
-
-	"dealdamage_start"
-	{
-		"de"		"{purple}DealDamageDay{default} ist gestartet!"
-		"en"		"The {purple}DealDamageDay{default} has started!"
-		"da"		"{purple}DealDamageDay{default} er startet!"
-	}
-
-	"dealdamage_start_nc"
-	{
-		"de"		"DealDamageDay ist gestartet!"
-		"en"		"The DealDamageDay started!"
-		"da"		"No Scope er startet!"
-	}
-
-	"dealdamage_t"
-	{
-		"#format"   "{1:i}"
-		"en"		"T Damage: {1} HP"
-	}
-
-	"dealdamage_tag"
-	{
-		"en"		"[{green}MyJB.DealDamage{default}]"
-	}
-
-	"dealdamage_tdealed"
-	{
-		"en"		"T dealed:"
-	}
-
-	"dealdamage_timeuntilstart_nc"
-	{
-		"#format"   "{1:i}"
-		"de"		"{1} Sekunden bis zum Start"
-		"en"		"{1} seconds until start"
-		"da"		"{1} sekunder til runden starter!"
-	}
-
-	"dealdamage_total"
-	{
-		"#format"   "{1:i}"
-		"en"		"Total Damage: {1} HP"
 	}
 
 	"dealdamage_twin_nc"
 	{
 		"#format"   "{1:i}"
+		"en"		"Prisoners win with {1} HP damage"
+		"ru"		"Террористы одержали победу. Они нанесли {1} урона"
 		"de"		"Terrorist gewinnen mit {1} HP Schaden"
-		"en"		"Terrorists win with {1} HP damage"
-	}
-
-	"dealdamage_voted"
-	{
-		"de"		"Du hast schon für {purple}DealDamageDay {default}gevotet"
-		"en"		"You already voted for {purple}DealDamageDay"
-		"da"		"Du har allerede stemt for {purple}DealDamageDay!"
-	}
-
-	"dealdamage_voting"
-	{
-		"de"		"Voting für DealDamageDay ist {purple}ausgeschaltet"
-		"en"		"Player Voting for DealDamageDay is {purple}disabled"
-		"da"		"Afstemninger for No Scope er {purple}slået fra"
 	}
 
 	"dealdamage_wait"
 	{
 		"#format"   "{1:i}"
+		"ru"		"Вы должны подождать больше {1} раундов"
 		"de"		"Du musst noch {1} Runden warten"
-		"en"		"you must wait {1} more rounds"
+		"en"		"You must wait {purple}{1}{default} more rounds for an Event Day!"
 		"da"		"Du skal vente {1} flere runder!"
+	}
+
+	"dealdamage_voting"
+	{
+		"ru"		"Голосования за День Урона {purple}отключено"
+		"de"		"Voting für DealDamageDay ist {purple}ausgeschaltet"
+		"en"		"Voting for DealDamageDay is {purple}disabled"
+		"da"		"Afstemninger for No Scope er {purple}slået fra"
+	}
+
+	"dealdamage_setbywarden"
+	{
+		"ru"		"Командир {purple}отключил{default} выбор День Урона"
+		"de"		"DealDamageDay Aktivierung durch den Warden ist {purple}ausgeschaltet"
+		"en"		"Set DealDamageDay by Warden is {purple}disabled!"
+		"da"		"Warden bestemmer runde for No Scope er {purple}slået fra"
+	}
+
+	"dealdamage_result"
+	{
+		"ru"		"Результаты Дня Урона"
+		"en"		"DealDamageDay Results:"
+	}
+
+	"dealdamage_setbyadmin"
+	{
+		"ru"		"Администратор {purple}отключил{default} выбор День Урона"
+		"de"		"DealDamageDay Aktivierung durch den Admin ist {purple}ausgeschaltet"
+		"en"		"Set DealDamageDay by Admin is {purple}disabled!"
+		"da"		"Admin bestemmer runde for No Scope er {purple}slået fra"
+	}
+
+	"dealdamage_total"
+	{
+		"#format"   "{1:i}"
+		"ru"		"Всего урона: {1} жизни"
+		"en"		"Total Damage: {1} HP"
+	}
+
+	"dealdamage_ctwin_nc"
+	{
+		"#format"   "{1:i}"
+		"ru"		"КТ одержали победу. Они нанесли {1} урона"
+		"de"		"Counter-Terrorist gewinnen mit {1} HP Schaden"
+		"en"		"The Guards win with {1} HP damage!"
+	}
+
+	"dealdamage_end"
+	{
+		"en"		"{purple}DealDamageDay{default} has ended!"
+		"ru"		"{purple}День урона{default} окончен"
+		"de"		"{purple}DealDamageDay{default} beendet"
+		"da"		"{purple}DealDamageDay{default} er afsluttet!"
+	}
+
+	"dealdamage_most"
+	{
+		"#format"   "{1:N},{2:i}"
+		"ru"		"Большинство урона: {1} урона: {2} жизни"
+		"en"		"Most Damage Dealt: {1} Damage: {2} HP"
+	}
+
+	"dealdamage_next"
+	{
+		"ru"		"Следующий раунд {purple}День Урона"
+		"de"		"Nächste Runde ist {purple}DealDamageDay"
+		"en"		"The following round will be: {purple}DealDamageDay."
+		"da"		"Næste runde er {purple}DealDamageDay"
+	}
+
+	"dealdamage_ct"
+	{
+		"#format"   "{1:i}"
+		"ru"		"CT урон: {1} HP"
+		"en"		"Guard Damage: {1} HP"
+	}
+
+	"dealdamage_next_nc"
+	{
+		"ru"		"Следующий раунд День Урона"
+		"de"		"Nächste Runde ist DealDamageDay"
+		"en"		"The following round will be: DealDamageDay."
+		"da"		"Næste runde er DealDamageDay"
+	}
+
+	"dealdamage_t"
+	{
+		"#format"   "{1:i}"
+		"ru"		"Т урон: {1} жизни"
+		"en"		"Prisoner Damage: {1} HP"
+	}
+
+	"dealdamage_start"
+	{
+		"ru"		"{purple}День урона{default} начался!"
+		"de"		"{purple}DealDamageDay{default} ist gestartet!"
+		"en"		"{purple}DealDamageDay{default} has begun!"
+		"da"		"{purple}DealDamageDay{default} er startet!"
+	}
+
+	"dealdamage_bestct"
+	{
+		"#format"   "{1:N},{2:i}"
+		"ru"		"Лучший CT: {1} урона: {2} жизни"
+		"en"		"Best Guard: {1} Damage: {2} HP"
+	}
+
+	"dealdamage_start_nc"
+	{
+		"ru"		"День урона начался!"
+		"de"		"DealDamageDay ist gestartet!"
+		"en"		"DealDamageDay has begun!"
+		"da"		"No Scope er startet!"
+	}
+
+	"dealdamage_bestt"
+	{
+		"#format"   "{1:N},{2:i}"
+		"ru"		"Лучший Т: {1} урона: {2} жизни"
+		"en"		"Best Prisoner: {1} Damage: {2} HP"
+	}
+
+	"dealdamage_voted"
+	{
+		"ru"		"Вы уже проголосовали за {purple}День Урона"
+		"de"		"Du hast schon für {purple}DealDamageDay {default}gevotet"
+		"en"		"You have already voted for {purple}DealDamageDay!"
+		"da"		"Du har allerede stemt for {purple}DealDamageDay!"
+	}
+
+	"dealdamage_client"
+	{
+		"#format"   "{1:i}"
+		"ru"		"Ваш урон: {1} жизни"
+		"en"		"Your Damage: {1} HP"
+	}
+
+	"dealdamage_progress"
+	{
+		"#format"   "{1:s}"
+		"ru"		"Игровой день {darkred}{1} {default}в {purple}процессе."
+		"de"		"Event {darkred}{1} {default}ist {purple}bereits gesetzt."
+		"en"		"The event ({darkred}{1} {default}is {purple}already in progress!"
+	}
+
+	"dealdamage_ctdealed"
+	{
+		"ru"		"КТ нанесли:"
+		"en"		"Guard dealed:"
+	}
+
+	"dealdamage_disabled"
+	{
+		"ru"		"День урона {purple}отключен."
+		"de"		"DealDamageDay ist vorübergehend {purple}deaktiviert."
+		"en"		"DealDamageDay is currently {purple}disabled!"
+		"da"		"DealDamageDay er midlertidigt {purple}slået fra."
+	}
+
+	"dealdamage_tdealed"
+	{
+		"ru"		"Т нанесли:"
+		"en"		"Prisoner Damage Dealt:"
+	}
+
+	"dealdamage_timeuntilstart_nc"
+	{
+		"#format"   "{1:i}"
+		"ru"		"{1} секунд до начала"
+		"de"		"{1} Sekunden bis zum Start"
+		"en"		"{1} seconds until round start!"
+		"da"		"{1} sekunder til runden starter!"
+	}
+
+	"dealdamage_clientdealed"
+	{
+		"ru"		"Вы нанесли:"
+		"en"		"You dealed:"
+	}
+
+	"dealdamage_info_title"
+	{
+		"ru"		"День урона активен"
+		"en"		"DealDamageDay is now Activated!"
+		"de"		"DealDamageDay ist aktiv"
+		"en"		"DealDamageDay er aktiveret!"
+	}
+
+	"dealdamage_hpdamage"
+	{
+		"ru"		"нанесено урона"
+		"en"		"HP damage"
+	}
+
+	"dealdamage_info_line1"
+	{
+		"ru"		"День Урона активен"
+		"de"		"DealDamageDay is aktiv!"
+		"en"		"DealDamageDay is now Activated!"
+	}
+
+	"dealdamage_info_line2"
+	{
+		"ru"		"Нанесите как можно больше урона вражеского команде"
+		"de"		"Mach soviel Schaden du kannst gegen das gegenerische Team"
+		"en"		"Deal as much Damage as you can to the opposing team!"
+	}
+
+	"dealdamage_info_line3"
+	{
+		"ru"		"Команда, которая нанесла больше урона победит"
+		"de"		"Das Team mit dem meist verteilen Schaden gewinnt"
+		"en"		"The team with the most dealt damage wins!"
+	}
+
+	"dealdamage_info_line4"
+	{
+		"ru"		"Все нормальные правила тюрьмы отменяются"
+		"de"		"Alle normalen Jailregeln sind aufgehoben!"
+		"en"		"All usual Jailbreak rules are repealed"
+		"da"		"Alle jail regler er ophævet!"
 	}
 
 }

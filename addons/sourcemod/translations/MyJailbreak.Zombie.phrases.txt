@@ -5,135 +5,151 @@
 {
 	"zombie_ctwin_nc"
 	{
+		"ru"		"Зомби убили всех людей"
 		"pl"		"Zombie zabily wszystkich Ludzi"
 		"de"		"Die Zombies haben die Menschen ausgelöscht"
-		"en"		"Zombies killed all Human"
+		"en"		"The Zombies have killed all the Humans!"
 		"da"		"Zombierne dræbte alle mennesker"
 	}
 
 	"zombie_disabled"
 	{
-		"pl"		"Zombie jest {purple}wylaczony."
-		"de"		"Zombie ist {purple}deaktiviert."
-		"en"		"Zombie is {purple}disabled."
-		"en"		"Zombie runde er {purple}slået fra."
+		"ru"		"Зомби день {purple}отключен."
+		"pl"		"Zombie jest tymczasowo {purple}wylaczony."
+		"de"		"Zombie ist vorübergehend {purple}deaktiviert."
+		"en"		"Zombie runde er midlertidigt {purple}slået fra."
 	}
 
 	"zombie_end"
 	{
+		"ru"		"{purple}Зомби день{default} окончен!"
 		"pl"		"{purple}Zombie{default} zakonczony"
 		"de"		"{purple}Zombie{default} beendet"
-		"en"		"{purple}Zombie{default} finished"
+		"en"		"{purple}Zombie{default} has ended."
 		"da"		"{purple}Zombie{default} er afsluttet!"
 	}
 
 	"zombie_info_line1"
 	{
+		"en"		"Zombies(Guards) VS Humans(Prisoners)!"
+		"ru"		"Зомби(ct) против Людей(t)"
 		"pl"		"Zombies(ct) przeciwko Ludzkosci (t)"
 		"de"		"Zombies(ct) gegen Humans(t)"
-		"en"		"Zombies(ct) against Humans(t)"
 		"da"		"Zombier(CT) mod Humans(T)"
 	}
 
 	"zombie_info_line2"
 	{
+		"ru"		"Зомби заморожены и Люди могут спрятаться"
 		"pl"		"Zombie zamarzly , czas sie schowac!!! "
 		"de"		"Zombies sind eine zeit gefreezt damit die T sich verstecken können"
-		"en"		"Zombies freezed and Human can hide"
+		"en"		"Zombies are freezed! Humans should run!"
 		"da"		"Zombierne er frosset og mennesker skal gemme sig!"
 	}
 
 	"zombie_info_line3"
 	{
+		"ru"		"Зомби получили очень много ХП."
 		"pl"		"Uwaga, Zombie maja o wiele wiecej HP."
 		"de"		"Zombies haben mehr HP"
-		"en"		"Zombies got much more HP."
+		"en"		"Zombies have a large amount of HP!"
 	}
 
 	"zombie_info_line4"
 	{
+		"ru"		"Все нормальные правила тюрьмы отменяются"
 		"pl"		"Wszystkie normalne zasady wiezienia zostaly zastapione"
 		"de"		"Alle normalen Jailregeln sind aufgehoben!"
-		"en"		"All normal jail rules are repealed"
+		"en"		"All usual Jailbreak Rules do not apply during this round!"
 		"da"		"Alle jail regler er ophævet!"
 	}
 
 	"zombie_info_line5"
 	{
+		"ru"		"Здесь нету последних желаний!"
 		"pl"		"Nie ma ostatniego zyczenia!"
 		"de"		"Der letzte Terrorists hat keinen Wunsch!"
-		"en"		"There is no last request!"
+		"en"		"Last Request is disabled during this round!"
 		"da"		"Last Request er deaktiveret i denne runde!"
 	}
 
 	"zombie_info_line6"
 	{
+		"en"		"Everyone is allowed to go anywhere within the map!"
+		"ru"		"Каждый может идти туда, куда захочет."
 		"pl"		"Kazdy moze isc i chowac sie gdzie chce "
 		"de"		"Jeder darf überall hin wo er will!"
-		"en"		"Everyone is allowed to go everywhere where he wants"
 		"da"		"Man må gå der hen hvor man har lyst - Ingen begrænsninger"
 	}
 
 	"zombie_info_line7"
 	{
+		"ru"		"Не будь мудаком!"
 		"pl"		"Nie badz DUPKIEM!"
 		"de"		"Bau keine Scheisse!"
-		"en"		"Dont be an asshole!"
+		"en"		"Don't be an Asshole!"
 		"da"		"Alle server regler skal overholdes!"
 	}
 
 	"zombie_info_title"
 	{
+		"ru"		"Зомби день активен"
 		"pl"		"Zombie jest Aktywne"
 		"de"		"Zombie ist aktiv"
-		"en"		"Zombie is active"
+		"en"		"Zombie is now Activated!"
 		"da"		"Zombie runde er aktiveret!"
 	}
 
 	"zombie_minplayer"
 	{
-		"en"		"For a Zombie you need at least {purple}one CT"
+		"da"		"For zombie runde skal der mindst være {purple}en CT"
+		"ru"		"Для зомби дня нужен минимум {purple} один КТ"
+		"en"		"For Zombie you need at least {purple}one Guard & one Prisoner!"
 		"pl"		"Do zabawy Zombie potrzeba przynajmniej {purple}jednego CT"
 		"de"		"Für Zombie brauchen wir mindestens {purple}einen CT"
-		"en"		"For zombie runde skal der mindst være {purple}en CT"
 	}
 
 	"zombie_need"
 	{
 		"#format"   "{1:i},{2:N}"
+		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes required to play {darkred}Zombie."
+		"ru"		"{purple}{2}{default} проголосовал. {purple}{1}{default} голосов осталось до {darkred}Зомби дня"
 		"pl"		"{purple}{2}{default} zaglosowal {purple}{1}{default} pozostalo glosow do {darkred}ZOMBIE"
 		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}Zombie{default} beginnt"
-		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes left to {darkred}Zombie"
 		"da"		"{purple}{2}{default} har stemt. {purple}{1}{default} stemmer tilbage for {darkred}Zombie"
 	}
 
 	"zombie_next"
 	{
+		"ru"		"Следующий раунд {purple}Зомби день"
 		"pl"		"Nastepna runda to {purple}Zombie"
 		"de"		"Nächste Runde ist {purple}Zombie"
-		"en"		"Next round is {purple}Zombie"
+		"en"		"The following round will be: {purple}Zombie."
 		"da"		"Næste runde er {purple}Zombie"
 	}
 
 	"zombie_next_nc"
 	{
+		"ru"		"Следующий раунд Зомби день"
 		"pl"		"Nastepna runda to Zombie"
 		"de"		"Nächste Runde ist Zombie"
-		"en"		"Next round is Zombie"
+		"en"		"The following round will be: Zombie."
 		"da"		"Næste runde er Zombie"
 	}
 
 	"zombie_progress"
 	{
 		"#format"   "{1:s}"
+		"ru"		"Игровой день {darkred}{1} {default}в {purple}процессе."
 		"pl"		"Zabawa  {darkred}{1} {default}sie {purple}rozpoczela"
 		"de"		"Event {darkred}{1} {default}ist {purple}bereits gesetzt."
-		"en"		"Event {darkred}{1} {default}is {purple}already in progress."
+		"en"		"The event {darkred}{1} {default}is {purple}already in progress!"
 	}
 
 	"zombie_rounds"
 	{
 		"#format"   "{1:i},{2:i}"
+		"ru"		"Раунд {purple}{1}{default} о {purple}{2}"
 		"pl"		"Runda {purple}{1}{default} z {purple}{2}"
 		"de"		"Runde {purple}{1}{default} von {purple}{2}"
 		"en"		"Round {purple}{1}{default} of {purple}{2}"
@@ -142,89 +158,101 @@
 
 	"zombie_setbyadmin"
 	{
+		"ru"		"Администратор {purple}отключил{default} выбор Зомби дня"
 		"pl"		"Wlaczenie Zombie przez admina jest {purple}wylaczone"
 		"de"		"Zombie Aktivierung durch den Admin ist {purple}ausgeschaltet"
-		"en"		"Set Zombie by admin is {purple}disabled"
+		"en"		"Set Zombie by Admin is {purple}disabled!"
 		"da"		"Admin bestemmer runde er {purple}slået fra"
 	}
 
 	"zombie_setbywarden"
 	{
+		"ru"		"Командир {purple}отключил{default} выбор Зомби дня"
 		"pl"		"Glosowanie na Zombie przez Straznika jest {purple}wylaczone"
 		"de"		"Zombie Aktivierung durch den Warden ist {purple}ausgeschaltet"
-		"en"		"Set Zombie by warden is {purple}disabled"
+		"en"		"Set Zombie by Warden is {purple}disabled!"
 		"da"		"Warden bestemmer runde er {purple}slået fra"
 	}
 
 	"zombie_start"
 	{
+		"ru"		"{purple}Зомби день{default} начался!"
+		"ru"		"{purple}Зомби день{default} начались!"
 		"pl"		"{purple}ZombieDay{default} sie rozpoczal!"
 		"de"		"{purple}Zombie{default} ist gestartet!"
-		"en"		"The {purple}Zombie{default} has started!"
+		"en"		"{purple}Zombie{default} has begun!"
 		"da"		"{purple}Zombie{default} runde er startet!"
 	}
 
 	"zombie_start_nc"
 	{
+		"ru"		"Зомби день начался!"
 		"pl"		"ZombieDay sie rozpoczal!"
 		"de"		"Zombie ist gestartet!"
-		"en"		"The Zombie has started!"
+		"en"		"Zombie has begun!"
 		"da"		"Zombie er startet!"
 	}
 
 	"zombie_tag"
 	{
+		"ru"		"[{green}MyJB.Zombie{default}]"
 		"en"		"[{green}MyJB.Zombie{default}]"
 	}
 
 	"zombie_timetounfreeze_nc"
 	{
 		"#format"   "{1:i}"
+		"ru"		"{1} секунд до разморозки"
 		"pl"		"{1} sekund do odmrozenia"
 		"de"		"{1} Sekunden bis zum unfreeze"
-		"en"		"{1} seconds until unfreeze"
+		"en"		"{1} seconds until you will be unfreezed!"
 		"da"		"{1} sekunder til du bliver unfreezet"
 	}
 
 	"zombie_timeuntilzombie_nc"
 	{
 		"#format"   "{1:i}"
+		"ru"		"{1} секунд, чтобы спрятаться"
 		"pl"		"{1} sekund do startu!"
 		"de"		"{1} Sekunden zum verstecken"
-		"en"		"{1} seconds to hide "
+		"en"		"{1} seconds left to hide!"
 		"da"		"{1} sekunder til at gemme dig i "
 	}
 
 	"zombie_twin_nc"
 	{
+		"ru"		"Люди выжили"
 		"pl"		"Ludzie przetrwali"
 		"de"		"Die Menschen haben überlebt"
-		"en"		"Humans has surrived"
+		"en"		"Humans has survived!"
 		"da"		"Mennesker har overlevet!"
 	}
 
 	"zombie_voted"
 	{
+		"ru"		"Вы проголосовали за {purple}Зомби день"
 		"pl"		"Juz glosowales na {purple}Zombie"
 		"de"		"Du hast schon für {purple}Zombie {default}gevotet"
-		"en"		"You already voted for {purple}Zombie"
+		"en"		"You have already voted for {purple}Zombie!"
 		"da"		"Du har allerede stemt på {purple}Zombie"
 	}
 
 	"zombie_voting"
 	{
+		"en"		"Voting for Zombie is {purple}disabled!"
+		"ru"		"Голосования за зомби день {purple}отключено"
 		"pl"		"Glosowanie graczy na Zombie jest {purple}wylaczone"
 		"de"		"Voting für Zombie ist {purple}ausgeschaltet"
-		"en"		"Player voting for Zombie is {purple}disabled"
 		"da"		"Afstemninger for zombie er {purple}slået fra"
 	}
 
 	"zombie_wait"
 	{
 		"#format"   "{1:i}"
+		"ru"		"Вы должны подождать больше {purple}{1}{default} раундов"
 		"pl"		"Musisz poczekac  {1} rund"
 		"de"		"Du musst noch {purple}{1}{default} Runden warten"
-		"en"		"You must wait {purple}{1}{default} more rounds"
+		"en"		"You must wait {purple}{1}{default} more rounds for an Event Day!"
 		"da"		"Du skal vente {purple}{1}{default} runder endnu!"
 	}
 

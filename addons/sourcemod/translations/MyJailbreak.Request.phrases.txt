@@ -8,7 +8,7 @@
 		"ru"		"Вы не мертвы или не КТ"
 		"pl"		"Jestes martwy lub nie w CT."
 		"de"		"Du bist tot oder ein Ct."
-		"en"		"You are not alive or a CT."
+		"en"		"You are either dead or a Guard!"
 	}
 
 	"request_fullhp"
@@ -16,7 +16,7 @@
 		"ru"		"Хорошая попытка, у Вас полное здоровье"
 		"pl"		"Nie kombinuj , masz full HP"
 		"de"		"Netter Versuch, Du bist bei voller Gesundheit"
-		"en"		"Nice try, you are full health"
+		"en"		"Nice try! You're at full health!"
 	}
 
 	"request_refusedtimes"
@@ -25,16 +25,16 @@
 		"de"		"Du hast in dieser Runde schon {purple}{1} mal verweigert."
 		"ru"		"Вы {purple}отказывались слишком много раз{default} в этом раунде."
 		"pl"		"juz {purple}odmawiales za duzo razy{default} w tej rundzie."
-		"en"		"You have already {purple}refused {1} times{default} in this round."
+		"en"		"You have already {purple}refused {1} times{default} during this round!"
 	}
 
 	"request_capitulation"
 	{
 		"#format"   "{1:N}"
+		"en"		"{purple}{1} {default}has {purple}capitulated! {default}Will the Warden accept the request?"
 		"ru"		"{purple}{1} {purple}капитулировал! {default}Будет ли командир одобрять?"
 		"pl"		"{purple}{1} {default}. {purple}skapitulowal! {default}Czy Warden to zaakceptuje ?"
 		"de"		"{purple}{1} {default}hat {purple}sich ergeben! {default}Wird der Warden akzeptieren?"
-		"en"		"{purple}{1} {default}has {purple}capitulated! {default}Will the Warden accept?"
 	}
 
 	"request_alreadycapitulated"
@@ -42,7 +42,7 @@
 		"ru"		"Вы уже {purple}капитулировали"
 		"pl"		"przeciez ty {purple}sie juz zbuntowales."
 		"de"		"Du hast {purple}schon ergeben."
-		"en"		"You have {purple}already capitulated."
+		"en"		"You have {purple}already capitulated!"
 	}
 
 	"request_knifeback"
@@ -50,7 +50,7 @@
 		"ru"		"Вы получили {purple}нож обратно."
 		"pl"		"Masz {purple}swoj noz z powrotem."
 		"de"		"Du hast {purple}dein Messer zurück erhalten."
-		"en"		"You got {purple}your knife back."
+		"en"		"You've been given {purple}your knife back."
 	}
 
 	"request_accepted"
@@ -59,7 +59,7 @@
 		"ru"		"Командир одобрил {1} запрос. "
 		"pl"		"Warden zaakceptowal twoje  {1}zyczenie."
 		"de"		"Der Warden hat {1}s Anfrage akzeptiert."
-		"en"		"The Warden has accepted {1}s request."
+		"en"		"The Warden has accepted {1}'s request."
 	}
 
 	"request_noaccepted"
@@ -68,7 +68,7 @@
 		"ru"		"Командир НЕ одобрил {1} запрос."
 		"pl"		"Warden NIE zaakceptowal twojego  {1}zyczenia."
 		"de"		"Der Warden hat {1}s Anfrage NICHT akzeptiert."
-		"en"		"The Warden has NOT accepted {1}s request."
+		"en"		"The Warden has {purple}not{default} accepted {1}s request."
 	}
 
 	"request_refuser"
@@ -76,7 +76,7 @@
 		"ru"		"Игрок, который отказывается"
 		"pl"		"Gracz ktory odmawia"
 		"de"		"Spieler die verweigern"
-		"en"		"Player who refusing"
+		"en"		"A Player is Refusing!"
 	}
 
 	"request_acceptcapitulation"
@@ -84,7 +84,7 @@
 		"ru"		"Одобрить Капитуляцию?"
 		"pl"		"Zaakceptowac kapitulacje ?"
 		"de"		"Kapitulation akzeptieren?"
-		"en"		"Accept Capitualation?"
+		"en"		"Do you accept The Capitualation?"
 	}
 
 	"request_acceptheal"
@@ -92,7 +92,7 @@
 		"ru"		"Принять исцеление?"
 		"pl"		"Zaakceptowac uleczenie?"
 		"de"		"Heilungsanfrage akzeptieren?"
-		"en"		"Accept healing?"
+		"en"		"Do you accept the Healing?"
 	}
 
 	"request_health"
@@ -100,7 +100,7 @@
 		"ru"		"У вас есть {purple} healthshot{default}"
 		"pl"		"Posiadasz {purple} healthshot{default}"
 		"de"		"Du haste eine {purple}healthshot{default} bekommen."
-		"en"		"You've got a {purple} healthshot{default}"
+		"en"		"You've received a {purple} Healthshot{default}!"
 		"da"		"Du har fået et {purple} healthshot{default}"
 	}
 
@@ -110,7 +110,7 @@
 		"ru"		"Вы запросили {purple}слишком много исцелений{default} в этом раунде."
 		"pl"		"ty juz {purple}skladales zyczenia za duzo razy {default} w tej rundzie."
 		"de"		"Du hast in dieser Runde schon {purple}{1} mal Heilungen{default} angefragt."
-		"en"		"You have already {purple}request {1} times healing{default} in this round."
+		"en"		"You have already requested healing{purple}{1} times{default} during this round!"
 	}
 
 	"request_nodamage"
@@ -118,16 +118,16 @@
 		"ru"		"Вы не можете наносить {purple}урон после капитуляции."
 		"pl"		"nie mozesz zadac obrazen  {purple}po kapitulacji."
 		"de"		"Du kannst nach einer Capitulation {purple}keinen Schaden verteilen."
-		"en"		"You have cant make {purple}damage after capitulation."
+		"en"		"You cannot do {purple}damage after capitulation!"
 	}
 
 	"request_heal"
 	{
 		"#format"   "{1:N}"
+		"en"		"{purple}{1} {default}has requested a {purple}Healing! {default}Will the Warden acceptthe request?"
 		"ru"		"{purple}{1} {default}запросил {purple}исцеление! {default}Будет ли командир одобрять?"
 		"pl"		"{purple}{1} {default}ma zyczenie {purple}healing! {default}Czy Warden to zaakceptuje ?"
 		"de"		"{purple}{1} {default}hat {purple}Heilung {default}angefragt. Wird der Warden akzeptieren?"
-		"en"		"{purple}{1} {default}has request {purple}healing! {default}Will the Warden accept?"
 	}
 
 	"request_alreadyhealed"
@@ -135,7 +135,7 @@
 		"ru"		"Вы уже {purple}запросили исцеление."
 		"pl"		"Przeciez juz {purple}chciales uzdrowienia."
 		"de"		"Du hast bereits{purple} nach Heilung gefragt."
-		"en"		"You have {purple}already request healing."
+		"en"		"You have already requested a{purple} Healing!"
 	}
 
 	"request_processing"
@@ -143,7 +143,7 @@
 		"ru"		"Ваш запрос уже в {purple}обработке. Подождите минутку"
 		"pl"		"takie rzadanie jest juz przetwarzane {purple}Poczekaj chwile!!"
 		"de"		"Es ist noch eine {purple}Anfrage im Gange. warte einen Moment"
-		"en"		"There is already a {purple}request in processing. Wait a moment"
+		"en"		"There is already a {purple}request in processing. Wait a moment!"
 	}
 
 	"request_repeatpls"
@@ -152,7 +152,7 @@
 		"ru"		"{purple}{1} {default}просит повторить! {default}Или он не знает правила игры."
 		"pl"		"{purple}{1} {default}prosi o  {purple}Powtorzenie ostatniego zdania  {default}albo nie zna zasad GRY! "
 		"de"		"{purple}{1} {default}bittet um eine {purple}Wiederholung!{default} Oder er kennt die Spielregeln nicht."
-		"en"		"{purple}{1} {default}asks for a {purple}repeat! {default}Or he doesn't know the game rules"
+		"en"		"{purple}{1} {default}has requested a {purple}Repeat!{default}"
 	}
 
 	"request_repeattimes"
@@ -161,7 +161,7 @@
 		"ru"		"Вы запросили {purple}слишком много повторов{default} в этом раунде."
 		"pl"		"ty juz  {purple}miales zbyt wiele zyczen {default} w tej rundzie."
 		"de"		"Du hast in dieser Runde schon {purple}{1} mal Wiederholungen{default} angefragt."
-		"en"		"You have already {purple}request repeats {1} times{default} in this round."
+		"en"		"You have already requested a {purple} Repeat {1} times{default} during this round!"
 	}
 
 	"request_alreadyrepeat"
@@ -169,7 +169,7 @@
 		"ru"		"Вы уже {purple}попросили повторить."
 		"pl"		"Ty juz prosiles o {purple} powtorzenie zasad."
 		"de"		"Du hast bereits nach einer {purple}Wiederholung gefragt."
-		"en"		"You have {purple}already request a repeat."
+		"en"		"You have already requested a {purple}repeat!"
 	}
 
 	"request_repeat"
@@ -177,7 +177,7 @@
 		"ru"		"Игрок, который просит повторить"
 		"pl"		"Gracze, ktorzy prosili o powtorzenie"
 		"de"		"Spieler die um eine Wiederholung bitten"
-		"en"		"Player who ask for repeating"
+		"en"		"A Player is requesting a Repeat!"
 	}
 
 	"request_menu_title"
@@ -185,7 +185,7 @@
 		"ru"		"Задать вопрос"
 		"pl"		"Popros o zyczenie"
 		"de"		"Anfrage stellen"
-		"en"		"Make a request"
+		"en"		"Make a Request"
 	}
 
 	"request_menu_repeat"
@@ -193,7 +193,7 @@
 		"ru"		"Повторите объявление"
 		"pl"		"Popros o powtorzenie"
 		"de"		"Ansage wiederholen"
-		"en"		"Repeat announcement"
+		"en"		"Repeat Announcement"
 	}
 
 	"request_menu_refuse"
@@ -201,7 +201,7 @@
 		"ru"		"Отказаться от игры"
 		"pl"		"Odmowa gry"
 		"de"		"Spiel verweigern"
-		"en"		"Refuse a game"
+		"en"		"Refuse the Current Game"
 	}
 
 	"request_menu_heal"
@@ -209,7 +209,7 @@
 		"ru"		"Запросить исцеление"
 		"pl"		"Popros o uzdrowienie"
 		"de"		"Heilung anfragen"
-		"en"		"Request Healing"
+		"en"		"Request a Healing"
 	}
 
 	"request_menu_capitulation"
@@ -222,10 +222,10 @@
 
 	"request_openrefuse"
 	{
+		"en"		"The warden has enabled refusals.{purple} Type !refuse to refuse the game!"
 		"ru"		"Командир принимает отказы.{purple} Напишите !refuse , чтобы отказаться от игры"
 		"pl"		"Warden otwiera rezygnacje.{purple} wpisz !refuse by zrezygnowac z trybu gry."
 		"de"		"Der Warden hat Verweigerung eröffnet. {purple}!refuse um das Spiel zu verweigern."
-		"en"		"The warden opend refuse.{purple} type !refuse to refused the game."
 	}
 
 	"request_tag"
@@ -242,7 +242,7 @@
 		"ru"		"{purple}{1} {purple}Отказался от этой игры."
 		"pl"		"{purple}{1} {default}. {purple}odmawia gry."
 		"de"		"{purple}{1} {default}hat das {purple}Spiel verweigert"
-		"en"		"{purple}{1} {default}has {purple}refused the game."
+		"en"		"{purple}{1} {default}has {purple}refused the game!"
 	}
 
 	"request_alreadyrefused"
@@ -250,7 +250,7 @@
 		"ru"		"Вы уже {purple} отказались."
 		"pl"		"Juz {purple}przeciez odmowiles gry."
 		"de"		"Du hast {purple}schon verweigert."
-		"en"		"You have {purple}already refused."
+		"en"		"You have {purple}already refused the game!"
 	}
 
 	"request_refuseallow"
@@ -258,20 +258,20 @@
 		"ru"		"Командир должен сначало {purple}разрешить написать !refuse"
 		"pl"		"Warden musi najpierw zarzadzic ODMOWY {purple}poprzez wpisanie !refuse"
 		"de"		"Der Warden muss zu erst verweigern {purple}erlauben mit !refuse"
-		"en"		"The warden must first {purple}allow refusing by type !refuse "
+		"en"		"The warden must first {purple}allow refusing by typing !refuse"
 	}
 
 	"request_handlefreekill"
 	{
 		"ru"		"Как справиться с этим фрикиллом?"
 		"de"		"Wie möchstest du den Freekill handhaben?"
-		"en"		"How handle this freekill?"
+		"en"		"How do you want to handle this freekill?"
 	}
 
 	"request_respawncell"
 	{
 		"ru"		"Возродить в камере"
-		"en"		"Respawn in cell"
+		"en"		"Request a Respawn in a Cell"
 		"de"		"In der Zelle wiederbeleben"
 	}
 
@@ -279,20 +279,20 @@
 	{
 		"ru"		"Возродил жертву."
 		"de"		"Das Opfer wiederbeleben"
-		"en"		"Respawn the victim"
+		"en"		"Respawn the Victim"
 	}
 
 	"request_killfreekiller"
 	{
 		"ru"		"Убить фрикиллера"
 		"de"		"Töte den Freekiller"
-		"en"		"Kill the freekiller"
+		"en"		"Slay the Freekiller"
 	}
 
 	"request_respawnwarden"
 	{
 		"ru"		"Воскрешение перед командиром."
-		"en"		"Respawn in front of warden"
+		"en"		"Respawn in Front of the Warden"
 		"de"		"Vor dem Warden wiederbeleben"
 	}
 
@@ -300,21 +300,21 @@
 	{
 		"ru"		"Следующий раунд фридей."
 		"de"		"Nächste Runde Freeday"
-		"en"		"Next round Freeday"
+		"en"		"Request a Freeday"
 	}
 
 	"request_swapfreekiller"
 	{
 		"ru"		"Перевести фрикиллера за Т"
 		"de"		"Schiebe den Freekiller zu T"
-		"en"		"Swap freekiller to T"
+		"en"		"Swap freekiller to Prisoner Team"
 	}
 
 	"request_aliveorct"
 	{
 		"de"		"Du bist nicht tot oder ein CT."
 		"ru"		"Вы живы или КТ"
-		"en"		"You are not dead or a CT."
+		"en"		"You are either alive or a Guard!"
 	}
 
 	"request_nokiller"
@@ -322,14 +322,14 @@
 		"ru"		"Простите, мы не можем найти Вашего убийцу?"
 		"ru"		"Простите, мы не можем найти Вашего убийцу?"
 		"de"		"Wir konnten deinen Mörder nicht finden"
-		"en"		"Sorry, we can't find your killer"
+		"en"		"Sorry, we can't find your killer!"
 	}
 
 	"request_respawned"
 	{
 		"ru"		"Вы возрождены"
 		"de"		"Du wurdest wiederbeleben"
-		"en"		"You respawned"
+		"en"		"You were respawned!"
 	}
 
 	"request_respawnedall"
@@ -337,14 +337,14 @@
 		"#format"   "{1:N}"
 		"ru"		"{1} был возрождён из-за {darkred}фрикилла"
 		"de"		"{1} wurde wegen eines {darkred}Freekills{default} wiederbelebt"
-		"en"		"{1} was respawned due a {darkred}freekill"
+		"en"		"{1} was respawned due a {darkred}Freekill!"
 	}
 
 	"request_freekilltimes"
 	{
 		"#format"   "{1:i}"
 		"ru"		"Вы уже отправили {purple} {1} жалоб о фрикилле{default} в этом раунде."
-		"en"		"You have already {purple}report {1} times freekills{default} in this round."
+		"en"		"You have already reported a Freekill {purple}{1}{default} times during this round."
 		"de"		"Du hast in dieser Runde schon {purple}{1} mal Freekills{default} gemeldet."
 	}
 
@@ -352,22 +352,22 @@
 	{
 		"ru"		"Вы были убиты из-за {darkred}фрикилла"
 		"de"		"Du wurdest wegen eines {darkred}Freekills{default} getötet"
-		"en"		"You got slayed due a {darkred}freekill"
+		"en"		"You were slain due to a {darkred}Freekill!"
 	}
 
 	"request_killbcfreekillall"
 	{
 		"#format"   "{1:N}"
+		"en"		"{green}{1}{default} was slain due to a {darkred}Freekill!"
 		"ru"		"{green}{1}{default} был убит в из-за {darkred}фрикилла"
 		"de"		"{green}{{1}{default} wurdest wegen eines {darkred}Freekills{default} getötet"
-		"en"		"{green}{1}{default} was slayed due a {darkred}freekill"
 	}
 
 	"request_swapbcfreekill"
 	{
 		"ru"		"Вы были переведены за команду террористов из-за {darkred}фрикилла."
 		"de"		"Du wurdest wegen eines {darkred}Freekills{default} zu Terror verschoben"
-		"en"		"You got swaped to terrorist team due a {darkred}freekill"
+		"en"		"You were swaped to the Prisoner's team due to a {darkred}Freekill!"
 	}
 
 	"request_swapbcfreekillall"
@@ -375,7 +375,7 @@
 		"#format"   "{1:N}"
 		"ru"		"{green}{{1}{default} был переведён из-за {darkred}фрикилла{default} в команду террористов."
 		"de"		"{green}{{1}{default} wurdest wegen eines {darkred}Freekills{default} zu den Terrors verschoben"
-		"en"		"{green}{{1}{default} was swaped due a {darkred}freekill{default} to terrorist team"
+		"en"		"{green}{1}{default} was swaped due to a {darkred}freekill{default} to the Prisoner's team!"
 	}
 
 	"request_menu_freekill"
@@ -390,7 +390,7 @@
 		"#format"   "{1:N},{2:N},{3:N}"
 		"ru"		"{green}{1}{default} Отправил отчёт {darkred}{3}{default} о фрикилле {purple}{2}"
 		"de"		"{green}{1}{default} meldet {darkred}{2}{default} wegen Freekill an {purple}{3}"
-		"en"		"{green}{1{default} send a freekill report of {darkred}{2}{default} to {purple}{3}"
+		"en"		"{green}{1{default} sent a Freekill report of {darkred}{2}{default} to {purple}{3}!"
 	}
 
 	"request_pardonfreekill"
@@ -403,14 +403,14 @@
 	"request_handlerespawn"
 	{
 		"ru"		"Где возродить?"
-		"en"		"Where to respawn?"
+		"en"		"Where do you want the respawn?"
 		"de"		"Wo möchtest du ihn respawnen?"
 	}
 
 	"request_respawnbody"
 	{
 		"ru"		"Возродить в теле"
-		"en"		"Respawn on body"
+		"en"		"Respawn on Death Place"
 		"de"		"An Leiche wiederbeleben"
 	}
 

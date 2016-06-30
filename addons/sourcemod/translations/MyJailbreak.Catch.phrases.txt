@@ -5,6 +5,7 @@
 {
 	"catch_tag"
 	{
+		"ru"		"[{green}MyJB.Catch{default}]"
 		"pl"		"[{green}JB.Ganiany{default}]"
 		"en"		"[{green}MyJB.Catch{default}]"
 	}
@@ -12,38 +13,44 @@
 	"catch_sprintend"
 	{
 		"#format"   "{1:i}"
+		"en"		"{blue}You're too tired to sprint!{default} Rest for {1} Seconds."
+		"ru"		"{blue}Ускоренный бег закончился!{default} Перезарядка {1} секунд"
 		"pl"		"{blue}Sprint sie skonczyl{default} odczekaj {1} Sekund"
 		"de"		"Du kannst nicht mehr {blue}sprinten! {default}warte {1} Sekunden!"
-		"en"		"{blue}Sprint ended!{default} Cooldown {1} Seconds"
 	}
 
 	"catch_sprintagain"
 	{
+		"ru"		"Вы можете{blue}использовать ускоренный бег опять!{default}"
 		"pl"		"Mozesz znowu{blue}biec Sprintem{default}"
 		"de"		"Du kannst wieder {blue}sprinten!"
-		"en"		"You can{blue}Sprint again!{default}"
+		"en"		"You caught your breath. You can {blue}sprint {default}again!"
 	}
 
 	"catch_disabled"
 	{
-		"pl"		"Ganiany jest {purple}wylaczony."
-		"de"		"Catch ist {purple}deaktiviert."
+		"ru"		"Заморозка {purple}отключена."
+		"ru"		"Заморозка {purple}отключена"
+		"pl"		"Ganiany jest tymczasowo {purple}wylaczony."
+		"de"		"Catch ist vorübergehend {purple}deaktiviert."
 		"en"		"Catch is {purple}disabled."
-		"da"		"Catch er {purple}slået fra."
+		"da"		"Catch er midlertidigt {purple}slået fra."
 	}
 
 	"catch_need"
 	{
 		"#format"   "{1:i},{2:N}"
+		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} vote(s) required to play {darkred}Catch!"
+		"ru"		"{purple}{2}{default} проголосовал. {purple}{1}{default} голосов осталось до {darkred}Заморозку"
 		"pl"		"{purple}{2}{default} zaglosowal. pozostalo {purple}{1}{default} glosow do {darkred}Ganiany{default} Ganianego "
 		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}Catch{default} beginnt"
-		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes left to {darkred}Catch"
 		"da"		"{purple}{2}{default} har stemt. {purple}{1}{default} stemmer tilbage til {darkred}Catch{default} starter!"
 	}
 
 	"catch_rounds"
 	{
 		"#format"   "{1:i},{2:i}"
+		"ru"		"Раунд {purple}{1}{default} из {purple}{2}"
 		"pl"		"Runda {purple}{1}{default} z {purple}{2}"
 		"de"		"Runde {purple}{1}{default} von {purple}{2}"
 		"en"		"Round {purple}{1}{default} of {purple}{2}"
@@ -52,211 +59,238 @@
 
 	"catch_info_title"
 	{
+		"ru"		"Ловля активирована!"
 		"pl"		"Ganiany jest Wlaczony!"
 		"de"		"Fangen ist aktiv"
-		"en"		"Catch is activated!"
+		"en"		"Catch is now activated!"
 		"da"		"Catch er aktiveret!"
 	}
 
 	"catch_twin_nc"
 	{
+		"ru"		"Террористы сбежали"
 		"pl"		"Terrorysta uciekl"
 		"de"		"Terroristen sind entkommen"
-		"en"		"Terrorists escaped"
+		"en"		"The terrorists have escaped!"
 		"da"		"Terroristerne slap væk og vandt!"
 	}
 
 	"catch_ctwin_nc"
 	{
+		"ru"		"Всех террористов поймали"
+		"ru"		"Всех террористов поймали!"
 		"pl"		"Wszyscy Terrorysci zlapani"
 		"de"		"Alle Terroristen wurden wieder eingefangen"
-		"en"		"All terrorists caught"
+		"en"		"All the terrorists have been caught!"
 		"da"		"Alle terrorister er blevet fanget!"
 	}
 
 	"catch_info_line1"
 	{
+		"ru"		"КТ должны поймать всех Т, ударив их ножом и заморозив"
 		"pl"		"CT musza zlapac wszystkich T swoimi nozami by ich zamrozic"
 		"de"		"Die CT müssen alle T mit dem Messer einfangen und freezen"
-		"en"		"The CTs have to catch all Ts with their knife and freeze them"
+		"en"		"The Guards must catch and freeze the Prisoners with their knife."
 		"da"		"CTs skal fange & fryse alle T ved at knife dem"
 	}
 
 	"catch_end"
 	{
+		"ru"		"{purple}Заморозка{default} окончена"
 		"pl"		"{purple}Ganiany{default} zakonczony"
 		"de"		"{purple}Catch{default} beendet"
-		"en"		"{purple}Catch{default} finished"
+		"en"		"{purple}Catch{default} has ended."
 		"da"		"{purple}Catch{default} er afsluttet!"
 	}
 
 	"catch_info_line2"
 	{
+		"ru"		"Т могут размораживать Т - просто ударьте их ножом!"
 		"pl"		"T moze odmrozic kolejnego T - uzyj swojego noza !"
 		"de"		"T können gefreezte T mit dem messer befreien"
-		"en"		"Ts can unfreeze Ts - Just knife them!"
+		"en"		"Prisoners can unfreeze Other Prisoners. Knife them!"
 		"da"		"T kan unfreeze fanget Ts med kniv"
 	}
 
 	"catch_voting"
 	{
+		"ru"		"Голосования за Заморозку {purple}отключено"
 		"pl"		"Glosowanie graczy na Ganianego jest {purple}wylaczone"
 		"de"		"Voting für Catch ist {purple}ausgeschaltet"
-		"en"		"Player voting for Catch is {purple}disabled"
+		"en"		"Voting for Catch is currently {purple}disabled!"
 		"da"		"Afstemning for Catch er {purple}slået fra"
 	}
 
 	"catch_setbywarden"
 	{
+		"ru"		"Командир {purple}отключил{default} выбор Заморозку"
 		"pl"		"Glosowanie na Ganianego przez Straznika jest {purple}wylaczone"
 		"de"		"Catch Aktivierung durch den Warden ist {purple}ausgeschaltet"
-		"en"		"Set Catch by warden is {purple}disabled"
+		"en"		"Set Catch by warden is currently {purple}disabled!"
 		"da"		"Start Catch som Warden er {purple}slået fra"
 	}
 
 	"catch_info_line3"
 	{
+		"ru"		"Нажмите 'E', чтобы использовать ускоренный бег!"
 		"pl"		"Wcisnij E by uzyc Sprintu!"
 		"de"		"mit der BENUTZEN-Taste kannst du sprinten"
-		"en"		"Press E to sprint!"
+		"en"		"Hold E to {blue}sprint!"
 		"da"		"Brug E til at Sprint!"
 	}
 
 	"catch_setbyadmin"
 	{
+		"ru"		"Администратор {purple}отключил{default} выбор Заморозку"
 		"pl"		"Wlaczenie Ganieanego przez admina jest {purple}wylaczone"
 		"de"		"Catch Aktivierung durch den Admin ist {purple}ausgeschaltet"
-		"en"		"Set Catch by admin is {purple}disabled"
+		"en"		"Set Catch by Admin is currently {purple}disabled!"
 		"da"		"Start Catch som Admin er {purple}slået fra"
 	}
 
 	"catch_next"
 	{
+		"ru"		"Следующий раунд {purple}Заморозка"
 		"pl"		"Nastepna runda to {purple}Ganiany"
 		"de"		"Nächste Runde ist {purple}Catch"
-		"en"		"Next round is {purple}Catch"
+		"en"		"The following round will be: {purple}Catch."
 		"da"		"Næste runde er {purple}Catch"
 	}
 
 	"catch_info_line4"
 	{
+		"ru"		"Никакие правила тюрьмы не применяются в этом раунде!"
 		"pl"		"Zasady Wiezienia nie obowiazuja w tej rundzie!"
 		"de"		"Alle normalen Jailregeln sind aufgehoben!"
-		"en"		"No jail rules apply in this round!"
+		"en"		"No usual Jailbreak rules apply for this round!"
 		"da"		"Ingen jail regler gælder i denne runde!"
 	}
 
 	"catch_next_nc"
 	{
+		"ru"		"Следующий раунд Заморозка"
 		"pl"		"Nastepna runda to Ganiany"
 		"de"		"Nächste Runde ist Catch"
-		"en"		"Next round is Catch"
+		"en"		"The following round will be: Catch."
 		"da"		"Næste runde er Catch"
 	}
 
 	"catch_info_line5"
 	{
+		"ru"		"Вы не можете использовать !lr в этом раунде!"
 		"pl"		"Nie mozna uzyc !lr w tej rundzie"
 		"de"		"Der letzte Terrorists hat keinen Wunsch!"
-		"en"		"You cannot use !lr in this round!"
+		"en"		"Last requests are disabled during this round."
 		"da"		"Der kan ikke laves !lr"
 	}
 
 	"catch_start"
 	{
+		"ru"		"{purple}День заморозки{default} начался!"
 		"pl"		"{purple}Ganiany{default} sie rozpoczal!"
 		"de"		"{purple}Catch{default} ist gestartet!"
-		"en"		"The {purple}Catch{default} has started!"
+		"en"		"{purple}Catch{default} has begun!"
 		"da"		"{purple}Catch{default} er startet!"
 	}
 
 	"catch_start_nc"
 	{
+		"ru"		"Заморозка началась!"
 		"pl"		"Ganiany sie rozpoczal!"
 		"de"		"Fangen ist gestartet!"
-		"en"		"The Catch has started!"
+		"en"		"Catch has Begun!"
 		"da"		"Catch er startet!"
 	}
 
 	"catch_info_line6"
 	{
+		"en"		"You must stay in the main Jailroom! Don't enter vents or secret areas!"
+		"ru"		"Оставайтесь в главной камере! Не уходите в нычки!"
 		"pl"		"Zostan w glownym pomieszczeniu Wiezienia! Zakaz wejsc do SECRETOW!"
 		"de"		"Bleib' im Haupt Jail Raum! Verstecke sind verboten!"
-		"en"		"Stay in the main jailroom! Don't enter secrets!"
 	}
 
 	"catch_voted"
 	{
+		"en"		"You have already voted for {purple}Catch!"
+		"ru"		"Вы уже проголосовали за {purple}Заморозку"
 		"pl"		"Juz glosowales na {purple}Ganianego"
 		"de"		"Du hast schon für {purple}Catch {default}gevotet"
-		"en"		"You already voted for {purple}Catch"
 		"da"		"Du har allerede stemt på {purple}Catch"
 	}
 
 	"catch_info_line7"
 	{
+		"ru"		"Правила сервера должны быть соблюдены!"
 		"pl"		"Pamietaj o zasadach Serwera!"
 		"de"		"Bau keine Scheisse!"
-		"en"		"Server Rules must be kept!"
+		"en"		"Server Rules still apply during this round!"
 		"da"		"Server Reglerne skal stadig holdes!"
 	}
 
 	"catch_progress"
 	{
 		"#format"   "{1:s}"
+		"ru"		"Игровой день {darkred}{1} {default}в {purple}процессе."
 		"pl"		"Zabawa {darkred}{1} {default}jest {purple}juz grana."
 		"de"		"Event {darkred}{1} {default}ist {purple}bereits gesetzt."
-		"en"		"Event {darkred}{1} {default}is {purple}already in progress."
+		"en"		"The event {darkred}{1} {default}is {purple}already in progress!"
 	}
 
 	"catch_minplayer"
 	{
+		"ru"		"Для Заморозки необходимо как минимум {purple}один КТ и один Т"
 		"pl"		"Do Ganianego potrzeba minimum {purple}jednego  CT i jednego T"
 		"de"		"Für Catch brauchen wir mindestens {purple}einen CT und einen T"
-		"en"		"For a Catch you need at least {purple}one CT & one T"
+		"en"		"For Catch, you must have at least {purple}one Guard, & one Prisoner"
 		"da"		"For Catch mangler du mindst {purple}en CT & en T"
 	}
 
 	"catch_wait"
 	{
 		"#format"   "{1:i}"
+		"ru"		"Вы должны подождать больше {purple}{1}{default} раундов"
 		"pl"		"Musisz odczekac {purple}{1}{default} rund"
 		"de"		"Du musst noch {purple}{1}{default} Runden warten"
-		"en"		"You must wait {purple}{1}{default} more rounds"
+		"en"		"You must wait {purple}{1}{default} more rounds for an Event Day!"
 		"da"		"Du skal vente {purple}{1}{default} flere runder"
 	}
 
 	"catch_sprint"
 	{
+		"ru"		"Вы можете использовать {blue}ускоренный бег!"
 		"pl"		"Uzywasz {blue}Sprintu!"
 		"de"		"Du {blue}sprintest!"
-		"en"		"You are now using {blue}Sprint!"
+		"en"		"You are now {blue}Sprinting!"
 		"da"		"Du bruger nu {blue}Sprint!"
 	}
 
 	"catch_unfreeze"
 	{
 		"#format"   "{1:N},{2:N}"
+		"ru"		"Заключённый {purple}{1}{default} разморозил {blue}{2}"
 		"pl"		"Wiezien {purple}{1}{default} odmrozil {blue}{2}"
 		"de"		"Häftling {purple}{1}{default} hat {blue}{2}{default} befreit"
-		"en"		"Prisoner {purple}{1}{default} unfreezed {blue}{2}"
+		"en"		"Prisoner {purple}{1}{default} has unfreezed {blue}{2}!"
 		"da"		"Fangen {purple}{1}{default} har unfreezet {blue}{2}"
 	}
 
 	"catch_catch"
 	{
 		"#format"   "{1:N},{2:N}"
+		"ru"		"Охранник {purple}{1}{default} заморозил {blue}{2}{default}"
 		"pl"		"Straznik {purple}{1}{default} zamrozil {blue}{2}{default}"
 		"de"		"Wärter {purple}{1}{default} hat {blue}{2}{default} gefangen"
-		"en"		"Guard {purple}{1}{default} freezed {blue}{2}{default}"
+		"en"		"Guard {purple}{1}{default} has freezed {blue}{2}{default}!"
 		"da"		"Vagten {purple}{1}{default} har frosset {blue}{2}{default}"
 	}
 
 	"catch_win"
 	{
+		"ru"		"Все заключённые {purple}заморожены"
 		"pl"		"Wszyscy wiezniowie zostali {purple}zlapani"
 		"de"		"Alle Häftlinge wurden {purple}eingefangen"
-		"en"		"All prisoners {purple}catched"
+		"en"		"All the prisoners have been {purple}caught!"
 		"da"		"Alle fanger er {purple}FANGET!"
 	}
 

@@ -5,38 +5,43 @@
 {
 	"cowboy_ctwin_nc"
 	{
+		"ru"		"КТ выжили"
 		"pl"		"Counter-Terrorists przetrwal"
 		"de"		"Ein Counter-Terrorists hat als einziger überlebt"
-		"en"		"A Counter-Terrorists has surrived"
+		"en"		"A Guard has survived!"
 		"da"		"En Counter-Terrorists har overlevet!"
 	}
 
 	"cowboy_disabled"
 	{
-		"pl"		"Cowboy jest {purple}wylaczony."
-		"de"		"Cowboy ist {purple}deaktiviert."
-		"en"		"Cowboy is {purple}disabled."
-		"da"		"Cowboy er {purple}slået fra."
+		"pl"		"Cowboy jest tymczasowo {purple}wylaczony."
+		"ru"		"Ковбой {purple}отключен."
+		"de"		"Cowboy ist vorübergehend {purple}deaktiviert."
+		"en"		"Cowboy is currently {purple}disabled!"
+		"da"		"Cowboy er midlertidigt {purple}slået fra."
 	}
 
 	"cowboy_end"
 	{
+		"ru"		"{purple}Ковбой{default} окончен!"
 		"pl"		"{purple}Cowboy{default} zakonczony"
 		"de"		"{purple}Cowboy{default} beendet"
-		"en"		"{purple}Cowboy{default} finished"
+		"en"		"{purple}Cowboy{default} has ended."
 		"da"		"{purple}Cowboy{default} er afsluttet!"
 	}
 
 	"cowboy_info_line1"
 	{
+		"ru"		"Ковбой - все против всех"
 		"pl"		"Cowboy - Free for All"
 		"de"		"Cowboy - Jeder gegen Jeden"
-		"en"		"Cowboy - Free for All"
+		"en"		"Cowboy - Free for all!"
 		"da"		"Cowboy - er hver mod hver!"
 	}
 
 	"cowboy_info_line2"
 	{
+		"ru"		"Борьба на пистолетах - DM"
 		"pl"		"Pistol Battle - DM"
 		"de"		"Pistol Battle - DM"
 		"en"		"Pistol Battle - DM"
@@ -44,47 +49,53 @@
 
 	"cowboy_info_line3"
 	{
+		"ru"		"Вы можете двигаться во время отсутствия урона"
 		"pl"		"mozna poruszac sie i wyjsc ze zbrojowni podczas fazy nodamage"
 		"de"		"Während der no damage phase kannst du aus der zelle/waffenkammer"
-		"en"		"you can move and exit the wk in nodamage phase"
+		"en"		"You can move around during the 'NoDamage' phase!"
 		"da"		"Den sidste som overlever vinder runden!"
 	}
 
 	"cowboy_info_line4"
 	{
+		"ru"		"Все нормальные правила тюрьмы отменяются"
 		"pl"		"Wszystkie normalne zasady wiezienia zostaly zastapione"
 		"de"		"Alle normalen Jailregeln sind aufgehoben!"
-		"en"		"All normal jail rules are repealed"
+		"en"		"All usual Jailbreak rules do not apply during this round!"
 		"da"		"Alle jail regler er ophævet!"
 	}
 
 	"cowboy_info_line5"
 	{
+		"ru"		"Здесь нету последних желаний!"
 		"pl"		"Nie ma ostatniego zyczenia!"
 		"de"		"Der letzte Terrorists hat keinen Wunsch!"
-		"en"		"There is no last request!"
+		"en"		"Last requests are disabled during this round!"
 		"da"		"Der kan ikke laves Last Request i denne runde!"
 	}
 
 	"cowboy_info_line6"
 	{
+		"en"		"You must stay in the main Jailroom! Don't enter vents or secret areas!"
+		"ru"		"Оставайтесь в главной камере! Не уходите в нычки!"
 		"pl"		"Zostan w glownym pomieszczeniu Wiezienia! Zakaz wejsc do SECRETOW!"
-		"en"		"Stay in the main jailroom! Don't enter secrets!"
 		"de"		"Bleib' im Haupt Jail Raum! Verstecke sind verboten!"
 		"en"		"Stay in the main jailroom! Don't enter secrets!"
 	}
 
 	"cowboy_info_line7"
 	{
+		"ru"		"Не будь мудаком!"
 		"pl"		"Nie badz DUPKIEM!"
 		"de"		"Bau keine Scheisse!"
-		"en"		"Dont be an asshole!"
+		"en"		"Don't be an AssholeAsshole!"
 		"da"		"Alle server regler skal overholdes!"
 	}
 
 	"cowboy_info_title"
 	{
-		"en"		"Cowboy is active"
+		"ru"		"Ковбой активен"
+		"en"		"Cowboy is now Activated!"
 		"pl"		"Cowboy jest aktywny"
 		"de"		"Cowboy ist aktiv"
 		"en"		"Cowboy er aktiveret!"
@@ -92,88 +103,99 @@
 
 	"cowboy_minplayer"
 	{
+		"en"		"For Cowboy, you must have at least {purple}one Guard, & one Prisoner"
+		"ru"		"Для ковбоя необходимо как минимум {purple}один КТ"
 		"pl"		"Do zabawy cowboy potrzeba przynajmniej {purple}jednego CT"
 		"de"		"Für cowboy brauchen wir mindestens {purple}einen CT"
-		"en"		"For a cowboy you need at least {purple}one CT"
 		"da"		"For cowboy skal der mindst være {purple}en CT"
 	}
 
 	"cowboy_need"
 	{
 		"#format"   "{1:i},{2:N}"
+		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} vote(s) required to play {darkred}Cowboy!"
+		"ru"		"{purple}{2}{default} проголосовал. {purple}{1}{default} голосов осталось до {darkred}ковбоя"
 		"pl"		"{purple}{2}{default} zaglosowal {purple}{1}{default} pozostalo glosow do {darkred}cowboy"
 		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}cowboy{default} beginnt"
-		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes left to {darkred}cowboy"
 		"da"		"{purple}{2}{default} har afstemt!. {purple}{1}{default} afstemninger tilbage til {darkred}cowboy"
 	}
 
 	"cowboy_next"
 	{
+		"ru"		"Следующий раунд {purple}Ковбой"
 		"pl"		"Nastepna runda to {purple}Cowboy"
 		"de"		"Nächste Runde ist {purple}Cowboy"
-		"en"		"Next round is {purple}Cowboy"
+		"en"		"The following round will be: {purple}Cowboy."
 		"da"		"Næste runde er {purple}Cowboy"
 	}
 
 	"cowboy_next_nc"
 	{
+		"ru"		"Следующий раунд ковбой"
 		"pl"		"Nastepna runda to Cowboy"
 		"de"		"Nächste Runde ist Cowboy"
-		"en"		"Next round is Cowboy"
+		"en"		"The following round will be: Cowboy."
 		"da"		"Næste runde er Cowboy"
 	}
 
 	"cowboy_progress"
 	{
 		"#format"   "{1:s}"
+		"ru"		"Игровой день {darkred}{1} {default}в {purple}процессе."
 		"pl"		"Zabawa  {darkred}{1} {default}sie {purple}rozpoczela"
 		"de"		"Event {darkred}{1} {default}ist {purple}bereits gesetzt."
-		"en"		"Event {darkred}{1} {default}is {purple}already in progress."
+		"en"		"The event {darkred}{1} {default}is {purple}already in progress!"
 	}
 
 	"cowboy_rounds"
 	{
 		"#format"   "{1:i},{2:i}"
+		"ru"		"Раунд {purple}{1}{default} из {purple}{2}"
 		"pl"		"Runda {purple}{1}{default} z {purple}{2}"
 		"de"		"Runde {purple}{1}{default} von {purple}{2}"
-		"en"		"Round {purple}{1}{default} of {purple}{2}"
+		"en"		"Round {purple}{1}{default} of {purple}{2}."
 		"da"		"Runde {purple}{1}{default} af {purple}{2}"
 	}
 
 	"cowboy_setbyadmin"
 	{
+		"ru"		"Администратор {purple}отключил{default} выбор ковбоя"
 		"pl"		"Wlaczenie Cowboy przez admina jest {purple}wylaczone"
 		"de"		"Cowboy Aktivierung durch den Admin ist {purple}ausgeschaltet"
-		"en"		"Set Cowboy by admin is {purple}disabled"
+		"en"		"Set Cowboy by Admin is {purple}disabled!"
 		"da"		"Admin bestemmer runde for No Scope er {purple}slået fra"
 	}
 
 	"cowboy_setbywarden"
 	{
+		"ru"		"Командир {purple}отключил{default} выбор ковбоя"
 		"pl"		"Glosowanie na Cowboy przez Straznika jest {purple}wylaczone"
 		"de"		"Cowboy Aktivierung durch den Warden ist {purple}ausgeschaltet"
-		"en"		"Set Cowboy by warden is {purple}disabled"
+		"en"		"Set Cowboy by warden is {purple}disabled!"
 		"da"		"Warden bestemmer runde for No Scope er {purple}slået fra"
 	}
 
 	"cowboy_start"
 	{
+		"ru"		"{purple}Ковбой{default} начался!"
 		"pl"		" {purple}Cowboy{default} sie rozpoczal!"
 		"de"		"{purple}Cowboy{default} ist gestartet!"
-		"en"		"The {purple}Cowboy{default} has started!"
+		"en"		"{purple}Cowboy{default} has begun!"
 		"da"		"{purple}Cowboy{default} er startet!"
 	}
 
 	"cowboy_start_nc"
 	{
+		"ru"		"Ковбой начался!"
 		"pl"		"Cowboy sie rozpoczal!"
 		"de"		"Cowboy ist gestartet!"
-		"en"		"The Cowboy started!"
+		"en"		"Cowboy has begun!"
 		"da"		"No Scope er startet!"
 	}
 
 	"cowboy_tag"
 	{
+		"ru"		"[{green}MyJB.cowboy{default}]"
 		"pl"		"[{green}JB.Cowboy{default}]"
 		"en"		"[{green}MyJB.cowboy{default}]"
 	}
@@ -181,42 +203,47 @@
 	"cowboy_timeuntilstart_nc"
 	{
 		"#format"   "{1:i}"
+		"ru"		"{1} секунд до начала"
 		"pl"		"{1} sekund do startu!"
 		"de"		"{1} Sekunden bis zum Start"
-		"en"		"{1} seconds until start"
+		"en"		"{1} seconds until round start!"
 		"da"		"{1} sekunder til runden starter!"
 	}
 
 	"cowboy_twin_nc"
 	{
+		"ru"		"Террористы выжили"
 		"pl"		"Terrorysta przetrwal"
 		"de"		"Ein Terrorists hat als einziger überlebt"
-		"en"		"A Terrorists has surrived"
+		"en"		"A Prisoner has surrived!"
 		"da"		"En Terrorists har overlevet!"
 	}
 
 	"cowboy_voted"
 	{
+		"ru"		"Вы уже проголосовали за {purple}ковбоя"
 		"pl"		"Juz glosowales na {purple}Cowboy"
 		"de"		"Du hast schon für {purple}Cowboy {default}gevotet"
-		"en"		"You already voted for {purple}Cowboy"
+		"en"		"You have already voted for {purple}Cowboy!"
 		"da"		"Du har allerede stemt for {purple}Cowboy!"
 	}
 
 	"cowboy_voting"
 	{
+		"ru"		"Голосования за ковбоя {purple}отключено"
 		"pl"		"Glosowanie graczy na Cowboy jest {purple}wylaczone"
 		"de"		"Voting für Cowboy ist {purple}ausgeschaltet"
-		"en"		"Player voting for Cowboy is {purple}disabled"
+		"en"		"Voting for Cowboy is currently {purple}disabled!"
 		"da"		"Afstemninger for No Scope er {purple}slået fra"
 	}
 
 	"cowboy_wait"
 	{
 		"#format"   "{1:i}"
+		"ru"		"Вы должны подождать больше {1} раундов"
 		"pl"		"Musisz poczekac  {1} rund"
 		"de"		"Du musst noch {1} Runden warten"
-		"en"		"You must wait {1} more rounds"
+		"en"		"You must wait {purple}{1}{default} more rounds for an Event Day!"
 		"da"		"Du skal vente {1} flere runder!"
 	}
 

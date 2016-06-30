@@ -5,119 +5,136 @@
 {
 	"noscope_ctwin_nc"
 	{
+		"ru"		"КТ выжили"
 		"de"		"Ein Counter-Terrorists hat als einziger überlebt"
-		"en"		"A Counter-Terrorists has surrived"
+		"en"		"A Guard has survived!"
 		"da"		"En Counter-Terrorists har overlevet!"
 	}
 
 	"noscope_disabled"
 	{
-		"de"		"NoScope ist {purple}deaktiviert."
-		"en"		"NoScope is {purple}disabled."
-		"da"		"NoScope er {purple}slået fra."
+		"de"		"NoScope ist vorübergehend {purple}deaktiviert."
+		"ru"		"Игра NoScope {purple}отключена."
+		"en"		"NoScope is currently {purple}disabled!"
+		"da"		"NoScope er midlertidigt {purple}slået fra."
 	}
 
 	"noscope_end"
 	{
+		"ru"		"{purple}Игра NoScope{default} завершена"
 		"de"		"{purple}NoScope{default} beendet"
-		"en"		"{purple}NoScope{default} finished"
+		"en"		"{purple}NoScope{default} has ended."
 		"da"		"{purple}NoScope{default} er afsluttet!"
 	}
 
 	"noscope_info_line1"
 	{
+		"ru"		"NoScope - Free for All"
 		"de"		"NoScope - Jeder gegen Jeden"
-		"en"		"NoScope - Free for All"
+		"en"		"NoScope - Free for All!"
 		"da"		"NoScope - er hver mod hver!"
 	}
 
 	"noscope_info_line2"
 	{
+		"ru"		"Включена низкая гравитация"
 		"de"		"Es ist low gravity"
-		"en"		"Its low gravity"
+		"en"		"Low Gravity is Enabled!"
 		"da"		"I NoScope er det FFA og lav gravity!"
 	}
 
 	"noscope_info_line3"
 	{
+		"ru"		"вы можете двигаться и выйти из wk во время nodamage"
 		"de"		"Während der no damage phase kannst du aus der zelle/waffenkammer"
-		"en"		"you can move and exit the wk in nodamage phase"
+		"en"		"Run away during the 'NoDamage' phase!"
 		"da"		"Den sidste som overlever vinder runden!"
 	}
 
 	"noscope_info_line4"
 	{
+		"ru"		"Стандартные правила джайлов отменены"
 		"de"		"Alle normalen Jailregeln sind aufgehoben!"
-		"en"		"All normal jail rules are repealed"
+		"en"		"All usual Jailbreak Rules do not apply during this round!"
 		"da"		"Alle jail regler er ophævet!"
 	}
 
 	"noscope_info_line5"
 	{
+		"ru"		"Нет доступных последних желаний!"
 		"de"		"Der letzte Terrorists hat keinen Wunsch!"
-		"en"		"There is no last request!"
+		"en"		"Last Requests are disabled during this round!"
 		"da"		"Der kan ikke laves Last Request i denne runde!"
 	}
 
 	"noscope_info_line6"
 	{
+		"en"		"You must stay in the main Jailroom! Don't enter Vents or Secrets!"
+		"ru"		"Оставайтесь в клетках! Не убегайте в нычки!"
 		"de"		"Bleib' im Haupt Jail Raum! Verstecke sind verboten!"
-		"en"		"Stay in the main jailroom! Don't enter secrets!"
 	}
 
 	"noscope_info_line7"
 	{
+		"ru"		"Не будь засранцем!"
 		"de"		"Bau keine Scheisse!"
-		"en"		"Dont be an asshole!"
+		"en"		"Don't be an Asshole!"
 		"da"		"Alle server regler skal overholdes!"
 	}
 
 	"noscope_info_title"
 	{
+		"ru"		"Игра NoScope активирована"
 		"de"		"NoScope ist aktiv"
-		"en"		"NoScope is active"
+		"en"		"NoScope er aktiveret!"
 		"en"		"NoScope er aktiveret!"
 	}
 
 	"noscope_minplayer"
 	{
+		"ru"		"Для игры NoScope вам нужен как минимум {purple}1 КТ"
 		"de"		"Für noscope brauchen wir mindestens {purple}einen CT"
-		"en"		"For a noscope you need at least {purple}one CT"
+		"en"		"For NoScope you need at least {purple}one Guard & one Prisoner!"
 		"da"		"For noscope skal der mindst være {purple}en CT"
 	}
 
 	"noscope_need"
 	{
 		"#format"   "{1:i},{2:N}"
+		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes required to play {darkred}NoScope."
+		"ru"		"{purple}{2}{default} проголосовал. {purple}{1}{default} голосов осталось до {darkred}игры NoScope"
 		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}noscope{default} beginnt"
-		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes left to {darkred}noscope"
 		"da"		"{purple}{2}{default} har afstemt!. {purple}{1}{default} afstemninger tilbage til {darkred}noscope"
 	}
 
 	"noscope_next"
 	{
+		"ru"		"Следующий раунд игра {purple}NoScope"
 		"de"		"Nächste Runde ist {purple}NoScope"
-		"en"		"Next round is {purple}NoScope"
+		"en"		"The following round will be: {purple}NoScope."
 		"da"		"Næste runde er {purple}NoScope"
 	}
 
 	"noscope_next_nc"
 	{
+		"ru"		"Следующий раунд игра NoScope"
 		"de"		"Nächste Runde ist NoScope"
-		"en"		"Next round is NoScope"
+		"en"		"The following round will be: NoScope."
 		"da"		"Næste runde er NoScope"
 	}
 
 	"noscope_progress"
 	{
 		"#format"   "{1:s}"
+		"ru"		"Игра {darkred}{1} {default}уже {purple}началась."
 		"de"		"Event {darkred}{1} {default}ist {purple}bereits gesetzt."
-		"en"		"Event {darkred}{1} {default}is {purple}already in progress."
+		"en"		"The event {darkred}{1} {default}is {purple}already in progress!"
 	}
 
 	"noscope_rounds"
 	{
 		"#format"   "{1:i},{2:i}"
+		"ru"		"Раунд {purple}{1}{default} с {purple}{2}"
 		"de"		"Runde {purple}{1}{default} von {purple}{2}"
 		"en"		"Round {purple}{1}{default} of {purple}{2}"
 		"da"		"Runde {purple}{1}{default} af {purple}{2}"
@@ -125,71 +142,81 @@
 
 	"noscope_setbyadmin"
 	{
+		"ru"		"Установка игры NoScope админом {purple}отменена"
 		"de"		"NoScope Aktivierung durch den Admin ist {purple}ausgeschaltet"
-		"en"		"Set NoScope by admin is {purple}disabled"
+		"en"		"Set NoScope by Admin is {purple}disabled!"
 		"da"		"Admin bestemmer runde for No Scope er {purple}slået fra"
 	}
 
 	"noscope_setbywarden"
 	{
+		"ru"		"Установка игры NoScope КМД {purple}отменена"
 		"de"		"NoScope Aktivierung durch den Warden ist {purple}ausgeschaltet"
-		"en"		"Set NoScope by warden is {purple}disabled"
+		"en"		"Set NoScope by Warden is {purple}disabled!"
 		"da"		"Warden bestemmer runde for No Scope er {purple}slået fra"
 	}
 
 	"noscope_start"
 	{
+		"ru"		"Игра {purple}NoScope{default} началась"
 		"de"		"{purple}NoScope{default} ist gestartet!"
-		"en"		"The {purple}NoScope{default} has started!"
+		"en"		"The {purple}NoScope Battle{default} has begun!"
 		"da"		"{purple}NoScope{default} er startet!"
 	}
 
 	"noscope_start_nc"
 	{
+		"ru"		"Игра NoScope началась!"
 		"de"		"NoScope ist gestartet!"
-		"en"		"The NoScope started!"
+		"en"		"The NoScope Battle has begun!"
 		"da"		"No Scope er startet!"
 	}
 
 	"noscope_tag"
 	{
+		"ru"		"[{green}MyJB.noscope{default}]"
 		"en"		"[{green}MyJB.noscope{default}]"
 	}
 
 	"noscope_timeuntilstart_nc"
 	{
 		"#format"   "{1:i}"
+		"ru"		"{1} секунд до старта"
 		"de"		"{1} Sekunden bis zum Start"
-		"en"		"{1} seconds until start"
+		"en"		"{1} seconds until round start!"
 		"da"		"{1} sekunder til runden starter!"
 	}
 
 	"noscope_twin_nc"
 	{
+		"ru"		"Террористы выжили"
 		"de"		"Ein Terrorists hat als einziger überlebt"
-		"en"		"A Terrorists has surrived"
+		"en"		"A Prisoner has survived!"
 		"da"		"En Terrorists har overlevet!"
 	}
 
 	"noscope_voted"
 	{
+		"ru"		"Вы уже проголосовали за игру {purple}NoScope"
 		"de"		"Du hast schon für {purple}NoScope {default}gevotet"
-		"en"		"You already voted for {purple}NoScope"
+		"en"		"You have already voted for {purple}NoScope!"
 		"da"		"Du har allerede stemt for {purple}NoScope!"
 	}
 
 	"noscope_voting"
 	{
+		"ru"		"Голосование игроков за игру Noscope {purple}отключено"
 		"de"		"Voting für NoScope ist {purple}ausgeschaltet"
-		"en"		"Player voting for NoScope is {purple}disabled"
+		"en"		"Voting for NoScope is {purple}disabled!"
 		"da"		"Afstemninger for No Scope er {purple}slået fra"
 	}
 
 	"noscope_wait"
 	{
 		"#format"   "{1:i}"
+		"ru"		"Вы должны подождать ещё {1} пару раундов"
 		"de"		"Du musst noch {1} Runden warten"
-		"en"		"You must wait {1} more rounds"
+		"en"		"You must wait {purple}{1}{default} more rounds for an Event Day!"
 		"da"		"Du skal vente {1} flere runder!"
 	}
 
