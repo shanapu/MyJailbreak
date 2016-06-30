@@ -336,6 +336,11 @@
 	{
 		"en"		"Vote for a Eventday:"
 	}
+
+	"menu_voteday"
+	{
+		"en"		"Start a EventDay Voting"
+	}
 	
 	
 	"menu_votingwon"

@@ -128,7 +128,7 @@ public void OnPluginStart()
 	gc_bTeam = AutoExecConfig_CreateConVar("sm_menu_team", "1", "0 - disabled, 1 - enable join team on menu", _, true,  0.0, true, 1.0);
 	gc_bWelcome = AutoExecConfig_CreateConVar("sm_menu_welcome", "1", "Show welcome message to newly connected users.", _, true,  0.0, true, 1.0);
 	gc_bVoting = AutoExecConfig_CreateConVar("sm_menu_voteday", "1", "0 - disabled, 1 - enable voteing for a eventday", _, true,  0.0, true, 1.0);
-	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_menu_flag", "g", "Set flag for admin/vip to start a voting.");
+	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_menu_flag", "g", "Set flag for admin/vip to start a voting & get admin menu");
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_menu_voteday_warden", "1", "0 - disabled, 1 - allow warden to start a voting", _, true,  0.0, true, 1.0);
 	gc_bSetA = AutoExecConfig_CreateConVar("sm_menu_voteday_admin", "1", "0 - disabled, 1 - allow admin/vip  to start a voting", _, true,  0.0, true, 1.0);
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_menu_voteday_cooldown_day", "3", "Rounds cooldown after a voting until voting can be start again", _, true,  0.0);
@@ -306,6 +306,11 @@ public Action JbMenu(int client, int args)
 						Format(menuinfo, sizeof(menuinfo), "%T", "menu_math", client);
 						mainmenu.AddItem("math", menuinfo);
 					}
+				}
+				if(gc_bVoting.BoolValue)
+				{
+					Format(menuinfo, sizeof(menuinfo), "%T", "menu_voteday", client);
+					mainmenu.AddItem("voteday", menuinfo);
 				}
 				if(gc_bDays.BoolValue)
 				{
@@ -538,6 +543,11 @@ public Action JbMenu(int client, int args)
 			{
 				if (!warden_iswarden(client))
 				{
+					if(gc_bVoting.BoolValue)
+					{
+						Format(menuinfo, sizeof(menuinfo), "%T", "menu_voteday", client);
+						mainmenu.AddItem("voteday", menuinfo);
+					}
 					if(gc_bDays.BoolValue)
 					{
 						Format(menuinfo, sizeof(menuinfo), "%T", "menu_seteventdays", client);
@@ -608,6 +618,10 @@ public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selec
 		else if ( strcmp(info,"votedays") == 0 ) 
 		{
 			FakeClientCommand(client, "sm_days");
+		}
+		else if ( strcmp(info,"voteday") == 0 ) 
+		{
+			FakeClientCommand(client, "sm_voteday");
 		}
 		else if ( strcmp(info,"setdays") == 0 ) 
 		{
