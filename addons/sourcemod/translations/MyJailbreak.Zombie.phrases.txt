@@ -17,7 +17,8 @@
 		"ru"		"Зомби день {purple}отключен."
 		"pl"		"Zombie jest tymczasowo {purple}wylaczony."
 		"de"		"Zombie ist vorübergehend {purple}deaktiviert."
-		"en"		"Zombie runde er midlertidigt {purple}slået fra."
+		"da"		"Zombie runde er midlertidigt {purple}slået fra."
+		"en"		"Zombie is currently {purple}disabled."
 	}
 
 	"zombie_end"

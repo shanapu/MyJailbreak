@@ -1444,10 +1444,11 @@ public void VotingResults(Menu menu, int num_votes, int num_clients, const int[]
 	if (num_items > 1 && (item_info[0][VOTEINFO_ITEM_VOTES] == item_info[1][VOTEINFO_ITEM_VOTES]))
 	{
 		winner = GetRandomInt(0, 1);
+		CPrintToChatAll("%t %t", "menu_tag", "menu_votingdraw")
 	}
 	char event[64];
 	menu.GetItem(item_info[winner][VOTEINFO_ITEM_INDEX], event, sizeof(event));
-	CPrintToChatAll("%t %t", "menu_tag", "menu_votingwon",  event, num_items);
+	CPrintToChatAll("%t %t", "menu_tag", "menu_votingwon", event, num_items);
 	ServerCommand("sm_set%s", event);
 }
 
@@ -1560,14 +1561,14 @@ public Action VotingMenu(int client, int args)
 						menu.DisplayVoteToAll(25);
 						g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 					}
-					else CPrintToChat(client, "coldown %i",g_iCoolDown);
+					else CPrintToChat(client,"%t %t", "menu_tag", "menu_wait", g_iCoolDown);
 				}
-				else CPrintToChat(client, "eventday run");
+				else CPrintToChat(client, "%t %t", "menu_tag", "menu_progress", EventDay);
 			}
-			else CPrintToChat(client, "playercont");
+			else CPrintToChat(client, "%t %t", "menu_tag", "menu_minplayer");
 		}
-		else CPrintToChat(client, "warden vip");
+		else CPrintToChat(client, "%t %t", "menu_tag", "warden_notwarden");
 	}
-	else CPrintToChat(client, "DISABLED");
+	else CPrintToChat(client, "%t %t", "menu_tag", "menu_disabled");
 
 }

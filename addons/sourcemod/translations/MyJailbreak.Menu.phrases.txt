@@ -397,10 +397,41 @@
 		"en"		"Start an Event Day Voting"
 	}
 
+	"menu_votingdraw"
+	{
+		"en"		"The vote ended in a 50/50 draw! An Event Day was chosen Randomly!
+	}
+
 	"menu_votingwon"
 	{
 		"#format"   "{1:s},{2:i}"
-		"en"		"The vote has ended. {green} won with {2} votes."
+		"en"		"The vote has ended. {2} votes given. {green}{1} won with ."
 	}
 
+	"menu_disabled"
+	{
+		"de"		"Event voting ist vorübergehend {purple}deaktiviert."
+		"en"		"Event voting runde er midlertidigt {purple}slÃ¥et fra."
+	}
+
+	"menu_minplayer"
+	{
+		"en"		"For a Event Day Voting, you must have at least {purple}one Guard, & one Prisoner"
+	}
+
+	"menu_progress"
+	{
+		"#format"   "{1:s}"
+		"en"		"The event {darkred}{1} {default}is {purple}already in progress!"
+	}
+
+	"menu_wait"
+	{
+		"#format"   "{1:i}"
+		"pl"		"Musisz poczekac  {1} rund"
+		"de"		"Du musst noch {1} Runden warten"
+		"en"		"You must wait {purple}{1}{default} more rounds for an Event Day Voting!"
+		"da"		"Du skal vente {1} flere runder!"
+	}
 }
+
