@@ -340,7 +340,6 @@
 	"menu_duckhunt"
 	{
 		"ru"		"Охота на уток"
-		"ru"		"Охота на уток"
 		"pl"		"Polowanie na Kaczki"
 		"en"		"DuckHunt"
 	}
@@ -387,6 +386,7 @@
 		"chi"		"画画菜单"
 	}
 
+
 	"menu_closecell"
 	{
 		"en"		"Close The Cell Doors"
@@ -397,21 +397,16 @@
 		"en"		"Start an Event Day Voting"
 	}
 
-	"menu_votingdraw"
-	{
-		"en"		"The vote ended in a 50/50 draw! An Event Day was chosen Randomly!
-	}
-
 	"menu_votingwon"
 	{
 		"#format"   "{1:s},{2:i}"
-		"en"		"The vote has ended. {2} votes given. {green}{1} won with ."
+		"en"		"The vote has ended. {green} won with {2} votes."
 	}
 
 	"menu_disabled"
 	{
-		"de"		"Event voting ist vor�bergehend {purple}deaktiviert."
-		"en"		"Event voting runde er midlertidigt {purple}slået fra."
+		"de"		"Event voting ist vorübergehend {purple}deaktiviert."
+		"en"		"Event voting runde er midlertidigt {purple}slÃ¥et fra."
 	}
 
 	"menu_minplayer"
@@ -428,10 +423,7 @@
 	"menu_wait"
 	{
 		"#format"   "{1:i}"
-		"pl"		"Musisz poczekac  {1} rund"
-		"de"		"Du musst noch {1} Runden warten"
 		"en"		"You must wait {purple}{1}{default} more rounds for an Event Day Voting!"
-		"da"		"Du skal vente {1} flere runder!"
 	}
-}
 
+}
