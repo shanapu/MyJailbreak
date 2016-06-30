@@ -192,58 +192,63 @@ public void OnConfigsExecuted()
 public Action SetHide(int client,int args)
 {
 	if (gc_bPlugin.BoolValue && canSet)	
+	{
+		if(client == 0)
 		{
-			if (warden_iswarden(client))
-			{
-				if (gc_bSetW.BoolValue)	
-				{
-					if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
-					{
-						char EventDay[64];
-						GetEventDay(EventDay);
-						
-						if(StrEqual(EventDay, "none", false))
-						{
-							if (g_iCoolDown == 0)
-							{
-								StartNextRound();
-								if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Hide was started by warden %L", client);
-							}
-							else CPrintToChat(client, "%t %t", "hide_tag" , "hide_wait", g_iCoolDown);
-						}
-						else CPrintToChat(client, "%t %t", "hide_tag" , "hide_progress" , EventDay);
-					}
-					else CPrintToChat(client, "%t %t", "hide_tag" , "hide_minplayer");
-				}
-				else CPrintToChat(client, "%t %t", "hide_tag" , "hide_setbywarden");
-			}
-			else if (CheckVipFlag(client,g_sAdminFlag))
-			{
-				if (gc_bSetA.BoolValue)
-				{
-					if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
-					{
-						char EventDay[64];
-						GetEventDay(EventDay);
-						
-						if(StrEqual(EventDay, "none", false))
-						{
-							if (g_iCoolDown == 0)
-							{
-								StartNextRound();
-								if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Hide was started by admin %L", client);
-							}
-							else CPrintToChat(client, "%t %t", "hide_tag" , "hide_wait", g_iCoolDown);
-						}
-						else CPrintToChat(client, "%t %t", "hide_tag" , "hide_progress" , EventDay);
-					}
-					else CPrintToChat(client, "%t %t", "hide_tag" , "hide_minplayer");
-				}
-				else CPrintToChat(client, "%t %t", "hide_tag" , "hide_setbyadmin");
-			}
-			else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
+			StartNextRound();
+			if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Hide was started by groupvoting");
 		}
-		else CPrintToChat(client, "%t %t", "hide_tag" , "hide_disabled");
+		else if (warden_iswarden(client))
+		{
+			if (gc_bSetW.BoolValue)	
+			{
+				if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
+				{
+					char EventDay[64];
+					GetEventDay(EventDay);
+					
+					if(StrEqual(EventDay, "none", false))
+					{
+						if (g_iCoolDown == 0)
+						{
+							StartNextRound();
+							if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Hide was started by warden %L", client);
+						}
+						else CPrintToChat(client, "%t %t", "hide_tag" , "hide_wait", g_iCoolDown);
+					}
+					else CPrintToChat(client, "%t %t", "hide_tag" , "hide_progress" , EventDay);
+				}
+				else CPrintToChat(client, "%t %t", "hide_tag" , "hide_minplayer");
+			}
+			else CPrintToChat(client, "%t %t", "hide_tag" , "hide_setbywarden");
+		}
+		else if (CheckVipFlag(client,g_sAdminFlag))
+		{
+			if (gc_bSetA.BoolValue)
+			{
+				if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
+				{
+					char EventDay[64];
+					GetEventDay(EventDay);
+					
+					if(StrEqual(EventDay, "none", false))
+					{
+						if (g_iCoolDown == 0)
+						{
+							StartNextRound();
+							if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Hide was started by admin %L", client);
+						}
+						else CPrintToChat(client, "%t %t", "hide_tag" , "hide_wait", g_iCoolDown);
+					}
+					else CPrintToChat(client, "%t %t", "hide_tag" , "hide_progress" , EventDay);
+				}
+				else CPrintToChat(client, "%t %t", "hide_tag" , "hide_minplayer");
+			}
+			else CPrintToChat(client, "%t %t", "hide_tag" , "hide_setbyadmin");
+		}
+		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
+	}
+	else CPrintToChat(client, "%t %t", "hide_tag" , "hide_disabled");
 }
 
 //Voting for Event

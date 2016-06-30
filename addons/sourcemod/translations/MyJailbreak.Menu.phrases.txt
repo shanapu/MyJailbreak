@@ -3,12 +3,20 @@
 //
 "Phrases"
 {
+	"menu_tag"
+	{
+		"ru"		"[{green}MyJB.menu{default}]"
+		"chi"		"[{green}我监狱.Menu{default}]"
+		"pl"		"[{green}MyJB.menu{default}]"
+		"en"		"[{green}MyJB.menu{default}]"
+	}
+
 	"menu_info"
 	{
-		"ru"		"[{green}MyJB.menu{default}] Откройте игровое меню, написав !menu или нажмите ,"
-		"chi"		"[{green}我监狱.Menu{default}]要打开MENU按，或输入!menu"
-		"pl"		"[{green}MyJB.menu{default}] Aby otworzyc Menu Jailbreak nacisnij lub wpisz !menu"
-		"en"		"[{green}MyJB.menu{default}] To open the jailbreak menu press , or type !menu"
+		"ru"		"Откройте игровое меню, написав !menu или нажмите ,"
+		"chi"		"要打开MENU按，或输入!menu"
+		"pl"		"Aby otworzyc Menu Jailbreak nacisnij lub wpisz !menu"
+		"en"		"To open the jailbreak menu press , or type !menu"
 	}
 
 	"menu_info_title"
@@ -323,5 +331,16 @@
 		"pl"		"Mute Menu"
 		"en"		"Mute Menu"
 	}
-
+	
+	"menu_voting"
+	{
+		"en"		"Vote for a Eventday:"
+	}
+	
+	
+	"menu_votingwon"
+	{
+		"#format"   "{1:s},{2:i}"
+		"en"		"Vote Ended. {green} won with {2} votes."
+	}
 }

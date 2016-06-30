@@ -208,7 +208,12 @@ public Action SetDealDamage(int client,int args)
 {
 	if (gc_bPlugin.BoolValue && canSet) //is plugin enabled?
 	{
-		if (warden_iswarden(client)) //is player warden?
+		if(client == 0)
+		{
+			StartNextRound();
+			if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Deal Damage was started by groupvoting");
+		}
+		else if (warden_iswarden(client)) //is player warden?
 		{
 			if (gc_bSetW.BoolValue) //is warden allowed to set?
 			{
@@ -620,7 +625,7 @@ public Action EndTheRound(Handle timer)
 	{
 		SendResults(client);
 	}
-
+	delete RoundTimer;
 	if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Damage Deal Result: BestCT: %N Dmg: %i BestT: %N Dmg: %i CT Damage: %i T Damage: %i Total Damage: %i", BestCT, BestCTdamage, BestT, BestTdamage, DamageCT, DamageT, TotalDamage);
 }
 

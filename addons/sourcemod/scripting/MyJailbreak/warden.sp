@@ -3654,7 +3654,6 @@ public Action BreakTheseCuffs(Handle timer, int client)
 	}
 }
 
-
 public Action FreeEm(int client, int attacker)
 {
 	SetEntityMoveType(client, MOVETYPE_WALK);

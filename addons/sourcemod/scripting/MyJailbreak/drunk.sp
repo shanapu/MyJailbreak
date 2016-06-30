@@ -193,7 +193,12 @@ public Action SetDrunk(int client,int args)
 {
 	if (gc_bPlugin.BoolValue && canSet) //is plugin enabled?
 	{
-		if (warden_iswarden(client)) //is player warden?
+		if(client == 0)
+		{
+			StartNextRound();
+			if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Drunk was started by groupvoting");
+		}
+		else if (warden_iswarden(client)) //is player warden?
 		{
 			if (gc_bSetW.BoolValue) //is warden allowed to set?
 			{

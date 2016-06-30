@@ -534,8 +534,8 @@ public Action OnWeaponCanUse(int client, int weapon)
 		
 		int index = GetEntProp(weapon, Prop_Send, "m_iItemDefinitionIndex");
 			
-			if(index == 64 || (StrEqual(sWeapon, "weapon_elite")))return Plugin_Continue;
-			else return Plugin_Handled;
+		if(index == 64 || (StrEqual(sWeapon, "weapon_elite")))return Plugin_Continue;
+		else return Plugin_Handled;
 	}
 	return Plugin_Continue;
 }

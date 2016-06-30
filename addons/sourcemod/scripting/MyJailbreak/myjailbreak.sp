@@ -39,6 +39,7 @@ public void OnPluginStart()
 	gc_bTag = CreateConVar("sm_myjb_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", _, true,  0.0, true, 1.0);
 	gc_bLogging = CreateConVar("sm_myjb_log", "1", "Allow MyJailbreak to log events, freekills & eventdays in logs/MyJailbreak", _, true,  0.0, true, 1.0);
 	
+	
 //	RegAdminCmd("sm_fogoff", CommandFogOff, ADMFLAG_ROOT, "");
 //	RegAdminCmd("sm_fogon", CommandFogOn, ADMFLAG_ROOT, "");
 //	HookEvent("round_start", RoundStart);
@@ -131,7 +132,11 @@ public void DoFog()
 public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
 	
-		
+	if(!StrEqual(EventDay, "none", false))
+	{
+		g_iCoolDown = gc_iCooldownDay.IntValue + 1;
+	}
+	else if (g_iCoolDown > 0) g_iCoolDown--;
 	
 	for(int client=1; client <= MaxClients; client++)
 	{

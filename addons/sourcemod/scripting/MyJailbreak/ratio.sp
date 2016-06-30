@@ -4,7 +4,6 @@
 #include <clientprefs>
 #include <colors>
 #include <cstrike>
-
 #include <autoexecconfig>
 #include <myjailbreak>
 
@@ -597,29 +596,3 @@ stock void SetClientPendingTeam(int client, int iTeam)
 {
 	SetEntProp(client, Prop_Send, "m_iPendingTeamNum", iTeam);
 }
-
-
-stock void PrintToChatAndConsole(int client, char [] szFormat, any ...)
-{
-	char szBuffer[256];
-	Format(szBuffer, sizeof(szBuffer), szFormat);
-	
-	CPrintToChat(client, szBuffer);
-	
-	CRemoveTags(szBuffer, sizeof(szBuffer)); // Remove color tags for console print
-	PrintToConsole(client, szBuffer);
-}
-
-stock void PrintToChatAndConsoleAll(char [] szFormat, any ...)
-{
-	char szBuffer[256];
-	Format(szBuffer, sizeof(szBuffer), szFormat);
-	
-	LoopValidClients(i, false,true)
-	{
-		CPrintToChat(i, szBuffer);
-		
-		CRemoveTags(szBuffer, sizeof(szBuffer)); // Remove color tags for console print
-		PrintToConsole(i, szBuffer);
-	}
-} 
