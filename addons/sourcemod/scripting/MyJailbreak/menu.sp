@@ -51,7 +51,7 @@ ConVar g_bKnife;
 ConVar g_bFFA;
 ConVar g_bExtend;
 ConVar g_bLaser;
-ConVar g_bDrawer;
+ConVar g_bPainter;
 ConVar g_bNoBlock;
 ConVar g_bZombie;
 ConVar g_bNoScope;
@@ -75,14 +75,14 @@ ConVar g_bSparks;
 ConVar g_bDealDamage;
 ConVar gc_sAdminFlagBulletSparks;
 ConVar gc_sAdminFlagLaser;
-ConVar gc_sAdminFlagDrawer;
+ConVar gc_sAdminFlagPainter;
 
 //Strings
 char g_sCustomCommand[64];
 
 char g_sAdminFlagBulletSparks[32];
 char g_sAdminFlagLaser[32];
-char g_sAdminFlagDrawer[32];
+char g_sAdminFlagPainter[32];
 char g_sAdminFlag[32];
 
 
@@ -181,7 +181,7 @@ public void OnConfigsExecuted()
 	g_bFFA = FindConVar("sm_ffa_enable");
 	g_bMute = FindConVar("sm_warden_mute");
 	g_bTorch = FindConVar("sm_torch_enable");
-	g_bDrawer = FindConVar("sm_warden_drawer");
+	g_bPainter = FindConVar("sm_warden_painter");
 	g_bLaser = FindConVar("sm_warden_laser");
 	g_bSparks = FindConVar("sm_warden_bulletsparks");
 	g_bZombie = FindConVar("sm_zombie_enable");
@@ -208,10 +208,10 @@ public void OnConfigsExecuted()
 	g_bDealDamage = FindConVar("sm_dealdamage_enable");
 	gc_sAdminFlagBulletSparks = FindConVar("sm_warden_bulletsparks_flag");
 	gc_sAdminFlagLaser = FindConVar("sm_warden_laser_flag");
-	gc_sAdminFlagDrawer = FindConVar("sm_warden_drawer_flag");
+	gc_sAdminFlagPainter = FindConVar("sm_warden_painter_flag");
 	
 	gc_sAdminFlagLaser.GetString(g_sAdminFlagLaser, sizeof(g_sAdminFlagLaser));
-	gc_sAdminFlagDrawer.GetString(g_sAdminFlagDrawer, sizeof(g_sAdminFlagDrawer));
+	gc_sAdminFlagPainter.GetString(g_sAdminFlagPainter, sizeof(g_sAdminFlagPainter));
 	gc_sAdminFlagBulletSparks.GetString(g_sAdminFlagBulletSparks, sizeof(g_sAdminFlagBulletSparks));
 	
 	char sBufferCMD[64];
@@ -325,12 +325,12 @@ public Action JbMenu(int client, int args)
 						mainmenu.AddItem("sparks", menuinfo);
 					}
 				}
-				if(g_bDrawer != null)
+				if(g_bPainter != null)
 				{
-					if(g_bDrawer.BoolValue && CheckVipFlag(client,g_sAdminFlagDrawer))
+					if(g_bPainter.BoolValue && CheckVipFlag(client,g_sAdminFlagPainter))
 					{
-						Format(menuinfo, sizeof(menuinfo), "%T", "menu_drawer", client);
-						mainmenu.AddItem("drawer", menuinfo);
+						Format(menuinfo, sizeof(menuinfo), "%T", "menu_painter", client);
+						mainmenu.AddItem("painter", menuinfo);
 					}
 				}
 				if(g_bLaser != null)
@@ -631,9 +631,9 @@ public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selec
 		{
 			FakeClientCommand(client, "sm_laser");
 		}
-		else if ( strcmp(info,"drawer") == 0 ) 
+		else if ( strcmp(info,"painter") == 0 ) 
 		{
-			FakeClientCommand(client, "sm_drawer");
+			FakeClientCommand(client, "sm_painter");
 		}
 		else if ( strcmp(info,"extend") == 0 ) 
 		{
