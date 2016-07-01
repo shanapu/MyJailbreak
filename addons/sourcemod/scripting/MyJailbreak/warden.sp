@@ -108,6 +108,7 @@ ConVar gc_bTimer;
 ConVar g_iGetRoundTime;
 ConVar gc_bDisarm;
 ConVar gc_iDisarm;
+ConVar gc_iDisarmMode;
 
 //Bools
 bool IsCountDown = false;
@@ -335,6 +336,7 @@ public void OnPluginStart()
 	gc_iBackstabNumber = AutoExecConfig_CreateConVar("sm_warden_backstab_number", "1", "How many time a warden get protected? 0 - alltime", _, true,  1.0);
 	gc_bDisarm = AutoExecConfig_CreateConVar("sm_warden_disarm", "1", "0 - disabled, 1 - enable disarm weapon on shot the arms/hands", _, true,  0.0, true, 1.0);
 	gc_iDisarm = AutoExecConfig_CreateConVar("sm_warden_disarm_mode", "1", "1 - Only warden can disarm, 2 - All CT can disarm, 3 - Everyone can disarm (CT & T)", _, true,  1.0, true, 3.0);
+	gc_iDisarmMode = AutoExecConfig_CreateConVar("sm_warden_disarm_drop", "1", "1 - weapon will drop, 2 - weapon  disapear", _, true,  1.0, true, 2.0);
 	gc_sAdminFlagBackstab = AutoExecConfig_CreateConVar("sm_warden_backstab_flag", "", "Set flag for admin/vip to get warden backstab protection. No flag = feature is available for all players!");
 	gc_bHandCuff = AutoExecConfig_CreateConVar("sm_warden_handcuffs", "1", "0 - disabled, 1 - enable handcuffs", _, true,  0.0, true, 1.0);
 	gc_iHandCuffsNumber = AutoExecConfig_CreateConVar("sm_warden_handcuffs_number", "2", "How many handcuffs a warden got?", _, true,  1.0);
@@ -3828,10 +3830,25 @@ public Action PlayerHurt(Handle event, char[] name, bool dontBroadcast)
 				{
 					if(victimweapon != -1)
 					{
-						CS_DropWeapon(victim, victimweapon, true, true);
 						CPrintToChatAll("%t %t", "warden_tag", "warden_disarmed", victim, attacker);
 						PrintHintText(victim, "%t", "warden_lostgun");
-						return Plugin_Stop;
+						if(gc_iDisarmMode.IntValue == 1)
+						{
+							CS_DropWeapon(victim, victimweapon, true, true);
+							return Plugin_Stop;
+						}
+						else if(gc_iDisarmMode.IntValue == 2)
+						{
+							CS_DropWeapon(victim, victimweapon, true, true);
+							if(IsValidEdict(victimweapon))
+							{
+								if (Entity_GetOwner(victimweapon) == -1)
+								{
+									AcceptEntityInput(victimweapon, "Kill");
+								}
+							}
+							return Plugin_Stop;
+						}
 					}
 				}
 			}
