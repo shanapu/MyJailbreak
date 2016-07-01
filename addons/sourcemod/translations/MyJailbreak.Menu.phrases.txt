@@ -386,7 +386,6 @@
 		"chi"		"画画菜单"
 	}
 
-
 	"menu_closecell"
 	{
 		"en"		"Close The Cell Doors"
@@ -399,8 +398,8 @@
 
 	"menu_votingwon"
 	{
-		"#format"   "{1:s},{2:i}"
-		"en"		"The vote has ended. {green} won with {2} votes."
+		"#format"   "{1:s},{2:i},{3:i}"
+		"en"		"The vote has ended with {2} vote yet. {green}{1} {default}won with {3} votes."
 	}
 
 	"menu_disabled"

@@ -25,6 +25,7 @@
 
 	"tags_CTOWN"
 	{
+		"ru"		"[Охранник.Основатель]"
 		"chi"		"[狱警.Owner]"
 		"pl"		"[Straznik.Owner]"
 		"de"		"[Wärter.Owner]"
@@ -74,6 +75,7 @@
 
 	"tags_TOWN"
 	{
+		"ru"		"[Заключённый.Основатель]"
 		"chi"		"[囚犯和管理员]"
 		"pl"		"[Wiezien.Owner]"
 		"de"		"[Häftling.Owner]"
@@ -123,6 +125,7 @@
 
 	"tags_WOWN"
 	{
+		"ru"		"[Командир.Основатель]"
 		"pl"		"[Warden.Owner]"
 		"de"		"[Warden.Owner]"
 		"en"		"[Warden.Owner]"
