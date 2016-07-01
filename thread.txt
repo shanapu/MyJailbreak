@@ -6,12 +6,13 @@ MyJailbreak is a redux rewrite of [URL="https://github.com/Franc1sco/Franug-Jail
 [B][u]Included Plugins:[/u][/B]
 
 [LIST]
-[*] [B]Warden[/B] - set/become warden,vote retire warden, model, icon, open cells,gun plant prevention, extend roundtime, handcuffs, laser pointer, drawer, set marker/quiz/EventDays/countdown/FF/nobock/mute
+[*] [B]Warden[/B] - set/become warden,vote retire warden, model, icon, open cells,gun plant prevention, extend roundtime, handcuffs, laser pointer, painter, set marker/quiz/EventDays/countdown/FF/nobock/mute
 [*] [B]Requests[/B] - terror requests. refuse a game, request Capitulation/Pardon, healing or repeating, report freekill
 [*] [B]Last Guard Rule[/B] - When Last Guard Rule is set the last CT get more HP and all terrors become rebel
 [*] [B]Menu[/B] - player menus for T, CT, warden & admin
 [*] [B]Weapons[/B] - weapon menus for CT &/or T(in event round)
 [*] [B]Player Tags[/B] - add player tags for T, T.Admin, CT, CT.Admin, W, WA.Admin in chat &/or stats
+[*] [B]Ratio[/B] - Manage team ratios and a queue system for prisoners to join guard through
 [*] [B]Event Days[/B] - vote/set a Event Day for next round with cooldowns, rounds in row, sounds & overlays
 [/LIST][INDENT][LIST]
 [*][B]War[/B] - CT vs T Team Deathmatch
@@ -55,7 +56,7 @@ MyJailbreak is a redux rewrite of [URL="https://github.com/Franc1sco/Franug-Jail
 
 [U][B]Warden[/B][/U]
 This plugins allows players to take control over the prison as warden/Headguard/Commander.  
-Chat, hud & sound notifications about warden / no warden. Vote to retire the warden. Colorized warden and define the color. Set warden Model and icon above head. Open & close cell doors & automatic open. Mute terroist for a amoung of time or round end. Extend roundtime. Gun plant prevention - CT can drop weapons only on round beginn without punishment & report to warden. Use Zeus as Handcuffs and move the cuffed T around. Cuffed T got a chance to get a paperclip to unlock cuffs. Give warden laser pointer & drawer(LaZzZers) with menu to choose color. Warden can toggle drawer for terrorists. Set different countdowns (start/stop) with overlays, sound & chat notifications. Start a MathQuiz with endtimer & show the player with the first right answer. Toggle Friendly Fire & No Block. Kill/pick a random T (excluding rebels & last T) with different kill effects(Lighting,Timebomb,Firebomb).
+Chat, hud & sound notifications about warden / no warden. Vote to retire the warden. Colorized warden and define the color. Set warden Model and icon above head. Open & close cell doors & automatic open. Mute terroist for a amoung of time or round end. Extend roundtime. Gun plant prevention - CT can drop weapons only on round beginn without punishment & report to warden. Use Zeus as Handcuffs and move the cuffed T around. Cuffed T got a chance to get a paperclip to unlock cuffs. Give warden laser pointer & painter(LaZzZers) with menu to choose color. Warden can toggle painter for terrorists. Set different countdowns (start/stop) with overlays, sound & chat notifications. Start a MathQuiz with endtimer & show the player with the first right answer. Toggle Friendly Fire & No Block. Kill/pick a random T (excluding rebels & last T) with different kill effects(Lighting,Timebomb,Firebomb).
 
 [b]Commands[/b]
 [SPOILER]
@@ -72,7 +73,7 @@ sm_close - Allows the warden to close the cell doors
 sm_sparks - Allows Warden to toggle on/off the wardens bullet sparks
 sm_laser - Allows the warden to toggle the wardens Laser pointer
 sm_extend - Allows the warden to extend the roundtime
-sm_drawer - Allows the warden to toggle the wardens Drawer
+sm_painter - Allows the warden to toggle the wardens Painter
 sm_noblockn - Allows the warden to toggle no block 
 sm_setff - Allows player to see the state and the warden to toggle friendly fire
 sm_cdmenu - Allows the warden to open the Countdown Menu
@@ -129,6 +130,7 @@ sm_warden_handcuffs: 0 - disabled, 1 - enable  handcuffs. Default 1
 sm_warden_handcuffs_number: How many handcuffs a warden got? Default 2
 sm_warden_handcuffs_lr: 0 - disabled, 1 - free cuffed terrorists on LR. Default 1
 sm_warden_handcuffs_ct: 0 - disabled, 1 - Warden can also handcuff CTs. Default 1
+sm_warden_handcuffs_distance- How many meters distance from warden to handcuffed T to pick up?
 sm_warden_handcuffs_paperclip_chance: Set the chance (1:x) a cuffed Terroris get a paperclip to free themself. Default 5
 sm_warden_handcuffs_unlock_chance: Set the chance (1:x) a cuffed Terroris who has a paperclip to free themself. Default 3
 sm_warden_handcuffs_unlock_mintime: Min. Time in seconds Ts need free themself with a paperclip. Default 15
@@ -142,9 +144,9 @@ sm_warden_bulletsparks_flag: Set flag for admin/vip to get warden bulletimpact s
 sm_warden_marker: 0 - disabled, 1 - enable warden advanced markers. Default 1
 sm_warden_laser: 0 - disabled, 1 - enable warden Laser Pointer with +E. Default 1
 sm_warden_laser_flag: Set flag for admin/vip to get warden laser pointer. No flag = feature is available for all players! Default ""
-sm_warden_drawer: 0 - disabled, 1 - enable warden Drawer with +E. Default 1
-sm_warden_drawer_terror: 0 - disabled, 1 - allow warden to toggle Drawer for Terrorist. Default 1
-sm_warden_drawer_flag: Set flag for admin/vip to get warden drawer access. No flag = feature is available for all players! Default ""
+sm_warden_painter: 0 - disabled, 1 - enable warden Painter with +E. Default 1
+sm_warden_painter_terror: 0 - disabled, 1 - allow warden to toggle Painter for Terrorist. Default 1
+sm_warden_painter_flag: Set flag for admin/vip to get warden painter access. No flag = feature is available for all players! Default ""
 sm_warden_math: 0 - disabled, 1 - enable mathquiz for warden. Default 1
 sm_warden_math_min: What should be the minimum number for questions. Default 1
 sm_warden_math_max: What should be the maximum number for questions. Default 100
@@ -169,6 +171,10 @@ sm_warden_open_enable: 0 - disabled, 1 - warden can open/close cell doors. Defau
 sm_warden_open_time_enable: 0 - disabled, 1 - cell doors will open automatic after sm_warden_open_time. Default 1
 sm_warden_open_time - Time in seconds for open doors on round start automaticly. Default 60
 sm_warden_open_time_warden: 0 - disabled, 1 - doors open automatic after sm_warden_open_time although there is a warden. needs sm_warden_open_time_enable 1. Default 1
+sm_warden_disarm - 0 - disabled, 1 - enable disarm weapon on shot the arms/hands
+sm_warden_disarm_mode - 1 - Only warden can disarm, 2 - All CT can disarm, 3 - Everyone can disarm (CT & T)
+sm_warden_disarm_drop - 1 - weapon will drop, 2 - weapon  disappears
+sm_warden_roundtime_reminder - 0 - disabled, 1 - announce remaining round time in chat & hud 3min,2min,1min,30sec before roundend
 [/CODE]
 [/SPOILER]
 [IMG]http://shanapu.de/myjb/warden.jpg[/IMG]
@@ -292,6 +298,7 @@ It will show different menus for Terrorists, Counter-Terrorists, admin & warden.
 sm_menu / sm_menus - opens the menu depends on players team/rank
 sm_days / sm_eventdays - open a vote EventDays menu for player
 sm_setdays / sm_seteventdays - open a set EventDays menu for warden or admins
+sm_voteday / sm_votedays / sm_voteeventdays - opens/start the vote a eventday menu for all player
    
 set your own custom command. take a look at "sm_menu_cmd"
 [/CODE]
@@ -309,6 +316,11 @@ sm_menu_days: 0 - disabled, 1 - enable vote/set EventDays menu
 sm_menu_close: 0 - disabled, 1 - close menu after action
 sm_menu_start: 0 - disabled, 1 - open menu on every roundstart
 sm_menu_team: 0 - disabled, 1 - enable join team on menu
+sm_menu_flag - Set flag for admin/vip to start a voting & see admin menus. Default "g"
+sm_menu_voteday_warden - 0 - disabled, 1 - allow warden to start a voting
+sm_menu_voteday_admin - 0 - disabled, 1 - allow admin/vip  to start a voting
+sm_menu_voteday_cooldown_day" - Rounds cooldown after a voting until voting can be start again
+sm_menu_voteday_cooldown_start - Rounds until voting can be start after mapchange.
 [/CODE]
 [/SPOILER]
 [b]Menu Structure[/b]
@@ -318,6 +330,7 @@ sm_menu_team: 0 - disabled, 1 - enable join team on menu
 [LIST]
 [*]Weapon Menu
 [*]Open Cells
+[*]Close Cells
 [*]Countdown
 [/LIST]
 [INDENT][LIST]
@@ -337,6 +350,7 @@ sm_menu_team: 0 - disabled, 1 - enable join team on menu
 [/LIST][/INDENT][/INDENT]
 [LIST]
 [*]Math Quiz
+[*]Start a Event Day Voting
 [*]Set a Event Days
 [/LIST][INDENT]
 [LIST]
@@ -359,11 +373,11 @@ sm_menu_team: 0 - disabled, 1 - enable join team on menu
 [/LIST][/INDENT]
 [LIST]
 [*]Toggle Bullet sparks
-[*]Drawer Menu
+[*]Painter Menu
 [/LIST]
 [INDENT][LIST]
-[*]Enable Drawer for terrors
-[*]Disable Drawer
+[*]Enable Painter for terrors
+[*]Disable Painter
 [*]Rainbow
 [*]White
 [*]Red
@@ -495,6 +509,7 @@ sm_menu_team: 0 - disabled, 1 - enable join team on menu
 
 [U][B]Additionally for Admins[/B][/U]
 [LIST]
+[*]Start a Event Day Voting
 [*]Set a Event Days
 [/LIST]
 [INDENT][LIST]
@@ -582,6 +597,38 @@ sm_playertag_adminflag: Set the flag for Admin. Default d
 sm_playertag_vipflag: Set the flag for VIP. Default t
 sm_playertag_vip2flag: Set the flag for VIP2. Default a
 sm_playertag_overwrite: 0 - only show tags for warden, admin & vip (no overwrite for prisoner & guards) 1 - enable tags for Prisioner & guards,too. Default 1
+[/CODE]
+[/SPOILER]
+
+
+
+[U][B]Ratio (Team Balance)[/B][/U]
+Manage team ratios and a queue system for prisoners to join guard through. Allow admins to remove player from queue.
+Supports priority queue to allow players with a certain flag to skip all players in the queue without that flag.
+Can be used with CTBans to block joining queue/guard when CTBanned 
+
+[b]Commands[/b]
+[SPOILER]
+[CODE]
+sm_guard - Allows the prisoners to queue to CT
+sm_viewqueue / sm_vq - Allows a player to show queue to CT.
+sm_leavequeue / sm_lq - Allows a player to leave queue to CT.
+
+set your own custom command. take a look at "sm_ratio_cmd"
+[/CODE]
+[u]AdminCommands // ADMFLAG_GENERIC[/u]
+[CODE]
+sm_removequeue - Allows the admin to remove player from queue to CT.
+[/CODE]
+[/SPOILER]
+[b]ConVars[/b]
+[SPOILER]
+[CODE]
+sm_ratio_cmd - Set your custom chat command for become guard. no need for sm_ or ! Default  "gua"
+sm_ratio_T_per_CT - How many prisoners for each guard. Default 2
+sm_ratio_flag - 0 - disabled, 1 - enable VIPs moved to front of queue. Default 1
+sm_ratio_vipflag - Set the flag for VIP. Default "a"
+sm_ratio_adsvip - 0 - disabled, 1 - enable adverstiment for 'VIPs moved to front of queue' when player types !quard. Default 1
 [/CODE]
 [/SPOILER]
 
@@ -1336,6 +1383,63 @@ sm_freeday_cooldown_day - Rounds until event can be started again. Default 0
 [B][u]Change Log[/u][/B]
 
 [QUOTE]
+[b][Beta 5.0][/b] - Ratio,VoteDay,Disarm...more
+[SPOILER]
+[u]Added[/u][LIST]
+[*] Ratio: Manage team ratios and a queue system for prisoners to join guard through. Supports priority queue to allow players with a certain flag to skip all players in the queue without that flag. Allows Admin to remove a player from guardqueue. Can be used with CTBans to block joining queue/guard when CTBanned.
+[/LIST][INDENT][LIST]
+[*] new command - sm_guard - Allows the prisoners to queue to CT
+[*] new command - sm_viewqueue / sm_vq - Allows a player to show queue to CT.
+[*] new command - sm_leavequeue / sm_lq - Allows a player to leave queue to CT.
+[*] new admin command - sm_removequeue - Allows the admin to remove player from queue to CT.
+[*] new cvar - sm_ratio_cmd - Set your custom chat command for become guard. no need for sm_ or ! Default  "gua"
+[*] new cvar - sm_ratio_T_per_CT - How many prisoners for each guard. Default 2
+[*] new cvar - sm_ratio_flag - 0 - disabled, 1 - enable VIPs moved to front of queue. Default 1
+[*] new cvar - sm_ratio_vipflag - Set the flag for VIP. Default "a"
+[*] new cvar - sm_ratio_adsvip - 0 - disabled, 1 - enable adverstiment for 'VIPs moved to front of queue' when player types !quard. Default 1
+[/LIST][/INDENT][LIST]
+[*] Menu: Admin &/or warden can start a voting which eventday should played next.
+[/LIST][INDENT][LIST]
+[*] new command - sm_voteday / sm_votedays / sm_voteeventdays - opens/start the vote a eventday menu for all player
+[*] new cvar - sm_menu_voteday_warden - 0 - disabled, 1 - allow warden to start a voting
+[*] new cvar - sm_menu_voteday_admin - 0 - disabled, 1 - allow admin/vip  to start a voting
+[*] new cvar - sm_menu_voteday_cooldown_day - Rounds cooldown after a voting until voting can be start again
+[*] new cvar - sm_menu_voteday_cooldown_start - Rounds until voting can be start after mapchange.
+[/LIST][/INDENT][LIST]
+[*] Warden: Disarm a players weapon by shoot his hand/arm
+[/LIST][INDENT][LIST]
+[*] new cvar - sm_warden_disarm - 0 - disabled, 1 - enable disarm weapon on shot the arms/hands
+[*] new cvar - sm_warden_disarm_mode - 1 - Only warden can disarm, 2 - All CT can disarm, 3 - Everyone can disarm (CT & T)
+[*] new cvar - sm_warden_disarm_drop - 1 - weapon will drop, 2 - weapon  disappears
+[/LIST][/INDENT][LIST]
+[*] Warden: RoundEndTime Reminder - warden gets a sound signal & chat/hud hint when 30sec, 60sec, 2min, 3min round time left
+[/LIST][INDENT][LIST]
+[*] new cvar - sm_warden_roundtime_reminder - 0 - disabled, 1 - announce remaining round time in chat & hud 3min,2min,1min,30sec before roundend
+[*] Translation: russian phrases Thx to include1 & murr
+[/LIST][/INDENT]
+  
+[u]Changed[/u][list]
+[*] Warden: renamed drawer to painter
+[*] Menu: Admin flag
+[/LIST][INDENT][LIST]
+[*] new cvar - sm_menu_flag - Set flag for admin/vip to start a voting & see admin menus. Default "g"
+[/LIST][/INDENT][LIST]
+[*] Warden: reduced Bullet sparks size
+[*] Menu: Added "Close Cell Doors" to menu
+[*] Warden: determine pick up radius for cuffed Ts
+[/LIST][INDENT][LIST]
+[*] new cvar - sm_warden_handcuffs_distance", "2", "How many meters distance from warden to handcuffed T to pick up?
+[/LIST][/INDENT][LIST]
+[*] Warden: paperclip translatable
+  
+[u]Fixed[/u][LIST]
+[*] Cowboy: Can't pickup revolver bug
+[*] Menu: Checkplayers
+[*] Warden: Painter/drawer toggle on spectator
+[*] minor errors
+[*] minor translation typos
+[/LIST]
+[/SPOILER]
 [B][Beta 4.1][/B] - fixes (careless mistakes)
 [SPOILER]
 [U]Fixed[/U][LIST]
@@ -1363,7 +1467,7 @@ sm_freeday_cooldown_day - Rounds until event can be started again. Default 0
 [/LIST][/INDENT][LIST]
 [*] Warden: Set features to admin/vip flag
 [/LIST][INDENT][LIST]
-[*] new cvar - sm_warden_drawer_flag: Set flag for admin/vip to get drawer access. No flag = feature is available for all players! Default ""
+[*] new cvar - sm_warden_painter_flag: Set flag for admin/vip to get painter access. No flag = feature is available for all players! Default ""
 [*] new cvar - sm_warden_laser_flag: Set flag for admin/vip to get warden laser pointer. No flag = feature is available for all players! Default ""
 [*] new cvar - sm_warden_bulletsparks_flag: Set flag for admin/vip to get warden bulletimpact sparks. No flag = feature is available for all players! Default ""
 [*] new cvar - sm_warden_backstab_flag: Set flag for admin/vip to get warden backstab protection. No flag = feature is available for all players! Default ""
@@ -1398,8 +1502,8 @@ sm_freeday_cooldown_day - Rounds until event can be started again. Default 0
 [*] new cvar - sm_dealdamage_rounds: Rounds to play in a row. Default 2
 [*] new cvar - sm_dealdamage_roundtime: Round time in minutes for a single dealdamage round. Default 2
 [*] new cvar - sm_dealdamage_trucetime: Time in seconds players can't deal damage. Default 15
-[*] new cvar - sm_dealdamage_cooldown_day", "3", "Rounds cooldown after a event until event can be start again. Default 3
-[*] new cvar - sm_dealdamage_cooldown_start", "3", "Rounds until event can be start after mapchange. Default 3
+[*] new cvar - sm_dealdamage_cooldown_day - Rounds cooldown after a event until event can be start again. Default 3
+[*] new cvar - sm_dealdamage_cooldown_start - Rounds until event can be start after mapchange. Default 3
 [*] new cvar - sm_dealdamage_sounds_enable: 0 - disabled, 1 - enable sounds. Default 1
 [*] new cvar - sm_dealdamage_sounds_start: Path to the soundfile which should be played for a start. Default "music/MyJailbreak/start.mp3"
 [*] new cvar - sm_dealdamage_overlays_enable: 0 - disabled, 1 - enable overlays. Default 1
@@ -1604,7 +1708,7 @@ based/merged/used code/idea plugins:
 [/SPOILER]
 [SIZE="5"]THANKS FOR MAKING FREE SOFTWARE![/SIZE] :bacon!: :bacon!:
 [U]Much Thanks: [/U]
-Weeeishy, UartigZone, Got Sw4g? terminator18, SkeLeXes, 0dieter0, maKs, TomseN48, Horoxx, zeddy, NrX, ElleVen, Bchewy, Include1, alsacchi, Murr, poppin-fresh, databomb, r3D w0LF for bughunting, translation & great ideas!
+Weeeishy, UartigZone, Got Sw4g? terminator18, SkeLeXes, 0dieter0, maKs, TomseN48, Horoxx, zeddy, NrX, ElleVen, Bchewy, Include1, alsacchi, Murr, poppin-fresh, databomb, r3D w0LF, JacobThePigeon for bughunting, translation & great ideas!
 
 
 

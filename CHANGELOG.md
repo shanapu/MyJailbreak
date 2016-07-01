@@ -1,5 +1,50 @@
 ### Change Log
   
+**[Beta 5.0]** - Ratio,VoteDay,Disarm...more
+  
+*Added*
+*  Ratio: Manage team ratios and a queue system for prisoners to join guard through. Supports priority queue to allow players with a certain flag to skip all players in the queue without that flag. Allows Admin to remove a player from guardqueue. Can be used with CTBans to block joining queue/guard when CTBanned.
+    *  new command - sm_guard - Allows the prisoners to queue to CT
+    *  new command - sm_viewqueue / sm_vq - Allows a player to show queue to CT.
+    *  new command - sm_leavequeue / sm_lq - Allows a player to leave queue to CT.
+    *  new admin command - sm_removequeue - Allows the admin to remove player from queue to CT.
+    *  new cvar - sm_ratio_cmd - Set your custom chat command for become guard. no need for sm_ or ! Default  "gua"
+    *  new cvar - sm_ratio_T_per_CT - How many prisoners for each guard. Default 2
+    *  new cvar - sm_ratio_flag - 0 - disabled, 1 - enable VIPs moved to front of queue. Default 1
+    *  new cvar - sm_ratio_vipflag - Set the flag for VIP. Default "a"
+    *  new cvar - sm_ratio_adsvip - 0 - disabled, 1 - enable adverstiment for 'VIPs moved to front of queue' when player types !quard. Default 1
+*  Menu: Admin &/or warden can start a voting which eventday should played next.
+    *  new command - sm_voteday / sm_votedays / sm_voteeventdays - opens/start the vote a eventday menu for all player
+    *  new cvar - sm_menu_voteday_warden - 0 - disabled, 1 - allow warden to start a voting
+    *  new cvar - sm_menu_voteday_admin - 0 - disabled, 1 - allow admin/vip  to start a voting
+    *  new cvar - sm_menu_voteday_cooldown_day" - Rounds cooldown after a voting until voting can be start again
+    *  new cvar - sm_menu_voteday_cooldown_start - Rounds until voting can be start after mapchange.
+*  Warden: Disarm a players weapon by shoot his hand/arm
+    *  new cvar - sm_warden_disarm - 0 - disabled, 1 - enable disarm weapon on shot the arms/hands
+    *  new cvar - sm_warden_disarm_mode - 1 - Only warden can disarm, 2 - All CT can disarm, 3 - Everyone can disarm (CT & T)
+    *  new cvar - sm_warden_disarm_drop - 1 - weapon will drop, 2 - weapon  disappears
+*  Warden: RoundEndTime Reminder - warden gets a sound signal & chat/hud hint when 30sec, 60sec, 2min, 3min round time left
+    *  new cvar - sm_warden_roundtime_reminder - 0 - disabled, 1 - announce remaining round time in chat & hud 3min,2min,1min,30sec before roundend
+*  Translation: russian phrases Thx to include1 & murr
+  
+*Changed*
+*  Warden: renamed drawer to painter
+*  Menu: Admin flag
+    *  new cvar - sm_menu_flag - Set flag for admin/vip to start a voting & see admin menus. Default "g"
+*  Warden: reduced Bullet sparks size
+*  Menu: Added "Close Cell Doors" to menu
+*  Warden: determine pick up radius for cuffed Ts
+    *  new cvar - sm_warden_handcuffs_distance", "2", "How many meters distance from warden to handcuffed T to pick up?
+*  Warden: paperclip translatable
+  
+*Fixed*
+*  Cowboy: Can't pickup revolver bug
+*  Menu: Checkplayers
+*  Warden: Painter/drawer toggle on spectator
+*  minor errors
+*  minor translation typos
+  
+  
 **[Beta 4.1]** - fixes (careless mistakes)
   
 *Fixed*
@@ -9,7 +54,7 @@
   
   
 **[Beta 4.0]** - DealDamage,Vip,Backstab,Paperclip...more
-
+  
 *Added*
 *  Request: Admin/warden can choose respawn position on a freekill
     *  new cvar - sm_freekill_respawn_cell: 0 - cells are still open on respawn, 1 - cells will close on respawn in cell. Default 1
@@ -21,7 +66,7 @@
     *  new cvar - sm_warden_backstab: 0 - disabled, 1 - enable backstab protection for warden. Default 1
     *  new cvar - sm_warden_backstab_number: How many time a warden get protected? 0 - alltime. Default 1
 *  Warden: Set features to admin/vip flag
-    *  new cvar - sm_warden_drawer_flag: Set flag for admin/vip to get drawer access. No flag = feature is available for all players! Default ""
+    *  new cvar - sm_warden_painter_flag: Set flag for admin/vip to get painter access. No flag = feature is available for all players! Default ""
     *  new cvar - sm_warden_laser_flag: Set flag for admin/vip to get warden laser pointer. No flag = feature is available for all players! Default ""
     *  new cvar - sm_warden_bulletsparks_flag: Set flag for admin/vip to get warden bulletimpact sparks. No flag = feature is available for all players! Default ""
     *  new cvar - sm_warden_backstab_flag: Set flag for admin/vip to get warden backstab protection. No flag = feature is available for all players! Default ""
@@ -51,8 +96,8 @@
     *  new cvar - sm_dealdamage_rounds: Rounds to play in a row. Default 2
     *  new cvar - sm_dealdamage_roundtime: Round time in minutes for a single dealdamage round. Default 2
     *  new cvar - sm_dealdamage_trucetime: Time in seconds players can't deal damage. Default 15
-    *  new cvar - sm_dealdamage_cooldown_day", "3", "Rounds cooldown after a event until event can be start again. Default 3
-    *  new cvar - sm_dealdamage_cooldown_start", "3", "Rounds until event can be start after mapchange. Default 3
+    *  new cvar - sm_dealdamage_cooldown_day" - Rounds cooldown after a event until event can be start again. Default 3
+    *  new cvar - sm_dealdamage_cooldown_start - Rounds until event can be start after mapchange. Default 3
     *  new cvar - sm_dealdamage_sounds_enable: 0 - disabled, 1 - enable sounds. Default 1
     *  new cvar - sm_dealdamage_sounds_start: Path to the soundfile which should be played for a start. Default "music/MyJailbreak/start.mp3"
     *  new cvar - sm_dealdamage_overlays_enable: 0 - disabled, 1 - enable overlays. Default 1
