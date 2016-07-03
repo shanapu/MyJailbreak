@@ -1382,7 +1382,7 @@ public void SendEndMathQuestion(int client)
 		MathTimer = INVALID_HANDLE;
 	}
 	
-	char answer[100];
+	char answer[264];
 	
 	if(client != -1)
 	{
@@ -1422,7 +1422,7 @@ public Action RemoveColor( Handle timer, any client )
 
 public Action AnswerQuestion(Handle timer, Handle pack)
 {
-	char str[100];
+	char str[264];
 	ResetPack(pack);
 	ReadPackString(pack, str, sizeof(str));
 	CPrintToChatAll(str);

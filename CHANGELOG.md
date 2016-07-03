@@ -42,6 +42,7 @@
 *  Cowboy: Can't pickup revolver bug
 *  Menu: Checkplayers
 *  Warden: Painter/drawer toggle on spectator
+*  Warden: MathQuiz "The Answer was {" bug
 *  minor errors
 *  minor translation typos
   

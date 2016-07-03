@@ -103,6 +103,7 @@ coded with ![](http://shanapu.de/githearth-small.png) free software
 *  Cowboy: Can't pickup revolver bug
 *  Menu: Checkplayers
 *  Warden: Drawer/Painter toggle on spectator
+*  Warden: MathQuiz "The Answer was {" bug
 *  minor errors
 *  minor translation typos
   
