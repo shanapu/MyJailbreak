@@ -29,6 +29,7 @@
   
 *Changed*
 *  Warden: renamed drawer to painter
+*  Translation: Better english translation Thx to JacobThePigeon
 *  Menu: Admin flag
     *  new cvar - sm_menu_flag - Set flag for admin/vip to start a voting & see admin menus. Default "g"
 *  Warden: reduced Bullet sparks size

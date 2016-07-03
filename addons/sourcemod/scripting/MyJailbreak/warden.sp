@@ -1747,7 +1747,6 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 						TeleportEntity(Target, location2, NULL_VECTOR, NULL_VECTOR);
 					}
 				}
-				
 			}
 		}
 		else if (g_bMarkerSetup)

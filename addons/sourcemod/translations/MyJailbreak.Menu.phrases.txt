@@ -35,14 +35,6 @@
 		"pl"		"Matematyczny Quiz"
 	}
 
-	"menu_drawer"
-	{
-		"ru"		"Меню рисовальщика"
-		"chi"		"画画菜单"
-		"pl"		"Menu Markera"
-		"en"		"Drawer Menu"
-	}
-
 	"menu_opencell"
 	{
 		"ru"		"Открыть двери камер"
@@ -381,6 +373,7 @@
 
 	"menu_painter"
 	{
+		"ru"		"Меню рисовальщика"
 		"en"		"Painter Menu"
 		"pl"		"Menu Painter"
 		"chi"		"画画菜单"
@@ -404,8 +397,8 @@
 
 	"menu_disabled"
 	{
-		"de"		"Event voting ist vorübergehend {purple}deaktiviert."
 		"en"		"Event voting runde er midlertidigt {purple}slÃ¥et fra."
+		"de"		"Event voting ist vorübergehend {purple}deaktiviert."
 	}
 
 	"menu_minplayer"
@@ -423,6 +416,11 @@
 	{
 		"#format"   "{1:i}"
 		"en"		"You must wait {purple}{1}{default} more rounds for an Event Day Voting!"
+	}
+
+	"menu_votingdraw"
+	{
+		"en"		"The vote ended in a 50/50 draw! An Event Day was chosen Randomly!"
 	}
 
 }

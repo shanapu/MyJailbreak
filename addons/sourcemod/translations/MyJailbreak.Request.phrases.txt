@@ -271,7 +271,7 @@
 	"request_respawncell"
 	{
 		"ru"		"Возродить в камере"
-		"en"		"Request a Respawn in a Cell"
+		"en"		"Respawn in a Cell"
 		"de"		"In der Zelle wiederbeleben"
 	}
 

@@ -1444,11 +1444,11 @@ public void VotingResults(Menu menu, int num_votes, int num_clients, const int[]
 	if (num_items > 1 && (item_info[0][VOTEINFO_ITEM_VOTES] == item_info[1][VOTEINFO_ITEM_VOTES]))
 	{
 		winner = GetRandomInt(0, 1);
-		CPrintToChatAll("%t %t", "menu_tag", "menu_votingdraw")
+		CPrintToChatAll("%t %t", "menu_tag", "menu_votingdraw");
 	}
 	char event[64];
 	menu.GetItem(item_info[winner][VOTEINFO_ITEM_INDEX], event, sizeof(event));
-	CPrintToChatAll("%t %t", "menu_tag", "menu_votingwon", event, num_items, num_clients);
+	CPrintToChatAll("%t %t", "menu_tag", "menu_votingwon", event, num_clients, num_items);
 	ServerCommand("sm_set%s", event);
 }
 

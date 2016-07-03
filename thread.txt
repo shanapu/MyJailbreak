@@ -1420,6 +1420,7 @@ sm_freeday_cooldown_day - Rounds until event can be started again. Default 0
   
 [u]Changed[/u][list]
 [*] Warden: renamed drawer to painter
+[*] Translation: Better english translation Thx to JacobThePigeon
 [*] Menu: Admin flag
 [/LIST][INDENT][LIST]
 [*] new cvar - sm_menu_flag - Set flag for admin/vip to start a voting & see admin menus. Default "g"
