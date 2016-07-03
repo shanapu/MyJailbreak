@@ -1,0 +1,68 @@
+
+- !guard = no swap (The !guard, ct, and simon chattriggers/commands don't work)
+do you use dev5.0 ??? cause beta 4.1 does not include commands like !guard & !ct.
+Do you have sm_warden_cmd" "simon" ? and !simon dont work as !warden? i hav to recheck this later
+
+- Can't get door on certain maps (!sjd or smartjaildoors will sometimes not pick up the doors on certain maps like jb_clouds)
+thats a sjd problem, or better a problem of the map. the map dont use common ways to handle the door... for this if got sm_EVENTNAME_spawn
+
+- lockpick doesn't work? (lockpick either doesn't spawn or breaks all the time, it should be %100 you get pick, but ratio of the pick breaking)
+do you have sm_warden_handcuffs_paperclip_chance", "1",  and  "sm_warden_handcuffs_unlock_chance" "1" ? this should do lockpick every handcuff. worked for me on last game ~4 days ago...
+
+=========================================
+Ideas:
+
+- Let me help with the translations to english (I can help make the english wording a lot better than what it is currently)
+Yeah, do a fork and pull request on github or git.tf! thank you! i realy apprichate this.
+
+- Spectator DM !redie (Found a Spectator-Deathmatch plugin that can work on CS:GO, will take time but could work)
+what about this https://forums.alliedmods.net/showthread.php?t=129735 or this https://forums.alliedmods.net/showthread.php?p=2198357 ?
+
+- Warden sparks supposed to delete t weapons (On other servers when a warden shoots a gun that a T has, it should delete it)
+added to issue/todo list
+
+- Player Glow? (Like in CS1.6 you could set a glow on each player via a menu, perhaps we can implement this)
+https://forums.alliedmods.net/showthread.php?p=2431199#post2431199
+
+- !draw or !line (instead of !drawer and directs you to the menu)
+yeah i going to rename this whole feature to paint soon
+
+- !countdown (Brings you to the countdown part of !menu)
+sm_cdmenu - Allows the warden to open the Countdown Menu
+not sure if there is a need for 2nd command.
+
+- Shoot to push button (Maybe we can make this work, like it was in 1.6)
+added to issue/todo list
+
+- Arms support for warden in warden.cfg (there is option for model, but maybe we can add one for arms models)
+added to issue/todo list
+
+- Close doors in menu / Toggle doors (we have Open doors, but we need Close doors in the !Menu)
+added to issue/todo list
+
+
+
+
+
+
+
+- !vote !voteday (A command that automatically brings you to the VoteEventDay menu)
+sm_days / sm_eventdays - open a vote EventDays menu for player
+sm_setdays / sm_seteventdays - open a set EventDays menu for warden or admins
+
+- Jailbreak Gangs (Gangs for CS:GO. similar to 1.6 gang [ https://forums.alliedmods.net/showthread.php?p=1981105] I found this but there's no download to plugin https://trello.com/b/4jAaf83l/sourcemod
+this is already developed/ing by bara & fransico
+
+- Jailbreak Jihad https://forums.alliedmods.net/showthread.php?t=215442)
+SuicideBomber - https://github.com/shanapu/MyJailbreak/wiki/SuicideBomber
+
+- Jailbreak Shop https://forums.alliedmods.net/showthread.php?p=2196085)
+you can use this one as additional to myjb. no conflicts
+
+- Player Stats (A plugin that will show you how long you've been on, your timeplayed on server, kills, deaths, something like that)
+this plugin already exists. developed by franisco if i remeber right. 
+
+- CS:GO Mic Chat Icon (When someone talks a big voice Icon will pop up over head)
+this plugin already exists. developed by franisco if i remeber right. 
+
+myjb dont need include all usefull plugins if they already exist for free and there is no need for myjb api integration
