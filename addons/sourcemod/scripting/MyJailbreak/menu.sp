@@ -118,7 +118,7 @@ public void OnPluginStart()
 	
 	AutoExecConfig_CreateConVar("sm_menu_version", PLUGIN_VERSION, "The version of the SourceMod plugin MyJailbreak - Menu", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_menu_enable", "1", "0 - disabled, 1 - enable jailbrek menu", _, true,  0.0, true, 1.0);
-	gc_sCustomCommand = AutoExecConfig_CreateConVar("sm_menu_cmd", "Set your custom chat command for open menu. no need for sm_ or !");
+	gc_sCustomCommand = AutoExecConfig_CreateConVar("sm_menu_cmd", "panel", "Set your custom chat command for open menu. no need for sm_ or !");
 	gc_bCTerror = AutoExecConfig_CreateConVar("sm_menu_ct", "1", "0 - disabled, 1 - enable ct jailbreak menu", _, true,  0.0, true, 1.0);
 	gc_bTerror = AutoExecConfig_CreateConVar("sm_menu_t", "1", "0 - disabled, 1 - enable t jailbreak menu", _, true,  0.0, true, 1.0);
 	gc_bWarden = AutoExecConfig_CreateConVar("sm_menu_warden", "1", "0 - disabled, 1 - enable warden jailbreak menu", _, true,  0.0, true, 1.0);
