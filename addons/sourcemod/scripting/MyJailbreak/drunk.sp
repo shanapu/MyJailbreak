@@ -193,7 +193,12 @@ public Action SetDrunk(int client,int args)
 {
 	if (gc_bPlugin.BoolValue && canSet) //is plugin enabled?
 	{
-		if (warden_iswarden(client)) //is player warden?
+		if(client == 0)
+		{
+			StartNextRound();
+			if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Drunk was started by groupvoting");
+		}
+		else if (warden_iswarden(client)) //is player warden?
 		{
 			if (gc_bSetW.BoolValue) //is warden allowed to set?
 			{
@@ -434,8 +439,8 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 			if (IsClientInGame(client)) SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true); //disbale noblock
 			KillDrunk(client);
 		}
-		if (DrunkTimer != null) KillTimer(DrunkTimer); 
-		if (TruceTimer != null) KillTimer(TruceTimer); //kill start time if still running
+		delete DrunkTimer; 
+		delete TruceTimer; //kill start time if still running
 		if (winner == 2) PrintHintTextToAll("%t", "drunk_twin_nc");
 		if (winner == 3) PrintHintTextToAll("%t", "drunk_ctwin_nc");
 		if (g_iRound == g_iMaxRound) //if this was the last round
@@ -478,8 +483,8 @@ public void OnMapEnd()
 	IsDrunk = false;
 	StartDrunk = false;
 	canSet = true;
-	if (TruceTimer != null) KillTimer(TruceTimer); //kill start time if still running
-	if (DrunkTimer != null) KillTimer(DrunkTimer); //kill start time if still running
+	delete TruceTimer; //kill start time if still running
+	delete DrunkTimer; //kill start time if still running
 	g_iVoteCount = 0;
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0'; 

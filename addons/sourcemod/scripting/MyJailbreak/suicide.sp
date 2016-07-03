@@ -241,7 +241,12 @@ public Action SetSuicideBomber(int client,int args)
 {
 	if (gc_bPlugin.BoolValue && canSet)
 	{
-		if (warden_iswarden(client))
+		if(client == 0)
+		{
+			StartNextRound();
+			if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event CowBoy was started by groupvoting");
+		}
+		else if (warden_iswarden(client))
 		{
 			if (gc_bSetW.BoolValue)
 			{
@@ -451,7 +456,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 			if (IsClientInGame(client)) SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
 			ClientSprintStatus[client] = 0;
 		}
-		if (FreezeTimer != null) KillTimer(FreezeTimer);
+		delete FreezeTimer;
 		if (winner == 2) PrintHintTextToAll("%t", "suicidebomber_twin_nc");
 		if (winner == 3) PrintHintTextToAll("%t", "suicidebomber_ctwin_nc");
 		BombActive = false;
@@ -508,8 +513,7 @@ public void OnMapEnd()
 	StartSuicideBomber = false;
 	BombActive = false;
 	canSet = true;
-	if (FreezeTimer != null) 
-	KillTimer(FreezeTimer);
+	delete FreezeTimer;
 	FreezeTimer = null;
 	g_iVoteCount = 0;
 	g_iRound = 0;

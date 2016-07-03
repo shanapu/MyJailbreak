@@ -12,12 +12,9 @@
 //ConVars
 ConVar gc_bTag;
 ConVar gc_bLogging;
-ConVar g_iGetRoundTime;
-ConVar gc_bTimer;
 
 //Integers
 int FogIndex = -1;
-int RoundTime;
 
 //Floats
 float mapFogStart = 0.0;
@@ -28,7 +25,6 @@ float mapFogDensity = 0.99;
 char IsEventDay[128] = "none";
 
 //Handles
-Handle RoundTimer;
 
 public Plugin myinfo = {
 	name = "MyJailbreak - Core",
@@ -42,14 +38,12 @@ public void OnPluginStart()
 {
 	gc_bTag = CreateConVar("sm_myjb_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", _, true,  0.0, true, 1.0);
 	gc_bLogging = CreateConVar("sm_myjb_log", "1", "Allow MyJailbreak to log events, freekills & eventdays in logs/MyJailbreak", _, true,  0.0, true, 1.0);
-	gc_bTimer = CreateConVar("sm_myjb_roundtime_announce", "1", "0 - disabled, 1 - announce remaining round time in chat & hud 3min,2min,1min,30sec before roundend.", _, true,  0.0, true, 1.0);
 	
-	//	RegAdminCmd("sm_fogoff", CommandFogOff, ADMFLAG_ROOT, "");
+	
+//	RegAdminCmd("sm_fogoff", CommandFogOff, ADMFLAG_ROOT, "");
 //	RegAdminCmd("sm_fogon", CommandFogOn, ADMFLAG_ROOT, "");
-
-	HookEvent("round_start", RoundStart);
-	HookEvent("round_end", RoundEnd);
-	}
+//	HookEvent("round_start", RoundStart);
+}
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -134,14 +128,16 @@ public void DoFog()
 		DispatchKeyValueFloat(FogIndex, "fogmaxdensity", mapFogDensity);
 	}
 }
-
+/*
 public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
 	
-		g_iGetRoundTime = FindConVar("mp_roundtime");
-		RoundTime = g_iGetRoundTime.IntValue * 60;
-		if(gc_bTimer.BoolValue)RoundTimer = CreateTimer(1.0, RoundTimerHandle, _, TIMER_REPEAT);
-	/*
+	if(!StrEqual(EventDay, "none", false))
+	{
+		g_iCoolDown = gc_iCooldownDay.IntValue + 1;
+	}
+	else if (g_iCoolDown > 0) g_iCoolDown--;
+	
 	for(int client=1; client <= MaxClients; client++)
 	{
 		if (IsClientInGame(client))
@@ -167,49 +163,8 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 			}
 		
 		}
-	}*/
-}
-
-public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
-{
-	delete RoundTimer;
-}
-public void OnMapEnd()
-{
-	delete RoundTimer;
-}
-
-public Action RoundTimerHandle(Handle timer)
-{
-	if(RoundTime >= 1)
-	{
-		RoundTime--;
-		
-		if(RoundTime == 180)
-		{
-			CPrintToChatAll("Noch 3 Minuten");
-			PrintHintTextToAll("Noch 3 Minuten");
-		}
-		if(RoundTime == 120)
-		{
-			CPrintToChatAll("Noch 2 Minuten");
-			PrintHintTextToAll("Noch 2 Minuten");
-		}
-		if(RoundTime == 60)
-		{
-			CPrintToChatAll("Noch 1 Minuten");
-			PrintHintTextToAll("Noch 1 Minuten");
-		}
-		if(RoundTime == 30)
-		{
-			CPrintToChatAll("Noch 30 Sekunden");
-			PrintHintTextToAll("Noch 30 Sekunden");
-		}
-		return Plugin_Continue;
 	}
-	RoundTimer = null;
-	return Plugin_Stop;
-}
+}*/
 
 public int Native_SetEventDay(Handle plugin,int argc)
 {

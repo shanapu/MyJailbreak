@@ -189,7 +189,12 @@ public Action Setffa(int client,int args)
 {
 	if (gc_bPlugin.BoolValue && canSet)
 	{
-		if (warden_iswarden(client))
+		if(client == 0)
+		{
+			StartNextRound();
+			if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event FFA was started by groupvoting");
+		}
+		else if (warden_iswarden(client))
 		{
 			if (gc_bSetW.BoolValue)
 			{
@@ -413,7 +418,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 	if (IsFFA)
 	{
 		LoopValidClients(client, false, true) SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
-		if (TruceTimer != null) KillTimer(TruceTimer);
+		delete TruceTimer;
 		if (winner == 2) PrintHintTextToAll("%t", "ffa_twin_nc"); 
 		if (winner == 3) PrintHintTextToAll("%t", "ffa_ctwin_nc");
 		if (g_iRound == g_iMaxRound)
@@ -450,7 +455,7 @@ public void OnMapEnd()
 {
 	IsFFA = false;
 	StartFFA = false;
-	if (TruceTimer != null) KillTimer(TruceTimer);
+	delete TruceTimer;
 	g_iVoteCount = 0;
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0';

@@ -1,0 +1,115 @@
+// Exported from SourceMod Translator
+// http://translator.mitchdempsey.com/sourcemod_plugins/201
+//
+"Phrases"
+{
+	"ratio_advip"
+	{
+		"ru"		"Получите {darkred}VIP{defailt} , чтобы автоматически переместиться в начало очереди."
+		"en"		"Get {darkred}VIP{default} to be automatically moved to the front of the queue."
+	}
+
+	"ratio_auto"
+	{
+		"ru"		"Вы не можете использовать автоматический выбор, чтобы присоединиться к команде."
+		"en"		"You cannot use auto select to join a team."
+	}
+
+	"ratio_banned"
+	{
+		"#format"   "{1:N}"
+		"ru"		"Вам запрещено играть за КТ, потому что Вы {green}забанены{default} за КТ."
+		"en"		"Du kannst nicht als Wärter spielen. Du bist als{green}CT{default} gebanned."
+		"de"		"Cannot play on guards because you are {green}CT{default} banned."
+	}
+
+	"ratio_empty"
+	{
+		"ru"		"В настоящее время очередь {green}пуста{default}."
+		"en"		"The queue is currently {green}empty{default}."
+	}
+
+	"ratio_find"
+	{
+		"#format"   "{1:N}"
+		"ru"		"Поиск следующего КТ из очереди. {green}{1} {default}новый КТ."
+		"en"		"Finding the next guard from queue. {green}{1} {default}is the new guard."
+		"de"		"Wähle den nächsten Anwärter aus der Liste. {green}{1} {default}ist neuer Guard"
+	}
+
+	"ratio_fullqueue"
+	{
+		"#format"   "{1:i}"
+		"ru"		"Команда КТ заполнена. Вы {green}#%i{default} в очереди."
+		"en"		"Guards team full. You are {green}#{1}{default} in the queue."
+	}
+
+	"ratio_info_title"
+	{
+		"ru"		"Очередь за КТ:"
+		"en"		"Guard Queue:"
+	}
+
+	"ratio_leavedqueue"
+	{
+		"en"		"You are no longer in the guard queue!"
+	}
+
+	"ratio_movetot"
+	{
+		"#format"   "{1:N}"
+		"en"		"There are to many Guards. {green}{1}{default} was picked random and moved to prisoner."
+	}
+
+	"ratio_noct"
+	{
+		"ru"		"Вы должны быть {green}заключённым{default}, чтобы встать в очередь."
+		"en"		"You must be a {green}prisoner{default} to join the queue."
+	}
+
+	"ratio_notonqueue"
+	{
+		"en"		"Your aren't on the guard queue!"
+	}
+
+	"ratio_novalid"
+	{
+		"ru"		"Не удалось найти{green} игрока{default} ,чтобы переместить за КТ. Грёбаный коэффициент."
+		"en"		"Could not find a{green} valid player{default} to switch to guards. Ratio may be fucked."
+	}
+
+	"ratio_number"
+	{
+		"#format"   "{1:i}"
+		"ru"		"Вы {green}{1}{default} в очереди."
+		"en"		"You are {green}#{1}{default} in the guard queue."
+	}
+
+	"ratio_random"
+	{
+		"#format"   "{1:N}"
+		"ru"		"Очередь за КТ пуста. {green}{1} {default}был выбран в качестве случайного нового КТ."
+		"en"		"Guard queue is empty. {green}{1} {default}was picked as random new guard."
+		"de"		"Anwärter Liste ist leer. {green}{1} {default}wurde als neuer Zufälliger Guard gewählt"
+	}
+
+	"ratio_removed"
+	{
+		"#format"   "{1:N},{2:N}"
+		"en"		"The Admin {1} removed {2} from the Guard queue!"
+	}
+
+	"ratio_tag"
+	{
+		"ru"		"[{green}MyJB.баланс{default}]"
+		"en"		"[{green}MyJB.ratio{default}]"
+		"de"		"[{green}MyJB.ratio{default}]"
+	}
+
+	"ratio_thxvip"
+	{
+		"ru"		"Благодарим за покупку {darkred}VIP{default}! Вы были перемещены в {green}начало очереди!{default}"
+		"en"		"Thank you for being a {darkred}VIP{default}! You have been moved to the {green}front of the queue!{default}"
+	}
+
+}

@@ -197,7 +197,12 @@ public Action SetHEbattle(int client,int args)
 {
 	if (gc_bPlugin.BoolValue && canSet)
 	{
-		if (warden_iswarden(client))
+		if(client == 0)
+		{
+			StartNextRound();
+			if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event HE Battle was started by groupvoting");
+		}
+		else if (warden_iswarden(client))
 		{
 			if (gc_bSetW.BoolValue)
 			{
@@ -426,10 +431,8 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 	if (IsHEbattle)
 	{
 		LoopClients(client) SetEntityGravity(client, 1.0);
-		if (TruceTimer != null) KillTimer(TruceTimer);
-		TruceTimer = null;
-		if (GravityTimer != null) KillTimer(GravityTimer);
-		GravityTimer = null;
+		delete TruceTimer;
+		delete GravityTimer;
 		if (winner == 2) PrintHintTextToAll("%t", "hebattle_twin_nc");
 		if (winner == 3) PrintHintTextToAll("%t", "hebattle_ctwin_nc");
 		if (g_iRound == g_iMaxRound)
@@ -467,8 +470,8 @@ public void OnMapEnd()
 	StartHEbattle = false;
 	canSet = true;
 	g_iVoteCount = 0;
-	if (TruceTimer != null) KillTimer(TruceTimer);
-	if (GravityTimer != null) KillTimer(GravityTimer);
+	delete TruceTimer;
+	delete GravityTimer;
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0';
 	SetEventDay("none");

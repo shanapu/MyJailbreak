@@ -5,14 +5,15 @@
 {
 	"menu_info"
 	{
-		"ru"		"[{green}MyJB.menu{default}] Откройте игровое меню, написав !menu или нажмите ,"
-		"chi"		"[{green}我监狱.Menu{default}]要打开MENU按，或输入!menu"
-		"pl"		"[{green}MyJB.menu{default}] Aby otworzyc Menu Jailbreak nacisnij lub wpisz !menu"
-		"en"		"[{green}MyJB.menu{default}] To open the jailbreak menu press , or type !menu"
+		"ru"		"Откройте игровое меню, написав !menu или нажмите ,"
+		"chi"		"要打开MENU按，或输入!menu"
+		"pl"		"Aby otworzyc Menu Jailbreak nacisnij lub wpisz !menu"
+		"en"		"To open the Jailbreak menu, press , or type !menu in chat!"
 	}
 
 	"menu_info_title"
 	{
+		"ru"		"MyJailBreak меню"
 		"chi"		"我监狱.Menu"
 		"pl"		"MyJailbreak Menu"
 		"en"		"MyJailbreak Menu"
@@ -20,41 +21,39 @@
 
 	"menu_countdown"
 	{
+		"en"		"Begin a Countdown Timer"
+		"ru"		"Начать отсчёт"
 		"chi"		"启动倒计时"
 		"pl"		"Rozpocznij Odliczanie"
-		"en"		"Start a Countdown"
 	}
 
 	"menu_math"
 	{
+		"en"		"Start a Math Quiz"
+		"ru"		"Викторина"
 		"chi"		"数学测验"
 		"pl"		"Matematyczny Quiz"
-		"en"		"Math Quiz"
-	}
-
-	"menu_drawer"
-	{
-		"chi"		"画画菜单"
-		"pl"		"Menu Markera"
-		"en"		"Drawer Menu"
 	}
 
 	"menu_opencell"
 	{
+		"ru"		"Открыть двери камер"
 		"chi"		"开放式监狱大门"
 		"pl"		"Otworz drzwi cell"
-		"en"		"Open cell doors"
+		"en"		"Open The Cell Doors"
 	}
 
 	"menu_seteventdays"
 	{
+		"en"		"Set Event Days"
+		"ru"		"Выбрать игровой день"
 		"chi"		"集游戏天"
 		"pl"		"Ustaw dzien/zabawe"
-		"en"		"Set EventDays"
 	}
 
 	"menu_guns"
 	{
+		"ru"		"Меню оружия"
 		"chi"		"枪菜单"
 		"pl"		"Menu Broni"
 		"en"		"Weapon Menu"
@@ -62,25 +61,29 @@
 
 	"menu_sparks"
 	{
+		"ru"		"Вкл/Выкл искры от пуль"
 		"en"		"Toggle BulletImpact Sparks"
 	}
 
 	"menu_voteeventdays"
 	{
+		"ru"		"Голосуйте за игровой день"
 		"chi"		"投票当天游戏天"
 		"pl"		"Glosuj na zabawe"
-		"en"		"Vote EventDays"
+		"en"		"Vote For Event Days"
 	}
 
 	"menu_noblock"
 	{
+		"ru"		"Вкл/Выкл No Block"
 		"chi"		"切换No Block"
 		"pl"		"Wlacz No Block"
-		"en"		"Toggle No Block"
+		"en"		"Toggle NoBlock"
 	}
 
 	"menu_laser"
 	{
+		"ru"		"Меню лазерного указатель"
 		"chi"		"激光菜单"
 		"pl"		"Menu Lasera/Markera"
 		"en"		"Laser Pointer Menu"
@@ -88,11 +91,13 @@
 
 	"menu_extend"
 	{
-		"en"		"Extend round time"
+		"ru"		"Продлить время раунда"
+		"en"		"Extend The Round Time"
 	}
 
 	"menu_ffon"
 	{
+		"ru"		"Включить FF для террористов"
 		"chi"		"启用误伤"
 		"pl"		"Wlacz Friendly Fire dla Terro"
 		"en"		"Enable FF for Ts"
@@ -100,6 +105,7 @@
 
 	"menu_ffoff"
 	{
+		"ru"		"Отключить FF для террористов"
 		"chi"		"关掉误伤"
 		"pl"		"Wylacz Friendly Fire dla Terro"
 		"en"		"Disable FF for Ts"
@@ -107,41 +113,47 @@
 
 	"menu_randomdead"
 	{
+		"ru"		"Убить случайного Террориста"
 		"chi"		"随机杀Terrorist"
 		"pl"		"Zabij randomowego terroryste"
-		"en"		"Kill a random Terrorist"
+		"en"		"Kill a Random Prisoner"
 	}
 
 	"menu_unwarden"
 	{
+		"ru"		"Покинуть пост"
 		"chi"		"监狱长退休"
 		"pl"		"Opusc Straznika"
-		"en"		"Leave warden"
+		"en"		"Retire From Warden"
 	}
 
 	"menu_getwarden"
 	{
+		"ru"		"Занять пост КМД"
 		"chi"		"成为监狱长"
 		"pl"		"Zostan Straznikiem"
-		"en"		"Become warden"
+		"en"		"Become The Warden"
 	}
 
 	"menu_joint"
 	{
+		"en"		"Become a Prisoner"
+		"ru"		"Зайти за террористов"
 		"chi"		"加入恐怖"
 		"pl"		"Dolacz do terrorystow"
-		"en"		"Join Terror"
 	}
 
 	"menu_check"
 	{
+		"ru"		"Проверка игроков"
 		"chi"		"查Players"
 		"pl"		"Sprawdz zawodnikow"
-		"en"		"Check Players"
+		"en"		"Check Rebellers"
 	}
 
 	"menu_lr"
 	{
+		"ru"		"Последнее желание"
 		"chi"		"最后一个请求(Last-Request)"
 		"pl"		"Ostatnie zyczenie"
 		"en"		"Last Request"
@@ -149,20 +161,23 @@
 
 	"menu_removewarden"
 	{
+		"ru"		"Уволить командира"
 		"chi"		"消防队长"
 		"pl"		"Usun Straznika"
-		"en"		"Remove warden"
+		"en"		"Remove Warden"
 	}
 
 	"menu_setwarden"
 	{
+		"ru"		"Выбрать нового командира"
 		"chi"		"设置新的监狱长"
 		"pl"		"Ustal nowego Straznika"
-		"en"		"Set new warden"
+		"en"		"Set New Warden"
 	}
 
 	"menu_rules"
 	{
+		"ru"		"Правила"
 		"chi"		"规则"
 		"pl"		"Zasady"
 		"en"		"Rules"
@@ -170,20 +185,23 @@
 
 	"menu_joinct"
 	{
+		"ru"		"Зайти за КТ"
 		"chi"		"加入Counter-Terror"
 		"pl"		"Dolacz do Counter Terro"
-		"en"		"Join Counter-Terror"
+		"en"		"Become a Guard"
 	}
 
 	"menu_guardct"
 	{
+		"ru"		"Занять очередь за КТ (!guard)"
 		"chi"		"排队CT(!guard)"
 		"pl"		"dolacz do kolejki CT (!guard)"
-		"en"		"Join CT queue (!guard)"
+		"en"		"Join Guard queue (!guard)"
 	}
 
 	"menu_request"
 	{
+		"ru"		"Запросы"
 		"chi"		"要求(Requests)"
 		"pl"		"Zadania"
 		"en"		"Requests"
@@ -191,98 +209,114 @@
 
 	"menu_votewarden"
 	{
+		"ru"		"Проголосовать за увольнение КМД"
 		"chi"		"投票消防队长"
 		"pl"		"Glosuj za zmiana Straznika"
-		"en"		"Vote fire warden"
+		"en"		"Vote To Fire The Warden"
 	}
 
 	"menu_event_Titlestart"
 	{
+		"ru"		"Начало игрового дня в следующем раунде"
 		"chi"		"活动下一轮开始"
 		"pl"		"Rozpocznij zabawe w nastepnej rundzie"
-		"en"		"Start Event next round"
+		"en"		"Start Event Next Round"
 	}
 
 	"menu_event_Titlevote"
 	{
+		"ru"		"Проголосовать за игровой день"
 		"chi"		"投票游戏天"
 		"pl"		"Glosuj na Zabawe Dnia"
-		"en"		"Vote for a Event Day"
+		"en"		"Vote for an Event Day"
 	}
 
 	"menu_war"
 	{
+		"ru"		"Война"
 		"pl"		"Wojna"
 		"en"		"War"
 	}
 
 	"menu_ffa"
 	{
+		"ru"		"Свобода для ВСЕХ"
 		"pl"		"Free for All"
 		"en"		"Free for All"
 	}
 
 	"menu_zeus"
 	{
+		"ru"		"Зевс"
 		"pl"		"Zeus"
 		"en"		"Zeus"
 	}
 
 	"menu_zombie"
 	{
+		"ru"		"Зомби день"
 		"pl"		"Zombie Day"
 		"en"		"Zombie Day"
 	}
 
 	"menu_dealdamge"
 	{
+		"ru"		"День урона"
 		"en"		"Deal Damage Day"
 	}
 
 	"menu_hide"
 	{
+		"ru"		"Прятки в темноте"
 		"pl"		"Chowanego"
 		"en"		"Hide in The Dark"
 	}
 
 	"menu_suicidebomber"
 	{
+		"ru"		"Смертник"
 		"pl"		"Suicide Bomber"
 		"en"		"Suicide Bomber"
 	}
 
 	"menu_catch"
 	{
+		"ru"		"Поймай и заморозь"
 		"pl"		"Goniony"
 		"en"		"Catch & Freeze"
 	}
 
 	"menu_knifefight"
 	{
+		"ru"		"Битва на ножах"
 		"pl"		"KNIFE"
 		"en"		"KnifeFight"
 	}
 
 	"menu_hebattle"
 	{
+		"ru"		"Бой гранатами"
 		"pl"		"HE Battle"
 		"en"		"HE Battle"
 	}
 
 	"menu_cowboy"
 	{
+		"ru"		"Ковбой"
 		"pl"		"Cowboy"
 		"en"		"Cowboy"
 	}
 
 	"menu_drunk"
 	{
+		"ru"		"Пьяный"
 		"pl"		"Pijak"
-		"en"		"Drunken"
+		"en"		"Drunk Day"
 	}
 
 	"menu_torch"
 	{
+		"ru"		"Эстафета Олимпийского огня"
 		"pl"		"Czlowiek Pochodnia"
 		"de"		"Fackellauf"
 		"en"		"Torch Relay"
@@ -290,24 +324,28 @@
 
 	"menu_noscope"
 	{
+		"ru"		"Без прицела"
 		"pl"		"No scope"
 		"en"		"No Scope"
 	}
 
 	"menu_duckhunt"
 	{
+		"ru"		"Охота на уток"
 		"pl"		"Polowanie na Kaczki"
 		"en"		"DuckHunt"
 	}
 
 	"menu_Freeday"
 	{
+		"ru"		"Фридей"
 		"pl"		"Freeday"
 		"en"		"Freeday"
 	}
 
 	"menu_admin"
 	{
+		"ru"		"Меню администратора"
 		"chi"		"管理菜单"
 		"pl"		"Admin Menu"
 		"en"		"Admin Menu"
@@ -315,8 +353,74 @@
 
 	"menu_mute"
 	{
+		"ru"		"Меню мутов"
 		"pl"		"Mute Menu"
 		"en"		"Mute Menu"
+	}
+
+	"menu_tag"
+	{
+		"en"		"[{green}MyJB.menu{default}]"
+		"pl"		"[{green}MyJB.menu{default}]"
+		"chi"		"[{green}我监狱.Menu{default}]"
+		"ru"		"[{green}MyJB.menu{default}]"
+	}
+
+	"menu_voting"
+	{
+		"en"		"Vote for an Event Day:"
+	}
+
+	"menu_painter"
+	{
+		"ru"		"Меню рисовальщика"
+		"en"		"Painter Menu"
+		"pl"		"Menu Painter"
+		"chi"		"画画菜单"
+	}
+
+	"menu_closecell"
+	{
+		"en"		"Close The Cell Doors"
+	}
+
+	"menu_voteday"
+	{
+		"en"		"Start an Event Day Voting"
+	}
+
+	"menu_votingwon"
+	{
+		"#format"   "{1:s},{2:i},{3:i}"
+		"en"		"The vote has ended with {2} vote yet. {green}{1} {default}won with {3} votes."
+	}
+
+	"menu_disabled"
+	{
+		"en"		"Event voting runde er midlertidigt {purple}slÃ¥et fra."
+		"de"		"Event voting ist vorübergehend {purple}deaktiviert."
+	}
+
+	"menu_minplayer"
+	{
+		"en"		"For a Event Day Voting, you must have at least {purple}one Guard, & one Prisoner"
+	}
+
+	"menu_progress"
+	{
+		"#format"   "{1:s}"
+		"en"		"The event {darkred}{1} {default}is {purple}already in progress!"
+	}
+
+	"menu_wait"
+	{
+		"#format"   "{1:i}"
+		"en"		"You must wait {purple}{1}{default} more rounds for an Event Day Voting!"
+	}
+
+	"menu_votingdraw"
+	{
+		"en"		"The vote ended in a 50/50 draw! An Event Day was chosen Randomly!"
 	}
 
 }

@@ -210,7 +210,12 @@ public Action SetDuckHunt(int client,int args)
 {
 	if (gc_bPlugin.BoolValue && canSet)
 	{
-		if (warden_iswarden(client))
+		if(client == 0)
+		{
+			StartNextRound();
+			if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event DuckHunt was started by groupvoting");
+		}
+		else if (warden_iswarden(client))
 		{
 			if (gc_bSetW.BoolValue)
 			{
@@ -474,7 +479,7 @@ public void OnMapEnd()
 	IsDuckHunt = false;
 	StartDuckHunt = false;
 	canSet = true;
-	if (TruceTimer != null) KillTimer(TruceTimer);
+	delete TruceTimer;
 	g_iVoteCount = 0;
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0';

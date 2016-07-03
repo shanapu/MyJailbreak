@@ -5,133 +5,150 @@
 {
 	"zeus_ctwin_nc"
 	{
+		"ru"		"КТ выжили"
 		"pl"		"Counter-Terrorists przetrwal"
 		"de"		"Ein Counter-Terrorists hat als einziger überlebt"
-		"en"		"A Counter-Terrorists has surrived"
+		"en"		"A Guard has survived!"
 		"da"		"En Counter-Terrorists har overlevet!"
 	}
 
 	"zeus_disabled"
 	{
-		"pl"		"ZeusDay jest {purple}wylaczony."
-		"de"		"ZeusDay ist {purple}deaktiviert."
-		"en"		"ZeusDay is {purple}disabled."
-		"da"		"ZeusDay er {purple}slået fra."
+		"ru"		"День зевса {purple}отключен."
+		"pl"		"ZeusDay jest tymczasowo {purple}wylaczony."
+		"de"		"ZeusDay ist vorübergehend {purple}deaktiviert."
+		"en"		"ZeusDay is currently {purple}disabled!"
+		"da"		"ZeusDay er midlertidigt {purple}slået fra."
 	}
 
 	"zeus_end"
 	{
+		"ru"		"{purple}День зевса{default} окончен!"
 		"pl"		"{purple}ZeusDay{default} zakonczony"
 		"de"		"{purple}ZeusDay{default} beendet"
-		"en"		"{purple}ZeusDay{default} finished"
+		"en"		"{purple}ZeusDay{default} has ended."
 		"da"		"{purple}ZeusDay{default} er afsluttet!"
 	}
 
 	"zeus_info_line1"
 	{
+		"ru"		"День зевса - все против всех"
 		"pl"		"ZeusDay Free for All"
 		"de"		"ZeusDay Jeder gegen Jeden"
-		"en"		"ZeusDay Free for All"
+		"en"		"ZeusDay - Free for All!"
 		"da"		"ZeusDay er hvor mod hvor!"
 	}
 
 	"zeus_info_line2"
 	{
+		"ru"		"У вас есть только один выстрел c Zeus"
 		"pl"		"Yposiadasz tylko jeden strzal z  Zeusa"
 		"de"		"Du hast in der Zeus nur einen Schuss"
-		"en"		"You got only one shot on Zeus"
+		"en"		"You only have one shot in your Zeus!"
 	}
 
 	"zeus_info_line3"
 	{
+		"ru"		"Убейте зевсом или ножом, чтобы получить новый зевс"
 		"pl"		"za Fraga z noza lub zeusa dostajesz nowego zeusa"
 		"de"		"Bei einem Kill mit Zeus oder Messer bekommst du einen neue Zeus"
-		"en"		"On kill with Zeus or Knife you get a new Zeus"
+		"en"		"When you get a kill, you will be rewarded with another Zeus!"
 	}
 
 	"zeus_info_line4"
 	{
+		"ru"		"Все нормальные правила тюрьмы отменяются"
 		"pl"		"Wszystkie normalne zasady wiezienia zostaly zastapione"
 		"de"		"Alle normalen Jailregeln sind aufgehoben!"
-		"en"		"All normal jail rules are repealed"
+		"en"		"All usual Jailbreak Rules do not apply during this round!"
 		"da"		"Alle jail regler er ophævet!"
 	}
 
 	"zeus_info_line5"
 	{
+		"ru"		"Здесь нету последних желаний!"
 		"pl"		"Nie ma ostatniego zyczenia!"
 		"de"		"Der letzte Terrorists hat keinen Wunsch!"
-		"en"		"There is no last request!"
+		"en"		"Last Request is disabled during this round!"
 		"da"		"Der kan ikke laves Last Request i denne runde!"
 	}
 
 	"zeus_info_line6"
 	{
+		"ru"		"Оставайтесь в главной камере! Не уходите в нычки!"
 		"pl"		"Zostan w glownym pomieszczeniu Wiezienia! Zakaz wejsc do SECRETOW!"
 		"de"		"Bleib' im Haupt Jail Raum! Verstecke sind verboten!"
-		"en"		"Stay in the main jailroom! Don't enter secrets!"
+		"en"		"You must stay in the main Jailroom! Don't enter vents or secrets!"
 	}
 
 	"zeus_info_line7"
 	{
+		"ru"		"Не будь мудаком!"
 		"pl"		"Nie badz DUPKIEM!"
 		"de"		"Bau keine Scheisse!"
-		"en"		"Dont be an asshole!"
+		"en"		"Don't be an Asshole!"
 		"da"		"Alle server regler skal overholdes!"
 	}
 
 	"zeus_info_title"
 	{
-		"en"		"ZeusDay is active"
+		"da"		"ZeusDay er aktiveret!"
+		"ru"		"День зевса активен"
+		"en"		"ZeusDay is now Activated!"
 		"pl"		"ZeusDay jest aktywny"
 		"de"		"ZeusDay ist aktiv"
-		"en"		"ZeusDay er aktiveret!"
 	}
 
 	"zeus_minplayer"
 	{
+		"en"		"For ZeusDay you need at least {purple}one Guard and one Prisoner!"
+		"ru"		"Для дня Зевса необходимо как минимум {purple}один КТ"
 		"pl"		"Do zabawy cowboy potrzeba przynajmniej {purple}jednego CT"
 		"de"		"Für Zeus brauchen wir mindestens {purple}einen CT"
-		"en"		"For a Zeus you need at least {purple}one CT"
 		"da"		"For Zeus skal der mindst være {purple}en CT"
 	}
 
 	"zeus_need"
 	{
 		"#format"   "{1:i},{2:N}"
+		"ru"		"{purple}{2}{default} проголосовал. {purple}{1}{default} голосов осталось до {darkred}дня зевса"
 		"pl"		"{purple}{2}{default} zaglosowal {purple}{1}{default} pozostalo glosow do {darkred}ZEUS"
 		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}zeus{default} beginnt"
-		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes left to {darkred}zeus"
+		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes required to play {darkred}ZeusDay."
 		"da"		"{purple}{2}{default} har afstemt!. {purple}{1}{default} afstemninger tilbage til {darkred}zeus"
 	}
 
 	"zeus_next"
 	{
+		"ru"		"Следующий день {purple}День зевса"
 		"pl"		"Nastepna runda to {purple}ZeusDay"
 		"de"		"Nächste Runde ist {purple}ZeusDay"
-		"en"		"Next round is {purple}ZeusDay"
+		"en"		"The following round will be: {purple}ZeusDay."
 		"da"		"Næste runde er {purple}ZeusDay"
 	}
 
 	"zeus_next_nc"
 	{
+		"ru"		"Следующий день День Зевса"
 		"pl"		"Nastepna runda to ZeusDay"
 		"de"		"Nächste Runde ist ZeusDay"
-		"en"		"Next round is ZeusDay"
+		"en"		"The following round will be: ZeusDay."
 		"da"		"Næste runde er ZeusDay"
 	}
 
 	"zeus_progress"
 	{
 		"#format"   "{1:s}"
+		"ru"		"Игровой день {darkred}{1} {default}в {purple}процессе."
 		"pl"		"Zabawa  {darkred}{1} {default}sie {purple}rozpoczela"
 		"de"		"Event {darkred}{1} {default}ist {purple}bereits gesetzt."
-		"en"		"Event {darkred}{1} {default}is {purple}already in progress."
+		"en"		"The event {darkred}{1} {default}is {purple}already in progress!"
 	}
 
 	"zeus_rounds"
 	{
 		"#format"   "{1:i},{2:i}"
+		"ru"		"Раунд {purple}{1}{default} из {purple}{2}"
 		"pl"		"Runda {purple}{1}{default} z {purple}{2}"
 		"de"		"Runde {purple}{1}{default} von {purple}{2}"
 		"en"		"Round {purple}{1}{default} of {purple}{2}"
@@ -140,80 +157,90 @@
 
 	"zeus_setbyadmin"
 	{
+		"ru"		"Администратор {purple}отключил{default} выбор дня зевса"
 		"pl"		"Wlaczenie Cowboy przez admina jest {purple}wylaczone"
 		"de"		"ZeusDay Aktivierung durch den Admin ist {purple}ausgeschaltet"
-		"en"		"Set ZeusDay by admin is {purple}disabled"
+		"en"		"Set ZeusDay by Admin is {purple}disabled!"
 		"da"		"Admin bestemmer runde for No Scope er {purple}slået fra"
 	}
 
 	"zeus_setbywarden"
 	{
+		"ru"		"Командир {purple}отключил{default} выбор дня зевса"
 		"pl"		"Glosowanie na Cowboy przez Straznika jest {purple}wylaczone"
 		"de"		"ZeusDay Aktivierung durch den Warden ist {purple}ausgeschaltet"
-		"en"		"Set ZeusDay by warden is {purple}disabled"
+		"en"		"Set ZeusDay by Warden is {purple}disabled!"
 		"da"		"Warden bestemmer runde for No Scope er {purple}slået fra"
 	}
 
 	"zeus_start"
 	{
+		"ru"		"{purple}День зевса{default} начался!"
 		"pl"		"{purple}ZeusDay{default} sie rozpoczal!"
 		"de"		"{purple}ZeusDay{default} ist gestartet!"
-		"en"		"The {purple}ZeusDay{default} has started!"
+		"en"		"{purple}ZeusDay{default} has begun!"
 		"da"		"{purple}ZeusDay{default} er startet!"
 	}
 
 	"zeus_start_nc"
 	{
+		"ru"		"День Зевса начался!"
 		"pl"		"ZeusDay sie rozpoczal!"
 		"de"		"ZeusDay ist gestartet!"
-		"en"		"The ZeusDay started!"
+		"en"		"ZeusDay has begun!"
 		"da"		"No Scope er startet!"
 	}
 
 	"zeus_tag"
 	{
+		"ru"		"[{green}MyJB.zeus{default}]"
 		"en"		"[{green}MyJB.zeus{default}]"
 	}
 
 	"zeus_timeuntilstart_nc"
 	{
 		"#format"   "{1:i}"
+		"ru"		"{1} секунд до начала"
 		"pl"		"{1} sekund do startu!"
 		"de"		"{1} Sekunden bis zum Start"
-		"en"		"{1} seconds until start"
+		"en"		"{1} seconds until round start!"
 		"da"		"{1} sekunder til runden starter!"
 	}
 
 	"zeus_twin_nc"
 	{
+		"ru"		"Т выжили"
 		"pl"		"Terrorysta przetrwal"
 		"de"		"Ein Terrorists hat als einziger überlebt"
-		"en"		"A Terrorists has surrived"
+		"en"		"A Prisoner has survived!"
 		"da"		"En Terrorists har overlevet!"
 	}
 
 	"zeus_voted"
 	{
+		"ru"		"Вы уже проголосовали за {purple}День Зевса"
 		"pl"		"Juz glosowales na {purple}ZeusDay"
 		"de"		"Du hast schon für {purple}ZeusDay {default}gevotet"
-		"en"		"You already voted for {purple}ZeusDay"
+		"en"		"You have already voted for {purple}ZeusDay!"
 		"da"		"Du har allerede stemt for {purple}ZeusDay!"
 	}
 
 	"zeus_voting"
 	{
+		"ru"		"Голосования за день зевса {purple}отключено"
 		"pl"		"Glosowanie graczy na ZEUS jest {purple}wylaczone"
 		"de"		"Voting für ZeusDay ist {purple}ausgeschaltet"
-		"en"		"Player voting for ZeusDay is {purple}disabled"
+		"en"		"Voting for ZeusDay is {purple}disabled!"
 		"da"		"Afstemninger for No Scope er {purple}slået fra"
 	}
 
 	"zeus_wait"
 	{
 		"#format"   "{1:i}"
+		"ru"		"Вы должны подождать больше {1} раундов"
 		"pl"		"Musisz poczekac  {1} rund"
 		"de"		"Du musst noch {1} Runden warten"
-		"en"		"You must wait {1} more rounds"
+		"en"		"You must wait {purple}{1}{default} more rounds for an Event Day!"
 		"da"		"Du skal vente {1} flere runder!"
 	}
 

@@ -5,140 +5,157 @@
 {
 	"hide_ctwin_nc"
 	{
+		"ru"		"КТ одержали победу"
 		"pl"		"Szukajacy Wygrywa"
 		"de"		"Seeker haben gewonnen"
-		"en"		"Seeker win"
+		"en"		"Seekers win!"
 		"da"		"CT vinder runden!"
 	}
 
 	"hide_disabled"
 	{
-		"pl"		"Chowany jest {purple}wylaczony."
-		"de"		"Hide in the Dark ist {purple}deaktiviert."
-		"en"		"Hide in the Dark is {purple}disabled."
+		"ru"		"Прятки в Темноте {purple}отключены."
+		"pl"		"Chowany jest tymczasowo {purple}wylaczony."
+		"de"		"Hide in the Dark ist vorübergehend {purple}deaktiviert."
 		"en"		"Hide in the Dark er {purple}deaktiveret."
 	}
 
 	"hide_end"
 	{
-		"en"		"{purple}Hide in the Dark{default} finished"
+		"da"		"{purple}Hide in the Dark{default} er afsluttet!"
+		"ru"		"{purple}Прятки в Темноте{default} окончены!"
+		"en"		"{purple}Hide in the Dark{default} has ended."
 		"pl"		"{purple}Chowany{default} zakonczony"
 		"de"		"{purple}Hide in the Dark{default} beendet"
-		"en"		"{purple}Hide in the Dark{default} er afsluttet!"
 	}
 
 	"hide_info_line1"
 	{
+		"ru"		"Т получили время в начале раунде, чтобы спрятаться"
 		"pl"		"Chowajacy sie maja czas na schowanie sie "
 		"de"		"Hider haben zu Rundenbeginn Zeit zum verstecken"
-		"en"		"Hider got time on beginn of the round to hide"
+		"en"		"The Hiders have time to hide at the start of the round!"
 	}
 
 	"hide_info_line2"
 	{
+		"ru"		"Прежде чем КТ будут разморожены Т будут заморожены"
 		"pl"		"Gdy Szukajacy sie odmrozi , automatycznie zamraza Chowajacych sie"
 		"de"		"Solbald es für die Seeker losgeht, werden die Hider gefreezt"
-		"en"		"When Seeker get unfreezed Hider get freezed"
+		"en"		"Hiders will be frozen when the Seeker becomes unfreezed!"
 	}
 
 	"hide_info_line3"
 	{
+		"ru"		"КТ получили несколько ВХ гранат."
 		"pl"		"Szukajacy zdobadz granaty TA"
 		"de"		"Seeker haben ein paar TA Granaten"
-		"en"		"Seeker get some TA grenades"
+		"en"		"The Seeker has been given TAGrenades!"
 	}
 
 	"hide_info_line4"
 	{
+		"en"		"All ususal Jailbreak Rules do not apply during this round!"
+		"ru"		"Все нормальный правила тюрьмы отключены."
 		"pl"		"Wszystkie normalne zasady wiezienia zostaly zastapione"
 		"de"		"Alle normalen Jailregeln sind aufgehoben!"
-		"en"		"All normal jail rules are repealed"
 		"da"		"Alle jail regler er ophævet!"
 	}
 
 	"hide_info_line5"
 	{
+		"ru"		"Здесь нету последних желаний!"
 		"pl"		"Nie ma ostatniego zyczenia!"
 		"de"		"Der letzte Terrorists hat keinen Wunsch!"
-		"en"		"There is no last request!"
+		"en"		"Last Request is disabled during this round!"
 		"da"		"Last Request er deaktiveret i denne runde!"
 	}
 
 	"hide_info_line6"
 	{
+		"ru"		"Каждый может идти туда, куда захочет."
 		"pl"		"Kazdy moze isc gdzie chce "
 		"de"		"Jeder darf überall hin wo er will!"
-		"en"		"Everyone is allowed to go everywhere where he wants"
+		"en"		"Everyone is allowed to go anywhere within the map!"
 		"da"		"Alle må gå der hen som de har lyst!"
 	}
 
 	"hide_info_line7"
 	{
+		"ru"		"Не будь мудаком!"
 		"pl"		"Nie badz DUPKIEM!"
 		"de"		"Bau keine Scheisse!"
-		"en"		"Dont be an asshole!"
+		"en"		"Don't be an Asshole!"
 		"da"		"Alle server reglerne skal overholdes!"
 	}
 
 	"hide_info_title"
 	{
+		"ru"		"Прятки в Темноте активны"
 		"pl"		"Chowany jest aktywny"
 		"de"		"Hide In The Dark ist aktiv"
-		"en"		"Hide In The Dark is active"
+		"en"		"Hide In The Dark is now Activated!"
 		"da"		"Hide In The Dark er aktiveret!"
 	}
 
 	"hide_minplayer"
 	{
+		"ru"		"Для пряток в темноте вам нужно, по крайней мере {purple} один КТ и один Т"
 		"pl"		"Do zabawy w Chowanego potrzeba przynajmniej {purple}jednego  CT i jednego Terro"
 		"de"		"Für Hide in the Dark brauchen wir mindestens {purple}einen CT und einen T"
-		"en"		"For a Hide in the Dark you need at least {purple}one CT & one T"
+		"en"		"For Hide in the Dark you need at least {purple}one Guard and one Prisoner!"
 		"da"		"For Hide in the Dark skal der mindst være {purple}en CT & en T"
 	}
 
 	"hide_need"
 	{
 		"#format"   "{1:i},{2:N}"
+		"ru"		"{purple}{2}{default} проголосовал. {purple}{1}{default} голосов осталось до {darkred}Пряток в Темноте"
 		"pl"		"{purple}{2}{default} zaglosowal {purple}{1}{default} pozostalo glosow do {darkred}Chowanego"
 		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}Hide in the Dark{default} beginnt"
-		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes left to {darkred}Hide in the Dark"
+		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes required to play {darkred}Hide in the Dark."
 		"da"		"{purple}{2}{default} har stemt. {purple}{1}{default} stemmer tilbage for {darkred}Hide in the Dark"
 	}
 
 	"hide_next"
 	{
+		"ru"		"Следующий раунд {purple}Прятки в Темноте"
 		"pl"		"Nastepna runda to {purple}Chowanego"
 		"de"		"Nächste Runde ist {purple}Hide in the Dark"
-		"en"		"Next round is {purple}Hide in the Dark"
+		"en"		"The following round will be: {purple}Hide in the Dark."
 		"da"		"Næste runde er {purple}Hide in the Dark"
 	}
 
 	"hide_next_nc"
 	{
+		"ru"		"Следующий раунд Прятки в Темноте"
 		"pl"		"Nastepna runda to Chowany"
 		"de"		"Nächste Runde ist Hide in the Dark"
-		"en"		"Next round is Hide in the Dark"
+		"en"		"The following round will be: Hide in the Dark."
 		"da"		"Næste runde er Hide in the Dark"
 	}
 
 	"hide_nota"
 	{
+		"ru"		"У вас больше {green}нет{default} ВХ гранат."
 		"pl"		"nie masz juz {green}zadnych{default} TA granatow."
 		"de"		"Du hast {green}keine{default} TA Granaten mehr übrig."
-		"en"		"You've got {green}no more{default} TA grenades left."
+		"en"		"You've {green}run out{default} of TAGrenades!"
 	}
 
 	"hide_progress"
 	{
 		"#format"   "{1:s}"
+		"ru"		"Игровой день {darkred}{1} {default} в {purple}процессе."
 		"pl"		"Zabawa  {darkred}{1} {default}sie {purple}rozpoczela"
 		"de"		"Event {darkred}{1} {default}ist {purple}bereits gesetzt."
-		"en"		"Event {darkred}{1} {default}is {purple}already in progress."
+		"en"		"The event{darkred}{1} {default}is {purple}already in progress!"
 	}
 
 	"hide_rounds"
 	{
 		"#format"   "{1:i},{2:i}"
+		"ru"		"Раунд {purple}{1}{default} о {purple}{2}"
 		"pl"		"Runda {purple}{1}{default} z {purple}{2}"
 		"de"		"Runde {purple}{1}{default} von {purple}{2}"
 		"en"		"Round {purple}{1}{default} of {purple}{2}"
@@ -147,46 +164,52 @@
 
 	"hide_setbyadmin"
 	{
+		"ru"		"Администратор {purple}отключил{default} выбор пряток в темноте"
 		"pl"		"Wlaczenie Chowany przez admina jest {purple}wylaczone"
 		"de"		"Hide in the Dark Aktivierung durch den Admin ist {purple}ausgeschaltet"
-		"en"		"Set Hide in the Dark by admin is {purple}disabled"
+		"en"		"Set Hide in the Dark by Admin is {purple}disabled!"
 		"da"		"Admin vælger runden for Hide in the Dark er {purple}slået fra"
 	}
 
 	"hide_setbyWarden"
 	{
+		"ru"		"Командир {purple}отключил{default} выбор Пряток в Темноте"
 		"pl"		"Glosowanie na Chowany przez Straznika jest {purple}wylaczone"
 		"de"		"Hide in the Dark Aktivierung durch den Warden ist {purple}ausgeschaltet"
-		"en"		"Set Hide in the Dark by warden is {purple}disabled"
+		"en"		"Set Hide in the Dark by Warden is {purple}disabled!"
 		"da"		"Warden vælger runden for Hide in the Dark er {purple}slået fra"
 	}
 
 	"hide_start"
 	{
+		"ru"		"{purple}Прятки в Темноте{default} начались!"
 		"pl"		" {purple}Chowany{default} sie rozpoczela!"
 		"de"		"{purple}Hide in the Dark{default} ist gestartet!"
-		"en"		"The {purple}Hide in the Dark{default} has started!"
+		"en"		"{purple}Hide in the Dark{default} has begun!"
 		"da"		"{purple}Hide in the Dark{default} er startet!"
 	}
 
 	"hide_start_nc"
 	{
+		"ru"		"Прятки в Темноте начались!"
 		"pl"		"Chowany sie rozpoczal!"
 		"de"		"Hide in the Dark ist gestartet!"
-		"en"		"The Hide in the Dark has started!"
+		"en"		"Hide in the Dark has begun!"
 		"da"		"Hide in the Dark er startet!"
 	}
 
 	"hide_stillta"
 	{
 		"#format"   "{1:i}"
+		"ru"		"Вы получили {green}{1}{default} ВХ гранат."
 		"pl"		"Masz jeszcze {green}{1}{default} TA granat."
 		"de"		"Du hast noch {green}{1}{default} TA Granaten übrig."
-		"en"		"You've got {green}{1}{default} TA grenades left."
+		"en"		"You have {green}{1}{default} TAGrenade(s) left."
 	}
 
 	"hide_tag"
 	{
+		"ru"		"[{green}MyJB.hide{default}]"
 		"pl"		"[{green}JB.Chowanego{default}]"
 		"en"		"[{green}MyJB.hide{default}]"
 	}
@@ -194,51 +217,57 @@
 	"hide_timetohide_nc"
 	{
 		"#format"   "{1:i}"
+		"ru"		"{1} секунд, чтобы спрятаться"
 		"pl"		"{1} sekund zeby sie schowac!"
 		"de"		"{1} Sekunden zum verstecken"
-		"en"		"{1} seconds to hide"
+		"en"		"{1} seconds left to hide!"
 		"da"		"{1} sekunder til at gemme dig i!"
 	}
 
 	"hide_timetounfreeze_nc"
 	{
 		"#format"   "{1:i}"
+		"ru"		"{1} секунд до разморозки"
 		"pl"		"{1} sekund do odmrozenia!"
 		"de"		"{1} Sekunden bis zum unfreeze"
-		"en"		"{1} seconds until unfreeze"
+		"en"		"{1} seconds until unfreeze!"
 		"da"		"{1} sekunder til du bliver unfreezet!"
 	}
 
 	"hide_twin_nc"
 	{
+		"ru"		"Т одержали победу!"
 		"pl"		"Chowajacy sie wygrywaja"
 		"de"		"Hiders haben gewonnen"
-		"en"		"Hiders win"
+		"en"		"Hiders win!"
 		"da"		"T vinder runden!"
 	}
 
 	"hide_voted"
 	{
+		"ru"		"Вы уже проголосовали за {purple}Прятки в Темноте"
 		"pl"		"Juz glosowales na {purple}Chowanego"
 		"de"		"Du hast schon für {purple}hide in the dark {default}gevotet"
-		"en"		"You already voted for {purple}hide in the dark"
+		"en"		"You have already voted for {purple}Hide in the Dark!"
 		"da"		"Du har allerede stemt for {purple}hide in the dark runde!"
 	}
 
 	"hide_voting"
 	{
+		"ru"		"Голосования за прятки в темноте {purple}отключено"
 		"pl"		"Glosowanie graczy na Chowyny jest {purple}wylaczone"
 		"de"		"Voting für Hide in the Dark ist {purple}ausgeschaltet"
-		"en"		"Player voting for Hide in the Dark is {purple}disabled"
+		"en"		"Voting for Hide in the Dark is {purple}disabled!"
 		"da"		"Afstemning for Hide in the Dark er {purple}slået fra"
 	}
 
 	"hide_wait"
 	{
 		"#format"   "{1:i}"
+		"ru"		"Вы должны подождать больше {purple}{1}{default} раундов"
 		"pl"		"Musisz poczekac  {1} rund"
 		"de"		"Du musst noch {purple}{1}{default} Runden Warten"
-		"en"		"You must wait {purple}{1}{default} more rounds"
+		"en"		"You must wait {purple}{1}{default} more rounds for an Event Day!"
 		"da"		"Du skal vente {purple}{1}{default} flere runder!"
 	}
 

@@ -5,19 +5,19 @@
 {
 	"freeday_disabled"
 	{
+		"de"		"Freeday ist vorübergehend {purple}deaktiviert."
+		"pl"		"Freeday jest tymczasowo {purple}wylaczony."
 		"ru"		"Фридей {purple}отключен."
-		"pl"		"Freeday jest {purple}wylaczony."
-		"de"		"Freeday ist {purple}deaktiviert."
-		"en"		"Freeday is {purple}disabled."
-		"da"		"Freeday er {purple}slået fra."
+		"en"		"Freeday is currently {purple}disabled!"
+		"da"		"Freeday er midlertidigt {purple}slået fra."
 	}
 
 	"freeday_end"
 	{
+		"en"		"{purple}Freeday{default} has ended."
 		"ru"		"{purple}Фридей {default}закончен"
 		"pl"		"{purple}Freeday{default}zakonczony"
 		"de"		"{purple}Freeday{default} beendet"
-		"en"		"{purple}Freeday{default} finished"
 		"da"		"{purple}Freeday{default} er afsluttet!"
 	}
 
@@ -26,7 +26,7 @@
 		"ru"		"Это фридей!"
 		"pl"		"Jest  Freeday!"
 		"de"		"Es ist Freeday"
-		"en"		"It's Freeday"
+		"en"		"It's a Freeday!"
 	}
 
 	"freeday_info_line2"
@@ -50,7 +50,7 @@
 		"ru"		"Все нормальные правила тюрьмы отменены"
 		"pl"		"Zasady Wiezienia nie obowiazuja w tej rundzie!"
 		"de"		"Alle normalen Jailregeln sind aufgehoben!"
-		"en"		"All normal jail rules are repealed"
+		"en"		"All usual Jailbreak rules do not apply during this round!"
 		"da"		"Alle jail regler er ophævet!"
 	}
 
@@ -59,7 +59,7 @@
 		"ru"		"Нет последних желаний!"
 		"pl"		"Nie ma ostatniego zyczenia!"
 		"de"		"Der letzte Terrorists hat keinen Wunsch!"
-		"en"		"There is no last request!"
+		"en"		"Last Requests are disabled during this round!"
 		"da"		"Der kan ikke laves !lr i Freeday"
 	}
 
@@ -68,7 +68,7 @@
 		"ru"		"Каждому разрешено ходить везде, где хочет"
 		"pl"		"Kazdy moze isc gdzie che i robic co chce"
 		"de"		"Jeder darf überall hin wo er will!"
-		"en"		"Everyone is allowed to go everywhere where they wants"
+		"en"		"Everyone is allowed to go anywhere within the map!"
 		"da"		"T kan gå hvor hen de vil - De må bare ikke have våben!"
 	}
 
@@ -77,7 +77,7 @@
 		"ru"		"Не будь засранцем!"
 		"pl"		"Nie badz DUPKIEM!"
 		"de"		"Bau keine Scheisse!"
-		"en"		"Dont be an asshole!"
+		"en"		"Don't be an Asshole!"
 		"da"		"Serverne regler skal overholdes!"
 	}
 
@@ -86,16 +86,16 @@
 		"ru"		"Фридей!"
 		"pl"		"Jest  Freeday!"
 		"de"		"Es ist Freeday!"
-		"en"		"It's Freeday!"
+		"en"		"It's a Freeday!"
 	}
 
 	"freeday_need"
 	{
 		"#format"   "{1:i},{2:N}"
+		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} vote(s) required to play {darkred}Freeday."
 		"ru"		"{purple}{2}{default} проголосовал. {purple}{1}{default} голосов осталось до {darkred}Фридея"
 		"pl"		"{purple}{2}{default} zaglosowal. pozostalo {purple}{1}{default} glosow do {darkred}Catch{default} Freeday"
 		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}krieg{default} beginnt"
-		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes left to {darkred}Freeday"
 		"da"		"{purple}{2}{default} har afstemt. {purple}{1}{default} afstemninger tilbage til {darkred}Freeday"
 	}
 
@@ -104,7 +104,7 @@
 		"ru"		"Следующий раунд {purple}Фридей"
 		"pl"		"Nastepna runda to {purple}Freeday"
 		"de"		"Nächste Runde ist {purple}Freeday"
-		"en"		"Next round is {purple}Freeday"
+		"en"		"The following round will be: {purple}Freeday."
 		"da"		"Næste runde er {purple}Freeday"
 	}
 
@@ -113,7 +113,7 @@
 		"ru"		"Следующий раунд Фридей"
 		"pl"		"Nastepna runda to Freeday"
 		"de"		"Nächste Runde ist Freeday"
-		"en"		"Next round is Freeday"
+		"en"		"The following round will be: Freeday."
 		"da"		"Næste runde er Freeday"
 	}
 
@@ -123,7 +123,7 @@
 		"ru"		"Игра {darkred}{1} {purple}уже началась."
 		"pl"		"Zabawa {darkred}{1} {default}jest {purple}juz grana."
 		"de"		"Event {darkred}{1} {default}ist {purple}bereits gesetzt."
-		"en"		"Event {darkred}{1} {default}is {purple}already in progress."
+		"en"		"The event {darkred}{1} {default}is {purple}already in progress!"
 	}
 
 	"freeday_setbyadmin"
@@ -131,7 +131,7 @@
 		"ru"		"Фридей отключен {purple}администратором"
 		"pl"		"Wlaczenie Freeday przez admina jest {purple}wylaczone"
 		"de"		"Freeday Aktivierung durch den Admin ist {purple}ausgeschaltet"
-		"en"		"Set Freeday by admin is {purple}disabled"
+		"en"		"Set Freeday by Admin is {purple}disabled!"
 		"da"		"Admin vælger runde er {purple}slået fra"
 	}
 
@@ -140,7 +140,7 @@
 		"ru"		"Запуск фридея командиром {purple}выключен"
 		"pl"		"Glosowanie na Freeday przez Straznika jest {purple}wylaczone"
 		"de"		"Freeday Aktivierung durch den Warden ist {purple}ausgeschaltet"
-		"en"		"Set Freeday by warden is {purple}disabled"
+		"en"		"Set Freeday by Warden is {purple}disabled!"
 		"da"		"Warden vælger runde er {purple}slået fra"
 	}
 
@@ -149,7 +149,7 @@
 		"ru"		"{purple}Фридей {default}начался!"
 		"pl"		"{purple}Freeday{default} sie rozpoczal!"
 		"de"		"{purple}Freeday{default} ist gestartet!"
-		"en"		"The {purple}Freeday{default} has started!"
+		"en"		"{purple}Freeday{default} has begun!"
 		"da"		"{purple}Freeday{default} er startet!"
 	}
 
@@ -158,7 +158,7 @@
 		"ru"		"Фридей начался!"
 		"pl"		"Freeday sie rozpoczal!"
 		"de"		"Freeday ist gestartet!"
-		"en"		"The Freeday has started!"
+		"en"		"Freeday has begun!"
 		"da"		"Freeday er startet!"
 	}
 
@@ -173,7 +173,7 @@
 		"ru"		"Ты уже проголосовал за {purple}Фридей"
 		"pl"		"Juz glosowales na {purple}Freeday"
 		"de"		"Du hast schon für {purple}Freeday {default}gevotet"
-		"en"		"You already voted for {purple}Freeday"
+		"en"		"You have already voted for {purple}Freeday!"
 		"da"		"Du har allerede stemt for {purple}Freeday runde!"
 	}
 
@@ -182,7 +182,7 @@
 		"ru"		"Голосование игроков за Фридей {purple}отключено"
 		"pl"		"Glosowanie graczy na Freeday jest {purple}wylaczone"
 		"de"		"Voting für Freeday ist {purple}ausgeschaltet"
-		"en"		"Player voting for Freeday is {purple}disabled"
+		"en"		"Voting for Freeday is {purple}disabled!"
 		"da"		"Afstemninger er {purple}slået fra"
 	}
 
@@ -193,7 +193,6 @@
 		"ru"		"Ты должен подождать {1}  раундов"
 		"pl"		"Musisz poczekac  {1} rund"
 		"de"		"Du musst noch {1} Runden warten"
-		"en"		"You must wait {1} more rounds"
 		"en"		"Du skal vente {1} flere runder!"
 	}
 
