@@ -397,7 +397,8 @@
 
 	"menu_disabled"
 	{
-		"en"		"Event voting runde er midlertidigt {purple}slÃ¥et fra."
+		"en"		"Event voting is currently {purple}disabled!"
+		"da"		"Event voting runde er midlertidigt {purple}slÃ¥et fra."
 		"de"		"Event voting ist vorübergehend {purple}deaktiviert."
 	}
 
