@@ -1,6 +1,14 @@
 ### Change Log
   
-**[Beta 5.0]** - Ratio,VoteDay,Disarm...more
+**[Beta .5.1]** - LastGuard fixes   
+  
+*Fixed*  
+*  LastGuardRule: missing phrases  
+  
+*Changed*
+*  LastGuardRule: weapon menu open after trucetime
+  
+  **[Beta 5.0]** - Ratio,VoteDay,Disarm...more
   
 *Added*
 *  Ratio: Manage team ratios and a queue system for prisoners to join guard through. Supports priority queue to allow players with a certain flag to skip all players in the queue without that flag. Allows Admin to remove a player from guardqueue. Can be used with CTBans to block joining queue/guard when CTBanned.

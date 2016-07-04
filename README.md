@@ -61,6 +61,14 @@ coded with ![](http://shanapu.de/githearth-small.png) free software
   
 ***Change Log***
   
+**[Beta .5.1]** - LastGuard fixes   
+  
+*Fixed*  
+*  LastGuardRule: missing phrases  
+  
+*Changed*
+*  LastGuardRule: weapon menu open after trucetime
+  
   **[Beta 5.0]** - Ratio,VoteDay,Disarm...more
   
 *Added*
