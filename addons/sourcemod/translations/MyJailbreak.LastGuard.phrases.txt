@@ -68,6 +68,15 @@
 		"da"		"Der kan ikke laves Last Request i denne runde!"
 	}
 
+	"lastguard_info_line6"
+	{
+		"ru"		"Каждому разрешено ходить везде, где хочет"
+		"pl"		"Kazdy moze isc gdzie che i robic co chce"
+		"de"		"Jeder darf überall hin wo er will!"
+		"en"		"Everyone is allowed to go anywhere within the map!"
+		"da"		"T kan gå hvor hen de vil - De må bare ikke have våben!"
+	}
+
 	"lastguard_info_line7"
 	{
 		"ru"		"Не будь мудаком!"
