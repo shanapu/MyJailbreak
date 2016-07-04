@@ -111,6 +111,7 @@ ConVar gc_iDisarm;
 ConVar gc_iDisarmMode;
 
 //Bools
+bool CanAnswer = false;
 bool IsCountDown = false;
 bool IsMathQuiz = false;
 bool g_bMarkerSetup;
@@ -1299,7 +1300,7 @@ public Action StartMathQuestion(int client, int args)
 
 public Action CreateMathQuestion( Handle timer, any client )
 {
-	if(gc_bMath.BoolValue)	
+	if(gc_bMath.BoolValue)
 	{
 		if(client == g_iWarden)
 		{
@@ -1343,6 +1344,7 @@ public Action CreateMathQuestion( Handle timer, any client )
 				PrintHintTextToAll("%i %s %i = ?? ", NumOne, g_sOp, NumTwo);
 			}
 			
+			CanAnswer = true;
 			
 			MathTimer = CreateTimer(gc_iTimeAnswer.FloatValue, EndMathQuestion);
 		}
@@ -1352,7 +1354,7 @@ public Action CreateMathQuestion( Handle timer, any client )
 
 public Action OnChatMessage(int &author, Handle recipients, char[] name, char[] message)
 {
-	if(IsMathQuiz)
+	if(IsMathQuiz && CanAnswer)
 	{
 		char bit[1][5];
 		ExplodeString(message, " ", bit, sizeof bit, sizeof bit[]);
@@ -1403,7 +1405,7 @@ public void SendEndMathQuestion(int client)
 	Handle pack = CreateDataPack();
 	CreateDataTimer(0.3, AnswerQuestion, pack);
 	WritePackString(pack, answer);
-	
+	CanAnswer = false;
 	IsMathQuiz = false;
 }
 
@@ -1470,6 +1472,8 @@ public void OnMapEnd()
 		if(g_bPainter[client]) g_bPainter[client] = false;
 	}
 	delete RoundTimer;
+	CanAnswer = false;
+	IsMathQuiz = false;
 }
 
 public Action Timer_DrawMakers(Handle timer, any data)
