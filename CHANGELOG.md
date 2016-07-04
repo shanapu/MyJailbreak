@@ -15,6 +15,7 @@
     *  new cvar - sm_ratio_adsvip - 0 - disabled, 1 - enable adverstiment for 'VIPs moved to front of queue' when player types !quard. Default 1
 *  Menu: Admin &/or warden can start a voting which eventday should played next.
     *  new command - sm_voteday / sm_votedays / sm_voteeventdays - opens/start the vote a eventday menu for all player
+    *  new cvar - sm_menu_voteday - 0 - disabled, 1 - enable voteing for a eventday
     *  new cvar - sm_menu_voteday_warden - 0 - disabled, 1 - allow warden to start a voting
     *  new cvar - sm_menu_voteday_admin - 0 - disabled, 1 - allow admin/vip  to start a voting
     *  new cvar - sm_menu_voteday_cooldown_day" - Rounds cooldown after a voting until voting can be start again

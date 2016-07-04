@@ -45,6 +45,11 @@
 	{
 		"ru"		"Все террористы бунтуют!"
 		"de"		"Alle Terrors sind Rebelen!"
+		"en"		"All Terrorists are Rebels!"
+	}
+
+	"lastguard_info_line3"
+	{
 		"en"		"The last Guard has a lot more health!"
 	}
 

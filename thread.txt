@@ -1431,7 +1431,7 @@ sm_freeday_cooldown_day - Rounds until event can be started again. Default 0
 [/LIST][INDENT][LIST]
 [*] new cvar - sm_warden_handcuffs_distance", "2", "How many meters distance from warden to handcuffed T to pick up?
 [/LIST][/INDENT][LIST]
-[*] Warden: paperclip translatable
+[*] Warden: paperclip translatable[/LIST]
   
 [u]Fixed[/u][LIST]
 [*] Cowboy: Can't pickup revolver bug
