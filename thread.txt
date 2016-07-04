@@ -1383,6 +1383,12 @@ sm_freeday_cooldown_day - Rounds until event can be started again. Default 0
 [B][u]Change Log[/u][/B]
 
 [QUOTE]  
+[b][Beta .5.2][/b] - VotingMenu fixes   
+[SPOILER]
+[u]Fixed[/u][LIST]
+[*] Menu: fix translation  
+[/LIST
+[/SPOILER]
 [b][Beta .5.1][/b] - LastGuard fixes   
 [SPOILER]
 [u]Fixed[/u][LIST]

@@ -61,6 +61,12 @@ coded with ![](http://shanapu.de/githearth-small.png) free software
   
 ***Change Log***
   
+**[Beta .5.2]** - VotingMenu fix   
+  
+*Fixed*  
+*  menu: fixed translation  
+  
+  
 **[Beta .5.1]** - LastGuard fixes   
   
 *Fixed*  
@@ -68,6 +74,7 @@ coded with ![](http://shanapu.de/githearth-small.png) free software
   
 *Changed*
 *  LastGuardRule: weapon menu open after trucetime
+  
   
   **[Beta 5.0]** - Ratio,VoteDay,Disarm...more
   

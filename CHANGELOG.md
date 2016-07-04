@@ -1,5 +1,11 @@
 ### Change Log
   
+**[Beta .5.2]** - VotingMenu fix   
+  
+*Fixed*  
+*  menu: fixed translation  
+  
+  
 **[Beta .5.1]** - LastGuard fixes   
   
 *Fixed*  
