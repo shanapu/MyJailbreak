@@ -52,12 +52,14 @@
 
 	"ratio_leavedqueue"
 	{
+		"ru"		"Вы больше не в очереди за КТ!"
 		"en"		"You are no longer in the guard queue!"
 	}
 
 	"ratio_movetot"
 	{
 		"#format"   "{1:N}"
+		"ru"		"Слишком много КТ. {green}{1}{default} был выбран случайным образом и перемещён за Т."
 		"en"		"There are to many Guards. {green}{1}{default} was picked random and moved to prisoner."
 	}
 
@@ -69,6 +71,7 @@
 
 	"ratio_notonqueue"
 	{
+		"ru"		"Вы не в очереди за КТ!"
 		"en"		"Your aren't on the guard queue!"
 	}
 
@@ -96,6 +99,7 @@
 	"ratio_removed"
 	{
 		"#format"   "{1:N},{2:N}"
+		"ru"		"Администратора {1} удалил {2} из очереди за КТ!"
 		"en"		"The Admin {1} removed {2} from the Guard queue!"
 	}
 

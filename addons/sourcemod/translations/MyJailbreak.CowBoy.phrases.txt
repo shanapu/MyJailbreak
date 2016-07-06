@@ -178,7 +178,7 @@
 	"cowboy_start"
 	{
 		"ru"		"{purple}Ковбой{default} начался!"
-		"pl"		" {purple}Cowboy{default} sie rozpoczal!"
+		"pl"		"{purple}Cowboy{default} sie rozpoczal!"
 		"de"		"{purple}Cowboy{default} ist gestartet!"
 		"en"		"{purple}Cowboy{default} has begun!"
 		"da"		"{purple}Cowboy{default} er startet!"

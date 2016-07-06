@@ -368,6 +368,7 @@
 
 	"menu_voting"
 	{
+		"ru"		"Голосование за игровой день:"
 		"en"		"Vote for an Event Day:"
 	}
 
@@ -381,47 +382,55 @@
 
 	"menu_closecell"
 	{
+		"ru"		"Закрыть двери камер"
 		"en"		"Close The Cell Doors"
 	}
 
 	"menu_voteday"
 	{
+		"ru"		"Начать голосование за игровой день"
 		"en"		"Start an Event Day Voting"
 	}
 
 	"menu_votingwon"
 	{
 		"#format"   "{1:s},{2:i},{3:i}"
+		"ru"		"Голосование закончилось {2} голосов было. {green}{1} {default}победил с {3} голосами."
 		"en"		"The vote has ended with {2} vote yet. {green}{1} {default}won with {3} votes."
-	}
-
-	"menu_disabled"
-	{
-		"en"		"Event voting is currently {purple}disabled!"
-		"da"		"Event voting runde er midlertidigt {purple}slÃ¥et fra."
-		"de"		"Event voting ist vorübergehend {purple}deaktiviert."
 	}
 
 	"menu_minplayer"
 	{
+		"ru"		"Для голосование за игровой дня, вы должны иметь как минимум {purple}одного КТ и 1 Т"
 		"en"		"For a Event Day Voting, you must have at least {purple}one Guard, & one Prisoner"
 	}
 
 	"menu_progress"
 	{
 		"#format"   "{1:s}"
+		"ru"		"Игровой день {darkred}{1} {default}в {purple}процессе!"
 		"en"		"The event {darkred}{1} {default}is {purple}already in progress!"
 	}
 
 	"menu_wait"
 	{
 		"#format"   "{1:i}"
+		"ru"		"Вы должны подождать больше {1} раундов для голосования за игровой день!"
 		"en"		"You must wait {purple}{1}{default} more rounds for an Event Day Voting!"
 	}
 
 	"menu_votingdraw"
 	{
+		"ru"		"Голосование закончилось в 50/50! Игровой день был выбран случайно!"
 		"en"		"The vote ended in a 50/50 draw! An Event Day was chosen Randomly!"
+	}
+
+	"menu_disabled"
+	{
+		"ru"		"Голосование за игровой день {purple}отключен!"
+		"de"		"Event voting ist vorübergehend {purple}deaktiviert."
+		"da"		"Event voting runde er midlertidigt {purple}slÃ¥et fra."
+		"en"		"Event voting is currently {purple}disabled!"
 	}
 
 }

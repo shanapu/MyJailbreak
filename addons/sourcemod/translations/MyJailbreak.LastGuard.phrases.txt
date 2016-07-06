@@ -50,6 +50,7 @@
 
 	"lastguard_info_line3"
 	{
+		"ru"		"Последний КТ получили много ХП!"
 		"en"		"The last Guard has a lot more health!"
 	}
 
@@ -70,11 +71,11 @@
 
 	"lastguard_info_line6"
 	{
-		"ru"		"Каждому разрешено ходить везде, где хочет"
-		"pl"		"Kazdy moze isc gdzie che i robic co chce"
-		"de"		"Jeder darf überall hin wo er will!"
-		"en"		"Everyone is allowed to go anywhere within the map!"
 		"da"		"T kan gå hvor hen de vil - De må bare ikke have våben!"
+		"en"		"Everyone is allowed to go anywhere within the map!"
+		"de"		"Jeder darf überall hin wo er will!"
+		"pl"		"Kazdy moze isc gdzie che i robic co chce"
+		"ru"		"Каждому разрешено ходить везде, где хочет"
 	}
 
 	"lastguard_info_line7"
@@ -87,6 +88,7 @@
 
 	"lastguard_info_title"
 	{
+		"da"		"Last Guard Rule er aktiveret!"
 		"en"		"The Last Guard Rule is now Activated!"
 		"ru"		"Правило последнего КТ активно"
 		"de"		"Last Guard Rule ist aktiv"

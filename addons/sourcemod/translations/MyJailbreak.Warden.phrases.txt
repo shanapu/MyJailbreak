@@ -1199,6 +1199,7 @@
 
 	"warden_lostgun"
 	{
+		"ru"		"Вы были ранены в руку! Вы потеряли свое оружие!"
 		"en"		"You've been wounded in the arm! You lost your weapon!"
 	}
 
@@ -1213,11 +1214,13 @@
 	"warden_disarmed"
 	{
 		"#format"   "{1:N},{2:N}"
+		"ru"		"{2} обезоружил {1}"
 		"en"		"{1} was disarmed by {2}."
 	}
 
 	"warden_remaining"
 	{
+		"ru"		"Осталось"
 		"de"		"verbleibend"
 		"en"		"Remaining"
 	}
