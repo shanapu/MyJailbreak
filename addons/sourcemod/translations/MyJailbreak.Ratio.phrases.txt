@@ -6,7 +6,7 @@
 	"ratio_advip"
 	{
 		"ru"		"Получите {darkred}VIP{defailt} , чтобы автоматически переместиться в начало очереди."
-		"en"		"Get {darkred}VIP{default} to be automatically moved to the front of the queue."
+		"en"		"Get a {darkred}VIP{default} to be automatically moved to the front of the queue."
 	}
 
 	"ratio_auto"
@@ -40,7 +40,7 @@
 	{
 		"#format"   "{1:i}"
 		"ru"		"Команда КТ заполнена. Вы {green}#%i{default} в очереди."
-		"en"		"Guards team full. You are {green}#{1}{default} in the queue."
+		"en"		"Guards team is full. You are {green}#{1}{default} in the queue."
 	}
 
 	"ratio_info_title"
@@ -59,7 +59,7 @@
 	{
 		"#format"   "{1:N}"
 		"ru"		"Слишком много КТ. {green}{1}{default} был выбран случайным образом и перемещён за Т."
-		"en"		"There are to many Guards. {green}{1}{default} was picked random and moved to prisoner."
+		"en"		"There are too many Guards. {green}{1}{default} was picked randomly and moved to prisoners."
 	}
 
 	"ratio_noct"
@@ -71,13 +71,13 @@
 	"ratio_notonqueue"
 	{
 		"ru"		"Вы не в очереди за КТ!"
-		"en"		"Your aren't on the guard queue!"
+		"en"		"Your aren't in the guard queue!"
 	}
 
 	"ratio_novalid"
 	{
 		"ru"		"Не удалось найти{green} игрока{default} ,чтобы переместить за КТ. Грёбаный коэффициент."
-		"en"		"Could not find a{green} valid player{default} to switch to guards. Ratio may be fucked."
+		"en"		"Could not find a{green} valid player{default} to switch to guards. Contact an admin."
 	}
 
 	"ratio_number"
@@ -91,7 +91,7 @@
 	{
 		"#format"   "{1:N}"
 		"ru"		"Очередь за КТ пуста. {green}{1} {default}был выбран в качестве случайного нового КТ."
-		"en"		"Guard queue is empty. {green}{1} {default}was picked as random new guard."
+		"en"		"Guard queue is currently empty. {green}{1} {default}was picked as a random new guard."
 		"de"		"Anwärter Liste ist leer. {green}{1} {default}wurde als neuer Zufälliger Guard gewählt"
 	}
 
