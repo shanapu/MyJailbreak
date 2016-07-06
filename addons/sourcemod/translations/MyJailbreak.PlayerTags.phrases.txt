@@ -15,7 +15,7 @@
 
 	"tags_CTA"
 	{
-		"ru"		"[Охранник.Admin]"
+		"ru"		"[Охрана.Адм]"
 		"chi"		"[狱警和管理员]"
 		"pl"		"[Straznik.Admin]"
 		"de"		"[Wärter.Admin]"
@@ -25,7 +25,7 @@
 
 	"tags_CTOWN"
 	{
-		"ru"		"[Охранник.Основатель]"
+		"ru"		"[КТ.Основ]"
 		"chi"		"[狱警.Owner]"
 		"pl"		"[Straznik.Owner]"
 		"de"		"[Wärter.Owner]"
@@ -35,7 +35,7 @@
 
 	"tags_CTVIP1"
 	{
-		"ru"		"[Охранник.VIP]"
+		"ru"		"[Охрана.VIP]"
 		"chi"		"[狱警.VIP]"
 		"pl"		"[Straznik.VIP]"
 		"de"		"[Wärter.VIP]"
@@ -45,7 +45,7 @@
 
 	"tags_CTVIP2"
 	{
-		"ru"		"[Охранник.sVIP]"
+		"ru"		"[Охрана.sVIP]"
 		"chi"		"[狱警.sVIP]"
 		"pl"		"[Straznik.sVIP]"
 		"de"		"[Wärter.sVIP]"
@@ -57,7 +57,7 @@
 	{
 		"da"		"[Fange]"
 		"en"		"[Prisoner]"
-		"ru"		"[Заключенный]"
+		"ru"		"[Зэк]"
 		"chi"		"[囚犯]"
 		"pl"		"[Wiezien]"
 		"de"		"[Häftling]"
@@ -65,7 +65,7 @@
 
 	"tags_TA"
 	{
-		"ru"		"[Заключенный.Admin]"
+		"ru"		"[Зэк.Адм]"
 		"da"		"[Fange.Admin]"
 		"chi"		"[囚犯和管理员]"
 		"pl"		"[Wiezien.Admin]"
@@ -75,7 +75,7 @@
 
 	"tags_TOWN"
 	{
-		"ru"		"[Заключённый.Основатель]"
+		"ru"		"[Зэк.Основ]"
 		"chi"		"[囚犯和管理员]"
 		"pl"		"[Wiezien.Owner]"
 		"de"		"[Häftling.Owner]"
@@ -87,7 +87,7 @@
 	{
 		"da"		"[Fange.VIP]"
 		"en"		"[Prisoner.VIP]"
-		"ru"		"[Заключенный.VIP]"
+		"ru"		"[Зэк.VIP]"
 		"chi"		"[囚犯.VIP]"
 		"pl"		"[Wiezien.VIP]"
 		"de"		"[Häftling.VIP]"
@@ -96,7 +96,7 @@
 	"tags_TVIP2"
 	{
 		"da"		"[Fange.sVIP]"
-		"ru"		"[Заключенный.sVIP]"
+		"ru"		"[Зэк.sVIP]""
 		"chi"		"[囚犯.sVIP]"
 		"pl"		"[Wiezien.sVIP]"
 		"de"		"[Häftling.sVIP]"
@@ -105,7 +105,7 @@
 
 	"tags_W"
 	{
-		"ru"		"[Командир]"
+		"ru"		"[КМД]"
 		"chi"		"[监狱长]"
 		"pl"		"[Warden]"
 		"de"		"[Warden]"
@@ -115,7 +115,7 @@
 
 	"tags_WA"
 	{
-		"ru"		"[КМД.Admin]"
+		"ru"		"[КМД.Aдм]"
 		"chi"		"[监狱长和管理员]"
 		"pl"		"[Warden.Admin]"
 		"de"		"[Warden.Admin]"
@@ -125,7 +125,7 @@
 
 	"tags_WOWN"
 	{
-		"ru"		"[Командир.Основатель]"
+		"ru"		"[КМД.Оснв]"
 		"pl"		"[Warden.Owner]"
 		"de"		"[Warden.Owner]"
 		"en"		"[Warden.Owner]"
