@@ -17,7 +17,6 @@
 
 	"ratio_banned"
 	{
-		"#format"   "{1:N}"
 		"ru"		"Вам запрещено играть за КТ, потому что Вы {green}забанены{default} за КТ."
 		"en"		"Du kannst nicht als Wärter spielen. Du bist als{green}CT{default} gebanned."
 		"de"		"Cannot play on guards because you are {green}CT{default} banned."
