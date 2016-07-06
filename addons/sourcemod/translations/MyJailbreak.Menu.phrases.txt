@@ -343,6 +343,11 @@
 		"en"		"Freeday"
 	}
 
+	"menu_playerfreeday"
+	{
+		"en"		"Give a Player a Freeday"
+	}
+
 	"menu_admin"
 	{
 		"ru"		"Меню администратора"

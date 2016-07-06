@@ -72,6 +72,7 @@ ConVar g_bRandom;
 ConVar g_bRequest;
 ConVar g_bWarden;
 ConVar g_bSparks;
+ConVar g_bPlayerFreeday;
 ConVar g_bDealDamage;
 ConVar gc_sAdminFlagBulletSparks;
 ConVar gc_sAdminFlagLaser;
@@ -206,6 +207,7 @@ public void OnConfigsExecuted()
 	g_bFF = FindConVar("mp_teammates_are_enemies");
 	g_bRequest = FindConVar("sm_request_enable");
 	g_bDealDamage = FindConVar("sm_dealdamage_enable");
+	g_bPlayerFreeday = FindConVar("sm_freekill_freeday_victim");
 	gc_sAdminFlagBulletSparks = FindConVar("sm_warden_bulletsparks_flag");
 	gc_sAdminFlagLaser = FindConVar("sm_warden_laser_flag");
 	gc_sAdminFlagPainter = FindConVar("sm_warden_painter_flag");
@@ -297,6 +299,14 @@ public Action JbMenu(int client, int args)
 					{
 						Format(menuinfo, sizeof(menuinfo), "%T", "menu_countdown", client);
 						mainmenu.AddItem("countdown", menuinfo);
+					}
+				}
+				if(g_bPlayerFreeday != null)
+				{
+					if(g_bPlayerFreeday.BoolValue)
+					{
+						Format(menuinfo, sizeof(menuinfo), "%T", "menu_playerfreeday", client);
+						mainmenu.AddItem("playerfreeday", menuinfo);
 					}
 				}
 				if(g_bMath != null)
@@ -543,6 +553,14 @@ public Action JbMenu(int client, int args)
 			{
 				if (!warden_iswarden(client))
 				{
+					if(g_bPlayerFreeday != null)
+					{
+						if(g_bPlayerFreeday.BoolValue)
+						{
+							Format(menuinfo, sizeof(menuinfo), "%T", "menu_playerfreeday", client);
+							mainmenu.AddItem("playerfreeday", menuinfo);
+						}
+					}
 					if(gc_bVoting.BoolValue)
 					{
 						Format(menuinfo, sizeof(menuinfo), "%T", "menu_voteday", client);
@@ -614,6 +632,10 @@ public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selec
 		else if ( strcmp(info,"guns") == 0 ) 
 		{
 			FakeClientCommand(client, "sm_guns");
+		}
+		else if ( strcmp(info,"playerfreeday") == 0 ) 
+		{
+			FakeClientCommand(client, "sm_givefreeday");
 		}
 		else if ( strcmp(info,"votedays") == 0 ) 
 		{

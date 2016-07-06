@@ -1209,6 +1209,7 @@ public int GiveFreeDayHandler(Menu menu5, MenuAction action, int client, int Pos
 		g_bHaveFreeDay[user] = true;
 		CPrintToChatAll("%t %t", "warden_tag", "request_personalfreeday", user);
 		CPrintToChat(user, "%t %t", "warden_tag", "request_freedayforyou");
+		Command_FreeDay(client,0);
 	}
 	else if(action == MenuAction_Cancel)
 	{
