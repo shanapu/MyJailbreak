@@ -872,7 +872,7 @@ public Action Command_Freekill(int client, int args)
 			{
 				if(!IsRequest)
 				{
-					if(g_iKilledBy[client] > 0)
+					if(IsValidClient(g_iKilledBy[client], true, true) && IsValidClient(client, true, true))
 					{
 						if (g_iFreeKillCounter[client] < gc_iFreeKillLimit.IntValue)
 						{
@@ -889,7 +889,7 @@ public Action Command_Freekill(int client, int args)
 								CPrintToChatAll("%t %t", "request_tag", "request_freekill", client, g_iKilledBy[client], a);
 								if(MyJBLogging(true)) LogToFileEx(g_sFreeKillLogFile, "Player %L claiming %L freekilled him. Reported to admin %L", client, g_iKilledBy[client], a);
 							}
-							else LoopClients(i) if (warden_iswarden(i) && gc_bReportWarden.BoolValue)
+							else LoopValidClientsClients(i, false, true) if (warden_iswarden(i) && gc_bReportWarden.BoolValue)
 							{
 								g_iFreeKillCounter[client]++;
 								FreeKillAcceptMenu(i);

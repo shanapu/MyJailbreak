@@ -124,7 +124,7 @@
 	"request_heal"
 	{
 		"#format"   "{1:N}"
-		"en"		"{purple}{1} {default}has requested a {purple}Healing! {default}Will the Warden acceptthe request?"
+		"en"		"{purple}{1} {default}has requested a {purple}Healing! {default}Will the Warden accept the request?"
 		"ru"		"{purple}{1} {default}запросил {purple}исцеление! {default}Будет ли командир одобрять?"
 		"pl"		"{purple}{1} {default}ma zyczenie {purple}healing! {default}Czy Warden to zaakceptuje ?"
 		"de"		"{purple}{1} {default}hat {purple}Heilung {default}angefragt. Wird der Warden akzeptieren?"
