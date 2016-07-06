@@ -300,7 +300,13 @@
 	{
 		"ru"		"Следующий раунд фридей."
 		"de"		"Nächste Runde Freeday"
-		"en"		"Request a Freeday"
+		"en"		"Next Round Freeday"
+	}
+
+	"request_freedayvictim"
+	{
+		"de"		"Nächste Runde Freeday für Opfer"
+		"en"		"Give Victim next Round Freeday"
 	}
 
 	"request_swapfreekiller"
@@ -319,7 +325,6 @@
 
 	"request_nokiller"
 	{
-		"ru"		"Простите, мы не можем найти Вашего убийцу?"
 		"ru"		"Простите, мы не можем найти Вашего убийцу?"
 		"de"		"Wir konnten deinen Mörder nicht finden"
 		"en"		"Sorry, we can't find your killer!"
@@ -412,6 +417,28 @@
 		"ru"		"Возродить в теле"
 		"en"		"Respawn on Death Place"
 		"de"		"An Leiche wiederbeleben"
+	}
+
+	"request_personalfreeday"
+	{
+		"#format"   "{1:N}"
+		"en"		"{1} gets a personal FreeDay next round"
+	}
+
+	"request_havefreeday"
+	{
+		"#format"   "{1:N}"
+		"en"		"{1} has now a personal FreeDay!"
+	}
+
+	"request_freedayforyou"
+	{
+		"en"		"You get a personal FreeDay next round"
+	}
+
+	"request_givefreeday"
+	{
+		"en"		"Give FreeDay to:"
 	}
 
 }

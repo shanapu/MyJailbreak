@@ -49,12 +49,17 @@ ConVar gc_sCustomCommandCapitulation;
 ConVar gc_sCustomCommandRefuse;
 ConVar gc_sCustomCommandRepeat;
 ConVar gc_sCustomCommandFreekill;
+ConVar gc_sCustomCommandGiveFreeDay;
 ConVar gc_bFreeKill;
 ConVar gc_iFreeKillLimit;
 ConVar gc_bFreeKillRespawn;
 ConVar gc_bFreeKillKill;
 ConVar gc_bFreeKillFreeDay;
 ConVar gc_bFreeKillSwap;
+ConVar gc_bFreeKillFreeDayVictim;
+ConVar gc_iFreeDayColorRed;
+ConVar gc_iFreeDayColorGreen;
+ConVar gc_iFreeDayColorBlue;
 ConVar gc_bReportAdmin;
 ConVar gc_bReportWarden;
 ConVar gc_bRespawnCellClosed;
@@ -69,6 +74,7 @@ bool g_bCapitulated[MAXPLAYERS+1];
 bool g_bRefused[MAXPLAYERS+1];
 bool g_bRepeated[MAXPLAYERS+1];
 bool g_bFreeKilled[MAXPLAYERS+1];
+bool g_bHaveFreeDay[MAXPLAYERS+1];
 bool g_bAllowRefuse;
 bool IsRequest;
 
@@ -103,6 +109,7 @@ char g_sCustomCommandCapitulation[64];
 char g_sCustomCommandRepeat[64];
 char g_sCustomCommandRefuse[64];
 char g_sCustomCommandFreekill[64];
+char g_sCustomCommandGiveFreeDay[64];
 char g_sFreeKillLogFile[PLATFORM_MAX_PATH];
 char g_sAdminFlagRepeat[32];
 char g_sAdminFlagRefuse[32];
@@ -137,6 +144,8 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_repeat", Command_Repeat, "Allows a Terrorist request repeat");
 	
 	RegConsoleCmd("sm_freekill", Command_Freekill, "Allows a Dead Terrorist report a Freekill");
+	
+	RegConsoleCmd("sm_givefreeday", Command_FreeDay, "Allows a warden to give a freeday to a player");
 	
 	//AutoExecConfig
 	AutoExecConfig_SetFile("Request", "MyJailbreak");
@@ -183,7 +192,12 @@ public void OnPluginStart()
 	gc_bFreeKillRespawn = AutoExecConfig_CreateConVar("sm_freekill_respawn", "1", "0 - disabled, 1 - Allow the warden to respawn a Freekill victim");
 	gc_bRespawnCellClosed = AutoExecConfig_CreateConVar("sm_freekill_respawn_cell", "1", "0 - cells are still open, 1 - cells will close on respawn in cell");
 	gc_bFreeKillKill = AutoExecConfig_CreateConVar("sm_freekill_kill", "1", "0 - disabled, 1 - Allow the warden to Kill a Freekiller");
-	gc_bFreeKillFreeDay = AutoExecConfig_CreateConVar("sm_freekill_freeday", "1", "0 - disabled, 1 - Allow the warden to set a freeday next round as pardon");
+	gc_bFreeKillFreeDay = AutoExecConfig_CreateConVar("sm_freekill_freeday", "1", "0 - disabled, 1 - Allow the warden to set a freeday next round as pardon for all player");
+	gc_bFreeKillFreeDayVictim= AutoExecConfig_CreateConVar("sm_freekill_freeday_victim", "1", "0 - disabled, 1 - Allow the warden to set a personal freeday next round as pardon for the victim");
+	gc_sCustomCommandGiveFreeDay = AutoExecConfig_CreateConVar("sm_freekill_freeday_cmd", "gfd", "Set your custom chat command for give a freeday. no need for sm_ or !");
+	gc_iFreeDayColorRed = AutoExecConfig_CreateConVar("sm_freekill_freeday_color_red", "0","What color to turn the warden into (set R, G and B values to 255 to disable) (Rgb): x - red value", _, true, 0.0, true, 255.0);
+	gc_iFreeDayColorGreen = AutoExecConfig_CreateConVar("sm_freekill_freeday_color_green", "200","What color to turn the warden into (rGb): x - green value", _, true, 0.0, true, 255.0);
+	gc_iFreeDayColorBlue = AutoExecConfig_CreateConVar("sm_freekill_freeday_color_blue", "0","What color to turn the warden into (rgB): x - blue value", _, true, 0.0, true, 255.0);
 	gc_bFreeKillSwap = AutoExecConfig_CreateConVar("sm_freekill_swap", "1", "0 - disabled, 1 - Allow the warden to swap a freekiller to terrorist");
 	gc_bReportAdmin = AutoExecConfig_CreateConVar("sm_freekill_admin", "1", "0 - disabled, 1 - Report will be send to admins - if there is no admin its send to warden");
 	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_freekill_flag", "g", "Set flag for admin/vip get reported freekills to decide.");
@@ -207,6 +221,7 @@ public void OnPluginStart()
 	HookConVarChange(gc_sCustomCommandRepeat, OnSettingChanged);
 	HookConVarChange(gc_sCustomCommandCapitulation, OnSettingChanged);
 	HookConVarChange(gc_sCustomCommandFreekill, OnSettingChanged);
+	HookConVarChange(gc_sCustomCommandGiveFreeDay, OnSettingChanged);
 	HookConVarChange(gc_sAdminFlagRepeat, OnSettingChanged);
 	HookConVarChange(gc_sAdminFlagRefuse, OnSettingChanged);
 	HookConVarChange(gc_sAdminFlagHeal, OnSettingChanged);
@@ -217,6 +232,7 @@ public void OnPluginStart()
 	gc_sSoundRefuseStopPath.GetString(g_sSoundRefuseStopPath, sizeof(g_sSoundRefuseStopPath));
 	gc_sSoundCapitulationPath.GetString(g_sSoundCapitulationPath, sizeof(g_sSoundCapitulationPath));
 	gc_sSoundRepeatPath.GetString(g_sSoundRepeatPath, sizeof(g_sSoundRepeatPath));
+	gc_sCustomCommandGiveFreeDay.GetString(g_sCustomCommandGiveFreeDay , sizeof(g_sCustomCommandGiveFreeDay));
 	gc_sCustomCommandHeal.GetString(g_sCustomCommandHeal , sizeof(g_sCustomCommandHeal));
 	gc_sCustomCommandRefuse.GetString(g_sCustomCommandRefuse , sizeof(g_sCustomCommandRefuse));
 	gc_sCustomCommandRepeat.GetString(g_sCustomCommandRepeat , sizeof(g_sCustomCommandRepeat));
@@ -296,6 +312,14 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 		if(GetCommandFlags(sBufferCMD) == INVALID_FCVAR_FLAGS)
 			RegConsoleCmd(sBufferCMD, Command_Freekill, "Allows a rebeling terrorist to report a freekill");
 	}
+	else if(convar == gc_sCustomCommandGiveFreeDay)
+	{
+		strcopy(g_sCustomCommandGiveFreeDay, sizeof(g_sCustomCommandGiveFreeDay), newValue);
+		char sBufferCMD[64];
+		Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommandGiveFreeDay);
+		if(GetCommandFlags(sBufferCMD) == INVALID_FCVAR_FLAGS)
+			RegConsoleCmd(sBufferCMD, Command_FreeDay, "Allows a warden to give a freeday to a player");
+	}
 	else if(convar == gc_sAdminFlagRefuse)
 	{
 		strcopy(g_sAdminFlagRefuse, sizeof(g_sAdminFlagRefuse), newValue);
@@ -319,6 +343,7 @@ public void OnMapStart()
 		PrecacheSoundAnyDownload(g_sSoundCapitulationPath);
 		PrecacheSoundAnyDownload(g_sSoundRepeatPath);
 	}
+	LoopClients(client) g_bHaveFreeDay[client] = false;
 }
 
 public void OnConfigsExecuted()
@@ -346,6 +371,9 @@ public void OnConfigsExecuted()
 
 public Action RoundStart(Handle event, char [] name, bool dontBroadcast)
 {
+	char EventDay[64];
+	GetEventDay(EventDay);
+	
 	LoopClients(client)
 	{
 		delete RefuseTimer[client];
@@ -371,9 +399,15 @@ public Action RoundStart(Handle event, char [] name, bool dontBroadcast)
 		if(CheckVipFlag(client,g_sAdminFlagRefuse)) g_iRefuseCounter[client] = -1;
 		if(CheckVipFlag(client,g_sAdminFlagHeal)) g_iHealCounter[client] = -1;
 		if(CheckVipFlag(client,g_sAdminFlagRepeat)) g_iRepeatCounter[client] = -1;
+		
+		if(StrEqual(EventDay, "none", false) && g_bHaveFreeDay[client])
+		{
+			CPrintToChatAll("%t %t", "request_tag", "request_havefreeday", client);
+			SetEntityRenderColor(client, gc_iFreeDayColorRed.IntValue, gc_iFreeDayColorGreen.IntValue, gc_iFreeDayColorBlue.IntValue, 255);
+			g_bHaveFreeDay[client] = false;
+		}
 	}
 	g_iCountStopTime = gc_fRefuseTime.IntValue;
-	return Plugin_Continue;
 }
 
 public void OnClientPutInServer(int client)
@@ -889,7 +923,7 @@ public Action Command_Freekill(int client, int args)
 								CPrintToChatAll("%t %t", "request_tag", "request_freekill", client, g_iKilledBy[client], a);
 								if(MyJBLogging(true)) LogToFileEx(g_sFreeKillLogFile, "Player %L claiming %L freekilled him. Reported to admin %L", client, g_iKilledBy[client], a);
 							}
-							else LoopValidClientsClients(i, false, true) if (warden_iswarden(i) && gc_bReportWarden.BoolValue)
+							else LoopValidClients(i, false, true) if (warden_iswarden(i) && gc_bReportWarden.BoolValue)
 							{
 								g_iFreeKillCounter[client]++;
 								FreeKillAcceptMenu(i);
@@ -960,6 +994,8 @@ public int FreeKillAcceptHandler(Menu menu, MenuAction action, int client, int P
 			if(gc_bFreeKillKill.BoolValue) menu1.AddItem("2", info);
 			Format(info, sizeof(info), "%T", "request_freeday", client);
 			if(gc_bFreeKillFreeDay.BoolValue) menu1.AddItem("3", info);
+			Format(info, sizeof(info), "%T", "request_freedayvictim", client);
+			if(gc_bFreeKillFreeDayVictim.BoolValue) menu1.AddItem("5", info);
 			Format(info, sizeof(info), "%T", "request_swapfreekiller", client);
 			if(gc_bFreeKillSwap.BoolValue) menu1.AddItem("4", info);
 			menu1.Display(client, MENU_TIME_FOREVER);
@@ -1038,6 +1074,17 @@ public int FreeKillHandler(Menu menu, MenuAction action, int client, int Positio
 				CPrintToChatAll("%t %t", "warden_tag", "request_swapbcfreekillall", i);
 			}
 		}
+		if(choice == 5) //freeday to victim
+		{
+			LoopClients(i) if(g_bFreeKilled[i])
+			{
+				g_bHaveFreeDay[i] = true;
+				g_bFreeKilled[i] = false;
+				CPrintToChat(i, "%t %t", "request_tag", "request_freedayforyou");
+				if(MyJBLogging(true)) LogToFileEx(g_sFreeKillLogFile, "Warden/Admin %L accept freekill request of %L gave him a personal freeday", client, i);
+				CPrintToChatAll("%t %t", "warden_tag", "request_personalfreeday", i);
+			}
+		}
 	}
 	else if (action == MenuAction_End)
 	{
@@ -1113,6 +1160,66 @@ public int RespawnHandler(Menu menu, MenuAction action, int client, int Position
 				CPrintToChatAll("debug warden is %N", warden);
 			}
 		}
+	}
+}
+
+//GiveFreeDay
+
+public Action Command_FreeDay(int warden, int args)
+{
+	if (gc_bPlugin.BoolValue)
+	{
+		if (gc_bFreeKillFreeDayVictim.BoolValue)
+		{
+			if (IsValidClient(warden, false, false) && warden_iswarden(warden))
+			{
+				char info1[255];
+				Menu menu5 = CreateMenu(GiveFreeDayHandler);
+				Format(info1, sizeof(info1), "%T", "request_givefreeday", warden);
+				menu5.SetTitle(info1);
+				LoopValidClients(i,true,true)
+				{
+					if((GetClientTeam(i) == CS_TEAM_T) && !g_bHaveFreeDay[i])
+					{
+							char userid[11];
+							char username[MAX_NAME_LENGTH];
+							IntToString(GetClientUserId(i), userid, sizeof(userid));
+							if(IsPlayerAlive(i))Format(username, sizeof(username), "%N", i);
+							if(!IsPlayerAlive(i))Format(username, sizeof(username), "%N [†]", i);
+							menu5.AddItem(userid,username);
+							
+					}
+				}
+				menu5.ExitBackButton = true;
+				menu5.ExitButton = true;
+				menu5.Display(warden,MENU_TIME_FOREVER);
+			}
+		}
+	}
+}
+
+public int GiveFreeDayHandler(Menu menu5, MenuAction action, int client, int Position)
+{
+	if(action == MenuAction_Select)
+	{
+		char name[32];
+		menu5.GetItem(Position,name,sizeof(name));
+		int user = GetClientOfUserId(StringToInt(name)); 
+		
+		g_bHaveFreeDay[user] = true;
+		CPrintToChatAll("%t %t", "warden_tag", "request_personalfreeday", user);
+		CPrintToChat(user, "%t %t", "warden_tag", "request_freedayforyou");
+	}
+	else if(action == MenuAction_Cancel)
+	{
+		if(Position == MenuCancel_ExitBack) 
+		{
+			FakeClientCommand(client, "sm_menu");
+		}
+	}
+	else if(action == MenuAction_End)
+	{
+		delete menu5;
 	}
 }
 

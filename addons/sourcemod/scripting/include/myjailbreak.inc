@@ -3,7 +3,7 @@
 #endif
 #define _myjailbreak_included_
 
-#define PLUGIN_VERSION "Beta 5.2"
+#define PLUGIN_VERSION "Beta 6.0 dev"
 #define URL_LINK "https://github.com/shanapu/MyJailbreak"
 
 #include <sdktools>
@@ -206,7 +206,7 @@ stock int GetAliveTeamCount(int team)
 
 stock bool CheckVipFlag(int client, const char[] flagsNeed)
 {
-	if(GetUserFlagBits(client) & ReadFlagString(flagsNeed) == ReadFlagString(flagsNeed))
+	if((GetUserFlagBits(client) & ReadFlagString(flagsNeed) == ReadFlagString(flagsNeed)) || (GetUserFlagBits(client) & ADMFLAG_ROOT))
 	{
 		return true;
 	}
