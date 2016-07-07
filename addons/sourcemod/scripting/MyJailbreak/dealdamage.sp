@@ -476,7 +476,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 			}
 		}
 		delete TruceTimer; //kill start time if still running
-		delete RoundTimer; //kill start time if still running
+		
 		if (winner == 2) PrintHintTextToAll("%t", "dealdamage_twin_nc", DamageT);
 		if (winner == 3) PrintHintTextToAll("%t", "dealdamage_ctwin_nc", DamageCT);
 		if (g_iRound == g_iMaxRound) //if this was the last round
@@ -589,17 +589,17 @@ public Action EndTheRound(Handle timer)
 {
 	if (DamageCT > DamageT) 
 	{
-		CS_TerminateRound(8.0, CSRoundEnd_CTWin);
+		CS_TerminateRound(5.0, CSRoundEnd_CTWin);
 		LoopClients(i) if(GetClientTeam(i) == CS_TEAM_T ) ForcePlayerSuicide(i);
 	}
 	else if(DamageCT < DamageT) 
 	{
-		CS_TerminateRound(8.0, CSRoundEnd_TerroristWin);
+		CS_TerminateRound(5.0, CSRoundEnd_TerroristWin);
 		LoopClients(i) if(GetClientTeam(i) == CS_TEAM_CT ) ForcePlayerSuicide(i);
 	}
 	else
 	{
-		CS_TerminateRound(8.0, CSRoundEnd_Draw);
+		CS_TerminateRound(5.0, CSRoundEnd_Draw);
 	}
 	LoopClients(i)
 	{
@@ -624,6 +624,7 @@ public Action EndTheRound(Handle timer)
 	{
 		SendResults(client);
 	}
+	RoundTimer = null;
 	delete RoundTimer;
 	if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Damage Deal Result: BestCT: %N Dmg: %i BestT: %N Dmg: %i CT Damage: %i T Damage: %i Total Damage: %i", BestCT, BestCTdamage, BestT, BestTdamage, DamageCT, DamageT, TotalDamage);
 }

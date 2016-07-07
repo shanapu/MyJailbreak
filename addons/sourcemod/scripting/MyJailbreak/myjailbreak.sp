@@ -78,7 +78,7 @@ public int Native_IsEventDayRunning(Handle plugin,int argc)
 public int Native_SetEventDayRunning(Handle plugin,int argc)
 {
 	EventDayRunning = GetNativeCell(1);
-	CPrintToChatAll("{darkred}DEBUG: EventDayRunning %b",EventDayRunning);
+//	CPrintToChatAll("{darkred}DEBUG: EventDayRunning %b",EventDayRunning);
 }
 
 public int Native_IsEventDayPlaned(Handle plugin,int argc)
@@ -89,7 +89,7 @@ public int Native_IsEventDayPlaned(Handle plugin,int argc)
 public int Native_SetEventDayPlaned(Handle plugin,int argc)
 {
 	EventDayPlaned = GetNativeCell(1);
-	CPrintToChatAll("{darkred}DEBUG: EventDayPlaned %b",EventDayPlaned);
+//	CPrintToChatAll("{darkred}DEBUG: EventDayPlaned %b",EventDayPlaned);
 }
 
 //Set sv_tags
