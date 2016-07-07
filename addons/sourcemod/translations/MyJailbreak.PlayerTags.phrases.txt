@@ -96,7 +96,7 @@
 	"tags_TVIP2"
 	{
 		"da"		"[Fange.sVIP]"
-		"ru"		"[Зэк.sVIP]""
+		"ru"		"[Зэк.sVIP]"
 		"chi"		"[囚犯.sVIP]"
 		"pl"		"[Wiezien.sVIP]"
 		"de"		"[Häftling.sVIP]"
