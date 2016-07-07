@@ -35,7 +35,7 @@ ConVar gc_bOverlays;
 ConVar gc_sOverlayStartPath;
 ConVar gc_bSounds;
 ConVar gc_sSoundStartPath;
-ConVar g_iSetRoundTime;
+ConVar g_iGetRoundTime;
 ConVar g_bAllowTP;
 ConVar gc_iRounds;
 ConVar gc_sCustomCommand;
@@ -123,7 +123,7 @@ public void OnPluginStart()
 	
 	//Find
 	g_bAllowTP = FindConVar("sv_allow_thirdperson");
-	g_iSetRoundTime = FindConVar("mp_roundtime");
+	g_iGetRoundTime = FindConVar("mp_roundtime");
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
@@ -477,7 +477,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 			SetCvar("mp_teammates_are_enemies", 0);
 			SetCvarFloat("sv_friction", 5.2);
 			SetConVarInt(g_bAllowTP, 0);
-			g_iSetRoundTime.IntValue = g_iOldRoundTime;
+			g_iGetRoundTime.IntValue = g_iOldRoundTime;
 			SetEventDay("none");
 			SetEventDayRunning(false);
 			CPrintToChatAll("%t %t", "knifefight_tag" , "knifefight_end");

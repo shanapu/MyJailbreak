@@ -139,7 +139,6 @@ public void OnPluginStart()
 	
 	//Hooks
 	HookEvent("player_spawn", Event_OnPlayerSpawn);
-	HookEvent("round_end", RoundEnd);
 	HookEvent("round_start", RoundStart);
 	HookConVarChange(gc_sCustomCommand, OnSettingChanged);
 	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
