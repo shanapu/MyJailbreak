@@ -15,7 +15,6 @@
 //Booleans
 bool IsCowBoy; 
 bool StartCowBoy; 
-bool canSet;
 
 //ConVars
 ConVar gc_bPlugin;
@@ -166,7 +165,6 @@ public void OnMapStart()
 	g_iRound = 0;
 	IsCowBoy = false;
 	StartCowBoy = false;
-	canSet = true;
 	
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iTruceTime = gc_iTruceTime.IntValue;
@@ -199,7 +197,7 @@ public void OnClientPutInServer(int client)
 
 public Action SetCowBoy(int client,int args)
 {
-	if (gc_bPlugin.BoolValue && canSet)
+	if (gc_bPlugin.BoolValue)
 	{
 		if(client == 0)
 		{
@@ -267,7 +265,7 @@ public Action VoteCowBoy(int client,int args)
 	char steamid[64];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
 	
-	if (gc_bPlugin.BoolValue && canSet)
+	if (gc_bPlugin.BoolValue)
 	{	
 		if (gc_bVote.BoolValue)
 		{
@@ -316,6 +314,10 @@ void StartNextRound()
 	g_iVoteCount = 0;
 	
 	SetEventDay("cowboy");
+	SetEventDayPlaned(true);
+	
+	g_iOldRoundTime = g_iGetRoundTime.IntValue; //save original round time
+	g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
 	
 	CPrintToChatAll("%t %t", "cowboy_tag" , "cowboy_next");
 	PrintHintTextToAll("%t", "cowboy_next_nc");
@@ -325,7 +327,6 @@ void StartNextRound()
 
 public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
-	canSet = true;
 	if (StartCowBoy || IsCowBoy)
 	{
 		SetCvar("sm_hosties_lr", 0);
@@ -334,6 +335,8 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		SetCvar("sv_infinite_ammo", 2);
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("mp_teammates_are_enemies", 1);
+		SetEventDayPlaned(false);
+		SetEventDayRunning(true);
 		
 		IsCowBoy = true;
 		
@@ -468,7 +471,6 @@ public Action StartTimer(Handle timer)
 
 public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 {
-	canSet = false;
 	int winner = GetEventInt(event, "winner");
 	
 	if (IsCowBoy)
@@ -495,14 +497,13 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 			SetCvar("sm_warden_enable", 1);
 			g_iGetRoundTime.IntValue = g_iOldRoundTime;
 			SetEventDay("none");
+			SetEventDayRunning(false);
 			CPrintToChatAll("%t %t", "cowboy_tag" , "cowboy_end");
 		}
 	}
 	if (StartCowBoy)
 	{
 		LoopClients(i) CreateInfoPanel(i);
-		g_iOldRoundTime = g_iGetRoundTime.IntValue;
-		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;
 		
 		CPrintToChatAll("%t %t", "cowboy_tag" , "cowboy_next");
 		PrintHintTextToAll("%t", "cowboy_next_nc");
@@ -515,12 +516,10 @@ public void OnMapEnd()
 {
 	IsCowBoy = false;
 	StartCowBoy = false;
-	canSet = true;
 	delete TruceTimer;
 	g_iVoteCount = 0;
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0';
-	SetEventDay("none");
 }
 
 //Scout only

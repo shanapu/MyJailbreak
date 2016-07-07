@@ -15,7 +15,6 @@
 //Booleans
 bool IsDrunk;
 bool StartDrunk;
-bool canSet;
 
 //ConVars    gc_i = global convar integer / gc_i = global convar bool ...
 ConVar gc_bPlugin;
@@ -166,7 +165,6 @@ public void OnMapStart()
 	g_iRound = 0;
 	IsDrunk = false;
 	StartDrunk = false;
-	canSet = true;
 	
 	//Precache Sound & Overlay
 	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
@@ -191,7 +189,7 @@ public void OnConfigsExecuted()
 
 public Action SetDrunk(int client,int args)
 {
-	if (gc_bPlugin.BoolValue && canSet) //is plugin enabled?
+	if (gc_bPlugin.BoolValue) //is plugin enabled?
 	{
 		if(client == 0)
 		{
@@ -250,7 +248,7 @@ public Action VoteDrunk(int client,int args)
 	char steamid[64];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
 	
-	if (gc_bPlugin.BoolValue && canSet) //is plugin enabled?
+	if (gc_bPlugin.BoolValue) //is plugin enabled?
 	{	
 		if (gc_bVote.BoolValue) //is voting enabled?
 		{	
@@ -295,6 +293,9 @@ void StartNextRound()
 	g_iVoteCount = 0;
 	
 	SetEventDay("drunk"); //tell myjailbreak new event is set
+	SetEventDayPlaned(true);
+	g_iOldRoundTime = g_iGetRoundTime.IntValue; //save original round time
+	g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
 	
 	CPrintToChatAll("%t %t", "drunk_tag" , "drunk_next");
 	PrintHintTextToAll("%t", "drunk_next_nc");
@@ -304,7 +305,6 @@ void StartNextRound()
 
 public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
-	canSet = true;
 	if (StartDrunk || IsDrunk)
 	{
 		//disable other plugins
@@ -313,7 +313,8 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		SetCvar("sm_menu_enable", 0);
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("mp_teammates_are_enemies", 1);
-		
+		SetEventDayPlaned(false);
+		SetEventDayRunning(true);
 		IsDrunk = true;
 		
 		g_iRound++; //Add Round number
@@ -427,7 +428,6 @@ stock void CreateInfoPanel(int client)
 
 public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 {
-	canSet = false;
 	DrunkTimer = null;
 	delete DrunkTimer;
 	int winner = GetEventInt(event, "winner");
@@ -461,14 +461,14 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 			
 			g_iGetRoundTime.IntValue = g_iOldRoundTime; //return to original round time
 			SetEventDay("none"); //tell myjailbreak event is ended
+			SetEventDayRunning(false);
+			
 			CPrintToChatAll("%t %t", "drunk_tag" , "drunk_end");
 		}
 	}
 	if (StartDrunk)
 	{
 		LoopClients(i) CreateInfoPanel(i);
-		g_iOldRoundTime = g_iGetRoundTime.IntValue; //save original round time
-		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
 		
 		CPrintToChatAll("%t %t", "drunk_tag" , "drunk_next");
 		PrintHintTextToAll("%t", "drunk_next_nc");
@@ -482,13 +482,11 @@ public void OnMapEnd()
 	//return to default start values
 	IsDrunk = false;
 	StartDrunk = false;
-	canSet = true;
 	delete TruceTimer; //kill start time if still running
 	delete DrunkTimer; //kill start time if still running
 	g_iVoteCount = 0;
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0'; 
-	SetEventDay("none");
 }
 
 //Start Timer

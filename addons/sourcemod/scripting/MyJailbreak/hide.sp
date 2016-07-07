@@ -15,7 +15,6 @@
 //Booleans
 bool IsHide;
 bool StartHide;
-bool canSet;
 
 //ConVars
 ConVar gc_bPlugin;
@@ -161,7 +160,6 @@ public void OnMapStart()
 	g_iRound = 0;
 	IsHide = false;
 	StartHide = false;
-	canSet = true;
 	
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
@@ -191,7 +189,7 @@ public void OnConfigsExecuted()
 
 public Action SetHide(int client,int args)
 {
-	if (gc_bPlugin.BoolValue && canSet)	
+	if (gc_bPlugin.BoolValue)	
 	{
 		if(client == 0)
 		{
@@ -258,7 +256,7 @@ public Action VoteHide(int client,int args)
 	char steamid[64];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
 	
-	if (gc_bPlugin.BoolValue && canSet)
+	if (gc_bPlugin.BoolValue)
 	{
 		if (gc_bVote.BoolValue)
 		{
@@ -306,6 +304,10 @@ void StartNextRound()
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	
 	SetEventDay("hide");
+	SetEventDayPlaned(true);
+	
+	g_iOldRoundTime = g_iGetRoundTime.IntValue; //save original round time
+	g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
 	
 	g_iVoteCount = 0;
 	CPrintToChatAll("%t %t", "hide_tag" , "hide_next");
@@ -316,7 +318,6 @@ void StartNextRound()
 
 public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
-	canSet = true;
 	if (StartHide || IsHide)
 	{
 		SetCvar("sm_hosties_lr", 0);
@@ -325,6 +326,8 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		SetCvar("sm_weapons_t", 0);
 		SetCvar("sm_weapons_ct", 0);
 		SetCvar("sm_menu_enable", 0);
+		SetEventDayPlaned(false);
+		SetEventDayRunning(true);
 		IsHide = true;
 		g_iRound++;
 		StartHide = false;
@@ -458,7 +461,6 @@ public Action StartTimer(Handle timer)
 
 public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 {
-	canSet = false;
 	int winner = GetEventInt(event, "winner");
 	
 	if (IsHide)
@@ -488,6 +490,8 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 			SetCvar("sm_menu_enable", 1);
 			g_iGetRoundTime.IntValue = g_iOldRoundTime;
 			SetEventDay("none");
+			SetEventDayRunning(false);
+			SetEventDayRunning(false);
 			CPrintToChatAll("%t %t", "hide_tag" , "hide_end");
 			
 			FogOff();
@@ -496,8 +500,6 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 	if (StartHide)
 	{
 		LoopClients(i) CreateInfoPanel(i);
-		g_iOldRoundTime = g_iGetRoundTime.IntValue;
-		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;
 		
 		CPrintToChatAll("%t %t", "hide_tag" , "hide_next");
 		PrintHintTextToAll("%t", "hide_next_nc");
@@ -524,12 +526,10 @@ public void OnMapEnd()
 {
 	IsHide = false;
 	StartHide = false;
-	canSet = true;
 	delete FreezeTimer;
 	g_iVoteCount = 0;
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0';
-	SetEventDay("none");
 }
 
 //Knife only for Terrorists

@@ -34,6 +34,12 @@ native GetEventDay(char[] CurrentEventDay);
 
 native bool MyJBLogging(bool IsLogging);
 
+native SetEventDayRunning(bool SetRunning);
+native bool IsEventDayRunning(bool IsRunning);
+
+native SetEventDayPlaned(bool SetPlaned);
+native bool IsEventDayPlaned(bool IsPlaned);
+
 native FogOn();
 
 native FogOff();

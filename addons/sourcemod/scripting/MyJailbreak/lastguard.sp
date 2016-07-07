@@ -185,7 +185,7 @@ public Action VoteLastGuard(int client,int args)
 				char EventDay[64];
 				GetEventDay(EventDay);
 				
-				if(StrEqual(EventDay, "none", false))
+				if(IsEventDayRunning(false))
 				{
 					if (!IsLastGuard)
 					{
@@ -222,7 +222,7 @@ public Action VoteLastGuard(int client,int args)
 				char EventDay[64];
 				GetEventDay(EventDay);
 				
-				if(StrEqual(EventDay, "none", false))
+				if(IsEventDayRunning(false))
 				{
 					if (!IsLastGuard)
 					{
@@ -410,10 +410,7 @@ public Action CheckStatus()
 {
 	if (gc_bPlugin.BoolValue && !IsLR && !IsLastGuard && gc_bAutomatic.BoolValue)
 	{
-		char EventDay[64];
-		GetEventDay(EventDay);
-		
-		if ((GetAliveTeamCount(CS_TEAM_CT) == 1) && (GetAliveTeamCount(CS_TEAM_T) > 1 ) && StrEqual(EventDay, "none", false) && !IsLastGuard && !IsLR && MinCT)
+		if ((GetAliveTeamCount(CS_TEAM_CT) == 1) && (GetAliveTeamCount(CS_TEAM_T) > 1 ) && IsEventDayRunning(false) && !IsLastGuard && !IsLR && MinCT)
 		{
 			StartLastGuard();
 			if(MyJBLogging(true)) LogToFileEx(g_sMyJBLogFile, "Last Guard Rule was started automatic");

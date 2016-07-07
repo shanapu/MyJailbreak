@@ -14,7 +14,6 @@
 #pragma newdecls required
 
 //Booleans
-bool canSet;
 int g_iCoolDown;
 
 //ConVars
@@ -1427,14 +1426,11 @@ public int changemenu(Menu menu, MenuAction action, int client, int selection)
 
 public void OnMapStart()
 {
-	canSet = true;
-	
 	g_iCoolDown = gc_iCooldownStart.IntValue +1;
 }
 
 public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
-	canSet = true;
 	
 	char EventDay[64];
 	GetEventDay(EventDay);
@@ -1445,10 +1441,6 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 	else if (g_iCoolDown > 0) g_iCoolDown--;
 }
 
-public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
-{
-	canSet = false;
-}
 
 public int VotingMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
@@ -1476,7 +1468,7 @@ public void VotingResults(Menu menu, int num_votes, int num_clients, const int[]
 
 public Action VotingMenu(int client, int args)
 {
-	if (gc_bPlugin.BoolValue && canSet && gc_bVoting.BoolValue)
+	if (gc_bPlugin.BoolValue && gc_bVoting.BoolValue)
 	{
 		if ((warden_iswarden(client) && gc_bSetW.BoolValue) || (CheckVipFlag(client,g_sAdminFlag) && gc_bSetA.BoolValue))
 		{
@@ -1592,5 +1584,4 @@ public Action VotingMenu(int client, int args)
 		else CPrintToChat(client, "%t %t", "menu_tag", "warden_notwarden");
 	}
 	else CPrintToChat(client, "%t %t", "menu_tag", "menu_disabled");
-
 }

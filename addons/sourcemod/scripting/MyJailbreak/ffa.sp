@@ -15,7 +15,6 @@
 //Booleans
 bool IsFFA = false;
 bool StartFFA = false;
-bool canSet;
 
 //ConVars
 ConVar gc_bPlugin;
@@ -161,7 +160,6 @@ public void OnMapStart()
 	g_iRound = 0;
 	IsFFA = false;
 	StartFFA = false;
-	canSet = true;
 	
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iTruceTime = gc_iTruceTime.IntValue;
@@ -187,7 +185,7 @@ public void OnConfigsExecuted()
 
 public Action Setffa(int client,int args)
 {
-	if (gc_bPlugin.BoolValue && canSet)
+	if (gc_bPlugin.BoolValue)
 	{
 		if(client == 0)
 		{
@@ -254,7 +252,7 @@ public Action VoteFFA(int client,int args)
 	char steamid[64];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
 	
-	if (gc_bPlugin.BoolValue && canSet)
+	if (gc_bPlugin.BoolValue)
 	{	
 		if (gc_bVote.BoolValue)
 		{
@@ -303,6 +301,10 @@ void StartNextRound()
 	g_iVoteCount = 0;
 	
 	SetEventDay("ffa");
+	SetEventDayPlaned(true);
+	
+	g_iOldRoundTime = g_iGetRoundTime.IntValue; //save original round time
+	g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
 	
 	CPrintToChatAll("%t %t", "ffa_tag" , "ffa_next");
 	PrintHintTextToAll("%t", "ffa_next_nc");
@@ -312,7 +314,6 @@ void StartNextRound()
 
 public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
-	canSet = true;
 	if (StartFFA || IsFFA)
 	{
 		SetCvar("sm_hosties_lr", 0);
@@ -322,6 +323,8 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		SetCvar("mp_teammates_are_enemies", 1);
 		SetCvar("mp_friendlyfire", 1);
 		SetCvar("sm_menu_enable", 0);
+		SetEventDayPlaned(false);
+		SetEventDayRunning(true);
 		FogOn();
 		g_iRound++;
 		IsFFA = true;
@@ -412,7 +415,6 @@ stock void CreateInfoPanel(int client)
 
 public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 {
-	canSet = false;
 	int winner = GetEventInt(event, "winner");
 	
 	if (IsFFA)
@@ -435,14 +437,13 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 			SetCvar("sm_menu_enable", 1);
 			g_iGetRoundTime.IntValue = g_iOldRoundTime;
 			SetEventDay("none");
+			SetEventDayRunning(false);
 			CPrintToChatAll("%t %t", "ffa_tag" , "ffa_end");
 		}
 	}
 	if (StartFFA)
 	{
 		LoopClients(i) CreateInfoPanel(i);
-		g_iOldRoundTime = g_iGetRoundTime.IntValue;
-		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;
 		
 		CPrintToChatAll("%t %t", "ffa_tag" , "ffa_next");
 		PrintHintTextToAll("%t", "ffa_next_nc");
@@ -459,7 +460,6 @@ public void OnMapEnd()
 	g_iVoteCount = 0;
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0';
-	SetEventDay("none");
 }
 
 //Start Timer

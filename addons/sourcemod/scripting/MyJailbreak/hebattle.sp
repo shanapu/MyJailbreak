@@ -15,7 +15,6 @@
 //Booleans
 bool IsHEbattle; 
 bool StartHEbattle; 
-bool canSet;
 
 //ConVars
 ConVar gc_bPlugin;
@@ -165,7 +164,6 @@ public void OnMapStart()
 	g_iRound = 0;
 	IsHEbattle = false;
 	StartHEbattle = false;
-	canSet = true;
 	
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iTruceTime = gc_iTruceTime.IntValue;
@@ -195,7 +193,7 @@ public void OnClientPutInServer(int client)
 
 public Action SetHEbattle(int client,int args)
 {
-	if (gc_bPlugin.BoolValue && canSet)
+	if (gc_bPlugin.BoolValue)
 	{
 		if(client == 0)
 		{
@@ -262,7 +260,7 @@ public Action VoteHEbattle(int client,int args)
 	char steamid[64];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
 	
-	if (gc_bPlugin.BoolValue && canSet)
+	if (gc_bPlugin.BoolValue)
 	{
 		if (gc_bVote.BoolValue)
 		{
@@ -312,6 +310,10 @@ void StartNextRound()
 	g_iVoteCount = 0;
 	
 	SetEventDay("hebattle");
+	SetEventDayPlaned(true);
+	
+	g_iOldRoundTime = g_iGetRoundTime.IntValue; //save original round time
+	g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
 	
 	CPrintToChatAll("%t %t", "hebattle_tag" , "hebattle_next");
 	PrintHintTextToAll("%t", "hebattle_next_nc");
@@ -322,7 +324,6 @@ void StartNextRound()
 
 public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
-	canSet = true;
 	if (StartHEbattle || IsHEbattle)
 	{
 		SetCvar("sm_hosties_lr", 0);
@@ -330,6 +331,8 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("mp_teammates_are_enemies", 1);
 		SetCvar("sm_menu_enable", 0);
+		SetEventDayPlaned(false);
+		SetEventDayRunning(true);
 		IsHEbattle = true;
 		g_iRound++;
 		StartHEbattle = false;
@@ -425,7 +428,6 @@ stock void CreateInfoPanel(int client)
 
 public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 {
-	canSet = false;
 	int winner = GetEventInt(event, "winner");
 	
 	if (IsHEbattle)
@@ -448,14 +450,13 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 			SetCvar("sm_menu_enable", 1);
 			g_iGetRoundTime.IntValue = g_iOldRoundTime;
 			SetEventDay("none");
+			SetEventDayRunning(false);
 			CPrintToChatAll("%t %t", "hebattle_tag" , "hebattle_end");
 		}
 	}
 	if (StartHEbattle)
 	{
 		LoopClients(i) CreateInfoPanel(i);
-		g_iOldRoundTime = g_iGetRoundTime.IntValue;
-		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;
 		
 		CPrintToChatAll("%t %t", "hebattle_tag" , "hebattle_next");
 		PrintHintTextToAll("%t", "hebattle_next_nc");
@@ -468,13 +469,11 @@ public void OnMapEnd()
 {
 	IsHEbattle = false;
 	StartHEbattle = false;
-	canSet = true;
 	g_iVoteCount = 0;
 	delete TruceTimer;
 	delete GravityTimer;
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0';
-	SetEventDay("none");
 }
 
 //Start Timer

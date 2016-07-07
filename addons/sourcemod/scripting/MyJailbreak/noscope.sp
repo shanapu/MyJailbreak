@@ -15,7 +15,6 @@
 //Booleans
 bool IsNoScope; 
 bool StartNoScope; 
-bool canSet;
 
 //ConVars
 ConVar gc_bPlugin;
@@ -170,7 +169,6 @@ public void OnMapStart()
 	g_iRound = 0;
 	IsNoScope = false;
 	StartNoScope = false;
-	canSet = true;
 	
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iTruceTime = gc_iTruceTime.IntValue;
@@ -206,7 +204,7 @@ public void OnClientPutInServer(int client)
 
 public Action SetNoScope(int client,int args)
 {
-	if (gc_bPlugin.BoolValue && canSet)
+	if (gc_bPlugin.BoolValue)
 	{
 		if(client == 0)
 		{
@@ -273,7 +271,7 @@ public Action VoteNoScope(int client,int args)
 	char steamid[64];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
 	
-	if (gc_bPlugin.BoolValue && canSet)
+	if (gc_bPlugin.BoolValue)
 	{	
 		if (gc_bVote.BoolValue)
 		{
@@ -322,6 +320,10 @@ void StartNextRound()
 	g_iVoteCount = 0;
 	
 	SetEventDay("noscope");
+	SetEventDayPlaned(true);
+	
+	g_iOldRoundTime = g_iGetRoundTime.IntValue; //save original round time
+	g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
 	
 	CPrintToChatAll("%t %t", "noscope_tag" , "noscope_next");
 	PrintHintTextToAll("%t", "noscope_next_nc");
@@ -331,7 +333,6 @@ void StartNextRound()
 
 public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
-	canSet = true;
 	if (StartNoScope || IsNoScope)
 	{
 		SetCvar("sm_hosties_lr", 0);
@@ -340,6 +341,8 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		SetCvar("sv_infinite_ammo", 2);
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("mp_teammates_are_enemies", 1);
+		SetEventDayPlaned(false);
+		SetEventDayRunning(true);
 		
 		IsNoScope = true;
 		
@@ -487,7 +490,6 @@ public Action StartTimer(Handle timer)
 
 public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 {
-	canSet = false;
 	int winner = GetEventInt(event, "winner");
 	
 	if (IsNoScope)
@@ -516,14 +518,13 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 			SetCvar("sm_warden_enable", 1);
 			g_iGetRoundTime.IntValue = g_iOldRoundTime;
 			SetEventDay("none");
+			SetEventDayRunning(false);
 			CPrintToChatAll("%t %t", "noscope_tag" , "noscope_end");
 		}
 	}
 	if (StartNoScope)
 	{
 		LoopClients(i) CreateInfoPanel(i);
-		g_iOldRoundTime = g_iGetRoundTime.IntValue;
-		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;
 		
 		CPrintToChatAll("%t %t", "noscope_tag" , "noscope_next");
 		PrintHintTextToAll("%t", "noscope_next_nc");
@@ -538,13 +539,11 @@ public void OnMapEnd()
 {
 	IsNoScope = false;
 	StartNoScope = false;
-	canSet = true;
 	delete TruceTimer;
 	delete GravityTimer;
 	g_iVoteCount = 0;
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0';
-	SetEventDay("none");
 }
 
 //Scout only

@@ -21,7 +21,6 @@
 bool IsCatch;
 bool StartCatch;
 bool catched[MAXPLAYERS+1];
-bool canSet;
 
 //ConVars
 ConVar gc_bPlugin;
@@ -183,7 +182,6 @@ public void OnMapStart()
 	g_iRound = 0;
 	IsCatch = false;
 	StartCatch = false;
-	canSet = true;
 	
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	
@@ -215,7 +213,7 @@ public void OnClientPutInServer(int client)
 
 public Action SetCatch(int client,int args)
 {
-	if (gc_bPlugin.BoolValue && canSet)
+	if (gc_bPlugin.BoolValue)
 	{
 		if(client == 0)
 		{
@@ -282,7 +280,7 @@ public Action VoteCatch(int client,int args)
 	char steamid[64];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
 	
-	if (gc_bPlugin.BoolValue && canSet)
+	if (gc_bPlugin.BoolValue)
 	{
 		if (gc_bVote.BoolValue)
 		{
@@ -331,6 +329,10 @@ void StartNextRound()
 	g_iVoteCount = 0;
 	
 	SetEventDay("catch");
+	SetEventDayPlaned(true);
+	
+	g_iOldRoundTime = g_iGetRoundTime.IntValue; //save original round time
+	g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
 	
 	CPrintToChatAll("%t %t", "catch_tag" , "catch_next");
 	PrintHintTextToAll("%t", "catch_next_nc");
@@ -340,13 +342,13 @@ void StartNextRound()
 
 public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
-	canSet = true;
 	if (StartCatch || IsCatch)
 	{
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("sm_weapons_enable", 0);
-		
+		SetEventDayPlaned(false);
+		SetEventDayRunning(true);
 		IsCatch = true;
 		g_iRound++;
 		StartCatch = false;
@@ -419,7 +421,6 @@ stock void CreateInfoPanel(int client)
 
 public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 {
-	canSet = false;
 	int winner = GetEventInt(event, "winner");
 	
 	if (IsCatch)
@@ -450,14 +451,13 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 			
 			g_iGetRoundTime.IntValue = g_iOldRoundTime;
 			SetEventDay("none");
+			SetEventDayRunning(false);
 			CPrintToChatAll("%t %t", "catch_tag" , "catch_end");
 		}
 	}
 	if (StartCatch)
 	{
 		LoopClients(i) CreateInfoPanel(i);
-		g_iOldRoundTime = g_iGetRoundTime.IntValue;
-		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;
 		
 		CPrintToChatAll("%t %t", "catch_tag" , "catch_next");
 		PrintHintTextToAll("%t", "catch_next_nc");
@@ -488,11 +488,9 @@ public void OnMapEnd()
 {
 	IsCatch = false;
 	StartCatch = false;
-	canSet = true;
 	g_iVoteCount = 0;
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0';
-	SetEventDay("none");
 }
 
 //Catch & Freeze

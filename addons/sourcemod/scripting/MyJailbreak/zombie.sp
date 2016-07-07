@@ -16,7 +16,6 @@
 //Booleans
 bool IsZombie;
 bool StartZombie;
-bool canSet;
 
 //ConVars
 ConVar gc_bPlugin;
@@ -59,7 +58,6 @@ Handle ZombieMenu;
 
 //Floats
 float g_fPos[3];
-
 
 //Strings
 char g_sZombieModel[256];
@@ -182,7 +180,6 @@ public void OnMapStart()
 	g_iRound = 0;
 	IsZombie = false;
 	StartZombie = false;
-	canSet = true;
 	
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
@@ -215,7 +212,7 @@ public void OnClientPutInServer(int client)
 
 public Action SetZombie(int client,int args)
 {
-	if (gc_bPlugin.BoolValue && canSet)
+	if (gc_bPlugin.BoolValue)
 	{
 		if(client == 0)
 		{
@@ -282,7 +279,7 @@ public Action VoteZombie(int client,int args)
 	char steamid[64];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
 	
-	if (gc_bPlugin.BoolValue && canSet)
+	if (gc_bPlugin.BoolValue)
 	{	
 		if (gc_bVote.BoolValue)
 		{
@@ -330,6 +327,10 @@ void StartNextRound()
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iVoteCount = 0;
 	SetEventDay("zombie");
+	SetEventDayPlaned(true);
+	
+	g_iOldRoundTime = g_iGetRoundTime.IntValue; //save original round time
+	g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
 	
 	CPrintToChatAll("%t %t", "zombie_tag" , "zombie_next");
 	PrintHintTextToAll("%t", "zombie_next_nc");
@@ -339,7 +340,6 @@ void StartNextRound()
 
 public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
-	canSet = true;
 	if (StartZombie || IsZombie)
 	{
 		SetCvar("sm_hosties_lr", 0);
@@ -349,6 +349,8 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		SetCvar("sm_weapons_ct", 0);
 		SetCvar("sv_infinite_ammo", 2);
 		SetCvar("sm_menu_enable", 0);
+		SetEventDayPlaned(false);
+		SetEventDayRunning(true);
 		IsZombie = true;
 		g_iRound++;
 		StartZombie = false;
@@ -452,7 +454,6 @@ stock void CreateInfoPanel(int client)
 
 public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 {
-	canSet = false;
 	int winner = GetEventInt(event, "winner");
 	
 	if (IsZombie)
@@ -492,6 +493,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 			SetCvar("sm_menu_enable", 1);
 			g_iGetRoundTime.IntValue = g_iOldRoundTime;
 			SetEventDay("none");
+			SetEventDayRunning(false);
 			FogOff();
 			CPrintToChatAll("%t %t", "zombie_tag" , "zombie_end");
 		}
@@ -499,8 +501,6 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 	if (StartZombie)
 	{
 		LoopClients(i) CreateInfoPanel(i);
-		g_iOldRoundTime = g_iGetRoundTime.IntValue;
-		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;
 		
 		CPrintToChatAll("%t %t", "zombie_tag" , "zombie_next");
 		PrintHintTextToAll("%t", "zombie_next_nc");
@@ -513,13 +513,11 @@ public void OnMapEnd()
 {
 	IsZombie = false;
 	StartZombie = false;
-	canSet = true;
 	delete FreezeTimer;
 	delete GlowTimer;
 	g_iVoteCount = 0;
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0';
-	SetEventDay("none");
 }
 
 //glow

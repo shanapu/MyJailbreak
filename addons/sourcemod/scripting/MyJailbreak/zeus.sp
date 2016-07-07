@@ -15,7 +15,6 @@
 //Booleans
 bool IsZeus; 
 bool StartZeus; 
-bool canSet;
 
 //ConVars
 ConVar gc_bPlugin;
@@ -162,7 +161,6 @@ public void OnMapStart()
 	g_iRound = 0;
 	IsZeus = false;
 	StartZeus = false;
-	canSet = true;
 	
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iTruceTime = gc_iTruceTime.IntValue;
@@ -192,7 +190,7 @@ public void OnClientPutInServer(int client)
 
 public Action SetZeus(int client,int args)
 {
-	if (gc_bPlugin.BoolValue && canSet)
+	if (gc_bPlugin.BoolValue)
 	{
 		if(client == 0)
 		{
@@ -259,7 +257,7 @@ public Action VoteZeus(int client,int args)
 	char steamid[64];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
 	
-	if (gc_bPlugin.BoolValue && canSet)
+	if (gc_bPlugin.BoolValue)
 	{	
 		if (gc_bVote.BoolValue)
 		{
@@ -308,6 +306,10 @@ void StartNextRound()
 	g_iVoteCount = 0;
 	
 	SetEventDay("zeus");
+	SetEventDayPlaned(true);
+	
+	g_iOldRoundTime = g_iGetRoundTime.IntValue; //save original round time
+	g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
 	
 	CPrintToChatAll("%t %t", "zeus_tag" , "zeus_next");
 	PrintHintTextToAll("%t", "zeus_next_nc");
@@ -317,7 +319,6 @@ void StartNextRound()
 
 public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
-	canSet = true;
 	if (StartZeus || IsZeus)
 	{
 		SetCvar("sm_hosties_lr", 0);
@@ -325,6 +326,8 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		SetCvar("sm_menu_enable", 0);
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("mp_teammates_are_enemies", 1);
+		SetEventDayPlaned(false);
+		SetEventDayRunning(true);
 		
 		IsZeus = true;
 		
@@ -454,7 +457,6 @@ public Action StartTimer(Handle timer)
 
 public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 {
-	canSet = false;
 	int winner = GetEventInt(event, "winner");
 	
 	if (IsZeus)
@@ -477,14 +479,13 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 			SetCvar("sm_warden_enable", 1);
 			g_iGetRoundTime.IntValue = g_iOldRoundTime;
 			SetEventDay("none");
+			SetEventDayRunning(false);
 			CPrintToChatAll("%t %t", "zeus_tag" , "zeus_end");
 		}
 	}
 	if (StartZeus)
 	{
 		LoopClients(i) CreateInfoPanel(i);
-		g_iOldRoundTime = g_iGetRoundTime.IntValue;
-		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;
 		
 		CPrintToChatAll("%t %t", "zeus_tag" , "zeus_next");
 		PrintHintTextToAll("%t", "zeus_next_nc");
@@ -497,12 +498,10 @@ public void OnMapEnd()
 {
 	IsZeus = false;
 	StartZeus = false;
-	canSet = true;
 	delete TruceTimer;
 	g_iVoteCount = 0;
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0';
-	SetEventDay("none");
 }
 
 //Knife & Taser only

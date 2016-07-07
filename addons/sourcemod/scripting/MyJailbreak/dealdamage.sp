@@ -16,7 +16,6 @@
 bool IsTruce;
 bool IsDealDamage;
 bool StartDealDamage;
-bool canSet;
 
 //ConVars    gc_i = global convar integer / gc_i = global convar bool ...
 ConVar gc_bPlugin;
@@ -176,7 +175,6 @@ public void OnMapStart()
 	g_iRound = 0;
 	IsDealDamage = false;
 	StartDealDamage = false;
-	canSet = true;
 	
 	//Precache Sound & Overlay
 	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
@@ -206,7 +204,7 @@ public void OnClientPutInServer(int client)
 
 public Action SetDealDamage(int client,int args)
 {
-	if (gc_bPlugin.BoolValue && canSet) //is plugin enabled?
+	if (gc_bPlugin.BoolValue) //is plugin enabled?
 	{
 		if(client == 0)
 		{
@@ -265,7 +263,7 @@ public Action VoteDealDamage(int client,int args)
 	char steamid[64];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
 	
-	if (gc_bPlugin.BoolValue && canSet) //is plugin enabled?
+	if (gc_bPlugin.BoolValue) //is plugin enabled?
 	{	
 		if (gc_bVote.BoolValue) //is voting enabled?
 		{	
@@ -310,6 +308,10 @@ void StartNextRound()
 	g_iVoteCount = 0;
 	
 	SetEventDay("dealdamage"); //tell myjailbreak new event is set
+	SetEventDayPlaned(true);
+	
+	g_iOldRoundTime = g_iGetRoundTime.IntValue; //save original round time
+	g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
 	
 	if(gc_bSpawnRandom.BoolValue)SetCvar("mp_randomspawn", 1);
 	if(gc_bSpawnRandom.BoolValue)SetCvar("mp_randomspawn_los", 1);
@@ -323,7 +325,6 @@ void StartNextRound()
 
 public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
-	canSet = true;
 	if (StartDealDamage || IsDealDamage)
 	{
 		
@@ -335,6 +336,8 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		SetCvar("sm_weapons_ct", 1);
 		SetCvar("sm_menu_enable", 0);
 		SetCvar("sm_warden_enable", 0);
+		SetEventDayPlaned(false);
+		SetEventDayRunning(true);
 		BestT = 0;
 		BestCT = 0;
 		BestTdamage = 0;
@@ -460,7 +463,6 @@ stock void CreateInfoPanel(int client)
 
 public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 {
-	canSet = false;
 	int winner = GetEventInt(event, "winner");
 	
 	if (IsDealDamage) //if event was running this round
@@ -497,6 +499,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 			
 			g_iGetRoundTime.IntValue = g_iOldRoundTime; //return to original round time
 			SetEventDay("none"); //tell myjailbreak event is ended
+			SetEventDayRunning(false);
 			CPrintToChatAll("%t %t", "dealdamage_tag" , "dealdamage_end");
 			
 		}
@@ -504,8 +507,6 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 	if (StartDealDamage)
 	{
 		LoopClients(i) CreateInfoPanel(i);
-		g_iOldRoundTime = g_iGetRoundTime.IntValue; //save original round time
-		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
 		
 		CPrintToChatAll("%t %t", "dealdamage_tag" , "dealdamage_next");
 		PrintHintTextToAll("%t", "dealdamage_next_nc");
@@ -519,13 +520,11 @@ public void OnMapEnd()
 	//return to default start values
 	IsDealDamage = false;
 	StartDealDamage = false;
-	canSet = true;
 	delete TruceTimer; //kill start time if still running
 	delete RoundTimer; //kill start time if still running
 	g_iVoteCount = 0;
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0'; 
-	SetEventDay("none");
 }
 
 //Start Timer

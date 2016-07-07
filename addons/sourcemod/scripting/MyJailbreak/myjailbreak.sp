@@ -21,6 +21,10 @@ float mapFogStart = 0.0;
 float mapFogEnd = 150.0;
 float mapFogDensity = 0.99;
 
+//Bools
+bool EventDayPlaned = false;
+bool EventDayRunning = false;
+
 //Strings
 char IsEventDay[128] = "none";
 
@@ -52,6 +56,10 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	CreateNative("FogOn", Native_FogOn);
 	CreateNative("FogOff", Native_FogOff);
 	CreateNative("MyJBLogging", Native_GetMyJBLogging);
+	CreateNative("IsEventDayRunning", Native_IsEventDayRunning);
+	CreateNative("IsEventDayPlaned", Native_IsEventDayPlaned);
+	CreateNative("SetEventDayRunning", Native_SetEventDayRunning);
+	CreateNative("SetEventDayPlaned", Native_SetEventDayPlaned);
 	
 	if (GetEngineVersion() != Engine_CSGO)
 	{
@@ -60,6 +68,28 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	RegPluginLibrary("myjailbreak");
 	return APLRes_Success;
 	
+}
+
+public int Native_IsEventDayRunning(Handle plugin,int argc)
+{
+	if(!EventDayRunning) return true;
+	else return false;
+}
+public int Native_SetEventDayRunning(Handle plugin,int argc)
+{
+	EventDayRunning = GetNativeCell(1);
+	CPrintToChatAll("{darkred}DEBUG: EventDayRunning %b",EventDayRunning);
+}
+
+public int Native_IsEventDayPlaned(Handle plugin,int argc)
+{
+	if(!EventDayPlaned) return true;
+	else return false;
+}
+public int Native_SetEventDayPlaned(Handle plugin,int argc)
+{
+	EventDayPlaned = GetNativeCell(1);
+	CPrintToChatAll("{darkred}DEBUG: EventDayPlaned %b",EventDayPlaned);
 }
 
 //Set sv_tags
@@ -80,7 +110,12 @@ public void OnConfigsExecuted()
 }
 
 //Darken the Map
-
+public void OnMapEnd()
+{
+	EventDayPlaned = false;
+	EventDayRunning = false;
+	SetEventDay("none");
+}
 public void OnMapStart()
 {
 	int ent; 
@@ -132,7 +167,7 @@ public void DoFog()
 public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
 	
-	if(!StrEqual(EventDay, "none", false))
+	if(!IsEventDayRunning(false))
 	{
 		g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	}
@@ -145,7 +180,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 			char EventDay[64];
 			GetEventDay(EventDay);
 			
-			if(StrEqual(EventDay, "none", false))
+			if(IsEventDayRunning(false))
 			{
 				if (GetClientTeam(client) == CS_TEAM_T)
 				{
@@ -184,3 +219,4 @@ public int Native_GetMyJBLogging(Handle plugin,int argc)
 	if(gc_bLogging.BoolValue) return true;
 	else return false;
 }
+

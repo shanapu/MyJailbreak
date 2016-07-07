@@ -15,7 +15,6 @@
 bool IsFreeday; 
 bool StartFreeday; 
 bool AutoFreeday; 
-bool canSet;
 
 //ConVars
 ConVar gc_bPlugin;
@@ -140,6 +139,7 @@ public void OnMapStart()
 	{
 		StartFreeday = true;
 		SetEventDay("freeday");
+		SetEventDayPlaned(true);
 	}
 	else
 	{
@@ -147,14 +147,13 @@ public void OnMapStart()
 	}
 	IsFreeday = false;
 	AutoFreeday = false;
-	canSet = true;
 }
 
 //Admin & Warden set Event
 
 public Action SetFreeday(int client,int args)
 {
-	if (gc_bPlugin.BoolValue && canSet)
+	if (gc_bPlugin.BoolValue)
 	{
 		if(client == 0)
 		{
@@ -168,7 +167,7 @@ public Action SetFreeday(int client,int args)
 				char EventDay[64];
 				GetEventDay(EventDay);
 				
-				if(StrEqual(EventDay, "none", false))
+				if(IsEventDayPlaned(false))
 				{
 					if (g_iCoolDown == 0)
 					{
@@ -188,7 +187,7 @@ public Action SetFreeday(int client,int args)
 				char EventDay[64];
 				GetEventDay(EventDay);
 				
-				if(StrEqual(EventDay, "none", false))
+				if(IsEventDayPlaned(false))
 				{
 					if (g_iCoolDown == 0)
 					{
@@ -213,14 +212,14 @@ public Action VoteFreeday(int client,int args)
 	char steamid[64];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
 	
-	if (gc_bPlugin.BoolValue && canSet)
+	if (gc_bPlugin.BoolValue)
 	{	
 		if (gc_bVote.BoolValue)
 		{
 			char EventDay[64];
 			GetEventDay(EventDay);
 			
-			if(StrEqual(EventDay, "none", false))
+			if(IsEventDayPlaned(false))
 			{
 				if (g_iCoolDown == 0)
 				{
@@ -257,6 +256,9 @@ void StartNextRound()
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iVoteCount = 0;
 	SetEventDay("freeday");
+	SetEventDayPlaned(true);
+	g_iOldRoundTime = g_iGetRoundTime.IntValue;
+	g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;
 	
 	CPrintToChatAll("%t %t", "freeday_tag" , "freeday_next");
 	PrintHintTextToAll("%t", "freeday_next_nc");
@@ -278,18 +280,18 @@ public void PlayerDeath(Event event, const char[] name, bool dontBroadcast)
 
 public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
-	canSet = true;
 	if ((GetTeamClientCount(CS_TEAM_CT) < 1) && gc_bAuto.BoolValue)
 	{
 		char EventDay[64];
 		GetEventDay(EventDay);
 		
-		if(StrEqual(EventDay, "none", false))
+		if(IsEventDayPlaned(false))
 		{
 			StartFreeday = true;
 			g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 			g_iVoteCount = 0;
 			SetEventDay("freeday");
+			SetEventDayRunning(true);
 			AutoFreeday = true;
 		}
 	}
@@ -299,6 +301,8 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		SetCvar("sm_weapons_enable", 0);
 		SetCvar("sm_weapons_t", 0);
 		SetCvar("sm_warden_enable", 0);
+		SetEventDayPlaned(false);
+		SetEventDayRunning(true);
 		IsFreeday = true;
 		FreedayRound++;
 		StartFreeday = false;
@@ -358,7 +362,6 @@ stock void CreateInfoPanel(int client)
 
 public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 {
-	canSet = false;
 	if (IsFreeday)
 	{
 		IsFreeday = false;
@@ -372,13 +375,12 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 		if(!AutoFreeday) g_iGetRoundTime.IntValue = g_iOldRoundTime;
 		AutoFreeday = false;
 		SetEventDay("none");
+		SetEventDayRunning(false);
 		CPrintToChatAll("%t %t", "freeday_tag" , "freeday_end");
 	}
 	if (StartFreeday)
 	{
 		LoopClients(i) CreateInfoPanel(i);
-		g_iOldRoundTime = g_iGetRoundTime.IntValue;
-		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;
 		
 		CPrintToChatAll("%t %t", "freeday_tag" , "freeday_next");
 		PrintHintTextToAll("%t", "freeday_next_nc");
@@ -399,7 +401,6 @@ public void OnMapEnd()
 	}
 	IsFreeday = false;
 	AutoFreeday = false;
-	canSet = true;
 	g_iVoteCount = 0;
 	FreedayRound = 0;
 	g_sHasVoted[0] = '\0';

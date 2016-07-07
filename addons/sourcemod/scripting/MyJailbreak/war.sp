@@ -14,7 +14,6 @@
 //Booleans
 bool IsWar;
 bool StartWar;
-bool canSet;
 
 //ConVars
 ConVar gc_bPlugin;
@@ -162,7 +161,6 @@ public void OnMapStart()
 	g_iRound = 0;
 	IsWar = false;
 	StartWar = false;
-	canSet = true;
 	
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
@@ -189,7 +187,7 @@ public void OnConfigsExecuted()
 
 public Action SetWar(int client,int args)
 {
-	if (gc_bPlugin.BoolValue && canSet)
+	if (gc_bPlugin.BoolValue)
 	{
 		if(client == 0)
 		{
@@ -256,7 +254,7 @@ public Action VoteWar(int client,int args)
 	char steamid[64];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
 	
-	if (gc_bPlugin.BoolValue && canSet)
+	if (gc_bPlugin.BoolValue)
 	{
 		if (gc_bVote.BoolValue)
 		{
@@ -303,7 +301,12 @@ void StartNextRound()
 	StartWar = true;
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iVoteCount = 0;
-	SetEventDay("war");
+	SetEventDay("war");	
+	SetEventDayPlaned(true);
+	
+	g_iOldRoundTime = g_iGetRoundTime.IntValue; //save original round time
+	g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
+	
 	
 	CPrintToChatAll("%t %t", "war_tag" , "war_next");
 	PrintHintTextToAll("%t", "war_next_nc");
@@ -313,7 +316,6 @@ void StartNextRound()
 
 public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
-	canSet = true;
 	if (StartWar || IsWar)
 	{
 		SetCvar("sm_hosties_lr", 0);
@@ -321,6 +323,8 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		SetCvar("sm_weapons_t", 1);
 		SetCvar("sm_weapons_ct", 1);
 		SetCvar("sm_menu_enable", 0);
+		SetEventDayPlaned(false);
+		SetEventDayRunning(true);
 		g_iRound++;
 		IsWar = true;
 		StartWar = false;
@@ -439,7 +443,6 @@ stock void CreateInfoPanel(int client)
 
 public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 {
-	canSet = false;
 	int winner = GetEventInt(event, "winner");
 	
 	if (IsWar)
@@ -463,14 +466,13 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 			SetCvar("sm_menu_enable", 1);
 			g_iGetRoundTime.IntValue = g_iOldRoundTime;
 			SetEventDay("none");
+			SetEventDayRunning(false);
 			CPrintToChatAll("%t %t", "war_tag" , "war_end");
 		}
 	}
 	if (StartWar)
 	{
 		LoopClients(i) CreateInfoPanel(i);
-		g_iOldRoundTime = g_iGetRoundTime.IntValue;
-		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;
 		
 		CPrintToChatAll("%t %t", "war_tag" , "war_next");
 		PrintHintTextToAll("%t", "war_next_nc");
@@ -483,13 +485,11 @@ public void OnMapEnd()
 {
 	IsWar = false;
 	StartWar = false;
-	canSet = true;
 	delete FreezeTimer;
 	delete TruceTimer;
 	g_iVoteCount = 0;
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0';
-	SetEventDay("none");
 }
 
 //Freeze Timer
