@@ -417,28 +417,31 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 
 public int OnAvailableLR(int Announced)
 {
-	LoopClients(client)
+	if (IsCowBoy && gc_bAllowLR.BoolValue)
 	{
-		SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
-	}
-	
-	delete TruceTimer;
-	if (g_iRound == g_iMaxRound)
-	{
-		IsCowBoy = false;
-		StartCowBoy = false;
-		g_iRound = 0;
-		Format(g_sHasVoted, sizeof(g_sHasVoted), "");
-		SetCvar("sm_hosties_lr", 1);
-		SetCvar("sm_weapons_enable", 1);
-		SetCvar("sv_infinite_ammo", 0);
-		SetCvar("mp_teammates_are_enemies", 0);
-		SetCvar("sm_menu_enable", 1);
-		SetCvar("sm_warden_enable", 1);
-		g_iGetRoundTime.IntValue = g_iOldRoundTime;
-		SetEventDay("none");
-		SetEventDayRunning(false);
-		CPrintToChatAll("%t %t", "cowboy_tag" , "cowboy_end");
+		LoopClients(client)
+		{
+			SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
+		}
+		
+		delete TruceTimer;
+		if (g_iRound == g_iMaxRound)
+		{
+			IsCowBoy = false;
+			StartCowBoy = false;
+			g_iRound = 0;
+			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
+			SetCvar("sm_hosties_lr", 1);
+			SetCvar("sm_weapons_enable", 1);
+			SetCvar("sv_infinite_ammo", 0);
+			SetCvar("mp_teammates_are_enemies", 0);
+			SetCvar("sm_menu_enable", 1);
+			SetCvar("sm_warden_enable", 1);
+			g_iGetRoundTime.IntValue = g_iOldRoundTime;
+			SetEventDay("none");
+			SetEventDayRunning(false);
+			CPrintToChatAll("%t %t", "cowboy_tag" , "cowboy_end");
+		}
 	}
 
 }
