@@ -358,13 +358,13 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 			{
 				LoopClients(client)
 				{
-
 					CreateInfoPanel(client);
 					
 					SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 					StripAllWeapons(client);
 					GivePlayerItem(client, "weapon_hegrenade");
 					SetEntityHealth(client, gc_iPlayerHP.IntValue);
+					SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
 					
 					if (gc_bGrav.BoolValue)
 					{
@@ -432,7 +432,11 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 	
 	if (IsHEbattle)
 	{
-		LoopClients(client) SetEntityGravity(client, 1.0);
+		LoopClients(client)
+		{
+			SetEntityGravity(client, 1.0);
+			SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
+		}
 		delete TruceTimer;
 		delete GravityTimer;
 		if (winner == 2) PrintHintTextToAll("%t", "hebattle_twin_nc");

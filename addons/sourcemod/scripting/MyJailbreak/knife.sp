@@ -371,6 +371,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 				{
 					CreateInfoPanel(client);
 					
+					SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
 					SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 					StripAllWeapons(client);
 					GivePlayerItem(client, "weapon_knife");
