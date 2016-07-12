@@ -446,7 +446,7 @@ public Action JbMenu(int client, int args)
 					
 					if(StrEqual(EventDay, "none", false)) //is an other event running or set?
 					{
-						if(gc_bDays.BoolValue)
+						if(gc_bDays.BoolValue && CheckVipFlag(client,g_sAdminFlag))
 						{
 							Format(menuinfo, sizeof(menuinfo), "%T", "menu_voteeventdays", client);
 							mainmenu.AddItem("votedays", menuinfo);
@@ -515,7 +515,7 @@ public Action JbMenu(int client, int args)
 					
 					if(StrEqual(EventDay, "none", false)) //is an other event running or set?
 					{
-						if(gc_bDays.BoolValue)
+						if(gc_bDays.BoolValue && CheckVipFlag(client,g_sAdminFlag))
 						{
 							Format(menuinfo, sizeof(menuinfo), "%T", "menu_voteeventdays", client);
 							mainmenu.AddItem("votedays", menuinfo);
@@ -544,7 +544,7 @@ public Action JbMenu(int client, int args)
 					mainmenu.AddItem("rules", menuinfo);
 				}
 			}
-			if (CheckVipFlag(client,g_sAdminFlag))
+			if (CheckVipFlag(client,"b"))
 			{
 				char EventDay[64];
 				GetEventDay(EventDay);
