@@ -1553,7 +1553,7 @@ public Action VotingMenu(int client, int args)
 						if(GetCommandFlags("sm_setknifefight") != INVALID_FCVAR_FLAGS)
 						{
 								Format(menuinfo, sizeof(menuinfo), "%T", "menu_knifefight", client);
-								menu.AddItem("knife", menuinfo);
+								menu.AddItem("knifefight", menuinfo);
 						}
 						if(GetCommandFlags("sm_settorch") != INVALID_FCVAR_FLAGS)
 						{
