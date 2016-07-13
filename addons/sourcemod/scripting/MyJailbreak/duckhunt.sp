@@ -435,9 +435,10 @@ public int OnAvailableLR(int Announced)
 				if (GetClientTeam(client) == CS_TEAM_T)
 					SetEntityModel(client, g_sModelPathT);
 			}
-			
+			GivePlayerItem(client, "weapon_knife");
 			
 		}
+		
 		if (TruceTimer != null) KillTimer(TruceTimer);
 		if (g_iRound == g_iMaxRound)
 		{

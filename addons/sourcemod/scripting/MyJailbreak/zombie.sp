@@ -465,6 +465,7 @@ public int OnAvailableLR(int Announced)
 				SetEntityModel(client, g_sModelPath);
 				SetEntityHealth(client, 100);
 			}
+			GivePlayerItem(client, "weapon_knife");
 		}
 		
 		delete FreezeTimer;

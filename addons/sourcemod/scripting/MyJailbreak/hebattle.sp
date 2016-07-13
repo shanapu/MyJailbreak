@@ -421,6 +421,7 @@ public int OnAvailableLR(int Announced)
 			{
 				FakeClientCommand(client, "sm_guns");
 			}
+			GivePlayerItem(client, "weapon_knife");
 		}
 		delete TruceTimer;
 		delete GravityTimer;
