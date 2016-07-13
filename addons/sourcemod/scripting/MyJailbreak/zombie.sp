@@ -69,6 +69,7 @@ char g_sSkyName[256];
 char g_sCustomCommand[64];
 char g_sEventsLogFile[PLATFORM_MAX_PATH];
 char g_sAdminFlag[32];
+char g_sModelPath[256];
 
 public Plugin myinfo = {
 	name = "MyJailbreak - Zombie",
@@ -385,6 +386,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 					
 					if (GetClientTeam(client) == CS_TEAM_CT)
 					{
+						GetEntPropString(client, Prop_Data, "m_ModelName", g_sModelPath, sizeof(g_sModelPath));
 						SetEntityModel(client, g_sZombieModel);
 						SetEntityMoveType(client, MOVETYPE_NONE);
 						SetEntityHealth(client, gc_iZombieHP.IntValue);
@@ -457,6 +459,8 @@ public int OnAvailableLR(int Announced)
 			if (GetClientTeam(client) == CS_TEAM_CT)
 			{
 				FakeClientCommand(client, "sm_guns");
+				SetEntityModel(client, g_sModelPath);
+				SetEntityHealth(client, 100);
 			}
 		}
 		
