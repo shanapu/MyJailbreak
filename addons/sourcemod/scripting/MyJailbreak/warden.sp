@@ -673,12 +673,15 @@ public void RoundStart(Event event, const char[] name, bool dontBroadcast)
 	
 	if(gc_bPlugin.BoolValue)
 	{
-		g_iOpenTimer = GetConVarInt(gc_hOpenTimer);
-		OpenCounterTime = CreateTimer(1.0, OpenCounter, _, TIMER_REPEAT);
-		if (RandomTimer != null)
-		KillTimer(RandomTimer);
-		
-		RandomTimer = null;
+		if (SJD_IsCurrentMapConfigured()) {
+			g_iOpenTimer = GetConVarInt(gc_hOpenTimer);
+			OpenCounterTime = CreateTimer(1.0, OpenCounter, _, TIMER_REPEAT);
+			if (RandomTimer != null)
+			KillTimer(RandomTimer);
+			
+			RandomTimer = null;
+		}
+		else CPrintToChatAll("%t %t", "warden_tag" , "warden_openauto_unavailable"); 
 	}
 	else
 	{
@@ -1023,7 +1026,7 @@ public int m_WardenOverwrite(Menu menu, MenuAction action, int client, int Posit
 		if(choice == 1)
 		{
 			int newwarden = GetClientOfUserId(g_iTempWarden[client]);
-			if (g_iWarden != -1)CPrintToChatAll("%t %t", "warden_tag" , "warden_removed", client, g_iWarden);
+			CPrintToChatAll("%t %t", "warden_tag" , "warden_removed", client, g_iWarden);
 			CPrintToChatAll("%t %t", "warden_tag" , "warden_new", newwarden);
 			if(gc_bSounds.BoolValue)
 			{
@@ -1035,8 +1038,6 @@ public int m_WardenOverwrite(Menu menu, MenuAction action, int client, int Posit
 			}
 			if(MyJBLogging(true)) LogToFileEx(g_sMyJBLogFile, "Admin %L kick player %L warden and set %L as new", client, g_iWarden, newwarden);
 			RemoveIcon(g_iWarden);
-			CreateTimer( 0.1, RemoveColor, g_iWarden);
-			SetEntityModel(g_iWarden, g_sModelPath);
 			g_iWarden = newwarden;
 			CreateTimer(1.0, Timer_WardenFixColor, newwarden, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 			if (gc_bHandCuff.BoolValue && !IsLR) GivePlayerItem(newwarden, "weapon_taser");
@@ -1044,7 +1045,7 @@ public int m_WardenOverwrite(Menu menu, MenuAction action, int client, int Posit
 			GetEntPropString(newwarden, Prop_Data, "m_ModelName", g_sModelPath, sizeof(g_sModelPath));
 			if(gc_bModel.BoolValue)
 			{
-				SetEntityModel(newwarden, g_sWardenModel);
+				SetEntityModel(client, g_sWardenModel);
 			}
 			Call_StartForward(gF_OnWardenCreatedByAdmin);
 			Call_PushCell(newwarden);
@@ -3025,14 +3026,12 @@ public Action OpenCounter(Handle timer, Handle pack)
 				{
 					SJD_OpenDoors(); 
 					CPrintToChatAll("%t %t", "warden_tag" , "warden_openauto");
-					
-					
 				}
 				else CPrintToChatAll("%t %t", "warden_tag" , "warden_opentime"); 
 				if (OpenCounterTime != null)
 				KillTimer(OpenCounterTime);
 				OpenCounterTime = null;
-			} 
+			}
 		}
 	}
 }
@@ -3045,11 +3044,14 @@ public Action OpenDoors(int client, int args)
 		{
 			if (client == g_iWarden)
 			{
-				CPrintToChatAll("%t %t", "warden_tag" , "warden_dooropen"); 
-				SJD_OpenDoors();
-				if (OpenCounterTime != null)
-				KillTimer(OpenCounterTime);
-				OpenCounterTime = null;
+				if (SJD_IsCurrentMapConfigured()) {
+					CPrintToChatAll("%t %t", "warden_tag" , "warden_dooropen"); 
+					SJD_OpenDoors();
+					if (OpenCounterTime != null)
+					KillTimer(OpenCounterTime);
+					OpenCounterTime = null;
+				}
+				else CPrintToChat(client, "%t %t", "warden_tag" , "warden_dooropen_unavailable"); 
 			}
 			else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden"); 
 		}
@@ -3064,8 +3066,11 @@ public Action CloseDoors(int client, int args)
 		{
 			if (client == g_iWarden)
 			{
-				CPrintToChatAll("%t %t", "warden_tag" , "warden_doorclose"); 
-				SJD_CloseDoors();
+				if (SJD_IsCurrentMapConfigured()) {
+					CPrintToChatAll("%t %t", "warden_tag" , "warden_doorclose"); 
+					SJD_CloseDoors();
+				}
+				else CPrintToChat(client, "%t %t", "warden_tag" , "warden_doorclose_unavailable"); 
 			}
 			else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden"); 
 		}
