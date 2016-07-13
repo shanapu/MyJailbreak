@@ -8,6 +8,7 @@
 #include <autoexecconfig>
 #include <myjailbreak>
 #include <smlib>
+#include <lastrequest>
 
 
 //Compiler Options
@@ -38,6 +39,7 @@ ConVar g_bAllowTP;
 ConVar gc_iRounds;
 ConVar gc_sCustomCommand;
 ConVar gc_sAdminFlag;
+ConVar gc_bAllowLR;
 
 //Integers
 int g_iOldRoundTime;
@@ -100,6 +102,7 @@ public void OnPluginStart()
 	gc_sSoundStartPath = AutoExecConfig_CreateConVar("sm_duckhunt_sounds_start", "music/MyJailbreak/duckhunt.mp3", "Path to the soundfile which should be played for start");
 	gc_bOverlays = AutoExecConfig_CreateConVar("sm_duckhunt_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true,  0.0, true, 1.0);
 	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_duckhunt_overlays_start", "overlays/MyJailbreak/start" , "Path to the start Overlay DONT TYPE .vmt or .vft");
+	gc_bAllowLR = AutoExecConfig_CreateConVar("sm_duckhunt_allow_lr", "1" , "0 - disabled, 1 - enable, LR on last round", _, true, 0.0, true, 1.0);
 	
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
@@ -378,6 +381,16 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 						ClientCommand(client, "thirdperson");
 					}
 				}
+				
+				//enable lr on last round
+				if (gc_bAllowLR.BoolValue)
+				{
+					if (g_iRound == g_iMaxRound)
+					{
+						SetCvar("sm_hosties_lr", 1);
+					}
+				}
+				
 				CPrintToChatAll("%t %t", "duckhunt_tag" ,"duckhunt_rounds", g_iRound, g_iMaxRound);
 				g_iTruceTime--;
 				TruceTimer = CreateTimer(1.0, StartTimer, _, TIMER_REPEAT);
@@ -394,6 +407,46 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		}
 		else if (g_iCoolDown > 0) g_iCoolDown--;
 	}
+}
+
+public int OnAvailableLR(int Announced)
+{
+	if (IsDuckHunt && gc_bAllowLR.BoolValue)
+	{
+		LoopClients(client)
+		{
+			if (IsValidClient(client, false, true))
+				{
+					SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
+					SetEntityGravity(client, 1.0);
+					FP(client);
+				}
+			StripAllWeapons(client);
+			if (GetClientTeam(client) == CS_TEAM_CT)
+			{
+				FakeClientCommand(client, "sm_guns");
+			}
+		}
+		if (TruceTimer != null) KillTimer(TruceTimer);
+		if (g_iRound == g_iMaxRound)
+		{
+			IsDuckHunt = false;
+			StartDuckHunt = false;
+			g_iRound = 0;
+			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
+			
+			SetCvar("sm_hosties_lr", 1);
+			SetCvar("sm_weapons_enable", 1);
+			SetCvar("sm_warden_enable", 1);
+			SetCvar("sm_menu_enable", 1);
+			SetConVarInt(g_bAllowTP, 0);
+			g_iGetRoundTime.IntValue = g_iOldRoundTime;
+			SetEventDay("none");
+			SetEventDayRunning(false);
+			CPrintToChatAll("%t %t", "duckhunt_tag" , "duckhunt_end");
+		}
+	}
+
 }
 
 stock void CreateInfoPanel(int client)

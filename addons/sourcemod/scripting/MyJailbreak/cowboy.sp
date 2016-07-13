@@ -422,6 +422,11 @@ public int OnAvailableLR(int Announced)
 		LoopClients(client)
 		{
 			SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
+			StripAllWeapons(client);
+			if (GetClientTeam(client) == CS_TEAM_CT)
+			{
+				FakeClientCommand(client, "sm_guns");
+			}
 		}
 		
 		delete TruceTimer;

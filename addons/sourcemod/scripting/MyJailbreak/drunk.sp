@@ -417,6 +417,11 @@ public int OnAvailableLR(int Announced)
 		{
 			if (IsClientInGame(client)) SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true); //disbale noblock
 			KillDrunk(client);
+			StripAllWeapons(client);
+			if (GetClientTeam(client) == CS_TEAM_CT)
+			{
+				FakeClientCommand(client, "sm_guns");
+			}
 		}
 		delete DrunkTimer; 
 		delete TruceTimer; //kill start time if still running
