@@ -376,6 +376,8 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 			
 			g_fPos[2] = g_fPos[2] + 6;
 			
+			GetEntPropString(RandomCT, Prop_Data, "m_ModelName", g_sModelPath, sizeof(g_sModelPath));
+			
 			if (g_iRound > 0)
 			{
 				LoopClients(client)
@@ -386,7 +388,6 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 					
 					if (GetClientTeam(client) == CS_TEAM_CT)
 					{
-						GetEntPropString(client, Prop_Data, "m_ModelName", g_sModelPath, sizeof(g_sModelPath));
 						SetEntityModel(client, g_sZombieModel);
 						SetEntityMoveType(client, MOVETYPE_NONE);
 						SetEntityHealth(client, gc_iZombieHP.IntValue);
@@ -454,6 +455,8 @@ public int OnAvailableLR(int Announced)
 				SetEntPropFloat(skin, Prop_Send, "m_flGlowMaxDist", 10000000.0);
 			}
 			SetEntProp(client, Prop_Send, "m_bNightVisionOn", 0);
+			
+			SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
 			
 			StripAllWeapons(client);
 			if (GetClientTeam(client) == CS_TEAM_CT)
