@@ -419,22 +419,23 @@ public int OnAvailableLR(int Announced)
 	{
 		LoopClients(client)
 		{
-			if (IsValidClient(client, false, true))
-				{
-					SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
-					SetEntityGravity(client, 1.0);
-					FP(client);
-				}
 			StripAllWeapons(client);
 			
-			if (GetClientTeam(client) == CS_TEAM_CT)
+			if (IsValidClient(client, false, true))
 			{
-				FakeClientCommand(client, "sm_guns");
-				SetEntityModel(client, g_sModelPathCT);
+				SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
+				SetEntityGravity(client, 1.0);
+				FP(client);
+				if (GetClientTeam(client) == CS_TEAM_CT)
+				{
+					FakeClientCommand(client, "sm_guns");
+					SetEntityModel(client, g_sModelPathCT);
+				}
+				
+				if (GetClientTeam(client) == CS_TEAM_T)
+					SetEntityModel(client, g_sModelPathT);
 			}
 			
-			if (GetClientTeam(client) == CS_TEAM_T)
-				SetEntityModel(client, g_sModelPathCT);
 			
 		}
 		if (TruceTimer != null) KillTimer(TruceTimer);
