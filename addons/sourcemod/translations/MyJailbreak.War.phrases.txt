@@ -161,11 +161,11 @@
 	"war_rounds"
 	{
 		"#format"   "{1:i}"
-		"ru"		"Раунд {purple}{1}{default} о {purple}3"
-		"pl"		"Runda {purple}{1}{default} z {purple}3"
-		"de"		"Runde {purple}{1}{default} von {purple}3"
-		"en"		"Round {purple}{1}{default} of {purple}3"
-		"da"		"Runde {purple}{1}{default} af {purple}3"
+		"ru"		"Раунд {purple}{1}{default} о {purple}{2}"
+		"pl"		"Runda {purple}{1}{default} z {purple}{2}"
+		"de"		"Runde {purple}{1}{default} von {purple}{2}"
+		"en"		"Round {purple}{1}{default} of {purple}{2}"
+		"da"		"Runde {purple}{1}{default} af {purple}{2}"
 	}
 
 	"war_setbyadmin"
