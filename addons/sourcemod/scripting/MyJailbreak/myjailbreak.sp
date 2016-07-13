@@ -43,6 +43,7 @@ public void OnPluginStart()
 	gc_bTag = CreateConVar("sm_myjb_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", _, true,  0.0, true, 1.0);
 	gc_bLogging = CreateConVar("sm_myjb_log", "1", "Allow MyJailbreak to log events, freekills & eventdays in logs/MyJailbreak", _, true,  0.0, true, 1.0);
 	
+	RegAdminCmd("sm_endround", Command_EndRound, ADMFLAG_GENERIC);
 	
 //	RegAdminCmd("sm_fogoff", CommandFogOff, ADMFLAG_ROOT, "");
 //	RegAdminCmd("sm_fogon", CommandFogOn, ADMFLAG_ROOT, "");
@@ -68,6 +69,11 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	RegPluginLibrary("myjailbreak");
 	return APLRes_Success;
 	
+}
+
+public Action Command_EndRound(int client, int args)
+{
+	CS_TerminateRound(0.5, CSRoundEnd_Draw, true); 
 }
 
 public int Native_IsEventDayRunning(Handle plugin,int argc)

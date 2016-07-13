@@ -256,7 +256,7 @@ public Action JbMenu(int client, int args)
 {
 	if(gc_bPlugin.BoolValue)
 	{
-		if(IsValidClient(client,false,true)
+		if(IsValidClient(client,false,true))
 		{
 			char menuinfo[255];
 			
