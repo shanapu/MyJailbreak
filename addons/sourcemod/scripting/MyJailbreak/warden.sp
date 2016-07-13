@@ -1026,7 +1026,7 @@ public int m_WardenOverwrite(Menu menu, MenuAction action, int client, int Posit
 		if(choice == 1)
 		{
 			int newwarden = GetClientOfUserId(g_iTempWarden[client]);
-			CPrintToChatAll("%t %t", "warden_tag" , "warden_removed", client, g_iWarden);
+			if (g_iWarden != -1)CPrintToChatAll("%t %t", "warden_tag" , "warden_removed", client, g_iWarden);
 			CPrintToChatAll("%t %t", "warden_tag" , "warden_new", newwarden);
 			if(gc_bSounds.BoolValue)
 			{
@@ -1038,6 +1038,8 @@ public int m_WardenOverwrite(Menu menu, MenuAction action, int client, int Posit
 			}
 			if(MyJBLogging(true)) LogToFileEx(g_sMyJBLogFile, "Admin %L kick player %L warden and set %L as new", client, g_iWarden, newwarden);
 			RemoveIcon(g_iWarden);
+			CreateTimer( 0.1, RemoveColor, g_iWarden);
+			SetEntityModel(g_iWarden, g_sModelPath);
 			g_iWarden = newwarden;
 			CreateTimer(1.0, Timer_WardenFixColor, newwarden, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 			if (gc_bHandCuff.BoolValue && !IsLR) GivePlayerItem(newwarden, "weapon_taser");
@@ -1045,7 +1047,7 @@ public int m_WardenOverwrite(Menu menu, MenuAction action, int client, int Posit
 			GetEntPropString(newwarden, Prop_Data, "m_ModelName", g_sModelPath, sizeof(g_sModelPath));
 			if(gc_bModel.BoolValue)
 			{
-				SetEntityModel(client, g_sWardenModel);
+				SetEntityModel(newwarden, g_sWardenModel);
 			}
 			Call_StartForward(gF_OnWardenCreatedByAdmin);
 			Call_PushCell(newwarden);
