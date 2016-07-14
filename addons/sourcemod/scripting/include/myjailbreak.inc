@@ -14,7 +14,6 @@
 
 Handle IntCvar;
 Handle FloatCvar;
-char g_sOverlayStart[256];
 
 
 public SharedPlugin:__pl_myjailbreak =
@@ -94,14 +93,14 @@ stock StripAllWeapons(int client)
 	}
 }
 
-public Action ShowOverlayStart( Handle timer, any client ) 
+public Action ShowOverlay(int client, char [] path, float deletetime) 
 {
 	if(IsValidClient(client, false, true))
 	{
 		int iFlag = GetCommandFlags( "r_screenoverlay" ) & ( ~FCVAR_CHEAT ); 
 		SetCommandFlags( "r_screenoverlay", iFlag ); 
-		ClientCommand( client, "r_screenoverlay \"%s.vtf\"", g_sOverlayStart);
-		CreateTimer( 2.5, DeleteOverlay, client );
+		ClientCommand( client, "r_screenoverlay \"%s.vtf\"", path);
+		if (deletetime != 0.0) CreateTimer( deletetime, DeleteOverlay, client );
 	}
 	return Plugin_Continue;
 }
