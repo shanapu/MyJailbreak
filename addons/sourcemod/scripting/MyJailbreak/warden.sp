@@ -673,12 +673,15 @@ public void RoundStart(Event event, const char[] name, bool dontBroadcast)
 	
 	if(gc_bPlugin.BoolValue)
 	{
-		g_iOpenTimer = GetConVarInt(gc_hOpenTimer);
-		OpenCounterTime = CreateTimer(1.0, OpenCounter, _, TIMER_REPEAT);
-		if (RandomTimer != null)
-		KillTimer(RandomTimer);
-		
-		RandomTimer = null;
+		if (SJD_IsCurrentMapConfigured()) {
+			g_iOpenTimer = GetConVarInt(gc_hOpenTimer);
+			OpenCounterTime = CreateTimer(1.0, OpenCounter, _, TIMER_REPEAT);
+			if (RandomTimer != null)
+			KillTimer(RandomTimer);
+			
+			RandomTimer = null;
+		}
+		else CPrintToChatAll("%t %t", "warden_tag" , "warden_openauto_unavailable"); 
 	}
 	else
 	{
@@ -3025,14 +3028,12 @@ public Action OpenCounter(Handle timer, Handle pack)
 				{
 					SJD_OpenDoors(); 
 					CPrintToChatAll("%t %t", "warden_tag" , "warden_openauto");
-					
-					
 				}
 				else CPrintToChatAll("%t %t", "warden_tag" , "warden_opentime"); 
 				if (OpenCounterTime != null)
 				KillTimer(OpenCounterTime);
 				OpenCounterTime = null;
-			} 
+			}
 		}
 	}
 }
@@ -3045,11 +3046,14 @@ public Action OpenDoors(int client, int args)
 		{
 			if (client == g_iWarden)
 			{
-				CPrintToChatAll("%t %t", "warden_tag" , "warden_dooropen"); 
-				SJD_OpenDoors();
-				if (OpenCounterTime != null)
-				KillTimer(OpenCounterTime);
-				OpenCounterTime = null;
+				if (SJD_IsCurrentMapConfigured()) {
+					CPrintToChatAll("%t %t", "warden_tag" , "warden_dooropen"); 
+					SJD_OpenDoors();
+					if (OpenCounterTime != null)
+					KillTimer(OpenCounterTime);
+					OpenCounterTime = null;
+				}
+				else CPrintToChat(client, "%t %t", "warden_tag" , "warden_dooropen_unavailable"); 
 			}
 			else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden"); 
 		}
@@ -3064,8 +3068,11 @@ public Action CloseDoors(int client, int args)
 		{
 			if (client == g_iWarden)
 			{
-				CPrintToChatAll("%t %t", "warden_tag" , "warden_doorclose"); 
-				SJD_CloseDoors();
+				if (SJD_IsCurrentMapConfigured()) {
+					CPrintToChatAll("%t %t", "warden_tag" , "warden_doorclose"); 
+					SJD_CloseDoors();
+				}
+				else CPrintToChat(client, "%t %t", "warden_tag" , "warden_doorclose_unavailable"); 
 			}
 			else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden"); 
 		}
