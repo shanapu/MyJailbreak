@@ -4,6 +4,7 @@
 #include <warden>
 #include <colors>
 #include <autoexecconfig>
+#include <smartjaildoors>
 #include <myjailbreak>
 #undef REQUIRE_PLUGIN
 #include <lastrequest>
@@ -285,7 +286,7 @@ public Action JbMenu(int client, int args)
 					}
 					if(g_bOpen != null)
 					{
-						if(g_bOpen.BoolValue)
+						if(g_bOpen.BoolValue && SJD_IsCurrentMapConfigured())
 						{
 							Format(menuinfo, sizeof(menuinfo), "%T", "menu_opencell", client);
 							mainmenu.AddItem("cellopen", menuinfo);
