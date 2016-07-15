@@ -61,8 +61,8 @@ char huntermodel[256] = "models/player/custom_player/legacy/tm_phoenix_heavy.mdl
 char g_sCustomCommand[64];
 char g_sEventsLogFile[PLATFORM_MAX_PATH];
 char g_sAdminFlag[32];
-char g_sModelPathCT[256];
-char g_sModelPathT[256];
+char g_sModelPathCT[MAXPLAYERS+1][256];
+char g_sModelPathT[MAXPLAYERS+1][256];
 
 public Plugin myinfo = {
 	name = "MyJailbreak - DuckHunt",
@@ -369,14 +369,14 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 					
 					if (GetClientTeam(client) == CS_TEAM_CT && IsValidClient(client, false, false))
 					{
-						GetEntPropString(client, Prop_Data, "m_ModelName", g_sModelPathCT, sizeof(g_sModelPathCT));
+						GetEntPropString(client, Prop_Data, "m_ModelName", g_sModelPathCT[client], sizeof(g_sModelPathCT[client]));
 						SetEntityModel(client, huntermodel);
 						SetEntityHealth(client, gc_iHunterHP.IntValue);
 						GivePlayerItem(client, "weapon_nova");
 					}
 					if (GetClientTeam(client) == CS_TEAM_T && IsValidClient(client, false, false))
 					{
-						GetEntPropString(client, Prop_Data, "m_ModelName", g_sModelPathT, sizeof(g_sModelPathT));
+						GetEntPropString(client, Prop_Data, "m_ModelName", g_sModelPathT[client], sizeof(g_sModelPathT[client]));
 						SetEntityModel(client, "models/chicken/chicken.mdl");
 						SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.2);
 						SetEntityGravity(client, 0.3);
@@ -429,11 +429,11 @@ public int OnAvailableLR(int Announced)
 				if (GetClientTeam(client) == CS_TEAM_CT)
 				{
 					FakeClientCommand(client, "sm_guns");
-					SetEntityModel(client, g_sModelPathCT);
+					SetEntityModel(client, g_sModelPathCT[client]);
 				}
 				
 				if (GetClientTeam(client) == CS_TEAM_T)
-					SetEntityModel(client, g_sModelPathT);
+					SetEntityModel(client, g_sModelPathT[client]);
 			}
 			GivePlayerItem(client, "weapon_knife");
 			
