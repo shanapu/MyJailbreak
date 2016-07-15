@@ -3,51 +3,35 @@
 #include <cstrike>
 #include <warden>
 #include <emitsoundany>
-#include <smartjaildoors>
 #include <colors>
 #include <autoexecconfig>
 #include <myjailbreak>
 #include <scp>
 #include <lastrequest>
 #include <smlib>
+#include <smartjaildoors>
 
 //Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
 
 //Defines
-#define SOUND_THUNDER "ambient/weather/thunder3.wav"
-#define PLUS				"+"
-#define MINUS				"-"
-#define DIVISOR				"/"
-#define MULTIPL				"*"
 #define MAX_BUTTONS 25
 
 //ConVars
-ConVar gc_bOpenTimer;
-ConVar gc_bOpenTimerWarden;
 ConVar gc_bPlugin;
 ConVar gc_bVote;
 ConVar gc_bStayWarden;
-ConVar gc_bNoBlock;
-ConVar gc_bNoBlockMode;
 ConVar gc_bColor;
-ConVar gc_bOpen;
 ConVar gc_bBecomeWarden;
 ConVar gc_bChooseRandom;
 ConVar gc_bSounds;
-ConVar gc_bFF;
 ConVar gc_bGunPlant;
 ConVar gc_bGunRemove;
 ConVar gc_fGunRemoveTime;
 ConVar gc_iGunSlapDamage;
 ConVar gc_bGunSlap;
 ConVar gc_bGunNoDrop;
-ConVar gc_bRandom;
-ConVar gc_iRandomMode;
-ConVar gc_hOpenTimer;
-ConVar gc_fRandomTimer;
-ConVar gc_bMath;
 ConVar gc_bMarker;
 ConVar gc_bPainter;
 ConVar gc_bPainterT;
@@ -61,52 +45,24 @@ ConVar gc_sWarden;
 ConVar gc_sUnWarden;
 ConVar gc_sSoundStartPath;
 ConVar gc_sSoundStopPath;
-ConVar gc_sSoundCuffsPath;
 ConVar gc_sModelPath;
 ConVar gc_bModel;
 ConVar gc_bBetterNotes;
-ConVar gc_iMinimumNumber;
-ConVar gc_iMaximumNumber;
-ConVar gc_iTimeAnswer;
 ConVar gc_iWardenColorRed;
 ConVar gc_iWardenColorGreen;
 ConVar gc_iWardenColorBlue;
-ConVar g_bFF;
-ConVar gc_bOp;
-ConVar g_bNoBlockSolid;
 ConVar g_bMenuClose;
 ConVar gc_sCustomCommand;
 ConVar gc_fAllowDropTime;
-ConVar gc_sOverlayCuffsPath;
-ConVar gc_bHandCuff;
-ConVar gc_iHandCuffsNumber;
-ConVar gc_iHandCuffsDistance;
-ConVar gc_bHandCuffLR;
-ConVar gc_bHandCuffCT;
-ConVar gc_bExtend;
-ConVar gc_iExtendLimit;
 ConVar gc_bWardenColorRandom;
 ConVar gc_bBackstab;
 ConVar gc_iBackstabNumber;
 ConVar gc_sAdminFlagBackstab;
 ConVar gc_sAdminFlagLaser;
 ConVar gc_sAdminFlagPainter;
-ConVar gc_sAdminFlagCuffs;
-ConVar gc_fUnLockTimeMax;
-ConVar gc_fUnLockTimeMin;
-ConVar gc_iPaperClipUnLockChance;
-ConVar gc_iPaperClipGetChance;
-ConVar gc_sSoundBreakCuffsPath;
-ConVar gc_sSoundUnLockCuffsPath;
-ConVar gc_bTimer;
-ConVar g_iGetRoundTime;
-ConVar gc_bDisarm;
-ConVar gc_iDisarm;
-ConVar gc_iDisarmMode;
+ConVar gc_fRandomTimer;
 
 //Bools
-bool CanAnswer = false;
-bool IsMathQuiz = false;
 bool g_bMarkerSetup;
 bool g_bCanZoom[MAXPLAYERS + 1];
 bool g_bHasSilencer[MAXPLAYERS + 1];
@@ -115,11 +71,9 @@ bool g_bPainterUse[MAXPLAYERS+1] = {false, ...};
 bool g_bLaser = true;
 bool g_bPainter[MAXPLAYERS+1] = false;
 bool g_bPainterT = false;
-bool g_bNoBlock = true;
 bool g_bLaserColorRainbow[MAXPLAYERS+1] = true;
 bool g_bPainterColorRainbow[MAXPLAYERS+1] = true;
 bool g_bWeaponDropped[MAXPLAYERS+1] = false;
-bool g_bCuffed[MAXPLAYERS+1] = false;
 bool g_bAllowDrop;
 bool IsLR = false;
 
@@ -128,18 +82,8 @@ int g_iWarden = -1;
 int g_iTempWarden[MAXPLAYERS+1] = -1;
 int g_iWrongWeapon[MAXPLAYERS+1];
 int g_iVoteCount;
-int g_iCollisionOffset;
-int g_iOpenTimer;
-int g_iCountStartTime = 9;
-int g_iCountStopTime = 9;
 int g_iBeamSprite = -1;
 int g_iHaloSprite = -1;
-int g_iSetCountStartStopTime;
-int g_iSmokeSprite;
-int g_iKillKind;
-int g_iMathMin;
-int g_iMathMax;
-int g_iMathResult;
 int g_iLastButtons[MAXPLAYERS+1];
 // int g_iWeaponDrop[MAXPLAYERS+1];
 int g_iIcon[MAXPLAYERS + 1] = {-1, ...};
@@ -157,12 +101,8 @@ int g_iColors[8][4] =
 };
 int g_iLaserColor[MAXPLAYERS+1];
 int g_iPainterColor[MAXPLAYERS+1];
-int g_iPlayerHandCuffs[MAXPLAYERS+1];
-int g_iCuffed = 0;
 int g_iBackstabNumber[MAXPLAYERS+1];
-int g_iExtendNumber[MAXPLAYERS+1];
 int g_iRoundTime;
-int g_iDisarm;
 
 //Handles
 Handle g_fward_onBecome;
@@ -173,12 +113,8 @@ Handle gF_OnWardenDisconnected = null;
 Handle gF_OnWardenDeath = null;
 Handle gF_OnWardenRemovedBySelf = null;
 Handle gF_OnWardenRemovedByAdmin = null;
-Handle OpenCounterTime = null;
 Handle RandomTimer = null;
-Handle MathTimer = null;
-Handle RoundTimer;
 
-//Strings
 char g_sHasVoted[1500];
 char g_sModelPath[256];
 char g_sWardenModel[256];
@@ -187,9 +123,7 @@ char g_sWarden[256];
 char g_sIconPath[256];
 char g_sSoundStartPath[256];
 char g_sSoundStopPath[256];
-char g_sSoundCuffsPath[256];
 char g_sOverlayStopPath[256];
-char g_sOverlayCuffsPath[256];
 char g_sOp[32];
 char g_sOperators[4][2] = {"+", "-", "/", "*"};
 char g_sColorNamesRed[64];
@@ -208,9 +142,6 @@ char g_sMyJBLogFile[PLATFORM_MAX_PATH];
 char g_sAdminFlagBackstab[32];
 char g_sAdminFlagLaser[32];
 char g_sAdminFlagPainter[32];
-char g_sAdminFlagCuffs[32];
-char g_sSoundBreakCuffsPath[256];
-char g_sSoundUnLockCuffsPath[256];
 char g_sOverlayStart[256];
 
 //float
@@ -229,8 +160,15 @@ float g_fLastPainter[MAXPLAYERS+1][3];
 #include "MyJailbreak/Warden/mute.sp"
 #include "MyJailbreak/Warden/bulletsparks.sp"
 #include "MyJailbreak/Warden/countdown.sp"
-
-
+#include "MyJailbreak/Warden/math.sp"
+#include "MyJailbreak/Warden/disarm.sp"
+#include "MyJailbreak/Warden/noblock.sp"
+#include "MyJailbreak/Warden/celldoors.sp"
+#include "MyJailbreak/Warden/extendtime.sp"
+#include "MyJailbreak/Warden/friendlyfire.sp"
+#include "MyJailbreak/Warden/reminder.sp"
+#include "MyJailbreak/Warden/randomkill.sp"
+#include "MyJailbreak/Warden/handcuffs.sp"
 
 public Plugin myinfo = {
 	name = "MyJailbreak - Warden",
@@ -246,49 +184,44 @@ public void OnPluginStart()
 	LoadTranslations("MyJailbreak.Warden.phrases");
 	
 	//Client commands
-
-	RegConsoleCmd("sm_w", BecomeWarden, "Allows the player taking the charge over prisoners");
-	RegConsoleCmd("sm_warden", BecomeWarden, "Allows the player taking the charge over prisoners");
-	RegConsoleCmd("sm_uw", ExitWarden, "Allows the player to retire from the position");
-	RegConsoleCmd("sm_unwarden", ExitWarden, "Allows the player to retire from the position");
-	RegConsoleCmd("sm_hg", BecomeWarden, "Allows the player taking the charge over prisoners");
-	RegConsoleCmd("sm_headguard", BecomeWarden, "Allows the player taking the charge over prisoners");
-	RegConsoleCmd("sm_uhg", ExitWarden, "Allows the player to retire from the position");
-	RegConsoleCmd("sm_unheadguard", ExitWarden, "Allows the player to retire from the position");
-	RegConsoleCmd("sm_com", BecomeWarden, "Allows the player taking the charge over prisoners");
-	RegConsoleCmd("sm_commander", BecomeWarden, "Allows the player taking the charge over prisoners");
-	RegConsoleCmd("sm_uc", ExitWarden, "Allows the player to retire from the position");
-	RegConsoleCmd("sm_uncommander", ExitWarden, "Allows the player to retire from the position");
-	RegConsoleCmd("sm_open", OpenDoors, "Allows the Warden to open the cell doors");
-	RegConsoleCmd("sm_close", CloseDoors, "Allows the Warden to close the cell doors");
-	RegConsoleCmd("sm_vw", VoteWarden, "Allows the player to vote to retire Warden");
-	RegConsoleCmd("sm_votewarden", VoteWarden, "Allows the player to vote to retire Warden");
-	RegConsoleCmd("sm_vetowarden", VoteWarden, "Allows the player to vote to retire Warden");
-	RegConsoleCmd("sm_setff", ToggleFF, "Allows player to see the state and the Warden to toggle friendly fire");
-	RegConsoleCmd("sm_laser", LaserMenu, "Allows Warden to toggle on/off the wardens Laser pointer");
-	RegConsoleCmd("sm_painter", PainterMenu, "Allows Warden to toggle on/off the wardens Painter");
-	RegConsoleCmd("sm_noblock", ToggleNoBlock, "Allows the Warden to toggle no block"); 
-	RegConsoleCmd("sm_killrandom", KillRandom, "Allows the Warden to kill a random T");
-	RegConsoleCmd("sm_math", StartMathQuestion, "Allows the Warden to start a MathQuiz. Show player with first right Answer");
-	RegConsoleCmd("sm_extend", ExtendRoundTime, "Allows the warden to extend the roundtime");
+	RegConsoleCmd("sm_w", Command_BecomeWarden, "Allows the player taking the charge over prisoners");
+	RegConsoleCmd("sm_warden", Command_BecomeWarden, "Allows the player taking the charge over prisoners");
+	RegConsoleCmd("sm_uw", Command_ExitWarden, "Allows the player to retire from the position");
+	RegConsoleCmd("sm_unwarden", Command_ExitWarden, "Allows the player to retire from the position");
+	RegConsoleCmd("sm_hg", Command_BecomeWarden, "Allows the player taking the charge over prisoners");
+	RegConsoleCmd("sm_headguard", Command_BecomeWarden, "Allows the player taking the charge over prisoners");
+	RegConsoleCmd("sm_uhg", Command_ExitWarden, "Allows the player to retire from the position");
+	RegConsoleCmd("sm_unheadguard", Command_ExitWarden, "Allows the player to retire from the position");
+	RegConsoleCmd("sm_com", Command_BecomeWarden, "Allows the player taking the charge over prisoners");
+	RegConsoleCmd("sm_commander", Command_BecomeWarden, "Allows the player taking the charge over prisoners");
+	RegConsoleCmd("sm_uc", Command_ExitWarden, "Allows the player to retire from the position");
+	RegConsoleCmd("sm_uncommander", Command_ExitWarden, "Allows the player to retire from the position");
+	RegConsoleCmd("sm_vw", Command_VoteWarden, "Allows the player to vote to retire Warden");
+	RegConsoleCmd("sm_votewarden", Command_VoteWarden, "Allows the player to vote to retire Warden");
+	RegConsoleCmd("sm_vetowarden", Command_VoteWarden, "Allows the player to vote to retire Warden");
+	RegConsoleCmd("sm_laser", Command_LaserMenu, "Allows Warden to toggle on/off the wardens Laser pointer");
+	RegConsoleCmd("sm_painter", Command_PainterMenu, "Allows Warden to toggle on/off the wardens Painter");
 	
 	//Admin commands
-	RegAdminCmd("sm_sw", SetWarden, ADMFLAG_GENERIC);
-	RegAdminCmd("sm_setwarden", SetWarden, ADMFLAG_GENERIC);
-	RegAdminCmd("sm_rw", RemoveWarden, ADMFLAG_GENERIC);
-	RegAdminCmd("sm_fw", RemoveWarden, ADMFLAG_GENERIC);
-	RegAdminCmd("sm_firewarden", RemoveWarden, ADMFLAG_GENERIC);
-	RegAdminCmd("sm_removewarden", RemoveWarden, ADMFLAG_GENERIC);
+	RegAdminCmd("sm_sw", AdminCommand_SetWarden, ADMFLAG_GENERIC);
+	RegAdminCmd("sm_setwarden", AdminCommand_SetWarden, ADMFLAG_GENERIC);
+	RegAdminCmd("sm_rw", AdminCommand_RemoveWarden, ADMFLAG_GENERIC);
+	RegAdminCmd("sm_fw", AdminCommand_RemoveWarden, ADMFLAG_GENERIC);
+	RegAdminCmd("sm_firewarden", AdminCommand_RemoveWarden, ADMFLAG_GENERIC);
+	RegAdminCmd("sm_removewarden", AdminCommand_RemoveWarden, ADMFLAG_GENERIC);
 	
 	//Forwards
-	gF_OnWardenCreatedByUser = CreateGlobalForward("Warden_OnWardenCreatedByUser", ET_Ignore, Param_Cell);
-	gF_OnWardenCreatedByAdmin = CreateGlobalForward("Warden_OnWardenCreatedByAdmin", ET_Ignore, Param_Cell);
 	g_fward_onBecome = CreateGlobalForward("warden_OnWardenCreated", ET_Ignore, Param_Cell);
-	gF_OnWardenDisconnected = CreateGlobalForward("Warden_OnWardenDisconnected", ET_Ignore, Param_Cell);
-	gF_OnWardenDeath = CreateGlobalForward("Warden_OnWardenDeath", ET_Ignore, Param_Cell);
-	gF_OnWardenRemovedBySelf = CreateGlobalForward("Warden_OnWardenRemovedBySelf", ET_Ignore, Param_Cell);
-	gF_OnWardenRemovedByAdmin = CreateGlobalForward("Warden_OnWardenRemovedByAdmin", ET_Ignore, Param_Cell);
 	g_fward_onRemove = CreateGlobalForward("warden_OnWardenRemoved", ET_Ignore, Param_Cell);
+	
+	
+	
+	gF_OnWardenCreatedByUser = CreateGlobalForward("warden_OnWardenCreatedByUser", ET_Ignore, Param_Cell);
+	gF_OnWardenCreatedByAdmin = CreateGlobalForward("warden_OnWardenCreatedByAdmin", ET_Ignore, Param_Cell);
+	gF_OnWardenDisconnected = CreateGlobalForward("warden_OnWardenDisconnected", ET_Ignore, Param_Cell);
+	gF_OnWardenDeath = CreateGlobalForward("warden_OnWardenDeath", ET_Ignore, Param_Cell);
+	gF_OnWardenRemovedBySelf = CreateGlobalForward("warden_OnWardenRemovedBySelf", ET_Ignore, Param_Cell);
+	gF_OnWardenRemovedByAdmin = CreateGlobalForward("warden_OnWardenRemovedByAdmin", ET_Ignore, Param_Cell);
 	
 	//AutoExecConfig
 	AutoExecConfig_SetFile("Warden", "MyJailbreak");
@@ -303,11 +236,6 @@ public void OnPluginStart()
 	gc_bVote = AutoExecConfig_CreateConVar("sm_warden_vote", "1", "0 - disabled, 1 - enable player vote against warden", _, true,  0.0, true, 1.0);
 	gc_bStayWarden = AutoExecConfig_CreateConVar("sm_warden_stay", "1", "0 - disabled, 1 - enable warden stay after round end", _, true,  0.0, true, 1.0);
 	gc_bBetterNotes = AutoExecConfig_CreateConVar("sm_warden_better_notifications", "1", "0 - disabled, 1 - Will use hint and center text", _, true, 0.0, true, 1.0);
-	gc_bNoBlock = AutoExecConfig_CreateConVar("sm_warden_noblock", "1", "0 - disabled, 1 - enable noblock toggle for warden", _, true,  0.0, true, 1.0);
-	gc_bNoBlockMode = AutoExecConfig_CreateConVar("sm_warden_noblock_mode", "1", "0 - collision only between CT & T, 1 - collision within a team.", _, true,  0.0, true, 1.0);
-	gc_bFF = AutoExecConfig_CreateConVar("sm_warden_ff", "1", "0 - disabled, 1 - enable switch ff for T ", _, true,  0.0, true, 1.0);
-	gc_bExtend = AutoExecConfig_CreateConVar("sm_warden_extend", "1", "0 - disabled, 1 - Allows the warden to extend the roundtime", _, true,  0.0, true, 1.0);
-	gc_iExtendLimit = AutoExecConfig_CreateConVar("sm_warden_extend_limit", "2", "How many time a warden can extend the round?", _, true,  1.0);
 	gc_bGunPlant = AutoExecConfig_CreateConVar("sm_warden_gunplant", "1", "0 - disabled, 1 - enable Gun plant prevention", _, true,  0.0, true, 1.0);
 	gc_fAllowDropTime = AutoExecConfig_CreateConVar("sm_warden_allow_time", "15.0", "Time in seconds CTs allowed to drop weapon on round beginn.", _, true,  0.1);
 	gc_bGunNoDrop = AutoExecConfig_CreateConVar("sm_warden_gunnodrop", "0", "0 - disabled, 1 - disallow gun dropping for ct", _, true,  0.0, true, 1.0);
@@ -317,42 +245,16 @@ public void OnPluginStart()
 	gc_iGunSlapDamage = AutoExecConfig_CreateConVar("sm_warden_gunslap_dmg", "10", "Amoung of HP losing on slap for dropping a gun", _, true,  0.0);
 	gc_bBackstab = AutoExecConfig_CreateConVar("sm_warden_backstab", "1", "0 - disabled, 1 - enable backstab protection for warden", _, true,  0.0, true, 1.0);
 	gc_iBackstabNumber = AutoExecConfig_CreateConVar("sm_warden_backstab_number", "1", "How many time a warden get protected? 0 - alltime", _, true,  1.0);
-	gc_bDisarm = AutoExecConfig_CreateConVar("sm_warden_disarm", "1", "0 - disabled, 1 - enable disarm weapon on shot the arms/hands", _, true,  0.0, true, 1.0);
-	gc_iDisarm = AutoExecConfig_CreateConVar("sm_warden_disarm_mode", "1", "1 - Only warden can disarm, 2 - All CT can disarm, 3 - Everyone can disarm (CT & T)", _, true,  1.0, true, 3.0);
-	gc_iDisarmMode = AutoExecConfig_CreateConVar("sm_warden_disarm_drop", "1", "1 - weapon will drop, 2 - weapon  disapear", _, true,  1.0, true, 2.0);
 	gc_sAdminFlagBackstab = AutoExecConfig_CreateConVar("sm_warden_backstab_flag", "", "Set flag for admin/vip to get warden backstab protection. No flag = feature is available for all players!");
-	gc_bHandCuff = AutoExecConfig_CreateConVar("sm_warden_handcuffs", "1", "0 - disabled, 1 - enable handcuffs", _, true,  0.0, true, 1.0);
-	gc_iHandCuffsNumber = AutoExecConfig_CreateConVar("sm_warden_handcuffs_number", "2", "How many handcuffs a warden got?", _, true,  1.0);
-	gc_iHandCuffsDistance = AutoExecConfig_CreateConVar("sm_warden_handcuffs_distance", "2", "How many meters distance from warden to handcuffed T to pick up?", _, true,  1.0);
-	gc_bHandCuffLR = AutoExecConfig_CreateConVar("sm_warden_handcuffs_lr", "1", "0 - disabled, 1 - free cuffed terrorists on LR", _, true,  0.0, true, 1.0);
-	gc_bHandCuffCT = AutoExecConfig_CreateConVar("sm_warden_handcuffs_ct", "1", "0 - disabled, 1 - Warden can also handcuff CTs", _, true,  0.0, true, 1.0);
-	gc_fUnLockTimeMax = AutoExecConfig_CreateConVar("sm_warden_handcuffs_unlock_maxtime", "35.0", "Time in seconds Ts need free themself with a paperclip.", _, true, 0.1);
-	gc_iPaperClipGetChance = AutoExecConfig_CreateConVar("sm_warden_handcuffs_paperclip_chance", "5", "Set the chance (1:x) a cuffed Terroris get a paperclip to free themself", _, true,  1.0);
-	gc_iPaperClipUnLockChance = AutoExecConfig_CreateConVar("sm_warden_handcuffs_unlock_chance", "3", "Set the chance (1:x) a cuffed Terroris who has a paperclip to free themself", _, true,  1.0);
-	gc_fUnLockTimeMin = AutoExecConfig_CreateConVar("sm_warden_handcuffs_unlock_mintime", "15.0", "Min. Time in seconds Ts need free themself with a paperclip.", _, true,  1.0);
-	gc_fUnLockTimeMax = AutoExecConfig_CreateConVar("sm_warden_handcuffs_unlock_maxtime", "35.0", "Max. Time in seconds Ts need free themself with a paperclip.", _, true,  1.0);
-	gc_sAdminFlagCuffs = AutoExecConfig_CreateConVar("sm_warden_handcuffs_flag", "", "Set flag for admin/vip must have to get access to paperclip. No flag = feature is available for all players!");
-	gc_sOverlayCuffsPath = AutoExecConfig_CreateConVar("sm_warden_overlays_cuffs", "overlays/MyJailbreak/cuffs" , "Path to the cuffs Overlay DONT TYPE .vmt or .vft");
-	gc_bRandom = AutoExecConfig_CreateConVar("sm_warden_random", "1", "0 - disabled, 1 - enable kill a random t for warden", _, true,  0.0, true, 1.0);
-	gc_iRandomMode = AutoExecConfig_CreateConVar("sm_warden_random_mode", "2", "1 - all random / 2 - Thunder / 3 - Timebomb / 4 - Firebomb / 5 - NoKill(1,3,4 needs funcommands.smx enabled)", _, true,  1.0, true, 4.0);
 	gc_bOverlays = AutoExecConfig_CreateConVar("sm_warden_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true,  0.0, true, 1.0);
 	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_warden_overlays_start", "overlays/MyJailbreak/start" , "Path to the start Overlay DONT TYPE .vmt or .vft");
 	gc_sOverlayStopPath = AutoExecConfig_CreateConVar("sm_warden_overlays_stop", "overlays/MyJailbreak/stop" , "Path to the stop Overlay DONT TYPE .vmt or .vft");
-	gc_bOpen = AutoExecConfig_CreateConVar("sm_warden_open_enable", "1", "0 - disabled, 1 - warden can open/close cells", _, true,  0.0, true, 1.0);
-	gc_hOpenTimer = AutoExecConfig_CreateConVar("sm_warden_open_time", "60", "Time in seconds for open doors on round start automaticly", _, true, 0.0); 
-	gc_bOpenTimer = AutoExecConfig_CreateConVar("sm_warden_open_time_enable", "1", "should doors open automatic 0- no 1 yes", _, true,  0.0, true, 1.0);
-	gc_bOpenTimerWarden = AutoExecConfig_CreateConVar("sm_warden_open_time_warden", "1", "should doors open automatic after sm_warden_open_time when there is a warden? needs sm_warden_open_time_enable 1", _, true,  0.0, true, 1.0);
 	gc_bMarker = AutoExecConfig_CreateConVar("sm_warden_marker", "1", "0 - disabled, 1 - enable Warden advanced markers ", _, true,  0.0, true, 1.0);
 	gc_bLaser = AutoExecConfig_CreateConVar("sm_warden_laser", "1", "0 - disabled, 1 - enable Warden Laser Pointer with +E ", _, true,  0.0, true, 1.0);
 	gc_sAdminFlagLaser = AutoExecConfig_CreateConVar("sm_warden_laser_flag", "", "Set flag for admin/vip to get warden laser pointer. No flag = feature is available for all players!");
 	gc_bPainter = AutoExecConfig_CreateConVar("sm_warden_painter", "1", "0 - disabled, 1 - enable Warden Painter with +E ", _, true,  0.0, true, 1.0);
 	gc_sAdminFlagPainter = AutoExecConfig_CreateConVar("sm_warden_painter_flag", "", "Set flag for admin/vip to get warden painter access. No flag = feature is available for all players!");
 	gc_bPainterT= AutoExecConfig_CreateConVar("sm_warden_painter_terror", "1", "0 - disabled, 1 - allow Warden to toggle Painter for Terrorist ", _, true,  0.0, true, 1.0);
-	gc_bMath = AutoExecConfig_CreateConVar("sm_warden_math", "1", "0 - disabled, 1 - enable mathquiz for warden", _, true,  0.0, true, 1.0);
-	gc_iMinimumNumber = AutoExecConfig_CreateConVar("sm_warden_math_min", "1", "What should be the minimum number for questions?", _, true,  1.0);
-	gc_iMaximumNumber = AutoExecConfig_CreateConVar("sm_warden_math_max", "100", "What should be the maximum number for questions?", _, true,  2.0);
-	gc_bOp = AutoExecConfig_CreateConVar("sm_warden_math_mode", "1", "0 - only addition & subtraction, 1 -  addition, subtraction, multiplication & division", _, true,  0.0, true, 1.0);
-	gc_iTimeAnswer = AutoExecConfig_CreateConVar("sm_warden_math_time", "10", "Time in seconds to give a answer to a question.", _, true,  3.0);
 	gc_bIcon = AutoExecConfig_CreateConVar("sm_warden_icon_enable", "1", "0 - disabled, 1 - enable the icon above the wardens head", _, true,  0.0, true, 1.0);
 	gc_sIconPath = AutoExecConfig_CreateConVar("sm_warden_icon", "decals/MyJailbreak/warden" , "Path to the warden icon DONT TYPE .vmt or .vft");
 	gc_bModel = AutoExecConfig_CreateConVar("sm_warden_model", "1", "0 - disabled, 1 - enable warden model", 0, true, 0.0, true, 1.0);
@@ -367,12 +269,19 @@ public void OnPluginStart()
 	gc_sUnWarden = AutoExecConfig_CreateConVar("sm_warden_sounds_unwarden", "music/MyJailbreak/unwarden.mp3", "Path to the soundfile which should be played when there is no warden anymore.");
 	gc_sSoundStartPath = AutoExecConfig_CreateConVar("sm_warden_sounds_start", "music/MyJailbreak/start.mp3", "Path to the soundfile which should be played for a start countdown.");
 	gc_sSoundStopPath = AutoExecConfig_CreateConVar("sm_warden_sounds_stop", "music/MyJailbreak/stop.mp3", "Path to the soundfile which should be played for stop countdown.");
-	gc_sSoundCuffsPath = AutoExecConfig_CreateConVar("sm_warden_sounds_cuffs", "music/MyJailbreak/cuffs.mp3", "Path to the soundfile which should be played for cuffed player.");
-	gc_sSoundBreakCuffsPath = AutoExecConfig_CreateConVar("sm_warden_sounds_breakcuffs", "music/MyJailbreak/breakcuffs.mp3", "Path to the soundfile which should be played for break cuffs.");
-	gc_sSoundUnLockCuffsPath = AutoExecConfig_CreateConVar("sm_warden_sounds_unlock", "music/MyJailbreak/unlock.mp3", "Path to the soundfile which should be played for unlocking cuffs.");
-	gc_bTimer = CreateConVar("sm_warden_roundtime_reminder", "1", "0 - disabled, 1 - announce remaining round time in chat & hud 3min,2min,1min,30sec before roundend.", _, true,  0.0, true, 1.0);
 	
 	Mute_OnPluginStart();
+	Disarm_OnPluginStart();
+	BulletSparks_OnPluginStart();
+	Countdown_OnPluginStart();
+	Math_OnPluginStart();
+	NoBlock_OnPluginStart();
+	CellDoors_OnPluginStart();
+	ExtendTime_OnPluginStart();
+	FriendlyFire_OnPluginStart();
+	Reminder_OnPluginStart();
+	RandomKill_OnPluginStart();
+	HandCuffs_OnPluginStart();
 	
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
@@ -385,47 +294,32 @@ public void OnPluginStart()
 	HookEvent("player_team", EventPlayerTeam);
 	HookEvent("round_end", RoundEnd);
 	HookEvent("weapon_fire", WeaponFire);
-	HookEvent("player_hurt", PlayerHurt);
 	HookConVarChange(gc_sModelPath, OnSettingChanged);
 	HookConVarChange(gc_sUnWarden, OnSettingChanged);
 	HookConVarChange(gc_sWarden, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundStopPath, OnSettingChanged);
-	HookConVarChange(gc_sSoundCuffsPath, OnSettingChanged);
-	HookConVarChange(gc_sSoundBreakCuffsPath, OnSettingChanged);
-	HookConVarChange(gc_sSoundUnLockCuffsPath, OnSettingChanged);
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sOverlayStopPath, OnSettingChanged);
-	HookConVarChange(gc_sOverlayCuffsPath, OnSettingChanged);
 	HookConVarChange(gc_sIconPath, OnSettingChanged);
 	HookConVarChange(gc_sAdminFlagBackstab, OnSettingChanged);
 	HookConVarChange(gc_sAdminFlagLaser, OnSettingChanged);
 	HookConVarChange(gc_sAdminFlagPainter, OnSettingChanged);
-	HookConVarChange(gc_sAdminFlagCuffs, OnSettingChanged);
 	
 	//FindConVar
 	g_bMenuClose = FindConVar("sm_menu_close");
-	g_bNoBlockSolid = FindConVar("mp_solid_teammates");
-	g_bFF = FindConVar("mp_teammates_are_enemies");
 	gc_sWarden.GetString(g_sWarden, sizeof(g_sWarden));
 	gc_sUnWarden.GetString(g_sUnWarden, sizeof(g_sUnWarden));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 	gc_sSoundStopPath.GetString(g_sSoundStopPath, sizeof(g_sSoundStopPath));
-	gc_sSoundCuffsPath.GetString(g_sSoundCuffsPath, sizeof(g_sSoundCuffsPath));
-	gc_sSoundBreakCuffsPath.GetString(g_sSoundBreakCuffsPath, sizeof(g_sSoundBreakCuffsPath));
-	gc_sSoundUnLockCuffsPath.GetString(g_sSoundUnLockCuffsPath, sizeof(g_sSoundUnLockCuffsPath));
 	gc_sModelPath.GetString(g_sWardenModel, sizeof(g_sWardenModel));
 	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
-	gc_sOverlayCuffsPath.GetString(g_sOverlayCuffsPath , sizeof(g_sOverlayCuffsPath));
 	gc_sOverlayStopPath.GetString(g_sOverlayStopPath , sizeof(g_sOverlayStopPath));
 	gc_sIconPath.GetString(g_sIconPath , sizeof(g_sIconPath));
 	gc_sCustomCommand.GetString(g_sCustomCommand , sizeof(g_sCustomCommand));
 	gc_sAdminFlagBackstab.GetString(g_sAdminFlagBackstab , sizeof(g_sAdminFlagBackstab));
 	gc_sAdminFlagLaser.GetString(g_sAdminFlagLaser , sizeof(g_sAdminFlagLaser));
 	gc_sAdminFlagPainter.GetString(g_sAdminFlagPainter , sizeof(g_sAdminFlagPainter));
-	gc_sAdminFlagCuffs.GetString(g_sAdminFlagCuffs , sizeof(g_sAdminFlagCuffs));
-	
-	g_iCollisionOffset = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
 	
 	CreateTimer(1.0, Timer_DrawMakers, _, TIMER_REPEAT);
 	
@@ -477,21 +371,6 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 		strcopy(g_sSoundStopPath, sizeof(g_sSoundStopPath), newValue);
 		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStopPath);
 	}
-	else if(convar == gc_sSoundCuffsPath)
-	{
-		strcopy(g_sSoundCuffsPath, sizeof(g_sSoundCuffsPath), newValue);
-		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundCuffsPath);
-	}
-	else if(convar == gc_sSoundBreakCuffsPath)
-	{
-		strcopy(g_sSoundBreakCuffsPath, sizeof(g_sSoundBreakCuffsPath), newValue);
-		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundBreakCuffsPath);
-	}
-	else if(convar == gc_sSoundUnLockCuffsPath)
-	{
-		strcopy(g_sSoundUnLockCuffsPath, sizeof(g_sSoundUnLockCuffsPath), newValue);
-		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundUnLockCuffsPath);
-	}
 	else if(convar == gc_sOverlayStartPath)
 	{
 		strcopy(g_sOverlayStart, sizeof(g_sOverlayStart), newValue);
@@ -501,11 +380,6 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 	{
 		strcopy(g_sOverlayStopPath, sizeof(g_sOverlayStopPath), newValue);
 		if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStopPath);
-	}
-	else if(convar == gc_sOverlayCuffsPath)
-	{
-		strcopy(g_sOverlayCuffsPath, sizeof(g_sOverlayCuffsPath), newValue);
-		if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayCuffsPath);
 	}
 	else if(convar == gc_sModelPath)
 	{
@@ -529,17 +403,13 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 	{
 		strcopy(g_sAdminFlagPainter, sizeof(g_sAdminFlagPainter), newValue);
 	}
-	else if(convar == gc_sAdminFlagCuffs)
-	{
-		strcopy(g_sAdminFlagCuffs, sizeof(g_sAdminFlagCuffs), newValue);
-	}
 	else if(convar == gc_sCustomCommand)
 	{
 		strcopy(g_sCustomCommand, sizeof(g_sCustomCommand), newValue);
 		char sBufferCMD[64];
 		Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommand);
 		if(GetCommandFlags(sBufferCMD) == INVALID_FCVAR_FLAGS)
-			RegConsoleCmd(sBufferCMD, BecomeWarden, "Allows the player taking the charge over prisoners");
+			RegConsoleCmd(sBufferCMD, Command_BecomeWarden, "Allows the player taking the charge over prisoners");
 	}
 }
 
@@ -547,14 +417,13 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 
 public void OnConfigsExecuted()
 {
-	g_iMathMin = gc_iMinimumNumber.IntValue;
-	g_iMathMax = gc_iMaximumNumber.IntValue;
-	g_iKillKind = gc_iRandomMode.IntValue;
+	Math_OnConfigsExecuted();
+	RandomKill_OnConfigsExecuted();
 	
 	char sBufferCMD[64];
 	Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommand);
 	if(GetCommandFlags(sBufferCMD) == INVALID_FCVAR_FLAGS)
-		RegConsoleCmd(sBufferCMD, BecomeWarden, "Allows the player taking the charge over prisoners");
+		RegConsoleCmd(sBufferCMD, Command_BecomeWarden, "Allows the player taking the charge over prisoners");
 }
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
@@ -571,22 +440,22 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 public void OnMapStart()
 {
+	Countdown_OnMapStart();
+	Math_OnMapStart();
+	HandCuffs_OnMapStart();
+	
 	if(gc_bSounds.BoolValue)
 	{
 		PrecacheSoundAnyDownload(g_sWarden);
 		PrecacheSoundAnyDownload(g_sUnWarden);
 		PrecacheSoundAnyDownload(g_sSoundStopPath);
 		PrecacheSoundAnyDownload(g_sSoundStartPath);
-		PrecacheSoundAnyDownload(g_sSoundCuffsPath);
-		PrecacheSoundAnyDownload(g_sSoundBreakCuffsPath);
-		PrecacheSoundAnyDownload(g_sSoundUnLockCuffsPath);
-	}	
+	}
 	PrecacheSound("weapons/c4/c4_beep1.wav", true);
 	g_iVoteCount = 0;
 	PrecacheModel(g_sWardenModel);
 	if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStart);
 	if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStopPath);
-	if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayCuffsPath);
 	if(gc_bIcon.BoolValue) PrecacheModelAnyDownload(g_sIconPath);
 	g_iBeamSprite = PrecacheModel("materials/sprites/laserbeam.vmt");
 	g_iHaloSprite = PrecacheModel("materials/sprites/glow01.vmt");
@@ -610,6 +479,7 @@ public void OnClientPutInServer(int client)
 	g_fLastPainter[client][2] = 0.0;
 	
 	BulletSparks_OnClientPutInServer(client);
+	HandCuffs_OnClientPutInServer(client);
 	
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakedamage);
 }
@@ -636,28 +506,11 @@ public void PostRoundStart(Event event, const char[] name, bool dontBroadcast)
 
 public void RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
-	if (OpenCounterTime != null)
-		KillTimer(OpenCounterTime);
-		
-	OpenCounterTime = null;
-	
-	if(gc_bPlugin.BoolValue)
-	{
-		if (SJD_IsCurrentMapConfigured()) {
-			g_iOpenTimer = GetConVarInt(gc_hOpenTimer);
-			OpenCounterTime = CreateTimer(1.0, OpenCounter, _, TIMER_REPEAT);
-			if (RandomTimer != null)
-			KillTimer(RandomTimer);
-			
-			RandomTimer = null;
-		}
-		else CPrintToChatAll("%t %t", "warden_tag" , "warden_openauto_unavailable"); 
-	}
-	else
+	if(!gc_bPlugin.BoolValue)
 	{
 		if (g_iWarden == 1)
 		{
-			CreateTimer(0.1, RemoveColor, g_iWarden);
+			CreateTimer(0.1, Timer_RemoveColor, g_iWarden);
 			SetEntityModel(g_iWarden, g_sModelPath);
 			Forward_OnWardenRemoved(g_iWarden);
 			RemoveIcon(g_iWarden);
@@ -672,7 +525,7 @@ public void RoundStart(Event event, const char[] name, bool dontBroadcast)
 	{
 		if (g_iWarden == 1)
 		{
-			CreateTimer( 0.1, RemoveColor, g_iWarden);
+			CreateTimer( 0.1, Timer_RemoveColor, g_iWarden);
 			SetEntityModel(g_iWarden, g_sModelPath);
 			Forward_OnWardenRemoved(g_iWarden);
 			RemoveIcon(g_iWarden);
@@ -684,52 +537,35 @@ public void RoundStart(Event event, const char[] name, bool dontBroadcast)
 	{
 		SpawnIcon(g_iWarden);
 		if(gc_bModel.BoolValue) SetEntityModel(g_iWarden, g_sWardenModel);
-		if (gc_bHandCuff.BoolValue && !IsLR) GivePlayerItem(g_iWarden, "weapon_taser");
+		
 	}
 	g_bAllowDrop = true;
 	IsLR = false;
-	g_iCuffed = 0;
 	LoopClients(i)
 	{
-		g_iPlayerHandCuffs[i] = gc_iHandCuffsNumber.IntValue;
 		g_iBackstabNumber[i] = gc_iBackstabNumber.IntValue;
-		g_iExtendNumber[i] = gc_iExtendLimit.IntValue;
 	}
 	CreateTimer (gc_fAllowDropTime.FloatValue, AllowDropTimer);
 	
 	g_iGetRoundTime = FindConVar("mp_roundtime");
 	g_iRoundTime = g_iGetRoundTime.IntValue * 60;
-	g_iDisarm = gc_iDisarm.IntValue;
-	if(gc_bTimer.BoolValue)RoundTimer = CreateTimer(1.0, RoundTimerHandle, _, TIMER_REPEAT);
 }
 
 //Round End
 
 public void RoundEnd(Event event, const char[] name, bool dontBroadcast)
 {
-	if(gc_bPlugin.BoolValue)
-	{
-		if (g_bFF.BoolValue) 
-		{
-			SetCvar("mp_teammates_are_enemies", 0);
-			g_bFF = FindConVar("mp_teammates_are_enemies");
-			CPrintToChatAll("%t %t", "warden_tag", "warden_ffisoff" );
-		}
-	}
-	SetCvar("mp_solid_teammates", g_bNoBlockSolid.BoolValue);
 	g_bPainterT = false;
 	IsLR = false;
 	LoopClients(i)
 	{
-		if(g_bCuffed[i]) FreeEm(i, 0);
 		if(g_bPainter[i]) g_bPainter[i] = false;
 	}
-	delete RoundTimer;
 }
 
 //!w
 
-public Action BecomeWarden(int client, int args)
+public Action Command_BecomeWarden(int client, int args)
 {
 	if(gc_bPlugin.BoolValue)
 	{
@@ -759,7 +595,7 @@ public Action BecomeWarden(int client, int args)
 
 //!uw
 
-public Action ExitWarden(int client, int args) 
+public Action Command_ExitWarden(int client, int args) 
 {
 	if(gc_bPlugin.BoolValue)
 	{
@@ -772,7 +608,7 @@ public Action ExitWarden(int client, int args)
 				PrintCenterTextAll("%t", "warden_retire_nc", client);
 			}
 			Forward_OnWardenRemoved(client);
-			CreateTimer( 0.1, RemoveColor, g_iWarden);
+			CreateTimer( 0.1, Timer_RemoveColor, g_iWarden);
 			SetEntityModel(client, g_sModelPath);
 			if (RandomTimer != null)
 			KillTimer(RandomTimer);
@@ -795,7 +631,7 @@ public Action ExitWarden(int client, int args)
 
 //!vw
 
-public Action VoteWarden(int client,int args)
+public Action Command_VoteWarden(int client,int args)
 {
 	if(gc_bPlugin.BoolValue)
 	{
@@ -857,14 +693,7 @@ public Action playerDeath(Event event, const char[] name, bool dontBroadcast)
 		RemoveIcon(g_iWarden);
 		g_iWarden = -1;
 	}
-	if(g_bCuffed[client])
-	{
-		g_iCuffed--;
-		g_bCuffed[client] = false;
-		SetEntityMoveType(client, MOVETYPE_WALK);
-		SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
-		CreateTimer( 0.0, DeleteOverlay, client );
-	}
+	
 	g_fLastPainter[client][0] = 0.0;
 	g_fLastPainter[client][1] = 0.0;
 	g_fLastPainter[client][2] = 0.0;
@@ -873,7 +702,7 @@ public Action playerDeath(Event event, const char[] name, bool dontBroadcast)
 
 //Set new Warden for Admin Menu
 
-public Action SetWarden(int client,int args)
+public Action AdminCommand_SetWarden(int client,int args)
 {
 	if(gc_bPlugin.BoolValue)	
 	{
@@ -947,7 +776,7 @@ public int SetWardenHandler(Menu menu, MenuAction action, int client, int Positi
 							EmitSoundToAllAny(g_sWarden);
 						}
 						CreateTimer(1.0, Timer_WardenFixColor, i, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
-						if (gc_bHandCuff.BoolValue && !IsLR) GivePlayerItem(i, "weapon_taser");
+						
 						SpawnIcon(i);
 						GetEntPropString(i, Prop_Data, "m_ModelName", g_sModelPath, sizeof(g_sModelPath));
 						if(gc_bModel.BoolValue)
@@ -1003,11 +832,10 @@ public int m_WardenOverwrite(Menu menu, MenuAction action, int client, int Posit
 			}
 			if(MyJBLogging(true)) LogToFileEx(g_sMyJBLogFile, "Admin %L kick player %L warden and set %L as new", client, g_iWarden, newwarden);
 			RemoveIcon(g_iWarden);
-			CreateTimer( 0.1, RemoveColor, g_iWarden);
+			CreateTimer( 0.1, Timer_RemoveColor, g_iWarden);
 			SetEntityModel(g_iWarden, g_sModelPath);
 			g_iWarden = newwarden;
 			CreateTimer(1.0, Timer_WardenFixColor, newwarden, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
-			if (gc_bHandCuff.BoolValue && !IsLR) GivePlayerItem(newwarden, "weapon_taser");
 			SpawnIcon(newwarden);
 			GetEntPropString(newwarden, Prop_Data, "m_ModelName", g_sModelPath, sizeof(g_sModelPath));
 			if(gc_bModel.BoolValue)
@@ -1114,12 +942,9 @@ public void OnClientDisconnect(int client)
 		g_iWarden = -1;
 		g_bPainterT = false;
 	}
-	if(g_bCuffed[client])
-	{
-		g_iCuffed--;
-		
-	}
 	g_iLastButtons[client] = 0;
+	
+	HandCuffs_OnClientDisconnect(client);
 }
 
 //warden change team
@@ -1140,7 +965,7 @@ public Action EventPlayerTeam(Event event, const char[] name, bool dontBroadcast
 		Call_StartForward(gF_OnWardenDisconnected);
 		Call_PushCell(client);
 		Call_Finish();
-		CreateTimer( 0.1, RemoveColor, client);
+		CreateTimer( 0.1, Timer_RemoveColor, client);
 		
 		if (RandomTimer != null)
 		KillTimer(RandomTimer);
@@ -1170,7 +995,6 @@ void SetTheWarden(int client)
 			PrintCenterTextAll("%t", "warden_new_nc", client);
 		}
 		g_iWarden = client;
-		if (gc_bHandCuff.BoolValue && !IsLR) GivePlayerItem(client, "weapon_taser");
 		CreateTimer(1.0, Timer_WardenFixColor, client, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 		SpawnIcon(client);
 		GetEntPropString(client, Prop_Data, "m_ModelName", g_sModelPath, sizeof(g_sModelPath));
@@ -1195,7 +1019,7 @@ void SetTheWarden(int client)
 
 //Remove player Warden
 
-public Action RemoveWarden(int client, int args)
+public Action AdminCommand_RemoveWarden(int client, int args)
 {
 	if(g_iWarden != -1)
 	{
@@ -1217,7 +1041,7 @@ void RemoveTheWarden(int client)
 		PrintCenterTextAll("%t", "warden_removed_nc", client, g_iWarden);
 	}
 	if(MyJBLogging(true)) LogToFileEx(g_sMyJBLogFile, "Admin %L removed player %L as warden", client, g_iWarden);
-	CreateTimer( 0.1, RemoveColor, g_iWarden);
+	CreateTimer( 0.1, Timer_RemoveColor, g_iWarden);
 	SetEntityModel(client, g_sModelPath);
 	if (RandomTimer != null)
 		KillTimer(RandomTimer);
@@ -1242,163 +1066,7 @@ void RemoveTheWarden(int client)
 	g_iWarden = -1;
 }
 
-//Math Quizz
 
-public Action StartMathQuestion(int client, int args)
-{
-	if(gc_bMath.BoolValue)
-	{
-		if(client == g_iWarden)
-		{
-			if (!IsMathQuiz)
-			{
-				CreateTimer( 4.0, CreateMathQuestion, client);
-				
-				CPrintToChatAll("%t %t", "warden_tag" , "warden_startmathquiz");
-				
-				if(gc_bBetterNotes.BoolValue)
-				{
-					PrintCenterTextAll("%t", "warden_startmathquiz_nc");
-				}
-						
-				IsMathQuiz = true;
-			}
-		}
-		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
-	}
-}
-
-public Action CreateMathQuestion( Handle timer, any client )
-{
-	if(gc_bMath.BoolValue)
-	{
-		if(client == g_iWarden)
-		{
-			int NumOne = GetRandomInt(g_iMathMin, g_iMathMax);
-			int NumTwo = GetRandomInt(g_iMathMin, g_iMathMax);
-			
-			if(gc_bOp.BoolValue) 
-			{
-				Format(g_sOp, sizeof(g_sOp), g_sOperators[GetRandomInt(0,3)]);
-			}
-			else Format(g_sOp, sizeof(g_sOp), g_sOperators[GetRandomInt(0,1)]);
-			
-			if(StrEqual(g_sOp, PLUS))
-			{
-				g_iMathResult = NumOne + NumTwo;
-			}
-			else if(StrEqual(g_sOp, MINUS))
-			{
-				g_iMathResult = NumOne - NumTwo;
-			}
-			else if(StrEqual(g_sOp, DIVISOR))
-			{
-				do
-				{
-					NumOne = GetRandomInt(g_iMathMin, g_iMathMax);
-					NumTwo = GetRandomInt(g_iMathMin, g_iMathMax);
-				}
-				while(NumOne % NumTwo != 0);
-				g_iMathResult = NumOne / NumTwo;
-			}
-			else if(StrEqual(g_sOp, MULTIPL))
-			{
-				g_iMathResult = NumOne * NumTwo;
-			}
-			
-			
-			CPrintToChatAll("%t %N: %i %s %i = ?? ", "warden_tag", client, NumOne, g_sOp, NumTwo);
-		
-			if(gc_bBetterNotes.BoolValue)
-			{
-				PrintHintTextToAll("%i %s %i = ?? ", NumOne, g_sOp, NumTwo);
-			}
-			
-			CanAnswer = true;
-			
-			MathTimer = CreateTimer(gc_iTimeAnswer.FloatValue, EndMathQuestion);
-		}
-		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
-	}
-}
-
-public Action OnChatMessage(int &author, Handle recipients, char[] name, char[] message)
-{
-	if(IsMathQuiz && CanAnswer)
-	{
-		char bit[1][5];
-		ExplodeString(message, " ", bit, sizeof bit, sizeof bit[]);
-
-		if(ProcessSolution(author, StringToInt(bit[0])))
-			SendEndMathQuestion(author);
-	}
-}
-
-public bool ProcessSolution(int client, int number)
-{
-	if(g_iMathResult == number)
-	{		
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
-
-public void SendEndMathQuestion(int client)
-{
-	if(MathTimer != INVALID_HANDLE)
-	{
-		KillTimer(MathTimer);
-		MathTimer = INVALID_HANDLE;
-	}
-	
-	char answer[264];
-	
-	if(client != -1)
-	{
-		Format(answer, sizeof(answer), "%t %t", "warden_tag", "warden_math_correct", client, g_iMathResult);
-		CreateTimer( 5.0, RemoveColor, client);
-		SetEntityRenderColor(client, 0, 255, 0, 255);
-	}
-	else Format(answer, sizeof(answer), "%t %t", "warden_tag", "warden_math_time", g_iMathResult);
-	
-	if(gc_bOverlays.BoolValue)
-	{
-		ShowOverlay(client, g_sOverlayStopPath, 2.0);
-	}
-	if(gc_bSounds.BoolValue)	
-	{
-		EmitSoundToAllAny(g_sSoundStopPath);
-	}
-	Handle pack = CreateDataPack();
-	CreateDataTimer(0.3, AnswerQuestion, pack);
-	WritePackString(pack, answer);
-	CanAnswer = false;
-	IsMathQuiz = false;
-}
-
-public Action EndMathQuestion(Handle timer)
-{
-	SendEndMathQuestion(-1);
-}
-
-public Action RemoveColor( Handle timer, any client ) 
-{
-	if(IsValidClient(client, false, true))
-	{
-		SetEntityRenderColor(client, 255, 255, 255, 255);
-	}
-}
-
-public Action AnswerQuestion(Handle timer, Handle pack)
-{
-	char str[264];
-	ResetPack(pack);
-	ReadPackString(pack, str, sizeof(str));
-	CPrintToChatAll(str);
-}
 
 //New Marker
 
@@ -1409,11 +1077,6 @@ public Action ItemEquip(Handle event, const char[] name, bool dontBroadcast)
 	g_bCanZoom[client] = GetEventBool(event, "canzoom");
 	g_bHasSilencer[client] = GetEventBool(event, "hassilencer");
 	g_iWrongWeapon[client] = GetEventInt(event, "weptype");
-	char weapon[32];
-	GetEventString(event, "item", weapon, sizeof(weapon));
-	g_sEquipWeapon[client] = weapon;
-	
-	if (StrEqual(weapon, "taser") && warden_iswarden(client) && (g_iPlayerHandCuffs[client] != 0)) PrintCenterText(client, "%t", "warden_cuffs");
 }
 
 public void OnMapEnd()
@@ -1421,7 +1084,7 @@ public void OnMapEnd()
 	RemoveAllMarkers();
 	if (g_iWarden != -1)
 	{
-		CreateTimer(0.1, RemoveColor, g_iWarden);
+		CreateTimer(0.1, Timer_RemoveColor, g_iWarden);
 		Forward_OnWardenRemoved(g_iWarden);
 		RemoveIcon(g_iWarden);
 		g_iWarden = -1;
@@ -1436,15 +1099,13 @@ public void OnMapEnd()
 		g_fLastPainter[client][2] = 0.0;
 		g_bPainterUse[client] = false;
 		g_bPainter[client] = false;
-		if(g_bCuffed[client]) FreeEm(client, 0);
-		if(g_bPainter[client]) g_bPainter[client] = false;
 	}
-	delete RoundTimer;
-	CanAnswer = false;
-	IsMathQuiz = false;
 	
+	Math_OnMapEnd();
 	Mute_OnMapEnd();
 	Countdown_OnMapEnd();
+	Reminder_OnMapEnd();
+	HandCuffs_OnMapEnd();
 }
 
 public Action Timer_DrawMakers(Handle timer, any data)
@@ -1672,6 +1333,8 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 {
 	if (client == g_iWarden && gc_bPlugin.BoolValue)
 	{
+		HandCuffs_OnPlayerRunCmd(client, buttons, impulse, vel, angles, weapon);
+		
 		if (buttons & IN_ATTACK2)
 		{
 			if (gc_bMarker.BoolValue && !g_bCanZoom[client] && !g_bHasSilencer[client] && (g_iWrongWeapon[client] != 0) && (g_iWrongWeapon[client] != 8) && (!StrEqual(g_sEquipWeapon[client], "taser")))
@@ -1695,33 +1358,6 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 				}
 				
 				g_bMarkerSetup = true;
-			}
-			if (gc_bHandCuff.BoolValue && (StrEqual(g_sEquipWeapon[client], "taser")))
-			{
-				int Target = GetClientAimTarget(client, true);
-				
-				if (IsValidClient(Target, true, false) && (g_bCuffed[Target] == true))
-				{
-					float distance = Entity_GetDistance(client, Target);
-					distance = Math_UnitsToMeters(distance);
-					
-					if(gc_iHandCuffsDistance.IntValue > distance)
-					{
-						float origin[3];
-						GetClientAbsOrigin(client, origin);
-						float location[3];
-						GetClientEyePosition(client, location);
-						float ang[3];
-						GetClientEyeAngles(client, ang);
-						float location2[3];
-						location2[0] = (location[0]+(100*((Cosine(DegToRad(ang[1]))) * (Cosine(DegToRad(ang[0]))))));
-						location2[1] = (location[1]+(100*((Sine(DegToRad(ang[1]))) * (Cosine(DegToRad(ang[0]))))));
-						ang[0] -= (2*ang[0]);
-						location2[2] = origin[2] += 5.0;
-						
-						TeleportEntity(Target, location2, NULL_VECTOR, NULL_VECTOR);
-					}
-				}
 			}
 		}
 		else if (g_bMarkerSetup)
@@ -1780,7 +1416,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	return Plugin_Continue;
 }
 
-public Action LaserMenu(int client, int args)
+public Action Command_LaserMenu(int client, int args)
 {
 	if(gc_bLaser.BoolValue)
 	{
@@ -1937,7 +1573,7 @@ if (action == MenuAction_Select)
 	}
 }
 
-public Action PainterMenu(int client, int args)
+public Action Command_PainterMenu(int client, int args)
 {
 	if(gc_bPainter.BoolValue && CheckVipFlag(client,g_sAdminFlagPainter))
 	{
@@ -2128,7 +1764,7 @@ public Action TogglePainterT(int client, int args)
 				
 				LoopValidClients(iClient, false, true)
 				{
-					if (GetClientTeam(iClient) == CS_TEAM_T) PainterMenu(iClient,0);
+					if (GetClientTeam(iClient) == CS_TEAM_T) Command_PainterMenu(iClient,0);
 				}
 			}
 			else
@@ -2261,214 +1897,9 @@ stock void RemoveIcon(int client)
 	}
 }
 
-//No Block
 
-public Action ToggleNoBlock(int client, int args)
-{
-	if (gc_bNoBlock.BoolValue) 
-	{
-		if (client == g_iWarden)
-		{
-			if (!g_bNoBlock) 
-			{
-				g_bNoBlock = true;
-				CPrintToChatAll("%t %t", "warden_tag" , "warden_noblockon");
-				LoopValidClients(i, true, true)
-				{
-					SetEntData(i, g_iCollisionOffset, 2, 4, true);
-					if(gc_bNoBlockMode.BoolValue) SetCvar("mp_solid_teammates", 0);
-				}
-			}
-			else
-			{
-				g_bNoBlock = false;
-				CPrintToChatAll("%t %t", "warden_tag" , "warden_noblockoff");
-				LoopValidClients(i, true, true)
-				{
-					SetEntData(i, g_iCollisionOffset, 5, 4, true);
-					if(gc_bNoBlockMode.BoolValue) SetCvar("mp_solid_teammates", 1);
-				}
-			}
-		}
-		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
-	}
-}
 
-//Friendy Fire 
 
-public Action ToggleFF(int client, int args)
-{
-	if (gc_bFF.BoolValue) 
-	{
-		if (g_bFF.BoolValue) 
-		{
-			if (client == g_iWarden)
-			{
-				SetCvar("mp_teammates_are_enemies", 0);
-				g_bFF = FindConVar("mp_teammates_are_enemies");
-				CPrintToChatAll("%t %t", "warden_tag", "warden_ffisoff" );
-			}else CPrintToChatAll("%t %t", "warden_tag", "warden_ffison" );
-			
-		}
-		else
-		{	
-			if (client == g_iWarden)
-			{
-				SetCvar("mp_teammates_are_enemies", 1);
-				g_bFF = FindConVar("mp_teammates_are_enemies");
-				CPrintToChatAll("%t %t", "warden_tag", "warden_ffison" );
-			}
-			else CPrintToChatAll("%t %t", "warden_tag", "warden_ffisoff" );
-		}
-	}
-}
-
-//Kill a Random T
-
-public Action KillRandom(int client, int args)
-{
-	if (gc_bRandom.BoolValue) 
-	{
-		if (client == g_iWarden)
-		{
-			char info[255];
-			Menu menu1 = CreateMenu(killmenu);
-			Format(info, sizeof(info), "%T", "warden_sure", g_iWarden, client);
-			menu1.SetTitle(info);
-			Format(info, sizeof(info), "%T", "warden_no", client);
-			menu1.AddItem("0", info);
-			Format(info, sizeof(info), "%T", "warden_yes", client);
-			menu1.AddItem("1", info);
-			menu1.ExitBackButton = true;
-			menu1.ExitButton = true;
-			menu1.Display(client,MENU_TIME_FOREVER);
-		}
-		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden"); 
-	}
-}
-
-public int killmenu(Menu menu, MenuAction action, int client, int Position)
-{
-	if(action == MenuAction_Select)
-	{
-		char Item[11];
-		menu.GetItem(Position,Item,sizeof(Item));
-		int choice = StringToInt(Item);
-		if(choice == 1)
-		{
-			if (GetAlivePlayersCount(CS_TEAM_T) > 1)
-			{
-				int i = GetRandomPlayer(CS_TEAM_T);
-				if(i > 0)
-				{
-					CreateTimer( 1.0, KillPlayer, i);
-					CPrintToChatAll("%t %t", "warden_tag", "warden_israndom", i); 
-					if(MyJBLogging(true)) LogToFileEx(g_sMyJBLogFile, "Warden %L killed random player %L", client, i);
-				}
-			}
-			else CPrintToChatAll("%t %t", "warden_tag", "warden_minrandom"); 
-		}
-		if(g_bMenuClose != null)
-		{
-			if(!g_bMenuClose)
-			{
-				FakeClientCommand(client, "sm_menu");
-			}
-		}
-		
-	}
-	else if(action == MenuAction_Cancel)
-	{
-		if(Position == MenuCancel_ExitBack) 
-		{
-			FakeClientCommand(client, "sm_menu");
-		}
-	}
-	else if(action == MenuAction_End)
-	{
-		delete menu;
-	}
-}
-
-stock int GetAlivePlayersCount(int iTeam)
-{
-	int iCount, i; iCount = 0;
-
-	for( i = 1; i <= MaxClients; i++ )
-		if(IsValidClient(i,true,false) && !IsClientRebel(i) && GetClientTeam( i ) == iTeam )
-		iCount++;
-
-	return iCount;
-}
-
-public Action KillPlayer( Handle timer, any client) 
-{
-	if(g_iKillKind == 1)
-	{
-		int randomnum = GetRandomInt(0, 2);
-		
-		if(randomnum == 0)PerformSmite(0, client);
-		if(randomnum == 1)ServerCommand("sm_timebomb %N 1", client);
-		if(randomnum == 2)ServerCommand("sm_firebomb %N 1", client);
-	}
-	else if(g_iKillKind == 2)PerformSmite(0, client);
-	else if(g_iKillKind == 3)ServerCommand("sm_timebomb %N 1", client);
-	else if(g_iKillKind == 4)ServerCommand("sm_firebomb %N 1", client);
-}
-
-stock int GetRandomPlayer(int team) 
-{
-	int[] clients = new int[MaxClients];
-	int clientCount;
-	LoopClients(i)
-	{
-		if ((GetClientTeam(i) == team) && IsPlayerAlive(i) && !IsClientRebel(i))
-		{
-			clients[clientCount++] = i;
-		}
-	}
-	return (clientCount == 0) ? -1 : clients[GetRandomInt(0, clientCount-1)];
-}
-
-public Action PerformSmite(int client, int target)
-{
-	// define where the lightning strike ends
-	float clientpos[3];
-	GetClientAbsOrigin(target, clientpos);
-	clientpos[2] -= 26; // increase y-axis by 26 to strike at player's chest instead of the ground
-	
-	// get random numbers for the x and y starting positions
-	int randomx = GetRandomInt(-500, 500);
-	int randomy = GetRandomInt(-500, 500);
-	
-	// define where the lightning strike starts
-	float startpos[3];
-	startpos[0] = clientpos[0] + randomx;
-	startpos[1] = clientpos[1] + randomy;
-	startpos[2] = clientpos[2] + 800;
-	
-	// define the color of the strike
-	int color[4] = {255, 255, 255, 255};
-	
-	// define the direction of the sparks
-	float dir[3] = {0.0, 0.0, 0.0};
-	
-	TE_SetupBeamPoints(startpos, clientpos, g_iBeamSprite, 0, 0, 0, 0.2, 20.0, 10.0, 0, 1.0, color, 3);
-	TE_SendToAll();
-	
-	TE_SetupSparks(clientpos, dir, 5000, 1000);
-	TE_SendToAll();
-	
-	TE_SetupEnergySplash(clientpos, dir, false);
-	TE_SendToAll();
-	
-	TE_SetupSmoke(clientpos, g_iSmokeSprite, 5.0, 10);
-	TE_SendToAll();
-	
-	EmitAmbientSound(SOUND_THUNDER, startpos, target, SNDLEVEL_GUNFIRE);
-	
-	ForcePlayerSuicide(target);
-}
 
 //choose random warden
 
@@ -2493,85 +1924,6 @@ public Action ChooseRandom(Handle timer, Handle pack)
 		KillTimer(RandomTimer);
 			
 	RandomTimer = null;
-}
-
-//Open Cell Doors
-
-public Action OpenCounter(Handle timer, Handle pack)
-{
-	if(gc_bPlugin.BoolValue)
-	{
-		--g_iOpenTimer;
-		if(g_iOpenTimer < 1)
-		{
-			if(warden_exist() != 1)
-			{
-				if(gc_bOpenTimer.BoolValue)
-				{
-				SJD_OpenDoors(); 
-				CPrintToChatAll("%t %t", "warden_tag" , "warden_openauto");
-				
-				if (OpenCounterTime != null)
-					KillTimer(OpenCounterTime);
-				
-				OpenCounterTime = null;
-				}
-			}
-			else if(gc_bOpenTimer.BoolValue)
-			{
-				if(gc_bOpenTimerWarden.BoolValue)
-				{
-					SJD_OpenDoors(); 
-					CPrintToChatAll("%t %t", "warden_tag" , "warden_openauto");
-				}
-				else CPrintToChatAll("%t %t", "warden_tag" , "warden_opentime"); 
-				if (OpenCounterTime != null)
-				KillTimer(OpenCounterTime);
-				OpenCounterTime = null;
-			}
-		}
-	}
-}
-
-public Action OpenDoors(int client, int args)
-{
-	if(gc_bPlugin.BoolValue)
-	{
-		if(gc_bOpen.BoolValue)
-		{
-			if (client == g_iWarden)
-			{
-				if (SJD_IsCurrentMapConfigured()) {
-					CPrintToChatAll("%t %t", "warden_tag" , "warden_dooropen"); 
-					SJD_OpenDoors();
-					if (OpenCounterTime != null)
-					KillTimer(OpenCounterTime);
-					OpenCounterTime = null;
-				}
-				else CPrintToChat(client, "%t %t", "warden_tag" , "warden_dooropen_unavailable"); 
-			}
-			else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden"); 
-		}
-	}
-}
-
-public Action CloseDoors(int client, int args)
-{
-	if(gc_bPlugin.BoolValue)
-	{
-		if(gc_bOpen.BoolValue)
-		{
-			if (client == g_iWarden)
-			{
-				if (SJD_IsCurrentMapConfigured()) {
-					CPrintToChatAll("%t %t", "warden_tag" , "warden_doorclose"); 
-					SJD_CloseDoors();
-				}
-				else CPrintToChat(client, "%t %t", "warden_tag" , "warden_doorclose_unavailable"); 
-			}
-			else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden"); 
-		}
-	}
 }
 
 //GunPlant
@@ -2669,15 +2021,10 @@ public Action AllowDropTimer(Handle timer)
 
 public int OnAvailableLR(int Announced)
 {
-	LoopClients(i)
-	{
-		IsLR = true;
-		if(gc_bHandCuffLR.BoolValue && g_bCuffed[i]) FreeEm(i, 0);
-		g_iPlayerHandCuffs[i] = 0;
-		if(i == g_iWarden) StripZeus(i);
-	}
+	IsLR = true;
 	g_bAllowDrop = true;
 	Mute_OnAvailableLR(Announced);
+	HandCuffs_OnAvailableLR(Announced);
 }
 
 public int Native_ExistWarden(Handle plugin, int numParams)
@@ -2761,8 +2108,6 @@ stock bool IsClientWarden(int client)
 }
 
 
-// Handcuffs
-
 public Action OnTakedamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &weapon, float damageForce[3], float damagePosition[3], int damagecustom)
 {
 	if(!IsValidClient(victim, true, false) || attacker == victim || !IsValidClient(attacker, true, false)) return Plugin_Continue;
@@ -2789,306 +2134,6 @@ public Action OnTakedamage(int victim, int &attacker, int &inflictor, float &dam
 			}
 		}
 	}
-	
-	//cuffs
-	
-	if(g_bCuffed[attacker]) return Plugin_Handled;
-	
-	if(!gc_bPlugin.BoolValue || !gc_bHandCuff.BoolValue || !warden_iswarden(attacker) || !IsValidEdict(weapon) || (!gc_bHandCuffCT.BoolValue && (GetClientTeam(victim) == CS_TEAM_CT)))
-	{
-		return Plugin_Continue;
-	}
-	
-	if(!StrEqual(sWeapon, "weapon_taser")) return Plugin_Continue;
-	
-	if((g_iPlayerHandCuffs[attacker] == 0) && (g_iCuffed == 0)) return Plugin_Continue;
-		
-	if(g_bCuffed[victim])
-	{
-		FreeEm(victim, attacker);
-	}
-	else CuffsEm(victim, attacker);
-	
 	return Plugin_Handled;
 }
 
-public Action WeaponFire(Handle event, char [] name, bool dontBroadcast)
-{
-	int client = GetClientOfUserId(GetEventInt(event, "userid"));
-	
-	if(gc_bPlugin.BoolValue && gc_bHandCuff.BoolValue && warden_iswarden(client) && ((g_iPlayerHandCuffs[client] != 0) || ((g_iPlayerHandCuffs[client] == 0) && (g_iCuffed > 0))))
-	{
-		char sWeapon[64];
-		GetEventString(event, "weapon", sWeapon, sizeof(sWeapon));
-		if (StrEqual(sWeapon, "weapon_taser"))
-		{
-			SetPlayerWeaponAmmo(client, Client_GetActiveWeapon(client), _, 2);
-		}
-	}
-	return Plugin_Continue;
-}
-
-public Action CuffsEm(int client, int attacker)
-{
-	if(g_iPlayerHandCuffs[attacker] > 0)
-	{
-		SetEntityMoveType(client, MOVETYPE_NONE);
-		SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 0.0);
-		SetEntityRenderColor(client, 0, 190, 0, 255);
-		g_bCuffed[client] = true;
-		ShowOverlay(client, g_sOverlayCuffsPath, 0.0);
-		g_iPlayerHandCuffs[attacker]--;
-		g_iCuffed++;
-		if(gc_bSounds)EmitSoundToAllAny(g_sSoundCuffsPath);
-		
-		CPrintToChatAll("%t %t", "warden_tag" , "warden_cuffson", attacker, client);
-		CPrintToChat(attacker, "%t %t", "warden_tag" , "warden_cuffsgot", g_iPlayerHandCuffs[attacker]);
-		if(CheckVipFlag(client,g_sAdminFlagCuffs))
-		{
-			CreateTimer (2.5, HasPaperClip, client);
-		}
-	}
-	
-}
-
-public Action HasPaperClip(Handle timer, int client)
-{
-	if(g_bCuffed[client])
-	{
-		int paperclip = GetRandomInt(1,gc_iPaperClipGetChance.IntValue);
-		float unlocktime = GetRandomFloat(gc_fUnLockTimeMin.FloatValue, gc_fUnLockTimeMax.FloatValue);
-		if(paperclip == 1)
-		{
-			CPrintToChat(client, "%t", "warden_gotpaperclip");
-			PrintCenterText(client, "%t", "warden_gotpaperclip");
-			CreateTimer (unlocktime, BreakTheseCuffs, client);
-			if(gc_bSounds)EmitSoundToClientAny(client, g_sSoundUnLockCuffsPath);
-		}
-	}
-}
-
-public Action BreakTheseCuffs(Handle timer, int client)
-{
-	if(IsValidClient(client,false,false) && g_bCuffed[client])
-	{
-		int unlocked = GetRandomInt(1,gc_iPaperClipUnLockChance.IntValue);
-		if(unlocked == 1)
-		{
-			CPrintToChat(client, "%t", "warden_unlock");
-			PrintCenterText(client, "%t", "warden_unlock");
-			if(gc_bSounds)EmitSoundToAllAny(g_sSoundBreakCuffsPath);
-			SetEntityMoveType(client, MOVETYPE_WALK);
-			SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
-			SetEntityRenderColor(client, 255, 255, 255, 255);
-			g_bCuffed[client] = false;
-			CreateTimer( 0.0, DeleteOverlay, client );
-			g_iCuffed--;
-		}
-		else
-		{
-			CPrintToChat(client, "%t", "warden_brokepaperclip");
-			PrintCenterText(client, "%t", "warden_brokepaperclip");
-		}
-	}
-}
-
-public Action FreeEm(int client, int attacker)
-{
-	SetEntityMoveType(client, MOVETYPE_WALK);
-	SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
-	SetEntityRenderColor(client, 255, 255, 255, 255);
-	g_bCuffed[client] = false;
-	CreateTimer( 0.0, DeleteOverlay, client );
-	g_iCuffed--;
-	if(gc_bSounds)StopSoundAny(client,SNDCHAN_AUTO,g_sSoundUnLockCuffsPath);
-	if((attacker != 0) && (g_iCuffed == 0) && (g_iPlayerHandCuffs[attacker] < 1)) SetPlayerWeaponAmmo(attacker, Client_GetActiveWeapon(attacker), _, 0);
-	if(attacker != 0) CPrintToChatAll("%t %t", "warden_tag" , "warden_cuffsoff", attacker, client);
-}
-
-stock int StripZeus(int client)
-{
-	char sWeapon[64];
-	FakeClientCommand(client,"use weapon_taser");
-	int weapon = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
-	if(weapon != -1)
-	{
-		GetEntityClassname(weapon, sWeapon, sizeof(sWeapon));
-		if (StrEqual(sWeapon, "weapon_taser"))
-		{ 
-			SDKHooks_DropWeapon(client, weapon, NULL_VECTOR, NULL_VECTOR); 
-			AcceptEntityInput(weapon, "Kill");
-		}
-	}
-}
-
-//exend time
-
-public Action ExtendRoundTime(int client, int args)
-{
-	if(gc_bExtend.BoolValue)
-	{
-		if (client == g_iWarden)
-		{
-			if(g_iExtendNumber[client] > 0)
-			{
-				char menuinfo[255];
-				
-				Menu menu = new Menu(ExtendRoundTimeHandler);
-				Format(menuinfo, sizeof(menuinfo), "%T", "warden_time_title", client);
-				menu.SetTitle(menuinfo);
-				Format(menuinfo, sizeof(menuinfo), "%T", "warden_120", client);
-				menu.AddItem("120", menuinfo);
-				Format(menuinfo, sizeof(menuinfo), "%T", "warden_180", client);
-				menu.AddItem("180", menuinfo);
-				Format(menuinfo, sizeof(menuinfo), "%T", "warden_300", client);
-				menu.AddItem("300", menuinfo);
-				
-				menu.ExitBackButton = true;
-				menu.ExitButton = true;
-				menu.Display(client, 20);
-			}
-			else CPrintToChat(client, "%t %t", "warden_tag", "warden_extendtimes", gc_iExtendLimit.IntValue);
-		}
-		else CPrintToChat(client, "%t %t", "warden_tag", "warden_notwarden" );
-	}
-	return Plugin_Handled;
-}
-
-public int ExtendRoundTimeHandler(Menu menu, MenuAction action, int client, int selection)
-{
-	if (action == MenuAction_Select)
-	{
-		char info[32];
-		menu.GetItem(selection, info, sizeof(info));
-		
-		if ( strcmp(info,"120") == 0 ) 
-		{
-			ExtendTime(client, 120);
-		}
-		else if ( strcmp(info,"180") == 0 ) 
-		{
-			ExtendTime(client, 180);
-		}
-		else if ( strcmp(info,"300") == 0 ) 
-		{
-			ExtendTime(client, 300);
-		}
-		if(g_bMenuClose != null)
-		{
-			if(!g_bMenuClose)
-			{
-				FakeClientCommand(client, "sm_menu");
-			}
-		}
-		g_iExtendNumber[client]--;
-	}
-	else if(action == MenuAction_Cancel)
-	{
-		if(selection == MenuCancel_ExitBack) 
-		{
-			FakeClientCommand(client, "sm_menu");
-		}
-	}
-	else if(action == MenuAction_End)
-	{
-		delete menu;
-	}
-}
-
-public Action ExtendTime(int client, int args)
-{
-		GameRules_SetProp("m_iRoundTime", GameRules_GetProp("m_iRoundTime", 4, 0)+args, 4, 0, true);
-		int extendminute = (args/60);
-		g_iRoundTime = g_iRoundTime + args;
-		CPrintToChatAll("%t %t", "warden_tag" , "warden_extend", client, extendminute);
-		return Plugin_Handled;
-}
-
-public Action RoundTimerHandle(Handle timer)
-{
-	if(g_iRoundTime >= 1)
-	{
-		g_iRoundTime--;
-		char timeinfo[64];
-		if(g_iRoundTime == 180 && (g_iWarden != -1))
-		{
-			EmitSoundToClient(g_iWarden, "weapons/c4/c4_beep1.wav", SOUND_FROM_PLAYER, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, 1.0);
-			Format(timeinfo, sizeof(timeinfo), "%T %T %T", "warden_tag", g_iWarden, "warden_180", g_iWarden, "warden_remaining", g_iWarden);
-			CPrintToChat(g_iWarden, timeinfo);
-			Format(timeinfo, sizeof(timeinfo), "%T %T", "warden_180", g_iWarden, "warden_remaining", g_iWarden);
-			PrintCenterText(g_iWarden, timeinfo);
-		}
-		if(g_iRoundTime == 120 && (g_iWarden != -1))
-		{
-			EmitSoundToClient(g_iWarden, "weapons/c4/c4_beep1.wav", SOUND_FROM_PLAYER, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, 1.0);
-			Format(timeinfo, sizeof(timeinfo), "%T %T %T", "warden_tag", g_iWarden, "warden_120", g_iWarden, "warden_remaining", g_iWarden);
-			CPrintToChat(g_iWarden, timeinfo);
-			Format(timeinfo, sizeof(timeinfo), "%T %T", "warden_120", g_iWarden, "warden_remaining", g_iWarden);
-			PrintCenterText(g_iWarden, timeinfo);
-		}
-		if(g_iRoundTime == 60 && (g_iWarden != -1))
-		{
-			EmitSoundToClient(g_iWarden, "weapons/c4/c4_beep1.wav", SOUND_FROM_PLAYER, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, 1.0);
-			Format(timeinfo, sizeof(timeinfo), "%T %T %T", "warden_tag", g_iWarden, "warden_60", g_iWarden, "warden_remaining", g_iWarden);
-			CPrintToChat(g_iWarden, timeinfo);
-			Format(timeinfo, sizeof(timeinfo), "%T %T", "warden_60", g_iWarden, "warden_remaining", g_iWarden);
-			PrintCenterText(g_iWarden, timeinfo);
-		}
-		if(g_iRoundTime == 30 && (g_iWarden != -1))
-		{
-			EmitSoundToClient(g_iWarden, "weapons/c4/c4_beep1.wav", SOUND_FROM_PLAYER, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, 1.0);
-			Format(timeinfo, sizeof(timeinfo), "%T %T %T", "warden_tag", g_iWarden, "warden_30", g_iWarden, "warden_remaining", g_iWarden);
-			CPrintToChat(g_iWarden, timeinfo);
-			Format(timeinfo, sizeof(timeinfo), "%T %T", "warden_30", g_iWarden, "warden_remaining", g_iWarden);
-			PrintCenterText(g_iWarden, timeinfo);
-		}
-		return Plugin_Continue;
-	}
-	RoundTimer = null;
-	return Plugin_Stop;
-}
-//disarm weapon
-
-public Action PlayerHurt(Handle event, char[] name, bool dontBroadcast)
-{
-	if(gc_bPlugin.BoolValue && gc_bDisarm.BoolValue)
-	{
-		int victim 			= GetClientOfUserId(GetEventInt(event, "userid"));
-		int attacker 		= GetClientOfUserId(GetEventInt(event, "attacker"));
-		int hitgroup		= GetEventInt(event, "hitgroup");
-		int victimweapon = GetEntPropEnt(victim, Prop_Send, "m_hActiveWeapon");
-		
-		if (IsValidClient(attacker,true,false) && IsValidClient(victim,true,false))
-		{
-			if ((warden_iswarden(attacker) && g_iDisarm == 1) || ((GetClientTeam(attacker) == CS_TEAM_CT) && g_iDisarm == 2) || ((GetClientTeam(attacker) != GetClientTeam(victim)) && g_iDisarm == 3))
-			{
-				if(hitgroup == 4 || hitgroup == 5)
-				{
-					if(victimweapon != -1)
-					{
-						CPrintToChatAll("%t %t", "warden_tag", "warden_disarmed", victim, attacker);
-						PrintHintText(victim, "%t", "warden_lostgun");
-						if(gc_iDisarmMode.IntValue == 1)
-						{
-							CS_DropWeapon(victim, victimweapon, true, true);
-							return Plugin_Stop;
-						}
-						else if(gc_iDisarmMode.IntValue == 2)
-						{
-							CS_DropWeapon(victim, victimweapon, true, true);
-							if(IsValidEdict(victimweapon))
-							{
-								if (Entity_GetOwner(victimweapon) == -1)
-								{
-									AcceptEntityInput(victimweapon, "Kill");
-								}
-							}
-							return Plugin_Stop;
-						}
-					}
-				}
-			}
-		}
-	}
-	return Plugin_Continue;
-}

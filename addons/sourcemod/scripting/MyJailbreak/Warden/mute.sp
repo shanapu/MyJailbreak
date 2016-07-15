@@ -29,13 +29,13 @@ char g_sAdminFlagMute[32];
 public void Mute_OnPluginStart()
 {
 	//Client commands
-	RegConsoleCmd("sm_wmute", MuteMenu, "Allows a warden to mute all terrorists for a specified duration or untill the next round.");
-	RegConsoleCmd("sm_wunmute", UnMute_Command, "Allows a warden to unmute the terrorists.");
+	RegConsoleCmd("sm_wmute", Command_MuteMenu, "Allows a warden to mute all terrorists for a specified duration or untill the next round.");
+	RegConsoleCmd("sm_wunmute", Command_UnMuteMenu, "Allows a warden to unmute the terrorists.");
 	
 	//AutoExecConfig
 	gc_bMute = AutoExecConfig_CreateConVar("sm_warden_mute", "1", "0 - disabled, 1 - Allow the warden to mute T-side player", _, true, 0.0, true, 1.0);
 	gc_bMuteEnd = AutoExecConfig_CreateConVar("sm_warden_mute_round", "1", "0 - disabled, 1 - Allow the warden to mute a player until roundend", _, true, 0.0, true, 1.0);
-	gc_sAdminFlagMute = AutoExecConfig_CreateConVar("sm_warden_muteimmuntiy", "a", "Set flag for admin/vip Mute immunity. No flag immunity for all. so don't leave blank!");
+	gc_sAdminFlagMute = AutoExecConfig_CreateConVar("sm_warden_mute_immuntiy", "a", "Set flag for admin/vip Mute immunity. No flag immunity for all. so don't leave blank!");
 	
 	//Hooks 
 	HookConVarChange(gc_sAdminFlagMute, Mute_OnSettingChanged);
@@ -60,7 +60,7 @@ public Action MuteMenuPlayer(int client,int args)
 		if(IsValidClient(client, false, false) && IsClientWarden(client) && gc_bMute.BoolValue)
 		{
 			char info1[255];
-			Menu menu5 = CreateMenu(MuteMenuTime);
+			Menu menu5 = CreateMenu(Handler_MuteMenuPlayer);
 			Format(info1, sizeof(info1), "%T", "warden_choose", client);
 			menu5.SetTitle(info1);
 			LoopValidClients(i,true,true)
@@ -83,7 +83,7 @@ public Action MuteMenuPlayer(int client,int args)
 	return Plugin_Handled;
 }
 
-public int MuteMenuTime(Menu menu5, MenuAction action, int client, int Position)
+public int Handler_MuteMenuPlayer(Menu menu5, MenuAction action, int client, int Position)
 {
 	if(action == MenuAction_Select)
 	{
@@ -91,7 +91,7 @@ public int MuteMenuTime(Menu menu5, MenuAction action, int client, int Position)
 		
 		char menuinfo[255];
 		
-		Menu menu3 = new Menu(MuteMenuTimeHandler);
+		Menu menu3 = new Menu(Handler_MuteMenuTime);
 		Format(menuinfo, sizeof(menuinfo), "%T", "warden_time_title", client);
 		menu3.SetTitle(menuinfo);
 		Format(menuinfo, sizeof(menuinfo), "%T", "warden_roundend", client);
@@ -129,7 +129,7 @@ public int MuteMenuTime(Menu menu5, MenuAction action, int client, int Position)
 	}
 }
 
-public int MuteMenuTimeHandler(Menu menu3, MenuAction action, int client, int selection)
+public int Handler_MuteMenuTime(Menu menu3, MenuAction action, int client, int selection)
 {
 	if (action == MenuAction_Select)
 	{
@@ -161,14 +161,14 @@ public int MuteMenuTimeHandler(Menu menu3, MenuAction action, int client, int se
 	}
 }
 
-public Action UnMute_Command(int client, any args)
+public Action Command_UnMuteMenu(int client, any args)
 {
 	if(gc_bPlugin.BoolValue)	
 	{
 		if(IsValidClient(client, false, false) && IsClientWarden(client) && gc_bMute.BoolValue)
 		{
 			char info1[255];
-			Menu menu4 = CreateMenu(UnMuteMenuHandler);
+			Menu menu4 = CreateMenu(Handler_UnMuteMenu);
 			Format(info1, sizeof(info1), "%T", "warden_choose", client);
 			menu4.SetTitle(info1);
 			LoopValidClients(i,true,true)
@@ -196,7 +196,7 @@ public Action UnMute_Command(int client, any args)
 	return Plugin_Handled;
 }
 
-public int UnMuteMenuHandler(Menu menu4, MenuAction action, int client, int selection)
+public int Handler_UnMuteMenu(Menu menu4, MenuAction action, int client, int selection)
 {
 	if (action == MenuAction_Select)
 	{
@@ -227,14 +227,14 @@ public int UnMuteMenuHandler(Menu menu4, MenuAction action, int client, int sele
 	}
 }
 
-public Action MuteMenu(int client, int args)
+public Action Command_MuteMenu(int client, int args)
 {
 	if (gc_bMute.BoolValue) 
 	{
 		if (client == g_iWarden)
 		{
 			char info[255];
-			Menu menu1 = CreateMenu(MuteMenuHandler);
+			Menu menu1 = CreateMenu(Handler_MuteMenu);
 			Format(info, sizeof(info), "%T", "warden_mute_title", g_iWarden, client);
 			menu1.SetTitle(info);
 			Format(info, sizeof(info), "%T", "warden_menu_mute", client);
@@ -249,7 +249,7 @@ public Action MuteMenu(int client, int args)
 	}
 }
 
-public int MuteMenuHandler(Menu menu, MenuAction action, int client, int Position)
+public int Handler_MuteMenu(Menu menu, MenuAction action, int client, int Position)
 {
 	if(action == MenuAction_Select)
 	{
@@ -258,7 +258,7 @@ public int MuteMenuHandler(Menu menu, MenuAction action, int client, int Positio
 		int choice = StringToInt(Item);
 		if(choice == 1)
 		{
-			UnMute_Command(client,0);
+			Command_UnMuteMenu(client,0);
 		}
 		if(choice == 0)
 		{
@@ -302,7 +302,7 @@ public Action MuteClient(int client, int time)
 	if(time > 0)
 	{
 		float timing = float(time);
-		CreateTimer(timing, UnMuteTimer,client);
+		CreateTimer(timing, Timer_UnMute,client);
 	}
 }
 
@@ -317,7 +317,7 @@ public void UnMuteClient(any client)
 	}
 }
 
-public Action UnMuteTimer(Handle timer, any client)
+public Action Timer_UnMute(Handle timer, any client)
 {
 	UnMuteClient(client);
 }

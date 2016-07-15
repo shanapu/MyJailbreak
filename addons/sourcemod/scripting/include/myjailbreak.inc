@@ -8,6 +8,7 @@
 
 #include <sdktools>
 #include <sdkhooks>
+#include <lastrequest>
 
 #define LoopClients(%1) for(int %1 = 1; %1 <= MaxClients; %1++) if(IsClientInGame(%1))
 #define LoopValidClients(%1,%2,%3) for(int %1 = 1; %1 <= MaxClients; %1++) if(IsValidClient(%1, %2, %3))
@@ -200,6 +201,39 @@ stock void SetPlayerWeaponAmmo(int client, int weaponEnt, int clip = -1, int amm
 			SetEntProp(weaponEnt, Prop_Send, "m_iPrimaryReserveAmmoCount", ammo);
 		}
 	}
+}
+
+public Action Timer_RemoveColor( Handle timer, any client ) 
+{
+	if(IsValidClient(client, true, true))
+	{
+		SetEntityRenderColor(client, 255, 255, 255, 255);
+	}
+}
+
+stock int GetRandomPlayer(int team) 
+{
+	int[] clients = new int[MaxClients];
+	int clientCount;
+	LoopClients(i)
+	{
+		if ((GetClientTeam(i) == team) && IsPlayerAlive(i) && !IsClientRebel(i))
+		{
+			clients[clientCount++] = i;
+		}
+	}
+	return (clientCount == 0) ? -1 : clients[GetRandomInt(0, clientCount-1)];
+}
+
+stock int GetAlivePlayersCount(int iTeam)
+{
+	int iCount, i; iCount = 0;
+
+	for( i = 1; i <= MaxClients; i++ )
+		if(IsValidClient(i,true,false) && !IsClientRebel(i) && GetClientTeam( i ) == iTeam )
+		iCount++;
+
+	return iCount;
 }
 
 stock int GetAliveTeamCount(int team)

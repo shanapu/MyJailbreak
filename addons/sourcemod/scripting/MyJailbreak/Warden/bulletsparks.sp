@@ -26,7 +26,7 @@ char g_sAdminFlagBulletSparks[32];
 public void BulletSparks_OnPluginStart()
 {
 	//Client commands
-	RegConsoleCmd("sm_sparks", BulletSparks, "Allows Warden to toggle on/off the wardens bullet sparks");
+	RegConsoleCmd("sm_sparks", Command_BulletSparks, "Allows Warden to toggle on/off the wardens bullet sparks");
 	
 	//AutoExecConfig
 	gc_bBulletSparks = AutoExecConfig_CreateConVar("sm_warden_bulletsparks", "1", "0 - disabled, 1 - enable Warden bulletimpact sparks", _, true,  0.0, true, 1.0);
@@ -69,7 +69,7 @@ public Action BulletSparks_BulletImpact(Handle hEvent, char [] sName, bool bDont
 	return Plugin_Continue;
 }
 
-public Action BulletSparks(int client, int args)
+public Action Command_BulletSparks(int client, int args)
 {
 	if(gc_bPlugin.BoolValue)
 	{

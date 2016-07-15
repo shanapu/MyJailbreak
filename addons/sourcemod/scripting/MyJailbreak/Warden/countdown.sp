@@ -5,6 +5,7 @@
 #include <cstrike>
 #include <warden>
 #include <colors>
+#include <emitsoundany>
 #include <autoexecconfig>
 #include <myjailbreak>
 
@@ -35,24 +36,29 @@ Handle g_hStartTimer = null;
 Handle g_hStopTimer = null;
 Handle g_hStartStopTimer = null;
 
+//Integers
+int g_iCountStartTime = 9;
+int g_iCountStopTime = 9;
+int g_iSetCountStartStopTime;
+
 
 public void Countdown_OnPluginStart()
 {
 	//Client commands
-	RegConsoleCmd("sm_cdstart", SetStartCountDown, "Allows the Warden to start a START Countdown! (start after 10sec.) - start without menu");
-	RegConsoleCmd("sm_cdmenu", CDMenu, "Allows the Warden to open the Countdown Menu");
-	RegConsoleCmd("sm_cdstartstop", StartStopCDMenu, "Allows the Warden to start a START/STOP Countdown! (start after 10sec./stop after 20sec.) - start without menu");
-	RegConsoleCmd("sm_cdstop", SetStopCountDown, "Allows the Warden to start a STOP Countdown! (stop after 20sec.) - start without menu");
-//	RegConsoleCmd("sm_cdcancel", CancelCountDown, "Allows the Warden to cancel a running Countdown");
+	RegConsoleCmd("sm_cdstart", Command_StartCountDown, "Allows the Warden to start a START Countdown! (start after 10sec.) - start without menu");
+	RegConsoleCmd("sm_cdmenu", Command_CountDownMenu, "Allows the Warden to open the Countdown Menu");
+	RegConsoleCmd("sm_cdstartstop", Command_StartStopMenu, "Allows the Warden to start a START/STOP Countdown! (start after 10sec./stop after 20sec.) - start without menu");
+	RegConsoleCmd("sm_cdstop", Command_StopCountDown, "Allows the Warden to start a STOP Countdown! (stop after 20sec.) - start without menu");
+//	RegConsoleCmd("sm_cdcancel", Command_CancelCountDown, "Allows the Warden to cancel a running Countdown");
 	
 	//AutoExecConfig
 	gc_bCountDown = AutoExecConfig_CreateConVar("sm_warden_countdown", "1", "0 - disabled, 1 - enable countdown for warden", _, true,  0.0, true, 1.0);
-	gc_bCountdownOverlays = AutoExecConfig_CreateConVar("sm_warden_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true,  0.0, true, 1.0);
-	gc_sCountdownOverlayStartPath = AutoExecConfig_CreateConVar("sm_warden_overlays_start", "overlays/MyJailbreak/start" , "Path to the start Overlay DONT TYPE .vmt or .vft");
-	gc_sCountdownOverlayStopPath = AutoExecConfig_CreateConVar("sm_warden_overlays_stop", "overlays/MyJailbreak/stop" , "Path to the stop Overlay DONT TYPE .vmt or .vft");
-	gc_bCountdownSounds = AutoExecConfig_CreateConVar("sm_warden_sounds_enable", "1", "0 - disabled, 1 - enable sounds ", _, true,  0.0, true, 1.0);
-	gc_sCountdownSoundStartPath = AutoExecConfig_CreateConVar("sm_warden_sounds_start", "music/MyJailbreak/start.mp3", "Path to the soundfile which should be played for a start countdown.");
-	gc_sCountdownSoundStopPath = AutoExecConfig_CreateConVar("sm_warden_sounds_stop", "music/MyJailbreak/stop.mp3", "Path to the soundfile which should be played for stop countdown.");
+	gc_bCountdownOverlays = AutoExecConfig_CreateConVar("sm_warden_countdown_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true,  0.0, true, 1.0);
+	gc_sCountdownOverlayStartPath = AutoExecConfig_CreateConVar("sm_warden_countdown_overlays_start", "overlays/MyJailbreak/start" , "Path to the start Overlay DONT TYPE .vmt or .vft");
+	gc_sCountdownOverlayStopPath = AutoExecConfig_CreateConVar("sm_warden_countdown_overlays_stop", "overlays/MyJailbreak/stop" , "Path to the stop Overlay DONT TYPE .vmt or .vft");
+	gc_bCountdownSounds = AutoExecConfig_CreateConVar("sm_warden_countdown_sounds_enable", "1", "0 - disabled, 1 - enable sounds ", _, true,  0.0, true, 1.0);
+	gc_sCountdownSoundStartPath = AutoExecConfig_CreateConVar("sm_warden_countdown_sounds_start", "music/MyJailbreak/start.mp3", "Path to the soundfile which should be played for a start countdown.");
+	gc_sCountdownSoundStopPath = AutoExecConfig_CreateConVar("sm_warden_countdown_sounds_stop", "music/MyJailbreak/stop.mp3", "Path to the soundfile which should be played for stop countdown.");
 	
 	//Hooks 
 	HookEvent("round_end", Countdown_RoundEnd);
@@ -100,16 +106,30 @@ public void Countdown_RoundEnd(Event event, const char[] name, bool dontBroadcas
 	
 	LoopClients(i)
 	{
-		CancelCountDown(i, 0);
+		Command_CancelCountDown(i, 0);
+	}
+}
+
+public void Countdown_OnMapStart()
+{
+	if(gc_bCountdownSounds.BoolValue)
+	{
+		PrecacheSoundAnyDownload(g_sCountdownSoundStopPath);
+		PrecacheSoundAnyDownload(g_sCountdownSoundStartPath);
+	}
+	if(gc_bCountdownOverlays.BoolValue)
+	{
+		PrecacheDecalAnyDownload(g_sCountdownOverlayStartPath);
+		PrecacheDecalAnyDownload(g_sCountdownOverlayStopPath);
 	}
 }
 
 public void Countdown_OnMapEnd()
 {
-	LoopClients(i) CancelCountDown(i, 0);
+	LoopClients(i) Command_CancelCountDown(i, 0);
 }
 
-public Action CDMenu(int client, int args)
+public Action Command_CountDownMenu(int client, int args)
 {
 	if(gc_bCountDown.BoolValue)
 	{
@@ -117,7 +137,7 @@ public Action CDMenu(int client, int args)
 		{
 			char menuinfo[255];
 			
-			Menu menu = new Menu(CDHandler);
+			Menu menu = new Menu(Handler_CountDownMenu);
 			Format(menuinfo, sizeof(menuinfo), "%T", "warden_cdmenu_title", client);
 			menu.SetTitle(menuinfo);
 			Format(menuinfo, sizeof(menuinfo), "%T", "warden_cdmenu_start", client);
@@ -135,7 +155,7 @@ public Action CDMenu(int client, int args)
 	return Plugin_Handled;
 }
 
-public int CDHandler(Menu menu, MenuAction action, int client, int selection)
+public int Handler_CountDownMenu(Menu menu, MenuAction action, int client, int selection)
 {
 	if (action == MenuAction_Select)
 	{
@@ -181,7 +201,7 @@ public int CDHandler(Menu menu, MenuAction action, int client, int selection)
 	}
 }
 
-public Action CancelCountDown(int client, int args)
+public Action Command_CancelCountDown(int client, int args)
 {
 	if (g_bIsCountDown)
 	{
@@ -195,7 +215,7 @@ public Action CancelCountDown(int client, int args)
 	}
 }
 
-public Action StartStopCDMenu(int client, int args)
+public Action Command_StartStopMenu(int client, int args)
 {
 	if(gc_bCountDown.BoolValue)
 	{
@@ -203,7 +223,7 @@ public Action StartStopCDMenu(int client, int args)
 		{
 			char menuinfo[255];
 			
-			Menu menu = new Menu(StartStopCDHandler);
+			Menu menu = new Menu(Handler_StartStopMenu);
 			Format(menuinfo, sizeof(menuinfo), "%T", "warden_cdmenu_title2", client);
 			menu.SetTitle(menuinfo);
 			Format(menuinfo, sizeof(menuinfo), "%T", "warden_15", client);
@@ -232,7 +252,7 @@ public Action StartStopCDMenu(int client, int args)
 	return Plugin_Handled;
 }
 
-public int StartStopCDHandler(Menu menu, MenuAction action, int client, int selection)
+public int Handler_StartStopMenu(Menu menu, MenuAction action, int client, int selection)
 {
 	if (action == MenuAction_Select)
 	{
@@ -300,7 +320,7 @@ public int StartStopCDHandler(Menu menu, MenuAction action, int client, int sele
 	}
 }
 
-public Action SetStartCountDown(int client, int args)
+public Action Command_StartCountDown(int client, int args)
 {
 	if(gc_bCountDown.BoolValue)
 	{
@@ -309,7 +329,7 @@ public Action SetStartCountDown(int client, int args)
 			if (!g_bIsCountDown)
 			{
 				g_iCountStopTime = 9;
-				g_hStartTimer = CreateTimer( 1.0, StartCountdown, client, TIMER_REPEAT);
+				g_hStartTimer = CreateTimer( 1.0, Timer_StartCountdown, client, TIMER_REPEAT);
 				
 				CPrintToChatAll("%t %t", "warden_tag" , "warden_startcountdownhint");
 		
@@ -327,7 +347,7 @@ public Action SetStartCountDown(int client, int args)
 	}
 }
 
-public Action SetStopCountDown(int client, int args)
+public Action Command_StopCountDown(int client, int args)
 {
 	if(gc_bCountDown.BoolValue)
 	{
@@ -336,7 +356,7 @@ public Action SetStopCountDown(int client, int args)
 			if (!g_bIsCountDown)
 			{
 				g_iCountStopTime = 20;
-				g_hStopTimer = CreateTimer( 1.0, StopCountdown, client, TIMER_REPEAT);
+				g_hStopTimer = CreateTimer( 1.0, Timer_StopCountdown, client, TIMER_REPEAT);
 				
 				
 				CPrintToChatAll("%t %t", "warden_tag" , "warden_stopcountdownhint");
@@ -363,8 +383,8 @@ public Action SetStartStopCountDown(int client, int args)
 			if (!g_bIsCountDown)
 			{
 				g_iCountStartTime = 9;
-				g_hStartTimer = CreateTimer( 1.0, StartCountdown, client, TIMER_REPEAT);
-				g_hStartStopTimer = CreateTimer( 1.0, StopStartStopCountdown, client, TIMER_REPEAT);
+				g_hStartTimer = CreateTimer( 1.0, Timer_StartCountdown, client, TIMER_REPEAT);
+				g_hStartStopTimer = CreateTimer( 1.0, Timer_StopStartStopCountdown, client, TIMER_REPEAT);
 				
 				CPrintToChatAll("%t %t", "warden_tag" , "warden_startstopcountdownhint");
 				
@@ -380,7 +400,7 @@ public Action SetStartStopCountDown(int client, int args)
 	}
 }
 
-public Action StartCountdown( Handle timer, any client ) 
+public Action Timer_StartCountdown( Handle timer, any client ) 
 {
 	if (g_iCountStartTime > 0)
 	{
@@ -420,7 +440,7 @@ public Action StartCountdown( Handle timer, any client )
 	return Plugin_Continue;
 }
 
-public Action StopCountdown( Handle timer, any client ) 
+public Action Timer_StopCountdown( Handle timer, any client ) 
 {
 	if (g_iCountStopTime > 0)
 	{
@@ -460,7 +480,7 @@ public Action StopCountdown( Handle timer, any client )
 	return Plugin_Continue;
 }
 
-public Action StopStartStopCountdown( Handle timer, any client ) 
+public Action Timer_StopStartStopCountdown( Handle timer, any client ) 
 {
 	if ( g_iSetCountStartStopTime > 0)
 	{
