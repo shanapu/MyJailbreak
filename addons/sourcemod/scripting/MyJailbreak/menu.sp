@@ -4,6 +4,7 @@
 #include <warden>
 #include <colors>
 #include <autoexecconfig>
+#include <smartjaildoors>
 #include <myjailbreak>
 #undef REQUIRE_PLUGIN
 #include <lastrequest>
@@ -285,7 +286,7 @@ public Action JbMenu(int client, int args)
 					}
 					if(g_bOpen != null)
 					{
-						if(g_bOpen.BoolValue)
+						if(g_bOpen.BoolValue && SJD_IsCurrentMapConfigured())
 						{
 							Format(menuinfo, sizeof(menuinfo), "%T", "menu_opencell", client);
 							mainmenu.AddItem("cellopen", menuinfo);
@@ -446,7 +447,7 @@ public Action JbMenu(int client, int args)
 					
 					if(StrEqual(EventDay, "none", false)) //is an other event running or set?
 					{
-						if(gc_bDays.BoolValue && CheckVipFlag(client,g_sAdminFlag))
+						if(gc_bDays.BoolValue)
 						{
 							Format(menuinfo, sizeof(menuinfo), "%T", "menu_voteeventdays", client);
 							mainmenu.AddItem("votedays", menuinfo);
@@ -515,7 +516,7 @@ public Action JbMenu(int client, int args)
 					
 					if(StrEqual(EventDay, "none", false)) //is an other event running or set?
 					{
-						if(gc_bDays.BoolValue && CheckVipFlag(client,g_sAdminFlag))
+						if(gc_bDays.BoolValue)
 						{
 							Format(menuinfo, sizeof(menuinfo), "%T", "menu_voteeventdays", client);
 							mainmenu.AddItem("votedays", menuinfo);
@@ -544,7 +545,7 @@ public Action JbMenu(int client, int args)
 					mainmenu.AddItem("rules", menuinfo);
 				}
 			}
-			if (CheckVipFlag(client,"b"))
+			if (CheckVipFlag(client,g_sAdminFlag))
 			{
 				char EventDay[64];
 				GetEventDay(EventDay);
