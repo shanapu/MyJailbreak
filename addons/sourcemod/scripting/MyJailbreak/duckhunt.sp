@@ -369,14 +369,14 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 					
 					if (GetClientTeam(client) == CS_TEAM_CT && IsValidClient(client, false, false))
 					{
-						GetEntPropString(client, Prop_Data, "m_ModelName", g_sModelPathCT[client], sizeof(g_sModelPathCT[client]));
+						GetEntPropString(client, Prop_Data, "m_ModelName", g_sModelPathCT[client], sizeof(g_sModelPathCT[]));
 						SetEntityModel(client, huntermodel);
 						SetEntityHealth(client, gc_iHunterHP.IntValue);
 						GivePlayerItem(client, "weapon_nova");
 					}
 					if (GetClientTeam(client) == CS_TEAM_T && IsValidClient(client, false, false))
 					{
-						GetEntPropString(client, Prop_Data, "m_ModelName", g_sModelPathT[client], sizeof(g_sModelPathT[client]));
+						GetEntPropString(client, Prop_Data, "m_ModelName", g_sModelPathT[client], sizeof(g_sModelPathT[]));
 						SetEntityModel(client, "models/chicken/chicken.mdl");
 						SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.2);
 						SetEntityGravity(client, 0.3);

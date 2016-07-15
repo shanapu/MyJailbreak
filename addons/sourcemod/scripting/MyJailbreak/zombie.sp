@@ -386,7 +386,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 					
 					if (GetClientTeam(client) == CS_TEAM_CT)
 					{
-						GetEntPropString(RandomCT, Prop_Data, "m_ModelName", g_sModelPath[client], sizeof(g_sModelPath[client]));
+						GetEntPropString(client, Prop_Data, "m_ModelName", g_sModelPath[client], sizeof(g_sModelPath[]));
 						SetEntityModel(client, g_sZombieModel);
 						SetEntityMoveType(client, MOVETYPE_NONE);
 						SetEntityHealth(client, gc_iZombieHP.IntValue);
