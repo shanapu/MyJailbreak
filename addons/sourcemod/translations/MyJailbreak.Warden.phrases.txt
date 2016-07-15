@@ -229,7 +229,6 @@
 		"de"		"Warden hat hat die Zellentüren {purple}geöffnet{default}."
 		"da"		"Warden har {purple}åbnet{default} cellerne."
 	}
-
 	"warden_randomwarden"
 	{
 		"ru"		"Выбран случайный командир."
@@ -1224,5 +1223,22 @@
 		"de"		"verbleibend"
 		"en"		"Remaining"
 	}
-
+	
+	"warden_dooropen_unavailable"
+	{
+		"en"		"{darkred}This map doesn't support remote door opening. {default}You {purple}must manually open the doors!"
+		"cze"		"{darkred}Tato mapa nepodporuje vzdálené otevírání dveří. {default}Musíš je {purple}otevřít ručně!"
+	}
+	
+	"warden_doorclose_unavailable"
+	{
+		"en"		"{darkred}This map doesn't support remote door closing. {default}You {purple}must manually close the doors!"
+		"cze"		"{darkred}Tato mapa nepodporuje vzdálené zavírání dveří. {default}Musíš je {purple}zavřít ručně!"
+	}
+	
+	"warden_openauto_unavailable"
+	{
+		"en"		"{darkred}This map doesn't support automatic door opening. {default}The Warden {purple}must manually open the doors!"
+		"cze"		"{darkred}Tato mapa nepodporuje automatické otevírání dveří. {default}Warden je musí {purple}otevřít ručně!"
+	}
 }
