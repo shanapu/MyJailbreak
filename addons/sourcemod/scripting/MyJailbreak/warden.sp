@@ -38,13 +38,8 @@ ConVar gc_bPainterT;
 ConVar gc_bLaser;
 ConVar gc_bIcon;
 ConVar gc_sIconPath;
-ConVar gc_bOverlays;
-ConVar gc_sOverlayStartPath;
-ConVar gc_sOverlayStopPath;
 ConVar gc_sWarden;
 ConVar gc_sUnWarden;
-ConVar gc_sSoundStartPath;
-ConVar gc_sSoundStopPath;
 ConVar gc_sModelPath;
 ConVar gc_bModel;
 ConVar gc_bBetterNotes;
@@ -121,9 +116,6 @@ char g_sWardenModel[256];
 char g_sUnWarden[256];
 char g_sWarden[256];
 char g_sIconPath[256];
-char g_sSoundStartPath[256];
-char g_sSoundStopPath[256];
-char g_sOverlayStopPath[256];
 char g_sOp[32];
 char g_sOperators[4][2] = {"+", "-", "/", "*"};
 char g_sColorNamesRed[64];
@@ -142,7 +134,6 @@ char g_sMyJBLogFile[PLATFORM_MAX_PATH];
 char g_sAdminFlagBackstab[32];
 char g_sAdminFlagLaser[32];
 char g_sAdminFlagPainter[32];
-char g_sOverlayStart[256];
 
 //float
 float g_fMarkerRadiusMin = 100.0;
@@ -246,9 +237,6 @@ public void OnPluginStart()
 	gc_bBackstab = AutoExecConfig_CreateConVar("sm_warden_backstab", "1", "0 - disabled, 1 - enable backstab protection for warden", _, true,  0.0, true, 1.0);
 	gc_iBackstabNumber = AutoExecConfig_CreateConVar("sm_warden_backstab_number", "1", "How many time a warden get protected? 0 - alltime", _, true,  1.0);
 	gc_sAdminFlagBackstab = AutoExecConfig_CreateConVar("sm_warden_backstab_flag", "", "Set flag for admin/vip to get warden backstab protection. No flag = feature is available for all players!");
-	gc_bOverlays = AutoExecConfig_CreateConVar("sm_warden_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true,  0.0, true, 1.0);
-	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_warden_overlays_start", "overlays/MyJailbreak/start" , "Path to the start Overlay DONT TYPE .vmt or .vft");
-	gc_sOverlayStopPath = AutoExecConfig_CreateConVar("sm_warden_overlays_stop", "overlays/MyJailbreak/stop" , "Path to the stop Overlay DONT TYPE .vmt or .vft");
 	gc_bMarker = AutoExecConfig_CreateConVar("sm_warden_marker", "1", "0 - disabled, 1 - enable Warden advanced markers ", _, true,  0.0, true, 1.0);
 	gc_bLaser = AutoExecConfig_CreateConVar("sm_warden_laser", "1", "0 - disabled, 1 - enable Warden Laser Pointer with +E ", _, true,  0.0, true, 1.0);
 	gc_sAdminFlagLaser = AutoExecConfig_CreateConVar("sm_warden_laser_flag", "", "Set flag for admin/vip to get warden laser pointer. No flag = feature is available for all players!");
@@ -267,8 +255,6 @@ public void OnPluginStart()
 	gc_bSounds = AutoExecConfig_CreateConVar("sm_warden_sounds_enable", "1", "0 - disabled, 1 - enable sounds ", _, true,  0.0, true, 1.0);
 	gc_sWarden = AutoExecConfig_CreateConVar("sm_warden_sounds_warden", "music/MyJailbreak/warden.mp3", "Path to the soundfile which should be played for a int warden.");
 	gc_sUnWarden = AutoExecConfig_CreateConVar("sm_warden_sounds_unwarden", "music/MyJailbreak/unwarden.mp3", "Path to the soundfile which should be played when there is no warden anymore.");
-	gc_sSoundStartPath = AutoExecConfig_CreateConVar("sm_warden_sounds_start", "music/MyJailbreak/start.mp3", "Path to the soundfile which should be played for a start countdown.");
-	gc_sSoundStopPath = AutoExecConfig_CreateConVar("sm_warden_sounds_stop", "music/MyJailbreak/stop.mp3", "Path to the soundfile which should be played for stop countdown.");
 	
 	Mute_OnPluginStart();
 	Disarm_OnPluginStart();
@@ -297,10 +283,6 @@ public void OnPluginStart()
 	HookConVarChange(gc_sModelPath, OnSettingChanged);
 	HookConVarChange(gc_sUnWarden, OnSettingChanged);
 	HookConVarChange(gc_sWarden, OnSettingChanged);
-	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
-	HookConVarChange(gc_sSoundStopPath, OnSettingChanged);
-	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
-	HookConVarChange(gc_sOverlayStopPath, OnSettingChanged);
 	HookConVarChange(gc_sIconPath, OnSettingChanged);
 	HookConVarChange(gc_sAdminFlagBackstab, OnSettingChanged);
 	HookConVarChange(gc_sAdminFlagLaser, OnSettingChanged);
@@ -310,11 +292,7 @@ public void OnPluginStart()
 	g_bMenuClose = FindConVar("sm_menu_close");
 	gc_sWarden.GetString(g_sWarden, sizeof(g_sWarden));
 	gc_sUnWarden.GetString(g_sUnWarden, sizeof(g_sUnWarden));
-	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
-	gc_sSoundStopPath.GetString(g_sSoundStopPath, sizeof(g_sSoundStopPath));
 	gc_sModelPath.GetString(g_sWardenModel, sizeof(g_sWardenModel));
-	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
-	gc_sOverlayStopPath.GetString(g_sOverlayStopPath , sizeof(g_sOverlayStopPath));
 	gc_sIconPath.GetString(g_sIconPath , sizeof(g_sIconPath));
 	gc_sCustomCommand.GetString(g_sCustomCommand , sizeof(g_sCustomCommand));
 	gc_sAdminFlagBackstab.GetString(g_sAdminFlagBackstab , sizeof(g_sAdminFlagBackstab));
@@ -360,26 +338,6 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 	{
 		strcopy(g_sUnWarden, sizeof(g_sUnWarden), newValue);
 		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sUnWarden);
-	}
-	else if(convar == gc_sSoundStartPath)
-	{
-		strcopy(g_sSoundStartPath, sizeof(g_sSoundStartPath), newValue);
-		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
-	}
-	else if(convar == gc_sSoundStopPath)
-	{
-		strcopy(g_sSoundStopPath, sizeof(g_sSoundStopPath), newValue);
-		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStopPath);
-	}
-	else if(convar == gc_sOverlayStartPath)
-	{
-		strcopy(g_sOverlayStart, sizeof(g_sOverlayStart), newValue);
-		if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStart);
-	}
-	else if(convar == gc_sOverlayStopPath)
-	{
-		strcopy(g_sOverlayStopPath, sizeof(g_sOverlayStopPath), newValue);
-		if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStopPath);
 	}
 	else if(convar == gc_sModelPath)
 	{
@@ -448,14 +406,10 @@ public void OnMapStart()
 	{
 		PrecacheSoundAnyDownload(g_sWarden);
 		PrecacheSoundAnyDownload(g_sUnWarden);
-		PrecacheSoundAnyDownload(g_sSoundStopPath);
-		PrecacheSoundAnyDownload(g_sSoundStartPath);
 	}
 	PrecacheSound("weapons/c4/c4_beep1.wav", true);
 	g_iVoteCount = 0;
 	PrecacheModel(g_sWardenModel);
-	if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStart);
-	if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStopPath);
 	if(gc_bIcon.BoolValue) PrecacheModelAnyDownload(g_sIconPath);
 	g_iBeamSprite = PrecacheModel("materials/sprites/laserbeam.vmt");
 	g_iHaloSprite = PrecacheModel("materials/sprites/glow01.vmt");
