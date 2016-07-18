@@ -8,13 +8,13 @@
 
 #include <sdktools>
 #include <sdkhooks>
+#include <lastrequest>
 
 #define LoopClients(%1) for(int %1 = 1; %1 <= MaxClients; %1++) if(IsClientInGame(%1))
 #define LoopValidClients(%1,%2,%3) for(int %1 = 1; %1 <= MaxClients; %1++) if(IsValidClient(%1, %2, %3))
 
 Handle IntCvar;
 Handle FloatCvar;
-char g_sOverlayStart[256];
 
 
 public SharedPlugin:__pl_myjailbreak =
@@ -94,14 +94,14 @@ stock StripAllWeapons(int client)
 	}
 }
 
-public Action ShowOverlayStart( Handle timer, any client ) 
+public Action ShowOverlay(int client, char [] path, float deletetime) 
 {
 	if(IsValidClient(client, false, true))
 	{
 		int iFlag = GetCommandFlags( "r_screenoverlay" ) & ( ~FCVAR_CHEAT ); 
 		SetCommandFlags( "r_screenoverlay", iFlag ); 
-		ClientCommand( client, "r_screenoverlay \"%s.vtf\"", g_sOverlayStart);
-		CreateTimer( 2.5, DeleteOverlay, client );
+		ClientCommand( client, "r_screenoverlay \"%s.vtf\"", path);
+		if (deletetime != 0.0) CreateTimer( deletetime, DeleteOverlay, client );
 	}
 	return Plugin_Continue;
 }
@@ -201,6 +201,39 @@ stock void SetPlayerWeaponAmmo(int client, int weaponEnt, int clip = -1, int amm
 			SetEntProp(weaponEnt, Prop_Send, "m_iPrimaryReserveAmmoCount", ammo);
 		}
 	}
+}
+
+public Action Timer_RemoveColor( Handle timer, any client ) 
+{
+	if(IsValidClient(client, true, true))
+	{
+		SetEntityRenderColor(client, 255, 255, 255, 255);
+	}
+}
+
+stock int GetRandomPlayer(int team) 
+{
+	int[] clients = new int[MaxClients];
+	int clientCount;
+	LoopClients(i)
+	{
+		if ((GetClientTeam(i) == team) && IsPlayerAlive(i) && !IsClientRebel(i))
+		{
+			clients[clientCount++] = i;
+		}
+	}
+	return (clientCount == 0) ? -1 : clients[GetRandomInt(0, clientCount-1)];
+}
+
+stock int GetAlivePlayersCount(int iTeam)
+{
+	int iCount, i; iCount = 0;
+
+	for( i = 1; i <= MaxClients; i++ )
+		if(IsValidClient(i,true,false) && !IsClientRebel(i) && GetClientTeam( i ) == iTeam )
+		iCount++;
+
+	return iCount;
 }
 
 stock int GetAliveTeamCount(int team)
