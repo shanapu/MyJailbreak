@@ -373,7 +373,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 					{
 						SetEntityGravity(client, gc_fGravValue.FloatValue);	
 					}
-					if (!gc_bSpawnCell.BoolValue)
+					if (!gc_bSpawnCell.BoolValue || (gc_bSpawnCell.BoolValue && !SJD_IsCurrentMapConfigured)) //spawn Terrors to CT Spawn 
 					{
 						TeleportEntity(client, g_fPos, NULL_VECTOR, NULL_VECTOR);
 					}

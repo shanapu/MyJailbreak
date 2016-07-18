@@ -411,7 +411,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 			{
 				LoopClients(client)
 				{
-					if (!gc_bSpawnCell.BoolValue)
+					if (!gc_bSpawnCell.BoolValue || (gc_bSpawnCell.BoolValue && !SJD_IsCurrentMapConfigured)) //spawn Terrors to CT Spawn 
 					{
 						if (IsClientInGame(client))
 						{

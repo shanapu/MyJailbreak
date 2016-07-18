@@ -400,7 +400,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 						SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true); //NoBlock
 						CreateInfoPanel(client);
 						SetEntProp(client, Prop_Data, "m_takedamage", 0, 1); //disable damage
-						if (!gc_bSpawnCell.BoolValue) //spawn Terrors to CT Spawn
+						if (!gc_bSpawnCell.BoolValue || (gc_bSpawnCell.BoolValue && !SJD_IsCurrentMapConfigured)) //spawn Terrors to CT Spawn  //spawn Terrors to CT Spawn
 						{
 							TeleportEntity(client, g_fPos, NULL_VECTOR, NULL_VECTOR);
 						}

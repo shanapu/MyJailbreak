@@ -402,7 +402,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 						GivePlayerItem(client, "weapon_molotov");
 						if (gc_bGlow.BoolValue && (IsValidClient(client, false, true))) GlowTimer = CreateTimer(1.5, Glow_Timer, client, TIMER_REPEAT);
 					}
-					if (!gc_bSpawnCell.BoolValue)
+					if (!gc_bSpawnCell.BoolValue || (gc_bSpawnCell.BoolValue && !SJD_IsCurrentMapConfigured)) //spawn Terrors to CT Spawn 
 					{
 						TeleportEntity(client, g_fPos, NULL_VECTOR, NULL_VECTOR);
 					}

@@ -360,15 +360,12 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 			{
 				for(int client=1; client <= MaxClients; client++)
 				{
-					if (!gc_bSpawnCell.BoolValue)
+					if (!gc_bSpawnCell.BoolValue || (gc_bSpawnCell.BoolValue && !SJD_IsCurrentMapConfigured)) //spawn Terrors to CT Spawn )
 					{
 						if (IsClientInGame(client))
 						{
 							TeleportEntity(client, g_fPos, NULL_VECTOR, NULL_VECTOR);
-							if (!gc_bSpawnCell.BoolValue)
-							{
-								SetEntityMoveType(client, MOVETYPE_NONE);
-							}
+							SetEntityMoveType(client, MOVETYPE_NONE);
 						}
 					}
 				}
@@ -399,7 +396,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 			
 			g_iFreezeTime--;
 			
-			if (!gc_bSpawnCell.BoolValue)
+			if (!gc_bSpawnCell.BoolValue || (gc_bSpawnCell.BoolValue && !SJD_IsCurrentMapConfigured)) //spawn Terrors to CT Spawn )
 			{
 				FreezeTimer = CreateTimer(1.0, FreezedTimer, _, TIMER_REPEAT);
 			}
