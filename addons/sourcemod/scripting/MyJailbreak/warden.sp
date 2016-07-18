@@ -306,7 +306,7 @@ public void PostRoundStart(Event event, const char[] name, bool dontBroadcast)
 {
 	if(gc_bPlugin.BoolValue)
 	{
-		if ((!IsWardenExist) && gc_bBecomeWarden.BoolValue)
+		if ((!IsWardenExist()) && gc_bBecomeWarden.BoolValue)
 		{
 			RandomTimer = CreateTimer(gc_fRandomTimer.FloatValue, ChooseRandom);
 			CPrintToChatAll("%t %t", "warden_tag" , "warden_nowarden");
@@ -323,7 +323,7 @@ public void RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
 	if(!gc_bPlugin.BoolValue)
 	{
-		if (IsWardenExist)
+		if (IsWardenExist())
 		{
 			CreateTimer(0.1, Timer_RemoveColor, g_iWarden);
 			SetEntityModel(g_iWarden, g_sModelPath);
@@ -336,7 +336,7 @@ public void RoundStart(Event event, const char[] name, bool dontBroadcast)
 	
 	if(!StrEqual(EventDay, "none", false) || !gc_bStayWarden.BoolValue)
 	{
-		if (IsWardenExist)
+		if (IsWardenExist())
 		{
 			CreateTimer( 0.1, Timer_RemoveColor, g_iWarden);
 			SetEntityModel(g_iWarden, g_sModelPath);
@@ -345,7 +345,7 @@ public void RoundStart(Event event, const char[] name, bool dontBroadcast)
 			
 		}
 	}
-	if(IsWardenExist)
+	if(IsWardenExist())
 	{
 		if(gc_bModel.BoolValue) SetEntityModel(g_iWarden, g_sWardenModel);
 	}
@@ -365,7 +365,7 @@ public Action Command_BecomeWarden(int client, int args)
 {
 	if(gc_bPlugin.BoolValue)
 	{
-		if (!IsWardenExist)
+		if (!IsWardenExist())
 		{
 			if (gc_bBecomeWarden.BoolValue)
 			{
@@ -419,7 +419,7 @@ public Action Command_VoteWarden(int client,int args)
 		{
 			char steamid[64];
 			GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
-			if (IsWardenExist)
+			if (IsWardenExist())
 			{
 				if (StrContains(g_sHasVoted, steamid, true) == -1)
 				{
@@ -520,7 +520,7 @@ public int Handler_SetWarden(Menu menu, MenuAction action, int client, int Posit
 				int userid = GetClientUserId(i);
 				if(userid == StringToInt(Item))
 				{
-					if(IsWardenExist)  // if(IsWardenExist() == true)
+					if(IsWardenExist())  // if(IsWardenExist()() == true)
 					{
 						g_iTempWarden[client] = userid;
 						Menu menu1 = CreateMenu(Handler_SetWardenOverwrite);
@@ -740,7 +740,7 @@ public Action ChooseRandom(Handle timer, Handle pack)
 {
 	if(gc_bPlugin.BoolValue)
 	{
-		if(!IsWardenExist)
+		if(!IsWardenExist())
 		{
 			if(gc_bChooseRandom.BoolValue)
 			{
@@ -786,7 +786,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 
 stock bool IsWardenExist()
 {
-	if(!IsWardenExist)
+	if(g_iWarden == -1)
 	{
 		return false;
 	}
@@ -806,7 +806,7 @@ stock bool IsClientWarden(int client)
 
 public int Native_ExistWarden(Handle plugin, int numParams)
 {
-	if(!IsWardenExist)
+	if(!IsWardenExist())
 	{
 		return false;
 	}
@@ -833,7 +833,7 @@ public int Native_SetWarden(Handle plugin, int numParams)
 	if (!IsClientInGame(client) && !IsClientConnected(client))
 		ThrowNativeError(SP_ERROR_INDEX, "Client index %i is invalid", client);
 	
-	if(!IsWardenExist)
+	if(!IsWardenExist())
 		SetTheWarden(client);
 }
 
