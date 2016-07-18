@@ -46,6 +46,8 @@ int g_iMathResult;
 //Strings
 char g_sMathSoundStopPath[256];
 char g_sMathOverlayStopPath[256];
+char g_sOp[32];
+char g_sOperators[4][2] = {"+", "-", "/", "*"};
 
 
 public void Math_OnPluginStart()
@@ -107,7 +109,7 @@ public Action Command_MathQuestion(int client, int args)
 {
 	if(gc_bMath.BoolValue)
 	{
-		if(client == g_iWarden)
+		if(IsClientWarden(client))
 		{
 			if (!g_bIsMathQuiz)
 			{
@@ -131,7 +133,7 @@ public Action Timer_CreateMathQuestion( Handle timer, any client )
 {
 	if(gc_bMath.BoolValue)
 	{
-		if(client == g_iWarden)
+		if(IsClientWarden(client))
 		{
 			int NumOne = GetRandomInt(g_iMathMin, g_iMathMax);
 			int NumTwo = GetRandomInt(g_iMathMin, g_iMathMax);

@@ -48,6 +48,7 @@ public int BulletSparks_OnSettingChanged(Handle convar, const char[] oldValue, c
 	}
 }
 
+
 public Action BulletSparks_BulletImpact(Handle hEvent, char [] sName, bool bDontBroadcast)
 {
 	int iClient = GetClientOfUserId(GetEventInt(hEvent, "userid"));
@@ -75,7 +76,7 @@ public Action Command_BulletSparks(int client, int args)
 	{
 		if(gc_bBulletSparks.BoolValue)
 		{
-			if (client == g_iWarden)
+			if (IsClientWarden(client))
 			{
 				if(CheckVipFlag(client,g_sAdminFlagBulletSparks))
 				{

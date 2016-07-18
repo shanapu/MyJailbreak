@@ -19,6 +19,7 @@ ConVar g_iGetRoundTime;
 
 //Integers
 int g_iExtendNumber[MAXPLAYERS+1];
+int g_iRoundTime;
 
 public void ExtendTime_OnPluginStart()
 {
@@ -40,13 +41,16 @@ public void ExtendTime_OnPluginStart()
 public void ExtendTime_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
 	LoopClients(i) g_iExtendNumber[i] = gc_iExtendLimit.IntValue;
+	
+	g_iGetRoundTime = FindConVar("mp_roundtime");
+	g_iRoundTime = g_iGetRoundTime.IntValue * 60;
 }
 
 public Action Command_ExtendRoundTime(int client, int args)
 {
 	if(gc_bExtend.BoolValue)
 	{
-		if (client == g_iWarden)
+		if (IsClientWarden(client))
 		{
 			if(g_iExtendNumber[client] > 0)
 			{

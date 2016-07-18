@@ -30,7 +30,10 @@ public void Reminder_OnPluginStart()
 	//FindConVar
 	g_bFF = FindConVar("mp_teammates_are_enemies");
 }
-
+public void Reminder_OnMapStart()
+{
+	PrecacheSound("weapons/c4/c4_beep1.wav", true);
+}
 public void Reminder_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 {
 	delete RemindTimer;

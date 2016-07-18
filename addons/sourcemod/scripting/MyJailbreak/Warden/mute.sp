@@ -231,7 +231,7 @@ public Action Command_MuteMenu(int client, int args)
 {
 	if (gc_bMute.BoolValue) 
 	{
-		if (client == g_iWarden)
+		if (IsClientWarden(client))
 		{
 			char info[255];
 			Menu menu1 = CreateMenu(Handler_MuteMenu);

@@ -42,6 +42,7 @@ char g_sOverlayCuffsPath[256];
 char g_sAdminFlagCuffs[32];
 char g_sSoundBreakCuffsPath[256];
 char g_sSoundUnLockCuffsPath[256];
+char g_sEquipWeapon[MAXPLAYERS+1][32];
 
 
 public void HandCuffs_OnPluginStart()
@@ -115,7 +116,7 @@ public int HandCuffs_OnSettingChanged(Handle convar, const char[] oldValue, cons
 
 public void HandCuffs_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
-	if(gc_bStayWarden.BoolValue && warden_exist())
+	if(gc_bStayWarden.BoolValue && IsWardenExist)
 	{
 		if (gc_bHandCuff.BoolValue && !IsLR) GivePlayerItem(g_iWarden, "weapon_taser");
 	}
@@ -198,7 +199,6 @@ public void HandCuffs_OnMapEnd()
 	LoopClients(i)
 	{
 		if(g_bCuffed[i]) FreeEm(i, 0);
-		if(g_bPainter[i]) g_bPainter[i] = false;
 	}
 }
 
@@ -374,27 +374,9 @@ public void warden_OnWardenCreated(int client)
 	if (gc_bHandCuff.BoolValue && !IsLR) GivePlayerItem(client, "weapon_taser");
 }
 
-public void warden_OnWardenCreatedByUser(int client)
-{
-	if (gc_bHandCuff.BoolValue && !IsLR) GivePlayerItem(client, "weapon_taser");
-}
-
-public void warden_OnWardenCreatedByAdmin(int client)
-{
-	if (gc_bHandCuff.BoolValue && !IsLR) GivePlayerItem(g_iWarden, "weapon_taser");
-}
-
 public void warden_OnWardenRemoved(int client)
 {
 	StripZeus(g_iWarden);
 }
 
-public void warden_OnWardenRemovedBySelf(int client)
-{
-	StripZeus(g_iWarden);
-}
 
-public void warden_OnWardenRemovedByAdmin(int client)
-{
-	StripZeus(g_iWarden);
-}

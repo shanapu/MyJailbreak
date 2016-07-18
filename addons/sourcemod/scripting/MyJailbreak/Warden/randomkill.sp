@@ -22,7 +22,6 @@ ConVar gc_iRandomMode;
 
 //Integers
 int g_iKillKind;
-int g_iSmokeSprite;
 
 public void RandomKill_OnPluginStart()
 {
@@ -47,7 +46,7 @@ public Action Command_KillMenu(int client, int args)
 {
 	if (gc_bRandom.BoolValue) 
 	{
-		if (client == g_iWarden)
+		if (IsClientWarden(client))
 		{
 			char info[255];
 			Menu menu1 = CreateMenu(Handler_KillMenu);

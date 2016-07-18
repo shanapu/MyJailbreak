@@ -133,7 +133,7 @@ public Action Command_CountDownMenu(int client, int args)
 {
 	if(gc_bCountDown.BoolValue)
 	{
-		if (client == g_iWarden)
+		if (IsClientWarden(client))
 		{
 			char menuinfo[255];
 			
@@ -219,7 +219,7 @@ public Action Command_StartStopMenu(int client, int args)
 {
 	if(gc_bCountDown.BoolValue)
 	{
-		if (client == g_iWarden)
+		if (IsClientWarden(client))
 		{
 			char menuinfo[255];
 			
@@ -324,7 +324,7 @@ public Action Command_StartCountDown(int client, int args)
 {
 	if(gc_bCountDown.BoolValue)
 	{
-		if (client == g_iWarden)
+		if (IsClientWarden(client))
 		{
 			if (!g_bIsCountDown)
 			{
@@ -351,7 +351,7 @@ public Action Command_StopCountDown(int client, int args)
 {
 	if(gc_bCountDown.BoolValue)
 	{
-		if (client == g_iWarden)
+		if (IsClientWarden(client))
 		{
 			if (!g_bIsCountDown)
 			{
@@ -378,7 +378,7 @@ public Action SetStartStopCountDown(int client, int args)
 {
 	if(gc_bCountDown.BoolValue)
 	{
-		if (client == g_iWarden)
+		if (IsClientWarden(client))
 		{
 			if (!g_bIsCountDown)
 			{

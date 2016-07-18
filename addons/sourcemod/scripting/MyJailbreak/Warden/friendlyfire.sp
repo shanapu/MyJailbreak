@@ -50,7 +50,7 @@ public Action Command_FriendlyFire(int client, int args)
 	{
 		if (g_bFF.BoolValue) 
 		{
-			if (client == g_iWarden)
+			if (IsClientWarden(client))
 			{
 				SetCvar("mp_teammates_are_enemies", 0);
 				g_bFF = FindConVar("mp_teammates_are_enemies");
@@ -60,7 +60,7 @@ public Action Command_FriendlyFire(int client, int args)
 		}
 		else
 		{	
-			if (client == g_iWarden)
+			if (IsClientWarden(client))
 			{
 				SetCvar("mp_teammates_are_enemies", 1);
 				g_bFF = FindConVar("mp_teammates_are_enemies");

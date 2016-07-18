@@ -49,7 +49,7 @@ public Action Command_ToggleNoBlock(int client, int args)
 {
 	if (gc_bNoBlock.BoolValue) 
 	{
-		if (client == g_iWarden)
+		if (IsClientWarden(client))
 		{
 			if (!g_bNoBlock) 
 			{

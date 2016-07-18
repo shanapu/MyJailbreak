@@ -73,7 +73,7 @@ public Action Timer_OpenCounter(Handle timer, Handle pack)
 		--g_iOpenTimer;
 		if(g_iOpenTimer < 1)
 		{
-			if(warden_exist() != 1)
+			if(!IsWardenExist)
 			{
 				if(gc_bOpenTimer.BoolValue)
 				{
@@ -108,7 +108,7 @@ public Action Command_OpenDoors(int client, int args)
 	{
 		if(gc_bOpen.BoolValue)
 		{
-			if (client == g_iWarden)
+			if (IsClientWarden(client))
 			{
 				if (SJD_IsCurrentMapConfigured())
 				{
@@ -131,7 +131,7 @@ public Action Command_CloseDoors(int client, int args)
 	{
 		if(gc_bOpen.BoolValue)
 		{
-			if (client == g_iWarden)
+			if (IsClientWarden(client))
 			{
 				if (SJD_IsCurrentMapConfigured()) 
 				{
