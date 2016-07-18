@@ -27,13 +27,6 @@ public void Color_OnPluginStart()
 	gc_iWardenColorRed = AutoExecConfig_CreateConVar("sm_warden_color_red", "0","What color to turn the warden into (set R, G and B values to 255 to disable) (Rgb): x - red value", _, true, 0.0, true, 255.0);
 	gc_iWardenColorGreen = AutoExecConfig_CreateConVar("sm_warden_color_green", "0","What color to turn the warden into (rGb): x - green value", _, true, 0.0, true, 255.0);
 	gc_iWardenColorBlue = AutoExecConfig_CreateConVar("sm_warden_color_blue", "255","What color to turn the warden into (rgB): x - blue value", _, true, 0.0, true, 255.0);
-	
-	//Hooks
-	HookEvent("round_poststart", Icon_PostRoundStart);
-	HookConVarChange(gc_sIconPath, Icon_OnSettingChanged);
-	
-	//FindConVar
-	gc_sIconPath.GetString(g_sIconPath , sizeof(g_sIconPath));
 }
 
 public Action Timer_WardenFixColor(Handle timer,any client)

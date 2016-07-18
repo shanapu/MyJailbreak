@@ -73,7 +73,7 @@ public Action Timer_OpenCounter(Handle timer, Handle pack)
 		--g_iOpenTimer;
 		if(g_iOpenTimer < 1)
 		{
-			if(!IsWardenExist)
+			if(g_iWarden == -1)
 			{
 				if(gc_bOpenTimer.BoolValue)
 				{

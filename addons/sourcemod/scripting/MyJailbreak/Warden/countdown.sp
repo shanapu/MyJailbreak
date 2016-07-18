@@ -62,10 +62,10 @@ public void Countdown_OnPluginStart()
 	
 	//Hooks 
 	HookEvent("round_end", Countdown_RoundEnd);
-	HookConVarChange(gc_sCountdownSoundStartPath, OnSettingChanged);
-	HookConVarChange(gc_sCountdownSoundStopPath, OnSettingChanged);
-	HookConVarChange(gc_sCountdownOverlayStartPath, OnSettingChanged);
-	HookConVarChange(gc_sCountdownOverlayStopPath, OnSettingChanged);
+	HookConVarChange(gc_sCountdownSoundStartPath, Countdown_OnSettingChanged);
+	HookConVarChange(gc_sCountdownSoundStopPath, Countdown_OnSettingChanged);
+	HookConVarChange(gc_sCountdownOverlayStartPath, Countdown_OnSettingChanged);
+	HookConVarChange(gc_sCountdownOverlayStopPath, Countdown_OnSettingChanged);
 	
 	//FindConVar
 	gc_sCountdownSoundStartPath.GetString(g_sCountdownSoundStartPath, sizeof(g_sCountdownSoundStartPath));

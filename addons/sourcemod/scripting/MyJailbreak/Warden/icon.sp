@@ -106,7 +106,7 @@ stock void RemoveIcon(int client)
 
 public void Icon_PostRoundStart(Event event, const char[] name, bool dontBroadcast)
 {
-	if(IsWardenExist) SpawnIcon(g_iWarden);
+	if(g_iWarden != -1) SpawnIcon(g_iWarden);
 }
 
 public void Icon_OnWardenCreation(int client)
