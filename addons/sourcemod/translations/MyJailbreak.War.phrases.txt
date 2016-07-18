@@ -160,7 +160,7 @@
 
 	"war_rounds"
 	{
-		"#format"   "{1:i}"
+		"#format"   "{1:i},{2:i}"
 		"ru"		"Раунд {purple}{1}{default} о {purple}{2}"
 		"pl"		"Runda {purple}{1}{default} z {purple}{2}"
 		"de"		"Runde {purple}{1}{default} von {purple}{2}"
