@@ -59,6 +59,7 @@ char g_sSoundStartPath[256];
 char g_sCustomCommand[64];
 char g_sEventsLogFile[PLATFORM_MAX_PATH];
 char g_sAdminFlag[32];
+char g_sOverlayStartPath[256];
 
 public Plugin myinfo = {
 	name = "MyJailbreak - Zeus",
@@ -119,7 +120,7 @@ public void OnPluginStart()
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	g_iGetRoundTime = FindConVar("mp_roundtime");
-	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
+	gc_sOverlayStartPath.GetString(g_sOverlayStartPath , sizeof(g_sOverlayStartPath));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 	gc_sCustomCommand.GetString(g_sCustomCommand , sizeof(g_sCustomCommand));
 	gc_sAdminFlag.GetString(g_sAdminFlag , sizeof(g_sAdminFlag));
@@ -134,8 +135,8 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 {
 	if(convar == gc_sOverlayStartPath)
 	{
-		strcopy(g_sOverlayStart, sizeof(g_sOverlayStart), newValue);
-		if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStart);
+		strcopy(g_sOverlayStartPath, sizeof(g_sOverlayStartPath), newValue);
+		if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
 	}
 	else if(convar == gc_sAdminFlag)
 	{
@@ -169,7 +170,7 @@ public void OnMapStart()
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	
 	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
-	if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStart);
+	if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
 }
 
 public void OnConfigsExecuted()
@@ -490,7 +491,7 @@ public Action StartTimer(Handle timer)
 		{
 			SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
 			PrintHintText(client,"%t", "zeus_start_nc");
-			if(gc_bOverlays.BoolValue) CreateTimer( 0.0, ShowOverlayStart, client);
+			if(gc_bOverlays.BoolValue) ShowOverlay(client, g_sOverlayStartPath, 2.0);
 			if(gc_bSounds.BoolValue)	
 			{
 				EmitSoundToAllAny(g_sSoundStartPath);

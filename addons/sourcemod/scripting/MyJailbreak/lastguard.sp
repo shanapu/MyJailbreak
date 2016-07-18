@@ -48,6 +48,7 @@ char g_sSoundStartPath[256];
 char g_sSoundLastCTPath[256];
 char g_sCustomCommand[64];
 char g_sMyJBLogFile[PLATFORM_MAX_PATH];
+char g_sOverlayStartPath[256];
 
 public Plugin myinfo = {
 	name = "MyJailbreak - Last Guard Rule",
@@ -102,7 +103,7 @@ public void OnPluginStart()
 	
 	//Find
 	g_iTruceTime = gc_iTruceTime.IntValue;
-	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
+	gc_sOverlayStartPath.GetString(g_sOverlayStartPath , sizeof(g_sOverlayStartPath));
 	gc_sSoundLastCTPath.GetString(g_sSoundLastCTPath, sizeof(g_sSoundLastCTPath));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 	gc_sCustomCommand.GetString(g_sCustomCommand , sizeof(g_sCustomCommand));
@@ -116,8 +117,8 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 {
 	if(convar == gc_sOverlayStartPath)
 	{
-		strcopy(g_sOverlayStart, sizeof(g_sOverlayStart), newValue);
-		if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStart);
+		strcopy(g_sOverlayStartPath, sizeof(g_sOverlayStartPath), newValue);
+		if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
 	}
 	else if(convar == gc_sSoundStartPath)
 	{
@@ -160,7 +161,7 @@ public void OnMapStart()
 	
 	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);    //Add sound to download and precache table
 	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundLastCTPath);    //Add sound to download and precache table
-	if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStart);    //Add overlay to download and precache table
+	if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);    //Add overlay to download and precache table
 }
 
 public void OnConfigsExecuted()
@@ -359,7 +360,7 @@ public Action StartTimer(Handle timer)
 	{
 		SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
 		PrintHintText(client,"%t", "lastguard_start_nc");
-		if(gc_bOverlays.BoolValue) CreateTimer( 0.0, ShowOverlayStart, client);
+		if(gc_bOverlays.BoolValue) ShowOverlay(client, g_sOverlayStartPath, 2.0);
 		if(gc_bSounds.BoolValue)
 		{
 			EmitSoundToAllAny(g_sSoundStartPath);

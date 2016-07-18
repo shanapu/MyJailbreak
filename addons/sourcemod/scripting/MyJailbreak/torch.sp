@@ -75,6 +75,7 @@ char g_sSoundStartPath[256];
 char g_sCustomCommand[64];
 char g_sEventsLogFile[PLATFORM_MAX_PATH];
 char g_sAdminFlag[32];
+char g_sOverlayStartPath[256];
 
 //Floats
 float g_fPos[3];
@@ -155,7 +156,7 @@ public void OnPluginStart()
 	gc_sSoundClearTorchPath.GetString(g_sSoundClearTorchPath, sizeof(g_sSoundClearTorchPath));
 	gc_sOverlayOnTorch.GetString(g_sOverlayOnTorch , sizeof(g_sOverlayOnTorch));
 	gc_sCustomCommand.GetString(g_sCustomCommand , sizeof(g_sCustomCommand));
-	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
+	gc_sOverlayStartPath.GetString(g_sOverlayStartPath , sizeof(g_sOverlayStartPath));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 	gc_sAdminFlag.GetString(g_sAdminFlag , sizeof(g_sAdminFlag));
 	
@@ -187,8 +188,8 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 	}
 	else if(convar == gc_sOverlayStartPath)
 	{
-		strcopy(g_sOverlayStart, sizeof(g_sOverlayStart), newValue);
-		if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStart);
+		strcopy(g_sOverlayStartPath, sizeof(g_sOverlayStartPath), newValue);
+		if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
 	}
 	else if(convar == gc_sSoundStartPath)
 	{
@@ -220,7 +221,7 @@ public void OnMapStart()
 	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundOnTorchPath);
 	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundClearTorchPath);
 	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
-	if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStart);
+	if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
 	if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayOnTorch);
 	PrecacheSound("player/suit_sprint.wav", true);
 }
@@ -519,7 +520,7 @@ public Action StartTimer(Handle timer)
 	if (IsClientInGame(client) && IsPlayerAlive(client) && (client != g_iBurningZero)) 
 		{
 			SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
-			if(gc_bOverlays.BoolValue) CreateTimer( 0.0, ShowOverlayStart, client);
+			if(gc_bOverlays.BoolValue) ShowOverlay(client, g_sOverlayStartPath, 2.0);
 			if(gc_bSounds.BoolValue)
 			{
 				EmitSoundToClientAny(client, g_sSoundStartPath);
