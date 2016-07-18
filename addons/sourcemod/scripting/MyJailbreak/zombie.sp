@@ -8,6 +8,7 @@
 #include <autoexecconfig>
 #include <myjailbreak>
 #include <CustomPlayerSkins>
+#include <lastrequest>
 
 //Compiler Options
 #pragma semicolon 1
@@ -42,6 +43,7 @@ ConVar g_sOldSkyName;
 ConVar gc_iRounds;
 ConVar gc_sCustomCommand;
 ConVar gc_sAdminFlag;
+ConVar gc_bAllowLR;
 
 //Integers
 int g_iOldRoundTime;
@@ -67,6 +69,7 @@ char g_sSkyName[256];
 char g_sCustomCommand[64];
 char g_sEventsLogFile[PLATFORM_MAX_PATH];
 char g_sAdminFlag[32];
+char g_sModelPath[MAXPLAYERS+1][256];
 
 public Plugin myinfo = {
 	name = "MyJailbreak - Zombie",
@@ -113,6 +116,7 @@ public void OnPluginStart()
 	gc_bOverlays = AutoExecConfig_CreateConVar("sm_zombie_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true, 0.0, true, 1.0);
 	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_zombie_overlays_start", "overlays/MyJailbreak/zombie" , "Path to the start Overlay DONT TYPE .vmt or .vft");
 	gc_sModelPath = AutoExecConfig_CreateConVar("sm_zombie_model", "models/player/custom_player/zombie/revenant/revenant_v2.mdl", "Path to the model for zombies.");
+	gc_bAllowLR = AutoExecConfig_CreateConVar("sm_zombie_allow_lr", "1" , "0 - disabled, 1 - enable, LR on last round", _, true, 0.0, true, 1.0);
 	
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
@@ -382,6 +386,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 					
 					if (GetClientTeam(client) == CS_TEAM_CT)
 					{
+						GetEntPropString(client, Prop_Data, "m_ModelName", g_sModelPath[client], sizeof(g_sModelPath[]));
 						SetEntityModel(client, g_sZombieModel);
 						SetEntityMoveType(client, MOVETYPE_NONE);
 						SetEntityHealth(client, gc_iZombieHP.IntValue);
@@ -402,9 +407,19 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 						TeleportEntity(client, g_fPos, NULL_VECTOR, NULL_VECTOR);
 					}
 				}
+				
+				//enable lr on last round
+				if (gc_bAllowLR.BoolValue)
+				{
+					if (g_iRound == g_iMaxRound)
+					{
+						SetCvar("sm_hosties_lr", 1);
+					}
+				}
 			}
 			g_iFreezeTime--;
 			FreezeTimer = CreateTimer(1.0, StartTimer, _, TIMER_REPEAT);
+			
 			CPrintToChatAll("%t %t", "zombie_tag" ,"zombie_rounds", g_iRound, g_iMaxRound);
 		}
 	}
@@ -419,6 +434,62 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		}
 		else if (g_iCoolDown > 0) g_iCoolDown--;
 	}
+}
+
+public int OnAvailableLR(int Announced)
+{
+	if (IsZombie && gc_bAllowLR.BoolValue)
+	{
+		
+		LoopValidClients(client,false,true)
+		{
+			SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
+			char model[PLATFORM_MAX_PATH]; 
+			GetClientModel(client, model, sizeof(model)); 
+			int skin = CPS_SetSkin(client, model, CPS_RENDER);
+			if(skin != -1 && gc_bGlow.BoolValue)
+			{
+				SetEntProp(skin, Prop_Send, "m_bShouldGlow", false, true);
+				SetEntProp(skin, Prop_Send, "m_nGlowStyle", 1);
+				SetEntPropFloat(skin, Prop_Send, "m_flGlowMaxDist", 10000000.0);
+			}
+			SetEntProp(client, Prop_Send, "m_bNightVisionOn", 0);
+			
+			SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
+			
+			StripAllWeapons(client);
+			if (GetClientTeam(client) == CS_TEAM_CT)
+			{
+				FakeClientCommand(client, "sm_guns");
+				SetEntityModel(client, g_sModelPath[client]);
+				SetEntityHealth(client, 100);
+			}
+			GivePlayerItem(client, "weapon_knife");
+		}
+		
+		delete FreezeTimer;
+		delete GlowTimer;
+		if (g_iRound == g_iMaxRound)
+		{
+			IsZombie = false;
+			StartZombie = false;
+			g_iRound = 0;
+			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
+			SetCvar("sm_hosties_lr", 1);
+			SetCvar("sm_weapons_t", 0);
+			SetCvar("sm_weapons_ct", 1);
+			SetCvarString("sv_skyname", g_sSkyName);
+			SetCvar("sv_infinite_ammo", 0);
+			SetCvar("sm_warden_enable", 1);
+			SetCvar("sm_menu_enable", 1);
+			g_iGetRoundTime.IntValue = g_iOldRoundTime;
+			SetEventDay("none");
+			SetEventDayRunning(false);
+			FogOff();
+			CPrintToChatAll("%t %t", "zombie_tag" , "zombie_end");
+		}
+	}
+
 }
 
 stock void CreateInfoPanel(int client)

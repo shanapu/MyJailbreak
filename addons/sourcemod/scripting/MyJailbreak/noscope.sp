@@ -7,6 +7,7 @@
 #include <colors>
 #include <autoexecconfig>
 #include <myjailbreak>
+#include <lastrequest>
 
 //Compiler Options
 #pragma semicolon 1
@@ -38,6 +39,7 @@ ConVar gc_sSoundStartPath;
 ConVar gc_iRounds;
 ConVar gc_sCustomCommand;
 ConVar gc_sAdminFlag;
+ConVar gc_bAllowLR;
 
 //Integers
 int g_iOldRoundTime;
@@ -108,6 +110,7 @@ public void OnPluginStart()
 	gc_sSoundStartPath = AutoExecConfig_CreateConVar("sm_noscope_sounds_start", "music/MyJailbreak/start.mp3", "Path to the soundfile which should be played for a start.");
 	gc_bOverlays = AutoExecConfig_CreateConVar("sm_noscope_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true,  0.0, true, 1.0);
 	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_noscope_overlays_start", "overlays/MyJailbreak/start" , "Path to the start Overlay DONT TYPE .vmt or .vft");
+	gc_bAllowLR = AutoExecConfig_CreateConVar("sm_noscope_allow_lr", "1" , "0 - disabled, 1 - enable, LR on last round", _, true, 0.0, true, 1.0);
 	
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
@@ -399,6 +402,16 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 				g_iTruceTime--;
 				TruceTimer = CreateTimer(1.0, StartTimer, _, TIMER_REPEAT);
 				GravityTimer = CreateTimer(1.0, CheckGravity, _, TIMER_REPEAT);
+				
+				//enable lr on last round
+				if (gc_bAllowLR.BoolValue)
+				{
+					if (g_iRound == g_iMaxRound)
+					{
+						SetCvar("sm_hosties_lr", 1);
+					}
+				}
+				
 				CPrintToChatAll("%t %t", "noscope_tag" ,"noscope_rounds", g_iRound, g_iMaxRound);
 			}
 			LoopClients(i) if (IsPlayerAlive(i)) SDKHook(i, SDKHook_PreThink, OnPreThink);
@@ -415,6 +428,45 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		}
 		else if (g_iCoolDown > 0) g_iCoolDown--;
 	}
+}
+
+public int OnAvailableLR(int Announced)
+{
+	if (IsNoScope && gc_bAllowLR.BoolValue)
+	{
+		LoopClients(client)
+		{
+			SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
+			SetEntityGravity(client, 1.0);
+			StripAllWeapons(client);
+			if (GetClientTeam(client) == CS_TEAM_CT)
+			{
+				FakeClientCommand(client, "sm_guns");
+			}
+			GivePlayerItem(client, "weapon_knife");
+		}
+		
+		delete TruceTimer;
+		delete GravityTimer;
+		if (g_iRound == g_iMaxRound)
+		{
+			IsNoScope = false;
+			StartNoScope = false;
+			g_iRound = 0;
+			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
+			SetCvar("sm_hosties_lr", 1);
+			SetCvar("sm_weapons_enable", 1);
+			SetCvar("sv_infinite_ammo", 0);
+			SetCvar("mp_teammates_are_enemies", 0);
+			SetCvar("sm_menu_enable", 1);
+			SetCvar("sm_warden_enable", 1);
+			g_iGetRoundTime.IntValue = g_iOldRoundTime;
+			SetEventDay("none");
+			SetEventDayRunning(false);
+			CPrintToChatAll("%t %t", "noscope_tag" , "noscope_end");
+		}
+	}
+
 }
 
 stock void CreateInfoPanel(int client)
