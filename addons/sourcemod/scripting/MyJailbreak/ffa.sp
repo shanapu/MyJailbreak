@@ -475,7 +475,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 		delete TruceTimer;
 		if (winner == 2) PrintHintTextToAll("%t", "ffa_twin_nc"); 
 		if (winner == 3) PrintHintTextToAll("%t", "ffa_ctwin_nc");
-		if (g_iRound == g_iMaxRound)
+		if (g_iRound == g_iMaxRound && !gc_bAllowLR.BoolValue)
 		{
 			IsFFA = false;
 			g_iRound = 0;

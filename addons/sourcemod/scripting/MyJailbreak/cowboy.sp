@@ -533,7 +533,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 		delete TruceTimer;
 		if (winner == 2) PrintHintTextToAll("%t", "cowboy_twin_nc");
 		if (winner == 3) PrintHintTextToAll("%t", "cowboy_ctwin_nc");
-		if (g_iRound == g_iMaxRound)
+		if (g_iRound == g_iMaxRound && !gc_bAllowLR.BoolValue)
 		{
 			IsCowBoy = false;
 			StartCowBoy = false;

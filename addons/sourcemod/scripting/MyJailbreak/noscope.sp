@@ -556,7 +556,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 		delete GravityTimer;
 		if (winner == 2) PrintHintTextToAll("%t", "noscope_twin_nc");
 		if (winner == 3) PrintHintTextToAll("%t", "noscope_ctwin_nc");
-		if (g_iRound == g_iMaxRound)
+		if (g_iRound == g_iMaxRound && !gc_bAllowLR.BoolValue)
 		{
 			IsNoScope = false;
 			StartNoScope = false;
