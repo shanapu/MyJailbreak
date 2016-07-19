@@ -123,7 +123,11 @@ public void HandCuffs_RoundStart(Event event, const char[] name, bool dontBroadc
 	}
 	g_iCuffed = 0;
 	
-	LoopClients(i) g_iPlayerHandCuffs[i] = gc_iHandCuffsNumber.IntValue;
+	LoopClients(i)
+	{
+		g_iPlayerHandCuffs[i] = gc_iHandCuffsNumber.IntValue;
+		g_bCuffed[i] = false;
+	}
 }
 
 public void HandCuffs_RoundEnd(Event event, const char[] name, bool dontBroadcast)

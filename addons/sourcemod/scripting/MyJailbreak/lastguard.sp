@@ -288,6 +288,11 @@ public Action StartLastGuard()
 		HPterBuffer = (GetClientHealth(i) + HPterrors);
 		HPterrors = HPterBuffer;
 		HPterBuffer = 0;
+		
+		SetEntityMoveType(i, MOVETYPE_WALK);
+		SetEntPropFloat(i, Prop_Data, "m_flLaggedMovementValue", 1.0);
+		SetEntityRenderColor(i, 255, 255, 255, 255);
+		CreateTimer( 0.0, DeleteOverlay, i);
 	}
 	int HPCT = RoundToCeil(HPterrors * (gc_iHPmultipler.FloatValue / 100.0));
 	LoopClients(iClient)
