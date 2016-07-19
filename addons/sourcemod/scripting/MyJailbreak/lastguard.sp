@@ -14,6 +14,7 @@
 
 //Booleans
 bool IsLastGuard;
+bool AllowLastGuard;
 bool IsLR;
 bool MinCT = false;
 
@@ -148,6 +149,8 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 	IsLastGuard = false;
 	MinCT = false;
 	g_iVoteCount = 0;
+	AllowLastGuard = false;
+	CreateTimer(2.5, LGRBeginn); 
 	if (GetAliveTeamCount(CS_TEAM_CT) > 1) MinCT = true;
 }
 
@@ -252,6 +255,11 @@ public Action VoteLastGuard(int client,int args)
 public Action LastCTsound(Handle timer)
 {
 	EmitSoundToAllAny(g_sSoundLastCTPath);
+}
+
+public Action LGRBeginn(Handle timer)
+{
+	AllowLastGuard = true;
 }
 
 //Prepare Event
@@ -428,12 +436,12 @@ public Action CheckStatus()
 
 public Action EventPlayer(Event event, const char[] name, bool dontBroadcast)
 {
-	CheckStatus();
+	if(AllowLastGuard)CheckStatus();
 }
 
 public void OnClientDisconnect_Post(int client)
 {
-	CheckStatus();
+	if(AllowLastGuard)CheckStatus();
 }
 
 public int OnAvailableLR(int Announced)
