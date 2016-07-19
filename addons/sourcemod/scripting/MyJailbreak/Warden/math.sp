@@ -65,6 +65,12 @@ public void Math_OnPluginStart()
 	gc_sMathSoundStopPath = AutoExecConfig_CreateConVar("sm_warden_math_sounds_stop", "music/MyJailbreak/stop.mp3", "Path to the soundfile which should be played for stop countdown.");
 	gc_bMathOverlays = AutoExecConfig_CreateConVar("sm_warden_math_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true,  0.0, true, 1.0);
 	gc_sMathOverlayStopPath = AutoExecConfig_CreateConVar("sm_warden_math_overlays_stop", "overlays/MyJailbreak/stop" , "Path to the stop Overlay DONT TYPE .vmt or .vft");
+	
+	HookConVarChange(gc_sMathSoundStopPath, Math_OnSettingChanged);
+	HookConVarChange(gc_sMathOverlayStopPath, Math_OnSettingChanged);
+	
+	gc_sMathSoundStopPath.GetString(g_sMathSoundStopPath, sizeof(g_sMathSoundStopPath));
+	gc_sMathOverlayStopPath.GetString(g_sMathOverlayStopPath , sizeof(g_sMathOverlayStopPath));
 }
 
 public void Math_OnConfigsExecuted()
@@ -227,7 +233,7 @@ public void SendEndMathQuestion(int client)
 	
 	if(gc_bMathOverlays.BoolValue)
 	{
-		ShowOverlay(client, g_sMathOverlayStopPath, 2.0);
+		ShowOverlayAll(g_sMathOverlayStopPath, 2.0);
 	}
 	if(gc_bMathSounds.BoolValue)	
 	{

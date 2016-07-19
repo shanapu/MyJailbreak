@@ -172,7 +172,7 @@
 		"pl"		"Admin: {1} zwolnil Wardena: {2}"
 		"de"		"Admin {1} hat Warden {2} seines Amtes enthoben."
 		"sv"		"Admin: {1} avskedade Fängelsedirektören: {2}"
-		"pt"		"O Administrador do: {{1} o diretor se aposentou cedo: {2}"
+		"pt"		"O Administrador do: {1} o diretor se aposentou cedo: {2}"
 		"es"		"Administrador: {1} ha prejubilado al AlcÃ¡ide: {2}"
 		"en"		"Admin: {1} has Fired the Warden: {2}"
 		"da"		"Admin: {1} har fyret Warden: {2}"
@@ -204,12 +204,12 @@
 	{
 		"#format"   "{1:N},{2:N}"
 		"ru"		"Админ:{purple}{1}{default} уволил командира: {purple}{2}"
-		"pl"		"Admin: {purple}{1}{default} zwolnil Wardena:  {purple}{2}"
-		"de"		"Admin: {purple}{1}{default} hat Warden  {purple}{2}{default} seines Amtes enthoben."
-		"sv"		"Admin: {purple}{1}{default} avskedade Fängelsedirektören:  {purple}{2}"
-		"pt"		"O Administrador do: {purple}{1}{default} o diretor se aposentou cedo:  {purple}{2}"
-		"es"		"Administrador: {purple}{1}{default} ha prejubilado al AlcÃ¡ide:  {purple}{2}"
-		"en"		"Admin: {purple}{1}{default} has Fired the Warden:  {purple}{2}"
+		"pl"		"Admin: {purple}{1}{default} zwolnil Wardena: {purple}{2}"
+		"de"		"Admin: {purple}{1}{default} hat Warden {purple}{2}{default} seines Amtes enthoben."
+		"sv"		"Admin: {purple}{1}{default} avskedade Fängelsedirektören: {purple}{2}"
+		"pt"		"O Administrador do: {purple}{1}{default} o diretor se aposentou cedo: {purple}{2}"
+		"es"		"Administrador: {purple}{1}{default} ha prejubilado al AlcÃ¡ide: {purple}{2}"
+		"en"		"Admin: {purple}{1}{default} has Fired the Warden: {purple}{2}"
 		"da"		"Admin: {purple}{1}{default} har fyret Warden: {purple}{2}"
 	}
 

@@ -106,6 +106,18 @@ public Action ShowOverlay(int client, char [] path, float deletetime)
 	return Plugin_Continue;
 }
 
+public Action ShowOverlayAll(char [] path, float deletetime) 
+{
+	LoopValidClients(client, false, true)
+	{
+		int iFlag = GetCommandFlags( "r_screenoverlay" ) & ( ~FCVAR_CHEAT ); 
+		SetCommandFlags( "r_screenoverlay", iFlag ); 
+		ClientCommand( client, "r_screenoverlay \"%s.vtf\"", path);
+		if (deletetime != 0.0) CreateTimer( deletetime, DeleteOverlay, client );
+	}
+	return Plugin_Continue;
+}
+
 public Action DeleteOverlay( Handle timer, any client ) 
 {
 	if(IsValidClient(client, false, true))

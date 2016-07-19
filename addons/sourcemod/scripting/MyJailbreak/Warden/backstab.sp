@@ -81,5 +81,5 @@ public Action BackStab_OnTakedamage(int victim, int &attacker, int &inflictor, f
 			}
 		}
 	}
-	return Plugin_Handled;
+	return Plugin_Continue;
 }

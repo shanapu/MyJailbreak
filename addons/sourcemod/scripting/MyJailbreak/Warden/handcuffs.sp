@@ -71,6 +71,7 @@ public void HandCuffs_OnPluginStart()
 	HookEvent("round_end", HandCuffs_RoundEnd);
 	HookEvent("player_death", HandCuffs_PlayerDeath);
 	HookEvent("item_equip", HandCuffs_ItemEquip);
+	HookEvent("weapon_fire", HandCuffs_WeaponFire);
 	HookConVarChange(gc_sSoundCuffsPath, HandCuffs_OnSettingChanged);
 	HookConVarChange(gc_sSoundBreakCuffsPath, HandCuffs_OnSettingChanged);
 	HookConVarChange(gc_sSoundUnLockCuffsPath, HandCuffs_OnSettingChanged);
@@ -223,7 +224,7 @@ public void HandCuffs_OnClientPutInServer(int client)
 	SDKHook(client, SDKHook_OnTakeDamage, HandCuffs_OnTakedamage);
 }
 
-public Action WeaponFire(Handle event, char [] name, bool dontBroadcast)
+public Action HandCuffs_WeaponFire(Handle event, char [] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(GetEventInt(event, "userid"));
 	
@@ -318,16 +319,19 @@ public Action FreeEm(int client, int attacker)
 
 stock int StripZeus(int client)
 {
-	char sWeapon[64];
-	FakeClientCommand(client,"use weapon_taser");
-	int weapon = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
-	if(weapon != -1)
+	if(IsValidClient(client, true, false)
 	{
-		GetEntityClassname(weapon, sWeapon, sizeof(sWeapon));
-		if (StrEqual(sWeapon, "weapon_taser"))
-		{ 
-			SDKHooks_DropWeapon(client, weapon, NULL_VECTOR, NULL_VECTOR); 
-			AcceptEntityInput(weapon, "Kill");
+		char sWeapon[64];
+		FakeClientCommand(client,"use weapon_taser");
+		int weapon = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
+		if(weapon != -1)
+		{
+			GetEntityClassname(weapon, sWeapon, sizeof(sWeapon));
+			if (StrEqual(sWeapon, "weapon_taser"))
+			{ 
+				SDKHooks_DropWeapon(client, weapon, NULL_VECTOR, NULL_VECTOR); 
+				AcceptEntityInput(weapon, "Kill");
+			}
 		}
 	}
 }

@@ -424,7 +424,7 @@ public Action Timer_StartCountdown( Handle timer, any client )
 			
 			if(gc_bCountdownOverlays.BoolValue)
 			{
-				ShowOverlay(client, g_sCountdownOverlayStartPath, 2.0);
+				ShowOverlayAll(g_sCountdownOverlayStartPath, 2.0);
 			}
 			if(gc_bCountdownSounds.BoolValue)	
 			{
@@ -464,7 +464,7 @@ public Action Timer_StopCountdown( Handle timer, any client )
 			
 			if(gc_bCountdownOverlays.BoolValue)
 			{
-				ShowOverlay(client, g_sCountdownOverlayStopPath, 2.0);
+				ShowOverlayAll(g_sCountdownOverlayStopPath, 2.0);
 			}
 			if(gc_bCountdownSounds.BoolValue)	
 			{
@@ -505,7 +505,7 @@ public Action Timer_StopStartStopCountdown( Handle timer, any client )
 			
 			if(gc_bCountdownOverlays.BoolValue)
 			{
-				ShowOverlay(client, g_sCountdownOverlayStopPath, 2.0);
+				ShowOverlayAll(g_sCountdownOverlayStopPath, 2.0);
 			}
 			if(gc_bCountdownSounds.BoolValue)	
 			{

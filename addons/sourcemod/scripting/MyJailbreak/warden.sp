@@ -195,7 +195,6 @@ public void OnPluginStart()
 	HookEvent("player_death", playerDeath);
 	HookEvent("player_team", EventPlayerTeam);
 	HookEvent("round_end", RoundEnd);
-	HookEvent("weapon_fire", WeaponFire);
 	HookConVarChange(gc_sModelPath, OnSettingChanged);
 	HookConVarChange(gc_sUnWarden, OnSettingChanged);
 	HookConVarChange(gc_sWarden, OnSettingChanged);
@@ -466,6 +465,7 @@ public Action playerDeath(Event event, const char[] name, bool dontBroadcast)
 		RandomTimer = null;
 		RandomTimer = CreateTimer(gc_fRandomTimer.FloatValue, ChooseRandom);
 		Forward_OnWardenDeath(client);
+		Forward_OnWardenRemoved(client);
 		g_iWarden = -1;
 	}
 }
@@ -609,9 +609,8 @@ public Action EventPlayerTeam(Event event, const char[] name, bool dontBroadcast
 		{
 			PrintCenterTextAll("%t", "warden_retire_nc", client);
 		}
-		RemoveTheWarden();
-		Forward_OnWardenRemoved(client);
 		Forward_OnWardenDeath(client);
+		RemoveTheWarden();
 	}
 }
 
