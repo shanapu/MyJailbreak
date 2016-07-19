@@ -6,6 +6,7 @@
 #include <cstrike>
 #include <autoexecconfig>
 #include <myjailbreak>
+#include <warden>
 
 //Compiler Options
 #pragma semicolon 1
@@ -475,6 +476,9 @@ stock int GetRandomClientFromTeam(int iTeam, bool bSkipCTBanned=true)
 	LoopValidClients(i, true,true)
 	{
 		if(!IsClientInGame(i))
+			continue;
+		
+		if(warden_iswarden(i))
 			continue;
 
 		if(GetClientPendingTeam(i) != iTeam)
