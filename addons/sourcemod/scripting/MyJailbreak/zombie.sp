@@ -55,7 +55,6 @@ int g_iMaxRound;
 
 //Handles
 Handle FreezeTimer;
-Handle GlowTimer;
 Handle ZombieMenu;
 
 //Floats
@@ -108,7 +107,7 @@ public void OnPluginStart()
 	gc_iZombieHP = AutoExecConfig_CreateConVar("sm_zombie_zombie_hp", "8500", "HP the Zombies got on Spawn", _, true, 1.0);
 	gc_iHumanHP = AutoExecConfig_CreateConVar("sm_zombie_human_hp", "65", "HP the Humans got on Spawn", _, true, 1.0);
 	gc_bDark = AutoExecConfig_CreateConVar("sm_zombie_dark", "1", "0 - disabled, 1 - enable Map Darkness", _, true,  0.0, true, 1.0);
-	gc_bGlow = AutoExecConfig_CreateConVar("sm_zombie_glow", "0", "0 - disabled, 1 - enable Glow effect for humans", _, true,  0.0, true, 1.0);
+	gc_bGlow = AutoExecConfig_CreateConVar("sm_zombie_glow", "1", "0 - disabled, 1 - enable Glow effect for humans", _, true,  0.0, true, 1.0);
 	gc_bVision = AutoExecConfig_CreateConVar("sm_zombie_vision", "1", "0 - disabled, 1 - enable NightVision View for Zombies", _, true,  0.0, true, 1.0);
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_zombie_cooldown_day", "3", "Rounds cooldown after a event until event can be start again", _, true, 0.0);
 	gc_iCooldownStart = AutoExecConfig_CreateConVar("sm_zombie_cooldown_start", "3", "Rounds until event can be start after mapchange.", _, true, 0.0);
@@ -401,7 +400,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 						GivePlayerItem(client, "weapon_tec9");
 						GivePlayerItem(client, "weapon_hegrenade");
 						GivePlayerItem(client, "weapon_molotov");
-						if (gc_bGlow.BoolValue && (IsValidClient(client, false, true))) GlowTimer = CreateTimer(1.5, Glow_Timer, client, TIMER_REPEAT);
+						if (gc_bGlow.BoolValue && (IsValidClient(client, true, true))) SetupGlowSkin(client);
 					}
 					if (!gc_bSpawnCell.BoolValue || (gc_bSpawnCell.BoolValue && !SJD_IsCurrentMapConfigured)) //spawn Terrors to CT Spawn 
 					{
@@ -437,23 +436,83 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 	}
 }
 
+void SetupGlowSkin(int client)
+{
+	char sModel[PLATFORM_MAX_PATH];
+	GetClientModel(client, sModel, sizeof(sModel));
+	int iSkin = CPS_SetSkin(client, sModel, CPS_RENDER);
+	
+	if(iSkin == -1)
+		return;
+		
+	if (SDKHookEx(iSkin, SDKHook_SetTransmit, OnSetTransmit_GlowSkin))
+		SetupGlow(iSkin);
+}
+
+void SetupGlow(int iSkin)
+{
+	int iOffset;
+	
+	if (!iOffset && (iOffset = GetEntSendPropOffs(iSkin, "m_clrGlow")) == -1)
+		return;
+	
+	SetEntProp(iSkin, Prop_Send, "m_bShouldGlow", true, true);
+	SetEntProp(iSkin, Prop_Send, "m_nGlowStyle", 0);
+	SetEntPropFloat(iSkin, Prop_Send, "m_flGlowMaxDist", 10000000.0);
+	
+	int iRed = 155;
+	int iGreen = 0;
+	int iBlue = 10;
+
+	SetEntData(iSkin, iOffset, iRed, _, true);
+	SetEntData(iSkin, iOffset + 1, iGreen, _, true);
+	SetEntData(iSkin, iOffset + 2, iBlue, _, true);
+	SetEntData(iSkin, iOffset + 3, 255, _, true);
+}
+
+public Action OnSetTransmit_GlowSkin(int iSkin, int client)
+{
+	if(!IsPlayerAlive(client))
+		return Plugin_Handled;
+	
+	LoopClients(target)
+	{
+		if(!CPS_HasSkin(target))
+			continue;
+		
+		if(EntRefToEntIndex(CPS_GetSkin(target)) != iSkin)
+			continue;
+			
+		if (GetClientTeam(client) == CS_TEAM_CT)
+		
+		return Plugin_Continue;
+	}
+	
+	return Plugin_Handled;
+}
+
+
+void UnhookGlow(int client)
+{
+	if(IsValidClient(client, false, true))
+	{
+		char sModel[PLATFORM_MAX_PATH];
+		GetClientModel(client, sModel, sizeof(sModel));
+	//	SetEntProp(client, Prop_Send, "m_bShouldGlow", false, true);
+		SDKUnhook(client, SDKHook_SetTransmit, OnSetTransmit_GlowSkin);
+	}
+}
+
 public int OnAvailableLR(int Announced)
 {
 	if (IsZombie && gc_bAllowLR.BoolValue)
 	{
-		
 		LoopValidClients(client,false,true)
 		{
 			SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
-			char model[PLATFORM_MAX_PATH]; 
-			GetClientModel(client, model, sizeof(model)); 
-			int skin = CPS_SetSkin(client, model, CPS_RENDER);
-			if(skin != -1 && gc_bGlow.BoolValue)
-			{
-				SetEntProp(skin, Prop_Send, "m_bShouldGlow", false, true);
-				SetEntProp(skin, Prop_Send, "m_nGlowStyle", 1);
-				SetEntPropFloat(skin, Prop_Send, "m_flGlowMaxDist", 10000000.0);
-			}
+			
+			if(gc_bGlow.BoolValue) UnhookGlow(client);
+			
 			SetEntProp(client, Prop_Send, "m_bNightVisionOn", 0);
 			
 			SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
@@ -469,7 +528,6 @@ public int OnAvailableLR(int Announced)
 		}
 		
 		delete FreezeTimer;
-		delete GlowTimer;
 		if (g_iRound == g_iMaxRound)
 		{
 			IsZombie = false;
@@ -533,20 +591,11 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 		LoopValidClients(client,false,true)
 		{
 			SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
-			char model[PLATFORM_MAX_PATH]; 
-			GetClientModel(client, model, sizeof(model)); 
-			int skin = CPS_SetSkin(client, model, CPS_RENDER);
-			if(skin != -1 && gc_bGlow.BoolValue)
-			{
-				SetEntProp(skin, Prop_Send, "m_bShouldGlow", false, true);
-				SetEntProp(skin, Prop_Send, "m_nGlowStyle", 1);
-				SetEntPropFloat(skin, Prop_Send, "m_flGlowMaxDist", 10000000.0);
-			}
+			if(gc_bGlow.BoolValue) UnhookGlow(client);
 			SetEntProp(client, Prop_Send, "m_bNightVisionOn", 0);
 		}
 		
 		delete FreezeTimer;
-		delete GlowTimer;
 		
 		if (winner == 2) PrintHintTextToAll("%t", "zombie_twin_nc");
 		if (winner == 3) PrintHintTextToAll("%t", "zombie_ctwin_nc");
@@ -586,25 +635,9 @@ public void OnMapEnd()
 	IsZombie = false;
 	StartZombie = false;
 	delete FreezeTimer;
-	delete GlowTimer;
 	g_iVoteCount = 0;
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0';
-}
-
-//glow
-
-public Action Glow_Timer(Handle timer, any client)
-{
-	if(IsValidClient(client, false, false))
-	{
-		char model[PLATFORM_MAX_PATH]; 
-		GetClientModel(client, model, sizeof(model)); 
-		int skin = CPS_SetSkin(client, model, CPS_RENDER); 
-		SetEntProp(skin, Prop_Send, "m_bShouldGlow", true, true);
-		SetEntProp(skin, Prop_Send, "m_nGlowStyle", 1);
-		SetEntPropFloat(skin, Prop_Send, "m_flGlowMaxDist", 10000000.0);
-	}
 }
 
 //Start Timer
