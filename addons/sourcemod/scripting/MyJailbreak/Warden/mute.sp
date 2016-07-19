@@ -352,7 +352,7 @@ public int Handler_MuteMenuTeam(Menu menu6, MenuAction action, int client, int s
 }
 public Action MuteClient(int client, int time)
 {
-	if(IsValidClient(client,true,true))
+	if(IsValidClient(client,true,true) && !CheckVipFlag(client,g_sAdminFlagMute))
 	{
 		if(GetClientTeam(client) == CS_TEAM_T)
 		{
