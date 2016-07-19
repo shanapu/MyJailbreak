@@ -247,6 +247,8 @@ public Action CuffsEm(int client, int attacker)
 		SetEntityMoveType(client, MOVETYPE_NONE);
 		SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 0.0);
 		SetEntityRenderColor(client, 0, 190, 0, 255);
+		StripAllWeapons(client);
+		GivePlayerItem(client, "weapon_knife");
 		g_bCuffed[client] = true;
 		ShowOverlay(client, g_sOverlayCuffsPath, 0.0);
 		g_iPlayerHandCuffs[attacker]--;
@@ -319,7 +321,7 @@ public Action FreeEm(int client, int attacker)
 
 stock int StripZeus(int client)
 {
-	if(IsValidClient(client, true, false)
+	if(IsValidClient(client, true, false))
 	{
 		char sWeapon[64];
 		FakeClientCommand(client,"use weapon_taser");
