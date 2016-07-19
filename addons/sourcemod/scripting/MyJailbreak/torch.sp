@@ -495,7 +495,7 @@ public Action StartTimer(Handle timer)
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	
 	
-	g_iBurningZero = GetRandomPlayer();
+	g_iBurningZero = GetRandomAlivePlayer();
 	if(g_iBurningZero > 0)
 	{
 		CPrintToChatAll("%t %t", "torch_tag", "torch_random", g_iBurningZero); 
@@ -535,7 +535,7 @@ public Action StartTimer(Handle timer)
 	return Plugin_Stop;
 }
 
-stock int GetRandomPlayer() 
+stock int GetRandomAlivePlayer() 
 {
 	int[] clients = new int[MaxClients];
 	int clientCount;
