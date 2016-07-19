@@ -26,7 +26,7 @@ int g_iKillKind;
 public void RandomKill_OnPluginStart()
 {
 	//Client commands
-	RegConsoleCmd("sm_randomkill", Command_KillMenu, "Allows the Warden to kill a random T");
+	RegConsoleCmd("sm_killrandom", Command_KillMenu, "Allows the Warden to kill a random T");
 	
 	//AutoExecConfig
 	gc_bRandom = AutoExecConfig_CreateConVar("sm_warden_random", "1", "0 - disabled, 1 - enable kill a random t for warden", _, true,  0.0, true, 1.0);
