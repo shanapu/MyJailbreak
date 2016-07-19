@@ -266,82 +266,87 @@ public Action LGRBeginn(Handle timer)
 
 public Action StartLastGuard()
 {
-	IsLastGuard = true;
-	g_iVoteCount = 0;
-	
-	SetCvar("sm_hosties_lr", 0);
-	SetCvar("sm_weapons_t", 1);
-	SetCvar("sm_warden_enable", 0);
-	int Tcount = (GetAliveTeamCount(CS_TEAM_T)*gc_iTimePerT.IntValue);
-	
-	if(gc_iTime.IntValue != 0) GameRules_SetProp("m_iRoundTime", (60+Tcount+(gc_iTime.IntValue*60)), 4, 0, true);
-	
-	if(gc_bSounds.BoolValue)
+	if(AllowLastGuard)
 	{
-		CreateTimer(0.5, LastCTsound); 
-	}
-	
-	int HPterrors = 0;
-	int HPterBuffer = 0;
-	LoopClients(i) if(IsPlayerAlive(i) && GetClientTeam(i) == CS_TEAM_T)
-	{
-		HPterBuffer = (GetClientHealth(i) + HPterrors);
-		HPterrors = HPterBuffer;
-		HPterBuffer = 0;
+		IsLastGuard = true;
+		g_iVoteCount = 0;
 		
-		SetEntityMoveType(i, MOVETYPE_WALK);
-		SetEntPropFloat(i, Prop_Data, "m_flLaggedMovementValue", 1.0);
-		SetEntityRenderColor(i, 255, 255, 255, 255);
-		CreateTimer( 0.0, DeleteOverlay, i);
-	}
-	int HPCT = RoundToCeil(HPterrors * (gc_iHPmultipler.FloatValue / 100.0));
-	LoopClients(iClient)
-	{
-		char info[64];
-		LastGuardMenu = CreatePanel();
-		Format(info, sizeof(info), "%T", "lastguard_info_title", iClient);
-		SetPanelTitle(LastGuardMenu, info);
-		DrawPanelText(LastGuardMenu, "                                   ");
-		Format(info, sizeof(info), "%T", "lastguard_info_line1", iClient);
-		DrawPanelText(LastGuardMenu, info);
-		DrawPanelText(LastGuardMenu, "-----------------------------------");
-		Format(info, sizeof(info), "%T", "lastguard_info_line2", iClient);
-		DrawPanelText(LastGuardMenu, info);
-		Format(info, sizeof(info), "%T", "lastguard_info_line3", iClient);
-		DrawPanelText(LastGuardMenu, info);
-		Format(info, sizeof(info), "%T", "lastguard_info_line4", iClient);
-		DrawPanelText(LastGuardMenu, info);
-		Format(info, sizeof(info), "%T", "lastguard_info_line5", iClient);
-		DrawPanelText(LastGuardMenu, info);
-		Format(info, sizeof(info), "%T", "lastguard_info_line6", iClient);
-		DrawPanelText(LastGuardMenu, info);
-		Format(info, sizeof(info), "%T", "lastguard_info_line7", iClient);
-		DrawPanelText(LastGuardMenu, info);
-		DrawPanelText(LastGuardMenu, "-----------------------------------");
-		Format(info, sizeof(info), "%T", "warden_close", iClient);
-		DrawPanelItem(LastGuardMenu, info); 
-		SendPanelToClient(LastGuardMenu, iClient, NullHandler, 20);
+		SJD_OpenDoors();
 		
-		SetEntData(iClient, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
-		SetEntProp(iClient, Prop_Data, "m_takedamage", 0, 1);
+		SetCvar("sm_hosties_lr", 0);
+		SetCvar("sm_weapons_t", 1);
+		SetCvar("sm_warden_enable", 0);
+		int Tcount = (GetAliveTeamCount(CS_TEAM_T)*gc_iTimePerT.IntValue);
 		
-		if (gc_bFreeze.BoolValue) SetEntityMoveType(iClient, MOVETYPE_NONE);
+		if(gc_iTime.IntValue != 0) GameRules_SetProp("m_iRoundTime", (60+Tcount+(gc_iTime.IntValue*60)), 4, 0, true);
 		
-	//	FakeClientCommand(iClient, "sm_guns");
-		
-		if(IsPlayerAlive(iClient) && GetClientTeam(iClient) == CS_TEAM_CT)
+		if(gc_bSounds.BoolValue)
 		{
-			SetEntityHealth(iClient, HPCT);
-			CPrintToChatAll("%t %t", "lastguard_tag", "lastguard_hp", GetAliveTeamCount(CS_TEAM_T), HPterrors, iClient, HPCT);
-	
+			CreateTimer(0.5, LastCTsound); 
 		}
+		
+		int HPterrors = 0;
+		int HPterBuffer = 0;
+		LoopClients(i) if(IsPlayerAlive(i) && GetClientTeam(i) == CS_TEAM_T)
+		{
+			HPterBuffer = (GetClientHealth(i) + HPterrors);
+			HPterrors = HPterBuffer;
+			HPterBuffer = 0;
+			
+			SetEntityMoveType(i, MOVETYPE_WALK);
+			SetEntPropFloat(i, Prop_Data, "m_flLaggedMovementValue", 1.0);
+			SetEntityRenderColor(i, 255, 255, 255, 255);
+			CreateTimer( 0.0, DeleteOverlay, i);
+		}
+		int HPCT = RoundToCeil(HPterrors * (gc_iHPmultipler.FloatValue / 100.0));
+		LoopClients(iClient)
+		{
+			char info[64];
+			LastGuardMenu = CreatePanel();
+			Format(info, sizeof(info), "%T", "lastguard_info_title", iClient);
+			SetPanelTitle(LastGuardMenu, info);
+			DrawPanelText(LastGuardMenu, "                                   ");
+			Format(info, sizeof(info), "%T", "lastguard_info_line1", iClient);
+			DrawPanelText(LastGuardMenu, info);
+			DrawPanelText(LastGuardMenu, "-----------------------------------");
+			Format(info, sizeof(info), "%T", "lastguard_info_line2", iClient);
+			DrawPanelText(LastGuardMenu, info);
+			Format(info, sizeof(info), "%T", "lastguard_info_line3", iClient);
+			DrawPanelText(LastGuardMenu, info);
+			Format(info, sizeof(info), "%T", "lastguard_info_line4", iClient);
+			DrawPanelText(LastGuardMenu, info);
+			Format(info, sizeof(info), "%T", "lastguard_info_line5", iClient);
+			DrawPanelText(LastGuardMenu, info);
+			Format(info, sizeof(info), "%T", "lastguard_info_line6", iClient);
+			DrawPanelText(LastGuardMenu, info);
+			Format(info, sizeof(info), "%T", "lastguard_info_line7", iClient);
+			DrawPanelText(LastGuardMenu, info);
+			DrawPanelText(LastGuardMenu, "-----------------------------------");
+			Format(info, sizeof(info), "%T", "warden_close", iClient);
+			DrawPanelItem(LastGuardMenu, info); 
+			SendPanelToClient(LastGuardMenu, iClient, NullHandler, 20);
+			
+			SetEntData(iClient, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
+			SetEntProp(iClient, Prop_Data, "m_takedamage", 0, 1);
+			
+			if (gc_bFreeze.BoolValue) SetEntityMoveType(iClient, MOVETYPE_NONE);
+			
+		//	FakeClientCommand(iClient, "sm_guns");
+			
+			if(IsPlayerAlive(iClient) && GetClientTeam(iClient) == CS_TEAM_CT)
+			{
+				SetEntityHealth(iClient, HPCT);
+				CPrintToChatAll("%t %t", "lastguard_tag", "lastguard_hp", GetAliveTeamCount(CS_TEAM_T), HPterrors, iClient, HPCT);
+		
+			}
+		}
+		
+		g_iTruceTime--;
+		TruceTimer = CreateTimer(1.0, StartTimer, _, TIMER_REPEAT);
+		
+		CPrintToChatAll("%t %t", "lastguard_tag" , "lastguard_startnow");
+		PrintHintTextToAll("%t", "lastguard_startnow_nc");
 	}
-	
-	g_iTruceTime--;
-	TruceTimer = CreateTimer(1.0, StartTimer, _, TIMER_REPEAT);
-	
-	CPrintToChatAll("%t %t", "lastguard_tag" , "lastguard_startnow");
-	PrintHintTextToAll("%t", "lastguard_startnow_nc");
 }
 
 
@@ -383,7 +388,6 @@ public Action StartTimer(Handle timer)
 	CPrintToChatAll("%t %t", "lastguard_tag" , "lastguard_start");
 	
 	TruceTimer = null;
-	SJD_OpenDoors();
 	return Plugin_Stop;
 }
 
@@ -410,6 +414,8 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 		SetCvar("sm_warden_enable", 1);
 		CPrintToChatAll("%t %t", "lastguard_tag" , "lastguard_end");
 	}
+	
+	AllowLastGuard = false;
 	IsLR = false;
 }
 
@@ -418,6 +424,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 public void OnMapEnd()
 {
 	IsLastGuard = false;
+	AllowLastGuard = false;
 	delete TruceTimer;
 	g_iVoteCount = 0;
 	g_sHasVoted[0] = '\0';
