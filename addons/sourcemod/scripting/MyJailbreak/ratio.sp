@@ -61,7 +61,7 @@ public void OnPluginStart()
 	
 	AutoExecConfig_CreateConVar("sm_ratio_version", PLUGIN_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 //	gc_bPlugin = AutoExecConfig_CreateConVar("sm_ratio_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true,  0.0, true, 1.0);
-	gc_sCustomCommand = AutoExecConfig_CreateConVar("sm_ratio_cmd", "gua", "Set your custom chat command for become guard. no need for sm_ or !");
+	gc_sCustomCommand = AutoExecConfig_CreateConVar("sm_ratio_cmd", "ct", "Set your custom chat command for become guard. no need for sm_ or !");
 	gc_iPrisonerPerGuard = AutoExecConfig_CreateConVar("sm_ratio_T_per_CT", "2", "How many prisoners for each guard.", _, true, 1.0);
 	gc_bVIPQueue = AutoExecConfig_CreateConVar("sm_ratio_flag", "1", "0 - disabled, 1 - enable VIPs moved to front of queue", _, true,  0.0, true, 1.0);
 	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_ratio_vipflag", "a", "Set the flag for VIP");
@@ -78,6 +78,7 @@ public void OnPluginStart()
 	HookConVarChange(gc_sCustomCommand, OnSettingChanged);
 	
 	gc_sAdminFlag.GetString(g_sAdminFlag,sizeof(g_sAdminFlag));
+	gc_sCustomCommand.GetString(g_sCustomCommand , sizeof(g_sCustomCommand));
 	
 	g_aGuardQueue = CreateArray();
 	
