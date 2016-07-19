@@ -46,7 +46,7 @@ public void Reminder_OnMapEnd()
 
 public void Reminder_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
-	if(gc_bRemindTimer.BoolValue)RemindTimer = CreateTimer(1.0, Timer_RemindTimer, _, TIMER_REPEAT);
+	if(gc_bRemindTimer.BoolValue)RemindTimer = CreateTimer(2.0, Timer_RemindTimer, _, TIMER_REPEAT);
 }
 
 public Action Timer_RemindTimer(Handle timer)
