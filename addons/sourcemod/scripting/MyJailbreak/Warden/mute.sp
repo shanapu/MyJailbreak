@@ -181,12 +181,12 @@ public Action Command_UnMuteMenu(int client, any args)
 					Format(username, sizeof(username), "%N", i);
 					menu4.AddItem(userid,username);
 				}
-				else
+			/*	else
 				{
 					CPrintToChat(client, "%t %t", "warden_tag", "warden_nomuted");
 					FakeClientCommand(client, "sm_wmute");
 				}
-			}
+	*/		}
 			menu4.ExitBackButton = true;
 			menu4.ExitButton = true;
 			menu4.Display(client,MENU_TIME_FOREVER);
@@ -241,6 +241,10 @@ public Action Command_MuteMenu(int client, int args)
 			menu1.AddItem("0", info);
 			Format(info, sizeof(info), "%T", "warden_menu_unmute", client);
 			menu1.AddItem("1", info);
+			Format(info, sizeof(info), "%T", "warden_menu_muteall", client);
+			menu1.AddItem("2", info);
+			Format(info, sizeof(info), "%T", "warden_menu_unmuteall", client);
+			menu1.AddItem("3", info);
 			menu1.ExitBackButton = true;
 			menu1.ExitButton = true;
 			menu1.Display(client,MENU_TIME_FOREVER);
@@ -264,6 +268,14 @@ public int Handler_MuteMenu(Menu menu, MenuAction action, int client, int Positi
 		{
 			MuteMenuPlayer(client,0);
 		}
+		if(choice == 2)
+		{
+			MuteMenuTeam(client,0);
+		}
+		if(choice == 3)
+		{
+			LoopClients(i) UnMuteClient(i);
+		}
 	}
 	else if(action == MenuAction_Cancel)
 	{
@@ -278,6 +290,66 @@ public int Handler_MuteMenu(Menu menu, MenuAction action, int client, int Positi
 	}
 }
 
+public int MuteMenuTeam(int client, int args)
+{
+	char menuinfo[255];
+	
+	Menu menu6 = new Menu(Handler_MuteMenuTeam);
+	Format(menuinfo, sizeof(menuinfo), "%T", "warden_time_title", client);
+	menu6.SetTitle(menuinfo);
+	Format(menuinfo, sizeof(menuinfo), "%T", "warden_roundend", client);
+	if(gc_bMuteEnd.BoolValue) menu6.AddItem("0", menuinfo);
+	Format(menuinfo, sizeof(menuinfo), "%T", "warden_15", client);
+	menu6.AddItem("15", menuinfo);
+	Format(menuinfo, sizeof(menuinfo), "%T", "warden_30", client);
+	menu6.AddItem("30", menuinfo);
+	Format(menuinfo, sizeof(menuinfo), "%T", "warden_45", client);
+	menu6.AddItem("45", menuinfo);
+	Format(menuinfo, sizeof(menuinfo), "%T", "warden_60", client);
+	menu6.AddItem("60", menuinfo);
+	Format(menuinfo, sizeof(menuinfo), "%T", "warden_90", client);
+	menu6.AddItem("90", menuinfo);
+	Format(menuinfo, sizeof(menuinfo), "%T", "warden_120", client);
+	menu6.AddItem("120", menuinfo);
+	Format(menuinfo, sizeof(menuinfo), "%T", "warden_180", client);
+	menu6.AddItem("180", menuinfo);
+	Format(menuinfo, sizeof(menuinfo), "%T", "warden_300", client);
+	menu6.AddItem("300", menuinfo);
+	menu6.ExitBackButton = true;
+	menu6.ExitButton = true;
+	menu6.Display(client, 20);
+}
+
+public int Handler_MuteMenuTeam(Menu menu6, MenuAction action, int client, int selection)
+{
+	if (action == MenuAction_Select)
+	{
+		char info[32];
+		menu6.GetItem(selection, info, sizeof(info));
+		int duration = StringToInt(info);
+				
+		LoopClients(i) MuteClient(i,duration);
+		
+		if(g_bMenuClose != null)
+		{
+			if(!g_bMenuClose)
+			{
+				FakeClientCommand(client, "sm_menu");
+			}
+		}
+	}
+	else if(action == MenuAction_Cancel)
+	{
+		if(selection == MenuCancel_ExitBack) 
+		{
+			FakeClientCommand(client, "sm_wmute");
+		}
+	}
+	else if(action == MenuAction_End)
+	{
+		delete menu6;
+	}
+}
 public Action MuteClient(int client, int time)
 {
 	if(IsValidClient(client,true,true))

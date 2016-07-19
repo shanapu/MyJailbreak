@@ -1039,6 +1039,16 @@
 		"pl"		"Odmutuj terroryste"
 		"de"		"Einen Terrorist unmuten"
 	}
+	
+	"warden_menu_muteall"
+	{
+		"en"		"Mute all Prisoners"
+	}
+
+	"warden_menu_unmuteall"
+	{
+		"en"		"Unmute all Prisoners"
+	}
 
 	"warden_cuffs"
 	{

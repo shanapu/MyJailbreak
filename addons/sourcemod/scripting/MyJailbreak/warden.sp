@@ -7,7 +7,6 @@
 #include <autoexecconfig>
 #include <myjailbreak>
 #include <scp>
-#include <lastrequest>
 #include <smlib>
 #include <smartjaildoors>
 
