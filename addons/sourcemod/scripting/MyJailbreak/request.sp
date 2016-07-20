@@ -1294,7 +1294,7 @@ public int Handler_KillReasonMenu(Menu menu, MenuAction action, int client, int 
 		if(choice == 5) //sry
 		{
 			CPrintToChatAll("%t %t", "request_tag", "request_killreason_sry_chat", client, g_iHasKilled[client]);
-			FreeKillAcceptMenu(victim);
+			Command_Freekill(victim,0);
 		}
 		if(choice == 6) //freekill
 		{
