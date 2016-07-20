@@ -67,6 +67,7 @@ ConVar gc_sAdminFlag;
 ConVar gc_sAdminFlagRepeat;
 ConVar gc_sAdminFlagRefuse;
 ConVar gc_sAdminFlagHeal;
+ConVar gc_bKillReason;
 
 //Bools
 bool g_bHealed[MAXPLAYERS+1];
@@ -85,6 +86,7 @@ int g_iHealCounter[MAXPLAYERS+1];
 int g_iRepeatCounter[MAXPLAYERS+1];
 int g_iFreeKillCounter[MAXPLAYERS+1];
 int g_iKilledBy[MAXPLAYERS+1];
+int g_iHasKilled[MAXPLAYERS+1];
 int g_iCountStopTime;
 
 
@@ -205,13 +207,14 @@ public void OnPluginStart()
 	gc_sAdminFlagRepeat = AutoExecConfig_CreateConVar("sm_repeat_flag", "a", "Set flag for admin/vip to get one more repeat. No flag = feature is available for all players!");
 	gc_sAdminFlagRefuse = AutoExecConfig_CreateConVar("sm_refuse_flag", "a", "Set flag for admin/vip to get one more refuse. No flag = feature is available for all players!");
 	gc_sAdminFlagHeal = AutoExecConfig_CreateConVar("sm_repeat_flag", "a", "Set flag for admin/vip to get one more heal. No flag = feature is available for all players!");
-
+	gc_bKillReason = AutoExecConfig_CreateConVar("sm_killreason_enable", "1", "0 - disabled, 1 - enable - CT must answer a menu with the kill reason");
+	
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
 	
 	//Hooks
 	HookEvent("round_start", RoundStart);
-	HookEvent("player_death", playerDeath);
+	HookEvent("player_death", PlayerDeath);
 	HookConVarChange(gc_sSoundRefusePath, OnSettingChanged);
 	HookConVarChange(gc_sSoundRefuseStopPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundCapitulationPath, OnSettingChanged);
@@ -395,6 +398,7 @@ public Action RoundStart(Handle event, char [] name, bool dontBroadcast)
 		IsRequest = false;
 		g_bAllowRefuse = false;
 		g_iKilledBy[client] = 0;
+		g_iHasKilled[client] = 0;
 		g_bFreeKilled[client] = false;
 		if(CheckVipFlag(client,g_sAdminFlagRefuse)) g_iRefuseCounter[client] = -1;
 		if(CheckVipFlag(client,g_sAdminFlagHeal)) g_iHealCounter[client] = -1;
@@ -1224,16 +1228,85 @@ public int GiveFreeDayHandler(Menu menu5, MenuAction action, int client, int Pos
 	}
 }
 
-public Action playerDeath(Event event, const char[] name, bool dontBroadcast) 
+public Action PlayerDeath(Event event, const char[] name, bool dontBroadcast) 
 {
 	int victim = GetClientOfUserId(GetEventInt(event, "userid")); // Get the dead clients id
 	int attacker = GetClientOfUserId(GetEventInt(event, "attacker")); // Get the attacker clients id
 	
-	if(IsValidClient(attacker, true, false) && (attacker != victim)) g_iKilledBy[victim] = attacker;
+	if(IsValidClient(attacker, true, false) && (attacker != victim))
+	{
+		g_iKilledBy[victim] = attacker;
+		g_iHasKilled[attacker] = victim;
+	}
 	
-	
+	if(gc_bPlugin.BoolValue && gc_bKillReason.BoolValue && ((GetClientTeam(attacker) == CS_TEAM_CT) && (GetClientTeam(victim) == CS_TEAM_T))) KillReasonMenu(attacker,victim);
 	
 	GetClientAbsOrigin(victim, DeathOrigin[victim]);
+}
+
+public int KillReasonMenu(int client, int victim)
+{
+	char info[255];
+	
+	Menu menu1 = CreateMenu(Handler_KillReasonMenu);
+	Format(info, sizeof(info), "%T", "request_killreason_title", client, victim);
+	menu1.SetTitle(info);
+	Format(info, sizeof(info), "%T", "request_killreason_lostgame", client, victim);
+	if(gc_bFreeKillRespawn.BoolValue) menu1.AddItem("1", info);
+	Format(info, sizeof(info), "%T", "request_killreason_rebel", client);
+	if(gc_bFreeKillKill.BoolValue) menu1.AddItem("2", info);
+	Format(info, sizeof(info), "%T", "request_killreason_brokerule", client);
+	if(gc_bFreeKillFreeDay.BoolValue) menu1.AddItem("3", info);
+	Format(info, sizeof(info), "%T", "request_killreason_notfollow", client);
+	if(gc_bFreeKillFreeDayVictim.BoolValue) menu1.AddItem("4", info);
+	Format(info, sizeof(info), "%T", "request_killreason_sry", client);
+	if(gc_bFreeKillSwap.BoolValue) menu1.AddItem("5", info);
+	Format(info, sizeof(info), "%T", "request_killreason_freekill", client);
+	if(gc_bFreeKillSwap.BoolValue) menu1.AddItem("6", info);
+	menu1.Display(client, MENU_TIME_FOREVER);
+}
+
+public int Handler_KillReasonMenu(Menu menu, MenuAction action, int client, int Position)
+{
+	if(action == MenuAction_Select)
+	{
+		char Item[11];
+		menu.GetItem(Position,Item,sizeof(Item));
+		int choice = StringToInt(Item);
+		int victim = g_iHasKilled[client];
+		
+		if(choice == 1) //lostgame
+		{
+			CPrintToChatAll("%t %t", "request_tag", "request_killreason_lostgame_chat", client, g_iHasKilled[client]);
+		}
+		if(choice == 2) //rebel
+		{
+			CPrintToChatAll("%t %t", "request_tag", "request_killreason_rebel_chat", client, g_iHasKilled[client]);
+		}
+		if(choice == 3) //broke rule
+		{
+			CPrintToChatAll("%t %t", "request_tag", "request_killreason_brokerule_chat", client, g_iHasKilled[client]);
+		}
+		if(choice == 4) //dictate
+		{
+			CPrintToChatAll("%t %t", "request_tag", "request_killreason_notfollow_chat", client, g_iHasKilled[client]);
+		}
+		if(choice == 5) //sry
+		{
+			CPrintToChatAll("%t %t", "request_tag", "request_killreason_sry_chat", client, g_iHasKilled[client]);
+			FreeKillAcceptMenu(victim);
+		}
+		if(choice == 6) //freekill
+		{
+			CPrintToChatAll("%t %t", "request_tag", "request_killreason_freekill_chat", client, g_iHasKilled[client]);
+			Command_Freekill(victim,0);
+		}
+	}
+	else if (action == MenuAction_End)
+	{
+		delete menu;
+	//	CPrintToChatAll("%t %t", "request_tag", "request_killreason_noanswer", client, g_iHasKilled[client]);
+	}
 }
 
 public Action IsRequestTimer(Handle timer, any client)

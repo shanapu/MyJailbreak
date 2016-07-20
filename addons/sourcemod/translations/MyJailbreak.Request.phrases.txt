@@ -365,7 +365,7 @@
 		"#format"   "{1:N}"
 		"en"		"{green}{1}{default} was slain due to a {darkred}Freekill!"
 		"ru"		"{green}{1}{default} был убит в из-за {darkred}фрикилла"
-		"de"		"{green}{{1}{default} wurdest wegen eines {darkred}Freekills{default} getötet"
+		"de"		"{green}{1}{default} wurdest wegen eines {darkred}Freekills{default} getötet"
 	}
 
 	"request_swapbcfreekill"
@@ -395,7 +395,7 @@
 		"#format"   "{1:N},{2:N},{3:N}"
 		"ru"		"{green}{1}{default} Отправил отчёт {darkred}{3}{default} о фрикилле {purple}{2}"
 		"de"		"{green}{1}{default} meldet {darkred}{2}{default} wegen Freekill an {purple}{3}"
-		"en"		"{green}{1{default} sent a Freekill report of {darkred}{2}{default} to {purple}{3}!"
+		"en"		"{green}{1}{default} sent a Freekill report of {darkred}{2}{default} to {purple}{3}!"
 	}
 
 	"request_pardonfreekill"
@@ -441,4 +441,82 @@
 		"en"		"Give FreeDay to:"
 	}
 
+	"request_killreason_title"
+	{
+		"#format"   "{1:N}"
+		"en"		"You killed {1}???"
+	}
+
+	"request_killreason_lostgame"
+	{
+		"en"		"He lost the Game"
+	}
+
+	"request_killreason_rebel"
+	{
+		"en"		"He was a Rebel"
+	}
+
+	"request_killreason_brokerule"
+	{
+		"en"		"He broke the Rules"
+	}
+
+	"request_killreason_notfollow"
+	{
+		"en"		"He not listen to dictate"
+	}
+
+	"request_killreason_sry"
+	{
+		"en"		"My fault, wanna say sorry"
+	}
+
+	"request_killreason_freekill"
+	{
+		"en"		"I freekilled him"
+	}
+
+	"request_killreason_lostgame_chat"
+	{
+		"#format"   "{1:N},{2:N}"
+		"en"		"The Guard {green}{1}{default} claiming {darkred}{2}{default} lost the Game"
+	}
+
+	"request_killreason_rebel_chat"
+	{
+		"#format"   "{1:N},{2:N}"
+		"en"		"The Guard {green}{1}{default} claiming {darkred}{2}{default} was a rebel"
+	}
+
+	"request_killreason_brokerule_chat"
+	{
+		"#format"   "{1:N},{2:N}"
+		"en"		"The Guard {green}{1}{default} claiming {darkred}{2}{default} has broke the rules"
+	}
+
+	"request_killreason_notfollow_chat"
+	{
+		"#format"   "{1:N},{2:N}"
+		"en"		"The Guard {green}{1}{default} claiming {darkred}{2}{default} hasn't followed the dictation"
+	}
+
+	"request_killreason_sry_chat"
+	{
+		"#format"   "{1:N},{2:N}"
+		"en"		"The Guard {green}{1}{default} wanna say sorry for mistakly killing {darkred}{2}{default}"
+	}
+
+	"request_killreason_freekill_chat"
+	{
+		"#format"   "{1:N},{2:N}"
+		"en"		"The Guard {green}{1}{default} confess a freekill on {darkred}{2}{default}"
+	}
+
+	"request_killreason_noanswer"
+	{
+		"#format"   "{1:N},{2:N}"
+		"en"		"The Guard {green}{1}{default} has no declaration for the kill on {darkred}{2}{default}"
+	}
+	
 }
