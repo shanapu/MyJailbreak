@@ -502,7 +502,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 		
 		if (winner == 2) PrintHintTextToAll("%t", "war_twin_nc"); 
 		if (winner == 3) PrintHintTextToAll("%t", "war_ctwin_nc");
-		if (g_iRound == g_iMaxRound && !gc_bAllowLR.BoolValue)
+		if (g_iRound == g_iMaxRound)
 		{
 			IsWar = false;
 			g_iRound = 0;

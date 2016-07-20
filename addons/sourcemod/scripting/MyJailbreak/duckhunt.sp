@@ -512,7 +512,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 		if (TruceTimer != null) KillTimer(TruceTimer);
 		if (winner == 2) PrintHintTextToAll("%t", "duckhunt_twin_nc");
 		if (winner == 3) PrintHintTextToAll("%t", "duckhunt_ctwin_nc");
-		if (g_iRound == g_iMaxRound && !gc_bAllowLR.BoolValue)
+		if (g_iRound == g_iMaxRound)
 		{
 			IsDuckHunt = false;
 			StartDuckHunt = false;

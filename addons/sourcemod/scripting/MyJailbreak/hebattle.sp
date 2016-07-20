@@ -492,7 +492,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 		delete GravityTimer;
 		if (winner == 2) PrintHintTextToAll("%t", "hebattle_twin_nc");
 		if (winner == 3) PrintHintTextToAll("%t", "hebattle_ctwin_nc");
-		if (g_iRound == g_iMaxRound && !gc_bAllowLR.BoolValue)
+		if (g_iRound == g_iMaxRound)
 		{
 			IsHEbattle = false;
 			StartHEbattle = false;

@@ -502,7 +502,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 		delete TruceTimer; //kill start time if still running
 		if (winner == 2) PrintHintTextToAll("%t", "drunk_twin_nc");
 		if (winner == 3) PrintHintTextToAll("%t", "drunk_ctwin_nc");
-		if (g_iRound == g_iMaxRound && !gc_bAllowLR.BoolValue) //if this was the last round
+		if (g_iRound == g_iMaxRound) //if this was the last round
 		{
 			//return to default start values
 			IsDrunk = false;
