@@ -1,27 +1,51 @@
-//Marker module for MyJailbreak - Warden
+/*
+ * MyJailbreak - Warden - Marker Module.
+ * by: shanapu
+ * https://github.com/shanapu/MyJailbreak/
+ *
+ * This file is part of the MyJailbreak SourceMod Plugin.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, version 3.0, as published by the
+ * Free Software Foundation.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+
+/******************************************************************************
+                   STARTUP
+******************************************************************************/
+
 
 //Includes
-#include <sourcemod>
-#include <cstrike>
-#include <warden>
-#include <colors>
-#include <autoexecconfig>
 #include <myjailbreak>
+
 
 //Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
 
-//ConVars
+
+//Console Variables
 ConVar gc_bMarker;
 
-//Bools
+
+//Booleans
 bool g_bMarkerSetup;
 bool g_bCanZoom[MAXPLAYERS + 1];
 bool g_bHasSilencer[MAXPLAYERS + 1];
 
+
 //Integers
 int g_iWrongWeapon[MAXPLAYERS+1];
+
 
 //Strings
 char g_sColorNamesRed[64];
@@ -35,6 +59,7 @@ char g_sColorNamesCyan[64];
 char g_sColorNamesWhite[64];
 char g_sColorNames[8][64] ={{""},{""},{""},{""},{""},{""},{""},{""}};
 
+
 //float
 float g_fMarkerRadiusMin = 100.0;
 float g_fMarkerRadiusMax = 500.0;
@@ -46,13 +71,15 @@ float g_fMarkerSetupEndOrigin[3];
 float g_fMarkerOrigin[8][3];
 float g_fMarkerRadius[8];
 
+
+//Start
 public void Marker_OnPluginStart()
 {
 	//AutoExecConfig
 	gc_bMarker = AutoExecConfig_CreateConVar("sm_warden_marker", "1", "0 - disabled, 1 - enable Warden advanced markers ", _, true,  0.0, true, 1.0);
 	
 	//Hooks
-	HookEvent("item_equip", Marker_ItemEquip);
+	HookEvent("item_equip", Marker_Event_ItemEquip);
 	
 	CreateTimer(1.0, Timer_DrawMakers, _, TIMER_REPEAT);
 	
@@ -81,6 +108,27 @@ public void PrepareMarkerNames()
 	g_sColorNames[4] = g_sColorNamesYellow;
 	g_sColorNames[5] = g_sColorNamesCyan;
 }
+
+
+/******************************************************************************
+                   EVENTS
+******************************************************************************/
+
+
+public Action Marker_Event_ItemEquip(Handle event, const char[] name, bool dontBroadcast)
+{
+	int client = GetClientOfUserId(GetEventInt(event, "userid"));
+	
+	g_bCanZoom[client] = GetEventBool(event, "canzoom");
+	g_bHasSilencer[client] = GetEventBool(event, "hassilencer");
+	g_iWrongWeapon[client] = GetEventInt(event, "weptype");
+}
+
+
+/******************************************************************************
+                   FORWARDS LISTEN
+******************************************************************************/
+
 
 public Action Marker_OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
 {
@@ -116,64 +164,29 @@ public Action Marker_OnPlayerRunCmd(int client, int &buttons, int &impulse, floa
 	}
 }
 
-public Action Marker_ItemEquip(Handle event, const char[] name, bool dontBroadcast)
+
+public void Marker_OnWardenRemoved()
 {
-	int client = GetClientOfUserId(GetEventInt(event, "userid"));
-	
-	g_bCanZoom[client] = GetEventBool(event, "canzoom");
-	g_bHasSilencer[client] = GetEventBool(event, "hassilencer");
-	g_iWrongWeapon[client] = GetEventInt(event, "weptype");
+	RemoveAllMarkers();
 }
 
-public Action Timer_DrawMakers(Handle timer, any data)
+
+public void Marker_OnMapEnd()
 {
-	Draw_Markers();
-	return Plugin_Continue;
+	RemoveAllMarkers();
 }
 
-stock void Draw_Markers()
+
+public void Marker_OnMapStart()
 {
-	if (g_iWarden == -1)
-		return;
-	
-	for(int i = 0; i<8; i++)
-	{
-		if (g_fMarkerRadius[i] <= 0.0)
-			continue;
-		
-		float fWardenOrigin[3];
-		Entity_GetAbsOrigin(g_iWarden, fWardenOrigin);
-		
-		if (GetVectorDistance(fWardenOrigin, g_fMarkerOrigin[i]) > g_fMarkerRangeMax)
-		{
-			CPrintToChat(g_iWarden, "%t %t", "warden_tag", "warden_marker_faraway", g_sColorNames[i]);
-			RemoveMarker(i);
-			continue;
-		}
-		
-		LoopValidClients(iClient, false, false)
-		{
-			
-			// Show the ring
-			
-			TE_SetupBeamRingPoint(g_fMarkerOrigin[i], g_fMarkerRadius[i], g_fMarkerRadius[i]+0.1, g_iBeamSprite, g_iHaloSprite, 0, 10, 1.0, 2.0, 0.0, g_iColors[i], 10, 0);
-			TE_SendToAll();
-			
-			// Show the arrow
-			
-			float fStart[3];
-			AddVectors(fStart, g_fMarkerOrigin[i], fStart);
-			fStart[2] += g_fMarkerArrowHeight;
-			
-			float fEnd[3];
-			AddVectors(fEnd, fStart, fEnd);
-			fEnd[2] += g_fMarkerArrowLength;
-			
-			TE_SetupBeamPoints(fStart, fEnd, g_iBeamSprite, g_iHaloSprite, 0, 10, 1.0, 2.0, 16.0, 1, 0.0, g_iColors[i], 5);
-			TE_SendToAll();
-		}
-	}
+	RemoveAllMarkers();
 }
+
+
+/******************************************************************************
+                   MENUS
+******************************************************************************/
+
 
 stock void MarkerMenu(int client)
 {
@@ -239,6 +252,7 @@ stock void MarkerMenu(int client)
 	}
 }
 
+
 public int Handle_MarkerMenu(Handle menu, MenuAction action, int client, int itemNum)
 {
 	if(!(0 < client < MaxClients))
@@ -267,6 +281,69 @@ public int Handle_MarkerMenu(Handle menu, MenuAction action, int client, int ite
 	}
 }
 
+
+/******************************************************************************
+                   TIMER
+******************************************************************************/
+
+
+public Action Timer_DrawMakers(Handle timer, any data)
+{
+	Draw_Markers();
+	return Plugin_Continue;
+}
+
+
+/******************************************************************************
+                   STOCKS
+******************************************************************************/
+
+
+stock void Draw_Markers()
+{
+	if (g_iWarden == -1)
+		return;
+	
+	for(int i = 0; i<8; i++)
+	{
+		if (g_fMarkerRadius[i] <= 0.0)
+			continue;
+		
+		float fWardenOrigin[3];
+		Entity_GetAbsOrigin(g_iWarden, fWardenOrigin);
+		
+		if (GetVectorDistance(fWardenOrigin, g_fMarkerOrigin[i]) > g_fMarkerRangeMax)
+		{
+			CPrintToChat(g_iWarden, "%t %t", "warden_tag", "warden_marker_faraway", g_sColorNames[i]);
+			RemoveMarker(i);
+			continue;
+		}
+		
+		LoopValidClients(iClient, false, false)
+		{
+			
+			// Show the ring
+			
+			TE_SetupBeamRingPoint(g_fMarkerOrigin[i], g_fMarkerRadius[i], g_fMarkerRadius[i]+0.1, g_iBeamSprite, g_iHaloSprite, 0, 10, 1.0, 2.0, 0.0, g_iColors[i], 10, 0);
+			TE_SendToAll();
+			
+			// Show the arrow
+			
+			float fStart[3];
+			AddVectors(fStart, g_fMarkerOrigin[i], fStart);
+			fStart[2] += g_fMarkerArrowHeight;
+			
+			float fEnd[3];
+			AddVectors(fEnd, fStart, fEnd);
+			fEnd[2] += g_fMarkerArrowLength;
+			
+			TE_SetupBeamPoints(fStart, fEnd, g_iBeamSprite, g_iHaloSprite, 0, 10, 1.0, 2.0, 16.0, 1, 0.0, g_iColors[i], 5);
+			TE_SendToAll();
+		}
+	}
+}
+
+
 stock void SetupMarker(int client, int marker)
 {
 	g_fMarkerOrigin[marker][0] = g_fMarkerSetupStartOrigin[0];
@@ -280,6 +357,7 @@ stock void SetupMarker(int client, int marker)
 		radius = g_fMarkerRadiusMin;
 	g_fMarkerRadius[marker] = radius;
 }
+
 
 stock int GetClientAimTargetPos(int client, float g_fPos[3]) 
 {
@@ -303,6 +381,7 @@ stock int GetClientAimTargetPos(int client, float g_fPos[3])
 	return entity;
 }
 
+
 stock void RemoveMarker(int marker)
 {
 	if(marker != -1)
@@ -311,11 +390,13 @@ stock void RemoveMarker(int marker)
 	}
 }
 
+
 stock void RemoveAllMarkers()
 {
 	for(int i = 0; i < 8;i++)
 		RemoveMarker(i);
 }
+
 
 stock int IsMarkerInRange(float g_fPos[3])
 {
@@ -330,6 +411,7 @@ stock int IsMarkerInRange(float g_fPos[3])
 	return -1;
 }
 
+
 public bool TraceFilterAllEntities(int entity, int contentsMask, any client)
 {
 	if (entity == client)
@@ -342,19 +424,4 @@ public bool TraceFilterAllEntities(int entity, int contentsMask, any client)
 		return false;
 	
 	return true;
-}
-
-public void Marker_OnWardenRemoved()
-{
-	RemoveAllMarkers();
-}
-
-public void Marker_OnMapEnd()
-{
-	RemoveAllMarkers();
-}
-
-public void Marker_OnMapStart()
-{
-	RemoveAllMarkers();
 }

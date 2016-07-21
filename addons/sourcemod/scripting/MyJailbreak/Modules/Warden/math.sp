@@ -1,18 +1,37 @@
-// Countdown module for MyJailbreak - Warden
+/*
+ * MyJailbreak - Warden - Math Quiz Module.
+ * by: shanapu
+ * https://github.com/shanapu/MyJailbreak/
+ *
+ * This file is part of the MyJailbreak SourceMod Plugin.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, version 3.0, as published by the
+ * Free Software Foundation.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+
+/******************************************************************************
+                   STARTUP
+******************************************************************************/
+
 
 //Includes
-#include <sourcemod>
-#include <cstrike>
-#include <warden>
-#include <colors>
-#include <emitsoundany>
-#include <autoexecconfig>
-#include <scp>
 #include <myjailbreak>
+
 
 //Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
+
 
 //Defines
 #define PLUS				"+"
@@ -20,7 +39,8 @@
 #define DIVISOR				"/"
 #define MULTIPL				"*"
 
-//ConVars
+
+//Console Variables
 ConVar gc_bMath;
 ConVar gc_bOp;
 ConVar gc_iMinimumNumber;
@@ -31,17 +51,21 @@ ConVar gc_bMathSounds;
 ConVar gc_sMathSoundStopPath;
 ConVar gc_iTimeAnswer;
 
-//Bools
+
+//Booleans
 bool g_bIsMathQuiz = false;
 bool g_bCanAnswer = false;
 
+
 //Handles
 Handle g_hMathTimer = null;
+
 
 //Integers
 int g_iMathMin;
 int g_iMathMax;
 int g_iMathResult;
+
 
 //Strings
 char g_sMathSoundStopPath[256];
@@ -50,10 +74,12 @@ char g_sOp[32];
 char g_sOperators[4][2] = {"+", "-", "/", "*"};
 
 
+//Start
 public void Math_OnPluginStart()
 {
 	//Client commands
 	RegConsoleCmd("sm_math", Command_MathQuestion, "Allows the Warden to start a MathQuiz. Show player with first right Answer");
+	
 	
 	//AutoExecConfig
 	gc_bMath = AutoExecConfig_CreateConVar("sm_warden_math", "1", "0 - disabled, 1 - enable mathquiz for warden", _, true,  0.0, true, 1.0);
@@ -66,17 +92,15 @@ public void Math_OnPluginStart()
 	gc_bMathOverlays = AutoExecConfig_CreateConVar("sm_warden_math_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true,  0.0, true, 1.0);
 	gc_sMathOverlayStopPath = AutoExecConfig_CreateConVar("sm_warden_math_overlays_stop", "overlays/MyJailbreak/stop" , "Path to the stop Overlay DONT TYPE .vmt or .vft");
 	
+	
+	//Hooks
 	HookConVarChange(gc_sMathSoundStopPath, Math_OnSettingChanged);
 	HookConVarChange(gc_sMathOverlayStopPath, Math_OnSettingChanged);
 	
+	
+	//FindConVar
 	gc_sMathSoundStopPath.GetString(g_sMathSoundStopPath, sizeof(g_sMathSoundStopPath));
 	gc_sMathOverlayStopPath.GetString(g_sMathOverlayStopPath , sizeof(g_sMathOverlayStopPath));
-}
-
-public void Math_OnConfigsExecuted()
-{
-	g_iMathMin = gc_iMinimumNumber.IntValue;
-	g_iMathMax = gc_iMaximumNumber.IntValue;
 }
 
 public int Math_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
@@ -93,23 +117,11 @@ public int Math_OnSettingChanged(Handle convar, const char[] oldValue, const cha
 	}
 }
 
-public void Math_OnMapStart()
-{
-	if(gc_bMathSounds.BoolValue)
-	{
-		PrecacheSoundAnyDownload(g_sMathSoundStopPath);
-	}
-	if(gc_bMathOverlays.BoolValue)
-	{
-		PrecacheDecalAnyDownload(g_sMathOverlayStopPath);
-	}
-}
 
-public void Math_OnMapEnd()
-{
-	g_bIsMathQuiz = false;
-	g_bCanAnswer = false;
-}
+/******************************************************************************
+                   COMMANDS
+******************************************************************************/
+
 
 public Action Command_MathQuestion(int client, int args)
 {
@@ -134,6 +146,109 @@ public Action Command_MathQuestion(int client, int args)
 		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
 	}
 }
+
+
+/******************************************************************************
+                   FORWARDS LISTEN
+******************************************************************************/
+
+
+public void Math_OnConfigsExecuted()
+{
+	g_iMathMin = gc_iMinimumNumber.IntValue;
+	g_iMathMax = gc_iMaximumNumber.IntValue;
+}
+
+
+public void Math_OnMapStart()
+{
+	if(gc_bMathSounds.BoolValue)
+	{
+		PrecacheSoundAnyDownload(g_sMathSoundStopPath);
+	}
+	if(gc_bMathOverlays.BoolValue)
+	{
+		PrecacheDecalAnyDownload(g_sMathOverlayStopPath);
+	}
+}
+
+
+public void Math_OnMapEnd()
+{
+	g_bIsMathQuiz = false;
+	g_bCanAnswer = false;
+}
+
+
+public Action OnChatMessage(int &author, Handle recipients, char[] name, char[] message)
+{
+	if(g_bIsMathQuiz && g_bCanAnswer)
+	{
+		char bit[1][5];
+		ExplodeString(message, " ", bit, sizeof bit, sizeof bit[]);
+
+		if(ProcessSolution(author, StringToInt(bit[0])))
+			SendEndMathQuestion(author);
+	}
+}
+
+
+/******************************************************************************
+                   FUNCTIONS
+******************************************************************************/
+
+
+public bool ProcessSolution(int client, int number)
+{
+	if(g_iMathResult == number)
+	{		
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+
+public void SendEndMathQuestion(int client)
+{
+	if(g_hMathTimer != INVALID_HANDLE)
+	{
+		KillTimer(g_hMathTimer);
+		g_hMathTimer = INVALID_HANDLE;
+	}
+	
+	char answer[264];
+	
+	if(client != -1)
+	{
+		Format(answer, sizeof(answer), "%t %t", "warden_tag", "warden_math_correct", client, g_iMathResult);
+		CreateTimer( 5.0, Timer_RemoveColor, client);
+		SetEntityRenderColor(client, 0, 255, 0, 255);
+	}
+	else Format(answer, sizeof(answer), "%t %t", "warden_tag", "warden_math_time", g_iMathResult);
+	
+	if(gc_bMathOverlays.BoolValue)
+	{
+		ShowOverlayAll(g_sMathOverlayStopPath, 2.0);
+	}
+	if(gc_bMathSounds.BoolValue)	
+	{
+		EmitSoundToAllAny(g_sMathSoundStopPath);
+	}
+	Handle pack = CreateDataPack();
+	CreateDataTimer(0.3, Timer_AnswerQuestion, pack);
+	WritePackString(pack, answer);
+	g_bCanAnswer = false;
+	g_bIsMathQuiz = false;
+}
+
+
+/******************************************************************************
+                   TIMER
+******************************************************************************/
+
 
 public Action Timer_CreateMathQuestion( Handle timer, any client )
 {
@@ -189,67 +304,12 @@ public Action Timer_CreateMathQuestion( Handle timer, any client )
 	}
 }
 
-public Action OnChatMessage(int &author, Handle recipients, char[] name, char[] message)
-{
-	if(g_bIsMathQuiz && g_bCanAnswer)
-	{
-		char bit[1][5];
-		ExplodeString(message, " ", bit, sizeof bit, sizeof bit[]);
-
-		if(ProcessSolution(author, StringToInt(bit[0])))
-			SendEndMathQuestion(author);
-	}
-}
-
-public bool ProcessSolution(int client, int number)
-{
-	if(g_iMathResult == number)
-	{		
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
-
-public void SendEndMathQuestion(int client)
-{
-	if(g_hMathTimer != INVALID_HANDLE)
-	{
-		KillTimer(g_hMathTimer);
-		g_hMathTimer = INVALID_HANDLE;
-	}
-	
-	char answer[264];
-	
-	if(client != -1)
-	{
-		Format(answer, sizeof(answer), "%t %t", "warden_tag", "warden_math_correct", client, g_iMathResult);
-		CreateTimer( 5.0, Timer_RemoveColor, client);
-		SetEntityRenderColor(client, 0, 255, 0, 255);
-	}
-	else Format(answer, sizeof(answer), "%t %t", "warden_tag", "warden_math_time", g_iMathResult);
-	
-	if(gc_bMathOverlays.BoolValue)
-	{
-		ShowOverlayAll(g_sMathOverlayStopPath, 2.0);
-	}
-	if(gc_bMathSounds.BoolValue)	
-	{
-		EmitSoundToAllAny(g_sMathSoundStopPath);
-	}
-	Handle pack = CreateDataPack();
-	CreateDataTimer(0.3, Timer_AnswerQuestion, pack);
-	WritePackString(pack, answer);
-	g_bCanAnswer = false;
-	g_bIsMathQuiz = false;
-}
 
 public Action Timer_EndMathQuestion(Handle timer)
 {
 	SendEndMathQuestion(-1);
 }
+
 
 public Action Timer_AnswerQuestion(Handle timer, Handle pack)
 {

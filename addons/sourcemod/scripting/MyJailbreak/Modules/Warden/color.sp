@@ -1,24 +1,47 @@
-//Warden Color module for MyJailbreak - Warden
+/*
+ * MyJailbreak - Warden - Colorize Warden Module.
+ * by: shanapu
+ * https://github.com/shanapu/MyJailbreak/
+ *
+ * This file is part of the MyJailbreak SourceMod Plugin.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, version 3.0, as published by the
+ * Free Software Foundation.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+
+/******************************************************************************
+                   STARTUP
+******************************************************************************/
+
 
 //Includes
-#include <sourcemod>
-#include <cstrike>
-#include <warden>
-#include <colors>
-#include <autoexecconfig>
 #include <myjailbreak>
+
 
 //Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
 
-//ConVars
+
+//Console Variables
 ConVar gc_bColor;
 ConVar gc_iWardenColorRed;
 ConVar gc_iWardenColorGreen;
 ConVar gc_iWardenColorBlue;
 ConVar gc_bWardenColorRandom;
 
+
+//Info
 public void Color_OnPluginStart()
 {
 	//AutoExecConfig
@@ -28,6 +51,29 @@ public void Color_OnPluginStart()
 	gc_iWardenColorGreen = AutoExecConfig_CreateConVar("sm_warden_color_green", "0","What color to turn the warden into (rGb): x - green value", _, true, 0.0, true, 255.0);
 	gc_iWardenColorBlue = AutoExecConfig_CreateConVar("sm_warden_color_blue", "255","What color to turn the warden into (rgB): x - blue value", _, true, 0.0, true, 255.0);
 }
+
+
+/******************************************************************************
+                   FORWARDS LISTEN
+******************************************************************************/
+
+
+public void Color_OnWardenCreation(int client)
+{
+	CreateTimer(1.0, Timer_WardenFixColor, client, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
+}
+
+
+public void Color_OnWardenRemoved(int client)
+{
+	CreateTimer(0.1, Timer_RemoveColor, client);
+}
+
+
+/******************************************************************************
+                   TIMER
+******************************************************************************/
+
 
 public Action Timer_WardenFixColor(Handle timer,any client)
 {
@@ -59,14 +105,4 @@ public Action Timer_WardenFixColor(Handle timer,any client)
 		return Plugin_Stop;
 	}
 	return Plugin_Continue;
-}
-
-public void Color_OnWardenCreation(int client)
-{
-	CreateTimer(1.0, Timer_WardenFixColor, client, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
-}
-
-public void Color_OnWardenRemoved(int client)
-{
-	CreateTimer(0.1, Timer_RemoveColor, client);
 }

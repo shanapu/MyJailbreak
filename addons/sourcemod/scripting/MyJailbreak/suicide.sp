@@ -130,9 +130,9 @@ public void OnPluginStart()
 	AutoExecConfig_CleanFile();
 	
 	//Hooks
-	HookEvent("round_start", RoundStart);
+	HookEvent("round_start", Event_RoundStart);
 	HookEvent("player_spawn", Event_PlayerSpawn);
-	HookEvent("round_end", RoundEnd);
+	HookEvent("round_end", Event_RoundEnd);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundSuicideBomberPath, OnSettingChanged);
@@ -243,7 +243,7 @@ public Action SetSuicideBomber(int client,int args)
 		if(client == 0)
 		{
 			StartNextRound();
-			if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event CowBoy was started by groupvoting");
+			if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event CowBoy was started by groupvoting");
 		}
 		else if (warden_iswarden(client))
 		{
@@ -252,14 +252,14 @@ public Action SetSuicideBomber(int client,int args)
 				if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
 				{
 					char EventDay[64];
-					GetEventDay(EventDay);
+					GetEventDayName(EventDay);
 					
 					if(StrEqual(EventDay, "none", false))
 					{
 						if (g_iCoolDown == 0)
 						{
 							StartNextRound();
-							if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Suicide Bomber was started by warden %L", client);
+							if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Suicide Bomber was started by warden %L", client);
 						}
 						else CPrintToChat(client, "%t %t", "suicidebomber_tag" , "suicidebomber_wait", g_iCoolDown);
 					}
@@ -276,14 +276,14 @@ public Action SetSuicideBomber(int client,int args)
 				if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
 				{
 					char EventDay[64];
-					GetEventDay(EventDay);
+					GetEventDayName(EventDay);
 					
 					if(StrEqual(EventDay, "none", false))
 					{
 						if (g_iCoolDown == 0)
 						{
 							StartNextRound();
-							if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Suicide Bomber was started by admin %L", client);
+							if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Suicide Bomber was started by admin %L", client);
 						}
 						else CPrintToChat(client, "%t %t", "suicidebomber_tag" , "suicidebomber_wait", g_iCoolDown);
 					}
@@ -312,7 +312,7 @@ public Action VoteSuicideBomber(int client,int args)
 			if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
 			{
 				char EventDay[64];
-				GetEventDay(EventDay);
+				GetEventDayName(EventDay);
 				
 				if(StrEqual(EventDay, "none", false))
 				{	
@@ -328,7 +328,7 @@ public Action VoteSuicideBomber(int client,int args)
 	if (g_iVoteCount > playercount)
 	{
 		StartNextRound();
-		if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Suicide Bomber was started by voting");
+		if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Suicide Bomber was started by voting");
 	}
 	else CPrintToChatAll("%t %t", "suicidebomber_tag" , "suicidebomber_need", Missing, client);
 						}
@@ -352,8 +352,8 @@ void StartNextRound()
 	StartSuicideBomber = true;
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iVoteCount = 0;
-	SetEventDay("Suicide Bomber");
-	SetEventDayPlaned(true);
+	SetEventDayName("Suicide Bomber");
+	SetEventDayPlanned(true);
 	
 	g_iOldRoundTime = g_iGetRoundTime.IntValue; //save original round time
 	g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
@@ -364,7 +364,7 @@ void StartNextRound()
 
 //Round start
 
-public void RoundStart(Handle event, char[] name, bool dontBroadcast)
+public void Event_RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
 	if (StartSuicideBomber || IsSuicideBomber)
 	{
@@ -372,7 +372,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("sm_menu_enable", 0);
 		SetCvar("sm_weapons_enable", 0);
-		SetEventDayPlaned(false);
+		SetEventDayPlanned(false);
 		SetEventDayRunning(true);
 		
 		g_iRound++;
@@ -406,7 +406,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 	else
 	{
 		char EventDay[64];
-		GetEventDay(EventDay);
+		GetEventDayName(EventDay);
 		
 		if(!StrEqual(EventDay, "none", false))
 		{
@@ -443,12 +443,12 @@ stock void CreateInfoPanel(int client)
 	DrawPanelText(SuicideBomberMenu, "-----------------------------------");
 	Format(info, sizeof(info), "%T", "warden_close", client);
 	DrawPanelItem(SuicideBomberMenu, info); 
-	SendPanelToClient(SuicideBomberMenu, client, NullHandler, 20);
+	SendPanelToClient(SuicideBomberMenu, client, Handler_NullCancel, 20);
 }
 
 //Round End
 
-public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
+public void Event_RoundEnd(Handle event, char[] name, bool dontBroadcast)
 {
 	int winner = GetEventInt(event, "winner");
 	
@@ -477,7 +477,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 			SetCvar("sm_warden_enable", 1);
 			SetCvar("sm_menu_enable", 1);
 			g_iGetRoundTime.IntValue = g_iOldRoundTime;
-			SetEventDay("none");
+			SetEventDayName("none");
 			SetEventDayRunning(false);
 			CPrintToChatAll("%t %t", "suicidebomber_tag" , "suicidebomber_end");
 		}

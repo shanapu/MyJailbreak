@@ -117,8 +117,8 @@ public void OnPluginStart()
 	AutoExecConfig_CleanFile();
 	
 	//Hooks
-	HookEvent("round_start", RoundStart);
-	HookEvent("round_end", RoundEnd);
+	HookEvent("round_start", Event_RoundStart);
+	HookEvent("round_end", Event_RoundEnd);
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
 	HookConVarChange(gc_sCustomCommand, OnSettingChanged);
@@ -213,7 +213,7 @@ public Action SetNoScope(int client,int args)
 		if(client == 0)
 		{
 			StartNextRound();
-			if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event noscope was started by groupvoting");
+			if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event noscope was started by groupvoting");
 		}
 		else if (warden_iswarden(client))
 		{
@@ -222,14 +222,14 @@ public Action SetNoScope(int client,int args)
 				if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
 				{
 					char EventDay[64];
-					GetEventDay(EventDay);
+					GetEventDayName(EventDay);
 					
 					if(StrEqual(EventDay, "none", false))
 					{
 						if (g_iCoolDown == 0)
 						{
 							StartNextRound();
-							if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event NoScope was started by warden %L", client);
+							if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event NoScope was started by warden %L", client);
 						}
 						else CPrintToChat(client, "%t %t", "noscope_tag" , "noscope_wait", g_iCoolDown);
 					}
@@ -246,14 +246,14 @@ public Action SetNoScope(int client,int args)
 				if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
 				{
 					char EventDay[64];
-					GetEventDay(EventDay);
+					GetEventDayName(EventDay);
 					
 					if(StrEqual(EventDay, "none", false))
 					{
 						if (g_iCoolDown == 0)
 						{
 							StartNextRound();
-							if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event NoScope was started by admin %L", client);
+							if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event NoScope was started by admin %L", client);
 						}
 						else CPrintToChat(client, "%t %t", "noscope_tag" , "noscope_wait", g_iCoolDown);
 					}
@@ -282,7 +282,7 @@ public Action VoteNoScope(int client,int args)
 			if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
 			{
 				char EventDay[64];
-				GetEventDay(EventDay);
+				GetEventDayName(EventDay);
 				
 				if(StrEqual(EventDay, "none", false))
 				{
@@ -298,7 +298,7 @@ public Action VoteNoScope(int client,int args)
 							if (g_iVoteCount > playercount)
 							{
 								StartNextRound();
-								if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event NoScope was started by voting");
+								if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event NoScope was started by voting");
 							}
 							else CPrintToChatAll("%t %t", "noscope_tag" , "noscope_need", Missing, client);
 						}
@@ -323,8 +323,8 @@ void StartNextRound()
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iVoteCount = 0;
 	
-	SetEventDay("noscope");
-	SetEventDayPlaned(true);
+	SetEventDayName("noscope");
+	SetEventDayPlanned(true);
 	
 	g_iOldRoundTime = g_iGetRoundTime.IntValue; //save original round time
 	g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
@@ -335,7 +335,7 @@ void StartNextRound()
 
 //Round start
 
-public void RoundStart(Handle event, char[] name, bool dontBroadcast)
+public void Event_RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
 	if (StartNoScope || IsNoScope)
 	{
@@ -345,7 +345,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		SetCvar("sv_infinite_ammo", 2);
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("mp_teammates_are_enemies", 1);
-		SetEventDayPlaned(false);
+		SetEventDayPlanned(false);
 		SetEventDayRunning(true);
 		
 		IsNoScope = true;
@@ -421,7 +421,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 	else
 	{
 		char EventDay[64];
-		GetEventDay(EventDay);
+		GetEventDayName(EventDay);
 	
 		if(!StrEqual(EventDay, "none", false))
 		{
@@ -462,7 +462,7 @@ public int OnAvailableLR(int Announced)
 			SetCvar("sm_menu_enable", 1);
 			SetCvar("sm_warden_enable", 1);
 			g_iGetRoundTime.IntValue = g_iOldRoundTime;
-			SetEventDay("none");
+			SetEventDayName("none");
 			SetEventDayRunning(false);
 			CPrintToChatAll("%t %t", "noscope_tag" , "noscope_end");
 		}
@@ -497,7 +497,7 @@ stock void CreateInfoPanel(int client)
 	DrawPanelText(NoScopeMenu, "-----------------------------------");
 	Format(info, sizeof(info), "%T", "warden_close", client);
 	DrawPanelItem(NoScopeMenu, info); 
-	SendPanelToClient(NoScopeMenu, client, NullHandler, 20);
+	SendPanelToClient(NoScopeMenu, client, Handler_NullCancel, 20);
 }
 
 //Start Timer
@@ -541,7 +541,7 @@ public Action StartTimer(Handle timer)
 
 //Round End
 
-public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
+public void Event_RoundEnd(Handle event, char[] name, bool dontBroadcast)
 {
 	int winner = GetEventInt(event, "winner");
 	
@@ -570,7 +570,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 			SetCvar("sm_menu_enable", 1);
 			SetCvar("sm_warden_enable", 1);
 			g_iGetRoundTime.IntValue = g_iOldRoundTime;
-			SetEventDay("none");
+			SetEventDayName("none");
 			SetEventDayRunning(false);
 			CPrintToChatAll("%t %t", "noscope_tag" , "noscope_end");
 		}

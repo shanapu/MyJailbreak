@@ -115,9 +115,9 @@ public void OnPluginStart()
 	AutoExecConfig_CleanFile();
 	
 	//Hooks
-	HookEvent("round_start", RoundStart);
-	HookEvent("round_end", RoundEnd);
-	HookEvent("player_death", playerDeath);
+	HookEvent("round_start", Event_RoundStart);
+	HookEvent("round_end", Event_RoundEnd);
+	HookEvent("player_death", Event_PlayerDeath);
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
 	HookConVarChange(gc_sCustomCommand, OnSettingChanged);
@@ -199,21 +199,21 @@ public Action SetDrunk(int client,int args)
 		if(client == 0)
 		{
 			StartNextRound();
-			if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Drunk was started by groupvoting");
+			if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Drunk was started by groupvoting");
 		}
 		else if (warden_iswarden(client)) //is player warden?
 		{
 			if (gc_bSetW.BoolValue) //is warden allowed to set?
 			{
 				char EventDay[64];
-				GetEventDay(EventDay);
+				GetEventDayName(EventDay);
 				
 				if(StrEqual(EventDay, "none", false)) //is an other event running or set?
 				{
 					if (g_iCoolDown == 0) //is event cooled down?
 					{
 						StartNextRound(); //prepare Event for next round
-						if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event drunken was started by warden %L", client);
+						if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event drunken was started by warden %L", client);
 					}
 					else CPrintToChat(client, "%t %t", "drunk_tag" , "drunk_wait", g_iCoolDown);
 				}
@@ -226,14 +226,14 @@ public Action SetDrunk(int client,int args)
 			if (gc_bSetA.BoolValue) //is admin allowed to set?
 			{
 				char EventDay[64];
-				GetEventDay(EventDay);
+				GetEventDayName(EventDay);
 				
 				if(StrEqual(EventDay, "none", false)) //is an other event running or set?
 				{
 					if (g_iCoolDown == 0) //is event cooled down?
 					{
 						StartNextRound(); //prepare Event for next round;
-						if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event drunken was started by admin %L", client);
+						if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event drunken was started by admin %L", client);
 					}
 					else CPrintToChat(client, "%t %t", "drunk_tag" , "drunk_wait", g_iCoolDown);
 				}
@@ -258,7 +258,7 @@ public Action VoteDrunk(int client,int args)
 		if (gc_bVote.BoolValue) //is voting enabled?
 		{	
 			char EventDay[64];
-			GetEventDay(EventDay);
+			GetEventDayName(EventDay);
 			
 			if(StrEqual(EventDay, "none", false)) //is an other event running or set?
 			{
@@ -274,7 +274,7 @@ public Action VoteDrunk(int client,int args)
 						if (g_iVoteCount > playercount) 
 						{
 							StartNextRound(); //prepare Event for next round
-							if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event drunken was started by voting");
+							if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event drunken was started by voting");
 						}
 						else CPrintToChatAll("%t %t", "drunk_tag" , "drunk_need", Missing, client);
 					}
@@ -297,8 +297,8 @@ void StartNextRound()
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iVoteCount = 0;
 	
-	SetEventDay("drunk"); //tell myjailbreak new event is set
-	SetEventDayPlaned(true);
+	SetEventDayName("drunk"); //tell myjailbreak new event is set
+	SetEventDayPlanned(true);
 	g_iOldRoundTime = g_iGetRoundTime.IntValue; //save original round time
 	g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
 	
@@ -308,7 +308,7 @@ void StartNextRound()
 
 //Round start
 
-public void RoundStart(Handle event, char[] name, bool dontBroadcast)
+public void Event_RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
 	if (StartDrunk || IsDrunk)
 	{
@@ -318,7 +318,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		SetCvar("sm_menu_enable", 0);
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("mp_teammates_are_enemies", 1);
-		SetEventDayPlaned(false);
+		SetEventDayPlanned(false);
 		SetEventDayRunning(true);
 		IsDrunk = true;
 		
@@ -369,7 +369,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 						CreateInfoPanel(client);
 						GivePlayerItem(client, "weapon_knife"); //give Knife
 						SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true); //NoBlock
-						SendPanelToClient(DrunkMenu, client, NullHandler, 20); //open info Panel
+						SendPanelToClient(DrunkMenu, client, Handler_NullCancel, 20); //open info Panel
 						SetEntProp(client, Prop_Data, "m_takedamage", 0, 1); //disable damage
 						if (!gc_bSpawnCell.BoolValue || (gc_bSpawnCell.BoolValue && !SJD_IsCurrentMapConfigured)) //spawn Terrors to CT Spawn  //spawn Terrors to CT Spawn
 						{
@@ -400,7 +400,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		//If Event isnt running - subtract cooldown round
 		
 		char EventDay[64];
-		GetEventDay(EventDay);
+		GetEventDayName(EventDay);
 		
 		if(!StrEqual(EventDay, "none", false))
 		{
@@ -444,7 +444,7 @@ public int OnAvailableLR(int Announced)
 			SetCvar("sm_warden_enable", 1);
 			
 			g_iGetRoundTime.IntValue = g_iOldRoundTime; //return to original round time
-			SetEventDay("none"); //tell myjailbreak event is ended
+			SetEventDayName("none"); //tell myjailbreak event is ended
 			SetEventDayRunning(false);
 			
 			CPrintToChatAll("%t %t", "drunk_tag" , "drunk_end");
@@ -480,12 +480,12 @@ stock void CreateInfoPanel(int client)
 	DrawPanelText(DrunkMenu, "-----------------------------------");
 	Format(info, sizeof(info), "%T", "warden_close", client);
 	DrawPanelItem(DrunkMenu, info); 
-	SendPanelToClient(DrunkMenu, client, NullHandler, 20); //open info Panel
+	SendPanelToClient(DrunkMenu, client, Handler_NullCancel, 20); //open info Panel
 }
 
 //Round End
 
-public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
+public void Event_RoundEnd(Handle event, char[] name, bool dontBroadcast)
 {
 	DrunkTimer = null;
 	delete DrunkTimer;
@@ -519,7 +519,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 			SetCvar("sm_warden_enable", 1);
 			
 			g_iGetRoundTime.IntValue = g_iOldRoundTime; //return to original round time
-			SetEventDay("none"); //tell myjailbreak event is ended
+			SetEventDayName("none"); //tell myjailbreak event is ended
 			SetEventDayRunning(false);
 			
 			CPrintToChatAll("%t %t", "drunk_tag" , "drunk_end");
@@ -588,7 +588,7 @@ public Action StartTimer(Handle timer)
 	return Plugin_Stop;
 }
 
-public Action playerDeath(Event event, const char[] name, bool dontBroadcast) 
+public Action Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast) 
 {
 	int client = GetClientOfUserId(GetEventInt(event, "userid")); // Get the dead clients id
 	

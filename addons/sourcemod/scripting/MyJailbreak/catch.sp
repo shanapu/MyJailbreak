@@ -117,11 +117,11 @@ public void OnPluginStart()
 	AutoExecConfig_CleanFile();
 	
 	//Hooks
-	HookEvent("round_start", RoundStart);
+	HookEvent("round_start", Event_RoundStart);
 	HookEvent("player_spawn", Event_PlayerSpawn);
-	HookEvent("round_end", RoundEnd);
-	HookEvent("player_team", EventPlayerTeam);
-	HookEvent("player_death", EventPlayerTeam);
+	HookEvent("round_end", Event_RoundEnd);
+	HookEvent("player_team", Event_PlayerTeam);
+	HookEvent("player_death", Event_PlayerTeam);
 	HookConVarChange(gc_sOverlayFreeze, OnSettingChanged);
 	HookConVarChange(gc_sSoundFreezePath, OnSettingChanged);
 	HookConVarChange(gc_sSoundUnFreezePath, OnSettingChanged);
@@ -218,7 +218,7 @@ public Action SetCatch(int client,int args)
 		if(client == 0)
 		{
 			StartNextRound();
-			if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Catch was started by groupvoting");
+			if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Catch was started by groupvoting");
 		}
 		else if (warden_iswarden(client))
 		{
@@ -227,14 +227,14 @@ public Action SetCatch(int client,int args)
 				if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
 				{
 					char EventDay[64];
-					GetEventDay(EventDay);
+					GetEventDayName(EventDay);
 					
 					if(StrEqual(EventDay, "none", false))
 					{
 						if (g_iCoolDown == 0)
 						{
 							StartNextRound();
-							if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Catch was started by warden %L", client);
+							if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Catch was started by warden %L", client);
 						}
 						else CPrintToChat(client, "%t %t", "catch_tag" , "catch_wait", g_iCoolDown);
 					}
@@ -251,14 +251,14 @@ public Action SetCatch(int client,int args)
 					if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
 					{
 						char EventDay[64];
-						GetEventDay(EventDay);
+						GetEventDayName(EventDay);
 						
 						if(StrEqual(EventDay, "none", false))
 						{
 							if (g_iCoolDown == 0)
 							{
 								StartNextRound();
-								if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Catch was started by admin %L", client);
+								if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Catch was started by admin %L", client);
 							}
 							else CPrintToChat(client, "%t %t", "catch_tag" , "catch_wait", g_iCoolDown);
 						}
@@ -287,7 +287,7 @@ public Action VoteCatch(int client,int args)
 			if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
 			{
 				char EventDay[64];
-				GetEventDay(EventDay);
+				GetEventDayName(EventDay);
 				
 				if(StrEqual(EventDay, "none", false))
 				{
@@ -303,7 +303,7 @@ public Action VoteCatch(int client,int args)
 							if (g_iVoteCount > playercount)
 							{
 								StartNextRound();
-								if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Catch was started by voting");
+								if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Catch was started by voting");
 							}
 							else CPrintToChatAll("%t %t", "catch_tag" , "catch_need", Missing, client);
 						}
@@ -328,8 +328,8 @@ void StartNextRound()
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iVoteCount = 0;
 	
-	SetEventDay("catch");
-	SetEventDayPlaned(true);
+	SetEventDayName("catch");
+	SetEventDayPlanned(true);
 	
 	g_iOldRoundTime = g_iGetRoundTime.IntValue; //save original round time
 	g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
@@ -340,14 +340,14 @@ void StartNextRound()
 
 //Round start
 
-public void RoundStart(Handle event, char[] name, bool dontBroadcast)
+public void Event_RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
 	if (StartCatch || IsCatch)
 	{
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("sm_weapons_enable", 0);
-		SetEventDayPlaned(false);
+		SetEventDayPlanned(false);
 		SetEventDayRunning(true);
 		IsCatch = true;
 		g_iRound++;
@@ -363,7 +363,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 					ClientSprintStatus[client] = 0;
 					GivePlayerItem(client, "weapon_knife");
 					SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
-					SendPanelToClient(CatchMenu, client, NullHandler, 20);
+					SendPanelToClient(CatchMenu, client, Handler_NullCancel, 20);
 					PrintHintText(client,"%t", "catch_start_nc");
 					
 					if (GetClientTeam(client) == CS_TEAM_T)
@@ -378,7 +378,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 	else
 	{
 		char EventDay[64];
-		GetEventDay(EventDay);
+		GetEventDayName(EventDay);
 		
 		if(!StrEqual(EventDay, "none", false))
 		{
@@ -414,12 +414,12 @@ stock void CreateInfoPanel(int client)
 	DrawPanelText(CatchMenu, "-----------------------------------");
 	Format(info, sizeof(info), "%T", "warden_close", client);
 	DrawPanelItem(CatchMenu, info); 
-	SendPanelToClient(CatchMenu, client, NullHandler, 20);
+	SendPanelToClient(CatchMenu, client, Handler_NullCancel, 20);
 	
 }
 //Round End
 
-public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
+public void Event_RoundEnd(Handle event, char[] name, bool dontBroadcast)
 {
 	int winner = GetEventInt(event, "winner");
 	
@@ -450,7 +450,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 			SetCvar("sm_warden_enable", 1);
 			
 			g_iGetRoundTime.IntValue = g_iOldRoundTime;
-			SetEventDay("none");
+			SetEventDayName("none");
 			SetEventDayRunning(false);
 			CPrintToChatAll("%t %t", "catch_tag" , "catch_end");
 		}
@@ -526,7 +526,7 @@ public void OnClientDisconnect_Post(int client)
 	CheckStatus();
 }
 
-public Action EventPlayerTeam(Event event, const char[] name, bool dontBroadcast)
+public Action Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
 {
 	if(IsCatch == false)
 	{

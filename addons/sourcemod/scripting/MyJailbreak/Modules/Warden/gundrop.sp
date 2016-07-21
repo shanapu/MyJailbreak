@@ -1,18 +1,39 @@
-//Gun Drop Prevention module for MyJailbreak - Warden
+/*
+ * MyJailbreak - Warden - Gun Drop Prevention Module.
+ * by: shanapu
+ * https://github.com/shanapu/MyJailbreak/
+ *
+ * This file is part of the MyJailbreak SourceMod Plugin.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, version 3.0, as published by the
+ * Free Software Foundation.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+
+/******************************************************************************
+                   STARTUP
+******************************************************************************/
+
 
 //Includes
-#include <sourcemod>
-#include <cstrike>
-#include <warden>
-#include <colors>
-#include <autoexecconfig>
 #include <myjailbreak>
+
 
 //Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
 
-//ConVars
+
+//Console Variables
 ConVar gc_bGunPlant;
 ConVar gc_bGunRemove;
 ConVar gc_fGunRemoveTime;
@@ -21,10 +42,13 @@ ConVar gc_bGunSlap;
 ConVar gc_bGunNoDrop;
 ConVar gc_fAllowDropTime;
 
+
 //Bools
 bool g_bWeaponDropped[MAXPLAYERS+1] = false;
 bool g_bAllowDrop;
 
+
+//Start
 public void GunDropPrevention_OnPluginStart()
 {
 	//AutoExecConfig
@@ -36,11 +60,16 @@ public void GunDropPrevention_OnPluginStart()
 	gc_bGunSlap = AutoExecConfig_CreateConVar("sm_warden_gunslap", "1", "0 - disabled, 1 - Slap the CT for dropping a gun", _, true,  0.0, true, 1.0);
 	gc_iGunSlapDamage = AutoExecConfig_CreateConVar("sm_warden_gunslap_dmg", "10", "Amoung of HP losing on slap for dropping a gun", _, true,  0.0);
 	
+	
 	//Hooks
 	HookEvent("round_start", GunDropPrevention_RoundStart);
 }
 
-//GunPlant
+
+/******************************************************************************
+                   EVENTS
+******************************************************************************/
+
 
 public void GunDropPrevention_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
@@ -48,6 +77,23 @@ public void GunDropPrevention_RoundStart(Event event, const char[] name, bool do
 	
 	CreateTimer (gc_fAllowDropTime.FloatValue, Timer_AllowDrop);
 }
+
+
+/******************************************************************************
+                   FORWARDS LISTEN
+******************************************************************************/
+
+
+public void GunDropPrevention_OnAvailableLR(int Announced)
+{
+	g_bAllowDrop = true;
+}
+
+
+/******************************************************************************
+                   FUNCTIONS
+******************************************************************************/
+
 
 public Action CS_OnCSWeaponDrop(int client, int weapon)
 {
@@ -84,6 +130,12 @@ public Action CS_OnCSWeaponDrop(int client, int weapon)
 	return Plugin_Continue;
 }
 
+
+/******************************************************************************
+                   TIMER
+******************************************************************************/
+
+
 public Action Timer_DroppedWeapon(Handle timer, Handle hData)
 {
 	ResetPack(hData);
@@ -116,6 +168,7 @@ public Action Timer_DroppedWeapon(Handle timer, Handle hData)
 	}
 }
 
+
 public Action Timer_RemoveWeapon(Handle timer, Handle hData2)
 {
 	ResetPack(hData2);
@@ -132,12 +185,8 @@ public Action Timer_RemoveWeapon(Handle timer, Handle hData2)
 	g_bWeaponDropped[client] = false;
 }
 
+
 public Action Timer_AllowDrop(Handle timer)
 {
 	g_bAllowDrop = false;
-}
-
-public void GunDropPrevention_OnAvailableLR(int Announced)
-{
-	g_bAllowDrop = true;
 }

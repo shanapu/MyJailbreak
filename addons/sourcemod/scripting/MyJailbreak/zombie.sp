@@ -33,7 +33,7 @@ ConVar gc_iHumanHP;
 ConVar gc_bDark;
 ConVar gc_bVision;
 ConVar gc_bGlow;
-ConVar gc_sModelPath;
+ConVar gc_sModelPathZombie;
 ConVar gc_bSounds;
 ConVar gc_sSoundStartPath;
 ConVar gc_bOverlays;
@@ -61,14 +61,14 @@ Handle ZombieMenu;
 float g_fPos[3];
 
 //Strings
-char g_sZombieModel[256];
+char g_sModelPathZombie[256];
 char g_sHasVoted[1500];
 char g_sSoundStartPath[256];
 char g_sSkyName[256];
 char g_sCustomCommand[64];
 char g_sEventsLogFile[PLATFORM_MAX_PATH];
 char g_sAdminFlag[32];
-char g_sModelPath[MAXPLAYERS+1][256];
+char g_sModelPathPrevious[MAXPLAYERS+1][256];
 char g_sOverlayStartPath[256];
 
 public Plugin myinfo = {
@@ -115,17 +115,17 @@ public void OnPluginStart()
 	gc_sSoundStartPath = AutoExecConfig_CreateConVar("sm_zombie_sounds_start", "music/MyJailbreak/zombie.mp3", "Path to the soundfile which should be played for a start.");
 	gc_bOverlays = AutoExecConfig_CreateConVar("sm_zombie_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true, 0.0, true, 1.0);
 	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_zombie_overlays_start", "overlays/MyJailbreak/zombie" , "Path to the start Overlay DONT TYPE .vmt or .vft");
-	gc_sModelPath = AutoExecConfig_CreateConVar("sm_zombie_model", "models/player/custom_player/zombie/revenant/revenant_v2.mdl", "Path to the model for zombies.");
+	gc_sModelPathZombie = AutoExecConfig_CreateConVar("sm_zombie_model", "models/player/custom_player/zombie/revenant/revenant_v2.mdl", "Path to the model for zombies.");
 	gc_bAllowLR = AutoExecConfig_CreateConVar("sm_zombie_allow_lr", "0" , "0 - disabled, 1 - enable LR for last round and end eventday", _, true, 0.0, true, 1.0);
 	
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
 	
 	//Hooks
-	HookEvent("round_start", RoundStart);
-	HookEvent("round_end", RoundEnd);
+	HookEvent("round_start", Event_RoundStart);
+	HookEvent("round_end", Event_RoundEnd);
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
-	HookConVarChange(gc_sModelPath, OnSettingChanged);
+	HookConVarChange(gc_sModelPathZombie, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
 	HookConVarChange(gc_sCustomCommand, OnSettingChanged);
 	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
@@ -135,7 +135,7 @@ public void OnPluginStart()
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
 	gc_sOverlayStartPath.GetString(g_sOverlayStartPath , sizeof(g_sOverlayStartPath));
-	gc_sModelPath.GetString(g_sZombieModel, sizeof(g_sZombieModel));
+	gc_sModelPathZombie.GetString(g_sModelPathZombie, sizeof(g_sModelPathZombie));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 	gc_sCustomCommand.GetString(g_sCustomCommand , sizeof(g_sCustomCommand));
 	gc_sAdminFlag.GetString(g_sAdminFlag , sizeof(g_sAdminFlag));
@@ -147,10 +147,10 @@ public void OnPluginStart()
 
 public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
-	if(convar == gc_sModelPath)
+	if(convar == gc_sModelPathZombie)
 	{
-		strcopy(g_sZombieModel, sizeof(g_sZombieModel), newValue);
-		PrecacheModel(g_sZombieModel);
+		strcopy(g_sModelPathZombie, sizeof(g_sModelPathZombie), newValue);
+		PrecacheModel(g_sModelPathZombie);
 	}
 	else if(convar == gc_sAdminFlag)
 	{
@@ -192,7 +192,7 @@ public void OnMapStart()
 	
 	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
 	if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
-	PrecacheModel(g_sZombieModel);
+	PrecacheModel(g_sModelPathZombie);
 }
 
 public void OnConfigsExecuted()
@@ -221,7 +221,7 @@ public Action SetZombie(int client,int args)
 		if(client == 0)
 		{
 			StartNextRound();
-			if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event zombie was started by groupvoting");
+			if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event zombie was started by groupvoting");
 		}
 		else if (warden_iswarden(client))
 		{
@@ -230,14 +230,14 @@ public Action SetZombie(int client,int args)
 				if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
 				{
 					char EventDay[64];
-					GetEventDay(EventDay);
+					GetEventDayName(EventDay);
 					
 					if(StrEqual(EventDay, "none", false))
 					{
 						if (g_iCoolDown == 0)
 						{
 							StartNextRound();
-							if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Zombie was started by warden %L", client);
+							if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Zombie was started by warden %L", client);
 						}
 						else CPrintToChat(client, "%t %t", "zombie_tag" , "zombie_wait", g_iCoolDown);
 					}
@@ -254,14 +254,14 @@ public Action SetZombie(int client,int args)
 				if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
 				{
 					char EventDay[64];
-					GetEventDay(EventDay);
+					GetEventDayName(EventDay);
 					
 					if(StrEqual(EventDay, "none", false))
 					{
 						if (g_iCoolDown == 0)
 						{
 							StartNextRound();
-							if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Zombie was started by admin %L", client);
+							if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Zombie was started by admin %L", client);
 						}
 						else CPrintToChat(client, "%t %t", "zombie_tag" , "zombie_wait", g_iCoolDown);
 					}
@@ -290,7 +290,7 @@ public Action VoteZombie(int client,int args)
 			if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
 			{
 				char EventDay[64];
-				GetEventDay(EventDay);
+				GetEventDayName(EventDay);
 			
 				if(StrEqual(EventDay, "none", false))
 				{
@@ -306,7 +306,7 @@ public Action VoteZombie(int client,int args)
 							if (g_iVoteCount > playercount)
 							{
 								StartNextRound();
-								if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Zombie was started by voting");
+								if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Zombie was started by voting");
 							}
 							else CPrintToChatAll("%t %t", "zombie_tag" , "zombie_need", Missing, client);
 						}
@@ -330,8 +330,8 @@ void StartNextRound()
 	StartZombie = true;
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iVoteCount = 0;
-	SetEventDay("zombie");
-	SetEventDayPlaned(true);
+	SetEventDayName("zombie");
+	SetEventDayPlanned(true);
 	
 	g_iOldRoundTime = g_iGetRoundTime.IntValue; //save original round time
 	g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
@@ -342,7 +342,7 @@ void StartNextRound()
 
 //Round start
 
-public void RoundStart(Handle event, char[] name, bool dontBroadcast)
+public void Event_RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
 	if (StartZombie || IsZombie)
 	{
@@ -353,7 +353,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		SetCvar("sm_weapons_ct", 0);
 		SetCvar("sv_infinite_ammo", 2);
 		SetCvar("sm_menu_enable", 0);
-		SetEventDayPlaned(false);
+		SetEventDayPlanned(false);
 		SetEventDayRunning(true);
 		IsZombie = true;
 		g_iRound++;
@@ -386,8 +386,8 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 					
 					if (GetClientTeam(client) == CS_TEAM_CT)
 					{
-						GetEntPropString(client, Prop_Data, "m_ModelName", g_sModelPath[client], sizeof(g_sModelPath[]));
-						SetEntityModel(client, g_sZombieModel);
+						GetEntPropString(client, Prop_Data, "m_ModelName", g_sModelPathPrevious[client], sizeof(g_sModelPathPrevious[]));
+						SetEntityModel(client, g_sModelPathZombie);
 						SetEntityMoveType(client, MOVETYPE_NONE);
 						SetEntityHealth(client, gc_iZombieHP.IntValue);
 						StripAllWeapons(client);
@@ -426,7 +426,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 	else
 	{
 		char EventDay[64];
-		GetEventDay(EventDay);
+		GetEventDayName(EventDay);
 		
 		if(!StrEqual(EventDay, "none", false))
 		{
@@ -521,7 +521,7 @@ public int OnAvailableLR(int Announced)
 			if (GetClientTeam(client) == CS_TEAM_CT)
 			{
 				FakeClientCommand(client, "sm_guns");
-				SetEntityModel(client, g_sModelPath[client]);
+				SetEntityModel(client, g_sModelPathPrevious[client]);
 				SetEntityHealth(client, 100);
 			}
 			GivePlayerItem(client, "weapon_knife");
@@ -542,7 +542,7 @@ public int OnAvailableLR(int Announced)
 			SetCvar("sm_warden_enable", 1);
 			SetCvar("sm_menu_enable", 1);
 			g_iGetRoundTime.IntValue = g_iOldRoundTime;
-			SetEventDay("none");
+			SetEventDayName("none");
 			SetEventDayRunning(false);
 			FogOff();
 			CPrintToChatAll("%t %t", "zombie_tag" , "zombie_end");
@@ -578,11 +578,11 @@ stock void CreateInfoPanel(int client)
 	DrawPanelText(ZombieMenu, "-----------------------------------");
 	Format(info, sizeof(info), "%T", "warden_close", client);
 	DrawPanelItem(ZombieMenu, info); 
-	SendPanelToClient(ZombieMenu, client, NullHandler, 20);
+	SendPanelToClient(ZombieMenu, client, Handler_NullCancel, 20);
 }
 //Round End
 
-public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
+public void Event_RoundEnd(Handle event, char[] name, bool dontBroadcast)
 {
 	int winner = GetEventInt(event, "winner");
 	
@@ -613,7 +613,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 			SetCvar("sm_warden_enable", 1);
 			SetCvar("sm_menu_enable", 1);
 			g_iGetRoundTime.IntValue = g_iOldRoundTime;
-			SetEventDay("none");
+			SetEventDayName("none");
 			SetEventDayRunning(false);
 			FogOff();
 			CPrintToChatAll("%t %t", "zombie_tag" , "zombie_end");

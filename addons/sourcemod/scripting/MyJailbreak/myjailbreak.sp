@@ -1,7 +1,30 @@
-//includes
-#include <sourcemod>
-#include <cstrike>
-#include <colors>
+/*
+ * MyJailbreak - Warden Plugin.
+ * by: shanapu
+ * https://github.com/shanapu/MyJailbreak/
+ *
+ * This file is part of the MyJailbreak SourceMod Plugin.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, version 3.0, as published by the
+ * Free Software Foundation.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+
+/******************************************************************************
+                   STARTUP
+******************************************************************************/
+
+
+//Includes
 #include <myjailbreak>
 
 
@@ -9,27 +32,26 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-//ConVars
+
+//Console Variables
 ConVar gc_bTag;
 ConVar gc_bLogging;
 
-//Integers
-int FogIndex = -1;
 
-//Floats
-float mapFogStart = 0.0;
-float mapFogEnd = 150.0;
-float mapFogDensity = 0.99;
-
-//Bools
-bool EventDayPlaned = false;
+//Booleans
+bool EventDayPlanned = false;
 bool EventDayRunning = false;
+
 
 //Strings
 char IsEventDay[128] = "none";
 
-//Handles
 
+//Modules
+#include "MyJailbreak/Modules/fog.sp"
+
+
+//Info
 public Plugin myinfo = {
 	name = "MyJailbreak - Core",
 	author = "shanapu",
@@ -38,68 +60,20 @@ public Plugin myinfo = {
 	url = URL_LINK
 };
 
+
+//Start
 public void OnPluginStart()
 {
+	//Admin commands
+	RegAdminCmd("sm_endround", Command_EndRound, ADMFLAG_CHANGEMAP);
+	
+	//Create Console Variables
 	gc_bTag = CreateConVar("sm_myjb_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", _, true,  0.0, true, 1.0);
 	gc_bLogging = CreateConVar("sm_myjb_log", "1", "Allow MyJailbreak to log events, freekills & eventdays in logs/MyJailbreak", _, true,  0.0, true, 1.0);
-	
-	RegAdminCmd("sm_endround", Command_EndRound, ADMFLAG_GENERIC);
-	
-//	RegAdminCmd("sm_fogoff", CommandFogOff, ADMFLAG_ROOT, "");
-//	RegAdminCmd("sm_fogon", CommandFogOn, ADMFLAG_ROOT, "");
-//	HookEvent("round_start", RoundStart);
 }
 
-public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
-{
-	CreateNative("SetEventDay", Native_SetEventDay);
-	CreateNative("GetEventDay", Native_GetEventDay);
-	CreateNative("FogOn", Native_FogOn);
-	CreateNative("FogOff", Native_FogOff);
-	CreateNative("MyJBLogging", Native_GetMyJBLogging);
-	CreateNative("IsEventDayRunning", Native_IsEventDayRunning);
-	CreateNative("IsEventDayPlaned", Native_IsEventDayPlaned);
-	CreateNative("SetEventDayRunning", Native_SetEventDayRunning);
-	CreateNative("SetEventDayPlaned", Native_SetEventDayPlaned);
-	
-	if (GetEngineVersion() != Engine_CSGO)
-	{
-		SetFailState("Game is not supported. CS:GO ONLY");
-	}
-	RegPluginLibrary("myjailbreak");
-	return APLRes_Success;
-	
-}
 
-public Action Command_EndRound(int client, int args)
-{
-	CS_TerminateRound(0.5, CSRoundEnd_Draw, true); 
-}
-
-public int Native_IsEventDayRunning(Handle plugin,int argc)
-{
-	if(!EventDayRunning) return true;
-	else return false;
-}
-public int Native_SetEventDayRunning(Handle plugin,int argc)
-{
-	EventDayRunning = GetNativeCell(1);
-//	CPrintToChatAll("{darkred}DEBUG: EventDayRunning %b",EventDayRunning);
-}
-
-public int Native_IsEventDayPlaned(Handle plugin,int argc)
-{
-	if(!EventDayPlaned) return true;
-	else return false;
-}
-public int Native_SetEventDayPlaned(Handle plugin,int argc)
-{
-	EventDayPlaned = GetNativeCell(1);
-//	CPrintToChatAll("{darkred}DEBUG: EventDayPlaned %b",EventDayPlaned);
-}
-
-//Set sv_tags
-
+//Initialize Plugin - check/set sv_tags for MyJailbreak
 public void OnConfigsExecuted()
 {
 	if (gc_bTag.BoolValue)
@@ -115,99 +89,106 @@ public void OnConfigsExecuted()
 	}
 }
 
-//Darken the Map
-public void OnMapEnd()
+
+/******************************************************************************
+                   COMMANDS
+******************************************************************************/
+
+
+//End the current round instandly
+public Action Command_EndRound(int client, int args)
 {
-	EventDayPlaned = false;
-	EventDayRunning = false;
-	SetEventDay("none");
+	CS_TerminateRound(0.5, CSRoundEnd_Draw, true); 
 }
+
+
+/******************************************************************************
+                   FORWARDS LISTEN
+******************************************************************************/
+
+
+//Prepare modules
 public void OnMapStart()
 {
-	int ent; 
-	ent = FindEntityByClassname(-1, "env_fog_controller");
-	if (ent != -1) 
-	{
-		FogIndex = ent;
-	}
-	else
-	{
-		FogIndex = CreateEntityByName("env_fog_controller");
-		DispatchSpawn(FogIndex);
-	}
-	DoFog();
-	AcceptEntityInput(FogIndex, "TurnOff");
-}
-/*
-public Action CommandFogOff(int client, int args)
-{
-	AcceptEntityInput(FogIndex, "TurnOff");
-	PrintToChatAll("fog off");
+	Fog_OnMapStart();
 }
 
-public Action CommandFogOn(int client, int args)
-{
-	AcceptEntityInput(FogIndex, "TurnOn");
-	PrintToChatAll("fog on");
-}
-*/
-public int Native_FogOff(Handle plugin,int argc)
-{AcceptEntityInput(FogIndex, "TurnOff");}
 
-public int Native_FogOn(Handle plugin,int argc)
-{AcceptEntityInput(FogIndex, "TurnOn");}
-
-public void DoFog()
+//Reset Plugin
+public void OnMapEnd()
 {
-	if(FogIndex != -1)
-	{
-		DispatchKeyValue(FogIndex, "fogblend", "0");
-		DispatchKeyValue(FogIndex, "fogcolor", "0 0 0");
-		DispatchKeyValue(FogIndex, "fogcolor2", "0 0 0");
-		DispatchKeyValueFloat(FogIndex, "fogstart", mapFogStart);
-		DispatchKeyValueFloat(FogIndex, "fogend", mapFogEnd);
-		DispatchKeyValueFloat(FogIndex, "fogmaxdensity", mapFogDensity);
-	}
+	EventDayPlanned = false;
+	EventDayRunning = false;
+	SetEventDayName("none");
 }
-/*
-public void RoundStart(Handle event, char[] name, bool dontBroadcast)
+
+
+/******************************************************************************
+                   NATIVES
+******************************************************************************/
+
+
+//Register Natives
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
+	CreateNative("SetEventDayName", Native_SetEventDayName);
+	CreateNative("GetEventDayName", Native_GetEventDayName);
+	CreateNative("FogOn", Native_FogOn);
+	CreateNative("FogOff", Native_FogOff);
+	CreateNative("ActiveLogging", Native_GetActiveLogging);
+	CreateNative("IsEventDayRunning", Native_IsEventDayRunning);
+	CreateNative("IsEventDayPlanned", Native_IsEventDayPlanned);
+	CreateNative("SetEventDayRunning", Native_SetEventDayNameRunning);
+	CreateNative("SetEventDayPlanned", Native_SetEventDayPlanned);
 	
-	if(!IsEventDayRunning(false))
+	if (GetEngineVersion() != Engine_CSGO)
 	{
-		g_iCoolDown = gc_iCooldownDay.IntValue + 1;
+		SetFailState("Game is not supported. CS:GO ONLY");
 	}
-	else if (g_iCoolDown > 0) g_iCoolDown--;
+	RegPluginLibrary("myjailbreak");
+	return APLRes_Success;
 	
-	for(int client=1; client <= MaxClients; client++)
-	{
-		if (IsClientInGame(client))
-		{
-			char EventDay[64];
-			GetEventDay(EventDay);
-			
-			if(IsEventDayRunning(false))
-			{
-				if (GetClientTeam(client) == CS_TEAM_T)
-				{
-					StripAllWeapons(client);
-					GivePlayerItem(client, "weapon_knife");
-				}
-				
-			//	SetCvar("sm_YOUR_CVAR", 1);		// No EventDay
-			//	SetCvar("sm_YOUR_CVAR", 1);		// No EventDay
-			}
-			else
-			{
-			//	SetCvar("sm_YOUR_CVAR", 0);		// Is EventDay
-			//	SetCvar("sm_YOUR_CVAR", 0);		// Is EventDay
-			}
-		
-		}
-	}
-}*/
+}
 
-public int Native_SetEventDay(Handle plugin,int argc)
+
+//Boolean Is Event Day running (true = running)
+public int Native_IsEventDayRunning(Handle plugin,int argc)
+{
+	if(EventDayRunning) 
+	{
+		return false;
+	}
+	return true;
+}
+
+
+//Boolean Set Event Day running (true = running)
+public int Native_SetEventDayNameRunning(Handle plugin,int argc)
+{
+	EventDayRunning = GetNativeCell(1);
+}
+
+
+//Boolean Is Event Day planned (true = planned)
+public int Native_IsEventDayPlanned(Handle plugin,int argc)
+{
+	if(!EventDayPlanned) 
+	{
+		return false;
+	}
+	return true;
+}
+
+
+//Boolean Set Event Day planned (true = planned)
+public int Native_SetEventDayPlanned(Handle plugin,int argc)
+{
+	EventDayPlanned = GetNativeCell(1);
+}
+
+
+//Set Event Day Name
+public int Native_SetEventDayName(Handle plugin,int argc)
 {
 	char buffer[64];
 	GetNativeString(1, buffer, 64);
@@ -215,14 +196,17 @@ public int Native_SetEventDay(Handle plugin,int argc)
 	Format(IsEventDay, sizeof(IsEventDay), buffer);
 }
 
-public int Native_GetEventDay(Handle plugin,int argc)
+
+//Get Event Day Name
+public int Native_GetEventDayName(Handle plugin,int argc)
 {
 	SetNativeString(1, IsEventDay, sizeof(IsEventDay));
 }
 
-public int Native_GetMyJBLogging(Handle plugin,int argc)
+
+//Check if logging is active
+public int Native_GetActiveLogging(Handle plugin,int argc)
 {
 	if(gc_bLogging.BoolValue) return true;
 	else return false;
 }
-

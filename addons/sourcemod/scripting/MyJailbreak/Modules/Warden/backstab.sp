@@ -1,28 +1,53 @@
-//Backstab protection module for MyJailbreak - Warden
+/*
+ * MyJailbreak - Warden - Backstab Module.
+ * by: shanapu
+ * https://github.com/shanapu/MyJailbreak/
+ *
+ * This file is part of the MyJailbreak SourceMod Plugin.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, version 3.0, as published by the
+ * Free Software Foundation.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+
+/******************************************************************************
+                   STARTUP
+******************************************************************************/
+
 
 //Includes
-#include <sourcemod>
-#include <cstrike>
-#include <warden>
-#include <colors>
-#include <autoexecconfig>
-#include <myjailbreak>
+#include <myjailbreak> //... all other includes in myjailbreak.inc
+
 
 //Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
 
-//ConVars
+
+//Console Variables
 ConVar gc_bBackstab;
 ConVar gc_iBackstabNumber;
 ConVar gc_sAdminFlagBackstab;
 
+
 //Integers
 int g_iBackstabNumber[MAXPLAYERS+1];
+
 
 //Strings
 char g_sAdminFlagBackstab[32];
 
+
+//Start
 public void BackStab_OnPluginStart()
 {
 	//AutoExecConfig
@@ -30,9 +55,11 @@ public void BackStab_OnPluginStart()
 	gc_iBackstabNumber = AutoExecConfig_CreateConVar("sm_warden_backstab_number", "1", "How many time a warden get protected? 0 - alltime", _, true,  1.0);
 	gc_sAdminFlagBackstab = AutoExecConfig_CreateConVar("sm_warden_backstab_flag", "", "Set flag for admin/vip to get warden backstab protection. No flag = feature is available for all players!");
 	
+	
 	//Hooks
-	HookEvent("round_start", BackStab_RoundStart);
+	HookEvent("round_start", BackStab_Event_RoundStart);
 	HookConVarChange(gc_sAdminFlagBackstab, BackStab_OnSettingChanged);
+	
 	
 	//FindConVar
 	gc_sAdminFlagBackstab.GetString(g_sAdminFlagBackstab , sizeof(g_sAdminFlagBackstab));
@@ -47,15 +74,17 @@ public int BackStab_OnSettingChanged(Handle convar, const char[] oldValue, const
 	}
 }
 
-public void BackStab_OnClientPutInServer(int client)
-{
-	SDKHook(client, SDKHook_OnTakeDamage, BackStab_OnTakedamage);
-}
 
-public void BackStab_RoundStart(Event event, const char[] name, bool dontBroadcast)
+/******************************************************************************
+                   EVENTS
+******************************************************************************/
+
+
+public void BackStab_Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
 	LoopClients(i) g_iBackstabNumber[i] = gc_iBackstabNumber.IntValue;
 }
+
 
 public Action BackStab_OnTakedamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &weapon, float damageForce[3], float damagePosition[3], int damagecustom)
 {
@@ -82,4 +111,15 @@ public Action BackStab_OnTakedamage(int victim, int &attacker, int &inflictor, f
 		}
 	}
 	return Plugin_Continue;
+}
+
+
+/******************************************************************************
+                   FORWARDS LISTEN
+******************************************************************************/
+
+
+public void BackStab_OnClientPutInServer(int client)
+{
+	SDKHook(client, SDKHook_OnTakeDamage, BackStab_OnTakedamage);
 }

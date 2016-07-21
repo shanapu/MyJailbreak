@@ -1,17 +1,39 @@
-//includes
-#include <sourcemod>
-#include <cstrike>
-#include <warden>
-#include <scp>
+/*
+ * MyJailbreak - Player Tags Plugin.
+ * by: shanapu
+ * https://github.com/shanapu/MyJailbreak/
+ *
+ * This file is part of the MyJailbreak SourceMod Plugin.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, version 3.0, as published by the
+ * Free Software Foundation.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+
+/******************************************************************************
+                   STARTUP
+******************************************************************************/
+
+
+//Includes
 #include <myjailbreak>
-#include <autoexecconfig>
-#include <colors>
+
 
 //Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
 
-//ConVars
+
+//Console Variables
 ConVar gc_bPlugin;
 ConVar gc_bStats;
 ConVar gc_bChat;
@@ -21,11 +43,15 @@ ConVar gc_sVIPFlag;
 ConVar gc_sVIP2Flag;
 ConVar gc_bNoOverwrite;
 
+
+//Strings
 char g_sAdminFlag[32];
 char g_sOwnerFlag[32];
 char g_sVIP2Flag[32];
 char g_sVIPFlag[32];
 
+
+//Info
 public Plugin myinfo =
 {
 	name = "MyJailbreak - PlayerTags",
@@ -35,10 +61,13 @@ public Plugin myinfo =
 	url = URL_LINK
 }
 
+
+//Start
 public void OnPluginStart()
 {
 	// Translation
 	LoadTranslations("MyJailbreak.PlayerTags.phrases");
+	
 	
 	//AutoExecConfig
 	AutoExecConfig_SetFile("PlayerTags", "MyJailbreak");
@@ -58,20 +87,39 @@ public void OnPluginStart()
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
 	
-//Events to give new Tag
 	
-	//Hooks
-	HookEvent("player_connect", checkTag);
-	HookEvent("player_team", checkTag);
-	HookEvent("player_spawn", checkTag);
-	HookEvent("player_death", checkTag);
-	HookEvent("round_start", checkTag);
+	//Hooks - Events to check for Tag
+	HookEvent("player_connect", Event_CheckTag);
+	HookEvent("player_team", Event_CheckTag);
+	HookEvent("player_spawn", Event_CheckTag);
+	HookEvent("player_death", Event_CheckTag);
+	HookEvent("round_start", Event_CheckTag);
 	
+	
+	//FindConVar
 	gc_sOwnerFlag.GetString(g_sOwnerFlag,sizeof(g_sOwnerFlag));
 	gc_sAdminFlag.GetString(g_sAdminFlag,sizeof(g_sAdminFlag));
 	gc_sVIPFlag.GetString(g_sVIPFlag,sizeof(g_sVIPFlag));
 	gc_sVIP2Flag.GetString(g_sVIP2Flag,sizeof(g_sVIP2Flag));
 }
+
+
+/******************************************************************************
+                   EVENTS
+******************************************************************************/
+
+
+public Action Event_CheckTag(Handle event, char[] name, bool dontBroadcast)
+{
+	CreateTimer(1.0, DelayCheck);
+	return Action;
+}
+
+
+/******************************************************************************
+                   FORWARDS LISTEN
+******************************************************************************/
+
 
 public void OnClientPutInServer(int client)
 {
@@ -91,11 +139,11 @@ public int warden_OnWardenRemoved(int client)
 	return;
 }
 
-public Action checkTag(Handle event, char[] name, bool dontBroadcast)
-{
-	CreateTimer(1.0, DelayCheck);
-	return Action;
-}
+
+/******************************************************************************
+                   TIMER
+******************************************************************************/
+
 
 public Action DelayCheck(Handle timer) 
 {
@@ -109,8 +157,13 @@ public Action DelayCheck(Handle timer)
 	return Action;
 }
 
-//Give Tag
 
+/******************************************************************************
+                   FUNCTIONS
+******************************************************************************/
+
+
+//Give Tag
 public int HandleTag(int client)
 {
 	if(gc_bPlugin.BoolValue)
@@ -207,8 +260,8 @@ public int HandleTag(int client)
 	}
 }
 
-//Check Chat & add Tag
 
+//Check Chat & add Tag
 public Action OnChatMessage(int &author, Handle recipients, char[] name, char[] message)
 {
 	if(gc_bPlugin.BoolValue)

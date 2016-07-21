@@ -1,25 +1,49 @@
-// Disarm module for MyJailbreak - Warden
+/*
+ * MyJailbreak - Warden - Disarm Module.
+ * by: shanapu
+ * https://github.com/shanapu/MyJailbreak/
+ *
+ * This file is part of the MyJailbreak SourceMod Plugin.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, version 3.0, as published by the
+ * Free Software Foundation.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+
+/******************************************************************************
+                   STARTUP
+******************************************************************************/
+
 
 //Includes
-#include <sourcemod>
-#include <cstrike>
-#include <warden>
-#include <colors>
-#include <autoexecconfig>
 #include <myjailbreak>
+
 
 //Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
 
-//ConVars
+
+//Console Variables
 ConVar gc_bDisarm;
 ConVar gc_iDisarm;
 ConVar gc_iDisarmMode;
 
+
 //Integers
 int g_iDisarm;
 
+
+//Start
 public void Disarm_OnPluginStart()
 {
 	//AutoExecConfig
@@ -28,16 +52,22 @@ public void Disarm_OnPluginStart()
 	gc_iDisarmMode = AutoExecConfig_CreateConVar("sm_warden_disarm_drop", "1", "1 - weapon will drop, 2 - weapon  disapear", _, true,  1.0, true, 2.0);
 	
 	//Hooks 
-	HookEvent("player_hurt", Disarm_PlayerHurt);
-	HookEvent("round_start", Disarm_RoundStart);
+	HookEvent("player_hurt", Disarm_Event_PlayerHurt);
+	HookEvent("round_start", Disarm_Event_RoundStart);
 }
 
-public void Disarm_RoundStart(Event event, const char[] name, bool dontBroadcast)
+
+/******************************************************************************
+                   EVENTS
+******************************************************************************/
+
+
+public void Disarm_Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
 	g_iDisarm = gc_iDisarm.IntValue;
 }
 
-public Action Disarm_PlayerHurt(Handle event, char[] name, bool dontBroadcast)
+public Action Disarm_Event_PlayerHurt(Handle event, char[] name, bool dontBroadcast)
 {
 	if(gc_bPlugin.BoolValue && gc_bDisarm.BoolValue)
 	{

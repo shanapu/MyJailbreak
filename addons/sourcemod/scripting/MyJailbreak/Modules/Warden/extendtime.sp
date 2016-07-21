@@ -1,26 +1,50 @@
-// Extend Round Time module for MyJailbreak - Warden
+/*
+ * MyJailbreak - Warden - Extend Round Time Module.
+ * by: shanapu
+ * https://github.com/shanapu/MyJailbreak/
+ *
+ * This file is part of the MyJailbreak SourceMod Plugin.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, version 3.0, as published by the
+ * Free Software Foundation.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+
+/******************************************************************************
+                   STARTUP
+******************************************************************************/
+
 
 //Includes
-#include <sourcemod>
-#include <cstrike>
-#include <warden>
-#include <colors>
-#include <autoexecconfig>
 #include <myjailbreak>
+
 
 //Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
 
-//ConVars
+
+//Console Variables
 ConVar gc_bExtend;
 ConVar gc_iExtendLimit;
 ConVar g_iGetRoundTime;
+
 
 //Integers
 int g_iExtendNumber[MAXPLAYERS+1];
 int g_iRoundTime;
 
+
+//Start
 public void ExtendTime_OnPluginStart()
 {
 	//Client commands
@@ -31,20 +55,18 @@ public void ExtendTime_OnPluginStart()
 	gc_iExtendLimit = AutoExecConfig_CreateConVar("sm_warden_extend_limit", "2", "How many time a warden can extend the round?", _, true,  1.0);
 	
 	//Hooks
-	HookEvent("round_start", ExtendTime_RoundStart);
+	HookEvent("round_start", ExtendTime_Event_RoundStart);
 	
 	//FindConVar
 	g_iCollisionOffset = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
 	g_bNoBlockSolid = FindConVar("mp_solid_teammates");
 }
 
-public void ExtendTime_RoundStart(Event event, const char[] name, bool dontBroadcast)
-{
-	LoopClients(i) g_iExtendNumber[i] = gc_iExtendLimit.IntValue;
-	
-	g_iGetRoundTime = FindConVar("mp_roundtime");
-	g_iRoundTime = g_iGetRoundTime.IntValue * 60;
-}
+
+/******************************************************************************
+                   COMMANDS
+******************************************************************************/
+
 
 public Action Command_ExtendRoundTime(int client, int args)
 {
@@ -76,6 +98,41 @@ public Action Command_ExtendRoundTime(int client, int args)
 	}
 	return Plugin_Handled;
 }
+
+
+/******************************************************************************
+                   EVENTS
+******************************************************************************/
+
+
+public void ExtendTime_Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
+{
+	LoopClients(i) g_iExtendNumber[i] = gc_iExtendLimit.IntValue;
+	
+	g_iGetRoundTime = FindConVar("mp_roundtime");
+	g_iRoundTime = g_iGetRoundTime.IntValue * 60;
+}
+
+
+/******************************************************************************
+                   FUNCTIONS
+******************************************************************************/
+
+
+public Action ExtendTime(int client, int args)
+{
+		GameRules_SetProp("m_iRoundTime", GameRules_GetProp("m_iRoundTime", 4, 0)+args, 4, 0, true);
+		int extendminute = (args/60);
+		g_iRoundTime = g_iRoundTime + args;
+		CPrintToChatAll("%t %t", "warden_tag" , "warden_extend", client, extendminute);
+		return Plugin_Handled;
+}
+
+
+/******************************************************************************
+                   MENUS
+******************************************************************************/
+
 
 public int Handler_ExtendRoundTime(Menu menu, MenuAction action, int client, int selection)
 {
@@ -116,13 +173,4 @@ public int Handler_ExtendRoundTime(Menu menu, MenuAction action, int client, int
 	{
 		delete menu;
 	}
-}
-
-public Action ExtendTime(int client, int args)
-{
-		GameRules_SetProp("m_iRoundTime", GameRules_GetProp("m_iRoundTime", 4, 0)+args, 4, 0, true);
-		int extendminute = (args/60);
-		g_iRoundTime = g_iRoundTime + args;
-		CPrintToChatAll("%t %t", "warden_tag" , "warden_extend", client, extendminute);
-		return Plugin_Handled;
 }

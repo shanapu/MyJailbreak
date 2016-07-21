@@ -1,49 +1,77 @@
-// Laser Pointer module for MyJailbreak - Warden
+/*
+ * MyJailbreak - Warden - Laser Pointer Module.
+ * by: shanapu
+ * https://github.com/shanapu/MyJailbreak/
+ *
+ * This file is part of the MyJailbreak SourceMod Plugin.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, version 3.0, as published by the
+ * Free Software Foundation.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+
+/******************************************************************************
+                   STARTUP
+******************************************************************************/
+
 
 //Includes
-#include <sourcemod>
-#include <cstrike>
-#include <warden>
-#include <colors>
-#include <autoexecconfig>
 #include <myjailbreak>
-#include <lastrequest>
+
 
 //Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
 
-//Defines
+
+//Console Variables
 ConVar gc_bLaser;
 ConVar gc_sAdminFlagLaser;
 
-//Bools
+
+//Boolean
 bool g_bLaserUse[MAXPLAYERS+1];
 bool g_bLaser = true;
 bool g_bLaserColorRainbow[MAXPLAYERS+1] = true;
 
+
 //Integers
 int g_iLaserColor[MAXPLAYERS+1];
+
 
 //Strings
 char g_sAdminFlagLaser[32];
 
 
+//Start
 public void Laser_OnPluginStart()
 {
 	//Client commands
 	RegConsoleCmd("sm_laser", Command_LaserMenu, "Allows Warden to toggle on/off the wardens Laser pointer");
 	
+	
 	//AutoExecConfig
 	gc_bLaser = AutoExecConfig_CreateConVar("sm_warden_laser", "1", "0 - disabled, 1 - enable Warden Laser Pointer with +E ", _, true,  0.0, true, 1.0);
 	gc_sAdminFlagLaser = AutoExecConfig_CreateConVar("sm_warden_laser_flag", "", "Set flag for admin/vip to get warden laser pointer. No flag = feature is available for all players!");
 	
+	
 	//Hooks
 	HookConVarChange(gc_sAdminFlagLaser, Laser_OnSettingChanged);
+	
 	
 	//FindConVar
 	gc_sAdminFlagLaser.GetString(g_sAdminFlagLaser , sizeof(g_sAdminFlagLaser));
 }
+
 
 public int Laser_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
@@ -53,36 +81,11 @@ public int Laser_OnSettingChanged(Handle convar, const char[] oldValue, const ch
 	}
 }
 
-public Action Laser_OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
-{
-	if((buttons & IN_USE))
-	{
-		if (gc_bLaser.BoolValue && CheckVipFlag(client,g_sAdminFlagLaser))
-		{
-			if (g_bLaser)
-			{
-				g_bLaserUse[client] = true;
-				if(IsClientInGame(client) && g_bLaserUse[client])
-				{
-					float m_fOrigin[3], m_fImpact[3];
-					
-					if(g_bLaserColorRainbow[client]) g_iLaserColor[client] = GetRandomInt(0,6);
-					
-					GetClientEyePosition(client, m_fOrigin);
-					GetClientSightEnd(client, m_fImpact);
-					TE_SetupBeamPoints(m_fOrigin, m_fImpact, g_iBeamSprite, 0, 0, 0, 0.1, 0.12, 0.0, 1, 0.0, g_iColors[g_iLaserColor[client]], 0);
-					TE_SendToAll();
-					TE_SetupGlowSprite(m_fImpact, g_iHaloSprite, 0.1, 0.25, g_iColors[1][3] /*g_iHaloSpritecolor[3] */ );
-					TE_SendToAll();
-				}
-			}
-		}
-	}
-	else if(!(buttons & IN_USE))
-	{
-		g_bLaserUse[client] = false;
-	}
-}
+
+/******************************************************************************
+                   COMMANDS
+******************************************************************************/
+
 
 public Action Command_LaserMenu(int client, int args)
 {
@@ -128,6 +131,80 @@ public Action Command_LaserMenu(int client, int args)
 	}
 	return Plugin_Handled;
 }
+
+
+/******************************************************************************
+                   FORWARDS LISTEN
+******************************************************************************/
+
+
+public Action Laser_OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
+{
+	if((buttons & IN_USE))
+	{
+		if (gc_bLaser.BoolValue && CheckVipFlag(client,g_sAdminFlagLaser))
+		{
+			if (g_bLaser)
+			{
+				g_bLaserUse[client] = true;
+				if(IsClientInGame(client) && g_bLaserUse[client])
+				{
+					float m_fOrigin[3], m_fImpact[3];
+					
+					if(g_bLaserColorRainbow[client]) g_iLaserColor[client] = GetRandomInt(0,6);
+					
+					GetClientEyePosition(client, m_fOrigin);
+					GetClientSightEnd(client, m_fImpact);
+					TE_SetupBeamPoints(m_fOrigin, m_fImpact, g_iBeamSprite, 0, 0, 0, 0.1, 0.12, 0.0, 1, 0.0, g_iColors[g_iLaserColor[client]], 0);
+					TE_SendToAll();
+					TE_SetupGlowSprite(m_fImpact, g_iHaloSprite, 0.1, 0.25, g_iColors[1][3] /*g_iHaloSpritecolor[3] */ );
+					TE_SendToAll();
+				}
+			}
+		}
+	}
+	else if(!(buttons & IN_USE))
+	{
+		g_bLaserUse[client] = false;
+	}
+}
+
+
+public void Laser_OnMapEnd()
+{
+	g_bLaser = false;
+}
+
+
+public void Laser_OnMapStart()
+{
+	g_bLaser = true;
+}
+
+
+public void Laser_OnClientPutInServer(int client)
+{
+	g_bLaserUse[client] = false;
+	g_bLaserColorRainbow[client] = true;
+}
+
+
+public void Laser_OnWardenCreation(int client)
+{
+	g_bLaser = true;
+}
+
+
+public void Laser_OnWardenRemoved(int client)
+{
+	g_bLaser = false;
+}
+
+
+/******************************************************************************
+                   MENUS
+******************************************************************************/
+
 
 public int Handler_LaserMenu(Menu menu, MenuAction action, int client, int selection)
 {
@@ -241,21 +318,11 @@ public int Handler_LaserMenu(Menu menu, MenuAction action, int client, int selec
 	}
 }
 
-public void Laser_OnMapEnd()
-{
-	g_bLaser = false;
-}
 
-public void Laser_OnMapStart()
-{
-	g_bLaser = true;
-}
+/******************************************************************************
+                   STOCKS
+******************************************************************************/
 
-public void Laser_OnClientPutInServer(int client)
-{
-	g_bLaserUse[client] = false;
-	g_bLaserColorRainbow[client] = true;
-}
 
 stock void GetClientSightEnd(int client, float out[3])
 {
@@ -268,21 +335,11 @@ stock void GetClientSightEnd(int client, float out[3])
 		TR_GetEndPosition(out);
 }
 
+
 public bool TraceRayDontHitPlayers(int entity,int mask, any data)
 {
 	if(0 < entity <= MaxClients)
 		return false;
 	return true;
 }
-
-public void Laser_OnWardenCreation(int client)
-{
-	g_bLaser = true;
-}
-
-public void Laser_OnWardenRemoved(int client)
-{
-	g_bLaser = false;
-}
-
 

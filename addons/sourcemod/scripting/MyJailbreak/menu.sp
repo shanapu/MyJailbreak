@@ -1,23 +1,43 @@
-//includes
-#include <sourcemod>
-#include <cstrike>
-#include <warden>
-#include <colors>
-#include <autoexecconfig>
-#include <smartjaildoors>
+/*
+ * MyJailbreak - Menu Plugin.
+ * by: shanapu
+ * https://github.com/shanapu/MyJailbreak/
+ *
+ * This file is part of the MyJailbreak SourceMod Plugin.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, version 3.0, as published by the
+ * Free Software Foundation.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+
+/******************************************************************************
+                   STARTUP
+******************************************************************************/
+
+
+//Includes
 #include <myjailbreak>
-#undef REQUIRE_PLUGIN
-#include <lastrequest>
-#define REQUIRE_PLUGIN
+
 
 //Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
 
+
 //Booleans
 int g_iCoolDown;
 
-//ConVars
+
+//Console Variables
 ConVar gc_bPlugin;
 ConVar gc_bTerror;
 ConVar gc_bCTerror;
@@ -78,15 +98,16 @@ ConVar gc_sAdminFlagBulletSparks;
 ConVar gc_sAdminFlagLaser;
 ConVar gc_sAdminFlagPainter;
 
+
 //Strings
 char g_sCustomCommand[64];
-
 char g_sAdminFlagBulletSparks[32];
 char g_sAdminFlagLaser[32];
 char g_sAdminFlagPainter[32];
 char g_sAdminFlag[32];
 
 
+//Info
 public Plugin myinfo = {
 	name = "MyJailbreak - Menus",
 	author = "shanapu, Franc1sco",
@@ -95,23 +116,27 @@ public Plugin myinfo = {
 	url = URL_LINK
 };
 
+
+//Start
 public void OnPluginStart()
 {
 	// Translation
 	LoadTranslations("MyJailbreak.Warden.phrases");
 	LoadTranslations("MyJailbreak.Menu.phrases");
 	
+	
 	//Client Commands
-	RegConsoleCmd("sm_menu", JbMenu, "opens the menu depends on players team/rank");
-	RegConsoleCmd("sm_menus", JbMenu, "opens the menu depends on players team/rank");
-	RegConsoleCmd("buyammo1", JbMenu, "opens the menu depends on players team/rank");
-	RegConsoleCmd("sm_days", VoteEventDays, "open a vote EventDays menu for player");
-	RegConsoleCmd("sm_eventdays", VoteEventDays, "open a vote EventDays menu for player");
-	RegConsoleCmd("sm_seteventdays", SetEventDays, "open a Set EventDays menu for Warden/Admin");
-	RegConsoleCmd("sm_setdays", SetEventDays, "open a Set EventDays menu for Warden/Admin");
-	RegConsoleCmd("sm_voteday", VotingMenu, "opens the vote menu");
-	RegConsoleCmd("sm_votedays", VotingMenu, "opens the vote menu");
-	RegConsoleCmd("sm_voteeventdays", VotingMenu, "opens the vote menu");
+	RegConsoleCmd("sm_menu", Command_OpenMenu, "opens the menu depends on players team/rank");
+	RegConsoleCmd("sm_menus", Command_OpenMenu, "opens the menu depends on players team/rank");
+	RegConsoleCmd("buyammo1", Command_OpenMenu, "opens the menu depends on players team/rank");
+	RegConsoleCmd("sm_days", Command_VoteEventDays, "open a vote EventDays menu for player");
+	RegConsoleCmd("sm_eventdays", Command_VoteEventDays, "open a vote EventDays menu for player");
+	RegConsoleCmd("sm_setday", Command_SetEventDay, "open a Set EventDays menu for Warden/Admin");
+	RegConsoleCmd("sm_setdays", Command_SetEventDay, "open a Set EventDays menu for Warden/Admin");
+	RegConsoleCmd("sm_voteday", Command_VotingMenu, "opens the vote menu");
+	RegConsoleCmd("sm_votedays", Command_VotingMenu, "opens the vote menu");
+	RegConsoleCmd("sm_voteeventdays", Command_VotingMenu, "opens the vote menu");
+	
 	
 	//AutoExecConfig
 	AutoExecConfig_SetFile("Menu", "MyJailbreak");
@@ -138,18 +163,21 @@ public void OnPluginStart()
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
 	
+	
 	//Hooks
 	HookEvent("player_spawn", Event_OnPlayerSpawn);
-	HookEvent("round_start", RoundStart);
+	HookEvent("round_start", Event_RoundStart);
 	HookConVarChange(gc_sCustomCommand, OnSettingChanged);
 	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
+	
 	
 	//Find
 	gc_sAdminFlag.GetString(g_sAdminFlag , sizeof(g_sAdminFlag));
 	gc_sCustomCommand.GetString(g_sCustomCommand , sizeof(g_sCustomCommand));
-	
 }
 
+
+//ConVarChange for Strings
 public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
 	if(convar == gc_sCustomCommand)
@@ -158,7 +186,7 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 		char sBufferCMD[64];
 		Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommand);
 		if(GetCommandFlags(sBufferCMD) == INVALID_FCVAR_FLAGS)
-			RegConsoleCmd(sBufferCMD, JbMenu, "opens the menu depends on players team/rank");
+			RegConsoleCmd(sBufferCMD, Command_OpenMenu, "opens the menu depends on players team/rank");
 	}
 	else if(convar == gc_sAdminFlag)
 	{
@@ -166,8 +194,8 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 	}
 }
 
-//FindConVar
 
+//FindConVar
 public void OnConfigsExecuted()
 {
 	g_bWarden = FindConVar("sm_warden_enable");
@@ -218,11 +246,53 @@ public void OnConfigsExecuted()
 	char sBufferCMD[64];
 	Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommand);
 	if(GetCommandFlags(sBufferCMD) == INVALID_FCVAR_FLAGS)
-		RegConsoleCmd(sBufferCMD, JbMenu, "opens the menu depends on players team/rank");
+		RegConsoleCmd(sBufferCMD, Command_OpenMenu, "opens the menu depends on players team/rank");
 }
 
-//Welcome/Info Message
 
+/******************************************************************************
+                   COMMANDS
+******************************************************************************/
+
+
+
+
+/******************************************************************************
+                   EVENTS
+******************************************************************************/
+
+
+//Open Menu on Spawn
+public Action Event_OnPlayerSpawn(Event event, const char[] name, bool dontBroadcast)
+{
+	int client = GetClientOfUserId(GetEventInt(event, "userid"));
+	
+	if(gc_bStart.BoolValue)
+	{
+		Command_OpenMenu(client,0);
+	}
+}
+
+
+public void Event_RoundStart(Handle event, char[] name, bool dontBroadcast)
+{
+	
+	char EventDay[64];
+	GetEventDayName(EventDay);
+	if(!StrEqual(EventDay, "none", false))
+	{
+		g_iCoolDown = gc_iCooldownDay.IntValue + 1;
+	}
+	else if (g_iCoolDown > 0) g_iCoolDown--;
+}
+
+
+/******************************************************************************
+                   FORWARDS LISTEN
+******************************************************************************/
+
+
+//Welcome/Info Message
 public void OnClientPutInServer(int client)
 {
 	if (gc_bWelcome.BoolValue)
@@ -231,29 +301,20 @@ public void OnClientPutInServer(int client)
 	}
 }
 
-public Action Timer_WelcomeMessage(Handle timer, any client)
-{	
-	if (gc_bWelcome.BoolValue && IsValidClient(client, false, true))
-	{
-		CPrintToChat(client, "%t %t", "menu_tag", "menu_info");
-	}
-}
 
-//Open Menu on Spawn
-
-public Action Event_OnPlayerSpawn(Event event, const char[] name, bool dontBroadcast)
+public void OnMapStart()
 {
-	int client = GetClientOfUserId(GetEventInt(event, "userid"));
-	
-	if(gc_bStart.BoolValue)
-	{
-		JbMenu(client,0);
-	}
+	g_iCoolDown = gc_iCooldownStart.IntValue +1;
 }
+
+
+/******************************************************************************
+                   MENUS
+******************************************************************************/
 
 //Main Menu
 
-public Action JbMenu(int client, int args)
+public Action Command_OpenMenu(int client, int args)
 {
 	if(gc_bPlugin.BoolValue)
 	{
@@ -325,7 +386,7 @@ public Action JbMenu(int client, int args)
 					}
 					if(gc_bDays.BoolValue)
 					{
-						Format(menuinfo, sizeof(menuinfo), "%T", "menu_seteventdays", client);
+						Format(menuinfo, sizeof(menuinfo), "%T", "menu_SetEventDayNames", client);
 						mainmenu.AddItem("setdays", menuinfo);
 					}
 					if(g_bSparks != null)
@@ -443,7 +504,7 @@ public Action JbMenu(int client, int args)
 						}
 					}
 					char EventDay[64];
-					GetEventDay(EventDay);
+					GetEventDayName(EventDay);
 					
 					if(StrEqual(EventDay, "none", false)) //is an other event running or set?
 					{
@@ -512,7 +573,7 @@ public Action JbMenu(int client, int args)
 					}
 					
 					char EventDay[64];
-					GetEventDay(EventDay);
+					GetEventDayName(EventDay);
 					
 					if(StrEqual(EventDay, "none", false)) //is an other event running or set?
 					{
@@ -548,7 +609,7 @@ public Action JbMenu(int client, int args)
 			if (CheckVipFlag(client,g_sAdminFlag))
 			{
 				char EventDay[64];
-				GetEventDay(EventDay);
+				GetEventDayName(EventDay);
 				
 				if(StrEqual(EventDay, "none", false)) //is an other event running or set?
 				{
@@ -569,7 +630,7 @@ public Action JbMenu(int client, int args)
 						}
 						if(gc_bDays.BoolValue)
 						{
-							Format(menuinfo, sizeof(menuinfo), "%T", "menu_seteventdays", client);
+							Format(menuinfo, sizeof(menuinfo), "%T", "menu_SetEventDayNames", client);
 							mainmenu.AddItem("setdays", menuinfo);
 						}
 					}
@@ -686,19 +747,19 @@ public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selec
 		else if ( strcmp(info,"getwarden") == 0 ) 
 		{
 			FakeClientCommand(client, "sm_warden");
-			JbMenu(client,0);
+			Command_OpenMenu(client,0);
 		}
 		else if ( strcmp(info,"unwarden") == 0 ) 
 		{
 			FakeClientCommand(client, "sm_unwarden");
-			JbMenu(client,0);
+			Command_OpenMenu(client,0);
 		}
 		else if ( strcmp(info,"removewarden") == 0 ) 
 		{
 			FakeClientCommand(client, "sm_rw");
 			if(!gc_bClose.BoolValue)
 			{
-				JbMenu(client,0);
+				Command_OpenMenu(client,0);
 			}
 		}
 		else if ( strcmp(info,"sparks") == 0 ) 
@@ -706,7 +767,7 @@ public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selec
 			FakeClientCommand(client, "sm_sparks");
 			if(!gc_bClose.BoolValue)
 			{
-				JbMenu(client,0);
+				Command_OpenMenu(client,0);
 			}
 		}
 		else if ( strcmp(info,"setff") == 0 ) 
@@ -714,7 +775,7 @@ public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selec
 			FakeClientCommand(client, "sm_setff");
 			if(!gc_bClose.BoolValue)
 			{
-				JbMenu(client,0);
+				Command_OpenMenu(client,0);
 			}
 		}
 		else if ( strcmp(info,"math") == 0 ) 
@@ -722,7 +783,7 @@ public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selec
 			FakeClientCommand(client, "sm_math");
 			if(!gc_bClose.BoolValue)
 			{
-				JbMenu(client,0);
+				Command_OpenMenu(client,0);
 			}
 		}
 		else if ( strcmp(info,"cellclose") == 0 ) 
@@ -730,7 +791,7 @@ public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selec
 			FakeClientCommand(client, "sm_close");
 			if(!gc_bClose.BoolValue)
 			{
-				JbMenu(client,0);
+				Command_OpenMenu(client,0);
 			}
 		}
 		else if ( strcmp(info,"cellopen") == 0 ) 
@@ -738,7 +799,7 @@ public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selec
 			FakeClientCommand(client, "sm_open");
 			if(!gc_bClose.BoolValue)
 			{
-				JbMenu(client,0);
+				Command_OpenMenu(client,0);
 			}
 		}
 		else if ( strcmp(info,"noblock") == 0 ) 
@@ -746,7 +807,7 @@ public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selec
 			FakeClientCommand(client, "sm_noblock");
 			if(!gc_bClose.BoolValue)
 			{
-				JbMenu(client,0);
+				Command_OpenMenu(client,0);
 			}
 		}
 		else if ( strcmp(info,"guard") == 0 ) 
@@ -754,7 +815,7 @@ public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selec
 			FakeClientCommand(client, "sm_guard");
 			if(!gc_bClose.BoolValue)
 			{
-				JbMenu(client,0);
+				Command_OpenMenu(client,0);
 			}
 		}
 		else if ( strcmp(info,"votewarden") == 0 ) 
@@ -762,7 +823,7 @@ public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selec
 			FakeClientCommand(client, "sm_votewarden");
 			if(!gc_bClose.BoolValue)
 			{
-				JbMenu(client,0);
+				Command_OpenMenu(client,0);
 			}
 		} 
 		else if (action == MenuAction_End)
@@ -774,7 +835,7 @@ public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selec
 
 //Event Day Voting Menu
 
-public Action VoteEventDays(int client, int args)
+public Action Command_VoteEventDays(int client, int args)
 {
 	if(gc_bDays.BoolValue)
 	{
@@ -934,7 +995,7 @@ public int VoteEventMenuHandler(Menu daysmenu, MenuAction action, int client, in
 			FakeClientCommand(client, "sm_war");
 			if(!gc_bClose.BoolValue)
 			{
-				JbMenu(client,0);
+				Command_OpenMenu(client,0);
 			}
 		} 
 		else if ( strcmp(info,"voteffa") == 0 ) 
@@ -942,7 +1003,7 @@ public int VoteEventMenuHandler(Menu daysmenu, MenuAction action, int client, in
 			FakeClientCommand(client, "sm_ffa");
 			if(!gc_bClose.BoolValue)
 			{
-				JbMenu(client,0);
+				Command_OpenMenu(client,0);
 			}
 		} 
 		else if ( strcmp(info,"votezombie") == 0 ) 
@@ -950,7 +1011,7 @@ public int VoteEventMenuHandler(Menu daysmenu, MenuAction action, int client, in
 			FakeClientCommand(client, "sm_zombie");
 			if(!gc_bClose.BoolValue)
 			{
-				JbMenu(client,0);
+				Command_OpenMenu(client,0);
 			}
 		} 
 		else if ( strcmp(info,"votezeus") == 0 )
@@ -958,7 +1019,7 @@ public int VoteEventMenuHandler(Menu daysmenu, MenuAction action, int client, in
 			FakeClientCommand(client, "sm_zeus");
 			if(!gc_bClose.BoolValue)
 			{
-					JbMenu(client,0);
+					Command_OpenMenu(client,0);
 			}
 		} 
 		else if ( strcmp(info,"votecatch") == 0 )
@@ -966,7 +1027,7 @@ public int VoteEventMenuHandler(Menu daysmenu, MenuAction action, int client, in
 			FakeClientCommand(client, "sm_catch");
 			if(!gc_bClose.BoolValue)
 			{
-				JbMenu(client,0);
+				Command_OpenMenu(client,0);
 			}
 		}
 		else if ( strcmp(info,"votedrunk") == 0 )
@@ -974,7 +1035,7 @@ public int VoteEventMenuHandler(Menu daysmenu, MenuAction action, int client, in
 			FakeClientCommand(client, "sm_drunk");
 			if(!gc_bClose.BoolValue)
 			{
-				JbMenu(client,0);
+				Command_OpenMenu(client,0);
 			}
 		}
 		else if ( strcmp(info,"votecowboy") == 0 )
@@ -982,7 +1043,7 @@ public int VoteEventMenuHandler(Menu daysmenu, MenuAction action, int client, in
 			FakeClientCommand(client, "sm_cowboy");
 			if(!gc_bClose.BoolValue)
 			{
-				JbMenu(client,0);
+				Command_OpenMenu(client,0);
 			}
 		}
 		else if ( strcmp(info,"voteSuicideBomber") == 0 )
@@ -990,7 +1051,7 @@ public int VoteEventMenuHandler(Menu daysmenu, MenuAction action, int client, in
 			FakeClientCommand(client, "sm_suicidebomber");
 			if(!gc_bClose.BoolValue)
 			{
-				JbMenu(client,0);
+				Command_OpenMenu(client,0);
 			}
 		}
 		else if ( strcmp(info,"votenoscope") == 0 )
@@ -998,7 +1059,7 @@ public int VoteEventMenuHandler(Menu daysmenu, MenuAction action, int client, in
 			FakeClientCommand(client, "sm_noscope");
 			if(!gc_bClose.BoolValue)
 			{
-				JbMenu(client,0);
+				Command_OpenMenu(client,0);
 			}
 		}
 		else if ( strcmp(info,"votetorch") == 0 )
@@ -1006,7 +1067,7 @@ public int VoteEventMenuHandler(Menu daysmenu, MenuAction action, int client, in
 			FakeClientCommand(client, "sm_torch");
 			if(!gc_bClose.BoolValue)
 			{
-				JbMenu(client,0);
+				Command_OpenMenu(client,0);
 			}
 		}
 		else if ( strcmp(info,"votedeal") == 0 )
@@ -1014,7 +1075,7 @@ public int VoteEventMenuHandler(Menu daysmenu, MenuAction action, int client, in
 			FakeClientCommand(client, "sm_dealdamage");
 			if(!gc_bClose.BoolValue)
 			{
-				JbMenu(client,0);
+				Command_OpenMenu(client,0);
 			}
 		}
 		else if ( strcmp(info,"votehebattle") == 0 )
@@ -1022,7 +1083,7 @@ public int VoteEventMenuHandler(Menu daysmenu, MenuAction action, int client, in
 			FakeClientCommand(client, "sm_hebattle");
 			if(!gc_bClose.BoolValue)
 			{
-				JbMenu(client,0);
+				Command_OpenMenu(client,0);
 			}
 		}
 		else if ( strcmp(info,"voteduckhunt") == 0 )
@@ -1030,7 +1091,7 @@ public int VoteEventMenuHandler(Menu daysmenu, MenuAction action, int client, in
 			FakeClientCommand(client, "sm_duckhunt");
 			if(!gc_bClose.BoolValue)
 			{
-				JbMenu(client,0);
+				Command_OpenMenu(client,0);
 			}
 		}
 		else if ( strcmp(info,"votehide") == 0 )
@@ -1038,7 +1099,7 @@ public int VoteEventMenuHandler(Menu daysmenu, MenuAction action, int client, in
 			FakeClientCommand(client, "sm_hide");
 			if(!gc_bClose.BoolValue)
 			{
-				JbMenu(client,0);
+				Command_OpenMenu(client,0);
 			}
 		}
 		else if ( strcmp(info,"voteknife") == 0 )
@@ -1046,7 +1107,7 @@ public int VoteEventMenuHandler(Menu daysmenu, MenuAction action, int client, in
 			FakeClientCommand(client, "sm_knifefight");
 			if(!gc_bClose.BoolValue)
 			{
-				JbMenu(client,0);
+				Command_OpenMenu(client,0);
 			}
 		}
 		else if ( strcmp(info,"voteFreeday") == 0 )
@@ -1054,7 +1115,7 @@ public int VoteEventMenuHandler(Menu daysmenu, MenuAction action, int client, in
 			FakeClientCommand(client, "sm_Freeday");
 			if(!gc_bClose.BoolValue)
 			{
-				JbMenu(client,0);
+				Command_OpenMenu(client,0);
 			}
 		}
 	}
@@ -1062,7 +1123,7 @@ public int VoteEventMenuHandler(Menu daysmenu, MenuAction action, int client, in
 	{
 		if(selection == MenuCancel_ExitBack) 
 		{
-			JbMenu(client,0);
+			Command_OpenMenu(client,0);
 		}
 	}
 	else if (action == MenuAction_End)
@@ -1073,7 +1134,7 @@ public int VoteEventMenuHandler(Menu daysmenu, MenuAction action, int client, in
 
 // Event Days Set Menu
 
-public Action SetEventDays(int client, int args)
+public Action Command_SetEventDay(int client, int args)
 {
 	if(gc_bDays.BoolValue && (warden_iswarden(client) || CheckVipFlag(client,g_sAdminFlag)))
 	{
@@ -1233,7 +1294,7 @@ public int SetEventMenuHandler(Menu daysmenu, MenuAction action, int client, int
 			FakeClientCommand(client, "sm_setwar");
 			if(!gc_bClose.BoolValue)
 			{
-				JbMenu(client,0);
+				Command_OpenMenu(client,0);
 			}
 		}
 		else if ( strcmp(info,"setffa") == 0 ) 
@@ -1241,7 +1302,7 @@ public int SetEventMenuHandler(Menu daysmenu, MenuAction action, int client, int
 			FakeClientCommand(client, "sm_setffa");
 			if(!gc_bClose.BoolValue)
 			{
-				JbMenu(client,0);
+				Command_OpenMenu(client,0);
 			}
 		}
 		else if ( strcmp(info,"setzombie") == 0 ) 
@@ -1249,7 +1310,7 @@ public int SetEventMenuHandler(Menu daysmenu, MenuAction action, int client, int
 			FakeClientCommand(client, "sm_setzombie");
 			if(!gc_bClose.BoolValue)
 			{
-				JbMenu(client,0);
+				Command_OpenMenu(client,0);
 			}
 		}
 		else if ( strcmp(info,"settorch") == 0 )
@@ -1257,7 +1318,7 @@ public int SetEventMenuHandler(Menu daysmenu, MenuAction action, int client, int
 			FakeClientCommand(client, "sm_settorch");
 			if(!gc_bClose.BoolValue)
 			{
-				JbMenu(client,0);
+				Command_OpenMenu(client,0);
 			}
 		}
 		else if ( strcmp(info,"setcowboy") == 0 )
@@ -1265,7 +1326,7 @@ public int SetEventMenuHandler(Menu daysmenu, MenuAction action, int client, int
 			FakeClientCommand(client, "sm_setcowboy");
 			if(!gc_bClose.BoolValue)
 			{
-				JbMenu(client,0);
+				Command_OpenMenu(client,0);
 			}
 		}
 		else if ( strcmp(info,"setzeus") == 0 )
@@ -1273,7 +1334,7 @@ public int SetEventMenuHandler(Menu daysmenu, MenuAction action, int client, int
 			FakeClientCommand(client, "sm_setzeus");
 			if(!gc_bClose.BoolValue)
 			{
-				JbMenu(client,0);
+				Command_OpenMenu(client,0);
 			}
 		}
 		else if ( strcmp(info,"setdeal") == 0 )
@@ -1281,7 +1342,7 @@ public int SetEventMenuHandler(Menu daysmenu, MenuAction action, int client, int
 			FakeClientCommand(client, "sm_setdealdamage");
 			if(!gc_bClose.BoolValue)
 			{
-				JbMenu(client,0);
+				Command_OpenMenu(client,0);
 			}
 		} 
 		else if ( strcmp(info,"setcatch") == 0 )
@@ -1289,7 +1350,7 @@ public int SetEventMenuHandler(Menu daysmenu, MenuAction action, int client, int
 			FakeClientCommand(client, "sm_setcatch");
 			if(!gc_bClose.BoolValue)
 			{
-				JbMenu(client,0);
+				Command_OpenMenu(client,0);
 			}
 		} 
 		else if ( strcmp(info,"setdrunk") == 0 )
@@ -1297,7 +1358,7 @@ public int SetEventMenuHandler(Menu daysmenu, MenuAction action, int client, int
 			FakeClientCommand(client, "sm_setdrunk");
 			if(!gc_bClose.BoolValue)
 			{
-				JbMenu(client,0);
+				Command_OpenMenu(client,0);
 			}
 		}
 		else if ( strcmp(info,"setSuicideBomber") == 0 )
@@ -1305,7 +1366,7 @@ public int SetEventMenuHandler(Menu daysmenu, MenuAction action, int client, int
 			FakeClientCommand(client, "sm_setsuicidebomber");
 			if(!gc_bClose.BoolValue)
 			{
-				JbMenu(client,0);
+				Command_OpenMenu(client,0);
 			}
 		}
 		else if ( strcmp(info,"setnoscope") == 0 )
@@ -1313,7 +1374,7 @@ public int SetEventMenuHandler(Menu daysmenu, MenuAction action, int client, int
 			FakeClientCommand(client, "sm_setnoscope");
 			if(!gc_bClose.BoolValue)
 			{
-				JbMenu(client,0);
+				Command_OpenMenu(client,0);
 			}
 		}
 		else if ( strcmp(info,"sethebattle") == 0 )
@@ -1321,7 +1382,7 @@ public int SetEventMenuHandler(Menu daysmenu, MenuAction action, int client, int
 			FakeClientCommand(client, "sm_sethebattle");
 			if(!gc_bClose.BoolValue)
 			{
-				JbMenu(client,0);
+				Command_OpenMenu(client,0);
 			}
 		}
 		else if ( strcmp(info,"setduckhunt") == 0 )
@@ -1329,7 +1390,7 @@ public int SetEventMenuHandler(Menu daysmenu, MenuAction action, int client, int
 			FakeClientCommand(client, "sm_setduckhunt");
 			if(!gc_bClose.BoolValue)
 			{
-				JbMenu(client,0);
+				Command_OpenMenu(client,0);
 			}
 		}
 		else if ( strcmp(info,"sethide") == 0 )
@@ -1337,7 +1398,7 @@ public int SetEventMenuHandler(Menu daysmenu, MenuAction action, int client, int
 			FakeClientCommand(client, "sm_sethide");
 			if(!gc_bClose.BoolValue)
 			{
-				JbMenu(client,0);
+				Command_OpenMenu(client,0);
 			}
 		}
 		else if ( strcmp(info,"setknife") == 0 )
@@ -1345,7 +1406,7 @@ public int SetEventMenuHandler(Menu daysmenu, MenuAction action, int client, int
 			FakeClientCommand(client, "sm_setknifefight");
 			if(!gc_bClose.BoolValue)
 			{
-				JbMenu(client,0);
+				Command_OpenMenu(client,0);
 			}
 		}
 		else if ( strcmp(info,"setFreeday") == 0 )
@@ -1353,7 +1414,7 @@ public int SetEventMenuHandler(Menu daysmenu, MenuAction action, int client, int
 			FakeClientCommand(client, "sm_setfreeday");
 			if(!gc_bClose.BoolValue)
 			{
-				JbMenu(client,0);
+				Command_OpenMenu(client,0);
 			}
 		}
 	}
@@ -1361,7 +1422,7 @@ public int SetEventMenuHandler(Menu daysmenu, MenuAction action, int client, int
 	{
 		if(selection == MenuCancel_ExitBack) 
 		{
-			JbMenu(client,0);
+			Command_OpenMenu(client,0);
 		}
 	}
 	else if (action == MenuAction_End)
@@ -1398,7 +1459,7 @@ public int changemenu(Menu menu, MenuAction action, int client, int selection)
 		int choice = StringToInt(Item);
 		if(choice == 1)
 		{
-			JbMenu(client,0);
+			Command_OpenMenu(client,0);
 		}
 		else if(choice == 0)
 		{
@@ -1423,25 +1484,6 @@ public int changemenu(Menu menu, MenuAction action, int client, int selection)
 	{
 		delete menu;
 	}
-}
-
-//Voting
-
-public void OnMapStart()
-{
-	g_iCoolDown = gc_iCooldownStart.IntValue +1;
-}
-
-public void RoundStart(Handle event, char[] name, bool dontBroadcast)
-{
-	
-	char EventDay[64];
-	GetEventDay(EventDay);
-	if(!StrEqual(EventDay, "none", false))
-	{
-		g_iCoolDown = gc_iCooldownDay.IntValue + 1;
-	}
-	else if (g_iCoolDown > 0) g_iCoolDown--;
 }
 
 
@@ -1469,7 +1511,7 @@ public void VotingResults(Menu menu, int num_votes, int num_clients, const int[]
 	ServerCommand("sm_set%s", event);
 }
 
-public Action VotingMenu(int client, int args)
+public Action Command_VotingMenu(int client, int args)
 {
 	if (gc_bPlugin.BoolValue && gc_bVoting.BoolValue)
 	{
@@ -1478,7 +1520,7 @@ public Action VotingMenu(int client, int args)
 			if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
 			{
 				char EventDay[64];
-				GetEventDay(EventDay);
+				GetEventDayName(EventDay);
 				
 				if(StrEqual(EventDay, "none", false))
 				{
@@ -1587,4 +1629,18 @@ public Action VotingMenu(int client, int args)
 		else CPrintToChat(client, "%t %t", "menu_tag", "warden_notwarden");
 	}
 	else CPrintToChat(client, "%t %t", "menu_tag", "menu_disabled");
+}
+
+
+/******************************************************************************
+                   TIMER
+******************************************************************************/
+
+
+public Action Timer_WelcomeMessage(Handle timer, any client)
+{
+	if (gc_bWelcome.BoolValue && IsValidClient(client, false, true))
+	{
+		CPrintToChat(client, "%t %t", "menu_tag", "menu_info");
+	}
 }
