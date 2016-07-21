@@ -1,19 +1,39 @@
-//includes
-#include <cstrike>
-#include <sourcemod>
-#include <colors>
-#include <warden>
-#include <emitsoundany>
-#include <smartjaildoors>
-#include <autoexecconfig>
+/*
+ * MyJailbreak - Request Plugin.
+ * by: shanapu
+ * https://github.com/shanapu/MyJailbreak/
+ *
+ * This file is part of the MyJailbreak SourceMod Plugin.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, version 3.0, as published by the
+ * Free Software Foundation.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+
+/******************************************************************************
+                   STARTUP
+******************************************************************************/
+
+
+//Includes
 #include <myjailbreak>
-#include <lastrequest>
+
 
 //Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
 
-//ConVars
+
+//Console Variables
 ConVar gc_fRefuseTime;
 ConVar gc_bRefuse;
 ConVar gc_bPlugin;
@@ -69,6 +89,7 @@ ConVar gc_sAdminFlagRefuse;
 ConVar gc_sAdminFlagHeal;
 ConVar gc_bKillReason;
 
+
 //Bools
 bool g_bHealed[MAXPLAYERS+1];
 bool g_bCapitulated[MAXPLAYERS+1];
@@ -78,6 +99,7 @@ bool g_bFreeKilled[MAXPLAYERS+1];
 bool g_bHaveFreeDay[MAXPLAYERS+1];
 bool g_bAllowRefuse;
 bool IsRequest;
+bool IsLR;
 
 
 //Integers
@@ -101,6 +123,7 @@ Handle RepeatPanel;
 Handle RequestTimer;
 Handle AllowRefuseTimer;
 
+
 //characters
 char g_sSoundRefusePath[256];
 char g_sSoundRefuseStopPath[256];
@@ -118,6 +141,7 @@ char g_sAdminFlagRefuse[32];
 char g_sAdminFlagHeal[32];
 char g_sAdminFlag[32];
 
+
 public Plugin myinfo = 
 {
 	name = "MyJailbreak - Request",
@@ -127,14 +151,16 @@ public Plugin myinfo =
 	url = URL_LINK
 }
 
+
 public void OnPluginStart()
 {
 	// Translationw
 	LoadTranslations("MyJailbreak.Warden.phrases");
 	LoadTranslations("MyJailbreak.Request.phrases");
 	
+	
 	//Client Commands
-	RegConsoleCmd("sm_request", RequestMenu, "Open the requests menu");
+	RegConsoleCmd("sm_request", Command_RequestMenu, "Open the requests menu");
 	
 	RegConsoleCmd("sm_refuse", Command_refuse, "Allows the Warden start refusing time and Terrorist to refuse a game");
 	
@@ -148,6 +174,7 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_freekill", Command_Freekill, "Allows a Dead Terrorist report a Freekill");
 	
 	RegConsoleCmd("sm_givefreeday", Command_FreeDay, "Allows a warden to give a freeday to a player");
+	
 	
 	//AutoExecConfig
 	AutoExecConfig_SetFile("Request", "MyJailbreak");
@@ -212,8 +239,10 @@ public void OnPluginStart()
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
 	
+	
 	//Hooks
 	HookEvent("round_start", Event_RoundStart);
+	HookEvent("round_end", Event_RoundEnd);
 	HookEvent("player_death", Event_PlayerDeath);
 	HookConVarChange(gc_sSoundRefusePath, OnSettingChanged);
 	HookConVarChange(gc_sSoundRefuseStopPath, OnSettingChanged);
@@ -229,6 +258,7 @@ public void OnPluginStart()
 	HookConVarChange(gc_sAdminFlagRefuse, OnSettingChanged);
 	HookConVarChange(gc_sAdminFlagHeal, OnSettingChanged);
 	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
+	
 	
 	//FindConVar
 	gc_sSoundRefusePath.GetString(g_sSoundRefusePath, sizeof(g_sSoundRefusePath));
@@ -248,6 +278,7 @@ public void OnPluginStart()
 	
 	SetLogFile(g_sFreeKillLogFile, "Freekills");
 }
+
 
 public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
@@ -337,6 +368,14 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 	}
 }
 
+
+/******************************************************************************
+                   COMMANDS
+******************************************************************************/
+
+
+
+
 public void OnMapStart()
 {
 	if(gc_bSounds.BoolValue)
@@ -346,6 +385,8 @@ public void OnMapStart()
 		PrecacheSoundAnyDownload(g_sSoundCapitulationPath);
 		PrecacheSoundAnyDownload(g_sSoundRepeatPath);
 	}
+	
+	IsLR = false;
 	LoopClients(client) g_bHaveFreeDay[client] = false;
 }
 
@@ -411,7 +452,16 @@ public Action Event_RoundStart(Handle event, char [] name, bool dontBroadcast)
 			g_bHaveFreeDay[client] = false;
 		}
 	}
+	IsLR = false;
+	
 	g_iCountStopTime = gc_fRefuseTime.IntValue;
+}
+
+
+//Round End
+public void Event_RoundEnd(Handle event, char[] name, bool dontBroadcast)
+{
+	IsLR = false;
 }
 
 public void OnClientPutInServer(int client)
@@ -775,13 +825,13 @@ public int HealMenuHandler(Menu menu, MenuAction action, int client, int Positio
 
 // Request Menu
 
-public Action RequestMenu(int client, int args)
+public Action Command_RequestMenu(int client, int args)
 {
 	if(gc_bPlugin.BoolValue)
 	{
 		if (GetClientTeam(client) == CS_TEAM_T && IsValidClient(client,false,true))
 		{
-			Menu reqmenu = new Menu(RequestMenuHandler);
+			Menu reqmenu = new Menu(Command_RequestMenuHandler);
 			
 			char menuinfo19[255], menuinfo20[255], menuinfo21[255], menuinfo22[255], menuinfo29[255];
 			
@@ -822,7 +872,7 @@ public Action RequestMenu(int client, int args)
 }
 
 
-public int RequestMenuHandler(Menu reqmenu, MenuAction action, int client, int selection)
+public int Command_RequestMenuHandler(Menu reqmenu, MenuAction action, int client, int selection)
 {
 	if (action == MenuAction_Select)
 	{
@@ -1239,7 +1289,7 @@ public Action Event_PlayerDeath(Event event, const char[] name, bool dontBroadca
 		g_iHasKilled[attacker] = victim;
 	}
 	
-	if(gc_bPlugin.BoolValue && gc_bKillReason.BoolValue && ((GetClientTeam(attacker) == CS_TEAM_CT) && (GetClientTeam(victim) == CS_TEAM_T))) KillReasonMenu(attacker,victim);
+	if(!IsLR && gc_bPlugin.BoolValue && gc_bKillReason.BoolValue && ((GetClientTeam(attacker) == CS_TEAM_CT) && (GetClientTeam(victim) == CS_TEAM_T))) KillReasonMenu(attacker,victim);
 	
 	GetClientAbsOrigin(victim, DeathOrigin[victim]);
 }
@@ -1397,4 +1447,5 @@ public Action OnTakedamage(int victim, int &attacker, int &inflictor, float &dam
 public int OnAvailableLR(int Announced)
 {
 	LoopClients(i) g_bCapitulated[i] = false;
+	IsLR = true;
 }

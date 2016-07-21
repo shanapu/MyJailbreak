@@ -1,5 +1,5 @@
 /*
- * MyJailbreak - Warden Plugin.
+ * MyJailbreak - Ratio Plugin.
  * by: shanapu
  * https://github.com/shanapu/MyJailbreak/
  *

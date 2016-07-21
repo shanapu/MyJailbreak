@@ -63,7 +63,6 @@ public void BackStab_OnPluginStart()
 	
 	//FindConVar
 	gc_sAdminFlagBackstab.GetString(g_sAdminFlagBackstab , sizeof(g_sAdminFlagBackstab));
-	
 }
 
 public int BackStab_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
