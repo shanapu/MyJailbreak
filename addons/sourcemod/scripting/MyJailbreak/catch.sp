@@ -491,6 +491,7 @@ public void OnMapEnd()
 	g_iVoteCount = 0;
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0';
+
 }
 
 //Catch & Freeze

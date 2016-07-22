@@ -386,7 +386,7 @@ public Action Command_OpenMenu(int client, int args)
 					}
 					if(gc_bDays.BoolValue)
 					{
-						Format(menuinfo, sizeof(menuinfo), "%T", "menu_SetEventDayNames", client);
+						Format(menuinfo, sizeof(menuinfo), "%T", "menu_seteventdays", client);
 						mainmenu.AddItem("setdays", menuinfo);
 					}
 					if(g_bSparks != null)
@@ -630,7 +630,7 @@ public Action Command_OpenMenu(int client, int args)
 						}
 						if(gc_bDays.BoolValue)
 						{
-							Format(menuinfo, sizeof(menuinfo), "%T", "menu_SetEventDayNames", client);
+							Format(menuinfo, sizeof(menuinfo), "%T", "menu_seteventdays", client);
 							mainmenu.AddItem("setdays", menuinfo);
 						}
 					}

@@ -63,7 +63,7 @@ ConVar gc_bPlugin;
 ConVar gc_bTerror;
 ConVar gc_bCTerror;
 ConVar gc_bTA;
-ConVar gc_bCommand_OpenMenu;
+ConVar gc_bJBmenu;
 ConVar gc_bAWP;
 ConVar gc_bAutoSniper;
 ConVar gc_bHealth;
@@ -126,7 +126,7 @@ public void OnPluginStart()
 	gc_bAutoSniper = AutoExecConfig_CreateConVar("sm_weapons_autosniper", "1", "0 - disabled, 1 - enable scar20 & g3sg1 in menu", _, true,  0.0, true, 1.0);
 	gc_bTA = AutoExecConfig_CreateConVar("sm_weapons_warden_tagrenade", "1", "0 - disabled, 1 - warden get a TA grenade with weapons", _, true,  0.0, true, 1.0);
 	gc_bHealth = AutoExecConfig_CreateConVar("sm_weapons_warden_healthshot", "1", "0 - disabled, 1 - warden get a healthshot with weapons", _, true,  0.0, true, 1.0);
-	gc_bCommand_OpenMenu = AutoExecConfig_CreateConVar("sm_weapons_Command_OpenMenu", "1", "0 - disabled, 1 - enable autoopen the MyJailbreak !menu after weapon given.", _, true,  0.0, true, 1.0);
+	gc_bJBmenu = AutoExecConfig_CreateConVar("sm_weapons_jbmenu", "1", "0 - disabled, 1 - enable autoopen the MyJailbreak !menu after weapon given.", _, true,  0.0, true, 1.0);
 	
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
@@ -329,7 +329,7 @@ public void GiveSavedWeapons(int clientIndex)
 		
 		weaponsGivenThisRound[clientIndex] = true;
 		
-		if (gc_bCommand_OpenMenu.BoolValue)
+		if (gc_bJBmenu.BoolValue)
 		{
 			FakeClientCommand(clientIndex,"sm_menu");
 		}
