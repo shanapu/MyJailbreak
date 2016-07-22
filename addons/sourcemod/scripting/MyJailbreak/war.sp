@@ -547,8 +547,17 @@ public Action FreezedTimer(Handle timer)
 	if (g_iFreezeTime > 1)
 	{
 		g_iFreezeTime--;
-		
-		PrintHintTextToAll("%t", "war_timetohide_nc", g_iFreezeTime);
+		LoopClients(client) if (IsPlayerAlive(client))
+		{
+			if (GetClientTeam(client) == CS_TEAM_T)
+			{
+				PrintHintText(client,"%t", "war_timetounfreeze_nc", g_iFreezeTime);
+			}
+			else if (GetClientTeam(client) == CS_TEAM_CT)
+			{
+				PrintHintText(client,"%t", "war_timetohide_nc", g_iFreezeTime);
+			}
+		}
 		
 		return Plugin_Continue;
 	}
