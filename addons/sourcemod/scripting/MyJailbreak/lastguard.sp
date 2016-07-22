@@ -45,6 +45,7 @@ ConVar gc_bPlugin;
 ConVar gc_bSetCT;
 ConVar gc_bVote;
 ConVar gc_bAutomatic;
+ConVar gc_iMinCT;
 ConVar gc_iTruceTime;
 ConVar gc_iTime;
 ConVar gc_iTimePerT;
@@ -109,6 +110,7 @@ public void OnPluginStart()
 	gc_bSetCT = AutoExecConfig_CreateConVar("sm_lastguard_ct", "1", "0 - disabled, 1 - allow last CT to set Last Guard Rule", _, true,  0.0, true, 1.0);
 	gc_bVote = AutoExecConfig_CreateConVar("sm_lastguard_vote", "1", "0 - disabled, 1 - allow alive player to vote for Last Guard Rule", _, true,  0.0, true, 1.0);
 	gc_bAutomatic = AutoExecConfig_CreateConVar("sm_lastguard_auto", "0", "0 - disabled, 1 - Last Guard Rule will start automatic if there is only 1 CT. Disables sm_lastguard_vote & sm_lastguard_ct.", _, true,  0.0, true, 1.0);
+	gc_iMinCT = AutoExecConfig_CreateConVar("sm_lastguard_minct", "2", "How many Counter-Terrorist must be on Roundstart to enable LGR? ", _, true,  2.0);
 	gc_iHPmultipler = AutoExecConfig_CreateConVar("sm_lastguard_hp", "50", "How many percent of the combined Terror Health the CT get? (3 terror alive with 100HP = 300HP / 50% = CT get 150HP)", _, true,  0.0);
 	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_lastguard_trucetime", "10", "Time in seconds players can't deal damage. Half of this time you are freezed", _, true,  8.0);
 	gc_iTime = AutoExecConfig_CreateConVar("sm_lastguard_time", "5", "Time in minutes to end the last guard rule - 0 = keep original time", _, true,  0.0);
@@ -197,7 +199,7 @@ public Action VoteLastGuard(int client,int args)
 				char EventDay[64];
 				GetEventDayName(EventDay);
 				
-				if(IsEventDayRunning())
+				if(!IsEventDayRunning())
 				{
 					if (!IsLastGuard)
 					{
@@ -234,7 +236,7 @@ public Action VoteLastGuard(int client,int args)
 				char EventDay[64];
 				GetEventDayName(EventDay);
 				
-				if(IsEventDayRunning())
+				if(!IsEventDayRunning())
 				{
 					if (!IsLastGuard)
 					{
@@ -271,7 +273,7 @@ public void Event_RoundStart(Handle event, char[] name, bool dontBroadcast)
 	g_iVoteCount = 0;
 	AllowLastGuard = false;
 	CreateTimer(2.5, Timer_LastGuardBeginn); 
-	if (GetAliveTeamCount(CS_TEAM_CT) > 1) MinCT = true;
+	if (GetAliveTeamCount(CS_TEAM_CT) >= gc_iMinCT.IntValue) MinCT = true;
 }
 
 
@@ -291,6 +293,7 @@ public void Event_RoundEnd(Handle event, char[] name, bool dontBroadcast)
 		if (winner == 2) PrintHintTextToAll("%t", "lastguard_twin_nc");
 		if (winner == 3) PrintHintTextToAll("%t", "lastguard_ctwin_nc");
 		
+		SetLastGuardRule(false);
 		IsLastGuard = false;
 		SetCvar("sm_hosties_lr", 1);
 		SetCvar("sm_weapons_t", 0);
@@ -324,6 +327,8 @@ public Action StartLastGuard()
 		g_iVoteCount = 0;
 		
 		SJD_OpenDoors();
+		
+		SetLastGuardRule(true);
 		
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_weapons_t", 1);
@@ -407,7 +412,7 @@ public Action CheckStatus()
 {
 	if (gc_bPlugin.BoolValue && !IsLR && !IsLastGuard && gc_bAutomatic.BoolValue)
 	{
-		if ((GetAliveTeamCount(CS_TEAM_CT) == 1) && (GetAliveTeamCount(CS_TEAM_T) > 1 ) && IsEventDayRunning() && !IsLastGuard && !IsLR && MinCT)
+		if ((GetAliveTeamCount(CS_TEAM_CT) == 1) && (GetAliveTeamCount(CS_TEAM_T) > 1 ) && !IsEventDayRunning() && !IsLastGuard && !IsLR && MinCT)
 		{
 			StartLastGuard();
 			if(ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Last Guard Rule was started automatic");
@@ -457,7 +462,8 @@ public void OnMapEnd()
 	delete TruceTimer;
 	g_iVoteCount = 0;
 	g_sHasVoted[0] = '\0';
-	SetEventDayName("none");
+	
+	SetLastGuardRule(false);
 }
 
 

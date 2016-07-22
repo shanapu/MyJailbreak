@@ -41,6 +41,7 @@ ConVar gc_bLogging;
 //Booleans
 bool EventDayPlanned = false;
 bool EventDayRunning = false;
+bool LastGuardRuleActive = false;
 
 
 //Strings
@@ -98,7 +99,7 @@ public void OnConfigsExecuted()
 //End the current round instandly
 public Action Command_EndRound(int client, int args)
 {
-	CS_TerminateRound(0.5, CSRoundEnd_Draw, true); 
+	CS_TerminateRound(5.5, CSRoundEnd_Draw, true); 
 }
 
 
@@ -111,6 +112,7 @@ public Action Command_EndRound(int client, int args)
 public void OnMapStart()
 {
 	Fog_OnMapStart();
+	LastGuardRuleActive = false;
 }
 
 
@@ -119,6 +121,7 @@ public void OnMapEnd()
 {
 	EventDayPlanned = false;
 	EventDayRunning = false;
+	LastGuardRuleActive = false;
 	SetEventDayName("none");
 }
 
@@ -133,28 +136,31 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 {
 	CreateNative("SetEventDayName", Native_SetEventDayName);
 	CreateNative("GetEventDayName", Native_GetEventDayName);
-	CreateNative("FogOn", Native_FogOn);
-	CreateNative("FogOff", Native_FogOff);
-	CreateNative("ActiveLogging", Native_GetActiveLogging);
 	CreateNative("IsEventDayRunning", Native_IsEventDayRunning);
-	CreateNative("IsEventDayPlanned", Native_IsEventDayPlanned);
 	CreateNative("SetEventDayRunning", Native_SetEventDayNameRunning);
 	CreateNative("SetEventDayPlanned", Native_SetEventDayPlanned);
+	CreateNative("IsEventDayPlanned", Native_IsEventDayPlanned);
+	CreateNative("IsLastGuardRule", Native_IsLastGuardRule);
+	CreateNative("SetLastGuardRule", Native_SetLastGuardRule);
+	CreateNative("ActiveLogging", Native_GetActiveLogging);
+	CreateNative("FogOn", Native_FogOn);
+	CreateNative("FogOff", Native_FogOff);
+	
 	
 	if (GetEngineVersion() != Engine_CSGO)
 	{
 		SetFailState("Game is not supported. CS:GO ONLY");
 	}
 	RegPluginLibrary("myjailbreak");
-	return APLRes_Success;
 	
+	return APLRes_Success;
 }
 
 
 //Boolean Is Event Day running (true = running)
 public int Native_IsEventDayRunning(Handle plugin,int argc)
 {
-	if(EventDayRunning) 
+	if(!EventDayRunning)
 	{
 		return false;
 	}
@@ -172,7 +178,7 @@ public int Native_SetEventDayNameRunning(Handle plugin,int argc)
 //Boolean Is Event Day planned (true = planned)
 public int Native_IsEventDayPlanned(Handle plugin,int argc)
 {
-	if(!EventDayPlanned) 
+	if(!EventDayPlanned)
 	{
 		return false;
 	}
@@ -201,6 +207,24 @@ public int Native_SetEventDayName(Handle plugin,int argc)
 public int Native_GetEventDayName(Handle plugin,int argc)
 {
 	SetNativeString(1, IsEventDay, sizeof(IsEventDay));
+}
+
+
+//Boolean Is Last Guard Rule active (true = active)
+public int Native_IsLastGuardRule(Handle plugin,int argc)
+{
+	if(!LastGuardRuleActive)
+	{
+		return false;
+	}
+	return true;
+}
+
+
+//Boolean Set Last Guard Rule active (true = active)
+public int Native_SetLastGuardRule(Handle plugin,int argc)
+{
+	LastGuardRuleActive = GetNativeCell(1);
 }
 
 

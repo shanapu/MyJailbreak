@@ -122,10 +122,28 @@ native bool IsEventDayPlanned();
 
 
 /*********************************************************
- * Check bool Event Day is planned
+ * Set Boolean Last Guard Rule is active
+ *
+ * @param status		Boolean is active (true = active)
+ * @NoReturn
+ *********************************************************/
+native void SetLastGuardRule(bool status);
+
+
+/*********************************************************
+ * Check bool Last Guard Rule is active
  *
  *
- * @Return			true on planned, false if not
+ * @Return			true on active, false if not
+ *********************************************************/
+native bool IsLastGuardRule();
+
+
+/*********************************************************
+ * Check bool is logging active
+ *
+ *
+ * @Return			true on active, false if not
  *********************************************************/
 native bool ActiveLogging();
 
