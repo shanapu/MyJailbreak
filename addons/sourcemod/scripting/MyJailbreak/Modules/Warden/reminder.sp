@@ -99,7 +99,7 @@ public void Reminder_OnMapEnd()
 
 public Action Timer_RemindTimer(Handle timer)
 {
-	if(g_iRoundTime >= 1)
+	if(g_iRoundTime >= 1 && !IsLastGuardRule())
 	{
 		g_iRoundTime--;
 		char timeinfo[64];
