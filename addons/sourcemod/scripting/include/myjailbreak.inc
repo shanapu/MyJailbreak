@@ -68,7 +68,7 @@ public SharedPlugin:__pl_myjailbreak =
 
 
 /*********************************************************
- * Set a Event Day
+ * Set the name of the planned/running Event Day
  *
  * @param name			The name of the Event Day
  * @NoReturn
@@ -77,7 +77,7 @@ native void SetEventDayName(const char[] name);
 
 
 /*********************************************************
- * Get a Event Days name
+ * Get the name of the planned/running Event Day
  *
  *
  * @Return				The name of the Event Day

@@ -41,7 +41,7 @@ ConVar gc_bKillReason;
 public void KillReason_OnPluginStart()
 {
 	//AutoExecConfig
-	gc_bKillReason = AutoExecConfig_CreateConVar("sm_killreason_enable", "1", "0 - disabled, 1 - enable - CT must answer a menu with the kill reason");
+	gc_bKillReason = AutoExecConfig_CreateConVar("sm_killreason_enable", "1", "0 - disabled, 1 - enable - CT can answer a menu with the kill reason");
 	
 	
 	//Hooks 
