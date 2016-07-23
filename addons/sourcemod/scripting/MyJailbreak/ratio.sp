@@ -34,7 +34,7 @@
 
 
 //Console Variables
-ConVar gc_iPrisonerPerGuard;
+ConVar gc_fPrisonerPerGuard;
 ConVar gc_sCustomCommand;
 ConVar gc_sAdminFlag;
 ConVar gc_bAdsVIP;
@@ -90,7 +90,7 @@ public void OnPluginStart()
 	
 	AutoExecConfig_CreateConVar("sm_ratio_version", PLUGIN_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_sCustomCommand = AutoExecConfig_CreateConVar("sm_ratio_cmd", "ct", "Set your custom chat command for become guard. no need for sm_ or !");
-	gc_iPrisonerPerGuard = AutoExecConfig_CreateConVar("sm_ratio_T_per_CT", "2", "How many prisoners for each guard.", _, true, 1.0);
+	gc_fPrisonerPerGuard = AutoExecConfig_CreateConVar("sm_ratio_T_per_CT", "2", "How many prisoners for each guard.", _, true, 1.0);
 	gc_bVIPQueue = AutoExecConfig_CreateConVar("sm_ratio_flag", "1", "0 - disabled, 1 - enable VIPs moved to front of queue", _, true,  0.0, true, 1.0);
 	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_ratio_vipflag", "a", "Set the flag for VIP");
 	gc_bAdsVIP = AutoExecConfig_CreateConVar("sm_ratio_adsvip", "1", "0 - disabled, 1 - enable adverstiment for 'VIPs moved to front of queue' when player types !quard ", _, true,  0.0, true, 1.0);
@@ -448,7 +448,7 @@ bool ShouldMoveGuardToPrisoner()
 	if(iNumGuards <= 1)
 		return false;
 	
-	if(iNumGuards <= RoundToFloor(float(iNumPrisoners) / GetConVarFloat(gc_iPrisonerPerGuard)))
+	if(iNumGuards <= RoundToFloor(float(iNumPrisoners) / GetConVarFloat(gc_fPrisonerPerGuard)))
 		return false;
 	
 	return true;
@@ -472,7 +472,7 @@ bool ShouldMovePrisonerToGuard()
 	if(iNumPrisoners < 1)
 		return false;
 	
-	if(float(iNumPrisoners) / float(iNumGuards) < GetConVarFloat(gc_iPrisonerPerGuard))
+	if(float(iNumPrisoners) / float(iNumGuards) < GetConVarFloat(gc_fPrisonerPerGuard))
 		return false;
 	
 	return true;
@@ -657,10 +657,10 @@ stock bool CanClientJoinGuards(int client)
 		return true;
 	
 	float fNumPrisonersPerGuard = float(iNumPrisoners) / float(iNumGuards);
-	if(fNumPrisonersPerGuard < GetConVarFloat(gc_iPrisonerPerGuard))
+	if(fNumPrisonersPerGuard < GetConVarFloat(gc_fPrisonerPerGuard))
 		return false;
 	
-	int iGuardsNeeded = RoundToCeil(fNumPrisonersPerGuard - GetConVarFloat(gc_iPrisonerPerGuard));
+	int iGuardsNeeded = RoundToCeil(fNumPrisonersPerGuard - GetConVarFloat(gc_fPrisonerPerGuard));
 	if(iGuardsNeeded < 1)
 		iGuardsNeeded = 1;
 	
