@@ -39,6 +39,7 @@ ConVar gc_sCustomCommand;
 ConVar gc_sAdminFlag;
 ConVar gc_bAdsVIP;
 ConVar gc_bVIPQueue;
+ConVar gc_iConfirm;
 
 
 //Handles
@@ -72,7 +73,7 @@ public void OnPluginStart()
 	
 	
 	//Client commands
-	RegConsoleCmd("sm_guard", Command_OnGuardQueue,"Allows the prisoners to queue to CT");
+	RegConsoleCmd("sm_guard", Command_JoinGuardQueue,"Allows the prisoners to queue to CT");
 	RegConsoleCmd("sm_viewqueue", Command_ViewGuardQueue,"Allows a player to show queue to CT");
 	RegConsoleCmd("sm_vq", Command_ViewGuardQueue,"Allows a player to show queue to CT");
 	RegConsoleCmd("sm_Command_LeaveQueue", Command_LeaveQueue,"Allows a player to leave queue to CT");
@@ -94,6 +95,7 @@ public void OnPluginStart()
 	gc_bVIPQueue = AutoExecConfig_CreateConVar("sm_ratio_flag", "1", "0 - disabled, 1 - enable VIPs moved to front of queue", _, true,  0.0, true, 1.0);
 	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_ratio_vipflag", "a", "Set the flag for VIP");
 	gc_bAdsVIP = AutoExecConfig_CreateConVar("sm_ratio_adsvip", "1", "0 - disabled, 1 - enable adverstiment for 'VIPs moved to front of queue' when player types !quard ", _, true,  0.0, true, 1.0);
+	gc_iConfirm = AutoExecConfig_CreateConVar("sm_ratio_confirm_mode", "1", "0 - instandly join ct/queue, no confirmation, 1 - confirm rules", _, true,  0.0, true, 2.0);
 	
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
@@ -130,7 +132,7 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 		char sBufferCMD[64];
 		Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommand);
 		if(GetCommandFlags(sBufferCMD) == INVALID_FCVAR_FLAGS)
-			RegConsoleCmd(sBufferCMD, Command_OnGuardQueue, "Allows the prisoners to queue to CT");
+			RegConsoleCmd(sBufferCMD, Command_JoinGuardQueue, "Allows the prisoners to queue to CT");
 	}
 }
 
@@ -147,7 +149,7 @@ public void OnConfigsExecuted()
 	char sBufferCMD[64];
 	Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommand);
 	if(GetCommandFlags(sBufferCMD) == INVALID_FCVAR_FLAGS)
-		RegConsoleCmd(sBufferCMD, Command_OnGuardQueue, "Allows the prisoners to queue to CT");
+		RegConsoleCmd(sBufferCMD, Command_JoinGuardQueue, "Allows the prisoners to queue to CT");
 }
 
 
@@ -213,7 +215,7 @@ public Action Command_ViewGuardQueue(int client, int args)
 }
 
 
-public Action Command_OnGuardQueue(int client, int iArgNum)
+public Action Command_JoinGuardQueue(int client, int iArgNum)
 {
 	if(!IsValidClient(client, true, true))
 	{
@@ -237,33 +239,15 @@ public Action Command_OnGuardQueue(int client, int iArgNum)
 		return Plugin_Handled;
 	}
 	
+	
 	int iIndex = FindValueInArray(g_aGuardQueue, client);
-	int iQueueSize = GetArraySize(g_aGuardQueue);
 	
 	if(iIndex == -1)
 	{
-		if (CheckVipFlag(client, g_sAdminFlag) && gc_bVIPQueue.BoolValue)
-		{
-			if (iQueueSize == 0)
-				iIndex = PushArrayCell(g_aGuardQueue, client);
-			else
-			{
-				ShiftArrayUp(g_aGuardQueue, 0);
-				SetArrayCell(g_aGuardQueue, 0, client);
-			}
-			CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_thxvip");
-			CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_number", iIndex + 1);
-			return Plugin_Handled;
-		}
-		else
-		{
-			iIndex = PushArrayCell(g_aGuardQueue, client);
-			
-			CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_number", iIndex + 1);
-			if(gc_bAdsVIP.BoolValue && gc_bVIPQueue.BoolValue) CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_advip");
-			
-			return Plugin_Handled;
-		}
+		if(gc_iConfirm.IntValue == 0) AddToQueue(client);
+		if(gc_iConfirm.IntValue == 1) Menu_AcceptGuardRules(client);
+		if(gc_iConfirm.IntValue == 2) Menu_GuardQuestions(client);
+		return Plugin_Handled;
 	}
 	else
 	{
@@ -384,32 +368,15 @@ public Action Event_OnJoinTeam(int client, const char[] szCommand, int iArgCount
 	if(!CanClientJoinGuards(client))
 	{
 		int iIndex = FindValueInArray(g_aGuardQueue, client);
-		int iQueueSize = GetArraySize(g_aGuardQueue);
+		
 		ClientCommand(client, "play %s", g_sRestrictedSound);
+		
 		if(iIndex == -1)
 		{
-			if (CheckVipFlag(client, g_sAdminFlag) && gc_bVIPQueue.BoolValue)
-			{
-				if (iQueueSize == 0)
-					iIndex = PushArrayCell(g_aGuardQueue, client);
-				else
-				{
-					ShiftArrayUp(g_aGuardQueue, 0);
-					SetArrayCell(g_aGuardQueue, 0, client);
-				}
-				CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_thxvip");
-				CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_fullqueue", iIndex + 1);
-				return Plugin_Handled;
-			}
-			else
-			{
-				iIndex = PushArrayCell(g_aGuardQueue, client);
-				
-				CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_fullqueue", iIndex + 1);
-				if(gc_bAdsVIP.BoolValue && gc_bVIPQueue.BoolValue) CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_advip");
-				
-				return Plugin_Handled;
-			}
+			if(gc_iConfirm.IntValue == 0) FullAddToQueue(client);
+			if(gc_iConfirm.IntValue == 1) Menu_AcceptGuardRules(client);
+			if(gc_iConfirm.IntValue == 2) Menu_GuardQuestions(client);
+			return Plugin_Handled;
 		}
 		else
 		{
@@ -419,13 +386,76 @@ public Action Event_OnJoinTeam(int client, const char[] szCommand, int iArgCount
 		}
 	}
 	
-	return Plugin_Continue;
+	if(gc_iConfirm.IntValue == 0) return Plugin_Continue;
+	if(gc_iConfirm.IntValue == 1) Menu_AcceptGuardRules(client);
+	if(gc_iConfirm.IntValue == 2) Menu_GuardQuestions(client);
+	return Plugin_Handled;
 }
 
 
 /******************************************************************************
                    FUNCTIONS
 ******************************************************************************/
+
+
+public void AddToQueue(int client)
+{
+	int iIndex = FindValueInArray(g_aGuardQueue, client);
+	int iQueueSize = GetArraySize(g_aGuardQueue);
+	
+	if(iIndex == -1)
+	{
+		if (CheckVipFlag(client, g_sAdminFlag) && gc_bVIPQueue.BoolValue)
+		{
+			if (iQueueSize == 0)
+				iIndex = PushArrayCell(g_aGuardQueue, client);
+			else
+			{
+				ShiftArrayUp(g_aGuardQueue, 0);
+				SetArrayCell(g_aGuardQueue, 0, client);
+			}
+			CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_thxvip");
+			CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_number", iIndex + 1);
+		}
+		else
+		{
+			iIndex = PushArrayCell(g_aGuardQueue, client);
+			
+			CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_number", iIndex + 1);
+			if(gc_bAdsVIP.BoolValue && gc_bVIPQueue.BoolValue) CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_advip");
+		}
+	}
+}
+
+
+public void FullAddToQueue(int client)
+{
+	int iIndex = FindValueInArray(g_aGuardQueue, client);
+	int iQueueSize = GetArraySize(g_aGuardQueue);
+	
+	if(iIndex == -1)
+	{
+		if (CheckVipFlag(client, g_sAdminFlag) && gc_bVIPQueue.BoolValue)
+		{
+			if (iQueueSize == 0)
+				iIndex = PushArrayCell(g_aGuardQueue, client);
+			else
+			{
+				ShiftArrayUp(g_aGuardQueue, 0);
+				SetArrayCell(g_aGuardQueue, 0, client);
+			}
+			CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_thxvip");
+			CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_number", iIndex + 1);
+		}
+		else
+		{
+			iIndex = PushArrayCell(g_aGuardQueue, client);
+			
+			CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_number", iIndex + 1);
+			if(gc_bAdsVIP.BoolValue && gc_bVIPQueue.BoolValue) CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_advip");
+		}
+	}
+}
 
 
 public void OnForcePickTimeChanged(Handle hConVar, const char[] szOldValue, const char[] szNewValue)
@@ -493,6 +523,118 @@ public void OnClientDisconnect_Post(int client)
 /******************************************************************************
                    MENUS
 ******************************************************************************/
+
+
+public Action Menu_AcceptGuardRules(int client)
+{
+	char info[64];
+	
+	Handle AcceptMenu = CreatePanel();
+	
+	Format(info, sizeof(info), "%T", "ratio_accept_title", client);
+	SetPanelTitle(AcceptMenu, info);
+	DrawPanelText(AcceptMenu, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "ratio_accept_line1", client);
+	DrawPanelText(AcceptMenu, info);
+	DrawPanelText(AcceptMenu, "    ");
+	Format(info, sizeof(info), "%T", "ratio_accept_line2", client);
+	DrawPanelText(AcceptMenu, info);
+	Format(info, sizeof(info), "%T", "ratio_accept_line3", client);
+	DrawPanelText(AcceptMenu, info);
+	Format(info, sizeof(info), "%T", "ratio_accept_line4", client);
+	DrawPanelText(AcceptMenu, info);
+	Format(info, sizeof(info), "%T", "ratio_accept_line5", client);
+	DrawPanelText(AcceptMenu, info);
+	DrawPanelText(AcceptMenu, "    ");
+	DrawPanelText(AcceptMenu, "-----------------------------------");
+	DrawPanelText(AcceptMenu, "    ");
+	Format(info, sizeof(info), "%T", "ratio_accept", client);
+	DrawPanelItem(AcceptMenu, info); 
+	Format(info, sizeof(info), "%T", "ratio_notaccept", client);
+	DrawPanelItem(AcceptMenu, info); 
+	SendPanelToClient(AcceptMenu, client, Handler_AcceptGuardRules, 20);
+}
+
+
+public int Handler_AcceptGuardRules(Handle menu, MenuAction action, int param1, int param2)
+{
+	int client = param1;
+	if (action == MenuAction_Select)
+	{
+		switch(param2)
+		{
+			case 1:
+			{
+				if(CanClientJoinGuards(client))
+				{
+					ForcePlayerSuicide(client);
+					ChangeClientTeam(client, CS_TEAM_CT);
+				//	CS_RespawnPlayer(client);
+				}
+				else AddToQueue(client);
+			}
+		}
+	}
+}
+
+//WIP
+public void Menu_GuardQuestions(int client)
+{
+	char info[64];
+	
+	Handle AcceptMenu = CreatePanel();
+	
+	Format(info, sizeof(info), "%T", "ratio_question_title", client);
+	SetPanelTitle(AcceptMenu, info);
+	DrawPanelText(AcceptMenu, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "ratio_question_line1", client);
+	DrawPanelText(AcceptMenu, info);
+	Format(info, sizeof(info), "%T", "ratio_question_line2", client);
+	DrawPanelText(AcceptMenu, info);
+	DrawPanelText(AcceptMenu, "-----------------------------------");
+	DrawPanelText(AcceptMenu, "    ");
+	Format(info, sizeof(info), "%T", "ratio_question_wrong1", client);
+	DrawPanelItem(AcceptMenu, info);
+	DrawPanelText(AcceptMenu, "    ");
+	Format(info, sizeof(info), "%T", "ratio_question_right", client);
+	DrawPanelItem(AcceptMenu, info);
+	DrawPanelText(AcceptMenu, "    ");
+	Format(info, sizeof(info), "%T", "ratio_question_wrong2", client);
+	DrawPanelItem(AcceptMenu, info);
+	SendPanelToClient(AcceptMenu, client, Handler_GuardQuestions, 20);
+}
+
+//WIP
+public int Handler_GuardQuestions(Handle menu, MenuAction action, int param1, int param2)
+{
+	int client = param1;
+	if (action == MenuAction_Select)
+	{
+		switch(param2)
+		{
+			case 1:
+			{
+				CPrintToChat(client, "NOT Accept");
+			}
+			case 2:
+			{
+				if(CanClientJoinGuards(client))
+				{
+					ForcePlayerSuicide(client);
+					ChangeClientTeam(client, CS_TEAM_CT);
+				//	CS_RespawnPlayer(client);
+				}
+				else AddToQueue(client);
+			}
+			case 3:
+			{
+				CPrintToChat(client, "NOT Accept");
+			}
+		}
+	}
+}
+
+
 
 
 public int ViewQueueMenuHandle(Menu hMenu, MenuAction action, int client, int option)
