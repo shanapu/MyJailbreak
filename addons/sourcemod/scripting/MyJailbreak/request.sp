@@ -115,6 +115,7 @@ public void OnPluginStart()
 	//Hooks
 	HookEvent("round_start", Event_RoundStart);
 	HookEvent("round_end", Event_RoundEnd);
+	HookEvent("player_death", Event_PlayerDeath);
 }
 
 
@@ -183,6 +184,12 @@ public Action Event_RoundStart(Handle event, char [] name, bool dontBroadcast)
 	IsRequest = false;
 	
 	IsLR = false;
+	
+	LoopClients(client)
+	{
+		g_iKilledBy[client] = 0;
+		g_iHasKilled[client] = 0;
+	}
 }
 
 
@@ -190,6 +197,18 @@ public Action Event_RoundStart(Handle event, char [] name, bool dontBroadcast)
 public void Event_RoundEnd(Handle event, char[] name, bool dontBroadcast)
 {
 	IsLR = false;
+}
+
+public Action Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast) 
+{
+	int victim = GetClientOfUserId(GetEventInt(event, "userid")); // Get the dead clients id
+	int attacker = GetClientOfUserId(GetEventInt(event, "attacker")); // Get the attacker clients id
+	
+	if(IsValidClient(attacker, true, false) && (attacker != victim))
+	{
+		g_iKilledBy[victim] = attacker;
+		g_iHasKilled[attacker] = victim;
+	}
 }
 
 

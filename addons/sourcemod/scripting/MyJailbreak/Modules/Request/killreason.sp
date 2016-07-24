@@ -59,8 +59,7 @@ public Action KillReason_Event_PlayerDeath(Event event, const char[] name, bool 
 	int victim = GetClientOfUserId(GetEventInt(event, "userid")); // Get the dead clients id
 	int attacker = GetClientOfUserId(GetEventInt(event, "attacker")); // Get the attacker clients id
 	
-	
-	if(!IsLR && gc_bPlugin.BoolValue && gc_bKillReason.BoolValue && ((GetClientTeam(attacker) == CS_TEAM_CT) && (GetClientTeam(victim) == CS_TEAM_T))) Menu_KillReason(attacker,victim);
+	if (IsValidClient(victim, false, true) && IsValidClient(attacker, true, true) && !IsLR && gc_bPlugin.BoolValue && gc_bKillReason.BoolValue && ((GetClientTeam(attacker) == CS_TEAM_CT) && (GetClientTeam(victim) == CS_TEAM_T))) Menu_KillReason(attacker,victim);
 }
 
 

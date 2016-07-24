@@ -188,7 +188,7 @@ public Action Freekill_Event_PlayerDeath(Event event, const char[] name, bool do
 {
 	int victim = GetClientOfUserId(GetEventInt(event, "userid")); // Get the dead clients id
 	
-	GetClientAbsOrigin(victim, DeathOrigin[victim]);
+	if (IsValidClient(victim, false, true)) GetClientAbsOrigin(victim, DeathOrigin[victim]);
 }
 
 
