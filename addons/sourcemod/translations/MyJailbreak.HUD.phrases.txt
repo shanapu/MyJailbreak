@@ -1,0 +1,27 @@
+"Phrases"
+{
+	"hud_planned"
+	{
+		"en"		"Next round:"
+	}
+	"hud_running"
+	{
+		"en"		"Now running:"
+	}
+	"hud_warden"
+	{
+		"en"		"Warden:"
+	}
+	"hud_nowarden"
+	{
+		"en"		"there is no warden"
+	}
+	"hud_guards"
+	{
+		"en"		"Guards:"
+	}
+	"hud_prisoner"
+	{
+		"en"		"Prisoner:"
+	}
+}
