@@ -39,7 +39,8 @@ ConVar gc_sCustomCommand;
 ConVar gc_sAdminFlag;
 ConVar gc_bAdsVIP;
 ConVar gc_bVIPQueue;
-ConVar gc_iConfirm;
+ConVar gc_iJoinMode;
+ConVar gc_iQuestionTimes;
 
 
 //Handles
@@ -48,8 +49,14 @@ Handle g_sCookieCTBan;
 Handle ViewQueueMenu;
 
 
+//Integer
+int randomanswer[MAXPLAYERS+1];
+int questiontimes[MAXPLAYERS+1];
+
+
 //Strings
 char g_sRestrictedSound[32] = "buttons/button11.wav";
+char g_sRightAnswerSound[32] = "buttons/button14.wav";
 char g_sCustomCommand[32];
 char g_sAdminFlag[32];
 
@@ -95,7 +102,8 @@ public void OnPluginStart()
 	gc_bVIPQueue = AutoExecConfig_CreateConVar("sm_ratio_flag", "1", "0 - disabled, 1 - enable VIPs moved to front of queue", _, true,  0.0, true, 1.0);
 	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_ratio_vipflag", "a", "Set the flag for VIP");
 	gc_bAdsVIP = AutoExecConfig_CreateConVar("sm_ratio_adsvip", "1", "0 - disabled, 1 - enable adverstiment for 'VIPs moved to front of queue' when player types !quard ", _, true,  0.0, true, 1.0);
-	gc_iConfirm = AutoExecConfig_CreateConVar("sm_ratio_confirm_mode", "1", "0 - instandly join ct/queue, no confirmation, 1 - confirm rules", _, true,  0.0, true, 2.0);
+	gc_iJoinMode = AutoExecConfig_CreateConVar("sm_ratio_join_mode", "1", "0 - instandly join ct/queue, no confirmation 1 - confirm rules", _, true,  0.0, true, 2.0);
+	gc_iQuestionTimes = AutoExecConfig_CreateConVar("sm_ratio_questions", "3", "How many question a player have to answer before join ct/queue", _, true,  1.0, true, 5.0);
 	
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
@@ -244,9 +252,10 @@ public Action Command_JoinGuardQueue(int client, int iArgNum)
 	
 	if(iIndex == -1)
 	{
-		if(gc_iConfirm.IntValue == 0) AddToQueue(client);
-		if(gc_iConfirm.IntValue == 1) Menu_AcceptGuardRules(client);
-		if(gc_iConfirm.IntValue == 2) Menu_GuardQuestions(client);
+		if(gc_iJoinMode.IntValue == 0) AddToQueue(client);
+		if(gc_iJoinMode.IntValue == 1) Menu_AcceptGuardRules(client);
+		if(gc_iJoinMode.IntValue == 2) Menu_GuardQuestions(client);
+		questiontimes[client] = gc_iQuestionTimes.IntValue;
 		return Plugin_Handled;
 	}
 	else
@@ -373,9 +382,10 @@ public Action Event_OnJoinTeam(int client, const char[] szCommand, int iArgCount
 		
 		if(iIndex == -1)
 		{
-			if(gc_iConfirm.IntValue == 0) FullAddToQueue(client);
-			if(gc_iConfirm.IntValue == 1) Menu_AcceptGuardRules(client);
-			if(gc_iConfirm.IntValue == 2) Menu_GuardQuestions(client);
+			if(gc_iJoinMode.IntValue == 0) FullAddToQueue(client);
+			if(gc_iJoinMode.IntValue == 1) Menu_AcceptGuardRules(client);
+			if(gc_iJoinMode.IntValue == 2) Menu_GuardQuestions(client);
+			questiontimes[client] = gc_iQuestionTimes.IntValue;
 			return Plugin_Handled;
 		}
 		else
@@ -386,9 +396,10 @@ public Action Event_OnJoinTeam(int client, const char[] szCommand, int iArgCount
 		}
 	}
 	
-	if(gc_iConfirm.IntValue == 0) return Plugin_Continue;
-	if(gc_iConfirm.IntValue == 1) Menu_AcceptGuardRules(client);
-	if(gc_iConfirm.IntValue == 2) Menu_GuardQuestions(client);
+	if(gc_iJoinMode.IntValue == 0) return Plugin_Continue;
+	if(gc_iJoinMode.IntValue == 1) Menu_AcceptGuardRules(client);
+	if(gc_iJoinMode.IntValue == 2) Menu_GuardQuestions(client);
+	questiontimes[client] = gc_iQuestionTimes.IntValue;
 	return Plugin_Handled;
 }
 
@@ -572,6 +583,11 @@ public int Handler_AcceptGuardRules(Handle menu, MenuAction action, int param1, 
 				//	CS_RespawnPlayer(client);
 				}
 				else AddToQueue(client);
+				ClientCommand(client, "play %s", g_sRightAnswerSound);
+			}
+			case 2:
+			{
+				ClientCommand(client, "play %s", g_sRestrictedSound);
 			}
 		}
 	}
@@ -580,27 +596,58 @@ public int Handler_AcceptGuardRules(Handle menu, MenuAction action, int param1, 
 //WIP
 public void Menu_GuardQuestions(int client)
 {
-	char info[64];
+	char info[64], random[64];
 	
 	Handle AcceptMenu = CreatePanel();
+	int randomquestion = GetRandomInt(1,5);
+	randomanswer[client] = GetRandomInt(1,3);
+	questiontimes[client]--;
 	
 	Format(info, sizeof(info), "%T", "ratio_question_title", client);
 	SetPanelTitle(AcceptMenu, info);
 	DrawPanelText(AcceptMenu, "-----------------------------------");
-	Format(info, sizeof(info), "%T", "ratio_question_line1", client);
+	Format(random, sizeof(random), "ratio_question%i_line1", randomquestion);
+	Format(info, sizeof(info), "%T", random, client);
 	DrawPanelText(AcceptMenu, info);
-	Format(info, sizeof(info), "%T", "ratio_question_line2", client);
+	Format(random, sizeof(random), "ratio_question%i_line2", randomquestion);
+	Format(info, sizeof(info), "%T", random, client);
 	DrawPanelText(AcceptMenu, info);
 	DrawPanelText(AcceptMenu, "-----------------------------------");
+	
+	if(randomanswer[client] == 1)
+	{
+		DrawPanelText(AcceptMenu, "    ");
+		Format(random, sizeof(random), "ratio_question%i_right", randomquestion);
+		Format(info, sizeof(info), "%T", random, client);
+		DrawPanelItem(AcceptMenu, info);
+	}
+	
 	DrawPanelText(AcceptMenu, "    ");
-	Format(info, sizeof(info), "%T", "ratio_question_wrong1", client);
+	Format(random, sizeof(random), "ratio_question%i_wrong1", randomquestion);
+	Format(info, sizeof(info), "%T", random, client);
 	DrawPanelItem(AcceptMenu, info);
+	
+	if(randomanswer[client] == 2)
+	{
+		DrawPanelText(AcceptMenu, "    ");
+		Format(random, sizeof(random), "ratio_question%i_right", randomquestion);
+		Format(info, sizeof(info), "%T", random, client);
+		DrawPanelItem(AcceptMenu, info);
+	}
+	
 	DrawPanelText(AcceptMenu, "    ");
-	Format(info, sizeof(info), "%T", "ratio_question_right", client);
+	Format(random, sizeof(random), "ratio_question%i_wrong2", randomquestion);
+	Format(info, sizeof(info), "%T", random, client);
 	DrawPanelItem(AcceptMenu, info);
-	DrawPanelText(AcceptMenu, "    ");
-	Format(info, sizeof(info), "%T", "ratio_question_wrong2", client);
-	DrawPanelItem(AcceptMenu, info);
+	
+	if(randomanswer[client] == 3)
+	{
+		DrawPanelText(AcceptMenu, "    ");
+		Format(random, sizeof(random), "ratio_question%i_right", randomquestion);
+		Format(info, sizeof(info), "%T", random, client);
+		DrawPanelItem(AcceptMenu, info);
+	}
+	
 	SendPanelToClient(AcceptMenu, client, Handler_GuardQuestions, 20);
 }
 
@@ -614,27 +661,64 @@ public int Handler_GuardQuestions(Handle menu, MenuAction action, int param1, in
 		{
 			case 1:
 			{
-				CPrintToChat(client, "NOT Accept");
+				if(randomanswer[client] == 1)
+				{
+					if (questiontimes[client] <= 0)
+					{
+						if(CanClientJoinGuards(client))
+						{
+							ForcePlayerSuicide(client);
+							ChangeClientTeam(client, CS_TEAM_CT);
+						//	CS_RespawnPlayer(client);
+						}
+						else AddToQueue(client);
+					}
+					else Menu_GuardQuestions(client);
+					ClientCommand(client, "play %s", g_sRightAnswerSound);
+				}
+				else ClientCommand(client, "play %s", g_sRestrictedSound);
 			}
 			case 2:
 			{
-				if(CanClientJoinGuards(client))
+				if(randomanswer[client] == 2)
 				{
-					ForcePlayerSuicide(client);
-					ChangeClientTeam(client, CS_TEAM_CT);
-				//	CS_RespawnPlayer(client);
+					if (questiontimes[client] <= 0)
+					{
+						if(CanClientJoinGuards(client))
+						{
+							ForcePlayerSuicide(client);
+							ChangeClientTeam(client, CS_TEAM_CT);
+						//	CS_RespawnPlayer(client);
+						}
+						else AddToQueue(client);
+					}
+					else Menu_GuardQuestions(client);
+					ClientCommand(client, "play %s", g_sRightAnswerSound);
 				}
-				else AddToQueue(client);
+				else ClientCommand(client, "play %s", g_sRestrictedSound);
 			}
 			case 3:
 			{
-				CPrintToChat(client, "NOT Accept");
+				if(randomanswer[client] == 3)
+				{
+					if (questiontimes[client] <= 0)
+					{
+						if(CanClientJoinGuards(client))
+						{
+							ForcePlayerSuicide(client);
+							ChangeClientTeam(client, CS_TEAM_CT);
+						//	CS_RespawnPlayer(client);
+						}
+						else AddToQueue(client);
+					}
+					else Menu_GuardQuestions(client);
+					ClientCommand(client, "play %s", g_sRightAnswerSound);
+				}
+				else ClientCommand(client, "play %s", g_sRestrictedSound);
 			}
 		}
 	}
 }
-
-
 
 
 public int ViewQueueMenuHandle(Menu hMenu, MenuAction action, int client, int option)
