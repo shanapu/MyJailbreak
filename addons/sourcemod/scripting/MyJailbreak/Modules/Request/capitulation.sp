@@ -291,6 +291,7 @@ public int Handler_CapitulationMenu(Menu menu, MenuAction action, int client, in
 				SetEntityRenderColor(client, gc_iCapitulationColorRed.IntValue, gc_iCapitulationColorGreen.IntValue, gc_iCapitulationColorBlue.IntValue, 255);
 				CapitulationTimer[i] = CreateTimer(gc_fCapitulationTime.FloatValue, Timer_GiveKnifeCapitulated, i);
 				CPrintToChatAll("%t %t", "warden_tag", "request_accepted", i, client);
+				ChangeRebelStatus(i, false);
 			}
 		}
 		if(choice == 0)  //no
@@ -307,6 +308,7 @@ public int Handler_CapitulationMenu(Menu menu, MenuAction action, int client, in
 					KillTimer(RebelTimer[i]);
 				RebelTimer[i] = null;
 				CPrintToChatAll("%t %t", "warden_tag", "request_noaccepted", i, client);
+				ChangeRebelStatus(i, true);
 			}
 		}
 	}
