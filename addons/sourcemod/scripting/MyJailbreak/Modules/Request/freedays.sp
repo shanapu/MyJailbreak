@@ -59,7 +59,7 @@ public void Freedays_OnPluginStart()
 	
 	
 	//Hooks 
-	HookEvent("round_start", Freedays_Event_RoundStart);
+	HookEvent("round_poststart",  Freedays_Event_RoundStart_Post);
 	HookEvent("player_death", Freedays_Event_PlayerDeath);
 	HookConVarChange(gc_sCustomCommandGiveFreeDay, Freedays_OnSettingChanged);
 	
@@ -126,7 +126,7 @@ public Action Command_FreeDay(int warden, int args)
 ******************************************************************************/
 
 
-public Action Freedays_Event_RoundStart(Handle event, char [] name, bool dontBroadcast)
+public Action  Freedays_Event_RoundStart_Post(Handle event, char [] name, bool dontBroadcast)
 {
 	char EventDay[64];
 	GetEventDayName(EventDay);
