@@ -255,7 +255,7 @@ public Action Command_JoinGuardQueue(int client, int iArgNum)
 		if(gc_iJoinMode.IntValue == 0) AddToQueue(client);
 		if(gc_iJoinMode.IntValue == 1) Menu_AcceptGuardRules(client);
 		if(gc_iJoinMode.IntValue == 2) Menu_GuardQuestions(client);
-		questiontimes[client] = gc_iQuestionTimes.IntValue;
+		questiontimes[client] = gc_iQuestionTimes.IntValue-1;
 		return Plugin_Handled;
 	}
 	else
@@ -385,7 +385,7 @@ public Action Event_OnJoinTeam(int client, const char[] szCommand, int iArgCount
 			if(gc_iJoinMode.IntValue == 0) FullAddToQueue(client);
 			if(gc_iJoinMode.IntValue == 1) Menu_AcceptGuardRules(client);
 			if(gc_iJoinMode.IntValue == 2) Menu_GuardQuestions(client);
-			questiontimes[client] = gc_iQuestionTimes.IntValue;
+			questiontimes[client] = gc_iQuestionTimes.IntValue-1;
 			return Plugin_Handled;
 		}
 		else
@@ -399,7 +399,7 @@ public Action Event_OnJoinTeam(int client, const char[] szCommand, int iArgCount
 	if(gc_iJoinMode.IntValue == 0) return Plugin_Continue;
 	if(gc_iJoinMode.IntValue == 1) Menu_AcceptGuardRules(client);
 	if(gc_iJoinMode.IntValue == 2) Menu_GuardQuestions(client);
-	questiontimes[client] = gc_iQuestionTimes.IntValue;
+	questiontimes[client] = gc_iQuestionTimes.IntValue-1;
 	return Plugin_Handled;
 }
 
@@ -601,7 +601,6 @@ public void Menu_GuardQuestions(int client)
 	Handle AcceptMenu = CreatePanel();
 	int randomquestion = GetRandomInt(1,5);
 	randomanswer[client] = GetRandomInt(1,3);
-	questiontimes[client]--;
 	
 	Format(info, sizeof(info), "%T", "ratio_question_title", client);
 	SetPanelTitle(AcceptMenu, info);
@@ -675,6 +674,7 @@ public int Handler_GuardQuestions(Handle menu, MenuAction action, int param1, in
 					}
 					else Menu_GuardQuestions(client);
 					ClientCommand(client, "play %s", g_sRightAnswerSound);
+					questiontimes[client]--;
 				}
 				else ClientCommand(client, "play %s", g_sRestrictedSound);
 			}
@@ -694,6 +694,7 @@ public int Handler_GuardQuestions(Handle menu, MenuAction action, int param1, in
 					}
 					else Menu_GuardQuestions(client);
 					ClientCommand(client, "play %s", g_sRightAnswerSound);
+					questiontimes[client]--;
 				}
 				else ClientCommand(client, "play %s", g_sRestrictedSound);
 			}
@@ -713,6 +714,7 @@ public int Handler_GuardQuestions(Handle menu, MenuAction action, int param1, in
 					}
 					else Menu_GuardQuestions(client);
 					ClientCommand(client, "play %s", g_sRightAnswerSound);
+					questiontimes[client]--;
 				}
 				else ClientCommand(client, "play %s", g_sRestrictedSound);
 			}

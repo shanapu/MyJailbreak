@@ -235,6 +235,7 @@
 	{
 		"ru"		"Война"
 		"pl"		"Wojna"
+		"de"		"Krieg"
 		"en"		"War"
 	}
 
@@ -247,9 +248,8 @@
 
 	"menu_zeus"
 	{
-		"ru"		"Зевс"
-		"pl"		"Zeus"
-		"en"		"Zeus"
+		"ru"		"День зевса"
+		"en"		"Zeus Day"
 	}
 
 	"menu_zombie"
@@ -290,7 +290,7 @@
 	{
 		"ru"		"Битва на ножах"
 		"pl"		"KNIFE"
-		"en"		"KnifeFight"
+		"en"		"Knife Fight"
 	}
 
 	"menu_hebattle"

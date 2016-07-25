@@ -323,7 +323,9 @@ void StartNextRound()
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iVoteCount = 0;
 	
-	SetEventDayName("knifefight");
+	char buffer[32];
+	Format(buffer, sizeof(buffer), "%T", "knifefight_name", LANG_SERVER);
+	SetEventDayName(buffer);
 	SetEventDayPlanned(true);
 	
 	g_iOldRoundTime = g_iGetRoundTime.IntValue; //save original round time

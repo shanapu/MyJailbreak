@@ -21,6 +21,14 @@
 		"en"		"Duckhunt is currently {purple}disabled!"
 	}
 
+	"duckhunt_name"
+	{
+		"ru"		"Охота на уток"
+		"pl"		"Polowanie na kaczki"
+		"de"		"Entenjagd"
+		"en"		"Duckhunt"
+	}
+
 	"duckhunt_end"
 	{
 		"ru"		"{purple}Охота на уток{default} окончена"

@@ -17,7 +17,15 @@
 		"ru"		"Прятки в Темноте {purple}отключены."
 		"pl"		"Chowany jest tymczasowo {purple}wylaczony."
 		"de"		"Hide in the Dark ist vorübergehend {purple}deaktiviert."
-		"en"		"Hide in the Dark er {purple}deaktiveret."
+		"en"		"Hide in the Dark currently {purple}disabled!"
+		"da"		"Hide in the Dark er {purple}deaktiveret."
+	}
+
+	"hide_name"
+	{
+		"ru"		"Прятки в Темноте"
+		"de"		"Verstecken im Dunkeln"
+		"en"		"Hide in the Dark"
 	}
 
 	"hide_end"

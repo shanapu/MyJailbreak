@@ -21,6 +21,12 @@
 		"da"		"Drunken Day er midlertidigt {purple}slået fra."
 	}
 
+	"drunk_name"
+	{
+		"ru"		"Пьяный день"
+		"en"		"Drunken Day"
+	}
+
 	"drunk_end"
 	{
 		"ru"		"{purple}Пьяный день{default} окончен"

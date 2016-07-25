@@ -21,6 +21,12 @@
 		"da"		"Cowboy er midlertidigt {purple}slået fra."
 	}
 
+	"cowboy_disabled"
+	{
+		"ru"		"Ковбой"
+		"en"		"Cowboy"
+	}
+
 	"cowboy_end"
 	{
 		"ru"		"{purple}Ковбой{default} окончен!"

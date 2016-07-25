@@ -41,6 +41,14 @@
 		"da"		"War er midlertidigt {purple}slået fra."
 	}
 
+	"war_disabled"
+	{
+		"ru"		"Война"
+		"pl"		"Wojna"
+		"de"		"Krieg"
+		"en"		"War"
+	}
+
 	"war_end"
 	{
 		"ru"		"{purple}Война{default} окончена"

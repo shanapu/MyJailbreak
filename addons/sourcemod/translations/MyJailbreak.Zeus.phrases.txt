@@ -15,28 +15,34 @@
 	"zeus_disabled"
 	{
 		"ru"		"День зевса {purple}отключен."
-		"pl"		"ZeusDay jest tymczasowo {purple}wylaczony."
-		"de"		"ZeusDay ist vorübergehend {purple}deaktiviert."
-		"en"		"ZeusDay is currently {purple}disabled!"
-		"da"		"ZeusDay er midlertidigt {purple}slået fra."
+		"pl"		"Zeus Day jest tymczasowo {purple}wylaczony."
+		"de"		"Zeus Day ist vorübergehend {purple}deaktiviert."
+		"en"		"Zeus Day is currently {purple}disabled!"
+		"da"		"Zeus Day er midlertidigt {purple}slået fra."
+	}
+	
+	"zeus_name"
+	{
+		"ru"		"День зевса"
+		"pl"		"Zeus Day"
 	}
 
 	"zeus_end"
 	{
 		"ru"		"{purple}День зевса{default} окончен!"
-		"pl"		"{purple}ZeusDay{default} zakonczony"
-		"de"		"{purple}ZeusDay{default} beendet"
-		"en"		"{purple}ZeusDay{default} has ended."
-		"da"		"{purple}ZeusDay{default} er afsluttet!"
+		"pl"		"{purple}Zeus Day{default} zakonczony"
+		"de"		"{purple}Zeus Day{default} beendet"
+		"en"		"{purple}Zeus Day{default} has ended."
+		"da"		"{purple}Zeus Day{default} er afsluttet!"
 	}
 
 	"zeus_info_line1"
 	{
 		"ru"		"День зевса - все против всех"
-		"pl"		"ZeusDay Free for All"
-		"de"		"ZeusDay Jeder gegen Jeden"
-		"en"		"ZeusDay - Free for All!"
-		"da"		"ZeusDay er hvor mod hvor!"
+		"pl"		"Zeus Day Free for All"
+		"de"		"Zeus Day Jeder gegen Jeden"
+		"en"		"Zeus Day - Free for All!"
+		"da"		"Zeus Day er hvor mod hvor!"
 	}
 
 	"zeus_info_line2"
@@ -92,16 +98,16 @@
 
 	"zeus_info_title"
 	{
-		"da"		"ZeusDay er aktiveret!"
+		"da"		"Zeus Day er aktiveret!"
 		"ru"		"День зевса активен"
-		"en"		"ZeusDay is now Activated!"
-		"pl"		"ZeusDay jest aktywny"
-		"de"		"ZeusDay ist aktiv"
+		"en"		"Zeus Day is now Activated!"
+		"pl"		"Zeus Day jest aktywny"
+		"de"		"Zeus Day ist aktiv"
 	}
 
 	"zeus_minplayer"
 	{
-		"en"		"For ZeusDay you need at least {purple}one Guard and one Prisoner!"
+		"en"		"For Zeus Day you need at least {purple}one Guard and one Prisoner!"
 		"ru"		"Для дня Зевса необходимо как минимум {purple}один КТ"
 		"pl"		"Do zabawy cowboy potrzeba przynajmniej {purple}jednego CT"
 		"de"		"Für Zeus brauchen wir mindestens {purple}einen CT"
@@ -114,26 +120,26 @@
 		"ru"		"{purple}{2}{default} проголосовал. {purple}{1}{default} голосов осталось до {darkred}дня зевса"
 		"pl"		"{purple}{2}{default} zaglosowal {purple}{1}{default} pozostalo glosow do {darkred}ZEUS"
 		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}zeus{default} beginnt"
-		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes required to play {darkred}ZeusDay."
+		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes required to play {darkred}Zeus Day."
 		"da"		"{purple}{2}{default} har afstemt!. {purple}{1}{default} afstemninger tilbage til {darkred}zeus"
 	}
 
 	"zeus_next"
 	{
 		"ru"		"Следующий день {purple}День зевса"
-		"pl"		"Nastepna runda to {purple}ZeusDay"
-		"de"		"Nächste Runde ist {purple}ZeusDay"
-		"en"		"The following round will be: {purple}ZeusDay."
-		"da"		"Næste runde er {purple}ZeusDay"
+		"pl"		"Nastepna runda to {purple}Zeus Day"
+		"de"		"Nächste Runde ist {purple}Zeus Day"
+		"en"		"The following round will be: {purple}Zeus Day."
+		"da"		"Næste runde er {purple}Zeus Day"
 	}
 
 	"zeus_next_nc"
 	{
 		"ru"		"Следующий день День Зевса"
-		"pl"		"Nastepna runda to ZeusDay"
-		"de"		"Nächste Runde ist ZeusDay"
-		"en"		"The following round will be: ZeusDay."
-		"da"		"Næste runde er ZeusDay"
+		"pl"		"Nastepna runda to Zeus Day"
+		"de"		"Nächste Runde ist Zeus Day"
+		"en"		"The following round will be: Zeus Day."
+		"da"		"Næste runde er Zeus Day"
 	}
 
 	"zeus_progress"
@@ -159,8 +165,8 @@
 	{
 		"ru"		"Администратор {purple}отключил{default} выбор дня зевса"
 		"pl"		"Wlaczenie Cowboy przez admina jest {purple}wylaczone"
-		"de"		"ZeusDay Aktivierung durch den Admin ist {purple}ausgeschaltet"
-		"en"		"Set ZeusDay by Admin is {purple}disabled!"
+		"de"		"Zeus Day Aktivierung durch den Admin ist {purple}ausgeschaltet"
+		"en"		"Set Zeus Day by Admin is {purple}disabled!"
 		"da"		"Admin bestemmer runde for No Scope er {purple}slået fra"
 	}
 
@@ -168,26 +174,26 @@
 	{
 		"ru"		"Командир {purple}отключил{default} выбор дня зевса"
 		"pl"		"Glosowanie na Cowboy przez Straznika jest {purple}wylaczone"
-		"de"		"ZeusDay Aktivierung durch den Warden ist {purple}ausgeschaltet"
-		"en"		"Set ZeusDay by Warden is {purple}disabled!"
+		"de"		"Zeus Day Aktivierung durch den Warden ist {purple}ausgeschaltet"
+		"en"		"Set Zeus Day by Warden is {purple}disabled!"
 		"da"		"Warden bestemmer runde for No Scope er {purple}slået fra"
 	}
 
 	"zeus_start"
 	{
 		"ru"		"{purple}День зевса{default} начался!"
-		"pl"		"{purple}ZeusDay{default} sie rozpoczal!"
-		"de"		"{purple}ZeusDay{default} ist gestartet!"
-		"en"		"{purple}ZeusDay{default} has begun!"
-		"da"		"{purple}ZeusDay{default} er startet!"
+		"pl"		"{purple}Zeus Day{default} sie rozpoczal!"
+		"de"		"{purple}Zeus Day{default} ist gestartet!"
+		"en"		"{purple}Zeus Day{default} has begun!"
+		"da"		"{purple}Zeus Day{default} er startet!"
 	}
 
 	"zeus_start_nc"
 	{
 		"ru"		"День Зевса начался!"
-		"pl"		"ZeusDay sie rozpoczal!"
-		"de"		"ZeusDay ist gestartet!"
-		"en"		"ZeusDay has begun!"
+		"pl"		"Zeus Day sie rozpoczal!"
+		"de"		"Zeus Day ist gestartet!"
+		"en"		"Zeus Day has begun!"
 		"da"		"No Scope er startet!"
 	}
 
@@ -219,18 +225,18 @@
 	"zeus_voted"
 	{
 		"ru"		"Вы уже проголосовали за {purple}День Зевса"
-		"pl"		"Juz glosowales na {purple}ZeusDay"
-		"de"		"Du hast schon für {purple}ZeusDay {default}gevotet"
-		"en"		"You have already voted for {purple}ZeusDay!"
-		"da"		"Du har allerede stemt for {purple}ZeusDay!"
+		"pl"		"Juz glosowales na {purple}Zeus Day"
+		"de"		"Du hast schon für {purple}Zeus Day {default}gevotet"
+		"en"		"You have already voted for {purple}Zeus Day!"
+		"da"		"Du har allerede stemt for {purple}Zeus Day!"
 	}
 
 	"zeus_voting"
 	{
 		"ru"		"Голосования за день зевса {purple}отключено"
 		"pl"		"Glosowanie graczy na ZEUS jest {purple}wylaczone"
-		"de"		"Voting für ZeusDay ist {purple}ausgeschaltet"
-		"en"		"Voting for ZeusDay is {purple}disabled!"
+		"de"		"Voting für Zeus Day ist {purple}ausgeschaltet"
+		"en"		"Voting for Zeus Day is {purple}disabled!"
 		"da"		"Afstemninger for No Scope er {purple}slået fra"
 	}
 

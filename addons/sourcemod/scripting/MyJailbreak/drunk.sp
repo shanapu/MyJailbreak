@@ -297,7 +297,10 @@ void StartNextRound()
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iVoteCount = 0;
 	
-	SetEventDayName("drunk"); //tell myjailbreak new event is set
+	char buffer[32];
+	Format(buffer, sizeof(buffer), "%T", "drunk_name", LANG_SERVER);
+	SetEventDayName(buffer);
+	
 	SetEventDayPlanned(true);
 	g_iOldRoundTime = g_iGetRoundTime.IntValue; //save original round time
 	g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time

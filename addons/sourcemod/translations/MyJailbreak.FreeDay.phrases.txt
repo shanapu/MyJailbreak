@@ -12,6 +12,12 @@
 		"da"		"Freeday er midlertidigt {purple}slået fra."
 	}
 
+	"freeday_name"
+	{
+		"ru"		"Фридей"
+		"en"		"Freeday"
+	}
+
 	"freeday_end"
 	{
 		"en"		"{purple}Freeday{default} has ended."

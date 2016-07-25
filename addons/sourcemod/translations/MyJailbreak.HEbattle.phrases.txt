@@ -21,6 +21,12 @@
 		"da"		"HE Battle er midlertidigt {purple}slået fra."
 	}
 
+	"hebattle_name"
+	{
+		"ru"		"Битва Гранатами"
+		"en"		"HE Battle"
+	}
+
 	"hebattle_end"
 	{
 		"ru"		"{purple}Битва Гранатами{default} окончена!"

@@ -1,6 +1,3 @@
-// Exported from SourceMod Translator
-// http://translator.mitchdempsey.com/sourcemod_plugins/201
-//
 "Phrases"
 {
 	"ratio_advip"
@@ -287,5 +284,5 @@
 	"ratio_question5_right"
 	{
 		"en"		"As guard, of course I will have to play as the new Warden."
-
+	}
 }

@@ -21,6 +21,12 @@
 		"en"		"Zombie is currently {purple}disabled."
 	}
 
+	"zombie_name"
+	{
+		"ru"		"Зомби день"
+		"en"		"Zombie Day"
+	}
+
 	"zombie_end"
 	{
 		"ru"		"{purple}Зомби день{default} окончен!"

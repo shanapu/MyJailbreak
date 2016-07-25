@@ -71,30 +71,30 @@
 	"dealdamage_voting"
 	{
 		"ru"		"Голосования за День Урона {purple}отключено"
-		"de"		"Voting für DealDamageDay ist {purple}ausgeschaltet"
-		"en"		"Voting for DealDamageDay is {purple}disabled"
+		"de"		"Voting für Deal Damage Day ist {purple}ausgeschaltet"
+		"en"		"Voting for Deal Damage Day is {purple}disabled"
 		"da"		"Afstemninger for No Scope er {purple}slået fra"
 	}
 
 	"dealdamage_setbywarden"
 	{
 		"ru"		"Командир {purple}отключил{default} выбор День Урона"
-		"de"		"DealDamageDay Aktivierung durch den Warden ist {purple}ausgeschaltet"
-		"en"		"Set DealDamageDay by Warden is {purple}disabled!"
+		"de"		"Deal Damage Day Aktivierung durch den Warden ist {purple}ausgeschaltet"
+		"en"		"Set Deal Damage Day by Warden is {purple}disabled!"
 		"da"		"Warden bestemmer runde for No Scope er {purple}slået fra"
 	}
 
 	"dealdamage_result"
 	{
 		"ru"		"Результаты Дня Урона"
-		"en"		"DealDamageDay Results:"
+		"en"		"Deal Damage Day Results:"
 	}
 
 	"dealdamage_setbyadmin"
 	{
 		"ru"		"Администратор {purple}отключил{default} выбор День Урона"
-		"de"		"DealDamageDay Aktivierung durch den Admin ist {purple}ausgeschaltet"
-		"en"		"Set DealDamageDay by Admin is {purple}disabled!"
+		"de"		"Deal Damage Day Aktivierung durch den Admin ist {purple}ausgeschaltet"
+		"en"		"Set Deal Damage Day by Admin is {purple}disabled!"
 		"da"		"Admin bestemmer runde for No Scope er {purple}slået fra"
 	}
 
@@ -115,10 +115,10 @@
 
 	"dealdamage_end"
 	{
-		"en"		"{purple}DealDamageDay{default} has ended!"
+		"en"		"{purple}Deal Damage Day{default} has ended!"
 		"ru"		"{purple}День урона{default} окончен"
-		"de"		"{purple}DealDamageDay{default} beendet"
-		"da"		"{purple}DealDamageDay{default} er afsluttet!"
+		"de"		"{purple}Deal Damage Day{default} beendet"
+		"da"		"{purple}Deal Damage Day{default} er afsluttet!"
 	}
 
 	"dealdamage_most"
@@ -131,9 +131,9 @@
 	"dealdamage_next"
 	{
 		"ru"		"Следующий раунд {purple}День Урона"
-		"de"		"Nächste Runde ist {purple}DealDamageDay"
-		"en"		"The following round will be: {purple}DealDamageDay."
-		"da"		"Næste runde er {purple}DealDamageDay"
+		"de"		"Nächste Runde ist {purple}Deal Damage Day"
+		"en"		"The following round will be: {purple}Deal Damage Day."
+		"da"		"Næste runde er {purple}Deal Damage Day"
 	}
 
 	"dealdamage_ct"
@@ -146,9 +146,9 @@
 	"dealdamage_next_nc"
 	{
 		"ru"		"Следующий раунд День Урона"
-		"de"		"Nächste Runde ist DealDamageDay"
-		"en"		"The following round will be: DealDamageDay."
-		"da"		"Næste runde er DealDamageDay"
+		"de"		"Nächste Runde ist Deal Damage Day"
+		"en"		"The following round will be: Deal Damage Day."
+		"da"		"Næste runde er Deal Damage Day"
 	}
 
 	"dealdamage_t"
@@ -161,9 +161,9 @@
 	"dealdamage_start"
 	{
 		"ru"		"{purple}День урона{default} начался!"
-		"de"		"{purple}DealDamageDay{default} ist gestartet!"
-		"en"		"{purple}DealDamageDay{default} has begun!"
-		"da"		"{purple}DealDamageDay{default} er startet!"
+		"de"		"{purple}Deal Damage Day{default} ist gestartet!"
+		"en"		"{purple}Deal Damage Day{default} has begun!"
+		"da"		"{purple}Deal Damage Day{default} er startet!"
 	}
 
 	"dealdamage_bestct"
@@ -176,8 +176,8 @@
 	"dealdamage_start_nc"
 	{
 		"ru"		"День урона начался!"
-		"de"		"DealDamageDay ist gestartet!"
-		"en"		"DealDamageDay has begun!"
+		"de"		"Deal Damage Day ist gestartet!"
+		"en"		"Deal Damage Day has begun!"
 		"da"		"No Scope er startet!"
 	}
 
@@ -191,9 +191,9 @@
 	"dealdamage_voted"
 	{
 		"ru"		"Вы уже проголосовали за {purple}День Урона"
-		"de"		"Du hast schon für {purple}DealDamageDay {default}gevotet"
-		"en"		"You have already voted for {purple}DealDamageDay!"
-		"da"		"Du har allerede stemt for {purple}DealDamageDay!"
+		"de"		"Du hast schon für {purple}Deal Damage Day {default}gevotet"
+		"en"		"You have already voted for {purple}Deal Damage Day!"
+		"da"		"Du har allerede stemt for {purple}Deal Damage Day!"
 	}
 
 	"dealdamage_client"
@@ -220,9 +220,15 @@
 	"dealdamage_disabled"
 	{
 		"ru"		"День урона {purple}отключен."
-		"de"		"DealDamageDay ist vorübergehend {purple}deaktiviert."
-		"en"		"DealDamageDay is currently {purple}disabled!"
-		"da"		"DealDamageDay er midlertidigt {purple}slået fra."
+		"de"		"Deal Damage Day ist vorübergehend {purple}deaktiviert."
+		"en"		"Deal Damage Day is currently {purple}disabled!"
+		"da"		"Deal Damage Day er midlertidigt {purple}slået fra."
+	}
+	
+	"dealdamage_name"
+	{
+		"ru"		"День урона"
+		"en"		"Deal Damage Day"
 	}
 
 	"dealdamage_tdealed"
@@ -249,9 +255,9 @@
 	"dealdamage_info_title"
 	{
 		"ru"		"День урона активен"
-		"en"		"DealDamageDay is now Activated!"
-		"de"		"DealDamageDay ist aktiv"
-		"en"		"DealDamageDay er aktiveret!"
+		"en"		"Deal Damage Day is now Activated!"
+		"de"		"Deal Damage Day ist aktiv"
+		"en"		"Deal Damage Day er aktiveret!"
 	}
 
 	"dealdamage_hpdamage"
@@ -263,8 +269,8 @@
 	"dealdamage_info_line1"
 	{
 		"ru"		"День Урона активен"
-		"de"		"DealDamageDay is aktiv!"
-		"en"		"DealDamageDay is now Activated!"
+		"de"		"Deal Damage Day is aktiv!"
+		"en"		"Deal Damage Day is now Activated!"
 	}
 
 	"dealdamage_info_line2"

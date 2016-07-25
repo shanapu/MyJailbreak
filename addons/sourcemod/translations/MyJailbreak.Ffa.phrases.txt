@@ -31,6 +31,12 @@
 		"da"		"FFA er midlertidigt {purple}slået fra."
 	}
 
+	"ffa_name"
+	{
+		"en"		"Free for All"
+		"en"		"Jeder gegen Jeden"
+	}
+
 	"ffa_end"
 	{
 		"ru"		"{purple}FFA{default} окончен"

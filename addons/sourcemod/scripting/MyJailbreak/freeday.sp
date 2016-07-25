@@ -138,7 +138,11 @@ public void OnMapStart()
 	if (gc_bFirst.BoolValue)
 	{
 		StartFreeday = true;
-		SetEventDayName("freeday");
+		
+		char buffer[32];
+		Format(buffer, sizeof(buffer), "%T", "freeday_name", LANG_SERVER);
+		SetEventDayName(buffer);
+		
 		SetEventDayPlanned(true);
 	}
 	else
@@ -255,7 +259,9 @@ void StartNextRound()
 	StartFreeday = true;
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iVoteCount = 0;
-	SetEventDayName("freeday");
+	char buffer[32];
+	Format(buffer, sizeof(buffer), "%T", "freeday_name", LANG_SERVER);
+	SetEventDayName(buffer);
 	SetEventDayPlanned(true);
 	g_iOldRoundTime = g_iGetRoundTime.IntValue;
 	g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;
@@ -290,7 +296,9 @@ public void Event_RoundStart(Handle event, char[] name, bool dontBroadcast)
 			StartFreeday = true;
 			g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 			g_iVoteCount = 0;
-			SetEventDayName("freeday");
+			char buffer[32];
+			Format(buffer, sizeof(buffer), "%T", "freeday_name", LANG_SERVER);
+			SetEventDayName(buffer);
 			SetEventDayRunning(true);
 			AutoFreeday = true;
 		}

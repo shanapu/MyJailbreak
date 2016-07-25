@@ -305,7 +305,15 @@ void StartNextRound()
 	StartWar = true;
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iVoteCount = 0;
-	SetEventDayName("war");	
+	
+
+	
+	WarMenu = CreatePanel();
+	
+	char buffer[32];
+	Format(buffer, sizeof(buffer), "%T", "war_name", LANG_SERVER);
+	SetEventDayName(buffer);
+	
 	SetEventDayPlanned(true);
 	
 	g_iOldRoundTime = g_iGetRoundTime.IntValue; //save original round time
