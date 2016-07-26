@@ -1529,87 +1529,87 @@ public Action Command_VotingMenu(int client, int args)
 						char menuinfo[64];
 						Menu menu = new Menu(VotingMenuHandler);
 						menu.VoteResultCallback = VotingResults;
-						Format(menuinfo, sizeof(menuinfo), "%T", "menu_voting", client);
+						Format(menuinfo, sizeof(menuinfo), "%T", "menu_voting", LANG_SERVER);
 						menu.SetTitle(menuinfo);
 						
 						if(GetCommandFlags("sm_setwar") != INVALID_FCVAR_FLAGS)
 						{
-								Format(menuinfo, sizeof(menuinfo), "%T", "menu_war", client);
+								Format(menuinfo, sizeof(menuinfo), "%T", "menu_war", LANG_SERVER);
 								menu.AddItem("war", menuinfo);
 						}
 						if(GetCommandFlags("sm_setffa") != INVALID_FCVAR_FLAGS)
 						{
-								Format(menuinfo, sizeof(menuinfo), "%T", "menu_ffa", client);
+								Format(menuinfo, sizeof(menuinfo), "%T", "menu_ffa", LANG_SERVER);
 								menu.AddItem("ffa", menuinfo);
 						}
 						if(GetCommandFlags("sm_setzombie") != INVALID_FCVAR_FLAGS)
 						{
-								Format(menuinfo, sizeof(menuinfo), "%T", "menu_zombie", client);
+								Format(menuinfo, sizeof(menuinfo), "%T", "menu_zombie", LANG_SERVER);
 								menu.AddItem("zombie", menuinfo);
 						}
 						if(GetCommandFlags("sm_sethide") != INVALID_FCVAR_FLAGS)
 						{
-								Format(menuinfo, sizeof(menuinfo), "%T", "menu_hide", client);
+								Format(menuinfo, sizeof(menuinfo), "%T", "menu_hide", LANG_SERVER);
 								menu.AddItem("hide", menuinfo);
 						}
 						if(GetCommandFlags("sm_setcatch") != INVALID_FCVAR_FLAGS)
 						{
-								Format(menuinfo, sizeof(menuinfo), "%T", "menu_catch", client);
+								Format(menuinfo, sizeof(menuinfo), "%T", "menu_catch", LANG_SERVER);
 								menu.AddItem("catch", menuinfo);
 						}
 						if(GetCommandFlags("sm_setsuicidebomber") != INVALID_FCVAR_FLAGS)
 						{
-								Format(menuinfo, sizeof(menuinfo), "%T", "menu_suicidebomber", client);
+								Format(menuinfo, sizeof(menuinfo), "%T", "menu_suicidebomber", LANG_SERVER);
 								menu.AddItem("suicidebomber", menuinfo);
 						}
 						if(GetCommandFlags("sm_sethebattle") != INVALID_FCVAR_FLAGS)
 						{
-								Format(menuinfo, sizeof(menuinfo), "%T", "menu_hebattle", client);
+								Format(menuinfo, sizeof(menuinfo), "%T", "menu_hebattle", LANG_SERVER);
 								menu.AddItem("hebattle", menuinfo);
 						}
 						if(GetCommandFlags("sm_setnoscope") != INVALID_FCVAR_FLAGS)
 						{
-								Format(menuinfo, sizeof(menuinfo), "%T", "menu_noscope", client);
+								Format(menuinfo, sizeof(menuinfo), "%T", "menu_noscope", LANG_SERVER);
 								menu.AddItem("noscope", menuinfo);
 						}
 						if(GetCommandFlags("sm_setduckhunt") != INVALID_FCVAR_FLAGS)
 						{
-								Format(menuinfo, sizeof(menuinfo), "%T", "menu_duckhunt", client);
+								Format(menuinfo, sizeof(menuinfo), "%T", "menu_duckhunt", LANG_SERVER);
 								menu.AddItem("duckhunt", menuinfo);
 						}
 						if(GetCommandFlags("sm_setzeus") != INVALID_FCVAR_FLAGS)
 						{
-								Format(menuinfo, sizeof(menuinfo), "%T", "menu_zeus", client);
+								Format(menuinfo, sizeof(menuinfo), "%T", "menu_zeus", LANG_SERVER);
 								menu.AddItem("zeus", menuinfo);
 						}
 						if(GetCommandFlags("sm_setdealdamage") != INVALID_FCVAR_FLAGS)
 						{
-								Format(menuinfo, sizeof(menuinfo), "%T", "menu_dealdamge", client);
+								Format(menuinfo, sizeof(menuinfo), "%T", "menu_dealdamge", LANG_SERVER);
 								menu.AddItem("dealdamage", menuinfo);
 						}
 						if(GetCommandFlags("sm_setdrunk") != INVALID_FCVAR_FLAGS)
 						{
-								Format(menuinfo, sizeof(menuinfo), "%T", "menu_drunk", client);
+								Format(menuinfo, sizeof(menuinfo), "%T", "menu_drunk", LANG_SERVER);
 								menu.AddItem("drunk", menuinfo);
 						}
 						if(GetCommandFlags("sm_setknifefight") != INVALID_FCVAR_FLAGS)
 						{
-								Format(menuinfo, sizeof(menuinfo), "%T", "menu_knifefight", client);
+								Format(menuinfo, sizeof(menuinfo), "%T", "menu_knifefight", LANG_SERVER);
 								menu.AddItem("knifefight", menuinfo);
 						}
 						if(GetCommandFlags("sm_settorch") != INVALID_FCVAR_FLAGS)
 						{
-								Format(menuinfo, sizeof(menuinfo), "%T", "menu_torch", client);
+								Format(menuinfo, sizeof(menuinfo), "%T", "menu_torch", LANG_SERVER);
 								menu.AddItem("torch", menuinfo);
 						}
 						if(GetCommandFlags("sm_setcowboy") != INVALID_FCVAR_FLAGS)
 						{
-								Format(menuinfo, sizeof(menuinfo), "%T", "menu_cowboy", client);
+								Format(menuinfo, sizeof(menuinfo), "%T", "menu_cowboy", LANG_SERVER);
 								menu.AddItem("cowboy", menuinfo);
 						}
 						if(GetCommandFlags("sm_setfreeday") != INVALID_FCVAR_FLAGS)
 						{
-								Format(menuinfo, sizeof(menuinfo), "%T", "menu_Freeday", client);
+								Format(menuinfo, sizeof(menuinfo), "%T", "menu_Freeday", LANG_SERVER);
 								menu.AddItem("freeday", menuinfo);
 						}
 						menu.ExitButton = true;
