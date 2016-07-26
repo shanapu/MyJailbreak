@@ -844,8 +844,8 @@
 	"warden_mute"
 	{
 		"#format"   "{1:N},{2:N},{3:i}"
-		"ru"		"{2] отключен микрофон командиром {1} на {3} секнуд"
-		"pl"		"{2} Zmutowany przez Wardena{1} na {3} sekund"
+		"ru"		"{2} отключен микрофон командиром {1} на {3} секнуд"
+		"pl"		"{2} Zmutowany przez Wardena {1} na {3} sekund"
 		"de"		"{2} wurde vom Warden {1} für {3} Sekunden gemutet"
 		"en"		"{2} was Muted by the Warden {1} for {3} seconds!"
 	}

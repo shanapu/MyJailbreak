@@ -247,7 +247,7 @@
  
 	"ratio_question4_wrong1"
 	{
-		"en"		"Что, простите?"
+		"en"		"Простите, что?"
 	}
  
 	"ratio_question4_wrong2"

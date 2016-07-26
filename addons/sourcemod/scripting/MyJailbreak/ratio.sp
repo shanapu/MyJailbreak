@@ -495,31 +495,6 @@ bool ShouldMoveGuardToPrisoner()
 	return true;
 }
 
-bool ShouldMovePrisonerToGuard()
-{
-	int iNumGuards, iNumPrisoners;
-	
-	LoopValidClients(i, true,true)
-	{	
-		if (GetClientPendingTeam(i) == CS_TEAM_T)
-			iNumPrisoners++;
-		else if (GetClientPendingTeam(i) == CS_TEAM_CT)
-			 iNumGuards++;
-	}
-	
-	iNumPrisoners--;
-	iNumGuards++;
-	
-	if(iNumPrisoners < 1)
-		return false;
-	
-	if(float(iNumPrisoners) / float(iNumGuards) < GetConVarFloat(gc_fPrisonerPerGuard))
-		return false;
-	
-	return true;
-}
-
-
 /******************************************************************************
                    FORWARDS LISTEN
 ******************************************************************************/
@@ -781,6 +756,31 @@ stock bool RemovePlayerFromGuardQueue(int client)
 		return;
 	
 	RemoveFromArray(g_aGuardQueue, iIndex);
+}
+
+
+bool ShouldMovePrisonerToGuard()
+{
+	int iNumGuards, iNumPrisoners;
+	
+	LoopValidClients(i, true,true)
+	{	
+		if (GetClientPendingTeam(i) == CS_TEAM_T)
+			iNumPrisoners++;
+		else if (GetClientPendingTeam(i) == CS_TEAM_CT)
+			 iNumGuards++;
+	}
+	
+	iNumPrisoners--;
+	iNumGuards++;
+	
+	if(iNumPrisoners < 1)
+		return false;
+	
+	if(float(iNumPrisoners) / float(iNumGuards) < GetConVarFloat(gc_fPrisonerPerGuard))
+		return false;
+	
+	return true;
 }
 
 

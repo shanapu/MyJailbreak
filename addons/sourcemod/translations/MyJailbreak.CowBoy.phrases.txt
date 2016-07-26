@@ -21,7 +21,8 @@
 		"da"		"Cowboy er midlertidigt {purple}slået fra."
 	}
 
-	"cowboy_disabled"
+	"cowboy_name"	
+	
 	{
 		"ru"		"Ковбой"
 		"en"		"Cowboy"
