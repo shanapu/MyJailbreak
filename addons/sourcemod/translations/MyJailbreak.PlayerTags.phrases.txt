@@ -152,4 +152,153 @@
 		"da"		"[Warden.sVIP]"
 	}
 
+	"tags_CT_chat"
+	{
+		"ru"		"[Охранник]"
+		"chi"		"[狱警]"
+		"pl"		"[Straznik]"
+		"de"		"[Wärter]"
+		"en"		"[Guard]"
+		"da"		"[Vagt]"
+	}
+
+	"tags_CTA_chat"
+	{
+		"ru"		"[Охрана.Адм]"
+		"chi"		"[狱警和管理员]"
+		"pl"		"[Straznik.Admin]"
+		"de"		"[Wärter.Admin]"
+		"en"		"[Guard.Admin]"
+		"da"		"[Vagt.Admin]"
+	}
+
+	"tags_CTOWN_chat"
+	{
+		"ru"		"[Охранник.Основатель]"
+		"chi"		"[狱警.Owner]"
+		"pl"		"[Straznik.Owner]"
+		"de"		"[Wärter.Owner]"
+		"en"		"[Guard.Owner]"
+		"da"		"[Vagt.Owner]"
+	}
+
+	"tags_CTVIP1_chat"
+	{
+		"ru"		"[Охранник.VIP]"
+		"chi"		"[狱警.VIP]"
+		"pl"		"[Straznik.VIP]"
+		"de"		"[Wärter.VIP]"
+		"en"		"[Guard.VIP]"
+		"da"		"[Vagt.VIP]"
+	}
+
+	"tags_CTVIP2_chat"
+	{
+		"ru"		"[Охранник.sVIP]"
+		"chi"		"[狱警.sVIP]"
+		"pl"		"[Straznik.sVIP]"
+		"de"		"[Wärter.sVIP]"
+		"en"		"[Guard.sVIP]"
+		"da"		"[Vagt.sVIP]"
+	}
+
+	"tags_T_chat"
+	{
+		"da"		"[Fange]"
+		"en"		"[Prisoner]"
+		"ru"		"[Заключенный]"
+		"chi"		"[囚犯]"
+		"pl"		"[Wiezien]"
+		"de"		"[Häftling]"
+	}
+
+	"tags_TA_chat"
+	{
+		"ru"		"[Заключенный.Admin]"
+		"da"		"[Fange.Admin]"
+		"chi"		"[囚犯和管理员]"
+		"pl"		"[Wiezien.Admin]"
+		"de"		"[Häftling.Admin]"
+		"en"		"[Prisoner.Admin]"
+	}
+
+	"tags_TOWN_chat"
+	{
+		"ru"		"[Заключённый.Основатель]"
+		"chi"		"[囚犯和管理员]"
+		"pl"		"[Wiezien.Owner]"
+		"de"		"[Häftling.Owner]"
+		"en"		"[Prisoner.Owner]"
+		"da"		"[Fange.Owner]"
+	}
+
+	"tags_TVIP1_chat"
+	{
+		"da"		"[Fange.VIP]"
+		"en"		"[Prisoner.VIP]"
+		"ru"		"[Заключенный.VIP]"
+		"chi"		"[囚犯.VIP]"
+		"pl"		"[Wiezien.VIP]"
+		"de"		"[Häftling.VIP]"
+	}
+
+	"tags_TVIP2_chat"
+	{
+		"da"		"[Fange.sVIP]"
+		"ru"		"[Заключенный.sVIP]"
+		"chi"		"[囚犯.sVIP]"
+		"pl"		"[Wiezien.sVIP]"
+		"de"		"[Häftling.sVIP]"
+		"en"		"[Prisoner.sVIP]"
+	}
+
+	"tags_W_chat"
+	{
+		"ru"		"[Командир]"
+		"chi"		"[监狱长]"
+		"pl"		"[Warden]"
+		"de"		"[Warden]"
+		"en"		"[Warden]"
+		"da"		"[Warden]"
+	}
+
+	"tags_WA_chat"
+	{
+		"ru"		"[КМД.Aдм]"
+		"chi"		"[监狱长和管理员]"
+		"pl"		"[Warden.Admin]"
+		"de"		"[Warden.Admin]"
+		"en"		"[Warden.Admin]"
+		"da"		"[Warden.Admin]"
+	}
+
+	"tags_WOWN_chat"
+	{
+		"ru"		"[Командир.Основатель]"
+		"pl"		"[Warden.Owner]"
+		"de"		"[Warden.Owner]"
+		"en"		"[Warden.Owner]"
+		"da"		"[Warden.Owner]"
+	}
+
+	"tags_WVIP1_chat"
+	{
+		"ru"		"[КМД.VIP]"
+		"chi"		"[监狱长.VIP]"
+		"pl"		"[Warden.VIP]"
+		"de"		"[Warden.VIP]"
+		"en"		"[Warden.VIP]"
+		"da"		"[Warden.VIP]"
+	}
+
+	"tags_WVIP2_chat"
+	{
+		"ru"		"[КМД.sVIP]"
+		"chi"		"[监狱长.sVIP]"
+		"pl"		"[Warden.sVIP]"
+		"de"		"[Warden.sVIP]"
+		"en"		"[Warden.sVIP]"
+		"da"		"[Warden.sVIP]"
+	}
+
 }
