@@ -397,6 +397,21 @@
 		"en"		"Start an Event Day Voting"
 	}
 
+	"menu_teamgamesmenu"
+	{
+		"en"		"Team Games - Menu"
+	}
+
+	"menu_teamgamesgames"
+	{
+		"en"		"Team Games - Games"
+	}
+
+	"menu_teamgamesrebel"
+	{
+		"en"		"Make yourself a rebel!"
+	}
+
 	"menu_votingwon"
 	{
 		"#format"   "{1:s},{2:i},{3:i}"
