@@ -143,7 +143,10 @@ public void OnMapStart()
 		Format(buffer, sizeof(buffer), "%T", "freeday_name", LANG_SERVER);
 		SetEventDayName(buffer);
 		
-		SetEventDayPlanned(true);
+		SetEventDayRunning(true);
+		
+		g_iOldRoundTime = g_iGetRoundTime.IntValue;
+		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;
 	}
 	else
 	{
