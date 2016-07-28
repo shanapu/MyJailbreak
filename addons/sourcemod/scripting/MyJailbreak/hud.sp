@@ -115,7 +115,7 @@ public Action Event_PlayerTeamDeath(Event event, const char[] name, bool dontBro
 //Prepare Plugin & modules
 public void OnMapStart()
 {
-	if(gc_bPlugin.BoolValue) CreateTimer(5.0, Timer_ShowHUD, _, TIMER_REPEAT);
+	if(gc_bPlugin.BoolValue) CreateTimer(1.0, Timer_ShowHUD, _, TIMER_REPEAT);
 	LoopClients(i) g_bEnableHud[i] = true;
 }
 

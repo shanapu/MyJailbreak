@@ -507,11 +507,11 @@ public Action StartTimer(Handle timer)
 		CreateTimer( 0.0, ShowOverlayOnTorch, g_iBurningZero );
 		IgniteEntity(g_iBurningZero, 200.0);
 		SetEntPropFloat(g_iBurningZero, Prop_Data, "m_flLaggedMovementValue", gc_fSprintSpeed.FloatValue);
-		if(gc_bSounds.BoolValue)	
+		if(gc_bSounds.BoolValue)
 		{
 			EmitSoundToClientAny(g_iBurningZero, g_sSoundOnTorchPath);
 		}
-		if(!gc_bStayOverlay.BoolValue)	
+		if(!gc_bStayOverlay.BoolValue)
 		{
 			CreateTimer( 3.0, DeleteOverlay, g_iBurningZero );
 		}
@@ -535,20 +535,6 @@ public Action StartTimer(Handle timer)
 	TruceTimer = null;
 	
 	return Plugin_Stop;
-}
-
-stock int GetRandomAlivePlayer() 
-{
-	int[] clients = new int[MaxClients];
-	int clientCount;
-	LoopClients(i)
-	{
-		if (IsPlayerAlive(i))
-		{
-			clients[clientCount++] = i;
-		}
-	}
-	return (clientCount == 0) ? -1 : clients[GetRandomInt(0, clientCount-1)];
 }
 
 

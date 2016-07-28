@@ -354,6 +354,7 @@ public Action StartLastGuard()
 			SetEntPropFloat(i, Prop_Data, "m_flLaggedMovementValue", 1.0);
 			SetEntityRenderColor(i, 255, 255, 255, 255);
 			CreateTimer( 0.0, DeleteOverlay, i);
+			ChangeRebelStatus(i,true);
 		}
 		int HPCT = RoundToCeil(HPterrors * (gc_iHPmultipler.FloatValue / 100.0));
 		LoopClients(iClient)

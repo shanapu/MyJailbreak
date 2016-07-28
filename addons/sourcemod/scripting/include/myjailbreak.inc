@@ -407,6 +407,22 @@ stock int GetAliveTeamCount(int team)
 }
 
 
+//Get a alive random player of all teams
+stock int GetRandomAlivePlayer() 
+{
+	int[] clients = new int[MaxClients];
+	int clientCount;
+	LoopClients(i)
+	{
+		if (IsPlayerAlive(i))
+		{
+			clients[clientCount++] = i;
+		}
+	}
+	return (clientCount == 0) ? -1 : clients[GetRandomInt(0, clientCount-1)];
+}
+
+
 //Get a player for a certain admin flag
 stock bool CheckVipFlag(int client, const char[] flagsNeed)
 {

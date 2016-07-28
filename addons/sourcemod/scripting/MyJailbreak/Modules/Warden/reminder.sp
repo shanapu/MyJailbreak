@@ -77,7 +77,7 @@ public void Reminder_Event_RoundEnd(Event event, const char[] name, bool dontBro
 
 public void Reminder_Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
-	if(gc_bRemindTimer.BoolValue)RemindTimer = CreateTimer(2.0, Timer_RemindTimer, _, TIMER_REPEAT);
+	if(gc_bRemindTimer.BoolValue)RemindTimer = CreateTimer(1.0, Timer_RemindTimer, _, TIMER_REPEAT);
 }
 
 
