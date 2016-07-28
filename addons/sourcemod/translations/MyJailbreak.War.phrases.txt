@@ -256,7 +256,13 @@
 		"en"		"Prisoners win!"
 		"da"		"Terroristerne vinder!"
 	}
-
+	
+	"war_name"
+	{
+		"en"		"War"
+		"de"		"Krieg"
+	}
+	
 	"war_voted"
 	{
 		"ru"		"Вы уже проголосовали за {purple}Войну"
