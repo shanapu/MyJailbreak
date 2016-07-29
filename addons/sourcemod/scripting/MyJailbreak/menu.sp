@@ -567,11 +567,6 @@ public Action Command_OpenMenu(int client, int args)
 							mainmenu.AddItem("request", menuinfo);
 						}
 					}
-					if(GetCommandFlags("sm_rebel") != INVALID_FCVAR_FLAGS)
-					{
-						Format(menuinfo, sizeof(menuinfo), "%T", "menu_teamgamesrebel", client);
-						mainmenu.AddItem("teamgamesrebel", menuinfo);
-					}
 					if(g_bWarden != null)
 					{
 						if(warden_exist())

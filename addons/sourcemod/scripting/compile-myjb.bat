@@ -22,5 +22,6 @@ spcomp MyJailbreak/zombie.sp -o../plugins/MyJailbreak/zombie.smx
 spcomp MyJailbreak/request.sp -o../plugins/MyJailbreak/request.smx 
 spcomp MyJailbreak/dealdamage.sp -o../plugins/MyJailbreak/dealdamage.smx 
 spcomp MyJailbreak/ratio.sp -o../plugins/MyJailbreak/ratio.smx 
+spcomp MyJailbreak/hud.sp -o../plugins/MyJailbreak/hud.smx 
 
 pause
