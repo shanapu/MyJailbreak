@@ -20,12 +20,6 @@
 		"en"		"Zeus Day is currently {purple}disabled!"
 		"da"		"Zeus Day er midlertidigt {purple}slået fra."
 	}
-	
-	"zeus_name"
-	{
-		"ru"		"День зевса"
-		"pl"		"Zeus Day"
-	}
 
 	"zeus_end"
 	{
@@ -114,13 +108,19 @@
 		"da"		"For Zeus skal der mindst være {purple}en CT"
 	}
 
+	"zeus_name"
+	{
+		"de"		"Zeus Day"
+		"ru"		"День зевса"
+	}
+
 	"zeus_need"
 	{
 		"#format"   "{1:i},{2:N}"
+		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes required to play {darkred}Zeus Day."
 		"ru"		"{purple}{2}{default} проголосовал. {purple}{1}{default} голосов осталось до {darkred}дня зевса"
 		"pl"		"{purple}{2}{default} zaglosowal {purple}{1}{default} pozostalo glosow do {darkred}ZEUS"
 		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}zeus{default} beginnt"
-		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes required to play {darkred}Zeus Day."
 		"da"		"{purple}{2}{default} har afstemt!. {purple}{1}{default} afstemninger tilbage til {darkred}zeus"
 	}
 
@@ -135,10 +135,10 @@
 
 	"zeus_next_nc"
 	{
+		"en"		"The following round will be: Zeus Day."
 		"ru"		"Следующий день День Зевса"
 		"pl"		"Nastepna runda to Zeus Day"
 		"de"		"Nächste Runde ist Zeus Day"
-		"en"		"The following round will be: Zeus Day."
 		"da"		"Næste runde er Zeus Day"
 	}
 

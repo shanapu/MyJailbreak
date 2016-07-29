@@ -190,8 +190,8 @@
 
 	"dealdamage_voted"
 	{
-		"ru"		"Вы уже проголосовали за {purple}День Урона"
 		"de"		"Du hast schon für {purple}Deal Damage Day {default}gevotet"
+		"ru"		"Вы уже проголосовали за {purple}День Урона"
 		"en"		"You have already voted for {purple}Deal Damage Day!"
 		"da"		"Du har allerede stemt for {purple}Deal Damage Day!"
 	}
@@ -213,8 +213,8 @@
 
 	"dealdamage_ctdealed"
 	{
-		"ru"		"КТ нанесли:"
 		"en"		"CT dealt:"
+		"ru"		"КТ нанесли:"
 	}
 
 	"dealdamage_disabled"
@@ -223,12 +223,6 @@
 		"de"		"Deal Damage Day ist vorübergehend {purple}deaktiviert."
 		"en"		"Deal Damage Day is currently {purple}disabled!"
 		"da"		"Deal Damage Day er midlertidigt {purple}slået fra."
-	}
-	
-	"dealdamage_name"
-	{
-		"ru"		"День урона"
-		"en"		"Deal Damage Day"
 	}
 
 	"dealdamage_tdealed"
@@ -254,10 +248,10 @@
 
 	"dealdamage_info_title"
 	{
-		"ru"		"День урона активен"
-		"en"		"Deal Damage Day is now Activated!"
-		"de"		"Deal Damage Day ist aktiv"
 		"en"		"Deal Damage Day er aktiveret!"
+		"ru"		"День урона активен"
+		"de"		"Deal Damage Day ist aktiv"
+		"en"		"DealDamageDay er aktiveret!"
 	}
 
 	"dealdamage_hpdamage"
@@ -293,6 +287,12 @@
 		"de"		"Alle normalen Jailregeln sind aufgehoben!"
 		"en"		"All usual Jailbreak rules are repealed"
 		"da"		"Alle jail regler er ophævet!"
+	}
+
+	"dealdamage_name"
+	{
+		"en"		"Deal Damage Day"
+		"ru"		"День урона"
 	}
 
 }

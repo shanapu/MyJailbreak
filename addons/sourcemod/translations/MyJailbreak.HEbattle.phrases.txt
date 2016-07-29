@@ -21,12 +21,6 @@
 		"da"		"HE Battle er midlertidigt {purple}slået fra."
 	}
 
-	"hebattle_name"
-	{
-		"ru"		"Битва Гранатами"
-		"en"		"HE Battle"
-	}
-
 	"hebattle_end"
 	{
 		"ru"		"{purple}Битва Гранатами{default} окончена!"
@@ -109,10 +103,16 @@
 	"hebattle_minplayer"
 	{
 		"ru"		"Для битвы гранатами необходимо как минимум {purple}один КТ"
-		"en"		"For HE Battle, you must have at least {purple}one Guard, & one Prisoner"
+		"en"		"For a HE Battle you need at least {purple}one CT"
 		"de"		"Für HE Battle brauchen wir mindestens {purple}einen CT"
 		"en"		"For a HE Battle you need at least {purple}one CT"
 		"da"		"For HE Battle skal der mindst være {purple}en CT"
+	}
+
+	"hebattle_name"
+	{
+		"en"		"HE Battle"
+		"ru"		"Битва Гранатами"
 	}
 
 	"hebattle_need"
@@ -173,7 +173,7 @@
 
 	"hebattle_setbywarden"
 	{
-		"ru"		"Командир {purple}отключил{default} выбор Битвы Гранатами"
+		"ru"		"Командир {purple}отключил{default} выбор Битву Гранатами"
 		"ru"		"Командир {purple}отключил{default} выбор Битву Гранатами"
 		"pl"		"Glosowanie na HE Battle przez Straznika jest {purple}wylaczone"
 		"de"		"HE Battle Aktivierung durch den Warden ist {purple}ausgeschaltet"

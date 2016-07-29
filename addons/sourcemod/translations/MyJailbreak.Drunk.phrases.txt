@@ -21,12 +21,6 @@
 		"da"		"Drunken Day er midlertidigt {purple}slået fra."
 	}
 
-	"drunk_name"
-	{
-		"ru"		"Пьяный день"
-		"en"		"Drunken Day"
-	}
-
 	"drunk_end"
 	{
 		"ru"		"{purple}Пьяный день{default} окончен"
@@ -102,6 +96,12 @@
 		"en"		"Drunken Day is now Activated!"
 		"pl"		"Pijak jest aktywny"
 		"de"		"Drunken Day ist aktiv"
+	}
+
+	"drunk_name"
+	{
+		"en"		"Drunken Day"
+		"ru"		"Пьяный день"
 	}
 
 	"drunk_need"

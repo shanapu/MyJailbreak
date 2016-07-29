@@ -14,17 +14,11 @@
 
 	"zombie_disabled"
 	{
-		"ru"		"Зомби день {purple}отключен."
-		"pl"		"Zombie jest tymczasowo {purple}wylaczony."
-		"de"		"Zombie ist vorübergehend {purple}deaktiviert."
-		"da"		"Zombie runde er midlertidigt {purple}slået fra."
 		"en"		"Zombie is currently {purple}disabled."
-	}
-
-	"zombie_name"
-	{
-		"ru"		"Зомби день"
-		"en"		"Zombie Day"
+		"da"		"Zombie runde er midlertidigt {purple}slået fra."
+		"de"		"Zombie ist vorübergehend {purple}deaktiviert."
+		"pl"		"Zombie jest tymczasowo {purple}wylaczony."
+		"ru"		"Зомби день {purple}отключен."
 	}
 
 	"zombie_end"
@@ -116,6 +110,12 @@
 		"de"		"Für Zombie brauchen wir mindestens {purple}einen CT"
 	}
 
+	"zombie_name"
+	{
+		"en"		"Zombie Day"
+		"ru"		"Зомби день"
+	}
+
 	"zombie_need"
 	{
 		"#format"   "{1:i},{2:N}"
@@ -183,7 +183,7 @@
 
 	"zombie_start"
 	{
-		"ru"		"{purple}Зомби день{default} начался!"
+		"ru"		"{purple}Зомби день{default} начались!"
 		"ru"		"{purple}Зомби день{default} начались!"
 		"pl"		"{purple}ZombieDay{default} sie rozpoczal!"
 		"de"		"{purple}Zombie{default} ist gestartet!"

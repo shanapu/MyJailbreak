@@ -160,12 +160,6 @@
 		"de"		"{purple}Suicide Bomber{default} ist gestartet!"
 	}
 
-	"suicidebomber_name"
-	{
-		"en"		"Suicide Bomber"
-		"ru"		"Смертник"
-	}
-
 	"suicidebomber_start_nc"
 	{
 		"ru"		"Игра Смертник началась!"
@@ -264,6 +258,12 @@
 		"pl"		"{1} sekund do ukrycia sie!"
 		"de"		"{1} Sekunden to hide"
 		"en"		"{1} seconds left to hide!"
+	}
+
+	"suicidebomber_name"
+	{
+		"ru"		"Смертник"
+		"en"		"Suicide Bomber"
 	}
 
 }

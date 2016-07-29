@@ -21,13 +21,6 @@
 		"da"		"Cowboy er midlertidigt {purple}slået fra."
 	}
 
-	"cowboy_name"	
-	
-	{
-		"ru"		"Ковбой"
-		"en"		"Cowboy"
-	}
-
 	"cowboy_end"
 	{
 		"ru"		"{purple}Ковбой{default} окончен!"
@@ -83,7 +76,7 @@
 
 	"cowboy_info_line6"
 	{
-		"en"		"You must stay in the main Jailroom! Don't enter vents or secret areas!"
+		"en"		"Stay in the main jailroom! Don't enter secrets!"
 		"ru"		"Оставайтесь в главной камере! Не уходите в нычки!"
 		"pl"		"Zostan w glownym pomieszczeniu Wiezienia! Zakaz wejsc do SECRETOW!"
 		"de"		"Bleib' im Haupt Jail Raum! Verstecke sind verboten!"
@@ -102,7 +95,7 @@
 	"cowboy_info_title"
 	{
 		"ru"		"Ковбой активен"
-		"en"		"Cowboy is now Activated!"
+		"en"		"Cowboy er aktiveret!"
 		"pl"		"Cowboy jest aktywny"
 		"de"		"Cowboy ist aktiv"
 		"en"		"Cowboy er aktiveret!"
@@ -115,6 +108,12 @@
 		"pl"		"Do zabawy cowboy potrzeba przynajmniej {purple}jednego CT"
 		"de"		"Für cowboy brauchen wir mindestens {purple}einen CT"
 		"da"		"For cowboy skal der mindst være {purple}en CT"
+	}
+
+	"cowboy_name"
+	{
+		"en"		"Cowboy"
+		"ru"		"Ковбой"
 	}
 
 	"cowboy_need"

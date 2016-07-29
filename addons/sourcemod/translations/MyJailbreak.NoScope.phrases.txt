@@ -13,15 +13,10 @@
 
 	"noscope_disabled"
 	{
-		"de"		"No Scope Battle ist vorübergehend {purple}deaktiviert."
 		"ru"		"Игра No Scope Battle {purple}отключена."
 		"en"		"No Scope Battle is currently {purple}disabled!"
+		"de"		"No Scope Battle ist vorübergehend {purple}deaktiviert."
 		"da"		"No Scope Battle er midlertidigt {purple}slået fra."
-	}
-
-	"noscope_name"
-	{
-		"en"		"No Scope Battle"
 	}
 
 	"noscope_end"
@@ -92,7 +87,7 @@
 		"ru"		"Игра No Scope Battle активирована"
 		"de"		"No Scope Battle ist aktiv"
 		"en"		"No Scope Battle er aktiveret!"
-		"en"		"No Scope Battle er aktiveret!"
+		"en"		"NoScope er aktiveret!"
 	}
 
 	"noscope_minplayer"
@@ -103,11 +98,16 @@
 		"da"		"For noscope skal der mindst være {purple}en CT"
 	}
 
+	"noscope_name"
+	{
+		"en"		"No Scope Battle"
+	}
+
 	"noscope_need"
 	{
 		"#format"   "{1:i},{2:N}"
-		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes required to play {darkred}No Scope Battle."
 		"ru"		"{purple}{2}{default} проголосовал. {purple}{1}{default} голосов осталось до {darkred}игры No Scope Battle"
+		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes required to play {darkred}No Scope Battle."
 		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}noscope{default} beginnt"
 		"da"		"{purple}{2}{default} har afstemt!. {purple}{1}{default} afstemninger tilbage til {darkred}noscope"
 	}
@@ -172,8 +172,8 @@
 	"noscope_start_nc"
 	{
 		"ru"		"Игра No Scope Battle началась!"
-		"de"		"No Scope Battle ist gestartet!"
 		"en"		"The No Scope Battle Battle has begun!"
+		"de"		"No Scope Battle ist gestartet!"
 		"da"		"No Scope er startet!"
 	}
 

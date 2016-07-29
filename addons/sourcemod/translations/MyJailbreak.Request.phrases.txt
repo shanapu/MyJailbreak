@@ -239,7 +239,7 @@
 	"request_refusing"
 	{
 		"#format"   "{1:N}"
-		"ru"		"{purple}{1} {purple}Отказался от этой игры."
+		"ru"		"{purple}{1} {purple}отказался от этой игры."
 		"pl"		"{purple}{1} {default}. {purple}odmawia gry."
 		"de"		"{purple}{1} {default}hat das {purple}Spiel verweigert"
 		"en"		"{purple}{1} {default}has {purple}refused the game!"
@@ -298,15 +298,9 @@
 
 	"request_freeday"
 	{
+		"en"		"Next Round Freeday"
 		"ru"		"Следующий раунд фридей."
 		"de"		"Nächste Runde Freeday"
-		"en"		"Next Round Freeday"
-	}
-
-	"request_freedayvictim"
-	{
-		"de"		"Nächste Runde Freeday für Opfer"
-		"en"		"Give Victim next Round Freeday"
 	}
 
 	"request_swapfreekiller"
@@ -363,9 +357,9 @@
 	"request_killbcfreekillall"
 	{
 		"#format"   "{1:N}"
+		"de"		"{green}{1}{default} wurdest wegen eines {darkred}Freekills{default} getötet"
 		"en"		"{green}{1}{default} was slain due to a {darkred}Freekill!"
 		"ru"		"{green}{1}{default} был убит в из-за {darkred}фрикилла"
-		"de"		"{green}{1}{default} wurdest wegen eines {darkred}Freekills{default} getötet"
 	}
 
 	"request_swapbcfreekill"
@@ -419,104 +413,126 @@
 		"de"		"An Leiche wiederbeleben"
 	}
 
-	"request_personalfreeday"
-	{
-		"#format"   "{1:N}"
-		"en"		"{1} gets a personal FreeDay next round"
-	}
-
-	"request_havefreeday"
-	{
-		"#format"   "{1:N}"
-		"en"		"{1} has now a personal FreeDay!"
-	}
-
-	"request_freedayforyou"
-	{
-		"en"		"You get a personal FreeDay next round"
-	}
-
-	"request_givefreeday"
-	{
-		"en"		"Give FreeDay to:"
-	}
-
-	"request_killreason_title"
-	{
-		"#format"   "{1:N}"
-		"en"		"You killed {1}???"
-	}
-
-	"request_killreason_lostgame"
-	{
-		"en"		"He lost the Game"
-	}
-
-	"request_killreason_rebel"
-	{
-		"en"		"He was a Rebel"
-	}
-
-	"request_killreason_brokerule"
-	{
-		"en"		"He broke the Rules"
-	}
-
-	"request_killreason_notfollow"
-	{
-		"en"		"He not listen to dictate"
-	}
-
-	"request_killreason_sry"
-	{
-		"en"		"My fault, wanna say sorry"
-	}
-
-	"request_killreason_freekill"
-	{
-		"en"		"I freekilled him"
-	}
-
-	"request_killreason_lostgame_chat"
-	{
-		"#format"   "{1:N},{2:N}"
-		"en"		"The Guard {green}{1}{default} claiming {darkred}{2}{default} lost the Game"
-	}
-
-	"request_killreason_rebel_chat"
-	{
-		"#format"   "{1:N},{2:N}"
-		"en"		"The Guard {green}{1}{default} claiming {darkred}{2}{default} was a rebel"
-	}
-
-	"request_killreason_brokerule_chat"
-	{
-		"#format"   "{1:N},{2:N}"
-		"en"		"The Guard {green}{1}{default} claiming {darkred}{2}{default} has broke the rules"
-	}
-
 	"request_killreason_notfollow_chat"
 	{
 		"#format"   "{1:N},{2:N}"
+		"ru"		"Охранник {green}{1}{default} наказал {darkred}{2}{default} за неисполнение приказа"
 		"en"		"The Guard {green}{1}{default} claiming {darkred}{2}{default} hasn't followed the dictation"
 	}
 
 	"request_killreason_sry_chat"
 	{
 		"#format"   "{1:N},{2:N}"
+		"ru"		"Охранник {green}{1}{default} хочет извиниться перед {darkred}{2}{default} за случайное убийство"
 		"en"		"The Guard {green}{1}{default} wanna say sorry for mistakly killing {darkred}{2}{default}"
 	}
 
 	"request_killreason_freekill_chat"
 	{
 		"#format"   "{1:N},{2:N}"
+		"ru"		"Охранник {green}{1}{default} признается в фрикилле {darkred}{2}{default}"
 		"en"		"The Guard {green}{1}{default} confess a freekill on {darkred}{2}{default}"
+	}
+
+	"request_freedayvictim"
+	{
+		"en"		"Give Victim next Round Freeday"
+		"de"		"Nächste Runde Freeday für Opfer"
+	}
+
+	"request_personalfreeday"
+	{
+		"#format"   "{1:N}"
+		"ru"		"{1} получит персональный фридей в следующем раунде"
+		"en"		"{1} gets a personal FreeDay next round"
+	}
+
+	"request_havefreeday"
+	{
+		"#format"   "{1:N}"
+		"ru"		"У {1} персональный фридей!"
+		"en"		"{1} has now a personal FreeDay!"
+	}
+
+	"request_freedayforyou"
+	{
+		"ru"		"В следующем раунде вы получите персональный фридей"
+		"en"		"You get a personal FreeDay next round"
+	}
+
+	"request_givefreeday"
+	{
+		"ru"		"Выдать фридей:"
+		"en"		"Give FreeDay to:"
+	}
+
+	"request_killreason_title"
+	{
+		"#format"   "{1:N}"
+		"ru"		"Причина убийства {1}?"
+		"en"		"You killed {1}???"
+	}
+
+	"request_killreason_lostgame"
+	{
+		"ru"		"Проигрыш в игре"
+		"en"		"He lost the Game"
 	}
 
 	"request_killreason_noanswer"
 	{
 		"#format"   "{1:N},{2:N}"
+		"ru"		"Охранник {green}{1}{default} не имеет никакого заявления на убийство {darkred}{2}{default}"
 		"en"		"The Guard {green}{1}{default} has no declaration for the kill on {darkred}{2}{default}"
 	}
-	
+
+	"request_killreason_rebel"
+	{
+		"ru"		"Взбунтовал"
+		"en"		"He was a Rebel"
+	}
+
+	"request_killreason_brokerule"
+	{
+		"en"		"Нарушение правил"
+	}
+
+	"request_killreason_notfollow"
+	{
+		"ru"		"Неподчинение приказу"
+		"en"		"He not listen to dictate"
+	}
+
+	"request_killreason_sry"
+	{
+		"ru"		"Моя вина, я извинюсь"
+		"en"		"My fault, wanna say sorry"
+	}
+
+	"request_killreason_freekill"
+	{
+		"en"		"Я убил его просто так"
+	}
+
+	"request_killreason_lostgame_chat"
+	{
+		"#format"   "{1:N},{2:N}"
+		"ru"		"Охранник {green}{1}{default} наказал {darkred}{2}{default} из-за проигрыша в игре"
+		"en"		"The Guard {green}{1}{default} claiming {darkred}{2}{default} lost the Game"
+	}
+
+	"request_killreason_rebel_chat"
+	{
+		"#format"   "{1:N},{2:N}"
+		"ru"		"Охранник {green}{1}{default} наказал {darkred}{2}{default} из-за бунта"
+		"en"		"The Guard {green}{1}{default} claiming {darkred}{2}{default} was a rebel"
+	}
+
+	"request_killreason_brokerule_chat"
+	{
+		"#format"   "{1:N},{2:N}"
+		"ru"		"Охранник {green}{1}{default} наказал {darkred}{2}{default} за нарушение правил"
+		"en"		"The Guard {green}{1}{default} claiming {darkred}{2}{default} has broke the rules"
+	}
+
 }

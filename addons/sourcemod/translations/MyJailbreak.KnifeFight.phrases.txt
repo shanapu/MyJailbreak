@@ -14,17 +14,11 @@
 
 	"knifefight_disabled"
 	{
+		"de"		"Knife Fight ist vorübergehend {purple}deaktiviert."
 		"ru"		"Ножевая схватка {purple}отключена."
 		"pl"		"KNIFE jest tymczasowo {purple}wylaczony."
-		"de"		"Knife Fight ist vorübergehend {purple}deaktiviert."
 		"en"		"Knife Fight currently {purple}disabled!"
 		"da"		"Knife Fight er midlertidigt {purple}slået fra."
-	}
-
-	"knifefight_name"
-	{
-		"ru"		"Ножевая схватка"
-		"en"		"Knife Fight"
 	}
 
 	"knifefight_end"
@@ -39,7 +33,7 @@
 	"knifefight_info_line1"
 	{
 		"ru"		"Не удивляйтесь, если появитесь на КТ спавне!"
-		"en"		"Do not be surprised if you spawned in the Armory!"
+		"en"		"Do not be surprised if ported to CT Spawn"
 		"de"		"Nicht wundern falls ihr zum CT Spawngeportet wurdet"
 		"en"		"Do not be surprised if ported to CT Spawn"
 		"da"		"Bliv ikke overrasket hvis du bliver teleportet til CT Spawn!"
@@ -100,20 +94,26 @@
 	"knifefight_info_title"
 	{
 		"ru"		"FFA Knife Fight - Free for all активирована"
-		"pl"		"KNIFE jest aktywny"
 		"de"		"FFA Knife Fight - Jeder gegen Jeden ist aktiv"
+		"pl"		"KNIFE jest aktywny"
 		"en"		"FFA Knife Fight - Free for All is now activated"
 		"da"		"FFA Knifefighter- er hver mod hver aktiv!"
 	}
 
 	"knifefight_minplayer"
 	{
-		"ru"		"Для ножевой схватки вам нужно как минимум {purple} 1 КТ и 1 Т"
+		"ru"		"Для ножевой битвы вам нужно как минимум {purple} 1 КТ и 1 Т"
 		"ru"		"Для ножевой битвы вам нужно как минимум {purple} 1 КТ и 1 Т"
 		"pl"		"Do zabawy cowboy potrzeba przynajmniej {purple}jednego CT"
 		"de"		"Für Knife Fight brauchen wir mindestens {purple}einen CT"
 		"en"		"For Knife Fight you need at least {purple}one Guard and one Prisoner!"
 		"da"		"For Knife Fight skal der mindst være {purple}en CT & en T"
+	}
+
+	"knifefight_name"
+	{
+		"en"		"Knife Fight"
+		"ru"		"Ножевая схватка"
 	}
 
 	"knifefight_need"
@@ -229,19 +229,19 @@
 	{
 		"da"		"Du har allerede stemt på {purple}Knife Fight"
 		"ru"		"Вы уже проголосовали за {purple}ножевую схватку"
-		"en"		"You have already voted for {purple}Knife Fight."
+		"en"		"Du har allerede stemt på {purple}Knife Fight"
 		"pl"		"Juz glosowales na {purple}KNIFE"
 		"de"		"Du hast schon für {purple}Knife Fight {default}gevotet"
-		"en"		"Du har allerede stemt på {purple}Knife Fight"
+		"en"		"Du har allerede stemt på {purple}knifefight"
 	}
 
 	"knifefight_voting"
 	{
+		"da"		"Afstemninger for Knife Fight er {purple}slået fra"
 		"ru"		"Голосование игроков за Ножевую Схватку {purple}отменено"
 		"pl"		"Glosowanie graczy na KNIFE jest {purple}wylaczone"
 		"de"		"Voting für Knife Fight ist {purple}ausgeschaltet"
 		"en"		"Voting for Knife Fight is {purple}disabled!"
-		"da"		"Afstemninger for Knife Fight er {purple}slået fra"
 	}
 
 	"knifefight_wait"

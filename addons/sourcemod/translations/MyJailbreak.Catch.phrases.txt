@@ -36,12 +36,6 @@
 		"da"		"Catch er midlertidigt {purple}slået fra."
 	}
 
-	"catch_name"
-	{
-		"ru"		"Поймай и заморозь"
-		"en"		"Catch and Freeze"
-	}
-
 	"catch_need"
 	{
 		"#format"   "{1:i},{2:N}"
@@ -82,7 +76,7 @@
 
 	"catch_ctwin_nc"
 	{
-		"ru"		"Всех террористов поймали"
+		"ru"		"Всех террористов поймали!"
 		"ru"		"Всех террористов поймали!"
 		"pl"		"Wszyscy Terrorysci zlapani"
 		"de"		"Alle Terroristen wurden wieder eingefangen"
@@ -297,6 +291,12 @@
 		"de"		"Alle Häftlinge wurden {purple}eingefangen"
 		"en"		"All the prisoners have been {purple}caught!"
 		"da"		"Alle fanger er {purple}FANGET!"
+	}
+
+	"catch_name"
+	{
+		"en"		"Catch and Freeze"
+		"ru"		"Поймай и заморозь"
 	}
 
 }

@@ -89,7 +89,7 @@
 	"lastguard_info_title"
 	{
 		"da"		"Last Guard Rule er aktiveret!"
-		"en"		"The Last Guard Rule is now Activated!"
+		"en"		"Last Guard Rule er aktiveret!"
 		"ru"		"Правило последнего КТ активно"
 		"de"		"Last Guard Rule ist aktiv"
 		"en"		"Last Guard Rule er aktiveret!"
