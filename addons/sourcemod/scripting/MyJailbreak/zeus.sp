@@ -365,7 +365,7 @@ public void Event_RoundStart(Handle event, char[] name, bool dontBroadcast)
 				LoopClients(client)
 				{
 					CreateInfoPanel(client);
-					StripAllWeapons(client);
+					StripAllPlayerWeapons(client);
 					GivePlayerItem(client, "weapon_knife");
 					SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
 					SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
@@ -413,7 +413,7 @@ public int OnAvailableLR(int Announced)
 		LoopClients(client) 
 		{
 			SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
-			StripAllWeapons(client);
+			StripAllPlayerWeapons(client);
 			if (GetClientTeam(client) == CS_TEAM_CT)
 			{
 				FakeClientCommand(client, "sm_guns");

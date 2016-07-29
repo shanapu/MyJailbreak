@@ -359,7 +359,7 @@ public void Event_RoundStart(Handle event, char[] name, bool dontBroadcast)
 					
 					if (IsClientInGame(client))
 					{
-						StripAllWeapons(client);
+						StripAllPlayerWeapons(client);
 						
 						if (GetClientTeam(client) == CS_TEAM_CT && IsValidClient(client, false, false))
 						{
@@ -421,7 +421,7 @@ public int OnAvailableLR(int Announced)
 		{
 			if (IsClientInGame(client)) SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true); //disbale noblock
 			KillDrunk(client);
-			StripAllWeapons(client);
+			StripAllPlayerWeapons(client);
 			if (GetClientTeam(client) == CS_TEAM_CT)
 			{
 				FakeClientCommand(client, "sm_guns");

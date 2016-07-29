@@ -428,7 +428,7 @@ public void Event_RoundStart(Handle event, char[] name, bool dontBroadcast)
 			{
 				
 				
-				StripAllWeapons(client);
+				StripAllPlayerWeapons(client);
 				ClientSprintStatus[client] = 0;
 				GivePlayerItem(client, "weapon_knife");
 				SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
@@ -552,7 +552,7 @@ public void Event_RoundEnd(Handle event, char[] name, bool dontBroadcast)
 			SetEntityRenderColor(client, 255, 255, 255, 0);
 			OnTorch[client] = false;
 			ImmuneTorch[client] = false;
-			StripAllWeapons(client);
+			StripAllPlayerWeapons(client);
 		}
 		g_iBurningZero = -1;
 		delete TruceTimer;

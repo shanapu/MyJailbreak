@@ -394,7 +394,7 @@ public void Event_RoundStart(Handle event, char[] name, bool dontBroadcast)
 						SetEntityModel(client, g_sModelPathZombie);
 						SetEntityMoveType(client, MOVETYPE_NONE);
 						SetEntityHealth(client, gc_iZombieHP.IntValue);
-						StripAllWeapons(client);
+						StripAllPlayerWeapons(client);
 						GivePlayerItem(client, "weapon_knife");
 					}
 					if (GetClientTeam(client) == CS_TEAM_T)
@@ -522,7 +522,7 @@ public int OnAvailableLR(int Announced)
 			
 			SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
 			
-			StripAllWeapons(client);
+			StripAllPlayerWeapons(client);
 			if (GetClientTeam(client) == CS_TEAM_CT)
 			{
 				FakeClientCommand(client, "sm_guns");

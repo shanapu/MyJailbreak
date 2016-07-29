@@ -360,7 +360,7 @@ public void Event_RoundStart(Handle event, char[] name, bool dontBroadcast)
 				LoopClients(client)
 				{
 					CreateInfoPanel(client);
-					StripAllWeapons(client);
+					StripAllPlayerWeapons(client);
 					ClientSprintStatus[client] = 0;
 					GivePlayerItem(client, "weapon_knife");
 					SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
@@ -435,7 +435,7 @@ public void Event_RoundEnd(Handle event, char[] name, bool dontBroadcast)
 			catched[client] = false;
 			if (GetClientTeam(client) == CS_TEAM_T)
 			{
-				StripAllWeapons(client);
+				StripAllPlayerWeapons(client);
 			}
 		}
 		

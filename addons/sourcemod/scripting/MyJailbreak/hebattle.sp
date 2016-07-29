@@ -367,7 +367,7 @@ public void Event_RoundStart(Handle event, char[] name, bool dontBroadcast)
 					CreateInfoPanel(client);
 					
 					SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
-					StripAllWeapons(client);
+					StripAllPlayerWeapons(client);
 					GivePlayerItem(client, "weapon_hegrenade");
 					SetEntityHealth(client, gc_iPlayerHP.IntValue);
 					SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
@@ -419,7 +419,7 @@ public int OnAvailableLR(int Announced)
 		{
 			SetEntityGravity(client, 1.0);
 			SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
-			StripAllWeapons(client);
+			StripAllPlayerWeapons(client);
 			if (GetClientTeam(client) == CS_TEAM_CT)
 			{
 				FakeClientCommand(client, "sm_guns");

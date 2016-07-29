@@ -57,6 +57,7 @@ public SharedPlugin:__pl_myjailbreak =
 #include <colors>
 #include <autoexecconfig>
 #include <smartjaildoors>
+#include <hosties>
 #include <lastrequest>
 #include <warden>
 #include <scp>
@@ -227,7 +228,7 @@ stock void PrecacheSoundAnyDownload(char[] sSound)
 
 
 //Strip All Weapons & the knife slot twice for taser
-stock void StripAllWeapons(int client)
+stock void StripAllPlayerWeapons(int client)
 {
 	int weapon;
 	for (int i = 0; i <= 4; i++)

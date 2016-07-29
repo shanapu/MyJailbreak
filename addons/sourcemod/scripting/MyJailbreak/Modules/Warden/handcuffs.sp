@@ -353,7 +353,7 @@ public Action CuffsEm(int client, int attacker)
 		SetEntityMoveType(client, MOVETYPE_NONE);
 		SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 0.0);
 		SetEntityRenderColor(client, 0, 190, 0, 255);
-		StripAllWeapons(client);
+		StripAllPlayerWeapons(client);
 		GivePlayerItem(client, "weapon_knife");
 		g_bCuffed[client] = true;
 		ShowOverlay(client, g_sOverlayCuffsPath, 0.0);

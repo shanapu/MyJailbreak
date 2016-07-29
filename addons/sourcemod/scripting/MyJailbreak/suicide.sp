@@ -387,7 +387,7 @@ public void Event_RoundStart(Handle event, char[] name, bool dontBroadcast)
 				{
 					CreateInfoPanel(client);
 					
-					StripAllWeapons(client);
+					StripAllPlayerWeapons(client);
 					ClientSprintStatus[client] = 0;
 					SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
 					

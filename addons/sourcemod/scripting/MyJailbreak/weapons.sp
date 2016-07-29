@@ -236,7 +236,7 @@ public void GiveSavedWeaponsFix(int clientIndex)
 		{
 			if((gc_bTerror.BoolValue && GetClientTeam(clientIndex) == 2) || (gc_bCTerror.BoolValue && GetClientTeam(clientIndex) == 3))
 			{
-				//StripAllWeapons(clientIndex);
+				//StripAllPlayerWeapons(clientIndex);
 				if(GetPlayerWeaponSlot(clientIndex, CS_SLOT_PRIMARY) == -1)
 				{
 					if (StrEqual(primaryWeapon[clientIndex], "random"))
@@ -291,7 +291,7 @@ public void GiveSavedWeapons(int clientIndex)
 	if (!weaponsGivenThisRound[clientIndex] && IsPlayerAlive(clientIndex))
 	{
 		
-		StripAllWeapons(clientIndex);
+		StripAllPlayerWeapons(clientIndex);
 		GivePlayerItem(clientIndex, "weapon_knife");
 		if (warden_iswarden(clientIndex))
 		{

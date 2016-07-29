@@ -137,7 +137,7 @@ public Action Command_Capitulation(int client, int args)
 							
 							float DoubleTime = (gc_fRebelTime.FloatValue * 2);
 							RebelTimer[client] = CreateTimer(DoubleTime, Timer_RebelNoAction, client);
-						//	StripAllWeapons(client);
+						//	StripAllPlayerWeapons(client);
 							LoopClients(i) Menu_CapitulationMenu(i);
 							if(gc_bSounds.BoolValue)EmitSoundToAllAny(g_sSoundCapitulationPath);
 						}
@@ -287,7 +287,7 @@ public int Handler_CapitulationMenu(Menu menu, MenuAction action, int client, in
 				if (RebelTimer[i] != null)
 					KillTimer(RebelTimer[i]);
 				RebelTimer[i] = null;
-				StripAllWeapons(i);
+				StripAllPlayerWeapons(i);
 				SetEntityRenderColor(client, gc_iCapitulationColorRed.IntValue, gc_iCapitulationColorGreen.IntValue, gc_iCapitulationColorBlue.IntValue, 255);
 				CapitulationTimer[i] = CreateTimer(gc_fCapitulationTime.FloatValue, Timer_GiveKnifeCapitulated, i);
 				CPrintToChatAll("%t %t", "warden_tag", "request_accepted", i, client);

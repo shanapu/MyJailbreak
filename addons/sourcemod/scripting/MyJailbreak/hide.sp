@@ -345,7 +345,7 @@ public void Event_RoundStart(Handle event, char[] name, bool dontBroadcast)
 				
 				if (GetClientTeam(client) == CS_TEAM_CT)
 				{
-					StripAllWeapons(client);
+					StripAllPlayerWeapons(client);
 					SetEntityMoveType(client, MOVETYPE_NONE);
 					GivePlayerItem(client, "weapon_tagrenade");
 					SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
@@ -353,7 +353,7 @@ public void Event_RoundStart(Handle event, char[] name, bool dontBroadcast)
 				}
 				if (GetClientTeam(client) == CS_TEAM_T)
 				{
-					StripAllWeapons(client);
+					StripAllPlayerWeapons(client);
 					SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
 					GivePlayerItem(client, "weapon_knife");
 				}
