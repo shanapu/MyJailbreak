@@ -33,6 +33,7 @@ ConVar gc_iHumanHP;
 ConVar gc_bDark;
 ConVar gc_bVision;
 ConVar gc_bGlow;
+ConVar gc_iGlowMode;
 ConVar gc_sModelPathZombie;
 ConVar gc_bSounds;
 ConVar gc_sSoundStartPath;
@@ -108,6 +109,7 @@ public void OnPluginStart()
 	gc_iHumanHP = AutoExecConfig_CreateConVar("sm_zombie_human_hp", "65", "HP the Humans got on Spawn", _, true, 1.0);
 	gc_bDark = AutoExecConfig_CreateConVar("sm_zombie_dark", "1", "0 - disabled, 1 - enable Map Darkness", _, true,  0.0, true, 1.0);
 	gc_bGlow = AutoExecConfig_CreateConVar("sm_zombie_glow", "1", "0 - disabled, 1 - enable Glow effect for humans", _, true,  0.0, true, 1.0);
+	gc_iGlowMode = AutoExecConfig_CreateConVar("sm_zombie_glow_mode", "1", "1 - human contours with wallhack for zombies, 2 - human glow effect without wallhack for zombies", _, true,  1.0, true, 2.0);
 	gc_bVision = AutoExecConfig_CreateConVar("sm_zombie_vision", "1", "0 - disabled, 1 - enable NightVision View for Zombies", _, true,  0.0, true, 1.0);
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_zombie_cooldown_day", "3", "Rounds cooldown after a event until event can be start again", _, true, 0.0);
 	gc_iCooldownStart = AutoExecConfig_CreateConVar("sm_zombie_cooldown_start", "3", "Rounds until event can be start after mapchange.", _, true, 0.0);
@@ -459,7 +461,8 @@ void SetupGlow(int iSkin)
 		return;
 	
 	SetEntProp(iSkin, Prop_Send, "m_bShouldGlow", true, true);
-	SetEntProp(iSkin, Prop_Send, "m_nGlowStyle", 0);
+	if(gc_iGlowMode.IntValue == 1) SetEntProp(iSkin, Prop_Send, "m_nGlowStyle", 0);
+	if(gc_iGlowMode.IntValue == 2) SetEntProp(iSkin, Prop_Send, "m_nGlowStyle", 1);
 	SetEntPropFloat(iSkin, Prop_Send, "m_flGlowMaxDist", 10000000.0);
 	
 	int iRed = 155;
