@@ -25,13 +25,8 @@
 
 
 //Includes
-#include <sourcemod>
-#include <cstrike>
+#include <myjailbreak> //... all other includes in myjailbreak.inc
 #include <clientprefs>
-#include <warden>
-#include <colors>
-#include <autoexecconfig>
-#include <myjailbreak>
 
 
 //Compiler Options

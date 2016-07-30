@@ -25,7 +25,7 @@
 
 
 //Includes
-#include <myjailbreak>
+#include <myjailbreak> //... all other includes in myjailbreak.inc
 
 
 //Compiler Options
@@ -43,7 +43,7 @@ ConVar gc_bGunNoDrop;
 ConVar gc_fAllowDropTime;
 
 
-//Bools
+//Booleans
 bool g_bWeaponDropped[MAXPLAYERS+1] = false;
 bool g_bAllowDrop;
 

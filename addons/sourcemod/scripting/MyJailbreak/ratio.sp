@@ -25,7 +25,7 @@
 
 
 //Includes
-#include <myjailbreak>
+#include <myjailbreak> //... all other includes in myjailbreak.inc
 #include <clientprefs>
 
 //Compiler Options

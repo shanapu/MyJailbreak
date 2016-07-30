@@ -123,7 +123,7 @@
 
 	"ffa_name"
 	{
-		"en"		"Jeder gegen Jeden"
+		"de"		"Jeder gegen Jeden"
 		"en"		"Free for All"
 	}
 

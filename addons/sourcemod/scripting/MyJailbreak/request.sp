@@ -25,7 +25,7 @@
 
 
 //Includes
-#include <myjailbreak>
+#include <myjailbreak> //... all other includes in myjailbreak.inc
 
 
 //Compiler Options
@@ -38,7 +38,7 @@ ConVar gc_bPlugin;
 ConVar gc_bSounds;
 
 
-//Bools
+//Booleans
 bool g_bHaveFreeDay[MAXPLAYERS+1];
 bool IsRequest;
 bool IsLR;
