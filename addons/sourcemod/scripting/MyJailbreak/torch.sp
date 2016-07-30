@@ -81,7 +81,7 @@ char g_sOverlayStartPath[256];
 float g_fPos[3];
 
 public Plugin myinfo = {
-	name = "MyJailbreak - Torch & OnTorch",
+	name = "MyJailbreak - Torch Relay",
 	author = "shanapu",
 	description = "Event Day for Jailbreak Server",
 	version = PLUGIN_VERSION,
