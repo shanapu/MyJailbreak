@@ -1,13 +1,31 @@
-//includes
-#include <cstrike>
-#include <sourcemod>
-#include <colors>
-#include <smartjaildoors>
-#include <warden>
-#include <emitsoundany>
-#include <autoexecconfig>
-#include <clientprefs>
-#include <myjailbreak>
+/*
+ * MyJailbreak - Suicide Bomber Event Day Plugin.
+ * by: shanapu
+ * https://github.com/shanapu/MyJailbreak/
+ *
+ * This file is part of the MyJailbreak SourceMod Plugin.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, version 3.0, as published by the
+ * Free Software Foundation.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+
+/******************************************************************************
+                   STARTUP
+******************************************************************************/
+
+
+//Includes
+#include <myjailbreak> //... all other includes in myjailbreak.inc
 
 //Compiler Options
 #pragma semicolon 1
@@ -22,9 +40,8 @@
 bool IsSuicideBomber;
 bool StartSuicideBomber;
 bool BombActive;
-bool canSet;
 
-//ConVars
+//Console Variables
 ConVar gc_bPlugin;
 ConVar gc_bSetW;
 ConVar gc_bSetA;
@@ -74,6 +91,7 @@ char g_sSoundStartPath[256];
 char g_sCustomCommand[64];
 char g_sEventsLogFile[PLATFORM_MAX_PATH];
 char g_sAdminFlag[32];
+char g_sOverlayStartPath[256];
 
 public Plugin myinfo = {
 	name = "MyJailbreak - Suicide Bomber",
@@ -130,9 +148,9 @@ public void OnPluginStart()
 	AutoExecConfig_CleanFile();
 	
 	//Hooks
-	HookEvent("round_start", RoundStart);
+	HookEvent("round_start", Event_RoundStart);
 	HookEvent("player_spawn", Event_PlayerSpawn);
-	HookEvent("round_end", RoundEnd);
+	HookEvent("round_end", Event_RoundEnd);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundSuicideBomberPath, OnSettingChanged);
@@ -146,7 +164,7 @@ public void OnPluginStart()
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
 	gc_sSoundSuicideBomberPath.GetString(g_sSoundSuicideBomberPath, sizeof(g_sSoundSuicideBomberPath));
 	gc_sSoundBoomPath.GetString(g_sSoundBoomPath, sizeof(g_sSoundBoomPath));
-	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
+	gc_sOverlayStartPath.GetString(g_sOverlayStartPath , sizeof(g_sOverlayStartPath));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 	gc_sCustomCommand.GetString(g_sCustomCommand , sizeof(g_sCustomCommand));
 	gc_sAdminFlag.GetString(g_sAdminFlag , sizeof(g_sAdminFlag));
@@ -176,8 +194,8 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 	}
 	else if(convar == gc_sOverlayStartPath)
 	{
-		strcopy(g_sOverlayStart, sizeof(g_sOverlayStart), newValue);
-		if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStart);
+		strcopy(g_sOverlayStartPath, sizeof(g_sOverlayStartPath), newValue);
+		if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
 	}
 	else if(convar == gc_sSoundStartPath)
 	{
@@ -203,12 +221,11 @@ public void OnMapStart()
 	IsSuicideBomber = false;
 	StartSuicideBomber = false;
 	BombActive = false;
-	canSet = true;
 	
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
 	
-	if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStart);
+	if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
 	if(gc_bSounds.BoolValue)	
 	{
 		PrecacheSoundAnyDownload(g_sSoundSuicideBomberPath);
@@ -239,12 +256,12 @@ public void OnClientPutInServer(int client)
 
 public Action SetSuicideBomber(int client,int args)
 {
-	if (gc_bPlugin.BoolValue && canSet)
+	if (gc_bPlugin.BoolValue)
 	{
 		if(client == 0)
 		{
 			StartNextRound();
-			if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event CowBoy was started by groupvoting");
+			if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event CowBoy was started by groupvoting");
 		}
 		else if (warden_iswarden(client))
 		{
@@ -253,14 +270,14 @@ public Action SetSuicideBomber(int client,int args)
 				if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
 				{
 					char EventDay[64];
-					GetEventDay(EventDay);
+					GetEventDayName(EventDay);
 					
 					if(StrEqual(EventDay, "none", false))
 					{
 						if (g_iCoolDown == 0)
 						{
 							StartNextRound();
-							if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Suicide Bomber was started by warden %L", client);
+							if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Suicide Bomber was started by warden %L", client);
 						}
 						else CPrintToChat(client, "%t %t", "suicidebomber_tag" , "suicidebomber_wait", g_iCoolDown);
 					}
@@ -277,14 +294,14 @@ public Action SetSuicideBomber(int client,int args)
 				if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
 				{
 					char EventDay[64];
-					GetEventDay(EventDay);
+					GetEventDayName(EventDay);
 					
 					if(StrEqual(EventDay, "none", false))
 					{
 						if (g_iCoolDown == 0)
 						{
 							StartNextRound();
-							if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Suicide Bomber was started by admin %L", client);
+							if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Suicide Bomber was started by admin %L", client);
 						}
 						else CPrintToChat(client, "%t %t", "suicidebomber_tag" , "suicidebomber_wait", g_iCoolDown);
 					}
@@ -306,14 +323,14 @@ public Action VoteSuicideBomber(int client,int args)
 	char steamid[64];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
 	
-	if (gc_bPlugin.BoolValue && canSet)
+	if (gc_bPlugin.BoolValue)
 	{
 		if (gc_bVote.BoolValue)
 		{
 			if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
 			{
 				char EventDay[64];
-				GetEventDay(EventDay);
+				GetEventDayName(EventDay);
 				
 				if(StrEqual(EventDay, "none", false))
 				{	
@@ -329,7 +346,7 @@ public Action VoteSuicideBomber(int client,int args)
 	if (g_iVoteCount > playercount)
 	{
 		StartNextRound();
-		if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Suicide Bomber was started by voting");
+		if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Suicide Bomber was started by voting");
 	}
 	else CPrintToChatAll("%t %t", "suicidebomber_tag" , "suicidebomber_need", Missing, client);
 						}
@@ -353,7 +370,13 @@ void StartNextRound()
 	StartSuicideBomber = true;
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iVoteCount = 0;
-	SetEventDay("Suicide Bomber");
+	char buffer[32];
+	Format(buffer, sizeof(buffer), "%T", "suicidebomber_name", LANG_SERVER);
+	SetEventDayName(buffer);
+	SetEventDayPlanned(true);
+	
+	g_iOldRoundTime = g_iGetRoundTime.IntValue; //save original round time
+	g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
 	
 	CPrintToChatAll("%t %t", "suicidebomber_tag" , "suicidebomber_next");
 	PrintHintTextToAll("%t", "suicidebomber_next_nc");
@@ -361,15 +384,16 @@ void StartNextRound()
 
 //Round start
 
-public void RoundStart(Handle event, char[] name, bool dontBroadcast)
+public void Event_RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
-	canSet = true;
 	if (StartSuicideBomber || IsSuicideBomber)
 	{
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("sm_menu_enable", 0);
 		SetCvar("sm_weapons_enable", 0);
+		SetEventDayPlanned(false);
+		SetEventDayRunning(true);
 		
 		g_iRound++;
 		IsSuicideBomber = true;
@@ -381,7 +405,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 				{
 					CreateInfoPanel(client);
 					
-					StripAllWeapons(client);
+					StripAllPlayerWeapons(client);
 					ClientSprintStatus[client] = 0;
 					SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
 					
@@ -402,7 +426,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 	else
 	{
 		char EventDay[64];
-		GetEventDay(EventDay);
+		GetEventDayName(EventDay);
 		
 		if(!StrEqual(EventDay, "none", false))
 		{
@@ -439,14 +463,13 @@ stock void CreateInfoPanel(int client)
 	DrawPanelText(SuicideBomberMenu, "-----------------------------------");
 	Format(info, sizeof(info), "%T", "warden_close", client);
 	DrawPanelItem(SuicideBomberMenu, info); 
-	SendPanelToClient(SuicideBomberMenu, client, NullHandler, 20);
+	SendPanelToClient(SuicideBomberMenu, client, Handler_NullCancel, 20);
 }
 
 //Round End
 
-public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
+public void Event_RoundEnd(Handle event, char[] name, bool dontBroadcast)
 {
-	canSet = false;
 	int winner = GetEventInt(event, "winner");
 	
 	if (IsSuicideBomber)
@@ -474,15 +497,14 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 			SetCvar("sm_warden_enable", 1);
 			SetCvar("sm_menu_enable", 1);
 			g_iGetRoundTime.IntValue = g_iOldRoundTime;
-			SetEventDay("none");
+			SetEventDayName("none");
+			SetEventDayRunning(false);
 			CPrintToChatAll("%t %t", "suicidebomber_tag" , "suicidebomber_end");
 		}
 	}
 	if (StartSuicideBomber)
 	{
 		LoopClients(i) CreateInfoPanel(i);
-		g_iOldRoundTime = g_iGetRoundTime.IntValue;
-		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;
 		
 		CPrintToChatAll("%t %t", "suicidebomber_tag" , "suicidebomber_next");
 		PrintHintTextToAll("%t", "suicidebomber_next_nc");
@@ -512,13 +534,11 @@ public void OnMapEnd()
 	IsSuicideBomber = false;
 	StartSuicideBomber = false;
 	BombActive = false;
-	canSet = true;
 	delete FreezeTimer;
 	FreezeTimer = null;
 	g_iVoteCount = 0;
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0';
-	SetEventDay("none");
 }
 
 //Start Timer
@@ -554,7 +574,7 @@ public Action StartTimer(Handle timer)
 				SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
 				PrintHintText(client,"%t", "suicidebomber_start_nc");
 			}
-			if(gc_bOverlays.BoolValue) CreateTimer( 0.0, ShowOverlayStart, client);
+			if(gc_bOverlays.BoolValue) ShowOverlay(client, g_sOverlayStartPath, 2.0);
 			
 			if(gc_bSounds.BoolValue)
 			{

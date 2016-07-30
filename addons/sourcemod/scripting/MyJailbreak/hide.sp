@@ -1,12 +1,31 @@
-//includes
-#include <cstrike>
-#include <sourcemod>
-#include <colors>
-#include <warden>
-#include <emitsoundany>
-#include <smartjaildoors>
-#include <autoexecconfig>
-#include <myjailbreak>
+/*
+ * MyJailbreak - Hide in the Dark Event Day Plugin.
+ * by: shanapu
+ * https://github.com/shanapu/MyJailbreak/
+ *
+ * This file is part of the MyJailbreak SourceMod Plugin.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, version 3.0, as published by the
+ * Free Software Foundation.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+
+/******************************************************************************
+                   STARTUP
+******************************************************************************/
+
+
+//Includes
+#include <myjailbreak> //... all other includes in myjailbreak.inc
 
 //Compiler Options
 #pragma semicolon 1
@@ -15,9 +34,8 @@
 //Booleans
 bool IsHide;
 bool StartHide;
-bool canSet;
 
-//ConVars
+//Console Variables
 ConVar gc_bPlugin;
 ConVar gc_bSetW;
 ConVar gc_bSetA;
@@ -59,6 +77,7 @@ char g_sCustomCommand[64];
 char g_sEventsLogFile[PLATFORM_MAX_PATH];
 char g_sSkyName[256];
 char g_sAdminFlag[32];
+char g_sOverlayStartPath[256];
 
 public Plugin myinfo = {
 	name = "MyJailbreak - HideInTheDark",
@@ -105,8 +124,8 @@ public void OnPluginStart()
 	AutoExecConfig_CleanFile();
 	
 	//Hooks
-	HookEvent("round_start", RoundStart);
-	HookEvent("round_end", RoundEnd);
+	HookEvent("round_start", Event_RoundStart);
+	HookEvent("round_end", Event_RoundEnd);
 	HookEvent("tagrenade_detonate", OnTagrenadeDetonate);
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
@@ -117,7 +136,7 @@ public void OnPluginStart()
 	g_iGetRoundTime = FindConVar("mp_roundtime");
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
-	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
+	gc_sOverlayStartPath.GetString(g_sOverlayStartPath , sizeof(g_sOverlayStartPath));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 	gc_sCustomCommand.GetString(g_sCustomCommand , sizeof(g_sCustomCommand));
 	gc_sAdminFlag.GetString(g_sAdminFlag , sizeof(g_sAdminFlag));
@@ -131,8 +150,8 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 {
 	if(convar == gc_sOverlayStartPath)
 	{
-		strcopy(g_sOverlayStart, sizeof(g_sOverlayStart), newValue);
-		if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStart);
+		strcopy(g_sOverlayStartPath, sizeof(g_sOverlayStartPath), newValue);
+		if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
 	}
 	else if(convar == gc_sSoundStartPath)
 	{
@@ -161,14 +180,13 @@ public void OnMapStart()
 	g_iRound = 0;
 	IsHide = false;
 	StartHide = false;
-	canSet = true;
 	
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
 	g_sOldSkyName = FindConVar("sv_skyname");
 	g_sOldSkyName.GetString(g_sSkyName, sizeof(g_sSkyName));
 	
-	if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStart);
+	if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
 	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
 	
 	for(int client=1; client <= MaxClients; client++) g_iTA[client] = 0;
@@ -191,12 +209,12 @@ public void OnConfigsExecuted()
 
 public Action SetHide(int client,int args)
 {
-	if (gc_bPlugin.BoolValue && canSet)	
+	if (gc_bPlugin.BoolValue)	
 	{
 		if(client == 0)
 		{
 			StartNextRound();
-			if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Hide was started by groupvoting");
+			if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Hide was started by groupvoting");
 		}
 		else if (warden_iswarden(client))
 		{
@@ -205,14 +223,14 @@ public Action SetHide(int client,int args)
 				if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
 				{
 					char EventDay[64];
-					GetEventDay(EventDay);
+					GetEventDayName(EventDay);
 					
 					if(StrEqual(EventDay, "none", false))
 					{
 						if (g_iCoolDown == 0)
 						{
 							StartNextRound();
-							if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Hide was started by warden %L", client);
+							if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Hide was started by warden %L", client);
 						}
 						else CPrintToChat(client, "%t %t", "hide_tag" , "hide_wait", g_iCoolDown);
 					}
@@ -229,14 +247,14 @@ public Action SetHide(int client,int args)
 				if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
 				{
 					char EventDay[64];
-					GetEventDay(EventDay);
+					GetEventDayName(EventDay);
 					
 					if(StrEqual(EventDay, "none", false))
 					{
 						if (g_iCoolDown == 0)
 						{
 							StartNextRound();
-							if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Hide was started by admin %L", client);
+							if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Hide was started by admin %L", client);
 						}
 						else CPrintToChat(client, "%t %t", "hide_tag" , "hide_wait", g_iCoolDown);
 					}
@@ -258,14 +276,14 @@ public Action VoteHide(int client,int args)
 	char steamid[64];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
 	
-	if (gc_bPlugin.BoolValue && canSet)
+	if (gc_bPlugin.BoolValue)
 	{
 		if (gc_bVote.BoolValue)
 		{
 			if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
 			{
 				char EventDay[64];
-				GetEventDay(EventDay);
+				GetEventDayName(EventDay);
 				
 				if(StrEqual(EventDay, "none", false))
 				{
@@ -281,7 +299,7 @@ public Action VoteHide(int client,int args)
 							if (g_iVoteCount > playercount)
 							{
 								StartNextRound();
-								if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Hide was started by voting");
+								if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Hide was started by voting");
 							}
 							else CPrintToChatAll("%t %t", "hide_tag" , "hide_need", Missing, client);
 						}
@@ -305,7 +323,13 @@ void StartNextRound()
 	StartHide = true;
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	
-	SetEventDay("hide");
+	char buffer[32];
+	Format(buffer, sizeof(buffer), "%T", "hide_name", LANG_SERVER);
+	SetEventDayName(buffer);
+	SetEventDayPlanned(true);
+	
+	g_iOldRoundTime = g_iGetRoundTime.IntValue; //save original round time
+	g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
 	
 	g_iVoteCount = 0;
 	CPrintToChatAll("%t %t", "hide_tag" , "hide_next");
@@ -314,9 +338,8 @@ void StartNextRound()
 
 //Round start
 
-public void RoundStart(Handle event, char[] name, bool dontBroadcast)
+public void Event_RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
-	canSet = true;
 	if (StartHide || IsHide)
 	{
 		SetCvar("sm_hosties_lr", 0);
@@ -325,6 +348,8 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		SetCvar("sm_weapons_t", 0);
 		SetCvar("sm_weapons_ct", 0);
 		SetCvar("sm_menu_enable", 0);
+		SetEventDayPlanned(false);
+		SetEventDayRunning(true);
 		IsHide = true;
 		g_iRound++;
 		StartHide = false;
@@ -339,7 +364,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 				
 				if (GetClientTeam(client) == CS_TEAM_CT)
 				{
-					StripAllWeapons(client);
+					StripAllPlayerWeapons(client);
 					SetEntityMoveType(client, MOVETYPE_NONE);
 					GivePlayerItem(client, "weapon_tagrenade");
 					SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
@@ -347,7 +372,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 				}
 				if (GetClientTeam(client) == CS_TEAM_T)
 				{
-					StripAllWeapons(client);
+					StripAllPlayerWeapons(client);
 					SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
 					GivePlayerItem(client, "weapon_knife");
 				}
@@ -359,7 +384,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 	else
 	{
 		char EventDay[64];
-		GetEventDay(EventDay);
+		GetEventDayName(EventDay);
 		
 		if(!StrEqual(EventDay, "none", false))
 		{
@@ -396,7 +421,7 @@ stock void CreateInfoPanel(int client)
 	DrawPanelText(HideMenu, "-----------------------------------");
 	Format(info, sizeof(info), "%T", "warden_close", client);
 	DrawPanelItem(HideMenu, info); 
-	SendPanelToClient(HideMenu, client, NullHandler, 20);
+	SendPanelToClient(HideMenu, client, Handler_NullCancel, 20);
 }
 //Start Timer
 
@@ -441,7 +466,7 @@ public Action StartTimer(Handle timer)
 					SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 0.9);
 				}
 			}
-			if(gc_bOverlays.BoolValue) CreateTimer( 0.0, ShowOverlayStart, client);
+			if(gc_bOverlays.BoolValue) ShowOverlay(client, g_sOverlayStartPath, 2.0);
 			if(gc_bSounds.BoolValue)
 			{
 				EmitSoundToAllAny(g_sSoundStartPath);
@@ -456,9 +481,8 @@ public Action StartTimer(Handle timer)
 
 //Round End
 
-public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
+public void Event_RoundEnd(Handle event, char[] name, bool dontBroadcast)
 {
-	canSet = false;
 	int winner = GetEventInt(event, "winner");
 	
 	if (IsHide)
@@ -487,7 +511,9 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 			SetCvar("sm_warden_enable", 1);
 			SetCvar("sm_menu_enable", 1);
 			g_iGetRoundTime.IntValue = g_iOldRoundTime;
-			SetEventDay("none");
+			SetEventDayName("none");
+			SetEventDayRunning(false);
+			SetEventDayRunning(false);
 			CPrintToChatAll("%t %t", "hide_tag" , "hide_end");
 			
 			FogOff();
@@ -496,8 +522,6 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 	if (StartHide)
 	{
 		LoopClients(i) CreateInfoPanel(i);
-		g_iOldRoundTime = g_iGetRoundTime.IntValue;
-		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;
 		
 		CPrintToChatAll("%t %t", "hide_tag" , "hide_next");
 		PrintHintTextToAll("%t", "hide_next_nc");
@@ -524,12 +548,10 @@ public void OnMapEnd()
 {
 	IsHide = false;
 	StartHide = false;
-	canSet = true;
 	delete FreezeTimer;
 	g_iVoteCount = 0;
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0';
-	SetEventDay("none");
 }
 
 //Knife only for Terrorists

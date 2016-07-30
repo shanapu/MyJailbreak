@@ -233,6 +233,7 @@
 
 	"menu_war"
 	{
+		"de"		"Krieg"
 		"ru"		"Война"
 		"pl"		"Wojna"
 		"en"		"War"
@@ -247,9 +248,9 @@
 
 	"menu_zeus"
 	{
-		"ru"		"Зевс"
+		"ru"		"День зевса"
 		"pl"		"Zeus"
-		"en"		"Zeus"
+		"en"		"Zeus Day"
 	}
 
 	"menu_zombie"
@@ -288,9 +289,9 @@
 
 	"menu_knifefight"
 	{
+		"en"		"Knife Fight"
 		"ru"		"Битва на ножах"
 		"pl"		"KNIFE"
-		"en"		"KnifeFight"
 	}
 
 	"menu_hebattle"
@@ -397,6 +398,21 @@
 		"#format"   "{1:s},{2:i},{3:i}"
 		"ru"		"Голосование закончилось {2} голосов было. {green}{1} {default}победил с {3} голосами."
 		"en"		"The vote has ended with {2} vote yet. {green}{1} {default}won with {3} votes."
+	}
+
+	"menu_playerfreeday"
+	{
+		"en"		"Give a Player a Freeday"
+	}
+
+	"menu_teamgamesmenu"
+	{
+		"en"		"Team Games - Menu"
+	}
+
+	"menu_teamgamesgames"
+	{
+		"en"		"Team Games - Games"
 	}
 
 	"menu_minplayer"

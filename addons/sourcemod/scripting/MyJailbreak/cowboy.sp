@@ -1,12 +1,31 @@
-//includes
-#include <cstrike>
-#include <sourcemod>
-#include <smartjaildoors>
-#include <warden>
-#include <emitsoundany>
-#include <colors>
-#include <autoexecconfig>
-#include <myjailbreak>
+/*
+ * MyJailbreak - Cowboy Event Day Plugin.
+ * by: shanapu
+ * https://github.com/shanapu/MyJailbreak/
+ *
+ * This file is part of the MyJailbreak SourceMod Plugin.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, version 3.0, as published by the
+ * Free Software Foundation.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+
+/******************************************************************************
+                   STARTUP
+******************************************************************************/
+
+
+//Includes
+#include <myjailbreak> //... all other includes in myjailbreak.inc
 
 //Compiler Options
 #pragma semicolon 1
@@ -15,9 +34,8 @@
 //Booleans
 bool IsCowBoy; 
 bool StartCowBoy; 
-bool canSet;
 
-//ConVars
+//Console Variables
 ConVar gc_bPlugin;
 ConVar gc_bSetW;
 ConVar gc_iCooldownStart;
@@ -38,6 +56,7 @@ ConVar gc_sSoundStartPath;
 ConVar gc_iRounds;
 ConVar gc_sCustomCommand;
 ConVar gc_sAdminFlag;
+ConVar gc_bAllowLR;
 
 //Integers
 int g_iOldRoundTime;
@@ -61,6 +80,7 @@ char g_sWeapon[32];
 char g_sCustomCommand[64];
 char g_sEventsLogFile[PLATFORM_MAX_PATH];
 char g_sAdminFlag[32];
+char g_sOverlayStartPath[256];
 
 public Plugin myinfo = {
 	name = "MyJailbreak - CowBoy",
@@ -105,13 +125,14 @@ public void OnPluginStart()
 	gc_bSoundsHit = AutoExecConfig_CreateConVar("sm_cowboy_sounds_bling", "1", "0 - disabled, 1 - enable bling - hitsound sounds ", _, true, 0.1, true, 1.0);
 	gc_bOverlays = AutoExecConfig_CreateConVar("sm_cowboy_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true,  0.0, true, 1.0);
 	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_cowboy_overlays_start", "overlays/MyJailbreak/start" , "Path to the start Overlay DONT TYPE .vmt or .vft");
+	gc_bAllowLR = AutoExecConfig_CreateConVar("sm_cowboy_allow_lr", "0" , "0 - disabled, 1 - enable LR for last round and end eventday", _, true, 0.0, true, 1.0);
 	
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
 	
 	//Hooks
-	HookEvent("round_start", RoundStart);
-	HookEvent("round_end", RoundEnd);
+	HookEvent("round_start", Event_RoundStart);
+	HookEvent("round_end", Event_RoundEnd);
 	HookEvent("player_hurt", EventHurt);
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
@@ -122,7 +143,7 @@ public void OnPluginStart()
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	g_iGetRoundTime = FindConVar("mp_roundtime");
-	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
+	gc_sOverlayStartPath.GetString(g_sOverlayStartPath , sizeof(g_sOverlayStartPath));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 	gc_sCustomCommand.GetString(g_sCustomCommand , sizeof(g_sCustomCommand));
 	gc_sAdminFlag.GetString(g_sAdminFlag , sizeof(g_sAdminFlag));
@@ -136,8 +157,8 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 {
 	if(convar == gc_sOverlayStartPath)
 	{
-		strcopy(g_sOverlayStart, sizeof(g_sOverlayStart), newValue);
-		if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStart);
+		strcopy(g_sOverlayStartPath, sizeof(g_sOverlayStartPath), newValue);
+		if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
 	}
 	else if(convar == gc_sSoundStartPath)
 	{
@@ -166,13 +187,12 @@ public void OnMapStart()
 	g_iRound = 0;
 	IsCowBoy = false;
 	StartCowBoy = false;
-	canSet = true;
 	
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	
 	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);    //Add sound to download and precache table
-	if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStart);    //Add overlay to download and precache table
+	if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);    //Add overlay to download and precache table
 }
 
 public void OnConfigsExecuted()
@@ -199,12 +219,12 @@ public void OnClientPutInServer(int client)
 
 public Action SetCowBoy(int client,int args)
 {
-	if (gc_bPlugin.BoolValue && canSet)
+	if (gc_bPlugin.BoolValue)
 	{
 		if(client == 0)
 		{
 			StartNextRound();
-			if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event CowBoy was started by groupvoting");
+			if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event CowBoy was started by groupvoting");
 		}
 		else if (warden_iswarden(client))
 		{
@@ -213,14 +233,14 @@ public Action SetCowBoy(int client,int args)
 				if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
 				{
 					char EventDay[64];
-					GetEventDay(EventDay);
+					GetEventDayName(EventDay);
 					
 					if(StrEqual(EventDay, "none", false))
 					{
 						if (g_iCoolDown == 0)
 						{
 							StartNextRound();
-							if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event CowBoy was started by warden %L", client);
+							if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event CowBoy was started by warden %L", client);
 						}
 						else CPrintToChat(client, "%t %t", "cowboy_tag" , "cowboy_wait", g_iCoolDown);
 					}
@@ -237,14 +257,14 @@ public Action SetCowBoy(int client,int args)
 				if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
 				{
 					char EventDay[64];
-					GetEventDay(EventDay);
+					GetEventDayName(EventDay);
 					
 					if(StrEqual(EventDay, "none", false))
 					{
 						if (g_iCoolDown == 0)
 						{
 							StartNextRound();
-							if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event CowBoy was started by admin %L", client);
+							if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event CowBoy was started by admin %L", client);
 						}
 						else CPrintToChat(client, "%t %t", "cowboy_tag" , "cowboy_wait", g_iCoolDown);
 					}
@@ -267,14 +287,14 @@ public Action VoteCowBoy(int client,int args)
 	char steamid[64];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
 	
-	if (gc_bPlugin.BoolValue && canSet)
+	if (gc_bPlugin.BoolValue)
 	{	
 		if (gc_bVote.BoolValue)
 		{
 			if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
 			{
 				char EventDay[64];
-				GetEventDay(EventDay);
+				GetEventDayName(EventDay);
 				
 				if(StrEqual(EventDay, "none", false))
 				{
@@ -290,7 +310,7 @@ public Action VoteCowBoy(int client,int args)
 							if (g_iVoteCount > playercount)
 							{
 								StartNextRound();
-								if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event CowBoy was started by voting");
+								if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event CowBoy was started by voting");
 							}
 							else CPrintToChatAll("%t %t", "cowboy_tag" , "cowboy_need", Missing, client);
 						}
@@ -314,8 +334,13 @@ void StartNextRound()
 	StartCowBoy = true;
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iVoteCount = 0;
+	char buffer[32];
+	Format(buffer, sizeof(buffer), "%T", "cowboy_name", LANG_SERVER);
+	SetEventDayName(buffer);
+	SetEventDayPlanned(true);
 	
-	SetEventDay("cowboy");
+	g_iOldRoundTime = g_iGetRoundTime.IntValue; //save original round time
+	g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
 	
 	CPrintToChatAll("%t %t", "cowboy_tag" , "cowboy_next");
 	PrintHintTextToAll("%t", "cowboy_next_nc");
@@ -323,9 +348,8 @@ void StartNextRound()
 
 //Round start
 
-public void RoundStart(Handle event, char[] name, bool dontBroadcast)
+public void Event_RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
-	canSet = true;
 	if (StartCowBoy || IsCowBoy)
 	{
 		SetCvar("sm_hosties_lr", 0);
@@ -334,6 +358,8 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		SetCvar("sv_infinite_ammo", 2);
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("mp_teammates_are_enemies", 1);
+		SetEventDayPlanned(false);
+		SetEventDayRunning(true);
 		
 		IsCowBoy = true;
 		
@@ -370,18 +396,28 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 				LoopClients(client)
 				{
 					CreateInfoPanel(client);
-					StripAllWeapons(client);
+					StripAllPlayerWeapons(client);
 					GivePlayerItem(client, g_sWeapon);
 					SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
 					SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 					
-					if (!gc_bSpawnCell.BoolValue)
+					if (!gc_bSpawnCell.BoolValue || (gc_bSpawnCell.BoolValue && !SJD_IsCurrentMapConfigured)) //spawn Terrors to CT Spawn 
 					{
 						TeleportEntity(client, g_fPos, NULL_VECTOR, NULL_VECTOR);
 					}
 				}
 				g_iTruceTime--;
 				TruceTimer = CreateTimer(1.0, StartTimer, _, TIMER_REPEAT);
+				
+				//enable lr on last round
+				if (gc_bAllowLR.BoolValue)
+				{
+					if (g_iRound == g_iMaxRound)
+					{
+						SetCvar("sm_hosties_lr", 1);
+					}
+				}
+				
 				CPrintToChatAll("%t %t", "cowboy_tag" ,"cowboy_rounds", g_iRound, g_iMaxRound);
 			}
 		}
@@ -389,7 +425,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 	else
 	{
 		char EventDay[64];
-		GetEventDay(EventDay);
+		GetEventDayName(EventDay);
 	
 		if(!StrEqual(EventDay, "none", false))
 		{
@@ -397,6 +433,43 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		}
 		else if (g_iCoolDown > 0) g_iCoolDown--;
 	}
+}
+
+public int OnAvailableLR(int Announced)
+{
+	if (IsCowBoy && gc_bAllowLR.BoolValue)
+	{
+		LoopClients(client)
+		{
+			SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
+			StripAllPlayerWeapons(client);
+			if (GetClientTeam(client) == CS_TEAM_CT)
+			{
+				FakeClientCommand(client, "sm_guns");
+			}
+			GivePlayerItem(client, "weapon_knife");
+		}
+		
+		delete TruceTimer;
+		if (g_iRound == g_iMaxRound)
+		{
+			IsCowBoy = false;
+			StartCowBoy = false;
+			g_iRound = 0;
+			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
+			SetCvar("sm_hosties_lr", 1);
+			SetCvar("sm_weapons_enable", 1);
+			SetCvar("sv_infinite_ammo", 0);
+			SetCvar("mp_teammates_are_enemies", 0);
+			SetCvar("sm_menu_enable", 1);
+			SetCvar("sm_warden_enable", 1);
+			g_iGetRoundTime.IntValue = g_iOldRoundTime;
+			SetEventDayName("none");
+			SetEventDayRunning(false);
+			CPrintToChatAll("%t %t", "cowboy_tag" , "cowboy_end");
+		}
+	}
+
 }
 
 stock void CreateInfoPanel(int client)
@@ -426,7 +499,7 @@ stock void CreateInfoPanel(int client)
 	DrawPanelText(CowBoyMenu, "-----------------------------------");
 	Format(info, sizeof(info), "%T", "warden_close", client);
 	DrawPanelItem(CowBoyMenu, info); 
-	SendPanelToClient(CowBoyMenu, client, NullHandler, 20);
+	SendPanelToClient(CowBoyMenu, client, Handler_NullCancel, 20);
 }
 
 //Start Timer
@@ -451,7 +524,7 @@ public Action StartTimer(Handle timer)
 		{
 			SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
 			PrintHintText(client,"%t", "cowboy_start_nc");
-			if(gc_bOverlays.BoolValue) CreateTimer( 0.0, ShowOverlayStart, client);
+			if(gc_bOverlays.BoolValue) ShowOverlay(client, g_sOverlayStartPath, 2.0);
 			if(gc_bSounds.BoolValue)
 			{
 				EmitSoundToAllAny(g_sSoundStartPath);
@@ -466,9 +539,8 @@ public Action StartTimer(Handle timer)
 
 //Round End
 
-public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
+public void Event_RoundEnd(Handle event, char[] name, bool dontBroadcast)
 {
-	canSet = false;
 	int winner = GetEventInt(event, "winner");
 	
 	if (IsCowBoy)
@@ -494,15 +566,14 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 			SetCvar("sm_menu_enable", 1);
 			SetCvar("sm_warden_enable", 1);
 			g_iGetRoundTime.IntValue = g_iOldRoundTime;
-			SetEventDay("none");
+			SetEventDayName("none");
+			SetEventDayRunning(false);
 			CPrintToChatAll("%t %t", "cowboy_tag" , "cowboy_end");
 		}
 	}
 	if (StartCowBoy)
 	{
 		LoopClients(i) CreateInfoPanel(i);
-		g_iOldRoundTime = g_iGetRoundTime.IntValue;
-		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;
 		
 		CPrintToChatAll("%t %t", "cowboy_tag" , "cowboy_next");
 		PrintHintTextToAll("%t", "cowboy_next_nc");
@@ -515,12 +586,10 @@ public void OnMapEnd()
 {
 	IsCowBoy = false;
 	StartCowBoy = false;
-	canSet = true;
 	delete TruceTimer;
 	g_iVoteCount = 0;
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0';
-	SetEventDay("none");
 }
 
 //Scout only

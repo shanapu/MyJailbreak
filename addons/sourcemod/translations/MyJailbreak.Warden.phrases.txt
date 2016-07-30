@@ -23,6 +23,24 @@
 		"da"		"{purple}{1}{default} er nu warden!"
 	}
 
+	"warden_dooropen_unavailable"
+	{
+		"cze"		"{darkred}Tato mapa nepodporuje vzdálené otevírání dveří. {default}Musíš je {purple}otevřít ručně!"
+		"en"		"{darkred}This map doesn't support remote door opening. {default}You {purple}must manually open the doors!"
+	}
+
+	"warden_doorclose_unavailable"
+	{
+		"cze"		"{darkred}Tato mapa nepodporuje vzdálené zavírání dveří. {default}Musíš je {purple}zavřít ručně!"
+		"en"		"{darkred}This map doesn't support remote door closing. {default}You {purple}must manually close the doors!"
+	}
+
+	"warden_openauto_unavailable"
+	{
+		"cze"		"{darkred}Tato mapa nepodporuje automatické otevírání dveří. {default}Warden je musí {purple}otevřít ručně!"
+		"en"		"{darkred}This map doesn't support automatic door opening. {default}The Warden {purple}must manually open the doors!"
+	}
+
 	"warden_playerdead"
 	{
 		"ru"		"только {purple}живые игроки{default} могут стать командиром."
@@ -168,11 +186,11 @@
 	"warden_removed_nc"
 	{
 		"#format"   "{1:N},{2:N}"
+		"pt"		"O Administrador do: {1} o diretor se aposentou cedo: {2}"
 		"ru"		"Админ: {1} уволил командира: {2}"
 		"pl"		"Admin: {1} zwolnil Wardena: {2}"
 		"de"		"Admin {1} hat Warden {2} seines Amtes enthoben."
 		"sv"		"Admin: {1} avskedade Fängelsedirektören: {2}"
-		"pt"		"O Administrador do: {{1} o diretor se aposentou cedo: {2}"
 		"es"		"Administrador: {1} ha prejubilado al AlcÃ¡ide: {2}"
 		"en"		"Admin: {1} has Fired the Warden: {2}"
 		"da"		"Admin: {1} har fyret Warden: {2}"
@@ -204,12 +222,12 @@
 	{
 		"#format"   "{1:N},{2:N}"
 		"ru"		"Админ:{purple}{1}{default} уволил командира: {purple}{2}"
-		"pl"		"Admin: {purple}{1}{default} zwolnil Wardena:  {purple}{2}"
-		"de"		"Admin: {purple}{1}{default} hat Warden  {purple}{2}{default} seines Amtes enthoben."
-		"sv"		"Admin: {purple}{1}{default} avskedade Fängelsedirektören:  {purple}{2}"
-		"pt"		"O Administrador do: {purple}{1}{default} o diretor se aposentou cedo:  {purple}{2}"
-		"es"		"Administrador: {purple}{1}{default} ha prejubilado al AlcÃ¡ide:  {purple}{2}"
-		"en"		"Admin: {purple}{1}{default} has Fired the Warden:  {purple}{2}"
+		"pl"		"Admin: {purple}{1}{default} zwolnil Wardena: {purple}{2}"
+		"de"		"Admin: {purple}{1}{default} hat Warden {purple}{2}{default} seines Amtes enthoben."
+		"sv"		"Admin: {purple}{1}{default} avskedade Fängelsedirektören: {purple}{2}"
+		"pt"		"O Administrador do: {purple}{1}{default} o diretor se aposentou cedo: {purple}{2}"
+		"es"		"Administrador: {purple}{1}{default} ha prejubilado al AlcÃ¡ide: {purple}{2}"
+		"en"		"Admin: {purple}{1}{default} has Fired the Warden: {purple}{2}"
 		"da"		"Admin: {purple}{1}{default} har fyret Warden: {purple}{2}"
 	}
 
@@ -845,8 +863,8 @@
 	"warden_mute"
 	{
 		"#format"   "{1:N},{2:N},{3:i}"
-		"ru"		"{2] отключен микрофон командиром {1} на {3} секнуд"
-		"pl"		"{2} Zmutowany przez Wardena{1} na {3} sekund"
+		"ru"		"{2} отключен микрофон командиром {1} на {3} секнуд"
+		"pl"		"{2} Zmutowany przez Wardena {1} na {3} sekund"
 		"de"		"{2} wurde vom Warden {1} für {3} Sekunden gemutet"
 		"en"		"{2} was Muted by the Warden {1} for {3} seconds!"
 	}
@@ -930,10 +948,10 @@
 	"warden_math_correct"
 	{
 		"#format"   "{1:N},{2:i}"
+		"pl"		"{1} udzielil{green}poprawnej odpowiedzi!{default} Odpowiedz to {purple}{2}"
 		"en"		"{1} has given a{green} correct answer!{default} The Answer was {purple}{2}!"
 		"it"		"{1} ha dato {green} la risposta corretta!{default} La risposta era {purple}{2}"
 		"ru"		"{1} дал {green} верный ответ!{default} Ответ был {purple}{2}"
-		"pl"		"{1} udzielil{green}poprawnej odpowiedzi!{default} Odpowiedz to {purple}{2}"
 		"de"		"{1} hat die{green} richtige Antwort!{default} Die Antwort war {purple}{2}"
 	}
 
@@ -1223,6 +1241,16 @@
 		"ru"		"Осталось"
 		"de"		"verbleibend"
 		"en"		"Remaining"
+	}
+
+	"warden_menu_muteall"
+	{
+		"en"		"Mute all Prisoners"
+	}
+
+	"warden_menu_unmuteall"
+	{
+		"en"		"Unmute all Prisoners"
 	}
 
 }

@@ -23,8 +23,8 @@
 
 	"freeday_info_line1"
 	{
+		"pl"		"Jest Freeday!"
 		"ru"		"Это фридей!"
-		"pl"		"Jest  Freeday!"
 		"de"		"Es ist Freeday"
 		"en"		"It's a Freeday!"
 	}
@@ -89,13 +89,19 @@
 		"en"		"It's a Freeday!"
 	}
 
+	"freeday_name"
+	{
+		"en"		"Freeday"
+		"ru"		"Фридей"
+	}
+
 	"freeday_need"
 	{
 		"#format"   "{1:i},{2:N}"
+		"pl"		"{purple}{2}{default} zaglosowal. pozostalo {purple}{1}{default} glosow do {darkred}Freeday{default}"
 		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} vote(s) required to play {darkred}Freeday."
 		"ru"		"{purple}{2}{default} проголосовал. {purple}{1}{default} голосов осталось до {darkred}Фридея"
-		"pl"		"{purple}{2}{default} zaglosowal. pozostalo {purple}{1}{default} glosow do {darkred}Catch{default} Freeday"
-		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}krieg{default} beginnt"
+		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}FreeDay{default} beginnt"
 		"da"		"{purple}{2}{default} har afstemt. {purple}{1}{default} afstemninger tilbage til {darkred}Freeday"
 	}
 

@@ -1,34 +1,67 @@
+/*
+ * MyJailbreak - Ratio Plugin.
+ * by: shanapu
+ * https://github.com/shanapu/MyJailbreak/
+ *
+ * This file is part of the MyJailbreak SourceMod Plugin.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, version 3.0, as published by the
+ * Free Software Foundation.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+
+/******************************************************************************
+                   STARTUP
+******************************************************************************/
+
+
 //Includes
-#include <sourcemod>
-#include <sdktools>
+#include <myjailbreak> //... all other includes in myjailbreak.inc
 #include <clientprefs>
-#include <colors>
-#include <cstrike>
-#include <autoexecconfig>
-#include <myjailbreak>
 
 //Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
 
-//ConVars
-//ConVar gc_bPlugin;
-ConVar gc_iPrisonerPerGuard;
+
+//Console Variables
+ConVar gc_fPrisonerPerGuard;
 ConVar gc_sCustomCommand;
 ConVar gc_sAdminFlag;
 ConVar gc_bAdsVIP;
 ConVar gc_bVIPQueue;
+ConVar gc_iJoinMode;
+ConVar gc_iQuestionTimes;
+
 
 //Handles
 Handle g_aGuardQueue;
 Handle g_sCookieCTBan;
 Handle ViewQueueMenu;
 
+
+//Integer
+int randomanswer[MAXPLAYERS+1];
+int questiontimes[MAXPLAYERS+1];
+
+
 //Strings
 char g_sRestrictedSound[32] = "buttons/button11.wav";
+char g_sRightAnswerSound[32] = "buttons/button14.wav";
 char g_sCustomCommand[32];
 char g_sAdminFlag[32];
 
+
+//Info
 public Plugin myinfo = {
 	name = "MyJailbreak - Ratio",
 	author = "shanapu, Addicted",
@@ -37,52 +70,67 @@ public Plugin myinfo = {
 	url = URL_LINK
 };
 
+
+//Start
 public void OnPluginStart()
 {
 	//Translation
 	LoadTranslations("MyJailbreak.Ratio.phrases");
 	LoadTranslations("MyJailbreak.Warden.phrases");
 	
+	
 	//Client commands
-	RegConsoleCmd("sm_guard", OnGuardQueue,"Allows the prisoners to queue to CT");
-	RegConsoleCmd("sm_viewqueue", ViewGuardQueue,"Allows a player to show queue to CT");
-	RegConsoleCmd("sm_vq", ViewGuardQueue,"Allows a player to show queue to CT");
-	RegConsoleCmd("sm_leavequeue", LeaveQueue,"Allows a player to leave queue to CT");
-	RegConsoleCmd("sm_lq", LeaveQueue,"Allows a player to leave queue to CT");
+	RegConsoleCmd("sm_guard", Command_JoinGuardQueue,"Allows the prisoners to queue to CT");
+	RegConsoleCmd("sm_viewqueue", Command_ViewGuardQueue,"Allows a player to show queue to CT");
+	RegConsoleCmd("sm_vq", Command_ViewGuardQueue,"Allows a player to show queue to CT");
+	RegConsoleCmd("sm_Command_LeaveQueue", Command_LeaveQueue,"Allows a player to leave queue to CT");
+	RegConsoleCmd("sm_lq", Command_LeaveQueue,"Allows a player to leave queue to CT");
+	
 	
 	//Admin commands
-	RegAdminCmd("sm_removequeue", RemoveFromQueue, ADMFLAG_GENERIC,"Allows the admin to remove player from queue to CT");
-	RegAdminCmd("sm_rq", RemoveFromQueue, ADMFLAG_GENERIC,"Allows the admin to remove player from queue to CT");
+	RegAdminCmd("sm_removequeue", AdminCommand_RemoveFromQueue, ADMFLAG_GENERIC,"Allows the admin to remove player from queue to CT");
+	RegAdminCmd("sm_rq", AdminCommand_RemoveFromQueue, ADMFLAG_GENERIC,"Allows the admin to remove player from queue to CT");
+	
 	
 	//AutoExecConfig
 	AutoExecConfig_SetFile("Ratio", "MyJailbreak");
 	AutoExecConfig_SetCreateFile(true);
 	
 	AutoExecConfig_CreateConVar("sm_ratio_version", PLUGIN_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
-//	gc_bPlugin = AutoExecConfig_CreateConVar("sm_ratio_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true,  0.0, true, 1.0);
-	gc_sCustomCommand = AutoExecConfig_CreateConVar("sm_ratio_cmd", "gua", "Set your custom chat command for become guard. no need for sm_ or !");
-	gc_iPrisonerPerGuard = AutoExecConfig_CreateConVar("sm_ratio_T_per_CT", "2", "How many prisoners for each guard.", _, true, 1.0);
+	gc_sCustomCommand = AutoExecConfig_CreateConVar("sm_ratio_cmd", "ct", "Set your custom chat command for become guard. no need for sm_ or !");
+	gc_fPrisonerPerGuard = AutoExecConfig_CreateConVar("sm_ratio_T_per_CT", "2", "How many prisoners for each guard.", _, true, 1.0);
 	gc_bVIPQueue = AutoExecConfig_CreateConVar("sm_ratio_flag", "1", "0 - disabled, 1 - enable VIPs moved to front of queue", _, true,  0.0, true, 1.0);
 	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_ratio_vipflag", "a", "Set the flag for VIP");
 	gc_bAdsVIP = AutoExecConfig_CreateConVar("sm_ratio_adsvip", "1", "0 - disabled, 1 - enable adverstiment for 'VIPs moved to front of queue' when player types !quard ", _, true,  0.0, true, 1.0);
+	gc_iJoinMode = AutoExecConfig_CreateConVar("sm_ratio_join_mode", "1", "0 - instandly join ct/queue, no confirmation / 1 - confirm rules / 2 - Qualification questions", _, true,  0.0, true, 2.0);
+	gc_iQuestionTimes = AutoExecConfig_CreateConVar("sm_ratio_questions", "3", "How many question a player have to answer before join ct/queue. need sm_ratio_join_mode 2", _, true,  1.0, true, 5.0);
 	
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
 	
+	
 	//Hooks
-	AddCommandListener(OnJoinTeam, "jointeam");
+	AddCommandListener(Event_OnJoinTeam, "jointeam");
 	HookEvent("player_team", Event_PlayerTeam_Post, EventHookMode_Post);
 	HookEvent("round_end", Event_RoundEnd_Post, EventHookMode_Post);
 	HookEvent("player_spawn", Event_OnPlayerSpawn, EventHookMode_Post);
 	HookConVarChange(gc_sCustomCommand, OnSettingChanged);
 	
-	gc_sAdminFlag.GetString(g_sAdminFlag,sizeof(g_sAdminFlag));
 	
+	//FindConVar
+	gc_sAdminFlag.GetString(g_sAdminFlag,sizeof(g_sAdminFlag));
+	gc_sCustomCommand.GetString(g_sCustomCommand , sizeof(g_sCustomCommand));
+	
+	
+	//Prepare
 	g_aGuardQueue = CreateArray();
 	
+	
+	//Cookies
 	if((g_sCookieCTBan = FindClientCookie("Banned_From_CT")) == INVALID_HANDLE)
 		g_sCookieCTBan = RegClientCookie("Banned_From_CT", "Tells if you are restricted from joining the CT team", CookieAccess_Protected);
 }
+
 
 public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
@@ -92,9 +140,10 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 		char sBufferCMD[64];
 		Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommand);
 		if(GetCommandFlags(sBufferCMD) == INVALID_FCVAR_FLAGS)
-			RegConsoleCmd(sBufferCMD, OnGuardQueue, "Allows the prisoners to queue to CT");
+			RegConsoleCmd(sBufferCMD, Command_JoinGuardQueue, "Allows the prisoners to queue to CT");
 	}
 }
+
 
 public void OnConfigsExecuted()
 {
@@ -108,18 +157,153 @@ public void OnConfigsExecuted()
 	char sBufferCMD[64];
 	Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommand);
 	if(GetCommandFlags(sBufferCMD) == INVALID_FCVAR_FLAGS)
-		RegConsoleCmd(sBufferCMD, OnGuardQueue, "Allows the prisoners to queue to CT");
+		RegConsoleCmd(sBufferCMD, Command_JoinGuardQueue, "Allows the prisoners to queue to CT");
 }
 
-public void OnForcePickTimeChanged(Handle hConVar, const char[] szOldValue, const char[] szNewValue)
+
+/******************************************************************************
+                   COMMANDS
+******************************************************************************/
+
+
+public Action Command_LeaveQueue(int client, int iArgNum)
 {
-	SetConVarInt(hConVar, 999999);
+	int iIndex = FindValueInArray(g_aGuardQueue, client);
+	
+	if(iIndex == -1)
+	{
+		CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_notonqueue");
+		return Plugin_Handled;
+	}
+	else
+	{
+		RemovePlayerFromGuardQueue(client);
+		CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_leavedqueue");
+		return Plugin_Handled;
+	}
 }
 
-public void OnClientDisconnect_Post(int client)
+
+public Action Command_ViewGuardQueue(int client, int args)
 {
-	RemovePlayerFromGuardQueue(client);
+	if(!IsValidClient(client, true, true))
+		return Plugin_Handled;
+
+	if(GetArraySize(g_aGuardQueue) < 1)
+	{
+		CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_empty");
+		return Plugin_Handled;
+	}
+	char info[64];
+	
+	ViewQueueMenu = CreatePanel();
+	
+	Format(info, sizeof(info), "%T", "ratio_info_title", client);
+	SetPanelTitle(ViewQueueMenu, info);
+	DrawPanelText(ViewQueueMenu, "-----------------------------------");
+	DrawPanelText(ViewQueueMenu, "                                   ");
+	
+	for (int i; i < GetArraySize(g_aGuardQueue); i++)
+	{
+		if(!IsValidClient(GetArrayCell(g_aGuardQueue, i), true, true))
+			continue;
+		
+		char display[120];
+		Format(display, sizeof(display), "%N", GetArrayCell(g_aGuardQueue, i));
+		DrawPanelText(ViewQueueMenu, display);
+	}
+	
+	DrawPanelText(ViewQueueMenu, "                                   ");
+	DrawPanelText(ViewQueueMenu, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "warden_close", client);
+	DrawPanelItem(ViewQueueMenu, info); 
+	SendPanelToClient(ViewQueueMenu, client, Handler_NullCancel, 12);
+	
+	return Plugin_Handled;
 }
+
+
+public Action Command_JoinGuardQueue(int client, int iArgNum)
+{
+	if(!IsValidClient(client, true, true))
+	{
+		return Plugin_Handled;
+	}
+	
+	if(GetClientTeam(client) != CS_TEAM_T)
+	{
+		ClientCommand(client, "play %s", g_sRestrictedSound);
+		CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_noct");
+		return Plugin_Handled;
+	}
+	
+	char szCookie[2];
+	GetClientCookie(client, g_sCookieCTBan, szCookie, sizeof(szCookie));
+	if(szCookie[0] == '1')
+	{
+		ClientCommand(client, "play %s", g_sRestrictedSound);
+		CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_banned");
+		FakeClientCommand(client, "sm_isbanned @me");
+		return Plugin_Handled;
+	}
+	
+	
+	int iIndex = FindValueInArray(g_aGuardQueue, client);
+	
+	if(iIndex == -1)
+	{
+		if(gc_iJoinMode.IntValue == 0) AddToQueue(client);
+		if(gc_iJoinMode.IntValue == 1) Menu_AcceptGuardRules(client);
+		if(gc_iJoinMode.IntValue == 2) Menu_GuardQuestions(client);
+		questiontimes[client] = gc_iQuestionTimes.IntValue-1;
+		return Plugin_Handled;
+	}
+	else
+	{
+		CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_number", iIndex + 1);
+		if(gc_bAdsVIP.BoolValue && gc_bVIPQueue.BoolValue && !CheckVipFlag(client, g_sAdminFlag)) CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_advip");
+	}
+	return Plugin_Continue;
+}
+
+
+public Action AdminCommand_RemoveFromQueue(int client, int args)
+{
+	if(!IsValidClient(client, true, true))
+		return Plugin_Handled;
+	
+	if(GetArraySize(g_aGuardQueue) < 1)
+	{
+		CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_empty");
+		return Plugin_Handled;
+	}
+	
+	Menu hMenu = CreateMenu(ViewQueueMenuHandle);
+	SetMenuTitle(hMenu, "Remove from Queue:");
+	
+	for (int i; i < GetArraySize(g_aGuardQueue); i++)
+	{
+		if(!IsValidClient(GetArrayCell(g_aGuardQueue, i),true,true))
+			continue;
+		
+		char userid[11];
+		char username[MAX_NAME_LENGTH];
+		IntToString(GetClientUserId(i+1), userid, sizeof(userid));
+		Format(username, sizeof(username), "%N", GetArrayCell(g_aGuardQueue, i));
+		hMenu.AddItem(userid,username);
+	}
+	hMenu.ExitBackButton = true;
+	hMenu.ExitButton = true;
+	DisplayMenu(hMenu, client, 15);
+	
+	return Plugin_Handled;
+}
+
+
+/******************************************************************************
+                   EVENTS
+******************************************************************************/
+
 
 public Action Event_OnPlayerSpawn(Event event, const char[] name, bool bDontBroadcast) 
 {
@@ -138,25 +322,13 @@ public Action Event_OnPlayerSpawn(Event event, const char[] name, bool bDontBroa
 	{
 		CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_banned");
 		PrintHintText(client, "%t", "ratio_banned");
-		CreateTimer(5.0, SlayPlayer, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
+		CreateTimer(5.0, Timer_SlayPlayer, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 		return Plugin_Continue;
 	}
 	
 	return Plugin_Continue;
 }
 
-public Action SlayPlayer(Handle hTimer, any iUserId) 
-{
-	int client = GetClientOfUserId(iUserId);
-	
-	if ((IsValidClient(client, false, false)) && (GetClientTeam(client) == CS_TEAM_CT))
-	{
-		ForcePlayerSuicide(client);
-		ChangeClientTeam(client, CS_TEAM_T);
-		CS_RespawnPlayer(client);
-	}
-	return Plugin_Stop;
-}
 
 public void Event_PlayerTeam_Post(Handle hEvent, const char[] szName, bool bDontBroadcast)
 {
@@ -167,12 +339,14 @@ public void Event_PlayerTeam_Post(Handle hEvent, const char[] szName, bool bDont
 	RemovePlayerFromGuardQueue(client);
 }
 
+
 public Action Event_RoundEnd_Post(Handle hEvent, const char[] szName, bool bDontBroadcast)
 {
 	FixTeamRatio();
 }
 
-public Action OnJoinTeam(int client, const char[] szCommand, int iArgCount)
+
+public Action Event_OnJoinTeam(int client, const char[] szCommand, int iArgCount)
 {
 	if(iArgCount < 1)
 		return Plugin_Continue;
@@ -203,32 +377,16 @@ public Action OnJoinTeam(int client, const char[] szCommand, int iArgCount)
 	if(!CanClientJoinGuards(client))
 	{
 		int iIndex = FindValueInArray(g_aGuardQueue, client);
-		int iQueueSize = GetArraySize(g_aGuardQueue);
+		
 		ClientCommand(client, "play %s", g_sRestrictedSound);
+		
 		if(iIndex == -1)
 		{
-			if (CheckVipFlag(client, g_sAdminFlag) && gc_bVIPQueue.BoolValue)
-			{
-				if (iQueueSize == 0)
-					iIndex = PushArrayCell(g_aGuardQueue, client);
-				else
-				{
-					ShiftArrayUp(g_aGuardQueue, 0);
-					SetArrayCell(g_aGuardQueue, 0, client);
-				}
-				CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_thxvip");
-				CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_fullqueue", iIndex + 1);
-				return Plugin_Handled;
-			}
-			else
-			{
-				iIndex = PushArrayCell(g_aGuardQueue, client);
-				
-				CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_fullqueue", iIndex + 1);
-				if(gc_bAdsVIP.BoolValue && gc_bVIPQueue.BoolValue) CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_advip");
-				
-				return Plugin_Handled;
-			}
+			if(gc_iJoinMode.IntValue == 0) FullAddToQueue(client);
+			if(gc_iJoinMode.IntValue == 1) Menu_AcceptGuardRules(client);
+			if(gc_iJoinMode.IntValue == 2) Menu_GuardQuestions(client);
+			questiontimes[client] = gc_iQuestionTimes.IntValue-1;
+			return Plugin_Handled;
 		}
 		else
 		{
@@ -238,95 +396,307 @@ public Action OnJoinTeam(int client, const char[] szCommand, int iArgCount)
 		}
 	}
 	
-	return Plugin_Continue;
+	if(gc_iJoinMode.IntValue == 0) return Plugin_Continue;
+	if(gc_iJoinMode.IntValue == 1) Menu_AcceptGuardRules(client);
+	if(gc_iJoinMode.IntValue == 2) Menu_GuardQuestions(client);
+	questiontimes[client] = gc_iQuestionTimes.IntValue-1;
+	return Plugin_Handled;
 }
 
-public Action LeaveQueue(int client, int iArgNum)
+
+/******************************************************************************
+                   FUNCTIONS
+******************************************************************************/
+
+
+public void AddToQueue(int client)
 {
 	int iIndex = FindValueInArray(g_aGuardQueue, client);
+	int iQueueSize = GetArraySize(g_aGuardQueue);
 	
 	if(iIndex == -1)
 	{
-		CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_notonqueue");
-		return Plugin_Handled;
-	}
-	else
-	{
-		RemovePlayerFromGuardQueue(client);
-		CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_leavedqueue");
-		return Plugin_Handled;
+		if (CheckVipFlag(client, g_sAdminFlag) && gc_bVIPQueue.BoolValue)
+		{
+			if (iQueueSize == 0)
+				iIndex = PushArrayCell(g_aGuardQueue, client);
+			else
+			{
+				ShiftArrayUp(g_aGuardQueue, 0);
+				SetArrayCell(g_aGuardQueue, 0, client);
+			}
+			CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_thxvip");
+			CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_number", iIndex + 1);
+		}
+		else
+		{
+			iIndex = PushArrayCell(g_aGuardQueue, client);
+			
+			CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_number", iIndex + 1);
+			if(gc_bAdsVIP.BoolValue && gc_bVIPQueue.BoolValue) CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_advip");
+		}
 	}
 }
 
-public Action ViewGuardQueue(int client, int args)
-{
-	if(!IsValidClient(client, true, true))
-		return Plugin_Handled;
 
-	if(GetArraySize(g_aGuardQueue) < 1)
+public void FullAddToQueue(int client)
+{
+	int iIndex = FindValueInArray(g_aGuardQueue, client);
+	int iQueueSize = GetArraySize(g_aGuardQueue);
+	
+	if(iIndex == -1)
 	{
-		CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_empty");
-		return Plugin_Handled;
+		if (CheckVipFlag(client, g_sAdminFlag) && gc_bVIPQueue.BoolValue)
+		{
+			if (iQueueSize == 0)
+				iIndex = PushArrayCell(g_aGuardQueue, client);
+			else
+			{
+				ShiftArrayUp(g_aGuardQueue, 0);
+				SetArrayCell(g_aGuardQueue, 0, client);
+			}
+			CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_thxvip");
+			CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_number", iIndex + 1);
+		}
+		else
+		{
+			iIndex = PushArrayCell(g_aGuardQueue, client);
+			
+			CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_number", iIndex + 1);
+			if(gc_bAdsVIP.BoolValue && gc_bVIPQueue.BoolValue) CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_advip");
+		}
 	}
+}
+
+
+public void OnForcePickTimeChanged(Handle hConVar, const char[] szOldValue, const char[] szNewValue)
+{
+	SetConVarInt(hConVar, 999999);
+}
+
+bool ShouldMoveGuardToPrisoner()
+{
+	int iNumGuards, iNumPrisoners;
+	
+	LoopValidClients(i, true,true)
+	{	
+		if (GetClientPendingTeam(i) == CS_TEAM_T)
+			iNumPrisoners++;
+		else if (GetClientPendingTeam(i) == CS_TEAM_CT)
+			 iNumGuards++;
+	}
+	
+	if(iNumGuards <= 1)
+		return false;
+	
+	if(iNumGuards <= RoundToFloor(float(iNumPrisoners) / GetConVarFloat(gc_fPrisonerPerGuard)))
+		return false;
+	
+	return true;
+}
+
+/******************************************************************************
+                   FORWARDS LISTEN
+******************************************************************************/
+
+
+public void OnClientDisconnect_Post(int client)
+{
+	RemovePlayerFromGuardQueue(client);
+}
+
+
+/******************************************************************************
+                   MENUS
+******************************************************************************/
+
+
+public Action Menu_AcceptGuardRules(int client)
+{
 	char info[64];
 	
-	ViewQueueMenu = CreatePanel();
+	Handle AcceptMenu = CreatePanel();
 	
-	Format(info, sizeof(info), "%T", "ratio_info_title", client);
-	SetPanelTitle(ViewQueueMenu, info);
-	DrawPanelText(ViewQueueMenu, "-----------------------------------");
-	DrawPanelText(ViewQueueMenu, "                                   ");
-
-	for (int i; i < GetArraySize(g_aGuardQueue); i++)
-	{
-		if(!IsValidClient(GetArrayCell(g_aGuardQueue, i), true, true))
-			continue;
-
-		char display[120];
-		Format(display, sizeof(display), "%N", GetArrayCell(g_aGuardQueue, i));
-		DrawPanelText(ViewQueueMenu, display);
-	}
-	
-	DrawPanelText(ViewQueueMenu, "                                   ");
-	DrawPanelText(ViewQueueMenu, "-----------------------------------");
-	Format(info, sizeof(info), "%T", "warden_close", client);
-	DrawPanelItem(ViewQueueMenu, info); 
-	SendPanelToClient(ViewQueueMenu, client, NullHandler, 12);
-	
-	return Plugin_Handled;
+	Format(info, sizeof(info), "%T", "ratio_accept_title", client);
+	SetPanelTitle(AcceptMenu, info);
+	DrawPanelText(AcceptMenu, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "ratio_accept_line1", client);
+	DrawPanelText(AcceptMenu, info);
+	DrawPanelText(AcceptMenu, "    ");
+	Format(info, sizeof(info), "%T", "ratio_accept_line2", client);
+	DrawPanelText(AcceptMenu, info);
+	Format(info, sizeof(info), "%T", "ratio_accept_line3", client);
+	DrawPanelText(AcceptMenu, info);
+	Format(info, sizeof(info), "%T", "ratio_accept_line4", client);
+	DrawPanelText(AcceptMenu, info);
+	Format(info, sizeof(info), "%T", "ratio_accept_line5", client);
+	DrawPanelText(AcceptMenu, info);
+	DrawPanelText(AcceptMenu, "    ");
+	DrawPanelText(AcceptMenu, "-----------------------------------");
+	DrawPanelText(AcceptMenu, "    ");
+	Format(info, sizeof(info), "%T", "ratio_accept", client);
+	DrawPanelItem(AcceptMenu, info); 
+	Format(info, sizeof(info), "%T", "ratio_notaccept", client);
+	DrawPanelItem(AcceptMenu, info); 
+	SendPanelToClient(AcceptMenu, client, Handler_AcceptGuardRules, 20);
 }
 
-public Action RemoveFromQueue(int client, int args)
+
+public int Handler_AcceptGuardRules(Handle menu, MenuAction action, int param1, int param2)
 {
-	if(!IsValidClient(client, true, true))
-		return Plugin_Handled;
-
-	if(GetArraySize(g_aGuardQueue) < 1)
+	int client = param1;
+	if (action == MenuAction_Select)
 	{
-		CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_empty");
-		return Plugin_Handled;
+		switch(param2)
+		{
+			case 1:
+			{
+				if(CanClientJoinGuards(client))
+				{
+					ForcePlayerSuicide(client);
+					ChangeClientTeam(client, CS_TEAM_CT);
+				//	CS_RespawnPlayer(client);
+				}
+				else AddToQueue(client);
+				ClientCommand(client, "play %s", g_sRightAnswerSound);
+			}
+			case 2:
+			{
+				ClientCommand(client, "play %s", g_sRestrictedSound);
+			}
+		}
 	}
-	
-	Menu hMenu = CreateMenu(ViewQueueMenuHandle);
-	SetMenuTitle(hMenu, "Remove from Queue:");
-
-	for (int i; i < GetArraySize(g_aGuardQueue); i++)
-	{
-		if(!IsValidClient(GetArrayCell(g_aGuardQueue, i),true,true))
-			continue;
-
-		char userid[11];
-		char username[MAX_NAME_LENGTH];
-		IntToString(GetClientUserId(i+1), userid, sizeof(userid));
-		Format(username, sizeof(username), "%N", GetArrayCell(g_aGuardQueue, i));
-		hMenu.AddItem(userid,username);
-	}
-	hMenu.ExitBackButton = true;
-	hMenu.ExitButton = true;
-	DisplayMenu(hMenu, client, 15);
-	
-	return Plugin_Handled;
 }
+
+//WIP
+public void Menu_GuardQuestions(int client)
+{
+	char info[64], random[64];
+	
+	Handle AcceptMenu = CreatePanel();
+	int randomquestion = GetRandomInt(1,5);
+	randomanswer[client] = GetRandomInt(1,3);
+	
+	Format(info, sizeof(info), "%T", "ratio_question_title", client);
+	SetPanelTitle(AcceptMenu, info);
+	DrawPanelText(AcceptMenu, "-----------------------------------");
+	Format(random, sizeof(random), "ratio_question%i_line1", randomquestion);
+	Format(info, sizeof(info), "%T", random, client);
+	DrawPanelText(AcceptMenu, info);
+	Format(random, sizeof(random), "ratio_question%i_line2", randomquestion);
+	Format(info, sizeof(info), "%T", random, client);
+	DrawPanelText(AcceptMenu, info);
+	DrawPanelText(AcceptMenu, "-----------------------------------");
+	
+	if(randomanswer[client] == 1)
+	{
+		DrawPanelText(AcceptMenu, "    ");
+		Format(random, sizeof(random), "ratio_question%i_right", randomquestion);
+		Format(info, sizeof(info), "%T", random, client);
+		DrawPanelItem(AcceptMenu, info);
+	}
+	
+	DrawPanelText(AcceptMenu, "    ");
+	Format(random, sizeof(random), "ratio_question%i_wrong1", randomquestion);
+	Format(info, sizeof(info), "%T", random, client);
+	DrawPanelItem(AcceptMenu, info);
+	
+	if(randomanswer[client] == 2)
+	{
+		DrawPanelText(AcceptMenu, "    ");
+		Format(random, sizeof(random), "ratio_question%i_right", randomquestion);
+		Format(info, sizeof(info), "%T", random, client);
+		DrawPanelItem(AcceptMenu, info);
+	}
+	
+	DrawPanelText(AcceptMenu, "    ");
+	Format(random, sizeof(random), "ratio_question%i_wrong2", randomquestion);
+	Format(info, sizeof(info), "%T", random, client);
+	DrawPanelItem(AcceptMenu, info);
+	
+	if(randomanswer[client] == 3)
+	{
+		DrawPanelText(AcceptMenu, "    ");
+		Format(random, sizeof(random), "ratio_question%i_right", randomquestion);
+		Format(info, sizeof(info), "%T", random, client);
+		DrawPanelItem(AcceptMenu, info);
+	}
+	
+	SendPanelToClient(AcceptMenu, client, Handler_GuardQuestions, 20);
+}
+
+//WIP
+public int Handler_GuardQuestions(Handle menu, MenuAction action, int param1, int param2)
+{
+	int client = param1;
+	if (action == MenuAction_Select)
+	{
+		switch(param2)
+		{
+			case 1:
+			{
+				if(randomanswer[client] == 1)
+				{
+					if (questiontimes[client] <= 0)
+					{
+						if(CanClientJoinGuards(client))
+						{
+							ForcePlayerSuicide(client);
+							ChangeClientTeam(client, CS_TEAM_CT);
+						//	CS_RespawnPlayer(client);
+						}
+						else AddToQueue(client);
+					}
+					else Menu_GuardQuestions(client);
+					ClientCommand(client, "play %s", g_sRightAnswerSound);
+					questiontimes[client]--;
+				}
+				else ClientCommand(client, "play %s", g_sRestrictedSound);
+			}
+			case 2:
+			{
+				if(randomanswer[client] == 2)
+				{
+					if (questiontimes[client] <= 0)
+					{
+						if(CanClientJoinGuards(client))
+						{
+							ForcePlayerSuicide(client);
+							ChangeClientTeam(client, CS_TEAM_CT);
+						//	CS_RespawnPlayer(client);
+						}
+						else AddToQueue(client);
+					}
+					else Menu_GuardQuestions(client);
+					ClientCommand(client, "play %s", g_sRightAnswerSound);
+					questiontimes[client]--;
+				}
+				else ClientCommand(client, "play %s", g_sRestrictedSound);
+			}
+			case 3:
+			{
+				if(randomanswer[client] == 3)
+				{
+					if (questiontimes[client] <= 0)
+					{
+						if(CanClientJoinGuards(client))
+						{
+							ForcePlayerSuicide(client);
+							ChangeClientTeam(client, CS_TEAM_CT);
+						//	CS_RespawnPlayer(client);
+						}
+						else AddToQueue(client);
+					}
+					else Menu_GuardQuestions(client);
+					ClientCommand(client, "play %s", g_sRightAnswerSound);
+					questiontimes[client]--;
+				}
+				else ClientCommand(client, "play %s", g_sRestrictedSound);
+			}
+		}
+	}
+}
+
 
 public int ViewQueueMenuHandle(Menu hMenu, MenuAction action, int client, int option)
 {
@@ -354,65 +724,30 @@ public int ViewQueueMenuHandle(Menu hMenu, MenuAction action, int client, int op
 	}
 }
 
-public Action OnGuardQueue(int client, int iArgNum)
+
+/******************************************************************************
+                   TIMER
+******************************************************************************/
+
+
+public Action Timer_SlayPlayer(Handle hTimer, any iUserId) 
 {
-	if(!IsValidClient(client, true, true))
-	{
-		return Plugin_Handled;
-	}
+	int client = GetClientOfUserId(iUserId);
 	
-	if(GetClientTeam(client) != CS_TEAM_T)
+	if ((IsValidClient(client, false, false)) && (GetClientTeam(client) == CS_TEAM_CT))
 	{
-		ClientCommand(client, "play %s", g_sRestrictedSound);
-		CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_noct");
-		return Plugin_Handled;
+		ForcePlayerSuicide(client);
+		ChangeClientTeam(client, CS_TEAM_T);
+		CS_RespawnPlayer(client);
 	}
-	
-	char szCookie[2];
-	GetClientCookie(client, g_sCookieCTBan, szCookie, sizeof(szCookie));
-	if(szCookie[0] == '1')
-	{
-		ClientCommand(client, "play %s", g_sRestrictedSound);
-		CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_banned");
-		FakeClientCommand(client, "sm_isbanned @me");
-		return Plugin_Handled;
-	}
-	
-	int iIndex = FindValueInArray(g_aGuardQueue, client);
-	int iQueueSize = GetArraySize(g_aGuardQueue);
-	
-	if(iIndex == -1)
-	{
-		if (CheckVipFlag(client, g_sAdminFlag) && gc_bVIPQueue.BoolValue)
-		{
-			if (iQueueSize == 0)
-				iIndex = PushArrayCell(g_aGuardQueue, client);
-			else
-			{
-				ShiftArrayUp(g_aGuardQueue, 0);
-				SetArrayCell(g_aGuardQueue, 0, client);
-			}
-			CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_thxvip");
-			CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_number", iIndex + 1);
-			return Plugin_Handled;
-		}
-		else
-		{
-			iIndex = PushArrayCell(g_aGuardQueue, client);
-			
-			CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_number", iIndex + 1);
-			if(gc_bAdsVIP.BoolValue && gc_bVIPQueue.BoolValue) CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_advip");
-			
-			return Plugin_Handled;
-		}
-	}
-	else
-	{
-		CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_number", iIndex + 1);
-		if(gc_bAdsVIP.BoolValue && gc_bVIPQueue.BoolValue && !CheckVipFlag(client, g_sAdminFlag)) CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_advip");
-	}
-	return Plugin_Continue;
+	return Plugin_Stop;
 }
+
+
+/******************************************************************************
+                   STOCKS
+******************************************************************************/
+
 
 stock bool RemovePlayerFromGuardQueue(int client)
 {
@@ -422,6 +757,32 @@ stock bool RemovePlayerFromGuardQueue(int client)
 	
 	RemoveFromArray(g_aGuardQueue, iIndex);
 }
+
+
+bool ShouldMovePrisonerToGuard()
+{
+	int iNumGuards, iNumPrisoners;
+	
+	LoopValidClients(i, true,true)
+	{	
+		if (GetClientPendingTeam(i) == CS_TEAM_T)
+			iNumPrisoners++;
+		else if (GetClientPendingTeam(i) == CS_TEAM_CT)
+			 iNumGuards++;
+	}
+	
+	iNumPrisoners--;
+	iNumGuards++;
+	
+	if(iNumPrisoners < 1)
+		return false;
+	
+	if(float(iNumPrisoners) / float(iNumGuards) < GetConVarFloat(gc_fPrisonerPerGuard))
+		return false;
+	
+	return true;
+}
+
 
 stock void FixTeamRatio()
 {
@@ -466,20 +827,24 @@ stock void FixTeamRatio()
 	}
 }
 
+
 stock int GetRandomClientFromTeam(int iTeam, bool bSkipCTBanned=true)
 {
 	int iNumFound;
 	int clients[MAXPLAYERS];
 	char szCookie[2];
-
+	
 	LoopValidClients(i, true,true)
 	{
 		if(!IsClientInGame(i))
 			continue;
-
+		
+		if(warden_iswarden(i))
+			continue;
+		
 		if(GetClientPendingTeam(i) != iTeam)
 			continue;
-
+		
 		if(bSkipCTBanned)
 		{
 			if(!AreClientCookiesCached(i))
@@ -489,60 +854,16 @@ stock int GetRandomClientFromTeam(int iTeam, bool bSkipCTBanned=true)
 			if(szCookie[0] == '1')
 				continue;
 		}
-
+		
 		clients[iNumFound++] = i;
 	}
-
+	
 	if(!iNumFound)
 		return 0;
-
+	
 	return clients[GetRandomInt(0, iNumFound-1)];
 }
 
-bool ShouldMoveGuardToPrisoner()
-{
-	int iNumGuards, iNumPrisoners;
-	
-	LoopValidClients(i, true,true)
-	{	
-		if (GetClientPendingTeam(i) == CS_TEAM_T)
-			iNumPrisoners++;
-		else if (GetClientPendingTeam(i) == CS_TEAM_CT)
-			 iNumGuards++;
-	}
-
-	if(iNumGuards <= 1)
-		return false;
-
-	if(iNumGuards <= RoundToFloor(float(iNumPrisoners) / GetConVarFloat(gc_iPrisonerPerGuard)))
-		return false;
-
-	return true;
-}
-
-bool ShouldMovePrisonerToGuard()
-{
-	int iNumGuards, iNumPrisoners;
-	
-	LoopValidClients(i, true,true)
-	{	
-		if (GetClientPendingTeam(i) == CS_TEAM_T)
-			iNumPrisoners++;
-		else if (GetClientPendingTeam(i) == CS_TEAM_CT)
-			 iNumGuards++;
-	}
-	
-	iNumPrisoners--;
-	iNumGuards++;
-	
-	if(iNumPrisoners < 1)
-		return false;
-
-	if(float(iNumPrisoners) / float(iNumGuards) < GetConVarFloat(gc_iPrisonerPerGuard))
-		return false;
-	
-	return true;
-}
 
 stock bool CanClientJoinGuards(int client)
 {
@@ -564,10 +885,10 @@ stock bool CanClientJoinGuards(int client)
 		return true;
 	
 	float fNumPrisonersPerGuard = float(iNumPrisoners) / float(iNumGuards);
-	if(fNumPrisonersPerGuard < GetConVarFloat(gc_iPrisonerPerGuard))
+	if(fNumPrisonersPerGuard < GetConVarFloat(gc_fPrisonerPerGuard))
 		return false;
 	
-	int iGuardsNeeded = RoundToCeil(fNumPrisonersPerGuard - GetConVarFloat(gc_iPrisonerPerGuard));
+	int iGuardsNeeded = RoundToCeil(fNumPrisonersPerGuard - GetConVarFloat(gc_fPrisonerPerGuard));
 	if(iGuardsNeeded < 1)
 		iGuardsNeeded = 1;
 	
@@ -587,12 +908,14 @@ stock bool CanClientJoinGuards(int client)
 	return false;
 }
 
+
 stock int GetClientPendingTeam(int client)
 {
 	return GetEntProp(client, Prop_Send, "m_iPendingTeamNum");
 }
 
-stock void SetClientPendingTeam(int client, int iTeam)
+
+stock void SetClientPendingTeam(int client, int team)
 {
-	SetEntProp(client, Prop_Send, "m_iPendingTeamNum", iTeam);
+	SetEntProp(client, Prop_Send, "m_iPendingTeamNum", team);
 }

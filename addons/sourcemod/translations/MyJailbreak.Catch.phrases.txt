@@ -29,8 +29,7 @@
 
 	"catch_disabled"
 	{
-		"ru"		"Заморозка {purple}отключена."
-		"ru"		"Заморозка {purple}отключена"
+		"ru"		"Поймай и заморозь {purple}отключена."
 		"pl"		"Ganiany jest tymczasowo {purple}wylaczony."
 		"de"		"Catch ist vorübergehend {purple}deaktiviert."
 		"en"		"Catch is {purple}disabled."
@@ -77,7 +76,7 @@
 
 	"catch_ctwin_nc"
 	{
-		"ru"		"Всех террористов поймали"
+		"ru"		"Всех террористов поймали!"
 		"ru"		"Всех террористов поймали!"
 		"pl"		"Wszyscy Terrorysci zlapani"
 		"de"		"Alle Terroristen wurden wieder eingefangen"
@@ -96,7 +95,7 @@
 
 	"catch_end"
 	{
-		"ru"		"{purple}Заморозка{default} окончена"
+		"ru"		"{purple}Поймай и заморозь{default} окончена"
 		"pl"		"{purple}Ganiany{default} zakonczony"
 		"de"		"{purple}Catch{default} beendet"
 		"en"		"{purple}Catch{default} has ended."
@@ -150,7 +149,7 @@
 
 	"catch_next"
 	{
-		"ru"		"Следующий раунд {purple}Заморозка"
+		"ru"		"Следующий раунд {purple}Поймай и заморозь"
 		"pl"		"Nastepna runda to {purple}Ganiany"
 		"de"		"Nächste Runde ist {purple}Catch"
 		"en"		"The following round will be: {purple}Catch."
@@ -168,7 +167,7 @@
 
 	"catch_next_nc"
 	{
-		"ru"		"Следующий раунд Заморозка"
+		"ru"		"Следующий раунд Поймай и заморозь"
 		"pl"		"Nastepna runda to Ganiany"
 		"de"		"Nächste Runde ist Catch"
 		"en"		"The following round will be: Catch."
@@ -195,7 +194,7 @@
 
 	"catch_start_nc"
 	{
-		"ru"		"Заморозка началась!"
+		"ru"		"Поймай и заморозь началась!"
 		"pl"		"Ganiany sie rozpoczal!"
 		"de"		"Fangen ist gestartet!"
 		"en"		"Catch has Begun!"
@@ -292,6 +291,12 @@
 		"de"		"Alle Häftlinge wurden {purple}eingefangen"
 		"en"		"All the prisoners have been {purple}caught!"
 		"da"		"Alle fanger er {purple}FANGET!"
+	}
+
+	"catch_name"
+	{
+		"en"		"Catch and Freeze"
+		"ru"		"Поймай и заморозь"
 	}
 
 }

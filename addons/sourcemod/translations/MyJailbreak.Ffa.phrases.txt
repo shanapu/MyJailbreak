@@ -16,7 +16,7 @@
 	{
 		"#format"   "{1:i}"
 		"ru"		"{1} секунд до активации урона"
-		"en"		"{1} seconds until Damage is enabled!"
+		"en"		"{1} seconds until damage enabled"
 		"de"		"{1} Sekunden bis Schaden aktiv ist"
 		"en"		"{1} seconds until damage enabled"
 		"da"		"{1} sekunder til man kan skade hinanden!"
@@ -121,6 +121,12 @@
 		"da"		"For FFA skal der mindst være {purple}en CT"
 	}
 
+	"ffa_name"
+	{
+		"de"		"Jeder gegen Jeden"
+		"en"		"Free for All"
+	}
+
 	"ffa_need"
 	{
 		"#format"   "{1:i},{2:N}"
@@ -187,7 +193,7 @@
 
 	"ffa_start"
 	{
-		"ru"		"{purple}FFA день{default} начался!"
+		"ru"		"{purple}Все Против Всех{default} начался!"
 		"ru"		"{purple}Все Против Всех{default} начался!"
 		"pl"		" {purple}FFA{default} sie rozpoczal!"
 		"de"		"{purple}FFA{default} ist gestartet!"

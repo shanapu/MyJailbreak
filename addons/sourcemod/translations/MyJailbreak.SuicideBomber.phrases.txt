@@ -260,4 +260,10 @@
 		"en"		"{1} seconds left to hide!"
 	}
 
+	"suicidebomber_name"
+	{
+		"ru"		"Смертник"
+		"en"		"Suicide Bomber"
+	}
+
 }

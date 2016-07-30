@@ -14,26 +14,26 @@
 
 	"knifefight_disabled"
 	{
+		"de"		"Knife Fight ist vorübergehend {purple}deaktiviert."
 		"ru"		"Ножевая схватка {purple}отключена."
 		"pl"		"KNIFE jest tymczasowo {purple}wylaczony."
-		"de"		"knifefight ist vorübergehend {purple}deaktiviert."
-		"en"		"KnifeFight currently {purple}disabled!"
-		"da"		"knifefight er midlertidigt {purple}slået fra."
+		"en"		"Knife Fight currently {purple}disabled!"
+		"da"		"Knife Fight er midlertidigt {purple}slået fra."
 	}
 
 	"knifefight_end"
 	{
 		"ru"		"{purple}Ножевая схватка{default} завершена"
 		"pl"		"{purple}KNIFE{default} zakonczony"
-		"de"		"{purple}knifefight{default} beendet"
-		"en"		"{purple}KnifeFight{default} has ended."
-		"da"		"{purple}knifefight{default} er afsluttet!"
+		"de"		"{purple}Knife Fight{default} beendet"
+		"en"		"{purple}Knife Fight{default} has ended."
+		"da"		"{purple}Knife Fight{default} er afsluttet!"
 	}
 
 	"knifefight_info_line1"
 	{
 		"ru"		"Не удивляйтесь, если появитесь на КТ спавне!"
-		"en"		"Do not be surprised if you spawned in the Armory!"
+		"en"		"Do not be surprised if ported to CT Spawn"
 		"de"		"Nicht wundern falls ihr zum CT Spawngeportet wurdet"
 		"en"		"Do not be surprised if ported to CT Spawn"
 		"da"		"Bliv ikke overrasket hvis du bliver teleportet til CT Spawn!"
@@ -93,49 +93,55 @@
 
 	"knifefight_info_title"
 	{
-		"ru"		"FFA Knifefight - Free for all активирована"
+		"ru"		"FFA Knife Fight - Free for all активирована"
+		"de"		"FFA Knife Fight - Jeder gegen Jeden ist aktiv"
 		"pl"		"KNIFE jest aktywny"
-		"de"		"FFA Knifefight - Jeder gegen Jeden ist aktiv"
-		"en"		"FFA KnifeFight - Free for All is now activated"
+		"en"		"FFA Knife Fight - Free for All is now activated"
 		"da"		"FFA Knifefighter- er hver mod hver aktiv!"
 	}
 
 	"knifefight_minplayer"
 	{
-		"ru"		"Для ножевой схватки вам нужно как минимум {purple} 1 КТ и 1 Т"
+		"ru"		"Для ножевой битвы вам нужно как минимум {purple} 1 КТ и 1 Т"
 		"ru"		"Для ножевой битвы вам нужно как минимум {purple} 1 КТ и 1 Т"
 		"pl"		"Do zabawy cowboy potrzeba przynajmniej {purple}jednego CT"
-		"de"		"Für knifefight brauchen wir mindestens {purple}einen CT"
-		"en"		"For KnifeFight you need at least {purple}one Guard and one Prisoner!"
-		"da"		"For knifefight skal der mindst være {purple}en CT & en T"
+		"de"		"Für Knife Fight brauchen wir mindestens {purple}einen CT"
+		"en"		"For Knife Fight you need at least {purple}one Guard and one Prisoner!"
+		"da"		"For Knife Fight skal der mindst være {purple}en CT & en T"
+	}
+
+	"knifefight_name"
+	{
+		"en"		"Knife Fight"
+		"ru"		"Ножевая схватка"
 	}
 
 	"knifefight_need"
 	{
 		"#format"   "{1:i},{2:N}"
-		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes required to play {darkred}KnifeFight."
+		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes required to play {darkred}Knife Fight."
 		"ru"		"{purple}{2}{default} проголосовал. {purple}{1}{default} голосов осталось до {darkred}Ножевой схватки"
 		"pl"		"{purple}{2}{default} zaglosowal {purple}{1}{default} pozostalo glosow do {darkred}na KNIFE"
-		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}knifefight{default} beginnt"
-		"da"		"{purple}{2}{default} har stemt. {purple}{1}{default} afstemninger tilbage til {darkred}knifefight"
+		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}Knife Fight{default} beginnt"
+		"da"		"{purple}{2}{default} har stemt. {purple}{1}{default} afstemninger tilbage til {darkred}Knife Fight"
 	}
 
 	"knifefight_next"
 	{
 		"ru"		"Следующий раунд  {purple}Ножевая схватка!"
 		"pl"		"Nastepna runda to {purple}KNIFE"
-		"de"		"Nächste Runde ist {purple}knifefight"
-		"en"		"The following round will be: {purple}KnifeFight."
-		"da"		"Næste runde er {purple}knifefight"
+		"de"		"Nächste Runde ist {purple}Knife Fight"
+		"en"		"The following round will be: {purple}Knife Fight."
+		"da"		"Næste runde er {purple}Knife Fight"
 	}
 
 	"knifefight_next_nc"
 	{
 		"ru"		"Следующий раунд - Ножевая схватка"
 		"pl"		"Nastepna runda to KNIFE"
-		"de"		"Nächste Runde ist knifefight"
-		"en"		"The following round will be: KnifeFight."
-		"da"		"Næste runde er knifefight"
+		"de"		"Nächste Runde ist Knife Fight"
+		"en"		"The following round will be: Knife Fight."
+		"da"		"Næste runde er Knife Fight"
 	}
 
 	"knifefight_progress"
@@ -161,43 +167,43 @@
 	{
 		"ru"		"Установка ножевой схватки админом{purple}отменена"
 		"pl"		"Wlaczenie KNIFE przez admina jest {purple}wylaczone"
-		"de"		"knifefight Aktivierung durch den Admin ist {purple}ausgeschaltet"
-		"en"		"Set KnifeFight by Admin is {purple}disabled!"
-		"da"		"knifefight for Admin er {purple}slået fra"
+		"de"		"Knife Fight Aktivierung durch den Admin ist {purple}ausgeschaltet"
+		"en"		"Set Knife Fight by Admin is {purple}disabled!"
+		"da"		"Knife Fight for Admin er {purple}slået fra"
 	}
 
 	"knifefight_setbywarden"
 	{
 		"ru"		"Установка ножевой схватки КМД {purple}отменена"
 		"pl"		"Glosowanie KNIFE przez Straznika jest {purple}wylaczone"
-		"de"		"knifefight Aktivierung durch den Warden ist {purple}ausgeschaltet"
-		"en"		"Set KnifeFight by Warden is {purple}disabled!"
-		"da"		"knifefight for Warden er {purple}slået fra"
+		"de"		"Knife Fight Aktivierung durch den Warden ist {purple}ausgeschaltet"
+		"en"		"Set Knife Fight by Warden is {purple}disabled!"
+		"da"		"Knife Fight for Warden er {purple}slået fra"
 	}
 
 	"knifefight_start"
 	{
 		"ru"		"{purple}Ножевая схватка{default} началась!"
 		"pl"		"{purple}KNIFE{default} sie rozpoczal!"
-		"de"		"{purple}knifefight{default} ist gestartet!"
-		"en"		"{purple}KnifeFight{default} has begun!"
-		"da"		"{purple}knifefight{default} er startet!"
+		"de"		"{purple}Knife Fight{default} ist gestartet!"
+		"en"		"{purple}Knife Fight{default} has begun!"
+		"da"		"{purple}Knife Fight{default} er startet!"
 	}
 
 	"knifefight_start_nc"
 	{
 		"ru"		"Ножевая схватка началась!"
 		"pl"		"KNIFE sie rozpoczal!"
-		"de"		"knifefight ist gestartet!"
-		"en"		"KnifeFight has begun!"
-		"da"		"knifefight er startet!"
+		"de"		"Knife Fight ist gestartet!"
+		"en"		"Knife Fight has begun!"
+		"da"		"Knife Fight er startet!"
 	}
 
 	"knifefight_tag"
 	{
-		"ru"		"[{green}MyJB.knifefight{default}]"
+		"ru"		"[{green}MyJB.Knife Fight{default}]"
 		"pl"		"[{green}JB.KNIFE{default}]"
-		"en"		"[{green}MyJB.knifefight{default}]"
+		"en"		"[{green}MyJB.Knife Fight{default}]"
 	}
 
 	"knifefight_timeuntilstart_nc"
@@ -221,21 +227,21 @@
 
 	"knifefight_voted"
 	{
-		"da"		"Du har allerede stemt på {purple}knifefight"
+		"da"		"Du har allerede stemt på {purple}Knife Fight"
 		"ru"		"Вы уже проголосовали за {purple}ножевую схватку"
-		"en"		"You have already voted for {purple}KnifeFight."
+		"en"		"Du har allerede stemt på {purple}Knife Fight"
 		"pl"		"Juz glosowales na {purple}KNIFE"
-		"de"		"Du hast schon für {purple}knifefight {default}gevotet"
+		"de"		"Du hast schon für {purple}Knife Fight {default}gevotet"
 		"en"		"Du har allerede stemt på {purple}knifefight"
 	}
 
 	"knifefight_voting"
 	{
+		"da"		"Afstemninger for Knife Fight er {purple}slået fra"
 		"ru"		"Голосование игроков за Ножевую Схватку {purple}отменено"
 		"pl"		"Glosowanie graczy na KNIFE jest {purple}wylaczone"
-		"de"		"Voting für knifefight ist {purple}ausgeschaltet"
-		"en"		"Voting for KnifeFight is {purple}disabled!"
-		"da"		"Afstemninger for knifefight er {purple}slået fra"
+		"de"		"Voting für Knife Fight ist {purple}ausgeschaltet"
+		"en"		"Voting for Knife Fight is {purple}disabled!"
 	}
 
 	"knifefight_wait"

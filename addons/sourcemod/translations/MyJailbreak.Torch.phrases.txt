@@ -162,7 +162,7 @@
 
 	"torch_info_line5"
 	{
-		"ru"		"Вы не можете активировать !lr в этом раунде!"
+		"ru"		"Вы не можете активировать !lr в "
 		"ru"		"Вы не можете активировать !lr в "
 		"pl"		"ie mozesz uzyc !lr  w tej rundzie!"
 		"de"		"Der letzte Terrorists hat keinen Wunsch!"
@@ -283,6 +283,14 @@
 		"pl"		"Pochodnia zostala UGASZONA"
 		"de"		"Die Fackel ist erloschen"
 		"en"		"The torch has been extinguished!"
+	}
+
+	"torch_name"
+	{
+		"en"		"Torch Relay"
+		"de"		"Fackellauf"
+		"pl"		"Czlowiek Pochodnia"
+		"ru"		"Эстафета Олимпийского огня"
 	}
 
 }

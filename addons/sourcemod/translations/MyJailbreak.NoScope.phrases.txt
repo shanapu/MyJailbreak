@@ -13,26 +13,26 @@
 
 	"noscope_disabled"
 	{
-		"de"		"NoScope ist vorübergehend {purple}deaktiviert."
-		"ru"		"Игра NoScope {purple}отключена."
-		"en"		"NoScope is currently {purple}disabled!"
-		"da"		"NoScope er midlertidigt {purple}slået fra."
+		"ru"		"Игра No Scope Battle {purple}отключена."
+		"en"		"No Scope Battle is currently {purple}disabled!"
+		"de"		"No Scope Battle ist vorübergehend {purple}deaktiviert."
+		"da"		"No Scope Battle er midlertidigt {purple}slået fra."
 	}
 
 	"noscope_end"
 	{
-		"ru"		"{purple}Игра NoScope{default} завершена"
-		"de"		"{purple}NoScope{default} beendet"
-		"en"		"{purple}NoScope{default} has ended."
-		"da"		"{purple}NoScope{default} er afsluttet!"
+		"ru"		"{purple}Игра No Scope Battle{default} завершена"
+		"de"		"{purple}No Scope Battle{default} beendet"
+		"en"		"{purple}No Scope Battle{default} has ended."
+		"da"		"{purple}No Scope Battle{default} er afsluttet!"
 	}
 
 	"noscope_info_line1"
 	{
-		"ru"		"NoScope - Free for All"
-		"de"		"NoScope - Jeder gegen Jeden"
-		"en"		"NoScope - Free for All!"
-		"da"		"NoScope - er hver mod hver!"
+		"ru"		"No Scope Battle - Free for All"
+		"de"		"No Scope Battle - Jeder gegen Jeden"
+		"en"		"No Scope Battle - Free for All!"
+		"da"		"No Scope Battle - er hver mod hver!"
 	}
 
 	"noscope_info_line2"
@@ -40,7 +40,7 @@
 		"ru"		"Включена низкая гравитация"
 		"de"		"Es ist low gravity"
 		"en"		"Low Gravity is Enabled!"
-		"da"		"I NoScope er det FFA og lav gravity!"
+		"da"		"I No Scope Battle er det FFA og lav gravity!"
 	}
 
 	"noscope_info_line3"
@@ -84,43 +84,48 @@
 
 	"noscope_info_title"
 	{
-		"ru"		"Игра NoScope активирована"
-		"de"		"NoScope ist aktiv"
-		"en"		"NoScope er aktiveret!"
+		"ru"		"Игра No Scope Battle активирована"
+		"de"		"No Scope Battle ist aktiv"
+		"en"		"No Scope Battle er aktiveret!"
 		"en"		"NoScope er aktiveret!"
 	}
 
 	"noscope_minplayer"
 	{
-		"ru"		"Для игры NoScope вам нужен как минимум {purple}1 КТ"
+		"ru"		"Для игры No Scope Battle вам нужен как минимум {purple}1 КТ"
 		"de"		"Für noscope brauchen wir mindestens {purple}einen CT"
-		"en"		"For NoScope you need at least {purple}one Guard & one Prisoner!"
+		"en"		"For No Scope Battle you need at least {purple}one Guard & one Prisoner!"
 		"da"		"For noscope skal der mindst være {purple}en CT"
+	}
+
+	"noscope_name"
+	{
+		"en"		"No Scope Battle"
 	}
 
 	"noscope_need"
 	{
 		"#format"   "{1:i},{2:N}"
-		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes required to play {darkred}NoScope."
-		"ru"		"{purple}{2}{default} проголосовал. {purple}{1}{default} голосов осталось до {darkred}игры NoScope"
+		"ru"		"{purple}{2}{default} проголосовал. {purple}{1}{default} голосов осталось до {darkred}игры No Scope Battle"
+		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes required to play {darkred}No Scope Battle."
 		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}noscope{default} beginnt"
 		"da"		"{purple}{2}{default} har afstemt!. {purple}{1}{default} afstemninger tilbage til {darkred}noscope"
 	}
 
 	"noscope_next"
 	{
-		"ru"		"Следующий раунд игра {purple}NoScope"
-		"de"		"Nächste Runde ist {purple}NoScope"
-		"en"		"The following round will be: {purple}NoScope."
-		"da"		"Næste runde er {purple}NoScope"
+		"ru"		"Следующий раунд игра {purple}No Scope Battle"
+		"de"		"Nächste Runde ist {purple}No Scope Battle"
+		"en"		"The following round will be: {purple}No Scope Battle."
+		"da"		"Næste runde er {purple}No Scope Battle"
 	}
 
 	"noscope_next_nc"
 	{
-		"ru"		"Следующий раунд игра NoScope"
-		"de"		"Nächste Runde ist NoScope"
-		"en"		"The following round will be: NoScope."
-		"da"		"Næste runde er NoScope"
+		"ru"		"Следующий раунд игра No Scope Battle"
+		"de"		"Nächste Runde ist No Scope Battle"
+		"en"		"The following round will be: No Scope Battle."
+		"da"		"Næste runde er No Scope Battle"
 	}
 
 	"noscope_progress"
@@ -142,33 +147,33 @@
 
 	"noscope_setbyadmin"
 	{
-		"ru"		"Установка игры NoScope админом {purple}отменена"
-		"de"		"NoScope Aktivierung durch den Admin ist {purple}ausgeschaltet"
-		"en"		"Set NoScope by Admin is {purple}disabled!"
+		"ru"		"Установка игры No Scope Battle админом {purple}отменена"
+		"de"		"No Scope Battle Aktivierung durch den Admin ist {purple}ausgeschaltet"
+		"en"		"Set No Scope Battle by Admin is {purple}disabled!"
 		"da"		"Admin bestemmer runde for No Scope er {purple}slået fra"
 	}
 
 	"noscope_setbywarden"
 	{
-		"ru"		"Установка игры NoScope КМД {purple}отменена"
-		"de"		"NoScope Aktivierung durch den Warden ist {purple}ausgeschaltet"
-		"en"		"Set NoScope by Warden is {purple}disabled!"
+		"ru"		"Установка игры No Scope Battle КМД {purple}отменена"
+		"de"		"No Scope Battle Aktivierung durch den Warden ist {purple}ausgeschaltet"
+		"en"		"Set No Scope Battle by Warden is {purple}disabled!"
 		"da"		"Warden bestemmer runde for No Scope er {purple}slået fra"
 	}
 
 	"noscope_start"
 	{
-		"ru"		"Игра {purple}NoScope{default} началась"
-		"de"		"{purple}NoScope{default} ist gestartet!"
-		"en"		"The {purple}NoScope Battle{default} has begun!"
-		"da"		"{purple}NoScope{default} er startet!"
+		"ru"		"Игра {purple}No Scope Battle{default} началась"
+		"de"		"{purple}No Scope Battle{default} ist gestartet!"
+		"en"		"The {purple}No Scope Battle Battle{default} has begun!"
+		"da"		"{purple}No Scope Battle{default} er startet!"
 	}
 
 	"noscope_start_nc"
 	{
-		"ru"		"Игра NoScope началась!"
-		"de"		"NoScope ist gestartet!"
-		"en"		"The NoScope Battle has begun!"
+		"ru"		"Игра No Scope Battle началась!"
+		"en"		"The No Scope Battle Battle has begun!"
+		"de"		"No Scope Battle ist gestartet!"
 		"da"		"No Scope er startet!"
 	}
 
@@ -197,17 +202,17 @@
 
 	"noscope_voted"
 	{
-		"ru"		"Вы уже проголосовали за игру {purple}NoScope"
-		"de"		"Du hast schon für {purple}NoScope {default}gevotet"
-		"en"		"You have already voted for {purple}NoScope!"
-		"da"		"Du har allerede stemt for {purple}NoScope!"
+		"ru"		"Вы уже проголосовали за игру {purple}No Scope Battle"
+		"de"		"Du hast schon für {purple}No Scope Battle {default}gevotet"
+		"en"		"You have already voted for {purple}No Scope Battle!"
+		"da"		"Du har allerede stemt for {purple}No Scope Battle!"
 	}
 
 	"noscope_voting"
 	{
 		"ru"		"Голосование игроков за игру Noscope {purple}отключено"
-		"de"		"Voting für NoScope ist {purple}ausgeschaltet"
-		"en"		"Voting for NoScope is {purple}disabled!"
+		"de"		"Voting für No Scope Battle ist {purple}ausgeschaltet"
+		"en"		"Voting for No Scope Battle is {purple}disabled!"
 		"da"		"Afstemninger for No Scope er {purple}slået fra"
 	}
 

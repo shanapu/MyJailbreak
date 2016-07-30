@@ -1,0 +1,54 @@
+"Phrases"
+{
+	"hud_planned"
+	{
+		"en"		"Next round:"
+		"ru"		"Следующий раунд:"
+	}
+	"hud_running"
+	{
+		"en"		"This round:"
+		"ru"		"Этот раунд:"
+	}
+	"hud_warden"
+	{
+		"en"		"Warden:"
+		"ru"		"Командир:"
+	}
+	"hud_nowarden"
+	{
+		"en"		"Currently no warden"
+		"ru"		"Нет командира"
+	}
+	"hud_guards"
+	{
+		"en"		"Guards:"
+		"ru"		"Охранники:"
+	}
+	"hud_prisoner"
+	{
+		"en"		"Prisoner:"
+		"ru"		"Заключённые:"
+	}
+	"hud_tag"
+	{
+		"en"		"[MyJB.HUD]"
+	}
+
+	"hud_on"
+	{
+		"en"		"HUD {purple}is enabled!"
+		"pl"		"HUD {purple}wlaczony"
+		"de"		"HUD {purple}ist aktiv!"
+		"da"		"HUD {purple}aktiveret!"
+	}
+
+	"hud_off"
+	{
+		"en"		"HUD {purple}is disabled"
+		"it"		"HUD {purple}disabilitato"
+		"pl"		"HUD {purple}wylaczony"
+		"de"		"HUD {purple}ist deaktiviert!"
+		"da"		"HUD {purple}deaktiveret!"
+	}
+}

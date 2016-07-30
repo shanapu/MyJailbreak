@@ -98,6 +98,12 @@
 		"de"		"Drunken Day ist aktiv"
 	}
 
+	"drunk_name"
+	{
+		"en"		"Drunken Day"
+		"ru"		"Пьяный день"
+	}
+
 	"drunk_need"
 	{
 		"#format"   "{1:i},{2:N}"

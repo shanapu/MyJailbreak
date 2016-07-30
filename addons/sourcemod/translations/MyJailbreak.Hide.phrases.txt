@@ -14,10 +14,11 @@
 
 	"hide_disabled"
 	{
+		"da"		"Hide in the Dark er {purple}deaktiveret."
+		"en"		"Hide in the Dark currently {purple}disabled!"
 		"ru"		"Прятки в Темноте {purple}отключены."
 		"pl"		"Chowany jest tymczasowo {purple}wylaczony."
 		"de"		"Hide in the Dark ist vorübergehend {purple}deaktiviert."
-		"en"		"Hide in the Dark er {purple}deaktiveret."
 	}
 
 	"hide_end"
@@ -105,6 +106,13 @@
 		"de"		"Für Hide in the Dark brauchen wir mindestens {purple}einen CT und einen T"
 		"en"		"For Hide in the Dark you need at least {purple}one Guard and one Prisoner!"
 		"da"		"For Hide in the Dark skal der mindst være {purple}en CT & en T"
+	}
+
+	"hide_name"
+	{
+		"en"		"Hide in the Dark"
+		"de"		"Verstecken im Dunkeln"
+		"ru"		"Прятки в Темноте"
 	}
 
 	"hide_need"

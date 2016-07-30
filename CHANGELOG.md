@@ -1,4 +1,109 @@
 ### Change Log
+
+  **[Beta 6.0]** - Personal Freeday, Kill reason, allow LR on Eventday, Guard Questions & more
+  
+*Added*
+*  Myjailbreak: Admincommand to force end the round as a draw 
+    *  new command - sm_endround - Allows the Admin to force the roundend. (ADMFLAG_CHANGEMAP)
+*  Ratio: Join guard agreement. Join Guard Qualification questions.
+    *  new cvar - sm_ratio_join_mode - 0 - instandly join ct/queue, no confirmation / 1 - confirm rules / 2 - Qualification questions
+    *  new cvar - sm_ratio_questions - How many question a player have to answer before join ct/queue. need sm_ratio_join_mode 2
+*  Warden - Mute: Mute & Unmute all terrors
+*  Request: Warden can give a personal Freeday a single player for next nonevent round. 
+    *  new command - sm_givefreeday - Allows the Warden to give a freeday to a player
+    *  new cvar - sm_freekill_freeday_victim - Allow the warden to set a personal freeday next round as pardon for the victim
+    *  new cvar - sm_freekill_freeday_cmd - Set your custom chat command for give a freeday. no need for sm_ or !
+    *  new cvar - sm_freekill_freeday_color_red - What color to turn the warden into (set R, G and B values to 255 to disable) (Rgb): x - red value
+    *  new cvar - sm_freekill_freeday_color_green - What color to turn the warden into (rGb): x - green value
+    *  new cvar - sm_freekill_freeday_color_blue - What color to turn the warden into (rgB): x - blue value
+*  Request: Kill reason - When a CT kill a T, a menu pop up for the killer and he can give an statement (beta)
+    *  new cvar - sm_killreason_enable - CT can answer with a menu the kill reason
+*  Last Guard Rule: Adjust round time on runnnig Last Guard Rule
+    *  new cvar - sm_lastguard_time - Time in minutes to end the last guard rule - 0 = keep original time
+    *  new cvar - sm_lastguard_time_per_T - Time in seconds to add to sm_lastguard_time per living terror - 0 = no extra time per t
+*  Event Days: new cvars for end last round of a running Eventday when Last Request is available. Much Thx to devu4!
+    *  new cvar - sm_cowboy_allow_lr - enable, Last Request on last round
+    *  new cvar - sm_drunk_allow_lr - enable, Last Request on last round
+    *  new cvar - sm_duckhunt_allow_lr - enable, Last Request on last round
+    *  new cvar - sm_ffa_allow_lr - enable, Last Request on last round
+    *  new cvar - sm_war_allow_lr - enable, Last Request on last round
+    *  new cvar - sm_hebattle_allow_lr - enable, Last Request on last round
+    *  new cvar - sm_knifefight_allow_lr - enable, Last Request on last round
+    *  new cvar - sm_noscope_allow_lr - enable, Last Request on last round
+    *  new cvar - sm_zeus_allow_lr - enable, Last Request on last round
+    *  new cvar - sm_zombie_allow_lr - enable, Last Request on last round
+*  HUD: A players HUD display: Current Warden, Guards/Prisoner Count & planned/running eventday name
+    *  new command - sm_hud - Allows player to toggle the hud display.
+    * new cvar - sm_hud_enable - 0 - disabled, 1 - enable this MyJailbreak SourceMod plugin
+*  Warden - Cell Doors: Check is current map is configurated in smartjaildoors. Thx to NomisCZ!
+*  Menu: Added TeamGames commands !tg !games if these team games commands are available
+*  Menu - Cell Doors: Check is current map is configurated in smartjaildoors. If not items not shown
+*  Event Days - Cell Doors: Check is current map is configurated in smartjaildoors. If not force sm_*eventday*_spawn "1"
+  
+  
+  
+*Changed*
+*  Warden - Handcuffs: Strip weapons on Cuffed
+*  Warden: Splitted Overlays & sounds for countdown & math
+    *  removed cvar - sm_warden_overlays_start
+    *  removed cvar - sm_warden_overlays_stop
+    *  removed cvar - sm_warden_sounds_start
+    *  removed cvar - sm_warden_sounds_stop
+    *  new cvar - sm_warden_countdown_overlays_enable - enable overlays for countdown
+    *  new cvar - sm_warden_countdown_overlays_start - Path to the start Overlay  DONT TYPE .vmt or .vft
+    *  new cvar - sm_warden_countdown_overlays_stop - Path to the stop Overlay DONT TYPE .vmt or .vft
+    *  new cvar - sm_warden_countdown_sounds_enable - enable sounds for countdown
+    *  new cvar - sm_warden_countdown_sounds_start - Path to the soundfile which should be played for a start countdown.
+    *  new cvar - sm_warden_countdown_sounds_stop - Path to the soundfile which should be played for stop countdown.
+    *  new cvar - sm_warden_math_sounds_enable - enable sounds for math quiz
+    *  new cvar - sm_warden_math_sounds_stop - Path to the soundfile which should be played for stop countdown.
+    *  new cvar - sm_warden_math_overlays_enable - enable overlays for math quiz
+    *  new cvar - sm_warden_math_overlays_stop - Path to the stop Overlay DONT TYPE .vmt or .vft
+*  Event Days: Translations for Event day name
+*  Last Guard Rule: Remove cuffs on last guard rule start
+*  Ratio: changed default custom command from !gua to !ct
+*  Ratio: Prevent warden from move to terror when unbalanced team
+*  Deal Damage: Better looking for HUD
+*  Zombie: New Glow effect with wallhack for zombies, fix old glow bug
+    *  new cvar - sm_zombie_glow_mode - 1 - human contours with wallhack for zombies, 2 - human glow effect without wallhack for zombies
+*  Request: Change Rebel status on capitulation 
+*  Player Tags: Splitted translation to chat & stats = different tags for chat & stats
+  
+  
+  
+*Fixed*
+*  Warden - Mathquiz: Bug when type last answer before new quiz started
+*  Last Guard Rule: Bug on first round -> auto restart -> stuck on last guard rule
+*  Zombie: fix glow bug -> new glowing
+*  Ratio: Fixed custom command !gua / !ct
+*  Freeday: Bug on sm_freeday_firstround "1" and 1min round time
+*  Player Tags: Shorten RU Tags  Thx to include1!
+*  minor errors, fixes & typos
+  
+  
+  
+*Developer stuff*
+*  Natives: Changed some existing native names
+    *  changed native - before:"SetEventDay" now:"SetEventDayName" Set the name(char) of the planned/running Event Day
+    *  changed native - before:"GetEventDay" now:"GetEventDayName" Get the name(char) of the planned/running Event Day
+    *  changed native - before:"MyJBLogging" now:"ActiveLogging" Get the name of the planned/running Event Day
+*  Natives: New natives for better Eventday/LastGuardRule detection - changed some existing native names
+    *  new native - SetEventDayPlanned Boolean to set Event Day is planned true/false
+    *  new native - IsEventDayPlanned Boolean to check Event Day is planned true/false
+    *  new native - SetEventDayRunning Boolean to set Event Day is running true/false
+    *  new native - IsEventDayRunning Boolean to check Event Day is running true/false
+    *  new native - SetLastGuardRule Boolean to set Last Guard Rule is running true/false
+    *  new native - IsLastGuardRule Boolean to check Last Guard Rule is running true/false
+*  Renamed many functions & stocks and other shit for better visibility
+*  Warden: Splitted warden.sp source to module .sp files
+*  Request: Splitted request.sp source to module .sp files
+*  Cleaned up code and more comments
+  
+  
+*Bug found*
+  
++  RU translation. Not shown completly cause cyrillic letters. Find fix or shorten phrases
+  
   
 **[Beta .5.2]** - VotingMenu fix   
   

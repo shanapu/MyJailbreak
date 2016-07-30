@@ -1,13 +1,31 @@
-//includes
-#include <cstrike>
-#include <sourcemod>
-#include <colors>
-#include <smartjaildoors>
-#include <warden>
-#include <emitsoundany>
-#include <autoexecconfig>
-#include <clientprefs>
-#include <myjailbreak>
+/*
+ * MyJailbreak - Catch & Freeze Event Day Plugin.
+ * by: shanapu
+ * https://github.com/shanapu/MyJailbreak/
+ *
+ * This file is part of the MyJailbreak SourceMod Plugin.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, version 3.0, as published by the
+ * Free Software Foundation.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+
+/******************************************************************************
+                   STARTUP
+******************************************************************************/
+
+
+//Includes
+#include <myjailbreak> //... all other includes in myjailbreak.inc
 
 //Compiler Options
 #pragma semicolon 1
@@ -21,9 +39,8 @@
 bool IsCatch;
 bool StartCatch;
 bool catched[MAXPLAYERS+1];
-bool canSet;
 
-//ConVars
+//Console Variables
 ConVar gc_bPlugin;
 ConVar gc_bSetW;
 ConVar gc_bSetA;
@@ -118,11 +135,11 @@ public void OnPluginStart()
 	AutoExecConfig_CleanFile();
 	
 	//Hooks
-	HookEvent("round_start", RoundStart);
+	HookEvent("round_start", Event_RoundStart);
 	HookEvent("player_spawn", Event_PlayerSpawn);
-	HookEvent("round_end", RoundEnd);
-	HookEvent("player_team", EventPlayerTeam);
-	HookEvent("player_death", EventPlayerTeam);
+	HookEvent("round_end", Event_RoundEnd);
+	HookEvent("player_team", Event_PlayerTeam);
+	HookEvent("player_death", Event_PlayerTeam);
 	HookConVarChange(gc_sOverlayFreeze, OnSettingChanged);
 	HookConVarChange(gc_sSoundFreezePath, OnSettingChanged);
 	HookConVarChange(gc_sSoundUnFreezePath, OnSettingChanged);
@@ -183,7 +200,6 @@ public void OnMapStart()
 	g_iRound = 0;
 	IsCatch = false;
 	StartCatch = false;
-	canSet = true;
 	
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	
@@ -215,12 +231,12 @@ public void OnClientPutInServer(int client)
 
 public Action SetCatch(int client,int args)
 {
-	if (gc_bPlugin.BoolValue && canSet)
+	if (gc_bPlugin.BoolValue)
 	{
 		if(client == 0)
 		{
 			StartNextRound();
-			if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Catch was started by groupvoting");
+			if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Catch was started by groupvoting");
 		}
 		else if (warden_iswarden(client))
 		{
@@ -229,14 +245,14 @@ public Action SetCatch(int client,int args)
 				if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
 				{
 					char EventDay[64];
-					GetEventDay(EventDay);
+					GetEventDayName(EventDay);
 					
 					if(StrEqual(EventDay, "none", false))
 					{
 						if (g_iCoolDown == 0)
 						{
 							StartNextRound();
-							if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Catch was started by warden %L", client);
+							if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Catch was started by warden %L", client);
 						}
 						else CPrintToChat(client, "%t %t", "catch_tag" , "catch_wait", g_iCoolDown);
 					}
@@ -253,14 +269,14 @@ public Action SetCatch(int client,int args)
 					if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
 					{
 						char EventDay[64];
-						GetEventDay(EventDay);
+						GetEventDayName(EventDay);
 						
 						if(StrEqual(EventDay, "none", false))
 						{
 							if (g_iCoolDown == 0)
 							{
 								StartNextRound();
-								if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Catch was started by admin %L", client);
+								if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Catch was started by admin %L", client);
 							}
 							else CPrintToChat(client, "%t %t", "catch_tag" , "catch_wait", g_iCoolDown);
 						}
@@ -282,14 +298,14 @@ public Action VoteCatch(int client,int args)
 	char steamid[64];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
 	
-	if (gc_bPlugin.BoolValue && canSet)
+	if (gc_bPlugin.BoolValue)
 	{
 		if (gc_bVote.BoolValue)
 		{
 			if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
 			{
 				char EventDay[64];
-				GetEventDay(EventDay);
+				GetEventDayName(EventDay);
 				
 				if(StrEqual(EventDay, "none", false))
 				{
@@ -305,7 +321,7 @@ public Action VoteCatch(int client,int args)
 							if (g_iVoteCount > playercount)
 							{
 								StartNextRound();
-								if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Catch was started by voting");
+								if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Catch was started by voting");
 							}
 							else CPrintToChatAll("%t %t", "catch_tag" , "catch_need", Missing, client);
 						}
@@ -329,8 +345,13 @@ void StartNextRound()
 	StartCatch = true;
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iVoteCount = 0;
+	char buffer[32];
+	Format(buffer, sizeof(buffer), "%T", "catch_name", LANG_SERVER);
+	SetEventDayName(buffer);
+	SetEventDayPlanned(true);
 	
-	SetEventDay("catch");
+	g_iOldRoundTime = g_iGetRoundTime.IntValue; //save original round time
+	g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
 	
 	CPrintToChatAll("%t %t", "catch_tag" , "catch_next");
 	PrintHintTextToAll("%t", "catch_next_nc");
@@ -338,15 +359,15 @@ void StartNextRound()
 
 //Round start
 
-public void RoundStart(Handle event, char[] name, bool dontBroadcast)
+public void Event_RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
-	canSet = true;
 	if (StartCatch || IsCatch)
 	{
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("sm_weapons_enable", 0);
-		
+		SetEventDayPlanned(false);
+		SetEventDayRunning(true);
 		IsCatch = true;
 		g_iRound++;
 		StartCatch = false;
@@ -357,11 +378,11 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 				LoopClients(client)
 				{
 					CreateInfoPanel(client);
-					StripAllWeapons(client);
+					StripAllPlayerWeapons(client);
 					ClientSprintStatus[client] = 0;
 					GivePlayerItem(client, "weapon_knife");
 					SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
-					SendPanelToClient(CatchMenu, client, NullHandler, 20);
+					SendPanelToClient(CatchMenu, client, Handler_NullCancel, 20);
 					PrintHintText(client,"%t", "catch_start_nc");
 					
 					if (GetClientTeam(client) == CS_TEAM_T)
@@ -376,7 +397,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 	else
 	{
 		char EventDay[64];
-		GetEventDay(EventDay);
+		GetEventDayName(EventDay);
 		
 		if(!StrEqual(EventDay, "none", false))
 		{
@@ -412,14 +433,13 @@ stock void CreateInfoPanel(int client)
 	DrawPanelText(CatchMenu, "-----------------------------------");
 	Format(info, sizeof(info), "%T", "warden_close", client);
 	DrawPanelItem(CatchMenu, info); 
-	SendPanelToClient(CatchMenu, client, NullHandler, 20);
+	SendPanelToClient(CatchMenu, client, Handler_NullCancel, 20);
 	
 }
 //Round End
 
-public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
+public void Event_RoundEnd(Handle event, char[] name, bool dontBroadcast)
 {
-	canSet = false;
 	int winner = GetEventInt(event, "winner");
 	
 	if (IsCatch)
@@ -433,7 +453,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 			catched[client] = false;
 			if (GetClientTeam(client) == CS_TEAM_T)
 			{
-				StripAllWeapons(client);
+				StripAllPlayerWeapons(client);
 			}
 		}
 		
@@ -449,15 +469,14 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 			SetCvar("sm_warden_enable", 1);
 			
 			g_iGetRoundTime.IntValue = g_iOldRoundTime;
-			SetEventDay("none");
+			SetEventDayName("none");
+			SetEventDayRunning(false);
 			CPrintToChatAll("%t %t", "catch_tag" , "catch_end");
 		}
 	}
 	if (StartCatch)
 	{
 		LoopClients(i) CreateInfoPanel(i);
-		g_iOldRoundTime = g_iGetRoundTime.IntValue;
-		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;
 		
 		CPrintToChatAll("%t %t", "catch_tag" , "catch_next");
 		PrintHintTextToAll("%t", "catch_next_nc");
@@ -488,11 +507,10 @@ public void OnMapEnd()
 {
 	IsCatch = false;
 	StartCatch = false;
-	canSet = true;
 	g_iVoteCount = 0;
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0';
-	SetEventDay("none");
+
 }
 
 //Catch & Freeze
@@ -528,7 +546,7 @@ public void OnClientDisconnect_Post(int client)
 	CheckStatus();
 }
 
-public Action EventPlayerTeam(Event event, const char[] name, bool dontBroadcast)
+public Action Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
 {
 	if(IsCatch == false)
 	{

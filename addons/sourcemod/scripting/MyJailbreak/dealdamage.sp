@@ -1,12 +1,31 @@
-//includes
-#include <cstrike>
-#include <sourcemod>
-#include <smartjaildoors>
-#include <warden>
-#include <emitsoundany>
-#include <colors>
-#include <autoexecconfig>
-#include <myjailbreak>
+/*
+ * MyJailbreak - Deal Damage Event Day Plugin.
+ * by: shanapu
+ * https://github.com/shanapu/MyJailbreak/
+ *
+ * This file is part of the MyJailbreak SourceMod Plugin.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, version 3.0, as published by the
+ * Free Software Foundation.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+
+/******************************************************************************
+                   STARTUP
+******************************************************************************/
+
+
+//Includes
+#include <myjailbreak> //... all other includes in myjailbreak.inc
 
 //Compiler Options
 #pragma semicolon 1
@@ -16,9 +35,8 @@
 bool IsTruce;
 bool IsDealDamage;
 bool StartDealDamage;
-bool canSet;
 
-//ConVars    gc_i = global convar integer / gc_i = global convar bool ...
+//Console Variables    gc_i = global convar integer / gc_i = global convar bool ...
 ConVar gc_bPlugin;
 ConVar gc_bSetW;
 ConVar gc_iCooldownStart;
@@ -73,6 +91,7 @@ char g_sSoundStartPath[256];
 char g_sCustomCommand[64];
 char g_sEventsLogFile[PLATFORM_MAX_PATH];
 char g_sAdminFlag[32];
+char g_sOverlayStartPath[256];
 
 public Plugin myinfo = {
 	name = "MyJailbreak - DealDamage",
@@ -122,8 +141,8 @@ public void OnPluginStart()
 	AutoExecConfig_CleanFile();
 	
 	//Hooks
-	HookEvent("round_start", RoundStart);
-	HookEvent("round_end", RoundEnd);
+	HookEvent("round_start", Event_RoundStart);
+	HookEvent("round_end", Event_RoundEnd);
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
 	HookConVarChange(gc_sCustomCommand, OnSettingChanged);
@@ -131,7 +150,7 @@ public void OnPluginStart()
 	
 	//Find
 	g_iGetRoundTime = FindConVar("mp_roundtime");
-	gc_sOverlayStartPath.GetString(g_sOverlayStart , sizeof(g_sOverlayStart));
+	gc_sOverlayStartPath.GetString(g_sOverlayStartPath , sizeof(g_sOverlayStartPath));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 	gc_sCustomCommand.GetString(g_sCustomCommand , sizeof(g_sCustomCommand));
 	gc_sAdminFlag.GetString(g_sAdminFlag , sizeof(g_sAdminFlag));
@@ -145,8 +164,8 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 {
 	if(convar == gc_sOverlayStartPath)    //Add overlay to download and precache table if changed
 	{
-		strcopy(g_sOverlayStart, sizeof(g_sOverlayStart), newValue);
-		if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStart);
+		strcopy(g_sOverlayStartPath, sizeof(g_sOverlayStartPath), newValue);
+		if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
 	}
 	else if(convar == gc_sAdminFlag)
 	{
@@ -176,11 +195,10 @@ public void OnMapStart()
 	g_iRound = 0;
 	IsDealDamage = false;
 	StartDealDamage = false;
-	canSet = true;
 	
 	//Precache Sound & Overlay
 	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
-	if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStart);
+	if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
 }
 
 public void OnConfigsExecuted()
@@ -206,26 +224,26 @@ public void OnClientPutInServer(int client)
 
 public Action SetDealDamage(int client,int args)
 {
-	if (gc_bPlugin.BoolValue && canSet) //is plugin enabled?
+	if (gc_bPlugin.BoolValue) //is plugin enabled?
 	{
 		if(client == 0)
 		{
 			StartNextRound();
-			if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event Deal Damage was started by groupvoting");
+			if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Deal Damage was started by groupvoting");
 		}
 		else if (warden_iswarden(client)) //is player warden?
 		{
 			if (gc_bSetW.BoolValue) //is warden allowed to set?
 			{
 				char EventDay[64];
-				GetEventDay(EventDay);
+				GetEventDayName(EventDay);
 				
 				if(StrEqual(EventDay, "none", false)) //is an other event running or set?
 				{
 					if (g_iCoolDown == 0) //is event cooled down?
 					{
 						StartNextRound(); //prepare Event for next round
-						if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event DealDamage was started by warden %L", client);
+						if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event DealDamage was started by warden %L", client);
 					}
 					else CPrintToChat(client, "%t %t", "dealdamage_tag" , "dealdamage_wait", g_iCoolDown);
 				}
@@ -238,14 +256,14 @@ public Action SetDealDamage(int client,int args)
 			if (gc_bSetA.BoolValue) //is admin allowed to set?
 			{
 				char EventDay[64];
-				GetEventDay(EventDay);
+				GetEventDayName(EventDay);
 				
 				if(StrEqual(EventDay, "none", false)) //is an other event running or set?
 				{
 					if (g_iCoolDown == 0) //is event cooled down?
 					{
 						StartNextRound(); //prepare Event for next round
-						if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event DealDamage was started by admin %L", client);
+						if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event DealDamage was started by admin %L", client);
 					}
 					else CPrintToChat(client, "%t %t", "dealdamage_tag" , "dealdamage_wait", g_iCoolDown);
 				}
@@ -265,12 +283,12 @@ public Action VoteDealDamage(int client,int args)
 	char steamid[64];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
 	
-	if (gc_bPlugin.BoolValue && canSet) //is plugin enabled?
+	if (gc_bPlugin.BoolValue) //is plugin enabled?
 	{	
 		if (gc_bVote.BoolValue) //is voting enabled?
 		{	
 			char EventDay[64];
-			GetEventDay(EventDay);
+			GetEventDayName(EventDay);
 			
 			if(StrEqual(EventDay, "none", false)) //is an other event running or set?
 			{
@@ -286,7 +304,7 @@ public Action VoteDealDamage(int client,int args)
 						if (g_iVoteCount > playercount) 
 						{
 							StartNextRound(); //prepare Event for next round
-							if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Event DealDamage was started by voting");
+							if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event DealDamage was started by voting");
 						}
 						else CPrintToChatAll("%t %t", "dealdamage_tag" , "dealdamage_need", Missing, client);
 					}
@@ -309,7 +327,13 @@ void StartNextRound()
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iVoteCount = 0;
 	
-	SetEventDay("dealdamage"); //tell myjailbreak new event is set
+	char buffer[32];
+	Format(buffer, sizeof(buffer), "%T", "dealdamage_name", LANG_SERVER);
+	SetEventDayName(buffer);
+	SetEventDayPlanned(true);
+	
+	g_iOldRoundTime = g_iGetRoundTime.IntValue; //save original round time
+	g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
 	
 	if(gc_bSpawnRandom.BoolValue)SetCvar("mp_randomspawn", 1);
 	if(gc_bSpawnRandom.BoolValue)SetCvar("mp_randomspawn_los", 1);
@@ -321,9 +345,8 @@ void StartNextRound()
 
 //Round start
 
-public void RoundStart(Handle event, char[] name, bool dontBroadcast)
+public void Event_RoundStart(Handle event, char[] name, bool dontBroadcast)
 {
-	canSet = true;
 	if (StartDealDamage || IsDealDamage)
 	{
 		
@@ -335,6 +358,8 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		SetCvar("sm_weapons_ct", 1);
 		SetCvar("sm_menu_enable", 0);
 		SetCvar("sm_warden_enable", 0);
+		SetEventDayPlanned(false);
+		SetEventDayRunning(true);
 		BestT = 0;
 		BestCT = 0;
 		BestTdamage = 0;
@@ -397,7 +422,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 						SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true); //NoBlock
 						CreateInfoPanel(client);
 						SetEntProp(client, Prop_Data, "m_takedamage", 0, 1); //disable damage
-						if (!gc_bSpawnCell.BoolValue) //spawn Terrors to CT Spawn
+						if (!gc_bSpawnCell.BoolValue || (gc_bSpawnCell.BoolValue && !SJD_IsCurrentMapConfigured)) //spawn Terrors to CT Spawn  //spawn Terrors to CT Spawn
 						{
 							TeleportEntity(client, g_fPos, NULL_VECTOR, NULL_VECTOR);
 						}
@@ -416,7 +441,7 @@ public void RoundStart(Handle event, char[] name, bool dontBroadcast)
 		//If Event isnt running - subtract cooldown round
 		
 		char EventDay[64];
-		GetEventDay(EventDay);
+		GetEventDayName(EventDay);
 		
 		if(!StrEqual(EventDay, "none", false))
 		{
@@ -453,14 +478,13 @@ stock void CreateInfoPanel(int client)
 	DrawPanelText(DealDamageMenu, "-----------------------------------");
 	Format(info, sizeof(info), "%T", "warden_close", client);
 	DrawPanelItem(DealDamageMenu, info); 
-	SendPanelToClient(DealDamageMenu, client, NullHandler, 20); //open info Panel
+	SendPanelToClient(DealDamageMenu, client, Handler_NullCancel, 20); //open info Panel
 }
 
 //Round End
 
-public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
+public void Event_RoundEnd(Handle event, char[] name, bool dontBroadcast)
 {
-	canSet = false;
 	int winner = GetEventInt(event, "winner");
 	
 	if (IsDealDamage) //if event was running this round
@@ -474,7 +498,7 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 			}
 		}
 		delete TruceTimer; //kill start time if still running
-		delete RoundTimer; //kill start time if still running
+		
 		if (winner == 2) PrintHintTextToAll("%t", "dealdamage_twin_nc", DamageT);
 		if (winner == 3) PrintHintTextToAll("%t", "dealdamage_ctwin_nc", DamageCT);
 		if (g_iRound == g_iMaxRound) //if this was the last round
@@ -496,7 +520,8 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 			if(gc_bSpawnRandom.BoolValue)SetCvar("mp_randomspawn_los", 0);
 			
 			g_iGetRoundTime.IntValue = g_iOldRoundTime; //return to original round time
-			SetEventDay("none"); //tell myjailbreak event is ended
+			SetEventDayName("none"); //tell myjailbreak event is ended
+			SetEventDayRunning(false);
 			CPrintToChatAll("%t %t", "dealdamage_tag" , "dealdamage_end");
 			
 		}
@@ -504,8 +529,6 @@ public void RoundEnd(Handle event, char[] name, bool dontBroadcast)
 	if (StartDealDamage)
 	{
 		LoopClients(i) CreateInfoPanel(i);
-		g_iOldRoundTime = g_iGetRoundTime.IntValue; //save original round time
-		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
 		
 		CPrintToChatAll("%t %t", "dealdamage_tag" , "dealdamage_next");
 		PrintHintTextToAll("%t", "dealdamage_next_nc");
@@ -519,13 +542,11 @@ public void OnMapEnd()
 	//return to default start values
 	IsDealDamage = false;
 	StartDealDamage = false;
-	canSet = true;
 	delete TruceTimer; //kill start time if still running
 	delete RoundTimer; //kill start time if still running
 	g_iVoteCount = 0;
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0'; 
-	SetEventDay("none");
 }
 
 //Start Timer
@@ -554,7 +575,7 @@ public Action StartTimer(Handle timer)
 				PrintHintText(client,"%t", "dealdamage_start_nc");
 				SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
 			}
-			if(gc_bOverlays.BoolValue) CreateTimer( 0.0, ShowOverlayStart, client);
+			if(gc_bOverlays.BoolValue) ShowOverlay(client, g_sOverlayStartPath, 2.0);
 			if(gc_bSounds.BoolValue)
 			{
 				EmitSoundToAllAny(g_sSoundStartPath);
@@ -581,7 +602,7 @@ public Action OnTakedamage(int victim, int &attacker, int &inflictor, float &dam
 	{
 		DamageT = DamageT + RoundToCeil(damage);
 	}
-	LoopClients(i) PrintHintText(i, "<font color='#0055FF'>%t  </font> %i %t                     <font color='#FF0000'>%t   </font> %i %t                    <font color='#00FF00'>%t   </font> %i %t", "dealdamage_ctdealed", DamageCT, "dealdamage_hpdamage", "dealdamage_tdealed", DamageT, "dealdamage_hpdamage", "dealdamage_clientdealed", DamageDealed[i], "dealdamage_hpdamage");
+	LoopClients(i) PrintHintText(i, "<font face='Arial' color='#0055FF'>%t  </font> %i %t \n<font face='Arial' color='#FF0000'>%t   </font> %i %t \n<font face='Arial' color='#00FF00'>%t   </font> %i %t", "dealdamage_ctdealed", DamageCT, "dealdamage_hpdamage", "dealdamage_tdealed", DamageT, "dealdamage_hpdamage", "dealdamage_clientdealed", DamageDealed[i], "dealdamage_hpdamage");
 	if((GetClientTeam(attacker) != GetClientTeam(victim))) DamageDealed[attacker] = DamageDealed[attacker] + RoundToCeil(damage);
 	return Plugin_Handled;
 }
@@ -590,17 +611,17 @@ public Action EndTheRound(Handle timer)
 {
 	if (DamageCT > DamageT) 
 	{
-		CS_TerminateRound(8.0, CSRoundEnd_CTWin);
+		CS_TerminateRound(5.0, CSRoundEnd_CTWin);
 		LoopClients(i) if(GetClientTeam(i) == CS_TEAM_T ) ForcePlayerSuicide(i);
 	}
 	else if(DamageCT < DamageT) 
 	{
-		CS_TerminateRound(8.0, CSRoundEnd_TerroristWin);
+		CS_TerminateRound(5.0, CSRoundEnd_TerroristWin);
 		LoopClients(i) if(GetClientTeam(i) == CS_TEAM_CT ) ForcePlayerSuicide(i);
 	}
 	else
 	{
-		CS_TerminateRound(8.0, CSRoundEnd_Draw);
+		CS_TerminateRound(5.0, CSRoundEnd_Draw);
 	}
 	LoopClients(i)
 	{
@@ -625,8 +646,9 @@ public Action EndTheRound(Handle timer)
 	{
 		SendResults(client);
 	}
+	RoundTimer = null;
 	delete RoundTimer;
-	if(MyJBLogging(true)) LogToFileEx(g_sEventsLogFile, "Damage Deal Result: BestCT: %N Dmg: %i BestT: %N Dmg: %i CT Damage: %i T Damage: %i Total Damage: %i", BestCT, BestCTdamage, BestT, BestTdamage, DamageCT, DamageT, TotalDamage);
+	if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Damage Deal Result: BestCT: %N Dmg: %i BestT: %N Dmg: %i CT Damage: %i T Damage: %i Total Damage: %i", BestCT, BestCTdamage, BestT, BestTdamage, DamageCT, DamageT, TotalDamage);
 }
 
 stock void SendResults(int client)
@@ -679,6 +701,6 @@ stock void SendResults(int client)
 	if(gc_bChat.BoolValue) CPrintToChat(client, info);
 	if(gc_bConsole.BoolValue) PrintToConsole(client, info);
 	
-	if(gc_bShowPanel.BoolValue) SendPanelToClient(DealDamageEndMenu, client, NullHandler, 20); //open info Panel
+	if(gc_bShowPanel.BoolValue) SendPanelToClient(DealDamageEndMenu, client, Handler_NullCancel, 20); //open info Panel
 }
 

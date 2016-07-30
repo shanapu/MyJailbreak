@@ -88,7 +88,7 @@
 	"war_info_line6"
 	{
 		"ru"		"Каждый может идти туда, куда захочет."
-		"en"		"Everyone is allowed to go anywhere within the map!"
+		"en"		"Everyone is allowed to go everywhere where he wants"
 		"de"		"Jeder darf überall hin wo er will!"
 		"en"		"Everyone is allowed to go everywhere where he wants"
 		"da"		"Alle kan gå hen hvor de har lyst eller starte!"
@@ -119,6 +119,14 @@
 		"de"		"Für war brauchen wir mindestens {purple}einen CT"
 		"en"		"For a War you need at least {purple}one Guard & one Prisoner!"
 		"da"		"For war skal der mindst være {purple}en CT"
+	}
+
+	"war_name"
+	{
+		"pl"		"Wojna"
+		"ru"		"Война"
+		"de"		"Krieg"
+		"en"		"War"
 	}
 
 	"war_need"
@@ -160,12 +168,12 @@
 
 	"war_rounds"
 	{
-		"#format"   "{1:i}"
-		"ru"		"Раунд {purple}{1}{default} о {purple}3"
-		"pl"		"Runda {purple}{1}{default} z {purple}3"
-		"de"		"Runde {purple}{1}{default} von {purple}3"
-		"en"		"Round {purple}{1}{default} of {purple}3"
-		"da"		"Runde {purple}{1}{default} af {purple}3"
+		"#format"   "{1:i},{2:i}"
+		"ru"		"Раунд {purple}{1}{default} о {purple}{2}"
+		"pl"		"Runda {purple}{1}{default} z {purple}{2}"
+		"de"		"Runde {purple}{1}{default} von {purple}{2}"
+		"en"		"Round {purple}{1}{default} of {purple}{2}"
+		"da"		"Runde {purple}{1}{default} af {purple}{2}"
 	}
 
 	"war_setbyadmin"
@@ -213,11 +221,21 @@
 	"war_timetohide_nc"
 	{
 		"#format"   "{1:i}"
-		"ru"		"{1} секунд до разморозки"
-		"pl"		"{1} sekund do odmrozenia"
-		"de"		"{1} Sekunden bis zum unfreeze"
-		"en"		"{1} seconds until you will be unfreezed!"
+		"da"		"{1} sekunder til at gemme dig i "
+		"en"		"{1} seconds left to hide!"
+		"de"		"{1} Sekunden zum verstecken"
+		"pl"		"{1} sekund do startu!"
+		"ru"		"{1} секунд, чтобы спрятаться"
+	}
+
+	"war_timetounfreeze_nc"
+	{
+		"#format"   "{1:i}"
 		"da"		"{1} sekunder til du bliver unfreezet!"
+		"en"		"{1} seconds until you will be unfreezed!"
+		"de"		"{1} Sekunden bis zum unfreeze"
+		"pl"		"{1} sekund do odmrozenia"
+		"ru"		"{1} секунд до разморозки"
 	}
 
 	"war_twin_nc"

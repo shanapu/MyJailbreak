@@ -12,7 +12,7 @@
 
 	"weapons_health"
 	{
-		"en"		"You've been given a {purple}Healthshot{default}!"
+		"en"		"You've got a {purple} healthshot{default}"
 		"pl"		"Posiadasz zastrzyk  {purple} ADRENALINY {default}"
 		"ru"		"У вас есть {purple} шприц адреналина {default}"
 		"de"		"Du haste eine {purple}healthshot{default} bekommen."

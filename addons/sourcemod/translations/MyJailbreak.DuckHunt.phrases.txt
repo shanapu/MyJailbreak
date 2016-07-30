@@ -110,6 +110,14 @@
 		"da"		"For at lave Duckhunt skal der mindst være {purple}en CT & en T"
 	}
 
+	"duckhunt_name"
+	{
+		"en"		"Duckhunt"
+		"de"		"Entenjagd"
+		"pl"		"Polowanie na kaczki"
+		"ru"		"Охота на уток"
+	}
+
 	"duckhunt_need"
 	{
 		"#format"   "{1:i},{2:N}"
@@ -141,7 +149,7 @@
 	"duckhunt_progress"
 	{
 		"#format"   "{1:s}"
-		"en"		"The event {darkred}{1} {default}is {purple}already in progress!"
+		"en"		"Event {darkred}{1} {default}is {purple}already in progress."
 		"ru"		"Игровой день {darkred}{1} {default}в {purple}процессе."
 		"pl"		"Zabawa {darkred}{1} {default}jest {purple}juz grana."
 		"de"		"Event {darkred}{1} {default}ist {purple}bereits gesetzt."
