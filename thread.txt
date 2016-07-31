@@ -1585,6 +1585,16 @@ native warden_get(client);
 [B][u]Latest Changes[/u][/B]
 
 [QUOTE]  
+  [b][Beta 6.1][/b] - smaller fixes
+[SPOILER]
+[i]Fixed[/i]
+[LIST]
+[*]Menu: personal freeday seen as admin
+[*]HUD: enable on start
+[*]Freeday: fix roundtime bug
+[*]Request: missing "en" translation
+[/LIST]
+[/SPOILER]
   [b][Beta 6.0][/b] - Personal Freeday, Kill reason, allow LR on Eventday, Guard Questions & more
 [SPOILER]
   

@@ -1,5 +1,14 @@
 ### Change Log
-
+  
+  **[Beta 6.1]** - smaller fixes
+  
+*Fixed*
+*  Menu: personal freeday seen as admin
+*  HUD: enable on start
+*  Freeday: fix roundtime bug
+*  Request: missing "en" translation
+  
+  
   **[Beta 6.0]** - Personal Freeday, Kill reason, allow LR on Eventday, Guard Questions & more
   
 *Added*
