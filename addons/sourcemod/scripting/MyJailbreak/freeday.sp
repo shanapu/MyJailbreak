@@ -403,7 +403,7 @@ public void Event_RoundEnd(Handle event, char[] name, bool dontBroadcast)
 		SetCvar("sm_weapons_enable", 1);
 		SetCvar("mp_teammates_are_enemies", 0);
 		SetCvar("sm_warden_enable", 1);
-		if(!AutoFreeday) g_iGetRoundTime.IntValue = g_iOldRoundTime;
+		g_iGetRoundTime.IntValue = g_iOldRoundTime;
 		AutoFreeday = false;
 		SetEventDayName("none");
 		SetEventDayRunning(false);
