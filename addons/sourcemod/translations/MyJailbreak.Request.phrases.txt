@@ -494,7 +494,8 @@
 
 	"request_killreason_brokerule"
 	{
-		"en"		"Нарушение правил"
+		"en"		"He broke the Rules"
+		"ru"		"Нарушение правил"
 	}
 
 	"request_killreason_notfollow"
@@ -511,7 +512,8 @@
 
 	"request_killreason_freekill"
 	{
-		"en"		"Я убил его просто так"
+		"en"		"I freekilled him"
+		"ru"		"Я убил его просто так"
 	}
 
 	"request_killreason_lostgame_chat"
