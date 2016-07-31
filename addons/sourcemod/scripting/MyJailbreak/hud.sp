@@ -129,6 +129,11 @@ public void OnMapStart()
 	if(gc_bPlugin.BoolValue) CreateTimer(1.0, Timer_ShowHUD, _, TIMER_REPEAT);
 }
 
+public void OnClientPutInServer(int client)
+{
+	g_bEnableHud[client] = true;
+}
+
 
 public int warden_OnWardenCreated(int client)
 {
