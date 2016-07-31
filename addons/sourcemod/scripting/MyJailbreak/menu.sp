@@ -625,14 +625,6 @@ public Action Command_OpenMenu(int client, int args)
 				{
 					if (!warden_iswarden(client))
 					{
-						if(g_bPlayerFreeday != null)
-						{
-							if(g_bPlayerFreeday.BoolValue)
-							{
-								Format(menuinfo, sizeof(menuinfo), "%T", "menu_playerfreeday", client);
-								mainmenu.AddItem("playerfreeday", menuinfo);
-							}
-						}
 						if(gc_bVoting.BoolValue)
 						{
 							Format(menuinfo, sizeof(menuinfo), "%T", "menu_voteday", client);

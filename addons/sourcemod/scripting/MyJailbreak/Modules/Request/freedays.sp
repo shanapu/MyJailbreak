@@ -93,7 +93,7 @@ public Action Command_FreeDay(int warden, int args)
 	{
 		if (gc_bFreeKillFreeDayVictim.BoolValue)
 		{
-			if (IsValidClient(warden, false, false) && warden_iswarden(warden))
+			if (IsValidClient(warden, false, true))
 			{
 				char info1[255];
 				Menu menu5 = CreateMenu(Handler_GiveFreeDay);
