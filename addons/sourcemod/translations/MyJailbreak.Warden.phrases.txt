@@ -1253,4 +1253,19 @@
 		"en"		"Unmute all Prisoners"
 	}
 
+	"warden_rebel_title"
+	{
+		"en"		"Rebels Menu"
+	}
+
+	"warden_rebel_mark"
+	{
+		"en"		"Mark a Player as Rebel"
+	}
+
+	"warden_rebel_unmark"
+	{
+		"en"		"Remove a Player from Rebels"
+	}
+
 }

@@ -5,8 +5,11 @@
 *Added*
 *  Ratio: Force player on connect or mapstart to terror team
     *  new cvar - sm_ratio_force_t 0 - disabled, 1 - force player on connect to join T side
-*  Myjailbreak: Admincommand to force end the round as a draw 
+*  Myjailbreak: Player can shoot buttons to toggle them. Big Thx to good_live & devu4!
     *  new cvar - sm_myjb_shoot_buttons 0 - disabled, 1 - allow player to trigger a map button by shooting it
+*  Warden: A small menu to Mark or Unmark a player as rebel
+    *  new command - sm_markrebel - Allows Warden to mark/unmark prisoner as rebel
+    *  new cvar - sm_warden_mark_rebel - 0 - disabled, 1 - enable allow warden to mark/unmark prisoner as rebel (hosties)
   
   
   **[Beta 6.1]** - smaller fixes

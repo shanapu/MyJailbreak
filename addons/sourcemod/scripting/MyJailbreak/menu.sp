@@ -91,6 +91,7 @@ ConVar g_bOpen;
 ConVar g_bRandom;
 ConVar g_bRequest;
 ConVar g_bWarden;
+ConVar g_bWardenRebel;
 ConVar g_bSparks;
 ConVar g_bPlayerFreeday;
 ConVar g_bDealDamage;
@@ -199,6 +200,7 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 public void OnConfigsExecuted()
 {
 	g_bWarden = FindConVar("sm_warden_enable");
+	g_bWardenRebel = FindConVar("sm_warden_mark_rebel");
 	g_bRules = FindConVar("sm_hosties_rules_enable");
 	g_bCheck = FindConVar("sm_hosties_checkplayers_enable");
 	g_bMath = FindConVar("sm_warden_math");
@@ -369,6 +371,14 @@ public Action Command_OpenMenu(int client, int args)
 						{
 							Format(menuinfo, sizeof(menuinfo), "%T", "menu_playerfreeday", client);
 							mainmenu.AddItem("playerfreeday", menuinfo);
+						}
+					}
+					if(g_bWardenRebel != null)
+					{
+						if(g_bWardenRebel.BoolValue)
+						{
+							Format(menuinfo, sizeof(menuinfo), "%T", "menu_rebel", client);
+							mainmenu.AddItem("rebel", menuinfo);
 						}
 					}
 					if(GetCommandFlags("sm_tg") != INVALID_FCVAR_FLAGS)
@@ -737,6 +747,10 @@ public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selec
 		else if ( strcmp(info,"mute") == 0 ) 
 		{
 			FakeClientCommand(client, "sm_wmute");
+		}
+		else if ( strcmp(info,"rebel") == 0 ) 
+		{
+			FakeClientCommand(client, "sm_markrebel");
 		}
 		else if ( strcmp(info,"kill") == 0 ) 
 		{

@@ -119,6 +119,7 @@ char g_sMyJBLogFile[PLATFORM_MAX_PATH];
 #include "MyJailbreak/Modules/Warden/color.sp"
 #include "MyJailbreak/Modules/Warden/laser.sp"
 #include "MyJailbreak/Modules/Warden/painter.sp"
+#include "MyJailbreak/Modules/Warden/rebel.sp"
 
 
 //Info
@@ -217,6 +218,7 @@ public void OnPluginStart()
 	Color_OnPluginStart();
 	Laser_OnPluginStart();
 	Painter_OnPluginStart();
+	MarkRebel_OnPluginStart();
 	
 	
 	//AutoExecConfig

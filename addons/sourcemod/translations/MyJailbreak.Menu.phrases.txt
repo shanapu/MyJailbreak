@@ -415,6 +415,11 @@
 		"en"		"Team Games - Games"
 	}
 
+	"menu_rebel"
+	{
+		"en"		"Un/Mark a player as Rebel"
+	}
+
 	"menu_minplayer"
 	{
 		"ru"		"Для голосование за игровой дня, вы должны иметь как минимум {purple}одного КТ и 1 Т"
