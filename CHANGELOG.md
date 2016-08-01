@@ -1,5 +1,13 @@
 ### Change Log
   
+  **[Beta X.X]** - 
+  
+*Added*
+*  Ratio: Force player on connect or mapstart to terror team
+    *  new cvar - sm_ratio_force_t 0 - disabled, 1 - force player on connect to join T side
+  
+  
+  
   **[Beta 6.1]** - smaller fixes
   
 *Fixed*

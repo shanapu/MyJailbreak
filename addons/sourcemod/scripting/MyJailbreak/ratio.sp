@@ -39,6 +39,7 @@ ConVar gc_sCustomCommand;
 ConVar gc_sAdminFlag;
 ConVar gc_bAdsVIP;
 ConVar gc_bVIPQueue;
+ConVar gc_bForceTConnect;
 ConVar gc_iJoinMode;
 ConVar gc_iQuestionTimes;
 
@@ -100,6 +101,7 @@ public void OnPluginStart()
 	gc_sCustomCommand = AutoExecConfig_CreateConVar("sm_ratio_cmd", "ct", "Set your custom chat command for become guard. no need for sm_ or !");
 	gc_fPrisonerPerGuard = AutoExecConfig_CreateConVar("sm_ratio_T_per_CT", "2", "How many prisoners for each guard.", _, true, 1.0);
 	gc_bVIPQueue = AutoExecConfig_CreateConVar("sm_ratio_flag", "1", "0 - disabled, 1 - enable VIPs moved to front of queue", _, true,  0.0, true, 1.0);
+	gc_bForceTConnect = AutoExecConfig_CreateConVar("sm_ratio_force_t", "1", "0 - disabled, 1 - force player on connect to join T side", _, true,  0.0, true, 1.0);
 	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_ratio_vipflag", "a", "Set the flag for VIP");
 	gc_bAdsVIP = AutoExecConfig_CreateConVar("sm_ratio_adsvip", "1", "0 - disabled, 1 - enable adverstiment for 'VIPs moved to front of queue' when player types !quard ", _, true,  0.0, true, 1.0);
 	gc_iJoinMode = AutoExecConfig_CreateConVar("sm_ratio_join_mode", "1", "0 - instandly join ct/queue, no confirmation / 1 - confirm rules / 2 - Qualification questions", _, true,  0.0, true, 2.0);
@@ -111,6 +113,7 @@ public void OnPluginStart()
 	
 	//Hooks
 	AddCommandListener(Event_OnJoinTeam, "jointeam");
+	HookEvent("player_connect_full", Event_OnFullConnect, EventHookMode_Pre);
 	HookEvent("player_team", Event_PlayerTeam_Post, EventHookMode_Post);
 	HookEvent("round_end", Event_RoundEnd_Post, EventHookMode_Post);
 	HookEvent("player_spawn", Event_OnPlayerSpawn, EventHookMode_Post);
@@ -346,6 +349,14 @@ public Action Event_RoundEnd_Post(Handle hEvent, const char[] szName, bool bDont
 }
 
 
+public Action Event_OnFullConnect(Handle event, const char[] name, bool dontBroadcast)
+{
+	int client = GetClientOfUserId(GetEventInt(event, "userid"));
+	if(gc_bForceTConnect.BoolValue) CreateTimer(1.0, Timer_ForceTSide, client);
+	return Plugin_Continue;
+}
+
+
 public Action Event_OnJoinTeam(int client, const char[] szCommand, int iArgCount)
 {
 	if(iArgCount < 1)
@@ -555,6 +566,7 @@ public int Handler_AcceptGuardRules(Handle menu, MenuAction action, int param1, 
 				{
 					ForcePlayerSuicide(client);
 					ChangeClientTeam(client, CS_TEAM_CT);
+					
 				//	CS_RespawnPlayer(client);
 				}
 				else AddToQueue(client);
@@ -568,7 +580,7 @@ public int Handler_AcceptGuardRules(Handle menu, MenuAction action, int param1, 
 	}
 }
 
-//WIP
+//
 public void Menu_GuardQuestions(int client)
 {
 	char info[64], random[64];
@@ -625,7 +637,7 @@ public void Menu_GuardQuestions(int client)
 	SendPanelToClient(AcceptMenu, client, Handler_GuardQuestions, 20);
 }
 
-//WIP
+//
 public int Handler_GuardQuestions(Handle menu, MenuAction action, int param1, int param2)
 {
 	int client = param1;
@@ -643,6 +655,7 @@ public int Handler_GuardQuestions(Handle menu, MenuAction action, int param1, in
 						{
 							ForcePlayerSuicide(client);
 							ChangeClientTeam(client, CS_TEAM_CT);
+							
 						//	CS_RespawnPlayer(client);
 						}
 						else AddToQueue(client);
@@ -663,6 +676,7 @@ public int Handler_GuardQuestions(Handle menu, MenuAction action, int param1, in
 						{
 							ForcePlayerSuicide(client);
 							ChangeClientTeam(client, CS_TEAM_CT);
+							
 						//	CS_RespawnPlayer(client);
 						}
 						else AddToQueue(client);
@@ -683,6 +697,7 @@ public int Handler_GuardQuestions(Handle menu, MenuAction action, int param1, in
 						{
 							ForcePlayerSuicide(client);
 							ChangeClientTeam(client, CS_TEAM_CT);
+							
 						//	CS_RespawnPlayer(client);
 						}
 						else AddToQueue(client);
@@ -739,8 +754,15 @@ public Action Timer_SlayPlayer(Handle hTimer, any iUserId)
 		ForcePlayerSuicide(client);
 		ChangeClientTeam(client, CS_TEAM_T);
 		CS_RespawnPlayer(client);
+		
 	}
 	return Plugin_Stop;
+}
+
+
+public Action Timer_ForceTSide(Handle timer, any client)
+{
+	ChangeClientTeam(client, CS_TEAM_T);
 }
 
 
@@ -810,6 +832,7 @@ stock void FixTeamRatio()
 		}
 		
 		SetClientPendingTeam(client, CS_TEAM_CT);
+		
 		bMovedPlayers = true;
 	}
 	
@@ -918,4 +941,5 @@ stock int GetClientPendingTeam(int client)
 stock void SetClientPendingTeam(int client, int team)
 {
 	SetEntProp(client, Prop_Send, "m_iPendingTeamNum", team);
+	
 }
