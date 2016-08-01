@@ -26,6 +26,8 @@
 
 //Includes
 #include <myjailbreak> //... all other includes in myjailbreak.inc
+#include <voiceannounce_ex>
+#include <basecomm>
 
 
 //Compiler Options
@@ -37,10 +39,13 @@
 ConVar gc_bMute;
 ConVar gc_bMuteEnd;
 ConVar gc_sAdminFlagMute;
+ConVar gc_bMuteTalkOver;
+ConVar gc_bMuteTalkOverTeam;
 
 
 //Boolean
 bool IsMuted[MAXPLAYERS+1] = {false, ...};
+bool TempMuted[MAXPLAYERS+1] = {false, ...};
 
 
 //Strings
@@ -60,9 +65,11 @@ public void Mute_OnPluginStart()
 	gc_bMute = AutoExecConfig_CreateConVar("sm_warden_mute", "1", "0 - disabled, 1 - Allow the warden to mute T-side player", _, true, 0.0, true, 1.0);
 	gc_bMuteEnd = AutoExecConfig_CreateConVar("sm_warden_mute_round", "1", "0 - disabled, 1 - Allow the warden to mute a player until roundend", _, true, 0.0, true, 1.0);
 	gc_sAdminFlagMute = AutoExecConfig_CreateConVar("sm_warden_mute_immuntiy", "a", "Set flag for admin/vip Mute immunity. No flag immunity for all. so don't leave blank!");
+	gc_bMuteTalkOver = AutoExecConfig_CreateConVar("sm_warden_talkover", "1", "0 - disabled, 1 - temporary mutes all client when the warden speaks", _, true, 0.0, true, 1.0);
+	gc_bMuteTalkOverTeam = AutoExecConfig_CreateConVar("sm_warden_talkover_team", "1", "0 - mute prisoner & guards on talkover, 1 - only mute prisoners on talkover", _, true, 0.0, true, 1.0);
 	
 	
-	//Hooks 
+	//Hooks
 	HookConVarChange(gc_sAdminFlagMute, Mute_OnSettingChanged);
 	HookEvent("round_end", Mute_Event_RoundEnd);
 	
@@ -170,9 +177,53 @@ public void Mute_OnAvailableLR(int Announced)
 	LoopClients(i) if(IsMuted[i] && IsPlayerAlive(i)) UnMuteClient(i);
 }
 
+
 public void Mute_OnMapEnd()
 {
 	LoopClients(i) if(IsMuted[i]) UnMuteClient(i);
+}
+
+
+// Mute Terror when Warden speaks
+public int OnClientSpeakingEx(int client)
+{
+	if (warden_iswarden(client) && gc_bMuteTalkOver.BoolValue)
+	{
+		LoopValidClients(i, false, true)
+		{
+			if (!CheckVipFlag(i,g_sAdminFlagMute))
+			{
+				if ((GetClientTeam(i) == CS_TEAM_T) && (!IsMuted[i] || (GetClientListeningFlags(i) != VOICE_MUTED)) || 
+					(!gc_bMuteTalkOverTeam.BoolValue && !warden_iswarden(i) && (GetClientTeam(i) == CS_TEAM_CT) && (GetClientListeningFlags(i) != VOICE_MUTED)))
+				{
+					PrintCenterText(i, "%t", "warden_talkover");
+					TempMuted[i] = true;
+					SetClientListeningFlags(i, VOICE_MUTED);
+				}
+			}
+		}
+	}
+	else if (TempMuted[client])
+	{
+		PrintCenterText(client, "%t", "warden_talkover");
+	}
+}
+
+
+// Mute Terror when Warden end speaking
+public int OnClientSpeakingEnd(int client)
+{
+	if (warden_iswarden(client) && gc_bMuteTalkOver.BoolValue)
+	{
+		LoopValidClients(i, false, true)
+		{
+			if (TempMuted[i] && !IsMuted[i] && !BaseComm_IsClientMuted(i))
+			{
+				TempMuted[i] = false;
+				SetClientListeningFlags(i, VOICE_NORMAL);
+			}
+		}
+	}
 }
 
 
@@ -209,9 +260,10 @@ public Action MuteClient(int client, int time)
 	}
 }
 
+
 public void UnMuteClient(any client)
 {
-	if(IsValidClient(client,true,true) && IsMuted[client])
+	if(IsValidClient(client,true,true) && IsMuted[client] && !BaseComm_IsClientMuted(client))
 	{
 		SetClientListeningFlags(client, VOICE_NORMAL);
 		IsMuted[client] = false;

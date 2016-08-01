@@ -11,7 +11,13 @@
     *  new command - sm_markrebel - Allows Warden to mark/unmark prisoner as rebel
     *  new cvar - sm_warden_mark_rebel - 0 - disabled, 1 - enable allow warden to mark/unmark prisoner as rebel (hosties)
 *  HUD: Show LastGuards name on active Last Guard Rule
+*  Warden - Mute: Automute player when warden speaks (talkover / be quiet). Exluding admin/vip
+    *  new cvar - sm_warden_talkover - 0 - disabled, 1 - temporary mutes all client when the warden speaks
+    *  new cvar - sm_warden_talkover_team - 0 - mute prisoner & guards on talkover, 1 - only mute prisoners on talkover
   
+*New Requirements*
+*  [ANY] VoiceannounceEX (VoiceHook) - https://forums.alliedmods.net/showthread.php?p=2177167
+*  DHooks (Dynamic Hooks - Dev Preview) - https://forums.alliedmods.net/showthread.php?t=180114
   
   **[Beta 6.1]** - smaller fixes
   

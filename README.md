@@ -85,8 +85,11 @@ coded with ![](http://shanapu.de/githearth-small.png) free software
 * SM File/Folder Downloader and Precacher https://forums.alliedmods.net/showthread.php?p=602270 for zombie/warden model download
 * Simple Chat Prozessor https://bitbucket.org/minimoney1/simple-chat-processor
 * CustomPlayerSkins https://forums.alliedmods.net/showthread.php?t=240703
+* VoiceannounceEX (VoiceHook) https://forums.alliedmods.net/showthread.php?p=2177167
+* DHooks (Dynamic Hooks - Dev Preview) https://forums.alliedmods.net/showthread.php?t=180114
 
 *Include files needed for compile*
+  
 * autoexecconfig.inc https://forums.alliedmods.net/showthread.php?t=204254
 * colors.inc https://forums.alliedmods.net/showthread.php?t=96831
 * emitsoundany.inc https://forums.alliedmods.net/showthread.php?t=237045
@@ -96,11 +99,14 @@ coded with ![](http://shanapu.de/githearth-small.png) free software
 * warden.inc https://github.com/shanapu/MyJailbreak/blob/master/addons/sourcemod/scripting/include/warden.inc (myjailbreak version)
 * smlib.inc https://github.com/bcserv/smlib
 * CustomPlayerSkins.inc https://forums.alliedmods.net/showthread.php?t=240703
+* voiceannounce_ex.inc https://forums.alliedmods.net/showthread.php?p=2177167
+* lastrequest.inc https://github.com/dataviruset/sm-hosties (not in MyJB package)
+* hosties.inc https://github.com/dataviruset/sm-hosties (not in MyJB package)
   
 ---
   
 ***Installation***
-
+  
 1. Make sure you have the *latest versions* of the **required plugins**
 2. Download the [latest release](https://github.com/shanapu/MyJailbreak/releases
 3. Copy the folders ```addons/```,``` cfg/```, ```materials/```, ```models/``` &``` sound/``` to *your root* ```csgo/``` directory  
@@ -149,7 +155,9 @@ based/merged/used code/idea plugins:
 * https://forums.alliedmods.net/showthread.php?p=1922088
 * https://github.com/walmar/ShortSprint
 * https://github.com/KissLick/TeamGames/
+* https://github.com/TiBarification/Jail-Warden-Pro
 * https://github.com/AG-Headline/Hunger-Games-Beacon
+* https://forums.alliedmods.net/showthread.php?p=2376483
 * https://forums.alliedmods.net/showthread.php?p=1086127
 * https://forums.alliedmods.net/showthread.php?t=234169
 * https://forums.alliedmods.net/showthread.php?p=1749220
