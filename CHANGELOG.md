@@ -5,7 +5,8 @@
 *Added*
 *  Ratio: Force player on connect or mapstart to terror team
     *  new cvar - sm_ratio_force_t 0 - disabled, 1 - force player on connect to join T side
-  
+*  Myjailbreak: Admincommand to force end the round as a draw 
+    *  new cvar - sm_myjb_shoot_buttons 0 - disabled, 1 - allow player to trigger a map button by shooting it
   
   
   **[Beta 6.1]** - smaller fixes

@@ -36,6 +36,7 @@
 //Console Variables
 ConVar gc_bTag;
 ConVar gc_bLogging;
+ConVar gc_bShootButton;
 
 
 //Booleans
@@ -71,6 +72,10 @@ public void OnPluginStart()
 	//Create Console Variables
 	gc_bTag = CreateConVar("sm_myjb_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", _, true,  0.0, true, 1.0);
 	gc_bLogging = CreateConVar("sm_myjb_log", "1", "Allow MyJailbreak to log events, freekills & eventdays in logs/MyJailbreak", _, true,  0.0, true, 1.0);
+	gc_bShootButton = CreateConVar("sm_myjb_shoot_buttons", "1", "0 - disabled, 1 - allow player to trigger a map button by shooting it", _, true,  0.0, true, 1.0);
+	
+	//Hooks
+	HookEvent("round_start", Event_RoundStart);
 }
 
 
@@ -100,6 +105,24 @@ public void OnConfigsExecuted()
 public Action Command_EndRound(int client, int args)
 {
 	CS_TerminateRound(5.5, CSRoundEnd_Draw, true); 
+}
+
+
+/******************************************************************************
+                   EVENTS
+******************************************************************************/
+
+
+public Action Event_RoundStart(Handle event, const char[] name, bool dontBroadcast)
+{
+	if(gc_bShootButton.BoolValue)
+	{
+		int ent = -1;
+		while((ent = FindEntityByClassname(ent, "func_button")) != -1)
+		{
+			SetEntProp(ent, Prop_Data, "m_spawnflags", GetEntProp(ent, Prop_Data, "m_spawnflags")|512);
+		}
+	}
 }
 
 
