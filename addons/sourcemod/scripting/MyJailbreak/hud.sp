@@ -179,15 +179,28 @@ public void ShowHUD()
 	{
 		if(g_bEnableHud[i])
 		{
-			if(warden == -1)
+			if(IsLastGuardRule())
+			{
+				int lastCT = (GetClientTeam(i) == CS_TEAM_CT);
+				
+				if(IsEventDayPlanned())
+				{
+					PrintHintText(i, "<font face='Arial' color='#006699'>%t </font>%N</font>\n<font face='Arial' color='#B980EF'>%t</font> %s\n<font face='Arial' color='#5E97D8'>%t</font> %i/%i\t<font face='Arial' color='#E3AD39'>%t</font> %i/%i\n", "hud_lastCT", lastCT, "hud_planned", EventDay, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
+				}
+				else
+				{
+					PrintHintText(i, "<font face='Arial' color='#006699'>%t </font>%N</font>\n<font face='Arial' color='#5E97D8'>%t</font> %i/%i\t<font face='Arial' color='#E3AD39'>%t</font> %i/%i\n", "hud_lastCT", lastCT, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
+				}
+			}
+			else if(IsEventDayRunning())
+			{
+				PrintHintText(i, "<font face='Arial' color='#B980EF'>%t </font>%s\n<font face='Arial' color='#5E97D8'>%t</font> %i/%i\t<font face='Arial' color='#E3AD39'>%t</font> %i/%i\n", "hud_running", EventDay, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
+			}
+			else if(warden == -1)
 			{
 				if(IsEventDayPlanned())
 				{
 					PrintHintText(i, "<font face='Arial' color='#006699'>%t </font><font face='Arial' color='#FE4040'>%t</font>\n<font face='Arial' color='#B980EF'>%t</font> %s\n<font face='Arial' color='#5E97D8'>%t</font> %i/%i\t<font face='Arial' color='#E3AD39'>%t</font> %i/%i\n", "hud_warden", "hud_nowarden", "hud_planned", EventDay, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
-				}
-				else if(IsEventDayRunning())
-				{
-					PrintHintText(i, "<font face='Arial' color='#B980EF'>%t </font>%s\n<font face='Arial' color='#5E97D8'>%t</font> %i/%i\t<font face='Arial' color='#E3AD39'>%t</font> %i/%i\n", "hud_running", EventDay, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
 				}
 				else
 				{
@@ -199,10 +212,6 @@ public void ShowHUD()
 				if(IsEventDayPlanned())
 				{
 					PrintHintText(i, "<font face='Arial' color='#006699'>%t </font>%N\n<font face='Arial' color='#B980EF'>%t</font> %s\n<font face='Arial' color='#5E97D8'>%t</font> %i/%i\t<font face='Arial' color='#E3AD39'>%t</font> %i/%i\n", "hud_warden", warden, "hud_planned", EventDay, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
-				}
-				else if(IsEventDayRunning())
-				{
-					PrintHintText(i, "<font face='Arial' color='#B980EF'>%t </font>%s\n<font face='Arial' color='#5E97D8'>%t</font> %i/%i\t<font face='Arial' color='#E3AD39'>%t</font> %i/%i\n", "hud_running", EventDay, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
 				}
 				else
 				{

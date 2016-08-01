@@ -10,6 +10,7 @@
 *  Warden: A small menu to Mark or Unmark a player as rebel
     *  new command - sm_markrebel - Allows Warden to mark/unmark prisoner as rebel
     *  new cvar - sm_warden_mark_rebel - 0 - disabled, 1 - enable allow warden to mark/unmark prisoner as rebel (hosties)
+*  HUD: Show LastGuards name on active Last Guard Rule
   
   
   **[Beta 6.1]** - smaller fixes
