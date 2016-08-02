@@ -24,7 +24,7 @@
     *  new cvar - sm_warden_icon_ct - Path to the guard icon DONT TYPE .vmt or .vft
     *  new cvar - sm_warden_icon_t_enable - 0 - disabled, 1 - enable the icon above the prisoner head
     *  new cvar - sm_warden_icon_t - Path to the prisoner icon DONT TYPE .vmt or .vft
-    *  new icons - https://shanapu.de/myjb/icons.jpg
+    *  new icons - http://shanapu.de/myjb/icons.jpg
   
   
 *New Requirements*

@@ -83,7 +83,7 @@ char g_sAdminFlag[32];
 char g_sOverlayStartPath[256];
 
 public Plugin myinfo = {
-	name = "MyJailbreak - HEbattle",
+	name = "MyJailbreak - HE Battle",
 	author = "shanapu",
 	description = "Event Day for Jailbreak Server",
 	version = PLUGIN_VERSION,
