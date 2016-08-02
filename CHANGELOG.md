@@ -29,6 +29,8 @@
     *  new command - sm_ratio - Allows the admin toggle the ratio check and player to see if ratio is enabled
     *  new cvar - sm_ratio_disabled - Allow the admin to toggle 'ratio check & autoswap' on/off with !ratio
     *  new cvar - sm_ratio_disbaled_announce - Announce in a chatmessage on roundend when ratio is disabled
+*  Ratio: No Agreement, or Questions, or force to T connect for VIP/Admins
+    *  new cvar - sm_ratio_vip_bypass - Bypass Admin/VIP though agreement / question
   
   
 *New Requirements*

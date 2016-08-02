@@ -42,6 +42,7 @@ ConVar gc_bToggle;
 ConVar gc_bToggleAnnounce;
 ConVar gc_bAdsVIP;
 ConVar gc_bVIPQueue;
+ConVar gc_bAdminBypass;
 ConVar gc_bForceTConnect;
 ConVar gc_iJoinMode;
 ConVar gc_iQuestionTimes;
@@ -115,6 +116,7 @@ public void OnPluginStart()
 	gc_bAdsVIP = AutoExecConfig_CreateConVar("sm_ratio_adsvip", "1", "0 - disabled, 1 - enable adverstiment for 'VIPs moved to front of queue' when player types !quard ", _, true,  0.0, true, 1.0);
 	gc_iJoinMode = AutoExecConfig_CreateConVar("sm_ratio_join_mode", "1", "0 - instandly join ct/queue, no confirmation / 1 - confirm rules / 2 - Qualification questions", _, true,  0.0, true, 2.0);
 	gc_iQuestionTimes = AutoExecConfig_CreateConVar("sm_ratio_questions", "3", "How many question a player have to answer before join ct/queue. need sm_ratio_join_mode 2", _, true,  1.0, true, 5.0);
+	gc_bAdminBypass = AutoExecConfig_CreateConVar("sm_ratio_vip_bypass", "1", "Bypass Admin/VIP though agreement / question", _, true,  0.0, true, 1.0);
 	
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
@@ -282,9 +284,9 @@ public Action Command_JoinGuardQueue(int client, int iArgNum)
 	
 	if(iIndex == -1)
 	{
-		if(gc_iJoinMode.IntValue == 0) AddToQueue(client);
-		if(gc_iJoinMode.IntValue == 1) Menu_AcceptGuardRules(client);
-		if(gc_iJoinMode.IntValue == 2) Menu_GuardQuestions(client);
+		if((gc_iJoinMode.IntValue == 0) || (gc_bAdminBypass.BoolValue && CheckVipFlag(client, g_sAdminFlag))) AddToQueue(client);
+		if((gc_iJoinMode.IntValue == 1) && ((gc_bAdminBypass.BoolValue && !CheckVipFlag(client, g_sAdminFlag)) || (!gc_bAdminBypass.BoolValue))) Menu_AcceptGuardRules(client);
+		if((gc_iJoinMode.IntValue == 2) && ((gc_bAdminBypass.BoolValue && !CheckVipFlag(client, g_sAdminFlag)) || (!gc_bAdminBypass.BoolValue))) Menu_GuardQuestions(client);
 		questiontimes[client] = gc_iQuestionTimes.IntValue-1;
 		return Plugin_Handled;
 	}
@@ -415,7 +417,7 @@ public Action Event_RoundEnd_Post(Handle hEvent, const char[] szName, bool bDont
 public Action Event_OnFullConnect(Handle event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(GetEventInt(event, "userid"));
-	if(gc_bForceTConnect.BoolValue && g_bRatioEnable) CreateTimer(1.0, Timer_ForceTSide, client);
+	if(gc_bForceTConnect.BoolValue && g_bRatioEnable && ((gc_bAdminBypass.BoolValue && !CheckVipFlag(client, g_sAdminFlag)) || !gc_bAdminBypass.BoolValue)) CreateTimer(1.0, Timer_ForceTSide, client);
 	return Plugin_Continue;
 }
 
@@ -462,9 +464,9 @@ public Action Event_OnJoinTeam(int client, const char[] szCommand, int iArgCount
 		
 		if(iIndex == -1)
 		{
-			if(gc_iJoinMode.IntValue == 0) FullAddToQueue(client);
-			if(gc_iJoinMode.IntValue == 1) Menu_AcceptGuardRules(client);
-			if(gc_iJoinMode.IntValue == 2) Menu_GuardQuestions(client);
+			if((gc_iJoinMode.IntValue == 0) || (gc_bAdminBypass.BoolValue && CheckVipFlag(client, g_sAdminFlag))) FullAddToQueue(client);
+			if((gc_iJoinMode.IntValue == 1) && ((gc_bAdminBypass.BoolValue && !CheckVipFlag(client, g_sAdminFlag)) || (!gc_bAdminBypass.BoolValue))) Menu_AcceptGuardRules(client);
+			if((gc_iJoinMode.IntValue == 2) && ((gc_bAdminBypass.BoolValue && !CheckVipFlag(client, g_sAdminFlag)) || (!gc_bAdminBypass.BoolValue))) Menu_GuardQuestions(client);
 			questiontimes[client] = gc_iQuestionTimes.IntValue-1;
 			return Plugin_Handled;
 		}
@@ -476,9 +478,9 @@ public Action Event_OnJoinTeam(int client, const char[] szCommand, int iArgCount
 		}
 	}
 	
-	if(gc_iJoinMode.IntValue == 0) return Plugin_Continue;
-	if(gc_iJoinMode.IntValue == 1) Menu_AcceptGuardRules(client);
-	if(gc_iJoinMode.IntValue == 2) Menu_GuardQuestions(client);
+	if((gc_iJoinMode.IntValue == 0) || (gc_bAdminBypass.BoolValue && CheckVipFlag(client, g_sAdminFlag))) return Plugin_Continue;
+	if((gc_iJoinMode.IntValue == 1) && ((gc_bAdminBypass.BoolValue && !CheckVipFlag(client, g_sAdminFlag)) || (!gc_bAdminBypass.BoolValue))) Menu_AcceptGuardRules(client);
+	if((gc_iJoinMode.IntValue == 2) && ((gc_bAdminBypass.BoolValue && !CheckVipFlag(client, g_sAdminFlag)) || (!gc_bAdminBypass.BoolValue))) Menu_GuardQuestions(client);
 	questiontimes[client] = gc_iQuestionTimes.IntValue-1;
 	return Plugin_Handled;
 }
