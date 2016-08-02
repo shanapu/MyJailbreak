@@ -599,6 +599,7 @@ public void OnClientDisconnect(int client)
 	
 	Painter_OnClientDisconnect(client);
 	HandCuffs_OnClientDisconnect(client);
+	Icon_OnClientDisconnect(client);
 }
 
 

@@ -14,11 +14,18 @@
 *  Warden - Mute: Automute player when warden speaks (talkover / be quiet). Exluding admin/vip
     *  new cvar - sm_warden_talkover - 0 - disabled, 1 - temporary mutes all client when the warden speaks
     *  new cvar - sm_warden_talkover_team - 0 - mute prisoner & guards on talkover, 1 - only mute prisoners on talkover
-  *  Warden - Counter: Count all terrorist in a radius around warden
+*  Warden - Counter: Count all terrorist in a radius around warden
     *  new command - sm_count - Allows Warden to count the prisoners in his radius
     *  new cvar - sm_warden_counter - 0 - disabled, 1 - Allow the warden count player in radius
     *  new cvar - sm_warden_counter_radius - Radius in meter to count prisoners inside
     *  new cvar - sm_warden_counter_mode - 1 - Show prisoner count in chat / 2 - Show prisoner count in HUD / 3 - Show prisoner count in chat & HUD / 4 - Show names in Menu / 5 - Show prisoner count in chat & show names in Menu / 6 - Show prisoner count in HUD & show names in Menu / 7 - Show prisoner count in chat & HUD & show names in Menu
+*  Warden - Icons: Icons above Players head for warden, guard & prisoners
+    *  new cvar - sm_warden_icon_ct_enable - 0 - disabled, 1 - enable the icon above the guards head
+    *  new cvar - sm_warden_icon_ct - Path to the guard icon DONT TYPE .vmt or .vft
+    *  new cvar - sm_warden_icon_t_enable - 0 - disabled, 1 - enable the icon above the prisoner head
+    *  new cvar - sm_warden_icon_t - Path to the prisoner icon DONT TYPE .vmt or .vft
+    *  new icons - https://shanapu.de/myjb/icons.jpg
+  
   
 *New Requirements*
 *  [ANY] VoiceannounceEX (VoiceHook) - https://forums.alliedmods.net/showthread.php?p=2177167
