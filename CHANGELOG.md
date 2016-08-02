@@ -25,6 +25,10 @@
     *  new cvar - sm_warden_icon_t_enable - 0 - disabled, 1 - enable the icon above the prisoner head
     *  new cvar - sm_warden_icon_t - Path to the prisoner icon DONT TYPE .vmt or .vft
     *  new icons - http://shanapu.de/myjb/icons.jpg
+*  Ratio: Possibility for admin to toggle ratio plugin on/off
+    *  new command - sm_ratio - Allows the admin toggle the ratio check and player to see if ratio is enabled
+    *  new cvar - sm_ratio_disabled - Allow the admin to toggle 'ratio check & autoswap' on/off with !ratio
+    *  new cvar - sm_ratio_disbaled_announce - Announce in a chatmessage on roundend when ratio is disabled
   
   
 *New Requirements*

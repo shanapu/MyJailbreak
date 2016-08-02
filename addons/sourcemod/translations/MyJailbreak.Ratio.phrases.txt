@@ -65,7 +65,7 @@
 	"ratio_advip"
 	{
 		"en"		"Get a {darkred}VIP{default} to be automatically moved to the front of the queue."
-		"ru"		"Получите {darkred}VIP{defailt} , чтобы автоматически переместиться в начало очереди."
+		"ru"		"Получите {darkred}VIP{default}, чтобы автоматически переместиться в начало очереди."
 	}
 
 	"ratio_random"
@@ -317,6 +317,27 @@
 		"de"		"Cannot play on guards because you are {green}CT{default} banned."
 		"en"		"Du kannst nicht als Wärter spielen. Du bist als{green}CT{default} gebanned."
 		"ru"		"Вам запрещено играть за КТ, потому что Вы {green}забанены{default} за КТ."
+	}
+
+	"ratio_disabled"
+	{
+		"en"		"Ratio is disabled by Admin"
+	}
+
+	"ratio_hasdisabled"
+	{
+		"en"		"Admin has disabled the Ratio"
+	}
+
+	"ratio_hasactivated"
+	{
+		"en"		"Admin has activated the Ratio. Ratio fix next round."
+	}
+
+	"ratio_active"
+	{
+		"#format"   "{1:f}"
+		"en"		"Ratio is active! 1 Guards to {1} Prisoners"
 	}
 
 }
