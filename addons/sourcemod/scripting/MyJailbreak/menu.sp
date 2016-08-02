@@ -91,6 +91,7 @@ ConVar g_bOpen;
 ConVar g_bRandom;
 ConVar g_bRequest;
 ConVar g_bWarden;
+ConVar g_bWardenCount;
 ConVar g_bWardenRebel;
 ConVar g_bSparks;
 ConVar g_bPlayerFreeday;
@@ -200,6 +201,7 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 public void OnConfigsExecuted()
 {
 	g_bWarden = FindConVar("sm_warden_enable");
+	g_bWardenCount = FindConVar("sm_warden_counter");
 	g_bWardenRebel = FindConVar("sm_warden_mark_rebel");
 	g_bRules = FindConVar("sm_hosties_rules_enable");
 	g_bCheck = FindConVar("sm_hosties_checkplayers_enable");
@@ -363,6 +365,14 @@ public Action Command_OpenMenu(int client, int args)
 						{
 							Format(menuinfo, sizeof(menuinfo), "%T", "menu_countdown", client);
 							mainmenu.AddItem("countdown", menuinfo);
+						}
+					}
+					if(g_bWardenCount != null)
+					{
+						if(g_bWardenCount.BoolValue)
+						{
+							Format(menuinfo, sizeof(menuinfo), "%T", "menu_count", client);
+							mainmenu.AddItem("count", menuinfo);
 						}
 					}
 					if(g_bPlayerFreeday != null)
@@ -723,6 +733,10 @@ public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selec
 		else if ( strcmp(info,"setdays") == 0 ) 
 		{
 			FakeClientCommand(client, "sm_setdays");
+		}
+		else if ( strcmp(info,"count") == 0 ) 
+		{
+			FakeClientCommand(client, "sm_count");
 		}
 		else if ( strcmp(info,"laser") == 0 ) 
 		{
