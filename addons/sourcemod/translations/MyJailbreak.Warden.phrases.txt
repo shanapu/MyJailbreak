@@ -1273,4 +1273,15 @@
 		"en"		"Warden speaks, you have been muted."
 	}
 
+	"warden_info_counter"
+	{
+		"en"		"Prisoner in Radius:"
+	}
+
+	"warden_counter"
+	{
+		"#format"   "{1:i}"
+		"en"		"There are {1} prisoner in your radius"
+	}
+
 }
