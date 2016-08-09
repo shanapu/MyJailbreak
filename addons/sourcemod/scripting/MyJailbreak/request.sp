@@ -201,13 +201,16 @@ public void Event_RoundEnd(Handle event, char[] name, bool dontBroadcast)
 
 public Action Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast) 
 {
-	int victim = GetClientOfUserId(GetEventInt(event, "userid")); // Get the dead clients id
-	int attacker = GetClientOfUserId(GetEventInt(event, "attacker")); // Get the attacker clients id
+	int victimID = GetEventInt(event, "userid"); // Get the dead user id
+	int victim = GetClientOfUserId(victimID); // Get the dead clients id
+	int attackerID = GetEventInt(event, "attacker"); // Get the user clients id
+	int attacker = GetClientOfUserId(attackerID); // Get the attacker clients id
+	
 	
 	if(IsValidClient(attacker, true, false) && (attacker != victim))
 	{
-		g_iKilledBy[victim] = attacker;
-		g_iHasKilled[attacker] = victim;
+		g_iKilledBy[victim] = attackerID;
+		g_iHasKilled[attacker] = victimID;
 	}
 }
 

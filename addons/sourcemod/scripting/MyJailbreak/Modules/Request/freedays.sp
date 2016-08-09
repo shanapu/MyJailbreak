@@ -60,7 +60,6 @@ public void Freedays_OnPluginStart()
 	
 	//Hooks 
 	HookEvent("round_poststart",  Freedays_Event_RoundStart_Post);
-	HookEvent("player_death", Freedays_Event_PlayerDeath);
 	HookConVarChange(gc_sCustomCommandGiveFreeDay, Freedays_OnSettingChanged);
 	
 	
@@ -134,8 +133,6 @@ public Action  Freedays_Event_RoundStart_Post(Handle event, char [] name, bool d
 	LoopClients(client)
 	{
 		g_iFreeKillCounter[client] = 0;
-		g_iKilledBy[client] = 0;
-		g_iHasKilled[client] = 0;
 		
 		if(StrEqual(EventDay, "none", false) && g_bHaveFreeDay[client])
 		{
@@ -143,19 +140,6 @@ public Action  Freedays_Event_RoundStart_Post(Handle event, char [] name, bool d
 			SetEntityRenderColor(client, gc_iFreeDayColorRed.IntValue, gc_iFreeDayColorGreen.IntValue, gc_iFreeDayColorBlue.IntValue, 255);
 			g_bHaveFreeDay[client] = false;
 		}
-	}
-}
-
-
-public Action Freedays_Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast) 
-{
-	int victim = GetClientOfUserId(GetEventInt(event, "userid")); // Get the dead clients id
-	int attacker = GetClientOfUserId(GetEventInt(event, "attacker")); // Get the attacker clients id
-	
-	if(IsValidClient(attacker, true, false) && (attacker != victim))
-	{
-		g_iKilledBy[victim] = attacker;
-		g_iHasKilled[attacker] = victim;
 	}
 }
 

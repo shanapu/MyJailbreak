@@ -101,7 +101,7 @@ public int Handler_KillReason(Menu menu, MenuAction action, int client, int Posi
 		char Item[11];
 		menu.GetItem(Position,Item,sizeof(Item));
 		int choice = StringToInt(Item);
-		int victim = g_iHasKilled[client];
+		int victim = GetClientOfUserId(g_iHasKilled[client]);
 		
 		if (IsValidClient(victim, true, true) && IsValidClient(client, false, true))
 		{
@@ -136,6 +136,5 @@ public int Handler_KillReason(Menu menu, MenuAction action, int client, int Posi
 	else if (action == MenuAction_End)
 	{
 		delete menu;
-	//	CPrintToChatAll("%t %t", "request_tag", "request_killreason_noanswer", client, g_iHasKilled[client]);
 	}
 }

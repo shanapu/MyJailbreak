@@ -132,7 +132,9 @@ public Action Command_Freekill(int client, int args)
 			{
 				if(!IsRequest)
 				{
-					if(IsValidClient(g_iKilledBy[client], true, true) && IsValidClient(client, true, true))
+					int attacker = GetClientOfUserId(g_iKilledBy[client]);
+					
+					if(IsValidClient(attacker, true, true) && IsValidClient(client, true, true))
 					{
 						if (g_iFreeKillCounter[client] < gc_iFreeKillLimit.IntValue)
 						{
@@ -146,15 +148,15 @@ public Action Command_Freekill(int client, int args)
 							{
 								g_iFreeKillCounter[client]++;
 								FreeKillAcceptMenu(a);
-								CPrintToChatAll("%t %t", "request_tag", "request_freekill", client, g_iKilledBy[client], a);
-								if(ActiveLogging()) LogToFileEx(g_sFreeKillLogFile, "Player %L claiming %L freekilled him. Reported to admin %L", client, g_iKilledBy[client], a);
+								CPrintToChatAll("%t %t", "request_tag", "request_freekill", client, attacker, a);
+								if(ActiveLogging()) LogToFileEx(g_sFreeKillLogFile, "Player %L claiming %L freekilled him. Reported to admin %L", client, attacker, a);
 							}
 							else LoopValidClients(i, false, true) if (warden_iswarden(i) && gc_bReportWarden.BoolValue)
 							{
 								g_iFreeKillCounter[client]++;
 								FreeKillAcceptMenu(i);
-								CPrintToChatAll("%t %t", "request_tag", "request_freekill", client, g_iKilledBy[client], i);
-								if(ActiveLogging()) LogToFileEx(g_sFreeKillLogFile, "Player %L claiming %L freekilled him. Reported to warden %L", client, g_iKilledBy[client], i);
+								CPrintToChatAll("%t %t", "request_tag", "request_freekill", client, attacker, i);
+								if(ActiveLogging()) LogToFileEx(g_sFreeKillLogFile, "Player %L claiming %L freekilled him. Reported to warden %L", client, attacker, i);
 							}
 						}
 						else CPrintToChat(client, "%t %t", "request_tag", "request_freekilltimes", gc_iFreeKillLimit.IntValue);
@@ -315,9 +317,12 @@ public int FreeKillHandler(Menu menu, MenuAction action, int client, int Positio
 			LoopClients(i) if(g_bFreeKilled[i])
 			{
 				g_bFreeKilled[i] = false;
-				ForcePlayerSuicide(g_iKilledBy[i]);
-				if(ActiveLogging()) LogToFileEx(g_sFreeKillLogFile, "Warden/Admin %L accept freekill request of %L  and killed %L", client, i, g_iKilledBy[i]);
-				CPrintToChat(g_iKilledBy[i], "%t %t", "request_tag", "request_killbcfreekill");
+				
+				int attacker = GetClientOfUserId(g_iKilledBy[i]);
+				ForcePlayerSuicide(attacker);
+				
+				if(ActiveLogging()) LogToFileEx(g_sFreeKillLogFile, "Warden/Admin %L accept freekill request of %L  and killed %L", client, i, attacker);
+				CPrintToChat(attacker, "%t %t", "request_tag", "request_killbcfreekill");
 				CPrintToChatAll("%t %t", "warden_tag", "request_killbcfreekillall", i);
 			}
 		}
@@ -334,10 +339,12 @@ public int FreeKillHandler(Menu menu, MenuAction action, int client, int Positio
 		{
 			LoopClients(i) if(g_bFreeKilled[i])
 			{
+				int attacker = GetClientOfUserId(g_iKilledBy[i]);
+				
 				g_bFreeKilled[i] = false;
-				ClientCommand(g_iKilledBy[i], "jointeam %i", CS_TEAM_T);
-				CPrintToChat(g_iKilledBy[i], "%t %t", "request_tag", "request_swapbcfreekill");
-				if(ActiveLogging()) LogToFileEx(g_sFreeKillLogFile, "Warden/Admin %L accept freekill request of %L  and swaped %L to T", client, i, g_iKilledBy[i]);
+				ClientCommand(attacker, "jointeam %i", CS_TEAM_T);
+				CPrintToChat(attacker, "%t %t", "request_tag", "request_swapbcfreekill");
+				if(ActiveLogging()) LogToFileEx(g_sFreeKillLogFile, "Warden/Admin %L accept freekill request of %L  and swaped %L to T", client, i, attacker);
 				CPrintToChatAll("%t %t", "warden_tag", "request_swapbcfreekillall", i);
 			}
 		}
