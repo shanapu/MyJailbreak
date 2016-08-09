@@ -358,7 +358,7 @@ void StartNextRound()
 	g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
 	
 	CPrintToChatAll("%t %t", "duckhunt_tag" , "duckhunt_next");
-	PrintHintTextToAll("%t", "duckhunt_next_nc");
+	PrintCenterTextAll("%t", "duckhunt_next_nc");
 }
 
 public Action Timer_SetModel(Handle timer)
@@ -547,8 +547,8 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 				}
 		}
 		if (TruceTimer != null) KillTimer(TruceTimer);
-		if (winner == 2) PrintHintTextToAll("%t", "duckhunt_twin_nc");
-		if (winner == 3) PrintHintTextToAll("%t", "duckhunt_ctwin_nc");
+		if (winner == 2) PrintCenterTextAll("%t", "duckhunt_twin_nc");
+		if (winner == 3) PrintCenterTextAll("%t", "duckhunt_ctwin_nc");
 		if (g_iRound == g_iMaxRound)
 		{
 			IsDuckHunt = false;
@@ -572,7 +572,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 		LoopClients(i) CreateInfoPanel(i);
 		
 		CPrintToChatAll("%t %t", "duckhunt_tag" , "duckhunt_next");
-		PrintHintTextToAll("%t", "duckhunt_next_nc");
+		PrintCenterTextAll("%t", "duckhunt_next_nc");
 	}
 }
 
@@ -601,7 +601,7 @@ public Action StartTimer(Handle timer)
 		g_iTruceTime--;
 		LoopClients(client) if (IsPlayerAlive(client))
 		{
-			PrintHintText(client,"%t", "duckhunt_timeuntilstart_nc", g_iTruceTime);
+			PrintCenterText(client,"%t", "duckhunt_timeuntilstart_nc", g_iTruceTime);
 		}
 		return Plugin_Continue;
 	}
@@ -621,7 +621,7 @@ public Action StartTimer(Handle timer)
 			{
 				SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
 			}
-			PrintHintText(client,"%t", "duckhunt_start_nc");
+			PrintCenterText(client,"%t", "duckhunt_start_nc");
 			if(gc_bOverlays.BoolValue) ShowOverlay(client, g_sOverlayStartPath, 2.0);
 			if(gc_bSounds.BoolValue)	
 			{

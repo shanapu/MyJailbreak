@@ -290,7 +290,7 @@ void StartNextRound()
 	g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;
 	
 	CPrintToChatAll("%t %t", "freeday_tag" , "freeday_next");
-	PrintHintTextToAll("%t", "freeday_next_nc");
+	PrintCenterTextAll("%t", "freeday_next_nc");
 }
 
 /*
@@ -349,9 +349,9 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 			}
 			if (IsPlayerAlive(client)) 
 			{
-				PrintHintText(client,"%t", "freeday_start_nc");
-				}
+				PrintCenterText(client,"%t", "freeday_start_nc");
 			}
+		}
 		CPrintToChatAll("%t %t", "freeday_tag" , "freeday_start");
 	}
 	else
@@ -414,7 +414,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 		LoopClients(i) CreateInfoPanel(i);
 		
 		CPrintToChatAll("%t %t", "freeday_tag" , "freeday_next");
-		PrintHintTextToAll("%t", "freeday_next_nc");
+		PrintCenterTextAll("%t", "freeday_next_nc");
 	}
 }
 

@@ -359,7 +359,7 @@ void StartNextRound()
 	g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
 	
 	CPrintToChatAll("%t %t", "zombie_tag" , "zombie_next");
-	PrintHintTextToAll("%t", "zombie_next_nc");
+	PrintCenterTextAll("%t", "zombie_next_nc");
 }
 
 
@@ -634,8 +634,8 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 		
 		delete FreezeTimer;
 		
-		if (winner == 2) PrintHintTextToAll("%t", "zombie_twin_nc");
-		if (winner == 3) PrintHintTextToAll("%t", "zombie_ctwin_nc");
+		if (winner == 2) PrintCenterTextAll("%t", "zombie_twin_nc");
+		if (winner == 3) PrintCenterTextAll("%t", "zombie_ctwin_nc");
 		if (g_iRound == g_iMaxRound)
 		{
 			IsZombie = false;
@@ -661,7 +661,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 		LoopClients(i) CreateInfoPanel(i);
 		
 		CPrintToChatAll("%t %t", "zombie_tag" , "zombie_next");
-		PrintHintTextToAll("%t", "zombie_next_nc");
+		PrintCenterTextAll("%t", "zombie_next_nc");
 	}
 }
 
@@ -688,11 +688,11 @@ public Action StartTimer(Handle timer)
 		{
 			if (GetClientTeam(client) == CS_TEAM_CT)
 			{
-				PrintHintText(client,"%t", "zombie_timetounfreeze_nc", g_iFreezeTime);
+				PrintCenterText(client,"%t", "zombie_timetounfreeze_nc", g_iFreezeTime);
 			}
 			else if (GetClientTeam(client) == CS_TEAM_T)
 			{
-				PrintHintText(client,"%t", "zombie_timeuntilzombie_nc", g_iFreezeTime);
+				PrintCenterText(client,"%t", "zombie_timeuntilzombie_nc", g_iFreezeTime);
 			}
 		}
 		return Plugin_Continue;
@@ -711,7 +711,7 @@ public Action StartTimer(Handle timer)
 				if (gc_bVision.BoolValue) SetEntProp(client, Prop_Send, "m_bNightVisionOn",1); 
 			}
 			SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
-			PrintHintText(client,"%t", "zombie_start_nc");
+			PrintCenterText(client,"%t", "zombie_start_nc");
 			if(gc_bOverlays.BoolValue) ShowOverlay(client, g_sOverlayStartPath, 2.0);
 			if(gc_bSounds.BoolValue)
 			{

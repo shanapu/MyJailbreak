@@ -340,7 +340,7 @@ void StartNextRound()
 	
 	
 	CPrintToChatAll("%t %t", "war_tag" , "war_next");
-	PrintHintTextToAll("%t", "war_next_nc");
+	PrintCenterTextAll("%t", "war_next_nc");
 }
 
 //Round start
@@ -527,8 +527,8 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 		delete FreezeTimer;
 		delete TruceTimer;
 		
-		if (winner == 2) PrintHintTextToAll("%t", "war_twin_nc"); 
-		if (winner == 3) PrintHintTextToAll("%t", "war_ctwin_nc");
+		if (winner == 2) PrintCenterTextAll("%t", "war_twin_nc"); 
+		if (winner == 3) PrintCenterTextAll("%t", "war_ctwin_nc");
 		if (g_iRound == g_iMaxRound)
 		{
 			IsWar = false;
@@ -550,7 +550,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 		LoopClients(i) CreateInfoPanel(i);
 		
 		CPrintToChatAll("%t %t", "war_tag" , "war_next");
-		PrintHintTextToAll("%t", "war_next_nc");
+		PrintCenterTextAll("%t", "war_next_nc");
 	}
 }
 
@@ -578,11 +578,11 @@ public Action FreezedTimer(Handle timer)
 		{
 			if (GetClientTeam(client) == CS_TEAM_T)
 			{
-				PrintHintText(client,"%t", "war_timetounfreeze_nc", g_iFreezeTime);
+				PrintCenterText(client,"%t", "war_timetounfreeze_nc", g_iFreezeTime);
 			}
 			else if (GetClientTeam(client) == CS_TEAM_CT)
 			{
-				PrintHintText(client,"%t", "war_timetohide_nc", g_iFreezeTime);
+				PrintCenterText(client,"%t", "war_timetohide_nc", g_iFreezeTime);
 			}
 		}
 		
@@ -618,7 +618,7 @@ public Action StartTimer(Handle timer)
 	{
 		g_iTruceTime--;
 		
-		PrintHintTextToAll("%t", "war_damage_nc", g_iTruceTime);
+		PrintCenterTextAll("%t", "war_damage_nc", g_iTruceTime);
 		
 		return Plugin_Continue;
 	}
@@ -635,7 +635,7 @@ public Action StartTimer(Handle timer)
 		{
 			EmitSoundToAllAny(g_sSoundStartPath);
 		}
-		PrintHintText(client,"%t", "war_start_nc");
+		PrintCenterText(client,"%t", "war_start_nc");
 	}
 	CPrintToChatAll("%t %t", "war_tag" , "war_start");
 	TruceTimer = null;

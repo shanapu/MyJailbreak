@@ -160,7 +160,7 @@ public Action Timer_DroppedWeapon(Handle timer, Handle hData)
 				
 				CPrintToChat(client, "%t %t", "warden_tag" , "warden_noplant", client , g_sWeaponName);
 				if(g_iWarden != -1) CPrintToChat(g_iWarden, "%t %t", "warden_tag" , "warden_gunplant", client , g_sWeaponName);
-				if((g_iWarden != -1) && gc_bBetterNotes.BoolValue) PrintHintText(g_iWarden, "%t", "warden_gunplant_nc", client , g_sWeaponName);
+				if((g_iWarden != -1) && gc_bBetterNotes.BoolValue) PrintCenterText(g_iWarden, "%t", "warden_gunplant_nc", client , g_sWeaponName);
 				if(gc_bGunRemove.BoolValue) CreateTimer(gc_fGunRemoveTime.FloatValue, Timer_RemoveWeapon, hData2, TIMER_FLAG_NO_MAPCHANGE);
 				if(gc_bGunSlap.BoolValue) SlapPlayer(client, gc_iGunSlapDamage.IntValue, true);
 			}

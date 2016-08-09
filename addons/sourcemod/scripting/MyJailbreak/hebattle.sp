@@ -340,7 +340,7 @@ void StartNextRound()
 	g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
 	
 	CPrintToChatAll("%t %t", "hebattle_tag" , "hebattle_next");
-	PrintHintTextToAll("%t", "hebattle_next_nc");
+	PrintCenterTextAll("%t", "hebattle_next_nc");
 
 }
 
@@ -510,8 +510,8 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 		}
 		delete TruceTimer;
 		delete GravityTimer;
-		if (winner == 2) PrintHintTextToAll("%t", "hebattle_twin_nc");
-		if (winner == 3) PrintHintTextToAll("%t", "hebattle_ctwin_nc");
+		if (winner == 2) PrintCenterTextAll("%t", "hebattle_twin_nc");
+		if (winner == 3) PrintCenterTextAll("%t", "hebattle_ctwin_nc");
 		if (g_iRound == g_iMaxRound)
 		{
 			IsHEbattle = false;
@@ -534,7 +534,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 		LoopClients(i) CreateInfoPanel(i);
 		
 		CPrintToChatAll("%t %t", "hebattle_tag" , "hebattle_next");
-		PrintHintTextToAll("%t", "hebattle_next_nc");
+		PrintCenterTextAll("%t", "hebattle_next_nc");
 	}
 }
 
@@ -559,7 +559,7 @@ public Action StartTimer(Handle timer)
 	{
 		g_iTruceTime--;
 		LoopClients(client) if(IsPlayerAlive(client))
-			PrintHintText(client,"%t", "hebattle_timeuntilstart_nc", g_iTruceTime);
+			PrintCenterText(client,"%t", "hebattle_timeuntilstart_nc", g_iTruceTime);
 		return Plugin_Continue;
 	}
 	
@@ -576,7 +576,7 @@ public Action StartTimer(Handle timer)
 				{
 					SetEntityGravity(client, gc_fGravValue.FloatValue);	
 				}
-				PrintHintText(client,"%t", "hebattle_start_nc");
+				PrintCenterText(client,"%t", "hebattle_start_nc");
 			}
 			if(gc_bOverlays.BoolValue) ShowOverlay(client, g_sOverlayStartPath, 2.0);
 			if(gc_bSounds.BoolValue)	

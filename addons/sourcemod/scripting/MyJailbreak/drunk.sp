@@ -324,7 +324,7 @@ void StartNextRound()
 	g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
 	
 	CPrintToChatAll("%t %t", "drunk_tag" , "drunk_next");
-	PrintHintTextToAll("%t", "drunk_next_nc");
+	PrintCenterTextAll("%t", "drunk_next_nc");
 }
 
 //Round start
@@ -521,8 +521,8 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 		}
 		delete DrunkTimer; 
 		delete TruceTimer; //kill start time if still running
-		if (winner == 2) PrintHintTextToAll("%t", "drunk_twin_nc");
-		if (winner == 3) PrintHintTextToAll("%t", "drunk_ctwin_nc");
+		if (winner == 2) PrintCenterTextAll("%t", "drunk_twin_nc");
+		if (winner == 3) PrintCenterTextAll("%t", "drunk_ctwin_nc");
 		if (g_iRound == g_iMaxRound) //if this was the last round
 		{
 			//return to default start values
@@ -551,7 +551,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 		LoopClients(i) CreateInfoPanel(i);
 		
 		CPrintToChatAll("%t %t", "drunk_tag" , "drunk_next");
-		PrintHintTextToAll("%t", "drunk_next_nc");
+		PrintCenterTextAll("%t", "drunk_next_nc");
 	}
 }
 

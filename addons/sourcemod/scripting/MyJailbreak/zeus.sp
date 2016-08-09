@@ -336,7 +336,7 @@ void StartNextRound()
 	g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
 	
 	CPrintToChatAll("%t %t", "zeus_tag" , "zeus_next");
-	PrintHintTextToAll("%t", "zeus_next_nc");
+	PrintCenterTextAll("%t", "zeus_next_nc");
 }
 
 //Round start
@@ -499,7 +499,7 @@ public Action StartTimer(Handle timer)
 	if (g_iTruceTime > 1)
 	{
 		g_iTruceTime--;
-		LoopClients(client) if(IsPlayerAlive(client)) PrintHintText(client,"%t", "zeus_timeuntilstart_nc", g_iTruceTime);
+		LoopValidClients(client,false,true) PrintCenterText(client,"%t", "zeus_timeuntilstart_nc", g_iTruceTime);
 		return Plugin_Continue;
 	}
 	
@@ -510,7 +510,7 @@ public Action StartTimer(Handle timer)
 		LoopClients(client) if(IsPlayerAlive(client))
 		{
 			SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
-			PrintHintText(client,"%t", "zeus_start_nc");
+			PrintCenterText(client,"%t", "zeus_start_nc");
 			if(gc_bOverlays.BoolValue) ShowOverlay(client, g_sOverlayStartPath, 2.0);
 			if(gc_bSounds.BoolValue)	
 			{
@@ -536,8 +536,8 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 	{
 		LoopClients(client) SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
 		delete TruceTimer;
-		if (winner == 2) PrintHintTextToAll("%t", "zeus_twin_nc");
-		if (winner == 3) PrintHintTextToAll("%t", "zeus_ctwin_nc");
+		if (winner == 2) PrintCenterTextAll("%t", "zeus_twin_nc");
+		if (winner == 3) PrintCenterTextAll("%t", "zeus_ctwin_nc");
 		if (g_iRound == g_iMaxRound)
 		{
 			IsZeus = false;
@@ -561,7 +561,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 		LoopClients(i) CreateInfoPanel(i);
 		
 		CPrintToChatAll("%t %t", "zeus_tag" , "zeus_next");
-		PrintHintTextToAll("%t", "zeus_next_nc");
+		PrintCenterTextAll("%t", "zeus_next_nc");
 	}
 }
 

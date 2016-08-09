@@ -392,7 +392,7 @@ void StartNextRound()
 	g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
 	
 	CPrintToChatAll("%t %t", "torch_tag" , "torch_next");
-	PrintHintTextToAll("%t", "torch_next_nc");
+	PrintCenterTextAll("%t", "torch_next_nc");
 }
 
 //Round start
@@ -507,7 +507,7 @@ public Action StartTimer(Handle timer)
 	{
 		g_iTruceTime--;
 		
-		PrintHintTextToAll("%t", "torch_damage_nc", g_iTruceTime);
+		PrintCenterTextAll("%t", "torch_damage_nc", g_iTruceTime);
 		
 		return Plugin_Continue;
 	}
@@ -545,7 +545,7 @@ public Action StartTimer(Handle timer)
 			{
 				EmitSoundToClientAny(client, g_sSoundStartPath);
 			}
-			PrintHintText(client,"%t", "torch_start_nc");
+			PrintCenterText(client,"%t", "torch_start_nc");
 		}
 	}
 	CPrintToChatAll("%t %t", "torch_tag" , "torch_start");
@@ -594,7 +594,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 		LoopClients(i) CreateInfoPanel(i);
 		
 		CPrintToChatAll("%t %t", "torch_tag" , "torch_next");
-		PrintHintTextToAll("%t", "torch_next_nc");
+		PrintCenterTextAll("%t", "torch_next_nc");
 	}
 }
 

@@ -354,7 +354,7 @@ void StartNextRound()
 	g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
 	
 	CPrintToChatAll("%t %t", "catch_tag" , "catch_next");
-	PrintHintTextToAll("%t", "catch_next_nc");
+	PrintCenterTextAll("%t", "catch_next_nc");
 }
 
 //Round start
@@ -383,7 +383,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 					GivePlayerItem(client, "weapon_knife");
 					SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
 					SendPanelToClient(CatchMenu, client, Handler_NullCancel, 20);
-					PrintHintText(client,"%t", "catch_start_nc");
+					PrintCenterText(client,"%t", "catch_start_nc");
 					
 					if (GetClientTeam(client) == CS_TEAM_T)
 					{
@@ -457,8 +457,8 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			}
 		}
 		
-		if (winner == 2) PrintHintTextToAll("%t", "catch_twin_nc");
-		if (winner == 3) PrintHintTextToAll("%t", "catch_ctwin_nc");
+		if (winner == 2) PrintCenterTextAll("%t", "catch_twin_nc");
+		if (winner == 3) PrintCenterTextAll("%t", "catch_ctwin_nc");
 		if (g_iRound == g_iMaxRound)
 		{
 			IsCatch = false;
@@ -479,7 +479,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 		LoopClients(i) CreateInfoPanel(i);
 		
 		CPrintToChatAll("%t %t", "catch_tag" , "catch_next");
-		PrintHintTextToAll("%t", "catch_next_nc");
+		PrintCenterTextAll("%t", "catch_next_nc");
 	}
 }
 

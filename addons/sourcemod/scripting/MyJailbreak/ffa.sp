@@ -334,7 +334,7 @@ void StartNextRound()
 	g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
 	
 	CPrintToChatAll("%t %t", "ffa_tag" , "ffa_next");
-	PrintHintTextToAll("%t", "ffa_next_nc");
+	PrintCenterTextAll("%t", "ffa_next_nc");
 }
 
 //Round start
@@ -497,8 +497,8 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 	{
 		LoopValidClients(client, false, true) SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
 		delete TruceTimer;
-		if (winner == 2) PrintHintTextToAll("%t", "ffa_twin_nc"); 
-		if (winner == 3) PrintHintTextToAll("%t", "ffa_ctwin_nc");
+		if (winner == 2) PrintCenterTextAll("%t", "ffa_twin_nc"); 
+		if (winner == 3) PrintCenterTextAll("%t", "ffa_ctwin_nc");
 		if (g_iRound == g_iMaxRound)
 		{
 			IsFFA = false;
@@ -522,7 +522,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 		LoopClients(i) CreateInfoPanel(i);
 		
 		CPrintToChatAll("%t %t", "ffa_tag" , "ffa_next");
-		PrintHintTextToAll("%t", "ffa_next_nc");
+		PrintCenterTextAll("%t", "ffa_next_nc");
 	}
 }
 
@@ -546,7 +546,7 @@ public Action StartTimer(Handle timer)
 	{
 		g_iTruceTime--;
 		
-		PrintHintTextToAll("%t", "ffa_damage_nc", g_iTruceTime);
+		PrintCenterTextAll("%t", "ffa_damage_nc", g_iTruceTime);
 		
 		return Plugin_Continue;
 	}
@@ -566,7 +566,7 @@ public Action StartTimer(Handle timer)
 				EmitSoundToAllAny(g_sSoundStartPath);
 			}
 			
-			PrintHintText(client,"%t", "ffa_start_nc");
+			PrintCenterText(client,"%t", "ffa_start_nc");
 		}
 	}
 	CPrintToChatAll("%t %t", "ffa_tag" , "ffa_start");

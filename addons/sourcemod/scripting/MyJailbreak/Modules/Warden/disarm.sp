@@ -85,7 +85,7 @@ public Action Disarm_Event_PlayerHurt(Event event, char[] name, bool dontBroadca
 					if(victimweapon != -1)
 					{
 						CPrintToChatAll("%t %t", "warden_tag", "warden_disarmed", victim, attacker);
-						PrintHintText(victim, "%t", "warden_lostgun");
+						PrintCenterText(victim, "%t", "warden_lostgun");
 						
 						if(gc_iDisarmMode.IntValue == 1)
 						{

@@ -333,7 +333,7 @@ void StartNextRound()
 	
 	g_iVoteCount = 0;
 	CPrintToChatAll("%t %t", "hide_tag" , "hide_next");
-	PrintHintTextToAll("%t", "hide_next_nc");
+	PrintCenterTextAll("%t", "hide_next_nc");
 }
 
 //Round start
@@ -434,11 +434,11 @@ public Action StartTimer(Handle timer)
 		{
 			if (GetClientTeam(client) == CS_TEAM_CT)
 			{
-				PrintHintText(client,"%t", "hide_timetounfreeze_nc", g_iFreezeTime);
+				PrintCenterText(client,"%t", "hide_timetounfreeze_nc", g_iFreezeTime);
 			}
 			else if (GetClientTeam(client) == CS_TEAM_T)
 			{
-				PrintHintText(client,"%t", "hide_timetohide_nc", g_iFreezeTime);
+				PrintCenterText(client,"%t", "hide_timetohide_nc", g_iFreezeTime);
 			}
 		}
 		return Plugin_Continue;
@@ -471,7 +471,7 @@ public Action StartTimer(Handle timer)
 			{
 				EmitSoundToAllAny(g_sSoundStartPath);
 			}
-			PrintHintText(client,"%t", "hide_start_nc");
+			PrintCenterText(client,"%t", "hide_start_nc");
 		}
 		CPrintToChatAll("%t %t", "hide_tag" , "hide_start");
 	}
@@ -496,8 +496,8 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 		
 		delete FreezeTimer;
 		
-		if (winner == 2) PrintHintTextToAll("%t", "hide_twin_nc");
-		if (winner == 3) PrintHintTextToAll("%t", "hide_ctwin_nc");
+		if (winner == 2) PrintCenterTextAll("%t", "hide_twin_nc");
+		if (winner == 3) PrintCenterTextAll("%t", "hide_ctwin_nc");
 		if (g_iRound == g_iMaxRound)
 		{
 			IsHide = false;
@@ -524,7 +524,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 		LoopClients(i) CreateInfoPanel(i);
 		
 		CPrintToChatAll("%t %t", "hide_tag" , "hide_next");
-		PrintHintTextToAll("%t", "hide_next_nc");
+		PrintCenterTextAll("%t", "hide_next_nc");
 	}
 }
 

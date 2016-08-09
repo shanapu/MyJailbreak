@@ -350,7 +350,7 @@ void StartNextRound()
 	g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
 	
 	CPrintToChatAll("%t %t", "knifefight_tag" , "knifefight_next");
-	PrintHintTextToAll("%t", "knifefight_next_nc");
+	PrintCenterTextAll("%t", "knifefight_next_nc");
 }
 
 //Round start
@@ -536,8 +536,8 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 		}
 		delete TruceTimer;
 		delete GravityTimer;
-		if (winner == 2) PrintHintTextToAll("%t", "knifefight_twin_nc");
-		if (winner == 3) PrintHintTextToAll("%t", "knifefight_ctwin_nc");
+		if (winner == 2) PrintCenterTextAll("%t", "knifefight_twin_nc");
+		if (winner == 3) PrintCenterTextAll("%t", "knifefight_ctwin_nc");
 		if (g_iRound == g_iMaxRound)
 		{
 			IsKnifeFight = false;
@@ -562,7 +562,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 		LoopClients(i) CreateInfoPanel(i);
 		
 		CPrintToChatAll("%t %t", "knifefight_tag" , "knifefight_next");
-		PrintHintTextToAll("%t", "knifefight_next_nc");
+		PrintCenterTextAll("%t", "knifefight_next_nc");
 	}
 }
 
@@ -589,7 +589,7 @@ public Action StartTimer(Handle timer)
 		g_iTruceTime--;
 		LoopClients(client) if (IsPlayerAlive(client))
 		{
-			PrintHintText(client,"%t", "knifefight_timeuntilstart_nc", g_iTruceTime);
+			PrintCenterText(client,"%t", "knifefight_timeuntilstart_nc", g_iTruceTime);
 		}
 		return Plugin_Continue;
 	}
@@ -605,7 +605,7 @@ public Action StartTimer(Handle timer)
 			{
 				SetEntityGravity(client, gc_fGravValue.FloatValue);	
 			}
-			PrintHintText(client,"%t", "knifefight_start_nc");
+			PrintCenterText(client,"%t", "knifefight_start_nc");
 			if(gc_bOverlays.BoolValue) ShowOverlay(client, g_sOverlayStartPath, 2.0);
 			if(gc_bSounds.BoolValue)	
 			{

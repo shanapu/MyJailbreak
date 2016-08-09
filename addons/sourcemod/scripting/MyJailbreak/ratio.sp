@@ -389,7 +389,7 @@ public Action Event_OnPlayerSpawn(Event event, const char[] name, bool bDontBroa
 	if(sData[0] == '1')
 	{
 		CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_banned");
-		PrintHintText(client, "%t", "ratio_banned");
+		PrintCenterText(client, "%t", "ratio_banned");
 		CreateTimer(5.0, Timer_SlayPlayer, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 		return Plugin_Continue;
 	}

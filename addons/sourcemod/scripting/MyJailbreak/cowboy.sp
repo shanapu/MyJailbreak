@@ -343,7 +343,7 @@ void StartNextRound()
 	g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
 	
 	CPrintToChatAll("%t %t", "cowboy_tag" , "cowboy_next");
-	PrintHintTextToAll("%t", "cowboy_next_nc");
+	PrintCenterTextAll("%t", "cowboy_next_nc");
 }
 
 //Round start
@@ -511,7 +511,7 @@ public Action StartTimer(Handle timer)
 		g_iTruceTime--;
 		LoopClients(client) if (IsPlayerAlive(client))
 		{
-			PrintHintText(client,"%t", "cowboy_timeuntilstart_nc", g_iTruceTime);
+			PrintCenterText(client,"%t", "cowboy_timeuntilstart_nc", g_iTruceTime);
 		}
 		return Plugin_Continue;
 	}
@@ -523,7 +523,7 @@ public Action StartTimer(Handle timer)
 		LoopClients(client) if (IsPlayerAlive(client))
 		{
 			SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
-			PrintHintText(client,"%t", "cowboy_start_nc");
+			PrintCenterText(client,"%t", "cowboy_start_nc");
 			if(gc_bOverlays.BoolValue) ShowOverlay(client, g_sOverlayStartPath, 2.0);
 			if(gc_bSounds.BoolValue)
 			{
@@ -551,8 +551,8 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 		}
 		
 		delete TruceTimer;
-		if (winner == 2) PrintHintTextToAll("%t", "cowboy_twin_nc");
-		if (winner == 3) PrintHintTextToAll("%t", "cowboy_ctwin_nc");
+		if (winner == 2) PrintCenterTextAll("%t", "cowboy_twin_nc");
+		if (winner == 3) PrintCenterTextAll("%t", "cowboy_ctwin_nc");
 		if (g_iRound == g_iMaxRound)
 		{
 			IsCowBoy = false;
@@ -576,7 +576,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 		LoopClients(i) CreateInfoPanel(i);
 		
 		CPrintToChatAll("%t %t", "cowboy_tag" , "cowboy_next");
-		PrintHintTextToAll("%t", "cowboy_next_nc");
+		PrintCenterTextAll("%t", "cowboy_next_nc");
 	}
 }
 

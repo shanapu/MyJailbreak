@@ -379,7 +379,7 @@ void StartNextRound()
 	g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
 	
 	CPrintToChatAll("%t %t", "suicidebomber_tag" , "suicidebomber_next");
-	PrintHintTextToAll("%t", "suicidebomber_next_nc");
+	PrintCenterTextAll("%t", "suicidebomber_next_nc");
 }
 
 //Round start
@@ -480,8 +480,8 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			ClientSprintStatus[client] = 0;
 		}
 		delete FreezeTimer;
-		if (winner == 2) PrintHintTextToAll("%t", "suicidebomber_twin_nc");
-		if (winner == 3) PrintHintTextToAll("%t", "suicidebomber_ctwin_nc");
+		if (winner == 2) PrintCenterTextAll("%t", "suicidebomber_twin_nc");
+		if (winner == 3) PrintCenterTextAll("%t", "suicidebomber_ctwin_nc");
 		BombActive = false;
 		if (g_iRound == g_iMaxRound)
 		{
@@ -507,7 +507,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 		LoopClients(i) CreateInfoPanel(i);
 		
 		CPrintToChatAll("%t %t", "suicidebomber_tag" , "suicidebomber_next");
-		PrintHintTextToAll("%t", "suicidebomber_next_nc");
+		PrintCenterTextAll("%t", "suicidebomber_next_nc");
 	}
 }
 
@@ -553,11 +553,11 @@ public Action StartTimer(Handle timer)
 		{
 			if (GetClientTeam(client) == CS_TEAM_CT)
 			{
-				PrintHintText(client,"%t", "suicidebomber_timetohide_nc", g_iFreezeTime);
+				PrintCenterText(client,"%t", "suicidebomber_timetohide_nc", g_iFreezeTime);
 			}
 			if (GetClientTeam(client) == CS_TEAM_T)
 			{
-				PrintHintText(client,"%t", "suicidebomber_timeuntilopen_nc", g_iFreezeTime);
+				PrintCenterText(client,"%t", "suicidebomber_timeuntilopen_nc", g_iFreezeTime);
 			}
 		}
 		return Plugin_Continue;
@@ -572,7 +572,7 @@ public Action StartTimer(Handle timer)
 			if (IsValidClient(client, true, true))
 			{
 				SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
-				PrintHintText(client,"%t", "suicidebomber_start_nc");
+				PrintCenterText(client,"%t", "suicidebomber_start_nc");
 			}
 			if(gc_bOverlays.BoolValue) ShowOverlay(client, g_sOverlayStartPath, 2.0);
 			

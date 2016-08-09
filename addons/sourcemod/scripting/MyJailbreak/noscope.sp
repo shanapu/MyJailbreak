@@ -350,7 +350,7 @@ void StartNextRound()
 	g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
 	
 	CPrintToChatAll("%t %t", "noscope_tag" , "noscope_next");
-	PrintHintTextToAll("%t", "noscope_next_nc");
+	PrintCenterTextAll("%t", "noscope_next_nc");
 }
 
 //Round start
@@ -529,7 +529,7 @@ public Action StartTimer(Handle timer)
 		g_iTruceTime--;
 		LoopClients(client) if (IsPlayerAlive(client))
 		{
-			PrintHintText(client,"%t", "noscope_timeuntilstart_nc", g_iTruceTime);
+			PrintCenterText(client,"%t", "noscope_timeuntilstart_nc", g_iTruceTime);
 		}
 		return Plugin_Continue;
 	}
@@ -545,7 +545,7 @@ public Action StartTimer(Handle timer)
 			{
 				SetEntityGravity(client, gc_fGravValue.FloatValue);	
 			}
-			PrintHintText(client,"%t", "noscope_start_nc");
+			PrintCenterText(client,"%t", "noscope_start_nc");
 			if(gc_bOverlays.BoolValue) ShowOverlay(client, g_sOverlayStartPath, 2.0);
 			if(gc_bSounds.BoolValue)
 			{
@@ -575,8 +575,8 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 		
 		delete TruceTimer;
 		delete GravityTimer;
-		if (winner == 2) PrintHintTextToAll("%t", "noscope_twin_nc");
-		if (winner == 3) PrintHintTextToAll("%t", "noscope_ctwin_nc");
+		if (winner == 2) PrintCenterTextAll("%t", "noscope_twin_nc");
+		if (winner == 3) PrintCenterTextAll("%t", "noscope_ctwin_nc");
 		if (g_iRound == g_iMaxRound)
 		{
 			IsNoScope = false;
@@ -600,7 +600,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 		LoopClients(i) CreateInfoPanel(i);
 		
 		CPrintToChatAll("%t %t", "noscope_tag" , "noscope_next");
-		PrintHintTextToAll("%t", "noscope_next_nc");
+		PrintCenterTextAll("%t", "noscope_next_nc");
 		
 		LoopClients(i) SDKUnhook(i, SDKHook_PreThink, OnPreThink);
 	}

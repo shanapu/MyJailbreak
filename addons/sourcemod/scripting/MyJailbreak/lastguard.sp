@@ -290,8 +290,8 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
 		}
 		delete TruceTimer;
-		if (winner == 2) PrintHintTextToAll("%t", "lastguard_twin_nc");
-		if (winner == 3) PrintHintTextToAll("%t", "lastguard_ctwin_nc");
+		if (winner == 2) PrintCenterTextAll("%t", "lastguard_twin_nc");
+		if (winner == 3) PrintCenterTextAll("%t", "lastguard_ctwin_nc");
 		
 		SetLastGuardRule(false);
 		IsLastGuard = false;
@@ -403,7 +403,7 @@ public Action StartLastGuard()
 		TruceTimer = CreateTimer(1.0, Timer_TruceUntilStart, _, TIMER_REPEAT);
 		
 		CPrintToChatAll("%t %t", "lastguard_tag" , "lastguard_startnow");
-		PrintHintTextToAll("%t", "lastguard_startnow_nc");
+		PrintCenterTextAll("%t", "lastguard_startnow_nc");
 	}
 }
 
@@ -495,11 +495,11 @@ public Action Timer_TruceUntilStart(Handle timer)
 		g_iTruceTime--;
 		LoopClients(client) if (IsPlayerAlive(client))
 		{
-			PrintHintText(client,"%t", "lastguard_timeuntilstart_nc", g_iTruceTime);
+			PrintCenterText(client,"%t", "lastguard_timeuntilstart_nc", g_iTruceTime);
 			if (gc_bFreeze.BoolValue && (g_iTruceTime <= (gc_iTruceTime.IntValue / 2)) && (GetEntityMoveType(client) == MOVETYPE_NONE))
 			{
 				SetEntityMoveType(client, MOVETYPE_WALK);
-				PrintHintText(client,"%t", "lastguard_movenow_nc", g_iTruceTime);
+				PrintCenterText(client,"%t", "lastguard_movenow_nc", g_iTruceTime);
 				CPrintToChat(client, "%t %t", "lastguard_tag" , "lastguard_movenow");
 				
 			}
@@ -513,7 +513,7 @@ public Action Timer_TruceUntilStart(Handle timer)
 	LoopClients(client) if (IsPlayerAlive(client))
 	{
 		SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
-		PrintHintText(client,"%t", "lastguard_start_nc");
+		PrintCenterText(client,"%t", "lastguard_start_nc");
 		if(gc_bOverlays.BoolValue) ShowOverlay(client, g_sOverlayStartPath, 2.0);
 		if(gc_bSounds.BoolValue)
 		{
