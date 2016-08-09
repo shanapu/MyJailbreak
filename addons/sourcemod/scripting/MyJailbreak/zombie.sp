@@ -63,6 +63,7 @@ ConVar gc_iRounds;
 ConVar gc_sCustomCommand;
 ConVar gc_sAdminFlag;
 ConVar gc_bAllowLR;
+ConVar g_ciTsLR;
 
 //Integers
 int g_iOldRoundTime;
@@ -71,6 +72,7 @@ int g_iCoolDown;
 int g_iVoteCount;
 int g_iRound;
 int g_iMaxRound;
+int g_iTsLR;
 
 //Handles
 Handle FreezeTimer;
@@ -152,6 +154,7 @@ public void OnPluginStart()
 	
 	//FindConVar
 	g_iGetRoundTime = FindConVar("mp_roundtime");
+	g_ciTsLR = FindConVar("sm_hosties_lr_ts_max");
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
 	gc_sOverlayStartPath.GetString(g_sOverlayStartPath , sizeof(g_sOverlayStartPath));
@@ -445,9 +448,11 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 				CreateTimer (1.1, Timer_SetModel);
 				
 				//enable lr on last round
+				g_iTsLR = GetAliveTeamCount(CS_TEAM_T);
+				
 				if (gc_bAllowLR.BoolValue)
 				{
-					if (g_iRound == g_iMaxRound)
+					if ((g_iRound == g_iMaxRound) && (g_iTsLR > g_ciTsLR.IntValue))
 					{
 						SetCvar("sm_hosties_lr", 1);
 					}
@@ -542,7 +547,7 @@ void UnhookGlow(int client)
 
 public int OnAvailableLR(int Announced)
 {
-	if (IsZombie && gc_bAllowLR.BoolValue)
+	if (IsZombie && gc_bAllowLR.BoolValue && (g_iTsLR > g_ciTsLR.IntValue))
 	{
 		LoopValidClients(client,false,true)
 		{

@@ -36,7 +36,9 @@
 *  Zombie: Conflict with sm_skinchooser (no zombie model)
 *  Duckhunt: Conflict with sm_skinchooser (no models)
 *  Freeday: harmless warning on compile
-*  Request: Freekill report show (on player recononect) wrong names.
+*  Request: Freekill report show (on player reconnect) wrong names
+*  HUD: Conflics with StartTimer & EventDay HUDs
+*  Bug when "sm_eventday_allow_lr 1" and T count on roundstart = sm_hosties_lr_ts_max
   
 *New Requirements*
 *  [ANY] VoiceannounceEX (VoiceHook) - https://forums.alliedmods.net/showthread.php?p=2177167

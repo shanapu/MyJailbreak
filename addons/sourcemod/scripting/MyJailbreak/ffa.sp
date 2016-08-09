@@ -57,6 +57,7 @@ ConVar g_iGetRoundTime;
 ConVar gc_sCustomCommand;
 ConVar gc_sAdminFlag;
 ConVar gc_bAllowLR;
+ConVar g_ciTsLR;
 
 //Integers
 int g_iOldRoundTime;
@@ -65,6 +66,7 @@ int g_iTruceTime;
 int g_iVoteCount;
 int g_iRound;
 int g_iMaxRound;
+int g_iTsLR;
 
 //Floats
 float g_fPos[3];
@@ -141,6 +143,7 @@ public void OnPluginStart()
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iGetRoundTime = FindConVar("mp_roundtime");
+	g_ciTsLR = FindConVar("sm_hosties_lr_ts_max");
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 	gc_sOverlayStartPath.GetString(g_sOverlayStartPath , sizeof(g_sOverlayStartPath));
 	gc_sCustomCommand.GetString(g_sCustomCommand , sizeof(g_sCustomCommand));
@@ -388,9 +391,11 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 				}
 				
 				//enable lr on last round
+				g_iTsLR = GetAliveTeamCount(CS_TEAM_T);
+				
 				if (gc_bAllowLR.BoolValue)
 				{
-					if (g_iRound == g_iMaxRound)
+					if ((g_iRound == g_iMaxRound) && (g_iTsLR > g_ciTsLR.IntValue))
 					{
 						SetCvar("sm_hosties_lr", 1);
 					}
@@ -422,7 +427,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 
 public int OnAvailableLR(int Announced)
 {
-	if (IsFFA && gc_bAllowLR.BoolValue)
+	if (IsFFA && gc_bAllowLR.BoolValue && (g_iTsLR > g_ciTsLR.IntValue))
 	{
 		LoopValidClients(client, false, true)
 		{
