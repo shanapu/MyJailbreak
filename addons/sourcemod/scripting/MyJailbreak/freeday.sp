@@ -34,7 +34,7 @@
 //Booleans
 bool IsFreeday; 
 bool StartFreeday; 
-bool AutoFreeday; 
+//bool AutoFreeday; 
 
 //Console Variables
 ConVar gc_bPlugin;
@@ -173,7 +173,7 @@ public void OnMapStart()
 		StartFreeday = false;	
 	}
 	IsFreeday = false;
-	AutoFreeday = false;
+//	AutoFreeday = false;
 }
 
 //Admin & Warden set Event
@@ -323,7 +323,7 @@ public void Event_RoundStart(Handle event, char[] name, bool dontBroadcast)
 			Format(buffer, sizeof(buffer), "%T", "freeday_name", LANG_SERVER);
 			SetEventDayName(buffer);
 			SetEventDayRunning(true);
-			AutoFreeday = true;
+		//	AutoFreeday = true;
 		}
 	}
 	if (StartFreeday)
@@ -404,7 +404,7 @@ public void Event_RoundEnd(Handle event, char[] name, bool dontBroadcast)
 		SetCvar("mp_teammates_are_enemies", 0);
 		SetCvar("sm_warden_enable", 1);
 		g_iGetRoundTime.IntValue = g_iOldRoundTime;
-		AutoFreeday = false;
+	//	AutoFreeday = false;
 		SetEventDayName("none");
 		SetEventDayRunning(false);
 		CPrintToChatAll("%t %t", "freeday_tag" , "freeday_end");
@@ -431,7 +431,7 @@ public void OnMapEnd()
 		StartFreeday = false;
 	}
 	IsFreeday = false;
-	AutoFreeday = false;
+//	AutoFreeday = false;
 	g_iVoteCount = 0;
 	FreedayRound = 0;
 	g_sHasVoted[0] = '\0';

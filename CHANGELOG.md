@@ -35,6 +35,7 @@
 *Fixed*
 *  Zombie: Conflict with sm_skinchooser (no zombie model)
 *  Duckhunt: Conflict with sm_skinchooser (no models)
+*  Freeday: harmless warning on compile
   
 *New Requirements*
 *  [ANY] VoiceannounceEX (VoiceHook) - https://forums.alliedmods.net/showthread.php?p=2177167
