@@ -127,7 +127,7 @@ public Action Command_EndRound(int client, int args)
 ******************************************************************************/
 
 
-public Action Event_RoundStart(Handle event, const char[] name, bool dontBroadcast)
+public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
 	if(gc_bShootButton.BoolValue)
 	{

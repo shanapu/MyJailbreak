@@ -133,7 +133,7 @@ public void OnPluginStart()
 	//Hooks
 	HookEvent("round_start", Event_RoundStart);
 	HookEvent("round_end", Event_RoundEnd);
-	HookEvent("player_hurt", EventHurt);
+	HookEvent("player_hurt", Event_PlayerHurt);
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
 	HookConVarChange(gc_sCustomCommand, OnSettingChanged);
@@ -348,7 +348,7 @@ void StartNextRound()
 
 //Round start
 
-public void Event_RoundStart(Handle event, char[] name, bool dontBroadcast)
+public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
 	if (StartCowBoy || IsCowBoy)
 	{
@@ -539,9 +539,9 @@ public Action StartTimer(Handle timer)
 
 //Round End
 
-public void Event_RoundEnd(Handle event, char[] name, bool dontBroadcast)
+public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
-	int winner = GetEventInt(event, "winner");
+	int winner = event.GetInt("winner");
 	
 	if (IsCowBoy)
 	{
@@ -611,14 +611,14 @@ public Action OnWeaponCanUse(int client, int weapon)
 
 //ding sound
 
-public Action EventHurt(Handle event, const char [] name, bool dontBroadcast)
+public void Event_PlayerHurt(Event event, const char [] name, bool dontBroadcast)
 {
 	if (gc_bSoundsHit.BoolValue && IsCowBoy)
 	{
 		Handle data; // Delay it to a frame later. If we use IsPlayerAlive(victim) here, it would always return true.
 		CreateDataTimer(0.0, Timer_Hitsound, data, TIMER_FLAG_NO_MAPCHANGE);
-		WritePackCell(data, GetEventInt(event, "attacker"));
-		WritePackCell(data, GetEventInt(event, "userid"));
+		WritePackCell(data, event.GetInt("attacker"));
+		WritePackCell(data, event.GetInt("userid"));
 		ResetPack(data);
 	}
 }

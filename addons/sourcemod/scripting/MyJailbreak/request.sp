@@ -177,7 +177,7 @@ public Action Command_RequestMenu(int client, int args)
 ******************************************************************************/
 
 
-public Action Event_RoundStart(Handle event, char [] name, bool dontBroadcast)
+public void Event_RoundStart(Event event, char [] name, bool dontBroadcast)
 {
 	delete RequestTimer;
 	
@@ -194,16 +194,16 @@ public Action Event_RoundStart(Handle event, char [] name, bool dontBroadcast)
 
 
 //Round End
-public void Event_RoundEnd(Handle event, char[] name, bool dontBroadcast)
+public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
 	IsLR = false;
 }
 
-public Action Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast) 
+public void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast) 
 {
-	int victimID = GetEventInt(event, "userid"); // Get the dead user id
+	int victimID = event.GetInt("userid"); // Get the dead user id
 	int victim = GetClientOfUserId(victimID); // Get the dead clients id
-	int attackerID = GetEventInt(event, "attacker"); // Get the user clients id
+	int attackerID = event.GetInt("attacker"); // Get the user clients id
 	int attacker = GetClientOfUserId(attackerID); // Get the attacker clients id
 	
 	

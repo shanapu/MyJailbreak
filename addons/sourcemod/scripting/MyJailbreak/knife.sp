@@ -355,7 +355,7 @@ void StartNextRound()
 
 //Round start
 
-public void Event_RoundStart(Handle event, char[] name, bool dontBroadcast)
+public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
 	if (StartKnifeFight || IsKnifeFight)
 	{
@@ -522,9 +522,9 @@ stock void CreateInfoPanel(int client)
 
 //Round End
 
-public void Event_RoundEnd(Handle event, char[] name, bool dontBroadcast)
+public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
-	int winner = GetEventInt(event, "winner");
+	int winner = event.GetInt("winner");
 	
 	if (IsKnifeFight)
 	{
@@ -667,11 +667,11 @@ public void OnClientDisconnect(int client)
 	}
 }
 
-public void Event_PlayerDeath(Handle event, char [] name, bool dontBroadcast)
+public void Event_PlayerDeath(Event event, char [] name, bool dontBroadcast)
 {
 	if(IsKnifeFight == true)
 	{
-		int client = GetClientOfUserId(GetEventInt(event, "userid"));
+		int client = GetClientOfUserId(event.GetInt("userid"));
 		FP(client);
 	}
 }

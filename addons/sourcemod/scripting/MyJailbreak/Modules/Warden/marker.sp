@@ -115,13 +115,13 @@ public void PrepareMarkerNames()
 ******************************************************************************/
 
 
-public Action Marker_Event_ItemEquip(Handle event, const char[] name, bool dontBroadcast)
+public void Marker_Event_ItemEquip(Event event, const char[] name, bool dontBroadcast)
 {
-	int client = GetClientOfUserId(GetEventInt(event, "userid"));
+	int client = GetClientOfUserId(event.GetInt("userid"));
 	
-	g_bCanZoom[client] = GetEventBool(event, "canzoom");
-	g_bHasSilencer[client] = GetEventBool(event, "hassilencer");
-	g_iWrongWeapon[client] = GetEventInt(event, "weptype");
+	g_bCanZoom[client] = event.GetBool("canzoom");
+	g_bHasSilencer[client] = event.GetBool("hassilencer");
+	g_iWrongWeapon[client] = event.GetInt("weptype");
 }
 
 

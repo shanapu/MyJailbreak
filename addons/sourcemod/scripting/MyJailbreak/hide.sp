@@ -126,7 +126,7 @@ public void OnPluginStart()
 	//Hooks
 	HookEvent("round_start", Event_RoundStart);
 	HookEvent("round_end", Event_RoundEnd);
-	HookEvent("tagrenade_detonate", OnTagrenadeDetonate);
+	HookEvent("tagrenade_detonate", Event_TA_Detonate);
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
 	HookConVarChange(gc_sCustomCommand, OnSettingChanged);
@@ -338,7 +338,7 @@ void StartNextRound()
 
 //Round start
 
-public void Event_RoundStart(Handle event, char[] name, bool dontBroadcast)
+public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
 	if (StartHide || IsHide)
 	{
@@ -481,9 +481,9 @@ public Action StartTimer(Handle timer)
 
 //Round End
 
-public void Event_RoundEnd(Handle event, char[] name, bool dontBroadcast)
+public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
-	int winner = GetEventInt(event, "winner");
+	int winner = event.GetInt("winner");
 	
 	if (IsHide)
 	{
@@ -577,11 +577,11 @@ public Action OnWeaponCanUse(int client, int weapon)
 
 //Give new TA
 
-public void OnTagrenadeDetonate(Handle event, const char[] name, bool dontBroadcast)
+public void Event_TA_Detonate(Event event, const char[] name, bool dontBroadcast)
 {
 	if (IsHide == true)
 	{
-		int target = GetClientOfUserId(GetEventInt(event, "userid"));
+		int target = GetClientOfUserId(event.GetInt("userid"));
 		if (GetClientTeam(target) == 1 && !IsPlayerAlive(target))
 		{
 			return;

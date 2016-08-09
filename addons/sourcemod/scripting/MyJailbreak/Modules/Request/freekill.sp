@@ -176,7 +176,7 @@ public Action Command_Freekill(int client, int args)
                    EVENTS
 ******************************************************************************/
 
-public Action Freekill_Event_RoundStart(Handle event, char [] name, bool dontBroadcast)
+public void Freekill_Event_RoundStart(Event event, char [] name, bool dontBroadcast)
 {
 	LoopClients(client)
 	{
@@ -186,9 +186,9 @@ public Action Freekill_Event_RoundStart(Handle event, char [] name, bool dontBro
 }
 
 
-public Action Freekill_Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast) 
+public void Freekill_Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast) 
 {
-	int victim = GetClientOfUserId(GetEventInt(event, "userid")); // Get the dead clients id
+	int victim = GetClientOfUserId(event.GetInt("userid")); // Get the dead clients id
 	
 	if (IsValidClient(victim, false, true)) GetClientAbsOrigin(victim, DeathOrigin[victim]);
 }

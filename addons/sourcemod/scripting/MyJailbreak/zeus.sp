@@ -341,7 +341,7 @@ void StartNextRound()
 
 //Round start
 
-public void Event_RoundStart(Handle event, char[] name, bool dontBroadcast)
+public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
 	if (StartZeus || IsZeus)
 	{
@@ -528,9 +528,9 @@ public Action StartTimer(Handle timer)
 
 //Round End
 
-public void Event_RoundEnd(Handle event, char[] name, bool dontBroadcast)
+public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
-	int winner = GetEventInt(event, "winner");
+	int winner = event.GetInt("winner");
 	
 	if (IsZeus)
 	{
@@ -596,11 +596,11 @@ public Action OnWeaponCanUse(int client, int weapon)
 
 //Give new Zeus on Kill
 
-public void Event_PlayerDeath(Handle event, char [] name, bool dontBroadcast)
+public void Event_PlayerDeath(Event event, char [] name, bool dontBroadcast)
 {
 	if(IsZeus == true)
 	{
-		int killer = GetClientOfUserId(GetEventInt(event, "attacker"));
+		int killer = GetClientOfUserId(event.GetInt("attacker"));
 		
 		ClientTimer[killer] = CreateTimer(0.5, Timer_GiveZeus, killer);
 	}

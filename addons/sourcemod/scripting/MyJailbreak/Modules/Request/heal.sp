@@ -167,7 +167,7 @@ public Action Command_Heal(int client, int args)
 ******************************************************************************/
 
 
-public Action Heal_Event_RoundStart(Handle event, char [] name, bool dontBroadcast)
+public void Heal_Event_RoundStart(Event event, char [] name, bool dontBroadcast)
 {
 	LoopClients(client)
 	{

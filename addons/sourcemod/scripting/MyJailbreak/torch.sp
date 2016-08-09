@@ -397,7 +397,7 @@ void StartNextRound()
 
 //Round start
 
-public void Event_RoundStart(Handle event, char[] name, bool dontBroadcast)
+public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
 	if (StartTorch || IsTorch)
 	{
@@ -558,7 +558,7 @@ public Action StartTimer(Handle timer)
 
 //Round End
 
-public void Event_RoundEnd(Handle event, char[] name, bool dontBroadcast)
+public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
 	if (IsTorch)
 	{
@@ -678,7 +678,7 @@ public void OnClientDisconnect_Post(int client)
 	CheckStatus();
 }
 
-public Action Event_PlayerTeamDeath(Event event, const char[] name, bool dontBroadcast)
+public void Event_PlayerTeamDeath(Event event, const char[] name, bool dontBroadcast)
 {
 	if(IsTorch == false)
 	{
@@ -686,7 +686,7 @@ public Action Event_PlayerTeamDeath(Event event, const char[] name, bool dontBro
 	}
 	CheckStatus();
 	
-	int iClient = GetClientOfUserId(GetEventInt(event, "userid"));
+	int iClient = GetClientOfUserId(event.GetInt("userid"));
 	ResetSprint(iClient);
 }
 
@@ -827,9 +827,9 @@ public Action Timer_SprintCooldown(Handle timer, any client)
 	return;
 }
 
-public void Event_PlayerSpawn(Handle event, const char[] name, bool dontBroadcast)
+public void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast)
 {
-	int iClient = GetClientOfUserId(GetEventInt(event, "userid"));
+	int iClient = GetClientOfUserId(event.GetInt("userid"));
 	ResetSprint(iClient);
 	ClientSprintStatus[iClient] &= ~ IsSprintCoolDown;
 	return;

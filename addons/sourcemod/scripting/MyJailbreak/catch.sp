@@ -359,7 +359,7 @@ void StartNextRound()
 
 //Round start
 
-public void Event_RoundStart(Handle event, char[] name, bool dontBroadcast)
+public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
 	if (StartCatch || IsCatch)
 	{
@@ -438,9 +438,9 @@ stock void CreateInfoPanel(int client)
 }
 //Round End
 
-public void Event_RoundEnd(Handle event, char[] name, bool dontBroadcast)
+public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
-	int winner = GetEventInt(event, "winner");
+	int winner = event.GetInt("winner");
 	
 	if (IsCatch)
 	{
@@ -532,6 +532,7 @@ public Action OnTakedamage(int victim, int &attacker, int &inflictor, float &dam
 	if(GetClientTeam(victim) == CS_TEAM_T && GetClientTeam(attacker) == CS_TEAM_T && catched[victim] && !catched[attacker])
 	{
 		FreeEm(victim, attacker);
+		CheckStatus();
 	}
 	return Plugin_Handled;
 }
@@ -546,7 +547,7 @@ public void OnClientDisconnect_Post(int client)
 	CheckStatus();
 }
 
-public Action Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
+public void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
 {
 	if(IsCatch == false)
 	{
@@ -554,7 +555,7 @@ public Action Event_PlayerTeam(Event event, const char[] name, bool dontBroadcas
 	}
 	CheckStatus();
 	
-	int iClient = GetClientOfUserId(GetEventInt(event, "userid"));
+	int iClient = GetClientOfUserId(event.GetInt("userid"));
 	ResetSprint(iClient);
 }
 
@@ -601,6 +602,7 @@ public Action CheckStatus()
 		CS_TerminateRound(5.0, CSRoundEnd_CTWin);
 		CreateTimer( 1.0, DeleteOverlay);
 	}
+	
 }
 
 //Knife only
@@ -625,8 +627,8 @@ public Action OnWeaponCanUse(int client, int weapon)
 
 //Overlays
 
-public Action ShowOverlayFreeze( Handle timer, any client ) {
-	
+public Action ShowOverlayFreeze( Handle timer, any client )
+{
 	if(gc_bOverlays.BoolValue && IsValidClient(client, false, true))
 	{
 	int iFlag = GetCommandFlags( "r_screenoverlay" ) & ( ~FCVAR_CHEAT ); 
@@ -727,9 +729,9 @@ public Action Timer_SprintCooldown(Handle timer, any client)
 	return;
 }
 
-public void Event_PlayerSpawn(Handle event, const char[] name, bool dontBroadcast)
+public void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast)
 {
-	int iClient = GetClientOfUserId(GetEventInt(event, "userid"));
+	int iClient = GetClientOfUserId(event.GetInt("userid"));
 	ResetSprint(iClient);
 	ClientSprintStatus[iClient] &= ~ IsSprintCoolDown;
 	return;

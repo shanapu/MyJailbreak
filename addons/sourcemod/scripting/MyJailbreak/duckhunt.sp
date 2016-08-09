@@ -133,8 +133,8 @@ public void OnPluginStart()
 	HookEvent("round_start", Event_RoundStart);
 	HookEvent("round_end", Event_RoundEnd);
 	HookEvent("player_death", Event_PlayerDeath);
-	HookEvent("weapon_reload", WeaponReload);
-	HookEvent("hegrenade_detonate", HE_Detonate);
+	HookEvent("weapon_reload", Event_WeaponReload);
+	HookEvent("hegrenade_detonate", Event_HE_Detonate);
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
 	HookConVarChange(gc_sCustomCommand, OnSettingChanged);
@@ -380,7 +380,7 @@ public Action Timer_SetModel(Handle timer)
 
 //Round start
 
-public void Event_RoundStart(Handle event, char[] name, bool dontBroadcast)
+public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
 	if (StartDuckHunt || IsDuckHunt)
 	{
@@ -531,9 +531,9 @@ stock void CreateInfoPanel(int client)
 
 //Round End
 
-public void Event_RoundEnd(Handle event, char[] name, bool dontBroadcast)
+public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
-	int winner = GetEventInt(event, "winner");
+	int winner = event.GetInt("winner");
 	
 	if (IsDuckHunt)
 	{
@@ -672,11 +672,11 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 
 //Give new Nades after detonation to chicken
 
-public Action HE_Detonate(Handle event, const char[] name, bool dontBroadcast)
+public void Event_HE_Detonate(Event event, const char[] name, bool dontBroadcast)
 {
 	if (IsDuckHunt == true)
 	{
-		int target = GetClientOfUserId(GetEventInt(event, "userid"));
+		int target = GetClientOfUserId(event.GetInt("userid"));
 		if (GetClientTeam(target) == 1 && !IsPlayerAlive(target))
 		{
 			return;
@@ -688,11 +688,11 @@ public Action HE_Detonate(Handle event, const char[] name, bool dontBroadcast)
 
 //Give new Ammo to Hunter
 
-public void WeaponReload(Handle event, char [] name, bool dontBroadcast)
+public void Event_WeaponReload(Event event, char [] name, bool dontBroadcast)
 {
 	if(IsDuckHunt == true)
 	{
-		int client = GetClientOfUserId(GetEventInt(event, "userid"));
+		int client = GetClientOfUserId(event.GetInt("userid"));
 		if(IsValidClient(client, false, false) && (GetClientTeam(client) == CS_TEAM_CT))
 		{
 			SetPlayerWeaponAmmo(client, Client_GetActiveWeapon(client), _, 32);
@@ -719,11 +719,11 @@ public void OnClientDisconnect(int client)
 	}
 }
 
-public void Event_PlayerDeath(Handle event, char [] name, bool dontBroadcast)
+public void Event_PlayerDeath(Event event, char [] name, bool dontBroadcast)
 {
 	if(IsDuckHunt == true)
 	{
-		int client = GetClientOfUserId(GetEventInt(event, "userid"));
+		int client = GetClientOfUserId(event.GetInt("userid"));
 		FP(client);
 	}
 }

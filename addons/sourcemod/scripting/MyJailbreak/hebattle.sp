@@ -132,7 +132,7 @@ public void OnPluginStart()
 	//Hooks
 	HookEvent("round_start", Event_RoundStart);
 	HookEvent("round_end", Event_RoundEnd);
-	HookEvent("hegrenade_detonate", HE_Detonate);
+	HookEvent("hegrenade_detonate", Event_HE_Detonate);
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
 	HookConVarChange(gc_sCustomCommand, OnSettingChanged);
@@ -346,7 +346,7 @@ void StartNextRound()
 
 //Round start
 
-public void Event_RoundStart(Handle event, char[] name, bool dontBroadcast)
+public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
 	if (StartHEbattle || IsHEbattle)
 	{
@@ -497,9 +497,9 @@ stock void CreateInfoPanel(int client)
 }
 //Round End
 
-public void Event_RoundEnd(Handle event, char[] name, bool dontBroadcast)
+public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
-	int winner = GetEventInt(event, "winner");
+	int winner = event.GetInt("winner");
 	
 	if (IsHEbattle)
 	{
@@ -615,11 +615,11 @@ public Action OnWeaponCanUse(int client, int weapon)
 
 //Give new Nades after detonation
 
-public Action HE_Detonate(Handle event, const char[] name, bool dontBroadcast)
+public void Event_HE_Detonate(Event event, const char[] name, bool dontBroadcast)
 {
 	if (IsHEbattle == true)
 	{
-		int  target = GetClientOfUserId(GetEventInt(event, "userid"));
+		int  target = GetClientOfUserId(event.GetInt("userid"));
 		if (GetClientTeam(target) == 1 && !IsPlayerAlive(target))
 		{
 			return;

@@ -267,9 +267,9 @@ public void OnConfigsExecuted()
 
 
 //Open Menu on Spawn
-public Action Event_OnPlayerSpawn(Event event, const char[] name, bool dontBroadcast)
+public void Event_OnPlayerSpawn(Event event, const char[] name, bool dontBroadcast)
 {
-	int client = GetClientOfUserId(GetEventInt(event, "userid"));
+	int client = GetClientOfUserId(event.GetInt("userid"));
 	
 	if(gc_bStart.BoolValue)
 	{
@@ -278,9 +278,8 @@ public Action Event_OnPlayerSpawn(Event event, const char[] name, bool dontBroad
 }
 
 
-public void Event_RoundStart(Handle event, char[] name, bool dontBroadcast)
+public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
-	
 	char EventDay[64];
 	GetEventDayName(EventDay);
 	if(!StrEqual(EventDay, "none", false))

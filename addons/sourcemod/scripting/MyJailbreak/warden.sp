@@ -421,9 +421,9 @@ public Action AdminCommand_SetWarden(int client,int args)
 
 
 //Warden Died
-public Action Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast) 
+public void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast) 
 {
-	int client = GetClientOfUserId(GetEventInt(event, "userid"));  //Get the dead clients id
+	int client = GetClientOfUserId(event.GetInt("userid"));  //Get the dead clients id
 	
 	if(IsClientWarden(client))  //The Warden is dead
 	{
@@ -453,9 +453,9 @@ public Action Event_PlayerDeath(Event event, const char[] name, bool dontBroadca
 
 
 //Warden change Team
-public Action Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
+public void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
 {
-	int client = GetClientOfUserId(GetEventInt(event, "userid"));  //Get the clients id
+	int client = GetClientOfUserId(event.GetInt("userid"));  //Get the clients id
 	
 	if(IsClientWarden(client))  //The Warden changed team
 	{

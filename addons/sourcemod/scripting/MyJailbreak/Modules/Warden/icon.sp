@@ -111,9 +111,9 @@ public void Icon_Event_PostRoundStart(Event event, const char[] name, bool dontB
 }
 
 
-public Action Icon_Event_PlayerDeathTeam(Event event, const char[] name, bool dontBroadcast) 
+public void Icon_Event_PlayerDeathTeam(Event event, const char[] name, bool dontBroadcast) 
 {
-	int client = GetClientOfUserId(GetEventInt(event, "userid"));  //Get the dead clients id
+	int client = GetClientOfUserId(event.GetInt("userid"));  //Get the dead clients id
 	RemoveIcon(client);
 }
 

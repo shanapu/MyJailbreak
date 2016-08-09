@@ -125,7 +125,7 @@ public Action Command_FreeDay(int warden, int args)
 ******************************************************************************/
 
 
-public Action  Freedays_Event_RoundStart_Post(Handle event, char [] name, bool dontBroadcast)
+public void Freedays_Event_RoundStart_Post(Event event, char [] name, bool dontBroadcast)
 {
 	char EventDay[64];
 	GetEventDayName(EventDay);

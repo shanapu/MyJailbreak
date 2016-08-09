@@ -265,7 +265,7 @@ public Action VoteLastGuard(int client,int args)
 
 
 //Initialize Event
-public void Event_RoundStart(Handle event, char[] name, bool dontBroadcast)
+public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
 	IsLR = false;
 	IsLastGuard = false;
@@ -278,9 +278,9 @@ public void Event_RoundStart(Handle event, char[] name, bool dontBroadcast)
 
 
 //Round End
-public void Event_RoundEnd(Handle event, char[] name, bool dontBroadcast)
+public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
-	int winner = GetEventInt(event, "winner");
+	int winner = event.GetInt("winner");
 	
 	Format(g_sHasVoted, sizeof(g_sHasVoted), "");
 	if (IsLastGuard)
@@ -307,7 +307,7 @@ public void Event_RoundEnd(Handle event, char[] name, bool dontBroadcast)
 
 
 //Check player count when player dies or change team
-public Action Event_PlayerTeamDeath(Event event, const char[] name, bool dontBroadcast)
+public void Event_PlayerTeamDeath(Event event, const char[] name, bool dontBroadcast)
 {
 	if(AllowLastGuard)CheckStatus();
 }

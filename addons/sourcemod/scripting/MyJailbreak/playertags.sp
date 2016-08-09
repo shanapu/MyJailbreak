@@ -109,10 +109,9 @@ public void OnPluginStart()
 ******************************************************************************/
 
 
-public Action Event_CheckTag(Handle event, char[] name, bool dontBroadcast)
+public void Event_CheckTag(Event event, char[] name, bool dontBroadcast)
 {
 	CreateTimer(1.0, DelayCheck);
-	return Action;
 }
 
 

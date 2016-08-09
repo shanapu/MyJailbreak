@@ -113,7 +113,7 @@ public Action Command_HUD(int client, int args)
 
 	
 	//Warden change Team
-public Action Event_PlayerTeamDeath(Event event, const char[] name, bool dontBroadcast)
+public void Event_PlayerTeamDeath(Event event, const char[] name, bool dontBroadcast)
 {
 	ShowHUD();
 }
@@ -200,7 +200,7 @@ public void ShowHUD()
 			{
 				if(IsEventDayPlanned())
 				{
-					PrintHintText(i, "<font face='Arial' color='#006699'>%t </font><font face='Arial' color='#FE4040'>%t</font>\n<font face='Arial' color='#B980EF'>%t</font> %s\n<font face='Arial' color='#5E97D8'>%t</font> %i/%i\t<font face='Arial' color='#E3AD39'>%t</font> %i/%i\n", "hud_warden", "hud_nowarden", "hud_planned", EventDay, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
+					PrintHintText(i, "<font face='Arial' color='#006699'>%t </font><font face='Arial' color='#FE4040'>%t</font>\n<font face='Arial' color='#B980EF'>%t</font> %s\n<font face='Arial' color='#5E97D8'>%t</font> %i/%i\t<font face='Arial' color='#E3AD39'>%t</font> %i/%i", "hud_warden", "hud_nowarden", "hud_planned", EventDay, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
 				}
 				else
 				{

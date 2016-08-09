@@ -329,7 +329,7 @@ void StartNextRound()
 
 //Round start
 
-public void Event_RoundStart(Handle event, char[] name, bool dontBroadcast)
+public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
 	if (StartDrunk || IsDrunk)
 	{
@@ -506,11 +506,11 @@ stock void CreateInfoPanel(int client)
 
 //Round End
 
-public void Event_RoundEnd(Handle event, char[] name, bool dontBroadcast)
+public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
 	DrunkTimer = null;
 	delete DrunkTimer;
-	int winner = GetEventInt(event, "winner");
+	int winner = event.GetInt("winner");
 	
 	if (IsDrunk) //if event was running this round
 	{
@@ -609,9 +609,9 @@ public Action StartTimer(Handle timer)
 	return Plugin_Stop;
 }
 
-public Action Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast) 
+public void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast) 
 {
-	int client = GetClientOfUserId(GetEventInt(event, "userid")); // Get the dead clients id
+	int client = GetClientOfUserId(event.GetInt("userid")); // Get the dead clients id
 	
 	KillDrunk(client);
 }

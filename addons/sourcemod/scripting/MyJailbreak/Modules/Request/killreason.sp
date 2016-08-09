@@ -54,10 +54,10 @@ public void KillReason_OnPluginStart()
 ******************************************************************************/
 
 
-public Action KillReason_Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast) 
+public void KillReason_Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast) 
 {
-	int victim = GetClientOfUserId(GetEventInt(event, "userid")); // Get the dead clients id
-	int attacker = GetClientOfUserId(GetEventInt(event, "attacker")); // Get the attacker clients id
+	int victim = GetClientOfUserId(event.GetInt("userid")); // Get the dead clients id
+	int attacker = GetClientOfUserId(event.GetInt("attacker")); // Get the attacker clients id
 	
 	if (IsValidClient(victim, true, true) && IsValidClient(attacker, false, true) && !IsLR && gc_bPlugin.BoolValue && gc_bKillReason.BoolValue && ((GetClientTeam(attacker) == CS_TEAM_CT) && (GetClientTeam(victim) == CS_TEAM_T))) Menu_KillReason(attacker,victim);
 }

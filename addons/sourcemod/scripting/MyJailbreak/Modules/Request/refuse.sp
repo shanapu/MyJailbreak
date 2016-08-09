@@ -192,7 +192,7 @@ public Action Command_refuse(int client, int args)
 ******************************************************************************/
 
 
-public Action Refuse_Event_RoundStart(Handle event, char [] name, bool dontBroadcast)
+public void Refuse_Event_RoundStart(Event event, char [] name, bool dontBroadcast)
 {
 	LoopClients(client)
 	{

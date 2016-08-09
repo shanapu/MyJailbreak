@@ -47,6 +47,7 @@ ConVar gc_bForceTConnect;
 ConVar gc_iJoinMode;
 ConVar gc_iQuestionTimes;
 
+
 //Booleans
 bool g_bRatioEnable = true;
 
@@ -374,7 +375,7 @@ public Action Command_ToggleRatio(int client, int args)
 
 public Action Event_OnPlayerSpawn(Event event, const char[] name, bool bDontBroadcast) 
 {
-	int client = GetClientOfUserId(GetEventInt(event, "userid"));
+	int client = GetClientOfUserId(event.GetInt("userid"));
 	
 	if (GetClientTeam(client) != 3) 
 		return Plugin_Continue;
@@ -397,26 +398,26 @@ public Action Event_OnPlayerSpawn(Event event, const char[] name, bool bDontBroa
 }
 
 
-public void Event_PlayerTeam_Post(Handle hEvent, const char[] szName, bool bDontBroadcast)
+public void Event_PlayerTeam_Post(Event event, const char[] szName, bool bDontBroadcast)
 {
-	if(GetEventInt(hEvent, "team") != CS_TEAM_CT)
+	if(GetEventInt(event, "team") != CS_TEAM_CT)
 		return;
 	
-	int client = GetClientOfUserId(GetEventInt(hEvent, "userid"));
+	int client = GetClientOfUserId(GetEventInt(event, "userid"));
 	RemovePlayerFromGuardQueue(client);
 }
 
 
-public Action Event_RoundEnd_Post(Handle hEvent, const char[] szName, bool bDontBroadcast)
+public Action Event_RoundEnd_Post(Event event, const char[] szName, bool bDontBroadcast)
 {
 	if(g_bRatioEnable) FixTeamRatio();
 	else if(gc_bToggleAnnounce.BoolValue) CPrintToChatAll("%t %t", "ratio_tag", "ratio_disabled");
 }
 
 
-public Action Event_OnFullConnect(Handle event, const char[] name, bool dontBroadcast)
+public Action Event_OnFullConnect(Event event, const char[] name, bool dontBroadcast)
 {
-	int client = GetClientOfUserId(GetEventInt(event, "userid"));
+	int client = GetClientOfUserId(event.GetInt("userid"));
 	if(gc_bForceTConnect.BoolValue && g_bRatioEnable && ((gc_bAdminBypass.BoolValue && !CheckVipFlag(client, g_sAdminFlag)) || !gc_bAdminBypass.BoolValue)) CreateTimer(1.0, Timer_ForceTSide, client);
 	return Plugin_Continue;
 }

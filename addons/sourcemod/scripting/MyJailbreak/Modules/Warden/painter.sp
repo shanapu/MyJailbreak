@@ -153,9 +153,9 @@ public Action Command_PainterMenu(int client, int args)
 ******************************************************************************/
 
 
-public Action Painter_Event_PlayerTeamDeath(Handle event, const char[] name, bool dontBroadcast) 
+public void Painter_Event_PlayerTeamDeath(Event event, const char[] name, bool dontBroadcast) 
 {
-	int client = GetClientOfUserId(GetEventInt(event, "userid"));
+	int client = GetClientOfUserId(event.GetInt("userid"));
 	
 	g_fLastPainter[client][0] = 0.0;
 	g_fLastPainter[client][1] = 0.0;

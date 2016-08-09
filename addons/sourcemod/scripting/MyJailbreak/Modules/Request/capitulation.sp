@@ -159,7 +159,7 @@ public Action Command_Capitulation(int client, int args)
 ******************************************************************************/
 
 
-public Action Capitulation_Event_RoundStart(Handle event, char [] name, bool dontBroadcast)
+public void Capitulation_Event_RoundStart(Event event, char [] name, bool dontBroadcast)
 {
 	LoopClients(client)
 	{

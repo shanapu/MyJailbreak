@@ -298,7 +298,7 @@ public void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast
 {
 	if((AutoFreeday && gc_iRespawn.IntValue == 1) || (IsFreeday && gc_iRespawn.IntValue == 2) || ((IsFreeday || AutoFreeday) && gc_iRespawn.IntValue == 3))
 	{
-		int client = GetClientOfUserId(GetEventInt(event, "userid")); // Get the dead clients id
+		int client = GetClientOfUserId(event.GetInt("userid")); // Get the dead clients id
 		
 		CS_RespawnPlayer(client);
 	}
@@ -307,7 +307,7 @@ public void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast
 
 //Round start
 
-public void Event_RoundStart(Handle event, char[] name, bool dontBroadcast)
+public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
 	if ((GetTeamClientCount(CS_TEAM_CT) < 1) && gc_bAuto.BoolValue)
 	{
@@ -391,7 +391,7 @@ stock void CreateInfoPanel(int client)
 }
 //Round End
 
-public void Event_RoundEnd(Handle event, char[] name, bool dontBroadcast)
+public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
 	if (IsFreeday)
 	{
