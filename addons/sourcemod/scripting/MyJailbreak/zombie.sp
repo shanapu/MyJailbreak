@@ -362,6 +362,20 @@ void StartNextRound()
 	PrintHintTextToAll("%t", "zombie_next_nc");
 }
 
+
+public Action Timer_SetModel(Handle timer)
+{
+	LoopValidClients(client, true, false)
+	{
+		if (GetClientTeam(client) == CS_TEAM_CT)
+		{
+			GetEntPropString(client, Prop_Data, "m_ModelName", g_sModelPathPrevious[client], sizeof(g_sModelPathPrevious[]));
+			SetEntityModel(client, g_sModelPathZombie);
+		}
+	}
+}
+
+
 //Round start
 
 public void Event_RoundStart(Handle event, char[] name, bool dontBroadcast)
@@ -408,8 +422,6 @@ public void Event_RoundStart(Handle event, char[] name, bool dontBroadcast)
 					
 					if (GetClientTeam(client) == CS_TEAM_CT)
 					{
-						GetEntPropString(client, Prop_Data, "m_ModelName", g_sModelPathPrevious[client], sizeof(g_sModelPathPrevious[]));
-						SetEntityModel(client, g_sModelPathZombie);
 						SetEntityMoveType(client, MOVETYPE_NONE);
 						SetEntityHealth(client, gc_iZombieHP.IntValue);
 						StripAllPlayerWeapons(client);
@@ -429,6 +441,8 @@ public void Event_RoundStart(Handle event, char[] name, bool dontBroadcast)
 						TeleportEntity(client, g_fPos, NULL_VECTOR, NULL_VECTOR);
 					}
 				}
+				
+				CreateTimer (1.1, Timer_SetModel);
 				
 				//enable lr on last round
 				if (gc_bAllowLR.BoolValue)

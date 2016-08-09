@@ -361,6 +361,23 @@ void StartNextRound()
 	PrintHintTextToAll("%t", "duckhunt_next_nc");
 }
 
+public Action Timer_SetModel(Handle timer)
+{
+	LoopValidClients(client, true, false)
+	{
+		if (GetClientTeam(client) == CS_TEAM_CT)
+		{
+			GetEntPropString(client, Prop_Data, "m_ModelName", g_sModelPathCTPrevious[client], sizeof(g_sModelPathCTPrevious[]));
+			SetEntityModel(client, huntermodel);
+		}
+		if (GetClientTeam(client) == CS_TEAM_T)
+		{
+			GetEntPropString(client, Prop_Data, "m_ModelName", g_sModelPathTPrevious[client], sizeof(g_sModelPathTPrevious[]));
+			SetEntityModel(client, "models/chicken/chicken.mdl");
+		}
+	}
+}
+
 //Round start
 
 public void Event_RoundStart(Handle event, char[] name, bool dontBroadcast)
@@ -391,15 +408,11 @@ public void Event_RoundStart(Handle event, char[] name, bool dontBroadcast)
 					
 					if (GetClientTeam(client) == CS_TEAM_CT && IsValidClient(client, false, false))
 					{
-						GetEntPropString(client, Prop_Data, "m_ModelName", g_sModelPathCTPrevious[client], sizeof(g_sModelPathCTPrevious[]));
-						SetEntityModel(client, huntermodel);
 						SetEntityHealth(client, gc_iHunterHP.IntValue);
 						GivePlayerItem(client, "weapon_nova");
 					}
 					if (GetClientTeam(client) == CS_TEAM_T && IsValidClient(client, false, false))
 					{
-						GetEntPropString(client, Prop_Data, "m_ModelName", g_sModelPathTPrevious[client], sizeof(g_sModelPathTPrevious[]));
-						SetEntityModel(client, "models/chicken/chicken.mdl");
 						SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.2);
 						SetEntityGravity(client, 0.3);
 						SetEntityHealth(client, gc_iChickenHP.IntValue);
@@ -407,6 +420,8 @@ public void Event_RoundStart(Handle event, char[] name, bool dontBroadcast)
 						ClientCommand(client, "thirdperson");
 					}
 				}
+				
+				CreateTimer (1.1, Timer_SetModel);
 				
 				//enable lr on last round
 				if (gc_bAllowLR.BoolValue)
@@ -434,6 +449,7 @@ public void Event_RoundStart(Handle event, char[] name, bool dontBroadcast)
 		else if (g_iCoolDown > 0) g_iCoolDown--;
 	}
 }
+
 
 public int OnAvailableLR(int Announced)
 {

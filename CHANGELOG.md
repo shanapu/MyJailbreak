@@ -32,6 +32,9 @@
 *  Ratio: No Agreement, or Questions, or force to T connect for VIP/Admins
     *  new cvar - sm_ratio_vip_bypass - Bypass Admin/VIP though agreement / question
   
+*Fixed*
+*  Zombie: Conflict with sm_skinchooser (no zombie model)
+*  Duckhunt: Conflict with sm_skinchooser (no models)
   
 *New Requirements*
 *  [ANY] VoiceannounceEX (VoiceHook) - https://forums.alliedmods.net/showthread.php?p=2177167
