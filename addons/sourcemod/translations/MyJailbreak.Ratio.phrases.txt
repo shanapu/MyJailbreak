@@ -3,30 +3,37 @@
 //
 "Phrases"
 {
-	"ratio_movetot"
+	"ratio_advip"
 	{
-		"#format"   "{1:N}"
-		"en"		"There are too many Guards. {green}{1}{default} was picked randomly and moved to prisoners."
-		"ru"		"Слишком много КТ. {green}{1}{default} был выбран случайным образом и перемещён за Т."
-	}
-
-	"ratio_tag"
-	{
-		"ru"		"[{green}MyJB.баланс{default}]"
-		"en"		"[{green}MyJB.ratio{default}]"
-		"de"		"[{green}MyJB.ratio{default}]"
-	}
-
-	"ratio_thxvip"
-	{
-		"ru"		"Благодарим за покупку {darkred}VIP{default}! Вы были перемещены в {green}начало очереди!{default}"
-		"en"		"Thank you for being a {darkred}VIP{default}! You have been moved to the {green}front of the queue!{default}"
+		"ru"		"Получите {darkred}VIP{defailt} , чтобы автоматически переместиться в начало очереди."
+		"en"		"Get a {darkred}VIP{default} to be automatically moved to the front of the queue."
 	}
 
 	"ratio_auto"
 	{
 		"ru"		"Вы не можете использовать автоматический выбор, чтобы присоединиться к команде."
 		"en"		"You cannot use auto select to join a team."
+	}
+
+	"ratio_banned"
+	{
+		"ru"		"Вам запрещено играть за КТ, потому что Вы {green}забанены{default} за КТ."
+		"en"		"Du kannst nicht als Wärter spielen. Du bist als{green}CT{default} gebanned."
+		"de"		"Cannot play on guards because you are {green}CT{default} banned."
+	}
+
+	"ratio_empty"
+	{
+		"ru"		"В настоящее время очередь {green}пуста{default}."
+		"en"		"The queue is currently {green}empty{default}."
+	}
+
+	"ratio_find"
+	{
+		"#format"   "{1:N}"
+		"ru"		"Поиск следующего КТ из очереди. {green}{1} {default}новый КТ."
+		"en"		"Finding the next guard from queue. {green}{1} {default}is the new guard."
+		"de"		"Wähle den nächsten Anwärter aus der Liste. {green}{1} {default}ist neuer Guard"
 	}
 
 	"ratio_fullqueue"
@@ -42,10 +49,17 @@
 		"en"		"Guard Queue:"
 	}
 
-	"ratio_empty"
+	"ratio_leavedqueue"
 	{
-		"ru"		"В настоящее время очередь {green}пуста{default}."
-		"en"		"The queue is currently {green}empty{default}."
+		"ru"		"Вы больше не в очереди за КТ!"
+		"en"		"You are no longer in the guard queue!"
+	}
+
+	"ratio_movetot"
+	{
+		"#format"   "{1:N}"
+		"ru"		"Слишком много КТ. {green}{1}{default} был выбран случайным образом и перемещён за Т."
+		"en"		"There are too many Guards. {green}{1}{default} was picked randomly and moved to prisoners."
 	}
 
 	"ratio_noct"
@@ -54,26 +68,10 @@
 		"en"		"You must be a {green}prisoner{default} to join the queue."
 	}
 
-	"ratio_find"
+	"ratio_notonqueue"
 	{
-		"#format"   "{1:N}"
-		"ru"		"Поиск следующего КТ из очереди. {green}{1} {default}новый КТ."
-		"en"		"Finding the next guard from queue. {green}{1} {default}is the new guard."
-		"de"		"Wähle den nächsten Anwärter aus der Liste. {green}{1} {default}ist neuer Guard"
-	}
-
-	"ratio_advip"
-	{
-		"en"		"Get a {darkred}VIP{default} to be automatically moved to the front of the queue."
-		"ru"		"Получите {darkred}VIP{default}, чтобы автоматически переместиться в начало очереди."
-	}
-
-	"ratio_random"
-	{
-		"#format"   "{1:N}"
-		"ru"		"Очередь за КТ пуста. {green}{1} {default}был выбран в качестве случайного нового КТ."
-		"en"		"Guard queue is currently empty. {green}{1} {default}was picked as a random new guard."
-		"de"		"Anwärter Liste ist leer. {green}{1} {default}wurde als neuer Zufälliger Guard gewählt"
+		"ru"		"Вы не в очереди за КТ!"
+		"en"		"Your aren't in the guard queue!"
 	}
 
 	"ratio_novalid"
@@ -89,6 +87,14 @@
 		"en"		"You are {green}#{1}{default} in the guard queue."
 	}
 
+	"ratio_random"
+	{
+		"#format"   "{1:N}"
+		"ru"		"Очередь за КТ пуста. {green}{1} {default}был выбран в качестве случайного нового КТ."
+		"en"		"Guard queue is currently empty. {green}{1} {default}was picked as a random new guard."
+		"de"		"Anwärter Liste ist leer. {green}{1} {default}wurde als neuer Zufälliger Guard gewählt"
+	}
+
 	"ratio_removed"
 	{
 		"#format"   "{1:N},{2:N}"
@@ -96,227 +102,225 @@
 		"en"		"The Admin {1} removed {2} from the Guard queue!"
 	}
 
-	"ratio_notonqueue"
+	"ratio_tag"
 	{
-		"ru"		"Вы не в очереди за КТ!"
-		"en"		"Your aren't in the guard queue!"
+		"ru"		"[{green}MyJB.баланс{default}]"
+		"en"		"[{green}MyJB.ratio{default}]"
+		"de"		"[{green}MyJB.ratio{default}]"
 	}
 
-	"ratio_leavedqueue"
+	"ratio_thxvip"
 	{
-		"ru"		"Вы больше не в очереди за КТ!"
-		"en"		"You are no longer in the guard queue!"
+		"ru"		"Благодарим за покупку {darkred}VIP{default}! Вы были перемещены в {green}начало очереди!{default}"
+		"en"		"Thank you for being a {darkred}VIP{default}! You have been moved to the {green}front of the queue!{default}"
 	}
 
 	"ratio_accept_title"
 	{
-		"ru"		"Квалификация КТ"
 		"en"		"Guard Qualifications"
+		"ru"		"Квалификация КТ"
 	}
-
+ 
 	"ratio_accept_line1"
 	{
-		"ru"		"Перед тем, как вы станете КТ, вы должны принять эти условия и соглашения:"
 		"en"		"Before you become a guard, you must accept these terms and agreements:"
+		"ru"		"Перед тем, как вы станете КТ, вы должны принять эти условия:"
 	}
-
+ 
 	"ratio_accept_line2"
 	{
-		"ru"		"Я подтверждаю, что я прочитал и я понимаю правила."
 		"en"		"I confirm that I read & I understand the rules."
+		"ru"		"Я прочитал и я понимаю правила."
 	}
-
+ 
 	"ratio_accept_line3"
 	{
-		"ru"		"Я подтверждаю, что прочитал правила CT дважды!"
 		"en"		"I confirm that I have read the CT rules twice!"
+		"ru"		"Я прочитал правила CT дважды!"
 	}
-
+ 
 	"ratio_accept_line4"
 	{
-		"ru"		"Я подтверждаю, что я буду играть честно и следовать правилам сервера."
 		"en"		"I confirm that I will play fair & follow the server rules."
+		"ru"		"Я буду играть честно и следовать правилам сервера."
 	}
-
+ 
 	"ratio_accept_line5"
 	{
-		"ru"		"Несоблюдение правил приведёт к CT бану."
 		"en"		"Failiure to comply with the rules will be result in a CT ban."
+		"ru"		"Несоблюдение правил приведёт к CT бану."
 	}
-
+ 
 	"ratio_accept"
 	{
-		"ru"		"Да, я принимаю эти условия и соглашения."
 		"en"		"Yes, I accept these terms and agreements."
+		"ru"		"Да, я принимаю эти условия и соглашения."
 	}
-
+ 
 	"ratio_notaccept"
 	{
-		"ru"		"Нет, я не хочу стать охранником."
 		"en"		"No, I don't want to become a guard."
+		"ru"		"Нет, я не хочу стать охранником."
 	}
-
+ 
 	"ratio_question_title"
 	{
-		"ru"		"Пожалуйста, ответьте на следующие вопросы, чтобы стать охранником."
 		"en"		"Please answer the following questions to become a Guard."
+		"ru"		"Ответьте на вопросы, чтобы стать охранником."
 	}
-
+ 
 	"ratio_question1_line1"
 	{
-		"ru"		"Камеры закрыты, заключенные внутри!"
 		"en"		"The Cell Doors are closed, the prisoners are inside!"
+		"ru"		"Камеры закрыты, заключенные внутри!"
 	}
-
+ 
 	"ratio_question1_line2"
 	{
-		"ru"		"Что вы будете делать?"
 		"en"		"What will you do?"
+		"ru"		"Что вы будете делать?"
 	}
-
+ 
 	"ratio_question1_wrong1"
 	{
-		"ru"		"Я подожду, пока двери откроются и убью их всех!"
 		"en"		"I wait until cells open, and kill'em all!"
+		"ru"		"После открытия камер я убью всех!"
 	}
-
+ 
 	"ratio_question1_wrong2"
 	{
-		"ru"		"Я буду убивать их одного за другим, до Последнего Желания."
 		"en"		"Kill'em one by one until Last Request."
+		"ru"		"Я убью всех, до ЛР"
 	}
-
+ 
 	"ratio_question1_right"
 	{
-		"ru"		"Я буду ждать первого объявления КМД."
 		"en"		"I wait for the warden first announcement."
+		"ru"		"Я буду ждать первого приказа КМД."
 	}
-
+ 
+ 
 	"ratio_question2_line1"
 	{
-		"ru"		"КМД сосет и этот раунд скучный, как дерьмо."
 		"en"		"The warden sucks & this round is boring as shit."
+		"ru"		"КМД сосет и этот раунд скучный, как дерьмо."
 	}
-
+ 
 	"ratio_question2_line2"
 	{
-		"ru"		"Отдамка я своё оружие заключённому, чтобы ускорить раунд!"
 		"en"		"Drop your gun and give it to an prisoner to accelerate the round!"
+		"ru"		"Отдамка своё оружие зэку, дабы ускорить раунд"
 	}
-
+ 
 	"ratio_question2_wrong1"
 	{
-		"ru"		"Это хорошая идея."
 		"en"		"This is a good idea."
+		"ru"		"Это хорошая идея."
 	}
-
+ 
 	"ratio_question2_wrong2"
 	{
-		"ru"		"Никогда! Только если заключённый мой приятель!"
 		"en"		"Never! Just when the prisoner is my mate!"
+		"ru"		"Только если заключённый мой приятель!"
 	}
-
+ 
 	"ratio_question2_right"
 	{
-		"ru"		"Никогда! Бросать оружие (Подбрасывать оружие) запрещено!"
 		"en"		"Never! Dropping a gun (Gun Planting) is forbidden!"
+		"ru"		"Никогда! Это запрещено!"
 	}
-
+ 
+ 
 	"ratio_question3_line1"
 	{
-		"ru"		"Вы читали правила сервера?"
 		"en"		"Have you read the server rules?"
+		"ru"		"Вы читали правила сервера?"
 	}
-
+ 
 	"ratio_question3_line2"
 	{
-		"ru"		"Понимаете ли вы правила сервера?"
 		"en"		"Do you understand the server rules?"
+		"ru"		"Поняли ли вы правила?"
 	}
-
+ 
 	"ratio_question3_wrong1"
 	{
-		"ru"		"Да, я читал их. Я не буду следовать правилам сервера."
 		"en"		"Yeah, I read them. I'm not going to follow them."
+		"ru"		"Я не буду следовать правилам сервера."
 	}
-
+ 
 	"ratio_question3_wrong2"
 	{
-		"ru"		"Чтение? Я здесь, чтобы играть, lol!"
 		"en"		"Reading? I'm here to play lol!"
+		"ru"		"Чтение? Я здесь, чтобы играть, lol!"
 	}
-
+ 
 	"ratio_question3_right"
 	{
-		"ru"		"Да, я читал их. Я знаю, как играть на этом сервере."
 		"en"		"Yeah, I read them. I know how to play on this server."
+		"ru"		"Да. Я знаю, как играть здесь."
 	}
-
+ 
+ 
 	"ratio_question4_line1"
 	{
-		"ru"		"У вас есть рабочий микрофон?"
 		"en"		"Do you have a working microphone?"
+		"ru"		"У вас есть рабочий микрофон?"
 	}
-
+ 
 	"ratio_question4_line2"
 	{
-		"ru"		"Вы говорите на языке сервера?"
 		"en"		"Do you speak the server language?"
+		"ru"		"Вы говорите на языке сервера?"
 	}
-
+ 
 	"ratio_question4_wrong1"
 	{
-		"ru"		"Sorry what?"
 		"en"		"Простите, что?"
+		"ru"		"Sorry what?"
 	}
-
+ 
 	"ratio_question4_wrong2"
 	{
-		"ru"		"Мой микрофон сломан, я буду использовать чат."
 		"en"		"My microphone is broken, I will type the commands."
+		"ru"		"Мой микрофон сломан."
 	}
-
+ 
 	"ratio_question4_right"
 	{
-		"ru"		"У меня есть рабочий микрофон, приличного качества."
 		"en"		"I have a working, decent quality microphone."
+		"ru"		"У меня есть хороший микрофон."
 	}
-
+ 
+ 
 	"ratio_question5_line1"
 	{
-		"ru"		"Командир был убит, и вы один из последних охранников."
 		"en"		"The Warden has been killed, and you are one of the last guards."
+		"ru"		"КМД убит, вы один из последних охранников."
 	}
-
+ 
 	"ratio_question5_line2"
 	{
-		"ru"		"Станете ли вы командиром?"
 		"en"		"Would you play as Warden?"
+		"ru"		"Станете ли вы командиром?"
 	}
-
+ 
 	"ratio_question5_wrong1"
 	{
-		"ru"		"Лучше всего начать freeday.."
 		"en"		"Better start a freeday..."
+		"ru"		"Лучше всего начать freeday.."
 	}
-
+ 
 	"ratio_question5_wrong2"
 	{
-		"ru"		"Нужно убить всех заключённых, пока не начнётся Последнего Желания."
 		"en"		"Kill every prisoner one by one until Last Request."
+		"ru"		"Убью всех зэков, до ЛР"
 	}
-
+ 
 	"ratio_question5_right"
 	{
-		"ru"		"Как охранник, я, конечно, буду играть в качестве нового командира."
 		"en"		"As guard, of course I will have to play as the new Warden."
-	}
-
-	"ratio_banned"
-	{
-		"de"		"Cannot play on guards because you are {green}CT{default} banned."
-		"en"		"Du kannst nicht als Wärter spielen. Du bist als{green}CT{default} gebanned."
-		"ru"		"Вам запрещено играть за КТ, потому что Вы {green}забанены{default} за КТ."
+		"ru"		"Я буду играть в качестве нового командира."
 	}
 
 	"ratio_disabled"

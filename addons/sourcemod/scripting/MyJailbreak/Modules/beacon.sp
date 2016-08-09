@@ -62,14 +62,14 @@ public void Beacon_OnPluginStart()
 }
 
 
-public void Beacon_Event_PlayerTeamDeath(Handle event, char[] name, bool dontBroadcast)
+public void Beacon_Event_PlayerTeamDeath(Event event, char[] name, bool dontBroadcast)
 {
-	int client = GetClientOfUserId(GetEventInt(event, "userid"));  //Get the dead clients id
+	int client = GetClientOfUserId(event.GetInt("userid"));  //Get the dead clients id
 	g_bBeaconOn[client] = false;
 }
 
 
-public void Beacon_Event_RoundEnd(Handle event, char[] name, bool dontBroadcast)
+public void Beacon_Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
 	LoopClients(i) g_bBeaconOn[i] = false;
 }
