@@ -56,10 +56,6 @@ public void ExtendTime_OnPluginStart()
 	
 	//Hooks
 	HookEvent("round_start", ExtendTime_Event_RoundStart);
-	
-	//FindConVar
-	g_iCollisionOffset = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
-	g_bNoBlockSolid = FindConVar("mp_solid_teammates");
 }
 
 

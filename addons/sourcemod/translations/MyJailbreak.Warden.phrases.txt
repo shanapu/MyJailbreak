@@ -55,7 +55,7 @@
 
 	"warden_ctsonly"
 	{
-		"ru"		"только {purple}КТ{fdefault} могут стать командиром."
+		"ru"		"только {purple}КТ{default} могут стать командиром."
 		"pl"		"tylko  {purple}Counter-Terrorists{default} moze zostac Wardenem."
 		"de"		"nur {purple}Counter-Terrorists{default} können Warden werden."
 		"sv"		"Endast {purple}Anti-Terrorister{default} kan bli fängelsedirektör."
