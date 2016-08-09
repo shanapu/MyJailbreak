@@ -26,6 +26,7 @@
 
 //Includes
 #include <myjailbreak> //... all other includes in myjailbreak.inc
+#include <CustomPlayerSkins>
 
 //Compiler Options
 #pragma semicolon 1
@@ -55,6 +56,7 @@ ConVar gc_iRoundTime;
 ConVar gc_bSpawnCell;
 ConVar gc_iTruceTime;
 ConVar gc_sOverlayOnTorch;
+ConVar gc_bWallhack;
 ConVar gc_bSprintUse;
 ConVar gc_iSprintCooldown;
 ConVar gc_bSprint;
@@ -137,6 +139,7 @@ public void OnPluginStart()
 	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_torch_overlays_start", "overlays/MyJailbreak/start" , "Path to the start Overlay DONT TYPE .vmt or .vft");
 	gc_sOverlayOnTorch = AutoExecConfig_CreateConVar("sm_torch_overlaytorch_path", "overlays/MyJailbreak/fire" , "Path to the OnTorch Overlay DONT TYPE .vmt or .vft");
 	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_torch_trucetime", "10", "Time in seconds players can't deal damage", _, true,  0.0);
+	gc_bWallhack = AutoExecConfig_CreateConVar("sm_torch_wallhack", "1", "0 - disabled, 1 - enable wallhack for the torch to find enemeys", _, true,  0.0, true, 1.0);
 	gc_bStayOverlay = AutoExecConfig_CreateConVar("sm_torch_stayoverlay", "1", "0 - overlays will removed after 3sec. , 1 - overlays will stay until untorch", _, true, 0.0, true, 1.0);
 	gc_bSounds = AutoExecConfig_CreateConVar("sm_torch_sounds_enable", "1", "0 - disabled, 1 - enable sounds ", _, true, 0.0, true, 1.0);
 	gc_sSoundStartPath = AutoExecConfig_CreateConVar("sm_torch_sounds_start", "music/MyJailbreak/burn.mp3", "Path to the soundfile which should be played for a start.");
@@ -525,6 +528,7 @@ public Action StartTimer(Handle timer)
 		CreateTimer( 0.0, ShowOverlayOnTorch, g_iBurningZero );
 		IgniteEntity(g_iBurningZero, 200.0);
 		SetEntPropFloat(g_iBurningZero, Prop_Data, "m_flLaggedMovementValue", gc_fSprintSpeed.FloatValue);
+		
 		if(gc_bSounds.BoolValue)
 		{
 			EmitSoundToClientAny(g_iBurningZero, g_sSoundOnTorchPath);
@@ -537,7 +541,8 @@ public Action StartTimer(Handle timer)
 	
 	LoopClients(client)
 	{
-	if (IsClientInGame(client) && IsPlayerAlive(client) && (client != g_iBurningZero)) 
+		if (gc_bWallhack.BoolValue) Setup_WallhackSkin(client);
+		if (IsClientInGame(client) && IsPlayerAlive(client) && (client != g_iBurningZero)) 
 		{
 			SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
 			if(gc_bOverlays.BoolValue) ShowOverlay(client, g_sOverlayStartPath, 2.0);
@@ -555,6 +560,72 @@ public Action StartTimer(Handle timer)
 	return Plugin_Stop;
 }
 
+void Setup_WallhackSkin(int client)
+{
+	char sModel[PLATFORM_MAX_PATH];
+	GetClientModel(client, sModel, sizeof(sModel));
+	int iSkin = CPS_SetSkin(client, sModel, CPS_RENDER);
+	
+	if(iSkin == -1)
+		return;
+		
+	if (SDKHookEx(iSkin, SDKHook_SetTransmit, OnSetTransmit_Wallhack))
+		Setup_Wallhack(iSkin);
+}
+
+void Setup_Wallhack(int iSkin)
+{
+	int iOffset;
+	
+	if (!iOffset && (iOffset = GetEntSendPropOffs(iSkin, "m_clrGlow")) == -1)
+		return;
+	
+	SetEntProp(iSkin, Prop_Send, "m_bShouldGlow", true, true);
+	SetEntProp(iSkin, Prop_Send, "m_nGlowStyle", 0);
+	SetEntPropFloat(iSkin, Prop_Send, "m_flGlowMaxDist", 10000000.0);
+	
+	int iRed = 155;
+	int iGreen = 0;
+	int iBlue = 10;
+
+	SetEntData(iSkin, iOffset, iRed, _, true);
+	SetEntData(iSkin, iOffset + 1, iGreen, _, true);
+	SetEntData(iSkin, iOffset + 2, iBlue, _, true);
+	SetEntData(iSkin, iOffset + 3, 255, _, true);
+}
+
+public Action OnSetTransmit_Wallhack(int iSkin, int client)
+{
+	if(!IsPlayerAlive(client))
+		return Plugin_Handled;
+	
+	LoopClients(target)
+	{
+		if(!CPS_HasSkin(target))
+			continue;
+		
+		if(EntRefToEntIndex(CPS_GetSkin(target)) != iSkin)
+			continue;
+			
+		if (OnTorch[client])
+		
+		return Plugin_Continue;
+	}
+	
+	return Plugin_Handled;
+}
+
+
+void UnhookWallhack(int client)
+{
+	if(IsValidClient(client, false, true))
+	{
+		char sModel[PLATFORM_MAX_PATH];
+		GetClientModel(client, sModel, sizeof(sModel));
+	//	SetEntProp(client, Prop_Send, "m_bShouldGlow", false, true);
+		SDKUnhook(client, SDKHook_SetTransmit, OnSetTransmit_Wallhack);
+	}
+}
 
 //Round End
 
@@ -571,6 +642,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			OnTorch[client] = false;
 			ImmuneTorch[client] = false;
 			StripAllPlayerWeapons(client);
+			if(gc_bWallhack.BoolValue) UnhookWallhack(client);
 		}
 		g_iBurningZero = -1;
 		delete TruceTimer;

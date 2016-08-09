@@ -31,6 +31,8 @@
     *  new cvar - sm_ratio_disbaled_announce - Announce in a chatmessage on roundend when ratio is disabled
 *  Ratio: No Agreement, or Questions, or force to T connect for VIP/Admins
     *  new cvar - sm_ratio_vip_bypass - Bypass Admin/VIP though agreement / question
+*  Torch Relay: Added wallhack for the torch.
+    *  new cvar - sm_torch_wallhack - 0 - disabled, 1 - enable wallhack for the torch to find enemeys
   
 *Fixed*
 *  Zombie: Conflict with sm_skinchooser (no zombie model)
