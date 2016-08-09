@@ -177,7 +177,7 @@ native void BeaconOn(int client, float interval);
 
 
 /*********************************************************
- * Remove client Beacon
+ * Remove client Beacon (auto remove on mapend/playerdeath/roundend)
  *
  *
  * @noreturn

@@ -42,6 +42,7 @@ ConVar gc_iCooldownStart;
 ConVar gc_bSetA;
 ConVar gc_bSpawnCell;
 ConVar gc_bVote;
+ConVar gc_fBeaconTime;
 ConVar gc_iWeapon;
 ConVar gc_bRandom;
 ConVar gc_iCooldownDay;
@@ -119,6 +120,7 @@ public void OnPluginStart()
 	gc_iWeapon = AutoExecConfig_CreateConVar("sm_cowboy_weapon", "1", "1 - Revolver / 2 - Dual Barettas", _, true,  1.0, true, 2.0);
 	gc_bRandom = AutoExecConfig_CreateConVar("sm_cowboy_random", "1", "get a random weapon (revolver,duals) ignore: sm_cowboy_weapon", _, true,  0.0, true, 1.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_cowboy_roundtime", "5", "Round time in minutes for a single cowboy round", _, true, 1.0);
+	gc_fBeaconTime = AutoExecConfig_CreateConVar("sm_cowboy_beacon_time", "240", "Time in seconds until the beacon turned on (set to 0 to disable)", _, true, 0.0);
 	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_cowboy_trucetime", "15", "Time in seconds players can't deal damage", _, true,  0.0);
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_cowboy_cooldown_day", "3", "Rounds cooldown after a event until event can be start again", _, true,  0.0);
 	gc_iCooldownStart = AutoExecConfig_CreateConVar("sm_cowboy_cooldown_start", "3", "Rounds until event can be start after mapchange.", _, true, 0.0);
@@ -349,6 +351,11 @@ void StartNextRound()
 	PrintCenterTextAll("%t", "cowboy_next_nc");
 }
 
+public Action Timer_BeaconOn(Handle timer)
+{
+	LoopValidClients(i,true,false) BeaconOn(i, 2.0);
+}
+
 //Round start
 
 public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
@@ -365,6 +372,8 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		SetEventDayRunning(true);
 		
 		IsCowBoy = true;
+		
+		if (gc_fBeaconTime.FloatValue > 0.0) CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
 		
 		if (gc_bRandom.BoolValue)
 		{
@@ -634,5 +643,4 @@ public Action Timer_Hitsound(Handle timer, Handle data)
 	if (attacker <= 0 || attacker > MaxClients || victim <= 0 || victim > MaxClients || attacker == victim) return;
 	ClientCommand(attacker, "playgamesound training/bell_normal.wav");
 }
-
 

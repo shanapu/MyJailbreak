@@ -48,6 +48,7 @@ ConVar gc_bSetA;
 ConVar gc_bSpawnCell;
 ConVar gc_bVote;
 ConVar gc_iCooldownDay;
+ConVar gc_fBeaconTime;
 ConVar gc_iRoundTime;
 ConVar gc_iTruceTime;
 ConVar gc_bOverlays;
@@ -124,6 +125,7 @@ public void OnPluginStart()
 	gc_bIce = AutoExecConfig_CreateConVar("sm_knifefight_iceskate", "1", "0 - disabled, 1 - enable iceskate", _, true,  0.0, true, 1.0);
 	gc_fIceValue= AutoExecConfig_CreateConVar("sm_knifefight_iceskate_value", "c","Ratio iceskate (5.2 normal)", _, true, 0.1, true, 5.2);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_knifefight_roundtime", "5", "Round time in minutes for a single knifefight round", _, true, 1.0);
+	gc_fBeaconTime = AutoExecConfig_CreateConVar("sm_knifefight_beacon_time", "240", "Time in seconds until the beacon turned on (set to 0 to disable)", _, true, 0.0);
 	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_knifefight_trucetime", "15", "Time in seconds players can't deal damage", _, true, 0.0);
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_knifefight_cooldown_day", "3", "Rounds cooldown after a event until event can be start again", _, true, 0.0);
 	gc_iCooldownStart = AutoExecConfig_CreateConVar("sm_knifefight_cooldown_start", "3", "Rounds until event can be start after mapchange.", _, true, 0.0);
@@ -356,6 +358,11 @@ void StartNextRound()
 	PrintCenterTextAll("%t", "knifefight_next_nc");
 }
 
+public Action Timer_BeaconOn(Handle timer)
+{
+	LoopValidClients(i,true,false) BeaconOn(i, 2.0);
+}
+
 //Round start
 
 public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
@@ -375,6 +382,8 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		g_iRound++;
 		StartKnifeFight = false;
 		SJD_OpenDoors();
+		
+		if (gc_fBeaconTime.FloatValue > 0.0) CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
 		
 		int RandomCT = 0;
 		

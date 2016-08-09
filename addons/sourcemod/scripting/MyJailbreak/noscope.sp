@@ -46,6 +46,7 @@ ConVar gc_bSpawnCell;
 ConVar gc_bVote;
 ConVar gc_iWeapon;
 ConVar gc_bRandom;
+ConVar gc_fBeaconTime;
 ConVar gc_iCooldownDay;
 ConVar gc_iRoundTime;
 ConVar gc_iTruceTime;
@@ -124,6 +125,7 @@ public void OnPluginStart()
 	gc_bGrav = AutoExecConfig_CreateConVar("sm_noscope_gravity", "1", "0 - disabled, 1 - enable low Gravity for noscope", _, true,  0.0, true, 1.0);
 	gc_fGravValue= AutoExecConfig_CreateConVar("sm_noscope_gravity_value", "0.3","Ratio for Gravity 1.0 earth 0.5 moon", _, true, 0.1, true, 1.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_noscope_roundtime", "5", "Round time in minutes for a single noscope round", _, true, 1.0);
+	gc_fBeaconTime = AutoExecConfig_CreateConVar("sm_noscope_beacon_time", "240", "Time in seconds until the beacon turned on (set to 0 to disable)", _, true, 0.0);
 	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_noscope_trucetime", "15", "Time in seconds players can't deal damage", _, true,  0.0);
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_noscope_cooldown_day", "3", "Rounds cooldown after a event until event can be start again", _, true,  0.0);
 	gc_iCooldownStart = AutoExecConfig_CreateConVar("sm_noscope_cooldown_start", "3", "Rounds until event can be start after mapchange.", _, true, 0.0);
@@ -356,6 +358,12 @@ void StartNextRound()
 	PrintCenterTextAll("%t", "noscope_next_nc");
 }
 
+public Action Timer_BeaconOn(Handle timer)
+{
+	LoopValidClients(i,true,false) BeaconOn(i, 2.0);
+}
+
+
 //Round start
 
 public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
@@ -372,6 +380,8 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		SetEventDayRunning(true);
 		
 		IsNoScope = true;
+		
+		if (gc_fBeaconTime.FloatValue > 0.0) CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
 		
 		if (gc_bRandom.BoolValue)
 		{

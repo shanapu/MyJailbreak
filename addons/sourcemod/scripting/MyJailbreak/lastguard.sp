@@ -46,6 +46,7 @@ ConVar gc_bSetCT;
 ConVar gc_bVote;
 ConVar gc_bAutomatic;
 ConVar gc_iMinCT;
+ConVar gc_fBeaconTime;
 ConVar gc_iTruceTime;
 ConVar gc_iTime;
 ConVar gc_iTimePerT;
@@ -114,6 +115,7 @@ public void OnPluginStart()
 	gc_iHPmultipler = AutoExecConfig_CreateConVar("sm_lastguard_hp", "50", "How many percent of the combined Terror Health the CT get? (3 terror alive with 100HP = 300HP / 50% = CT get 150HP)", _, true,  0.0);
 	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_lastguard_trucetime", "10", "Time in seconds players can't deal damage. Half of this time you are freezed", _, true,  8.0);
 	gc_iTime = AutoExecConfig_CreateConVar("sm_lastguard_time", "5", "Time in minutes to end the last guard rule - 0 = keep original time", _, true,  0.0);
+	gc_fBeaconTime = AutoExecConfig_CreateConVar("sm_lastguard_beacon_time", "300", "Time in seconds until the beacon turned on (set to 0 to disable)", _, true, 0.0);
 	gc_iTimePerT = AutoExecConfig_CreateConVar("sm_lastguard_time_per_T", "60", "Time in seconds to add to sm_lastguard_time per living terror - 0 = no extra time per t", _, true,  0.0);
 	gc_bFreeze = AutoExecConfig_CreateConVar("sm_lastguard_freeze", "0", "0 - disabled, 1 - Freeze all players the half of trucetime.", _, true,  0.0, true, 1.0);
 	gc_bSounds = AutoExecConfig_CreateConVar("sm_lastguard_sounds_enable", "1", "0 - disabled, 1 - enable sounds ", _, true, 0.1, true, 1.0);
@@ -330,6 +332,8 @@ public Action StartLastGuard()
 		
 		SetLastGuardRule(true);
 		
+		if (gc_fBeaconTime.FloatValue > 0.0) CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
+		
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_weapons_t", 1);
 		SetCvar("sm_warden_enable", 0);
@@ -395,7 +399,6 @@ public Action StartLastGuard()
 			{
 				SetEntityHealth(iClient, HPCT);
 				CPrintToChatAll("%t %t", "lastguard_tag", "lastguard_hp", GetAliveTeamCount(CS_TEAM_T), HPterrors, iClient, HPCT);
-		
 			}
 		}
 		
@@ -537,4 +540,10 @@ public Action Timer_LastGuardSound(Handle timer)
 public Action Timer_LastGuardBeginn(Handle timer)
 {
 	AllowLastGuard = true;
+}
+
+
+public Action Timer_BeaconOn(Handle timer)
+{
+	LoopValidClients(i,true,false) BeaconOn(i, 2.0);
 }

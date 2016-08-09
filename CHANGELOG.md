@@ -33,6 +33,34 @@
     *  new cvar - sm_ratio_vip_bypass - Bypass Admin/VIP though agreement / question
 *  Torch Relay: Added wallhack for the torch.
     *  new cvar - sm_torch_wallhack - 0 - disabled, 1 - enable wallhack for the torch to find enemeys
+*  Eventdays: Added Beacon to most event days
+    *  new cvar - sm_myjb_beacon_radius - Sets the radius for the beacon's rings
+    *  new cvar - sm_myjb_beacon_width - Sets the thickness for the beacon's rings
+    *  new cvar - sm_myjb_beacon_CT_color_red - What color to turn the CT beacons into (set R, G and B values to 255 to disable) (Rgb): x - red value
+    *  new cvar - sm_myjb_beacon_CT_color_green - What color to turn the CT beacons into (rGb): x - green value
+    *  new cvar - sm_myjb_beacon_CT_color_blue - What color to turn the CT beacons into (rgB): x - blue value
+    *  new cvar - sm_myjb_beacon_T_color_red - What color to turn the T beacons  into (set R, G and B values to 255 to disable) (Rgb): x - red value
+    *  new cvar - sm_myjb_beacon_T_color_green - What color to turn the T beacons into (rGb): x - green value
+    *  new cvar - sm_myjb_beacon_T_color_blue - What color to turn the T beacons into (rgB): x - blue value
+    *  new cvar - sm_cowboy_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
+    *  new cvar - sm_dealdamage_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
+    *  new cvar - sm_drunk_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
+    *  new cvar - sm_duckhunt_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
+    *  new cvar - sm_ffa_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
+    *  new cvar - sm_hebattle_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
+    *  new cvar - sm_hide_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
+    *  new cvar - sm_knifefight_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
+    *  new cvar - sm_noscope_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
+    *  new cvar - sm_suicide_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
+    *  new cvar - sm_torch_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
+    *  new cvar - sm_war_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
+    *  new cvar - sm_zeus_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
+    *  new cvar - sm_zombie_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
+  
+  
+*Changed*
+*  Zombie - Glow/wallhack begin on end of freezetime instead roundstart
+  
   
 *Fixed*
 *  Zombie: Conflict with sm_skinchooser (no zombie model)
@@ -42,9 +70,16 @@
 *  HUD: Conflics with StartTimer & EventDay HUDs
 *  Bug when "sm_eventday_allow_lr 1" and T count on roundstart = sm_hosties_lr_ts_max
   
+  
 *New Requirements*
 *  [ANY] VoiceannounceEX (VoiceHook) - https://forums.alliedmods.net/showthread.php?p=2177167
 *  DHooks (Dynamic Hooks - Dev Preview) - https://forums.alliedmods.net/showthread.php?t=180114
+  
+  
+*Developer stuff*
+*  Natives: New natives for on/off beacons
+    *  new native - BeaconOn Set client Beacon & intervall
+    *  new native - BeaconOff Remove client Beacon
   
   
   **[Beta 6.1]** - smaller fixes

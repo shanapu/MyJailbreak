@@ -46,8 +46,8 @@ bool g_bBeaconOn[MAXPLAYERS+1] = false;
 //Floats
 public void Beacon_OnPluginStart()
 {
-	gc_fBeaconRadius = AutoExecConfig_CreateConVar("sm_myjb_beacon_radius", "750", "Sets the radius for the beacon's rings.", _, true, 50.0, true, 1500.0);
-	gc_fBeaconWidth = AutoExecConfig_CreateConVar("sm_myjb_beacon_width", "10", "Sets the thickness for the beacon's rings.", _, true, 10.0, true, 30.0);
+	gc_fBeaconRadius = AutoExecConfig_CreateConVar("sm_myjb_beacon_radius", "850", "Sets the radius for the beacon's rings.", _, true, 50.0, true, 1500.0);
+	gc_fBeaconWidth = AutoExecConfig_CreateConVar("sm_myjb_beacon_width", "25", "Sets the thickness for the beacon's rings.", _, true, 10.0, true, 30.0);
 	gc_iCTColorRed = AutoExecConfig_CreateConVar("sm_myjb_beacon_CT_color_red", "0","What color to turn the CT beacons into (set R, G and B values to 255 to disable) (Rgb): x - red value", _, true, 0.0, true, 255.0);
 	gc_iCTColorGreen = AutoExecConfig_CreateConVar("sm_myjb_beacon_CT_color_green", "0","What color to turn the CT beacons into (rGb): x - green value", _, true, 0.0, true, 255.0);
 	gc_iCTColorBlue = AutoExecConfig_CreateConVar("sm_myjb_beacon_CT_color_blue", "255","What color to turn the CT beacons into (rgB): x - blue value", _, true, 0.0, true, 255.0);
@@ -82,7 +82,7 @@ public void Beacon_Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 
 public Action Timer_BeaconOn(Handle timer, any client)
 {
-	if (IsValidClient(client))
+	if (IsValidClient(client,true,false))
 	{
 		if (!g_bBeaconOn[client]) 
 			return Plugin_Stop;
@@ -99,12 +99,14 @@ public Action Timer_BeaconOn(Handle timer, any client)
 			color[0] = gc_iCTColorRed.IntValue;
 			color[1] = gc_iCTColorGreen.IntValue;
 			color[2] = gc_iCTColorBlue.IntValue;
+			EmitAmbientSound("buttons/blip1.wav", a_fOrigin, client, SNDLEVEL_RAIDSIREN);
 		}
 		if(GetClientTeam(client) == CS_TEAM_T) 
 		{
 			color[0] = gc_iTColorRed.IntValue;
 			color[1] = gc_iTColorGreen.IntValue;
 			color[2] = gc_iTColorBlue.IntValue;
+			EmitAmbientSound("buttons/button1.wav", a_fOrigin, client, SNDLEVEL_RAIDSIREN);
 		}
 		
 		TE_SetupBeamRingPoint(a_fOrigin, 10.0, gc_fBeaconRadius.FloatValue, g_iBeamSprite, g_iHaloSprite, 0, 10, 0.6, gc_fBeaconWidth.FloatValue, 0.5, color, 5, 0);
@@ -112,8 +114,6 @@ public Action Timer_BeaconOn(Handle timer, any client)
 		TE_SendToAll();
 		
 		GetClientEyePosition(client, a_fOrigin);
-		
-		EmitAmbientSound("buttons/blip1.wav", a_fOrigin, client, SNDLEVEL_RAIDSIREN);
 	}
 	return Plugin_Continue;
 }
@@ -128,7 +128,9 @@ public Action Timer_BeaconOn(Handle timer, any client)
 public void Beacon_OnMapStart()
 {
 	g_iBeamSprite = PrecacheModel("materials/sprites/laserbeam.vmt");
-	g_iHaloSprite = PrecacheModel("materials/sprites/glow01.vmt");
+	// g_iHaloSprite = PrecacheModel("materials/sprites/glow01.vmt");
+	// g_iHaloSprite = PrecacheModel("materials/sprites/halo.vtf");
+	g_iHaloSprite = PrecacheModel("materials/sprites/light_glow02.vmt");
 }
 
 

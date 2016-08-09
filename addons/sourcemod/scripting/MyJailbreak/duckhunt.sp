@@ -46,6 +46,7 @@ ConVar gc_bVote;
 ConVar gc_iHunterHP;
 ConVar gc_iChickenHP;
 ConVar gc_bSounds;
+ConVar gc_fBeaconTime;
 ConVar gc_sSoundStartPath;
 ConVar gc_iCooldownDay;
 ConVar gc_iRoundTime;
@@ -117,6 +118,7 @@ public void OnPluginStart()
 	gc_bVote = AutoExecConfig_CreateConVar("sm_duckhunt_vote", "1", "0 - disabled, 1 - allow player to vote for duckhunt", _, true,  0.0, true, 1.0);
 	gc_iRounds = AutoExecConfig_CreateConVar("sm_duckhunt_rounds", "1", "Rounds to play in a row", _, true, 1.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_duckhunt_roundtime", "5", "Round time in minutes for a single duckhunt round", _, true, 1.0);
+	gc_fBeaconTime = AutoExecConfig_CreateConVar("sm_duckhunt_beacon_time", "240", "Time in seconds until the beacon turned on (set to 0 to disable)", _, true, 0.0);
 	gc_iChickenHP = AutoExecConfig_CreateConVar("sm_duckhunt_chicken_hp", "100", "THP the chicken got on Spawn", _, true, 1.0);
 	gc_iHunterHP = AutoExecConfig_CreateConVar("sm_duckhunt_hunter_hp", "850", "HP the hunters got on Spawn", _, true, 1.0);
 	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_duckhunt_trucetime", "15", "Time in seconds until cells open / players can't deal damage", _, true,  0.0);
@@ -381,6 +383,12 @@ public Action Timer_SetModel(Handle timer)
 	}
 }
 
+
+public Action Timer_BeaconOn(Handle timer)
+{
+	LoopValidClients(i,true,false) BeaconOn(i, 2.0);
+}
+
 //Round start
 
 public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
@@ -394,6 +402,8 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		SetConVarInt(g_bAllowTP, 1);
 		SetEventDayPlanned(false);
 		SetEventDayRunning(true);
+		
+		if (gc_fBeaconTime.FloatValue > 0.0) CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
 		
 		IsDuckHunt = true;
 		g_iRound++;

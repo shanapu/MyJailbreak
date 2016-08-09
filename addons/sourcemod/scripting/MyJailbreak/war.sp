@@ -47,6 +47,7 @@ ConVar gc_iCooldownDay;
 ConVar gc_iCooldownStart;
 ConVar gc_iFreezeTime;
 ConVar gc_iTruceTime;
+ConVar gc_fBeaconTime;
 ConVar gc_bSounds;
 ConVar gc_sSoundStartPath;
 ConVar gc_bOverlays;
@@ -117,6 +118,7 @@ public void OnPluginStart()
 	gc_iFreezeTime = AutoExecConfig_CreateConVar("sm_war_freezetime", "30", "Time in seconds the Terrorists freezed - need sm_war_spawn 0", _, true,  0.0);
 	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_war_trucetime", "15", "Time after freezetime damage disbaled", _, true,  0.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_war_roundtime", "5", "Round time in minutes for a single war round", _, true,  1.0);
+	gc_fBeaconTime = AutoExecConfig_CreateConVar("sm_war_beacon_time", "240", "Time in seconds until the beacon turned on (set to 0 to disable)", _, true, 0.0);
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_war_cooldown_day", "3", "Rounds cooldown after a event until event can be start again", _, true,  0.0);
 	gc_iCooldownStart = AutoExecConfig_CreateConVar("sm_war_cooldown_start", "3", "Rounds until event can be start after mapchange.", _, true,  0.0);
 	gc_bSounds = AutoExecConfig_CreateConVar("sm_war_sounds_enable", "1", "0 - disabled, 1 - enable sounds ", _, true,  0.0, true, 1.0);
@@ -345,6 +347,11 @@ void StartNextRound()
 	PrintCenterTextAll("%t", "war_next_nc");
 }
 
+
+public Action Timer_BeaconOn(Handle timer)
+{
+	LoopValidClients(i,true,false) BeaconOn(i, 2.0);
+}
 //Round start
 
 public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
@@ -359,6 +366,9 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		SetEventDayPlanned(false);
 		SetEventDayRunning(true);
 		g_iRound++;
+		
+		if (gc_fBeaconTime.FloatValue > 0.0) CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
+		
 		IsWar = true;
 		StartWar = false;
 		if (gc_bSpawnCell.BoolValue)

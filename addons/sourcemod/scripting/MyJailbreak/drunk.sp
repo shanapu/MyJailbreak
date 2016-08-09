@@ -44,6 +44,7 @@ ConVar gc_bSpawnCell;
 ConVar gc_bVote;
 ConVar gc_iCooldownDay;
 ConVar gc_iRoundTime;
+ConVar gc_fBeaconTime;
 ConVar gc_iTruceTime;
 ConVar gc_bOverlays;
 ConVar gc_sOverlayStartPath;
@@ -114,7 +115,7 @@ public void OnPluginStart()
 	gc_sCustomCommand = AutoExecConfig_CreateConVar("sm_drunk_cmd", "!curse", "Set your custom chat command for Event voting. no need for sm_ or !");
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_drunk_warden", "1", "0 - disabled, 1 - allow warden to set drunk round", _, true,  0.0, true, 1.0);
 	gc_bSetA = AutoExecConfig_CreateConVar("sm_drunk_admin", "1", "0 - disabled, 1 - allow admin/vip to set drunk round", _, true,  0.0, true, 1.0);
-	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_zombie_flag", "g", "Set flag for admin/vip to set this Event Day.");
+	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_drunk_flag", "g", "Set flag for admin/vip to set this Event Day.");
 	gc_bVote = AutoExecConfig_CreateConVar("sm_drunk_vote", "1", "0 - disabled, 1 - allow player to vote for drunk", _, true,  0.0, true, 1.0);
 	gc_bSpawnCell = AutoExecConfig_CreateConVar("sm_drunk_spawn", "0", "0 - T teleport to CT spawn, 1 - cell doors auto open", _, true,  0.0, true, 1.0);
 //	gc_bInvertX = AutoExecConfig_CreateConVar("sm_drunk_invert_x", "1", "Invert movement on the x-axis (left & right)", _, true, 0.0, true, 1.0);
@@ -122,6 +123,7 @@ public void OnPluginStart()
 	gc_bWiggle = AutoExecConfig_CreateConVar("sm_drunk_wiggle", "1", "Wiggle with the screen", _, true, 0.0, true, 1.0);
 	gc_iRounds = AutoExecConfig_CreateConVar("sm_drunk_rounds", "1", "Rounds to play in a row", _, true, 1.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_drunk_roundtime", "5", "Round time in minutes for a single drunk round", _, true, 1.0);
+	gc_fBeaconTime = AutoExecConfig_CreateConVar("sm_drunk_beacon_time", "240", "Time in seconds until the beacon turned on (set to 0 to disable)", _, true, 0.0);
 	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_drunk_trucetime", "15", "Time in seconds players can't deal damage", _, true,  0.0);
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_drunk_cooldown_day", "3", "Rounds cooldown after a event until event can be start again", _, true,  0.0);
 	gc_iCooldownStart = AutoExecConfig_CreateConVar("sm_drunk_cooldown_start", "3", "Rounds until event can be start after mapchange.", _, true, 0.0);
@@ -330,6 +332,15 @@ void StartNextRound()
 	PrintCenterTextAll("%t", "drunk_next_nc");
 }
 
+public Action Timer_BeaconOn(Handle timer)
+{
+	LoopValidClients(i,true,false)
+	{
+		int random = GetRandomFloat(0.5,4.0)
+		BeaconOn(i, random);
+	}
+}
+
 //Round start
 
 public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
@@ -350,6 +361,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		StartDrunk = false;
 		SJD_OpenDoors(); //open Jail
 		
+		if (gc_fBeaconTime.FloatValue > 0.0) CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
 		
 		//Find Position in CT Spawn
 		

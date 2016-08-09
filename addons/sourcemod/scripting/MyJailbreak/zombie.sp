@@ -43,6 +43,7 @@ ConVar gc_bSetA;
 ConVar gc_iCooldownStart;
 ConVar gc_bVote;
 ConVar gc_iRoundTime;
+ConVar gc_fBeaconTime;
 ConVar gc_iCooldownDay;
 ConVar gc_iFreezeTime;
 ConVar gc_bSpawnCell;
@@ -124,6 +125,7 @@ public void OnPluginStart()
 	gc_bSpawnCell = AutoExecConfig_CreateConVar("sm_zombie_spawn", "0", "0 - T teleport to CT spawn, 1 - cell doors auto open", _, true,  0.0, true, 1.0);
 	gc_iRounds = AutoExecConfig_CreateConVar("sm_zombie_rounds", "1", "Rounds to play in a row", _, true, 1.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_zombie_roundtime", "5", "Round time in minutes for a single zombie round", _, true, 1.0);
+	gc_fBeaconTime = AutoExecConfig_CreateConVar("sm_zombie_beacon_time", "240", "Time in seconds until the beacon turned on (set to 0 to disable)", _, true, 0.0);
 	gc_iFreezeTime = AutoExecConfig_CreateConVar("sm_zombie_freezetime", "35", "Time in seconds the zombies freezed", _, true, 0.0);
 	gc_iZombieHP = AutoExecConfig_CreateConVar("sm_zombie_zombie_hp", "8500", "HP the Zombies got on Spawn", _, true, 1.0);
 	gc_iHumanHP = AutoExecConfig_CreateConVar("sm_zombie_human_hp", "65", "HP the Humans got on Spawn", _, true, 1.0);
@@ -379,6 +381,12 @@ public Action Timer_SetModel(Handle timer)
 }
 
 
+public Action Timer_BeaconOn(Handle timer)
+{
+	LoopValidClients(i,true,false) BeaconOn(i, 2.0);
+}
+
+
 //Round start
 
 public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
@@ -398,6 +406,8 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		g_iRound++;
 		StartZombie = false;
 		SJD_OpenDoors();
+		
+		if (gc_fBeaconTime.FloatValue > 0.0) CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
 		
 		int RandomCT = 0;
 		
@@ -437,7 +447,6 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 						GivePlayerItem(client, "weapon_tec9");
 						GivePlayerItem(client, "weapon_hegrenade");
 						GivePlayerItem(client, "weapon_molotov");
-						if (gc_bGlow.BoolValue && (IsValidClient(client, true, true))) SetupGlowSkin(client);
 					}
 					if (!gc_bSpawnCell.BoolValue || (gc_bSpawnCell.BoolValue && !SJD_IsCurrentMapConfigured)) //spawn Terrors to CT Spawn 
 					{
@@ -715,6 +724,9 @@ public Action StartTimer(Handle timer)
 				SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.4);
 				if (gc_bVision.BoolValue) SetEntProp(client, Prop_Send, "m_bNightVisionOn",1); 
 			}
+			
+			if (gc_bGlow.BoolValue && (IsValidClient(client, true, true)) && (GetClientTeam(client) == CS_TEAM_T)) SetupGlowSkin(client);
+			
 			SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
 			PrintCenterText(client,"%t", "zombie_start_nc");
 			if(gc_bOverlays.BoolValue) ShowOverlay(client, g_sOverlayStartPath, 2.0);

@@ -45,6 +45,7 @@ ConVar gc_bSetA;
 ConVar gc_bVote;
 ConVar gc_iPlayerHP;
 ConVar gc_iCooldownDay;
+ConVar gc_fBeaconTime;
 ConVar gc_bSpawnCell;
 ConVar gc_iRoundTime;
 ConVar gc_iTruceTime;
@@ -119,6 +120,7 @@ public void OnPluginStart()
 	gc_fGravValue= AutoExecConfig_CreateConVar("sm_hebattle_gravity_value", "0.3","Ratio for gravity 0.5 moon / 1.0 earth ", _, true,  0.1, true, 1.0);
 	gc_iRounds = AutoExecConfig_CreateConVar("sm_hebattle_rounds", "1", "Rounds to play in a row", _, true, 1.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_hebattle_roundtime", "5", "Round time in minutes for a single hebattle round", _, true, 1.0);
+	gc_fBeaconTime = AutoExecConfig_CreateConVar("sm_hebattle_beacon_time", "240", "Time in seconds until the beacon turned on (set to 0 to disable)", _, true, 0.0);
 	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_hebattle_trucetime", "15", "Time in seconds players can't deal damage", _, true,  0.0);
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_hebattle_cooldown_day", "3", "Rounds cooldown after a event until event can be start again", _, true,  0.0);
 	gc_iCooldownStart = AutoExecConfig_CreateConVar("sm_hebattle_cooldown_start", "3", "Rounds until event can be start after mapchange.", _, true,  0.0);
@@ -344,7 +346,12 @@ void StartNextRound()
 	
 	CPrintToChatAll("%t %t", "hebattle_tag" , "hebattle_next");
 	PrintCenterTextAll("%t", "hebattle_next_nc");
+}
 
+
+public Action Timer_BeaconOn(Handle timer)
+{
+	LoopValidClients(i,true,false) BeaconOn(i, 2.0);
 }
 
 //Round start
@@ -366,6 +373,8 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		SJD_OpenDoors();
 		
 		int RandomCT = 0;
+		
+		if (gc_fBeaconTime.FloatValue > 0.0) CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
 		
 		LoopClients(client)
 		{

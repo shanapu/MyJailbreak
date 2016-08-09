@@ -43,6 +43,7 @@ ConVar gc_iCooldownStart;
 ConVar gc_bSetA;
 ConVar gc_bSpawnCell;
 ConVar gc_bVote;
+ConVar gc_fBeaconTime;
 ConVar gc_iCooldownDay;
 ConVar gc_iRoundTime;
 ConVar gc_iTruceTime;
@@ -131,6 +132,7 @@ public void OnPluginStart()
 	gc_bConsole = AutoExecConfig_CreateConVar("sm_dealdamage_console", "1", "0 - disabled, 1 - enable print results in client console", _, true,  0.0, true, 1.0);
 	gc_iRounds = AutoExecConfig_CreateConVar("sm_dealdamage_rounds", "2", "Rounds to play in a row", _, true, 1.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_dealdamage_roundtime", "2", "Round time in minutes for a single dealdamage round", _, true, 1.0);
+	gc_fBeaconTime = AutoExecConfig_CreateConVar("sm_dealdamage_beacon_time", "90", "Time in seconds until the beacon turned on (set to 0 to disable)", _, true, 0.0);
 	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_dealdamage_trucetime", "15", "Time in seconds players can't deal damage", _, true,  0.0);
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_dealdamage_cooldown_day", "3", "Rounds cooldown after a event until event can be start again", _, true,  0.0);
 	gc_iCooldownStart = AutoExecConfig_CreateConVar("sm_dealdamage_cooldown_start", "3", "Rounds until event can be start after mapchange.", _, true, 0.0);
@@ -371,6 +373,8 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		BestCTdamage = 0;
 		BestPlayer = 0;
 		
+		if (gc_fBeaconTime.FloatValue > 0.0) CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
+		
 		float RoundTime = (gc_iRoundTime.FloatValue*60-5);
 		RoundTimer = CreateTimer (RoundTime, EndTheRound);
 		IsDealDamage = true;
@@ -455,6 +459,12 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		else if (g_iCoolDown > 0) g_iCoolDown--;
 	}
 }
+
+public Action Timer_BeaconOn(Handle timer)
+{
+	LoopValidClients(i,true,false) BeaconOn(i, 2.0);
+}
+
 
 stock void CreateInfoPanel(int client)
 {
