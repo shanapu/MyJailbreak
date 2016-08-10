@@ -627,6 +627,11 @@ public Action Command_OpenMenu(int client, int args)
 					}
 				}
 			}
+			/* PLAYER PLACEHOLDER
+			Format(menuinfo, sizeof(menuinfo), "%T", "menu_PLACEHOLDER", client);
+			mainmenu.AddItem("PLACEHOLDER", menuinfo);
+			*/
+			
 			if(g_bRules != null)
 			{
 				if(g_bRules.BoolValue)
@@ -637,6 +642,11 @@ public Action Command_OpenMenu(int client, int args)
 			}
 			if (CheckVipFlag(client,g_sAdminFlag))
 			{
+				/* ADMIN PLACEHOLDER
+				Format(menuinfo, sizeof(menuinfo), "%T", "menu_PLACEHOLDER", client);
+				mainmenu.AddItem("PLACEHOLDER", menuinfo);
+				*/
+				
 				char EventDay[64];
 				GetEventDayName(EventDay);
 				

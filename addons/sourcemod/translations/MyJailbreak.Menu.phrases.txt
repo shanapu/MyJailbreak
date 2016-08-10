@@ -459,4 +459,11 @@
 		"en"		"Event voting is currently {purple}disabled!"
 	}
 
+	/* Translation PLACEHOLDER
+	"menu_PLACEHOLDER"
+	{
+		"en"		"PLACEHOLDER Item"
+	}
+	*/
+
 }

@@ -52,10 +52,10 @@
     *  new cvar - sm_knifefight_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
     *  new cvar - sm_noscope_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
     *  new cvar - sm_suicide_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
-    *  new cvar - sm_torch_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
     *  new cvar - sm_war_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
     *  new cvar - sm_zeus_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
     *  new cvar - sm_zombie_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
+    *  new cvar - sm_lastguard_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
   
   
 *Changed*
