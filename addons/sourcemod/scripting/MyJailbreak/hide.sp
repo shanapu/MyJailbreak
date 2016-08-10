@@ -70,6 +70,7 @@ int g_iTA[MAXPLAYERS + 1];
 //Handles
 Handle FreezeTimer;
 Handle HideMenu;
+Handle BeaconTimer;
 
 //Strings
 char g_sHasVoted[1500];
@@ -341,6 +342,7 @@ void StartNextRound()
 public Action Timer_BeaconOn(Handle timer)
 {
 	LoopValidClients(i,true,false) BeaconOn(i, 2.0);
+	BeaconTimer = null;
 }
 
 //Round start
@@ -363,7 +365,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		SJD_OpenDoors();
 		FogOn();
 		
-		if (gc_fBeaconTime.FloatValue > 0.0) CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
+		if (gc_fBeaconTime.FloatValue > 0.0) BeaconTimer = CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
 		
 		if (g_iRound > 0)
 		{
@@ -503,6 +505,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			g_iTA[client] = 0;
 		}
 		
+		delete BeaconTimer;
 		delete FreezeTimer;
 		
 		if (winner == 2) PrintCenterTextAll("%t", "hide_twin_nc");

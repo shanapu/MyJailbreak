@@ -74,6 +74,7 @@ int g_iTsLR;
 //Handles
 Handle TruceTimer;
 Handle DuckHuntMenu;
+Handle BeaconTimer;
 
 //Strings
 
@@ -387,6 +388,7 @@ public Action Timer_SetModel(Handle timer)
 public Action Timer_BeaconOn(Handle timer)
 {
 	LoopValidClients(i,true,false) BeaconOn(i, 2.0);
+	BeaconTimer = null;
 }
 
 //Round start
@@ -403,7 +405,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		SetEventDayPlanned(false);
 		SetEventDayRunning(true);
 		
-		if (gc_fBeaconTime.FloatValue > 0.0) CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
+		if (gc_fBeaconTime.FloatValue > 0.0) BeaconTimer = CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
 		
 		IsDuckHunt = true;
 		g_iRound++;
@@ -492,6 +494,7 @@ public int OnAvailableLR(int Announced)
 			
 		}
 		
+		delete BeaconTimer;
 		if (TruceTimer != null) KillTimer(TruceTimer);
 		if (g_iRound == g_iMaxRound)
 		{
@@ -561,6 +564,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 					FP(client);
 				}
 		}
+		delete BeaconTimer;
 		if (TruceTimer != null) KillTimer(TruceTimer);
 		if (winner == 2) PrintCenterTextAll("%t", "duckhunt_twin_nc");
 		if (winner == 3) PrintCenterTextAll("%t", "duckhunt_ctwin_nc");

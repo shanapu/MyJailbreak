@@ -85,6 +85,7 @@ float g_fPos[3];
 //Handles
 Handle TruceTimer;
 Handle RoundTimer;
+Handle BeaconTimer;
 Handle DealDamageMenu;
 Handle DealDamageEndMenu;
 
@@ -373,7 +374,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		BestCTdamage = 0;
 		BestPlayer = 0;
 		
-		if (gc_fBeaconTime.FloatValue > 0.0) CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
+		if (gc_fBeaconTime.FloatValue > 0.0) BeaconTimer = CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
 		
 		float RoundTime = (gc_iRoundTime.FloatValue*60-5);
 		RoundTimer = CreateTimer (RoundTime, EndTheRound);
@@ -463,6 +464,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 public Action Timer_BeaconOn(Handle timer)
 {
 	LoopValidClients(i,true,false) BeaconOn(i, 2.0);
+	BeaconTimer = null;
 }
 
 
@@ -513,6 +515,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			}
 		}
 		delete TruceTimer; //kill start time if still running
+		delete BeaconTimer;
 		
 		if (winner == 2) PrintCenterTextAll("%t", "dealdamage_twin_nc", DamageT);
 		if (winner == 3) PrintCenterTextAll("%t", "dealdamage_ctwin_nc", DamageCT);
@@ -560,6 +563,7 @@ public void OnMapEnd()
 	StartDealDamage = false;
 	delete TruceTimer; //kill start time if still running
 	delete RoundTimer; //kill start time if still running
+	delete BeaconTimer;
 	g_iVoteCount = 0;
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0'; 

@@ -73,6 +73,7 @@ float g_fPos[3];
 Handle TruceTimer;
 Handle ZeusMenu;
 Handle ClientTimer[MAXPLAYERS+1];
+Handle BeaconTimer;
 
 //Strings
 char g_sHasVoted[1500];
@@ -348,6 +349,7 @@ void StartNextRound()
 public Action Timer_BeaconOn(Handle timer)
 {
 	LoopValidClients(i,true,false) BeaconOn(i, 2.0);
+	BeaconTimer = null;
 }
 
 
@@ -365,7 +367,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		SetEventDayPlanned(false);
 		SetEventDayRunning(true);
 		
-		if (gc_fBeaconTime.FloatValue > 0.0) CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
+		if (gc_fBeaconTime.FloatValue > 0.0) BeaconTimer = CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
 		
 		IsZeus = true;
 		
@@ -456,6 +458,7 @@ public int OnAvailableLR(int Announced)
 			
 		}
 		
+		delete BeaconTimer;
 		delete TruceTimer;
 		if (g_iRound == g_iMaxRound)
 		{
@@ -552,6 +555,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 	{
 		LoopClients(client) SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
 		delete TruceTimer;
+		delete BeaconTimer;
 		if (winner == 2) PrintCenterTextAll("%t", "zeus_twin_nc");
 		if (winner == 3) PrintCenterTextAll("%t", "zeus_ctwin_nc");
 		if (g_iRound == g_iMaxRound)

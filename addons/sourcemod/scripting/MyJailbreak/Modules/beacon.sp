@@ -141,6 +141,11 @@ public void Beacon_OnMapEnd()
 }
 
 
+public int OnAvailableLR(int Announced)
+{
+	LoopClients(i) g_bBeaconOn[i] = false;
+}
+
 /******************************************************************************
                    NATIVES
 ******************************************************************************/

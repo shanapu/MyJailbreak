@@ -72,6 +72,7 @@ int g_iTsLR;
 //Handles
 Handle TruceTimer;
 Handle CowBoyMenu;
+Handle BeaconTimer;
 
 //Floats
 float g_fPos[3];
@@ -354,6 +355,7 @@ void StartNextRound()
 public Action Timer_BeaconOn(Handle timer)
 {
 	LoopValidClients(i,true,false) BeaconOn(i, 2.0);
+	BeaconTimer = null;
 }
 
 //Round start
@@ -373,7 +375,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		
 		IsCowBoy = true;
 		
-		if (gc_fBeaconTime.FloatValue > 0.0) CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
+		if (gc_fBeaconTime.FloatValue > 0.0) BeaconTimer = CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
 		
 		if (gc_bRandom.BoolValue)
 		{
@@ -464,6 +466,7 @@ public int OnAvailableLR(int Announced)
 			GivePlayerItem(client, "weapon_knife");
 		}
 		
+		delete BeaconTimer;
 		delete TruceTimer;
 		if (g_iRound == g_iMaxRound)
 		{
@@ -565,6 +568,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 		}
 		
 		delete TruceTimer;
+		delete BeaconTimer;
 		if (winner == 2) PrintCenterTextAll("%t", "cowboy_twin_nc");
 		if (winner == 3) PrintCenterTextAll("%t", "cowboy_ctwin_nc");
 		if (g_iRound == g_iMaxRound)

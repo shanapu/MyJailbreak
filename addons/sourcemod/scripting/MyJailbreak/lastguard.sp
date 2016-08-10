@@ -68,6 +68,7 @@ int g_iVoteCount;
 //Handles
 Handle TruceTimer;
 Handle LastGuardMenu;
+Handle BeaconTimer;
 
 
 //Strings
@@ -292,6 +293,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
 		}
 		delete TruceTimer;
+		delete BeaconTimer;
 		if (winner == 2) PrintCenterTextAll("%t", "lastguard_twin_nc");
 		if (winner == 3) PrintCenterTextAll("%t", "lastguard_ctwin_nc");
 		
@@ -332,7 +334,7 @@ public Action StartLastGuard()
 		
 		SetLastGuardRule(true);
 		
-		if (gc_fBeaconTime.FloatValue > 0.0) CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
+		if (gc_fBeaconTime.FloatValue > 0.0) BeaconTimer = CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
 		
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_weapons_t", 1);
@@ -482,6 +484,7 @@ public void OnClientDisconnect_Post(int client)
 public int OnAvailableLR(int Announced)
 {
 	IsLR = true;
+	delete BeaconTimer;
 }
 
 
@@ -546,4 +549,5 @@ public Action Timer_LastGuardBeginn(Handle timer)
 public Action Timer_BeaconOn(Handle timer)
 {
 	LoopValidClients(i,true,false) BeaconOn(i, 2.0);
+	BeaconTimer = null;
 }

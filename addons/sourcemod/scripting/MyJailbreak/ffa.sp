@@ -75,6 +75,7 @@ float g_fPos[3];
 //Handles
 Handle TruceTimer;
 Handle FFAMenu;
+Handle BeaconTimer;
 
 //Strings
 char g_sHasVoted[1500];
@@ -346,6 +347,7 @@ void StartNextRound()
 public Action Timer_BeaconOn(Handle timer)
 {
 	LoopValidClients(i,true,false) BeaconOn(i, 2.0);
+	BeaconTimer = null;
 }
 
 //Round start
@@ -369,7 +371,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		StartFFA = false;
 		SJD_OpenDoors();
 		
-		if (gc_fBeaconTime.FloatValue > 0.0) CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
+		if (gc_fBeaconTime.FloatValue > 0.0) BeaconTimer = CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
 		
 		int RandomCT = 0;
 		
@@ -451,6 +453,7 @@ public int OnAvailableLR(int Announced)
 			GivePlayerItem(client, "weapon_knife");
 		}
 		
+		delete BeaconTimer;
 		delete TruceTimer;
 		if (g_iRound == g_iMaxRound)
 		{
@@ -512,6 +515,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 	{
 		LoopValidClients(client, false, true) SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
 		delete TruceTimer;
+		delete BeaconTimer;
 		if (winner == 2) PrintCenterTextAll("%t", "ffa_twin_nc"); 
 		if (winner == 3) PrintCenterTextAll("%t", "ffa_ctwin_nc");
 		if (g_iRound == g_iMaxRound)

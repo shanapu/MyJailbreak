@@ -77,6 +77,7 @@ int g_iTsLR;
 
 //Handles
 Handle FreezeTimer;
+Handle BeaconTimer;
 Handle ZombieMenu;
 
 //Floats
@@ -384,6 +385,7 @@ public Action Timer_SetModel(Handle timer)
 public Action Timer_BeaconOn(Handle timer)
 {
 	LoopValidClients(i,true,false) BeaconOn(i, 2.0);
+	BeaconTimer = null;
 }
 
 
@@ -407,7 +409,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		StartZombie = false;
 		SJD_OpenDoors();
 		
-		if (gc_fBeaconTime.FloatValue > 0.0) CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
+		if (gc_fBeaconTime.FloatValue > 0.0) BeaconTimer = CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
 		
 		int RandomCT = 0;
 		
@@ -579,6 +581,7 @@ public int OnAvailableLR(int Announced)
 		}
 		
 		delete FreezeTimer;
+		delete BeaconTimer;
 		if (g_iRound == g_iMaxRound)
 		{
 			IsZombie = false;
@@ -647,6 +650,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 		}
 		
 		delete FreezeTimer;
+		delete BeaconTimer;
 		
 		if (winner == 2) PrintCenterTextAll("%t", "zombie_twin_nc");
 		if (winner == 3) PrintCenterTextAll("%t", "zombie_ctwin_nc");
@@ -686,6 +690,7 @@ public void OnMapEnd()
 	IsZombie = false;
 	StartZombie = false;
 	delete FreezeTimer;
+	delete BeaconTimer;
 	g_iVoteCount = 0;
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0';

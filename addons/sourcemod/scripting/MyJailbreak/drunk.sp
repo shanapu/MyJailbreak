@@ -79,6 +79,7 @@ float g_DrunkAngles[20] = {0.0, 5.0, 10.0, 15.0, 20.0, 25.0, 20.0, 15.0, 10.0, 5
 Handle TruceTimer;
 Handle DrunkMenu;
 Handle DrunkTimer;
+Handle BeaconTimer;
 
 //Strings    g_s = global string
 char g_sHasVoted[1500];
@@ -336,9 +337,10 @@ public Action Timer_BeaconOn(Handle timer)
 {
 	LoopValidClients(i,true,false)
 	{
-		int random = GetRandomFloat(0.5,4.0)
+		float random = GetRandomFloat(0.5,4.0);
 		BeaconOn(i, random);
 	}
+	BeaconTimer = null;
 }
 
 //Round start
@@ -361,7 +363,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		StartDrunk = false;
 		SJD_OpenDoors(); //open Jail
 		
-		if (gc_fBeaconTime.FloatValue > 0.0) CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
+		if (gc_fBeaconTime.FloatValue > 0.0) BeaconTimer = CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
 		
 		//Find Position in CT Spawn
 		
@@ -464,6 +466,7 @@ public int OnAvailableLR(int Announced)
 			GivePlayerItem(client, "weapon_knife");
 		}
 		delete DrunkTimer; 
+		delete BeaconTimer;
 		delete TruceTimer; //kill start time if still running
 		if (g_iRound == g_iMaxRound) //if this was the last round
 		{
@@ -537,6 +540,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			KillDrunk(client);
 		}
 		delete DrunkTimer; 
+		delete BeaconTimer;
 		delete TruceTimer; //kill start time if still running
 		if (winner == 2) PrintCenterTextAll("%t", "drunk_twin_nc");
 		if (winner == 3) PrintCenterTextAll("%t", "drunk_ctwin_nc");

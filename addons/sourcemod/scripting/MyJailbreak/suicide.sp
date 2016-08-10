@@ -83,6 +83,7 @@ int g_iMaxRound;
 Handle SprintTimer[MAXPLAYERS+1];
 Handle SuicideBomberMenu;
 Handle FreezeTimer;
+Handle BeaconTimer;
 
 //Strings
 char g_sSoundBoomPath[256];
@@ -387,6 +388,7 @@ void StartNextRound()
 public Action Timer_BeaconOn(Handle timer)
 {
 	LoopValidClients(i,true,false) BeaconOn(i, 2.0);
+	BeaconTimer = null;
 }
 
 
@@ -405,7 +407,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		
 		g_iRound++;
 		
-		if (gc_fBeaconTime.FloatValue > 0.0) CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
+		if (gc_fBeaconTime.FloatValue > 0.0) BeaconTimer = CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
 		
 		IsSuicideBomber = true;
 		StartSuicideBomber = false;
@@ -491,6 +493,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			ClientSprintStatus[client] = 0;
 		}
 		delete FreezeTimer;
+		delete BeaconTimer;
 		if (winner == 2) PrintCenterTextAll("%t", "suicidebomber_twin_nc");
 		if (winner == 3) PrintCenterTextAll("%t", "suicidebomber_ctwin_nc");
 		BombActive = false;
