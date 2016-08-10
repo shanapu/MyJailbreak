@@ -137,7 +137,7 @@ public Action Command_Heal(int client, int args)
 								if(!IsRequest)
 								{
 									IsRequest = true;
-									RequestTimer = CreateTimer (gc_fHealTime.FloatValue, IsRequestTimer);
+									RequestTimer = CreateTimer (gc_fHealTime.FloatValue, Timer_IsRequest);
 									g_bHealed[client] = true;
 									g_iHealCounter[client]++;
 									CPrintToChatAll("%t %t", "request_tag", "request_heal", client);

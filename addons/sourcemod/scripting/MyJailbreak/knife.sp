@@ -27,13 +27,16 @@
 //Includes
 #include <myjailbreak> //... all other includes in myjailbreak.inc
 
+
 //Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
 
+
 //Booleans
 bool IsKnifeFight; 
 bool StartKnifeFight; 
+
 
 //Console Variables
 ConVar gc_bPlugin;
@@ -63,6 +66,7 @@ ConVar gc_sAdminFlag;
 ConVar gc_bAllowLR;
 ConVar g_ciTsLR;
 
+
 //Integers
 int g_iOldRoundTime;
 int g_iCoolDown;
@@ -72,14 +76,17 @@ int g_iRound;
 int g_iMaxRound;
 int g_iTsLR;
 
+
 //Floats
 float g_fPos[3];
+
 
 //Handles
 Handle TruceTimer;
 Handle GravityTimer;
 Handle KnifeFightMenu;
 Handle BeaconTimer;
+
 
 //Strings
 char g_sHasVoted[1500];
@@ -89,6 +96,8 @@ char g_sEventsLogFile[PLATFORM_MAX_PATH];
 char g_sAdminFlag[32];
 char g_sOverlayStartPath[256];
 
+
+//Info
 public Plugin myinfo = {
 	name = "MyJailbreak - KnifeFight",
 	author = "shanapu",
@@ -97,15 +106,19 @@ public Plugin myinfo = {
 	url = URL_LINK
 };
 
+
+//Start
 public void OnPluginStart()
 {
 	// Translation
 	LoadTranslations("MyJailbreak.Warden.phrases");
 	LoadTranslations("MyJailbreak.KnifeFight.phrases");
 	
+	
 	//Client Commands
 	RegConsoleCmd("sm_setknifefight", SetKnifeFight, "Allows the Admin or Warden to set knifefight as next round");
 	RegConsoleCmd("sm_knifefight", VoteKnifeFight, "Allows players to vote for a knifefight");
+	
 	
 	//AutoExecConfig
 	AutoExecConfig_SetFile("KnifeFight", "MyJailbreak/EventDays");
@@ -139,6 +152,7 @@ public void OnPluginStart()
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
 	
+	
 	//Hooks
 	HookEvent("round_start", Event_RoundStart);
 	HookEvent("round_end", Event_RoundEnd);
@@ -147,6 +161,7 @@ public void OnPluginStart()
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
 	HookConVarChange(gc_sCustomCommand, OnSettingChanged);
 	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
+	
 	
 	//Find
 	g_bAllowTP = FindConVar("sv_allow_thirdperson");
@@ -167,8 +182,8 @@ public void OnPluginStart()
 	SetLogFile(g_sEventsLogFile, "Events");
 }
 
-//ConVarChange for Strings
 
+//ConVarChange for Strings
 public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
 	if(convar == gc_sOverlayStartPath)
@@ -195,22 +210,8 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 	}
 }
 
-//Initialize Event
 
-public void OnMapStart()
-{
-	g_iVoteCount = 0;
-	g_iRound = 0;
-	IsKnifeFight = false;
-	StartKnifeFight = false;
-	
-	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
-	g_iTruceTime = gc_iTruceTime.IntValue;
-	
-	if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
-	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
-}
-
+//Initialize Plugin
 public void OnConfigsExecuted()
 {
 	g_iTruceTime = gc_iTruceTime.IntValue;
@@ -223,13 +224,13 @@ public void OnConfigsExecuted()
 		RegConsoleCmd(sBufferCMD, VoteKnifeFight, "Allows players to vote for a knife fight");
 }
 
-public void OnClientPutInServer(int client)
-{
-	SDKHook(client, SDKHook_WeaponCanUse, OnWeaponCanUse);
-}
+
+/******************************************************************************
+                   COMMANDS
+******************************************************************************/
+
 
 //Admin & Warden set Event
-
 public Action SetKnifeFight(int client,int args)
 {
 	if (gc_bPlugin.BoolValue)
@@ -292,8 +293,8 @@ public Action SetKnifeFight(int client,int args)
 	else CPrintToChat(client, "%t %t", "knifefight_tag" , "knifefight_disabled");
 }
 
-//Voting for Event
 
+//Voting for Event
 public Action VoteKnifeFight(int client,int args)
 {
 	char steamid[64];
@@ -339,34 +340,13 @@ public Action VoteKnifeFight(int client,int args)
 	else CPrintToChat(client, "%t %t", "knifefight_tag" , "knifefight_disabled");
 }
 
-//Prepare Event
 
-void StartNextRound()
-{
-	StartKnifeFight = true;
-	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
-	g_iVoteCount = 0;
-	
-	char buffer[32];
-	Format(buffer, sizeof(buffer), "%T", "knifefight_name", LANG_SERVER);
-	SetEventDayName(buffer);
-	SetEventDayPlanned(true);
-	
-	g_iOldRoundTime = g_iGetRoundTime.IntValue; //save original round time
-	g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
-	
-	CPrintToChatAll("%t %t", "knifefight_tag" , "knifefight_next");
-	PrintCenterTextAll("%t", "knifefight_next_nc");
-}
+/******************************************************************************
+                   EVENTS
+******************************************************************************/
 
-public Action Timer_BeaconOn(Handle timer)
-{
-	LoopValidClients(i,true,false) BeaconOn(i, 2.0);
-	BeaconTimer = null;
-}
 
 //Round start
-
 public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
 	if (StartKnifeFight || IsKnifeFight)
@@ -432,10 +412,10 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 					}
 				}
 				g_iTruceTime--;
-				TruceTimer = CreateTimer(1.0, StartTimer, _, TIMER_REPEAT);
+				TruceTimer = CreateTimer(1.0, Timer_StartEvent, _, TIMER_REPEAT);
 				if (gc_bGrav.BoolValue)
 				{
-					GravityTimer = CreateTimer(1.0, CheckGravity, _, TIMER_REPEAT);
+					GravityTimer = CreateTimer(1.0, Timer_CheckGravity, _, TIMER_REPEAT);
 				}
 				
 				//enable lr on last round
@@ -466,79 +446,8 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 	}
 }
 
-public int OnAvailableLR(int Announced)
-{
-	if (IsKnifeFight && gc_bAllowLR.BoolValue && (g_iTsLR > g_ciTsLR.IntValue))
-	{
-		LoopValidClients(client, false, true)
-		{
-			SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
-			SetEntityGravity(client, 1.0);
-			FP(client);
-			StripAllPlayerWeapons(client);
-			if (GetClientTeam(client) == CS_TEAM_CT)
-			{
-				FakeClientCommand(client, "sm_guns");
-			}
-			GivePlayerItem(client, "weapon_knife");
-		}
-		delete BeaconTimer;
-		delete TruceTimer;
-		delete GravityTimer;
-		if (g_iRound == g_iMaxRound)
-		{
-			IsKnifeFight = false;
-			StartKnifeFight = false;
-			g_iRound = 0;
-			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
-			SetCvar("sm_hosties_lr", 1);
-			SetCvar("sm_weapons_enable", 1);
-			SetCvar("sm_warden_enable", 1);
-			SetCvar("sm_menu_enable", 1);
-			SetCvar("mp_teammates_are_enemies", 0);
-			SetCvarFloat("sv_friction", 5.2);
-			SetConVarInt(g_bAllowTP, 0);
-			g_iGetRoundTime.IntValue = g_iOldRoundTime;
-			SetEventDayName("none");
-			SetEventDayRunning(false);
-			CPrintToChatAll("%t %t", "knifefight_tag" , "knifefight_end");
-		}
-	}
-
-}
-
-stock void CreateInfoPanel(int client)
-{
-	//Create info Panel
-	char info[255];
-	
-	KnifeFightMenu = CreatePanel();
-	Format(info, sizeof(info), "%T", "knifefight_info_title", client);
-	SetPanelTitle(KnifeFightMenu, info);
-	DrawPanelText(KnifeFightMenu, "                                   ");
-	Format(info, sizeof(info), "%T", "knifefight_info_line1", client);
-	DrawPanelText(KnifeFightMenu, info);
-	DrawPanelText(KnifeFightMenu, "-----------------------------------");
-	Format(info, sizeof(info), "%T", "knifefight_info_line2", client);
-	DrawPanelText(KnifeFightMenu, info);
-	Format(info, sizeof(info), "%T", "knifefight_info_line3", client);
-	DrawPanelText(KnifeFightMenu, info);
-	Format(info, sizeof(info), "%T", "knifefight_info_line4", client);
-	DrawPanelText(KnifeFightMenu, info);
-	Format(info, sizeof(info), "%T", "knifefight_info_line5", client);
-	DrawPanelText(KnifeFightMenu, info);
-	Format(info, sizeof(info), "%T", "knifefight_info_line6", client);
-	DrawPanelText(KnifeFightMenu, info);
-	Format(info, sizeof(info), "%T", "knifefight_info_line7", client);
-	DrawPanelText(KnifeFightMenu, info);
-	DrawPanelText(KnifeFightMenu, "-----------------------------------");
-	Format(info, sizeof(info), "%T", "warden_close", client);
-	DrawPanelItem(KnifeFightMenu, info); 
-	SendPanelToClient(KnifeFightMenu, client, Handler_NullCancel, 20);
-}
 
 //Round End
-
 public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
 	int winner = event.GetInt("winner");
@@ -584,8 +493,39 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 	}
 }
 
-//Map End
 
+public void Event_PlayerDeath(Event event, char [] name, bool dontBroadcast)
+{
+	if(IsKnifeFight == true)
+	{
+		int client = GetClientOfUserId(event.GetInt("userid"));
+		FP(client);
+	}
+}
+
+
+/******************************************************************************
+                   FORWARDS LISTEN
+******************************************************************************/
+
+
+//Initialize Event
+public void OnMapStart()
+{
+	g_iVoteCount = 0;
+	g_iRound = 0;
+	IsKnifeFight = false;
+	StartKnifeFight = false;
+	
+	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
+	g_iTruceTime = gc_iTruceTime.IntValue;
+	
+	if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
+	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
+}
+
+
+//Map End
 public void OnMapEnd()
 {
 	IsKnifeFight = false;
@@ -598,9 +538,163 @@ public void OnMapEnd()
 	LoopClients(client) FP(client);
 }
 
-//Start Timer
 
-public Action StartTimer(Handle timer)
+//Listen for Last Lequest
+public int OnAvailableLR(int Announced)
+{
+	if (IsKnifeFight && gc_bAllowLR.BoolValue && (g_iTsLR > g_ciTsLR.IntValue))
+	{
+		LoopValidClients(client, false, true)
+		{
+			SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
+			SetEntityGravity(client, 1.0);
+			FP(client);
+			StripAllPlayerWeapons(client);
+			if (GetClientTeam(client) == CS_TEAM_CT)
+			{
+				FakeClientCommand(client, "sm_guns");
+			}
+			GivePlayerItem(client, "weapon_knife");
+		}
+		delete BeaconTimer;
+		delete TruceTimer;
+		delete GravityTimer;
+		if (g_iRound == g_iMaxRound)
+		{
+			IsKnifeFight = false;
+			StartKnifeFight = false;
+			g_iRound = 0;
+			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
+			SetCvar("sm_hosties_lr", 1);
+			SetCvar("sm_weapons_enable", 1);
+			SetCvar("sm_warden_enable", 1);
+			SetCvar("sm_menu_enable", 1);
+			SetCvar("mp_teammates_are_enemies", 0);
+			SetCvarFloat("sv_friction", 5.2);
+			SetConVarInt(g_bAllowTP, 0);
+			g_iGetRoundTime.IntValue = g_iOldRoundTime;
+			SetEventDayName("none");
+			SetEventDayRunning(false);
+			CPrintToChatAll("%t %t", "knifefight_tag" , "knifefight_end");
+		}
+	}
+}
+
+
+public void OnClientDisconnect(int client)
+{
+	if (IsKnifeFight == true)
+	{
+		FP(client);
+	}
+}
+
+
+//Set Client Hook
+public void OnClientPutInServer(int client)
+{
+	SDKHook(client, SDKHook_WeaponCanUse, OnWeaponCanUse);
+}
+
+
+//Knife only
+public Action OnWeaponCanUse(int client, int weapon)
+{
+	if(IsKnifeFight == true)
+	{
+		char sWeapon[32];
+		GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
+		if(StrEqual(sWeapon, "weapon_knife"))
+		{
+			if (IsClientInGame(client) && IsPlayerAlive(client))
+			{
+				return Plugin_Continue;
+			}
+		}
+		return Plugin_Handled;
+	}
+	return Plugin_Continue;
+}
+
+
+/******************************************************************************
+                   FUNCTIONS
+******************************************************************************/
+
+
+//Prepare Event
+void StartNextRound()
+{
+	StartKnifeFight = true;
+	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
+	g_iVoteCount = 0;
+	
+	char buffer[32];
+	Format(buffer, sizeof(buffer), "%T", "knifefight_name", LANG_SERVER);
+	SetEventDayName(buffer);
+	SetEventDayPlanned(true);
+	
+	g_iOldRoundTime = g_iGetRoundTime.IntValue; //save original round time
+	g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
+	
+	CPrintToChatAll("%t %t", "knifefight_tag" , "knifefight_next");
+	PrintCenterTextAll("%t", "knifefight_next_nc");
+}
+
+
+//Back to First Person
+public Action FP(int client)
+{
+	if(IsValidClient(client, false, true))
+	{
+		ClientCommand(client, "firstperson");
+	}
+}
+
+
+/******************************************************************************
+                   MENUS
+******************************************************************************/
+
+
+stock void CreateInfoPanel(int client)
+{
+	//Create info Panel
+	char info[255];
+	
+	KnifeFightMenu = CreatePanel();
+	Format(info, sizeof(info), "%T", "knifefight_info_title", client);
+	SetPanelTitle(KnifeFightMenu, info);
+	DrawPanelText(KnifeFightMenu, "                                   ");
+	Format(info, sizeof(info), "%T", "knifefight_info_line1", client);
+	DrawPanelText(KnifeFightMenu, info);
+	DrawPanelText(KnifeFightMenu, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "knifefight_info_line2", client);
+	DrawPanelText(KnifeFightMenu, info);
+	Format(info, sizeof(info), "%T", "knifefight_info_line3", client);
+	DrawPanelText(KnifeFightMenu, info);
+	Format(info, sizeof(info), "%T", "knifefight_info_line4", client);
+	DrawPanelText(KnifeFightMenu, info);
+	Format(info, sizeof(info), "%T", "knifefight_info_line5", client);
+	DrawPanelText(KnifeFightMenu, info);
+	Format(info, sizeof(info), "%T", "knifefight_info_line6", client);
+	DrawPanelText(KnifeFightMenu, info);
+	Format(info, sizeof(info), "%T", "knifefight_info_line7", client);
+	DrawPanelText(KnifeFightMenu, info);
+	DrawPanelText(KnifeFightMenu, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "warden_close", client);
+	DrawPanelItem(KnifeFightMenu, info); 
+	SendPanelToClient(KnifeFightMenu, client, Handler_NullCancel, 20);
+}
+
+
+/******************************************************************************
+                   TIMER
+******************************************************************************/
+
+
+//Start Timer
+public Action Timer_StartEvent(Handle timer)
 {
 	if (g_iTruceTime > 1)
 	{
@@ -636,60 +730,21 @@ public Action StartTimer(Handle timer)
 	return Plugin_Stop;
 }
 
-//Knife only
 
-public Action OnWeaponCanUse(int client, int weapon)
+//Beacon Timer
+public Action Timer_BeaconOn(Handle timer)
 {
-	if(IsKnifeFight == true)
-	{
-		char sWeapon[32];
-		GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
-		if(StrEqual(sWeapon, "weapon_knife"))
-		{
-			if (IsClientInGame(client) && IsPlayerAlive(client))
-			{
-				return Plugin_Continue;
-			}
-		}
-		return Plugin_Handled;
-	}
-	return Plugin_Continue;
+	LoopValidClients(i,true,false) BeaconOn(i, 2.0);
+	BeaconTimer = null;
 }
 
-//Give back Gravity if it gone -> ladders
 
-public Action CheckGravity(Handle timer)
+//Give back Gravity if it gone -> ladders
+public Action Timer_CheckGravity(Handle timer)
 {
 	LoopValidClients(client, false, false)
 	{
 		if(GetEntityGravity(client) != 1.0)
 			SetEntityGravity(client, gc_fGravValue.FloatValue);
-	}
-}
-
-//Back to First Person
-
-public Action FP(int client)
-{
-	if(IsValidClient(client, false, true))
-	{
-		ClientCommand(client, "firstperson");
-	}
-}
-
-public void OnClientDisconnect(int client)
-{
-	if (IsKnifeFight == true)
-	{
-		FP(client);
-	}
-}
-
-public void Event_PlayerDeath(Event event, char [] name, bool dontBroadcast)
-{
-	if(IsKnifeFight == true)
-	{
-		int client = GetClientOfUserId(event.GetInt("userid"));
-		FP(client);
 	}
 }

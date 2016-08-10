@@ -27,13 +27,16 @@
 //Includes
 #include <myjailbreak> //... all other includes in myjailbreak.inc
 
+
 //Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
 
+
 //Booleans
-bool IsNoScope; 
-bool StartNoScope; 
+bool IsNoScope;
+bool StartNoScope;
+
 
 //Console Variables
 ConVar gc_bPlugin;
@@ -61,6 +64,7 @@ ConVar gc_sAdminFlag;
 ConVar gc_bAllowLR;
 ConVar g_ciTsLR;
 
+
 //Integers
 int g_iOldRoundTime;
 int g_iCoolDown;
@@ -71,14 +75,17 @@ int m_flNextSecondaryAttack;
 int g_iMaxRound;
 int g_iTsLR;
 
+
 //Handles
 Handle TruceTimer;
 Handle GravityTimer;
 Handle NoScopeMenu;
 Handle BeaconTimer;
 
+
 //Floats
 float g_fPos[3];
+
 
 //Strings
 char g_sHasVoted[1500];
@@ -89,6 +96,8 @@ char g_sEventsLogFile[PLATFORM_MAX_PATH];
 char g_sAdminFlag[32];
 char g_sOverlayStartPath[256];
 
+
+//Info
 public Plugin myinfo = {
 	name = "MyJailbreak - NoScope",
 	author = "shanapu",
@@ -97,16 +106,19 @@ public Plugin myinfo = {
 	url = URL_LINK
 };
 
+
+//Start
 public void OnPluginStart()
 {
 	// Translation
 	LoadTranslations("MyJailbreak.Warden.phrases");
 	LoadTranslations("MyJailbreak.NoScope.phrases");
 	
+	
 	//Client Commands
 	RegConsoleCmd("sm_setnoscope", SetNoScope, "Allows the Admin or Warden to set noscope as next round");
 	RegConsoleCmd("sm_noscope", VoteNoScope, "Allows players to vote for a noscope");
-
+	
 	
 	//AutoExecConfig
 	AutoExecConfig_SetFile("NoScope", "MyJailbreak/EventDays");
@@ -139,6 +151,7 @@ public void OnPluginStart()
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
 	
+	
 	//Hooks
 	HookEvent("round_start", Event_RoundStart);
 	HookEvent("round_end", Event_RoundEnd);
@@ -146,6 +159,7 @@ public void OnPluginStart()
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
 	HookConVarChange(gc_sCustomCommand, OnSettingChanged);
 	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
+	
 	
 	//Find
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
@@ -161,8 +175,8 @@ public void OnPluginStart()
 	SetLogFile(g_sEventsLogFile, "Events");
 }
 
-//ConVarChange for Strings
 
+//ConVarChange for Strings
 public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
 	if(convar == gc_sOverlayStartPath)
@@ -189,22 +203,8 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 	}
 }
 
-//Initialize Event
 
-public void OnMapStart()
-{
-	g_iVoteCount = 0;
-	g_iRound = 0;
-	IsNoScope = false;
-	StartNoScope = false;
-	
-	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
-	g_iTruceTime = gc_iTruceTime.IntValue;
-	
-	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);    //Add sound to download and precache table
-	if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);    //Add overlay to download and precache table
-}
-
+//Initialize Plugin
 public void OnConfigsExecuted()
 {
 	g_iTruceTime = gc_iTruceTime.IntValue;
@@ -222,14 +222,13 @@ public void OnConfigsExecuted()
 		RegConsoleCmd(sBufferCMD, VoteNoScope, "Allows players to vote for no scope");
 }
 
-public void OnClientPutInServer(int client)
-{
-	SDKHook(client, SDKHook_WeaponCanUse, OnWeaponCanUse);
-	SDKHook(client, SDKHook_PreThink, OnPreThink);
-}
+
+/******************************************************************************
+                   COMMANDS
+******************************************************************************/
+
 
 //Admin & Warden set Event
-
 public Action SetNoScope(int client,int args)
 {
 	if (gc_bPlugin.BoolValue)
@@ -292,8 +291,8 @@ public Action SetNoScope(int client,int args)
 	else CPrintToChat(client, "%t %t", "noscope_tag" , "noscope_disabled");
 }
 
-//Voting for Event
 
+//Voting for Event
 public Action VoteNoScope(int client,int args)
 {
 	char steamid[64];
@@ -339,35 +338,13 @@ public Action VoteNoScope(int client,int args)
 	else CPrintToChat(client, "%t %t", "noscope_tag" , "noscope_disabled");
 }
 
-//Prepare Event
 
-void StartNextRound()
-{
-	StartNoScope = true;
-	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
-	g_iVoteCount = 0;
-	
-	char buffer[32];
-	Format(buffer, sizeof(buffer), "%T", "noscope_name", LANG_SERVER);
-	SetEventDayName(buffer);
-	SetEventDayPlanned(true);
-	
-	g_iOldRoundTime = g_iGetRoundTime.IntValue; //save original round time
-	g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
-	
-	CPrintToChatAll("%t %t", "noscope_tag" , "noscope_next");
-	PrintCenterTextAll("%t", "noscope_next_nc");
-}
-
-public Action Timer_BeaconOn(Handle timer)
-{
-	LoopValidClients(i,true,false) BeaconOn(i, 2.0);
-	BeaconTimer = null;
-}
+/******************************************************************************
+                   EVENTS
+******************************************************************************/
 
 
 //Round start
-
 public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
 	if (StartNoScope || IsNoScope)
@@ -436,8 +413,8 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 					}
 				}
 				g_iTruceTime--;
-				TruceTimer = CreateTimer(1.0, StartTimer, _, TIMER_REPEAT);
-				GravityTimer = CreateTimer(1.0, CheckGravity, _, TIMER_REPEAT);
+				TruceTimer = CreateTimer(1.0, Timer_StartEvent, _, TIMER_REPEAT);
+				GravityTimer = CreateTimer(1.0, Timer_CheckGravity, _, TIMER_REPEAT);
 				
 				//enable lr on last round
 				g_iTsLR = GetAliveTeamCount(CS_TEAM_T);
@@ -468,117 +445,8 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 	}
 }
 
-public int OnAvailableLR(int Announced)
-{
-	if (IsNoScope && gc_bAllowLR.BoolValue && (g_iTsLR > g_ciTsLR.IntValue))
-	{
-		LoopClients(client)
-		{
-			SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
-			SetEntityGravity(client, 1.0);
-			StripAllPlayerWeapons(client);
-			if (GetClientTeam(client) == CS_TEAM_CT)
-			{
-				FakeClientCommand(client, "sm_guns");
-			}
-			GivePlayerItem(client, "weapon_knife");
-		}
-		
-		delete BeaconTimer;
-		delete TruceTimer;
-		delete GravityTimer;
-		if (g_iRound == g_iMaxRound)
-		{
-			IsNoScope = false;
-			StartNoScope = false;
-			g_iRound = 0;
-			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
-			SetCvar("sm_hosties_lr", 1);
-			SetCvar("sm_weapons_enable", 1);
-			SetCvar("sv_infinite_ammo", 0);
-			SetCvar("mp_teammates_are_enemies", 0);
-			SetCvar("sm_menu_enable", 1);
-			SetCvar("sm_warden_enable", 1);
-			g_iGetRoundTime.IntValue = g_iOldRoundTime;
-			SetEventDayName("none");
-			SetEventDayRunning(false);
-			CPrintToChatAll("%t %t", "noscope_tag" , "noscope_end");
-		}
-	}
-
-}
-
-stock void CreateInfoPanel(int client)
-{
-	//Create info Panel
-	char info[255];
-
-	NoScopeMenu = CreatePanel();
-	Format(info, sizeof(info), "%T", "noscope_info_title", client);
-	SetPanelTitle(NoScopeMenu, info);
-	DrawPanelText(NoScopeMenu, "                                   ");
-	Format(info, sizeof(info), "%T", "noscope_info_line1", client);
-	DrawPanelText(NoScopeMenu, info);
-	DrawPanelText(NoScopeMenu, "-----------------------------------");
-	Format(info, sizeof(info), "%T", "noscope_info_line2", client);
-	DrawPanelText(NoScopeMenu, info);
-	Format(info, sizeof(info), "%T", "noscope_info_line3", client);
-	DrawPanelText(NoScopeMenu, info);
-	Format(info, sizeof(info), "%T", "noscope_info_line4", client);
-	DrawPanelText(NoScopeMenu, info);
-	Format(info, sizeof(info), "%T", "noscope_info_line5", client);
-	DrawPanelText(NoScopeMenu, info);
-	Format(info, sizeof(info), "%T", "noscope_info_line6", client);
-	DrawPanelText(NoScopeMenu, info);
-	Format(info, sizeof(info), "%T", "noscope_info_line7", client);
-	DrawPanelText(NoScopeMenu, info);
-	DrawPanelText(NoScopeMenu, "-----------------------------------");
-	Format(info, sizeof(info), "%T", "warden_close", client);
-	DrawPanelItem(NoScopeMenu, info); 
-	SendPanelToClient(NoScopeMenu, client, Handler_NullCancel, 20);
-}
-
-//Start Timer
-
-public Action StartTimer(Handle timer)
-{
-	if (g_iTruceTime > 1)
-	{
-		g_iTruceTime--;
-		LoopClients(client) if (IsPlayerAlive(client))
-		{
-			PrintCenterText(client,"%t", "noscope_timeuntilstart_nc", g_iTruceTime);
-		}
-		return Plugin_Continue;
-	}
-	
-	g_iTruceTime = gc_iTruceTime.IntValue;
-	
-	if (g_iRound > 0)
-	{
-		LoopClients(client) if (IsPlayerAlive(client))
-		{
-			SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
-			if (gc_bGrav.BoolValue)
-			{
-				SetEntityGravity(client, gc_fGravValue.FloatValue);	
-			}
-			PrintCenterText(client,"%t", "noscope_start_nc");
-			if(gc_bOverlays.BoolValue) ShowOverlay(client, g_sOverlayStartPath, 2.0);
-			if(gc_bSounds.BoolValue)
-			{
-				EmitSoundToAllAny(g_sSoundStartPath);
-			}
-		}
-		CPrintToChatAll("%t %t", "noscope_tag" , "noscope_start");
-	}
-	TruceTimer = null;
-	
-	return Plugin_Stop;
-}
 
 //Round End
-
 public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
 	int winner = event.GetInt("winner");
@@ -625,6 +493,68 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 	}
 }
 
+
+/******************************************************************************
+                   FORWARDS LISTEN
+******************************************************************************/
+
+
+//Initialize Event
+public void OnMapStart()
+{
+	g_iVoteCount = 0;
+	g_iRound = 0;
+	IsNoScope = false;
+	StartNoScope = false;
+	
+	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
+	g_iTruceTime = gc_iTruceTime.IntValue;
+	
+	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);    //Add sound to download and precache table
+	if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);    //Add overlay to download and precache table
+}
+
+
+//Listen for Last Lequest
+public int OnAvailableLR(int Announced)
+{
+	if (IsNoScope && gc_bAllowLR.BoolValue && (g_iTsLR > g_ciTsLR.IntValue))
+	{
+		LoopClients(client)
+		{
+			SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
+			SetEntityGravity(client, 1.0);
+			StripAllPlayerWeapons(client);
+			if (GetClientTeam(client) == CS_TEAM_CT)
+			{
+				FakeClientCommand(client, "sm_guns");
+			}
+			GivePlayerItem(client, "weapon_knife");
+		}
+		
+		delete BeaconTimer;
+		delete TruceTimer;
+		delete GravityTimer;
+		if (g_iRound == g_iMaxRound)
+		{
+			IsNoScope = false;
+			StartNoScope = false;
+			g_iRound = 0;
+			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
+			SetCvar("sm_hosties_lr", 1);
+			SetCvar("sm_weapons_enable", 1);
+			SetCvar("sv_infinite_ammo", 0);
+			SetCvar("mp_teammates_are_enemies", 0);
+			SetCvar("sm_menu_enable", 1);
+			SetCvar("sm_warden_enable", 1);
+			g_iGetRoundTime.IntValue = g_iOldRoundTime;
+			SetEventDayName("none");
+			SetEventDayRunning(false);
+			CPrintToChatAll("%t %t", "noscope_tag" , "noscope_end");
+		}
+	}
+}
+
 //Map End
 
 public void OnMapEnd()
@@ -638,8 +568,8 @@ public void OnMapEnd()
 	g_sHasVoted[0] = '\0';
 }
 
-//Scout only
 
+//Scout only
 public Action OnWeaponCanUse(int client, int weapon)
 {
 	char sWeapon[32];
@@ -658,15 +588,41 @@ public Action OnWeaponCanUse(int client, int weapon)
 	return Plugin_Continue;
 }
 
-public Action OnPreThink(int client)
+
+//Set Client Hooks
+public void OnClientPutInServer(int client)
 {
-	int iWeapon = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
-	MakeNoScope(iWeapon);
-	return Plugin_Continue;
+	SDKHook(client, SDKHook_WeaponCanUse, OnWeaponCanUse);
+	SDKHook(client, SDKHook_PreThink, OnPreThink);
 }
 
-//No Scope
 
+/******************************************************************************
+                   FUNCTIONS
+******************************************************************************/
+
+
+//Prepare Event
+void StartNextRound()
+{
+	StartNoScope = true;
+	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
+	g_iVoteCount = 0;
+	
+	char buffer[32];
+	Format(buffer, sizeof(buffer), "%T", "noscope_name", LANG_SERVER);
+	SetEventDayName(buffer);
+	SetEventDayPlanned(true);
+	
+	g_iOldRoundTime = g_iGetRoundTime.IntValue; //save original round time
+	g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
+	
+	CPrintToChatAll("%t %t", "noscope_tag" , "noscope_next");
+	PrintCenterTextAll("%t", "noscope_next_nc");
+}
+
+
+//No Scope
 stock void MakeNoScope(int weapon)
 {
 	if (IsNoScope == true)
@@ -682,13 +638,109 @@ stock void MakeNoScope(int weapon)
 	}
 }
 
-//Give back Gravity if it gone -> ladders
 
-public Action CheckGravity(Handle timer)
+public Action OnPreThink(int client)
+{
+	int iWeapon = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
+	MakeNoScope(iWeapon);
+	return Plugin_Continue;
+}
+
+
+/******************************************************************************
+                   MENUS
+******************************************************************************/
+
+
+stock void CreateInfoPanel(int client)
+{
+	//Create info Panel
+	char info[255];
+
+	NoScopeMenu = CreatePanel();
+	Format(info, sizeof(info), "%T", "noscope_info_title", client);
+	SetPanelTitle(NoScopeMenu, info);
+	DrawPanelText(NoScopeMenu, "                                   ");
+	Format(info, sizeof(info), "%T", "noscope_info_line1", client);
+	DrawPanelText(NoScopeMenu, info);
+	DrawPanelText(NoScopeMenu, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "noscope_info_line2", client);
+	DrawPanelText(NoScopeMenu, info);
+	Format(info, sizeof(info), "%T", "noscope_info_line3", client);
+	DrawPanelText(NoScopeMenu, info);
+	Format(info, sizeof(info), "%T", "noscope_info_line4", client);
+	DrawPanelText(NoScopeMenu, info);
+	Format(info, sizeof(info), "%T", "noscope_info_line5", client);
+	DrawPanelText(NoScopeMenu, info);
+	Format(info, sizeof(info), "%T", "noscope_info_line6", client);
+	DrawPanelText(NoScopeMenu, info);
+	Format(info, sizeof(info), "%T", "noscope_info_line7", client);
+	DrawPanelText(NoScopeMenu, info);
+	DrawPanelText(NoScopeMenu, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "warden_close", client);
+	DrawPanelItem(NoScopeMenu, info); 
+	SendPanelToClient(NoScopeMenu, client, Handler_NullCancel, 20);
+}
+
+
+/******************************************************************************
+                   TIMER
+******************************************************************************/
+
+
+//Start Timer
+public Action Timer_StartEvent(Handle timer)
+{
+	if (g_iTruceTime > 1)
+	{
+		g_iTruceTime--;
+		LoopClients(client) if (IsPlayerAlive(client))
+		{
+			PrintCenterText(client,"%t", "noscope_timeuntilstart_nc", g_iTruceTime);
+		}
+		return Plugin_Continue;
+	}
+	
+	g_iTruceTime = gc_iTruceTime.IntValue;
+	
+	if (g_iRound > 0)
+	{
+		LoopClients(client) if (IsPlayerAlive(client))
+		{
+			SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
+			if (gc_bGrav.BoolValue)
+			{
+				SetEntityGravity(client, gc_fGravValue.FloatValue);	
+			}
+			PrintCenterText(client,"%t", "noscope_start_nc");
+			if(gc_bOverlays.BoolValue) ShowOverlay(client, g_sOverlayStartPath, 2.0);
+			if(gc_bSounds.BoolValue)
+			{
+				EmitSoundToAllAny(g_sSoundStartPath);
+			}
+		}
+		CPrintToChatAll("%t %t", "noscope_tag" , "noscope_start");
+	}
+	TruceTimer = null;
+	
+	return Plugin_Stop;
+}
+
+
+//Give back Gravity if it gone -> ladders
+public Action Timer_CheckGravity(Handle timer)
 {
 	LoopValidClients(client,false,false)
 	{
 		if(GetEntityGravity(client) != 1.0)
 			SetEntityGravity(client, gc_fGravValue.FloatValue);
 	}
+}
+
+
+//Beacon Timer
+public Action Timer_BeaconOn(Handle timer)
+{
+	LoopValidClients(i,true,false) BeaconOn(i, 2.0);
+	BeaconTimer = null;
 }

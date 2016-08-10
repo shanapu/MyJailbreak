@@ -27,13 +27,16 @@
 //Includes
 #include <myjailbreak> //... all other includes in myjailbreak.inc
 
+
 //Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
 
+
 //Booleans
 bool IsCowBoy; 
 bool StartCowBoy; 
+
 
 //Console Variables
 ConVar gc_bPlugin;
@@ -60,6 +63,7 @@ ConVar gc_sAdminFlag;
 ConVar gc_bAllowLR;
 ConVar g_ciTsLR;
 
+
 //Integers
 int g_iOldRoundTime;
 int g_iCoolDown;
@@ -69,13 +73,16 @@ int g_iRound;
 int g_iMaxRound;
 int g_iTsLR;
 
+
 //Handles
 Handle TruceTimer;
 Handle CowBoyMenu;
 Handle BeaconTimer;
 
+
 //Floats
 float g_fPos[3];
+
 
 //Strings
 char g_sHasVoted[1500];
@@ -86,6 +93,8 @@ char g_sEventsLogFile[PLATFORM_MAX_PATH];
 char g_sAdminFlag[32];
 char g_sOverlayStartPath[256];
 
+
+//Info
 public Plugin myinfo = {
 	name = "MyJailbreak - CowBoy",
 	author = "shanapu",
@@ -94,16 +103,19 @@ public Plugin myinfo = {
 	url = URL_LINK
 };
 
+
+//Start
 public void OnPluginStart()
 {
 	// Translation
 	LoadTranslations("MyJailbreak.Warden.phrases");
 	LoadTranslations("MyJailbreak.CowBoy.phrases");
 	
+	
 	//Client Commands
 	RegConsoleCmd("sm_setcowboy", SetCowBoy, "Allows the Admin or Warden to set cowboy as next round");
 	RegConsoleCmd("sm_cowboy", VoteCowBoy, "Allows players to vote for a cowboy");
-
+	
 	
 	//AutoExecConfig
 	AutoExecConfig_SetFile("CowBoy", "MyJailbreak/EventDays");
@@ -135,6 +147,7 @@ public void OnPluginStart()
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
 	
+	
 	//Hooks
 	HookEvent("round_start", Event_RoundStart);
 	HookEvent("round_end", Event_RoundEnd);
@@ -143,6 +156,7 @@ public void OnPluginStart()
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
 	HookConVarChange(gc_sCustomCommand, OnSettingChanged);
 	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
+	
 	
 	//Find
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
@@ -157,8 +171,8 @@ public void OnPluginStart()
 	SetLogFile(g_sEventsLogFile, "Events");
 }
 
-//ConVarChange for Strings
 
+//ConVarChange for Strings
 public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
 	if(convar == gc_sOverlayStartPath)
@@ -185,22 +199,8 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 	}
 }
 
-//Initialize Event
 
-public void OnMapStart()
-{
-	g_iVoteCount = 0;
-	g_iRound = 0;
-	IsCowBoy = false;
-	StartCowBoy = false;
-	
-	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
-	g_iTruceTime = gc_iTruceTime.IntValue;
-	
-	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);    //Add sound to download and precache table
-	if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);    //Add overlay to download and precache table
-}
-
+//Initialize Plugin
 public void OnConfigsExecuted()
 {
 	g_iTruceTime = gc_iTruceTime.IntValue;
@@ -216,13 +216,13 @@ public void OnConfigsExecuted()
 		RegConsoleCmd(sBufferCMD, VoteCowBoy, "Allows players to vote for no scope");
 }
 
-public void OnClientPutInServer(int client)
-{
-	SDKHook(client, SDKHook_WeaponCanUse, OnWeaponCanUse);
-}
+
+/******************************************************************************
+                   COMMANDS
+******************************************************************************/
+
 
 //Admin & Warden set Event
-
 public Action SetCowBoy(int client,int args)
 {
 	if (gc_bPlugin.BoolValue)
@@ -286,8 +286,8 @@ public Action SetCowBoy(int client,int args)
 	else CPrintToChat(client, "%t %t", "cowboy_tag" , "cowboy_disabled");
 }
 
-//Voting for Event
 
+//Voting for Event
 public Action VoteCowBoy(int client,int args)
 {
 	char steamid[64];
@@ -333,33 +333,13 @@ public Action VoteCowBoy(int client,int args)
 	else CPrintToChat(client, "%t %t", "cowboy_tag" , "cowboy_disabled");
 }
 
-//Prepare Event
 
-void StartNextRound()
-{
-	StartCowBoy = true;
-	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
-	g_iVoteCount = 0;
-	char buffer[32];
-	Format(buffer, sizeof(buffer), "%T", "cowboy_name", LANG_SERVER);
-	SetEventDayName(buffer);
-	SetEventDayPlanned(true);
-	
-	g_iOldRoundTime = g_iGetRoundTime.IntValue; //save original round time
-	g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
-	
-	CPrintToChatAll("%t %t", "cowboy_tag" , "cowboy_next");
-	PrintCenterTextAll("%t", "cowboy_next_nc");
-}
+/******************************************************************************
+                   EVENTS
+******************************************************************************/
 
-public Action Timer_BeaconOn(Handle timer)
-{
-	LoopValidClients(i,true,false) BeaconOn(i, 2.0);
-	BeaconTimer = null;
-}
 
 //Round start
-
 public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
 	if (StartCowBoy || IsCowBoy)
@@ -421,7 +401,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 					}
 				}
 				g_iTruceTime--;
-				TruceTimer = CreateTimer(1.0, StartTimer, _, TIMER_REPEAT);
+				TruceTimer = CreateTimer(1.0, Timer_StartEvent, _, TIMER_REPEAT);
 				
 				//enable lr on last round
 				g_iTsLR = GetAliveTeamCount(CS_TEAM_T);
@@ -451,111 +431,8 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 	}
 }
 
-public int OnAvailableLR(int Announced)
-{
-	if (IsCowBoy && gc_bAllowLR.BoolValue && (g_iTsLR > g_ciTsLR.IntValue))
-	{
-		LoopClients(client)
-		{
-			SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
-			StripAllPlayerWeapons(client);
-			if (GetClientTeam(client) == CS_TEAM_CT)
-			{
-				FakeClientCommand(client, "sm_guns");
-			}
-			GivePlayerItem(client, "weapon_knife");
-		}
-		
-		delete BeaconTimer;
-		delete TruceTimer;
-		if (g_iRound == g_iMaxRound)
-		{
-			IsCowBoy = false;
-			StartCowBoy = false;
-			g_iRound = 0;
-			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
-			SetCvar("sm_hosties_lr", 1);
-			SetCvar("sm_weapons_enable", 1);
-			SetCvar("sv_infinite_ammo", 0);
-			SetCvar("mp_teammates_are_enemies", 0);
-			SetCvar("sm_menu_enable", 1);
-			SetCvar("sm_warden_enable", 1);
-			g_iGetRoundTime.IntValue = g_iOldRoundTime;
-			SetEventDayName("none");
-			SetEventDayRunning(false);
-			CPrintToChatAll("%t %t", "cowboy_tag" , "cowboy_end");
-		}
-	}
-
-}
-
-stock void CreateInfoPanel(int client)
-{
-	//Create info Panel
-	char info[255];
-
-	CowBoyMenu = CreatePanel();
-	Format(info, sizeof(info), "%T", "cowboy_info_title", client);
-	SetPanelTitle(CowBoyMenu, info);
-	DrawPanelText(CowBoyMenu, "                                   ");
-	Format(info, sizeof(info), "%T", "cowboy_info_line1", client);
-	DrawPanelText(CowBoyMenu, info);
-	DrawPanelText(CowBoyMenu, "-----------------------------------");
-	Format(info, sizeof(info), "%T", "cowboy_info_line2", client);
-	DrawPanelText(CowBoyMenu, info);
-	Format(info, sizeof(info), "%T", "cowboy_info_line3", client);
-	DrawPanelText(CowBoyMenu, info);
-	Format(info, sizeof(info), "%T", "cowboy_info_line4", client);
-	DrawPanelText(CowBoyMenu, info);
-	Format(info, sizeof(info), "%T", "cowboy_info_line5", client);
-	DrawPanelText(CowBoyMenu, info);
-	Format(info, sizeof(info), "%T", "cowboy_info_line6", client);
-	DrawPanelText(CowBoyMenu, info);
-	Format(info, sizeof(info), "%T", "cowboy_info_line7", client);
-	DrawPanelText(CowBoyMenu, info);
-	DrawPanelText(CowBoyMenu, "-----------------------------------");
-	Format(info, sizeof(info), "%T", "warden_close", client);
-	DrawPanelItem(CowBoyMenu, info); 
-	SendPanelToClient(CowBoyMenu, client, Handler_NullCancel, 20);
-}
-
-//Start Timer
-
-public Action StartTimer(Handle timer)
-{
-	if (g_iTruceTime > 1)
-	{
-		g_iTruceTime--;
-		LoopClients(client) if (IsPlayerAlive(client))
-		{
-			PrintCenterText(client,"%t", "cowboy_timeuntilstart_nc", g_iTruceTime);
-		}
-		return Plugin_Continue;
-	}
-	
-	g_iTruceTime = gc_iTruceTime.IntValue;
-	
-	if (g_iRound > 0)
-	{
-		LoopClients(client) if (IsPlayerAlive(client))
-		{
-			SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
-			PrintCenterText(client,"%t", "cowboy_start_nc");
-			if(gc_bOverlays.BoolValue) ShowOverlay(client, g_sOverlayStartPath, 2.0);
-			if(gc_bSounds.BoolValue)
-			{
-				EmitSoundToAllAny(g_sSoundStartPath);
-			}
-		}
-		CPrintToChatAll("%t %t", "cowboy_tag" , "cowboy_start");
-	}
-	TruceTimer = null;
-	
-	return Plugin_Stop;
-}
 
 //Round End
-
 public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
 	int winner = event.GetInt("winner");
@@ -598,8 +475,43 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 	}
 }
 
-//Map End
 
+//ding sound
+public void Event_PlayerHurt(Event event, const char [] name, bool dontBroadcast)
+{
+	if (gc_bSoundsHit.BoolValue && IsCowBoy)
+	{
+		Handle data; // Delay it to a frame later. If we use IsPlayerAlive(victim) here, it would always return true.
+		CreateDataTimer(0.0, Timer_Hitsound, data, TIMER_FLAG_NO_MAPCHANGE);
+		WritePackCell(data, event.GetInt("attacker"));
+		WritePackCell(data, event.GetInt("userid"));
+		ResetPack(data);
+	}
+}
+
+
+/******************************************************************************
+                   FORWARDS LISTEN
+******************************************************************************/
+
+
+//Initialize Event
+public void OnMapStart()
+{
+	g_iVoteCount = 0;
+	g_iRound = 0;
+	IsCowBoy = false;
+	StartCowBoy = false;
+	
+	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
+	g_iTruceTime = gc_iTruceTime.IntValue;
+	
+	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);    //Add sound to download and precache table
+	if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);    //Add overlay to download and precache table
+}
+
+
+//Map End
 public void OnMapEnd()
 {
 	IsCowBoy = false;
@@ -610,8 +522,54 @@ public void OnMapEnd()
 	g_sHasVoted[0] = '\0';
 }
 
-//Scout only
 
+//Listen for Last Lequest
+public int OnAvailableLR(int Announced)
+{
+	if (IsCowBoy && gc_bAllowLR.BoolValue && (g_iTsLR > g_ciTsLR.IntValue))
+	{
+		LoopClients(client)
+		{
+			SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
+			StripAllPlayerWeapons(client);
+			if (GetClientTeam(client) == CS_TEAM_CT)
+			{
+				FakeClientCommand(client, "sm_guns");
+			}
+			GivePlayerItem(client, "weapon_knife");
+		}
+		
+		delete BeaconTimer;
+		delete TruceTimer;
+		if (g_iRound == g_iMaxRound)
+		{
+			IsCowBoy = false;
+			StartCowBoy = false;
+			g_iRound = 0;
+			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
+			SetCvar("sm_hosties_lr", 1);
+			SetCvar("sm_weapons_enable", 1);
+			SetCvar("sv_infinite_ammo", 0);
+			SetCvar("mp_teammates_are_enemies", 0);
+			SetCvar("sm_menu_enable", 1);
+			SetCvar("sm_warden_enable", 1);
+			g_iGetRoundTime.IntValue = g_iOldRoundTime;
+			SetEventDayName("none");
+			SetEventDayRunning(false);
+			CPrintToChatAll("%t %t", "cowboy_tag" , "cowboy_end");
+		}
+	}
+}
+
+
+//Set Client Hook
+public void OnClientPutInServer(int client)
+{
+	SDKHook(client, SDKHook_WeaponCanUse, OnWeaponCanUse);
+}
+
+
+//Scout only
 public Action OnWeaponCanUse(int client, int weapon)
 {
 	if (IsCowBoy)
@@ -627,19 +585,114 @@ public Action OnWeaponCanUse(int client, int weapon)
 	return Plugin_Continue;
 }
 
-//ding sound
 
-public void Event_PlayerHurt(Event event, const char [] name, bool dontBroadcast)
+/******************************************************************************
+                   FUNCTIONS
+******************************************************************************/
+
+
+//Prepare Event
+void StartNextRound()
 {
-	if (gc_bSoundsHit.BoolValue && IsCowBoy)
-	{
-		Handle data; // Delay it to a frame later. If we use IsPlayerAlive(victim) here, it would always return true.
-		CreateDataTimer(0.0, Timer_Hitsound, data, TIMER_FLAG_NO_MAPCHANGE);
-		WritePackCell(data, event.GetInt("attacker"));
-		WritePackCell(data, event.GetInt("userid"));
-		ResetPack(data);
-	}
+	StartCowBoy = true;
+	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
+	g_iVoteCount = 0;
+	char buffer[32];
+	Format(buffer, sizeof(buffer), "%T", "cowboy_name", LANG_SERVER);
+	SetEventDayName(buffer);
+	SetEventDayPlanned(true);
+	
+	g_iOldRoundTime = g_iGetRoundTime.IntValue; //save original round time
+	g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
+	
+	CPrintToChatAll("%t %t", "cowboy_tag" , "cowboy_next");
+	PrintCenterTextAll("%t", "cowboy_next_nc");
 }
+
+
+/******************************************************************************
+                   MENUS
+******************************************************************************/
+
+
+stock void CreateInfoPanel(int client)
+{
+	//Create info Panel
+	char info[255];
+
+	CowBoyMenu = CreatePanel();
+	Format(info, sizeof(info), "%T", "cowboy_info_title", client);
+	SetPanelTitle(CowBoyMenu, info);
+	DrawPanelText(CowBoyMenu, "                                   ");
+	Format(info, sizeof(info), "%T", "cowboy_info_line1", client);
+	DrawPanelText(CowBoyMenu, info);
+	DrawPanelText(CowBoyMenu, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "cowboy_info_line2", client);
+	DrawPanelText(CowBoyMenu, info);
+	Format(info, sizeof(info), "%T", "cowboy_info_line3", client);
+	DrawPanelText(CowBoyMenu, info);
+	Format(info, sizeof(info), "%T", "cowboy_info_line4", client);
+	DrawPanelText(CowBoyMenu, info);
+	Format(info, sizeof(info), "%T", "cowboy_info_line5", client);
+	DrawPanelText(CowBoyMenu, info);
+	Format(info, sizeof(info), "%T", "cowboy_info_line6", client);
+	DrawPanelText(CowBoyMenu, info);
+	Format(info, sizeof(info), "%T", "cowboy_info_line7", client);
+	DrawPanelText(CowBoyMenu, info);
+	DrawPanelText(CowBoyMenu, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "warden_close", client);
+	DrawPanelItem(CowBoyMenu, info); 
+	SendPanelToClient(CowBoyMenu, client, Handler_NullCancel, 20);
+}
+
+
+/******************************************************************************
+                   TIMER
+******************************************************************************/
+
+
+//Start Timer
+public Action Timer_StartEvent(Handle timer)
+{
+	if (g_iTruceTime > 1)
+	{
+		g_iTruceTime--;
+		LoopClients(client) if (IsPlayerAlive(client))
+		{
+			PrintCenterText(client,"%t", "cowboy_timeuntilstart_nc", g_iTruceTime);
+		}
+		return Plugin_Continue;
+	}
+	
+	g_iTruceTime = gc_iTruceTime.IntValue;
+	
+	if (g_iRound > 0)
+	{
+		LoopClients(client) if (IsPlayerAlive(client))
+		{
+			SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
+			PrintCenterText(client,"%t", "cowboy_start_nc");
+			if(gc_bOverlays.BoolValue) ShowOverlay(client, g_sOverlayStartPath, 2.0);
+			if(gc_bSounds.BoolValue)
+			{
+				EmitSoundToAllAny(g_sSoundStartPath);
+			}
+		}
+		CPrintToChatAll("%t %t", "cowboy_tag" , "cowboy_start");
+	}
+	TruceTimer = null;
+	
+	return Plugin_Stop;
+}
+
+
+public Action Timer_BeaconOn(Handle timer)
+{
+	LoopValidClients(i,true,false) BeaconOn(i, 2.0);
+	BeaconTimer = null;
+}
+
+
 public Action Timer_Hitsound(Handle timer, Handle data)
 {
 	int attacker	= GetClientOfUserId(ReadPackCell(data));
@@ -647,4 +700,3 @@ public Action Timer_Hitsound(Handle timer, Handle data)
 	if (attacker <= 0 || attacker > MaxClients || victim <= 0 || victim > MaxClients || attacker == victim) return;
 	ClientCommand(attacker, "playgamesound training/bell_normal.wav");
 }
-

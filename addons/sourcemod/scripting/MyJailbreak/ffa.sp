@@ -60,6 +60,7 @@ ConVar gc_sAdminFlag;
 ConVar gc_bAllowLR;
 ConVar g_ciTsLR;
 
+
 //Integers
 int g_iOldRoundTime;
 int g_iCoolDown;
@@ -69,13 +70,16 @@ int g_iRound;
 int g_iMaxRound;
 int g_iTsLR;
 
+
 //Floats
 float g_fPos[3];
+
 
 //Handles
 Handle TruceTimer;
 Handle FFAMenu;
 Handle BeaconTimer;
+
 
 //Strings
 char g_sHasVoted[1500];
@@ -85,6 +89,8 @@ char g_sEventsLogFile[PLATFORM_MAX_PATH];
 char g_sAdminFlag[32];
 char g_sOverlayStartPath[256];
 
+
+//Info
 public Plugin myinfo = 
 {
 	name = "MyJailbreak - War FFA",
@@ -94,16 +100,19 @@ public Plugin myinfo =
 	url = URL_LINK
 };
 
+
+//Start
 public void OnPluginStart()
 {
 	// Translation
 	LoadTranslations("MyJailbreak.Warden.phrases");
 	LoadTranslations("MyJailbreak.Ffa.phrases");
 	
+	
 	//Client Commands
 	RegConsoleCmd("sm_setffa", Setffa, "Allows the Admin or Warden to set a ffa for next 3 rounds");
 	RegConsoleCmd("sm_ffa", VoteFFA, "Allows players to vote for a FFA");
-
+	
 	
 	//AutoExecConfig
 	AutoExecConfig_SetFile("FreeForAll", "MyJailbreak/EventDays");
@@ -132,6 +141,7 @@ public void OnPluginStart()
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
 	
+	
 	//Hooks
 	HookEvent("round_start", Event_RoundStart);
 	HookEvent("round_end", Event_RoundEnd);
@@ -140,9 +150,8 @@ public void OnPluginStart()
 	HookConVarChange(gc_sCustomCommand, OnSettingChanged);
 	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
 	
+	
 	//FindConVar
-	
-	
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iGetRoundTime = FindConVar("mp_roundtime");
@@ -155,8 +164,8 @@ public void OnPluginStart()
 	SetLogFile(g_sEventsLogFile, "Events");
 }
 
-//ConVarChange for Strings
 
+//ConVarChange for Strings
 public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
 	if(convar == gc_sOverlayStartPath)
@@ -183,23 +192,8 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 	}
 }
 
-//Initialize Event
 
-public void OnMapStart()
-{
-	g_iVoteCount = 0;
-	g_iRound = 0;
-	IsFFA = false;
-	StartFFA = false;
-	
-	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
-	g_iTruceTime = gc_iTruceTime.IntValue;
-	
-	if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
-	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
-	
-}
-
+//Initialize Plugin
 public void OnConfigsExecuted()
 {
 	g_iTruceTime = gc_iTruceTime.IntValue;
@@ -212,8 +206,13 @@ public void OnConfigsExecuted()
 		RegConsoleCmd(sBufferCMD, VoteFFA, "Allows players to vote for a ffa");
 }
 
-//Admin & Warden set Event
 
+/******************************************************************************
+                   COMMANDS
+******************************************************************************/
+
+
+//Admin & Warden set Event
 public Action Setffa(int client,int args)
 {
 	if (gc_bPlugin.BoolValue)
@@ -276,8 +275,8 @@ public Action Setffa(int client,int args)
 	else CPrintToChat(client, "%t %t", "ffa_tag" , "ffa_disabled");
 }
 
-//Voting for Event
 
+//Voting for Event
 public Action VoteFFA(int client,int args)
 {
 	char steamid[64];
@@ -323,35 +322,13 @@ public Action VoteFFA(int client,int args)
 	else CPrintToChat(client, "%t %t", "ffa_tag" , "ffa_disabled");
 }
 
-//Prepare Event
 
-void StartNextRound()
-{
-	StartFFA = true;
-	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
-	g_iVoteCount = 0;
-	
-	char buffer[32];
-	Format(buffer, sizeof(buffer), "%T", "ffa_name", LANG_SERVER);
-	SetEventDayName(buffer);
-	SetEventDayPlanned(true);
-	
-	g_iOldRoundTime = g_iGetRoundTime.IntValue; //save original round time
-	g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
-	
-	CPrintToChatAll("%t %t", "ffa_tag" , "ffa_next");
-	PrintCenterTextAll("%t", "ffa_next_nc");
-}
+/******************************************************************************
+                   EVENTS
+******************************************************************************/
 
-
-public Action Timer_BeaconOn(Handle timer)
-{
-	LoopValidClients(i,true,false) BeaconOn(i, 2.0);
-	BeaconTimer = null;
-}
 
 //Round start
-
 public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
 	if (StartFFA || IsFFA)
@@ -421,7 +398,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 				SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
 				SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 			}
-			TruceTimer = CreateTimer(1.0, StartTimer, _, TIMER_REPEAT);
+			TruceTimer = CreateTimer(1.0, Timer_StartEvent, _, TIMER_REPEAT);
 		}
 	}
 	else
@@ -437,76 +414,8 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 	}
 }
 
-public int OnAvailableLR(int Announced)
-{
-	if (IsFFA && gc_bAllowLR.BoolValue && (g_iTsLR > g_ciTsLR.IntValue))
-	{
-		LoopValidClients(client, false, true)
-		{
-			SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
-			
-			StripAllPlayerWeapons(client);
-			if (GetClientTeam(client) == CS_TEAM_CT)
-			{
-				FakeClientCommand(client, "sm_guns");
-			}
-			GivePlayerItem(client, "weapon_knife");
-		}
-		
-		delete BeaconTimer;
-		delete TruceTimer;
-		if (g_iRound == g_iMaxRound)
-		{
-			IsFFA = false;
-			g_iRound = 0;
-			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
-			SetCvar("sm_hosties_lr", 1);
-			SetCvar("sm_warden_enable", 1);
-			SetCvar("sm_weapons_t", 0);
-			SetCvar("sm_weapons_ct", 1);
-			SetCvar("mp_teammates_are_enemies", 0);
-			SetCvar("mp_friendlyfire", 0);
-			SetCvar("sm_menu_enable", 1);
-			g_iGetRoundTime.IntValue = g_iOldRoundTime;
-			SetEventDayName("none");
-			SetEventDayRunning(false);
-			CPrintToChatAll("%t %t", "ffa_tag" , "ffa_end");
-		}
-	}
 
-}
-
-stock void CreateInfoPanel(int client)
-{
-	//Create info Panel
-	char info[255];
-
-	FFAMenu = CreatePanel();
-	Format(info, sizeof(info), "%T", "ffa_info_title", client);
-	SetPanelTitle(FFAMenu, info);
-	DrawPanelText(FFAMenu, "                                   ");
-	Format(info, sizeof(info), "%T", "ffa_info_line1", client);
-	DrawPanelText(FFAMenu, info);
-	DrawPanelText(FFAMenu, "-----------------------------------");
-	Format(info, sizeof(info), "%T", "ffa_info_line2", client);
-	DrawPanelText(FFAMenu, info);
-	Format(info, sizeof(info), "%T", "ffa_info_line3", client);
-	DrawPanelText(FFAMenu, info);
-	Format(info, sizeof(info), "%T", "ffa_info_line4", client);
-	DrawPanelText(FFAMenu, info);
-	Format(info, sizeof(info), "%T", "ffa_info_line5", client);
-	DrawPanelText(FFAMenu, info);
-	Format(info, sizeof(info), "%T", "ffa_info_line6", client);
-	DrawPanelText(FFAMenu, info);
-	Format(info, sizeof(info), "%T", "ffa_info_line7", client);
-	DrawPanelText(FFAMenu, info);
-	DrawPanelText(FFAMenu, "-----------------------------------");
-	Format(info, sizeof(info), "%T", "warden_close", client);
-	DrawPanelItem(FFAMenu, info); 
-	SendPanelToClient(FFAMenu, client, Handler_NullCancel, 20);
-}
 //Round End
-
 public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
 	int winner = event.GetInt("winner");
@@ -545,8 +454,30 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 	}
 }
 
-//Map End
 
+/******************************************************************************
+                   FORWARDS LISTEN
+******************************************************************************/
+
+
+//Initialize Event
+public void OnMapStart()
+{
+	g_iVoteCount = 0;
+	g_iRound = 0;
+	IsFFA = false;
+	StartFFA = false;
+	
+	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
+	g_iTruceTime = gc_iTruceTime.IntValue;
+	
+	if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
+	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
+	
+}
+
+
+//Map End
 public void OnMapEnd()
 {
 	IsFFA = false;
@@ -557,9 +488,115 @@ public void OnMapEnd()
 	g_sHasVoted[0] = '\0';
 }
 
-//Start Timer
 
-public Action StartTimer(Handle timer)
+//Listen for Last Lequest
+public int OnAvailableLR(int Announced)
+{
+	if (IsFFA && gc_bAllowLR.BoolValue && (g_iTsLR > g_ciTsLR.IntValue))
+	{
+		LoopValidClients(client, false, true)
+		{
+			SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
+			
+			StripAllPlayerWeapons(client);
+			if (GetClientTeam(client) == CS_TEAM_CT)
+			{
+				FakeClientCommand(client, "sm_guns");
+			}
+			GivePlayerItem(client, "weapon_knife");
+		}
+		
+		delete BeaconTimer;
+		delete TruceTimer;
+		if (g_iRound == g_iMaxRound)
+		{
+			IsFFA = false;
+			g_iRound = 0;
+			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
+			SetCvar("sm_hosties_lr", 1);
+			SetCvar("sm_warden_enable", 1);
+			SetCvar("sm_weapons_t", 0);
+			SetCvar("sm_weapons_ct", 1);
+			SetCvar("mp_teammates_are_enemies", 0);
+			SetCvar("mp_friendlyfire", 0);
+			SetCvar("sm_menu_enable", 1);
+			g_iGetRoundTime.IntValue = g_iOldRoundTime;
+			SetEventDayName("none");
+			SetEventDayRunning(false);
+			CPrintToChatAll("%t %t", "ffa_tag" , "ffa_end");
+		}
+	}
+}
+
+
+/******************************************************************************
+                   FUNCTIONS
+******************************************************************************/
+
+
+//Prepare Event for next round
+void StartNextRound()
+{
+	StartFFA = true;
+	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
+	g_iVoteCount = 0;
+	
+	char buffer[32];
+	Format(buffer, sizeof(buffer), "%T", "ffa_name", LANG_SERVER);
+	SetEventDayName(buffer);
+	SetEventDayPlanned(true);
+	
+	g_iOldRoundTime = g_iGetRoundTime.IntValue; //save original round time
+	g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
+	
+	CPrintToChatAll("%t %t", "ffa_tag" , "ffa_next");
+	PrintCenterTextAll("%t", "ffa_next_nc");
+}
+
+
+/******************************************************************************
+                   MENUS
+******************************************************************************/
+
+
+stock void CreateInfoPanel(int client)
+{
+	//Create info Panel
+	char info[255];
+
+	FFAMenu = CreatePanel();
+	Format(info, sizeof(info), "%T", "ffa_info_title", client);
+	SetPanelTitle(FFAMenu, info);
+	DrawPanelText(FFAMenu, "                                   ");
+	Format(info, sizeof(info), "%T", "ffa_info_line1", client);
+	DrawPanelText(FFAMenu, info);
+	DrawPanelText(FFAMenu, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "ffa_info_line2", client);
+	DrawPanelText(FFAMenu, info);
+	Format(info, sizeof(info), "%T", "ffa_info_line3", client);
+	DrawPanelText(FFAMenu, info);
+	Format(info, sizeof(info), "%T", "ffa_info_line4", client);
+	DrawPanelText(FFAMenu, info);
+	Format(info, sizeof(info), "%T", "ffa_info_line5", client);
+	DrawPanelText(FFAMenu, info);
+	Format(info, sizeof(info), "%T", "ffa_info_line6", client);
+	DrawPanelText(FFAMenu, info);
+	Format(info, sizeof(info), "%T", "ffa_info_line7", client);
+	DrawPanelText(FFAMenu, info);
+	DrawPanelText(FFAMenu, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "warden_close", client);
+	DrawPanelItem(FFAMenu, info); 
+	SendPanelToClient(FFAMenu, client, Handler_NullCancel, 20);
+}
+
+
+/******************************************************************************
+                   TIMER
+******************************************************************************/
+
+
+//Start Timer
+public Action Timer_StartEvent(Handle timer)
 {
 	if (g_iTruceTime > 1)
 	{
@@ -595,3 +632,10 @@ public Action StartTimer(Handle timer)
 	return Plugin_Stop;
 }
 
+
+//Beacon Timer
+public Action Timer_BeaconOn(Handle timer)
+{
+	LoopValidClients(i,true,false) BeaconOn(i, 2.0);
+	BeaconTimer = null;
+}

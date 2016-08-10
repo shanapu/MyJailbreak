@@ -131,7 +131,7 @@ public Action Command_Capitulation(int client, int args)
 						if(!IsRequest)
 						{
 							IsRequest = true;
-							RequestTimer = CreateTimer (gc_fCapitulationTime.FloatValue, IsRequestTimer);
+							RequestTimer = CreateTimer (gc_fCapitulationTime.FloatValue, Timer_IsRequest);
 							g_bCapitulated[client] = true;
 							CPrintToChatAll("%t %t", "request_tag", "request_capitulation", client);
 							

@@ -27,13 +27,16 @@
 //Includes
 #include <myjailbreak> //... all other includes in myjailbreak.inc
 
+
 //Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
 
+
 //Booleans
 bool IsHide;
 bool StartHide;
+
 
 //Console Variables
 ConVar gc_bPlugin;
@@ -57,6 +60,7 @@ ConVar gc_sCustomCommand;
 ConVar g_sOldSkyName;
 ConVar gc_sAdminFlag;
 
+
 //Integers
 int g_iOldRoundTime;
 int g_iFreezeTime;
@@ -67,10 +71,12 @@ int g_iMaxRound;
 int g_iMaxTA;
 int g_iTA[MAXPLAYERS + 1];
 
+
 //Handles
 Handle FreezeTimer;
 Handle HideMenu;
 Handle BeaconTimer;
+
 
 //Strings
 char g_sHasVoted[1500];
@@ -81,6 +87,8 @@ char g_sSkyName[256];
 char g_sAdminFlag[32];
 char g_sOverlayStartPath[256];
 
+
+//Info
 public Plugin myinfo = {
 	name = "MyJailbreak - HideInTheDark",
 	author = "shanapu",
@@ -89,15 +97,19 @@ public Plugin myinfo = {
 	url = URL_LINK
 };
 
+
+//Start
 public void OnPluginStart()
 {
 	// Translation
 	LoadTranslations("MyJailbreak.Warden.phrases");
 	LoadTranslations("MyJailbreak.Hide.phrases");
 	
+	
 	//Client Commands
 	RegConsoleCmd("sm_sethide", SetHide, "Allows the Admin or Warden to set hide as next round");
 	RegConsoleCmd("sm_hide", VoteHide, "Allows players to vote for a hide");
+	
 	
 	//AutoExecConfig
 	AutoExecConfig_SetFile("Hide", "MyJailbreak/EventDays");
@@ -126,6 +138,7 @@ public void OnPluginStart()
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
 	
+	
 	//Hooks
 	HookEvent("round_start", Event_RoundStart);
 	HookEvent("round_end", Event_RoundEnd);
@@ -134,6 +147,7 @@ public void OnPluginStart()
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
 	HookConVarChange(gc_sCustomCommand, OnSettingChanged);
 	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
+	
 	
 	//FindConVar
 	g_iGetRoundTime = FindConVar("mp_roundtime");
@@ -147,8 +161,8 @@ public void OnPluginStart()
 	SetLogFile(g_sEventsLogFile, "Events");
 }
 
-//ConVarChange for Strings
 
+//ConVarChange for Strings
 public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
 	if(convar == gc_sOverlayStartPath)
@@ -175,26 +189,8 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 	}
 }
 
-//Initialize Event
 
-public void OnMapStart()
-{
-	g_iVoteCount = 0;
-	g_iRound = 0;
-	IsHide = false;
-	StartHide = false;
-	
-	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
-	g_iFreezeTime = gc_iFreezeTime.IntValue;
-	g_sOldSkyName = FindConVar("sv_skyname");
-	g_sOldSkyName.GetString(g_sSkyName, sizeof(g_sSkyName));
-	
-	if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
-	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
-	
-	for(int client=1; client <= MaxClients; client++) g_iTA[client] = 0;
-}
-
+//Initialize Plugin
 public void OnConfigsExecuted()
 {
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
@@ -208,8 +204,13 @@ public void OnConfigsExecuted()
 		RegConsoleCmd(sBufferCMD, VoteHide, "Allows players to vote for hide");
 }
 
-//Admin & Warden set Event
 
+/******************************************************************************
+                   COMMANDS
+******************************************************************************/
+
+
+//Admin & Warden set Event
 public Action SetHide(int client,int args)
 {
 	if (gc_bPlugin.BoolValue)	
@@ -272,8 +273,8 @@ public Action SetHide(int client,int args)
 	else CPrintToChat(client, "%t %t", "hide_tag" , "hide_disabled");
 }
 
-//Voting for Event
 
+//Voting for Event
 public Action VoteHide(int client,int args)
 {
 	char steamid[64];
@@ -319,34 +320,13 @@ public Action VoteHide(int client,int args)
 	else CPrintToChat(client, "%t %t", "hide_tag" , "hide_disabled");
 }
 
-//Prepare Event
 
-void StartNextRound()
-{
-	StartHide = true;
-	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
-	
-	char buffer[32];
-	Format(buffer, sizeof(buffer), "%T", "hide_name", LANG_SERVER);
-	SetEventDayName(buffer);
-	SetEventDayPlanned(true);
-	
-	g_iOldRoundTime = g_iGetRoundTime.IntValue; //save original round time
-	g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
-	
-	g_iVoteCount = 0;
-	CPrintToChatAll("%t %t", "hide_tag" , "hide_next");
-	PrintCenterTextAll("%t", "hide_next_nc");
-}
+/******************************************************************************
+                   EVENTS
+******************************************************************************/
 
-public Action Timer_BeaconOn(Handle timer)
-{
-	LoopValidClients(i,true,false) BeaconOn(i, 2.0);
-	BeaconTimer = null;
-}
 
 //Round start
-
 public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
 	if (StartHide || IsHide)
@@ -389,7 +369,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 				}
 			}
 			g_iFreezeTime--;
-			FreezeTimer = CreateTimer(1.0, StartTimer, _, TIMER_REPEAT);
+			FreezeTimer = CreateTimer(1.0, Timer_StartEvent, _, TIMER_REPEAT);
 		}
 	}
 	else
@@ -404,6 +384,191 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		else if (g_iCoolDown > 0) g_iCoolDown--;
 	}
 }
+
+
+//Round End
+public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
+{
+	int winner = event.GetInt("winner");
+	
+	if (IsHide)
+	{
+		LoopClients(client)
+		{
+			SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
+			SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
+			g_iTA[client] = 0;
+		}
+		
+		delete BeaconTimer;
+		delete FreezeTimer;
+		
+		if (winner == 2) PrintCenterTextAll("%t", "hide_twin_nc");
+		if (winner == 3) PrintCenterTextAll("%t", "hide_ctwin_nc");
+		if (g_iRound == g_iMaxRound)
+		{
+			IsHide = false;
+			StartHide = false;
+			g_iRound = 0;
+			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
+			SetCvar("sm_hosties_lr", 1);
+			SetCvar("sm_weapons_t", 0);
+			SetCvar("sm_weapons_ct", 1);
+			SetCvarString("sv_skyname", g_sSkyName);
+			SetCvar("sm_warden_enable", 1);
+			SetCvar("sm_menu_enable", 1);
+			g_iGetRoundTime.IntValue = g_iOldRoundTime;
+			SetEventDayName("none");
+			SetEventDayRunning(false);
+			SetEventDayRunning(false);
+			CPrintToChatAll("%t %t", "hide_tag" , "hide_end");
+			
+			FogOff();
+		}
+	}
+	if (StartHide)
+	{
+		LoopClients(i) CreateInfoPanel(i);
+		
+		CPrintToChatAll("%t %t", "hide_tag" , "hide_next");
+		PrintCenterTextAll("%t", "hide_next_nc");
+	}
+}
+
+
+//Give new TA
+public void Event_TA_Detonate(Event event, const char[] name, bool dontBroadcast)
+{
+	if (IsHide == true)
+	{
+		int target = GetClientOfUserId(event.GetInt("userid"));
+		if (GetClientTeam(target) == 1 && !IsPlayerAlive(target))
+		{
+			return;
+		}
+		if (g_iTA[target] != g_iMaxTA)
+		{
+			GivePlayerItem(target, "weapon_tagrenade");
+			int g_iTAgot = (g_iMaxTA - g_iTA[target]);
+			g_iTA[target]++;
+			
+			CPrintToChat(target,"%t %t", "hide_tag" , "hide_stillta", g_iTAgot);
+		}
+		else CPrintToChat(target,"%t %t", "hide_tag" , "hide_nota");
+	}
+	return;
+}
+
+
+/******************************************************************************
+                   FORWARDS LISTEN
+******************************************************************************/
+
+
+//Initialize Event
+public void OnMapStart()
+{
+	g_iVoteCount = 0;
+	g_iRound = 0;
+	IsHide = false;
+	StartHide = false;
+	
+	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
+	g_iFreezeTime = gc_iFreezeTime.IntValue;
+	g_sOldSkyName = FindConVar("sv_skyname");
+	g_sOldSkyName.GetString(g_sSkyName, sizeof(g_sSkyName));
+	
+	if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
+	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
+	
+	for(int client=1; client <= MaxClients; client++) g_iTA[client] = 0;
+}
+
+
+//Terror win Round if time runs out
+public Action CS_OnTerminateRound(float &delay, CSRoundEndReason &reason)
+{
+	if (IsHide)   //TODO: does this trigger??
+	{
+		if (reason == CSRoundEnd_Draw)
+		{
+			reason = CSRoundEnd_TerroristWin;
+			return Plugin_Changed;
+		}
+		return Plugin_Continue;
+	}
+	return Plugin_Continue;
+}
+
+
+public void OnMapEnd()
+{
+	IsHide = false;
+	StartHide = false;
+	delete FreezeTimer;
+	g_iVoteCount = 0;
+	g_iRound = 0;
+	g_sHasVoted[0] = '\0';
+}
+
+
+//Set Client Hook
+public void OnClientPutInServer(int client)
+{
+	SDKHook(client, SDKHook_WeaponCanUse, OnWeaponCanUse);
+}
+
+
+//Knife only for Terrorists
+public Action OnWeaponCanUse(int client, int weapon)
+{
+	if(IsHide == true)
+	{
+		char sWeapon[32];
+		GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
+		if((GetClientTeam(client) == CS_TEAM_T && StrEqual(sWeapon, "weapon_knife")) || (GetClientTeam(client) == CS_TEAM_CT))
+		{
+		
+			if (IsClientInGame(client) && IsPlayerAlive(client))
+			{
+				return Plugin_Continue;
+			}
+		}
+		return Plugin_Handled;
+	}
+	return Plugin_Continue;
+}
+
+
+/******************************************************************************
+                   FUNCTIONS
+******************************************************************************/
+
+
+//Prepare Event
+void StartNextRound()
+{
+	StartHide = true;
+	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
+	
+	char buffer[32];
+	Format(buffer, sizeof(buffer), "%T", "hide_name", LANG_SERVER);
+	SetEventDayName(buffer);
+	SetEventDayPlanned(true);
+	
+	g_iOldRoundTime = g_iGetRoundTime.IntValue; //save original round time
+	g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
+	
+	g_iVoteCount = 0;
+	CPrintToChatAll("%t %t", "hide_tag" , "hide_next");
+	PrintCenterTextAll("%t", "hide_next_nc");
+}
+
+
+/******************************************************************************
+                   MENUS
+******************************************************************************/
+
 
 stock void CreateInfoPanel(int client)
 {
@@ -434,9 +599,15 @@ stock void CreateInfoPanel(int client)
 	DrawPanelItem(HideMenu, info); 
 	SendPanelToClient(HideMenu, client, Handler_NullCancel, 20);
 }
-//Start Timer
 
-public Action StartTimer(Handle timer)
+
+/******************************************************************************
+                   TIMER
+******************************************************************************/
+
+
+//Start Timer
+public Action Timer_StartEvent(Handle timer)
 {
 	if (g_iFreezeTime > 1)
 	{
@@ -490,123 +661,10 @@ public Action StartTimer(Handle timer)
 	return Plugin_Stop;
 }
 
-//Round End
 
-public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
+//Beacon Timer
+public Action Timer_BeaconOn(Handle timer)
 {
-	int winner = event.GetInt("winner");
-	
-	if (IsHide)
-	{
-		LoopClients(client)
-		{
-			SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
-			SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
-			g_iTA[client] = 0;
-		}
-		
-		delete BeaconTimer;
-		delete FreezeTimer;
-		
-		if (winner == 2) PrintCenterTextAll("%t", "hide_twin_nc");
-		if (winner == 3) PrintCenterTextAll("%t", "hide_ctwin_nc");
-		if (g_iRound == g_iMaxRound)
-		{
-			IsHide = false;
-			StartHide = false;
-			g_iRound = 0;
-			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
-			SetCvar("sm_hosties_lr", 1);
-			SetCvar("sm_weapons_t", 0);
-			SetCvar("sm_weapons_ct", 1);
-			SetCvarString("sv_skyname", g_sSkyName);
-			SetCvar("sm_warden_enable", 1);
-			SetCvar("sm_menu_enable", 1);
-			g_iGetRoundTime.IntValue = g_iOldRoundTime;
-			SetEventDayName("none");
-			SetEventDayRunning(false);
-			SetEventDayRunning(false);
-			CPrintToChatAll("%t %t", "hide_tag" , "hide_end");
-			
-			FogOff();
-		}
-	}
-	if (StartHide)
-	{
-		LoopClients(i) CreateInfoPanel(i);
-		
-		CPrintToChatAll("%t %t", "hide_tag" , "hide_next");
-		PrintCenterTextAll("%t", "hide_next_nc");
-	}
-}
-
-//Terror win Round if time runs out
-
-public Action CS_OnTerminateRound(float &delay, CSRoundEndReason &reason)
-{
-	if (IsHide)   //TODO: does this trigger??
-	{
-		if (reason == CSRoundEnd_Draw)
-		{
-			reason = CSRoundEnd_TerroristWin;
-			return Plugin_Changed;
-		}
-		return Plugin_Continue;
-	}
-	return Plugin_Continue;
-}
-
-public void OnMapEnd()
-{
-	IsHide = false;
-	StartHide = false;
-	delete FreezeTimer;
-	g_iVoteCount = 0;
-	g_iRound = 0;
-	g_sHasVoted[0] = '\0';
-}
-
-//Knife only for Terrorists
-
-public Action OnWeaponCanUse(int client, int weapon)
-{
-	if(IsHide == true)
-	{
-		char sWeapon[32];
-		GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
-		if((GetClientTeam(client) == CS_TEAM_T && StrEqual(sWeapon, "weapon_knife")) || (GetClientTeam(client) == CS_TEAM_CT))
-		{
-		
-			if (IsClientInGame(client) && IsPlayerAlive(client))
-			{
-				return Plugin_Continue;
-			}
-		}
-		return Plugin_Handled;
-	}
-	return Plugin_Continue;
-}
-
-//Give new TA
-
-public void Event_TA_Detonate(Event event, const char[] name, bool dontBroadcast)
-{
-	if (IsHide == true)
-	{
-		int target = GetClientOfUserId(event.GetInt("userid"));
-		if (GetClientTeam(target) == 1 && !IsPlayerAlive(target))
-		{
-			return;
-		}
-		if (g_iTA[target] != g_iMaxTA)
-		{
-			GivePlayerItem(target, "weapon_tagrenade");
-			int g_iTAgot = (g_iMaxTA - g_iTA[target]);
-			g_iTA[target]++;
-			
-			CPrintToChat(target,"%t %t", "hide_tag" , "hide_stillta", g_iTAgot);
-		}
-		else CPrintToChat(target,"%t %t", "hide_tag" , "hide_nota");
-	}
-	return;
+	LoopValidClients(i,true,false) BeaconOn(i, 2.0);
+	BeaconTimer = null;
 }

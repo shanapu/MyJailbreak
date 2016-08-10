@@ -199,6 +199,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 	IsLR = false;
 }
 
+
 public void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast) 
 {
 	int victimID = event.GetInt("userid"); // Get the dead user id
@@ -240,6 +241,7 @@ public void OnConfigsExecuted()
 	Freedays_OnConfigsExecuted();
 }
 
+
 public void OnClientPutInServer(int client)
 {
 	Refuse_OnClientPutInServer(client);
@@ -249,6 +251,7 @@ public void OnClientPutInServer(int client)
 	Freekill_OnClientPutInServer(client);
 }
 
+
 public void OnClientDisconnect(int client)
 {
 	Refuse_OnClientDisconnect(client);
@@ -256,6 +259,12 @@ public void OnClientDisconnect(int client)
 	Repeat_OnClientDisconnect(client);
 }
 
+
+public int OnAvailableLR(int Announced)
+{
+	Capitulation_OnAvailableLR(Announced);
+	IsLR = true;
+}
 
 /******************************************************************************
                    MENUS
@@ -305,15 +314,14 @@ public int Command_RequestMenuHandler(Menu reqmenu, MenuAction action, int clien
 }
 
 
-public Action IsRequestTimer(Handle timer, any client)
+/******************************************************************************
+                   TIMER
+******************************************************************************/
+
+
+public Action Timer_IsRequest(Handle timer, any client)
 {
 	IsRequest = false;
 	RequestTimer = null;
 	LoopClients(i) if(g_bFreeKilled[i]) g_bFreeKilled[i] = false;
-}
-
-public int OnAvailableLR(int Announced)
-{
-	Capitulation_OnAvailableLR(Announced);
-	IsLR = true;
 }

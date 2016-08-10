@@ -139,7 +139,7 @@ public Action Command_Freekill(int client, int args)
 						if (g_iFreeKillCounter[client] < gc_iFreeKillLimit.IntValue)
 						{
 							IsRequest = true;
-							RequestTimer = CreateTimer (20.0, IsRequestTimer);
+							RequestTimer = CreateTimer (20.0, Timer_IsRequest);
 							g_bFreeKilled[client] = true;
 							
 							
