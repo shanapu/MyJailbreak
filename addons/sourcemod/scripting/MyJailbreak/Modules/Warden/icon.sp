@@ -203,7 +203,7 @@ public Action Should_TransmitP(int entity, int client)
 
 stock int SpawnIcon(int client) 
 {
-	if(!IsClientInGame(client) || !IsPlayerAlive(client) || (!gc_bIconWarden.BoolValue && IsClientWarden(client)) || (!gc_bIconGuard.BoolValue && (GetClientTeam(client) == CS_TEAM_CT)) || (!gc_bIconPrisoner.BoolValue && (GetClientTeam(client) == CS_TEAM_T))) return -1;
+	if(!IsClientInGame(client) || !IsPlayerAlive(client) || (!gc_bIconWarden.BoolValue && IsClientWarden(client)) || (!gc_bIconGuard.BoolValue && (GetClientTeam(client) == CS_TEAM_CT  && !IsClientWarden(client))) || (!gc_bIconPrisoner.BoolValue && (GetClientTeam(client) == CS_TEAM_T))) return -1;
 	
 	RemoveIcon(client);
 	
