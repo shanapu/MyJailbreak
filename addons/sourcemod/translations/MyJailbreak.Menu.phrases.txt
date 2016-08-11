@@ -406,18 +406,6 @@
 		"ru"		"Выдать игроку фридей"
 	}
 
-	"menu_teamgamesmenu"
-	{
-		"en"		"Team Games - Menu"
-		"ru"		"Команды игры - Меню"
-	}
-
-	"menu_teamgamesgames"
-	{
-		"en"		"Team Games - Games"
-		"ru"		"Команды игры - Игры"
-	}
-
 	"menu_rebel"
 	{
 		"en"		"Un/Mark a player as Rebel"

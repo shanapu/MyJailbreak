@@ -390,16 +390,6 @@ public Action Command_OpenMenu(int client, int args)
 							mainmenu.AddItem("rebel", menuinfo);
 						}
 					}
-					if(GetCommandFlags("sm_tg") != INVALID_FCVAR_FLAGS)
-					{
-						Format(menuinfo, sizeof(menuinfo), "%T", "menu_teamgamesmenu", client);
-						mainmenu.AddItem("teamgamesmenu", menuinfo);
-					}
-					if(GetCommandFlags("sm_games") != INVALID_FCVAR_FLAGS)
-					{
-						Format(menuinfo, sizeof(menuinfo), "%T", "menu_teamgamesgames", client);
-						mainmenu.AddItem("teamgamesgames", menuinfo);
-					}
 					if(g_bMath != null)
 					{
 						if(g_bMath.BoolValue)
