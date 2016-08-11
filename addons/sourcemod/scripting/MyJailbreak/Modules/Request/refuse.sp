@@ -192,7 +192,7 @@ public Action Command_refuse(int client, int args)
 ******************************************************************************/
 
 
-public Action Refuse_Event_RoundStart(Handle event, char [] name, bool dontBroadcast)
+public void Refuse_Event_RoundStart(Event event, char [] name, bool dontBroadcast)
 {
 	LoopClients(client)
 	{
@@ -305,7 +305,7 @@ public Action Timer_NoAllowRefuse(Handle timer)
 		{
 			LoopValidClients(client, false, true)
 			{
-				PrintHintText(client,"%t", "warden_stopcountdown_nc", g_iCountStopTime);
+				PrintCenterText(client,"%t", "warden_stopcountdown_nc", g_iCountStopTime);
 			}
 			CPrintToChatAll("%t %t", "warden_tag" , "warden_stopcountdown", g_iCountStopTime);
 		}
@@ -316,7 +316,7 @@ public Action Timer_NoAllowRefuse(Handle timer)
 	{
 		LoopValidClients(client, false, true)
 		{
-			PrintHintText(client, "%t", "warden_countdownstop_nc");
+			PrintCenterText(client, "%t", "warden_countdownstop_nc");
 			if(gc_bSounds.BoolValue)
 			{
 				EmitSoundToAllAny(g_sSoundRefuseStopPath);

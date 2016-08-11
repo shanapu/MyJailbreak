@@ -153,7 +153,7 @@ public Action Command_Repeat(int client, int args)
 ******************************************************************************/
 
 
-public Action Repeat_Event_RoundStart(Handle event, char [] name, bool dontBroadcast)
+public void Repeat_Event_RoundStart(Event event, char [] name, bool dontBroadcast)
 {
 	LoopClients(client)
 	{

@@ -63,6 +63,9 @@ ConVar gc_bAWP;
 ConVar gc_bAutoSniper;
 ConVar gc_bHealth;
 ConVar gc_sCustomCommand;
+
+
+//Extern Convars
 ConVar g_bTaser;
 
 
@@ -206,9 +209,9 @@ public Action Command_Weapons(int client,int args)
 
 
 //On Player Spawn
-public int Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast)
+public void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast)
 {
-	int clientIndex = GetClientOfUserId(GetEventInt(event, "userid"));
+	int clientIndex = GetClientOfUserId(event.GetInt("userid"));
 	
 	KillAllTimer(clientIndex);
 	if(gc_bSpawn.BoolValue)

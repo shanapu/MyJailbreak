@@ -77,9 +77,6 @@ public void OnPluginStart()
 	//Hooks - Events to check for Tag
 	HookEvent("player_death", Event_PlayerTeamDeath);
 	HookEvent("player_team", Event_PlayerTeamDeath);
-	
-	//FindConVar
-	
 }
 
 
@@ -105,18 +102,18 @@ public Action Command_HUD(int client, int args)
 	}
 }
 
+
 /******************************************************************************
                    EVENTS
 ******************************************************************************/
 
 
-
-	
-	//Warden change Team
-public Action Event_PlayerTeamDeath(Event event, const char[] name, bool dontBroadcast)
+//Warden change Team
+public void Event_PlayerTeamDeath(Event event, const char[] name, bool dontBroadcast)
 {
 	ShowHUD();
 }
+
 
 /******************************************************************************
                    FORWARDS LISTEN
@@ -175,38 +172,50 @@ public void ShowHUD()
 	char EventDay[64];
 	GetEventDayName(EventDay);
 	
-	LoopValidClients(i,false,true)
+	if(gc_bPlugin.BoolValue)
 	{
-		if(g_bEnableHud[i])
+		LoopValidClients(i,false,true)
 		{
-			if(warden == -1)
+			if(g_bEnableHud[i])
 			{
-				if(IsEventDayPlanned())
+				if(IsLastGuardRule())
 				{
-					PrintHintText(i, "<font face='Arial' color='#006699'>%t </font><font face='Arial' color='#FE4040'>%t</font>\n<font face='Arial' color='#B980EF'>%t</font> %s\n<font face='Arial' color='#5E97D8'>%t</font> %i/%i\t<font face='Arial' color='#E3AD39'>%t</font> %i/%i\n", "hud_warden", "hud_nowarden", "hud_planned", EventDay, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
+					int lastCT = (GetClientTeam(i) == CS_TEAM_CT);
+					
+					if(IsEventDayPlanned())
+					{
+						PrintHintText(i, "<font face='Arial' color='#006699'>%t </font>%N</font>\n<font face='Arial' color='#B980EF'>%t</font> %s\n<font color='#5E97D8'>%t</font> %i/%i\t<font color='#E3AD39'>%t</font> %i/%i\n", "hud_lastCT", lastCT, "hud_planned", EventDay, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
+					}
+					else
+					{
+						PrintHintText(i, "<font face='Arial' color='#006699'>%t </font>%N</font>\n<font color='#5E97D8'>%t</font> %i/%i\t<font color='#E3AD39'>%t</font> %i/%i\n", "hud_lastCT", lastCT, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
+					}
 				}
 				else if(IsEventDayRunning())
 				{
-					PrintHintText(i, "<font face='Arial' color='#B980EF'>%t </font>%s\n<font face='Arial' color='#5E97D8'>%t</font> %i/%i\t<font face='Arial' color='#E3AD39'>%t</font> %i/%i\n", "hud_running", EventDay, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
+					PrintHintText(i, "<font face='Arial' color='#B980EF'>%t </font>%s\n<font color='#5E97D8'>%t</font> %i/%i\t<font color='#E3AD39'>%t</font> %i/%i\n", "hud_running", EventDay, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
+				}
+				else if(warden == -1)
+				{
+					if(IsEventDayPlanned())
+					{
+						PrintHintText(i, "<font face='Arial' color='#006699'>%t </font><font face='Arial' color='#FE4040'>%t</font>\n<font color='#B980EF'>%t</font> %s\n<font color='#5E97D8'>%t</font> %i/%i\t<font color='#E3AD39'>%t</font> %i/%i", "hud_warden", "hud_nowarden", "hud_planned", EventDay, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
+					}
+					else
+					{
+						PrintHintText(i, "<font face='Arial' color='#006699'>%t </font><font face='Arial' color='#FE4040'>%t</font>\n<font color='#5E97D8'>%t</font> %i/%i\t<font color='#E3AD39'>%t</font> %i/%i\n", "hud_warden", "hud_nowarden", "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
+					}
 				}
 				else
 				{
-					PrintHintText(i, "<font face='Arial' color='#006699'>%t </font><font face='Arial' color='#FE4040'>%t</font>\n<font face='Arial' color='#5E97D8'>%t</font> %i/%i\t<font face='Arial' color='#E3AD39'>%t</font> %i/%i\n", "hud_warden", "hud_nowarden", "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
-				}
-			}
-			else
-			{
-				if(IsEventDayPlanned())
-				{
-					PrintHintText(i, "<font face='Arial' color='#006699'>%t </font>%N\n<font face='Arial' color='#B980EF'>%t</font> %s\n<font face='Arial' color='#5E97D8'>%t</font> %i/%i\t<font face='Arial' color='#E3AD39'>%t</font> %i/%i\n", "hud_warden", warden, "hud_planned", EventDay, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
-				}
-				else if(IsEventDayRunning())
-				{
-					PrintHintText(i, "<font face='Arial' color='#B980EF'>%t </font>%s\n<font face='Arial' color='#5E97D8'>%t</font> %i/%i\t<font face='Arial' color='#E3AD39'>%t</font> %i/%i\n", "hud_running", EventDay, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
-				}
-				else
-				{
-					PrintHintText(i, "<font face='Arial' color='#006699'>%t </font>%N\n<font face='Arial' color='#5E97D8'>%t</font> %i/%i\t<font face='Arial' color='#E3AD39'>%t</font> %i/%i\n", "hud_warden", warden, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
+					if(IsEventDayPlanned())
+					{
+						PrintHintText(i, "<font face='Arial' color='#006699'>%t </font>%N\n<font face='Arial' color='#B980EF'>%t</font> %s\n<font color='#5E97D8'>%t</font> %i/%i\t<font color='#E3AD39'>%t</font> %i/%i\n", "hud_warden", warden, "hud_planned", EventDay, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
+					}
+					else
+					{
+						PrintHintText(i, "<font face='Arial' color='#006699'>%t </font>%N\n<font color='#5E97D8'>%t</font> %i/%i\t<font color='#E3AD39'>%t</font> %i/%i\n", "hud_warden", warden, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
+					}
 				}
 			}
 		}

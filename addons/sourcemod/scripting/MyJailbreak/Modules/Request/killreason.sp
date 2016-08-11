@@ -54,10 +54,10 @@ public void KillReason_OnPluginStart()
 ******************************************************************************/
 
 
-public Action KillReason_Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast) 
+public void KillReason_Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast) 
 {
-	int victim = GetClientOfUserId(GetEventInt(event, "userid")); // Get the dead clients id
-	int attacker = GetClientOfUserId(GetEventInt(event, "attacker")); // Get the attacker clients id
+	int victim = GetClientOfUserId(event.GetInt("userid")); // Get the dead clients id
+	int attacker = GetClientOfUserId(event.GetInt("attacker")); // Get the attacker clients id
 	
 	if (IsValidClient(victim, true, true) && IsValidClient(attacker, false, true) && !IsLR && gc_bPlugin.BoolValue && gc_bKillReason.BoolValue && ((GetClientTeam(attacker) == CS_TEAM_CT) && (GetClientTeam(victim) == CS_TEAM_T))) Menu_KillReason(attacker,victim);
 }
@@ -101,7 +101,7 @@ public int Handler_KillReason(Menu menu, MenuAction action, int client, int Posi
 		char Item[11];
 		menu.GetItem(Position,Item,sizeof(Item));
 		int choice = StringToInt(Item);
-		int victim = g_iHasKilled[client];
+		int victim = GetClientOfUserId(g_iHasKilled[client]);
 		
 		if (IsValidClient(victim, true, true) && IsValidClient(client, false, true))
 		{
@@ -136,6 +136,5 @@ public int Handler_KillReason(Menu menu, MenuAction action, int client, int Posi
 	else if (action == MenuAction_End)
 	{
 		delete menu;
-	//	CPrintToChatAll("%t %t", "request_tag", "request_killreason_noanswer", client, g_iHasKilled[client]);
 	}
 }

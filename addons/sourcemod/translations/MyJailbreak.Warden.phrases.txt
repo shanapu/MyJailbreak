@@ -55,7 +55,7 @@
 
 	"warden_ctsonly"
 	{
-		"ru"		"только {purple}КТ{fdefault} могут стать командиром."
+		"ru"		"только {purple}КТ{default} могут стать командиром."
 		"pl"		"tylko  {purple}Counter-Terrorists{default} moze zostac Wardenem."
 		"de"		"nur {purple}Counter-Terrorists{default} können Warden werden."
 		"sv"		"Endast {purple}Anti-Terrorister{default} kan bli fängelsedirektör."
@@ -1251,6 +1251,37 @@
 	"warden_menu_unmuteall"
 	{
 		"en"		"Unmute all Prisoners"
+	}
+
+	"warden_rebel_title"
+	{
+		"en"		"Rebels Menu"
+	}
+
+	"warden_rebel_mark"
+	{
+		"en"		"Mark a Player as Rebel"
+	}
+
+	"warden_rebel_unmark"
+	{
+		"en"		"Remove a Player from Rebels"
+	}
+
+	"warden_talkover"
+	{
+		"en"		"Warden speaks, you have been muted."
+	}
+
+	"warden_info_counter"
+	{
+		"en"		"Prisoner in Radius:"
+	}
+
+	"warden_counter"
+	{
+		"#format"   "{1:i}"
+		"en"		"There are {1} prisoner in your radius"
 	}
 
 }

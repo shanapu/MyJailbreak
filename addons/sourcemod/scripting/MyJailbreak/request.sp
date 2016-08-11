@@ -177,7 +177,7 @@ public Action Command_RequestMenu(int client, int args)
 ******************************************************************************/
 
 
-public Action Event_RoundStart(Handle event, char [] name, bool dontBroadcast)
+public void Event_RoundStart(Event event, char [] name, bool dontBroadcast)
 {
 	delete RequestTimer;
 	
@@ -194,20 +194,24 @@ public Action Event_RoundStart(Handle event, char [] name, bool dontBroadcast)
 
 
 //Round End
-public void Event_RoundEnd(Handle event, char[] name, bool dontBroadcast)
+public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
 	IsLR = false;
 }
 
-public Action Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast) 
+
+public void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast) 
 {
-	int victim = GetClientOfUserId(GetEventInt(event, "userid")); // Get the dead clients id
-	int attacker = GetClientOfUserId(GetEventInt(event, "attacker")); // Get the attacker clients id
+	int victimID = event.GetInt("userid"); // Get the dead user id
+	int victim = GetClientOfUserId(victimID); // Get the dead clients id
+	int attackerID = event.GetInt("attacker"); // Get the user clients id
+	int attacker = GetClientOfUserId(attackerID); // Get the attacker clients id
+	
 	
 	if(IsValidClient(attacker, true, false) && (attacker != victim))
 	{
-		g_iKilledBy[victim] = attacker;
-		g_iHasKilled[attacker] = victim;
+		g_iKilledBy[victim] = attackerID;
+		g_iHasKilled[attacker] = victimID;
 	}
 }
 
@@ -237,6 +241,7 @@ public void OnConfigsExecuted()
 	Freedays_OnConfigsExecuted();
 }
 
+
 public void OnClientPutInServer(int client)
 {
 	Refuse_OnClientPutInServer(client);
@@ -246,6 +251,7 @@ public void OnClientPutInServer(int client)
 	Freekill_OnClientPutInServer(client);
 }
 
+
 public void OnClientDisconnect(int client)
 {
 	Refuse_OnClientDisconnect(client);
@@ -253,6 +259,12 @@ public void OnClientDisconnect(int client)
 	Repeat_OnClientDisconnect(client);
 }
 
+
+public int OnAvailableLR(int Announced)
+{
+	Capitulation_OnAvailableLR(Announced);
+	IsLR = true;
+}
 
 /******************************************************************************
                    MENUS
@@ -302,15 +314,14 @@ public int Command_RequestMenuHandler(Menu reqmenu, MenuAction action, int clien
 }
 
 
-public Action IsRequestTimer(Handle timer, any client)
+/******************************************************************************
+                   TIMER
+******************************************************************************/
+
+
+public Action Timer_IsRequest(Handle timer, any client)
 {
 	IsRequest = false;
 	RequestTimer = null;
 	LoopClients(i) if(g_bFreeKilled[i]) g_bFreeKilled[i] = false;
-}
-
-public int OnAvailableLR(int Announced)
-{
-	Capitulation_OnAvailableLR(Announced);
-	IsLR = true;
 }

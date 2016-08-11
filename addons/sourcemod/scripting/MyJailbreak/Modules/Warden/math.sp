@@ -293,7 +293,7 @@ public Action Timer_CreateMathQuestion( Handle timer, any client )
 		
 			if(gc_bBetterNotes.BoolValue)
 			{
-				PrintHintTextToAll("%i %s %i = ?? ", NumOne, g_sOp, NumTwo);
+				PrintCenterTextAll("%i %s %i = ?? ", NumOne, g_sOp, NumTwo);
 			}
 			
 			g_bCanAnswer = true;

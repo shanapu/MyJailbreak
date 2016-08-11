@@ -36,7 +36,10 @@
 //Console Variables
 ConVar gc_bExtend;
 ConVar gc_iExtendLimit;
-ConVar g_iGetRoundTime;
+
+
+//Extern Convars
+ConVar g_iMPRoundTime;
 
 
 //Integers
@@ -56,10 +59,6 @@ public void ExtendTime_OnPluginStart()
 	
 	//Hooks
 	HookEvent("round_start", ExtendTime_Event_RoundStart);
-	
-	//FindConVar
-	g_iCollisionOffset = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
-	g_bNoBlockSolid = FindConVar("mp_solid_teammates");
 }
 
 
@@ -109,8 +108,8 @@ public void ExtendTime_Event_RoundStart(Event event, const char[] name, bool don
 {
 	LoopClients(i) g_iExtendNumber[i] = gc_iExtendLimit.IntValue;
 	
-	g_iGetRoundTime = FindConVar("mp_roundtime");
-	g_iRoundTime = g_iGetRoundTime.IntValue * 60;
+	g_iMPRoundTime = FindConVar("mp_roundtime");
+	g_iRoundTime = g_iMPRoundTime.IntValue * 60;
 }
 
 

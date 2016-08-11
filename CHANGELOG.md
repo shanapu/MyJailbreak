@@ -1,5 +1,90 @@
 ### Change Log
   
+**[Beta 7.0]** - Automute/Talkover, more icons, beacon & more!
+  
+*Added*
+*  Ratio: Force player on connect or mapstart to terror team
+    *  new cvar - sm_ratio_force_t 0 - disabled, 1 - force player on connect to join T side
+*  Myjailbreak: Player can shoot buttons to toggle them. Big Thx to good_live & devu4!
+    *  new cvar - sm_myjb_shoot_buttons 0 - disabled, 1 - allow player to trigger a map button by shooting it
+*  Warden: A small menu to Mark or Unmark a player as rebel
+    *  new command - sm_markrebel - Allows Warden to mark/unmark prisoner as rebel
+    *  new cvar - sm_warden_mark_rebel - 0 - disabled, 1 - enable allow warden to mark/unmark prisoner as rebel (hosties)
+*  HUD: Show LastGuards name on active Last Guard Rule
+*  Warden - Mute: Automute player when warden speaks (talkover / be quiet). Exluding admin/vip
+    *  new cvar - sm_warden_talkover - 0 - disabled, 1 - temporary mutes all client when the warden speaks
+    *  new cvar - sm_warden_talkover_team - 0 - mute prisoner & guards on talkover, 1 - only mute prisoners on talkover
+*  Warden - Counter: Count all terrorist in a radius around warden
+    *  new command - sm_count - Allows Warden to count the prisoners in his radius
+    *  new cvar - sm_warden_counter - 0 - disabled, 1 - Allow the warden count player in radius
+    *  new cvar - sm_warden_counter_radius - Radius in meter to count prisoners inside
+    *  new cvar - sm_warden_counter_mode - 1 - Show prisoner count in chat / 2 - Show prisoner count in HUD / 3 - Show prisoner count in chat & HUD / 4 - Show names in Menu / 5 - Show prisoner count in chat & show names in Menu / 6 - Show prisoner count in HUD & show names in Menu / 7 - Show prisoner count in chat & HUD & show names in Menu
+*  Warden - Icons: Icons above Players head for warden, guard & prisoners
+    *  new cvar - sm_warden_icon_ct_enable - 0 - disabled, 1 - enable the icon above the guards head
+    *  new cvar - sm_warden_icon_ct - Path to the guard icon DONT TYPE .vmt or .vft
+    *  new cvar - sm_warden_icon_t_enable - 0 - disabled, 1 - enable the icon above the prisoner head
+    *  new cvar - sm_warden_icon_t - Path to the prisoner icon DONT TYPE .vmt or .vft
+    *  new icons - http://shanapu.de/myjb/icons.jpg
+*  Ratio: Possibility for admin to toggle ratio plugin on/off
+    *  new command - sm_ratio - Allows the admin toggle the ratio check and player to see if ratio is enabled
+    *  new cvar - sm_ratio_disabled - Allow the admin to toggle 'ratio check & autoswap' on/off with !ratio
+    *  new cvar - sm_ratio_disbaled_announce - Announce in a chatmessage on roundend when ratio is disabled
+*  Ratio: No Agreement, or Questions, or force to T connect for VIP/Admins
+    *  new cvar - sm_ratio_vip_bypass - Bypass Admin/VIP though agreement / question
+*  Torch Relay: Added wallhack for the torch.
+    *  new cvar - sm_torch_wallhack - 0 - disabled, 1 - enable wallhack for the torch to find enemeys
+*  Eventdays: Added Beacon to most event days
+    *  new cvar - sm_myjb_beacon_radius - Sets the radius for the beacons rings
+    *  new cvar - sm_myjb_beacon_width - Sets the thickness for the beacons rings
+    *  new cvar - sm_myjb_beacon_CT_color_red - What color to turn the CT beacons into (set R, G and B values to 255 to disable) (Rgb): x - red value
+    *  new cvar - sm_myjb_beacon_CT_color_green - What color to turn the CT beacons into (rGb): x - green value
+    *  new cvar - sm_myjb_beacon_CT_color_blue - What color to turn the CT beacons into (rgB): x - blue value
+    *  new cvar - sm_myjb_beacon_T_color_red - What color to turn the T beacons  into (set R, G and B values to 255 to disable) (Rgb): x - red value
+    *  new cvar - sm_myjb_beacon_T_color_green - What color to turn the T beacons into (rGb): x - green value
+    *  new cvar - sm_myjb_beacon_T_color_blue - What color to turn the T beacons into (rgB): x - blue value
+    *  new cvar - sm_cowboy_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
+    *  new cvar - sm_dealdamage_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
+    *  new cvar - sm_drunk_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
+    *  new cvar - sm_duckhunt_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
+    *  new cvar - sm_ffa_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
+    *  new cvar - sm_hebattle_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
+    *  new cvar - sm_hide_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
+    *  new cvar - sm_knifefight_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
+    *  new cvar - sm_noscope_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
+    *  new cvar - sm_suicide_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
+    *  new cvar - sm_war_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
+    *  new cvar - sm_zeus_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
+    *  new cvar - sm_zombie_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
+    *  new cvar - sm_lastguard_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
+  
+  
+*Changed*
+*  Zombie - Glow/wallhack begin on end of freezetime instead roundstart
+  
+  
+*Fixed*
+*  Zombie: Conflict with sm_skinchooser (no zombie model)
+*  Duckhunt: Conflict with sm_skinchooser (no models)
+*  Freeday: harmless warning on compile
+*  Request: Freekill report show (on player reconnect) wrong names
+*  HUD: Conflics with StartTimer & EventDay HUDs
+*  Bug when "sm_eventday_allow_lr 1" and T count on roundstart = sm_hosties_lr_ts_max
+*  minor errors, fixes & typos
+*  Wiki rewrite & new tutorials
+  
+  
+*New Requirements*
+*  [ANY] VoiceannounceEX (VoiceHook) - https://forums.alliedmods.net/showthread.php?p=2177167
+*  DHooks (Dynamic Hooks - Dev Preview) - https://forums.alliedmods.net/showthread.php?t=180114
+  
+  
+*Developer stuff*
+*  Natives: New natives for on/off beacons
+    *  new native - BeaconOn Set client Beacon & intervall as float
+    *  new native - BeaconOff Remove client Beacon
+  
+  
+  
   **[Beta 6.1]** - smaller fixes
   
 *Fixed*
@@ -9,7 +94,8 @@
 *  Request: missing "en" translation
   
   
-  **[Beta 6.0]** - Personal Freeday, Kill reason, allow LR on Eventday, Guard Questions & more
+  
+ **[Beta 6.0]** - Personal Freeday, Kill reason, allow LR on Eventday, Guard Questions & more
   
 *Added*
 *  Myjailbreak: Admincommand to force end the round as a draw 
@@ -50,7 +136,6 @@
 *  Event Days - Cell Doors: Check is current map is configurated in smartjaildoors. If not force sm_*eventday*_spawn "1"
   
   
-  
 *Changed*
 *  Warden - Handcuffs: Strip weapons on Cuffed
 *  Warden: Splitted Overlays & sounds for countdown & math
@@ -79,7 +164,6 @@
 *  Player Tags: Splitted translation to chat & stats = different tags for chat & stats
   
   
-  
 *Fixed*
 *  Warden - Mathquiz: Bug when type last answer before new quiz started
 *  Last Guard Rule: Bug on first round -> auto restart -> stuck on last guard rule
@@ -88,7 +172,6 @@
 *  Freeday: Bug on sm_freeday_firstround "1" and 1min round time
 *  Player Tags: Shorten RU Tags  Thx to include1!
 *  minor errors, fixes & typos
-  
   
   
 *Developer stuff*

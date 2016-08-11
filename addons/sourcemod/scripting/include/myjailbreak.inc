@@ -43,7 +43,7 @@ public SharedPlugin:__pl_myjailbreak =
 
 
 //Defines
-#define PLUGIN_VERSION "Beta 6.1"
+#define PLUGIN_VERSION "7.0"
 #define URL_LINK "https://github.com/shanapu/MyJailbreak"
 
 
@@ -165,6 +165,24 @@ native void FogOn();
  * @noreturn
  *********************************************************/
 native void FogOff();
+
+
+/*********************************************************
+ * Set client Beacon
+ *
+ *
+ * @noreturn
+ *********************************************************/
+native void BeaconOn(int client, float interval);
+
+
+/*********************************************************
+ * Remove client Beacon (auto remove on mapend/playerdeath/roundend)
+ *
+ *
+ * @noreturn
+ *********************************************************/
+native void BeaconOff(int client);
 
 
 /******************************************************************************

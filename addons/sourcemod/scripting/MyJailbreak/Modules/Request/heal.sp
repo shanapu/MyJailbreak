@@ -137,7 +137,7 @@ public Action Command_Heal(int client, int args)
 								if(!IsRequest)
 								{
 									IsRequest = true;
-									RequestTimer = CreateTimer (gc_fHealTime.FloatValue, IsRequestTimer);
+									RequestTimer = CreateTimer (gc_fHealTime.FloatValue, Timer_IsRequest);
 									g_bHealed[client] = true;
 									g_iHealCounter[client]++;
 									CPrintToChatAll("%t %t", "request_tag", "request_heal", client);
@@ -167,7 +167,7 @@ public Action Command_Heal(int client, int args)
 ******************************************************************************/
 
 
-public Action Heal_Event_RoundStart(Handle event, char [] name, bool dontBroadcast)
+public void Heal_Event_RoundStart(Event event, char [] name, bool dontBroadcast)
 {
 	LoopClients(client)
 	{
@@ -243,7 +243,7 @@ public int HealMenuHandler(Menu menu, MenuAction action, int client, int Positio
 			{
 				IsRequest = false;
 				RequestTimer = null;
-				if(gc_bHealthShot) GivePlayerItem(i, "weapon_healthshot");
+				if(gc_bHealthShot.BoolValue) GivePlayerItem(i, "weapon_healthshot");
 				CPrintToChat(i, "%t %t", "request_tag", "request_health");
 				CPrintToChatAll("%t %t", "warden_tag", "request_accepted", i, client);
 			}

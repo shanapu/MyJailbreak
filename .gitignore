@@ -1,5 +1,6 @@
 *.dat
 *.exe
+.gitignore
 addons/sourcemod/scripting/snips/*
 addons/sourcemod/scripting/compiled
 addons/sourcemod/scripting/compile.exe
@@ -25,7 +26,6 @@ addons/sourcemod/scripting/include/core.inc
 addons/sourcemod/scripting/include/cstrike.inc
 addons/sourcemod/scripting/include/datapack.inc
 addons/sourcemod/scripting/include/dbi.inc
-addons/sourcemod/scripting/include/dhooks.inc
 addons/sourcemod/scripting/include/emitsoundany.inc
 addons/sourcemod/scripting/include/entity.inc
 addons/sourcemod/scripting/include/entity_prop_stocks.inc
@@ -39,7 +39,6 @@ addons/sourcemod/scripting/include/handles.inc
 addons/sourcemod/scripting/include/helpers.inc
 addons/sourcemod/scripting/include/keyvalues.inc
 addons/sourcemod/scripting/include/lang.inc
-addons/sourcemod/scripting/include/lastrequest.inc
 addons/sourcemod/scripting/include/logging.inc
 addons/sourcemod/scripting/include/mapchooser.inc
 addons/sourcemod/scripting/include/menus.inc
@@ -79,8 +78,6 @@ addons/sourcemod/scripting/include/usermessages.inc
 addons/sourcemod/scripting/include/vector.inc
 addons/sourcemod/scripting/include/version.inc
 addons/sourcemod/scripting/include/version_auto.inc
-
-
 addons/sourcemod/scripting/funcommands.sp
 addons/sourcemod/scripting/funcommands/
 *.lnk

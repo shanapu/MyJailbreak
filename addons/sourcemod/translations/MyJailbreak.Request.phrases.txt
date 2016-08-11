@@ -55,20 +55,20 @@
 
 	"request_accepted"
 	{
-		"#format"   "{1:N}"
-		"ru"		"Командир одобрил {1} запрос. "
-		"pl"		"Warden zaakceptowal twoje  {1}zyczenie."
-		"de"		"Der Warden hat {1}s Anfrage akzeptiert."
-		"en"		"The Warden has accepted {1}'s request."
+		"#format"   "{1:N},{2:N}"
+		"ru"		"{2} одобрил {1} запрос. "
+		"pl"		"{2} zaakceptowal twoje  {1}zyczenie."
+		"de"		"{2} hat {1}s Anfrage akzeptiert."
+		"en"		"{2} has accepted {1}'s request."
 	}
 
 	"request_noaccepted"
 	{
-		"#format"   "{1:N}"
-		"ru"		"Командир НЕ одобрил {1} запрос."
-		"pl"		"Warden NIE zaakceptowal twojego  {1}zyczenia."
-		"de"		"Der Warden hat {1}s Anfrage NICHT akzeptiert."
-		"en"		"The Warden has {purple}not{default} accepted {1}s request."
+		"#format"   "{1:N},{2:N}"
+		"ru"		"К{2} НЕ одобрил {1} запрос."
+		"pl"		"{2} NIE zaakceptowal twojego  {1}zyczenia."
+		"de"		"{2} hat {1}s Anfrage NICHT akzeptiert."
+		"en"		"{2} has {purple}not{default} accepted {1}s request."
 	}
 
 	"request_refuser"

@@ -36,6 +36,7 @@
 //Console Variables
 ConVar gc_bTag;
 ConVar gc_bLogging;
+ConVar gc_bShootButton;
 
 
 //Booleans
@@ -50,6 +51,7 @@ char IsEventDay[128] = "none";
 
 //Modules
 #include "MyJailbreak/Modules/fog.sp"
+#include "MyJailbreak/Modules/beacon.sp"
 
 
 //Info
@@ -68,9 +70,27 @@ public void OnPluginStart()
 	//Admin commands
 	RegAdminCmd("sm_endround", Command_EndRound, ADMFLAG_CHANGEMAP);
 	
+	
+	//AutoExecConfig
+	AutoExecConfig_SetFile("MyJailbreak", "MyJailbreak");
+	AutoExecConfig_SetCreateFile(true);
+	
+	
 	//Create Console Variables
-	gc_bTag = CreateConVar("sm_myjb_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", _, true,  0.0, true, 1.0);
-	gc_bLogging = CreateConVar("sm_myjb_log", "1", "Allow MyJailbreak to log events, freekills & eventdays in logs/MyJailbreak", _, true,  0.0, true, 1.0);
+	gc_bTag = AutoExecConfig_CreateConVar("sm_myjb_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", _, true,  0.0, true, 1.0);
+	gc_bLogging = AutoExecConfig_CreateConVar("sm_myjb_log", "1", "Allow MyJailbreak to log events, freekills & eventdays in logs/MyJailbreak", _, true,  0.0, true, 1.0);
+	gc_bShootButton = AutoExecConfig_CreateConVar("sm_myjb_shoot_buttons", "1", "0 - disabled, 1 - allow player to trigger a map button by shooting it", _, true,  0.0, true, 1.0);
+	
+	
+	Beacon_OnPluginStart();
+	
+	
+	AutoExecConfig_ExecuteFile();
+	AutoExecConfig_CleanFile();
+	
+	
+	//Hooks
+	HookEvent("round_start", Event_RoundStart);
 }
 
 
@@ -104,6 +124,24 @@ public Action Command_EndRound(int client, int args)
 
 
 /******************************************************************************
+                   EVENTS
+******************************************************************************/
+
+
+public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
+{
+	if(gc_bShootButton.BoolValue)
+	{
+		int ent = -1;
+		while((ent = FindEntityByClassname(ent, "func_button")) != -1)
+		{
+			SetEntProp(ent, Prop_Data, "m_spawnflags", GetEntProp(ent, Prop_Data, "m_spawnflags")|512);
+		}
+	}
+}
+
+
+/******************************************************************************
                    FORWARDS LISTEN
 ******************************************************************************/
 
@@ -112,6 +150,8 @@ public Action Command_EndRound(int client, int args)
 public void OnMapStart()
 {
 	Fog_OnMapStart();
+	Beacon_OnMapStart();
+	
 	LastGuardRuleActive = false;
 }
 
@@ -123,6 +163,8 @@ public void OnMapEnd()
 	EventDayRunning = false;
 	LastGuardRuleActive = false;
 	SetEventDayName("none");
+	
+	Beacon_OnMapEnd();
 }
 
 
@@ -145,6 +187,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	CreateNative("ActiveLogging", Native_GetActiveLogging);
 	CreateNative("FogOn", Native_FogOn);
 	CreateNative("FogOff", Native_FogOff);
+	CreateNative("BeaconOn", Native_BeaconOn);
+	CreateNative("BeaconOff", Native_BeaconOff);
 	
 	
 	if (GetEngineVersion() != Engine_CSGO)

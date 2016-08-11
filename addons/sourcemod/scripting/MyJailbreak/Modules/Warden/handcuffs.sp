@@ -161,21 +161,21 @@ public void HandCuffs_Event_RoundStart(Event event, const char[] name, bool dont
 }
 
 
-public Action HandCuffs_Event_ItemEquip(Handle event, const char[] name, bool dontBroadcast)
+public void HandCuffs_Event_ItemEquip(Event event, const char[] name, bool dontBroadcast)
 {
-	int client = GetClientOfUserId(GetEventInt(event, "userid"));
+	int client = GetClientOfUserId(event.GetInt("userid"));
 	
 	char weapon[32];
-	GetEventString(event, "item", weapon, sizeof(weapon));
+	event.GetString("item", weapon, sizeof(weapon));
 	g_sEquipWeapon[client] = weapon;
 	
 	if (StrEqual(weapon, "taser") && warden_iswarden(client) && (g_iPlayerHandCuffs[client] != 0)) PrintCenterText(client, "%t", "warden_cuffs");
 }
 
 
-public Action HandCuffs_Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast) 
+public void HandCuffs_Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast) 
 {
-	int client = GetClientOfUserId(GetEventInt(event, "userid")); // Get the dead clients id
+	int client = GetClientOfUserId(event.GetInt("userid")); // Get the dead clients id
 	
 	if(g_bCuffed[client])
 	{
@@ -188,20 +188,19 @@ public Action HandCuffs_Event_PlayerDeath(Event event, const char[] name, bool d
 }
 
 
-public Action HandCuffs_Event_WeaponFire(Handle event, char [] name, bool dontBroadcast)
+public void HandCuffs_Event_WeaponFire(Event event, char [] name, bool dontBroadcast)
 {
-	int client = GetClientOfUserId(GetEventInt(event, "userid"));
+	int client = GetClientOfUserId(event.GetInt("userid"));
 	
 	if(gc_bPlugin.BoolValue && gc_bHandCuff.BoolValue && warden_iswarden(client) && ((g_iPlayerHandCuffs[client] != 0) || ((g_iPlayerHandCuffs[client] == 0) && (g_iCuffed > 0))))
 	{
 		char sWeapon[64];
-		GetEventString(event, "weapon", sWeapon, sizeof(sWeapon));
+		event.GetString("weapon", sWeapon, sizeof(sWeapon));
 		if (StrEqual(sWeapon, "weapon_taser"))
 		{
 			SetPlayerWeaponAmmo(client, Client_GetActiveWeapon(client), _, 2);
 		}
 	}
-	return Plugin_Continue;
 }
 
 

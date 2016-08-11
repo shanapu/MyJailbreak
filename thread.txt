@@ -44,8 +44,10 @@ MyJailbreak is a redux rewrite of [URL="https://github.com/Franc1sco/Franug-Jail
 [*]Custom chat tags [MyJB.tag]
 [*]Colors
 [*]Sounds & overlays
+[*]Flag system - restrict some features only for admin/VIP
 [*]Natives & forwards of the [URL="http://www.sourcemod.net/plugins.php?cat=0&mod=-1&title=warden&author=&description=&search=1"]original warden plugins[/URL] to keep compatibility
 [*][URL="https://github.com/shanapu/MyJailbreak/wiki/Eventdays-template"]Template[/URL] to make your own Eventday
+[*][URL="https://github.com/shanapu/MyJailbreak/wiki/Custom-Overlays"]Small tutorial[/URL] for making your own custom overlay or icon
 [*]some other fancy stuff
 [/LIST]
 
@@ -57,7 +59,7 @@ MyJailbreak is a redux rewrite of [URL="https://github.com/Franc1sco/Franug-Jail
 
 [U][B]Warden[/B][/U]
 This plugins allows players to take control over the prison as warden/Headguard/Commander.  
-Chat, hud & sound notifications about warden / no warden. Vote to retire the warden. Colorized warden and define the color. Set warden Model and icon above head. Open & close cell doors & automatic open. Mute terroist for a amoung of time or round end. Extend roundtime. Gun plant prevention - CT can drop weapons only on round beginn without punishment & report to warden. Use Zeus as Handcuffs and move the cuffed T around. Cuffed T got a chance to get a paperclip to unlock cuffs. Give warden laser pointer & painter(LaZzZers) with menu to choose color. Warden can toggle painter for terrorists. Set different countdowns (start/stop) with overlays, sound & chat notifications. Start a MathQuiz with endtimer & show the player with the first right answer. Toggle Friendly Fire & No Block. Kill/pick a random T (excluding rebels & last T) with different kill effects(Lighting,Timebomb,Firebomb).
+Chat, hud & sound notifications about warden / no warden. Vote to retire the warden. Colorized warden and define the color. Set warden Model and icon above pleayers head. Open & close cell doors & automatic open. Mute terroist for a amoung of time or round end. Extend roundtime. Gun plant prevention - CT can drop weapons only on round beginn without punishment & report to warden. Use Zeus as Handcuffs and move the cuffed T around. Cuffed T got a chance to get a paperclip to unlock cuffs. Give warden laser pointer & painter(LaZzZers) with menu to choose color. Warden can toggle painter for terrorists. Set different countdowns (start/stop) with overlays, sound & chat notifications. Start a MathQuiz with endtimer & show the player with the first right answer. Toggle Friendly Fire & No Block. Kill/pick a random T (excluding rebels & last T) with different kill effects(Lighting,Timebomb,Firebomb). Count Player In Wardens radius. Mark or UnMark a player as Rebel. Automute Player when warden Talks.
 
 [b]Commands[/b]
 [SPOILER]
@@ -86,6 +88,8 @@ sm_killrandom - Allows the warden to kill a random T
 sm_math - Allows the warden to start a MathQuiz. Show player with first right Answer
 sm_wmute - Allows the warden to mute a terrorist
 sm_wunmute - Allows the warden to unmute a muted terrorist
+sm_markrebel - Allows Warden to mark/unmark prisoner as rebel
+sm_count - Allows Warden to count the prisoners in his radius
 [/CODE]
 set your own custom command. take a look at "sm_warden_cmd"
 
@@ -181,11 +185,23 @@ sm_warden_disarm - 0 - disabled, 1 - enable disarm weapon on shot the arms/hands
 sm_warden_disarm_mode - 1 - Only warden can disarm, 2 - All CT can disarm, 3 - Everyone can disarm (CT & T)
 sm_warden_disarm_drop - 1 - weapon will drop, 2 - weapon  disappears
 sm_warden_roundtime_reminder - 0 - disabled, 1 - announce remaining round time in chat & hud 3min,2min,1min,30sec before roundend
+sm_warden_mark_rebel - 0 - disabled, 1 - enable allow warden to mark/unmark prisoner as rebel (hosties)
+sm_warden_talkover - 0 - disabled, 1 - temporary mutes all client when the warden speaks
+sm_warden_talkover_team - 0 - mute prisoner & guards on talkover, 1 - only mute prisoners on talkover
+sm_warden_counter - 0 - disabled, 1 - Allow the warden count player in radius
+sm_warden_counter_radius - Radius in meter to count prisoners inside
+sm_warden_counter_mode - 1 - Show prisoner count in chat / 2 - Show prisoner count in HUD / 3 - Show prisoner count in chat & HUD / 4 - Show names in Menu / 5 - Show prisoner count in chat & show names in Menu / 6 - Show prisoner count in HUD & show names in Menu / 7 - Show prisoner count in chat & HUD & show names in Menu
+sm_warden_icon_ct_enable - 0 - disabled, 1 - enable the icon above the guards head
+sm_warden_icon_ct - Path to the guard icon DONT TYPE .vmt or .vft
+sm_warden_icon_t_enable - 0 - disabled, 1 - enable the icon above the prisoner head
+sm_warden_icon_t - Path to the prisoner icon DONT TYPE .vmt or .vft
 [/CODE]
 [/SPOILER]
 [IMG]http://shanapu.de/myjb/warden.jpg[/IMG]
 
 [IMG]http://shanapu.de/myjb/sparks.jpg[/IMG]
+
+[IMG]http://shanapu.de/myjb/icons.jpg[/IMG]
 
 [youtube]tp6k_Q6K37c[/youtube]
 
@@ -194,7 +210,7 @@ sm_warden_roundtime_reminder - 0 - disabled, 1 - announce remaining round time i
 
 
 [U][B]Request[/B][/U]
-Allow terrorists to start a request. Refuse a Game - Warden can "open the refusing" and T can refuse a game and get colored & the warden get a listing of all refuser. Request Capitulation/Pardon - T get strip weapons and the warden got Menu to accept this request. Request healing - T get colored and warden gets Menu to accept this request (give Healthshot). Repeat - T can request a repeat of last call & the warden get a listing of all requester. Freekill - a dead terror can report a Freekill. A random admins get the choice of respawn the victim, kill the freekiller, Set freeday next round or swap the freekiller to terrorist. If there is no admin the warden get the report.
+Allow terrorists to start a request. Refuse a Game - Warden can "open the refusing" and T can refuse a game and get colored & the warden get a listing of all refuser. Request Capitulation/Pardon - T get strip weapons and the warden got Menu to accept this request. Request healing - T get colored and warden gets Menu to accept this request (give Healthshot). Repeat - T can request a repeat of last call & the warden get a listing of all requester. Freekill - a dead terror can report a Freekill. A random admins get the choice of respawn the victim, kill the freekiller, give freeday next round, Set freeday next round or swap the freekiller to terrorist. If there is no admin the warden get the report. The CT can give a reason for a T kill.
 
 [b]Commands[/b]
 [SPOILER]
@@ -219,7 +235,7 @@ sm_request_sounds_enable: 0 - disabled, 1 -  enable sounds. Default 1
 sm_refuse_enable: 0 - disabled, 1 - Enable Refuse. Default 1
 sm_capitulation_cmd: Set your custom chat command for Refuse. no need for sm_ or ! . Default "ref" results in !ref /ref & sm_ref
 sm_refuse_limit: Сount how many times you can use the command
-sm_refuse_time": Time after the player gets his normal colors back
+sm_refuse_time: Time after the player gets his normal colors back
 sm_refuse_flag: Set flag for VIP to get one more refuse. No flag = feature is available for all players! Default a
 sm_refuse_color_red: What color to turn the refusing Terror into (set R, G and B values to 255 to disable) (Rgb): x - red value
 sm_refuse_color_green: What color to turn the refusing Terror into (rGb): x - green value
@@ -264,7 +280,6 @@ sm_freekill_freeday_color_red - What color to turn the warden into (set R, G and
 sm_freekill_freeday_color_green - What color to turn the warden into (rGb): x - green value
 sm_freekill_freeday_color_blue - What color to turn the warden into (rgB): x - blue value
 sm_killreason_enable - CT can answer with a menu the kill reason
-
 [/CODE]
 [/SPOILER]
 
@@ -299,6 +314,7 @@ sm_lastguard_overlays_enable: 0 - disabled, 1 - enable overlays. Default 1
 sm_lastguard_overlays_start: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
 sm_lastguard_time - Time in minutes to end the last guard rule - 0 = keep original time
 sm_lastguard_time_per_T - Time in seconds to add to sm_lastguard_time per living terror - 0 = no extra time per t
+sm_lastguard_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
 [/CODE]
 [/SPOILER]
 
@@ -335,7 +351,7 @@ sm_menu_team: 0 - disabled, 1 - enable join team on menu
 sm_menu_flag - Set flag for admin/vip to start a voting & see admin menus. Default "g"
 sm_menu_voteday_warden - 0 - disabled, 1 - allow warden to start a voting
 sm_menu_voteday_admin - 0 - disabled, 1 - allow admin/vip  to start a voting
-sm_menu_voteday_cooldown_day" - Rounds cooldown after a voting until voting can be start again
+sm_menu_voteday_cooldown_day - Rounds cooldown after a voting until voting can be start again
 sm_menu_voteday_cooldown_start - Rounds until voting can be start after mapchange.
 [/CODE]
 [/SPOILER]
@@ -365,6 +381,11 @@ sm_menu_voteday_cooldown_start - Rounds until voting can be start after mapchang
 [*]5 Minutes
 [/LIST][/INDENT][/INDENT]
 [LIST]
+[*]Count nearby prisoner
+[*]Give player freeday
+[*]Mark/Unmark rebel
+[*]TeamGames Menu (if installed)
+[*]TeamGames Games (if installed)
 [*]Math Quiz
 [*]Start a Event Day Voting
 [*]Set a Event Days
@@ -620,8 +641,7 @@ sm_playertag_overwrite: 0 - only show tags for warden, admin & vip (no overwrite
 
 [U][B]Ratio (Team Balance)[/B][/U]
 Manage team ratios and a queue system for prisoners to join guard through. Allow admins to remove player from queue.
-Supports priority queue to allow players with a certain flag to skip all players in the queue without that flag.
-Can be used with CTBans to block joining queue/guard when CTBanned 
+Supports priority queue to allow players with a certain flag to skip all players in the queue without that flag. If wanted the player has to accept a agreement or answer a some questions before join the queue. Force Player to join T on connect. Bypass for admins/Vips. Can be used with CTBans to block joining queue/guard when CTBanned.
 
 [b]Commands[/b]
 [SPOILER]
@@ -629,12 +649,13 @@ Can be used with CTBans to block joining queue/guard when CTBanned
 sm_guard - Allows the prisoners to queue to CT
 sm_viewqueue / sm_vq - Allows a player to show queue to CT.
 sm_leavequeue / sm_lq - Allows a player to leave queue to CT.
+sm_ratio - Allows the admin toggle the ratio check and player to see if ratio is enabled
 
-set your own custom command. take a look at "sm_ratio_cmd"
+set your own custom guard command. take a look at "sm_ratio_cmd"
 [/CODE]
 [u]AdminCommands // ADMFLAG_GENERIC[/u]
 [CODE]
-sm_removequeue - Allows the admin to remove player from queue to CT.
+sm_rq / sm_removequeue- Allows the admin to remove player from queue to CT.
 [/CODE]
 [/SPOILER]
 [b]ConVars[/b]
@@ -647,6 +668,10 @@ sm_ratio_vipflag - Set the flag for VIP. Default "a"
 sm_ratio_adsvip - 0 - disabled, 1 - enable adverstiment for 'VIPs moved to front of queue' when player types !quard. Default 1
 sm_ratio_join_mode - 0 - instandly join ct/queue, no confirmation / 1 - confirm rules / 2 - Qualification questions
 sm_ratio_questions - How many question a player have to answer before join ct/queue. need sm_ratio_join_mode 2
+sm_ratio_force_t 0 - disabled, 1 - force player on connect to join T side
+sm_ratio_disabled - Allow the admin to toggle 'ratio check & autoswap' on/off with !ratio
+sm_ratio_disbaled_announce - Announce in a chatmessage on every roundend when ratio is disabled
+sm_ratio_vip_bypass - Bypass Admin/VIP though agreement / question
 [/CODE]
 [/SPOILER]
 
@@ -670,7 +695,7 @@ sm_hud_enable - 0 - disabled, 1 - enable this MyJailbreak SourceMod plugin
 
 
 [U][B]MyJailbreak core[/B][/U]
-This plugins is the "interface" between Eventdays. Need for cooldowns and disable other days on running Eventday.
+This plugins is the "interface" between Eventdays. Need for cooldowns and disable other days on running Eventday. Handle config & natives for some modules
   
 [b]Commands[/b]
 [SPOILER]
@@ -681,6 +706,15 @@ sm_endround - Allows admin to force end the round
 [b]ConVars[/b]
 [SPOILER]
 [CODE]
+sm_myjb_shoot_buttons: 0 - disabled, 1 - allow player to trigger a map button by shooting it
+sm_myjb_beacon_radius - Sets the radius for the beacon's rings
+sm_myjb_beacon_width - Sets the thickness for the beacon's rings
+sm_myjb_beacon_CT_color_red - What color to turn the CT beacons into (set R, G and B values to 255 to disable) (Rgb): x - red value
+sm_myjb_beacon_CT_color_green - What color to turn the CT beacons into (rGb): x - green value
+sm_myjb_beacon_CT_color_blue - What color to turn the CT beacons into (rgB): x - blue value
+sm_myjb_beacon_T_color_red - What color to turn the T beacons  into (set R, G and B values to 255 to disable) (Rgb): x - red value
+sm_myjb_beacon_T_color_green - What color to turn the T beacons into (rGb): x - green value
+sm_myjb_beacon_T_color_blue - What color to turn the T beacons into (rgB): x - blue value
 sm_myjb_tag: 0 - disabled, 1 - Allow "MyJailbreak" to be added to your server tags. So player will find servers with MyJB faster. it dont touch youR sv_tags
 sm_myjb_log: 0 - disabled, 1 - Allow MyJailbreak to log events, freekills & eventdays in logs/MyJailbreak by day
 ```
@@ -717,6 +751,7 @@ sm_war_allow_lr - enable, Last Request on last round
 sm_war_vote: 0 - disabled, 1 - allow player to vote for war. Default 1
 sm_war_spawn: 0 - teleport Ts to CT and freeze, 1 - open cell doors an get weapons. Default 0
 sm_war_roundtime - Roundtime for a single war round in minutes. Default 5
+sm_war_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
 sm_war_freezetime- Time in seconds Ts are freezed. time to hide on map for CT (need sm_war_spawn: 0). Default 30
 sm_war_trucetime - Time in seconds after freezetime damage is disbaled. Default 30
 sm_war_cooldown_start - Rounds until event can be start after mapchange. Default 3
@@ -758,6 +793,7 @@ sm_ffa_allow_lr - enable, Last Request on last round
 sm_ffa_vote: 0 - disabled, 1 - allow player to vote for ffa. Default 1
 sm_ffa_spawn: 0 - teleport Ts to CT and freeze, 1 - open cell doors an get weapons (need smartjaildoors). Default 0
 sm_ffa_roundtime - Roundtime for a single ffa round in minutes. Default 5
+sm_ffa_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
 sm_ffa_trucetime - Time in seconds after freezetime damage is disbaled. Default 30
 sm_ffa_cooldown_start - Rounds until event can be start after mapchange. Default 3
 sm_ffa_cooldown_day - Rounds until event can be started again. Default 3
@@ -773,11 +809,11 @@ sm_ffa_overlays_start: Path to the start Overlay DONT TYPE .vmt or .vft. Default
 [U][B]Zombie[/B][/U]
 This plugin allows players to vote and warden to set next rounds to zombie escape.  
 On Round start Ts spawn in open cells with weapons & weaponmenu. CT are zombies with a zombie model, and with 8500 HP.  
-Zombies freezed for 35sec (default) so T can hide &/or climb.  
+Zombies freezed for 35sec (default) so T can hide &/or climb. Zombies got wallhack and nightvision.  
 
 [b]Commands[/b]
 [SPOILER]
-[CODE]]
+[CODE]
 sm_zombie - Allows players to vote for a Zombie 
 sm_setzombie - Allows the Admin or warden to set Zombie as next round
   
@@ -798,8 +834,9 @@ sm_zombie_spawn: 0 - teleport Ts to CT and freeze, 1 - open cell doors an get we
 sm_zombie_rounds: Rounds to play in a row. Default 1
 sm_zombie_allow_lr - enable, Last Request on last round
 sm_zombie_roundtime - Roundtime for a single zombie round in minutes. Default 5
+sm_zombie_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
 sm_zombie_freezetime - Time in seconds Zombies freezed. Default 35
-sm_zombie_glow: 0 - disabled, 1 - enable Glow effect for humans", _, true,  0.0, true, 1.0);
+sm_zombie_glow: 0 - disabled, 1 - enable Glow effect for humans
 sm_zombie_glow_mode: 1 - human contours with wallhack for zombies, 2 - human glow effect without wallhack for zombiessm_zombie_hp: HP the Zombies got on Spawn. Default 8500
 sm_zombie_human_hp: HP the Humans got on Spawn. Default 65
 sm_zombie_cooldown_start - Rounds until event can be start after mapchange. Default 3
@@ -846,6 +883,7 @@ sm_noscope_random: 0 - disabled, 1 - get a random weapon (ssg08,awp,scar20,g3sg1
 sm_noscope_gravity: 0 - disabled, 1 - enable low Gravity for noscope. Default 1
 sm_noscope_gravity_value - Ratio for Gravity 1.0 earth 0.5 moon. Default 0.3
 sm_noscope_roundtime - Roundtime for a single noscope round in minutes. Default 5
+sm_noscope_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
 sm_noscope_trucetime - Time in seconds damage is disbaled. Default 15
 sm_noscope_cooldown_start - Rounds until event can be start after mapchange. Default 3
 sm_noscope_cooldown_day - Rounds until event can be started again. Default 3
@@ -888,6 +926,7 @@ sm_hebattle_allow_lr - enable, Last Request on last round
 sm_hebattle_gravity: 0 - disabled, 1 - enable low Gravity for hebattle. Default 1
 sm_hebattle_gravity_value - Ratio for Gravity 1.0 earth 0.5 moon. Default 0.3
 sm_hebattle_roundtime - Roundtime for a single hebattle round in minutes. Default 5
+sm_hebattle_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
 sm_hebattle_trucetime - Time in seconds damage is disbaled. Default 15
 sm_hebattle_cooldown_start - Rounds until event can be start after mapchange. Default 3
 sm_hebattle_cooldown_day - Rounds until event can be started again. Default 3
@@ -973,6 +1012,7 @@ sm_hide_vote: 0 - disabled, 1 - allow player to vote for ffa. Default 1
 sm_hide_enable: 0 - disabled, 1 - enable the hide plugin. Default 1
 sm_hide_rounds: Rounds to play in a row
 sm_hide_roundtime - Roundtime for a single hide round in minutes. Default 5
+sm_hide_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
 sm_hide_hidetime - Time in seconds to hide. Default 30
 sm_hide_freezehider: 0 - disabled, 1 - enable freeze hider when hidetime gone. Default 1
 sm_hide_tagrenades: how many tagrenades a guard have? Default 3
@@ -1013,6 +1053,7 @@ sm_duckhunt_enable: 0 - disabled, 1 - enable the duckhunt plugin. Default 1
 sm_duckhunt_rounds: Rounds to play in a row
 sm_duckhunt_allow_lr - enable, Last Request on last round
 sm_duckhunt_roundtime - Roundtime for a single duckhunt round in minutes. Default 5
+sm_duckhunt_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
 sm_duckhunt_trucetime - Time in seconds damage is disbaled. Default 15
 sm_duckhunt_cooldown_start - Rounds until event can be start after mapchange. Default 3
 sm_duckhunt_cooldown_day - Rounds until event can be started again. Default 3
@@ -1061,6 +1102,7 @@ sm_suicidebomber_sprint_cooldown: Time in seconds the player must wait for the n
 sm_suicidebomber_sprint_speed: Ratio for how fast the player will sprint. Default 1.25
 sm_suicidebomber_sprint_time: Time in seconds the player will sprint. Default 3.5
 sm_suicidebomber_roundtime - Roundtime for a single Suicide Bomber round in minutes. Default 5
+sm_suicidebomber_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
 sm_suicidebomber_hidetime - Time to hide. Default 20
 sm_suicidebomber_cooldown_start - Rounds until event can be start after mapchange. Default 3
 sm_suicidebomber_cooldown_day - Rounds until event can be started again. Default 3
@@ -1091,8 +1133,6 @@ set your own custom command. take a look at "sm_dealdamage_cmd"
 [b]ConVars[/b]
 [SPOILER]
 [CODE]
-sm_setdealdamage: Allows the Admin or Warden to set dealdamage as next round
-sm_dealdamage: Allows players to vote for a dealdamage
 sm_dealdamage_enable: 0 - disabled, 1 - enable this MyJailbreak SourceMod plugin. Default 1
 sm_dealdamage_cmd: Set your custom chat command for Event voting. no need for sm_ or ! Default "dd" results in !dd /dd sm_dd
 sm_dealdamage_warden: 0 - disabled, 1 - allow warden to set dealdamage round. Default 1
@@ -1106,6 +1146,7 @@ sm_dealdamage_chat: 0 - disabled, 1 - enable print results in chat. Default 1
 sm_dealdamage_console: 0 - disabled, 1 - enable print results in client console. Default 1
 sm_dealdamage_rounds: Rounds to play in a row. Default 2
 sm_dealdamage_roundtime: Round time in minutes for a single dealdamage round. Default 2
+sm_dealdamage_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
 sm_dealdamage_trucetime: Time in seconds players can't deal damage. Default 15
 sm_dealdamage_cooldown_day", "3", "Rounds cooldown after a event until event can be start again. Default 3
 sm_dealdamage_cooldown_start", "3", "Rounds until event can be start after mapchange. Default 3
@@ -1145,6 +1186,7 @@ sm_zeus_spawn: 0 - teleport Ts to CT and freeze, 1 - open cell doors an get weap
 sm_zeus_rounds: Rounds to play in a row
 sm_zeus_allow_lr - enable, Last Request on last round
 sm_zeus_roundtime - Roundtime for a single zeus round in minutes. Default 5
+sm_zeus_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
 sm_zeus_trucetime - Time in seconds damage is disbaled. Default 15
 sm_zeus_cooldown_start - Rounds until event can be start after mapchange. Default 3
 sm_zeus_cooldown_day - Rounds until event can be started again. Default 3
@@ -1181,19 +1223,20 @@ sm_drunk_seta: 0 - disabled, 1 - allow Admin to set next round drunk round. Defa
 sm_drunk_flag: Set flag for admin/vip to set this Event Day. Default g
 sm_drunk_vote: 0 - disabled, 1 - allow player to vote for drunk. Default 1
 sm_drunk_spawn: 0 - teleport Ts to CT and freeze, 1 - open cell doors an get weapons. Default 0
-sm_drunk_invert_x: 0 - disabled, 1 - enable invert movement on the x-axis (left & right). Default 1
-sm_drunk_invert_y: 0 - disabled, 1 - enable invert movement on the y-axis (forward & back). Default 1
+//sm_drunk_invert_x: 0 - disabled, 1 - enable invert movement on the x-axis (left & right). Default 1
+//sm_drunk_invert_y: 0 - disabled, 1 - enable invert movement on the y-axis (forward & back). Default 1
 sm_drunk_wiggle: 0 - disabled, 1 - enable wiggle with the screen. Default 1
 sm_drunk_rounds: Rounds to play in a row
 sm_drunk_allow_lr - enable, Last Request on last round
 sm_drunk_roundtime - Roundtime for a single drunk round in minutes. Default 5
+sm_drunk_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
 sm_drunk_trucetime - Time in seconds damage is disbaled. Default 15
 sm_drunk_cooldown_start - Rounds until event can be start after mapchange. Default 3
 sm_drunk_cooldown_day - Rounds until event can be started again. Default 3
 sm_drunk_overlays_enable: 0 - disabled, 1 - enable  overlays. Default 1
 sm_drunk_overlays_start: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
 sm_drunk_sounds_enable: 0 - disabled, 1 - enable sounds. Default 1
-sm_drunk_sounds_start: Path to the soundfile which should be played for a start. Default "music/MyJailbreak/burn.mp3"
+sm_drunk_sounds_start: Path to the soundfile which should be played for a start. Default "music/MyJailbreak/drunk.mp3"
 [/CODE]
 [/SPOILER]
 
@@ -1231,6 +1274,7 @@ sm_knifefight_gravity_value - Ratio for Gravity 1.0 earth 0.5 moon. Default 0.3
 sm_knifefight_iceskate: 0 - disabled, 1 - enable iceskate for knifefight. Default 1
 sm_knifefight_iceskate_value - Ratio iceskate (5.2 normal). Default 0.8
 sm_knifefight_roundtime - Roundtime for a single knifefight round in minutes. Default 5
+sm_knifefight_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
 sm_knifefight_trucetime - Time in seconds damage is disbaled. Default 15
 sm_knifefight_cooldown_start - Rounds until event can be start after mapchange. Default 3
 sm_knifefight_cooldown_day - Rounds until event can be started again. Default 3
@@ -1275,6 +1319,7 @@ sm_torch_cooldown_day - Rounds until event can be started again. Default 3
 sm_torch_overlays_enable: 0 - disabled, 1 - enable  overlays. Default 1
 sm_torch_overlays_start: Path to the start Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/start"
 sm_torch_trucetime: Time in seconds players can't deal damage. Default 10
+sm_torch_wallhack - 0 - disabled, 1 - enable wallhack for the torch to find enemeys
 sm_torch_stayoverlay: 0 - overlays will removed after 3sec. , 1 - overlays will stay until untorch. Default 1
 sm_torch_sounds_enable: 0 - disabled, 1 - enable sounds. Default 1
 sm_torch_sounds_start: Path to the soundfile which should be played for a start. Default "music/MyJailbreak/burn.mp3"
@@ -1320,6 +1365,7 @@ sm_cowboy_random: 0 - disabled, 1 - get a random weapon (revolver, duals) ignore
 sm_cowboy_gravity: 0 - disabled, 1 - enable low Gravity for cowboy. Default 1
 sm_cowboy_gravity_value - Ratio for Gravity 1.0 earth 0.5 moon. Default 0.3
 sm_cowboy_roundtime - Roundtime for a single cowboy round in minutes. Default 5
+sm_cowboy_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
 sm_cowboy_trucetime - Time in seconds damage is disbaled. Default 15
 sm_cowboy_cooldown_start - Rounds until event can be start after mapchange. Default 3
 sm_cowboy_cooldown_day - Rounds until event can be started again. Default 3
@@ -1386,6 +1432,11 @@ sm_freeday_cooldown_day - Rounds until event can be started again. Default 0
 [*]Simple Chat Prozessor [url]https://bitbucket.org/minimoney1/simple-chat-processor[/url]
 
 [*]CustomPlayerSkins [url]https://forums.alliedmods.net/showthread.php?t=240703[/url]
+
+[*][ANY] VoiceannounceEX (VoiceHook) [url]https://forums.alliedmods.net/showthread.php?p=2177167[url]
+
+[*]DHooks (Dynamic Hooks - Dev Preview) [url]https://forums.alliedmods.net/showthread.php?t=180114[url]
+
 [/LIST]
 [U]Include files needed for compile[/U][SPOILER]
 [LIST]
@@ -1516,6 +1567,24 @@ native void FogOn();
  *********************************************************/
 native void FogOff();
 
+
+/*********************************************************
+ * Set client Beacon
+ *
+ *
+ * @noreturn
+ *********************************************************/
+native void BeaconOn(int client, float interval);
+
+
+/*********************************************************
+ * Remove client Beacon (auto remove on mapend/playerdeath/roundend)
+ *
+ *
+ * @noreturn
+ *********************************************************/
+native void BeaconOff(int client);
+
 [/php]
 warden.inc
 [php]
@@ -1584,174 +1653,139 @@ native warden_get(client);
 
 [B][u]Latest Changes[/u][/B]
 
-[QUOTE]  
-  [b][Beta 6.1][/b] - smaller fixes
+[QUOTE] 
+[b][Beta 7.0][/b] - Automute/Talkover, more icons, beacon & more!
 [SPOILER]
-[i]Fixed[/i]
+[i]Added[/i]
 [LIST]
-[*]Menu: personal freeday seen as admin
-[*]HUD: enable on start
-[*]Freeday: fix roundtime bug
-[*]Request: missing "en" translation
-[/LIST]
-[/SPOILER]
-  [b][Beta 6.0][/b] - Personal Freeday, Kill reason, allow LR on Eventday, Guard Questions & more
-[SPOILER]
-  
-[i]Added[/i][LIST]
-[*]Myjailbreak: Admincommand to force end the round as a draw 
+[*]Ratio: Force player on connect or mapstart to terror team
 [/LIST]
 [INDENT][LIST]
-[*]new command - sm_endround - Allows the Admin to force the roundend. (ADMFLAG_CHANGEMAP)
-[/LIST][/INDENT]
-[LIST][*]Ratio: Join guard agreement. Join Guard Qualification questions.
-[/LIST]
-[INDENT][LIST]
-[*]new cvar - sm_ratio_join_mode - 0 - instandly join ct/queue, no confirmation / 1 - confirm rules / 2 - Qualification questions
-[*]new cvar - sm_ratio_questions - How many question a player have to answer before join ct/queue. need sm_ratio_join_mode 2
+[*]new cvar - sm_ratio_force_t 0 - disabled, 1 - force player on connect to join T side
 [/LIST][/INDENT]
 [LIST]
-[*]Warden - Mute: Mute & Unmute all terrors
-[*]Request: Warden can give a personal Freeday a single player for next nonevent round. 
+[*]Myjailbreak: Player can shoot buttons to toggle them. Big Thx to good_live & devu4!
 [/LIST]
 [INDENT][LIST]
-[*]new command - sm_givefreeday - Allows the Warden to give a freeday to a player
-[*]new cvar - sm_freekill_freeday_victim - Allow the warden to set a personal freeday next round as pardon for the victim
-[*]new cvar - sm_freekill_freeday_cmd - Set your custom chat command for give a freeday. no need for sm_ or !
-[*]new cvar - sm_freekill_freeday_color_red - What color to turn the warden into (set R, G and B values to 255 to disable) (Rgb): x - red value
-[*]new cvar - sm_freekill_freeday_color_green - What color to turn the warden into (rGb): x - green value
-[*]new cvar - sm_freekill_freeday_color_blue - What color to turn the warden into (rgB): x - blue value
+[*]new cvar - sm_myjb_shoot_buttons 0 - disabled, 1 - allow player to trigger a map button by shooting it
 [/LIST][/INDENT]
 [LIST]
-[*]Request: Kill reason - When a CT kill a T, a menu pop up for the killer and he can give an statement (beta)
+[*]Warden: A small menu to Mark or Unmark a player as rebel
 [/LIST]
 [INDENT][LIST]
-[*]new cvar - sm_killreason_enable - CT can answer with a menu the kill reason
+[*]new command - sm_markrebel - Allows Warden to mark/unmark prisoner as rebel
+[*]new cvar - sm_warden_mark_rebel - 0 - disabled, 1 - enable allow warden to mark/unmark prisoner as rebel (hosties)
 [/LIST][/INDENT]
 [LIST]
-[*]Last Guard Rule: Adjust round time on runnnig Last Guard Rule
+[*]HUD: Show LastGuards name on active Last Guard Rule
+[*]Warden - Mute: Automute player when warden speaks (talkover / be quiet). Exluding admin/vip
 [/LIST]
 [INDENT][LIST]
-[*]new cvar - sm_lastguard_time - Time in minutes to end the last guard rule - 0 = keep original time
-[*]new cvar - sm_lastguard_time_per_T - Time in seconds to add to sm_lastguard_time per living terror - 0 = no extra time per t
+[*]new cvar - sm_warden_talkover - 0 - disabled, 1 - temporary mutes all client when the warden speaks
+[*]new cvar - sm_warden_talkover_team - 0 - mute prisoner & guards on talkover, 1 - only mute prisoners on talkover
 [/LIST][/INDENT]
 [LIST]
-[*]Event Days: new cvars for end last round of a running Eventday when Last Request is available. Much Thx to devu4!
+[*]Warden - Counter: Count all terrorist in a radius around warden
 [/LIST]
 [INDENT][LIST]
-[*]new cvar - sm_cowboy_allow_lr - enable, Last Request on last round
-[*]new cvar - sm_drunk_allow_lr - enable, Last Request on last round
-[*]new cvar - sm_duckhunt_allow_lr - enable, Last Request on last round
-[*]new cvar - sm_ffa_allow_lr - enable, Last Request on last round
-[*]new cvar - sm_war_allow_lr - enable, Last Request on last round
-[*]new cvar - sm_hebattle_allow_lr - enable, Last Request on last round
-[*]new cvar - sm_knifefight_allow_lr - enable, Last Request on last round
-[*]new cvar - sm_noscope_allow_lr - enable, Last Request on last round
-[*]new cvar - sm_zeus_allow_lr - enable, Last Request on last round
-[*]new cvar - sm_zombie_allow_lr - enable, Last Request on last round
+[*]new command - sm_count - Allows Warden to count the prisoners in his radius
+[*]new cvar - sm_warden_counter - 0 - disabled, 1 - Allow the warden count player in radius
+[*]new cvar - sm_warden_counter_radius - Radius in meter to count prisoners inside
+[*]new cvar - sm_warden_counter_mode - 1 - Show prisoner count in chat / 2 - Show prisoner count in HUD / 3 - Show prisoner count in chat & HUD / 4 - Show names in Menu / 5 - Show prisoner count in chat & show names in Menu / 6 - Show prisoner count in HUD & show names in Menu / 7 - Show prisoner count in chat & HUD & show names in Menu
 [/LIST][/INDENT]
 [LIST]
-[*]HUD: A players HUD display: Current Warden, Guards/Prisoner Count & planned/running eventday name
+[*]Warden - Icons: Icons above Players head for warden, guard & prisoners
 [/LIST]
 [INDENT][LIST]
-[*]new command - sm_hud - Allows player to toggle the hud display.
-[*]new cvar - sm_hud_enable - 0 - disabled, 1 - enable this MyJailbreak SourceMod plugin
+[*]new cvar - sm_warden_icon_ct_enable - 0 - disabled, 1 - enable the icon above the guards head
+[*]new cvar - sm_warden_icon_ct - Path to the guard icon DONT TYPE .vmt or .vft
+[*]new cvar - sm_warden_icon_t_enable - 0 - disabled, 1 - enable the icon above the prisoner head
+[*]new cvar - sm_warden_icon_t - Path to the prisoner icon DONT TYPE .vmt or .vft
+[*]new icons - [URL]http://shanapu.de/myjb/icons.jpg[/URL]
 [/LIST][/INDENT]
 [LIST]
-[*]Warden - Cell Doors: Check is current map is configurated in smartjaildoors. Thx to NomisCZ!
-[*]Menu: Added TeamGames commands !tg !games if these team games commands are available
-[*]Menu - Cell Doors: Check is current map is configurated in smartjaildoors. If not items not shown
-[*]Event Days - Cell Doors: Check is current map is configurated in smartjaildoors. If not force sm_*eventday*_spawn "1"
+[*]Ratio: Possibility for admin to toggle ratio plugin on/off
 [/LIST]
-  
+[INDENT][LIST]
+[*]new command - sm_ratio - Allows the admin toggle the ratio check and player to see if ratio is enabled
+[*]new cvar - sm_ratio_disabled - Allow the admin to toggle 'ratio check & autoswap' on/off with !ratio
+[*]new cvar - sm_ratio_disbaled_announce - Announce in a chatmessage on roundend when ratio is disabled
+[/LIST][/INDENT]
+[LIST]
+[*]Ratio: No Agreement, or Questions, or force to T connect for VIP/Admins
+[/LIST]
+[INDENT][LIST]
+[*]new cvar - sm_ratio_vip_bypass - Bypass Admin/VIP though agreement / question
+[/LIST][/INDENT]
+[LIST]
+[*]Torch Relay: Added wallhack for the torch.
+[/LIST]
+[INDENT][LIST]
+[*]new cvar - sm_torch_wallhack - 0 - disabled, 1 - enable wallhack for the torch to find enemeys
+[/LIST][/INDENT]
+[LIST]
+[*]Eventdays: Added Beacon to most event days
+[/LIST]
+[INDENT][LIST]
+[*]new cvar - sm_myjb_beacon_radius - Sets the radius for the beacons rings
+[*]new cvar - sm_myjb_beacon_width - Sets the thickness for the beacons rings
+[*]new cvar - sm_myjb_beacon_CT_color_red - What color to turn the CT beacons into (set R, G and B values to 255 to disable) (Rgb): x - red value
+[*]new cvar - sm_myjb_beacon_CT_color_green - What color to turn the CT beacons into (rGb): x - green value
+[*]new cvar - sm_myjb_beacon_CT_color_blue - What color to turn the CT beacons into (rgB): x - blue value
+[*]new cvar - sm_myjb_beacon_T_color_red - What color to turn the T beacons  into (set R, G and B values to 255 to disable) (Rgb): x - red value
+[*]new cvar - sm_myjb_beacon_T_color_green - What color to turn the T beacons into (rGb): x - green value
+[*]new cvar - sm_myjb_beacon_T_color_blue - What color to turn the T beacons into (rgB): x - blue value
+[*]new cvar - sm_cowboy_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
+[*]new cvar - sm_dealdamage_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
+[*]new cvar - sm_drunk_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
+[*]new cvar - sm_duckhunt_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
+[*]new cvar - sm_ffa_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
+[*]new cvar - sm_hebattle_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
+[*]new cvar - sm_hide_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
+[*]new cvar - sm_knifefight_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
+[*]new cvar - sm_noscope_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
+[*]new cvar - sm_suicide_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
+[*]new cvar - sm_war_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
+[*]new cvar - sm_zeus_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
+[*]new cvar - sm_zombie_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
+[*]new cvar - sm_lastguard_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
+[/LIST][/INDENT]
   
   
 [i]Changed[/i]
 [LIST]
-[*]Warden - Handcuffs: Strip weapons on Cuffed
-[*]Warden: Splitted Overlays & sounds for countdown & math
+[*]Zombie - Glow/wallhack begin on end of freezetime instead roundstart
 [/LIST]
-[INDENT][LIST]
-[*]removed cvar - sm_warden_overlays_start
-[*]removed cvar - sm_warden_overlays_stop
-[*]removed cvar - sm_warden_sounds_start
-[*]removed cvar - sm_warden_sounds_stop
-[*]new cvar - sm_warden_countdown_overlays_enable - enable overlays for countdown
-[*]new cvar - sm_warden_countdown_overlays_start - Path to the start Overlay  DONT TYPE .vmt or .vft
-[*]new cvar - sm_warden_countdown_overlays_stop - Path to the stop Overlay DONT TYPE .vmt or .vft
-[*]new cvar - sm_warden_countdown_sounds_enable - enable sounds for countdown
-[*]new cvar - sm_warden_countdown_sounds_start - Path to the soundfile which should be played for a start countdown.
-[*]new cvar - sm_warden_countdown_sounds_stop - Path to the soundfile which should be played for stop countdown.
-[*]new cvar - sm_warden_math_sounds_enable - enable sounds for math quiz
-[*]new cvar - sm_warden_math_sounds_stop - Path to the soundfile which should be played for stop countdown.
-[*]new cvar - sm_warden_math_overlays_enable - enable overlays for math quiz
-[*]new cvar - sm_warden_math_overlays_stop - Path to the stop Overlay DONT TYPE .vmt or .vft
-[/LIST][/INDENT]
-[LIST]
-[*]Event Days: Translations for Event day name
-[*]Last Guard Rule: Remove cuffs on last guard rule start
-[*]Ratio: changed default custom command from !gua to !ct
-[*]Ratio: Prevent warden from move to terror when unbalanced team
-[*]Deal Damage: Better looking for HUD
-[*]Zombie: New Glow effect with wallhack for zombies, fix old glow bug
-[/LIST]
-[INDENT][LIST]
-[*]new cvar - sm_zombie_glow_mode - 1 - human contours with wallhack for zombies, 2 - human glow effect without wallhack for zombies
-[/LIST][/INDENT]
-[LIST]
-[*]Request: Change Rebel status on capitulation 
-[*]Player Tags: Splitted translation to chat & stats = different tags for chat & stats
-[/LIST]
-  
   
   
 [i]Fixed[/i]
 [LIST]
-[*]Warden - Mathquiz: Bug when type last answer before new quiz started
-[*]Last Guard Rule: Bug on first round -> auto restart -> stuck on last guard rule
-[*]Zombie: fix glow bug -> new glowing
-[*]Ratio: Fixed custom command !gua / !ct
-[*]Freeday: Bug on sm_freeday_firstround "1" and 1min round time
-[*]Player Tags: Shorten RU Tags  Thx to include1!
+[*]Zombie: Conflict with sm_skinchooser (no zombie model)
+[*]Duckhunt: Conflict with sm_skinchooser (no models)
+[*]Freeday: harmless warning on compile
+[*]Request: Freekill report show (on player reconnect) wrong names
+[*]HUD: Conflics with StartTimer & EventDay HUDs
+[*]Bug when "sm_eventday_allow_lr 1" and T count on roundstart = sm_hosties_lr_ts_max
 [*]minor errors, fixes & typos
+[*]Wiki rewrite & new tutorials
 [/LIST]
   
+  
+[i]New Requirements[/i]
+[LIST]
+[*][ANY] VoiceannounceEX (VoiceHook) - https://forums.alliedmods.net/showthread.php?p=2177167
+[*]DHooks (Dynamic Hooks - Dev Preview) - https://forums.alliedmods.net/showthread.php?t=180114
+[/LIST]
   
   
 [i]Developer stuff[/i]
 [LIST]
-[*]Natives: Changed some existing native names
+[*]Natives: New natives for on/off beacons
 [/LIST]
 [INDENT][LIST]
-[*]changed native - before:"SetEventDay" now:"SetEventDayName" Set the name(char) of the planned/running Event Day
-[*]changed native - before:"GetEventDay" now:"GetEventDayName" Get the name(char) of the planned/running Event Day
-[*]changed native - before:"MyJBLogging" now:"ActiveLogging" Get the name of the planned/running Event Day
+[*]new native - BeaconOn Set client Beacon & intervall as float
+[*]new native - BeaconOff Remove client Beacon
 [/LIST][/INDENT]
-[LIST]
-[*]Natives: New natives for better Eventday/LastGuardRule detection - changed some existing native names
-[/LIST]
-[INDENT][LIST]
-[*]new native - SetEventDayPlanned Boolean to set Event Day is planned true/false
-[*]new native - IsEventDayPlanned Boolean to check Event Day is planned true/false
-[*]new native - SetEventDayRunning Boolean to set Event Day is running true/false
-[*]new native - IsEventDayRunning Boolean to check Event Day is running true/false
-[*]new native - SetLastGuardRule Boolean to set Last Guard Rule is running true/false
-[*]new native - IsLastGuardRule Boolean to check Last Guard Rule is running true/false
-[/LIST][/INDENT]
-[LIST]
-[*]Renamed many functions & stocks and other shit for better visibility
-[*]Warden: Splitted warden.sp source to module .sp files
-[*]Request: Splitted request.sp source to module .sp files
-[*]Cleaned up code and more comments
-[/LIST]
-  
-  
-[i]Bug found[/i]
-  
-[LIST]
-RU translation. Not shown completly cause cyrillic letters. Find fix or shorten phrases
-[/LIST]
-  
 [/SPOILER]
   
 [U][B]Full Change Log:[/B][/U]
@@ -1790,6 +1824,7 @@ based/merged/used code/idea plugins:
 * [url]https://forums.alliedmods.net/showthread.php?p=1922088[/url]
 * [url]https://github.com/walmar/ShortSprint[/url]
 * [url]https://github.com/KissLick/TeamGames/[/url]
+* [url]https://github.com/TiBarification/Jail-Warden-Pro[/url]
 * [url]https://github.com/AG-Headline/Hunger-Games-Beacon[/url]
 * [url]https://forums.alliedmods.net/showthread.php?p=1086127[/url]
 * [url]https://forums.alliedmods.net/showthread.php?t=234169[/url]
@@ -1809,7 +1844,7 @@ based/merged/used code/idea plugins:
 [/SPOILER]
 [SIZE="5"]THANKS FOR MAKING FREE SOFTWARE![/SIZE] :bacon!: :bacon!:
 [U]Much Thanks: [/U]
-Weeeishy, UartigZone, Got Sw4g? terminator18, SkeLeXes, 0dieter0, maKs, TomseN48, Horoxx, zeddy, NrX, ElleVen, Bchewy, Include1, alsacchi, Murr, poppin-fresh, databomb, r3D w0LF, JacobThePigeon for bughunting, translation & great ideas!
+devu4, good_live, Weeeishy, UartigZone, Got Sw4g? terminator18, SkeLeXes, 0dieter0, maKs, TomseN48, Horoxx, zeddy, NrX, ElleVen, Bchewy, Include1, alsacchi, Murr, poppin-fresh, databomb, r3D w0LF, JacobThePigeon, mrkos9i4ok for bughunting, translation & great ideas!
 
 
 
@@ -1818,7 +1853,7 @@ Weeeishy, UartigZone, Got Sw4g? terminator18, SkeLeXes, 0dieter0, maKs, TomseN48
 [COLOR="DarkRed"][B]The smx files on Github are compiled with SM 1.8. 
 If you still use 1.7.x you should update your sourcemod or compile MyJailbreak for yourself on your SM version[/B][/COLOR]
 
-[B][U]Wiki:[/U][/B] need some work
+[B][U]Wiki:[/U][/B] [i]need some work[/i]
 [url]https://github.com/shanapu/MyJailbreak/wiki/[/url]
 
 [U][B]Report Bugs, Ideas, Requests & see todo:[/B][/U]
@@ -1835,7 +1870,7 @@ coded with [IMG]http://shanapu.de/githearth-small.png[/IMG] free software
 Even if you are a beginner and willing to learn or you just want to help with translations.[/b] 
 If you own a feature or extention for jail or have an idea that would fit in, i would be happy when you [U]share it with us[/U].
 
-This is my first public project. please note that the code may is messy, stupid and inconseqent or mix different coding styles.  
+This is my first public project. please note that the code may is messy, stupid and inconseqent or mix different coding styles. I do my best to clean it up!  
 
 
 [SIZE="1"]my golden faucets not finance itself...[/SIZE] [URL="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=QT8TVRSYWP53J"] [IMG]http://shanapu.de/donate.gif[/IMG][/URL]

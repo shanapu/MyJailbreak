@@ -35,8 +35,11 @@
 
 //Console Variables
 ConVar gc_bNoBlock;
-ConVar g_bNoBlockSolid;
 ConVar gc_bNoBlockMode;
+
+
+//Extern Convars
+ConVar g_bNoBlockSolid;
 
 
 //Booleans

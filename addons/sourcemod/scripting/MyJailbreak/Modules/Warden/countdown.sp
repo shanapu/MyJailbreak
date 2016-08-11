@@ -225,13 +225,12 @@ public Action Command_StartCountDown(int client, int args)
 				g_hStartTimer = CreateTimer( 1.0, Timer_StartCountdown, client, TIMER_REPEAT);
 				
 				CPrintToChatAll("%t %t", "warden_tag" , "warden_startcountdownhint");
-		
+				
 				if(gc_bBetterNotes.BoolValue)
 				{
-					PrintHintTextToAll("%t", "warden_startcountdownhint_nc");
+					PrintCenterTextAll("%t", "warden_startcountdownhint_nc");
 				}
-	
-			
+				
 				g_bIsCountDown = true;
 			}
 			else CPrintToChat(client, "%t %t", "warden_tag" , "warden_countdownrunning");
@@ -257,7 +256,7 @@ public Action Command_StopCountDown(int client, int args)
 		
 				if(gc_bBetterNotes.BoolValue)
 				{
-					PrintHintTextToAll("%t", "warden_stopcountdownhint_nc");
+					PrintCenterTextAll("%t", "warden_stopcountdownhint_nc");
 				}
 												
 				g_bIsCountDown = true;
@@ -334,7 +333,7 @@ public Action SetStartStopCountDown(int client, int args)
 				
 				if(gc_bBetterNotes.BoolValue)
 				{
-					PrintHintTextToAll("%t", "warden_startstopcountdownhint_nc");
+					PrintCenterTextAll("%t", "warden_startstopcountdownhint_nc");
 				}
 				g_bIsCountDown = true;
 			}
@@ -479,7 +478,7 @@ public Action Timer_StartCountdown( Handle timer, any client )
 		{
 			if (g_iCountStartTime < 6) 
 			{
-				PrintHintText(client,"%t", "warden_startcountdown_nc", g_iCountStartTime);
+				PrintCenterText(client,"%t", "warden_startcountdown_nc", g_iCountStartTime);
 				CPrintToChatAll("%t %t", "warden_tag" , "warden_startcountdown", g_iCountStartTime);
 			}
 		}
@@ -490,7 +489,7 @@ public Action Timer_StartCountdown( Handle timer, any client )
 	{
 		if(IsClientInGame(client) && IsClientConnected(client) && !IsFakeClient(client))
 		{
-			PrintHintText(client, "%t", "warden_countdownstart_nc");
+			PrintCenterText(client, "%t", "warden_countdownstart_nc");
 			CPrintToChatAll("%t %t", "warden_tag" , "warden_countdownstart");
 			
 			if(gc_bCountdownOverlays.BoolValue)
@@ -520,7 +519,7 @@ public Action Timer_StopCountdown( Handle timer, any client )
 		{
 			if (g_iCountStopTime < 16) 
 			{
-				PrintHintText(client,"%t", "warden_stopcountdown_nc", g_iCountStopTime);
+				PrintCenterText(client,"%t", "warden_stopcountdown_nc", g_iCountStopTime);
 				CPrintToChatAll("%t %t", "warden_tag" , "warden_stopcountdown", g_iCountStopTime);
 			}
 		}
@@ -531,7 +530,7 @@ public Action Timer_StopCountdown( Handle timer, any client )
 	{
 		if(IsClientInGame(client) && IsClientConnected(client) && !IsFakeClient(client))
 		{
-			PrintHintText(client, "%t", "warden_countdownstop_nc");
+			PrintCenterText(client, "%t", "warden_countdownstop_nc");
 			CPrintToChatAll("%t %t", "warden_tag" , "warden_countdownstop");
 			
 			if(gc_bCountdownOverlays.BoolValue)
@@ -561,7 +560,7 @@ public Action Timer_StopStartStopCountdown( Handle timer, any client )
 		{
 			if ( g_iSetCountStartStopTime < 11) 
 			{
-				PrintHintText(client,"%t", "warden_stopcountdown_nc", g_iSetCountStartStopTime);
+				PrintCenterText(client,"%t", "warden_stopcountdown_nc", g_iSetCountStartStopTime);
 				CPrintToChatAll("%t %t", "warden_tag" , "warden_stopcountdown", g_iSetCountStartStopTime);
 			}
 		}
@@ -573,7 +572,7 @@ public Action Timer_StopStartStopCountdown( Handle timer, any client )
 	{
 		if(IsClientInGame(client) && IsClientConnected(client) && !IsFakeClient(client))
 		{
-			PrintHintText(client, "%t", "warden_countdownstop_nc");
+			PrintCenterText(client, "%t", "warden_countdownstop_nc");
 			CPrintToChatAll("%t %t", "warden_tag" , "warden_countdownstop");
 			
 			if(gc_bCountdownOverlays.BoolValue)

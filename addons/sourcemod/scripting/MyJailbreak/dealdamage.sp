@@ -27,14 +27,17 @@
 //Includes
 #include <myjailbreak> //... all other includes in myjailbreak.inc
 
+
 //Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
+
 
 //Booleans
 bool IsTruce;
 bool IsDealDamage;
 bool StartDealDamage;
+
 
 //Console Variables    gc_i = global convar integer / gc_i = global convar bool ...
 ConVar gc_bPlugin;
@@ -43,6 +46,7 @@ ConVar gc_iCooldownStart;
 ConVar gc_bSetA;
 ConVar gc_bSpawnCell;
 ConVar gc_bVote;
+ConVar gc_fBeaconTime;
 ConVar gc_iCooldownDay;
 ConVar gc_iRoundTime;
 ConVar gc_iTruceTime;
@@ -52,15 +56,21 @@ ConVar gc_bSounds;
 ConVar gc_iRounds;
 ConVar gc_sSoundStartPath;
 ConVar gc_sCustomCommand;
-ConVar g_iGetRoundTime;
 ConVar gc_bChat;
 ConVar gc_bConsole;
 ConVar gc_bShowPanel;
 ConVar gc_bSpawnRandom;
 ConVar gc_sAdminFlag;
 
+
+//Extern Convars
+ConVar g_iMPRoundTime;
+ConVar g_bHUD;
+
+
 //Integers    g_i = global integer
 int g_iOldRoundTime;
+int g_iOldHUD;
 int g_iCoolDown;
 int g_iTruceTime;
 int g_iVoteCount;
@@ -76,14 +86,18 @@ int BestCTdamage = 0;
 int BestPlayer = -1;
 int TotalDamage = 0;
 
+
 //Floats    g_i = global float
 float g_fPos[3];
+
 
 //Handles
 Handle TruceTimer;
 Handle RoundTimer;
+Handle BeaconTimer;
 Handle DealDamageMenu;
 Handle DealDamageEndMenu;
+
 
 //Strings    g_s = global string
 char g_sHasVoted[1500];
@@ -93,6 +107,8 @@ char g_sEventsLogFile[PLATFORM_MAX_PATH];
 char g_sAdminFlag[32];
 char g_sOverlayStartPath[256];
 
+
+//Info
 public Plugin myinfo = {
 	name = "MyJailbreak - DealDamage",
 	author = "shanapu",
@@ -101,15 +117,19 @@ public Plugin myinfo = {
 	url = URL_LINK
 };
 
+
+//Start
 public void OnPluginStart()
 {
 	// Translation
 	LoadTranslations("MyJailbreak.Warden.phrases");
 	LoadTranslations("MyJailbreak.DealDamage.phrases");
 	
+	
 	//Client Commands
 	RegConsoleCmd("sm_setdealdamage", SetDealDamage, "Allows the Admin or Warden to set dealdamage as next round");
 	RegConsoleCmd("sm_dealdamage", VoteDealDamage, "Allows players to vote for a dealdamage");
+	
 	
 	//AutoExecConfig
 	AutoExecConfig_SetFile("DealDamage", "MyJailbreak/EventDays");
@@ -129,6 +149,7 @@ public void OnPluginStart()
 	gc_bConsole = AutoExecConfig_CreateConVar("sm_dealdamage_console", "1", "0 - disabled, 1 - enable print results in client console", _, true,  0.0, true, 1.0);
 	gc_iRounds = AutoExecConfig_CreateConVar("sm_dealdamage_rounds", "2", "Rounds to play in a row", _, true, 1.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_dealdamage_roundtime", "2", "Round time in minutes for a single dealdamage round", _, true, 1.0);
+	gc_fBeaconTime = AutoExecConfig_CreateConVar("sm_dealdamage_beacon_time", "90", "Time in seconds until the beacon turned on (set to 0 to disable)", _, true, 0.0);
 	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_dealdamage_trucetime", "15", "Time in seconds players can't deal damage", _, true,  0.0);
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_dealdamage_cooldown_day", "3", "Rounds cooldown after a event until event can be start again", _, true,  0.0);
 	gc_iCooldownStart = AutoExecConfig_CreateConVar("sm_dealdamage_cooldown_start", "3", "Rounds until event can be start after mapchange.", _, true, 0.0);
@@ -140,6 +161,7 @@ public void OnPluginStart()
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
 	
+	
 	//Hooks
 	HookEvent("round_start", Event_RoundStart);
 	HookEvent("round_end", Event_RoundEnd);
@@ -148,8 +170,10 @@ public void OnPluginStart()
 	HookConVarChange(gc_sCustomCommand, OnSettingChanged);
 	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
 	
+	
 	//Find
-	g_iGetRoundTime = FindConVar("mp_roundtime");
+	g_iMPRoundTime = FindConVar("mp_roundtime");
+	g_bHUD = FindConVar("sm_hud_enable");
 	gc_sOverlayStartPath.GetString(g_sOverlayStartPath , sizeof(g_sOverlayStartPath));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 	gc_sCustomCommand.GetString(g_sCustomCommand , sizeof(g_sCustomCommand));
@@ -158,8 +182,8 @@ public void OnPluginStart()
 	SetLogFile(g_sEventsLogFile, "Events");
 }
 
-//ConVarChange for Strings
 
+//ConVarChange for Strings
 public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
 	if(convar == gc_sOverlayStartPath)    //Add overlay to download and precache table if changed
@@ -186,21 +210,8 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 	}
 }
 
-//Initialize Event
 
-public void OnMapStart()
-{
-	//set default start values
-	g_iVoteCount = 0; //how many player voted for the event
-	g_iRound = 0;
-	IsDealDamage = false;
-	StartDealDamage = false;
-	
-	//Precache Sound & Overlay
-	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
-	if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
-}
-
+//Initialize Plugin
 public void OnConfigsExecuted()
 {
 	//Find Convar Times
@@ -215,13 +226,13 @@ public void OnConfigsExecuted()
 		RegConsoleCmd(sBufferCMD, VoteDealDamage, "Allows players to vote for DealDamage");
 }
 
-public void OnClientPutInServer(int client)
-{
-	SDKHook(client, SDKHook_OnTakeDamage, OnTakedamage);
-}
+
+/******************************************************************************
+                   COMMANDS
+******************************************************************************/
+
 
 //Admin & Warden set Event
-
 public Action SetDealDamage(int client,int args)
 {
 	if (gc_bPlugin.BoolValue) //is plugin enabled?
@@ -276,8 +287,8 @@ public Action SetDealDamage(int client,int args)
 	else CPrintToChat(client, "%t %t", "dealdamage_tag" , "dealdamage_disabled");
 }
 
-//Voting for Event
 
+//Voting for Event
 public Action VoteDealDamage(int client,int args)
 {
 	char steamid[64];
@@ -319,38 +330,17 @@ public Action VoteDealDamage(int client,int args)
 	else CPrintToChat(client, "%t %t", "dealdamage_tag" , "dealdamage_disabled");
 }
 
-//Prepare Event
 
-void StartNextRound()
-{
-	StartDealDamage = true;
-	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
-	g_iVoteCount = 0;
-	
-	char buffer[32];
-	Format(buffer, sizeof(buffer), "%T", "dealdamage_name", LANG_SERVER);
-	SetEventDayName(buffer);
-	SetEventDayPlanned(true);
-	
-	g_iOldRoundTime = g_iGetRoundTime.IntValue; //save original round time
-	g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
-	
-	if(gc_bSpawnRandom.BoolValue)SetCvar("mp_randomspawn", 1);
-	if(gc_bSpawnRandom.BoolValue)SetCvar("mp_randomspawn_los", 1);
-	
-	CPrintToChatAll("%t %t", "dealdamage_tag" , "dealdamage_next");
-	PrintHintTextToAll("%t", "dealdamage_next_nc");
-//	LoopClients(i) CreateInfoPanel(i);
-}
+/******************************************************************************
+                   EVENTS
+******************************************************************************/
+
 
 //Round start
-
-public void Event_RoundStart(Handle event, char[] name, bool dontBroadcast)
+public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
 	if (StartDealDamage || IsDealDamage)
 	{
-		
-		
 		//disable other plugins
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_weapons_enable", 1);
@@ -358,6 +348,7 @@ public void Event_RoundStart(Handle event, char[] name, bool dontBroadcast)
 		SetCvar("sm_weapons_ct", 1);
 		SetCvar("sm_menu_enable", 0);
 		SetCvar("sm_warden_enable", 0);
+		SetCvar("sm_hud_enable", 0);
 		SetEventDayPlanned(false);
 		SetEventDayRunning(true);
 		BestT = 0;
@@ -366,8 +357,10 @@ public void Event_RoundStart(Handle event, char[] name, bool dontBroadcast)
 		BestCTdamage = 0;
 		BestPlayer = 0;
 		
+		if (gc_fBeaconTime.FloatValue > 0.0) BeaconTimer = CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
+		
 		float RoundTime = (gc_iRoundTime.FloatValue*60-5);
-		RoundTimer = CreateTimer (RoundTime, EndTheRound);
+		RoundTimer = CreateTimer (RoundTime, Timer_EndTheRound);
 		IsDealDamage = true;
 		IsTruce = true;
 		
@@ -431,7 +424,7 @@ public void Event_RoundStart(Handle event, char[] name, bool dontBroadcast)
 				}
 				//Set Start Timer
 				g_iTruceTime--;
-				TruceTimer = CreateTimer(1.0, StartTimer, _, TIMER_REPEAT);
+				TruceTimer = CreateTimer(1.0, Timer_StartEvent, _, TIMER_REPEAT);
 				CPrintToChatAll("%t %t", "dealdamage_tag" ,"dealdamage_rounds", g_iRound, g_iMaxRound);
 			}
 		}
@@ -450,6 +443,160 @@ public void Event_RoundStart(Handle event, char[] name, bool dontBroadcast)
 		else if (g_iCoolDown > 0) g_iCoolDown--;
 	}
 }
+
+
+//Round End
+public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
+{
+	int winner = event.GetInt("winner");
+	
+	if (IsDealDamage) //if event was running this round
+	{
+		LoopClients(client)
+		{
+			if (IsClientInGame(client)) 
+			{
+				SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true); //disbale noblock
+				SendResults(client);
+			}
+		}
+		delete TruceTimer; //kill start time if still running
+		delete BeaconTimer;
+		
+		if (winner == 2) PrintCenterTextAll("%t", "dealdamage_twin_nc", DamageT);
+		if (winner == 3) PrintCenterTextAll("%t", "dealdamage_ctwin_nc", DamageCT);
+		if (g_iRound == g_iMaxRound) //if this was the last round
+		{
+			//return to default start values
+			IsDealDamage = false;
+			StartDealDamage = false;
+			g_iRound = 0;
+			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
+			
+			//enable other pluigns
+			SetCvar("sm_hosties_lr", 1);
+			SetCvar("sm_weapons_enable", 1);
+			SetCvar("sv_infinite_ammo", 0);
+			SetCvar("sm_menu_enable", 1);
+			SetCvar("sm_warden_enable", 1);
+			SetCvar("sm_weapons_t", 0);
+			SetCvar("sm_hud_enable", g_iOldHUD);
+			if(gc_bSpawnRandom.BoolValue)SetCvar("mp_randomspawn", 0);
+			if(gc_bSpawnRandom.BoolValue)SetCvar("mp_randomspawn_los", 0);
+			
+			g_iMPRoundTime.IntValue = g_iOldRoundTime; //return to original round time
+			SetEventDayName("none"); //tell myjailbreak event is ended
+			SetEventDayRunning(false);
+			CPrintToChatAll("%t %t", "dealdamage_tag" , "dealdamage_end");
+			
+		}
+	}
+	if (StartDealDamage)
+	{
+		LoopClients(i) CreateInfoPanel(i);
+		
+		CPrintToChatAll("%t %t", "dealdamage_tag" , "dealdamage_next");
+		PrintCenterTextAll("%t", "dealdamage_next_nc");
+	}
+}
+
+
+/******************************************************************************
+                   FORWARDS LISTEN
+******************************************************************************/
+
+
+//Initialize Event
+public void OnMapStart()
+{
+	//set default start values
+	g_iVoteCount = 0; //how many player voted for the event
+	g_iRound = 0;
+	IsDealDamage = false;
+	StartDealDamage = false;
+	
+	//Precache Sound & Overlay
+	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
+	if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
+}
+
+
+//Map End
+public void OnMapEnd()
+{
+	//return to default start values
+	IsDealDamage = false;
+	StartDealDamage = false;
+	delete TruceTimer; //kill start time if still running
+	delete RoundTimer; //kill start time if still running
+	delete BeaconTimer;
+	g_iVoteCount = 0;
+	g_iRound = 0;
+	g_sHasVoted[0] = '\0'; 
+}
+
+
+//Set Client Hook
+public void OnClientPutInServer(int client)
+{
+	SDKHook(client, SDKHook_OnTakeDamage, OnTakedamage);
+}
+
+
+public Action OnTakedamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &weapon, float damageForce[3], float damagePosition[3], int damagecustom)
+{
+	if(!IsValidClient(victim, true, false) || attacker == victim || !IsValidClient(attacker, true, false) || !IsDealDamage) return Plugin_Continue;
+	
+	if((GetClientTeam(attacker) == CS_TEAM_CT) && (GetClientTeam(victim) == CS_TEAM_T) && !IsTruce)
+	{
+		DamageCT = DamageCT + RoundToCeil(damage);
+	}
+	if((GetClientTeam(attacker) == CS_TEAM_T) && (GetClientTeam(victim) == CS_TEAM_CT) && !IsTruce)
+	{
+		DamageT = DamageT + RoundToCeil(damage);
+	}
+	LoopClients(i) PrintHintText(i, "<font face='Arial' color='#0055FF'>%t  </font> %i %t \n<font face='Arial' color='#FF0000'>%t  </font> %i %t \n<font face='Arial' color='#00FF00'>%t  </font> %i %t", "dealdamage_ctdealed", DamageCT, "dealdamage_hpdamage", "dealdamage_tdealed", DamageT, "dealdamage_hpdamage", "dealdamage_clientdealed", DamageDealed[i], "dealdamage_hpdamage");
+	if((GetClientTeam(attacker) != GetClientTeam(victim))) DamageDealed[attacker] = DamageDealed[attacker] + RoundToCeil(damage);
+	return Plugin_Handled;
+}
+
+
+/******************************************************************************
+                   FUNCTIONS
+******************************************************************************/
+
+
+//Prepare Event
+void StartNextRound()
+{
+	StartDealDamage = true;
+	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
+	g_iVoteCount = 0;
+	
+	char buffer[32];
+	Format(buffer, sizeof(buffer), "%T", "dealdamage_name", LANG_SERVER);
+	SetEventDayName(buffer);
+	SetEventDayPlanned(true);
+	
+	g_iOldRoundTime = g_iMPRoundTime.IntValue; //save original round time
+	g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
+	
+	g_bHUD = FindConVar("sm_hud_enable");
+	g_iOldHUD = g_bHUD.IntValue;
+	
+	if(gc_bSpawnRandom.BoolValue)SetCvar("mp_randomspawn", 1);
+	if(gc_bSpawnRandom.BoolValue)SetCvar("mp_randomspawn_los", 1);
+	
+	CPrintToChatAll("%t %t", "dealdamage_tag" , "dealdamage_next");
+	PrintCenterTextAll("%t", "dealdamage_next_nc");
+//	LoopClients(i) CreateInfoPanel(i);
+}
+
+
+/******************************************************************************
+                   MENUS
+******************************************************************************/
+
 
 stock void CreateInfoPanel(int client)
 {
@@ -481,86 +628,75 @@ stock void CreateInfoPanel(int client)
 	SendPanelToClient(DealDamageMenu, client, Handler_NullCancel, 20); //open info Panel
 }
 
-//Round End
 
-public void Event_RoundEnd(Handle event, char[] name, bool dontBroadcast)
+stock void SendResults(int client)
 {
-	int winner = GetEventInt(event, "winner");
+	char info[128];
 	
-	if (IsDealDamage) //if event was running this round
-	{
-		LoopClients(client)
-		{
-			if (IsClientInGame(client)) 
-			{
-				SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true); //disbale noblock
-				
-			}
-		}
-		delete TruceTimer; //kill start time if still running
-		
-		if (winner == 2) PrintHintTextToAll("%t", "dealdamage_twin_nc", DamageT);
-		if (winner == 3) PrintHintTextToAll("%t", "dealdamage_ctwin_nc", DamageCT);
-		if (g_iRound == g_iMaxRound) //if this was the last round
-		{
-			//return to default start values
-			IsDealDamage = false;
-			StartDealDamage = false;
-			g_iRound = 0;
-			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
-			
-			//enable other pluigns
-			SetCvar("sm_hosties_lr", 1);
-			SetCvar("sm_weapons_enable", 1);
-			SetCvar("sv_infinite_ammo", 0);
-			SetCvar("sm_menu_enable", 1);
-			SetCvar("sm_warden_enable", 1);
-			SetCvar("sm_weapons_t", 0);
-			if(gc_bSpawnRandom.BoolValue)SetCvar("mp_randomspawn", 0);
-			if(gc_bSpawnRandom.BoolValue)SetCvar("mp_randomspawn_los", 0);
-			
-			g_iGetRoundTime.IntValue = g_iOldRoundTime; //return to original round time
-			SetEventDayName("none"); //tell myjailbreak event is ended
-			SetEventDayRunning(false);
-			CPrintToChatAll("%t %t", "dealdamage_tag" , "dealdamage_end");
-			
-		}
-	}
-	if (StartDealDamage)
-	{
-		LoopClients(i) CreateInfoPanel(i);
-		
-		CPrintToChatAll("%t %t", "dealdamage_tag" , "dealdamage_next");
-		PrintHintTextToAll("%t", "dealdamage_next_nc");
-	}
+	DealDamageEndMenu = CreatePanel();
+	Format(info, sizeof(info),"%t", "dealdamage_result");
+	SetPanelTitle(DealDamageEndMenu, info);
+	if(gc_bConsole.BoolValue) PrintToConsole(client, info);
+	Format(info, sizeof(info),"%t %t", "dealdamage_tag" , "dealdamage_result");
+	if(gc_bChat.BoolValue) CPrintToChat(client, info);
+	DrawPanelText(DealDamageEndMenu, "                                   ");
+	Format(info, sizeof(info), "%t", "dealdamage_total", TotalDamage);
+	DrawPanelText(DealDamageEndMenu, info);
+	if(gc_bConsole.BoolValue) PrintToConsole(client, info);
+	Format(info, sizeof(info), "%t %t", "dealdamage_tag" ,  "dealdamage_total", TotalDamage);
+	if(gc_bChat.BoolValue) CPrintToChat(client, info);
+	Format(info, sizeof(info), "%t","dealdamage_most", BestPlayer, DamageDealed[BestPlayer]);
+	DrawPanelText(DealDamageEndMenu, info);
+	if(gc_bConsole.BoolValue) PrintToConsole(client, info);
+	Format(info, sizeof(info), "%t %t", "dealdamage_tag" ,  "dealdamage_most", BestPlayer, DamageDealed[BestPlayer]);
+	if(gc_bChat.BoolValue) CPrintToChat(client, info);
+	DrawPanelText(DealDamageEndMenu, "                                   ");
+	Format(info, sizeof(info),"%t", "dealdamage_ct", DamageCT);
+	DrawPanelText(DealDamageEndMenu, info);
+	if(gc_bConsole.BoolValue) PrintToConsole(client, info);
+	Format(info, sizeof(info),"%t %t", "dealdamage_tag" ,  "dealdamage_ct", DamageCT);
+	if(gc_bChat.BoolValue) CPrintToChat(client, info);
+	Format(info, sizeof(info), "%t", "dealdamage_t", DamageT);
+	DrawPanelText(DealDamageEndMenu, info);
+	if(gc_bConsole.BoolValue) PrintToConsole(client, info);
+	Format(info, sizeof(info), "%t %t", "dealdamage_tag" ,  "dealdamage_ct", DamageT);
+	if(gc_bChat.BoolValue) CPrintToChat(client, info);
+	DrawPanelText(DealDamageEndMenu, "                                   ");
+	Format(info, sizeof(info),"%t", "dealdamage_bestct", BestCT, BestCTdamage);
+	DrawPanelText(DealDamageEndMenu, info);
+	if(gc_bConsole.BoolValue) PrintToConsole(client, info);
+	Format(info, sizeof(info),"%t %t", "dealdamage_tag" ,  "dealdamage_bestct", BestCT, BestCTdamage);
+	if(gc_bChat.BoolValue) CPrintToChat(client, info);
+	Format(info, sizeof(info),"%t", "dealdamage_bestt", BestT, BestTdamage);
+	DrawPanelText(DealDamageEndMenu, info);
+	if(gc_bConsole.BoolValue) PrintToConsole(client, info);
+	Format(info, sizeof(info),"%t %t", "dealdamage_tag" , "dealdamage_bestt", BestT, BestTdamage);
+	if(gc_bChat.BoolValue) CPrintToChat(client, info);
+	Format(info, sizeof(info),"%t", "dealdamage_client", DamageDealed[client]);
+	DrawPanelText(DealDamageEndMenu, info);
+	if(gc_bConsole.BoolValue) PrintToConsole(client, info);
+	DrawPanelText(DealDamageEndMenu, "                                   ");
+	Format(info, sizeof(info),"%t %t", "dealdamage_tag" , "dealdamage_client", DamageDealed[client]);
+	if(gc_bChat.BoolValue) CPrintToChat(client, info);
+	
+	if(gc_bShowPanel.BoolValue) SendPanelToClient(DealDamageEndMenu, client, Handler_NullCancel, 20); //open info Panel
 }
 
-//Map End
 
-public void OnMapEnd()
-{
-	//return to default start values
-	IsDealDamage = false;
-	StartDealDamage = false;
-	delete TruceTimer; //kill start time if still running
-	delete RoundTimer; //kill start time if still running
-	g_iVoteCount = 0;
-	g_iRound = 0;
-	g_sHasVoted[0] = '\0'; 
-}
+/******************************************************************************
+                   TIMER
+******************************************************************************/
+
 
 //Start Timer
-
-public Action StartTimer(Handle timer)
+public Action Timer_StartEvent(Handle timer)
 {
 	if (g_iTruceTime > 1) //countdown to start
 	{
 		g_iTruceTime--;
-		LoopClients(client)
-		if (IsClientInGame(client) && IsPlayerAlive(client))
-			{
-				PrintHintText(client,"%t", "dealdamage_timeuntilstart_nc", g_iTruceTime);
-			}
+		
+		LoopValidClients(client,false,true) PrintCenterText(client,"%t", "dealdamage_timeuntilstart_nc", g_iTruceTime);
+		
 		return Plugin_Continue;
 	}
 	
@@ -572,7 +708,7 @@ public Action StartTimer(Handle timer)
 		{
 			if (IsClientInGame(client) && IsPlayerAlive(client))
 			{
-				PrintHintText(client,"%t", "dealdamage_start_nc");
+				PrintCenterText(client,"%t", "dealdamage_start_nc");
 				SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
 			}
 			if(gc_bOverlays.BoolValue) ShowOverlay(client, g_sOverlayStartPath, 2.0);
@@ -590,24 +726,14 @@ public Action StartTimer(Handle timer)
 	return Plugin_Stop;
 }
 
-public Action OnTakedamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &weapon, float damageForce[3], float damagePosition[3], int damagecustom)
+public Action Timer_BeaconOn(Handle timer)
 {
-	if(!IsValidClient(victim, true, false) || attacker == victim || !IsValidClient(attacker, true, false) || !IsDealDamage) return Plugin_Continue;
-	
-	if((GetClientTeam(attacker) == CS_TEAM_CT) && (GetClientTeam(victim) == CS_TEAM_T) && !IsTruce)
-	{
-		DamageCT = DamageCT + RoundToCeil(damage);
-	}
-	if((GetClientTeam(attacker) == CS_TEAM_T) && (GetClientTeam(victim) == CS_TEAM_CT) && !IsTruce)
-	{
-		DamageT = DamageT + RoundToCeil(damage);
-	}
-	LoopClients(i) PrintHintText(i, "<font face='Arial' color='#0055FF'>%t  </font> %i %t \n<font face='Arial' color='#FF0000'>%t   </font> %i %t \n<font face='Arial' color='#00FF00'>%t   </font> %i %t", "dealdamage_ctdealed", DamageCT, "dealdamage_hpdamage", "dealdamage_tdealed", DamageT, "dealdamage_hpdamage", "dealdamage_clientdealed", DamageDealed[i], "dealdamage_hpdamage");
-	if((GetClientTeam(attacker) != GetClientTeam(victim))) DamageDealed[attacker] = DamageDealed[attacker] + RoundToCeil(damage);
-	return Plugin_Handled;
+	LoopValidClients(i,true,false) BeaconOn(i, 2.0);
+	BeaconTimer = null;
 }
 
-public Action EndTheRound(Handle timer)
+
+public Action Timer_EndTheRound(Handle timer)
 {
 	if (DamageCT > DamageT) 
 	{
@@ -641,66 +767,7 @@ public Action EndTheRound(Handle timer)
 	
 	TotalDamage = DamageCT + DamageT;
 	
-
-	LoopValidClients(client,false,false)
-	{
-		SendResults(client);
-	}
 	RoundTimer = null;
 	delete RoundTimer;
 	if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Damage Deal Result: BestCT: %N Dmg: %i BestT: %N Dmg: %i CT Damage: %i T Damage: %i Total Damage: %i", BestCT, BestCTdamage, BestT, BestTdamage, DamageCT, DamageT, TotalDamage);
 }
-
-stock void SendResults(int client)
-{
-	char info[128];
-	
-	DealDamageEndMenu = CreatePanel();
-	Format(info, sizeof(info),"%t", "dealdamage_result");
-	SetPanelTitle(DealDamageEndMenu, info);
-	Format(info, sizeof(info),"%t %t", "dealdamage_tag" , "dealdamage_result");
-	if(gc_bChat.BoolValue) CPrintToChat(client, info);
-	if(gc_bConsole.BoolValue) PrintToConsole(client, info);
-	DrawPanelText(DealDamageEndMenu, "                                   ");
-	Format(info, sizeof(info), "%t", "dealdamage_total", TotalDamage);
-	DrawPanelText(DealDamageEndMenu, info);
-	Format(info, sizeof(info), "%t %t", "dealdamage_tag" ,  "dealdamage_total", TotalDamage);
-	if(gc_bChat.BoolValue) CPrintToChat(client, info);
-	if(gc_bConsole.BoolValue) PrintToConsole(client, info);
-	Format(info, sizeof(info), "%t","dealdamage_most", BestPlayer, DamageDealed[BestPlayer]);
-	DrawPanelText(DealDamageEndMenu, info);
-	Format(info, sizeof(info), "%t %t", "dealdamage_tag" ,  "dealdamage_most", BestPlayer, DamageDealed[BestPlayer]);
-	if(gc_bChat.BoolValue) CPrintToChat(client, info);
-	if(gc_bConsole.BoolValue) PrintToConsole(client, info);
-	DrawPanelText(DealDamageEndMenu, "                                   ");
-	Format(info, sizeof(info),"%t", "dealdamage_ct", DamageCT);
-	DrawPanelText(DealDamageEndMenu, info);
-	Format(info, sizeof(info),"%t %t", "dealdamage_tag" ,  "dealdamage_ct", DamageCT);
-	if(gc_bChat.BoolValue) CPrintToChat(client, info);
-	if(gc_bConsole.BoolValue) PrintToConsole(client, info);
-	Format(info, sizeof(info), "%t", "dealdamage_t", DamageT);
-	DrawPanelText(DealDamageEndMenu, info);
-	Format(info, sizeof(info), "%t %t", "dealdamage_tag" ,  "dealdamage_ct", DamageT);
-	if(gc_bChat.BoolValue) CPrintToChat(client, info);
-	if(gc_bConsole.BoolValue) PrintToConsole(client, info);
-	DrawPanelText(DealDamageEndMenu, "                                   ");
-	Format(info, sizeof(info),"%t", "dealdamage_bestct", BestCT, BestCTdamage);
-	DrawPanelText(DealDamageEndMenu, info);
-	Format(info, sizeof(info),"%t %t", "dealdamage_tag" ,  "dealdamage_bestct", BestCT, BestCTdamage);
-	if(gc_bChat.BoolValue) CPrintToChat(client, info);
-	if(gc_bConsole.BoolValue) PrintToConsole(client, info);
-	Format(info, sizeof(info),"%t", "dealdamage_bestt", BestT, BestTdamage);
-	DrawPanelText(DealDamageEndMenu, info);
-	Format(info, sizeof(info),"%t %t", "dealdamage_tag" , "dealdamage_bestt", BestT, BestTdamage);
-	if(gc_bChat.BoolValue) CPrintToChat(client, info);
-	if(gc_bConsole.BoolValue) PrintToConsole(client, info);
-	Format(info, sizeof(info),"%t", "dealdamage_client", DamageDealed[client]);
-	DrawPanelText(DealDamageEndMenu, info);
-	DrawPanelText(DealDamageEndMenu, "                                   ");
-	Format(info, sizeof(info),"%t %t", "dealdamage_tag" , "dealdamage_client", DamageDealed[client]);
-	if(gc_bChat.BoolValue) CPrintToChat(client, info);
-	if(gc_bConsole.BoolValue) PrintToConsole(client, info);
-	
-	if(gc_bShowPanel.BoolValue) SendPanelToClient(DealDamageEndMenu, client, Handler_NullCancel, 20); //open info Panel
-}
-

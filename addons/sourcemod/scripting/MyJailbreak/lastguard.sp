@@ -46,6 +46,7 @@ ConVar gc_bSetCT;
 ConVar gc_bVote;
 ConVar gc_bAutomatic;
 ConVar gc_iMinCT;
+ConVar gc_fBeaconTime;
 ConVar gc_iTruceTime;
 ConVar gc_iTime;
 ConVar gc_iTimePerT;
@@ -67,6 +68,7 @@ int g_iVoteCount;
 //Handles
 Handle TruceTimer;
 Handle LastGuardMenu;
+Handle BeaconTimer;
 
 
 //Strings
@@ -114,6 +116,7 @@ public void OnPluginStart()
 	gc_iHPmultipler = AutoExecConfig_CreateConVar("sm_lastguard_hp", "50", "How many percent of the combined Terror Health the CT get? (3 terror alive with 100HP = 300HP / 50% = CT get 150HP)", _, true,  0.0);
 	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_lastguard_trucetime", "10", "Time in seconds players can't deal damage. Half of this time you are freezed", _, true,  8.0);
 	gc_iTime = AutoExecConfig_CreateConVar("sm_lastguard_time", "5", "Time in minutes to end the last guard rule - 0 = keep original time", _, true,  0.0);
+	gc_fBeaconTime = AutoExecConfig_CreateConVar("sm_lastguard_beacon_time", "300", "Time in seconds until the beacon turned on (set to 0 to disable)", _, true, 0.0);
 	gc_iTimePerT = AutoExecConfig_CreateConVar("sm_lastguard_time_per_T", "60", "Time in seconds to add to sm_lastguard_time per living terror - 0 = no extra time per t", _, true,  0.0);
 	gc_bFreeze = AutoExecConfig_CreateConVar("sm_lastguard_freeze", "0", "0 - disabled, 1 - Freeze all players the half of trucetime.", _, true,  0.0, true, 1.0);
 	gc_bSounds = AutoExecConfig_CreateConVar("sm_lastguard_sounds_enable", "1", "0 - disabled, 1 - enable sounds ", _, true, 0.1, true, 1.0);
@@ -265,7 +268,7 @@ public Action VoteLastGuard(int client,int args)
 
 
 //Initialize Event
-public void Event_RoundStart(Handle event, char[] name, bool dontBroadcast)
+public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
 	IsLR = false;
 	IsLastGuard = false;
@@ -278,9 +281,9 @@ public void Event_RoundStart(Handle event, char[] name, bool dontBroadcast)
 
 
 //Round End
-public void Event_RoundEnd(Handle event, char[] name, bool dontBroadcast)
+public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
-	int winner = GetEventInt(event, "winner");
+	int winner = event.GetInt("winner");
 	
 	Format(g_sHasVoted, sizeof(g_sHasVoted), "");
 	if (IsLastGuard)
@@ -290,8 +293,9 @@ public void Event_RoundEnd(Handle event, char[] name, bool dontBroadcast)
 			SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
 		}
 		delete TruceTimer;
-		if (winner == 2) PrintHintTextToAll("%t", "lastguard_twin_nc");
-		if (winner == 3) PrintHintTextToAll("%t", "lastguard_ctwin_nc");
+		delete BeaconTimer;
+		if (winner == 2) PrintCenterTextAll("%t", "lastguard_twin_nc");
+		if (winner == 3) PrintCenterTextAll("%t", "lastguard_ctwin_nc");
 		
 		SetLastGuardRule(false);
 		IsLastGuard = false;
@@ -307,7 +311,7 @@ public void Event_RoundEnd(Handle event, char[] name, bool dontBroadcast)
 
 
 //Check player count when player dies or change team
-public Action Event_PlayerTeamDeath(Event event, const char[] name, bool dontBroadcast)
+public void Event_PlayerTeamDeath(Event event, const char[] name, bool dontBroadcast)
 {
 	if(AllowLastGuard)CheckStatus();
 }
@@ -329,6 +333,8 @@ public Action StartLastGuard()
 		SJD_OpenDoors();
 		
 		SetLastGuardRule(true);
+		
+		if (gc_fBeaconTime.FloatValue > 0.0) BeaconTimer = CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
 		
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_weapons_t", 1);
@@ -395,7 +401,6 @@ public Action StartLastGuard()
 			{
 				SetEntityHealth(iClient, HPCT);
 				CPrintToChatAll("%t %t", "lastguard_tag", "lastguard_hp", GetAliveTeamCount(CS_TEAM_T), HPterrors, iClient, HPCT);
-		
 			}
 		}
 		
@@ -403,7 +408,7 @@ public Action StartLastGuard()
 		TruceTimer = CreateTimer(1.0, Timer_TruceUntilStart, _, TIMER_REPEAT);
 		
 		CPrintToChatAll("%t %t", "lastguard_tag" , "lastguard_startnow");
-		PrintHintTextToAll("%t", "lastguard_startnow_nc");
+		PrintCenterTextAll("%t", "lastguard_startnow_nc");
 	}
 }
 
@@ -479,6 +484,7 @@ public void OnClientDisconnect_Post(int client)
 public int OnAvailableLR(int Announced)
 {
 	IsLR = true;
+	delete BeaconTimer;
 }
 
 
@@ -495,11 +501,11 @@ public Action Timer_TruceUntilStart(Handle timer)
 		g_iTruceTime--;
 		LoopClients(client) if (IsPlayerAlive(client))
 		{
-			PrintHintText(client,"%t", "lastguard_timeuntilstart_nc", g_iTruceTime);
+			PrintCenterText(client,"%t", "lastguard_timeuntilstart_nc", g_iTruceTime);
 			if (gc_bFreeze.BoolValue && (g_iTruceTime <= (gc_iTruceTime.IntValue / 2)) && (GetEntityMoveType(client) == MOVETYPE_NONE))
 			{
 				SetEntityMoveType(client, MOVETYPE_WALK);
-				PrintHintText(client,"%t", "lastguard_movenow_nc", g_iTruceTime);
+				PrintCenterText(client,"%t", "lastguard_movenow_nc", g_iTruceTime);
 				CPrintToChat(client, "%t %t", "lastguard_tag" , "lastguard_movenow");
 				
 			}
@@ -513,7 +519,7 @@ public Action Timer_TruceUntilStart(Handle timer)
 	LoopClients(client) if (IsPlayerAlive(client))
 	{
 		SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
-		PrintHintText(client,"%t", "lastguard_start_nc");
+		PrintCenterText(client,"%t", "lastguard_start_nc");
 		if(gc_bOverlays.BoolValue) ShowOverlay(client, g_sOverlayStartPath, 2.0);
 		if(gc_bSounds.BoolValue)
 		{
@@ -537,4 +543,11 @@ public Action Timer_LastGuardSound(Handle timer)
 public Action Timer_LastGuardBeginn(Handle timer)
 {
 	AllowLastGuard = true;
+}
+
+
+public Action Timer_BeaconOn(Handle timer)
+{
+	LoopValidClients(i,true,false) BeaconOn(i, 2.0);
+	BeaconTimer = null;
 }

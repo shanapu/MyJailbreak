@@ -415,6 +415,16 @@
 		"en"		"Team Games - Games"
 	}
 
+	"menu_rebel"
+	{
+		"en"		"Un/Mark a player as Rebel"
+	}
+
+	"menu_count"
+	{
+		"en"		"Count nearby Prisoner"
+	}
+
 	"menu_minplayer"
 	{
 		"ru"		"Для голосование за игровой дня, вы должны иметь как минимум {purple}одного КТ и 1 Т"
@@ -448,5 +458,12 @@
 		"da"		"Event voting runde er midlertidigt {purple}slÃ¥et fra."
 		"en"		"Event voting is currently {purple}disabled!"
 	}
+
+	/* Translation PLACEHOLDER
+	"menu_PLACEHOLDER"
+	{
+		"en"		"PLACEHOLDER Item"
+	}
+	*/
 
 }

@@ -67,13 +67,13 @@ public void Disarm_Event_RoundStart(Event event, const char[] name, bool dontBro
 	g_iDisarm = gc_iDisarm.IntValue;
 }
 
-public Action Disarm_Event_PlayerHurt(Handle event, char[] name, bool dontBroadcast)
+public Action Disarm_Event_PlayerHurt(Event event, char[] name, bool dontBroadcast)
 {
 	if(gc_bPlugin.BoolValue && gc_bDisarm.BoolValue)
 	{
-		int victim 			= GetClientOfUserId(GetEventInt(event, "userid"));
-		int attacker 		= GetClientOfUserId(GetEventInt(event, "attacker"));
-		int hitgroup		= GetEventInt(event, "hitgroup");
+		int victim 			= GetClientOfUserId(event.GetInt("userid"));
+		int attacker 		= GetClientOfUserId(event.GetInt("attacker"));
+		int hitgroup		= event.GetInt("hitgroup");
 		int victimweapon = GetEntPropEnt(victim, Prop_Send, "m_hActiveWeapon");
 		
 		if (IsValidClient(attacker,true,false) && IsValidClient(victim,true,false))
@@ -85,7 +85,7 @@ public Action Disarm_Event_PlayerHurt(Handle event, char[] name, bool dontBroadc
 					if(victimweapon != -1)
 					{
 						CPrintToChatAll("%t %t", "warden_tag", "warden_disarmed", victim, attacker);
-						PrintHintText(victim, "%t", "warden_lostgun");
+						PrintCenterText(victim, "%t", "warden_lostgun");
 						
 						if(gc_iDisarmMode.IntValue == 1)
 						{
