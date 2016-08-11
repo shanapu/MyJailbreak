@@ -241,7 +241,7 @@
 
 	"menu_ffa"
 	{
-		"ru"		"Свобода для ВСЕХ"
+		"ru"		"Все против ВСЕХ"
 		"pl"		"Free for All"
 		"en"		"Free for All"
 	}
@@ -403,26 +403,31 @@
 	"menu_playerfreeday"
 	{
 		"en"		"Give a Player a Freeday"
+		"ru"		"Выдать игроку фридей"
 	}
 
 	"menu_teamgamesmenu"
 	{
 		"en"		"Team Games - Menu"
+		"ru"		"Команды игры - Меню"
 	}
 
 	"menu_teamgamesgames"
 	{
 		"en"		"Team Games - Games"
+		"ru"		"Команды игры - Игры"
 	}
 
 	"menu_rebel"
 	{
 		"en"		"Un/Mark a player as Rebel"
+		"ru"		"Офф/Пометить игрока как бунтующего"
 	}
 
 	"menu_count"
 	{
 		"en"		"Count nearby Prisoner"
+		"ru"		"Посчитать заключённых"
 	}
 
 	"menu_minplayer"

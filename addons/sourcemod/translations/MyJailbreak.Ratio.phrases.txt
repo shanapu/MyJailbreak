@@ -18,7 +18,7 @@
 	"ratio_banned"
 	{
 		"ru"		"Вам запрещено играть за КТ, потому что Вы {green}забанены{default} за КТ."
-		"de"		"Du kannst nicht als Wärter spielen. Du bist als{green}CT{default} gebanned."
+		"de			"Du kannst nicht als Wärter spielen. Du bist als{green}CT{default} gebanned."
 		"en"		"Cannot play on guards because you are {green}CT{default} banned."
 	}
 
@@ -326,22 +326,26 @@
 	"ratio_disabled"
 	{
 		"en"		"Ratio is disabled by Admin"
+		"ru"		"Баланс отключен администратором"
 	}
 
 	"ratio_hasdisabled"
 	{
 		"en"		"Admin has disabled the Ratio"
+		"ru"		"Администратор отключил баланс"
 	}
 
 	"ratio_hasactivated"
 	{
 		"en"		"Admin has activated the Ratio. Ratio fix next round."
+		"ru"		"Администратор активировал баланс. Баланс будет активен в следующем раунде."
 	}
 
 	"ratio_active"
 	{
 		"#format"   "{1:f}"
 		"en"		"Ratio is active! 1 Guards to {1} Prisoners"
+		"ru"		"Баланс активен! 1 Охранник на {1} Заключённых"
 	}
 
 }

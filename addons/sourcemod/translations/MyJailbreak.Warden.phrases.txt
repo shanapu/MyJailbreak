@@ -1226,7 +1226,7 @@
 		"en"		"The Painter for Prisoners is {purple}disabled!"
 		"de"		"Painter für Terroristen {purple}ist deaktiviert!"
 		"pl"		"Marker dla Terrorystow jest{purple}wylaczony"
-		"ru"		"Ящик для Т {purple}отключен"
+		"ru"		"Рисование для Т {purple}отключено"
 	}
 
 	"warden_disarmed"
@@ -1246,42 +1246,50 @@
 	"warden_menu_muteall"
 	{
 		"en"		"Mute all Prisoners"
+		"ru"		"Замутить всех заключённых"
 	}
 
 	"warden_menu_unmuteall"
 	{
 		"en"		"Unmute all Prisoners"
+		"ru"		"Размутить всех заключённых"
 	}
 
 	"warden_rebel_title"
 	{
 		"en"		"Rebels Menu"
+		"ru"		"Меню бунта"
 	}
 
 	"warden_rebel_mark"
 	{
 		"en"		"Mark a Player as Rebel"
+		"en"		"Пометить игрока как бунтующего"
 	}
 
 	"warden_rebel_unmark"
 	{
 		"en"		"Remove a Player from Rebels"
+		"ru"		"Удалить пометку с игрока"
 	}
 
 	"warden_talkover"
 	{
 		"en"		"Warden speaks, you have been muted."
+		"ru"		"Командир говорит, вы были замучены."
 	}
 
 	"warden_info_counter"
 	{
 		"en"		"Prisoner in Radius:"
+		"ru"		"Заключённые в строю:"
 	}
 
 	"warden_counter"
 	{
 		"#format"   "{1:i}"
 		"en"		"There are {1} prisoner in your radius"
+		"ru"		"В строю {1} заключённых"
 	}
 
 }
