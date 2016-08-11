@@ -104,7 +104,7 @@ public Action Command_ToggleNoBlock(int client, int args)
 				}
 			}
 		}
-		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
+		else CReplyToCommand(client, "%t %t", "warden_tag" , "warden_notwarden");
 	}
 }
 
