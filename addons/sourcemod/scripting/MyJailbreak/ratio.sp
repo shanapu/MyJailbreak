@@ -858,7 +858,7 @@ public Action Timer_SlayPlayer(Handle hTimer, any iUserId)
 
 public Action Timer_ForceTSide(Handle timer, any client)
 {
-	ChangeClientTeam(client, CS_TEAM_T);
+	if(IsValidClient(client,true,true)) ChangeClientTeam(client, CS_TEAM_T);
 }
 
 
