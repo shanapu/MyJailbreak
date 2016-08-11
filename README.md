@@ -111,7 +111,7 @@ coded with ![](http://shanapu.de/githearth-small.png) free software
 ***Installation***
   
 1. Make sure you have the *latest versions* of the **required plugins**
-2. Download the [latest release](https://github.com/shanapu/MyJailbreak/releases
+2. Download the [latest release](https://github.com/shanapu/MyJailbreak/releases)
 3. Copy the folders ```addons/```,``` cfg/```, ```materials/```, ```models/``` &``` sound/``` to *your root* ```csgo/``` directory  
 4. Copy the folders ```materials/```, ```models/``` & ```sound/``` *in the fastDL/ directory* to *your* ```FastDownload server```  
 5. Open *your* ```downloads.ini``` in ```your csgo/addons/sourcemod/configs``` directory and add the content of ```downloads.txt```  
