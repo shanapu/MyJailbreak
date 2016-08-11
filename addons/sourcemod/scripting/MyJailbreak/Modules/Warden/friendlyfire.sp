@@ -35,6 +35,9 @@
 
 //Console Variables
 ConVar gc_bFF;
+
+
+//Extern Convars
 ConVar g_bFF;
 
 

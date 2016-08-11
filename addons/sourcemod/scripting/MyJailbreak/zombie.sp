@@ -61,13 +61,13 @@ ConVar gc_bSounds;
 ConVar gc_sSoundStartPath;
 ConVar gc_bOverlays;
 ConVar gc_sOverlayStartPath;
-ConVar g_iGetRoundTime;
+ConVar g_iMPRoundTime;
 ConVar g_sOldSkyName;
 ConVar gc_iRounds;
 ConVar gc_sCustomCommand;
 ConVar gc_sAdminFlag;
 ConVar gc_bAllowLR;
-ConVar g_ciTsLR;
+ConVar g_iTerrorForLR;
 
 
 //Integers
@@ -171,8 +171,8 @@ public void OnPluginStart()
 	
 	
 	//FindConVar
-	g_iGetRoundTime = FindConVar("mp_roundtime");
-	g_ciTsLR = FindConVar("sm_hosties_lr_ts_max");
+	g_iMPRoundTime = FindConVar("mp_roundtime");
+	g_iTerrorForLR = FindConVar("sm_hosties_lr_ts_max");
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
 	gc_sOverlayStartPath.GetString(g_sOverlayStartPath , sizeof(g_sOverlayStartPath));
@@ -426,7 +426,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 				
 				if (gc_bAllowLR.BoolValue)
 				{
-					if ((g_iRound == g_iMaxRound) && (g_iTsLR > g_ciTsLR.IntValue))
+					if ((g_iRound == g_iMaxRound) && (g_iTsLR > g_iTerrorForLR.IntValue))
 					{
 						SetCvar("sm_hosties_lr", 1);
 					}
@@ -484,7 +484,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			SetCvar("sv_infinite_ammo", 0);
 			SetCvar("sm_warden_enable", 1);
 			SetCvar("sm_menu_enable", 1);
-			g_iGetRoundTime.IntValue = g_iOldRoundTime;
+			g_iMPRoundTime.IntValue = g_iOldRoundTime;
 			SetEventDayName("none");
 			SetEventDayRunning(false);
 			FogOff();
@@ -541,7 +541,7 @@ public void OnMapEnd()
 //Listen for Last Lequest
 public int OnAvailableLR(int Announced)
 {
-	if (IsZombie && gc_bAllowLR.BoolValue && (g_iTsLR > g_ciTsLR.IntValue))
+	if (IsZombie && gc_bAllowLR.BoolValue && (g_iTsLR > g_iTerrorForLR.IntValue))
 	{
 		LoopValidClients(client,false,true)
 		{
@@ -578,7 +578,7 @@ public int OnAvailableLR(int Announced)
 			SetCvar("sv_infinite_ammo", 0);
 			SetCvar("sm_warden_enable", 1);
 			SetCvar("sm_menu_enable", 1);
-			g_iGetRoundTime.IntValue = g_iOldRoundTime;
+			g_iMPRoundTime.IntValue = g_iOldRoundTime;
 			SetEventDayName("none");
 			SetEventDayRunning(false);
 			FogOff();
@@ -633,8 +633,8 @@ void StartNextRound()
 	SetEventDayName(buffer);
 	SetEventDayPlanned(true);
 	
-	g_iOldRoundTime = g_iGetRoundTime.IntValue; //save original round time
-	g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
+	g_iOldRoundTime = g_iMPRoundTime.IntValue; //save original round time
+	g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
 	
 	CPrintToChatAll("%t %t", "zombie_tag" , "zombie_next");
 	PrintCenterTextAll("%t", "zombie_next_nc");

@@ -55,10 +55,13 @@ ConVar gc_bSounds;
 ConVar gc_sSoundStartPath;
 ConVar gc_iRounds;
 ConVar gc_iTAgrenades;
-ConVar g_iGetRoundTime;
 ConVar gc_sCustomCommand;
-ConVar g_sOldSkyName;
 ConVar gc_sAdminFlag;
+
+
+//Extern Convars
+ConVar g_iMPRoundTime;
+ConVar g_sOldSkyName;
 
 
 //Integers
@@ -150,7 +153,7 @@ public void OnPluginStart()
 	
 	
 	//FindConVar
-	g_iGetRoundTime = FindConVar("mp_roundtime");
+	g_iMPRoundTime = FindConVar("mp_roundtime");
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	gc_sOverlayStartPath.GetString(g_sOverlayStartPath , sizeof(g_sOverlayStartPath));
@@ -417,7 +420,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			SetCvarString("sv_skyname", g_sSkyName);
 			SetCvar("sm_warden_enable", 1);
 			SetCvar("sm_menu_enable", 1);
-			g_iGetRoundTime.IntValue = g_iOldRoundTime;
+			g_iMPRoundTime.IntValue = g_iOldRoundTime;
 			SetEventDayName("none");
 			SetEventDayRunning(false);
 			SetEventDayRunning(false);
@@ -556,8 +559,8 @@ void StartNextRound()
 	SetEventDayName(buffer);
 	SetEventDayPlanned(true);
 	
-	g_iOldRoundTime = g_iGetRoundTime.IntValue; //save original round time
-	g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
+	g_iOldRoundTime = g_iMPRoundTime.IntValue; //save original round time
+	g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
 	
 	g_iVoteCount = 0;
 	CPrintToChatAll("%t %t", "hide_tag" , "hide_next");

@@ -63,6 +63,9 @@ ConVar gc_bAWP;
 ConVar gc_bAutoSniper;
 ConVar gc_bHealth;
 ConVar gc_sCustomCommand;
+
+
+//Extern Convars
 ConVar g_bTaser;
 
 

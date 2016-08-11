@@ -55,11 +55,14 @@ ConVar gc_bSounds;
 ConVar gc_sSoundStartPath;
 ConVar gc_bOverlays;
 ConVar gc_sOverlayStartPath;
-ConVar g_iGetRoundTime;
 ConVar gc_sCustomCommand;
 ConVar gc_sAdminFlag;
 ConVar gc_bAllowLR;
-ConVar g_ciTsLR;
+
+
+//Extern Convars
+ConVar g_iMPRoundTime;
+ConVar g_iTerrorForLR;
 
 
 //Integers
@@ -159,8 +162,8 @@ public void OnPluginStart()
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	g_iMaxRound = gc_iRounds.IntValue;
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
-	g_iGetRoundTime = FindConVar("mp_roundtime");
-	g_ciTsLR = FindConVar("sm_hosties_lr_ts_max");
+	g_iMPRoundTime = FindConVar("mp_roundtime");
+	g_iTerrorForLR = FindConVar("sm_hosties_lr_ts_max");
 	gc_sOverlayStartPath.GetString(g_sOverlayStartPath , sizeof(g_sOverlayStartPath));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 	gc_sCustomCommand.GetString(g_sCustomCommand , sizeof(g_sCustomCommand));
@@ -396,7 +399,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 				
 				if (gc_bAllowLR.BoolValue)
 				{
-					if ((g_iRound == g_iMaxRound) && (g_iTsLR > g_ciTsLR.IntValue))
+					if ((g_iRound == g_iMaxRound) && (g_iTsLR > g_iTerrorForLR.IntValue))
 					{
 						SetCvar("sm_hosties_lr", 1);
 					}
@@ -468,7 +471,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			SetCvar("sm_weapons_t", 0);
 			SetCvar("sm_weapons_ct", 1);
 			SetCvar("sm_menu_enable", 1);
-			g_iGetRoundTime.IntValue = g_iOldRoundTime;
+			g_iMPRoundTime.IntValue = g_iOldRoundTime;
 			SetEventDayName("none");
 			SetEventDayRunning(false);
 			CPrintToChatAll("%t %t", "war_tag" , "war_end");
@@ -522,7 +525,7 @@ public void OnMapEnd()
 //Listen for Last Lequest
 public int OnAvailableLR(int Announced)
 {
-	if (IsWar && gc_bAllowLR.BoolValue && (g_iTsLR > g_ciTsLR.IntValue))
+	if (IsWar && gc_bAllowLR.BoolValue && (g_iTsLR > g_iTerrorForLR.IntValue))
 	{
 		LoopValidClients(client, false, true) 
 		{
@@ -550,7 +553,7 @@ public int OnAvailableLR(int Announced)
 			SetCvar("sm_weapons_t", 0);
 			SetCvar("sm_weapons_ct", 1);
 			SetCvar("sm_menu_enable", 1);
-			g_iGetRoundTime.IntValue = g_iOldRoundTime;
+			g_iMPRoundTime.IntValue = g_iOldRoundTime;
 			SetEventDayName("none");
 			SetEventDayRunning(false);
 			CPrintToChatAll("%t %t", "war_tag" , "war_end");
@@ -579,8 +582,8 @@ void StartNextRound()
 	
 	SetEventDayPlanned(true);
 	
-	g_iOldRoundTime = g_iGetRoundTime.IntValue; //save original round time
-	g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
+	g_iOldRoundTime = g_iMPRoundTime.IntValue; //save original round time
+	g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
 	
 	CPrintToChatAll("%t %t", "war_tag" , "war_next");
 	PrintCenterTextAll("%t", "war_next_nc");

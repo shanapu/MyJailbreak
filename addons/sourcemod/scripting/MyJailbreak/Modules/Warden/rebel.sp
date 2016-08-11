@@ -35,6 +35,10 @@
 
 //Console Variables
 ConVar gc_bMarkRebel;
+
+
+
+//Extern Convars
 ConVar g_bHostiesColor;
 ConVar g_iHostiesR;
 ConVar g_iHostiesG;

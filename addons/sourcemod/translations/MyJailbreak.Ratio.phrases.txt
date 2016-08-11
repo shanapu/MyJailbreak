@@ -18,8 +18,8 @@
 	"ratio_banned"
 	{
 		"ru"		"Вам запрещено играть за КТ, потому что Вы {green}забанены{default} за КТ."
-		"en"		"Du kannst nicht als Wärter spielen. Du bist als{green}CT{default} gebanned."
-		"de"		"Cannot play on guards because you are {green}CT{default} banned."
+		"de			"Du kannst nicht als Wärter spielen. Du bist als{green}CT{default} gebanned."
+		"en"		"Cannot play on guards because you are {green}CT{default} banned."
 	}
 
 	"ratio_empty"
@@ -276,8 +276,8 @@
  
 	"ratio_question4_wrong1"
 	{
-		"en"		"Простите, что?"
-		"ru"		"Sorry what?"
+		"en"		"Sorry what?"
+		"ru"		"Простите, что?"
 	}
  
 	"ratio_question4_wrong2"

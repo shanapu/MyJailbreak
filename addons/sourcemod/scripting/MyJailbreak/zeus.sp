@@ -50,7 +50,6 @@ ConVar gc_iRoundTime;
 ConVar gc_iTruceTime;
 ConVar gc_bOverlays;
 ConVar gc_sOverlayStartPath;
-ConVar g_iGetRoundTime;
 ConVar gc_bSounds;
 ConVar gc_iRounds;
 ConVar gc_sSoundStartPath;
@@ -58,7 +57,11 @@ ConVar gc_fBeaconTime;
 ConVar gc_sCustomCommand;
 ConVar gc_sAdminFlag;
 ConVar gc_bAllowLR;
-ConVar g_ciTsLR;
+
+
+//Extern Convars
+ConVar g_iMPRoundTime;
+ConVar g_iTerrorForLR;
 
 
 //Integers
@@ -155,8 +158,8 @@ public void OnPluginStart()
 	//Find
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iTruceTime = gc_iTruceTime.IntValue;
-	g_iGetRoundTime = FindConVar("mp_roundtime");
-	g_ciTsLR = FindConVar("sm_hosties_lr_ts_max");
+	g_iMPRoundTime = FindConVar("mp_roundtime");
+	g_iTerrorForLR = FindConVar("sm_hosties_lr_ts_max");
 	gc_sOverlayStartPath.GetString(g_sOverlayStartPath , sizeof(g_sOverlayStartPath));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 	gc_sCustomCommand.GetString(g_sCustomCommand , sizeof(g_sCustomCommand));
@@ -394,7 +397,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 				
 				if (gc_bAllowLR.BoolValue)
 				{
-					if ((g_iRound == g_iMaxRound) && (g_iTsLR > g_ciTsLR.IntValue))
+					if ((g_iRound == g_iMaxRound) && (g_iTsLR > g_iTerrorForLR.IntValue))
 					{
 						SetCvar("sm_hosties_lr", 1);
 					}
@@ -442,7 +445,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			SetCvar("mp_teammates_are_enemies", 0);
 			SetCvar("sm_menu_enable", 1);
 			SetCvar("sm_warden_enable", 1);
-			g_iGetRoundTime.IntValue = g_iOldRoundTime;
+			g_iMPRoundTime.IntValue = g_iOldRoundTime;
 			SetEventDayName("none");
 			SetEventDayRunning(false);
 			CPrintToChatAll("%t %t", "zeus_tag" , "zeus_end");
@@ -494,7 +497,7 @@ public void OnMapStart()
 //Listen for Last Lequest
 public int OnAvailableLR(int Announced)
 {
-	if (IsZeus && gc_bAllowLR.BoolValue && (g_iTsLR > g_ciTsLR.IntValue))
+	if (IsZeus && gc_bAllowLR.BoolValue && (g_iTsLR > g_iTerrorForLR.IntValue))
 	{
 		LoopClients(client)
 		{
@@ -523,7 +526,7 @@ public int OnAvailableLR(int Announced)
 			SetCvar("mp_teammates_are_enemies", 0);
 			SetCvar("sm_menu_enable", 1);
 			SetCvar("sm_warden_enable", 1);
-			g_iGetRoundTime.IntValue = g_iOldRoundTime;
+			g_iMPRoundTime.IntValue = g_iOldRoundTime;
 			SetEventDayName("none");
 			SetEventDayRunning(false);
 			CPrintToChatAll("%t %t", "zeus_tag" , "zeus_end");
@@ -585,8 +588,8 @@ void StartNextRound()
 	SetEventDayName(buffer);
 	SetEventDayPlanned(true);
 	
-	g_iOldRoundTime = g_iGetRoundTime.IntValue; //save original round time
-	g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
+	g_iOldRoundTime = g_iMPRoundTime.IntValue; //save original round time
+	g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
 	
 	CPrintToChatAll("%t %t", "zeus_tag" , "zeus_next");
 	PrintCenterTextAll("%t", "zeus_next_nc");

@@ -46,8 +46,8 @@ bool g_bBeaconOn[MAXPLAYERS+1] = false;
 //Floats
 public void Beacon_OnPluginStart()
 {
-	gc_fBeaconRadius = AutoExecConfig_CreateConVar("sm_myjb_beacon_radius", "850", "Sets the radius for the beacon's rings.", _, true, 50.0, true, 1500.0);
-	gc_fBeaconWidth = AutoExecConfig_CreateConVar("sm_myjb_beacon_width", "25", "Sets the thickness for the beacon's rings.", _, true, 10.0, true, 30.0);
+	gc_fBeaconRadius = AutoExecConfig_CreateConVar("sm_myjb_beacon_radius", "850", "Sets the radius for the beacons rings.", _, true, 50.0, true, 1500.0);
+	gc_fBeaconWidth = AutoExecConfig_CreateConVar("sm_myjb_beacon_width", "25", "Sets the thickness for the beacons rings.", _, true, 10.0, true, 30.0);
 	gc_iCTColorRed = AutoExecConfig_CreateConVar("sm_myjb_beacon_CT_color_red", "0","What color to turn the CT beacons into (set R, G and B values to 255 to disable) (Rgb): x - red value", _, true, 0.0, true, 255.0);
 	gc_iCTColorGreen = AutoExecConfig_CreateConVar("sm_myjb_beacon_CT_color_green", "0","What color to turn the CT beacons into (rGb): x - green value", _, true, 0.0, true, 255.0);
 	gc_iCTColorBlue = AutoExecConfig_CreateConVar("sm_myjb_beacon_CT_color_blue", "255","What color to turn the CT beacons into (rgB): x - blue value", _, true, 0.0, true, 255.0);

@@ -70,10 +70,13 @@ ConVar gc_sSoundStartPath;
 ConVar gc_sOverlayStartPath;
 ConVar gc_sSoundOnTorchPath;
 ConVar gc_sSoundClearTorchPath;
-ConVar g_iGetRoundTime;
 ConVar gc_iRounds;
 ConVar gc_sCustomCommand;
 ConVar gc_sAdminFlag;
+
+
+//Extern Convars
+ConVar g_iMPRoundTime;
 
 
 //Integers
@@ -188,7 +191,7 @@ public void OnPluginStart()
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	g_iMaxRound = gc_iRounds.IntValue;
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
-	g_iGetRoundTime = FindConVar("mp_roundtime");
+	g_iMPRoundTime = FindConVar("mp_roundtime");
 	gc_sSoundOnTorchPath.GetString(g_sSoundOnTorchPath, sizeof(g_sSoundOnTorchPath));
 	gc_sSoundClearTorchPath.GetString(g_sSoundClearTorchPath, sizeof(g_sSoundClearTorchPath));
 	gc_sOverlayOnTorch.GetString(g_sOverlayOnTorch , sizeof(g_sOverlayOnTorch));
@@ -482,7 +485,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			SetCvar("sm_weapons_enable", 1);
 			SetCvar("sm_warden_enable", 1);
 			
-			g_iGetRoundTime.IntValue = g_iOldRoundTime;
+			g_iMPRoundTime.IntValue = g_iOldRoundTime;
 			SetEventDayName("none");
 			SetEventDayRunning(false);
 			CPrintToChatAll("%t %t", "torch_tag" , "torch_end");
@@ -623,8 +626,8 @@ void StartNextRound()
 	SetEventDayName(buffer);
 	SetEventDayPlanned(true);
 	
-	g_iOldRoundTime = g_iGetRoundTime.IntValue; //save original round time
-	g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
+	g_iOldRoundTime = g_iMPRoundTime.IntValue; //save original round time
+	g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
 	
 	CPrintToChatAll("%t %t", "torch_tag" , "torch_next");
 	PrintCenterTextAll("%t", "torch_next_nc");

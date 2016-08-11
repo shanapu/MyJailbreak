@@ -69,10 +69,13 @@ ConVar gc_iSprintTime;
 ConVar gc_sSoundStartPath;
 ConVar gc_sSoundSuicideBomberPath;
 ConVar gc_sSoundBoomPath;
-ConVar g_iGetRoundTime;
 ConVar gc_iRounds;
 ConVar gc_sCustomCommand;
 ConVar gc_sAdminFlag;
+
+
+//Extern Convars
+ConVar g_iMPRoundTime;
 
 
 //Integers
@@ -177,7 +180,7 @@ public void OnPluginStart()
 	
 	
 	//FindConVar
-	g_iGetRoundTime = FindConVar("mp_roundtime");
+	g_iMPRoundTime = FindConVar("mp_roundtime");
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
 	gc_sSoundSuicideBomberPath.GetString(g_sSoundSuicideBomberPath, sizeof(g_sSoundSuicideBomberPath));
@@ -495,7 +498,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			SetCvar("sv_infinite_ammo", 0);
 			SetCvar("sm_warden_enable", 1);
 			SetCvar("sm_menu_enable", 1);
-			g_iGetRoundTime.IntValue = g_iOldRoundTime;
+			g_iMPRoundTime.IntValue = g_iOldRoundTime;
 			SetEventDayName("none");
 			SetEventDayRunning(false);
 			CPrintToChatAll("%t %t", "suicidebomber_tag" , "suicidebomber_end");
@@ -665,8 +668,8 @@ void StartNextRound()
 	SetEventDayName(buffer);
 	SetEventDayPlanned(true);
 	
-	g_iOldRoundTime = g_iGetRoundTime.IntValue; //save original round time
-	g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
+	g_iOldRoundTime = g_iMPRoundTime.IntValue; //save original round time
+	g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
 	
 	CPrintToChatAll("%t %t", "suicidebomber_tag" , "suicidebomber_next");
 	PrintCenterTextAll("%t", "suicidebomber_next_nc");

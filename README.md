@@ -44,7 +44,10 @@ MyJailbreak is a redux rewrite of [Franugs Special Jailbreak](https://github.com
 * Custom chat tags [MyJB.tag]
 * Colors
 * Sounds & overlays
+* Flag system - restrict some features only for admin/VIP
 * Natives & forwards from [original warden plugins](http://www.sourcemod.net/plugins.php?cat=0&mod=-1&title=warden&author=&description=&search=1) to keep compatibility
+* [Template](https://github.com/shanapu/MyJailbreak/wiki/Eventdays-template) to make your own Eventday
+* [Small Tutorial](https://github.com/shanapu/MyJailbreak/wiki/Custom-Overlays) for making your own custom overlay or icon
 * some other fancy stuff
   
 ---
@@ -87,7 +90,7 @@ coded with ![](http://shanapu.de/githearth-small.png) free software
 * CustomPlayerSkins https://forums.alliedmods.net/showthread.php?t=240703
 * VoiceannounceEX (VoiceHook) https://forums.alliedmods.net/showthread.php?p=2177167
 * DHooks (Dynamic Hooks - Dev Preview) https://forums.alliedmods.net/showthread.php?t=180114
-
+  
 *Include files needed for compile*
   
 * autoexecconfig.inc https://forums.alliedmods.net/showthread.php?t=204254
@@ -176,7 +179,7 @@ based/merged/used code/idea plugins:
 
 # THANKS FOR MAKING FREE SOFTWARE!
 **Much Thanks:**
-Weeeishy, UartigZone, Got Sw4g? terminator18, SkeLeXes, 0dieter0, maKs, TomseN48, Horoxx, zeddy, NrX, ElleVen, Bchewy, Include1, alsacchi, Murr, JacobThePigeon, poppin-fresh, databomb, r3D w0LF for bughunting, translation & great ideas!
+devu4, good_live, Weeeishy, UartigZone, Got Sw4g? terminator18, SkeLeXes, 0dieter0, maKs, TomseN48, Horoxx, zeddy, NrX, ElleVen, Bchewy, Include1, alsacchi, Murr, poppin-fresh, databomb, r3D w0LF, JacobThePigeon, mrkos9i4ok for bughunting, translation & great ideas!
 
   
 ---

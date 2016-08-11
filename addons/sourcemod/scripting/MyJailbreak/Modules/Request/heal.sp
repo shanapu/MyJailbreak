@@ -243,7 +243,7 @@ public int HealMenuHandler(Menu menu, MenuAction action, int client, int Positio
 			{
 				IsRequest = false;
 				RequestTimer = null;
-				if(gc_bHealthShot) GivePlayerItem(i, "weapon_healthshot");
+				if(gc_bHealthShot.BoolValue) GivePlayerItem(i, "weapon_healthshot");
 				CPrintToChat(i, "%t %t", "request_tag", "request_health");
 				CPrintToChatAll("%t %t", "warden_tag", "request_accepted", i, client);
 			}

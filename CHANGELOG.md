@@ -1,6 +1,6 @@
 ### Change Log
   
-  **[Beta X.X]** - 
+**[Beta 7.0]** - Automute/Talkover, more icons, beacon & more!
   
 *Added*
 *  Ratio: Force player on connect or mapstart to terror team
@@ -34,8 +34,8 @@
 *  Torch Relay: Added wallhack for the torch.
     *  new cvar - sm_torch_wallhack - 0 - disabled, 1 - enable wallhack for the torch to find enemeys
 *  Eventdays: Added Beacon to most event days
-    *  new cvar - sm_myjb_beacon_radius - Sets the radius for the beacon's rings
-    *  new cvar - sm_myjb_beacon_width - Sets the thickness for the beacon's rings
+    *  new cvar - sm_myjb_beacon_radius - Sets the radius for the beacons rings
+    *  new cvar - sm_myjb_beacon_width - Sets the thickness for the beacons rings
     *  new cvar - sm_myjb_beacon_CT_color_red - What color to turn the CT beacons into (set R, G and B values to 255 to disable) (Rgb): x - red value
     *  new cvar - sm_myjb_beacon_CT_color_green - What color to turn the CT beacons into (rGb): x - green value
     *  new cvar - sm_myjb_beacon_CT_color_blue - What color to turn the CT beacons into (rgB): x - blue value
@@ -69,6 +69,8 @@
 *  Request: Freekill report show (on player reconnect) wrong names
 *  HUD: Conflics with StartTimer & EventDay HUDs
 *  Bug when "sm_eventday_allow_lr 1" and T count on roundstart = sm_hosties_lr_ts_max
+*  minor errors, fixes & typos
+*  Wiki rewrite & new tutorials
   
   
 *New Requirements*
@@ -78,8 +80,9 @@
   
 *Developer stuff*
 *  Natives: New natives for on/off beacons
-    *  new native - BeaconOn Set client Beacon & intervall
+    *  new native - BeaconOn Set client Beacon & intervall as float
     *  new native - BeaconOff Remove client Beacon
+  
   
   
   **[Beta 6.1]** - smaller fixes
@@ -91,7 +94,8 @@
 *  Request: missing "en" translation
   
   
-  **[Beta 6.0]** - Personal Freeday, Kill reason, allow LR on Eventday, Guard Questions & more
+  
+ **[Beta 6.0]** - Personal Freeday, Kill reason, allow LR on Eventday, Guard Questions & more
   
 *Added*
 *  Myjailbreak: Admincommand to force end the round as a draw 
@@ -132,7 +136,6 @@
 *  Event Days - Cell Doors: Check is current map is configurated in smartjaildoors. If not force sm_*eventday*_spawn "1"
   
   
-  
 *Changed*
 *  Warden - Handcuffs: Strip weapons on Cuffed
 *  Warden: Splitted Overlays & sounds for countdown & math
@@ -161,7 +164,6 @@
 *  Player Tags: Splitted translation to chat & stats = different tags for chat & stats
   
   
-  
 *Fixed*
 *  Warden - Mathquiz: Bug when type last answer before new quiz started
 *  Last Guard Rule: Bug on first round -> auto restart -> stuck on last guard rule
@@ -170,7 +172,6 @@
 *  Freeday: Bug on sm_freeday_firstround "1" and 1min round time
 *  Player Tags: Shorten RU Tags  Thx to include1!
 *  minor errors, fixes & typos
-  
   
   
 *Developer stuff*

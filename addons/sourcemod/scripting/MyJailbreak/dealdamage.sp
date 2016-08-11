@@ -61,7 +61,10 @@ ConVar gc_bConsole;
 ConVar gc_bShowPanel;
 ConVar gc_bSpawnRandom;
 ConVar gc_sAdminFlag;
-ConVar g_iGetRoundTime;
+
+
+//Extern Convars
+ConVar g_iMPRoundTime;
 ConVar g_bHUD;
 
 
@@ -169,7 +172,7 @@ public void OnPluginStart()
 	
 	
 	//Find
-	g_iGetRoundTime = FindConVar("mp_roundtime");
+	g_iMPRoundTime = FindConVar("mp_roundtime");
 	g_bHUD = FindConVar("sm_hud_enable");
 	gc_sOverlayStartPath.GetString(g_sOverlayStartPath , sizeof(g_sOverlayStartPath));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
@@ -481,7 +484,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			if(gc_bSpawnRandom.BoolValue)SetCvar("mp_randomspawn", 0);
 			if(gc_bSpawnRandom.BoolValue)SetCvar("mp_randomspawn_los", 0);
 			
-			g_iGetRoundTime.IntValue = g_iOldRoundTime; //return to original round time
+			g_iMPRoundTime.IntValue = g_iOldRoundTime; //return to original round time
 			SetEventDayName("none"); //tell myjailbreak event is ended
 			SetEventDayRunning(false);
 			CPrintToChatAll("%t %t", "dealdamage_tag" , "dealdamage_end");
@@ -575,8 +578,8 @@ void StartNextRound()
 	SetEventDayName(buffer);
 	SetEventDayPlanned(true);
 	
-	g_iOldRoundTime = g_iGetRoundTime.IntValue; //save original round time
-	g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
+	g_iOldRoundTime = g_iMPRoundTime.IntValue; //save original round time
+	g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
 	
 	g_bHUD = FindConVar("sm_hud_enable");
 	g_iOldHUD = g_bHUD.IntValue;

@@ -63,10 +63,13 @@ ConVar gc_fSprintSpeed;
 ConVar gc_fSprintTime;
 ConVar gc_sSoundFreezePath;
 ConVar gc_sSoundUnFreezePath;
-ConVar g_iGetRoundTime;
 ConVar gc_iRounds;
 ConVar gc_sCustomCommand;
 ConVar gc_sAdminFlag;
+
+
+//Extern Convars
+ConVar g_iMPRoundTime;
 
 
 //Integers
@@ -164,7 +167,7 @@ public void OnPluginStart()
 	//FindConVar
 	g_iMaxRound = gc_iRounds.IntValue;
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
-	g_iGetRoundTime = FindConVar("mp_roundtime");
+	g_iMPRoundTime = FindConVar("mp_roundtime");
 	gc_sSoundFreezePath.GetString(g_sSoundFreezePath, sizeof(g_sSoundFreezePath));
 	gc_sSoundUnFreezePath.GetString(g_sSoundUnFreezePath, sizeof(g_sSoundUnFreezePath));
 	gc_sOverlayFreeze.GetString(g_sOverlayFreeze , sizeof(g_sOverlayFreeze));
@@ -423,7 +426,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			SetCvar("sm_weapons_enable", 1);
 			SetCvar("sm_warden_enable", 1);
 			
-			g_iGetRoundTime.IntValue = g_iOldRoundTime;
+			g_iMPRoundTime.IntValue = g_iOldRoundTime;
 			SetEventDayName("none");
 			SetEventDayRunning(false);
 			CPrintToChatAll("%t %t", "catch_tag" , "catch_end");
@@ -580,8 +583,8 @@ void StartNextRound()
 	SetEventDayName(buffer);
 	SetEventDayPlanned(true);
 	
-	g_iOldRoundTime = g_iGetRoundTime.IntValue; //save original round time
-	g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
+	g_iOldRoundTime = g_iMPRoundTime.IntValue; //save original round time
+	g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
 	
 	CPrintToChatAll("%t %t", "catch_tag" , "catch_next");
 	PrintCenterTextAll("%t", "catch_next_nc");

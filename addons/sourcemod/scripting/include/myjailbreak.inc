@@ -43,7 +43,7 @@ public SharedPlugin:__pl_myjailbreak =
 
 
 //Defines
-#define PLUGIN_VERSION "6.1.develop"
+#define PLUGIN_VERSION "7.0"
 #define URL_LINK "https://github.com/shanapu/MyJailbreak"
 
 

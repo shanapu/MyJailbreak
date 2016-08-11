@@ -50,9 +50,12 @@ ConVar gc_bSetA;
 ConVar gc_bVote;
 ConVar gc_iCooldownDay;
 ConVar gc_iRoundTime;
-ConVar g_iGetRoundTime;
 ConVar gc_sCustomCommand;
 ConVar gc_sAdminFlag;
+
+
+//Extern Convars
+ConVar g_iMPRoundTime;
 
 
 //Integers
@@ -128,7 +131,7 @@ public void OnPluginStart()
 	
 	
 	//FindConVar
-	g_iGetRoundTime = FindConVar("mp_roundtime");
+	g_iMPRoundTime = FindConVar("mp_roundtime");
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	gc_sCustomCommand.GetString(g_sCustomCommand , sizeof(g_sCustomCommand));
 	gc_sAdminFlag.GetString(g_sAdminFlag , sizeof(g_sAdminFlag));
@@ -343,7 +346,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 		SetCvar("sm_weapons_enable", 1);
 		SetCvar("mp_teammates_are_enemies", 0);
 		SetCvar("sm_warden_enable", 1);
-		g_iGetRoundTime.IntValue = g_iOldRoundTime;
+		g_iMPRoundTime.IntValue = g_iOldRoundTime;
 	//	AutoFreeday = false;
 		SetEventDayName("none");
 		SetEventDayRunning(false);
@@ -393,8 +396,8 @@ public void OnMapStart()
 		
 		SetEventDayRunning(true);
 		
-		g_iOldRoundTime = g_iGetRoundTime.IntValue;
-		g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;
+		g_iOldRoundTime = g_iMPRoundTime.IntValue;
+		g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue;
 	}
 	else
 	{
@@ -440,8 +443,8 @@ void StartNextRound()
 	Format(buffer, sizeof(buffer), "%T", "freeday_name", LANG_SERVER);
 	SetEventDayName(buffer);
 	SetEventDayPlanned(true);
-	g_iOldRoundTime = g_iGetRoundTime.IntValue;
-	g_iGetRoundTime.IntValue = gc_iRoundTime.IntValue;
+	g_iOldRoundTime = g_iMPRoundTime.IntValue;
+	g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue;
 	
 	CPrintToChatAll("%t %t", "freeday_tag" , "freeday_next");
 	PrintCenterTextAll("%t", "freeday_next_nc");
