@@ -21,14 +21,14 @@ before_script:
     - cd addons/sourcemod/scripting/
     - chmod +x spcomp
     - mkdir compiled
-    - cd addons/sourcemod/scripting/
 script: ./compile.sh MyJailbreak/catch.sp MyJailbreak/cowboy.sp MyJailbreak/dealdamage.sp MyJailbreak/drunk.sp MyJailbreak/duckhunt.sp MyJailbreak/ffa.sp MyJailbreak/freeday.sp MyJailbreak/hebattle.sp MyJailbreak/hide.sp MyJailbreak/hud.sp MyJailbreak/knife.sp MyJailbreak/lastguard.sp MyJailbreak/menu.sp MyJailbreak/myjailbreak.sp MyJailbreak/noscope.sp MyJailbreak/playertags.sp MyJailbreak/ratio.sp MyJailbreak/request.sp MyJailbreak/suicide.sp MyJailbreak/torch.sp MyJailbreak/war.sp MyJailbreak/warden.sp MyJailbreak/weapons.sp MyJailbreak/zeus.sp MyJailbreak/zombie.sp
 
 #Releases
 before_deploy:
     - cd ../../..
     - mkdir MyJB
-    - mv addons MyJB/addons/sourcemod/translations/
+    - mv addons MyJB/addons/
+    - mv MyJB/addons/sourcemod/scripting/compiled MyJB/addons/sourcemod/plugins/MyJailbreak",
     - mv cfg MyJB/cfg/
     - mv fastDL MyJB/
     - mv materials MyJB/
