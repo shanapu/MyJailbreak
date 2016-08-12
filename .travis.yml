@@ -43,7 +43,7 @@ before_deploy:
     - tar -czf MyJB.tar.gz MyJB
 deploy:
     provider: releases
-    api_key: ${GH_TOKEN}
+    api_key: ed0927e5e9b1f95b60ed3a0c9f94f44bc2a3a22e
     file:
         - CHANGELOG.md
         - MyJB.zip
