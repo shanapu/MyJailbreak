@@ -8,7 +8,6 @@ addons:
 
 #Set the build environment
 env:
-    - SMVERSION=1.7
     - SMVERSION=1.8
     - SMVERSION=1.9
 
@@ -30,6 +29,7 @@ before_deploy:
     - mkdir MyJB
     - mv addons MyJB/addons/
     - mv MyJB/addons/sourcemod/scripting/compiled/MyJailbreak MyJB/addons/sourcemod/plugins/MyJailbreak/
+    - rm -rf MyJB/addons/sourcemod/scripting/compiled
     - mv cfg MyJB/cfg/
     - mv fastDL MyJB/
     - mv materials MyJB/
@@ -45,9 +45,11 @@ deploy:
     provider: releases
     api_key: ${GH_TOKEN}
     file:
+        - CHANGELOG.md
         - MyJB.zip
         - MyJB.tar.gz
     skip_cleanup: true
+    overwrite: true
     on:
         tags: true
 

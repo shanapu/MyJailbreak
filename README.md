@@ -103,8 +103,8 @@ coded with ![](http://shanapu.de/githearth-small.png) free software
 * smlib.inc https://github.com/bcserv/smlib
 * CustomPlayerSkins.inc https://forums.alliedmods.net/showthread.php?t=240703
 * voiceannounce_ex.inc https://forums.alliedmods.net/showthread.php?p=2177167
-* lastrequest.inc https://github.com/dataviruset/sm-hosties (not in MyJB package)
-* hosties.inc https://github.com/dataviruset/sm-hosties (not in MyJB package)
+* lastrequest.inc https://github.com/dataviruset/sm-hosties 
+* hosties.inc https://github.com/dataviruset/sm-hosties 
   
 ---
   
