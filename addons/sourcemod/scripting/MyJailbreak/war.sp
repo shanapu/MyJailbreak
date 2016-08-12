@@ -247,13 +247,13 @@ public Action SetWar(int client,int args)
 							StartNextRound();
 							if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event war was started by warden %L", client);
 						}
-						else CPrintToChat(client, "%t %t", "war_tag" , "war_wait", g_iCoolDown);
+						else CReplyToCommand(client, "%t %t", "war_tag" , "war_wait", g_iCoolDown);
 					}
-					else CPrintToChat(client, "%t %t", "war_tag" , "war_progress" , EventDay);
+					else CReplyToCommand(client, "%t %t", "war_tag" , "war_progress" , EventDay);
 				}
-				else CPrintToChat(client, "%t %t", "war_tag" , "war_minplayer");
+				else CReplyToCommand(client, "%t %t", "war_tag" , "war_minplayer");
 			}
-			else CPrintToChat(client, "%t %t", "warden_tag" , "war_setbywarden");
+			else CReplyToCommand(client, "%t %t", "warden_tag" , "war_setbywarden");
 		}
 		else if (CheckVipFlag(client,g_sAdminFlag))
 		{
@@ -271,17 +271,18 @@ public Action SetWar(int client,int args)
 							StartNextRound();
 							if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event war was started by admin %L", client);
 						}
-						else CPrintToChat(client, "%t %t", "war_tag" , "war_wait", g_iCoolDown);
+						else CReplyToCommand(client, "%t %t", "war_tag" , "war_wait", g_iCoolDown);
 					}
-					else CPrintToChat(client, "%t %t", "war_tag" , "war_progress" , EventDay);
+					else CReplyToCommand(client, "%t %t", "war_tag" , "war_progress" , EventDay);
 				}
-				else CPrintToChat(client, "%t %t", "war_tag" , "war_minplayer");
+				else CReplyToCommand(client, "%t %t", "war_tag" , "war_minplayer");
 			}
-			else CPrintToChat(client, "%t %t", "war_tag" , "war_setbyadmin");
+			else CReplyToCommand(client, "%t %t", "war_tag" , "war_setbyadmin");
 		}
-		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden"); 
+		else CReplyToCommand(client, "%t %t", "warden_tag" , "warden_notwarden"); 
 	}
-	else CPrintToChat(client, "%t %t", "war_tag" , "war_disabled");
+	else CReplyToCommand(client, "%t %t", "war_tag" , "war_disabled");
+	return Plugin_Handled;
 }
 
 
@@ -318,17 +319,18 @@ public Action VoteWar(int client,int args)
 							}
 							else CPrintToChatAll("%t %t", "war_tag" , "war_need", Missing, client);
 						}
-						else CPrintToChat(client, "%t %t", "war_tag" , "war_voted");
+						else CReplyToCommand(client, "%t %t", "war_tag" , "war_voted");
 					}
-					else CPrintToChat(client, "%t %t", "war_tag" , "war_wait", g_iCoolDown);
+					else CReplyToCommand(client, "%t %t", "war_tag" , "war_wait", g_iCoolDown);
 				}
-				else CPrintToChat(client, "%t %t", "war_tag" , "war_progress" , EventDay);
+				else CReplyToCommand(client, "%t %t", "war_tag" , "war_progress" , EventDay);
 			}
-			else CPrintToChat(client, "%t %t", "war_tag" , "war_minplayer");
+			else CReplyToCommand(client, "%t %t", "war_tag" , "war_minplayer");
 		}
-		else CPrintToChat(client, "%t %t", "war_tag" , "war_voting");
+		else CReplyToCommand(client, "%t %t", "war_tag" , "war_voting");
 	}
-	else CPrintToChat(client, "%t %t", "war_tag" , "war_disabled");
+	else CReplyToCommand(client, "%t %t", "war_tag" , "war_disabled");
+	return Plugin_Handled;
 }
 
 

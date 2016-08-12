@@ -91,15 +91,16 @@ public Action Command_HUD(int client, int args)
 	if(!g_bEnableHud[client])
 	{
 		g_bEnableHud[client] = true;
-		CPrintToChat(client, "%t %t", "hud_tag", "hud_on");
+		CReplyToCommand(client, "%t %t", "hud_tag", "hud_on");
 		
 	}
 	else
 	{
 		g_bEnableHud[client] = false;
-		CPrintToChat(client, "%t %t", "hud_tag", "hud_off");
+		CReplyToCommand(client, "%t %t", "hud_tag", "hud_off");
 		
 	}
+	return Plugin_Handled;
 }
 
 

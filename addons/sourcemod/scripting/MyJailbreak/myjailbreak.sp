@@ -119,7 +119,8 @@ public void OnConfigsExecuted()
 //End the current round instandly
 public Action Command_EndRound(int client, int args)
 {
-	CS_TerminateRound(5.5, CSRoundEnd_Draw, true); 
+	CS_TerminateRound(5.5, CSRoundEnd_Draw, true);
+	return Plugin_Handled;
 }
 
 

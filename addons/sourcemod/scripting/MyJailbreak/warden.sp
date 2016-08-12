@@ -315,15 +315,16 @@ public Action Command_BecomeWarden(int client, int args)
 						SetTheWarden(client);
 						Forward_OnWardenCreatedByUser(client);
 					}
-					else CPrintToChat(client, "%t %t", "warden_tag" , "warden_playerdead");
+					else CReplyToCommand(client, "%t %t", "warden_tag" , "warden_playerdead");
 				}
-				else CPrintToChat(client, "%t %t", "warden_tag" , "warden_ctsonly");
+				else CReplyToCommand(client, "%t %t", "warden_tag" , "warden_ctsonly");
 			}
-			else CPrintToChat(client, "%t %t", "warden_tag" , "warden_nobecome", g_iWarden);
+			else CReplyToCommand(client, "%t %t", "warden_tag" , "warden_nobecome", g_iWarden);
 		}
-		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_exist", g_iWarden);
+		else CReplyToCommand(client, "%t %t", "warden_tag" , "warden_exist", g_iWarden);
 	}
-	else CPrintToChat(client, "%t %t", "warden_tag" , "warden_disabled");
+	else CReplyToCommand(client, "%t %t", "warden_tag" , "warden_disabled");
+	return Plugin_Handled;
 }
 
 
@@ -343,9 +344,10 @@ public Action Command_ExitWarden(int client, int args)
 				PrintCenterTextAll("%t", "warden_retire_nc", client);
 			}
 		}
-		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
+		else CReplyToCommand(client, "%t %t", "warden_tag" , "warden_notwarden");
 	}
-	else CPrintToChat(client, "%t %t", "warden_tag" , "warden_disabled");
+	else CReplyToCommand(client, "%t %t", "warden_tag" , "warden_disabled");
+	return Plugin_Handled;
 }
 
 
@@ -374,13 +376,14 @@ public Action Command_VoteWarden(int client,int args)
 					}
 					else CPrintToChatAll("%t %t", "warden_tag" , "warden_need", Missing, client);
 				}
-				else CPrintToChat(client, "%t %t", "warden_tag" , "warden_voted");
+				else CReplyToCommand(client, "%t %t", "warden_tag" , "warden_voted");
 			}
-			else CPrintToChat(client, "%t %t", "warden_tag" , "warden_noexist");
+			else CReplyToCommand(client, "%t %t", "warden_tag" , "warden_noexist");
 		}
-		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_voting");
+		else CReplyToCommand(client, "%t %t", "warden_tag" , "warden_voting");
 	}
-	else CPrintToChat(client, "%t %t", "warden_tag" , "warden_disabled");
+	else CReplyToCommand(client, "%t %t", "warden_tag" , "warden_disabled");
+	return Plugin_Handled;
 }
 
 
@@ -681,7 +684,7 @@ void SetTheWarden(int client)
 		
 		RandomTimer = null;
 	}
-	else CPrintToChat(client, "%t %t", "warden_tag" , "warden_disabled");
+	else CReplyToCommand(client, "%t %t", "warden_tag" , "warden_disabled");
 }
 
 

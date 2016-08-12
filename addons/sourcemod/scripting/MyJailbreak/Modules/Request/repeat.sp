@@ -137,11 +137,11 @@ public Action Command_Repeat(int client, int args)
 						if (warden_exist()) LoopClients(i) RepeatMenu(i);
 						if(gc_bSounds.BoolValue)EmitSoundToAllAny(g_sSoundRepeatPath);
 					}
-					else CPrintToChat(client, "%t %t", "request_tag", "request_repeattimes", gc_iRepeatLimit.IntValue);
+					else CReplyToCommand(client, "%t %t", "request_tag", "request_repeattimes", gc_iRepeatLimit.IntValue);
 				}
-				else CPrintToChat(client, "%t %t", "request_tag", "request_alreadyrepeat");
+				else CReplyToCommand(client, "%t %t", "request_tag", "request_alreadyrepeat");
 			}
-			else CPrintToChat(client, "%t %t", "request_tag", "request_notalivect");
+			else CReplyToCommand(client, "%t %t", "request_tag", "request_notalivect");
 		}
 	}
 	return Plugin_Handled;

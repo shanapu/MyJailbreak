@@ -1,5 +1,23 @@
 ### Change Log
   
+**[Beta 7.1]** - smaller fixes
+  
+*Fixed*
+*  Warden - Icon: sm_warden_icon_ct_enable 0 will not disable warden icon. THX devu4!
+*  Ratio: missing quote in translation. THX Kailo97!
+*  Ratio: minor error
+*  CReplyToCommand for Commands instead CPrintToChat. THX good_live!
+  
+  
+*removed*
+*  Menu: TeamGames Menu Items - use https://github.com/shanapu/MyJailbreak/wiki/Add-Menu-Item
+  
+  
+*updated*
+*  RU translation: HUD, Menu, Ratio & Warden THX include!
+  
+  
+  
 **[Beta 7.0]** - Automute/Talkover, more icons, beacon & more!
   
 *Added*

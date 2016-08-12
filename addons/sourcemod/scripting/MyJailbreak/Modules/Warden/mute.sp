@@ -115,7 +115,7 @@ public Action Command_UnMuteMenu(int client, any args)
 				}
 			/*	else
 				{
-					CPrintToChat(client, "%t %t", "warden_tag", "warden_nomuted");
+					CReplyToCommand(client, "%t %t", "warden_tag", "warden_nomuted");
 					FakeClientCommand(client, "sm_wmute");
 				}
 	*/		}
@@ -123,7 +123,7 @@ public Action Command_UnMuteMenu(int client, any args)
 			menu4.ExitButton = true;
 			menu4.Display(client,MENU_TIME_FOREVER);
 		}
-		else CPrintToChat(client, "%t %t", "warden_tag", "warden_notwarden");
+		else CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
 	}
 	return Plugin_Handled;
 }
@@ -151,8 +151,9 @@ public Action Command_MuteMenu(int client, int args)
 			menu1.ExitButton = true;
 			menu1.Display(client,MENU_TIME_FOREVER);
 		}
-		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden"); 
+		else CReplyToCommand(client, "%t %t", "warden_tag" , "warden_notwarden"); 
 	}
+	return Plugin_Handled;
 }
 
 
@@ -303,7 +304,7 @@ public Action MuteMenuPlayer(int client,int args)
 			menu5.ExitButton = true;
 			menu5.Display(client,MENU_TIME_FOREVER);
 		}
-		else CPrintToChat(client, "%t %t", "warden_tag", "warden_notwarden");
+		else CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
 	}
 	return Plugin_Handled;
 }

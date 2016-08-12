@@ -222,15 +222,15 @@ public Action VoteLastGuard(int client,int args)
 								}
 								else CPrintToChatAll("%t %t", "lastguard_tag" , "lastguard_need", Missing, client);
 							}
-							else CPrintToChat(client, "%t %t", "lastguard_tag" , "lastguard_voted");
+							else CReplyToCommand(client, "%t %t", "lastguard_tag" , "lastguard_voted");
 						}
-						else CPrintToChat(client, "%t %t", "lastguard_tag" , "lastguard_lr");
+						else CReplyToCommand(client, "%t %t", "lastguard_tag" , "lastguard_lr");
 					}
-					else CPrintToChat(client, "%t %t", "lastguard_tag" , "lastguard_running");
+					else CReplyToCommand(client, "%t %t", "lastguard_tag" , "lastguard_running");
 				}
-				else CPrintToChat(client, "%t %t", "lastguard_tag" , "lastguard_progress" , EventDay);
+				else CReplyToCommand(client, "%t %t", "lastguard_tag" , "lastguard_progress" , EventDay);
 			}
-			else CPrintToChat(client, "%t %t", "lastguard_tag" , "lastguard_minplayer");
+			else CReplyToCommand(client, "%t %t", "lastguard_tag" , "lastguard_minplayer");
 		}
 		else if (gc_bSetCT.BoolValue && (GetClientTeam(client) == CS_TEAM_CT) && IsPlayerAlive(client))
 		{
@@ -248,17 +248,18 @@ public Action VoteLastGuard(int client,int args)
 							StartLastGuard();
 							if(ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Last Guard Rule was started by last CT %L", client);
 						}
-						else CPrintToChat(client, "%t %t", "lastguard_tag" , "lastguard_lr");
+						else CReplyToCommand(client, "%t %t", "lastguard_tag" , "lastguard_lr");
 					}
-					else CPrintToChat(client, "%t %t", "lastguard_tag" , "lastguard_running");
+					else CReplyToCommand(client, "%t %t", "lastguard_tag" , "lastguard_running");
 				}
-				else CPrintToChat(client, "%t %t", "lastguard_tag" , "lastguard_progress" , EventDay);
+				else CReplyToCommand(client, "%t %t", "lastguard_tag" , "lastguard_progress" , EventDay);
 			}
-			else CPrintToChat(client, "%t %t", "lastguard_tag" , "lastguard_minplayer");
+			else CReplyToCommand(client, "%t %t", "lastguard_tag" , "lastguard_minplayer");
 		}
-		else CPrintToChat(client, "%t %t", "lastguard_tag" , "lastguard_notalive");
+		else CReplyToCommand(client, "%t %t", "lastguard_tag" , "lastguard_notalive");
 	}
-	else CPrintToChat(client, "%t %t", "lastguard_tag" , "lastguard_disabled");
+	else CReplyToCommand(client, "%t %t", "lastguard_tag" , "lastguard_disabled");
+	return Plugin_Handled;
 }
 
 

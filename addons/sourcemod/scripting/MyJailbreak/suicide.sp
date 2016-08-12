@@ -279,13 +279,13 @@ public Action SetSuicideBomber(int client,int args)
 							StartNextRound();
 							if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Suicide Bomber was started by warden %L", client);
 						}
-						else CPrintToChat(client, "%t %t", "suicidebomber_tag" , "suicidebomber_wait", g_iCoolDown);
+						else CReplyToCommand(client, "%t %t", "suicidebomber_tag" , "suicidebomber_wait", g_iCoolDown);
 					}
-					else CPrintToChat(client, "%t %t", "suicidebomber_tag" , "suicidebomber_progress" , EventDay);
+					else CReplyToCommand(client, "%t %t", "suicidebomber_tag" , "suicidebomber_progress" , EventDay);
 				}
-				else CPrintToChat(client, "%t %t", "suicidebomber_tag" , "suicidebomber_minplayer");
+				else CReplyToCommand(client, "%t %t", "suicidebomber_tag" , "suicidebomber_minplayer");
 			}
-			else CPrintToChat(client, "%t %t", "warden_tag" , "suicidebomber_setbywarden");
+			else CReplyToCommand(client, "%t %t", "warden_tag" , "suicidebomber_setbywarden");
 		}
 		else if (CheckVipFlag(client,g_sAdminFlag))
 		{
@@ -303,17 +303,18 @@ public Action SetSuicideBomber(int client,int args)
 							StartNextRound();
 							if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Suicide Bomber was started by admin %L", client);
 						}
-						else CPrintToChat(client, "%t %t", "suicidebomber_tag" , "suicidebomber_wait", g_iCoolDown);
+						else CReplyToCommand(client, "%t %t", "suicidebomber_tag" , "suicidebomber_wait", g_iCoolDown);
 					}
-					else CPrintToChat(client, "%t %t", "suicidebomber_tag" , "suicidebomber_progress" , EventDay);
+					else CReplyToCommand(client, "%t %t", "suicidebomber_tag" , "suicidebomber_progress" , EventDay);
 				}
-				else CPrintToChat(client, "%t %t", "suicidebomber_tag" , "suicidebomber_minplayer");
+				else CReplyToCommand(client, "%t %t", "suicidebomber_tag" , "suicidebomber_minplayer");
 			}
-			else CPrintToChat(client, "%t %t", "suicidebomber_tag" , "suicidebomber_setbyadmin");
+			else CReplyToCommand(client, "%t %t", "suicidebomber_tag" , "suicidebomber_setbyadmin");
 		}
-		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
+		else CReplyToCommand(client, "%t %t", "warden_tag" , "warden_notwarden");
 	}
-	else CPrintToChat(client, "%t %t", "suicidebomber_tag" , "suicidebomber_disabled");
+	else CReplyToCommand(client, "%t %t", "suicidebomber_tag" , "suicidebomber_disabled");
+	return Plugin_Handled;
 }
 
 
@@ -350,17 +351,18 @@ public Action VoteSuicideBomber(int client,int args)
 							}
 							else CPrintToChatAll("%t %t", "suicidebomber_tag" , "suicidebomber_need", Missing, client);
 						}
-						else CPrintToChat(client, "%t %t", "suicidebomber_tag" , "suicidebomber_voted");
+						else CReplyToCommand(client, "%t %t", "suicidebomber_tag" , "suicidebomber_voted");
 					}
-					else CPrintToChat(client, "%t %t", "suicidebomber_tag" , "suicidebomber_wait", g_iCoolDown);
+					else CReplyToCommand(client, "%t %t", "suicidebomber_tag" , "suicidebomber_wait", g_iCoolDown);
 				}
-				else CPrintToChat(client, "%t %t", "suicidebomber_tag" , "suicidebomber_progress" , EventDay);
+				else CReplyToCommand(client, "%t %t", "suicidebomber_tag" , "suicidebomber_progress" , EventDay);
 			}
-			else CPrintToChat(client, "%t %t", "suicidebomber_tag" , "suicidebomber_minplayer");
+			else CReplyToCommand(client, "%t %t", "suicidebomber_tag" , "suicidebomber_minplayer");
 		}
-		else CPrintToChat(client, "%t %t", "suicidebomber_tag" , "suicidebomber_voting");
+		else CReplyToCommand(client, "%t %t", "suicidebomber_tag" , "suicidebomber_voting");
 	}
-	else CPrintToChat(client, "%t %t", "suicidebomber_tag" , "suicidebomber_disabled");
+	else CReplyToCommand(client, "%t %t", "suicidebomber_tag" , "suicidebomber_disabled");
+	return Plugin_Handled;
 }
 
 
@@ -849,12 +851,12 @@ public Action Command_StartSprint(int client, int args)
 			ClientSprintStatus[client] |= IsSprintUsing | IsSprintCoolDown;
 			SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", gc_fSprintSpeed.FloatValue);
 			EmitSoundToClient(client, "player/suit_sprint.wav", SOUND_FROM_PLAYER, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, 0.8);
-			CPrintToChat(client, "%t %t", "suicidebomber_tag" ,"suicidebomber_sprint");
+			CReplyToCommand(client, "%t %t", "suicidebomber_tag" ,"suicidebomber_sprint");
 			SprintTimer[client] = CreateTimer(gc_iSprintTime.FloatValue, Timer_SprintEnd, client);
 		}
 		return(Plugin_Handled);
 	}
-	else CPrintToChat(client, "%t %t", "suicidebomber_tag" , "suicidebomber_disabled");
+	else CReplyToCommand(client, "%t %t", "suicidebomber_tag" , "suicidebomber_disabled");
 	return(Plugin_Handled);
 }
 

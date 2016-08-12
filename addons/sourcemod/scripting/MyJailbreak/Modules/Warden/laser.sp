@@ -125,9 +125,9 @@ public Action Command_LaserMenu(int client, int args)
 				menu.ExitButton = true;
 				menu.Display(client, 20);
 			}
-			else CPrintToChat(client, "%t %t", "warden_tag", "warden_vipfeature");
+			else CReplyToCommand(client, "%t %t", "warden_tag", "warden_vipfeature");
 		}
-		else CPrintToChat(client, "%t %t", "warden_tag", "warden_notwarden" );
+		else CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden" );
 	}
 	return Plugin_Handled;
 }

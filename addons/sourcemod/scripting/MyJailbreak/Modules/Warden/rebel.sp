@@ -87,9 +87,10 @@ public Action Command_MarkRebel(int client, int args)
 			{
 				Menu_MarkRebelMenu(client);
 			}
-			else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden"); 
+			else CReplyToCommand(client, "%t %t", "warden_tag" , "warden_notwarden"); 
 		}
 	}
+	return Plugin_Handled;
 }
 
 

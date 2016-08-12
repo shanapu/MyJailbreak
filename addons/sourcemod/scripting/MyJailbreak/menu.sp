@@ -676,6 +676,7 @@ public Action Command_OpenMenu(int client, int args)
 			mainmenu.Display(client, MENU_TIME_FOREVER);
 		}
 	}
+	return Plugin_Handled;
 }
 
 //Main Handle
@@ -1003,6 +1004,7 @@ public Action Command_VoteEventDays(int client, int args)
 			daysmenu.ExitBackButton = true;
 			daysmenu.Display(client, MENU_TIME_FOREVER);
 	}
+	return Plugin_Handled;
 }
 
 //Event Day Voting Handler
@@ -1302,6 +1304,7 @@ public Action Command_SetEventDay(int client, int args)
 			daysmenu.ExitBackButton = true;
 			daysmenu.Display(client, MENU_TIME_FOREVER);
 	}
+	return Plugin_Handled;
 }
 
 // Event Days Set Handler
@@ -1553,7 +1556,7 @@ public Action Command_VotingMenu(int client, int args)
 					{
 						if (IsVoteInProgress())
 						{
-							return;
+							return Plugin_Handled;
 						}
 						char menuinfo[64];
 						Menu menu = new Menu(VotingMenuHandler);
@@ -1645,15 +1648,16 @@ public Action Command_VotingMenu(int client, int args)
 						menu.DisplayVoteToAll(25);
 						g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 					}
-					else CPrintToChat(client,"%t %t", "menu_tag", "menu_wait", g_iCoolDown);
+					else CReplyToCommand(client,"%t %t", "menu_tag", "menu_wait", g_iCoolDown);
 				}
-				else CPrintToChat(client, "%t %t", "menu_tag", "menu_progress", EventDay);
+				else CReplyToCommand(client, "%t %t", "menu_tag", "menu_progress", EventDay);
 			}
-			else CPrintToChat(client, "%t %t", "menu_tag", "menu_minplayer");
+			else CReplyToCommand(client, "%t %t", "menu_tag", "menu_minplayer");
 		}
-		else CPrintToChat(client, "%t %t", "menu_tag", "warden_notwarden");
+		else CReplyToCommand(client, "%t %t", "menu_tag", "warden_notwarden");
 	}
-	else CPrintToChat(client, "%t %t", "menu_tag", "menu_disabled");
+	else CReplyToCommand(client, "%t %t", "menu_tag", "menu_disabled");
+	return Plugin_Handled;
 }
 
 

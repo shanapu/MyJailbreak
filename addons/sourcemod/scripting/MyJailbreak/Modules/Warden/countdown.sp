@@ -154,7 +154,7 @@ public Action Command_CountDownMenu(int client, int args)
 			menu.ExitBackButton = true;
 			menu.Display(client, 20);
 		}
-		else CPrintToChat(client, "%t %t", "warden_tag", "warden_notwarden" );
+		else CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden" );
 	}
 	return Plugin_Handled;
 }
@@ -172,6 +172,7 @@ public Action Command_CancelCountDown(int client, int args)
 		g_bIsCountDown = false;
 		CPrintToChatAll("%t %t", "warden_tag", "warden_countdowncanceled" );
 	}
+	return Plugin_Handled;
 }
 
 
@@ -207,7 +208,7 @@ public Action Command_StartStopMenu(int client, int args)
 			menu.ExitButton = true;
 			menu.Display(client, 20);
 		}
-		else CPrintToChat(client, "%t %t", "warden_tag", "warden_notwarden" );
+		else CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden" );
 	}
 	return Plugin_Handled;
 }
@@ -233,10 +234,11 @@ public Action Command_StartCountDown(int client, int args)
 				
 				g_bIsCountDown = true;
 			}
-			else CPrintToChat(client, "%t %t", "warden_tag" , "warden_countdownrunning");
+			else CReplyToCommand(client, "%t %t", "warden_tag" , "warden_countdownrunning");
 		}
-		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
+		else CReplyToCommand(client, "%t %t", "warden_tag" , "warden_notwarden");
 	}
+	return Plugin_Handled;
 }
 
 
@@ -261,10 +263,11 @@ public Action Command_StopCountDown(int client, int args)
 												
 				g_bIsCountDown = true;
 			}
-			else CPrintToChat(client, "%t %t", "warden_tag" , "warden_countdownrunning");
+			else CReplyToCommand(client, "%t %t", "warden_tag" , "warden_countdownrunning");
 		}
-		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
+		else CReplyToCommand(client, "%t %t", "warden_tag" , "warden_notwarden");
 	}
+	return Plugin_Handled;
 }
 
 
@@ -337,9 +340,9 @@ public Action SetStartStopCountDown(int client, int args)
 				}
 				g_bIsCountDown = true;
 			}
-			else CPrintToChat(client, "%t %t", "warden_tag" , "warden_countdownrunning");
+			else CReplyToCommand(client, "%t %t", "warden_tag" , "warden_countdownrunning");
 		}
-		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
+		else CReplyToCommand(client, "%t %t", "warden_tag" , "warden_notwarden");
 	}
 }
 

@@ -117,6 +117,7 @@ public Action Command_FreeDay(int warden, int args)
 			}
 		}
 	}
+	return Plugin_Handled;
 }
 
 

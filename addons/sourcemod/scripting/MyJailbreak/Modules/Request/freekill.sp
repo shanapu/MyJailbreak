@@ -159,13 +159,13 @@ public Action Command_Freekill(int client, int args)
 								if(ActiveLogging()) LogToFileEx(g_sFreeKillLogFile, "Player %L claiming %L freekilled him. Reported to warden %L", client, attacker, i);
 							}
 						}
-						else CPrintToChat(client, "%t %t", "request_tag", "request_freekilltimes", gc_iFreeKillLimit.IntValue);
+						else CReplyToCommand(client, "%t %t", "request_tag", "request_freekilltimes", gc_iFreeKillLimit.IntValue);
 					}
-					else CPrintToChat(client, "%t %t", "request_tag", "request_nokiller");
+					else CReplyToCommand(client, "%t %t", "request_tag", "request_nokiller");
 				}
-				else CPrintToChat(client, "%t %t", "request_tag", "request_processing");
+				else CReplyToCommand(client, "%t %t", "request_tag", "request_processing");
 			}
-			else CPrintToChat(client, "%t %t", "request_tag", "request_aliveorct");
+			else CReplyToCommand(client, "%t %t", "request_tag", "request_aliveorct");
 		}
 	}
 	return Plugin_Handled;

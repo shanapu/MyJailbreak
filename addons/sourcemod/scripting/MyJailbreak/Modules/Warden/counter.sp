@@ -99,7 +99,7 @@ public Action Command_Counter(int client, any args)
 				}
 			}
 			
-			if((gc_iCounterMode.IntValue == 1 ) || (gc_iCounterMode.IntValue == 3 ) || (gc_iCounterMode.IntValue == 5 ) || (gc_iCounterMode.IntValue == 7)) CPrintToChat(client, "%t %t", "warden_tag", "warden_counter", counter);
+			if((gc_iCounterMode.IntValue == 1 ) || (gc_iCounterMode.IntValue == 3 ) || (gc_iCounterMode.IntValue == 5 ) || (gc_iCounterMode.IntValue == 7)) CReplyToCommand(client, "%t %t", "warden_tag", "warden_counter", counter);
 			if((gc_iCounterMode.IntValue == 2 ) || (gc_iCounterMode.IntValue == 3 ) || (gc_iCounterMode.IntValue == 6 ) || (gc_iCounterMode.IntValue == 7)) PrintCenterText(client, "%t", "warden_counter", counter);
 			if((gc_iCounterMode.IntValue == 4 ) || (gc_iCounterMode.IntValue == 5 ) || (gc_iCounterMode.IntValue == 6 ) || (gc_iCounterMode.IntValue == 7))
 			{
@@ -128,7 +128,7 @@ public Action Command_Counter(int client, any args)
 				SendPanelToClient(CounterPanel, client, Handler_NullCancel, 23);
 			}
 		}
-		else CPrintToChat(client, "%t %t", "warden_tag", "warden_notwarden");
+		else CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
 	}
 	return Plugin_Handled;
 }

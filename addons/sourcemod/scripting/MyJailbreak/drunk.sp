@@ -247,11 +247,11 @@ public Action SetDrunk(int client,int args)
 						StartNextRound(); //prepare Event for next round
 						if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event drunken was started by warden %L", client);
 					}
-					else CPrintToChat(client, "%t %t", "drunk_tag" , "drunk_wait", g_iCoolDown);
+					else CReplyToCommand(client, "%t %t", "drunk_tag" , "drunk_wait", g_iCoolDown);
 				}
-				else CPrintToChat(client, "%t %t", "drunk_tag" , "drunk_progress" , EventDay);
+				else CReplyToCommand(client, "%t %t", "drunk_tag" , "drunk_progress" , EventDay);
 			}
-			else CPrintToChat(client, "%t %t", "warden_tag" , "nocscope_setbywarden");
+			else CReplyToCommand(client, "%t %t", "warden_tag" , "nocscope_setbywarden");
 		}
 		else if (CheckVipFlag(client,g_sAdminFlag))
 		{
@@ -267,15 +267,16 @@ public Action SetDrunk(int client,int args)
 						StartNextRound(); //prepare Event for next round;
 						if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event drunken was started by admin %L", client);
 					}
-					else CPrintToChat(client, "%t %t", "drunk_tag" , "drunk_wait", g_iCoolDown);
+					else CReplyToCommand(client, "%t %t", "drunk_tag" , "drunk_wait", g_iCoolDown);
 				}
-				else CPrintToChat(client, "%t %t", "drunk_tag" , "drunk_progress" , EventDay);
+				else CReplyToCommand(client, "%t %t", "drunk_tag" , "drunk_progress" , EventDay);
 			}
-			else CPrintToChat(client, "%t %t", "nocscope_tag" , "drunk_setbyadmin");
+			else CReplyToCommand(client, "%t %t", "nocscope_tag" , "drunk_setbyadmin");
 		}
-		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
+		else CReplyToCommand(client, "%t %t", "warden_tag" , "warden_notwarden");
 	}
-	else CPrintToChat(client, "%t %t", "drunk_tag" , "drunk_disabled");
+	else CReplyToCommand(client, "%t %t", "drunk_tag" , "drunk_disabled");
+	return Plugin_Handled;
 }
 
 
@@ -310,15 +311,16 @@ public Action VoteDrunk(int client,int args)
 						}
 						else CPrintToChatAll("%t %t", "drunk_tag" , "drunk_need", Missing, client);
 					}
-					else CPrintToChat(client, "%t %t", "drunk_tag" , "drunk_voted");
+					else CReplyToCommand(client, "%t %t", "drunk_tag" , "drunk_voted");
 				}
-				else CPrintToChat(client, "%t %t", "drunk_tag" , "drunk_wait", g_iCoolDown);
+				else CReplyToCommand(client, "%t %t", "drunk_tag" , "drunk_wait", g_iCoolDown);
 			}
-			else CPrintToChat(client, "%t %t", "drunk_tag" , "drunk_progress" , EventDay);
+			else CReplyToCommand(client, "%t %t", "drunk_tag" , "drunk_progress" , EventDay);
 		}
-		else CPrintToChat(client, "%t %t", "drunk_tag" , "drunk_voting");
+		else CReplyToCommand(client, "%t %t", "drunk_tag" , "drunk_voting");
 	}
-	else CPrintToChat(client, "%t %t", "drunk_tag" , "drunk_disabled");
+	else CReplyToCommand(client, "%t %t", "drunk_tag" , "drunk_disabled");
+	return Plugin_Handled;
 }
 
 

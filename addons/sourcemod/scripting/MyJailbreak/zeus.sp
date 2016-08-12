@@ -243,13 +243,13 @@ public Action SetZeus(int client,int args)
 							StartNextRound();
 							if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Zeus was started by warden %L", client);
 						}
-						else CPrintToChat(client, "%t %t", "zeus_tag" , "zeus_wait", g_iCoolDown);
+						else CReplyToCommand(client, "%t %t", "zeus_tag" , "zeus_wait", g_iCoolDown);
 					}
-					else CPrintToChat(client, "%t %t", "zeus_tag" , "zeus_progress" , EventDay);
+					else CReplyToCommand(client, "%t %t", "zeus_tag" , "zeus_progress" , EventDay);
 				}
-				else CPrintToChat(client, "%t %t", "zeus_tag" , "zeus_minplayer");
+				else CReplyToCommand(client, "%t %t", "zeus_tag" , "zeus_minplayer");
 			}
-			else CPrintToChat(client, "%t %t", "warden_tag" , "zeus_setbywarden");
+			else CReplyToCommand(client, "%t %t", "warden_tag" , "zeus_setbywarden");
 		}
 		else if (CheckVipFlag(client,g_sAdminFlag))
 		{
@@ -267,17 +267,18 @@ public Action SetZeus(int client,int args)
 							StartNextRound();
 							if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Zeus was started by admin %L", client);
 						}
-						else CPrintToChat(client, "%t %t", "zeus_tag" , "zeus_wait", g_iCoolDown);
+						else CReplyToCommand(client, "%t %t", "zeus_tag" , "zeus_wait", g_iCoolDown);
 					}
-					else CPrintToChat(client, "%t %t", "zeus_tag" , "zeus_progress" , EventDay);
+					else CReplyToCommand(client, "%t %t", "zeus_tag" , "zeus_progress" , EventDay);
 				}
-				else CPrintToChat(client, "%t %t", "zeus_tag" , "zeus_minplayer");
+				else CReplyToCommand(client, "%t %t", "zeus_tag" , "zeus_minplayer");
 			}
-			else CPrintToChat(client, "%t %t", "zeus_tag" , "zeus_setbyadmin");
+			else CReplyToCommand(client, "%t %t", "zeus_tag" , "zeus_setbyadmin");
 		}
-		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
+		else CReplyToCommand(client, "%t %t", "warden_tag" , "warden_notwarden");
 	}
-	else CPrintToChat(client, "%t %t", "zeus_tag" , "zeus_disabled");
+	else CReplyToCommand(client, "%t %t", "zeus_tag" , "zeus_disabled");
+	return Plugin_Handled;
 }
 
 
@@ -314,17 +315,18 @@ public Action VoteZeus(int client,int args)
 							}
 							else CPrintToChatAll("%t %t", "zeus_tag" , "zeus_need", Missing, client);
 						}
-						else CPrintToChat(client, "%t %t", "zeus_tag" , "zeus_voted");
+						else CReplyToCommand(client, "%t %t", "zeus_tag" , "zeus_voted");
 					}
-					else CPrintToChat(client, "%t %t", "zeus_tag" , "zeus_wait", g_iCoolDown);
+					else CReplyToCommand(client, "%t %t", "zeus_tag" , "zeus_wait", g_iCoolDown);
 				}
-				else CPrintToChat(client, "%t %t", "zeus_tag" , "zeus_progress" , EventDay);
+				else CReplyToCommand(client, "%t %t", "zeus_tag" , "zeus_progress" , EventDay);
 			}
-			else CPrintToChat(client, "%t %t", "zeus_tag" , "zeus_minplayer");
+			else CReplyToCommand(client, "%t %t", "zeus_tag" , "zeus_minplayer");
 		}
-		else CPrintToChat(client, "%t %t", "zeus_tag" , "zeus_voting");
+		else CReplyToCommand(client, "%t %t", "zeus_tag" , "zeus_voting");
 	}
-	else CPrintToChat(client, "%t %t", "zeus_tag" , "zeus_disabled");
+	else CReplyToCommand(client, "%t %t", "zeus_tag" , "zeus_disabled");
+	return Plugin_Handled;
 }
 
 

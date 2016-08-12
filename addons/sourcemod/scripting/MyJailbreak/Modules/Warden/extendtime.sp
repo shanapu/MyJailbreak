@@ -91,9 +91,9 @@ public Action Command_ExtendRoundTime(int client, int args)
 				menu.ExitButton = true;
 				menu.Display(client, 20);
 			}
-			else CPrintToChat(client, "%t %t", "warden_tag", "warden_extendtimes", gc_iExtendLimit.IntValue);
+			else CReplyToCommand(client, "%t %t", "warden_tag", "warden_extendtimes", gc_iExtendLimit.IntValue);
 		}
-		else CPrintToChat(client, "%t %t", "warden_tag", "warden_notwarden" );
+		else CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden" );
 	}
 	return Plugin_Handled;
 }

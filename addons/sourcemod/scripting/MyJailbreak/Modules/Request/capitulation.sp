@@ -141,13 +141,13 @@ public Action Command_Capitulation(int client, int args)
 							LoopClients(i) Menu_CapitulationMenu(i);
 							if(gc_bSounds.BoolValue)EmitSoundToAllAny(g_sSoundCapitulationPath);
 						}
-						else CPrintToChat(client, "%t %t", "request_tag", "request_processing");
+						else CReplyToCommand(client, "%t %t", "request_tag", "request_processing");
 					}
-					else CPrintToChat(client, "%t %t", "request_tag", "warden_noexist");
+					else CReplyToCommand(client, "%t %t", "request_tag", "warden_noexist");
 				}
-				else CPrintToChat(client, "%t %t", "request_tag", "request_alreadycapitulated");
+				else CReplyToCommand(client, "%t %t", "request_tag", "request_alreadycapitulated");
 			}
-			else CPrintToChat(client, "%t %t", "request_tag", "request_notalivect");
+			else CReplyToCommand(client, "%t %t", "request_tag", "request_notalivect");
 		}
 	}
 	return Plugin_Handled;

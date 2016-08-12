@@ -145,17 +145,17 @@ public Action Command_Heal(int client, int args)
 									HealTimer[client] = CreateTimer(gc_fHealTime.FloatValue, Timer_ResetColorHeal, client);
 									LoopClients(i) HealMenu(i);
 								}
-								else CPrintToChat(client, "%t %t", "request_tag", "request_processing");
+								else CReplyToCommand(client, "%t %t", "request_tag", "request_processing");
 							}
-							else CPrintToChat(client, "%t %t", "request_tag", "request_fullhp");
+							else CReplyToCommand(client, "%t %t", "request_tag", "request_fullhp");
 						}
-						else CPrintToChat(client, "%t %t", "request_tag", "warden_noexist");
+						else CReplyToCommand(client, "%t %t", "request_tag", "warden_noexist");
 					}
-					else CPrintToChat(client, "%t %t", "request_tag", "request_healtimes", gc_iHealLimit.IntValue);
+					else CReplyToCommand(client, "%t %t", "request_tag", "request_healtimes", gc_iHealLimit.IntValue);
 				}
-				else CPrintToChat(client, "%t %t", "request_tag", "request_alreadyhealed");
+				else CReplyToCommand(client, "%t %t", "request_tag", "request_alreadyhealed");
 			}
-			else CPrintToChat(client, "%t %t", "request_tag", "request_notalivect");
+			else CReplyToCommand(client, "%t %t", "request_tag", "request_notalivect");
 		}
 	}
 	return Plugin_Handled;

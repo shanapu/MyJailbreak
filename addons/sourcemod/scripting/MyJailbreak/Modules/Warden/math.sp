@@ -143,8 +143,9 @@ public Action Command_MathQuestion(int client, int args)
 				g_bIsMathQuiz = true;
 			}
 		}
-		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
+		else CReplyToCommand(client, "%t %t", "warden_tag" , "warden_notwarden");
 	}
+	return Plugin_Handled;
 }
 
 
@@ -300,7 +301,7 @@ public Action Timer_CreateMathQuestion( Handle timer, any client )
 			
 			g_hMathTimer = CreateTimer(gc_iTimeAnswer.FloatValue, Timer_EndMathQuestion);
 		}
-		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
+		else CReplyToCommand(client, "%t %t", "warden_tag" , "warden_notwarden");
 	}
 }
 

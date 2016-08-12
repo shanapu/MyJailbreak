@@ -198,7 +198,7 @@ public Action Command_Weapons(int client,int args)
 		}
 		return Plugin_Continue;
 	}
-	else CPrintToChat(client, "%t %t", "weapons_tag" , "weapons_disabled");
+	else CReplyToCommand(client, "%t %t", "weapons_tag" , "weapons_disabled");
 	return Plugin_Continue;
 }
 

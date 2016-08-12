@@ -90,11 +90,12 @@ public Action Command_OpenDoors(int client, int args)
 					KillTimer(OpenCounterTime);
 					OpenCounterTime = null;
 				}
-				else CPrintToChat(client, "%t %t", "warden_tag" , "warden_dooropen_unavailable"); 
+				else CReplyToCommand(client, "%t %t", "warden_tag" , "warden_dooropen_unavailable"); 
 			}
-			else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden"); 
+			else CReplyToCommand(client, "%t %t", "warden_tag" , "warden_notwarden"); 
 		}
 	}
+	return Plugin_Handled;
 }
 
 
@@ -111,11 +112,12 @@ public Action Command_CloseDoors(int client, int args)
 					CPrintToChatAll("%t %t", "warden_tag" , "warden_doorclose"); 
 					SJD_CloseDoors();
 				}
-				else CPrintToChat(client, "%t %t", "warden_tag" , "warden_doorclose_unavailable"); 
+				else CReplyToCommand(client, "%t %t", "warden_tag" , "warden_doorclose_unavailable"); 
 			}
-			else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden"); 
+			else CReplyToCommand(client, "%t %t", "warden_tag" , "warden_notwarden"); 
 		}
 	}
+	return Plugin_Handled;
 }
 
 

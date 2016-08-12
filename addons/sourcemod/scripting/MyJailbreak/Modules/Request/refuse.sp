@@ -173,13 +173,13 @@ public Action Command_refuse(int client, int args)
 								if (warden_exist()) LoopClients(i) RefuseMenu(i);
 								if(gc_bSounds.BoolValue)EmitSoundToAllAny(g_sSoundRefusePath);
 							}
-							else CPrintToChat(client, "%t %t", "request_tag", "request_refusedtimes", gc_iRefuseLimit.IntValue);
+							else CReplyToCommand(client, "%t %t", "request_tag", "request_refusedtimes", gc_iRefuseLimit.IntValue);
 						}
-						else CPrintToChat(client, "%t %t", "request_tag", "request_refuseallow");
+						else CReplyToCommand(client, "%t %t", "request_tag", "request_refuseallow");
 					}
-					else CPrintToChat(client, "%t %t", "request_tag", "request_alreadyrefused");
+					else CReplyToCommand(client, "%t %t", "request_tag", "request_alreadyrefused");
 				}
-				else CPrintToChat(client, "%t %t", "request_tag", "request_notalivect");
+				else CReplyToCommand(client, "%t %t", "request_tag", "request_notalivect");
 			}
 		}
 	}

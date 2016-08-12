@@ -187,19 +187,19 @@ public Action Command_LeaveQueue(int client, int iArgNum)
 	
 	if(!g_bRatioEnable)
 	{
-		CPrintToChat(client, "%t %t", "ratio_tag", "ratio_disabled");
+		CReplyToCommand(client, "%t %t", "ratio_tag", "ratio_disabled");
 		return Plugin_Handled;
 	}
 	
 	if(iIndex == -1)
 	{
-		CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_notonqueue");
+		CReplyToCommand(client, "%t %t", "ratio_tag" , "ratio_notonqueue");
 		return Plugin_Handled;
 	}
 	else
 	{
 		RemovePlayerFromGuardQueue(client);
-		CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_leavedqueue");
+		CReplyToCommand(client, "%t %t", "ratio_tag" , "ratio_leavedqueue");
 		return Plugin_Handled;
 	}
 }
@@ -212,13 +212,13 @@ public Action Command_ViewGuardQueue(int client, int args)
 	
 	if(!g_bRatioEnable)
 	{
-		CPrintToChat(client, "%t %t", "ratio_tag", "ratio_disabled");
+		CReplyToCommand(client, "%t %t", "ratio_tag", "ratio_disabled");
 		return Plugin_Handled;
 	}
 	
 	if(GetArraySize(g_aGuardQueue) < 1)
 	{
-		CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_empty");
+		CReplyToCommand(client, "%t %t", "ratio_tag" , "ratio_empty");
 		return Plugin_Handled;
 	}
 	char info[64];
@@ -259,14 +259,14 @@ public Action Command_JoinGuardQueue(int client, int iArgNum)
 	
 	if(!g_bRatioEnable)
 	{
-		CPrintToChat(client, "%t %t", "ratio_tag", "ratio_disabled");
+		CReplyToCommand(client, "%t %t", "ratio_tag", "ratio_disabled");
 		return Plugin_Handled;
 	}
 	
 	if(GetClientTeam(client) != CS_TEAM_T)
 	{
 		ClientCommand(client, "play %s", g_sRestrictedSound);
-		CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_noct");
+		CReplyToCommand(client, "%t %t", "ratio_tag" , "ratio_noct");
 		return Plugin_Handled;
 	}
 	
@@ -275,7 +275,7 @@ public Action Command_JoinGuardQueue(int client, int iArgNum)
 	if(szCookie[0] == '1')
 	{
 		ClientCommand(client, "play %s", g_sRestrictedSound);
-		CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_banned");
+		CReplyToCommand(client, "%t %t", "ratio_tag" , "ratio_banned");
 		FakeClientCommand(client, "sm_isbanned @me");
 		return Plugin_Handled;
 	}
@@ -293,8 +293,8 @@ public Action Command_JoinGuardQueue(int client, int iArgNum)
 	}
 	else
 	{
-		CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_number", iIndex + 1);
-		if(gc_bAdsVIP.BoolValue && gc_bVIPQueue.BoolValue && !CheckVipFlag(client, g_sAdminFlag)) CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_advip");
+		CReplyToCommand(client, "%t %t", "ratio_tag" , "ratio_number", iIndex + 1);
+		if(gc_bAdsVIP.BoolValue && gc_bVIPQueue.BoolValue && !CheckVipFlag(client, g_sAdminFlag)) CReplyToCommand(client, "%t %t", "ratio_tag" , "ratio_advip");
 	}
 	return Plugin_Continue;
 }
@@ -307,13 +307,13 @@ public Action AdminCommand_RemoveFromQueue(int client, int args)
 	
 	if(!g_bRatioEnable)
 	{
-		CPrintToChat(client, "%t %t", "ratio_tag", "ratio_disabled");
+		CReplyToCommand(client, "%t %t", "ratio_tag", "ratio_disabled");
 		return Plugin_Handled;
 	}
 	
 	if(GetArraySize(g_aGuardQueue) < 1)
 	{
-		CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_empty");
+		CReplyToCommand(client, "%t %t", "ratio_tag" , "ratio_empty");
 		return Plugin_Handled;
 	}
 	
@@ -358,11 +358,11 @@ public Action Command_ToggleRatio(int client, int args)
 	{
 		if(g_bRatioEnable)
 		{
-			CPrintToChat(client, "%t %t", "ratio_tag", "ratio_active", gc_fPrisonerPerGuard.FloatValue);
+			CReplyToCommand(client, "%t %t", "ratio_tag", "ratio_active", gc_fPrisonerPerGuard.FloatValue);
 		}
 		else
 		{
-			CPrintToChat(client, "%t %t", "ratio_tag", "ratio_disabled");
+			CReplyToCommand(client, "%t %t", "ratio_tag", "ratio_disabled");
 		}
 	}
 }

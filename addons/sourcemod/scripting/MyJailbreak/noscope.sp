@@ -257,13 +257,13 @@ public Action SetNoScope(int client,int args)
 							StartNextRound();
 							if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event NoScope was started by warden %L", client);
 						}
-						else CPrintToChat(client, "%t %t", "noscope_tag" , "noscope_wait", g_iCoolDown);
+						else CReplyToCommand(client, "%t %t", "noscope_tag" , "noscope_wait", g_iCoolDown);
 					}
-					else CPrintToChat(client, "%t %t", "noscope_tag" , "noscope_progress" , EventDay);
+					else CReplyToCommand(client, "%t %t", "noscope_tag" , "noscope_progress" , EventDay);
 				}
-				else CPrintToChat(client, "%t %t", "noscope_tag" , "noscope_minplayer");
+				else CReplyToCommand(client, "%t %t", "noscope_tag" , "noscope_minplayer");
 			}
-			else CPrintToChat(client, "%t %t", "warden_tag" , "nocscope_setbywarden");
+			else CReplyToCommand(client, "%t %t", "warden_tag" , "nocscope_setbywarden");
 		}
 		else if (CheckVipFlag(client,g_sAdminFlag))
 		{
@@ -281,17 +281,18 @@ public Action SetNoScope(int client,int args)
 							StartNextRound();
 							if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event NoScope was started by admin %L", client);
 						}
-						else CPrintToChat(client, "%t %t", "noscope_tag" , "noscope_wait", g_iCoolDown);
+						else CReplyToCommand(client, "%t %t", "noscope_tag" , "noscope_wait", g_iCoolDown);
 					}
-					else CPrintToChat(client, "%t %t", "noscope_tag" , "noscope_progress" , EventDay);
+					else CReplyToCommand(client, "%t %t", "noscope_tag" , "noscope_progress" , EventDay);
 				}
-				else CPrintToChat(client, "%t %t", "noscope_tag" , "noscope_minplayer");
+				else CReplyToCommand(client, "%t %t", "noscope_tag" , "noscope_minplayer");
 			}
-			else CPrintToChat(client, "%t %t", "nocscope_tag" , "noscope_setbyadmin");
+			else CReplyToCommand(client, "%t %t", "nocscope_tag" , "noscope_setbyadmin");
 		}
-		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
+		else CReplyToCommand(client, "%t %t", "warden_tag" , "warden_notwarden");
 	}
-	else CPrintToChat(client, "%t %t", "noscope_tag" , "noscope_disabled");
+	else CReplyToCommand(client, "%t %t", "noscope_tag" , "noscope_disabled");
+	return Plugin_Handled;
 }
 
 
@@ -328,17 +329,18 @@ public Action VoteNoScope(int client,int args)
 							}
 							else CPrintToChatAll("%t %t", "noscope_tag" , "noscope_need", Missing, client);
 						}
-						else CPrintToChat(client, "%t %t", "noscope_tag" , "noscope_voted");
+						else CReplyToCommand(client, "%t %t", "noscope_tag" , "noscope_voted");
 					}
-					else CPrintToChat(client, "%t %t", "noscope_tag" , "noscope_wait", g_iCoolDown);
+					else CReplyToCommand(client, "%t %t", "noscope_tag" , "noscope_wait", g_iCoolDown);
 				}
-				else CPrintToChat(client, "%t %t", "noscope_tag" , "noscope_progress" , EventDay);
+				else CReplyToCommand(client, "%t %t", "noscope_tag" , "noscope_progress" , EventDay);
 			}
-			else CPrintToChat(client, "%t %t", "noscope_tag" , "noscope_minplayer");
+			else CReplyToCommand(client, "%t %t", "noscope_tag" , "noscope_minplayer");
 		}
-		else CPrintToChat(client, "%t %t", "noscope_tag" , "noscope_voting");
+		else CReplyToCommand(client, "%t %t", "noscope_tag" , "noscope_voting");
 	}
-	else CPrintToChat(client, "%t %t", "noscope_tag" , "noscope_disabled");
+	else CReplyToCommand(client, "%t %t", "noscope_tag" , "noscope_disabled");
+	return Plugin_Handled;
 }
 
 

@@ -239,13 +239,13 @@ public Action SetHide(int client,int args)
 							StartNextRound();
 							if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Hide was started by warden %L", client);
 						}
-						else CPrintToChat(client, "%t %t", "hide_tag" , "hide_wait", g_iCoolDown);
+						else CReplyToCommand(client, "%t %t", "hide_tag" , "hide_wait", g_iCoolDown);
 					}
-					else CPrintToChat(client, "%t %t", "hide_tag" , "hide_progress" , EventDay);
+					else CReplyToCommand(client, "%t %t", "hide_tag" , "hide_progress" , EventDay);
 				}
-				else CPrintToChat(client, "%t %t", "hide_tag" , "hide_minplayer");
+				else CReplyToCommand(client, "%t %t", "hide_tag" , "hide_minplayer");
 			}
-			else CPrintToChat(client, "%t %t", "hide_tag" , "hide_setbywarden");
+			else CReplyToCommand(client, "%t %t", "hide_tag" , "hide_setbywarden");
 		}
 		else if (CheckVipFlag(client,g_sAdminFlag))
 		{
@@ -263,17 +263,18 @@ public Action SetHide(int client,int args)
 							StartNextRound();
 							if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Hide was started by admin %L", client);
 						}
-						else CPrintToChat(client, "%t %t", "hide_tag" , "hide_wait", g_iCoolDown);
+						else CReplyToCommand(client, "%t %t", "hide_tag" , "hide_wait", g_iCoolDown);
 					}
-					else CPrintToChat(client, "%t %t", "hide_tag" , "hide_progress" , EventDay);
+					else CReplyToCommand(client, "%t %t", "hide_tag" , "hide_progress" , EventDay);
 				}
-				else CPrintToChat(client, "%t %t", "hide_tag" , "hide_minplayer");
+				else CReplyToCommand(client, "%t %t", "hide_tag" , "hide_minplayer");
 			}
-			else CPrintToChat(client, "%t %t", "hide_tag" , "hide_setbyadmin");
+			else CReplyToCommand(client, "%t %t", "hide_tag" , "hide_setbyadmin");
 		}
-		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
+		else CReplyToCommand(client, "%t %t", "warden_tag" , "warden_notwarden");
 	}
-	else CPrintToChat(client, "%t %t", "hide_tag" , "hide_disabled");
+	else CReplyToCommand(client, "%t %t", "hide_tag" , "hide_disabled");
+	return Plugin_Handled;
 }
 
 
@@ -310,17 +311,18 @@ public Action VoteHide(int client,int args)
 							}
 							else CPrintToChatAll("%t %t", "hide_tag" , "hide_need", Missing, client);
 						}
-						else CPrintToChat(client, "%t %t", "hide_tag" , "hide_voted");
+						else CReplyToCommand(client, "%t %t", "hide_tag" , "hide_voted");
 					}
-					else CPrintToChat(client, "%t %t", "hide_tag" , "hide_wait", g_iCoolDown);
+					else CReplyToCommand(client, "%t %t", "hide_tag" , "hide_wait", g_iCoolDown);
 				}
-				else CPrintToChat(client, "%t %t", "hide_tag" , "hide_progress" , EventDay);
+				else CReplyToCommand(client, "%t %t", "hide_tag" , "hide_progress" , EventDay);
 			}
-			else CPrintToChat(client, "%t %t", "hide_tag" , "hide_minplayer");
+			else CReplyToCommand(client, "%t %t", "hide_tag" , "hide_minplayer");
 		}
-		else CPrintToChat(client, "%t %t", "hide_tag" , "hide_voting");
+		else CReplyToCommand(client, "%t %t", "hide_tag" , "hide_voting");
 	}
-	else CPrintToChat(client, "%t %t", "hide_tag" , "hide_disabled");
+	else CReplyToCommand(client, "%t %t", "hide_tag" , "hide_disabled");
+	return Plugin_Handled;
 }
 
 

@@ -248,13 +248,13 @@ public Action SetHEbattle(int client,int args)
 							StartNextRound();
 							if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event HEBattle was started by warden %L", client);
 						}
-						else CPrintToChat(client, "%t %t", "hebattle_tag" , "hebattle_wait", g_iCoolDown);
+						else CReplyToCommand(client, "%t %t", "hebattle_tag" , "hebattle_wait", g_iCoolDown);
 					}
-					else CPrintToChat(client, "%t %t", "hebattle_tag" , "hebattle_progress" , EventDay);
+					else CReplyToCommand(client, "%t %t", "hebattle_tag" , "hebattle_progress" , EventDay);
 				}
-				else CPrintToChat(client, "%t %t", "hebattle_tag" , "hebattle_minplayer");
+				else CReplyToCommand(client, "%t %t", "hebattle_tag" , "hebattle_minplayer");
 			}
-			else CPrintToChat(client, "%t %t", "warden_tag" , "hebattle_setbywarden");
+			else CReplyToCommand(client, "%t %t", "warden_tag" , "hebattle_setbywarden");
 		}
 		else if (CheckVipFlag(client,g_sAdminFlag))
 		{
@@ -272,17 +272,18 @@ public Action SetHEbattle(int client,int args)
 							StartNextRound();
 							if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event HEbattle was started by admin %L", client);
 						}
-						else CPrintToChat(client, "%t %t", "hebattle_tag" , "hebattle_wait", g_iCoolDown);
+						else CReplyToCommand(client, "%t %t", "hebattle_tag" , "hebattle_wait", g_iCoolDown);
 					}
-					else CPrintToChat(client, "%t %t", "hebattle_tag" , "hebattle_progress" , EventDay);
+					else CReplyToCommand(client, "%t %t", "hebattle_tag" , "hebattle_progress" , EventDay);
 				}
-				else CPrintToChat(client, "%t %t", "hebattle_tag" , "hebattle_minplayer");
+				else CReplyToCommand(client, "%t %t", "hebattle_tag" , "hebattle_minplayer");
 			}
-			else CPrintToChat(client, "%t %t", "hebattle_tag" , "hebattle_setbyadmin");
+			else CReplyToCommand(client, "%t %t", "hebattle_tag" , "hebattle_setbyadmin");
 		}
-		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
+		else CReplyToCommand(client, "%t %t", "warden_tag" , "warden_notwarden");
 	}
-	else CPrintToChat(client, "%t %t", "hebattle_tag" , "hebattle_disabled");
+	else CReplyToCommand(client, "%t %t", "hebattle_tag" , "hebattle_disabled");
+	return Plugin_Handled;
 }
 
 
@@ -319,18 +320,19 @@ public Action VoteHEbattle(int client,int args)
 							}
 							else CPrintToChatAll("%t %t", "hebattle_tag" , "hebattle_need", Missing, client);
 						}
-						else CPrintToChat(client, "%t %t", "hebattle_tag" , "hebattle_voted");
+						else CReplyToCommand(client, "%t %t", "hebattle_tag" , "hebattle_voted");
 					}
-					else CPrintToChat(client, "%t %t", "hebattle_tag" , "hebattle_wait", g_iCoolDown);
+					else CReplyToCommand(client, "%t %t", "hebattle_tag" , "hebattle_wait", g_iCoolDown);
 					
 				}
-				else CPrintToChat(client, "%t %t", "hebattle_tag" , "hebattle_progress" , EventDay);
+				else CReplyToCommand(client, "%t %t", "hebattle_tag" , "hebattle_progress" , EventDay);
 			}
-			else CPrintToChat(client, "%t %t", "hebattle_tag" , "hebattle_minplayer");
+			else CReplyToCommand(client, "%t %t", "hebattle_tag" , "hebattle_minplayer");
 		}
-		else CPrintToChat(client, "%t %t", "hebattle_tag" , "hebattle_voting");
+		else CReplyToCommand(client, "%t %t", "hebattle_tag" , "hebattle_voting");
 	}
-	else CPrintToChat(client, "%t %t", "hebattle_tag" , "hebattle_disabled");
+	else CReplyToCommand(client, "%t %t", "hebattle_tag" , "hebattle_disabled");
+	return Plugin_Handled;
 }
 
 

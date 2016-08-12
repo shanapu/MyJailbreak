@@ -167,8 +167,9 @@ public Action Command_RequestMenu(int client, int args)
 			reqmenu.ExitBackButton = true;
 			reqmenu.Display(client, MENU_TIME_FOREVER);
 		}
-		else CPrintToChat(client, "%t %t", "request_tag", "request_notalivect");
+		else CReplyToCommand(client, "%t %t", "request_tag", "request_notalivect");
 	}
+	return Plugin_Handled;
 }
 
 

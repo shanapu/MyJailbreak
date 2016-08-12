@@ -263,13 +263,13 @@ public Action SetZombie(int client,int args)
 							StartNextRound();
 							if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Zombie was started by warden %L", client);
 						}
-						else CPrintToChat(client, "%t %t", "zombie_tag" , "zombie_wait", g_iCoolDown);
+						else CReplyToCommand(client, "%t %t", "zombie_tag" , "zombie_wait", g_iCoolDown);
 					}
-					else CPrintToChat(client, "%t %t", "zombie_tag" , "zombie_progress" , EventDay);
+					else CReplyToCommand(client, "%t %t", "zombie_tag" , "zombie_progress" , EventDay);
 				}
-				else CPrintToChat(client, "%t %t", "zombie_tag" , "zombie_minplayer");
-		}
-			else CPrintToChat(client, "%t %t", "warden_tag" , "zombie_setbywarden");
+				else CReplyToCommand(client, "%t %t", "zombie_tag" , "zombie_minplayer");
+			}
+			else CReplyToCommand(client, "%t %t", "warden_tag" , "zombie_setbywarden");
 		}
 		else if (CheckVipFlag(client,g_sAdminFlag))
 		{
@@ -287,17 +287,18 @@ public Action SetZombie(int client,int args)
 							StartNextRound();
 							if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Zombie was started by admin %L", client);
 						}
-						else CPrintToChat(client, "%t %t", "zombie_tag" , "zombie_wait", g_iCoolDown);
+						else CReplyToCommand(client, "%t %t", "zombie_tag" , "zombie_wait", g_iCoolDown);
 					}
-					else CPrintToChat(client, "%t %t", "zombie_tag" , "zombie_progress" , EventDay);
+					else CReplyToCommand(client, "%t %t", "zombie_tag" , "zombie_progress" , EventDay);
 				}
-				else CPrintToChat(client, "%t %t", "zombie_tag" , "zombie_minplayer");
+				else CReplyToCommand(client, "%t %t", "zombie_tag" , "zombie_minplayer");
 			}
-			else CPrintToChat(client, "%t %t", "zombie_tag" , "zombie_setbyadmin");
+			else CReplyToCommand(client, "%t %t", "zombie_tag" , "zombie_setbyadmin");
 		}
-		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
+		else CReplyToCommand(client, "%t %t", "warden_tag" , "warden_notwarden");
 	}
-	else CPrintToChat(client, "%t %t", "zombie_tag" , "zombie_disabled");
+	else CReplyToCommand(client, "%t %t", "zombie_tag" , "zombie_disabled");
+	return Plugin_Handled;
 }
 
 
@@ -334,17 +335,18 @@ public Action VoteZombie(int client,int args)
 							}
 							else CPrintToChatAll("%t %t", "zombie_tag" , "zombie_need", Missing, client);
 						}
-						else CPrintToChat(client, "%t %t", "zombie_tag" , "zombie_voted");
+						else CReplyToCommand(client, "%t %t", "zombie_tag" , "zombie_voted");
 					}
-					else CPrintToChat(client, "%t %t", "zombie_tag" , "zombie_wait", g_iCoolDown);
+					else CReplyToCommand(client, "%t %t", "zombie_tag" , "zombie_wait", g_iCoolDown);
 				}
-				else CPrintToChat(client, "%t %t", "zombie_tag" , "zombie_progress" , EventDay);
+				else CReplyToCommand(client, "%t %t", "zombie_tag" , "zombie_progress" , EventDay);
 			}
-			else CPrintToChat(client, "%t %t", "zombie_tag" , "zombie_minplayer");
+			else CReplyToCommand(client, "%t %t", "zombie_tag" , "zombie_minplayer");
 		}
-		else CPrintToChat(client, "%t %t", "zombie_tag" , "zombie_voting");
+		else CReplyToCommand(client, "%t %t", "zombie_tag" , "zombie_voting");
 	}
-	else CPrintToChat(client, "%t %t", "zombie_tag" , "zombie_disabled");
+	else CReplyToCommand(client, "%t %t", "zombie_tag" , "zombie_disabled");
+	return Plugin_Handled;
 }
 
 

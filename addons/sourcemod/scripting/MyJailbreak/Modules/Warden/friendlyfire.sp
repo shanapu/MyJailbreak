@@ -88,6 +88,7 @@ public Action Command_FriendlyFire(int client, int args)
 			else CPrintToChatAll("%t %t", "warden_tag", "warden_ffisoff" );
 		}
 	}
+	return Plugin_Handled;
 }
 
 

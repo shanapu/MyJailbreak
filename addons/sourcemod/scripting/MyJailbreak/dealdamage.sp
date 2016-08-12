@@ -256,11 +256,11 @@ public Action SetDealDamage(int client,int args)
 						StartNextRound(); //prepare Event for next round
 						if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event DealDamage was started by warden %L", client);
 					}
-					else CPrintToChat(client, "%t %t", "dealdamage_tag" , "dealdamage_wait", g_iCoolDown);
+					else CReplyToCommand(client, "%t %t", "dealdamage_tag" , "dealdamage_wait", g_iCoolDown);
 				}
-				else CPrintToChat(client, "%t %t", "dealdamage_tag" , "dealdamage_progress" , EventDay);
+				else CReplyToCommand(client, "%t %t", "dealdamage_tag" , "dealdamage_progress" , EventDay);
 			}
-			else CPrintToChat(client, "%t %t", "warden_tag" , "nocscope_setbywarden");
+			else CReplyToCommand(client, "%t %t", "warden_tag" , "nocscope_setbywarden");
 		}
 		else if (CheckVipFlag(client,g_sAdminFlag))//is player admin?
 		{
@@ -276,15 +276,16 @@ public Action SetDealDamage(int client,int args)
 						StartNextRound(); //prepare Event for next round
 						if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event DealDamage was started by admin %L", client);
 					}
-					else CPrintToChat(client, "%t %t", "dealdamage_tag" , "dealdamage_wait", g_iCoolDown);
+					else CReplyToCommand(client, "%t %t", "dealdamage_tag" , "dealdamage_wait", g_iCoolDown);
 				}
-				else CPrintToChat(client, "%t %t", "dealdamage_tag" , "dealdamage_progress" , EventDay);
+				else CReplyToCommand(client, "%t %t", "dealdamage_tag" , "dealdamage_progress" , EventDay);
 			}
-			else CPrintToChat(client, "%t %t", "nocscope_tag" , "dealdamage_setbyadmin");
+			else CReplyToCommand(client, "%t %t", "nocscope_tag" , "dealdamage_setbyadmin");
 		}
-		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
+		else CReplyToCommand(client, "%t %t", "warden_tag" , "warden_notwarden");
 	}
-	else CPrintToChat(client, "%t %t", "dealdamage_tag" , "dealdamage_disabled");
+	else CReplyToCommand(client, "%t %t", "dealdamage_tag" , "dealdamage_disabled");
+	return Plugin_Handled;
 }
 
 
@@ -319,15 +320,16 @@ public Action VoteDealDamage(int client,int args)
 						}
 						else CPrintToChatAll("%t %t", "dealdamage_tag" , "dealdamage_need", Missing, client);
 					}
-					else CPrintToChat(client, "%t %t", "dealdamage_tag" , "dealdamage_voted");
+					else CReplyToCommand(client, "%t %t", "dealdamage_tag" , "dealdamage_voted");
 				}
-				else CPrintToChat(client, "%t %t", "dealdamage_tag" , "dealdamage_wait", g_iCoolDown);
+				else CReplyToCommand(client, "%t %t", "dealdamage_tag" , "dealdamage_wait", g_iCoolDown);
 			}
-			else CPrintToChat(client, "%t %t", "dealdamage_tag" , "dealdamage_progress" , EventDay);
+			else CReplyToCommand(client, "%t %t", "dealdamage_tag" , "dealdamage_progress" , EventDay);
 		}
-		else CPrintToChat(client, "%t %t", "dealdamage_tag" , "dealdamage_voting");
+		else CReplyToCommand(client, "%t %t", "dealdamage_tag" , "dealdamage_voting");
 	}
-	else CPrintToChat(client, "%t %t", "dealdamage_tag" , "dealdamage_disabled");
+	else CReplyToCommand(client, "%t %t", "dealdamage_tag" , "dealdamage_disabled");
+	return Plugin_Handled;
 }
 
 

@@ -82,8 +82,9 @@ public Action Command_KillMenu(int client, int args)
 			menu1.ExitButton = true;
 			menu1.Display(client,MENU_TIME_FOREVER);
 		}
-		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden"); 
+		else CReplyToCommand(client, "%t %t", "warden_tag" , "warden_notwarden"); 
 	}
+	return Plugin_Handled;
 }
 
 

@@ -197,11 +197,11 @@ public Action SetFreeday(int client,int args)
 						StartNextRound();
 						if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Freeday was started by warden %L", client);
 					}
-					else CPrintToChat(client, "%t %t", "freeday_tag" , "freeday_wait", g_iCoolDown);
+					else CReplyToCommand(client, "%t %t", "freeday_tag" , "freeday_wait", g_iCoolDown);
 				}
-				else CPrintToChat(client, "%t %t", "freeday_tag" , "freeday_progress" , EventDay);
+				else CReplyToCommand(client, "%t %t", "freeday_tag" , "freeday_progress" , EventDay);
 			}
-			else CPrintToChat(client, "%t %t", "warden_tag" , "freeday_setbywarden");
+			else CReplyToCommand(client, "%t %t", "warden_tag" , "freeday_setbywarden");
 		}
 		else if (CheckVipFlag(client,g_sAdminFlag))
 		{
@@ -217,15 +217,16 @@ public Action SetFreeday(int client,int args)
 						StartNextRound();
 						if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Freeday was started by admin %L", client);
 					}
-					else CPrintToChat(client, "%t %t", "freeday_tag" , "freeday_wait", g_iCoolDown);
+					else CReplyToCommand(client, "%t %t", "freeday_tag" , "freeday_wait", g_iCoolDown);
 				}
-				else CPrintToChat(client, "%t %t", "freeday_tag" , "freeday_progress" , EventDay);
+				else CReplyToCommand(client, "%t %t", "freeday_tag" , "freeday_progress" , EventDay);
 			}
-			else CPrintToChat(client, "%t %t", "freeday_tag" , "freeday_setbyadmin");
+			else CReplyToCommand(client, "%t %t", "freeday_tag" , "freeday_setbyadmin");
 		}
-		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
+		else CReplyToCommand(client, "%t %t", "warden_tag" , "warden_notwarden");
 	}
-	else CPrintToChat(client, "%t %t", "freeday_tag" , "freeday_disabled");
+	else CReplyToCommand(client, "%t %t", "freeday_tag" , "freeday_disabled");
+	return Plugin_Handled;
 }
 
 
@@ -260,15 +261,16 @@ public Action VoteFreeday(int client,int args)
 						}
 						else CPrintToChatAll("%t %t", "freeday_tag" , "freeday_need", Missing, client);
 					}
-					else CPrintToChat(client, "%t %t", "freeday_tag" , "freeday_voted");
+					else CReplyToCommand(client, "%t %t", "freeday_tag" , "freeday_voted");
 				}
-				else CPrintToChat(client, "%t %t", "freeday_tag" , "freeday_wait", g_iCoolDown);
+				else CReplyToCommand(client, "%t %t", "freeday_tag" , "freeday_wait", g_iCoolDown);
 			}
-			else CPrintToChat(client, "%t %t", "freeday_tag" , "freeday_progress" , EventDay);
+			else CReplyToCommand(client, "%t %t", "freeday_tag" , "freeday_progress" , EventDay);
 		}
-		else CPrintToChat(client, "%t %t", "freeday_tag" , "freeday_voting");
+		else CReplyToCommand(client, "%t %t", "freeday_tag" , "freeday_voting");
 	}
-	else CPrintToChat(client, "%t %t", "freeday_tag" , "freeday_disabled");
+	else CReplyToCommand(client, "%t %t", "freeday_tag" , "freeday_disabled");
+	return Plugin_Handled;
 }
 
 

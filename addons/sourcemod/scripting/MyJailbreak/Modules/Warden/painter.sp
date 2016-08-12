@@ -141,7 +141,7 @@ public Action Command_PainterMenu(int client, int args)
 				menu.ExitButton = true;
 				menu.Display(client, 20);
 			}
-			else CPrintToChat(client, "%t %t", "warden_tag", "warden_vipfeature");
+			else CReplyToCommand(client, "%t %t", "warden_tag", "warden_vipfeature");
 		}
 	}
 	return Plugin_Handled;
