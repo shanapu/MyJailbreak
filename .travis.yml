@@ -23,35 +23,6 @@ before_script:
     - mkdir compiled/MyJailbreak
 script: ./compile.sh MyJailbreak/catch.sp MyJailbreak/cowboy.sp MyJailbreak/dealdamage.sp MyJailbreak/drunk.sp MyJailbreak/duckhunt.sp MyJailbreak/ffa.sp MyJailbreak/freeday.sp MyJailbreak/hebattle.sp MyJailbreak/hide.sp MyJailbreak/hud.sp MyJailbreak/knife.sp MyJailbreak/lastguard.sp MyJailbreak/menu.sp MyJailbreak/myjailbreak.sp MyJailbreak/noscope.sp MyJailbreak/playertags.sp MyJailbreak/ratio.sp MyJailbreak/request.sp MyJailbreak/suicide.sp MyJailbreak/torch.sp MyJailbreak/war.sp MyJailbreak/warden.sp MyJailbreak/weapons.sp MyJailbreak/zeus.sp MyJailbreak/zombie.sp
 
-#Releases
-before_deploy:
-    - cd ../../..
-    - mkdir MyJB
-    - mv addons MyJB/addons/
-    - mv MyJB/addons/sourcemod/scripting/compiled/MyJailbreak MyJB/addons/sourcemod/plugins/MyJailbreak/
-    - rm -rf MyJB/addons/sourcemod/scripting/compiled
-    - mv cfg MyJB/cfg/
-    - mv fastDL MyJB/
-    - mv materials MyJB/
-    - mv models MyJB/
-    - mv sound MyJB/
-    - mv downloads.txt MyJB/
-    - mv license.txt MyJB/
-    - mv README.md MyJB/
-    - mv CHANGELOG.md MyJB/
-    - zip -rq MyJB MyJB
-    - tar -czf MyJB.tar.gz MyJB
-deploy:
-    provider: releases
-    api_key: ${GH_TOKEN}
-    file:
-        - CHANGELOG.md
-        - MyJB.zip
-        - MyJB.tar.gz
-    skip_cleanup: true
-    overwrite: true
-    on:
-        tags: true
 
 #Notifications
 notifications:
