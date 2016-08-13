@@ -1,0 +1,72 @@
+/*
+ * MyJailbreak - Warden - Shoot Gun to remove Module.
+ * by: shanapu
+ * https://github.com/shanapu/MyJailbreak/
+ *
+ * This file is part of the MyJailbreak SourceMod Plugin.
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, version 3.0, as published by the
+ * Free Software Foundation.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+
+/******************************************************************************
+                   STARTUP
+******************************************************************************/
+
+
+//Includes
+#include <myjailbreak> //... all other includes in myjailbreak.inc
+
+
+//Compiler Options
+#pragma semicolon 1
+#pragma newdecls required
+
+
+//Console Variables
+ConVar gc_bShootGuns;
+ConVar gc_iShootGunsMode;
+
+
+//Start
+public void ShootGuns_OnPluginStart()
+{
+	//AutoExecConfig
+	gc_bShootGuns = AutoExecConfig_CreateConVar("sm_warden_ _enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true,  0.0, true, 1.0);
+	gc_iShootGunsMode = AutoExecConfig_CreateConVar("sm_warden_shootguns_mode", "1", "1 - only warden / 2 - warden & ct / 3 - all player", _, true, 1.0, true, 3.0);
+	
+	
+	//Hooks
+	HookEvent("bullet_impact", ShootGuns_Event_BulletImpact);
+}
+
+
+/******************************************************************************
+                   EVENTS
+******************************************************************************/
+
+
+public void ShootGuns_Event_BulletImpact(Event event, const char[] name, bool dontBroadcast)
+{
+	int client = GetClientOfUserId(event.GetInt("userid"));  //Get the clients id
+	
+	int eni = GetClientAimTarget(client, false);
+	
+	if(gc_bShootGuns.BoolValue && ((gc_iShootGunsMode.IntValue == 1 && IsClientWarden(client)) || (gc_iShootGunsMode.IntValue == 2 && (GetClientTeam(client) == CS_TEAM_CT)) || (gc_iShootGunsMode.IntValue == 3)))
+	{
+		if(Weapon_IsValid(eni) && !IsValidClient(eni,true,true))
+		{
+			AcceptEntityInput(eni, "Kill");
+		}
+	}
+}

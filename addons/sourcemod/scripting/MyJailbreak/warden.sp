@@ -124,6 +124,7 @@ char g_sMyJBLogFile[PLATFORM_MAX_PATH];
 #include "MyJailbreak/Modules/Warden/painter.sp"
 #include "MyJailbreak/Modules/Warden/rebel.sp"
 #include "MyJailbreak/Modules/Warden/counter.sp"
+#include "MyJailbreak/Modules/Warden/shootguns.sp"
 
 
 //Info
@@ -212,6 +213,7 @@ public void OnPluginStart()
 	Painter_OnPluginStart();
 	MarkRebel_OnPluginStart();
 	Counter_OnPluginStart();
+	ShootGuns_OnPluginStart();
 	
 	
 	//AutoExecConfig
