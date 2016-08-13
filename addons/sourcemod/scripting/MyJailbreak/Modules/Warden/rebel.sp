@@ -35,7 +35,7 @@
 
 //Console Variables
 ConVar gc_bMarkRebel;
-
+ConVar gc_sCustomCommandRebel;
 
 
 //Extern Convars
@@ -60,6 +60,7 @@ public void MarkRebel_OnPluginStart()
 	
 	//AutoExecConfig
 	gc_bMarkRebel = AutoExecConfig_CreateConVar("sm_warden_mark_rebel", "1", "0 - disabled, 1 - enable allow warden to mark/unmark prisoner as rebel (hosties)", _, true,  0.0, true, 1.0);
+	gc_sCustomCommandRebel = AutoExecConfig_CreateConVar("sm_warden_cmds_rebel", "sr,srebel,setrebel,rebelmenu", "Set your custom chat commands for un/mark rebel(!markrebel (no 'sm_'/'!')(seperate with comma ',')(max. 8 commands)");
 	
 	
 	//FindConVar
@@ -247,5 +248,30 @@ public int Handler_UnMarkRebel(Menu UnMarkRebel, MenuAction action, int client, 
 	else if(action == MenuAction_End)
 	{
 		delete UnMarkRebel;
+	}
+}
+
+
+/******************************************************************************
+                   FORWARDS LISTENING
+******************************************************************************/
+
+
+public void Rebel_OnConfigsExecuted()
+{
+	//Set custom Commands
+	int iCount = 0;
+	char sCommands[128], sCommandsL[8][32], sCommand[32];
+	
+	//Rebel
+	gc_sCustomCommandRebel.GetString(sCommands, sizeof(sCommands));
+	ReplaceString(sCommands, sizeof(sCommands), " ", "");
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	
+	for(int i = 0; i < iCount; i++)
+	{
+		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
+		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+			RegConsoleCmd(sCommand, Command_MarkRebel, "Allows Warden to mark/unmark prisoner as rebel");
 	}
 }

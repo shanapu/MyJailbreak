@@ -40,6 +40,7 @@
 //Console Variables
 ConVar gc_bRandom;
 ConVar gc_iRandomMode;
+ConVar gc_sCustomCommandRandomKill;
 
 
 //Integers
@@ -56,6 +57,7 @@ public void RandomKill_OnPluginStart()
 	//AutoExecConfig
 	gc_bRandom = AutoExecConfig_CreateConVar("sm_warden_random", "1", "0 - disabled, 1 - enable kill a random t for warden", _, true,  0.0, true, 1.0);
 	gc_iRandomMode = AutoExecConfig_CreateConVar("sm_warden_random_mode", "2", "1 - all random / 2 - Thunder / 3 - Timebomb / 4 - Firebomb / 5 - NoKill(1,3,4 needs funcommands.smx enabled)", _, true,  1.0, true, 4.0);
+	gc_sCustomCommandRandomKill = AutoExecConfig_CreateConVar("sm_warden_cmds_randomkill", "randomkill,rk,kr", "Set your custom chat commands for become warden(!killrandom (no 'sm_'/'!')(seperate with comma ',')(max. 8 commands))");
 }
 
 
@@ -96,6 +98,23 @@ public Action Command_KillMenu(int client, int args)
 public void RandomKill_OnConfigsExecuted()
 {
 	g_iKillKind = gc_iRandomMode.IntValue;
+	
+	
+	//Set custom Commands
+	int iCount = 0;
+	char sCommands[128], sCommandsL[8][32], sCommand[32];
+	
+	//Give freeday
+	gc_sCustomCommandRandomKill.GetString(sCommands, sizeof(sCommands));
+	ReplaceString(sCommands, sizeof(sCommands), " ", "");
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	
+	for(int i = 0; i < iCount; i++)
+	{
+		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
+		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+			RegConsoleCmd(sCommand, Command_KillMenu, "Allows the Warden to kill a random T");
+	}
 }
 
 

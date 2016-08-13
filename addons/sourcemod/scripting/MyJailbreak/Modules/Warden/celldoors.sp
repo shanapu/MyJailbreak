@@ -38,6 +38,8 @@ ConVar gc_bOpen;
 ConVar gc_bOpenTimer;
 ConVar gc_hOpenTimer;
 ConVar gc_bOpenTimerWarden;
+ConVar gc_sCustomCommandOpen;
+ConVar gc_sCustomCommandClose;
 
 
 //Integers
@@ -57,6 +59,8 @@ public void CellDoors_OnPluginStart()
 	
 	//AutoExecConfig
 	gc_bOpen = AutoExecConfig_CreateConVar("sm_warden_open_enable", "1", "0 - disabled, 1 - warden can open/close cells", _, true,  0.0, true, 1.0);
+	gc_sCustomCommandOpen = AutoExecConfig_CreateConVar("sm_warden_cmds_open", "o,unlock,cells", "Set your custom chat commands for open cells(!open (no 'sm_'/'!')(seperate with comma ',')(max. 8 commands)");
+	gc_sCustomCommandClose = AutoExecConfig_CreateConVar("sm_warden_cmds_close", "lock,shut", "Set your custom chat commands for close cells(!close (no 'sm_'/'!')(seperate with comma ',')(max. 8 commands)");
 	gc_hOpenTimer = AutoExecConfig_CreateConVar("sm_warden_open_time", "60", "Time in seconds for open doors on round start automaticly", _, true, 0.0); 
 	gc_bOpenTimer = AutoExecConfig_CreateConVar("sm_warden_open_time_enable", "1", "should doors open automatic 0- no 1 yes", _, true,  0.0, true, 1.0);
 	gc_bOpenTimerWarden = AutoExecConfig_CreateConVar("sm_warden_open_time_warden", "1", "should doors open automatic after sm_warden_open_time when there is a warden? needs sm_warden_open_time_enable 1", _, true,  0.0, true, 1.0);
@@ -145,6 +149,43 @@ public void CellDoors_Event_RoundStart(Event event, const char[] name, bool dont
 			RandomTimer = null;
 		}
 		else CPrintToChatAll("%t %t", "warden_tag" , "warden_openauto_unavailable"); 
+	}
+}
+
+
+/******************************************************************************
+                   FORWARDS LISTENING
+******************************************************************************/
+
+
+public void CellDoors_OnConfigsExecuted()
+{
+	//Set custom Commands
+	int iCount = 0;
+	char sCommands[128], sCommandsL[8][32], sCommand[32];
+	
+	//Open Cell doors
+	gc_sCustomCommandOpen.GetString(sCommands, sizeof(sCommands));
+	ReplaceString(sCommands, sizeof(sCommands), " ", "");
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	
+	for(int i = 0; i < iCount; i++)
+	{
+		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
+		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+			RegConsoleCmd(sCommand, Command_OpenDoors, "Allows the Warden to open the cell doors");
+	}
+	
+	//Close Cell doors
+	gc_sCustomCommandClose.GetString(sCommands, sizeof(sCommands));
+	ReplaceString(sCommands, sizeof(sCommands), " ", "");
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	
+	for(int i = 0; i < iCount; i++)
+	{
+		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
+		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+			RegConsoleCmd(sCommand, Command_CloseDoors, "Allows the Warden to close the cell doors");
 	}
 }
 

@@ -40,10 +40,6 @@ ConVar gc_iFreeDayColorGreen;
 ConVar gc_iFreeDayColorBlue;
 
 
-//Strings
-char g_sCustomCommandGiveFreeDay[64];
-
-
 //Start
 public void Freedays_OnPluginStart()
 {
@@ -52,7 +48,7 @@ public void Freedays_OnPluginStart()
 	
 	
 	//AutoExecConfig
-	gc_sCustomCommandGiveFreeDay = AutoExecConfig_CreateConVar("sm_freekill_freeday_cmd", "gfd", "Set your custom chat command for give a freeday. no need for sm_ or !");
+	gc_sCustomCommandGiveFreeDay = AutoExecConfig_CreateConVar("sm_freekill_cmds_freeday", "gfd,setfreeday,sfd", "Set your custom chat command for give a freeday(!givefreeday (no 'sm_'/'!')(seperate with comma ',')(max. 8 commands))");
 	gc_iFreeDayColorRed = AutoExecConfig_CreateConVar("sm_freekill_freeday_color_red", "0","What color to turn the warden into (set R, G and B values to 255 to disable) (Rgb): x - red value", _, true, 0.0, true, 255.0);
 	gc_iFreeDayColorGreen = AutoExecConfig_CreateConVar("sm_freekill_freeday_color_green", "200","What color to turn the warden into (rGb): x - green value", _, true, 0.0, true, 255.0);
 	gc_iFreeDayColorBlue = AutoExecConfig_CreateConVar("sm_freekill_freeday_color_blue", "0","What color to turn the warden into (rgB): x - blue value", _, true, 0.0, true, 255.0);
@@ -60,24 +56,6 @@ public void Freedays_OnPluginStart()
 	
 	//Hooks 
 	HookEvent("round_poststart",  Freedays_Event_RoundStart_Post);
-	HookConVarChange(gc_sCustomCommandGiveFreeDay, Freedays_OnSettingChanged);
-	
-	
-	//FindConVar
-	gc_sCustomCommandGiveFreeDay.GetString(g_sCustomCommandGiveFreeDay , sizeof(g_sCustomCommandGiveFreeDay));
-}
-
-
-public int Freedays_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
-{
-	if(convar == gc_sCustomCommandGiveFreeDay)
-	{
-		strcopy(g_sCustomCommandGiveFreeDay, sizeof(g_sCustomCommandGiveFreeDay), newValue);
-		char sBufferCMD[64];
-		Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommandGiveFreeDay);
-		if(GetCommandFlags(sBufferCMD) == INVALID_FCVAR_FLAGS)
-			RegConsoleCmd(sBufferCMD, Command_FreeDay, "Allows a warden to give a freeday to a player");
-	}
 }
 
 
@@ -158,11 +136,21 @@ public void Freedays_OnMapStart()
 
 public void Freedays_OnConfigsExecuted()
 {
-	char sBufferCMDFreekill[64];
+	//Set custom Commands
+	int iCount = 0;
+	char sCommands[128], sCommandsL[8][32], sCommand[32];
 	
-	Format(sBufferCMDFreekill, sizeof(sBufferCMDFreekill), "sm_%s", g_sCustomCommandFreekill);
-	if(GetCommandFlags(sBufferCMDFreekill) == INVALID_FCVAR_FLAGS)
-		RegConsoleCmd(sBufferCMDFreekill, Command_Freekill, "Allows a dead terrorist to report a freekill");
+	//Give freeday
+	gc_sCustomCommandGiveFreeDay.GetString(sCommands, sizeof(sCommands));
+	ReplaceString(sCommands, sizeof(sCommands), " ", "");
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	
+	for(int i = 0; i < iCount; i++)
+	{
+		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
+		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+			RegConsoleCmd(sCommand, Command_FreeDay, "Allows a warden to give a freeday to a player");
+	}
 }
 
 

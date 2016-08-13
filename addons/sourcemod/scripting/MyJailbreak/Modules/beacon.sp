@@ -151,7 +151,7 @@ public int OnAvailableLR(int Announced)
 ******************************************************************************/
 
 
-//Set Map fog in module
+//Activate Beacon on client & set interval
 public int Native_BeaconOn(Handle plugin,int argc)
 {
 	int client = GetNativeCell(1);
@@ -165,7 +165,7 @@ public int Native_BeaconOn(Handle plugin,int argc)
 }
 
 
-//Remove Map fog OFF in module
+//Remove beacon from client
 public int Native_BeaconOff(Handle plugin,int argc)
 {
 	int client = GetNativeCell(1);

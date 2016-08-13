@@ -50,6 +50,7 @@ ConVar gc_sMathOverlayStopPath;
 ConVar gc_bMathSounds;
 ConVar gc_sMathSoundStopPath;
 ConVar gc_iTimeAnswer;
+ConVar gc_sCustomCommandMath;
 
 
 //Booleans
@@ -91,6 +92,7 @@ public void Math_OnPluginStart()
 	gc_sMathSoundStopPath = AutoExecConfig_CreateConVar("sm_warden_math_sounds_stop", "music/MyJailbreak/stop.mp3", "Path to the soundfile which should be played for stop countdown.");
 	gc_bMathOverlays = AutoExecConfig_CreateConVar("sm_warden_math_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true,  0.0, true, 1.0);
 	gc_sMathOverlayStopPath = AutoExecConfig_CreateConVar("sm_warden_math_overlays_stop", "overlays/MyJailbreak/stop" , "Path to the stop Overlay DONT TYPE .vmt or .vft");
+	gc_sCustomCommandMath = AutoExecConfig_CreateConVar("sm_warden_cmds_math", "m,quiz", "Set your custom chat commands for become warden(!math (no 'sm_'/'!')(seperate with comma ',')(max. 8 commands))");
 	
 	
 	//Hooks
@@ -158,6 +160,22 @@ public void Math_OnConfigsExecuted()
 {
 	g_iMathMin = gc_iMinimumNumber.IntValue;
 	g_iMathMax = gc_iMaximumNumber.IntValue;
+	
+	//Set custom Commands
+	int iCount = 0;
+	char sCommands[128], sCommandsL[8][32], sCommand[32];
+	
+	//Math quiz
+	gc_sCustomCommandMath.GetString(sCommands, sizeof(sCommands));
+	ReplaceString(sCommands, sizeof(sCommands), " ", "");
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	
+	for(int i = 0; i < iCount; i++)
+	{
+		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
+		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+			RegConsoleCmd(sCommand, Command_MathQuestion, "Allows the Warden to start a MathQuiz. Show player with first right Answer");
+	}
 }
 
 

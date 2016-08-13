@@ -41,6 +41,7 @@ ConVar gc_sCountdownOverlayStopPath;
 ConVar gc_bCountdownSounds;
 ConVar gc_sCountdownSoundStartPath;
 ConVar gc_sCountdownSoundStopPath;
+ConVar gc_sCustomCommandCD;
 
 
 //Booleans
@@ -85,6 +86,7 @@ public void Countdown_OnPluginStart()
 	gc_bCountdownSounds = AutoExecConfig_CreateConVar("sm_warden_countdown_sounds_enable", "1", "0 - disabled, 1 - enable sounds ", _, true,  0.0, true, 1.0);
 	gc_sCountdownSoundStartPath = AutoExecConfig_CreateConVar("sm_warden_countdown_sounds_start", "music/MyJailbreak/start.mp3", "Path to the soundfile which should be played for a start countdown.");
 	gc_sCountdownSoundStopPath = AutoExecConfig_CreateConVar("sm_warden_countdown_sounds_stop", "music/MyJailbreak/stop.mp3", "Path to the soundfile which should be played for stop countdown.");
+	gc_sCustomCommandCD = AutoExecConfig_CreateConVar("sm_warden_cmds_countdown", "cd,countdown,timer", "Set your custom chat commands for countdown menu(!cdmenu (no 'sm_'/'!')(seperate with comma ',')(max. 8 commands)");
 	
 	
 	//Hooks
@@ -260,7 +262,6 @@ public Action Command_StopCountDown(int client, int args)
 				{
 					PrintCenterTextAll("%t", "warden_stopcountdownhint_nc");
 				}
-												
 				g_bIsCountDown = true;
 			}
 			else CReplyToCommand(client, "%t %t", "warden_tag" , "warden_countdownrunning");
@@ -312,6 +313,26 @@ public void Countdown_OnMapStart()
 public void Countdown_OnMapEnd()
 {
 	LoopClients(i) Command_CancelCountDown(i, 0);
+}
+
+
+public void Countdown_OnConfigsExecuted()
+{
+	//Set custom Commands
+	int iCount = 0;
+	char sCommands[128], sCommandsL[8][32], sCommand[32];
+	
+	//Countdown
+	gc_sCustomCommandCD.GetString(sCommands, sizeof(sCommands));
+	ReplaceString(sCommands, sizeof(sCommands), " ", "");
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	
+	for(int i = 0; i < iCount; i++)
+	{
+		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
+		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+			RegConsoleCmd(sCommand, Command_CountDownMenu, "Allows the Warden to open the Countdown Menu");
+	}
 }
 
 

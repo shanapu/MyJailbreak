@@ -47,7 +47,10 @@ ConVar gc_bClose;
 ConVar gc_bStart;
 ConVar gc_bWelcome;
 ConVar gc_bTeam;
-ConVar gc_sCustomCommand;
+ConVar gc_sCustomCommandMenu;
+ConVar gc_sCustomCommandDays;
+ConVar gc_sCustomCommandSetDay;
+ConVar gc_sCustomCommandVoting;
 ConVar gc_iCooldownDay;
 ConVar gc_iCooldownStart;
 ConVar gc_sAdminFlag;
@@ -102,7 +105,6 @@ ConVar gc_sAdminFlagPainter;
 
 
 //Strings
-char g_sCustomCommand[64];
 char g_sAdminFlagBulletSparks[32];
 char g_sAdminFlagLaser[32];
 char g_sAdminFlagPainter[32];
@@ -129,15 +131,10 @@ public void OnPluginStart()
 	
 	//Client Commands
 	RegConsoleCmd("sm_menu", Command_OpenMenu, "opens the menu depends on players team/rank");
-	RegConsoleCmd("sm_menus", Command_OpenMenu, "opens the menu depends on players team/rank");
 	RegConsoleCmd("buyammo1", Command_OpenMenu, "opens the menu depends on players team/rank");
-	RegConsoleCmd("sm_days", Command_VoteEventDays, "open a vote EventDays menu for player");
 	RegConsoleCmd("sm_eventdays", Command_VoteEventDays, "open a vote EventDays menu for player");
 	RegConsoleCmd("sm_setday", Command_SetEventDay, "open a Set EventDays menu for Warden/Admin");
-	RegConsoleCmd("sm_setdays", Command_SetEventDay, "open a Set EventDays menu for Warden/Admin");
-	RegConsoleCmd("sm_voteday", Command_VotingMenu, "opens the vote menu");
-	RegConsoleCmd("sm_votedays", Command_VotingMenu, "opens the vote menu");
-	RegConsoleCmd("sm_voteeventdays", Command_VotingMenu, "opens the vote menu");
+	RegConsoleCmd("sm_voteday", Command_VotingMenu, "Allows warden & admin to opens event day voting");
 	
 	
 	//AutoExecConfig
@@ -146,7 +143,10 @@ public void OnPluginStart()
 	
 	AutoExecConfig_CreateConVar("sm_menu_version", PLUGIN_VERSION, "The version of the SourceMod plugin MyJailbreak - Menu", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_menu_enable", "1", "0 - disabled, 1 - enable jailbrek menu", _, true,  0.0, true, 1.0);
-	gc_sCustomCommand = AutoExecConfig_CreateConVar("sm_menu_cmd", "panel", "Set your custom chat command for open menu. no need for sm_ or !");
+	gc_sCustomCommandMenu = AutoExecConfig_CreateConVar("sm_menu_cmds_menu", "panel,menus,m", "Set your custom chat command for open menu(!menu (no 'sm_'/'!')(seperate with comma ',')(max. 8 commands))");
+	gc_sCustomCommandDays = AutoExecConfig_CreateConVar("sm_menu_cmds_days", "days,day,ed", "Set your custom chat command for open menu(!eventdays (no 'sm_'/'!')(seperate with comma ',')(max. 8 commands))");
+	gc_sCustomCommandSetDay = AutoExecConfig_CreateConVar("sm_menu_cmds_setday", "sd,setdays", "Set your custom chat command for open menu(!menu (no 'sm_'/'!')(seperate with comma ',')(max. 8 commands))");
+	gc_sCustomCommandVoting = AutoExecConfig_CreateConVar("sm_menu_cmds_voting", "vd,votedays", "Set your custom chat command for open menu(!menu (no 'sm_'/'!')(seperate with comma ',')(max. 8 commands))");
 	gc_bCTerror = AutoExecConfig_CreateConVar("sm_menu_ct", "1", "0 - disabled, 1 - enable ct jailbreak menu", _, true,  0.0, true, 1.0);
 	gc_bTerror = AutoExecConfig_CreateConVar("sm_menu_t", "1", "0 - disabled, 1 - enable t jailbreak menu", _, true,  0.0, true, 1.0);
 	gc_bWarden = AutoExecConfig_CreateConVar("sm_menu_warden", "1", "0 - disabled, 1 - enable warden jailbreak menu", _, true,  0.0, true, 1.0);
@@ -169,28 +169,18 @@ public void OnPluginStart()
 	//Hooks
 	HookEvent("player_spawn", Event_OnPlayerSpawn);
 	HookEvent("round_start", Event_RoundStart);
-	HookConVarChange(gc_sCustomCommand, OnSettingChanged);
 	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
 	
 	
 	//Find
 	gc_sAdminFlag.GetString(g_sAdminFlag , sizeof(g_sAdminFlag));
-	gc_sCustomCommand.GetString(g_sCustomCommand , sizeof(g_sCustomCommand));
 }
 
 
 //ConVarChange for Strings
 public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
-	if(convar == gc_sCustomCommand)
-	{
-		strcopy(g_sCustomCommand, sizeof(g_sCustomCommand), newValue);
-		char sBufferCMD[64];
-		Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommand);
-		if(GetCommandFlags(sBufferCMD) == INVALID_FCVAR_FLAGS)
-			RegConsoleCmd(sBufferCMD, Command_OpenMenu, "opens the menu depends on players team/rank");
-	}
-	else if(convar == gc_sAdminFlag)
+	if(convar == gc_sAdminFlag)
 	{
 		strcopy(g_sAdminFlag, sizeof(g_sAdminFlag), newValue);
 	}
@@ -247,10 +237,58 @@ public void OnConfigsExecuted()
 	gc_sAdminFlagPainter.GetString(g_sAdminFlagPainter, sizeof(g_sAdminFlagPainter));
 	gc_sAdminFlagBulletSparks.GetString(g_sAdminFlagBulletSparks, sizeof(g_sAdminFlagBulletSparks));
 	
-	char sBufferCMD[64];
-	Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommand);
-	if(GetCommandFlags(sBufferCMD) == INVALID_FCVAR_FLAGS)
-		RegConsoleCmd(sBufferCMD, Command_OpenMenu, "opens the menu depends on players team/rank");
+	
+	//Set custom Commands
+	int iCount = 0;
+	char sCommands[128], sCommandsL[8][32], sCommand[32];
+	
+	//Menu
+	gc_sCustomCommandMenu.GetString(sCommands, sizeof(sCommands));
+	ReplaceString(sCommands, sizeof(sCommands), " ", "");
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	
+	for(int i = 0; i < iCount; i++)
+	{
+		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
+		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+			RegConsoleCmd(sCommand, Command_OpenMenu, "opens the menu depends on players team/rank");
+	}
+	
+	//Days Menu
+	gc_sCustomCommandDays.GetString(sCommands, sizeof(sCommands));
+	ReplaceString(sCommands, sizeof(sCommands), " ", "");
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	
+	for(int i = 0; i < iCount; i++)
+	{
+		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
+		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+			RegConsoleCmd(sCommand, Command_VoteEventDays, "open a vote EventDays menu for player");
+	}
+	
+	//Set Day
+	gc_sCustomCommandSetDay.GetString(sCommands, sizeof(sCommands));
+	ReplaceString(sCommands, sizeof(sCommands), " ", "");
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	
+	for(int i = 0; i < iCount; i++)
+	{
+		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
+		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+			RegConsoleCmd(sCommand, Command_SetEventDay, "open a Set EventDays menu for Warden/Admin");
+	}
+	
+	//Voting
+	gc_sCustomCommandVoting.GetString(sCommands, sizeof(sCommands));
+	ReplaceString(sCommands, sizeof(sCommands), " ", "");
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	
+	for(int i = 0; i < iCount; i++)
+	{
+		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
+		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+			RegConsoleCmd(sCommand, Command_VotingMenu, "Allows warden & admin to opens event day voting");
+	}
 }
 
 
@@ -716,7 +754,7 @@ public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selec
 		}
 		else if ( strcmp(info,"guns") == 0 ) 
 		{
-			FakeClientCommand(client, "sm_guns");
+			FakeClientCommand(client, "sm_weapon");
 		}
 		else if ( strcmp(info,"playerfreeday") == 0 ) 
 		{
@@ -724,7 +762,7 @@ public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selec
 		}
 		else if ( strcmp(info,"votedays") == 0 ) 
 		{
-			FakeClientCommand(client, "sm_days");
+			FakeClientCommand(client, "sm_eventdays");
 		}
 		else if ( strcmp(info,"voteday") == 0 ) 
 		{
@@ -732,7 +770,7 @@ public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selec
 		}
 		else if ( strcmp(info,"setdays") == 0 ) 
 		{
-			FakeClientCommand(client, "sm_setdays");
+			FakeClientCommand(client, "sm_setday");
 		}
 		else if ( strcmp(info,"count") == 0 ) 
 		{
@@ -790,7 +828,7 @@ public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selec
 		}
 		else if ( strcmp(info,"removewarden") == 0 ) 
 		{
-			FakeClientCommand(client, "sm_rw");
+			FakeClientCommand(client, "sm_removewarden");
 			if(!gc_bClose.BoolValue)
 			{
 				Command_OpenMenu(client,0);
@@ -846,7 +884,7 @@ public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selec
 		}
 		else if ( strcmp(info,"votewarden") == 0 ) 
 		{
-			FakeClientCommand(client, "sm_votewarden");
+			FakeClientCommand(client, "sm_vetowarden");
 			if(!gc_bClose.BoolValue)
 			{
 				Command_OpenMenu(client,0);

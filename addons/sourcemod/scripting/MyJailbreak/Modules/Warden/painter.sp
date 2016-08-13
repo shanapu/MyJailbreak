@@ -41,6 +41,7 @@
 ConVar gc_bPainter;
 ConVar gc_bPainterT;
 ConVar gc_sAdminFlagPainter;
+ConVar gc_sCustomCommandPainter;
 
 
 //Boolean
@@ -73,6 +74,7 @@ public void Painter_OnPluginStart()
 	gc_bPainter = AutoExecConfig_CreateConVar("sm_warden_painter", "1", "0 - disabled, 1 - enable Warden Painter with +E ", _, true,  0.0, true, 1.0);
 	gc_sAdminFlagPainter = AutoExecConfig_CreateConVar("sm_warden_painter_flag", "", "Set flag for admin/vip to get warden painter access. No flag = feature is available for all players!");
 	gc_bPainterT= AutoExecConfig_CreateConVar("sm_warden_painter_terror", "1", "0 - disabled, 1 - allow Warden to toggle Painter for Terrorist ", _, true,  0.0, true, 1.0);
+	gc_sCustomCommandPainter = AutoExecConfig_CreateConVar("sm_warden_cmds_painter", "paint,draw", "Set your custom chat commands for Painter menu(!painter (no 'sm_'/'!')(seperate with comma ',')(max. 8 commands))");
 	
 	
 	//Hooks
@@ -174,9 +176,32 @@ public void Painter_Event_RoundEnd(Event event, const char[] name, bool dontBroa
 }
 
 
+
+
+
 /******************************************************************************
-                   FORWARDS LISTEN
+                   FORWARDS LISTENING
 ******************************************************************************/
+
+
+public void Painter_OnConfigsExecuted()
+{
+	//Set custom Commands
+	int iCount = 0;
+	char sCommands[128], sCommandsL[8][32], sCommand[32];
+	
+	//Painter
+	gc_sCustomCommandPainter.GetString(sCommands, sizeof(sCommands));
+	ReplaceString(sCommands, sizeof(sCommands), " ", "");
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	
+	for(int i = 0; i < iCount; i++)
+	{
+		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
+		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+			RegConsoleCmd(sCommand, Command_PainterMenu, "Allows Warden to toggle on/off the wardens Painter");
+	}
+}
 
 
 public Action Painter_OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)

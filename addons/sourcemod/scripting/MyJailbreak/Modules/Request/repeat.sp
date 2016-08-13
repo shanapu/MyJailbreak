@@ -58,7 +58,6 @@ Handle RepeatPanel;
 
 //Strings
 char g_sSoundRepeatPath[256];
-char g_sCustomCommandRepeat[64];
 char g_sAdminFlagRepeat[32];
 
 
@@ -71,7 +70,7 @@ public void Repeat_OnPluginStart()
 	
 	//AutoExecConfig
 	gc_bRepeat = AutoExecConfig_CreateConVar("sm_repeat_enable", "1", "0 - disabled, 1 - enable repeat");
-	gc_sCustomCommandRepeat = AutoExecConfig_CreateConVar("sm_repeat_cmd", "what", "Set your custom chat command for Repeat. no need for sm_ or !");
+	gc_sCustomCommandRepeat = AutoExecConfig_CreateConVar("sm_repeat_cmds", "what,rep,again", "Set your custom chat command for Repeat.(!repeat (no 'sm_'/'!')(seperate with comma ',')(max. 8 commands))");
 	gc_iRepeatLimit = AutoExecConfig_CreateConVar("sm_repeat_limit", "2", "Сount how many times you can use the command");
 	gc_sSoundRepeatPath = AutoExecConfig_CreateConVar("sm_repeat_sound", "music/MyJailbreak/repeat.mp3", "Path to the soundfile which should be played for a repeat.");
 	gc_sAdminFlagRepeat = AutoExecConfig_CreateConVar("sm_repeat_flag", "a", "Set flag for admin/vip to get one more repeat. No flag = feature is available for all players!");
@@ -80,13 +79,11 @@ public void Repeat_OnPluginStart()
 	//Hooks 
 	HookEvent("round_start", Repeat_Event_RoundStart);
 	HookConVarChange(gc_sSoundRepeatPath, Repeat_OnSettingChanged);
-	HookConVarChange(gc_sCustomCommandRepeat, Repeat_OnSettingChanged);
 	HookConVarChange(gc_sAdminFlagRepeat, Repeat_OnSettingChanged);
 	
 	
 	//FindConVar
 	gc_sSoundRepeatPath.GetString(g_sSoundRepeatPath, sizeof(g_sSoundRepeatPath));
-	gc_sCustomCommandRepeat.GetString(g_sCustomCommandRepeat , sizeof(g_sCustomCommandRepeat));
 	gc_sAdminFlagRepeat.GetString(g_sAdminFlagRepeat , sizeof(g_sAdminFlagRepeat));
 }
 
@@ -97,14 +94,6 @@ public int Repeat_OnSettingChanged(Handle convar, const char[] oldValue, const c
 	{
 		strcopy(g_sSoundRepeatPath, sizeof(g_sSoundRepeatPath), newValue);
 		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundRepeatPath);
-	}
-	else if(convar == gc_sCustomCommandRepeat)
-	{
-		strcopy(g_sCustomCommandRepeat, sizeof(g_sCustomCommandRepeat), newValue);
-		char sBufferCMD[64];
-		Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommandRepeat);
-		if(GetCommandFlags(sBufferCMD) == INVALID_FCVAR_FLAGS)
-			RegConsoleCmd(sBufferCMD, Command_Repeat, "Allows a Terrorist request a repeat");
 	}
 	else if(convar == gc_sAdminFlagRepeat)
 	{
@@ -180,11 +169,21 @@ public void Repeat_OnMapStart()
 
 public void Repeat_OnConfigsExecuted()
 {
-	char sBufferCMDRepeat[64];
+	//Set custom Commands
+	int iCount = 0;
+	char sCommands[128], sCommandsL[8][32], sCommand[32];
 	
-	Format(sBufferCMDRepeat, sizeof(sBufferCMDRepeat), "sm_%s", g_sCustomCommandRepeat);
-	if(GetCommandFlags(sBufferCMDRepeat) == INVALID_FCVAR_FLAGS)
-		RegConsoleCmd(sBufferCMDRepeat, Command_Repeat, "Allows a Terrorist request repeat");
+	//Repeat
+	gc_sCustomCommandRepeat.GetString(sCommands, sizeof(sCommands));
+	ReplaceString(sCommands, sizeof(sCommands), " ", "");
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	
+	for(int i = 0; i < iCount; i++)
+	{
+		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
+		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+			RegConsoleCmd(sCommand, Command_Repeat, "Allows a Terrorist request repeat");
+	}
 }
 
 

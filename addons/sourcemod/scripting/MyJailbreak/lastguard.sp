@@ -57,7 +57,7 @@ ConVar gc_sOverlayStartPath;
 ConVar gc_bSounds;
 ConVar gc_sSoundStartPath;
 ConVar gc_sSoundLastCTPath;
-ConVar gc_sCustomCommand;
+ConVar gc_sCustomCommandLGR;
 
 
 //Integers
@@ -75,7 +75,6 @@ Handle BeaconTimer;
 char g_sHasVoted[1500];
 char g_sSoundStartPath[256];
 char g_sSoundLastCTPath[256];
-char g_sCustomCommand[64];
 char g_sMyJBLogFile[PLATFORM_MAX_PATH];
 char g_sOverlayStartPath[256];
 
@@ -99,7 +98,7 @@ public void OnPluginStart()
 	
 	
 	//Client Commands
-	RegConsoleCmd("sm_lastguard", VoteLastGuard, "Allows terrors to vote and last CT to set Last Guard Rule");	
+	RegConsoleCmd("sm_lastguard", Command_VoteLastGuard, "Allows terrors to vote and last CT to set Last Guard Rule");	
 	
 	
 	//AutoExecConfig
@@ -108,7 +107,7 @@ public void OnPluginStart()
 	
 	AutoExecConfig_CreateConVar("sm_lastguard_version", PLUGIN_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_lastguard_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true,  0.0, true, 1.0);
-	gc_sCustomCommand = AutoExecConfig_CreateConVar("sm_lastguard_cmd", "lg", "Set your custom chat command for Last Guard Rule. no need for sm_ or !");
+	gc_sCustomCommandLGR = AutoExecConfig_CreateConVar("sm_lastguard_cmds", "lg,lgr,lastguardrule", "Set your custom chat command for Last Guard Rule(!lastguard (no 'sm_'/'!')(seperate with comma ',')(max. 8 commands))");
 	gc_bSetCT = AutoExecConfig_CreateConVar("sm_lastguard_ct", "1", "0 - disabled, 1 - allow last CT to set Last Guard Rule", _, true,  0.0, true, 1.0);
 	gc_bVote = AutoExecConfig_CreateConVar("sm_lastguard_vote", "1", "0 - disabled, 1 - allow alive player to vote for Last Guard Rule", _, true,  0.0, true, 1.0);
 	gc_bAutomatic = AutoExecConfig_CreateConVar("sm_lastguard_auto", "0", "0 - disabled, 1 - Last Guard Rule will start automatic if there is only 1 CT. Disables sm_lastguard_vote & sm_lastguard_ct.", _, true,  0.0, true, 1.0);
@@ -137,7 +136,6 @@ public void OnPluginStart()
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundLastCTPath, OnSettingChanged);
-	HookConVarChange(gc_sCustomCommand, OnSettingChanged);
 	
 	
 	//Find
@@ -145,7 +143,6 @@ public void OnPluginStart()
 	gc_sOverlayStartPath.GetString(g_sOverlayStartPath , sizeof(g_sOverlayStartPath));
 	gc_sSoundLastCTPath.GetString(g_sSoundLastCTPath, sizeof(g_sSoundLastCTPath));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
-	gc_sCustomCommand.GetString(g_sCustomCommand , sizeof(g_sCustomCommand));
 	
 	
 	//Set directory for LogFile - must be created before
@@ -171,14 +168,6 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 		strcopy(g_sSoundLastCTPath, sizeof(g_sSoundLastCTPath), newValue);
 		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundLastCTPath);
 	}
-	else if(convar == gc_sCustomCommand)
-	{
-		strcopy(g_sCustomCommand, sizeof(g_sCustomCommand), newValue);
-		char sBufferCMD[64];
-		Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommand);
-		if(GetCommandFlags(sBufferCMD) == INVALID_FCVAR_FLAGS)
-			RegConsoleCmd(sBufferCMD, VoteLastGuard, "Allows players to vote for Last Guard Rule");
-	}
 }
 
 
@@ -188,7 +177,7 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 
 
 //Voting for Last Guard Rule
-public Action VoteLastGuard(int client,int args)
+public Action Command_VoteLastGuard(int client,int args)
 {
 	char steamid[64];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
@@ -449,15 +438,25 @@ public void OnMapStart()
 }
 
 
-//Prepare client for Plugin
 public void OnConfigsExecuted()
 {
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	
-	char sBufferCMD[64];    //Register the custom command 
-	Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommand);
-	if(GetCommandFlags(sBufferCMD) == INVALID_FCVAR_FLAGS)
-		RegConsoleCmd(sBufferCMD, VoteLastGuard, "Allows players to vote for Last Guard Rule");
+	//Set custom Commands
+	int iCount = 0;
+	char sCommands[128], sCommandsL[8][32], sCommand[32];
+	
+	//Become warden
+	gc_sCustomCommandLGR.GetString(sCommands, sizeof(sCommands));
+	ReplaceString(sCommands, sizeof(sCommands), " ", "");
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	
+	for(int i = 0; i < iCount; i++)
+	{
+		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
+		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+			RegConsoleCmd(sCommand, Command_VoteLastGuard, "Allows terrors to vote and last CT to set Last Guard Rule");	
+	}
 }
 
 

@@ -62,7 +62,7 @@ ConVar gc_bJBmenu;
 ConVar gc_bAWP;
 ConVar gc_bAutoSniper;
 ConVar gc_bHealth;
-ConVar gc_sCustomCommand;
+ConVar gc_sCustomCommandWeapon;
 
 
 //Extern Convars
@@ -72,7 +72,6 @@ ConVar g_bTaser;
 //Strings
 char primaryWeapon[MAXPLAYERS + 1][24];
 char secondaryWeapon[MAXPLAYERS + 1][24];
-char g_sCustomCommand[64];
 
 
 enum weapons
@@ -101,13 +100,7 @@ public void OnPluginStart()
 	
 	
 	//Client Commands
-	RegConsoleCmd("sm_guns", Command_Weapons, "Open the weapon menu if enabled (in EventDays/for CT)");
-	RegConsoleCmd("sm_gun", Command_Weapons, "Open the weapon menu if enabled (in EventDays/for CT)");
 	RegConsoleCmd("sm_weapon", Command_Weapons, "Open the weapon menu if enabled (in EventDays/for CT)");
-	RegConsoleCmd("sm_weapons", Command_Weapons, "Open the weapon menu if enabled (in EventDays/for CT)");
-	RegConsoleCmd("sm_gunmenu", Command_Weapons, "Open the weapon menu if enabled (in EventDays/for CT)");
-	RegConsoleCmd("sm_weaponmenu", Command_Weapons, "Open the weapon menu if enabled (in EventDays/for CT)");
-	RegConsoleCmd("sm_giveweapon", Command_Weapons, "Open the weapon menu if enabled (in EventDays/for CT)");
 	
 	
 	//AutoExecConfig
@@ -116,7 +109,7 @@ public void OnPluginStart()
 	
 	AutoExecConfig_CreateConVar("sm_weapons_version", PLUGIN_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_weapons_enable", "1", "0 - disabled, 1 - enable weapons menu - you shouldn't touch these, cause events days will handle them", _, true,  0.0, true, 1.0);
-	gc_sCustomCommand = AutoExecConfig_CreateConVar("sm_weapons_cmd", "arms", "Set your custom chat command for Event voting. no need for sm_ or !");
+	gc_sCustomCommandWeapon = AutoExecConfig_CreateConVar("sm_weapons_cmds", "gun,guns,weapons,gunmenu,weaponmenu,giveweapon,arms", "Set your custom chat command for weapon menu(!weapon (no 'sm_'/'!')(seperate with comma ',')(max. 8 commands))");
 	gc_bTerror = AutoExecConfig_CreateConVar("sm_weapons_t", "0", "0 - disabled, 1 - enable weapons menu for T - you shouldn't touch these, cause events days will handle them", _, true,  0.0, true, 1.0);
 	gc_bCTerror = AutoExecConfig_CreateConVar("sm_weapons_ct", "1", "0 - disabled, 1 - enable weapons menu for CT - you shouldn't touch these, cause events days will handle them", _, true,  0.0, true, 1.0);
 	gc_bSpawn = AutoExecConfig_CreateConVar("sm_weapons_spawnmenu", "1", "0 - disabled, 1 -  enable autoopen weapon menu on spawn", _, true,  0.0, true, 1.0);
@@ -132,7 +125,6 @@ public void OnPluginStart()
 	
 	//Hooks
 	HookEvent("player_spawn", Event_PlayerSpawn);
-	HookConVarChange(gc_sCustomCommand, OnSettingChanged);
 	
 	
 	//Cookies
@@ -142,22 +134,9 @@ public void OnPluginStart()
 	
 	//FindConVar
 	g_bTaser = FindConVar("sm_warden_handcuffs");
-	gc_sCustomCommand.GetString(g_sCustomCommand , sizeof(g_sCustomCommand));
 }
 
 
-//ConVarChange for Strings
-public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
-{
-	if(convar == gc_sCustomCommand)
-	{
-		strcopy(g_sCustomCommand, sizeof(g_sCustomCommand), newValue);
-		char sBufferCMD[64];
-		Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommand);
-		if(GetCommandFlags(sBufferCMD) == INVALID_FCVAR_FLAGS)
-			RegConsoleCmd(sBufferCMD, Command_Weapons, "Open the weapon menu if enabled (in EventDays/for CT)");
-	}
-}
 
 
 //Initialize Plugin
@@ -173,10 +152,22 @@ public void OnConfigsExecuted()
 	optionsMenu3 = Menu_BuildWeaponsMenu(true);
 	optionsMenu4 = Menu_BuildWeaponsMenu(false);
 	
-	char sBufferCMD[64];
-	Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommand);
-	if(GetCommandFlags(sBufferCMD) == INVALID_FCVAR_FLAGS)
-		RegConsoleCmd(sBufferCMD, Command_Weapons, "Open the weapon menu if enabled (in EventDays/for CT)");
+	
+	//Set custom Commands
+	int iCount = 0;
+	char sCommands[128], sCommandsL[8][32], sCommand[32];
+	
+	//Become warden
+	gc_sCustomCommandWeapon.GetString(sCommands, sizeof(sCommands));
+	ReplaceString(sCommands, sizeof(sCommands), " ", "");
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	
+	for(int i = 0; i < iCount; i++)
+	{
+		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
+		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+			RegConsoleCmd(sCommand, Command_Weapons, "Open the weapon menu if enabled (in EventDays/for CT)");
+	}
 }
 
 

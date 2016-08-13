@@ -35,6 +35,7 @@
 
 //Console Variables
 ConVar gc_bFF;
+ConVar gc_sCustomCommandFF;
 
 
 //Extern Convars
@@ -49,6 +50,7 @@ public void FriendlyFire_OnPluginStart()
 	
 	//AutoExecConfig
 	gc_bFF = AutoExecConfig_CreateConVar("sm_warden_ff", "1", "0 - disabled, 1 - enable switch ff for T ", _, true,  0.0, true, 1.0);
+	gc_sCustomCommandFF = AutoExecConfig_CreateConVar("sm_warden_cmds_ff", "isff,friendlyfire", "Set your custom chat commands for set/see friendly fire(!setff (no 'sm_'/'!')(seperate with comma ',')(max. 8 commands)");
 	
 	//Hooks
 	HookEvent("round_end", FriendlyFire_Event_RoundEnd);
@@ -107,5 +109,30 @@ public void FriendlyFire_Event_RoundEnd(Event event, const char[] name, bool don
 			g_bFF = FindConVar("mp_teammates_are_enemies");
 			CPrintToChatAll("%t %t", "warden_tag", "warden_ffisoff" );
 		}
+	}
+}
+
+
+/******************************************************************************
+                   FORWARDS LISTENING
+******************************************************************************/
+
+
+public void FriendlyFire_OnConfigsExecuted()
+{
+	//Set custom Commands
+	int iCount = 0;
+	char sCommands[128], sCommandsL[8][32], sCommand[32];
+	
+	//Friendly fire
+	gc_sCustomCommandFF.GetString(sCommands, sizeof(sCommands));
+	ReplaceString(sCommands, sizeof(sCommands), " ", "");
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	
+	for(int i = 0; i < iCount; i++)
+	{
+		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
+		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+			RegConsoleCmd(sCommand, Command_FriendlyFire, "Allows player to see the state and the Warden to toggle friendly fire");
 	}
 }

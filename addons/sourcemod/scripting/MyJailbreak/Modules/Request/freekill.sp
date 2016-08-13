@@ -57,7 +57,6 @@ int g_iFreeKillCounter[MAXPLAYERS+1];
 
 
 //Strings
-char g_sCustomCommandFreekill[64];
 char g_sFreeKillLogFile[PLATFORM_MAX_PATH];
 char g_sAdminFlag[32];
 
@@ -71,7 +70,7 @@ public void Freekill_OnPluginStart()
 	
 	//AutoExecConfig
 	gc_bFreeKill = AutoExecConfig_CreateConVar("sm_freekill_enable", "1", "0 - disabled, 1 - enable freekill report");
-	gc_sCustomCommandFreekill = AutoExecConfig_CreateConVar("sm_freekill_cmd", "fk", "Set your custom chat command for freekill. no need for sm_ or !");
+	gc_sCustomCommandFreekill = AutoExecConfig_CreateConVar("sm_freekill_cmds", "fk,reportfk,rfk", "Set your custom chat commands for freekill(!freekill (no 'sm_'/'!')(seperate with comma ',')(max. 8 commands))");
 	gc_iFreeKillLimit = AutoExecConfig_CreateConVar("sm_freekill_limit", "2", "Сount how many times you can report a freekill");
 	gc_bFreeKillRespawn = AutoExecConfig_CreateConVar("sm_freekill_respawn", "1", "0 - disabled, 1 - Allow the warden to respawn a Freekill victim");
 	gc_bRespawnCellClosed = AutoExecConfig_CreateConVar("sm_freekill_respawn_cell", "1", "0 - cells are still open, 1 - cells will close on respawn in cell");
@@ -87,12 +86,10 @@ public void Freekill_OnPluginStart()
 	//Hooks 
 	HookEvent("round_start", Freekill_Event_RoundStart);
 	HookEvent("player_death", Freekill_Event_PlayerDeath);
-	HookConVarChange(gc_sCustomCommandFreekill, Freekill_OnSettingChanged);
 	HookConVarChange(gc_sAdminFlag, Freekill_OnSettingChanged);
 	
 	
 	//FindConVar
-	gc_sCustomCommandFreekill.GetString(g_sCustomCommandFreekill , sizeof(g_sCustomCommandFreekill));
 	gc_sAdminFlag.GetString(g_sAdminFlag , sizeof(g_sAdminFlag));
 	
 	SetLogFile(g_sFreeKillLogFile, "Freekills");
@@ -104,15 +101,6 @@ public int Freekill_OnSettingChanged(Handle convar, const char[] oldValue, const
 	if(convar == gc_sAdminFlag)
 	{
 		strcopy(g_sAdminFlag, sizeof(g_sAdminFlag), newValue);
-	}
-	
-	else if(convar == gc_sCustomCommandFreekill)
-	{
-		strcopy(g_sCustomCommandFreekill, sizeof(g_sCustomCommandFreekill), newValue);
-		char sBufferCMD[64];
-		Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommandFreekill);
-		if(GetCommandFlags(sBufferCMD) == INVALID_FCVAR_FLAGS)
-			RegConsoleCmd(sBufferCMD, Command_Freekill, "Allows a dead terrorist to report a freekill");
 	}
 }
 
@@ -207,11 +195,21 @@ public void Freekill_OnMapStart()
 
 public void Freekill_OnConfigsExecuted()
 {
-	char sBufferCMDCapitulation[64];
+	//Set custom Commands
+	int iCount = 0;
+	char sCommands[128], sCommandsL[8][32], sCommand[32];
 	
-	Format(sBufferCMDCapitulation, sizeof(sBufferCMDCapitulation), "sm_%s", g_sCustomCommandCapitulation);
-	if(GetCommandFlags(sBufferCMDCapitulation) == INVALID_FCVAR_FLAGS)
-		RegConsoleCmd(sBufferCMDCapitulation, Command_Capitulation, "Allows a rebeling terrorist to request a capitulate");
+	//Report freekill
+	gc_sCustomCommandFreekill.GetString(sCommands, sizeof(sCommands));
+	ReplaceString(sCommands, sizeof(sCommands), " ", "");
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	
+	for(int i = 0; i < iCount; i++)
+	{
+		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
+		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+			RegConsoleCmd(sCommand, Command_Freekill, "Allows a Dead Terrorist report a Freekill");
+	}
 }
 
 

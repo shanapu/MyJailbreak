@@ -37,6 +37,7 @@
 ConVar gc_bTag;
 ConVar gc_bLogging;
 ConVar gc_bShootButton;
+ConVar gc_sCustomCommandEndRound;
 
 
 //Booleans
@@ -80,6 +81,7 @@ public void OnPluginStart()
 	gc_bTag = AutoExecConfig_CreateConVar("sm_myjb_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", _, true,  0.0, true, 1.0);
 	gc_bLogging = AutoExecConfig_CreateConVar("sm_myjb_log", "1", "Allow MyJailbreak to log events, freekills & eventdays in logs/MyJailbreak", _, true,  0.0, true, 1.0);
 	gc_bShootButton = AutoExecConfig_CreateConVar("sm_myjb_shoot_buttons", "1", "0 - disabled, 1 - allow player to trigger a map button by shooting it", _, true,  0.0, true, 1.0);
+	gc_sCustomCommandEndRound = AutoExecConfig_CreateConVar("sm_myjb_cmds_endround", "er,stopround,end", "Set your custom chat commands for admins to end the current round(!endround (no 'sm_'/'!')(seperate with comma ',')(max. 8 commands)");
 	
 	
 	Beacon_OnPluginStart();
@@ -107,6 +109,23 @@ public void OnConfigsExecuted()
 			StrCat(sTags, sizeof(sTags), ", MyJailbreak");
 			hTags.SetString(sTags);
 		}
+	}
+	
+	
+	//Set custom Commands
+	int iCount = 0;
+	char sCommands[128], sCommandsL[8][32], sCommand[32];
+	
+	//End round
+	gc_sCustomCommandEndRound.GetString(sCommands, sizeof(sCommands));
+	ReplaceString(sCommands, sizeof(sCommands), " ", "");
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	
+	for(int i = 0; i < iCount; i++)
+	{
+		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
+		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+			RegAdminCmd(sCommand, Command_EndRound, ADMFLAG_CHANGEMAP);
 	}
 }
 

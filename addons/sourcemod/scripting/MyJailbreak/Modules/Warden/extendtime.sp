@@ -36,6 +36,7 @@
 //Console Variables
 ConVar gc_bExtend;
 ConVar gc_iExtendLimit;
+ConVar gc_sCustomCommandExtend;
 
 
 //Extern Convars
@@ -56,6 +57,7 @@ public void ExtendTime_OnPluginStart()
 	//AutoExecConfig
 	gc_bExtend = AutoExecConfig_CreateConVar("sm_warden_extend", "1", "0 - disabled, 1 - Allows the warden to extend the roundtime", _, true,  0.0, true, 1.0);
 	gc_iExtendLimit = AutoExecConfig_CreateConVar("sm_warden_extend_limit", "2", "How many time a warden can extend the round?", _, true,  1.0);
+	gc_sCustomCommandExtend = AutoExecConfig_CreateConVar("sm_warden_cmds_extend", "extendtime,moretime", "Set your custom chat commands for extend time.(!extend (no 'sm_'/'!')(seperate with comma ',')(max. 8 commands))");
 	
 	//Hooks
 	HookEvent("round_start", ExtendTime_Event_RoundStart);
@@ -120,11 +122,11 @@ public void ExtendTime_Event_RoundStart(Event event, const char[] name, bool don
 
 public Action ExtendTime(int client, int args)
 {
-		GameRules_SetProp("m_iRoundTime", GameRules_GetProp("m_iRoundTime", 4, 0)+args, 4, 0, true);
-		int extendminute = (args/60);
-		g_iRoundTime = g_iRoundTime + args;
-		CPrintToChatAll("%t %t", "warden_tag" , "warden_extend", client, extendminute);
-		return Plugin_Handled;
+	GameRules_SetProp("m_iRoundTime", GameRules_GetProp("m_iRoundTime", 4, 0)+args, 4, 0, true);
+	int extendminute = (args/60);
+	g_iRoundTime = g_iRoundTime + args;
+	CPrintToChatAll("%t %t", "warden_tag" , "warden_extend", client, extendminute);
+	return Plugin_Handled;
 }
 
 
@@ -171,5 +173,30 @@ public int Handler_ExtendRoundTime(Menu menu, MenuAction action, int client, int
 	else if(action == MenuAction_End)
 	{
 		delete menu;
+	}
+}
+
+
+/******************************************************************************
+                   FORWARDS LISTENING
+******************************************************************************/
+
+
+public void ExtendTime_OnConfigsExecuted()
+{
+	//Set custom Commands
+	int iCount = 0;
+	char sCommands[128], sCommandsL[8][32], sCommand[32];
+	
+	//extend time
+	gc_sCustomCommandExtend.GetString(sCommands, sizeof(sCommands));
+	ReplaceString(sCommands, sizeof(sCommands), " ", "");
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	
+	for(int i = 0; i < iCount; i++)
+	{
+		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
+		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+			RegConsoleCmd(sCommand, Command_ExtendRoundTime, "Allows the warden to extend the roundtime");
 	}
 }

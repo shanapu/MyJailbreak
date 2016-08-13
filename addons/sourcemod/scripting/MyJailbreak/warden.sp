@@ -48,7 +48,11 @@ ConVar gc_sModelPathWarden;
 ConVar gc_bModel;
 ConVar gc_bBetterNotes;
 ConVar g_bMenuClose;
-ConVar gc_sCustomCommand;
+ConVar gc_sCustomCommandWarden;
+ConVar gc_sCustomCommandUnWarden;
+ConVar gc_sCustomCommandVetoWarden;
+ConVar gc_sCustomCommandSetWarden;
+ConVar gc_sCustomCommandRemoveWarden;
 ConVar gc_fRandomTimer;
 
 
@@ -95,7 +99,6 @@ char g_sModelPathPrevious[256];
 char g_sModelPathWarden[256];
 char g_sUnWarden[256];
 char g_sWarden[256];
-char g_sCustomCommand[64];
 char g_sMyJBLogFile[PLATFORM_MAX_PATH];
 
 
@@ -141,29 +144,13 @@ public void OnPluginStart()
 	
 	
 	//Client commands
-	RegConsoleCmd("sm_w", Command_BecomeWarden, "Allows the player taking the charge over prisoners");
 	RegConsoleCmd("sm_warden", Command_BecomeWarden, "Allows the player taking the charge over prisoners");
-	RegConsoleCmd("sm_uw", Command_ExitWarden, "Allows the player to retire from the position");
 	RegConsoleCmd("sm_unwarden", Command_ExitWarden, "Allows the player to retire from the position");
-	RegConsoleCmd("sm_hg", Command_BecomeWarden, "Allows the player taking the charge over prisoners");
-	RegConsoleCmd("sm_headguard", Command_BecomeWarden, "Allows the player taking the charge over prisoners");
-	RegConsoleCmd("sm_uhg", Command_ExitWarden, "Allows the player to retire from the position");
-	RegConsoleCmd("sm_unheadguard", Command_ExitWarden, "Allows the player to retire from the position");
-	RegConsoleCmd("sm_com", Command_BecomeWarden, "Allows the player taking the charge over prisoners");
-	RegConsoleCmd("sm_commander", Command_BecomeWarden, "Allows the player taking the charge over prisoners");
-	RegConsoleCmd("sm_uc", Command_ExitWarden, "Allows the player to retire from the position");
-	RegConsoleCmd("sm_uncommander", Command_ExitWarden, "Allows the player to retire from the position");
-	RegConsoleCmd("sm_vw", Command_VoteWarden, "Allows the player to vote to retire Warden");
-	RegConsoleCmd("sm_votewarden", Command_VoteWarden, "Allows the player to vote to retire Warden");
 	RegConsoleCmd("sm_vetowarden", Command_VoteWarden, "Allows the player to vote to retire Warden");
 	
 	
 	//Admin commands
-	RegAdminCmd("sm_sw", AdminCommand_SetWarden, ADMFLAG_GENERIC);
 	RegAdminCmd("sm_setwarden", AdminCommand_SetWarden, ADMFLAG_GENERIC);
-	RegAdminCmd("sm_rw", AdminCommand_RemoveWarden, ADMFLAG_GENERIC);
-	RegAdminCmd("sm_fw", AdminCommand_RemoveWarden, ADMFLAG_GENERIC);
-	RegAdminCmd("sm_firewarden", AdminCommand_RemoveWarden, ADMFLAG_GENERIC);
 	RegAdminCmd("sm_removewarden", AdminCommand_RemoveWarden, ADMFLAG_GENERIC);
 	
 	
@@ -184,7 +171,11 @@ public void OnPluginStart()
 	
 	AutoExecConfig_CreateConVar("sm_warden_version", PLUGIN_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_warden_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true,  0.0, true, 1.0);
-	gc_sCustomCommand = AutoExecConfig_CreateConVar("sm_warden_cmd", "simon", "Set your custom chat command for become warden. no need for sm_ or !");
+	gc_sCustomCommandWarden = AutoExecConfig_CreateConVar("sm_warden_cmds_become", "w,simon", "Set your custom chat commands for become warden(!warden (no 'sm_'/'!')(seperate with comma ',')(max. 8 commands))");
+	gc_sCustomCommandUnWarden = AutoExecConfig_CreateConVar("sm_warden_cmds_retire", "uw,unsimon", "Set your custom chat commands for retire from warden(!unwarden (no 'sm_'/'!')(seperate with comma ',')(max. 8 commands))");
+	gc_sCustomCommandVetoWarden = AutoExecConfig_CreateConVar("sm_warden_cmds_veto", "vw,votewarden", "Set your custom chat commands for vote against warden(!vetowarden (no 'sm_'/'!')(seperate with comma ',')(max. 8 commands))");
+	gc_sCustomCommandSetWarden = AutoExecConfig_CreateConVar("sm_warden_cmds_set", "sw,newwarden", "Set your custom chat commands for admins to set a new warden(!setwarden (no 'sm_'/'!')(seperate with comma ',')(max. 8 commands))");
+	gc_sCustomCommandRemoveWarden = AutoExecConfig_CreateConVar("sm_warden_cmds_remove", "rw,firewarden,fw", "Set your custom chat commands for admins to remove a warden(!removewarden (no 'sm_'/'!')(seperate with comma ',')(max. 8 commands)");
 	gc_bBecomeWarden = AutoExecConfig_CreateConVar("sm_warden_become", "1", "0 - disabled, 1 - enable !w / !warden - player can choose to be warden. If disabled you should need sm_warden_choose_random 1", _, true,  0.0, true, 1.0);
 	gc_bChooseRandom = AutoExecConfig_CreateConVar("sm_warden_choose_random", "0", "0 - disabled, 1 - enable pick random warden if there is still no warden after sm_warden_choose_time", _, true,  0.0, true, 1.0);
 	gc_fRandomTimer = AutoExecConfig_CreateConVar("sm_warden_choose_time", "45.0", "Time in seconds a random warden will picked when no warden was set. need sm_warden_choose_random 1", _, true,  1.0);
@@ -244,7 +235,6 @@ public void OnPluginStart()
 	gc_sWarden.GetString(g_sWarden, sizeof(g_sWarden));
 	gc_sUnWarden.GetString(g_sUnWarden, sizeof(g_sUnWarden));
 	gc_sModelPathWarden.GetString(g_sModelPathWarden, sizeof(g_sModelPathWarden));
-	gc_sCustomCommand.GetString(g_sCustomCommand , sizeof(g_sCustomCommand));
 	
 	
 	//Set directory for LogFile - must be created before
@@ -270,14 +260,6 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 		strcopy(g_sModelPathWarden, sizeof(g_sModelPathWarden), newValue);
 		if(gc_bModel.BoolValue) PrecacheModel(g_sModelPathWarden);
 	}
-	else if(convar == gc_sCustomCommand)
-	{
-		strcopy(g_sCustomCommand, sizeof(g_sCustomCommand), newValue);
-		char sBufferCMD[64];
-		Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommand);
-		if(GetCommandFlags(sBufferCMD) == INVALID_FCVAR_FLAGS)  //if command not already exist
-			RegConsoleCmd(sBufferCMD, Command_BecomeWarden, "Allows the player taking the charge over prisoners");
-	}
 }
 
 
@@ -286,11 +268,80 @@ public void OnConfigsExecuted()
 {
 	Math_OnConfigsExecuted();
 	RandomKill_OnConfigsExecuted();
+	CellDoors_OnConfigsExecuted();
+	Laser_OnConfigsExecuted();
+	Mute_OnConfigsExecuted();
+	NoBlock_OnConfigsExecuted();
+	Painter_OnConfigsExecuted();
+	Rebel_OnConfigsExecuted();
+	Countdown_OnConfigsExecuted();
+	ExtendTime_OnConfigsExecuted();
+	Counter_OnConfigsExecuted();
 	
-	char sBufferCMD[64];
-	Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommand);
-	if(GetCommandFlags(sBufferCMD) == INVALID_FCVAR_FLAGS)  //if command not already exist
-		RegConsoleCmd(sBufferCMD, Command_BecomeWarden, "Allows the player taking the charge over prisoners");
+	
+	//Set custom Commands
+	int iCount = 0;
+	char sCommands[128], sCommandsL[8][32], sCommand[32];
+	
+	//Become warden
+	gc_sCustomCommandWarden.GetString(sCommands, sizeof(sCommands));
+	ReplaceString(sCommands, sizeof(sCommands), " ", "");
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	
+	for(int i = 0; i < iCount; i++)
+	{
+		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
+		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+			RegConsoleCmd(sCommand, Command_BecomeWarden, "Allows the warde taking the charge over prisoners");
+	}
+	
+	//Exit warden
+	gc_sCustomCommandUnWarden.GetString(sCommands, sizeof(sCommands));
+	ReplaceString(sCommands, sizeof(sCommands), " ", "");
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	
+	for(int i = 0; i < iCount; i++)
+	{
+		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
+		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+			RegConsoleCmd(sCommand, Command_ExitWarden, "Allows the player to retire from the position");
+	}
+	
+	//Veto warden
+	gc_sCustomCommandVetoWarden.GetString(sCommands, sizeof(sCommands));
+	ReplaceString(sCommands, sizeof(sCommands), " ", "");
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	
+	for(int i = 0; i < iCount; i++)
+	{
+		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
+		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+			RegConsoleCmd(sCommand, Command_VoteWarden, "Allows the player to vote against Warden");
+	}
+	
+	//Set warden
+	gc_sCustomCommandSetWarden.GetString(sCommands, sizeof(sCommands));
+	ReplaceString(sCommands, sizeof(sCommands), " ", "");
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	
+	for(int i = 0; i < iCount; i++)
+	{
+		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
+		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+			RegAdminCmd(sCommand, AdminCommand_SetWarden, ADMFLAG_GENERIC, "Allows the admin to set a new Warden");
+	}
+	
+	//Remove warden
+	gc_sCustomCommandRemoveWarden.GetString(sCommands, sizeof(sCommands));
+	ReplaceString(sCommands, sizeof(sCommands), " ", "");
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	
+	for(int i = 0; i < iCount; i++)
+	{
+		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
+		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+			RegAdminCmd(sCommand, AdminCommand_RemoveWarden, ADMFLAG_GENERIC, "Allows the admin to remove the Warden");
+	}
 }
 
 

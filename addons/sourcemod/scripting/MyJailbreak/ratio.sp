@@ -36,7 +36,11 @@
 
 //Console Variables
 ConVar gc_fPrisonerPerGuard;
-ConVar gc_sCustomCommand;
+ConVar gc_sCustomCommandGuard;
+ConVar gc_sCustomCommandQueue;
+ConVar gc_sCustomCommandLeave;
+ConVar gc_sCustomCommandRatio;
+ConVar gc_sCustomCommandRemove;
 ConVar gc_sAdminFlag;
 ConVar gc_bToggle;
 ConVar gc_bToggleAnnounce;
@@ -66,7 +70,6 @@ int questiontimes[MAXPLAYERS+1];
 //Strings
 char g_sRestrictedSound[32] = "buttons/button11.wav";
 char g_sRightAnswerSound[32] = "buttons/button14.wav";
-char g_sCustomCommand[32];
 char g_sAdminFlag[32];
 
 
@@ -91,23 +94,23 @@ public void OnPluginStart()
 	//Client commands
 	RegConsoleCmd("sm_guard", Command_JoinGuardQueue,"Allows the prisoners to queue to CT");
 	RegConsoleCmd("sm_viewqueue", Command_ViewGuardQueue,"Allows a player to show queue to CT");
-	RegConsoleCmd("sm_vq", Command_ViewGuardQueue,"Allows a player to show queue to CT");
-	RegConsoleCmd("sm_Command_LeaveQueue", Command_LeaveQueue,"Allows a player to leave queue to CT");
-	RegConsoleCmd("sm_lq", Command_LeaveQueue,"Allows a player to leave queue to CT");
+	RegConsoleCmd("sm_leavequeue", Command_LeaveQueue,"Allows a player to leave queue to CT");
 	RegConsoleCmd("sm_ratio", Command_ToggleRatio, "Allows the admin toggle the ratio check and player to see if ratio is enabled");
 	
 	
 	//Admin commands
 	RegAdminCmd("sm_removequeue", AdminCommand_RemoveFromQueue, ADMFLAG_GENERIC,"Allows the admin to remove player from queue to CT");
-	RegAdminCmd("sm_rq", AdminCommand_RemoveFromQueue, ADMFLAG_GENERIC,"Allows the admin to remove player from queue to CT");
-	
 	
 	//AutoExecConfig
 	AutoExecConfig_SetFile("Ratio", "MyJailbreak");
 	AutoExecConfig_SetCreateFile(true);
 	
 	AutoExecConfig_CreateConVar("sm_ratio_version", PLUGIN_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
-	gc_sCustomCommand = AutoExecConfig_CreateConVar("sm_ratio_cmd", "ct", "Set your custom chat command for become guard. no need for sm_ or !");
+	gc_sCustomCommandGuard = AutoExecConfig_CreateConVar("sm_ratio_cmds_guard", "g,ct,guards", "Set your custom chat command for become guard(!guard (no 'sm_'/'!')(seperate with comma ',')(max. 8 commands))");
+	gc_sCustomCommandQueue = AutoExecConfig_CreateConVar("sm_ratio_cmds_queue", "vq,queue", "Set your custom chat command for view guard queue (!viewqueue (no 'sm_'/'!')(seperate with comma ',')(max. 8 commands))");
+	gc_sCustomCommandLeave = AutoExecConfig_CreateConVar("sm_ratio_cmds_leave", "lq,stay", "Set your custom chat command for view leave queue (!leavequeue (no 'sm_'/'!')(seperate with comma ',')(max. 8 commands))");
+	gc_sCustomCommandRatio = AutoExecConfig_CreateConVar("sm_ratio_cmds_ratio", "balance", "Set your custom chat command for view/toggle ratio (!ratio (no 'sm_'/'!')(seperate with comma ',')(max. 8 commands))");
+	gc_sCustomCommandRemove = AutoExecConfig_CreateConVar("sm_ratio_cmds_remove", "rq", "Set your custom chat command for admins to remove a player from guard queue (!removequeue (no 'sm_'/'!')(seperate with comma ',')(max. 8 commands))");
 	gc_fPrisonerPerGuard = AutoExecConfig_CreateConVar("sm_ratio_T_per_CT", "2", "How many prisoners for each guard.", _, true, 1.0);
 	gc_bVIPQueue = AutoExecConfig_CreateConVar("sm_ratio_flag", "1", "0 - disabled, 1 - enable VIPs moved to front of queue", _, true,  0.0, true, 1.0);
 	gc_bForceTConnect = AutoExecConfig_CreateConVar("sm_ratio_force_t", "1", "0 - disabled, 1 - force player on connect to join T side", _, true,  0.0, true, 1.0);
@@ -129,12 +132,10 @@ public void OnPluginStart()
 	HookEvent("player_team", Event_PlayerTeam_Post, EventHookMode_Post);
 	HookEvent("round_end", Event_RoundEnd_Post, EventHookMode_Post);
 	HookEvent("player_spawn", Event_OnPlayerSpawn, EventHookMode_Post);
-	HookConVarChange(gc_sCustomCommand, OnSettingChanged);
 	
 	
 	//FindConVar
 	gc_sAdminFlag.GetString(g_sAdminFlag,sizeof(g_sAdminFlag));
-	gc_sCustomCommand.GetString(g_sCustomCommand , sizeof(g_sCustomCommand));
 	
 	
 	//Prepare
@@ -147,19 +148,6 @@ public void OnPluginStart()
 }
 
 
-public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
-{
-	if(convar == gc_sCustomCommand)
-	{
-		strcopy(g_sCustomCommand, sizeof(g_sCustomCommand), newValue);
-		char sBufferCMD[64];
-		Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommand);
-		if(GetCommandFlags(sBufferCMD) == INVALID_FCVAR_FLAGS)
-			RegConsoleCmd(sBufferCMD, Command_JoinGuardQueue, "Allows the prisoners to queue to CT");
-	}
-}
-
-
 public void OnConfigsExecuted()
 {
 	Handle hConVar = FindConVar("mp_force_pick_time");
@@ -169,10 +157,70 @@ public void OnConfigsExecuted()
 	HookConVarChange(hConVar, OnForcePickTimeChanged);
 	SetConVarInt(hConVar, 999999);
 	
-	char sBufferCMD[64];
-	Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommand);
-	if(GetCommandFlags(sBufferCMD) == INVALID_FCVAR_FLAGS)
-		RegConsoleCmd(sBufferCMD, Command_JoinGuardQueue, "Allows the prisoners to queue to CT");
+	
+	//Set custom Commands
+	int iCount = 0;
+	char sCommands[128], sCommandsL[8][32], sCommand[32];
+	
+	//Join Guardqueue
+	gc_sCustomCommandGuard.GetString(sCommands, sizeof(sCommands));
+	ReplaceString(sCommands, sizeof(sCommands), " ", "");
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	
+	for(int i = 0; i < iCount; i++)
+	{
+		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
+		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+			RegConsoleCmd(sCommand, Command_JoinGuardQueue,"Allows the prisoners to queue to CT");
+	}
+	
+	//View guardqueue
+	gc_sCustomCommandQueue.GetString(sCommands, sizeof(sCommands));
+	ReplaceString(sCommands, sizeof(sCommands), " ", "");
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	
+	for(int i = 0; i < iCount; i++)
+	{
+		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
+		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+			RegConsoleCmd(sCommand, Command_ViewGuardQueue,"Allows a player to show queue to CT");
+	}
+	
+	//leave guardqueue
+	gc_sCustomCommandLeave.GetString(sCommands, sizeof(sCommands));
+	ReplaceString(sCommands, sizeof(sCommands), " ", "");
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	
+	for(int i = 0; i < iCount; i++)
+	{
+		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
+		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+			RegConsoleCmd(sCommand, Command_LeaveQueue,"Allows a player to leave queue to CT");
+	}
+	
+	//View/toggle ratio
+	gc_sCustomCommandRatio.GetString(sCommands, sizeof(sCommands));
+	ReplaceString(sCommands, sizeof(sCommands), " ", "");
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	
+	for(int i = 0; i < iCount; i++)
+	{
+		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
+		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+			RegConsoleCmd(sCommand, Command_ToggleRatio, "Allows the admin toggle the ratio check and player to see if ratio is enabled");
+	}
+	
+	//Admin remove player from queue
+	gc_sCustomCommandRemove.GetString(sCommands, sizeof(sCommands));
+	ReplaceString(sCommands, sizeof(sCommands), " ", "");
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	
+	for(int i = 0; i < iCount; i++)
+	{
+		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
+		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+			RegAdminCmd(sCommand, AdminCommand_RemoveFromQueue, ADMFLAG_GENERIC,"Allows the admin to remove player from queue to CT");
+	}
 }
 
 

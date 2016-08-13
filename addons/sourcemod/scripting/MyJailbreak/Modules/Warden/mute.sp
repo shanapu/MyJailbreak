@@ -41,6 +41,8 @@ ConVar gc_bMuteEnd;
 ConVar gc_sAdminFlagMute;
 ConVar gc_bMuteTalkOver;
 ConVar gc_bMuteTalkOverTeam;
+ConVar gc_sCustomCommandMute;
+ConVar gc_sCustomCommandUnMute;
 
 
 //Boolean
@@ -67,6 +69,8 @@ public void Mute_OnPluginStart()
 	gc_sAdminFlagMute = AutoExecConfig_CreateConVar("sm_warden_mute_immuntiy", "a", "Set flag for admin/vip Mute immunity. No flag immunity for all. so don't leave blank!");
 	gc_bMuteTalkOver = AutoExecConfig_CreateConVar("sm_warden_talkover", "1", "0 - disabled, 1 - temporary mutes all client when the warden speaks", _, true, 0.0, true, 1.0);
 	gc_bMuteTalkOverTeam = AutoExecConfig_CreateConVar("sm_warden_talkover_team", "1", "0 - mute prisoner & guards on talkover, 1 - only mute prisoners on talkover", _, true, 0.0, true, 1.0);
+	gc_sCustomCommandWarden = AutoExecConfig_CreateConVar("sm_warden_cmds_mute", "wm,mutemenu", "Set your custom chat commands for become warden(!warden (no 'sm_'/'!')(seperate with comma ',')(max. 8 commands))");
+	gc_sCustomCommandUnWarden = AutoExecConfig_CreateConVar("sm_warden_cmds_unmute", "wum,unmutemenu", "Set your custom chat commands for retire from warden(!unwarden (no 'sm_'/'!')(seperate with comma ',')(max. 8 commands))");
 	
 	
 	//Hooks
@@ -84,6 +88,38 @@ public int Mute_OnSettingChanged(Handle convar, const char[] oldValue, const cha
 	if(convar == gc_sAdminFlagMute)
 	{
 		strcopy(g_sAdminFlagMute, sizeof(g_sAdminFlagMute), newValue);
+	}
+}
+
+
+public void Mute_OnConfigsExecuted()
+{
+	//Set custom Commands
+	int iCount = 0;
+	char sCommands[128], sCommandsL[8][32], sCommand[32];
+	
+	//Mute
+	gc_sCustomCommandMute.GetString(sCommands, sizeof(sCommands));
+	ReplaceString(sCommands, sizeof(sCommands), " ", "");
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	
+	for(int i = 0; i < iCount; i++)
+	{
+		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
+		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+			RegConsoleCmd(sCommand, Command_MuteMenu, "Allows a warden to mute all terrorists for a specified duration or untill the next round.");
+	}
+	
+	//UnMute
+	gc_sCustomCommandUnMute.GetString(sCommands, sizeof(sCommands));
+	ReplaceString(sCommands, sizeof(sCommands), " ", "");
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	
+	for(int i = 0; i < iCount; i++)
+	{
+		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
+		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+			RegConsoleCmd(sCommand, Command_UnMuteMenu, "Allows a warden to unmute the terrorists.");
 	}
 }
 

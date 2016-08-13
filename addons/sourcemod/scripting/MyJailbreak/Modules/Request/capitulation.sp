@@ -58,7 +58,6 @@ Handle RebelTimer[MAXPLAYERS+1];
 
 //Strings
 char g_sSoundCapitulationPath[256];
-char g_sCustomCommandCapitulation[64];
 
 
 //Start
@@ -66,12 +65,11 @@ public void Capitulation_OnPluginStart()
 {
 	//Client commands
 	RegConsoleCmd("sm_capitulation", Command_Capitulation, "Allows a rebeling terrorist to request a capitulate");
-	RegConsoleCmd("sm_pardon", Command_Capitulation, "Allows a rebeling terrorist to request a capitulate");
 	
-		
+	
 	//AutoExecConfig
 	gc_bCapitulation = AutoExecConfig_CreateConVar("sm_capitulation_enable", "1", "0 - disabled, 1 - enable Capitulation");
-	gc_sCustomCommandCapitulation = AutoExecConfig_CreateConVar("sm_capitulation_cmd", "capi", "Set your custom chat command for Capitulation. no need for sm_ or !");
+	gc_sCustomCommandCapitulation = AutoExecConfig_CreateConVar("sm_capitulation_cmds", "capi,capitulate,pardon,p", "Set your custom chat commands for Capitulation(!capitulation (no 'sm_'/'!')(seperate with comma ',')(max. 8 commands)");
 	gc_fCapitulationTime = AutoExecConfig_CreateConVar("sm_capitulation_timer", "10.0", "Time to decide to accept the capitulation");
 	gc_fRebelTime = AutoExecConfig_CreateConVar("sm_capitulation_rebel_timer", "10.0", "Time to give a rebel on not accepted capitulation his knife back");
 	gc_bCapitulationDamage = AutoExecConfig_CreateConVar("sm_capitulation_damage", "1", "0 - disabled, 1 - enable Terror make no damage after capitulation");
@@ -84,12 +82,10 @@ public void Capitulation_OnPluginStart()
 	//Hooks 
 	HookEvent("round_start", Capitulation_Event_RoundStart);
 	HookConVarChange(gc_sSoundCapitulationPath, Capitulation_OnSettingChanged);
-	HookConVarChange(gc_sCustomCommandCapitulation, Capitulation_OnSettingChanged);
 	
 	
 	//FindConVar
 	gc_sSoundCapitulationPath.GetString(g_sSoundCapitulationPath, sizeof(g_sSoundCapitulationPath));
-	gc_sCustomCommandCapitulation.GetString(g_sCustomCommandCapitulation , sizeof(g_sCustomCommandCapitulation));
 }
 
 
@@ -99,14 +95,6 @@ public int Capitulation_OnSettingChanged(Handle convar, const char[] oldValue, c
 	{
 		strcopy(g_sSoundCapitulationPath, sizeof(g_sSoundCapitulationPath), newValue);
 		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundCapitulationPath);
-	}
-	else if(convar == gc_sCustomCommandCapitulation)
-	{
-		strcopy(g_sCustomCommandCapitulation, sizeof(g_sCustomCommandCapitulation), newValue);
-		char sBufferCMD[64];
-		Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommandCapitulation);
-		if(GetCommandFlags(sBufferCMD) == INVALID_FCVAR_FLAGS)
-			RegConsoleCmd(sBufferCMD, Command_Capitulation, "Allows a rebeling terrorist to request a capitulate");
 	}
 }
 
@@ -184,11 +172,21 @@ public void Capitulation_OnMapStart()
 
 public void Capitulation_OnConfigsExecuted()
 {
-	char sBufferCMDCapitulation[64];
+	//Set custom Commands
+	int iCount = 0;
+	char sCommands[128], sCommandsL[8][32], sCommand[32];
 	
-	Format(sBufferCMDCapitulation, sizeof(sBufferCMDCapitulation), "sm_%s", g_sCustomCommandCapitulation);
-	if(GetCommandFlags(sBufferCMDCapitulation) == INVALID_FCVAR_FLAGS)
-		RegConsoleCmd(sBufferCMDCapitulation, Command_Capitulation, "Allows a rebeling terrorist to request a capitulate");
+	//Capitulation
+	gc_sCustomCommandCapitulation.GetString(sCommands, sizeof(sCommands));
+	ReplaceString(sCommands, sizeof(sCommands), " ", "");
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	
+	for(int i = 0; i < iCount; i++)
+	{
+		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
+		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+			RegConsoleCmd(sCommand, Command_Capitulation, "Allows a rebeling terrorist to request a capitulate");
+	}
 }
 
 
