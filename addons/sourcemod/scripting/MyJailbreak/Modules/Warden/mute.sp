@@ -463,7 +463,6 @@ public int Handler_UnMuteMenu(Menu menu4, MenuAction action, int client, int sel
 			{
 				FakeClientCommand(client, "sm_menu");
 			}
-			else UnMuteMenu();
 		}
 	}
 	else if(action == MenuAction_Cancel)

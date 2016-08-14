@@ -9,6 +9,8 @@
 *  Ratio: Added one round cooldown for guard queue on wrong answer.
 *  Weapons: Kevlar & Helm for guards on roundstart except on event days
     *  new cvar - sm_weapons_kevlar - 0 - disabled, 1 - CT get Kevlar & helm on Spawn
+*  Warden - Mute: mute all T on roundbegin
+    *  new cvar - sm_warden_mute_default - 0 - disabled, 1 - Prisoners are muted on roundstart by default. Warden have to unmute them
   
   
 *Changed*

@@ -17,6 +17,7 @@
 
 	"ratio_cooldown"
 	{
+		"ru"		"Вы заблокированы за неверный ответ. Попробуйте в следующем раунде."
 		"en"		"You are blocked for missing right answer. Try it next round."
 	}
 
