@@ -36,7 +36,8 @@
 //Booleans
 bool IsFreeday; 
 bool StartFreeday; 
-//bool AutoFreeday; 
+bool AutoFreeday; 
+bool AllowRespawn;
 
 
 //Console Variables
@@ -44,7 +45,8 @@ ConVar gc_bPlugin;
 ConVar gc_bSetW;
 ConVar gc_bFirst;
 ConVar gc_bAuto;
-//ConVar gc_iRespawn;
+ConVar gc_iRespawn;
+ConVar gc_iRespawnTime;
 ConVar gc_bdamage;
 ConVar gc_bSetA;
 ConVar gc_bVote;
@@ -113,7 +115,8 @@ public void OnPluginStart()
 	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_freeday_flag", "g", "Set flag for admin/vip to set this Event Day.");
 	gc_bVote = AutoExecConfig_CreateConVar("sm_freeday_vote", "1", "0 - disabled, 1 - allow player to vote for freeday", _, true,  0.0, true, 1.0);
 	gc_bAuto = AutoExecConfig_CreateConVar("sm_freeday_noct", "1", "0 - disabled, 1 - auto freeday when there is no CT", _, true,  0.0, true, 1.0);
-//	gc_iRespawn = AutoExecConfig_CreateConVar("sm_freeday_respawn", "1", "1 - respawn on NoCT Freeday / 2 - respawn on firstround/vote/set Freeday / 3 - Both", _, true,  0.0, true, 1.0);
+	gc_iRespawn = AutoExecConfig_CreateConVar("sm_freeday_respawn", "1", "1 - respawn on NoCT Freeday / 2 - respawn on firstround/vote/set Freeday / 3 - Both", _, true,  1.0, true, 3.0);
+	gc_iRespawnTime = AutoExecConfig_CreateConVar("sm_freeday_respawn_time", "120", "Timer in seconds player will respawn after round begin", _, true,  1.0);
 	gc_bFirst = AutoExecConfig_CreateConVar("sm_freeday_firstround", "1", "0 - disabled, 1 - auto freeday first round after mapstart", _, true,  0.0, true, 1.0);
 	gc_bdamage = AutoExecConfig_CreateConVar("sm_freeday_damage", "1", "0 - disabled, 1 - enable damage on freedays", _, true,  0.0, true, 1.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_freeday_roundtime", "5", "Round time in minutes for a single freeday round", _, true,  1.0);
@@ -126,7 +129,7 @@ public void OnPluginStart()
 	//Hooks
 	HookEvent("round_start", Event_RoundStart);
 	HookEvent("round_end", Event_RoundEnd);
-//	HookEvent("player_death", Event_PlayerDeath);
+	HookEvent("player_death", Event_PlayerDeath);
 	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
 	
 	
@@ -297,7 +300,7 @@ public Action Command_VoteFreeday(int client,int args)
 
 public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
-	if ((GetTeamClientCount(CS_TEAM_CT) < 1) && gc_bAuto.BoolValue)
+	if((GetTeamClientCount(CS_TEAM_CT) < 1) && gc_bAuto.BoolValue)
 	{
 		char EventDay[64];
 		GetEventDayName(EventDay);
@@ -311,10 +314,10 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 			Format(buffer, sizeof(buffer), "%T", "freeday_name", LANG_SERVER);
 			SetEventDayName(buffer);
 			SetEventDayRunning(true);
-		//	AutoFreeday = true;
+			AutoFreeday = true;
 		}
 	}
-	if (StartFreeday)
+	if(StartFreeday)
 	{
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_weapons_enable", 0);
@@ -326,6 +329,9 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		FreedayRound++;
 		StartFreeday = false;
 		SJD_OpenDoors();
+		
+		CreateTimer (gc_iRespawnTime.FloatValue, Timer_StopRespawn);
+		AllowRespawn = true;
 		
 		LoopClients(client)
 		{
@@ -356,6 +362,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 	{
 		IsFreeday = false;
 		StartFreeday = false;
+		AllowRespawn = false;
 		FreedayRound = 0;
 		Format(g_sHasVoted, sizeof(g_sHasVoted), "");
 		SetCvar("sm_hosties_lr", 1);
@@ -363,7 +370,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 		SetCvar("mp_teammates_are_enemies", 0);
 		SetCvar("sm_warden_enable", 1);
 		g_iMPRoundTime.IntValue = g_iOldRoundTime;
-	//	AutoFreeday = false;
+		AutoFreeday = false;
 		SetEventDayName("none");
 		SetEventDayRunning(false);
 		CPrintToChatAll("%t %t", "freeday_tag" , "freeday_end");
@@ -378,17 +385,21 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 }
 
 
-/*
+
 public void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast) 
 {
 	if((AutoFreeday && gc_iRespawn.IntValue == 1) || (IsFreeday && gc_iRespawn.IntValue == 2) || ((IsFreeday || AutoFreeday) && gc_iRespawn.IntValue == 3))
 	{
 		int client = GetClientOfUserId(event.GetInt("userid")); // Get the dead clients id
 		
-		CS_RespawnPlayer(client);
+		if(((GetAliveTeamCount(CS_TEAM_CT) >= 1) && (GetClientTeam(client) == CS_TEAM_CT) && AllowRespawn) || ((GetAliveTeamCount(CS_TEAM_T) >= 1) && (GetClientTeam(client) == CS_TEAM_T) && AllowRespawn))
+		{
+			CreateTimer (2.0, Timer_Respawn, client);
+		}
 	}
 }
-*/
+
+
 
 
 /******************************************************************************
@@ -420,7 +431,7 @@ public void OnMapStart()
 		StartFreeday = false;	
 	}
 	IsFreeday = false;
-//	AutoFreeday = false;
+	AutoFreeday = false;
 }
 
 
@@ -436,7 +447,8 @@ public void OnMapEnd()
 		StartFreeday = false;
 	}
 	IsFreeday = false;
-//	AutoFreeday = false;
+	AutoFreeday = false;
+	AllowRespawn = false;
 	g_iVoteCount = 0;
 	FreedayRound = 0;
 	g_sHasVoted[0] = '\0';
@@ -501,3 +513,21 @@ stock void CreateInfoPanel(int client)
 	DrawPanelItem(FreedayMenu, info); 
 	SendPanelToClient(FreedayMenu, client, Handler_NullCancel, 20);
 }
+
+
+/******************************************************************************
+                   TIMER
+******************************************************************************/
+
+
+public Action Timer_StopRespawn(Handle timer)
+{
+	AllowRespawn = false;
+}
+
+
+public Action Timer_Respawn(Handle timer, any client)
+{
+	CS_RespawnPlayer(client);
+}
+
