@@ -500,14 +500,14 @@ public Action Event_OnJoinTeam(int client, const char[] szCommand, int iArgCount
 		return Plugin_Handled;
 	}
 	
+	if(iTeam != CS_TEAM_CT)
+		return Plugin_Continue;
+	
 	if(g_bQueueCooldown[client])
 	{
 		CReplyToCommand(client, "%t %t", "ratio_tag" , "ratio_cooldown");
 		return Plugin_Handled;
 	}
-	
-	if(iTeam != CS_TEAM_CT)
-		return Plugin_Continue;
 	
 	GetClientCookie(client, g_sCookieCTBan, szData, sizeof(szData));
 	
