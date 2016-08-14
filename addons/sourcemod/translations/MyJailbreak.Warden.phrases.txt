@@ -1269,7 +1269,7 @@
 	"warden_rebel_mark"
 	{
 		"en"		"Mark a Player as Rebel"
-		"en"		"Пометить игрока как бунтующего"
+		"ru"		"Пометить игрока как бунтующего"
 	}
 
 	"warden_rebel_unmark"

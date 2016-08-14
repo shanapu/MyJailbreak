@@ -234,7 +234,7 @@ public int Handler_UnMarkRebel(Menu UnMarkRebel, MenuAction action, int client, 
 		UnMarkRebel.GetItem(selection, info, sizeof(info));
 		int i = GetClientOfUserId(StringToInt(info));
 		ChangeRebelStatus(i, false);
-		SetEntityRenderColor(client, 255, 255, 255, 255);
+		SetEntityRenderColor(i, 255, 255, 255, 255);
 		
 		Menu_MarkRebelMenu(client);
 	}
