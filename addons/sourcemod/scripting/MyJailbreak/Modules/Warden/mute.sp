@@ -38,6 +38,7 @@
 //Console Variables
 ConVar gc_bMute;
 ConVar gc_bMuteEnd;
+ConVar gc_bMuteDefault;
 ConVar gc_sAdminFlagMute;
 ConVar gc_bMuteTalkOver;
 ConVar gc_bMuteTalkOverTeam;
@@ -66,6 +67,7 @@ public void Mute_OnPluginStart()
 	//AutoExecConfig
 	gc_bMute = AutoExecConfig_CreateConVar("sm_warden_mute", "1", "0 - disabled, 1 - Allow the warden to mute T-side player", _, true, 0.0, true, 1.0);
 	gc_bMuteEnd = AutoExecConfig_CreateConVar("sm_warden_mute_round", "1", "0 - disabled, 1 - Allow the warden to mute a player until roundend", _, true, 0.0, true, 1.0);
+	gc_bMuteDefault = AutoExecConfig_CreateConVar("sm_warden_mute_default", "0", "0 - disabled, 1 - Prisoners are muted on roundstart by default. Warden have to unmute them", _, true, 0.0, true, 1.0);
 	gc_sAdminFlagMute = AutoExecConfig_CreateConVar("sm_warden_mute_immuntiy", "a", "Set flag for admin/vip Mute immunity. No flag immunity for all. so don't leave blank!");
 	gc_bMuteTalkOver = AutoExecConfig_CreateConVar("sm_warden_talkover", "1", "0 - disabled, 1 - temporary mutes all client when the warden speaks", _, true, 0.0, true, 1.0);
 	gc_bMuteTalkOverTeam = AutoExecConfig_CreateConVar("sm_warden_talkover_team", "1", "0 - mute prisoner & guards on talkover, 1 - only mute prisoners on talkover", _, true, 0.0, true, 1.0);
@@ -76,6 +78,7 @@ public void Mute_OnPluginStart()
 	//Hooks
 	HookConVarChange(gc_sAdminFlagMute, Mute_OnSettingChanged);
 	HookEvent("round_end", Mute_Event_RoundEnd);
+	HookEvent("round_start", Mute_Event_RoundStart);
 	
 	
 	//FindConVar
@@ -196,6 +199,24 @@ public Action Command_MuteMenu(int client, int args)
 /******************************************************************************
                    EVENTS
 ******************************************************************************/
+
+
+public void Mute_Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
+{
+	if(gc_bMuteDefault.BoolValue)
+	{
+		LoopValidClients(i,true,true)if(!CheckVipFlag(i,g_sAdminFlagMute))
+		{
+			if(GetClientTeam(i) == CS_TEAM_T)
+			{
+				SetClientListeningFlags(i, VOICE_MUTED);
+				IsMuted[i] = true;
+				
+			}
+		}
+		CPrintToChatAll("%t %t", "warden_tag", "warden_mutedefault");
+	}
+}
 
 
 public void Mute_Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
@@ -327,7 +348,7 @@ public Action MuteMenuPlayer(int client,int args)
 			menu5.SetTitle(info1);
 			LoopValidClients(i,true,true)
 			{
-				if((GetClientTeam(i) == CS_TEAM_T) && !CheckVipFlag(i,g_sAdminFlagMute))
+				if((GetClientTeam(i) == CS_TEAM_T) && !CheckVipFlag(i,g_sAdminFlagMute) && !IsMuted[i])
 				{
 					char userid[11];
 					char username[MAX_NAME_LENGTH];
@@ -442,6 +463,7 @@ public int Handler_UnMuteMenu(Menu menu4, MenuAction action, int client, int sel
 			{
 				FakeClientCommand(client, "sm_menu");
 			}
+			else UnMuteMenu();
 		}
 	}
 	else if(action == MenuAction_Cancel)

@@ -878,6 +878,11 @@
 		"en"		"3 Minutes"
 	}
 
+	"warden_mutedefault"
+	{
+		"en"		"All Prisoners are muted by default."
+	}
+
 	"warden_muteend"
 	{
 		"#format"   "{1:N},{2:N}"
