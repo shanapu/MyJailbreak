@@ -57,9 +57,10 @@ ConVar gc_sOverlayStartPath;
 ConVar gc_bSounds;
 ConVar gc_sSoundStartPath;
 ConVar gc_iRounds;
-ConVar gc_sCustomCommand;
 ConVar gc_sAdminFlag;
 ConVar gc_bAllowLR;
+ConVar gc_sCustomCommandVote;
+ConVar gc_sCustomCommandSet;
 
 
 //Extern Convars
@@ -92,7 +93,6 @@ float g_fPos[3];
 char g_sHasVoted[1500];
 char g_sSoundStartPath[256];
 char g_sWeapon[32];
-char g_sCustomCommand[64];
 char g_sEventsLogFile[PLATFORM_MAX_PATH];
 char g_sAdminFlag[32];
 char g_sOverlayStartPath[256];
@@ -117,8 +117,8 @@ public void OnPluginStart()
 	
 	
 	//Client Commands
-	RegConsoleCmd("sm_setcowboy", SetCowBoy, "Allows the Admin or Warden to set cowboy as next round");
-	RegConsoleCmd("sm_cowboy", VoteCowBoy, "Allows players to vote for a cowboy");
+	RegConsoleCmd("sm_Command_SetCowBoy", Command_SetCowBoy, "Allows the Admin or Warden to set cowboy as next round");
+	RegConsoleCmd("sm_cowboy", Command_VoteCowBoy, "Allows players to vote for a cowboy");
 	
 	
 	//AutoExecConfig
@@ -127,7 +127,8 @@ public void OnPluginStart()
 	
 	AutoExecConfig_CreateConVar("sm_cowboy_version", PLUGIN_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_cowboy_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true,  0.0, true, 1.0);
-	gc_sCustomCommand = AutoExecConfig_CreateConVar("sm_cowboy_cmd", "cow", "Set your custom chat command for Event voting. no need for sm_ or !");
+	gc_sCustomCommandVote = AutoExecConfig_CreateConVar("sm_cowboy_cmds_vote", "cow", "Set your custom chat command for Event voting(!cowboy (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands))");
+	gc_sCustomCommandSet = AutoExecConfig_CreateConVar("sm_cowboy_cmds_set", "scow,setcow", "Set your custom chat command for set Event (!setcowboy (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands))");
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_cowboy_warden", "1", "0 - disabled, 1 - allow warden to set cowboy round", _, true,  0.0, true, 1.0);
 	gc_bSetA = AutoExecConfig_CreateConVar("sm_cowboy_admin", "1", "0 - disabled, 1 - allow admin/vip to set cowboy round", _, true,  0.0, true, 1.0);
 	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_cowboy_flag", "g", "Set flag for admin/vip to set this Event Day.");
@@ -158,7 +159,6 @@ public void OnPluginStart()
 	HookEvent("player_hurt", Event_PlayerHurt);
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
-	HookConVarChange(gc_sCustomCommand, OnSettingChanged);
 	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
 	
 	
@@ -169,7 +169,6 @@ public void OnPluginStart()
 	g_iTerrorForLR = FindConVar("sm_hosties_lr_ts_max");
 	gc_sOverlayStartPath.GetString(g_sOverlayStartPath , sizeof(g_sOverlayStartPath));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
-	gc_sCustomCommand.GetString(g_sCustomCommand , sizeof(g_sCustomCommand));
 	gc_sAdminFlag.GetString(g_sAdminFlag , sizeof(g_sAdminFlag));
 	
 	SetLogFile(g_sEventsLogFile, "Events");
@@ -193,14 +192,6 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 	{
 		strcopy(g_sAdminFlag, sizeof(g_sAdminFlag), newValue);
 	}
-	else if(convar == gc_sCustomCommand)
-	{
-		strcopy(g_sCustomCommand, sizeof(g_sCustomCommand), newValue);
-		char sBufferCMD[64];
-		Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommand);
-		if(GetCommandFlags(sBufferCMD) == INVALID_FCVAR_FLAGS)
-			RegConsoleCmd(sBufferCMD, VoteCowBoy, "Allows players to vote for cowboy");
-	}
 }
 
 
@@ -214,10 +205,34 @@ public void OnConfigsExecuted()
 	if (gc_iWeapon.IntValue == 1) g_sWeapon = "weapon_revolver";
 	if (gc_iWeapon.IntValue == 2) g_sWeapon = "weapon_elite";
 	
-	char sBufferCMD[64];    //Register the custom command 
-	Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommand);
-	if(GetCommandFlags(sBufferCMD) == INVALID_FCVAR_FLAGS)
-		RegConsoleCmd(sBufferCMD, VoteCowBoy, "Allows players to vote for no scope");
+	
+	//Set custom Commands
+	int iCount = 0;
+	char sCommands[128], sCommandsL[12][32], sCommand[32];
+	
+	//vote
+	gc_sCustomCommandVote.GetString(sCommands, sizeof(sCommands));
+	ReplaceString(sCommands, sizeof(sCommands), " ", "");
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	
+	for(int i = 0; i < iCount; i++)
+	{
+		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
+		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+			RegConsoleCmd(sCommand, Command_VoteCowBoy, "Allows players to vote for a cowboy");
+	}
+	
+	//set
+	gc_sCustomCommandSet.GetString(sCommands, sizeof(sCommands));
+	ReplaceString(sCommands, sizeof(sCommands), " ", "");
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	
+	for(int i = 0; i < iCount; i++)
+	{
+		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
+		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+			RegConsoleCmd(sCommand, Command_SetCowBoy, "Allows the Admin or Warden to set cowboy as next round");
+	}
 }
 
 
@@ -227,7 +242,7 @@ public void OnConfigsExecuted()
 
 
 //Admin & Warden set Event
-public Action SetCowBoy(int client,int args)
+public Action Command_SetCowBoy(int client,int args)
 {
 	if (gc_bPlugin.BoolValue)
 	{
@@ -293,7 +308,7 @@ public Action SetCowBoy(int client,int args)
 
 
 //Voting for Event
-public Action VoteCowBoy(int client,int args)
+public Action Command_VoteCowBoy(int client,int args)
 {
 	char steamid[64];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));

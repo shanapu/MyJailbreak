@@ -69,8 +69,8 @@ public void Mute_OnPluginStart()
 	gc_sAdminFlagMute = AutoExecConfig_CreateConVar("sm_warden_mute_immuntiy", "a", "Set flag for admin/vip Mute immunity. No flag immunity for all. so don't leave blank!");
 	gc_bMuteTalkOver = AutoExecConfig_CreateConVar("sm_warden_talkover", "1", "0 - disabled, 1 - temporary mutes all client when the warden speaks", _, true, 0.0, true, 1.0);
 	gc_bMuteTalkOverTeam = AutoExecConfig_CreateConVar("sm_warden_talkover_team", "1", "0 - mute prisoner & guards on talkover, 1 - only mute prisoners on talkover", _, true, 0.0, true, 1.0);
-	gc_sCustomCommandWarden = AutoExecConfig_CreateConVar("sm_warden_cmds_mute", "wm,mutemenu", "Set your custom chat commands for become warden(!warden (no 'sm_'/'!')(seperate with comma ',')(max. 8 commands))");
-	gc_sCustomCommandUnWarden = AutoExecConfig_CreateConVar("sm_warden_cmds_unmute", "wum,unmutemenu", "Set your custom chat commands for retire from warden(!unwarden (no 'sm_'/'!')(seperate with comma ',')(max. 8 commands))");
+	gc_sCustomCommandMute = AutoExecConfig_CreateConVar("sm_warden_cmds_mute", "wm,mutemenu", "Set your custom chat commands for become warden(!warden (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands))");
+	gc_sCustomCommandUnMute = AutoExecConfig_CreateConVar("sm_warden_cmds_unmute", "wum,unmutemenu", "Set your custom chat commands for retire from warden(!unwarden (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands))");
 	
 	
 	//Hooks
@@ -96,7 +96,7 @@ public void Mute_OnConfigsExecuted()
 {
 	//Set custom Commands
 	int iCount = 0;
-	char sCommands[128], sCommandsL[8][32], sCommand[32];
+	char sCommands[128], sCommandsL[12][32], sCommand[32];
 	
 	//Mute
 	gc_sCustomCommandMute.GetString(sCommands, sizeof(sCommands));

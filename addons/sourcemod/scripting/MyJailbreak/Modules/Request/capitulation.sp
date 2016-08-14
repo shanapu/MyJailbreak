@@ -69,7 +69,7 @@ public void Capitulation_OnPluginStart()
 	
 	//AutoExecConfig
 	gc_bCapitulation = AutoExecConfig_CreateConVar("sm_capitulation_enable", "1", "0 - disabled, 1 - enable Capitulation");
-	gc_sCustomCommandCapitulation = AutoExecConfig_CreateConVar("sm_capitulation_cmds", "capi,capitulate,pardon,p", "Set your custom chat commands for Capitulation(!capitulation (no 'sm_'/'!')(seperate with comma ',')(max. 8 commands)");
+	gc_sCustomCommandCapitulation = AutoExecConfig_CreateConVar("sm_capitulation_cmds", "capi,capitulate,pardon,p", "Set your custom chat commands for Capitulation(!capitulation (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands)");
 	gc_fCapitulationTime = AutoExecConfig_CreateConVar("sm_capitulation_timer", "10.0", "Time to decide to accept the capitulation");
 	gc_fRebelTime = AutoExecConfig_CreateConVar("sm_capitulation_rebel_timer", "10.0", "Time to give a rebel on not accepted capitulation his knife back");
 	gc_bCapitulationDamage = AutoExecConfig_CreateConVar("sm_capitulation_damage", "1", "0 - disabled, 1 - enable Terror make no damage after capitulation");
@@ -174,7 +174,7 @@ public void Capitulation_OnConfigsExecuted()
 {
 	//Set custom Commands
 	int iCount = 0;
-	char sCommands[128], sCommandsL[8][32], sCommand[32];
+	char sCommands[128], sCommandsL[12][32], sCommand[32];
 	
 	//Capitulation
 	gc_sCustomCommandCapitulation.GetString(sCommands, sizeof(sCommands));

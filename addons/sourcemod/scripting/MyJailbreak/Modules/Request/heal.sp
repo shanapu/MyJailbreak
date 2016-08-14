@@ -71,7 +71,7 @@ public void Heal_OnPluginStart()
 	
 	//AutoExecConfig
 	gc_bHeal = AutoExecConfig_CreateConVar("sm_heal_enable", "1", "0 - disabled, 1 - enable heal");
-	gc_sCustomCommandHeal = AutoExecConfig_CreateConVar("sm_heal_cmds", "cure,h,ouch", "Set your custom chat command for Heal(!heal (no 'sm_'/'!')(seperate with comma ',')(max. 8 commands))");
+	gc_sCustomCommandHeal = AutoExecConfig_CreateConVar("sm_heal_cmds", "cure,h,ouch", "Set your custom chat command for Heal(!heal (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands))");
 	gc_bHealthShot = AutoExecConfig_CreateConVar("sm_heal_healthshot", "1", "0 - disabled, 1 - enable give healthshot on accept to terror");
 	gc_bHealthCheck = AutoExecConfig_CreateConVar("sm_heal_check", "1", "0 - disabled, 1 - enable check if player is already full health");
 	gc_iHealLimit = AutoExecConfig_CreateConVar("sm_heal_limit", "2", "Сount how many times you can use the command");
@@ -179,7 +179,7 @@ public void Heal_OnConfigsExecuted()
 {
 	//Set custom Commands
 	int iCount = 0;
-	char sCommands[128], sCommandsL[8][32], sCommand[32];
+	char sCommands[128], sCommandsL[12][32], sCommand[32];
 	
 	//Capitulation
 	gc_sCustomCommandHeal.GetString(sCommands, sizeof(sCommands));

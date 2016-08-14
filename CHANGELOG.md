@@ -1,5 +1,25 @@
 ### Change Log
   
+**[Beta x.x]** - develop
+  
+*Added*
+*  Myjailbreak: Shoot weapon on ground to remove it
+    *  new cvar - sm_warden_shootguns_enable - 0 - disabled, 1 - enable shoot guns on ground to remove
+    *  new cvar - sm_warden_shootguns_mode - 1 - only warden / 2 - warden & ct / 3 - all player
+  
+  
+*Changed*
+*  Commands: Add up to 12 custom commands to almost all myjailbreak command.
+    *  new cvar - sm_*PLUGINNAME*_cmds_*FEATURENAME* - Set your custom chat commands for *FEATURENAME*(no 'sm_'/'!')(seperate with comma ',')(max. 12 commands)
+    *  removed cvar - sm_*PLUGINNAME*_cmd - obsolete cvars. Please remove them from your configs!
+  
+  
+*Fixed*
+*  Warden - Icon: missing FastDL files
+  
+  
+  
+  
 **[Beta 7.1]** - smaller fixes
   
 *Fixed*

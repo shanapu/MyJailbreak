@@ -78,7 +78,7 @@ public void Refuse_OnPluginStart()
 	
 	//AutoExecConfig
 	gc_bRefuse = AutoExecConfig_CreateConVar("sm_refuse_enable", "1", "0 - disabled, 1 - enable Refuse");
-	gc_sCustomCommandRefuse = AutoExecConfig_CreateConVar("sm_refuse_cmds", "ref,r", "Set your custom chat commands for Refuse(!refuse (no 'sm_'/'!')(seperate with comma ',')(max. 8 commands))");
+	gc_sCustomCommandRefuse = AutoExecConfig_CreateConVar("sm_refuse_cmds", "ref,r", "Set your custom chat commands for Refuse(!refuse (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands))");
 	gc_bWardenAllowRefuse = AutoExecConfig_CreateConVar("sm_refuse_allow", "0", "0 - disabled, 1 - Warden must allow !refuse before T can use it");
 	gc_iRefuseLimit = AutoExecConfig_CreateConVar("sm_refuse_limit", "1", "Сount how many times you can use the command");
 	gc_fRefuseTime = AutoExecConfig_CreateConVar("sm_refuse_time", "5.0", "Time the player gets to refuse after warden open refuse with !refuse / colortime");
@@ -216,7 +216,7 @@ public void Refuse_OnConfigsExecuted()
 	
 	//Set custom Commands
 	int iCount = 0;
-	char sCommands[128], sCommandsL[8][32], sCommand[32];
+	char sCommands[128], sCommandsL[12][32], sCommand[32];
 	
 	//Refuse Game
 	gc_sCustomCommandRefuse.GetString(sCommands, sizeof(sCommands));

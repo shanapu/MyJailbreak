@@ -59,8 +59,8 @@ public void CellDoors_OnPluginStart()
 	
 	//AutoExecConfig
 	gc_bOpen = AutoExecConfig_CreateConVar("sm_warden_open_enable", "1", "0 - disabled, 1 - warden can open/close cells", _, true,  0.0, true, 1.0);
-	gc_sCustomCommandOpen = AutoExecConfig_CreateConVar("sm_warden_cmds_open", "o,unlock,cells", "Set your custom chat commands for open cells(!open (no 'sm_'/'!')(seperate with comma ',')(max. 8 commands)");
-	gc_sCustomCommandClose = AutoExecConfig_CreateConVar("sm_warden_cmds_close", "lock,shut", "Set your custom chat commands for close cells(!close (no 'sm_'/'!')(seperate with comma ',')(max. 8 commands)");
+	gc_sCustomCommandOpen = AutoExecConfig_CreateConVar("sm_warden_cmds_open", "o,unlock,cells", "Set your custom chat commands for open cells(!open (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands)");
+	gc_sCustomCommandClose = AutoExecConfig_CreateConVar("sm_warden_cmds_close", "lock,shut", "Set your custom chat commands for close cells(!close (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands)");
 	gc_hOpenTimer = AutoExecConfig_CreateConVar("sm_warden_open_time", "60", "Time in seconds for open doors on round start automaticly", _, true, 0.0); 
 	gc_bOpenTimer = AutoExecConfig_CreateConVar("sm_warden_open_time_enable", "1", "should doors open automatic 0- no 1 yes", _, true,  0.0, true, 1.0);
 	gc_bOpenTimerWarden = AutoExecConfig_CreateConVar("sm_warden_open_time_warden", "1", "should doors open automatic after sm_warden_open_time when there is a warden? needs sm_warden_open_time_enable 1", _, true,  0.0, true, 1.0);
@@ -162,7 +162,7 @@ public void CellDoors_OnConfigsExecuted()
 {
 	//Set custom Commands
 	int iCount = 0;
-	char sCommands[128], sCommandsL[8][32], sCommand[32];
+	char sCommands[128], sCommandsL[12][32], sCommand[32];
 	
 	//Open Cell doors
 	gc_sCustomCommandOpen.GetString(sCommands, sizeof(sCommands));

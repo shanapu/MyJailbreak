@@ -50,7 +50,7 @@ public void FriendlyFire_OnPluginStart()
 	
 	//AutoExecConfig
 	gc_bFF = AutoExecConfig_CreateConVar("sm_warden_ff", "1", "0 - disabled, 1 - enable switch ff for T ", _, true,  0.0, true, 1.0);
-	gc_sCustomCommandFF = AutoExecConfig_CreateConVar("sm_warden_cmds_ff", "isff,friendlyfire", "Set your custom chat commands for set/see friendly fire(!setff (no 'sm_'/'!')(seperate with comma ',')(max. 8 commands)");
+	gc_sCustomCommandFF = AutoExecConfig_CreateConVar("sm_warden_cmds_ff", "isff,friendlyfire", "Set your custom chat commands for set/see friendly fire(!setff (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands)");
 	
 	//Hooks
 	HookEvent("round_end", FriendlyFire_Event_RoundEnd);
@@ -122,7 +122,7 @@ public void FriendlyFire_OnConfigsExecuted()
 {
 	//Set custom Commands
 	int iCount = 0;
-	char sCommands[128], sCommandsL[8][32], sCommand[32];
+	char sCommands[128], sCommandsL[12][32], sCommand[32];
 	
 	//Friendly fire
 	gc_sCustomCommandFF.GetString(sCommands, sizeof(sCommands));

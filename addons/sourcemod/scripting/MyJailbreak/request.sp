@@ -98,7 +98,7 @@ public void OnPluginStart()
 	AutoExecConfig_CreateConVar("sm_request_version", PLUGIN_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_request_enable", "1", "0 - disabled, 1 - enable Request Plugin");
 	gc_bSounds = AutoExecConfig_CreateConVar("sm_request_sounds_enable", "1", "0 - disabled, 1 - enable sounds ", _, true,  0.0, true, 1.0);
-	gc_sCustomCommandRequest = AutoExecConfig_CreateConVar("sm_request_cmds", "req,requestmenu", "Set your custom chat command for requestmenu (!request (no 'sm_'/'!')(seperate with comma ',')(max. 8 commands))");
+	gc_sCustomCommandRequest = AutoExecConfig_CreateConVar("sm_request_cmds", "req,requestmenu", "Set your custom chat command for requestmenu (!request (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands))");
 	
 	
 	Refuse_OnPluginStart();
@@ -246,7 +246,7 @@ public void OnConfigsExecuted()
 	
 	//Set custom Commands
 	int iCount = 0;
-	char sCommands[128], sCommandsL[8][32], sCommand[32];
+	char sCommands[128], sCommandsL[12][32], sCommand[32];
 	
 	//request
 	gc_sCustomCommandRequest.GetString(sCommands, sizeof(sCommands));

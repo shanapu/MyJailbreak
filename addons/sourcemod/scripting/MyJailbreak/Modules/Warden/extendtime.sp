@@ -57,7 +57,7 @@ public void ExtendTime_OnPluginStart()
 	//AutoExecConfig
 	gc_bExtend = AutoExecConfig_CreateConVar("sm_warden_extend", "1", "0 - disabled, 1 - Allows the warden to extend the roundtime", _, true,  0.0, true, 1.0);
 	gc_iExtendLimit = AutoExecConfig_CreateConVar("sm_warden_extend_limit", "2", "How many time a warden can extend the round?", _, true,  1.0);
-	gc_sCustomCommandExtend = AutoExecConfig_CreateConVar("sm_warden_cmds_extend", "extendtime,moretime", "Set your custom chat commands for extend time.(!extend (no 'sm_'/'!')(seperate with comma ',')(max. 8 commands))");
+	gc_sCustomCommandExtend = AutoExecConfig_CreateConVar("sm_warden_cmds_extend", "extendtime,moretime", "Set your custom chat commands for extend time.(!extend (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands))");
 	
 	//Hooks
 	HookEvent("round_start", ExtendTime_Event_RoundStart);
@@ -186,7 +186,7 @@ public void ExtendTime_OnConfigsExecuted()
 {
 	//Set custom Commands
 	int iCount = 0;
-	char sCommands[128], sCommandsL[8][32], sCommand[32];
+	char sCommands[128], sCommandsL[12][32], sCommand[32];
 	
 	//extend time
 	gc_sCustomCommandExtend.GetString(sCommands, sizeof(sCommands));

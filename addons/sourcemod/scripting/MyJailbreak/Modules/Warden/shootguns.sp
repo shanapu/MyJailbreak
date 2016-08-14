@@ -42,7 +42,7 @@ ConVar gc_iShootGunsMode;
 public void ShootGuns_OnPluginStart()
 {
 	//AutoExecConfig
-	gc_bShootGuns = AutoExecConfig_CreateConVar("sm_warden_ _enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true,  0.0, true, 1.0);
+	gc_bShootGuns = AutoExecConfig_CreateConVar("sm_warden_shootguns_enable", "1", "0 - disabled, 1 - enable shoot guns on ground to remove", _, true,  0.0, true, 1.0);
 	gc_iShootGunsMode = AutoExecConfig_CreateConVar("sm_warden_shootguns_mode", "1", "1 - only warden / 2 - warden & ct / 3 - all player", _, true, 1.0, true, 3.0);
 	
 	

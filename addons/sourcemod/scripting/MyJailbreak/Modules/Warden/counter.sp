@@ -59,7 +59,7 @@ public void Counter_OnPluginStart()
 	gc_bCounter = AutoExecConfig_CreateConVar("sm_warden_counter", "1", "0 - disabled, 1 - Allow the warden count player in radius", _, true, 0.0, true, 1.0);
 	gc_fRadius = AutoExecConfig_CreateConVar("sm_warden_counter_radius", "30.0", "Radius in meter to count prisoners inside", _, true, 1.0);
 	gc_iCounterMode = AutoExecConfig_CreateConVar("sm_warden_counter_mode", "7", "1 - Show prisoner count in chat / 2 - Show prisoner count in HUD / 3 - Show prisoner count in chat & HUD / 4 - Show names in Menu / 5 - Show prisoner count in chat & show names in Menu / 6 - Show prisoner count in HUD & show names in Menu / 7 - Show prisoner count in chat & HUD & show names in Menu", _, true, 1.0, true, 7.0);
-	gc_sCustomCommandCounter = AutoExecConfig_CreateConVar("sm_warden_cmds_counter", "count,radius", "Set your custom chat command for counter.(!counter (no 'sm_'/'!')(seperate with comma ',')(max. 8 commands))");
+	gc_sCustomCommandCounter = AutoExecConfig_CreateConVar("sm_warden_cmds_counter", "count,radius", "Set your custom chat command for counter.(!counter (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands))");
 	
 }
 
@@ -145,7 +145,7 @@ public void Counter_OnConfigsExecuted()
 {
 	//Set custom Commands
 	int iCount = 0;
-	char sCommands[128], sCommandsL[8][32], sCommand[32];
+	char sCommands[128], sCommandsL[12][32], sCommand[32];
 	
 	//Capitulation
 	gc_sCustomCommandCounter.GetString(sCommands, sizeof(sCommands));

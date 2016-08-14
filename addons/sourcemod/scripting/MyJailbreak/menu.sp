@@ -143,10 +143,10 @@ public void OnPluginStart()
 	
 	AutoExecConfig_CreateConVar("sm_menu_version", PLUGIN_VERSION, "The version of the SourceMod plugin MyJailbreak - Menu", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_menu_enable", "1", "0 - disabled, 1 - enable jailbrek menu", _, true,  0.0, true, 1.0);
-	gc_sCustomCommandMenu = AutoExecConfig_CreateConVar("sm_menu_cmds_menu", "panel,menus,m", "Set your custom chat command for open menu(!menu (no 'sm_'/'!')(seperate with comma ',')(max. 8 commands))");
-	gc_sCustomCommandDays = AutoExecConfig_CreateConVar("sm_menu_cmds_days", "days,day,ed", "Set your custom chat command for open menu(!eventdays (no 'sm_'/'!')(seperate with comma ',')(max. 8 commands))");
-	gc_sCustomCommandSetDay = AutoExecConfig_CreateConVar("sm_menu_cmds_setday", "sd,setdays", "Set your custom chat command for open menu(!menu (no 'sm_'/'!')(seperate with comma ',')(max. 8 commands))");
-	gc_sCustomCommandVoting = AutoExecConfig_CreateConVar("sm_menu_cmds_voting", "vd,votedays", "Set your custom chat command for open menu(!menu (no 'sm_'/'!')(seperate with comma ',')(max. 8 commands))");
+	gc_sCustomCommandMenu = AutoExecConfig_CreateConVar("sm_menu_cmds_menu", "panel,menus,m", "Set your custom chat command for open menu(!menu (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands))");
+	gc_sCustomCommandDays = AutoExecConfig_CreateConVar("sm_menu_cmds_days", "days,day,ed", "Set your custom chat command for open menu(!eventdays (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands))");
+	gc_sCustomCommandSetDay = AutoExecConfig_CreateConVar("sm_menu_cmds_setday", "sd,setdays", "Set your custom chat command for open menu(!menu (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands))");
+	gc_sCustomCommandVoting = AutoExecConfig_CreateConVar("sm_menu_cmds_voting", "vd,votedays", "Set your custom chat command for open menu(!menu (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands))");
 	gc_bCTerror = AutoExecConfig_CreateConVar("sm_menu_ct", "1", "0 - disabled, 1 - enable ct jailbreak menu", _, true,  0.0, true, 1.0);
 	gc_bTerror = AutoExecConfig_CreateConVar("sm_menu_t", "1", "0 - disabled, 1 - enable t jailbreak menu", _, true,  0.0, true, 1.0);
 	gc_bWarden = AutoExecConfig_CreateConVar("sm_menu_warden", "1", "0 - disabled, 1 - enable warden jailbreak menu", _, true,  0.0, true, 1.0);
@@ -240,7 +240,7 @@ public void OnConfigsExecuted()
 	
 	//Set custom Commands
 	int iCount = 0;
-	char sCommands[128], sCommandsL[8][32], sCommand[32];
+	char sCommands[128], sCommandsL[12][32], sCommand[32];
 	
 	//Menu
 	gc_sCustomCommandMenu.GetString(sCommands, sizeof(sCommands));

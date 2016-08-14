@@ -60,7 +60,7 @@ public void MarkRebel_OnPluginStart()
 	
 	//AutoExecConfig
 	gc_bMarkRebel = AutoExecConfig_CreateConVar("sm_warden_mark_rebel", "1", "0 - disabled, 1 - enable allow warden to mark/unmark prisoner as rebel (hosties)", _, true,  0.0, true, 1.0);
-	gc_sCustomCommandRebel = AutoExecConfig_CreateConVar("sm_warden_cmds_rebel", "sr,srebel,setrebel,rebelmenu", "Set your custom chat commands for un/mark rebel(!markrebel (no 'sm_'/'!')(seperate with comma ',')(max. 8 commands)");
+	gc_sCustomCommandRebel = AutoExecConfig_CreateConVar("sm_warden_cmds_rebel", "sr,srebel,setrebel,rebelmenu", "Set your custom chat commands for un/mark rebel(!markrebel (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands)");
 	
 	
 	//FindConVar
@@ -261,7 +261,7 @@ public void Rebel_OnConfigsExecuted()
 {
 	//Set custom Commands
 	int iCount = 0;
-	char sCommands[128], sCommandsL[8][32], sCommand[32];
+	char sCommands[128], sCommandsL[12][32], sCommand[32];
 	
 	//Rebel
 	gc_sCustomCommandRebel.GetString(sCommands, sizeof(sCommands));

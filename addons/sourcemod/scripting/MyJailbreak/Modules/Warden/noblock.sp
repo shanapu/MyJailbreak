@@ -61,7 +61,7 @@ public void NoBlock_OnPluginStart()
 	//AutoExecConfig
 	gc_bNoBlock = AutoExecConfig_CreateConVar("sm_warden_noblock", "1", "0 - disabled, 1 - enable noblock toggle for warden", _, true,  0.0, true, 1.0);
 	gc_bNoBlockMode = AutoExecConfig_CreateConVar("sm_warden_noblock_mode", "1", "0 - collision only between CT & T, 1 - collision within a team.", _, true,  0.0, true, 1.0);
-	gc_sCustomCommandNoBlock = AutoExecConfig_CreateConVar("sm_warden_cmds_noblock", "block,unblock,collision", "Set your custom chat command for toggle no block (!noblock (no 'sm_'/'!')(seperate with comma ',')(max. 8 commands))");
+	gc_sCustomCommandNoBlock = AutoExecConfig_CreateConVar("sm_warden_cmds_noblock", "block,unblock,collision", "Set your custom chat command for toggle no block (!noblock (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands))");
 	
 	
 	//Hooks
@@ -132,7 +132,7 @@ public void NoBlock_OnConfigsExecuted()
 {
 	//Set custom Commands
 	int iCount = 0;
-	char sCommands[128], sCommandsL[8][32], sCommand[32];
+	char sCommands[128], sCommandsL[12][32], sCommand[32];
 	
 	//No Block
 	gc_sCustomCommandNoBlock.GetString(sCommands, sizeof(sCommands));

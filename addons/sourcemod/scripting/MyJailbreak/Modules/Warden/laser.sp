@@ -63,7 +63,7 @@ public void Laser_OnPluginStart()
 	//AutoExecConfig
 	gc_bLaser = AutoExecConfig_CreateConVar("sm_warden_laser", "1", "0 - disabled, 1 - enable Warden Laser Pointer with +E ", _, true,  0.0, true, 1.0);
 	gc_sAdminFlagLaser = AutoExecConfig_CreateConVar("sm_warden_laser_flag", "", "Set flag for admin/vip to get warden laser pointer. No flag = feature is available for all players!");
-	gc_sCustomCommandLaser = AutoExecConfig_CreateConVar("sm_warden_cmds_laser", "what,rep,again", "Set your custom chat command for Laser Pointer.(!laser (no 'sm_'/'!')(seperate with comma ',')(max. 8 commands))");
+	gc_sCustomCommandLaser = AutoExecConfig_CreateConVar("sm_warden_cmds_laser", "what,rep,again", "Set your custom chat command for Laser Pointer.(!laser (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands))");
 	
 	
 	//Hooks
@@ -176,7 +176,7 @@ public void Laser_OnConfigsExecuted()
 {
 	//Set custom Commands
 	int iCount = 0;
-	char sCommands[128], sCommandsL[8][32], sCommand[32];
+	char sCommands[128], sCommandsL[12][32], sCommand[32];
 	
 	//Repeat
 	gc_sCustomCommandLaser.GetString(sCommands, sizeof(sCommands));

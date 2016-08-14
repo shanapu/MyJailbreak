@@ -86,7 +86,7 @@ public void Countdown_OnPluginStart()
 	gc_bCountdownSounds = AutoExecConfig_CreateConVar("sm_warden_countdown_sounds_enable", "1", "0 - disabled, 1 - enable sounds ", _, true,  0.0, true, 1.0);
 	gc_sCountdownSoundStartPath = AutoExecConfig_CreateConVar("sm_warden_countdown_sounds_start", "music/MyJailbreak/start.mp3", "Path to the soundfile which should be played for a start countdown.");
 	gc_sCountdownSoundStopPath = AutoExecConfig_CreateConVar("sm_warden_countdown_sounds_stop", "music/MyJailbreak/stop.mp3", "Path to the soundfile which should be played for stop countdown.");
-	gc_sCustomCommandCD = AutoExecConfig_CreateConVar("sm_warden_cmds_countdown", "cd,countdown,timer", "Set your custom chat commands for countdown menu(!cdmenu (no 'sm_'/'!')(seperate with comma ',')(max. 8 commands)");
+	gc_sCustomCommandCD = AutoExecConfig_CreateConVar("sm_warden_cmds_countdown", "cd,countdown,timer", "Set your custom chat commands for countdown menu(!cdmenu (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands)");
 	
 	
 	//Hooks
@@ -320,7 +320,7 @@ public void Countdown_OnConfigsExecuted()
 {
 	//Set custom Commands
 	int iCount = 0;
-	char sCommands[128], sCommandsL[8][32], sCommand[32];
+	char sCommands[128], sCommandsL[12][32], sCommand[32];
 	
 	//Countdown
 	gc_sCustomCommandCD.GetString(sCommands, sizeof(sCommands));

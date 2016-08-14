@@ -70,7 +70,7 @@ public void Repeat_OnPluginStart()
 	
 	//AutoExecConfig
 	gc_bRepeat = AutoExecConfig_CreateConVar("sm_repeat_enable", "1", "0 - disabled, 1 - enable repeat");
-	gc_sCustomCommandRepeat = AutoExecConfig_CreateConVar("sm_repeat_cmds", "what,rep,again", "Set your custom chat command for Repeat.(!repeat (no 'sm_'/'!')(seperate with comma ',')(max. 8 commands))");
+	gc_sCustomCommandRepeat = AutoExecConfig_CreateConVar("sm_repeat_cmds", "what,rep,again", "Set your custom chat command for Repeat.(!repeat (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands))");
 	gc_iRepeatLimit = AutoExecConfig_CreateConVar("sm_repeat_limit", "2", "Сount how many times you can use the command");
 	gc_sSoundRepeatPath = AutoExecConfig_CreateConVar("sm_repeat_sound", "music/MyJailbreak/repeat.mp3", "Path to the soundfile which should be played for a repeat.");
 	gc_sAdminFlagRepeat = AutoExecConfig_CreateConVar("sm_repeat_flag", "a", "Set flag for admin/vip to get one more repeat. No flag = feature is available for all players!");
@@ -171,7 +171,7 @@ public void Repeat_OnConfigsExecuted()
 {
 	//Set custom Commands
 	int iCount = 0;
-	char sCommands[128], sCommandsL[8][32], sCommand[32];
+	char sCommands[128], sCommandsL[12][32], sCommand[32];
 	
 	//Repeat
 	gc_sCustomCommandRepeat.GetString(sCommands, sizeof(sCommands));
