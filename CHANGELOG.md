@@ -7,6 +7,8 @@
     *  new cvar - sm_warden_shootguns_enable - 0 - disabled, 1 - enable shoot guns on ground to remove
     *  new cvar - sm_warden_shootguns_mode - 1 - only warden / 2 - warden & ct / 3 - all player
 *  Ratio: Added one round cooldown for guard queue on wrong answer.
+*  Weapons: Kevlar & Helm for guards on roundstart except on event days
+    *  new cvar - sm_weapons_kevlar - 0 - disabled, 1 - CT get Kevlar & helm on Spawn
   
   
 *Changed*

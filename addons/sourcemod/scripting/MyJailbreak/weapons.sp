@@ -62,6 +62,7 @@ ConVar gc_bJBmenu;
 ConVar gc_bAWP;
 ConVar gc_bAutoSniper;
 ConVar gc_bHealth;
+ConVar gc_bKevlar;
 ConVar gc_sCustomCommandWeapon;
 
 
@@ -116,6 +117,7 @@ public void OnPluginStart()
 	gc_bAWP = AutoExecConfig_CreateConVar("sm_weapons_awp", "1", "0 - disabled, 1 - enable AWP in menu", _, true,  0.0, true, 1.0);
 	gc_bAutoSniper = AutoExecConfig_CreateConVar("sm_weapons_autosniper", "1", "0 - disabled, 1 - enable scar20 & g3sg1 in menu", _, true,  0.0, true, 1.0);
 	gc_bTA = AutoExecConfig_CreateConVar("sm_weapons_warden_tagrenade", "1", "0 - disabled, 1 - warden get a TA grenade with weapons", _, true,  0.0, true, 1.0);
+	gc_bKevlar = AutoExecConfig_CreateConVar("sm_weapons_kevlar", "1", "0 - disabled, 1 - CT get Kevlar & helm on Spawn", _, true,  0.0, true, 1.0);
 	gc_bHealth = AutoExecConfig_CreateConVar("sm_weapons_warden_healthshot", "1", "0 - disabled, 1 - warden get a healthshot with weapons", _, true,  0.0, true, 1.0);
 	gc_bJBmenu = AutoExecConfig_CreateConVar("sm_weapons_jbmenu", "1", "0 - disabled, 1 - enable autoopen the MyJailbreak !menu after weapon given.", _, true,  0.0, true, 1.0);
 	
@@ -157,7 +159,7 @@ public void OnConfigsExecuted()
 	int iCount = 0;
 	char sCommands[128], sCommandsL[12][32], sCommand[32];
 	
-	//Become warden
+	//weapons
 	gc_sCustomCommandWeapon.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
 	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
@@ -202,12 +204,21 @@ public Action Command_Weapons(int client,int args)
 //On Player Spawn
 public void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast)
 {
-	int clientIndex = GetClientOfUserId(event.GetInt("userid"));
+	int client = GetClientOfUserId(event.GetInt("userid"));
 	
-	KillAllTimer(clientIndex);
+	KillAllTimer(client);
 	if(gc_bSpawn.BoolValue)
 	{
-		Timers[clientIndex] = CreateTimer(1.0, Timer_GetWeapons, clientIndex);
+		Timers[client] = CreateTimer(1.0, Timer_GetWeapons, client);
+	}
+	
+	if(gc_bKevlar.BoolValue && (GetClientTeam(client) == CS_TEAM_CT) && !IsEventDayRunning() && !IsEventDayPlanned())
+	{
+		int iHelmet = FindSendPropInfo("CCSPlayer", "m_bHasHelmet");
+		int iKevlar = FindSendPropInfo("CCSPlayer", "m_ArmorValue");
+		
+		SetEntData(client, iHelmet, 1);
+		SetEntData(client, iKevlar, 100);
 	}
 }
 

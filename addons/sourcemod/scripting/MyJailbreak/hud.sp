@@ -89,7 +89,7 @@ public void OnConfigsExecuted()
 	int iCount = 0;
 	char sCommands[128], sCommandsL[12][32], sCommand[32];
 	
-	//Become warden
+	//HUd
 	gc_sCustomCommandHUD.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
 	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
@@ -108,7 +108,7 @@ public void OnConfigsExecuted()
 ******************************************************************************/
 
 
-//Become Warden
+//Toggle hud
 public Action Command_HUD(int client, int args)
 {
 	if(!g_bEnableHud[client])
