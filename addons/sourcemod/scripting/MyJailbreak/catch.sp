@@ -52,15 +52,19 @@ ConVar gc_bVote;
 ConVar gc_bSounds;
 ConVar gc_bOverlays;
 ConVar gc_bStayOverlay;
+ConVar gc_sOverlayStartPath;
 ConVar gc_iCooldownDay;
 ConVar gc_iCooldownStart;
 ConVar gc_iRoundTime;
+ConVar gc_fBeaconTime;
+ConVar gc_iFreezeTime;
 ConVar gc_sOverlayFreeze;
 ConVar gc_bSprintUse;
 ConVar gc_iSprintCooldown;
 ConVar gc_bSprint;
 ConVar gc_fSprintSpeed;
 ConVar gc_fSprintTime;
+ConVar gc_sSoundStartPath;
 ConVar gc_sSoundFreezePath;
 ConVar gc_sSoundUnFreezePath;
 ConVar gc_iRounds;
@@ -68,10 +72,12 @@ ConVar gc_sCustomCommandVote;
 ConVar gc_sCustomCommandSet;
 ConVar gc_sAdminFlag;
 ConVar gc_iCatchCount;
+ConVar gc_bAllowLR;
 
 
 //Extern Convars
 ConVar g_iMPRoundTime;
+ConVar g_iTerrorForLR;
 
 
 //Integers
@@ -82,11 +88,15 @@ int g_iRound;
 int ClientSprintStatus[MAXPLAYERS+1];
 int g_iCatchCounter[MAXPLAYERS+1];
 int g_iMaxRound;
+int g_iFreezeTime;
+int g_iTsLR;
 
 
 //Handles
 Handle SprintTimer[MAXPLAYERS+1];
 Handle CatchMenu;
+Handle FreezeTimer;
+Handle BeaconTimer;
 
 
 //Strings
@@ -96,6 +106,8 @@ char g_sHasVoted[1500];
 char g_sOverlayFreeze[256];
 char g_sEventsLogFile[PLATFORM_MAX_PATH];
 char g_sAdminFlag[32];
+char g_sSoundStartPath[256];
+char g_sOverlayStartPath[256];
 
 
 //Info
@@ -135,14 +147,18 @@ public void OnPluginStart()
 	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_catch_flag", "g", "Set flag for admin/vip to set this Event Day.");
 	gc_bVote = AutoExecConfig_CreateConVar("sm_catch_vote", "1", "0 - disabled, 1 - allow player to vote for catch", _, true, 0.0, true, 1.0);
 	gc_iCatchCount = AutoExecConfig_CreateConVar("sm_catch_count", "1", "How many times a terror can be catched before he get killed", _, true, 1.0);
+	gc_fBeaconTime = AutoExecConfig_CreateConVar("sm_catch_beacon_time", "240", "Time in seconds until the beacon turned on (set to 0 to disable)", _, true, 0.0);
 	gc_iRounds = AutoExecConfig_CreateConVar("sm_catch_rounds", "1", "Rounds to play in a row", _, true, 1.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_catch_roundtime", "5", "Round time in minutes for a single catch round", _, true, 1.0);
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_catch_cooldown_day", "3", "Rounds cooldown after a event until event can be start again", _, true, 0.0);
 	gc_iCooldownStart = AutoExecConfig_CreateConVar("sm_catch_cooldown_start", "3", "Rounds until event can be start after mapchange.", _, true, 0.0);
 	gc_bOverlays = AutoExecConfig_CreateConVar("sm_catch_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true, 0.0, true, 1.0);
+	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_catch_overlays_start", "overlays/MyJailbreak/start" , "Path to the start Overlay DONT TYPE .vmt or .vft");
 	gc_sOverlayFreeze = AutoExecConfig_CreateConVar("sm_catch_overlayfreeze_path", "overlays/MyJailbreak/freeze" , "Path to the Freeze Overlay DONT TYPE .vmt or .vft");
 	gc_bStayOverlay = AutoExecConfig_CreateConVar("sm_catch_stayoverlay", "1", "0 - overlays will removed after 3sec. , 1 - overlays will stay until unfreeze", _, true, 0.0, true, 1.0);
+	gc_iFreezeTime = AutoExecConfig_CreateConVar("sm_catch_trucetime", "15", "Time in seconds CTs are freezed", _, true, 0.0);
 	gc_bSounds = AutoExecConfig_CreateConVar("sm_catch_sounds_enable", "1", "0 - disabled, 1 - enable sounds ", _, true, 0.0, true, 1.0);
+	gc_sSoundStartPath = AutoExecConfig_CreateConVar("sm_catch_sounds_start", "music/MyJailbreak/start.mp3", "Path to the soundfile which should be played for a start.");
 	gc_sSoundFreezePath = AutoExecConfig_CreateConVar("sm_catch_sounds_freeze", "music/MyJailbreak/freeze.mp3", "Path to the soundfile which should be played on freeze.");
 	gc_sSoundUnFreezePath = AutoExecConfig_CreateConVar("sm_catch_sounds_unfreeze", "music/MyJailbreak/unfreeze.mp3", "Path to the soundfile which should be played on unfreeze.");
 	gc_bSprint = AutoExecConfig_CreateConVar("sm_catch_sprint_enable", "1", "0 - disabled, 1 - enable ShortSprint", _, true, 0.0, true, 1.0);
@@ -150,6 +166,7 @@ public void OnPluginStart()
 	gc_iSprintCooldown= AutoExecConfig_CreateConVar("sm_catch_sprint_cooldown", "10", "Time in seconds the player must wait for the next sprint", _, true, 0.0);
 	gc_fSprintSpeed = AutoExecConfig_CreateConVar("sm_catch_sprint_speed", "1.25", "Ratio for how fast the player will sprint", _, true, 1.01);
 	gc_fSprintTime = AutoExecConfig_CreateConVar("sm_catch_sprint_time", "3.0", "Time in seconds the player will sprint", _, true, 1.0);
+	gc_bAllowLR = AutoExecConfig_CreateConVar("sm_catch_allow_lr", "0" , "0 - disabled, 1 - enable LR for last round and end eventday", _, true, 0.0, true, 1.0);
 	
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
@@ -161,6 +178,8 @@ public void OnPluginStart()
 	HookEvent("round_end", Event_RoundEnd);
 	HookEvent("player_team", Event_PlayerTeam);
 	HookEvent("player_death", Event_PlayerTeam);
+	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
+	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
 	HookConVarChange(gc_sOverlayFreeze, OnSettingChanged);
 	HookConVarChange(gc_sSoundFreezePath, OnSettingChanged);
 	HookConVarChange(gc_sSoundUnFreezePath, OnSettingChanged);
@@ -170,7 +189,11 @@ public void OnPluginStart()
 	//FindConVar
 	g_iMaxRound = gc_iRounds.IntValue;
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
+	g_iFreezeTime = gc_iFreezeTime.IntValue;
 	g_iMPRoundTime = FindConVar("mp_roundtime");
+	g_iTerrorForLR = FindConVar("sm_hosties_lr_ts_max");
+	gc_sOverlayStartPath.GetString(g_sOverlayStartPath , sizeof(g_sOverlayStartPath));
+	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 	gc_sSoundFreezePath.GetString(g_sSoundFreezePath, sizeof(g_sSoundFreezePath));
 	gc_sSoundUnFreezePath.GetString(g_sSoundUnFreezePath, sizeof(g_sSoundUnFreezePath));
 	gc_sOverlayFreeze.GetString(g_sOverlayFreeze , sizeof(g_sOverlayFreeze));
@@ -202,12 +225,23 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 		strcopy(g_sOverlayFreeze, sizeof(g_sOverlayFreeze), newValue);
 		if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayFreeze);
 	}
+	else if(convar == gc_sSoundStartPath)
+	{
+		strcopy(g_sSoundStartPath, sizeof(g_sSoundStartPath), newValue);
+		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
+	}
+	else if(convar == gc_sOverlayStartPath)
+	{
+		strcopy(g_sOverlayStartPath, sizeof(g_sOverlayStartPath), newValue);
+		if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
+	}
 }
 
 
 //Initialize Plugin
 public void OnConfigsExecuted()
 {
+	g_iFreezeTime = gc_iFreezeTime.IntValue;
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iMaxRound = gc_iRounds.IntValue;
 	
@@ -380,6 +414,8 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		StartCatch = false;
 		SJD_OpenDoors();
 		
+		if (gc_fBeaconTime.FloatValue > 0.0) BeaconTimer = CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
+		
 		if (g_iRound > 0)
 			{
 				LoopClients(client)
@@ -397,11 +433,24 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 					
 					if (GetClientTeam(client) == CS_TEAM_CT)
 					{
-						SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", gc_fSprintSpeed.FloatValue);
+						SetEntityMoveType(client, MOVETYPE_NONE);
 					}
 				}
+				
+				//enable lr on last round
+				g_iTsLR = GetAliveTeamCount(CS_TEAM_T);
+				
+				if (gc_bAllowLR.BoolValue)
+				{
+					if ((g_iRound == g_iMaxRound) && (g_iTsLR > g_iTerrorForLR.IntValue))
+					{
+						SetCvar("sm_hosties_lr", 1);
+					}
+				}
+				
+				g_iFreezeTime--;
+				FreezeTimer = CreateTimer(1.0, Timer_StartEvent, _, TIMER_REPEAT);
 				CPrintToChatAll("%t %t", "catch_tag" ,"catch_rounds", g_iRound, g_iMaxRound);
-				CPrintToChatAll("%t %t", "catch_tag" , "catch_start");
 			}
 	}
 	else
@@ -437,6 +486,9 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 				StripAllPlayerWeapons(client);
 			}
 		}
+		
+		delete FreezeTimer;
+		delete BeaconTimer;
 		
 		if (winner == 2) PrintCenterTextAll("%t", "catch_twin_nc");
 		if (winner == 3) PrintCenterTextAll("%t", "catch_ctwin_nc");
@@ -591,6 +643,48 @@ public Action OnWeaponCanUse(int client, int weapon)
 }
 
 
+//Listen for Last Lequest
+public int OnAvailableLR(int Announced)
+{
+	if (IsCatch && gc_bAllowLR.BoolValue && (g_iTsLR > g_iTerrorForLR.IntValue))
+	{
+		LoopValidClients(client,false,true)
+		{
+			SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
+			ClientSprintStatus[client] = 0;
+			CreateTimer( 0.0, DeleteOverlay, client );
+			SetEntityRenderColor(client, 255, 255, 255, 0);
+			catched[client] = false;
+			SetEntityHealth(client, 100);
+			
+			StripAllPlayerWeapons(client);
+			if (GetClientTeam(client) == CS_TEAM_CT)
+			{
+				FakeClientCommand(client, "sm_guns");
+			}
+			GivePlayerItem(client, "weapon_knife");
+		}
+		
+		delete FreezeTimer;
+		delete BeaconTimer;
+		
+		if (g_iRound == g_iMaxRound)
+		{
+			IsCatch = false;
+			g_iRound = 0;
+			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
+			SetCvar("sm_hosties_lr", 1);
+			SetCvar("sm_weapons_enable", 1);
+			SetCvar("sm_warden_enable", 1);
+			
+			g_iMPRoundTime.IntValue = g_iOldRoundTime;
+			SetEventDayName("none");
+			SetEventDayRunning(false);
+			CPrintToChatAll("%t %t", "catch_tag" , "catch_end");
+		}
+	}
+}
+
 /******************************************************************************
                    FUNCTIONS
 ******************************************************************************/
@@ -661,6 +755,66 @@ public Action CheckStatus()
 		CreateTimer( 1.0, DeleteOverlay);
 	}
 	
+}
+
+
+/******************************************************************************
+                   TIMER
+******************************************************************************/
+
+
+//Start Timer
+public Action Timer_StartEvent(Handle timer)
+{
+	if (g_iFreezeTime > 1)
+	{
+		g_iFreezeTime--;
+		LoopClients(client) if (IsPlayerAlive(client))
+		{
+			if (GetClientTeam(client) == CS_TEAM_CT)
+			{
+				PrintCenterText(client,"%t", "catch_timetounfreeze_nc", g_iFreezeTime);
+			}
+			else if (GetClientTeam(client) == CS_TEAM_T)
+			{
+				PrintCenterText(client,"%t", "catch_timeuntilstart_nc", g_iFreezeTime);
+			}
+		}
+		return Plugin_Continue;
+	}
+	
+	g_iFreezeTime = gc_iFreezeTime.IntValue;
+	
+	if (g_iRound > 0)
+	{
+		LoopClients(client) if (IsPlayerAlive(client))
+		{
+			if (GetClientTeam(client) == CS_TEAM_CT)
+			{
+				SetEntityMoveType(client, MOVETYPE_WALK);
+				SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.4);
+			}
+			
+			PrintCenterText(client,"%t", "catch_start_nc");
+			if(gc_bOverlays.BoolValue) ShowOverlay(client, g_sOverlayStartPath, 2.0);
+			if(gc_bSounds.BoolValue)
+			{
+				EmitSoundToAllAny(g_sSoundStartPath);
+			}
+		}
+		CPrintToChatAll("%t %t", "catch_tag" , "catch_start");
+	}
+	FreezeTimer = null;
+	
+	return Plugin_Stop;
+}
+
+
+//Beacon Timer
+public Action Timer_BeaconOn(Handle timer)
+{
+	LoopValidClients(i,true,false) BeaconOn(i, 2.0);
+	BeaconTimer = null;
 }
 
 
