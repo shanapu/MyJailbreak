@@ -67,6 +67,7 @@ ConVar gc_iRounds;
 ConVar gc_sCustomCommandVote;
 ConVar gc_sCustomCommandSet;
 ConVar gc_sAdminFlag;
+ConVar gc_iCatchCount;
 
 
 //Extern Convars
@@ -79,6 +80,7 @@ int g_iOldRoundTime;
 int g_iCoolDown;
 int g_iRound;
 int ClientSprintStatus[MAXPLAYERS+1];
+int g_iCatchCounter[MAXPLAYERS+1];
 int g_iMaxRound;
 
 
@@ -115,7 +117,7 @@ public void OnPluginStart()
 	
 	
 	//Client Commands
-	RegConsoleCmd("sm_Command_SetCatch", Command_SetCatch, "Allows the Admin or Warden to set catch as next round");
+	RegConsoleCmd("sm_setcatch", Command_SetCatch, "Allows the Admin or Warden to set catch as next round");
 	RegConsoleCmd("sm_catch", Command_VoteCatch, "Allows players to vote for a catch ");
 	RegConsoleCmd("sm_sprint", Command_StartSprint, "Start sprinting!");
 	
@@ -132,6 +134,7 @@ public void OnPluginStart()
 	gc_bSetA = AutoExecConfig_CreateConVar("sm_catch_admin", "1", "0 - disabled, 1 - allow admin/vip to set catch round", _, true, 0.0, true, 1.0);
 	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_catch_flag", "g", "Set flag for admin/vip to set this Event Day.");
 	gc_bVote = AutoExecConfig_CreateConVar("sm_catch_vote", "1", "0 - disabled, 1 - allow player to vote for catch", _, true, 0.0, true, 1.0);
+	gc_iCatchCount = AutoExecConfig_CreateConVar("sm_catch_count", "1", "How many times a terror can be catched before he get killed", _, true, 1.0);
 	gc_iRounds = AutoExecConfig_CreateConVar("sm_catch_rounds", "1", "Rounds to play in a row", _, true, 1.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_catch_roundtime", "5", "Round time in minutes for a single catch round", _, true, 1.0);
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_catch_cooldown_day", "3", "Rounds cooldown after a event until event can be start again", _, true, 0.0);
@@ -389,9 +392,12 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 					SendPanelToClient(CatchMenu, client, Handler_NullCancel, 20);
 					PrintCenterText(client,"%t", "catch_start_nc");
 					
-					if (GetClientTeam(client) == CS_TEAM_T)
+					g_iCatchCounter[client] = 0;
+					catched[client] = false;
+					
+					if (GetClientTeam(client) == CS_TEAM_CT)
 					{
-						catched[client] = false;
+						SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", gc_fSprintSpeed.FloatValue);
 					}
 				}
 				CPrintToChatAll("%t %t", "catch_tag" ,"catch_rounds", g_iRound, g_iMaxRound);
@@ -533,7 +539,8 @@ public Action OnTakedamage(int victim, int &attacker, int &inflictor, float &dam
 	
 	if(GetClientTeam(victim) == CS_TEAM_T && GetClientTeam(attacker) == CS_TEAM_CT && !catched[victim])
 	{
-		CatchEm(victim, attacker);
+		if(g_iCatchCounter[victim] >= gc_iCatchCount.IntValue) ForcePlayerSuicide(victim);
+		else CatchEm(victim, attacker);
 		CheckStatus();
 	}
 	if(GetClientTeam(victim) == CS_TEAM_T && GetClientTeam(attacker) == CS_TEAM_T && catched[victim] && !catched[attacker])
@@ -614,6 +621,7 @@ public Action CatchEm(int client, int attacker)
 	SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 0.0);
 	SetEntityRenderColor(client, 0, 0, 205, 255);
 	catched[client] = true;
+	g_iCatchCounter[client]++; 
 	ShowOverlay(client, g_sOverlayFreeze, 0.0);
 	if(gc_bSounds.BoolValue)	
 	{
@@ -702,6 +710,7 @@ public Action Command_StartSprint(int client, int args)
 {
 	if (IsCatch)
 	{
+		if(GetClientTeam(client) == CS_TEAM_T)
 		{
 			if (catched[client] == false)
 			{
