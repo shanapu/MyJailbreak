@@ -228,7 +228,7 @@ public Action HandCuffs_OnPlayerRunCmd(int client, int &buttons, int &impulse, f
 				float distance = Entity_GetDistance(client, Target);
 				distance = Math_UnitsToMeters(distance);
 				
-				if(gc_iHandCuffsDistance.IntValue > distance)
+				if((gc_iHandCuffsDistance.IntValue > distance) && !Client_IsLookingAtWall(client, Entity_GetDistance(client, Target)+40.0))
 				{
 					float origin[3];
 					GetClientAbsOrigin(client, origin);
