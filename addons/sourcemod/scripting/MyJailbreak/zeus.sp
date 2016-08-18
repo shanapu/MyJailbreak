@@ -523,7 +523,7 @@ public int OnAvailableLR(int Announced)
 			StripAllPlayerWeapons(client);
 			if (GetClientTeam(client) == CS_TEAM_CT)
 			{
-				FakeClientCommand(client, "sm_guns");
+				FakeClientCommand(client, "sm_weapons");
 			}
 			GivePlayerItem(client, "weapon_knife");
 			

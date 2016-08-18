@@ -68,6 +68,9 @@ ConVar gc_sCustomCommandVote;
 ConVar gc_sCustomCommandSet;
 ConVar gc_sAdminFlag;
 ConVar gc_bAllowLR;
+
+
+//Extern Convars
 ConVar g_iTerrorForLR;
 
 
@@ -574,7 +577,7 @@ public int OnAvailableLR(int Announced)
 			StripAllPlayerWeapons(client);
 			if (GetClientTeam(client) == CS_TEAM_CT)
 			{
-				FakeClientCommand(client, "sm_guns");
+				FakeClientCommand(client, "sm_weapons");
 				SetEntityModel(client, g_sModelPathPrevious[client]);
 				SetEntityHealth(client, 100);
 			}

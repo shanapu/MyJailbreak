@@ -586,7 +586,7 @@ public int OnAvailableLR(int Announced)
 				FP(client);
 				if (GetClientTeam(client) == CS_TEAM_CT)
 				{
-					FakeClientCommand(client, "sm_guns");
+					FakeClientCommand(client, "sm_weapons");
 					SetEntityModel(client, g_sModelPathCTPrevious[client]);
 				}
 				

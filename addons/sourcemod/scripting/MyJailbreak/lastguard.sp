@@ -385,7 +385,7 @@ public Action StartLastGuard()
 			
 			if (gc_bFreeze.BoolValue) SetEntityMoveType(iClient, MOVETYPE_NONE);
 			
-		//	FakeClientCommand(iClient, "sm_guns");
+		//	FakeClientCommand(iClient, "sm_weapons");
 			
 			if(IsPlayerAlive(iClient) && GetClientTeam(iClient) == CS_TEAM_CT)
 			{
@@ -525,7 +525,7 @@ public Action Timer_TruceUntilStart(Handle timer)
 		{
 			EmitSoundToAllAny(g_sSoundStartPath);
 		}
-		FakeClientCommand(client, "sm_guns");
+		FakeClientCommand(client, "sm_weapons");
 	}
 	CPrintToChatAll("%t %t", "lastguard_tag" , "lastguard_start");
 	
