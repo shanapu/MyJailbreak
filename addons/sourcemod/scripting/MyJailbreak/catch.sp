@@ -26,6 +26,7 @@
 
 //Includes
 #include <myjailbreak> //... all other includes in myjailbreak.inc
+#include <CustomPlayerSkins>
 
 
 //Compiler Options
@@ -56,6 +57,7 @@ ConVar gc_sOverlayStartPath;
 ConVar gc_iCooldownDay;
 ConVar gc_iCooldownStart;
 ConVar gc_iRoundTime;
+ConVar gc_bWallhack;
 ConVar gc_fBeaconTime;
 ConVar gc_iFreezeTime;
 ConVar gc_sOverlayFreeze;
@@ -148,6 +150,7 @@ public void OnPluginStart()
 	gc_bVote = AutoExecConfig_CreateConVar("sm_catch_vote", "1", "0 - disabled, 1 - allow player to vote for catch", _, true, 0.0, true, 1.0);
 	gc_iCatchCount = AutoExecConfig_CreateConVar("sm_catch_count", "1", "How many times a terror can be catched before he get killed", _, true, 1.0);
 	gc_fBeaconTime = AutoExecConfig_CreateConVar("sm_catch_beacon_time", "240", "Time in seconds until the beacon turned on (set to 0 to disable)", _, true, 0.0);
+	gc_bWallhack = AutoExecConfig_CreateConVar("sm_catch_wallhack", "1", "0 - disabled, 1 - enable wallhack for CT to see freezed enemeys", _, true,  0.0, true, 1.0);
 	gc_iRounds = AutoExecConfig_CreateConVar("sm_catch_rounds", "1", "Rounds to play in a row", _, true, 1.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_catch_roundtime", "5", "Round time in minutes for a single catch round", _, true, 1.0);
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_catch_cooldown_day", "3", "Rounds cooldown after a event until event can be start again", _, true, 0.0);
@@ -156,7 +159,7 @@ public void OnPluginStart()
 	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_catch_overlays_start", "overlays/MyJailbreak/start" , "Path to the start Overlay DONT TYPE .vmt or .vft");
 	gc_sOverlayFreeze = AutoExecConfig_CreateConVar("sm_catch_overlayfreeze_path", "overlays/MyJailbreak/freeze" , "Path to the Freeze Overlay DONT TYPE .vmt or .vft");
 	gc_bStayOverlay = AutoExecConfig_CreateConVar("sm_catch_stayoverlay", "1", "0 - overlays will removed after 3sec. , 1 - overlays will stay until unfreeze", _, true, 0.0, true, 1.0);
-	gc_iFreezeTime = AutoExecConfig_CreateConVar("sm_catch_trucetime", "15", "Time in seconds CTs are freezed", _, true, 0.0);
+	gc_iFreezeTime = AutoExecConfig_CreateConVar("sm_catch_freezetime", "15", "Time in seconds CTs are freezed", _, true, 0.0);
 	gc_bSounds = AutoExecConfig_CreateConVar("sm_catch_sounds_enable", "1", "0 - disabled, 1 - enable sounds ", _, true, 0.0, true, 1.0);
 	gc_sSoundStartPath = AutoExecConfig_CreateConVar("sm_catch_sounds_start", "music/MyJailbreak/start.mp3", "Path to the soundfile which should be played for a start.");
 	gc_sSoundFreezePath = AutoExecConfig_CreateConVar("sm_catch_sounds_freeze", "music/MyJailbreak/freeze.mp3", "Path to the soundfile which should be played on freeze.");
@@ -485,6 +488,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			{
 				StripAllPlayerWeapons(client);
 			}
+			if(gc_bWallhack.BoolValue) UnhookWallhack(client);
 		}
 		
 		delete FreezeTimer;
@@ -660,9 +664,11 @@ public int OnAvailableLR(int Announced)
 			StripAllPlayerWeapons(client);
 			if (GetClientTeam(client) == CS_TEAM_CT)
 			{
-				FakeClientCommand(client, "sm_guns");
+				FakeClientCommand(client, "sm_weapons");
 			}
 			GivePlayerItem(client, "weapon_knife");
+			
+			if(gc_bWallhack.BoolValue) UnhookWallhack(client);
 		}
 		
 		delete FreezeTimer;
@@ -758,6 +764,85 @@ public Action CheckStatus()
 }
 
 
+//Perpare client for wallhack
+void Setup_WallhackSkin(int client)
+{
+	char sModel[PLATFORM_MAX_PATH];
+	GetClientModel(client, sModel, sizeof(sModel));
+	int iSkin = CPS_SetSkin(client, sModel, CPS_RENDER);
+	
+	if(iSkin == -1)
+		return;
+		
+	if (SDKHookEx(iSkin, SDKHook_SetTransmit, OnSetTransmit_Wallhack))
+		Setup_Wallhack(iSkin);
+}
+
+
+//set client wallhacked
+void Setup_Wallhack(int iSkin)
+{
+	int iOffset;
+	
+	if (!iOffset && (iOffset = GetEntSendPropOffs(iSkin, "m_clrGlow")) == -1)
+		return;
+	
+	SetEntProp(iSkin, Prop_Send, "m_bShouldGlow", true, true);
+	SetEntProp(iSkin, Prop_Send, "m_nGlowStyle", 0);
+	SetEntPropFloat(iSkin, Prop_Send, "m_flGlowMaxDist", 10000000.0);
+	
+	int iRed = 60;
+	int iGreen = 60;
+	int iBlue = 200;
+	
+	SetEntData(iSkin, iOffset, iRed, _, true);
+	SetEntData(iSkin, iOffset + 1, iGreen, _, true);
+	SetEntData(iSkin, iOffset + 2, iBlue, _, true);
+	SetEntData(iSkin, iOffset + 3, 255, _, true);
+}
+
+
+//Who can see wallhack if vaild
+public Action OnSetTransmit_Wallhack(int iSkin, int client)
+{
+	if(!IsPlayerAlive(client))
+		return Plugin_Handled;
+	
+	LoopClients(target)
+	{
+		if(!CPS_HasSkin(target))
+			continue;
+		
+		if(!catched[target])
+			continue;
+		
+		if(EntRefToEntIndex(CPS_GetSkin(target)) != iSkin)
+			continue;
+			
+		if (GetClientTeam(client) == CS_TEAM_CT)
+		
+		return Plugin_Continue;
+	}
+	
+	return Plugin_Handled;
+}
+
+
+//remove wallhack
+void UnhookWallhack(int client)
+{
+	if(IsValidClient(client, false, true))
+	{
+		char sModel[PLATFORM_MAX_PATH];
+		GetClientModel(client, sModel, sizeof(sModel));
+	//	SetEntProp(client, Prop_Send, "m_bShouldGlow", false, true);
+		SDKUnhook(client, SDKHook_SetTransmit, OnSetTransmit_Wallhack);
+	}
+}
+
+
+
+
 /******************************************************************************
                    TIMER
 ******************************************************************************/
@@ -801,6 +886,7 @@ public Action Timer_StartEvent(Handle timer)
 			{
 				EmitSoundToAllAny(g_sSoundStartPath);
 			}
+			if (gc_bWallhack.BoolValue) Setup_WallhackSkin(client);
 		}
 		CPrintToChatAll("%t %t", "catch_tag" , "catch_start");
 	}
