@@ -996,6 +996,10 @@ stock void FixTeamRatio()
 			client = GetRandomClientFromTeam(CS_TEAM_T, true);
 			CPrintToChatAll("%t %t", "ratio_tag", "ratio_random", client);
 		}
+		else
+		{
+			return;
+		}
 		
 		if(!IsValidClient(client,true,true))
 		{
