@@ -50,6 +50,7 @@ ConVar gc_bAdminBypass;
 ConVar gc_bForceTConnect;
 ConVar gc_iJoinMode;
 ConVar gc_ig_iQuestionTimes;
+ConVar gc_bBalanceRandom;
 
 
 //Booleans
@@ -121,6 +122,7 @@ public void OnPluginStart()
 	gc_iJoinMode = AutoExecConfig_CreateConVar("sm_ratio_join_mode", "1", "0 - instandly join ct/queue, no confirmation / 1 - confirm rules / 2 - Qualification questions", _, true,  0.0, true, 2.0);
 	gc_ig_iQuestionTimes = AutoExecConfig_CreateConVar("sm_ratio_questions", "3", "How many question a player have to answer before join ct/queue. need sm_ratio_join_mode 2", _, true,  1.0, true, 5.0);
 	gc_bAdminBypass = AutoExecConfig_CreateConVar("sm_ratio_vip_bypass", "1", "Bypass Admin/VIP though agreement / question", _, true,  0.0, true, 1.0);
+	gc_bBalanceRandom = AutoExecConfig_CreateConVar("sm_ratio_balance_random", "1", "Switch a random T, when nobody in queue to balance the teams.", _, true, 0.0, true, 1.0);
 	
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
@@ -989,7 +991,7 @@ stock void FixTeamRatio()
 			
 			CPrintToChatAll("%t %t", "ratio_tag", "ratio_find", client);
 		}
-		else
+		else if(gc_bBalanceRandom.BoolValue)
 		{
 			client = GetRandomClientFromTeam(CS_TEAM_T, true);
 			CPrintToChatAll("%t %t", "ratio_tag", "ratio_random", client);
