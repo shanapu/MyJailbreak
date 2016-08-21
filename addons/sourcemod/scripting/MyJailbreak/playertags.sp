@@ -81,7 +81,7 @@ public void OnPluginStart()
 	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_playertag_adminflag", "d", "Set the flag for admin");
 	gc_sVIPFlag = AutoExecConfig_CreateConVar("sm_playertag_vipflag", "t", "Set the flag for VIP");
 	gc_sVIP2Flag = AutoExecConfig_CreateConVar("sm_playertag_vip2flag", "a", "Set the flag for VIP2");
-	gc_bNoOverwrite = AutoExecConfig_CreateConVar("sm_playertag_overwrite", "1", "0 - only show tags for warden, admin & vip (no overwrite for prisionor & guards) 1 - enable tags for prisoner & guards,too", _, true,  0.0, true, 1.0);
+	gc_bNoOverwrite = AutoExecConfig_CreateConVar("sm_playertag_overwrite", "1", "0 - only show tags for warden, deputy, admin & vip (no overwrite for prisionor & guards) 1 - enable tags for prisoner & guards,too", _, true,  0.0, true, 1.0);
 	
 	
 	AutoExecConfig_ExecuteFile();
@@ -229,6 +229,34 @@ public int HandleTag(int client)
 						CS_SetClientClanTag(client, tags); 
 					}
 				}
+				else if (warden_deputy_isdeputy(client))
+				{
+					if (CheckVipFlag(client, g_sOwnerFlag))
+					{
+						Format(tags, sizeof(tags), "%t" ,"tags_DOWN", LANG_SERVER);
+						CS_SetClientClanTag(client, tags);
+					}
+					else if (CheckVipFlag(client, g_sAdminFlag))
+					{
+						Format(tags, sizeof(tags), "%t" ,"tags_DA", LANG_SERVER);
+						CS_SetClientClanTag(client, tags); 
+					}
+					else if (CheckVipFlag(client, g_sVIPFlag))
+					{
+						Format(tags, sizeof(tags), "%t" ,"tags_DVIP1", LANG_SERVER);
+						CS_SetClientClanTag(client, tags); 
+					}
+					else if (CheckVipFlag(client, g_sVIP2Flag))
+					{
+						Format(tags, sizeof(tags), "%t" ,"tags_DVIP2", LANG_SERVER);
+						CS_SetClientClanTag(client, tags); 
+					}
+					else if (gc_bNoOverwrite.BoolValue)
+					{
+						Format(tags, sizeof(tags), "%t" ,"tags_D", LANG_SERVER);
+						CS_SetClientClanTag(client, tags); 
+					}
+				}
 				else if (CheckVipFlag(client, g_sOwnerFlag))
 				{
 					Format(tags, sizeof(tags), "%t" ,"tags_CTOWN", LANG_SERVER);
@@ -322,6 +350,34 @@ public Action OnChatMessage(int &author, Handle recipients, char[] name, char[] 
 					else if (gc_bNoOverwrite.BoolValue)
 					{
 						Format(name, MAXLENGTH_NAME, "%t %s","tags_W_chat", name);
+						return Plugin_Changed;
+					}
+				}
+				else if (warden_deputy_isdeputy(author))
+				{
+					if (CheckVipFlag(author, g_sOwnerFlag))
+					{
+						Format(name, MAXLENGTH_NAME, "%t %s","tags_DOWN_chat", name);
+						return Plugin_Changed;
+					}
+					else if (CheckVipFlag(author, g_sAdminFlag))
+					{
+						Format(name, MAXLENGTH_NAME, "%t %s","tags_DA_chat", name);
+						return Plugin_Changed;
+					}
+					else if (CheckVipFlag(author, g_sVIPFlag))
+					{
+						Format(name, MAXLENGTH_NAME, "%t %s","tags_DVIP1_chat", name);
+						return Plugin_Changed;
+					}
+					else if (CheckVipFlag(author, g_sVIP2Flag))
+					{
+						Format(name, MAXLENGTH_NAME, "%t %s","tags_DVIP2_chat", name);
+						return Plugin_Changed;
+					}
+					else if (gc_bNoOverwrite.BoolValue)
+					{
+						Format(name, MAXLENGTH_NAME, "%t %s","tags_D_chat", name);
 						return Plugin_Changed;
 					}
 				}
