@@ -217,7 +217,7 @@ public void HandCuffs_Event_RoundEnd(Event event, const char[] name, bool dontBr
 
 public Action HandCuffs_OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
 {
-	if (buttons & IN_ATTACK2)
+	if ((buttons & IN_ATTACK2) && IsClientWarden(client) && gc_bPlugin.BoolValue)
 	{
 		if (gc_bHandCuff.BoolValue && (StrEqual(g_sEquipWeapon[client], "taser")))
 		{

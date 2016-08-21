@@ -35,6 +35,7 @@
 
 //Console Variables
 ConVar gc_bNoBlock;
+ConVar gc_bNoBlockDeputy;
 ConVar gc_bNoBlockMode;
 ConVar gc_sCustomCommandNoBlock;
 
@@ -60,6 +61,7 @@ public void NoBlock_OnPluginStart()
 	
 	//AutoExecConfig
 	gc_bNoBlock = AutoExecConfig_CreateConVar("sm_warden_noblock", "1", "0 - disabled, 1 - enable noblock toggle for warden", _, true,  0.0, true, 1.0);
+	gc_bNoBlockDeputy = AutoExecConfig_CreateConVar("sm_warden_noblock_deputy", "1", "0 - disabled, 1 - enable noblock toggle for deputy", _, true,  0.0, true, 1.0);
 	gc_bNoBlockMode = AutoExecConfig_CreateConVar("sm_warden_noblock_mode", "1", "0 - collision only between CT & T, 1 - collision within a team.", _, true,  0.0, true, 1.0);
 	gc_sCustomCommandNoBlock = AutoExecConfig_CreateConVar("sm_warden_cmds_noblock", "block,unblock,collision", "Set your custom chat command for toggle no block (!noblock (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands))");
 	
@@ -83,7 +85,7 @@ public Action Command_ToggleNoBlock(int client, int args)
 {
 	if (gc_bNoBlock.BoolValue) 
 	{
-		if (IsClientWarden(client))
+		if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bNoBlockDeputy.BoolValue))
 		{
 			if (!g_bNoBlock) 
 			{

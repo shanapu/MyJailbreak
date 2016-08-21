@@ -47,13 +47,16 @@ ConVar gc_sUnWarden;
 ConVar gc_sModelPathWarden;
 ConVar gc_bModel;
 ConVar gc_bBetterNotes;
-ConVar g_bMenuClose;
 ConVar gc_sCustomCommandWarden;
 ConVar gc_sCustomCommandUnWarden;
 ConVar gc_sCustomCommandVetoWarden;
 ConVar gc_sCustomCommandSetWarden;
 ConVar gc_sCustomCommandRemoveWarden;
 ConVar gc_fRandomTimer;
+
+
+//3rd party Convars
+ConVar g_bMenuClose;
 
 
 //Booleans
@@ -125,6 +128,7 @@ char g_sMyJBLogFile[PLATFORM_MAX_PATH];
 #include "MyJailbreak/Modules/Warden/rebel.sp"
 #include "MyJailbreak/Modules/Warden/counter.sp"
 #include "MyJailbreak/Modules/Warden/shootguns.sp"
+#include "MyJailbreak/Modules/Warden/deputy.sp"
 
 
 //Info
@@ -214,6 +218,7 @@ public void OnPluginStart()
 	MarkRebel_OnPluginStart();
 	Counter_OnPluginStart();
 	ShootGuns_OnPluginStart();
+	Deputy_OnPluginStart();
 	
 	
 	//AutoExecConfig
@@ -279,6 +284,7 @@ public void OnConfigsExecuted()
 	Countdown_OnConfigsExecuted();
 	ExtendTime_OnConfigsExecuted();
 	Counter_OnConfigsExecuted();
+	Deputy_OnConfigsExecuted();
 	
 	
 	//Set custom Commands
@@ -603,6 +609,7 @@ public void OnMapStart()
 	Icon_OnMapStart();
 	Laser_OnMapStart();
 	Painter_OnMapStart();
+	Deputy_OnMapStart();
 	
 	if(gc_bSounds.BoolValue)
 	{
@@ -656,6 +663,7 @@ public void OnClientDisconnect(int client)
 	Painter_OnClientDisconnect(client);
 	HandCuffs_OnClientDisconnect(client);
 	Icon_OnClientDisconnect(client);
+	Deputy_OnClientDisconnect(client);
 }
 
 
@@ -677,6 +685,7 @@ public void OnMapEnd()
 	Marker_OnMapEnd();
 	Laser_OnMapEnd();
 	Painter_OnMapEnd();
+	Deputy_OnMapEnd();
 }
 
 
@@ -694,13 +703,11 @@ public int OnAvailableLR(int Announced)
 // Check Keyboard Input for modules
 public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
 {
-	if(IsClientWarden(client) && gc_bPlugin.BoolValue)
-	{
-		HandCuffs_OnPlayerRunCmd(client, buttons, impulse, vel, angles, weapon);
-		Marker_OnPlayerRunCmd(client, buttons, impulse, vel, angles, weapon);
-		Laser_OnPlayerRunCmd(client, buttons, impulse, vel, angles, weapon);
-		Painter_OnPlayerRunCmd(client, buttons, impulse, vel, angles, weapon);
-	}
+	HandCuffs_OnPlayerRunCmd(client, buttons, impulse, vel, angles, weapon);
+	Marker_OnPlayerRunCmd(client, buttons, impulse, vel, angles, weapon);
+	Laser_OnPlayerRunCmd(client, buttons, impulse, vel, angles, weapon);
+	Painter_OnPlayerRunCmd(client, buttons, impulse, vel, angles, weapon);
+	
 	return Plugin_Continue;
 }
 
@@ -949,6 +956,12 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	CreateNative("warden_removed", Native_RemoveWarden);
 	CreateNative("warden_get", Native_GetWarden);
 	
+	CreateNative("warden_deputy_exist", Native_ExistDeputy);
+	CreateNative("warden_deputy_isdeputy", Native_IsDeputy);
+	CreateNative("warden_deputy_set", Native_SetDeputy);
+	CreateNative("warden_deputy_removed", Native_RemoveDeputy);
+	CreateNative("warden_deputy_get", Native_GetDeputy);
+	
 	RegPluginLibrary("warden");
 	return APLRes_Success;
 }
@@ -1062,6 +1075,7 @@ void Forward_OnWardenRemoved(int client)
 	Color_OnWardenRemoved(client);
 	Laser_OnWardenRemoved(client);
 	Painter_OnWardenRemoved(client);
+	Deputy_OnWardenRemoved(client);
 }
 
 

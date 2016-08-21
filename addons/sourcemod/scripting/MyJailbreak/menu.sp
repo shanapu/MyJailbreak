@@ -94,6 +94,9 @@ ConVar g_bOpen;
 ConVar g_bRandom;
 ConVar g_bRequest;
 ConVar g_bWarden;
+ConVar g_bDeputy;
+ConVar g_bDeputySet;
+ConVar g_bDeputyBecome;
 ConVar g_bWardenCount;
 ConVar g_bWardenRebel;
 ConVar g_bSparks;
@@ -191,6 +194,9 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 public void OnConfigsExecuted()
 {
 	g_bWarden = FindConVar("sm_warden_enable");
+	g_bDeputy = FindConVar("sm_warden_deputy_enable");
+	g_bDeputySet = FindConVar("sm_warden_deputy_set");
+	g_bDeputyBecome = FindConVar("sm_warden_deputy_become");
 	g_bWardenCount = FindConVar("sm_warden_counter");
 	g_bWardenRebel = FindConVar("sm_warden_mark_rebel");
 	g_bRules = FindConVar("sm_hosties_rules_enable");
@@ -396,6 +402,14 @@ public Action Command_OpenMenu(int client, int args)
 							mainmenu.AddItem("cellclose", menuinfo);
 						}
 					}
+					if(g_bDeputy != null && g_bDeputySet != null)
+					{
+						if(g_bDeputy.BoolValue && g_bDeputySet.BoolValue && !warden_deputy_exist())
+						{
+							Format(menuinfo, sizeof(menuinfo), "%T", "menu_deputyset", client);
+							mainmenu.AddItem("setdeputy", menuinfo);
+						}
+					}
 					if(g_bCountdown != null)
 					{
 						if(g_bCountdown.BoolValue)
@@ -558,8 +572,18 @@ public Action Command_OpenMenu(int client, int args)
 								Format(menuinfo, sizeof(menuinfo), "%T", "menu_getwarden", client);
 								mainmenu.AddItem("getwarden", menuinfo);
 							}
+							
+						}
+						if(g_bDeputy != null && g_bDeputyBecome != null)
+						{
+							if(warden_exist() && g_bDeputy.BoolValue && g_bDeputyBecome.BoolValue && !warden_deputy_exist())
+							{
+								Format(menuinfo, sizeof(menuinfo), "%T", "menu_deputybecome", client);
+								mainmenu.AddItem("becomedeputy", menuinfo);
+							}
 						}
 					}
+					
 					char EventDay[64];
 					GetEventDayName(EventDay);
 					
@@ -772,6 +796,10 @@ public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selec
 		{
 			FakeClientCommand(client, "sm_setday");
 		}
+		else if ( strcmp(info,"setdeputy") == 0 ) 
+		{
+			FakeClientCommand(client, "sm_deputy");
+		}
 		else if ( strcmp(info,"count") == 0 ) 
 		{
 			FakeClientCommand(client, "sm_count");
@@ -837,6 +865,14 @@ public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selec
 		else if ( strcmp(info,"sparks") == 0 ) 
 		{
 			FakeClientCommand(client, "sm_sparks");
+			if(!gc_bClose.BoolValue)
+			{
+				Command_OpenMenu(client,0);
+			}
+		}
+		else if ( strcmp(info,"becomedeputy") == 0 ) 
+		{
+			FakeClientCommand(client, "sm_deputy");
 			if(!gc_bClose.BoolValue)
 			{
 				Command_OpenMenu(client,0);

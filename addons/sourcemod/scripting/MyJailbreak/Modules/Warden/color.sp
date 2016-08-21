@@ -38,6 +38,9 @@ ConVar gc_bColor;
 ConVar gc_iWardenColorRed;
 ConVar gc_iWardenColorGreen;
 ConVar gc_iWardenColorBlue;
+ConVar gc_iDeputyColorRed;
+ConVar gc_iDeputyColorGreen;
+ConVar gc_iDeputyColorBlue;
 ConVar gc_bWardenColorRandom;
 
 
@@ -50,6 +53,9 @@ public void Color_OnPluginStart()
 	gc_iWardenColorRed = AutoExecConfig_CreateConVar("sm_warden_color_red", "0","What color to turn the warden into (set R, G and B values to 255 to disable) (Rgb): x - red value", _, true, 0.0, true, 255.0);
 	gc_iWardenColorGreen = AutoExecConfig_CreateConVar("sm_warden_color_green", "0","What color to turn the warden into (rGb): x - green value", _, true, 0.0, true, 255.0);
 	gc_iWardenColorBlue = AutoExecConfig_CreateConVar("sm_warden_color_blue", "255","What color to turn the warden into (rgB): x - blue value", _, true, 0.0, true, 255.0);
+	gc_iDeputyColorRed = AutoExecConfig_CreateConVar("sm_warden_color_red_deputy", "0","What color to turn the deputy into (set R, G and B values to 255 to disable) (Rgb): x - red value", _, true, 0.0, true, 255.0);
+	gc_iDeputyColorGreen = AutoExecConfig_CreateConVar("sm_warden_color_green_deputy", "0","What color to turn the deputy into (rGb): x - green value", _, true, 0.0, true, 255.0);
+	gc_iDeputyColorBlue = AutoExecConfig_CreateConVar("sm_warden_color_blue_deputy", "255","What color to turn the deputy into (rgB): x - blue value", _, true, 0.0, true, 255.0);
 }
 
 
@@ -69,6 +75,17 @@ public void Color_OnWardenRemoved(int client)
 	CreateTimer(0.1, Timer_RemoveColor, client);
 }
 
+public void Color_OnDeputyCreation(int client)
+{
+	CreateTimer(1.0, Timer_WardenFixColor, client, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
+}
+
+
+public void Color_OnDeputyRemoved(int client)
+{
+	CreateTimer(0.1, Timer_RemoveColor, client);
+}
+
 
 /******************************************************************************
                    TIMER
@@ -79,13 +96,14 @@ public Action Timer_WardenFixColor(Handle timer,any client)
 {
 	if(IsValidClient(client, false, false))
 	{
-		if(IsClientWarden(client))
+		if(IsClientWarden(client) || IsClientDeputy(client))
 		{
 			if(gc_bPlugin.BoolValue)
 			{
 				if(gc_bColor.BoolValue)
 				{
-					if(gc_bWardenColorRandom.BoolValue)
+					if(IsClientDeputy(client)) SetEntityRenderColor(client, gc_iDeputyColorRed.IntValue, gc_iDeputyColorGreen.IntValue, gc_iDeputyColorBlue.IntValue, 255);
+					else if(gc_bWardenColorRandom.BoolValue)
 					{
 						int i = GetRandomInt(1, 7);
 						SetEntityRenderColor(client, g_iColors[i][0], g_iColors[i][1], g_iColors[i][2], g_iColors[i][3]);

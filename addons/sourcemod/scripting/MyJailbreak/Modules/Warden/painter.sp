@@ -39,6 +39,8 @@
 
 //Console Variables
 ConVar gc_bPainter;
+ConVar gc_bPainterDeputy;
+ConVar gc_bPainterTDeputy;
 ConVar gc_bPainterT;
 ConVar gc_sAdminFlagPainter;
 ConVar gc_sCustomCommandPainter;
@@ -72,8 +74,10 @@ public void Painter_OnPluginStart()
 	
 	//AutoExecConfig
 	gc_bPainter = AutoExecConfig_CreateConVar("sm_warden_painter", "1", "0 - disabled, 1 - enable Warden Painter with +E ", _, true,  0.0, true, 1.0);
+	gc_bPainterDeputy = AutoExecConfig_CreateConVar("sm_warden_painter_deputy", "1", "0 - disabled, 1 - enable 'Warden Painter'-feature for deputy", _, true,  0.0, true, 1.0);
 	gc_sAdminFlagPainter = AutoExecConfig_CreateConVar("sm_warden_painter_flag", "", "Set flag for admin/vip to get warden painter access. No flag = feature is available for all players!");
 	gc_bPainterT= AutoExecConfig_CreateConVar("sm_warden_painter_terror", "1", "0 - disabled, 1 - allow Warden to toggle Painter for Terrorist ", _, true,  0.0, true, 1.0);
+	gc_bPainterTDeputy= AutoExecConfig_CreateConVar("sm_warden_painter_terror_deputy", "1", "0 - disabled, 1 - allow Deputy to toggle Painter for Terrorist ", _, true,  0.0, true, 1.0);
 	gc_sCustomCommandPainter = AutoExecConfig_CreateConVar("sm_warden_cmds_painter", "paint,draw", "Set your custom chat commands for Painter menu(!painter (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands))");
 	
 	
@@ -107,7 +111,7 @@ public Action Command_PainterMenu(int client, int args)
 {
 	if(gc_bPainter.BoolValue && CheckVipFlag(client,g_sAdminFlagPainter))
 	{
-		if ((IsClientWarden(client)) || ((GetClientTeam(client) == CS_TEAM_T) && g_bPainterT))
+		if ((IsClientWarden(client)) || (IsClientDeputy(client) && gc_bPainterDeputy.BoolValue) || ((GetClientTeam(client) == CS_TEAM_T) && g_bPainterT))
 		{
 			if(CheckVipFlag(client,g_sAdminFlagPainter) || (GetClientTeam(client) == CS_TEAM_T))
 			{
@@ -206,7 +210,7 @@ public void Painter_OnConfigsExecuted()
 
 public Action Painter_OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
 {
-	if((IsClientWarden(client) && gc_bPainter.BoolValue && g_bPainter[client] && CheckVipFlag(client,g_sAdminFlagPainter)) || ((GetClientTeam(client) == CS_TEAM_T) && gc_bPainter.BoolValue && g_bPainterT))
+	if((IsClientWarden(client) && gc_bPainter.BoolValue && g_bPainter[client] && CheckVipFlag(client,g_sAdminFlagPainter)) || ((GetClientTeam(client) == CS_TEAM_T) && gc_bPainter.BoolValue && g_bPainterT) || (IsClientDeputy(client) && gc_bPainterDeputy.BoolValue))
 	{
 		for (int i = 0; i < MAX_BUTTONS; i++)
 		{
@@ -250,7 +254,7 @@ public void Painter_OnMapEnd()
 		g_bPainterUse[i] = false;
 		g_bPainter[i] = false;
 		
-		if(IsClientWarden(i)) g_bPainterT = false;
+		if(IsClientWarden(i) || (IsClientDeputy(i) && gc_bPainterDeputy.BoolValue)) g_bPainterT = false;
 		if(g_bPainter[i]) g_bPainter[i] = false;
 	}
 }
@@ -277,7 +281,7 @@ public void Painter_OnWardenRemoved(int client)
 
 public void Painter_OnClientDisconnect(int client)
 {
-	if(IsClientWarden(client)) g_bPainterT = false;
+	if(IsClientWarden(client) || (IsClientDeputy(client) && gc_bPainterDeputy.BoolValue)) g_bPainterT = false;
 	g_iLastButtons[client] = 0;
 }
 
@@ -291,7 +295,7 @@ public Action TogglePainterT(int client, int args)
 {
 	if (gc_bPainterT.BoolValue) 
 	{
-		if (IsClientWarden(client))
+		if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bPainterDeputy.BoolValue && gc_bPainterTDeputy.BoolValue))
 		{
 			if (!g_bPainterT) 
 			{

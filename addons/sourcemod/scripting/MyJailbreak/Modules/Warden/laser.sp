@@ -35,6 +35,7 @@
 
 //Console Variables
 ConVar gc_bLaser;
+ConVar gc_bLaserDeputy;
 ConVar gc_sAdminFlagLaser;
 ConVar gc_sCustomCommandLaser;
 
@@ -62,6 +63,7 @@ public void Laser_OnPluginStart()
 	
 	//AutoExecConfig
 	gc_bLaser = AutoExecConfig_CreateConVar("sm_warden_laser", "1", "0 - disabled, 1 - enable Warden Laser Pointer with +E ", _, true,  0.0, true, 1.0);
+	gc_bLaserDeputy = AutoExecConfig_CreateConVar("sm_warden_laser_deputy", "1", "0 - disabled, 1 - enable Laser Pointer for Deputy", _, true,  0.0, true, 1.0);
 	gc_sAdminFlagLaser = AutoExecConfig_CreateConVar("sm_warden_laser_flag", "", "Set flag for admin/vip to get warden laser pointer. No flag = feature is available for all players!");
 	gc_sCustomCommandLaser = AutoExecConfig_CreateConVar("sm_warden_cmds_laser", "what,rep,again", "Set your custom chat command for Laser Pointer.(!laser (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands))");
 	
@@ -93,7 +95,7 @@ public Action Command_LaserMenu(int client, int args)
 {
 	if(gc_bLaser.BoolValue)
 	{
-		if (IsClientWarden(client))
+		if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bLaserDeputy.BoolValue))
 		{
 			if(CheckVipFlag(client,g_sAdminFlagLaser))
 			{
@@ -142,7 +144,7 @@ public Action Command_LaserMenu(int client, int args)
 
 public Action Laser_OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
 {
-	if((buttons & IN_USE))
+	if((buttons & IN_USE) && (IsClientWarden(client) || (IsClientDeputy(client) && gc_bLaserDeputy.BoolValue)) && gc_bPlugin.BoolValue)
 	{
 		if (gc_bLaser.BoolValue && CheckVipFlag(client,g_sAdminFlagLaser))
 		{

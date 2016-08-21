@@ -135,6 +135,16 @@
 		"en"		"Become The Warden"
 	}
 
+	"menu_deputybecome"
+	{
+		"en"		"Become Wardens Deputy"
+	}
+
+	"menu_deputyset"
+	{
+		"en"		"Set your Deputy"
+	}
+
 	"menu_joint"
 	{
 		"en"		"Become a Prisoner"
