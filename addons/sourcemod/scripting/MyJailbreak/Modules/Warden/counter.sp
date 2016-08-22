@@ -20,7 +20,7 @@
 
 
 /******************************************************************************
-                   STARTUP
+					STARTUP
 ******************************************************************************/
 
 
@@ -37,7 +37,6 @@
 ConVar gc_bCounter;
 ConVar gc_iCounterMode;
 ConVar gc_sCustomCommandCounter;
-ConVar gc_fRadius;
 
 
 //Boolean
@@ -52,20 +51,19 @@ float g_fDistance[MAXPLAYERS+1];
 public void Counter_OnPluginStart()
 {
 	//Client commands
-	RegConsoleCmd("sm_count", Command_Counter, "Allows a warden to count all terrorists in radius");
+	RegConsoleCmd("sm_count", Command_Counter, "Allows a warden to count all terrorists in sight");
 	
 	
 	//AutoExecConfig
-	gc_bCounter = AutoExecConfig_CreateConVar("sm_warden_counter", "1", "0 - disabled, 1 - Allow the warden count player in radius", _, true, 0.0, true, 1.0);
-	gc_fRadius = AutoExecConfig_CreateConVar("sm_warden_counter_radius", "30.0", "Radius in meter to count prisoners inside", _, true, 1.0);
+	gc_bCounter = AutoExecConfig_CreateConVar("sm_warden_counter", "1", "0 - disabled, 1 - Allow the warden count player in sight", _, true, 0.0, true, 1.0);
 	gc_iCounterMode = AutoExecConfig_CreateConVar("sm_warden_counter_mode", "7", "1 - Show prisoner count in chat / 2 - Show prisoner count in HUD / 3 - Show prisoner count in chat & HUD / 4 - Show names in Menu / 5 - Show prisoner count in chat & show names in Menu / 6 - Show prisoner count in HUD & show names in Menu / 7 - Show prisoner count in chat & HUD & show names in Menu", _, true, 1.0, true, 7.0);
-	gc_sCustomCommandCounter = AutoExecConfig_CreateConVar("sm_warden_cmds_counter", "count,radius", "Set your custom chat command for counter.(!counter (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands))");
+	gc_sCustomCommandCounter = AutoExecConfig_CreateConVar("sm_warden_cmds_counter", "count,sight", "Set your custom chat command for counter.(!counter (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands))");
 	
 }
 
 
 /******************************************************************************
-                   COMMANDS
+					COMMANDS
 ******************************************************************************/
 
 
@@ -92,7 +90,7 @@ public Action Command_Counter(int client, any args)
 					
 					float distance = GetVectorDistance(clientOrigin, wardenOrigin, false);
 					
-					if(distance <= (gc_fRadius.FloatValue/0.01905)) //meter to units
+					if(ClientViews(client, i))
 					{
 						counter++;
 						g_bCounted[i] = true;
@@ -137,7 +135,7 @@ public Action Command_Counter(int client, any args)
 
 
 /******************************************************************************
-                   FORWARDS LISTENING
+					FORWARDS LISTENING
 ******************************************************************************/
 
 
@@ -156,9 +154,59 @@ public void Counter_OnConfigsExecuted()
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
 		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
-			RegConsoleCmd(sCommand, Command_Counter, "Allows a warden to count all terrorists in radius");
+			RegConsoleCmd(sCommand, Command_Counter, "Allows a warden to count all terrorists in sight");
 	}
 }
 
+
+/******************************************************************************
+					STOCKS
+******************************************************************************/
+
+
+stock bool ClientViews(int viewer,int target, float fMaxDistance=0.0, float fThreshold=0.73)
+{
+	// Retrieve view and target eyes position
+	float fViewPos[3];   GetClientEyePosition(viewer, fViewPos);
+	float fViewAng[3];   GetClientEyeAngles(viewer, fViewAng);
+	float fViewDir[3];
+	float fTargetPos[3]; GetClientEyePosition(target, fTargetPos);
+	float fTargetDir[3];
+	float fDistance[3];
+	
+	// Calculate view direction
+	fViewAng[0] = fViewAng[2] = 0.0;
+	GetAngleVectors(fViewAng, fViewDir, NULL_VECTOR, NULL_VECTOR);
+	
+	// Calculate distance to viewer to see if it can be seen.
+	fDistance[0] = fTargetPos[0]-fViewPos[0];
+	fDistance[1] = fTargetPos[1]-fViewPos[1];
+	fDistance[2] = 0.0;
+	if (fMaxDistance != 0.0)
+	{
+		if (((fDistance[0]*fDistance[0])+(fDistance[1]*fDistance[1])) >= (fMaxDistance*fMaxDistance))
+			return false;
+	}
+	
+	// Check dot product. If it's negative, that means the viewer is facing
+	// backwards to the target.
+	NormalizeVector(fDistance, fTargetDir);
+	if (GetVectorDotProduct(fViewDir, fTargetDir) < fThreshold) return false;
+	
+	// Now check if there are no obstacles in between through raycasting
+	Handle hTrace = TR_TraceRayFilterEx(fViewPos, fTargetPos, MASK_PLAYERSOLID_BRUSHONLY, RayType_EndPoint, ClientViewsFilter);
+	if (TR_DidHit(hTrace)) { CloseHandle(hTrace); return false; }
+	CloseHandle(hTrace);
+	
+	// Done, it's visible
+	return true;
+}
+
+
+public bool ClientViewsFilter(int Entity, int Mask, any Junk)
+{
+	if (Entity >= 1 && Entity <= MaxClients) return false;
+	return true;
+}
 
 

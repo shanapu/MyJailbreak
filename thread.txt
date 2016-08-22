@@ -1827,7 +1827,7 @@ native warden_get(client);
 
 
 [B][U]Credits:[/U][/B]
-used code & stuff from: [B]ecca, Zipcore, ESK0, Floody.de, Franc1sco, databomb, walmar, KeepCalm, bara, Arkarr, KissLick, headline, MasterOfTheXP, Hipster, ReFlexPoison, 8guawong, Mitchell, Xines, Jackmaster, Impact123, Kaesar, andi67[/B] and many other I cant remember, unfortunately!
+used code & stuff from: [B]ecca, Zipcore, ESK0, Floody.de, Franc1sco, databomb, walmar, KeepCalm, bara, Arkarr, KissLick, headline, MasterOfTheXP, Damizean,Hipster, ReFlexPoison, 8guawong, Mitchell, Xines, Jackmaster, Impact123, Kaesar, andi67[/B] and many other I cant remember, unfortunately!
 Also thanks to all sourcemod & metamod developers out there!
 [SPOILER]
 based/merged/used code/idea plugins:
@@ -1851,6 +1851,7 @@ based/merged/used code/idea plugins:
 * [url]https://forums.alliedmods.net/showthread.php?t=188799[/url]
 * [url]https://forums.alliedmods.net/showthread.php?t=189956[/url]
 * [url]https://forums.alliedmods.net/showthread.php?t=188773[/url]
+* [url]https://forums.alliedmods.net/showpost.php?p=973411&postcount=4[/url]
 * [url]https://forums.alliedmods.net/showpost.php?p=2393733&postcount=12[/url]
 * [url]https://forums.alliedmods.net/showthread.php?p=1965643[/url]
 * [url]https://forums.alliedmods.net/showpost.php?p=2231099&postcount=22[/url]

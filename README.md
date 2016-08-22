@@ -142,7 +142,7 @@ https://github.com/shanapu/MyJailbreak/blob/master/CHANGELOG.md
 ---
   
 ***Credits:***
-used code & stuff from: **ecca, Zipcore, ESK0, Floody.de, Franc1sco, walmar, KeepCalm, bara, Arkarr, KissLick, headline, MasterOfTheXP, Hipster, ReFlexPoison, 8guawong, Mitchell, Xines, Jackmaster, Impact123, Kaesar, andi67** and many other I cant remember unfortunately!
+used code & stuff from: **ecca, Zipcore, ESK0, Floody.de, Franc1sco, walmar, KeepCalm, bara, Arkarr, KissLick, Damizean, headline, MasterOfTheXP, Hipster, ReFlexPoison, 8guawong, Mitchell, Xines, Jackmaster, Impact123, Kaesar, andi67** and many other I cant remember unfortunately!
 Also thanks to all sourcemod & metamod developers out there!
   
 based/merged/used code/idea plugins:  
@@ -170,6 +170,7 @@ based/merged/used code/idea plugins:
 * https://forums.alliedmods.net/showpost.php?p=2393733&postcount=12
 * https://forums.alliedmods.net/showthread.php?p=1965643
 * https://forums.alliedmods.net/showpost.php?p=2231099&postcount=22
+* https://forums.alliedmods.net/showpost.php?p=973411&postcount=4
 + https://github.com/Zipcore/Timer/ (sound)
 * https://git.tf/TTT/Plugin (sound)
 * https://forums.alliedmods.net/showthread.php?t=262170 (model)

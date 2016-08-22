@@ -414,7 +414,7 @@
 
 	"menu_count"
 	{
-		"en"		"Count nearby Prisoner"
+		"en"		"Count Prisoner in sight"
 		"ru"		"Посчитать заключённых"
 	}
 

@@ -1286,14 +1286,14 @@
 
 	"warden_info_counter"
 	{
-		"en"		"Prisoner in Radius:"
+		"en"		"Prisoner in sight:"
 		"ru"		"Заключённые в строю:"
 	}
 
 	"warden_counter"
 	{
 		"#format"   "{1:i}"
-		"en"		"There are {1} prisoner in your radius"
+		"en"		"There are {1} prisoner in your view"
 		"ru"		"В строю {1} заключённых"
 	}
 
