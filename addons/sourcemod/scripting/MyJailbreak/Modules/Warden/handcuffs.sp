@@ -35,6 +35,7 @@
 
 //Console Variables
 ConVar gc_bHandCuff;
+ConVar gc_bHandCuffDeputy;
 ConVar gc_iHandCuffsNumber;
 ConVar gc_iHandCuffsDistance;
 ConVar gc_bHandCuffLR;
@@ -73,6 +74,7 @@ public void HandCuffs_OnPluginStart()
 {
 	//AutoExecConfig
 	gc_bHandCuff = AutoExecConfig_CreateConVar("sm_warden_handcuffs", "1", "0 - disabled, 1 - enable handcuffs", _, true,  0.0, true, 1.0);
+	gc_bHandCuffDeputy = AutoExecConfig_CreateConVar("sm_warden_handcuffs_deputy", "1", "0 - disabled, 1 - enable handcuffs for deputy, too", _, true,  0.0, true, 1.0);
 	gc_iHandCuffsNumber = AutoExecConfig_CreateConVar("sm_warden_handcuffs_number", "2", "How many handcuffs a warden got?", _, true,  1.0);
 	gc_iHandCuffsDistance = AutoExecConfig_CreateConVar("sm_warden_handcuffs_distance", "2", "How many meters distance from warden to handcuffed T to pick up?", _, true,  1.0);
 	gc_bHandCuffLR = AutoExecConfig_CreateConVar("sm_warden_handcuffs_lr", "1", "0 - disabled, 1 - free cuffed terrorists on LR", _, true,  0.0, true, 1.0);
@@ -92,7 +94,8 @@ public void HandCuffs_OnPluginStart()
 	//Hooks
 	HookEvent("round_start", HandCuffs_Event_RoundStart);
 	HookEvent("round_end", HandCuffs_Event_RoundEnd);
-	HookEvent("player_death", HandCuffs_Event_PlayerDeath);
+	HookEvent("player_death", HandCuffs_Event_PlayerTeamDeath);
+	HookEvent("player_team", HandCuffs_Event_PlayerTeamDeath);
 	HookEvent("item_equip", HandCuffs_Event_ItemEquip);
 	HookEvent("weapon_fire", HandCuffs_Event_WeaponFire);
 	HookConVarChange(gc_sSoundCuffsPath, HandCuffs_OnSettingChanged);
@@ -147,9 +150,10 @@ public int HandCuffs_OnSettingChanged(Handle convar, const char[] oldValue, cons
 
 public void HandCuffs_Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
-	if(gc_bStayWarden.BoolValue && g_iWarden != -1)
+	if(gc_bHandCuff.BoolValue && !IsLR && gc_bStayWarden.BoolValue)
 	{
-		if (gc_bHandCuff.BoolValue && !IsLR) GivePlayerItem(g_iWarden, "weapon_taser");
+		if (g_iWarden != -1) GivePlayerItem(g_iWarden, "weapon_taser");
+		if (g_iDeputy != -1) GivePlayerItem(g_iDeputy, "weapon_taser");
 	}
 	g_iCuffed = 0;
 	
@@ -169,11 +173,11 @@ public void HandCuffs_Event_ItemEquip(Event event, const char[] name, bool dontB
 	event.GetString("item", weapon, sizeof(weapon));
 	g_sEquipWeapon[client] = weapon;
 	
-	if (StrEqual(weapon, "taser") && warden_iswarden(client) && (g_iPlayerHandCuffs[client] != 0)) PrintCenterText(client, "%t", "warden_cuffs");
+	if (StrEqual(weapon, "taser") && (IsClientWarden(client) || (IsClientDeputy(client) && gc_bHandCuffDeputy.BoolValue)) && (g_iPlayerHandCuffs[client] != 0)) PrintCenterText(client, "%t", "warden_cuffs");
 }
 
 
-public void HandCuffs_Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast) 
+public void HandCuffs_Event_PlayerTeamDeath(Event event, const char[] name, bool dontBroadcast) 
 {
 	int client = GetClientOfUserId(event.GetInt("userid")); // Get the dead clients id
 	
@@ -192,7 +196,7 @@ public void HandCuffs_Event_WeaponFire(Event event, char [] name, bool dontBroad
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));
 	
-	if(gc_bPlugin.BoolValue && gc_bHandCuff.BoolValue && warden_iswarden(client) && ((g_iPlayerHandCuffs[client] != 0) || ((g_iPlayerHandCuffs[client] == 0) && (g_iCuffed > 0))))
+	if(gc_bPlugin.BoolValue && gc_bHandCuff.BoolValue && (IsClientWarden(client) || (IsClientDeputy(client) && gc_bHandCuffDeputy.BoolValue)) && ((g_iPlayerHandCuffs[client] != 0) || ((g_iPlayerHandCuffs[client] == 0) && (g_iCuffed > 0))))
 	{
 		char sWeapon[64];
 		event.GetString("weapon", sWeapon, sizeof(sWeapon));
@@ -217,7 +221,7 @@ public void HandCuffs_Event_RoundEnd(Event event, const char[] name, bool dontBr
 
 public Action HandCuffs_OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
 {
-	if ((buttons & IN_ATTACK2) && IsClientWarden(client) && gc_bPlugin.BoolValue)
+	if ((buttons & IN_ATTACK2) && (IsClientWarden(client) || (IsClientDeputy(client) && gc_bHandCuffDeputy.BoolValue)) && gc_bPlugin.BoolValue)
 	{
 		if (gc_bHandCuff.BoolValue && (StrEqual(g_sEquipWeapon[client], "taser")))
 		{
@@ -259,7 +263,7 @@ public Action HandCuffs_OnTakedamage(int victim, int &attacker, int &inflictor, 
 	
 	if(g_bCuffed[attacker]) return Plugin_Handled;
 	
-	if(!gc_bPlugin.BoolValue || !gc_bHandCuff.BoolValue || !warden_iswarden(attacker) || !IsValidEdict(weapon) || (!gc_bHandCuffCT.BoolValue && (GetClientTeam(victim) == CS_TEAM_CT)))
+	if(!gc_bPlugin.BoolValue || !gc_bHandCuff.BoolValue || (!IsClientWarden(attacker) || (!IsClientDeputy(attacker) && gc_bHandCuffDeputy.BoolValue)) || !IsValidEdict(weapon) || (!gc_bHandCuffCT.BoolValue && (GetClientTeam(victim) == CS_TEAM_CT)))
 	{
 		return Plugin_Continue;
 	}
@@ -285,19 +289,31 @@ public void HandCuffs_OnAvailableLR(int Announced)
 		g_iPlayerHandCuffs[i] = 0;
 		if(gc_bHandCuffLR.BoolValue && g_bCuffed[i]) FreeEm(i, 0);
 	}
-	StripZeus(g_iWarden);
+	StripZeus();
 }
 
 
-public void warden_OnWardenCreated(int client)
+public void HandCuffs_OnWardenCreation(int client)
 {
 	if (gc_bHandCuff.BoolValue && !IsLR) GivePlayerItem(client, "weapon_taser");
 }
 
 
-public void warden_OnWardenRemoved(int client)
+public void HandCuffs_OnWardenRemoved(int client)
 {
-	StripZeus(g_iWarden);
+	StripZeus();
+}
+
+
+public void HandCuffs_OnDeputyCreation(int client)
+{
+	if (gc_bHandCuff.BoolValue && !IsLR) GivePlayerItem(client, "weapon_taser");
+}
+
+
+public void HandCuffs_OnDeputyRemoved(int client)
+{
+	StripZeus();
 }
 
 
@@ -438,9 +454,9 @@ public Action BreakTheseCuffs(Handle timer, int client)
 ******************************************************************************/
 
 
-stock int StripZeus(int client)
+stock void StripZeus()
 {
-	if(IsValidClient(client, true, false))
+	LoopValidClients(client, true, false)if((IsClientWarden(client) || (IsClientDeputy(client) && gc_bHandCuffDeputy.BoolValue)))
 	{
 		char sWeapon[64];
 		FakeClientCommand(client,"use weapon_taser");

@@ -1042,6 +1042,7 @@ void Forward_OnWardenCreated(int client)
 	Color_OnWardenCreation(client);
 	Laser_OnWardenCreation(client);
 	Painter_OnWardenCreation(client);
+	HandCuffs_OnWardenCreation(client);
 }
 
 
@@ -1076,6 +1077,7 @@ void Forward_OnWardenRemoved(int client)
 	Laser_OnWardenRemoved(client);
 	Painter_OnWardenRemoved(client);
 	Deputy_OnWardenRemoved(client);
+	HandCuffs_OnWardenRemoved(client);
 }
 
 

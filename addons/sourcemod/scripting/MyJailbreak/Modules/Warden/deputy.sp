@@ -598,6 +598,7 @@ void Forward_OnDeputyCreated(int client)
 	
 	Color_OnDeputyCreation(client);
 	Icon_OnDeputyCreation(client);
+	HandCuffs_OnDeputyCreation(client);
 }
 
 
@@ -610,5 +611,6 @@ void Forward_OnDeputyRemoved(int client)
 	
 	Color_OnDeputyRemoved(client);
 	Icon_OnDeputyRemoved(client);
+	HandCuffs_OnDeputyRemoved(client);
 }
 
