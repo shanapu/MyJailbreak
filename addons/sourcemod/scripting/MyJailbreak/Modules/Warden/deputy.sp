@@ -351,7 +351,7 @@ public void Deputy_OnMapEnd()
 }
 
 
-//Deputy disconnect
+//warden removed
 public void Deputy_OnWardenRemoved(int client)
 {
 	if(g_iDeputy != -1)
@@ -361,15 +361,20 @@ public void Deputy_OnWardenRemoved(int client)
 }
 
 
-//Deputy disconnect
+//warden retire
+public void Deputy_OnWardenRemovedBySelf(int client)
+{
+	if(g_iDeputy != -1)
+	{
+		if(gc_bWardenDead.BoolValue) CreateTimer (0.5, Timer_DeputyNewWarden);
+	}
+}
+
+
+//New warden
 public void Deputy_OnWardenCreation(int client)
 {
-	if(IsClientDeputy(client))
-	{
-		Forward_OnDeputyRemoved(client);
-		
-		CreateTimer(5.0, Timer_NoDeputy);
-	}
+	CreateTimer(10.0, Timer_NoDeputy);
 }
 
 

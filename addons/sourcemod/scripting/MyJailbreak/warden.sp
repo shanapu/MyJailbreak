@@ -1096,6 +1096,8 @@ void Forward_OnWardenRemovedBySelf(int client)
 	Call_StartForward(gF_OnWardenRemovedBySelf);
 	Call_PushCell(client);
 	Call_Finish();
+	
+	Deputy_OnWardenRemovedBySelf(client);
 }
 
 
