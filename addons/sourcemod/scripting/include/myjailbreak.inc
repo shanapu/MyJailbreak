@@ -442,6 +442,21 @@ stock int GetRandomAlivePlayer()
 }
 
 
+//Get last alive player of a team
+stock int GetLastAlive(int team)
+{
+	int clientCount = 0;
+	int client;
+	
+	LoopValidClients(i,true,false) if(GetClientTeam(i) == team)
+	{
+		clientCount++;
+		client = i;
+	}
+	return (clientCount > 1) ? -1 : client;
+}
+
+
 //Get a player for a certain admin flag
 stock bool CheckVipFlag(int client, const char[] flagsNeed)
 {
