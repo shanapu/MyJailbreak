@@ -121,7 +121,7 @@ public Action Command_PainterMenu(int client, int args)
 				Format(menuinfo, sizeof(menuinfo), "%T", "warden_painter_title", client);
 				menu.SetTitle(menuinfo);
 				Format(menuinfo, sizeof(menuinfo), "%T", "warden_painter_off", client);
-				menu.AddItem("off", menuinfo);
+				if(g_bPainter[client] == true) menu.AddItem("off", menuinfo);
 				Format(menuinfo, sizeof(menuinfo), "%T", "warden_paintert", client);
 				if (GetClientTeam(client) == CS_TEAM_CT) menu.AddItem("terror", menuinfo);
 				Format(menuinfo, sizeof(menuinfo), "%T", "warden_rainbow", client);

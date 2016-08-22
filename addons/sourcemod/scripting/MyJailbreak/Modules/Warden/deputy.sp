@@ -197,13 +197,13 @@ public Action Command_ExitDeputy(int client, int args)
 		}
 		else if(IsClientWarden(client))  //Is client the deputy
 		{
-			RemoveTheDeputy();
 			
-			CPrintToChatAll("%t %t", "warden_tag" , "warden_deputy_removed", client);
+			CPrintToChatAll("%t %t", "warden_tag" , "warden_deputy_fired", client, g_iDeputy);
 			if(gc_bBetterNotes.BoolValue)
 			{
-				PrintCenterTextAll("%t", "warden_deputy_removed_nc", client);
+				PrintCenterTextAll("%t", "warden_deputy_fired_nc", client, g_iDeputy);
 			}
+			RemoveTheDeputy();
 		}
 		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
 	}
@@ -597,6 +597,7 @@ void Forward_OnDeputyCreated(int client)
 	Call_Finish();
 	
 	Color_OnDeputyCreation(client);
+	Icon_OnDeputyCreation(client);
 }
 
 
@@ -608,5 +609,6 @@ void Forward_OnDeputyRemoved(int client)
 	Call_Finish();
 	
 	Color_OnDeputyRemoved(client);
+	Icon_OnDeputyRemoved(client);
 }
 

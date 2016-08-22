@@ -1348,18 +1348,18 @@
 		"de"		"{1} ist zurückgetreten. Wir brauchen einen neuen Deputy!"
 	}
 
-	"warden_deputy_removed_nc"
+	"warden_deputy_fired_nc"
 	{
 		"#format"   "{1:N},{2:N}"
-		"de"		"Admin {1} hat Deputy {2} seines Amtes enthoben."
-		"en"		"Admin: {1} has Fired the Deputy: {2}"
+		"de"		"Warden {1} hat Deputy {2} seines Amtes enthoben."
+		"en"		"Warden: {1} has Fired the Deputy: {2}"
 	}
 
-	"warden_deputy_removed"
+	"warden_deputy_fired"
 	{
 		"#format"   "{1:N},{2:N}"
-		"de"		"Admin: {purple}{1}{default} hat Deputy {purple}{2}{default} seines Amtes enthoben."
-		"en"		"Admin: {purple}{1}{default} has Fired the Deputy: {purple}{2}"
+		"de"		"Warden: {purple}{1}{default} hat Deputy {purple}{2}{default} seines Amtes enthoben."
+		"en"		"Warden: {purple}{1}{default} has Fired the Deputy: {purple}{2}"
 	}
 
 	"warden_deputy_dead_nc"

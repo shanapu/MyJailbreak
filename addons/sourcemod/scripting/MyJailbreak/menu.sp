@@ -434,15 +434,10 @@ public Action Command_OpenMenu(int client, int args)
 					}
 					if(g_bDeputy != null && g_bDeputySet != null)
 					{
-						if(g_bDeputy.BoolValue && g_bDeputySet.BoolValue && !warden_deputy_exist())
+						if(g_bDeputy.BoolValue && g_bDeputySet.BoolValue && !warden_deputy_exist() && (GetAliveTeamCount(CS_TEAM_CT) > 1))
 						{
 							Format(menuinfo, sizeof(menuinfo), "%T", "menu_deputyset", client);
 							mainmenu.AddItem("setdeputy", menuinfo);
-						}
-						if(g_bDeputy.BoolValue && g_bDeputySet.BoolValue && warden_deputy_exist())
-						{
-							Format(menuinfo, sizeof(menuinfo), "%T", "menu_removedeputy", client);
-							mainmenu.AddItem("undeputy", menuinfo);
 						}
 					}
 					if(g_bCountdown != null)
@@ -573,6 +568,14 @@ public Action Command_OpenMenu(int client, int args)
 						{
 							Format(menuinfo, sizeof(menuinfo), "%T", "menu_randomdead", client);
 							mainmenu.AddItem("kill", menuinfo);
+						}
+					}
+					if(g_bDeputy != null && g_bDeputySet != null)
+					{
+						if(g_bDeputy.BoolValue && g_bDeputySet.BoolValue && warden_deputy_exist())
+						{
+							Format(menuinfo, sizeof(menuinfo), "%T", "menu_removedeputy", client);
+							mainmenu.AddItem("undeputy", menuinfo);
 						}
 					}
 					Format(menuinfo, sizeof(menuinfo), "%T", "menu_unwarden", client);

@@ -90,7 +90,7 @@ public Action Command_BulletSparks(int client, int args)
 	{
 		if(gc_bBulletSparks.BoolValue)
 		{
-			if (IsClientWarden(client))
+			if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bBulletSparksDeputy.BoolValue))
 			{
 				if(CheckVipFlag(client,g_sAdminFlagBulletSparks))
 				{
@@ -132,7 +132,7 @@ public Action BulletSparks_Event_BulletImpact(Handle hEvent, char [] sName, bool
 	startpos[2] = GetEventFloat(hEvent, "z");
 	
 	if(warden_iswarden(client))TE_SetupSparks(startpos, dir, 2500, 500);
-	if(warden_deputy_isdeputy(client))TE_SetupSparks(startpos, dir, 1200, 300);
+	if(warden_deputy_isdeputy(client))TE_SetupSparks(startpos, dir, 1500, 300);
 	
 	TE_SendToAll();
 

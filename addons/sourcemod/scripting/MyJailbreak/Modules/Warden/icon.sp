@@ -162,6 +162,18 @@ public void Icon_OnWardenRemoved(int client)
 }
 
 
+public void Icon_OnDeputyCreation(int client)
+{
+	CreateTimer(0.1, Timer_Delay);
+}
+
+
+public void Icon_OnDeputyRemoved(int client)
+{
+	CreateTimer(0.1, Timer_Delay);
+}
+
+
 public Action Timer_Delay(Handle timer, Handle pack)
 {
 	LoopValidClients(i,true,false) SpawnIcon(i);
