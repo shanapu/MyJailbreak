@@ -54,7 +54,7 @@ public void Color_OnPluginStart()
 	gc_iWardenColorGreen = AutoExecConfig_CreateConVar("sm_warden_color_green", "0","What color to turn the warden into (rGb): x - green value", _, true, 0.0, true, 255.0);
 	gc_iWardenColorBlue = AutoExecConfig_CreateConVar("sm_warden_color_blue", "255","What color to turn the warden into (rgB): x - blue value", _, true, 0.0, true, 255.0);
 	gc_iDeputyColorRed = AutoExecConfig_CreateConVar("sm_warden_color_red_deputy", "0","What color to turn the deputy into (set R, G and B values to 255 to disable) (Rgb): x - red value", _, true, 0.0, true, 255.0);
-	gc_iDeputyColorGreen = AutoExecConfig_CreateConVar("sm_warden_color_green_deputy", "0","What color to turn the deputy into (rGb): x - green value", _, true, 0.0, true, 255.0);
+	gc_iDeputyColorGreen = AutoExecConfig_CreateConVar("sm_warden_color_green_deputy", "155","What color to turn the deputy into (rGb): x - green value", _, true, 0.0, true, 255.0);
 	gc_iDeputyColorBlue = AutoExecConfig_CreateConVar("sm_warden_color_blue_deputy", "255","What color to turn the deputy into (rgB): x - blue value", _, true, 0.0, true, 255.0);
 }
 

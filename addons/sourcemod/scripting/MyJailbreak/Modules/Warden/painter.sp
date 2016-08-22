@@ -302,21 +302,21 @@ public Action TogglePainterT(int client, int args)
 				g_bPainterT = true;
 				CPrintToChatAll("%t %t", "warden_tag", "warden_tpainteron");
 				
-				LoopValidClients(iClient, false, true)
+				LoopValidClients(i, false, true)
 				{
-					if (GetClientTeam(iClient) == CS_TEAM_T) Command_PainterMenu(iClient,0);
+					if (GetClientTeam(i) == CS_TEAM_T) Command_PainterMenu(i,0);
 				}
 			}
 			else
 			{
-				LoopValidClients(iClient, false, true)
+				LoopValidClients(i, false, true)
 				{
-					if (GetClientTeam(iClient) == CS_TEAM_T)
+					if (GetClientTeam(i) == CS_TEAM_T)
 					{
-						g_fLastPainter[iClient][0] = 0.0;
-						g_fLastPainter[iClient][1] = 0.0;
-						g_fLastPainter[iClient][2] = 0.0;
-						g_bPainterUse[iClient] = false;
+						g_fLastPainter[i][0] = 0.0;
+						g_fLastPainter[i][1] = 0.0;
+						g_fLastPainter[i][2] = 0.0;
+						g_bPainterUse[i] = false;
 					}
 				}
 				g_bPainterT = false;

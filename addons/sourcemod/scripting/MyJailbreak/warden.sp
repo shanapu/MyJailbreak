@@ -106,6 +106,7 @@ char g_sMyJBLogFile[PLATFORM_MAX_PATH];
 
 
 //Modules
+#include "MyJailbreak/Modules/Warden/deputy.sp"
 #include "MyJailbreak/Modules/Warden/mute.sp"
 #include "MyJailbreak/Modules/Warden/bulletsparks.sp"
 #include "MyJailbreak/Modules/Warden/countdown.sp"
@@ -128,7 +129,6 @@ char g_sMyJBLogFile[PLATFORM_MAX_PATH];
 #include "MyJailbreak/Modules/Warden/rebel.sp"
 #include "MyJailbreak/Modules/Warden/counter.sp"
 #include "MyJailbreak/Modules/Warden/shootguns.sp"
-#include "MyJailbreak/Modules/Warden/deputy.sp"
 
 
 //Info

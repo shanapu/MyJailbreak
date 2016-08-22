@@ -127,6 +127,16 @@
 		"en"		"Retire From Warden"
 	}
 
+	"menu_undeputy"
+	{
+		"en"		"Retire From Deputy"
+	}
+
+	"menu_removedeputy"
+	{
+		"en"		"Remove Deputy"
+	}
+
 	"menu_getwarden"
 	{
 		"ru"		"Занять пост КМД"

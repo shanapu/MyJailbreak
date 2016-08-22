@@ -251,7 +251,7 @@ public void Refuse_OnClientDisconnect(int client)
 
 public Action RefuseMenu(int warden)
 {
-	if (IsValidClient(warden, false, false) && warden_iswarden(warden))
+	if (warden_iswarden(warden) || warden_deputy_isdeputy(warden))
 	{
 		char info1[255];
 		RefusePanel = CreatePanel();

@@ -39,6 +39,7 @@
 
 //Console Variables
 ConVar gc_bRandom;
+ConVar gc_bRandomDeputy;
 ConVar gc_iRandomMode;
 ConVar gc_sCustomCommandRandomKill;
 
@@ -56,6 +57,7 @@ public void RandomKill_OnPluginStart()
 	
 	//AutoExecConfig
 	gc_bRandom = AutoExecConfig_CreateConVar("sm_warden_random", "1", "0 - disabled, 1 - enable kill a random t for warden", _, true,  0.0, true, 1.0);
+	gc_bRandomDeputy = AutoExecConfig_CreateConVar("sm_warden_random_deputy", "1", "0 - disabled, 1 - enable kill a random t for deputy,too", _, true,  0.0, true, 1.0);
 	gc_iRandomMode = AutoExecConfig_CreateConVar("sm_warden_random_mode", "2", "1 - all random / 2 - Thunder / 3 - Timebomb / 4 - Firebomb / 5 - NoKill(1,3,4 needs funcommands.smx enabled)", _, true,  1.0, true, 4.0);
 	gc_sCustomCommandRandomKill = AutoExecConfig_CreateConVar("sm_warden_cmds_randomkill", "randomkill,rk,kr", "Set your custom chat commands for become warden(!killrandom (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands))");
 }
@@ -70,7 +72,7 @@ public Action Command_KillMenu(int client, int args)
 {
 	if (gc_bRandom.BoolValue) 
 	{
-		if (IsClientWarden(client))
+		if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bRandomDeputy.BoolValue))
 		{
 			char info[255];
 			Menu menu1 = CreateMenu(Handler_KillMenu);

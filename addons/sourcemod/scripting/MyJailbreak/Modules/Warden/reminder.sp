@@ -135,6 +135,39 @@ public Action Timer_RemindTimer(Handle timer)
 			Format(timeinfo, sizeof(timeinfo), "%T %T", "warden_30", g_iWarden, "warden_remaining", g_iWarden);
 			PrintCenterText(g_iWarden, timeinfo);
 		}
+		//Deputy
+		if(g_iRoundTime == 180 && (g_iDeputy != -1))
+		{
+			EmitSoundToClient(g_iDeputy, "weapons/c4/c4_beep1.wav", SOUND_FROM_PLAYER, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, 1.0);
+			Format(timeinfo, sizeof(timeinfo), "%T %T %T", "warden_tag", g_iDeputy, "warden_180", g_iDeputy, "warden_remaining", g_iDeputy);
+			CPrintToChat(g_iDeputy, timeinfo);
+			Format(timeinfo, sizeof(timeinfo), "%T %T", "warden_180", g_iDeputy, "warden_remaining", g_iDeputy);
+			PrintCenterText(g_iDeputy, timeinfo);
+		}
+		if(g_iRoundTime == 120 && (g_iDeputy != -1))
+		{
+			EmitSoundToClient(g_iDeputy, "weapons/c4/c4_beep1.wav", SOUND_FROM_PLAYER, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, 1.0);
+			Format(timeinfo, sizeof(timeinfo), "%T %T %T", "warden_tag", g_iDeputy, "warden_120", g_iDeputy, "warden_remaining", g_iDeputy);
+			CPrintToChat(g_iDeputy, timeinfo);
+			Format(timeinfo, sizeof(timeinfo), "%T %T", "warden_120", g_iDeputy, "warden_remaining", g_iDeputy);
+			PrintCenterText(g_iDeputy, timeinfo);
+		}
+		if(g_iRoundTime == 60 && (g_iDeputy != -1))
+		{
+			EmitSoundToClient(g_iDeputy, "weapons/c4/c4_beep1.wav", SOUND_FROM_PLAYER, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, 1.0);
+			Format(timeinfo, sizeof(timeinfo), "%T %T %T", "warden_tag", g_iDeputy, "warden_60", g_iDeputy, "warden_remaining", g_iDeputy);
+			CPrintToChat(g_iDeputy, timeinfo);
+			Format(timeinfo, sizeof(timeinfo), "%T %T", "warden_60", g_iDeputy, "warden_remaining", g_iDeputy);
+			PrintCenterText(g_iDeputy, timeinfo);
+		}
+		if(g_iRoundTime == 30 && (g_iDeputy != -1))
+		{
+			EmitSoundToClient(g_iDeputy, "weapons/c4/c4_beep1.wav", SOUND_FROM_PLAYER, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, 1.0);
+			Format(timeinfo, sizeof(timeinfo), "%T %T %T", "warden_tag", g_iDeputy, "warden_30", g_iDeputy, "warden_remaining", g_iDeputy);
+			CPrintToChat(g_iDeputy, timeinfo);
+			Format(timeinfo, sizeof(timeinfo), "%T %T", "warden_30", g_iDeputy, "warden_remaining", g_iDeputy);
+			PrintCenterText(g_iDeputy, timeinfo);
+		}
 		return Plugin_Continue;
 	}
 	RemindTimer = null;

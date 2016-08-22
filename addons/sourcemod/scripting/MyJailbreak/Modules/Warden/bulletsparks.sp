@@ -35,6 +35,7 @@
 
 //Console Variables
 ConVar gc_bBulletSparks;
+ConVar gc_bBulletSparksDeputy;
 ConVar gc_sAdminFlagBulletSparks;
 
 
@@ -55,6 +56,7 @@ public void BulletSparks_OnPluginStart()
 	
 	//AutoExecConfig
 	gc_bBulletSparks = AutoExecConfig_CreateConVar("sm_warden_bulletsparks", "1", "0 - disabled, 1 - enable Warden bulletimpact sparks", _, true,  0.0, true, 1.0);
+	gc_bBulletSparksDeputy = AutoExecConfig_CreateConVar("sm_warden_bulletsparks_deputy", "1", "0 - disabled, 1 - enable smaller bulletimpact sparks for deputy, too", _, true,  0.0, true, 1.0);
 	gc_sAdminFlagBulletSparks = AutoExecConfig_CreateConVar("sm_warden_bulletsparks_flag", "", "Set flag for admin/vip to get warden bulletimpact sparks. No flag = feature is available for all players!");
 	
 	
@@ -117,9 +119,9 @@ public Action Command_BulletSparks(int client, int args)
 
 public Action BulletSparks_Event_BulletImpact(Handle hEvent, char [] sName, bool bDontBroadcast)
 {
-	int iClient = GetClientOfUserId(GetEventInt(hEvent, "userid"));
+	int client = GetClientOfUserId(GetEventInt(hEvent, "userid"));
 	
-	if (!gc_bPlugin.BoolValue || !gc_bBulletSparks.BoolValue || !warden_iswarden(iClient) || !g_bBulletSparks[iClient] || !CheckVipFlag(iClient,g_sAdminFlagBulletSparks))
+	if (!gc_bPlugin.BoolValue || !gc_bBulletSparks.BoolValue || (!IsClientWarden(client) || (!IsClientDeputy(client) && gc_bBulletSparksDeputy.BoolValue)) || !g_bBulletSparks[client] || !CheckVipFlag(client,g_sAdminFlagBulletSparks))
 		return Plugin_Continue;
 	
 	float startpos[3];
@@ -129,7 +131,8 @@ public Action BulletSparks_Event_BulletImpact(Handle hEvent, char [] sName, bool
 	startpos[1] = GetEventFloat(hEvent, "y");
 	startpos[2] = GetEventFloat(hEvent, "z");
 	
-	TE_SetupSparks(startpos, dir, 2500, 500);
+	if(warden_iswarden(client))TE_SetupSparks(startpos, dir, 2500, 500);
+	if(warden_deputy_isdeputy(client))TE_SetupSparks(startpos, dir, 1200, 300);
 	
 	TE_SendToAll();
 
