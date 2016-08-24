@@ -1041,6 +1041,9 @@ stock int GetRandomClientFromTeam(int iTeam, bool bSkipCTBanned=true)
 		if(warden_iswarden(i))
 			continue;
 		
+		if(warden_deputy_isdeputy(i))
+			continue;
+		
 		if(GetClientPendingTeam(i) != iTeam)
 			continue;
 		

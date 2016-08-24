@@ -214,7 +214,7 @@ public void Heal_OnClientDisconnect(int client)
 
 public Action HealMenu(int warden)
 {
-	if (IsValidClient(warden, false, false) && warden_iswarden(warden))
+	if (warden_iswarden(warden))
 	{
 		char info5[255], info6[255], info7[255];
 		Menu menu1 = CreateMenu(HealMenuHandler);

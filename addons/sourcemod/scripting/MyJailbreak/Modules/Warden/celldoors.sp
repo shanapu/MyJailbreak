@@ -35,6 +35,7 @@
 
 //Console Variables
 ConVar gc_bOpen;
+ConVar gc_bOpenDeputy;
 ConVar gc_bOpenTimer;
 ConVar gc_hOpenTimer;
 ConVar gc_bOpenTimerWarden;
@@ -59,6 +60,7 @@ public void CellDoors_OnPluginStart()
 	
 	//AutoExecConfig
 	gc_bOpen = AutoExecConfig_CreateConVar("sm_warden_open_enable", "1", "0 - disabled, 1 - warden can open/close cells", _, true,  0.0, true, 1.0);
+	gc_bOpenDeputy = AutoExecConfig_CreateConVar("sm_warden_open_enable_deputy", "1", "0 - disabled, 1 - deputy can open/close cells", _, true,  0.0, true, 1.0);
 	gc_sCustomCommandOpen = AutoExecConfig_CreateConVar("sm_warden_cmds_open", "o,unlock,cells", "Set your custom chat commands for open cells(!open (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands)");
 	gc_sCustomCommandClose = AutoExecConfig_CreateConVar("sm_warden_cmds_close", "lock,shut", "Set your custom chat commands for close cells(!close (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands)");
 	gc_hOpenTimer = AutoExecConfig_CreateConVar("sm_warden_open_time", "60", "Time in seconds for open doors on round start automaticly", _, true, 0.0); 
@@ -84,7 +86,7 @@ public Action Command_OpenDoors(int client, int args)
 	{
 		if(gc_bOpen.BoolValue)
 		{
-			if (IsClientWarden(client))
+			if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bOpenDeputy.BoolValue))
 			{
 				if (SJD_IsCurrentMapConfigured())
 				{
@@ -109,7 +111,7 @@ public Action Command_CloseDoors(int client, int args)
 	{
 		if(gc_bOpen.BoolValue)
 		{
-			if (IsClientWarden(client))
+			if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bOpenDeputy.BoolValue))
 			{
 				if (SJD_IsCurrentMapConfigured()) 
 				{

@@ -39,6 +39,8 @@
 
 //Console Variables
 ConVar gc_bPainter;
+ConVar gc_bPainterDeputy;
+ConVar gc_bPainterTDeputy;
 ConVar gc_bPainterT;
 ConVar gc_sAdminFlagPainter;
 ConVar gc_sCustomCommandPainter;
@@ -72,8 +74,10 @@ public void Painter_OnPluginStart()
 	
 	//AutoExecConfig
 	gc_bPainter = AutoExecConfig_CreateConVar("sm_warden_painter", "1", "0 - disabled, 1 - enable Warden Painter with +E ", _, true,  0.0, true, 1.0);
+	gc_bPainterDeputy = AutoExecConfig_CreateConVar("sm_warden_painter_deputy", "1", "0 - disabled, 1 - enable 'Warden Painter'-feature for deputy", _, true,  0.0, true, 1.0);
 	gc_sAdminFlagPainter = AutoExecConfig_CreateConVar("sm_warden_painter_flag", "", "Set flag for admin/vip to get warden painter access. No flag = feature is available for all players!");
 	gc_bPainterT= AutoExecConfig_CreateConVar("sm_warden_painter_terror", "1", "0 - disabled, 1 - allow Warden to toggle Painter for Terrorist ", _, true,  0.0, true, 1.0);
+	gc_bPainterTDeputy= AutoExecConfig_CreateConVar("sm_warden_painter_terror_deputy", "1", "0 - disabled, 1 - allow Deputy to toggle Painter for Terrorist ", _, true,  0.0, true, 1.0);
 	gc_sCustomCommandPainter = AutoExecConfig_CreateConVar("sm_warden_cmds_painter", "paint,draw", "Set your custom chat commands for Painter menu(!painter (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands))");
 	
 	
@@ -107,7 +111,7 @@ public Action Command_PainterMenu(int client, int args)
 {
 	if(gc_bPainter.BoolValue)
 	{
-		if ((IsClientWarden(client)) || ((GetClientTeam(client) == CS_TEAM_T) && g_bPainterT))
+		if ((IsClientWarden(client)) || (IsClientDeputy(client) && gc_bPainterDeputy.BoolValue) || ((GetClientTeam(client) == CS_TEAM_T) && g_bPainterT))
 		{
 			if(CheckVipFlag(client,g_sAdminFlagPainter) || (GetClientTeam(client) == CS_TEAM_T))
 			{
@@ -117,7 +121,7 @@ public Action Command_PainterMenu(int client, int args)
 				Format(menuinfo, sizeof(menuinfo), "%T", "warden_painter_title", client);
 				menu.SetTitle(menuinfo);
 				Format(menuinfo, sizeof(menuinfo), "%T", "warden_painter_off", client);
-				if (g_bPainter[client]) menu.AddItem("off", menuinfo);
+				if(g_bPainter[client]) menu.AddItem("off", menuinfo);
 				Format(menuinfo, sizeof(menuinfo), "%T", "warden_paintert", client);
 				if (GetClientTeam(client) == CS_TEAM_CT) menu.AddItem("terror", menuinfo);
 				Format(menuinfo, sizeof(menuinfo), "%T", "warden_rainbow", client);
@@ -176,9 +180,6 @@ public void Painter_Event_RoundEnd(Event event, const char[] name, bool dontBroa
 }
 
 
-
-
-
 /******************************************************************************
                    FORWARDS LISTENING
 ******************************************************************************/
@@ -206,7 +207,7 @@ public void Painter_OnConfigsExecuted()
 
 public Action Painter_OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
 {
-	if((IsClientWarden(client) && gc_bPainter.BoolValue && g_bPainter[client] && CheckVipFlag(client,g_sAdminFlagPainter)) || ((GetClientTeam(client) == CS_TEAM_T) && gc_bPainter.BoolValue && g_bPainterT))
+	if((IsClientWarden(client) && gc_bPainter.BoolValue && g_bPainter[client] && CheckVipFlag(client,g_sAdminFlagPainter)) || ((GetClientTeam(client) == CS_TEAM_T) && gc_bPainter.BoolValue && g_bPainterT && g_bPainter[client]) || (IsClientDeputy(client) && gc_bPainterDeputy.BoolValue && g_bPainter[client]))
 	{
 		for (int i = 0; i < MAX_BUTTONS; i++)
 		{
@@ -249,8 +250,6 @@ public void Painter_OnMapEnd()
 		g_fLastPainter[i][2] = 0.0;
 		g_bPainterUse[i] = false;
 		g_bPainter[i] = false;
-		
-		if(g_bPainter[i]) g_bPainter[i] = false;
 	}
 }
 
@@ -260,8 +259,6 @@ public void Painter_OnClientPutInServer(int client)
 	g_bPainterUse[client] = false;
 	g_bPainterColorRainbow[client] = true;
 }
-
-
 
 
 public void Painter_OnWardenRemoved(int client)
@@ -286,28 +283,28 @@ public Action TogglePainterT(int client, int args)
 {
 	if (gc_bPainterT.BoolValue) 
 	{
-		if (IsClientWarden(client))
+		if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bPainterDeputy.BoolValue && gc_bPainterTDeputy.BoolValue))
 		{
 			if (!g_bPainterT) 
 			{
 				g_bPainterT = true;
 				CPrintToChatAll("%t %t", "warden_tag", "warden_tpainteron");
 				
-				LoopValidClients(iClient, false, true)
+				LoopValidClients(i, false, true)
 				{
-					if (GetClientTeam(iClient) == CS_TEAM_T) Command_PainterMenu(iClient,0);
+					if (GetClientTeam(i) == CS_TEAM_T) Command_PainterMenu(i,0);
 				}
 			}
 			else
 			{
-				LoopValidClients(iClient, false, true)
+				LoopValidClients(i, false, true)
 				{
-					if (GetClientTeam(iClient) == CS_TEAM_T)
+					if (GetClientTeam(i) == CS_TEAM_T)
 					{
-						g_fLastPainter[iClient][0] = 0.0;
-						g_fLastPainter[iClient][1] = 0.0;
-						g_fLastPainter[iClient][2] = 0.0;
-						g_bPainterUse[iClient] = false;
+						g_fLastPainter[i][0] = 0.0;
+						g_fLastPainter[i][1] = 0.0;
+						g_fLastPainter[i][2] = 0.0;
+						g_bPainterUse[i] = false;
 					}
 				}
 				g_bPainterT = false;

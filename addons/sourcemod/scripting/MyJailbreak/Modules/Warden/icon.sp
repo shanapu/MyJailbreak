@@ -36,6 +36,8 @@
 //Console Variables
 ConVar gc_bIconWarden;
 ConVar gc_sIconWardenPath;
+ConVar gc_bIconDeputy;
+ConVar gc_sIconDeputyPath;
 ConVar gc_bIconGuard;
 ConVar gc_sIconGuardPath;
 ConVar gc_bIconPrisoner;
@@ -48,6 +50,7 @@ int g_iIcon[MAXPLAYERS + 1] = {-1, ...};
 
 //Strings
 char g_sIconWardenPath[256];
+char g_sIconDeputyPath[256];
 char g_sIconGuardPath[256];
 char g_sIconPrisonerPath[256];
 
@@ -58,6 +61,8 @@ public void Icon_OnPluginStart()
 	//AutoExecConfig
 	gc_bIconWarden = AutoExecConfig_CreateConVar("sm_warden_icon_enable", "1", "0 - disabled, 1 - enable the icon above the wardens head", _, true,  0.0, true, 1.0);
 	gc_sIconWardenPath = AutoExecConfig_CreateConVar("sm_warden_icon", "decals/MyJailbreak/warden" , "Path to the warden icon DONT TYPE .vmt or .vft");
+	gc_bIconDeputy = AutoExecConfig_CreateConVar("sm_warden_icon_deputy_enable", "1", "0 - disabled, 1 - enable the icon above the deputy head", _, true,  0.0, true, 1.0);
+	gc_sIconDeputyPath = AutoExecConfig_CreateConVar("sm_warden_icon_deputy", "decals/MyJailbreak/warden-4" , "Path to the deputy icon DONT TYPE .vmt or .vft");
 	gc_bIconGuard = AutoExecConfig_CreateConVar("sm_warden_icon_ct_enable", "1", "0 - disabled, 1 - enable the icon above the guards head", _, true,  0.0, true, 1.0);
 	gc_sIconGuardPath = AutoExecConfig_CreateConVar("sm_warden_icon_ct", "decals/MyJailbreak/ct" , "Path to the guard icon DONT TYPE .vmt or .vft");
 	gc_bIconPrisoner = AutoExecConfig_CreateConVar("sm_warden_icon_t_enable", "1", "0 - disabled, 1 - enable the icon above the prisoners head", _, true,  0.0, true, 1.0);
@@ -69,12 +74,14 @@ public void Icon_OnPluginStart()
 	HookEvent("player_death", Icon_Event_PlayerDeathTeam);
 	HookEvent("player_team", Icon_Event_PlayerDeathTeam);
 	HookConVarChange(gc_sIconWardenPath, Icon_OnSettingChanged);
+	HookConVarChange(gc_sIconDeputyPath, Icon_OnSettingChanged);
 	HookConVarChange(gc_sIconGuardPath, Icon_OnSettingChanged);
 	HookConVarChange(gc_sIconPrisonerPath, Icon_OnSettingChanged);
 	
 	
 	//FindConVar
 	gc_sIconWardenPath.GetString(g_sIconWardenPath , sizeof(g_sIconWardenPath));
+	gc_sIconWardenPath.GetString(g_sIconDeputyPath , sizeof(g_sIconDeputyPath));
 	gc_sIconGuardPath.GetString(g_sIconGuardPath , sizeof(g_sIconGuardPath));
 	gc_sIconPrisonerPath.GetString(g_sIconPrisonerPath , sizeof(g_sIconPrisonerPath));
 }
@@ -86,6 +93,11 @@ public int Icon_OnSettingChanged(Handle convar, const char[] oldValue, const cha
 	{
 		strcopy(g_sIconWardenPath, sizeof(g_sIconWardenPath), newValue);
 		if(gc_bIconWarden.BoolValue) PrecacheModelAnyDownload(g_sIconWardenPath);
+	}
+	else if(convar == gc_sIconDeputyPath)
+	{
+		strcopy(g_sIconDeputyPath, sizeof(g_sIconDeputyPath), newValue);
+		if(gc_bIconDeputy.BoolValue) PrecacheModelAnyDownload(g_sIconDeputyPath);
 	}
 	else if(convar == gc_sIconGuardPath)
 	{
@@ -134,6 +146,7 @@ public void Icon_OnMapStart()
 	if(gc_bIconWarden.BoolValue) PrecacheModelAnyDownload(g_sIconWardenPath);
 	if(gc_bIconGuard.BoolValue) PrecacheModelAnyDownload(g_sIconGuardPath);
 	if(gc_bIconPrisoner.BoolValue) PrecacheModelAnyDownload(g_sIconPrisonerPath);
+	if(gc_bIconDeputy.BoolValue) PrecacheModelAnyDownload(g_sIconDeputyPath);
 }
 
 
@@ -144,6 +157,18 @@ public void Icon_OnWardenCreation(int client)
 
 
 public void Icon_OnWardenRemoved(int client)
+{
+	CreateTimer(0.1, Timer_Delay);
+}
+
+
+public void Icon_OnDeputyCreation(int client)
+{
+	CreateTimer(0.1, Timer_Delay);
+}
+
+
+public void Icon_OnDeputyRemoved(int client)
 {
 	CreateTimer(0.1, Timer_Delay);
 }
@@ -184,6 +209,18 @@ public Action Should_TransmitW(int entity, int client)
 }
 
 
+public Action Should_TransmitD(int entity, int client)
+{
+	char m_ModelName[PLATFORM_MAX_PATH];
+	char iconbuffer[256];
+	Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconDeputyPath);
+	GetEntPropString(entity, Prop_Data, "m_ModelName", m_ModelName, sizeof(m_ModelName));
+	if (StrEqual( iconbuffer, m_ModelName))
+		return Plugin_Continue;
+	return Plugin_Handled;
+}
+
+
 public Action Should_TransmitP(int entity, int client)
 {
 	char m_ModelName[PLATFORM_MAX_PATH];
@@ -216,6 +253,7 @@ stock int SpawnIcon(int client)
 	if(!g_iIcon[client]) return -1;
 	char iconbuffer[256];
 	if(IsClientWarden(client)) Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconWardenPath);
+	else if(IsClientDeputy(client)) Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconDeputyPath);
 	else if(GetClientTeam(client) == CS_TEAM_CT) Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconGuardPath);
 	else if(GetClientTeam(client) == CS_TEAM_T) Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconPrisonerPath);
 	
@@ -235,6 +273,7 @@ stock int SpawnIcon(int client)
 	SetVariantString(iTarget);
 	AcceptEntityInput(g_iIcon[client], "SetParent", g_iIcon[client], g_iIcon[client], 0);
 	if(IsClientWarden(client)) SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitW);
+	else if(IsClientDeputy(client))  SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitD);
 	else if(GetClientTeam(client) == CS_TEAM_CT)  SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitG);
 	else if(GetClientTeam(client) == CS_TEAM_T)  SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitP);
 	return g_iIcon[client];

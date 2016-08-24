@@ -47,13 +47,16 @@ ConVar gc_sUnWarden;
 ConVar gc_sModelPathWarden;
 ConVar gc_bModel;
 ConVar gc_bBetterNotes;
-ConVar g_bMenuClose;
 ConVar gc_sCustomCommandWarden;
 ConVar gc_sCustomCommandUnWarden;
 ConVar gc_sCustomCommandVetoWarden;
 ConVar gc_sCustomCommandSetWarden;
 ConVar gc_sCustomCommandRemoveWarden;
 ConVar gc_fRandomTimer;
+
+
+//3rd party Convars 
+ConVar g_bMenuClose; 
 
 
 //Booleans
@@ -103,6 +106,7 @@ char g_sMyJBLogFile[PLATFORM_MAX_PATH];
 
 
 //Modules
+#include "MyJailbreak/Modules/Warden/deputy.sp"
 #include "MyJailbreak/Modules/Warden/mute.sp"
 #include "MyJailbreak/Modules/Warden/bulletsparks.sp"
 #include "MyJailbreak/Modules/Warden/countdown.sp"
@@ -192,6 +196,7 @@ public void OnPluginStart()
 	
 	
 	//Warden module
+	Deputy_OnPluginStart();
 	Mute_OnPluginStart();
 	Disarm_OnPluginStart();
 	BulletSparks_OnPluginStart();
@@ -268,6 +273,7 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 //Initialize Plugin
 public void OnConfigsExecuted()
 {
+	Deputy_OnConfigsExecuted();
 	Math_OnConfigsExecuted();
 	RandomKill_OnConfigsExecuted();
 	CellDoors_OnConfigsExecuted();
@@ -595,6 +601,7 @@ public void Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 //Prepare Plugin & modules
 public void OnMapStart()
 {
+	Deputy_OnMapStart();
 	Countdown_OnMapStart();
 	Math_OnMapStart();
 	HandCuffs_OnMapStart();
@@ -653,6 +660,7 @@ public void OnClientDisconnect(int client)
 		g_iWarden = -1;
 	}
 	
+	Deputy_OnClientDisconnect(client);
 	Painter_OnClientDisconnect(client);
 	HandCuffs_OnClientDisconnect(client);
 	Icon_OnClientDisconnect(client);
@@ -669,13 +677,13 @@ public void OnMapEnd()
 		g_iWarden = -1;
 	}
 	
+	Deputy_OnMapEnd();
 	Math_OnMapEnd();
 	Mute_OnMapEnd();
 	Countdown_OnMapEnd();
 	Reminder_OnMapEnd();
 	HandCuffs_OnMapEnd();
 	Marker_OnMapEnd();
-	Laser_OnMapEnd();
 	Painter_OnMapEnd();
 }
 
@@ -694,13 +702,14 @@ public int OnAvailableLR(int Announced)
 // Check Keyboard Input for modules
 public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
 {
-	if(IsClientWarden(client) && gc_bPlugin.BoolValue)
+	if((IsClientWarden(client) || IsClientDeputy(client)) && gc_bPlugin.BoolValue)
 	{
 		HandCuffs_OnPlayerRunCmd(client, buttons, impulse, vel, angles, weapon);
 		Marker_OnPlayerRunCmd(client, buttons, impulse, vel, angles, weapon);
 		Laser_OnPlayerRunCmd(client, buttons, impulse, vel, angles, weapon);
 	}
 	Painter_OnPlayerRunCmd(client, buttons, impulse, vel, angles, weapon);
+	
 	return Plugin_Continue;
 }
 
@@ -949,6 +958,12 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	CreateNative("warden_removed", Native_RemoveWarden);
 	CreateNative("warden_get", Native_GetWarden);
 	
+	CreateNative("warden_deputy_exist", Native_ExistDeputy);
+	CreateNative("warden_deputy_isdeputy", Native_IsDeputy);
+	CreateNative("warden_deputy_set", Native_SetDeputy);
+	CreateNative("warden_deputy_removed", Native_RemoveDeputy);
+	CreateNative("warden_deputy_get", Native_GetDeputy);
+	
 	RegPluginLibrary("warden");
 	return APLRes_Success;
 }
@@ -1025,9 +1040,11 @@ void Forward_OnWardenCreated(int client)
 	Call_PushCell(client);
 	Call_Finish();
 	
+	Deputy_OnWardenCreation(client);
 	Icon_OnWardenCreation(client);
 	Color_OnWardenCreation(client);
 	Laser_OnWardenCreation(client);
+	HandCuffs_OnWardenCreation(client);
 }
 
 
@@ -1056,11 +1073,13 @@ void Forward_OnWardenRemoved(int client)
 	Call_PushCell(client);
 	Call_Finish();
 	
+	Deputy_OnWardenRemoved(client);
 	Marker_OnWardenRemoved();
 	Icon_OnWardenRemoved(client);
 	Color_OnWardenRemoved(client);
 	Laser_OnWardenRemoved(client);
 	Painter_OnWardenRemoved(client);
+	HandCuffs_OnWardenRemoved(client); 
 }
 
 
@@ -1079,6 +1098,8 @@ void Forward_OnWardenRemovedBySelf(int client)
 	Call_StartForward(gF_OnWardenRemovedBySelf);
 	Call_PushCell(client);
 	Call_Finish();
+	
+	Deputy_OnWardenRemovedBySelf(client);
 }
 
 

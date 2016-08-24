@@ -209,7 +209,7 @@ public void Repeat_OnClientDisconnect(int client)
 
 public Action RepeatMenu(int warden)
 {
-	if (IsValidClient(warden, false, false) && warden_iswarden(warden))
+	if (warden_iswarden(warden) || warden_deputy_isdeputy(warden))
 	{
 		char info1[255];
 		RepeatPanel = CreatePanel();

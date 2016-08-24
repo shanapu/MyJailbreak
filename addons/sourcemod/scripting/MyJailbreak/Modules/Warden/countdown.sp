@@ -35,6 +35,7 @@
 
 //Console Variables
 ConVar gc_bCountDown;
+ConVar gc_bCountDownDeputy;
 ConVar gc_bCountdownOverlays;
 ConVar gc_sCountdownOverlayStartPath;
 ConVar gc_sCountdownOverlayStopPath;
@@ -80,6 +81,7 @@ public void Countdown_OnPluginStart()
 	
 	//AutoExecConfig
 	gc_bCountDown = AutoExecConfig_CreateConVar("sm_warden_countdown", "1", "0 - disabled, 1 - enable countdown for warden", _, true,  0.0, true, 1.0);
+	gc_bCountDownDeputy = AutoExecConfig_CreateConVar("sm_warden_countdown_deputy", "1", "0 - disabled, 1 - enable countdown for deputy", _, true,  0.0, true, 1.0);
 	gc_bCountdownOverlays = AutoExecConfig_CreateConVar("sm_warden_countdown_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true,  0.0, true, 1.0);
 	gc_sCountdownOverlayStartPath = AutoExecConfig_CreateConVar("sm_warden_countdown_overlays_start", "overlays/MyJailbreak/start" , "Path to the start Overlay DONT TYPE .vmt or .vft");
 	gc_sCountdownOverlayStopPath = AutoExecConfig_CreateConVar("sm_warden_countdown_overlays_stop", "overlays/MyJailbreak/stop" , "Path to the stop Overlay DONT TYPE .vmt or .vft");
@@ -139,7 +141,7 @@ public Action Command_CountDownMenu(int client, int args)
 {
 	if(gc_bCountDown.BoolValue)
 	{
-		if (IsClientWarden(client))
+		if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bCountDownDeputy.BoolValue))
 		{
 			char menuinfo[255];
 			
@@ -182,7 +184,7 @@ public Action Command_StartStopMenu(int client, int args)
 {
 	if(gc_bCountDown.BoolValue)
 	{
-		if (IsClientWarden(client))
+		if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bCountDownDeputy.BoolValue))
 		{
 			char menuinfo[255];
 			
@@ -220,7 +222,7 @@ public Action Command_StartCountDown(int client, int args)
 {
 	if(gc_bCountDown.BoolValue)
 	{
-		if (IsClientWarden(client))
+		if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bCountDownDeputy.BoolValue))
 		{
 			if (!g_bIsCountDown)
 			{
@@ -248,7 +250,7 @@ public Action Command_StopCountDown(int client, int args)
 {
 	if(gc_bCountDown.BoolValue)
 	{
-		if (IsClientWarden(client))
+		if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bCountDownDeputy.BoolValue))
 		{
 			if (!g_bIsCountDown)
 			{
@@ -345,7 +347,7 @@ public Action SetStartStopCountDown(int client, int args)
 {
 	if(gc_bCountDown.BoolValue)
 	{
-		if (IsClientWarden(client))
+		if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bCountDownDeputy.BoolValue))
 		{
 			if (!g_bIsCountDown)
 			{

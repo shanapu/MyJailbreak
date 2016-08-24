@@ -48,7 +48,7 @@ public void Disarm_OnPluginStart()
 {
 	//AutoExecConfig
 	gc_bDisarm = AutoExecConfig_CreateConVar("sm_warden_disarm", "1", "0 - disabled, 1 - enable disarm weapon on shot the arms/hands", _, true,  0.0, true, 1.0);
-	gc_iDisarm = AutoExecConfig_CreateConVar("sm_warden_disarm_mode", "1", "1 - Only warden can disarm, 2 - All CT can disarm, 3 - Everyone can disarm (CT & T)", _, true,  1.0, true, 3.0);
+	gc_iDisarm = AutoExecConfig_CreateConVar("sm_warden_disarm_mode", "1", "1 - Only warden can disarm, 2 - warden & deputy can disarm, 3 - All CT can disarm, 4 - Everyone can disarm (CT & T)", _, true,  1.0, true, 3.0);
 	gc_iDisarmMode = AutoExecConfig_CreateConVar("sm_warden_disarm_drop", "1", "1 - weapon will drop, 2 - weapon  disapear", _, true,  1.0, true, 2.0);
 	
 	//Hooks 
@@ -78,7 +78,7 @@ public Action Disarm_Event_PlayerHurt(Event event, char[] name, bool dontBroadca
 		
 		if (IsValidClient(attacker,true,false) && IsValidClient(victim,true,false))
 		{
-			if ((warden_iswarden(attacker) && g_iDisarm == 1) || ((GetClientTeam(attacker) == CS_TEAM_CT) && g_iDisarm == 2) || ((GetClientTeam(attacker) != GetClientTeam(victim)) && g_iDisarm == 3))
+			if ((IsClientWarden(attacker) && g_iDisarm == 1) || ((IsClientWarden(attacker) || IsClientDeputy(attacker)) && g_iDisarm == 2) || ((GetClientTeam(attacker) == CS_TEAM_CT) && g_iDisarm == 3) || ((GetClientTeam(attacker) != GetClientTeam(victim)) && g_iDisarm == 4))
 			{
 				if(hitgroup == 4 || hitgroup == 5)
 				{

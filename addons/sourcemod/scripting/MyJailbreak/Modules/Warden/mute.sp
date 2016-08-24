@@ -37,10 +37,12 @@
 
 //Console Variables
 ConVar gc_bMute;
+ConVar gc_bMuteDeputy;
 ConVar gc_bMuteEnd;
 ConVar gc_bMuteDefault;
 ConVar gc_sAdminFlagMute;
 ConVar gc_bMuteTalkOver;
+ConVar gc_bMuteTalkOverDeputy;
 ConVar gc_bMuteTalkOverTeam;
 ConVar gc_sCustomCommandMute;
 ConVar gc_sCustomCommandUnMute;
@@ -66,10 +68,12 @@ public void Mute_OnPluginStart()
 	
 	//AutoExecConfig
 	gc_bMute = AutoExecConfig_CreateConVar("sm_warden_mute", "1", "0 - disabled, 1 - Allow the warden to mute T-side player", _, true, 0.0, true, 1.0);
+	gc_bMuteDeputy = AutoExecConfig_CreateConVar("sm_warden_mute_deputy", "1", "0 - disabled, 1 - Allow the deputy to mute T-side player", _, true, 0.0, true, 1.0);
 	gc_bMuteEnd = AutoExecConfig_CreateConVar("sm_warden_mute_round", "1", "0 - disabled, 1 - Allow the warden to mute a player until roundend", _, true, 0.0, true, 1.0);
 	gc_bMuteDefault = AutoExecConfig_CreateConVar("sm_warden_mute_default", "0", "0 - disabled, 1 - Prisoners are muted on roundstart by default. Warden have to unmute them", _, true, 0.0, true, 1.0);
 	gc_sAdminFlagMute = AutoExecConfig_CreateConVar("sm_warden_mute_immuntiy", "a", "Set flag for admin/vip Mute immunity. No flag immunity for all. so don't leave blank!");
 	gc_bMuteTalkOver = AutoExecConfig_CreateConVar("sm_warden_talkover", "1", "0 - disabled, 1 - temporary mutes all client when the warden speaks", _, true, 0.0, true, 1.0);
+	gc_bMuteTalkOverDeputy = AutoExecConfig_CreateConVar("sm_warden_talkover_deputy", "1", "0 - disabled, 1 - temporary mutes all client when the deputy speaks", _, true, 0.0, true, 1.0);
 	gc_bMuteTalkOverTeam = AutoExecConfig_CreateConVar("sm_warden_talkover_team", "1", "0 - mute prisoner & guards on talkover, 1 - only mute prisoners on talkover", _, true, 0.0, true, 1.0);
 	gc_sCustomCommandMute = AutoExecConfig_CreateConVar("sm_warden_cmds_mute", "wm,mutemenu", "Set your custom chat commands for become warden(!warden (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands))");
 	gc_sCustomCommandUnMute = AutoExecConfig_CreateConVar("sm_warden_cmds_unmute", "wum,unmutemenu", "Set your custom chat commands for retire from warden(!unwarden (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands))");
@@ -136,7 +140,7 @@ public Action Command_UnMuteMenu(int client, any args)
 {
 	if(gc_bPlugin.BoolValue)	
 	{
-		if(IsValidClient(client, false, false) && IsClientWarden(client) && gc_bMute.BoolValue)
+		if((IsClientWarden(client) || (IsClientDeputy(client) && gc_bMuteDeputy.BoolValue)) && gc_bMute.BoolValue)
 		{
 			char info1[255];
 			Menu menu4 = CreateMenu(Handler_UnMuteMenu);
@@ -172,11 +176,11 @@ public Action Command_MuteMenu(int client, int args)
 {
 	if (gc_bMute.BoolValue) 
 	{
-		if (IsClientWarden(client))
+		if((IsClientWarden(client) || (IsClientDeputy(client) && gc_bMuteDeputy.BoolValue)) && gc_bMute.BoolValue)
 		{
 			char info[255];
 			Menu menu1 = CreateMenu(Handler_MuteMenu);
-			Format(info, sizeof(info), "%T", "warden_mute_title", g_iWarden, client);
+			Format(info, sizeof(info), "%T", "warden_mute_title", client);
 			menu1.SetTitle(info);
 			Format(info, sizeof(info), "%T", "warden_menu_mute", client);
 			menu1.AddItem("0", info);
@@ -221,7 +225,7 @@ public void Mute_Event_RoundStart(Event event, const char[] name, bool dontBroad
 
 public void Mute_Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 {
-	LoopClients(i) if(IsMuted[i]) UnMuteClient(i);
+	LoopClients(i) if(IsMuted[i]) UnMuteClient(i,-1);
 }
 
 
@@ -232,27 +236,27 @@ public void Mute_Event_RoundEnd(Event event, const char[] name, bool dontBroadca
 
 public void Mute_OnAvailableLR(int Announced)
 {
-	LoopClients(i) if(IsMuted[i] && IsPlayerAlive(i)) UnMuteClient(i);
+	LoopClients(i) if(IsMuted[i] && IsPlayerAlive(i)) UnMuteClient(i,-1);
 }
 
 
 public void Mute_OnMapEnd()
 {
-	LoopClients(i) if(IsMuted[i]) UnMuteClient(i);
+	LoopClients(i) if(IsMuted[i]) UnMuteClient(i,-1);
 }
 
 
 // Mute Terror when Warden speaks
 public int OnClientSpeakingEx(int client)
 {
-	if (warden_iswarden(client) && gc_bMuteTalkOver.BoolValue)
+	if ((warden_iswarden(client) && gc_bMuteTalkOver.BoolValue) || (warden_deputy_isdeputy(client) && gc_bMuteTalkOverDeputy.BoolValue))
 	{
 		LoopValidClients(i, false, true)
 		{
 			if (!CheckVipFlag(i,g_sAdminFlagMute))
 			{
 				if ((GetClientTeam(i) == CS_TEAM_T) && (!IsMuted[i] || (GetClientListeningFlags(i) != VOICE_MUTED)) || 
-					(!gc_bMuteTalkOverTeam.BoolValue && !warden_iswarden(i) && (GetClientTeam(i) == CS_TEAM_CT) && (GetClientListeningFlags(i) != VOICE_MUTED)))
+					(!gc_bMuteTalkOverTeam.BoolValue && !warden_iswarden(i) && !warden_deputy_isdeputy(i) && (GetClientTeam(i) == CS_TEAM_CT) && (GetClientListeningFlags(i) != VOICE_MUTED)))
 				{
 					PrintCenterText(i, "%t", "warden_talkover");
 					TempMuted[i] = true;
@@ -271,7 +275,7 @@ public int OnClientSpeakingEx(int client)
 // Mute Terror when Warden end speaking
 public int OnClientSpeakingEnd(int client)
 {
-	if (warden_iswarden(client) && gc_bMuteTalkOver.BoolValue)
+	if ((warden_iswarden(client) && gc_bMuteTalkOver.BoolValue) || (warden_deputy_isdeputy(client) && gc_bMuteTalkOverDeputy.BoolValue))
 	{
 		LoopValidClients(i, false, true)
 		{
@@ -290,7 +294,7 @@ public int OnClientSpeakingEnd(int client)
 ******************************************************************************/
 
 
-public Action MuteClient(int client, int time)
+public Action MuteClient(int client, int time, int muter)
 {
 	if(IsValidClient(client,true,true) && !CheckVipFlag(client,g_sAdminFlagMute))
 	{
@@ -301,13 +305,13 @@ public Action MuteClient(int client, int time)
 			
 			if (time == 0)
 			{
-				CPrintToChatAll("%t %t", "warden_tag", "warden_muteend", g_iWarden, client);
-				if(ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Warden %L muted player %L until round end", g_iWarden, client);
+				CPrintToChatAll("%t %t", "warden_tag", "warden_muteend", muter, client);
+				if(ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Warden/Deputy %L muted player %L until round end", muter, client);
 			}
 			else
 			{
-				CPrintToChatAll("%t %t", "warden_tag", "warden_mute", g_iWarden, client, time);
-				if(ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Warden %L muted player %L for %i seconds", g_iWarden, client, time);
+				CPrintToChatAll("%t %t", "warden_tag", "warden_mute", muter, client, time);
+				if(ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Warden/Deputy %L muted player %L for %i seconds", muter, client, time);
 			}
 		}
 	}
@@ -319,14 +323,14 @@ public Action MuteClient(int client, int time)
 }
 
 
-public void UnMuteClient(any client)
+public void UnMuteClient(any client, int unmuter)
 {
 	if(IsValidClient(client,true,true) && IsMuted[client] && !BaseComm_IsClientMuted(client))
 	{
 		SetClientListeningFlags(client, VOICE_NORMAL);
 		IsMuted[client] = false;
 		CPrintToChat(client,"%t %t", "warden_tag", "warden_unmute", client);
-		if(g_iWarden != -1) CPrintToChat(g_iWarden,"%t %t", "warden_tag", "warden_unmute", client);
+		if(unmuter != -1) CPrintToChat(unmuter,"%t %t", "warden_tag", "warden_unmute", client);
 	}
 }
 
@@ -340,7 +344,7 @@ public Action MuteMenuPlayer(int client,int args)
 {
 	if(gc_bPlugin.BoolValue)	
 	{
-		if(IsValidClient(client, false, false) && IsClientWarden(client) && gc_bMute.BoolValue)
+		if((IsClientWarden(client) || (IsClientDeputy(client) && gc_bMuteDeputy.BoolValue)) && gc_bMute.BoolValue)
 		{
 			char info1[255];
 			Menu menu5 = CreateMenu(Handler_MuteMenuPlayer);
@@ -423,7 +427,7 @@ public int Handler_MuteMenuTime(Menu menu3, MenuAction action, int client, int s
 		int duration = StringToInt(info);
 		int user = GetClientOfUserId(StringToInt(g_sMuteUser)); 
 		
-		MuteClient(user,duration);
+		MuteClient(user,duration,client);
 		
 		if(g_bMenuClose != null)
 		{
@@ -455,7 +459,7 @@ public int Handler_UnMuteMenu(Menu menu4, MenuAction action, int client, int sel
 		menu4.GetItem(selection, info, sizeof(info));
 		int user = GetClientOfUserId(StringToInt(info)); 
 		
-		UnMuteClient(user);
+		UnMuteClient(user,client);
 		
 		if(g_bMenuClose != null)
 		{
@@ -500,7 +504,7 @@ public int Handler_MuteMenu(Menu menu, MenuAction action, int client, int Positi
 		}
 		if(choice == 3)
 		{
-			LoopClients(i) UnMuteClient(i);
+			LoopClients(i) UnMuteClient(i,client);
 		}
 	}
 	else if(action == MenuAction_Cancel)
@@ -556,7 +560,7 @@ public int Handler_MuteMenuTeam(Menu menu6, MenuAction action, int client, int s
 		menu6.GetItem(selection, info, sizeof(info));
 		int duration = StringToInt(info);
 				
-		LoopClients(i) MuteClient(i,duration);
+		LoopClients(i) MuteClient(i,duration,client);
 		
 		if(g_bMenuClose != null)
 		{
@@ -587,6 +591,6 @@ public int Handler_MuteMenuTeam(Menu menu6, MenuAction action, int client, int s
 
 public Action Timer_UnMute(Handle timer, any client)
 {
-	UnMuteClient(client);
+	UnMuteClient(client,-1);
 }
 

@@ -35,6 +35,7 @@
 
 //Console Variables
 ConVar gc_sCustomCommandGiveFreeDay;
+ConVar gc_bFreeDayDeputy;
 ConVar gc_iFreeDayColorRed;
 ConVar gc_iFreeDayColorGreen;
 ConVar gc_iFreeDayColorBlue;
@@ -52,6 +53,7 @@ public void Freedays_OnPluginStart()
 	gc_iFreeDayColorRed = AutoExecConfig_CreateConVar("sm_freekill_freeday_color_red", "0","What color to turn the warden into (set R, G and B values to 255 to disable) (Rgb): x - red value", _, true, 0.0, true, 255.0);
 	gc_iFreeDayColorGreen = AutoExecConfig_CreateConVar("sm_freekill_freeday_color_green", "200","What color to turn the warden into (rGb): x - green value", _, true, 0.0, true, 255.0);
 	gc_iFreeDayColorBlue = AutoExecConfig_CreateConVar("sm_freekill_freeday_color_blue", "0","What color to turn the warden into (rgB): x - blue value", _, true, 0.0, true, 255.0);
+	gc_bFreeDayDeputy= AutoExecConfig_CreateConVar("sm_freekill_freeday_victim_deputy", "1", "0 - disabled, 1 - Allow the deputy to set a personal freeday next round");
 	
 	
 	//Hooks 
@@ -70,7 +72,7 @@ public Action Command_FreeDay(int client, int args)
 	{
 		if (gc_bFreeKillFreeDayVictim.BoolValue)
 		{
-			if (warden_iswarden(client))
+			if (warden_iswarden(client) || (warden_deputy_isdeputy(client) && gc_bFreeDayDeputy.BoolValue))
 			{
 				char info1[255];
 				Menu menu5 = CreateMenu(Handler_GiveFreeDay);
@@ -93,6 +95,7 @@ public Action Command_FreeDay(int client, int args)
 				menu5.ExitButton = true;
 				menu5.Display(client,MENU_TIME_FOREVER);
 			}
+			else CReplyToCommand(client, "%t %t", "warden_tag" , "warden_notwarden"); 
 		}
 	}
 	return Plugin_Handled;

@@ -10,19 +10,6 @@
 		"en"		"[{green}MyJB.warden{default}]"
 	}
 
-	"warden_new"
-	{
-		"#format"   "{1:N}"
-		"en"		"{purple}{1}{default} is now the Warden of this prison."
-		"ru"		"{purple}{1}{default} стал командиром этой тюрьмы."
-		"pl"		"{purple}{1}{default} zostal Wardenem tego wiezienia."
-		"de"		"{purple}{1}{default} ist der neue Warden dieses Gefängnisses."
-		"sv"		"{purple}{1}{default} har blivit fängelsedirektör över detta fängelse."
-		"pt"		"{purple}{1}{default} Agora, o diretor da prisão.."
-		"es"		"{purple}{1}{default} Es ahora el AlcÃ¡ide de esta PrisiÃ³n."
-		"da"		"{purple}{1}{default} er nu warden!"
-	}
-
 	"warden_dooropen_unavailable"
 	{
 		"cze"		"{darkred}Tato mapa nepodporuje vzdálené otevírání dveří. {default}Musíš je {purple}otevřít ručně!"
@@ -45,7 +32,7 @@
 	{
 		"ru"		"только {purple}живые игроки{default} могут стать командиром."
 		"pl"		"tylko {purple}zyjacy gracze{default} moga zostac Wardenem."
-		"de"		"nur {purple}lebende Spieler{default} können Warden werden."
+		"de"		"Nur {purple}lebende Spieler{default} können Warden werden."
 		"sv"		"Endast levande spelare kan bli fängelsedirektör."
 		"pt"		"Apenas os {purple}jogadores podem{default} viver o diretor.."
 		"es"		"SÃ³lo los {purple}jugadores vivos{default}, pueden ser el AlcÃ¡ide."
@@ -138,18 +125,6 @@
 		"en"		"There is no current Warden. Type !w to become the Warden!"
 	}
 
-	"warden_disconnected_nc"
-	{
-		"ru"		"Командир отключился. Вы можете выбрать нового."
-		"pl"		"Warden sie rozlaczyl. Mozecie wybrac nowego."
-		"de"		"Der Warden ist disconnected. Wir brauchen einen neuen Warden!"
-		"sv"		"fängelsedirektören har lämnat. Ni bör nu välja en ny."
-		"pt"		"O diretor deixou o jogo. Agora começa a escolher um novo."
-		"es"		"El AlcÃ¡ide ha desertado. Ahora toca elegir uno nuevo."
-		"en"		"The Warden has disconnected. You may now choose a new one."
-		"da"		"Warden har disconnected. Andre CT kan skrive !w for at blive warden."
-	}
-
 	"warden_notwarden"
 	{
 		"ru"		"Вы должны быть {purple}командиром{default}, чтобы использовать эту команду."
@@ -196,6 +171,19 @@
 		"da"		"Admin: {1} har fyret Warden: {2}"
 	}
 
+	"warden_removed"
+	{
+		"#format"   "{1:N},{2:N}"
+		"ru"		"Админ:{purple}{1}{default} уволил командира: {purple}{2}"
+		"pl"		"Admin: {purple}{1}{default} zwolnil Wardena: {purple}{2}"
+		"de"		"Admin: {purple}{1}{default} hat Warden {purple}{2}{default} seines Amtes enthoben."
+		"sv"		"Admin: {purple}{1}{default} avskedade Fängelsedirektören: {purple}{2}"
+		"pt"		"O Administrador do: {purple}{1}{default} o diretor se aposentou cedo: {purple}{2}"
+		"es"		"Administrador: {purple}{1}{default} ha prejubilado al AlcÃ¡ide: {purple}{2}"
+		"en"		"Admin: {purple}{1}{default} has Fired the Warden: {purple}{2}"
+		"da"		"Admin: {purple}{1}{default} har fyret Warden: {purple}{2}"
+	}
+
 	"warden_adminset"
 	{
 		"#format"   "{1:N}"
@@ -218,17 +206,16 @@
 		"da"		"Warden har {purple}disconnected{default}. Andre CT kan skrive !w for at blive warden."
 	}
 
-	"warden_removed"
+	"warden_disconnected_nc"
 	{
-		"#format"   "{1:N},{2:N}"
-		"ru"		"Админ:{purple}{1}{default} уволил командира: {purple}{2}"
-		"pl"		"Admin: {purple}{1}{default} zwolnil Wardena: {purple}{2}"
-		"de"		"Admin: {purple}{1}{default} hat Warden {purple}{2}{default} seines Amtes enthoben."
-		"sv"		"Admin: {purple}{1}{default} avskedade Fängelsedirektören: {purple}{2}"
-		"pt"		"O Administrador do: {purple}{1}{default} o diretor se aposentou cedo: {purple}{2}"
-		"es"		"Administrador: {purple}{1}{default} ha prejubilado al AlcÃ¡ide: {purple}{2}"
-		"en"		"Admin: {purple}{1}{default} has Fired the Warden: {purple}{2}"
-		"da"		"Admin: {purple}{1}{default} har fyret Warden: {purple}{2}"
+		"ru"		"Командир отключился. Вы можете выбрать нового."
+		"pl"		"Warden sie rozlaczyl. Mozecie wybrac nowego."
+		"de"		"Der Warden ist disconnected. Wir brauchen einen neuen Warden!"
+		"sv"		"fängelsedirektören har lämnat. Ni bör nu välja en ny."
+		"pt"		"O diretor deixou o jogo. Agora começa a escolher um novo."
+		"es"		"El AlcÃ¡ide ha desertado. Ahora toca elegir uno nuevo."
+		"en"		"The Warden has disconnected. You may now choose a new one."
+		"da"		"Warden har disconnected. Andre CT kan skrive !w for at blive warden."
 	}
 
 	"warden_nobecome"
@@ -1032,6 +1019,19 @@
 		"da"		"{1} er nu warden!"
 	}
 
+	"warden_new"
+	{
+		"#format"   "{1:N}"
+		"en"		"{purple}{1}{default} is now the Warden of this prison."
+		"ru"		"{purple}{1}{default} стал командиром этой тюрьмы."
+		"pl"		"{purple}{1}{default} zostal Wardenem tego wiezienia."
+		"de"		"{purple}{1}{default} ist der neue Warden dieses Gefängnisses."
+		"sv"		"{purple}{1}{default} har blivit fängelsedirektör över detta fängelse."
+		"pt"		"{purple}{1}{default} Agora, o diretor da prisão.."
+		"es"		"{purple}{1}{default} Es ahora el AlcÃ¡ide de esta PrisiÃ³n."
+		"da"		"{purple}{1}{default} er nu warden!"
+	}
+
 	"warden_nomuted"
 	{
 		"en"		"There is no muted Prisoner!"
@@ -1295,6 +1295,121 @@
 		"#format"   "{1:i}"
 		"en"		"There are {1} prisoner in your view"
 		"ru"		"В строю {1} заключённых"
+	}
+
+	"warden_deputy_playerdead"
+	{
+		"de"		"Nur {purple}lebende Spieler{default} können Deputy werden."
+		"en"		"Only {purple}alive players{default} can become Deputy!"
+	}
+
+	"warden_deputy_ctsonly"
+	{
+		"de"		"Nur {purple}Counter-Terrorists{default} können Deputy werden."
+		"en"		"Only {purple}Counter-Terrorists{default} can become Deputy!"
+	}
+
+	"warden_deputy_exist"
+	{
+		"#format"   "{1:N}"
+		"de"		"Derzeitiger Deputy ist {purple}{1}{default}"
+		"en"		"The current Deputy is: {purple}{1}{default}."
+	}
+
+	"warden_deputy_disabled"
+	{
+		"en"		"Deputy is currently {purple}disabled{default}!"
+		"pl"		"Deputy jest {purple}wylaczony{default}."
+		"de"		"Deputy ist {purple}ausgeschaltet{default}."
+		"da"		"Deputy er {purple}deaktiveret{default}."
+	}
+
+	"warden_deputy_nobecome"
+	{
+		"en"		"You cannot become deputy, the warden must choose you"
+	}
+
+	"warden_deputy_nobecome"
+	{
+		"en"		"You cannot set a deputy, must choose to become deputy"
+	}
+
+	"warden_deputy_retire"
+	{
+		"#format"   "{1:N}"
+		"de"		"{purple}{1}{default} ist zurückgetreten. Wir brauchen einen neuen Deputy!"
+		"en"		"{purple}{1}{default} has decided to retire as Deputy. You may now choose a new Deputy!"
+	}
+
+	"warden_deputy_retire_nc"
+	{
+		"#format"   "{1:N}"
+		"en"		"{1} has decided to retire as Deputy. You may now choose a new Deputy!"
+		"de"		"{1} ist zurückgetreten. Wir brauchen einen neuen Deputy!"
+	}
+
+	"warden_deputy_fired_nc"
+	{
+		"#format"   "{1:N},{2:N}"
+		"de"		"Warden {1} hat Deputy {2} seines Amtes enthoben."
+		"en"		"Warden: {1} has Fired the Deputy: {2}"
+	}
+
+	"warden_deputy_fired"
+	{
+		"#format"   "{1:N},{2:N}"
+		"de"		"Warden: {purple}{1}{default} hat Deputy {purple}{2}{default} seines Amtes enthoben."
+		"en"		"Warden: {purple}{1}{default} has Fired the Deputy: {purple}{2}"
+	}
+
+	"warden_deputy_dead_nc"
+	{
+		"de"		"Der Deputy ist Tod! Ihr solltet jetzt einen neuen wählen!"
+		"en"		"The Deputy is now dead. You may now choose a new one."
+	}
+
+	"warden_deputy_dead"
+	{
+		"de"		"Der Deputy ist {darkred}Tod{default}! Ihr solltet jetzt einen neuen wählen!"
+		"en"		"The Deputy is now {darkred}dead{default}. You may now choose a new one."
+	}
+
+	"warden_deputy_disconnected"
+	{
+		"de"		"Der Deputy ist {purple}disconnected{default}. Wir brauchen einen neuen Deputy!"
+		"en"		"The Deputy has {purple}disconnected{default}. You may now choose a new one."
+	}
+
+	"warden_deputy_disconnected_nc"
+	{
+		"de"		"Der Deputy ist disconnected. Wir brauchen einen neuen Deputy!"
+		"en"		"The Deputy has disconnected. You may now choose a new one."
+	}
+
+	"warden_deputy_new_nc"
+	{
+		"#format"   "{1:N}"
+		"de"		"{1} ist der neue Deputy des Wardens."
+		"en"		"{1} is now the Deputy of the Warden."
+	}
+
+	"warden_deputy_new"
+	{
+		"#format"   "{1:N}"
+		"en"		"{purple}{1}{default} is now the Deputy of the Warden."
+		"de"		"{purple}{1}{default} ist der neue Deputy des Wardens."
+	}
+
+	"warden_deputy_set"
+	{
+		"de"		"Du kannst als {purple}Warden{default} einen {purple}Deputy{default} bestimmen. Schreibe {green}!deputy{default} um einen Stellvertreter zu wählen!"
+		"en"		"You as {purple}Warden{default} can set a Deputy. Type {green}!deputy{default} to set an Deputy!"
+	}
+
+	"warden_deputy_become"
+	{
+		"de"		"Es gibt zur Zeit {purple}keinen Deputy{default}. Schreibe {green}!deputy{default} um neuer Deputy zu werden!"
+		"en"		"There is no current {purple}Deputy{default}. Type {green}!deputy{default} to become the Deputy!"
 	}
 
 }

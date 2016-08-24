@@ -35,10 +35,11 @@
 
 //Console Variables
 ConVar gc_bMarker;
+ConVar gc_bMarkerDeputy;
 
 
 //Booleans
-bool g_bMarkerSetup;
+bool g_bMarkerSetup[MAXPLAYERS + 1];
 bool g_bCanZoom[MAXPLAYERS + 1];
 bool g_bHasSilencer[MAXPLAYERS + 1];
 
@@ -77,6 +78,7 @@ public void Marker_OnPluginStart()
 {
 	//AutoExecConfig
 	gc_bMarker = AutoExecConfig_CreateConVar("sm_warden_marker", "1", "0 - disabled, 1 - enable Warden advanced markers ", _, true,  0.0, true, 1.0);
+	gc_bMarkerDeputy = AutoExecConfig_CreateConVar("sm_warden_marker_deputy", "1", "0 - disabled, 1 - enable 'advanced markers'-feature for deputy ", _, true,  0.0, true, 1.0);
 	
 	//Hooks
 	HookEvent("item_equip", Marker_Event_ItemEquip);
@@ -134,9 +136,9 @@ public Action Marker_OnPlayerRunCmd(int client, int &buttons, int &impulse, floa
 {
 	if (buttons & IN_ATTACK2)
 	{
-		if (gc_bMarker.BoolValue && !g_bCanZoom[client] && !g_bHasSilencer[client] && (g_iWrongWeapon[client] != 0) && (g_iWrongWeapon[client] != 8) && (!StrEqual(g_sEquipWeapon[client], "taser")))
+		if (gc_bMarker.BoolValue && !g_bCanZoom[client] && !g_bHasSilencer[client] && (g_iWrongWeapon[client] != 0) && (g_iWrongWeapon[client] != 8) && (!StrEqual(g_sEquipWeapon[client], "taser")) && (IsClientWarden(client) || (IsClientDeputy(client) && gc_bMarkerDeputy.BoolValue)) && gc_bPlugin.BoolValue)
 		{
-			if(!g_bMarkerSetup)
+			if(!g_bMarkerSetup[client])
 				GetClientAimTargetPos(client, g_fMarkerSetupStartOrigin);
 			
 			GetClientAimTargetPos(client, g_fMarkerSetupEndOrigin);
@@ -154,13 +156,13 @@ public Action Marker_OnPlayerRunCmd(int client, int &buttons, int &impulse, floa
 				TE_SendToClient(client);
 			}
 			
-			g_bMarkerSetup = true;
+			g_bMarkerSetup[client] = true;
 		}
 	}
-	else if (g_bMarkerSetup)
+	else if (g_bMarkerSetup[client])
 	{
 		MarkerMenu(client);
-		g_bMarkerSetup = false;
+		g_bMarkerSetup[client] = false;
 	}
 }
 
@@ -190,7 +192,7 @@ public void Marker_OnMapStart()
 
 stock void MarkerMenu(int client)
 {
-	if(!(0 < client < MaxClients) || !IsClientWarden(client))
+	if(!IsValidClient(client, false, false) || (!IsClientWarden(client) && !IsClientDeputy(client)))
 	{
 		CPrintToChat(client, "%t %t", "warden_tag", "warden_notwarden");
 		return;
@@ -213,7 +215,7 @@ stock void MarkerMenu(int client)
 	}
 	
 	float g_fPos[3];
-	Entity_GetAbsOrigin(g_iWarden, g_fPos);
+	Entity_GetAbsOrigin(client, g_fPos);
 	
 	float range = GetVectorDistance(g_fPos, g_fMarkerSetupStartOrigin);
 	if (range > g_fMarkerRangeMax)
@@ -255,13 +257,10 @@ stock void MarkerMenu(int client)
 
 public int Handle_MarkerMenu(Handle menu, MenuAction action, int client, int itemNum)
 {
-	if(!(0 < client < MaxClients))
-		return;
-	
 	if(!IsValidClient(client, false, false))
 		return;
 	
-	if (client != g_iWarden)
+	if (!IsClientWarden(client) && !IsClientDeputy(client))
 	{
 		CPrintToChat(client, "%t %t", "warden_tag", "warden_notwarden");
 		return;
@@ -309,6 +308,8 @@ stock void Draw_Markers()
 		if (g_fMarkerRadius[i] <= 0.0)
 			continue;
 		
+		
+		// FIX OR FEATURE    TODO ASK ZIPCORE
 		float fWardenOrigin[3];
 		Entity_GetAbsOrigin(g_iWarden, fWardenOrigin);
 		
@@ -317,7 +318,8 @@ stock void Draw_Markers()
 			CPrintToChat(g_iWarden, "%t %t", "warden_tag", "warden_marker_faraway", g_sColorNames[i]);
 			RemoveMarker(i);
 			continue;
-		}
+		}		
+		// FIX OR FEATURE    TODO ASK ZIPCORE
 		
 		LoopValidClients(iClient, false, false)
 		{
