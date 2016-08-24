@@ -64,17 +64,17 @@ public void Freedays_OnPluginStart()
 ******************************************************************************/
 
 
-public Action Command_FreeDay(int warden, int args)
+public Action Command_FreeDay(int client, int args)
 {
 	if (gc_bPlugin.BoolValue)
 	{
 		if (gc_bFreeKillFreeDayVictim.BoolValue)
 		{
-			if (IsValidClient(warden, false, true))
+			if (warden_iswarden(client))
 			{
 				char info1[255];
 				Menu menu5 = CreateMenu(Handler_GiveFreeDay);
-				Format(info1, sizeof(info1), "%T", "request_givefreeday", warden);
+				Format(info1, sizeof(info1), "%T", "request_givefreeday", client);
 				menu5.SetTitle(info1);
 				LoopValidClients(i,true,true)
 				{
@@ -91,7 +91,7 @@ public Action Command_FreeDay(int warden, int args)
 				}
 				menu5.ExitBackButton = true;
 				menu5.ExitButton = true;
-				menu5.Display(warden,MENU_TIME_FOREVER);
+				menu5.Display(client,MENU_TIME_FOREVER);
 			}
 		}
 	}
