@@ -182,7 +182,7 @@ public Action Command_VoteLastGuard(int client,int args)
 	char steamid[64];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
 	
-	if (gc_bPlugin.BoolValue && !gc_bAutomatic.BoolValue)
+	if (gc_bPlugin.BoolValue && !gc_bAutomatic.BoolValue && MinCT)
 	{
 		if (gc_bVote.BoolValue && (GetClientTeam(client) == CS_TEAM_T) && IsPlayerAlive(client))
 		{
