@@ -103,36 +103,36 @@
 
 	"weapons_random"
 	{
-		"ru"		"Вы получите {purple} случайное оружие{default} в следующем раунде"
-		"pl"		"Dostaniesz  {purple} randomowo wylosowana bron  {default}w nastepnej rundzie"
-		"de"		"Du bekommst {purple}eine Zufalls Waffe{default} in der nächsten Runde."
-		"en"		"You will get a {purple} Random Weapon{default} next round."
-		"da"		"Du vil få et {purple} tilfældigt våben{default} næste runde."
+		"ru"		"Вы получите {purple} случайное оружие{default}"
+		"pl"		"Dostaniesz {purple} randomowo wylosowana bron{default}"
+		"de"		"Du bekommst {purple}eine Zufalls Waffe{default}."
+		"en"		"You will get a {purple} Random Weapon{default}."
+		"da"		"Du vil få et {purple} tilfældigt våben{default}."
 	}
 
 	"weapons_randomall"
 	{
 		"ru"		"Вы получите {purple} случайное оружие{default} в следующих раундах"
-		"pl"		"Dostaniesz  {purple} randomowo wylosowana bron  {default}w nastepnych rundach"
-		"de"		"Du bekommst {purple}eine Zufalls Waffe{default} in den nächsten Runden."
+		"pl"		"Dostaniesz {purple} randomowo wylosowana bron  {default}w nastepnych rundach"
+		"de"		"Du bekommst immer {purple}eine Zufalls Waffe{default} in den nächsten Runden."
 		"en"		"You will now get a{purple} Random Weapon{default} every round."
 		"da"		"Du vil få et {purple} tilfældigt våben{default} næste runde."
 	}
 
 	"weapons_same"
 	{
-		"ru"		"Вы получите {purple} это же оружие{default} в следующем раунде"
-		"pl"		"Dostaniesz  {purple} te sama bron {default}w nastepnej rundzie"
-		"de"		"Du bekommst die gleiche Waffe{default} in der nächsten Runde."
-		"en"		"You will get the {purple}Same Weapon{default} next round."
-		"da"		"Du vil få {purple}samme våben{default} næste runde."
+		"ru"		"Вы получите {purple} это же оружие{default}"
+		"pl"		"Dostaniesz  {purple} te sama bron {default}"
+		"de"		"Du bekommst {purple}die gleiche Waffe{default}."
+		"en"		"You will get the {purple}Same Weapon{default}."
+		"da"		"Du vil få {purple}samme våben{default}."
 	}
 
 	"weapons_sameall"
 	{
 		"ru"		"Вы получите {purple} это же оружие{default} в следующих раундах"
-		"pl"		"Dostaniesz  {purple} te sama bron {default}w nastepnych rundach"
-		"de"		"Du bekommst {purple}die gleiche Waffe{default} in den nächsten Runden."
+		"pl"		"Dostaniesz {purple} te sama bron {default}w nastepnych rundach"
+		"de"		"Du bekommst immer {purple}die gleiche Waffe{default} in den nächsten Runden."
 		"en"		"You will now get the{purple} Same Weapon{default} every round."
 		"da"		"Du vil få det {purple} samme våben{default} næste runde."
 	}
