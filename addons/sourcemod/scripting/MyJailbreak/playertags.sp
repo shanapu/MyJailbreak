@@ -134,7 +134,7 @@ public int warden_OnWardenCreated(int client)
 
 public int warden_OnWardenRemoved(int client)
 {
-	HandleTag(client);
+	CreateTimer(1.0, DelayCheck);
 	return;
 }
 
@@ -168,7 +168,7 @@ public int HandleTag(int client)
 	if(gc_bPlugin.BoolValue)
 	{
 		if(gc_bStats.BoolValue && IsValidClient(client, true, true))
-		{	
+		{
 			char tags[64];
 			
 			if (GetClientTeam(client) == CS_TEAM_T)
