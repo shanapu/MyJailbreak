@@ -105,7 +105,7 @@ public int Painter_OnSettingChanged(Handle convar, const char[] oldValue, const 
 
 public Action Command_PainterMenu(int client, int args)
 {
-	if(gc_bPainter.BoolValue && CheckVipFlag(client,g_sAdminFlagPainter))
+	if(gc_bPainter.BoolValue)
 	{
 		if ((IsClientWarden(client)) || ((GetClientTeam(client) == CS_TEAM_T) && g_bPainterT))
 		{
@@ -117,7 +117,7 @@ public Action Command_PainterMenu(int client, int args)
 				Format(menuinfo, sizeof(menuinfo), "%T", "warden_painter_title", client);
 				menu.SetTitle(menuinfo);
 				Format(menuinfo, sizeof(menuinfo), "%T", "warden_painter_off", client);
-				menu.AddItem("off", menuinfo);
+				if (g_bPainter[client]) menu.AddItem("off", menuinfo);
 				Format(menuinfo, sizeof(menuinfo), "%T", "warden_paintert", client);
 				if (GetClientTeam(client) == CS_TEAM_CT) menu.AddItem("terror", menuinfo);
 				Format(menuinfo, sizeof(menuinfo), "%T", "warden_rainbow", client);
@@ -250,7 +250,6 @@ public void Painter_OnMapEnd()
 		g_bPainterUse[i] = false;
 		g_bPainter[i] = false;
 		
-		if(IsClientWarden(i)) g_bPainterT = false;
 		if(g_bPainter[i]) g_bPainter[i] = false;
 	}
 }
@@ -258,15 +257,11 @@ public void Painter_OnMapEnd()
 
 public void Painter_OnClientPutInServer(int client)
 {
-	g_bLaserUse[client] = false;
-	g_bLaserColorRainbow[client] = true;
+	g_bPainterUse[client] = false;
+	g_bPainterColorRainbow[client] = true;
 }
 
 
-public void Painter_OnWardenCreation(int client)
-{
-	g_bLaser = true;
-}
 
 
 public void Painter_OnWardenRemoved(int client)

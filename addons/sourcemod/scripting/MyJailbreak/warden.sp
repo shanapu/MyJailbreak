@@ -699,8 +699,8 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 		HandCuffs_OnPlayerRunCmd(client, buttons, impulse, vel, angles, weapon);
 		Marker_OnPlayerRunCmd(client, buttons, impulse, vel, angles, weapon);
 		Laser_OnPlayerRunCmd(client, buttons, impulse, vel, angles, weapon);
-		Painter_OnPlayerRunCmd(client, buttons, impulse, vel, angles, weapon);
 	}
+	Painter_OnPlayerRunCmd(client, buttons, impulse, vel, angles, weapon);
 	return Plugin_Continue;
 }
 
@@ -1028,7 +1028,6 @@ void Forward_OnWardenCreated(int client)
 	Icon_OnWardenCreation(client);
 	Color_OnWardenCreation(client);
 	Laser_OnWardenCreation(client);
-	Painter_OnWardenCreation(client);
 }
 
 
