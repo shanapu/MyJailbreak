@@ -109,7 +109,7 @@ public int Painter_OnSettingChanged(Handle convar, const char[] oldValue, const 
 
 public Action Command_PainterMenu(int client, int args)
 {
-	if(gc_bPainter.BoolValue && CheckVipFlag(client,g_sAdminFlagPainter))
+	if(gc_bPainter.BoolValue)
 	{
 		if ((IsClientWarden(client)) || (IsClientDeputy(client) && gc_bPainterDeputy.BoolValue) || ((GetClientTeam(client) == CS_TEAM_T) && g_bPainterT))
 		{
@@ -121,7 +121,7 @@ public Action Command_PainterMenu(int client, int args)
 				Format(menuinfo, sizeof(menuinfo), "%T", "warden_painter_title", client);
 				menu.SetTitle(menuinfo);
 				Format(menuinfo, sizeof(menuinfo), "%T", "warden_painter_off", client);
-				if(g_bPainter[client] == true) menu.AddItem("off", menuinfo);
+				if(g_bPainter[client]) menu.AddItem("off", menuinfo);
 				Format(menuinfo, sizeof(menuinfo), "%T", "warden_paintert", client);
 				if (GetClientTeam(client) == CS_TEAM_CT) menu.AddItem("terror", menuinfo);
 				Format(menuinfo, sizeof(menuinfo), "%T", "warden_rainbow", client);
@@ -180,9 +180,6 @@ public void Painter_Event_RoundEnd(Event event, const char[] name, bool dontBroa
 }
 
 
-
-
-
 /******************************************************************************
                    FORWARDS LISTENING
 ******************************************************************************/
@@ -210,7 +207,7 @@ public void Painter_OnConfigsExecuted()
 
 public Action Painter_OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
 {
-	if((IsClientWarden(client) && gc_bPainter.BoolValue && g_bPainter[client] && CheckVipFlag(client,g_sAdminFlagPainter)) || ((GetClientTeam(client) == CS_TEAM_T) && gc_bPainter.BoolValue && g_bPainterT) || (IsClientDeputy(client) && gc_bPainterDeputy.BoolValue))
+	if((IsClientWarden(client) && gc_bPainter.BoolValue && g_bPainter[client] && CheckVipFlag(client,g_sAdminFlagPainter)) || ((GetClientTeam(client) == CS_TEAM_T) && gc_bPainter.BoolValue && g_bPainterT && g_bPainter[client]) || (IsClientDeputy(client) && gc_bPainterDeputy.BoolValue && g_bPainter[client]))
 	{
 		for (int i = 0; i < MAX_BUTTONS; i++)
 		{
@@ -253,23 +250,14 @@ public void Painter_OnMapEnd()
 		g_fLastPainter[i][2] = 0.0;
 		g_bPainterUse[i] = false;
 		g_bPainter[i] = false;
-		
-		if(IsClientWarden(i) || (IsClientDeputy(i) && gc_bPainterDeputy.BoolValue)) g_bPainterT = false;
-		if(g_bPainter[i]) g_bPainter[i] = false;
 	}
 }
 
 
 public void Painter_OnClientPutInServer(int client)
 {
-	g_bLaserUse[client] = false;
-	g_bLaserColorRainbow[client] = true;
-}
-
-
-public void Painter_OnWardenCreation(int client)
-{
-	g_bLaser = true;
+	g_bPainterUse[client] = false;
+	g_bPainterColorRainbow[client] = true;
 }
 
 
@@ -281,7 +269,7 @@ public void Painter_OnWardenRemoved(int client)
 
 public void Painter_OnClientDisconnect(int client)
 {
-	if(IsClientWarden(client) || (IsClientDeputy(client) && gc_bPainterDeputy.BoolValue)) g_bPainterT = false;
+	if(IsClientWarden(client)) g_bPainterT = false;
 	g_iLastButtons[client] = 0;
 }
 

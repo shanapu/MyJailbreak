@@ -39,7 +39,7 @@ ConVar gc_bMarkerDeputy;
 
 
 //Booleans
-bool g_bMarkerSetup;
+bool g_bMarkerSetup[MAXPLAYERS + 1];
 bool g_bCanZoom[MAXPLAYERS + 1];
 bool g_bHasSilencer[MAXPLAYERS + 1];
 
@@ -138,7 +138,7 @@ public Action Marker_OnPlayerRunCmd(int client, int &buttons, int &impulse, floa
 	{
 		if (gc_bMarker.BoolValue && !g_bCanZoom[client] && !g_bHasSilencer[client] && (g_iWrongWeapon[client] != 0) && (g_iWrongWeapon[client] != 8) && (!StrEqual(g_sEquipWeapon[client], "taser")) && (IsClientWarden(client) || (IsClientDeputy(client) && gc_bMarkerDeputy.BoolValue)) && gc_bPlugin.BoolValue)
 		{
-			if(!g_bMarkerSetup)
+			if(!g_bMarkerSetup[client])
 				GetClientAimTargetPos(client, g_fMarkerSetupStartOrigin);
 			
 			GetClientAimTargetPos(client, g_fMarkerSetupEndOrigin);
@@ -156,13 +156,13 @@ public Action Marker_OnPlayerRunCmd(int client, int &buttons, int &impulse, floa
 				TE_SendToClient(client);
 			}
 			
-			g_bMarkerSetup = true;
+			g_bMarkerSetup[client] = true;
 		}
 	}
-	else if (g_bMarkerSetup)
+	else if (g_bMarkerSetup[client])
 	{
 		MarkerMenu(client);
-		g_bMarkerSetup = false;
+		g_bMarkerSetup[client] = false;
 	}
 }
 
@@ -192,7 +192,7 @@ public void Marker_OnMapStart()
 
 stock void MarkerMenu(int client)
 {
-	if(!(0 < client < MaxClients) || (!IsClientWarden(client) || (!IsClientDeputy(client) && gc_bMarkerDeputy.BoolValue)))
+	if(!IsValidClient(client, false, false) || (!IsClientWarden(client) && !IsClientDeputy(client)))
 	{
 		CPrintToChat(client, "%t %t", "warden_tag", "warden_notwarden");
 		return;
@@ -257,13 +257,10 @@ stock void MarkerMenu(int client)
 
 public int Handle_MarkerMenu(Handle menu, MenuAction action, int client, int itemNum)
 {
-	if(!(0 < client < MaxClients))
-		return;
-	
 	if(!IsValidClient(client, false, false))
 		return;
 	
-	if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bMarkerDeputy.BoolValue))
+	if (!IsClientWarden(client) && !IsClientDeputy(client))
 	{
 		CPrintToChat(client, "%t %t", "warden_tag", "warden_notwarden");
 		return;

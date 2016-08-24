@@ -105,7 +105,7 @@ public Action Command_LaserMenu(int client, int args)
 				Format(menuinfo, sizeof(menuinfo), "%T", "warden_laser_title", client);
 				menu.SetTitle(menuinfo);
 				Format(menuinfo, sizeof(menuinfo), "%T", "warden_laser_off", client);
-				if(g_bLaser[client] == true) menu.AddItem("off", menuinfo);
+				if(g_bLaser[client]) menu.AddItem("off", menuinfo);
 				Format(menuinfo, sizeof(menuinfo), "%T", "warden_rainbow", client);
 				menu.AddItem("rainbow", menuinfo);
 				Format(menuinfo, sizeof(menuinfo), "%T", "warden_white", client);
@@ -191,13 +191,6 @@ public void Laser_OnConfigsExecuted()
 		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
 			RegConsoleCmd(sCommand, Command_LaserMenu, "Allows Warden to toggle on/off the wardens Laser pointer");
 	}
-}
-
-
-
-public void Laser_OnMapEnd()
-{
-	LoopClients(i) g_bLaser[i] = false;
 }
 
 

@@ -221,9 +221,9 @@ public void HandCuffs_Event_RoundEnd(Event event, const char[] name, bool dontBr
 
 public Action HandCuffs_OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
 {
-	if ((buttons & IN_ATTACK2) && (IsClientWarden(client) || (IsClientDeputy(client) && gc_bHandCuffDeputy.BoolValue)) && gc_bPlugin.BoolValue)
+	if ((buttons & IN_ATTACK2))
 	{
-		if (gc_bHandCuff.BoolValue && (StrEqual(g_sEquipWeapon[client], "taser")))
+		if (gc_bHandCuff.BoolValue && (StrEqual(g_sEquipWeapon[client], "taser")) && (IsClientWarden(client) || (IsClientDeputy(client) && gc_bHandCuffDeputy.BoolValue)) && gc_bPlugin.BoolValue)
 		{
 			int Target = GetClientAimTarget(client, true);
 			
@@ -263,7 +263,7 @@ public Action HandCuffs_OnTakedamage(int victim, int &attacker, int &inflictor, 
 	
 	if(g_bCuffed[attacker]) return Plugin_Handled;
 	
-	if(!gc_bPlugin.BoolValue || !gc_bHandCuff.BoolValue || (!IsClientWarden(attacker) || (!IsClientDeputy(attacker) && gc_bHandCuffDeputy.BoolValue)) || !IsValidEdict(weapon) || (!gc_bHandCuffCT.BoolValue && (GetClientTeam(victim) == CS_TEAM_CT)))
+	if(!gc_bPlugin.BoolValue || !gc_bHandCuff.BoolValue || (!IsClientWarden(attacker) && !IsClientDeputy(attacker)) || (IsClientDeputy(attacker) && !gc_bHandCuffDeputy.BoolValue) || !IsValidEdict(weapon) || (!gc_bHandCuffCT.BoolValue && (GetClientTeam(victim) == CS_TEAM_CT)))
 	{
 		return Plugin_Continue;
 	}
@@ -271,7 +271,7 @@ public Action HandCuffs_OnTakedamage(int victim, int &attacker, int &inflictor, 
 	if(!StrEqual(sWeapon, "weapon_taser")) return Plugin_Continue;
 	
 	if((g_iPlayerHandCuffs[attacker] == 0) && (g_iCuffed == 0)) return Plugin_Continue;
-		
+	
 	if(g_bCuffed[victim])
 	{
 		FreeEm(victim, attacker);

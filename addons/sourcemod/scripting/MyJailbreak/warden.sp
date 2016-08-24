@@ -55,8 +55,8 @@ ConVar gc_sCustomCommandRemoveWarden;
 ConVar gc_fRandomTimer;
 
 
-//3rd party Convars
-ConVar g_bMenuClose;
+//3rd party Convars 
+ConVar g_bMenuClose; 
 
 
 //Booleans
@@ -196,6 +196,7 @@ public void OnPluginStart()
 	
 	
 	//Warden module
+	Deputy_OnPluginStart();
 	Mute_OnPluginStart();
 	Disarm_OnPluginStart();
 	BulletSparks_OnPluginStart();
@@ -218,7 +219,6 @@ public void OnPluginStart()
 	MarkRebel_OnPluginStart();
 	Counter_OnPluginStart();
 	ShootGuns_OnPluginStart();
-	Deputy_OnPluginStart();
 	
 	
 	//AutoExecConfig
@@ -273,6 +273,7 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 //Initialize Plugin
 public void OnConfigsExecuted()
 {
+	Deputy_OnConfigsExecuted();
 	Math_OnConfigsExecuted();
 	RandomKill_OnConfigsExecuted();
 	CellDoors_OnConfigsExecuted();
@@ -284,7 +285,6 @@ public void OnConfigsExecuted()
 	Countdown_OnConfigsExecuted();
 	ExtendTime_OnConfigsExecuted();
 	Counter_OnConfigsExecuted();
-	Deputy_OnConfigsExecuted();
 	
 	
 	//Set custom Commands
@@ -601,6 +601,7 @@ public void Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 //Prepare Plugin & modules
 public void OnMapStart()
 {
+	Deputy_OnMapStart();
 	Countdown_OnMapStart();
 	Math_OnMapStart();
 	HandCuffs_OnMapStart();
@@ -609,7 +610,6 @@ public void OnMapStart()
 	Icon_OnMapStart();
 	Laser_OnMapStart();
 	Painter_OnMapStart();
-	Deputy_OnMapStart();
 	
 	if(gc_bSounds.BoolValue)
 	{
@@ -660,10 +660,10 @@ public void OnClientDisconnect(int client)
 		g_iWarden = -1;
 	}
 	
+	Deputy_OnClientDisconnect(client);
 	Painter_OnClientDisconnect(client);
 	HandCuffs_OnClientDisconnect(client);
 	Icon_OnClientDisconnect(client);
-	Deputy_OnClientDisconnect(client);
 }
 
 
@@ -677,15 +677,14 @@ public void OnMapEnd()
 		g_iWarden = -1;
 	}
 	
+	Deputy_OnMapEnd();
 	Math_OnMapEnd();
 	Mute_OnMapEnd();
 	Countdown_OnMapEnd();
 	Reminder_OnMapEnd();
 	HandCuffs_OnMapEnd();
 	Marker_OnMapEnd();
-	Laser_OnMapEnd();
 	Painter_OnMapEnd();
-	Deputy_OnMapEnd();
 }
 
 
@@ -703,9 +702,12 @@ public int OnAvailableLR(int Announced)
 // Check Keyboard Input for modules
 public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
 {
-	HandCuffs_OnPlayerRunCmd(client, buttons, impulse, vel, angles, weapon);
-	Marker_OnPlayerRunCmd(client, buttons, impulse, vel, angles, weapon);
-	Laser_OnPlayerRunCmd(client, buttons, impulse, vel, angles, weapon);
+	if((IsClientWarden(client) || IsClientDeputy(client)) && gc_bPlugin.BoolValue)
+	{
+		HandCuffs_OnPlayerRunCmd(client, buttons, impulse, vel, angles, weapon);
+		Marker_OnPlayerRunCmd(client, buttons, impulse, vel, angles, weapon);
+		Laser_OnPlayerRunCmd(client, buttons, impulse, vel, angles, weapon);
+	}
 	Painter_OnPlayerRunCmd(client, buttons, impulse, vel, angles, weapon);
 	
 	return Plugin_Continue;
@@ -1038,10 +1040,10 @@ void Forward_OnWardenCreated(int client)
 	Call_PushCell(client);
 	Call_Finish();
 	
+	Deputy_OnWardenCreation(client);
 	Icon_OnWardenCreation(client);
 	Color_OnWardenCreation(client);
 	Laser_OnWardenCreation(client);
-	Painter_OnWardenCreation(client);
 	HandCuffs_OnWardenCreation(client);
 }
 
@@ -1071,13 +1073,13 @@ void Forward_OnWardenRemoved(int client)
 	Call_PushCell(client);
 	Call_Finish();
 	
+	Deputy_OnWardenRemoved(client);
 	Marker_OnWardenRemoved();
 	Icon_OnWardenRemoved(client);
 	Color_OnWardenRemoved(client);
 	Laser_OnWardenRemoved(client);
 	Painter_OnWardenRemoved(client);
-	Deputy_OnWardenRemoved(client);
-	HandCuffs_OnWardenRemoved(client);
+	HandCuffs_OnWardenRemoved(client); 
 }
 
 

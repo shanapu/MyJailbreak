@@ -371,7 +371,7 @@ public void Deputy_OnWardenRemovedBySelf(int client)
 }
 
 
-//New warden
+//Announce feature
 public void Deputy_OnWardenCreation(int client)
 {
 	CreateTimer(10.0, Timer_NoDeputy);

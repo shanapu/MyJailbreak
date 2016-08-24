@@ -204,7 +204,7 @@ public void ShowHUD()
 			{
 				if(IsLastGuardRule())
 				{
-					int lastCT = (GetClientTeam(i) == CS_TEAM_CT);
+					int lastCT = GetLastAlive(CS_TEAM_CT); 
 					
 					if(IsEventDayPlanned())
 					{
