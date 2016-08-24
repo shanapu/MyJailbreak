@@ -39,6 +39,7 @@ ConVar gc_bDeputy;
 ConVar gc_sModelPathDeputy;
 ConVar gc_sCustomCommandDeputy;
 ConVar gc_sCustomCommandUnDeputy;
+ConVar gc_sCustomCommandRemoveDeputy;
 ConVar gc_bSetDeputy;
 ConVar gc_bBecomeDeputy;
 ConVar gc_bModelDeputy;
@@ -68,6 +69,10 @@ public void Deputy_OnPluginStart()
 	RegConsoleCmd("sm_undeputy", Command_ExitDeputy, "Allows the warden to remove the deputy and the deputy to retire from the position");
 	
 	
+	//Admin commands
+	RegAdminCmd("sm_removedeputy", AdminCommand_RemoveDeputy, ADMFLAG_GENERIC);
+	
+	
 	//Forwards
 	gF_OnDeputyCreated = CreateGlobalForward("warden_OnDeputyCreated", ET_Ignore, Param_Cell);
 	gF_OnDeputyRemoved = CreateGlobalForward("warden_OnDeputyRemoved", ET_Ignore, Param_Cell);
@@ -84,6 +89,7 @@ public void Deputy_OnPluginStart()
 	gc_sModelPathDeputy = AutoExecConfig_CreateConVar("sm_warden_deputy_model_path", "models/player/custom_player/zombie/revenant/revenant_v2.mdl", "Path to the model for deputy.");
 	gc_sCustomCommandDeputy = AutoExecConfig_CreateConVar("sm_warden_cmds_deputy", "d", "Set your custom chat command for open menu(!menu (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands))");
 	gc_sCustomCommandUnDeputy = AutoExecConfig_CreateConVar("sm_warden_cmds_undeputy", "ud", "Set your custom chat command for open menu(!menu (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands))");
+	gc_sCustomCommandRemoveDeputy = AutoExecConfig_CreateConVar("sm_warden_cmds_removedeputy", "rd,fd", "Set your custom chat commands for admins to remove a warden(!removewarden (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands)");
 	gc_bWardenDead = AutoExecConfig_CreateConVar("sm_warden_deputy_warden_dead", "1", "0 - Deputy will removed on warden death, 1 - Deputy will be new warden", _, true,  0.0, true, 1.0);
 	
 	
@@ -138,6 +144,18 @@ public void Deputy_OnConfigsExecuted()
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
 		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
 			RegConsoleCmd(sCommand, Command_ExitDeputy, "Allows the warden to remove the deputy and the deputy to retire from the position");
+	}
+	
+	//RemoveDeputy
+	gc_sCustomCommandRemoveDeputy.GetString(sCommands, sizeof(sCommands));
+	ReplaceString(sCommands, sizeof(sCommands), " ", "");
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	
+	for(int i = 0; i < iCount; i++)
+	{
+		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
+		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+			RegAdminCmd(sCommand, AdminCommand_RemoveDeputy, ADMFLAG_GENERIC);
 	}
 }
 
@@ -208,6 +226,25 @@ public Action Command_ExitDeputy(int client, int args)
 		else CPrintToChat(client, "%t %t", "warden_tag" , "warden_notwarden");
 	}
 	else CPrintToChat(client, "%t %t", "warden_tag" , "warden_deputy_disabled");
+}
+
+
+//Remove Deputy for Admins
+public Action AdminCommand_RemoveDeputy(int client, int args)
+{
+	if(gc_bDeputy.BoolValue && gc_bPlugin.BoolValue)  //"sm_warden_deputy_enable" "1"
+	{
+		if(g_iDeputy != -1)  //Is there a warden to remove
+		{
+			CPrintToChatAll("%t %t", "warden_tag" , "warden_deputy_removed", client, g_iDeputy);  // if client is console !=
+			if(gc_bBetterNotes.BoolValue) PrintCenterTextAll("%t", "warden_deputy_removed_nc", client, g_iDeputy);
+			
+			if(ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Admin %L removed player %L as Deputy", client, g_iDeputy);
+			
+			RemoveTheDeputy();
+		}
+	}
+	return Plugin_Handled;
 }
 
 
