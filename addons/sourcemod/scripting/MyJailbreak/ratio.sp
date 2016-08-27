@@ -60,6 +60,7 @@ bool g_bQueueCooldown[MAXPLAYERS+1] = false;
 
 //Handles
 Handle g_aGuardQueue;
+Handle g_aGuardList;
 Handle g_sCookieCTBan;
 
 
@@ -142,6 +143,7 @@ public void OnPluginStart()
 	
 	//Prepare
 	g_aGuardQueue = CreateArray();
+	g_aGuardList = CreateArray();
 	
 	
 	//Cookies
@@ -456,11 +458,21 @@ public Action Event_OnPlayerSpawn(Event event, const char[] name, bool bDontBroa
 
 public void Event_PlayerTeam_Post(Event event, const char[] szName, bool bDontBroadcast)
 {
-	if(GetEventInt(event, "team") != CS_TEAM_CT)
-		return;
-	
 	int client = GetClientOfUserId(GetEventInt(event, "userid"));
-	RemovePlayerFromGuardQueue(client);
+	
+	if(GetEventInt(event, "team") == CS_TEAM_CT)
+	{
+		int iIndex = FindValueInArray(g_aGuardList, client);
+		
+		if(iIndex == -1)
+		{
+			iIndex = PushArrayCell(g_aGuardList, client);
+		}
+		RemovePlayerFromGuardQueue(client);
+		
+	}
+	else RemovePlayerFromGuardList(client);
+	return;
 }
 
 
@@ -555,19 +567,18 @@ public Action Event_OnJoinTeam(int client, const char[] szCommand, int iArgCount
 ******************************************************************************/
 
 
-/*
+
 void MinusDeath(int client)
 {
 	if(IsValidClient(client, true, true))
 	{
 		int frags = GetEntProp(client, Prop_Data, "m_iFrags");
 		int deaths = GetEntProp(client, Prop_Data, "m_iDeaths");
-		SetEntProp(client, Prop_Data, "m_iFrags", (frags++));
+		SetEntProp(client, Prop_Data, "m_iFrags", (frags+1));
 		SetEntProp(client, Prop_Data, "m_iDeaths", (deaths-1));
 		
 	}
 }
-*/
 
 
 public void AddToQueue(int client)
@@ -636,28 +647,6 @@ public void OnForcePickTimeChanged(Handle hConVar, const char[] szOldValue, cons
 }
 
 
-bool ShouldMoveGuardToPrisoner()
-{
-	int iNumGuards, iNumPrisoners;
-	
-	LoopValidClients(i, true,true)
-	{	
-		if (GetClientPendingTeam(i) == CS_TEAM_T)
-			iNumPrisoners++;
-		else if (GetClientPendingTeam(i) == CS_TEAM_CT)
-			 iNumGuards++;
-	}
-	
-	if(iNumGuards <= 1)
-		return false;
-	
-	if(iNumGuards <= RoundToFloor(float(iNumPrisoners) / GetConVarFloat(gc_fPrisonerPerGuard)))
-		return false;
-	
-	return true;
-}
-
-
 /******************************************************************************
                    FORWARDS LISTEN
 ******************************************************************************/
@@ -666,6 +655,7 @@ bool ShouldMoveGuardToPrisoner()
 public void OnClientDisconnect_Post(int client)
 {
 	RemovePlayerFromGuardQueue(client);
+	RemovePlayerFromGuardList(client);
 }
 
 
@@ -740,7 +730,6 @@ public int Handler_AcceptGuardRules(Handle menu, MenuAction action, int param1, 
 }
 
 
-//
 public void Menu_GuardQuestions(int client)
 {
 	char info[64], random[64];
@@ -797,7 +786,7 @@ public void Menu_GuardQuestions(int client)
 	SendPanelToClient(AcceptMenu, client, Handler_GuardQuestions, 20);
 }
 
-//
+
 public int Handler_GuardQuestions(Handle menu, MenuAction action, int param1, int param2)
 {
 	int client = param1;
@@ -953,6 +942,38 @@ stock bool RemovePlayerFromGuardQueue(int client)
 }
 
 
+stock bool RemovePlayerFromGuardList(int client)
+{
+	int iIndex = FindValueInArray(g_aGuardList, client);
+	if(iIndex == -1)
+		return;
+	
+	RemoveFromArray(g_aGuardList, iIndex);
+}
+
+
+bool ShouldMoveGuardToPrisoner()
+{
+	int iNumGuards, iNumPrisoners;
+	
+	LoopValidClients(i, true,true)
+	{	
+		if (GetClientPendingTeam(i) == CS_TEAM_T)
+			iNumPrisoners++;
+		else if (GetClientPendingTeam(i) == CS_TEAM_CT)
+			 iNumGuards++;
+	}
+	
+	if(iNumGuards <= 1)
+		return false;
+	
+	if(iNumGuards <= RoundToFloor(float(iNumPrisoners) / GetConVarFloat(gc_fPrisonerPerGuard)))
+		return false;
+	
+	return true;
+}
+
+
 bool ShouldMovePrisonerToGuard()
 {
 	int iNumGuards, iNumPrisoners;
@@ -1008,7 +1029,7 @@ stock void FixTeamRatio()
 		}
 		
 		SetClientPendingTeam(client, CS_TEAM_CT);
-		// MinusDeath(client);
+		MinusDeath(client);
 		bMovedPlayers = true;
 	}
 	
@@ -1017,12 +1038,30 @@ stock void FixTeamRatio()
 	
 	while(ShouldMoveGuardToPrisoner())
 	{
-		int client = GetRandomClientFromTeam(CS_TEAM_CT, true);
-		if(!client)
+		int iListSize = GetArraySize(g_aGuardList);
+		int iListNum = iListSize-1;
+		
+		int client = GetArrayCell(g_aGuardList, iListNum);
+		
+		if(warden_iswarden(client) || warden_deputy_isdeputy(client))
+		{
+			iListNum--;
+			client = GetArrayCell(g_aGuardList, iListNum);
+			
+			if(warden_iswarden(client) || warden_deputy_isdeputy(client))
+			{
+				iListNum--;
+				if(iListNum != -1) client = GetArrayCell(g_aGuardList, iListNum);
+			}
+		}
+		
+		if(!client || iListNum == -1)
 			break;
 			
 		CPrintToChatAll("%t %t", "ratio_tag", "ratio_movetot" ,client);
 		SetClientPendingTeam(client, CS_TEAM_T);
+		MinusDeath(client);
+		RemovePlayerFromGuardList(client);
 	}
 }
 
@@ -1036,12 +1075,6 @@ stock int GetRandomClientFromTeam(int iTeam, bool bSkipCTBanned=true)
 	LoopValidClients(i, true,true)
 	{
 		if(!IsClientInGame(i))
-			continue;
-		
-		if(warden_iswarden(i))
-			continue;
-		
-		if(warden_deputy_isdeputy(i))
 			continue;
 		
 		if(GetClientPendingTeam(i) != iTeam)

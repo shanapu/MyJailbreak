@@ -72,6 +72,7 @@
 *  Warden counter: Use the wardens FOV instead radius around him to count terrors
     *  removed cvar - sm_warden_counter_radius - obsolete cvar. Please remove them from your config!
 *  Weapons: Players can get weapons from menu more than once in a round. No need to wait until next round.
+*  Ratio: When move Guard to Prisoner, the last joined ct will be moved. If he is warden or deputy he will skipt and the next latest joined ct will be moved. "last in first out"
   
   
   
