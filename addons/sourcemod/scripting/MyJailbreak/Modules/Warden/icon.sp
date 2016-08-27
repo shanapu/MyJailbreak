@@ -62,7 +62,7 @@ public void Icon_OnPluginStart()
 	gc_bIconWarden = AutoExecConfig_CreateConVar("sm_warden_icon_enable", "1", "0 - disabled, 1 - enable the icon above the wardens head", _, true,  0.0, true, 1.0);
 	gc_sIconWardenPath = AutoExecConfig_CreateConVar("sm_warden_icon", "decals/MyJailbreak/warden" , "Path to the warden icon DONT TYPE .vmt or .vft");
 	gc_bIconDeputy = AutoExecConfig_CreateConVar("sm_warden_icon_deputy_enable", "1", "0 - disabled, 1 - enable the icon above the deputy head", _, true,  0.0, true, 1.0);
-	gc_sIconDeputyPath = AutoExecConfig_CreateConVar("sm_warden_icon_deputy", "decals/MyJailbreak/warden-4" , "Path to the deputy icon DONT TYPE .vmt or .vft");
+	gc_sIconDeputyPath = AutoExecConfig_CreateConVar("sm_warden_icon_deputy", "decals/MyJailbreak/warden-2" , "Path to the deputy icon DONT TYPE .vmt or .vft");
 	gc_bIconGuard = AutoExecConfig_CreateConVar("sm_warden_icon_ct_enable", "1", "0 - disabled, 1 - enable the icon above the guards head", _, true,  0.0, true, 1.0);
 	gc_sIconGuardPath = AutoExecConfig_CreateConVar("sm_warden_icon_ct", "decals/MyJailbreak/ct" , "Path to the guard icon DONT TYPE .vmt or .vft");
 	gc_bIconPrisoner = AutoExecConfig_CreateConVar("sm_warden_icon_t_enable", "1", "0 - disabled, 1 - enable the icon above the prisoners head", _, true,  0.0, true, 1.0);
@@ -240,7 +240,7 @@ public Action Should_TransmitP(int entity, int client)
 
 stock int SpawnIcon(int client) 
 {
-	if(!IsClientInGame(client) || !IsPlayerAlive(client) || (!gc_bIconWarden.BoolValue && IsClientWarden(client)) || (!gc_bIconGuard.BoolValue && (GetClientTeam(client) == CS_TEAM_CT  && !IsClientWarden(client))) || (!gc_bIconPrisoner.BoolValue && (GetClientTeam(client) == CS_TEAM_T))) return -1;
+	if(!IsClientInGame(client) || !IsPlayerAlive(client) || (!gc_bIconWarden.BoolValue && IsClientWarden(client)) || (!gc_bIconGuard.BoolValue && (GetClientTeam(client) == CS_TEAM_CT && !IsClientWarden(client) && !IsClientDeputy(client))) || (!gc_bIconDeputy.BoolValue && (!IsClientWarden(client) && IsClientDeputy(client))) || (!gc_bIconPrisoner.BoolValue && (GetClientTeam(client) == CS_TEAM_T))) return -1;
 	
 	RemoveIcon(client);
 	
@@ -273,7 +273,7 @@ stock int SpawnIcon(int client)
 	SetVariantString(iTarget);
 	AcceptEntityInput(g_iIcon[client], "SetParent", g_iIcon[client], g_iIcon[client], 0);
 	if(IsClientWarden(client)) SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitW);
-	else if(IsClientDeputy(client))  SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitD);
+	else if(IsClientDeputy(client)) SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitD);
 	else if(GetClientTeam(client) == CS_TEAM_CT)  SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitG);
 	else if(GetClientTeam(client) == CS_TEAM_T)  SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitP);
 	return g_iIcon[client];

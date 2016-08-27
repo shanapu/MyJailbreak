@@ -51,7 +51,7 @@ public void FriendlyFire_OnPluginStart()
 	
 	//AutoExecConfig
 	gc_bFF = AutoExecConfig_CreateConVar("sm_warden_ff", "1", "0 - disabled, 1 - enable switch ff for the warden", _, true,  0.0, true, 1.0);
-	gc_bFFDeputy = AutoExecConfig_CreateConVar("sm_warden_ff_deputy", "1", "0 - disabled, 1 - enable switch ff for the deputy", _, true,  0.0, true, 1.0);
+	gc_bFFDeputy = AutoExecConfig_CreateConVar("sm_warden_ff_deputy", "1", "0 - disabled, 1 - enable switch ff for the deputy, too", _, true,  0.0, true, 1.0);
 	gc_sCustomCommandFF = AutoExecConfig_CreateConVar("sm_warden_cmds_ff", "isff,friendlyfire", "Set your custom chat commands for set/see friendly fire(!ff is reservered)(!setff (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands)");
 	
 	//Hooks

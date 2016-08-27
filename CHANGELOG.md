@@ -1,26 +1,89 @@
 ### Change Log
   
-**[Beta x.x]** - develop
+**[Beta *7.1.develop*]** - develop
   
 *Added*
 *  Myjailbreak: Shoot weapon on ground to remove it
     *  new cvar - sm_warden_shootguns_enable - 0 - disabled, 1 - enable shoot guns on ground to remove
     *  new cvar - sm_warden_shootguns_mode - 1 - only warden / 2 - warden & ct / 3 - all player
 *  Ratio: Added one round cooldown for guard queue on wrong answer.
+*  Ratio: Prevent per cvar to move a random T to CT if teams are unbalanced. THX good_live!
+    *  new cvar - sm_ratio_balance_random - Switch a random T, when nobody in queue to balance the teams.
 *  Weapons: Kevlar & Helm for guards on roundstart except on event days
     *  new cvar - sm_weapons_kevlar - 0 - disabled, 1 - CT get Kevlar & helm on Spawn
 *  Warden - Mute: mute all T on roundbegin
     *  new cvar - sm_warden_mute_default - 0 - disabled, 1 - Prisoners are muted on roundstart by default. Warden have to unmute them. Default 0
+*  Freeday: Player respawn on event freeday
+    *  new cvar - sm_freeday_respawn - 1 - respawn on AutoFreeday when no CTs / 2 - respawn on firstround/vote/set Freeday / 3 - Both
+    *  new cvar - sm_freeday_respawn_time - Time in seconds the player will respawn after round begin. Default 120
+*  Warden - Deputy: The warden get a deputy to his side with configurable warden features.
+    *  new command - sm_deputy - Allows the warden to choose a deputy or a player to be deputy
+    *  new command - sm_undeputy - Allows the warden to remove the deputy and the deputy to retire from the position
+    *  new admin command - sm_removedeputy - Allows the admin to remove the deputy
+    *  new cvar - sm_warden_deputy_enable - 0 - disabled, 1 - enable this MyJailbreak SourceMod plugin
+    *  new cvar - sm_warden_deputy_set - 0 - disabled, 1 - enable !w / !deputy - warden can choose his deputy.
+    *  new cvar - sm_warden_deputy_become - 0 - disabled, 1 - enable !w / !deputy - player can choose to be deputy.
+    *  new cvar - sm_warden_deputy_model - 0 - disabled, 1 - enable deputy model
+    *  new cvar - sm_warden_deputy_model_path -  Path to the model for deputy. Default "models/player/custom_player/kuristaja/jailbreak/guard3/guard3.mdl"
+    *  new cvar - sm_warden_deputy_warden_dead - 0 - Deputy will removed on warden death, 1 - Deputy will be new warden
+    *  new cvar - sm_warden_backstab_deputy - 0 - disabled, 1 - enable backstab protection for deputy, too
+    *  new cvar - sm_warden_bulletsparks_deputy - 0 - disabled, 1 - enable smaller bulletimpact sparks for deputy, too
+    *  new cvar - sm_warden_open_deputy - 0 - disabled, 1 - deputy can open/close cells
+    *  new cvar - sm_warden_color_red_deputy - What color to turn the deputy into (set R, G and B values to 255 to disable) (Rgb)
+    *  new cvar - sm_warden_color_green_deputy - What color to turn the deputy into (rGb): x - green value
+    *  new cvar - sm_warden_color_blue_deputy - What color to turn the deputy into (rgB): x - blue value
+    *  new cvar - sm_warden_countdown_deputy - 0 - disabled, 1 - enable countdown for deputy, too
+    *  new cvar - sm_warden_counter_deputy - 0 - disabled, 1 - Allow the deputy count player in radius, too
+    *  new cvar - sm_warden_extend_deputy - 0 - disabled, 1 - enable the 'extend the roundtime'-feature for deputy,too
+    *  new cvar - sm_warden_ff_deputy - 0 - disabled, 1 - enable switch ff for the deputy, too
+    *  new cvar - sm_warden_handcuffs_deputy - 0 - disabled, 1 - enable handcuffs for deputy, too
+    *  new cvar - sm_warden_icon_deputy_enable - 0 - disabled, 1 - enable the icon above the deputy head
+    *  new cvar - sm_warden_icon_deputy - Path to the deputy icon DONT TYPE .vmt or .vft Default "decals/MyJailbreak/warden-4"
+    *  new cvar - sm_warden_laser_deputy - 0 - disabled, 1 - enable Laser Pointer for Deputy, too
+    *  new cvar - sm_warden_marker_deputy - 0 - disabled, 1 - enable 'advanced markers'-feature for deputy
+    *  new cvar - sm_warden_math_deputy - 0 - disabled, 1 - enable mathquiz for deputy,too
+    *  new cvar - sm_warden_mute_deputy - 0 - disabled, 1 - Allow to mute T-side player for deputy, too
+    *  new cvar - sm_warden_noblock_deputy - 0 - disabled, 1 - enable noblock toggle for deputy, too
+    *  new cvar - sm_warden_painter_deputy - 0 - disabled, 1 - enable 'Warden Painter'-feature for deputy, too
+    *  new cvar - sm_warden_painter_terror_deputy - 0 - disabled, 1 - allow to toggle Painter for Terrorist as deputy, too
+    *  new cvar - sm_warden_random_deputy - 0 - disabled, 1 - enable kill a random t for deputy,too
+    *  new cvar - sm_warden_mark_rebel_deputy - 0 - disabled, 1 - enable 'mark/unmark prisoner as rebel'-feature for deputy, too
+    *  new cvar - sm_warden_cmds_deputy - Set your custom chat command for open menu(!menu (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands). Default "d"
+    *  new cvar - sm_warden_cmds_undeputy - Set your custom chat command for open menu(!menu (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands). Default "ud"
+    *  new cvar - sm_warden_cmds_removedeputy - Set your custom chat commands for admins to remove a warden(!removewarden (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands) Default "rd,fd"
+    *  new cvar - sm_freekill_freeday_victim_deputy - 0 - disabled, 1 - Allow the deputy to set a personal freeday next round
+    *  changed cvar - sm_warden_disarm_mode - 1 - Only warden can disarm, 2 - warden & deputy can disarm, 3 - All CT can disarm, 4 - Everyone can disarm (CT & T)
+    *  changed cvar - sm_warden_shootguns_mode1 - only warden / 2 - warden & deputy / 3 - warden, deputy & ct / 4 - all player
+  
   
   
 *Changed*
-*  Commands: Add up to 12 custom commands to almost all myjailbreak command.
+*  Commands: Add up to 12 custom commands to almost all myjailbreak commands.
     *  new cvar - sm_PLUGINNAME_cmds_FEATURENAME - Set your custom chat commands for *FEATURENAME*(no 'sm_'/'!')(seperate with comma ',')(max. 12 commands)
     *  removed cvar - sm_PLUGINNAME_cmd - obsolete cvars. Please remove them from your configs!
+*  Catch: Freezetime for CTs. CTs can see freezed T though walls. Kill terror if he get catched more than once, make it available for LR & insert beacon.
+    *  new cvar - sm_catch_freezetime - Time in seconds CTs are freezed. Default 15
+    *  new cvar - sm_catch_overlays_start - Path to the start Overlay DONT TYPE .vmt or .vft
+    *  new cvar - sm_catch_sound_start - Path to the soundfile which should be played for a start.
+    *  new cvar - sm_catch_wallhack - 0 - disabled, 1 - enable wallhack for CT to see freezed enemeys
+    *  new cvar - sm_catch_count - How many times a terror can be catched before he get killed. 0 = T dont get killed ever all T must be catched- Default 0
+    *  new cvar - sm_catch_allow_lr - 0 - disabled, 1 - enable LR for last round and end eventday (need sm_catch_count min 1)
+    *  new cvar - sm_catch_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
+*  Warden counter: Use the wardens FOV instead radius around him to count terrors
+    *  removed cvar - sm_warden_counter_radius - obsolete cvar. Please remove them from your config!
+*  Weapons: Players can get weapons from menu more than once in a round. No need to wait until next round.
+  
   
   
 *Fixed*
 *  Warden - Icon: missing FastDL files
+*  Warden - Mark rebel: remove color on unmark
+*  Warden - Handcuffs: Move cuffed player though walls... kind of fix not perfect!
+*  Warden - Painter: fix painter for terrors. THX devu4!
+*  Request - Freedays: fix where all players can !givefreeday
+*  Last Guard: fix sm_lastguard_minct bypass. THX devu4!
+*  PlayerTags: fix tags on warden remove
+*  minor errors & smaller fixes
   
   
   

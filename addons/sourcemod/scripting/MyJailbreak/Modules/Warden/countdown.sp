@@ -81,7 +81,7 @@ public void Countdown_OnPluginStart()
 	
 	//AutoExecConfig
 	gc_bCountDown = AutoExecConfig_CreateConVar("sm_warden_countdown", "1", "0 - disabled, 1 - enable countdown for warden", _, true,  0.0, true, 1.0);
-	gc_bCountDownDeputy = AutoExecConfig_CreateConVar("sm_warden_countdown_deputy", "1", "0 - disabled, 1 - enable countdown for deputy", _, true,  0.0, true, 1.0);
+	gc_bCountDownDeputy = AutoExecConfig_CreateConVar("sm_warden_countdown_deputy", "1", "0 - disabled, 1 - enable countdown for deputy, too", _, true,  0.0, true, 1.0);
 	gc_bCountdownOverlays = AutoExecConfig_CreateConVar("sm_warden_countdown_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true,  0.0, true, 1.0);
 	gc_sCountdownOverlayStartPath = AutoExecConfig_CreateConVar("sm_warden_countdown_overlays_start", "overlays/MyJailbreak/start" , "Path to the start Overlay DONT TYPE .vmt or .vft");
 	gc_sCountdownOverlayStopPath = AutoExecConfig_CreateConVar("sm_warden_countdown_overlays_stop", "overlays/MyJailbreak/stop" , "Path to the stop Overlay DONT TYPE .vmt or .vft");

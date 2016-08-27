@@ -85,7 +85,7 @@ public void Math_OnPluginStart()
 	
 	//AutoExecConfig
 	gc_bMath = AutoExecConfig_CreateConVar("sm_warden_math", "1", "0 - disabled, 1 - enable mathquiz for warden", _, true,  0.0, true, 1.0);
-	gc_bMathDeputy = AutoExecConfig_CreateConVar("sm_warden_math_deputy", "1", "0 - disabled, 1 - enable mathquiz for deputy,too", _, true,  0.0, true, 1.0);
+	gc_bMathDeputy = AutoExecConfig_CreateConVar("sm_warden_math_deputy", "1", "0 - disabled, 1 - enable mathquiz for deputy, too", _, true,  0.0, true, 1.0);
 	gc_iMinimumNumber = AutoExecConfig_CreateConVar("sm_warden_math_min", "1", "What should be the minimum number for questions?", _, true,  1.0);
 	gc_iMaximumNumber = AutoExecConfig_CreateConVar("sm_warden_math_max", "100", "What should be the maximum number for questions?", _, true,  2.0);
 	gc_bOp = AutoExecConfig_CreateConVar("sm_warden_math_mode", "1", "0 - only addition & subtraction, 1 -  addition, subtraction, multiplication & division", _, true,  0.0, true, 1.0);

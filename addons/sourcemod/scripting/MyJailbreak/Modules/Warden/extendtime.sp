@@ -57,7 +57,7 @@ public void ExtendTime_OnPluginStart()
 	
 	//AutoExecConfig
 	gc_bExtend = AutoExecConfig_CreateConVar("sm_warden_extend", "1", "0 - disabled, 1 - Allows the warden to extend the roundtime", _, true,  0.0, true, 1.0);
-	gc_bExtendDeputy = AutoExecConfig_CreateConVar("sm_warden_extend_deputy", "1", "0 - disabled, 1 - enable the 'extend the roundtime'-feature for deputy", _, true,  0.0, true, 1.0);
+	gc_bExtendDeputy = AutoExecConfig_CreateConVar("sm_warden_extend_deputy", "1", "0 - disabled, 1 - enable the 'extend the roundtime'-feature for deputy, too", _, true,  0.0, true, 1.0);
 	gc_iExtendLimit = AutoExecConfig_CreateConVar("sm_warden_extend_limit", "2", "How many time a warden can extend the round?", _, true,  1.0);
 	gc_sCustomCommandExtend = AutoExecConfig_CreateConVar("sm_warden_cmds_extend", "extendtime,moretime", "Set your custom chat commands for extend time.(!extend (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands))");
 	

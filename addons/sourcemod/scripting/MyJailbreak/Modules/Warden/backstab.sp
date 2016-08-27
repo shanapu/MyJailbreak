@@ -55,7 +55,7 @@ public void BackStab_OnPluginStart()
 	gc_bBackstab = AutoExecConfig_CreateConVar("sm_warden_backstab", "1", "0 - disabled, 1 - enable backstab protection for warden", _, true,  0.0, true, 1.0);
 	gc_bBackstabDeputy = AutoExecConfig_CreateConVar("sm_warden_backstab_deputy", "1", "0 - disabled, 1 - enable backstab protection for deputy, too", _, true,  0.0, true, 1.0);
 	gc_iBackstabNumber = AutoExecConfig_CreateConVar("sm_warden_backstab_number", "1", "How many time a warden get protected? 0 - alltime", _, true,  1.0);
-	gc_sAdminFlagBackstab = AutoExecConfig_CreateConVar("sm_warden_backstab_flag", "", "Set flag for admin/vip to get warden backstab protection. No flag = feature is available for all players!");
+	gc_sAdminFlagBackstab = AutoExecConfig_CreateConVar("sm_warden_backstab_flag", "", "Set flag for admin/vip to get warden/deputy backstab protection. No flag = feature is available for all players!");
 	
 	
 	//Hooks

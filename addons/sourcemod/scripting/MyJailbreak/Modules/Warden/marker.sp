@@ -78,7 +78,7 @@ public void Marker_OnPluginStart()
 {
 	//AutoExecConfig
 	gc_bMarker = AutoExecConfig_CreateConVar("sm_warden_marker", "1", "0 - disabled, 1 - enable Warden advanced markers ", _, true,  0.0, true, 1.0);
-	gc_bMarkerDeputy = AutoExecConfig_CreateConVar("sm_warden_marker_deputy", "1", "0 - disabled, 1 - enable 'advanced markers'-feature for deputy ", _, true,  0.0, true, 1.0);
+	gc_bMarkerDeputy = AutoExecConfig_CreateConVar("sm_warden_marker_deputy", "1", "0 - disabled, 1 - enable 'advanced markers'-feature for deputy, too", _, true,  0.0, true, 1.0);
 	
 	//Hooks
 	HookEvent("item_equip", Marker_Event_ItemEquip);

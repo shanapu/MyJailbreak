@@ -77,7 +77,7 @@ sm_sparks - Allows Warden to toggle on/off the wardens bullet sparks
 sm_laser - Allows the warden to toggle the wardens Laser pointer
 sm_extend - Allows the warden to extend the roundtime
 sm_painter - Allows the warden to toggle the wardens Painter
-sm_noblockn - Allows the warden to toggle no block 
+sm_noblock - Allows the warden to toggle no block 
 sm_setff - Allows player to see the state and the warden to toggle friendly fire
 sm_cdmenu - Allows the warden to open the Countdown Menu
 sm_cdstart - Allows the warden to start a START Countdown! (start after 10sec.) - start without menu
@@ -163,7 +163,7 @@ sm_warden_countdown_overlays_stop - Path to the stop Overlay DONT TYPE .vmt or .
 sm_warden_math_overlays_enable - enable overlays for math quiz
 sm_warden_math_overlays_stop - Path to the stop Overlay DONT TYPE .vmt or .vft
 sm_warden_model: 0 - disabled, 1 - enable warden model. Default 1
-sm_warden_model_path:Path to the model for zombies. Default "models/player/custom_player/legacy/security/security.mdl"
+sm_warden_model_path:Path to the model for warden. Default "models/player/custom_player/legacy/security/security.mdl"
 sm_warden_color_enable: 0 - disabled, 1 - enable colored warden. Default 1
 sm_warden_color_random: 0 - disabled, 1 - enable warden rainbow colored. Default 1
 sm_warden_color_red - What color to turn the warden into (set R, G and B values to 0 to disable). Default 0

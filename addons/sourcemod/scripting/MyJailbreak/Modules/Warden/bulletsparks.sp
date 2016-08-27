@@ -57,7 +57,7 @@ public void BulletSparks_OnPluginStart()
 	//AutoExecConfig
 	gc_bBulletSparks = AutoExecConfig_CreateConVar("sm_warden_bulletsparks", "1", "0 - disabled, 1 - enable Warden bulletimpact sparks", _, true,  0.0, true, 1.0);
 	gc_bBulletSparksDeputy = AutoExecConfig_CreateConVar("sm_warden_bulletsparks_deputy", "1", "0 - disabled, 1 - enable smaller bulletimpact sparks for deputy, too", _, true,  0.0, true, 1.0);
-	gc_sAdminFlagBulletSparks = AutoExecConfig_CreateConVar("sm_warden_bulletsparks_flag", "", "Set flag for admin/vip to get warden bulletimpact sparks. No flag = feature is available for all players!");
+	gc_sAdminFlagBulletSparks = AutoExecConfig_CreateConVar("sm_warden_bulletsparks_flag", "", "Set flag for admin/vip to get warden/deputy bulletimpact sparks. No flag = feature is available for all players!");
 	
 	
 	//Hooks 

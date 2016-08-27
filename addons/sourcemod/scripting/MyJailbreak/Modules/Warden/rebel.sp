@@ -61,7 +61,7 @@ public void MarkRebel_OnPluginStart()
 	
 	//AutoExecConfig
 	gc_bMarkRebel = AutoExecConfig_CreateConVar("sm_warden_mark_rebel", "1", "0 - disabled, 1 - enable allow warden to mark/unmark prisoner as rebel (hosties)", _, true,  0.0, true, 1.0);
-	gc_bMarkRebelDeputy = AutoExecConfig_CreateConVar("sm_warden_mark_rebel_deputy", "1", "0 - disabled, 1 - enable 'mark/unmark prisoner as rebel'-feature for deputy", _, true,  0.0, true, 1.0);
+	gc_bMarkRebelDeputy = AutoExecConfig_CreateConVar("sm_warden_mark_rebel_deputy", "1", "0 - disabled, 1 - enable 'mark/unmark prisoner as rebel'-feature for deputy, too", _, true,  0.0, true, 1.0);
 	gc_sCustomCommandRebel = AutoExecConfig_CreateConVar("sm_warden_cmds_rebel", "sr,srebel,setrebel,rebelmenu", "Set your custom chat commands for un/mark rebel(!markrebel (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands)");
 	
 	

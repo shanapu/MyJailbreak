@@ -68,7 +68,7 @@ public void Mute_OnPluginStart()
 	
 	//AutoExecConfig
 	gc_bMute = AutoExecConfig_CreateConVar("sm_warden_mute", "1", "0 - disabled, 1 - Allow the warden to mute T-side player", _, true, 0.0, true, 1.0);
-	gc_bMuteDeputy = AutoExecConfig_CreateConVar("sm_warden_mute_deputy", "1", "0 - disabled, 1 - Allow the deputy to mute T-side player", _, true, 0.0, true, 1.0);
+	gc_bMuteDeputy = AutoExecConfig_CreateConVar("sm_warden_mute_deputy", "1", "0 - disabled, 1 - Allow to mute T-side player for deputy, too", _, true, 0.0, true, 1.0);
 	gc_bMuteEnd = AutoExecConfig_CreateConVar("sm_warden_mute_round", "1", "0 - disabled, 1 - Allow the warden to mute a player until roundend", _, true, 0.0, true, 1.0);
 	gc_bMuteDefault = AutoExecConfig_CreateConVar("sm_warden_mute_default", "0", "0 - disabled, 1 - Prisoners are muted on roundstart by default. Warden have to unmute them", _, true, 0.0, true, 1.0);
 	gc_sAdminFlagMute = AutoExecConfig_CreateConVar("sm_warden_mute_immuntiy", "a", "Set flag for admin/vip Mute immunity. No flag immunity for all. so don't leave blank!");

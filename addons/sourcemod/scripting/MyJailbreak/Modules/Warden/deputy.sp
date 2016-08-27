@@ -86,9 +86,9 @@ public void Deputy_OnPluginStart()
 	gc_bSetDeputy = AutoExecConfig_CreateConVar("sm_warden_deputy_set", "1", "0 - disabled, 1 - enable !w / !deputy - warden can choose his deputy.", _, true,  0.0, true, 1.0);
 	gc_bBecomeDeputy = AutoExecConfig_CreateConVar("sm_warden_deputy_become", "1", "0 - disabled, 1 - enable !w / !deputy - player can choose to be deputy.", _, true,  0.0, true, 1.0);
 	gc_bModelDeputy = AutoExecConfig_CreateConVar("sm_warden_deputy_model", "1", "0 - disabled, 1 - enable deputy model", 0, true, 0.0, true, 1.0);
-	gc_sModelPathDeputy = AutoExecConfig_CreateConVar("sm_warden_deputy_model_path", "models/player/custom_player/zombie/revenant/revenant_v2.mdl", "Path to the model for deputy.");
-	gc_sCustomCommandDeputy = AutoExecConfig_CreateConVar("sm_warden_cmds_deputy", "d", "Set your custom chat command for open menu(!menu (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands))");
-	gc_sCustomCommandUnDeputy = AutoExecConfig_CreateConVar("sm_warden_cmds_undeputy", "ud", "Set your custom chat command for open menu(!menu (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands))");
+	gc_sModelPathDeputy = AutoExecConfig_CreateConVar("sm_warden_deputy_model_path", "models/player/custom_player/kuristaja/jailbreak/guard3/guard3.mdl", "Path to the model for deputy.");
+	gc_sCustomCommandDeputy = AutoExecConfig_CreateConVar("sm_warden_cmds_deputy", "d", "Set your custom chat command for open menu(!menu (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands)");
+	gc_sCustomCommandUnDeputy = AutoExecConfig_CreateConVar("sm_warden_cmds_undeputy", "ud", "Set your custom chat command for open menu(!menu (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands)");
 	gc_sCustomCommandRemoveDeputy = AutoExecConfig_CreateConVar("sm_warden_cmds_removedeputy", "rd,fd", "Set your custom chat commands for admins to remove a warden(!removewarden (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands)");
 	gc_bWardenDead = AutoExecConfig_CreateConVar("sm_warden_deputy_warden_dead", "1", "0 - Deputy will removed on warden death, 1 - Deputy will be new warden", _, true,  0.0, true, 1.0);
 	
@@ -431,7 +431,7 @@ public Action Timer_DeputyNewWarden(Handle timer)
 
 public Action Timer_NoDeputy(Handle timer)
 {
-	if(g_iDeputy != -1)
+	if(g_iDeputy == -1)
 	{
 		if(gc_bSetDeputy.BoolValue) CPrintToChat(g_iWarden, "%t %t", "warden_tag" , "warden_deputy_set");
 		if(gc_bBecomeDeputy.BoolValue) CPrintToChatAll("%t %t", "warden_tag" , "warden_deputy_become");
