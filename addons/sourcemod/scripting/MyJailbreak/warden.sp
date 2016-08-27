@@ -65,6 +65,7 @@ bool IsLR = false;
 
 //Integers
 int g_iWarden = -1;
+int g_iLastWarden = -1;
 int g_iTempWarden[MAXPLAYERS+1] = -1;
 int g_iVoteCount;
 int g_iBeamSprite = -1;
@@ -508,7 +509,7 @@ public void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast
 		
 		RandomTimer = null;
 		RandomTimer = CreateTimer(gc_fRandomTimer.FloatValue, Timer_ChooseRandom);
-		
+		g_iLastWarden = g_iWarden;
 		g_iWarden = -1;
 	}
 }
@@ -561,6 +562,7 @@ public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 			CreateTimer(0.1, Timer_RemoveColor, g_iWarden);
 			SetEntityModel(g_iWarden, g_sModelPathPrevious);
 			Forward_OnWardenRemoved(g_iWarden);
+			g_iLastWarden = g_iWarden;
 			g_iWarden = -1;
 		}
 	}
@@ -574,6 +576,7 @@ public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 			CreateTimer( 0.1, Timer_RemoveColor, g_iWarden);
 			SetEntityModel(g_iWarden, g_sModelPathPrevious);
 			Forward_OnWardenRemoved(g_iWarden);
+			g_iLastWarden = g_iWarden;
 			g_iWarden = -1;
 			
 		}
@@ -656,7 +659,7 @@ public void OnClientDisconnect(int client)
 		{
 			EmitSoundToAllAny(g_sUnWarden);
 		}
-		
+		g_iLastWarden = -1;
 		g_iWarden = -1;
 	}
 	
@@ -675,6 +678,7 @@ public void OnMapEnd()
 		CreateTimer(0.1, Timer_RemoveColor, g_iWarden);
 		Forward_OnWardenRemoved(g_iWarden);
 		g_iWarden = -1;
+		g_iLastWarden = -1;
 	}
 	
 	Deputy_OnMapEnd();
@@ -772,6 +776,7 @@ void RemoveTheWarden()
 	Format(g_sHasVoted, sizeof(g_sHasVoted), "");
 	g_sHasVoted[0] = '\0';
 	
+	g_iLastWarden = g_iWarden;
 	g_iWarden = -1;
 }
 
@@ -950,19 +955,21 @@ stock bool IsClientWarden(int client)
 
 
 //Register Natives
-public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+public APLRes AskPluginLoad2(Handle myself, bool late, char [] error, int err_max)
 {
 	CreateNative("warden_exist", Native_ExistWarden);
 	CreateNative("warden_iswarden", Native_IsWarden);
 	CreateNative("warden_set", Native_SetWarden);
 	CreateNative("warden_removed", Native_RemoveWarden);
 	CreateNative("warden_get", Native_GetWarden);
+	CreateNative("warden_getlast", Native_GetLastWarden);
 	
 	CreateNative("warden_deputy_exist", Native_ExistDeputy);
 	CreateNative("warden_deputy_isdeputy", Native_IsDeputy);
 	CreateNative("warden_deputy_set", Native_SetDeputy);
 	CreateNative("warden_deputy_removed", Native_RemoveDeputy);
 	CreateNative("warden_deputy_get", Native_GetDeputy);
+	CreateNative("warden_deputy_getlast", Native_GetLastDeputy);
 	
 	RegPluginLibrary("warden");
 	return APLRes_Success;
@@ -970,7 +977,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 
 //Booleans Exist Warden
-public int Native_ExistWarden(Handle plugin, int numParams)
+public int Native_ExistWarden(Handle plugin, int argc)
 {
 	if(g_iWarden == -1)
 	{
@@ -981,7 +988,7 @@ public int Native_ExistWarden(Handle plugin, int numParams)
 
 
 //Booleans Is Client Warden
-public int Native_IsWarden(Handle plugin, int numParams)
+public int Native_IsWarden(Handle plugin, int argc)
 {
 	int client = GetNativeCell(1);
 	
@@ -996,7 +1003,7 @@ public int Native_IsWarden(Handle plugin, int numParams)
 
 
 //Set Client as Warden
-public int Native_SetWarden(Handle plugin, int numParams)
+public int Native_SetWarden(Handle plugin, int argc)
 {
 	int client = GetNativeCell(1);
 	
@@ -1009,7 +1016,7 @@ public int Native_SetWarden(Handle plugin, int numParams)
 
 
 //Remove current Warden
-public int Native_RemoveWarden(Handle plugin, int numParams)
+public int Native_RemoveWarden(Handle plugin, int argc)
 {
 	int client = GetNativeCell(1);
 	
@@ -1025,6 +1032,13 @@ public int Native_RemoveWarden(Handle plugin, int numParams)
 public int Native_GetWarden(Handle plugin, int argc)
 {
 	return g_iWarden;
+}
+
+
+//Get last wardens Client Index
+public int Native_GetLastWarden(Handle plugin, int argc)
+{
+	return g_iLastWarden;
 }
 
 

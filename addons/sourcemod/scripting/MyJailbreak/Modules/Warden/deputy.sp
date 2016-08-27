@@ -53,6 +53,7 @@ Handle gF_OnDeputyRemoved;
 
 //Integers
 int g_iDeputy = -1;
+int g_iLastDeputy = -1;
 int g_iDeputyDelay;
 
 
@@ -267,7 +268,7 @@ public void Deputy_Event_PlayerDeath(Event event, const char[] name, bool dontBr
 		{
 			PrintCenterTextAll("%t", "warden_deputy_dead_nc", client);
 		}
-		
+		g_iLastDeputy = g_iDeputy;
 		g_iDeputy = -1;
 	}
 	if(IsClientWarden(client))  //The Warden changed team
@@ -315,6 +316,7 @@ public void Deputy_Event_RoundStart(Event event, const char[] name, bool dontBro
 			CreateTimer(0.1, Timer_RemoveColor, g_iDeputy);
 			SetEntityModel(g_iDeputy, g_sModelDeputyPathPrevious);
 			Forward_OnDeputyRemoved(g_iDeputy);
+			g_iLastDeputy = g_iDeputy;
 			g_iDeputy = -1;
 		}
 	}
@@ -328,6 +330,7 @@ public void Deputy_Event_RoundStart(Event event, const char[] name, bool dontBro
 			CreateTimer( 0.1, Timer_RemoveColor, g_iDeputy);
 			SetEntityModel(g_iDeputy, g_sModelDeputyPathPrevious);
 			Forward_OnDeputyRemoved(g_iDeputy);
+			g_iLastDeputy = g_iDeputy;
 			g_iDeputy = -1;
 			
 		}
@@ -363,7 +366,7 @@ public void Deputy_OnClientDisconnect(int client)
 		}
 		
 		Forward_OnDeputyRemoved(client);
-		
+		g_iLastDeputy = -1;
 		g_iDeputy = -1;
 	}
 	if(IsClientWarden(client))  //The Warden changed team
@@ -383,6 +386,7 @@ public void Deputy_OnMapEnd()
 	{
 		CreateTimer(0.1, Timer_RemoveColor, g_iDeputy);
 		Forward_OnDeputyRemoved(g_iDeputy);
+		g_iLastDeputy = -1;
 		g_iDeputy = -1;
 	}
 }
@@ -480,6 +484,7 @@ void RemoveTheDeputy()
 	Format(g_sHasVoted, sizeof(g_sHasVoted), "");
 	g_sHasVoted[0] = '\0';
 	
+	g_iLastDeputy = g_iDeputy;
 	g_iDeputy = -1;
 }
 
@@ -568,7 +573,7 @@ stock bool IsClientDeputy(int client)
 
 
 //Booleans Exist Deputy
-public int Native_ExistDeputy(Handle plugin, int numParams)
+public int Native_ExistDeputy(Handle plugin, int argc)
 {
 	if(g_iDeputy == -1)
 	{
@@ -579,7 +584,7 @@ public int Native_ExistDeputy(Handle plugin, int numParams)
 
 
 //Booleans Is Client Deputy
-public int Native_IsDeputy(Handle plugin, int numParams)
+public int Native_IsDeputy(Handle plugin, int argc)
 {
 	int client = GetNativeCell(1);
 	
@@ -594,7 +599,7 @@ public int Native_IsDeputy(Handle plugin, int numParams)
 
 
 //Set Client as Deputy
-public int Native_SetDeputy(Handle plugin, int numParams)
+public int Native_SetDeputy(Handle plugin, int argc)
 {
 	int client = GetNativeCell(1);
 	
@@ -607,7 +612,7 @@ public int Native_SetDeputy(Handle plugin, int numParams)
 
 
 //Remove current Deputy
-public int Native_RemoveDeputy(Handle plugin, int numParams)
+public int Native_RemoveDeputy(Handle plugin, int argc)
 {
 	int client = GetNativeCell(1);
 	
@@ -623,6 +628,13 @@ public int Native_RemoveDeputy(Handle plugin, int numParams)
 public int Native_GetDeputy(Handle plugin, int argc)
 {
 	return g_iDeputy;
+}
+
+
+//Get last deputys Client Index
+public int Native_GetLastDeputy(Handle plugin, int argc)
+{
+	return g_iLastDeputy;
 }
 
 
