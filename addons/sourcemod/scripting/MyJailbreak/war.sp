@@ -386,7 +386,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 			{
 				for(int client=1; client <= MaxClients; client++)
 				{
-					if (!gc_bSpawnCell.BoolValue || (gc_bSpawnCell.BoolValue && !SJD_IsCurrentMapConfigured)) //spawn Terrors to CT Spawn )
+					if (!gc_bSpawnCell.BoolValue || (gc_bSpawnCell.BoolValue && (SJD_IsCurrentMapConfigured() != true))) //spawn Terrors to CT Spawn )
 					{
 						if (IsClientInGame(client))
 						{
@@ -424,7 +424,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 			
 			g_iFreezeTime--;
 			
-			if (!gc_bSpawnCell.BoolValue || (gc_bSpawnCell.BoolValue && !SJD_IsCurrentMapConfigured)) //spawn Terrors to CT Spawn )
+			if (!gc_bSpawnCell.BoolValue || (gc_bSpawnCell.BoolValue && (SJD_IsCurrentMapConfigured() != true))) //spawn Terrors to CT Spawn )
 			{
 				FreezeTimer = CreateTimer(1.0, Timer_FreezeOnStart, _, TIMER_REPEAT);
 			}

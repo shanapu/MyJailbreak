@@ -386,7 +386,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 					SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 					ClientTimer[client] = CreateTimer(0.5, Timer_GiveZeus, client);
 					
-					if (!gc_bSpawnCell.BoolValue || (gc_bSpawnCell.BoolValue && !SJD_IsCurrentMapConfigured)) //spawn Terrors to CT Spawn 
+					if (!gc_bSpawnCell.BoolValue || (gc_bSpawnCell.BoolValue && (SJD_IsCurrentMapConfigured() != true))) //spawn Terrors to CT Spawn 
 					{
 						TeleportEntity(client, g_fPos, NULL_VECTOR, NULL_VECTOR);
 					}

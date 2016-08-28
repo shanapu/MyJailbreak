@@ -1,5 +1,12 @@
 ### Change Log
   
+**[Beta 7.2]** - fix for 1.7.x
+  
+*Fixed*
+*  Compatibility issues with sourcemod 1.7.x
+  
+  
+  
 **[Beta 7.1]** - smaller fixes
   
 *Fixed*

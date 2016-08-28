@@ -1656,6 +1656,8 @@ native warden_get(client);
 [B][u]Latest Changes[/u][/B]
 
 [QUOTE] 
+[b][Beta 7.2][/b] - Compatibility issues with sourcemod 1.7.x
+
 [b][Beta 7.1][/b] - smaller fixes
 [SPOILER]  
 [i]Fixed[/i][LIST]
