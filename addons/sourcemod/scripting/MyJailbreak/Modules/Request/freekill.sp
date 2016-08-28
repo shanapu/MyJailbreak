@@ -410,7 +410,7 @@ public int RespawnHandler(Menu menu, MenuAction action, int client, int Position
 				g_bFreeKilled[i] = false;
 				CS_RespawnPlayer(i);
 				
-				int warden = warden_get(warden);
+				int warden = warden_get();
 				
 				float origin[3];
 				GetClientAbsOrigin(warden, origin);

@@ -43,7 +43,7 @@ public SharedPlugin:__pl_myjailbreak =
 
 
 //Defines
-#define PLUGIN_VERSION "Beta 7.1.develop"
+#define PLUGIN_VERSION "Beta 7.2.develop"
 #define URL_LINK "https://github.com/shanapu/MyJailbreak"
 
 
@@ -292,7 +292,7 @@ stock void ShowOverlayAll(char [] path, float deletetime)
 
 
 //Remove overlay from a client
-stock Action DeleteOverlay( Handle timer, any client ) 
+public Action DeleteOverlay( Handle timer, any client ) 
 {
 	if(IsValidClient(client, false, true))
 	{
@@ -379,7 +379,7 @@ stock void SetPlayerWeaponAmmo(int client, int weaponEnt, int clip = -1, int amm
 
 
 //Remove a players render color
-stock Action Timer_RemoveColor( Handle timer, any client ) 
+public Action Timer_RemoveColor( Handle timer, any client ) 
 {
 	if(IsValidClient(client, true, true))
 	{
@@ -469,7 +469,7 @@ stock bool CheckVipFlag(int client, const char[] flagsNeed)
 
 
 //Menu Handler for Panels
-stock int Handler_NullCancel(Handle menu, MenuAction action, int param1, int param2)
+public int Handler_NullCancel(Handle menu, MenuAction action, int param1, int param2)
 {
 	if (action == MenuAction_Select) 
 	{

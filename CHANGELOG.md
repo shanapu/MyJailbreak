@@ -1,6 +1,6 @@
 ### Change Log
   
-**[Beta *7.1.develop*]** - develop
+**[Beta *7.2.develop*]** - develop
   
 *Added*
 *  Myjailbreak: Shoot weapon on ground to remove it
@@ -89,6 +89,13 @@
 *  Last Guard: fix sm_lastguard_minct bypass. THX devu4!
 *  PlayerTags: fix tags on warden remove
 *  minor errors & smaller fixes
+  
+  
+  
+  **[Beta 7.2]** - fix for 1.7.x 
+   
+*Fixed* 
+*  Compatibility issues with sourcemod 1.7.x 
   
   
   

@@ -87,7 +87,7 @@ Handle BeaconTimer;
 //Strings
 char g_sHasVoted[1500];
 char g_sSoundStartPath[256];
-char huntermodel[256] = "models/player/custom_player/legacy/tm_phoenix_heavy.mdl";
+char g_sHunterModel[256] = "models/player/custom_player/legacy/tm_phoenix_heavy.mdl";
 char g_sEventsLogFile[PLATFORM_MAX_PATH];
 char g_sAdminFlag[32];
 char g_sModelPathCTPrevious[MAXPLAYERS+1][256];
@@ -555,7 +555,7 @@ public void OnMapStart()
 	if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
 	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
 	PrecacheModel("models/chicken/chicken.mdl", true);
-	PrecacheModel(huntermodel, true);
+	PrecacheModel(g_sHunterModel, true);
 	AddFileToDownloadsTable("materials/models/props_farm/chicken_white.vmt");
 	AddFileToDownloadsTable("materials/models/props_farm/chicken_white.vtf");
 	AddFileToDownloadsTable("models/chicken/chicken.dx90.vtx");
@@ -810,7 +810,7 @@ public Action Timer_SetModel(Handle timer)
 		if (GetClientTeam(client) == CS_TEAM_CT)
 		{
 			GetEntPropString(client, Prop_Data, "m_ModelName", g_sModelPathCTPrevious[client], sizeof(g_sModelPathCTPrevious[]));
-			SetEntityModel(client, huntermodel);
+			SetEntityModel(client, g_sHunterModel);
 		}
 		if (GetClientTeam(client) == CS_TEAM_T)
 		{
