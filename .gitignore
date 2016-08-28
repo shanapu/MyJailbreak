@@ -13,7 +13,6 @@ addons/sourcemod/scripting/include/adt_stack.inc
 addons/sourcemod/scripting/include/adt_trie.inc
 addons/sourcemod/scripting/include/autoexecconfig.inc
 addons/sourcemod/scripting/include/banning.inc
-addons/sourcemod/scripting/include/basecomm.inc
 addons/sourcemod/scripting/include/bitbuffer.inc
 addons/sourcemod/scripting/include/clientprefs.inc
 addons/sourcemod/scripting/include/clients.inc

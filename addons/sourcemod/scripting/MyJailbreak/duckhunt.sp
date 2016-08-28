@@ -116,6 +116,7 @@ public void OnPluginStart()
 	//Client Commands
 	RegConsoleCmd("sm_setduckhunt", Command_SetDuckHunt, "Allows the Admin or Warden to set duckhunt as next round");
 	RegConsoleCmd("sm_duckhunt", Command_VoteDuckHunt, "Allows players to vote for a duckhunt");
+	RegConsoleCmd("drop", Command_ToggleFly);
 	
 	
 	//AutoExecConfig
@@ -355,6 +356,27 @@ public Action Command_VoteDuckHunt(int client,int args)
 	}
 	else CReplyToCommand(client, "%t %t", "duckhunt_tag" , "duckhunt_disabled");
 	return Plugin_Handled;
+}
+
+
+public Action Command_ToggleFly(int client, int args)
+{
+	if(IsDuckHunt && (GetClientTeam(client) == CS_TEAM_T) && gc_bFlyMode.BoolValue)
+	{
+		MoveType movetype = GetEntityMoveType(client); 
+		
+		if (movetype != MOVETYPE_FLY)
+		{
+			SetEntityMoveType(client, MOVETYPE_FLY);
+			return Plugin_Handled;
+		}
+		else
+		{
+			SetEntityMoveType(client, MOVETYPE_WALK);
+			return Plugin_Handled;
+		}
+	}
+	return Plugin_Continue;
 }
 
 
