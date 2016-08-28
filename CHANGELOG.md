@@ -7,15 +7,27 @@
     *  new cvar - sm_warden_shootguns_enable - 0 - disabled, 1 - enable shoot guns on ground to remove
     *  new cvar - sm_warden_shootguns_mode - 1 - only warden / 2 - warden & ct / 3 - all player
 *  Ratio: Added one round cooldown for guard queue on wrong answer.
-*  Ratio: Prevent per cvar to move a random T to CT if teams are unbalanced. THX good_live!
-    *  new cvar - sm_ratio_balance_random - Switch a random T, when nobody in queue to balance the teams.
+*  Ratio: New system to choose players to switch on unbalanced teams.
+    *  new cvar - sm_ratio_balance_terror - 0 = Could result in unbalanced teams. 1 = Switch a random T, when nobody is in guardqueue to balance the teams.
+    *  new cvar - sm_ratio_balance_guard - Mode to choose a guard to be switch to T on balance the teams. 1 = Last In First Out / 0 = Random Guard
+    *  new cvar - sm_ratio_balance_warden - Prevent warden & deputy to be switch to T on balance the teams. Could result in unbalanced teams
 *  Weapons: Kevlar & Helm for guards on roundstart except on event days
     *  new cvar - sm_weapons_kevlar - 0 - disabled, 1 - CT get Kevlar & helm on Spawn
 *  Warden - Mute: mute all T on roundbegin
     *  new cvar - sm_warden_mute_default - 0 - disabled, 1 - Prisoners are muted on roundstart by default. Warden have to unmute them. Default 0
+*  Duckhunt: New kind to fly for ducks
+    *  new cvar - sm_duckhunt_flymode - 0 - Low gravity (old way), 1 - 'Flymode' (like a slow noclip with clipping). Bit difficult
 *  Freeday: Player respawn on event freeday
     *  new cvar - sm_freeday_respawn - 1 - respawn on AutoFreeday when no CTs / 2 - respawn on firstround/vote/set Freeday / 3 - Both
     *  new cvar - sm_freeday_respawn_time - Time in seconds the player will respawn after round begin. Default 120
+*  Catch: Freezetime for CTs. CTs can see freezed T though walls. Kill terror if he get catched more than once, make it available for LR & insert beacon.
+    *  new cvar - sm_catch_freezetime - Time in seconds CTs are freezed. Default 15
+    *  new cvar - sm_catch_overlays_start - Path to the start Overlay DONT TYPE .vmt or .vft
+    *  new cvar - sm_catch_sound_start - Path to the soundfile which should be played for a start.
+    *  new cvar - sm_catch_wallhack - 0 - disabled, 1 - enable wallhack for CT to see freezed enemeys
+    *  new cvar - sm_catch_count - How many times a terror can be catched before he get killed. 0 = T dont get killed ever all T must be catched- Default 0
+    *  new cvar - sm_catch_allow_lr - 0 - disabled, 1 - enable LR for last round and end eventday (need sm_catch_count min 1)
+    *  new cvar - sm_catch_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
 *  Warden - Deputy: The warden get a deputy to his side with configurable warden features.
     *  new command - sm_deputy - Allows the warden to choose a deputy or a player to be deputy
     *  new command - sm_undeputy - Allows the warden to remove the deputy and the deputy to retire from the position
@@ -61,18 +73,9 @@
 *  Commands: Add up to 12 custom commands to almost all myjailbreak commands.
     *  new cvar - sm_PLUGINNAME_cmds_FEATURENAME - Set your custom chat commands for *FEATURENAME*(no 'sm_'/'!')(seperate with comma ',')(max. 12 commands)
     *  removed cvar - sm_PLUGINNAME_cmd - obsolete cvars. Please remove them from your configs!
-*  Catch: Freezetime for CTs. CTs can see freezed T though walls. Kill terror if he get catched more than once, make it available for LR & insert beacon.
-    *  new cvar - sm_catch_freezetime - Time in seconds CTs are freezed. Default 15
-    *  new cvar - sm_catch_overlays_start - Path to the start Overlay DONT TYPE .vmt or .vft
-    *  new cvar - sm_catch_sound_start - Path to the soundfile which should be played for a start.
-    *  new cvar - sm_catch_wallhack - 0 - disabled, 1 - enable wallhack for CT to see freezed enemeys
-    *  new cvar - sm_catch_count - How many times a terror can be catched before he get killed. 0 = T dont get killed ever all T must be catched- Default 0
-    *  new cvar - sm_catch_allow_lr - 0 - disabled, 1 - enable LR for last round and end eventday (need sm_catch_count min 1)
-    *  new cvar - sm_catch_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
 *  Warden counter: Use the wardens FOV instead radius around him to count terrors
     *  removed cvar - sm_warden_counter_radius - obsolete cvar. Please remove them from your config!
 *  Weapons: Players can get weapons from menu more than once in a round. No need to wait until next round.
-*  Ratio: When move Guard to Prisoner, the last joined ct will be moved. If he is warden or deputy he will skipt and the next latest joined ct will be moved. "last in first out"
   
   
   

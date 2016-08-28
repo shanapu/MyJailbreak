@@ -45,6 +45,7 @@ ConVar gc_bSetA;
 ConVar gc_bVote;
 ConVar gc_iHunterHP;
 ConVar gc_iChickenHP;
+ConVar gc_bFlyMode;
 ConVar gc_bSounds;
 ConVar gc_fBeaconTime;
 ConVar gc_sSoundStartPath;
@@ -132,6 +133,7 @@ public void OnPluginStart()
 	gc_iRounds = AutoExecConfig_CreateConVar("sm_duckhunt_rounds", "1", "Rounds to play in a row", _, true, 1.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_duckhunt_roundtime", "5", "Round time in minutes for a single duckhunt round", _, true, 1.0);
 	gc_fBeaconTime = AutoExecConfig_CreateConVar("sm_duckhunt_beacon_time", "240", "Time in seconds until the beacon turned on (set to 0 to disable)", _, true, 0.0);
+	gc_bFlyMode = AutoExecConfig_CreateConVar("sm_duckhunt_flymode", "1", "0 - Low gravity, 1 - 'Flymode' (like a slow noclip with clipping). Bit difficult", _, true,  0.0, true, 1.0);
 	gc_iChickenHP = AutoExecConfig_CreateConVar("sm_duckhunt_chicken_hp", "100", "THP the chicken got on Spawn", _, true, 1.0);
 	gc_iHunterHP = AutoExecConfig_CreateConVar("sm_duckhunt_hunter_hp", "850", "HP the hunters got on Spawn", _, true, 1.0);
 	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_duckhunt_trucetime", "15", "Time in seconds until cells open / players can't deal damage", _, true,  0.0);
@@ -397,8 +399,15 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 					}
 					if (GetClientTeam(client) == CS_TEAM_T && IsValidClient(client, false, false))
 					{
-						SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.2);
-						SetEntityGravity(client, 0.3);
+						if(gc_bFlyMode.BoolValue)
+						{
+							SetEntityMoveType(client, MOVETYPE_FLY);
+						}
+						else
+						{
+							SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.2);
+							SetEntityGravity(client, 0.3);
+						}
 						SetEntityHealth(client, gc_iChickenHP.IntValue);
 						GivePlayerItem(client, "weapon_hegrenade");
 						ClientCommand(client, "thirdperson");
@@ -451,6 +460,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 					SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
 					SetEntityGravity(client, 1.0);
 					FP(client);
+					SetEntityMoveType(client, MOVETYPE_WALK);
 				}
 		}
 		delete BeaconTimer;
@@ -521,6 +531,7 @@ public void Event_PlayerDeath(Event event, char [] name, bool dontBroadcast)
 	{
 		int client = GetClientOfUserId(event.GetInt("userid"));
 		FP(client);
+		SetEntityMoveType(client, MOVETYPE_WALK);
 	}
 }
 
@@ -566,6 +577,7 @@ public void OnMapEnd()
 	LoopClients(client)
 	{
 		FP(client);
+		SetEntityMoveType(client, MOVETYPE_WALK);
 	}
 }
 
