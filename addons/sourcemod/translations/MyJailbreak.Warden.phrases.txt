@@ -525,6 +525,12 @@
 		"da"		"{1} afstemninger tilbage til {darkred}kick warden"
 	}
 
+	"warden_votesuccess"
+	{
+		"en"		"The Voting to {purple}kick the Warden{default} was successful!"
+		"de"		"Die Abstimmung {purple}gegen den Warden{default} war erfolgreich!"
+	}
+
 	"warden_voted"
 	{
 		"en"		"You have already voted against the current {purple}Warden{default}!"

@@ -433,6 +433,7 @@ public Action Command_VoteWarden(int client,int args)
 					{
 						if(ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Player %L was kick as warden by voting", g_iWarden);
 						RemoveTheWarden();
+						CPrintToChatAll("%t %t", "warden_tag" , "warden_votesuccess");
 					}
 					else CPrintToChatAll("%t %t", "warden_tag" , "warden_need", Missing, client);
 				}
