@@ -50,7 +50,9 @@ ConVar gc_bAdminBypass;
 ConVar gc_bForceTConnect;
 ConVar gc_iJoinMode;
 ConVar gc_ig_iQuestionTimes;
-ConVar gc_bBalanceRandom;
+ConVar gc_bBalanceTerror;
+ConVar gc_bBalanceGuards;
+ConVar gc_bBalanceWarden;
 
 
 //Booleans
@@ -123,7 +125,9 @@ public void OnPluginStart()
 	gc_iJoinMode = AutoExecConfig_CreateConVar("sm_ratio_join_mode", "1", "0 - instandly join ct/queue, no confirmation / 1 - confirm rules / 2 - Qualification questions", _, true,  0.0, true, 2.0);
 	gc_ig_iQuestionTimes = AutoExecConfig_CreateConVar("sm_ratio_questions", "3", "How many question a player have to answer before join ct/queue. need sm_ratio_join_mode 2", _, true,  1.0, true, 5.0);
 	gc_bAdminBypass = AutoExecConfig_CreateConVar("sm_ratio_vip_bypass", "1", "Bypass Admin/VIP though agreement / question", _, true,  0.0, true, 1.0);
-	gc_bBalanceRandom = AutoExecConfig_CreateConVar("sm_ratio_balance_random", "1", "Switch a random T, when nobody in queue to balance the teams.", _, true, 0.0, true, 1.0);
+	gc_bBalanceTerror = AutoExecConfig_CreateConVar("sm_ratio_balance_terror", "1", "0 = Could result in unbalanced teams. 1 = Switch a random T, when nobody is in guardqueue to balance the teams.", _, true, 0.0, true, 1.0);
+	gc_bBalanceGuards = AutoExecConfig_CreateConVar("sm_ratio_balance_guard", "1", "Mode to choose a guard to be switch to T on balance the teams. 1 = Last In First Out / 0 = Random Guard", _, true, 0.0, true, 1.0);
+	gc_bBalanceWarden = AutoExecConfig_CreateConVar("sm_ratio_balance_warden", "1", "Prevent warden & deputy to be switch to T on balance the teams. Could result in unbalanced teams", _, true, 0.0, true, 1.0);
 	
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
@@ -1012,7 +1016,7 @@ stock void FixTeamRatio()
 			
 			CPrintToChatAll("%t %t", "ratio_tag", "ratio_find", client);
 		}
-		else if(gc_bBalanceRandom.BoolValue)
+		else if(gc_bBalanceTerror.BoolValue)
 		{
 			client = GetRandomClientFromTeam(CS_TEAM_T, true);
 			CPrintToChatAll("%t %t", "ratio_tag", "ratio_random", client);
@@ -1038,26 +1042,34 @@ stock void FixTeamRatio()
 	
 	while(ShouldMoveGuardToPrisoner())
 	{
-		int iListSize = GetArraySize(g_aGuardList);
-		int iListNum = iListSize-1;
+		int client;
 		
-		int client = GetArrayCell(g_aGuardList, iListNum);
-		
-		if(warden_iswarden(client) || warden_deputy_isdeputy(client))
+		if(gc_bBalanceGuards.BoolValue)
 		{
-			iListNum--;
+			int iListSize = GetArraySize(g_aGuardList);
+			int iListNum = iListSize-1;
+			
 			client = GetArrayCell(g_aGuardList, iListNum);
 			
-			if(warden_iswarden(client) || warden_deputy_isdeputy(client))
+			if((warden_iswarden(client) || warden_deputy_isdeputy(client) || (!warden_exist() && (warden_getlast() == client)) || (!warden_deputy_exist() && (warden_deputy_getlast() == client))) && gc_bBalanceWarden.BoolValue)
 			{
 				iListNum--;
-				if(iListNum != -1) client = GetArrayCell(g_aGuardList, iListNum);
+				client = GetArrayCell(g_aGuardList, iListNum);
+				
+				if(warden_iswarden(client) || warden_deputy_isdeputy(client) || (!warden_exist() && (warden_getlast() == client)) || (!warden_deputy_exist() && (warden_deputy_getlast() == client)))
+				{
+					iListNum--;
+					if(iListNum != -1) client = GetArrayCell(g_aGuardList, iListNum);
+				}
 			}
+			if(iListNum == -1)
+				break;
 		}
+		else client = GetRandomClientFromTeam(CS_TEAM_CT, true);
 		
-		if(!client || iListNum == -1)
+		if(!client)
 			break;
-			
+		
 		CPrintToChatAll("%t %t", "ratio_tag", "ratio_movetot" ,client);
 		SetClientPendingTeam(client, CS_TEAM_T);
 		MinusDeath(client);
@@ -1078,6 +1090,9 @@ stock int GetRandomClientFromTeam(int iTeam, bool bSkipCTBanned=true)
 			continue;
 		
 		if(GetClientPendingTeam(i) != iTeam)
+			continue;
+		
+		if((warden_iswarden(i) || warden_deputy_isdeputy(i)) && gc_bBalanceWarden.BoolValue)
 			continue;
 		
 		if(bSkipCTBanned)

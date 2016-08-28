@@ -46,7 +46,7 @@ native warden_remove(client);
  *
  * @Return				Client Index of warden
  *********************************************************/
-native warden_get(client);
+native warden_get();
 
 
 /*********************************************************
@@ -55,7 +55,7 @@ native warden_get(client);
  *
  * @Return				Client Index of last warden
  *********************************************************/
-native warden_getlast(client);
+native warden_getlast();
 
 
 
@@ -101,7 +101,7 @@ native warden_deputy_remove(client);
  *
  * @Return				Client index of deputy
  *********************************************************/
-native warden_deputy_get(client);
+native warden_deputy_get();
 
 
 /*********************************************************
@@ -110,4 +110,4 @@ native warden_deputy_get(client);
  *
  * @Return				Client Index of last deputy
  *********************************************************/
-native warden_deputy_getlast(client);
+native warden_deputy_getlast();
