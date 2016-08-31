@@ -44,6 +44,7 @@ ConVar gc_bSetW;
 ConVar gc_bSetA;
 ConVar gc_bVote;
 ConVar gc_iHunterHP;
+ConVar gc_iHunterHPincrease;
 ConVar gc_iChickenHP;
 ConVar gc_bFlyMode;
 ConVar gc_bSounds;
@@ -135,8 +136,9 @@ public void OnPluginStart()
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_duckhunt_roundtime", "5", "Round time in minutes for a single duckhunt round", _, true, 1.0);
 	gc_fBeaconTime = AutoExecConfig_CreateConVar("sm_duckhunt_beacon_time", "240", "Time in seconds until the beacon turned on (set to 0 to disable)", _, true, 0.0);
 	gc_bFlyMode = AutoExecConfig_CreateConVar("sm_duckhunt_flymode", "1", "0 - Low gravity, 1 - 'Flymode' (like a slow noclip with clipping). Bit difficult", _, true,  0.0, true, 1.0);
-	gc_iChickenHP = AutoExecConfig_CreateConVar("sm_duckhunt_chicken_hp", "100", "THP the chicken got on Spawn", _, true, 1.0);
 	gc_iHunterHP = AutoExecConfig_CreateConVar("sm_duckhunt_hunter_hp", "850", "HP the hunters got on Spawn", _, true, 1.0);
+	gc_iHunterHPincrease = AutoExecConfig_CreateConVar("sm_duckhunt_hunter_hp_extra", "100", "HP the Hunter get additional per extra duck", _, true, 1.0);
+	gc_iChickenHP = AutoExecConfig_CreateConVar("sm_duckhunt_chicken_hp", "100", "THP the chicken got on Spawn", _, true, 1.0);
 	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_duckhunt_trucetime", "15", "Time in seconds until cells open / players can't deal damage", _, true,  0.0);
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_duckhunt_cooldown_day", "3", "Rounds cooldown after a event until event can be start again", _, true,  0.0);
 	gc_iCooldownStart = AutoExecConfig_CreateConVar("sm_duckhunt_cooldown_start", "3", "Rounds until event can be start after mapchange.", _, true,  0.0);
@@ -416,7 +418,12 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 					
 					if (GetClientTeam(client) == CS_TEAM_CT && IsValidClient(client, false, false))
 					{
-						SetEntityHealth(client, gc_iHunterHP.IntValue);
+						int HunterHP = gc_iHunterHP.IntValue;
+						int difference = (GetAliveTeamCount(CS_TEAM_T) - GetAliveTeamCount(CS_TEAM_CT));
+						
+						if (difference > 0) HunterHP = HunterHP + (gc_iHunterHPincrease.IntValue * difference); 
+						
+						SetEntityHealth(client, HunterHP);
 						GivePlayerItem(client, "weapon_nova");
 					}
 					if (GetClientTeam(client) == CS_TEAM_T && IsValidClient(client, false, false))

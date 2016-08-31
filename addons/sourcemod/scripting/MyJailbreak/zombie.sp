@@ -51,6 +51,7 @@ ConVar gc_iCooldownDay;
 ConVar gc_iFreezeTime;
 ConVar gc_bSpawnCell;
 ConVar gc_iZombieHP;
+ConVar gc_iZombieHPincrease;
 ConVar gc_iHumanHP;
 ConVar gc_bDark;
 ConVar gc_bVision;
@@ -145,7 +146,8 @@ public void OnPluginStart()
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_zombie_roundtime", "5", "Round time in minutes for a single zombie round", _, true, 1.0);
 	gc_fBeaconTime = AutoExecConfig_CreateConVar("sm_zombie_beacon_time", "240", "Time in seconds until the beacon turned on (set to 0 to disable)", _, true, 0.0);
 	gc_iFreezeTime = AutoExecConfig_CreateConVar("sm_zombie_freezetime", "35", "Time in seconds the zombies freezed", _, true, 0.0);
-	gc_iZombieHP = AutoExecConfig_CreateConVar("sm_zombie_zombie_hp", "8500", "HP the Zombies got on Spawn", _, true, 1.0);
+	gc_iZombieHP = AutoExecConfig_CreateConVar("sm_zombie_zombie_hp", "4000", "HP the Zombies got on Spawn", _, true, 1.0);
+	gc_iZombieHPincrease = AutoExecConfig_CreateConVar("sm_zombie_zombie_hp_extra", "1000", "HP the Zombies get additional per extra Human", _, true, 1.0);
 	gc_iHumanHP = AutoExecConfig_CreateConVar("sm_zombie_human_hp", "65", "HP the Humans got on Spawn", _, true, 1.0);
 	gc_bDark = AutoExecConfig_CreateConVar("sm_zombie_dark", "1", "0 - disabled, 1 - enable Map Darkness", _, true,  0.0, true, 1.0);
 	gc_bGlow = AutoExecConfig_CreateConVar("sm_zombie_glow", "1", "0 - disabled, 1 - enable Glow effect for humans", _, true,  0.0, true, 1.0);
@@ -422,7 +424,14 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 					if (GetClientTeam(client) == CS_TEAM_CT)
 					{
 						SetEntityMoveType(client, MOVETYPE_NONE);
-						SetEntityHealth(client, gc_iZombieHP.IntValue);
+						
+						int zombieHP = gc_iZombieHP.IntValue;
+						int difference = (GetAliveTeamCount(CS_TEAM_T) - GetAliveTeamCount(CS_TEAM_CT));
+						
+						if (difference > 0) zombieHP = zombieHP + (gc_iZombieHPincrease.IntValue * difference); 
+						
+						SetEntityHealth(client, zombieHP);
+						
 						StripAllPlayerWeapons(client);
 						GivePlayerItem(client, "weapon_knife");
 					}
