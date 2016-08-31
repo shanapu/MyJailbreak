@@ -145,12 +145,12 @@ public void CellDoors_Event_RoundStart(Event event, const char[] name, bool dont
 		{
 			g_iOpenTimer = gc_hOpenTimer.IntValue;
 			OpenCounterTime = CreateTimer(1.0, Timer_OpenCounter, _, TIMER_REPEAT);
-			if (RandomTimer != null)
-			KillTimer(RandomTimer);
-			
-			RandomTimer = null;
 		}
-		else CPrintToChatAll("%t %t", "warden_tag" , "warden_openauto_unavailable"); 
+		else CPrintToChatAll("%t %t", "warden_tag" , "warden_openauto_unavailable");
+	}
+	if(GameRules_GetProp("m_bWarmupPeriod") == 1)
+	{
+		if (SJD_IsCurrentMapConfigured()) SJD_OpenDoors();
 	}
 }
 

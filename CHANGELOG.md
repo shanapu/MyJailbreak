@@ -27,6 +27,7 @@
     *  new cvar - sm_catch_count - How many times a terror can be catched before he get killed. 0 = T dont get killed ever all T must be catched- Default 0
     *  new cvar - sm_catch_allow_lr - 0 - disabled, 1 - enable LR for last round and end eventday (need sm_catch_count min 1)
     *  new cvar - sm_catch_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
+*  Warden - Cell Doors: automatic open cell doors on warmup
 *  Warden - Mute: new fuctions with cvars mute all T on roundbegin & dont mute dead player on warden talkover
     *  new cvar - sm_warden_mute_default - 0 - disabled, 1 - Prisoners are muted on roundstart by default. Warden have to unmute them. Default 0
     *  new cvar - sm_warden_talkover_dead - 0 - mute death & alive player on talkover, 1 - only mute alive player on talkover. Default 0
@@ -79,6 +80,10 @@
 *  Warden counter: Use the wardens FOV instead radius around him to count terrors
     *  removed cvar - sm_warden_counter_radius - obsolete cvar. Please remove them from your config!
 *  Weapons: Players can get weapons from menu more than once in a round. No need to wait until next round.
+*  Duckhunt: Changed the way to set health for hunter based on enemey count. https://github.com/shanapu/MyJailbreak/issues/77#issuecomment-242951426
+    *  new cvar - sm_duckhunt_hunter_hp_extra - HP the Hunter get additional per extra duck.
+*  Zombie: Changed the way to set health for zombies based on enemey count. https://github.com/shanapu/MyJailbreak/issues/77#issuecomment-242951426
+    *  new cvar - sm_zombie_zombie_hp_extra - HP the zombie get additional per extra duck.
   
   
   
