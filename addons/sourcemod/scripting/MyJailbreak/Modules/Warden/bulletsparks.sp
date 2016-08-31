@@ -72,7 +72,7 @@ public void BulletSparks_OnPluginStart()
 
 public int BulletSparks_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
-	if(convar == gc_sAdminFlagBulletSparks)
+	if (convar == gc_sAdminFlagBulletSparks)
 	{
 		strcopy(g_sAdminFlagBulletSparks, sizeof(g_sAdminFlagBulletSparks), newValue);
 	}
@@ -86,13 +86,13 @@ public int BulletSparks_OnSettingChanged(Handle convar, const char[] oldValue, c
 
 public Action Command_BulletSparks(int client, int args)
 {
-	if(gc_bPlugin.BoolValue)
+	if (gc_bPlugin.BoolValue)
 	{
-		if(gc_bBulletSparks.BoolValue)
+		if (gc_bBulletSparks.BoolValue)
 		{
 			if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bBulletSparksDeputy.BoolValue))
 			{
-				if(CheckVipFlag(client,g_sAdminFlagBulletSparks))
+				if (CheckVipFlag(client, g_sAdminFlagBulletSparks))
 				{
 					if (!g_bBulletSparks[client])
 					{
@@ -117,22 +117,22 @@ public Action Command_BulletSparks(int client, int args)
 ******************************************************************************/
 
 
-public Action BulletSparks_Event_BulletImpact(Handle hEvent, char [] sName, bool bDontBroadcast)
+public Action BulletSparks_Event_BulletImpact(Handle event, char [] sName, bool bDontBroadcast)
 {
-	int client = GetClientOfUserId(GetEventInt(hEvent, "userid"));
+	int client = GetClientOfUserId(event.GetInt("userid"));
 	
-	if (!gc_bPlugin.BoolValue || !gc_bBulletSparks.BoolValue || (!IsClientWarden(client) || (!IsClientDeputy(client) && gc_bBulletSparksDeputy.BoolValue)) || !g_bBulletSparks[client] || !CheckVipFlag(client,g_sAdminFlagBulletSparks))
+	if (!gc_bPlugin.BoolValue || !gc_bBulletSparks.BoolValue || (!IsClientWarden(client) || (!IsClientDeputy(client) && gc_bBulletSparksDeputy.BoolValue)) || !g_bBulletSparks[client] || !CheckVipFlag(client, g_sAdminFlagBulletSparks))
 		return Plugin_Continue;
 	
 	float startpos[3];
 	float dir[3] = {0.0, 0.0, 0.0};
 	
-	startpos[0] = GetEventFloat(hEvent, "x");
-	startpos[1] = GetEventFloat(hEvent, "y");
-	startpos[2] = GetEventFloat(hEvent, "z");
+	startpos[0] = event.GetFloat("x");
+	startpos[1] = event.GetFloat("y");
+	startpos[2] = event.GetFloat("z");
 	
-	if(warden_iswarden(client))TE_SetupSparks(startpos, dir, 2500, 500);
-	if(warden_deputy_isdeputy(client))TE_SetupSparks(startpos, dir, 1500, 300);
+	if (warden_iswarden(client))TE_SetupSparks(startpos, dir, 2500, 500);
+	if (warden_deputy_isdeputy(client))TE_SetupSparks(startpos, dir, 1500, 300);
 	
 	TE_SendToAll();
 

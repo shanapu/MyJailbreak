@@ -97,18 +97,18 @@ public void GunDropPrevention_OnAvailableLR(int Announced)
 
 public Action CS_OnCSWeaponDrop(int client, int weapon)
 {
-	if(gc_bPlugin.BoolValue)
+	if (gc_bPlugin.BoolValue)
 	{
-		if(gc_bGunPlant.BoolValue)
+		if (gc_bGunPlant.BoolValue)
 		{
-			if(GetClientTeam(client) == CS_TEAM_CT)
+			if (GetClientTeam(client) == CS_TEAM_CT)
 			{
-				if(!g_bAllowDrop && !IsClientInLastRequest(client))
+				if (!g_bAllowDrop && !IsClientInLastRequest(client))
 				{
 					if (g_bWeaponDropped[client]) 
 						return Plugin_Handled;
 						
-					if(gc_bGunNoDrop.BoolValue)
+					if (gc_bGunNoDrop.BoolValue)
 						return Plugin_Handled;
 						
 				//	g_iWeaponDrop[client] = weapon;
@@ -119,7 +119,7 @@ public Action CS_OnCSWeaponDrop(int client, int weapon)
 					
 					
 					
-					if(IsValidEntity(weapon))
+					if (IsValidEntity(weapon))
 					{
 						if (!g_bWeaponDropped[client]) CreateTimer(0.1, Timer_DroppedWeapon, hData, TIMER_FLAG_NO_MAPCHANGE);
 					}
@@ -142,11 +142,11 @@ public Action Timer_DroppedWeapon(Handle timer, Handle hData)
 	int client = ReadPackCell(hData);
 	int iWeapon = ReadPackCell(hData);
 	
-	if(IsValidEdict(iWeapon))
+	if (IsValidEdict(iWeapon))
 	{
 		if (Entity_GetOwner(iWeapon) == -1)
 		{
-			if(IsValidClient(client, false, false))  // && !IsClientInLastRequest(client)
+			if (IsValidClient(client, false, false))  // && !IsClientInLastRequest(client)
 			{
 				char g_sWeaponName[80];
 				
@@ -159,12 +159,12 @@ public Action Timer_DroppedWeapon(Handle timer, Handle hData)
 				WritePackCell(hData2, iWeapon);
 				
 				CPrintToChat(client, "%t %t", "warden_tag" , "warden_noplant", client , g_sWeaponName);
-				if(g_iWarden != -1) CPrintToChat(g_iWarden, "%t %t", "warden_tag" , "warden_gunplant", client , g_sWeaponName);
-				if((g_iWarden != -1) && gc_bBetterNotes.BoolValue) PrintCenterText(g_iWarden, "%t", "warden_gunplant_nc", client , g_sWeaponName);
-				if(g_iDeputy != -1) CPrintToChat(g_iDeputy, "%t %t", "warden_tag" , "warden_gunplant", client , g_sWeaponName);
-				if((g_iDeputy != -1) && gc_bBetterNotes.BoolValue) PrintCenterText(g_iDeputy, "%t", "warden_gunplant_nc", client , g_sWeaponName);
-				if(gc_bGunRemove.BoolValue) CreateTimer(gc_fGunRemoveTime.FloatValue, Timer_RemoveWeapon, hData2, TIMER_FLAG_NO_MAPCHANGE);
-				if(gc_bGunSlap.BoolValue) SlapPlayer(client, gc_iGunSlapDamage.IntValue, true);
+				if (g_iWarden != -1) CPrintToChat(g_iWarden, "%t %t", "warden_tag" , "warden_gunplant", client , g_sWeaponName);
+				if ((g_iWarden != -1) && gc_bBetterNotes.BoolValue) PrintCenterText(g_iWarden, "%t", "warden_gunplant_nc", client , g_sWeaponName);
+				if (g_iDeputy != -1) CPrintToChat(g_iDeputy, "%t %t", "warden_tag" , "warden_gunplant", client , g_sWeaponName);
+				if ((g_iDeputy != -1) && gc_bBetterNotes.BoolValue) PrintCenterText(g_iDeputy, "%t", "warden_gunplant_nc", client , g_sWeaponName);
+				if (gc_bGunRemove.BoolValue) CreateTimer(gc_fGunRemoveTime.FloatValue, Timer_RemoveWeapon, hData2, TIMER_FLAG_NO_MAPCHANGE);
+				if (gc_bGunSlap.BoolValue) SlapPlayer(client, gc_iGunSlapDamage.IntValue, true);
 			}
 		}
 	}
@@ -177,7 +177,7 @@ public Action Timer_RemoveWeapon(Handle timer, Handle hData2)
 	int client = ReadPackCell(hData2);
 	int iWeapon = ReadPackCell(hData2);
 	
-	if(IsValidEdict(iWeapon))
+	if (IsValidEdict(iWeapon))
 	{
 		if (Entity_GetOwner(iWeapon) == -1)
 		{

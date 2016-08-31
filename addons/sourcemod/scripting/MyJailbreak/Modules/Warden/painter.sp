@@ -78,7 +78,7 @@ public void Painter_OnPluginStart()
 	gc_sAdminFlagPainter = AutoExecConfig_CreateConVar("sm_warden_painter_flag", "", "Set flag for admin/vip to get warden painter access. No flag = feature is available for all players!");
 	gc_bPainterT= AutoExecConfig_CreateConVar("sm_warden_painter_terror", "1", "0 - disabled, 1 - allow Warden to toggle Painter for Terrorist ", _, true,  0.0, true, 1.0);
 	gc_bPainterTDeputy= AutoExecConfig_CreateConVar("sm_warden_painter_terror_deputy", "1", "0 - disabled, 1 - allow to toggle Painter for Terrorist as deputy, too", _, true,  0.0, true, 1.0);
-	gc_sCustomCommandPainter = AutoExecConfig_CreateConVar("sm_warden_cmds_painter", "paint,draw", "Set your custom chat commands for Painter menu(!painter (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands))");
+	gc_sCustomCommandPainter = AutoExecConfig_CreateConVar("sm_warden_cmds_painter", "paint, draw", "Set your custom chat commands for Painter menu(!painter (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	
 	
 	//Hooks
@@ -95,7 +95,7 @@ public void Painter_OnPluginStart()
 
 public int Painter_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
-	if(convar == gc_sAdminFlagPainter)
+	if (convar == gc_sAdminFlagPainter)
 	{
 		strcopy(g_sAdminFlagPainter, sizeof(g_sAdminFlagPainter), newValue);
 	}
@@ -109,11 +109,11 @@ public int Painter_OnSettingChanged(Handle convar, const char[] oldValue, const 
 
 public Action Command_PainterMenu(int client, int args)
 {
-	if(gc_bPainter.BoolValue)
+	if (gc_bPainter.BoolValue)
 	{
 		if ((IsClientWarden(client)) || (IsClientDeputy(client) && gc_bPainterDeputy.BoolValue) || ((GetClientTeam(client) == CS_TEAM_T) && g_bPainterT))
 		{
-			if(CheckVipFlag(client,g_sAdminFlagPainter) || (GetClientTeam(client) == CS_TEAM_T))
+			if (CheckVipFlag(client, g_sAdminFlagPainter) || (GetClientTeam(client) == CS_TEAM_T))
 			{
 				char menuinfo[255];
 				
@@ -121,7 +121,7 @@ public Action Command_PainterMenu(int client, int args)
 				Format(menuinfo, sizeof(menuinfo), "%T", "warden_painter_title", client);
 				menu.SetTitle(menuinfo);
 				Format(menuinfo, sizeof(menuinfo), "%T", "warden_painter_off", client);
-				if(g_bPainter[client]) menu.AddItem("off", menuinfo);
+				if (g_bPainter[client]) menu.AddItem("off", menuinfo);
 				Format(menuinfo, sizeof(menuinfo), "%T", "warden_paintert", client);
 				if (GetClientTeam(client) == CS_TEAM_CT) menu.AddItem("terror", menuinfo);
 				Format(menuinfo, sizeof(menuinfo), "%T", "warden_rainbow", client);
@@ -176,7 +176,7 @@ public void Painter_Event_PlayerTeamDeath(Event event, const char[] name, bool d
 public void Painter_Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 {
 	g_bPainterT = false;
-	LoopClients(i) if(g_bPainter[i]) g_bPainter[i] = false;
+	LoopClients(i) if (g_bPainter[i]) g_bPainter[i] = false;
 }
 
 
@@ -194,12 +194,12 @@ public void Painter_OnConfigsExecuted()
 	//Painter
 	gc_sCustomCommandPainter.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
-	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	iCount = ExplodeString(sCommands, ", ", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
 	
-	for(int i = 0; i < iCount; i++)
+	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
 			RegConsoleCmd(sCommand, Command_PainterMenu, "Allows Warden to toggle on/off the wardens Painter");
 	}
 }
@@ -207,7 +207,7 @@ public void Painter_OnConfigsExecuted()
 
 public Action Painter_OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
 {
-	if((IsClientWarden(client) && gc_bPainter.BoolValue && g_bPainter[client] && CheckVipFlag(client,g_sAdminFlagPainter)) || ((GetClientTeam(client) == CS_TEAM_T) && gc_bPainter.BoolValue && g_bPainterT && g_bPainter[client]) || (IsClientDeputy(client) && gc_bPainterDeputy.BoolValue && g_bPainter[client]))
+	if ((IsClientWarden(client) && gc_bPainter.BoolValue && g_bPainter[client] && CheckVipFlag(client, g_sAdminFlagPainter)) || ((GetClientTeam(client) == CS_TEAM_T) && gc_bPainter.BoolValue && g_bPainterT && g_bPainter[client]) || (IsClientDeputy(client) && gc_bPainterDeputy.BoolValue && g_bPainter[client]))
 	{
 		for (int i = 0; i < MAX_BUTTONS; i++)
 		{
@@ -269,7 +269,7 @@ public void Painter_OnWardenRemoved(int client)
 
 public void Painter_OnClientDisconnect(int client)
 {
-	if(IsClientWarden(client)) g_bPainterT = false;
+	if (IsClientWarden(client)) g_bPainterT = false;
 	g_iLastButtons[client] = 0;
 }
 
@@ -292,7 +292,7 @@ public Action TogglePainterT(int client, int args)
 				
 				LoopValidClients(i, false, true)
 				{
-					if (GetClientTeam(i) == CS_TEAM_T) Command_PainterMenu(i,0);
+					if (GetClientTeam(i) == CS_TEAM_T) Command_PainterMenu(i, 0);
 				}
 			}
 			else
@@ -315,9 +315,9 @@ public Action TogglePainterT(int client, int args)
 }
 
 
-stock void OnButtonPress(int client,int button)
+stock void OnButtonPress(int client, int button)
 {
-	if(button == IN_USE)
+	if (button == IN_USE)
 	{
 		TraceEye(client, g_fLastPainter[client]);
 		g_bPainterUse[client] = true;
@@ -325,9 +325,9 @@ stock void OnButtonPress(int client,int button)
 }
 
 
-stock void OnButtonRelease(int client,int button)
+stock void OnButtonRelease(int client, int button)
 {
-	if(button == IN_USE)
+	if (button == IN_USE)
 	{
 		g_fLastPainter[client][0] = 0.0;
 		g_fLastPainter[client][1] = 0.0;
@@ -337,7 +337,7 @@ stock void OnButtonRelease(int client,int button)
 }
 
 
-public Action Connect_Painter(float start[3], float end[3],int color[4])
+public Action Connect_Painter(float start[3], float end[3], int color[4])
 {
 	TE_SetupBeamPoints(start, end, g_iBeamSprite, 0, 0, 0, 25.0, 2.0, 2.0, 10, 0.0, color, 0);
 	TE_SendToAll();
@@ -350,7 +350,7 @@ public Action TraceEye(int client, float g_fPos[3])
 	GetClientEyePosition(client, vOrigin);
 	GetClientEyeAngles(client, vAngles);
 	TR_TraceRayFilter(vOrigin, vAngles, MASK_SHOT, RayType_Infinite, TraceEntityFilterPlayer);
-	if(TR_DidHit(INVALID_HANDLE)) TR_GetEndPosition(g_fPos, INVALID_HANDLE);
+	if (TR_DidHit(INVALID_HANDLE)) TR_GetEndPosition(g_fPos, INVALID_HANDLE);
 	return;
 }
 
@@ -374,89 +374,89 @@ if (action == MenuAction_Select)
 		char info[32];
 		menu.GetItem(selection, info, sizeof(info));
 		
-		if ( strcmp(info,"off") == 0 ) 
+		if (strcmp(info, "off") == 0)
 		{
 			g_bPainter[client] = false;
 			CPrintToChat(client, "%t %t", "warden_tag", "warden_painteroff");
 		}
-		else if ( strcmp(info,"terror") == 0 ) 
+		else if (strcmp(info, "terror") == 0)
 		{
-			TogglePainterT(client,0);
+			TogglePainterT(client, 0);
 		}
-		else if ( strcmp(info,"rainbow") == 0 ) 
+		else if (strcmp(info, "rainbow") == 0)
 		{
-			if(!g_bPainter[client]) CPrintToChat(client, "%t %t", "warden_tag", "warden_painteron");
+			if (!g_bPainter[client]) CPrintToChat(client, "%t %t", "warden_tag", "warden_painteron");
 			CPrintToChat(client, "%t %t", "warden_tag", "warden_painter", g_sColorNamesRainbow);
 			g_bPainter[client] = true;
 			g_bPainterColorRainbow[client] = true;
 			
 		}
-		else if ( strcmp(info,"white") == 0 ) 
+		else if (strcmp(info, "white") == 0)
 		{
-			if(!g_bPainter[client]) CPrintToChat(client, "%t %t", "warden_tag", "warden_painteron");
+			if (!g_bPainter[client]) CPrintToChat(client, "%t %t", "warden_tag", "warden_painteron");
 			CPrintToChat(client, "%t %t", "warden_tag", "warden_painter", g_sColorNamesWhite);
 			g_bPainter[client] = true;
 			g_bPainterColorRainbow[client] = false;
 			g_iPainterColor[client] = 0;
 			
 		}
-		else if ( strcmp(info,"red") == 0 ) 
+		else if (strcmp(info, "red") == 0)
 		{
-			if(!g_bPainter[client]) CPrintToChat(client, "%t %t", "warden_tag", "warden_painteron");
+			if (!g_bPainter[client]) CPrintToChat(client, "%t %t", "warden_tag", "warden_painteron");
 			CPrintToChat(client, "%t %t", "warden_tag", "warden_painter", g_sColorNamesRed);
 			g_bPainter[client] = true;
 			g_bPainterColorRainbow[client] = false;
 			g_iPainterColor[client] = 1;
 			
 		}
-		else if ( strcmp(info,"green") == 0 ) 
+		else if (strcmp(info, "green") == 0)
 		{
-			if(!g_bPainter[client]) CPrintToChat(client, "%t %t", "warden_tag", "warden_painteron");
+			if (!g_bPainter[client]) CPrintToChat(client, "%t %t", "warden_tag", "warden_painteron");
 			CPrintToChat(client, "%t %t", "warden_tag", "warden_painter", g_sColorNamesGreen);
 			g_bPainter[client] = true;
 			g_bPainterColorRainbow[client] = false;
 			g_iPainterColor[client] = 2;
 			
 		}
-		else if ( strcmp(info,"blue") == 0 ) 
+		else if (strcmp(info, "blue") == 0)
 		{
-			if(!g_bPainter[client]) CPrintToChat(client, "%t %t", "warden_tag", "warden_painteron");
+			if (!g_bPainter[client]) CPrintToChat(client, "%t %t", "warden_tag", "warden_painteron");
 			CPrintToChat(client, "%t %t", "warden_tag", "warden_painter", g_sColorNamesBlue);
 			g_bPainter[client] = true;
 			g_bPainterColorRainbow[client] = false;
 			g_iPainterColor[client] = 3;
 			
 		}
-		else if ( strcmp(info,"yellow") == 0 ) 
+		else if (strcmp(info, "yellow") == 0)
 		{
-			if(!g_bPainter[client]) CPrintToChat(client, "%t %t", "warden_tag", "warden_painteron");
+			if (!g_bPainter[client]) CPrintToChat(client, "%t %t", "warden_tag", "warden_painteron");
 			CPrintToChat(client, "%t %t", "warden_tag", "warden_painter", g_sColorNamesYellow);
 			g_bPainter[client] = true;
 			g_bPainterColorRainbow[client] = false;
 			g_iPainterColor[client] = 4;
 			
 		}
-		else if ( strcmp(info,"cyan") == 0 ) 
+		else if (strcmp(info, "cyan") == 0)
 		{
-			if(!g_bPainter[client]) CPrintToChat(client, "%t %t", "warden_tag", "warden_painteron");
+			if (!g_bPainter[client]) CPrintToChat(client, "%t %t", "warden_tag", "warden_painteron");
 			CPrintToChat(client, "%t %t", "warden_tag", "warden_painter", g_sColorNamesCyan);
 			g_bPainter[client] = true;
 			g_bPainterColorRainbow[client] = false;
 			g_iPainterColor[client] = 5;
 			
 		}
-		else if ( strcmp(info,"magenta") == 0 ) 
+		else if (strcmp(info, "magenta") == 0)
 		{
-			if(!g_bPainter[client]) CPrintToChat(client, "%t %t", "warden_tag", "warden_painteron");
+			if (!g_bPainter[client]) CPrintToChat(client, "%t %t", "warden_tag", "warden_painteron");
 			CPrintToChat(client, "%t %t", "warden_tag", "warden_painter", g_sColorNamesMagenta);
 			g_bPainter[client] = true;
 			g_bPainterColorRainbow[client] = false;
 			g_iPainterColor[client] = 6;
 			
 		}
-		else if ( strcmp(info,"orange") == 0 ) 
+		else if (strcmp(info, "orange") == 0)
 		{
-			if(!g_bPainter[client]) CPrintToChat(client, "%t %t", "warden_tag", "warden_painteron");
+			if (!g_bPainter[client]) CPrintToChat(client, "%t %t", "warden_tag", "warden_painteron");
 			CPrintToChat(client, "%t %t", "warden_tag", "warden_painter", g_sColorNamesOrange);
 			g_bPainter[client] = true;
 			g_bPainterColorRainbow[client] = false;
@@ -464,14 +464,14 @@ if (action == MenuAction_Select)
 			
 		}
 	}
-	else if(action == MenuAction_Cancel)
+	else if (action == MenuAction_Cancel)
 	{
-		if(selection == MenuCancel_ExitBack) 
+		if (selection == MenuCancel_ExitBack) 
 		{
 			FakeClientCommand(client, "sm_menu");
 		}
 	}
-	else if(action == MenuAction_End)
+	else if (action == MenuAction_End)
 	{
 		delete menu;
 	}
@@ -487,13 +487,13 @@ public Action Print_Painter(Handle timer)
 {
 	float g_fPos[3];
 	
-	for(int Y = 1; Y <= MaxClients; Y++) 
+	for (int Y = 1; Y <= MaxClients; Y++) 
 	{
-		if(g_bPainterColorRainbow[Y]) g_iPainterColor[Y] = GetRandomInt(0,6);
-		if(IsClientInGame(Y) && g_bPainterUse[Y])
+		if (g_bPainterColorRainbow[Y]) g_iPainterColor[Y] = GetRandomInt(0, 6);
+		if (IsClientInGame(Y) && g_bPainterUse[Y])
 		{
 			TraceEye(Y, g_fPos);
-			if(GetVectorDistance(g_fPos, g_fLastPainter[Y]) > 6.0) {
+			if (GetVectorDistance(g_fPos, g_fLastPainter[Y]) > 6.0) {
 				Connect_Painter(g_fLastPainter[Y], g_fPos, g_iColors[g_iPainterColor[Y]]);
 				g_fLastPainter[Y][0] = g_fPos[0];
 				g_fLastPainter[Y][1] = g_fPos[1];

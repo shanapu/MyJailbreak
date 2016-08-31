@@ -88,7 +88,7 @@ public void Countdown_OnPluginStart()
 	gc_bCountdownSounds = AutoExecConfig_CreateConVar("sm_warden_countdown_sounds_enable", "1", "0 - disabled, 1 - enable sounds ", _, true,  0.0, true, 1.0);
 	gc_sCountdownSoundStartPath = AutoExecConfig_CreateConVar("sm_warden_countdown_sounds_start", "music/MyJailbreak/start.mp3", "Path to the soundfile which should be played for a start countdown.");
 	gc_sCountdownSoundStopPath = AutoExecConfig_CreateConVar("sm_warden_countdown_sounds_stop", "music/MyJailbreak/stop.mp3", "Path to the soundfile which should be played for stop countdown.");
-	gc_sCustomCommandCD = AutoExecConfig_CreateConVar("sm_warden_cmds_countdown", "cd,countdown,timer", "Set your custom chat commands for countdown menu(!cdmenu (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands)");
+	gc_sCustomCommandCD = AutoExecConfig_CreateConVar("sm_warden_cmds_countdown", "cd, countdown, timer", "Set your custom chat commands for countdown menu(!cdmenu (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)");
 	
 	
 	//Hooks
@@ -109,25 +109,25 @@ public void Countdown_OnPluginStart()
 
 public int Countdown_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
-	if(convar == gc_sCountdownSoundStartPath)
+	if (convar == gc_sCountdownSoundStartPath)
 	{
 		strcopy(g_sCountdownSoundStartPath, sizeof(g_sCountdownSoundStartPath), newValue);
-		if(gc_bCountdownSounds.BoolValue) PrecacheSoundAnyDownload(g_sCountdownSoundStartPath);
+		if (gc_bCountdownSounds.BoolValue) PrecacheSoundAnyDownload(g_sCountdownSoundStartPath);
 	}
-	else if(convar == gc_sCountdownSoundStopPath)
+	else if (convar == gc_sCountdownSoundStopPath)
 	{
 		strcopy(g_sCountdownSoundStopPath, sizeof(g_sCountdownSoundStopPath), newValue);
-		if(gc_bCountdownSounds.BoolValue) PrecacheSoundAnyDownload(g_sCountdownSoundStopPath);
+		if (gc_bCountdownSounds.BoolValue) PrecacheSoundAnyDownload(g_sCountdownSoundStopPath);
 	}
-	else if(convar == gc_sCountdownOverlayStartPath)
+	else if (convar == gc_sCountdownOverlayStartPath)
 	{
 		strcopy(g_sCountdownOverlayStartPath, sizeof(g_sCountdownOverlayStartPath), newValue);
-		if(gc_bCountdownOverlays.BoolValue) PrecacheDecalAnyDownload(g_sCountdownOverlayStartPath);
+		if (gc_bCountdownOverlays.BoolValue) PrecacheDecalAnyDownload(g_sCountdownOverlayStartPath);
 	}
-	else if(convar == gc_sCountdownOverlayStopPath)
+	else if (convar == gc_sCountdownOverlayStopPath)
 	{
 		strcopy(g_sCountdownOverlayStopPath, sizeof(g_sCountdownOverlayStopPath), newValue);
-		if(gc_bCountdownOverlays.BoolValue) PrecacheDecalAnyDownload(g_sCountdownOverlayStopPath);
+		if (gc_bCountdownOverlays.BoolValue) PrecacheDecalAnyDownload(g_sCountdownOverlayStopPath);
 	}
 }
 
@@ -139,7 +139,7 @@ public int Countdown_OnSettingChanged(Handle convar, const char[] oldValue, cons
 
 public Action Command_CountDownMenu(int client, int args)
 {
-	if(gc_bCountDown.BoolValue)
+	if (gc_bCountDown.BoolValue)
 	{
 		if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bCountDownDeputy.BoolValue))
 		{
@@ -182,7 +182,7 @@ public Action Command_CancelCountDown(int client, int args)
 
 public Action Command_StartStopMenu(int client, int args)
 {
-	if(gc_bCountDown.BoolValue)
+	if (gc_bCountDown.BoolValue)
 	{
 		if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bCountDownDeputy.BoolValue))
 		{
@@ -220,7 +220,7 @@ public Action Command_StartStopMenu(int client, int args)
 
 public Action Command_StartCountDown(int client, int args)
 {
-	if(gc_bCountDown.BoolValue)
+	if (gc_bCountDown.BoolValue)
 	{
 		if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bCountDownDeputy.BoolValue))
 		{
@@ -231,7 +231,7 @@ public Action Command_StartCountDown(int client, int args)
 				
 				CPrintToChatAll("%t %t", "warden_tag" , "warden_startcountdownhint");
 				
-				if(gc_bBetterNotes.BoolValue)
+				if (gc_bBetterNotes.BoolValue)
 				{
 					PrintCenterTextAll("%t", "warden_startcountdownhint_nc");
 				}
@@ -248,7 +248,7 @@ public Action Command_StartCountDown(int client, int args)
 
 public Action Command_StopCountDown(int client, int args)
 {
-	if(gc_bCountDown.BoolValue)
+	if (gc_bCountDown.BoolValue)
 	{
 		if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bCountDownDeputy.BoolValue))
 		{
@@ -260,7 +260,7 @@ public Action Command_StopCountDown(int client, int args)
 				
 				CPrintToChatAll("%t %t", "warden_tag" , "warden_stopcountdownhint");
 		
-				if(gc_bBetterNotes.BoolValue)
+				if (gc_bBetterNotes.BoolValue)
 				{
 					PrintCenterTextAll("%t", "warden_stopcountdownhint_nc");
 				}
@@ -299,12 +299,12 @@ public void Countdown_Event_RoundEnd(Event event, const char[] name, bool dontBr
 
 public void Countdown_OnMapStart()
 {
-	if(gc_bCountdownSounds.BoolValue)
+	if (gc_bCountdownSounds.BoolValue)
 	{
 		PrecacheSoundAnyDownload(g_sCountdownSoundStopPath);
 		PrecacheSoundAnyDownload(g_sCountdownSoundStartPath);
 	}
-	if(gc_bCountdownOverlays.BoolValue)
+	if (gc_bCountdownOverlays.BoolValue)
 	{
 		PrecacheDecalAnyDownload(g_sCountdownOverlayStartPath);
 		PrecacheDecalAnyDownload(g_sCountdownOverlayStopPath);
@@ -327,12 +327,12 @@ public void Countdown_OnConfigsExecuted()
 	//Countdown
 	gc_sCustomCommandCD.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
-	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	iCount = ExplodeString(sCommands, ", ", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
 	
-	for(int i = 0; i < iCount; i++)
+	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
 			RegConsoleCmd(sCommand, Command_CountDownMenu, "Allows the Warden to open the Countdown Menu");
 	}
 }
@@ -345,7 +345,7 @@ public void Countdown_OnConfigsExecuted()
 
 public Action SetStartStopCountDown(int client, int args)
 {
-	if(gc_bCountDown.BoolValue)
+	if (gc_bCountDown.BoolValue)
 	{
 		if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bCountDownDeputy.BoolValue))
 		{
@@ -357,7 +357,7 @@ public Action SetStartStopCountDown(int client, int args)
 				
 				CPrintToChatAll("%t %t", "warden_tag" , "warden_startstopcountdownhint");
 				
-				if(gc_bBetterNotes.BoolValue)
+				if (gc_bBetterNotes.BoolValue)
 				{
 					PrintCenterTextAll("%t", "warden_startstopcountdownhint_nc");
 				}
@@ -382,36 +382,36 @@ public int Handler_CountDownMenu(Menu menu, MenuAction action, int client, int s
 		char info[32];
 		menu.GetItem(selection, info, sizeof(info));
 		
-		if ( strcmp(info,"start") == 0 ) 
+		if (strcmp(info, "start") == 0)
 		{
 			FakeClientCommand(client, "sm_cdstart");
 			
-			if(g_bMenuClose != null)
+			if (g_bMenuClose != null)
 			{
-				if(!g_bMenuClose)
+				if (!g_bMenuClose)
 				{
 					FakeClientCommand(client, "sm_menu");
 				}
 			}
 		}
-		else if ( strcmp(info,"stop") == 0 ) 
+		else if (strcmp(info, "stop") == 0)
 		{
 			FakeClientCommand(client, "sm_cdstop");
 			
-			if(g_bMenuClose != null)
+			if (g_bMenuClose != null)
 			{
-				if(!g_bMenuClose)
+				if (!g_bMenuClose)
 				{
 					FakeClientCommand(client, "sm_menu");
 				}
 			}
 		}
-		else if ( strcmp(info,"startstop") == 0 ) 
+		else if (strcmp(info, "startstop") == 0)
 		{
 		FakeClientCommand(client, "sm_cdstartstop");
 		}
 	}
-	else if(selection == MenuCancel_ExitBack) 
+	else if (selection == MenuCancel_ExitBack) 
 	{
 		FakeClientCommand(client, "sm_menu");
 	}
@@ -429,62 +429,62 @@ public int Handler_StartStopMenu(Menu menu, MenuAction action, int client, int s
 		char info[32];
 		menu.GetItem(selection, info, sizeof(info));
 		
-		if ( strcmp(info,"15") == 0 ) 
+		if (strcmp(info, "15") == 0)
 		{
 			g_iSetCountStartStopTime = 25;
 			SetStartStopCountDown(client, 0);
 		}
-		else if ( strcmp(info,"30") == 0 ) 
+		else if (strcmp(info, "30") == 0)
 		{
 			g_iSetCountStartStopTime = 40;
 			SetStartStopCountDown(client, 0);
 		}
-		else if ( strcmp(info,"45") == 0 ) 
+		else if (strcmp(info, "45") == 0)
 		{
 			g_iSetCountStartStopTime = 55;
 			SetStartStopCountDown(client, 0);
 		}
-		else if ( strcmp(info,"60") == 0 ) 
+		else if (strcmp(info, "60") == 0)
 		{
 			g_iSetCountStartStopTime = 70;
 			SetStartStopCountDown(client, 0);
 		}
-		else if ( strcmp(info,"90") == 0 ) 
+		else if (strcmp(info, "90") == 0)
 		{
 			g_iSetCountStartStopTime = 100;
 			SetStartStopCountDown(client, 0);
 		}
-		else if ( strcmp(info,"120") == 0 ) 
+		else if (strcmp(info, "120") == 0)
 		{
 			g_iSetCountStartStopTime = 130;
 			SetStartStopCountDown(client, 0);
 		}
-		else if ( strcmp(info,"180") == 0 ) 
+		else if (strcmp(info, "180") == 0)
 		{
 			g_iSetCountStartStopTime = 190;
 			SetStartStopCountDown(client, 0);
 		}
-		else if ( strcmp(info,"300") == 0 ) 
+		else if (strcmp(info, "300") == 0)
 		{
 			g_iSetCountStartStopTime = 310;
 			SetStartStopCountDown(client, 0);
 		}
-		if(g_bMenuClose != null)
+		if (g_bMenuClose != null)
 		{
-			if(!g_bMenuClose)
+			if (!g_bMenuClose)
 			{
 				FakeClientCommand(client, "sm_menu");
 			}
 		}
 	}
-	else if(action == MenuAction_Cancel)
+	else if (action == MenuAction_Cancel)
 	{
-		if(selection == MenuCancel_ExitBack) 
+		if (selection == MenuCancel_ExitBack) 
 		{
 			FakeClientCommand(client, "sm_cdmenu");
 		}
 	}
-	else if(action == MenuAction_End)
+	else if (action == MenuAction_End)
 	{
 		delete menu;
 	}
@@ -496,7 +496,7 @@ public int Handler_StartStopMenu(Menu menu, MenuAction action, int client, int s
 ******************************************************************************/
 
 
-public Action Timer_StartCountdown( Handle timer, any client ) 
+public Action Timer_StartCountdown( Handle timer, any client)
 {
 	if (g_iCountStartTime > 0)
 	{
@@ -504,7 +504,7 @@ public Action Timer_StartCountdown( Handle timer, any client )
 		{
 			if (g_iCountStartTime < 6) 
 			{
-				PrintCenterText(client,"%t", "warden_startcountdown_nc", g_iCountStartTime);
+				PrintCenterText(client, "%t", "warden_startcountdown_nc", g_iCountStartTime);
 				CPrintToChatAll("%t %t", "warden_tag" , "warden_startcountdown", g_iCountStartTime);
 			}
 		}
@@ -513,16 +513,16 @@ public Action Timer_StartCountdown( Handle timer, any client )
 	}
 	if (g_iCountStartTime == 0)
 	{
-		if(IsClientInGame(client) && IsClientConnected(client) && !IsFakeClient(client))
+		if (IsClientInGame(client) && IsClientConnected(client) && !IsFakeClient(client))
 		{
 			PrintCenterText(client, "%t", "warden_countdownstart_nc");
 			CPrintToChatAll("%t %t", "warden_tag" , "warden_countdownstart");
 			
-			if(gc_bCountdownOverlays.BoolValue)
+			if (gc_bCountdownOverlays.BoolValue)
 			{
 				ShowOverlayAll(g_sCountdownOverlayStartPath, 2.0);
 			}
-			if(gc_bCountdownSounds.BoolValue)	
+			if (gc_bCountdownSounds.BoolValue)	
 			{
 				EmitSoundToAllAny(g_sCountdownSoundStartPath);
 			}
@@ -537,7 +537,7 @@ public Action Timer_StartCountdown( Handle timer, any client )
 }
 
 
-public Action Timer_StopCountdown( Handle timer, any client ) 
+public Action Timer_StopCountdown( Handle timer, any client)
 {
 	if (g_iCountStopTime > 0)
 	{
@@ -545,7 +545,7 @@ public Action Timer_StopCountdown( Handle timer, any client )
 		{
 			if (g_iCountStopTime < 16) 
 			{
-				PrintCenterText(client,"%t", "warden_stopcountdown_nc", g_iCountStopTime);
+				PrintCenterText(client, "%t", "warden_stopcountdown_nc", g_iCountStopTime);
 				CPrintToChatAll("%t %t", "warden_tag" , "warden_stopcountdown", g_iCountStopTime);
 			}
 		}
@@ -554,16 +554,16 @@ public Action Timer_StopCountdown( Handle timer, any client )
 	}
 	if (g_iCountStopTime == 0)
 	{
-		if(IsClientInGame(client) && IsClientConnected(client) && !IsFakeClient(client))
+		if (IsClientInGame(client) && IsClientConnected(client) && !IsFakeClient(client))
 		{
 			PrintCenterText(client, "%t", "warden_countdownstop_nc");
 			CPrintToChatAll("%t %t", "warden_tag" , "warden_countdownstop");
 			
-			if(gc_bCountdownOverlays.BoolValue)
+			if (gc_bCountdownOverlays.BoolValue)
 			{
 				ShowOverlayAll(g_sCountdownOverlayStopPath, 2.0);
 			}
-			if(gc_bCountdownSounds.BoolValue)	
+			if (gc_bCountdownSounds.BoolValue)	
 			{
 				EmitSoundToAllAny(g_sCountdownSoundStopPath);
 			}
@@ -578,15 +578,15 @@ public Action Timer_StopCountdown( Handle timer, any client )
 }
 
 
-public Action Timer_StopStartStopCountdown( Handle timer, any client ) 
+public Action Timer_StopStartStopCountdown( Handle timer, any client)
 {
-	if ( g_iSetCountStartStopTime > 0)
+	if (g_iSetCountStartStopTime > 0)
 	{
 		if (IsClientInGame(client) && IsPlayerAlive(client))
 		{
-			if ( g_iSetCountStartStopTime < 11) 
+			if (g_iSetCountStartStopTime < 11) 
 			{
-				PrintCenterText(client,"%t", "warden_stopcountdown_nc", g_iSetCountStartStopTime);
+				PrintCenterText(client, "%t", "warden_stopcountdown_nc", g_iSetCountStartStopTime);
 				CPrintToChatAll("%t %t", "warden_tag" , "warden_stopcountdown", g_iSetCountStartStopTime);
 			}
 		}
@@ -594,18 +594,18 @@ public Action Timer_StopStartStopCountdown( Handle timer, any client )
 		g_bIsCountDown = true;
 		return Plugin_Continue;
 	}
-	if ( g_iSetCountStartStopTime == 0)
+	if (g_iSetCountStartStopTime == 0)
 	{
-		if(IsClientInGame(client) && IsClientConnected(client) && !IsFakeClient(client))
+		if (IsClientInGame(client) && IsClientConnected(client) && !IsFakeClient(client))
 		{
 			PrintCenterText(client, "%t", "warden_countdownstop_nc");
 			CPrintToChatAll("%t %t", "warden_tag" , "warden_countdownstop");
 			
-			if(gc_bCountdownOverlays.BoolValue)
+			if (gc_bCountdownOverlays.BoolValue)
 			{
 				ShowOverlayAll(g_sCountdownOverlayStopPath, 2.0);
 			}
-			if(gc_bCountdownSounds.BoolValue)	
+			if (gc_bCountdownSounds.BoolValue)	
 			{
 				EmitSoundToAllAny(g_sCountdownSoundStopPath);
 			}

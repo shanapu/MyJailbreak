@@ -52,7 +52,7 @@ public void FriendlyFire_OnPluginStart()
 	//AutoExecConfig
 	gc_bFF = AutoExecConfig_CreateConVar("sm_warden_ff", "1", "0 - disabled, 1 - enable switch ff for the warden", _, true,  0.0, true, 1.0);
 	gc_bFFDeputy = AutoExecConfig_CreateConVar("sm_warden_ff_deputy", "1", "0 - disabled, 1 - enable switch ff for the deputy, too", _, true,  0.0, true, 1.0);
-	gc_sCustomCommandFF = AutoExecConfig_CreateConVar("sm_warden_cmds_ff", "isff,friendlyfire", "Set your custom chat commands for set/see friendly fire(!ff is reservered)(!setff (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands)");
+	gc_sCustomCommandFF = AutoExecConfig_CreateConVar("sm_warden_cmds_ff", "isff, friendlyfire", "Set your custom chat commands for set/see friendly fire(!ff is reservered)(!setff (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)");
 	
 	//Hooks
 	HookEvent("round_end", FriendlyFire_Event_RoundEnd);
@@ -103,7 +103,7 @@ public Action Command_FriendlyFire(int client, int args)
 
 public void FriendlyFire_Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 {
-	if(gc_bPlugin.BoolValue)
+	if (gc_bPlugin.BoolValue)
 	{
 		if (g_bFF.BoolValue) 
 		{
@@ -129,12 +129,12 @@ public void FriendlyFire_OnConfigsExecuted()
 	//Friendly fire
 	gc_sCustomCommandFF.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
-	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	iCount = ExplodeString(sCommands, ", ", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
 	
-	for(int i = 0; i < iCount; i++)
+	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
 			RegConsoleCmd(sCommand, Command_FriendlyFire, "Allows player to see the state and the Warden to toggle friendly fire");
 	}
 }

@@ -70,7 +70,7 @@ public void Repeat_OnPluginStart()
 	
 	//AutoExecConfig
 	gc_bRepeat = AutoExecConfig_CreateConVar("sm_repeat_enable", "1", "0 - disabled, 1 - enable repeat");
-	gc_sCustomCommandRepeat = AutoExecConfig_CreateConVar("sm_repeat_cmds", "what,rep,again", "Set your custom chat command for Repeat.(!repeat (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands))");
+	gc_sCustomCommandRepeat = AutoExecConfig_CreateConVar("sm_repeat_cmds", "what, rep, again", "Set your custom chat command for Repeat.(!repeat (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_iRepeatLimit = AutoExecConfig_CreateConVar("sm_repeat_limit", "2", "Сount how many times you can use the command");
 	gc_sSoundRepeatPath = AutoExecConfig_CreateConVar("sm_repeat_sound", "music/MyJailbreak/repeat.mp3", "Path to the soundfile which should be played for a repeat.");
 	gc_sAdminFlagRepeat = AutoExecConfig_CreateConVar("sm_repeat_flag", "a", "Set flag for admin/vip to get one more repeat. No flag = feature is available for all players!");
@@ -90,12 +90,12 @@ public void Repeat_OnPluginStart()
 
 public int Repeat_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
-	if(convar == gc_sSoundRepeatPath)
+	if (convar == gc_sSoundRepeatPath)
 	{
 		strcopy(g_sSoundRepeatPath, sizeof(g_sSoundRepeatPath), newValue);
-		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundRepeatPath);
+		if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundRepeatPath);
 	}
-	else if(convar == gc_sAdminFlagRepeat)
+	else if (convar == gc_sAdminFlagRepeat)
 	{
 		strcopy(g_sAdminFlagRepeat, sizeof(g_sAdminFlagRepeat), newValue);
 	}
@@ -124,7 +124,7 @@ public Action Command_Repeat(int client, int args)
 						CPrintToChatAll("%t %t", "request_tag", "request_repeatpls", client);
 						RepeatTimer[client] = CreateTimer(10.0, Timer_RepeatEnd, client);
 						if (warden_exist()) LoopClients(i) RepeatMenu(i);
-						if(gc_bSounds.BoolValue)EmitSoundToAllAny(g_sSoundRepeatPath);
+						if (gc_bSounds.BoolValue)EmitSoundToAllAny(g_sSoundRepeatPath);
 					}
 					else CReplyToCommand(client, "%t %t", "request_tag", "request_repeattimes", gc_iRepeatLimit.IntValue);
 				}
@@ -151,7 +151,7 @@ public void Repeat_Event_RoundStart(Event event, char [] name, bool dontBroadcas
 		g_bRepeated[client] = false;
 		g_iRepeatCounter[client] = 0;
 		
-		if(CheckVipFlag(client,g_sAdminFlagRepeat)) g_iRepeatCounter[client] = -1;
+		if (CheckVipFlag(client, g_sAdminFlagRepeat)) g_iRepeatCounter[client] = -1;
 	}
 }
 
@@ -163,7 +163,7 @@ public void Repeat_Event_RoundStart(Event event, char [] name, bool dontBroadcas
 
 public void Repeat_OnMapStart()
 {
-	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundRepeatPath);
+	if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundRepeatPath);
 }
 
 
@@ -176,12 +176,12 @@ public void Repeat_OnConfigsExecuted()
 	//Repeat
 	gc_sCustomCommandRepeat.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
-	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	iCount = ExplodeString(sCommands, ", ", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
 	
-	for(int i = 0; i < iCount; i++)
+	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
 			RegConsoleCmd(sCommand, Command_Repeat, "Allows a Terrorist request repeat");
 	}
 }
@@ -190,7 +190,7 @@ public void Repeat_OnConfigsExecuted()
 public void Repeat_OnClientPutInServer(int client)
 {
 	g_iRepeatCounter[client] = 0;
-	if(CheckVipFlag(client,g_sAdminFlagRepeat)) g_iRepeatCounter[client] = -1;
+	if (CheckVipFlag(client, g_sAdminFlagRepeat)) g_iRepeatCounter[client] = -1;
 	
 	g_bRepeated[client] = false;
 }
@@ -217,15 +217,15 @@ public Action RepeatMenu(int warden)
 		SetPanelTitle(RepeatPanel, info1);
 		DrawPanelText(RepeatPanel, "-----------------------------------");
 		DrawPanelText(RepeatPanel, "                                   ");
-		for(int i = 1;i <= MaxClients;i++) if(IsValidClient(i, true))
+		for (int i = 1;i <= MaxClients;i++) if (IsValidClient(i, true))
 		{
-			if(g_bRepeated[i])
+			if (g_bRepeated[i])
 			{
 				char userid[11];
 				char username[MAX_NAME_LENGTH];
 				IntToString(GetClientUserId(i), userid, sizeof(userid));
 				Format(username, sizeof(username), "%N", i);
-				DrawPanelText(RepeatPanel,username);
+				DrawPanelText(RepeatPanel, username);
 			}
 		}
 		DrawPanelText(RepeatPanel, "                                   ");

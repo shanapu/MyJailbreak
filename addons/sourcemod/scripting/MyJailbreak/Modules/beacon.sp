@@ -48,12 +48,12 @@ public void Beacon_OnPluginStart()
 {
 	gc_fBeaconRadius = AutoExecConfig_CreateConVar("sm_myjb_beacon_radius", "850", "Sets the radius for the beacons rings.", _, true, 50.0, true, 1500.0);
 	gc_fBeaconWidth = AutoExecConfig_CreateConVar("sm_myjb_beacon_width", "25", "Sets the thickness for the beacons rings.", _, true, 10.0, true, 30.0);
-	gc_iCTColorRed = AutoExecConfig_CreateConVar("sm_myjb_beacon_CT_color_red", "0","What color to turn the CT beacons into (set R, G and B values to 255 to disable) (Rgb): x - red value", _, true, 0.0, true, 255.0);
-	gc_iCTColorGreen = AutoExecConfig_CreateConVar("sm_myjb_beacon_CT_color_green", "0","What color to turn the CT beacons into (rGb): x - green value", _, true, 0.0, true, 255.0);
-	gc_iCTColorBlue = AutoExecConfig_CreateConVar("sm_myjb_beacon_CT_color_blue", "255","What color to turn the CT beacons into (rgB): x - blue value", _, true, 0.0, true, 255.0);
-	gc_iTColorRed = AutoExecConfig_CreateConVar("sm_myjb_beacon_T_color_red", "255","What color to turn the T beacons  into (set R, G and B values to 255 to disable) (Rgb): x - red value", _, true, 0.0, true, 255.0);
-	gc_iTColorGreen = AutoExecConfig_CreateConVar("sm_myjb_beacon_T_color_green", "0","What color to turn the T beacons into (rGb): x - green value", _, true, 0.0, true, 255.0);
-	gc_iTColorBlue = AutoExecConfig_CreateConVar("sm_myjb_beacon_T_color_blue", "0","What color to turn the T beacons into (rgB): x - blue value", _, true, 0.0, true, 255.0);
+	gc_iCTColorRed = AutoExecConfig_CreateConVar("sm_myjb_beacon_CT_color_red", "0", "What color to turn the CT beacons into (set R, G and B values to 255 to disable) (Rgb): x - red value", _, true, 0.0, true, 255.0);
+	gc_iCTColorGreen = AutoExecConfig_CreateConVar("sm_myjb_beacon_CT_color_green", "0", "What color to turn the CT beacons into (rGb): x - green value", _, true, 0.0, true, 255.0);
+	gc_iCTColorBlue = AutoExecConfig_CreateConVar("sm_myjb_beacon_CT_color_blue", "255", "What color to turn the CT beacons into (rgB): x - blue value", _, true, 0.0, true, 255.0);
+	gc_iTColorRed = AutoExecConfig_CreateConVar("sm_myjb_beacon_T_color_red", "255", "What color to turn the T beacons  into (set R, G and B values to 255 to disable) (Rgb): x - red value", _, true, 0.0, true, 255.0);
+	gc_iTColorGreen = AutoExecConfig_CreateConVar("sm_myjb_beacon_T_color_green", "0", "What color to turn the T beacons into (rGb): x - green value", _, true, 0.0, true, 255.0);
+	gc_iTColorBlue = AutoExecConfig_CreateConVar("sm_myjb_beacon_T_color_blue", "0", "What color to turn the T beacons into (rgB): x - blue value", _, true, 0.0, true, 255.0);
 	
 	//Hooks
 	HookEvent("round_end", Beacon_Event_RoundEnd);
@@ -82,7 +82,7 @@ public void Beacon_Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 
 public Action Timer_BeaconOn(Handle timer, any client)
 {
-	if (IsValidClient(client,true,false))
+	if (IsValidClient(client, true, false))
 	{
 		if (!g_bBeaconOn[client]) 
 			return Plugin_Stop;
@@ -92,16 +92,16 @@ public Action Timer_BeaconOn(Handle timer, any client)
 		GetClientAbsOrigin(client, a_fOrigin);
 		a_fOrigin[2] += 10;
 		
-		int color[4] = {255,255,255,255};
+		int color[4] = {255, 255, 255, 255};
 		
-		if(GetClientTeam(client) == CS_TEAM_CT) 
+		if (GetClientTeam(client) == CS_TEAM_CT) 
 		{
 			color[0] = gc_iCTColorRed.IntValue;
 			color[1] = gc_iCTColorGreen.IntValue;
 			color[2] = gc_iCTColorBlue.IntValue;
 			EmitAmbientSound("buttons/blip1.wav", a_fOrigin, client, SNDLEVEL_RAIDSIREN);
 		}
-		if(GetClientTeam(client) == CS_TEAM_T) 
+		if (GetClientTeam(client) == CS_TEAM_T) 
 		{
 			color[0] = gc_iTColorRed.IntValue;
 			color[1] = gc_iTColorGreen.IntValue;
@@ -152,12 +152,12 @@ public int OnAvailableLR(int Announced)
 
 
 //Activate Beacon on client & set interval
-public int Native_BeaconOn(Handle plugin,int argc)
+public int Native_BeaconOn(Handle plugin, int argc)
 {
 	int client = GetNativeCell(1);
 	float interval = GetNativeCell(2);
 	
-	if(!g_bBeaconOn[client])
+	if (!g_bBeaconOn[client])
 	{
 		g_bBeaconOn[client] = true;
 		CreateTimer (interval, Timer_BeaconOn, client, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
@@ -166,7 +166,7 @@ public int Native_BeaconOn(Handle plugin,int argc)
 
 
 //Remove beacon from client
-public int Native_BeaconOff(Handle plugin,int argc)
+public int Native_BeaconOff(Handle plugin, int argc)
 {
 	int client = GetNativeCell(1);
 	g_bBeaconOn[client] = false;

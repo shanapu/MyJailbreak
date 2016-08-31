@@ -59,7 +59,7 @@ public void Counter_OnPluginStart()
 	gc_bCounter = AutoExecConfig_CreateConVar("sm_warden_counter", "1", "0 - disabled, 1 - Allow the warden count player in radius", _, true, 0.0, true, 1.0);
 	gc_bCounterDeputy = AutoExecConfig_CreateConVar("sm_warden_counter_deputy", "1", "0 - disabled, 1 - Allow the deputy count player in radius, too", _, true, 0.0, true, 1.0);
 	gc_iCounterMode = AutoExecConfig_CreateConVar("sm_warden_counter_mode", "7", "1 - Show prisoner count in chat / 2 - Show prisoner count in HUD / 3 - Show prisoner count in chat & HUD / 4 - Show names in Menu / 5 - Show prisoner count in chat & show names in Menu / 6 - Show prisoner count in HUD & show names in Menu / 7 - Show prisoner count in chat & HUD & show names in Menu", _, true, 1.0, true, 7.0);
-	gc_sCustomCommandCounter = AutoExecConfig_CreateConVar("sm_warden_cmds_counter", "count,sight", "Set your custom chat command for counter.(!counter (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands))");
+	gc_sCustomCommandCounter = AutoExecConfig_CreateConVar("sm_warden_cmds_counter", "count, sight", "Set your custom chat command for counter.(!counter (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	
 }
 
@@ -71,18 +71,18 @@ public void Counter_OnPluginStart()
 
 public Action Command_Counter(int client, any args)
 {
-	if(gc_bPlugin.BoolValue)	
+	if (gc_bPlugin.BoolValue)	
 	{
-		if((IsClientWarden(client) || (IsClientDeputy(client) && gc_bCounterDeputy.BoolValue)) && gc_bCounter.BoolValue)
+		if ((IsClientWarden(client) || (IsClientDeputy(client) && gc_bCounterDeputy.BoolValue)) && gc_bCounter.BoolValue)
 		{
 			float wardenOrigin[3];
 			GetClientAbsOrigin(client, wardenOrigin);
 			
 			int counter = 0;
 			
-			LoopValidClients(i,true,false)
+			LoopValidClients(i, true, false)
 			{
-				if(GetClientTeam(i) == CS_TEAM_T)
+				if (GetClientTeam(i) == CS_TEAM_T)
 				{
 					g_bCounted[i] = false;
 					g_fDistance[i] = 0.0;
@@ -92,7 +92,7 @@ public Action Command_Counter(int client, any args)
 					
 					float distance = GetVectorDistance(clientOrigin, wardenOrigin, false);
 					
-					if(ClientViews(client, i))
+					if (ClientViews(client, i))
 					{
 						counter++;
 						g_bCounted[i] = true;
@@ -101,9 +101,9 @@ public Action Command_Counter(int client, any args)
 				}
 			}
 			
-			if((gc_iCounterMode.IntValue == 1 ) || (gc_iCounterMode.IntValue == 3 ) || (gc_iCounterMode.IntValue == 5 ) || (gc_iCounterMode.IntValue == 7)) CReplyToCommand(client, "%t %t", "warden_tag", "warden_counter", counter);
-			if((gc_iCounterMode.IntValue == 2 ) || (gc_iCounterMode.IntValue == 3 ) || (gc_iCounterMode.IntValue == 6 ) || (gc_iCounterMode.IntValue == 7)) PrintCenterText(client, "%t", "warden_counter", counter);
-			if((gc_iCounterMode.IntValue == 4 ) || (gc_iCounterMode.IntValue == 5 ) || (gc_iCounterMode.IntValue == 6 ) || (gc_iCounterMode.IntValue == 7))
+			if ((gc_iCounterMode.IntValue == 1)|| (gc_iCounterMode.IntValue == 3)|| (gc_iCounterMode.IntValue == 5)|| (gc_iCounterMode.IntValue == 7)) CReplyToCommand(client, "%t %t", "warden_tag", "warden_counter", counter);
+			if ((gc_iCounterMode.IntValue == 2)|| (gc_iCounterMode.IntValue == 3)|| (gc_iCounterMode.IntValue == 6)|| (gc_iCounterMode.IntValue == 7)) PrintCenterText(client, "%t", "warden_counter", counter);
+			if ((gc_iCounterMode.IntValue == 4)|| (gc_iCounterMode.IntValue == 5)|| (gc_iCounterMode.IntValue == 6)|| (gc_iCounterMode.IntValue == 7))
 			{
 				char info1[255];
 				Handle CounterPanel = CreatePanel();
@@ -111,16 +111,16 @@ public Action Command_Counter(int client, any args)
 				SetPanelTitle(CounterPanel, info1);
 				DrawPanelText(CounterPanel, "-----------------------------------");
 				DrawPanelText(CounterPanel, "                                   ");
-				LoopValidClients(i,true,false)
+				LoopValidClients(i, true, false)
 				{
-					if(g_bCounted[i])
+					if (g_bCounted[i])
 					{
 						int userdistance = RoundToNearest(Math_UnitsToMeters(g_fDistance[i]));
 						char userid[11];
 						char username[MAX_NAME_LENGTH];
 						IntToString(GetClientUserId(i), userid, sizeof(userid));
 						Format(username, sizeof(username), "%N (%im)", i, userdistance);
-						DrawPanelText(CounterPanel,username);
+						DrawPanelText(CounterPanel, username);
 					}
 				}
 				DrawPanelText(CounterPanel, "                                   ");
@@ -150,12 +150,12 @@ public void Counter_OnConfigsExecuted()
 	//Capitulation
 	gc_sCustomCommandCounter.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
-	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	iCount = ExplodeString(sCommands, ", ", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
 	
-	for(int i = 0; i < iCount; i++)
+	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
 			RegConsoleCmd(sCommand, Command_Counter, "Allows a warden to count all terrorists in sight");
 	}
 }
@@ -166,7 +166,7 @@ public void Counter_OnConfigsExecuted()
 ******************************************************************************/
 
 
-stock bool ClientViews(int viewer,int target, float fMaxDistance=0.0, float fThreshold=0.73)
+stock bool ClientViews(int viewer, int target, float fMaxDistance=0.0, float fThreshold=0.73)
 {
 	// Retrieve view and target eyes position
 	float fViewPos[3];   GetClientEyePosition(viewer, fViewPos);

@@ -93,10 +93,10 @@ char g_sOverlayStartPath[256];
 
 //Info
 public Plugin myinfo = {
-	name = "MyJailbreak - HideInTheDark",
-	author = "shanapu",
-	description = "Event Day for Jailbreak Server",
-	version = PLUGIN_VERSION,
+	name = "MyJailbreak - HideInTheDark", 
+	author = "shanapu", 
+	description = "Event Day for Jailbreak Server", 
+	version = PLUGIN_VERSION, 
 	url = URL_LINK
 };
 
@@ -120,8 +120,8 @@ public void OnPluginStart()
 	
 	AutoExecConfig_CreateConVar("sm_hide_version", PLUGIN_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_hide_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true,  0.0, true, 1.0);
-	gc_sCustomCommandVote = AutoExecConfig_CreateConVar("sm_hide_cmds_vote", "hidenseek", "Set your custom chat command for Event voting(!hide (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands))");
-	gc_sCustomCommandSet = AutoExecConfig_CreateConVar("sm_hide_cmds_set", "shide", "Set your custom chat command for set Event(!hide (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands))");
+	gc_sCustomCommandVote = AutoExecConfig_CreateConVar("sm_hide_cmds_vote", "hidenseek", "Set your custom chat command for Event voting(!hide (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
+	gc_sCustomCommandSet = AutoExecConfig_CreateConVar("sm_hide_cmds_set", "shide", "Set your custom chat command for set Event(!hide (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_hide_warden", "1", "0 - disabled, 1 - allow warden to set hide round", _, true,  0.0, true, 1.0);
 	gc_bSetA = AutoExecConfig_CreateConVar("sm_hide_admin", "1", "0 - disabled, 1 - allow admin/vip to set hide round", _, true,  0.0, true, 1.0);
 	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_hide_flag", "g", "Set flag for admin/vip to set this Event Day.");
@@ -167,17 +167,17 @@ public void OnPluginStart()
 //ConVarChange for Strings
 public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
-	if(convar == gc_sOverlayStartPath)
+	if (convar == gc_sOverlayStartPath)
 	{
 		strcopy(g_sOverlayStartPath, sizeof(g_sOverlayStartPath), newValue);
-		if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
+		if (gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
 	}
-	else if(convar == gc_sSoundStartPath)
+	else if (convar == gc_sSoundStartPath)
 	{
 		strcopy(g_sSoundStartPath, sizeof(g_sSoundStartPath), newValue);
-		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
+		if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
 	}
-	else if(convar == gc_sAdminFlag)
+	else if (convar == gc_sAdminFlag)
 	{
 		strcopy(g_sAdminFlag, sizeof(g_sAdminFlag), newValue);
 	}
@@ -201,24 +201,24 @@ public void OnConfigsExecuted()
 	//Vote
 	gc_sCustomCommandVote.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
-	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	iCount = ExplodeString(sCommands, ", ", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
 	
-	for(int i = 0; i < iCount; i++)
+	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
 			RegConsoleCmd(sCommand, Command_VoteHide, "Allows players to vote for a hide");
 	}
 	
 	//Set
 	gc_sCustomCommandSet.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
-	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	iCount = ExplodeString(sCommands, ", ", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
 	
-	for(int i = 0; i < iCount; i++)
+	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
 			RegConsoleCmd(sCommand, Command_SetHide, "Allows the Admin or Warden to set hide as next round");
 	}
 }
@@ -230,14 +230,14 @@ public void OnConfigsExecuted()
 
 
 //Admin & Warden set Event
-public Action Command_SetHide(int client,int args)
+public Action Command_SetHide(int client, int args)
 {
 	if (gc_bPlugin.BoolValue)	
 	{
-		if(client == 0)
+		if (client == 0)
 		{
 			StartNextRound();
-			if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Hide was started by groupvoting");
+			if (ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Hide was started by groupvoting");
 		}
 		else if (warden_iswarden(client))
 		{
@@ -248,12 +248,12 @@ public Action Command_SetHide(int client,int args)
 					char EventDay[64];
 					GetEventDayName(EventDay);
 					
-					if(StrEqual(EventDay, "none", false))
+					if (StrEqual(EventDay, "none", false))
 					{
 						if (g_iCoolDown == 0)
 						{
 							StartNextRound();
-							if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Hide was started by warden %L", client);
+							if (ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Hide was started by warden %L", client);
 						}
 						else CReplyToCommand(client, "%t %t", "hide_tag" , "hide_wait", g_iCoolDown);
 					}
@@ -263,7 +263,7 @@ public Action Command_SetHide(int client,int args)
 			}
 			else CReplyToCommand(client, "%t %t", "hide_tag" , "hide_setbywarden");
 		}
-		else if (CheckVipFlag(client,g_sAdminFlag))
+		else if (CheckVipFlag(client, g_sAdminFlag))
 		{
 			if (gc_bSetA.BoolValue)
 			{
@@ -272,12 +272,12 @@ public Action Command_SetHide(int client,int args)
 					char EventDay[64];
 					GetEventDayName(EventDay);
 					
-					if(StrEqual(EventDay, "none", false))
+					if (StrEqual(EventDay, "none", false))
 					{
 						if (g_iCoolDown == 0)
 						{
 							StartNextRound();
-							if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Hide was started by admin %L", client);
+							if (ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Hide was started by admin %L", client);
 						}
 						else CReplyToCommand(client, "%t %t", "hide_tag" , "hide_wait", g_iCoolDown);
 					}
@@ -295,7 +295,7 @@ public Action Command_SetHide(int client,int args)
 
 
 //Voting for Event
-public Action Command_VoteHide(int client,int args)
+public Action Command_VoteHide(int client, int args)
 {
 	char steamid[64];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
@@ -309,7 +309,7 @@ public Action Command_VoteHide(int client,int args)
 				char EventDay[64];
 				GetEventDayName(EventDay);
 				
-				if(StrEqual(EventDay, "none", false))
+				if (StrEqual(EventDay, "none", false))
 				{
 					if (g_iCoolDown == 0)
 					{
@@ -318,12 +318,12 @@ public Action Command_VoteHide(int client,int args)
 							int playercount = (GetClientCount(true) / 2);
 							g_iVoteCount++;
 							int Missing = playercount - g_iVoteCount + 1;
-							Format(g_sHasVoted, sizeof(g_sHasVoted), "%s,%s", g_sHasVoted, steamid);
+							Format(g_sHasVoted, sizeof(g_sHasVoted), "%s, %s", g_sHasVoted, steamid);
 							
 							if (g_iVoteCount > playercount)
 							{
 								StartNextRound();
-								if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Hide was started by voting");
+								if (ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Hide was started by voting");
 							}
 							else CPrintToChatAll("%t %t", "hide_tag" , "hide_need", Missing, client);
 						}
@@ -398,7 +398,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		char EventDay[64];
 		GetEventDayName(EventDay);
 		
-		if(!StrEqual(EventDay, "none", false))
+		if (!StrEqual(EventDay, "none", false))
 		{
 			g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 		}
@@ -473,9 +473,9 @@ public void Event_TA_Detonate(Event event, const char[] name, bool dontBroadcast
 			int g_iTAgot = (g_iMaxTA - g_iTA[target]);
 			g_iTA[target]++;
 			
-			CPrintToChat(target,"%t %t", "hide_tag" , "hide_stillta", g_iTAgot);
+			CPrintToChat(target, "%t %t", "hide_tag" , "hide_stillta", g_iTAgot);
 		}
-		else CPrintToChat(target,"%t %t", "hide_tag" , "hide_nota");
+		else CPrintToChat(target, "%t %t", "hide_tag" , "hide_nota");
 	}
 	return;
 }
@@ -499,10 +499,10 @@ public void OnMapStart()
 	g_sOldSkyName = FindConVar("sv_skyname");
 	g_sOldSkyName.GetString(g_sSkyName, sizeof(g_sSkyName));
 	
-	if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
-	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
+	if (gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
+	if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
 	
-	for(int client=1; client <= MaxClients; client++) g_iTA[client] = 0;
+	for (int client=1; client <= MaxClients; client++) g_iTA[client] = 0;
 }
 
 
@@ -543,11 +543,11 @@ public void OnClientPutInServer(int client)
 //Knife only for Terrorists
 public Action OnWeaponCanUse(int client, int weapon)
 {
-	if(IsHide == true)
+	if (IsHide == true)
 	{
 		char sWeapon[32];
 		GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
-		if((GetClientTeam(client) == CS_TEAM_T && StrEqual(sWeapon, "weapon_knife")) || (GetClientTeam(client) == CS_TEAM_CT))
+		if ((GetClientTeam(client) == CS_TEAM_T && StrEqual(sWeapon, "weapon_knife")) || (GetClientTeam(client) == CS_TEAM_CT))
 		{
 		
 			if (IsClientInGame(client) && IsPlayerAlive(client))
@@ -637,11 +637,11 @@ public Action Timer_StartEvent(Handle timer)
 		{
 			if (GetClientTeam(client) == CS_TEAM_CT)
 			{
-				PrintCenterText(client,"%t", "hide_timetounfreeze_nc", g_iFreezeTime);
+				PrintCenterText(client, "%t", "hide_timetounfreeze_nc", g_iFreezeTime);
 			}
 			else if (GetClientTeam(client) == CS_TEAM_T)
 			{
-				PrintCenterText(client,"%t", "hide_timetohide_nc", g_iFreezeTime);
+				PrintCenterText(client, "%t", "hide_timetohide_nc", g_iFreezeTime);
 			}
 		}
 		return Plugin_Continue;
@@ -651,7 +651,7 @@ public Action Timer_StartEvent(Handle timer)
 	
 	if (g_iRound > 0)
 	{
-		LoopClients(client) if(IsPlayerAlive(client))
+		LoopClients(client) if (IsPlayerAlive(client))
 		{
 			if (GetClientTeam(client) == CS_TEAM_CT)
 			{
@@ -669,12 +669,12 @@ public Action Timer_StartEvent(Handle timer)
 					SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 0.9);
 				}
 			}
-			if(gc_bOverlays.BoolValue) ShowOverlay(client, g_sOverlayStartPath, 2.0);
-			if(gc_bSounds.BoolValue)
+			if (gc_bOverlays.BoolValue) ShowOverlay(client, g_sOverlayStartPath, 2.0);
+			if (gc_bSounds.BoolValue)
 			{
 				EmitSoundToAllAny(g_sSoundStartPath);
 			}
-			PrintCenterText(client,"%t", "hide_start_nc");
+			PrintCenterText(client, "%t", "hide_start_nc");
 		}
 		CPrintToChatAll("%t %t", "hide_tag" , "hide_start");
 	}
@@ -686,6 +686,6 @@ public Action Timer_StartEvent(Handle timer)
 //Beacon Timer
 public Action Timer_BeaconOn(Handle timer)
 {
-	LoopValidClients(i,true,false) BeaconOn(i, 2.0);
+	LoopValidClients(i, true, false) BeaconOn(i, 2.0);
 	BeaconTimer = null;
 }

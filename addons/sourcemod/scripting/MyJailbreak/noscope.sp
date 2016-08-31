@@ -102,10 +102,10 @@ char g_sOverlayStartPath[256];
 
 //Info
 public Plugin myinfo = {
-	name = "MyJailbreak - NoScope",
-	author = "shanapu",
-	description = "Event Day for Jailbreak Server",
-	version = PLUGIN_VERSION,
+	name = "MyJailbreak - NoScope", 
+	author = "shanapu", 
+	description = "Event Day for Jailbreak Server", 
+	version = PLUGIN_VERSION, 
 	url = URL_LINK
 };
 
@@ -129,8 +129,8 @@ public void OnPluginStart()
 	
 	AutoExecConfig_CreateConVar("sm_noscope_version", PLUGIN_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_noscope_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true,  0.0, true, 1.0);
-	gc_sCustomCommandVote = AutoExecConfig_CreateConVar("sm_noscope_cmds_vote", "scope,ns", "Set your custom chat command for Event voting(!noscope (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands))");
-	gc_sCustomCommandSet = AutoExecConfig_CreateConVar("sm_noscope_cmds_set", "sscope,sns", "Set your custom chat command for set Event(!setnoscope (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands))");
+	gc_sCustomCommandVote = AutoExecConfig_CreateConVar("sm_noscope_cmds_vote", "scope, ns", "Set your custom chat command for Event voting(!noscope (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
+	gc_sCustomCommandSet = AutoExecConfig_CreateConVar("sm_noscope_cmds_set", "sscope, sns", "Set your custom chat command for set Event(!setnoscope (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_noscope_warden", "1", "0 - disabled, 1 - allow warden to set noscope round", _, true,  0.0, true, 1.0);
 	gc_bSetA = AutoExecConfig_CreateConVar("sm_noscope_admin", "1", "0 - disabled, 1 - allow admin/vip to set noscope round", _, true,  0.0, true, 1.0);
 	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_noscope_flag", "g", "Set flag for admin/vip to set this Event Day.");
@@ -138,9 +138,9 @@ public void OnPluginStart()
 	gc_bSpawnCell = AutoExecConfig_CreateConVar("sm_noscope_spawn", "0", "0 - T teleport to CT spawn, 1 - cell doors auto open", _, true,  0.0, true, 1.0);
 	gc_iRounds = AutoExecConfig_CreateConVar("sm_noscope_rounds", "1", "Rounds to play in a row", _, true, 1.0);
 	gc_iWeapon = AutoExecConfig_CreateConVar("sm_noscope_weapon", "1", "1 - ssg08 / 2 - awp / 3 - scar20 / 4 - g3sg1", _, true,  1.0, true, 4.0);
-	gc_bRandom = AutoExecConfig_CreateConVar("sm_noscope_random", "1", "get a random weapon (ssg08,awp,scar20,g3sg1) ignore: sm_noscope_weapon", _, true,  0.0, true, 1.0);
+	gc_bRandom = AutoExecConfig_CreateConVar("sm_noscope_random", "1", "get a random weapon (ssg08, awp, scar20, g3sg1) ignore: sm_noscope_weapon", _, true,  0.0, true, 1.0);
 	gc_bGrav = AutoExecConfig_CreateConVar("sm_noscope_gravity", "1", "0 - disabled, 1 - enable low Gravity for noscope", _, true,  0.0, true, 1.0);
-	gc_fGravValue= AutoExecConfig_CreateConVar("sm_noscope_gravity_value", "0.3","Ratio for Gravity 1.0 earth 0.5 moon", _, true, 0.1, true, 1.0);
+	gc_fGravValue= AutoExecConfig_CreateConVar("sm_noscope_gravity_value", "0.3", "Ratio for Gravity 1.0 earth 0.5 moon", _, true, 0.1, true, 1.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_noscope_roundtime", "5", "Round time in minutes for a single noscope round", _, true, 1.0);
 	gc_fBeaconTime = AutoExecConfig_CreateConVar("sm_noscope_beacon_time", "240", "Time in seconds until the beacon turned on (set to 0 to disable)", _, true, 0.0);
 	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_noscope_trucetime", "15", "Time in seconds players can't deal damage", _, true,  0.0);
@@ -181,19 +181,19 @@ public void OnPluginStart()
 //ConVarChange for Strings
 public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
-	if(convar == gc_sOverlayStartPath)
+	if (convar == gc_sOverlayStartPath)
 	{
 		strcopy(g_sOverlayStartPath, sizeof(g_sOverlayStartPath), newValue);
-		if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
+		if (gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
 	}
-	else if(convar == gc_sAdminFlag)
+	else if (convar == gc_sAdminFlag)
 	{
 		strcopy(g_sAdminFlag, sizeof(g_sAdminFlag), newValue);
 	}
-	else if(convar == gc_sSoundStartPath)
+	else if (convar == gc_sSoundStartPath)
 	{
 		strcopy(g_sSoundStartPath, sizeof(g_sSoundStartPath), newValue);
-		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
+		if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
 	}
 }
 
@@ -218,24 +218,24 @@ public void OnConfigsExecuted()
 	//Vote
 	gc_sCustomCommandVote.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
-	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	iCount = ExplodeString(sCommands, ", ", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
 	
-	for(int i = 0; i < iCount; i++)
+	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
 			RegConsoleCmd(sCommand, Command_VoteNoScope, "Allows players to vote for a noscope");
 	}
 	
 	//Set
 	gc_sCustomCommandSet.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
-	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	iCount = ExplodeString(sCommands, ", ", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
 	
-	for(int i = 0; i < iCount; i++)
+	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
 			RegConsoleCmd(sCommand, Command_SetNoScope, "Allows the Admin or Warden to set noscope as next round");
 	}
 }
@@ -247,14 +247,14 @@ public void OnConfigsExecuted()
 
 
 //Admin & Warden set Event
-public Action Command_SetNoScope(int client,int args)
+public Action Command_SetNoScope(int client, int args)
 {
 	if (gc_bPlugin.BoolValue)
 	{
-		if(client == 0)
+		if (client == 0)
 		{
 			StartNextRound();
-			if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event noscope was started by groupvoting");
+			if (ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event noscope was started by groupvoting");
 		}
 		else if (warden_iswarden(client))
 		{
@@ -265,12 +265,12 @@ public Action Command_SetNoScope(int client,int args)
 					char EventDay[64];
 					GetEventDayName(EventDay);
 					
-					if(StrEqual(EventDay, "none", false))
+					if (StrEqual(EventDay, "none", false))
 					{
 						if (g_iCoolDown == 0)
 						{
 							StartNextRound();
-							if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event NoScope was started by warden %L", client);
+							if (ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event NoScope was started by warden %L", client);
 						}
 						else CReplyToCommand(client, "%t %t", "noscope_tag" , "noscope_wait", g_iCoolDown);
 					}
@@ -280,7 +280,7 @@ public Action Command_SetNoScope(int client,int args)
 			}
 			else CReplyToCommand(client, "%t %t", "warden_tag" , "nocscope_setbywarden");
 		}
-		else if (CheckVipFlag(client,g_sAdminFlag))
+		else if (CheckVipFlag(client, g_sAdminFlag))
 		{
 			if (gc_bSetA.BoolValue)
 			{
@@ -289,12 +289,12 @@ public Action Command_SetNoScope(int client,int args)
 					char EventDay[64];
 					GetEventDayName(EventDay);
 					
-					if(StrEqual(EventDay, "none", false))
+					if (StrEqual(EventDay, "none", false))
 					{
 						if (g_iCoolDown == 0)
 						{
 							StartNextRound();
-							if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event NoScope was started by admin %L", client);
+							if (ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event NoScope was started by admin %L", client);
 						}
 						else CReplyToCommand(client, "%t %t", "noscope_tag" , "noscope_wait", g_iCoolDown);
 					}
@@ -312,7 +312,7 @@ public Action Command_SetNoScope(int client,int args)
 
 
 //Voting for Event
-public Action Command_VoteNoScope(int client,int args)
+public Action Command_VoteNoScope(int client, int args)
 {
 	char steamid[64];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
@@ -326,7 +326,7 @@ public Action Command_VoteNoScope(int client,int args)
 				char EventDay[64];
 				GetEventDayName(EventDay);
 				
-				if(StrEqual(EventDay, "none", false))
+				if (StrEqual(EventDay, "none", false))
 				{
 					if (g_iCoolDown == 0)
 					{
@@ -335,12 +335,12 @@ public Action Command_VoteNoScope(int client,int args)
 							int playercount = (GetClientCount(true) / 2);
 							g_iVoteCount++;
 							int Missing = playercount - g_iVoteCount + 1;
-							Format(g_sHasVoted, sizeof(g_sHasVoted), "%s,%s", g_sHasVoted, steamid);
+							Format(g_sHasVoted, sizeof(g_sHasVoted), "%s, %s", g_sHasVoted, steamid);
 							
 							if (g_iVoteCount > playercount)
 							{
 								StartNextRound();
-								if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event NoScope was started by voting");
+								if (ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event NoScope was started by voting");
 							}
 							else CPrintToChatAll("%t %t", "noscope_tag" , "noscope_need", Missing, client);
 						}
@@ -386,10 +386,10 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		{
 			int randomnum = GetRandomInt(0, 3);
 			
-			if(randomnum == 0)g_sWeapon = "weapon_ssg08";
-			if(randomnum == 1)g_sWeapon = "weapon_awp";
-			if(randomnum == 2)g_sWeapon = "weapon_scar20";
-			if(randomnum == 3)g_sWeapon = "weapon_g3sg1";
+			if (randomnum == 0)g_sWeapon = "weapon_ssg08";
+			if (randomnum == 1)g_sWeapon = "weapon_awp";
+			if (randomnum == 2)g_sWeapon = "weapon_scar20";
+			if (randomnum == 3)g_sWeapon = "weapon_g3sg1";
 		}
 		
 		g_iRound++;
@@ -447,7 +447,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 					}
 				}
 				
-				CPrintToChatAll("%t %t", "noscope_tag" ,"noscope_rounds", g_iRound, g_iMaxRound);
+				CPrintToChatAll("%t %t", "noscope_tag" , "noscope_rounds", g_iRound, g_iMaxRound);
 			}
 			LoopClients(i) if (IsPlayerAlive(i)) SDKHook(i, SDKHook_PreThink, OnPreThink);
 		}
@@ -457,7 +457,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		char EventDay[64];
 		GetEventDayName(EventDay);
 	
-		if(!StrEqual(EventDay, "none", false))
+		if (!StrEqual(EventDay, "none", false))
 		{
 			g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 		}
@@ -530,8 +530,8 @@ public void OnMapStart()
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	
-	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);    //Add sound to download and precache table
-	if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);    //Add overlay to download and precache table
+	if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);    //Add sound to download and precache table
+	if (gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);    //Add overlay to download and precache table
 }
 
 
@@ -595,11 +595,11 @@ public Action OnWeaponCanUse(int client, int weapon)
 	char sWeapon[32];
 	GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
 	
-	if(!StrEqual(sWeapon, g_sWeapon))
+	if (!StrEqual(sWeapon, g_sWeapon))
 		{
 			if (IsClientInGame(client) && IsPlayerAlive(client))
 			{
-				if(IsNoScope)
+				if (IsNoScope)
 				{
 					return Plugin_Handled;
 				}
@@ -647,7 +647,7 @@ stock void MakeNoScope(int weapon)
 {
 	if (IsNoScope == true)
 	{
-		if(IsValidEdict(weapon))
+		if (IsValidEdict(weapon))
 		{
 			char classname[MAX_NAME_LENGTH];
 			if (GetEdictClassname(weapon, classname, sizeof(classname)) || StrEqual(classname[7], g_sWeapon))
@@ -716,7 +716,7 @@ public Action Timer_StartEvent(Handle timer)
 		g_iTruceTime--;
 		LoopClients(client) if (IsPlayerAlive(client))
 		{
-			PrintCenterText(client,"%t", "noscope_timeuntilstart_nc", g_iTruceTime);
+			PrintCenterText(client, "%t", "noscope_timeuntilstart_nc", g_iTruceTime);
 		}
 		return Plugin_Continue;
 	}
@@ -732,9 +732,9 @@ public Action Timer_StartEvent(Handle timer)
 			{
 				SetEntityGravity(client, gc_fGravValue.FloatValue);	
 			}
-			PrintCenterText(client,"%t", "noscope_start_nc");
-			if(gc_bOverlays.BoolValue) ShowOverlay(client, g_sOverlayStartPath, 2.0);
-			if(gc_bSounds.BoolValue)
+			PrintCenterText(client, "%t", "noscope_start_nc");
+			if (gc_bOverlays.BoolValue) ShowOverlay(client, g_sOverlayStartPath, 2.0);
+			if (gc_bSounds.BoolValue)
 			{
 				EmitSoundToAllAny(g_sSoundStartPath);
 			}
@@ -750,9 +750,9 @@ public Action Timer_StartEvent(Handle timer)
 //Give back Gravity if it gone -> ladders
 public Action Timer_CheckGravity(Handle timer)
 {
-	LoopValidClients(client,false,false)
+	LoopValidClients(client, false, false)
 	{
-		if(GetEntityGravity(client) != 1.0)
+		if (GetEntityGravity(client) != 1.0)
 			SetEntityGravity(client, gc_fGravValue.FloatValue);
 	}
 }
@@ -761,6 +761,6 @@ public Action Timer_CheckGravity(Handle timer)
 //Beacon Timer
 public Action Timer_BeaconOn(Handle timer)
 {
-	LoopValidClients(i,true,false) BeaconOn(i, 2.0);
+	LoopValidClients(i, true, false) BeaconOn(i, 2.0);
 	BeaconTimer = null;
 }

@@ -77,8 +77,8 @@ public void Mute_OnPluginStart()
 	gc_bMuteTalkOverDeputy = AutoExecConfig_CreateConVar("sm_warden_talkover_deputy", "1", "0 - disabled, 1 - temporary mutes all client when the deputy speaks", _, true, 0.0, true, 1.0);
 	gc_bMuteTalkOverTeam = AutoExecConfig_CreateConVar("sm_warden_talkover_team", "1", "0 - mute prisoner & guards on talkover, 1 - only mute prisoners on talkover", _, true, 0.0, true, 1.0);
 	gc_bMuteTalkOverDead = AutoExecConfig_CreateConVar("sm_warden_talkover_dead", "0", "0 - mute death & alive player on talkover, 1 - only mute alive player on talkover", _, true, 0.0, true, 1.0);
-	gc_sCustomCommandMute = AutoExecConfig_CreateConVar("sm_warden_cmds_mute", "wm,mutemenu", "Set your custom chat commands for become warden(!warden (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands))");
-	gc_sCustomCommandUnMute = AutoExecConfig_CreateConVar("sm_warden_cmds_unmute", "wum,unmutemenu", "Set your custom chat commands for retire from warden(!unwarden (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands))");
+	gc_sCustomCommandMute = AutoExecConfig_CreateConVar("sm_warden_cmds_mute", "wm, mutemenu", "Set your custom chat commands for become warden(!warden (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
+	gc_sCustomCommandUnMute = AutoExecConfig_CreateConVar("sm_warden_cmds_unmute", "wum, unmutemenu", "Set your custom chat commands for retire from warden(!unwarden (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	
 	
 	//Hooks
@@ -94,7 +94,7 @@ public void Mute_OnPluginStart()
 
 public int Mute_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
-	if(convar == gc_sAdminFlagMute)
+	if (convar == gc_sAdminFlagMute)
 	{
 		strcopy(g_sAdminFlagMute, sizeof(g_sAdminFlagMute), newValue);
 	}
@@ -110,24 +110,24 @@ public void Mute_OnConfigsExecuted()
 	//Mute
 	gc_sCustomCommandMute.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
-	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	iCount = ExplodeString(sCommands, ", ", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
 	
-	for(int i = 0; i < iCount; i++)
+	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
 			RegConsoleCmd(sCommand, Command_MuteMenu, "Allows a warden to mute all terrorists for a specified duration or untill the next round.");
 	}
 	
 	//UnMute
 	gc_sCustomCommandUnMute.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
-	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	iCount = ExplodeString(sCommands, ", ", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
 	
-	for(int i = 0; i < iCount; i++)
+	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
 			RegConsoleCmd(sCommand, Command_UnMuteMenu, "Allows a warden to unmute the terrorists.");
 	}
 }
@@ -140,23 +140,23 @@ public void Mute_OnConfigsExecuted()
 
 public Action Command_UnMuteMenu(int client, any args)
 {
-	if(gc_bPlugin.BoolValue)	
+	if (gc_bPlugin.BoolValue)	
 	{
-		if((IsClientWarden(client) || (IsClientDeputy(client) && gc_bMuteDeputy.BoolValue)) && gc_bMute.BoolValue)
+		if ((IsClientWarden(client) || (IsClientDeputy(client) && gc_bMuteDeputy.BoolValue)) && gc_bMute.BoolValue)
 		{
 			char info1[255];
 			Menu menu4 = CreateMenu(Handler_UnMuteMenu);
 			Format(info1, sizeof(info1), "%T", "warden_choose", client);
 			menu4.SetTitle(info1);
-			LoopValidClients(i,true,true)
+			LoopValidClients(i, true, true)
 			{
-				if((GetClientTeam(i) == CS_TEAM_T) && IsMuted[i])
+				if ((GetClientTeam(i) == CS_TEAM_T) && IsMuted[i])
 				{
 					char userid[11];
 					char username[MAX_NAME_LENGTH];
 					IntToString(GetClientUserId(i), userid, sizeof(userid));
 					Format(username, sizeof(username), "%N", i);
-					menu4.AddItem(userid,username);
+					menu4.AddItem(userid, username);
 				}
 			/*	else
 				{
@@ -166,7 +166,7 @@ public Action Command_UnMuteMenu(int client, any args)
 	*/		}
 			menu4.ExitBackButton = true;
 			menu4.ExitButton = true;
-			menu4.Display(client,MENU_TIME_FOREVER);
+			menu4.Display(client, MENU_TIME_FOREVER);
 		}
 		else CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
 	}
@@ -178,7 +178,7 @@ public Action Command_MuteMenu(int client, int args)
 {
 	if (gc_bMute.BoolValue) 
 	{
-		if((IsClientWarden(client) || (IsClientDeputy(client) && gc_bMuteDeputy.BoolValue)) && gc_bMute.BoolValue)
+		if ((IsClientWarden(client) || (IsClientDeputy(client) && gc_bMuteDeputy.BoolValue)) && gc_bMute.BoolValue)
 		{
 			char info[255];
 			Menu menu1 = CreateMenu(Handler_MuteMenu);
@@ -194,7 +194,7 @@ public Action Command_MuteMenu(int client, int args)
 			menu1.AddItem("3", info);
 			menu1.ExitBackButton = true;
 			menu1.ExitButton = true;
-			menu1.Display(client,MENU_TIME_FOREVER);
+			menu1.Display(client, MENU_TIME_FOREVER);
 		}
 		else CReplyToCommand(client, "%t %t", "warden_tag" , "warden_notwarden"); 
 	}
@@ -209,11 +209,11 @@ public Action Command_MuteMenu(int client, int args)
 
 public void Mute_Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
-	if(gc_bMuteDefault.BoolValue)
+	if (gc_bMuteDefault.BoolValue)
 	{
-		LoopValidClients(i,true,true)if(!CheckVipFlag(i,g_sAdminFlagMute))
+		LoopValidClients(i, true, true)if (!CheckVipFlag(i, g_sAdminFlagMute))
 		{
-			if(GetClientTeam(i) == CS_TEAM_T)
+			if (GetClientTeam(i) == CS_TEAM_T)
 			{
 				SetClientListeningFlags(i, VOICE_MUTED);
 				IsMuted[i] = true;
@@ -227,7 +227,7 @@ public void Mute_Event_RoundStart(Event event, const char[] name, bool dontBroad
 
 public void Mute_Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 {
-	LoopClients(i) if(IsMuted[i]) UnMuteClient(i,-1);
+	LoopClients(i) if (IsMuted[i]) UnMuteClient(i, -1);
 }
 
 
@@ -238,29 +238,29 @@ public void Mute_Event_RoundEnd(Event event, const char[] name, bool dontBroadca
 
 public void Mute_OnAvailableLR(int Announced)
 {
-	LoopClients(i) if(IsMuted[i] && IsPlayerAlive(i)) UnMuteClient(i,-1);
+	LoopClients(i) if (IsMuted[i] && IsPlayerAlive(i)) UnMuteClient(i, -1);
 }
 
 
 public void Mute_OnMapEnd()
 {
-	LoopClients(i) if(IsMuted[i]) UnMuteClient(i,-1);
+	LoopClients(i) if (IsMuted[i]) UnMuteClient(i, -1);
 }
 
 
 // Mute Terror when Warden speaks
 public int OnClientSpeakingEx(int client)
 {
-	if((warden_iswarden(client) && gc_bMuteTalkOver.BoolValue) || (warden_deputy_isdeputy(client) && gc_bMuteTalkOverDeputy.BoolValue))
+	if ((warden_iswarden(client) && gc_bMuteTalkOver.BoolValue) || (warden_deputy_isdeputy(client) && gc_bMuteTalkOverDeputy.BoolValue))
 	{
 		LoopValidClients(i, false, true)
 		{
-			if(!CheckVipFlag(i,g_sAdminFlagMute))
+			if (!CheckVipFlag(i, g_sAdminFlagMute))
 			{
-				if((GetClientTeam(i) == CS_TEAM_T) && (!IsMuted[i] || (GetClientListeningFlags(i) != VOICE_MUTED)) || 
+				if ((GetClientTeam(i) == CS_TEAM_T) && (!IsMuted[i] || (GetClientListeningFlags(i) != VOICE_MUTED)) || 
 					(!gc_bMuteTalkOverTeam.BoolValue && !warden_iswarden(i) && !warden_deputy_isdeputy(i) && (GetClientTeam(i) == CS_TEAM_CT) && (GetClientListeningFlags(i) != VOICE_MUTED)))
 				{
-					if((gc_bMuteTalkOverDead.BoolValue && IsPlayerAlive(i)) || !gc_bMuteTalkOverDead.BoolValue)
+					if ((gc_bMuteTalkOverDead.BoolValue && IsPlayerAlive(i)) || !gc_bMuteTalkOverDead.BoolValue)
 					{
 						PrintCenterText(i, "%t", "warden_talkover");
 						TempMuted[i] = true;
@@ -270,7 +270,7 @@ public int OnClientSpeakingEx(int client)
 			}
 		}
 	}
-	else if(TempMuted[client])
+	else if (TempMuted[client])
 	{
 		PrintCenterText(client, "%t", "warden_talkover");
 	}
@@ -301,9 +301,9 @@ public int OnClientSpeakingEnd(int client)
 
 public Action MuteClient(int client, int time, int muter)
 {
-	if(IsValidClient(client,true,true) && !CheckVipFlag(client,g_sAdminFlagMute))
+	if (IsValidClient(client, true, true) && !CheckVipFlag(client, g_sAdminFlagMute))
 	{
-		if(GetClientTeam(client) == CS_TEAM_T)
+		if (GetClientTeam(client) == CS_TEAM_T)
 		{
 			SetClientListeningFlags(client, VOICE_MUTED);
 			IsMuted[client] = true;
@@ -311,31 +311,31 @@ public Action MuteClient(int client, int time, int muter)
 			if (time == 0)
 			{
 				CPrintToChatAll("%t %t", "warden_tag", "warden_muteend", muter, client);
-				if(ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Warden/Deputy %L muted player %L until round end", muter, client);
+				if (ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Warden/Deputy %L muted player %L until round end", muter, client);
 			}
 			else
 			{
 				CPrintToChatAll("%t %t", "warden_tag", "warden_mute", muter, client, time);
-				if(ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Warden/Deputy %L muted player %L for %i seconds", muter, client, time);
+				if (ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Warden/Deputy %L muted player %L for %i seconds", muter, client, time);
 			}
 		}
 	}
-	if(time > 0)
+	if (time > 0)
 	{
 		float timing = float(time);
-		CreateTimer(timing, Timer_UnMute,client);
+		CreateTimer(timing, Timer_UnMute, client);
 	}
 }
 
 
 public void UnMuteClient(any client, int unmuter)
 {
-	if(IsValidClient(client,true,true) && IsMuted[client] && !BaseComm_IsClientMuted(client))
+	if (IsValidClient(client, true, true) && IsMuted[client] && !BaseComm_IsClientMuted(client))
 	{
 		SetClientListeningFlags(client, VOICE_NORMAL);
 		IsMuted[client] = false;
-		CPrintToChat(client,"%t %t", "warden_tag", "warden_unmute", client);
-		if(unmuter != -1) CPrintToChat(unmuter,"%t %t", "warden_tag", "warden_unmute", client);
+		CPrintToChat(client, "%t %t", "warden_tag", "warden_unmute", client);
+		if (unmuter != -1) CPrintToChat(unmuter, "%t %t", "warden_tag", "warden_unmute", client);
 	}
 }
 
@@ -345,30 +345,30 @@ public void UnMuteClient(any client, int unmuter)
 ******************************************************************************/
 
 
-public Action MuteMenuPlayer(int client,int args)
+public Action MuteMenuPlayer(int client, int args)
 {
-	if(gc_bPlugin.BoolValue)	
+	if (gc_bPlugin.BoolValue)	
 	{
-		if((IsClientWarden(client) || (IsClientDeputy(client) && gc_bMuteDeputy.BoolValue)) && gc_bMute.BoolValue)
+		if ((IsClientWarden(client) || (IsClientDeputy(client) && gc_bMuteDeputy.BoolValue)) && gc_bMute.BoolValue)
 		{
 			char info1[255];
 			Menu menu5 = CreateMenu(Handler_MuteMenuPlayer);
 			Format(info1, sizeof(info1), "%T", "warden_choose", client);
 			menu5.SetTitle(info1);
-			LoopValidClients(i,true,true)
+			LoopValidClients(i, true, true)
 			{
-				if((GetClientTeam(i) == CS_TEAM_T) && !CheckVipFlag(i,g_sAdminFlagMute) && !IsMuted[i])
+				if ((GetClientTeam(i) == CS_TEAM_T) && !CheckVipFlag(i, g_sAdminFlagMute) && !IsMuted[i])
 				{
 					char userid[11];
 					char username[MAX_NAME_LENGTH];
 					IntToString(GetClientUserId(i), userid, sizeof(userid));
 					Format(username, sizeof(username), "%N", i);
-					menu5.AddItem(userid,username);
+					menu5.AddItem(userid, username);
 				}
 			}
 			menu5.ExitBackButton = true;
 			menu5.ExitButton = true;
-			menu5.Display(client,MENU_TIME_FOREVER);
+			menu5.Display(client, MENU_TIME_FOREVER);
 		}
 		else CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
 	}
@@ -378,9 +378,9 @@ public Action MuteMenuPlayer(int client,int args)
 
 public int Handler_MuteMenuPlayer(Menu menu5, MenuAction action, int client, int Position)
 {
-	if(action == MenuAction_Select)
+	if (action == MenuAction_Select)
 	{
-		menu5.GetItem(Position,g_sMuteUser,sizeof(g_sMuteUser));
+		menu5.GetItem(Position, g_sMuteUser, sizeof(g_sMuteUser));
 		
 		char menuinfo[255];
 		
@@ -388,7 +388,7 @@ public int Handler_MuteMenuPlayer(Menu menu5, MenuAction action, int client, int
 		Format(menuinfo, sizeof(menuinfo), "%T", "warden_time_title", client);
 		menu3.SetTitle(menuinfo);
 		Format(menuinfo, sizeof(menuinfo), "%T", "warden_roundend", client);
-		if(gc_bMuteEnd.BoolValue) menu3.AddItem("0", menuinfo);
+		if (gc_bMuteEnd.BoolValue) menu3.AddItem("0", menuinfo);
 		Format(menuinfo, sizeof(menuinfo), "%T", "warden_15", client);
 		menu3.AddItem("15", menuinfo);
 		Format(menuinfo, sizeof(menuinfo), "%T", "warden_30", client);
@@ -409,14 +409,14 @@ public int Handler_MuteMenuPlayer(Menu menu5, MenuAction action, int client, int
 		menu3.ExitButton = true;
 		menu3.Display(client, 20);
 	}
-	else if(action == MenuAction_Cancel)
+	else if (action == MenuAction_Cancel)
 	{
-		if(Position == MenuCancel_ExitBack) 
+		if (Position == MenuCancel_ExitBack) 
 		{
 			FakeClientCommand(client, "sm_menu");
 		}
 	}
-	else if(action == MenuAction_End)
+	else if (action == MenuAction_End)
 	{
 		delete menu5;
 	}
@@ -432,24 +432,24 @@ public int Handler_MuteMenuTime(Menu menu3, MenuAction action, int client, int s
 		int duration = StringToInt(info);
 		int user = GetClientOfUserId(StringToInt(g_sMuteUser)); 
 		
-		MuteClient(user,duration,client);
+		MuteClient(user, duration, client);
 		
-		if(g_bMenuClose != null)
+		if (g_bMenuClose != null)
 		{
-			if(!g_bMenuClose)
+			if (!g_bMenuClose)
 			{
 				FakeClientCommand(client, "sm_menu");
 			}
 		}
 	}
-	else if(action == MenuAction_Cancel)
+	else if (action == MenuAction_Cancel)
 	{
-		if(selection == MenuCancel_ExitBack) 
+		if (selection == MenuCancel_ExitBack) 
 		{
 			FakeClientCommand(client, "sm_wmute");
 		}
 	}
-	else if(action == MenuAction_End)
+	else if (action == MenuAction_End)
 	{
 		delete menu3;
 	}
@@ -464,24 +464,24 @@ public int Handler_UnMuteMenu(Menu menu4, MenuAction action, int client, int sel
 		menu4.GetItem(selection, info, sizeof(info));
 		int user = GetClientOfUserId(StringToInt(info)); 
 		
-		UnMuteClient(user,client);
+		UnMuteClient(user, client);
 		
-		if(g_bMenuClose != null)
+		if (g_bMenuClose != null)
 		{
-			if(!g_bMenuClose)
+			if (!g_bMenuClose)
 			{
 				FakeClientCommand(client, "sm_menu");
 			}
 		}
 	}
-	else if(action == MenuAction_Cancel)
+	else if (action == MenuAction_Cancel)
 	{
-		if(selection == MenuCancel_ExitBack) 
+		if (selection == MenuCancel_ExitBack) 
 		{
 			FakeClientCommand(client, "sm_menu");
 		}
 	}
-	else if(action == MenuAction_End)
+	else if (action == MenuAction_End)
 	{
 		delete menu4;
 	}
@@ -490,36 +490,36 @@ public int Handler_UnMuteMenu(Menu menu4, MenuAction action, int client, int sel
 
 public int Handler_MuteMenu(Menu menu, MenuAction action, int client, int Position)
 {
-	if(action == MenuAction_Select)
+	if (action == MenuAction_Select)
 	{
 		char Item[11];
-		menu.GetItem(Position,Item,sizeof(Item));
+		menu.GetItem(Position, Item, sizeof(Item));
 		int choice = StringToInt(Item);
-		if(choice == 1)
+		if (choice == 1)
 		{
-			Command_UnMuteMenu(client,0);
+			Command_UnMuteMenu(client, 0);
 		}
-		if(choice == 0)
+		if (choice == 0)
 		{
-			MuteMenuPlayer(client,0);
+			MuteMenuPlayer(client, 0);
 		}
-		if(choice == 2)
+		if (choice == 2)
 		{
-			MuteMenuTeam(client,0);
+			MuteMenuTeam(client, 0);
 		}
-		if(choice == 3)
+		if (choice == 3)
 		{
-			LoopClients(i) UnMuteClient(i,client);
+			LoopClients(i) UnMuteClient(i, client);
 		}
 	}
-	else if(action == MenuAction_Cancel)
+	else if (action == MenuAction_Cancel)
 	{
-		if(Position == MenuCancel_ExitBack) 
+		if (Position == MenuCancel_ExitBack) 
 		{
 			FakeClientCommand(client, "sm_menu");
 		}
 	}
-	else if(action == MenuAction_End)
+	else if (action == MenuAction_End)
 	{
 		delete menu;
 	}
@@ -534,7 +534,7 @@ public int MuteMenuTeam(int client, int args)
 	Format(menuinfo, sizeof(menuinfo), "%T", "warden_time_title", client);
 	menu6.SetTitle(menuinfo);
 	Format(menuinfo, sizeof(menuinfo), "%T", "warden_roundend", client);
-	if(gc_bMuteEnd.BoolValue) menu6.AddItem("0", menuinfo);
+	if (gc_bMuteEnd.BoolValue) menu6.AddItem("0", menuinfo);
 	Format(menuinfo, sizeof(menuinfo), "%T", "warden_15", client);
 	menu6.AddItem("15", menuinfo);
 	Format(menuinfo, sizeof(menuinfo), "%T", "warden_30", client);
@@ -565,24 +565,24 @@ public int Handler_MuteMenuTeam(Menu menu6, MenuAction action, int client, int s
 		menu6.GetItem(selection, info, sizeof(info));
 		int duration = StringToInt(info);
 				
-		LoopClients(i) MuteClient(i,duration,client);
+		LoopClients(i) MuteClient(i, duration, client);
 		
-		if(g_bMenuClose != null)
+		if (g_bMenuClose != null)
 		{
-			if(!g_bMenuClose)
+			if (!g_bMenuClose)
 			{
 				FakeClientCommand(client, "sm_menu");
 			}
 		}
 	}
-	else if(action == MenuAction_Cancel)
+	else if (action == MenuAction_Cancel)
 	{
-		if(selection == MenuCancel_ExitBack) 
+		if (selection == MenuCancel_ExitBack) 
 		{
 			FakeClientCommand(client, "sm_wmute");
 		}
 	}
-	else if(action == MenuAction_End)
+	else if (action == MenuAction_End)
 	{
 		delete menu6;
 	}
@@ -596,6 +596,6 @@ public int Handler_MuteMenuTeam(Menu menu6, MenuAction action, int client, int s
 
 public Action Timer_UnMute(Handle timer, any client)
 {
-	UnMuteClient(client,-1);
+	UnMuteClient(client, -1);
 }
 

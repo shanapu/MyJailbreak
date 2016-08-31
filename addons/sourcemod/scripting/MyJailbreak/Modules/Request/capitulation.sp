@@ -69,13 +69,13 @@ public void Capitulation_OnPluginStart()
 	
 	//AutoExecConfig
 	gc_bCapitulation = AutoExecConfig_CreateConVar("sm_capitulation_enable", "1", "0 - disabled, 1 - enable Capitulation");
-	gc_sCustomCommandCapitulation = AutoExecConfig_CreateConVar("sm_capitulation_cmds", "capi,capitulate,pardon,p", "Set your custom chat commands for Capitulation(!capitulation (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands)");
+	gc_sCustomCommandCapitulation = AutoExecConfig_CreateConVar("sm_capitulation_cmds", "capi, capitulate, pardon, p", "Set your custom chat commands for Capitulation(!capitulation (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)");
 	gc_fCapitulationTime = AutoExecConfig_CreateConVar("sm_capitulation_timer", "10.0", "Time to decide to accept the capitulation");
 	gc_fRebelTime = AutoExecConfig_CreateConVar("sm_capitulation_rebel_timer", "10.0", "Time to give a rebel on not accepted capitulation his knife back");
 	gc_bCapitulationDamage = AutoExecConfig_CreateConVar("sm_capitulation_damage", "1", "0 - disabled, 1 - enable Terror make no damage after capitulation");
-	gc_iCapitulationColorRed = AutoExecConfig_CreateConVar("sm_capitulation_color_red", "0","What color to turn the capitulation Terror into (set R, G and B values to 255 to disable) (Rgb): x - red value", _, true, 0.0, true, 255.0);
-	gc_iCapitulationColorGreen = AutoExecConfig_CreateConVar("sm_capitulation_color_green", "250","What color to turn the capitulation Terror into (rGb): x - green value", _, true, 0.0, true, 255.0);
-	gc_iCapitulationColorBlue = AutoExecConfig_CreateConVar("sm_capitulation_color_blue", "0","What color to turn the capitulation Terror into (rgB): x - blue value", _, true, 0.0, true, 255.0);
+	gc_iCapitulationColorRed = AutoExecConfig_CreateConVar("sm_capitulation_color_red", "0", "What color to turn the capitulation Terror into (set R, G and B values to 255 to disable) (Rgb): x - red value", _, true, 0.0, true, 255.0);
+	gc_iCapitulationColorGreen = AutoExecConfig_CreateConVar("sm_capitulation_color_green", "250", "What color to turn the capitulation Terror into (rGb): x - green value", _, true, 0.0, true, 255.0);
+	gc_iCapitulationColorBlue = AutoExecConfig_CreateConVar("sm_capitulation_color_blue", "0", "What color to turn the capitulation Terror into (rgB): x - blue value", _, true, 0.0, true, 255.0);
 	gc_sSoundCapitulationPath = AutoExecConfig_CreateConVar("sm_capitulation_sound", "music/MyJailbreak/capitulation.mp3", "Path to the soundfile which should be played for a capitulation.");
 	
 	
@@ -91,10 +91,10 @@ public void Capitulation_OnPluginStart()
 
 public int Capitulation_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
-	if(convar == gc_sSoundCapitulationPath)
+	if (convar == gc_sSoundCapitulationPath)
 	{
 		strcopy(g_sSoundCapitulationPath, sizeof(g_sSoundCapitulationPath), newValue);
-		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundCapitulationPath);
+		if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundCapitulationPath);
 	}
 }
 
@@ -116,7 +116,7 @@ public Action Command_Capitulation(int client, int args)
 				{
 					if (warden_exist())
 					{
-						if(!IsRequest)
+						if (!IsRequest)
 						{
 							IsRequest = true;
 							RequestTimer = CreateTimer (gc_fCapitulationTime.FloatValue, Timer_IsRequest);
@@ -127,7 +127,7 @@ public Action Command_Capitulation(int client, int args)
 							RebelTimer[client] = CreateTimer(DoubleTime, Timer_RebelNoAction, client);
 						//	StripAllPlayerWeapons(client);
 							LoopClients(i) Menu_CapitulationMenu(i);
-							if(gc_bSounds.BoolValue)EmitSoundToAllAny(g_sSoundCapitulationPath);
+							if (gc_bSounds.BoolValue)EmitSoundToAllAny(g_sSoundCapitulationPath);
 						}
 						else CReplyToCommand(client, "%t %t", "request_tag", "request_processing");
 					}
@@ -166,7 +166,7 @@ public void Capitulation_Event_RoundStart(Event event, char [] name, bool dontBr
 
 public void Capitulation_OnMapStart()
 {
-	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundCapitulationPath);
+	if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundCapitulationPath);
 }
 
 
@@ -179,12 +179,12 @@ public void Capitulation_OnConfigsExecuted()
 	//Capitulation
 	gc_sCustomCommandCapitulation.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
-	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	iCount = ExplodeString(sCommands, ", ", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
 	
-	for(int i = 0; i < iCount; i++)
+	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
 			RegConsoleCmd(sCommand, Command_Capitulation, "Allows a rebeling terrorist to request a capitulate");
 	}
 }
@@ -208,12 +208,12 @@ public void Capitulation_OnClientDisconnect(int client)
 
 public Action Capitulation_OnWeaponCanUse(int client, int weapon)
 {
-	if(g_bCapitulated[client])
+	if (g_bCapitulated[client])
 	{
 		char sWeapon[32];
 		GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
 		
-		if(!StrEqual(sWeapon, "weapon_knife"))
+		if (!StrEqual(sWeapon, "weapon_knife"))
 		{
 			if (IsValidClient(client, true, false))
 			{
@@ -229,7 +229,7 @@ public Action Capitulation_OnTakedamage(int victim, int &attacker, int &inflicto
 {
 	if (IsValidClient(attacker, true, false) && GetClientTeam(attacker) == CS_TEAM_T && IsPlayerAlive(attacker))
 	{
-		if(g_bCapitulated[attacker] && gc_bCapitulationDamage.BoolValue && !IsClientInLastRequest(attacker))
+		if (g_bCapitulated[attacker] && gc_bCapitulationDamage.BoolValue && !IsClientInLastRequest(attacker))
 		{
 			CPrintToChat(attacker, "%t %t", "request_tag", "request_nodamage");
 			return Plugin_Handled;
@@ -269,14 +269,14 @@ public Action Menu_CapitulationMenu(int warden)
 
 public int Handler_CapitulationMenu(Menu menu, MenuAction action, int client, int Position)
 {
-	if(action == MenuAction_Select)
+	if (action == MenuAction_Select)
 	{
 		char Item[11];
-		menu.GetItem(Position,Item,sizeof(Item));
+		menu.GetItem(Position, Item, sizeof(Item));
 		int choice = StringToInt(Item);
-		if(choice == 1)  //yes
+		if (choice == 1)  //yes
 		{
-			LoopClients(i) if(g_bCapitulated[i])
+			LoopClients(i) if (g_bCapitulated[i])
 			{
 				IsRequest = false;
 				if (RequestTimer != null)
@@ -292,9 +292,9 @@ public int Handler_CapitulationMenu(Menu menu, MenuAction action, int client, in
 				ChangeRebelStatus(i, false);
 			}
 		}
-		if(choice == 0)  //no
+		if (choice == 0)  //no
 		{
-			LoopClients(i) if(g_bCapitulated[i])
+			LoopClients(i) if (g_bCapitulated[i])
 			{
 				IsRequest = false;
 				if (RequestTimer != null)
@@ -322,7 +322,7 @@ public Action Timer_GiveKnifeCapitulated(Handle timer, any client)
 {
 	if (IsClientConnected(client))
 	{
-		GivePlayerItem(client,"weapon_knife");
+		GivePlayerItem(client, "weapon_knife");
 		CPrintToChat(client, "%t %t", "request_tag", "request_knifeback");
 		SetEntityRenderColor(client, 255, 255, 255, 255);
 	}

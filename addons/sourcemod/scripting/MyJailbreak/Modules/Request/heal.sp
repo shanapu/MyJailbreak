@@ -71,14 +71,14 @@ public void Heal_OnPluginStart()
 	
 	//AutoExecConfig
 	gc_bHeal = AutoExecConfig_CreateConVar("sm_heal_enable", "1", "0 - disabled, 1 - enable heal");
-	gc_sCustomCommandHeal = AutoExecConfig_CreateConVar("sm_heal_cmds", "cure,h,ouch", "Set your custom chat command for Heal(!heal (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands))");
+	gc_sCustomCommandHeal = AutoExecConfig_CreateConVar("sm_heal_cmds", "cure, h, ouch", "Set your custom chat command for Heal(!heal (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_bHealthShot = AutoExecConfig_CreateConVar("sm_heal_healthshot", "1", "0 - disabled, 1 - enable give healthshot on accept to terror");
 	gc_bHealthCheck = AutoExecConfig_CreateConVar("sm_heal_check", "1", "0 - disabled, 1 - enable check if player is already full health");
 	gc_iHealLimit = AutoExecConfig_CreateConVar("sm_heal_limit", "2", "Сount how many times you can use the command");
 	gc_fHealTime = AutoExecConfig_CreateConVar("sm_heal_time", "10.0", "Time after the player gets his normal colors back");
-	gc_iHealColorRed = AutoExecConfig_CreateConVar("sm_heal_color_red", "240","What color to turn the heal Terror into (set R, G and B values to 255 to disable) (Rgb): x - red value", _, true, 0.0, true, 255.0);
-	gc_iHealColorGreen = AutoExecConfig_CreateConVar("sm_heal_color_green", "0","What color to turn the heal Terror into (rGb): x - green value", _, true, 0.0, true, 255.0);
-	gc_iHealColorBlue = AutoExecConfig_CreateConVar("sm_heal_color_blue", "100","What color to turn the heal Terror into (rgB): x - blue value", _, true, 0.0, true, 255.0);
+	gc_iHealColorRed = AutoExecConfig_CreateConVar("sm_heal_color_red", "240", "What color to turn the heal Terror into (set R, G and B values to 255 to disable) (Rgb): x - red value", _, true, 0.0, true, 255.0);
+	gc_iHealColorGreen = AutoExecConfig_CreateConVar("sm_heal_color_green", "0", "What color to turn the heal Terror into (rGb): x - green value", _, true, 0.0, true, 255.0);
+	gc_iHealColorBlue = AutoExecConfig_CreateConVar("sm_heal_color_blue", "100", "What color to turn the heal Terror into (rgB): x - blue value", _, true, 0.0, true, 255.0);
 	gc_sAdminFlagHeal = AutoExecConfig_CreateConVar("sm_repeat_flag", "a", "Set flag for admin/vip to get one more heal. No flag = feature is available for all players!");
 	
 	
@@ -94,7 +94,7 @@ public void Heal_OnPluginStart()
 
 public int Heal_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
-	if(convar == gc_sAdminFlagHeal)
+	if (convar == gc_sAdminFlagHeal)
 	{
 		strcopy(g_sAdminFlagHeal, sizeof(g_sAdminFlagHeal), newValue);
 	}
@@ -121,9 +121,9 @@ public Action Command_Heal(int client, int args)
 					{
 						if (warden_exist())
 						{
-							if((GetClientHealth(client) < 100) || !gc_bHealthCheck.BoolValue)
+							if ((GetClientHealth(client) < 100) || !gc_bHealthCheck.BoolValue)
 							{
-								if(!IsRequest)
+								if (!IsRequest)
 								{
 									IsRequest = true;
 									RequestTimer = CreateTimer (gc_fHealTime.FloatValue, Timer_IsRequest);
@@ -165,7 +165,7 @@ public void Heal_Event_RoundStart(Event event, char [] name, bool dontBroadcast)
 		g_iHealCounter[client] = 0;
 		g_bHealed[client] = false;
 		
-		if(CheckVipFlag(client,g_sAdminFlagHeal)) g_iHealCounter[client] = -1;
+		if (CheckVipFlag(client, g_sAdminFlagHeal)) g_iHealCounter[client] = -1;
 	}
 }
 
@@ -184,12 +184,12 @@ public void Heal_OnConfigsExecuted()
 	//Capitulation
 	gc_sCustomCommandHeal.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
-	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	iCount = ExplodeString(sCommands, ", ", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
 	
-	for(int i = 0; i < iCount; i++)
+	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
 			RegConsoleCmd(sCommand, Command_Heal, "Allows a Terrorist request healing");
 	}
 }
@@ -197,7 +197,7 @@ public void Heal_OnConfigsExecuted()
 public void Heal_OnClientPutInServer(int client)
 {
 	g_iHealCounter[client] = 0;
-	if(CheckVipFlag(client,g_sAdminFlagHeal)) g_iHealCounter[client] = -1;
+	if (CheckVipFlag(client, g_sAdminFlagHeal)) g_iHealCounter[client] = -1;
 	g_bHealed[client] = false;
 }
 
@@ -224,34 +224,34 @@ public Action HealMenu(int warden)
 		Format(info7, sizeof(info7), "%T", "warden_yes", warden);
 		menu1.AddItem("1", info7);
 		menu1.AddItem("0", info6);
-		menu1.Display(warden,gc_fHealTime.IntValue);
+		menu1.Display(warden, gc_fHealTime.IntValue);
 	}
 }
 
 
 public int HealMenuHandler(Menu menu, MenuAction action, int client, int Position)
 {
-	if(action == MenuAction_Select)
+	if (action == MenuAction_Select)
 	{
 		char Item[11];
-		menu.GetItem(Position,Item,sizeof(Item));
+		menu.GetItem(Position, Item, sizeof(Item));
 		int choice = StringToInt(Item);
-		if(choice == 1)
+		if (choice == 1)
 		{
-			LoopClients(i) if(g_bHealed[i])
+			LoopClients(i) if (g_bHealed[i])
 			{
 				IsRequest = false;
 				RequestTimer = null;
-				if(gc_bHealthShot.BoolValue) GivePlayerItem(i, "weapon_healthshot");
+				if (gc_bHealthShot.BoolValue) GivePlayerItem(i, "weapon_healthshot");
 				CPrintToChat(i, "%t %t", "request_tag", "request_health");
 				CPrintToChatAll("%t %t", "warden_tag", "request_accepted", i, client);
 			}
 		}
-		if(choice == 0)
+		if (choice == 0)
 		{
 			IsRequest = false;
 			RequestTimer = null;
-			LoopClients(i) if(g_bHealed[i])
+			LoopClients(i) if (g_bHealed[i])
 			{
 				CPrintToChatAll("%t %t", "warden_tag", "request_noaccepted", i, client);
 			}

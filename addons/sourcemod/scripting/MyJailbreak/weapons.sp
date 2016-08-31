@@ -76,7 +76,7 @@ char secondaryWeapon[MAXPLAYERS + 1][24];
 
 enum weapons
 {
-	String:ItemName[64],
+	String:ItemName[64], 
 	String:desc[64]
 }
 
@@ -84,10 +84,10 @@ enum weapons
 //Info
 public Plugin myinfo =
 {
-	name = "MyJailbreak - Weapons",
-	author = "shanapu, Franc1sco",
-	description = "Jailbreak weapons script",
-	version = PLUGIN_VERSION,
+	name = "MyJailbreak - Weapons", 
+	author = "shanapu, Franc1sco", 
+	description = "Jailbreak weapons script", 
+	version = PLUGIN_VERSION, 
 	url = "https://github.com/shanapu/MyJailbreak"
 };
 
@@ -109,7 +109,7 @@ public void OnPluginStart()
 	
 	AutoExecConfig_CreateConVar("sm_weapons_version", PLUGIN_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_weapons_enable", "1", "0 - disabled, 1 - enable weapons menu - you shouldn't touch these, cause events days will handle them", _, true,  0.0, true, 1.0);
-	gc_sCustomCommandWeapon = AutoExecConfig_CreateConVar("sm_weapons_cmds", "gun,guns,weapons,gunmenu,weaponmenu,giveweapon,arms", "Set your custom chat command for weapon menu(!weapon (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands))");
+	gc_sCustomCommandWeapon = AutoExecConfig_CreateConVar("sm_weapons_cmds", "gun, guns, weapons, gunmenu, weaponmenu, giveweapon, arms", "Set your custom chat command for weapon menu(!weapon (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_bTerror = AutoExecConfig_CreateConVar("sm_weapons_t", "0", "0 - disabled, 1 - enable weapons menu for T - you shouldn't touch these, cause events days will handle them", _, true,  0.0, true, 1.0);
 	gc_bCTerror = AutoExecConfig_CreateConVar("sm_weapons_ct", "1", "0 - disabled, 1 - enable weapons menu for CT - you shouldn't touch these, cause events days will handle them", _, true,  0.0, true, 1.0);
 	gc_bSpawn = AutoExecConfig_CreateConVar("sm_weapons_spawnmenu", "1", "0 - disabled, 1 -  enable autoopen weapon menu on spawn", _, true,  0.0, true, 1.0);
@@ -161,12 +161,12 @@ public void OnConfigsExecuted()
 	//weapons
 	gc_sCustomCommandWeapon.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
-	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	iCount = ExplodeString(sCommands, ", ", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
 	
-	for(int i = 0; i < iCount; i++)
+	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
 			RegConsoleCmd(sCommand, Command_Weapons, "Open the weapon menu if enabled (in EventDays/for CT)");
 	}
 }
@@ -178,9 +178,9 @@ public void OnConfigsExecuted()
 
 
 //Open the weapon menu
-public Action Command_Weapons(int client,int args)
+public Action Command_Weapons(int client, int args)
 {
-	if(gc_bPlugin.BoolValue)	
+	if (gc_bPlugin.BoolValue)	
 	{
 		if (client != 0 && IsClientInGame(client))
 		{
@@ -206,12 +206,12 @@ public void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast
 	int client = GetClientOfUserId(event.GetInt("userid"));
 	
 	KillAllTimer(client);
-	if(gc_bSpawn.BoolValue)
+	if (gc_bSpawn.BoolValue)
 	{
 		Timers[client] = CreateTimer(1.0, Timer_GetWeapons, client);
 	}
 	
-	if(gc_bKevlar.BoolValue && (GetClientTeam(client) == CS_TEAM_CT) && !IsEventDayRunning() && !IsEventDayPlanned())
+	if (gc_bKevlar.BoolValue && (GetClientTeam(client) == CS_TEAM_CT) && !IsEventDayRunning() && !IsEventDayPlanned())
 	{
 		int iHelmet = FindSendPropInfo("CCSPlayer", "m_bHasHelmet");
 		int iKevlar = FindSendPropInfo("CCSPlayer", "m_ArmorValue");
@@ -231,12 +231,12 @@ public void GiveSavedWeaponsFix(int client)
 {
 	if (IsPlayerAlive(client))
 	{
-		if(gc_bPlugin.BoolValue)
+		if (gc_bPlugin.BoolValue)
 		{
-			if((gc_bTerror.BoolValue && GetClientTeam(client) == 2) || (gc_bCTerror.BoolValue && GetClientTeam(client) == 3))
+			if ((gc_bTerror.BoolValue && GetClientTeam(client) == 2) || (gc_bCTerror.BoolValue && GetClientTeam(client) == 3))
 			{
 				//StripAllPlayerWeapons(client);
-				if(GetPlayerWeaponSlot(client, CS_SLOT_PRIMARY) == -1)
+				if (GetPlayerWeaponSlot(client, CS_SLOT_PRIMARY) == -1)
 				{
 					if (StrEqual(primaryWeapon[client], "random"))
 					{
@@ -248,7 +248,7 @@ public void GiveSavedWeaponsFix(int client)
 					}
 					else GivePlayerItem(client, primaryWeapon[client]);
 				}
-				if(GetPlayerWeaponSlot(client, CS_SLOT_SECONDARY) == -1)
+				if (GetPlayerWeaponSlot(client, CS_SLOT_SECONDARY) == -1)
 				{
 					if (StrEqual(secondaryWeapon[client], "random"))
 					{
@@ -260,7 +260,7 @@ public void GiveSavedWeaponsFix(int client)
 					}
 					else GivePlayerItem(client, secondaryWeapon[client]);
 				}
-				if(GetPlayerWeaponSlot(client, CS_SLOT_GRENADE) == -1) GivePlayerItem(client, "weapon_hegrenade");
+				if (GetPlayerWeaponSlot(client, CS_SLOT_GRENADE) == -1) GivePlayerItem(client, "weapon_hegrenade");
 
 			}
 		}
@@ -303,7 +303,7 @@ public void GiveSavedWeapons(int client)
 				GivePlayerItem(client, "weapon_tagrenade");
 				CPrintToChat(client, "%t %t", "weapons_tag", "weapons_ta");
 			}
-			if(g_bTaser != null) if(g_bTaser.BoolValue) GivePlayerItem(client, "weapon_taser");
+			if (g_bTaser != null) if (g_bTaser.BoolValue) GivePlayerItem(client, "weapon_taser");
 		}
 		if (StrEqual(primaryWeapon[client], "random"))
 		{
@@ -327,7 +327,7 @@ public void GiveSavedWeapons(int client)
 		
 		if (gc_bJBmenu.BoolValue)
 		{
-			FakeClientCommand(client,"sm_menu");
+			FakeClientCommand(client, "sm_menu");
 		}
 		Timers[client] = CreateTimer(6.0, Timer_Fix, client);
 	}
@@ -567,7 +567,7 @@ public int Handler_BuildOptionsMenu(Handle menu, MenuAction action, int client, 
 	if (action == MenuAction_Select)
 	{
 		char info[24];
-		GetMenuItem(menu, param2, info, sizeof(info));
+		menu.GetItem(param2, info, sizeof(info));
 		
 		if (StrEqual(info, "New"))
 		{
@@ -622,13 +622,13 @@ Handle Menu_BuildWeaponsMenu(bool primary)
 	char info7[255], info8[255];
 	Handle menu;
 	int Items[weapons];
-	if(primary)
+	if (primary)
 	{
 		menu = CreateMenu(Menu_Primary);
 		Format(info7, sizeof(info7), "%T\n ", "weapons_info_prim", LANG_SERVER);
 		SetMenuTitle(menu, info7);
-		SetMenuExitButton(menu, true);
-		for(int i=0;i<GetArraySize(array_primary);++i)
+		menu.ExitButton = true;
+		for (int i=0;i<GetArraySize(array_primary);++i)
 		{
 			GetArrayArray(array_primary, i, Items[0]);
 			AddMenuItem(menu, Items[ItemName], Items[desc]);
@@ -639,8 +639,8 @@ Handle Menu_BuildWeaponsMenu(bool primary)
 		menu = CreateMenu(Menu_Secondary);
 		Format(info8, sizeof(info8), "%T\n ", "weapons_info_sec", LANG_SERVER);
 		SetMenuTitle(menu, info8);
-		SetMenuExitButton(menu, true);
-		for(int i=0;i<GetArraySize(array_secondary);++i)
+		menu.ExitButton = true;
+		for (int i=0;i<GetArraySize(array_secondary);++i)
 		{
 			GetArrayArray(array_secondary, i, Items[0]);
 			AddMenuItem(menu, Items[ItemName], Items[desc]);
@@ -656,7 +656,7 @@ public int Menu_Primary(Handle menu, MenuAction action, int client, int param2)
 	if (action == MenuAction_Select)
 	{
 		char info[24];
-		GetMenuItem(menu, param2, info, sizeof(info));
+		menu.GetItem(param2, info, sizeof(info));
 		primaryWeapon[client] = info;
 		DisplayMenu(optionsMenu4, client, MENU_TIME_FOREVER);
 	}
@@ -664,12 +664,12 @@ public int Menu_Primary(Handle menu, MenuAction action, int client, int param2)
 
 
 //Menu choose secondary weapons
-public int Menu_Secondary(Handle menu, MenuAction action,int client,int param2)
+public int Menu_Secondary(Handle menu, MenuAction action, int client, int param2)
 {
 	if (action == MenuAction_Select)
 	{
 		char info[24];
-		GetMenuItem(menu, param2, info, sizeof(info));
+		menu.GetItem(param2, info, sizeof(info));
 		secondaryWeapon[client] = info;
 		GiveSavedWeapons(client);
 		if (!IsPlayerAlive(client))
@@ -681,9 +681,9 @@ public int Menu_Secondary(Handle menu, MenuAction action,int client,int param2)
 //Check for display menu
 public void DisplayOptionsMenu(int client)
 {
-	if(gc_bPlugin.BoolValue)	
+	if (gc_bPlugin.BoolValue)	
 	{
-		if((gc_bTerror.BoolValue && GetClientTeam(client) == 2) || (gc_bCTerror.BoolValue && GetClientTeam(client) == 3))
+		if ((gc_bTerror.BoolValue && GetClientTeam(client) == 2) || (gc_bCTerror.BoolValue && GetClientTeam(client) == 3))
 		{
 			if (strcmp(primaryWeapon[client], "") == 0 || strcmp(secondaryWeapon[client], "") == 0)
 				DisplayMenu(optionsMenu2, client, 30);
@@ -705,11 +705,11 @@ public Action Timer_GetWeapons(Handle timer, any client)
 	Timers[client] = null;
 	if (GetClientTeam(client) > 1 && IsPlayerAlive(client))
 	{
-		if(gc_bPlugin.BoolValue)	
+		if (gc_bPlugin.BoolValue)	
 		{
-			if(gc_bSpawn.BoolValue)
+			if (gc_bSpawn.BoolValue)
 			{
-				if((gc_bTerror.BoolValue && GetClientTeam(client) == 2) || (gc_bCTerror.BoolValue && GetClientTeam(client) == 3))
+				if ((gc_bTerror.BoolValue && GetClientTeam(client) == 2) || (gc_bCTerror.BoolValue && GetClientTeam(client) == 3))
 				{
 					// Give weapons or display menu.
 					if (newWeaponsSelected[client])

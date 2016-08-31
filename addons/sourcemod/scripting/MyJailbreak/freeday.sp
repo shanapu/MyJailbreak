@@ -81,10 +81,10 @@ char g_sAdminFlag[32];
 //Info
 public Plugin myinfo =
 {
-	name = "MyJailbreak - Freeday",
-	author = "shanapu",
-	description = "Event Day for Jailbreak Server",
-	version = PLUGIN_VERSION,
+	name = "MyJailbreak - Freeday", 
+	author = "shanapu", 
+	description = "Event Day for Jailbreak Server", 
+	version = PLUGIN_VERSION, 
 	url = URL_LINK
 };
 
@@ -108,8 +108,8 @@ public void OnPluginStart()
 	
 	AutoExecConfig_CreateConVar("sm_freeday_version", PLUGIN_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_freeday_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true,  0.0, true, 1.0);
-	gc_sCustomCommandVote = AutoExecConfig_CreateConVar("sm_freeday_cmds_vote", "fd,free", "Set your custom chat command for Event voting(!freeday (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands))");
-	gc_sCustomCommandSet = AutoExecConfig_CreateConVar("sm_freeday_cmds_set", "sfreeday,sfd", "Set your custom chat command for set Event(!setfreeday (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands))");
+	gc_sCustomCommandVote = AutoExecConfig_CreateConVar("sm_freeday_cmds_vote", "fd, free", "Set your custom chat command for Event voting(!freeday (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
+	gc_sCustomCommandSet = AutoExecConfig_CreateConVar("sm_freeday_cmds_set", "sfreeday, sfd", "Set your custom chat command for set Event(!setfreeday (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_freeday_warden", "1", "0 - disabled, 1 - allow warden to set freeday round", _, true,  0.0, true, 1.0);
 	gc_bSetA = AutoExecConfig_CreateConVar("sm_freeday_admin", "1", "0 - disabled, 1 - allow admin/vip to set freeday round", _, true,  0.0, true, 1.0);
 	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_freeday_flag", "g", "Set flag for admin/vip to set this Event Day.");
@@ -145,7 +145,7 @@ public void OnPluginStart()
 //ConVarChange for Strings
 public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
-	if(convar == gc_sAdminFlag)
+	if (convar == gc_sAdminFlag)
 	{
 		strcopy(g_sAdminFlag, sizeof(g_sAdminFlag), newValue);
 	}
@@ -162,24 +162,24 @@ public void OnConfigsExecuted()
 	//Vote
 	gc_sCustomCommandVote.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
-	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	iCount = ExplodeString(sCommands, ", ", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
 	
-	for(int i = 0; i < iCount; i++)
+	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
 			RegConsoleCmd(sCommand, Command_VoteFreeday, "Allows players to vote for a freeday");
 	}
 	
 	//Set
 	gc_sCustomCommandSet.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
-	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	iCount = ExplodeString(sCommands, ", ", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
 	
-	for(int i = 0; i < iCount; i++)
+	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
 			RegConsoleCmd(sCommand, Command_SetFreeday, "Allows the Admin or Warden to set freeday as next round");
 	}
 }
@@ -191,14 +191,14 @@ public void OnConfigsExecuted()
 
 
 //Admin & Warden set Event
-public Action Command_SetFreeday(int client,int args)
+public Action Command_SetFreeday(int client, int args)
 {
 	if (gc_bPlugin.BoolValue)
 	{
-		if(client == 0)
+		if (client == 0)
 		{
 			StartNextRound();
-			if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event FreeDay was started by groupvoting");
+			if (ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event FreeDay was started by groupvoting");
 		}
 		else if (warden_iswarden(client))
 		{
@@ -207,12 +207,12 @@ public Action Command_SetFreeday(int client,int args)
 				char EventDay[64];
 				GetEventDayName(EventDay);
 				
-				if(!IsEventDayPlanned())
+				if (!IsEventDayPlanned())
 				{
 					if (g_iCoolDown == 0)
 					{
 						StartNextRound();
-						if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Freeday was started by warden %L", client);
+						if (ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Freeday was started by warden %L", client);
 					}
 					else CReplyToCommand(client, "%t %t", "freeday_tag" , "freeday_wait", g_iCoolDown);
 				}
@@ -220,19 +220,19 @@ public Action Command_SetFreeday(int client,int args)
 			}
 			else CReplyToCommand(client, "%t %t", "warden_tag" , "freeday_setbywarden");
 		}
-		else if (CheckVipFlag(client,g_sAdminFlag))
+		else if (CheckVipFlag(client, g_sAdminFlag))
 		{
 			if (gc_bSetA.BoolValue)
 			{
 				char EventDay[64];
 				GetEventDayName(EventDay);
 				
-				if(!IsEventDayPlanned())
+				if (!IsEventDayPlanned())
 				{
 					if (g_iCoolDown == 0)
 					{
 						StartNextRound();
-						if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Freeday was started by admin %L", client);
+						if (ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Freeday was started by admin %L", client);
 					}
 					else CReplyToCommand(client, "%t %t", "freeday_tag" , "freeday_wait", g_iCoolDown);
 				}
@@ -248,7 +248,7 @@ public Action Command_SetFreeday(int client,int args)
 
 
 //Voting for Event
-public Action Command_VoteFreeday(int client,int args)
+public Action Command_VoteFreeday(int client, int args)
 {
 	char steamid[64];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
@@ -260,7 +260,7 @@ public Action Command_VoteFreeday(int client,int args)
 			char EventDay[64];
 			GetEventDayName(EventDay);
 			
-			if(!IsEventDayPlanned())
+			if (!IsEventDayPlanned())
 			{
 				if (g_iCoolDown == 0)
 				{
@@ -269,12 +269,12 @@ public Action Command_VoteFreeday(int client,int args)
 						int playercount = (GetClientCount(true) / 2);
 						g_iVoteCount++;
 						int Missing = playercount - g_iVoteCount + 1;
-						Format(g_sHasVoted, sizeof(g_sHasVoted), "%s,%s", g_sHasVoted, steamid);
+						Format(g_sHasVoted, sizeof(g_sHasVoted), "%s, %s", g_sHasVoted, steamid);
 						
 						if (g_iVoteCount > playercount)
 						{
 							StartNextRound();
-							if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event freeday was started by voting");
+							if (ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event freeday was started by voting");
 						}
 						else CPrintToChatAll("%t %t", "freeday_tag" , "freeday_need", Missing, client);
 					}
@@ -300,12 +300,12 @@ public Action Command_VoteFreeday(int client,int args)
 
 public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
-	if((GetTeamClientCount(CS_TEAM_CT) < 1) && gc_bAuto.BoolValue)
+	if ((GetTeamClientCount(CS_TEAM_CT) < 1) && gc_bAuto.BoolValue)
 	{
 		char EventDay[64];
 		GetEventDayName(EventDay);
 		
-		if(!IsEventDayPlanned())
+		if (!IsEventDayPlanned())
 		{
 			StartFreeday = true;
 			g_iCoolDown = gc_iCooldownDay.IntValue + 1;
@@ -317,7 +317,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 			AutoFreeday = true;
 		}
 	}
-	if(StartFreeday)
+	if (StartFreeday)
 	{
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_weapons_enable", 0);
@@ -343,7 +343,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 			}
 			if (IsPlayerAlive(client)) 
 			{
-				PrintCenterText(client,"%t", "freeday_start_nc");
+				PrintCenterText(client, "%t", "freeday_start_nc");
 			}
 		}
 		CPrintToChatAll("%t %t", "freeday_tag" , "freeday_start");
@@ -388,11 +388,11 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 
 public void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast) 
 {
-	if((AutoFreeday && gc_iRespawn.IntValue == 1) || (IsFreeday && gc_iRespawn.IntValue == 2) || ((IsFreeday || AutoFreeday) && gc_iRespawn.IntValue == 3))
+	if ((AutoFreeday && gc_iRespawn.IntValue == 1) || (IsFreeday && gc_iRespawn.IntValue == 2) || ((IsFreeday || AutoFreeday) && gc_iRespawn.IntValue == 3))
 	{
 		int client = GetClientOfUserId(event.GetInt("userid")); // Get the dead clients id
 		
-		if(((GetAliveTeamCount(CS_TEAM_CT) >= 1) && (GetClientTeam(client) == CS_TEAM_CT) && AllowRespawn) || ((GetAliveTeamCount(CS_TEAM_T) >= 1) && (GetClientTeam(client) == CS_TEAM_T) && AllowRespawn))
+		if (((GetAliveTeamCount(CS_TEAM_CT) >= 1) && (GetClientTeam(client) == CS_TEAM_CT) && AllowRespawn) || ((GetAliveTeamCount(CS_TEAM_T) >= 1) && (GetClientTeam(client) == CS_TEAM_T) && AllowRespawn))
 		{
 			CreateTimer (2.0, Timer_Respawn, client);
 		}

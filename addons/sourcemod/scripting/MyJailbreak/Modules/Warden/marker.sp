@@ -58,7 +58,7 @@ char g_sColorNamesRainbow[64];
 char g_sColorNamesYellow[64];
 char g_sColorNamesCyan[64];
 char g_sColorNamesWhite[64];
-char g_sColorNames[8][64] ={{""},{""},{""},{""},{""},{""},{""},{""}};
+char g_sColorNames[8][64] ={{""}, {""}, {""}, {""}, {""}, {""}, {""}, {""}};
 
 
 //float
@@ -138,7 +138,7 @@ public Action Marker_OnPlayerRunCmd(int client, int &buttons, int &impulse, floa
 	{
 		if (gc_bMarker.BoolValue && !g_bCanZoom[client] && !g_bHasSilencer[client] && (g_iWrongWeapon[client] != 0) && (g_iWrongWeapon[client] != 8) && (!StrEqual(g_sEquipWeapon[client], "taser")) && (IsClientWarden(client) || (IsClientDeputy(client) && gc_bMarkerDeputy.BoolValue)) && gc_bPlugin.BoolValue)
 		{
-			if(!g_bMarkerSetup[client])
+			if (!g_bMarkerSetup[client])
 				GetClientAimTargetPos(client, g_fMarkerSetupStartOrigin);
 			
 			GetClientAimTargetPos(client, g_fMarkerSetupEndOrigin);
@@ -152,7 +152,7 @@ public Action Marker_OnPlayerRunCmd(int client, int &buttons, int &impulse, floa
 			
 			if (radius > 0)
 			{
-				TE_SetupBeamRingPoint(g_fMarkerSetupStartOrigin, radius, radius+0.1, g_iBeamSprite, g_iHaloSprite, 0, 10, 0.1, 2.0, 0.0, {255,255,255,255}, 10, 0);
+				TE_SetupBeamRingPoint(g_fMarkerSetupStartOrigin, radius, radius+0.1, g_iBeamSprite, g_iHaloSprite, 0, 10, 0.1, 2.0, 0.0, {255, 255, 255, 255}, 10, 0);
 				TE_SendToClient(client);
 			}
 			
@@ -192,7 +192,7 @@ public void Marker_OnMapStart()
 
 stock void MarkerMenu(int client)
 {
-	if(!IsValidClient(client, false, false) || (!IsClientWarden(client) && !IsClientDeputy(client)))
+	if (!IsValidClient(client, false, false) || (!IsClientWarden(client) && !IsClientDeputy(client)))
 	{
 		CPrintToChat(client, "%t %t", "warden_tag", "warden_notwarden");
 		return;
@@ -250,14 +250,14 @@ stock void MarkerMenu(int client)
 		Format(menuinfo, sizeof(menuinfo), "%T", "warden_yellow", client);
 		AddMenuItem(menu, "4", menuinfo);
 		
-		DisplayMenu(menu, client, 20);
+		menu.Display(client, 20);
 	}
 }
 
 
 public int Handle_MarkerMenu(Handle menu, MenuAction action, int client, int itemNum)
 {
-	if(!IsValidClient(client, false, false))
+	if (!IsValidClient(client, false, false))
 		return;
 	
 	if (!IsClientWarden(client) && !IsClientDeputy(client))
@@ -269,7 +269,7 @@ public int Handle_MarkerMenu(Handle menu, MenuAction action, int client, int ite
 	if (action == MenuAction_Select)
 	{
 		char info[32]; char info2[32];
-		bool found = GetMenuItem(menu, itemNum, info, sizeof(info), _, info2, sizeof(info2));
+		bool found = menu.GetItem(itemNum, info, sizeof(info), _, info2, sizeof(info2));
 		int marker = StringToInt(info);
 		
 		if (found)
@@ -303,7 +303,7 @@ stock void Draw_Markers()
 	if (g_iWarden == -1)
 		return;
 	
-	for(int i = 0; i<8; i++)
+	for (int i = 0; i<8; i++)
 	{
 		if (g_fMarkerRadius[i] <= 0.0)
 			continue;
@@ -368,7 +368,7 @@ stock int GetClientAimTargetPos(int client, float g_fPos[3])
 	
 	float vAngles[3]; float vOrigin[3];
 	
-	GetClientEyePosition(client,vOrigin);
+	GetClientEyePosition(client, vOrigin);
 	GetClientEyeAngles(client, vAngles);
 	
 	Handle trace = TR_TraceRayFilterEx(vOrigin, vAngles, MASK_SHOT, RayType_Infinite, TraceFilterAllEntities, client);
@@ -386,7 +386,7 @@ stock int GetClientAimTargetPos(int client, float g_fPos[3])
 
 stock void RemoveMarker(int marker)
 {
-	if(marker != -1)
+	if (marker != -1)
 	{
 		g_fMarkerRadius[marker] = 0.0;
 	}
@@ -395,14 +395,14 @@ stock void RemoveMarker(int marker)
 
 stock void RemoveAllMarkers()
 {
-	for(int i = 0; i < 8;i++)
+	for (int i = 0; i < 8;i++)
 		RemoveMarker(i);
 }
 
 
 stock int IsMarkerInRange(float g_fPos[3])
 {
-	for(int i = 0; i < 8;i++)
+	for (int i = 0; i < 8;i++)
 	{
 		if (g_fMarkerRadius[i] <= 0.0)
 			continue;
@@ -420,9 +420,9 @@ public bool TraceFilterAllEntities(int entity, int contentsMask, any client)
 		return false;
 	if (entity > MaxClients)
 		return false;
-	if(!IsClientInGame(entity))
+	if (!IsClientInGame(entity))
 		return false;
-	if(!IsPlayerAlive(entity))
+	if (!IsPlayerAlive(entity))
 		return false;
 	
 	return true;

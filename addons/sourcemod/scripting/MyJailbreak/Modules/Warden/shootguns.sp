@@ -62,9 +62,9 @@ public void ShootGuns_Event_BulletImpact(Event event, const char[] name, bool do
 	
 	int eni = GetClientAimTarget(client, false);
 	
-	if(gc_bShootGuns.BoolValue && ((gc_iShootGunsMode.IntValue == 1 && IsClientWarden(client)) || (gc_iShootGunsMode.IntValue == 2 && (IsClientWarden(client) || IsClientDeputy(client)) || (gc_iShootGunsMode.IntValue == 3 && (GetClientTeam(client) == CS_TEAM_CT)) || (gc_iShootGunsMode.IntValue == 4))))
+	if (gc_bShootGuns.BoolValue && ((gc_iShootGunsMode.IntValue == 1 && IsClientWarden(client)) || (gc_iShootGunsMode.IntValue == 2 && (IsClientWarden(client) || IsClientDeputy(client)) || (gc_iShootGunsMode.IntValue == 3 && (GetClientTeam(client) == CS_TEAM_CT)) || (gc_iShootGunsMode.IntValue == 4))))
 	{
-		if(Weapon_IsValid(eni) && !IsValidClient(eni,true,true))
+		if (Weapon_IsValid(eni) && !IsValidClient(eni, true, true))
 		{
 			AcceptEntityInput(eni, "Kill");
 		}

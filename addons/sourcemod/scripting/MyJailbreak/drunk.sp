@@ -100,10 +100,10 @@ char g_sOverlayStartPath[256];
 
 //Info
 public Plugin myinfo = {
-	name = "MyJailbreak - Drunk",
-	author = "shanapu",
-	description = "Event Day for Jailbreak Server",
-	version = PLUGIN_VERSION,
+	name = "MyJailbreak - Drunk", 
+	author = "shanapu", 
+	description = "Event Day for Jailbreak Server", 
+	version = PLUGIN_VERSION, 
 	url = URL_LINK
 };
 
@@ -127,8 +127,8 @@ public void OnPluginStart()
 	
 	AutoExecConfig_CreateConVar("sm_drunk_version", PLUGIN_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_drunk_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true,  0.0, true, 1.0);
-	gc_sCustomCommandVote = AutoExecConfig_CreateConVar("sm_drunk_cmds_vote", "drunken", "Set your custom chat command for Event voting(!drunk (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands))");
-	gc_sCustomCommandSet = AutoExecConfig_CreateConVar("sm_drunk_cmds_set", "sdrunk,sdrunken", "Set your custom chat command for set Event(!setdrunk (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands))");
+	gc_sCustomCommandVote = AutoExecConfig_CreateConVar("sm_drunk_cmds_vote", "drunken", "Set your custom chat command for Event voting(!drunk (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
+	gc_sCustomCommandSet = AutoExecConfig_CreateConVar("sm_drunk_cmds_set", "sdrunk, sdrunken", "Set your custom chat command for set Event(!setdrunk (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_drunk_warden", "1", "0 - disabled, 1 - allow warden to set drunk round", _, true,  0.0, true, 1.0);
 	gc_bSetA = AutoExecConfig_CreateConVar("sm_drunk_admin", "1", "0 - disabled, 1 - allow admin/vip to set drunk round", _, true,  0.0, true, 1.0);
 	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_drunk_flag", "g", "Set flag for admin/vip to set this Event Day.");
@@ -176,17 +176,17 @@ public void OnPluginStart()
 //ConVarChange for Strings
 public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
-	if(convar == gc_sOverlayStartPath)    //Add overlay to download and precache table if changed
+	if (convar == gc_sOverlayStartPath)    //Add overlay to download and precache table if changed
 	{
 		strcopy(g_sOverlayStartPath, sizeof(g_sOverlayStartPath), newValue);
-		if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
+		if (gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
 	}
-	else if(convar == gc_sSoundStartPath)    //Add sound to download and precache table if changed
+	else if (convar == gc_sSoundStartPath)    //Add sound to download and precache table if changed
 	{
 		strcopy(g_sSoundStartPath, sizeof(g_sSoundStartPath), newValue);
-		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
+		if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
 	}
-	else if(convar == gc_sAdminFlag)
+	else if (convar == gc_sAdminFlag)
 	{
 		strcopy(g_sAdminFlag, sizeof(g_sAdminFlag), newValue);
 	}
@@ -210,24 +210,24 @@ public void OnConfigsExecuted()
 	//Vote
 	gc_sCustomCommandVote.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
-	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	iCount = ExplodeString(sCommands, ", ", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
 	
-	for(int i = 0; i < iCount; i++)
+	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
 			RegConsoleCmd(sCommand, Command_VoteDrunk, "Allows players to vote for a drunk");
 	}
 	
 	//Set
 	gc_sCustomCommandSet.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
-	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	iCount = ExplodeString(sCommands, ", ", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
 	
-	for(int i = 0; i < iCount; i++)
+	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
 			RegConsoleCmd(sCommand, Command_SetDrunk, "Allows the Admin or Warden to set drunk as next round");
 	}
 }
@@ -239,14 +239,14 @@ public void OnConfigsExecuted()
 
 
 //Admin & Warden set Event
-public Action Command_SetDrunk(int client,int args)
+public Action Command_SetDrunk(int client, int args)
 {
 	if (gc_bPlugin.BoolValue) //is plugin enabled?
 	{
-		if(client == 0)
+		if (client == 0)
 		{
 			StartNextRound();
-			if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Drunk was started by groupvoting");
+			if (ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Drunk was started by groupvoting");
 		}
 		else if (warden_iswarden(client)) //is player warden?
 		{
@@ -255,12 +255,12 @@ public Action Command_SetDrunk(int client,int args)
 				char EventDay[64];
 				GetEventDayName(EventDay);
 				
-				if(StrEqual(EventDay, "none", false)) //is an other event running or set?
+				if (StrEqual(EventDay, "none", false)) //is an other event running or set?
 				{
 					if (g_iCoolDown == 0) //is event cooled down?
 					{
 						StartNextRound(); //prepare Event for next round
-						if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event drunken was started by warden %L", client);
+						if (ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event drunken was started by warden %L", client);
 					}
 					else CReplyToCommand(client, "%t %t", "drunk_tag" , "drunk_wait", g_iCoolDown);
 				}
@@ -268,19 +268,19 @@ public Action Command_SetDrunk(int client,int args)
 			}
 			else CReplyToCommand(client, "%t %t", "warden_tag" , "nocscope_setbywarden");
 		}
-		else if (CheckVipFlag(client,g_sAdminFlag))
+		else if (CheckVipFlag(client, g_sAdminFlag))
 		{
 			if (gc_bSetA.BoolValue) //is admin allowed to set?
 			{
 				char EventDay[64];
 				GetEventDayName(EventDay);
 				
-				if(StrEqual(EventDay, "none", false)) //is an other event running or set?
+				if (StrEqual(EventDay, "none", false)) //is an other event running or set?
 				{
 					if (g_iCoolDown == 0) //is event cooled down?
 					{
 						StartNextRound(); //prepare Event for next round;
-						if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event drunken was started by admin %L", client);
+						if (ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event drunken was started by admin %L", client);
 					}
 					else CReplyToCommand(client, "%t %t", "drunk_tag" , "drunk_wait", g_iCoolDown);
 				}
@@ -296,7 +296,7 @@ public Action Command_SetDrunk(int client,int args)
 
 
 //Voting for Event
-public Action Command_VoteDrunk(int client,int args)
+public Action Command_VoteDrunk(int client, int args)
 {
 	char steamid[64];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
@@ -308,7 +308,7 @@ public Action Command_VoteDrunk(int client,int args)
 			char EventDay[64];
 			GetEventDayName(EventDay);
 			
-			if(StrEqual(EventDay, "none", false)) //is an other event running or set?
+			if (StrEqual(EventDay, "none", false)) //is an other event running or set?
 			{
 				if (g_iCoolDown == 0) //is event cooled down?
 				{
@@ -317,12 +317,12 @@ public Action Command_VoteDrunk(int client,int args)
 						int playercount = (GetClientCount(true) / 2);
 						g_iVoteCount++;
 						int Missing = playercount - g_iVoteCount + 1;
-						Format(g_sHasVoted, sizeof(g_sHasVoted), "%s,%s", g_sHasVoted, steamid);
+						Format(g_sHasVoted, sizeof(g_sHasVoted), "%s, %s", g_sHasVoted, steamid);
 						
 						if (g_iVoteCount > playercount) 
 						{
 							StartNextRound(); //prepare Event for next round
-							if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event drunken was started by voting");
+							if (ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event drunken was started by voting");
 						}
 						else CPrintToChatAll("%t %t", "drunk_tag" , "drunk_need", Missing, client);
 					}
@@ -413,7 +413,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 						{
 							TeleportEntity(client, g_fPos, NULL_VECTOR, NULL_VECTOR);
 						}
-						if(gc_bWiggle.BoolValue) DrunkTimer = CreateTimer(1.0, Timer_Drunk, client, TIMER_REPEAT);
+						if (gc_bWiggle.BoolValue) DrunkTimer = CreateTimer(1.0, Timer_Drunk, client, TIMER_REPEAT);
 					}
 				}
 				//Set Start Timer
@@ -431,7 +431,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 					}
 				}
 				
-				CPrintToChatAll("%t %t", "drunk_tag" ,"drunk_rounds", g_iRound, g_iMaxRound);
+				CPrintToChatAll("%t %t", "drunk_tag" , "drunk_rounds", g_iRound, g_iMaxRound);
 			}
 		}
 	}
@@ -442,7 +442,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		char EventDay[64];
 		GetEventDayName(EventDay);
 		
-		if(!StrEqual(EventDay, "none", false))
+		if (!StrEqual(EventDay, "none", false))
 		{
 			g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 		}
@@ -527,8 +527,8 @@ public void OnMapStart()
 	StartDrunk = false;
 	
 	//Precache Sound & Overlay
-	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
-	if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
+	if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
+	if (gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
 }
 
 
@@ -632,33 +632,33 @@ void KillDrunk(int client)
 /*
 public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon) 
 {
-	if(IsDrunk)
+	if (IsDrunk)
 	{
-		if(gc_bInvertX.BoolValue) 
+		if (gc_bInvertX.BoolValue) 
 		{
 			vel[1] = -vel[1]; //Will always equal to the opposite value, according to rules of arithmetic.
 			
-			if(buttons & IN_MOVELEFT) //Fixes walking animations for CS:GO.
+			if (buttons & IN_MOVELEFT) //Fixes walking animations for CS:GO.
 			{
 				buttons &= ~IN_MOVELEFT;
 				buttons |= IN_MOVERIGHT;
 			}
-			else if(buttons & IN_MOVERIGHT)
+			else if (buttons & IN_MOVERIGHT)
 			{
 				buttons &= ~IN_MOVERIGHT;
 				buttons |= IN_MOVELEFT;
 			}
 		}
-		if(gc_bInvertY.BoolValue)
+		if (gc_bInvertY.BoolValue)
 		{
 			vel[0] = -vel[0];
 			
-			if(buttons & IN_FORWARD)
+			if (buttons & IN_FORWARD)
 			{
 				buttons &= ~IN_FORWARD;
 				buttons |= IN_BACK;
 			}
-			else if(buttons & IN_BACK)
+			else if (buttons & IN_BACK)
 			{
 				buttons &= ~IN_BACK;
 				buttons |= IN_FORWARD;
@@ -721,7 +721,7 @@ public Action Timer_StartEvent(Handle timer)
 		LoopClients(client)
 		if (IsClientInGame(client) && IsPlayerAlive(client))
 			{
-				PrintCenterText(client,"%t", "drunk_timeuntilstart_nc", g_iTruceTime);
+				PrintCenterText(client, "%t", "drunk_timeuntilstart_nc", g_iTruceTime);
 			}
 		return Plugin_Continue;
 	}
@@ -735,10 +735,10 @@ public Action Timer_StartEvent(Handle timer)
 			if (IsClientInGame(client) && IsPlayerAlive(client))
 			{
 				SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
-				PrintCenterText(client,"%t", "drunk_start_nc");
+				PrintCenterText(client, "%t", "drunk_start_nc");
 			}
-			if(gc_bOverlays.BoolValue) ShowOverlay(client, g_sOverlayStartPath, 5.0);
-			if(gc_bSounds.BoolValue)
+			if (gc_bOverlays.BoolValue) ShowOverlay(client, g_sOverlayStartPath, 5.0);
+			if (gc_bSounds.BoolValue)
 			{
 				EmitSoundToAllAny(g_sSoundStartPath);
 			}
@@ -754,9 +754,9 @@ public Action Timer_StartEvent(Handle timer)
 
 public Action Timer_BeaconOn(Handle timer)
 {
-	LoopValidClients(i,true,false)
+	LoopValidClients(i, true, false)
 	{
-		float random = GetRandomFloat(0.5,4.0);
+		float random = GetRandomFloat(0.5, 4.0);
 		BeaconOn(i, random);
 	}
 	BeaconTimer = null;
@@ -765,12 +765,12 @@ public Action Timer_BeaconOn(Handle timer)
 
 public Action Timer_Drunk(Handle timer, any client)
 {
-	if(IsDrunk && IsValidClient(client,false,false))
+	if (IsDrunk && IsValidClient(client, false, false))
 	{
 		float angs[3];
 		GetClientEyeAngles(client, angs);
 		
-		angs[2] = g_DrunkAngles[GetRandomInt(0,100) % 20];
+		angs[2] = g_DrunkAngles[GetRandomInt(0, 100) % 20];
 		
 		TeleportEntity(client, NULL_VECTOR, angs, NULL_VECTOR);
 		

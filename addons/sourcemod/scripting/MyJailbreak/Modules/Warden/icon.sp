@@ -89,25 +89,25 @@ public void Icon_OnPluginStart()
 
 public int Icon_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
-	if(convar == gc_sIconWardenPath)
+	if (convar == gc_sIconWardenPath)
 	{
 		strcopy(g_sIconWardenPath, sizeof(g_sIconWardenPath), newValue);
-		if(gc_bIconWarden.BoolValue) PrecacheModelAnyDownload(g_sIconWardenPath);
+		if (gc_bIconWarden.BoolValue) PrecacheModelAnyDownload(g_sIconWardenPath);
 	}
-	else if(convar == gc_sIconDeputyPath)
+	else if (convar == gc_sIconDeputyPath)
 	{
 		strcopy(g_sIconDeputyPath, sizeof(g_sIconDeputyPath), newValue);
-		if(gc_bIconDeputy.BoolValue) PrecacheModelAnyDownload(g_sIconDeputyPath);
+		if (gc_bIconDeputy.BoolValue) PrecacheModelAnyDownload(g_sIconDeputyPath);
 	}
-	else if(convar == gc_sIconGuardPath)
+	else if (convar == gc_sIconGuardPath)
 	{
 		strcopy(g_sIconGuardPath, sizeof(g_sIconGuardPath), newValue);
-		if(gc_bIconGuard.BoolValue) PrecacheModelAnyDownload(g_sIconGuardPath);
+		if (gc_bIconGuard.BoolValue) PrecacheModelAnyDownload(g_sIconGuardPath);
 	}
-	else if(convar == gc_sIconPrisonerPath)
+	else if (convar == gc_sIconPrisonerPath)
 	{
 		strcopy(g_sIconPrisonerPath, sizeof(g_sIconPrisonerPath), newValue);
-		if(gc_bIconPrisoner.BoolValue) PrecacheModelAnyDownload(g_sIconPrisonerPath);
+		if (gc_bIconPrisoner.BoolValue) PrecacheModelAnyDownload(g_sIconPrisonerPath);
 	}
 }
 
@@ -143,10 +143,10 @@ public void Icon_OnClientDisconnect(int client)
 
 public void Icon_OnMapStart()
 {
-	if(gc_bIconWarden.BoolValue) PrecacheModelAnyDownload(g_sIconWardenPath);
-	if(gc_bIconGuard.BoolValue) PrecacheModelAnyDownload(g_sIconGuardPath);
-	if(gc_bIconPrisoner.BoolValue) PrecacheModelAnyDownload(g_sIconPrisonerPath);
-	if(gc_bIconDeputy.BoolValue) PrecacheModelAnyDownload(g_sIconDeputyPath);
+	if (gc_bIconWarden.BoolValue) PrecacheModelAnyDownload(g_sIconWardenPath);
+	if (gc_bIconGuard.BoolValue) PrecacheModelAnyDownload(g_sIconGuardPath);
+	if (gc_bIconPrisoner.BoolValue) PrecacheModelAnyDownload(g_sIconPrisonerPath);
+	if (gc_bIconDeputy.BoolValue) PrecacheModelAnyDownload(g_sIconDeputyPath);
 }
 
 
@@ -176,7 +176,7 @@ public void Icon_OnDeputyRemoved(int client)
 
 public Action Timer_Delay(Handle timer, Handle pack)
 {
-	LoopValidClients(i,true,false) SpawnIcon(i);
+	LoopValidClients(i, true, false) SpawnIcon(i);
 }
 
 
@@ -240,7 +240,7 @@ public Action Should_TransmitP(int entity, int client)
 
 stock int SpawnIcon(int client) 
 {
-	if(!IsClientInGame(client) || !IsPlayerAlive(client) || (!gc_bIconWarden.BoolValue && IsClientWarden(client)) || (!gc_bIconGuard.BoolValue && (GetClientTeam(client) == CS_TEAM_CT && !IsClientWarden(client) && !IsClientDeputy(client))) || (!gc_bIconDeputy.BoolValue && (!IsClientWarden(client) && IsClientDeputy(client))) || (!gc_bIconPrisoner.BoolValue && (GetClientTeam(client) == CS_TEAM_T))) return -1;
+	if (!IsClientInGame(client) || !IsPlayerAlive(client) || (!gc_bIconWarden.BoolValue && IsClientWarden(client)) || (!gc_bIconGuard.BoolValue && (GetClientTeam(client) == CS_TEAM_CT && !IsClientWarden(client) && !IsClientDeputy(client))) || (!gc_bIconDeputy.BoolValue && (!IsClientWarden(client) && IsClientDeputy(client))) || (!gc_bIconPrisoner.BoolValue && (GetClientTeam(client) == CS_TEAM_T))) return -1;
 	
 	RemoveIcon(client);
 	
@@ -250,12 +250,12 @@ stock int SpawnIcon(int client)
 
 	g_iIcon[client] = CreateEntityByName("env_sprite");
 
-	if(!g_iIcon[client]) return -1;
+	if (!g_iIcon[client]) return -1;
 	char iconbuffer[256];
-	if(IsClientWarden(client)) Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconWardenPath);
-	else if(IsClientDeputy(client)) Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconDeputyPath);
-	else if(GetClientTeam(client) == CS_TEAM_CT) Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconGuardPath);
-	else if(GetClientTeam(client) == CS_TEAM_T) Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconPrisonerPath);
+	if (IsClientWarden(client)) Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconWardenPath);
+	else if (IsClientDeputy(client)) Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconDeputyPath);
+	else if (GetClientTeam(client) == CS_TEAM_CT) Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconGuardPath);
+	else if (GetClientTeam(client) == CS_TEAM_T) Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconPrisonerPath);
 	
 	DispatchKeyValue(g_iIcon[client], "model", iconbuffer);
 	DispatchKeyValue(g_iIcon[client], "classname", "env_sprite");
@@ -272,17 +272,17 @@ stock int SpawnIcon(int client)
 	TeleportEntity(g_iIcon[client], origin, NULL_VECTOR, NULL_VECTOR);
 	SetVariantString(iTarget);
 	AcceptEntityInput(g_iIcon[client], "SetParent", g_iIcon[client], g_iIcon[client], 0);
-	if(IsClientWarden(client)) SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitW);
-	else if(IsClientDeputy(client)) SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitD);
-	else if(GetClientTeam(client) == CS_TEAM_CT)  SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitG);
-	else if(GetClientTeam(client) == CS_TEAM_T)  SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitP);
+	if (IsClientWarden(client)) SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitW);
+	else if (IsClientDeputy(client)) SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitD);
+	else if (GetClientTeam(client) == CS_TEAM_CT)  SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitG);
+	else if (GetClientTeam(client) == CS_TEAM_T)  SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitP);
 	return g_iIcon[client];
 }
 
 
 stock void RemoveIcon(int client) 
 {
-	if(g_iIcon[client] > 0 && IsValidEdict(g_iIcon[client]))
+	if (g_iIcon[client] > 0 && IsValidEdict(g_iIcon[client]))
 	{
 		AcceptEntityInput(g_iIcon[client], "Kill");
 		g_iIcon[client] = -1;

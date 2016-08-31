@@ -58,8 +58,8 @@ public void RandomKill_OnPluginStart()
 	//AutoExecConfig
 	gc_bRandom = AutoExecConfig_CreateConVar("sm_warden_random", "1", "0 - disabled, 1 - enable kill a random t for warden", _, true,  0.0, true, 1.0);
 	gc_bRandomDeputy = AutoExecConfig_CreateConVar("sm_warden_random_deputy", "1", "0 - disabled, 1 - enable kill a random t for deputy, too", _, true,  0.0, true, 1.0);
-	gc_iRandomMode = AutoExecConfig_CreateConVar("sm_warden_random_mode", "2", "1 - all random / 2 - Thunder / 3 - Timebomb / 4 - Firebomb / 5 - NoKill(1,3,4 needs funcommands.smx enabled)", _, true,  1.0, true, 4.0);
-	gc_sCustomCommandRandomKill = AutoExecConfig_CreateConVar("sm_warden_cmds_randomkill", "randomkill,rk,kr", "Set your custom chat commands for become warden(!killrandom (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands))");
+	gc_iRandomMode = AutoExecConfig_CreateConVar("sm_warden_random_mode", "2", "1 - all random / 2 - Thunder / 3 - Timebomb / 4 - Firebomb / 5 - NoKill(1, 3, 4 needs funcommands.smx enabled)", _, true,  1.0, true, 4.0);
+	gc_sCustomCommandRandomKill = AutoExecConfig_CreateConVar("sm_warden_cmds_randomkill", "randomkill, rk, kr", "Set your custom chat commands for become warden(!killrandom (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 }
 
 
@@ -84,7 +84,7 @@ public Action Command_KillMenu(int client, int args)
 			menu1.AddItem("1", info);
 			menu1.ExitBackButton = true;
 			menu1.ExitButton = true;
-			menu1.Display(client,MENU_TIME_FOREVER);
+			menu1.Display(client, MENU_TIME_FOREVER);
 		}
 		else CReplyToCommand(client, "%t %t", "warden_tag" , "warden_notwarden"); 
 	}
@@ -109,12 +109,12 @@ public void RandomKill_OnConfigsExecuted()
 	//Give freeday
 	gc_sCustomCommandRandomKill.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
-	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	iCount = ExplodeString(sCommands, ", ", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
 	
-	for(int i = 0; i < iCount; i++)
+	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
 			RegConsoleCmd(sCommand, Command_KillMenu, "Allows the Warden to kill a random T");
 	}
 }
@@ -173,42 +173,42 @@ public Action PerformSmite(int client, int target)
 
 public int Handler_KillMenu(Menu menu, MenuAction action, int client, int Position)
 {
-	if(action == MenuAction_Select)
+	if (action == MenuAction_Select)
 	{
 		char Item[11];
-		menu.GetItem(Position,Item,sizeof(Item));
+		menu.GetItem(Position, Item, sizeof(Item));
 		int choice = StringToInt(Item);
-		if(choice == 1)
+		if (choice == 1)
 		{
 			if (GetAlivePlayersCount(CS_TEAM_T) > 1)
 			{
 				int i = GetRandomPlayer(CS_TEAM_T);
-				if(i > 0)
+				if (i > 0)
 				{
 					CreateTimer( 1.0, Timer_KillPlayer, i);
 					CPrintToChatAll("%t %t", "warden_tag", "warden_israndom", i); 
-					if(ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Warden %L killed random player %L", client, i);
+					if (ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Warden %L killed random player %L", client, i);
 				}
 			}
 			else CPrintToChatAll("%t %t", "warden_tag", "warden_minrandom"); 
 		}
-		if(g_bMenuClose != null)
+		if (g_bMenuClose != null)
 		{
-			if(!g_bMenuClose)
+			if (!g_bMenuClose)
 			{
 				FakeClientCommand(client, "sm_menu");
 			}
 		}
 		
 	}
-	else if(action == MenuAction_Cancel)
+	else if (action == MenuAction_Cancel)
 	{
-		if(Position == MenuCancel_ExitBack) 
+		if (Position == MenuCancel_ExitBack) 
 		{
 			FakeClientCommand(client, "sm_menu");
 		}
 	}
-	else if(action == MenuAction_End)
+	else if (action == MenuAction_End)
 	{
 		delete menu;
 	}
@@ -222,15 +222,15 @@ public int Handler_KillMenu(Menu menu, MenuAction action, int client, int Positi
 
 public Action Timer_KillPlayer( Handle timer, any client) 
 {
-	if(g_iKillKind == 1)
+	if (g_iKillKind == 1)
 	{
 		int randomnum = GetRandomInt(0, 2);
 		
-		if(randomnum == 0)PerformSmite(0, client);
-		if(randomnum == 1)ServerCommand("sm_timebomb %N 1", client);
-		if(randomnum == 2)ServerCommand("sm_firebomb %N 1", client);
+		if (randomnum == 0)PerformSmite(0, client);
+		if (randomnum == 1)ServerCommand("sm_timebomb %N 1", client);
+		if (randomnum == 2)ServerCommand("sm_firebomb %N 1", client);
 	}
-	else if(g_iKillKind == 2)PerformSmite(0, client);
-	else if(g_iKillKind == 3)ServerCommand("sm_timebomb %N 1", client);
-	else if(g_iKillKind == 4)ServerCommand("sm_firebomb %N 1", client);
+	else if (g_iKillKind == 2)PerformSmite(0, client);
+	else if (g_iKillKind == 3)ServerCommand("sm_timebomb %N 1", client);
+	else if (g_iKillKind == 4)ServerCommand("sm_firebomb %N 1", client);
 }

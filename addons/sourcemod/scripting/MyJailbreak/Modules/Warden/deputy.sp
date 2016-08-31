@@ -88,9 +88,9 @@ public void Deputy_OnPluginStart()
 	gc_bBecomeDeputy = AutoExecConfig_CreateConVar("sm_warden_deputy_become", "1", "0 - disabled, 1 - enable !w / !deputy - player can choose to be deputy.", _, true,  0.0, true, 1.0);
 	gc_bModelDeputy = AutoExecConfig_CreateConVar("sm_warden_deputy_model", "1", "0 - disabled, 1 - enable deputy model", 0, true, 0.0, true, 1.0);
 	gc_sModelPathDeputy = AutoExecConfig_CreateConVar("sm_warden_deputy_model_path", "models/player/custom_player/kuristaja/jailbreak/guard3/guard3.mdl", "Path to the model for deputy.");
-	gc_sCustomCommandDeputy = AutoExecConfig_CreateConVar("sm_warden_cmds_deputy", "d", "Set your custom chat command for open menu(!menu (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands)");
-	gc_sCustomCommandUnDeputy = AutoExecConfig_CreateConVar("sm_warden_cmds_undeputy", "ud", "Set your custom chat command for open menu(!menu (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands)");
-	gc_sCustomCommandRemoveDeputy = AutoExecConfig_CreateConVar("sm_warden_cmds_removedeputy", "rd,fd", "Set your custom chat commands for admins to remove a warden(!removewarden (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands)");
+	gc_sCustomCommandDeputy = AutoExecConfig_CreateConVar("sm_warden_cmds_deputy", "d", "Set your custom chat command for open menu(!menu (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)");
+	gc_sCustomCommandUnDeputy = AutoExecConfig_CreateConVar("sm_warden_cmds_undeputy", "ud", "Set your custom chat command for open menu(!menu (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)");
+	gc_sCustomCommandRemoveDeputy = AutoExecConfig_CreateConVar("sm_warden_cmds_removedeputy", "rd, fd", "Set your custom chat commands for admins to remove a warden(!removewarden (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)");
 	gc_bWardenDead = AutoExecConfig_CreateConVar("sm_warden_deputy_warden_dead", "1", "0 - Deputy will removed on warden death, 1 - Deputy will be new warden", _, true,  0.0, true, 1.0);
 	
 	
@@ -108,10 +108,10 @@ public void Deputy_OnPluginStart()
 //ConVarChange for Strings
 public int Deputy_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
-	if(convar == gc_sModelPathDeputy)
+	if (convar == gc_sModelPathDeputy)
 	{
 		strcopy(g_sModelPathDeputy, sizeof(g_sModelPathDeputy), newValue);
-		if(gc_bModelDeputy.BoolValue) PrecacheModel(g_sModelPathDeputy);
+		if (gc_bModelDeputy.BoolValue) PrecacheModel(g_sModelPathDeputy);
 	}
 }
 
@@ -126,36 +126,36 @@ public void Deputy_OnConfigsExecuted()
 	//Set Deputy
 	gc_sCustomCommandDeputy.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
-	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	iCount = ExplodeString(sCommands, ", ", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
 	
-	for(int i = 0; i < iCount; i++)
+	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
 			RegConsoleCmd(sCommand, Command_SetDeputy, "Allows the warden to choose a deputy or a player to be deputy");
 	}
 	
 	//UnDeputy
 	gc_sCustomCommandUnDeputy.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
-	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	iCount = ExplodeString(sCommands, ", ", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
 	
-	for(int i = 0; i < iCount; i++)
+	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
 			RegConsoleCmd(sCommand, Command_ExitDeputy, "Allows the warden to remove the deputy and the deputy to retire from the position");
 	}
 	
 	//RemoveDeputy
 	gc_sCustomCommandRemoveDeputy.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
-	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	iCount = ExplodeString(sCommands, ", ", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
 	
-	for(int i = 0; i < iCount; i++)
+	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
 			RegAdminCmd(sCommand, AdminCommand_RemoveDeputy, ADMFLAG_GENERIC);
 	}
 }
@@ -169,11 +169,11 @@ public void Deputy_OnConfigsExecuted()
 //Become Deputy
 public Action Command_SetDeputy(int client, int args)
 {
-	if(gc_bDeputy.BoolValue && gc_bPlugin.BoolValue)  //"sm_warden_deputy_enable" "1"
+	if (gc_bDeputy.BoolValue && gc_bPlugin.BoolValue)  //"sm_warden_deputy_enable" "1"
 	{
-		if(g_iDeputy == -1)  //Is there already a deputy
+		if (g_iDeputy == -1)  //Is there already a deputy
 		{
-			if(g_iWarden != -1)  //Is there a warden
+			if (g_iWarden != -1)  //Is there a warden
 			{
 				if ((gc_bBecomeDeputy.BoolValue && !IsClientWarden(client)) || (gc_bSetDeputy.BoolValue && IsClientWarden(client)))  //"sm_warden_deputy_become" "1"
 				{
@@ -181,7 +181,7 @@ public Action Command_SetDeputy(int client, int args)
 					{
 						if (IsPlayerAlive(client))  //Alive?
 						{
-							if(!IsClientWarden(client)) SetTheDeputy(client);
+							if (!IsClientWarden(client)) SetTheDeputy(client);
 							else Menu_SetDeputy(client);
 						}
 						else CPrintToChat(client, "%t %t", "warden_tag" , "warden_deputy_playerdead");
@@ -202,23 +202,23 @@ public Action Command_SetDeputy(int client, int args)
 //Exit / Retire Deputy
 public Action Command_ExitDeputy(int client, int args) 
 {
-	if(gc_bDeputy.BoolValue && gc_bPlugin.BoolValue)  //"sm_warden_deputy_enable" "1"
+	if (gc_bDeputy.BoolValue && gc_bPlugin.BoolValue)  //"sm_warden_deputy_enable" "1"
 	{
-		if(IsClientDeputy(client))  //Is client the deputy
+		if (IsClientDeputy(client))  //Is client the deputy
 		{
 			RemoveTheDeputy();
 			
 			CPrintToChatAll("%t %t", "warden_tag" , "warden_deputy_retire", client);
-			if(gc_bBetterNotes.BoolValue)
+			if (gc_bBetterNotes.BoolValue)
 			{
 				PrintCenterTextAll("%t", "warden_deputy_retire_nc", client);
 			}
 		}
-		else if(IsClientWarden(client))  //Is client the deputy
+		else if (IsClientWarden(client))  //Is client the deputy
 		{
 			
 			CPrintToChatAll("%t %t", "warden_tag" , "warden_deputy_fired", client, g_iDeputy);
-			if(gc_bBetterNotes.BoolValue)
+			if (gc_bBetterNotes.BoolValue)
 			{
 				PrintCenterTextAll("%t", "warden_deputy_fired_nc", client, g_iDeputy);
 			}
@@ -233,14 +233,14 @@ public Action Command_ExitDeputy(int client, int args)
 //Remove Deputy for Admins
 public Action AdminCommand_RemoveDeputy(int client, int args)
 {
-	if(gc_bDeputy.BoolValue && gc_bPlugin.BoolValue)  //"sm_warden_deputy_enable" "1"
+	if (gc_bDeputy.BoolValue && gc_bPlugin.BoolValue)  //"sm_warden_deputy_enable" "1"
 	{
-		if(g_iDeputy != -1)  //Is there a warden to remove
+		if (g_iDeputy != -1)  //Is there a warden to remove
 		{
 			CPrintToChatAll("%t %t", "warden_tag" , "warden_deputy_removed", client, g_iDeputy);  // if client is console !=
-			if(gc_bBetterNotes.BoolValue) PrintCenterTextAll("%t", "warden_deputy_removed_nc", client, g_iDeputy);
+			if (gc_bBetterNotes.BoolValue) PrintCenterTextAll("%t", "warden_deputy_removed_nc", client, g_iDeputy);
 			
-			if(ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Admin %L removed player %L as Deputy", client, g_iDeputy);
+			if (ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Admin %L removed player %L as Deputy", client, g_iDeputy);
 			
 			RemoveTheDeputy();
 		}
@@ -259,23 +259,23 @@ public void Deputy_Event_PlayerDeath(Event event, const char[] name, bool dontBr
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));  //Get the dead clients id
 	
-	if(IsClientDeputy(client))  //The Deputy is dead
+	if (IsClientDeputy(client))  //The Deputy is dead
 	{
 		Forward_OnDeputyRemoved(client);
 		
 		CPrintToChatAll("%t %t", "warden_tag" , "warden_deputy_dead", client);
-		if(gc_bBetterNotes.BoolValue)
+		if (gc_bBetterNotes.BoolValue)
 		{
 			PrintCenterTextAll("%t", "warden_deputy_dead_nc", client);
 		}
 		g_iLastDeputy = g_iDeputy;
 		g_iDeputy = -1;
 	}
-	if(IsClientWarden(client))  //The Warden changed team
+	if (IsClientWarden(client))  //The Warden changed team
 	{
-		if(g_iDeputy != -1)
+		if (g_iDeputy != -1)
 		{
-			if(gc_bWardenDead.BoolValue) CreateTimer (0.5, Timer_DeputyNewWarden);
+			if (gc_bWardenDead.BoolValue) CreateTimer (0.5, Timer_DeputyNewWarden);
 		}
 	}
 }
@@ -286,21 +286,21 @@ public void Deputy_Event_PlayerTeam(Event event, const char[] name, bool dontBro
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));  //Get the clients id
 	
-	if(IsClientDeputy(client))  //The Deputy changed team
+	if (IsClientDeputy(client))  //The Deputy changed team
 	{
 		RemoveTheDeputy();
 		
 		CPrintToChatAll("%t %t", "warden_tag" , "warden_deputy_retire", client);
-		if(gc_bBetterNotes.BoolValue)
+		if (gc_bBetterNotes.BoolValue)
 		{
 			PrintCenterTextAll("%t", "warden_deputy_retire_nc", client);
 		}
 	}
-	if(IsClientWarden(client))  //The Warden changed team
+	if (IsClientWarden(client))  //The Warden changed team
 	{
-		if(g_iDeputy != -1)
+		if (g_iDeputy != -1)
 		{
-			if(gc_bWardenDead.BoolValue) CreateTimer (0.5, Timer_DeputyNewWarden);
+			if (gc_bWardenDead.BoolValue) CreateTimer (0.5, Timer_DeputyNewWarden);
 		}
 	}
 }
@@ -309,9 +309,9 @@ public void Deputy_Event_PlayerTeam(Event event, const char[] name, bool dontBro
 //Round Start Post
 public void Deputy_Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
-	if(!gc_bDeputy.BoolValue || !gc_bPlugin.BoolValue)
+	if (!gc_bDeputy.BoolValue || !gc_bPlugin.BoolValue)
 	{
-		if(g_iDeputy != -1)
+		if (g_iDeputy != -1)
 		{
 			CreateTimer(0.1, Timer_RemoveColor, g_iDeputy);
 			SetEntityModel(g_iDeputy, g_sModelDeputyPathPrevious);
@@ -323,9 +323,9 @@ public void Deputy_Event_RoundStart(Event event, const char[] name, bool dontBro
 	char EventDay[64];
 	GetEventDayName(EventDay);
 	
-	if(!StrEqual(EventDay, "none", false) || !gc_bStayWarden.BoolValue)
+	if (!StrEqual(EventDay, "none", false) || !gc_bStayWarden.BoolValue)
 	{
-		if(g_iDeputy != -1)
+		if (g_iDeputy != -1)
 		{
 			CreateTimer( 0.1, Timer_RemoveColor, g_iDeputy);
 			SetEntityModel(g_iDeputy, g_sModelDeputyPathPrevious);
@@ -335,9 +335,9 @@ public void Deputy_Event_RoundStart(Event event, const char[] name, bool dontBro
 			
 		}
 	}
-	if(g_iDeputy != -1)
+	if (g_iDeputy != -1)
 	{
-		if(gc_bModelDeputy.BoolValue) SetEntityModel(g_iDeputy, g_sModelPathDeputy);
+		if (gc_bModelDeputy.BoolValue) SetEntityModel(g_iDeputy, g_sModelPathDeputy);
 	}
 }
 
@@ -357,10 +357,10 @@ public void Deputy_OnMapStart()
 //Deputy disconnect
 public void Deputy_OnClientDisconnect(int client)
 {
-	if(IsClientDeputy(client))
+	if (IsClientDeputy(client))
 	{
 		CPrintToChatAll("%t %t", "warden_tag" , "warden_deputy_disconnected", client);
-		if(gc_bBetterNotes.BoolValue)
+		if (gc_bBetterNotes.BoolValue)
 		{
 			PrintCenterTextAll("%t", "warden_deputy_disconnected_nc", client);
 		}
@@ -369,11 +369,11 @@ public void Deputy_OnClientDisconnect(int client)
 		g_iLastDeputy = -1;
 		g_iDeputy = -1;
 	}
-	if(IsClientWarden(client))  //The Warden changed team
+	if (IsClientWarden(client))  //The Warden changed team
 	{
-		if(g_iDeputy != -1)
+		if (g_iDeputy != -1)
 		{
-			if(gc_bWardenDead.BoolValue) CreateTimer (0.5, Timer_DeputyNewWarden);
+			if (gc_bWardenDead.BoolValue) CreateTimer (0.5, Timer_DeputyNewWarden);
 		}
 	}
 }
@@ -395,7 +395,7 @@ public void Deputy_OnMapEnd()
 //warden removed
 public void Deputy_OnWardenRemoved(int client)
 {
-	if(g_iDeputy != -1)
+	if (g_iDeputy != -1)
 	{
 		RemoveTheDeputy();
 	}
@@ -405,9 +405,9 @@ public void Deputy_OnWardenRemoved(int client)
 //warden retire
 public void Deputy_OnWardenRemovedBySelf(int client)
 {
-	if(g_iDeputy != -1)
+	if (g_iDeputy != -1)
 	{
-		if(gc_bWardenDead.BoolValue) CreateTimer (0.5, Timer_DeputyNewWarden);
+		if (gc_bWardenDead.BoolValue) CreateTimer (0.5, Timer_DeputyNewWarden);
 	}
 }
 
@@ -426,7 +426,7 @@ public void Deputy_OnWardenCreation(int client)
 
 public Action Timer_DeputyNewWarden(Handle timer)
 {
-	if(IsValidClient(g_iDeputyDelay,true,false))
+	if (IsValidClient(g_iDeputyDelay, true, false))
 	{
 		SetTheWarden(g_iDeputyDelay);
 	}
@@ -435,10 +435,10 @@ public Action Timer_DeputyNewWarden(Handle timer)
 
 public Action Timer_NoDeputy(Handle timer)
 {
-	if(g_iDeputy == -1)
+	if (g_iDeputy == -1)
 	{
-		if(gc_bSetDeputy.BoolValue) CPrintToChat(g_iWarden, "%t %t", "warden_tag" , "warden_deputy_set");
-		if(gc_bBecomeDeputy.BoolValue) CPrintToChatAll("%t %t", "warden_tag" , "warden_deputy_become");
+		if (gc_bSetDeputy.BoolValue) CPrintToChat(g_iWarden, "%t %t", "warden_tag" , "warden_deputy_set");
+		if (gc_bBecomeDeputy.BoolValue) CPrintToChatAll("%t %t", "warden_tag" , "warden_deputy_become");
 	}
 }
 
@@ -452,16 +452,16 @@ public Action Timer_NoDeputy(Handle timer)
 //Set a new deputy
 void SetTheDeputy(int client)
 {
-	if(gc_bDeputy.BoolValue && gc_bPlugin.BoolValue)
+	if (gc_bDeputy.BoolValue && gc_bPlugin.BoolValue)
 	{
 		CPrintToChatAll("%t %t", "warden_tag" , "warden_deputy_new", client);
-		if(gc_bBetterNotes.BoolValue) PrintCenterTextAll("%t", "warden_deputy_new_nc", client);
+		if (gc_bBetterNotes.BoolValue) PrintCenterTextAll("%t", "warden_deputy_new_nc", client);
 		
 		g_iDeputy = client;
 		g_iDeputyDelay = g_iDeputy;
 		
 		GetEntPropString(client, Prop_Data, "m_ModelName", g_sModelDeputyPathPrevious, sizeof(g_sModelDeputyPathPrevious));
-		if(gc_bModelDeputy.BoolValue)
+		if (gc_bModelDeputy.BoolValue)
 		{
 			SetEntityModel(client, g_sModelPathDeputy);
 		}
@@ -503,49 +503,49 @@ void Menu_SetDeputy(int client)
 	menu.SetTitle(info1);
 	LoopValidClients(i, true, false)
 	{
-		if(GetClientTeam(i) == CS_TEAM_CT && !IsClientWarden(i))
+		if (GetClientTeam(i) == CS_TEAM_CT && !IsClientWarden(i))
 		{
 			char userid[11];
 			char username[MAX_NAME_LENGTH];
 			IntToString(GetClientUserId(i), userid, sizeof(userid));
 			Format(username, sizeof(username), "%N", i);
-			menu.AddItem(userid,username);
+			menu.AddItem(userid, username);
 		}
 	}
 	menu.ExitBackButton = true;
 	menu.ExitButton = true;
-	menu.Display(client,MENU_TIME_FOREVER);
+	menu.Display(client, MENU_TIME_FOREVER);
 }
 
 
 //Handler set (new) Deputy menu with overwrite/remove query
 public int Handler_SetDeputy(Menu menu, MenuAction action, int client, int Position)
 {
-	if(action == MenuAction_Select)
+	if (action == MenuAction_Select)
 	{
 		char Item[11];
-		menu.GetItem(Position,Item,sizeof(Item));
+		menu.GetItem(Position, Item, sizeof(Item));
 		
 		LoopValidClients(i, true, false)
 		{
-			if(GetClientTeam(i) == CS_TEAM_CT && IsClientDeputy(i) == false)
+			if (GetClientTeam(i) == CS_TEAM_CT && IsClientDeputy(i) == false)
 			{
 				int userid = GetClientUserId(i);
-				if(userid == StringToInt(Item))
+				if (userid == StringToInt(Item))
 				{
 					SetTheDeputy(i);
 				}
 			}
 		}
 	}
-	else if(action == MenuAction_Cancel)
+	else if (action == MenuAction_Cancel)
 	{
-		if(Position == MenuCancel_ExitBack) 
+		if (Position == MenuCancel_ExitBack) 
 		{
 			FakeClientCommand(client, "sm_menu");
 		}
 	}
-	else if(action == MenuAction_End)
+	else if (action == MenuAction_End)
 	{
 		delete menu;
 	}
@@ -559,7 +559,7 @@ public int Handler_SetDeputy(Menu menu, MenuAction action, int client, int Posit
 
 stock bool IsClientDeputy(int client)
 {
-	if(client != g_iDeputy)
+	if (client != g_iDeputy)
 	{
 		return false;
 	}
@@ -575,7 +575,7 @@ stock bool IsClientDeputy(int client)
 //Booleans Exist Deputy
 public int Native_ExistDeputy(Handle plugin, int argc)
 {
-	if(g_iDeputy == -1)
+	if (g_iDeputy == -1)
 	{
 		return false;
 	}
@@ -588,10 +588,10 @@ public int Native_IsDeputy(Handle plugin, int argc)
 {
 	int client = GetNativeCell(1);
 	
-	if(!IsClientInGame(client) && !IsClientConnected(client))
+	if (!IsClientInGame(client) && !IsClientConnected(client))
 		ThrowNativeError(SP_ERROR_INDEX, "Client index %i is invalid", client);
 	
-	if(IsClientDeputy(client))
+	if (IsClientDeputy(client))
 		return true;
 	
 	return false;
@@ -606,7 +606,7 @@ public int Native_SetDeputy(Handle plugin, int argc)
 	if (!IsClientInGame(client) && !IsClientConnected(client))
 		ThrowNativeError(SP_ERROR_INDEX, "Client index %i is invalid", client);
 	
-	if(g_iDeputy == -1)
+	if (g_iDeputy == -1)
 		SetTheDeputy(client);
 }
 
@@ -619,7 +619,7 @@ public int Native_RemoveDeputy(Handle plugin, int argc)
 	if (!IsClientInGame(client) && !IsClientConnected(client))
 		ThrowNativeError(SP_ERROR_INDEX, "Client index %i is invalid", client);
 	
-	if(IsClientDeputy(client))
+	if (IsClientDeputy(client))
 		RemoveTheDeputy();
 }
 

@@ -50,12 +50,12 @@ public void Color_OnPluginStart()
 	//AutoExecConfig
 	gc_bColor = AutoExecConfig_CreateConVar("sm_warden_color_enable", "1", "0 - disabled, 1 - enable warden colored", _, true,  0.0, true, 1.0);
 	gc_bWardenColorRandom = AutoExecConfig_CreateConVar("sm_warden_color_random", "1", "0 - disabled, 1 - enable warden rainbow colored", _, true,  0.0, true, 1.0);
-	gc_iWardenColorRed = AutoExecConfig_CreateConVar("sm_warden_color_red", "0","What color to turn the warden into (set R, G and B values to 255 to disable) (Rgb): x - red value", _, true, 0.0, true, 255.0);
-	gc_iWardenColorGreen = AutoExecConfig_CreateConVar("sm_warden_color_green", "0","What color to turn the warden into (rGb): x - green value", _, true, 0.0, true, 255.0);
-	gc_iWardenColorBlue = AutoExecConfig_CreateConVar("sm_warden_color_blue", "255","What color to turn the warden into (rgB): x - blue value", _, true, 0.0, true, 255.0);
-	gc_iDeputyColorRed = AutoExecConfig_CreateConVar("sm_warden_color_red_deputy", "0","What color to turn the deputy into (set R, G and B values to 255 to disable) (Rgb): x - red value", _, true, 0.0, true, 255.0);
-	gc_iDeputyColorGreen = AutoExecConfig_CreateConVar("sm_warden_color_green_deputy", "155","What color to turn the deputy into (rGb): x - green value", _, true, 0.0, true, 255.0);
-	gc_iDeputyColorBlue = AutoExecConfig_CreateConVar("sm_warden_color_blue_deputy", "255","What color to turn the deputy into (rgB): x - blue value", _, true, 0.0, true, 255.0);
+	gc_iWardenColorRed = AutoExecConfig_CreateConVar("sm_warden_color_red", "0", "What color to turn the warden into (set R, G and B values to 255 to disable) (Rgb): x - red value", _, true, 0.0, true, 255.0);
+	gc_iWardenColorGreen = AutoExecConfig_CreateConVar("sm_warden_color_green", "0", "What color to turn the warden into (rGb): x - green value", _, true, 0.0, true, 255.0);
+	gc_iWardenColorBlue = AutoExecConfig_CreateConVar("sm_warden_color_blue", "255", "What color to turn the warden into (rgB): x - blue value", _, true, 0.0, true, 255.0);
+	gc_iDeputyColorRed = AutoExecConfig_CreateConVar("sm_warden_color_red_deputy", "0", "What color to turn the deputy into (set R, G and B values to 255 to disable) (Rgb): x - red value", _, true, 0.0, true, 255.0);
+	gc_iDeputyColorGreen = AutoExecConfig_CreateConVar("sm_warden_color_green_deputy", "155", "What color to turn the deputy into (rGb): x - green value", _, true, 0.0, true, 255.0);
+	gc_iDeputyColorBlue = AutoExecConfig_CreateConVar("sm_warden_color_blue_deputy", "255", "What color to turn the deputy into (rgB): x - blue value", _, true, 0.0, true, 255.0);
 }
 
 
@@ -92,18 +92,18 @@ public void Color_OnDeputyRemoved(int client)
 ******************************************************************************/
 
 
-public Action Timer_WardenFixColor(Handle timer,any client)
+public Action Timer_WardenFixColor(Handle timer, any client)
 {
-	if(IsValidClient(client, false, false))
+	if (IsValidClient(client, false, false))
 	{
-		if(IsClientWarden(client) || IsClientDeputy(client))
+		if (IsClientWarden(client) || IsClientDeputy(client))
 		{
-			if(gc_bPlugin.BoolValue)
+			if (gc_bPlugin.BoolValue)
 			{
-				if(gc_bColor.BoolValue)
+				if (gc_bColor.BoolValue)
 				{
-					if(IsClientDeputy(client)) SetEntityRenderColor(client, gc_iDeputyColorRed.IntValue, gc_iDeputyColorGreen.IntValue, gc_iDeputyColorBlue.IntValue, 255);
-					else if(gc_bWardenColorRandom.BoolValue)
+					if (IsClientDeputy(client)) SetEntityRenderColor(client, gc_iDeputyColorRed.IntValue, gc_iDeputyColorGreen.IntValue, gc_iDeputyColorBlue.IntValue, 255);
+					else if (gc_bWardenColorRandom.BoolValue)
 					{
 						int i = GetRandomInt(1, 7);
 						SetEntityRenderColor(client, g_iColors[i][0], g_iColors[i][1], g_iColors[i][2], g_iColors[i][3]);

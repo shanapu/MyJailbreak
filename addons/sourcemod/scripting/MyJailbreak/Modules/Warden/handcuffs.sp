@@ -116,27 +116,27 @@ public void HandCuffs_OnPluginStart()
 
 public int HandCuffs_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
-	if(convar == gc_sSoundCuffsPath)
+	if (convar == gc_sSoundCuffsPath)
 	{
 		strcopy(g_sSoundCuffsPath, sizeof(g_sSoundCuffsPath), newValue);
-		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundCuffsPath);
+		if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundCuffsPath);
 	}
-	else if(convar == gc_sSoundBreakCuffsPath)
+	else if (convar == gc_sSoundBreakCuffsPath)
 	{
 		strcopy(g_sSoundBreakCuffsPath, sizeof(g_sSoundBreakCuffsPath), newValue);
-		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundBreakCuffsPath);
+		if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundBreakCuffsPath);
 	}
-	else if(convar == gc_sSoundUnLockCuffsPath)
+	else if (convar == gc_sSoundUnLockCuffsPath)
 	{
 		strcopy(g_sSoundUnLockCuffsPath, sizeof(g_sSoundUnLockCuffsPath), newValue);
-		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundUnLockCuffsPath);
+		if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundUnLockCuffsPath);
 	}
-	else if(convar == gc_sOverlayCuffsPath)
+	else if (convar == gc_sOverlayCuffsPath)
 	{
 		strcopy(g_sOverlayCuffsPath, sizeof(g_sOverlayCuffsPath), newValue);
-		if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayCuffsPath);
+		if (gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayCuffsPath);
 	}
-	else if(convar == gc_sAdminFlagCuffs)
+	else if (convar == gc_sAdminFlagCuffs)
 	{
 		strcopy(g_sAdminFlagCuffs, sizeof(g_sAdminFlagCuffs), newValue);
 	}
@@ -150,7 +150,7 @@ public int HandCuffs_OnSettingChanged(Handle convar, const char[] oldValue, cons
 
 public void HandCuffs_Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
-	if(gc_bHandCuff.BoolValue && !IsLR && gc_bStayWarden.BoolValue)
+	if (gc_bHandCuff.BoolValue && !IsLR && gc_bStayWarden.BoolValue)
 	{
 		if (g_iWarden != -1) GivePlayerItem(g_iWarden, "weapon_taser");
 		if (g_iDeputy != -1) GivePlayerItem(g_iDeputy, "weapon_taser");
@@ -181,7 +181,7 @@ public void HandCuffs_Event_PlayerTeamDeath(Event event, const char[] name, bool
 {
 	int client = GetClientOfUserId(event.GetInt("userid")); // Get the dead clients id
 	
-	if(g_bCuffed[client])
+	if (g_bCuffed[client])
 	{
 		g_iCuffed--;
 		g_bCuffed[client] = false;
@@ -196,7 +196,7 @@ public void HandCuffs_Event_WeaponFire(Event event, char [] name, bool dontBroad
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));
 	
-	if(gc_bPlugin.BoolValue && gc_bHandCuff.BoolValue && (IsClientWarden(client) || (IsClientDeputy(client) && gc_bHandCuffDeputy.BoolValue)) && ((g_iPlayerHandCuffs[client] != 0) || ((g_iPlayerHandCuffs[client] == 0) && (g_iCuffed > 0))))
+	if (gc_bPlugin.BoolValue && gc_bHandCuff.BoolValue && (IsClientWarden(client) || (IsClientDeputy(client) && gc_bHandCuffDeputy.BoolValue)) && ((g_iPlayerHandCuffs[client] != 0) || ((g_iPlayerHandCuffs[client] == 0) && (g_iCuffed > 0))))
 	{
 		char sWeapon[64];
 		event.GetString("weapon", sWeapon, sizeof(sWeapon));
@@ -210,7 +210,7 @@ public void HandCuffs_Event_WeaponFire(Event event, char [] name, bool dontBroad
 
 public void HandCuffs_Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 {
-	LoopClients(i) if(g_bCuffed[i]) FreeEm(i, 0);
+	LoopClients(i) if (g_bCuffed[i]) FreeEm(i, 0);
 }
 
 
@@ -232,7 +232,7 @@ public Action HandCuffs_OnPlayerRunCmd(int client, int &buttons, int &impulse, f
 				float distance = Entity_GetDistance(client, Target);
 				distance = Math_UnitsToMeters(distance);
 				
-				if((gc_iHandCuffsDistance.IntValue > distance) && !Client_IsLookingAtWall(client, Entity_GetDistance(client, Target)+40.0))
+				if ((gc_iHandCuffsDistance.IntValue > distance) && !Client_IsLookingAtWall(client, Entity_GetDistance(client, Target)+40.0))
 				{
 					float origin[3];
 					GetClientAbsOrigin(client, origin);
@@ -256,23 +256,23 @@ public Action HandCuffs_OnPlayerRunCmd(int client, int &buttons, int &impulse, f
 
 public Action HandCuffs_OnTakedamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &weapon, float damageForce[3], float damagePosition[3], int damagecustom)
 {
-	if(!IsValidClient(victim, true, false) || attacker == victim || !IsValidClient(attacker, true, false)) return Plugin_Continue;
+	if (!IsValidClient(victim, true, false) || attacker == victim || !IsValidClient(attacker, true, false)) return Plugin_Continue;
 	
 	char sWeapon[32];
-	if(IsValidEntity(weapon)) GetEntityClassname(weapon, sWeapon, sizeof(sWeapon));
+	if (IsValidEntity(weapon)) GetEntityClassname(weapon, sWeapon, sizeof(sWeapon));
 	
-	if(g_bCuffed[attacker]) return Plugin_Handled;
+	if (g_bCuffed[attacker]) return Plugin_Handled;
 	
-	if(!gc_bPlugin.BoolValue || !gc_bHandCuff.BoolValue || (!IsClientWarden(attacker) && !IsClientDeputy(attacker)) || (IsClientDeputy(attacker) && !gc_bHandCuffDeputy.BoolValue) || !IsValidEdict(weapon) || (!gc_bHandCuffCT.BoolValue && (GetClientTeam(victim) == CS_TEAM_CT)))
+	if (!gc_bPlugin.BoolValue || !gc_bHandCuff.BoolValue || (!IsClientWarden(attacker) && !IsClientDeputy(attacker)) || (IsClientDeputy(attacker) && !gc_bHandCuffDeputy.BoolValue) || !IsValidEdict(weapon) || (!gc_bHandCuffCT.BoolValue && (GetClientTeam(victim) == CS_TEAM_CT)))
 	{
 		return Plugin_Continue;
 	}
 	
-	if(!StrEqual(sWeapon, "weapon_taser")) return Plugin_Continue;
+	if (!StrEqual(sWeapon, "weapon_taser")) return Plugin_Continue;
 	
-	if((g_iPlayerHandCuffs[attacker] == 0) && (g_iCuffed == 0)) return Plugin_Continue;
+	if ((g_iPlayerHandCuffs[attacker] == 0) && (g_iCuffed == 0)) return Plugin_Continue;
 	
-	if(g_bCuffed[victim])
+	if (g_bCuffed[victim])
 	{
 		FreeEm(victim, attacker);
 	}
@@ -287,7 +287,7 @@ public void HandCuffs_OnAvailableLR(int Announced)
 	LoopClients(i)
 	{
 		g_iPlayerHandCuffs[i] = 0;
-		if(gc_bHandCuffLR.BoolValue && g_bCuffed[i]) FreeEm(i, 0);
+		if (gc_bHandCuffLR.BoolValue && g_bCuffed[i]) FreeEm(i, 0);
 	}
 	StripZeus();
 }
@@ -319,19 +319,19 @@ public void HandCuffs_OnDeputyRemoved(int client)
 
 public void HandCuffs_OnMapStart()
 {
-	if(gc_bSounds.BoolValue)
+	if (gc_bSounds.BoolValue)
 	{
 		PrecacheSoundAnyDownload(g_sSoundCuffsPath);
 		PrecacheSoundAnyDownload(g_sSoundBreakCuffsPath);
 		PrecacheSoundAnyDownload(g_sSoundUnLockCuffsPath);
 	}
-	if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayCuffsPath);
+	if (gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayCuffsPath);
 }
 
 
 public void HandCuffs_OnClientDisconnect(int client)
 {
-	if(g_bCuffed[client]) g_iCuffed--;
+	if (g_bCuffed[client]) g_iCuffed--;
 }
 
 
@@ -339,7 +339,7 @@ public void HandCuffs_OnMapEnd()
 {
 	LoopClients(i)
 	{
-		if(g_bCuffed[i]) FreeEm(i, 0);
+		if (g_bCuffed[i]) FreeEm(i, 0);
 	}
 }
 
@@ -363,7 +363,7 @@ public void HandCuffs_OnClientPutInServer(int client)
 
 public Action CuffsEm(int client, int attacker)
 {
-	if(g_iPlayerHandCuffs[attacker] > 0)
+	if (g_iPlayerHandCuffs[attacker] > 0)
 	{
 		SetEntityMoveType(client, MOVETYPE_NONE);
 		SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 0.0);
@@ -374,11 +374,11 @@ public Action CuffsEm(int client, int attacker)
 		ShowOverlay(client, g_sOverlayCuffsPath, 0.0);
 		g_iPlayerHandCuffs[attacker]--;
 		g_iCuffed++;
-		if(gc_bSounds)EmitSoundToAllAny(g_sSoundCuffsPath);
+		if (gc_bSounds)EmitSoundToAllAny(g_sSoundCuffsPath);
 		
 		CPrintToChatAll("%t %t", "warden_tag" , "warden_cuffson", attacker, client);
 		CPrintToChat(attacker, "%t %t", "warden_tag" , "warden_cuffsgot", g_iPlayerHandCuffs[attacker]);
-		if(CheckVipFlag(client,g_sAdminFlagCuffs))
+		if (CheckVipFlag(client, g_sAdminFlagCuffs))
 		{
 			CreateTimer (2.5, HasPaperClip, client);
 		}
@@ -395,9 +395,9 @@ public Action FreeEm(int client, int attacker)
 	g_bCuffed[client] = false;
 	CreateTimer( 0.0, DeleteOverlay, client );
 	g_iCuffed--;
-	if(gc_bSounds)StopSoundAny(client,SNDCHAN_AUTO,g_sSoundUnLockCuffsPath);
-	if((attacker != 0) && (g_iCuffed == 0) && (g_iPlayerHandCuffs[attacker] < 1)) SetPlayerWeaponAmmo(attacker, Client_GetActiveWeapon(attacker), _, 0);
-	if(attacker != 0) CPrintToChatAll("%t %t", "warden_tag" , "warden_cuffsoff", attacker, client);
+	if (gc_bSounds)StopSoundAny(client, SNDCHAN_AUTO, g_sSoundUnLockCuffsPath);
+	if ((attacker != 0) && (g_iCuffed == 0) && (g_iPlayerHandCuffs[attacker] < 1)) SetPlayerWeaponAmmo(attacker, Client_GetActiveWeapon(attacker), _, 0);
+	if (attacker != 0) CPrintToChatAll("%t %t", "warden_tag" , "warden_cuffsoff", attacker, client);
 }
 
 
@@ -408,16 +408,16 @@ public Action FreeEm(int client, int attacker)
 
 public Action HasPaperClip(Handle timer, int client)
 {
-	if(g_bCuffed[client])
+	if (g_bCuffed[client])
 	{
-		int paperclip = GetRandomInt(1,gc_iPaperClipGetChance.IntValue);
+		int paperclip = GetRandomInt(1, gc_iPaperClipGetChance.IntValue);
 		float unlocktime = GetRandomFloat(gc_fUnLockTimeMin.FloatValue, gc_fUnLockTimeMax.FloatValue);
-		if(paperclip == 1)
+		if (paperclip == 1)
 		{
 			CPrintToChat(client, "%t", "warden_gotpaperclip");
 			PrintCenterText(client, "%t", "warden_gotpaperclip");
 			CreateTimer (unlocktime, BreakTheseCuffs, client);
-			if(gc_bSounds)EmitSoundToClientAny(client, g_sSoundUnLockCuffsPath);
+			if (gc_bSounds)EmitSoundToClientAny(client, g_sSoundUnLockCuffsPath);
 		}
 	}
 }
@@ -425,14 +425,14 @@ public Action HasPaperClip(Handle timer, int client)
 
 public Action BreakTheseCuffs(Handle timer, int client)
 {
-	if(IsValidClient(client,false,false) && g_bCuffed[client])
+	if (IsValidClient(client, false, false) && g_bCuffed[client])
 	{
-		int unlocked = GetRandomInt(1,gc_iPaperClipUnLockChance.IntValue);
-		if(unlocked == 1)
+		int unlocked = GetRandomInt(1, gc_iPaperClipUnLockChance.IntValue);
+		if (unlocked == 1)
 		{
 			CPrintToChat(client, "%t", "warden_unlock");
 			PrintCenterText(client, "%t", "warden_unlock");
-			if(gc_bSounds)EmitSoundToAllAny(g_sSoundBreakCuffsPath);
+			if (gc_bSounds)EmitSoundToAllAny(g_sSoundBreakCuffsPath);
 			SetEntityMoveType(client, MOVETYPE_WALK);
 			SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
 			SetEntityRenderColor(client, 255, 255, 255, 255);
@@ -456,12 +456,12 @@ public Action BreakTheseCuffs(Handle timer, int client)
 
 stock void StripZeus()
 {
-	LoopValidClients(client, true, false)if((IsClientWarden(client) || (IsClientDeputy(client) && gc_bHandCuffDeputy.BoolValue)))
+	LoopValidClients(client, true, false)if ((IsClientWarden(client) || (IsClientDeputy(client) && gc_bHandCuffDeputy.BoolValue)))
 	{
 		char sWeapon[64];
-		FakeClientCommand(client,"use weapon_taser");
+		FakeClientCommand(client, "use weapon_taser");
 		int weapon = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
-		if(weapon != -1)
+		if (weapon != -1)
 		{
 			GetEntityClassname(weapon, sWeapon, sizeof(sWeapon));
 			if (StrEqual(sWeapon, "weapon_taser"))

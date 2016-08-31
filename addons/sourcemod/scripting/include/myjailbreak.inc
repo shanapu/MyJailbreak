@@ -32,12 +32,12 @@
 
 public SharedPlugin:__pl_myjailbreak =
 {
-	name = "myjailbreak",
-	file = "myjailbreak.smx",
+	name = "myjailbreak", 
+	file = "myjailbreak.smx", 
 	#if defined REQUIRE_PLUGIN
-	required = 1,
+	required = 1, 
 	#else
-	required = 0,
+	required = 0, 
 	#endif
 };
 
@@ -193,7 +193,7 @@ native void BeaconOff(int client);
 //Check for valid clients with bool for bots & dead player 
 stock bool IsValidClient(int client, bool bAllowBots = false, bool bAllowDead = true)
 {
-	if(!(1 <= client <= MaxClients) || !IsClientInGame(client) || (IsFakeClient(client) && !bAllowBots) || IsClientSourceTV(client) || IsClientReplay(client) || (!bAllowDead && !IsPlayerAlive(client)))
+	if (!(1 <= client <= MaxClients) || !IsClientInGame(client) || (IsFakeClient(client) && !bAllowBots) || IsClientSourceTV(client) || IsClientReplay(client) || (!bAllowDead && !IsPlayerAlive(client)))
 	{
 		return false;
 	}
@@ -202,8 +202,8 @@ stock bool IsValidClient(int client, bool bAllowBots = false, bool bAllowDead = 
 
 
 //Easy clean client loops
-#define LoopClients(%1) for(int %1 = 1; %1 <= MaxClients; %1++) if(IsClientInGame(%1))
-#define LoopValidClients(%1,%2,%3) for(int %1 = 1; %1 <= MaxClients; %1++) if(IsValidClient(%1, %2, %3))
+#define LoopClients(%1) for (int %1 = 1; %1 <= MaxClients; %1++) if (IsClientInGame(%1))
+#define LoopValidClients(%1,%2,%3) for (int %1 = 1; %1 <= MaxClients; %1++) if (IsValidClient(%1,%2,%3))
 
 
 //Easy precache & prepare download for decals
@@ -251,13 +251,13 @@ stock void StripAllPlayerWeapons(int client)
 	int weapon;
 	for (int i = 0; i <= 4; i++)
 	{
-		if((weapon = GetPlayerWeaponSlot(client, i)) != -1)
+		if ((weapon = GetPlayerWeaponSlot(client, i)) != -1)
 		{
 			SDKHooks_DropWeapon(client, weapon, NULL_VECTOR, NULL_VECTOR); 
 			AcceptEntityInput(weapon, "Kill"); 
 		}
 	}
-	if((weapon = GetPlayerWeaponSlot(client, CS_SLOT_KNIFE)) != -1)   //strip knife slot 2 times for taser
+	if ((weapon = GetPlayerWeaponSlot(client, CS_SLOT_KNIFE)) != -1)   //strip knife slot 2 times for taser
 	{
 		SDKHooks_DropWeapon(client, weapon, NULL_VECTOR, NULL_VECTOR); 
 		AcceptEntityInput(weapon, "Kill"); 
@@ -268,7 +268,7 @@ stock void StripAllPlayerWeapons(int client)
 //Easy show overlay to a client with lifetime | 0.0 = no auto remove
 stock void ShowOverlay(int client, char [] path, float lifetime) 
 {
-	if(IsValidClient(client, false, true))
+	if (IsValidClient(client, false, true))
 	{
 		int iFlag = GetCommandFlags( "r_screenoverlay" ) & ( ~FCVAR_CHEAT ); 
 		SetCommandFlags( "r_screenoverlay", iFlag ); 
@@ -294,7 +294,7 @@ stock void ShowOverlayAll(char [] path, float deletetime)
 //Remove overlay from a client
 public Action DeleteOverlay( Handle timer, any client ) 
 {
-	if(IsValidClient(client, false, true))
+	if (IsValidClient(client, false, true))
 	{
 		int iFlag = GetCommandFlags( "r_screenoverlay" ) & ( ~FCVAR_CHEAT ); 
 		SetCommandFlags( "r_screenoverlay", iFlag ); 
@@ -304,10 +304,10 @@ public Action DeleteOverlay( Handle timer, any client )
 
 
 //Easy silent change of ConVars - Boolean
-stock void SetCvar(char cvarName[64],int value)
+stock void SetCvar(char cvarName[64], int value)
 {
 	Handle IntCvar = FindConVar(cvarName);
-	if(IntCvar == null) return;
+	if (IntCvar == null) return;
 	
 	int flags = GetConVarFlags(IntCvar);
 	flags &= ~FCVAR_NOTIFY;
@@ -324,7 +324,7 @@ stock void SetCvar(char cvarName[64],int value)
 stock void SetCvarFloat(char cvarName[64], float value)
 {
 	Handle FloatCvar = FindConVar(cvarName);
-	if(FloatCvar == INVALID_HANDLE) return;
+	if (FloatCvar == INVALID_HANDLE) return;
 	
 	new flags = GetConVarFlags(FloatCvar);
 	flags &= ~FCVAR_NOTIFY;
@@ -381,7 +381,7 @@ stock void SetPlayerWeaponAmmo(int client, int weaponEnt, int clip = -1, int amm
 //Remove a players render color
 public Action Timer_RemoveColor( Handle timer, any client ) 
 {
-	if(IsValidClient(client, true, true))
+	if (IsValidClient(client, true, true))
 	{
 		SetEntityRenderColor(client, 255, 255, 255, 255);
 	}
@@ -409,8 +409,8 @@ stock int GetAlivePlayersCount(int team)
 {
 	int iCount, i; iCount = 0;
 	
-	for( i = 1; i <= MaxClients; i++ )
-		if(IsValidClient(i,true,false) && !IsClientRebel(i) && GetClientTeam( i ) == team )
+	for ( i = 1; i <= MaxClients; i++ )
+		if (IsValidClient(i, true, false) && !IsClientRebel(i) && GetClientTeam( i ) == team )
 		iCount++;
 	
 	return iCount;
@@ -421,7 +421,7 @@ stock int GetAlivePlayersCount(int team)
 stock int GetAliveTeamCount(int team)
 {
 	int number = 0;
-	LoopClients(i) if(IsPlayerAlive(i) && GetClientTeam(i) == team) number++;
+	LoopClients(i) if (IsPlayerAlive(i) && GetClientTeam(i) == team) number++;
 	return number;
 }
 
@@ -448,7 +448,7 @@ stock int GetLastAlive(int team)
 	int clientCount = 0;
 	int client;
 	
-	LoopValidClients(i,true,false) if(GetClientTeam(i) == team)
+	LoopValidClients(i, true, false) if (GetClientTeam(i) == team)
 	{
 		clientCount++;
 		client = i;
@@ -460,7 +460,7 @@ stock int GetLastAlive(int team)
 //Get a player for a certain admin flag
 stock bool CheckVipFlag(int client, const char[] flagsNeed)
 {
-	if((GetUserFlagBits(client) & ReadFlagString(flagsNeed) == ReadFlagString(flagsNeed)) || (GetUserFlagBits(client) & ADMFLAG_ROOT))
+	if ((GetUserFlagBits(client) & ReadFlagString(flagsNeed) == ReadFlagString(flagsNeed)) || (GetUserFlagBits(client) & ADMFLAG_ROOT))
 	{
 		return true;
 	}

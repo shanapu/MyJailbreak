@@ -74,14 +74,14 @@ int g_iSmokeSprite;
 int g_iLastButtons[MAXPLAYERS+1];
 int g_iColors[8][4] = 
 {
-	{255,255,255,255},  //white
-	{255,0,0,255},  //red
-	{20,255,20,255},  //green
-	{0,65,255,255},  //blue
-	{255,255,0,255},  //yellow
-	{0,255,255,255},  //cyan
-	{255,0,255,255},  //magenta
-	{255,80,0,255}  //orange
+	{255, 255, 255, 255},  //white
+	{255, 0, 0, 255},  //red
+	{20, 255, 20, 255},  //green
+	{0, 65, 255, 255},  //blue
+	{255, 255, 0, 255},  //yellow
+	{0, 255, 255, 255},  //cyan
+	{255, 0, 255, 255},  //magenta
+	{255, 80, 0, 255}  //orange
 };
 
 
@@ -134,10 +134,10 @@ char g_sMyJBLogFile[PLATFORM_MAX_PATH];
 
 //Info
 public Plugin myinfo = {
-	name = "MyJailbreak - Warden",
-	author = "shanapu, ecca, ESKO & .#zipcore",
-	description = "Jailbreak Warden script",
-	version = PLUGIN_VERSION,
+	name = "MyJailbreak - Warden", 
+	author = "shanapu, ecca, ESKO & .#zipcore", 
+	description = "Jailbreak Warden script", 
+	version = PLUGIN_VERSION, 
 	url = URL_LINK
 };
 
@@ -177,11 +177,11 @@ public void OnPluginStart()
 	
 	AutoExecConfig_CreateConVar("sm_warden_version", PLUGIN_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_warden_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true,  0.0, true, 1.0);
-	gc_sCustomCommandWarden = AutoExecConfig_CreateConVar("sm_warden_cmds_become", "w,simon", "Set your custom chat commands for become warden(!warden (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands))");
-	gc_sCustomCommandUnWarden = AutoExecConfig_CreateConVar("sm_warden_cmds_retire", "uw,unsimon", "Set your custom chat commands for retire from warden(!unwarden (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands))");
-	gc_sCustomCommandVetoWarden = AutoExecConfig_CreateConVar("sm_warden_cmds_veto", "vw,votewarden", "Set your custom chat commands for vote against warden(!vetowarden (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands))");
-	gc_sCustomCommandSetWarden = AutoExecConfig_CreateConVar("sm_warden_cmds_set", "sw,newwarden", "Set your custom chat commands for admins to set a new warden(!setwarden (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands))");
-	gc_sCustomCommandRemoveWarden = AutoExecConfig_CreateConVar("sm_warden_cmds_remove", "rw,firewarden,fw", "Set your custom chat commands for admins to remove a warden(!removewarden (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands)");
+	gc_sCustomCommandWarden = AutoExecConfig_CreateConVar("sm_warden_cmds_become", "w, simon", "Set your custom chat commands for become warden(!warden (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
+	gc_sCustomCommandUnWarden = AutoExecConfig_CreateConVar("sm_warden_cmds_retire", "uw, unsimon", "Set your custom chat commands for retire from warden(!unwarden (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
+	gc_sCustomCommandVetoWarden = AutoExecConfig_CreateConVar("sm_warden_cmds_veto", "vw, votewarden", "Set your custom chat commands for vote against warden(!vetowarden (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
+	gc_sCustomCommandSetWarden = AutoExecConfig_CreateConVar("sm_warden_cmds_set", "sw, newwarden", "Set your custom chat commands for admins to set a new warden(!setwarden (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
+	gc_sCustomCommandRemoveWarden = AutoExecConfig_CreateConVar("sm_warden_cmds_remove", "rw, firewarden, fw", "Set your custom chat commands for admins to remove a warden(!removewarden (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)");
 	gc_bBecomeWarden = AutoExecConfig_CreateConVar("sm_warden_become", "1", "0 - disabled, 1 - enable !w / !warden - player can choose to be warden. If disabled you should need sm_warden_choose_random 1", _, true,  0.0, true, 1.0);
 	gc_bChooseRandom = AutoExecConfig_CreateConVar("sm_warden_choose_random", "0", "0 - disabled, 1 - enable pick random warden if there is still no warden after sm_warden_choose_time", _, true,  0.0, true, 1.0);
 	gc_fRandomTimer = AutoExecConfig_CreateConVar("sm_warden_choose_time", "45.0", "Time in seconds a random warden will picked when no warden was set. need sm_warden_choose_random 1", _, true,  1.0);
@@ -253,20 +253,20 @@ public void OnPluginStart()
 //ConVarChange for Strings
 public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
-	if(convar == gc_sWarden)
+	if (convar == gc_sWarden)
 	{
 		strcopy(g_sWarden, sizeof(g_sWarden), newValue);
-		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sWarden);
+		if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sWarden);
 	}
-	else if(convar == gc_sUnWarden)
+	else if (convar == gc_sUnWarden)
 	{
 		strcopy(g_sUnWarden, sizeof(g_sUnWarden), newValue);
-		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sUnWarden);
+		if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sUnWarden);
 	}
-	else if(convar == gc_sModelPathWarden)
+	else if (convar == gc_sModelPathWarden)
 	{
 		strcopy(g_sModelPathWarden, sizeof(g_sModelPathWarden), newValue);
-		if(gc_bModel.BoolValue) PrecacheModel(g_sModelPathWarden);
+		if (gc_bModel.BoolValue) PrecacheModel(g_sModelPathWarden);
 	}
 }
 
@@ -295,60 +295,60 @@ public void OnConfigsExecuted()
 	//Become warden
 	gc_sCustomCommandWarden.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
-	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	iCount = ExplodeString(sCommands, ", ", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
 	
-	for(int i = 0; i < iCount; i++)
+	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
 			RegConsoleCmd(sCommand, Command_BecomeWarden, "Allows the warde taking the charge over prisoners");
 	}
 	
 	//Exit warden
 	gc_sCustomCommandUnWarden.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
-	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	iCount = ExplodeString(sCommands, ", ", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
 	
-	for(int i = 0; i < iCount; i++)
+	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
 			RegConsoleCmd(sCommand, Command_ExitWarden, "Allows the player to retire from the position");
 	}
 	
 	//Veto warden
 	gc_sCustomCommandVetoWarden.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
-	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	iCount = ExplodeString(sCommands, ", ", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
 	
-	for(int i = 0; i < iCount; i++)
+	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
 			RegConsoleCmd(sCommand, Command_VoteWarden, "Allows the player to vote against Warden");
 	}
 	
 	//Set warden
 	gc_sCustomCommandSetWarden.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
-	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	iCount = ExplodeString(sCommands, ", ", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
 	
-	for(int i = 0; i < iCount; i++)
+	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
 			RegAdminCmd(sCommand, AdminCommand_SetWarden, ADMFLAG_GENERIC, "Allows the admin to set a new Warden");
 	}
 	
 	//Remove warden
 	gc_sCustomCommandRemoveWarden.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
-	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	iCount = ExplodeString(sCommands, ", ", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
 	
-	for(int i = 0; i < iCount; i++)
+	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if(GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
 			RegAdminCmd(sCommand, AdminCommand_RemoveWarden, ADMFLAG_GENERIC, "Allows the admin to remove the Warden");
 	}
 }
@@ -362,9 +362,9 @@ public void OnConfigsExecuted()
 //Become Warden
 public Action Command_BecomeWarden(int client, int args)
 {
-	if(gc_bPlugin.BoolValue)  //"sm_warden_enable" "1"
+	if (gc_bPlugin.BoolValue)  //"sm_warden_enable" "1"
 	{
-		if(g_iWarden == -1)  //Is there already a warden
+		if (g_iWarden == -1)  //Is there already a warden
 		{
 			if (gc_bBecomeWarden.BoolValue)  //"sm_warden_become" "1"
 			{
@@ -391,15 +391,15 @@ public Action Command_BecomeWarden(int client, int args)
 //Exit / Retire Warden
 public Action Command_ExitWarden(int client, int args) 
 {
-	if(gc_bPlugin.BoolValue)  //"sm_warden_enable" "1"
+	if (gc_bPlugin.BoolValue)  //"sm_warden_enable" "1"
 	{
-		if(IsClientWarden(client))  //Is client the warden
+		if (IsClientWarden(client))  //Is client the warden
 		{
 			Forward_OnWardenRemovedBySelf(client);
 			RemoveTheWarden();
 			
 			CPrintToChatAll("%t %t", "warden_tag" , "warden_retire", client);
-			if(gc_bBetterNotes.BoolValue)
+			if (gc_bBetterNotes.BoolValue)
 			{
 				PrintCenterTextAll("%t", "warden_retire_nc", client);
 			}
@@ -412,26 +412,26 @@ public Action Command_ExitWarden(int client, int args)
 
 
 //Voting against Warden
-public Action Command_VoteWarden(int client,int args)
+public Action Command_VoteWarden(int client, int args)
 {
-	if(gc_bPlugin.BoolValue)  //"sm_warden_enable" "1"
+	if (gc_bPlugin.BoolValue)  //"sm_warden_enable" "1"
 	{
-		if(gc_bVote.BoolValue)  //"sm_warden_vote" "1"
+		if (gc_bVote.BoolValue)  //"sm_warden_vote" "1"
 		{
 			char steamid[64];
 			GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));  //Get client steam ID
-			if(g_iWarden != -1)
+			if (g_iWarden != -1)
 			{
 				if (StrContains(g_sHasVoted, steamid, true) == -1)  //Check steam ID has already voted
 				{
 					int playercount = (GetClientCount(true) / 2);
 					g_iVoteCount++;
 					int Missing = playercount - g_iVoteCount + 1;
-					Format(g_sHasVoted, sizeof(g_sHasVoted), "%s,%s", g_sHasVoted, steamid);
+					Format(g_sHasVoted, sizeof(g_sHasVoted), "%s, %s", g_sHasVoted, steamid);
 					
 					if (g_iVoteCount > playercount)
 					{
-						if(ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Player %L was kick as warden by voting", g_iWarden);
+						if (ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Player %L was kick as warden by voting", g_iWarden);
 						RemoveTheWarden();
 						CPrintToChatAll("%t %t", "warden_tag" , "warden_votesuccess");
 					}
@@ -451,14 +451,14 @@ public Action Command_VoteWarden(int client,int args)
 //Remove Warden for Admins
 public Action AdminCommand_RemoveWarden(int client, int args)
 {
-	if(gc_bPlugin.BoolValue)  //"sm_warden_enable" "1"
+	if (gc_bPlugin.BoolValue)  //"sm_warden_enable" "1"
 	{
-		if(g_iWarden != -1)  //Is there a warden to remove
+		if (g_iWarden != -1)  //Is there a warden to remove
 		{
 			CPrintToChatAll("%t %t", "warden_tag" , "warden_removed", client, g_iWarden);  // if client is console !=
-			if(gc_bBetterNotes.BoolValue) PrintCenterTextAll("%t", "warden_removed_nc", client, g_iWarden);
+			if (gc_bBetterNotes.BoolValue) PrintCenterTextAll("%t", "warden_removed_nc", client, g_iWarden);
 			
-			if(ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Admin %L removed player %L as warden", client, g_iWarden);
+			if (ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Admin %L removed player %L as warden", client, g_iWarden);
 			
 			RemoveTheWarden();
 			Forward_OnWardenRemovedByAdmin(client);
@@ -469,9 +469,9 @@ public Action AdminCommand_RemoveWarden(int client, int args)
 
 
 //Set new Warden for Admins
-public Action AdminCommand_SetWarden(int client,int args)
+public Action AdminCommand_SetWarden(int client, int args)
 {
-	if(gc_bPlugin.BoolValue)  //"sm_warden_enable" "1"
+	if (gc_bPlugin.BoolValue)  //"sm_warden_enable" "1"
 	{
 		Menu_SetWarden(client);
 	}
@@ -489,18 +489,18 @@ public void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));  //Get the dead clients id
 	
-	if(IsClientWarden(client))  //The Warden is dead
+	if (IsClientWarden(client))  //The Warden is dead
 	{
 		Forward_OnWardenDeath(client);
 		Forward_OnWardenRemoved(client);
 		
 		CPrintToChatAll("%t %t", "warden_tag" , "warden_dead", client);
-		if(gc_bBetterNotes.BoolValue)
+		if (gc_bBetterNotes.BoolValue)
 		{
 			PrintCenterTextAll("%t", "warden_dead_nc", client);
 		}
 		
-		if(gc_bSounds.BoolValue)
+		if (gc_bSounds.BoolValue)
 		{
 			EmitSoundToAllAny(g_sUnWarden);
 		}
@@ -521,13 +521,13 @@ public void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));  //Get the clients id
 	
-	if(IsClientWarden(client))  //The Warden changed team
+	if (IsClientWarden(client))  //The Warden changed team
 	{
 		Forward_OnWardenDeath(client);
 		RemoveTheWarden();
 		
 		CPrintToChatAll("%t %t", "warden_tag" , "warden_retire", client);
-		if(gc_bBetterNotes.BoolValue)
+		if (gc_bBetterNotes.BoolValue)
 		{
 			PrintCenterTextAll("%t", "warden_retire_nc", client);
 		}
@@ -538,13 +538,13 @@ public void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
 //Round Start Post
 public void Event_PostRoundStart(Event event, const char[] name, bool dontBroadcast)
 {
-	if(gc_bPlugin.BoolValue)
+	if (gc_bPlugin.BoolValue)
 	{
-		if((g_iWarden == -1) && gc_bBecomeWarden.BoolValue)
+		if ((g_iWarden == -1) && gc_bBecomeWarden.BoolValue)
 		{
 			RandomTimer = CreateTimer(gc_fRandomTimer.FloatValue, Timer_ChooseRandom);
 			CPrintToChatAll("%t %t", "warden_tag" , "warden_nowarden");
-			if(gc_bBetterNotes.BoolValue)
+			if (gc_bBetterNotes.BoolValue)
 			{
 				PrintCenterTextAll("%t", "warden_nowarden_nc");
 			}
@@ -556,9 +556,9 @@ public void Event_PostRoundStart(Event event, const char[] name, bool dontBroadc
 //Round Start Post
 public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
-	if(!gc_bPlugin.BoolValue)
+	if (!gc_bPlugin.BoolValue)
 	{
-		if(g_iWarden != -1)
+		if (g_iWarden != -1)
 		{
 			CreateTimer(0.1, Timer_RemoveColor, g_iWarden);
 			SetEntityModel(g_iWarden, g_sModelPathPrevious);
@@ -570,9 +570,9 @@ public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 	char EventDay[64];
 	GetEventDayName(EventDay);
 	
-	if(!StrEqual(EventDay, "none", false) || !gc_bStayWarden.BoolValue)
+	if (!StrEqual(EventDay, "none", false) || !gc_bStayWarden.BoolValue)
 	{
-		if(g_iWarden != -1)
+		if (g_iWarden != -1)
 		{
 			CreateTimer( 0.1, Timer_RemoveColor, g_iWarden);
 			SetEntityModel(g_iWarden, g_sModelPathPrevious);
@@ -582,9 +582,9 @@ public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 			
 		}
 	}
-	if(g_iWarden != -1)
+	if (g_iWarden != -1)
 	{
-		if(gc_bModel.BoolValue) SetEntityModel(g_iWarden, g_sModelPathWarden);
+		if (gc_bModel.BoolValue) SetEntityModel(g_iWarden, g_sModelPathWarden);
 	}
 	IsLR = false;
 }
@@ -615,7 +615,7 @@ public void OnMapStart()
 	Laser_OnMapStart();
 	Painter_OnMapStart();
 	
-	if(gc_bSounds.BoolValue)
+	if (gc_bSounds.BoolValue)
 	{
 		PrecacheSoundAnyDownload(g_sWarden);
 		PrecacheSoundAnyDownload(g_sUnWarden);
@@ -645,10 +645,10 @@ public void OnClientPutInServer(int client)
 //Warden disconnect
 public void OnClientDisconnect(int client)
 {
-	if(IsClientWarden(client))
+	if (IsClientWarden(client))
 	{
 		CPrintToChatAll("%t %t", "warden_tag" , "warden_disconnected", client);
-		if(gc_bBetterNotes.BoolValue)
+		if (gc_bBetterNotes.BoolValue)
 		{
 			PrintCenterTextAll("%t", "warden_disconnected_nc", client);
 		}
@@ -656,7 +656,7 @@ public void OnClientDisconnect(int client)
 		Forward_OnWardenRemoved(client);
 		Forward_OnWardenDisconnected(client);
 		
-		if(gc_bSounds.BoolValue)
+		if (gc_bSounds.BoolValue)
 		{
 			EmitSoundToAllAny(g_sUnWarden);
 		}
@@ -707,7 +707,7 @@ public int OnAvailableLR(int Announced)
 // Check Keyboard Input for modules
 public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
 {
-	if((IsClientWarden(client) || IsClientDeputy(client)) && gc_bPlugin.BoolValue)
+	if ((IsClientWarden(client) || IsClientDeputy(client)) && gc_bPlugin.BoolValue)
 	{
 		HandCuffs_OnPlayerRunCmd(client, buttons, impulse, vel, angles, weapon);
 		Marker_OnPlayerRunCmd(client, buttons, impulse, vel, angles, weapon);
@@ -727,22 +727,22 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 //Set a new warden
 void SetTheWarden(int client)
 {
-	if(gc_bPlugin.BoolValue)
+	if (gc_bPlugin.BoolValue)
 	{
 		CPrintToChatAll("%t %t", "warden_tag" , "warden_new", client);
-		if(gc_bBetterNotes.BoolValue) PrintCenterTextAll("%t", "warden_new_nc", client);
+		if (gc_bBetterNotes.BoolValue) PrintCenterTextAll("%t", "warden_new_nc", client);
 		
 		g_iWarden = client;
 		
 		GetEntPropString(client, Prop_Data, "m_ModelName", g_sModelPathPrevious, sizeof(g_sModelPathPrevious));
-		if(gc_bModel.BoolValue)
+		if (gc_bModel.BoolValue)
 		{
 			SetEntityModel(client, g_sModelPathWarden);
 		}
 		SetClientListeningFlags(client, VOICE_NORMAL);
 		Forward_OnWardenCreated(client);
 		
-		if(gc_bSounds.BoolValue)
+		if (gc_bSounds.BoolValue)
 		{
 			EmitSoundToAllAny(g_sWarden);
 		}
@@ -768,7 +768,7 @@ void RemoveTheWarden()
 	
 	Forward_OnWardenRemoved(g_iWarden);
 	
-	if(gc_bSounds.BoolValue)
+	if (gc_bSounds.BoolValue)
 	{
 		EmitSoundToAllAny(g_sUnWarden);
 	}
@@ -796,38 +796,38 @@ void Menu_SetWarden(int client)
 	menu.SetTitle(info1);
 	LoopValidClients(i, true, false)
 	{
-		if(GetClientTeam(i) == CS_TEAM_CT && IsClientWarden(i) == false)
+		if (GetClientTeam(i) == CS_TEAM_CT && IsClientWarden(i) == false)
 		{
 			char userid[11];
 			char username[MAX_NAME_LENGTH];
 			IntToString(GetClientUserId(i), userid, sizeof(userid));
 			Format(username, sizeof(username), "%N", i);
-			menu.AddItem(userid,username);
+			menu.AddItem(userid, username);
 		}
 	}
 	menu.ExitBackButton = true;
 	menu.ExitButton = true;
-	menu.Display(client,MENU_TIME_FOREVER);
+	menu.Display(client, MENU_TIME_FOREVER);
 }
 
 
 //Handler set (new) Warden menu with overwrite/remove query
 public int Handler_SetWarden(Menu menu, MenuAction action, int client, int Position)
 {
-	if(action == MenuAction_Select)
+	if (action == MenuAction_Select)
 	{
 		char Item[11];
-		menu.GetItem(Position,Item,sizeof(Item));
+		menu.GetItem(Position, Item, sizeof(Item));
 		
 		LoopValidClients(i, true, false)
 		{
-			if(GetClientTeam(i) == CS_TEAM_CT && IsClientWarden(i) == false)
+			if (GetClientTeam(i) == CS_TEAM_CT && IsClientWarden(i) == false)
 			{
 				char info4[255], info2[255], info3[255];
 				int userid = GetClientUserId(i);
-				if(userid == StringToInt(Item))
+				if (userid == StringToInt(Item))
 				{
-					if(g_iWarden != -1)  // if(g_iWarden != -1)
+					if (g_iWarden != -1)  // if (g_iWarden != -1)
 					{
 						g_iTempWarden[client] = userid;
 						Menu menu1 = CreateMenu(Handler_SetWardenOverwrite);
@@ -839,7 +839,7 @@ public int Handler_SetWarden(Menu menu, MenuAction action, int client, int Posit
 						menu1.AddItem("0", info2);
 						menu1.ExitBackButton = true;
 						menu1.ExitButton = true;
-						menu1.Display(client,MENU_TIME_FOREVER);
+						menu1.Display(client, MENU_TIME_FOREVER);
 					}
 					else
 					{
@@ -850,14 +850,14 @@ public int Handler_SetWarden(Menu menu, MenuAction action, int client, int Posit
 			}
 		}
 	}
-	else if(action == MenuAction_Cancel)
+	else if (action == MenuAction_Cancel)
 	{
-		if(Position == MenuCancel_ExitBack) 
+		if (Position == MenuCancel_ExitBack) 
 		{
 			FakeClientCommand(client, "sm_menu");
 		}
 	}
-	else if(action == MenuAction_End)
+	else if (action == MenuAction_End)
 	{
 		delete menu;
 	}
@@ -867,38 +867,38 @@ public int Handler_SetWarden(Menu menu, MenuAction action, int client, int Posit
 //Handler overwrite/remove query menu
 public int Handler_SetWardenOverwrite(Menu menu, MenuAction action, int client, int Position)
 {
-	if(action == MenuAction_Select)
+	if (action == MenuAction_Select)
 	{
 		char Item[11];
-		menu.GetItem(Position,Item,sizeof(Item));
+		menu.GetItem(Position, Item, sizeof(Item));
 		int choice = StringToInt(Item);
-		if(choice == 1)
+		if (choice == 1)
 		{
 			int newwarden = GetClientOfUserId(g_iTempWarden[client]);
 			if (g_iWarden != -1)CPrintToChatAll("%t %t", "warden_tag" , "warden_removed", client, g_iWarden);
 			
-			if(ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Admin %L kick player %L warden and set %L as new", client, g_iWarden, newwarden);
+			if (ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Admin %L kick player %L warden and set %L as new", client, g_iWarden, newwarden);
 			
 			RemoveTheWarden();
 			SetTheWarden(newwarden);
 			Forward_OnWardenCreatedByAdmin(newwarden);
 		}
-		if(g_bMenuClose != null)
+		if (g_bMenuClose != null)
 		{
-			if(!g_bMenuClose)
+			if (!g_bMenuClose)
 			{
 				FakeClientCommand(client, "sm_menu");
 			}
 		}
 	}
-	else if(action == MenuAction_Cancel)
+	else if (action == MenuAction_Cancel)
 	{
-		if(Position == MenuCancel_ExitBack) 
+		if (Position == MenuCancel_ExitBack) 
 		{
 			FakeClientCommand(client, "sm_menu");
 		}
 	}
-	else if(action == MenuAction_End)
+	else if (action == MenuAction_End)
 	{
 		delete menu;
 	}
@@ -913,14 +913,14 @@ public int Handler_SetWardenOverwrite(Menu menu, MenuAction action, int client, 
 //Choose a random Warden after a defined time
 public Action Timer_ChooseRandom(Handle timer, Handle pack)
 {
-	if(gc_bPlugin.BoolValue)
+	if (gc_bPlugin.BoolValue)
 	{
-		if(g_iWarden == -1)
+		if (g_iWarden == -1)
 		{
-			if(gc_bChooseRandom.BoolValue)
+			if (gc_bChooseRandom.BoolValue)
 			{
 				int i = GetRandomPlayer(CS_TEAM_CT);
-				if(i > 0)
+				if (i > 0)
 				{
 					CPrintToChatAll("%t %t", "warden_tag", "warden_randomwarden"); 
 					SetTheWarden(i);
@@ -942,7 +942,7 @@ public Action Timer_ChooseRandom(Handle timer, Handle pack)
 
 stock bool IsClientWarden(int client)
 {
-	if(client != g_iWarden)
+	if (client != g_iWarden)
 	{
 		return false;
 	}
@@ -980,7 +980,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char [] error, int err_ma
 //Booleans Exist Warden
 public int Native_ExistWarden(Handle plugin, int argc)
 {
-	if(g_iWarden == -1)
+	if (g_iWarden == -1)
 	{
 		return false;
 	}
@@ -993,10 +993,10 @@ public int Native_IsWarden(Handle plugin, int argc)
 {
 	int client = GetNativeCell(1);
 	
-	if(!IsClientInGame(client) && !IsClientConnected(client))
+	if (!IsClientInGame(client) && !IsClientConnected(client))
 		ThrowNativeError(SP_ERROR_INDEX, "Client index %i is invalid", client);
 	
-	if(IsClientWarden(client))
+	if (IsClientWarden(client))
 		return true;
 	
 	return false;
@@ -1011,7 +1011,7 @@ public int Native_SetWarden(Handle plugin, int argc)
 	if (!IsClientInGame(client) && !IsClientConnected(client))
 		ThrowNativeError(SP_ERROR_INDEX, "Client index %i is invalid", client);
 	
-	if(g_iWarden == -1)
+	if (g_iWarden == -1)
 		SetTheWarden(client);
 }
 
@@ -1024,7 +1024,7 @@ public int Native_RemoveWarden(Handle plugin, int argc)
 	if (!IsClientInGame(client) && !IsClientConnected(client))
 		ThrowNativeError(SP_ERROR_INDEX, "Client index %i is invalid", client);
 	
-	if(IsClientWarden(client))
+	if (IsClientWarden(client))
 		RemoveTheWarden();
 }
 
