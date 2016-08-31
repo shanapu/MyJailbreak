@@ -14,6 +14,7 @@
 *  Weapons: Kevlar & Helm for guards on roundstart except on event days
     *  new cvar - sm_weapons_kevlar - 0 - disabled, 1 - CT get Kevlar & helm on Spawn
 *  Duckhunt: New kind to fly for ducks
+    *  new keybind - +drop (drop weapon) - toggle fly and walk for ducks when sm_duckhunt_flymode 1
     *  new cvar - sm_duckhunt_flymode - 0 - Low gravity (old way), 1 - 'Flymode' (like a slow noclip with clipping). Bit difficult
 *  Freeday: Player respawn on event freeday
     *  new cvar - sm_freeday_respawn - 1 - respawn on AutoFreeday when no CTs / 2 - respawn on firstround/vote/set Freeday / 3 - Both
@@ -26,8 +27,9 @@
     *  new cvar - sm_catch_count - How many times a terror can be catched before he get killed. 0 = T dont get killed ever all T must be catched- Default 0
     *  new cvar - sm_catch_allow_lr - 0 - disabled, 1 - enable LR for last round and end eventday (need sm_catch_count min 1)
     *  new cvar - sm_catch_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
-*  Warden - Mute: mute all T on roundbegin
+*  Warden - Mute: new fuctions with cvars mute all T on roundbegin & dont mute dead player on warden talkover
     *  new cvar - sm_warden_mute_default - 0 - disabled, 1 - Prisoners are muted on roundstart by default. Warden have to unmute them. Default 0
+    *  new cvar - sm_warden_talkover_dead - 0 - mute death & alive player on talkover, 1 - only mute alive player on talkover. Default 0
 *  Warden - Deputy: The warden get a deputy to his side with configurable warden features.
     *  new command - sm_deputy - Allows the warden to choose a deputy or a player to be deputy
     *  new command - sm_undeputy - Allows the warden to remove the deputy and the deputy to retire from the position

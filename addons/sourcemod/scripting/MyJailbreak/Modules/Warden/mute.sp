@@ -44,6 +44,7 @@ ConVar gc_sAdminFlagMute;
 ConVar gc_bMuteTalkOver;
 ConVar gc_bMuteTalkOverDeputy;
 ConVar gc_bMuteTalkOverTeam;
+ConVar gc_bMuteTalkOverDead;
 ConVar gc_sCustomCommandMute;
 ConVar gc_sCustomCommandUnMute;
 
@@ -75,6 +76,7 @@ public void Mute_OnPluginStart()
 	gc_bMuteTalkOver = AutoExecConfig_CreateConVar("sm_warden_talkover", "1", "0 - disabled, 1 - temporary mutes all client when the warden speaks", _, true, 0.0, true, 1.0);
 	gc_bMuteTalkOverDeputy = AutoExecConfig_CreateConVar("sm_warden_talkover_deputy", "1", "0 - disabled, 1 - temporary mutes all client when the deputy speaks", _, true, 0.0, true, 1.0);
 	gc_bMuteTalkOverTeam = AutoExecConfig_CreateConVar("sm_warden_talkover_team", "1", "0 - mute prisoner & guards on talkover, 1 - only mute prisoners on talkover", _, true, 0.0, true, 1.0);
+	gc_bMuteTalkOverDead = AutoExecConfig_CreateConVar("sm_warden_talkover_dead", "0", "0 - mute death & alive player on talkover, 1 - only mute alive player on talkover", _, true, 0.0, true, 1.0);
 	gc_sCustomCommandMute = AutoExecConfig_CreateConVar("sm_warden_cmds_mute", "wm,mutemenu", "Set your custom chat commands for become warden(!warden (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands))");
 	gc_sCustomCommandUnMute = AutoExecConfig_CreateConVar("sm_warden_cmds_unmute", "wum,unmutemenu", "Set your custom chat commands for retire from warden(!unwarden (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands))");
 	
@@ -249,23 +251,26 @@ public void Mute_OnMapEnd()
 // Mute Terror when Warden speaks
 public int OnClientSpeakingEx(int client)
 {
-	if ((warden_iswarden(client) && gc_bMuteTalkOver.BoolValue) || (warden_deputy_isdeputy(client) && gc_bMuteTalkOverDeputy.BoolValue))
+	if((warden_iswarden(client) && gc_bMuteTalkOver.BoolValue) || (warden_deputy_isdeputy(client) && gc_bMuteTalkOverDeputy.BoolValue))
 	{
 		LoopValidClients(i, false, true)
 		{
-			if (!CheckVipFlag(i,g_sAdminFlagMute))
+			if(!CheckVipFlag(i,g_sAdminFlagMute))
 			{
-				if ((GetClientTeam(i) == CS_TEAM_T) && (!IsMuted[i] || (GetClientListeningFlags(i) != VOICE_MUTED)) || 
+				if((GetClientTeam(i) == CS_TEAM_T) && (!IsMuted[i] || (GetClientListeningFlags(i) != VOICE_MUTED)) || 
 					(!gc_bMuteTalkOverTeam.BoolValue && !warden_iswarden(i) && !warden_deputy_isdeputy(i) && (GetClientTeam(i) == CS_TEAM_CT) && (GetClientListeningFlags(i) != VOICE_MUTED)))
 				{
-					PrintCenterText(i, "%t", "warden_talkover");
-					TempMuted[i] = true;
-					SetClientListeningFlags(i, VOICE_MUTED);
+					if((gc_bMuteTalkOverDead.BoolValue && IsPlayerAlive(i)) || !gc_bMuteTalkOverDead.BoolValue)
+					{
+						PrintCenterText(i, "%t", "warden_talkover");
+						TempMuted[i] = true;
+						SetClientListeningFlags(i, VOICE_MUTED);
+					}
 				}
 			}
 		}
 	}
-	else if (TempMuted[client])
+	else if(TempMuted[client])
 	{
 		PrintCenterText(client, "%t", "warden_talkover");
 	}
