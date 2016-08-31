@@ -46,10 +46,6 @@ bool EventDayRunning = false;
 bool LastGuardRuleActive = false;
 
 
-//Intergers
-int g_iDaysRound;
-
-
 //Strings
 char IsEventDay[128] = "none";
 
@@ -163,74 +159,12 @@ public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 			SetEntProp(ent, Prop_Data, "m_spawnflags", GetEntProp(ent, Prop_Data, "m_spawnflags")|512);
 		}
 	}
-	
-	if (gc_iDaysRound.InValue != 0)
-	{
-		if (g_iDaysRound == gc_iDaysRound.IntValue)
-		{
-			LoopValidClients(i, false, true) OpenVoteWarning(i);
-			CreateTimer(10.0, Timer_StartVote);
-			g_iDaysRound = 0;
-			CPrintToChatAll("%T", "");
-		}
-		else g_iDaysRound++;
-	}
-	
-	
-	
 }
 
 
 public void Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 {
 	
-}
-
-
-/******************************************************************************
-                   TIMER
-******************************************************************************/
-
-
-public Action Timer_StartVote(Handle timer, Handle pack)
-{
-	FakeClientCommand(0, "sm_eventdays");
-}
-
-
-/******************************************************************************
-                   MENUS
-******************************************************************************/
-
-
-stock void OpenVoteWarning(int client)
-{
-	//Create info Panel
-	char info[255];
-
-	FFAMenu = CreatePanel();
-	Format(info, sizeof(info), "%T", "ffa_info_title", client);
-	SetPanelTitle(FFAMenu, info);
-	DrawPanelText(FFAMenu, "                                   ");
-	Format(info, sizeof(info), "%T", "ffa_info_line1", client);
-	DrawPanelText(FFAMenu, info);
-	DrawPanelText(FFAMenu, "-----------------------------------");
-	Format(info, sizeof(info), "%T", "ffa_info_line2", client);
-	DrawPanelText(FFAMenu, info);
-	Format(info, sizeof(info), "%T", "ffa_info_line3", client);
-	DrawPanelText(FFAMenu, info);
-	Format(info, sizeof(info), "%T", "ffa_info_line4", client);
-	DrawPanelText(FFAMenu, info);
-	Format(info, sizeof(info), "%T", "ffa_info_line5", client);
-	DrawPanelText(FFAMenu, info);
-	Format(info, sizeof(info), "%T", "ffa_info_line6", client);
-	DrawPanelText(FFAMenu, info);
-	Format(info, sizeof(info), "%T", "ffa_info_line7", client);
-	DrawPanelText(FFAMenu, info);
-	DrawPanelText(FFAMenu, "-----------------------------------");
-	Format(info, sizeof(info), "%T", "warden_close", client);
-	DrawPanelItem(FFAMenu, info); 
-	SendPanelToClient(FFAMenu, client, Handler_NullCancel, 10);
 }
 
 
@@ -244,7 +178,6 @@ public void OnMapStart()
 {
 	Fog_OnMapStart();
 	Beacon_OnMapStart();
-	g_iDaysRound = 0;
 	LastGuardRuleActive = false;
 }
 
