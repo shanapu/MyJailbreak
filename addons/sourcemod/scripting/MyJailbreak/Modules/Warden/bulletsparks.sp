@@ -117,7 +117,7 @@ public Action Command_BulletSparks(int client, int args)
 ******************************************************************************/
 
 
-public Action BulletSparks_Event_BulletImpact(Handle event, char [] sName, bool bDontBroadcast)
+public Action BulletSparks_Event_BulletImpact(Event event, char [] sName, bool bDontBroadcast)
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));
 	

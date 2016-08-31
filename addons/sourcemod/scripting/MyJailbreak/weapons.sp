@@ -543,7 +543,7 @@ Handle Menu_BuildOptionsMenu(bool sameWeaponsEnabled)
 	char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255];
 	
 	int sameWeaponsStyle = (sameWeaponsEnabled) ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED;
-	Handle menu3 = CreateMenu(Handler_BuildOptionsMenu);
+	Menu menu3 = CreateMenu(Handler_BuildOptionsMenu);
 	Format(info1, sizeof(info1), "%T\n ", "weapons_info_title", LANG_SERVER);
 	SetMenuTitle(menu3, info1);
 	SetMenuExitButton(menu3, true);
@@ -562,7 +562,7 @@ Handle Menu_BuildOptionsMenu(bool sameWeaponsEnabled)
 
 
 //Menu Handler first site - choosing mode
-public int Handler_BuildOptionsMenu(Handle menu, MenuAction action, int client, int param2)
+public int Handler_BuildOptionsMenu(Menu menu, MenuAction action, int client, int param2)
 {
 	if (action == MenuAction_Select)
 	{
@@ -620,7 +620,7 @@ Handle Menu_BuildWeaponsMenu(bool primary)
 {
 	
 	char info7[255], info8[255];
-	Handle menu;
+	Menu menu;
 	int Items[weapons];
 	if (primary)
 	{
@@ -651,7 +651,7 @@ Handle Menu_BuildWeaponsMenu(bool primary)
 
 
 //Menu choose primary weapons
-public int Menu_Primary(Handle menu, MenuAction action, int client, int param2)
+public int Menu_Primary(Menu menu, MenuAction action, int client, int param2)
 {
 	if (action == MenuAction_Select)
 	{
@@ -664,7 +664,7 @@ public int Menu_Primary(Handle menu, MenuAction action, int client, int param2)
 
 
 //Menu choose secondary weapons
-public int Menu_Secondary(Handle menu, MenuAction action, int client, int param2)
+public int Menu_Secondary(Menu menu, MenuAction action, int client, int param2)
 {
 	if (action == MenuAction_Select)
 	{

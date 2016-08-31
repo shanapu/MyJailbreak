@@ -226,7 +226,7 @@ stock void MarkerMenu(int client)
 	
 	if (0 < client < MaxClients)
 	{
-		Handle menu = CreateMenu(Handle_MarkerMenu);
+		Menu menu = CreateMenu(Handle_MarkerMenu);
 		
 		char menuinfo[255];
 		
@@ -255,7 +255,7 @@ stock void MarkerMenu(int client)
 }
 
 
-public int Handle_MarkerMenu(Handle menu, MenuAction action, int client, int itemNum)
+public int Handle_MarkerMenu(Menu menu, MenuAction action, int client, int itemNum)
 {
 	if (!IsValidClient(client, false, false))
 		return;
