@@ -37,6 +37,8 @@
 //Booleans
 bool newWeaponsSelected[MAXPLAYERS+1];
 bool rememberChoice[MAXPLAYERS+1];
+bool TA[MAXPLAYERS+1];
+bool Health[MAXPLAYERS+1];
 
 
 //Handles
@@ -219,6 +221,8 @@ public void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast
 		SetEntData(client, iHelmet, 1);
 		SetEntData(client, iKevlar, 100);
 	}
+	Health[client] = false;
+	TA[client] = false;
 }
 
 
@@ -261,7 +265,6 @@ public void GiveSavedWeaponsFix(int client)
 					else GivePlayerItem(client, secondaryWeapon[client]);
 				}
 				if (GetPlayerWeaponSlot(client, CS_SLOT_GRENADE) == -1) GivePlayerItem(client, "weapon_hegrenade");
-
 			}
 		}
 	}
@@ -293,18 +296,21 @@ public void GiveSavedWeapons(int client)
 		GivePlayerItem(client, "weapon_knife");
 		if (warden_iswarden(client))
 		{
-			if (gc_bHealth.BoolValue)
+			if (gc_bHealth.BoolValue && !TA[client])
 			{
 				GivePlayerItem(client, "weapon_healthshot");
 				CPrintToChat(client, "%t %t", "weapons_tag", "weapons_health");
+				TA[client] = true;
 			}
-			if (gc_bTA.BoolValue)
+			if (gc_bTA.BoolValue && !Health[client])
 			{
 				GivePlayerItem(client, "weapon_tagrenade");
 				CPrintToChat(client, "%t %t", "weapons_tag", "weapons_ta");
+				Health[client] = true;
 			}
-			if (g_bTaser != null) if (g_bTaser.BoolValue) GivePlayerItem(client, "weapon_taser");
+			if ((g_bTaser != null) && g_bTaser.BoolValue) GivePlayerItem(client, "weapon_taser");
 		}
+		
 		if (StrEqual(primaryWeapon[client], "random"))
 		{
 			// Select random menu item (excluding "Random" option)
