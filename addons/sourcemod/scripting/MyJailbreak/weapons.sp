@@ -161,7 +161,7 @@ public void OnConfigsExecuted()
 	//weapons
 	gc_sCustomCommandWeapon.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
-	iCount = ExplodeString(sCommands, ", ", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
 	
 	for (int i = 0; i < iCount; i++)
 	{
@@ -287,7 +287,7 @@ public void SetBuyZones(const char[] status)
 
 public void GiveSavedWeapons(int client)
 {
-	if (IsPlayerAlive(client))
+	if (((gc_bTerror.BoolValue && GetClientTeam(client) == 2) || (gc_bCTerror.BoolValue && GetClientTeam(client) == 3)) && IsPlayerAlive(client))
 	{
 		StripAllPlayerWeapons(client);
 		GivePlayerItem(client, "weapon_knife");

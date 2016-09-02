@@ -169,7 +169,7 @@ public void CellDoors_OnConfigsExecuted()
 	//Open Cell doors
 	gc_sCustomCommandOpen.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
-	iCount = ExplodeString(sCommands, ", ", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
 	
 	for (int i = 0; i < iCount; i++)
 	{
@@ -181,7 +181,7 @@ public void CellDoors_OnConfigsExecuted()
 	//Close Cell doors
 	gc_sCustomCommandClose.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
-	iCount = ExplodeString(sCommands, ", ", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
 	
 	for (int i = 0; i < iCount; i++)
 	{

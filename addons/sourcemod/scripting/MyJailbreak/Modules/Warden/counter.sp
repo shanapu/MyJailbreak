@@ -150,7 +150,7 @@ public void Counter_OnConfigsExecuted()
 	//Capitulation
 	gc_sCustomCommandCounter.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
-	iCount = ExplodeString(sCommands, ", ", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
 	
 	for (int i = 0; i < iCount; i++)
 	{

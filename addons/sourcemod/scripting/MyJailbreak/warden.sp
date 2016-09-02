@@ -295,7 +295,7 @@ public void OnConfigsExecuted()
 	//Become warden
 	gc_sCustomCommandWarden.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
-	iCount = ExplodeString(sCommands, ", ", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
 	
 	for (int i = 0; i < iCount; i++)
 	{
@@ -307,7 +307,7 @@ public void OnConfigsExecuted()
 	//Exit warden
 	gc_sCustomCommandUnWarden.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
-	iCount = ExplodeString(sCommands, ", ", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
 	
 	for (int i = 0; i < iCount; i++)
 	{
@@ -319,7 +319,7 @@ public void OnConfigsExecuted()
 	//Veto warden
 	gc_sCustomCommandVetoWarden.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
-	iCount = ExplodeString(sCommands, ", ", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
 	
 	for (int i = 0; i < iCount; i++)
 	{
@@ -331,7 +331,7 @@ public void OnConfigsExecuted()
 	//Set warden
 	gc_sCustomCommandSetWarden.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
-	iCount = ExplodeString(sCommands, ", ", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
 	
 	for (int i = 0; i < iCount; i++)
 	{
@@ -343,7 +343,7 @@ public void OnConfigsExecuted()
 	//Remove warden
 	gc_sCustomCommandRemoveWarden.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
-	iCount = ExplodeString(sCommands, ", ", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
 	
 	for (int i = 0; i < iCount; i++)
 	{

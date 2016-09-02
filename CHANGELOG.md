@@ -95,6 +95,8 @@
 *  Request - Freedays: fix player check for !givefreeday
 *  Last Guard: fix sm_lastguard_minct bypass. THX devu4!
 *  PlayerTags: fix tags on warden remove
+*  Weapons: glitch to use menu on T side. THX devu4!
+*  Icon Terror: fix black icon on standart terror.vmt
 *  minor errors & smaller fixes
   
   

@@ -79,7 +79,7 @@ public void Heal_OnPluginStart()
 	gc_iHealColorRed = AutoExecConfig_CreateConVar("sm_heal_color_red", "240", "What color to turn the heal Terror into (set R, G and B values to 255 to disable) (Rgb): x - red value", _, true, 0.0, true, 255.0);
 	gc_iHealColorGreen = AutoExecConfig_CreateConVar("sm_heal_color_green", "0", "What color to turn the heal Terror into (rGb): x - green value", _, true, 0.0, true, 255.0);
 	gc_iHealColorBlue = AutoExecConfig_CreateConVar("sm_heal_color_blue", "100", "What color to turn the heal Terror into (rgB): x - blue value", _, true, 0.0, true, 255.0);
-	gc_sAdminFlagHeal = AutoExecConfig_CreateConVar("sm_repeat_flag", "a", "Set flag for admin/vip to get one more heal. No flag = feature is available for all players!");
+	gc_sAdminFlagHeal = AutoExecConfig_CreateConVar("sm_heal_flag", "a", "Set flag for admin/vip to get one more heal. No flag = feature is available for all players!");
 	
 	
 	//Hooks 
@@ -184,7 +184,7 @@ public void Heal_OnConfigsExecuted()
 	//Capitulation
 	gc_sCustomCommandHeal.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
-	iCount = ExplodeString(sCommands, ", ", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
 	
 	for (int i = 0; i < iCount; i++)
 	{

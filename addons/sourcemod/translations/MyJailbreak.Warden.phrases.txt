@@ -1335,11 +1335,6 @@
 		"en"		"You cannot become deputy, the warden must choose you"
 	}
 
-	"warden_deputy_nobecome"
-	{
-		"en"		"You cannot set a deputy, must choose to become deputy"
-	}
-
 	"warden_deputy_retire"
 	{
 		"#format"   "{1:N}"
