@@ -69,9 +69,6 @@ public void CellDoors_OnPluginStart()
 	
 	//Hooks
 	HookEvent("round_start", CellDoors_Event_RoundStart);
-	
-	//FindConVar
-	g_bNoBlockSolid = FindConVar("mp_solid_teammates");
 }
 
 

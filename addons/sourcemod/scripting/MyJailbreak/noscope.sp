@@ -165,10 +165,7 @@ public void OnPluginStart()
 	
 	
 	//Find
-	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
-	g_iTruceTime = gc_iTruceTime.IntValue;
 	g_iMPRoundTime = FindConVar("mp_roundtime");
-	g_iTerrorForLR = FindConVar("sm_hosties_lr_ts_max");
 	m_flNextSecondaryAttack = FindSendPropInfo("CBaseCombatWeapon", "m_flNextSecondaryAttack");
 	gc_sOverlayStartPath.GetString(g_sOverlayStartPath , sizeof(g_sOverlayStartPath));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
@@ -204,6 +201,9 @@ public void OnConfigsExecuted()
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iMaxRound = gc_iRounds.IntValue;
+	
+	//FindConVar
+	g_iTerrorForLR = FindConVar("sm_hosties_lr_ts_max");
 	
 	if (gc_iWeapon.IntValue == 1) g_sWeapon = "weapon_ssg08";
 	if (gc_iWeapon.IntValue == 2) g_sWeapon = "weapon_awp";

@@ -181,8 +181,6 @@ public void OnPluginStart()
 	
 	//FindConVar
 	g_iMPRoundTime = FindConVar("mp_roundtime");
-	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
-	g_iFreezeTime = gc_iFreezeTime.IntValue;
 	gc_sSoundSuicideBomberPath.GetString(g_sSoundSuicideBomberPath, sizeof(g_sSoundSuicideBomberPath));
 	gc_sSoundBoomPath.GetString(g_sSoundBoomPath, sizeof(g_sSoundBoomPath));
 	gc_sOverlayStartPath.GetString(g_sOverlayStartPath , sizeof(g_sOverlayStartPath));

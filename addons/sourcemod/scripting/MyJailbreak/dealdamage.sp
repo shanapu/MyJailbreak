@@ -173,7 +173,6 @@ public void OnPluginStart()
 	
 	//Find
 	g_iMPRoundTime = FindConVar("mp_roundtime");
-	g_bHUD = FindConVar("sm_hud_enable");
 	gc_sOverlayStartPath.GetString(g_sOverlayStartPath , sizeof(g_sOverlayStartPath));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 	gc_sAdminFlag.GetString(g_sAdminFlag , sizeof(g_sAdminFlag));

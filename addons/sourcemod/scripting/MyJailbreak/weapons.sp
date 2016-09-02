@@ -131,14 +131,14 @@ public void OnPluginStart()
 	//Cookies
 	weapons1 = RegClientCookie("Primary Weapons", "", CookieAccess_Private);
 	weapons2 = RegClientCookie("Secondary Weapons", "", CookieAccess_Private);
-	
-	
-	//FindConVar
-	g_bTaser = FindConVar("sm_warden_handcuffs");
 }
 
 
-
+public void OnAllPluginsLoaded()
+{
+	//FindConVar
+	g_bTaser = FindConVar("sm_warden_handcuffs");
+}
 
 //Initialize Plugin
 public void OnConfigsExecuted()

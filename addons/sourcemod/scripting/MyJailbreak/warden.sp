@@ -239,7 +239,6 @@ public void OnPluginStart()
 	
 	
 	//FindConVar
-	g_bMenuClose = FindConVar("sm_menu_close");
 	gc_sWarden.GetString(g_sWarden, sizeof(g_sWarden));
 	gc_sUnWarden.GetString(g_sUnWarden, sizeof(g_sUnWarden));
 	gc_sModelPathWarden.GetString(g_sModelPathWarden, sizeof(g_sModelPathWarden));
@@ -247,6 +246,13 @@ public void OnPluginStart()
 	
 	//Set directory for LogFile - must be created before
 	SetLogFile(g_sMyJBLogFile, "MyJB");
+}
+
+
+public void OnAllPluginsLoaded()
+{
+	//FindConVar
+	g_bMenuClose = FindConVar("sm_menu_close");
 }
 
 

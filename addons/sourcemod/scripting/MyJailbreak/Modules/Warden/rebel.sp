@@ -63,15 +63,6 @@ public void MarkRebel_OnPluginStart()
 	gc_bMarkRebel = AutoExecConfig_CreateConVar("sm_warden_mark_rebel", "1", "0 - disabled, 1 - enable allow warden to mark/unmark prisoner as rebel (hosties)", _, true,  0.0, true, 1.0);
 	gc_bMarkRebelDeputy = AutoExecConfig_CreateConVar("sm_warden_mark_rebel_deputy", "1", "0 - disabled, 1 - enable 'mark/unmark prisoner as rebel'-feature for deputy, too", _, true,  0.0, true, 1.0);
 	gc_sCustomCommandRebel = AutoExecConfig_CreateConVar("sm_warden_cmds_rebel", "sr, srebel, setrebel, rebelmenu", "Set your custom chat commands for un/mark rebel(!markrebel (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)");
-	
-	
-	//FindConVar
-	g_bHostiesColor = FindConVar("sm_hosties_rebel_color");
-	g_iHostiesG = FindConVar("sm_hosties_rebel_green");
-	g_iHostiesR = FindConVar("sm_hosties_rebel_red");
-	g_iHostiesB = FindConVar("sm_hosties_rebel_blue");
-	g_bHostiesAnnounce = FindConVar("sm_hosties_announce_rebel");
-	g_bHostiesAnnounceGlobal = FindConVar("sm_hosties_lr_send_global_msgs");
 }
 
 
@@ -265,7 +256,17 @@ public void Rebel_OnConfigsExecuted()
 	int iCount = 0;
 	char sCommands[128], sCommandsL[12][32], sCommand[32];
 	
-	//Rebel
+	
+	//FindConVar
+	g_bHostiesColor = FindConVar("sm_hosties_rebel_color");
+	g_iHostiesG = FindConVar("sm_hosties_rebel_green");
+	g_iHostiesR = FindConVar("sm_hosties_rebel_red");
+	g_iHostiesB = FindConVar("sm_hosties_rebel_blue");
+	g_bHostiesAnnounce = FindConVar("sm_hosties_announce_rebel");
+	g_bHostiesAnnounceGlobal = FindConVar("sm_hosties_lr_send_global_msgs");
+	
+	
+	//Custom rebel command
 	gc_sCustomCommandRebel.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
 	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
