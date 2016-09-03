@@ -435,7 +435,7 @@ public Action Timer_DeputyNewWarden(Handle timer)
 
 public Action Timer_NoDeputy(Handle timer)
 {
-	if (g_iDeputy == -1)
+	if ((g_iDeputy == -1) && (g_iWarden != -1))
 	{
 		if (gc_bSetDeputy.BoolValue) CPrintToChat(g_iWarden, "%t %t", "warden_tag" , "warden_deputy_set");
 		if (gc_bBecomeDeputy.BoolValue) CPrintToChatAll("%t %t", "warden_tag" , "warden_deputy_become");

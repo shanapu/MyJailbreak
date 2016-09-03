@@ -261,7 +261,7 @@ public void OnConfigsExecuted()
 	g_bsetFF = FindConVar("sm_warden_ff");
 	g_bRandom = FindConVar("sm_warden_random");
 	g_bPlayerFreeday = FindConVar("sm_freekill_freeday_victim");
-	g_bOpenDeputy = FindConVar("sm_warden_open_enable_deputy");
+	g_bOpenDeputy = FindConVar("sm_warden_open_deputy");
 	g_bsetFFDeputy = FindConVar("sm_warden_ff_deputy");
 	g_bRandomDeputy = FindConVar("sm_warden_random_deputy");
 	g_bPlayerFreedayDeputy = FindConVar("sm_freekill_freeday_victim_deputy");
