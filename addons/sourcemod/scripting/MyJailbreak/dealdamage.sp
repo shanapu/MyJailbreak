@@ -44,6 +44,7 @@ ConVar gc_bPlugin;
 ConVar gc_bSetW;
 ConVar gc_iCooldownStart;
 ConVar gc_bSetA;
+ConVar gc_bSetABypassCooldown;
 ConVar gc_bSpawnCell;
 ConVar gc_bVote;
 ConVar gc_fBeaconTime;
@@ -154,6 +155,7 @@ public void OnPluginStart()
 	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_dealdamage_trucetime", "15", "Time in seconds players can't deal damage", _, true,  0.0);
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_dealdamage_cooldown_day", "3", "Rounds cooldown after a event until event can be start again", _, true,  0.0);
 	gc_iCooldownStart = AutoExecConfig_CreateConVar("sm_dealdamage_cooldown_start", "3", "Rounds until event can be start after mapchange.", _, true, 0.0);
+	gc_bSetABypassCooldown = AutoExecConfig_CreateConVar("sm_dealdamage_cooldown_admin", "1", "0 - disabled, 1 - ingnore the cooldown when admin/vip set dealdamage round", _, true, 0.0, true, 1.0);
 	gc_bSounds = AutoExecConfig_CreateConVar("sm_dealdamage_sounds_enable", "1", "0 - disabled, 1 - enable sounds ", _, true, 0.1, true, 1.0);
 	gc_sSoundStartPath = AutoExecConfig_CreateConVar("sm_dealdamage_sounds_start", "music/MyJailbreak/start.mp3", "Path to the soundfile which should be played for a start.");
 	gc_bOverlays = AutoExecConfig_CreateConVar("sm_dealdamage_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true,  0.0, true, 1.0);
@@ -285,7 +287,7 @@ public Action Command_SetDealDamage(int client, int args)
 				
 				if (StrEqual(EventDay, "none", false)) //is an other event running or set?
 				{
-					if (g_iCoolDown == 0) //is event cooled down?
+					if ((g_iCoolDown == 0) || gc_bSetABypassCooldown.BoolValue) //is event cooled down?
 					{
 						StartNextRound(); //prepare Event for next round
 						if (ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event DealDamage was started by admin %L", client);

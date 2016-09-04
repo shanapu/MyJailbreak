@@ -42,6 +42,7 @@ bool StartFFA = false;
 ConVar gc_bPlugin;
 ConVar gc_bSetW;
 ConVar gc_bSetA;
+ConVar gc_bSetABypassCooldown;
 ConVar gc_bVote;
 ConVar gc_iCooldownStart;
 ConVar gc_bSpawnCell;
@@ -133,6 +134,7 @@ public void OnPluginStart()
 	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_ffa_trucetime", "30", "Time in seconds players can't deal damage", _, true,  0.0);
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_ffa_cooldown_day", "3", "Rounds cooldown after a event until event can be start again", _, true,  0.0);
 	gc_iCooldownStart = AutoExecConfig_CreateConVar("sm_ffa_cooldown_start", "3", "Rounds until event can be start after mapchange.", _, true,  0.0);
+	gc_bSetABypassCooldown = AutoExecConfig_CreateConVar("sm_ffa_cooldown_admin", "1", "0 - disabled, 1 - ingnore the cooldown when admin/vip set ffa round", _, true, 0.0, true, 1.0);
 	gc_bSounds = AutoExecConfig_CreateConVar("sm_ffa_sounds_enable", "1", "0 - disabled, 1 - enable sounds", _, true,  0.0, true, 1.0);
 	gc_sSoundStartPath = AutoExecConfig_CreateConVar("sm_ffa_sounds_start", "music/MyJailbreak/start.mp3", "Path to the soundfile which should be played for a start.");
 	gc_bOverlays = AutoExecConfig_CreateConVar("sm_ffa_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true,  0.0, true, 1.0);
@@ -273,7 +275,7 @@ public Action Command_Setffa(int client, int args)
 						
 						if (StrEqual(EventDay, "none", false))
 						{
-							if (g_iCoolDown == 0)
+							if ((g_iCoolDown == 0) || gc_bSetABypassCooldown.BoolValue)
 							{
 								StartNextRound();
 								if (ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event FFA was started by admin %L", client);

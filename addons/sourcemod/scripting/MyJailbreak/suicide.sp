@@ -49,6 +49,7 @@ bool BombActive;
 ConVar gc_bPlugin;
 ConVar gc_bSetW;
 ConVar gc_bSetA;
+ConVar gc_bSetABypassCooldown;
 ConVar gc_bVote;
 ConVar gc_iKey;
 ConVar gc_bStandStill;
@@ -152,6 +153,7 @@ public void OnPluginStart()
 	gc_fBeaconTime = AutoExecConfig_CreateConVar("sm_suicidebomber_beacon_time", "240", "Time in seconds until the beacon turned on (set to 0 to disable)", _, true, 0.0);
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_suicidebomber_cooldown_day", "3", "Rounds cooldown after a event until event can be start again", _, true, 0.0);
 	gc_iCooldownStart = AutoExecConfig_CreateConVar("sm_suicidebomber_cooldown_start", "3", "Rounds until event can be start after mapchange.", _, true, 0.0);
+	gc_bSetABypassCooldown = AutoExecConfig_CreateConVar("sm_suicide_cooldown_admin", "1", "0 - disabled, 1 - ingnore the cooldown when admin/vip set suicide round", _, true, 0.0, true, 1.0);
 	gc_bOverlays = AutoExecConfig_CreateConVar("sm_suicidebomber_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true,  0.0, true, 1.0);
 	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_suicidebomber_overlays_start", "overlays/MyJailbreak/start" , "Path to the start Overlay DONT TYPE .vmt or .vft");
 	gc_bSounds = AutoExecConfig_CreateConVar("sm_suicidebomber_sounds_enable", "1", "0 - disabled, 1 - enable sounds ", _, true,  0.0, true, 1.0);
@@ -311,7 +313,7 @@ public Action Command_SetSuicideBomber(int client, int args)
 					
 					if (StrEqual(EventDay, "none", false))
 					{
-						if (g_iCoolDown == 0)
+						if ((g_iCoolDown == 0) || gc_bSetABypassCooldown.BoolValue)
 						{
 							StartNextRound();
 							if (ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Suicide Bomber was started by admin %L", client);

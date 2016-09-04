@@ -49,6 +49,7 @@ bool catched[MAXPLAYERS+1];
 ConVar gc_bPlugin;
 ConVar gc_bSetW;
 ConVar gc_bSetA;
+ConVar gc_bSetABypassCooldown;
 ConVar gc_bVote;
 ConVar gc_bSounds;
 ConVar gc_bOverlays;
@@ -155,6 +156,7 @@ public void OnPluginStart()
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_catch_roundtime", "5", "Round time in minutes for a single catch round", _, true, 1.0);
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_catch_cooldown_day", "3", "Rounds cooldown after a event until event can be start again", _, true, 0.0);
 	gc_iCooldownStart = AutoExecConfig_CreateConVar("sm_catch_cooldown_start", "3", "Rounds until event can be start after mapchange.", _, true, 0.0);
+	gc_bSetABypassCooldown = AutoExecConfig_CreateConVar("sm_catch_cooldown_admin", "1", "0 - disabled, 1 - ingnore the cooldown when admin/vip set catch round", _, true, 0.0, true, 1.0);
 	gc_bOverlays = AutoExecConfig_CreateConVar("sm_catch_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true, 0.0, true, 1.0);
 	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_catch_overlays_start", "overlays/MyJailbreak/start" , "Path to the start Overlay DONT TYPE .vmt or .vft");
 	gc_sOverlayFreeze = AutoExecConfig_CreateConVar("sm_catch_overlayfreeze_path", "overlays/MyJailbreak/freeze" , "Path to the Freeze Overlay DONT TYPE .vmt or .vft");
@@ -330,7 +332,7 @@ public Action Command_SetCatch(int client, int args)
 						
 						if (StrEqual(EventDay, "none", false))
 						{
-							if (g_iCoolDown == 0)
+							if ((g_iCoolDown == 0) || gc_bSetABypassCooldown.BoolValue)
 							{
 								StartNextRound();
 								if (ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Catch was started by admin %L", client);

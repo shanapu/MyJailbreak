@@ -50,6 +50,7 @@ bool ImmuneTorch[MAXPLAYERS+1];
 ConVar gc_bPlugin;
 ConVar gc_bSetW;
 ConVar gc_bSetA;
+ConVar gc_bSetABypassCooldown;
 ConVar gc_bVote;
 ConVar gc_bSounds;
 ConVar gc_bOverlays;
@@ -152,6 +153,7 @@ public void OnPluginStart()
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_torch_roundtime", "9", "Round time in minutes for a single torch round", _, true, 1.0);
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_torch_cooldown_day", "3", "Rounds cooldown after a event until event can be start again", _, true, 0.0);
 	gc_iCooldownStart = AutoExecConfig_CreateConVar("sm_torch_cooldown_start", "3", "Rounds until event can be start after mapchange.", _, true, 0.0);
+	gc_bSetABypassCooldown = AutoExecConfig_CreateConVar("sm_torch_cooldown_admin", "1", "0 - disabled, 1 - ingnore the cooldown when admin/vip set torch round", _, true, 0.0, true, 1.0);
 	gc_bSpawnCell = AutoExecConfig_CreateConVar("sm_torch_spawn", "0", "0 - T teleport to CT spawn, 1 - cell doors auto open", _, true,  0.0, true, 1.0);
 	gc_bOverlays = AutoExecConfig_CreateConVar("sm_torch_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true, 0.0, true, 1.0);
 	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_torch_overlays_start", "overlays/MyJailbreak/start" , "Path to the start Overlay DONT TYPE .vmt or .vft");
@@ -326,7 +328,7 @@ public Action Command_SetTorch(int client, int args)
 					
 					if (StrEqual(EventDay, "none", false))
 					{
-						if (g_iCoolDown == 0)
+						if ((g_iCoolDown == 0) || gc_bSetABypassCooldown.BoolValue)
 						{
 							StartNextRound();
 							if (ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Torch was started by admin %L", client);
