@@ -66,7 +66,7 @@ public void Icon_OnPluginStart()
 	gc_bIconGuard = AutoExecConfig_CreateConVar("sm_warden_icon_ct_enable", "1", "0 - disabled, 1 - enable the icon above the guards head", _, true,  0.0, true, 1.0);
 	gc_sIconGuardPath = AutoExecConfig_CreateConVar("sm_warden_icon_ct", "decals/MyJailbreak/ct" , "Path to the guard icon DONT TYPE .vmt or .vft");
 	gc_bIconPrisoner = AutoExecConfig_CreateConVar("sm_warden_icon_t_enable", "1", "0 - disabled, 1 - enable the icon above the prisoners head", _, true,  0.0, true, 1.0);
-	gc_sIconPrisonerPath = AutoExecConfig_CreateConVar("sm_warden_icon_t", "decals/MyJailbreak/terror" , "Path to the prisoner icon DONT TYPE .vmt or .vft");
+	gc_sIconPrisonerPath = AutoExecConfig_CreateConVar("sm_warden_icon_t", "decals/MyJailbreak/terror-fix" , "Path to the prisoner icon DONT TYPE .vmt or .vft");
 	
 	
 	//Hooks

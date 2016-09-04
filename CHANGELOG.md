@@ -32,6 +32,7 @@
     *  new cvar - sm_warden_mute_default - 0 - disabled, 1 - Prisoners are muted on roundstart by default. Warden have to unmute them. Default 0
     *  new cvar - sm_warden_talkover_dead - 0 - mute death & alive player on talkover, 1 - only mute alive player on talkover. Default 0
 *  Warden - Deputy: The warden get a deputy to his side with configurable warden features.
+    *  new model for deputy - "models/player/custom_player/kuristaja/jailbreak/guard3/guard3.mdl" - dont forget your downloads.ini and fastDL
     *  new command - sm_deputy - Allows the warden to choose a deputy or a player to be deputy
     *  new command - sm_undeputy - Allows the warden to remove the deputy and the deputy to retire from the position
     *  new admin command - sm_removedeputy - Allows the admin to remove the deputy
@@ -96,7 +97,7 @@
 *  Last Guard: fix sm_lastguard_minct bypass. THX devu4!
 *  PlayerTags: fix tags on warden remove
 *  Weapons: glitch to use menu on T side. THX devu4!
-*  Icon Terror: fix black icon on standart terror.vmt
+*  Icon Terror: fix black icon on decals/MyJailbreak/terror - use sm_warden_icon_t "decals/MyJailbreak/terror-fix"
 *  minor errors & smaller fixes
   
   
