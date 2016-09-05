@@ -37,6 +37,15 @@
 		"de"		"{purple}{1} {default}hat {purple}sich ergeben! {default}Wird der Warden akzeptieren?"
 	}
 
+	"request_capitulated"
+	{
+		"#format"   "{1:N}"
+		"en"		"{purple}{1} {default}has {purple}capitulated!"
+		"ru"		"{purple}{1} {purple}капитулировал!"
+		"pl"		"{purple}{1} {default}. {purple}skapitulowal!"
+		"de"		"{purple}{1} {default}hat {purple}sich ergeben!"
+	}
+
 	"request_alreadycapitulated"
 	{
 		"ru"		"Вы уже {purple}капитулировали"

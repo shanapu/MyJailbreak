@@ -13,6 +13,8 @@
     *  new cvar - sm_ratio_balance_warden - Prevent warden & deputy to be switch to T on balance the teams. Could result in unbalanced teams
 *  Weapons: Kevlar & Helm for guards on roundstart except on event days
     *  new cvar - sm_weapons_kevlar - 0 - disabled, 1 - CT get Kevlar & helm on Spawn
+*  Request - Capitulation: instand accept capitulation - the warden dont need to accept the capitulation per menu
+    *  new cvar - sm_capitulation_accept - 0 - disabled, 1 - the warden have to accept capitulation on menupopup Default 1
 *  Duckhunt: New kind to fly for ducks
     *  new keybind - +drop (drop weapon) - toggle fly and walk for ducks when sm_duckhunt_flymode 1
     *  new cvar - sm_duckhunt_flymode - 0 - Low gravity (old way), 1 - 'Flymode' (like a slow noclip with clipping). Bit difficult

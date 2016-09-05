@@ -38,6 +38,7 @@
 //Console Variables
 ConVar gc_fCapitulationTime;
 ConVar gc_bCapitulation;
+ConVar gc_bCapitulationAccept;
 ConVar gc_fRebelTime;
 ConVar gc_bCapitulationDamage;
 ConVar gc_iCapitulationColorRed;
@@ -68,11 +69,12 @@ public void Capitulation_OnPluginStart()
 	
 	
 	//AutoExecConfig
-	gc_bCapitulation = AutoExecConfig_CreateConVar("sm_capitulation_enable", "1", "0 - disabled, 1 - enable Capitulation");
+	gc_bCapitulation = AutoExecConfig_CreateConVar("sm_capitulation_enable", "1", "0 - disabled, 1 - enable Capitulation", _, true, 0.0, true, 1.0);
 	gc_sCustomCommandCapitulation = AutoExecConfig_CreateConVar("sm_capitulation_cmds", "capi, capitulate, pardon, p", "Set your custom chat commands for Capitulation(!capitulation (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)");
 	gc_fCapitulationTime = AutoExecConfig_CreateConVar("sm_capitulation_timer", "10.0", "Time to decide to accept the capitulation");
 	gc_fRebelTime = AutoExecConfig_CreateConVar("sm_capitulation_rebel_timer", "10.0", "Time to give a rebel on not accepted capitulation his knife back");
-	gc_bCapitulationDamage = AutoExecConfig_CreateConVar("sm_capitulation_damage", "1", "0 - disabled, 1 - enable Terror make no damage after capitulation");
+	gc_bCapitulationAccept = AutoExecConfig_CreateConVar("sm_capitulation_accept", "1", "0 - disabled, 1 - the warden have to accept capitulation on menu popup", _, true, 0.0, true, 1.0);
+	gc_bCapitulationDamage = AutoExecConfig_CreateConVar("sm_capitulation_damage", "1", "0 - disabled, 1 - enable Terror make no damage after capitulation", _, true, 0.0, true, 1.0);
 	gc_iCapitulationColorRed = AutoExecConfig_CreateConVar("sm_capitulation_color_red", "0", "What color to turn the capitulation Terror into (set R, G and B values to 255 to disable) (Rgb): x - red value", _, true, 0.0, true, 255.0);
 	gc_iCapitulationColorGreen = AutoExecConfig_CreateConVar("sm_capitulation_color_green", "250", "What color to turn the capitulation Terror into (rGb): x - green value", _, true, 0.0, true, 255.0);
 	gc_iCapitulationColorBlue = AutoExecConfig_CreateConVar("sm_capitulation_color_blue", "0", "What color to turn the capitulation Terror into (rgB): x - blue value", _, true, 0.0, true, 255.0);
@@ -114,7 +116,7 @@ public Action Command_Capitulation(int client, int args)
 			{
 				if (!(g_bCapitulated[client]))
 				{
-					if (warden_exist())
+					if (warden_exist() && gc_bCapitulationAccept.BoolValue)
 					{
 						if (!IsRequest)
 						{
@@ -130,6 +132,14 @@ public Action Command_Capitulation(int client, int args)
 							if (gc_bSounds.BoolValue)EmitSoundToAllAny(g_sSoundCapitulationPath);
 						}
 						else CReplyToCommand(client, "%t %t", "request_tag", "request_processing");
+					}
+					else if (!gc_bCapitulationAccept.BoolValue)
+					{
+						StripAllPlayerWeapons(i);
+						SetEntityRenderColor(client, gc_iCapitulationColorRed.IntValue, gc_iCapitulationColorGreen.IntValue, gc_iCapitulationColorBlue.IntValue, 255);
+						CapitulationTimer[i] = CreateTimer(gc_fCapitulationTime.FloatValue, Timer_GiveKnifeCapitulated, i);
+						CPrintToChatAll("%t %t", "warden_tag", "request_capitulated", i, client);
+						ChangeRebelStatus(i, false);
 					}
 					else CReplyToCommand(client, "%t %t", "request_tag", "warden_noexist");
 				}
@@ -288,7 +298,7 @@ public int Handler_CapitulationMenu(Menu menu, MenuAction action, int client, in
 				StripAllPlayerWeapons(i);
 				SetEntityRenderColor(client, gc_iCapitulationColorRed.IntValue, gc_iCapitulationColorGreen.IntValue, gc_iCapitulationColorBlue.IntValue, 255);
 				CapitulationTimer[i] = CreateTimer(gc_fCapitulationTime.FloatValue, Timer_GiveKnifeCapitulated, i);
-				CPrintToChatAll("%t %t", "warden_tag", "request_accepted", i, client);
+				CPrintToChatAll("%t %t", "warden_tag", "request_capitulated", i, client);
 				ChangeRebelStatus(i, false);
 			}
 		}
