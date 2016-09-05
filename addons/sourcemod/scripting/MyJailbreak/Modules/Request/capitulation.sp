@@ -19,8 +19,6 @@
  */
 
 
-
-
 /******************************************************************************
                    STARTUP
 ******************************************************************************/
@@ -70,7 +68,7 @@ public void Capitulation_OnPluginStart()
 	
 	//AutoExecConfig
 	gc_bCapitulation = AutoExecConfig_CreateConVar("sm_capitulation_enable", "1", "0 - disabled, 1 - enable Capitulation", _, true, 0.0, true, 1.0);
-	gc_sCustomCommandCapitulation = AutoExecConfig_CreateConVar("sm_capitulation_cmds", "capi, capitulate, pardon, p", "Set your custom chat commands for Capitulation(!capitulation (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)");
+	gc_sCustomCommandCapitulation = AutoExecConfig_CreateConVar("sm_capitulation_cmds", "sur, surrender, capi, capitulate, pardon, p", "Set your custom chat commands for Capitulation(!capitulation (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)");
 	gc_fCapitulationTime = AutoExecConfig_CreateConVar("sm_capitulation_timer", "10.0", "Time to decide to accept the capitulation");
 	gc_fRebelTime = AutoExecConfig_CreateConVar("sm_capitulation_rebel_timer", "10.0", "Time to give a rebel on not accepted capitulation his knife back");
 	gc_bCapitulationAccept = AutoExecConfig_CreateConVar("sm_capitulation_accept", "1", "0 - disabled, 1 - the warden have to accept capitulation on menu popup", _, true, 0.0, true, 1.0);
@@ -135,11 +133,11 @@ public Action Command_Capitulation(int client, int args)
 					}
 					else if (!gc_bCapitulationAccept.BoolValue)
 					{
-						StripAllPlayerWeapons(i);
+						StripAllPlayerWeapons(client);
 						SetEntityRenderColor(client, gc_iCapitulationColorRed.IntValue, gc_iCapitulationColorGreen.IntValue, gc_iCapitulationColorBlue.IntValue, 255);
-						CapitulationTimer[i] = CreateTimer(gc_fCapitulationTime.FloatValue, Timer_GiveKnifeCapitulated, i);
-						CPrintToChatAll("%t %t", "warden_tag", "request_capitulated", i, client);
-						ChangeRebelStatus(i, false);
+						CapitulationTimer[client] = CreateTimer(gc_fCapitulationTime.FloatValue, Timer_GiveKnifeCapitulated, client);
+						CPrintToChatAll("%t %t", "warden_tag", "request_capitulated", client);
+						ChangeRebelStatus(client, false);
 					}
 					else CReplyToCommand(client, "%t %t", "request_tag", "warden_noexist");
 				}
