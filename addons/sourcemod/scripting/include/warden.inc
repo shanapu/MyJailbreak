@@ -4,6 +4,115 @@
 #define _warden_included
 
 
+public SharedPlugin:__pl_warden =
+{
+	name = "warden", 
+	file = "warden.smx", 
+	#if defined REQUIRE_PLUGIN
+	required = 1, 
+	#else
+	required = 0, 
+	#endif
+};
+
+
+#if !defined REQUIRE_PLUGIN
+public __pl_warden_SetNTVOptional()
+{
+	MarkNativeAsOptional("warden_exist");
+	MarkNativeAsOptional("warden_iswarden");
+	MarkNativeAsOptional("warden_set");
+	MarkNativeAsOptional("warden_remove");
+	MarkNativeAsOptional("warden_get");
+	MarkNativeAsOptional("warden_getlast");
+	
+	MarkNativeAsOptional("warden_deputy_exist");
+	MarkNativeAsOptional("warden_deputy_isdeputy");
+	MarkNativeAsOptional("warden_deputy_set");
+	MarkNativeAsOptional("warden_deputy_remove");
+	MarkNativeAsOptional("warden_deputy_get");
+	MarkNativeAsOptional("warden_deputy_getlast");
+}
+#endif
+
+
+
+/*********************************************************
+ * Called when a new warden was created
+ * By player, admin, randomchoose...
+ *
+ * @param client		The client who was warden
+ * @NoReturn
+ *********************************************************/
+forward void warden_OnWardenCreated(int client);
+
+
+/*********************************************************
+ * Called when a client become new warden
+ *
+ * @param client		The client who was warden
+ * @NoReturn
+ *********************************************************/
+forward void warden_OnWardenCreatedByUser(int client);
+
+
+/*********************************************************
+ * Called when a admin set a new warden
+ *
+ * @param client		The client who was warden
+ * @NoReturn
+ *********************************************************/
+forward void warden_OnWardenCreatedByAdmin(int client);
+
+
+/*********************************************************
+ * Called everytime the warden position become free.
+ * On wardens dead, disconnect, removed...
+ * 
+ * @param client		The client who was warden
+ * @NoReturn
+ *********************************************************/
+forward void warden_OnWardenRemoved(int client);
+
+
+/*********************************************************
+ * Called when a the warden was removed by an admin
+ *
+ * @param client		The client who was warden
+ * @NoReturn
+ *********************************************************/
+forward void warden_OnWardenRemovedByAdmin(int client);
+
+
+/*********************************************************
+ * Called when a the warden retire hisself
+ *
+ * @param client		The client who was warden
+ * @NoReturn
+ *********************************************************/
+forward void warden_OnWardenRemovedBySelf(int client);
+
+
+/*********************************************************
+ * Called when a the warden disconnect
+ *
+ * @param client		The client who disconnected
+ * @NoReturn
+ *********************************************************/
+forward void warden_OnWardenDisconnected(int client);
+
+
+/*********************************************************
+ * Called when a the warden dies
+ *
+ * @param client		The client who was warden
+ * @NoReturn
+ *********************************************************/
+forward void warden_OnWardenDeath(int client);
+
+
+
+
 /*********************************************************
  * Checks if any warden exist
  *

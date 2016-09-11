@@ -25,8 +25,17 @@
 
 
 //Includes
-#include <myjailbreak> //... all other includes in myjailbreak.inc
+#include <sourcemod>
+#include <sdktools>
+#include <sdkhooks>
+#include <cstrike>
+#include <smlib>
+#include <colors>
+#include <autoexecconfig>
+#include <smartjaildoors>
 #include <warden>
+#include <mystocks>
+#include <myjailbreak>
 
 
 //Compiler Options
@@ -437,8 +446,8 @@ public Action Timer_NoDeputy(Handle timer)
 {
 	if ((g_iDeputy == -1) && (g_iWarden != -1))
 	{
-		if (gc_bSetDeputy.BoolValue) CPrintToChat(g_iWarden, "%t %t", "warden_tag" , "warden_deputy_set");
 		if (gc_bBecomeDeputy.BoolValue) CPrintToChatAll("%t %t", "warden_tag" , "warden_deputy_become");
+		if (gc_bSetDeputy.BoolValue) CPrintToChat(g_iWarden, "%t %t", "warden_tag" , "warden_deputy_set");
 	}
 }
 

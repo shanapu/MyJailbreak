@@ -25,13 +25,18 @@
 
 
 //Includes
-#include <myjailbreak> //... all other includes in myjailbreak.inc
+#include <sourcemod>
+#include <sdktools>
+#include <sdkhooks>
+#include <cstrike>
+#include <emitsoundany>
+#include <colors>
+#include <autoexecconfig>
+#include <hosties>
+#include <lastrequest>
 #include <warden>
-
-
-//Compiler Options
-#pragma semicolon 1
-#pragma newdecls required
+#include <mystocks>
+#include <myjailbreak>
 
 
 //Console Variables
@@ -61,6 +66,7 @@ ConVar g_bMenuClose;
 
 //Booleans
 bool IsLR = false;
+bool gp_bMyJailBreak = false;
 
 
 //Integers
@@ -130,6 +136,11 @@ char g_sMyJBLogFile[PLATFORM_MAX_PATH];
 #include "MyJailbreak/Modules/Warden/rebel.sp"
 #include "MyJailbreak/Modules/Warden/counter.sp"
 #include "MyJailbreak/Modules/Warden/shootguns.sp"
+
+
+//Compiler Options
+#pragma semicolon 1
+#pragma newdecls required
 
 
 //Info
@@ -249,13 +260,6 @@ public void OnPluginStart()
 }
 
 
-public void OnAllPluginsLoaded()
-{
-	//FindConVar
-	g_bMenuClose = FindConVar("sm_menu_close");
-}
-
-
 //ConVarChange for Strings
 public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
@@ -360,6 +364,29 @@ public void OnConfigsExecuted()
 }
 
 
+public void OnAllPluginsLoaded()
+{
+	//FindConVar
+	g_bMenuClose = FindConVar("sm_menu_close");
+	
+	gp_bMyJailBreak = LibraryExists("myjailbreak");
+}
+
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (StrEqual(name, "myjailbreak"))
+		gp_bMyJailBreak = false;
+}
+
+
+public void OnLibraryAdded(const char[] name)
+{
+	if (StrEqual(name, "myjailbreak"))
+		gp_bMyJailBreak = true;
+}
+
+
 /******************************************************************************
                    COMMANDS
 ******************************************************************************/
@@ -437,7 +464,7 @@ public Action Command_VoteWarden(int client, int args)
 					
 					if (g_iVoteCount > playercount)
 					{
-						if (ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Player %L was kick as warden by voting", g_iWarden);
+						if(gp_bMyJailBreak) if (ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Player %L was kick as warden by voting", g_iWarden);
 						RemoveTheWarden();
 						CPrintToChatAll("%t %t", "warden_tag" , "warden_votesuccess");
 					}
@@ -464,7 +491,7 @@ public Action AdminCommand_RemoveWarden(int client, int args)
 			CPrintToChatAll("%t %t", "warden_tag" , "warden_removed", client, g_iWarden);  // if client is console !=
 			if (gc_bBetterNotes.BoolValue) PrintCenterTextAll("%t", "warden_removed_nc", client, g_iWarden);
 			
-			if (ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Admin %L removed player %L as warden", client, g_iWarden);
+			if(gp_bMyJailBreak) if (ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Admin %L removed player %L as warden", client, g_iWarden);
 			
 			RemoveTheWarden();
 			Forward_OnWardenRemovedByAdmin(client);
@@ -573,19 +600,22 @@ public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 			g_iWarden = -1;
 		}
 	}
-	char EventDay[64];
-	GetEventDayName(EventDay);
-	
-	if (!StrEqual(EventDay, "none", false) || !gc_bStayWarden.BoolValue)
+	if (gp_bMyJailBreak)
 	{
-		if (g_iWarden != -1)
+		char EventDay[64];
+		GetEventDayName(EventDay);
+		
+		if (!StrEqual(EventDay, "none", false) || !gc_bStayWarden.BoolValue)
 		{
-			CreateTimer( 0.1, Timer_RemoveColor, g_iWarden);
-			SetEntityModel(g_iWarden, g_sModelPathPrevious);
-			Forward_OnWardenRemoved(g_iWarden);
-			g_iLastWarden = g_iWarden;
-			g_iWarden = -1;
-			
+			if (g_iWarden != -1)
+			{
+				CreateTimer( 0.1, Timer_RemoveColor, g_iWarden);
+				SetEntityModel(g_iWarden, g_sModelPathPrevious);
+				Forward_OnWardenRemoved(g_iWarden);
+				g_iLastWarden = g_iWarden;
+				g_iWarden = -1;
+				
+			}
 		}
 	}
 	if (g_iWarden != -1)
@@ -883,7 +913,7 @@ public int Handler_SetWardenOverwrite(Menu menu, MenuAction action, int client, 
 			int newwarden = GetClientOfUserId(g_iTempWarden[client]);
 			if (g_iWarden != -1)CPrintToChatAll("%t %t", "warden_tag" , "warden_removed", client, g_iWarden);
 			
-			if (ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Admin %L kick player %L warden and set %L as new", client, g_iWarden, newwarden);
+			if(gp_bMyJailBreak) if (ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Admin %L kick player %L warden and set %L as new", client, g_iWarden, newwarden);
 			
 			RemoveTheWarden();
 			SetTheWarden(newwarden);

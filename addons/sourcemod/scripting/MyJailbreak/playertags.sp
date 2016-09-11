@@ -25,7 +25,15 @@
 
 
 //Includes
-#include <myjailbreak> //... all other includes in myjailbreak.inc
+#include <sourcemod>
+#include <sdktools>
+#include <sdkhooks>
+#include <cstrike>
+#include <chat-processor>
+#include <autoexecconfig>
+#include <warden>
+#include <mystocks>
+#include <myjailbreak>
 
 
 //Compiler Options
@@ -123,19 +131,16 @@ public void Event_CheckTag(Event event, char[] name, bool dontBroadcast)
 public void OnClientPutInServer(int client)
 {
 	HandleTag(client);
-	return;
 }
 
-public int warden_OnWardenCreated(int client)
+public void warden_OnWardenCreated(int client)
 {
 	HandleTag(client);
-	return;
 }
 
-public int warden_OnWardenRemoved(int client)
+public void warden_OnWardenRemoved(int client)
 {
 	CreateTimer(1.0, DelayCheck);
-	return;
 }
 
 

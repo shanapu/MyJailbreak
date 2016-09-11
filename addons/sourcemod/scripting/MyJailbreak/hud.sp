@@ -25,7 +25,15 @@
 
 
 //Includes
-#include <myjailbreak> //... all other includes in myjailbreak.inc
+#include <sourcemod>
+#include <sdktools>
+#include <sdkhooks>
+#include <cstrike>
+#include <colors>
+#include <autoexecconfig>
+#include <warden>
+#include <mystocks>
+#include <myjailbreak>
 
 
 //Compiler Options
@@ -156,13 +164,13 @@ public void OnClientPutInServer(int client)
 }
 
 
-public int warden_OnWardenCreated(int client)
+public void warden_OnWardenCreated(int client)
 {
 	ShowHUD();
 }
 
 
-public int warden_OnWardenRemoved(int client)
+public void warden_OnWardenRemoved(int client)
 {
 	ShowHUD();
 }

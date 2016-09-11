@@ -25,6 +25,12 @@
 
 
 //Includes
+#include <sourcemod>
+#include <sdktools>
+#include <sdkhooks>
+#include <cstrike>
+#include <autoexecconfig>
+#include <mystocks>
 #include <myjailbreak>
 
 
