@@ -211,7 +211,7 @@ public void Math_OnMapEnd()
 }
 
 
-public Action OnChatMessage(int &author, Handle recipients, char[] name, char[] message)
+public Action OnChatMessage(int& author, ArrayList recipients, eChatFlags& flag, char[] name, char[] message, bool& bProcessColors, bool& bRemoveColors)
 {
 	if (g_bIsMathQuiz && g_bCanAnswer)
 	{
