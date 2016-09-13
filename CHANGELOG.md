@@ -3,9 +3,9 @@
 **[Beta *7.2.develop*]** - develop
   
 *Added*
-*  Myjailbreak: Shoot weapon on ground to remove it
+*  Warden: Shoot weapon on ground to remove it
     *  new cvar - sm_warden_shootguns_enable - 0 - disabled, 1 - enable shoot guns on ground to remove
-    *  new cvar - sm_warden_shootguns_mode - 1 - only warden / 2 - warden & ct / 3 - all player
+    *  new cvar - sm_warden_shootguns_mode - 1 - only warden / 2 - warden & deputy / 3 - warden, deputy & ct / 4 - all player
 *  Ratio: Added one round cooldown for guard queue on wrong answer.
 *  Ratio: New system to choose players to switch on unbalanced teams.
     *  new cvar - sm_ratio_balance_terror - 0 = Could result in unbalanced teams. 1 = Switch a random T, when nobody is in guardqueue to balance the teams.
@@ -35,7 +35,7 @@
     *  new cvar - sm_warden_talkover_dead - 0 - mute death & alive player on talkover, 1 - only mute alive player on talkover. Default 0
 *  Warden - Deputy: The warden get a deputy to his side with configurable warden features.
     *  new model for deputy - "models/player/custom_player/kuristaja/jailbreak/guard3/guard3.mdl" - dont forget your downloads.ini and fastDL
-    *  new command - sm_deputy - Allows the warden to choose a deputy or a player to be deputy
+    *  new command - sm_deputy - Allows the warden to choose a deputy or a player to become deputy
     *  new command - sm_undeputy - Allows the warden to remove the deputy and the deputy to retire from the position
     *  new admin command - sm_removedeputy - Allows the admin to remove the deputy
     *  new cvar - sm_warden_deputy_enable - 0 - disabled, 1 - enable this MyJailbreak SourceMod plugin
@@ -71,7 +71,8 @@
     *  new cvar - sm_warden_cmds_removedeputy - Set your custom chat commands for admins to remove a warden(!removewarden (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands) Default "rd,fd"
     *  new cvar - sm_freekill_freeday_victim_deputy - 0 - disabled, 1 - Allow the deputy to set a personal freeday next round
     *  changed cvar - sm_warden_disarm_mode - 1 - Only warden can disarm, 2 - warden & deputy can disarm, 3 - All CT can disarm, 4 - Everyone can disarm (CT & T)
-    *  changed cvar - sm_warden_shootguns_mode1 - only warden / 2 - warden & deputy / 3 - warden, deputy & ct / 4 - all player
+*  Event Days: bypass on eventday cooldown for admins
+    +  new cvar - sm_EVENTDAYNAME_cooldown_admin - 0 - disabled, 1 - ingnore the cooldown when admin/vip set event day
   
   
   
@@ -79,6 +80,7 @@
 *  Commands: Add up to 12 custom commands to almost all myjailbreak commands.
     *  new cvar - sm_PLUGINNAME_cmds_FEATURENAME - Set your custom chat commands for *FEATURENAME*(no 'sm_'/'!')(seperate with comma ',')(max. 12 commands)
     *  removed cvar - sm_PLUGINNAME_cmd - obsolete cvars. Please remove them from your configs!
+    *  removed commands - sm_ALTERNATIVE - double/different commands for same action. Use sm_PLUGINNAME_cmds_FEATURENAME
 *  Warden: Chathint on successful vote to kick warden
 *  Warden counter: Use the wardens FOV instead radius around him to count terrors
     *  removed cvar - sm_warden_counter_radius - obsolete cvar. Please remove them from your config!
@@ -86,7 +88,7 @@
 *  Duckhunt: Changed the way to set health for hunter based on enemey count. https://github.com/shanapu/MyJailbreak/issues/77#issuecomment-242951426
     *  new cvar - sm_duckhunt_hunter_hp_extra - HP the Hunter get additional per extra duck.
 *  Zombie: Changed the way to set health for zombies based on enemey count. https://github.com/shanapu/MyJailbreak/issues/77#issuecomment-242951426
-    *  new cvar - sm_zombie_zombie_hp_extra - HP the zombie get additional per extra duck.
+    *  new cvar - sm_zombie_zombie_hp_extra - HP the zombie get additional per extra human.
   
   
   
@@ -104,7 +106,13 @@
   
   
   
-  **[Beta 7.2]** - fix for 1.7.x 
+*Changed Requirements*
+*  removed - Simple Chat Prozessor - https://bitbucket.org/minimoney1/simple-chat-processor - remove/disable simple-chatprocessor.smx
+*  replacement - [Any] Chat-Processor - https://forums.alliedmods.net/showthread.php?p=2449343
+  
+  
+  
+**[Beta 7.2]** - fix for 1.7.x 
    
 *Fixed* 
 *  Compatibility issues with sourcemod 1.7.x 
