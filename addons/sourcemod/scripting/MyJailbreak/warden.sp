@@ -578,7 +578,7 @@ public void Event_PostRoundStart(Event event, const char[] name, bool dontBroadc
 		{
 			RandomTimer = CreateTimer(gc_fRandomTimer.FloatValue, Timer_ChooseRandom);
 			
-			LoopValidClients(i, false, false) if(GetClientTeam == CS_TEAM_CT)
+			LoopValidClients(i, false, false) if(GetClientTeam(i) == CS_TEAM_CT)
 			{
 				CPrintToChat(i, "%t %t", "warden_tag" , "warden_nowarden");
 				
