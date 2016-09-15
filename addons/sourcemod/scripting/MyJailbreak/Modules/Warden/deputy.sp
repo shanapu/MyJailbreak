@@ -29,7 +29,6 @@
 #include <sdktools>
 #include <sdkhooks>
 #include <cstrike>
-#include <smlib>
 #include <colors>
 #include <autoexecconfig>
 #include <smartjaildoors>
@@ -329,19 +328,22 @@ public void Deputy_Event_RoundStart(Event event, const char[] name, bool dontBro
 			g_iDeputy = -1;
 		}
 	}
-	char EventDay[64];
-	GetEventDayName(EventDay);
-	
-	if (!StrEqual(EventDay, "none", false) || !gc_bStayWarden.BoolValue)
+	if(gp_bMyJailBreak)
 	{
-		if (g_iDeputy != -1)
+		char EventDay[64];
+		GetEventDayName(EventDay);
+		
+		if (!StrEqual(EventDay, "none", false) || !gc_bStayWarden.BoolValue)
 		{
-			CreateTimer( 0.1, Timer_RemoveColor, g_iDeputy);
-			SetEntityModel(g_iDeputy, g_sModelDeputyPathPrevious);
-			Forward_OnDeputyRemoved(g_iDeputy);
-			g_iLastDeputy = g_iDeputy;
-			g_iDeputy = -1;
-			
+			if (g_iDeputy != -1)
+			{
+				CreateTimer( 0.1, Timer_RemoveColor, g_iDeputy);
+				SetEntityModel(g_iDeputy, g_sModelDeputyPathPrevious);
+				Forward_OnDeputyRemoved(g_iDeputy);
+				g_iLastDeputy = g_iDeputy;
+				g_iDeputy = -1;
+				
+			}
 		}
 	}
 	if (g_iDeputy != -1)

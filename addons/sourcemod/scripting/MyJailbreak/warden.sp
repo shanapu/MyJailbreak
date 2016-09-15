@@ -30,6 +30,7 @@
 #include <sdkhooks>
 #include <cstrike>
 #include <emitsoundany>
+#include <smlib>
 #include <colors>
 #include <autoexecconfig>
 #include <hosties>
@@ -576,10 +577,12 @@ public void Event_PostRoundStart(Event event, const char[] name, bool dontBroadc
 		if ((g_iWarden == -1) && gc_bBecomeWarden.BoolValue)
 		{
 			RandomTimer = CreateTimer(gc_fRandomTimer.FloatValue, Timer_ChooseRandom);
-			CPrintToChatAll("%t %t", "warden_tag" , "warden_nowarden");
-			if (gc_bBetterNotes.BoolValue)
+			
+			LoopValidClients(i, false, false) if(GetClientTeam == CS_TEAM_CT)
 			{
-				PrintCenterTextAll("%t", "warden_nowarden_nc");
+				CPrintToChat(i, "%t %t", "warden_tag" , "warden_nowarden");
+				
+				if (gc_bBetterNotes.BoolValue) PrintCenterText(i, "%t", "warden_nowarden_nc");
 			}
 		}
 	}

@@ -29,7 +29,6 @@
 #include <sdktools>
 #include <sdkhooks>
 #include <cstrike>
-#include <smlib>
 #include <colors>
 #include <autoexecconfig>
 #include <chat-processor>
