@@ -785,7 +785,7 @@
 	{
 		"ru"		"Желтый"
 		"pl"		"Zolty"
-		"de"		"Geld"
+		"de"		"Gelb"
 		"en"		"Yellow"
 	}
 
