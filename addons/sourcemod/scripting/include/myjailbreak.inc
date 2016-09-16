@@ -25,7 +25,7 @@
 
 
 //Defines
-#define PLUGIN_VERSION "Beta 7.2.develop"
+#define PLUGIN_VERSION "Beta 8.0"
 #define URL_LINK "https://github.com/shanapu/MyJailbreak"
 
 
