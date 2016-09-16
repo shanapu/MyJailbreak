@@ -22,7 +22,7 @@
 		"#format"   "{1:i},{2:N}"
 		"ru"		"{purple}{2}{default} проголосовал. {purple}{1}{default} голосов осталось до {darkred}игры Torch Relay"
 		"pl"		"{purple}{2}{default} zaglosowal {purple}{1}{default} pozostalo glosow do {darkred}Torch Relay"
-		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}Torch Relay{default} beginnt"
+		"de"		"{purple}{2}{default} hat gevotet. Jetzt noch {purple}{1}{default} votes bis {darkred}Torch Relay{default} beginnt"
 		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes required to play {darkred}Torch Relay."
 		"da"		"{purple}{2}{default} har stemt. {purple}{1}{default} stemmer tilbage til {darkred}Torch Relay{default} starter!"
 	}
@@ -68,7 +68,7 @@
 	{
 		"ru"		"Голосование игроков за игру Torch Relay {purple}отключено"
 		"pl"		"Glosowanie graczy na Torch Relay jest {purple}wylaczone"
-		"de"		"Voting für Torch Relay ist {purple}ausgeschaltet"
+		"de"		"Voting für Torch Relay ist {purple}deaktiviert"
 		"en"		"Voting for Torch Relay is {purple}disabled"
 		"da"		"Afstemning for Torch Relay er {purple}slået fra"
 	}
@@ -85,7 +85,7 @@
 	{
 		"ru"		"Установка игры Torch Relay КМД {purple}отменена"
 		"pl"		"Glosowanie na Torch Relay przez Straznika jest {purple}wylaczone"
-		"de"		"Torch Relay Aktivierung durch den Warden ist {purple}ausgeschaltet"
+		"de"		"Torch Relay Aktivierung durch den Warden ist {purple}deaktiviert"
 		"en"		"Set Torch Relay by Warden is {purple}disabled!"
 		"da"		"Start Torch Relay som Warden er {purple}slået fra"
 	}
@@ -102,7 +102,7 @@
 	{
 		"ru"		"Установка игры Torch Relay админом {purple}отменена"
 		"pl"		"Wlaczenie Torch Relay przez admina jest {purple}wylaczone"
-		"de"		"Torch Relay Aktivierung durch den Admin ist {purple}ausgeschaltet"
+		"de"		"Torch Relay Aktivierung durch den Admin ist {purple}deaktiviert"
 		"en"		"Set Torch Relay by Admin is {purple}disabled!"
 		"da"		"Start Torch Relay som Admin er {purple}slået fra"
 	}
@@ -165,7 +165,7 @@
 		"ru"		"Вы не можете активировать !lr в "
 		"ru"		"Вы не можете активировать !lr в "
 		"pl"		"ie mozesz uzyc !lr  w tej rundzie!"
-		"de"		"Der letzte Terrorists hat keinen Wunsch!"
+		"de"		"Der letzte Terrorist hat keinen Wunsch frei!"
 		"en"		"Last Request is disabled during this round!"
 		"da"		"Der kan ikke laves !lr"
 	}
@@ -184,7 +184,7 @@
 		"en"		"You must stay in the main Jailroom! Don't enter vents or secrets!"
 		"ru"		"Оставайтесь в клетках! Не убегайте в нычки!"
 		"pl"		"Zostan w glownym pomieszczeniu Wiezienia! Zakaz wejsc do SECRETOW!"
-		"de"		"Bleib' im Haupt Jail Raum! Verstecke sind verboten!"
+		"de"		"Bleib im Haupt Jail Raum! Verstecke sind verboten!"
 	}
 
 	"torch_progress"

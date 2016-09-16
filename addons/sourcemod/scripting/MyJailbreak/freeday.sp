@@ -134,7 +134,7 @@ public void OnPluginStart()
 	gc_bdamage = AutoExecConfig_CreateConVar("sm_freeday_damage", "1", "0 - disabled, 1 - enable damage on freedays", _, true,  0.0, true, 1.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_freeday_roundtime", "5", "Round time in minutes for a single freeday round", _, true,  1.0);
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_freeday_cooldown_day", "0", "Rounds until freeday can be started again.", _, true,  0.0);
-	gc_bSetABypassCooldown = AutoExecConfig_CreateConVar("sm_freeday_cooldown_admin", "1", "0 - disabled, 1 - ingnore the cooldown when admin/vip set freeday round", _, true, 0.0, true, 1.0);
+	gc_bSetABypassCooldown = AutoExecConfig_CreateConVar("sm_freeday_cooldown_admin", "1", "0 - disabled, 1 - ignore the cooldown when admin/vip set freeday round", _, true, 0.0, true, 1.0);
 	
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();

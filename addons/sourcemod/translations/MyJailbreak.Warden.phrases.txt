@@ -83,7 +83,7 @@
 		"en"		"Warden is currently {purple}disabled{default}!"
 		"ru"		"Командир {purple}недоступен{default}."
 		"pl"		"Warden jest {purple}wylaczony{default}."
-		"de"		"Warden ist {purple}ausgeschaltet{default}."
+		"de"		"Warden ist {purple}deaktiviert{default}."
 		"da"		"Warden er {purple}deaktiveret{default}."
 	}
 
@@ -292,7 +292,7 @@
 	{
 		"ru"		"Голосование за кик {purple}командира{default} отключено"
 		"pl"		"glosowanie na kickowanie {purple}wardena{default} jest wylaczone"
-		"de"		"Voting gegen den {purple}Warden{default} ist ausgeschaltet!"
+		"de"		"Voting gegen den {purple}Warden{default} ist deaktiviert!"
 		"en"		"Voting to kick the {purple}Warden{default} is currently disabled!"
 		"da"		"Afstemning om at kick {purple}warden{default} er deaktiveret!"
 	}
@@ -477,7 +477,7 @@
 	{
 		"ru"		"Командир отключил {purple}noblock!"
 		"pl"		"Warden ustawil {purple}noblock off!"
-		"de"		"Der Warden hat {purple}noblock ausgeschaltet!"
+		"de"		"Der Warden hat {purple}noblock deaktiviert!"
 		"en"		"The Warden toggled {purple}NoBlock off!"
 		"da"		"Warden har {purple}deaktiveret NOBLOCK!"
 	}
@@ -1123,7 +1123,7 @@
 	"warden_bulletmarkoff"
 	{
 		"ru"		"Искры пуль {purple}отключены!"
-		"de"		"Bullet Impact Sparks {purple}ausgeschaltet!"
+		"de"		"Bullet Impact Sparks {purple}deaktiviert!"
 		"en"		"Bullet Impact Sparks are now {purple}disabled!"
 	}
 
@@ -1326,7 +1326,7 @@
 	{
 		"en"		"Deputy is currently {purple}disabled{default}!"
 		"pl"		"Deputy jest {purple}wylaczony{default}."
-		"de"		"Deputy ist {purple}ausgeschaltet{default}."
+		"de"		"Deputy ist {purple}deaktiviert{default}."
 		"da"		"Deputy er {purple}deaktiveret{default}."
 	}
 

@@ -58,7 +58,7 @@
 	{
 		"ru"		"Нет последних желаний!"
 		"pl"		"Nie ma ostatniego zyczenia!"
-		"de"		"Der letzte Terrorists hat keinen Wunsch!"
+		"de"		"Der letzte Terrorist hat keinen Wunsch frei!"
 		"en"		"Last Requests are disabled during this round!"
 		"da"		"Der kan ikke laves !lr i Freeday"
 	}
@@ -101,7 +101,7 @@
 		"pl"		"{purple}{2}{default} zaglosowal. pozostalo {purple}{1}{default} glosow do {darkred}Freeday{default}"
 		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} vote(s) required to play {darkred}Freeday."
 		"ru"		"{purple}{2}{default} проголосовал. {purple}{1}{default} голосов осталось до {darkred}Фридея"
-		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}FreeDay{default} beginnt"
+		"de"		"{purple}{2}{default} hat gevotet. Jetzt noch {purple}{1}{default} votes bis {darkred}FreeDay{default} beginnt"
 		"da"		"{purple}{2}{default} har afstemt. {purple}{1}{default} afstemninger tilbage til {darkred}Freeday"
 	}
 
@@ -136,7 +136,7 @@
 	{
 		"ru"		"Фридей отключен {purple}администратором"
 		"pl"		"Wlaczenie Freeday przez admina jest {purple}wylaczone"
-		"de"		"Freeday Aktivierung durch den Admin ist {purple}ausgeschaltet"
+		"de"		"Freeday Aktivierung durch den Admin ist {purple}deaktiviert"
 		"en"		"Set Freeday by Admin is {purple}disabled!"
 		"da"		"Admin vælger runde er {purple}slået fra"
 	}
@@ -145,7 +145,7 @@
 	{
 		"ru"		"Запуск фридея командиром {purple}выключен"
 		"pl"		"Glosowanie na Freeday przez Straznika jest {purple}wylaczone"
-		"de"		"Freeday Aktivierung durch den Warden ist {purple}ausgeschaltet"
+		"de"		"Freeday Aktivierung durch den Warden ist {purple}deaktiviert"
 		"en"		"Set Freeday by Warden is {purple}disabled!"
 		"da"		"Warden vælger runde er {purple}slået fra"
 	}
@@ -187,7 +187,7 @@
 	{
 		"ru"		"Голосование игроков за Фридей {purple}отключено"
 		"pl"		"Glosowanie graczy na Freeday jest {purple}wylaczone"
-		"de"		"Voting für Freeday ist {purple}ausgeschaltet"
+		"de"		"Voting für Freeday ist {purple}deaktiviert"
 		"en"		"Voting for Freeday is {purple}disabled!"
 		"da"		"Afstemninger er {purple}slået fra"
 	}

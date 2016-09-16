@@ -62,7 +62,7 @@
 	"noscope_info_line5"
 	{
 		"ru"		"Нет доступных последних желаний!"
-		"de"		"Der letzte Terrorists hat keinen Wunsch!"
+		"de"		"Der letzte Terrorist hat keinen Wunsch frei!"
 		"en"		"Last Requests are disabled during this round!"
 		"da"		"Der kan ikke laves Last Request i denne runde!"
 	}
@@ -71,7 +71,7 @@
 	{
 		"en"		"You must stay in the main Jailroom! Don't enter Vents or Secrets!"
 		"ru"		"Оставайтесь в клетках! Не убегайте в нычки!"
-		"de"		"Bleib' im Haupt Jail Raum! Verstecke sind verboten!"
+		"de"		"Bleib im Haupt Jail Raum! Verstecke sind verboten!"
 	}
 
 	"noscope_info_line7"
@@ -108,7 +108,7 @@
 		"#format"   "{1:i},{2:N}"
 		"ru"		"{purple}{2}{default} проголосовал. {purple}{1}{default} голосов осталось до {darkred}игры No Scope Battle"
 		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes required to play {darkred}No Scope Battle."
-		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}noscope{default} beginnt"
+		"de"		"{purple}{2}{default} hat gevotet. Jetzt noch {purple}{1}{default} votes bis {darkred}noscope{default} beginnt"
 		"da"		"{purple}{2}{default} har afstemt!. {purple}{1}{default} afstemninger tilbage til {darkred}noscope"
 	}
 
@@ -148,7 +148,7 @@
 	"noscope_setbyadmin"
 	{
 		"ru"		"Установка игры No Scope Battle админом {purple}отменена"
-		"de"		"No Scope Battle Aktivierung durch den Admin ist {purple}ausgeschaltet"
+		"de"		"No Scope Battle Aktivierung durch den Admin ist {purple}deaktiviert"
 		"en"		"Set No Scope Battle by Admin is {purple}disabled!"
 		"da"		"Admin bestemmer runde for No Scope er {purple}slået fra"
 	}
@@ -156,7 +156,7 @@
 	"noscope_setbywarden"
 	{
 		"ru"		"Установка игры No Scope Battle КМД {purple}отменена"
-		"de"		"No Scope Battle Aktivierung durch den Warden ist {purple}ausgeschaltet"
+		"de"		"No Scope Battle Aktivierung durch den Warden ist {purple}deaktiviert"
 		"en"		"Set No Scope Battle by Warden is {purple}disabled!"
 		"da"		"Warden bestemmer runde for No Scope er {purple}slået fra"
 	}
@@ -211,7 +211,7 @@
 	"noscope_voting"
 	{
 		"ru"		"Голосование игроков за игру Noscope {purple}отключено"
-		"de"		"Voting für No Scope Battle ist {purple}ausgeschaltet"
+		"de"		"Voting für No Scope Battle ist {purple}deaktiviert"
 		"en"		"Voting for No Scope Battle is {purple}disabled!"
 		"da"		"Afstemninger for No Scope er {purple}slået fra"
 	}

@@ -80,7 +80,7 @@
 	{
 		"ru"		"Здесь нету последних желаний!"
 		"pl"		"Nie ma ostatniego zyczenia!"
-		"de"		"Der letzte Terrorists hat keinen Wunsch!"
+		"de"		"Der letzte Terrorist hat keinen Wunsch frei!"
 		"en"		"Last Request is disabled during this round!"
 		"da"		"Last Request er deaktiveret i denne runde!"
 	}
@@ -134,7 +134,7 @@
 		"#format"   "{1:i},{2:N}"
 		"ru"		"{purple}{2}{default} проголосовал. {purple}{1}{default} голосов осталось до {darkred}Войны"
 		"pl"		"{purple}{2}{default} zaglosowal {purple}{1}{default} pozostalo glosow do {darkred}Wojny"
-		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}War{default} beginnt"
+		"de"		"{purple}{2}{default} hat gevotet. Jetzt noch {purple}{1}{default} votes bis {darkred}War{default} beginnt"
 		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes required to play {darkred}War."
 		"da"		"{purple}{2}{default} har stemt! {purple}{1}{default} stemmer tilbage til {darkred}war"
 	}
@@ -180,7 +180,7 @@
 	{
 		"ru"		"Администратор {purple}отключил{default} выбор Войны"
 		"pl"		"Wlaczenie Wojny przez admina jest {purple}wylaczone"
-		"de"		"War Aktivierung durch den Admin ist {purple}ausgeschaltet"
+		"de"		"War Aktivierung durch den Admin ist {purple}deaktiviert"
 		"en"		"Set War by Admin is {purple}disabled!"
 		"da"		"Admin bestemmer runde er {purple}slået fra"
 	}
@@ -189,7 +189,7 @@
 	{
 		"ru"		"Командир {purple}отключил{default} выбор Войны"
 		"pl"		"Glosowanie na Wojne przez Straznika jest {purple}wylaczone"
-		"de"		"War Aktivierung durch den Warden ist {purple}ausgeschaltet"
+		"de"		"War Aktivierung durch den Warden ist {purple}deaktiviert"
 		"en"		"Set War by Warden is {purple}disabled!"
 		"da"		"Warden bestemmer runde er {purple}slået fra"
 	}
@@ -260,7 +260,7 @@
 	{
 		"ru"		"Голосования за Войну {purple}отключено"
 		"pl"		"Glosowanie graczy na Wojne jest {purple}wylaczone"
-		"de"		"Voting für War ist {purple}ausgeschaltet"
+		"de"		"Voting für War ist {purple}deaktiviert"
 		"en"		"Voting for War {purple}is disabled"
 		"da"		"Afstemning for war er {purple}slået fra"
 	}

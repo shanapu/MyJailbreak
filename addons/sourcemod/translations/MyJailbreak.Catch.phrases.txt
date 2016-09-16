@@ -62,7 +62,7 @@
 		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} vote(s) required to play {darkred}Catch!"
 		"ru"		"{purple}{2}{default} проголосовал. {purple}{1}{default} голосов осталось до {darkred}Заморозку"
 		"pl"		"{purple}{2}{default} zaglosowal. pozostalo {purple}{1}{default} glosow do {darkred}Ganiany{default} Ganianego "
-		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}Catch{default} beginnt"
+		"de"		"{purple}{2}{default} hat gevotet. Jetzt noch {purple}{1}{default} votes bis {darkred}Catch{default} beginnt"
 		"da"		"{purple}{2}{default} har stemt. {purple}{1}{default} stemmer tilbage til {darkred}Catch{default} starter!"
 	}
 
@@ -135,7 +135,7 @@
 	{
 		"ru"		"Голосования за Заморозку {purple}отключено"
 		"pl"		"Glosowanie graczy na Ganianego jest {purple}wylaczone"
-		"de"		"Voting für Catch ist {purple}ausgeschaltet"
+		"de"		"Voting für Catch ist {purple}deaktiviert"
 		"en"		"Voting for Catch is currently {purple}disabled!"
 		"da"		"Afstemning for Catch er {purple}slået fra"
 	}
@@ -144,7 +144,7 @@
 	{
 		"ru"		"Командир {purple}отключил{default} выбор Заморозку"
 		"pl"		"Glosowanie na Ganianego przez Straznika jest {purple}wylaczone"
-		"de"		"Catch Aktivierung durch den Warden ist {purple}ausgeschaltet"
+		"de"		"Catch Aktivierung durch den Warden ist {purple}deaktiviert"
 		"en"		"Set Catch by warden is currently {purple}disabled!"
 		"da"		"Start Catch som Warden er {purple}slået fra"
 	}
@@ -162,7 +162,7 @@
 	{
 		"ru"		"Администратор {purple}отключил{default} выбор Заморозку"
 		"pl"		"Wlaczenie Ganieanego przez admina jest {purple}wylaczone"
-		"de"		"Catch Aktivierung durch den Admin ist {purple}ausgeschaltet"
+		"de"		"Catch Aktivierung durch den Admin ist {purple}deaktiviert"
 		"en"		"Set Catch by Admin is currently {purple}disabled!"
 		"da"		"Start Catch som Admin er {purple}slået fra"
 	}
@@ -198,7 +198,7 @@
 	{
 		"ru"		"Вы не можете использовать !lr в этом раунде!"
 		"pl"		"Nie mozna uzyc !lr w tej rundzie"
-		"de"		"Der letzte Terrorists hat keinen Wunsch!"
+		"de"		"Der letzte Terrorist hat keinen Wunsch frei!"
 		"en"		"Last requests are disabled during this round."
 		"da"		"Der kan ikke laves !lr"
 	}
@@ -226,7 +226,7 @@
 		"en"		"You must stay in the main Jailroom! Don't enter vents or secret areas!"
 		"ru"		"Оставайтесь в главной камере! Не уходите в нычки!"
 		"pl"		"Zostan w glownym pomieszczeniu Wiezienia! Zakaz wejsc do SECRETOW!"
-		"de"		"Bleib' im Haupt Jail Raum! Verstecke sind verboten!"
+		"de"		"Bleib im Haupt Jail Raum! Verstecke sind verboten!"
 	}
 
 	"catch_voted"

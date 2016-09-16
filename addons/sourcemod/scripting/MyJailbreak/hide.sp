@@ -147,7 +147,7 @@ public void OnPluginStart()
 	gc_iFreezeTime = AutoExecConfig_CreateConVar("sm_hide_hidetime", "30", "Time in seconds to hide / CT freezed", _, true,  0.0);
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_hide_cooldown_day", "3", "Rounds cooldown after a event until event can be start again", _, true,  0.0);
 	gc_iCooldownStart = AutoExecConfig_CreateConVar("sm_hide_cooldown_start", "3", "Rounds until event can be start after mapchange.", _, true,  0.0);
-	gc_bSetABypassCooldown = AutoExecConfig_CreateConVar("sm_hide_cooldown_admin", "1", "0 - disabled, 1 - ingnore the cooldown when admin/vip set hide round", _, true, 0.0, true, 1.0);
+	gc_bSetABypassCooldown = AutoExecConfig_CreateConVar("sm_hide_cooldown_admin", "1", "0 - disabled, 1 - ignore the cooldown when admin/vip set hide round", _, true, 0.0, true, 1.0);
 	gc_bSounds = AutoExecConfig_CreateConVar("sm_hide_sounds_enable", "1", "0 - disabled, 1 - enable sounds ", _, true,  0.0, true, 1.0);
 	gc_sSoundStartPath = AutoExecConfig_CreateConVar("sm_hide_sounds_start", "music/MyJailbreak/start.mp3", "Path to the soundfile which should be played for start");
 	gc_bOverlays = AutoExecConfig_CreateConVar("sm_hide_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true,  0.0, true, 1.0);

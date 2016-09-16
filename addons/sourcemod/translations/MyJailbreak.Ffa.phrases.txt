@@ -80,7 +80,7 @@
 	{
 		"ru"		"Здесь нету последних желаний!"
 		"pl"		"Nie ma ostatniego zyczenia!"
-		"de"		"Der letzte Terrorists hat keinen Wunsch!"
+		"de"		"Der letzte Terrorist hat keinen Wunsch frei!"
 		"en"		"Last Request is disabled during this round!"
 		"da"		"!lr er deaktiveret i denne runde!"
 	}
@@ -133,7 +133,7 @@
 		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} vote(s) required to play {darkred}FFA."
 		"ru"		"{purple}{2}{default} проголосовал. {purple}{1}{default} голосов осталось до {darkred}FFA"
 		"pl"		"{purple}{2}{default} zaglosowal {purple}{1}{default} pozostalo glosow do {darkred}FFA"
-		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}FFA{default} beginnt"
+		"de"		"{purple}{2}{default} hat gevotet. Jetzt noch {purple}{1}{default} votes bis {darkred}FFA{default} beginnt"
 		"da"		"{purple}{2}{default} har afstemt. {purple}{1}{default} stemmer tilbage til {darkred}FFA runde"
 	}
 
@@ -177,7 +177,7 @@
 	{
 		"ru"		"Администратор {purple}отключил{default} выбор FFA"
 		"pl"		"Wlaczenie FFA przez admina jest {purple}wylaczone"
-		"de"		"FFA Aktivierung durch den Admin ist {purple}ausgeschaltet"
+		"de"		"FFA Aktivierung durch den Admin ist {purple}deaktiviert"
 		"en"		"Set FFA by Admin is {purple}disabled!"
 		"da"		"Admin kan vælge FFA runde er {purple}slået fra"
 	}
@@ -186,7 +186,7 @@
 	{
 		"ru"		"Командир {purple}отключил{default} выбор FFA"
 		"pl"		"Glosowanie na FFA przez Straznika jest {purple}wylaczone"
-		"de"		"FFA Aktivierung durch den Warden ist {purple}ausgeschaltet"
+		"de"		"FFA Aktivierung durch den Warden ist {purple}deaktiviert"
 		"en"		"Set FFA by Warden is {purple}disabled!"
 		"da"		"Warden kan vælge FFA runde er {purple}slået fra"
 	}
@@ -239,7 +239,7 @@
 	{
 		"ru"		"Голосования за FFA {purple}отключено"
 		"pl"		"Glosowanie graczy na FFA jest {purple}wylaczone"
-		"de"		"Voting für FFA ist {purple}ausgeschaltet"
+		"de"		"Voting für FFA ist {purple}deaktiviert"
 		"en"		"Voting for FFA is {purple}disabled!"
 		"da"		"Afstemning for FFA er {purple}slået fra"
 	}

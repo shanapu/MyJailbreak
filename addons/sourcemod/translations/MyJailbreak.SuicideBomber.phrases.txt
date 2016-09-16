@@ -15,7 +15,7 @@
 		"#format"   "{1:i},{2:N}"
 		"ru"		"{purple}{2}{default} проголосовал. {purple}{1}{default} голосов осталось до {darkred}игры Смертник"
 		"pl"		"{purple}{2}{default} zaglosowal {purple}{1}{default} pozostalo glosow do {darkred}Suicide Bomber"
-		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}Suicide Bomber{default} beginnt"
+		"de"		"{purple}{2}{default} hat gevotet. Jetzt noch {purple}{1}{default} votes bis {darkred}Suicide Bomber{default} beginnt"
 		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes required to play {darkred}Suicide Bomber."
 	}
 
@@ -59,14 +59,14 @@
 		"en"		"Voting for Suicide Bomber is {purple}disabled!"
 		"ru"		"Голосование игроков за Смертник {purple}отключено"
 		"pl"		"Glosowanie graczy na Suicide Bomber jest {purple}wylaczone"
-		"de"		"Voting für Suicide Bomber ist {purple}ausgeschaltet"
+		"de"		"Voting für Suicide Bomber ist {purple}deaktiviert"
 	}
 
 	"suicidebomber_setbywarden"
 	{
 		"ru"		"Установка игры Смертник админом {purple}отменена"
 		"pl"		"Glosowanie na Suicide Bomber przez Straznika jest {purple}wylaczone"
-		"de"		"Suicide Bomber Aktivierung durch den Warden ist {purple}ausgeschaltet"
+		"de"		"Suicide Bomber Aktivierung durch den Warden ist {purple}deaktiviert"
 		"en"		"Set Suicide Bomber by Warden is {purple}disabled!"
 	}
 
@@ -99,7 +99,7 @@
 	{
 		"ru"		"Установка игры Смертник админом {purple}отменено"
 		"pl"		"Wlaczenie Suicide Bomber przez admina jest {purple}wylaczone"
-		"de"		"Suicide Bomber Aktivierung durch den Admin ist {purple}ausgeschaltet"
+		"de"		"Suicide Bomber Aktivierung durch den Admin ist {purple}deaktiviert"
 		"en"		"Set Suicide Bomber by Admin is {purple}disabled!"
 	}
 
@@ -172,7 +172,7 @@
 	{
 		"ru"		"Нет последнего желания!"
 		"pl"		"Nie ma ostatniego zyczenia!"
-		"de"		"Der letzte Terrorists hat keinen Wunsch!"
+		"de"		"Der letzte Terrorist hat keinen Wunsch frei!"
 		"en"		"Last Requests are disabled during this round!"
 	}
 

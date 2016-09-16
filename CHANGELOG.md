@@ -1,6 +1,6 @@
 ### Change Log
   
-**[Beta *7.2.develop*]** - develop
+**[Beta *8.0*]** - Deputy, custom commands & much more
   
 *Added*
 *  Warden: Shoot weapon on ground to remove it
@@ -72,14 +72,14 @@
     *  new cvar - sm_freekill_freeday_victim_deputy - 0 - disabled, 1 - Allow the deputy to set a personal freeday next round
     *  changed cvar - sm_warden_disarm_mode - 1 - Only warden can disarm, 2 - warden & deputy can disarm, 3 - All CT can disarm, 4 - Everyone can disarm (CT & T)
 *  Event Days: bypass on eventday cooldown for admins
-    +  new cvar - sm_EVENTDAYNAME_cooldown_admin - 0 - disabled, 1 - ingnore the cooldown when admin/vip set event day
+    +  new cvar - sm_EVENTDAYNAME_cooldown_admin - 0 - disabled, 1 - ignore the cooldown when admin/vip set event day
   
   
   
 *Changed*
 *  Commands: Add up to 12 custom commands to almost all myjailbreak commands.
     *  new cvar - sm_PLUGINNAME_cmds_FEATURENAME - Set your custom chat commands for *FEATURENAME*(no 'sm_'/'!')(seperate with comma ',')(max. 12 commands)
-    *  removed cvar - sm_PLUGINNAME_cmd - obsolete cvars. Please remove them from your configs!
+    *  removed cvar - sm_PLUGINNAME_cmd - obsolete cvars. **Please remove them from your configs!**
     *  removed commands - sm_ALTERNATIVE - double/different commands for same action. Use sm_PLUGINNAME_cmds_FEATURENAME
 *  Warden: Chathint on successful vote to kick warden
 *  Warden counter: Use the wardens FOV instead radius around him to count terrors
@@ -94,6 +94,7 @@
   
 *Fixed*
 *  Warden - Icon: missing FastDL files
+*  Warden - Icon Terror: fix black icon on decals/MyJailbreak/terror - **use sm_warden_icon_t "decals/MyJailbreak/terror-fix"**
 *  Warden - Mark rebel: remove color on unmark
 *  Warden - Handcuffs: Move cuffed player though walls... kind of fix not perfect!
 *  Warden - Painter: fix painter for terrors. THX devu4!
@@ -101,13 +102,12 @@
 *  Last Guard: fix sm_lastguard_minct bypass. THX devu4!
 *  PlayerTags: fix tags on warden remove
 *  Weapons: glitch to use menu on T side. THX devu4!
-*  Icon Terror: fix black icon on decals/MyJailbreak/terror - use sm_warden_icon_t "decals/MyJailbreak/terror-fix"
 *  minor errors & smaller fixes
   
   
   
 *Changed Requirements*
-*  removed - Simple Chat Prozessor - https://bitbucket.org/minimoney1/simple-chat-processor - remove/disable simple-chatprocessor.smx
+*  removed - Simple Chat Prozessor - https://bitbucket.org/minimoney1/simple-chat-processor - **remove/disable simple-chatprocessor.smx. Use new chat-processor!**
 *  replacement - [Any] Chat-Processor - https://forums.alliedmods.net/showthread.php?p=2449343
   
   

@@ -67,7 +67,7 @@
 	{
 		"ru"		"Здесь нету последних желаний!"
 		"pl"		"Nie ma ostatniego zyczenia!"
-		"de"		"Der letzte Terrorists hat keinen Wunsch!"
+		"de"		"Der letzte Terrorist hat keinen Wunsch frei!"
 		"en"		"Last Request is disabled during this round!"
 		"da"		"Last Request er deaktiveret i denne runde!"
 	}
@@ -120,7 +120,7 @@
 		"#format"   "{1:i},{2:N}"
 		"ru"		"{purple}{2}{default} проголосовал. {purple}{1}{default} голосов осталось до {darkred}Пряток в Темноте"
 		"pl"		"{purple}{2}{default} zaglosowal {purple}{1}{default} pozostalo glosow do {darkred}Chowanego"
-		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}Hide in the Dark{default} beginnt"
+		"de"		"{purple}{2}{default} hat gevotet. Jetzt noch {purple}{1}{default} votes bis {darkred}Hide in the Dark{default} beginnt"
 		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes required to play {darkred}Hide in the Dark."
 		"da"		"{purple}{2}{default} har stemt. {purple}{1}{default} stemmer tilbage for {darkred}Hide in the Dark"
 	}
@@ -174,7 +174,7 @@
 	{
 		"ru"		"Администратор {purple}отключил{default} выбор пряток в темноте"
 		"pl"		"Wlaczenie Chowany przez admina jest {purple}wylaczone"
-		"de"		"Hide in the Dark Aktivierung durch den Admin ist {purple}ausgeschaltet"
+		"de"		"Hide in the Dark Aktivierung durch den Admin ist {purple}deaktiviert"
 		"en"		"Set Hide in the Dark by Admin is {purple}disabled!"
 		"da"		"Admin vælger runden for Hide in the Dark er {purple}slået fra"
 	}
@@ -183,7 +183,7 @@
 	{
 		"ru"		"Командир {purple}отключил{default} выбор Пряток в Темноте"
 		"pl"		"Glosowanie na Chowany przez Straznika jest {purple}wylaczone"
-		"de"		"Hide in the Dark Aktivierung durch den Warden ist {purple}ausgeschaltet"
+		"de"		"Hide in the Dark Aktivierung durch den Warden ist {purple}deaktiviert"
 		"en"		"Set Hide in the Dark by Warden is {purple}disabled!"
 		"da"		"Warden vælger runden for Hide in the Dark er {purple}slået fra"
 	}
@@ -264,7 +264,7 @@
 	{
 		"ru"		"Голосования за прятки в темноте {purple}отключено"
 		"pl"		"Glosowanie graczy na Chowyny jest {purple}wylaczone"
-		"de"		"Voting für Hide in the Dark ist {purple}ausgeschaltet"
+		"de"		"Voting für Hide in the Dark ist {purple}deaktiviert"
 		"en"		"Voting for Hide in the Dark is {purple}disabled!"
 		"da"		"Afstemning for Hide in the Dark er {purple}slået fra"
 	}
