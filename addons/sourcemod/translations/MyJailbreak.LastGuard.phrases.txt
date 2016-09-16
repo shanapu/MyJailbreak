@@ -64,7 +64,7 @@
 	"lastguard_info_line5"
 	{
 		"ru"		"Тут нету последнего желания!"
-		"de"		"Der letzte Terrorists hat keinen Wunsch!"
+		"de"		"Der letzte Terrorist hat keinen Wunsch frei!"
 		"en"		"Last Request is disabled during this round!"
 		"da"		"Der kan ikke laves Last Request i denne runde!"
 	}
@@ -127,7 +127,7 @@
 	{
 		"#format"   "{1:i},{2:N}"
 		"ru"		"{purple}{2}{default} проголосовал. {purple}{1}{default} осталось голосов до {darkred}Правила Последнего КТ"
-		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}Last Guard Rule{default} beginnt"
+		"de"		"{purple}{2}{default} hat gevotet. Jetzt noch {purple}{1}{default} votes bis {darkred}Last Guard Rule{default} beginnt"
 		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes required to play {darkred}The Last Guard Rule."
 		"da"		"{purple}{2}{default} har afstemt!. {purple}{1}{default} afstemninger tilbage til {darkred}Last Guard Rule"
 	}
@@ -157,7 +157,7 @@
 	"lastguard_setbyadmin"
 	{
 		"ru"		"Установка Правила Последнего КТ от админа {purple}отключено"
-		"de"		"Last Guard Rule Aktivierung durch den Admin ist {purple}ausgeschaltet"
+		"de"		"Last Guard Rule Aktivierung durch den Admin ist {purple}deaktiviert"
 		"en"		"Set Last Guard Rule by Admin is {purple}disabled!"
 		"da"		"Admin bestemmer runde for Last Guard Rule er {purple}slået fra"
 	}

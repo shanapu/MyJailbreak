@@ -29,7 +29,7 @@
 	{
 		"#format"   "{1:i},{2:N}"
 		"ru"		"{purple}{2}{default} проголосовал. {purple}{1}{default} голосов осталось до {darkred}Дня Урона"
-		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}dealdamage{default} beginnt"
+		"de"		"{purple}{2}{default} hat gevotet. Jetzt noch {purple}{1}{default} votes bis {darkred}dealdamage{default} beginnt"
 		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} vote(s) required to play {darkred}DealDamage."
 		"da"		"{purple}{2}{default} har afstemt!. {purple}{1}{default} afstemninger tilbage til {darkred}dealdamage"
 	}
@@ -71,7 +71,7 @@
 	"dealdamage_voting"
 	{
 		"ru"		"Голосования за День Урона {purple}отключено"
-		"de"		"Voting für Deal Damage Day ist {purple}ausgeschaltet"
+		"de"		"Voting für Deal Damage Day ist {purple}deaktiviert"
 		"en"		"Voting for Deal Damage Day is {purple}disabled"
 		"da"		"Afstemninger for No Scope er {purple}slået fra"
 	}
@@ -79,7 +79,7 @@
 	"dealdamage_setbywarden"
 	{
 		"ru"		"Командир {purple}отключил{default} выбор День Урона"
-		"de"		"Deal Damage Day Aktivierung durch den Warden ist {purple}ausgeschaltet"
+		"de"		"Deal Damage Day Aktivierung durch den Warden ist {purple}deaktiviert"
 		"en"		"Set Deal Damage Day by Warden is {purple}disabled!"
 		"da"		"Warden bestemmer runde for No Scope er {purple}slået fra"
 	}
@@ -93,7 +93,7 @@
 	"dealdamage_setbyadmin"
 	{
 		"ru"		"Администратор {purple}отключил{default} выбор День Урона"
-		"de"		"Deal Damage Day Aktivierung durch den Admin ist {purple}ausgeschaltet"
+		"de"		"Deal Damage Day Aktivierung durch den Admin ist {purple}deaktiviert"
 		"en"		"Set Deal Damage Day by Admin is {purple}disabled!"
 		"da"		"Admin bestemmer runde for No Scope er {purple}slået fra"
 	}

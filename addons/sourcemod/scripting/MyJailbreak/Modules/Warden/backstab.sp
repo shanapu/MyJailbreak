@@ -25,7 +25,14 @@
 
 
 //Includes
-#include <myjailbreak> //... all other includes in myjailbreak.inc //... all other includes in myjailbreak.inc
+#include <sourcemod>
+#include <sdktools>
+#include <sdkhooks>
+#include <cstrike>
+#include <autoexecconfig>
+#include <warden>
+#include <mystocks>
+#include <myjailbreak>
 
 
 //Compiler Options
@@ -35,6 +42,7 @@
 
 //Console Variables
 ConVar gc_bBackstab;
+ConVar gc_bBackstabDeputy;
 ConVar gc_iBackstabNumber;
 ConVar gc_sAdminFlagBackstab;
 
@@ -52,8 +60,9 @@ public void BackStab_OnPluginStart()
 {
 	//AutoExecConfig
 	gc_bBackstab = AutoExecConfig_CreateConVar("sm_warden_backstab", "1", "0 - disabled, 1 - enable backstab protection for warden", _, true,  0.0, true, 1.0);
+	gc_bBackstabDeputy = AutoExecConfig_CreateConVar("sm_warden_backstab_deputy", "1", "0 - disabled, 1 - enable backstab protection for deputy, too", _, true,  0.0, true, 1.0);
 	gc_iBackstabNumber = AutoExecConfig_CreateConVar("sm_warden_backstab_number", "1", "How many time a warden get protected? 0 - alltime", _, true,  1.0);
-	gc_sAdminFlagBackstab = AutoExecConfig_CreateConVar("sm_warden_backstab_flag", "", "Set flag for admin/vip to get warden backstab protection. No flag = feature is available for all players!");
+	gc_sAdminFlagBackstab = AutoExecConfig_CreateConVar("sm_warden_backstab_flag", "", "Set flag for admin/vip to get warden/deputy backstab protection. No flag = feature is available for all players!");
 	
 	
 	//Hooks
@@ -67,7 +76,7 @@ public void BackStab_OnPluginStart()
 
 public int BackStab_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
-	if(convar == gc_sAdminFlagBackstab)
+	if (convar == gc_sAdminFlagBackstab)
 	{
 		strcopy(g_sAdminFlagBackstab, sizeof(g_sAdminFlagBackstab), newValue);
 	}
@@ -87,23 +96,23 @@ public void BackStab_Event_RoundStart(Event event, const char[] name, bool dontB
 
 public Action BackStab_OnTakedamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &weapon, float damageForce[3], float damagePosition[3], int damagecustom)
 {
-	if(!IsValidClient(victim, true, false) || attacker == victim || !IsValidClient(attacker, true, false)) return Plugin_Continue;
+	if (!IsValidClient(victim, true, false) || attacker == victim || !IsValidClient(attacker, true, false)) return Plugin_Continue;
 	
 	char sWeapon[32];
-	if(IsValidEntity(weapon)) GetEntityClassname(weapon, sWeapon, sizeof(sWeapon));
+	if (IsValidEntity(weapon)) GetEntityClassname(weapon, sWeapon, sizeof(sWeapon));
 	
-	if(gc_bBackstab.BoolValue && IsClientInGame(attacker) && IsClientWarden(victim) && !IsClientInLastRequest(victim) && CheckVipFlag(victim,g_sAdminFlagBackstab))
+	if (gc_bBackstab.BoolValue && IsClientInGame(attacker) && (IsClientWarden(victim) || (IsClientDeputy(victim) && gc_bBackstabDeputy.BoolValue)) && !IsClientInLastRequest(victim) && CheckVipFlag(victim, g_sAdminFlagBackstab))
 	{
-		if((StrEqual(sWeapon, "weapon_knife", false)) && (damage > 99.0))
+		if ((StrEqual(sWeapon, "weapon_knife", false)) && (damage > 99.0))
 		{
 			if (gc_iBackstabNumber.IntValue == 0)
 			{
-				PrintCenterText(attacker,"%t", "warden_backstab");
+				PrintCenterText(attacker, "%t", "warden_backstab");
 				return Plugin_Handled;
 			}
 			else if (g_iBackstabNumber[victim] > 0)
 			{
-				PrintCenterText(attacker,"%t", "warden_backstab");
+				PrintCenterText(attacker, "%t", "warden_backstab");
 				g_iBackstabNumber[victim]--;
 				return Plugin_Handled;
 			}

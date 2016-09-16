@@ -69,7 +69,7 @@
 	{
 		"ru"		"Здесь нету последних желаний!"
 		"pl"		"Nie ma ostatniego zyczenia!"
-		"de"		"Der letzte Terrorists hat keinen Wunsch!"
+		"de"		"Der letzte Terrorist hat keinen Wunsch frei!"
 		"en"		"Last Request is disabled during this round!"
 		"da"		"Der kan ikke laves !lr i denne runde!"
 	}
@@ -78,7 +78,7 @@
 	{
 		"ru"		"Оставайтесь в главной камере! Не уходите в нычки!"
 		"pl"		"Zostan w glownym pomieszczeniu Wiezienia! Zakaz wejsc do SECRETOW!"
-		"de"		"Bleib' im Haupt Jail Raum! Verstecke sind verboten!"
+		"de"		"Bleib im Haupt Jail Raum! Verstecke sind verboten!"
 		"en"		"You must stay in the main Jailroom! Don't enter vents or secret areas!"
 	}
 
@@ -120,7 +120,7 @@
 		"#format"   "{1:i},{2:N}"
 		"ru"		"{purple}{2}{default} проголосовал. {purple}{1}{default} голосов осталось до {darkred}Битвы Гранатами"
 		"pl"		"{purple}{2}{default} zaglosowal {purple}{1}{default} pozostalo glosow do {darkred}hebattle"
-		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}hebattle{default} beginnt"
+		"de"		"{purple}{2}{default} hat gevotet. Jetzt noch {purple}{1}{default} votes bis {darkred}hebattle{default} beginnt"
 		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes required to play {darkred}HE Battle."
 		"da"		"{purple}{2}{default} har stemt. {purple}{1}{default} afstemninger tilbage til {darkred}hebattle"
 	}
@@ -166,7 +166,7 @@
 	{
 		"ru"		"Администратор {purple}отключил{default} выбор Битвы Гранатами"
 		"pl"		"Wlaczenie Cowboy przez admina jest {purple}wylaczone"
-		"de"		"HE Battle Aktivierung durch den Admin ist {purple}ausgeschaltet"
+		"de"		"HE Battle Aktivierung durch den Admin ist {purple}deaktiviert"
 		"en"		"Set HE Battle by Admin is {purple}disabled!"
 		"da"		"HE Battle for Admin er {purple}slået fra"
 	}
@@ -176,7 +176,7 @@
 		"ru"		"Командир {purple}отключил{default} выбор Битву Гранатами"
 		"ru"		"Командир {purple}отключил{default} выбор Битву Гранатами"
 		"pl"		"Glosowanie na HE Battle przez Straznika jest {purple}wylaczone"
-		"de"		"HE Battle Aktivierung durch den Warden ist {purple}ausgeschaltet"
+		"de"		"HE Battle Aktivierung durch den Warden ist {purple}deaktiviert"
 		"en"		"Set HE Battle by Warden is {purple}disabled"
 		"da"		"HE Battle for Warden er {purple}slået fra"
 	}
@@ -237,7 +237,7 @@
 	{
 		"ru"		"Голосования за Битву Гранатами {purple}отключено"
 		"pl"		"Glosowanie graczy na HE Battle jest {purple}wylaczone"
-		"de"		"Voting für HE Battle ist {purple}ausgeschaltet"
+		"de"		"Voting für HE Battle ist {purple}deaktiviert"
 		"en"		"Voting for HE Battle is {purple}disabled!"
 		"da"		"Afstemninger for HE Battle er {purple}slået fra"
 	}

@@ -15,10 +15,16 @@
 		"en"		"You cannot use auto select to join a team."
 	}
 
+	"ratio_cooldown"
+	{
+		"ru"		"Вы заблокированы за неверный ответ. Попробуйте в следующем раунде."
+		"en"		"You are blocked for missing right answer. Try it next round."
+	}
+
 	"ratio_banned"
 	{
 		"ru"		"Вам запрещено играть за КТ, потому что Вы {green}забанены{default} за КТ."
-		"de"			"Du kannst nicht als Wärter spielen. Du bist als{green}CT{default} gebanned."
+		"de"		"Du kannst nicht als Wärter spielen. Du bist als{green}CT{default} gebanned."
 		"en"		"Cannot play on guards because you are {green}CT{default} banned."
 	}
 

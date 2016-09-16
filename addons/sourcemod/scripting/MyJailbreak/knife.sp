@@ -25,7 +25,19 @@
 
 
 //Includes
-#include <myjailbreak> //... all other includes in myjailbreak.inc
+#include <sourcemod>
+#include <sdktools>
+#include <sdkhooks>
+#include <cstrike>
+#include <emitsoundany>
+#include <colors>
+#include <autoexecconfig>
+#include <hosties>
+#include <lastrequest>
+#include <warden>
+#include <smartjaildoors>
+#include <mystocks>
+#include <myjailbreak>
 
 
 //Compiler Options
@@ -59,7 +71,8 @@ ConVar gc_sOverlayStartPath;
 ConVar gc_bSounds;
 ConVar gc_sSoundStartPath;
 ConVar gc_iRounds;
-ConVar gc_sCustomCommand;
+ConVar gc_sCustomCommandVote;
+ConVar gc_sCustomCommandSet;
 ConVar gc_sAdminFlag;
 ConVar gc_bAllowLR;
 
@@ -94,7 +107,6 @@ Handle BeaconTimer;
 //Strings
 char g_sHasVoted[1500];
 char g_sSoundStartPath[256];
-char g_sCustomCommand[64];
 char g_sEventsLogFile[PLATFORM_MAX_PATH];
 char g_sAdminFlag[32];
 char g_sOverlayStartPath[256];
@@ -102,10 +114,10 @@ char g_sOverlayStartPath[256];
 
 //Info
 public Plugin myinfo = {
-	name = "MyJailbreak - KnifeFight",
-	author = "shanapu",
-	description = "Event Day for Jailbreak Server",
-	version = PLUGIN_VERSION,
+	name = "MyJailbreak - KnifeFight", 
+	author = "shanapu", 
+	description = "Event Day for Jailbreak Server", 
+	version = PLUGIN_VERSION, 
 	url = URL_LINK
 };
 
@@ -119,8 +131,8 @@ public void OnPluginStart()
 	
 	
 	//Client Commands
-	RegConsoleCmd("sm_setknifefight", SetKnifeFight, "Allows the Admin or Warden to set knifefight as next round");
-	RegConsoleCmd("sm_knifefight", VoteKnifeFight, "Allows players to vote for a knifefight");
+	RegConsoleCmd("sm_setknifefight", Command_SetKnifeFight, "Allows the Admin or Warden to set knifefight as next round");
+	RegConsoleCmd("sm_knifefight", Command_VoteKnifeFight, "Allows players to vote for a knifefight");
 	
 	
 	//AutoExecConfig
@@ -129,7 +141,8 @@ public void OnPluginStart()
 	
 	AutoExecConfig_CreateConVar("sm_knifefight_version", PLUGIN_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_knifefight_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true,  0.0, true, 1.0);
-	gc_sCustomCommand = AutoExecConfig_CreateConVar("sm_knifefight_cmd", "knife", "Set your custom chat command for Event voting. no need for sm_ or !");
+	gc_sCustomCommandVote = AutoExecConfig_CreateConVar("sm_knifefight_cmds_vote", "knifeday", "Set your custom chat command for Event voting(!knifefight (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
+	gc_sCustomCommandSet = AutoExecConfig_CreateConVar("sm_knifefight_cmds_set", "sknifefight, sknife", "Set your custom chat command for set Event(!setknifefight (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_knifefight_warden", "1", "0 - disabled, 1 - allow warden to set knifefight round", _, true,  0.0, true, 1.0);
 	gc_bSetA = AutoExecConfig_CreateConVar("sm_knifefight_admin", "1", "0 - disabled, 1 - allow admin/vip to set knifefight round", _, true,  0.0, true, 1.0);
 	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_knifefight_flag", "g", "Set flag for admin/vip to set this Event Day.");
@@ -138,9 +151,9 @@ public void OnPluginStart()
 	gc_iRounds = AutoExecConfig_CreateConVar("sm_knifefight_rounds", "1", "Rounds to play in a row", _, true, 1.0);
 	gc_bThirdPerson = AutoExecConfig_CreateConVar("sm_knifefight_thirdperson", "1", "0 - disabled, 1 - enable thirdperson", _, true,  0.0, true, 1.0);
 	gc_bGrav = AutoExecConfig_CreateConVar("sm_knifefight_gravity", "1", "0 - disabled, 1 - enable low gravity", _, true,  0.0, true, 1.0);
-	gc_fGravValue= AutoExecConfig_CreateConVar("sm_knifefight_gravity_value", "0.3","Ratio for Gravity 1.0 earth 0.5 moon", _, true, 0.1, true, 1.0);
+	gc_fGravValue= AutoExecConfig_CreateConVar("sm_knifefight_gravity_value", "0.3", "Ratio for Gravity 1.0 earth 0.5 moon", _, true, 0.1, true, 1.0);
 	gc_bIce = AutoExecConfig_CreateConVar("sm_knifefight_iceskate", "1", "0 - disabled, 1 - enable iceskate", _, true,  0.0, true, 1.0);
-	gc_fIceValue= AutoExecConfig_CreateConVar("sm_knifefight_iceskate_value", "c","Ratio iceskate (5.2 normal)", _, true, 0.1, true, 5.2);
+	gc_fIceValue= AutoExecConfig_CreateConVar("sm_knifefight_iceskate_value", "c", "Ratio iceskate (5.2 normal)", _, true, 0.1, true, 5.2);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_knifefight_roundtime", "5", "Round time in minutes for a single knifefight round", _, true, 1.0);
 	gc_fBeaconTime = AutoExecConfig_CreateConVar("sm_knifefight_beacon_time", "240", "Time in seconds until the beacon turned on (set to 0 to disable)", _, true, 0.0);
 	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_knifefight_trucetime", "15", "Time in seconds players can't deal damage", _, true, 0.0);
@@ -162,22 +175,17 @@ public void OnPluginStart()
 	HookEvent("player_death", Event_PlayerDeath);
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
-	HookConVarChange(gc_sCustomCommand, OnSettingChanged);
 	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
 	
 	
 	//Find
 	g_bAllowTP = FindConVar("sv_allow_thirdperson");
 	g_iMPRoundTime = FindConVar("mp_roundtime");
-	g_iTerrorForLR = FindConVar("sm_hosties_lr_ts_max");
-	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
-	g_iTruceTime = gc_iTruceTime.IntValue;
 	gc_sOverlayStartPath.GetString(g_sOverlayStartPath , sizeof(g_sOverlayStartPath));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
-	gc_sCustomCommand.GetString(g_sCustomCommand , sizeof(g_sCustomCommand));
 	gc_sAdminFlag.GetString(g_sAdminFlag , sizeof(g_sAdminFlag));
 	
-	if(g_bAllowTP == INVALID_HANDLE)
+	if (g_bAllowTP == INVALID_HANDLE)
 	{
 		SetFailState("sv_allow_thirdperson not found!");
 	}
@@ -189,27 +197,19 @@ public void OnPluginStart()
 //ConVarChange for Strings
 public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
-	if(convar == gc_sOverlayStartPath)
+	if (convar == gc_sOverlayStartPath)
 	{
 		strcopy(g_sOverlayStartPath, sizeof(g_sOverlayStartPath), newValue);
-		if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
+		if (gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
 	}
-	else if(convar == gc_sAdminFlag)
+	else if (convar == gc_sAdminFlag)
 	{
 		strcopy(g_sAdminFlag, sizeof(g_sAdminFlag), newValue);
 	}
-	else if(convar == gc_sSoundStartPath)
+	else if (convar == gc_sSoundStartPath)
 	{
 		strcopy(g_sSoundStartPath, sizeof(g_sSoundStartPath), newValue);
-		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
-	}
-	else if(convar == gc_sCustomCommand)
-	{
-		strcopy(g_sCustomCommand, sizeof(g_sCustomCommand), newValue);
-		char sBufferCMD[64];
-		Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommand);
-		if(GetCommandFlags(sBufferCMD) == INVALID_FCVAR_FLAGS)
-			RegConsoleCmd(sBufferCMD, VoteKnifeFight, "Allows players to vote for a knife fight");
+		if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
 	}
 }
 
@@ -221,10 +221,38 @@ public void OnConfigsExecuted()
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iMaxRound = gc_iRounds.IntValue;
 	
-	char sBufferCMD[64];
-	Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommand);
-	if(GetCommandFlags(sBufferCMD) == INVALID_FCVAR_FLAGS)
-		RegConsoleCmd(sBufferCMD, VoteKnifeFight, "Allows players to vote for a knife fight");
+	
+	//FindConVar
+	g_iTerrorForLR = FindConVar("sm_hosties_lr_ts_max");
+	
+	
+	//Set custom Commands
+	int iCount = 0;
+	char sCommands[128], sCommandsL[12][32], sCommand[32];
+	
+	//Vote
+	gc_sCustomCommandVote.GetString(sCommands, sizeof(sCommands));
+	ReplaceString(sCommands, sizeof(sCommands), " ", "");
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	
+	for (int i = 0; i < iCount; i++)
+	{
+		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+			RegConsoleCmd(sCommand, Command_VoteKnifeFight, "Allows players to vote for a knifefight");
+	}
+	
+	//Set
+	gc_sCustomCommandSet.GetString(sCommands, sizeof(sCommands));
+	ReplaceString(sCommands, sizeof(sCommands), " ", "");
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	
+	for (int i = 0; i < iCount; i++)
+	{
+		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+			RegConsoleCmd(sCommand, Command_SetKnifeFight, "Allows the Admin or Warden to set knifefight as next round");
+	}
 }
 
 
@@ -234,14 +262,14 @@ public void OnConfigsExecuted()
 
 
 //Admin & Warden set Event
-public Action SetKnifeFight(int client,int args)
+public Action Command_SetKnifeFight(int client, int args)
 {
 	if (gc_bPlugin.BoolValue)
 	{
-		if(client == 0)
+		if (client == 0)
 		{
 			StartNextRound();
-			if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event KnifeFight was started by groupvoting");
+			if (ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event KnifeFight was started by groupvoting");
 		}
 		else if (warden_iswarden(client))
 		{
@@ -252,12 +280,12 @@ public Action SetKnifeFight(int client,int args)
 					char EventDay[64];
 					GetEventDayName(EventDay);
 					
-					if(StrEqual(EventDay, "none", false))
+					if (StrEqual(EventDay, "none", false))
 					{
 						if (g_iCoolDown == 0)
 						{
 							StartNextRound();
-							if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event KnifeFight was started by warden %L", client);
+							if (ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event KnifeFight was started by warden %L", client);
 						}
 						else CReplyToCommand(client, "%t %t", "knifefight_tag" , "knifefight_wait", g_iCoolDown);
 					}
@@ -267,7 +295,7 @@ public Action SetKnifeFight(int client,int args)
 			}
 			else CReplyToCommand(client, "%t %t", "warden_tag" , "knifefight_setbywarden");
 		}
-		else if (CheckVipFlag(client,g_sAdminFlag))
+		else if (CheckVipFlag(client, g_sAdminFlag))
 		{
 			if (gc_bSetA.BoolValue)
 			{
@@ -276,12 +304,12 @@ public Action SetKnifeFight(int client,int args)
 					char EventDay[64];
 					GetEventDayName(EventDay);
 					
-					if(StrEqual(EventDay, "none", false))
+					if (StrEqual(EventDay, "none", false))
 					{
 						if (g_iCoolDown == 0)
 						{
 							StartNextRound();
-							if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event KnifeFight was started by admin %L", client);
+							if (ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event KnifeFight was started by admin %L", client);
 						}
 						else CReplyToCommand(client, "%t %t", "knifefight_tag" , "knifefight_wait", g_iCoolDown);
 					}
@@ -299,7 +327,7 @@ public Action SetKnifeFight(int client,int args)
 
 
 //Voting for Event
-public Action VoteKnifeFight(int client,int args)
+public Action Command_VoteKnifeFight(int client, int args)
 {
 	char steamid[64];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
@@ -313,7 +341,7 @@ public Action VoteKnifeFight(int client,int args)
 				char EventDay[64];
 				GetEventDayName(EventDay);
 				
-				if(StrEqual(EventDay, "none", false))
+				if (StrEqual(EventDay, "none", false))
 				{
 					if (g_iCoolDown == 0)
 					{
@@ -322,12 +350,12 @@ public Action VoteKnifeFight(int client,int args)
 							int playercount = (GetClientCount(true) / 2);
 							g_iVoteCount++;
 							int Missing = playercount - g_iVoteCount + 1;
-							Format(g_sHasVoted, sizeof(g_sHasVoted), "%s,%s", g_sHasVoted, steamid);
+							Format(g_sHasVoted, sizeof(g_sHasVoted), "%s, %s", g_sHasVoted, steamid);
 							
 							if (g_iVoteCount > playercount)
 							{
 								StartNextRound();
-								if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event KnifeFight was started by voting");
+								if (ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event KnifeFight was started by voting");
 							}
 							else CPrintToChatAll("%t %t", "knifefight_tag" , "knifefight_need", Missing, client);
 						}
@@ -434,7 +462,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 					}
 				}
 				
-				CPrintToChatAll("%t %t", "knifefight_tag" ,"knifefight_rounds", g_iRound, g_iMaxRound);
+				CPrintToChatAll("%t %t", "knifefight_tag" , "knifefight_rounds", g_iRound, g_iMaxRound);
 			}
 		}
 	}
@@ -443,7 +471,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		char EventDay[64];
 		GetEventDayName(EventDay);
 		
-		if(!StrEqual(EventDay, "none", false))
+		if (!StrEqual(EventDay, "none", false))
 		{
 			g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 		}
@@ -501,7 +529,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 
 public void Event_PlayerDeath(Event event, char [] name, bool dontBroadcast)
 {
-	if(IsKnifeFight == true)
+	if (IsKnifeFight == true)
 	{
 		int client = GetClientOfUserId(event.GetInt("userid"));
 		FP(client);
@@ -525,8 +553,8 @@ public void OnMapStart()
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	
-	if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
-	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
+	if (gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
+	if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
 }
 
 
@@ -557,7 +585,7 @@ public int OnAvailableLR(int Announced)
 			StripAllPlayerWeapons(client);
 			if (GetClientTeam(client) == CS_TEAM_CT)
 			{
-				FakeClientCommand(client, "sm_guns");
+				FakeClientCommand(client, "sm_weapons");
 			}
 			GivePlayerItem(client, "weapon_knife");
 		}
@@ -605,11 +633,11 @@ public void OnClientPutInServer(int client)
 //Knife only
 public Action OnWeaponCanUse(int client, int weapon)
 {
-	if(IsKnifeFight == true)
+	if (IsKnifeFight == true)
 	{
 		char sWeapon[32];
 		GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
-		if(StrEqual(sWeapon, "weapon_knife"))
+		if (StrEqual(sWeapon, "weapon_knife"))
 		{
 			if (IsClientInGame(client) && IsPlayerAlive(client))
 			{
@@ -650,7 +678,7 @@ void StartNextRound()
 //Back to First Person
 public Action FP(int client)
 {
-	if(IsValidClient(client, false, true))
+	if (IsValidClient(client, false, true))
 	{
 		ClientCommand(client, "firstperson");
 	}
@@ -706,7 +734,7 @@ public Action Timer_StartEvent(Handle timer)
 		g_iTruceTime--;
 		LoopClients(client) if (IsPlayerAlive(client))
 		{
-			PrintCenterText(client,"%t", "knifefight_timeuntilstart_nc", g_iTruceTime);
+			PrintCenterText(client, "%t", "knifefight_timeuntilstart_nc", g_iTruceTime);
 		}
 		return Plugin_Continue;
 	}
@@ -722,9 +750,9 @@ public Action Timer_StartEvent(Handle timer)
 			{
 				SetEntityGravity(client, gc_fGravValue.FloatValue);	
 			}
-			PrintCenterText(client,"%t", "knifefight_start_nc");
-			if(gc_bOverlays.BoolValue) ShowOverlay(client, g_sOverlayStartPath, 2.0);
-			if(gc_bSounds.BoolValue)	
+			PrintCenterText(client, "%t", "knifefight_start_nc");
+			if (gc_bOverlays.BoolValue) ShowOverlay(client, g_sOverlayStartPath, 2.0);
+			if (gc_bSounds.BoolValue)	
 			{
 				EmitSoundToAllAny(g_sSoundStartPath);
 			}
@@ -739,7 +767,7 @@ public Action Timer_StartEvent(Handle timer)
 //Beacon Timer
 public Action Timer_BeaconOn(Handle timer)
 {
-	LoopValidClients(i,true,false) BeaconOn(i, 2.0);
+	LoopValidClients(i, true, false) BeaconOn(i, 2.0);
 	BeaconTimer = null;
 }
 
@@ -749,7 +777,7 @@ public Action Timer_CheckGravity(Handle timer)
 {
 	LoopValidClients(client, false, false)
 	{
-		if(GetEntityGravity(client) != 1.0)
+		if (GetEntityGravity(client) != 1.0)
 			SetEntityGravity(client, gc_fGravValue.FloatValue);
 	}
 }

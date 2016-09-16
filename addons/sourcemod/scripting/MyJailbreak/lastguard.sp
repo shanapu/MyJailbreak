@@ -25,7 +25,18 @@
 
 
 //Includes
-#include <myjailbreak> //... all other includes in myjailbreak.inc
+#include <sourcemod>
+#include <sdktools>
+#include <sdkhooks>
+#include <cstrike>
+#include <emitsoundany>
+#include <colors>
+#include <autoexecconfig>
+#include <hosties>
+#include <lastrequest>
+#include <smartjaildoors>
+#include <mystocks>
+#include <myjailbreak>
 
 
 //Compiler Options
@@ -57,7 +68,7 @@ ConVar gc_sOverlayStartPath;
 ConVar gc_bSounds;
 ConVar gc_sSoundStartPath;
 ConVar gc_sSoundLastCTPath;
-ConVar gc_sCustomCommand;
+ConVar gc_sCustomCommandLGR;
 
 
 //Integers
@@ -75,17 +86,16 @@ Handle BeaconTimer;
 char g_sHasVoted[1500];
 char g_sSoundStartPath[256];
 char g_sSoundLastCTPath[256];
-char g_sCustomCommand[64];
 char g_sMyJBLogFile[PLATFORM_MAX_PATH];
 char g_sOverlayStartPath[256];
 
 
 //Info
 public Plugin myinfo = {
-	name = "MyJailbreak - Last Guard Rule",
-	author = "shanapu",
-	description = "Last Guard Rule for Jailbreak Server",
-	version = PLUGIN_VERSION,
+	name = "MyJailbreak - Last Guard Rule", 
+	author = "shanapu", 
+	description = "Last Guard Rule for Jailbreak Server", 
+	version = PLUGIN_VERSION, 
 	url = URL_LINK
 };
 
@@ -99,7 +109,7 @@ public void OnPluginStart()
 	
 	
 	//Client Commands
-	RegConsoleCmd("sm_lastguard", VoteLastGuard, "Allows terrors to vote and last CT to set Last Guard Rule");	
+	RegConsoleCmd("sm_lastguard", Command_VoteLastGuard, "Allows terrors to vote and last CT to set Last Guard Rule");	
 	
 	
 	//AutoExecConfig
@@ -108,7 +118,7 @@ public void OnPluginStart()
 	
 	AutoExecConfig_CreateConVar("sm_lastguard_version", PLUGIN_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_lastguard_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true,  0.0, true, 1.0);
-	gc_sCustomCommand = AutoExecConfig_CreateConVar("sm_lastguard_cmd", "lg", "Set your custom chat command for Last Guard Rule. no need for sm_ or !");
+	gc_sCustomCommandLGR = AutoExecConfig_CreateConVar("sm_lastguard_cmds", "lg, lgr, lastguardrule", "Set your custom chat command for Last Guard Rule(!lastguard (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_bSetCT = AutoExecConfig_CreateConVar("sm_lastguard_ct", "1", "0 - disabled, 1 - allow last CT to set Last Guard Rule", _, true,  0.0, true, 1.0);
 	gc_bVote = AutoExecConfig_CreateConVar("sm_lastguard_vote", "1", "0 - disabled, 1 - allow alive player to vote for Last Guard Rule", _, true,  0.0, true, 1.0);
 	gc_bAutomatic = AutoExecConfig_CreateConVar("sm_lastguard_auto", "0", "0 - disabled, 1 - Last Guard Rule will start automatic if there is only 1 CT. Disables sm_lastguard_vote & sm_lastguard_ct.", _, true,  0.0, true, 1.0);
@@ -137,7 +147,6 @@ public void OnPluginStart()
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundLastCTPath, OnSettingChanged);
-	HookConVarChange(gc_sCustomCommand, OnSettingChanged);
 	
 	
 	//Find
@@ -145,7 +154,6 @@ public void OnPluginStart()
 	gc_sOverlayStartPath.GetString(g_sOverlayStartPath , sizeof(g_sOverlayStartPath));
 	gc_sSoundLastCTPath.GetString(g_sSoundLastCTPath, sizeof(g_sSoundLastCTPath));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
-	gc_sCustomCommand.GetString(g_sCustomCommand , sizeof(g_sCustomCommand));
 	
 	
 	//Set directory for LogFile - must be created before
@@ -156,28 +164,20 @@ public void OnPluginStart()
 //ConVarChange for Strings
 public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
-	if(convar == gc_sOverlayStartPath)
+	if (convar == gc_sOverlayStartPath)
 	{
 		strcopy(g_sOverlayStartPath, sizeof(g_sOverlayStartPath), newValue);
-		if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
+		if (gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
 	}
-	else if(convar == gc_sSoundStartPath)
+	else if (convar == gc_sSoundStartPath)
 	{
 		strcopy(g_sSoundStartPath, sizeof(g_sSoundStartPath), newValue);
-		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
+		if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
 	}
-	else if(convar == gc_sSoundLastCTPath)
+	else if (convar == gc_sSoundLastCTPath)
 	{
 		strcopy(g_sSoundLastCTPath, sizeof(g_sSoundLastCTPath), newValue);
-		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundLastCTPath);
-	}
-	else if(convar == gc_sCustomCommand)
-	{
-		strcopy(g_sCustomCommand, sizeof(g_sCustomCommand), newValue);
-		char sBufferCMD[64];
-		Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommand);
-		if(GetCommandFlags(sBufferCMD) == INVALID_FCVAR_FLAGS)
-			RegConsoleCmd(sBufferCMD, VoteLastGuard, "Allows players to vote for Last Guard Rule");
+		if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundLastCTPath);
 	}
 }
 
@@ -188,12 +188,12 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 
 
 //Voting for Last Guard Rule
-public Action VoteLastGuard(int client,int args)
+public Action Command_VoteLastGuard(int client, int args)
 {
 	char steamid[64];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
 	
-	if (gc_bPlugin.BoolValue && !gc_bAutomatic.BoolValue)
+	if (gc_bPlugin.BoolValue && !gc_bAutomatic.BoolValue && MinCT)
 	{
 		if (gc_bVote.BoolValue && (GetClientTeam(client) == CS_TEAM_T) && IsPlayerAlive(client))
 		{
@@ -202,7 +202,7 @@ public Action VoteLastGuard(int client,int args)
 				char EventDay[64];
 				GetEventDayName(EventDay);
 				
-				if(!IsEventDayRunning())
+				if (!IsEventDayRunning())
 				{
 					if (!IsLastGuard)
 					{
@@ -213,12 +213,12 @@ public Action VoteLastGuard(int client,int args)
 								int playercount = (GetAliveTeamCount(CS_TEAM_T) / 2);
 								g_iVoteCount++;
 								int Missing = playercount - g_iVoteCount + 1;
-								Format(g_sHasVoted, sizeof(g_sHasVoted), "%s,%s", g_sHasVoted, steamid);
+								Format(g_sHasVoted, sizeof(g_sHasVoted), "%s, %s", g_sHasVoted, steamid);
 								
 								if (g_iVoteCount > playercount)
 								{
 									StartLastGuard();
-									if(ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Last Guard Rule was started by voting");
+									if (ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Last Guard Rule was started by voting");
 								}
 								else CPrintToChatAll("%t %t", "lastguard_tag" , "lastguard_need", Missing, client);
 							}
@@ -239,14 +239,14 @@ public Action VoteLastGuard(int client,int args)
 				char EventDay[64];
 				GetEventDayName(EventDay);
 				
-				if(!IsEventDayRunning())
+				if (!IsEventDayRunning())
 				{
 					if (!IsLastGuard)
 					{
-						if(!IsLR)
+						if (!IsLR)
 						{
 							StartLastGuard();
-							if(ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Last Guard Rule was started by last CT %L", client);
+							if (ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Last Guard Rule was started by last CT %L", client);
 						}
 						else CReplyToCommand(client, "%t %t", "lastguard_tag" , "lastguard_lr");
 					}
@@ -314,7 +314,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 //Check player count when player dies or change team
 public void Event_PlayerTeamDeath(Event event, const char[] name, bool dontBroadcast)
 {
-	if(AllowLastGuard)CheckStatus();
+	if (AllowLastGuard)CheckStatus();
 }
 
 
@@ -326,7 +326,7 @@ public void Event_PlayerTeamDeath(Event event, const char[] name, bool dontBroad
 //Prepare Event
 public Action StartLastGuard()
 {
-	if(AllowLastGuard)
+	if (AllowLastGuard)
 	{
 		IsLastGuard = true;
 		g_iVoteCount = 0;
@@ -342,16 +342,16 @@ public Action StartLastGuard()
 		SetCvar("sm_warden_enable", 0);
 		int Tcount = (GetAliveTeamCount(CS_TEAM_T)*gc_iTimePerT.IntValue);
 		
-		if(gc_iTime.IntValue != 0) GameRules_SetProp("m_iRoundTime", (60+Tcount+(gc_iTime.IntValue*60)), 4, 0, true);
+		if (gc_iTime.IntValue != 0) GameRules_SetProp("m_iRoundTime", (60+Tcount+(gc_iTime.IntValue*60)), 4, 0, true);
 		
-		if(gc_bSounds.BoolValue)
+		if (gc_bSounds.BoolValue)
 		{
 			CreateTimer(0.5, Timer_LastGuardSound); 
 		}
 		
 		int HPterrors = 0;
 		int HPterBuffer = 0;
-		LoopClients(i) if(IsPlayerAlive(i) && GetClientTeam(i) == CS_TEAM_T)
+		LoopClients(i) if (IsPlayerAlive(i) && GetClientTeam(i) == CS_TEAM_T)
 		{
 			HPterBuffer = (GetClientHealth(i) + HPterrors);
 			HPterrors = HPterBuffer;
@@ -361,7 +361,7 @@ public Action StartLastGuard()
 			SetEntPropFloat(i, Prop_Data, "m_flLaggedMovementValue", 1.0);
 			SetEntityRenderColor(i, 255, 255, 255, 255);
 			CreateTimer( 0.0, DeleteOverlay, i);
-			ChangeRebelStatus(i,true);
+			ChangeRebelStatus(i, true);
 		}
 		int HPCT = RoundToCeil(HPterrors * (gc_iHPmultipler.FloatValue / 100.0));
 		LoopClients(iClient)
@@ -396,9 +396,9 @@ public Action StartLastGuard()
 			
 			if (gc_bFreeze.BoolValue) SetEntityMoveType(iClient, MOVETYPE_NONE);
 			
-		//	FakeClientCommand(iClient, "sm_guns");
+		//	FakeClientCommand(iClient, "sm_weapons");
 			
-			if(IsPlayerAlive(iClient) && GetClientTeam(iClient) == CS_TEAM_CT)
+			if (IsPlayerAlive(iClient) && GetClientTeam(iClient) == CS_TEAM_CT)
 			{
 				SetEntityHealth(iClient, HPCT);
 				CPrintToChatAll("%t %t", "lastguard_tag", "lastguard_hp", GetAliveTeamCount(CS_TEAM_T), HPterrors, iClient, HPCT);
@@ -419,10 +419,10 @@ public Action CheckStatus()
 {
 	if (gc_bPlugin.BoolValue && !IsLR && !IsLastGuard && gc_bAutomatic.BoolValue)
 	{
-		if ((GetAliveTeamCount(CS_TEAM_CT) == 1) && (GetAliveTeamCount(CS_TEAM_T) > 1 ) && !IsEventDayRunning() && !IsLastGuard && !IsLR && MinCT)
+		if ((GetAliveTeamCount(CS_TEAM_CT) == 1) && (GetAliveTeamCount(CS_TEAM_T) > 1)&& !IsEventDayRunning() && !IsLastGuard && !IsLR && MinCT)
 		{
 			StartLastGuard();
-			if(ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Last Guard Rule was started automatic");
+			if (ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Last Guard Rule was started automatic");
 			MinCT = false;
 		}
 	}
@@ -443,21 +443,31 @@ public void OnMapStart()
 	
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	
-	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);    //Add sound to download and precache table
-	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundLastCTPath);    //Add sound to download and precache table
-	if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);    //Add overlay to download and precache table
+	if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);    //Add sound to download and precache table
+	if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundLastCTPath);    //Add sound to download and precache table
+	if (gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);    //Add overlay to download and precache table
 }
 
 
-//Prepare client for Plugin
 public void OnConfigsExecuted()
 {
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	
-	char sBufferCMD[64];    //Register the custom command 
-	Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommand);
-	if(GetCommandFlags(sBufferCMD) == INVALID_FCVAR_FLAGS)
-		RegConsoleCmd(sBufferCMD, VoteLastGuard, "Allows players to vote for Last Guard Rule");
+	//Set custom Commands
+	int iCount = 0;
+	char sCommands[128], sCommandsL[12][32], sCommand[32];
+	
+	//Last guard rule
+	gc_sCustomCommandLGR.GetString(sCommands, sizeof(sCommands));
+	ReplaceString(sCommands, sizeof(sCommands), " ", "");
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	
+	for (int i = 0; i < iCount; i++)
+	{
+		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+			RegConsoleCmd(sCommand, Command_VoteLastGuard, "Allows terrors to vote and last CT to set Last Guard Rule");	
+	}
 }
 
 
@@ -477,7 +487,7 @@ public void OnMapEnd()
 //Client Disconnect
 public void OnClientDisconnect_Post(int client)
 {
-	if(AllowLastGuard)CheckStatus();
+	if (AllowLastGuard)CheckStatus();
 }
 
 
@@ -502,11 +512,11 @@ public Action Timer_TruceUntilStart(Handle timer)
 		g_iTruceTime--;
 		LoopClients(client) if (IsPlayerAlive(client))
 		{
-			PrintCenterText(client,"%t", "lastguard_timeuntilstart_nc", g_iTruceTime);
+			PrintCenterText(client, "%t", "lastguard_timeuntilstart_nc", g_iTruceTime);
 			if (gc_bFreeze.BoolValue && (g_iTruceTime <= (gc_iTruceTime.IntValue / 2)) && (GetEntityMoveType(client) == MOVETYPE_NONE))
 			{
 				SetEntityMoveType(client, MOVETYPE_WALK);
-				PrintCenterText(client,"%t", "lastguard_movenow_nc", g_iTruceTime);
+				PrintCenterText(client, "%t", "lastguard_movenow_nc", g_iTruceTime);
 				CPrintToChat(client, "%t %t", "lastguard_tag" , "lastguard_movenow");
 				
 			}
@@ -520,13 +530,13 @@ public Action Timer_TruceUntilStart(Handle timer)
 	LoopClients(client) if (IsPlayerAlive(client))
 	{
 		SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
-		PrintCenterText(client,"%t", "lastguard_start_nc");
-		if(gc_bOverlays.BoolValue) ShowOverlay(client, g_sOverlayStartPath, 2.0);
-		if(gc_bSounds.BoolValue)
+		PrintCenterText(client, "%t", "lastguard_start_nc");
+		if (gc_bOverlays.BoolValue) ShowOverlay(client, g_sOverlayStartPath, 2.0);
+		if (gc_bSounds.BoolValue)
 		{
 			EmitSoundToAllAny(g_sSoundStartPath);
 		}
-		FakeClientCommand(client, "sm_guns");
+		FakeClientCommand(client, "sm_weapons");
 	}
 	CPrintToChatAll("%t %t", "lastguard_tag" , "lastguard_start");
 	
@@ -549,6 +559,6 @@ public Action Timer_LastGuardBeginn(Handle timer)
 
 public Action Timer_BeaconOn(Handle timer)
 {
-	LoopValidClients(i,true,false) BeaconOn(i, 2.0);
+	LoopValidClients(i, true, false) BeaconOn(i, 2.0);
 	BeaconTimer = null;
 }

@@ -25,7 +25,15 @@
 
 
 //Includes
-#include <myjailbreak> //... all other includes in myjailbreak.inc
+#include <sourcemod>
+#include <sdktools>
+#include <sdkhooks>
+#include <cstrike>
+#include <colors>
+#include <autoexecconfig>
+#include <warden>
+#include <mystocks>
+#include <myjailbreak>
 
 
 //Compiler Options
@@ -35,7 +43,9 @@
 
 //Console Variables
 ConVar gc_bExtend;
+ConVar gc_bExtendDeputy;
 ConVar gc_iExtendLimit;
+ConVar gc_sCustomCommandExtend;
 
 
 //Extern Convars
@@ -55,7 +65,9 @@ public void ExtendTime_OnPluginStart()
 	
 	//AutoExecConfig
 	gc_bExtend = AutoExecConfig_CreateConVar("sm_warden_extend", "1", "0 - disabled, 1 - Allows the warden to extend the roundtime", _, true,  0.0, true, 1.0);
+	gc_bExtendDeputy = AutoExecConfig_CreateConVar("sm_warden_extend_deputy", "1", "0 - disabled, 1 - enable the 'extend the roundtime'-feature for deputy, too", _, true,  0.0, true, 1.0);
 	gc_iExtendLimit = AutoExecConfig_CreateConVar("sm_warden_extend_limit", "2", "How many time a warden can extend the round?", _, true,  1.0);
+	gc_sCustomCommandExtend = AutoExecConfig_CreateConVar("sm_warden_cmds_extend", "extendtime, moretime", "Set your custom chat commands for extend time.(!extend (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	
 	//Hooks
 	HookEvent("round_start", ExtendTime_Event_RoundStart);
@@ -69,11 +81,11 @@ public void ExtendTime_OnPluginStart()
 
 public Action Command_ExtendRoundTime(int client, int args)
 {
-	if(gc_bExtend.BoolValue)
+	if (gc_bExtend.BoolValue)
 	{
-		if (IsClientWarden(client))
+		if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bExtendDeputy.BoolValue))
 		{
-			if(g_iExtendNumber[client] > 0)
+			if (g_iExtendNumber[client] > 0)
 			{
 				char menuinfo[255];
 				
@@ -120,11 +132,11 @@ public void ExtendTime_Event_RoundStart(Event event, const char[] name, bool don
 
 public Action ExtendTime(int client, int args)
 {
-		GameRules_SetProp("m_iRoundTime", GameRules_GetProp("m_iRoundTime", 4, 0)+args, 4, 0, true);
-		int extendminute = (args/60);
-		g_iRoundTime = g_iRoundTime + args;
-		CPrintToChatAll("%t %t", "warden_tag" , "warden_extend", client, extendminute);
-		return Plugin_Handled;
+	GameRules_SetProp("m_iRoundTime", GameRules_GetProp("m_iRoundTime", 4, 0)+args, 4, 0, true);
+	int extendminute = (args/60);
+	g_iRoundTime = g_iRoundTime + args;
+	CPrintToChatAll("%t %t", "warden_tag" , "warden_extend", client, extendminute);
+	return Plugin_Handled;
 }
 
 
@@ -140,36 +152,61 @@ public int Handler_ExtendRoundTime(Menu menu, MenuAction action, int client, int
 		char info[32];
 		menu.GetItem(selection, info, sizeof(info));
 		
-		if ( strcmp(info,"120") == 0 ) 
+		if (strcmp(info, "120") == 0)
 		{
 			ExtendTime(client, 120);
 		}
-		else if ( strcmp(info,"180") == 0 ) 
+		else if (strcmp(info, "180") == 0)
 		{
 			ExtendTime(client, 180);
 		}
-		else if ( strcmp(info,"300") == 0 ) 
+		else if (strcmp(info, "300") == 0)
 		{
 			ExtendTime(client, 300);
 		}
-		if(g_bMenuClose != null)
+		if (g_bMenuClose != null)
 		{
-			if(!g_bMenuClose)
+			if (!g_bMenuClose)
 			{
 				FakeClientCommand(client, "sm_menu");
 			}
 		}
 		g_iExtendNumber[client]--;
 	}
-	else if(action == MenuAction_Cancel)
+	else if (action == MenuAction_Cancel)
 	{
-		if(selection == MenuCancel_ExitBack) 
+		if (selection == MenuCancel_ExitBack) 
 		{
 			FakeClientCommand(client, "sm_menu");
 		}
 	}
-	else if(action == MenuAction_End)
+	else if (action == MenuAction_End)
 	{
 		delete menu;
+	}
+}
+
+
+/******************************************************************************
+                   FORWARDS LISTENING
+******************************************************************************/
+
+
+public void ExtendTime_OnConfigsExecuted()
+{
+	//Set custom Commands
+	int iCount = 0;
+	char sCommands[128], sCommandsL[12][32], sCommand[32];
+	
+	//extend time
+	gc_sCustomCommandExtend.GetString(sCommands, sizeof(sCommands));
+	ReplaceString(sCommands, sizeof(sCommands), " ", "");
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	
+	for (int i = 0; i < iCount; i++)
+	{
+		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+			RegConsoleCmd(sCommand, Command_ExtendRoundTime, "Allows the warden to extend the roundtime");
 	}
 }

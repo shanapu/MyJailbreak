@@ -41,7 +41,7 @@ float mapFogDensity = 0.99;
 //Magic
 void DoFog()
 {
-	if(FogIndex != -1)
+	if (FogIndex != -1)
 	{
 		DispatchKeyValue(FogIndex, "fogblend", "0");
 		DispatchKeyValue(FogIndex, "fogcolor", "0 0 0");
@@ -83,14 +83,14 @@ public void Fog_OnMapStart()
 
 
 //Set Map fog in module
-public int Native_FogOn(Handle plugin,int argc)
+public int Native_FogOn(Handle plugin, int argc)
 {
 	AcceptEntityInput(FogIndex, "TurnOn");
 }
 
 
 //Remove Map fog OFF in module
-public int Native_FogOff(Handle plugin,int argc)
+public int Native_FogOff(Handle plugin, int argc)
 {
 	AcceptEntityInput(FogIndex, "TurnOff");
 }

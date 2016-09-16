@@ -301,4 +301,64 @@
 		"ru"		"[КМД.sVIP]"
 	}
 
+	"tags_D"
+	{
+		"de"		"[Deputy]"
+		"en"		"[Deputy]"
+	}
+
+	"tags_DA"
+	{
+		"de"		"[Deputy.Admin]"
+		"en"		"[Deputy.Admin]"
+	}
+
+	"tags_DA_chat"
+	{
+		"en"		"[Deputy.Admin]"
+		"de"		"[Deputy.Admin]"
+	}
+
+	"tags_D_chat"
+	{
+		"en"		"[Deputy]"
+		"de"		"[Deputy]"
+	}
+
+	"tags_DOWN"
+	{
+		"de"		"[Deputy.Owner]"
+		"en"		"[Deputy.Owner]"
+	}
+
+	"tags_DOWN_chat"
+	{
+		"en"		"[Deputy.Owner]"
+		"de"		"[Deputy.Owner]"
+	}
+
+	"tags_DVIP1"
+	{
+		"de"		"[Deputy.VIP]"
+		"en"		"[Deputy.VIP]"
+	}
+
+	"tags_DVIP1_chat"
+	{
+		"en"		"[Deputy.VIP]"
+		"de"		"[Deputy.VIP]"
+	}
+
+	"tags_DVIP2"
+	{
+		"de"		"[Deputy.sVIP]"
+		"en"		"[Deputy.sVIP]"
+	}
+
+	"tags_DVIP2_chat"
+	{
+		"en"		"[Deputy.sVIP]"
+		"de"		"[Deputy.sVIP]"
+	}
+
 }

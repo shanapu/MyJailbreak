@@ -110,7 +110,7 @@
 		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} vote(s) required to play {darkred}Drunken Day."
 		"ru"		"{purple}{2}{default} проголосовал. {purple}{1}{default} голосов осталось до {darkred}Пьяный день"
 		"pl"		"{purple}{2}{default} zaglosowal {purple}{1}{default} pozostalo glosow do {darkred}Pijak"
-		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}drunk{default} beginnt"
+		"de"		"{purple}{2}{default} hat gevotet. Jetzt noch {purple}{1}{default} votes bis {darkred}drunk{default} beginnt"
 		"da"		"{purple}{2}{default} har afstemt!. {purple}{1}{default} afstemninger tilbage til {darkred}drunk"
 	}
 
@@ -155,7 +155,7 @@
 	{
 		"ru"		"Администратор {purple}отключил{default} выбор Пьяный день"
 		"pl"		"Glosowanie na Pijaka przez Straznika jest {purple}wylaczone"
-		"de"		"Drunken Day Aktivierung durch den Admin ist {purple}ausgeschaltet"
+		"de"		"Drunken Day Aktivierung durch den Admin ist {purple}deaktiviert"
 		"en"		"Set Drunken Day by Admin is {purple}disabled!"
 		"da"		"Admin bestemmer runde for No Scope er {purple}slået fra"
 	}
@@ -164,7 +164,7 @@
 	{
 		"ru"		"Командир {purple}отключил{default} выбор Пьяного Дня"
 		"pl"		"Glosowanie na Pijaka przez Straznika jest {purple}wylaczone"
-		"de"		"Drunken Day Aktivierung durch den Warden ist {purple}ausgeschaltet"
+		"de"		"Drunken Day Aktivierung durch den Warden ist {purple}deaktiviert"
 		"en"		"Set Drunken Day by Warden is {purple}disabled!"
 		"da"		"Warden bestemmer runde for No Scope er {purple}slået fra"
 	}
@@ -225,7 +225,7 @@
 	{
 		"ru"		"Голосования за Пьяный день {purple}отключено"
 		"pl"		"Glosowanie graczy na Pijaka jest {purple}wylaczone"
-		"de"		"Voting für Drunken Day ist {purple}ausgeschaltet"
+		"de"		"Voting für Drunken Day ist {purple}deaktiviert"
 		"en"		"Voting for Drunken Day is {purple}disabled!"
 		"da"		"Afstemninger for No Scope er {purple}slået fra"
 	}

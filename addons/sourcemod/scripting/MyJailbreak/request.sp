@@ -25,7 +25,19 @@
 
 
 //Includes
-#include <myjailbreak> //... all other includes in myjailbreak.inc
+#include <sourcemod>
+#include <sdktools>
+#include <sdkhooks>
+#include <cstrike>
+#include <emitsoundany>
+#include <colors>
+#include <autoexecconfig>
+#include <hosties>
+#include <lastrequest>
+#include <warden>
+#include <smartjaildoors>
+#include <mystocks>
+#include <myjailbreak>
 
 
 //Compiler Options
@@ -36,6 +48,7 @@
 //Console Variables
 ConVar gc_bPlugin;
 ConVar gc_bSounds;
+ConVar gc_sCustomCommandRequest;
 
 
 //Booleans
@@ -70,10 +83,10 @@ float DeathOrigin[MAXPLAYERS+1][3];
 //Info
 public Plugin myinfo = 
 {
-	name = "MyJailbreak - Request",
-	author = "shanapu",
-	description = "Requests - refuse, capitulation/pardon, heal",
-	version = PLUGIN_VERSION,
+	name = "MyJailbreak - Request", 
+	author = "shanapu", 
+	description = "Requests - refuse, capitulation/pardon, heal", 
+	version = PLUGIN_VERSION, 
 	url = URL_LINK
 }
 
@@ -97,6 +110,7 @@ public void OnPluginStart()
 	AutoExecConfig_CreateConVar("sm_request_version", PLUGIN_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_request_enable", "1", "0 - disabled, 1 - enable Request Plugin");
 	gc_bSounds = AutoExecConfig_CreateConVar("sm_request_sounds_enable", "1", "0 - disabled, 1 - enable sounds ", _, true,  0.0, true, 1.0);
+	gc_sCustomCommandRequest = AutoExecConfig_CreateConVar("sm_request_cmds", "req, requestmenu", "Set your custom chat command for requestmenu (!request (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	
 	
 	Refuse_OnPluginStart();
@@ -127,9 +141,9 @@ public void OnPluginStart()
 
 public Action Command_RequestMenu(int client, int args)
 {
-	if(gc_bPlugin.BoolValue)
+	if (gc_bPlugin.BoolValue)
 	{
-		if (GetClientTeam(client) == CS_TEAM_T && IsValidClient(client,false,true))
+		if (GetClientTeam(client) == CS_TEAM_T && IsValidClient(client, false, true))
 		{
 			Menu reqmenu = new Menu(Command_RequestMenuHandler);
 			
@@ -138,27 +152,27 @@ public Action Command_RequestMenu(int client, int args)
 			Format(menuinfo29, sizeof(menuinfo29), "%T", "request_menu_title", client);
 			reqmenu.SetTitle(menuinfo29);
 			
-			if(gc_bFreeKill.BoolValue && (!IsPlayerAlive(client)))
+			if (gc_bFreeKill.BoolValue && (!IsPlayerAlive(client)))
 			{
 				Format(menuinfo19, sizeof(menuinfo19), "%T", "request_menu_freekill", client);
 				reqmenu.AddItem("freekill", menuinfo19);
 			}
-			if(gc_bRefuse.BoolValue && (IsPlayerAlive(client)))
+			if (gc_bRefuse.BoolValue && (IsPlayerAlive(client)))
 			{
 				Format(menuinfo19, sizeof(menuinfo19), "%T", "request_menu_refuse", client);
 				reqmenu.AddItem("refuse", menuinfo19);
 			}
-			if(gc_bCapitulation.BoolValue && (IsPlayerAlive(client)))
+			if (gc_bCapitulation.BoolValue && (IsPlayerAlive(client)))
 			{
 				Format(menuinfo20, sizeof(menuinfo20), "%T", "request_menu_capitulation", client);
 				reqmenu.AddItem("capitulation", menuinfo20);
 			}
-			if(gc_bRepeat.BoolValue && (IsPlayerAlive(client)))
+			if (gc_bRepeat.BoolValue && (IsPlayerAlive(client)))
 			{
 				Format(menuinfo21, sizeof(menuinfo21), "%T", "request_menu_repeat", client);
 				reqmenu.AddItem("repeat", menuinfo21);
 			}
-			if(gc_bHeal.BoolValue && (IsPlayerAlive(client)))
+			if (gc_bHeal.BoolValue && (IsPlayerAlive(client)))
 			{
 				Format(menuinfo22, sizeof(menuinfo22), "%T", "request_menu_heal", client);
 				reqmenu.AddItem("heal", menuinfo22);
@@ -209,7 +223,7 @@ public void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast
 	int attacker = GetClientOfUserId(attackerID); // Get the attacker clients id
 	
 	
-	if(IsValidClient(attacker, true, false) && (attacker != victim))
+	if (IsValidClient(attacker, true, false) && (attacker != victim))
 	{
 		g_iKilledBy[victim] = attackerID;
 		g_iHasKilled[attacker] = victimID;
@@ -240,6 +254,23 @@ public void OnConfigsExecuted()
 	Heal_OnConfigsExecuted();
 	Repeat_OnConfigsExecuted();
 	Freedays_OnConfigsExecuted();
+	
+	
+	//Set custom Commands
+	int iCount = 0;
+	char sCommands[128], sCommandsL[12][32], sCommand[32];
+	
+	//request
+	gc_sCustomCommandRequest.GetString(sCommands, sizeof(sCommands));
+	ReplaceString(sCommands, sizeof(sCommands), " ", "");
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	
+	for (int i = 0; i < iCount; i++)
+	{
+		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+			RegConsoleCmd(sCommand, Command_RequestMenu, "Open the requests menu");
+	}
 }
 
 
@@ -280,30 +311,30 @@ public int Command_RequestMenuHandler(Menu reqmenu, MenuAction action, int clien
 		
 		reqmenu.GetItem(selection, info, sizeof(info));
 		
-		if ( strcmp(info,"refuse") == 0 ) 
+		if (strcmp(info, "refuse") == 0)
 		{
 			FakeClientCommand(client, "sm_refuse");
 		} 
-		else if ( strcmp(info,"freekill") == 0 ) 
+		else if (strcmp(info, "freekill") == 0)
 		{
 			FakeClientCommand(client, "sm_freekill");
 		} 
-		else if ( strcmp(info,"repeat") == 0 ) 
+		else if (strcmp(info, "repeat") == 0)
 		{
 			FakeClientCommand(client, "sm_repeat");
 		} 
-		else if ( strcmp(info,"capitulation") == 0 ) 
+		else if (strcmp(info, "capitulation") == 0)
 		{
 			FakeClientCommand(client, "sm_capitulation");
 		} 
-		else if ( strcmp(info,"heal") == 0 )
+		else if (strcmp(info, "heal") == 0 )
 		{
 			FakeClientCommand(client, "sm_heal");
 		}
 	}
-	else if(action == MenuAction_Cancel) 
+	else if (action == MenuAction_Cancel) 
 	{
-		if(selection == MenuCancel_ExitBack) 
+		if (selection == MenuCancel_ExitBack) 
 		{
 			FakeClientCommand(client, "sm_menu");
 		}
@@ -324,5 +355,5 @@ public Action Timer_IsRequest(Handle timer, any client)
 {
 	IsRequest = false;
 	RequestTimer = null;
-	LoopClients(i) if(g_bFreeKilled[i]) g_bFreeKilled[i] = false;
+	LoopClients(i) if (g_bFreeKilled[i]) g_bFreeKilled[i] = false;
 }

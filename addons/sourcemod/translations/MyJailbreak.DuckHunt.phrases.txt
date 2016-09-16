@@ -70,7 +70,7 @@
 	{
 		"ru"		"Здесь нету последних желаний!"
 		"pl"		"Nie ma ostatniego zyczenia!"
-		"de"		"Der letzte Terrorists hat keinen Wunsch!"
+		"de"		"Der letzte Terrorist hat keinen Wunsch frei!"
 		"en"		"Last Request is disabled during this round!"
 		"da"		"!lr er deaktiveret i denne runde!"
 	}
@@ -79,7 +79,7 @@
 	{
 		"ru"		"Оставайтесь в главной камере! Не уходите в нычки!"
 		"pl"		"Zostan w glownym pomieszczeniu Wiezienia! Zakaz wejsc do SECRETOW!"
-		"de"		"Bleib' im Haupt Jail Raum! Verstecke sind verboten!"
+		"de"		"Bleib im Haupt Jail Raum! Verstecke sind verboten!"
 		"en"		"You must stay in the main Jailroom! Don't enter vents or secret areas!"
 	}
 
@@ -123,7 +123,7 @@
 		"#format"   "{1:i},{2:N}"
 		"ru"		"{purple}{2}{default} проголосовал. {purple}{1}{default} голосов осталось до {darkred}Охоты на уток"
 		"pl"		"{purple}{2}{default} zaglosowal. {purple}{1}{default} glos potrzebny do {darkred}Polowania na kaczki"
-		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}duckhunt{default} beginnt"
+		"de"		"{purple}{2}{default} hat gevotet. Jetzt noch {purple}{1}{default} votes bis {darkred}duckhunt{default} beginnt"
 		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} vote(s) required to play {darkred}Duckhunt."
 		"da"		"{purple}{2}{default} har stemt. {purple}{1}{default} afstemninger tilbage til {darkred}duckhunt"
 	}
@@ -170,7 +170,7 @@
 	{
 		"ru"		"Администратор {purple}отключил{default} выбор Охоты на Уток"
 		"pl"		"Wlaczenie Polowania na Kaczki przez admina jest {purple}wylaczone"
-		"de"		"Duckhunt Aktivierung durch den Admin ist {purple}ausgeschaltet"
+		"de"		"Duckhunt Aktivierung durch den Admin ist {purple}deaktiviert"
 		"en"		"Set Duckhunt by Admin is {purple}disabled!"
 		"da"		"Duckhunt for Admin er {purple}slået fra"
 	}
@@ -179,7 +179,7 @@
 	{
 		"ru"		"Командир {purple}отключил{default} выбор Охоты на Уток"
 		"pl"		"Glosowanie na Polowanie na Kaczki przez Straznika jest {purple}wylaczone"
-		"de"		"Duckhunt Aktivierung durch den Warden ist {purple}ausgeschaltet"
+		"de"		"Duckhunt Aktivierung durch den Warden ist {purple}deaktiviert"
 		"en"		"Set Duckhunt by Warden is {purple}disabled!"
 		"da"		"Duckhunt for Warden er {purple}slået fra"
 	}
@@ -241,7 +241,7 @@
 	{
 		"ru"		"Голосования за Охоту на Уток {purple}отключено"
 		"pl"		"Glosowanie graczy na Polowanie na kaczki jest {purple}wylaczone"
-		"de"		"Voting für duckhuntt ist {purple}ausgeschaltet"
+		"de"		"Voting für duckhuntt ist {purple}deaktiviert"
 		"en"		"Voting for Duckhunt is {purple}disabled!"
 		"da"		"Afstemninger for Duckhunt er {purple}slået fra"
 	}

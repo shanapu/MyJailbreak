@@ -68,7 +68,7 @@
 	{
 		"ru"		"Здесь нету последних желаний!"
 		"pl"		"Nie ma ostatniego zyczenia!"
-		"de"		"Der letzte Terrorists hat keinen Wunsch!"
+		"de"		"Der letzte Terrorist hat keinen Wunsch frei!"
 		"en"		"Last Request is disabled during this round!"
 		"da"		"Der kan ikke laves Last Request i denne runde!"
 	}
@@ -77,7 +77,7 @@
 	{
 		"ru"		"Оставайтесь в главной камере! Не уходите в нычки!"
 		"pl"		"Zostan w glownym pomieszczeniu Wiezienia! Zakaz wejsc do SECRETOW!"
-		"de"		"Bleib' im Haupt Jail Raum! Verstecke sind verboten!"
+		"de"		"Bleib im Haupt Jail Raum! Verstecke sind verboten!"
 		"en"		"You must stay in the main Jailroom! Don't enter vents or secrets!"
 	}
 
@@ -120,7 +120,7 @@
 		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes required to play {darkred}Zeus Day."
 		"ru"		"{purple}{2}{default} проголосовал. {purple}{1}{default} голосов осталось до {darkred}дня зевса"
 		"pl"		"{purple}{2}{default} zaglosowal {purple}{1}{default} pozostalo glosow do {darkred}ZEUS"
-		"de"		"{purple}{2}{default} hat gevotet. jetzt noch {purple}{1}{default} votes bis {darkred}zeus{default} beginnt"
+		"de"		"{purple}{2}{default} hat gevotet. Jetzt noch {purple}{1}{default} votes bis {darkred}zeus{default} beginnt"
 		"da"		"{purple}{2}{default} har afstemt!. {purple}{1}{default} afstemninger tilbage til {darkred}zeus"
 	}
 
@@ -165,7 +165,7 @@
 	{
 		"ru"		"Администратор {purple}отключил{default} выбор дня зевса"
 		"pl"		"Wlaczenie Cowboy przez admina jest {purple}wylaczone"
-		"de"		"Zeus Day Aktivierung durch den Admin ist {purple}ausgeschaltet"
+		"de"		"Zeus Day Aktivierung durch den Admin ist {purple}deaktiviert"
 		"en"		"Set Zeus Day by Admin is {purple}disabled!"
 		"da"		"Admin bestemmer runde for No Scope er {purple}slået fra"
 	}
@@ -174,7 +174,7 @@
 	{
 		"ru"		"Командир {purple}отключил{default} выбор дня зевса"
 		"pl"		"Glosowanie na Cowboy przez Straznika jest {purple}wylaczone"
-		"de"		"Zeus Day Aktivierung durch den Warden ist {purple}ausgeschaltet"
+		"de"		"Zeus Day Aktivierung durch den Warden ist {purple}deaktiviert"
 		"en"		"Set Zeus Day by Warden is {purple}disabled!"
 		"da"		"Warden bestemmer runde for No Scope er {purple}slået fra"
 	}
@@ -235,7 +235,7 @@
 	{
 		"ru"		"Голосования за день зевса {purple}отключено"
 		"pl"		"Glosowanie graczy na ZEUS jest {purple}wylaczone"
-		"de"		"Voting für Zeus Day ist {purple}ausgeschaltet"
+		"de"		"Voting für Zeus Day ist {purple}deaktiviert"
 		"en"		"Voting for Zeus Day is {purple}disabled!"
 		"da"		"Afstemninger for No Scope er {purple}slået fra"
 	}

@@ -25,6 +25,12 @@
 
 
 //Includes
+#include <sourcemod>
+#include <sdktools>
+#include <sdkhooks>
+#include <cstrike>
+#include <autoexecconfig>
+#include <mystocks>
 #include <myjailbreak>
 
 
@@ -37,6 +43,7 @@
 ConVar gc_bTag;
 ConVar gc_bLogging;
 ConVar gc_bShootButton;
+ConVar gc_sCustomCommandEndRound;
 
 
 //Booleans
@@ -56,10 +63,10 @@ char IsEventDay[128] = "none";
 
 //Info
 public Plugin myinfo = {
-	name = "MyJailbreak - Core",
-	author = "shanapu",
-	description = "MyJailbreak - core plugin",
-	version = PLUGIN_VERSION,
+	name = "MyJailbreak - Core", 
+	author = "shanapu", 
+	description = "MyJailbreak - core plugin", 
+	version = PLUGIN_VERSION, 
 	url = URL_LINK
 };
 
@@ -80,6 +87,7 @@ public void OnPluginStart()
 	gc_bTag = AutoExecConfig_CreateConVar("sm_myjb_tag", "1", "Allow \"MyJailbreak\" to be added to the server tags? So player will find servers with MyJB faster. it dont touch you sv_tags", _, true,  0.0, true, 1.0);
 	gc_bLogging = AutoExecConfig_CreateConVar("sm_myjb_log", "1", "Allow MyJailbreak to log events, freekills & eventdays in logs/MyJailbreak", _, true,  0.0, true, 1.0);
 	gc_bShootButton = AutoExecConfig_CreateConVar("sm_myjb_shoot_buttons", "1", "0 - disabled, 1 - allow player to trigger a map button by shooting it", _, true,  0.0, true, 1.0);
+	gc_sCustomCommandEndRound = AutoExecConfig_CreateConVar("sm_myjb_cmds_endround", "er, stopround, end", "Set your custom chat commands for admins to end the current round(!endround (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)");
 	
 	
 	Beacon_OnPluginStart();
@@ -91,6 +99,7 @@ public void OnPluginStart()
 	
 	//Hooks
 	HookEvent("round_start", Event_RoundStart);
+	HookEvent("round_end", Event_RoundEnd);
 }
 
 
@@ -107,6 +116,23 @@ public void OnConfigsExecuted()
 			StrCat(sTags, sizeof(sTags), ", MyJailbreak");
 			hTags.SetString(sTags);
 		}
+	}
+	
+	
+	//Set custom Commands
+	int iCount = 0;
+	char sCommands[128], sCommandsL[12][32], sCommand[32];
+	
+	//End round
+	gc_sCustomCommandEndRound.GetString(sCommands, sizeof(sCommands));
+	ReplaceString(sCommands, sizeof(sCommands), " ","");
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	
+	for (int i = 0; i < iCount; i++)
+	{
+		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+			RegAdminCmd(sCommand, Command_EndRound, ADMFLAG_CHANGEMAP);
 	}
 }
 
@@ -131,14 +157,20 @@ public Action Command_EndRound(int client, int args)
 
 public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
-	if(gc_bShootButton.BoolValue)
+	if (gc_bShootButton.BoolValue)
 	{
 		int ent = -1;
-		while((ent = FindEntityByClassname(ent, "func_button")) != -1)
+		while ((ent = FindEntityByClassname(ent, "func_button")) != -1)
 		{
 			SetEntProp(ent, Prop_Data, "m_spawnflags", GetEntProp(ent, Prop_Data, "m_spawnflags")|512);
 		}
 	}
+}
+
+
+public void Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
+{
+	
 }
 
 
@@ -152,7 +184,6 @@ public void OnMapStart()
 {
 	Fog_OnMapStart();
 	Beacon_OnMapStart();
-	
 	LastGuardRuleActive = false;
 }
 
@@ -203,9 +234,9 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 
 //Boolean Is Event Day running (true = running)
-public int Native_IsEventDayRunning(Handle plugin,int argc)
+public int Native_IsEventDayRunning(Handle plugin, int argc)
 {
-	if(!EventDayRunning)
+	if (!EventDayRunning)
 	{
 		return false;
 	}
@@ -214,16 +245,16 @@ public int Native_IsEventDayRunning(Handle plugin,int argc)
 
 
 //Boolean Set Event Day running (true = running)
-public int Native_SetEventDayNameRunning(Handle plugin,int argc)
+public int Native_SetEventDayNameRunning(Handle plugin, int argc)
 {
 	EventDayRunning = GetNativeCell(1);
 }
 
 
 //Boolean Is Event Day planned (true = planned)
-public int Native_IsEventDayPlanned(Handle plugin,int argc)
+public int Native_IsEventDayPlanned(Handle plugin, int argc)
 {
-	if(!EventDayPlanned)
+	if (!EventDayPlanned)
 	{
 		return false;
 	}
@@ -232,14 +263,14 @@ public int Native_IsEventDayPlanned(Handle plugin,int argc)
 
 
 //Boolean Set Event Day planned (true = planned)
-public int Native_SetEventDayPlanned(Handle plugin,int argc)
+public int Native_SetEventDayPlanned(Handle plugin, int argc)
 {
 	EventDayPlanned = GetNativeCell(1);
 }
 
 
 //Set Event Day Name
-public int Native_SetEventDayName(Handle plugin,int argc)
+public int Native_SetEventDayName(Handle plugin, int argc)
 {
 	char buffer[64];
 	GetNativeString(1, buffer, 64);
@@ -249,16 +280,16 @@ public int Native_SetEventDayName(Handle plugin,int argc)
 
 
 //Get Event Day Name
-public int Native_GetEventDayName(Handle plugin,int argc)
+public int Native_GetEventDayName(Handle plugin, int argc)
 {
 	SetNativeString(1, IsEventDay, sizeof(IsEventDay));
 }
 
 
 //Boolean Is Last Guard Rule active (true = active)
-public int Native_IsLastGuardRule(Handle plugin,int argc)
+public int Native_IsLastGuardRule(Handle plugin, int argc)
 {
-	if(!LastGuardRuleActive)
+	if (!LastGuardRuleActive)
 	{
 		return false;
 	}
@@ -267,15 +298,15 @@ public int Native_IsLastGuardRule(Handle plugin,int argc)
 
 
 //Boolean Set Last Guard Rule active (true = active)
-public int Native_SetLastGuardRule(Handle plugin,int argc)
+public int Native_SetLastGuardRule(Handle plugin, int argc)
 {
 	LastGuardRuleActive = GetNativeCell(1);
 }
 
 
 //Check if logging is active
-public int Native_GetActiveLogging(Handle plugin,int argc)
+public int Native_GetActiveLogging(Handle plugin, int argc)
 {
-	if(gc_bLogging.BoolValue) return true;
+	if (gc_bLogging.BoolValue) return true;
 	else return false;
 }

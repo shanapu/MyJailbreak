@@ -127,12 +127,32 @@
 		"en"		"Retire From Warden"
 	}
 
+	"menu_undeputy"
+	{
+		"en"		"Retire From Deputy"
+	}
+
+	"menu_removedeputy"
+	{
+		"en"		"Remove Deputy"
+	}
+
 	"menu_getwarden"
 	{
 		"ru"		"Занять пост КМД"
 		"chi"		"成为监狱长"
 		"pl"		"Zostan Straznikiem"
 		"en"		"Become The Warden"
+	}
+
+	"menu_deputybecome"
+	{
+		"en"		"Become Wardens Deputy"
+	}
+
+	"menu_deputyset"
+	{
+		"en"		"Set your Deputy"
 	}
 
 	"menu_joint"
@@ -414,7 +434,7 @@
 
 	"menu_count"
 	{
-		"en"		"Count nearby Prisoner"
+		"en"		"Count Prisoner in sight"
 		"ru"		"Посчитать заключённых"
 	}
 

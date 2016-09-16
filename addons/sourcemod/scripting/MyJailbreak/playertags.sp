@@ -25,7 +25,15 @@
 
 
 //Includes
-#include <myjailbreak> //... all other includes in myjailbreak.inc
+#include <sourcemod>
+#include <sdktools>
+#include <sdkhooks>
+#include <cstrike>
+#include <chat-processor>
+#include <autoexecconfig>
+#include <warden>
+#include <mystocks>
+#include <myjailbreak>
 
 
 //Compiler Options
@@ -54,10 +62,10 @@ char g_sVIPFlag[32];
 //Info
 public Plugin myinfo =
 {
-	name = "MyJailbreak - PlayerTags",
-	description = "Define player tags in chat & stats for Jailbreak Server",
-	author = "shanapu",
-	version = PLUGIN_VERSION,
+	name = "MyJailbreak - PlayerTags", 
+	description = "Define player tags in chat & stats for Jailbreak Server", 
+	author = "shanapu", 
+	version = PLUGIN_VERSION, 
 	url = URL_LINK
 }
 
@@ -81,7 +89,7 @@ public void OnPluginStart()
 	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_playertag_adminflag", "d", "Set the flag for admin");
 	gc_sVIPFlag = AutoExecConfig_CreateConVar("sm_playertag_vipflag", "t", "Set the flag for VIP");
 	gc_sVIP2Flag = AutoExecConfig_CreateConVar("sm_playertag_vip2flag", "a", "Set the flag for VIP2");
-	gc_bNoOverwrite = AutoExecConfig_CreateConVar("sm_playertag_overwrite", "1", "0 - only show tags for warden, admin & vip (no overwrite for prisionor & guards) 1 - enable tags for prisoner & guards,too", _, true,  0.0, true, 1.0);
+	gc_bNoOverwrite = AutoExecConfig_CreateConVar("sm_playertag_overwrite", "1", "0 - only show tags for warden, deputy, admin & vip (no overwrite for prisionor & guards) 1 - enable tags for prisoner & guards, too", _, true,  0.0, true, 1.0);
 	
 	
 	AutoExecConfig_ExecuteFile();
@@ -97,10 +105,10 @@ public void OnPluginStart()
 	
 	
 	//FindConVar
-	gc_sOwnerFlag.GetString(g_sOwnerFlag,sizeof(g_sOwnerFlag));
-	gc_sAdminFlag.GetString(g_sAdminFlag,sizeof(g_sAdminFlag));
-	gc_sVIPFlag.GetString(g_sVIPFlag,sizeof(g_sVIPFlag));
-	gc_sVIP2Flag.GetString(g_sVIP2Flag,sizeof(g_sVIP2Flag));
+	gc_sOwnerFlag.GetString(g_sOwnerFlag, sizeof(g_sOwnerFlag));
+	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
+	gc_sVIPFlag.GetString(g_sVIPFlag, sizeof(g_sVIPFlag));
+	gc_sVIP2Flag.GetString(g_sVIP2Flag, sizeof(g_sVIP2Flag));
 }
 
 
@@ -123,19 +131,16 @@ public void Event_CheckTag(Event event, char[] name, bool dontBroadcast)
 public void OnClientPutInServer(int client)
 {
 	HandleTag(client);
-	return;
 }
 
-public int warden_OnWardenCreated(int client)
+public void warden_OnWardenCreated(int client)
 {
 	HandleTag(client);
-	return;
 }
 
-public int warden_OnWardenRemoved(int client)
+public void warden_OnWardenRemoved(int client)
 {
-	HandleTag(client);
-	return;
+	CreateTimer(1.0, DelayCheck);
 }
 
 
@@ -165,37 +170,37 @@ public Action DelayCheck(Handle timer)
 //Give Tag
 public int HandleTag(int client)
 {
-	if(gc_bPlugin.BoolValue)
+	if (gc_bPlugin.BoolValue)
 	{
-		if(gc_bStats.BoolValue && IsValidClient(client, true, true))
-		{	
+		if (gc_bStats.BoolValue && IsValidClient(client, true, true))
+		{
 			char tags[64];
 			
 			if (GetClientTeam(client) == CS_TEAM_T)
 			{
 				if (CheckVipFlag(client, g_sOwnerFlag))
 				{
-					Format(tags, sizeof(tags), "%t" ,"tags_TOWN", LANG_SERVER);
+					Format(tags, sizeof(tags), "%t" , "tags_TOWN", LANG_SERVER);
 					CS_SetClientClanTag(client, tags); 
 				}
 				else if (CheckVipFlag(client, g_sAdminFlag))
 				{
-					Format(tags, sizeof(tags), "%t" ,"tags_TA", LANG_SERVER);
+					Format(tags, sizeof(tags), "%t" , "tags_TA", LANG_SERVER);
 					CS_SetClientClanTag(client, tags);
 				}
 				else if (CheckVipFlag(client, g_sVIPFlag))
 				{
-					Format(tags, sizeof(tags), "%t" ,"tags_TVIP1", LANG_SERVER);
+					Format(tags, sizeof(tags), "%t" , "tags_TVIP1", LANG_SERVER);
 					CS_SetClientClanTag(client, tags);
 				}
 				else if (CheckVipFlag(client, g_sVIP2Flag))
 				{
-					Format(tags, sizeof(tags), "%t" ,"tags_TVIP2", LANG_SERVER);
+					Format(tags, sizeof(tags), "%t" , "tags_TVIP2", LANG_SERVER);
 					CS_SetClientClanTag(client, tags);
 				}
 				else if (gc_bNoOverwrite.BoolValue)
 				{
-					Format(tags, sizeof(tags), "%t" ,"tags_T", LANG_SERVER);
+					Format(tags, sizeof(tags), "%t" , "tags_T", LANG_SERVER);
 					CS_SetClientClanTag(client, tags);
 				}
 			}
@@ -205,53 +210,81 @@ public int HandleTag(int client)
 				{
 					if (CheckVipFlag(client, g_sOwnerFlag))
 					{
-						Format(tags, sizeof(tags), "%t" ,"tags_WOWN", LANG_SERVER);
+						Format(tags, sizeof(tags), "%t" , "tags_WOWN", LANG_SERVER);
 						CS_SetClientClanTag(client, tags);
 					}
 					else if (CheckVipFlag(client, g_sAdminFlag))
 					{
-						Format(tags, sizeof(tags), "%t" ,"tags_WA", LANG_SERVER);
+						Format(tags, sizeof(tags), "%t" , "tags_WA", LANG_SERVER);
 						CS_SetClientClanTag(client, tags); 
 					}
 					else if (CheckVipFlag(client, g_sVIPFlag))
 					{
-						Format(tags, sizeof(tags), "%t" ,"tags_WVIP1", LANG_SERVER);
+						Format(tags, sizeof(tags), "%t" , "tags_WVIP1", LANG_SERVER);
 						CS_SetClientClanTag(client, tags); 
 					}
 					else if (CheckVipFlag(client, g_sVIP2Flag))
 					{
-						Format(tags, sizeof(tags), "%t" ,"tags_WVIP2", LANG_SERVER);
+						Format(tags, sizeof(tags), "%t" , "tags_WVIP2", LANG_SERVER);
 						CS_SetClientClanTag(client, tags); 
 					}
 					else if (gc_bNoOverwrite.BoolValue)
 					{
-						Format(tags, sizeof(tags), "%t" ,"tags_W", LANG_SERVER);
+						Format(tags, sizeof(tags), "%t" , "tags_W", LANG_SERVER);
+						CS_SetClientClanTag(client, tags); 
+					}
+				}
+				else if (warden_deputy_isdeputy(client))
+				{
+					if (CheckVipFlag(client, g_sOwnerFlag))
+					{
+						Format(tags, sizeof(tags), "%t" , "tags_DOWN", LANG_SERVER);
+						CS_SetClientClanTag(client, tags);
+					}
+					else if (CheckVipFlag(client, g_sAdminFlag))
+					{
+						Format(tags, sizeof(tags), "%t" , "tags_DA", LANG_SERVER);
+						CS_SetClientClanTag(client, tags); 
+					}
+					else if (CheckVipFlag(client, g_sVIPFlag))
+					{
+						Format(tags, sizeof(tags), "%t" , "tags_DVIP1", LANG_SERVER);
+						CS_SetClientClanTag(client, tags); 
+					}
+					else if (CheckVipFlag(client, g_sVIP2Flag))
+					{
+						Format(tags, sizeof(tags), "%t" , "tags_DVIP2", LANG_SERVER);
+						CS_SetClientClanTag(client, tags); 
+					}
+					else if (gc_bNoOverwrite.BoolValue)
+					{
+						Format(tags, sizeof(tags), "%t" , "tags_D", LANG_SERVER);
 						CS_SetClientClanTag(client, tags); 
 					}
 				}
 				else if (CheckVipFlag(client, g_sOwnerFlag))
 				{
-					Format(tags, sizeof(tags), "%t" ,"tags_CTOWN", LANG_SERVER);
+					Format(tags, sizeof(tags), "%t" , "tags_CTOWN", LANG_SERVER);
 					CS_SetClientClanTag(client, tags);
 				}
 				else if (CheckVipFlag(client, g_sAdminFlag))
 				{
-					Format(tags, sizeof(tags), "%t" ,"tags_CTA", LANG_SERVER);
+					Format(tags, sizeof(tags), "%t" , "tags_CTA", LANG_SERVER);
 					CS_SetClientClanTag(client, tags);
 				}
 				else if (CheckVipFlag(client, g_sVIPFlag))
 				{
-					Format(tags, sizeof(tags), "%t" ,"tags_CTVIP1", LANG_SERVER);
+					Format(tags, sizeof(tags), "%t" , "tags_CTVIP1", LANG_SERVER);
 					CS_SetClientClanTag(client, tags); 
 				}
 				else if (CheckVipFlag(client, g_sVIP2Flag))
 				{
-					Format(tags, sizeof(tags), "%t" ,"tags_CTVIP2", LANG_SERVER);
+					Format(tags, sizeof(tags), "%t" , "tags_CTVIP2", LANG_SERVER);
 					CS_SetClientClanTag(client, tags); 
 				}
 				else if (gc_bNoOverwrite.BoolValue)
 				{
-					Format(tags, sizeof(tags), "%t" ,"tags_CT", LANG_SERVER);
+					Format(tags, sizeof(tags), "%t" , "tags_CT", LANG_SERVER);
 					CS_SetClientClanTag(client, tags); 
 				}
 			}
@@ -261,39 +294,34 @@ public int HandleTag(int client)
 
 
 //Check Chat & add Tag
-public Action OnChatMessage(int &author, Handle recipients, char[] name, char[] message)
+public Action OnChatMessage(int& author, ArrayList recipients, eChatFlags& flag, char[] name, char[] message, bool& bProcessColors, bool& bRemoveColors)
 {
-	if(gc_bPlugin.BoolValue)
+	if (gc_bPlugin.BoolValue)
 	{
-		if(gc_bChat.BoolValue)
+		if (gc_bChat.BoolValue)
 		{
 			if (GetClientTeam(author) == CS_TEAM_T) 
 			{
 				if (CheckVipFlag(author, g_sOwnerFlag))
-					{
-						Format(name, MAXLENGTH_NAME, "%t %s","tags_TOWN_chat", name);
-						return Plugin_Changed;
-					}
-					else if (CheckVipFlag(author, g_sAdminFlag))
-					{
-						Format(name, MAXLENGTH_NAME, "%t %s","tags_TA_chat", name);
-						return Plugin_Changed;
-					}
-					else if (CheckVipFlag(author, g_sVIPFlag))
-					{
-						Format(name, MAXLENGTH_NAME, "%t %s","tags_TVIP1_chat", name);
-						return Plugin_Changed;
-					}
-					else if (CheckVipFlag(author, g_sVIP2Flag))
-					{
-						Format(name, MAXLENGTH_NAME, "%t %s","tags_TVIP2_chat", name);
-						return Plugin_Changed;
-					}
-					else if (gc_bNoOverwrite.BoolValue)
-					{
-						Format(name, MAXLENGTH_NAME, "%t %s","tags_T_chat", name);
-						return Plugin_Changed;
-					}
+				{
+					Format(name, MAXLENGTH_NAME, "%t %s", "tags_TOWN_chat", name);
+				}
+				else if (CheckVipFlag(author, g_sAdminFlag))
+				{
+					Format(name, MAXLENGTH_NAME, "%t %s", "tags_TA_chat", name);
+				}
+				else if (CheckVipFlag(author, g_sVIPFlag))
+				{
+					Format(name, MAXLENGTH_NAME, "%t %s", "tags_TVIP1_chat", name);
+				}
+				else if (CheckVipFlag(author, g_sVIP2Flag))
+				{
+					Format(name, MAXLENGTH_NAME, "%t %s", "tags_TVIP2_chat", name);
+				}
+				else if (gc_bNoOverwrite.BoolValue)
+				{
+					Format(name, MAXLENGTH_NAME, "%t %s", "tags_T_chat", name);
+				}
 			}
 			else if (GetClientTeam(author) == CS_TEAM_CT)
 			{
@@ -301,57 +329,72 @@ public Action OnChatMessage(int &author, Handle recipients, char[] name, char[] 
 				{
 					if (CheckVipFlag(author, g_sOwnerFlag))
 					{
-						Format(name, MAXLENGTH_NAME, "%t %s","tags_WOWN_chat", name);
-						return Plugin_Changed;
+						Format(name, MAXLENGTH_NAME, "%t %s", "tags_WOWN_chat", name);
 					}
 					else if (CheckVipFlag(author, g_sAdminFlag))
 					{
-						Format(name, MAXLENGTH_NAME, "%t %s","tags_WA_chat", name);
-						return Plugin_Changed;
+						Format(name, MAXLENGTH_NAME, "%t %s", "tags_WA_chat", name);
 					}
 					else if (CheckVipFlag(author, g_sVIPFlag))
 					{
-						Format(name, MAXLENGTH_NAME, "%t %s","tags_WVIP1_chat", name);
-						return Plugin_Changed;
+						Format(name, MAXLENGTH_NAME, "%t %s", "tags_WVIP1_chat", name);
 					}
 					else if (CheckVipFlag(author, g_sVIP2Flag))
 					{
-						Format(name, MAXLENGTH_NAME, "%t %s","tags_WVIP2_chat", name);
-						return Plugin_Changed;
+						Format(name, MAXLENGTH_NAME, "%t %s", "tags_WVIP2_chat", name);
 					}
 					else if (gc_bNoOverwrite.BoolValue)
 					{
-						Format(name, MAXLENGTH_NAME, "%t %s","tags_W_chat", name);
-						return Plugin_Changed;
+						Format(name, MAXLENGTH_NAME, "%t %s", "tags_W_chat", name);
+					}
+				}
+				else if (warden_deputy_isdeputy(author))
+				{
+					if (CheckVipFlag(author, g_sOwnerFlag))
+					{
+						Format(name, MAXLENGTH_NAME, "%t %s", "tags_DOWN_chat", name);
+					}
+					else if (CheckVipFlag(author, g_sAdminFlag))
+					{
+						Format(name, MAXLENGTH_NAME, "%t %s", "tags_DA_chat", name);
+					}
+					else if (CheckVipFlag(author, g_sVIPFlag))
+					{
+						Format(name, MAXLENGTH_NAME, "%t %s", "tags_DVIP1_chat", name);
+					}
+					else if (CheckVipFlag(author, g_sVIP2Flag))
+					{
+						Format(name, MAXLENGTH_NAME, "%t %s", "tags_DVIP2_chat", name);
+					}
+					else if (gc_bNoOverwrite.BoolValue)
+					{
+						Format(name, MAXLENGTH_NAME, "%t %s", "tags_D_chat", name);
 					}
 				}
 				else if (CheckVipFlag(author, g_sOwnerFlag))
 				{
-					Format(name, MAXLENGTH_NAME, "%t %s","tags_CTOWN_chat", name);
-					return Plugin_Changed;
+					Format(name, MAXLENGTH_NAME, "%t %s", "tags_CTOWN_chat", name);
 				}
 				else if (CheckVipFlag(author, g_sAdminFlag))
 				{
-					Format(name, MAXLENGTH_NAME, "%t %s","tags_CTA_chat", name);
-					return Plugin_Changed;
+					Format(name, MAXLENGTH_NAME, "%t %s", "tags_CTA_chat", name);
 				}
 				else if (CheckVipFlag(author, g_sVIPFlag))
 				{
-					Format(name, MAXLENGTH_NAME, "%t %s","tags_CTVIP1_chat", name);
-					return Plugin_Changed;
+					Format(name, MAXLENGTH_NAME, "%t %s", "tags_CTVIP1_chat", name);
 				}
 				else if (CheckVipFlag(author, g_sVIP2Flag))
 				{
-					Format(name, MAXLENGTH_NAME, "%t %s","tags_CTVIP2_chat", name);
-					return Plugin_Changed;
+					Format(name, MAXLENGTH_NAME, "%t %s", "tags_CTVIP2_chat", name);
 				}
 				else if (gc_bNoOverwrite.BoolValue)
 				{
-					Format(name, MAXLENGTH_NAME, "%t %s","tags_CT_chat", name);
-					return Plugin_Changed;
+					Format(name, MAXLENGTH_NAME, "%t %s", "tags_CT_chat", name);
 				}
 			}
-		}return Plugin_Continue;
+			Format(message, MAXLENGTH_MESSAGE, "{default}%s", message);
+			
+		}
 	}
-	return Plugin_Continue;
+	return Plugin_Changed;
 }

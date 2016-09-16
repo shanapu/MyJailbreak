@@ -25,7 +25,15 @@
 
 
 //Includes
-#include <myjailbreak> //... all other includes in myjailbreak.inc
+#include <sourcemod>
+#include <sdktools>
+#include <sdkhooks>
+#include <cstrike>
+#include <colors>
+#include <autoexecconfig>
+#include <warden>
+#include <mystocks>
+#include <myjailbreak>
 
 
 //Compiler Options
@@ -35,6 +43,7 @@
 
 //Console Variables
 ConVar gc_bBulletSparks;
+ConVar gc_bBulletSparksDeputy;
 ConVar gc_sAdminFlagBulletSparks;
 
 
@@ -55,7 +64,8 @@ public void BulletSparks_OnPluginStart()
 	
 	//AutoExecConfig
 	gc_bBulletSparks = AutoExecConfig_CreateConVar("sm_warden_bulletsparks", "1", "0 - disabled, 1 - enable Warden bulletimpact sparks", _, true,  0.0, true, 1.0);
-	gc_sAdminFlagBulletSparks = AutoExecConfig_CreateConVar("sm_warden_bulletsparks_flag", "", "Set flag for admin/vip to get warden bulletimpact sparks. No flag = feature is available for all players!");
+	gc_bBulletSparksDeputy = AutoExecConfig_CreateConVar("sm_warden_bulletsparks_deputy", "1", "0 - disabled, 1 - enable smaller bulletimpact sparks for deputy, too", _, true,  0.0, true, 1.0);
+	gc_sAdminFlagBulletSparks = AutoExecConfig_CreateConVar("sm_warden_bulletsparks_flag", "", "Set flag for admin/vip to get warden/deputy bulletimpact sparks. No flag = feature is available for all players!");
 	
 	
 	//Hooks 
@@ -70,7 +80,7 @@ public void BulletSparks_OnPluginStart()
 
 public int BulletSparks_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
-	if(convar == gc_sAdminFlagBulletSparks)
+	if (convar == gc_sAdminFlagBulletSparks)
 	{
 		strcopy(g_sAdminFlagBulletSparks, sizeof(g_sAdminFlagBulletSparks), newValue);
 	}
@@ -84,13 +94,13 @@ public int BulletSparks_OnSettingChanged(Handle convar, const char[] oldValue, c
 
 public Action Command_BulletSparks(int client, int args)
 {
-	if(gc_bPlugin.BoolValue)
+	if (gc_bPlugin.BoolValue)
 	{
-		if(gc_bBulletSparks.BoolValue)
+		if (gc_bBulletSparks.BoolValue)
 		{
-			if (IsClientWarden(client))
+			if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bBulletSparksDeputy.BoolValue))
 			{
-				if(CheckVipFlag(client,g_sAdminFlagBulletSparks))
+				if (CheckVipFlag(client, g_sAdminFlagBulletSparks))
 				{
 					if (!g_bBulletSparks[client])
 					{
@@ -115,21 +125,22 @@ public Action Command_BulletSparks(int client, int args)
 ******************************************************************************/
 
 
-public Action BulletSparks_Event_BulletImpact(Handle hEvent, char [] sName, bool bDontBroadcast)
+public Action BulletSparks_Event_BulletImpact(Event event, char [] sName, bool bDontBroadcast)
 {
-	int iClient = GetClientOfUserId(GetEventInt(hEvent, "userid"));
+	int client = GetClientOfUserId(event.GetInt("userid"));
 	
-	if (!gc_bPlugin.BoolValue || !gc_bBulletSparks.BoolValue || !warden_iswarden(iClient) || !g_bBulletSparks[iClient] || !CheckVipFlag(iClient,g_sAdminFlagBulletSparks))
+	if (!gc_bPlugin.BoolValue || !gc_bBulletSparks.BoolValue || (!IsClientWarden(client) || (!IsClientDeputy(client) && gc_bBulletSparksDeputy.BoolValue)) || !g_bBulletSparks[client] || !CheckVipFlag(client, g_sAdminFlagBulletSparks))
 		return Plugin_Continue;
 	
 	float startpos[3];
 	float dir[3] = {0.0, 0.0, 0.0};
 	
-	startpos[0] = GetEventFloat(hEvent, "x");
-	startpos[1] = GetEventFloat(hEvent, "y");
-	startpos[2] = GetEventFloat(hEvent, "z");
+	startpos[0] = event.GetFloat("x");
+	startpos[1] = event.GetFloat("y");
+	startpos[2] = event.GetFloat("z");
 	
-	TE_SetupSparks(startpos, dir, 2500, 500);
+	if (warden_iswarden(client))TE_SetupSparks(startpos, dir, 2500, 500);
+	if (warden_deputy_isdeputy(client))TE_SetupSparks(startpos, dir, 1500, 300);
 	
 	TE_SendToAll();
 

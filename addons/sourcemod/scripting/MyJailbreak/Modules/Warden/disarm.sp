@@ -25,7 +25,15 @@
 
 
 //Includes
-#include <myjailbreak> //... all other includes in myjailbreak.inc
+#include <sourcemod>
+#include <sdktools>
+#include <sdkhooks>
+#include <cstrike>
+#include <colors>
+#include <autoexecconfig>
+#include <warden>
+#include <mystocks>
+#include <myjailbreak>
 
 
 //Compiler Options
@@ -48,7 +56,7 @@ public void Disarm_OnPluginStart()
 {
 	//AutoExecConfig
 	gc_bDisarm = AutoExecConfig_CreateConVar("sm_warden_disarm", "1", "0 - disabled, 1 - enable disarm weapon on shot the arms/hands", _, true,  0.0, true, 1.0);
-	gc_iDisarm = AutoExecConfig_CreateConVar("sm_warden_disarm_mode", "1", "1 - Only warden can disarm, 2 - All CT can disarm, 3 - Everyone can disarm (CT & T)", _, true,  1.0, true, 3.0);
+	gc_iDisarm = AutoExecConfig_CreateConVar("sm_warden_disarm_mode", "1", "1 - Only warden can disarm, 2 - warden & deputy can disarm, 3 - All CT can disarm, 4 - Everyone can disarm (CT & T)", _, true,  1.0, true, 3.0);
 	gc_iDisarmMode = AutoExecConfig_CreateConVar("sm_warden_disarm_drop", "1", "1 - weapon will drop, 2 - weapon  disapear", _, true,  1.0, true, 2.0);
 	
 	//Hooks 
@@ -69,34 +77,34 @@ public void Disarm_Event_RoundStart(Event event, const char[] name, bool dontBro
 
 public Action Disarm_Event_PlayerHurt(Event event, char[] name, bool dontBroadcast)
 {
-	if(gc_bPlugin.BoolValue && gc_bDisarm.BoolValue)
+	if (gc_bPlugin.BoolValue && gc_bDisarm.BoolValue)
 	{
 		int victim 			= GetClientOfUserId(event.GetInt("userid"));
 		int attacker 		= GetClientOfUserId(event.GetInt("attacker"));
 		int hitgroup		= event.GetInt("hitgroup");
 		int victimweapon = GetEntPropEnt(victim, Prop_Send, "m_hActiveWeapon");
 		
-		if (IsValidClient(attacker,true,false) && IsValidClient(victim,true,false))
+		if (IsValidClient(attacker, true, false) && IsValidClient(victim, true, false))
 		{
-			if ((warden_iswarden(attacker) && g_iDisarm == 1) || ((GetClientTeam(attacker) == CS_TEAM_CT) && g_iDisarm == 2) || ((GetClientTeam(attacker) != GetClientTeam(victim)) && g_iDisarm == 3))
+			if ((IsClientWarden(attacker) && g_iDisarm == 1) || ((IsClientWarden(attacker) || IsClientDeputy(attacker)) && g_iDisarm == 2) || ((GetClientTeam(attacker) == CS_TEAM_CT) && g_iDisarm == 3) || ((GetClientTeam(attacker) != GetClientTeam(victim)) && g_iDisarm == 4))
 			{
-				if(hitgroup == 4 || hitgroup == 5)
+				if (hitgroup == 4 || hitgroup == 5)
 				{
-					if(victimweapon != -1)
+					if (victimweapon != -1)
 					{
 						CPrintToChatAll("%t %t", "warden_tag", "warden_disarmed", victim, attacker);
 						PrintCenterText(victim, "%t", "warden_lostgun");
 						
-						if(gc_iDisarmMode.IntValue == 1)
+						if (gc_iDisarmMode.IntValue == 1)
 						{
 							CS_DropWeapon(victim, victimweapon, true, true);
 							return Plugin_Stop;
 						}
-						else if(gc_iDisarmMode.IntValue == 2)
+						else if (gc_iDisarmMode.IntValue == 2)
 						{
 							CS_DropWeapon(victim, victimweapon, true, true);
 							
-							if(IsValidEdict(victimweapon))
+							if (IsValidEdict(victimweapon))
 							{
 								if (Entity_GetOwner(victimweapon) == -1)
 								{

@@ -25,7 +25,16 @@
 
 
 //Includes
-#include <myjailbreak> //... all other includes in myjailbreak.inc
+#include <sourcemod>
+#include <sdktools>
+#include <sdkhooks>
+#include <cstrike>
+#include <colors>
+#include <autoexecconfig>
+#include <smartjaildoors>
+#include <warden>
+#include <mystocks>
+#include <myjailbreak>
 
 
 //Compiler Options
@@ -35,9 +44,12 @@
 
 //Console Variables
 ConVar gc_bOpen;
+ConVar gc_bOpenDeputy;
 ConVar gc_bOpenTimer;
 ConVar gc_hOpenTimer;
 ConVar gc_bOpenTimerWarden;
+ConVar gc_sCustomCommandOpen;
+ConVar gc_sCustomCommandClose;
 
 
 //Integers
@@ -57,15 +69,15 @@ public void CellDoors_OnPluginStart()
 	
 	//AutoExecConfig
 	gc_bOpen = AutoExecConfig_CreateConVar("sm_warden_open_enable", "1", "0 - disabled, 1 - warden can open/close cells", _, true,  0.0, true, 1.0);
+	gc_bOpenDeputy = AutoExecConfig_CreateConVar("sm_warden_open_deputy", "1", "0 - disabled, 1 - deputy can open/close cells", _, true,  0.0, true, 1.0);
+	gc_sCustomCommandOpen = AutoExecConfig_CreateConVar("sm_warden_cmds_open", "o, unlock, cells", "Set your custom chat commands for open cells(!open (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)");
+	gc_sCustomCommandClose = AutoExecConfig_CreateConVar("sm_warden_cmds_close", "lock, shut", "Set your custom chat commands for close cells(!close (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)");
 	gc_hOpenTimer = AutoExecConfig_CreateConVar("sm_warden_open_time", "60", "Time in seconds for open doors on round start automaticly", _, true, 0.0); 
 	gc_bOpenTimer = AutoExecConfig_CreateConVar("sm_warden_open_time_enable", "1", "should doors open automatic 0- no 1 yes", _, true,  0.0, true, 1.0);
 	gc_bOpenTimerWarden = AutoExecConfig_CreateConVar("sm_warden_open_time_warden", "1", "should doors open automatic after sm_warden_open_time when there is a warden? needs sm_warden_open_time_enable 1", _, true,  0.0, true, 1.0);
 	
 	//Hooks
 	HookEvent("round_start", CellDoors_Event_RoundStart);
-	
-	//FindConVar
-	g_bNoBlockSolid = FindConVar("mp_solid_teammates");
 }
 
 
@@ -76,11 +88,11 @@ public void CellDoors_OnPluginStart()
 
 public Action Command_OpenDoors(int client, int args)
 {
-	if(gc_bPlugin.BoolValue)
+	if (gc_bPlugin.BoolValue)
 	{
-		if(gc_bOpen.BoolValue)
+		if (gc_bOpen.BoolValue)
 		{
-			if (IsClientWarden(client))
+			if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bOpenDeputy.BoolValue))
 			{
 				if (SJD_IsCurrentMapConfigured())
 				{
@@ -101,11 +113,11 @@ public Action Command_OpenDoors(int client, int args)
 
 public Action Command_CloseDoors(int client, int args)
 {
-	if(gc_bPlugin.BoolValue)
+	if (gc_bPlugin.BoolValue)
 	{
-		if(gc_bOpen.BoolValue)
+		if (gc_bOpen.BoolValue)
 		{
-			if (IsClientWarden(client))
+			if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bOpenDeputy.BoolValue))
 			{
 				if (SJD_IsCurrentMapConfigured()) 
 				{
@@ -133,18 +145,55 @@ public void CellDoors_Event_RoundStart(Event event, const char[] name, bool dont
 		
 	OpenCounterTime = null;
 	
-	if(gc_bPlugin.BoolValue)
+	if (gc_bPlugin.BoolValue)
 	{
 		if (SJD_IsCurrentMapConfigured())
 		{
-			g_iOpenTimer = GetConVarInt(gc_hOpenTimer);
+			g_iOpenTimer = gc_hOpenTimer.IntValue;
 			OpenCounterTime = CreateTimer(1.0, Timer_OpenCounter, _, TIMER_REPEAT);
-			if (RandomTimer != null)
-			KillTimer(RandomTimer);
-			
-			RandomTimer = null;
 		}
-		else CPrintToChatAll("%t %t", "warden_tag" , "warden_openauto_unavailable"); 
+		else CPrintToChatAll("%t %t", "warden_tag" , "warden_openauto_unavailable");
+	}
+	if(GameRules_GetProp("m_bWarmupPeriod") == 1)
+	{
+		if (SJD_IsCurrentMapConfigured()) SJD_OpenDoors();
+	}
+}
+
+
+/******************************************************************************
+                   FORWARDS LISTENING
+******************************************************************************/
+
+
+public void CellDoors_OnConfigsExecuted()
+{
+	//Set custom Commands
+	int iCount = 0;
+	char sCommands[128], sCommandsL[12][32], sCommand[32];
+	
+	//Open Cell doors
+	gc_sCustomCommandOpen.GetString(sCommands, sizeof(sCommands));
+	ReplaceString(sCommands, sizeof(sCommands), " ", "");
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	
+	for (int i = 0; i < iCount; i++)
+	{
+		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+			RegConsoleCmd(sCommand, Command_OpenDoors, "Allows the Warden to open the cell doors");
+	}
+	
+	//Close Cell doors
+	gc_sCustomCommandClose.GetString(sCommands, sizeof(sCommands));
+	ReplaceString(sCommands, sizeof(sCommands), " ", "");
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	
+	for (int i = 0; i < iCount; i++)
+	{
+		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+			RegConsoleCmd(sCommand, Command_CloseDoors, "Allows the Warden to close the cell doors");
 	}
 }
 
@@ -156,14 +205,14 @@ public void CellDoors_Event_RoundStart(Event event, const char[] name, bool dont
 
 public Action Timer_OpenCounter(Handle timer, Handle pack)
 {
-	if(gc_bPlugin.BoolValue)
+	if (gc_bPlugin.BoolValue)
 	{
 		--g_iOpenTimer;
-		if(g_iOpenTimer < 1)
+		if (g_iOpenTimer < 1)
 		{
-			if(g_iWarden == -1)
+			if (g_iWarden == -1)
 			{
-				if(gc_bOpenTimer.BoolValue)
+				if (gc_bOpenTimer.BoolValue)
 				{
 					SJD_OpenDoors(); 
 					CPrintToChatAll("%t %t", "warden_tag" , "warden_openauto");
@@ -174,9 +223,9 @@ public Action Timer_OpenCounter(Handle timer, Handle pack)
 					OpenCounterTime = null;
 				}
 			}
-			else if(gc_bOpenTimer.BoolValue)
+			else if (gc_bOpenTimer.BoolValue)
 			{
-				if(gc_bOpenTimerWarden.BoolValue)
+				if (gc_bOpenTimerWarden.BoolValue)
 				{
 					SJD_OpenDoors(); 
 					CPrintToChatAll("%t %t", "warden_tag" , "warden_openauto");

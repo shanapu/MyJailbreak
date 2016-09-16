@@ -25,7 +25,16 @@
 
 
 //Includes
-#include <myjailbreak> //... all other includes in myjailbreak.inc
+#include <sourcemod>
+#include <sdktools>
+#include <sdkhooks>
+#include <cstrike>
+#include <colors>
+#include <autoexecconfig>
+#include <chat-processor>
+#include <warden>
+#include <mystocks>
+#include <myjailbreak>
 
 
 //Compiler Options
@@ -42,6 +51,7 @@
 
 //Console Variables
 ConVar gc_bMath;
+ConVar gc_bMathDeputy;
 ConVar gc_bOp;
 ConVar gc_iMinimumNumber;
 ConVar gc_iMaximumNumber;
@@ -50,6 +60,7 @@ ConVar gc_sMathOverlayStopPath;
 ConVar gc_bMathSounds;
 ConVar gc_sMathSoundStopPath;
 ConVar gc_iTimeAnswer;
+ConVar gc_sCustomCommandMath;
 
 
 //Booleans
@@ -83,6 +94,7 @@ public void Math_OnPluginStart()
 	
 	//AutoExecConfig
 	gc_bMath = AutoExecConfig_CreateConVar("sm_warden_math", "1", "0 - disabled, 1 - enable mathquiz for warden", _, true,  0.0, true, 1.0);
+	gc_bMathDeputy = AutoExecConfig_CreateConVar("sm_warden_math_deputy", "1", "0 - disabled, 1 - enable mathquiz for deputy, too", _, true,  0.0, true, 1.0);
 	gc_iMinimumNumber = AutoExecConfig_CreateConVar("sm_warden_math_min", "1", "What should be the minimum number for questions?", _, true,  1.0);
 	gc_iMaximumNumber = AutoExecConfig_CreateConVar("sm_warden_math_max", "100", "What should be the maximum number for questions?", _, true,  2.0);
 	gc_bOp = AutoExecConfig_CreateConVar("sm_warden_math_mode", "1", "0 - only addition & subtraction, 1 -  addition, subtraction, multiplication & division", _, true,  0.0, true, 1.0);
@@ -91,6 +103,7 @@ public void Math_OnPluginStart()
 	gc_sMathSoundStopPath = AutoExecConfig_CreateConVar("sm_warden_math_sounds_stop", "music/MyJailbreak/stop.mp3", "Path to the soundfile which should be played for stop countdown.");
 	gc_bMathOverlays = AutoExecConfig_CreateConVar("sm_warden_math_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true,  0.0, true, 1.0);
 	gc_sMathOverlayStopPath = AutoExecConfig_CreateConVar("sm_warden_math_overlays_stop", "overlays/MyJailbreak/stop" , "Path to the stop Overlay DONT TYPE .vmt or .vft");
+	gc_sCustomCommandMath = AutoExecConfig_CreateConVar("sm_warden_cmds_math", "m, quiz", "Set your custom chat commands for become warden(!math (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	
 	
 	//Hooks
@@ -105,15 +118,15 @@ public void Math_OnPluginStart()
 
 public int Math_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
-	if(convar == gc_sMathSoundStopPath)
+	if (convar == gc_sMathSoundStopPath)
 	{
 		strcopy(g_sMathSoundStopPath, sizeof(g_sMathSoundStopPath), newValue);
-		if(gc_bMathSounds.BoolValue) PrecacheSoundAnyDownload(g_sMathSoundStopPath);
+		if (gc_bMathSounds.BoolValue) PrecacheSoundAnyDownload(g_sMathSoundStopPath);
 	}
-	else if(convar == gc_sMathOverlayStopPath)
+	else if (convar == gc_sMathOverlayStopPath)
 	{
 		strcopy(g_sMathOverlayStopPath, sizeof(g_sMathOverlayStopPath), newValue);
-		if(gc_bMathOverlays.BoolValue) PrecacheDecalAnyDownload(g_sMathOverlayStopPath);
+		if (gc_bMathOverlays.BoolValue) PrecacheDecalAnyDownload(g_sMathOverlayStopPath);
 	}
 }
 
@@ -125,9 +138,9 @@ public int Math_OnSettingChanged(Handle convar, const char[] oldValue, const cha
 
 public Action Command_MathQuestion(int client, int args)
 {
-	if(gc_bMath.BoolValue)
+	if (gc_bMath.BoolValue)
 	{
-		if(IsClientWarden(client))
+		if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bMathDeputy.BoolValue))
 		{
 			if (!g_bIsMathQuiz)
 			{
@@ -135,7 +148,7 @@ public Action Command_MathQuestion(int client, int args)
 				
 				CPrintToChatAll("%t %t", "warden_tag" , "warden_startmathquiz");
 				
-				if(gc_bBetterNotes.BoolValue)
+				if (gc_bBetterNotes.BoolValue)
 				{
 					PrintCenterTextAll("%t", "warden_startmathquiz_nc");
 				}
@@ -158,16 +171,32 @@ public void Math_OnConfigsExecuted()
 {
 	g_iMathMin = gc_iMinimumNumber.IntValue;
 	g_iMathMax = gc_iMaximumNumber.IntValue;
+	
+	//Set custom Commands
+	int iCount = 0;
+	char sCommands[128], sCommandsL[12][32], sCommand[32];
+	
+	//Math quiz
+	gc_sCustomCommandMath.GetString(sCommands, sizeof(sCommands));
+	ReplaceString(sCommands, sizeof(sCommands), " ", "");
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	
+	for (int i = 0; i < iCount; i++)
+	{
+		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+			RegConsoleCmd(sCommand, Command_MathQuestion, "Allows the Warden to start a MathQuiz. Show player with first right Answer");
+	}
 }
 
 
 public void Math_OnMapStart()
 {
-	if(gc_bMathSounds.BoolValue)
+	if (gc_bMathSounds.BoolValue)
 	{
 		PrecacheSoundAnyDownload(g_sMathSoundStopPath);
 	}
-	if(gc_bMathOverlays.BoolValue)
+	if (gc_bMathOverlays.BoolValue)
 	{
 		PrecacheDecalAnyDownload(g_sMathOverlayStopPath);
 	}
@@ -181,14 +210,14 @@ public void Math_OnMapEnd()
 }
 
 
-public Action OnChatMessage(int &author, Handle recipients, char[] name, char[] message)
+public Action OnChatMessage(int& author, ArrayList recipients, eChatFlags& flag, char[] name, char[] message, bool& bProcessColors, bool& bRemoveColors)
 {
-	if(g_bIsMathQuiz && g_bCanAnswer)
+	if (g_bIsMathQuiz && g_bCanAnswer)
 	{
 		char bit[1][5];
 		ExplodeString(message, " ", bit, sizeof bit, sizeof bit[]);
 
-		if(ProcessSolution(author, StringToInt(bit[0])))
+		if (ProcessSolution(author, StringToInt(bit[0])))
 			SendEndMathQuestion(author);
 	}
 }
@@ -201,7 +230,7 @@ public Action OnChatMessage(int &author, Handle recipients, char[] name, char[] 
 
 public bool ProcessSolution(int client, int number)
 {
-	if(g_iMathResult == number)
+	if (g_iMathResult == number)
 	{		
 		return true;
 	}
@@ -214,7 +243,7 @@ public bool ProcessSolution(int client, int number)
 
 public void SendEndMathQuestion(int client)
 {
-	if(g_hMathTimer != INVALID_HANDLE)
+	if (g_hMathTimer != INVALID_HANDLE)
 	{
 		KillTimer(g_hMathTimer);
 		g_hMathTimer = INVALID_HANDLE;
@@ -222,7 +251,7 @@ public void SendEndMathQuestion(int client)
 	
 	char answer[264];
 	
-	if(client != -1)
+	if (client != -1)
 	{
 		Format(answer, sizeof(answer), "%t %t", "warden_tag", "warden_math_correct", client, g_iMathResult);
 		CreateTimer( 5.0, Timer_RemoveColor, client);
@@ -230,11 +259,11 @@ public void SendEndMathQuestion(int client)
 	}
 	else Format(answer, sizeof(answer), "%t %t", "warden_tag", "warden_math_time", g_iMathResult);
 	
-	if(gc_bMathOverlays.BoolValue)
+	if (gc_bMathOverlays.BoolValue)
 	{
 		ShowOverlayAll(g_sMathOverlayStopPath, 2.0);
 	}
-	if(gc_bMathSounds.BoolValue)	
+	if (gc_bMathSounds.BoolValue)	
 	{
 		EmitSoundToAllAny(g_sMathSoundStopPath);
 	}
@@ -253,38 +282,38 @@ public void SendEndMathQuestion(int client)
 
 public Action Timer_CreateMathQuestion( Handle timer, any client )
 {
-	if(gc_bMath.BoolValue)
+	if (gc_bMath.BoolValue)
 	{
-		if(IsClientWarden(client))
+		if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bMathDeputy.BoolValue))
 		{
 			int NumOne = GetRandomInt(g_iMathMin, g_iMathMax);
 			int NumTwo = GetRandomInt(g_iMathMin, g_iMathMax);
 			
-			if(gc_bOp.BoolValue) 
+			if (gc_bOp.BoolValue) 
 			{
-				Format(g_sOp, sizeof(g_sOp), g_sOperators[GetRandomInt(0,3)]);
+				Format(g_sOp, sizeof(g_sOp), g_sOperators[GetRandomInt(0, 3)]);
 			}
-			else Format(g_sOp, sizeof(g_sOp), g_sOperators[GetRandomInt(0,1)]);
+			else Format(g_sOp, sizeof(g_sOp), g_sOperators[GetRandomInt(0, 1)]);
 			
-			if(StrEqual(g_sOp, PLUS))
+			if (StrEqual(g_sOp, PLUS))
 			{
 				g_iMathResult = NumOne + NumTwo;
 			}
-			else if(StrEqual(g_sOp, MINUS))
+			else if (StrEqual(g_sOp, MINUS))
 			{
 				g_iMathResult = NumOne - NumTwo;
 			}
-			else if(StrEqual(g_sOp, DIVISOR))
+			else if (StrEqual(g_sOp, DIVISOR))
 			{
 				do
 				{
 					NumOne = GetRandomInt(g_iMathMin, g_iMathMax);
 					NumTwo = GetRandomInt(g_iMathMin, g_iMathMax);
 				}
-				while(NumOne % NumTwo != 0);
+				while (NumOne % NumTwo != 0);
 				g_iMathResult = NumOne / NumTwo;
 			}
-			else if(StrEqual(g_sOp, MULTIPL))
+			else if (StrEqual(g_sOp, MULTIPL))
 			{
 				g_iMathResult = NumOne * NumTwo;
 			}
@@ -292,7 +321,7 @@ public Action Timer_CreateMathQuestion( Handle timer, any client )
 			
 			CPrintToChatAll("%t %N: %i %s %i = ?? ", "warden_tag", client, NumOne, g_sOp, NumTwo);
 		
-			if(gc_bBetterNotes.BoolValue)
+			if (gc_bBetterNotes.BoolValue)
 			{
 				PrintCenterTextAll("%i %s %i = ?? ", NumOne, g_sOp, NumTwo);
 			}

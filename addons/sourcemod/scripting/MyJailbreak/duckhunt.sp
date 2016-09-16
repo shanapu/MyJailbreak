@@ -25,7 +25,20 @@
 
 
 //Includes
-#include <myjailbreak> //... all other includes in myjailbreak.inc
+#include <sourcemod>
+#include <sdktools>
+#include <sdkhooks>
+#include <cstrike>
+#include <emitsoundany>
+#include <colors>
+#include <smlib>
+#include <autoexecconfig>
+#include <hosties>
+#include <lastrequest>
+#include <warden>
+#include <smartjaildoors>
+#include <mystocks>
+#include <myjailbreak>
 
 
 //Compiler Options
@@ -42,9 +55,12 @@ bool StartDuckHunt;
 ConVar gc_bPlugin;
 ConVar gc_bSetW;
 ConVar gc_bSetA;
+ConVar gc_bSetABypassCooldown;
 ConVar gc_bVote;
 ConVar gc_iHunterHP;
+ConVar gc_iHunterHPincrease;
 ConVar gc_iChickenHP;
+ConVar gc_bFlyMode;
 ConVar gc_bSounds;
 ConVar gc_fBeaconTime;
 ConVar gc_sSoundStartPath;
@@ -55,9 +71,10 @@ ConVar gc_iTruceTime;
 ConVar gc_bOverlays;
 ConVar gc_sOverlayStartPath;
 ConVar gc_iRounds;
-ConVar gc_sCustomCommand;
 ConVar gc_sAdminFlag;
 ConVar gc_bAllowLR;
+ConVar gc_sCustomCommandVote;
+ConVar gc_sCustomCommandSet;
 
 
 //Extern Convars
@@ -85,8 +102,7 @@ Handle BeaconTimer;
 //Strings
 char g_sHasVoted[1500];
 char g_sSoundStartPath[256];
-char huntermodel[256] = "models/player/custom_player/legacy/tm_phoenix_heavy.mdl";
-char g_sCustomCommand[64];
+char g_sHunterModel[256] = "models/player/custom_player/legacy/tm_phoenix_heavy.mdl";
 char g_sEventsLogFile[PLATFORM_MAX_PATH];
 char g_sAdminFlag[32];
 char g_sModelPathCTPrevious[MAXPLAYERS+1][256];
@@ -96,10 +112,10 @@ char g_sOverlayStartPath[256];
 
 //Info
 public Plugin myinfo = {
-	name = "MyJailbreak - DuckHunt",
-	author = "shanapu",
-	description = "Event Day for Jailbreak Server",
-	version = PLUGIN_VERSION,
+	name = "MyJailbreak - DuckHunt", 
+	author = "shanapu", 
+	description = "Event Day for Jailbreak Server", 
+	version = PLUGIN_VERSION, 
 	url = URL_LINK
 };
 
@@ -113,8 +129,9 @@ public void OnPluginStart()
 	
 	
 	//Client Commands
-	RegConsoleCmd("sm_setduckhunt", SetDuckHunt, "Allows the Admin or Warden to set duckhunt as next round");
-	RegConsoleCmd("sm_duckhunt", VoteDuckHunt, "Allows players to vote for a duckhunt");
+	RegConsoleCmd("sm_setduckhunt", Command_SetDuckHunt, "Allows the Admin or Warden to set duckhunt as next round");
+	RegConsoleCmd("sm_duckhunt", Command_VoteDuckHunt, "Allows players to vote for a duckhunt");
+	RegConsoleCmd("drop", Command_ToggleFly);
 	
 	
 	//AutoExecConfig
@@ -123,7 +140,8 @@ public void OnPluginStart()
 	
 	AutoExecConfig_CreateConVar("sm_duckhunt_version", PLUGIN_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_duckhunt_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true,  0.0, true, 1.0);
-	gc_sCustomCommand = AutoExecConfig_CreateConVar("sm_duckhunt_cmd", "duck", "Set your custom chat command for Event voting. no need for sm_ or !");
+	gc_sCustomCommandVote = AutoExecConfig_CreateConVar("sm_duckhunt_cmds_vote", "duck, hunt", "Set your custom chat command for Event voting(!duckhunt (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
+	gc_sCustomCommandSet = AutoExecConfig_CreateConVar("sm_duckhunt_cmds_set", "sduck, shunt, sduckhunt", "Set your custom chat command for set Event(!setduckhunt (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_duckhunt_warden", "1", "0 - disabled, 1 - allow warden to set duckhunt round", _, true,  0.0, true, 1.0);
 	gc_bSetA = AutoExecConfig_CreateConVar("sm_duckhunt_admin", "1", "0 - disabled, 1 - allow admin/vip to set duckhunt round", _, true,  0.0, true, 1.0);
 	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_duckhunt_flag", "g", "Set flag for admin/vip to set this Event Day.");
@@ -131,11 +149,14 @@ public void OnPluginStart()
 	gc_iRounds = AutoExecConfig_CreateConVar("sm_duckhunt_rounds", "1", "Rounds to play in a row", _, true, 1.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_duckhunt_roundtime", "5", "Round time in minutes for a single duckhunt round", _, true, 1.0);
 	gc_fBeaconTime = AutoExecConfig_CreateConVar("sm_duckhunt_beacon_time", "240", "Time in seconds until the beacon turned on (set to 0 to disable)", _, true, 0.0);
-	gc_iChickenHP = AutoExecConfig_CreateConVar("sm_duckhunt_chicken_hp", "100", "THP the chicken got on Spawn", _, true, 1.0);
+	gc_bFlyMode = AutoExecConfig_CreateConVar("sm_duckhunt_flymode", "1", "0 - Low gravity, 1 - 'Flymode' (like a slow noclip with clipping). Bit difficult", _, true,  0.0, true, 1.0);
 	gc_iHunterHP = AutoExecConfig_CreateConVar("sm_duckhunt_hunter_hp", "850", "HP the hunters got on Spawn", _, true, 1.0);
+	gc_iHunterHPincrease = AutoExecConfig_CreateConVar("sm_duckhunt_hunter_hp_extra", "100", "HP the Hunter get additional per extra duck", _, true, 1.0);
+	gc_iChickenHP = AutoExecConfig_CreateConVar("sm_duckhunt_chicken_hp", "100", "HP the chicken got on Spawn", _, true, 1.0);
 	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_duckhunt_trucetime", "15", "Time in seconds until cells open / players can't deal damage", _, true,  0.0);
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_duckhunt_cooldown_day", "3", "Rounds cooldown after a event until event can be start again", _, true,  0.0);
 	gc_iCooldownStart = AutoExecConfig_CreateConVar("sm_duckhunt_cooldown_start", "3", "Rounds until event can be start after mapchange.", _, true,  0.0);
+	gc_bSetABypassCooldown = AutoExecConfig_CreateConVar("sm_duckhunt_cooldown_admin", "1", "0 - disabled, 1 - ignore the cooldown when admin/vip set duckhunt round", _, true, 0.0, true, 1.0);
 	gc_bSounds = AutoExecConfig_CreateConVar("sm_duckhunt_sounds_enable", "1", "0 - disabled, 1 - enable sounds ", _, true,  0.0, true, 1.0);
 	gc_sSoundStartPath = AutoExecConfig_CreateConVar("sm_duckhunt_sounds_start", "music/MyJailbreak/duckhunt.mp3", "Path to the soundfile which should be played for start");
 	gc_bOverlays = AutoExecConfig_CreateConVar("sm_duckhunt_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true,  0.0, true, 1.0);
@@ -154,22 +175,17 @@ public void OnPluginStart()
 	HookEvent("hegrenade_detonate", Event_HE_Detonate);
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
-	HookConVarChange(gc_sCustomCommand, OnSettingChanged);
 	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
 	
 	
 	//FindConVar
 	g_bAllowTP = FindConVar("sv_allow_thirdperson");
 	g_iMPRoundTime = FindConVar("mp_roundtime");
-	g_iTerrorForLR = FindConVar("sm_hosties_lr_ts_max");
-	g_iTruceTime = gc_iTruceTime.IntValue;
-	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	gc_sOverlayStartPath.GetString(g_sOverlayStartPath , sizeof(g_sOverlayStartPath));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
-	gc_sCustomCommand.GetString(g_sCustomCommand , sizeof(g_sCustomCommand));
 	gc_sAdminFlag.GetString(g_sAdminFlag , sizeof(g_sAdminFlag));
 
-	if(g_bAllowTP == INVALID_HANDLE)
+	if (g_bAllowTP == INVALID_HANDLE)
 	{
 		SetFailState("sv_allow_thirdperson not found!");
 	}
@@ -181,27 +197,19 @@ public void OnPluginStart()
 //ConVarChange for Strings
 public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
-	if(convar == gc_sOverlayStartPath)
+	if (convar == gc_sOverlayStartPath)
 	{
 		strcopy(g_sOverlayStartPath, sizeof(g_sOverlayStartPath), newValue);
-		if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
+		if (gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
 	}
-	else if(convar == gc_sSoundStartPath)
+	else if (convar == gc_sSoundStartPath)
 	{
 		strcopy(g_sSoundStartPath, sizeof(g_sSoundStartPath), newValue);
-		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
+		if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
 	}
-	else if(convar == gc_sAdminFlag)
+	else if (convar == gc_sAdminFlag)
 	{
 		strcopy(g_sAdminFlag, sizeof(g_sAdminFlag), newValue);
-	}
-	else if(convar == gc_sCustomCommand)
-	{
-		strcopy(g_sCustomCommand, sizeof(g_sCustomCommand), newValue);
-		char sBufferCMD[64];
-		Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommand);
-		if(GetCommandFlags(sBufferCMD) == INVALID_FCVAR_FLAGS)
-			RegConsoleCmd(sBufferCMD, VoteDuckHunt, "Allows players to vote for a duckhunt");
 	}
 }
 
@@ -213,10 +221,36 @@ public void OnConfigsExecuted()
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iMaxRound = gc_iRounds.IntValue;
 	
-	char sBufferCMD[64];
-	Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommand);
-	if(GetCommandFlags(sBufferCMD) == INVALID_FCVAR_FLAGS)
-		RegConsoleCmd(sBufferCMD, VoteDuckHunt, "Allows players to vote for a duckhunt");
+	//FindConVar
+	g_iTerrorForLR = FindConVar("sm_hosties_lr_ts_max");
+	
+	//Set custom Commands
+	int iCount = 0;
+	char sCommands[128], sCommandsL[12][32], sCommand[32];
+	
+	//Vote
+	gc_sCustomCommandVote.GetString(sCommands, sizeof(sCommands));
+	ReplaceString(sCommands, sizeof(sCommands), " ", "");
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	
+	for (int i = 0; i < iCount; i++)
+	{
+		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+			RegConsoleCmd(sCommand, Command_VoteDuckHunt, "Allows players to vote for a duckhunt");
+	}
+	
+	//Set
+	gc_sCustomCommandSet.GetString(sCommands, sizeof(sCommands));
+	ReplaceString(sCommands, sizeof(sCommands), " ", "");
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	
+	for (int i = 0; i < iCount; i++)
+	{
+		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+			RegConsoleCmd(sCommand, Command_SetDuckHunt, "Allows the Admin or Warden to set duckhunt as next round");
+	}
 }
 
 
@@ -226,14 +260,14 @@ public void OnConfigsExecuted()
 
 
 //Admin & Warden set Event
-public Action SetDuckHunt(int client,int args)
+public Action Command_SetDuckHunt(int client, int args)
 {
 	if (gc_bPlugin.BoolValue)
 	{
-		if(client == 0)
+		if (client == 0)
 		{
 			StartNextRound();
-			if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event DuckHunt was started by groupvoting");
+			if (ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event DuckHunt was started by groupvoting");
 		}
 		else if (warden_iswarden(client))
 		{
@@ -244,12 +278,12 @@ public Action SetDuckHunt(int client,int args)
 					char EventDay[64];
 					GetEventDayName(EventDay);
 					
-					if(StrEqual(EventDay, "none", false))
+					if (StrEqual(EventDay, "none", false))
 					{
 						if (g_iCoolDown == 0)
 						{
 							StartNextRound();
-							if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Duckhunt was started by warden %L", client);
+							if (ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Duckhunt was started by warden %L", client);
 						}
 						else CReplyToCommand(client, "%t %t", "duckhunt_tag" , "duckhunt_wait", g_iCoolDown);
 					}
@@ -259,7 +293,7 @@ public Action SetDuckHunt(int client,int args)
 			}
 			else CReplyToCommand(client, "%t %t", "warden_tag" , "duckhunt_setbywarden");
 		}
-		else if (CheckVipFlag(client,g_sAdminFlag))
+		else if (CheckVipFlag(client, g_sAdminFlag))
 			{
 				if (gc_bSetA.BoolValue)
 				{
@@ -268,12 +302,12 @@ public Action SetDuckHunt(int client,int args)
 						char EventDay[64];
 						GetEventDayName(EventDay);
 						
-						if(StrEqual(EventDay, "none", false))
+						if (StrEqual(EventDay, "none", false))
 						{
-							if (g_iCoolDown == 0)
+							if ((g_iCoolDown == 0) || gc_bSetABypassCooldown.BoolValue)
 							{
 								StartNextRound();
-								if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Duckhunt was started by admin %L", client);
+								if (ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Duckhunt was started by admin %L", client);
 							}
 							else CReplyToCommand(client, "%t %t", "duckhunt_tag" , "duckhunt_wait", g_iCoolDown);
 						}
@@ -291,7 +325,7 @@ public Action SetDuckHunt(int client,int args)
 
 
 //Voting for Event
-public Action VoteDuckHunt(int client,int args)
+public Action Command_VoteDuckHunt(int client, int args)
 {
 	char steamid[64];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
@@ -305,7 +339,7 @@ public Action VoteDuckHunt(int client,int args)
 				char EventDay[64];
 				GetEventDayName(EventDay);
 				
-				if(StrEqual(EventDay, "none", false))
+				if (StrEqual(EventDay, "none", false))
 				{
 					if (g_iCoolDown == 0)
 					{
@@ -317,12 +351,12 @@ public Action VoteDuckHunt(int client,int args)
 							
 							int Missing = playercount - g_iVoteCount + 1;
 							
-							Format(g_sHasVoted, sizeof(g_sHasVoted), "%s,%s", g_sHasVoted, steamid);
+							Format(g_sHasVoted, sizeof(g_sHasVoted), "%s, %s", g_sHasVoted, steamid);
 							
 							if (g_iVoteCount > playercount)
 							{
 								StartNextRound();
-								if(ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Duckhunt was started by voting");
+								if (ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Duckhunt was started by voting");
 							}
 							else CPrintToChatAll("%t %t", "duckhunt_tag" , "duckhunt_need", Missing, client);
 						}
@@ -338,6 +372,27 @@ public Action VoteDuckHunt(int client,int args)
 	}
 	else CReplyToCommand(client, "%t %t", "duckhunt_tag" , "duckhunt_disabled");
 	return Plugin_Handled;
+}
+
+
+public Action Command_ToggleFly(int client, int args)
+{
+	if (IsDuckHunt && (GetClientTeam(client) == CS_TEAM_T) && gc_bFlyMode.BoolValue)
+	{
+		MoveType movetype = GetEntityMoveType(client); 
+		
+		if (movetype != MOVETYPE_FLY)
+		{
+			SetEntityMoveType(client, MOVETYPE_FLY);
+			return Plugin_Handled;
+		}
+		else
+		{
+			SetEntityMoveType(client, MOVETYPE_WALK);
+			return Plugin_Handled;
+		}
+	}
+	return Plugin_Continue;
 }
 
 
@@ -377,13 +432,25 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 					
 					if (GetClientTeam(client) == CS_TEAM_CT && IsValidClient(client, false, false))
 					{
-						SetEntityHealth(client, gc_iHunterHP.IntValue);
+						int HunterHP = gc_iHunterHP.IntValue;
+						int difference = (GetAliveTeamCount(CS_TEAM_T) - GetAliveTeamCount(CS_TEAM_CT));
+						
+						if (difference > 0) HunterHP = HunterHP + (gc_iHunterHPincrease.IntValue * difference); 
+						
+						SetEntityHealth(client, HunterHP);
 						GivePlayerItem(client, "weapon_nova");
 					}
 					if (GetClientTeam(client) == CS_TEAM_T && IsValidClient(client, false, false))
 					{
-						SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.2);
-						SetEntityGravity(client, 0.3);
+						if (gc_bFlyMode.BoolValue)
+						{
+							SetEntityMoveType(client, MOVETYPE_FLY);
+						}
+						else
+						{
+							SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.2);
+							SetEntityGravity(client, 0.3);
+						}
 						SetEntityHealth(client, gc_iChickenHP.IntValue);
 						GivePlayerItem(client, "weapon_hegrenade");
 						ClientCommand(client, "thirdperson");
@@ -403,7 +470,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 					}
 				}
 				
-				CPrintToChatAll("%t %t", "duckhunt_tag" ,"duckhunt_rounds", g_iRound, g_iMaxRound);
+				CPrintToChatAll("%t %t", "duckhunt_tag" , "duckhunt_rounds", g_iRound, g_iMaxRound);
 				g_iTruceTime--;
 				TruceTimer = CreateTimer(1.0, Timer_StartEvent, _, TIMER_REPEAT);
 			}
@@ -413,7 +480,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		char EventDay[64];
 		GetEventDayName(EventDay);
 		
-		if(!StrEqual(EventDay, "none", false))
+		if (!StrEqual(EventDay, "none", false))
 		{
 			g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 		}
@@ -436,6 +503,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 					SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
 					SetEntityGravity(client, 1.0);
 					FP(client);
+					SetEntityMoveType(client, MOVETYPE_WALK);
 				}
 		}
 		delete BeaconTimer;
@@ -489,10 +557,10 @@ public void Event_HE_Detonate(Event event, const char[] name, bool dontBroadcast
 //Give new Ammo to Hunter
 public void Event_WeaponReload(Event event, char [] name, bool dontBroadcast)
 {
-	if(IsDuckHunt == true)
+	if (IsDuckHunt == true)
 	{
 		int client = GetClientOfUserId(event.GetInt("userid"));
-		if(IsValidClient(client, false, false) && (GetClientTeam(client) == CS_TEAM_CT))
+		if (IsValidClient(client, false, false) && (GetClientTeam(client) == CS_TEAM_CT))
 		{
 			SetPlayerWeaponAmmo(client, Client_GetActiveWeapon(client), _, 32);
 		}
@@ -502,10 +570,11 @@ public void Event_WeaponReload(Event event, char [] name, bool dontBroadcast)
 
 public void Event_PlayerDeath(Event event, char [] name, bool dontBroadcast)
 {
-	if(IsDuckHunt == true)
+	if (IsDuckHunt == true)
 	{
 		int client = GetClientOfUserId(event.GetInt("userid"));
 		FP(client);
+		SetEntityMoveType(client, MOVETYPE_WALK);
 	}
 }
 
@@ -526,10 +595,10 @@ public void OnMapStart()
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	
-	if(gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
-	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
+	if (gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
+	if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
 	PrecacheModel("models/chicken/chicken.mdl", true);
-	PrecacheModel(huntermodel, true);
+	PrecacheModel(g_sHunterModel, true);
 	AddFileToDownloadsTable("materials/models/props_farm/chicken_white.vmt");
 	AddFileToDownloadsTable("materials/models/props_farm/chicken_white.vtf");
 	AddFileToDownloadsTable("models/chicken/chicken.dx90.vtx");
@@ -551,6 +620,7 @@ public void OnMapEnd()
 	LoopClients(client)
 	{
 		FP(client);
+		SetEntityMoveType(client, MOVETYPE_WALK);
 	}
 }
 
@@ -571,7 +641,7 @@ public int OnAvailableLR(int Announced)
 				FP(client);
 				if (GetClientTeam(client) == CS_TEAM_CT)
 				{
-					FakeClientCommand(client, "sm_guns");
+					FakeClientCommand(client, "sm_weapons");
 					SetEntityModel(client, g_sModelPathCTPrevious[client]);
 				}
 				
@@ -615,11 +685,11 @@ public void OnClientPutInServer(int client)
 //Nova & Grenade only
 public Action OnWeaponCanUse(int client, int weapon)
 {
-	if(IsDuckHunt == true)
+	if (IsDuckHunt == true)
 	{
 		char sWeapon[32];
 		GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
-		if((GetClientTeam(client) == CS_TEAM_T && StrEqual(sWeapon, "weapon_hegrenade")) || (GetClientTeam(client) == CS_TEAM_CT && StrEqual(sWeapon, "weapon_nova")))
+		if ((GetClientTeam(client) == CS_TEAM_T && StrEqual(sWeapon, "weapon_hegrenade")) || (GetClientTeam(client) == CS_TEAM_CT && StrEqual(sWeapon, "weapon_nova")))
 		{
 		
 			if (IsClientInGame(client) && IsPlayerAlive(client))
@@ -636,9 +706,9 @@ public Action OnWeaponCanUse(int client, int weapon)
 // Only right click attack for chicken
 public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon) 
 {
-	if(IsDuckHunt == true)
+	if (IsDuckHunt == true)
 	{
-		if((GetClientTeam(client) == CS_TEAM_T) && IsClientInGame(client) && IsPlayerAlive(client) && buttons & IN_ATTACK)
+		if ((GetClientTeam(client) == CS_TEAM_T) && IsClientInGame(client) && IsPlayerAlive(client) && buttons & IN_ATTACK)
 		{
 			return Plugin_Handled;
 		}
@@ -664,7 +734,7 @@ public void OnClientDisconnect(int client)
 //Back to First Person
 public Action FP(int client)
 {
-	if(IsValidClient(client, false, true))
+	if (IsValidClient(client, false, true))
 	{
 		ClientCommand(client, "firstperson");
 	}
@@ -740,7 +810,7 @@ public Action Timer_StartEvent(Handle timer)
 		g_iTruceTime--;
 		LoopClients(client) if (IsPlayerAlive(client))
 		{
-			PrintCenterText(client,"%t", "duckhunt_timeuntilstart_nc", g_iTruceTime);
+			PrintCenterText(client, "%t", "duckhunt_timeuntilstart_nc", g_iTruceTime);
 		}
 		return Plugin_Continue;
 	}
@@ -749,7 +819,7 @@ public Action Timer_StartEvent(Handle timer)
 	
 	if (g_iRound > 0)
 	{
-		LoopClients(client) if(IsPlayerAlive(client))
+		LoopClients(client) if (IsPlayerAlive(client))
 		{
 			if (GetClientTeam(client) == CS_TEAM_T)
 			{
@@ -760,9 +830,9 @@ public Action Timer_StartEvent(Handle timer)
 			{
 				SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
 			}
-			PrintCenterText(client,"%t", "duckhunt_start_nc");
-			if(gc_bOverlays.BoolValue) ShowOverlay(client, g_sOverlayStartPath, 2.0);
-			if(gc_bSounds.BoolValue)	
+			PrintCenterText(client, "%t", "duckhunt_start_nc");
+			if (gc_bOverlays.BoolValue) ShowOverlay(client, g_sOverlayStartPath, 2.0);
+			if (gc_bSounds.BoolValue)	
 			{
 				EmitSoundToAllAny(g_sSoundStartPath);
 			}
@@ -783,7 +853,7 @@ public Action Timer_SetModel(Handle timer)
 		if (GetClientTeam(client) == CS_TEAM_CT)
 		{
 			GetEntPropString(client, Prop_Data, "m_ModelName", g_sModelPathCTPrevious[client], sizeof(g_sModelPathCTPrevious[]));
-			SetEntityModel(client, huntermodel);
+			SetEntityModel(client, g_sHunterModel);
 		}
 		if (GetClientTeam(client) == CS_TEAM_T)
 		{
@@ -797,6 +867,6 @@ public Action Timer_SetModel(Handle timer)
 //Beacon Timer
 public Action Timer_BeaconOn(Handle timer)
 {
-	LoopValidClients(i,true,false) BeaconOn(i, 2.0);
+	LoopValidClients(i, true, false) BeaconOn(i, 2.0);
 	BeaconTimer = null;
 }

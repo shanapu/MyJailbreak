@@ -25,7 +25,15 @@
 
 
 //Includes
-#include <myjailbreak> //... all other includes in myjailbreak.inc
+#include <sourcemod>
+#include <sdktools>
+#include <sdkhooks>
+#include <cstrike>
+#include <colors>
+#include <autoexecconfig>
+#include <warden>
+#include <mystocks>
+#include <myjailbreak>
 
 
 //Compiler Options
@@ -35,6 +43,7 @@
 
 //Console Variables
 ConVar gc_bPlugin;
+ConVar gc_sCustomCommandHUD;
 
 //Booleans
 g_bEnableHud[MAXPLAYERS+1] = true;
@@ -45,10 +54,10 @@ g_bEnableHud[MAXPLAYERS+1] = true;
 //Info
 public Plugin myinfo =
 {
-	name = "MyJailbreak - Player HUD",
-	description = "A player HUD to display game informations",
-	author = "shanapu",
-	version = PLUGIN_VERSION,
+	name = "MyJailbreak - Player HUD", 
+	description = "A player HUD to display game informations", 
+	author = "shanapu", 
+	version = PLUGIN_VERSION, 
 	url = URL_LINK
 }
 
@@ -58,7 +67,7 @@ public void OnPluginStart()
 {
 	// Translation
 	LoadTranslations("MyJailbreak.HUD.phrases");
-		
+	
 	RegConsoleCmd("sm_hud", Command_HUD, "Allows player to toggle the hud display.");
 	
 	
@@ -68,6 +77,7 @@ public void OnPluginStart()
 	
 	AutoExecConfig_CreateConVar("sm_hud_version", PLUGIN_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_hud_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true,  0.0, true, 1.0);
+	gc_sCustomCommandHUD = AutoExecConfig_CreateConVar("sm_hud_cmds", "HUD", "Set your custom chat commands for toggle HUD(!hud (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	
 	
 	AutoExecConfig_ExecuteFile();
@@ -80,15 +90,36 @@ public void OnPluginStart()
 }
 
 
+//Initialize Plugin
+public void OnConfigsExecuted()
+{
+	//Set custom Commands
+	int iCount = 0;
+	char sCommands[128], sCommandsL[12][32], sCommand[32];
+	
+	//HUd
+	gc_sCustomCommandHUD.GetString(sCommands, sizeof(sCommands));
+	ReplaceString(sCommands, sizeof(sCommands), " ", "");
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	
+	for (int i = 0; i < iCount; i++)
+	{
+		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+			RegConsoleCmd(sCommand, Command_HUD, "Allows player to toggle the hud display.");
+	}
+}
+
+
 /******************************************************************************
                    COMMANDS
 ******************************************************************************/
 
 
-//Become Warden
+//Toggle hud
 public Action Command_HUD(int client, int args)
 {
-	if(!g_bEnableHud[client])
+	if (!g_bEnableHud[client])
 	{
 		g_bEnableHud[client] = true;
 		CReplyToCommand(client, "%t %t", "hud_tag", "hud_on");
@@ -124,7 +155,7 @@ public void Event_PlayerTeamDeath(Event event, const char[] name, bool dontBroad
 //Prepare Plugin & modules
 public void OnMapStart()
 {
-	if(gc_bPlugin.BoolValue) CreateTimer(1.0, Timer_ShowHUD, _, TIMER_REPEAT);
+	if (gc_bPlugin.BoolValue) CreateTimer(1.0, Timer_ShowHUD, _, TIMER_REPEAT);
 }
 
 public void OnClientPutInServer(int client)
@@ -133,13 +164,13 @@ public void OnClientPutInServer(int client)
 }
 
 
-public int warden_OnWardenCreated(int client)
+public void warden_OnWardenCreated(int client)
 {
 	ShowHUD();
 }
 
 
-public int warden_OnWardenRemoved(int client)
+public void warden_OnWardenRemoved(int client)
 {
 	ShowHUD();
 }
@@ -163,7 +194,7 @@ public Action Timer_ShowHUD(Handle timer, Handle pack)
 
 public void ShowHUD()
 {
-	int warden = warden_get(warden);
+	int warden = warden_get();
 	int aliveCT = GetAliveTeamCount(CS_TEAM_CT);
 	int allCT = GetTeamClientCount(CS_TEAM_CT);
 	int aliveT = GetAliveTeamCount(CS_TEAM_T);
@@ -173,17 +204,18 @@ public void ShowHUD()
 	char EventDay[64];
 	GetEventDayName(EventDay);
 	
-	if(gc_bPlugin.BoolValue)
+	if (gc_bPlugin.BoolValue)
 	{
-		LoopValidClients(i,false,true)
+		LoopValidClients(i, false, true)
 		{
-			if(g_bEnableHud[i])
+			if (g_bEnableHud[i])
 			{
-				if(IsLastGuardRule())
+				if (IsLastGuardRule())
 				{
-					int lastCT = (GetClientTeam(i) == CS_TEAM_CT);
+					int lastCT = GetLastAlive(CS_TEAM_CT);
 					
-					if(IsEventDayPlanned())
+					
+					if (IsEventDayPlanned())
 					{
 						PrintHintText(i, "<font face='Arial' color='#006699'>%t </font>%N</font>\n<font face='Arial' color='#B980EF'>%t</font> %s\n<font color='#5E97D8'>%t</font> %i/%i\t<font color='#E3AD39'>%t</font> %i/%i\n", "hud_lastCT", lastCT, "hud_planned", EventDay, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
 					}
@@ -192,13 +224,13 @@ public void ShowHUD()
 						PrintHintText(i, "<font face='Arial' color='#006699'>%t </font>%N</font>\n<font color='#5E97D8'>%t</font> %i/%i\t<font color='#E3AD39'>%t</font> %i/%i\n", "hud_lastCT", lastCT, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
 					}
 				}
-				else if(IsEventDayRunning())
+				else if (IsEventDayRunning())
 				{
 					PrintHintText(i, "<font face='Arial' color='#B980EF'>%t </font>%s\n<font color='#5E97D8'>%t</font> %i/%i\t<font color='#E3AD39'>%t</font> %i/%i\n", "hud_running", EventDay, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
 				}
-				else if(warden == -1)
+				else if (warden == -1)
 				{
-					if(IsEventDayPlanned())
+					if (IsEventDayPlanned())
 					{
 						PrintHintText(i, "<font face='Arial' color='#006699'>%t </font><font face='Arial' color='#FE4040'>%t</font>\n<font color='#B980EF'>%t</font> %s\n<font color='#5E97D8'>%t</font> %i/%i\t<font color='#E3AD39'>%t</font> %i/%i", "hud_warden", "hud_nowarden", "hud_planned", EventDay, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
 					}
@@ -209,7 +241,7 @@ public void ShowHUD()
 				}
 				else
 				{
-					if(IsEventDayPlanned())
+					if (IsEventDayPlanned())
 					{
 						PrintHintText(i, "<font face='Arial' color='#006699'>%t </font>%N\n<font face='Arial' color='#B980EF'>%t</font> %s\n<font color='#5E97D8'>%t</font> %i/%i\t<font color='#E3AD39'>%t</font> %i/%i\n", "hud_warden", warden, "hud_planned", EventDay, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
 					}

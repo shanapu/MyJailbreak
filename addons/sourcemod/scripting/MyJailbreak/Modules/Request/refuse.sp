@@ -25,7 +25,15 @@
 
 
 //Includes
-#include <myjailbreak> //... all other includes in myjailbreak.inc
+#include <sourcemod>
+#include <sdktools>
+#include <sdkhooks>
+#include <cstrike>
+#include <colors>
+#include <autoexecconfig>
+#include <warden>
+#include <mystocks>
+#include <myjailbreak>
 
 
 //Compiler Options
@@ -66,7 +74,6 @@ Handle AllowRefuseTimer;
 //Strings
 char g_sSoundRefusePath[256];
 char g_sSoundRefuseStopPath[256];
-char g_sCustomCommandRefuse[64];
 char g_sAdminFlagRefuse[32];
 
 
@@ -79,13 +86,13 @@ public void Refuse_OnPluginStart()
 	
 	//AutoExecConfig
 	gc_bRefuse = AutoExecConfig_CreateConVar("sm_refuse_enable", "1", "0 - disabled, 1 - enable Refuse");
-	gc_sCustomCommandRefuse = AutoExecConfig_CreateConVar("sm_refuse_cmd", "ref", "Set your custom chat command for Refuse. no need for sm_ or !");
+	gc_sCustomCommandRefuse = AutoExecConfig_CreateConVar("sm_refuse_cmds", "ref, r", "Set your custom chat commands for Refuse(!refuse (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_bWardenAllowRefuse = AutoExecConfig_CreateConVar("sm_refuse_allow", "0", "0 - disabled, 1 - Warden must allow !refuse before T can use it");
 	gc_iRefuseLimit = AutoExecConfig_CreateConVar("sm_refuse_limit", "1", "Сount how many times you can use the command");
 	gc_fRefuseTime = AutoExecConfig_CreateConVar("sm_refuse_time", "5.0", "Time the player gets to refuse after warden open refuse with !refuse / colortime");
-	gc_iRefuseColorRed = AutoExecConfig_CreateConVar("sm_refuse_color_red", "0","What color to turn the refusing Terror into (set R, G and B values to 255 to disable) (Rgb): x - red value", _, true, 0.0, true, 255.0);
-	gc_iRefuseColorGreen = AutoExecConfig_CreateConVar("sm_refuse_color_green", "250","What color to turn the refusing Terror into (rGb): x - green value", _, true, 0.0, true, 255.0);
-	gc_iRefuseColorBlue = AutoExecConfig_CreateConVar("sm_refuse_color_blue", "250","What color to turn the refusing Terror into (rgB): x - blue value", _, true, 0.0, true, 255.0);
+	gc_iRefuseColorRed = AutoExecConfig_CreateConVar("sm_refuse_color_red", "0", "What color to turn the refusing Terror into (set R, G and B values to 255 to disable) (Rgb): x - red value", _, true, 0.0, true, 255.0);
+	gc_iRefuseColorGreen = AutoExecConfig_CreateConVar("sm_refuse_color_green", "250", "What color to turn the refusing Terror into (rGb): x - green value", _, true, 0.0, true, 255.0);
+	gc_iRefuseColorBlue = AutoExecConfig_CreateConVar("sm_refuse_color_blue", "250", "What color to turn the refusing Terror into (rgB): x - blue value", _, true, 0.0, true, 255.0);
 	gc_sSoundRefusePath = AutoExecConfig_CreateConVar("sm_refuse_sound", "music/MyJailbreak/refuse.mp3", "Path to the soundfile which should be played for a refusing.");
 	gc_sSoundRefuseStopPath = AutoExecConfig_CreateConVar("sm_refuse_stop_sound", "music/MyJailbreak/stop.mp3", "Path to the soundfile which should be played after a refusing.");
 	gc_sAdminFlagRefuse = AutoExecConfig_CreateConVar("sm_refuse_flag", "a", "Set flag for admin/vip to get one more refuse. No flag = feature is available for all players!");
@@ -95,39 +102,29 @@ public void Refuse_OnPluginStart()
 	HookEvent("round_start", Refuse_Event_RoundStart);
 	HookConVarChange(gc_sSoundRefusePath, Refuse_OnSettingChanged);
 	HookConVarChange(gc_sSoundRefuseStopPath, Refuse_OnSettingChanged);
-	HookConVarChange(gc_sCustomCommandRefuse, Refuse_OnSettingChanged);
 	HookConVarChange(gc_sAdminFlagRefuse, Refuse_OnSettingChanged);
 	
 	
 	//FindConVar
 	gc_sSoundRefusePath.GetString(g_sSoundRefusePath, sizeof(g_sSoundRefusePath));
 	gc_sSoundRefuseStopPath.GetString(g_sSoundRefuseStopPath, sizeof(g_sSoundRefuseStopPath));
-	gc_sCustomCommandRefuse.GetString(g_sCustomCommandRefuse , sizeof(g_sCustomCommandRefuse));
 	gc_sAdminFlagRefuse.GetString(g_sAdminFlagRefuse , sizeof(g_sAdminFlagRefuse));
 }
 
 
 public int Refuse_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
-	if(convar == gc_sSoundRefusePath)
+	if (convar == gc_sSoundRefusePath)
 	{
 		strcopy(g_sSoundRefusePath, sizeof(g_sSoundRefusePath), newValue);
-		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundRefusePath);
+		if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundRefusePath);
 	}
-	else if(convar == gc_sSoundRefuseStopPath)
+	else if (convar == gc_sSoundRefuseStopPath)
 	{
 		strcopy(g_sSoundRefuseStopPath, sizeof(g_sSoundRefuseStopPath), newValue);
-		if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundRefuseStopPath);
+		if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundRefuseStopPath);
 	}
-	else if(convar == gc_sCustomCommandRefuse)
-	{
-		strcopy(g_sCustomCommandRefuse, sizeof(g_sCustomCommandRefuse), newValue);
-		char sBufferCMD[64];
-		Format(sBufferCMD, sizeof(sBufferCMD), "sm_%s", g_sCustomCommandRefuse);
-		if(GetCommandFlags(sBufferCMD) == INVALID_FCVAR_FLAGS)
-			RegConsoleCmd(sBufferCMD, Command_refuse, "Allows the Warden start refusing time and Terrorist to refuse a game");
-	}
-	else if(convar == gc_sAdminFlagRefuse)
+	else if (convar == gc_sAdminFlagRefuse)
 	{
 		strcopy(g_sAdminFlagRefuse, sizeof(g_sAdminFlagRefuse), newValue);
 	}
@@ -145,22 +142,22 @@ public Action Command_refuse(int client, int args)
 	{
 		if (gc_bRefuse.BoolValue)
 		{
-			if(warden_iswarden(client) && gc_bWardenAllowRefuse.BoolValue)
+			if (warden_iswarden(client) && gc_bWardenAllowRefuse.BoolValue)
 			{
-				if(!g_bAllowRefuse)
+				if (!g_bAllowRefuse)
 				{
 					g_bAllowRefuse = true;
 					AllowRefuseTimer = CreateTimer(1.0, Timer_NoAllowRefuse, _, TIMER_REPEAT);
 					CPrintToChatAll("%t %t", "request_tag", "request_openrefuse");
 				}
 			}
-			if(!warden_iswarden(client))
+			if (!warden_iswarden(client))
 			{
 				if (GetClientTeam(client) == CS_TEAM_T && IsPlayerAlive(client))
 				{
 					if (RefuseTimer[client] == null)
 					{
-						if(g_bAllowRefuse || !gc_bWardenAllowRefuse.BoolValue)
+						if (g_bAllowRefuse || !gc_bWardenAllowRefuse.BoolValue)
 						{
 							if (g_iRefuseCounter[client] < gc_iRefuseLimit.IntValue)
 							{
@@ -171,7 +168,7 @@ public Action Command_refuse(int client, int args)
 								g_iCountStopTime = gc_fRefuseTime.IntValue;
 								RefuseTimer[client] = CreateTimer(gc_fRefuseTime.FloatValue, Timer_ResetColorRefuse, client);
 								if (warden_exist()) LoopClients(i) RefuseMenu(i);
-								if(gc_bSounds.BoolValue)EmitSoundToAllAny(g_sSoundRefusePath);
+								if (gc_bSounds.BoolValue)EmitSoundToAllAny(g_sSoundRefusePath);
 							}
 							else CReplyToCommand(client, "%t %t", "request_tag", "request_refusedtimes", gc_iRefuseLimit.IntValue);
 						}
@@ -202,7 +199,7 @@ public void Refuse_Event_RoundStart(Event event, char [] name, bool dontBroadcas
 		g_iRefuseCounter[client] = 0;
 		g_bRefused[client] = false;
 		g_bAllowRefuse = false;
-		if(CheckVipFlag(client,g_sAdminFlagRefuse)) g_iRefuseCounter[client] = -1;
+		if (CheckVipFlag(client, g_sAdminFlagRefuse)) g_iRefuseCounter[client] = -1;
 	}
 	
 	g_iCountStopTime = gc_fRefuseTime.IntValue;
@@ -216,8 +213,8 @@ public void Refuse_Event_RoundStart(Event event, char [] name, bool dontBroadcas
 
 public void Refuse_OnMapStart()
 {
-	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundRefusePath);
-	if(gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundRefuseStopPath);
+	if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundRefusePath);
+	if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundRefuseStopPath);
 }
 
 
@@ -225,17 +222,27 @@ public void Refuse_OnConfigsExecuted()
 {
 	g_iCountStopTime = gc_fRefuseTime.IntValue;
 	
-	char sBufferCMDRefuse[64];
+	//Set custom Commands
+	int iCount = 0;
+	char sCommands[128], sCommandsL[12][32], sCommand[32];
 	
-	Format(sBufferCMDRefuse, sizeof(sBufferCMDRefuse), "sm_%s", g_sCustomCommandRefuse);
-	if(GetCommandFlags(sBufferCMDRefuse) == INVALID_FCVAR_FLAGS)
-		RegConsoleCmd(sBufferCMDRefuse, Command_refuse, "Allows the Warden start refusing time and Terrorist to refuse a game");
+	//Refuse Game
+	gc_sCustomCommandRefuse.GetString(sCommands, sizeof(sCommands));
+	ReplaceString(sCommands, sizeof(sCommands), " ", "");
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+	
+	for (int i = 0; i < iCount; i++)
+	{
+		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+			RegConsoleCmd(sCommand, Command_refuse, "Allows the Warden start refusing time and Terrorist to refuse a game");
+	}
 }
 
 public void Refuse_OnClientPutInServer(int client)
 {
 	g_iRefuseCounter[client] = 0;
-	if(CheckVipFlag(client,g_sAdminFlagRefuse)) g_iRefuseCounter[client] = -1;
+	if (CheckVipFlag(client, g_sAdminFlagRefuse)) g_iRefuseCounter[client] = -1;
 	g_bRefused[client] = false;
 }
 
@@ -252,7 +259,7 @@ public void Refuse_OnClientDisconnect(int client)
 
 public Action RefuseMenu(int warden)
 {
-	if (IsValidClient(warden, false, false) && warden_iswarden(warden))
+	if (warden_iswarden(warden) || warden_deputy_isdeputy(warden))
 	{
 		char info1[255];
 		RefusePanel = CreatePanel();
@@ -260,15 +267,15 @@ public Action RefuseMenu(int warden)
 		SetPanelTitle(RefusePanel, info1);
 		DrawPanelText(RefusePanel, "-----------------------------------");
 		DrawPanelText(RefusePanel, "                                   ");
-		LoopValidClients(i,true,false)
+		LoopValidClients(i, true, false)
 		{
-			if(g_bRefused[i])
+			if (g_bRefused[i])
 			{
 				char userid[11];
 				char username[MAX_NAME_LENGTH];
 				IntToString(GetClientUserId(i), userid, sizeof(userid));
 				Format(username, sizeof(username), "%N", i);
-				DrawPanelText(RefusePanel,username);
+				DrawPanelText(RefusePanel, username);
 			}
 		}
 		DrawPanelText(RefusePanel, "                                   ");
@@ -305,7 +312,7 @@ public Action Timer_NoAllowRefuse(Handle timer)
 		{
 			LoopValidClients(client, false, true)
 			{
-				PrintCenterText(client,"%t", "warden_stopcountdown_nc", g_iCountStopTime);
+				PrintCenterText(client, "%t", "warden_stopcountdown_nc", g_iCountStopTime);
 			}
 			CPrintToChatAll("%t %t", "warden_tag" , "warden_stopcountdown", g_iCountStopTime);
 		}
@@ -317,7 +324,7 @@ public Action Timer_NoAllowRefuse(Handle timer)
 		LoopValidClients(client, false, true)
 		{
 			PrintCenterText(client, "%t", "warden_countdownstop_nc");
-			if(gc_bSounds.BoolValue)
+			if (gc_bSounds.BoolValue)
 			{
 				EmitSoundToAllAny(g_sSoundRefuseStopPath);
 			}
