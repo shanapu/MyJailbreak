@@ -215,7 +215,7 @@ public void Painter_OnConfigsExecuted()
 
 public Action Painter_OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
 {
-	if(!IsPlayerAlive(client)
+	if(!IsPlayerAlive(client))
 		return;
 	
 	if ((IsClientWarden(client) && gc_bPainter.BoolValue && g_bPainter[client] && CheckVipFlag(client, g_sAdminFlagPainter)) || ((GetClientTeam(client) == CS_TEAM_T) && gc_bPainter.BoolValue && g_bPainterT && g_bPainter[client]) || (IsClientDeputy(client) && gc_bPainterDeputy.BoolValue && g_bPainter[client]))
