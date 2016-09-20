@@ -131,7 +131,7 @@ public void OnPluginStart()
 	
 	
 	//Client Commands
-	RegConsoleCmd("sm_Command_SetCowBoy", Command_SetCowBoy, "Allows the Admin or Warden to set cowboy as next round");
+	RegConsoleCmd("sm_setcowboy", Command_SetCowBoy, "Allows the Admin or Warden to set cowboy as next round");
 	RegConsoleCmd("sm_cowboy", Command_VoteCowBoy, "Allows players to vote for a cowboy");
 	
 	
