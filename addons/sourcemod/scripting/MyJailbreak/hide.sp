@@ -392,8 +392,9 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 				{
 					StripAllPlayerWeapons(client);
 					SetEntityMoveType(client, MOVETYPE_NONE);
-					GivePlayerItem(client, "weapon_tagrenade");
+					SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 0.0);
 					SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
+					GivePlayerItem(client, "weapon_tagrenade");
 					GivePlayerItem(client, "weapon_knife");
 				}
 				if (GetClientTeam(client) == CS_TEAM_T)
@@ -677,6 +678,7 @@ public Action Timer_StartEvent(Handle timer)
 				if (gc_bFreezeHider)
 				{
 					SetEntityMoveType(client, MOVETYPE_NONE);
+					SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 0.0);
 				}
 				else
 				{

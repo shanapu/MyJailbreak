@@ -437,6 +437,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 					if (GetClientTeam(client) == CS_TEAM_CT)
 					{
 						SetEntityMoveType(client, MOVETYPE_NONE);
+						SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 0.0);
 						
 						int zombieHP = gc_iZombieHP.IntValue;
 						int difference = (GetAliveTeamCount(CS_TEAM_T) - GetAliveTeamCount(CS_TEAM_CT));

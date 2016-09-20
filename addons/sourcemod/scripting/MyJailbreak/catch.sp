@@ -453,6 +453,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 					if (GetClientTeam(client) == CS_TEAM_CT)
 					{
 						SetEntityMoveType(client, MOVETYPE_NONE);
+						SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 0.0);
 					}
 				}
 				

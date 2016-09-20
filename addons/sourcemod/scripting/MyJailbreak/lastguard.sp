@@ -394,8 +394,11 @@ public Action StartLastGuard()
 			SetEntData(iClient, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
 			SetEntProp(iClient, Prop_Data, "m_takedamage", 0, 1);
 			
-			if (gc_bFreeze.BoolValue) SetEntityMoveType(iClient, MOVETYPE_NONE);
-			
+			if (gc_bFreeze.BoolValue)
+			{
+				SetEntityMoveType(iClient, MOVETYPE_NONE);
+				SetEntPropFloat(iClient, Prop_Data, "m_flLaggedMovementValue", 0.0);
+			}
 		//	FakeClientCommand(iClient, "sm_weapons");
 			
 			if (IsPlayerAlive(iClient) && GetClientTeam(iClient) == CS_TEAM_CT)
@@ -516,6 +519,7 @@ public Action Timer_TruceUntilStart(Handle timer)
 			if (gc_bFreeze.BoolValue && (g_iTruceTime <= (gc_iTruceTime.IntValue / 2)) && (GetEntityMoveType(client) == MOVETYPE_NONE))
 			{
 				SetEntityMoveType(client, MOVETYPE_WALK);
+				SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
 				PrintCenterText(client, "%t", "lastguard_movenow_nc", g_iTruceTime);
 				CPrintToChat(client, "%t %t", "lastguard_tag" , "lastguard_movenow");
 				

@@ -427,6 +427,7 @@ public Action Command_BombSuicideBomber(int client, int args)
 				if (gc_bStandStill.BoolValue)
 				{
 					SetEntityMoveType(client, MOVETYPE_NONE);
+					SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 0.0);
 				}
 			}
 			//else CPrintToChat(client, "%t %t", "suicidebomber_tag" , "suicidebomber_needc4");

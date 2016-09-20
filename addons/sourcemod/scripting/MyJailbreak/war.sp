@@ -421,6 +421,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 						{
 							TeleportEntity(client, g_fPos, NULL_VECTOR, NULL_VECTOR);
 							SetEntityMoveType(client, MOVETYPE_NONE);
+							SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 0.0);
 						}
 					}
 				}
@@ -447,6 +448,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 				if (GetClientTeam(client) == CS_TEAM_CT)
 				{
 					SetEntityMoveType(client, MOVETYPE_WALK);
+					SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
 					TeleportEntity(client, g_fPos, NULL_VECTOR, NULL_VECTOR);
 				}
 			}
@@ -694,6 +696,7 @@ public Action Timer_FreezeOnStart(Handle timer)
 			if (GetClientTeam(client) == CS_TEAM_T)
 			{
 				SetEntityMoveType(client, MOVETYPE_WALK);
+				SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
 				TeleportEntity(client, g_fPos, NULL_VECTOR, NULL_VECTOR);
 			}
 		}
