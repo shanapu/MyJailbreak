@@ -70,6 +70,8 @@ ConVar gc_bTA;
 ConVar gc_bJBmenu;
 ConVar gc_bAWP;
 ConVar gc_bAutoSniper;
+ConVar gc_bM249;
+ConVar gc_bNegev;
 ConVar gc_bHealth;
 ConVar gc_bKevlar;
 ConVar gc_sCustomCommandWeapon;
@@ -125,6 +127,8 @@ public void OnPluginStart()
 	gc_bSpawn = AutoExecConfig_CreateConVar("sm_weapons_spawnmenu", "1", "0 - disabled, 1 -  enable autoopen weapon menu on spawn", _, true,  0.0, true, 1.0);
 	gc_bAWP = AutoExecConfig_CreateConVar("sm_weapons_awp", "1", "0 - disabled, 1 - enable AWP in menu", _, true,  0.0, true, 1.0);
 	gc_bAutoSniper = AutoExecConfig_CreateConVar("sm_weapons_autosniper", "1", "0 - disabled, 1 - enable scar20 & g3sg1 in menu", _, true,  0.0, true, 1.0);
+	gc_bNegev = AutoExecConfig_CreateConVar("sm_weapons_negev", "1", "0 - disabled, 1 - enable negev in menu", _, true,  0.0, true, 1.0);
+	gc_bM249 = AutoExecConfig_CreateConVar("sm_weapons_m249", "1", "0 - disabled, 1 - enable m249 in menu", _, true,  0.0, true, 1.0);
 	gc_bTA = AutoExecConfig_CreateConVar("sm_weapons_warden_tagrenade", "1", "0 - disabled, 1 - warden get a TA grenade with weapons", _, true,  0.0, true, 1.0);
 	gc_bHealth = AutoExecConfig_CreateConVar("sm_weapons_warden_healthshot", "1", "0 - disabled, 1 - warden get a healthshot with weapons", _, true,  0.0, true, 1.0);
 	gc_bKevlar = AutoExecConfig_CreateConVar("sm_weapons_kevlar", "1", "0 - disabled, 1 - CT get Kevlar & helm on Spawn", _, true,  0.0, true, 1.0);
@@ -399,13 +403,19 @@ public void ListWeapons()
 	Format(Items[desc], 64, "SG 553");
 	PushArrayArray(array_primary, Items[0]);
 	
-	Format(Items[ItemName], 64, "weapon_negev");
-	Format(Items[desc], 64, "Negev");
-	PushArrayArray(array_primary, Items[0]);
+	if (gc_bNegev.BoolValue)
+	{
+		Format(Items[ItemName], 64, "weapon_negev");
+		Format(Items[desc], 64, "Negev");
+		PushArrayArray(array_primary, Items[0]);
+	}
 	
-	Format(Items[ItemName], 64, "weapon_m249");
-	Format(Items[desc], 64, "M249");
-	PushArrayArray(array_primary, Items[0]);
+	if (gc_bM249.BoolValue)
+	{
+		Format(Items[ItemName], 64, "weapon_m249");
+		Format(Items[desc], 64, "M249");
+		PushArrayArray(array_primary, Items[0]);
+	}
 	
 	if (gc_bAWP.BoolValue)
 	{
