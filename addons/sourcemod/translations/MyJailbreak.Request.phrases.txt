@@ -381,8 +381,8 @@
 	"request_swapbcfreekillall"
 	{
 		"#format"   "{1:N}"
-		"ru"		"{green}{{1}{default} был переведён из-за {darkred}фрикилла{default} в команду террористов."
-		"de"		"{green}{{1}{default} wurdest wegen eines {darkred}Freekills{default} zu den Terrors verschoben"
+		"ru"		"{green}{1}{default} был переведён из-за {darkred}фрикилла{default} в команду террористов."
+		"de"		"{green}{1}{default} wurdest wegen eines {darkred}Freekills{default} zu den Terrors verschoben"
 		"en"		"{green}{1}{default} was swaped due to a {darkred}freekill{default} to the Prisoner's team!"
 	}
 

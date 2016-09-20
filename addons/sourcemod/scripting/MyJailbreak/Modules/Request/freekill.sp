@@ -329,7 +329,7 @@ public int FreeKillHandler(Menu menu, MenuAction action, int client, int Positio
 				
 				if (ActiveLogging()) LogToFileEx(g_sFreeKillLogFile, "Warden/Admin %L accept freekill request of %L  and killed %L", client, i, attacker);
 				CPrintToChat(attacker, "%t %t", "request_tag", "request_killbcfreekill");
-				CPrintToChatAll("%t %t", "warden_tag", "request_killbcfreekillall", i);
+				CPrintToChatAll("%t %t", "warden_tag", "request_killbcfreekillall", attacker);
 			}
 		}
 		if (choice == 3) //freeday
