@@ -341,6 +341,12 @@
 		"ru"		"Администратор отключил баланс"
 	}
 
+	"ratio_stamm"
+	{
+		"#format"   "{1:i}"
+		"en"		"You need at least {1} Stamm Points to play as a guard"
+	}
+
 	"ratio_hasactivated"
 	{
 		"en"		"Admin has activated the Ratio. Ratio fix next round."

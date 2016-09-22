@@ -73,11 +73,11 @@ coded with ![](http://shanapu.de/githearth-small.png) free software
   
 ---
   
-***Recommended plugins***
+***Optional plugins***
   
-* [CS:GO] Flashlight https://forums.alliedmods.net/showthread.php?p=2042310
-
-* [CSS/CS:GO] Disable Radar https://forums.alliedmods.net/showthread.php?p=2138783
+* Stamm 2.28 Final by Popoklopsi https://forums.alliedmods.net/showthread.php?p=1338942 - support for ratio (min stamm points)
+* [CS:S/CS:GO] CT Bans by databomb https://forums.alliedmods.net/showthread.php?p=1544101 - support for ratio (is banned)
+  
   
   
 ***Requires plugins***
@@ -86,7 +86,7 @@ coded with ![](http://shanapu.de/githearth-small.png) free software
 * SM hosties 2 https://github.com/dataviruset/sm-hosties/ use the Beta branch (version 2.2.3)
 * Smart Jail Doors https://github.com/Kailo97/smartjaildoors
 * SM File/Folder Downloader and Precacher https://forums.alliedmods.net/showthread.php?p=602270 for zombie/warden model download
-* Simple Chat Prozessor https://bitbucket.org/minimoney1/simple-chat-processor
+* [Any] Chat-Processor https://forums.alliedmods.net/showthread.php?t=286913
 * CustomPlayerSkins https://forums.alliedmods.net/showthread.php?t=240703
 * VoiceannounceEX (VoiceHook) https://forums.alliedmods.net/showthread.php?p=2177167
 * DHooks (Dynamic Hooks - Dev Preview) https://forums.alliedmods.net/showthread.php?t=180114
@@ -97,7 +97,8 @@ coded with ![](http://shanapu.de/githearth-small.png) free software
 * colors.inc https://forums.alliedmods.net/showthread.php?t=96831
 * emitsoundany.inc https://forums.alliedmods.net/showthread.php?t=237045
 * myjailbreak.inc https://github.com/shanapu/MyJailbreak/blob/master/addons/sourcemod/scripting/include/myjailbreak.inc
-* scp.inc https://forums.alliedmods.net/showthread.php?t=198501
+* mystocks.inc https://github.com/shanapu/MyJailbreak/blob/master/addons/sourcemod/scripting/include/mystocks.inc
+* chat-processor.inc https://forums.alliedmods.net/showthread.php?t=286913
 * smartjaildoors.inc https://forums.alliedmods.net/showthread.php?p=2306289
 * warden.inc https://github.com/shanapu/MyJailbreak/blob/master/addons/sourcemod/scripting/include/warden.inc (myjailbreak version)
 * smlib.inc https://github.com/bcserv/smlib
@@ -126,7 +127,7 @@ https://github.com/shanapu/MyJailbreak/releases
 **The smx files on Github are compiled with SM 1.8.  
 If you still use 1.7.x you should update your sourcemod or compile MyJailbreak for yourself on your SM version  **
   
-***Wiki:*** need some work  
+***Wiki:***
 https://github.com/shanapu/MyJailbreak/wiki/  
   
 ***Report Bugs, Ideas, Requests & see todo:***  
@@ -136,7 +137,6 @@ https://forums.alliedmods.net/showthread.php?t=283212
 ***Code changes:***  
 https://github.com/shanapu/MyJailbreak/commits/master  
   
-***Change Logs:***
 ***Changelogs:***  
 https://github.com/shanapu/MyJailbreak/blob/master/CHANGELOG.md  
   

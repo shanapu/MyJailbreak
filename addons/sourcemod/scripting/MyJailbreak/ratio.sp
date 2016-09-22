@@ -36,6 +36,10 @@
 #include <myjailbreak>
 #include <clientprefs>
 
+#undef REQUIRE_PLUGIN
+#include <stamm>
+#define REQUIRE_PLUGIN
+
 
 //Compiler Options
 #pragma semicolon 1
@@ -57,15 +61,17 @@ ConVar gc_bVIPQueue;
 ConVar gc_bAdminBypass;
 ConVar gc_bForceTConnect;
 ConVar gc_iJoinMode;
-ConVar gc_ig_iQuestionTimes;
+ConVar gc_iQuestionTimes;
 ConVar gc_bBalanceTerror;
 ConVar gc_bBalanceGuards;
 ConVar gc_bBalanceWarden;
+ConVar gc_iMinStammPoints;
 
 
 //Booleans
 bool g_bRatioEnable = true;
 bool g_bQueueCooldown[MAXPLAYERS+1] = false;
+bool gp_bStamm = false;
 
 
 //Handles
@@ -131,7 +137,8 @@ public void OnPluginStart()
 	gc_bToggleAnnounce = AutoExecConfig_CreateConVar("sm_ratio_disable_announce", "0", "Announce in a chatmessage on roundend when ratio is disabled", _, true,  0.0, true, 1.0);
 	gc_bAdsVIP = AutoExecConfig_CreateConVar("sm_ratio_adsvip", "1", "0 - disabled, 1 - enable adverstiment for 'VIPs moved to front of queue' when player types !quard ", _, true,  0.0, true, 1.0);
 	gc_iJoinMode = AutoExecConfig_CreateConVar("sm_ratio_join_mode", "1", "0 - instandly join ct/queue, no confirmation / 1 - confirm rules / 2 - Qualification questions", _, true,  0.0, true, 2.0);
-	gc_ig_iQuestionTimes = AutoExecConfig_CreateConVar("sm_ratio_questions", "3", "How many question a player have to answer before join ct/queue. need sm_ratio_join_mode 2", _, true,  1.0, true, 5.0);
+	gc_iQuestionTimes = AutoExecConfig_CreateConVar("sm_ratio_questions", "3", "How many question a player have to answer before join ct/queue. need sm_ratio_join_mode 2", _, true,  1.0, true, 5.0);
+	gc_iMinStammPoints = AutoExecConfig_CreateConVar("sm_ratio_stamm", "0", "0 - disabled, how many stamm points a player need to join ct? (only if stamm is available)", _, true,  1.0, true, 5.0);
 	gc_bAdminBypass = AutoExecConfig_CreateConVar("sm_ratio_vip_bypass", "1", "Bypass Admin/VIP though agreement / question", _, true,  0.0, true, 1.0);
 	gc_bBalanceTerror = AutoExecConfig_CreateConVar("sm_ratio_balance_terror", "1", "0 = Could result in unbalanced teams. 1 = Switch a random T, when nobody is in guardqueue to balance the teams.", _, true, 0.0, true, 1.0);
 	gc_bBalanceGuards = AutoExecConfig_CreateConVar("sm_ratio_balance_guard", "1", "Mode to choose a guard to be switch to T on balance the teams. 1 = Last In First Out / 0 = Random Guard", _, true, 0.0, true, 1.0);
@@ -240,6 +247,26 @@ public void OnConfigsExecuted()
 }
 
 
+public void OnAllPluginsLoaded()
+{
+	gp_bStamm = LibraryExists("stamm");
+}
+
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (StrEqual(name, "stamm"))
+		gp_bStamm = false;
+}
+
+
+public void OnLibraryAdded(const char[] name)
+{
+	if (StrEqual(name, "stamm"))
+		gp_bStamm = true;
+}
+
+
 /******************************************************************************
                    COMMANDS
 ******************************************************************************/
@@ -340,6 +367,15 @@ public Action Command_JoinGuardQueue(int client, int iArgNum)
 		return Plugin_Handled;
 	}
 	
+	if (gp_bStamm && gc_iMinStammPoints.IntValue != 0)
+	{
+		if (STAMM_GetClientPoints(client) < gc_iMinStammPoints.IntValue)
+		{
+			CReplyToCommand(client, "%t %t", "ratio_tag" , "ratio_stamm", gc_iMinStammPoints.IntValue);
+			return Plugin_Handled;
+		}
+	}
+	
 	char szCookie[2];
 	GetClientCookie(client, g_sCookieCTBan, szCookie, sizeof(szCookie));
 	if (szCookie[0] == '1')
@@ -358,7 +394,7 @@ public Action Command_JoinGuardQueue(int client, int iArgNum)
 		if ((gc_iJoinMode.IntValue == 0) || (gc_bAdminBypass.BoolValue && CheckVipFlag(client, g_sAdminFlag))) AddToQueue(client);
 		if ((gc_iJoinMode.IntValue == 1) && ((gc_bAdminBypass.BoolValue && !CheckVipFlag(client, g_sAdminFlag)) || (!gc_bAdminBypass.BoolValue))) Menu_AcceptGuardRules(client);
 		if ((gc_iJoinMode.IntValue == 2) && ((gc_bAdminBypass.BoolValue && !CheckVipFlag(client, g_sAdminFlag)) || (!gc_bAdminBypass.BoolValue))) Menu_GuardQuestions(client);
-		g_iQuestionTimes[client] = gc_ig_iQuestionTimes.IntValue-1;
+		g_iQuestionTimes[client] = gc_iQuestionTimes.IntValue-1;
 		return Plugin_Handled;
 	}
 	else
@@ -535,6 +571,15 @@ public Action Event_OnJoinTeam(int client, const char[] szCommand, int iArgCount
 		return Plugin_Handled;
 	}
 	
+	if (gp_bStamm && gc_iMinStammPoints.IntValue != 0)
+	{
+		if (STAMM_GetClientPoints(client) < gc_iMinStammPoints.IntValue)
+		{
+			CReplyToCommand(client, "%t %t", "ratio_tag" , "ratio_stamm", gc_iMinStammPoints.IntValue);
+			return Plugin_Handled;
+		}
+	}
+	
 	GetClientCookie(client, g_sCookieCTBan, szData, sizeof(szData));
 	
 	if (szData[0] == '1')
@@ -555,7 +600,7 @@ public Action Event_OnJoinTeam(int client, const char[] szCommand, int iArgCount
 			if ((gc_iJoinMode.IntValue == 0) || (gc_bAdminBypass.BoolValue && CheckVipFlag(client, g_sAdminFlag))) FullAddToQueue(client);
 			if ((gc_iJoinMode.IntValue == 1) && ((gc_bAdminBypass.BoolValue && !CheckVipFlag(client, g_sAdminFlag)) || (!gc_bAdminBypass.BoolValue))) Menu_AcceptGuardRules(client);
 			if ((gc_iJoinMode.IntValue == 2) && ((gc_bAdminBypass.BoolValue && !CheckVipFlag(client, g_sAdminFlag)) || (!gc_bAdminBypass.BoolValue))) Menu_GuardQuestions(client);
-			g_iQuestionTimes[client] = gc_ig_iQuestionTimes.IntValue-1;
+			g_iQuestionTimes[client] = gc_iQuestionTimes.IntValue-1;
 			return Plugin_Handled;
 		}
 		else
@@ -569,7 +614,7 @@ public Action Event_OnJoinTeam(int client, const char[] szCommand, int iArgCount
 	if ((gc_iJoinMode.IntValue == 0) || (gc_bAdminBypass.BoolValue && CheckVipFlag(client, g_sAdminFlag))) return Plugin_Continue;
 	if ((gc_iJoinMode.IntValue == 1) && ((gc_bAdminBypass.BoolValue && !CheckVipFlag(client, g_sAdminFlag)) || (!gc_bAdminBypass.BoolValue))) Menu_AcceptGuardRules(client);
 	if ((gc_iJoinMode.IntValue == 2) && ((gc_bAdminBypass.BoolValue && !CheckVipFlag(client, g_sAdminFlag)) || (!gc_bAdminBypass.BoolValue))) Menu_GuardQuestions(client);
-	g_iQuestionTimes[client] = gc_ig_iQuestionTimes.IntValue-1;
+	g_iQuestionTimes[client] = gc_iQuestionTimes.IntValue-1;
 	return Plugin_Handled;
 }
 
@@ -1111,6 +1156,12 @@ stock int GetRandomClientFromTeam(int iTeam, bool bSkipCTBanned=true)
 			GetClientCookie(i, g_sCookieCTBan, szCookie, sizeof(szCookie));
 			if (szCookie[0] == '1')
 				continue;
+			
+			if (gp_bStamm && gc_iMinStammPoints.IntValue != 0)
+			{
+				if (STAMM_GetClientPoints(i) < gc_iMinStammPoints.IntValue)
+					continue;
+			}
 		}
 		
 		clients[iNumFound++] = i;

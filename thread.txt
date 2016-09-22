@@ -746,6 +746,8 @@ sm_weapons_enable: 0 - disabled, 1 - enable weapons menu - you shouldn't touch t
 sm_weapons_ct: 0 - disabled, 1 - enable weapons menu for CT - you shouldn't touch these, cause events days will handle them
 sm_weapons_t: 0 - disabled, 1 - enable weapons menu for T - you shouldn't touch these, cause events days will handle them
 sm_weapons_spawnmenu: disabled, 1 - enable autoopen weapon menu on spawn if enabled
+sm_weapons_negev - 0 - disabled, 1 - enable negev in weapon menu
+sm_weapons_m249 - 0 - disabled, 1 - enable m249 in weapon menu
 sm_weapons_awp: 0 - disabled, 1 - enable AWP in weapon menu
 sm_weapons_autosniper: 0 - disabled, 1 - enable scar20 & g3sg1 in menu
 sm_weapons_tagrenade: 0 - disabled, 1 - warden gets a TA grenade with weapons
@@ -805,6 +807,7 @@ sm_ratio_vipflag - Set the flag for VIP. Default "a"
 sm_ratio_adsvip - 0 - disabled, 1 - enable adverstiment for 'VIPs moved to front of queue' when player types !quard. Default 1
 sm_ratio_join_mode - 0 - instandly join ct/queue, no confirmation / 1 - confirm rules / 2 - Qualification questions
 sm_ratio_questions - How many question a player have to answer before join ct/queue. need sm_ratio_join_mode 2
+sm_ratio_stamm - 0 - disabled, how many stamm points a player need to join ct? (only if stamm is available)
 sm_ratio_force_t 0 - disabled, 1 - force player on connect to join T side
 sm_ratio_disabled - Allow the admin to toggle 'ratio check & autoswap' on/off with !ratio
 sm_ratio_disabled_announce - Announce in a chatmessage on every roundend when ratio is disabled
@@ -1002,7 +1005,7 @@ sm_zombie_cmds_vote - Set your custom chat command for Event voting(!zombie (no 
 sm_zombie_cmds_set - Set your custom chat command for set Event(!setzombie (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)) Default sz, szd, szombie
 [/CODE]
 [/SPOILER]
-[IMG]http://shanapu.de/myjb/zombie2.jpg[/IMG][IMG]http://shanapu.de/myjb/zombie1.jpg[/IMG]
+[IMG]http://shanapu.de/myjb/zombie-2.jpg[/IMG][IMG]http://shanapu.de/myjb/zombie-1.jpg[/IMG]
 
 
 
@@ -1603,11 +1606,11 @@ sm_freeday_cmds_set - Set your custom chat command for set Event(!setfreeday (no
 [/SPOILER]
 [/SPOILER]
 
-[U][B]Recommended plugins[/B][/U]
+[U][B]Optional plugins[/B][/U]
 [LIST]
-[*][CS:GO] Flashlight [url]https://forums.alliedmods.net/showthread.php?p=2042310[/url]
+[*]Stamm 2.28 Final by Popoklopsi[url]https://forums.alliedmods.net/showthread.php?p=1338942[/url] - support for ratio (min stamm points)
 
-[*][CSS/CS:GO] Disable Radar [url]https://forums.alliedmods.net/showthread.php?p=2138783[/url]
+[*][CS:S/CS:GO] CT Bans by databomb[url]https://forums.alliedmods.net/showthread.php?p=1544101[/url] - support for ratio (is banned)
 [/LIST]
 
 [U][B]Requires plugins[/B][/U]
@@ -1620,7 +1623,7 @@ sm_freeday_cmds_set - Set your custom chat command for set Event(!setfreeday (no
 
 [*]SM File/Folder Downloader and Precacher [url]https://forums.alliedmods.net/showthread.php?p=602270[/url] for zombie/warden model download
 
-[*]Simple Chat Prozessor [url]https://bitbucket.org/minimoney1/simple-chat-processor[/url]
+[*][ANY] Chat Prozessor [url]https://forums.alliedmods.net/showthread.php?t=286913[/url]
 
 [*]CustomPlayerSkins [url]https://forums.alliedmods.net/showthread.php?t=240703[/url]
 
@@ -1639,7 +1642,9 @@ sm_freeday_cmds_set - Set your custom chat command for set Event(!setfreeday (no
 
 [*]myjailbreak.inc [url]https://github.com/shanapu/MyJailbreak/blob/master/addons/sourcemod/scripting/include/myjailbreak.inc[/url]
 
-[*]scp.inc [url]https://forums.alliedmods.net/showthread.php?t=198501[/url]
+[*]mystocks.inc [url]https://github.com/shanapu/MyJailbreak/blob/master/addons/sourcemod/scripting/include/mystocks.inc[/url]
+
+[*]chat-processor.inc [url]https://forums.alliedmods.net/showthread.php?t=286913[/url]
 
 [*]smartjaildoors.inc [url]https://forums.alliedmods.net/showthread.php?p=2306289[/url]
 
@@ -1777,24 +1782,102 @@ native void BeaconOn(int client, float interval);
  * @noreturn
  *********************************************************/
 native void BeaconOff(int client);
-
 [/php]
 warden.inc
 [php]
 /*********************************************************
+ * Called when a new warden was created
+ * By player, admin, randomchoose...
+ *
+ * @param client		The client who was warden
+ * @NoReturn
+ *********************************************************/
+forward void warden_OnWardenCreated(int client);
+
+
+/*********************************************************
+ * Called when a client become new warden
+ *
+ * @param client		The client who was warden
+ * @NoReturn
+ *********************************************************/
+forward void warden_OnWardenCreatedByUser(int client);
+
+
+/*********************************************************
+ * Called when a admin set a new warden
+ *
+ * @param client		The client who was warden
+ * @NoReturn
+ *********************************************************/
+forward void warden_OnWardenCreatedByAdmin(int client);
+
+
+/*********************************************************
+ * Called everytime the warden position become free.
+ * On wardens dead, disconnect, removed...
+ * 
+ * @param client		The client who was warden
+ * @NoReturn
+ *********************************************************/
+forward void warden_OnWardenRemoved(int client);
+
+
+/*********************************************************
+ * Called when a the warden was removed by an admin
+ *
+ * @param client		The client who was warden
+ * @NoReturn
+ *********************************************************/
+forward void warden_OnWardenRemovedByAdmin(int client);
+
+
+/*********************************************************
+ * Called when a the warden retire hisself
+ *
+ * @param client		The client who was warden
+ * @NoReturn
+ *********************************************************/
+forward void warden_OnWardenRemovedBySelf(int client);
+
+
+/*********************************************************
+ * Called when a the warden disconnect
+ *
+ * @param client		The client who disconnected
+ * @NoReturn
+ *********************************************************/
+forward void warden_OnWardenDisconnected(int client);
+
+
+/*********************************************************
+ * Called when a the warden dies
+ *
+ * @param client		The client who was warden
+ * @NoReturn
+ *********************************************************/
+forward void warden_OnWardenDeath(int client);
+
+
+
+
+/*********************************************************
  * Checks if any warden exist
+ *
  *
  * @true on match , false if not
  *********************************************************/
 native warden_exist();
 
+
 /*********************************************************
  * returns if client is warden
  *
  * @param client		The client to run the check on
- * @true on match, false if not		
+ * @true on match, false if not
  *********************************************************/
 native warden_iswarden(client);
+
 
 /*********************************************************
  * Set a client as warden
@@ -1804,21 +1887,87 @@ native warden_iswarden(client);
  *********************************************************/
 native warden_set(client);
 
+
 /*********************************************************
  * Removes the current warden if he exists
  *
  * @param client		The warden client to remove
- * @NoReturn	
+ * @NoReturn
  *********************************************************/
 native warden_remove(client);
 
+
 /*********************************************************
- * gets the current warden if he exists
+ * get the current warden if he exists
  *
- * @param client		The warden client to remove
- * @NoReturn	
+ *
+ * @Return				Client Index of warden
  *********************************************************/
-native warden_get(client);
+native warden_get();
+
+
+/*********************************************************
+ * get the last warden if he exist
+ *
+ *
+ * @Return				Client Index of last warden
+ *********************************************************/
+native warden_getlast();
+
+
+
+/*********************************************************
+ * Checks if any Deputy exist
+ *
+ *
+ * @true on match , false if not
+ *********************************************************/
+native warden_deputy_exist();
+
+
+/*********************************************************
+ * returns if client is Deputy
+ *
+ * @param client		The client to run the check on
+ * @true on match, false if not
+ *********************************************************/
+native warden_deputy_isdeputy(client);
+
+
+/*********************************************************
+ * Set a client as Deputy
+ *
+ * @param client		The client to set as Deputy
+ * @NoReturn
+ *********************************************************/
+native warden_deputy_set(client);
+
+
+/*********************************************************
+ * Removes the current Deputy if he exists
+ *
+ * @param client		The Deputy client to remove
+ * @NoReturn
+ *********************************************************/
+native warden_deputy_remove(client);
+
+
+/*********************************************************
+ * get the current Deputy if he exists
+ *
+ *
+ * @Return				Client index of deputy
+ *********************************************************/
+native warden_deputy_get();
+
+
+/*********************************************************
+ * get the last deputy if he exists
+ *
+ *
+ * @Return				Client Index of last deputy
+ *********************************************************/
+native warden_deputy_getlast();
 [/php]
 [/SPOILER]
 
@@ -1847,157 +1996,174 @@ native warden_get(client);
 [B][u]Latest Changes[/u][/B]
 
 [QUOTE] 
-[b][Beta 7.2][/b] - Compatibility issues with sourcemod 1.7.x
-
-[b][Beta 7.1][/b] - smaller fixes
+[b][Beta 8.0][/b] - Deputy, custom commands & much more
 [SPOILER]  
-[i]Fixed[/i][LIST]
-[*]Warden - Icon: sm_warden_icon_ct_enable 0 will not disable warden icon. THX devu4!
-[*]Ratio: missing quote in translation. THX Kailo97!
-[*]Ratio: minor error
-[*]CReplyToCommand for Commands instead CPrintToChat. THX good_live![/LIST]
-  
-  
-[i]removed[/i][LIST]
-[*]Menu: TeamGames Menu Items - use [url]https://github.com/shanapu/MyJailbreak/wiki/Add-Menu-Item[/url][/LIST]
-  
-  
-[i]updated[/i][LIST]
-[*]RU translation: HUD, Menu, Ratio & Warden THX include![/LIST]
-[/SPOILER]
-
-[b][Beta 7.0][/b] - Automute/Talkover, more icons, beacon & more!
-[SPOILER]
 [i]Added[/i]
 [LIST]
-[*]Ratio: Force player on connect or mapstart to terror team
+[*]Warden: Shoot weapon on ground to remove it
 [/LIST]
 [INDENT][LIST]
-[*]new cvar - sm_ratio_force_t 0 - disabled, 1 - force player on connect to join T side
+    [*]new cvar - sm_warden_shootguns_enable - 0 - disabled, 1 - enable shoot guns on ground to remove
+    [*]new cvar - sm_warden_shootguns_mode - 1 - only warden / 2 - warden & deputy / 3 - warden, deputy & ct / 4 - all player
 [/LIST][/INDENT]
 [LIST]
-[*]Myjailbreak: Player can shoot buttons to toggle them. Big Thx to good_live & devu4!
+[*]Ratio: Added one round cooldown for guard queue on wrong answer.
+[*]Ratio: New system to choose players to switch on unbalanced teams.
 [/LIST]
 [INDENT][LIST]
-[*]new cvar - sm_myjb_shoot_buttons 0 - disabled, 1 - allow player to trigger a map button by shooting it
+    [*]new cvar - sm_ratio_balance_terror - 0 = Could result in unbalanced teams. 1 = Switch a random T, when nobody is in guardqueue to balance the teams.
+    [*]new cvar - sm_ratio_balance_guard - Mode to choose a guard to be switch to T on balance the teams. 1 = Last In First Out / 0 = Random Guard
+    [*]new cvar - sm_ratio_balance_warden - Prevent warden & deputy to be switch to T on balance the teams. Could result in unbalanced teams
 [/LIST][/INDENT]
 [LIST]
-[*]Warden: A small menu to Mark or Unmark a player as rebel
+[*]Weapons: Kevlar & Helm for guards on roundstart except on event days
 [/LIST]
 [INDENT][LIST]
-[*]new command - sm_markrebel - Allows Warden to mark/unmark prisoner as rebel
-[*]new cvar - sm_warden_mark_rebel - 0 - disabled, 1 - enable allow warden to mark/unmark prisoner as rebel (hosties)
+    [*]new cvar - sm_weapons_kevlar - 0 - disabled, 1 - CT get Kevlar & helm on Spawn
 [/LIST][/INDENT]
 [LIST]
-[*]HUD: Show LastGuards name on active Last Guard Rule
-[*]Warden - Mute: Automute player when warden speaks (talkover / be quiet). Exluding admin/vip
+[*]Request - Capitulation: instand accept capitulation - the warden dont need to accept the capitulation per menu
 [/LIST]
 [INDENT][LIST]
-[*]new cvar - sm_warden_talkover - 0 - disabled, 1 - temporary mutes all client when the warden speaks
-[*]new cvar - sm_warden_talkover_team - 0 - mute prisoner & guards on talkover, 1 - only mute prisoners on talkover
+    [*]new cvar - sm_capitulation_accept - 0 - disabled, 1 - the warden have to accept capitulation on menupopup Default 1
 [/LIST][/INDENT]
 [LIST]
-[*]Warden - Counter: Count all terrorist in a radius around warden
+[*]Duckhunt: New kind to fly for ducks
 [/LIST]
 [INDENT][LIST]
-[*]new command - sm_count - Allows Warden to count the prisoners in his radius
-[*]new cvar - sm_warden_counter - 0 - disabled, 1 - Allow the warden count player in radius
-[*]new cvar - sm_warden_counter_radius - Radius in meter to count prisoners inside
-[*]new cvar - sm_warden_counter_mode - 1 - Show prisoner count in chat / 2 - Show prisoner count in HUD / 3 - Show prisoner count in chat & HUD / 4 - Show names in Menu / 5 - Show prisoner count in chat & show names in Menu / 6 - Show prisoner count in HUD & show names in Menu / 7 - Show prisoner count in chat & HUD & show names in Menu
+    [*]new keybind - +drop (drop weapon) - toggle fly and walk for ducks when sm_duckhunt_flymode 1
+    [*]new cvar - sm_duckhunt_flymode - 0 - Low gravity (old way), 1 - 'Flymode' (like a slow noclip with clipping). Bit difficult
 [/LIST][/INDENT]
 [LIST]
-[*]Warden - Icons: Icons above Players head for warden, guard & prisoners
+[*]Freeday: Player respawn on event freeday
 [/LIST]
 [INDENT][LIST]
-[*]new cvar - sm_warden_icon_ct_enable - 0 - disabled, 1 - enable the icon above the guards head
-[*]new cvar - sm_warden_icon_ct - Path to the guard icon DONT TYPE .vmt or .vft
-[*]new cvar - sm_warden_icon_t_enable - 0 - disabled, 1 - enable the icon above the prisoner head
-[*]new cvar - sm_warden_icon_t - Path to the prisoner icon DONT TYPE .vmt or .vft
-[*]new icons - [URL]http://shanapu.de/myjb/icons.jpg[/URL]
+    [*]new cvar - sm_freeday_respawn - 1 - respawn on AutoFreeday when no CTs / 2 - respawn on firstround/vote/set Freeday / 3 - Both
+    [*]new cvar - sm_freeday_respawn_time - Time in seconds the player will respawn after round begin. Default 120
 [/LIST][/INDENT]
 [LIST]
-[*]Ratio: Possibility for admin to toggle ratio plugin on/off
+[*]Catch: Freezetime for CTs. CTs can see freezed T though walls. Kill terror if he get catched more than once, make it available for LR & insert beacon.
 [/LIST]
 [INDENT][LIST]
-[*]new command - sm_ratio - Allows the admin toggle the ratio check and player to see if ratio is enabled
-[*]new cvar - sm_ratio_disabled - Allow the admin to toggle 'ratio check & autoswap' on/off with !ratio
-[*]new cvar - sm_ratio_disabled_announce - Announce in a chatmessage on roundend when ratio is disabled
+    [*]new cvar - sm_catch_freezetime - Time in seconds CTs are freezed. Default 15
+    [*]new cvar - sm_catch_overlays_start - Path to the start Overlay DONT TYPE .vmt or .vft
+    [*]new cvar - sm_catch_sound_start - Path to the soundfile which should be played for a start.
+    [*]new cvar - sm_catch_wallhack - 0 - disabled, 1 - enable wallhack for CT to see freezed enemeys
+    [*]new cvar - sm_catch_count - How many times a terror can be catched before he get killed. 0 = T dont get killed ever all T must be catched- Default 0
+    [*]new cvar - sm_catch_allow_lr - 0 - disabled, 1 - enable LR for last round and end eventday (need sm_catch_count min 1)
+    [*]new cvar - sm_catch_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
 [/LIST][/INDENT]
 [LIST]
-[*]Ratio: No Agreement, or Questions, or force to T connect for VIP/Admins
+[*]Warden - Cell Doors: automatic open cell doors on warmup
+[*]Warden - Mute: new fuctions with cvars mute all T on roundbegin & dont mute dead player on warden talkover
 [/LIST]
 [INDENT][LIST]
-[*]new cvar - sm_ratio_vip_bypass - Bypass Admin/VIP though agreement / question
+    [*]new cvar - sm_warden_mute_default - 0 - disabled, 1 - Prisoners are muted on roundstart by default. Warden have to unmute them. Default 0
+    [*]new cvar - sm_warden_talkover_dead - 0 - mute death & alive player on talkover, 1 - only mute alive player on talkover. Default 0
 [/LIST][/INDENT]
 [LIST]
-[*]Torch Relay: Added wallhack for the torch.
+[*]Warden - Deputy: The warden get a deputy to his side with configurable warden features.
 [/LIST]
 [INDENT][LIST]
-[*]new cvar - sm_torch_wallhack - 0 - disabled, 1 - enable wallhack for the torch to find enemeys
+    [*]new model for deputy - "models/player/custom_player/kuristaja/jailbreak/guard3/guard3.mdl" - dont forget your downloads.ini and fastDL
+    [*]new command - sm_deputy - Allows the warden to choose a deputy or a player to become deputy
+    [*]new command - sm_undeputy - Allows the warden to remove the deputy and the deputy to retire from the position
+    [*]new admin command - sm_removedeputy - Allows the admin to remove the deputy
+    [*]new cvar - sm_warden_deputy_enable - 0 - disabled, 1 - enable this MyJailbreak SourceMod plugin
+    [*]new cvar - sm_warden_deputy_set - 0 - disabled, 1 - enable !w / !deputy - warden can choose his deputy.
+    [*]new cvar - sm_warden_deputy_become - 0 - disabled, 1 - enable !w / !deputy - player can choose to be deputy.
+    [*]new cvar - sm_warden_deputy_model - 0 - disabled, 1 - enable deputy model
+    [*]new cvar - sm_warden_deputy_model_path -  Path to the model for deputy. Default "models/player/custom_player/kuristaja/jailbreak/guard3/guard3.mdl"
+    [*]new cvar - sm_warden_deputy_warden_dead - 0 - Deputy will removed on warden death, 1 - Deputy will be new warden
+    [*]new cvar - sm_warden_backstab_deputy - 0 - disabled, 1 - enable backstab protection for deputy, too
+    [*]new cvar - sm_warden_bulletsparks_deputy - 0 - disabled, 1 - enable smaller bulletimpact sparks for deputy, too
+    [*]new cvar - sm_warden_open_deputy - 0 - disabled, 1 - deputy can open/close cells
+    [*]new cvar - sm_warden_color_red_deputy - What color to turn the deputy into (set R, G and B values to 255 to disable) (Rgb)
+    [*]new cvar - sm_warden_color_green_deputy - What color to turn the deputy into (rGb): x - green value
+    [*]new cvar - sm_warden_color_blue_deputy - What color to turn the deputy into (rgB): x - blue value
+    [*]new cvar - sm_warden_countdown_deputy - 0 - disabled, 1 - enable countdown for deputy, too
+    [*]new cvar - sm_warden_counter_deputy - 0 - disabled, 1 - Allow the deputy count player in radius, too
+    [*]new cvar - sm_warden_extend_deputy - 0 - disabled, 1 - enable the 'extend the roundtime'-feature for deputy,too
+    [*]new cvar - sm_warden_ff_deputy - 0 - disabled, 1 - enable switch ff for the deputy, too
+    [*]new cvar - sm_warden_handcuffs_deputy - 0 - disabled, 1 - enable handcuffs for deputy, too
+    [*]new cvar - sm_warden_icon_deputy_enable - 0 - disabled, 1 - enable the icon above the deputy head
+    [*]new cvar - sm_warden_icon_deputy - Path to the deputy icon DONT TYPE .vmt or .vft Default "decals/MyJailbreak/warden-4"
+    [*]new cvar - sm_warden_laser_deputy - 0 - disabled, 1 - enable Laser Pointer for Deputy, too
+    [*]new cvar - sm_warden_marker_deputy - 0 - disabled, 1 - enable 'advanced markers'-feature for deputy
+    [*]new cvar - sm_warden_math_deputy - 0 - disabled, 1 - enable mathquiz for deputy,too
+    [*]new cvar - sm_warden_mute_deputy - 0 - disabled, 1 - Allow to mute T-side player for deputy, too
+    [*]new cvar - sm_warden_noblock_deputy - 0 - disabled, 1 - enable noblock toggle for deputy, too
+    [*]new cvar - sm_warden_painter_deputy - 0 - disabled, 1 - enable 'Warden Painter'-feature for deputy, too
+    [*]new cvar - sm_warden_painter_terror_deputy - 0 - disabled, 1 - allow to toggle Painter for Terrorist as deputy, too
+    [*]new cvar - sm_warden_random_deputy - 0 - disabled, 1 - enable kill a random t for deputy,too
+    [*]new cvar - sm_warden_mark_rebel_deputy - 0 - disabled, 1 - enable 'mark/unmark prisoner as rebel'-feature for deputy, too
+    [*]new cvar - sm_warden_cmds_deputy - Set your custom chat command for open menu(!menu (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands). Default "d"
+    [*]new cvar - sm_warden_cmds_undeputy - Set your custom chat command for open menu(!menu (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands). Default "ud"
+    [*]new cvar - sm_warden_cmds_removedeputy - Set your custom chat commands for admins to remove a warden(!removewarden (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands) Default "rd,fd"
+    [*]new cvar - sm_freekill_freeday_victim_deputy - 0 - disabled, 1 - Allow the deputy to set a personal freeday next round
+    [*]changed cvar - sm_warden_disarm_mode - 1 - Only warden can disarm, 2 - warden & deputy can disarm, 3 - All CT can disarm, 4 - Everyone can disarm (CT & T)
 [/LIST][/INDENT]
 [LIST]
-[*]Eventdays: Added Beacon to most event days
+[*]Event Days: bypass on eventday cooldown for admins
 [/LIST]
 [INDENT][LIST]
-[*]new cvar - sm_myjb_beacon_radius - Sets the radius for the beacons rings
-[*]new cvar - sm_myjb_beacon_width - Sets the thickness for the beacons rings
-[*]new cvar - sm_myjb_beacon_CT_color_red - What color to turn the CT beacons into (set R, G and B values to 255 to disable) (Rgb): x - red value
-[*]new cvar - sm_myjb_beacon_CT_color_green - What color to turn the CT beacons into (rGb): x - green value
-[*]new cvar - sm_myjb_beacon_CT_color_blue - What color to turn the CT beacons into (rgB): x - blue value
-[*]new cvar - sm_myjb_beacon_T_color_red - What color to turn the T beacons  into (set R, G and B values to 255 to disable) (Rgb): x - red value
-[*]new cvar - sm_myjb_beacon_T_color_green - What color to turn the T beacons into (rGb): x - green value
-[*]new cvar - sm_myjb_beacon_T_color_blue - What color to turn the T beacons into (rgB): x - blue value
-[*]new cvar - sm_cowboy_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
-[*]new cvar - sm_dealdamage_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
-[*]new cvar - sm_drunk_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
-[*]new cvar - sm_duckhunt_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
-[*]new cvar - sm_ffa_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
-[*]new cvar - sm_hebattle_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
-[*]new cvar - sm_hide_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
-[*]new cvar - sm_knifefight_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
-[*]new cvar - sm_noscope_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
-[*]new cvar - sm_suicide_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
-[*]new cvar - sm_war_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
-[*]new cvar - sm_zeus_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
-[*]new cvar - sm_zombie_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
-[*]new cvar - sm_lastguard_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
+    [*]new cvar - sm_EVENTDAYNAME_cooldown_admin - 0 - disabled, 1 - ignore the cooldown when admin/vip set event day
 [/LIST][/INDENT]
+  
   
   
 [i]Changed[/i]
 [LIST]
-[*]Zombie - Glow/wallhack begin on end of freeze time instead round start
+[*]Commands: Add up to 12 custom commands to almost all myjailbreak commands.
 [/LIST]
+[INDENT][LIST]
+    [*]new cvar - sm_PLUGINNAME_cmds_FEATURENAME - Set your custom chat commands for *FEATURENAME*(no 'sm_'/'!')(seperate with comma ',')(max. 12 commands)
+    [*]removed cvar - sm_PLUGINNAME_cmd - obsolete cvars. [b]Please remove them from your configs![/b]
+    [*]removed commands - sm_ALTERNATIVE - double/different commands for same action. Use sm_PLUGINNAME_cmds_FEATURENAME
+[/LIST][/INDENT]
+[LIST]
+[*]Warden: Chathint on successful vote to kick warden
+[*]Warden counter: Use the wardens FOV instead radius around him to count terrors
+[/LIST]
+[INDENT][LIST]
+    [*]removed cvar - sm_warden_counter_radius - obsolete cvar. Please remove them from your config!
+[/LIST][/INDENT]
+[LIST]
+[*]Weapons: Players can get weapons from menu more than once in a round. No need to wait until next round.
+[*]Duckhunt: Changed the way to set health for hunter based on enemey count. [url]https://github.com/shanapu/MyJailbreak/issues/77#issuecomment-242951426[/url]
+[/LIST]
+[INDENT][LIST]
+    [*]new cvar - sm_duckhunt_hunter_hp_extra - HP the Hunter get additional per extra duck.
+[/LIST][/INDENT]
+[LIST]
+[*]Zombie: Changed the way to set health for zombies based on enemey count. [url]https://github.com/shanapu/MyJailbreak/issues/77#issuecomment-242951426[/url]
+[/LIST]
+[INDENT][LIST]
+    [*]new cvar - sm_zombie_zombie_hp_extra - HP the zombie get additional per extra human.
+[/LIST][/INDENT]
   
   
 [i]Fixed[/i]
 [LIST]
-[*]Zombie: Conflict with sm_skinchooser (no zombie model)
-[*]Duckhunt: Conflict with sm_skinchooser (no models)
-[*]Freeday: harmless warning on compile
-[*]Request: Freekill report show (on player reconnect) wrong names
-[*]HUD: Conflics with StartTimer & EventDay HUDs
-[*]Bug when "sm_eventday_allow_lr 1" and T count on roundstart = sm_hosties_lr_ts_max
-[*]minor errors, fixes & typos
-[*]Wiki rewrite & new tutorials
+[*]Warden - Icon: missing FastDL files
+[*]Warden - Icon Terror: fix black icon on decals/MyJailbreak/terror - [b]use sm_warden_icon_t "decals/MyJailbreak/terror-fix"[/b]
+[*]Warden - Mark rebel: remove color on unmark
+[*]Warden - Handcuffs: Move cuffed player though walls... kind of fix not perfect!
+[*]Warden - Painter: fix painter for terrors. THX devu4!
+[*]Request - Freedays: fix player check for !givefreeday
+[*]Last Guard: fix sm_lastguard_minct bypass. THX devu4!
+[*]PlayerTags: fix tags on warden remove
+[*]Weapons: glitch to use menu on T side. THX devu4!
+[*]minor errors & smaller fixes
 [/LIST]
   
   
-[i]New Requirements[/i]
+  
+[i]Changed Requirements[/i]
 [LIST]
-[*][ANY] VoiceannounceEX (VoiceHook) - [url]https://forums.alliedmods.net/showthread.php?p=2177167[/url]
-[*]DHooks (Dynamic Hooks - Dev Preview) - [url]https://forums.alliedmods.net/showthread.php?t=180114[/url]
+[*]removed - Simple Chat Prozessor - [url]https://bitbucket.org/minimoney1/simple-chat-processor[/url] - [b]remove/disable simple-chatprocessor.smx. Use new chat-processor![/b]
+[*]replacement - [Any] Chat-Processor - [url]https://forums.alliedmods.net/showthread.php?t=286913[/url]
 [/LIST]
-  
-  
-[i]Developer stuff[/i]
-[LIST]
-[*]Natives: New natives for on/off beacons
-[/LIST]
-[INDENT][LIST]
-[*]new native - BeaconOn Set client Beacon & interval as float
-[*]new native - BeaconOff Remove client Beacon
-[/LIST][/INDENT]
 [/SPOILER]
   
 [U][B]Full Change Log:[/B][/U]
@@ -2066,7 +2232,7 @@ devu4, good_live, Weeeishy, UartigZone, Got Sw4g? terminator18, SkeLeXes, 0diete
 [COLOR="DarkRed"][B]The smx files on Github are compiled with SM 1.8. 
 If you still use 1.7.x you should update your sourcemod or compile MyJailbreak for yourself on your SM version[/B][/COLOR]
 
-[B][U]Wiki:[/U][/B] [i]need some work[/i]
+[B][U]Wiki:[/U][/B]
 [url]https://github.com/shanapu/MyJailbreak/wiki/[/url]
 
 [U][B]Report Bugs, Ideas, Requests & see todo:[/B][/U]

@@ -1,5 +1,25 @@
 ### Change Log
   
+**[Beta 8.1]** - lmg cvars, 
+  
+*Added*
+*  Weapons: allow maschine-guns per cvar
+    *  new cvar - sm_weapons_negev - 0 - disabled, 1 - enable negev in weapon menu
+    *  new cvar - sm_weapons_m249 - 0 - disabled, 1 - enable m249 in weapon menu
+*  Ratio: Stamm support
+    *  new cvar - sm_ratio_stamm - 0 - disabled, how many stamm points a player need to join ct? (only if stamm is available)
+  
+  
+  
+*Fixed*
+*  Warden - Painter: fix bug when enabled for t and t dies paint still activ!
+*  Eventdays with freeze: rar glitch player push out of map
+*  download.txt: removed .bz2 file extension for deputy
+*  Cowboy: Fix command sm_setcowboy
+*  Request: Fix chat messages or freekill
+  
+  
+  
 **[Beta *8.0*]** - Deputy, custom commands & much more
   
 *Added*
