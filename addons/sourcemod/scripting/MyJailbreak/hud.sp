@@ -57,8 +57,8 @@ public Plugin myinfo =
 	name = "MyJailbreak - Player HUD", 
 	description = "A player HUD to display game informations", 
 	author = "shanapu", 
-	version = PLUGIN_VERSION, 
-	url = URL_LINK
+	version = MYJB_VERSION, 
+	url = MYJB_URL_LINK
 }
 
 
@@ -75,7 +75,7 @@ public void OnPluginStart()
 	AutoExecConfig_SetFile("HUD", "MyJailbreak");
 	AutoExecConfig_SetCreateFile(true);
 	
-	AutoExecConfig_CreateConVar("sm_hud_version", PLUGIN_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
+	AutoExecConfig_CreateConVar("sm_hud_version", MYJB_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_hud_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true,  0.0, true, 1.0);
 	gc_sCustomCommandHUD = AutoExecConfig_CreateConVar("sm_hud_cmds", "HUD", "Set your custom chat commands for toggle HUD(!hud (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	

@@ -1663,7 +1663,7 @@ sm_freeday_cmds_set - Set your custom chat command for set Event(!setfreeday (no
 [/SPOILER]
 
 
-[B][U]Natives[/B][/U]
+[B][U]Natives & forwards[/B][/U]
 [SPOILER]
 myjailbreak.inc
 [php]
@@ -1996,6 +1996,36 @@ native warden_deputy_getlast();
 [B][u]Latest Changes[/u][/B]
 
 [QUOTE] 
+  
+[b][Beta 8.1][/b] - some fixes, some new cvars
+[SPOILER]  
+[i]Added[/i]
+[LIST]
+[*]Weapons: allow maschine-guns per cvar
+[/LIST]
+[INDENT][LIST]
+    [*]new cvar - sm_weapons_negev - 0 - disabled, 1 - enable negev in weapon menu
+    [*]new cvar - sm_weapons_m249 - 0 - disabled, 1 - enable m249 in weapon menu
+[/LIST][/INDENT]
+[LIST]
+[*]Ratio: Stamm support
+[/LIST]
+[INDENT][LIST]
+    [*]new cvar - sm_ratio_stamm - 0 - disabled, how many stamm points a player need to join ct? (only if stamm is available)
+[/LIST][/INDENT]
+  
+  
+  
+[i]Fixed[/i]
+[LIST]
+[*]Warden - Painter: fix bug when enabled for t and t dies paint still activ!
+[*]Eventdays with freeze: rar glitch player push out of map
+[*]download.txt: removed .bz2 file extension for deputy
+[*]Cowboy: Fix command sm_setcowboy
+[*]Request: Fix chat messages or freekill
+[/LIST]
+[/SPOILER]
+
 [b][Beta 8.0][/b] - Deputy, custom commands & much more
 [SPOILER]  
 [i]Added[/i]

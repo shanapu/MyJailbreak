@@ -124,8 +124,8 @@ public Plugin myinfo = {
 	name = "MyJailbreak - Suicide Bomber", 
 	author = "shanapu", 
 	description = "Event Day for Jailbreak Server", 
-	version = PLUGIN_VERSION, 
-	url = URL_LINK
+	version = MYJB_VERSION, 
+	url = MYJB_URL_LINK
 };
 
 
@@ -148,7 +148,7 @@ public void OnPluginStart()
 	AutoExecConfig_SetFile("SuicideBomber", "MyJailbreak/EventDays");
 	AutoExecConfig_SetCreateFile(true);
 	
-	AutoExecConfig_CreateConVar("sm_suicidebomber_version", PLUGIN_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
+	AutoExecConfig_CreateConVar("sm_suicidebomber_version", MYJB_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_suicidebomber_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true,  0.0, true, 1.0);
 	gc_sCustomCommandVote = AutoExecConfig_CreateConVar("sm_suicidebomber_cmds_vote", "suicide, jihad, bomber", "Set your custom chat commands for Event voting(!suicidebomber (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_sCustomCommandSet = AutoExecConfig_CreateConVar("sm_suicidebomber_cmds_set", "ssuicidebomber, ssuicide, sbomber, sjihad, setjihad", "Set your custom chat commands for set Event(!setsuicidebomber (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");

@@ -117,8 +117,8 @@ public Plugin myinfo = {
 	name = "MyJailbreak - CowBoy", 
 	author = "shanapu", 
 	description = "Event Day for Jailbreak Server", 
-	version = PLUGIN_VERSION, 
-	url = URL_LINK
+	version = MYJB_VERSION, 
+	url = MYJB_URL_LINK
 };
 
 
@@ -139,7 +139,7 @@ public void OnPluginStart()
 	AutoExecConfig_SetFile("CowBoy", "MyJailbreak/EventDays");
 	AutoExecConfig_SetCreateFile(true);
 	
-	AutoExecConfig_CreateConVar("sm_cowboy_version", PLUGIN_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
+	AutoExecConfig_CreateConVar("sm_cowboy_version", MYJB_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_cowboy_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true,  0.0, true, 1.0);
 	gc_sCustomCommandVote = AutoExecConfig_CreateConVar("sm_cowboy_cmds_vote", "cow", "Set your custom chat command for Event voting(!cowboy (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_sCustomCommandSet = AutoExecConfig_CreateConVar("sm_cowboy_cmds_set", "scow, setcow", "Set your custom chat command for set Event (!setcowboy (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");

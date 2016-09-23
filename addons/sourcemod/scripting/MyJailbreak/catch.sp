@@ -131,8 +131,8 @@ public Plugin myinfo = {
 	name = "MyJailbreak - Catch & Freeze", 
 	author = "shanapu", 
 	description = "Event Day for Jailbreak Server", 
-	version = PLUGIN_VERSION, 
-	url = URL_LINK
+	version = MYJB_VERSION, 
+	url = MYJB_URL_LINK
 };
 
 
@@ -154,7 +154,7 @@ public void OnPluginStart()
 	AutoExecConfig_SetFile("Catch", "MyJailbreak/EventDays");
 	AutoExecConfig_SetCreateFile(true);
 	
-	AutoExecConfig_CreateConVar("sm_catch_version", PLUGIN_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
+	AutoExecConfig_CreateConVar("sm_catch_version", MYJB_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_catch_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true, 0.0, true, 1.0);
 	gc_sCustomCommandVote = AutoExecConfig_CreateConVar("sm_catch_cmds_vote", "cat, catchfreeze", "Set your custom chat command for Event voting(!catch (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_sCustomCommandSet = AutoExecConfig_CreateConVar("sm_catch_cmds_set", "scat, scatchfreeze", "Set your custom chat command for set Event(!setcatch (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
@@ -742,11 +742,11 @@ public Action CatchEm(int client, int attacker)
 	ShowOverlay(client, g_sOverlayFreeze, 0.0);
 	if (gc_bSounds.BoolValue)	
 	{
-	EmitSoundToAllAny(g_sSoundFreezePath);
+		EmitSoundToAllAny(g_sSoundFreezePath);
 	}
 	if (!gc_bStayOverlay.BoolValue)	
 	{
-	CreateTimer( 3.0, DeleteOverlay, client );
+		CreateTimer( 3.0, DeleteOverlay, client );
 	}
 	CPrintToChatAll("%t %t", "catch_tag" , "catch_catch", attacker, client);
 }
@@ -759,9 +759,9 @@ public Action FreeEm(int client, int attacker)
 	SetEntityRenderColor(client, 255, 255, 255, 0);
 	catched[client] = false;
 	CreateTimer( 0.0, DeleteOverlay, client );
-	if (gc_bSounds.BoolValue)	
+	if (gc_bSounds.BoolValue)
 	{
-	EmitSoundToAllAny(g_sSoundUnFreezePath);
+		EmitSoundToAllAny(g_sSoundUnFreezePath);
 	}
 	CPrintToChatAll("%t %t", "catch_tag" , "catch_unfreeze", attacker, client);
 }

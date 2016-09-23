@@ -66,8 +66,8 @@ public Plugin myinfo = {
 	name = "MyJailbreak - Core", 
 	author = "shanapu", 
 	description = "MyJailbreak - core plugin", 
-	version = PLUGIN_VERSION, 
-	url = URL_LINK
+	version = MYJB_VERSION, 
+	url = MYJB_URL_LINK
 };
 
 
