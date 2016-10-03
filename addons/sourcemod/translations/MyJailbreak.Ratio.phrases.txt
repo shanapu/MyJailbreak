@@ -61,6 +61,11 @@
 		"en"		"You are no longer in the guard queue!"
 	}
 
+	"ratio_clearqueue"
+	{
+		"en"		"The admin has cleared the Guard queue!"
+	}
+
 	"ratio_movetot"
 	{
 		"#format"   "{1:N}"
