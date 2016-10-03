@@ -110,6 +110,7 @@
 
 	"zeus_name"
 	{
+		"en"		"Zeus Day"
 		"de"		"Zeus Day"
 		"ru"		"День зевса"
 	}

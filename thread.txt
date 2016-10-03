@@ -322,9 +322,9 @@ sm_freekill_flag: Set flag for admin/vip get reported freekills to decide. Defau
 sm_freekill_warden: 0 - disabled, 1 - Report will be send to Warden if there is no admin. Default 1
 sm_freekill_freeday_victim - Allow the warden to set a personal freeday next round as pardon for the victim
 sm_freekill_freeday_cmd - Set your custom chat command for give a freeday. no need for sm_ or !
-sm_freekill_freeday_color_red - What color to turn the warden into (set R, G and B values to 255 to disable) (Rgb): x - red value
-sm_freekill_freeday_color_green - What color to turn the warden into (rGb): x - green value
-sm_freekill_freeday_color_blue - What color to turn the warden into (rgB): x - blue value
+sm_freekill_freeday_color_red - What color to turn the player with freeday into (set R, G and B values to 255 to disable) (Rgb): x - red value
+sm_freekill_freeday_color_green - What color to turn the player with freeday into (rGb): x - green value
+sm_freekill_freeday_color_blue - What color to turn the player with freeday into (rgB): x - blue value
 sm_freekill_freeday_victim_deputy - 0 - disabled, 1 - Allow the deputy to set a personal freeday next round
 sm_killreason_enable - CT can answer with a menu the kill reason
 
