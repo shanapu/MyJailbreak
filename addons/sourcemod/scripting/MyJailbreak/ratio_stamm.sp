@@ -45,10 +45,6 @@
 ConVar gc_iMinStammPoints;
 
 
-//Strings
-char g_sRestrictedSound[32] = "buttons/button11.wav";
-
-
 //Info
 public Plugin myinfo = {
 	name = "MyJailbreak - Ratio - Stamm Support", 
@@ -85,7 +81,6 @@ public Action MyJB_OnClientJoinGuardQueue(int client)
 {
 	if (STAMM_GetClientPoints(client) < gc_iMinStammPoints.IntValue)
 	{
-		ClientCommand(client, "play %s", g_sRestrictedSound);
 		CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_stamm", gc_iMinStammPoints.IntValue);
 		return Plugin_Handled;
 	}
@@ -100,14 +95,14 @@ public Action Event_OnPlayerSpawn(Event event, const char[] name, bool bDontBroa
 	if (GetClientTeam(client) != 3) 
 		return Plugin_Continue;
 		
-	if (!IsValidClient(client, true, false))
+	if (!IsValidClient(client, false, false))
 		return Plugin_Continue;
 		
 	if (STAMM_GetClientPoints(client) < gc_iMinStammPoints.IntValue)
 	{
-		ClientCommand(client, "play %s", g_sRestrictedSound);
 		CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_stamm", gc_iMinStammPoints.IntValue);
-		return Plugin_Handled;
+		CreateTimer(5.0, Timer_SlayPlayer, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
+		return Plugin_Continue;
 	}
 	return Plugin_Continue;
 }

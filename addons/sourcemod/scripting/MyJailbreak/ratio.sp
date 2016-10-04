@@ -351,7 +351,10 @@ public Action Command_JoinGuardQueue(int client, int iArgNum)
 	Call_Finish(res);
 	
 	if (res >= Plugin_Handled)
+	{
+		ClientCommand(client, "play %s", g_sRestrictedSound);
 		return Plugin_Handled;
+	}
 	
 	
 	int iIndex = FindValueInArray(g_aGuardQueue, client);
@@ -527,7 +530,10 @@ public Action Event_OnJoinTeam(int client, const char[] szCommand, int iArgCount
 	Call_Finish(res);
 	
 	if (res >= Plugin_Handled)
+	{
+		ClientCommand(client, "play %s", g_sRestrictedSound);
 		return Plugin_Handled;
+	}
 	
 	
 	if (!CanClientJoinGuards(client))

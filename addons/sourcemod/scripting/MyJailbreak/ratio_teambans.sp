@@ -1,5 +1,5 @@
 /*
- * MyJailbreak - Ratio - CT Ban Support.
+ * MyJailbreak - Ratio - TeamBans Support.
  * by: shanapu
  * https://github.com/shanapu/MyJailbreak/
  *
@@ -32,6 +32,7 @@
 #include <mystocks>
 #include <myjailbreak>
 #include <clientprefs>
+#include <teambans>
 
 
 //Compiler Options
@@ -39,15 +40,15 @@
 #pragma newdecls required
 
 
-//Handles
-Handle g_hCookieCTBan;
+//Strings
+char g_sRestrictedSound[32] = "buttons/button11.wav";
 
 
 //Info
 public Plugin myinfo = {
-	name = "MyJailbreak - Ratio - CT Ban Support", 
+	name = "MyJailbreak - Ratio - TeamBans Support", 
 	author = "shanapu, Addicted, good_live", 
-	description = "Adds support for databombs CT Bans plugin to MyJB ratio", 
+	description = "Adds support for Baras TeamBans plugin to MyJB ratio", 
 	version = MYJB_VERSION, 
 	url = MYJB_URL_LINK
 };
@@ -60,22 +61,15 @@ public void OnPluginStart()
 	LoadTranslations("MyJailbreak.Ratio.phrases");
 	
 	HookEvent("player_spawn", Event_OnPlayerSpawn, EventHookMode_Post);
-	
-	//Cookies
-	if ((g_hCookieCTBan = FindClientCookie("Banned_From_CT")) == INVALID_HANDLE)
-		g_hCookieCTBan = RegClientCookie("Banned_From_CT", "Tells if you are restricted from joining the CT team", CookieAccess_Protected);
 }
 
 
 public Action MyJB_OnClientJoinGuardQueue(int client)
 {
-	char szCookie[2];
-	GetClientCookie(client, g_hCookieCTBan, szCookie, sizeof(szCookie));
-	if (szCookie[0] == '1')
+	if (TeamBans_IsClientBanned(client))
 	{
-
+		ClientCommand(client, "play %s", g_sRestrictedSound);
 		CReplyToCommand(client, "%t %t", "ratio_tag" , "ratio_banned");
-		FakeClientCommand(client, "sm_isbanned @me");
 		return Plugin_Handled;
 	}
 	return Plugin_Continue;
@@ -88,17 +82,14 @@ public Action Event_OnPlayerSpawn(Event event, const char[] name, bool bDontBroa
 	
 	if (GetClientTeam(client) != 3) 
 		return Plugin_Continue;
-		
+	
 	if (!IsValidClient(client, true, false))
 		return Plugin_Continue;
-		
-	char sData[2];
-	GetClientCookie(client, g_hCookieCTBan, sData, sizeof(sData));
 	
-	if (sData[0] == '1')
+	if (TeamBans_IsClientBanned(client))
 	{
-		CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_banned");
-		PrintCenterText(client, "%t", "ratio_banned");
+		ClientCommand(client, "play %s", g_sRestrictedSound);
+		CReplyToCommand(client, "%t %t", "ratio_tag" , "ratio_banned");
 		CreateTimer(5.0, Timer_SlayPlayer, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 		return Plugin_Continue;
 	}

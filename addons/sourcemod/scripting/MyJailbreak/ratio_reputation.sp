@@ -1,5 +1,5 @@
 /*
- * MyJailbreak - Ratio - CT Ban Support.
+ * MyJailbreak - Ratio - Stamm Support.
  * by: shanapu
  * https://github.com/shanapu/MyJailbreak/
  *
@@ -29,9 +29,11 @@
 #include <sdktools>
 #include <cstrike>
 #include <colors>
+#include <autoexecconfig>
 #include <mystocks>
 #include <myjailbreak>
 #include <clientprefs>
+#include <reputation>
 
 
 //Compiler Options
@@ -39,15 +41,15 @@
 #pragma newdecls required
 
 
-//Handles
-Handle g_hCookieCTBan;
+//Console Variables
+ConVar gc_iMinReputation;
 
 
 //Info
 public Plugin myinfo = {
-	name = "MyJailbreak - Ratio - CT Ban Support", 
+	name = "MyJailbreak - Ratio - Reputation Support", 
 	author = "shanapu, Addicted, good_live", 
-	description = "Adds support for databombs CT Bans plugin to MyJB ratio", 
+	description = "Adds support for addicted Player Reputations plugin to MyJB ratio", 
 	version = MYJB_VERSION, 
 	url = MYJB_URL_LINK
 };
@@ -59,23 +61,27 @@ public void OnPluginStart()
 	//Translation
 	LoadTranslations("MyJailbreak.Ratio.phrases");
 	
-	HookEvent("player_spawn", Event_OnPlayerSpawn, EventHookMode_Post);
 	
-	//Cookies
-	if ((g_hCookieCTBan = FindClientCookie("Banned_From_CT")) == INVALID_HANDLE)
-		g_hCookieCTBan = RegClientCookie("Banned_From_CT", "Tells if you are restricted from joining the CT team", CookieAccess_Protected);
+	//AutoExecConfig
+	AutoExecConfig_SetFile("Ratio", "MyJailbreak");
+	AutoExecConfig_SetCreateFile(true);
+	
+	gc_iMinReputation = AutoExecConfig_CreateConVar("sm_ratio_reputation", "0", "0 - disabled, how many reputation a player need to join ct? (only if reputation is available)", _, true,  1.0);
+	
+	AutoExecConfig_ExecuteFile();
+	AutoExecConfig_CleanFile();
+	
+	
+	//Hooks
+	HookEvent("player_spawn", Event_OnPlayerSpawn, EventHookMode_Post);
 }
 
 
 public Action MyJB_OnClientJoinGuardQueue(int client)
 {
-	char szCookie[2];
-	GetClientCookie(client, g_hCookieCTBan, szCookie, sizeof(szCookie));
-	if (szCookie[0] == '1')
+	if (Reputation_GetRep(client) < gc_iMinReputation.IntValue)
 	{
-
-		CReplyToCommand(client, "%t %t", "ratio_tag" , "ratio_banned");
-		FakeClientCommand(client, "sm_isbanned @me");
+		CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_reputation", gc_iMinReputation.IntValue);
 		return Plugin_Handled;
 	}
 	return Plugin_Continue;
@@ -89,20 +95,15 @@ public Action Event_OnPlayerSpawn(Event event, const char[] name, bool bDontBroa
 	if (GetClientTeam(client) != 3) 
 		return Plugin_Continue;
 		
-	if (!IsValidClient(client, true, false))
+	if (!IsValidClient(client, false, false))
 		return Plugin_Continue;
 		
-	char sData[2];
-	GetClientCookie(client, g_hCookieCTBan, sData, sizeof(sData));
-	
-	if (sData[0] == '1')
+	if (Reputation_GetRep(client) < gc_iMinReputation.IntValue)
 	{
-		CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_banned");
-		PrintCenterText(client, "%t", "ratio_banned");
+		CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_reputation", gc_iMinReputation.IntValue);
 		CreateTimer(5.0, Timer_SlayPlayer, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 		return Plugin_Continue;
 	}
-	
 	return Plugin_Continue;
 }
 
