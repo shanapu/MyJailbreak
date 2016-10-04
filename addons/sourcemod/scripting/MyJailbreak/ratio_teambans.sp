@@ -40,10 +40,6 @@
 #pragma newdecls required
 
 
-//Strings
-char g_sRestrictedSound[32] = "buttons/button11.wav";
-
-
 //Info
 public Plugin myinfo = {
 	name = "MyJailbreak - Ratio - TeamBans Support", 
@@ -68,8 +64,8 @@ public Action MyJB_OnClientJoinGuardQueue(int client)
 {
 	if (TeamBans_IsClientBanned(client))
 	{
-		ClientCommand(client, "play %s", g_sRestrictedSound);
 		CReplyToCommand(client, "%t %t", "ratio_tag" , "ratio_banned");
+		PrintCenterText(client, "%t", "ratio_banned_nc");
 		return Plugin_Handled;
 	}
 	return Plugin_Continue;
@@ -88,8 +84,8 @@ public Action Event_OnPlayerSpawn(Event event, const char[] name, bool bDontBroa
 	
 	if (TeamBans_IsClientBanned(client))
 	{
-		ClientCommand(client, "play %s", g_sRestrictedSound);
 		CReplyToCommand(client, "%t %t", "ratio_tag" , "ratio_banned");
+		PrintCenterText(client, "%t", "ratio_banned_nc");
 		CreateTimer(5.0, Timer_SlayPlayer, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 		return Plugin_Continue;
 	}

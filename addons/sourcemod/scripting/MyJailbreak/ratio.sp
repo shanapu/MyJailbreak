@@ -394,7 +394,10 @@ public Action AdminCommand_RemoveFromQueue(int client, int args)
 	}
 	
 	Menu hMenu = CreateMenu(ViewQueueMenuHandle);
-	SetMenuTitle(hMenu, "Remove from Queue:");
+	
+	char menuinfo[64];
+	Format(menuinfo, sizeof(menuinfo), "t", "ratio_remove", client);
+	SetMenuTitle(hMenu, menuinfo);
 	
 	for (int i; i < GetArraySize(g_aGuardQueue); i++)
 	{
