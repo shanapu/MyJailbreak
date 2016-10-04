@@ -105,7 +105,7 @@ Handle BeaconTimer;
 Handle ZombieMenu;
 
 
-//Floats
+//floats
 float g_fPos[3];
 
 
@@ -184,6 +184,7 @@ public void OnPluginStart()
 	//Hooks
 	HookEvent("round_start", Event_RoundStart);
 	HookEvent("round_end", Event_RoundEnd);
+	HookEvent("player_hurt", Event_PlayerHurt);
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sModelPathZombie, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
@@ -872,4 +873,73 @@ public Action Timer_BeaconOn(Handle timer)
 {
 	LoopValidClients(i, true, false) BeaconOn(i, 2.0);
 	BeaconTimer = null;
+}
+
+
+//Knockbackfix
+public Action Event_PlayerHurt(Handle event, char [] name, bool dontBroadcast)
+{
+	int client = GetClientOfUserId(GetEventInt(event, "userid"));
+	int attacker = GetClientOfUserId(GetEventInt(event, "attacker"));
+
+	if (!IsValidClient(attacker) || GetClientTeam(client) == CS_TEAM_T)
+		return;
+
+
+	int damage = GetEventInt(event, "dmg_health");
+
+	float knockback = 8.0; // knockback amount
+
+ 	float clientloc[3];
+   	float attackerloc[3];
+    
+    	GetClientAbsOrigin(client, clientloc);
+    
+        // Get attackers eye position.
+        GetClientEyePosition(attacker, attackerloc);
+        
+        // Get attackers eye angles.
+        float attackerang[3];
+        GetClientEyeAngles(attacker, attackerang);
+        
+        // Calculate knockback end-vector.
+        TR_TraceRayFilter(attackerloc, attackerang, MASK_ALL, RayType_Infinite, KnockbackTRFilter);
+        TR_GetEndPosition(clientloc);
+    
+    
+    	// Apply damage knockback multiplier.
+    	knockback *= damage;
+		
+        if(GetEntPropEnt(client, Prop_Send, "m_hGroundEntity") == -1) knockback *= 0.5;
+    
+    	// Apply knockback.
+    	KnockbackSetVelocity(client, attackerloc, clientloc, knockback);
+}
+
+void KnockbackSetVelocity(int client, const float startpoint[3], const float endpoint[3], float magnitude)
+{
+    // Create vector from the given starting and ending points.
+    float vector[3];
+    MakeVectorFromPoints(startpoint, endpoint, vector);
+    
+    // Normalize the vector (equal magnitude at varying distances).
+    NormalizeVector(vector, vector);
+    
+    // Apply the magnitude by scaling the vector (multiplying each of its components).
+    ScaleVector(vector, magnitude);
+    
+
+    TeleportEntity(client, NULL_VECTOR, NULL_VECTOR, vector);
+}
+
+public bool KnockbackTRFilter(int entity, int contentsMask)
+{
+    // If entity is a player, continue tracing.
+    if (entity > 0 && entity < MAXPLAYERS)
+    {
+        return false;
+    }
+    
+    // Allow hit.
+    return true;
 }
