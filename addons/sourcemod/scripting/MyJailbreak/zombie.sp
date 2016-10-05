@@ -765,7 +765,7 @@ void SetupGlow(int iSkin)
 
 
 //Who can see the glow if vaild
-Action OnSetTransmit_GlowSkin(int iSkin, int client)
+public Action OnSetTransmit_GlowSkin(int iSkin, int client)
 {
 	if (!IsPlayerAlive(client))
 		return Plugin_Handled;

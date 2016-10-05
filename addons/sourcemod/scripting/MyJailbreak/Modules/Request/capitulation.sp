@@ -302,6 +302,7 @@ public int Handler_CapitulationMenu(Menu menu, MenuAction action, int client, in
 					KillTimer(RebelTimer[i]);
 				RebelTimer[i] = null;
 				StripAllPlayerWeapons(i);
+				g_bCapitulated[i] = false;
 				SetEntityRenderColor(client, gc_iCapitulationColorRed.IntValue, gc_iCapitulationColorGreen.IntValue, gc_iCapitulationColorBlue.IntValue, 255);
 				CapitulationTimer[i] = CreateTimer(gc_fCapitulationTime.FloatValue, Timer_GiveKnifeCapitulated, i);
 				CPrintToChatAll("%t %t", "warden_tag", "request_capitulated", i, client);
