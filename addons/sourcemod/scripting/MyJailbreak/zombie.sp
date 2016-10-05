@@ -83,6 +83,7 @@ ConVar gc_sCustomCommandVote;
 ConVar gc_sCustomCommandSet;
 ConVar gc_sAdminFlag;
 ConVar gc_bAllowLR;
+ConVar gc_fKnockbackAmount;
 
 
 //Extern Convars
@@ -167,6 +168,7 @@ public void OnPluginStart()
 	gc_bGlow = AutoExecConfig_CreateConVar("sm_zombie_glow", "1", "0 - disabled, 1 - enable Glow effect for humans", _, true,  0.0, true, 1.0);
 	gc_iGlowMode = AutoExecConfig_CreateConVar("sm_zombie_glow_mode", "1", "1 - human contours with wallhack for zombies, 2 - human glow effect without wallhack for zombies", _, true,  1.0, true, 2.0);
 	gc_bVision = AutoExecConfig_CreateConVar("sm_zombie_vision", "1", "0 - disabled, 1 - enable NightVision View for Zombies", _, true,  0.0, true, 1.0);
+	gc_fKnockbackAmount = AutoExecConfig_CreateConVar("sm_zombie_knockback", "20.0", "Force of the knockback when shot at. Zombies only", _, true, 1.0, true, 100.0);
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_zombie_cooldown_day", "3", "Rounds cooldown after a event until event can be start again", _, true, 0.0);
 	gc_iCooldownStart = AutoExecConfig_CreateConVar("sm_zombie_cooldown_start", "3", "Rounds until event can be start after mapchange.", _, true, 0.0);
 	gc_bSetABypassCooldown = AutoExecConfig_CreateConVar("sm_zombie_cooldown_admin", "1", "0 - disabled, 1 - ignore the cooldown when admin/vip set zombie round", _, true, 0.0, true, 1.0);
@@ -546,6 +548,43 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 }
 
 
+public Action Event_PlayerHurt(Handle event, char [] name, bool dontBroadcast)
+{
+	int victim = GetClientOfUserId(GetEventInt(event, "userid"));
+	int attacker = GetClientOfUserId(GetEventInt(event, "attacker"));
+	
+	if (!IsValidClient(attacker) || GetClientTeam(victim) == CS_TEAM_T)
+		return;
+	
+	int damage = GetEventInt(event, "dmg_health");
+	
+	float knockback = gc_fKnockbackAmount.FloatValue; // knockback amount
+	float clientloc[3];
+	float attackerloc[3];
+	
+	GetClientAbsOrigin(victim, clientloc);
+	
+	// Get attackers eye position.
+	GetClientEyePosition(attacker, attackerloc);
+	
+	// Get attackers eye angles.
+	float attackerang[3];
+	GetClientEyeAngles(attacker, attackerang);
+	
+	// Calculate knockback end-vector.
+	TR_TraceRayFilter(attackerloc, attackerang, MASK_ALL, RayType_Infinite, KnockbackTRFilter);
+	TR_GetEndPosition(clientloc);
+	
+	// Apply damage knockback multiplier.
+	knockback *= damage;
+	
+	if(GetEntPropEnt(victim, Prop_Send, "m_hGroundEntity") == -1) knockback *= 0.5;
+	
+	// Apply knockback.
+	KnockbackSetVelocity(victim, attackerloc, clientloc, knockback);
+}
+
+
 /******************************************************************************
                    FORWARDS LISTEN
 ******************************************************************************/
@@ -726,7 +765,7 @@ void SetupGlow(int iSkin)
 
 
 //Who can see the glow if vaild
-public Action OnSetTransmit_GlowSkin(int iSkin, int client)
+Action OnSetTransmit_GlowSkin(int iSkin, int client)
 {
 	if (!IsPlayerAlive(client))
 		return Plugin_Handled;
@@ -755,9 +794,38 @@ void UnhookGlow(int client)
 	{
 		char sModel[PLATFORM_MAX_PATH];
 		GetClientModel(client, sModel, sizeof(sModel));
-	//	SetEntProp(client, Prop_Send, "m_bShouldGlow", false, true);
 		SDKUnhook(client, SDKHook_SetTransmit, OnSetTransmit_GlowSkin);
 	}
+}
+
+
+void KnockbackSetVelocity(int client, const float startpoint[3], const float endpoint[3], float magnitude)
+{
+	// Create vector from the given starting and ending points.
+	float vector[3];
+	MakeVectorFromPoints(startpoint, endpoint, vector);
+	
+	// Normalize the vector (equal magnitude at varying distances).
+	NormalizeVector(vector, vector);
+	
+	// Apply the magnitude by scaling the vector (multiplying each of its components).
+	ScaleVector(vector, magnitude);
+	
+	
+	TeleportEntity(client, NULL_VECTOR, NULL_VECTOR, vector);
+}
+
+
+public bool KnockbackTRFilter(int entity, int contentsMask)
+{
+	// If entity is a player, continue tracing.
+	if (entity > 0 && entity < MAXPLAYERS)
+	{
+		return false;
+	}
+	
+	// Allow hit.
+	return true;
 }
 
 
@@ -873,73 +941,4 @@ public Action Timer_BeaconOn(Handle timer)
 {
 	LoopValidClients(i, true, false) BeaconOn(i, 2.0);
 	BeaconTimer = null;
-}
-
-
-//Knockbackfix
-public Action Event_PlayerHurt(Handle event, char [] name, bool dontBroadcast)
-{
-	int client = GetClientOfUserId(GetEventInt(event, "userid"));
-	int attacker = GetClientOfUserId(GetEventInt(event, "attacker"));
-
-	if (!IsValidClient(attacker) || GetClientTeam(client) == CS_TEAM_T)
-		return;
-
-
-	int damage = GetEventInt(event, "dmg_health");
-
-	float knockback = 8.0; // knockback amount
-
- 	float clientloc[3];
-   	float attackerloc[3];
-    
-    	GetClientAbsOrigin(client, clientloc);
-    
-        // Get attackers eye position.
-        GetClientEyePosition(attacker, attackerloc);
-        
-        // Get attackers eye angles.
-        float attackerang[3];
-        GetClientEyeAngles(attacker, attackerang);
-        
-        // Calculate knockback end-vector.
-        TR_TraceRayFilter(attackerloc, attackerang, MASK_ALL, RayType_Infinite, KnockbackTRFilter);
-        TR_GetEndPosition(clientloc);
-    
-    
-    	// Apply damage knockback multiplier.
-    	knockback *= damage;
-		
-        if(GetEntPropEnt(client, Prop_Send, "m_hGroundEntity") == -1) knockback *= 0.5;
-    
-    	// Apply knockback.
-    	KnockbackSetVelocity(client, attackerloc, clientloc, knockback);
-}
-
-void KnockbackSetVelocity(int client, const float startpoint[3], const float endpoint[3], float magnitude)
-{
-    // Create vector from the given starting and ending points.
-    float vector[3];
-    MakeVectorFromPoints(startpoint, endpoint, vector);
-    
-    // Normalize the vector (equal magnitude at varying distances).
-    NormalizeVector(vector, vector);
-    
-    // Apply the magnitude by scaling the vector (multiplying each of its components).
-    ScaleVector(vector, magnitude);
-    
-
-    TeleportEntity(client, NULL_VECTOR, NULL_VECTOR, vector);
-}
-
-public bool KnockbackTRFilter(int entity, int contentsMask)
-{
-    // If entity is a player, continue tracing.
-    if (entity > 0 && entity < MAXPLAYERS)
-    {
-        return false;
-    }
-    
-    // Allow hit.
-    return true;
 }
