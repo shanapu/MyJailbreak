@@ -44,6 +44,7 @@ ConVar gc_bTag;
 ConVar gc_bLogging;
 ConVar gc_bShootButton;
 ConVar gc_sCustomCommandEndRound;
+ConVar gc_bEndRound;
 
 
 //Booleans
@@ -88,6 +89,7 @@ public void OnPluginStart()
 	gc_bLogging = AutoExecConfig_CreateConVar("sm_myjb_log", "1", "Allow MyJailbreak to log events, freekills & eventdays in logs/MyJailbreak", _, true,  0.0, true, 1.0);
 	gc_bShootButton = AutoExecConfig_CreateConVar("sm_myjb_shoot_buttons", "1", "0 - disabled, 1 - allow player to trigger a map button by shooting it", _, true,  0.0, true, 1.0);
 	gc_sCustomCommandEndRound = AutoExecConfig_CreateConVar("sm_myjb_cmds_endround", "er, stopround, end", "Set your custom chat commands for admins to end the current round(!endround (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)");
+	gc_bEndRound = AutoExecConfig_CreateConVar("sm_myjb_allow_endround", "0", "0 - disabled, 1 - enable !endround command for testing (disable against abusing)");
 	
 	
 	Beacon_OnPluginStart();
@@ -145,7 +147,7 @@ public void OnConfigsExecuted()
 //End the current round instandly
 public Action Command_EndRound(int client, int args)
 {
-	CS_TerminateRound(5.5, CSRoundEnd_Draw, true);
+	if (gc_bEndRound.BoolValue) CS_TerminateRound(5.5, CSRoundEnd_Draw, true);
 	return Plugin_Handled;
 }
 
