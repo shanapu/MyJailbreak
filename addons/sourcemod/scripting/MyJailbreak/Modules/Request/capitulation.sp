@@ -234,7 +234,7 @@ public Action Capitulation_OnWeaponCanUse(int client, int weapon)
 		char sWeapon[32];
 		GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
 		
-		if (!StrEqual(sWeapon, "weapon_knife") || !StrEqual(sWeapon, "weapon_healthshot") || !StrEqual(sWeapon, "weapon_c4"))
+		if (!StrEqual(sWeapon, "weapon_knife") && !StrEqual(sWeapon, "weapon_healthshot") && !StrEqual(sWeapon, "weapon_c4"))
 		{
 			if (IsValidClient(client, true, false))
 			{
