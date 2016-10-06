@@ -553,7 +553,7 @@ public Action Event_PlayerHurt(Handle event, char [] name, bool dontBroadcast)
 	int victim = GetClientOfUserId(GetEventInt(event, "userid"));
 	int attacker = GetClientOfUserId(GetEventInt(event, "attacker"));
 	
-	if (!IsValidClient(attacker) || GetClientTeam(victim) == CS_TEAM_T)
+	if (!IsZombie || !IsValidClient(attacker) || GetClientTeam(victim) == CS_TEAM_T)
 		return;
 	
 	int damage = GetEventInt(event, "dmg_health");
