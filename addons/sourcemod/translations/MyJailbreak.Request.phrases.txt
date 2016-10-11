@@ -546,4 +546,19 @@
 		"en"		"The Guard {green}{1}{default} claiming {darkred}{2}{default} has broke the rules"
 	}
 
+	"request_freeday_title"
+	{
+		"#format"   "{1:N}"
+		"en"		"Freeday for {1}"
+	}
+
+	"request_freedaynow"
+	{
+		"en"		"This Round"
+	}
+
+	"request_freedaynext"
+	{
+		"en"		"Next Round"
+	}
 }

@@ -48,6 +48,9 @@ ConVar gc_iFreeDayColorRed;
 ConVar gc_iFreeDayColorGreen;
 ConVar gc_iFreeDayColorBlue;
 
+//Handle
+Handle hData2;
+
 
 //Start
 public void Freedays_OnPluginStart()
@@ -83,7 +86,7 @@ public Action Command_FreeDay(int client, int args)
 			if (warden_iswarden(client) || (warden_deputy_isdeputy(client) && gc_bFreeDayDeputy.BoolValue))
 			{
 				char info1[255];
-				Menu menu5 = CreateMenu(Handler_GiveFreeDay);
+				Menu menu5 = CreateMenu(Handler_GiveFreeDayChoose);
 				Format(info1, sizeof(info1), "%T", "request_givefreeday", client);
 				menu5.SetTitle(info1);
 				LoopValidClients(i, true, true)
@@ -96,7 +99,6 @@ public Action Command_FreeDay(int client, int args)
 							if (IsPlayerAlive(i))Format(username, sizeof(username), "%N", i);
 							if (!IsPlayerAlive(i))Format(username, sizeof(username), "%N [†]", i);
 							menu5.AddItem(userid, username);
-							
 					}
 				}
 				menu5.ExitBackButton = true;
@@ -170,7 +172,7 @@ public void Freedays_OnConfigsExecuted()
 ******************************************************************************/
 
 
-public int Handler_GiveFreeDay(Menu menu5, MenuAction action, int client, int Position)
+public int Handler_GiveFreeDayChoose(Menu menu5, MenuAction action, int client, int Position)
 {
 	if (action == MenuAction_Select)
 	{
@@ -178,10 +180,31 @@ public int Handler_GiveFreeDay(Menu menu5, MenuAction action, int client, int Po
 		menu5.GetItem(Position, name, sizeof(name));
 		int user = GetClientOfUserId(StringToInt(name)); 
 		
-		g_bHaveFreeDay[user] = true;
-		CPrintToChatAll("%t %t", "warden_tag", "request_personalfreeday", user);
-		CPrintToChat(user, "%t %t", "warden_tag", "request_freedayforyou");
-		Command_FreeDay(client, 0);
+		if (IsPlayerAlive(user))
+		{
+			hData2 = CreateDataPack();
+			WritePackCell(hData2, user);
+			
+			char info[255];
+			Menu menu6 = CreateMenu(Handler_GiveFreeDay);
+			
+			Format(info, sizeof(info), "%T", "request_freeday_title", user, client);
+			menu6.SetTitle(info);
+			Format(info, sizeof(info), "%T", "request_freedaynow", client);
+			menu6.AddItem("1", info);
+			Format(info, sizeof(info), "%T", "request_freedaynext", client);
+			menu6.AddItem("0", info);
+			menu6.ExitBackButton = true;
+			menu6.ExitButton = true;
+			menu6.Display(client, MENU_TIME_FOREVER);
+		}
+		else
+		{
+			g_bHaveFreeDay[user] = true;
+			CPrintToChatAll("%t %t", "warden_tag", "request_personalfreeday", user);
+			CPrintToChat(user, "%t %t", "warden_tag", "request_freedayforyou");
+			Command_FreeDay(client, 0);
+		}
 	}
 	else if (action == MenuAction_Cancel)
 	{
@@ -193,5 +216,43 @@ public int Handler_GiveFreeDay(Menu menu5, MenuAction action, int client, int Po
 	else if (action == MenuAction_End)
 	{
 		delete menu5;
+	}
+}
+
+public int Handler_GiveFreeDay(Menu menu6, MenuAction action, int client, int Position)
+{
+	if (action == MenuAction_Select)
+	{
+		char info[32];
+		
+		ResetPack(hData2);
+		int user = ReadPackCell(hData2);
+		
+		menu6.GetItem(Position, info, sizeof(info));
+		
+		if (strcmp(info, "0") == 0)
+		{
+			g_bHaveFreeDay[user] = true;
+			CPrintToChatAll("%t %t", "warden_tag", "request_personalfreeday", user);
+			CPrintToChat(user, "%t %t", "warden_tag", "request_freedayforyou");
+			Command_FreeDay(client, 0);
+		}
+		else if (strcmp(info, "1") == 0)
+		{
+			CPrintToChatAll("%t %t", "request_tag", "request_havefreeday", user);
+			SetEntityRenderColor(user, gc_iFreeDayColorRed.IntValue, gc_iFreeDayColorGreen.IntValue, gc_iFreeDayColorBlue.IntValue, 255);
+			Command_FreeDay(client, 0);
+		}
+	}
+	else if (action == MenuAction_Cancel)
+	{
+		if (Position == MenuCancel_ExitBack) 
+		{
+			FakeClientCommand(client, "sm_menu");
+		}
+	}
+	else if (action == MenuAction_End)
+	{
+		delete menu6;
 	}
 }
