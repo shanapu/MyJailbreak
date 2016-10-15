@@ -1,5 +1,5 @@
 /*
- * MyJailbreak - Ratio - TeamBans Support.
+ * MyJailbreak - Ratio - Stamm Support.
  * by: shanapu
  * https://github.com/shanapu/MyJailbreak/
  *
@@ -29,10 +29,11 @@
 #include <sdktools>
 #include <cstrike>
 #include <colors>
+#include <autoexecconfig>
 #include <mystocks>
 #include <myjailbreak>
 #include <clientprefs>
-#include <teambans>
+#include <stamm>
 
 
 //Compiler Options
@@ -40,11 +41,15 @@
 #pragma newdecls required
 
 
+//Console Variables
+ConVar gc_iMinStammPoints;
+
+
 //Info
 public Plugin myinfo = {
-	name = "MyJailbreak - Ratio - TeamBans Support", 
+	name = "MyJailbreak - Ratio - Stamm Support", 
 	author = "shanapu, Addicted, good_live", 
-	description = "Adds support for Baras TeamBans plugin to MyJB ratio", 
+	description = "Adds support for popoklopsi stamm plugin to MyJB ratio", 
 	version = MYJB_VERSION, 
 	url = MYJB_URL_LINK
 };
@@ -56,16 +61,27 @@ public void OnPluginStart()
 	//Translation
 	LoadTranslations("MyJailbreak.Ratio.phrases");
 	
+	
+	//AutoExecConfig
+	AutoExecConfig_SetFile("Ratio", "MyJailbreak");
+	AutoExecConfig_SetCreateFile(true);
+	
+	gc_iMinStammPoints = AutoExecConfig_CreateConVar("sm_ratio_stamm", "0", "0 - disabled, how many stamm points a player need to join ct? (only if stamm is available)", _, true,  1.0);
+	
+	AutoExecConfig_ExecuteFile();
+	AutoExecConfig_CleanFile();
+	
+	
+	//Hooks
 	HookEvent("player_spawn", Event_OnPlayerSpawn, EventHookMode_Post);
 }
 
 
-public Action MyJB_OnClientJoinGuardQueue(int client)
+public Action MyJailbreak_OnJoinGuardQueue(int client)
 {
-	if (TeamBans_IsClientBanned(client))
+	if (STAMM_GetClientPoints(client) < gc_iMinStammPoints.IntValue)
 	{
-		CReplyToCommand(client, "%t %t", "ratio_tag" , "ratio_banned");
-		PrintCenterText(client, "%t", "ratio_banned_nc");
+		CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_stamm", gc_iMinStammPoints.IntValue);
 		return Plugin_Handled;
 	}
 	return Plugin_Continue;
@@ -78,18 +94,16 @@ public Action Event_OnPlayerSpawn(Event event, const char[] name, bool bDontBroa
 	
 	if (GetClientTeam(client) != 3) 
 		return Plugin_Continue;
-	
-	if (!IsValidClient(client, true, false))
+		
+	if (!IsValidClient(client, false, false))
 		return Plugin_Continue;
-	
-	if (TeamBans_IsClientBanned(client))
+		
+	if (STAMM_GetClientPoints(client) < gc_iMinStammPoints.IntValue)
 	{
-		CReplyToCommand(client, "%t %t", "ratio_tag" , "ratio_banned");
-		PrintCenterText(client, "%t", "ratio_banned_nc");
+		CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_stamm", gc_iMinStammPoints.IntValue);
 		CreateTimer(5.0, Timer_SlayPlayer, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 		return Plugin_Continue;
 	}
-	
 	return Plugin_Continue;
 }
 

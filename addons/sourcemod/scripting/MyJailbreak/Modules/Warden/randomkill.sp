@@ -197,7 +197,7 @@ public int Handler_KillMenu(Menu menu, MenuAction action, int client, int Positi
 				{
 					CreateTimer( 1.0, Timer_KillPlayer, i);
 					CPrintToChatAll("%t %t", "warden_tag", "warden_israndom", i); 
-					if (ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Warden %L killed random player %L", client, i);
+					if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Warden %L killed random player %L", client, i);
 				}
 			}
 			else CPrintToChatAll("%t %t", "warden_tag", "warden_minrandom"); 

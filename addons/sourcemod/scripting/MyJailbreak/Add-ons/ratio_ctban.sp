@@ -67,7 +67,7 @@ public void OnPluginStart()
 }
 
 
-public Action MyJB_OnClientJoinGuardQueue(int client)
+public Action MyJailbreak_OnJoinGuardQueue(int client)
 {
 	char szCookie[2];
 	GetClientCookie(client, g_hCookieCTBan, szCookie, sizeof(szCookie));

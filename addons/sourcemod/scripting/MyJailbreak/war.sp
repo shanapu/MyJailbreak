@@ -258,7 +258,7 @@ public Action Command_SetWar(int client, int args)
 		if (client == 0)
 		{
 			StartNextRound();
-			if (ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event war was started by groupvoting");
+			if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event war was started by groupvoting");
 		}
 		else if (warden_iswarden(client))
 		{
@@ -267,14 +267,14 @@ public Action Command_SetWar(int client, int args)
 				if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
 				{
 					char EventDay[64];
-					GetEventDayName(EventDay);
+					MyJailbreak_GetEventDayName(EventDay);
 					
 					if (StrEqual(EventDay, "none", false))
 					{
 						if (g_iCoolDown == 0)
 						{
 							StartNextRound();
-							if (ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event war was started by warden %L", client);
+							if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event war was started by warden %L", client);
 						}
 						else CReplyToCommand(client, "%t %t", "war_tag" , "war_wait", g_iCoolDown);
 					}
@@ -291,14 +291,14 @@ public Action Command_SetWar(int client, int args)
 				if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
 				{
 					char EventDay[64];
-					GetEventDayName(EventDay);
+					MyJailbreak_GetEventDayName(EventDay);
 					
 					if (StrEqual(EventDay, "none", false))
 					{
 						if ((g_iCoolDown == 0) || gc_bSetABypassCooldown.BoolValue)
 						{
 							StartNextRound();
-							if (ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event war was started by admin %L", client);
+							if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event war was started by admin %L", client);
 						}
 						else CReplyToCommand(client, "%t %t", "war_tag" , "war_wait", g_iCoolDown);
 					}
@@ -328,7 +328,7 @@ public Action Command_VoteWar(int client, int args)
 			if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
 			{
 				char EventDay[64];
-				GetEventDayName(EventDay);
+				MyJailbreak_GetEventDayName(EventDay);
 				
 				if (StrEqual(EventDay, "none", false))
 				{
@@ -344,7 +344,7 @@ public Action Command_VoteWar(int client, int args)
 							if (g_iVoteCount > playercount)
 							{
 								StartNextRound();
-								if (ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event war was started by voting");
+								if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event war was started by voting");
 							}
 							else CPrintToChatAll("%t %t", "war_tag" , "war_need", Missing, client);
 						}
@@ -378,8 +378,8 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		SetCvar("sm_weapons_t", 1);
 		SetCvar("sm_weapons_ct", 1);
 		SetCvar("sm_menu_enable", 0);
-		SetEventDayPlanned(false);
-		SetEventDayRunning(true);
+		MyJailbreak_SetEventDayPlanned(false);
+		MyJailbreak_SetEventDayRunning(true);
 		g_iRound++;
 		
 		if (gc_fBeaconTime.FloatValue > 0.0) BeaconTimer = CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
@@ -468,7 +468,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 	else
 	{
 		char EventDay[64];
-		GetEventDayName(EventDay);
+		MyJailbreak_GetEventDayName(EventDay);
 	
 		if (!StrEqual(EventDay, "none", false))
 		{
@@ -505,8 +505,8 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			SetCvar("sm_weapons_ct", 1);
 			SetCvar("sm_menu_enable", 1);
 			g_iMPRoundTime.IntValue = g_iOldRoundTime;
-			SetEventDayName("none");
-			SetEventDayRunning(false);
+			MyJailbreak_SetEventDayName("none");
+			MyJailbreak_SetEventDayRunning(false);
 			CPrintToChatAll("%t %t", "war_tag" , "war_end");
 		}
 	}
@@ -587,8 +587,8 @@ public int OnAvailableLR(int Announced)
 			SetCvar("sm_weapons_ct", 1);
 			SetCvar("sm_menu_enable", 1);
 			g_iMPRoundTime.IntValue = g_iOldRoundTime;
-			SetEventDayName("none");
-			SetEventDayRunning(false);
+			MyJailbreak_SetEventDayName("none");
+			MyJailbreak_SetEventDayRunning(false);
 			CPrintToChatAll("%t %t", "war_tag" , "war_end");
 		}
 	}
@@ -611,9 +611,9 @@ void StartNextRound()
 	
 	char buffer[32];
 	Format(buffer, sizeof(buffer), "%T", "war_name", LANG_SERVER);
-	SetEventDayName(buffer);
+	MyJailbreak_SetEventDayName(buffer);
 	
-	SetEventDayPlanned(true);
+	MyJailbreak_SetEventDayPlanned(true);
 	
 	g_iOldRoundTime = g_iMPRoundTime.IntValue; //save original round time
 	g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
@@ -741,6 +741,6 @@ public Action Timer_StartEvent(Handle timer)
 //Beacon Timer
 public Action Timer_BeaconOn(Handle timer)
 {
-	LoopValidClients(i, true, false) BeaconOn(i, 2.0);
+	LoopValidClients(i, true, false) MyJailbreak_BeaconOn(i, 2.0);
 	BeaconTimer = null;
 }

@@ -248,7 +248,7 @@ public Action AdminCommand_RemoveDeputy(int client, int args)
 			CPrintToChatAll("%t %t", "warden_tag" , "warden_deputy_removed", client, g_iDeputy);  // if client is console !=
 			if (gc_bBetterNotes.BoolValue) PrintCenterTextAll("%t", "warden_deputy_removed_nc", client, g_iDeputy);
 			
-			if (ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Admin %L removed player %L as Deputy", client, g_iDeputy);
+			if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Admin %L removed player %L as Deputy", client, g_iDeputy);
 			
 			RemoveTheDeputy();
 		}
@@ -331,7 +331,7 @@ public void Deputy_Event_RoundStart(Event event, const char[] name, bool dontBro
 	if(gp_bMyJailBreak)
 	{
 		char EventDay[64];
-		GetEventDayName(EventDay);
+		MyJailbreak_GetEventDayName(EventDay);
 		
 		if (!StrEqual(EventDay, "none", false) || !gc_bStayWarden.BoolValue)
 		{

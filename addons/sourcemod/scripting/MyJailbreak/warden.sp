@@ -465,7 +465,7 @@ public Action Command_VoteWarden(int client, int args)
 					
 					if (g_iVoteCount > playercount)
 					{
-						if(gp_bMyJailBreak) if (ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Player %L was kick as warden by voting", g_iWarden);
+						if(gp_bMyJailBreak) if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Player %L was kick as warden by voting", g_iWarden);
 						RemoveTheWarden();
 						CPrintToChatAll("%t %t", "warden_tag" , "warden_votesuccess");
 					}
@@ -492,7 +492,7 @@ public Action AdminCommand_RemoveWarden(int client, int args)
 			CPrintToChatAll("%t %t", "warden_tag" , "warden_removed", client, g_iWarden);  // if client is console !=
 			if (gc_bBetterNotes.BoolValue) PrintCenterTextAll("%t", "warden_removed_nc", client, g_iWarden);
 			
-			if(gp_bMyJailBreak) if (ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Admin %L removed player %L as warden", client, g_iWarden);
+			if(gp_bMyJailBreak) if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Admin %L removed player %L as warden", client, g_iWarden);
 			
 			RemoveTheWarden();
 			Forward_OnWardenRemovedByAdmin(client);
@@ -606,7 +606,7 @@ public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 	if (gp_bMyJailBreak)
 	{
 		char EventDay[64];
-		GetEventDayName(EventDay);
+		MyJailbreak_GetEventDayName(EventDay);
 		
 		if (!StrEqual(EventDay, "none", false) || !gc_bStayWarden.BoolValue)
 		{
@@ -916,7 +916,7 @@ public int Handler_SetWardenOverwrite(Menu menu, MenuAction action, int client, 
 			int newwarden = GetClientOfUserId(g_iTempWarden[client]);
 			if (g_iWarden != -1)CPrintToChatAll("%t %t", "warden_tag" , "warden_removed", client, g_iWarden);
 			
-			if(gp_bMyJailBreak) if (ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Admin %L kick player %L warden and set %L as new", client, g_iWarden, newwarden);
+			if(gp_bMyJailBreak) if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Admin %L kick player %L warden and set %L as new", client, g_iWarden, newwarden);
 			
 			RemoveTheWarden();
 			SetTheWarden(newwarden);

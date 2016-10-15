@@ -304,7 +304,7 @@ public Action Command_SetTorch(int client, int args)
 		if (client == 0)
 		{
 			StartNextRound();
-			if (ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event torch was started by groupvoting");
+			if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event torch was started by groupvoting");
 		}
 		else if (warden_iswarden(client))
 		{
@@ -313,14 +313,14 @@ public Action Command_SetTorch(int client, int args)
 				if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0)&& (GetClientCount() > 2))
 				{
 					char EventDay[64];
-					GetEventDayName(EventDay);
+					MyJailbreak_GetEventDayName(EventDay);
 					
 					if (StrEqual(EventDay, "none", false))
 					{
 						if (g_iCoolDown == 0)
 						{
 							StartNextRound();
-							if (ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Torch was started by warden %L", client);
+							if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Torch was started by warden %L", client);
 						}
 						else CReplyToCommand(client, "%t %t", "torch_tag" , "torch_wait", g_iCoolDown);
 					}
@@ -337,14 +337,14 @@ public Action Command_SetTorch(int client, int args)
 				if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0)&& (GetClientCount() > 2))
 				{
 					char EventDay[64];
-					GetEventDayName(EventDay);
+					MyJailbreak_GetEventDayName(EventDay);
 					
 					if (StrEqual(EventDay, "none", false))
 					{
 						if ((g_iCoolDown == 0) || gc_bSetABypassCooldown.BoolValue)
 						{
 							StartNextRound();
-							if (ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Torch was started by admin %L", client);
+							if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Torch was started by admin %L", client);
 						}
 						else CReplyToCommand(client, "%t %t", "torch_tag" , "torch_wait", g_iCoolDown);
 					}
@@ -373,7 +373,7 @@ public Action Command_VoteTorch(int client, int args)
 			if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0)&& (GetClientCount() > 2))
 			{
 				char EventDay[64];
-				GetEventDayName(EventDay);
+				MyJailbreak_GetEventDayName(EventDay);
 				
 				if (StrEqual(EventDay, "none", false))
 				{
@@ -389,7 +389,7 @@ public Action Command_VoteTorch(int client, int args)
 							if (g_iVoteCount > playercount)
 							{
 								StartNextRound();
-								if (ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Torch was started by voting");
+								if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Torch was started by voting");
 							}
 							else CPrintToChatAll("%t %t", "torch_tag" , "torch_need", Missing, client);
 						}
@@ -420,8 +420,8 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("sm_weapons_enable", 0);
-		SetEventDayPlanned(false);
-		SetEventDayRunning(true);
+		MyJailbreak_SetEventDayPlanned(false);
+		MyJailbreak_SetEventDayRunning(true);
 		
 		IsTorch = true;
 		g_iRound++;
@@ -477,7 +477,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 	else
 	{
 		char EventDay[64];
-		GetEventDayName(EventDay);
+		MyJailbreak_GetEventDayName(EventDay);
 		
 		if (!StrEqual(EventDay, "none", false))
 		{
@@ -516,8 +516,8 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			SetCvar("sm_warden_enable", 1);
 			
 			g_iMPRoundTime.IntValue = g_iOldRoundTime;
-			SetEventDayName("none");
-			SetEventDayRunning(false);
+			MyJailbreak_SetEventDayName("none");
+			MyJailbreak_SetEventDayRunning(false);
 			CPrintToChatAll("%t %t", "torch_tag" , "torch_end");
 		}
 	}
@@ -653,8 +653,8 @@ void StartNextRound()
 	
 	char buffer[32];
 	Format(buffer, sizeof(buffer), "%T", "torch_name", LANG_SERVER);
-	SetEventDayName(buffer);
-	SetEventDayPlanned(true);
+	MyJailbreak_SetEventDayName(buffer);
+	MyJailbreak_SetEventDayPlanned(true);
 	
 	g_iOldRoundTime = g_iMPRoundTime.IntValue; //save original round time
 	g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time

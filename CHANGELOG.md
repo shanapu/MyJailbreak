@@ -1,22 +1,44 @@
 ### Change Log
   
-**[Beta 8.1]** - lmg cvars, 
+**[Beta 8.1.dev]** - lmg cvars, 
   
 *Added*
 *  Weapons: allow maschine-guns per cvar
     *  new cvar - sm_weapons_negev - 0 - disabled, 1 - enable negev in weapon menu
     *  new cvar - sm_weapons_m249 - 0 - disabled, 1 - enable m249 in weapon menu
-*  Ratio: Stamm support
-    *  new cvar - sm_ratio_stamm - 0 - disabled, how many stamm points a player need to join ct? (only if stamm is available)
+*  Ratio: Support for 3rd party plugins (moved CT Bans support to extra plugin)
+    *  new plugin - ratio_ctban.smx - Support plugin for databombs CT Bans plugin
+    *  new plugin - ratio_reputation.smx - Support plugin for oaaron99 Player Reputations plugin
+        *  new cvar - sm_ratio_reputation - 0 - disabled, how many reputation a player need to join ct? (only if reputation is available)
+    *  new plugin - ratio_stamm.smx - Support plugin for popoklopsis Stamm plugin
+        *  new cvar - sm_ratio_stamm - 0 - disabled, how many stamm points a player need to join ct? (only if stamm is available)
+    *  new plugin - ratio_teambans.smx - Support plugin for baras TeamBans plugin
+*  Zombie: KnockbackFix
+    *  new cvar - sm_zombie_knockback - Force of the knockback when shot at. Zombies only
+*  Request - Capitulation: Allow capitulated players to take up weapons per cvar & healthshot & c4 as standart
+    *  new cvar - sm_capitulation_weapons - 0 - disabled, 1 - enable Terror can not pick up weapons after capitulation
+*  Request - FreeDay: Menu to choose the personal freeday for this or next round. !givefreeday
+    *  new cvar - sm_capitulation_weapons - 0 - disabled, 1 - enable Terror can not pick up weapons after capitulation
+*  MyJailbreak: Disabled command !endround (& sm_myjb_cmds_endround) on default. This command was thought for testing/debug
+    *  new cvar - sm_myjb_allow_endround - 0 - disabled, 1 - enable !endround command for testing (disable against abusing) 
   
   
   
 *Fixed*
-*  Warden - Painter: fix bug when enabled for t and t dies paint still activ!
+*  Warden - Painter: fix bug when enabled for t and t dies paint still activ
 *  Eventdays with freeze: rar glitch player push out of map
 *  download.txt: removed .bz2 file extension for deputy
 *  Cowboy: Fix command sm_setcowboy
 *  Request: Fix chat messages or freekill
+*  Zeus: fix missing en translation
+*  minor errors & smaller fixes
+  
+  
+  
+  *Developer stuff*
+*  Natives: Changed all native names by adding MyJailbreak_* in front to avoid conflicts with 3rd party plugins
+*  Forwards: New Forwards to add ratio support (restrict from guards/CT) for 3rd party plugins
+    *  new forward - MyJailbreak_OnJoinGuardQueue - Called when a client trys to join the Guards(CT) or GuardQueue
   
   
   

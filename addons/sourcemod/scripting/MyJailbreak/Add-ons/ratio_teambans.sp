@@ -1,5 +1,5 @@
 /*
- * MyJailbreak - Ratio - Stamm Support.
+ * MyJailbreak - Ratio - TeamBans Support.
  * by: shanapu
  * https://github.com/shanapu/MyJailbreak/
  *
@@ -29,11 +29,10 @@
 #include <sdktools>
 #include <cstrike>
 #include <colors>
-#include <autoexecconfig>
 #include <mystocks>
 #include <myjailbreak>
 #include <clientprefs>
-#include <reputation>
+#include <teambans>
 
 
 //Compiler Options
@@ -41,15 +40,11 @@
 #pragma newdecls required
 
 
-//Console Variables
-ConVar gc_iMinReputation;
-
-
 //Info
 public Plugin myinfo = {
-	name = "MyJailbreak - Ratio - Reputation Support", 
+	name = "MyJailbreak - Ratio - TeamBans Support", 
 	author = "shanapu, Addicted, good_live", 
-	description = "Adds support for addicted Player Reputations plugin to MyJB ratio", 
+	description = "Adds support for Baras TeamBans plugin to MyJB ratio", 
 	version = MYJB_VERSION, 
 	url = MYJB_URL_LINK
 };
@@ -61,27 +56,16 @@ public void OnPluginStart()
 	//Translation
 	LoadTranslations("MyJailbreak.Ratio.phrases");
 	
-	
-	//AutoExecConfig
-	AutoExecConfig_SetFile("Ratio", "MyJailbreak");
-	AutoExecConfig_SetCreateFile(true);
-	
-	gc_iMinReputation = AutoExecConfig_CreateConVar("sm_ratio_reputation", "0", "0 - disabled, how many reputation a player need to join ct? (only if reputation is available)", _, true,  1.0);
-	
-	AutoExecConfig_ExecuteFile();
-	AutoExecConfig_CleanFile();
-	
-	
-	//Hooks
 	HookEvent("player_spawn", Event_OnPlayerSpawn, EventHookMode_Post);
 }
 
 
-public Action MyJB_OnClientJoinGuardQueue(int client)
+public Action MyJailbreak_OnJoinGuardQueue(int client)
 {
-	if (Reputation_GetRep(client) < gc_iMinReputation.IntValue)
+	if (TeamBans_IsClientBanned(client))
 	{
-		CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_reputation", gc_iMinReputation.IntValue);
+		CReplyToCommand(client, "%t %t", "ratio_tag" , "ratio_banned");
+		PrintCenterText(client, "%t", "ratio_banned_nc");
 		return Plugin_Handled;
 	}
 	return Plugin_Continue;
@@ -94,16 +78,18 @@ public Action Event_OnPlayerSpawn(Event event, const char[] name, bool bDontBroa
 	
 	if (GetClientTeam(client) != 3) 
 		return Plugin_Continue;
-		
-	if (!IsValidClient(client, false, false))
+	
+	if (!IsValidClient(client, true, false))
 		return Plugin_Continue;
-		
-	if (Reputation_GetRep(client) < gc_iMinReputation.IntValue)
+	
+	if (TeamBans_IsClientBanned(client))
 	{
-		CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_reputation", gc_iMinReputation.IntValue);
+		CReplyToCommand(client, "%t %t", "ratio_tag" , "ratio_banned");
+		PrintCenterText(client, "%t", "ratio_banned_nc");
 		CreateTimer(5.0, Timer_SlayPlayer, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 		return Plugin_Continue;
 	}
+	
 	return Plugin_Continue;
 }
 

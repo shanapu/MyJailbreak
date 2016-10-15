@@ -33,7 +33,7 @@
 #include <mystocks>
 #include <myjailbreak>
 #include <clientprefs>
-#include <stamm>
+#include <reputation>
 
 
 //Compiler Options
@@ -42,14 +42,14 @@
 
 
 //Console Variables
-ConVar gc_iMinStammPoints;
+ConVar gc_iMinReputation;
 
 
 //Info
 public Plugin myinfo = {
-	name = "MyJailbreak - Ratio - Stamm Support", 
+	name = "MyJailbreak - Ratio - Reputation Support", 
 	author = "shanapu, Addicted, good_live", 
-	description = "Adds support for popoklopsi stamm plugin to MyJB ratio", 
+	description = "Adds support for addicted Player Reputations plugin to MyJB ratio", 
 	version = MYJB_VERSION, 
 	url = MYJB_URL_LINK
 };
@@ -66,7 +66,7 @@ public void OnPluginStart()
 	AutoExecConfig_SetFile("Ratio", "MyJailbreak");
 	AutoExecConfig_SetCreateFile(true);
 	
-	gc_iMinStammPoints = AutoExecConfig_CreateConVar("sm_ratio_stamm", "0", "0 - disabled, how many stamm points a player need to join ct? (only if stamm is available)", _, true,  1.0);
+	gc_iMinReputation = AutoExecConfig_CreateConVar("sm_ratio_reputation", "0", "0 - disabled, how many reputation a player need to join ct? (only if reputation is available)", _, true,  1.0);
 	
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
@@ -77,11 +77,11 @@ public void OnPluginStart()
 }
 
 
-public Action MyJB_OnClientJoinGuardQueue(int client)
+public Action MyJailbreak_OnJoinGuardQueue(int client)
 {
-	if (STAMM_GetClientPoints(client) < gc_iMinStammPoints.IntValue)
+	if (Reputation_GetRep(client) < gc_iMinReputation.IntValue)
 	{
-		CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_stamm", gc_iMinStammPoints.IntValue);
+		CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_reputation", gc_iMinReputation.IntValue);
 		return Plugin_Handled;
 	}
 	return Plugin_Continue;
@@ -98,9 +98,9 @@ public Action Event_OnPlayerSpawn(Event event, const char[] name, bool bDontBroa
 	if (!IsValidClient(client, false, false))
 		return Plugin_Continue;
 		
-	if (STAMM_GetClientPoints(client) < gc_iMinStammPoints.IntValue)
+	if (Reputation_GetRep(client) < gc_iMinReputation.IntValue)
 	{
-		CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_stamm", gc_iMinStammPoints.IntValue);
+		CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_reputation", gc_iMinReputation.IntValue);
 		CreateTimer(5.0, Timer_SlayPlayer, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 		return Plugin_Continue;
 	}

@@ -225,7 +225,7 @@ public void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast
 		Timers[client] = CreateTimer(1.0, Timer_GetWeapons, client);
 	}
 	
-	if (gc_bKevlar.BoolValue && (GetClientTeam(client) == CS_TEAM_CT) && !IsEventDayRunning() && !IsEventDayPlanned())
+	if (gc_bKevlar.BoolValue && (GetClientTeam(client) == CS_TEAM_CT) && !MyJailbreak_IsEventDayRunning() && !MyJailbreak_IsEventDayPlanned())
 	{
 		int iHelmet = FindSendPropInfo("CCSPlayer", "m_bHasHelmet");
 		int iKevlar = FindSendPropInfo("CCSPlayer", "m_ArmorValue");

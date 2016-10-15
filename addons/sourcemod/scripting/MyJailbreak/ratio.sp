@@ -161,7 +161,7 @@ public void OnPluginStart()
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	g_hOnClientJoinGuards = CreateGlobalForward("MyJB_OnClientJoinGuardQueue", ET_Event, Param_Cell);
+	g_hOnClientJoinGuards = CreateGlobalForward("MyJailbreak_OnJoinGuardQueue", ET_Event, Param_Cell);
 	
 	return APLRes_Success;
 }

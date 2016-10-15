@@ -250,7 +250,7 @@ public Action Command_Setffa(int client, int args)
 		if (client == 0)
 		{
 			StartNextRound();
-			if (ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event FFA was started by groupvoting");
+			if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event FFA was started by groupvoting");
 		}
 		else if (warden_iswarden(client))
 		{
@@ -259,14 +259,14 @@ public Action Command_Setffa(int client, int args)
 				if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
 				{
 					char EventDay[64];
-					GetEventDayName(EventDay);
+					MyJailbreak_GetEventDayName(EventDay);
 					
 					if (StrEqual(EventDay, "none", false))
 					{
 						if (g_iCoolDown == 0)
 						{
 							StartNextRound();
-							if (ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event FFA was started by warden %L", client);
+							if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event FFA was started by warden %L", client);
 						}
 						else CReplyToCommand(client, "%t %t", "ffa_tag" , "ffa_wait", g_iCoolDown);
 					}
@@ -283,14 +283,14 @@ public Action Command_Setffa(int client, int args)
 					if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
 					{
 						char EventDay[64];
-						GetEventDayName(EventDay);
+						MyJailbreak_GetEventDayName(EventDay);
 						
 						if (StrEqual(EventDay, "none", false))
 						{
 							if ((g_iCoolDown == 0) || gc_bSetABypassCooldown.BoolValue)
 							{
 								StartNextRound();
-								if (ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event FFA was started by admin %L", client);
+								if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event FFA was started by admin %L", client);
 							}
 							else CReplyToCommand(client, "%t %t", "ffa_tag" , "ffa_wait", g_iCoolDown);
 						}
@@ -320,7 +320,7 @@ public Action Command_VoteFFA(int client, int args)
 			if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
 			{
 				char EventDay[64];
-				GetEventDayName(EventDay);
+				MyJailbreak_GetEventDayName(EventDay);
 				
 				if (StrEqual(EventDay, "none", false))
 				{
@@ -336,7 +336,7 @@ public Action Command_VoteFFA(int client, int args)
 							if (g_iVoteCount > playercount)
 							{
 								StartNextRound();
-								if (ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event FFA was started by voting");
+								if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event FFA was started by voting");
 							}
 							else CPrintToChatAll("%t %t", "ffa_tag" , "ffa_need", Missing, client);
 						}
@@ -372,9 +372,9 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		SetCvar("mp_teammates_are_enemies", 1);
 		SetCvar("mp_friendlyfire", 1);
 		SetCvar("sm_menu_enable", 0);
-		SetEventDayPlanned(false);
-		SetEventDayRunning(true);
-		FogOn();
+		MyJailbreak_SetEventDayPlanned(false);
+		MyJailbreak_SetEventDayRunning(true);
+		MyJailbreak_FogOn();
 		g_iRound++;
 		IsFFA = true;
 		StartFFA = false;
@@ -436,7 +436,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 	else
 	{
 		char EventDay[64];
-		GetEventDayName(EventDay);
+		MyJailbreak_GetEventDayName(EventDay);
 	
 		if (!StrEqual(EventDay, "none", false))
 		{
@@ -472,8 +472,8 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			SetCvar("mp_friendlyfire", 0);
 			SetCvar("sm_menu_enable", 1);
 			g_iMPRoundTime.IntValue = g_iOldRoundTime;
-			SetEventDayName("none");
-			SetEventDayRunning(false);
+			MyJailbreak_SetEventDayName("none");
+			MyJailbreak_SetEventDayRunning(false);
 			CPrintToChatAll("%t %t", "ffa_tag" , "ffa_end");
 		}
 	}
@@ -554,8 +554,8 @@ public int OnAvailableLR(int Announced)
 			SetCvar("mp_friendlyfire", 0);
 			SetCvar("sm_menu_enable", 1);
 			g_iMPRoundTime.IntValue = g_iOldRoundTime;
-			SetEventDayName("none");
-			SetEventDayRunning(false);
+			MyJailbreak_SetEventDayName("none");
+			MyJailbreak_SetEventDayRunning(false);
 			CPrintToChatAll("%t %t", "ffa_tag" , "ffa_end");
 		}
 	}
@@ -576,8 +576,8 @@ void StartNextRound()
 	
 	char buffer[32];
 	Format(buffer, sizeof(buffer), "%T", "ffa_name", LANG_SERVER);
-	SetEventDayName(buffer);
-	SetEventDayPlanned(true);
+	MyJailbreak_SetEventDayName(buffer);
+	MyJailbreak_SetEventDayPlanned(true);
 	
 	g_iOldRoundTime = g_iMPRoundTime.IntValue; //save original round time
 	g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
@@ -658,7 +658,7 @@ public Action Timer_StartEvent(Handle timer)
 	}
 	CPrintToChatAll("%t %t", "ffa_tag" , "ffa_start");
 	TruceTimer = null;
-	FogOff();
+	MyJailbreak_FogOff();
 	
 	return Plugin_Stop;
 }
@@ -667,6 +667,6 @@ public Action Timer_StartEvent(Handle timer)
 //Beacon Timer
 public Action Timer_BeaconOn(Handle timer)
 {
-	LoopValidClients(i, true, false) BeaconOn(i, 2.0);
+	LoopValidClients(i, true, false) MyJailbreak_BeaconOn(i, 2.0);
 	BeaconTimer = null;
 }

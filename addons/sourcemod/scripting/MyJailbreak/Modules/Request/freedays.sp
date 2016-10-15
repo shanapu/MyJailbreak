@@ -120,7 +120,7 @@ public Action Command_FreeDay(int client, int args)
 public void Freedays_Event_RoundStart_Post(Event event, char [] name, bool dontBroadcast)
 {
 	char EventDay[64];
-	GetEventDayName(EventDay);
+	MyJailbreak_GetEventDayName(EventDay);
 	
 	LoopClients(client)
 	{

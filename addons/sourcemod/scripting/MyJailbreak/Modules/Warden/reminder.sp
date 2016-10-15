@@ -107,7 +107,7 @@ public void Reminder_OnMapEnd()
 
 public Action Timer_RemindTimer(Handle timer)
 {
-	if (g_iRoundTime >= 1 && !IsLastGuardRule())
+	if (g_iRoundTime >= 1 && !MyJailbreak_IsLastGuardRule())
 	{
 		g_iRoundTime--;
 		char timeinfo[64];

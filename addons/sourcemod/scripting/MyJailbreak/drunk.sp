@@ -261,21 +261,21 @@ public Action Command_SetDrunk(int client, int args)
 		if (client == 0)
 		{
 			StartNextRound();
-			if (ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Drunk was started by groupvoting");
+			if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Drunk was started by groupvoting");
 		}
 		else if (warden_iswarden(client)) //is player warden?
 		{
 			if (gc_bSetW.BoolValue) //is warden allowed to set?
 			{
 				char EventDay[64];
-				GetEventDayName(EventDay);
+				MyJailbreak_GetEventDayName(EventDay);
 				
 				if (StrEqual(EventDay, "none", false)) //is an other event running or set?
 				{
 					if (g_iCoolDown == 0) //is event cooled down?
 					{
 						StartNextRound(); //prepare Event for next round
-						if (ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event drunken was started by warden %L", client);
+						if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event drunken was started by warden %L", client);
 					}
 					else CReplyToCommand(client, "%t %t", "drunk_tag" , "drunk_wait", g_iCoolDown);
 				}
@@ -288,14 +288,14 @@ public Action Command_SetDrunk(int client, int args)
 			if (gc_bSetA.BoolValue) //is admin allowed to set?
 			{
 				char EventDay[64];
-				GetEventDayName(EventDay);
+				MyJailbreak_GetEventDayName(EventDay);
 				
 				if (StrEqual(EventDay, "none", false)) //is an other event running or set?
 				{
 					if ((g_iCoolDown == 0) || gc_bSetABypassCooldown.BoolValue) //is event cooled down?
 					{
 						StartNextRound(); //prepare Event for next round;
-						if (ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event drunken was started by admin %L", client);
+						if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event drunken was started by admin %L", client);
 					}
 					else CReplyToCommand(client, "%t %t", "drunk_tag" , "drunk_wait", g_iCoolDown);
 				}
@@ -321,7 +321,7 @@ public Action Command_VoteDrunk(int client, int args)
 		if (gc_bVote.BoolValue) //is voting enabled?
 		{	
 			char EventDay[64];
-			GetEventDayName(EventDay);
+			MyJailbreak_GetEventDayName(EventDay);
 			
 			if (StrEqual(EventDay, "none", false)) //is an other event running or set?
 			{
@@ -337,7 +337,7 @@ public Action Command_VoteDrunk(int client, int args)
 						if (g_iVoteCount > playercount) 
 						{
 							StartNextRound(); //prepare Event for next round
-							if (ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event drunken was started by voting");
+							if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event drunken was started by voting");
 						}
 						else CPrintToChatAll("%t %t", "drunk_tag" , "drunk_need", Missing, client);
 					}
@@ -370,8 +370,8 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		SetCvar("sm_menu_enable", 0);
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("mp_teammates_are_enemies", 1);
-		SetEventDayPlanned(false);
-		SetEventDayRunning(true);
+		MyJailbreak_SetEventDayPlanned(false);
+		MyJailbreak_SetEventDayRunning(true);
 		IsDrunk = true;
 		
 		g_iRound++; //Add Round number
@@ -455,7 +455,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		//If Event isnt running - subtract cooldown round
 		
 		char EventDay[64];
-		GetEventDayName(EventDay);
+		MyJailbreak_GetEventDayName(EventDay);
 		
 		if (!StrEqual(EventDay, "none", false))
 		{
@@ -502,8 +502,8 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			SetCvar("sm_warden_enable", 1);
 			
 			g_iMPRoundTime.IntValue = g_iOldRoundTime; //return to original round time
-			SetEventDayName("none"); //tell myjailbreak event is ended
-			SetEventDayRunning(false);
+			MyJailbreak_SetEventDayName("none"); //tell myjailbreak event is ended
+			MyJailbreak_SetEventDayRunning(false);
 			
 			CPrintToChatAll("%t %t", "drunk_tag" , "drunk_end");
 		}
@@ -597,8 +597,8 @@ public int OnAvailableLR(int Announced)
 			SetCvar("sm_warden_enable", 1);
 			
 			g_iMPRoundTime.IntValue = g_iOldRoundTime; //return to original round time
-			SetEventDayName("none"); //tell myjailbreak event is ended
-			SetEventDayRunning(false);
+			MyJailbreak_SetEventDayName("none"); //tell myjailbreak event is ended
+			MyJailbreak_SetEventDayRunning(false);
 			
 			CPrintToChatAll("%t %t", "drunk_tag" , "drunk_end");
 		}
@@ -620,9 +620,9 @@ void StartNextRound()
 	
 	char buffer[32];
 	Format(buffer, sizeof(buffer), "%T", "drunk_name", LANG_SERVER);
-	SetEventDayName(buffer);
+	MyJailbreak_SetEventDayName(buffer);
 	
-	SetEventDayPlanned(true);
+	MyJailbreak_SetEventDayPlanned(true);
 	g_iOldRoundTime = g_iMPRoundTime.IntValue; //save original round time
 	g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
 	
@@ -772,7 +772,7 @@ public Action Timer_BeaconOn(Handle timer)
 	LoopValidClients(i, true, false)
 	{
 		float random = GetRandomFloat(0.5, 4.0);
-		BeaconOn(i, random);
+		MyJailbreak_BeaconOn(i, random);
 	}
 	BeaconTimer = null;
 }

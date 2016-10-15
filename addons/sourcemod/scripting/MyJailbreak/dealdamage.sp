@@ -269,21 +269,21 @@ public Action Command_SetDealDamage(int client, int args)
 		if (client == 0)
 		{
 			StartNextRound();
-			if (ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Deal Damage was started by groupvoting");
+			if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Deal Damage was started by groupvoting");
 		}
 		else if (warden_iswarden(client)) //is player warden?
 		{
 			if (gc_bSetW.BoolValue) //is warden allowed to set?
 			{
 				char EventDay[64];
-				GetEventDayName(EventDay);
+				MyJailbreak_GetEventDayName(EventDay);
 				
 				if (StrEqual(EventDay, "none", false)) //is an other event running or set?
 				{
 					if (g_iCoolDown == 0) //is event cooled down?
 					{
 						StartNextRound(); //prepare Event for next round
-						if (ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event DealDamage was started by warden %L", client);
+						if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event DealDamage was started by warden %L", client);
 					}
 					else CReplyToCommand(client, "%t %t", "dealdamage_tag" , "dealdamage_wait", g_iCoolDown);
 				}
@@ -296,14 +296,14 @@ public Action Command_SetDealDamage(int client, int args)
 			if (gc_bSetA.BoolValue) //is admin allowed to set?
 			{
 				char EventDay[64];
-				GetEventDayName(EventDay);
+				MyJailbreak_GetEventDayName(EventDay);
 				
 				if (StrEqual(EventDay, "none", false)) //is an other event running or set?
 				{
 					if ((g_iCoolDown == 0) || gc_bSetABypassCooldown.BoolValue) //is event cooled down?
 					{
 						StartNextRound(); //prepare Event for next round
-						if (ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event DealDamage was started by admin %L", client);
+						if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event DealDamage was started by admin %L", client);
 					}
 					else CReplyToCommand(client, "%t %t", "dealdamage_tag" , "dealdamage_wait", g_iCoolDown);
 				}
@@ -329,7 +329,7 @@ public Action Command_VoteDealDamage(int client, int args)
 		if (gc_bVote.BoolValue) //is voting enabled?
 		{	
 			char EventDay[64];
-			GetEventDayName(EventDay);
+			MyJailbreak_GetEventDayName(EventDay);
 			
 			if (StrEqual(EventDay, "none", false)) //is an other event running or set?
 			{
@@ -345,7 +345,7 @@ public Action Command_VoteDealDamage(int client, int args)
 						if (g_iVoteCount > playercount) 
 						{
 							StartNextRound(); //prepare Event for next round
-							if (ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event DealDamage was started by voting");
+							if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event DealDamage was started by voting");
 						}
 						else CPrintToChatAll("%t %t", "dealdamage_tag" , "dealdamage_need", Missing, client);
 					}
@@ -380,8 +380,8 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		SetCvar("sm_menu_enable", 0);
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("sm_hud_enable", 0);
-		SetEventDayPlanned(false);
-		SetEventDayRunning(true);
+		MyJailbreak_SetEventDayPlanned(false);
+		MyJailbreak_SetEventDayRunning(true);
 		BestT = 0;
 		BestCT = 0;
 		BestTdamage = 0;
@@ -465,7 +465,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		//If Event isnt running - subtract cooldown round
 		
 		char EventDay[64];
-		GetEventDayName(EventDay);
+		MyJailbreak_GetEventDayName(EventDay);
 		
 		if (!StrEqual(EventDay, "none", false))
 		{
@@ -516,8 +516,8 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			if (gc_bSpawnRandom.BoolValue)SetCvar("mp_randomspawn_los", 0);
 			
 			g_iMPRoundTime.IntValue = g_iOldRoundTime; //return to original round time
-			SetEventDayName("none"); //tell myjailbreak event is ended
-			SetEventDayRunning(false);
+			MyJailbreak_SetEventDayName("none"); //tell myjailbreak event is ended
+			MyJailbreak_SetEventDayRunning(false);
 			CPrintToChatAll("%t %t", "dealdamage_tag" , "dealdamage_end");
 			
 		}
@@ -606,8 +606,8 @@ void StartNextRound()
 	
 	char buffer[32];
 	Format(buffer, sizeof(buffer), "%T", "dealdamage_name", LANG_SERVER);
-	SetEventDayName(buffer);
-	SetEventDayPlanned(true);
+	MyJailbreak_SetEventDayName(buffer);
+	MyJailbreak_SetEventDayPlanned(true);
 	
 	g_iOldRoundTime = g_iMPRoundTime.IntValue; //save original round time
 	g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
@@ -759,7 +759,7 @@ public Action Timer_StartEvent(Handle timer)
 
 public Action Timer_BeaconOn(Handle timer)
 {
-	LoopValidClients(i, true, false) BeaconOn(i, 2.0);
+	LoopValidClients(i, true, false) MyJailbreak_BeaconOn(i, 2.0);
 	BeaconTimer = null;
 }
 
@@ -800,5 +800,5 @@ public Action Timer_EndTheRound(Handle timer)
 	
 	RoundTimer = null;
 	delete RoundTimer;
-	if (ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Damage Deal Result: BestCT: %N Dmg: %i BestT: %N Dmg: %i CT Damage: %i T Damage: %i Total Damage: %i", BestCT, BestCTdamage, BestT, BestTdamage, DamageCT, DamageT, TotalDamage);
+	if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Damage Deal Result: BestCT: %N Dmg: %i BestT: %N Dmg: %i CT Damage: %i T Damage: %i Total Damage: %i", BestCT, BestCTdamage, BestT, BestTdamage, DamageCT, DamageT, TotalDamage);
 }

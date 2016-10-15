@@ -364,7 +364,7 @@ public void Event_OnPlayerSpawn(Event event, const char[] name, bool dontBroadca
 public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
 	char EventDay[64];
-	GetEventDayName(EventDay);
+	MyJailbreak_GetEventDayName(EventDay);
 	if (!StrEqual(EventDay, "none", false))
 	{
 		g_iCoolDown = gc_iCooldownDay.IntValue + 1;
@@ -785,7 +785,7 @@ public Action Command_OpenMenu(int client, int args)
 					}
 					
 					char EventDay[64];
-					GetEventDayName(EventDay);
+					MyJailbreak_GetEventDayName(EventDay);
 					
 					if (StrEqual(EventDay, "none", false)) //is an other event running or set?
 					{
@@ -854,7 +854,7 @@ public Action Command_OpenMenu(int client, int args)
 					}
 					
 					char EventDay[64];
-					GetEventDayName(EventDay);
+					MyJailbreak_GetEventDayName(EventDay);
 					
 					if (StrEqual(EventDay, "none", false)) //is an other event running or set?
 					{
@@ -900,7 +900,7 @@ public Action Command_OpenMenu(int client, int args)
 				*/
 				
 				char EventDay[64];
-				GetEventDayName(EventDay);
+				MyJailbreak_GetEventDayName(EventDay);
 				
 				if (StrEqual(EventDay, "none", false)) //is an other event running or set?
 				{
@@ -1827,7 +1827,7 @@ public Action Command_VotingMenu(int client, int args)
 			if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
 			{
 				char EventDay[64];
-				GetEventDayName(EventDay);
+				MyJailbreak_GetEventDayName(EventDay);
 				
 				if (StrEqual(EventDay, "none", false))
 				{

@@ -319,12 +319,12 @@ public Action MuteClient(int client, int time, int muter)
 			if (time == 0)
 			{
 				CPrintToChatAll("%t %t", "warden_tag", "warden_muteend", muter, client);
-				if (ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Warden/Deputy %L muted player %L until round end", muter, client);
+				if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Warden/Deputy %L muted player %L until round end", muter, client);
 			}
 			else
 			{
 				CPrintToChatAll("%t %t", "warden_tag", "warden_mute", muter, client, time);
-				if (ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Warden/Deputy %L muted player %L for %i seconds", muter, client, time);
+				if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Warden/Deputy %L muted player %L for %i seconds", muter, client, time);
 			}
 		}
 	}

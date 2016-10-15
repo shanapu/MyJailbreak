@@ -292,6 +292,7 @@ sm_refuse_color_blue: What color to turn the refusing Terror into (rgB): x - blu
 sm_refuse_sound: Path to the soundfile which should be played for a refusing
 sm_capitulation_enable: 0 - disabled, 1 - Enable Capitulation. Default 1
 sm_capitulation_accept - 0 - disabled, 1 - the warden have to accept capitulation on menupopup Default 1
+sm_capitulation_damage", "1", "0 - disabled, 1 - enable Terror make no damage after capitulation
 sm_capitulation_timer: Time to decide to accept the capitulation
 sm_capitulation_rebel_timer: Time to give a rebel on not accepted capitulation his knife back
 sm_capitulation_color_red: What color to turn the capitulation Terror into (set R, G and B values to 255 to disable) (Rgb): x - red value
@@ -960,7 +961,7 @@ sm_ffa_cmds_set - Set your custom chat command for set Event(!ffa (no 'sm_'/'!')
 
 [U][B]Zombie[/B][/U]
 This plugin allows players to vote and warden to set next rounds to zombie escape.  
-On Round start Ts spawn in open cells with weapons & weaponmenu. CT are zombies with a zombie model, and with 8500 HP.  
+On Round start Ts spawn in open cells with weapons & weaponmenu. CT are zombies with a zombie model, and with increased HP per Human.  
 Zombies freezed for 35sec (default) so T can hide &/or climb. Zombies got wallhack and nightvision.  
 
 [b]Commands[/b]
@@ -1004,6 +1005,7 @@ sm_zombie_model: Path to the model for zombies. Default "models/player/custom_pl
 sm_zombie_cmds_vote - Set your custom chat command for Event voting(!zombie (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)) Default zd, zomb, z
 sm_zombie_cmds_set - Set your custom chat command for set Event(!setzombie (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)) Default sz, szd, szombie
 [/CODE]
+recomment for sm_zombie_glow "1", put sv_force_transmit_players "1" to your .cfg
 [/SPOILER]
 [IMG]http://shanapu.de/myjb/zombie-2.jpg[/IMG][IMG]http://shanapu.de/myjb/zombie-1.jpg[/IMG]
 
@@ -1627,9 +1629,9 @@ sm_freeday_cmds_set - Set your custom chat command for set Event(!setfreeday (no
 
 [*]CustomPlayerSkins [url]https://forums.alliedmods.net/showthread.php?t=240703[/url]
 
-[*][ANY] VoiceannounceEX (VoiceHook) [url]https://forums.alliedmods.net/showthread.php?p=2177167[url]
+[*][ANY] VoiceannounceEX (VoiceHook) [url]https://forums.alliedmods.net/showthread.php?p=2177167[/url]
 
-[*]DHooks (Dynamic Hooks - Dev Preview) [url]https://forums.alliedmods.net/showthread.php?t=180114[url]
+[*]DHooks (Dynamic Hooks - Dev Preview) [url]https://forums.alliedmods.net/showthread.php?t=180114[/url]
 
 [/LIST]
 [U]Include files needed for compile[/U][SPOILER]

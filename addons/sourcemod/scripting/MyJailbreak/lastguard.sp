@@ -200,9 +200,9 @@ public Action Command_VoteLastGuard(int client, int args)
 			if ((GetAliveTeamCount(CS_TEAM_CT) == 1) && (GetAliveTeamCount(CS_TEAM_T) > 1 ))
 			{
 				char EventDay[64];
-				GetEventDayName(EventDay);
+				MyJailbreak_GetEventDayName(EventDay);
 				
-				if (!IsEventDayRunning())
+				if (!MyJailbreak_IsEventDayRunning())
 				{
 					if (!IsLastGuard)
 					{
@@ -218,7 +218,7 @@ public Action Command_VoteLastGuard(int client, int args)
 								if (g_iVoteCount > playercount)
 								{
 									StartLastGuard();
-									if (ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Last Guard Rule was started by voting");
+									if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Last Guard Rule was started by voting");
 								}
 								else CPrintToChatAll("%t %t", "lastguard_tag" , "lastguard_need", Missing, client);
 							}
@@ -237,16 +237,16 @@ public Action Command_VoteLastGuard(int client, int args)
 			if ((GetAliveTeamCount(CS_TEAM_CT) == 1) && (GetAliveTeamCount(CS_TEAM_T) > 1 ))
 			{
 				char EventDay[64];
-				GetEventDayName(EventDay);
+				MyJailbreak_GetEventDayName(EventDay);
 				
-				if (!IsEventDayRunning())
+				if (!MyJailbreak_IsEventDayRunning())
 				{
 					if (!IsLastGuard)
 					{
 						if (!IsLR)
 						{
 							StartLastGuard();
-							if (ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Last Guard Rule was started by last CT %L", client);
+							if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Last Guard Rule was started by last CT %L", client);
 						}
 						else CReplyToCommand(client, "%t %t", "lastguard_tag" , "lastguard_lr");
 					}
@@ -298,7 +298,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 		if (winner == 2) PrintCenterTextAll("%t", "lastguard_twin_nc");
 		if (winner == 3) PrintCenterTextAll("%t", "lastguard_ctwin_nc");
 		
-		SetLastGuardRule(false);
+		MyJailbreak_SetLastGuardRule(false);
 		IsLastGuard = false;
 		SetCvar("sm_hosties_lr", 1);
 		SetCvar("sm_weapons_t", 0);
@@ -333,7 +333,7 @@ public Action StartLastGuard()
 		
 		SJD_OpenDoors();
 		
-		SetLastGuardRule(true);
+		MyJailbreak_SetLastGuardRule(true);
 		
 		if (gc_fBeaconTime.FloatValue > 0.0) BeaconTimer = CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
 		
@@ -422,10 +422,10 @@ public Action CheckStatus()
 {
 	if (gc_bPlugin.BoolValue && !IsLR && !IsLastGuard && gc_bAutomatic.BoolValue)
 	{
-		if ((GetAliveTeamCount(CS_TEAM_CT) == 1) && (GetAliveTeamCount(CS_TEAM_T) > 1)&& !IsEventDayRunning() && !IsLastGuard && !IsLR && MinCT)
+		if ((GetAliveTeamCount(CS_TEAM_CT) == 1) && (GetAliveTeamCount(CS_TEAM_T) > 1)&& !MyJailbreak_IsEventDayRunning() && !IsLastGuard && !IsLR && MinCT)
 		{
 			StartLastGuard();
-			if (ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Last Guard Rule was started automatic");
+			if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Last Guard Rule was started automatic");
 			MinCT = false;
 		}
 	}
@@ -483,7 +483,7 @@ public void OnMapEnd()
 	g_iVoteCount = 0;
 	g_sHasVoted[0] = '\0';
 	
-	SetLastGuardRule(false);
+	MyJailbreak_SetLastGuardRule(false);
 }
 
 
@@ -563,6 +563,6 @@ public Action Timer_LastGuardBeginn(Handle timer)
 
 public Action Timer_BeaconOn(Handle timer)
 {
-	LoopValidClients(i, true, false) BeaconOn(i, 2.0);
+	LoopValidClients(i, true, false) MyJailbreak_BeaconOn(i, 2.0);
 	BeaconTimer = null;
 }

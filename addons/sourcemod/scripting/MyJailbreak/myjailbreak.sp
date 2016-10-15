@@ -196,7 +196,7 @@ public void OnMapEnd()
 	EventDayPlanned = false;
 	EventDayRunning = false;
 	LastGuardRuleActive = false;
-	SetEventDayName("none");
+	MyJailbreak_SetEventDayName("none");
 	
 	Beacon_OnMapEnd();
 }
@@ -210,19 +210,19 @@ public void OnMapEnd()
 //Register Natives
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	CreateNative("SetEventDayName", Native_SetEventDayName);
-	CreateNative("GetEventDayName", Native_GetEventDayName);
-	CreateNative("IsEventDayRunning", Native_IsEventDayRunning);
-	CreateNative("SetEventDayRunning", Native_SetEventDayNameRunning);
-	CreateNative("SetEventDayPlanned", Native_SetEventDayPlanned);
-	CreateNative("IsEventDayPlanned", Native_IsEventDayPlanned);
-	CreateNative("IsLastGuardRule", Native_IsLastGuardRule);
-	CreateNative("SetLastGuardRule", Native_SetLastGuardRule);
-	CreateNative("ActiveLogging", Native_GetActiveLogging);
-	CreateNative("FogOn", Native_FogOn);
-	CreateNative("FogOff", Native_FogOff);
-	CreateNative("BeaconOn", Native_BeaconOn);
-	CreateNative("BeaconOff", Native_BeaconOff);
+	CreateNative("MyJailbreak_SetEventDayName", Native_SetEventDayName);
+	CreateNative("MyJailbreak_GetEventDayName", Native_GetEventDayName);
+	CreateNative("MyJailbreak_IsEventDayRunning", Native_IsEventDayRunning);
+	CreateNative("MyJailbreak_SetEventDayRunning", Native_SetEventDayNameRunning);
+	CreateNative("MyJailbreak_SetEventDayPlanned", Native_SetEventDayPlanned);
+	CreateNative("MyJailbreak_IsEventDayPlanned", Native_IsEventDayPlanned);
+	CreateNative("MyJailbreak_IsLastGuardRule", Native_IsLastGuardRule);
+	CreateNative("MyJailbreak_SetLastGuardRule", Native_SetLastGuardRule);
+	CreateNative("MyJailbreak_ActiveLogging", Native_GetActiveLogging);
+	CreateNative("MyJailbreak_FogOn", Native_FogOn);
+	CreateNative("MyJailbreak_FogOff", Native_FogOff);
+	CreateNative("MyJailbreak_BeaconOn", Native_BeaconOn);
+	CreateNative("MyJailbreak_BeaconOff", Native_BeaconOff);
 	
 	
 	if (GetEngineVersion() != Engine_CSGO)
