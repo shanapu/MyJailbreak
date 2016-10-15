@@ -73,10 +73,10 @@ public __pl_myjailbreak_SetNTVOptional()
 ******************************************************************************/
 
 /*********************************************************
- * Called when a client trys to join the Guards / GuardQueue
+ * Called when a client trys to join the Guards(CT) or GuardQueue
  *
  * @param status		Client ID
- * @return                      Return Plugin_Handled to block the client.
+ * @return 				Return Plugin_Handled to block & Plugin_Continue to pass the client.
  *********************************************************/
 forward Action MyJailbreak_OnJoinGuardQueue(int client);
 

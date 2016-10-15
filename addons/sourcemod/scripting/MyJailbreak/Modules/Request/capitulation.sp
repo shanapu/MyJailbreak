@@ -121,7 +121,7 @@ public Action Command_Capitulation(int client, int args)
 	{
 		if (gc_bCapitulation.BoolValue)
 		{
-			if (GetClientTeam(client) == CS_TEAM_T && (IsPlayerAlive(client)))
+			if (GetClientTeam(client) == CS_TEAM_T && IsPlayerAlive(client))
 			{
 				if (!g_bCapitulated[client] && !g_bHasCapitulated[client])
 				{
@@ -347,7 +347,7 @@ public int Handler_CapitulationMenu(Menu menu, MenuAction action, int client, in
 
 public Action Timer_GiveKnifeCapitulated(Handle timer, any client)
 {
-	if (IsClientConnected(client))
+	if (IsValidClient(client,true,false))
 	{
 		GivePlayerItem(client, "weapon_knife");
 		CPrintToChat(client, "%t %t", "request_tag", "request_knifeback");
@@ -359,7 +359,7 @@ public Action Timer_GiveKnifeCapitulated(Handle timer, any client)
 
 public Action Timer_RebelNoAction(Handle timer, any client)
 {
-	if (IsClientConnected(client))
+	if (IsValidClient(client,true,false))
 	{
 		SetEntityRenderColor(client, 255, 0, 0, 255);
 	}

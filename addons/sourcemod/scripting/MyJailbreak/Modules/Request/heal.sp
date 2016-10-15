@@ -276,7 +276,7 @@ public int HealMenuHandler(Menu menu, MenuAction action, int client, int Positio
 
 public Action Timer_ResetColorHeal(Handle timer, any client)
 {
-	if (IsClientConnected(client))
+	if (IsValidClient(client,true,false))
 	{
 		SetEntityRenderColor(client, 255, 255, 255, 255);
 	}

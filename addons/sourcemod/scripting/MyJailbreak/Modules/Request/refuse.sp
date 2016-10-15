@@ -295,7 +295,7 @@ public Action RefuseMenu(int warden)
 
 public Action Timer_ResetColorRefuse(Handle timer, any client)
 {
-	if (IsClientConnected(client))
+	if (IsValidClient(client,true,false))
 	{
 		SetEntityRenderColor(client, 255, 255, 255, 255);
 	}
