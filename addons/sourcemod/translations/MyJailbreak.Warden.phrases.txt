@@ -1185,8 +1185,8 @@
 
 	"warden_gotpaperclip"
 	{
-		"ru"		"Вы получили скрепку"
-		"en"		"You secretly have a paperclip in your hand."
+		"ru"		"Вы получили скрепку. Hold +use (E)"
+		"en"		"You secretly have a paperclip in your hand. Hold +use (E)"
 	}
 
 	"warden_brokepaperclip"

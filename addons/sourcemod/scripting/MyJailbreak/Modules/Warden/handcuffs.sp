@@ -81,6 +81,10 @@ char g_sSoundUnLockCuffsPath[256];
 char g_sEquipWeapon[MAXPLAYERS+1][32];
 
 
+//Handles
+Handle BreakTimer[MAXPLAYERS+1];
+
+
 //Info
 public void HandCuffs_OnPluginStart()
 {
@@ -233,7 +237,7 @@ public void HandCuffs_Event_RoundEnd(Event event, const char[] name, bool dontBr
 
 public Action HandCuffs_OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
 {
-	if ((buttons & IN_ATTACK2))
+	if (buttons & IN_ATTACK2)
 	{
 		if (gc_bHandCuff.BoolValue && (StrEqual(g_sEquipWeapon[client], "taser")) && (IsClientWarden(client) || (IsClientDeputy(client) && gc_bHandCuffDeputy.BoolValue)) && gc_bPlugin.BoolValue)
 		{
@@ -263,8 +267,49 @@ public Action HandCuffs_OnPlayerRunCmd(int client, int &buttons, int &impulse, f
 			}
 		}
 	}
+	if (g_bCuffed[client])
+	{
+		for (int i = 0; i < MAX_BUTTONS; i++)
+		{
+			int button = (1 << i);
+			
+			if ((buttons & button))
+			{
+				if (!(g_iLastButtons[client] & button))
+				{
+					OnButtonPress2(client, button);
+				}
+			}
+			else if ((g_iLastButtons[client] & button))
+			{
+				OnButtonRelease2(client, button);
+			}
+		}
+		g_iLastButtons[client] = buttons;
+	}
 }
 
+public void OnButtonPress2(int client, int button)
+{
+	if (button == IN_USE)
+	{
+		float unlocktime = GetRandomFloat(gc_fUnLockTimeMin.FloatValue, gc_fUnLockTimeMax.FloatValue);
+		BreakTimer[client] = CreateTimer(unlocktime, Timer_BreakTheseCuffs);
+		if (gc_bSounds) EmitSoundToClientAny(client, g_sSoundUnLockCuffsPath);
+		CPrintToChat(client, "debug: start uncuff");
+	}
+}
+
+
+public void OnButtonRelease2(int client, int button)
+{
+	if (button == IN_USE)
+	{
+		BreakTimer[client] = null;
+		if (gc_bSounds) StopSoundAny(client, SNDCHAN_AUTO, g_sSoundUnLockCuffsPath);
+		CPrintToChat(client, "debug: stop uncuff");
+	}
+}
 
 public Action HandCuffs_OnTakedamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &weapon, float damageForce[3], float damagePosition[3], int damagecustom)
 {
@@ -344,6 +389,7 @@ public void HandCuffs_OnMapStart()
 public void HandCuffs_OnClientDisconnect(int client)
 {
 	if (g_bCuffed[client]) g_iCuffed--;
+	g_LastButtons[client] = 0;
 }
 
 
@@ -392,7 +438,7 @@ public Action CuffsEm(int client, int attacker)
 		CPrintToChat(attacker, "%t %t", "warden_tag" , "warden_cuffsgot", g_iPlayerHandCuffs[attacker]);
 		if (CheckVipFlag(client, g_sAdminFlagCuffs))
 		{
-			CreateTimer (2.5, HasPaperClip, client);
+			CreateTimer (2.5, Timer_HasPaperClip, client);
 		}
 	}
 	
@@ -418,24 +464,21 @@ public Action FreeEm(int client, int attacker)
 ******************************************************************************/
 
 
-public Action HasPaperClip(Handle timer, int client)
+public Action Timer_HasPaperClip(Handle timer, int client)
 {
 	if (g_bCuffed[client])
 	{
 		int paperclip = GetRandomInt(1, gc_iPaperClipGetChance.IntValue);
-		float unlocktime = GetRandomFloat(gc_fUnLockTimeMin.FloatValue, gc_fUnLockTimeMax.FloatValue);
 		if (paperclip == 1)
 		{
 			CPrintToChat(client, "%t", "warden_gotpaperclip");
 			PrintCenterText(client, "%t", "warden_gotpaperclip");
-			CreateTimer (unlocktime, BreakTheseCuffs, client);
-			if (gc_bSounds)EmitSoundToClientAny(client, g_sSoundUnLockCuffsPath);
 		}
 	}
 }
 
 
-public Action BreakTheseCuffs(Handle timer, int client)
+public Action Timer_BreakTheseCuffs(Handle timer, int client)
 {
 	if (IsValidClient(client, false, false) && g_bCuffed[client])
 	{
@@ -458,6 +501,7 @@ public Action BreakTheseCuffs(Handle timer, int client)
 			PrintCenterText(client, "%t", "warden_brokepaperclip");
 		}
 	}
+	BreakTimer[client] = null;
 }
 
 

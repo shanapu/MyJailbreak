@@ -48,6 +48,10 @@
 #include <mystocks>
 
 
+//Defines
+#define MAX_BUTTONS 25
+
+
 //Console Variables
 ConVar gc_bPlugin;
 ConVar gc_bVote;
@@ -780,11 +784,11 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 {
 	if ((IsClientWarden(client) || IsClientDeputy(client)) && gc_bPlugin.BoolValue)
 	{
-		HandCuffs_OnPlayerRunCmd(client, buttons, impulse, vel, angles, weapon);
 		Marker_OnPlayerRunCmd(client, buttons, impulse, vel, angles, weapon);
 		Laser_OnPlayerRunCmd(client, buttons, impulse, vel, angles, weapon);
 	}
 	Painter_OnPlayerRunCmd(client, buttons, impulse, vel, angles, weapon);
+	HandCuffs_OnPlayerRunCmd(client, buttons, impulse, vel, angles, weapon);
 	
 	return Plugin_Continue;
 }

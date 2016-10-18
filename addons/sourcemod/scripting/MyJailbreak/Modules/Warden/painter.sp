@@ -40,10 +40,6 @@
 #pragma newdecls required
 
 
-//Defines
-#define MAX_BUTTONS 25
-
-
 //Console Variables
 ConVar gc_bPainter;
 ConVar gc_bPainterDeputy;
@@ -325,7 +321,7 @@ public Action TogglePainterT(int client, int args)
 }
 
 
-stock void OnButtonPress(int client, int button)
+public void OnButtonPress(int client, int button)
 {
 	if (button == IN_USE)
 	{
@@ -335,7 +331,7 @@ stock void OnButtonPress(int client, int button)
 }
 
 
-stock void OnButtonRelease(int client, int button)
+public void OnButtonRelease(int client, int button)
 {
 	if (button == IN_USE)
 	{
