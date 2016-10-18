@@ -21,7 +21,11 @@ spcomp MyJailbreak/torch.sp -o../plugins/MyJailbreak/torch.smx
 spcomp MyJailbreak/zombie.sp -o../plugins/MyJailbreak/zombie.smx 
 spcomp MyJailbreak/request.sp -o../plugins/MyJailbreak/request.smx 
 spcomp MyJailbreak/dealdamage.sp -o../plugins/MyJailbreak/dealdamage.smx 
-spcomp MyJailbreak/ratio.sp -o../plugins/MyJailbreak/ratio.smx 
 spcomp MyJailbreak/hud.sp -o../plugins/MyJailbreak/hud.smx 
+spcomp MyJailbreak/ratio.sp -o../plugins/MyJailbreak/ratio.smx 
+spcomp MyJailbreak/Add-ons/ratio_ctban.sp -o../plugins/MyJailbreak/disabled/ratio_ctban.smx 
+spcomp MyJailbreak/Add-ons/ratio_stamm.sp -o../plugins/MyJailbreak/disabled/ratio_stamm.smx  
+spcomp MyJailbreak/Add-ons/ratio_teambans.sp -o../plugins/MyJailbreak/disabled/ratio_teambans.smx  
+spcomp MyJailbreak/Add-ons/ratio_reputation.sp -o../plugins/MyJailbreak/disabled/ratio_reputation.smx  
 
 pause

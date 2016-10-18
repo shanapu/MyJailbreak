@@ -31,11 +31,14 @@
 #include <cstrike>
 #include <colors>
 #include <autoexecconfig>
-#include <hosties>
-#include <lastrequest>
 #include <warden>
 #include <mystocks>
+
+#undef REQUIRE_PLUGIN
 #include <myjailbreak>
+#include <hosties>
+#include <lastrequest>
+#define REQUIRE_PLUGIN
 
 
 //Compiler Options
@@ -190,14 +193,19 @@ public int Handler_KillMenu(Menu menu, MenuAction action, int client, int Positi
 		int choice = StringToInt(Item);
 		if (choice == 1)
 		{
-			if (GetAlivePlayersCount(CS_TEAM_T) > 1)
+			int playercount;
+			if (gp_bHosties && gp_bLastRequest) playercount = GetAlivePlayersCountNonRebel(CS_TEAM_T);
+			else playercount = GetAlivePlayersCount(CS_TEAM_T);
+			
+			if (playercount > 1)
 			{
 				int i = GetRandomPlayer(CS_TEAM_T);
+				if (gp_bHosties && gp_bLastRequest) if (IsClientRebel(i)) i = GetRandomPlayerNonRebel(CS_TEAM_T);
 				if (i > 0)
 				{
 					CreateTimer( 1.0, Timer_KillPlayer, i);
 					CPrintToChatAll("%t %t", "warden_tag", "warden_israndom", i); 
-					if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Warden %L killed random player %L", client, i);
+					if(gp_bMyJailBreak) if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Warden %L killed random player %L", client, i);
 				}
 			}
 			else CPrintToChatAll("%t %t", "warden_tag", "warden_minrandom"); 

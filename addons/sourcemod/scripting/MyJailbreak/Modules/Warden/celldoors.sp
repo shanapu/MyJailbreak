@@ -31,10 +31,12 @@
 #include <cstrike>
 #include <colors>
 #include <autoexecconfig>
-#include <smartjaildoors>
 #include <warden>
 #include <mystocks>
-#include <myjailbreak>
+
+#undef REQUIRE_PLUGIN
+#include <smartjaildoors>
+#define REQUIRE_PLUGIN
 
 
 //Compiler Options
@@ -94,7 +96,7 @@ public Action Command_OpenDoors(int client, int args)
 		{
 			if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bOpenDeputy.BoolValue))
 			{
-				if (SJD_IsCurrentMapConfigured())
+				if (gp_bSmartJailDoors) if (SJD_IsCurrentMapConfigured())
 				{
 					CPrintToChatAll("%t %t", "warden_tag" , "warden_dooropen"); 
 					SJD_OpenDoors();
@@ -119,7 +121,7 @@ public Action Command_CloseDoors(int client, int args)
 		{
 			if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bOpenDeputy.BoolValue))
 			{
-				if (SJD_IsCurrentMapConfigured()) 
+				if (gp_bSmartJailDoors) if (SJD_IsCurrentMapConfigured()) 
 				{
 					CPrintToChatAll("%t %t", "warden_tag" , "warden_doorclose"); 
 					SJD_CloseDoors();
@@ -147,7 +149,7 @@ public void CellDoors_Event_RoundStart(Event event, const char[] name, bool dont
 	
 	if (gc_bPlugin.BoolValue)
 	{
-		if (SJD_IsCurrentMapConfigured())
+		if (gp_bSmartJailDoors) if (SJD_IsCurrentMapConfigured())
 		{
 			g_iOpenTimer = gc_hOpenTimer.IntValue;
 			OpenCounterTime = CreateTimer(1.0, Timer_OpenCounter, _, TIMER_REPEAT);

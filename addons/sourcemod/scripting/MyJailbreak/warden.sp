@@ -33,11 +33,19 @@
 #include <smlib>
 #include <colors>
 #include <autoexecconfig>
+#include <warden>
+
+//Optional Plugins
+#undef REQUIRE_PLUGIN
+#include <myjailbreak>
 #include <hosties>
 #include <lastrequest>
-#include <warden>
+#include <smartjaildoors>
+#include <voiceannounce_ex>
+#include <chat-processor>
+#define REQUIRE_PLUGIN
+
 #include <mystocks>
-#include <myjailbreak>
 
 
 //Console Variables
@@ -68,6 +76,10 @@ ConVar g_bMenuClose;
 //Booleans
 bool IsLR = false;
 bool gp_bMyJailBreak = false;
+bool gp_bHosties = false;
+bool gp_bLastRequest = false;
+bool gp_bSmartJailDoors = false;
+bool gp_bChatProcessor = false;
 
 
 //Integers
@@ -114,6 +126,7 @@ char g_sMyJBLogFile[PLATFORM_MAX_PATH];
 
 
 //Modules
+#include "MyJailbreak/Modules/Warden/celldoors.sp"
 #include "MyJailbreak/Modules/Warden/deputy.sp"
 #include "MyJailbreak/Modules/Warden/mute.sp"
 #include "MyJailbreak/Modules/Warden/bulletsparks.sp"
@@ -121,7 +134,6 @@ char g_sMyJBLogFile[PLATFORM_MAX_PATH];
 #include "MyJailbreak/Modules/Warden/math.sp"
 #include "MyJailbreak/Modules/Warden/disarm.sp"
 #include "MyJailbreak/Modules/Warden/noblock.sp"
-#include "MyJailbreak/Modules/Warden/celldoors.sp"
 #include "MyJailbreak/Modules/Warden/extendtime.sp"
 #include "MyJailbreak/Modules/Warden/friendlyfire.sp"
 #include "MyJailbreak/Modules/Warden/reminder.sp"
@@ -371,6 +383,10 @@ public void OnAllPluginsLoaded()
 	g_bMenuClose = FindConVar("sm_menu_close");
 	
 	gp_bMyJailBreak = LibraryExists("myjailbreak");
+	gp_bHosties = LibraryExists("hosties");
+	gp_bLastRequest = LibraryExists("lastrequest");
+	gp_bSmartJailDoors = LibraryExists("smartjaildoors");
+	gp_bChatProcessor = LibraryExists("chat-processor");
 }
 
 
@@ -378,6 +394,14 @@ public void OnLibraryRemoved(const char[] name)
 {
 	if (StrEqual(name, "myjailbreak"))
 		gp_bMyJailBreak = false;
+	if (StrEqual(name, "hosties"))
+		gp_bHosties = false;
+	if (StrEqual(name, "lastrequest"))
+		gp_bLastRequest = false;
+	if (StrEqual(name, "smartjaildoors"))
+		gp_bSmartJailDoors = false;
+	if (StrEqual(name, "chat-processor"))
+		gp_bChatProcessor = false;
 }
 
 
@@ -385,6 +409,14 @@ public void OnLibraryAdded(const char[] name)
 {
 	if (StrEqual(name, "myjailbreak"))
 		gp_bMyJailBreak = true;
+	if (StrEqual(name, "hosties"))
+		gp_bHosties = true;
+	if (StrEqual(name, "lastrequest"))
+		gp_bLastRequest = true;
+	if (StrEqual(name, "smartjaildoors"))
+		gp_bSmartJailDoors = true;
+	if (StrEqual(name, "chat-processor"))
+		gp_bChatProcessor = true;
 }
 
 

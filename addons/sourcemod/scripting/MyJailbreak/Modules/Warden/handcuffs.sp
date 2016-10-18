@@ -31,11 +31,13 @@
 #include <cstrike>
 #include <colors>
 #include <autoexecconfig>
-#include <hosties>
-#include <lastrequest>
 #include <warden>
 #include <mystocks>
-#include <myjailbreak>
+
+#undef REQUIRE_PLUGIN
+#include <hosties>
+#include <lastrequest>
+#define REQUIRE_PLUGIN
 
 
 //Compiler Options

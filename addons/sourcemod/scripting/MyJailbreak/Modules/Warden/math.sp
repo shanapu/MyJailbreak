@@ -31,10 +31,12 @@
 #include <cstrike>
 #include <colors>
 #include <autoexecconfig>
-#include <chat-processor>
 #include <warden>
 #include <mystocks>
-#include <myjailbreak>
+
+#undef REQUIRE_PLUGIN
+#include <chat-processor>
+#define REQUIRE_PLUGIN
 
 
 //Compiler Options
@@ -152,9 +154,26 @@ public Action Command_MathQuestion(int client, int args)
 				{
 					PrintCenterTextAll("%t", "warden_startmathquiz_nc");
 				}
-						
+				
 				g_bIsMathQuiz = true;
+				return Plugin_Handled;
 			}
+		}
+		if (!gp_bChatProcessor && g_bIsMathQuiz)
+		{
+			if (args != 1) // Not enough parameters
+			{
+				ReplyToCommand(client, "%t Use: sm_math <number>","warden_tag");
+				return Plugin_Handled;
+			}
+			
+			if (!g_bCanAnswer) return Plugin_Handled;
+			
+			char strAnswer[10]; 
+			GetCmdArg(1, strAnswer, sizeof(strAnswer));
+			
+			if (ProcessSolution(client, StringToInt(strAnswer)))
+			SendEndMathQuestion(client);
 		}
 		else CReplyToCommand(client, "%t %t", "warden_tag" , "warden_notwarden");
 	}
@@ -284,53 +303,47 @@ public Action Timer_CreateMathQuestion( Handle timer, any client )
 {
 	if (gc_bMath.BoolValue)
 	{
-		if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bMathDeputy.BoolValue))
-		{
-			int NumOne = GetRandomInt(g_iMathMin, g_iMathMax);
-			int NumTwo = GetRandomInt(g_iMathMin, g_iMathMax);
-			
-			if (gc_bOp.BoolValue) 
-			{
-				Format(g_sOp, sizeof(g_sOp), g_sOperators[GetRandomInt(0, 3)]);
-			}
-			else Format(g_sOp, sizeof(g_sOp), g_sOperators[GetRandomInt(0, 1)]);
-			
-			if (StrEqual(g_sOp, PLUS))
-			{
-				g_iMathResult = NumOne + NumTwo;
-			}
-			else if (StrEqual(g_sOp, MINUS))
-			{
-				g_iMathResult = NumOne - NumTwo;
-			}
-			else if (StrEqual(g_sOp, DIVISOR))
-			{
-				do
-				{
-					NumOne = GetRandomInt(g_iMathMin, g_iMathMax);
-					NumTwo = GetRandomInt(g_iMathMin, g_iMathMax);
-				}
-				while (NumOne % NumTwo != 0);
-				g_iMathResult = NumOne / NumTwo;
-			}
-			else if (StrEqual(g_sOp, MULTIPL))
-			{
-				g_iMathResult = NumOne * NumTwo;
-			}
-			
-			
-			CPrintToChatAll("%t %N: %i %s %i = ?? ", "warden_tag", client, NumOne, g_sOp, NumTwo);
+		int NumOne = GetRandomInt(g_iMathMin, g_iMathMax);
+		int NumTwo = GetRandomInt(g_iMathMin, g_iMathMax);
 		
-			if (gc_bBetterNotes.BoolValue)
-			{
-				PrintCenterTextAll("%i %s %i = ?? ", NumOne, g_sOp, NumTwo);
-			}
-			
-			g_bCanAnswer = true;
-			
-			g_hMathTimer = CreateTimer(gc_iTimeAnswer.FloatValue, Timer_EndMathQuestion);
+		if (gc_bOp.BoolValue) 
+		{
+			Format(g_sOp, sizeof(g_sOp), g_sOperators[GetRandomInt(0, 3)]);
 		}
-		else CReplyToCommand(client, "%t %t", "warden_tag" , "warden_notwarden");
+		else Format(g_sOp, sizeof(g_sOp), g_sOperators[GetRandomInt(0, 1)]);
+		
+		if (StrEqual(g_sOp, PLUS))
+		{
+			g_iMathResult = NumOne + NumTwo;
+		}
+		else if (StrEqual(g_sOp, MINUS))
+		{
+			g_iMathResult = NumOne - NumTwo;
+		}
+		else if (StrEqual(g_sOp, DIVISOR))
+		{
+			do
+			{
+				NumOne = GetRandomInt(g_iMathMin, g_iMathMax);
+				NumTwo = GetRandomInt(g_iMathMin, g_iMathMax);
+			}
+			while (NumOne % NumTwo != 0);
+			g_iMathResult = NumOne / NumTwo;
+		}
+		else if (StrEqual(g_sOp, MULTIPL))
+		{
+			g_iMathResult = NumOne * NumTwo;
+		}
+		
+		CPrintToChatAll("%t %N: %i %s %i = ?? ", "warden_tag", client, NumOne, g_sOp, NumTwo);
+		
+		if (gc_bBetterNotes.BoolValue) PrintCenterTextAll("%i %s %i = ?? ", NumOne, g_sOp, NumTwo);
+		
+		if (!gp_bChatProcessor) CPrintToChatAll("%t Use: sm_math <number>", "warden_tag");
+		
+		g_bCanAnswer = true;
+		
+		g_hMathTimer = CreateTimer(gc_iTimeAnswer.FloatValue, Timer_EndMathQuestion);
 	}
 }
 

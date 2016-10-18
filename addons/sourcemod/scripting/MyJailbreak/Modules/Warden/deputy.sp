@@ -31,10 +31,12 @@
 #include <cstrike>
 #include <colors>
 #include <autoexecconfig>
-#include <smartjaildoors>
 #include <warden>
 #include <mystocks>
+
+#undef REQUIRE_PLUGIN
 #include <myjailbreak>
+#define REQUIRE_PLUGIN
 
 
 //Compiler Options
@@ -248,7 +250,7 @@ public Action AdminCommand_RemoveDeputy(int client, int args)
 			CPrintToChatAll("%t %t", "warden_tag" , "warden_deputy_removed", client, g_iDeputy);  // if client is console !=
 			if (gc_bBetterNotes.BoolValue) PrintCenterTextAll("%t", "warden_deputy_removed_nc", client, g_iDeputy);
 			
-			if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Admin %L removed player %L as Deputy", client, g_iDeputy);
+			if(gp_bMyJailBreak) if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Admin %L removed player %L as Deputy", client, g_iDeputy);
 			
 			RemoveTheDeputy();
 		}
