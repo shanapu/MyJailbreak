@@ -69,6 +69,7 @@ bool g_bCuffed[MAXPLAYERS+1] = false;
 
 //Integers
 int g_iPlayerHandCuffs[MAXPLAYERS+1];
+int g_iPlayerPaperClips[MAXPLAYERS+1];
 int g_iCuffed = 0;
 
 
@@ -177,6 +178,7 @@ public void HandCuffs_Event_RoundStart(Event event, const char[] name, bool dont
 	{
 		g_iPlayerHandCuffs[i] = gc_iHandCuffsNumber.IntValue;
 		g_bCuffed[i] = false;
+		g_iPlayerPaperClips[i] = 0;
 	}
 }
 
@@ -294,9 +296,8 @@ public void OnButtonPress2(int client, int button)
 	if (button == IN_USE)
 	{
 		float unlocktime = GetRandomFloat(gc_fUnLockTimeMin.FloatValue, gc_fUnLockTimeMax.FloatValue);
-		BreakTimer[client] = CreateTimer(unlocktime, Timer_BreakTheseCuffs);
+		BreakTimer[client] = CreateTimer(unlocktime, Timer_BreakTheseCuffs, client);
 		if (gc_bSounds) EmitSoundToClientAny(client, g_sSoundUnLockCuffsPath);
-		CPrintToChat(client, "debug: start uncuff");
 	}
 }
 
@@ -305,9 +306,12 @@ public void OnButtonRelease2(int client, int button)
 {
 	if (button == IN_USE)
 	{
-		BreakTimer[client] = null;
+		if (BreakTimer[client] != null)
+		{
+			KillTimer(BreakTimer[client]);
+			BreakTimer[client] = null;
+		}
 		if (gc_bSounds) StopSoundAny(client, SNDCHAN_AUTO, g_sSoundUnLockCuffsPath);
-		CPrintToChat(client, "debug: stop uncuff");
 	}
 }
 
@@ -389,7 +393,7 @@ public void HandCuffs_OnMapStart()
 public void HandCuffs_OnClientDisconnect(int client)
 {
 	if (g_bCuffed[client]) g_iCuffed--;
-	g_LastButtons[client] = 0;
+	g_iLastButtons[client] = 0;
 }
 
 
@@ -410,6 +414,7 @@ public void HandCuffs_OnConfigsExecuted()
 
 public void HandCuffs_OnClientPutInServer(int client)
 {
+	g_iPlayerPaperClips[client] = 0;
 	SDKHook(client, SDKHook_OnTakeDamage, HandCuffs_OnTakedamage);
 }
 
@@ -471,7 +476,8 @@ public Action Timer_HasPaperClip(Handle timer, int client)
 		int paperclip = GetRandomInt(1, gc_iPaperClipGetChance.IntValue);
 		if (paperclip == 1)
 		{
-			CPrintToChat(client, "%t", "warden_gotpaperclip");
+			g_iPlayerPaperClips[client] += 1;
+			CPrintToChat(client, "%t %t", "warden_tag", "warden_gotpaperclip");
 			PrintCenterText(client, "%t", "warden_gotpaperclip");
 		}
 	}
@@ -485,7 +491,7 @@ public Action Timer_BreakTheseCuffs(Handle timer, int client)
 		int unlocked = GetRandomInt(1, gc_iPaperClipUnLockChance.IntValue);
 		if (unlocked == 1)
 		{
-			CPrintToChat(client, "%t", "warden_unlock");
+			CPrintToChat(client, "%t %t", "warden_tag", "warden_unlock");
 			PrintCenterText(client, "%t", "warden_unlock");
 			if (gc_bSounds)EmitSoundToAllAny(g_sSoundBreakCuffsPath);
 			SetEntityMoveType(client, MOVETYPE_WALK);
@@ -494,11 +500,13 @@ public Action Timer_BreakTheseCuffs(Handle timer, int client)
 			g_bCuffed[client] = false;
 			CreateTimer( 0.0, DeleteOverlay, client );
 			g_iCuffed--;
+			g_iPlayerPaperClips[client] -= 1;
 		}
 		else
 		{
-			CPrintToChat(client, "%t", "warden_brokepaperclip");
+			CPrintToChat(client, "%t %t", "warden_tag", "warden_brokepaperclip");
 			PrintCenterText(client, "%t", "warden_brokepaperclip");
+			g_iPlayerPaperClips[client] -= 1;
 		}
 	}
 	BreakTimer[client] = null;
