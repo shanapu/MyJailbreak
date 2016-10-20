@@ -57,6 +57,10 @@ ConVar gc_iRandomMode;
 ConVar gc_sCustomCommandRandomKill;
 
 
+//Extern Convars
+ConVar g_iTerrorForLR;
+
+
 //Integers
 int g_iKillKind;
 
@@ -112,6 +116,8 @@ public Action Command_KillMenu(int client, int args)
 
 public void RandomKill_OnConfigsExecuted()
 {
+	//FindConVar
+	g_iTerrorForLR = FindConVar("sm_hosties_lr_ts_max");
 	g_iKillKind = gc_iRandomMode.IntValue;
 	
 	
@@ -197,7 +203,7 @@ public int Handler_KillMenu(Menu menu, MenuAction action, int client, int Positi
 			if (gp_bHosties && gp_bLastRequest) playercount = GetAlivePlayersCountNonRebel(CS_TEAM_T);
 			else playercount = GetAlivePlayersCount(CS_TEAM_T);
 			
-			if (playercount > 1)
+			if (playercount > g_iTerrorForLR.IntValue)
 			{
 				int i = GetRandomPlayer(CS_TEAM_T);
 				if (gp_bHosties && gp_bLastRequest) if (IsClientRebel(i)) i = GetRandomPlayerNonRebel(CS_TEAM_T);
