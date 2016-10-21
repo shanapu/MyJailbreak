@@ -223,4 +223,11 @@
 		"da"		"Du har allerede stemt for {purple}Last Guard Rule!"
 	}
 
+	"lastguard_close"
+	{
+		"ru"		"Закрыть"
+		"de"		"Schliessen"
+		"en"		"Exit"
+	}
+
 }
