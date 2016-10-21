@@ -31,9 +31,12 @@
 #include <colors>
 #include <autoexecconfig>
 #include <mystocks>
-#include <myjailbreak>
-#include <clientprefs>
 #include <reputation>
+
+//Optional Plugins
+#undef REQUIRE_PLUGIN
+#include <myjailbreak>
+#define REQUIRE_PLUGIN
 
 
 //Compiler Options
@@ -74,6 +77,13 @@ public void OnPluginStart()
 	
 	//Hooks
 	HookEvent("player_spawn", Event_OnPlayerSpawn, EventHookMode_Post);
+}
+
+
+public void OnAllPluginsLoaded()
+{
+	if (!LibraryExists("myratio"))
+		SetFailState("You're missing the MyJailbreak - Ratio (ratio.smx) plugin");
 }
 
 

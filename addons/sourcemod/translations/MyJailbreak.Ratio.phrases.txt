@@ -383,4 +383,11 @@
 		"en"		"Remove from Queue:"
 	}
 
+	"ratio_close"
+	{
+		"ru"		"Закрыть"
+		"de"		"Schliessen"
+		"en"		"Exit"
+	}
+
 }

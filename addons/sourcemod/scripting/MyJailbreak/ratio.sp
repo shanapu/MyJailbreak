@@ -31,10 +31,13 @@
 #include <cstrike>
 #include <colors>
 #include <autoexecconfig>
-#include <warden>
 #include <mystocks>
+
+//Optional Plugins
+#undef REQUIRE_PLUGIN
 #include <myjailbreak>
-#include <clientprefs>
+#include <warden>
+#define REQUIRE_PLUGIN
 
 
 //Compiler Options
@@ -66,6 +69,7 @@ ConVar gc_bBalanceWarden;
 //Booleans
 bool g_bRatioEnable = true;
 bool g_bQueueCooldown[MAXPLAYERS+1] = false;
+bool gp_bWarden = false;
 
 
 //Handles
@@ -100,7 +104,6 @@ public void OnPluginStart()
 {
 	//Translation
 	LoadTranslations("MyJailbreak.Ratio.phrases");
-	LoadTranslations("MyJailbreak.Warden.phrases");
 	
 	
 	//Client commands
@@ -163,6 +166,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 {
 	g_hOnClientJoinGuards = CreateGlobalForward("MyJailbreak_OnJoinGuardQueue", ET_Event, Param_Cell);
 	
+	RegPluginLibrary("myratio");
 	return APLRes_Success;
 }
 
@@ -243,6 +247,25 @@ public void OnConfigsExecuted()
 }
 
 
+public void OnAllPluginsLoaded()
+{
+	gp_bWarden = LibraryExists("warden");
+}
+
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (StrEqual(name, "warden"))
+		gp_bWarden = false;
+}
+
+
+public void OnLibraryAdded(const char[] name)
+{
+	if (StrEqual(name, "warden"))
+		gp_bWarden = true;
+}
+
 
 /******************************************************************************
                    COMMANDS
@@ -310,7 +333,7 @@ public Action Command_ViewGuardQueue(int client, int args)
 	
 	DrawPanelText(ViewQueueMenu, "                                   ");
 	DrawPanelText(ViewQueueMenu, "-----------------------------------");
-	Format(info, sizeof(info), "%T", "warden_close", client);
+	Format(info, sizeof(info), "%T", "ratio_close", client);
 	DrawPanelItem(ViewQueueMenu, info); 
 	SendPanelToClient(ViewQueueMenu, client, Handler_NullCancel, 12);
 	
@@ -1039,7 +1062,7 @@ stock void FixTeamRatio()
 			{
 				client = GetArrayCell(g_aGuardList, iListNum);
 				
-				if ((warden_iswarden(client) || warden_deputy_isdeputy(client) || (!warden_exist() && (warden_getlast() == client)) || (!warden_deputy_exist() && (warden_deputy_getlast() == client))) && gc_bBalanceWarden.BoolValue)
+				if (gp_bWarden) if ((warden_iswarden(client) || warden_deputy_isdeputy(client) || (!warden_exist() && (warden_getlast() == client)) || (!warden_deputy_exist() && (warden_deputy_getlast() == client))) && gc_bBalanceWarden.BoolValue)
 				{
 					iListNum--;
 					client = GetArrayCell(g_aGuardList, iListNum);
@@ -1081,7 +1104,7 @@ stock int GetRandomClientFromTeam(int iTeam)
 		if (GetClientPendingTeam(i) != iTeam)
 			continue;
 		
-		if ((warden_iswarden(i) || warden_deputy_isdeputy(i)) && gc_bBalanceWarden.BoolValue)
+		if (gp_bWarden) if ((warden_iswarden(i) || warden_deputy_isdeputy(i)) && gc_bBalanceWarden.BoolValue)
 			continue;
 		
 		Action res = Plugin_Continue;

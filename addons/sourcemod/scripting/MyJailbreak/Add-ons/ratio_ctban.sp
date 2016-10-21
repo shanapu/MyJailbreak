@@ -30,8 +30,12 @@
 #include <cstrike>
 #include <colors>
 #include <mystocks>
-#include <myjailbreak>
 #include <clientprefs>
+
+//Optional Plugins
+#undef REQUIRE_PLUGIN
+#include <myjailbreak>
+#define REQUIRE_PLUGIN
 
 
 //Compiler Options
@@ -64,6 +68,13 @@ public void OnPluginStart()
 	//Cookies
 	if ((g_hCookieCTBan = FindClientCookie("Banned_From_CT")) == INVALID_HANDLE)
 		g_hCookieCTBan = RegClientCookie("Banned_From_CT", "Tells if you are restricted from joining the CT team", CookieAccess_Protected);
+}
+
+
+public void OnAllPluginsLoaded()
+{
+	if (!LibraryExists("myratio"))
+		SetFailState("You're missing the MyJailbreak - Ratio (ratio.smx) plugin");
 }
 
 
