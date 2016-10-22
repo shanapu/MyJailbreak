@@ -653,7 +653,6 @@ public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 				Forward_OnWardenRemoved(g_iWarden);
 				g_iLastWarden = g_iWarden;
 				g_iWarden = -1;
-				
 			}
 		}
 	}

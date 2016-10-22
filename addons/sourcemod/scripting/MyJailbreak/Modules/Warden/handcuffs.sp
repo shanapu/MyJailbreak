@@ -295,9 +295,12 @@ public void OnButtonPress2(int client, int button)
 {
 	if (button == IN_USE)
 	{
-		float unlocktime = GetRandomFloat(gc_fUnLockTimeMin.FloatValue, gc_fUnLockTimeMax.FloatValue);
-		BreakTimer[client] = CreateTimer(unlocktime, Timer_BreakTheseCuffs, client);
-		if (gc_bSounds) EmitSoundToClientAny(client, g_sSoundUnLockCuffsPath);
+		if (g_iPlayerPaperClips[client] > 0)
+		{
+			float unlocktime = GetRandomFloat(gc_fUnLockTimeMin.FloatValue, gc_fUnLockTimeMax.FloatValue);
+			BreakTimer[client] = CreateTimer(unlocktime, Timer_BreakTheseCuffs, client);
+			if (gc_bSounds) EmitSoundToClientAny(client, g_sSoundUnLockCuffsPath);
+		}
 	}
 }
 
@@ -446,7 +449,6 @@ public Action CuffsEm(int client, int attacker)
 			CreateTimer (2.5, Timer_HasPaperClip, client);
 		}
 	}
-	
 }
 
 
@@ -474,11 +476,12 @@ public Action Timer_HasPaperClip(Handle timer, int client)
 	if (g_bCuffed[client])
 	{
 		int paperclip = GetRandomInt(1, gc_iPaperClipGetChance.IntValue);
-		if (paperclip == 1)
+		if (paperclip == 1) g_iPlayerPaperClips[client]++;
+		
+		if (g_iPlayerPaperClips[client] > 0)
 		{
-			g_iPlayerPaperClips[client] += 1;
-			CPrintToChat(client, "%t %t", "warden_tag", "warden_gotpaperclip");
-			PrintCenterText(client, "%t", "warden_gotpaperclip");
+			CPrintToChat(client, "%t %t", "warden_tag", "warden_gotpaperclip", g_iPlayerPaperClips[client]);
+			PrintCenterText(client, "%t", "warden_gotpaperclip", g_iPlayerPaperClips[client]);
 		}
 	}
 }
@@ -493,20 +496,29 @@ public Action Timer_BreakTheseCuffs(Handle timer, int client)
 		{
 			CPrintToChat(client, "%t %t", "warden_tag", "warden_unlock");
 			PrintCenterText(client, "%t", "warden_unlock");
-			if (gc_bSounds)EmitSoundToAllAny(g_sSoundBreakCuffsPath);
+			if (gc_bSounds) StopSoundAny(client, SNDCHAN_AUTO, g_sSoundUnLockCuffsPath);
+			if (gc_bSounds) EmitSoundToAllAny(g_sSoundBreakCuffsPath);
 			SetEntityMoveType(client, MOVETYPE_WALK);
 			SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
 			SetEntityRenderColor(client, 255, 255, 255, 255);
 			g_bCuffed[client] = false;
 			CreateTimer( 0.0, DeleteOverlay, client );
 			g_iCuffed--;
-			g_iPlayerPaperClips[client] -= 1;
+			g_iPlayerPaperClips[client]--;
 		}
 		else
 		{
 			CPrintToChat(client, "%t %t", "warden_tag", "warden_brokepaperclip");
 			PrintCenterText(client, "%t", "warden_brokepaperclip");
-			g_iPlayerPaperClips[client] -= 1;
+			g_iPlayerPaperClips[client]--;
+			if (gc_bSounds) StopSoundAny(client, SNDCHAN_AUTO, g_sSoundUnLockCuffsPath);
+			
+			if (g_iPlayerPaperClips[client] > 0)
+			{
+				CPrintToChat(client, "%t %t", "warden_tag", "warden_gotpaperclip", g_iPlayerPaperClips[client]);
+				PrintCenterText(client, "%t", "warden_gotpaperclip", g_iPlayerPaperClips[client]);
+				if (gc_bSounds) StopSoundAny(client, SNDCHAN_AUTO, g_sSoundUnLockCuffsPath);
+			}
 		}
 	}
 	BreakTimer[client] = null;
