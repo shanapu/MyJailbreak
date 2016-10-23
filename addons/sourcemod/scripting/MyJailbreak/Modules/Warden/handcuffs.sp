@@ -71,6 +71,7 @@ bool g_bCuffed[MAXPLAYERS+1] = false;
 int g_iPlayerHandCuffs[MAXPLAYERS+1];
 int g_iPlayerPaperClips[MAXPLAYERS+1];
 int g_iCuffed = 0;
+int TickTime[MAXPLAYERS+1];
 
 
 //Strings
@@ -84,6 +85,7 @@ char g_sEquipWeapon[MAXPLAYERS+1][32];
 
 //Handles
 Handle BreakTimer[MAXPLAYERS+1];
+Handle ProgressTimer[MAXPLAYERS+1];
 
 
 //Info
@@ -106,7 +108,6 @@ public void HandCuffs_OnPluginStart()
 	gc_sSoundCuffsPath = AutoExecConfig_CreateConVar("sm_warden_sounds_cuffs", "music/MyJailbreak/cuffs.mp3", "Path to the soundfile which should be played for cuffed player.");
 	gc_sSoundBreakCuffsPath = AutoExecConfig_CreateConVar("sm_warden_sounds_breakcuffs", "music/MyJailbreak/breakcuffs.mp3", "Path to the soundfile which should be played for break cuffs.");
 	gc_sSoundUnLockCuffsPath = AutoExecConfig_CreateConVar("sm_warden_sounds_unlock", "music/MyJailbreak/unlock.mp3", "Path to the soundfile which should be played for unlocking cuffs.");
-	
 	
 	//Hooks
 	HookEvent("round_start", HandCuffs_Event_RoundStart);
@@ -299,6 +300,8 @@ public void OnButtonPress2(int client, int button)
 		{
 			float unlocktime = GetRandomFloat(gc_fUnLockTimeMin.FloatValue, gc_fUnLockTimeMax.FloatValue);
 			BreakTimer[client] = CreateTimer(unlocktime, Timer_BreakTheseCuffs, client);
+			TickTime[client] = 0;
+			ProgressTimer[client] = CreateTimer(1.0, Timer_Progress, client, TIMER_REPEAT);
 			if (gc_bSounds) EmitSoundToClientAny(client, g_sSoundUnLockCuffsPath);
 		}
 	}
@@ -314,9 +317,42 @@ public void OnButtonRelease2(int client, int button)
 			KillTimer(BreakTimer[client]);
 			BreakTimer[client] = null;
 		}
+		if (ProgressTimer[client] != null)
+		{
+			KillTimer(ProgressTimer[client]);
+			ProgressTimer[client] = null;
+			PrintCenterText(client, "%t", "warden_pickingaborted");
+		}
 		if (gc_bSounds) StopSoundAny(client, SNDCHAN_AUTO, g_sSoundUnLockCuffsPath);
+		
 	}
 }
+
+
+public Action Timer_Progress(Handle timer, int client)
+{
+	if (TickTime[client] == 0)
+	{
+		TickTime[client]++;
+		PrintCenterText(client, "%t", "warden_picking");
+	}
+	else if (TickTime[client] == 1)
+	{
+		TickTime[client]++;
+		PrintCenterText(client, "%t.", "warden_picking");
+	}
+	else if (TickTime[client] == 2)
+	{
+		TickTime[client]++;
+		PrintCenterText(client, "%t..", "warden_picking");
+	}
+	else if (TickTime[client] == 3)
+	{
+		TickTime[client] = 0;
+		PrintCenterText(client, "%t...", "warden_picking");
+	}
+}
+
 
 public Action HandCuffs_OnTakedamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &weapon, float damageForce[3], float damagePosition[3], int damagecustom)
 {
@@ -397,6 +433,16 @@ public void HandCuffs_OnClientDisconnect(int client)
 {
 	if (g_bCuffed[client]) g_iCuffed--;
 	g_iLastButtons[client] = 0;
+	if (BreakTimer[client] != null)
+	{
+		KillTimer(BreakTimer[client]);
+		BreakTimer[client] = null;
+	}
+	if (ProgressTimer[client] != null)
+	{
+		KillTimer(ProgressTimer[client]);
+		ProgressTimer[client] = null;
+	}
 }
 
 
@@ -405,6 +451,16 @@ public void HandCuffs_OnMapEnd()
 	LoopClients(i)
 	{
 		if (g_bCuffed[i]) FreeEm(i, 0);
+		if (BreakTimer[i] != null)
+		{
+			KillTimer(BreakTimer[i]);
+			BreakTimer[i] = null;
+		}
+		if (ProgressTimer[i] != null)
+		{
+			KillTimer(ProgressTimer[i]);
+			ProgressTimer[i] = null;
+		}
 	}
 }
 
@@ -460,6 +516,7 @@ public Action FreeEm(int client, int attacker)
 	g_bCuffed[client] = false;
 	CreateTimer( 0.0, DeleteOverlay, client );
 	g_iCuffed--;
+	ProgressTimer[client] = null;
 	if (gc_bSounds)StopSoundAny(client, SNDCHAN_AUTO, g_sSoundUnLockCuffsPath);
 	if ((attacker != 0) && (g_iCuffed == 0) && (g_iPlayerHandCuffs[attacker] < 1)) SetPlayerWeaponAmmo(attacker, Client_GetActiveWeapon(attacker), _, 0);
 	if (attacker != 0) CPrintToChatAll("%t %t", "warden_tag" , "warden_cuffsoff", attacker, client);
@@ -520,6 +577,11 @@ public Action Timer_BreakTheseCuffs(Handle timer, int client)
 				if (gc_bSounds) StopSoundAny(client, SNDCHAN_AUTO, g_sSoundUnLockCuffsPath);
 			}
 		}
+		if (ProgressTimer[client] != null)
+		{
+			KillTimer(ProgressTimer[client]);
+			ProgressTimer[client] = null;
+		}
 	}
 	BreakTimer[client] = null;
 }
@@ -541,7 +603,7 @@ stock void StripZeus()
 		{
 			GetEntityClassname(weapon, sWeapon, sizeof(sWeapon));
 			if (StrEqual(sWeapon, "weapon_taser"))
-			{ 
+			{
 				SDKHooks_DropWeapon(client, weapon, NULL_VECTOR, NULL_VECTOR); 
 				AcceptEntityInput(weapon, "Kill");
 			}

@@ -1413,4 +1413,16 @@
 		"en"		"There is no current {purple}Deputy{default}. Type {green}!deputy{default} to become the Deputy!"
 	}
 
+	"warden_picking"
+	{
+		"de"		"Knacke Schloss"
+		"en"		"Picking"
+	}
+
+	"warden_pickingaborted"
+	{
+		"de"		"Schloss knacken abgebrochen"
+		"en"		"Picking aborted"
+	}
+
 }
