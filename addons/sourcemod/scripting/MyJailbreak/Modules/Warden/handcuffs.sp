@@ -31,6 +31,7 @@
 #include <cstrike>
 #include <colors>
 #include <autoexecconfig>
+#include <emitsoundany>
 #include <warden>
 #include <mystocks>
 
@@ -331,6 +332,9 @@ public void OnButtonRelease2(int client, int button)
 
 public Action Timer_Progress(Handle timer, int client)
 {
+	if (!IsClientConnected(client))
+		return Plugin_Stop;
+	
 	if (TickTime[client] == 0)
 	{
 		TickTime[client]++;
