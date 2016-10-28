@@ -12,6 +12,8 @@
         *  new cvar - sm_ratio_reputation - 0 - disabled, how many reputation a player need to join ct? (only if reputation is available)
     *  new plugin - ratio_stamm.smx - Support plugin for popoklopsis Stamm plugin
         *  new cvar - sm_ratio_stamm - 0 - disabled, how many stamm points a player need to join ct? (only if stamm is available)
+    *  new plugin - ratio_rankme.smx - Support plugin for lok1s, Scoobys & Kentos RankMe plugin
+        *  new cvar - sm_ratio_rankme - 0 - disabled, how many rankme points a player need to join ct? (only if rankme is available)
     *  new plugin - ratio_teambans.smx - Support plugin for baras TeamBans plugin
 *  Zombie: KnockbackFix
     *  new cvar - sm_zombie_knockback - Force of the knockback when shot at. Zombies only
@@ -20,7 +22,12 @@
 *  Request - FreeDay: Menu to choose the personal freeday for this or next round. !givefreeday
     *  new cvar - sm_capitulation_weapons - 0 - disabled, 1 - enable Terror can not pick up weapons after capitulation
 *  MyJailbreak: Disabled command !endround (& sm_myjb_cmds_endround) on default. This command was thought for testing/debug
-    *  new cvar - sm_myjb_allow_endround - 0 - disabled, 1 - enable !endround command for testing (disable against abusing) 
+    *  new cvar - sm_myjb_allow_endround - 0 - disabled, 1 - enable !endround command for testing (disable against abusing)
+  
+  
+  
+*Changed*
+*  Warden - Handcuffs: a cuffed player have to press & hold +USE to lockpick
   
   
   
@@ -35,7 +42,18 @@
   
   
   
+*Removed*
+*  Removed Dependencies of the required plugins. So the plugins can be used as standalone
+    *  Warden: Dependencies of MyJailbreak(core), hosties, smartjaildoors, chat-processor, VoiceannounceEX
+    *  Ratio: Dependencies of MyJailbreak(core), warden
+    *  Last Guard Rule: Dependencies of MyJailbreak(core), hosties, smartjaildoors, warden
+    *  Weapons: Dependencies of MyJailbreak(core), warden
+  
+  
+  
   *Developer stuff*
+*  Warden: New native to add paperclips (for MyJailShop support)
+    *  new forward - warden_handcuff_givepaperclip - Give a player a specific amount of paperclips
 *  Natives: Changed all native names by adding MyJailbreak_* in front to avoid conflicts with 3rd party plugins
 *  Forwards: New Forwards to add ratio support (restrict from guards/CT) for 3rd party plugins
     *  new forward - MyJailbreak_OnJoinGuardQueue - Called when a client trys to join the Guards(CT) or GuardQueue

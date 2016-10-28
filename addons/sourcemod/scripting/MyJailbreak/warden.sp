@@ -1046,7 +1046,9 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char [] error, int err_ma
 	CreateNative("warden_deputy_get", Native_GetDeputy);
 	CreateNative("warden_deputy_getlast", Native_GetLastDeputy);
 	
-	RegPluginLibrary("warden");
+	CreateNative("warden_handcuffs_givepaperclip", Native_GivePaperClip);
+	
+	RegPluginLibrary("mywarden");
 	return APLRes_Success;
 }
 

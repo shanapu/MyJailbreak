@@ -553,11 +553,13 @@ public Action Timer_BreakTheseCuffs(Handle timer, int client)
 	if (IsValidClient(client, false, false) && g_bCuffed[client])
 	{
 		int unlocked = GetRandomInt(1, gc_iPaperClipUnLockChance.IntValue);
+		
+		if (gc_bSounds) StopSoundAny(client, SNDCHAN_AUTO, g_sSoundUnLockCuffsPath);
+		
 		if (unlocked == 1)
 		{
 			CPrintToChat(client, "%t %t", "warden_tag", "warden_unlock");
 			PrintCenterText(client, "%t", "warden_unlock");
-			if (gc_bSounds) StopSoundAny(client, SNDCHAN_AUTO, g_sSoundUnLockCuffsPath);
 			if (gc_bSounds) EmitSoundToAllAny(g_sSoundBreakCuffsPath);
 			SetEntityMoveType(client, MOVETYPE_WALK);
 			SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
@@ -572,13 +574,10 @@ public Action Timer_BreakTheseCuffs(Handle timer, int client)
 			CPrintToChat(client, "%t %t", "warden_tag", "warden_brokepaperclip");
 			PrintCenterText(client, "%t", "warden_brokepaperclip");
 			g_iPlayerPaperClips[client]--;
-			if (gc_bSounds) StopSoundAny(client, SNDCHAN_AUTO, g_sSoundUnLockCuffsPath);
 			
 			if (g_iPlayerPaperClips[client] > 0)
 			{
-				CPrintToChat(client, "%t %t", "warden_tag", "warden_gotpaperclip", g_iPlayerPaperClips[client]);
-				PrintCenterText(client, "%t", "warden_gotpaperclip", g_iPlayerPaperClips[client]);
-				if (gc_bSounds) StopSoundAny(client, SNDCHAN_AUTO, g_sSoundUnLockCuffsPath);
+				CreateTimer(2.0, Timer_StillPaperClip, client);
 			}
 		}
 		if (ProgressTimer[client] != null)
@@ -590,6 +589,15 @@ public Action Timer_BreakTheseCuffs(Handle timer, int client)
 	BreakTimer[client] = null;
 }
 
+
+public Action Timer_StillPaperClip(Handle timer, int client)
+{
+	if (g_bCuffed[client])
+	{
+		CPrintToChat(client, "%t %t", "warden_tag", "warden_gotpaperclip", g_iPlayerPaperClips[client]);
+		PrintCenterText(client, "%t", "warden_gotpaperclip", g_iPlayerPaperClips[client]);
+	}
+}
 
 /******************************************************************************
                    STOCKS
@@ -614,3 +622,23 @@ stock void StripZeus()
 		}
 	}
 }
+
+
+/******************************************************************************
+                   NATIVES
+******************************************************************************/
+
+
+//Remove current Warden
+public int Native_GivePaperClip(Handle plugin, int argc)
+{
+	int client = GetNativeCell(1);
+	int amount = GetNativeCell(2);
+	
+	if (!IsClientInGame(client) && !IsClientConnected(client))
+		ThrowNativeError(SP_ERROR_INDEX, "Client index %i is invalid", client);
+	
+	g_iPlayerPaperClips[client] += amount;
+	CreateTimer(2.0, Timer_StillPaperClip, client);
+}
+
