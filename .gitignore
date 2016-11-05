@@ -1,6 +1,7 @@
 *.dat
 *.exe
 .gitignore
+wip_*.*
 addons/sourcemod/scripting/snips/*
 addons/sourcemod/scripting/compiled
 addons/sourcemod/scripting/compile.exe

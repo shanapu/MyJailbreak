@@ -7,16 +7,16 @@
     *  new cvar - sm_weapons_negev - 0 - disabled, 1 - enable negev in weapon menu
     *  new cvar - sm_weapons_m249 - 0 - disabled, 1 - enable m249 in weapon menu
 *  Ratio: Support for 3rd party plugins (moved CT Bans support to extra plugin)
-    *  new plugin - ratio_ctban.smx - Support plugin for databombs CT Bans plugin
+    *  new plugin - disabled/ratio_ctban.smx - Support plugin for databombs CT Bans plugin
     *  new plugin - ratio_reputation.smx - Support plugin for oaaron99 Player Reputations plugin
-        *  new cvar - sm_ratio_reputation - 0 - disabled, how many reputation a player need to join ct? (only if reputation is available)
-    *  new plugin - ratio_stamm.smx - Support plugin for popoklopsis Stamm plugin
+        *  new cvar - disabled/sm_ratio_reputation - 0 - disabled, how many reputation a player need to join ct? (only if reputation is available)
+    *  new plugin - disabled/ratio_stamm.smx - Support plugin for popoklopsis Stamm plugin
         *  new cvar - sm_ratio_stamm - 0 - disabled, how many stamm points a player need to join ct? (only if stamm is available)
-    *  new plugin - ratio_rankme.smx - Support plugin for lok1s, Scoobys RankMe plugin
+    *  new plugin - disabled/ratio_rankme.smx - Support plugin for lok1s, Scoobys RankMe plugin
         *  new cvar - sm_ratio_rankme - 0 - disabled, how many rankme points a player need to join ct? (only if rankme is available)
-    *  new plugin - ratio_kento_rankme.smx - Support plugin for Kentos RankMe plugin
+    *  new plugin - disabled/ratio_kento_rankme.smx - Support plugin for Kentos RankMe plugin
         *  new cvar - sm_ratio_rankme - 0 - disabled, how many rankme points a player need to join ct? (only if kento rankme is available)
-    *  new plugin - ratio_teambans.smx - Support plugin for baras TeamBans plugin
+    *  new plugin - disabled/ratio_teambans.smx - Support plugin for baras TeamBans plugin
 *  Zombie: KnockbackFix
     *  new cvar - sm_zombie_knockback - Force of the knockback when shot at. Zombies only
 *  Request - Capitulation: Allow capitulated players to take up weapons per cvar & healthshot & c4 as standart
@@ -25,11 +25,12 @@
     *  new cvar - sm_capitulation_weapons - 0 - disabled, 1 - enable Terror can not pick up weapons after capitulation
 *  MyJailbreak: Disabled command !endround (& sm_myjb_cmds_endround) on default. This command was thought for testing/debug
     *  new cvar - sm_myjb_allow_endround - 0 - disabled, 1 - enable !endround command for testing (disable against abusing)
-  
+*  TeamGames: Better Support on FFA-Events for KissLicks TeamGames (TeamGames 1.1.0.7)
+    *  new plugin - disabled/myjailbreak_teamgames.smx - Support plugin for KissLicks TeamGames plugin
   
   
 *Changed*
-*  Warden - Handcuffs: a cuffed player have to press & hold +USE to lockpick
+*  Warden - Handcuffs: a cuffed player have to press & hold +USE to lockpick with small 'progress animation'
   
   
   
