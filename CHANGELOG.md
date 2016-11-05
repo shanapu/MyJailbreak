@@ -12,8 +12,10 @@
         *  new cvar - sm_ratio_reputation - 0 - disabled, how many reputation a player need to join ct? (only if reputation is available)
     *  new plugin - ratio_stamm.smx - Support plugin for popoklopsis Stamm plugin
         *  new cvar - sm_ratio_stamm - 0 - disabled, how many stamm points a player need to join ct? (only if stamm is available)
-    *  new plugin - ratio_rankme.smx - Support plugin for lok1s, Scoobys & Kentos RankMe plugin
+    *  new plugin - ratio_rankme.smx - Support plugin for lok1s, Scoobys RankMe plugin
         *  new cvar - sm_ratio_rankme - 0 - disabled, how many rankme points a player need to join ct? (only if rankme is available)
+    *  new plugin - ratio_kento_rankme.smx - Support plugin for Kentos RankMe plugin
+        *  new cvar - sm_ratio_rankme - 0 - disabled, how many rankme points a player need to join ct? (only if kento rankme is available)
     *  new plugin - ratio_teambans.smx - Support plugin for baras TeamBans plugin
 *  Zombie: KnockbackFix
     *  new cvar - sm_zombie_knockback - Force of the knockback when shot at. Zombies only

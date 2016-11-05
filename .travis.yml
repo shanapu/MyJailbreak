@@ -25,7 +25,7 @@ before_script:
     - mkdir compiled
     - mkdir compiled/MyJailbreak
 
-script: ./compile.sh MyJailbreak/catch.sp MyJailbreak/cowboy.sp MyJailbreak/dealdamage.sp MyJailbreak/drunk.sp MyJailbreak/duckhunt.sp MyJailbreak/ffa.sp MyJailbreak/freeday.sp MyJailbreak/hebattle.sp MyJailbreak/hide.sp MyJailbreak/hud.sp MyJailbreak/knife.sp MyJailbreak/lastguard.sp MyJailbreak/menu.sp MyJailbreak/myjailbreak.sp MyJailbreak/noscope.sp MyJailbreak/playertags.sp MyJailbreak/ratio.sp MyJailbreak/request.sp MyJailbreak/suicide.sp MyJailbreak/torch.sp MyJailbreak/war.sp MyJailbreak/warden.sp MyJailbreak/weapons.sp MyJailbreak/zeus.sp MyJailbreak/zombie.sp
+script: ./compile.sh MyJailbreak/catch.sp MyJailbreak/cowboy.sp MyJailbreak/dealdamage.sp MyJailbreak/drunk.sp MyJailbreak/duckhunt.sp MyJailbreak/ffa.sp MyJailbreak/freeday.sp MyJailbreak/hebattle.sp MyJailbreak/hide.sp MyJailbreak/hud.sp MyJailbreak/knife.sp MyJailbreak/lastguard.sp MyJailbreak/menu.sp MyJailbreak/myjailbreak.sp MyJailbreak/noscope.sp MyJailbreak/playertags.sp MyJailbreak/ratio.sp MyJailbreak/Add-ons/ratio_ctban.sp MyJailbreak/Add-ons/ratio_rankme.sp MyJailbreak/Add-ons/ratio_reputation.sp MyJailbreak/Add-ons/ratio_stamm.sp MyJailbreak/Add-ons/ratio_teambans.sp MyJailbreak/request.sp MyJailbreak/suicide.sp MyJailbreak/torch.sp MyJailbreak/war.sp MyJailbreak/warden.sp MyJailbreak/weapons.sp MyJailbreak/zeus.sp MyJailbreak/zombie.sp
 
 
 #Notifications
