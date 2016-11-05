@@ -6,7 +6,7 @@
 
 public SharedPlugin:__pl_warden =
 {
-	name = "mywarden", 
+	name = "warden", 
 	file = "warden.smx", 
 	#if defined REQUIRE_PLUGIN
 	required = 1, 
