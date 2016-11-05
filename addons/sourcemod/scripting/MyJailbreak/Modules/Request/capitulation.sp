@@ -33,7 +33,6 @@
 #include <autoexecconfig>
 #include <warden>
 #include <mystocks>
-#include <myjailbreak>
 
 
 //Compiler Options
@@ -327,7 +326,7 @@ public int Handler_CapitulationMenu(Menu menu, MenuAction action, int client, in
 				if (RequestTimer != null)
 					KillTimer(RequestTimer);
 				RequestTimer = null;
-				SetEntityRenderColor(i, 255, 0, 0, 255);
+				SetEntityRenderColor(i, 255, 0, 0, 255); //todo
 				g_bCapitulated[i] = false;
 				if (RebelTimer[i] != null)
 					KillTimer(RebelTimer[i]);

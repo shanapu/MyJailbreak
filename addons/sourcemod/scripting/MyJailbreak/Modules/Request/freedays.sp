@@ -33,7 +33,11 @@
 #include <autoexecconfig>
 #include <warden>
 #include <mystocks>
+
+//Optional Plugins
+#undef REQUIRE_PLUGIN
 #include <myjailbreak>
+#define REQUIRE_PLUGIN
 
 
 //Compiler Options
@@ -119,14 +123,20 @@ public Action Command_FreeDay(int client, int args)
 
 public void Freedays_Event_RoundStart_Post(Event event, char [] name, bool dontBroadcast)
 {
-	char EventDay[64];
-	MyJailbreak_GetEventDayName(EventDay);
+	if (gp_bMyJailBreak)
+	{
+		char EventDay[64];
+		MyJailbreak_GetEventDayName(EventDay);
+		
+		if (!StrEqual(EventDay, "none", false))
+			return;
+	}
 	
 	LoopClients(client)
 	{
 		g_iFreeKillCounter[client] = 0;
 		
-		if (StrEqual(EventDay, "none", false) && g_bHaveFreeDay[client])
+		if (g_bHaveFreeDay[client])
 		{
 			CPrintToChatAll("%t %t", "request_tag", "request_havefreeday", client);
 			SetEntityRenderColor(client, gc_iFreeDayColorRed.IntValue, gc_iFreeDayColorGreen.IntValue, gc_iFreeDayColorBlue.IntValue, 255);

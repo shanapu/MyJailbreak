@@ -32,12 +32,17 @@
 #include <emitsoundany>
 #include <colors>
 #include <autoexecconfig>
+#include <mystocks>
+
+//Optional Plugins
+#undef REQUIRE_PLUGIN
+#include <myjailbreak>
+#include <smartjaildoors>
+#define REQUIRE_PLUGIN
+
 #include <hosties>
 #include <lastrequest>
 #include <warden>
-#include <smartjaildoors>
-#include <mystocks>
-#include <myjailbreak>
 
 
 //Compiler Options
@@ -55,6 +60,8 @@ ConVar gc_sCustomCommandRequest;
 bool g_bHaveFreeDay[MAXPLAYERS+1];
 bool IsRequest;
 bool IsLR;
+bool gp_bMyJailBreak = false;
+bool gp_bSmartJailDoors = false;
 
 
 //Integers
@@ -94,8 +101,7 @@ public Plugin myinfo =
 //Start
 public void OnPluginStart()
 {
-	// Translationw
-	LoadTranslations("MyJailbreak.Warden.phrases");
+	// Translation
 	LoadTranslations("MyJailbreak.Request.phrases");
 	
 	
@@ -130,6 +136,32 @@ public void OnPluginStart()
 	HookEvent("round_start", Event_RoundStart);
 	HookEvent("round_end", Event_RoundEnd);
 	HookEvent("player_death", Event_PlayerDeath);
+}
+
+
+
+public void OnAllPluginsLoaded()
+{
+	gp_bMyJailBreak = LibraryExists("myjailbreak");
+	gp_bSmartJailDoors = LibraryExists("smartjaildoors");
+}
+
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (StrEqual(name, "myjailbreak"))
+		gp_bMyJailBreak = false;
+	if (StrEqual(name, "smartjaildoors"))
+		gp_bSmartJailDoors = false;
+}
+
+
+public void OnLibraryAdded(const char[] name)
+{
+	if (StrEqual(name, "myjailbreak"))
+		gp_bMyJailBreak = true;
+	if (StrEqual(name, "smartjaildoors"))
+		gp_bSmartJailDoors = true;
 }
 
 
