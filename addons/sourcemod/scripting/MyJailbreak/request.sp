@@ -103,6 +103,7 @@ public void OnPluginStart()
 {
 	// Translation
 	LoadTranslations("MyJailbreak.Request.phrases");
+	LoadTranslations("MyJailbreak.Warden.phrases");
 	
 	
 	//Client Commands
