@@ -164,7 +164,7 @@ public void OnPluginStart()
 	
 	
 	//Set directory for LogFile - must be created before
-	SetLogFile(g_sMyJBLogFile, "MyJB");
+	SetLogFile(g_sMyJBLogFile, "MyJB", "MyJailbreak");
 }
 
 

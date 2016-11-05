@@ -100,7 +100,7 @@ int g_iOldRoundTime;
 int g_iCoolDown;
 int g_iTruceTime;
 int g_iRound;
-int ClientSprintStatus[MAXPLAYERS+1];
+int g_iSprintStatus[MAXPLAYERS+1];
 int g_iMaxRound;
 int g_iBurningZero = -1;
 
@@ -214,7 +214,7 @@ public void OnPluginStart()
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 	gc_sAdminFlag.GetString(g_sAdminFlag , sizeof(g_sAdminFlag));
 	
-	SetLogFile(g_sEventsLogFile, "Events");
+	SetLogFile(g_sEventsLogFile, "Events", "MyJailbreak");
 }
 
 
@@ -463,7 +463,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 				
 				
 				StripAllPlayerWeapons(client);
-				ClientSprintStatus[client] = 0;
+				g_iSprintStatus[client] = 0;
 				GivePlayerItem(client, "weapon_knife");
 				SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
 				
@@ -496,7 +496,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 		LoopValidClients(client, true, true)
 		{
 			SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
-			ClientSprintStatus[client] = 0;
+			g_iSprintStatus[client] = 0;
 			CreateTimer( 0.0, DeleteOverlay, client );
 			SetEntityRenderColor(client, 255, 255, 255, 0);
 			OnTorch[client] = false;
@@ -907,9 +907,9 @@ public Action Command_StartSprint(int client, int args)
 		{
 			if (OnTorch[client] == false)
 			{
-				if (gc_bSprint.BoolValue && client > 0 && IsClientInGame(client) && IsPlayerAlive(client) && GetClientTeam(client) > 1 && !(ClientSprintStatus[client] & IsSprintUsing) && !(ClientSprintStatus[client] & IsSprintCoolDown))
+				if (gc_bSprint.BoolValue && client > 0 && IsClientInGame(client) && IsPlayerAlive(client) && GetClientTeam(client) > 1 && !(g_iSprintStatus[client] & IsSprintUsing) && !(g_iSprintStatus[client] & IsSprintCoolDown))
 				{
-					ClientSprintStatus[client] |= IsSprintUsing | IsSprintCoolDown;
+					g_iSprintStatus[client] |= IsSprintUsing | IsSprintCoolDown;
 					SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", gc_fSprintSpeed.FloatValue);
 					EmitSoundToClient(client, "player/suit_sprint.wav", SOUND_FROM_PLAYER, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, 0.8);
 					CReplyToCommand(client, "%t %t", "torch_tag" , "torch_sprint");
@@ -955,9 +955,9 @@ public Action ResetSprint(int client)
 	{
 		SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
 	}
-	if (ClientSprintStatus[client] & IsSprintUsing)
+	if (g_iSprintStatus[client] & IsSprintUsing)
 	{
-		ClientSprintStatus[client] &= ~ IsSprintUsing;
+		g_iSprintStatus[client] &= ~ IsSprintUsing;
 	}
 	return;
 }
@@ -968,10 +968,10 @@ public Action Timer_SprintEnd(Handle timer, any client)
 	SprintTimer[client] = null;
 	
 	
-	if (IsClientInGame(client) && (ClientSprintStatus[client] & IsSprintUsing))
+	if (IsClientInGame(client) && (g_iSprintStatus[client] & IsSprintUsing))
 	{
 		SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
-		ClientSprintStatus[client] &= ~ IsSprintUsing;
+		g_iSprintStatus[client] &= ~ IsSprintUsing;
 		if (IsPlayerAlive(client) && GetClientTeam(client) > 1)
 		{
 			SprintTimer[client] = CreateTimer(gc_iSprintCooldown.FloatValue, Timer_SprintCooldown, client);
@@ -985,9 +985,9 @@ public Action Timer_SprintEnd(Handle timer, any client)
 public Action Timer_SprintCooldown(Handle timer, any client)
 {
 	SprintTimer[client] = null;
-	if (IsClientInGame(client) && (ClientSprintStatus[client] & IsSprintCoolDown))
+	if (IsClientInGame(client) && (g_iSprintStatus[client] & IsSprintCoolDown))
 	{
-		ClientSprintStatus[client] &= ~ IsSprintCoolDown;
+		g_iSprintStatus[client] &= ~ IsSprintCoolDown;
 		CPrintToChat(client, "%t %t", "torch_tag" , "torch_sprintagain", gc_iSprintCooldown.IntValue);
 	}
 	return;
@@ -998,6 +998,6 @@ public void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast
 {
 	int iClient = GetClientOfUserId(event.GetInt("userid"));
 	ResetSprint(iClient);
-	ClientSprintStatus[iClient] &= ~ IsSprintCoolDown;
+	g_iSprintStatus[iClient] &= ~ IsSprintCoolDown;
 	return;
 }

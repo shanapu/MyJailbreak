@@ -152,7 +152,7 @@ public void OnPluginStart()
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	gc_sAdminFlag.GetString(g_sAdminFlag , sizeof(g_sAdminFlag));
 	
-	SetLogFile(g_sEventsLogFile, "Events");
+	SetLogFile(g_sEventsLogFile, "Events", "MyJailbreak");
 }
 
 

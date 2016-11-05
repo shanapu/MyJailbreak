@@ -210,6 +210,12 @@ public void OnMapEnd()
 //Register Natives
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
+	if (GetEngineVersion() != Engine_CSGO)
+	{
+		SetFailState("Game is not supported. CS:GO ONLY");
+	}
+	RegPluginLibrary("myjailbreak");
+	
 	CreateNative("MyJailbreak_SetEventDayName", Native_SetEventDayName);
 	CreateNative("MyJailbreak_GetEventDayName", Native_GetEventDayName);
 	CreateNative("MyJailbreak_IsEventDayRunning", Native_IsEventDayRunning);
@@ -223,13 +229,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	CreateNative("MyJailbreak_FogOff", Native_FogOff);
 	CreateNative("MyJailbreak_BeaconOn", Native_BeaconOn);
 	CreateNative("MyJailbreak_BeaconOff", Native_BeaconOff);
-	
-	
-	if (GetEngineVersion() != Engine_CSGO)
-	{
-		SetFailState("Game is not supported. CS:GO ONLY");
-	}
-	RegPluginLibrary("myjailbreak");
 	
 	return APLRes_Success;
 }

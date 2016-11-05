@@ -190,7 +190,7 @@ public void OnPluginStart()
 		SetFailState("sv_allow_thirdperson not found!");
 	}
 	
-	SetLogFile(g_sEventsLogFile, "Events");
+	SetLogFile(g_sEventsLogFile, "Events", "MyJailbreak");
 }
 
 

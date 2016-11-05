@@ -216,7 +216,7 @@ public void OnPluginStart()
 	gc_sOverlayFreeze.GetString(g_sOverlayFreeze , sizeof(g_sOverlayFreeze));
 	gc_sAdminFlag.GetString(g_sAdminFlag , sizeof(g_sAdminFlag));
 	
-	SetLogFile(g_sEventsLogFile, "Events");
+	SetLogFile(g_sEventsLogFile, "Events", "MyJailbreak");
 }
 
 

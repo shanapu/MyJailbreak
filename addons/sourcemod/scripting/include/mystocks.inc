@@ -166,11 +166,11 @@ stock void SetCvarString(char cvarName[64], char[] value)
 
 
 //Define filename & path for logging 
-stock void SetLogFile(char LogFile[PLATFORM_MAX_PATH] , char [] FileName)
+stock void SetLogFile(char LogFile[PLATFORM_MAX_PATH], char [] FileName, char [] FolderName)
 {
 	char sDate[12];
 	FormatTime(sDate, sizeof(sDate), "%y-%m-%d");
-	Format(LogFile, sizeof(LogFile), "logs/MyJailbreak/%s-%s.log", FileName, sDate);
+	Format(LogFile, sizeof(LogFile), "logs/%s/%s-%s.log", FolderName, FileName, sDate);
 	
 	BuildPath(Path_SM, LogFile, sizeof(LogFile), LogFile);
 }

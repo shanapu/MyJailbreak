@@ -105,7 +105,7 @@ public void Freekill_OnPluginStart()
 	//FindConVar
 	gc_sAdminFlag.GetString(g_sAdminFlag , sizeof(g_sAdminFlag));
 	
-	SetLogFile(g_sFreeKillLogFile, "Freekills");
+	SetLogFile(g_sFreeKillLogFile, "Freekills", "MyJailbreak");
 }
 
 
