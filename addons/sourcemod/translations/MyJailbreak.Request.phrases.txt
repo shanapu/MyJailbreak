@@ -561,4 +561,49 @@
 	{
 		"en"		"Next Round"
 	}
+
+	"request_close"
+	{
+		"ru"		"Закрыть"
+		"de"		"Schliessen"
+		"en"		"Exit"
+	}
+
+	"request_countdownstop"
+	{
+		"ru"		"{purple}СТОП! {darkred} КОНЕЦ!"
+		"pl"		"{purple}STOP! {darkred}Koniec!"
+		"de"		"{purple}ENDE! {darkred}STOP! {green}Fertig!"
+		"en"		"{purple}STOP! {darkred}END!"
+		"da"		"{purple}STOP! {darkred}SLUT! {green}AFSLUTTET!"
+	}
+
+	"request_countdownstop_nc"
+	{
+		"ru"		"СТОП! КОНЕЦ!"
+		"pl"		"STOP! KONIEC!"
+		"de"		"HALT ENDE FERTIG!"
+		"en"		"STOP! END!"
+		"da"		"STOP! SLUT!"
+	}
+
+	"request_stopcountdown_nc"
+	{
+		"#format"   "{1:i}"
+		"ru"		"Конеч через {1} секунд!"
+		"pl"		"Stop/koniec  za {1} sekund!"
+		"de"		"Stop/Ende in {1} Sekunden!"
+		"en"		"Stop/End in {1} seconds!"
+		"da"		"Stopper om {1} sekunder!"
+	}
+
+	"request_stopcountdown"
+	{
+		"#format"   "{1:i}"
+		"ru"		"Конец через {purple}{1}{default} секунд!"
+		"pl"		"Stop za {purple}{1}{default} sekund!"
+		"de"		"Stop in {purple}{1}{default} Sekunden!"
+		"en"		"Stop in {purple}{1}{default} seconds!"
+		"da"		"Stopper om {purple}{1}{default} sekunder!"
+	}
 }
