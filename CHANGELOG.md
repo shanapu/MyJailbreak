@@ -31,11 +31,13 @@
   
 *Changed*
 *  Warden - Handcuffs: a cuffed player have to press & hold +USE to lockpick with small 'progress animation'
+*  Ratio: T will be moved instandly to CT and respawned when there is space.
   
   
   
 *Fixed*
-*  Warden - Painter: fix bug when enabled for t and t dies paint still activ
+*  Warden - Painter: fix bug when enabled for t and t dies paint still active
+*  Freeday: fix problem on sm_freeday_firstround and roundrestart
 *  Ratio: Unmute CT on teambalance
 *  Eventdays with freeze: rar glitch player push out of map
 *  download.txt: removed .bz2 file extension for deputy

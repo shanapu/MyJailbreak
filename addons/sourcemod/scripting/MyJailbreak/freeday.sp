@@ -50,6 +50,7 @@ bool IsFreeday;
 bool StartFreeday; 
 bool AutoFreeday; 
 bool AllowRespawn;
+bool RepeatFirstFreeday;
 
 
 //Console Variables
@@ -331,7 +332,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 			AutoFreeday = true;
 		}
 	}
-	if (StartFreeday)
+	if (StartFreeday || RepeatFirstFreeday)
 	{
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_weapons_enable", 0);
@@ -361,6 +362,14 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 			}
 		}
 		CPrintToChatAll("%t %t", "freeday_tag" , "freeday_start");
+		
+		if(RepeatFirstFreeday)
+		{
+			SetTeamScore(CS_TEAM_CT, 0);
+			SetTeamScore(CS_TEAM_T, 0);
+			RepeatFirstFreeday = false;
+		}
+		if (gc_bFirst.BoolValue) if((GetTeamClientCount(CS_TEAM_CT) == 0) || (GetTeamClientCount(CS_TEAM_T) == 0) && (GetTeamScore(CS_TEAM_CT) + GetTeamScore(CS_TEAM_T) == 0)) RepeatFirstFreeday = true;
 	}
 	else
 	{
@@ -389,7 +398,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 		MyJailbreak_SetEventDayRunning(false);
 		CPrintToChatAll("%t %t", "freeday_tag" , "freeday_end");
 	}
-	if (StartFreeday)
+	if (StartFreeday || RepeatFirstFreeday)
 	{
 		LoopClients(i) CreateInfoPanel(i);
 		
@@ -442,10 +451,11 @@ public void OnMapStart()
 	}
 	else
 	{
-		StartFreeday = false;	
+		StartFreeday = false;
 	}
 	IsFreeday = false;
 	AutoFreeday = false;
+	RepeatFirstFreeday = false;
 }
 
 
