@@ -64,8 +64,9 @@ public void OnPluginStart()
 public void Event_RoundStart_Post(Event event, const char[] name, bool dontBroadcast)
 {
 	hastoggled = false;
+	ConVar bFFA = FindConVar("mp_teammates_are_enemies");
 	
-	if (MyJailbreak_IsEventDayRunning())
+	if (MyJailbreak_IsEventDayRunning() && bFFA.BoolValue)
 	{
 		//Get the Cvar Value
 		Cvar_tg_team_none_attack = FindConVar("tg_team_none_attack");
