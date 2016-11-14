@@ -379,23 +379,36 @@ public Action Command_JoinGuardQueue(int client, int iArgNum)
 		return Plugin_Handled;
 	}
 	
-	
-	int iIndex = FindValueInArray(g_aGuardQueue, client);
-	
-	if (iIndex == -1)
+	if (!CanClientJoinGuards(client))
 	{
-		if ((gc_iJoinMode.IntValue == 0) || (gc_bAdminBypass.BoolValue && CheckVipFlag(client, g_sAdminFlag))) AddToQueue(client);
-		if ((gc_iJoinMode.IntValue == 1) && ((gc_bAdminBypass.BoolValue && !CheckVipFlag(client, g_sAdminFlag)) || (!gc_bAdminBypass.BoolValue))) Menu_AcceptGuardRules(client);
-		if ((gc_iJoinMode.IntValue == 2) && ((gc_bAdminBypass.BoolValue && !CheckVipFlag(client, g_sAdminFlag)) || (!gc_bAdminBypass.BoolValue))) Menu_GuardQuestions(client);
-		g_iQuestionTimes[client] = gc_iQuestionTimes.IntValue-1;
+		int iIndex = FindValueInArray(g_aGuardQueue, client);
+
+		if (iIndex == -1)
+		{
+			if ((gc_iJoinMode.IntValue == 0) || (gc_bAdminBypass.BoolValue && CheckVipFlag(client, g_sAdminFlag))) AddToQueue(client);
+			if ((gc_iJoinMode.IntValue == 1) && ((gc_bAdminBypass.BoolValue && !CheckVipFlag(client, g_sAdminFlag)) || (!gc_bAdminBypass.BoolValue))) Menu_AcceptGuardRules(client);
+			if ((gc_iJoinMode.IntValue == 2) && ((gc_bAdminBypass.BoolValue && !CheckVipFlag(client, g_sAdminFlag)) || (!gc_bAdminBypass.BoolValue))) Menu_GuardQuestions(client);
+			g_iQuestionTimes[client] = gc_iQuestionTimes.IntValue-1;
+		}
+		else
+		{
+			CReplyToCommand(client, "%t %t", "ratio_tag" , "ratio_number", iIndex + 1);
+			if (gc_bAdsVIP.BoolValue && gc_bVIPQueue.BoolValue && !CheckVipFlag(client, g_sAdminFlag)) CReplyToCommand(client, "%t %t", "ratio_tag" , "ratio_advip");
+		}
 		return Plugin_Handled;
 	}
-	else
+	if ((gc_iJoinMode.IntValue == 0) || (gc_bAdminBypass.BoolValue && CheckVipFlag(client, g_sAdminFlag)))
 	{
-		CReplyToCommand(client, "%t %t", "ratio_tag" , "ratio_number", iIndex + 1);
-		if (gc_bAdsVIP.BoolValue && gc_bVIPQueue.BoolValue && !CheckVipFlag(client, g_sAdminFlag)) CReplyToCommand(client, "%t %t", "ratio_tag" , "ratio_advip");
+		ForcePlayerSuicide(client);
+		ChangeClientTeam(client, CS_TEAM_CT);
+		MinusDeath(client);
 	}
-	return Plugin_Continue;
+	
+	if ((gc_iJoinMode.IntValue == 1) && ((gc_bAdminBypass.BoolValue && !CheckVipFlag(client, g_sAdminFlag)) || (!gc_bAdminBypass.BoolValue))) Menu_AcceptGuardRules(client);
+	if ((gc_iJoinMode.IntValue == 2) && ((gc_bAdminBypass.BoolValue && !CheckVipFlag(client, g_sAdminFlag)) || (!gc_bAdminBypass.BoolValue))) Menu_GuardQuestions(client);
+	g_iQuestionTimes[client] = gc_iQuestionTimes.IntValue-1;
+	
+	return Plugin_Handled;
 }
 
 
@@ -474,6 +487,7 @@ public Action Command_ToggleRatio(int client, int args)
 			CReplyToCommand(client, "%t %t", "ratio_tag", "ratio_disabled");
 		}
 	}
+	return Plugin_Handled;
 }
 
 
@@ -574,14 +588,13 @@ public Action Event_OnJoinTeam(int client, const char[] szCommand, int iArgCount
 			if ((gc_iJoinMode.IntValue == 1) && ((gc_bAdminBypass.BoolValue && !CheckVipFlag(client, g_sAdminFlag)) || (!gc_bAdminBypass.BoolValue))) Menu_AcceptGuardRules(client);
 			if ((gc_iJoinMode.IntValue == 2) && ((gc_bAdminBypass.BoolValue && !CheckVipFlag(client, g_sAdminFlag)) || (!gc_bAdminBypass.BoolValue))) Menu_GuardQuestions(client);
 			g_iQuestionTimes[client] = gc_iQuestionTimes.IntValue-1;
-			return Plugin_Handled;
 		}
 		else
 		{
 			CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_fullqueue", iIndex + 1);
 			if (gc_bAdsVIP.BoolValue && gc_bVIPQueue.BoolValue && !CheckVipFlag(client, g_sAdminFlag)) CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_advip");
-			return Plugin_Handled;
 		}
+		return Plugin_Handled;
 	}
 	
 	if ((gc_iJoinMode.IntValue == 0) || (gc_bAdminBypass.BoolValue && CheckVipFlag(client, g_sAdminFlag))) return Plugin_Continue;
@@ -742,8 +755,8 @@ public int Handler_AcceptGuardRules(Handle menu, MenuAction action, int param1, 
 				{
 					ForcePlayerSuicide(client);
 					ChangeClientTeam(client, CS_TEAM_CT);
-					// MinusDeath(client);
-				//	CS_RespawnPlayer(client);
+					MinusDeath(client);
+					CS_RespawnPlayer(client);
 				}
 				else AddToQueue(client);
 				ClientCommand(client, "play %s", g_sRightAnswerSound);
@@ -832,8 +845,8 @@ public int Handler_GuardQuestions(Handle menu, MenuAction action, int param1, in
 						{
 							ForcePlayerSuicide(client);
 							ChangeClientTeam(client, CS_TEAM_CT);
-							// MinusDeath(client);
-						//	CS_RespawnPlayer(client);
+							MinusDeath(client);
+							CS_RespawnPlayer(client);
 						}
 						else AddToQueue(client);
 					}
@@ -857,8 +870,8 @@ public int Handler_GuardQuestions(Handle menu, MenuAction action, int param1, in
 						{
 							ForcePlayerSuicide(client);
 							ChangeClientTeam(client, CS_TEAM_CT);
-							// MinusDeath(client);
-						//	CS_RespawnPlayer(client);
+							MinusDeath(client);
+							CS_RespawnPlayer(client);
 						}
 						else AddToQueue(client);
 					}
@@ -882,8 +895,8 @@ public int Handler_GuardQuestions(Handle menu, MenuAction action, int param1, in
 						{
 							ForcePlayerSuicide(client);
 							ChangeClientTeam(client, CS_TEAM_CT);
-							// MinusDeath(client);
-						//	CS_RespawnPlayer(client);
+							MinusDeath(client);
+							CS_RespawnPlayer(client);
 						}
 						else AddToQueue(client);
 					}
