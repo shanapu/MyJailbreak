@@ -36,6 +36,7 @@
   
 *Fixed*
 *  Warden - Painter: fix bug when enabled for t and t dies paint still activ
+*  Ratio: Unmute CT on teambalance
 *  Eventdays with freeze: rar glitch player push out of map
 *  download.txt: removed .bz2 file extension for deputy
 *  Cowboy: Fix command sm_setcowboy

@@ -1042,6 +1042,7 @@ stock void FixTeamRatio()
 		}
 		
 		SetClientPendingTeam(client, CS_TEAM_CT);
+		SetClientListeningFlags(client, VOICE_NORMAL); //unmute if sm_hosties or admin has muted prisoners on round start
 		MinusDeath(client);
 		bMovedPlayers = true;
 	}

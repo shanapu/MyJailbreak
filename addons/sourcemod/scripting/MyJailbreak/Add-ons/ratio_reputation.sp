@@ -1,5 +1,5 @@
 /*
- * MyJailbreak - Ratio - Stamm Support.
+ * MyJailbreak - Ratio - Reputation Support.
  * by: shanapu
  * https://github.com/shanapu/MyJailbreak/
  *
