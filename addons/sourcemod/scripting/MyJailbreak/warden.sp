@@ -146,13 +146,13 @@ char g_sMyJBLogFile[PLATFORM_MAX_PATH];
 #include "MyJailbreak/Modules/Warden/backstab.sp"
 #include "MyJailbreak/Modules/Warden/gundrop.sp"
 #include "MyJailbreak/Modules/Warden/marker.sp"
-#include "MyJailbreak/Modules/Warden/icon.sp"
 #include "MyJailbreak/Modules/Warden/color.sp"
 #include "MyJailbreak/Modules/Warden/laser.sp"
 #include "MyJailbreak/Modules/Warden/painter.sp"
 #include "MyJailbreak/Modules/Warden/rebel.sp"
 #include "MyJailbreak/Modules/Warden/counter.sp"
 #include "MyJailbreak/Modules/Warden/shootguns.sp"
+#include "MyJailbreak/Modules/Warden/orders.sp"
 
 
 //Compiler Options
@@ -241,13 +241,13 @@ public void OnPluginStart()
 	BackStab_OnPluginStart();
 	Marker_OnPluginStart();
 	GunDropPrevention_OnPluginStart();
-	Icon_OnPluginStart();
 	Color_OnPluginStart();
 	Laser_OnPluginStart();
 	Painter_OnPluginStart();
 	MarkRebel_OnPluginStart();
 	Counter_OnPluginStart();
 	ShootGuns_OnPluginStart();
+	Orders_OnPluginStart();
 	
 	
 	//AutoExecConfig
@@ -313,6 +313,7 @@ public void OnConfigsExecuted()
 	Countdown_OnConfigsExecuted();
 	ExtendTime_OnConfigsExecuted();
 	Counter_OnConfigsExecuted();
+	Orders_OnConfigsExecuted();
 	
 	
 	//Set custom Commands
@@ -501,9 +502,9 @@ public Action Command_VoteWarden(int client, int args)
 					
 					if (g_iVoteCount > playercount)
 					{
-						if(gp_bMyJailBreak) if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Player %L was kick as warden by voting", g_iWarden);
 						RemoveTheWarden();
 						CPrintToChatAll("%t %t", "warden_tag" , "warden_votesuccess");
+						if(gp_bMyJailBreak) if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Player %L was kick as warden by voting", g_iWarden);
 					}
 					else CPrintToChatAll("%t %t", "warden_tag" , "warden_need", Missing, client);
 				}
@@ -528,10 +529,9 @@ public Action AdminCommand_RemoveWarden(int client, int args)
 			CPrintToChatAll("%t %t", "warden_tag" , "warden_removed", client, g_iWarden);  // if client is console !=
 			if (gc_bBetterNotes.BoolValue) PrintCenterTextAll("%t", "warden_removed_nc", client, g_iWarden);
 			
-			if(gp_bMyJailBreak) if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Admin %L removed player %L as warden", client, g_iWarden);
-			
 			RemoveTheWarden();
 			Forward_OnWardenRemovedByAdmin(client);
+			if(gp_bMyJailBreak) if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Admin %L removed player %L as warden", client, g_iWarden);
 		}
 	}
 	return Plugin_Handled;
@@ -685,9 +685,9 @@ public void OnMapStart()
 	HandCuffs_OnMapStart();
 	Marker_OnMapStart();
 	Reminder_OnMapStart();
-	Icon_OnMapStart();
 	Laser_OnMapStart();
 	Painter_OnMapStart();
+	Orders_OnMapStart();
 	
 	if (gc_bSounds.BoolValue)
 	{
@@ -741,7 +741,6 @@ public void OnClientDisconnect(int client)
 	Deputy_OnClientDisconnect(client);
 	Painter_OnClientDisconnect(client);
 	HandCuffs_OnClientDisconnect(client);
-	Icon_OnClientDisconnect(client);
 }
 
 
@@ -951,11 +950,10 @@ public int Handler_SetWardenOverwrite(Menu menu, MenuAction action, int client, 
 			int newwarden = GetClientOfUserId(g_iTempWarden[client]);
 			if (g_iWarden != -1)CPrintToChatAll("%t %t", "warden_tag" , "warden_removed", client, g_iWarden);
 			
-			if(gp_bMyJailBreak) if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Admin %L kick player %L warden and set %L as new", client, g_iWarden, newwarden);
-			
 			RemoveTheWarden();
 			SetTheWarden(newwarden);
 			Forward_OnWardenCreatedByAdmin(newwarden);
+			if(gp_bMyJailBreak) if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Admin %L kick player %L warden and set %L as new", client, g_iWarden, newwarden);
 		}
 		if (g_bMenuClose != null)
 		{
@@ -1047,6 +1045,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char [] error, int err_ma
 	CreateNative("warden_deputy_getlast", Native_GetLastDeputy);
 	
 	CreateNative("warden_handcuffs_givepaperclip", Native_GivePaperClip);
+	CreateNative("warden_handcuffs_iscuffed", Native_IsClientCuffed);
 	
 	RegPluginLibrary("warden");
 	return APLRes_Success;
@@ -1132,7 +1131,6 @@ void Forward_OnWardenCreated(int client)
 	Call_Finish();
 	
 	Deputy_OnWardenCreation(client);
-	Icon_OnWardenCreation(client);
 	Color_OnWardenCreation(client);
 	Laser_OnWardenCreation(client);
 	HandCuffs_OnWardenCreation(client);
@@ -1166,7 +1164,6 @@ void Forward_OnWardenRemoved(int client)
 	
 	Deputy_OnWardenRemoved(client);
 	Marker_OnWardenRemoved();
-	Icon_OnWardenRemoved(client);
 	Color_OnWardenRemoved(client);
 	Laser_OnWardenRemoved(client);
 	Painter_OnWardenRemoved(client);

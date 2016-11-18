@@ -9,7 +9,7 @@
 *  Ratio: Support for 3rd party plugins (moved CT Bans support to extra plugin)
     *  new plugin - disabled/ratio_ctban.smx - Support plugin for databombs CT Bans plugin
     *  new plugin - ratio_reputation.smx - Support plugin for oaaron99 Player Reputations plugin
-        *  new cvar - disabled/sm_ratio_reputation - 0 - disabled, how many reputation a player need to join ct? (only if reputation is available)
+        *  new cvar -sm_ratio_reputation - 0 - disabled, how many reputation a player need to join ct? (only if reputation is available)
     *  new plugin - disabled/ratio_stamm.smx - Support plugin for popoklopsis Stamm plugin
         *  new cvar - sm_ratio_stamm - 0 - disabled, how many stamm points a player need to join ct? (only if stamm is available)
     *  new plugin - disabled/ratio_rankme.smx - Support plugin for lok1s, Scoobys RankMe plugin
@@ -27,12 +27,33 @@
     *  new cvar - sm_myjb_allow_endround - 0 - disabled, 1 - enable !endround command for testing (disable against abusing)
 *  TeamGames: Better Support on FFA-Events for KissLicks TeamGames (TeamGames 1.1.0.7)
     *  new plugin - disabled/myjailbreak_teamgames.smx - Support plugin for KissLicks TeamGames plugin
+
+
   
   
 *Changed*
 *  Warden - Handcuffs: a cuffed player have to press & hold +USE to lockpick with small 'progress animation'
 *  Ratio: T will be moved instandly to CT and respawned when there is space.
-  
+*  Warden - icons: Moved wardens icon module to a seperate plugin
+    *  removed cvar - sm_warden_icon_*** - obsolete cvars. **Please remove them from your configs!**
+    *  new plugin - icons.smx - new icons & native to remove icon for client
+        *  new cvar - sm_icon_warden_enable - 0 - disabled, 1 - enable the icon above the wardens head
+        *  new cvar - sm_icon_warden_path - Path to the warden icon DONT TYPE .vmt or .vft
+        *  new cvar - sm_icon_deputy_enable - 0 - disabled, 1 - enable the icon above the deputy head
+        *  new cvar - sm_icon_deputy_path - Path to the deputy icon DONT TYPE .vmt or .vft
+        *  new cvar - sm_icon_ct_enable - 0 - disabled, 1 - enable the icon above the guards head
+        *  new cvar - sm_icon_ct_path - Path to the guard icon DONT TYPE .vmt or .vft
+        *  new cvar - sm_icon_t_enable - 0 - disabled, 1 - enable the icon above the prisoners head
+        *  new cvar - sm_icon_t_path - Path to the prisoner icon DONT TYPE .vmt or .vft
+        *  new cvar - sm_icon_rebel_enable - 0 - disabled, 1 - enable the icon above the rebel prisoners head
+        *  new cvar - sm_icon_rebel_path - Path to the rebel prisoner icon DONT TYPE .vmt or .vft
+        *  new cvar - sm_icon_cuffs_enable - 0 - disabled, 1 - enable the icon above the cuffed prisoners head
+        *  new cvar - sm_icon_cuffs_path - Path to the cuffed prisoner icon DONT TYPE .vmt or .vft
+*  Warden: Choose color of handcuffed client
+    *  new cvar - sm_warden_color_cuffs_red - What color to turn the cuffed player into (set R, G and B values to 255 to disable) (Rgb): x - red value
+    *  new cvar - sm_warden_color_cuffs_green - What color to turn the cuffed player into (rGb): x - green value
+    *  new cvar - sm_warden_color_cuffs_blue - What color to turn the cuffed player into (rgB): x - blue value
+	
   
   
 *Fixed*
@@ -59,11 +80,13 @@
   
   *Developer stuff*
 *  Warden: New native to add paperclips (for MyJailShop support)
-    *  new forward - warden_handcuff_givepaperclip - Give a player a specific amount of paperclips
-*  Natives: Changed all native names by adding MyJailbreak_* in front to avoid conflicts with 3rd party plugins
+    *  new native - warden_handcuff_givepaperclip - Give a player a specific amount of paperclips
+    *  new native - warden_handcuff_iscuffed - Check is player is in handcuffs
+*  MyJailbreak Natives: Changed all native names by adding MyJailbreak_* in front to avoid conflicts with 3rd party plugins
 *  Forwards: New Forwards to add ratio support (restrict from guards/CT) for 3rd party plugins
     *  new forward - MyJailbreak_OnJoinGuardQueue - Called when a client trys to join the Guards(CT) or GuardQueue
-  
+*  Icons: New native to block a client icon
+    *  new native - MyIcons_BlockClientIcon - Set status (true/false) if the icon of a player will be displayed
   
   
 **[Beta *8.0*]** - Deputy, custom commands & much more

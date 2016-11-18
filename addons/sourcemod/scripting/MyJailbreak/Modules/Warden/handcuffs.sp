@@ -62,6 +62,9 @@ ConVar gc_fUnLockTimeMax;
 ConVar gc_fUnLockTimeMin;
 ConVar gc_iPaperClipUnLockChance;
 ConVar gc_iPaperClipGetChance;
+ConVar gc_iCuffedColorRed;
+ConVar gc_iCuffedColorGreen;
+ConVar gc_iCuffedColorBlue;
 
 
 //Booleans
@@ -109,6 +112,9 @@ public void HandCuffs_OnPluginStart()
 	gc_sSoundCuffsPath = AutoExecConfig_CreateConVar("sm_warden_sounds_cuffs", "music/MyJailbreak/cuffs.mp3", "Path to the soundfile which should be played for cuffed player.");
 	gc_sSoundBreakCuffsPath = AutoExecConfig_CreateConVar("sm_warden_sounds_breakcuffs", "music/MyJailbreak/breakcuffs.mp3", "Path to the soundfile which should be played for break cuffs.");
 	gc_sSoundUnLockCuffsPath = AutoExecConfig_CreateConVar("sm_warden_sounds_unlock", "music/MyJailbreak/unlock.mp3", "Path to the soundfile which should be played for unlocking cuffs.");
+	gc_iCuffedColorRed = AutoExecConfig_CreateConVar("sm_warden_color_cuffs_red", "0", "What color to turn the cuffed player into (set R, G and B values to 255 to disable) (Rgb): x - red value", _, true, 0.0, true, 255.0);
+	gc_iCuffedColorGreen = AutoExecConfig_CreateConVar("sm_warden_color_cuffs_green", "190", "What color to turn the cuffed player into (rGb): x - green value", _, true, 0.0, true, 255.0);
+	gc_iCuffedColorBlue = AutoExecConfig_CreateConVar("sm_warden_color_cuffs_blue", "120", "What color to turn the cuffed player into (rgB): x - blue value", _, true, 0.0, true, 255.0);
 	
 	RegConsoleCmd("sm_cuff", Command_cuff);
 	
@@ -472,7 +478,7 @@ public Action CuffsEm(int client, int attacker)
 	{
 		SetEntityMoveType(client, MOVETYPE_NONE);
 		SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 0.0);
-		SetEntityRenderColor(client, 0, 190, 0, 255);
+		SetEntityRenderColor(client, gc_iCuffedColorRed.IntValue, gc_iCuffedColorGreen.IntValue, gc_iCuffedColorBlue.IntValue, 255);
 		StripAllPlayerWeapons(client);
 		GivePlayerItem(client, "weapon_knife");
 		g_bCuffed[client] = true;
@@ -742,3 +748,17 @@ public int Native_GivePaperClip(Handle plugin, int argc)
 	CreateTimer(2.0, Timer_StillPaperClip, client);
 }
 
+
+//Is Client in handcuffs
+public int Native_IsClientCuffed(Handle plugin, int argc)
+{
+	int client = GetNativeCell(1);
+	
+	if (!IsClientInGame(client) && !IsClientConnected(client))
+		ThrowNativeError(SP_ERROR_INDEX, "Client index %i is invalid", client);
+	
+	if (g_bCuffed[client])
+		return true;
+	
+	return false;
+}

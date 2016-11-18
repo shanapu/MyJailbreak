@@ -34,6 +34,7 @@ public __pl_warden_SetNTVOptional()
 	MarkNativeAsOptional("warden_deputy_getlast");
 	
 	MarkNativeAsOptional("warden_handcuffs_givepaperclip");
+	MarkNativeAsOptional("warden_handcuffs_iscuffed");
 }
 #endif
 
@@ -234,3 +235,12 @@ native warden_deputy_getlast();
  * @NoReturn
  *********************************************************/
 native warden_handcuffs_givepaperclip(int client, int amount);
+
+
+/*********************************************************
+ * returns if client is in handcuffs
+ *
+ * @param client		The client to run the check on
+ * @true on match, false if not
+ *********************************************************/
+native warden_handcuffs_iscuffed(int client);
