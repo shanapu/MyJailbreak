@@ -27,38 +27,40 @@
     *  new cvar - sm_myjb_allow_endround - 0 - disabled, 1 - enable !endround command for testing (disable against abusing)
 *  TeamGames: Better Support on FFA-Events for KissLicks TeamGames (TeamGames 1.1.0.7)
     *  new plugin - disabled/myjailbreak_teamgames.smx - Support plugin for KissLicks TeamGames plugin
-
-
+*  Warden: Orders menu for preconfigured order/calls with chat, hud, sounds & overlays support. Each order can be dis/enabled per map.
+    *  new config file - configs/MyJailbreak/orders.cfg
+  
+  
   
   
 *Changed*
 *  Warden - Handcuffs: a cuffed player have to press & hold +USE to lockpick with small 'progress animation'
 *  Ratio: T will be moved instandly to CT and respawned when there is space.
 *  Warden - icons: Moved wardens icon module to a seperate plugin
-    *  removed cvar - sm_warden_icon_*** - obsolete cvars. **Please remove them from your configs!**
+    *  removed cvars - sm_warden_icon_*** - obsolete cvars. **Please remove them from your configs!**
     *  new plugin - icons.smx - new icons & native to remove icon for client
-        *  new cvar - sm_icon_warden_enable - 0 - disabled, 1 - enable the icon above the wardens head
-        *  new cvar - sm_icon_warden_path - Path to the warden icon DONT TYPE .vmt or .vft
-        *  new cvar - sm_icon_deputy_enable - 0 - disabled, 1 - enable the icon above the deputy head
-        *  new cvar - sm_icon_deputy_path - Path to the deputy icon DONT TYPE .vmt or .vft
-        *  new cvar - sm_icon_ct_enable - 0 - disabled, 1 - enable the icon above the guards head
-        *  new cvar - sm_icon_ct_path - Path to the guard icon DONT TYPE .vmt or .vft
-        *  new cvar - sm_icon_t_enable - 0 - disabled, 1 - enable the icon above the prisoners head
-        *  new cvar - sm_icon_t_path - Path to the prisoner icon DONT TYPE .vmt or .vft
-        *  new cvar - sm_icon_rebel_enable - 0 - disabled, 1 - enable the icon above the rebel prisoners head
-        *  new cvar - sm_icon_rebel_path - Path to the rebel prisoner icon DONT TYPE .vmt or .vft
-        *  new cvar - sm_icon_cuffs_enable - 0 - disabled, 1 - enable the icon above the cuffed prisoners head
-        *  new cvar - sm_icon_cuffs_path - Path to the cuffed prisoner icon DONT TYPE .vmt or .vft
+        *  new cvar - sm_icons_warden_enable - 0 - disabled, 1 - enable the icon above the wardens head
+        *  new cvar - sm_icons_warden_path - Path to the warden icon DONT TYPE .vmt or .vft
+        *  new cvar - sm_icons_deputy_enable - 0 - disabled, 1 - enable the icon above the deputy head
+        *  new cvar - sm_icons_deputy_path - Path to the deputy icon DONT TYPE .vmt or .vft
+        *  new cvar - sm_icons_ct_enable - 0 - disabled, 1 - enable the icon above the guards head
+        *  new cvar - sm_icons_ct_path - Path to the guard icon DONT TYPE .vmt or .vft
+        *  new cvar - sm_icons_t_enable - 0 - disabled, 1 - enable the icon above the prisoners head
+        *  new cvar - sm_icons_t_path - Path to the prisoner icon DONT TYPE .vmt or .vft
+        *  new cvar - sm_icons_rebel_enable - 0 - disabled, 1 - enable the icon above the rebel prisoners head
+        *  new cvar - sm_icons_rebel_path - Path to the rebel prisoner icon DONT TYPE .vmt or .vft
+        *  new cvar - sm_icons_cuffs_enable - 0 - disabled, 1 - enable the icon above the cuffed prisoners head
+        *  new cvar - sm_icons_cuffs_path - Path to the cuffed prisoner icon DONT TYPE .vmt or .vft
 *  Warden: Choose color of handcuffed client
     *  new cvar - sm_warden_color_cuffs_red - What color to turn the cuffed player into (set R, G and B values to 255 to disable) (Rgb): x - red value
     *  new cvar - sm_warden_color_cuffs_green - What color to turn the cuffed player into (rGb): x - green value
     *  new cvar - sm_warden_color_cuffs_blue - What color to turn the cuffed player into (rgB): x - blue value
-	
   
   
 *Fixed*
 *  Warden - Painter: fix bug when enabled for t and t dies paint still active
 *  Freeday: fix problem on sm_freeday_firstround and roundrestart
+*  Drunk: fix invert movement on the x-axis/y-axis much thanks @ peace-maker!
 *  Ratio: Unmute CT on teambalance
 *  Eventdays with freeze: rar glitch player push out of map
 *  download.txt: removed .bz2 file extension for deputy
@@ -75,7 +77,7 @@
     *  Ratio: Dependencies of MyJailbreak(core), warden
     *  Last Guard Rule: Dependencies of MyJailbreak(core), hosties, smartjaildoors, warden
     *  Weapons: Dependencies of MyJailbreak(core), warden
-  
+*  removed cvars - sm_warden_icon_*** - obsolete cvars. **Please remove them from your configs!**
   
   
   *Developer stuff*

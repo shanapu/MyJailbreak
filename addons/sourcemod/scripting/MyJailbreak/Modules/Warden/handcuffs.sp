@@ -116,7 +116,7 @@ public void HandCuffs_OnPluginStart()
 	gc_iCuffedColorGreen = AutoExecConfig_CreateConVar("sm_warden_color_cuffs_green", "190", "What color to turn the cuffed player into (rGb): x - green value", _, true, 0.0, true, 255.0);
 	gc_iCuffedColorBlue = AutoExecConfig_CreateConVar("sm_warden_color_cuffs_blue", "120", "What color to turn the cuffed player into (rgB): x - blue value", _, true, 0.0, true, 255.0);
 	
-	RegConsoleCmd("sm_cuff", Command_cuff);
+	// RegConsoleCmd("sm_cuff", Command_cuff);
 	
 	//Hooks
 	HookEvent("round_start", HandCuffs_Event_RoundStart);
@@ -140,10 +140,12 @@ public void HandCuffs_OnPluginStart()
 	gc_sAdminFlagCuffs.GetString(g_sAdminFlagCuffs , sizeof(g_sAdminFlagCuffs));
 }
 
+/*
 public Action Command_cuff(int client, int args)
 {
 	CuffsEm(client,client);
 }
+*/
 
 public int HandCuffs_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {

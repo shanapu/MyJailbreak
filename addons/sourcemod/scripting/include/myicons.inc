@@ -30,4 +30,4 @@ public __pl_myicons_SetNTVOptional()
  * @param status		true or false
  * @NoReturn
  *********************************************************/
-native MyIcons_BlockClientIcon(int client, int amount);
+native MyIcons_BlockClientIcon(int client, bool status);

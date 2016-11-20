@@ -70,8 +70,8 @@ ConVar gc_iRounds;
 ConVar gc_sSoundStartPath;
 ConVar gc_sCustomCommandVote;
 ConVar gc_sCustomCommandSet;
-//ConVar gc_bInvertX;
-//ConVar gc_bInvertY;
+ConVar gc_bInvertX;
+ConVar gc_bInvertY;
 ConVar gc_bWiggle;
 ConVar gc_sAdminFlag;
 ConVar gc_bAllowLR;
@@ -148,8 +148,8 @@ public void OnPluginStart()
 	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_drunk_flag", "g", "Set flag for admin/vip to set this Event Day.");
 	gc_bVote = AutoExecConfig_CreateConVar("sm_drunk_vote", "1", "0 - disabled, 1 - allow player to vote for drunk", _, true,  0.0, true, 1.0);
 	gc_bSpawnCell = AutoExecConfig_CreateConVar("sm_drunk_spawn", "0", "0 - T teleport to CT spawn, 1 - cell doors auto open", _, true,  0.0, true, 1.0);
-//	gc_bInvertX = AutoExecConfig_CreateConVar("sm_drunk_invert_x", "1", "Invert movement on the x-axis (left & right)", _, true, 0.0, true, 1.0);
-//	gc_bInvertY = AutoExecConfig_CreateConVar("sm_drunk_invert_y", "1", "Invert movement on the y-axis (forward & back)", _, true, 0.0, true, 1.0);
+	gc_bInvertX = AutoExecConfig_CreateConVar("sm_drunk_invert_x", "1", "Invert movement on the x-axis (left & right)", _, true, 0.0, true, 1.0);
+	gc_bInvertY = AutoExecConfig_CreateConVar("sm_drunk_invert_y", "1", "Invert movement on the y-axis (forward & back)", _, true, 0.0, true, 1.0);
 	gc_bWiggle = AutoExecConfig_CreateConVar("sm_drunk_wiggle", "1", "Wiggle with the screen", _, true, 0.0, true, 1.0);
 	gc_iRounds = AutoExecConfig_CreateConVar("sm_drunk_rounds", "1", "Rounds to play in a row", _, true, 1.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_drunk_roundtime", "5", "Round time in minutes for a single drunk round", _, true, 1.0);
@@ -642,9 +642,8 @@ void KillDrunk(int client)
 	TeleportEntity(client, NULL_VECTOR, angs, NULL_VECTOR);	
 }
 
-
 //Switch WSAD
-/*
+
 public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon) 
 {
 	if (IsDrunk)
@@ -683,7 +682,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	}
 	return Plugin_Continue;
 }
-*/
+
 
 
 /******************************************************************************
@@ -788,7 +787,6 @@ public Action Timer_Drunk(Handle timer, any client)
 		angs[2] = g_DrunkAngles[GetRandomInt(0, 100) % 20];
 		
 		TeleportEntity(client, NULL_VECTOR, angs, NULL_VECTOR);
-		
 	}
 	return Plugin_Handled;
 }
