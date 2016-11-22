@@ -1,6 +1,6 @@
 ### Change Log
   
-**[Beta 8.1.dev]** - lmg cvars, 
+**[Beta 8.1.dev]** - icons, 3th party plugins & much more
   
 *Added*
 *  Weapons: allow maschine-guns per cvar
@@ -36,7 +36,7 @@
 *Changed*
 *  Warden - Handcuffs: a cuffed player have to press & hold +USE to lockpick with small 'progress animation'
 *  Ratio: T will be moved instandly to CT and respawned when there is space.
-*  Warden - icons: Moved wardens icon module to a seperate plugin
+*  Warden - icons: Moved wardens icon module to a seperate plugin. New icons for cuffed, rebel & freeday
     *  removed cvars - sm_warden_icon_*** - obsolete cvars. **Please remove them from your configs!**
     *  new plugin - icons.smx - new icons & native to remove icon for client
         *  new cvar - sm_icons_warden_enable - 0 - disabled, 1 - enable the icon above the wardens head
@@ -48,13 +48,25 @@
         *  new cvar - sm_icons_t_enable - 0 - disabled, 1 - enable the icon above the prisoners head
         *  new cvar - sm_icons_t_path - Path to the prisoner icon DONT TYPE .vmt or .vft
         *  new cvar - sm_icons_rebel_enable - 0 - disabled, 1 - enable the icon above the rebel prisoners head
-        *  new cvar - sm_icons_rebel_path - Path to the rebel prisoner icon DONT TYPE .vmt or .vft
+        *  new cvar - sm_icons_rebel_path - Path to the rebel icon DONT TYPE .vmt or .vft
         *  new cvar - sm_icons_cuffs_enable - 0 - disabled, 1 - enable the icon above the cuffed prisoners head
         *  new cvar - sm_icons_cuffs_path - Path to the cuffed prisoner icon DONT TYPE .vmt or .vft
+        *  new cvar - sm_icons_freeday_enable - 0 - disabled, 1 - enable the icon above the freeday prisoners head
+        *  new cvar - sm_icons_freeday_path - Path to the freeday icon DONT TYPE .vmt or .vft
 *  Warden: Choose color of handcuffed client
     *  new cvar - sm_warden_color_cuffs_red - What color to turn the cuffed player into (set R, G and B values to 255 to disable) (Rgb): x - red value
     *  new cvar - sm_warden_color_cuffs_green - What color to turn the cuffed player into (rGb): x - green value
     *  new cvar - sm_warden_color_cuffs_blue - What color to turn the cuffed player into (rgB): x - blue value
+*  Request/Warden - freedays:  Moved requests freeday module to warden plugin
+    *  removed cvars - sm_freekill_freeday_*** - obsolete cvars. **Please remove them from your configs!**
+        *  new cvar - sm_warden_freeday_enable - Allows a warden to give a freeday to a player
+        *  new cvar - sm_warden_freeday_cmd - Set your custom chat command for give a freeday. no need for sm_ or !
+        *  new cvar - sm_warden_freeday_color_red - What color to turn the warden into (set R, G and B values to 255 to disable) (Rgb): x - red value
+        *  new cvar - sm_warden_freeday_color_green - What color to turn the warden into (rGb): x - green value
+        *  new cvar - sm_warden_freeday_color_blue - What color to turn the warden into (rgB): x - blue value  
+        *  new cvar - sm_warden_freeday_victim_deputy - 0 - disabled, 1 - Allow the deputy to set a personal freeday next round");
+  
+  
   
   
 *Fixed*
@@ -71,6 +83,7 @@
   
   
   
+  
 *Removed*
 *  Removed Dependencies of the required plugins. So the plugins can be used as standalone
     *  Warden: Dependencies of MyJailbreak(core), hosties, smartjaildoors, chat-processor, VoiceannounceEX
@@ -80,10 +93,13 @@
 *  removed cvars - sm_warden_icon_*** - obsolete cvars. **Please remove them from your configs!**
   
   
+  
   *Developer stuff*
 *  Warden: New native to add paperclips (for MyJailShop support)
     *  new native - warden_handcuff_givepaperclip - Give a player a specific amount of paperclips
     *  new native - warden_handcuff_iscuffed - Check is player is in handcuffs
+    *  new native - warden_freeday_has - returns if client has a freeday now
+    *  new native - warden_freeday_set - Set the client get a freeday
 *  MyJailbreak Natives: Changed all native names by adding MyJailbreak_* in front to avoid conflicts with 3rd party plugins
 *  Forwards: New Forwards to add ratio support (restrict from guards/CT) for 3rd party plugins
     *  new forward - MyJailbreak_OnJoinGuardQueue - Called when a client trys to join the Guards(CT) or GuardQueue

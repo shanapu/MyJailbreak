@@ -153,6 +153,7 @@ char g_sMyJBLogFile[PLATFORM_MAX_PATH];
 #include "MyJailbreak/Modules/Warden/counter.sp"
 #include "MyJailbreak/Modules/Warden/shootguns.sp"
 #include "MyJailbreak/Modules/Warden/orders.sp"
+#include "MyJailbreak/Modules/Warden/freedays.sp"
 
 
 //Compiler Options
@@ -248,6 +249,7 @@ public void OnPluginStart()
 	Counter_OnPluginStart();
 	ShootGuns_OnPluginStart();
 	Orders_OnPluginStart();
+	Freedays_OnPluginStart();
 	
 	
 	//AutoExecConfig
@@ -314,7 +316,7 @@ public void OnConfigsExecuted()
 	ExtendTime_OnConfigsExecuted();
 	Counter_OnConfigsExecuted();
 	Orders_OnConfigsExecuted();
-	
+	Freedays_OnConfigsExecuted();
 	
 	//Set custom Commands
 	int iCount = 0;
@@ -688,6 +690,7 @@ public void OnMapStart()
 	Laser_OnMapStart();
 	Painter_OnMapStart();
 	Orders_OnMapStart();
+	Freedays_OnMapStart();
 	
 	if (gc_bSounds.BoolValue)
 	{
@@ -741,6 +744,7 @@ public void OnClientDisconnect(int client)
 	Deputy_OnClientDisconnect(client);
 	Painter_OnClientDisconnect(client);
 	HandCuffs_OnClientDisconnect(client);
+	Freedays_OnClientDisconnect(client);
 }
 
 
@@ -1046,6 +1050,9 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char [] error, int err_ma
 	
 	CreateNative("warden_handcuffs_givepaperclip", Native_GivePaperClip);
 	CreateNative("warden_handcuffs_iscuffed", Native_IsClientCuffed);
+	
+	CreateNative("warden_freeday_set", Native_GiveFreeday);
+	CreateNative("warden_freeday_has", Native_HasClientFreeday);
 	
 	RegPluginLibrary("warden");
 	return APLRes_Success;

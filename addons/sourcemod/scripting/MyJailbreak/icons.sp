@@ -60,6 +60,8 @@ ConVar gc_bIconCuffed;
 ConVar gc_sIconCuffedPath;
 ConVar gc_bIconRebel;
 ConVar gc_sIconRebelPath;
+ConVar gc_bIconFreeday;
+ConVar gc_sIconFreedayPath;
 
 
 //Bools
@@ -78,6 +80,7 @@ char g_sIconGuardPath[256];
 char g_sIconPrisonerPath[256];
 char g_sIconRebelPath[256];
 char g_sIconCuffedPath[256];
+char g_sIconFreedayPath[256];
 
 
 //Info
@@ -112,6 +115,8 @@ public void OnPluginStart()
 	gc_sIconRebelPath = AutoExecConfig_CreateConVar("sm_icons_rebel_path", "decals/MyJailbreak/rebel" , "Path to the rebel prisoner icon DONT TYPE .vmt or .vft");
 	gc_bIconCuffed = AutoExecConfig_CreateConVar("sm_icons_cuffs_enable", "1", "0 - disabled, 1 - enable the icon above the cuffed prisoners head", _, true,  0.0, true, 1.0);
 	gc_sIconCuffedPath = AutoExecConfig_CreateConVar("sm_icons_cuffs_path", "decals/MyJailbreak/cuffed" , "Path to the cuffed prisoner icon DONT TYPE .vmt or .vft");
+	gc_bIconFreeday = AutoExecConfig_CreateConVar("sm_warden_icons_freeday_enable", "1", "0 - disabled, 1 - enable the icon above the prisoners with freeday head", _, true,  0.0, true, 1.0);
+	gc_sIconFreedayPath = AutoExecConfig_CreateConVar("sm_warden_icons_freeday", "decals/MyJailbreak/freeday" , "Path to the freeday icon DONT TYPE .vmt or .vft");
 	
 	
 	//AutoExecConfig
@@ -129,6 +134,7 @@ public void OnPluginStart()
 	HookConVarChange(gc_sIconPrisonerPath, OnSettingChanged);
 	HookConVarChange(gc_sIconRebelPath, OnSettingChanged);
 	HookConVarChange(gc_sIconCuffedPath, OnSettingChanged);
+	HookConVarChange(gc_sIconFreedayPath, OnSettingChanged);
 	
 	
 	//FindConVar
@@ -138,6 +144,7 @@ public void OnPluginStart()
 	gc_sIconPrisonerPath.GetString(g_sIconPrisonerPath , sizeof(g_sIconPrisonerPath));
 	gc_sIconRebelPath.GetString(g_sIconRebelPath , sizeof(g_sIconRebelPath));
 	gc_sIconCuffedPath.GetString(g_sIconCuffedPath , sizeof(g_sIconCuffedPath));
+	gc_sIconFreedayPath.GetString(g_sIconFreedayPath , sizeof(g_sIconFreedayPath));
 }
 
 
@@ -172,6 +179,11 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 	{
 		strcopy(g_sIconCuffedPath, sizeof(g_sIconCuffedPath), newValue);
 		if (gc_bIconCuffed.BoolValue) PrecacheModelAnyDownload(g_sIconCuffedPath);
+	}
+	else if (convar == gc_sIconFreedayPath)
+	{
+		strcopy(g_sIconFreedayPath, sizeof(g_sIconFreedayPath), newValue);
+		if (gc_bIconFreeday.BoolValue) PrecacheModelAnyDownload(g_sIconFreedayPath);
 	}
 }
 
@@ -238,7 +250,8 @@ public void OnMapStart()
 	if (gc_bIconPrisoner.BoolValue) PrecacheModelAnyDownload(g_sIconPrisonerPath);
 	if (gc_bIconDeputy.BoolValue) PrecacheModelAnyDownload(g_sIconDeputyPath);
 	if (gc_bIconRebel.BoolValue) PrecacheModelAnyDownload(g_sIconRebelPath);
-	if (gc_bIconCuffed.BoolValue) PrecacheModelAnyDownload(g_sIconCuffedPath);
+	if (gc_bIconCuffed.BoolValue) PrecacheModelAnyDownload(g_sIconCuffedPath);if (gc_bIconFreeday.BoolValue) PrecacheModelAnyDownload(g_sIconFreedayPath);
+	if (gc_bIconFreeday.BoolValue) PrecacheModelAnyDownload(g_sIconFreedayPath);
 	CreateTimer(0.5, Timer_Delay, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 }
 
@@ -351,6 +364,18 @@ public Action Should_TransmitC(int entity, int client)
 }
 
 
+public Action Should_TransmitF(int entity, int client)
+{
+	char m_ModelName[PLATFORM_MAX_PATH];
+	char iconbuffer[256];
+	Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconFreedayPath);
+	GetEntPropString(entity, Prop_Data, "m_ModelName", m_ModelName, sizeof(m_ModelName));
+	if (StrEqual( iconbuffer, m_ModelName))
+		return Plugin_Continue;
+	return Plugin_Handled;
+}
+
+
 /******************************************************************************
                    STOCKS
 ******************************************************************************/
@@ -384,10 +409,11 @@ stock int SpawnIcon(int client)
 		else if(gp_bHosties)
 		{
 			if (IsClientRebel(client)) Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconRebelPath);
+			else if (warden_freeday_has(client)) Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconFreedayPath);
 			else if (GetClientTeam(client) == CS_TEAM_T) Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconPrisonerPath);
 		}
+		else if (warden_freeday_has(client)) Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconFreedayPath);
 		else if (GetClientTeam(client) == CS_TEAM_T) Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconPrisonerPath);
-		
 	}
 	else if (GetClientTeam(client) == CS_TEAM_CT) Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconGuardPath);
 	else if(gp_bHosties)
@@ -422,8 +448,10 @@ stock int SpawnIcon(int client)
 		else if(gp_bHosties)
 		{
 			if (IsClientRebel(client))  SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitR);
+			else if (warden_freeday_has(client))  SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitF);
 			else if (GetClientTeam(client) == CS_TEAM_T)  SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitP);
 		}
+		else if (warden_freeday_has(client))  SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitF);
 		else if (GetClientTeam(client) == CS_TEAM_T)  SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitP);
 	}
 	else if (GetClientTeam(client) == CS_TEAM_CT)  SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitG);

@@ -35,6 +35,9 @@ public __pl_warden_SetNTVOptional()
 	
 	MarkNativeAsOptional("warden_handcuffs_givepaperclip");
 	MarkNativeAsOptional("warden_handcuffs_iscuffed");
+	
+	MarkNativeAsOptional("warden_freeday_set");
+	MarkNativeAsOptional("warden_freeday_has");
 }
 #endif
 
@@ -244,3 +247,23 @@ native warden_handcuffs_givepaperclip(int client, int amount);
  * @true on match, false if not
  *********************************************************/
 native warden_handcuffs_iscuffed(int client);
+
+
+
+
+/*********************************************************
+ * Set the client get a freeday
+ *
+ * @param client		The client to run the check on
+ * @no return
+ *********************************************************/
+native warden_freeday_set(int client);
+
+
+/*********************************************************
+ * returns if client has a freeday now
+ *
+ * @param client		The client to run the check on
+ * @true on match, false if not
+ *********************************************************/
+native warden_freeday_has(int client);

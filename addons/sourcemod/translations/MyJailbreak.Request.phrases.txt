@@ -3,109 +3,196 @@
 //
 "Phrases"
 {
-	"request_notalivect"
-	{
-		"ru"		"Вы не мертвы или не КТ"
-		"pl"		"Jestes martwy lub nie w CT."
-		"de"		"Du bist tot oder ein Ct."
-		"en"		"You are either dead or a Guard!"
-	}
-
-	"request_fullhp"
-	{
-		"ru"		"Хорошая попытка, у Вас полное здоровье"
-		"pl"		"Nie kombinuj , masz full HP"
-		"de"		"Netter Versuch, Du bist bei voller Gesundheit"
-		"en"		"Nice try! You're at full health!"
-	}
-
-	"request_refusedtimes"
-	{
-		"#format"   "{1:i}"
-		"de"		"Du hast in dieser Runde schon {purple}{1} mal verweigert."
-		"ru"		"Вы {purple}отказывались слишком много раз{default} в этом раунде."
-		"pl"		"juz {purple}odmawiales za duzo razy{default} w tej rundzie."
-		"en"		"You have already {purple}refused {1} times{default} during this round!"
-	}
-
-	"request_capitulation"
-	{
-		"#format"   "{1:N}"
-		"en"		"{purple}{1} {default}has {purple}capitulated! {default}Will the Warden accept the request?"
-		"ru"		"{purple}{1} {purple}капитулировал! {default}Будет ли командир одобрять?"
-		"pl"		"{purple}{1} {default}. {purple}skapitulowal! {default}Czy Warden to zaakceptuje ?"
-		"de"		"{purple}{1} {default}hat {purple}sich ergeben! {default}Wird der Warden akzeptieren?"
-	}
-
-	"request_capitulated"
-	{
-		"#format"   "{1:N}"
-		"en"		"{purple}{1} {default}has {purple}capitulated!"
-		"ru"		"{purple}{1} {purple}капитулировал!"
-		"pl"		"{purple}{1} {default}. {purple}skapitulowal!"
-		"de"		"{purple}{1} {default}hat {purple}sich ergeben!"
-	}
-
-	"request_alreadycapitulated"
-	{
-		"ru"		"Вы уже {purple}капитулировали"
-		"pl"		"przeciez ty {purple}sie juz zbuntowales."
-		"de"		"Du hast {purple}schon ergeben."
-		"en"		"You have {purple}already capitulated!"
-	}
-
-	"request_knifeback"
-	{
-		"ru"		"Вы получили {purple}нож обратно."
-		"pl"		"Masz {purple}swoj noz z powrotem."
-		"de"		"Du hast {purple}dein Messer zurück erhalten."
-		"en"		"You've been given {purple}your knife back."
-	}
-
-	"request_accepted"
-	{
-		"#format"   "{1:N},{2:N}"
-		"ru"		"{2} одобрил {1} запрос. "
-		"pl"		"{2} zaakceptowal twoje  {1}zyczenie."
-		"de"		"{2} hat {1}s Anfrage akzeptiert."
-		"en"		"{2} has accepted {1}'s request."
-	}
-
-	"request_noaccepted"
-	{
-		"#format"   "{1:N},{2:N}"
-		"ru"		"К{2} НЕ одобрил {1} запрос."
-		"pl"		"{2} NIE zaakceptowal twojego  {1}zyczenia."
-		"de"		"{2} hat {1}s Anfrage NICHT akzeptiert."
-		"en"		"{2} has {purple}not{default} accepted {1}s request."
-	}
-
-	"request_refuser"
-	{
-		"ru"		"Игрок, который отказывается"
-		"pl"		"Gracz ktory odmawia"
-		"de"		"Spieler die verweigern"
-		"en"		"A Player is Refusing!"
-	}
-
 	"request_acceptcapitulation"
 	{
+		"it"		"Accettate Il Capitualation?"
 		"ru"		"Одобрить Капитуляцию?"
 		"pl"		"Zaakceptowac kapitulacje ?"
 		"de"		"Kapitulation akzeptieren?"
 		"en"		"Do you accept The Capitualation?"
 	}
 
+	"request_accepted"
+	{
+		"#format"   "{1:N},{2:N}"
+		"it"		"{2} ha accettato {1} la richiesta."
+		"ru"		"{2} одобрил {1} запрос. "
+		"pl"		"{2} zaakceptowal twoje  {1}zyczenie."
+		"de"		"{2} hat {1}s Anfrage akzeptiert."
+		"en"		"{2} has accepted {1}'s request."
+	}
+
 	"request_acceptheal"
 	{
+		"it"		"Accetti la guarigione?"
 		"ru"		"Принять исцеление?"
 		"pl"		"Zaakceptowac uleczenie?"
 		"de"		"Heilungsanfrage akzeptieren?"
 		"en"		"Do you accept the Healing?"
 	}
 
+	"request_aliveorct"
+	{
+		"it"		"Tu sei Vivo o Sei Una Guardia"
+		"de"		"Du bist nicht tot oder ein CT."
+		"ru"		"Вы живы или КТ"
+		"en"		"You are either alive or a Guard!"
+	}
+
+	"request_alreadycapitulated"
+	{
+		"it"		"Tu hai gia' {purple}capitolato!"
+		"ru"		"Вы уже {purple}капитулировали"
+		"pl"		"przeciez ty {purple}sie juz zbuntowales."
+		"de"		"Du hast {purple}schon ergeben."
+		"en"		"You have {purple}already capitulated!"
+	}
+
+	"request_alreadyhealed"
+	{
+		"it"		"Tu hai gia' richiestp la {purple}guarigione!"
+		"ru"		"Вы уже {purple}запросили исцеление."
+		"pl"		"Przeciez juz {purple}chciales uzdrowienia."
+		"de"		"Du hast bereits{purple} nach Heilung gefragt."
+		"en"		"You have already requested a{purple} Healing!"
+	}
+
+	"request_alreadyrefused"
+	{
+		"it"		"Tu hai gia' {purple}Rifiutato il Gioco"
+		"ru"		"Вы уже {purple} отказались."
+		"pl"		"Juz {purple}przeciez odmowiles gry."
+		"de"		"Du hast {purple}schon verweigert."
+		"en"		"You have {purple}already refused the game!"
+	}
+
+	"request_alreadyrepeat"
+	{
+		"it"		"Hai gia' richiesto di {purple}ripetere!"
+		"ru"		"Вы уже {purple}попросили повторить."
+		"pl"		"Ty juz prosiles o {purple} powtorzenie zasad."
+		"de"		"Du hast bereits nach einer {purple}Wiederholung gefragt."
+		"en"		"You have already requested a {purple}repeat!"
+	}
+
+	"request_capitulated"
+	{
+		"#format"   "{1:N}"
+		"it"		"{purple}{1} {default}ha {purple}capitolato!"
+		"de"		"{purple}{1} {default}hat {purple}sich ergeben!"
+		"pl"		"{purple}{1} {default}. {purple}skapitulowal!"
+		"ru"		"{purple}{1} {purple}капитулировал!"
+		"en"		"{purple}{1} {default}has {purple}capitulated!"
+	}
+
+	"request_capitulation"
+	{
+		"#format"   "{1:N}"
+		"it"		"{purple}{1} {default}ha {purple}Capitolato! {default}Il Warder accettera' la richiesta?"
+		"en"		"{purple}{1} {default}has {purple}capitulated! {default}Will the Warden accept the request?"
+		"ru"		"{purple}{1} {purple}капитулировал! {default}Будет ли командир одобрять?"
+		"pl"		"{purple}{1} {default}. {purple}skapitulowal! {default}Czy Warden to zaakceptuje ?"
+		"de"		"{purple}{1} {default}hat {purple}sich ergeben! {default}Wird der Warden akzeptieren?"
+	}
+
+	"request_close"
+	{
+		"en"		"Exit"
+		"de"		"Schliessen"
+		"ru"		"Закрыть"
+	}
+
+	"request_countdownstop"
+	{
+		"da"		"{purple}STOP! {darkred}SLUT! {green}AFSLUTTET!"
+		"en"		"{purple}STOP! {darkred}END!"
+		"de"		"{purple}ENDE! {darkred}STOP! {green}Fertig!"
+		"pl"		"{purple}STOP! {darkred}Koniec!"
+		"ru"		"{purple}СТОП! {darkred} КОНЕЦ!"
+	}
+
+	"request_countdownstop_nc"
+	{
+		"da"		"STOP! SLUT!"
+		"en"		"STOP! END!"
+		"de"		"HALT ENDE FERTIG!"
+		"pl"		"STOP! KONIEC!"
+		"ru"		"СТОП! КОНЕЦ!"
+	}
+
+	"request_freeday"
+	{
+		"it"		"Prossimo Round Freeday"
+		"en"		"Next Round Freeday"
+		"ru"		"Следующий раунд фридей."
+		"de"		"Nächste Runde Freeday"
+	}
+
+	"request_freedayvictim"
+	{
+		"it"		"La Vittima dell'rdm il prossimo round avra' freeday"
+		"ru"		"Выдать фридей в следующем раунде"
+		"en"		"Give Victim next Round Freeday"
+		"de"		"Nächste Runde Freeday für Opfer"
+	}
+
+	"request_freekill"
+	{
+		"#format"   "{1:N},{2:N},{3:N}"
+		"it"		"{green}{1}{default} inviato un rapporto di Freekill {darkred}{2}{default} per {purple}{3}!"
+		"ru"		"{green}{1}{default} Отправил отчёт {darkred}{3}{default} о фрикилле {purple}{2}"
+		"de"		"{green}{1}{default} meldet {darkred}{2}{default} wegen Freekill an {purple}{3}"
+		"en"		"{green}{1}{default} sent a Freekill report of {darkred}{2}{default} to {purple}{3}!"
+	}
+
+	"request_freekilltimes"
+	{
+		"#format"   "{1:i}"
+		"it"		"Hai già segnalato un Freekill {purple}{1}{default} volte durante questo round."
+		"ru"		"Вы уже отправили {purple} {1} жалоб о фрикилле{default} в этом раунде."
+		"en"		"You have already reported a Freekill {purple}{1}{default} times during this round."
+		"de"		"Du hast in dieser Runde schon {purple}{1} mal Freekills{default} gemeldet."
+	}
+
+	"request_fullhp"
+	{
+		"it"		"Bel tentativo! Sei in piena salute"
+		"ru"		"Хорошая попытка, у Вас полное здоровье"
+		"pl"		"Nie kombinuj , masz full HP"
+		"de"		"Netter Versuch, Du bist bei voller Gesundheit"
+		"en"		"Nice try! You're at full health!"
+	}
+
+
+	"request_handlefreekill"
+	{
+		"it"		"Come si desidera gestire questo freekill?"
+		"ru"		"Как справиться с этим фрикиллом?"
+		"de"		"Wie möchstest du den Freekill handhaben?"
+		"en"		"How do you want to handle this freekill?"
+	}
+
+	"request_handlerespawn"
+	{
+		"it"		"Dove vuoi il respawn?"
+		"ru"		"Где возродить?"
+		"en"		"Where do you want the respawn?"
+		"de"		"Wo möchtest du ihn respawnen?"
+	}
+
+	"request_heal"
+	{
+		"#format"   "{1:N}"
+		"it"		"{purple}{1} {default}ha richiesto la {purple}guarigione! {default}Il CapoCT accettera' la richiesta"
+		"en"		"{purple}{1} {default}has requested a {purple}Healing! {default}Will the Warden accept the request?"
+		"ru"		"{purple}{1} {default}запросил {purple}исцеление! {default}Будет ли командир одобрять?"
+		"pl"		"{purple}{1} {default}ma zyczenie {purple}healing! {default}Czy Warden to zaakceptuje ?"
+		"de"		"{purple}{1} {default}hat {purple}Heilung {default}angefragt. Wird der Warden akzeptieren?"
+	}
+
 	"request_health"
 	{
+		"it"		"Hai ricevuto una {purple} Healthshot{default}!"
 		"ru"		"У вас есть {purple} healthshot{default}"
 		"pl"		"Posiadasz {purple} healthshot{default}"
 		"de"		"Du haste eine {purple}healthshot{default} bekommen."
@@ -116,48 +203,319 @@
 	"request_healtimes"
 	{
 		"#format"   "{1:i}"
+		"it"		"Hai gia' richiesto la guarigione{purple}{1} volte{default} durante questo round!"
 		"ru"		"Вы запросили {purple}слишком много исцелений{default} в этом раунде."
 		"pl"		"ty juz {purple}skladales zyczenia za duzo razy {default} w tej rundzie."
 		"de"		"Du hast in dieser Runde schon {purple}{1} mal Heilungen{default} angefragt."
 		"en"		"You have already requested healing{purple}{1} times{default} during this round!"
 	}
 
+	"request_killbcfreekill"
+	{
+		"it"		"È stato ucciso a causa di un {darkred}RDM!"
+		"ru"		"Вы были убиты из-за {darkred}фрикилла"
+		"de"		"Du wurdest wegen eines {darkred}Freekills{default} getötet"
+		"en"		"You were slain due to a {darkred}Freekill!"
+	}
+
+	"request_killbcfreekillall"
+	{
+		"#format"   "{1:N}"
+		"it"		"{green}{1}{default} è stato ucciso a causa di un {darkred}RDM!"
+		"de"		"{green}{1}{default} wurdest wegen eines {darkred}Freekills{default} getötet"
+		"en"		"{green}{1}{default} was slain due to a {darkred}Freekill!"
+		"ru"		"{green}{1}{default} был убит в из-за {darkred}фрикилла"
+	}
+
+	"request_killfreekiller"
+	{
+		"it"		"Slay il Freekiller"
+		"ru"		"Убить фрикиллера"
+		"de"		"Töte den Freekiller"
+		"en"		"Slay the Freekiller"
+	}
+
+	"request_killreason_brokerule"
+	{
+		"it"		"Ha Infranto il Regolamento"
+		"ru"		"Нарушение правил"
+		"en"		"He broke the Rules"
+	}
+
+	"request_killreason_brokerule_chat"
+	{
+		"#format"   "{1:N},{2:N}"
+		"it"		"La Guardia {green}{1}{default} ha reclamato {darkred}{2}{default} ha infranto il regolamento"
+		"ru"		"Охранник {green}{1}{default} наказал {darkred}{2}{default} за нарушение правил"
+		"en"		"The Guard {green}{1}{default} claiming {darkred}{2}{default} has broke the rules"
+	}
+
+	"request_killreason_freekill"
+	{
+		"it"		"ho fatto rdm"
+		"ru"		"Я убил его просто так"
+		"en"		"I freekilled him"
+	}
+
+	"request_killreason_freekill_chat"
+	{
+		"#format"   "{1:N},{2:N}"
+		"it"		"La Guardia {green}{1}{default} Ha confessato l'rdm su {darkred}{2}{default}"
+		"ru"		"Охранник {green}{1}{default} признается в фрикилле {darkred}{2}{default}"
+		"en"		"The Guard {green}{1}{default} confess a freekill on {darkred}{2}{default}"
+	}
+
+	"request_killreason_lostgame"
+	{
+		"it"		"Ha perso la partita"
+		"ru"		"Проигрыш в игре"
+		"en"		"He lost the Game"
+	}
+
+	"request_killreason_lostgame_chat"
+	{
+		"#format"   "{1:N},{2:N}"
+		"it"		"La Guardia {green}{1}{default} ha reclamato {darkred}{2}{default} perso la partita"
+		"ru"		"Охранник {green}{1}{default} наказал {darkred}{2}{default} из-за проигрыша в игре"
+		"en"		"The Guard {green}{1}{default} claiming {darkred}{2}{default} lost the Game"
+	}
+
+	"request_killreason_noanswer"
+	{
+		"#format"   "{1:N},{2:N}"
+		"it"		"La Guardia {green}{1}{default} non ha dichiarazioni per l'uccisione su {darkred}{2}{default}"
+		"ru"		"Охранник {green}{1}{default} не имеет никакого заявления на убийство {darkred}{2}{default}"
+		"en"		"The Guard {green}{1}{default} has no declaration for the kill on {darkred}{2}{default}"
+	}
+
+	"request_killreason_notfollow"
+	{
+		"it"		"Non esegue i comandi"
+		"ru"		"Неподчинение приказу"
+		"en"		"He not listen to dictate"
+	}
+
+	"request_killreason_notfollow_chat"
+	{
+		"#format"   "{1:N},{2:N}"
+		"it"		"La Guardia {green}{1}{default} ha reclamato {darkred}{2}{default} Non ha seguito il dettato"
+		"ru"		"Охранник {green}{1}{default} наказал {darkred}{2}{default} за неисполнение приказа"
+		"en"		"The Guard {green}{1}{default} claiming {darkred}{2}{default} hasn't followed the dictation"
+	}
+
+	"request_killreason_rebel"
+	{
+		"it"		"Lui era un ribelle"
+		"ru"		"Взбунтовал"
+		"en"		"He was a Rebel"
+	}
+
+	"request_killreason_rebel_chat"
+	{
+		"#format"   "{1:N},{2:N}"
+		"it"		"La Guardia {green}{1}{default} ha reclamato {darkred}{2}{default} era ribelle"
+		"ru"		"Охранник {green}{1}{default} наказал {darkred}{2}{default} из-за бунта"
+		"en"		"The Guard {green}{1}{default} claiming {darkred}{2}{default} was a rebel"
+	}
+
+	"request_killreason_sry"
+	{
+		"it"		"Colpa mia, voglio chiedere scusa"
+		"ru"		"Моя вина, я извинюсь"
+		"en"		"My fault, wanna say sorry"
+	}
+
+	"request_killreason_sry_chat"
+	{
+		"#format"   "{1:N},{2:N}"
+		"it"		"La Guardia {green}{1}{default} vuole chiedere scusa per l'uccisione {darkred}{2}{default}"
+		"ru"		"Охранник {green}{1}{default} хочет извиниться перед {darkred}{2}{default} за случайное убийство"
+		"en"		"The Guard {green}{1}{default} wanna say sorry for mistakly killing {darkred}{2}{default}"
+	}
+
+	"request_killreason_title"
+	{
+		"#format"   "{1:N}"
+		"it"		"Hai ucciso {1}???"
+		"ru"		"Причина убийства {1}?"
+		"en"		"You killed {1}???"
+	}
+
+	"request_knifeback"
+	{
+		"it"		"ti hanno dato {purple}il coltello sulla schiena."
+		"ru"		"Вы получили {purple}нож обратно."
+		"pl"		"Masz {purple}swoj noz z powrotem."
+		"de"		"Du hast {purple}dein Messer zurück erhalten."
+		"en"		"You've been given {purple}your knife back."
+	}
+
+	"request_menu_capitulation"
+	{
+		"it"		"Resa"
+		"ru"		"Капитуляция."
+		"pl"		"Zbuntuj Sie"
+		"de"		"Kapitulation"
+		"en"		"Capitulation"
+	}
+
+	"request_menu_freekill"
+	{
+		"it"		"Segnala RDM"
+		"de"		"Freekill melden"
+		"ru"		"Пожаловаться на фрикилл"
+		"en"		"Report Freekill"
+	}
+
+	"request_menu_heal"
+	{
+		"it"		"Richiesta di Guarigione"
+		"ru"		"Запросить исцеление"
+		"pl"		"Popros o uzdrowienie"
+		"de"		"Heilung anfragen"
+		"en"		"Request a Healing"
+	}
+
+	"request_menu_refuse"
+	{
+		"it"		"Rifiutare la partita in corso"
+		"ru"		"Отказаться от игры"
+		"pl"		"Odmowa gry"
+		"de"		"Spiel verweigern"
+		"en"		"Refuse the Current Game"
+	}
+
+	"request_menu_repeat"
+	{
+		"it"		"Ripetere Annuncio"
+		"ru"		"Повторите объявление"
+		"pl"		"Popros o powtorzenie"
+		"de"		"Ansage wiederholen"
+		"en"		"Repeat Announcement"
+	}
+
+	"request_menu_title"
+	{
+		"it"		"Fai una Richiesta"
+		"ru"		"Задать вопрос"
+		"pl"		"Popros o zyczenie"
+		"de"		"Anfrage stellen"
+		"en"		"Make a Request"
+	}
+
+	"request_noaccepted"
+	{
+		"#format"   "{1:N},{2:N}"
+		"it"		"{2} Non {purple}ha{default} accettato {1}la richiesta."
+		"ru"		"К{2} НЕ одобрил {1} запрос."
+		"pl"		"{2} NIE zaakceptowal twojego  {1}zyczenia."
+		"de"		"{2} hat {1}s Anfrage NICHT akzeptiert."
+		"en"		"{2} has {purple}not{default} accepted {1}s request."
+	}
+
 	"request_nodamage"
 	{
+		"it"		"Non si può fare {purple}danni dopo la capitolazione!"
 		"ru"		"Вы не можете наносить {purple}урон после капитуляции."
 		"pl"		"nie mozesz zadac obrazen  {purple}po kapitulacji."
 		"de"		"Du kannst nach einer Capitulation {purple}keinen Schaden verteilen."
 		"en"		"You cannot do {purple}damage after capitulation!"
 	}
 
-	"request_heal"
+	"request_nokiller"
 	{
-		"#format"   "{1:N}"
-		"en"		"{purple}{1} {default}has requested a {purple}Healing! {default}Will the Warden accept the request?"
-		"ru"		"{purple}{1} {default}запросил {purple}исцеление! {default}Будет ли командир одобрять?"
-		"pl"		"{purple}{1} {default}ma zyczenie {purple}healing! {default}Czy Warden to zaakceptuje ?"
-		"de"		"{purple}{1} {default}hat {purple}Heilung {default}angefragt. Wird der Warden akzeptieren?"
+		"it"		"Siamo spiacenti, non riusciamo a trovare il tuo assassino"
+		"ru"		"Простите, мы не можем найти Вашего убийцу?"
+		"de"		"Wir konnten deinen Mörder nicht finden"
+		"en"		"Sorry, we can't find your killer!"
 	}
 
-	"request_alreadyhealed"
+	"request_notalivect"
 	{
-		"ru"		"Вы уже {purple}запросили исцеление."
-		"pl"		"Przeciez juz {purple}chciales uzdrowienia."
-		"de"		"Du hast bereits{purple} nach Heilung gefragt."
-		"en"		"You have already requested a{purple} Healing!"
+		"it"		"Sei morto o sei Guardia!"
+		"ru"		"Вы не мертвы или не КТ"
+		"pl"		"Jestes martwy lub nie w CT."
+		"de"		"Du bist tot oder ein Ct."
+		"en"		"You are either dead or a Guard!"
+	}
+
+	"request_openrefuse"
+	{
+		"it"		"Il CapoCT ha permesso negazioni.{purple} Scrivi !refuse per rifiutare il gioco!"
+		"en"		"The warden has enabled refusals.{purple} Type !refuse to refuse the game!"
+		"ru"		"Командир принимает отказы.{purple} Напишите !refuse , чтобы отказаться от игры"
+		"pl"		"Warden otwiera rezygnacje.{purple} wpisz !refuse by zrezygnowac z trybu gry."
+		"de"		"Der Warden hat Verweigerung eröffnet. {purple}!refuse um das Spiel zu verweigern."
+	}
+
+	"request_pardonfreekill"
+	{
+		"it"		"Era RDM?"
+		"ru"		"Был ли это фрикилл?"
+		"de"		"War es ein unerlaubt Mord?"
+		"en"		"Was that a Freekill?"
 	}
 
 	"request_processing"
 	{
+		"it"		"C'e' gia' una {purple}richiesta in corso. Aspetta un attimo!"
 		"ru"		"Ваш запрос уже в {purple}обработке. Подождите минутку"
 		"pl"		"takie rzadanie jest juz przetwarzane {purple}Poczekaj chwile!!"
 		"de"		"Es ist noch eine {purple}Anfrage im Gange. warte einen Moment"
 		"en"		"There is already a {purple}request in processing. Wait a moment!"
 	}
 
+	"request_refuseallow"
+	{
+		"it"		"Il CapoCT deve {purple}permettere di rifiutare!"
+		"ru"		"Командир должен сначало {purple}разрешить написать !refuse"
+		"pl"		"Warden musi najpierw zarzadzic ODMOWY {purple}poprzez wpisanie !refuse"
+		"de"		"Der Warden muss zu erst verweigern {purple}erlauben mit !refuse"
+		"en"		"The warden must first {purple}allow refusing by typing !refuse"
+	}
+
+	"request_refusedtimes"
+	{
+		"#format"   "{1:i}"
+		"it"		"Hai gia' {purple}rifiutato {1} volte{default} durante questo roud0!"
+		"de"		"Du hast in dieser Runde schon {purple}{1} mal verweigert."
+		"ru"		"Вы {purple}отказывались слишком много раз{default} в этом раунде."
+		"pl"		"juz {purple}odmawiales za duzo razy{default} w tej rundzie."
+		"en"		"You have already {purple}refused {1} times{default} during this round!"
+	}
+
+	"request_refuser"
+	{
+		"it"		"Un giocatore si rifiuta!"
+		"ru"		"Игрок, который отказывается"
+		"pl"		"Gracz ktory odmawia"
+		"de"		"Spieler die verweigern"
+		"en"		"A Player is Refusing!"
+	}
+
+	"request_refusing"
+	{
+		"#format"   "{1:N}"
+		"it"		"{purple}{1} {default}ha {purple}Rifiutato il Gioco!"
+		"ru"		"{purple}{1} {purple}отказался от этой игры."
+		"pl"		"{purple}{1} {default}. {purple}odmawia gry."
+		"de"		"{purple}{1} {default}hat das {purple}Spiel verweigert"
+		"en"		"{purple}{1} {default}has {purple}refused the game!"
+	}
+
+	"request_repeat"
+	{
+		"it"		"Un Player Ha Chiesto Di Ripete!!"
+		"ru"		"Игрок, который просит повторить"
+		"pl"		"Gracze, ktorzy prosili o powtorzenie"
+		"de"		"Spieler die um eine Wiederholung bitten"
+		"en"		"A Player is requesting a Repeat!"
+	}
+
 	"request_repeatpls"
 	{
 		"#format"   "{1:N}"
+		"it"		"{purple}{1} {default}ha richiesto di {purple}Ripetere!{default}"
 		"ru"		"{purple}{1} {default}просит повторить! {default}Или он не знает правила игры."
 		"pl"		"{purple}{1} {default}prosi o  {purple}Powtorzenie ostatniego zdania  {default}albo nie zna zasad GRY! "
 		"de"		"{purple}{1} {default}bittet um eine {purple}Wiederholung!{default} Oder er kennt die Spielregeln nicht."
@@ -167,174 +525,32 @@
 	"request_repeattimes"
 	{
 		"#format"   "{1:i}"
+		"it"		"Hai gia' chiesto di {purple} Ripetere {1} volte{default} durante questo round!"
 		"ru"		"Вы запросили {purple}слишком много повторов{default} в этом раунде."
 		"pl"		"ty juz  {purple}miales zbyt wiele zyczen {default} w tej rundzie."
 		"de"		"Du hast in dieser Runde schon {purple}{1} mal Wiederholungen{default} angefragt."
 		"en"		"You have already requested a {purple} Repeat {1} times{default} during this round!"
 	}
 
-	"request_alreadyrepeat"
+	"request_respawnbody"
 	{
-		"ru"		"Вы уже {purple}попросили повторить."
-		"pl"		"Ty juz prosiles o {purple} powtorzenie zasad."
-		"de"		"Du hast bereits nach einer {purple}Wiederholung gefragt."
-		"en"		"You have already requested a {purple}repeat!"
-	}
-
-	"request_repeat"
-	{
-		"ru"		"Игрок, который просит повторить"
-		"pl"		"Gracze, ktorzy prosili o powtorzenie"
-		"de"		"Spieler die um eine Wiederholung bitten"
-		"en"		"A Player is requesting a Repeat!"
-	}
-
-	"request_menu_title"
-	{
-		"ru"		"Задать вопрос"
-		"pl"		"Popros o zyczenie"
-		"de"		"Anfrage stellen"
-		"en"		"Make a Request"
-	}
-
-	"request_menu_repeat"
-	{
-		"ru"		"Повторите объявление"
-		"pl"		"Popros o powtorzenie"
-		"de"		"Ansage wiederholen"
-		"en"		"Repeat Announcement"
-	}
-
-	"request_menu_refuse"
-	{
-		"ru"		"Отказаться от игры"
-		"pl"		"Odmowa gry"
-		"de"		"Spiel verweigern"
-		"en"		"Refuse the Current Game"
-	}
-
-	"request_menu_heal"
-	{
-		"ru"		"Запросить исцеление"
-		"pl"		"Popros o uzdrowienie"
-		"de"		"Heilung anfragen"
-		"en"		"Request a Healing"
-	}
-
-	"request_menu_capitulation"
-	{
-		"ru"		"Капитуляция."
-		"pl"		"Zbuntuj Sie"
-		"de"		"Kapitulation"
-		"en"		"Capitulation"
-	}
-
-	"request_openrefuse"
-	{
-		"en"		"The warden has enabled refusals.{purple} Type !refuse to refuse the game!"
-		"ru"		"Командир принимает отказы.{purple} Напишите !refuse , чтобы отказаться от игры"
-		"pl"		"Warden otwiera rezygnacje.{purple} wpisz !refuse by zrezygnowac z trybu gry."
-		"de"		"Der Warden hat Verweigerung eröffnet. {purple}!refuse um das Spiel zu verweigern."
-	}
-
-	"request_tag"
-	{
-		"de"		"[{green}MyJB.requests{default}]"
-		"ru"		"[{green}MyJB.вопросы{default}]"
-		"pl"		"[{green}MyJB.Zyczenia{default}]"
-		"en"		"[{green}MyJB.requests{default}]"
-	}
-
-	"request_refusing"
-	{
-		"#format"   "{1:N}"
-		"ru"		"{purple}{1} {purple}отказался от этой игры."
-		"pl"		"{purple}{1} {default}. {purple}odmawia gry."
-		"de"		"{purple}{1} {default}hat das {purple}Spiel verweigert"
-		"en"		"{purple}{1} {default}has {purple}refused the game!"
-	}
-
-	"request_alreadyrefused"
-	{
-		"ru"		"Вы уже {purple} отказались."
-		"pl"		"Juz {purple}przeciez odmowiles gry."
-		"de"		"Du hast {purple}schon verweigert."
-		"en"		"You have {purple}already refused the game!"
-	}
-
-	"request_refuseallow"
-	{
-		"ru"		"Командир должен сначало {purple}разрешить написать !refuse"
-		"pl"		"Warden musi najpierw zarzadzic ODMOWY {purple}poprzez wpisanie !refuse"
-		"de"		"Der Warden muss zu erst verweigern {purple}erlauben mit !refuse"
-		"en"		"The warden must first {purple}allow refusing by typing !refuse"
-	}
-
-	"request_handlefreekill"
-	{
-		"ru"		"Как справиться с этим фрикиллом?"
-		"de"		"Wie möchstest du den Freekill handhaben?"
-		"en"		"How do you want to handle this freekill?"
+		"it"		"Respawn sul luogo del crimine"
+		"ru"		"Возродить в теле"
+		"en"		"Respawn on Death Place"
+		"de"		"An Leiche wiederbeleben"
 	}
 
 	"request_respawncell"
 	{
+		"it"		"Respawn in una cella"
 		"ru"		"Возродить в камере"
 		"en"		"Respawn in a Cell"
 		"de"		"In der Zelle wiederbeleben"
 	}
 
-	"request_respawnvictim"
-	{
-		"ru"		"Возродил жертву."
-		"de"		"Das Opfer wiederbeleben"
-		"en"		"Respawn the Victim"
-	}
-
-	"request_killfreekiller"
-	{
-		"ru"		"Убить фрикиллера"
-		"de"		"Töte den Freekiller"
-		"en"		"Slay the Freekiller"
-	}
-
-	"request_respawnwarden"
-	{
-		"ru"		"Воскрешение перед командиром."
-		"en"		"Respawn in Front of the Warden"
-		"de"		"Vor dem Warden wiederbeleben"
-	}
-
-	"request_freeday"
-	{
-		"en"		"Next Round Freeday"
-		"ru"		"Следующий раунд фридей."
-		"de"		"Nächste Runde Freeday"
-	}
-
-	"request_swapfreekiller"
-	{
-		"ru"		"Перевести фрикиллера за Т"
-		"de"		"Schiebe den Freekiller zu T"
-		"en"		"Swap freekiller to Prisoner Team"
-	}
-
-	"request_aliveorct"
-	{
-		"de"		"Du bist nicht tot oder ein CT."
-		"ru"		"Вы живы или КТ"
-		"en"		"You are either alive or a Guard!"
-	}
-
-	"request_nokiller"
-	{
-		"ru"		"Простите, мы не можем найти Вашего убийцу?"
-		"de"		"Wir konnten deinen Mörder nicht finden"
-		"en"		"Sorry, we can't find your killer!"
-	}
-
 	"request_respawned"
 	{
+		"it"		"Tu sei stato respawnato!"
 		"ru"		"Вы возрождены"
 		"de"		"Du wurdest wiederbeleben"
 		"en"		"You were respawned!"
@@ -343,36 +559,51 @@
 	"request_respawnedall"
 	{
 		"#format"   "{1:N}"
+		"it"		"{1} e' stato respawnato a casua di un {darkred}RDM!"
 		"ru"		"{1} был возрождён из-за {darkred}фрикилла"
 		"de"		"{1} wurde wegen eines {darkred}Freekills{default} wiederbelebt"
 		"en"		"{1} was respawned due a {darkred}Freekill!"
 	}
 
-	"request_freekilltimes"
+	"request_respawnvictim"
+	{
+		"it"		"Respawn la vittima"
+		"ru"		"Возродил жертву."
+		"de"		"Das Opfer wiederbeleben"
+		"en"		"Respawn the Victim"
+	}
+
+	"request_respawnwarden"
+	{
+		"it"		"Respawn in Front of the Warden"
+		"ru"		"Воскрешение перед командиром."
+		"en"		"Respawn in Front of the Warden"
+		"de"		"Vor dem Warden wiederbeleben"
+	}
+
+	"request_stopcountdown"
 	{
 		"#format"   "{1:i}"
-		"ru"		"Вы уже отправили {purple} {1} жалоб о фрикилле{default} в этом раунде."
-		"en"		"You have already reported a Freekill {purple}{1}{default} times during this round."
-		"de"		"Du hast in dieser Runde schon {purple}{1} mal Freekills{default} gemeldet."
+		"da"		"Stopper om {purple}{1}{default} sekunder!"
+		"en"		"Stop in {purple}{1}{default} seconds!"
+		"de"		"Stop in {purple}{1}{default} Sekunden!"
+		"pl"		"Stop za {purple}{1}{default} sekund!"
+		"ru"		"Конец через {purple}{1}{default} секунд!"
 	}
 
-	"request_killbcfreekill"
+	"request_stopcountdown_nc"
 	{
-		"ru"		"Вы были убиты из-за {darkred}фрикилла"
-		"de"		"Du wurdest wegen eines {darkred}Freekills{default} getötet"
-		"en"		"You were slain due to a {darkred}Freekill!"
-	}
-
-	"request_killbcfreekillall"
-	{
-		"#format"   "{1:N}"
-		"de"		"{green}{1}{default} wurdest wegen eines {darkred}Freekills{default} getötet"
-		"en"		"{green}{1}{default} was slain due to a {darkred}Freekill!"
-		"ru"		"{green}{1}{default} был убит в из-за {darkred}фрикилла"
+		"#format"   "{1:i}"
+		"da"		"Stopper om {1} sekunder!"
+		"en"		"Stop/End in {1} seconds!"
+		"de"		"Stop/Ende in {1} Sekunden!"
+		"pl"		"Stop/koniec  za {1} sekund!"
+		"ru"		"Конеч через {1} секунд!"
 	}
 
 	"request_swapbcfreekill"
 	{
+		"it"		"Sei stato swappato nei prigionieri a causa di un {darkred}RDM!"
 		"ru"		"Вы были переведены за команду террористов из-за {darkred}фрикилла."
 		"de"		"Du wurdest wegen eines {darkred}Freekills{default} zu Terror verschoben"
 		"en"		"You were swaped to the Prisoner's team due to a {darkred}Freekill!"
@@ -382,228 +613,26 @@
 	{
 		"#format"   "{1:N}"
 		"ru"		"{green}{1}{default} был переведён из-за {darkred}фрикилла{default} в команду террористов."
+		"it"		"{green}{1}{default}, a causa di un  {darkred}rdm,{default} e' stato spostato nei prigionieri!"
 		"de"		"{green}{1}{default} wurdest wegen eines {darkred}Freekills{default} zu den Terrors verschoben"
 		"en"		"{green}{1}{default} was swaped due to a {darkred}freekill{default} to the Prisoner's team!"
 	}
 
-	"request_menu_freekill"
+	"request_swapfreekiller"
 	{
-		"de"		"Freekill melden"
-		"ru"		"Пожаловаться на фрикилл"
-		"en"		"Report Freekill"
+		"it"		"Spostato il 'freekiller' nei Prigionieri"
+		"ru"		"Перевести фрикиллера за Т"
+		"de"		"Schiebe den Freekiller zu T"
+		"en"		"Swap freekiller to Prisoner Team"
 	}
 
-	"request_freekill"
+	"request_tag"
 	{
-		"#format"   "{1:N},{2:N},{3:N}"
-		"ru"		"{green}{1}{default} Отправил отчёт {darkred}{3}{default} о фрикилле {purple}{2}"
-		"de"		"{green}{1}{default} meldet {darkred}{2}{default} wegen Freekill an {purple}{3}"
-		"en"		"{green}{1}{default} sent a Freekill report of {darkred}{2}{default} to {purple}{3}!"
+		"it"		"[{green}MyJB.requests{default}]"
+		"de"		"[{green}MyJB.requests{default}]"
+		"ru"		"[{green}MyJB.вопросы{default}]"
+		"pl"		"[{green}MyJB.Zyczenia{default}]"
+		"en"		"[{green}MyJB.requests{default}]"
 	}
 
-	"request_pardonfreekill"
-	{
-		"ru"		"Был ли это фрикилл?"
-		"de"		"War es ein unerlaubt Mord?"
-		"en"		"Was that a Freekill?"
-	}
-
-	"request_handlerespawn"
-	{
-		"ru"		"Где возродить?"
-		"en"		"Where do you want the respawn?"
-		"de"		"Wo möchtest du ihn respawnen?"
-	}
-
-	"request_respawnbody"
-	{
-		"ru"		"Возродить в теле"
-		"en"		"Respawn on Death Place"
-		"de"		"An Leiche wiederbeleben"
-	}
-
-	"request_killreason_notfollow_chat"
-	{
-		"#format"   "{1:N},{2:N}"
-		"ru"		"Охранник {green}{1}{default} наказал {darkred}{2}{default} за неисполнение приказа"
-		"en"		"The Guard {green}{1}{default} claiming {darkred}{2}{default} hasn't followed the dictation"
-	}
-
-	"request_killreason_sry_chat"
-	{
-		"#format"   "{1:N},{2:N}"
-		"ru"		"Охранник {green}{1}{default} хочет извиниться перед {darkred}{2}{default} за случайное убийство"
-		"en"		"The Guard {green}{1}{default} wanna say sorry for mistakly killing {darkred}{2}{default}"
-	}
-
-	"request_killreason_freekill_chat"
-	{
-		"#format"   "{1:N},{2:N}"
-		"ru"		"Охранник {green}{1}{default} признается в фрикилле {darkred}{2}{default}"
-		"en"		"The Guard {green}{1}{default} confess a freekill on {darkred}{2}{default}"
-	}
-
-	"request_freedayvictim"
-	{
-		"en"		"Give Victim next Round Freeday"
-		"de"		"Nächste Runde Freeday für Opfer"
-	}
-
-	"request_personalfreeday"
-	{
-		"#format"   "{1:N}"
-		"ru"		"{1} получит персональный фридей в следующем раунде"
-		"en"		"{1} gets a personal FreeDay next round"
-	}
-
-	"request_havefreeday"
-	{
-		"#format"   "{1:N}"
-		"ru"		"У {1} персональный фридей!"
-		"en"		"{1} has now a personal FreeDay!"
-	}
-
-	"request_freedayforyou"
-	{
-		"ru"		"В следующем раунде вы получите персональный фридей"
-		"en"		"You get a personal FreeDay next round"
-	}
-
-	"request_givefreeday"
-	{
-		"ru"		"Выдать фридей:"
-		"en"		"Give FreeDay to:"
-	}
-
-	"request_killreason_title"
-	{
-		"#format"   "{1:N}"
-		"ru"		"Причина убийства {1}?"
-		"en"		"You killed {1}???"
-	}
-
-	"request_killreason_lostgame"
-	{
-		"ru"		"Проигрыш в игре"
-		"en"		"He lost the Game"
-	}
-
-	"request_killreason_noanswer"
-	{
-		"#format"   "{1:N},{2:N}"
-		"ru"		"Охранник {green}{1}{default} не имеет никакого заявления на убийство {darkred}{2}{default}"
-		"en"		"The Guard {green}{1}{default} has no declaration for the kill on {darkred}{2}{default}"
-	}
-
-	"request_killreason_rebel"
-	{
-		"ru"		"Взбунтовал"
-		"en"		"He was a Rebel"
-	}
-
-	"request_killreason_brokerule"
-	{
-		"en"		"He broke the Rules"
-		"ru"		"Нарушение правил"
-	}
-
-	"request_killreason_notfollow"
-	{
-		"ru"		"Неподчинение приказу"
-		"en"		"He not listen to dictate"
-	}
-
-	"request_killreason_sry"
-	{
-		"ru"		"Моя вина, я извинюсь"
-		"en"		"My fault, wanna say sorry"
-	}
-
-	"request_killreason_freekill"
-	{
-		"en"		"I freekilled him"
-		"ru"		"Я убил его просто так"
-	}
-
-	"request_killreason_lostgame_chat"
-	{
-		"#format"   "{1:N},{2:N}"
-		"ru"		"Охранник {green}{1}{default} наказал {darkred}{2}{default} из-за проигрыша в игре"
-		"en"		"The Guard {green}{1}{default} claiming {darkred}{2}{default} lost the Game"
-	}
-
-	"request_killreason_rebel_chat"
-	{
-		"#format"   "{1:N},{2:N}"
-		"ru"		"Охранник {green}{1}{default} наказал {darkred}{2}{default} из-за бунта"
-		"en"		"The Guard {green}{1}{default} claiming {darkred}{2}{default} was a rebel"
-	}
-
-	"request_killreason_brokerule_chat"
-	{
-		"#format"   "{1:N},{2:N}"
-		"ru"		"Охранник {green}{1}{default} наказал {darkred}{2}{default} за нарушение правил"
-		"en"		"The Guard {green}{1}{default} claiming {darkred}{2}{default} has broke the rules"
-	}
-
-	"request_freeday_title"
-	{
-		"#format"   "{1:N}"
-		"en"		"Freeday for {1}"
-	}
-
-	"request_freedaynow"
-	{
-		"en"		"This Round"
-	}
-
-	"request_freedaynext"
-	{
-		"en"		"Next Round"
-	}
-
-	"request_close"
-	{
-		"ru"		"Закрыть"
-		"de"		"Schliessen"
-		"en"		"Exit"
-	}
-
-	"request_countdownstop"
-	{
-		"ru"		"{purple}СТОП! {darkred} КОНЕЦ!"
-		"pl"		"{purple}STOP! {darkred}Koniec!"
-		"de"		"{purple}ENDE! {darkred}STOP! {green}Fertig!"
-		"en"		"{purple}STOP! {darkred}END!"
-		"da"		"{purple}STOP! {darkred}SLUT! {green}AFSLUTTET!"
-	}
-
-	"request_countdownstop_nc"
-	{
-		"ru"		"СТОП! КОНЕЦ!"
-		"pl"		"STOP! KONIEC!"
-		"de"		"HALT ENDE FERTIG!"
-		"en"		"STOP! END!"
-		"da"		"STOP! SLUT!"
-	}
-
-	"request_stopcountdown_nc"
-	{
-		"#format"   "{1:i}"
-		"ru"		"Конеч через {1} секунд!"
-		"pl"		"Stop/koniec  za {1} sekund!"
-		"de"		"Stop/Ende in {1} Sekunden!"
-		"en"		"Stop/End in {1} seconds!"
-		"da"		"Stopper om {1} sekunder!"
-	}
-
-	"request_stopcountdown"
-	{
-		"#format"   "{1:i}"
-		"ru"		"Конец через {purple}{1}{default} секунд!"
-		"pl"		"Stop za {purple}{1}{default} sekund!"
-		"de"		"Stop in {purple}{1}{default} Sekunden!"
-		"en"		"Stop in {purple}{1}{default} seconds!"
-		"da"		"Stopper om {purple}{1}{default} sekunder!"
-	}
 }
