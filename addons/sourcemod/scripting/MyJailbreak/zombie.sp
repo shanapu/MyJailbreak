@@ -50,7 +50,7 @@
 //Booleans
 bool IsZombie;
 bool StartZombie;
-
+bool NoPickUp;
 
 //Console Variables
 ConVar gc_bPlugin;
@@ -64,6 +64,7 @@ ConVar gc_fBeaconTime;
 ConVar gc_iCooldownDay;
 ConVar gc_iFreezeTime;
 ConVar gc_bSpawnCell;
+ConVar gc_bAmmo;
 ConVar gc_iZombieHP;
 ConVar gc_iZombieHPincrease;
 ConVar gc_iHumanHP;
@@ -72,6 +73,7 @@ ConVar gc_bVision;
 ConVar gc_bGlow;
 ConVar gc_iGlowMode;
 ConVar gc_sModelPathZombie;
+ConVar gc_sArmsPathZombie;
 ConVar gc_bSounds;
 ConVar gc_sSoundStartPath;
 ConVar gc_bOverlays;
@@ -112,12 +114,14 @@ float g_fPos[3];
 
 //Strings
 char g_sModelPathZombie[256];
+char g_sArmsPathZombie[256];
 char g_sHasVoted[1500];
 char g_sSoundStartPath[256];
 char g_sSkyName[256];
 char g_sEventsLogFile[PLATFORM_MAX_PATH];
 char g_sAdminFlag[32];
 char g_sModelPathPrevious[MAXPLAYERS+1][256];
+char g_sArmsPathPrevious[MAXPLAYERS+1][256];
 char g_sOverlayStartPath[256];
 
 
@@ -157,6 +161,7 @@ public void OnPluginStart()
 	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_zombie_flag", "g", "Set flag for admin/vip to set this Event Day.");
 	gc_bVote = AutoExecConfig_CreateConVar("sm_zombie_vote", "1", "0 - disabled, 1 - allow player to vote for zombie", _, true, 0.0, true, 1.0);
 	gc_bSpawnCell = AutoExecConfig_CreateConVar("sm_zombie_spawn", "0", "0 - T teleport to CT spawn, 1 - cell doors auto open", _, true,  0.0, true, 1.0);
+	gc_bAmmo = AutoExecConfig_CreateConVar("sm_zombie_ammo", "0", "0 - disabled, 1 - enable infinty ammo (with reload) for humans", _, true,  0.0, true, 1.0);
 	gc_iRounds = AutoExecConfig_CreateConVar("sm_zombie_rounds", "1", "Rounds to play in a row", _, true, 1.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_zombie_roundtime", "5", "Round time in minutes for a single zombie round", _, true, 1.0);
 	gc_fBeaconTime = AutoExecConfig_CreateConVar("sm_zombie_beacon_time", "240", "Time in seconds until the beacon turned on (set to 0 to disable)", _, true, 0.0);
@@ -177,6 +182,7 @@ public void OnPluginStart()
 	gc_bOverlays = AutoExecConfig_CreateConVar("sm_zombie_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true, 0.0, true, 1.0);
 	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_zombie_overlays_start", "overlays/MyJailbreak/zombie" , "Path to the start Overlay DONT TYPE .vmt or .vft");
 	gc_sModelPathZombie = AutoExecConfig_CreateConVar("sm_zombie_model", "models/player/custom_player/zombie/revenant/revenant_v2.mdl", "Path to the model for zombies.");
+	gc_sArmsPathZombie = AutoExecConfig_CreateConVar("sm_zombie_arms", "models/player/custom_player/zombie/revenant/revenant_arms.mdl", "Path to the arms model for zombies. '' Blank for default team arms");
 	gc_bAllowLR = AutoExecConfig_CreateConVar("sm_zombie_allow_lr", "0" , "0 - disabled, 1 - enable LR for last round and end eventday", _, true, 0.0, true, 1.0);
 	
 	AutoExecConfig_ExecuteFile();
@@ -189,6 +195,7 @@ public void OnPluginStart()
 	HookEvent("player_hurt", Event_PlayerHurt);
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sModelPathZombie, OnSettingChanged);
+	HookConVarChange(gc_sArmsPathZombie, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
 	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
 	
@@ -197,6 +204,7 @@ public void OnPluginStart()
 	g_iMPRoundTime = FindConVar("mp_roundtime");
 	gc_sOverlayStartPath.GetString(g_sOverlayStartPath , sizeof(g_sOverlayStartPath));
 	gc_sModelPathZombie.GetString(g_sModelPathZombie, sizeof(g_sModelPathZombie));
+	gc_sArmsPathZombie.GetString(g_sArmsPathZombie, sizeof(g_sArmsPathZombie));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 	gc_sAdminFlag.GetString(g_sAdminFlag , sizeof(g_sAdminFlag));
 	
@@ -211,6 +219,11 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 	{
 		strcopy(g_sModelPathZombie, sizeof(g_sModelPathZombie), newValue);
 		PrecacheModel(g_sModelPathZombie);
+	}
+	else if (convar == gc_sArmsPathZombie)
+	{
+		strcopy(g_sArmsPathZombie, sizeof(g_sArmsPathZombie), newValue);
+		if (!StrEqual(g_sArmsPathZombie, "")) PrecacheModel(g_sArmsPathZombie);
 	}
 	else if (convar == gc_sAdminFlag)
 	{
@@ -402,7 +415,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		SetCvarString("sv_skyname", "cs_baggage_skybox_");
 		SetCvar("sm_weapons_t", 1);
 		SetCvar("sm_weapons_ct", 0);
-		SetCvar("sv_infinite_ammo", 2);
+		if (gc_bAmmo.BoolValue) SetCvar("sv_infinite_ammo", 2);
 		SetCvar("sm_menu_enable", 0);
 		MyJailbreak_SetEventDayPlanned(false);
 		MyJailbreak_SetEventDayRunning(true);
@@ -445,7 +458,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 						int zombieHP = gc_iZombieHP.IntValue;
 						int difference = (GetAliveTeamCount(CS_TEAM_T) - GetAliveTeamCount(CS_TEAM_CT));
 						
-						if (difference > 0) zombieHP = zombieHP + (gc_iZombieHPincrease.IntValue * difference); 
+						if (difference > 0) zombieHP = zombieHP + (gc_iZombieHPincrease.IntValue * difference);
 						
 						SetEntityHealth(client, zombieHP);
 						
@@ -455,10 +468,6 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 					if (GetClientTeam(client) == CS_TEAM_T)
 					{
 						SetEntityHealth(client, gc_iHumanHP.IntValue);
-						GivePlayerItem(client, "weapon_negev");
-						GivePlayerItem(client, "weapon_tec9");
-						GivePlayerItem(client, "weapon_hegrenade");
-						GivePlayerItem(client, "weapon_molotov");
 					}
 					if (!gc_bSpawnCell.BoolValue || (gc_bSpawnCell.BoolValue && (SJD_IsCurrentMapConfigured() != true))) //spawn Terrors to CT Spawn 
 					{
@@ -511,6 +520,20 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
 			if (gc_bGlow.BoolValue) UnhookGlow(client);
 			SetEntProp(client, Prop_Send, "m_bNightVisionOn", 0);
+			if (GetClientTeam(client) == CS_TEAM_CT)
+			{
+				SetEntPropString(client, Prop_Send, "m_szArmsModel", g_sArmsPathPrevious[client]);
+				StripAllPlayerWeapons(client);  //if the player is near a weapon an have autopickup on roundend
+				GivePlayerItem(client, "weapon_knife");
+				
+				if (!StrEqual(g_sArmsPathZombie, ""))
+				{
+					int iWeapon = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon"); 
+					RemovePlayerItem(client, iWeapon); //remove knife for arms
+					NoPickUp = true;
+					CreateTimer(0.15, Timer_GivePlayerKnife, client);
+				}
+			}
 		}
 		
 		delete FreezeTimer;
@@ -606,6 +629,7 @@ public void OnMapStart()
 	if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
 	if (gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
 	PrecacheModel(g_sModelPathZombie);
+	if (!StrEqual(g_sArmsPathZombie, "")) PrecacheModel(g_sArmsPathZombie);
 }
 
 
@@ -637,14 +661,20 @@ public int OnAvailableLR(int Announced)
 			
 			SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
 			
-			StripAllPlayerWeapons(client);
 			if (GetClientTeam(client) == CS_TEAM_CT)
 			{
+				if (!StrEqual(g_sArmsPathZombie, ""))
+				{
+					SetEntPropString(client, Prop_Send, "m_szArmsModel", g_sArmsPathPrevious[client]);
+					int iWeapon = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
+					RemovePlayerItem(client, iWeapon);
+					NoPickUp = true;
+					CreateTimer(0.15, Timer_GivePlayerKnife, client);
+				}
 				FakeClientCommand(client, "sm_weapons");
 				SetEntityModel(client, g_sModelPathPrevious[client]);
 				SetEntityHealth(client, 100);
 			}
-			GivePlayerItem(client, "weapon_knife");
 		}
 		
 		delete FreezeTimer;
@@ -690,7 +720,7 @@ public Action OnWeaponCanUse(int client, int weapon)
 			{
 				if (IsClientInGame(client) && IsPlayerAlive(client))
 				{
-					if (IsZombie == true)
+					if (IsZombie == true || NoPickUp)
 					{
 						return Plugin_Handled;
 					}
@@ -931,10 +961,26 @@ public Action Timer_SetModel(Handle timer)
 		{
 			GetEntPropString(client, Prop_Data, "m_ModelName", g_sModelPathPrevious[client], sizeof(g_sModelPathPrevious[]));
 			SetEntityModel(client, g_sModelPathZombie);
+			
+			GetEntPropString(client, Prop_Send, "m_szArmsModel", g_sArmsPathPrevious[client], sizeof(g_sArmsPathPrevious[]));
+			
+			if (!StrEqual(g_sArmsPathZombie, ""))
+			{
+				SetEntPropString(client, Prop_Send, "m_szArmsModel", g_sArmsPathZombie);
+				
+				int iWeapon = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
+				RemovePlayerItem(client, iWeapon);
+				CreateTimer(0.15, Timer_GivePlayerKnife, client);
+			}
 		}
 	}
 }
 
+public Action Timer_GivePlayerKnife(Handle timer, int client)
+{
+	GivePlayerItem(client, "weapon_knife");
+	NoPickUp = false;
+}
 
 //Beacon Timer
 public Action Timer_BeaconOn(Handle timer)

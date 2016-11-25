@@ -18,6 +18,8 @@
         *  new cvar - sm_ratio_rankme - 0 - disabled, how many rankme points a player need to join ct? (only if kento rankme is available)
     *  new plugin - disabled/ratio_teambans.smx - Support plugin for baras TeamBans plugin
 *  Zombie: KnockbackFix
+*  Zombie: Added support for arms models
+    *  new cvar - Path to the arms model for zombies
 *  Menu: Added MyJailshop for Prisoners when installed
     *  new cvar - sm_zombie_knockback - Force of the knockback when shot at. Zombies only
 *  Request - Capitulation: Allow capitulated players to take up weapons per cvar & healthshot & c4 as standart
