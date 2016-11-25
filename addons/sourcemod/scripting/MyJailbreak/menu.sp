@@ -844,7 +844,7 @@ public Action Command_OpenMenu(int client, int args)
 					Format(menuinfo, sizeof(menuinfo), "%T", "menu_PLACEHOLDER", client);
 					mainmenu.AddItem("PLACEHOLDER", menuinfo);
 					*/
-					if (gp_bMyJailBreak.BoolValue)
+					if (gp_bMyJailBreak)
 					{
 						Format(menuinfo, sizeof(menuinfo), "%T", "menu_jailshop", client);
 						mainmenu.AddItem("jailshop", menuinfo);

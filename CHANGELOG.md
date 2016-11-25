@@ -18,6 +18,7 @@
         *  new cvar - sm_ratio_rankme - 0 - disabled, how many rankme points a player need to join ct? (only if kento rankme is available)
     *  new plugin - disabled/ratio_teambans.smx - Support plugin for baras TeamBans plugin
 *  Zombie: KnockbackFix
+*  Menu: Added MyJailshop for Prisoners when installed
     *  new cvar - sm_zombie_knockback - Force of the knockback when shot at. Zombies only
 *  Request - Capitulation: Allow capitulated players to take up weapons per cvar & healthshot & c4 as standart
     *  new cvar - sm_capitulation_weapons - 0 - disabled, 1 - enable Terror can not pick up weapons after capitulation
@@ -28,7 +29,7 @@
 *  TeamGames: Better Support on FFA-Events for KissLicks TeamGames (TeamGames 1.1.0.7)
     *  new plugin - disabled/myjailbreak_teamgames.smx - Support plugin for KissLicks TeamGames plugin
 *  Warden: Orders menu for preconfigured order/calls with chat, hud, sounds & overlays support. Each order can be dis/enabled per map.
-    *  new config file - configs/MyJailbreak/orders.cfg
+    *  new config file - addons/sourcemod/configs/MyJailbreak/orders.cfg
   
   
   
@@ -65,8 +66,11 @@
         *  new cvar - sm_warden_freeday_color_green - What color to turn the warden into (rGb): x - green value
         *  new cvar - sm_warden_freeday_color_blue - What color to turn the warden into (rgB): x - blue value  
         *  new cvar - sm_warden_freeday_victim_deputy - 0 - disabled, 1 - Allow the deputy to set a personal freeday next round");
-  
-  
+*  Catch: new overlay to improve misspelling. Frozen instead of freezed
+    *  removed overlay - overlays/MyJailbreak/freeze - I recommend to change it in you config to:
+    *  new overlay - overlays/MyJailbreak/frozen - I recommend this as overlays/MyJailbreak/freeze replacement
+*  Zombie: Removed humans spawn with weapons & nades. Use weapon menu or armory.
+    *  new cvar - sm_zombie_ammo - 0 - disabled, 1 - enable infinty ammo (with reload) for humans
   
   
 *Fixed*
