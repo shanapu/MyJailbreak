@@ -93,6 +93,12 @@
 	{
 		"ru"		"Продлить время раунда"
 		"en"		"Extend The Round Time"
+		"de"		"Rundenzeit verlängern"
+	}
+
+	"menu_jailshop"
+	{
+		"en"		"Open Jail Shop"
 	}
 
 	"menu_ffon"

@@ -43,6 +43,10 @@
 
 
 //Booleans
+bool gp_bMyJailBreak = false;
+
+
+//Integers
 int g_iCoolDown;
 
 
@@ -212,6 +216,27 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 	{
 		strcopy(g_sAdminFlag, sizeof(g_sAdminFlag), newValue);
 	}
+}
+
+
+// Check for optional Plugins
+public void OnAllPluginsLoaded()
+{
+	gp_bMyJailBreak = LibraryExists("myjailbreak");
+}
+
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (StrEqual(name, "myjailbreak"))
+		gp_bMyJailBreak = false;
+}
+
+
+public void OnLibraryAdded(const char[] name)
+{
+	if (StrEqual(name, "myjailbreak"))
+		gp_bMyJailBreak = true;
 }
 
 
@@ -819,6 +844,11 @@ public Action Command_OpenMenu(int client, int args)
 					Format(menuinfo, sizeof(menuinfo), "%T", "menu_PLACEHOLDER", client);
 					mainmenu.AddItem("PLACEHOLDER", menuinfo);
 					*/
+					if (gp_bMyJailBreak.BoolValue)
+					{
+						Format(menuinfo, sizeof(menuinfo), "%T", "menu_jailshop", client);
+						mainmenu.AddItem("jailshop", menuinfo);
+					}
 					if (g_bGuns != null)
 					{
 						if (g_bGuns.BoolValue)
@@ -975,6 +1005,10 @@ public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selec
 		else if (strcmp(info, "rules") == 0)
 		{
 			FakeClientCommand(client, "sm_rules");
+		}
+		else if (strcmp(info, "jailshop") == 0)
+		{
+			FakeClientCommand(client, "sm_jailshop");
 		}
 		else if (strcmp(info, "guns") == 0)
 		{
