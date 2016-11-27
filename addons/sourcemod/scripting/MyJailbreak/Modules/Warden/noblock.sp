@@ -101,8 +101,8 @@ public Action Command_ToggleNoBlock(int client, int args)
 				LoopValidClients(i, true, true)
 				{
 					SetEntData(i, g_iCollisionOffset, 2, 4, true);
-					if (gc_bNoBlockMode.BoolValue) SetCvar("mp_solid_teammates", 0);
 				}
+				if (gc_bNoBlockMode.BoolValue) SetCvar("mp_solid_teammates", 0);
 			}
 			else
 			{
@@ -111,8 +111,8 @@ public Action Command_ToggleNoBlock(int client, int args)
 				LoopValidClients(i, true, true)
 				{
 					SetEntData(i, g_iCollisionOffset, 5, 4, true);
-					if (gc_bNoBlockMode.BoolValue) SetCvar("mp_solid_teammates", 1);
 				}
+				if (gc_bNoBlockMode.BoolValue) SetCvar("mp_solid_teammates", 1);
 			}
 		}
 		else CReplyToCommand(client, "%t %t", "warden_tag" , "warden_notwarden");
