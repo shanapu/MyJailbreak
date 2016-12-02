@@ -23,6 +23,9 @@ do
   rm output.txt
 done
 
+echo "get basecom myjb 1.7"
+wget -q -O addons/sourcemod/scripting/include/basecomm.inc https://raw.githubusercontent.com/shanapu/MyJailbreak/master/addons/sourcemod/scripting/include/basecomm.inc
+
 echo "Move Modules folder for compile"
 mkdir addons/sourcemod/scripting/MyJailbreak/MyJailbreak/
 mv addons/sourcemod/scripting/MyJailbreak/Modules addons/sourcemod/scripting/MyJailbreak/MyJailbreak/
@@ -30,13 +33,13 @@ mv addons/sourcemod/scripting/MyJailbreak/Modules addons/sourcemod/scripting/MyJ
 echo "Compile MyJailbreak plugins"
 for file in addons/sourcemod/scripting/MyJailbreak/*.sp
 do
-  addons/sourcemod/scripting/spcomp -E $file
+  addons/sourcemod/scripting/spcomp $file
 done
 
 echo "Compile MyJailbreak Add-ons"
 for file in addons/sourcemod/scripting/MyJailbreak/Add-ons/*.sp
 do
-  addons/sourcemod/scripting/spcomp -E $file
+  addons/sourcemod/scripting/spcomp $file
 done
 
 echo "Remove plugins folder if exists"
