@@ -30,13 +30,13 @@ mv addons/sourcemod/scripting/MyJailbreak/Modules addons/sourcemod/scripting/MyJ
 echo "Compile MyJailbreak plugins"
 for file in addons/sourcemod/scripting/MyJailbreak/*.sp
 do
-  addons/sourcemod/scripting/spcomp -E -v0 $file
+  addons/sourcemod/scripting/spcomp -E $file
 done
 
 echo "Compile MyJailbreak Add-ons"
 for file in addons/sourcemod/scripting/MyJailbreak/Add-ons/*.sp
 do
-  addons/sourcemod/scripting/spcomp -E -v0 $file
+  addons/sourcemod/scripting/spcomp -E $file
 done
 
 echo "Remove plugins folder if exists"
