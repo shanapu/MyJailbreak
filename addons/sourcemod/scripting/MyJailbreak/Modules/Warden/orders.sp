@@ -63,8 +63,8 @@ public void Orders_OnPluginStart()
 	
 	BuildPath(Path_SM, g_sMenuFile, sizeof(g_sMenuFile), "configs/MyJailbreak/orders.cfg");
 	
-	AddCommandListener(Event_Say, "say");
-	AddCommandListener(Event_Say, "say_team");
+//	AddCommandListener(Event_Say, "say");
+//	AddCommandListener(Event_Say, "say_team");
 }
 
 
@@ -108,7 +108,7 @@ public void Orders_OnMapStart()
 }
 
 
-char g_sCommand[][128]; // some vale  todo
+// char g_sCommand[][128]; // some vale  todo
 
 
 public void Orders_OnConfigsExecuted()
@@ -311,7 +311,7 @@ public Action Menu_BuildOrderMenu(int client)
 		kvMenu.GetString("title", sTitle, sizeof(sTitle));
 		kvMenu.GetString("maps", sMaps, sizeof(sMaps));
 		
-		if (StrContains(sMaps, g_sCurrentMap, true) == -1 && strlen(sTitle) > 0))
+		if ((StrContains(sMaps, g_sCurrentMap, true) == -1) && (strlen(sTitle) > 0))
 		{
 			menu.AddItem(sNumber, sTitle);
 		}
