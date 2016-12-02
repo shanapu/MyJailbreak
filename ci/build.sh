@@ -84,20 +84,12 @@ rm -r build/gameserver/addons/sourcemod/data
 rm -r build/gameserver/addons/sourcemod/extensions
 rm -r build/gameserver/addons/sourcemod/gamedata
 rm -r build/gameserver/addons/sourcemod/scripting
-rm -r build/gameserver/addons/sourcemod/translations
 rm -r build/gameserver/cfg/sourcemod
 rm build/gameserver/addons/sourcemod/*.txt
 
 echo "Remove placeholder files"
 rm -r build/gameserver/addons/sourcemod/logs/MyJailbreak/.gitkeep
 rm -r build/gameserver/cfg/MyJailbreak/EventDays/.gitkeep
-
-
-echo "Create clean translation folder"
-mkdir build/gameserver/addons/sourcemod/translations
-
-echo "Move FastDL folder"
-mv addons/sourcemod/translations build/gameserver/addons/sourcemod/translations/
 
 echo "Clean root folder"
 rm sourcemod.tar.gz
