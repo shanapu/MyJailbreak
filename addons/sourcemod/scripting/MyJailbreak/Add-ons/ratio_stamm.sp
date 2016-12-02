@@ -102,12 +102,12 @@ public Action Event_OnPlayerSpawn(Event event, const char[] name, bool bDontBroa
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));
 	
-	if (GetClientTeam(client) != 3) 
+	if (GetClientTeam(client) != CS_TEAM_CT) 
 		return Plugin_Continue;
-		
-	if (!IsValidClient(client, false, false))
+	
+	if (!IsValidClient(client, true, true))
 		return Plugin_Continue;
-		
+	
 	if (STAMM_GetClientPoints(client) < gc_iMinStammPoints.IntValue)
 	{
 		CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_stamm", gc_iMinStammPoints.IntValue);

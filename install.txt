@@ -1,0 +1,14 @@
+Make sure you have the latest versions of the required plugins
+  
+  
+Open gameserver folder and copy the folders addons/, cfg/, materials/, models/ & sound/ to your gameservers root csgo/ directory  
+  
+Open fastDL folder and copy the folders materials/, models/ & sound/ to your FastDownload servers csgo/ directory  
+  
+Open your downloads.ini in your csgo/addons/sourcemod/configs directory and add the content of downloads.txt  
+  
+Run plugin for the first time and all necessary .cfg files will be generated  
+  
+Configure all settings in cfg/MyJailbreak & addons/sourcemod/configs/MyJailbreak to your needs
+  
+Have fun! Give feedback!

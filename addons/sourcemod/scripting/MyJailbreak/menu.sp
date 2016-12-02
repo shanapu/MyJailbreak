@@ -43,7 +43,7 @@
 
 
 //Booleans
-bool gp_bMyJailBreak = false;
+bool gp_bMyJailShop = false;
 
 
 //Integers
@@ -222,21 +222,21 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 // Check for optional Plugins
 public void OnAllPluginsLoaded()
 {
-	gp_bMyJailBreak = LibraryExists("myjailbreak");
+	gp_bMyJailShop = LibraryExists("myjailbreak");
 }
 
 
 public void OnLibraryRemoved(const char[] name)
 {
 	if (StrEqual(name, "myjailbreak"))
-		gp_bMyJailBreak = false;
+		gp_bMyJailShop = false;
 }
 
 
 public void OnLibraryAdded(const char[] name)
 {
 	if (StrEqual(name, "myjailbreak"))
-		gp_bMyJailBreak = true;
+		gp_bMyJailShop = true;
 }
 
 
@@ -844,7 +844,7 @@ public Action Command_OpenMenu(int client, int args)
 					Format(menuinfo, sizeof(menuinfo), "%T", "menu_PLACEHOLDER", client);
 					mainmenu.AddItem("PLACEHOLDER", menuinfo);
 					*/
-					if (gp_bMyJailBreak)
+					if (gp_bMyJailShop)
 					{
 						Format(menuinfo, sizeof(menuinfo), "%T", "menu_jailshop", client);
 						mainmenu.AddItem("jailshop", menuinfo);

@@ -108,6 +108,9 @@ public void Orders_OnMapStart()
 }
 
 
+char g_sCommand[][128]; // some vale  todo
+
+
 public void Orders_OnConfigsExecuted()
 {
 	//Set custom Commands
@@ -125,7 +128,7 @@ public void Orders_OnConfigsExecuted()
 		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
 			RegConsoleCmd(sCommand, Command_OrderMenu, "opens the menu");
 	}
-	
+	/*
 	
 	Handle hFile = OpenFile(g_sMenuFile, "rt");
 	if (!hFile)
@@ -147,25 +150,100 @@ public void Orders_OnConfigsExecuted()
 	do
 	{
 		char sNumber[4];
+		int num = StringToInt(sNumber);
 		
 		kvMenu.GetSectionName(sNumber, sizeof(sNumber));
 		kvMenu.GetString("commands", sCommands, sizeof(sCommands));
 		
-		ReplaceString(sCommands, sizeof(sCommands), " ", "");
-		iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
-		
-		for(int i = 0; i < iCount; i++)
-		{
-			//add command and # in a array(?) and listen to chat.
-		}
+		Format(g_sCommand[num], sizeof(sCommands), sCommands);
 	}
 	while (kvMenu.GotoNextKey());
+	*/
 }
 
-
-public Action Event_Say(int clientIndex, char [] command,int arg)
+/*
+public Action Event_Say(int client, char [] command,int arg)
 {
 	//listen for custom order commands
+	
+	char text[24];
+	GetCmdArgString(text, sizeof(text));
+	StripQuotes(text);
+	TrimString(text);
+	
+	
+	for(int i = 0; i < sizeof(g_sCommand); i++)
+	{
+		if (StrEqual(text, g_sCommand[i], false))
+		{
+			PrintToChatAll("Hello world %i", i+1);
+			char num[4];
+			IntToString(i+1,num,sizeof(num));
+			Command_Handler(num);
+		}
+	}
+	
+}
+*/
+
+public Action Command_Handler(char [] number)
+{
+		Handle hFile = OpenFile(g_sMenuFile, "rt");
+		
+		if (hFile)
+		{
+			KeyValues kvMenu = CreateKeyValues("Menu");
+			
+			if (!kvMenu.ImportFromFile(g_sMenuFile))
+			{
+				SetFailState("MyJailbreak Warden - Can't read %s correctly! (ImportFromFile)", g_sMenuFile);
+				delete kvMenu;
+			}
+			
+			if (kvMenu.JumpToKey(number, false))
+			{
+				char sValue[PLATFORM_MAX_PATH];
+				
+				kvMenu.GetString("chat", sValue, sizeof(sValue));
+				if (strlen(sValue) > 0)
+				{
+					CPrintToChatAll("%t %s", "warden_tag", sValue);
+				}
+				
+				kvMenu.GetString("HUD", sValue, sizeof(sValue));
+				if (strlen(sValue) > 0)
+				{
+					PrintCenterTextAll("%s", sValue);
+				}
+				
+				kvMenu.GetString("overlay", sValue, sizeof(sValue));
+				if (strlen(sValue) > 0)
+				{
+					char sTime[12];
+					char sTeam[6];
+					char szTeam[4][6];
+					kvMenu.GetString("overlay_time", sTime, sizeof(sTime));
+					kvMenu.GetString("overlay_team", sTeam, sizeof(sTeam));
+					
+					ReplaceString(sTeam, sizeof(sTeam), " ", "");
+					int iCount = ExplodeString(sTeam, ",", szTeam, sizeof(szTeam), sizeof(szTeam[]));
+					
+					for (int iTeam = 0; iTeam < iCount; iTeam++)
+					{
+						LoopValidClients(i, false, false)
+						if (GetClientTeam(i) == StringToInt(szTeam[iTeam])) ShowOverlay(i ,sValue, StringToFloat(sTime));
+					}
+				}
+				
+				kvMenu.GetString("sound", sValue, sizeof(sValue));
+				if (strlen(sValue) > 0)
+				{
+					EmitSoundToAllAny(sValue);
+				}
+			}
+		}
+		else SetFailState("MyJailbreak Warden - Can't open File: %s", g_sMenuFile);
+	
 }
 
 /******************************************************************************
@@ -233,7 +311,7 @@ public Action Menu_BuildOrderMenu(int client)
 		kvMenu.GetString("title", sTitle, sizeof(sTitle));
 		kvMenu.GetString("maps", sMaps, sizeof(sMaps));
 		
-		if (StrContains(sMaps, g_sCurrentMap, true) == -1)
+		if (StrContains(sMaps, g_sCurrentMap, true) == -1 && strlen(sTitle) > 0))
 		{
 			menu.AddItem(sNumber, sTitle);
 		}
