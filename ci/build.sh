@@ -92,7 +92,9 @@ rm -r build/gameserver/addons/metamod
 rm -r build/gameserver/addons/sourcemod/bin
 rm -r build/gameserver/addons/sourcemod/configs/geoip
 rm -r build/gameserver/addons/sourcemod/configs/sql-init-scripts
-rm build/gameserver/addons/sourcemod/configs/* 2> /dev/null
+rm -r build/gameserver/addons/sourcemod/configs/*.txt
+rm -r build/gameserver/addons/sourcemod/configs/*.ini
+rm -r build/gameserver/addons/sourcemod/configs/*.cfg
 rm -r build/gameserver/addons/sourcemod/data
 rm -r build/gameserver/addons/sourcemod/extensions
 rm -r build/gameserver/addons/sourcemod/gamedata
