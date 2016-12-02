@@ -8,7 +8,7 @@ Report: https://github.com/shanapu/MyJailbreak/issues
 Read: https://github.com/shanapu/MyJailbreak/wiki  
 READ: https://github.com/shanapu/MyJailbreak/wiki/Frequently-Asked-Questions  
   
-master: [![Build Status](https://img.shields.io/travis/shanapu/MyJailbreak/master.svg?style=flat-square)](https://travis-ci.org/shanapu/MyJailbreak)  dev: [![Build Status](https://img.shields.io/travis/shanapu/MyJailbreak/dev.svg?style=flat-square)](https://travis-ci.org/shanapu/MyJailbreak)  
+master: [![Build Status](https://img.shields.io/travis/shanapu/MyJailbreak/master.svg?style=flat-square)](https://travis-ci.org/shanapu/MyJailbreak?branch=master)  dev: [![Build Status](https://img.shields.io/travis/shanapu/MyJailbreak/dev.svg?style=flat-square)](https://travis-ci.org/shanapu/MyJailbreak?branch=dev)  
   
   
   

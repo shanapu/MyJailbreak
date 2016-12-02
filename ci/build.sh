@@ -1,4 +1,5 @@
 #!/bin/bash
+set -ev
 
 BID=$6
 FILE=MyJB-$2-$BID.zip
@@ -33,13 +34,13 @@ mv addons/sourcemod/scripting/MyJailbreak/Modules addons/sourcemod/scripting/MyJ
 echo "Compile MyJailbreak plugins"
 for file in addons/sourcemod/scripting/MyJailbreak/*.sp
 do
-  addons/sourcemod/scripting/spcomp $file
+  addons/sourcemod/scripting/spcomp -E -v0 $file
 done
 
 echo "Compile MyJailbreak Add-ons"
 for file in addons/sourcemod/scripting/MyJailbreak/Add-ons/*.sp
 do
-  addons/sourcemod/scripting/spcomp $file
+  addons/sourcemod/scripting/spcomp -E -v0 $file
 done
 
 echo "Remove plugins folder if exists"
