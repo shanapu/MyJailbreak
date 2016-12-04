@@ -58,7 +58,6 @@ MyJailbreak is a redux rewrite of [URL="https://github.com/Franc1sco/Franug-Jail
 [*]Sounds & overlays
 [*]Flag system - restrict some features only for admin/VIP
 [*]Natives & forwards of the [URL="http://www.sourcemod.net/plugins.php?cat=0&mod=-1&title=warden&author=&description=&search=1"]original warden plugins[/URL] to keep compatibility
-[*][URL="https://github.com/shanapu/MyJailbreak/wiki/Eventdays-template"]Template[/URL] to make your own Eventday
 [*][URL="https://github.com/shanapu/MyJailbreak/wiki/Custom-Overlays"]Small tutorial[/URL] for making your own custom overlay or icon
 [*]some other fancy stuff
 [/LIST]
@@ -2227,6 +2226,10 @@ native MyIcons_BlockClientIcon(int client, bool status);
 [INDENT][LIST]
 [*]new config file - addons/sourcemod/configs/MyJailbreak/orders.cfg
 [/LIST][/INDENT]
+[LIST]
+[*]New builds system - sourcecode on github / binarys at [url]http://shanapu.de/MyJailbreak[/url]
+[/LIST]
+  
   
   
   
@@ -2395,6 +2398,7 @@ based/merged/used code/idea plugins:
 * [url]https://github.com/KissLick/TeamGames/[/url]
 * [url]https://github.com/TiBarification/Jail-Warden-Pro[/url]
 * [url]https://github.com/AG-Headline/Hunger-Games-Beacon[/url]
+* [url]https://github.com/Bara20/TroubleinTerroristTown/tree/master/ci[/url]
 * [url]https://forums.alliedmods.net/showthread.php?p=1086127[/url]
 * [url]https://forums.alliedmods.net/showthread.php?t=234169[/url]
 * [url]https://forums.alliedmods.net/showthread.php?p=1749220[/url]
@@ -2406,7 +2410,7 @@ based/merged/used code/idea plugins:
 * [url]https://forums.alliedmods.net/showthread.php?p=1965643[/url]
 * [url]https://forums.alliedmods.net/showpost.php?p=2231099&postcount=22[/url]
 + [url]https://github.com/Zipcore/Timer/[/url] (sound)
-* [url]https://git.tf/TTT/Plugin[/url] (sound)
+* [url]https://github.com/Bara20/TroubleinTerroristTown/[/url] (sound)
 * [url]https://forums.alliedmods.net/showthread.php?t=262170[/url] (model)
 * [url]http://www.andi67.bplaced.net/Forum/viewtopic.php?f=40&t=342[/url] (model)
 * if I missed someone, please tell me!
@@ -2426,7 +2430,6 @@ devu4, good_live, Weeeishy, UartigZone, Got Sw4g? terminator18, SkeLeXes, 0diete
 [*]Read the issues on github & posts on forums thread - maybe your request was already posted there.
 [*]Use descriptive topic titles & descriptions. "i have idea", "need Help", "Suggestion" or "don't work" isn't helpful & pleasant.
 [*]Try to explain your request with [U][b]so many details as you can.[/b][/U]
-[*]Because of the Language gap (also on my side) it's very hard to understand everything.
 [*][B]USE PROPER ENGLISH![/B]
 [*]Expound every single step to reproduce your train of thought. [U]We're all no clairvoyant or mindreaders.[U]
 [*]Explain like "I'm an idiot and never I played MyJailbreak before".
@@ -2471,8 +2474,15 @@ devu4, good_live, Weeeishy, UartigZone, Got Sw4g? terminator18, SkeLeXes, 0diete
 
 
 
-[B][U]Download latest[/U][/B]
+[B][U]Download release pack[/U][/B] new build system!
 [url]https://shanapu.de/MyJailbreak/[/url]
+
+[B][U]Sourcecode & miscellaneous[/U][/B]
+[url]https://github.com/shanapu/MyJailbreak/[/url]
+
+
+[B][U]Frequently Asked Questions:[/U][/B]
+[url]https://github.com/shanapu/MyJailbreak/wiki/Frequently-Asked-Questions[/url]
 
 [B][U]Wiki:[/U][/B]
 [url]https://github.com/shanapu/MyJailbreak/wiki/[/url]

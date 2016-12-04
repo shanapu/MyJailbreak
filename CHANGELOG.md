@@ -1,6 +1,6 @@
 ### Change Log
   
-**[Beta 8.1.dev]** - icons, 3th party plugins & much more
+**[Beta 9.0]** - icons, 3th party plugins & much more
   
 *Added*
 *  Weapons: allow maschine-guns per cvar
@@ -33,6 +33,7 @@
     *  new cvar - sm_warden_orders_deputy - 0 - disabled, 1 - enable orders-feature for deputy, too",
     *  new cvar - sm_warden_cmds_orders - Set your custom chat command for open menu(!menu (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands))
     *  new config file - addons/sourcemod/configs/MyJailbreak/orders.cfg
+*  New builds system - sourcecode on github / binarys at http://shanapu.de/MyJailbreak
   
   
   

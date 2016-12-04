@@ -20,7 +20,7 @@ chmod +x addons/sourcemod/scripting/spcomp
 echo "Set plugins version"
 for file in addons/sourcemod/scripting/include/myjailbreak.inc
 do
-  sed -i "s/<ID>/$BID/g" $file > output.txt
+  sed -i "s/<COMMIT>/$BID/g" $file > output.txt
   rm output.txt
 done
 
@@ -189,12 +189,12 @@ echo "Compress directories and files"
 zip -9rq $FILE gameserver fastDL install.txt license.txt downloads.txt CHANGELOG.md
 
 echo "Upload file"
-lftp -c "set ftp:ssl-allow no; set ssl:verify-certificate no; open -u $USER,$PASS $HOST; put -O downloads/SM$1/$2/ $FILE"
+lftp -c "set ftp:ssl-allow no; set ssl:verify-certificate no; open -u $USER,$PASS $HOST; put -O MyJailbreak/downloads/SM$1/$2/ $FILE"
 
 echo "Add latest build"
 mv $FILE $LATEST
 
 echo "Upload latest build"
-lftp -c "set ftp:ssl-allow no; set ssl:verify-certificate no; open -u $USER,$PASS $HOST; put -O downloads/SM$1/ $LATEST"
+lftp -c "set ftp:ssl-allow no; set ssl:verify-certificate no; open -u $USER,$PASS $HOST; put -O MyJailbreak/downloads/SM$1/ $LATEST"
 
 echo "Build done"
