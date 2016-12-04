@@ -12,7 +12,7 @@ master: [![Build Status](https://img.shields.io/travis/shanapu/MyJailbreak/maste
   
   
   
-coded with [IMG]http://shanapu.de/githearth-small.png[/IMG] free software
+coded with ![](http://shanapu.de/githearth-small.png) free software
   
 *my golden faucets not finance itself...* [ ![](http://shanapu.de/donate.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=QT8TVRSYWP53J)
 
