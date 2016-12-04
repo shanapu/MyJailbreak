@@ -33,7 +33,6 @@
 #include <autoexecconfig>
 #include <warden>
 #include <mystocks>
-#include <myjailbreak>
 
 
 //Compiler Options
@@ -268,7 +267,6 @@ public int HealMenuHandler(Menu menu, MenuAction action, int client, int Positio
 }
 
 
-
 /******************************************************************************
                    TIMER
 ******************************************************************************/
@@ -276,7 +274,7 @@ public int HealMenuHandler(Menu menu, MenuAction action, int client, int Positio
 
 public Action Timer_ResetColorHeal(Handle timer, any client)
 {
-	if (IsClientConnected(client))
+	if (IsValidClient(client,true,false))
 	{
 		SetEntityRenderColor(client, 255, 255, 255, 255);
 	}

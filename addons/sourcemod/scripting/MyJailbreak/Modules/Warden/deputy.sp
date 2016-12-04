@@ -31,10 +31,12 @@
 #include <cstrike>
 #include <colors>
 #include <autoexecconfig>
-#include <smartjaildoors>
 #include <warden>
 #include <mystocks>
+
+#undef REQUIRE_PLUGIN
 #include <myjailbreak>
+#define REQUIRE_PLUGIN
 
 
 //Compiler Options
@@ -248,7 +250,7 @@ public Action AdminCommand_RemoveDeputy(int client, int args)
 			CPrintToChatAll("%t %t", "warden_tag" , "warden_deputy_removed", client, g_iDeputy);  // if client is console !=
 			if (gc_bBetterNotes.BoolValue) PrintCenterTextAll("%t", "warden_deputy_removed_nc", client, g_iDeputy);
 			
-			if (ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Admin %L removed player %L as Deputy", client, g_iDeputy);
+			if(gp_bMyJailBreak) if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Admin %L removed player %L as Deputy", client, g_iDeputy);
 			
 			RemoveTheDeputy();
 		}
@@ -331,7 +333,7 @@ public void Deputy_Event_RoundStart(Event event, const char[] name, bool dontBro
 	if(gp_bMyJailBreak)
 	{
 		char EventDay[64];
-		GetEventDayName(EventDay);
+		MyJailbreak_GetEventDayName(EventDay);
 		
 		if (!StrEqual(EventDay, "none", false) || !gc_bStayWarden.BoolValue)
 		{
@@ -662,7 +664,6 @@ void Forward_OnDeputyCreated(int client)
 	Call_Finish();
 	
 	Color_OnDeputyCreation(client);
-	Icon_OnDeputyCreation(client);
 	HandCuffs_OnDeputyCreation(client);
 }
 
@@ -675,7 +676,6 @@ void Forward_OnDeputyRemoved(int client)
 	Call_Finish();
 	
 	Color_OnDeputyRemoved(client);
-	Icon_OnDeputyRemoved(client);
 	HandCuffs_OnDeputyRemoved(client);
 }
 

@@ -31,11 +31,14 @@
 #include <cstrike>
 #include <colors>
 #include <autoexecconfig>
-#include <hosties>
-#include <lastrequest>
+#include <emitsoundany>
 #include <warden>
 #include <mystocks>
-#include <myjailbreak>
+
+#undef REQUIRE_PLUGIN
+#include <hosties>
+#include <lastrequest>
+#define REQUIRE_PLUGIN
 
 
 //Compiler Options
@@ -59,6 +62,9 @@ ConVar gc_fUnLockTimeMax;
 ConVar gc_fUnLockTimeMin;
 ConVar gc_iPaperClipUnLockChance;
 ConVar gc_iPaperClipGetChance;
+ConVar gc_iCuffedColorRed;
+ConVar gc_iCuffedColorGreen;
+ConVar gc_iCuffedColorBlue;
 
 
 //Booleans
@@ -67,7 +73,9 @@ bool g_bCuffed[MAXPLAYERS+1] = false;
 
 //Integers
 int g_iPlayerHandCuffs[MAXPLAYERS+1];
+int g_iPlayerPaperClips[MAXPLAYERS+1];
 int g_iCuffed = 0;
+int TickTime[MAXPLAYERS+1];
 
 
 //Strings
@@ -77,6 +85,11 @@ char g_sAdminFlagCuffs[32];
 char g_sSoundBreakCuffsPath[256];
 char g_sSoundUnLockCuffsPath[256];
 char g_sEquipWeapon[MAXPLAYERS+1][32];
+
+
+//Handles
+Handle BreakTimer[MAXPLAYERS+1];
+Handle ProgressTimer[MAXPLAYERS+1];
 
 
 //Info
@@ -89,17 +102,21 @@ public void HandCuffs_OnPluginStart()
 	gc_iHandCuffsDistance = AutoExecConfig_CreateConVar("sm_warden_handcuffs_distance", "2", "How many meters distance from warden to handcuffed T to pick up?", _, true,  1.0);
 	gc_bHandCuffLR = AutoExecConfig_CreateConVar("sm_warden_handcuffs_lr", "1", "0 - disabled, 1 - free cuffed terrorists on LR", _, true,  0.0, true, 1.0);
 	gc_bHandCuffCT = AutoExecConfig_CreateConVar("sm_warden_handcuffs_ct", "1", "0 - disabled, 1 - Warden can also handcuff CTs", _, true,  0.0, true, 1.0);
+	gc_sAdminFlagCuffs = AutoExecConfig_CreateConVar("sm_warden_handcuffs_flag", "", "Set flag for admin/vip must have to get access to lockpicking feature. No flag = lockpicking is available for all players!");
 	gc_fUnLockTimeMax = AutoExecConfig_CreateConVar("sm_warden_handcuffs_unlock_maxtime", "35.0", "Time in seconds Ts need free themself with a paperclip.", _, true, 0.1);
 	gc_iPaperClipGetChance = AutoExecConfig_CreateConVar("sm_warden_handcuffs_paperclip_chance", "5", "Set the chance (1:x) a cuffed Terroris get a paperclip to free themself", _, true,  1.0);
 	gc_iPaperClipUnLockChance = AutoExecConfig_CreateConVar("sm_warden_handcuffs_unlock_chance", "3", "Set the chance (1:x) a cuffed Terroris who has a paperclip to free themself", _, true,  1.0);
 	gc_fUnLockTimeMin = AutoExecConfig_CreateConVar("sm_warden_handcuffs_unlock_mintime", "15.0", "Min. Time in seconds Ts need free themself with a paperclip.", _, true,  1.0);
 	gc_fUnLockTimeMax = AutoExecConfig_CreateConVar("sm_warden_handcuffs_unlock_maxtime", "35.0", "Max. Time in seconds Ts need free themself with a paperclip.", _, true,  1.0);
-	gc_sAdminFlagCuffs = AutoExecConfig_CreateConVar("sm_warden_handcuffs_flag", "", "Set flag for admin/vip must have to get access to paperclip. No flag = feature is available for all players!");
 	gc_sOverlayCuffsPath = AutoExecConfig_CreateConVar("sm_warden_overlays_cuffs", "overlays/MyJailbreak/cuffs" , "Path to the cuffs Overlay DONT TYPE .vmt or .vft");
 	gc_sSoundCuffsPath = AutoExecConfig_CreateConVar("sm_warden_sounds_cuffs", "music/MyJailbreak/cuffs.mp3", "Path to the soundfile which should be played for cuffed player.");
 	gc_sSoundBreakCuffsPath = AutoExecConfig_CreateConVar("sm_warden_sounds_breakcuffs", "music/MyJailbreak/breakcuffs.mp3", "Path to the soundfile which should be played for break cuffs.");
 	gc_sSoundUnLockCuffsPath = AutoExecConfig_CreateConVar("sm_warden_sounds_unlock", "music/MyJailbreak/unlock.mp3", "Path to the soundfile which should be played for unlocking cuffs.");
+	gc_iCuffedColorRed = AutoExecConfig_CreateConVar("sm_warden_color_cuffs_red", "0", "What color to turn the cuffed player into (set R, G and B values to 255 to disable) (Rgb): x - red value", _, true, 0.0, true, 255.0);
+	gc_iCuffedColorGreen = AutoExecConfig_CreateConVar("sm_warden_color_cuffs_green", "190", "What color to turn the cuffed player into (rGb): x - green value", _, true, 0.0, true, 255.0);
+	gc_iCuffedColorBlue = AutoExecConfig_CreateConVar("sm_warden_color_cuffs_blue", "120", "What color to turn the cuffed player into (rgB): x - blue value", _, true, 0.0, true, 255.0);
 	
+	// RegConsoleCmd("sm_cuff", Command_cuff);
 	
 	//Hooks
 	HookEvent("round_start", HandCuffs_Event_RoundStart);
@@ -123,6 +140,12 @@ public void HandCuffs_OnPluginStart()
 	gc_sAdminFlagCuffs.GetString(g_sAdminFlagCuffs , sizeof(g_sAdminFlagCuffs));
 }
 
+/*
+public Action Command_cuff(int client, int args)
+{
+	CuffsEm(client,client);
+}
+*/
 
 public int HandCuffs_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
@@ -171,6 +194,7 @@ public void HandCuffs_Event_RoundStart(Event event, const char[] name, bool dont
 	{
 		g_iPlayerHandCuffs[i] = gc_iHandCuffsNumber.IntValue;
 		g_bCuffed[i] = false;
+		g_iPlayerPaperClips[i] = 0;
 	}
 }
 
@@ -231,7 +255,7 @@ public void HandCuffs_Event_RoundEnd(Event event, const char[] name, bool dontBr
 
 public Action HandCuffs_OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
 {
-	if ((buttons & IN_ATTACK2))
+	if (buttons & IN_ATTACK2)
 	{
 		if (gc_bHandCuff.BoolValue && (StrEqual(g_sEquipWeapon[client], "taser")) && (IsClientWarden(client) || (IsClientDeputy(client) && gc_bHandCuffDeputy.BoolValue)) && gc_bPlugin.BoolValue)
 		{
@@ -260,6 +284,62 @@ public Action HandCuffs_OnPlayerRunCmd(int client, int &buttons, int &impulse, f
 				}
 			}
 		}
+	}
+	if (g_bCuffed[client])
+	{
+		for (int i = 0; i < MAX_BUTTONS; i++)
+		{
+			int button = (1 << i);
+			
+			if ((buttons & button))
+			{
+				if (!(g_iLastButtons[client] & button))
+				{
+					OnButtonPress2(client, button);
+				}
+			}
+			else if ((g_iLastButtons[client] & button))
+			{
+				OnButtonRelease2(client, button);
+			}
+		}
+		g_iLastButtons[client] = buttons;
+	}
+}
+
+public void OnButtonPress2(int client, int button)
+{
+	if (button == IN_USE)
+	{
+		if (g_iPlayerPaperClips[client] > 0)
+		{
+			float unlocktime = GetRandomFloat(gc_fUnLockTimeMin.FloatValue, gc_fUnLockTimeMax.FloatValue);
+			BreakTimer[client] = CreateTimer(unlocktime, Timer_BreakTheseCuffs, client);
+			TickTime[client] = 0;
+			ProgressTimer[client] = CreateTimer(unlocktime/14, Timer_Progress, client, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
+			if (gc_bSounds) EmitSoundToClientAny(client, g_sSoundUnLockCuffsPath);
+		}
+	}
+}
+
+
+public void OnButtonRelease2(int client, int button)
+{
+	if (button == IN_USE)
+	{
+		if (BreakTimer[client] != null)
+		{
+			KillTimer(BreakTimer[client]);
+			BreakTimer[client] = null;
+		}
+		if (ProgressTimer[client] != null)
+		{
+			KillTimer(ProgressTimer[client]);
+			ProgressTimer[client] = null;
+			PrintCenterText(client, "%t", "warden_pickingaborted");
+		}
+		if (gc_bSounds) StopSoundAny(client, SNDCHAN_AUTO, g_sSoundUnLockCuffsPath);
+		
 	}
 }
 
@@ -341,7 +421,19 @@ public void HandCuffs_OnMapStart()
 
 public void HandCuffs_OnClientDisconnect(int client)
 {
-	if (g_bCuffed[client]) g_iCuffed--;
+	if (g_bCuffed[client])
+		g_iCuffed--;
+	g_iLastButtons[client] = 0;
+	if (BreakTimer[client] != null)
+	{
+		KillTimer(BreakTimer[client]);
+		BreakTimer[client] = null;
+	}
+	if (ProgressTimer[client] != null)
+	{
+		KillTimer(ProgressTimer[client]);
+		ProgressTimer[client] = null;
+	}
 }
 
 
@@ -350,6 +442,16 @@ public void HandCuffs_OnMapEnd()
 	LoopClients(i)
 	{
 		if (g_bCuffed[i]) FreeEm(i, 0);
+		if (BreakTimer[i] != null)
+		{
+			KillTimer(BreakTimer[i]);
+			BreakTimer[i] = null;
+		}
+		if (ProgressTimer[i] != null)
+		{
+			KillTimer(ProgressTimer[i]);
+			ProgressTimer[i] = null;
+		}
 	}
 }
 
@@ -362,6 +464,7 @@ public void HandCuffs_OnConfigsExecuted()
 
 public void HandCuffs_OnClientPutInServer(int client)
 {
+	g_iPlayerPaperClips[client] = 0;
 	SDKHook(client, SDKHook_OnTakeDamage, HandCuffs_OnTakedamage);
 }
 
@@ -377,7 +480,7 @@ public Action CuffsEm(int client, int attacker)
 	{
 		SetEntityMoveType(client, MOVETYPE_NONE);
 		SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 0.0);
-		SetEntityRenderColor(client, 0, 190, 0, 255);
+		SetEntityRenderColor(client, gc_iCuffedColorRed.IntValue, gc_iCuffedColorGreen.IntValue, gc_iCuffedColorBlue.IntValue, 255);
 		StripAllPlayerWeapons(client);
 		GivePlayerItem(client, "weapon_knife");
 		g_bCuffed[client] = true;
@@ -390,10 +493,9 @@ public Action CuffsEm(int client, int attacker)
 		CPrintToChat(attacker, "%t %t", "warden_tag" , "warden_cuffsgot", g_iPlayerHandCuffs[attacker]);
 		if (CheckVipFlag(client, g_sAdminFlagCuffs))
 		{
-			CreateTimer (2.5, HasPaperClip, client);
+			CreateTimer (2.5, Timer_HasPaperClip, client);
 		}
 	}
-	
 }
 
 
@@ -405,6 +507,7 @@ public Action FreeEm(int client, int attacker)
 	g_bCuffed[client] = false;
 	CreateTimer( 0.0, DeleteOverlay, client );
 	g_iCuffed--;
+	ProgressTimer[client] = null;
 	if (gc_bSounds)StopSoundAny(client, SNDCHAN_AUTO, g_sSoundUnLockCuffsPath);
 	if ((attacker != 0) && (g_iCuffed == 0) && (g_iPlayerHandCuffs[attacker] < 1)) SetPlayerWeaponAmmo(attacker, Client_GetActiveWeapon(attacker), _, 0);
 	if (attacker != 0) CPrintToChatAll("%t %t", "warden_tag" , "warden_cuffsoff", attacker, client);
@@ -416,45 +519,190 @@ public Action FreeEm(int client, int attacker)
 ******************************************************************************/
 
 
-public Action HasPaperClip(Handle timer, int client)
+//Does the player get or already have a paperclip?
+public Action Timer_HasPaperClip(Handle timer, int client)
 {
-	if (g_bCuffed[client])
+	if (g_bCuffed[client]) // is player cuffed?
 	{
 		int paperclip = GetRandomInt(1, gc_iPaperClipGetChance.IntValue);
-		float unlocktime = GetRandomFloat(gc_fUnLockTimeMin.FloatValue, gc_fUnLockTimeMax.FloatValue);
-		if (paperclip == 1)
+		if (paperclip == 1) g_iPlayerPaperClips[client]++;
+		
+		if (g_iPlayerPaperClips[client] > 0) //if yes tell him that
 		{
-			CPrintToChat(client, "%t", "warden_gotpaperclip");
-			PrintCenterText(client, "%t", "warden_gotpaperclip");
-			CreateTimer (unlocktime, BreakTheseCuffs, client);
-			if (gc_bSounds)EmitSoundToClientAny(client, g_sSoundUnLockCuffsPath);
+			CPrintToChat(client, "%t %t", "warden_tag", "warden_gotpaperclip", g_iPlayerPaperClips[client]);
+			PrintCenterText(client, "%t", "warden_gotpaperclip", g_iPlayerPaperClips[client]);
 		}
 	}
 }
 
 
-public Action BreakTheseCuffs(Handle timer, int client)
+//Show the progress
+public Action Timer_Progress(Handle timer, int client)
 {
+	if (!IsClientInGame(client)) 
+		return Plugin_Stop;
+	
+	if (TickTime[client] == 0)
+	{
+		TickTime[client]++;
+		PrintCenterText(client, "%s", "<font size='14'>\t░░░█▀█▀█▀█▀█▀█▀█▀█\n\t░░░█■█■█■█■█■█■█■█\n\t<u>▒▒▒▒▒▒▒░░░░░░░░░░█</u>");
+	}
+	else if (TickTime[client] == 1)
+	{
+		TickTime[client]++;
+		PrintCenterText(client, "%s", "<font size='14'>\t░░░█▀███▀█▀█▀█▀█▀█\n\t░░░█■█░█■█■█■█■█■█\n\t<u>▒▒▒▒▒▒▒░░░░░░░░░░█</u>");
+	}
+	else if (TickTime[client] == 2)
+	{
+		TickTime[client]++;
+		PrintCenterText(client, "%s", "<font size='14'>\t░░░█▀███▀█▀█▀█▀█▀█\n\t░░░█■█░█■█■█■█■█■█\n\t<u>▒▒▒▒▒▒▒▒▒▒▒░░░░░░█</u>");
+	}
+	else if (TickTime[client] == 3)
+	{
+		TickTime[client]++;
+		PrintCenterText(client, "%s", "<font size='14'>\t░░░█▀███▀███▀█▀█▀█\n\t░░░█■█░█■█░█■█■█■█\n\t<u>▒▒▒▒▒▒▒▒▒▒▒░░░░░░█</u>");
+	}
+	else if (TickTime[client] == 4)
+	{
+		TickTime[client]++;
+		PrintCenterText(client, "%s", "<font size='14'>\t░░░█▀███▀███▀█▀█▀█\n\t░░░█■█░█■█░█■█■█■█\n\t<u>▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░█</u>");
+	}
+	else if (TickTime[client] == 5)
+	{
+		TickTime[client]++;
+		PrintCenterText(client, "%s", "<font size='14'>\t░░░█▀███▀███▀███▀█\n\t░░░█■█░█■█░█■█░█■█\n\t<u>▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░█</u>");
+	}
+	else if (TickTime[client] == 6)
+	{
+		TickTime[client]++;
+		PrintCenterText(client, "%s", "<font size='14'>\t░░░█▀███▀███▀███▀█\n\t░░░█■█░█■█░█■█░█■█\n\t<u>▒▒▒▒▒░░░░░░░░░░░░█</u>");
+	}
+	else if (TickTime[client] == 7)
+	{
+		TickTime[client]++;
+		PrintCenterText(client, "%s", "<font size='14'>\t░░░█████▀███▀███▀█\n\t░░░█░█░█■█░█■█░█■█\n\t<u>▒▒▒▒▒░░░░░░░░░░░░█</u>");
+	}
+	else if (TickTime[client] == 8)
+	{
+		TickTime[client]++;
+		PrintCenterText(client, "%s", "<font size='14'>\t░░░█████▀███▀███▀█\n\t░░░█░█░█■█░█■█░█■█\n\t<u>▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░█</u>");
+	}
+	else if (TickTime[client] == 9)
+	{
+		TickTime[client]++;
+		PrintCenterText(client, "%s", "<font size='14'>\t░░░█████▀███████▀█\n\t░░░█░█░█■█░█░█░█■█\n\t<u>▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░█</u>");
+	}
+	else if (TickTime[client] == 10)
+	{
+		TickTime[client]++;
+		PrintCenterText(client, "%s", "<font size='14'>\t░░░█████▀███████▀█\n\t░░░█░█░█■█░█░█░█■█\n\t<u>▒▒▒▒▒▒▒▒▒░░░░░░░░█</u>");
+	}
+	else if (TickTime[client] == 11)
+	{
+		TickTime[client]++;
+		PrintCenterText(client, "%s", "<font size='14'>\t░░░█████████████▀█\n\t░░░█░█░█░█░█░█░█■█\n\t<u>▒▒▒▒▒▒▒▒▒░░░░░░░░█</u>");
+	}
+	else if (TickTime[client] == 12)
+	{
+		TickTime[client]++;
+		PrintCenterText(client, "%s", "<font size='14'>\t░░░█████████████▀█\n\t░░░█░█░█░█░█░█░█■█\n\t<u>▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒█</u>");
+		ProgressTimer[client] = null;
+	}
+	if (TickTime[client] < 13) 
+		return Plugin_Continue;
+	
+	return Plugin_Stop;
+}
+
+
+//was the lckpick sucessful?
+public Action Timer_BreakTheseCuffs(Handle timer, int client)
+{
+	if (ProgressTimer[client] != null)
+	{
+		KillTimer(ProgressTimer[client]);
+		ProgressTimer[client] = null;
+	}
 	if (IsValidClient(client, false, false) && g_bCuffed[client])
 	{
 		int unlocked = GetRandomInt(1, gc_iPaperClipUnLockChance.IntValue);
-		if (unlocked == 1)
+		
+		if (unlocked == 1) //yes
 		{
-			CPrintToChat(client, "%t", "warden_unlock");
-			PrintCenterText(client, "%t", "warden_unlock");
-			if (gc_bSounds)EmitSoundToAllAny(g_sSoundBreakCuffsPath);
-			SetEntityMoveType(client, MOVETYPE_WALK);
-			SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
-			SetEntityRenderColor(client, 255, 255, 255, 255);
-			g_bCuffed[client] = false;
-			CreateTimer( 0.0, DeleteOverlay, client );
-			g_iCuffed--;
+			CreateTimer(1.5, Timer_ProgressOpen, client, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 		}
-		else
+		else //no
 		{
-			CPrintToChat(client, "%t", "warden_brokepaperclip");
-			PrintCenterText(client, "%t", "warden_brokepaperclip");
+			CreateTimer(1.5, Timer_ProgressBroke, client, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 		}
+	}
+	BreakTimer[client] = null;
+}
+
+
+//show open progress and remove cuffs
+public Action Timer_ProgressOpen(Handle timer, int client)
+{
+	if (TickTime[client] == 13)
+	{
+		TickTime[client] = 0;
+		PrintCenterText(client, "%s", "<font size='14'>\t░░░███████████████\n\t░░░<font color='#00FF00'>█░█░█░█░█░█░█░</font>█\n\t<u>▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒█</u>");
+		return Plugin_Continue;
+	}
+	else if (TickTime[client] == 0)
+	{
+		if (gc_bSounds) StopSoundAny(client, SNDCHAN_AUTO, g_sSoundUnLockCuffsPath);
+		PrintCenterText(client, "%s", "<font size='14'>\t░░░█▀▀▀▀▀▀▀▀▀▀▀▀▀█\n\t░░░<font color='#00FF00'>█░█░█░█░█░█░█░</font>█\n\t<u>░░░░░░░░░░░░░░░░░█</u>");
+		CPrintToChat(client, "%t %t", "warden_tag", "warden_unlock");
+		if (gc_bSounds) EmitSoundToAllAny(g_sSoundBreakCuffsPath);
+		SetEntityMoveType(client, MOVETYPE_WALK);
+		SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
+		SetEntityRenderColor(client, 255, 255, 255, 255);
+		g_bCuffed[client] = false;
+		CreateTimer( 0.0, DeleteOverlay, client );
+		g_iCuffed--;
+		g_iPlayerPaperClips[client]--;
+	}
+	return Plugin_Stop;
+}
+
+
+//show break progress, remove paperclip and tell if he got more than one.
+public Action Timer_ProgressBroke(Handle timer, int client)
+{
+	if (TickTime[client] == 13)
+	{
+		TickTime[client]++;
+		PrintCenterText(client, "%s", "<font size='14'>\t░░░█▀█▀█▀█▀█▀█▀█▀█\n\t░░░█<font color='#FF0000'>■█■█■█■█■█■█■</font>█\n\t<u>▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒█</u>");
+		return Plugin_Continue;
+	}
+	else if (TickTime[client] == 14)
+	{
+		if (gc_bSounds) StopSoundAny(client, SNDCHAN_AUTO, g_sSoundUnLockCuffsPath);
+		PrintCenterText(client, "%s", "<font size='14'>\t░░░█▀█▀█▀█▀█▀█▀█▀█\n\t░░░█<font color='#FF0000'>■█■█■█■█■█■█■</font>█\n\t<u>░░░░░░░░░░░░░░░░░█</u>");
+		g_iPlayerPaperClips[client]--;
+		TickTime[client]= 0;
+		CPrintToChat(client, "%t %t", "warden_tag", "warden_brokepaperclip");
+		return Plugin_Continue;
+	}
+	else if (TickTime[client] == 0)
+	{
+		PrintCenterText(client, "%t", "warden_brokepaperclip");
+		if (g_iPlayerPaperClips[client] > 0)
+		{
+			CreateTimer(2.0, Timer_StillPaperClip, client);
+		}
+	}
+	return Plugin_Stop;
+}
+
+
+public Action Timer_StillPaperClip(Handle timer, int client)
+{
+	if (g_bCuffed[client])
+	{
+		CPrintToChat(client, "%t %t", "warden_tag", "warden_gotpaperclip", g_iPlayerPaperClips[client]);
+		PrintCenterText(client, "%t", "warden_gotpaperclip", g_iPlayerPaperClips[client]);
 	}
 }
 
@@ -475,10 +723,44 @@ stock void StripZeus()
 		{
 			GetEntityClassname(weapon, sWeapon, sizeof(sWeapon));
 			if (StrEqual(sWeapon, "weapon_taser"))
-			{ 
+			{
 				SDKHooks_DropWeapon(client, weapon, NULL_VECTOR, NULL_VECTOR); 
 				AcceptEntityInput(weapon, "Kill");
 			}
 		}
 	}
+}
+
+
+/******************************************************************************
+                   NATIVES
+******************************************************************************/
+
+
+//Remove current Warden
+public int Native_GivePaperClip(Handle plugin, int argc)
+{
+	int client = GetNativeCell(1);
+	int amount = GetNativeCell(2);
+	
+	if (!IsClientInGame(client) && !IsClientConnected(client))
+		ThrowNativeError(SP_ERROR_INDEX, "Client index %i is invalid", client);
+	
+	g_iPlayerPaperClips[client] += amount;
+	CreateTimer(2.0, Timer_StillPaperClip, client);
+}
+
+
+//Is Client in handcuffs
+public int Native_IsClientCuffed(Handle plugin, int argc)
+{
+	int client = GetNativeCell(1);
+	
+	if (!IsClientInGame(client) && !IsClientConnected(client))
+		ThrowNativeError(SP_ERROR_INDEX, "Client index %i is invalid", client);
+	
+	if (g_bCuffed[client])
+		return true;
+	
+	return false;
 }

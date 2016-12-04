@@ -33,11 +33,23 @@
 #include <smlib>
 #include <colors>
 #include <autoexecconfig>
+#include <warden>
+
+//Optional Plugins
+#undef REQUIRE_PLUGIN
+#include <myjailbreak>
 #include <hosties>
 #include <lastrequest>
-#include <warden>
+#include <smartjaildoors>
+#include <voiceannounce_ex>
+#include <chat-processor>
+#define REQUIRE_PLUGIN
+
 #include <mystocks>
-#include <myjailbreak>
+
+
+//Defines
+#define MAX_BUTTONS 25
 
 
 //Console Variables
@@ -68,6 +80,10 @@ ConVar g_bMenuClose;
 //Booleans
 bool IsLR = false;
 bool gp_bMyJailBreak = false;
+bool gp_bHosties = false;
+bool gp_bLastRequest = false;
+bool gp_bSmartJailDoors = false;
+bool gp_bChatProcessor = false;
 
 
 //Integers
@@ -114,6 +130,7 @@ char g_sMyJBLogFile[PLATFORM_MAX_PATH];
 
 
 //Modules
+#include "MyJailbreak/Modules/Warden/celldoors.sp"
 #include "MyJailbreak/Modules/Warden/deputy.sp"
 #include "MyJailbreak/Modules/Warden/mute.sp"
 #include "MyJailbreak/Modules/Warden/bulletsparks.sp"
@@ -121,7 +138,6 @@ char g_sMyJBLogFile[PLATFORM_MAX_PATH];
 #include "MyJailbreak/Modules/Warden/math.sp"
 #include "MyJailbreak/Modules/Warden/disarm.sp"
 #include "MyJailbreak/Modules/Warden/noblock.sp"
-#include "MyJailbreak/Modules/Warden/celldoors.sp"
 #include "MyJailbreak/Modules/Warden/extendtime.sp"
 #include "MyJailbreak/Modules/Warden/friendlyfire.sp"
 #include "MyJailbreak/Modules/Warden/reminder.sp"
@@ -130,13 +146,14 @@ char g_sMyJBLogFile[PLATFORM_MAX_PATH];
 #include "MyJailbreak/Modules/Warden/backstab.sp"
 #include "MyJailbreak/Modules/Warden/gundrop.sp"
 #include "MyJailbreak/Modules/Warden/marker.sp"
-#include "MyJailbreak/Modules/Warden/icon.sp"
 #include "MyJailbreak/Modules/Warden/color.sp"
 #include "MyJailbreak/Modules/Warden/laser.sp"
 #include "MyJailbreak/Modules/Warden/painter.sp"
 #include "MyJailbreak/Modules/Warden/rebel.sp"
 #include "MyJailbreak/Modules/Warden/counter.sp"
 #include "MyJailbreak/Modules/Warden/shootguns.sp"
+#include "MyJailbreak/Modules/Warden/orders.sp"
+#include "MyJailbreak/Modules/Warden/freedays.sp"
 
 
 //Compiler Options
@@ -225,13 +242,14 @@ public void OnPluginStart()
 	BackStab_OnPluginStart();
 	Marker_OnPluginStart();
 	GunDropPrevention_OnPluginStart();
-	Icon_OnPluginStart();
 	Color_OnPluginStart();
 	Laser_OnPluginStart();
 	Painter_OnPluginStart();
 	MarkRebel_OnPluginStart();
 	Counter_OnPluginStart();
 	ShootGuns_OnPluginStart();
+	Orders_OnPluginStart();
+	Freedays_OnPluginStart();
 	
 	
 	//AutoExecConfig
@@ -257,7 +275,7 @@ public void OnPluginStart()
 	
 	
 	//Set directory for LogFile - must be created before
-	SetLogFile(g_sMyJBLogFile, "MyJB");
+	SetLogFile(g_sMyJBLogFile, "MyJB", "MyJailbreak");
 }
 
 
@@ -297,7 +315,8 @@ public void OnConfigsExecuted()
 	Countdown_OnConfigsExecuted();
 	ExtendTime_OnConfigsExecuted();
 	Counter_OnConfigsExecuted();
-	
+	Orders_OnConfigsExecuted();
+	Freedays_OnConfigsExecuted();
 	
 	//Set custom Commands
 	int iCount = 0;
@@ -371,6 +390,10 @@ public void OnAllPluginsLoaded()
 	g_bMenuClose = FindConVar("sm_menu_close");
 	
 	gp_bMyJailBreak = LibraryExists("myjailbreak");
+	gp_bHosties = LibraryExists("hosties");
+	gp_bLastRequest = LibraryExists("lastrequest");
+	gp_bSmartJailDoors = LibraryExists("smartjaildoors");
+	gp_bChatProcessor = LibraryExists("chat-processor");
 }
 
 
@@ -378,6 +401,14 @@ public void OnLibraryRemoved(const char[] name)
 {
 	if (StrEqual(name, "myjailbreak"))
 		gp_bMyJailBreak = false;
+	if (StrEqual(name, "hosties"))
+		gp_bHosties = false;
+	if (StrEqual(name, "lastrequest"))
+		gp_bLastRequest = false;
+	if (StrEqual(name, "smartjaildoors"))
+		gp_bSmartJailDoors = false;
+	if (StrEqual(name, "chat-processor"))
+		gp_bChatProcessor = false;
 }
 
 
@@ -385,6 +416,14 @@ public void OnLibraryAdded(const char[] name)
 {
 	if (StrEqual(name, "myjailbreak"))
 		gp_bMyJailBreak = true;
+	if (StrEqual(name, "hosties"))
+		gp_bHosties = true;
+	if (StrEqual(name, "lastrequest"))
+		gp_bLastRequest = true;
+	if (StrEqual(name, "smartjaildoors"))
+		gp_bSmartJailDoors = true;
+	if (StrEqual(name, "chat-processor"))
+		gp_bChatProcessor = true;
 }
 
 
@@ -465,9 +504,9 @@ public Action Command_VoteWarden(int client, int args)
 					
 					if (g_iVoteCount > playercount)
 					{
-						if(gp_bMyJailBreak) if (ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Player %L was kick as warden by voting", g_iWarden);
 						RemoveTheWarden();
 						CPrintToChatAll("%t %t", "warden_tag" , "warden_votesuccess");
+						if(gp_bMyJailBreak) if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Player %L was kick as warden by voting", g_iWarden);
 					}
 					else CPrintToChatAll("%t %t", "warden_tag" , "warden_need", Missing, client);
 				}
@@ -492,10 +531,9 @@ public Action AdminCommand_RemoveWarden(int client, int args)
 			CPrintToChatAll("%t %t", "warden_tag" , "warden_removed", client, g_iWarden);  // if client is console !=
 			if (gc_bBetterNotes.BoolValue) PrintCenterTextAll("%t", "warden_removed_nc", client, g_iWarden);
 			
-			if(gp_bMyJailBreak) if (ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Admin %L removed player %L as warden", client, g_iWarden);
-			
 			RemoveTheWarden();
 			Forward_OnWardenRemovedByAdmin(client);
+			if(gp_bMyJailBreak) if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Admin %L removed player %L as warden", client, g_iWarden);
 		}
 	}
 	return Plugin_Handled;
@@ -606,7 +644,7 @@ public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 	if (gp_bMyJailBreak)
 	{
 		char EventDay[64];
-		GetEventDayName(EventDay);
+		MyJailbreak_GetEventDayName(EventDay);
 		
 		if (!StrEqual(EventDay, "none", false) || !gc_bStayWarden.BoolValue)
 		{
@@ -617,7 +655,6 @@ public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 				Forward_OnWardenRemoved(g_iWarden);
 				g_iLastWarden = g_iWarden;
 				g_iWarden = -1;
-				
 			}
 		}
 	}
@@ -650,9 +687,10 @@ public void OnMapStart()
 	HandCuffs_OnMapStart();
 	Marker_OnMapStart();
 	Reminder_OnMapStart();
-	Icon_OnMapStart();
 	Laser_OnMapStart();
 	Painter_OnMapStart();
+	Orders_OnMapStart();
+	Freedays_OnMapStart();
 	
 	if (gc_bSounds.BoolValue)
 	{
@@ -706,7 +744,7 @@ public void OnClientDisconnect(int client)
 	Deputy_OnClientDisconnect(client);
 	Painter_OnClientDisconnect(client);
 	HandCuffs_OnClientDisconnect(client);
-	Icon_OnClientDisconnect(client);
+	Freedays_OnClientDisconnect(client);
 }
 
 
@@ -748,11 +786,11 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 {
 	if ((IsClientWarden(client) || IsClientDeputy(client)) && gc_bPlugin.BoolValue)
 	{
-		HandCuffs_OnPlayerRunCmd(client, buttons, impulse, vel, angles, weapon);
 		Marker_OnPlayerRunCmd(client, buttons, impulse, vel, angles, weapon);
 		Laser_OnPlayerRunCmd(client, buttons, impulse, vel, angles, weapon);
 	}
 	Painter_OnPlayerRunCmd(client, buttons, impulse, vel, angles, weapon);
+	HandCuffs_OnPlayerRunCmd(client, buttons, impulse, vel, angles, weapon);
 	
 	return Plugin_Continue;
 }
@@ -916,11 +954,10 @@ public int Handler_SetWardenOverwrite(Menu menu, MenuAction action, int client, 
 			int newwarden = GetClientOfUserId(g_iTempWarden[client]);
 			if (g_iWarden != -1)CPrintToChatAll("%t %t", "warden_tag" , "warden_removed", client, g_iWarden);
 			
-			if(gp_bMyJailBreak) if (ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Admin %L kick player %L warden and set %L as new", client, g_iWarden, newwarden);
-			
 			RemoveTheWarden();
 			SetTheWarden(newwarden);
 			Forward_OnWardenCreatedByAdmin(newwarden);
+			if(gp_bMyJailBreak) if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Admin %L kick player %L warden and set %L as new", client, g_iWarden, newwarden);
 		}
 		if (g_bMenuClose != null)
 		{
@@ -1011,6 +1048,12 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char [] error, int err_ma
 	CreateNative("warden_deputy_get", Native_GetDeputy);
 	CreateNative("warden_deputy_getlast", Native_GetLastDeputy);
 	
+	CreateNative("warden_handcuffs_givepaperclip", Native_GivePaperClip);
+	CreateNative("warden_handcuffs_iscuffed", Native_IsClientCuffed);
+	
+	CreateNative("warden_freeday_set", Native_GiveFreeday);
+	CreateNative("warden_freeday_has", Native_HasClientFreeday);
+	
 	RegPluginLibrary("warden");
 	return APLRes_Success;
 }
@@ -1095,7 +1138,6 @@ void Forward_OnWardenCreated(int client)
 	Call_Finish();
 	
 	Deputy_OnWardenCreation(client);
-	Icon_OnWardenCreation(client);
 	Color_OnWardenCreation(client);
 	Laser_OnWardenCreation(client);
 	HandCuffs_OnWardenCreation(client);
@@ -1129,7 +1171,6 @@ void Forward_OnWardenRemoved(int client)
 	
 	Deputy_OnWardenRemoved(client);
 	Marker_OnWardenRemoved();
-	Icon_OnWardenRemoved(client);
 	Color_OnWardenRemoved(client);
 	Laser_OnWardenRemoved(client);
 	Painter_OnWardenRemoved(client);

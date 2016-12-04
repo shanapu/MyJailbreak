@@ -33,7 +33,6 @@
 #include <autoexecconfig>
 #include <warden>
 #include <mystocks>
-#include <myjailbreak>
 
 
 //Compiler Options
@@ -77,9 +76,9 @@ public void FriendlyFire_OnPluginStart()
 
 public Action Command_FriendlyFire(int client, int args)
 {
-	if (gc_bFF.BoolValue) 
+	if (gc_bFF.BoolValue)
 	{
-		if (g_bFF.BoolValue) 
+		if (g_bFF.BoolValue)
 		{
 			if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bFFDeputy.BoolValue))
 			{
@@ -90,7 +89,7 @@ public Action Command_FriendlyFire(int client, int args)
 			else CPrintToChatAll("%t %t", "warden_tag", "warden_ffison" );
 		}
 		else
-		{	
+		{
 			if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bFFDeputy.BoolValue))
 			{
 				SetCvar("mp_teammates_are_enemies", 1);

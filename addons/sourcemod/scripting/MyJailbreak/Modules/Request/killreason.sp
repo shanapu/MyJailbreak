@@ -33,7 +33,11 @@
 #include <autoexecconfig>
 #include <warden>
 #include <mystocks>
+
+//Optional Plugins
+#undef REQUIRE_PLUGIN
 #include <myjailbreak>
+#define REQUIRE_PLUGIN
 
 
 //Compiler Options
@@ -67,7 +71,8 @@ public void KillReason_Event_PlayerDeath(Event event, const char[] name, bool do
 	int victim = GetClientOfUserId(event.GetInt("userid")); // Get the dead clients id
 	int attacker = GetClientOfUserId(event.GetInt("attacker")); // Get the attacker clients id
 	
-	if (IsValidClient(victim, true, true) && IsValidClient(attacker, false, true) && !IsLR && gc_bPlugin.BoolValue && gc_bKillReason.BoolValue && ((GetClientTeam(attacker) == CS_TEAM_CT) && (GetClientTeam(victim) == CS_TEAM_T))) Menu_KillReason(attacker, victim);
+	if (IsValidClient(victim, true, true) && IsValidClient(attacker, false, true) && !IsLR && gc_bPlugin.BoolValue && gc_bKillReason.BoolValue && ((GetClientTeam(attacker) == CS_TEAM_CT) && (GetClientTeam(victim) == CS_TEAM_T)))
+		Menu_KillReason(attacker, victim);
 }
 
 
@@ -78,27 +83,28 @@ public void KillReason_Event_PlayerDeath(Event event, const char[] name, bool do
 
 public int Menu_KillReason(int client, int victim)
 {
-	if (!IsEventDayRunning() && !IsLastGuardRule())
-	{
-		char info[255];
-		
-		Menu menu1 = CreateMenu(Handler_KillReason);
-		Format(info, sizeof(info), "%T", "request_killreason_title", client, victim);
-		menu1.SetTitle(info);
-		Format(info, sizeof(info), "%T", "request_killreason_lostgame", client, victim);
-		if (gc_bFreeKillRespawn.BoolValue) menu1.AddItem("1", info);
-		Format(info, sizeof(info), "%T", "request_killreason_rebel", client);
-		if (gc_bFreeKillKill.BoolValue) menu1.AddItem("2", info);
-		Format(info, sizeof(info), "%T", "request_killreason_brokerule", client);
-		if (gc_bFreeKillFreeDay.BoolValue) menu1.AddItem("3", info);
-		Format(info, sizeof(info), "%T", "request_killreason_notfollow", client);
-		if (gc_bFreeKillFreeDayVictim.BoolValue) menu1.AddItem("4", info);
-		Format(info, sizeof(info), "%T", "request_killreason_sry", client);
-		if (gc_bFreeKillSwap.BoolValue) menu1.AddItem("5", info);
-		Format(info, sizeof(info), "%T", "request_killreason_freekill", client);
-		if (gc_bFreeKillSwap.BoolValue) menu1.AddItem("6", info);
-		menu1.Display(client, MENU_TIME_FOREVER);
-	}
+	if (MyJailbreak_IsEventDayRunning() || MyJailbreak_IsLastGuardRule())
+		return;
+	
+	char info[255];
+	
+	Menu menu1 = CreateMenu(Handler_KillReason);
+	Format(info, sizeof(info), "%T", "request_killreason_title", client, victim);
+	menu1.SetTitle(info);
+	Format(info, sizeof(info), "%T", "request_killreason_lostgame", client, victim);
+	if (gc_bFreeKillRespawn.BoolValue) menu1.AddItem("1", info);
+	Format(info, sizeof(info), "%T", "request_killreason_rebel", client);
+	if (gc_bFreeKillKill.BoolValue) menu1.AddItem("2", info);
+	Format(info, sizeof(info), "%T", "request_killreason_brokerule", client);
+	if (gc_bFreeKillFreeDay.BoolValue) menu1.AddItem("3", info);
+	Format(info, sizeof(info), "%T", "request_killreason_notfollow", client);
+	if (gc_bFreeKillFreeDayVictim.BoolValue) menu1.AddItem("4", info);
+	Format(info, sizeof(info), "%T", "request_killreason_sry", client);
+	if (gc_bFreeKillSwap.BoolValue) menu1.AddItem("5", info);
+	Format(info, sizeof(info), "%T", "request_killreason_freekill", client);
+	if (gc_bFreeKillSwap.BoolValue) menu1.AddItem("6", info);
+	menu1.Display(client, MENU_TIME_FOREVER);
+
 }
 
 

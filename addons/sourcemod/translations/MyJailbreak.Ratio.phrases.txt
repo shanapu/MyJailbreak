@@ -28,6 +28,13 @@
 		"en"		"Cannot play on guards because you are {green}CT{default} banned."
 	}
 
+	"ratio_banned_nc"
+	{
+		"ru"		"Вам запрещено играть за КТ, потому что Вы забанены за КТ."
+		"de"		"Du kannst nicht als Wärter spielen. Du bist als CT gebanned."
+		"en"		"Cannot play on guards because you are CT banned."
+	}
+
 	"ratio_empty"
 	{
 		"ru"		"В настоящее время очередь {green}пуста{default}."
@@ -59,6 +66,11 @@
 	{
 		"ru"		"Вы больше не в очереди за КТ!"
 		"en"		"You are no longer in the guard queue!"
+	}
+
+	"ratio_clearqueue"
+	{
+		"en"		"The admin has cleared the Guard queue!"
 	}
 
 	"ratio_movetot"
@@ -347,6 +359,18 @@
 		"en"		"You need at least {1} Stamm Points to play as a guard"
 	}
 
+	"ratio_rankme"
+	{
+		"#format"   "{1:i}"
+		"en"		"You need at least {1} RankMe Points to play as a guard"
+	}
+
+	"ratio_reputation"
+	{
+		"#format"   "{1:i}"
+		"en"		"You need at least {1} Reputation Points to play as a guard"
+	}
+
 	"ratio_hasactivated"
 	{
 		"en"		"Admin has activated the Ratio. Ratio fix next round."
@@ -358,6 +382,18 @@
 		"#format"   "{1:f}"
 		"en"		"Ratio is active! 1 Guards to {1} Prisoners"
 		"ru"		"Баланс активен! 1 Охранник на {1} Заключённых"
+	}
+
+	"ratio_remove"
+	{
+		"en"		"Remove from Queue:"
+	}
+
+	"ratio_close"
+	{
+		"ru"		"Закрыть"
+		"de"		"Schliessen"
+		"en"		"Exit"
 	}
 
 }

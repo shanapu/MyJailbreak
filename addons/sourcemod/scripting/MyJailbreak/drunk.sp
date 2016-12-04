@@ -70,8 +70,8 @@ ConVar gc_iRounds;
 ConVar gc_sSoundStartPath;
 ConVar gc_sCustomCommandVote;
 ConVar gc_sCustomCommandSet;
-//ConVar gc_bInvertX;
-//ConVar gc_bInvertY;
+ConVar gc_bInvertX;
+ConVar gc_bInvertY;
 ConVar gc_bWiggle;
 ConVar gc_sAdminFlag;
 ConVar gc_bAllowLR;
@@ -148,8 +148,8 @@ public void OnPluginStart()
 	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_drunk_flag", "g", "Set flag for admin/vip to set this Event Day.");
 	gc_bVote = AutoExecConfig_CreateConVar("sm_drunk_vote", "1", "0 - disabled, 1 - allow player to vote for drunk", _, true,  0.0, true, 1.0);
 	gc_bSpawnCell = AutoExecConfig_CreateConVar("sm_drunk_spawn", "0", "0 - T teleport to CT spawn, 1 - cell doors auto open", _, true,  0.0, true, 1.0);
-//	gc_bInvertX = AutoExecConfig_CreateConVar("sm_drunk_invert_x", "1", "Invert movement on the x-axis (left & right)", _, true, 0.0, true, 1.0);
-//	gc_bInvertY = AutoExecConfig_CreateConVar("sm_drunk_invert_y", "1", "Invert movement on the y-axis (forward & back)", _, true, 0.0, true, 1.0);
+	gc_bInvertX = AutoExecConfig_CreateConVar("sm_drunk_invert_x", "1", "Invert movement on the x-axis (left & right)", _, true, 0.0, true, 1.0);
+	gc_bInvertY = AutoExecConfig_CreateConVar("sm_drunk_invert_y", "1", "Invert movement on the y-axis (forward & back)", _, true, 0.0, true, 1.0);
 	gc_bWiggle = AutoExecConfig_CreateConVar("sm_drunk_wiggle", "1", "Wiggle with the screen", _, true, 0.0, true, 1.0);
 	gc_iRounds = AutoExecConfig_CreateConVar("sm_drunk_rounds", "1", "Rounds to play in a row", _, true, 1.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_drunk_roundtime", "5", "Round time in minutes for a single drunk round", _, true, 1.0);
@@ -183,7 +183,7 @@ public void OnPluginStart()
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 	gc_sAdminFlag.GetString(g_sAdminFlag , sizeof(g_sAdminFlag));
 	
-	SetLogFile(g_sEventsLogFile, "Events");
+	SetLogFile(g_sEventsLogFile, "Events", "MyJailbreak");
 }
 
 
@@ -261,21 +261,21 @@ public Action Command_SetDrunk(int client, int args)
 		if (client == 0)
 		{
 			StartNextRound();
-			if (ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Drunk was started by groupvoting");
+			if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Drunk was started by groupvoting");
 		}
 		else if (warden_iswarden(client)) //is player warden?
 		{
 			if (gc_bSetW.BoolValue) //is warden allowed to set?
 			{
 				char EventDay[64];
-				GetEventDayName(EventDay);
+				MyJailbreak_GetEventDayName(EventDay);
 				
 				if (StrEqual(EventDay, "none", false)) //is an other event running or set?
 				{
 					if (g_iCoolDown == 0) //is event cooled down?
 					{
 						StartNextRound(); //prepare Event for next round
-						if (ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event drunken was started by warden %L", client);
+						if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event drunken was started by warden %L", client);
 					}
 					else CReplyToCommand(client, "%t %t", "drunk_tag" , "drunk_wait", g_iCoolDown);
 				}
@@ -288,14 +288,14 @@ public Action Command_SetDrunk(int client, int args)
 			if (gc_bSetA.BoolValue) //is admin allowed to set?
 			{
 				char EventDay[64];
-				GetEventDayName(EventDay);
+				MyJailbreak_GetEventDayName(EventDay);
 				
 				if (StrEqual(EventDay, "none", false)) //is an other event running or set?
 				{
 					if ((g_iCoolDown == 0) || gc_bSetABypassCooldown.BoolValue) //is event cooled down?
 					{
 						StartNextRound(); //prepare Event for next round;
-						if (ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event drunken was started by admin %L", client);
+						if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event drunken was started by admin %L", client);
 					}
 					else CReplyToCommand(client, "%t %t", "drunk_tag" , "drunk_wait", g_iCoolDown);
 				}
@@ -321,7 +321,7 @@ public Action Command_VoteDrunk(int client, int args)
 		if (gc_bVote.BoolValue) //is voting enabled?
 		{	
 			char EventDay[64];
-			GetEventDayName(EventDay);
+			MyJailbreak_GetEventDayName(EventDay);
 			
 			if (StrEqual(EventDay, "none", false)) //is an other event running or set?
 			{
@@ -337,7 +337,7 @@ public Action Command_VoteDrunk(int client, int args)
 						if (g_iVoteCount > playercount) 
 						{
 							StartNextRound(); //prepare Event for next round
-							if (ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event drunken was started by voting");
+							if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event drunken was started by voting");
 						}
 						else CPrintToChatAll("%t %t", "drunk_tag" , "drunk_need", Missing, client);
 					}
@@ -370,8 +370,8 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		SetCvar("sm_menu_enable", 0);
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("mp_teammates_are_enemies", 1);
-		SetEventDayPlanned(false);
-		SetEventDayRunning(true);
+		MyJailbreak_SetEventDayPlanned(false);
+		MyJailbreak_SetEventDayRunning(true);
 		IsDrunk = true;
 		
 		g_iRound++; //Add Round number
@@ -455,7 +455,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		//If Event isnt running - subtract cooldown round
 		
 		char EventDay[64];
-		GetEventDayName(EventDay);
+		MyJailbreak_GetEventDayName(EventDay);
 		
 		if (!StrEqual(EventDay, "none", false))
 		{
@@ -502,8 +502,8 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			SetCvar("sm_warden_enable", 1);
 			
 			g_iMPRoundTime.IntValue = g_iOldRoundTime; //return to original round time
-			SetEventDayName("none"); //tell myjailbreak event is ended
-			SetEventDayRunning(false);
+			MyJailbreak_SetEventDayName("none"); //tell myjailbreak event is ended
+			MyJailbreak_SetEventDayRunning(false);
 			
 			CPrintToChatAll("%t %t", "drunk_tag" , "drunk_end");
 		}
@@ -597,8 +597,8 @@ public int OnAvailableLR(int Announced)
 			SetCvar("sm_warden_enable", 1);
 			
 			g_iMPRoundTime.IntValue = g_iOldRoundTime; //return to original round time
-			SetEventDayName("none"); //tell myjailbreak event is ended
-			SetEventDayRunning(false);
+			MyJailbreak_SetEventDayName("none"); //tell myjailbreak event is ended
+			MyJailbreak_SetEventDayRunning(false);
 			
 			CPrintToChatAll("%t %t", "drunk_tag" , "drunk_end");
 		}
@@ -620,9 +620,9 @@ void StartNextRound()
 	
 	char buffer[32];
 	Format(buffer, sizeof(buffer), "%T", "drunk_name", LANG_SERVER);
-	SetEventDayName(buffer);
+	MyJailbreak_SetEventDayName(buffer);
 	
-	SetEventDayPlanned(true);
+	MyJailbreak_SetEventDayPlanned(true);
 	g_iOldRoundTime = g_iMPRoundTime.IntValue; //save original round time
 	g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
 	
@@ -642,9 +642,8 @@ void KillDrunk(int client)
 	TeleportEntity(client, NULL_VECTOR, angs, NULL_VECTOR);	
 }
 
-
 //Switch WSAD
-/*
+
 public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon) 
 {
 	if (IsDrunk)
@@ -683,7 +682,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	}
 	return Plugin_Continue;
 }
-*/
+
 
 
 /******************************************************************************
@@ -772,7 +771,7 @@ public Action Timer_BeaconOn(Handle timer)
 	LoopValidClients(i, true, false)
 	{
 		float random = GetRandomFloat(0.5, 4.0);
-		BeaconOn(i, random);
+		MyJailbreak_BeaconOn(i, random);
 	}
 	BeaconTimer = null;
 }
@@ -788,7 +787,6 @@ public Action Timer_Drunk(Handle timer, any client)
 		angs[2] = g_DrunkAngles[GetRandomInt(0, 100) % 20];
 		
 		TeleportEntity(client, NULL_VECTOR, angs, NULL_VECTOR);
-		
 	}
 	return Plugin_Handled;
 }

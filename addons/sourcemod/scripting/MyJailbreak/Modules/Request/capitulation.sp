@@ -33,7 +33,6 @@
 #include <autoexecconfig>
 #include <warden>
 #include <mystocks>
-#include <myjailbreak>
 
 
 //Compiler Options
@@ -47,6 +46,7 @@ ConVar gc_bCapitulation;
 ConVar gc_bCapitulationAccept;
 ConVar gc_fRebelTime;
 ConVar gc_bCapitulationDamage;
+ConVar gc_bCapitulationWeapons;
 ConVar gc_iCapitulationColorRed;
 ConVar gc_iCapitulationColorGreen;
 ConVar gc_iCapitulationColorBlue;
@@ -56,6 +56,7 @@ ConVar gc_sCustomCommandCapitulation;
 
 //Booleans
 bool g_bCapitulated[MAXPLAYERS+1];
+bool g_bHasCapitulated[MAXPLAYERS+1];
 
 
 //Handles
@@ -81,6 +82,7 @@ public void Capitulation_OnPluginStart()
 	gc_fRebelTime = AutoExecConfig_CreateConVar("sm_capitulation_rebel_timer", "10.0", "Time to give a rebel on not accepted capitulation his knife back");
 	gc_bCapitulationAccept = AutoExecConfig_CreateConVar("sm_capitulation_accept", "1", "0 - disabled, 1 - the warden have to accept capitulation on menu popup", _, true, 0.0, true, 1.0);
 	gc_bCapitulationDamage = AutoExecConfig_CreateConVar("sm_capitulation_damage", "1", "0 - disabled, 1 - enable Terror make no damage after capitulation", _, true, 0.0, true, 1.0);
+	gc_bCapitulationWeapons = AutoExecConfig_CreateConVar("sm_capitulation_weapons", "1", "0 - disabled, 1 - enable Terror can not pick up weapons after capitulation", _, true, 0.0, true, 1.0);
 	gc_iCapitulationColorRed = AutoExecConfig_CreateConVar("sm_capitulation_color_red", "0", "What color to turn the capitulation Terror into (set R, G and B values to 255 to disable) (Rgb): x - red value", _, true, 0.0, true, 255.0);
 	gc_iCapitulationColorGreen = AutoExecConfig_CreateConVar("sm_capitulation_color_green", "250", "What color to turn the capitulation Terror into (rGb): x - green value", _, true, 0.0, true, 255.0);
 	gc_iCapitulationColorBlue = AutoExecConfig_CreateConVar("sm_capitulation_color_blue", "0", "What color to turn the capitulation Terror into (rgB): x - blue value", _, true, 0.0, true, 255.0);
@@ -118,9 +120,9 @@ public Action Command_Capitulation(int client, int args)
 	{
 		if (gc_bCapitulation.BoolValue)
 		{
-			if (GetClientTeam(client) == CS_TEAM_T && (IsPlayerAlive(client)))
+			if (GetClientTeam(client) == CS_TEAM_T && IsPlayerAlive(client))
 			{
-				if (!(g_bCapitulated[client]))
+				if (!g_bCapitulated[client] && !g_bHasCapitulated[client])
 				{
 					if (warden_exist() && gc_bCapitulationAccept.BoolValue)
 					{
@@ -171,6 +173,7 @@ public void Capitulation_Event_RoundStart(Event event, char [] name, bool dontBr
 		delete RebelTimer[client];
 		
 		g_bCapitulated[client] = false;
+		g_bHasCapitulated[client] = false;
 	}
 }
 
@@ -209,6 +212,7 @@ public void Capitulation_OnConfigsExecuted()
 public void Capitulation_OnClientPutInServer(int client)
 {
 	g_bCapitulated[client] = false;
+	g_bHasCapitulated[client] = false;
 	
 	SDKHook(client, SDKHook_WeaponCanUse, Capitulation_OnWeaponCanUse);
 	SDKHook(client, SDKHook_OnTakeDamage, Capitulation_OnTakedamage);
@@ -224,12 +228,12 @@ public void Capitulation_OnClientDisconnect(int client)
 
 public Action Capitulation_OnWeaponCanUse(int client, int weapon)
 {
-	if (g_bCapitulated[client])
+	if (g_bCapitulated[client] || g_bHasCapitulated[client] && gc_bCapitulationWeapons.BoolValue)
 	{
 		char sWeapon[32];
 		GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
 		
-		if (!StrEqual(sWeapon, "weapon_knife"))
+		if (!StrEqual(sWeapon, "weapon_knife") && !StrEqual(sWeapon, "weapon_healthshot") && !StrEqual(sWeapon, "weapon_c4"))
 		{
 			if (IsValidClient(client, true, false))
 			{
@@ -245,7 +249,7 @@ public Action Capitulation_OnTakedamage(int victim, int &attacker, int &inflicto
 {
 	if (IsValidClient(attacker, true, false) && GetClientTeam(attacker) == CS_TEAM_T && IsPlayerAlive(attacker))
 	{
-		if (g_bCapitulated[attacker] && gc_bCapitulationDamage.BoolValue && !IsClientInLastRequest(attacker))
+		if ((g_bCapitulated[attacker] || g_bHasCapitulated[attacker]) && gc_bCapitulationDamage.BoolValue && !IsClientInLastRequest(attacker))
 		{
 			CPrintToChat(attacker, "%t %t", "request_tag", "request_nodamage");
 			return Plugin_Handled;
@@ -257,7 +261,11 @@ public Action Capitulation_OnTakedamage(int victim, int &attacker, int &inflicto
 
 public int Capitulation_OnAvailableLR(int Announced)
 {
-	LoopClients(i) g_bCapitulated[i] = false;
+	LoopClients(i)
+	{
+		g_bCapitulated[i] = false;
+		g_bHasCapitulated[i] = false;
+	}
 }
 
 
@@ -300,6 +308,8 @@ public int Handler_CapitulationMenu(Menu menu, MenuAction action, int client, in
 				RequestTimer = null;
 				if (RebelTimer[i] != null)
 					KillTimer(RebelTimer[i]);
+				g_bHasCapitulated[i] = true;
+				g_bCapitulated[i] = false;
 				RebelTimer[i] = null;
 				StripAllPlayerWeapons(i);
 				SetEntityRenderColor(client, gc_iCapitulationColorRed.IntValue, gc_iCapitulationColorGreen.IntValue, gc_iCapitulationColorBlue.IntValue, 255);
@@ -316,7 +326,7 @@ public int Handler_CapitulationMenu(Menu menu, MenuAction action, int client, in
 				if (RequestTimer != null)
 					KillTimer(RequestTimer);
 				RequestTimer = null;
-				SetEntityRenderColor(i, 255, 0, 0, 255);
+				SetEntityRenderColor(i, 255, 0, 0, 255); //todo
 				g_bCapitulated[i] = false;
 				if (RebelTimer[i] != null)
 					KillTimer(RebelTimer[i]);
@@ -336,7 +346,7 @@ public int Handler_CapitulationMenu(Menu menu, MenuAction action, int client, in
 
 public Action Timer_GiveKnifeCapitulated(Handle timer, any client)
 {
-	if (IsClientConnected(client))
+	if (IsValidClient(client,true,false))
 	{
 		GivePlayerItem(client, "weapon_knife");
 		CPrintToChat(client, "%t %t", "request_tag", "request_knifeback");
@@ -348,7 +358,7 @@ public Action Timer_GiveKnifeCapitulated(Handle timer, any client)
 
 public Action Timer_RebelNoAction(Handle timer, any client)
 {
-	if (IsClientConnected(client))
+	if (IsValidClient(client,true,false))
 	{
 		SetEntityRenderColor(client, 255, 0, 0, 255);
 	}

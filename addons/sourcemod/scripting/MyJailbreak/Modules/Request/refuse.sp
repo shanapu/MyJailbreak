@@ -33,7 +33,6 @@
 #include <autoexecconfig>
 #include <warden>
 #include <mystocks>
-#include <myjailbreak>
 
 
 //Compiler Options
@@ -280,7 +279,7 @@ public Action RefuseMenu(int warden)
 		}
 		DrawPanelText(RefusePanel, "                                   ");
 		DrawPanelText(RefusePanel, "-----------------------------------");
-		Format(info1, sizeof(info1), "%T", "warden_close", warden);
+		Format(info1, sizeof(info1), "%T", "request_close", warden);
 		DrawPanelItem(RefusePanel, info1); 
 		SendPanelToClient(RefusePanel, warden, Handler_NullCancel, 23);
 		
@@ -295,7 +294,7 @@ public Action RefuseMenu(int warden)
 
 public Action Timer_ResetColorRefuse(Handle timer, any client)
 {
-	if (IsClientConnected(client))
+	if (IsValidClient(client,true,false))
 	{
 		SetEntityRenderColor(client, 255, 255, 255, 255);
 	}
@@ -312,9 +311,9 @@ public Action Timer_NoAllowRefuse(Handle timer)
 		{
 			LoopValidClients(client, false, true)
 			{
-				PrintCenterText(client, "%t", "warden_stopcountdown_nc", g_iCountStopTime);
+				PrintCenterText(client, "%t", "request_stopcountdown_nc", g_iCountStopTime);
 			}
-			CPrintToChatAll("%t %t", "warden_tag" , "warden_stopcountdown", g_iCountStopTime);
+			CPrintToChatAll("%t %t", "request_tag" , "request_stopcountdown", g_iCountStopTime);
 		}
 		g_iCountStopTime--;
 		return Plugin_Continue;
@@ -323,7 +322,7 @@ public Action Timer_NoAllowRefuse(Handle timer)
 	{
 		LoopValidClients(client, false, true)
 		{
-			PrintCenterText(client, "%t", "warden_countdownstop_nc");
+			PrintCenterText(client, "%t", "request_countdownstop_nc");
 			if (gc_bSounds.BoolValue)
 			{
 				EmitSoundToAllAny(g_sSoundRefuseStopPath);
@@ -333,7 +332,7 @@ public Action Timer_NoAllowRefuse(Handle timer)
 			g_iCountStopTime = gc_fRefuseTime.IntValue;
 			return Plugin_Stop;
 		}
-		CPrintToChatAll("%t %t", "warden_tag" , "warden_countdownstop");
+		CPrintToChatAll("%t %t", "request_tag" , "request_countdownstop");
 	}
 	return Plugin_Continue;
 }

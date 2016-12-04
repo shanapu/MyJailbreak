@@ -32,7 +32,6 @@
 #include <autoexecconfig>
 #include <warden>
 #include <mystocks>
-#include <myjailbreak>
 
 
 //Compiler Options
@@ -101,8 +100,11 @@ public Action BackStab_OnTakedamage(int victim, int &attacker, int &inflictor, f
 	char sWeapon[32];
 	if (IsValidEntity(weapon)) GetEntityClassname(weapon, sWeapon, sizeof(sWeapon));
 	
-	if (gc_bBackstab.BoolValue && IsClientInGame(attacker) && (IsClientWarden(victim) || (IsClientDeputy(victim) && gc_bBackstabDeputy.BoolValue)) && !IsClientInLastRequest(victim) && CheckVipFlag(victim, g_sAdminFlagBackstab))
+	if (gc_bBackstab.BoolValue && IsClientInGame(attacker) && (IsClientWarden(victim) || (IsClientDeputy(victim) && gc_bBackstabDeputy.BoolValue)) && CheckVipFlag(victim, g_sAdminFlagBackstab))
 	{
+		if (gp_bHosties && gp_bLastRequest) if (IsClientInLastRequest(victim))
+			return Plugin_Continue;
+		
 		if ((StrEqual(sWeapon, "weapon_knife", false)) && (damage > 99.0))
 		{
 			if (gc_iBackstabNumber.IntValue == 0)

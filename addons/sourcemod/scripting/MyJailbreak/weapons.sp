@@ -31,10 +31,14 @@
 #include <cstrike>
 #include <colors>
 #include <autoexecconfig>
-#include <warden>
 #include <clientprefs>
 #include <mystocks>
+
+//Optional Plugins
+#undef REQUIRE_PLUGIN
 #include <myjailbreak>
+#include <warden>
+#define REQUIRE_PLUGIN
 
 
 //Compiler Options
@@ -47,6 +51,8 @@ bool newWeaponsSelected[MAXPLAYERS+1];
 bool rememberChoice[MAXPLAYERS+1];
 bool TA[MAXPLAYERS+1];
 bool Health[MAXPLAYERS+1];
+bool gp_bWarden = false;
+bool gp_bMyJailBreak = false;
 
 
 //Handles
@@ -66,19 +72,22 @@ ConVar gc_bSpawn;
 ConVar gc_bPlugin;
 ConVar gc_bTerror;
 ConVar gc_bCTerror;
-ConVar gc_bTA;
+ConVar gc_bTAWarden;
+ConVar gc_bTADeputy;
 ConVar gc_bJBmenu;
 ConVar gc_bAWP;
 ConVar gc_bAutoSniper;
 ConVar gc_bM249;
 ConVar gc_bNegev;
-ConVar gc_bHealth;
+ConVar gc_bHealthWarden;
+ConVar gc_bHealthDeputy;
 ConVar gc_bKevlar;
 ConVar gc_sCustomCommandWeapon;
 
 
 //Extern Convars
-ConVar g_bTaser;
+ConVar g_bTaserWarden;
+ConVar g_bTaserDeputy;
 
 
 //Strings
@@ -129,8 +138,10 @@ public void OnPluginStart()
 	gc_bAutoSniper = AutoExecConfig_CreateConVar("sm_weapons_autosniper", "1", "0 - disabled, 1 - enable scar20 & g3sg1 in menu", _, true,  0.0, true, 1.0);
 	gc_bNegev = AutoExecConfig_CreateConVar("sm_weapons_negev", "1", "0 - disabled, 1 - enable negev in menu", _, true,  0.0, true, 1.0);
 	gc_bM249 = AutoExecConfig_CreateConVar("sm_weapons_m249", "1", "0 - disabled, 1 - enable m249 in menu", _, true,  0.0, true, 1.0);
-	gc_bTA = AutoExecConfig_CreateConVar("sm_weapons_warden_tagrenade", "1", "0 - disabled, 1 - warden get a TA grenade with weapons", _, true,  0.0, true, 1.0);
-	gc_bHealth = AutoExecConfig_CreateConVar("sm_weapons_warden_healthshot", "1", "0 - disabled, 1 - warden get a healthshot with weapons", _, true,  0.0, true, 1.0);
+	gc_bTAWarden = AutoExecConfig_CreateConVar("sm_weapons_warden_tagrenade", "1", "0 - disabled, 1 - warden get a TA grenade with weapons - need MyJB warden", _, true,  0.0, true, 1.0);
+	gc_bHealthWarden = AutoExecConfig_CreateConVar("sm_weapons_warden_healthshot", "1", "0 - disabled, 1 - warden get a healthshot with weapons - need MyJB warden", _, true,  0.0, true, 1.0);
+	gc_bTADeputy = AutoExecConfig_CreateConVar("sm_weapons_warden_tagrenade", "1", "0 - disabled, 1 - warden get a TA grenade with weapons - need MyJB warden", _, true,  0.0, true, 1.0);
+	gc_bHealthDeputy = AutoExecConfig_CreateConVar("sm_weapons_warden_healthshot", "1", "0 - disabled, 1 - warden get a healthshot with weapons - need MyJB warden", _, true,  0.0, true, 1.0);
 	gc_bKevlar = AutoExecConfig_CreateConVar("sm_weapons_kevlar", "1", "0 - disabled, 1 - CT get Kevlar & helm on Spawn", _, true,  0.0, true, 1.0);
 	gc_bJBmenu = AutoExecConfig_CreateConVar("sm_weapons_jbmenu", "1", "0 - disabled, 1 - enable autoopen the MyJailbreak !menu after weapon given.", _, true,  0.0, true, 1.0);
 	
@@ -148,10 +159,34 @@ public void OnPluginStart()
 }
 
 
+public void OnLibraryRemoved(const char[] name)
+{
+	if (StrEqual(name, "warden"))
+		gp_bWarden = false;
+	
+	if (StrEqual(name, "myjailbreak"))
+		gp_bMyJailBreak = false;
+}
+
+
+public void OnLibraryAdded(const char[] name)
+{
+	if (StrEqual(name, "warden"))
+		gp_bWarden = true;
+	
+	if (StrEqual(name, "myjailbreak"))
+		gp_bMyJailBreak = true;
+}
+
+
 public void OnAllPluginsLoaded()
 {
+	gp_bWarden = LibraryExists("warden");
+	gp_bMyJailBreak = LibraryExists("myjailbreak");
+	
 	//FindConVar
-	g_bTaser = FindConVar("sm_warden_handcuffs");
+	g_bTaserWarden = FindConVar("sm_warden_handcuffs");
+	g_bTaserDeputy = FindConVar("sm_warden_handcuffs_deputy");
 }
 
 //Initialize Plugin
@@ -225,8 +260,14 @@ public void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast
 		Timers[client] = CreateTimer(1.0, Timer_GetWeapons, client);
 	}
 	
-	if (gc_bKevlar.BoolValue && (GetClientTeam(client) == CS_TEAM_CT) && !IsEventDayRunning() && !IsEventDayPlanned())
+	if (gc_bKevlar.BoolValue && (GetClientTeam(client) == CS_TEAM_CT))
 	{
+		if (gp_bMyJailBreak)
+		{
+			if(MyJailbreak_IsEventDayRunning() || MyJailbreak_IsEventDayPlanned())
+			return;
+		}
+		
 		int iHelmet = FindSendPropInfo("CCSPlayer", "m_bHasHelmet");
 		int iKevlar = FindSendPropInfo("CCSPlayer", "m_ArmorValue");
 		
@@ -306,23 +347,43 @@ public void GiveSavedWeapons(int client)
 	{
 		StripAllPlayerWeapons(client);
 		GivePlayerItem(client, "weapon_knife");
-		if (warden_iswarden(client))
+		if (gp_bWarden)
 		{
-			if (gc_bHealth.BoolValue && !TA[client])
+			if (warden_iswarden(client))
 			{
-				GivePlayerItem(client, "weapon_healthshot");
-				CPrintToChat(client, "%t %t", "weapons_tag", "weapons_health");
-				TA[client] = true;
+				if (gc_bHealthWarden.BoolValue && !TA[client])
+				{
+					GivePlayerItem(client, "weapon_healthshot");
+					CPrintToChat(client, "%t %t", "weapons_tag", "weapons_health");
+					TA[client] = true;
+				}
+				if (gc_bTAWarden.BoolValue && !Health[client])
+				{
+					GivePlayerItem(client, "weapon_tagrenade");
+					CPrintToChat(client, "%t %t", "weapons_tag", "weapons_ta");
+					Health[client] = true;
+				}
+				if ((g_bTaserWarden != null) && g_bTaserWarden.BoolValue) GivePlayerItem(client, "weapon_taser");
+				
 			}
-			if (gc_bTA.BoolValue && !Health[client])
+			if (warden_deputy_isdeputy(client))
 			{
-				GivePlayerItem(client, "weapon_tagrenade");
-				CPrintToChat(client, "%t %t", "weapons_tag", "weapons_ta");
-				Health[client] = true;
+				if (gc_bHealthDeputy.BoolValue && !TA[client])
+				{
+					GivePlayerItem(client, "weapon_healthshot");
+					CPrintToChat(client, "%t %t", "weapons_tag", "weapons_health");
+					TA[client] = true;
+				}
+				if (gc_bTADeputy.BoolValue && !Health[client])
+				{
+					GivePlayerItem(client, "weapon_tagrenade");
+					CPrintToChat(client, "%t %t", "weapons_tag", "weapons_ta");
+					Health[client] = true;
+				}
+				if ((g_bTaserDeputy != null) && g_bTaserDeputy.BoolValue) GivePlayerItem(client, "weapon_taser");
+				
 			}
-			if ((g_bTaser != null) && g_bTaser.BoolValue) GivePlayerItem(client, "weapon_taser");
 		}
-		
 		if (StrEqual(primaryWeapon[client], "random"))
 		{
 			// Select random menu item (excluding "Random" option)

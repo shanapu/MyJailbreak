@@ -172,7 +172,7 @@ public void OnPluginStart()
 	gc_bSetABypassCooldown = AutoExecConfig_CreateConVar("sm_catch_cooldown_admin", "1", "0 - disabled, 1 - ignore the cooldown when admin/vip set catch round", _, true, 0.0, true, 1.0);
 	gc_bOverlays = AutoExecConfig_CreateConVar("sm_catch_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true, 0.0, true, 1.0);
 	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_catch_overlays_start", "overlays/MyJailbreak/start" , "Path to the start Overlay DONT TYPE .vmt or .vft");
-	gc_sOverlayFreeze = AutoExecConfig_CreateConVar("sm_catch_overlayfreeze_path", "overlays/MyJailbreak/freeze" , "Path to the Freeze Overlay DONT TYPE .vmt or .vft");
+	gc_sOverlayFreeze = AutoExecConfig_CreateConVar("sm_catch_overlayfreeze_path", "overlays/MyJailbreak/frozen" , "Path to the Freeze Overlay DONT TYPE .vmt or .vft");
 	gc_bStayOverlay = AutoExecConfig_CreateConVar("sm_catch_stayoverlay", "1", "0 - overlays will removed after 3sec. , 1 - overlays will stay until unfreeze", _, true, 0.0, true, 1.0);
 	gc_iFreezeTime = AutoExecConfig_CreateConVar("sm_catch_freezetime", "15", "Time in seconds CTs are freezed", _, true, 0.0);
 	gc_bSounds = AutoExecConfig_CreateConVar("sm_catch_sounds_enable", "1", "0 - disabled, 1 - enable sounds ", _, true, 0.0, true, 1.0);
@@ -216,7 +216,7 @@ public void OnPluginStart()
 	gc_sOverlayFreeze.GetString(g_sOverlayFreeze , sizeof(g_sOverlayFreeze));
 	gc_sAdminFlag.GetString(g_sAdminFlag , sizeof(g_sAdminFlag));
 	
-	SetLogFile(g_sEventsLogFile, "Events");
+	SetLogFile(g_sEventsLogFile, "Events", "MyJailbreak");
 }
 
 
@@ -308,7 +308,7 @@ public Action Command_SetCatch(int client, int args)
 		if (client == 0)
 		{
 			StartNextRound();
-			if (ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Catch was started by groupvoting");
+			if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Catch was started by groupvoting");
 		}
 		else if (warden_iswarden(client))
 		{
@@ -317,14 +317,14 @@ public Action Command_SetCatch(int client, int args)
 				if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
 				{
 					char EventDay[64];
-					GetEventDayName(EventDay);
+					MyJailbreak_GetEventDayName(EventDay);
 					
 					if (StrEqual(EventDay, "none", false))
 					{
 						if (g_iCoolDown == 0)
 						{
 							StartNextRound();
-							if (ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Catch was started by warden %L", client);
+							if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Catch was started by warden %L", client);
 						}
 						else CReplyToCommand(client, "%t %t", "catch_tag" , "catch_wait", g_iCoolDown);
 					}
@@ -341,14 +341,14 @@ public Action Command_SetCatch(int client, int args)
 					if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
 					{
 						char EventDay[64];
-						GetEventDayName(EventDay);
+						MyJailbreak_GetEventDayName(EventDay);
 						
 						if (StrEqual(EventDay, "none", false))
 						{
 							if ((g_iCoolDown == 0) || gc_bSetABypassCooldown.BoolValue)
 							{
 								StartNextRound();
-								if (ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Catch was started by admin %L", client);
+								if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Catch was started by admin %L", client);
 							}
 							else CReplyToCommand(client, "%t %t", "catch_tag" , "catch_wait", g_iCoolDown);
 						}
@@ -378,7 +378,7 @@ public Action Command_VoteCatch(int client, int args)
 			if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
 			{
 				char EventDay[64];
-				GetEventDayName(EventDay);
+				MyJailbreak_GetEventDayName(EventDay);
 				
 				if (StrEqual(EventDay, "none", false))
 				{
@@ -394,7 +394,7 @@ public Action Command_VoteCatch(int client, int args)
 							if (g_iVoteCount > playercount)
 							{
 								StartNextRound();
-								if (ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Catch was started by voting");
+								if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Catch was started by voting");
 							}
 							else CPrintToChatAll("%t %t", "catch_tag" , "catch_need", Missing, client);
 						}
@@ -426,8 +426,8 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("sm_weapons_enable", 0);
-		SetEventDayPlanned(false);
-		SetEventDayRunning(true);
+		MyJailbreak_SetEventDayPlanned(false);
+		MyJailbreak_SetEventDayRunning(true);
 		IsCatch = true;
 		g_iRound++;
 		StartCatch = false;
@@ -476,7 +476,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 	else
 	{
 		char EventDay[64];
-		GetEventDayName(EventDay);
+		MyJailbreak_GetEventDayName(EventDay);
 		
 		if (!StrEqual(EventDay, "none", false))
 		{
@@ -523,8 +523,8 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			SetCvar("sm_warden_enable", 1);
 			
 			g_iMPRoundTime.IntValue = g_iOldRoundTime;
-			SetEventDayName("none");
-			SetEventDayRunning(false);
+			MyJailbreak_SetEventDayName("none");
+			MyJailbreak_SetEventDayRunning(false);
 			CPrintToChatAll("%t %t", "catch_tag" , "catch_end");
 		}
 	}
@@ -701,8 +701,8 @@ public int OnAvailableLR(int Announced)
 			SetCvar("sm_warden_enable", 1);
 			
 			g_iMPRoundTime.IntValue = g_iOldRoundTime;
-			SetEventDayName("none");
-			SetEventDayRunning(false);
+			MyJailbreak_SetEventDayName("none");
+			MyJailbreak_SetEventDayRunning(false);
 			CPrintToChatAll("%t %t", "catch_tag" , "catch_end");
 		}
 	}
@@ -721,8 +721,8 @@ void StartNextRound()
 	g_iVoteCount = 0;
 	char buffer[32];
 	Format(buffer, sizeof(buffer), "%T", "catch_name", LANG_SERVER);
-	SetEventDayName(buffer);
-	SetEventDayPlanned(true);
+	MyJailbreak_SetEventDayName(buffer);
+	MyJailbreak_SetEventDayPlanned(true);
 	
 	g_iOldRoundTime = g_iMPRoundTime.IntValue; //save original round time
 	g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
@@ -916,7 +916,7 @@ public Action Timer_StartEvent(Handle timer)
 //Beacon Timer
 public Action Timer_BeaconOn(Handle timer)
 {
-	LoopValidClients(i, true, false) BeaconOn(i, 2.0);
+	LoopValidClients(i, true, false) MyJailbreak_BeaconOn(i, 2.0);
 	BeaconTimer = null;
 }
 

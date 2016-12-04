@@ -3,7 +3,7 @@
 MyJailbreak is a redux rewrite of [URL="https://github.com/Franc1sco/Franug-Jailbreak/"]Franugs Special Jailbreak[/URL] a merge/redux of [URL="http://www.sourcemod.net/plugins.php?cat=0&mod=-1&title=warden&author=&description=&search=1"]eccas, ESK0s & zipcores Jailbreak warden[/URL] and many other plugins.
 
 
-[B][u]Included Plugins:[/u][/B]
+[B][u]Included Plugins[/u][/B]
 
 [LIST]
 [*] [B]Warden[/B] - set/become warden,vote retire warden, model, icon, open cells,gun plant prevention, extend roundtime, handcuffs, laser pointer, painter, set marker/quiz/EventDays/countdown/FF/nobock/mute
@@ -12,9 +12,17 @@ MyJailbreak is a redux rewrite of [URL="https://github.com/Franc1sco/Franug-Jail
 [*] [B]Menu[/B] - player menus for T, CT, warden & admin
 [*] [B]Weapons[/B] - weapon menus for CT &/or T(in event round)
 [*] [B]Player Tags[/B] - add player tags for T, T.Admin, CT, CT.Admin, W, WA.Admin in chat &/or stats
+[*] [B]Icons[/B] - add a icon above players head for T, CT, warden, deputy, rebel, cuffed & freeday
+[*] [B]HUD[/B] - a players HUD to display game informations
 [*] [B]Ratio[/B] - Manage team ratios and a queue system for prisoners to join guard through
-[*] [B]HUD[/B] - a Players HUD to display game informations
-[*] [B]Event Days[/B] - vote/set a Event Day for next round with cooldowns, rounds in row, sounds & overlays
+[/LIST][INDENT][LIST]
+[*][B]CT Ban Support[/B] - Support plugin for [URL="https://forums.alliedmods.net/showthread.php?t=166080"]databombs CT Bans plugin[/URL]
+[*][B]RankMe Support[/B] - Support plugin for [URL="https://forums.alliedmods.net/showthread.php?t=155621"]lok1s, Scoobys RankMe plugin[/URL] & [URL="https://forums.alliedmods.net/showthread.php?t=290063"]Kentos RankMe plugin[/URL]
+[*][B]Reputation Support[/B] - Support plugin for [URL="https://forums.alliedmods.net/showthread.php?p=2411490"]oaaron99 Player Reputations plugin[/URL]
+[*][B]Stamm Support[/B] - Support plugin for [URL="https://forums.alliedmods.net/showthread.php?p=1338942"]popoklopsis Stamm plugin[/URL]
+[*][B]TeamBans Support[/B] - Support plugin for [URL="https://forums.alliedmods.net/showthread.php?t=270761"]baras TeamBans plugin[/URL]
+[/LIST][/INDENT][LIST]
+[*][B]Event Days[/B] - vote/set a Event Day for next round with cooldowns, rounds in row, sounds & overlays
 [/LIST][INDENT][LIST]
 [*][B]War[/B] - CT vs T Team Deathmatch
 [*][B]Free For All[/B] - Deathmatch
@@ -33,12 +41,16 @@ MyJailbreak is a redux rewrite of [URL="https://github.com/Franc1sco/Franug-Jail
 [*][B]Knife[/B] - Knife Deathmatch with configurable gravity, iceskate, and thirdperson
 [*][B]Freeday[/B] - Auto freeday on first round &/or if there is no CT
 [/LIST][/INDENT]
+[LIST]
+[*][B]TeamGames Support[/B] - Support plugin for [url=https://forums.alliedmods.net/showthread.php?t=286045]KissLicks TeamGames[/url]
+[/LIST]
 
 
 
-[B][u]Features:[/u][/B]
+[B][u]Features[/u][/B]
 [LIST]
 [*]SourcePawn Transitional Syntax 1.7
+[*][b][url=https://github.com/shanapu/MyJailbreak/wiki]Wiki[/url] & [url=https://github.com/shanapu/MyJailbreak/wiki/Frequently-Asked-Questions]FAQ[/url][/b]
 [*]Multilingual support
 [*]Custom chat commands !mycommand
 [*]Custom chat tags [MyJB.tag]
@@ -46,14 +58,13 @@ MyJailbreak is a redux rewrite of [URL="https://github.com/Franc1sco/Franug-Jail
 [*]Sounds & overlays
 [*]Flag system - restrict some features only for admin/VIP
 [*]Natives & forwards of the [URL="http://www.sourcemod.net/plugins.php?cat=0&mod=-1&title=warden&author=&description=&search=1"]original warden plugins[/URL] to keep compatibility
-[*][URL="https://github.com/shanapu/MyJailbreak/wiki/Eventdays-template"]Template[/URL] to make your own Eventday
 [*][URL="https://github.com/shanapu/MyJailbreak/wiki/Custom-Overlays"]Small tutorial[/URL] for making your own custom overlay or icon
 [*]some other fancy stuff
 [/LIST]
 
 
 
-[B][u]Plugin descriptions, commands & convars[/u][/B]
+[B][u]Plugin descriptions, pictures, commands & convars[/u][/B]
 [SPOILER]
 
 
@@ -109,8 +120,6 @@ sm_warden_choose_time: Time in seconds a random warden will picked when no warde
 sm_warden_stay: 0 - disabled, 1 - warden will stay after round end. Default 1
 sm_warden_vote: 0 - disabled, 1 - enable player vote against warden. Default 1
 sm_warden_better_notifications: 0 - disabled , 1 - will use hint and center say for better notifications. Default 1
-sm_warden_icon_enable: 0 - disabled , 1 - enable the icon above the wardens head. Default 1
-sm_warden_icon: Path to the floating warden icon DONT TYPE .vmt or .vft. Default: "decals/MyJailbreak/warden"
 sm_warden_noblock: 0 - disabled, 1 - enable setable noblock for warden. Default 1
 sm_warden_noblock_mode: 0 - collision only between CT & T , 1 - collision within a team. Default 1
 sm_warden_ff: 0 - disabled, 1 - enable warden switch friendly fire. Default 1
@@ -141,6 +150,9 @@ sm_warden_handcuffs_unlock_mintime: Min. Time in seconds Ts need free themself w
 sm_warden_handcuffs_unlock_maxtime: Max. Time in seconds Ts need free themself with a paperclip. Default 35
 sm_warden_handcuffs_flag: Set flag for admin/vip must have to get access to paperclip. No flag = feature is available for all players! Default ""
 sm_warden_overlays_cuffs: Path to the cuffs Overlay DONT TYPE .vmt or .vft. Default "overlays/MyJailbreak/cuffs"
+sm_warden_color_cuffs_red - What color to turn the cuffed player into (set R, G and B values to 255 to disable) (Rgb): x - red value
+sm_warden_color_cuffs_green - What color to turn the cuffed player into (rGb): x - green value
+sm_warden_color_cuffs_blue - What color to turn the cuffed player into (rgB): x - blue value
 sm_warden_random: 0 - disabled, 1 - enable kill a random t for warden. Default 1
 sm_warden_random_mode: 1 - all random / 2 - Thunder / 3 - Timebomb / 4 - Firebomb / 5 - NoKill (1,3,4 needs funcommands.smx enabled). Default 2
 sm_warden_bulletsparks: 0 - disabled, 1 - enable Warden bulletimpact sparks
@@ -189,12 +201,14 @@ sm_warden_talkover - 0 - disabled, 1 - temporary mutes all client when the warde
 sm_warden_talkover_team - 0 - mute prisoner & guards on talkover, 1 - only mute prisoners on talkover
 sm_warden_counter - 0 - disabled, 1 - Allow the warden count player in radius
 sm_warden_counter_mode - 1 - Show prisoner count in chat / 2 - Show prisoner count in HUD / 3 - Show prisoner count in chat & HUD / 4 - Show names in Menu / 5 - Show prisoner count in chat & show names in Menu / 6 - Show prisoner count in HUD & show names in Menu / 7 - Show prisoner count in chat & HUD & show names in Menu
-sm_warden_icon_ct_enable - 0 - disabled, 1 - enable the icon above the guards head
-sm_warden_icon_ct - Path to the guard icon DONT TYPE .vmt or .vft
-sm_warden_icon_t_enable - 0 - disabled, 1 - enable the icon above the prisoner head
-sm_warden_icon_t - Path to the prisoner icon DONT TYPE .vmt or .vft
 sm_warden_shootguns_enable, 0 - disabled, 1 - enable shoot guns on ground to remove.
 sm_warden_shootguns_mode, 1 - only warden / 2 - warden & deputy / 3 - warden, deputy & ct / 4 - all player.
+sm_warden_orders - 0 - disabled, 1 - enable allow warden to use the orders menu
+sm_warden_freeday_enable - Allows a warden to give a freeday to a player
+sm_warden_freeday_color_red - What color to turn the warden into (set R, G and B values to 255 to disable) (Rgb): x - red value
+sm_warden_freeday_color_green - What color to turn the warden into (rGb): x - green value
+sm_warden_freeday_color_blue - What color to turn the warden into (rgB): x - blue value  
+sm_warden_freeday_victim_deputy - 0 - disabled, 1 - Allow the deputy to set a personal freeday next round");
   
 sm_warden_deputy_enable - 0 - disabled, 1 - enable this MyJailbreak SourceMod plugin
 sm_warden_deputy_set - 0 - disabled, 1 - enable !w / !deputy - warden can choose his deputy.
@@ -213,8 +227,6 @@ sm_warden_counter_deputy - 0 - disabled, 1 - Allow the deputy count player in ra
 sm_warden_extend_deputy - 0 - disabled, 1 - enable the 'extend the roundtime'-feature for deputy,too
 sm_warden_ff_deputy - 0 - disabled, 1 - enable switch ff for the deputy, too
 sm_warden_handcuffs_deputy - 0 - disabled, 1 - enable handcuffs for deputy, too
-sm_warden_icon_deputy_enable - 0 - disabled, 1 - enable the icon above the deputy head
-sm_warden_icon_deputy - Path to the deputy icon DONT TYPE .vmt or .vft Default "decals/MyJailbreak/warden-4"
 sm_warden_laser_deputy - 0 - disabled, 1 - enable Laser Pointer for Deputy, too
 sm_warden_marker_deputy - 0 - disabled, 1 - enable 'advanced markers'-feature for deputy
 sm_warden_math_deputy - 0 - disabled, 1 - enable mathquiz for deputy,too
@@ -224,6 +236,7 @@ sm_warden_painter_deputy - 0 - disabled, 1 - enable 'Warden Painter'-feature for
 sm_warden_painter_terror_deputy - 0 - disabled, 1 - allow to toggle Painter for Terrorist as deputy, too
 sm_warden_random_deputy - 0 - disabled, 1 - enable kill a random t for deputy,too
 sm_warden_mark_rebel_deputy - 0 - disabled, 1 - enable 'mark/unmark prisoner as rebel'-feature for deputy, too
+sm_warden_orders_deputy - 0 - disabled, 1 - enable orders-feature for deputy, too",
   
 sm_warden_cmds_become - Set your custom chat commands for become warden(!warden (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
 sm_warden_cmds_retire - Set your custom chat commands for retire from warden(!unwarden (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
@@ -246,13 +259,98 @@ sm_warden_cmds_ff - Set your custom chat commands for set/see friendly fire(!ff 
 sm_warden_cmds_extend - Set your custom chat commands for extend time.(!extend (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)). Default "extendtime, moretime"
 sm_warden_cmds_counter - Set your custom chat command for counter.(!counter (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)). Default "count, sight"
 sm_warden_cmds_countdown - Set your custom chat commands for countdown menu(!cdmenu (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands). Default "cd, countdown, timer"
+sm_warden_freeday_cmd - Set your custom chat command for give a freeday. no need for sm_ or !
+sm_warden_cmds_orders - Set your custom chat command for open menu(!menu (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands))
 [/CODE]
+[/SPOILER]
+[b]Default order config as example[/b]
+[SPOILER]
+[php]
+"Orders"
+{
+	"1"
+	{
+		"title"			"Order #1 - Cells" // title show in menu
+		"chat"			"{darkred}No guns! No grenades! {default}- Crouch & step out of cell" // Message send on chat support colors.inc
+		"HUD"			"<font color='#ff0000'>No guns! No grenades!</font> - Crouch & step out of cell" // Message send on HUD support hud formating
+		"overlay"		"overlays/MyJailbreak/order" // Path to the overlay that will be shown - empty for no overlay
+		"overlay_time"	"5.0" // time in seconds the overlay stay on screen
+		"overlay_team"	"2" // team that will see the overlay - 2 - Terrorists / 3 - Counter-Terrorists
+		"sound"			"music/MyJailbreak/stop.mp3" // Path to the soundfile that will be play - empty for no sound
+		"maps"			"" // maps to exclude this command (on these maps the Order will NOT be available.
+	}
+	"2"
+	{
+		"title"			"Order #2 - Football" // title show in menu
+		"chat"			"{green}Go to the football field!{default}" // Message send on chat support colors.inc
+		"HUD"			"<font color='#00ff00'>Go to the football field!</font>" // Message send on HUD support hud formating
+		"overlay"		"overlays/MyJailbreak/order-football" // Path to the overlay that will be shown - empty for no overlay
+		"overlay_time"	"3.0" // time in seconds the overlay stay on screen
+		"overlay_team"	"2,3" // team that will see the overlay - 2 - Terrorists / 3 - Counter-Terrorists
+		"sound"			"music/MyJailbreak/stop.mp3" // Path to the soundfile that will be play - empty for no sound
+		"maps"			"jb_clouds_final5,jb_castleguarddev_v5" // maps to exclude this command (on these maps the Order will NOT be available.
+	}
+	"3"
+	{
+		"title"			"Order #3 - Basketball" // title show in menu
+		"chat"			"Go to the basketball field!" // Message send on chat support colors.inc
+		"HUD"			"Go to the basketball field!" // Message send on HUD support hud formating
+		"overlay"		"overlays/MyJailbreak/order-basketball" // Path to the overlay that will be shown - empty for no overlay
+		"overlay_time"	"3.0" // time in seconds the overlay stay on screen
+		"overlay_team"	"2,3" // team that will see the overlay - 2 - Terrorists / 3 - Counter-Terrorists
+		"sound"			"music/MyJailbreak/stop.mp3" // Path to the soundfile that will be play - empty for no sound
+		"maps"			"jb_clouds_final5" // maps to exclude this command (on these maps the Order will NOT be available.
+	}
+	"4"
+	{
+		"title"			"Order #4 - Pool" // title show in menu
+		"chat"			"{blue}Go to the Pool!{default}" // Message send on chat support colors.inc
+		"HUD"			"<font color='#aaaaff'>Go to the Pool!</font>" // Message send on HUD support hud formating
+		"overlay"		"overlays/MyJailbreak/order-pool" // Path to the overlay that will be shown - empty for no overlay
+		"overlay_time"	"3.0" // time in seconds the overlay stay on screen
+		"overlay_team"	"2,3" // team that will see the overlay - 2 - Terrorists / 3 - Counter-Terrorists
+		"sound"			"music/MyJailbreak/water.mp3" // Path to the soundfile that will be play - empty for no sound
+		"maps"			"jb_clouds_final5" // maps to exclude this command (on these maps the Order will NOT be available.
+	}
+	"5"
+	{
+		"title"			"Order #5 - Medic" // title show in menu
+		"chat"			"Go into the medic room!" // Message send on chat support colors.inc
+		"HUD"			"<font color='#ffffff'>Go to the medic room!</font>" // Message send on HUD support hud formating
+		"overlay"		"overlays/MyJailbreak/order-medic" // Path to the overlay that will be shown - empty for no overlay
+		"overlay_time"	"3.0" // time in seconds the overlay stay on screen
+		"overlay_team"	"2,3" // team that will see the overlay - 2 - Terrorists / 3 - Counter-Terrorists
+		"sound"			"music/MyJailbreak/stop.mp3" // Path to the soundfile that will be play - empty for no sound
+		"maps"			"" // maps to exclude this command (on these maps the Order will NOT be available.
+	}
+	"6"
+	{
+		"title"			"Order #6 - Freeze" // title show in menu
+		"chat"			"Everybody freeze & petrify!" // Message send on chat support colors.inc
+		"HUD"			"<font color='#bbbbbb'>Everybody freeze & petrify!</font>" // Message send on HUD support hud formating
+		"overlay"		"overlays/MyJailbreak/order-freeze" // Path to the overlay that will be shown - empty for no overlay
+		"overlay_time"	"3.0" // time in seconds the overlay stay on screen
+		"overlay_team"	"2" // team that will see the overlay - 2 - Terrorists / 3 - Counter-Terrorists
+		"sound"			"music/MyJailbreak/freeze.mp3" // Path to the soundfile that will be play - empty for no sound
+		"maps"			"" // maps to exclude this command (on these maps the Order will NOT be available.
+	}
+	"7"
+	{
+		"title"			"" // title show in menu
+		"chat"			"" // Message send on chat support colors.inc
+		"HUD"			"" // Message send on HUD support hud formating
+		"overlay"		"" // Path to the overlay that will be shown - empty for no overlay
+		"overlay_time"	"" // time in seconds the overlay stay on screen
+		"overlay_team"	"" // team that will see the overlay - 2 - Terrorists / 3 - Counter-Terrorists
+		"sound"			"" // Path to the soundfile that will be play - empty for no sound
+		"maps"			"" // maps to exclude this command (on these maps the Order will NOT be available.
+	}
+}
+[/php]
 [/SPOILER]
 [IMG]http://shanapu.de/myjb/warden.jpg[/IMG]
 
 [IMG]http://shanapu.de/myjb/sparks.jpg[/IMG]
-
-[IMG]http://shanapu.de/myjb/icons-fix.jpg[/IMG]
 
 [youtube]tp6k_Q6K37c[/youtube]
 
@@ -292,7 +390,9 @@ sm_refuse_color_blue: What color to turn the refusing Terror into (rgB): x - blu
 sm_refuse_sound: Path to the soundfile which should be played for a refusing
 sm_capitulation_enable: 0 - disabled, 1 - Enable Capitulation. Default 1
 sm_capitulation_accept - 0 - disabled, 1 - the warden have to accept capitulation on menupopup Default 1
+sm_capitulation_damage", "1", "0 - disabled, 1 - enable Terror make no damage after capitulation
 sm_capitulation_timer: Time to decide to accept the capitulation
+sm_capitulation_weapons - 0 - disabled, 1 - enable Terror can not pick up weapons after capitulation
 sm_capitulation_rebel_timer: Time to give a rebel on not accepted capitulation his knife back
 sm_capitulation_color_red: What color to turn the capitulation Terror into (set R, G and B values to 255 to disable) (Rgb): x - red value
 sm_capitulation_color_green: What color to turn the capitulation Terror into (rGb): x - green value
@@ -320,17 +420,10 @@ sm_freekill_swap: 0 - disabled, 1 - Allow the admin/warden to swap a freekiller 
 sm_freekill_admin: 0 - disabled, 1 - Report will be send to admins - if there is no admin its send to warden. Default 1
 sm_freekill_flag: Set flag for admin/vip get reported freekills to decide. Default g
 sm_freekill_warden: 0 - disabled, 1 - Report will be send to Warden if there is no admin. Default 1
-sm_freekill_freeday_victim - Allow the warden to set a personal freeday next round as pardon for the victim
-sm_freekill_freeday_cmd - Set your custom chat command for give a freeday. no need for sm_ or !
-sm_freekill_freeday_color_red - What color to turn the player with freeday into (set R, G and B values to 255 to disable) (Rgb): x - red value
-sm_freekill_freeday_color_green - What color to turn the player with freeday into (rGb): x - green value
-sm_freekill_freeday_color_blue - What color to turn the player with freeday into (rgB): x - blue value
-sm_freekill_freeday_victim_deputy - 0 - disabled, 1 - Allow the deputy to set a personal freeday next round
 sm_killreason_enable - CT can answer with a menu the kill reason
 
 sm_request_cmds - Set your custom chat command for requestmenu (!request (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)) Default: req, requestmenu
 sm_capitulation_cmds - Set your custom chat command for requestmenu (!capitulate (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)) Default: sur, surrender, capi, capitulate, pardon, p
-sm_freekill_cmds_freeday - Set your custom chat command for give a freeday(!givefreeday (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)) Default gfd, setfreeday, sfd
 sm_freekill_cmds - Set your custom chat commands for freekill(!freekill (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)) Default fk, reportfk, rfk
 sm_heal_cmds - Set your custom chat command for Heal(!heal (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)) Default cure, h, ouch
 sm_refuse_cmds - Set your custom chat commands for Refuse(!refuse (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)) Default ref, r
@@ -640,6 +733,7 @@ sm_menu_cmds_voting - Set your custom chat command for open menu(!menu (no 'sm_'
 
 [U][B]Terrorists Menu[/B][/U]
 [LIST]
+[*]MyJailShop (if available)
 [*]Weapon Menu
 [*]Request Menu
 [INDENT][LIST]
@@ -781,7 +875,8 @@ sm_playertag_overwrite: 0 - only show tags for warden, admin & vip (no overwrite
 
 [U][B]Ratio (Team Balance)[/B][/U]
 Manage team ratios and a queue system for prisoners to join guard through. Allow admins to remove player from queue.
-Supports priority queue to allow players with a certain flag to skip all players in the queue without that flag. If wanted the player has to accept a agreement or answer a some questions before join the queue. Force Player to join T on connect. Bypass for admins/Vips. Can be used with CTBans to block joining queue/guard when CTBanned.
+Supports priority queue to allow players with a certain flag to skip all players in the queue without that flag. If wanted the player has to accept a agreement or answer a some questions before join the queue. Force Player to join T on connect. Bypass for admins/Vips. 
+Optional Support plugins be used with CTBans, stamm, reputation, rankme to block joining queue/guard.
 
 [b]Commands[/b]
 [SPOILER]
@@ -817,6 +912,11 @@ sm_ratio_cmds_queue - Set your custom chat command for view guard queue (!viewqu
 sm_ratio_cmds_leave - Set your custom chat command for view leave queue (!leavequeue (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)) Default lq, stay
 sm_ratio_cmds_ratio - Set your custom chat command for view/toggle ratio (!ratio (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)) Default balance
 sm_ratio_cmds_remove - Set your custom chat command for admins to remove a player from guard queue (!removequeue (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)) Default rq
+
+optional plugins:
+sm_ratio_stamm - 0 - disabled, how many stamm points a player need to join ct? (only if stamm is available
+sm_ratio_reputation - 0 - disabled, how many reputation a player need to join ct? (only if reputation is available)
+sm_ratio_stamm - 0 - disabled, how many stamm points a player need to join ct? (only if stamm is available
 [/CODE]
 [/SPOILER]
 
@@ -839,6 +939,31 @@ sm_hud_cmds - Set your custom chat commands for toggle HUD(!hud (no 'sm_'/'!')(s
 [/CODE]
 [/SPOILER]
 
+
+[U][B]Icons[/B][/U]
+Shows a icon above the players head for guard, prisoner, warden, deputy, cuffed, rebel, freeday
+  
+[b]ConVars[/b]
+[SPOILER]
+[CODE]
+sm_icons_warden_enable - 0 - disabled, 1 - enable the icon above the wardens head
+sm_icons_warden_path - Path to the warden icon DONT TYPE .vmt or .vft
+sm_icons_deputy_enable - 0 - disabled, 1 - enable the icon above the deputy head
+sm_icons_deputy_path - Path to the deputy icon DONT TYPE .vmt or .vft
+sm_icons_ct_enable - 0 - disabled, 1 - enable the icon above the guards head
+sm_icons_ct_path - Path to the guard icon DONT TYPE .vmt or .vft
+sm_icons_t_enable - 0 - disabled, 1 - enable the icon above the prisoners head
+sm_icons_t_path - Path to the prisoner icon DONT TYPE .vmt or .vft
+sm_icons_rebel_enable - 0 - disabled, 1 - enable the icon above the rebel prisoners head
+sm_icons_rebel_path - Path to the rebel icon DONT TYPE .vmt or .vft
+sm_icons_cuffs_enable - 0 - disabled, 1 - enable the icon above the cuffed prisoners head
+sm_icons_cuffs_path - Path to the cuffed prisoner icon DONT TYPE .vmt or .vft
+sm_icons_freeday_enable - 0 - disabled, 1 - enable the icon above the freeday prisoners head
+sm_icons_freeday_path - Path to the freeday icon DONT TYPE .vmt or .vft
+[/CODE]
+[/SPOILER]
+
+[IMG]http://shanapu.de/myjb/icons-overview.png[/IMG]
 
 [U][B]MyJailbreak core[/B][/U]
 This plugins is the "interface" between Eventdays. Need for cooldowns and disable other days on running Eventday. Handle config & natives for some modules
@@ -865,6 +990,7 @@ sm_myjb_beacon_T_color_blue - What color to turn the T beacons into (rgB): x - b
 sm_myjb_tag: 0 - disabled, 1 - Allow "MyJailbreak" to be added to your server tags. So player will find servers with MyJB faster. it dont touch youR sv_tags
 sm_myjb_log: 0 - disabled, 1 - Allow MyJailbreak to log events, freekills & eventdays in logs/MyJailbreak by day
 sm_myjb_cmds_endround - Set your custom chat commands for admins to end the current round(!endround (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands) Default er, stopround, end
+sm_myjb_allow_endround - 0 - disabled, 1 - enable !endround command for testing (disable against abusing)
 ```
 [/CODE]
 [/SPOILER]
@@ -960,7 +1086,7 @@ sm_ffa_cmds_set - Set your custom chat command for set Event(!ffa (no 'sm_'/'!')
 
 [U][B]Zombie[/B][/U]
 This plugin allows players to vote and warden to set next rounds to zombie escape.  
-On Round start Ts spawn in open cells with weapons & weaponmenu. CT are zombies with a zombie model, and with 8500 HP.  
+On Round start Ts spawn in open cells with weapons & weaponmenu. CT are zombies with a zombie model, and with increased HP per Human.  
 Zombies freezed for 35sec (default) so T can hide &/or climb. Zombies got wallhack and nightvision.  
 
 [b]Commands[/b]
@@ -987,9 +1113,11 @@ sm_zombie_allow_lr - enable, Last Request on last round
 sm_zombie_roundtime - Roundtime for a single zombie round in minutes. Default 5
 sm_zombie_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
 sm_zombie_freezetime - Time in seconds Zombies freezed. Default 35
+sm_zombie_knockback - Force of the knockback when shot at. Zombies only
 sm_zombie_glow: 0 - disabled, 1 - enable Glow effect for humans
 sm_zombie_glow_mode: 1 - human contours with wallhack for zombies, 2 - human glow effect without wallhack for zombies
 sm_zombie_hp: HP the Zombies got on Spawn. Default 4000
+sm_zombie_ammo - 0 - disabled, 1 - enable infinty ammo (with reload) for humans
 sm_zombie_zombie_hp_extra - HP the zombie get additional per extra human. Default 1000
 sm_zombie_human_hp: HP the Humans got on Spawn. Default 65
 sm_zombie_cooldown_start - Rounds until event can be start after mapchange. Default 3
@@ -1004,6 +1132,7 @@ sm_zombie_model: Path to the model for zombies. Default "models/player/custom_pl
 sm_zombie_cmds_vote - Set your custom chat command for Event voting(!zombie (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)) Default zd, zomb, z
 sm_zombie_cmds_set - Set your custom chat command for set Event(!setzombie (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)) Default sz, szd, szombie
 [/CODE]
+recomment for sm_zombie_glow "1", put sv_force_transmit_players "1" to your .cfg
 [/SPOILER]
 [IMG]http://shanapu.de/myjb/zombie-2.jpg[/IMG][IMG]http://shanapu.de/myjb/zombie-1.jpg[/IMG]
 
@@ -1606,74 +1735,27 @@ sm_freeday_cmds_set - Set your custom chat command for set Event(!setfreeday (no
 [/SPOILER]
 [/SPOILER]
 
-[U][B]Optional plugins[/B][/U]
-[LIST]
-[*]Stamm 2.28 Final by Popoklopsi[url]https://forums.alliedmods.net/showthread.php?p=1338942[/url] - support for ratio (min stamm points)
 
-[*][CS:S/CS:GO] CT Bans by databomb[url]https://forums.alliedmods.net/showthread.php?p=1544101[/url] - support for ratio (is banned)
-[/LIST]
-
-[U][B]Requires plugins[/B][/U]
-[LIST]
-[*]Sourcemod 1.7.0+
-
-[*]SM hosties 2 [url]https://forums.alliedmods.net/showthread.php?t=108810[/url] - [B][URL="https://github.com/dataviruset/sm-hosties/tree/beta"]use the Beta branch (version 2.2.3)
-[/URL][/B]
-[*]Smart Jail Doors [url]https://github.com/Kailo97/smartjaildoors[/url]
-
-[*]SM File/Folder Downloader and Precacher [url]https://forums.alliedmods.net/showthread.php?p=602270[/url] for zombie/warden model download
-
-[*][ANY] Chat Prozessor [url]https://forums.alliedmods.net/showthread.php?t=286913[/url]
-
-[*]CustomPlayerSkins [url]https://forums.alliedmods.net/showthread.php?t=240703[/url]
-
-[*][ANY] VoiceannounceEX (VoiceHook) [url]https://forums.alliedmods.net/showthread.php?p=2177167[url]
-
-[*]DHooks (Dynamic Hooks - Dev Preview) [url]https://forums.alliedmods.net/showthread.php?t=180114[url]
-
-[/LIST]
-[U]Include files needed for compile[/U][SPOILER]
-[LIST]
-[*]autoexecconfig.inc [url]https://forums.alliedmods.net/showthread.php?t=204254[/url]
-
-[*]colors.inc [url]https://forums.alliedmods.net/showthread.php?t=96831[/url]
-
-[*]emitsoundany.inc [url]https://forums.alliedmods.net/showthread.php?t=237045[/url]
-
-[*]myjailbreak.inc [url]https://github.com/shanapu/MyJailbreak/blob/master/addons/sourcemod/scripting/include/myjailbreak.inc[/url]
-
-[*]mystocks.inc [url]https://github.com/shanapu/MyJailbreak/blob/master/addons/sourcemod/scripting/include/mystocks.inc[/url]
-
-[*]chat-processor.inc [url]https://forums.alliedmods.net/showthread.php?t=286913[/url]
-
-[*]smartjaildoors.inc [url]https://forums.alliedmods.net/showthread.php?p=2306289[/url]
-
-[*]warden.inc [url]https://github.com/shanapu/MyJailbreak/blob/master/addons/sourcemod/scripting/include/warden.inc[/url] (myjailbreak version)
-
-[*]hosties.inc [url]https://github.com/dataviruset/sm-hosties/blob/beta/addons/sourcemod/scripting/include/hosties.inc[/url] 
-
-[*]lastrequest.inc [url]https://github.com/dataviruset/sm-hosties/blob/beta/addons/sourcemod/scripting/include/lastrequest.inc[/url] 
-
-[*]smlib.inc [url]https://github.com/bcserv/smlib[/url]
-
-[*]CustomPlayerSkins.inc [url]https://forums.alliedmods.net/showthread.php?t=240703[/url]
-
-[*]voiceannounce_ex.inc [url]https://github.com/shanapu/MyJailbreak/blob/master/addons/sourcemod/scripting/include/voiceannounce_ex.inc [/url] (myjailbreak version)
-[/LIST]
-[/SPOILER]
-
-
-[B][U]Natives & forwards[/B][/U]
+[B][U]Natives & forwards - api[/B][/U]
 [SPOILER]
 myjailbreak.inc
 [php]
+/*********************************************************
+ * Called when a client trys to join the Guards(CT) or GuardQueue
+ *
+ * @param status		Client ID
+ * @return 				Return Plugin_Handled to block & Plugin_Continue to pass the client.
+ *********************************************************/
+forward Action MyJailbreak_OnJoinGuardQueue(int client);
+
+
 /*********************************************************
  * Set the name of the planned/running Event Day
  *
  * @param name			The name of the Event Day
  * @NoReturn
  *********************************************************/
-native void SetEventDayName(const char[] name);
+native void MyJailbreak_SetEventDayName(const char[] name);
 
 
 /*********************************************************
@@ -1682,7 +1764,7 @@ native void SetEventDayName(const char[] name);
  *
  * @Return				The name of the Event Day
  *********************************************************/
-native void GetEventDayName(char[] name);
+native void MyJailbreak_GetEventDayName(char[] name);
 
 
 /*********************************************************
@@ -1691,7 +1773,7 @@ native void GetEventDayName(char[] name);
  * @param status		Boolean is running (true = running)
  * @NoReturn
  *********************************************************/
-native void SetEventDayRunning(bool status);
+native void MyJailbreak_SetEventDayRunning(bool status);
 
 
 /*********************************************************
@@ -1700,7 +1782,7 @@ native void SetEventDayRunning(bool status);
  *
  * @Return			true on running, false if not
  *********************************************************/
-native bool IsEventDayRunning();
+native bool MyJailbreak_IsEventDayRunning();
 
 
 /*********************************************************
@@ -1709,7 +1791,7 @@ native bool IsEventDayRunning();
  * @param status		Boolean is planned (true = running)
  * @NoReturn
  *********************************************************/
-native void SetEventDayPlanned(bool status);
+native void MyJailbreak_SetEventDayPlanned(bool status);
 
 
 /*********************************************************
@@ -1718,7 +1800,7 @@ native void SetEventDayPlanned(bool status);
  *
  * @Return			true on planned, false if not
  *********************************************************/
-native bool IsEventDayPlanned();
+native bool MyJailbreak_IsEventDayPlanned();
 
 
 /*********************************************************
@@ -1727,7 +1809,7 @@ native bool IsEventDayPlanned();
  * @param status		Boolean is active (true = active)
  * @NoReturn
  *********************************************************/
-native void SetLastGuardRule(bool status);
+native void MyJailbreak_SetLastGuardRule(bool status);
 
 
 /*********************************************************
@@ -1736,7 +1818,7 @@ native void SetLastGuardRule(bool status);
  *
  * @Return			true on active, false if not
  *********************************************************/
-native bool IsLastGuardRule();
+native bool MyJailbreak_IsLastGuardRule();
 
 
 /*********************************************************
@@ -1745,7 +1827,7 @@ native bool IsLastGuardRule();
  *
  * @Return			true on active, false if not
  *********************************************************/
-native bool ActiveLogging();
+native bool MyJailbreak_ActiveLogging();
 
 
 /*********************************************************
@@ -1754,7 +1836,7 @@ native bool ActiveLogging();
  *
  * @noreturn
  *********************************************************/
-native void FogOn();
+native void MyJailbreak_FogOn();
 
 
 /*********************************************************
@@ -1763,7 +1845,7 @@ native void FogOn();
  *
  * @noreturn
  *********************************************************/
-native void FogOff();
+native void MyJailbreak_FogOff();
 
 
 /*********************************************************
@@ -1772,7 +1854,7 @@ native void FogOff();
  *
  * @noreturn
  *********************************************************/
-native void BeaconOn(int client, float interval);
+native void MyJailbreak_BeaconOn(int client, float interval);
 
 
 /*********************************************************
@@ -1781,7 +1863,7 @@ native void BeaconOn(int client, float interval);
  *
  * @noreturn
  *********************************************************/
-native void BeaconOff(int client);
+native void MyJailbreak_BeaconOff(int client);
 [/php]
 warden.inc
 [php]
@@ -1859,8 +1941,6 @@ forward void warden_OnWardenDisconnected(int client);
 forward void warden_OnWardenDeath(int client);
 
 
-
-
 /*********************************************************
  * Checks if any warden exist
  *
@@ -1876,7 +1956,7 @@ native warden_exist();
  * @param client		The client to run the check on
  * @true on match, false if not
  *********************************************************/
-native warden_iswarden(client);
+native warden_iswarden(int client);
 
 
 /*********************************************************
@@ -1885,7 +1965,7 @@ native warden_iswarden(client);
  * @param client		The client to set as warden
  * @NoReturn
  *********************************************************/
-native warden_set(client);
+native warden_set(int client);
 
 
 /*********************************************************
@@ -1894,7 +1974,7 @@ native warden_set(client);
  * @param client		The warden client to remove
  * @NoReturn
  *********************************************************/
-native warden_remove(client);
+native warden_remove(int client);
 
 
 /*********************************************************
@@ -1915,7 +1995,6 @@ native warden_get();
 native warden_getlast();
 
 
-
 /*********************************************************
  * Checks if any Deputy exist
  *
@@ -1931,7 +2010,7 @@ native warden_deputy_exist();
  * @param client		The client to run the check on
  * @true on match, false if not
  *********************************************************/
-native warden_deputy_isdeputy(client);
+native warden_deputy_isdeputy(int client);
 
 
 /*********************************************************
@@ -1940,7 +2019,7 @@ native warden_deputy_isdeputy(client);
  * @param client		The client to set as Deputy
  * @NoReturn
  *********************************************************/
-native warden_deputy_set(client);
+native warden_deputy_set(int client);
 
 
 /*********************************************************
@@ -1949,7 +2028,7 @@ native warden_deputy_set(client);
  * @param client		The Deputy client to remove
  * @NoReturn
  *********************************************************/
-native warden_deputy_remove(client);
+native warden_deputy_remove(int client);
 
 
 /*********************************************************
@@ -1968,233 +2047,317 @@ native warden_deputy_get();
  * @Return				Client Index of last deputy
  *********************************************************/
 native warden_deputy_getlast();
+
+
+/*********************************************************
+ * Give a client a amount of paperclips
+ *
+ * @param client		The client to give the paperclips
+ * @param amount		The amount of paperclips
+ * @NoReturn
+ *********************************************************/
+native warden_handcuffs_givepaperclip(int client, int amount);
+
+
+/*********************************************************
+ * returns if client is in handcuffs
+ *
+ * @param client		The client to run the check on
+ * @true on match, false if not
+ *********************************************************/
+native warden_handcuffs_iscuffed(int client);
+
+
+/*********************************************************
+ * Set the client get a freeday
+ *
+ * @param client		The client to run the check on
+ * @no return
+ *********************************************************/
+native warden_freeday_set(int client);
+
+
+/*********************************************************
+ * returns if client has a freeday now
+ *
+ * @param client		The client to run the check on
+ * @true on match, false if not
+ *********************************************************/
+native warden_freeday_has(int client);
+[/php]
+myicons.inc
+[php]
+/*********************************************************
+ * Block the players icon bool
+ *
+ * @param client		The client to block icon
+ * @param status		true or false
+ * @NoReturn
+ *********************************************************/
+native MyIcons_BlockClientIcon(int client, bool status);
 [/php]
 [/SPOILER]
 
 
-[U][B]Installation[/B][/U]
-[QUOTE]
-[LIST=1]
-[*]Make sure you have the [U]latest versions[/U] of the [B]required plugins[/B]
-[*]Download the [URL="https://github.com/shanapu/MyJailbreak/releases"]latest release[/URL]
-  
-[*]Copy the folders [B]addons/[/B],[B] cfg/[/B], [B]materials/[/B], [B]models/[/B] &[B] sound/[/B] to [U]your root[/U] [B]csgo/[/B] directory  
-  
-[*]Copy the folders [B]materials/[/B], [B]models/[/B] & [B]sound/[/B] [U]in the fastDL/ directory[/U] to [U]your[/U] [B]FastDownload server[/B]  
-  
-[*]Open [U]your[/U] [B]downloads.ini [/B]in [U]your csgo/addons/sourcemod/configs[/U] directory and add the content of [B]downloads.txt[/B]  
-  
-[*]Run plugin for the first time and [U]all necessary .cfg files will be generated[/U]  
-  
-[*]Configure all settings in [U]cfg/MyJailbreak[/U] to your needs
-  
-[*]Have fun! Give feedback!
+[U][b]Include files needed for [url=https://github.com/shanapu/MyJailbreak/wiki/Compile-MyJailbreak]compile[/url][/U][/b]
+[SPOILER]
+[LIST]
+[*]autoexecconfig.inc - [url]https://github.com/Impact123/AutoExecConfig/blob/development/autoexecconfig.inc[/url]
+[*]colors.inc - [url]https://forums.alliedmods.net/showthread.php?t=96831[/url]
+[*]emitsoundany.inc - [url]https://forums.alliedmods.net/showthread.php?t=237045[/url]
+[*]myjailbreak.inc - [url]https://github.com/shanapu/MyJailbreak/blob/master/addons/sourcemod/scripting/include/myjailbreak.inc[/url]
+[*]mystocks.inc - [url]https://github.com/shanapu/MyJailbreak/blob/master/addons/sourcemod/scripting/include/mystocks.inc[/url]
+[*]myicons.inc - [url]https://github.com/shanapu/MyJailbreak/blob/master/addons/sourcemod/scripting/include/myicons.inc[/url]
+[*]chat-processor.inc - [url]https://forums.alliedmods.net/showthread.php?t=286913[/url]
+[*]smartjaildoors.inc - [url]https://forums.alliedmods.net/showthread.php?p=2306289[/url]
+[*]warden.inc - [url]https://github.com/shanapu/MyJailbreak/blob/master/addons/sourcemod/scripting/include/warden.inc[/url] (myjailbreak version)
+[*]hosties.inc - [url]https://github.com/dataviruset/sm-hosties/blob/beta/addons/sourcemod/scripting/include/hosties.inc[/url] 
+[*]lastrequest.inc - [url]https://github.com/dataviruset/sm-hosties/blob/beta/addons/sourcemod/scripting/include/lastrequest.inc[/url] 
+[*]smlib.inc - [url]https://github.com/bcserv/smlib[/url]
+[*]CustomPlayerSkins.inc - [url]https://forums.alliedmods.net/showthread.php?t=240703[/url]
+[*]voiceannounce_ex.inc - [url]https://github.com/shanapu/MyJailbreak/blob/master/addons/sourcemod/scripting/include/voiceannounce_ex.inc [/url] (myjailbreak version)
 [/LIST]
-[/QUOTE]
+[/SPOILER]
+
+
+[U][B]Requires plugins[/B][/U]
+[LIST]
+[*]Sourcemod 1.7.0+
+[*][url=https://forums.alliedmods.net/showthread.php?t=108810]SM hosties 2[/url]
+[*][url=https://github.com/Kailo97/smartjaildoors]Smart Jail Doors[/url]
+[*][url=https://forums.alliedmods.net/showthread.php?p=602270]SM File/Folder Downloader and Precacher[/url] - for zombie/warden model download
+[*][url=https://forums.alliedmods.net/showthread.php?t=286913][ANY] Chat Prozessor[/url]
+[*][url=https://forums.alliedmods.net/showthread.php?t=240703]CustomPlayerSkins[/url]
+[/LIST]
+
+[U][B]Optional plugins[/B][/U]
+[LIST]
+[*][url=https://forums.alliedmods.net/showthread.php?p=2177167][ANY] VoiceannounceEX (VoiceHook)[/url] - needed for wardens voiceover
+[*][url=https://forums.alliedmods.net/showthread.php?t=180114]DHooks (Dynamic Hooks - Dev Preview)[/url] - needed for wardens voiceover
+[/LIST]
+
+
+[U][B]Supported 3th party plugins[/B][/U]
+[LIST]
+[*][url=https://forums.alliedmods.net/showthread.php?p=1338942]Stamm 2.28 Final by Popoklopsi[/url] - support for ratio (min stamm point to join ct)
+[*][url=https://forums.alliedmods.net/showthread.php?p=1544101][CS:S/CS:GO] CT Bans by databomb[/url] - support for ratio (is banned)
+[*][url=https://forums.alliedmods.net/showthread.php?t=155621][CS:S] RankMe[/url] - support for ratio (min rankme points to join ct)
+[*][url=https://forums.alliedmods.net/showthread.php?t=290063][CS:GO] RankMe Kento Edition[/url] - support for ratio (min rankme points to join ct)
+[*][url=https://forums.alliedmods.net/showthread.php?p=2411490][ANY] Player Reputations[/url] - support for ratio (min reputation points to join ct)
+[*][url=https://forums.alliedmods.net/showthread.php?t=286045]TeamGames (JailBreak teams, games, marks, fences, ...)[/url]
+[/LIST]
+
 
 
 [B][u]Latest Changes[/u][/B]
 
 [QUOTE] 
+[b][Beta 9.0][/B] - icons, 3th party plugins & much more
   
-[b][Beta 8.1][/b] - some fixes, some new cvars
-[SPOILER]  
+[SPOILER] 
 [i]Added[/i]
 [LIST]
 [*]Weapons: allow maschine-guns per cvar
 [/LIST]
 [INDENT][LIST]
-    [*]new cvar - sm_weapons_negev - 0 - disabled, 1 - enable negev in weapon menu
-    [*]new cvar - sm_weapons_m249 - 0 - disabled, 1 - enable m249 in weapon menu
+[*]new cvar - sm_weapons_negev - 0 - disabled, 1 - enable negev in weapon menu
+[*]new cvar - sm_weapons_m249 - 0 - disabled, 1 - enable m249 in weapon menu
 [/LIST][/INDENT]
 [LIST]
-[*]Ratio: Stamm support
+[*]Ratio: Support for 3rd party plugins (moved CT Bans support to extra plugin)
 [/LIST]
 [INDENT][LIST]
-    [*]new cvar - sm_ratio_stamm - 0 - disabled, how many stamm points a player need to join ct? (only if stamm is available)
+[*]new plugin - disabled/ratio_ctban.smx - Support plugin for databombs CT Bans plugin
+[*]new plugin - ratio_reputation.smx - Support plugin for oaaron99 Player Reputations plugin
+[/LIST]
+[INDENT][LIST]
+[*]new cvar -sm_ratio_reputation - 0 - disabled, how many reputation a player need to join ct? (only if reputation is available)
 [/LIST][/INDENT]
+[LIST]
+[*]new plugin - disabled/ratio_stamm.smx - Support plugin for popoklopsis Stamm plugin
+[/LIST]
+[INDENT][LIST]
+[*]new cvar - sm_ratio_stamm - 0 - disabled, how many stamm points a player need to join ct? (only if stamm is available)
+[/LIST][/INDENT]
+[LIST]
+[*]new plugin - disabled/ratio_rankme.smx - Support plugin for lok1s, Scoobys RankMe plugin
+[/LIST]
+[INDENT][LIST]
+[*]new cvar - sm_ratio_rankme - 0 - disabled, how many rankme points a player need to join ct? (only if rankme is available)
+[/LIST][/INDENT]
+[LIST]
+[*]new plugin - disabled/ratio_kento_rankme.smx - Support plugin for Kentos RankMe plugin
+[/LIST]
+[INDENT][LIST]
+[*]new cvar - sm_ratio_rankme - 0 - disabled, how many rankme points a player need to join ct? (only if kento rankme is available)
+[/LIST][/INDENT]
+[LIST]
+[*]new plugin - disabled/ratio_teambans.smx - Support plugin for baras TeamBans plugin
+[/LIST][/INDENT]
+[LIST]
+[*]Zombie: KnockbackFix
+[/LIST]
+[INDENT][LIST]
+[*]new cvar - sm_zombie_knockback - Force of the knockback when shot at. Zombies only
+[/LIST][/INDENT]
+[LIST]
+[*]Menu: Added MyJailshop for Prisoners when installed
+[*]Request - Capitulation: Allow capitulated players to take up weapons per cvar & healthshot & c4 as standart
+[/LIST]
+[INDENT][LIST]
+[*]new cvar - sm_capitulation_weapons - 0 - disabled, 1 - enable Terror can not pick up weapons after capitulation
+[/LIST][/INDENT]
+[LIST]
+[*]Request/Warden - freedays: Menu to choose the personal freeday for this or next round. !givefreeday
+[*]MyJailbreak: Disabled command !endround (& sm_myjb_cmds_endround) on default. This command was thought for testing/debug
+[/LIST]
+[INDENT][LIST]
+[*]new cvar - sm_myjb_allow_endround - 0 - disabled, 1 - enable !endround command for testing (disable against abusing)
+[/LIST][/INDENT]
+[LIST]
+[*]TeamGames: Better Support on FFA-Events for KissLicks TeamGames (TeamGames 1.1.0.7)
+[/LIST]
+[INDENT][LIST]
+[*]new plugin - disabled/myjailbreak_teamgames.smx - Support plugin for KissLicks TeamGames plugin
+[/LIST][/INDENT]
+[LIST]
+[*]Warden: Orders menu for preconfigured order/calls with chat, hud, sounds & overlays support. Each order can be dis/enabled per map.
+[/LIST]
+[INDENT][LIST]
+[*]new config file - addons/sourcemod/configs/MyJailbreak/orders.cfg
+[/LIST][/INDENT]
+[LIST]
+[*]New builds system - sourcecode on github / binarys at [url]http://shanapu.de/MyJailbreak[/url]
+[/LIST]
   
-  
-  
-[i]Fixed[/i]
-[LIST]
-[*]Warden - Painter: fix bug when enabled for t and t dies paint still activ!
-[*]Eventdays with freeze: rar glitch player push out of map
-[*]download.txt: removed .bz2 file extension for deputy
-[*]Cowboy: Fix command sm_setcowboy
-[*]Request: Fix chat messages or freekill
-[/LIST]
-[/SPOILER]
-
-[b][Beta 8.0][/b] - Deputy, custom commands & much more
-[SPOILER]  
-[i]Added[/i]
-[LIST]
-[*]Warden: Shoot weapon on ground to remove it
-[/LIST]
-[INDENT][LIST]
-    [*]new cvar - sm_warden_shootguns_enable - 0 - disabled, 1 - enable shoot guns on ground to remove
-    [*]new cvar - sm_warden_shootguns_mode - 1 - only warden / 2 - warden & deputy / 3 - warden, deputy & ct / 4 - all player
-[/LIST][/INDENT]
-[LIST]
-[*]Ratio: Added one round cooldown for guard queue on wrong answer.
-[*]Ratio: New system to choose players to switch on unbalanced teams.
-[/LIST]
-[INDENT][LIST]
-    [*]new cvar - sm_ratio_balance_terror - 0 = Could result in unbalanced teams. 1 = Switch a random T, when nobody is in guardqueue to balance the teams.
-    [*]new cvar - sm_ratio_balance_guard - Mode to choose a guard to be switch to T on balance the teams. 1 = Last In First Out / 0 = Random Guard
-    [*]new cvar - sm_ratio_balance_warden - Prevent warden & deputy to be switch to T on balance the teams. Could result in unbalanced teams
-[/LIST][/INDENT]
-[LIST]
-[*]Weapons: Kevlar & Helm for guards on roundstart except on event days
-[/LIST]
-[INDENT][LIST]
-    [*]new cvar - sm_weapons_kevlar - 0 - disabled, 1 - CT get Kevlar & helm on Spawn
-[/LIST][/INDENT]
-[LIST]
-[*]Request - Capitulation: instand accept capitulation - the warden dont need to accept the capitulation per menu
-[/LIST]
-[INDENT][LIST]
-    [*]new cvar - sm_capitulation_accept - 0 - disabled, 1 - the warden have to accept capitulation on menupopup Default 1
-[/LIST][/INDENT]
-[LIST]
-[*]Duckhunt: New kind to fly for ducks
-[/LIST]
-[INDENT][LIST]
-    [*]new keybind - +drop (drop weapon) - toggle fly and walk for ducks when sm_duckhunt_flymode 1
-    [*]new cvar - sm_duckhunt_flymode - 0 - Low gravity (old way), 1 - 'Flymode' (like a slow noclip with clipping). Bit difficult
-[/LIST][/INDENT]
-[LIST]
-[*]Freeday: Player respawn on event freeday
-[/LIST]
-[INDENT][LIST]
-    [*]new cvar - sm_freeday_respawn - 1 - respawn on AutoFreeday when no CTs / 2 - respawn on firstround/vote/set Freeday / 3 - Both
-    [*]new cvar - sm_freeday_respawn_time - Time in seconds the player will respawn after round begin. Default 120
-[/LIST][/INDENT]
-[LIST]
-[*]Catch: Freezetime for CTs. CTs can see freezed T though walls. Kill terror if he get catched more than once, make it available for LR & insert beacon.
-[/LIST]
-[INDENT][LIST]
-    [*]new cvar - sm_catch_freezetime - Time in seconds CTs are freezed. Default 15
-    [*]new cvar - sm_catch_overlays_start - Path to the start Overlay DONT TYPE .vmt or .vft
-    [*]new cvar - sm_catch_sound_start - Path to the soundfile which should be played for a start.
-    [*]new cvar - sm_catch_wallhack - 0 - disabled, 1 - enable wallhack for CT to see freezed enemeys
-    [*]new cvar - sm_catch_count - How many times a terror can be catched before he get killed. 0 = T dont get killed ever all T must be catched- Default 0
-    [*]new cvar - sm_catch_allow_lr - 0 - disabled, 1 - enable LR for last round and end eventday (need sm_catch_count min 1)
-    [*]new cvar - sm_catch_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
-[/LIST][/INDENT]
-[LIST]
-[*]Warden - Cell Doors: automatic open cell doors on warmup
-[*]Warden - Mute: new fuctions with cvars mute all T on roundbegin & dont mute dead player on warden talkover
-[/LIST]
-[INDENT][LIST]
-    [*]new cvar - sm_warden_mute_default - 0 - disabled, 1 - Prisoners are muted on roundstart by default. Warden have to unmute them. Default 0
-    [*]new cvar - sm_warden_talkover_dead - 0 - mute death & alive player on talkover, 1 - only mute alive player on talkover. Default 0
-[/LIST][/INDENT]
-[LIST]
-[*]Warden - Deputy: The warden get a deputy to his side with configurable warden features.
-[/LIST]
-[INDENT][LIST]
-    [*]new model for deputy - "models/player/custom_player/kuristaja/jailbreak/guard3/guard3.mdl" - dont forget your downloads.ini and fastDL
-    [*]new command - sm_deputy - Allows the warden to choose a deputy or a player to become deputy
-    [*]new command - sm_undeputy - Allows the warden to remove the deputy and the deputy to retire from the position
-    [*]new admin command - sm_removedeputy - Allows the admin to remove the deputy
-    [*]new cvar - sm_warden_deputy_enable - 0 - disabled, 1 - enable this MyJailbreak SourceMod plugin
-    [*]new cvar - sm_warden_deputy_set - 0 - disabled, 1 - enable !w / !deputy - warden can choose his deputy.
-    [*]new cvar - sm_warden_deputy_become - 0 - disabled, 1 - enable !w / !deputy - player can choose to be deputy.
-    [*]new cvar - sm_warden_deputy_model - 0 - disabled, 1 - enable deputy model
-    [*]new cvar - sm_warden_deputy_model_path -  Path to the model for deputy. Default "models/player/custom_player/kuristaja/jailbreak/guard3/guard3.mdl"
-    [*]new cvar - sm_warden_deputy_warden_dead - 0 - Deputy will removed on warden death, 1 - Deputy will be new warden
-    [*]new cvar - sm_warden_backstab_deputy - 0 - disabled, 1 - enable backstab protection for deputy, too
-    [*]new cvar - sm_warden_bulletsparks_deputy - 0 - disabled, 1 - enable smaller bulletimpact sparks for deputy, too
-    [*]new cvar - sm_warden_open_deputy - 0 - disabled, 1 - deputy can open/close cells
-    [*]new cvar - sm_warden_color_red_deputy - What color to turn the deputy into (set R, G and B values to 255 to disable) (Rgb)
-    [*]new cvar - sm_warden_color_green_deputy - What color to turn the deputy into (rGb): x - green value
-    [*]new cvar - sm_warden_color_blue_deputy - What color to turn the deputy into (rgB): x - blue value
-    [*]new cvar - sm_warden_countdown_deputy - 0 - disabled, 1 - enable countdown for deputy, too
-    [*]new cvar - sm_warden_counter_deputy - 0 - disabled, 1 - Allow the deputy count player in radius, too
-    [*]new cvar - sm_warden_extend_deputy - 0 - disabled, 1 - enable the 'extend the roundtime'-feature for deputy,too
-    [*]new cvar - sm_warden_ff_deputy - 0 - disabled, 1 - enable switch ff for the deputy, too
-    [*]new cvar - sm_warden_handcuffs_deputy - 0 - disabled, 1 - enable handcuffs for deputy, too
-    [*]new cvar - sm_warden_icon_deputy_enable - 0 - disabled, 1 - enable the icon above the deputy head
-    [*]new cvar - sm_warden_icon_deputy - Path to the deputy icon DONT TYPE .vmt or .vft Default "decals/MyJailbreak/warden-4"
-    [*]new cvar - sm_warden_laser_deputy - 0 - disabled, 1 - enable Laser Pointer for Deputy, too
-    [*]new cvar - sm_warden_marker_deputy - 0 - disabled, 1 - enable 'advanced markers'-feature for deputy
-    [*]new cvar - sm_warden_math_deputy - 0 - disabled, 1 - enable mathquiz for deputy,too
-    [*]new cvar - sm_warden_mute_deputy - 0 - disabled, 1 - Allow to mute T-side player for deputy, too
-    [*]new cvar - sm_warden_noblock_deputy - 0 - disabled, 1 - enable noblock toggle for deputy, too
-    [*]new cvar - sm_warden_painter_deputy - 0 - disabled, 1 - enable 'Warden Painter'-feature for deputy, too
-    [*]new cvar - sm_warden_painter_terror_deputy - 0 - disabled, 1 - allow to toggle Painter for Terrorist as deputy, too
-    [*]new cvar - sm_warden_random_deputy - 0 - disabled, 1 - enable kill a random t for deputy,too
-    [*]new cvar - sm_warden_mark_rebel_deputy - 0 - disabled, 1 - enable 'mark/unmark prisoner as rebel'-feature for deputy, too
-    [*]new cvar - sm_warden_cmds_deputy - Set your custom chat command for open menu(!menu (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands). Default "d"
-    [*]new cvar - sm_warden_cmds_undeputy - Set your custom chat command for open menu(!menu (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands). Default "ud"
-    [*]new cvar - sm_warden_cmds_removedeputy - Set your custom chat commands for admins to remove a warden(!removewarden (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands) Default "rd,fd"
-    [*]new cvar - sm_freekill_freeday_victim_deputy - 0 - disabled, 1 - Allow the deputy to set a personal freeday next round
-    [*]changed cvar - sm_warden_disarm_mode - 1 - Only warden can disarm, 2 - warden & deputy can disarm, 3 - All CT can disarm, 4 - Everyone can disarm (CT & T)
-[/LIST][/INDENT]
-[LIST]
-[*]Event Days: bypass on eventday cooldown for admins
-[/LIST]
-[INDENT][LIST]
-    [*]new cvar - sm_EVENTDAYNAME_cooldown_admin - 0 - disabled, 1 - ignore the cooldown when admin/vip set event day
-[/LIST][/INDENT]
   
   
   
 [i]Changed[/i]
 [LIST]
-[*]Commands: Add up to 12 custom commands to almost all myjailbreak commands.
+[*]Warden - Handcuffs: a cuffed player have to press & hold +USE to lockpick with small progress animation
+[*]Warden - icons: Moved wardens icon module to a seperate plugin. New icons for cuffed, rebel & freeday
 [/LIST]
 [INDENT][LIST]
-    [*]new cvar - sm_PLUGINNAME_cmds_FEATURENAME - Set your custom chat commands for *FEATURENAME*(no 'sm_'/'!')(seperate with comma ',')(max. 12 commands)
-    [*]removed cvar - sm_PLUGINNAME_cmd - obsolete cvars. [b]Please remove them from your configs![/b]
-    [*]removed commands - sm_ALTERNATIVE - double/different commands for same action. Use sm_PLUGINNAME_cmds_FEATURENAME
+    [*]removed cvars - sm_warden_icon_*** - obsolete cvars. [b]Please remove them from your configs![/B]
+    [*]new plugin - icons.smx - new icons & native to remove icon for client
+[/LIST]
+[INDENT][LIST]
+    [*]new cvar - sm_icons_warden_enable - 0 - disabled, 1 - enable the icon above the wardens head
+    [*]new cvar - sm_icons_warden_path - Path to the warden icon DONT TYPE .vmt or .vft
+    [*]new cvar - sm_icons_deputy_enable - 0 - disabled, 1 - enable the icon above the deputy head
+    [*]new cvar - sm_icons_deputy_path - Path to the deputy icon DONT TYPE .vmt or .vft
+    [*]new cvar - sm_icons_ct_enable - 0 - disabled, 1 - enable the icon above the guards head
+    [*]new cvar - sm_icons_ct_path - Path to the guard icon DONT TYPE .vmt or .vft
+    [*]new cvar - sm_icons_t_enable - 0 - disabled, 1 - enable the icon above the prisoners head
+    [*]new cvar - sm_icons_t_path - Path to the prisoner icon DONT TYPE .vmt or .vft
+    [*]new cvar - sm_icons_rebel_enable - 0 - disabled, 1 - enable the icon above the rebel prisoners head
+    [*]new cvar - sm_icons_rebel_path - Path to the rebel icon DONT TYPE .vmt or .vft
+    [*]new cvar - sm_icons_cuffs_enable - 0 - disabled, 1 - enable the icon above the cuffed prisoners head
+    [*]new cvar - sm_icons_cuffs_path - Path to the cuffed prisoner icon DONT TYPE .vmt or .vft
+    [*]new cvar - sm_icons_freeday_enable - 0 - disabled, 1 - enable the icon above the freeday prisoners head
+    [*]new cvar - sm_icons_freeday_path - Path to the freeday icon DONT TYPE .vmt or .vft
+    [*]new config file - cfg/MyJailbreak/Icons.cfg
+[/LIST][/INDENT]
+[/INDENT]
+[LIST]
+[*]Warden: Choose color of handcuffed client
+[/LIST]
+[INDENT][LIST]
+    [*]new cvar - sm_warden_color_cuffs_red - What color to turn the cuffed player into (set R, G and B values to 255 to disable) (Rgb): x - red value
+    [*]new cvar - sm_warden_color_cuffs_green - What color to turn the cuffed player into (rGb): x - green value
+    [*]new cvar - sm_warden_color_cuffs_blue - What color to turn the cuffed player into (rgB): x - blue value
 [/LIST][/INDENT]
 [LIST]
-[*]Warden: Chathint on successful vote to kick warden
-[*]Warden counter: Use the wardens FOV instead radius around him to count terrors
+[*]Ratio: T will be moved instandly to CT and respawned when there is space.
+[*]Request/Warden - freedays:  Moved requests freeday module to warden plugin
 [/LIST]
 [INDENT][LIST]
-    [*]removed cvar - sm_warden_counter_radius - obsolete cvar. Please remove them from your config!
+    [*]removed cvars - sm_freekill_freeday_*** - obsolete cvars. [b]Please remove them from your configs![/B]
+[/LIST]
+[INDENT][LIST]
+    [*]new cvar - sm_warden_freeday_enable - Allows a warden to give a freeday to a player
+    [*]new cvar - sm_warden_freeday_cmd - Set your custom chat command for give a freeday. no need for sm_ or !
+    [*]new cvar - sm_warden_freeday_color_red - What color to turn the warden into (set R, G and B values to 255 to disable) (Rgb): x - red value
+    [*]new cvar - sm_warden_freeday_color_green - What color to turn the warden into (rGb): x - green value
+    [*]new cvar - sm_warden_freeday_color_blue - What color to turn the warden into (rgB): x - blue value  
+    [*]new cvar - sm_warden_freeday_victim_deputy - 0 - disabled, 1 - Allow the deputy to set a personal freeday next round");
+[/LIST][/INDENT]
+[/INDENT]
+[LIST]
+[*]Catch: new overlay to fix misspelling. Frozen instead of freezed
+[/LIST]
+[INDENT][LIST]
+    [*]removed overlay - overlays/MyJailbreak/freeze - I recommend to change it in you config to:
+[*]new overlay - overlays/MyJailbreak/frozen - I recommend this as overlays/MyJailbreak/freeze replacement
 [/LIST][/INDENT]
 [LIST]
-[*]Weapons: Players can get weapons from menu more than once in a round. No need to wait until next round.
-[*]Duckhunt: Changed the way to set health for hunter based on enemey count. [url]https://github.com/shanapu/MyJailbreak/issues/77#issuecomment-242951426[/url]
+[*]Zombie: Removed humans spawn with weapons & nades. Use weapon menu or armory.
 [/LIST]
 [INDENT][LIST]
-    [*]new cvar - sm_duckhunt_hunter_hp_extra - HP the Hunter get additional per extra duck.
+    [*]new cvar - sm_zombie_ammo - 0 - disabled, 1 - enable infinty ammo (with reload) for humans
 [/LIST][/INDENT]
-[LIST]
-[*]Zombie: Changed the way to set health for zombies based on enemey count. [url]https://github.com/shanapu/MyJailbreak/issues/77#issuecomment-242951426[/url]
-[/LIST]
-[INDENT][LIST]
-    [*]new cvar - sm_zombie_zombie_hp_extra - HP the zombie get additional per extra human.
-[/LIST][/INDENT]
+  
   
   
 [i]Fixed[/i]
 [LIST]
-[*]Warden - Icon: missing FastDL files
-[*]Warden - Icon Terror: fix black icon on decals/MyJailbreak/terror - [b]use sm_warden_icon_t "decals/MyJailbreak/terror-fix"[/b]
-[*]Warden - Mark rebel: remove color on unmark
-[*]Warden - Handcuffs: Move cuffed player though walls... kind of fix not perfect!
-[*]Warden - Painter: fix painter for terrors. THX devu4!
-[*]Request - Freedays: fix player check for !givefreeday
-[*]Last Guard: fix sm_lastguard_minct bypass. THX devu4!
-[*]PlayerTags: fix tags on warden remove
-[*]Weapons: glitch to use menu on T side. THX devu4!
+[*]Warden - Painter: fix bug when enabled for t and t dies paint still active
+[*]Freeday: fix problem on sm_freeday_firstround and roundrestart
+[*]Drunk: fix invert movement on the x-axis/y-axis much thanks @ peace-maker!
+[*]Ratio: Unmute CT on teambalance
+[*]Eventdays with freeze: rar glitch player push out of map
+[*]download.txt: removed .bz2 file extension for deputy
+[*]Cowboy: Fix command sm_setcowboy
+[*]Request: Fix chat messages or freekill
+[*]Zeus: fix missing en translation
 [*]minor errors & smaller fixes
 [/LIST]
   
   
   
-[i]Changed Requirements[/i]
+[i]Removed[/i]
 [LIST]
-[*]removed - Simple Chat Prozessor - [url]https://bitbucket.org/minimoney1/simple-chat-processor[/url] - [b]remove/disable simple-chatprocessor.smx. Use new chat-processor![/b]
-[*]replacement - [Any] Chat-Processor - [url]https://forums.alliedmods.net/showthread.php?t=286913[/url]
+[*]Removed Dependencies of the required plugins. So the plugins can be used as standalone
 [/LIST]
-[/SPOILER]
+[INDENT][LIST]
+    [*]Warden: Dependencies of MyJailbreak(core), hosties, smartjaildoors, chat-processor, VoiceannounceEX
+[*]Ratio: Dependencies of MyJailbreak(core), warden
+[*]Last Guard Rule: Dependencies of MyJailbreak(core), hosties, smartjaildoors, warden
+[*]Weapons: Dependencies of MyJailbreak(core), warden
+[/LIST][/INDENT]
+[LIST]
+[*]removed cvars - sm_warden_icon_*** - obsolete cvars. **Please remove them from your configs!**
+[*]added & removed arms support.
+[/LIST]
+  
+  
+  
+[i]Developer stuff[/i]
+[LIST]
+[*]Warden: New native to add paperclips (for MyJailShop support)
+[/LIST]
+[INDENT][LIST]
+    [*]new native - warden_handcuff_givepaperclip - Give a player a specific amount of paperclips
+[*]new native - warden_handcuff_iscuffed - Check is player is in handcuffs
+[*]new native - warden_freeday_has - returns if client has a freeday now
+[*]new native - warden_freeday_set - Set the client get a freeday
+[/LIST][/INDENT]
+[LIST]
+[*]MyJailbreak Natives: Changed all native names by adding MyJailbreak_* in front to avoid conflicts with 3rd party plugins
+[*]Forwards: New Forwards to add ratio support (restrict from guards/CT) for 3rd party plugins
+[/LIST]
+[INDENT][LIST]
+    [*]new forward - MyJailbreak_OnJoinGuardQueue - Called when a client trys to join the Guards(CT) or GuardQueue
+[/LIST][/INDENT]
+[LIST]
+[*]Icons: New native to block a client icon
+[/LIST]
+[INDENT][LIST]
+    [*]new native - MyIcons_BlockClientIcon - Set status (true/false) if the icon of a player will be displayed
+[/LIST][/INDENT][LIST]
+[*]more comments in code[/LIST]
+[/SPOILER] 
   
 [U][B]Full Change Log:[/B][/U]
 [url=https://github.com/shanapu/MyJailbreak/blob/master/CHANGELOG.md]CHANGELOG.md[/url]
@@ -2212,12 +2375,13 @@ native warden_deputy_getlast();
 [/LIST]
 [i]you found a bug? tell me please![/i]
 [/QUOTE]
-[QUOTE=databomb;2428401]Users experiencing issues should consider updating Hosties to the Beta branch (version 2.2.3)[/QUOTE]
 
 
 [B][U]Credits:[/U][/B]
-used code & stuff from: [B]ecca, Zipcore, ESK0, Floody.de, Franc1sco, databomb, walmar, KeepCalm, bara, Arkarr, KissLick, headline, MasterOfTheXP, Damizean,Hipster, ReFlexPoison, 8guawong, Mitchell, Xines, Jackmaster, Impact123, Kaesar, andi67[/B] and many other I cant remember, unfortunately!
-Also thanks to all sourcemod & metamod developers out there!
+used code & stuff from: 
+[B]ecca, Zipcore, ESK0, Floody.de, Franc1sco, databomb, walmar, KeepCalm, bara, Arkarr, KissLick, headline, MasterOfTheXP, Damizean,Hipster, ReFlexPoison, 8guawong, Mitchell, Xines, Jackmaster, Impact123, Kaesar, andi67[/B] and many other I cant remember, unfortunately!
+
+Also big thanks to all sourcemod & metamod developers out there!
 [SPOILER]
 based/merged/used code/idea plugins:
 * [url]https://github.com/ecca/SourceMod-Plugins/tree/sourcemod/Warden[/url]
@@ -2234,6 +2398,7 @@ based/merged/used code/idea plugins:
 * [url]https://github.com/KissLick/TeamGames/[/url]
 * [url]https://github.com/TiBarification/Jail-Warden-Pro[/url]
 * [url]https://github.com/AG-Headline/Hunger-Games-Beacon[/url]
+* [url]https://github.com/Bara20/TroubleinTerroristTown/tree/master/ci[/url]
 * [url]https://forums.alliedmods.net/showthread.php?p=1086127[/url]
 * [url]https://forums.alliedmods.net/showthread.php?t=234169[/url]
 * [url]https://forums.alliedmods.net/showthread.php?p=1749220[/url]
@@ -2245,7 +2410,7 @@ based/merged/used code/idea plugins:
 * [url]https://forums.alliedmods.net/showthread.php?p=1965643[/url]
 * [url]https://forums.alliedmods.net/showpost.php?p=2231099&postcount=22[/url]
 + [url]https://github.com/Zipcore/Timer/[/url] (sound)
-* [url]https://git.tf/TTT/Plugin[/url] (sound)
+* [url]https://github.com/Bara20/TroubleinTerroristTown/[/url] (sound)
 * [url]https://forums.alliedmods.net/showthread.php?t=262170[/url] (model)
 * [url]http://www.andi67.bplaced.net/Forum/viewtopic.php?f=40&t=342[/url] (model)
 * if I missed someone, please tell me!
@@ -2257,10 +2422,67 @@ devu4, good_live, Weeeishy, UartigZone, Got Sw4g? terminator18, SkeLeXes, 0diete
 
 
 
-[B][U]Download latest[/U][/B]
-[url]https://github.com/shanapu/MyJailbreak/releases[/url]
-[COLOR="DarkRed"][B]The smx files on Github are compiled with SM 1.8. 
-If you still use 1.7.x you should update your sourcemod or compile MyJailbreak for yourself on your SM version[/B][/COLOR]
+
+[rant]
+[B][U]What should I consider if I open a issue on github or post on forum?[/U][/B]
+[LIST]
+[*]Take a look to the [url=https://github.com/shanapu/MyJailbreak/wiki/Frequently-Asked-Questions]FAQ[/url].
+[*]Read the issues on github & posts on forums thread - maybe your request was already posted there.
+[*]Use descriptive topic titles & descriptions. "i have idea", "need Help", "Suggestion" or "don't work" isn't helpful & pleasant.
+[*]Try to explain your request with [U][b]so many details as you can.[/b][/U]
+[*][B]USE PROPER ENGLISH![/B]
+[*]Expound every single step to reproduce your train of thought. [U]We're all no clairvoyant or mindreaders.[U]
+[*]Explain like "I'm an idiot and never I played MyJailbreak before".
+[*]Maybe take a screenshot or make a beautiful picture with paint.
+[*]Provide [U]so many infos as you can[/U]. Like your...
+[/LIST][INDENT][LIST=1]
+[*]sourcemod & metamod version
+[*]MyJailbreak version
+[*]sm plugins list server console output
+[*]plugin configs (.cfg)
+[*]error logs from .../csgo/addons/sourcemod/logs directory
+[*]all other things that could help us helping you!
+[/LIST][/INDENT][LIST]
+[*]Please open [U]one Issue[/U] per request/errors/problems. Split many requests/errors/problems to different Issues. Thanks!
+[/LIST]
+[COLOR="DarkRed"][B][U]If you are not capable to do this, I going to ignore you![/B][/U][/COLOR]
+[/rant]
+
+
+
+[U][B]Installation[/B][/U]
+[QUOTE]
+[LIST=1]
+[*]Make sure you have the [U]latest versions[/U] of the [B]required plugins[/B]
+
+[*]Download the [URL="https://shanapu.de/MyJailbreak/"]latest version[/URL] for your sourcemod
+  
+[*]Open [u]gameserver[/u] folder and copy the folders [B]addons/[/B],[B] cfg/[/B], [B]materials/[/B], [B]models/[/B] &[B] sound/[/B] to [U]your gameservers root[/U] [B]csgo/[/B] directory  
+  
+[*]Open [u]fastDL[/u] folder and copy the folders [B]materials/[/B], [B]models/[/B] & [B]sound/[/B] to your [U]FastDownload servers[/U] [B]csgo/[/B] directory  
+  
+[*]Open [U]your[/U] [B]downloads.ini [/B]in [U]your csgo/addons/sourcemod/configs[/U] directory and add the content of [B]downloads.txt[/B]  
+  
+[*]Run plugin for the first time and [U]all necessary .cfg files will be generated[/U]  
+  
+[*]Configure all settings in [U]cfg/MyJailbreak[/U] & [U]addons/sourcemod/configs/MyJailbreak[/U] to your needs
+  
+[*]Have fun! Give feedback!
+[/LIST]
+[/QUOTE]
+
+
+
+
+[B][U]Download release pack[/U][/B] new build system!
+[url]https://shanapu.de/MyJailbreak/[/url]
+
+[B][U]Sourcecode & miscellaneous[/U][/B]
+[url]https://github.com/shanapu/MyJailbreak/[/url]
+
+
+[B][U]Frequently Asked Questions:[/U][/B]
+[url]https://github.com/shanapu/MyJailbreak/wiki/Frequently-Asked-Questions[/url]
 
 [B][U]Wiki:[/U][/B]
 [url]https://github.com/shanapu/MyJailbreak/wiki/[/url]
@@ -2270,16 +2492,19 @@ If you still use 1.7.x you should update your sourcemod or compile MyJailbreak f
 
 [U][B]Code changes:[/B][/U]
 [url]https://github.com/shanapu/MyJailbreak/commits/master[/url]
+[url]https://github.com/shanapu/MyJailbreak/commits/dev[/url]
 
 [U][B]Changelogs:[/B][/U]
 [url]https://github.com/shanapu/MyJailbreak/blob/master/CHANGELOG.md[/url]
+[url]https://github.com/shanapu/MyJailbreak/blob/dev/CHANGELOG.md[/url]
+
 
 
 
 coded with [IMG]http://shanapu.de/githearth-small.png[/IMG] free software
 
 [b]I would be happy and very pleased if you want to join this project as an equal collaborator. 
-Even if you are a beginner and willing to learn or you just want to help with translations.[/b] 
+Even if you are a beginner and willing to learn or you just want to [url=http://translator.mitchdempsey.com/users/378/sourcemod_plugins]help with translations.[/url][/b] 
 If you own a feature or extension for jail or have an idea that would fit in, i would be happy when you [U]share it with us[/U].
 
 This is my first public project. please note that the code may is messy, stupid and inconsequent or mix different coding styles. I do my best to clean it up!  

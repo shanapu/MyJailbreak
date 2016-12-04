@@ -31,11 +31,13 @@
 #include <cstrike>
 #include <colors>
 #include <autoexecconfig>
-#include <hosties>
-#include <lastrequest>
 #include <warden>
 #include <mystocks>
-#include <myjailbreak>
+
+#undef REQUIRE_PLUGIN
+#include <hosties>
+#include <lastrequest>
+#define REQUIRE_PLUGIN
 
 
 //Compiler Options
@@ -83,7 +85,7 @@ public void MarkRebel_OnPluginStart()
 
 public Action Command_MarkRebel(int client, int args)
 {
-	if (gc_bPlugin.BoolValue)
+	if (gc_bPlugin.BoolValue && gp_bHosties && gp_bLastRequest)
 	{
 		if (gc_bMarkRebel.BoolValue)
 		{

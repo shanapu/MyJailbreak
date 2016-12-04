@@ -33,7 +33,10 @@
 #include <autoexecconfig>
 #include <warden>
 #include <mystocks>
+
+#undef REQUIRE_PLUGIN
 #include <myjailbreak>
+#define REQUIRE_PLUGIN
 
 
 //Compiler Options
@@ -107,8 +110,14 @@ public void Reminder_OnMapEnd()
 
 public Action Timer_RemindTimer(Handle timer)
 {
-	if (g_iRoundTime >= 1 && !IsLastGuardRule())
+	if (g_iRoundTime >= 1)
 	{
+		if (gp_bMyJailBreak) if (MyJailbreak_IsLastGuardRule())
+		{
+			RemindTimer = null;
+			return Plugin_Stop;
+		}
+		
 		g_iRoundTime--;
 		char timeinfo[64];
 		if (g_iRoundTime == 180 && (g_iWarden != -1))

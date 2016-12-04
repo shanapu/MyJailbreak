@@ -35,7 +35,6 @@
 #include <autoexecconfig>
 #include <warden>
 #include <mystocks>
-#include <myjailbreak>
 
 
 //Compiler Options
@@ -131,7 +130,12 @@ public Action Command_Repeat(int client, int args)
 						g_bRepeated[client] = true;
 						CPrintToChatAll("%t %t", "request_tag", "request_repeatpls", client);
 						RepeatTimer[client] = CreateTimer(10.0, Timer_RepeatEnd, client);
-						if (warden_exist()) LoopClients(i) RepeatMenu(i);
+						if (warden_exist())
+						{
+							LoopClients(i) if (warden_iswarden(i) || warden_deputy_isdeputy(i)) RepeatMenu(i);
+						}
+						else LoopValidClients(i, false, false) if (GetClientTeam(client) == CS_TEAM_CT) RepeatMenu(i);
+						
 						if (gc_bSounds.BoolValue)EmitSoundToAllAny(g_sSoundRepeatPath);
 					}
 					else CReplyToCommand(client, "%t %t", "request_tag", "request_repeattimes", gc_iRepeatLimit.IntValue);
@@ -217,31 +221,28 @@ public void Repeat_OnClientDisconnect(int client)
 
 public Action RepeatMenu(int warden)
 {
-	if (warden_iswarden(warden) || warden_deputy_isdeputy(warden))
+	char info1[255];
+	RepeatPanel = CreatePanel();
+	Format(info1, sizeof(info1), "%T", "request_repeat", warden);
+	SetPanelTitle(RepeatPanel, info1);
+	DrawPanelText(RepeatPanel, "-----------------------------------");
+	DrawPanelText(RepeatPanel, "                                   ");
+	for (int i = 1;i <= MaxClients;i++) if (IsValidClient(i, true))
 	{
-		char info1[255];
-		RepeatPanel = CreatePanel();
-		Format(info1, sizeof(info1), "%T", "request_repeat", warden);
-		SetPanelTitle(RepeatPanel, info1);
-		DrawPanelText(RepeatPanel, "-----------------------------------");
-		DrawPanelText(RepeatPanel, "                                   ");
-		for (int i = 1;i <= MaxClients;i++) if (IsValidClient(i, true))
+		if (g_bRepeated[i])
 		{
-			if (g_bRepeated[i])
-			{
-				char userid[11];
-				char username[MAX_NAME_LENGTH];
-				IntToString(GetClientUserId(i), userid, sizeof(userid));
-				Format(username, sizeof(username), "%N", i);
-				DrawPanelText(RepeatPanel, username);
-			}
+			char userid[11];
+			char username[MAX_NAME_LENGTH];
+			IntToString(GetClientUserId(i), userid, sizeof(userid));
+			Format(username, sizeof(username), "%N", i);
+			DrawPanelText(RepeatPanel, username);
 		}
-		DrawPanelText(RepeatPanel, "                                   ");
-		DrawPanelText(RepeatPanel, "-----------------------------------");
-		Format(info1, sizeof(info1), "%T", "warden_close", warden);
-		DrawPanelItem(RepeatPanel, info1); 
-		SendPanelToClient(RepeatPanel, warden, Handler_NullCancel, 20);
 	}
+	DrawPanelText(RepeatPanel, "                                   ");
+	DrawPanelText(RepeatPanel, "-----------------------------------");
+	Format(info1, sizeof(info1), "%T", "request_close", warden);
+	DrawPanelItem(RepeatPanel, info1); 
+	SendPanelToClient(RepeatPanel, warden, Handler_NullCancel, 20);
 }
 
 

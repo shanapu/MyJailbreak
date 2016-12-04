@@ -1,6 +1,12 @@
 *.dat
 *.exe
+*.bat
+!compile-menu.bat
+!compile-warden.bat
+!compile-myjb.bat
 .gitignore
+wip_*.*
+graphics/*
 addons/sourcemod/scripting/snips/*
 addons/sourcemod/scripting/compiled
 addons/sourcemod/scripting/compile.exe

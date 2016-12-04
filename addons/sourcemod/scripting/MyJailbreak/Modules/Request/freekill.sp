@@ -33,7 +33,12 @@
 #include <autoexecconfig>
 #include <warden>
 #include <mystocks>
+
+//Optional Plugins
+#undef REQUIRE_PLUGIN
 #include <myjailbreak>
+#include <smartjaildoors>
+#define REQUIRE_PLUGIN
 
 
 //Compiler Options
@@ -81,7 +86,7 @@ public void Freekill_OnPluginStart()
 	gc_sCustomCommandFreekill = AutoExecConfig_CreateConVar("sm_freekill_cmds", "fk, reportfk, rfk", "Set your custom chat commands for freekill(!freekill (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_iFreeKillLimit = AutoExecConfig_CreateConVar("sm_freekill_limit", "2", "Сount how many times you can report a freekill");
 	gc_bFreeKillRespawn = AutoExecConfig_CreateConVar("sm_freekill_respawn", "1", "0 - disabled, 1 - Allow the warden to respawn a Freekill victim");
-	gc_bRespawnCellClosed = AutoExecConfig_CreateConVar("sm_freekill_respawn_cell", "1", "0 - cells are still open, 1 - cells will close on respawn in cell");
+	gc_bRespawnCellClosed = AutoExecConfig_CreateConVar("sm_freekill_respawn_cell", "1", "0 - cells are still open, 1 - cells will close on respawn in cell - need smartjaildoors");
 	gc_bFreeKillKill = AutoExecConfig_CreateConVar("sm_freekill_kill", "1", "0 - disabled, 1 - Allow the warden to Kill a Freekiller");
 	gc_bFreeKillFreeDay = AutoExecConfig_CreateConVar("sm_freekill_freeday", "1", "0 - disabled, 1 - Allow the warden to set a freeday next round as pardon for all player");
 	gc_bFreeKillFreeDayVictim= AutoExecConfig_CreateConVar("sm_freekill_freeday_victim", "1", "0 - disabled, 1 - Allow the warden to set a personal freeday next round as pardon for the victim");
@@ -100,7 +105,7 @@ public void Freekill_OnPluginStart()
 	//FindConVar
 	gc_sAdminFlag.GetString(g_sAdminFlag , sizeof(g_sAdminFlag));
 	
-	SetLogFile(g_sFreeKillLogFile, "Freekills");
+	SetLogFile(g_sFreeKillLogFile, "Freekills", "MyJailbreak");
 }
 
 
@@ -145,14 +150,14 @@ public Action Command_Freekill(int client, int args)
 								g_iFreeKillCounter[client]++;
 								FreeKillAcceptMenu(a);
 								CPrintToChatAll("%t %t", "request_tag", "request_freekill", client, attacker, a);
-								if (ActiveLogging()) LogToFileEx(g_sFreeKillLogFile, "Player %L claiming %L freekilled him. Reported to admin %L", client, attacker, a);
+								if (gp_bMyJailBreak) if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sFreeKillLogFile, "Player %L claiming %L freekilled him. Reported to admin %L", client, attacker, a);
 							}
 							else LoopValidClients(i, false, true) if (warden_iswarden(i) && gc_bReportWarden.BoolValue)
 							{
 								g_iFreeKillCounter[client]++;
 								FreeKillAcceptMenu(i);
 								CPrintToChatAll("%t %t", "request_tag", "request_freekill", client, attacker, i);
-								if (ActiveLogging()) LogToFileEx(g_sFreeKillLogFile, "Player %L claiming %L freekilled him. Reported to warden %L", client, attacker, i);
+								if (gp_bMyJailBreak) if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sFreeKillLogFile, "Player %L claiming %L freekilled him. Reported to warden %L", client, attacker, i);
 							}
 						}
 						else CReplyToCommand(client, "%t %t", "request_tag", "request_freekilltimes", gc_iFreeKillLimit.IntValue);
@@ -282,7 +287,7 @@ public int FreeKillAcceptHandler(Menu menu, MenuAction action, int client, int P
 			IsRequest = false;
 			RequestTimer = null;
 			
-			LoopClients(i) if (g_bFreeKilled[i])
+			LoopValidClients(i, true, true) if (g_bFreeKilled[i])
 			{
 				CPrintToChatAll("%t %t", "warden_tag", "request_noaccepted", i, client);
 				g_bFreeKilled[i] = false;
@@ -320,48 +325,49 @@ public int FreeKillHandler(Menu menu, MenuAction action, int client, int Positio
 		}
 		if (choice == 2) //kill freekiller
 		{
-			LoopClients(i) if (g_bFreeKilled[i])
+			LoopValidClients(i, true, true) if (g_bFreeKilled[i])
 			{
 				g_bFreeKilled[i] = false;
 				
 				int attacker = GetClientOfUserId(g_iKilledBy[i]);
 				ForcePlayerSuicide(attacker);
 				
-				if (ActiveLogging()) LogToFileEx(g_sFreeKillLogFile, "Warden/Admin %L accept freekill request of %L  and killed %L", client, i, attacker);
+				if (gp_bMyJailBreak) if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sFreeKillLogFile, "Warden/Admin %L accept freekill request of %L  and killed %L", client, i, attacker);
 				CPrintToChat(attacker, "%t %t", "request_tag", "request_killbcfreekill");
 				CPrintToChatAll("%t %t", "warden_tag", "request_killbcfreekillall", attacker);
 			}
 		}
-		if (choice == 3) //freeday
+		if (choice == 3) //freeday event for all
 		{
-			LoopClients(i) if (g_bFreeKilled[i])
+			LoopValidClients(i, true, true) if (g_bFreeKilled[i])
 			{
 				g_bFreeKilled[i] = false;
-				if (ActiveLogging()) LogToFileEx(g_sFreeKillLogFile, "Warden/Admin %L accept freekill request of %L give a freeday", client, i);
+				if (gp_bMyJailBreak) if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sFreeKillLogFile, "Warden/Admin %L accept freekill request of %L give a freeday", client, i);
 				FakeClientCommand(client, "sm_setfreeday");
 			}
 		}
 		if (choice == 4) //swap freekiller
 		{
-			LoopClients(i) if (g_bFreeKilled[i])
+			LoopValidClients(i, true, true) if (g_bFreeKilled[i])
 			{
 				int attacker = GetClientOfUserId(g_iKilledBy[i]);
 				
 				g_bFreeKilled[i] = false;
 				ClientCommand(attacker, "jointeam %i", CS_TEAM_T);
 				CPrintToChat(attacker, "%t %t", "request_tag", "request_swapbcfreekill");
-				if (ActiveLogging()) LogToFileEx(g_sFreeKillLogFile, "Warden/Admin %L accept freekill request of %L  and swaped %L to T", client, i, attacker);
+				if (gp_bMyJailBreak) if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sFreeKillLogFile, "Warden/Admin %L accept freekill request of %L  and swaped %L to T", client, i, attacker);
 				CPrintToChatAll("%t %t", "warden_tag", "request_swapbcfreekillall", i);
 			}
 		}
 		if (choice == 5) //freeday to victim
 		{
-			LoopClients(i) if (g_bFreeKilled[i])
+			LoopValidClients(i, true, true) if (g_bFreeKilled[i])
 			{
-				g_bHaveFreeDay[i] = true;
+			//	g_bHaveFreeDay[i] = true;
+				warden_freeday_set(i);
 				g_bFreeKilled[i] = false;
 				CPrintToChat(i, "%t %t", "request_tag", "request_freedayforyou");
-				if (ActiveLogging()) LogToFileEx(g_sFreeKillLogFile, "Warden/Admin %L accept freekill request of %L gave him a personal freeday", client, i);
+				if (gp_bMyJailBreak) if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sFreeKillLogFile, "Warden/Admin %L accept freekill request of %L gave him a personal freeday", client, i);
 				CPrintToChatAll("%t %t", "warden_tag", "request_personalfreeday", i);
 			}
 		}
@@ -385,35 +391,35 @@ public int RespawnHandler(Menu menu, MenuAction action, int client, int Position
 		
 		if (choice == 1) //respawnbody
 		{
-			LoopClients(i) if (g_bFreeKilled[i])
+			LoopValidClients(i, true, true) if (g_bFreeKilled[i])
 			{
 				g_bFreeKilled[i] = false;
 				CS_RespawnPlayer(i);
 				
 				TeleportEntity(i, DeathOrigin[i], NULL_VECTOR, NULL_VECTOR);
 				
-				if (ActiveLogging()) LogToFileEx(g_sFreeKillLogFile, "Warden/Admin %L accept freekill request and respawned %L on his body", client, i);
+				if (gp_bMyJailBreak) if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sFreeKillLogFile, "Warden/Admin %L accept freekill request and respawned %L on his body", client, i);
 				CPrintToChat(i, "%t %t", "request_tag", "request_respawned");
 				CPrintToChatAll("%t %t", "warden_tag", "request_respawnedall", i);
 			}
 		}
 		if (choice == 2) //respawncell
 		{
-			LoopClients(i) if (g_bFreeKilled[i])
+			LoopValidClients(i, true, true) if (g_bFreeKilled[i])
 			{
 				g_bFreeKilled[i] = false;
 				
-				if (gc_bRespawnCellClosed.BoolValue) SJD_CloseDoors();
+				if (gp_bSmartJailDoors && gc_bRespawnCellClosed.BoolValue) SJD_CloseDoors();
 				CS_RespawnPlayer(i);
 				
-				if (ActiveLogging()) LogToFileEx(g_sFreeKillLogFile, "Warden/Admin %L accept freekill request and respawned %L in cell", client, i);
+				if (gp_bMyJailBreak) if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sFreeKillLogFile, "Warden/Admin %L accept freekill request and respawned %L in cell", client, i);
 				CPrintToChat(i, "%t %t", "request_tag", "request_respawned");
 				CPrintToChatAll("%t %t", "warden_tag", "request_respawnedall", i);
 			}
 		}
 		if (choice == 3) //respawnwarden
 		{
-			LoopClients(i) if (g_bFreeKilled[i])
+			LoopValidClients(i, true, true) if (g_bFreeKilled[i])
 			{
 				g_bFreeKilled[i] = false;
 				CS_RespawnPlayer(i);
@@ -434,7 +440,7 @@ public int RespawnHandler(Menu menu, MenuAction action, int client, int Position
 				
 				TeleportEntity(i, location2, NULL_VECTOR, NULL_VECTOR);
 				
-				if (ActiveLogging()) LogToFileEx(g_sFreeKillLogFile, "Warden/Admin %L accept freekill request and respawned %L in front of warden", client, i);
+				if (gp_bMyJailBreak) if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sFreeKillLogFile, "Warden/Admin %L accept freekill request and respawned %L in front of warden", client, i);
 				CPrintToChat(i, "%t %t", "request_tag", "request_respawned");
 				CPrintToChatAll("%t %t", "warden_tag", "request_respawnedall", i);
 				CPrintToChatAll("debug warden is %N", warden);
@@ -449,7 +455,7 @@ public int RespawnHandler(Menu menu, MenuAction action, int client, int Position
 ******************************************************************************/
 
 
-stock int GetRandomAdmin() 
+stock int GetRandomAdmin()
 {
 	int[] admins = new int[MaxClients];
 	int adminsCount;

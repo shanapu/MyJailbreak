@@ -50,6 +50,7 @@ bool IsFreeday;
 bool StartFreeday; 
 bool AutoFreeday; 
 bool AllowRespawn;
+bool RepeatFirstFreeday;
 
 
 //Console Variables
@@ -152,7 +153,7 @@ public void OnPluginStart()
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	gc_sAdminFlag.GetString(g_sAdminFlag , sizeof(g_sAdminFlag));
 	
-	SetLogFile(g_sEventsLogFile, "Events");
+	SetLogFile(g_sEventsLogFile, "Events", "MyJailbreak");
 }
 
 
@@ -212,21 +213,21 @@ public Action Command_SetFreeday(int client, int args)
 		if (client == 0)
 		{
 			StartNextRound();
-			if (ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event FreeDay was started by groupvoting");
+			if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event FreeDay was started by groupvoting");
 		}
 		else if (warden_iswarden(client))
 		{
 			if (gc_bSetW.BoolValue)
 			{
 				char EventDay[64];
-				GetEventDayName(EventDay);
+				MyJailbreak_GetEventDayName(EventDay);
 				
-				if (!IsEventDayPlanned())
+				if (!MyJailbreak_IsEventDayPlanned())
 				{
 					if (g_iCoolDown == 0)
 					{
 						StartNextRound();
-						if (ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Freeday was started by warden %L", client);
+						if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Freeday was started by warden %L", client);
 					}
 					else CReplyToCommand(client, "%t %t", "freeday_tag" , "freeday_wait", g_iCoolDown);
 				}
@@ -239,14 +240,14 @@ public Action Command_SetFreeday(int client, int args)
 			if (gc_bSetA.BoolValue)
 			{
 				char EventDay[64];
-				GetEventDayName(EventDay);
+				MyJailbreak_GetEventDayName(EventDay);
 				
-				if (!IsEventDayPlanned())
+				if (!MyJailbreak_IsEventDayPlanned())
 				{
 					if ((g_iCoolDown == 0) || gc_bSetABypassCooldown.BoolValue)
 					{
 						StartNextRound();
-						if (ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Freeday was started by admin %L", client);
+						if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Freeday was started by admin %L", client);
 					}
 					else CReplyToCommand(client, "%t %t", "freeday_tag" , "freeday_wait", g_iCoolDown);
 				}
@@ -272,9 +273,9 @@ public Action Command_VoteFreeday(int client, int args)
 		if (gc_bVote.BoolValue)
 		{
 			char EventDay[64];
-			GetEventDayName(EventDay);
+			MyJailbreak_GetEventDayName(EventDay);
 			
-			if (!IsEventDayPlanned())
+			if (!MyJailbreak_IsEventDayPlanned())
 			{
 				if (g_iCoolDown == 0)
 				{
@@ -288,7 +289,7 @@ public Action Command_VoteFreeday(int client, int args)
 						if (g_iVoteCount > playercount)
 						{
 							StartNextRound();
-							if (ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event freeday was started by voting");
+							if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event freeday was started by voting");
 						}
 						else CPrintToChatAll("%t %t", "freeday_tag" , "freeday_need", Missing, client);
 					}
@@ -317,28 +318,28 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 	if ((GetTeamClientCount(CS_TEAM_CT) < 1) && gc_bAuto.BoolValue)
 	{
 		char EventDay[64];
-		GetEventDayName(EventDay);
+		MyJailbreak_GetEventDayName(EventDay);
 		
-		if (!IsEventDayPlanned())
+		if (!MyJailbreak_IsEventDayPlanned())
 		{
 			StartFreeday = true;
 			g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 			g_iVoteCount = 0;
 			char buffer[32];
 			Format(buffer, sizeof(buffer), "%T", "freeday_name", LANG_SERVER);
-			SetEventDayName(buffer);
-			SetEventDayRunning(true);
+			MyJailbreak_SetEventDayName(buffer);
+			MyJailbreak_SetEventDayRunning(true);
 			AutoFreeday = true;
 		}
 	}
-	if (StartFreeday)
+	if (StartFreeday || RepeatFirstFreeday)
 	{
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_weapons_enable", 0);
 		SetCvar("sm_weapons_t", 0);
 		SetCvar("sm_warden_enable", 0);
-		SetEventDayPlanned(false);
-		SetEventDayRunning(true);
+		MyJailbreak_SetEventDayPlanned(false);
+		MyJailbreak_SetEventDayRunning(true);
 		IsFreeday = true;
 		FreedayRound++;
 		StartFreeday = false;
@@ -361,6 +362,14 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 			}
 		}
 		CPrintToChatAll("%t %t", "freeday_tag" , "freeday_start");
+		
+		if(RepeatFirstFreeday)
+		{
+			SetTeamScore(CS_TEAM_CT, 0);
+			SetTeamScore(CS_TEAM_T, 0);
+			RepeatFirstFreeday = false;
+		}
+		if (gc_bFirst.BoolValue) if((GetTeamClientCount(CS_TEAM_CT) == 0) || (GetTeamClientCount(CS_TEAM_T) == 0) && (GetTeamScore(CS_TEAM_CT) + GetTeamScore(CS_TEAM_T) == 0)) RepeatFirstFreeday = true;
 	}
 	else
 	{
@@ -385,11 +394,11 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 		SetCvar("sm_warden_enable", 1);
 		g_iMPRoundTime.IntValue = g_iOldRoundTime;
 		AutoFreeday = false;
-		SetEventDayName("none");
-		SetEventDayRunning(false);
+		MyJailbreak_SetEventDayName("none");
+		MyJailbreak_SetEventDayRunning(false);
 		CPrintToChatAll("%t %t", "freeday_tag" , "freeday_end");
 	}
-	if (StartFreeday)
+	if (StartFreeday || RepeatFirstFreeday)
 	{
 		LoopClients(i) CreateInfoPanel(i);
 		
@@ -433,19 +442,20 @@ public void OnMapStart()
 		
 		char buffer[32];
 		Format(buffer, sizeof(buffer), "%T", "freeday_name", LANG_SERVER);
-		SetEventDayName(buffer);
+		MyJailbreak_SetEventDayName(buffer);
 		
-		SetEventDayRunning(true);
+		MyJailbreak_SetEventDayRunning(true);
 		
 		g_iOldRoundTime = g_iMPRoundTime.IntValue;
 		g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue;
 	}
 	else
 	{
-		StartFreeday = false;	
+		StartFreeday = false;
 	}
 	IsFreeday = false;
 	AutoFreeday = false;
+	RepeatFirstFreeday = false;
 }
 
 
@@ -466,7 +476,7 @@ public void OnMapEnd()
 	g_iVoteCount = 0;
 	FreedayRound = 0;
 	g_sHasVoted[0] = '\0';
-	SetEventDayName("none");
+	MyJailbreak_SetEventDayName("none");
 }
 
 
@@ -483,8 +493,8 @@ void StartNextRound()
 	g_iVoteCount = 0;
 	char buffer[32];
 	Format(buffer, sizeof(buffer), "%T", "freeday_name", LANG_SERVER);
-	SetEventDayName(buffer);
-	SetEventDayPlanned(true);
+	MyJailbreak_SetEventDayName(buffer);
+	MyJailbreak_SetEventDayPlanned(true);
 	g_iOldRoundTime = g_iMPRoundTime.IntValue;
 	g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue;
 	

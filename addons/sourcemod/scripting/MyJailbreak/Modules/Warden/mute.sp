@@ -32,10 +32,13 @@
 #include <colors>
 #include <autoexecconfig>
 #include <warden>
-#include <voiceannounce_ex>
 #include <basecomm>
 #include <mystocks>
+
+#undef REQUIRE_PLUGIN
+#include <voiceannounce_ex>
 #include <myjailbreak>
+#define REQUIRE_PLUGIN
 
 
 //Compiler Options
@@ -225,7 +228,6 @@ public void Mute_Event_RoundStart(Event event, const char[] name, bool dontBroad
 			{
 				SetClientListeningFlags(i, VOICE_MUTED);
 				IsMuted[i] = true;
-				
 			}
 		}
 		CPrintToChatAll("%t %t", "warden_tag", "warden_mutedefault");
@@ -319,12 +321,12 @@ public Action MuteClient(int client, int time, int muter)
 			if (time == 0)
 			{
 				CPrintToChatAll("%t %t", "warden_tag", "warden_muteend", muter, client);
-				if (ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Warden/Deputy %L muted player %L until round end", muter, client);
+				if(gp_bMyJailBreak) if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Warden/Deputy %L muted player %L until round end", muter, client);
 			}
 			else
 			{
 				CPrintToChatAll("%t %t", "warden_tag", "warden_mute", muter, client, time);
-				if (ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Warden/Deputy %L muted player %L for %i seconds", muter, client, time);
+				if(gp_bMyJailBreak) if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Warden/Deputy %L muted player %L for %i seconds", muter, client, time);
 			}
 		}
 	}

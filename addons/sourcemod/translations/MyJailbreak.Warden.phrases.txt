@@ -1185,8 +1185,8 @@
 
 	"warden_gotpaperclip"
 	{
-		"ru"		"Вы получили скрепку"
-		"en"		"You secretly have a paperclip in your hand."
+		"#format"   "{1:i}"
+		"en"		"You secretly have {1} paperclip(s) in your pocket. Hold +use (E)"
 	}
 
 	"warden_brokepaperclip"
@@ -1411,6 +1411,71 @@
 	{
 		"de"		"Es gibt zur Zeit {purple}keinen Deputy{default}. Schreibe {green}!deputy{default} um neuer Deputy zu werden!"
 		"en"		"There is no current {purple}Deputy{default}. Type {green}!deputy{default} to become the Deputy!"
+	}
+
+	"warden_picking"
+	{
+		"de"		"Knacke Schloss"
+		"en"		"Picking"
+	}
+
+	"warden_pickingaborted"
+	{
+		"de"		"Schloss knacken abgebrochen"
+		"en"		"Picking aborted"
+	}
+
+	"warden_givefreeday"
+	{
+		"de"		"Freeday vergeben:"
+		"it"		"Dando Freeday a:"
+		"ru"		"Выдать фридей:"
+		"en"		"Give FreeDay to:"
+	}
+
+	"warden_havefreeday"
+	{
+		"#format"   "{1:N}"
+		"it"		"{1} ora ha Freeday!"
+		"ru"		"У {1} персональный фридей!"
+		"en"		"{1} has now a FreeDay!"
+		"de"		"{1} hat jetzt einen FreeDay!"
+	}
+
+	"warden_freeday_title"
+	{
+		"#format"   "{1:N}"
+		"en"		"Freeday for {1}"
+		"de"		"Freeday für {1}"
+	}
+
+	"warden_freedaynext"
+	{
+		"de"		"Nächste Runde"
+		"en"		"Next Round"
+	}
+
+	"warden_freedaynow"
+	{
+		"de"		"Diese Runde"
+		"en"		"This Round"
+	}
+
+	"warden_freedayforyou"
+	{
+		"de"		"Du bekommst nächste Runde einen Freeday"
+		"it"		"Il prossimo round avrai freeday"
+		"ru"		"В следующем раунде вы получите персональный фридей"
+		"en"		"You get a FreeDay next round"
+	}
+
+	"warden_personalfreeday"
+	{
+		"#format"   "{1:N}"
+		"it"		"{1} ottiene un Freeday per il prossimo round!"
+		"ru"		"{1} получит персональный фридей в следующем раунде"
+		"en"		"{1} gets a FreeDay next round"
+		"de"		"{1} bekommst nächste Runde einen FreeDay"
 	}
 
 }

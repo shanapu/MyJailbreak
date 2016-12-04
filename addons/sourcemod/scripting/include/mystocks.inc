@@ -166,11 +166,11 @@ stock void SetCvarString(char cvarName[64], char[] value)
 
 
 //Define filename & path for logging 
-stock void SetLogFile(char LogFile[PLATFORM_MAX_PATH] , char [] FileName)
+stock void SetLogFile(char LogFile[PLATFORM_MAX_PATH], char [] FileName, char [] FolderName)
 {
 	char sDate[12];
 	FormatTime(sDate, sizeof(sDate), "%y-%m-%d");
-	Format(LogFile, sizeof(LogFile), "logs/MyJailbreak/%s-%s.log", FileName, sDate);
+	Format(LogFile, sizeof(LogFile), "logs/%s/%s-%s.log", FolderName, FileName, sDate);
 	
 	BuildPath(Path_SM, LogFile, sizeof(LogFile), LogFile);
 }
@@ -208,6 +208,21 @@ public Action Timer_RemoveColor( Handle timer, any client )
 }
 
 
+//Get random alive & non-rebeling player of a team - need hosties
+stock int GetRandomPlayerNonRebel(int team) 
+{
+	int[] clients = new int[MaxClients];
+	int clientCount;
+	LoopClients(i)
+	{
+		if ((GetClientTeam(i) == team) && IsPlayerAlive(i) && IsClientRebel(i))
+		{
+			clients[clientCount++] = i;
+		}
+	}
+	return (clientCount == 0) ? -1 : clients[GetRandomInt(0, clientCount-1)];
+}
+
 //Get random alive & non-rebeling player of a team
 stock int GetRandomPlayer(int team) 
 {
@@ -215,7 +230,7 @@ stock int GetRandomPlayer(int team)
 	int clientCount;
 	LoopClients(i)
 	{
-		if ((GetClientTeam(i) == team) && IsPlayerAlive(i) && !IsClientRebel(i))
+		if ((GetClientTeam(i) == team) && IsPlayerAlive(i))
 		{
 			clients[clientCount++] = i;
 		}
@@ -226,6 +241,18 @@ stock int GetRandomPlayer(int team)
 
 //Get alive & non-rebeling player count of a team
 stock int GetAlivePlayersCount(int team)
+{
+	int iCount, i; iCount = 0;
+	
+	for ( i = 1; i <= MaxClients; i++ )
+		if (IsValidClient(i, true, false) && GetClientTeam( i ) == team )
+		iCount++;
+	
+	return iCount;
+}
+
+//Get alive & non-rebeling player count of a team - need hosties
+stock int GetAlivePlayersCountNonRebel(int team)
 {
 	int iCount, i; iCount = 0;
 	

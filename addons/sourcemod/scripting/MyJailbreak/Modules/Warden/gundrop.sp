@@ -33,7 +33,6 @@
 #include <autoexecconfig>
 #include <warden>
 #include <mystocks>
-#include <myjailbreak>
 
 
 //Compiler Options
@@ -111,8 +110,11 @@ public Action CS_OnCSWeaponDrop(int client, int weapon)
 		{
 			if (GetClientTeam(client) == CS_TEAM_CT)
 			{
-				if (!g_bAllowDrop && !IsClientInLastRequest(client))
+				if (!g_bAllowDrop)
 				{
+					if (gp_bHosties && gp_bLastRequest) if (IsClientInLastRequest(client))
+						return Plugin_Continue;
+					
 					if (g_bWeaponDropped[client]) 
 						return Plugin_Handled;
 						
