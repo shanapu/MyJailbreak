@@ -222,20 +222,20 @@ public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] n
 // Check for optional Plugins
 public void OnAllPluginsLoaded()
 {
-	gp_bMyJailShop = LibraryExists("myjailbreak");
+	gp_bMyJailShop = LibraryExists("myjailshop");
 }
 
 
 public void OnLibraryRemoved(const char[] name)
 {
-	if (StrEqual(name, "myjailbreak"))
+	if (StrEqual(name, "myjailshop"))
 		gp_bMyJailShop = false;
 }
 
 
 public void OnLibraryAdded(const char[] name)
 {
-	if (StrEqual(name, "myjailbreak"))
+	if (StrEqual(name, "myjailshop"))
 		gp_bMyJailShop = true;
 }
 
