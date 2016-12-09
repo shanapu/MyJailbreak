@@ -64,6 +64,7 @@ ConVar gc_iQuestionTimes;
 ConVar gc_bBalanceTerror;
 ConVar gc_bBalanceGuards;
 ConVar gc_bBalanceWarden;
+ConVar gc_bRespawn;
 
 
 //Booleans
@@ -140,6 +141,7 @@ public void OnPluginStart()
 	gc_bBalanceTerror = AutoExecConfig_CreateConVar("sm_ratio_balance_terror", "1", "0 = Could result in unbalanced teams. 1 = Switch a random T, when nobody is in guardqueue to balance the teams.", _, true, 0.0, true, 1.0);
 	gc_bBalanceGuards = AutoExecConfig_CreateConVar("sm_ratio_balance_guard", "1", "Mode to choose a guard to be switch to T on balance the teams. 1 = Last In First Out / 0 = Random Guard", _, true, 0.0, true, 1.0);
 	gc_bBalanceWarden = AutoExecConfig_CreateConVar("sm_ratio_balance_warden", "1", "Prevent warden & deputy to be switch to T on balance the teams. Could result in unbalanced teams", _, true, 0.0, true, 1.0);
+	gc_bRespawn = AutoExecConfig_CreateConVar("sm_ratio_respawn", "1", "0 - Move player on next round to CT / 1 - Move player immediately to CT and respawn", _, true, 0.0, true, 1.0);
 	
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
@@ -382,7 +384,7 @@ public Action Command_JoinGuardQueue(int client, int iArgNum)
 	if (!CanClientJoinGuards(client))
 	{
 		int iIndex = FindValueInArray(g_aGuardQueue, client);
-
+		
 		if (iIndex == -1)
 		{
 			if ((gc_iJoinMode.IntValue == 0) || (gc_bAdminBypass.BoolValue && CheckVipFlag(client, g_sAdminFlag))) AddToQueue(client);
@@ -399,10 +401,46 @@ public Action Command_JoinGuardQueue(int client, int iArgNum)
 	}
 	if ((gc_iJoinMode.IntValue == 0) || (gc_bAdminBypass.BoolValue && CheckVipFlag(client, g_sAdminFlag)))
 	{
-		ForcePlayerSuicide(client);
-		ChangeClientTeam(client, CS_TEAM_CT);
-		SetClientListeningFlags(client, VOICE_NORMAL); //unmute if sm_hosties or admin has muted prisoners on round start
-		MinusDeath(client);
+		if(gc_bRespawn.BoolValue)
+		{
+			ForcePlayerSuicide(client);
+			ChangeClientTeam(client, CS_TEAM_CT);
+			SetClientListeningFlags(client, VOICE_NORMAL); //unmute if sm_hosties or admin has muted prisoners on round start
+			MinusDeath(client);
+		}
+		else
+		{
+			int iIndex = FindValueInArray(g_aGuardQueue, client);
+			int iQueueSize = GetArraySize(g_aGuardQueue);
+			
+			if (iIndex == -1)
+			{
+				if (CheckVipFlag(client, g_sAdminFlag) && gc_bVIPQueue.BoolValue)
+				{
+					if (iQueueSize == 0)
+						iIndex = PushArrayCell(g_aGuardQueue, client);
+					else
+					{
+						ShiftArrayUp(g_aGuardQueue, 0);
+						SetArrayCell(g_aGuardQueue, 0, client);
+					}
+					CReplyToCommand(client, "%t %t", "ratio_tag" , "ratio_thxvip");
+					CReplyToCommand(client, "%t %t", "ratio_tag" , "ratio_number", iIndex + 1);
+				}
+				else
+				{
+					iIndex = PushArrayCell(g_aGuardQueue, client);
+					
+					CReplyToCommand(client, "%t %t", "ratio_tag" , "ratio_number", iIndex + 1);
+					if (gc_bAdsVIP.BoolValue && gc_bVIPQueue.BoolValue) CReplyToCommand(client, "%t %t", "ratio_tag" , "ratio_advip");
+				}
+			}
+			else
+			{
+				CReplyToCommand(client, "%t %t", "ratio_tag" , "ratio_number", iIndex + 1);
+				if (gc_bAdsVIP.BoolValue && gc_bVIPQueue.BoolValue && !CheckVipFlag(client, g_sAdminFlag)) CReplyToCommand(client, "%t %t", "ratio_tag" , "ratio_advip");
+			}
+		}
 	}
 	
 	if ((gc_iJoinMode.IntValue == 1) && ((gc_bAdminBypass.BoolValue && !CheckVipFlag(client, g_sAdminFlag)) || (!gc_bAdminBypass.BoolValue))) Menu_AcceptGuardRules(client);
@@ -756,9 +794,12 @@ public int Handler_AcceptGuardRules(Handle menu, MenuAction action, int param1, 
 				{
 					ForcePlayerSuicide(client);
 					ChangeClientTeam(client, CS_TEAM_CT);
-					SetClientListeningFlags(client, VOICE_NORMAL); //unmute if sm_hosties or admin has muted prisoners on round start
-					MinusDeath(client);
-					CS_RespawnPlayer(client);
+					if(gc_bRespawn.BoolValue)
+					{
+						SetClientListeningFlags(client, VOICE_NORMAL); //unmute if sm_hosties or admin has muted prisoners on round start
+						MinusDeath(client);
+						CS_RespawnPlayer(client);
+					}
 				}
 				else AddToQueue(client);
 				ClientCommand(client, "play %s", g_sRightAnswerSound);
@@ -848,8 +889,11 @@ public int Handler_GuardQuestions(Handle menu, MenuAction action, int param1, in
 							ForcePlayerSuicide(client);
 							ChangeClientTeam(client, CS_TEAM_CT);
 							SetClientListeningFlags(client, VOICE_NORMAL); //unmute if sm_hosties or admin has muted prisoners on round start
-							MinusDeath(client);
-							CS_RespawnPlayer(client);
+							if(gc_bRespawn.BoolValue)
+							{
+								MinusDeath(client);
+								CS_RespawnPlayer(client);
+							}
 						}
 						else AddToQueue(client);
 					}
@@ -874,8 +918,11 @@ public int Handler_GuardQuestions(Handle menu, MenuAction action, int param1, in
 							ForcePlayerSuicide(client);
 							ChangeClientTeam(client, CS_TEAM_CT);
 							SetClientListeningFlags(client, VOICE_NORMAL); //unmute if sm_hosties or admin has muted prisoners on round start
-							MinusDeath(client);
-							CS_RespawnPlayer(client);
+							if(gc_bRespawn.BoolValue)
+							{
+								MinusDeath(client);
+								CS_RespawnPlayer(client);
+							}
 						}
 						else AddToQueue(client);
 					}
@@ -900,8 +947,11 @@ public int Handler_GuardQuestions(Handle menu, MenuAction action, int param1, in
 							ForcePlayerSuicide(client);
 							ChangeClientTeam(client, CS_TEAM_CT);
 							SetClientListeningFlags(client, VOICE_NORMAL); //unmute if sm_hosties or admin has muted prisoners on round start
-							MinusDeath(client);
-							CS_RespawnPlayer(client);
+							if(gc_bRespawn.BoolValue)
+							{
+								MinusDeath(client);
+								CS_RespawnPlayer(client);
+							}
 						}
 						else AddToQueue(client);
 					}
