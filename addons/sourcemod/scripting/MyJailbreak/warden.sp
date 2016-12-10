@@ -530,10 +530,10 @@ public Action AdminCommand_RemoveWarden(int client, int args)
 		{
 			CPrintToChatAll("%t %t", "warden_tag" , "warden_removed", client, g_iWarden);  // if client is console !=
 			if (gc_bBetterNotes.BoolValue) PrintCenterTextAll("%t", "warden_removed_nc", client, g_iWarden);
+			if(gp_bMyJailBreak) if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Admin %L removed player %L as warden", client, g_iWarden);
 			
 			RemoveTheWarden();
 			Forward_OnWardenRemovedByAdmin(client);
-			if(gp_bMyJailBreak) if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Admin %L removed player %L as warden", client, g_iWarden);
 		}
 	}
 	return Plugin_Handled;
