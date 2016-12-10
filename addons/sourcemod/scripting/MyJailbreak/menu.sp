@@ -133,6 +133,8 @@ ConVar g_bDealDamage;
 ConVar gc_sAdminFlagBulletSparks;
 ConVar gc_sAdminFlagLaser;
 ConVar gc_sAdminFlagPainter;
+ConVar gc_bOrders;
+ConVar gc_bOrdersDeputy;
 
 
 //Strings
@@ -302,6 +304,8 @@ public void OnConfigsExecuted()
 	gc_sAdminFlagBulletSparks = FindConVar("sm_warden_bulletsparks_flag");
 	gc_sAdminFlagLaser = FindConVar("sm_warden_laser_flag");
 	gc_sAdminFlagPainter = FindConVar("sm_warden_painter_flag");
+	gc_bOrders = FindConVar("sm_warden_orders");
+	gc_bOrdersDeputy = FindConVar("sm_warden_orders_deputy");
 	
 	gc_sAdminFlagLaser.GetString(g_sAdminFlagLaser, sizeof(g_sAdminFlagLaser));
 	gc_sAdminFlagPainter.GetString(g_sAdminFlagPainter, sizeof(g_sAdminFlagPainter));
@@ -474,6 +478,14 @@ public Action Command_OpenMenu(int client, int args)
 							mainmenu.AddItem("setdeputy", menuinfo);
 						}
 					}
+					if (gc_bOrders != null)
+					{
+						if (gc_bOrders.BoolValue)
+						{
+							Format(menuinfo, sizeof(menuinfo), "%T", "menu_orders", client);
+							mainmenu.AddItem("orders", menuinfo);
+						}
+					}
 					if (g_bCountdown != null)
 					{
 						if (g_bCountdown.BoolValue)
@@ -643,6 +655,14 @@ public Action Command_OpenMenu(int client, int args)
 							mainmenu.AddItem("cellopen", menuinfo);
 							Format(menuinfo, sizeof(menuinfo), "%T", "menu_closecell", client);
 							mainmenu.AddItem("cellclose", menuinfo);
+						}
+					}
+					if (gc_bOrdersDeputy != null)
+					{
+						if (gc_bOrdersDeputy.BoolValue)
+						{
+							Format(menuinfo, sizeof(menuinfo), "%T", "menu_orders", client);
+							mainmenu.AddItem("orders", menuinfo);
 						}
 					}
 					if (g_bCountdown != null)
@@ -1029,6 +1049,10 @@ public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selec
 		else if (strcmp(info, "setdays") == 0)
 		{
 			FakeClientCommand(client, "sm_setday");
+		}
+		else if (strcmp(info, "orders") == 0)
+		{
+			FakeClientCommand(client, "sm_order");
 		}
 		else if (strcmp(info, "setdeputy") == 0)
 		{
