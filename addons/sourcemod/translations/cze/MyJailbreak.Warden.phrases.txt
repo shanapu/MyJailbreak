@@ -1,0 +1,36 @@
+// Exported from SourceMod Translator
+// Date: 2016-12-11 14:23:47 UTC
+// Language: Czech (cze)
+// 
+// To view other translations for this plugin, please visit:
+// http://translator.mitchdempsey.com/sourcemod_plugins/178
+//
+"Phrases"
+{
+
+	"warden_countdownrunning"
+	{
+		"cze"		"Odpocet uz {purple} bezi!"
+	}
+
+	"warden_draweron"
+	{
+		"cze"		"Kresleni {purple} zapnuto"
+	}
+
+	"warden_dooropen_unavailable"
+	{
+		"cze"		"{darkred}Tato mapa nepodporuje vzdálené otevírání dveří. {default}Musíš je {purple}otevřít ručně!"
+	}
+
+	"warden_doorclose_unavailable"
+	{
+		"cze"		"{darkred}Tato mapa nepodporuje vzdálené zavírání dveří. {default}Musíš je {purple}zavřít ručně!"
+	}
+
+	"warden_openauto_unavailable"
+	{
+		"cze"		"{darkred}Tato mapa nepodporuje automatické otevírání dveří. {default}Warden je musí {purple}otevřít ručně!"
+	}
+
+}

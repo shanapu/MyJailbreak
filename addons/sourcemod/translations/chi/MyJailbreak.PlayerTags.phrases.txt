@@ -1,0 +1,151 @@
+// Exported from SourceMod Translator
+// Date: 2016-12-11 14:24:05 UTC
+// Language: Chinese (Simplified) (chi)
+// 
+// To view other translations for this plugin, please visit:
+// http://translator.mitchdempsey.com/sourcemod_plugins/181
+//
+"Phrases"
+{
+
+	"tags_TA"
+	{
+		"chi"		"[囚犯和管理员]"
+	}
+
+	"tags_T"
+	{
+		"chi"		"[囚犯]"
+	}
+
+	"tags_CTA"
+	{
+		"chi"		"[狱警和管理员]"
+	}
+
+	"tags_CT"
+	{
+		"chi"		"[狱警]"
+	}
+
+	"tags_WA"
+	{
+		"chi"		"[监狱长和管理员]"
+	}
+
+	"tags_W"
+	{
+		"chi"		"[监狱长]"
+	}
+
+	"tags_TVIP1"
+	{
+		"chi"		"[囚犯.VIP]"
+	}
+
+	"tags_TVIP2"
+	{
+		"chi"		"[囚犯.sVIP]"
+	}
+
+	"tags_CTVIP1"
+	{
+		"chi"		"[狱警.VIP]"
+	}
+
+	"tags_CTVIP2"
+	{
+		"chi"		"[狱警.sVIP]"
+	}
+
+	"tags_WVIP1"
+	{
+		"chi"		"[监狱长.VIP]"
+	}
+
+	"tags_WVIP2"
+	{
+		"chi"		"[监狱长.sVIP]"
+	}
+
+	"tags_TOWN"
+	{
+		"chi"		"[囚犯和管理员]"
+	}
+
+	"tags_CTOWN"
+	{
+		"chi"		"[狱警.Owner]"
+	}
+
+	"tags_CT_chat"
+	{
+		"chi"		"[狱警]"
+	}
+
+	"tags_CTA_chat"
+	{
+		"chi"		"[狱警和管理员]"
+	}
+
+	"tags_CTOWN_chat"
+	{
+		"chi"		"[狱警.Owner]"
+	}
+
+	"tags_CTVIP1_chat"
+	{
+		"chi"		"[狱警.VIP]"
+	}
+
+	"tags_CTVIP2_chat"
+	{
+		"chi"		"[狱警.sVIP]"
+	}
+
+	"tags_T_chat"
+	{
+		"chi"		"[囚犯]"
+	}
+
+	"tags_TA_chat"
+	{
+		"chi"		"[囚犯和管理员]"
+	}
+
+	"tags_TOWN_chat"
+	{
+		"chi"		"[囚犯和管理员]"
+	}
+
+	"tags_TVIP1_chat"
+	{
+		"chi"		"[囚犯.VIP]"
+	}
+
+	"tags_TVIP2_chat"
+	{
+		"chi"		"[囚犯.sVIP]"
+	}
+
+	"tags_W_chat"
+	{
+		"chi"		"[监狱长]"
+	}
+
+	"tags_WA_chat"
+	{
+		"chi"		"[监狱长和管理员]"
+	}
+
+	"tags_WVIP1_chat"
+	{
+		"chi"		"[监狱长.VIP]"
+	}
+
+	"tags_WVIP2_chat"
+	{
+		"chi"		"[监狱长.sVIP]"
+	}
+
+}

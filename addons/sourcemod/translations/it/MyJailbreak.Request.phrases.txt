@@ -1,0 +1,351 @@
+// Exported from SourceMod Translator
+// Date: 2016-12-11 14:24:02 UTC
+// Language: Italian (it)
+// 
+// To view other translations for this plugin, please visit:
+// http://translator.mitchdempsey.com/sourcemod_plugins/196
+//
+"Phrases"
+{
+
+	"request_tag"
+	{
+		"it"		"[{green}MyJB.requests{default}]"
+	}
+
+	"request_openrefuse"
+	{
+		"it"		"Il CapoCT ha permesso negazioni.{purple} Scrivi !refuse per rifiutare il gioco!"
+	}
+
+	"request_refusing"
+	{
+		"it"		"{purple}{1} {default}ha {purple}Rifiutato il Gioco!"
+	}
+
+	"request_alreadyrefused"
+	{
+		"it"		"Tu hai gia' {purple}Rifiutato il Gioco"
+	}
+
+	"request_refuseallow"
+	{
+		"it"		"Il CapoCT deve {purple}permettere di rifiutare!"
+	}
+
+	"request_notalivect"
+	{
+		"it"		"Sei morto o sei Guardia!"
+	}
+
+	"request_fullhp"
+	{
+		"it"		"Bel tentativo! Sei in piena salute"
+	}
+
+	"request_refusedtimes"
+	{
+		"it"		"Hai gia' {purple}rifiutato {1} volte{default} durante questo roud0!"
+	}
+
+	"request_capitulation"
+	{
+		"it"		"{purple}{1} {default}ha {purple}Capitolato! {default}Il Warder accettera' la richiesta?"
+	}
+
+	"request_alreadycapitulated"
+	{
+		"it"		"Tu hai gia' {purple}capitolato!"
+	}
+
+	"request_knifeback"
+	{
+		"it"		"ti hanno dato {purple}il coltello sulla schiena."
+	}
+
+	"request_accepted"
+	{
+		"it"		"{2} ha accettato {1} la richiesta."
+	}
+
+	"request_noaccepted"
+	{
+		"it"		"{2} Non {purple}ha{default} accettato {1}la richiesta."
+	}
+
+	"request_refuser"
+	{
+		"it"		"Un giocatore si rifiuta!"
+	}
+
+	"request_acceptcapitulation"
+	{
+		"it"		"Accettate Il Capitualation?"
+	}
+
+	"request_acceptheal"
+	{
+		"it"		"Accetti la guarigione?"
+	}
+
+	"request_health"
+	{
+		"it"		"Hai ricevuto una {purple} Healthshot{default}!"
+	}
+
+	"request_heal"
+	{
+		"it"		"{purple}{1} {default}ha richiesto la {purple}guarigione! {default}Il CapoCT accettera' la richiesta"
+	}
+
+	"request_healtimes"
+	{
+		"it"		"Hai gia' richiesto la guarigione{purple}{1} volte{default} durante questo round!"
+	}
+
+	"request_alreadyhealed"
+	{
+		"it"		"Tu hai gia' richiestp la {purple}guarigione!"
+	}
+
+	"request_nodamage"
+	{
+		"it"		"Non si può fare {purple}danni dopo la capitolazione!"
+	}
+
+	"request_processing"
+	{
+		"it"		"C'e' gia' una {purple}richiesta in corso. Aspetta un attimo!"
+	}
+
+	"request_repeatpls"
+	{
+		"it"		"{purple}{1} {default}ha richiesto di {purple}Ripetere!{default}"
+	}
+
+	"request_repeattimes"
+	{
+		"it"		"Hai gia' chiesto di {purple} Ripetere {1} volte{default} durante questo round!"
+	}
+
+	"request_alreadyrepeat"
+	{
+		"it"		"Hai gia' richiesto di {purple}ripetere!"
+	}
+
+	"request_repeat"
+	{
+		"it"		"Un Player Ha Chiesto Di Ripete!!"
+	}
+
+	"request_menu_title"
+	{
+		"it"		"Fai una Richiesta"
+	}
+
+	"request_menu_repeat"
+	{
+		"it"		"Ripetere Annuncio"
+	}
+
+	"request_menu_refuse"
+	{
+		"it"		"Rifiutare la partita in corso"
+	}
+
+	"request_menu_heal"
+	{
+		"it"		"Richiesta di Guarigione"
+	}
+
+	"request_menu_capitulation"
+	{
+		"it"		"Resa"
+	}
+
+	"request_menu_freekill"
+	{
+		"it"		"Segnala RDM"
+	}
+
+	"request_freekill"
+	{
+		"it"		"{green}{1}{default} inviato un rapporto di Freekill {darkred}{2}{default} per {purple}{3}!"
+	}
+
+	"request_pardonfreekill"
+	{
+		"it"		"Era RDM?"
+	}
+
+	"request_handlefreekill"
+	{
+		"it"		"Come si desidera gestire questo freekill?"
+	}
+
+	"request_respawnvictim"
+	{
+		"it"		"Respawn la vittima"
+	}
+
+	"request_killfreekiller"
+	{
+		"it"		"Slay il Freekiller"
+	}
+
+	"request_freeday"
+	{
+		"it"		"Prossimo Round Freeday"
+	}
+
+	"request_swapfreekiller"
+	{
+		"it"		"Spostato il 'freekiller' nei Prigionieri"
+	}
+
+	"request_aliveorct"
+	{
+		"it"		"Tu sei Vivo o Sei Una Guardia"
+	}
+
+	"request_nokiller"
+	{
+		"it"		"Siamo spiacenti, non riusciamo a trovare il tuo assassino"
+	}
+
+	"request_respawned"
+	{
+		"it"		"Tu sei stato respawnato!"
+	}
+
+	"request_respawnedall"
+	{
+		"it"		"{1} e' stato respawnato a casua di un {darkred}RDM!"
+	}
+
+	"request_killbcfreekill"
+	{
+		"it"		"È stato ucciso a causa di un {darkred}RDM!"
+	}
+
+	"request_killbcfreekillall"
+	{
+		"it"		"{green}{1}{default} è stato ucciso a causa di un {darkred}RDM!"
+	}
+
+	"request_swapbcfreekill"
+	{
+		"it"		"Sei stato swappato nei prigionieri a causa di un {darkred}RDM!"
+	}
+
+	"request_swapbcfreekillall"
+	{
+		"it"		"{green}{1}{default}, a causa di un  {darkred}rdm,{default} e' stato spostato nei prigionieri!"
+	}
+
+	"request_handlerespawn"
+	{
+		"it"		"Dove vuoi il respawn?"
+	}
+
+	"request_respawnbody"
+	{
+		"it"		"Respawn sul luogo del crimine"
+	}
+
+	"request_respawncell"
+	{
+		"it"		"Respawn in una cella"
+	}
+
+	"request_respawnwarden"
+	{
+		"it"		"Respawn in Front of the Warden"
+	}
+
+	"request_freekilltimes"
+	{
+		"it"		"Hai già segnalato un Freekill {purple}{1}{default} volte durante questo round."
+	}
+
+	"request_freedayvictim"
+	{
+		"it"		"La Vittima dell'rdm il prossimo round avra' freeday"
+	}
+
+	"request_killreason_title"
+	{
+		"it"		"Hai ucciso {1}???"
+	}
+
+	"request_killreason_lostgame"
+	{
+		"it"		"Ha perso la partita"
+	}
+
+	"request_killreason_rebel"
+	{
+		"it"		"Lui era un ribelle"
+	}
+
+	"request_killreason_brokerule"
+	{
+		"it"		"Ha Infranto il Regolamento"
+	}
+
+	"request_killreason_notfollow"
+	{
+		"it"		"Non esegue i comandi"
+	}
+
+	"request_killreason_sry"
+	{
+		"it"		"Colpa mia, voglio chiedere scusa"
+	}
+
+	"request_killreason_freekill"
+	{
+		"it"		"ho fatto rdm"
+	}
+
+	"request_killreason_lostgame_chat"
+	{
+		"it"		"La Guardia {green}{1}{default} ha reclamato {darkred}{2}{default} perso la partita"
+	}
+
+	"request_killreason_rebel_chat"
+	{
+		"it"		"La Guardia {green}{1}{default} ha reclamato {darkred}{2}{default} era ribelle"
+	}
+
+	"request_killreason_brokerule_chat"
+	{
+		"it"		"La Guardia {green}{1}{default} ha reclamato {darkred}{2}{default} ha infranto il regolamento"
+	}
+
+	"request_killreason_notfollow_chat"
+	{
+		"it"		"La Guardia {green}{1}{default} ha reclamato {darkred}{2}{default} Non ha seguito il dettato"
+	}
+
+	"request_killreason_sry_chat"
+	{
+		"it"		"La Guardia {green}{1}{default} vuole chiedere scusa per l'uccisione {darkred}{2}{default}"
+	}
+
+	"request_killreason_freekill_chat"
+	{
+		"it"		"La Guardia {green}{1}{default} Ha confessato l'rdm su {darkred}{2}{default}"
+	}
+
+	"request_killreason_noanswer"
+	{
+		"it"		"La Guardia {green}{1}{default} non ha dichiarazioni per l'uccisione su {darkred}{2}{default}"
+	}
+
+	"request_capitulated"
+	{
+		"it"		"{purple}{1} {default}ha {purple}capitolato!"
+	}
+
+}

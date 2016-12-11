@@ -145,13 +145,13 @@ unzip -qo translations.zip -d build/gameserver/
 wget -q -O translations.zip http://translator.mitchdempsey.com/sourcemod_plugins/181/download/MyJailbreak.PlayerTags.translations.zip
 unzip -qo translations.zip -d build/gameserver/
 
-wget -q -O translations.zip http://translator.mitchdempsey.com/sourcemod_plugins/183/download/MyJailbreak.Torch.translations.zip
+wget -q -O translations.zip http://translator.mitchdempsey.com/sourcemod_plugins/183/download/MyJailbreak.Ffa.translations.zip
 unzip -qo translations.zip -d build/gameserver/
 
 wget -q -O translations.zip http://translator.mitchdempsey.com/sourcemod_plugins/192/download/MyJailbreak.FreeDay.translations.zip
 unzip -qo translations.zip -d build/gameserver/
 
-wget -q -O translations.zip http://translator.mitchdempsey.com/sourcemod_plugins/183/download/MyJailbreak.Torch.translations.zip
+wget -q -O translations.zip http://translator.mitchdempsey.com/sourcemod_plugins/183/download/MyJailbreak.Hide.translations.zip
 unzip -qo translations.zip -d build/gameserver/
 
 wget -q -O translations.zip http://translator.mitchdempsey.com/sourcemod_plugins/183/download/MyJailbreak.Torch.translations.zip
@@ -176,6 +176,12 @@ wget -q -O translations.zip http://translator.mitchdempsey.com/sourcemod_plugins
 unzip -qo translations.zip -d build/gameserver/
 
 wget -q -O translations.zip http://translator.mitchdempsey.com/sourcemod_plugins/186/download/MyJailbreak.DuckHunt.translations.zip
+unzip -qo translations.zip -d build/gameserver/
+
+wget -q -O translations.zip http://translator.mitchdempsey.com/sourcemod_plugins/188/download/MyJailbreak.KnifeFight.translations.zip
+unzip -qo translations.zip -d build/gameserver/
+
+wget -q -O translations.zip http://translator.mitchdempsey.com/sourcemod_plugins/186/download/MyJailbreak.Catch.translations.zip
 unzip -qo translations.zip -d build/gameserver/
 
 echo "Clean root folder"

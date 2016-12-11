@@ -1,0 +1,156 @@
+// Exported from SourceMod Translator
+// Date: 2016-12-11 14:24:10 UTC
+// Language: Italian (it)
+// 
+// To view other translations for this plugin, please visit:
+// http://translator.mitchdempsey.com/sourcemod_plugins/193
+//
+"Phrases"
+{
+
+	"hebattle_tag"
+	{
+		"it"		"[{green}MyJB.HEBattle{default}]"
+	}
+
+	"hebattle_need"
+	{
+		"it"		"{purple}{2}{default} ha votato. {purple}{1}{default} voti richiesti per giocare a {darkred}HE Battle."
+	}
+
+	"hebattle_rounds"
+	{
+		"it"		"Round {purple}{1}{default} di {purple}{2}"
+	}
+
+	"hebattle_minplayer"
+	{
+		"it"		"per HE Battle e' richiesto un {purple}CT"
+	}
+
+	"hebattle_minplayer"
+	{
+		"it"		"For a HE Battle you need at least {purple}one CT"
+	}
+
+	"hebattle_twin_nc"
+	{
+		"it"		"Un Terrorista e' sopravvissuto!"
+	}
+
+	"hebattle_voting"
+	{
+		"it"		"La votazione per He Battle e' {purple}disabilitata!"
+	}
+
+	"hebattle_setbywarden"
+	{
+		"it"		"Settare HE Battle da Warden e' {purple}disabilitato"
+	}
+
+	"hebattle_setbyadmin"
+	{
+		"it"		"Settare HE Battle da Admin e' {purple}disabilitato!"
+	}
+
+	"hebattle_ctwin_nc"
+	{
+		"it"		"Un CT e' sopravvissuto!"
+	}
+
+	"hebattle_end"
+	{
+		"it"		"{purple}HE Battle{default} e' finito."
+	}
+
+	"hebattle_next"
+	{
+		"it"		"Il Prossimo round sara': {purple}HE Battle."
+	}
+
+	"hebattle_next_nc"
+	{
+		"it"		"Il Prossimo round sara': HE Battle."
+	}
+
+	"hebattle_start"
+	{
+		"it"		"{purple}HE Battle{default} e' iniziato!"
+	}
+
+	"hebattle_start_nc"
+	{
+		"it"		"HE Battle e' iniziato!"
+	}
+
+	"hebattle_voted"
+	{
+		"it"		"hai gia' votato per {purple}He Battle"
+	}
+
+	"hebattle_progress"
+	{
+		"it"		"L'evento {darkred}{1} {default}e' {purple}gia' in corso!"
+	}
+
+	"hebattle_disabled"
+	{
+		"it"		"HE Battle e' {purple}disabilitato!"
+	}
+
+	"hebattle_timeuntilstart_nc"
+	{
+		"it"		"{1} secondi rimanti all'inizio del round!"
+	}
+
+	"hebattle_info_title"
+	{
+		"it"		"HE Battle Attivato"
+	}
+
+	"hebattle_info_line1"
+	{
+		"it"		"FFA HE Battle Con Gravita' bassa!"
+	}
+
+	"hebattle_info_line2"
+	{
+		"it"		"Verrai spawnato in armeria!"
+	}
+
+	"hebattle_info_line3"
+	{
+		"it"		"Danno da caduta disabilitato!"
+	}
+
+	"hebattle_info_line4"
+	{
+		"it"		"Le Regole del JB Non sono applicate per questo round!"
+	}
+
+	"hebattle_info_line5"
+	{
+		"it"		"LR disabilitato in questo round!"
+	}
+
+	"hebattle_info_line6"
+	{
+		"it"		"State nella 'JailRoom'. Non andate in condotti o posti segreti"
+	}
+
+	"hebattle_info_line7"
+	{
+		"it"		"Buona Fortuna"
+	}
+
+	"hebattle_wait"
+	{
+		"it"		"Devi aspettare {purple}{1}{default} round per un event day!"
+	}
+
+	"hebattle_name"
+	{
+		"it"		"Battaglia Granate"
+	}
+
+}

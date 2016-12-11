@@ -1,0 +1,241 @@
+// Exported from SourceMod Translator
+// Date: 2016-12-11 14:24:00 UTC
+// Language: Polish (pl)
+// 
+// To view other translations for this plugin, please visit:
+// http://translator.mitchdempsey.com/sourcemod_plugins/180
+//
+"Phrases"
+{
+
+	"menu_info"
+	{
+		"pl"		"Aby otworzyc Menu Jailbreak nacisnij lub wpisz !menu"
+	}
+
+	"menu_info_title"
+	{
+		"pl"		"MyJailbreak Menu"
+	}
+
+	"menu_countdown"
+	{
+		"pl"		"Rozpocznij Odliczanie"
+	}
+
+	"menu_opencell"
+	{
+		"pl"		"Otworz drzwi cell"
+	}
+
+	"menu_seteventdays"
+	{
+		"pl"		"Ustaw dzien/zabawe"
+	}
+
+	"menu_voteeventdays"
+	{
+		"pl"		"Glosuj na zabawe"
+	}
+
+	"menu_math"
+	{
+		"pl"		"Matematyczny Quiz"
+	}
+
+	"menu_guns"
+	{
+		"pl"		"Menu Broni"
+	}
+
+	"menu_laser"
+	{
+		"pl"		"Menu Lasera/Markera"
+	}
+
+	"menu_noblock"
+	{
+		"pl"		"Wlacz No Block"
+	}
+
+	"menu_ffon"
+	{
+		"pl"		"Wlacz Friendly Fire dla Terro"
+	}
+
+	"menu_ffoff"
+	{
+		"pl"		"Wylacz Friendly Fire dla Terro"
+	}
+
+	"menu_randomdead"
+	{
+		"pl"		"Zabij randomowego terroryste"
+	}
+
+	"menu_unwarden"
+	{
+		"pl"		"Opusc Straznika"
+	}
+
+	"menu_getwarden"
+	{
+		"pl"		"Zostan Straznikiem"
+	}
+
+	"menu_joint"
+	{
+		"pl"		"Dolacz do terrorystow"
+	}
+
+	"menu_check"
+	{
+		"pl"		"Sprawdz zawodnikow"
+	}
+
+	"menu_lr"
+	{
+		"pl"		"Ostatnie zyczenie"
+	}
+
+	"menu_removewarden"
+	{
+		"pl"		"Usun Straznika"
+	}
+
+	"menu_setwarden"
+	{
+		"pl"		"Ustal nowego Straznika"
+	}
+
+	"menu_rules"
+	{
+		"pl"		"Zasady"
+	}
+
+	"menu_joinct"
+	{
+		"pl"		"Dolacz do Counter Terro"
+	}
+
+	"menu_guardct"
+	{
+		"pl"		"dolacz do kolejki CT (!guard)"
+	}
+
+	"menu_request"
+	{
+		"pl"		"Zadania"
+	}
+
+	"menu_votewarden"
+	{
+		"pl"		"Glosuj za zmiana Straznika"
+	}
+
+	"menu_event_Titlestart"
+	{
+		"pl"		"Rozpocznij zabawe w nastepnej rundzie"
+	}
+
+	"menu_event_Titlevote"
+	{
+		"pl"		"Glosuj na Zabawe Dnia"
+	}
+
+	"menu_war"
+	{
+		"pl"		"Wojna"
+	}
+
+	"menu_ffa"
+	{
+		"pl"		"Free for All"
+	}
+
+	"menu_zeus"
+	{
+		"pl"		"Zeus"
+	}
+
+	"menu_zombie"
+	{
+		"pl"		"Zombie Day"
+	}
+
+	"menu_hide"
+	{
+		"pl"		"Chowanego"
+	}
+
+	"menu_suicidebomber"
+	{
+		"pl"		"Suicide Bomber"
+	}
+
+	"menu_catch"
+	{
+		"pl"		"Goniony"
+	}
+
+	"menu_knifefight"
+	{
+		"pl"		"KNIFE"
+	}
+
+	"menu_hebattle"
+	{
+		"pl"		"HE Battle"
+	}
+
+	"menu_cowboy"
+	{
+		"pl"		"Cowboy"
+	}
+
+	"menu_drunk"
+	{
+		"pl"		"Pijak"
+	}
+
+	"menu_torch"
+	{
+		"pl"		"Czlowiek Pochodnia"
+	}
+
+	"menu_noscope"
+	{
+		"pl"		"No scope"
+	}
+
+	"menu_duckhunt"
+	{
+		"pl"		"Polowanie na Kaczki"
+	}
+
+	"menu_Freeday"
+	{
+		"pl"		"Freeday"
+	}
+
+	"menu_admin"
+	{
+		"pl"		"Admin Menu"
+	}
+
+	"menu_mute"
+	{
+		"pl"		"Mute Menu"
+	}
+
+	"menu_tag"
+	{
+		"pl"		"[{green}MyJB.menu{default}]"
+	}
+
+	"menu_painter"
+	{
+		"pl"		"Menu Painter"
+	}
+
+}

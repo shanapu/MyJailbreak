@@ -1,0 +1,61 @@
+// Exported from SourceMod Translator
+// Date: 2016-12-11 14:23:59 UTC
+// Language: Italian (it)
+// 
+// To view other translations for this plugin, please visit:
+// http://translator.mitchdempsey.com/sourcemod_plugins/231
+//
+"Phrases"
+{
+
+	"hud_planned"
+	{
+		"it"		"Prossimo Round:"
+	}
+
+	"hud_running"
+	{
+		"it"		"Questo Round:"
+	}
+
+	"hud_warden"
+	{
+		"it"		"CapoCT:"
+	}
+
+	"hud_nowarden"
+	{
+		"it"		"Non c'e' un capo ct"
+	}
+
+	"hud_guards"
+	{
+		"it"		"Guardie:"
+	}
+
+	"hud_prisoner"
+	{
+		"it"		"Prigionieri:"
+	}
+
+	"hud_tag"
+	{
+		"it"		"[MyJB.HUD]"
+	}
+
+	"hud_on"
+	{
+		"it"		"HUD {purple}is enabled!"
+	}
+
+	"hud_off"
+	{
+		"it"		"HUD {purple}disabilitato"
+	}
+
+	"hud_lastCT"
+	{
+		"it"		"Ultima Guardia:"
+	}
+
+}

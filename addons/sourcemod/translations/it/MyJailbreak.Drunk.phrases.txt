@@ -1,0 +1,146 @@
+// Exported from SourceMod Translator
+// Date: 2016-12-11 14:24:07 UTC
+// Language: Italian (it)
+// 
+// To view other translations for this plugin, please visit:
+// http://translator.mitchdempsey.com/sourcemod_plugins/191
+//
+"Phrases"
+{
+
+	"drunk_tag"
+	{
+		"it"		"[{green}MyJB.drunk{default}]"
+	}
+
+	"drunk_need"
+	{
+		"it"		"{purple}{2}{default} ha votato. {purple}{1}{default} voti richiesti per giocare a {darkred}Drunken."
+	}
+
+	"drunk_rounds"
+	{
+		"it"		"Round {purple}{1}{default} di {purple}{2}."
+	}
+
+	"drunk_twin_nc"
+	{
+		"it"		"Un T e' sopravvisuto"
+	}
+
+	"drunk_voting"
+	{
+		"it"		"La votazione e' {purple}disabilitato!"
+	}
+
+	"drunk_setbywarden"
+	{
+		"it"		"Settare Drunken da Warden e' {purple}disabilitato!"
+	}
+
+	"drunk_setbyadmin"
+	{
+		"it"		"Settare Drunken da Admin e' {purple}disabilitato!"
+	}
+
+	"drunk_ctwin_nc"
+	{
+		"it"		"Un CT e' sopravvisuto"
+	}
+
+	"drunk_end"
+	{
+		"it"		"{purple}Drunken{default} e' finito."
+	}
+
+	"drunk_next"
+	{
+		"it"		"Il Prossimo Round sara': {purple}Drunken"
+	}
+
+	"drunk_next_nc"
+	{
+		"it"		"Il prossimo round sara': Drunken"
+	}
+
+	"drunk_start"
+	{
+		"it"		"{purple}Drunken {default} e' iniziato!"
+	}
+
+	"drunk_start_nc"
+	{
+		"it"		"Drunken e' iniziato!"
+	}
+
+	"drunk_voted"
+	{
+		"it"		"Hai gia' votato per {purple}Drunken!"
+	}
+
+	"drunk_progress"
+	{
+		"it"		"L'Evento {darkred}{1} {default}e' {purple}gia' in corso!"
+	}
+
+	"drunk_disabled"
+	{
+		"it"		"Drunken e' {purple}disabilitato!"
+	}
+
+	"drunk_timeuntilstart_nc"
+	{
+		"it"		"{1} secondi rimanenti all'inzio del round!"
+	}
+
+	"drunk_info_title"
+	{
+		"it"		"Drunken Attivo"
+	}
+
+	"drunk_info_line1"
+	{
+		"it"		"Drunken e' ora attivo"
+	}
+
+	"drunk_info_line2"
+	{
+		"it"		"-----------------------------------"
+	}
+
+	"drunk_info_line3"
+	{
+		"it"		"-----------------------------------"
+	}
+
+	"drunk_info_line4"
+	{
+		"it"		"Tutte le regole del JB non sono applicabili in questo round"
+	}
+
+	"drunk_info_line5"
+	{
+		"it"		"LR disabilitato"
+	}
+
+	"drunk_info_line6"
+	{
+		"it"		"Tutti possono andare dove vogliono!"
+	}
+
+	"drunk_info_line7"
+	{
+		"it"		"Buona Fortuna!"
+	}
+
+	"drunk_wait"
+	{
+		"it"		"Bisogna aspettare {purple}{1}{default} round per un event day!"
+	}
+
+	"drunk_name"
+	{
+		"it"		"Drunken"
+	}
+
+}

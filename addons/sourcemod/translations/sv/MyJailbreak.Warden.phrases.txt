@@ -1,0 +1,76 @@
+// Exported from SourceMod Translator
+// Date: 2016-12-11 14:23:48 UTC
+// Language: Swedish (sv)
+// 
+// To view other translations for this plugin, please visit:
+// http://translator.mitchdempsey.com/sourcemod_plugins/178
+//
+"Phrases"
+{
+
+	"warden_new"
+	{
+		"sv"		"{purple}{1}{default} har blivit fängelsedirektör över detta fängelse."
+	}
+
+	"warden_new_nc"
+	{
+		"sv"		"{1} har blivit fängelsedirektör över detta fängelse."
+	}
+
+	"warden_playerdead"
+	{
+		"sv"		"Endast levande spelare kan bli fängelsedirektör."
+	}
+
+	"warden_ctsonly"
+	{
+		"sv"		"Endast {purple}Anti-Terrorister{default} kan bli fängelsedirektör."
+	}
+
+	"warden_exist"
+	{
+		"sv"		"nuvarande fängelsedirektör är: {purple}{1}{default}"
+	}
+
+	"warden_retire"
+	{
+		"sv"		"{purple}{1}{default} har bestämt sig för att avgå. Ni bör nu välja en ny."
+	}
+
+	"warden_retire_nc"
+	{
+		"sv"		"{1} har bestämt sig för att avgå. Ni bör nu välja en ny."
+	}
+
+	"warden_dead"
+	{
+		"sv"		"fängelsedirektören är död. Ni bör nu välja en ny."
+	}
+
+	"warden_dead_nc"
+	{
+		"sv"		"fängelsedirektören är död. Ni bör nu välja en ny."
+	}
+
+	"warden_disconnected"
+	{
+		"sv"		"fängelsedirektören har lämnat. Ni bör nu välja en ny."
+	}
+
+	"warden_disconnected_nc"
+	{
+		"sv"		"fängelsedirektören har lämnat. Ni bör nu välja en ny."
+	}
+
+	"warden_removed"
+	{
+		"sv"		"Admin: {purple}{1}{default} avskedade Fängelsedirektören: {purple}{2}"
+	}
+
+	"warden_removed_nc"
+	{
+		"sv"		"Admin: {1} avskedade Fängelsedirektören: {2}"
+	}
+
+}

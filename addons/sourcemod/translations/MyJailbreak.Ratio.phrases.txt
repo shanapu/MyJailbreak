@@ -1,71 +1,304 @@
 // Exported from SourceMod Translator
+// Date: 2016-12-11 14:23:58 UTC
+// Language: English (en)
+// 
+// To view other translations for this plugin, please visit:
 // http://translator.mitchdempsey.com/sourcemod_plugins/201
 //
 "Phrases"
 {
-	"ratio_advip"
+
+	"ratio_tag"
 	{
-		"ru"		"Получите {darkred}VIP{defailt} , чтобы автоматически переместиться в начало очереди."
-		"en"		"Get a {darkred}VIP{default} to be automatically moved to the front of the queue."
+		"en"		"[{green}MyJB.ratio{default}]"
 	}
 
 	"ratio_auto"
 	{
-		"ru"		"Вы не можете использовать автоматический выбор, чтобы присоединиться к команде."
 		"en"		"You cannot use auto select to join a team."
-	}
-
-	"ratio_cooldown"
-	{
-		"ru"		"Вы заблокированы за неверный ответ. Попробуйте в следующем раунде."
-		"en"		"You are blocked for missing right answer. Try it next round."
-	}
-
-	"ratio_banned"
-	{
-		"ru"		"Вам запрещено играть за КТ, потому что Вы {green}забанены{default} за КТ."
-		"de"		"Du kannst nicht als Wärter spielen. Du bist als{green}CT{default} gebanned."
-		"en"		"Cannot play on guards because you are {green}CT{default} banned."
-	}
-
-	"ratio_banned_nc"
-	{
-		"ru"		"Вам запрещено играть за КТ, потому что Вы забанены за КТ."
-		"de"		"Du kannst nicht als Wärter spielen. Du bist als CT gebanned."
-		"en"		"Cannot play on guards because you are CT banned."
-	}
-
-	"ratio_empty"
-	{
-		"ru"		"В настоящее время очередь {green}пуста{default}."
-		"en"		"The queue is currently {green}empty{default}."
-	}
-
-	"ratio_find"
-	{
-		"#format"   "{1:N}"
-		"ru"		"Поиск следующего КТ из очереди. {green}{1} {default}новый КТ."
-		"en"		"Finding the next guard from queue. {green}{1} {default}is the new guard."
-		"de"		"Wähle den nächsten Anwärter aus der Liste. {green}{1} {default}ist neuer Guard"
 	}
 
 	"ratio_fullqueue"
 	{
-		"#format"   "{1:i}"
-		"ru"		"Команда КТ заполнена. Вы {green}#%i{default} в очереди."
+		"#format"	"{1:i}"
 		"en"		"Guards team is full. You are {green}#{1}{default} in the queue."
 	}
 
 	"ratio_info_title"
 	{
-		"ru"		"Очередь за КТ:"
 		"en"		"Guard Queue:"
+	}
+
+	"ratio_empty"
+	{
+		"en"		"The queue is currently {green}empty{default}."
+	}
+
+	"ratio_noct"
+	{
+		"en"		"You must be a {green}prisoner{default} to join the queue."
+	}
+
+	"ratio_find"
+	{
+		"#format"	"{1:N}"
+		"en"		"Finding the next guard from queue. {green}{1} {default}is the new guard."
+	}
+
+	"ratio_random"
+	{
+		"#format"	"{1:N}"
+		"en"		"Guard queue is currently empty. {green}{1} {default}was picked as a random new guard."
+	}
+
+	"ratio_novalid"
+	{
+		"en"		"Could not find a{green} valid player{default} to switch to guards. Contact an admin."
+	}
+
+	"ratio_number"
+	{
+		"#format"	"{1:i}"
+		"en"		"You are {green}#{1}{default} in the guard queue."
+	}
+
+	"ratio_thxvip"
+	{
+		"en"		"Thank you for being a {darkred}VIP{default}! You have been moved to the {green}front of the queue!{default}"
+	}
+
+	"ratio_advip"
+	{
+		"en"		"Get a {darkred}VIP{default} to be automatically moved to the front of the queue."
+	}
+
+	"ratio_movetot"
+	{
+		"#format"	"{1:N}"
+		"en"		"There are too many Guards. {green}{1}{default} was picked randomly and moved to prisoners."
+	}
+
+	"ratio_removed"
+	{
+		"#format"	"{1:N},{2:N}"
+		"en"		"The Admin {1} removed {2} from the Guard queue!"
+	}
+
+	"ratio_notonqueue"
+	{
+		"en"		"Your aren't in the guard queue!"
 	}
 
 	"ratio_leavedqueue"
 	{
-		"ru"		"Вы больше не в очереди за КТ!"
 		"en"		"You are no longer in the guard queue!"
+	}
+
+	"ratio_accept_title"
+	{
+		"en"		"Guard Qualifications"
+	}
+
+	"ratio_accept_line1"
+	{
+		"en"		"Before you become a guard, you must accept these terms and agreements:"
+	}
+
+	"ratio_accept_line2"
+	{
+		"en"		"I confirm that I read & I understand the rules."
+	}
+
+	"ratio_accept_line3"
+	{
+		"en"		"I confirm that I have read the CT rules twice!"
+	}
+
+	"ratio_accept_line4"
+	{
+		"en"		"I confirm that I will play fair & follow the server rules."
+	}
+
+	"ratio_accept_line5"
+	{
+		"en"		"Failiure to comply with the rules will be result in a CT ban."
+	}
+
+	"ratio_accept"
+	{
+		"en"		"Yes, I accept these terms and agreements."
+	}
+
+	"ratio_notaccept"
+	{
+		"en"		"No, I don't want to become a guard."
+	}
+
+	"ratio_question_title"
+	{
+		"en"		"Please answer the following questions to become a Guard."
+	}
+
+	"ratio_question1_line1"
+	{
+		"en"		"The Cell Doors are closed, the prisoners are inside!"
+	}
+
+	"ratio_question1_line2"
+	{
+		"en"		"What will you do?"
+	}
+
+	"ratio_question1_wrong1"
+	{
+		"en"		"I wait until cells open, and kill'em all!"
+	}
+
+	"ratio_question1_wrong2"
+	{
+		"en"		"Kill'em one by one until Last Request."
+	}
+
+	"ratio_question1_right"
+	{
+		"en"		"I wait for the warden first announcement."
+	}
+
+	"ratio_question2_line1"
+	{
+		"en"		"The warden sucks & this round is boring as shit."
+	}
+
+	"ratio_question2_line2"
+	{
+		"en"		"Drop your gun and give it to an prisoner to accelerate the round!"
+	}
+
+	"ratio_question2_wrong1"
+	{
+		"en"		"This is a good idea."
+	}
+
+	"ratio_question2_wrong2"
+	{
+		"en"		"Never! Just when the prisoner is my mate!"
+	}
+
+	"ratio_question2_right"
+	{
+		"en"		"Never! Dropping a gun (Gun Planting) is forbidden!"
+	}
+
+	"ratio_question3_line1"
+	{
+		"en"		"Have you read the server rules?"
+	}
+
+	"ratio_question3_line2"
+	{
+		"en"		"Do you understand the server rules?"
+	}
+
+	"ratio_question3_wrong1"
+	{
+		"en"		"Yeah, I read them. I'm not going to follow them."
+	}
+
+	"ratio_question3_wrong2"
+	{
+		"en"		"Reading? I'm here to play lol!"
+	}
+
+	"ratio_question3_right"
+	{
+		"en"		"Yeah, I read them. I know how to play on this server."
+	}
+
+	"ratio_question4_line1"
+	{
+		"en"		"Do you have a working microphone?"
+	}
+
+	"ratio_question4_line2"
+	{
+		"en"		"Do you speak the server language?"
+	}
+
+	"ratio_question4_wrong1"
+	{
+		"en"		"Sorry what?"
+	}
+
+	"ratio_question4_wrong2"
+	{
+		"en"		"My microphone is broken, I will type the commands."
+	}
+
+	"ratio_question4_right"
+	{
+		"en"		"I have a working, decent quality microphone."
+	}
+
+	"ratio_question5_line1"
+	{
+		"en"		"The Warden has been killed, and you are one of the last guards."
+	}
+
+	"ratio_question5_line2"
+	{
+		"en"		"Would you play as Warden?"
+	}
+
+	"ratio_question5_wrong1"
+	{
+		"en"		"Better start a freeday..."
+	}
+
+	"ratio_question5_wrong2"
+	{
+		"en"		"Kill every prisoner one by one until Last Request."
+	}
+
+	"ratio_question5_right"
+	{
+		"en"		"As guard, of course I will have to play as the new Warden."
+	}
+
+	"ratio_cooldown"
+	{
+		"en"		"You are blocked for missing right answer. Try it next round."
+	}
+
+	"ratio_disabled"
+	{
+		"en"		"Ratio is disabled by Admin"
+	}
+
+	"ratio_hasdisabled"
+	{
+		"en"		"Admin has disabled the Ratio"
+	}
+
+	"ratio_hasactivated"
+	{
+		"en"		"Admin has activated the Ratio. Ratio fix next round."
+	}
+
+	"ratio_active"
+	{
+		"#format"	"{1:f}"
+		"en"		"Ratio is active! 1 Guards to {1} Prisoners"
+	}
+
+	"ratio_stamm"
+	{
+		"#format"	"{1:i}"
+		"en"		"You need at least {1} Stamm Points to play as a guard"
+	}
+
+	"ratio_banned_nc"
+	{
+		"en"		"Cannot play on guards because you are CT banned."
 	}
 
 	"ratio_clearqueue"
@@ -73,315 +306,10 @@
 		"en"		"The admin has cleared the Guard queue!"
 	}
 
-	"ratio_movetot"
-	{
-		"#format"   "{1:N}"
-		"ru"		"Слишком много КТ. {green}{1}{default} был выбран случайным образом и перемещён за Т."
-		"en"		"There are too many Guards. {green}{1}{default} was picked randomly and moved to prisoners."
-	}
-
-	"ratio_noct"
-	{
-		"ru"		"Вы должны быть {green}заключённым{default}, чтобы встать в очередь."
-		"en"		"You must be a {green}prisoner{default} to join the queue."
-	}
-
-	"ratio_notonqueue"
-	{
-		"ru"		"Вы не в очереди за КТ!"
-		"en"		"Your aren't in the guard queue!"
-	}
-
-	"ratio_novalid"
-	{
-		"ru"		"Не удалось найти{green} игрока{default} ,чтобы переместить за КТ. Грёбаный коэффициент."
-		"en"		"Could not find a{green} valid player{default} to switch to guards. Contact an admin."
-	}
-
-	"ratio_number"
-	{
-		"#format"   "{1:i}"
-		"ru"		"Вы {green}{1}{default} в очереди."
-		"en"		"You are {green}#{1}{default} in the guard queue."
-	}
-
-	"ratio_random"
-	{
-		"#format"   "{1:N}"
-		"ru"		"Очередь за КТ пуста. {green}{1} {default}был выбран в качестве случайного нового КТ."
-		"en"		"Guard queue is currently empty. {green}{1} {default}was picked as a random new guard."
-		"de"		"Anwärter Liste ist leer. {green}{1} {default}wurde als neuer Zufälliger Guard gewählt"
-	}
-
-	"ratio_removed"
-	{
-		"#format"   "{1:N},{2:N}"
-		"ru"		"Администратора {1} удалил {2} из очереди за КТ!"
-		"en"		"The Admin {1} removed {2} from the Guard queue!"
-	}
-
-	"ratio_tag"
-	{
-		"ru"		"[{green}MyJB.баланс{default}]"
-		"en"		"[{green}MyJB.ratio{default}]"
-		"de"		"[{green}MyJB.ratio{default}]"
-	}
-
-	"ratio_thxvip"
-	{
-		"ru"		"Благодарим за покупку {darkred}VIP{default}! Вы были перемещены в {green}начало очереди!{default}"
-		"en"		"Thank you for being a {darkred}VIP{default}! You have been moved to the {green}front of the queue!{default}"
-	}
-
-	"ratio_accept_title"
-	{
-		"en"		"Guard Qualifications"
-		"ru"		"Квалификация КТ"
-	}
- 
-	"ratio_accept_line1"
-	{
-		"en"		"Before you become a guard, you must accept these terms and agreements:"
-		"ru"		"Перед тем, как вы станете КТ, вы должны принять эти условия:"
-	}
- 
-	"ratio_accept_line2"
-	{
-		"en"		"I confirm that I read & I understand the rules."
-		"ru"		"Я прочитал и я понимаю правила."
-	}
- 
-	"ratio_accept_line3"
-	{
-		"en"		"I confirm that I have read the CT rules twice!"
-		"ru"		"Я прочитал правила CT дважды!"
-	}
- 
-	"ratio_accept_line4"
-	{
-		"en"		"I confirm that I will play fair & follow the server rules."
-		"ru"		"Я буду играть честно и следовать правилам сервера."
-	}
- 
-	"ratio_accept_line5"
-	{
-		"en"		"Failiure to comply with the rules will be result in a CT ban."
-		"ru"		"Несоблюдение правил приведёт к CT бану."
-	}
- 
-	"ratio_accept"
-	{
-		"en"		"Yes, I accept these terms and agreements."
-		"ru"		"Да, я принимаю эти условия и соглашения."
-	}
- 
-	"ratio_notaccept"
-	{
-		"en"		"No, I don't want to become a guard."
-		"ru"		"Нет, я не хочу стать охранником."
-	}
- 
-	"ratio_question_title"
-	{
-		"en"		"Please answer the following questions to become a Guard."
-		"ru"		"Ответьте на вопросы, чтобы стать охранником."
-	}
- 
-	"ratio_question1_line1"
-	{
-		"en"		"The Cell Doors are closed, the prisoners are inside!"
-		"ru"		"Камеры закрыты, заключенные внутри!"
-	}
- 
-	"ratio_question1_line2"
-	{
-		"en"		"What will you do?"
-		"ru"		"Что вы будете делать?"
-	}
- 
-	"ratio_question1_wrong1"
-	{
-		"en"		"I wait until cells open, and kill'em all!"
-		"ru"		"После открытия камер я убью всех!"
-	}
- 
-	"ratio_question1_wrong2"
-	{
-		"en"		"Kill'em one by one until Last Request."
-		"ru"		"Я убью всех, до ЛР"
-	}
- 
-	"ratio_question1_right"
-	{
-		"en"		"I wait for the warden first announcement."
-		"ru"		"Я буду ждать первого приказа КМД."
-	}
- 
- 
-	"ratio_question2_line1"
-	{
-		"en"		"The warden sucks & this round is boring as shit."
-		"ru"		"КМД сосет и этот раунд скучный, как дерьмо."
-	}
- 
-	"ratio_question2_line2"
-	{
-		"en"		"Drop your gun and give it to an prisoner to accelerate the round!"
-		"ru"		"Отдамка своё оружие зэку, дабы ускорить раунд"
-	}
- 
-	"ratio_question2_wrong1"
-	{
-		"en"		"This is a good idea."
-		"ru"		"Это хорошая идея."
-	}
- 
-	"ratio_question2_wrong2"
-	{
-		"en"		"Never! Just when the prisoner is my mate!"
-		"ru"		"Только если заключённый мой приятель!"
-	}
- 
-	"ratio_question2_right"
-	{
-		"en"		"Never! Dropping a gun (Gun Planting) is forbidden!"
-		"ru"		"Никогда! Это запрещено!"
-	}
- 
- 
-	"ratio_question3_line1"
-	{
-		"en"		"Have you read the server rules?"
-		"ru"		"Вы читали правила сервера?"
-	}
- 
-	"ratio_question3_line2"
-	{
-		"en"		"Do you understand the server rules?"
-		"ru"		"Поняли ли вы правила?"
-	}
- 
-	"ratio_question3_wrong1"
-	{
-		"en"		"Yeah, I read them. I'm not going to follow them."
-		"ru"		"Я не буду следовать правилам сервера."
-	}
- 
-	"ratio_question3_wrong2"
-	{
-		"en"		"Reading? I'm here to play lol!"
-		"ru"		"Чтение? Я здесь, чтобы играть, lol!"
-	}
- 
-	"ratio_question3_right"
-	{
-		"en"		"Yeah, I read them. I know how to play on this server."
-		"ru"		"Да. Я знаю, как играть здесь."
-	}
- 
- 
-	"ratio_question4_line1"
-	{
-		"en"		"Do you have a working microphone?"
-		"ru"		"У вас есть рабочий микрофон?"
-	}
- 
-	"ratio_question4_line2"
-	{
-		"en"		"Do you speak the server language?"
-		"ru"		"Вы говорите на языке сервера?"
-	}
- 
-	"ratio_question4_wrong1"
-	{
-		"en"		"Sorry what?"
-		"ru"		"Простите, что?"
-	}
- 
-	"ratio_question4_wrong2"
-	{
-		"en"		"My microphone is broken, I will type the commands."
-		"ru"		"Мой микрофон сломан."
-	}
- 
-	"ratio_question4_right"
-	{
-		"en"		"I have a working, decent quality microphone."
-		"ru"		"У меня есть хороший микрофон."
-	}
- 
- 
-	"ratio_question5_line1"
-	{
-		"en"		"The Warden has been killed, and you are one of the last guards."
-		"ru"		"КМД убит, вы один из последних охранников."
-	}
- 
-	"ratio_question5_line2"
-	{
-		"en"		"Would you play as Warden?"
-		"ru"		"Станете ли вы командиром?"
-	}
- 
-	"ratio_question5_wrong1"
-	{
-		"en"		"Better start a freeday..."
-		"ru"		"Лучше всего начать freeday.."
-	}
- 
-	"ratio_question5_wrong2"
-	{
-		"en"		"Kill every prisoner one by one until Last Request."
-		"ru"		"Убью всех зэков, до ЛР"
-	}
- 
-	"ratio_question5_right"
-	{
-		"en"		"As guard, of course I will have to play as the new Warden."
-		"ru"		"Я буду играть в качестве нового командира."
-	}
-
-	"ratio_disabled"
-	{
-		"en"		"Ratio is disabled by Admin"
-		"ru"		"Баланс отключен администратором"
-	}
-
-	"ratio_hasdisabled"
-	{
-		"en"		"Admin has disabled the Ratio"
-		"ru"		"Администратор отключил баланс"
-	}
-
-	"ratio_stamm"
-	{
-		"#format"   "{1:i}"
-		"en"		"You need at least {1} Stamm Points to play as a guard"
-	}
-
-	"ratio_rankme"
-	{
-		"#format"   "{1:i}"
-		"en"		"You need at least {1} RankMe Points to play as a guard"
-	}
-
 	"ratio_reputation"
 	{
-		"#format"   "{1:i}"
+		"#format"	"{1:i}"
 		"en"		"You need at least {1} Reputation Points to play as a guard"
-	}
-
-	"ratio_hasactivated"
-	{
-		"en"		"Admin has activated the Ratio. Ratio fix next round."
-		"ru"		"Администратор активировал баланс. Баланс будет активен в следующем раунде."
-	}
-
-	"ratio_active"
-	{
-		"#format"   "{1:f}"
-		"en"		"Ratio is active! 1 Guards to {1} Prisoners"
-		"ru"		"Баланс активен! 1 Охранник на {1} Заключённых"
 	}
 
 	"ratio_remove"
@@ -389,10 +317,19 @@
 		"en"		"Remove from Queue:"
 	}
 
+	"ratio_banned"
+	{
+		"en"		"Cannot play on guards because you are {green}CT{default} banned."
+	}
+
+	"ratio_rankme"
+	{
+		"#format"	"{1:i}"
+		"en"		"You need at least {1} RankMe Points to play as a guard"
+	}
+
 	"ratio_close"
 	{
-		"ru"		"Закрыть"
-		"de"		"Schliessen"
 		"en"		"Exit"
 	}
 

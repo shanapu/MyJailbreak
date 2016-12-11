@@ -1,0 +1,161 @@
+// Exported from SourceMod Translator
+// Date: 2016-12-11 14:24:05 UTC
+// Language: Polish (pl)
+// 
+// To view other translations for this plugin, please visit:
+// http://translator.mitchdempsey.com/sourcemod_plugins/181
+//
+"Phrases"
+{
+
+	"tags_TA"
+	{
+		"pl"		"[Wiezien.Admin]"
+	}
+
+	"tags_T"
+	{
+		"pl"		"[Wiezien]"
+	}
+
+	"tags_CTA"
+	{
+		"pl"		"[Straznik.Admin]"
+	}
+
+	"tags_CT"
+	{
+		"pl"		"[Straznik]"
+	}
+
+	"tags_WA"
+	{
+		"pl"		"[Warden.Admin]"
+	}
+
+	"tags_W"
+	{
+		"pl"		"[Warden]"
+	}
+
+	"tags_TVIP1"
+	{
+		"pl"		"[Wiezien.VIP]"
+	}
+
+	"tags_TVIP2"
+	{
+		"pl"		"[Wiezien.sVIP]"
+	}
+
+	"tags_CTVIP1"
+	{
+		"pl"		"[Straznik.VIP]"
+	}
+
+	"tags_CTVIP2"
+	{
+		"pl"		"[Straznik.sVIP]"
+	}
+
+	"tags_WVIP1"
+	{
+		"pl"		"[Warden.VIP]"
+	}
+
+	"tags_WVIP2"
+	{
+		"pl"		"[Warden.sVIP]"
+	}
+
+	"tags_TOWN"
+	{
+		"pl"		"[Wiezien.Owner]"
+	}
+
+	"tags_CTOWN"
+	{
+		"pl"		"[Straznik.Owner]"
+	}
+
+	"tags_WOWN"
+	{
+		"pl"		"[Warden.Owner]"
+	}
+
+	"tags_CT_chat"
+	{
+		"pl"		"[Straznik]"
+	}
+
+	"tags_CTA_chat"
+	{
+		"pl"		"[Straznik.Admin]"
+	}
+
+	"tags_CTOWN_chat"
+	{
+		"pl"		"[Straznik.Owner]"
+	}
+
+	"tags_CTVIP1_chat"
+	{
+		"pl"		"[Straznik.VIP]"
+	}
+
+	"tags_CTVIP2_chat"
+	{
+		"pl"		"[Straznik.sVIP]"
+	}
+
+	"tags_T_chat"
+	{
+		"pl"		"[Wiezien]"
+	}
+
+	"tags_TA_chat"
+	{
+		"pl"		"[Wiezien.Admin]"
+	}
+
+	"tags_TOWN_chat"
+	{
+		"pl"		"[Wiezien.Owner]"
+	}
+
+	"tags_TVIP1_chat"
+	{
+		"pl"		"[Wiezien.VIP]"
+	}
+
+	"tags_TVIP2_chat"
+	{
+		"pl"		"[Wiezien.sVIP]"
+	}
+
+	"tags_W_chat"
+	{
+		"pl"		"[Warden]"
+	}
+
+	"tags_WA_chat"
+	{
+		"pl"		"[Warden.Admin]"
+	}
+
+	"tags_WOWN_chat"
+	{
+		"pl"		"[Warden.Owner]"
+	}
+
+	"tags_WVIP1_chat"
+	{
+		"pl"		"[Warden.VIP]"
+	}
+
+	"tags_WVIP2_chat"
+	{
+		"pl"		"[Warden.sVIP]"
+	}
+
+}

@@ -1,0 +1,156 @@
+// Exported from SourceMod Translator
+// Date: 2016-12-11 14:24:14 UTC
+// Language: Italian (it)
+// 
+// To view other translations for this plugin, please visit:
+// http://translator.mitchdempsey.com/sourcemod_plugins/195
+//
+"Phrases"
+{
+
+	"knifefight_tag"
+	{
+		"it"		"[{green}MyJB.Battaglia Coltelli{default}]"
+	}
+
+	"knifefight_need"
+	{
+		"it"		"{purple}{2}{default} ha votato. {purple}{1}{default} voti richiesti per fare {darkred}Battaglia Coltelli."
+	}
+
+	"knifefight_rounds"
+	{
+		"it"		"Round {purple}{1}{default} di {purple}{2}"
+	}
+
+	"knifefight_twin_nc"
+	{
+		"it"		"Un T e' sopravvissuto!"
+	}
+
+	"knifefight_voting"
+	{
+		"it"		"La votazione e' disabilitata!"
+	}
+
+	"knifefight_setbywarden"
+	{
+		"it"		"Settare Battaglia Coltelli da Warden e' {purple}disabilitato!"
+	}
+
+	"knifefight_setbyadmin"
+	{
+		"it"		"Settare Battaglia Coltelli da Admin e' {purple}disabilitato!"
+	}
+
+	"knifefight_ctwin_nc"
+	{
+		"it"		"Una Guardia e' Sopravvissuta!"
+	}
+
+	"knifefight_minplayer"
+	{
+		"it"		"Per la battaglia coltelli sono richiesti {purple}un CT e un T!"
+	}
+
+	"knifefight_end"
+	{
+		"it"		"{purple}Battaglia Coltelli{default} e' finito."
+	}
+
+	"knifefight_next"
+	{
+		"it"		"Il Prossimo round sara': {purple}Battaglia Coltelli."
+	}
+
+	"knifefight_next_nc"
+	{
+		"it"		"Il Prossimo round sara': Battaglia Coltelli."
+	}
+
+	"knifefight_start"
+	{
+		"it"		"{purple}La Battaglia Coltelli{default} e' iniziata!"
+	}
+
+	"knifefight_start_nc"
+	{
+		"it"		"La Battaglia Coltelli e' iniziata!"
+	}
+
+	"knifefight_voted"
+	{
+		"it"		"Hai già votato per {purple}knifefight"
+	}
+
+	"knifefight_progress"
+	{
+		"it"		"L'evento {darkred}{1} {default}e' {purple}gia' in corso!"
+	}
+
+	"knifefight_disabled"
+	{
+		"it"		"Battaglia Coltelli e' {purple}disabilitato!"
+	}
+
+	"knifefight_timeuntilstart_nc"
+	{
+		"it"		"{1} secondi rimanenti all'inizio del round"
+	}
+
+	"knifefight_info_title"
+	{
+		"it"		"FFA Battaglia Coltelli - Free for All"
+	}
+
+	"knifefight_info_line1"
+	{
+		"it"		"Verrete portarti al CT Spawn"
+	}
+
+	"knifefight_info_line1"
+	{
+		"it"		"Do not be surprised if ported to CT Spawn"
+	}
+
+	"knifefight_info_line2"
+	{
+		"it"		"Pattini da ghiaccio, Thirdperson & Terza persona e bassa gravità.."
+	}
+
+	"knifefight_info_line3"
+	{
+		"it"		"Scappa durante la fase di 'NoDamage'!"
+	}
+
+	"knifefight_info_line4"
+	{
+		"it"		"Tutte le regole del JB Non sono apllicabili in questo round"
+	}
+
+	"knifefight_info_line5"
+	{
+		"it"		"LR e' disattivato in questo round!"
+	}
+
+	"knifefight_info_line6"
+	{
+		"it"		"State nella 'JailRoom' Non e' permesso andare in condotti o posti segreti!"
+	}
+
+	"knifefight_info_line7"
+	{
+		"it"		"Buona Fortuna!"
+	}
+
+	"knifefight_wait"
+	{
+		"it"		"Devi aspettare {purple}{1}{default} round per un evento!"
+	}
+
+	"knifefight_name"
+	{
+		"it"		"Battaglia Coltelli"
+	}
+
+}

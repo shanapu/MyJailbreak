@@ -1,0 +1,21 @@
+// Exported from SourceMod Translator
+// Date: 2016-12-11 14:23:59 UTC
+// Language: Danish (da)
+// 
+// To view other translations for this plugin, please visit:
+// http://translator.mitchdempsey.com/sourcemod_plugins/231
+//
+"Phrases"
+{
+
+	"hud_on"
+	{
+		"da"		"HUD {purple}aktiveret!"
+	}
+
+	"hud_off"
+	{
+		"da"		"HUD {purple}deaktiveret!"
+	}
+
+}

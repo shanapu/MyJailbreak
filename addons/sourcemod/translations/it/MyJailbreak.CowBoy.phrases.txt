@@ -1,0 +1,161 @@
+// Exported from SourceMod Translator
+// Date: 2016-12-11 14:24:04 UTC
+// Language: Italian (it)
+// 
+// To view other translations for this plugin, please visit:
+// http://translator.mitchdempsey.com/sourcemod_plugins/190
+//
+"Phrases"
+{
+
+	"cowboy_tag"
+	{
+		"it"		"[{green}MyJB.cowboy{default}]"
+	}
+
+	"cowboy_need"
+	{
+		"it"		"{purple}{2}{default} ha votato. {purple}{1}{default} voti richiesti per giocare {darkred}Cowboy!"
+	}
+
+	"cowboy_rounds"
+	{
+		"it"		"Round {purple}{1}{default} di {purple}{2}."
+	}
+
+	"cowboy_twin_nc"
+	{
+		"it"		"Un T e' sopravvisuto"
+	}
+
+	"cowboy_voting"
+	{
+		"it"		"La Votazione e' disabilitata"
+	}
+
+	"cowboy_setbywarden"
+	{
+		"it"		"Settare Cowboy da warden e' {purple}disabilitato!"
+	}
+
+	"cowboy_minplayer"
+	{
+		"it"		"Per l'evento sono richiesti {purple}un CT e un T"
+	}
+
+	"cowboy_setbyadmin"
+	{
+		"it"		"Settare Cowboy da Admin e' {purple}disabilitato!"
+	}
+
+	"cowboy_ctwin_nc"
+	{
+		"it"		"Un CT e' sopravvisuto!"
+	}
+
+	"cowboy_end"
+	{
+		"it"		"{purple}Cowboy{default} e' finito."
+	}
+
+	"cowboy_next"
+	{
+		"it"		"Il prossimo round sara': {purple}Cowboy."
+	}
+
+	"cowboy_next_nc"
+	{
+		"it"		"Il prossimo round sara': Cowboy."
+	}
+
+	"cowboy_start"
+	{
+		"it"		"{purple}Cowboy{default} e' inziato!"
+	}
+
+	"cowboy_start_nc"
+	{
+		"it"		"Cowboy e' inziato!"
+	}
+
+	"cowboy_voted"
+	{
+		"it"		"Hai gia' votato per {purple}Cowboy!"
+	}
+
+	"cowboy_progress"
+	{
+		"it"		"L'evento {darkred}{1} {default}e' {purple}gia' in corso!"
+	}
+
+	"cowboy_disabled"
+	{
+		"it"		"Cowboy e' {purple}disabilitato!"
+	}
+
+	"cowboy_timeuntilstart_nc"
+	{
+		"it"		"{1} secondi rimanti all'inizio del round!"
+	}
+
+	"cowboy_info_title"
+	{
+		"it"		"Cowboy Attivato"
+	}
+
+	"cowboy_info_title"
+	{
+		"it"		"Cowboy er aktiveret!"
+	}
+
+	"cowboy_info_line1"
+	{
+		"it"		"Cowboy - Free for all!"
+	}
+
+	"cowboy_info_line2"
+	{
+		"it"		"Pistol Battle - DM"
+	}
+
+	"cowboy_info_line3"
+	{
+		"it"		"È possibile camminare durante la fase di 'NoDamage'"
+	}
+
+	"cowboy_info_line4"
+	{
+		"it"		"Tutte le Regole del JB Non sono applicabili in questo round"
+	}
+
+	"cowboy_info_line5"
+	{
+		"it"		"LR disabilitato in questo round"
+	}
+
+	"cowboy_info_line6"
+	{
+		"it"		"Stay in the main jailroom! Don't enter secrets!"
+	}
+
+	"cowboy_info_line6"
+	{
+		"it"		"State nella JailRoom. Non andare in condotti e posti segreti"
+	}
+
+	"cowboy_info_line7"
+	{
+		"it"		"Buona fortuna!"
+	}
+
+	"cowboy_wait"
+	{
+		"it"		"Devi aspettare {purple}{1}{default} round per un event day"
+	}
+
+	"cowboy_name"
+	{
+		"it"		"Cowboy"
+	}
+
+}

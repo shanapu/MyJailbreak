@@ -1,136 +1,319 @@
 // Exported from SourceMod Translator
+// Date: 2016-12-11 14:24:00 UTC
+// Language: English (en)
+// 
+// To view other translations for this plugin, please visit:
 // http://translator.mitchdempsey.com/sourcemod_plugins/180
 //
 "Phrases"
 {
+
 	"menu_info"
 	{
-		"ru"		"Откройте игровое меню, написав !menu или нажмите ,"
-		"chi"		"要打开MENU按，或输入!menu"
-		"pl"		"Aby otworzyc Menu Jailbreak nacisnij lub wpisz !menu"
 		"en"		"To open the Jailbreak menu, press , or type !menu in chat!"
 	}
 
 	"menu_info_title"
 	{
-		"ru"		"MyJailBreak меню"
-		"chi"		"我监狱.Menu"
-		"pl"		"MyJailbreak Menu"
 		"en"		"MyJailbreak Menu"
 	}
 
 	"menu_countdown"
 	{
 		"en"		"Begin a Countdown Timer"
-		"ru"		"Начать отсчёт"
-		"chi"		"启动倒计时"
-		"pl"		"Rozpocznij Odliczanie"
-	}
-
-	"menu_math"
-	{
-		"en"		"Start a Math Quiz"
-		"ru"		"Викторина"
-		"chi"		"数学测验"
-		"pl"		"Matematyczny Quiz"
 	}
 
 	"menu_opencell"
 	{
-		"ru"		"Открыть двери камер"
-		"chi"		"开放式监狱大门"
-		"pl"		"Otworz drzwi cell"
 		"en"		"Open The Cell Doors"
 	}
 
 	"menu_seteventdays"
 	{
 		"en"		"Set Event Days"
-		"ru"		"Выбрать игровой день"
-		"chi"		"集游戏天"
-		"pl"		"Ustaw dzien/zabawe"
-	}
-
-	"menu_guns"
-	{
-		"ru"		"Меню оружия"
-		"chi"		"枪菜单"
-		"pl"		"Menu Broni"
-		"en"		"Weapon Menu"
-	}
-
-	"menu_sparks"
-	{
-		"ru"		"Вкл/Выкл искры от пуль"
-		"en"		"Toggle BulletImpact Sparks"
 	}
 
 	"menu_voteeventdays"
 	{
-		"ru"		"Голосуйте за игровой день"
-		"chi"		"投票当天游戏天"
-		"pl"		"Glosuj na zabawe"
 		"en"		"Vote For Event Days"
 	}
 
-	"menu_noblock"
+	"menu_math"
 	{
-		"ru"		"Вкл/Выкл No Block"
-		"chi"		"切换No Block"
-		"pl"		"Wlacz No Block"
-		"en"		"Toggle NoBlock"
+		"en"		"Start a Math Quiz"
+	}
+
+	"menu_guns"
+	{
+		"en"		"Weapon Menu"
 	}
 
 	"menu_laser"
 	{
-		"ru"		"Меню лазерного указатель"
-		"chi"		"激光菜单"
-		"pl"		"Menu Lasera/Markera"
 		"en"		"Laser Pointer Menu"
+	}
+
+	"menu_noblock"
+	{
+		"en"		"Toggle NoBlock"
+	}
+
+	"menu_sparks"
+	{
+		"en"		"Toggle BulletImpact Sparks"
 	}
 
 	"menu_extend"
 	{
-		"ru"		"Продлить время раунда"
 		"en"		"Extend The Round Time"
-		"de"		"Rundenzeit verlängern"
-	}
-
-	"menu_jailshop"
-	{
-		"en"		"Open Jail Shop"
 	}
 
 	"menu_ffon"
 	{
-		"ru"		"Включить FF для террористов"
-		"chi"		"启用误伤"
-		"pl"		"Wlacz Friendly Fire dla Terro"
 		"en"		"Enable FF for Ts"
 	}
 
 	"menu_ffoff"
 	{
-		"ru"		"Отключить FF для террористов"
-		"chi"		"关掉误伤"
-		"pl"		"Wylacz Friendly Fire dla Terro"
 		"en"		"Disable FF for Ts"
 	}
 
 	"menu_randomdead"
 	{
-		"ru"		"Убить случайного Террориста"
-		"chi"		"随机杀Terrorist"
-		"pl"		"Zabij randomowego terroryste"
 		"en"		"Kill a Random Prisoner"
 	}
 
 	"menu_unwarden"
 	{
-		"ru"		"Покинуть пост"
-		"chi"		"监狱长退休"
-		"pl"		"Opusc Straznika"
 		"en"		"Retire From Warden"
+	}
+
+	"menu_getwarden"
+	{
+		"en"		"Become The Warden"
+	}
+
+	"menu_joint"
+	{
+		"en"		"Become a Prisoner"
+	}
+
+	"menu_check"
+	{
+		"en"		"Check Rebellers"
+	}
+
+	"menu_lr"
+	{
+		"en"		"Last Request"
+	}
+
+	"menu_removewarden"
+	{
+		"en"		"Remove Warden"
+	}
+
+	"menu_setwarden"
+	{
+		"en"		"Set New Warden"
+	}
+
+	"menu_rules"
+	{
+		"en"		"Rules"
+	}
+
+	"menu_joinct"
+	{
+		"en"		"Become a Guard"
+	}
+
+	"menu_guardct"
+	{
+		"en"		"Join Guard queue (!guard)"
+	}
+
+	"menu_request"
+	{
+		"en"		"Requests"
+	}
+
+	"menu_votewarden"
+	{
+		"en"		"Vote To Fire The Warden"
+	}
+
+	"menu_event_Titlestart"
+	{
+		"en"		"Start Event Next Round"
+	}
+
+	"menu_event_Titlevote"
+	{
+		"en"		"Vote for an Event Day"
+	}
+
+	"menu_war"
+	{
+		"en"		"War"
+	}
+
+	"menu_ffa"
+	{
+		"en"		"Free for All"
+	}
+
+	"menu_zeus"
+	{
+		"en"		"Zeus Day"
+	}
+
+	"menu_zombie"
+	{
+		"en"		"Zombie Day"
+	}
+
+	"menu_dealdamge"
+	{
+		"en"		"Deal Damage Day"
+	}
+
+	"menu_hide"
+	{
+		"en"		"Hide in The Dark"
+	}
+
+	"menu_suicidebomber"
+	{
+		"en"		"Suicide Bomber"
+	}
+
+	"menu_catch"
+	{
+		"en"		"Catch & Freeze"
+	}
+
+	"menu_knifefight"
+	{
+		"en"		"Knife Fight"
+	}
+
+	"menu_hebattle"
+	{
+		"en"		"HE Battle"
+	}
+
+	"menu_cowboy"
+	{
+		"en"		"Cowboy"
+	}
+
+	"menu_drunk"
+	{
+		"en"		"Drunk Day"
+	}
+
+	"menu_torch"
+	{
+		"en"		"Torch Relay"
+	}
+
+	"menu_noscope"
+	{
+		"en"		"No Scope"
+	}
+
+	"menu_duckhunt"
+	{
+		"en"		"DuckHunt"
+	}
+
+	"menu_Freeday"
+	{
+		"en"		"Freeday"
+	}
+
+	"menu_admin"
+	{
+		"en"		"Admin Menu"
+	}
+
+	"menu_mute"
+	{
+		"en"		"Mute Menu"
+	}
+
+	"menu_tag"
+	{
+		"en"		"[{green}MyJB.menu{default}]"
+	}
+
+	"menu_painter"
+	{
+		"en"		"Painter Menu"
+	}
+
+	"menu_closecell"
+	{
+		"en"		"Close The Cell Doors"
+	}
+
+	"menu_voting"
+	{
+		"en"		"Vote for an Event Day:"
+	}
+
+	"menu_voteday"
+	{
+		"en"		"Start an Event Day Voting"
+	}
+
+	"menu_votingwon"
+	{
+		"#format"	"{1:s},{2:i},{3:i}"
+		"en"		"The vote has ended with {2} vote yet. {green}{1} {default}won with {3} votes."
+	}
+
+	"menu_minplayer"
+	{
+		"en"		"For a Event Day Voting, you must have at least {purple}one Guard, & one Prisoner"
+	}
+
+	"menu_progress"
+	{
+		"#format"	"{1:s}"
+		"en"		"The event {darkred}{1} {default}is {purple}already in progress!"
+	}
+
+	"menu_wait"
+	{
+		"#format"	"{1:i}"
+		"en"		"You must wait {purple}{1}{default} more rounds for an Event Day Voting!"
+	}
+
+	"menu_votingdraw"
+	{
+		"en"		"The vote ended in a 50/50 draw! An Event Day was chosen Randomly!"
+	}
+
+	"menu_disabled"
+	{
+		"en"		"Event voting is currently {purple}disabled!"
+	}
+
+	"menu_playerfreeday"
+	{
+		"en"		"Give a Player a Freeday"
+	}
+
+	"menu_teamgamesmenu"
+	{
+		"en"		"Team Games - Menu"
+	}
+
+	"menu_teamgamesgames"
+	{
+		"en"		"Team Games - Games"
 	}
 
 	"menu_undeputy"
@@ -143,14 +326,6 @@
 		"en"		"Remove Deputy"
 	}
 
-	"menu_getwarden"
-	{
-		"ru"		"Занять пост КМД"
-		"chi"		"成为监狱长"
-		"pl"		"Zostan Straznikiem"
-		"en"		"Become The Warden"
-	}
-
 	"menu_deputybecome"
 	{
 		"en"		"Become Wardens Deputy"
@@ -161,328 +336,24 @@
 		"en"		"Set your Deputy"
 	}
 
-	"menu_joint"
-	{
-		"en"		"Become a Prisoner"
-		"ru"		"Зайти за террористов"
-		"chi"		"加入恐怖"
-		"pl"		"Dolacz do terrorystow"
-	}
-
-	"menu_check"
-	{
-		"ru"		"Проверка игроков"
-		"chi"		"查Players"
-		"pl"		"Sprawdz zawodnikow"
-		"en"		"Check Rebellers"
-	}
-
-	"menu_lr"
-	{
-		"ru"		"Последнее желание"
-		"chi"		"最后一个请求(Last-Request)"
-		"pl"		"Ostatnie zyczenie"
-		"en"		"Last Request"
-	}
-
-	"menu_removewarden"
-	{
-		"ru"		"Уволить командира"
-		"chi"		"消防队长"
-		"pl"		"Usun Straznika"
-		"en"		"Remove Warden"
-	}
-
-	"menu_setwarden"
-	{
-		"ru"		"Выбрать нового командира"
-		"chi"		"设置新的监狱长"
-		"pl"		"Ustal nowego Straznika"
-		"en"		"Set New Warden"
-	}
-
-	"menu_rules"
-	{
-		"ru"		"Правила"
-		"chi"		"规则"
-		"pl"		"Zasady"
-		"en"		"Rules"
-	}
-
-	"menu_joinct"
-	{
-		"ru"		"Зайти за КТ"
-		"chi"		"加入Counter-Terror"
-		"pl"		"Dolacz do Counter Terro"
-		"en"		"Become a Guard"
-	}
-
-	"menu_guardct"
-	{
-		"ru"		"Занять очередь за КТ (!guard)"
-		"chi"		"排队CT(!guard)"
-		"pl"		"dolacz do kolejki CT (!guard)"
-		"en"		"Join Guard queue (!guard)"
-	}
-
-	"menu_request"
-	{
-		"ru"		"Запросы"
-		"chi"		"要求(Requests)"
-		"pl"		"Zadania"
-		"en"		"Requests"
-	}
-
-	"menu_votewarden"
-	{
-		"ru"		"Проголосовать за увольнение КМД"
-		"chi"		"投票消防队长"
-		"pl"		"Glosuj za zmiana Straznika"
-		"en"		"Vote To Fire The Warden"
-	}
-
-	"menu_event_Titlestart"
-	{
-		"ru"		"Начало игрового дня в следующем раунде"
-		"chi"		"活动下一轮开始"
-		"pl"		"Rozpocznij zabawe w nastepnej rundzie"
-		"en"		"Start Event Next Round"
-	}
-
-	"menu_event_Titlevote"
-	{
-		"ru"		"Проголосовать за игровой день"
-		"chi"		"投票游戏天"
-		"pl"		"Glosuj na Zabawe Dnia"
-		"en"		"Vote for an Event Day"
-	}
-
-	"menu_war"
-	{
-		"de"		"Krieg"
-		"ru"		"Война"
-		"pl"		"Wojna"
-		"en"		"War"
-	}
-
-	"menu_ffa"
-	{
-		"ru"		"Все против ВСЕХ"
-		"pl"		"Free for All"
-		"en"		"Free for All"
-	}
-
-	"menu_zeus"
-	{
-		"ru"		"День зевса"
-		"pl"		"Zeus"
-		"en"		"Zeus Day"
-	}
-
-	"menu_zombie"
-	{
-		"ru"		"Зомби день"
-		"pl"		"Zombie Day"
-		"en"		"Zombie Day"
-	}
-
-	"menu_dealdamge"
-	{
-		"ru"		"День урона"
-		"en"		"Deal Damage Day"
-	}
-
-	"menu_hide"
-	{
-		"ru"		"Прятки в темноте"
-		"pl"		"Chowanego"
-		"en"		"Hide in The Dark"
-	}
-
-	"menu_suicidebomber"
-	{
-		"ru"		"Смертник"
-		"pl"		"Suicide Bomber"
-		"en"		"Suicide Bomber"
-	}
-
-	"menu_catch"
-	{
-		"ru"		"Поймай и заморозь"
-		"pl"		"Goniony"
-		"en"		"Catch & Freeze"
-	}
-
-	"menu_knifefight"
-	{
-		"en"		"Knife Fight"
-		"ru"		"Битва на ножах"
-		"pl"		"KNIFE"
-	}
-
-	"menu_hebattle"
-	{
-		"ru"		"Бой гранатами"
-		"pl"		"HE Battle"
-		"en"		"HE Battle"
-	}
-
-	"menu_cowboy"
-	{
-		"ru"		"Ковбой"
-		"pl"		"Cowboy"
-		"en"		"Cowboy"
-	}
-
-	"menu_drunk"
-	{
-		"ru"		"Пьяный"
-		"pl"		"Pijak"
-		"en"		"Drunk Day"
-	}
-
-	"menu_torch"
-	{
-		"ru"		"Эстафета Олимпийского огня"
-		"pl"		"Czlowiek Pochodnia"
-		"de"		"Fackellauf"
-		"en"		"Torch Relay"
-	}
-
-	"menu_noscope"
-	{
-		"ru"		"Без прицела"
-		"pl"		"No scope"
-		"en"		"No Scope"
-	}
-
-	"menu_duckhunt"
-	{
-		"ru"		"Охота на уток"
-		"pl"		"Polowanie na Kaczki"
-		"en"		"DuckHunt"
-	}
-
-	"menu_Freeday"
-	{
-		"ru"		"Фридей"
-		"pl"		"Freeday"
-		"en"		"Freeday"
-	}
-
-	"menu_admin"
-	{
-		"ru"		"Меню администратора"
-		"chi"		"管理菜单"
-		"pl"		"Admin Menu"
-		"en"		"Admin Menu"
-	}
-
-	"menu_mute"
-	{
-		"ru"		"Меню мутов"
-		"pl"		"Mute Menu"
-		"en"		"Mute Menu"
-	}
-
-	"menu_tag"
-	{
-		"en"		"[{green}MyJB.menu{default}]"
-		"pl"		"[{green}MyJB.menu{default}]"
-		"chi"		"[{green}我监狱.Menu{default}]"
-		"ru"		"[{green}MyJB.menu{default}]"
-	}
-
-	"menu_voting"
-	{
-		"ru"		"Голосование за игровой день:"
-		"en"		"Vote for an Event Day:"
-	}
-
-	"menu_painter"
-	{
-		"ru"		"Меню рисовальщика"
-		"en"		"Painter Menu"
-		"pl"		"Menu Painter"
-		"chi"		"画画菜单"
-	}
-
-	"menu_closecell"
-	{
-		"ru"		"Закрыть двери камер"
-		"en"		"Close The Cell Doors"
-	}
-
-	"menu_voteday"
-	{
-		"ru"		"Начать голосование за игровой день"
-		"en"		"Start an Event Day Voting"
-	}
-
-	"menu_votingwon"
-	{
-		"#format"   "{1:s},{2:i},{3:i}"
-		"ru"		"Голосование закончилось {2} голосов было. {green}{1} {default}победил с {3} голосами."
-		"en"		"The vote has ended with {2} vote yet. {green}{1} {default}won with {3} votes."
-	}
-
-	"menu_playerfreeday"
-	{
-		"en"		"Give a Player a Freeday"
-		"ru"		"Выдать игроку фридей"
-	}
-
 	"menu_rebel"
 	{
 		"en"		"Un/Mark a player as Rebel"
-		"ru"		"Офф/Пометить игрока как бунтующего"
 	}
 
 	"menu_count"
 	{
 		"en"		"Count Prisoner in sight"
-		"ru"		"Посчитать заключённых"
 	}
 
-	"menu_minplayer"
+	"menu_jailshop"
 	{
-		"ru"		"Для голосование за игровой дня, вы должны иметь как минимум {purple}одного КТ и 1 Т"
-		"en"		"For a Event Day Voting, you must have at least {purple}one Guard, & one Prisoner"
+		"en"		"Open Jail Shop"
 	}
 
-	"menu_progress"
+	"menu_orders"
 	{
-		"#format"   "{1:s}"
-		"ru"		"Игровой день {darkred}{1} {default}в {purple}процессе!"
-		"en"		"The event {darkred}{1} {default}is {purple}already in progress!"
+		"en"		"Orders"
 	}
-
-	"menu_wait"
-	{
-		"#format"   "{1:i}"
-		"ru"		"Вы должны подождать больше {1} раундов для голосования за игровой день!"
-		"en"		"You must wait {purple}{1}{default} more rounds for an Event Day Voting!"
-	}
-
-	"menu_votingdraw"
-	{
-		"ru"		"Голосование закончилось в 50/50! Игровой день был выбран случайно!"
-		"en"		"The vote ended in a 50/50 draw! An Event Day was chosen Randomly!"
-	}
-
-	"menu_disabled"
-	{
-		"ru"		"Голосование за игровой день {purple}отключен!"
-		"de"		"Event voting ist vorübergehend {purple}deaktiviert."
-		"da"		"Event voting runde er midlertidigt {purple}slÃ¥et fra."
-		"en"		"Event voting is currently {purple}disabled!"
-	}
-
-	/* Translation PLACEHOLDER
-	"menu_PLACEHOLDER"
-	{
-		"en"		"PLACEHOLDER Item"
-	}
-	*/
 
 }

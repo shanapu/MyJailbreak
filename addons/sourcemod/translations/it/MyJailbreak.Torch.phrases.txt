@@ -1,0 +1,176 @@
+// Exported from SourceMod Translator
+// Date: 2016-12-11 14:24:05 UTC
+// Language: Italian (it)
+// 
+// To view other translations for this plugin, please visit:
+// http://translator.mitchdempsey.com/sourcemod_plugins/183
+//
+"Phrases"
+{
+
+	"torch_tag"
+	{
+		"it"		"[{green}MyJB.TorchRelay{default}]"
+	}
+
+	"torch_need"
+	{
+		"it"		"{purple}{2}{default} ha votato per l'evento Torch. {purple}{1}{default} voti richiesti per giocare a {darkred}Torch Relay."
+	}
+
+	"torch_rounds"
+	{
+		"it"		"Round {purple}{1}{default} di {purple}{2}"
+	}
+
+	"torch_end"
+	{
+		"it"		"{purple}Torch Relay{default} e' finito"
+	}
+
+	"torch_voting"
+	{
+		"it"		"La votazione per giocare a Torch Relay e' {purple}disabilitata"
+	}
+
+	"torch_setbywarden"
+	{
+		"it"		"Settare Torch Relay da Warden e' {purple}disabilitato!"
+	}
+
+	"torch_setbyadmin"
+	{
+		"it"		"Settare Torch Relay da Admin {purple}disabilitato!"
+	}
+
+	"torch_next"
+	{
+		"it"		"Il Prossimo Round si giochera' a: {purple}Torch Relay."
+	}
+
+	"torch_next_nc"
+	{
+		"it"		"Il Prossimo Round si giochera' a: Torch Relay."
+	}
+
+	"torch_start"
+	{
+		"it"		"{purple}Torch Relay{default} e' iniziato!"
+	}
+
+	"torch_start_nc"
+	{
+		"it"		"Torch Relay e' iniziato!"
+	}
+
+	"torch_voted"
+	{
+		"it"		"hai gia' votato per {purple}Torch Relay!"
+	}
+
+	"torch_progress"
+	{
+		"it"		"L'evento {darkred}{1} {default}e' {purple}gia' in corso!"
+	}
+
+	"torch_minplayer"
+	{
+		"it"		"Per Torch Relay sono richiesti {purple}tre player, uno di questi deve essere guardia"
+	}
+
+	"torch_sprint"
+	{
+		"it"		"Stai {blue}Correndo!"
+	}
+
+	"torch_sprintend"
+	{
+		"it"		"{blue}Sei troppo stanco per correre!{default} Riposa per {1} secondi."
+	}
+
+	"torch_random"
+	{
+		"it"		"{darkred}La torcia umana  e'.......  {1}"
+	}
+
+	"torch_sprintagain"
+	{
+		"it"		"Hai preso il respiro. Ora puoi {blue}corre {default}ancora!"
+	}
+
+	"torch_disabled"
+	{
+		"it"		"Torch Relay e' momentaneamente {purple}disabilitato!"
+	}
+
+	"torch_info_title"
+	{
+		"it"		"Torch Relay e' ora attivo!"
+	}
+
+	"torch_info_line1"
+	{
+		"it"		"Un giocatore casuale sarà dato alle fiamme!"
+	}
+
+	"torch_info_line2"
+	{
+		"it"		"Trasmettere la fiamma accoltellando altri giocatori!"
+	}
+
+	"torch_info_line3"
+	{
+		"it"		"Tieni Premuto E per correre! La Torcia è più veloce di te!"
+	}
+
+	"torch_info_line4"
+	{
+		"it"		"Tutte le Regole del JailBreak sono disattivate in questo Round!"
+	}
+
+	"torch_info_line5"
+	{
+		"it"		"!lr disattivato in questo round!"
+	}
+
+	"torch_info_line6"
+	{
+		"it"		"Stare nella 'JailRoom' non entrare in condotti e in posti segreti"
+	}
+
+	"torch_info_line7"
+	{
+		"it"		"Buona Fortuna"
+	}
+
+	"torch_wait"
+	{
+		"it"		"Devi Aspettare {purple}{1}{default}  round per un nuovo event day!"
+	}
+
+	"torch_damage_nc"
+	{
+		"it"		"Un giocatore a caso brucerà in {1} secondi!"
+	}
+
+	"torch_torchem"
+	{
+		"it"		"{purple}{1}{default} e' la torcia!"
+	}
+
+	"torch_untorch"
+	{
+		"it"		"{purple}{1}{default} Non e' piu' la torcia !"
+	}
+
+	"torch_win"
+	{
+		"it"		"La torcia e' stata spenta!"
+	}
+
+	"torch_name"
+	{
+		"it"		"Torch Relay"
+	}
+
+}

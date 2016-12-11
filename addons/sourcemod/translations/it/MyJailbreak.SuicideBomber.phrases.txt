@@ -1,0 +1,171 @@
+// Exported from SourceMod Translator
+// Date: 2016-12-11 14:24:04 UTC
+// Language: Italian (it)
+// 
+// To view other translations for this plugin, please visit:
+// http://translator.mitchdempsey.com/sourcemod_plugins/182
+//
+"Phrases"
+{
+
+	"suicidebomber_tag"
+	{
+		"it"		"[{green}MyJB.SuicideBomber{default}]"
+	}
+
+	"suicidebomber_need"
+	{
+		"it"		"{purple}{2}{default} ha votato. {purple}{1}{default} voti richiesti per giocare a {darkred}Suicide Bomber."
+	}
+
+	"suicidebomber_rounds"
+	{
+		"it"		"Round {purple}{1}{default} di {purple}{2}"
+	}
+
+	"suicidebomber_twin_nc"
+	{
+		"it"		"Tutte le guardie sono state eliminate!"
+	}
+
+	"suicidebomber_voting"
+	{
+		"it"		"Votazione per Suicide Bomber e' {purple}disabilitata!"
+	}
+
+	"suicidebomber_setbywarden"
+	{
+		"it"		"Settare Suicide Bomber da Warden e'  {purple}disabilitato!"
+	}
+
+	"suicidebomber_minplayer"
+	{
+		"it"		"For Suicide Bomber e' necessario almeno {purple}una Guardia e un Prigioniero!"
+	}
+
+	"suicidebomber_setbyadmin"
+	{
+		"it"		"Settare Suicide Bomber da Admin e' {purple}disabilitato!"
+	}
+
+	"suicidebomber_ctwin_nc"
+	{
+		"it"		"Una Guardia e' sopravvisuta!"
+	}
+
+	"suicidebomber_end"
+	{
+		"it"		"{purple}Suicide Bomber{default} e' finito."
+	}
+
+	"suicidebomber_next"
+	{
+		"it"		"il prossimo round si giochera' a: {purple}Suicide Bomber."
+	}
+
+	"suicidebomber_next_nc"
+	{
+		"it"		"Il prossimo round si giochera' a: Suicide Bomber."
+	}
+
+	"suicidebomber_start"
+	{
+		"it"		"{purple}Suicide Bomber{default} e' iniziato!"
+	}
+
+	"suicidebomber_start_nc"
+	{
+		"it"		"Suicide Bomber e' iniziato!"
+	}
+
+	"suicidebomber_voted"
+	{
+		"it"		"hai gia' votato per {purple}Suicide Bomber!"
+	}
+
+	"suicidebomber_progress"
+	{
+		"it"		"L'evento {darkred}{1} {default}e' {purple}gia' in corso!"
+	}
+
+	"suicidebomber_disabled"
+	{
+		"it"		"Suicide Bomber e' momentaneamnete {purple}disabilitato!"
+	}
+
+	"suicidebomber_sprint"
+	{
+		"it"		"Stai {blue}Correndo!"
+	}
+
+	"suicidebomber_sprintend"
+	{
+		"it"		"{blue}Sei troppo stanco per correre!{default} Riposa per {1} Secondi."
+	}
+
+	"suicidebomber_sprintagain"
+	{
+		"it"		"Hai preso il respiro. Ora puoi {blue}correre {default}ancora!"
+	}
+
+	"suicidebomber_timetohide_nc"
+	{
+		"it"		"{1} secondi rimanenti per nascondersi"
+	}
+
+	"suicidebomber_timeuntilopen_nc"
+	{
+		"it"		"{1} Secondi finche' le celle saranno aperte!"
+	}
+
+	"suicidebomber_info_title"
+	{
+		"it"		"Suicide Bomber e' ora attivo"
+	}
+
+	"suicidebomber_info_line1"
+	{
+		"it"		"I kamikaze sono ovunque"
+	}
+
+	"suicidebomber_info_line2"
+	{
+		"it"		"I prigionieri hanno ora jihad e si possono suicidare con +lookweapon tasto 'F'"
+	}
+
+	"suicidebomber_info_line3"
+	{
+		"it"		"Premere E per correre!"
+	}
+
+	"suicidebomber_info_line4"
+	{
+		"it"		"Tutte le Regole del JailBreak sono disattivate in questo Round!"
+	}
+
+	"suicidebomber_info_line5"
+	{
+		"it"		"LR disabilitato in questo round!"
+	}
+
+	"suicidebomber_info_line6"
+	{
+		"it"		"Tutti Possono Andare Dove Vogliono"
+	}
+
+	"suicidebomber_info_line7"
+	{
+		"it"		"Buona Fortuna!"
+	}
+
+	"suicidebomber_wait"
+	{
+		"it"		"Devi aspettare {purple}{1}{default} round per giocare ancora all'event day!"
+	}
+
+	"suicidebomber_name"
+	{
+		"it"		"Suicide Bomber"
+	}
+
+}

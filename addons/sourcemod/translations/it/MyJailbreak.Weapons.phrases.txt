@@ -1,0 +1,101 @@
+// Exported from SourceMod Translator
+// Date: 2016-12-11 14:24:14 UTC
+// Language: Italian (it)
+// 
+// To view other translations for this plugin, please visit:
+// http://translator.mitchdempsey.com/sourcemod_plugins/188
+//
+"Phrases"
+{
+
+	"weapons_tag"
+	{
+		"it"		"[{green}MyJB.weapons{default}]"
+	}
+
+	"weapons_disabled"
+	{
+		"it"		"The {purple}weapons menu is currently {default} disabled!"
+	}
+
+	"weapons_same"
+	{
+		"it"		"You will get the {purple}Same Weapon{default}."
+	}
+
+	"weapons_sameall"
+	{
+		"it"		"You will now get the{purple} Same Weapon{default} every round."
+	}
+
+	"weapons_random"
+	{
+		"it"		"You will get a {purple} Random Weapon{default}."
+	}
+
+	"weapons_randomall"
+	{
+		"it"		"You will now get a{purple} Random Weapon{default} every round."
+	}
+
+	"weapons_next"
+	{
+		"it"		"Your settings will be{purple} applied{default} next round."
+	}
+
+	"weapons_ta"
+	{
+		"it"		"You've been given a{purple} TAGrenade{default}!"
+	}
+
+	"weapons_health"
+	{
+		"it"		"You've got a {purple} healthshot{default}"
+	}
+
+	"weapons_health"
+	{
+		"it"		"You've got a {purple} healthshot{default}"
+	}
+
+	"weapons_info_title"
+	{
+		"it"		"MyJailbreak Weapon Menu"
+	}
+
+	"weapons_info_choose"
+	{
+		"it"		"Choose a Weapon"
+	}
+
+	"weapons_info_same"
+	{
+		"it"		"Same Weapon"
+	}
+
+	"weapons_info_sameall"
+	{
+		"it"		"Same Weapon Every Round"
+	}
+
+	"weapons_info_random"
+	{
+		"it"		"Random Weapon"
+	}
+
+	"weapons_info_randomall"
+	{
+		"it"		"Random Weapon Every Round"
+	}
+
+	"weapons_info_prim"
+	{
+		"it"		"Primary Weapon:"
+	}
+
+	"weapons_info_sec"
+	{
+		"it"		"Secondary Weapon:"
+	}
+
+}

@@ -1,0 +1,156 @@
+// Exported from SourceMod Translator
+// Date: 2016-12-11 14:24:18 UTC
+// Language: Italian (it)
+// 
+// To view other translations for this plugin, please visit:
+// http://translator.mitchdempsey.com/sourcemod_plugins/186
+//
+"Phrases"
+{
+
+	"duckhunt_tag"
+	{
+		"it"		"[{green}MyJB.Duckhunt{default}]"
+	}
+
+	"duckhunt_rounds"
+	{
+		"it"		"Round {purple}{1}{default} di {purple}{2}"
+	}
+
+	"duckhunt_need"
+	{
+		"it"		"{purple}{2}{default} ha votato. {purple}{1}{default} voti richiesti per giocare a {darkred}Duckhunt."
+	}
+
+	"duckhunt_voting"
+	{
+		"it"		"La votazione e' {purple}disabilitata!"
+	}
+
+	"duckhunt_setbywarden"
+	{
+		"it"		"Settare Duckhunt da Warden e' {purple}disabilitato!"
+	}
+
+	"duckhunt_setbyadmin"
+	{
+		"it"		"Settare Duckhunt da Admin e' {purple}disabilitato!"
+	}
+
+	"duckhunt_ctwin_nc"
+	{
+		"it"		"Tutte le anatre sono stati cacciate!"
+	}
+
+	"duckhunt_twin_nc"
+	{
+		"it"		"I Duckhunter sono stati cacciati!"
+	}
+
+	"duckhunt_end"
+	{
+		"it"		"{purple}Duckhunt{default} e' finito."
+	}
+
+	"duckhunt_next"
+	{
+		"it"		"Il Prossimo round sara': {purple}Duckhunt."
+	}
+
+	"duckhunt_next_nc"
+	{
+		"it"		"Il Prossimo round sara': Duckhunt."
+	}
+
+	"duckhunt_start"
+	{
+		"it"		"{purple}Duckhunt{default} e' iniziato!"
+	}
+
+	"duckhunt_start_nc"
+	{
+		"it"		"Duckhunt e' iniziato!"
+	}
+
+	"duckhunt_voted"
+	{
+		"it"		"Hai gia' votato per {purple}Duckhunt!"
+	}
+
+	"duckhunt_progress"
+	{
+		"it"		"L'evento {darkred}{1} {default}e' {purple}gia' in corso."
+	}
+
+	"duckhunt_progress"
+	{
+		"it"		"Event {darkred}{1} {default}is {purple}already in progress."
+	}
+
+	"duckhunt_minplayer"
+	{
+		"it"		"Per Duckhunt, sono richiesti {purple}una Guardia e un Prigioniero"
+	}
+
+	"duckhunt_disabled"
+	{
+		"it"		"Duckhunt e'  {purple}disabilitato!"
+	}
+
+	"duckhunt_timeuntilstart_nc"
+	{
+		"it"		"{1} secondi rimanenti all'inizio del round!"
+	}
+
+	"duckhunt_info_title"
+	{
+		"it"		"Duckhunt Attivato"
+	}
+
+	"duckhunt_info_line1"
+	{
+		"it"		"Spara a tutte le anatre"
+	}
+
+	"duckhunt_info_line2"
+	{
+		"it"		"Le guardie hanno un Nova!"
+	}
+
+	"duckhunt_info_line3"
+	{
+		"it"		"I prigionieri sono ora polli e hanno granate. Solo Tasto Destro!"
+	}
+
+	"duckhunt_info_line4"
+	{
+		"it"		"Tutte le regole del JB non sono applicabili in questo round"
+	}
+
+	"duckhunt_info_line5"
+	{
+		"it"		"LR disabilitato in questo round"
+	}
+
+	"duckhunt_info_line6"
+	{
+		"it"		"State nella 'JailRoom'! Non entrare in condotti!"
+	}
+
+	"duckhunt_info_line7"
+	{
+		"it"		"Buona Fortuna"
+	}
+
+	"duckhunt_wait"
+	{
+		"it"		"Bisogna attendere {purple}{1}{default} round per un altro evento!"
+	}
+
+	"duckhunt_name"
+	{
+		"it"		"Duckhunt"
+	}
+
+}

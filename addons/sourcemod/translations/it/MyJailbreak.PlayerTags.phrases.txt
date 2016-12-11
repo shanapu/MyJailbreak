@@ -1,0 +1,211 @@
+// Exported from SourceMod Translator
+// Date: 2016-12-11 14:24:05 UTC
+// Language: Italian (it)
+// 
+// To view other translations for this plugin, please visit:
+// http://translator.mitchdempsey.com/sourcemod_plugins/181
+//
+"Phrases"
+{
+
+	"tags_TA"
+	{
+		"it"		"[Prigioniere.Admin]"
+	}
+
+	"tags_T"
+	{
+		"it"		"[Prigioniere]"
+	}
+
+	"tags_CTA"
+	{
+		"it"		"[Guardia.Admin]"
+	}
+
+	"tags_CT"
+	{
+		"it"		"[Guardia]"
+	}
+
+	"tags_WA"
+	{
+		"it"		"[CapoCT.Admin]"
+	}
+
+	"tags_W"
+	{
+		"it"		"[CapoCT]"
+	}
+
+	"tags_TVIP1"
+	{
+		"it"		"[Prigioniere.VIP]"
+	}
+
+	"tags_TVIP2"
+	{
+		"it"		"[Prigioniere.sVIP]"
+	}
+
+	"tags_CTVIP1"
+	{
+		"it"		"[Guardia.VIP]"
+	}
+
+	"tags_CTVIP2"
+	{
+		"it"		"[Guardia.sVIP]"
+	}
+
+	"tags_WVIP1"
+	{
+		"it"		"[CapoCT.VIP]"
+	}
+
+	"tags_WVIP2"
+	{
+		"it"		"[CapoCT.sVIP]"
+	}
+
+	"tags_TOWN"
+	{
+		"it"		"[Prigioniere.Owner]"
+	}
+
+	"tags_CTOWN"
+	{
+		"it"		"[Guardia.Owner]"
+	}
+
+	"tags_WOWN"
+	{
+		"it"		"[CapoCT.Owner]"
+	}
+
+	"tags_CT_chat"
+	{
+		"it"		"[Guardia]"
+	}
+
+	"tags_CTA_chat"
+	{
+		"it"		"[Guardia.Admin]"
+	}
+
+	"tags_CTOWN_chat"
+	{
+		"it"		"[Guardia.Owner]"
+	}
+
+	"tags_CTVIP1_chat"
+	{
+		"it"		"[Guardia.VIP]"
+	}
+
+	"tags_CTVIP2_chat"
+	{
+		"it"		"[Guardia.sVIP]"
+	}
+
+	"tags_T_chat"
+	{
+		"it"		"[Prigioniere]"
+	}
+
+	"tags_TA_chat"
+	{
+		"it"		"[Prigioniere.Admin]"
+	}
+
+	"tags_TOWN_chat"
+	{
+		"it"		"[Prigioniere.Owner]"
+	}
+
+	"tags_TVIP1_chat"
+	{
+		"it"		"[Prigioniere.VIP]"
+	}
+
+	"tags_TVIP2_chat"
+	{
+		"it"		"[Prigioniere.sVIP]"
+	}
+
+	"tags_W_chat"
+	{
+		"it"		"[CapoCT]"
+	}
+
+	"tags_WA_chat"
+	{
+		"it"		"[CapoCT.Admin]"
+	}
+
+	"tags_WOWN_chat"
+	{
+		"it"		"[CapoCT.Owner]"
+	}
+
+	"tags_WVIP1_chat"
+	{
+		"it"		"[CapoCT.VIP]"
+	}
+
+	"tags_WVIP2_chat"
+	{
+		"it"		"[CapoCT.sVIP]"
+	}
+
+	"tags_D"
+	{
+		"it"		"[Deputato]"
+	}
+
+	"tags_DA"
+	{
+		"it"		"[Deputato.Admin]"
+	}
+
+	"tags_DA_chat"
+	{
+		"it"		"[Deputato.Admin]"
+	}
+
+	"tags_D_chat"
+	{
+		"it"		"[Deputato]"
+	}
+
+	"tags_DOWN"
+	{
+		"it"		"[Deputato.Owner]"
+	}
+
+	"tags_DOWN_chat"
+	{
+		"it"		"[Deputato.Owner]"
+	}
+
+	"tags_DVIP1"
+	{
+		"it"		"[Deputato.VIP]"
+	}
+
+	"tags_DVIP1_chat"
+	{
+		"it"		"[Deputato.VIP]"
+	}
+
+	"tags_DVIP2"
+	{
+		"it"		"[Deputato.sVIP]"
+	}
+
+	"tags_DVIP2_chat"
+	{
+		"it"		"[Deputato.sVIP]"
+	}
+
+}

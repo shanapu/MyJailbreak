@@ -1,0 +1,186 @@
+// Exported from SourceMod Translator
+// Date: 2016-12-11 14:24:13 UTC
+// Language: Italian (it)
+// 
+// To view other translations for this plugin, please visit:
+// http://translator.mitchdempsey.com/sourcemod_plugins/185
+//
+"Phrases"
+{
+
+	"catch_tag"
+	{
+		"it"		"[{green}MyJB.Catch{default}]"
+	}
+
+	"catch_need"
+	{
+		"it"		"{purple}{2}{default} ha votato. {purple}{1}{default} voti richiesti per giocare a: {darkred}Catch!"
+	}
+
+	"catch_rounds"
+	{
+		"it"		"Round {purple}{1}{default} di {purple}{2}"
+	}
+
+	"catch_twin_nc"
+	{
+		"it"		"i Terroristi sono scappati!"
+	}
+
+	"catch_ctwin_nc"
+	{
+		"it"		"Tutti i terroristi sono stati presi!"
+	}
+
+	"catch_end"
+	{
+		"it"		"{purple}Catch{default} e' finito."
+	}
+
+	"catch_voting"
+	{
+		"it"		"La votazione e' {purple}disabilitata!"
+	}
+
+	"catch_setbywarden"
+	{
+		"it"		"Settare Catch da warden e' {purple}disabilitata!"
+	}
+
+	"catch_setbyadmin"
+	{
+		"it"		"Settare Catch da Admin e' {purple}disabilitata!"
+	}
+
+	"catch_next"
+	{
+		"it"		"Il prossimo round sara': {purple}Catch."
+	}
+
+	"catch_next_nc"
+	{
+		"it"		"Il prossimo round sara': Catch."
+	}
+
+	"catch_start"
+	{
+		"it"		"{purple}Catch{default} e' iniziato!"
+	}
+
+	"catch_start_nc"
+	{
+		"it"		"Catch e' iniziato!"
+	}
+
+	"catch_voted"
+	{
+		"it"		"Hai gia' votato per {purple}Catch!"
+	}
+
+	"catch_progress"
+	{
+		"it"		"L'evento {darkred}{1} {default}e' {purple}gia' in corso!"
+	}
+
+	"catch_minplayer"
+	{
+		"it"		"Per Catch, sono richiesti {purple}un CT, e un T"
+	}
+
+	"catch_sprint"
+	{
+		"it"		"Stai ora {blue}Correndo!"
+	}
+
+	"catch_sprintend"
+	{
+		"it"		"{blue}Sei stanco per correre!{default} Riposati per {1} Secondi."
+	}
+
+	"catch_sprintagain"
+	{
+		"it"		"Hai preso il fiato. Ora puoi {blue}correre {default}ancora!"
+	}
+
+	"catch_disabled"
+	{
+		"it"		"Catch e' ora {purple}disabilitato."
+	}
+
+	"catch_info_title"
+	{
+		"it"		"Catch Attivato!"
+	}
+
+	"catch_info_line1"
+	{
+		"it"		"Le Guardie devono catturare e congelare i prigionieri con il coltello"
+	}
+
+	"catch_info_line2"
+	{
+		"it"		"I Prigionieri possono essere scongellati se attaccati dal proprio compagno!"
+	}
+
+	"catch_info_line3"
+	{
+		"it"		"Premi E per {blue}correre!"
+	}
+
+	"catch_info_line4"
+	{
+		"it"		"Niente regole JB per questo round!"
+	}
+
+	"catch_info_line5"
+	{
+		"it"		"LR disabilitato."
+	}
+
+	"catch_info_line6"
+	{
+		"it"		"State nella JailRoom! Non entrare in condotti"
+	}
+
+	"catch_info_line7"
+	{
+		"it"		"Buona Fortuna!"
+	}
+
+	"catch_wait"
+	{
+		"it"		"Devi aspettare {purple}{1}{default} round per un altro evento!"
+	}
+
+	"catch_unfreeze"
+	{
+		"it"		"Il T {purple}{1}{default} Ha Scongelato {blue}{2}!"
+	}
+
+	"catch_catch"
+	{
+		"it"		"La Guardia {purple}{1}{default} ha congelato {blue}{2}{default}!"
+	}
+
+	"catch_win"
+	{
+		"it"		"Tutti i T sono stati {purple}presi!"
+	}
+
+	"catch_name"
+	{
+		"it"		"Acchiapparella"
+	}
+
+	"catch_timetounfreeze_nc"
+	{
+		"it"		"{1} secondi rimanenti fino a quando si sarà sfrezzati"
+	}
+
+	"catch_timeuntilstart_nc"
+	{
+		"it"		"{1} secondi rimanenti per nascondersi!"
+	}
+
+}

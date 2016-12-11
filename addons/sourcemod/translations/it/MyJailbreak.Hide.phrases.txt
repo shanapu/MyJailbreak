@@ -1,0 +1,166 @@
+// Exported from SourceMod Translator
+// Date: 2016-12-11 14:24:08 UTC
+// Language: Italian (it)
+// 
+// To view other translations for this plugin, please visit:
+// http://translator.mitchdempsey.com/sourcemod_plugins/194
+//
+"Phrases"
+{
+
+	"hide_tag"
+	{
+		"it"		"[{green}Ezic.Nascondino{default}]"
+	}
+
+	"hide_need"
+	{
+		"it"		"{purple}{2}{default} ha votato. {purple}{1}{default} voti richiesti per giocare a {darkred}Nascondino."
+	}
+
+	"hide_twin_nc"
+	{
+		"it"		"I Prigionieri hanno vinto!"
+	}
+
+	"hide_rounds"
+	{
+		"it"		"Round {purple}{1}{default} di {purple}{2}"
+	}
+
+	"hide_ctwin_nc"
+	{
+		"it"		"I CT Hanno vinto!"
+	}
+
+	"hide_end"
+	{
+		"it"		"{purple}Nascondino{default} e' finito."
+	}
+
+	"hide_next_nc"
+	{
+		"it"		"Il Prossimo round sara': Nascondino"
+	}
+
+	"hide_next"
+	{
+		"it"		"Il Prossimo Round sara': {purple}Nascondino."
+	}
+
+	"hide_start"
+	{
+		"it"		"{purple}Il Nascondino{default} e' iniziato!"
+	}
+
+	"hide_start_nc"
+	{
+		"it"		"Il Nascondino e' iniziato!"
+	}
+
+	"hide_voted"
+	{
+		"it"		"tu hai gia' votato per il {purple}Nascondino"
+	}
+
+	"hide_progress"
+	{
+		"it"		"L'evento{darkred}{1} {default}e' {purple}gia' in corso!"
+	}
+
+	"hide_minplayer"
+	{
+		"it"		"per il nascondino sono richiesti {purple}un CT e un T!"
+	}
+
+	"hide_disabled"
+	{
+		"it"		"Nascondersi nel buio {purple}e' disabilitato!"
+	}
+
+	"hide_voting"
+	{
+		"it"		"La votazione per il nascondino e' {purple}disabilitata!"
+	}
+
+	"hide_setbyWarden"
+	{
+		"it"		"Settare Nascondino da Warden e' {purple}disabilitato!"
+	}
+
+	"hide_setbyadmin"
+	{
+		"it"		"Settare Nascondino da Admin e' {purple}disabilitato!"
+	}
+
+	"hide_timetohide_nc"
+	{
+		"it"		"{1} secondi rimanenti per nascondersi!"
+	}
+
+	"hide_timetounfreeze_nc"
+	{
+		"it"		"{1} secondi rimanenti per l'inizio del nascondino!"
+	}
+
+	"hide_stillta"
+	{
+		"it"		"Hai {green}{1}{default} Granate rimanenti."
+	}
+
+	"hide_nota"
+	{
+		"it"		"Tu Non hai piu' granate"
+	}
+
+	"hide_info_title"
+	{
+		"it"		"Nascondino Attivo!"
+	}
+
+	"hide_info_line1"
+	{
+		"it"		"I T Hanno tempo per nascondersi!"
+	}
+
+	"hide_info_line2"
+	{
+		"it"		"i T saranno congelati Quando i CT verranno a cercarvi!"
+	}
+
+	"hide_info_line3"
+	{
+		"it"		"Hai CT Verranno date delle granate"
+	}
+
+	"hide_info_line4"
+	{
+		"it"		"Le Regole del JB Non sono applicabili in questo round!"
+	}
+
+	"hide_info_line5"
+	{
+		"it"		"LR disabilitato in questo round!"
+	}
+
+	"hide_info_line6"
+	{
+		"it"		"Tutti Possono Andare dove vogliono"
+	}
+
+	"hide_info_line7"
+	{
+		"it"		"Buona Fortuna!"
+	}
+
+	"hide_wait"
+	{
+		"it"		"Devi aspettare {purple}{1}{default} round per fare un evento!"
+	}
+
+	"hide_name"
+	{
+		"it"		"Nascondino"
+	}
+
+}

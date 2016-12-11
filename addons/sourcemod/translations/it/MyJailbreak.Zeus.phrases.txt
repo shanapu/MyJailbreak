@@ -1,0 +1,146 @@
+// Exported from SourceMod Translator
+// Date: 2016-12-11 14:24:08 UTC
+// Language: Italian (it)
+// 
+// To view other translations for this plugin, please visit:
+// http://translator.mitchdempsey.com/sourcemod_plugins/189
+//
+"Phrases"
+{
+
+	"zeus_tag"
+	{
+		"it"		"[{green}EziJB.Zeus{default}]"
+	}
+
+	"zeus_need"
+	{
+		"it"		"{purple}{2}{default} ha votato per l'evento {green}Zeus. {purple}{1}{default} Voti richiesti per l'evento {darkred}Zeus"
+	}
+
+	"zeus_rounds"
+	{
+		"it"		"Round {purple}{1}{default} di {purple}{2}"
+	}
+
+	"zeus_twin_nc"
+	{
+		"it"		"A Prisoner has survived!"
+	}
+
+	"zeus_voting"
+	{
+		"it"		"Voting for Zeus Day is {purple}disabled!"
+	}
+
+	"zeus_setbywarden"
+	{
+		"it"		"Set Zeus Day by Warden is {purple}disabled!"
+	}
+
+	"zeus_setbyadmin"
+	{
+		"it"		"Set Zeus Day by Admin is {purple}disabled!"
+	}
+
+	"zeus_minplayer"
+	{
+		"it"		"Per questo evento e' neccessario {purple}una Guardia e un Prigioniero!"
+	}
+
+	"zeus_ctwin_nc"
+	{
+		"it"		"Una guardia è sopravvissuta!"
+	}
+
+	"zeus_end"
+	{
+		"it"		"{purple}L'evento Zeus{default} e' finito."
+	}
+
+	"zeus_next"
+	{
+		"it"		"Il prossimo round si fara' l'evento: {purple}Zeus"
+	}
+
+	"zeus_next_nc"
+	{
+		"it"		"Il prossimo round si fara' l'evento Zeus."
+	}
+
+	"zeus_start"
+	{
+		"it"		"{purple}Evento Zeus{default} Iniziato!"
+	}
+
+	"zeus_start_nc"
+	{
+		"it"		"Evento Zeus Startato!"
+	}
+
+	"zeus_voted"
+	{
+		"it"		"hai già votato per {purple}Zeus!"
+	}
+
+	"zeus_progress"
+	{
+		"it"		"L'evento {darkred}{1} {default}e' {purple}gia' in corso!"
+	}
+
+	"zeus_disabled"
+	{
+		"it"		"Evento Zeus {purple}disabilitato!"
+	}
+
+	"zeus_timeuntilstart_nc"
+	{
+		"it"		"{1} secondi fino a inizio turno!"
+	}
+
+	"zeus_info_title"
+	{
+		"it"		"Evento Zeus Attivato!"
+	}
+
+	"zeus_info_line1"
+	{
+		"it"		"Evento Zeus - Free for All!"
+	}
+
+	"zeus_info_line2"
+	{
+		"it"		"Hai un solo colpo nella zeus!"
+	}
+
+	"zeus_info_line3"
+	{
+		"it"		"Quando si ottiene un kill, sarete ricompensati con un altro Zeus!"
+	}
+
+	"zeus_info_line4"
+	{
+		"it"		"Tutte le Regole del JailBreak sono disattivate in questo Round!"
+	}
+
+	"zeus_info_line5"
+	{
+		"it"		"!lr disattivo in questo round!"
+	}
+
+	"zeus_info_line6"
+	{
+		"it"		"Non e' concesso entrare nei posti segreti/condotti. State nella 'JailRoom'"
+	}
+
+	"zeus_info_line7"
+	{
+		"it"		"Buona Fortuna!"
+	}
+
+	"zeus_wait"
+	{
+		"it"		"Aspetta {purple}{1}{default} piu' round per l'evento Zeus!"
+	}
+
+}

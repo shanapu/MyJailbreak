@@ -1,0 +1,151 @@
+// Exported from SourceMod Translator
+// Date: 2016-12-11 14:24:09 UTC
+// Language: Italian (it)
+// 
+// To view other translations for this plugin, please visit:
+// http://translator.mitchdempsey.com/sourcemod_plugins/198
+//
+"Phrases"
+{
+
+	"noscope_tag"
+	{
+		"it"		"[{green}Ezic.NoScope{default}]"
+	}
+
+	"noscope_need"
+	{
+		"it"		"{purple}{2}{default} ha votato. {purple}{1}{default} voti richiesti per fare l'evento {darkred}NoScope "
+	}
+
+	"noscope_rounds"
+	{
+		"it"		"Round {purple}{1}{default} di {purple}{2}"
+	}
+
+	"noscope_twin_nc"
+	{
+		"it"		"Un T e' Sopravvissuto!"
+	}
+
+	"noscope_voting"
+	{
+		"it"		"Battaglia NoScope {purple}disabilitato!"
+	}
+
+	"noscope_setbywarden"
+	{
+		"it"		"Settare No Scope Battle da Warden e' {purple}disabilitato!"
+	}
+
+	"noscope_minplayer"
+	{
+		"it"		"Per la Battaglia Noscope e' richiesta {purple}un CT e un T!"
+	}
+
+	"noscope_setbyadmin"
+	{
+		"it"		"Settare No Scope Battle da Admin e' {purple}disabilitato!"
+	}
+
+	"noscope_ctwin_nc"
+	{
+		"it"		"Una Guardia e' sopravvissuta!"
+	}
+
+	"noscope_end"
+	{
+		"it"		"{purple}L'evento NoScope{default} e' finito."
+	}
+
+	"noscope_next"
+	{
+		"it"		"Il Prossimo Round Sara': {purple}Battaglia NoScope."
+	}
+
+	"noscope_next_nc"
+	{
+		"it"		"Il Prossimo Round Sara': Battaglia NoScope."
+	}
+
+	"noscope_start"
+	{
+		"it"		"L'evento {purple}Battaglia NoScope{default} e' iniziato!"
+	}
+
+	"noscope_start_nc"
+	{
+		"it"		"L'evento Battaglia Noscope e' iniziato!"
+	}
+
+	"noscope_voted"
+	{
+		"it"		"Tu hai gia' votato per l'evento {purple}Battaglia NoScope!"
+	}
+
+	"noscope_progress"
+	{
+		"it"		"L'evento {darkred}{1} {default}e' {purple}gia' in corso!"
+	}
+
+	"noscope_disabled"
+	{
+		"it"		"L'evento NoScope e' {purple}disabilitato!"
+	}
+
+	"noscope_timeuntilstart_nc"
+	{
+		"it"		"{1} secondi rimanenti all' inizio dell'evento!"
+	}
+
+	"noscope_info_title"
+	{
+		"it"		"NoScope attivato!"
+	}
+
+	"noscope_info_line1"
+	{
+		"it"		"Battaglia NoScope  - Free for All!"
+	}
+
+	"noscope_info_line2"
+	{
+		"it"		"Gravita' bassa Attivata!"
+	}
+
+	"noscope_info_line3"
+	{
+		"it"		"Scappa durante la fase di 'NoDamage'"
+	}
+
+	"noscope_info_line4"
+	{
+		"it"		"Tutte le Regole del JB Non sono valide per questo round!"
+	}
+
+	"noscope_info_line5"
+	{
+		"it"		"Lr disabilitato in questo round!"
+	}
+
+	"noscope_info_line6"
+	{
+		"it"		"State nella 'JailRoom'! Non andate in condotti o posti segreti!"
+	}
+
+	"noscope_info_line7"
+	{
+		"it"		"Buona Fortuna!"
+	}
+
+	"noscope_wait"
+	{
+		"it"		"Devi Aspettare {purple}{1}{default} round per un altro event day!"
+	}
+
+	"noscope_name"
+	{
+		"it"		"Battaglia NoScope"
+	}
+
+}

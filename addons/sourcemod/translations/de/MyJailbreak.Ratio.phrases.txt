@@ -1,0 +1,41 @@
+// Exported from SourceMod Translator
+// Date: 2016-12-11 14:23:58 UTC
+// Language: German (de)
+// 
+// To view other translations for this plugin, please visit:
+// http://translator.mitchdempsey.com/sourcemod_plugins/201
+//
+"Phrases"
+{
+
+	"ratio_tag"
+	{
+		"de"		"[{green}MyJB.ratio{default}]"
+	}
+
+	"ratio_find"
+	{
+		"de"		"Wähle den nächsten Anwärter aus der Liste. {green}{1} {default}ist neuer Guard"
+	}
+
+	"ratio_random"
+	{
+		"de"		"Anwärter Liste ist leer. {green}{1} {default}wurde als neuer Zufälliger Guard gewählt"
+	}
+
+	"ratio_banned_nc"
+	{
+		"de"		"Du kannst nicht als Wärter spielen. Du bist als CT gebanned."
+	}
+
+	"ratio_banned"
+	{
+		"de"		"Du kannst nicht als Wärter spielen. Du bist als{green}CT{default} gebanned."
+	}
+
+	"ratio_close"
+	{
+		"de"		"Schliessen"
+	}
+
+}

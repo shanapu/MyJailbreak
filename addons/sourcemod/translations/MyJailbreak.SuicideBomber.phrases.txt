@@ -1,268 +1,177 @@
 // Exported from SourceMod Translator
+// Date: 2016-12-11 14:24:04 UTC
+// Language: English (en)
+// 
+// To view other translations for this plugin, please visit:
 // http://translator.mitchdempsey.com/sourcemod_plugins/182
 //
 "Phrases"
 {
+
 	"suicidebomber_tag"
 	{
-		"de"		"[{green}MyJB.SuicideBomber{default}]"
-		"ru"		"[{green}MyJB.Смертник{default}]"
 		"en"		"[{green}MyJB.SuicideBomber{default}]"
 	}
 
 	"suicidebomber_need"
 	{
-		"#format"   "{1:i},{2:N}"
-		"ru"		"{purple}{2}{default} проголосовал. {purple}{1}{default} голосов осталось до {darkred}игры Смертник"
-		"pl"		"{purple}{2}{default} zaglosowal {purple}{1}{default} pozostalo glosow do {darkred}Suicide Bomber"
-		"de"		"{purple}{2}{default} hat gevotet. Jetzt noch {purple}{1}{default} votes bis {darkred}Suicide Bomber{default} beginnt"
+		"#format"	"{1:i},{2:N}"
 		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes required to play {darkred}Suicide Bomber."
-	}
-
-	"suicidebomber_timeuntilopen_nc"
-	{
-		"#format"   "{1:i}"
-		"ru"		"{1} секунд до открытия клеток"
-		"pl"		"{1} sekund do otwarcia sie cel! "
-		"de"		"{1} Sekunden bis die Zellen öffnen"
-		"en"		"{1} Seconds until the Cells open!"
 	}
 
 	"suicidebomber_rounds"
 	{
-		"#format"   "{1:i},{2:i}"
-		"ru"		"Раунд {purple}{1} с {purple}{2}"
-		"pl"		"Runda {purple}{1}{default} z {purple}{2}"
-		"de"		"Runde {purple}{1}{default} von {purple}{2}"
+		"#format"	"{1:i},{2:i}"
 		"en"		"Round {purple}{1}{default} of {purple}{2}"
-		"da"		"Runde {purple}{1}{default} af {purple}{2}"
 	}
 
 	"suicidebomber_twin_nc"
 	{
 		"en"		"All of the Guards were Eliminated!"
-		"ru"		"Все КТ мертвы"
-		"pl"		"wszyscy CT nie zyja"
-		"de"		"Alle CT sind Tod"
-	}
-
-	"suicidebomber_info_title"
-	{
-		"ru"		"Игра Смертник активирована"
-		"pl"		"Suicide Bomber jest aktywny"
-		"de"		"Suicide Bomber ist aktiv"
-		"en"		"Suicide Bomber is now Activated!"
 	}
 
 	"suicidebomber_voting"
 	{
 		"en"		"Voting for Suicide Bomber is {purple}disabled!"
-		"ru"		"Голосование игроков за Смертник {purple}отключено"
-		"pl"		"Glosowanie graczy na Suicide Bomber jest {purple}wylaczone"
-		"de"		"Voting für Suicide Bomber ist {purple}deaktiviert"
 	}
 
 	"suicidebomber_setbywarden"
 	{
-		"ru"		"Установка игры Смертник админом {purple}отменена"
-		"pl"		"Glosowanie na Suicide Bomber przez Straznika jest {purple}wylaczone"
-		"de"		"Suicide Bomber Aktivierung durch den Warden ist {purple}deaktiviert"
 		"en"		"Set Suicide Bomber by Warden is {purple}disabled!"
-	}
-
-	"suicidebomber_info_line1"
-	{
-		"ru"		"Смертники повсюду! "
-		"pl"		"Suicide Bombers sa wszedzieeeeee!"
-		"de"		"Überall Selbstmordattentäter!!"
-		"en"		"Suicide Bombers are everywhere!"
 	}
 
 	"suicidebomber_minplayer"
 	{
-		"ru"		"Для игры Смертник Вам нужно {purple}1 КТ & 1 Т"
-		"pl"		"Do zabawy cowboy potrzeba przynajmniej {purple}jednego CT i jednego TT"
-		"de"		"Für Suicide Bomber brauchen wir mindestens {purple}einen CT und einen T"
 		"en"		"For Suicide Bomber you need at least {purple}one Guard & one Prisoner!"
-		"da"		"For Suicide Bomber skal der mindst være {purple}en CT & en T"
-	}
-
-	"suicidebomber_info_line2"
-	{
-		"en"		"Prisoners now have Jihads and can suicide with +lookweapon 'F' -key!"
-		"ru"		"Террористам выдана c4, они могут взорвать себя с помощью +lookweapon 'F' - кнопка"
-		"pl"		"Terrorysta ma  c4  i moze sie wysadzic za pomoca +lookweapon 'F'-klawisza"
-		"de"		"Terrors haben c4 und können mit der +lookweapon 'F'-Taste suizid begehen"
 	}
 
 	"suicidebomber_setbyadmin"
 	{
-		"ru"		"Установка игры Смертник админом {purple}отменено"
-		"pl"		"Wlaczenie Suicide Bomber przez admina jest {purple}wylaczone"
-		"de"		"Suicide Bomber Aktivierung durch den Admin ist {purple}deaktiviert"
 		"en"		"Set Suicide Bomber by Admin is {purple}disabled!"
 	}
 
 	"suicidebomber_ctwin_nc"
 	{
-		"ru"		"КТ выжили"
-		"pl"		"Counter-Terrorists przetrwal"
-		"de"		"Die Counter-Terrorists haben überlebt"
 		"en"		"A Guard has survived!"
-	}
-
-	"suicidebomber_info_line3"
-	{
-		"ru"		"Нажмите 'E', чтобы использовать ускоренный бег!"
-		"pl"		"wcisnij  E by biec  sprintem !"
-		"de"		"mit der BENUTZEN-Taste kannst du sprinten"
-		"en"		"Hold E to sprint!"
-		"da"		"Brug E til at Sprint!"
 	}
 
 	"suicidebomber_end"
 	{
-		"ru"		"{purple}Игра Смертник{default} закончилась"
-		"pl"		"{purple}Suicide Bomber{default} zakonczony"
-		"de"		"{purple}Suicide Bomber{default} beendet"
 		"en"		"{purple}Suicide Bomber{default} has ended."
 	}
 
 	"suicidebomber_next"
 	{
-		"ru"		"Следующий раунд - игра {purple}Смертник"
-		"pl"		"Nastepna runda to Suicide Bomber"
-		"de"		"Nächste Runde ist {purple}Suicide Bomber"
 		"en"		"The following round will be: {purple}Suicide Bomber."
 	}
 
 	"suicidebomber_next_nc"
 	{
-		"ru"		"Следующий раунд - игра Смертник"
-		"pl"		"Nastepna runda to Cowboy"
-		"de"		"Nächste Runde ist Suicide Bomber"
 		"en"		"The following round will be: Suicide Bomber."
-	}
-
-	"suicidebomber_info_line4"
-	{
-		"ru"		"Стандартные правила джайлов отменены"
-		"pl"		"Wszystkie normalne zasady wiezienia zostaly zastapione"
-		"de"		"Alle normalen Jailregeln sind aufgehoben!"
-		"en"		"All usual Jailbreak Rules do not apply during this round!"
 	}
 
 	"suicidebomber_start"
 	{
 		"en"		"{purple}Suicide Bomber{default} has begun!"
-		"ru"		"Играй {purple}Смертник{default} началась!"
-		"pl"		"{purple}Suicide Bomber{default} sie rozpoczal!"
-		"de"		"{purple}Suicide Bomber{default} ist gestartet!"
 	}
 
 	"suicidebomber_start_nc"
 	{
-		"ru"		"Игра Смертник началась!"
-		"pl"		"Suicide Bomber sie rozpoczal!"
-		"de"		"Suicide Bomber ist gestartet!"
 		"en"		"Suicide Bomber has begun!"
-	}
-
-	"suicidebomber_info_line5"
-	{
-		"ru"		"Нет последнего желания!"
-		"pl"		"Nie ma ostatniego zyczenia!"
-		"de"		"Der letzte Terrorist hat keinen Wunsch frei!"
-		"en"		"Last Requests are disabled during this round!"
 	}
 
 	"suicidebomber_voted"
 	{
-		"ru"		"Вы уже проголосовали за {purple}игру Смертник"
-		"pl"		"Juz glosowales na {purple}Suicide Bomber "
-		"de"		"Du hast schon für {purple}Suicide Bomber {default}gevotet"
 		"en"		"You have already voted for {purple}Suicide Bomber!"
 	}
 
 	"suicidebomber_progress"
 	{
-		"#format"   "{1:s}"
-		"ru"		"Игра {darked}{1} {defalult}уже {purple}началась"
-		"pl"		"Zabawa  {darkred}{1} {default}sie {purple}rozpoczela"
-		"de"		"Event {darkred}{1} {default}ist {purple}bereits gesetzt."
+		"#format"	"{1:s}"
 		"en"		"The event {darkred}{1} {default}is {purple}already in progress!"
-	}
-
-	"suicidebomber_info_line6"
-	{
-		"ru"		"Каждому разрешено ходить везде, где хочет"
-		"pl"		"Kazdy moze biegac gdzie tylko chce! !"
-		"de"		"Jeder darf überall hin wo er will!"
-		"en"		"Everyone is allowed to go anywhere within the map!"
 	}
 
 	"suicidebomber_disabled"
 	{
-		"ru"		"Игра Смертник {purple}выключена"
-		"pl"		"Suicide Bomber  jest tymczasowo {purple}wylaczony."
-		"de"		"Du musst das {purple}c4{default} ausrüsten"
 		"en"		"Suicide Bomber is currently {purple}disabled!"
 	}
 
 	"suicidebomber_sprint"
 	{
-		"ru"		"Вы не используете {blue}спринт!"
-		"pl"		"Uzywasz wlasnie {blue}Sprint!"
-		"de"		"Du {blue}sprintest!"
 		"en"		"You are now {blue}Sprinting!"
-	}
-
-	"suicidebomber_info_line7"
-	{
-		"ru"		"Не будь засранцем!"
-		"pl"		"Nie badz DUPKIEM!"
-		"de"		"Bau keine Scheisse!"
-		"en"		"Don't be an Asshole!"
 	}
 
 	"suicidebomber_sprintend"
 	{
-		"#format"   "{1:i}"
-		"ru"		"{blue}Забег закончен!{default} Время восстановления {1} секунд"
-		"pl"		"{blue}Sprint zakonczony!{default} odpoczniesz za  {1} Sekund"
-		"de"		"Du kannst nicht mehr {blue}sprinten! {default}warte {1} Sekunden!"
+		"#format"	"{1:i}"
 		"en"		"{blue}You're too tired to sprint!{default} Rest for {1} Seconds."
 	}
 
 	"suicidebomber_sprintagain"
 	{
-		"ru"		"Вы можете{blue}ускориться снова!{default}"
-		"pl"		"Znowu mozesz uzyc {blue}Sprintu!{default}"
-		"de"		"Du kannst wieder {blue}sprinten!"
 		"en"		"You caught your breath. You can {blue}sprint {default}again!"
-	}
-
-	"suicidebomber_wait"
-	{
-		"#format"   "{1:i}"
-		"ru"		"Вы должны подождать ещё {purple}{1}{default} пару раундов"
-		"pl"		"Musisz poczekac  {1} rund"
-		"de"		"Du musst noch {purple}{1}{default} Runden warten"
-		"en"		"You must wait {purple}{1}{default} more rounds for an Event Day!"
 	}
 
 	"suicidebomber_timetohide_nc"
 	{
-		"#format"   "{1:i}"
-		"ru"		"{1} секунд, чтобы спрятаться"
-		"pl"		"{1} sekund do ukrycia sie!"
-		"de"		"{1} Sekunden to hide"
+		"#format"	"{1:i}"
 		"en"		"{1} seconds left to hide!"
+	}
+
+	"suicidebomber_timeuntilopen_nc"
+	{
+		"#format"	"{1:i}"
+		"en"		"{1} Seconds until the Cells open!"
+	}
+
+	"suicidebomber_info_title"
+	{
+		"en"		"Suicide Bomber is now Activated!"
+	}
+
+	"suicidebomber_info_line1"
+	{
+		"en"		"Suicide Bombers are everywhere!"
+	}
+
+	"suicidebomber_info_line2"
+	{
+		"en"		"Prisoners now have Jihads and can suicide with +lookweapon 'F' -key!"
+	}
+
+	"suicidebomber_info_line3"
+	{
+		"en"		"Hold E to sprint!"
+	}
+
+	"suicidebomber_info_line4"
+	{
+		"en"		"All usual Jailbreak Rules do not apply during this round!"
+	}
+
+	"suicidebomber_info_line5"
+	{
+		"en"		"Last Requests are disabled during this round!"
+	}
+
+	"suicidebomber_info_line6"
+	{
+		"en"		"Everyone is allowed to go anywhere within the map!"
+	}
+
+	"suicidebomber_info_line7"
+	{
+		"en"		"Don't be an Asshole!"
+	}
+
+	"suicidebomber_wait"
+	{
+		"#format"	"{1:i}"
+		"en"		"You must wait {purple}{1}{default} more rounds for an Event Day!"
 	}
 
 	"suicidebomber_name"
 	{
-		"ru"		"Смертник"
 		"en"		"Suicide Bomber"
 	}
 

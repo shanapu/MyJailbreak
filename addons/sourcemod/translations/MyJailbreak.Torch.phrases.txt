@@ -1,296 +1,185 @@
 // Exported from SourceMod Translator
+// Date: 2016-12-11 14:24:06 UTC
+// Language: English (en)
+// 
+// To view other translations for this plugin, please visit:
 // http://translator.mitchdempsey.com/sourcemod_plugins/183
 //
 "Phrases"
 {
-	"torch_sprintagain"
-	{
-		"en"		"You caught your breath. You can {blue}sprint {default}again!"
-		"ru"		"У вас снова есть{blue}спринт!{default}"
-		"pl"		"Znowu mozesz uzyc {blue}Sprintu!{default}"
-		"de"		"Du kannst wieder {blue}sprinten!"
-	}
 
 	"torch_tag"
 	{
-		"ru"		"[{green}MyJB.TorchRelay{default}]"
 		"en"		"[{green}MyJB.TorchRelay{default}]"
 	}
 
 	"torch_need"
 	{
-		"#format"   "{1:i},{2:N}"
-		"ru"		"{purple}{2}{default} проголосовал. {purple}{1}{default} голосов осталось до {darkred}игры Torch Relay"
-		"pl"		"{purple}{2}{default} zaglosowal {purple}{1}{default} pozostalo glosow do {darkred}Torch Relay"
-		"de"		"{purple}{2}{default} hat gevotet. Jetzt noch {purple}{1}{default} votes bis {darkred}Torch Relay{default} beginnt"
+		"#format"	"{1:i},{2:N}"
 		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes required to play {darkred}Torch Relay."
-		"da"		"{purple}{2}{default} har stemt. {purple}{1}{default} stemmer tilbage til {darkred}Torch Relay{default} starter!"
-	}
-
-	"torch_disabled"
-	{
-		"de"		"Torch Relay ist vorübergehend {purple}deaktiviert."
-		"ru"		"Игра Torch Relay {purple}отключена."
-		"pl"		"Torch Relay jest{purple}wylaczony."
-		"en"		"Torch Relay is currently {purple}disabled!"
-		"da"		"Torch Relay er midlertidigt {purple}slået fra."
 	}
 
 	"torch_rounds"
 	{
-		"#format"   "{1:i},{2:i}"
-		"ru"		"Раунд {purple}{1}{default} с {purple}{2}"
-		"pl"		"Runda {purple}{1}{default} z {purple}{2}"
-		"de"		"Runde {purple}{1}{default} von {purple}{2}"
+		"#format"	"{1:i},{2:i}"
 		"en"		"Round {purple}{1}{default} of {purple}{2}"
-		"da"		"Runde {purple}{1}{default} af {purple}{2}"
-	}
-
-	"torch_info_title"
-	{
-		"ru"		"Игра Torch Relay активирована!"
-		"pl"		"Torch Relay jest Aktywny!"
-		"de"		"Torch Relay ist aktiv"
-		"en"		"Torch Relay is now Activated!"
-		"da"		"Torch Relay er aktiveret!"
 	}
 
 	"torch_end"
 	{
-		"ru"		"{purple}Игра Torch Relay{default} завершена"
-		"pl"		"{purple}Torch Relay{default} Zakonczono"
-		"de"		"{purple}Torch Relay{default} beendet"
 		"en"		"{purple}Torch Relay{default} has ended."
-		"da"		"{purple}Torch Relay{default} er afsluttet!"
 	}
 
 	"torch_voting"
 	{
-		"ru"		"Голосование игроков за игру Torch Relay {purple}отключено"
-		"pl"		"Glosowanie graczy na Torch Relay jest {purple}wylaczone"
-		"de"		"Voting für Torch Relay ist {purple}deaktiviert"
 		"en"		"Voting for Torch Relay is {purple}disabled"
-		"da"		"Afstemning for Torch Relay er {purple}slået fra"
-	}
-
-	"torch_info_line1"
-	{
-		"ru"		"Случайный игрок будет подожжен"
-		"pl"		"Randomowy gracz zostanie podpalony! "
-		"de"		"Ein zufälliger Spieler wird in Brand gesetzt"
-		"en"		"A random player will be set on fire!"
 	}
 
 	"torch_setbywarden"
 	{
-		"ru"		"Установка игры Torch Relay КМД {purple}отменена"
-		"pl"		"Glosowanie na Torch Relay przez Straznika jest {purple}wylaczone"
-		"de"		"Torch Relay Aktivierung durch den Warden ist {purple}deaktiviert"
 		"en"		"Set Torch Relay by Warden is {purple}disabled!"
-		"da"		"Start Torch Relay som Warden er {purple}slået fra"
-	}
-
-	"torch_info_line2"
-	{
-		"ru"		"Факелом можно зажечь игрока, ударив его ножом"
-		"pl"		"Czlowiek pochodnia moze podpalac innych poprzez zadanie ciosu nozem"
-		"de"		"Die Fackel kann per knife übergeben werden"
-		"en"		"Pass on the flame by knifing other players!"
 	}
 
 	"torch_setbyadmin"
 	{
-		"ru"		"Установка игры Torch Relay админом {purple}отменена"
-		"pl"		"Wlaczenie Torch Relay przez admina jest {purple}wylaczone"
-		"de"		"Torch Relay Aktivierung durch den Admin ist {purple}deaktiviert"
 		"en"		"Set Torch Relay by Admin is {purple}disabled!"
-		"da"		"Start Torch Relay som Admin er {purple}slået fra"
 	}
 
 	"torch_next"
 	{
-		"ru"		"Следующий раунд игра {purple}Torch Relay"
-		"pl"		"Nastepna runda to {purple}Torch Relay"
-		"de"		"Nächste Runde ist {purple}Torch Relay"
 		"en"		"The following round will be: {purple}Torch Relay."
-		"da"		"Næste runde er {purple}Torch Relay"
-	}
-
-	"torch_info_line3"
-	{
-		"ru"		"Нажмите 'E', чтобы использовать ускоренный бег!"
-		"pl"		"Trzymaj klawisz E by biec sprintem ! Pochodnia jest szybsza od ciebie!"
-		"de"		"mit der E-Taste kannst du sprinten. Die Fackel ist schneller als du"
-		"en"		"Hold E to sprint! The Torch is faster than you!"
 	}
 
 	"torch_next_nc"
 	{
-		"ru"		"Следующий раунд игра Torch Relay"
-		"pl"		"Nastepna runda to Torch Relay"
-		"de"		"Nächste Runde ist Torch Relay"
 		"en"		"The following round will be: Torch Relay."
-		"da"		"Næste runde er Torch Relay"
-	}
-
-	"torch_info_line4"
-	{
-		"ru"		"Стандартные правила джайлов отменены"
-		"pl"		"Wszystkie normalne zasady wiezienia zostaly zastapione"
-		"de"		"Alle normalen Jailregeln sind aufgehoben!"
-		"en"		"All usual Jailbreak Rules do not apply during this round!"
-		"da"		"Ingen jail regler gælder i denne runde!"
 	}
 
 	"torch_start"
 	{
-		"ru"		"Игра {purple}Torch Relay{default} началась"
-		"pl"		" {purple}Torch Relay{default} sie rozpoczal!"
-		"de"		"{purple}Torch Relay{default} ist gestartet!"
 		"en"		"{purple}Torch Relay{default} has begun!"
-		"da"		"{purple}Torch Relay{default} er startet!"
 	}
 
 	"torch_start_nc"
 	{
-		"ru"		"Игра Torch Relay началась!"
-		"pl"		"Torch Relay sie rozpoczal!"
-		"de"		"Torch Relay ist gestartet!"
 		"en"		"Torch Relay has begun!"
-		"da"		"Torch Relay er startet!"
-	}
-
-	"torch_info_line5"
-	{
-		"ru"		"Вы не можете активировать !lr в "
-		"ru"		"Вы не можете активировать !lr в "
-		"pl"		"ie mozesz uzyc !lr  w tej rundzie!"
-		"de"		"Der letzte Terrorist hat keinen Wunsch frei!"
-		"en"		"Last Request is disabled during this round!"
-		"da"		"Der kan ikke laves !lr"
 	}
 
 	"torch_voted"
 	{
-		"ru"		"Вы уже проголосовали за игру {purple}Torch Relay"
-		"pl"		"Juz glosowales na {purple}Torch Relay"
-		"de"		"Du hast schon für {purple}Torch Relay {default}gevotet"
 		"en"		"You have already voted for {purple}Torch Relay!"
-		"da"		"Du har allerede stemt på {purple}Torch Relay"
-	}
-
-	"torch_info_line6"
-	{
-		"en"		"You must stay in the main Jailroom! Don't enter vents or secrets!"
-		"ru"		"Оставайтесь в клетках! Не убегайте в нычки!"
-		"pl"		"Zostan w glownym pomieszczeniu Wiezienia! Zakaz wejsc do SECRETOW!"
-		"de"		"Bleib im Haupt Jail Raum! Verstecke sind verboten!"
 	}
 
 	"torch_progress"
 	{
-		"#format"   "{1:s}"
-		"ru"		"Игра {darkred}{1} {default}уже {purple}началась."
-		"pl"		"Zabawa  {darkred}{1} {default}sie {purple}rozpoczela"
-		"de"		"Event {darkred}{1} {default}ist {purple}bereits gesetzt."
+		"#format"	"{1:s}"
 		"en"		"The event {darkred}{1} {default}is {purple}already in progress!"
 	}
 
 	"torch_minplayer"
 	{
-		"ru"		"Для игры Torch Relay нужно как минимум {purple}3 игрока, и 1 должен быть КТ"
-		"pl"		"Do zabawy Torch Relay potrzeba przynajmniej {purple}trzech graczy w tym jednego  CT"
-		"de"		"Für Torch Relay brauchen wir mindestens {purple}drei Spieler einer davon CT"
 		"en"		"For Torch Relay you need at least {purple}three players, one of which must be a Guard!"
-	}
-
-	"torch_info_line7"
-	{
-		"ru"		"Правила сервера должны соблюдаться!"
-		"pl"		"Pamietaj o zasadach Serwera i Serwerowni!"
-		"de"		"Bau keine Scheisse!"
-		"en"		"You must follow the server rules!"
-		"da"		"Server Reglerne skal stadig holdes!"
 	}
 
 	"torch_sprint"
 	{
-		"ru"		"Вы сейчас используете {blue} спринт!"
-		"pl"		"Uzywasz wlasnie {blue}Sprint!"
-		"de"		"Du {blue}sprintest!"
 		"en"		"You are now {blue}Sprinting!"
-		"da"		"Du bruger nu {blue}Sprint!"
 	}
 
 	"torch_sprintend"
 	{
-		"#format"   "{1:i}"
-		"ru"		"{blue}Спринт кончился!{default} Время восстановления {1} секнуд"
-		"pl"		"{blue}Sprint zakonczony!{default} odpoczniesz za  {1} Sekund"
-		"de"		"Du kannst nicht mehr {blue}sprinten! {default}warte {1} Sekunden!"
+		"#format"	"{1:i}"
 		"en"		"{blue}You're too tired to sprint!{default} Rest for {1} Seconds."
-	}
-
-	"torch_wait"
-	{
-		"#format"   "{1:i}"
-		"ru"		"Вы должны подождать ещё {purple}{1}{default} пару раундов"
-		"pl"		"Musisz poczekac  {1} rund"
-		"de"		"Du musst noch {purple}{1}{default} Runden warten"
-		"en"		"You must wait {purple}{1}{default} more rounds for an Event Day!"
-		"da"		"Du skal vente {purple}{1}{default} flere runder"
 	}
 
 	"torch_random"
 	{
-		"#format"   "{1:N}"
-		"ru"		"{darkred}Случайный Torch Relay - {1}"
-		"pl"		"{darkred}Random Torch to obecnie .. {1}"
-		"de"		"{darkred}{1} wurde Zufälig als fackel gewählt"
+		"#format"	"{1:N}"
 		"en"		"{darkred}The Random Torch is... {1}"
+	}
+
+	"torch_sprintagain"
+	{
+		"en"		"You caught your breath. You can {blue}sprint {default}again!"
+	}
+
+	"torch_disabled"
+	{
+		"en"		"Torch Relay is currently {purple}disabled!"
+	}
+
+	"torch_info_title"
+	{
+		"en"		"Torch Relay is now Activated!"
+	}
+
+	"torch_info_line1"
+	{
+		"en"		"A random player will be set on fire!"
+	}
+
+	"torch_info_line2"
+	{
+		"en"		"Pass on the flame by knifing other players!"
+	}
+
+	"torch_info_line3"
+	{
+		"en"		"Hold E to sprint! The Torch is faster than you!"
+	}
+
+	"torch_info_line4"
+	{
+		"en"		"All usual Jailbreak Rules do not apply during this round!"
+	}
+
+	"torch_info_line5"
+	{
+		"en"		"Last Request is disabled during this round!"
+	}
+
+	"torch_info_line6"
+	{
+		"en"		"You must stay in the main Jailroom! Don't enter vents or secrets!"
+	}
+
+	"torch_info_line7"
+	{
+		"en"		"You must follow the server rules!"
+	}
+
+	"torch_wait"
+	{
+		"#format"	"{1:i}"
+		"en"		"You must wait {purple}{1}{default} more rounds for an Event Day!"
 	}
 
 	"torch_damage_nc"
 	{
-		"#format"   "{1:i}"
-		"ru"		"Случайный игрок загорится через {1} секунд"
-		"pl"		"randomowy zawodnik zostanie spalony za  {1} sekund"
-		"de"		"Ein zufälligr Spieler wird in {1} sekunden in Brand gesetzt"
+		"#format"	"{1:i}"
 		"en"		"A Random player will burn in {1} seconds!"
 	}
 
 	"torch_torchem"
 	{
-		"#format"   "{1:N}"
-		"ru"		"{purple}{1}{default} - факел"
-		"pl"		"{purple}{1}{default} jest Czlowiekiem Pochodnia"
-		"de"		"{purple}{1}{default} ist jetzt die Fackel"
+		"#format"	"{1:N}"
 		"en"		"{purple}{1}{default} is the torch!"
 	}
 
 	"torch_untorch"
 	{
-		"#format"   "{1:N}"
-		"ru"		"{purple}{1}{default} больше не факел"
-		"pl"		"{purple}{1}{default} nie jest juz  Czlowiekiem Pochodnia"
-		"de"		"{purple}{1}{default} ist nicht mehr die Fackel"
+		"#format"	"{1:N}"
 		"en"		"{purple}{1}{default} is no longer the Torch!"
 	}
 
 	"torch_win"
 	{
-		"ru"		"Факел погас"
-		"pl"		"Pochodnia zostala UGASZONA"
-		"de"		"Die Fackel ist erloschen"
 		"en"		"The torch has been extinguished!"
 	}
 
 	"torch_name"
 	{
 		"en"		"Torch Relay"
-		"de"		"Fackellauf"
-		"pl"		"Czlowiek Pochodnia"
-		"ru"		"Эстафета Олимпийского огня"
 	}
 
 }

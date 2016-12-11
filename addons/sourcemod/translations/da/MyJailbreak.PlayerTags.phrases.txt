@@ -1,0 +1,161 @@
+// Exported from SourceMod Translator
+// Date: 2016-12-11 14:24:05 UTC
+// Language: Danish (da)
+// 
+// To view other translations for this plugin, please visit:
+// http://translator.mitchdempsey.com/sourcemod_plugins/181
+//
+"Phrases"
+{
+
+	"tags_TA"
+	{
+		"da"		"[Fange.Admin]"
+	}
+
+	"tags_T"
+	{
+		"da"		"[Fange]"
+	}
+
+	"tags_CTA"
+	{
+		"da"		"[Vagt.Admin]"
+	}
+
+	"tags_CT"
+	{
+		"da"		"[Vagt]"
+	}
+
+	"tags_WA"
+	{
+		"da"		"[Warden.Admin]"
+	}
+
+	"tags_W"
+	{
+		"da"		"[Warden]"
+	}
+
+	"tags_TVIP1"
+	{
+		"da"		"[Fange.VIP]"
+	}
+
+	"tags_TVIP2"
+	{
+		"da"		"[Fange.sVIP]"
+	}
+
+	"tags_CTVIP1"
+	{
+		"da"		"[Vagt.VIP]"
+	}
+
+	"tags_CTVIP2"
+	{
+		"da"		"[Vagt.sVIP]"
+	}
+
+	"tags_WVIP1"
+	{
+		"da"		"[Warden.VIP]"
+	}
+
+	"tags_WVIP2"
+	{
+		"da"		"[Warden.sVIP]"
+	}
+
+	"tags_TOWN"
+	{
+		"da"		"[Fange.Owner]"
+	}
+
+	"tags_CTOWN"
+	{
+		"da"		"[Vagt.Owner]"
+	}
+
+	"tags_WOWN"
+	{
+		"da"		"[Warden.Owner]"
+	}
+
+	"tags_CT_chat"
+	{
+		"da"		"[Vagt]"
+	}
+
+	"tags_CTA_chat"
+	{
+		"da"		"[Vagt.Admin]"
+	}
+
+	"tags_CTOWN_chat"
+	{
+		"da"		"[Vagt.Owner]"
+	}
+
+	"tags_CTVIP1_chat"
+	{
+		"da"		"[Vagt.VIP]"
+	}
+
+	"tags_CTVIP2_chat"
+	{
+		"da"		"[Vagt.sVIP]"
+	}
+
+	"tags_T_chat"
+	{
+		"da"		"[Fange]"
+	}
+
+	"tags_TA_chat"
+	{
+		"da"		"[Fange.Admin]"
+	}
+
+	"tags_TOWN_chat"
+	{
+		"da"		"[Fange.Owner]"
+	}
+
+	"tags_TVIP1_chat"
+	{
+		"da"		"[Fange.VIP]"
+	}
+
+	"tags_TVIP2_chat"
+	{
+		"da"		"[Fange.sVIP]"
+	}
+
+	"tags_W_chat"
+	{
+		"da"		"[Warden]"
+	}
+
+	"tags_WA_chat"
+	{
+		"da"		"[Warden.Admin]"
+	}
+
+	"tags_WOWN_chat"
+	{
+		"da"		"[Warden.Owner]"
+	}
+
+	"tags_WVIP1_chat"
+	{
+		"da"		"[Warden.VIP]"
+	}
+
+	"tags_WVIP2_chat"
+	{
+		"da"		"[Warden.sVIP]"
+	}
+
+}
