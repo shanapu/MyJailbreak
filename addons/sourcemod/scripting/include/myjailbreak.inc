@@ -25,7 +25,7 @@
 
 
 //Defines
-#define MYJB_VERSION "Beta 9.0.dev-<COMMIT>"
+#define MYJB_VERSION "Beta 9.1-<COMMIT>"
 #define MYJB_URL_LINK "https://github.com/shanapu/MyJailbreak"
 
 
