@@ -1,0 +1,166 @@
+// Exported from SourceMod Translator
+// Date: 2016-12-11 14:24:17 UTC
+// Language: Italian (it)
+// 
+// To view other translations for this plugin, please visit:
+// http://translator.mitchdempsey.com/sourcemod_plugins/179
+//
+"Phrases"
+{
+
+	"war_tag"
+	{
+		"it"		"[{green}MyJB.war{default}]"
+	}
+
+	"war_need"
+	{
+		"it"		"{purple}{2}{default} ha votato guerra. {purple}{1}{default} voti richiesti per la {darkred}guerratr."
+	}
+
+	"war_rounds"
+	{
+		"it"		"Round {purple}{1}{default} of {purple}{2}"
+	}
+
+	"war_twin_nc"
+	{
+		"it"		"Prisoners win!"
+	}
+
+	"war_ctwin_nc"
+	{
+		"it"		"Le Guardie hanno vinto!"
+	}
+
+	"war_end"
+	{
+		"it"		"{purple}War{default} e' finito."
+	}
+
+	"war_next"
+	{
+		"it"		"Il Prossimo Round Sara': {purple}Guerra."
+	}
+
+	"war_next_nc"
+	{
+		"it"		"The following round will be: War."
+	}
+
+	"war_start"
+	{
+		"it"		"The {purple}War{default} has begun!"
+	}
+
+	"war_start_nc"
+	{
+		"it"		"The War has begun!"
+	}
+
+	"war_voted"
+	{
+		"it"		"You have already voted for {purple}War!"
+	}
+
+	"war_progress"
+	{
+		"it"		"The event {darkred}{1} {default}is {purple}already in progress!"
+	}
+
+	"war_minplayer"
+	{
+		"it"		"per la guerra sono richiesti {purple}un CT e un T!"
+	}
+
+	"war_disabled"
+	{
+		"it"		"War e' momentaneamente {purple}disattato!"
+	}
+
+	"war_damage_nc"
+	{
+		"it"		"{1} secondi fino a quando il danno è abilitato!"
+	}
+
+	"war_voting"
+	{
+		"it"		"Voting for War {purple}is disabled"
+	}
+
+	"war_setbywarden"
+	{
+		"it"		"Set War by Warden is {purple}disabled!"
+	}
+
+	"war_setbyadmin"
+	{
+		"it"		"Set War by Admin is {purple}disabled!"
+	}
+
+	"war_info_title"
+	{
+		"it"		"Guarra Attivata"
+	}
+
+	"war_info_line1"
+	{
+		"it"		"Non stupitevi se si è congelati in aria"
+	}
+
+	"war_info_line2"
+	{
+		"it"		"Le guardie sono in guerra con i prigionieri!"
+	}
+
+	"war_info_line3"
+	{
+		"it"		"Scappa durante la fase di 'NoDamage'!"
+	}
+
+	"war_info_line4"
+	{
+		"it"		"Tutte le Regole del JailBreak sono disattivate in questo Round"
+	}
+
+	"war_info_line5"
+	{
+		"it"		"!lr disattivo in questo round!"
+	}
+
+	"war_info_line6"
+	{
+		"it"		"Tutti i posti sono accessibili a tutti"
+	}
+
+	"war_info_line6"
+	{
+		"it"		"Everyone is allowed to go everywhere where he wants"
+	}
+
+	"war_info_line7"
+	{
+		"it"		"Buona Fortuna!"
+	}
+
+	"war_wait"
+	{
+		"it"		"You must wait {purple}{1}{default} more rounds for an Event Day!"
+	}
+
+	"war_timetounfreeze_nc"
+	{
+		"it"		"{1} seconds until you will be unfreezed!"
+	}
+
+	"war_timetohide_nc"
+	{
+		"it"		"{1} seconds left to hide!"
+	}
+
+	"war_name"
+	{
+		"it"		"Guerra"
+	}
+
+}

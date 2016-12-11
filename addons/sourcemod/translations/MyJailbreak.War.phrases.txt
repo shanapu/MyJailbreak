@@ -1,278 +1,178 @@
 // Exported from SourceMod Translator
+// Date: 2016-12-11 14:24:18 UTC
+// Language: English (en)
+// 
+// To view other translations for this plugin, please visit:
 // http://translator.mitchdempsey.com/sourcemod_plugins/179
 //
 "Phrases"
 {
+
+	"war_tag"
+	{
+		"en"		"[{green}MyJB.war{default}]"
+	}
+
+	"war_need"
+	{
+		"#format"	"{1:i},{2:N}"
+		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes required to play {darkred}War."
+	}
+
+	"war_rounds"
+	{
+		"#format"	"{1:i},{2:i}"
+		"en"		"Round {purple}{1}{default} of {purple}{2}"
+	}
+
+	"war_twin_nc"
+	{
+		"en"		"Prisoners win!"
+	}
+
 	"war_ctwin_nc"
 	{
-		"ru"		"КТ одержали победу"
-		"pl"		"Counter-Terrorists WYGRALO"
-		"de"		"Counter-Terrorists haben gewonnen"
 		"en"		"The Guards win!"
-		"da"		"Counter-Terroristerne vinder"
-	}
-
-	"war_damage_nc"
-	{
-		"#format"   "{1:i}"
-		"ru"		"{1} секунд до включение урона"
-		"pl"		"{1} sekund do ponownegowlaczenie przyjmowania uszkodzen"
-		"de"		"{1} Sekunden bis Schaden aktiv ist"
-		"en"		"{1} seconds until damage is enabled!"
-		"da"		"{1} sekunder til man kan skyde hinanden!"
-	}
-
-	"war_disabled"
-	{
-		"ru"		"Война {purple}отключена."
-		"pl"		"Wojna jest {purple}wylaczona."
-		"de"		"War ist vorübergehend {purple}deaktiviert."
-		"en"		"War is currently {purple}disabled!"
-		"da"		"War er midlertidigt {purple}slået fra."
 	}
 
 	"war_end"
 	{
-		"ru"		"{purple}Война{default} окончена"
-		"pl"		"{purple}Wojna{default} Zakonczona"
-		"de"		"{purple}War{default} beendet"
 		"en"		"{purple}War{default} has ended."
-		"da"		"{purple}War{default} er afsluttet!"
+	}
+
+	"war_next"
+	{
+		"en"		"The following round will be: {purple}War."
+	}
+
+	"war_next_nc"
+	{
+		"en"		"The following round will be: War."
+	}
+
+	"war_start"
+	{
+		"en"		"The {purple}War{default} has begun!"
+	}
+
+	"war_start_nc"
+	{
+		"en"		"The War has begun!"
+	}
+
+	"war_voted"
+	{
+		"en"		"You have already voted for {purple}War!"
+	}
+
+	"war_progress"
+	{
+		"#format"	"{1:s}"
+		"en"		"The event {darkred}{1} {default}is {purple}already in progress!"
+	}
+
+	"war_minplayer"
+	{
+		"en"		"For a War you need at least {purple}one Guard & one Prisoner!"
+	}
+
+	"war_disabled"
+	{
+		"en"		"War is currently {purple}disabled!"
+	}
+
+	"war_damage_nc"
+	{
+		"#format"	"{1:i}"
+		"en"		"{1} seconds until damage is enabled!"
+	}
+
+	"war_voting"
+	{
+		"en"		"Voting for War {purple}is disabled"
+	}
+
+	"war_voting"
+	{
+		"en"		"Afstemning for war er {purple}slået fra"
+	}
+
+	"war_setbywarden"
+	{
+		"en"		"Set War by Warden is {purple}disabled!"
+	}
+
+	"war_setbyadmin"
+	{
+		"en"		"Set War by Admin is {purple}disabled!"
+	}
+
+	"war_info_title"
+	{
+		"en"		"War is now Activated!"
 	}
 
 	"war_info_line1"
 	{
-		"ru"		"Не удивляйтесь, если вы висите в воздухе и заморожены"
-		"pl"		"Nie zdziw sie jak zamrozi cie w powietrzu!! "
-		"de"		"Nicht wundern falls ihr in der Luft hängt und dich nicht bewegen kannst"
 		"en"		"Do not be surprised if you are frozen in the air!"
-		"da"		"Ikke bliv overrasket hvis du sidder fast i luften og frosset!"
 	}
 
 	"war_info_line2"
 	{
-		"ru"		"В войне КТ играют против Т"
-		"pl"		"Podczas Wojny CT gra przeciwko T "
-		"de"		"In Kriegrunden spielen CT's gegen T's"
 		"en"		"The Guards are at war with the Prisoners!"
-		"da"		"I war skal CT og T spille mod hinanden."
 	}
 
 	"war_info_line3"
 	{
-		"ru"		"Во время NODAMAGE вы можете двигаться и найти позицию"
-		"pl"		"Podczas fazy NODAMAGE mozesz sie przemieszczac i zajac pozycje "
-		"de"		"Während der Nodamage Phase darfst du dich bewegen und in Position gehen"
 		"en"		"Run away during the 'NoDamage' phase!"
-		"da"		"Indtil runden begynder, kan du finde et godt sted at starte!"
 	}
 
 	"war_info_line4"
 	{
 		"en"		"All usual Jailbreak Rules do not apply during this round!"
-		"ru"		"Все нормальные правила тюрьмы отменяются"
-		"pl"		"Wszystkie normalne zasady wiezienia zostaly zastapione"
-		"de"		"Alle normalen Jailregeln sind aufgehoben!"
-		"da"		"Alle jail regler er ophævet!"
 	}
 
 	"war_info_line5"
 	{
-		"ru"		"Здесь нету последних желаний!"
-		"pl"		"Nie ma ostatniego zyczenia!"
-		"de"		"Der letzte Terrorist hat keinen Wunsch frei!"
 		"en"		"Last Request is disabled during this round!"
-		"da"		"Last Request er deaktiveret i denne runde!"
 	}
 
 	"war_info_line6"
 	{
-		"ru"		"Каждый может идти туда, куда захочет."
 		"en"		"Everyone is allowed to go everywhere where he wants"
-		"de"		"Jeder darf überall hin wo er will!"
+	}
+
+	"war_info_line6"
+	{
 		"en"		"Everyone is allowed to go everywhere where he wants"
-		"da"		"Alle kan gå hen hvor de har lyst eller starte!"
 	}
 
 	"war_info_line7"
 	{
-		"ru"		"Не будь мудаком!"
-		"pl"		"Nie badz DUPKIEM!"
-		"de"		"Bau keine Scheisse!"
 		"en"		"Don't be an Asshole!"
-		"da"		"Alle server regler skal overholdes!"
-	}
-
-	"war_info_title"
-	{
-		"ru"		"Война активна"
-		"pl"		"Wojna jest aktywna"
-		"de"		"War ist aktiv"
-		"en"		"War is now Activated!"
-		"da"		"War er aktiveret!"
-	}
-
-	"war_minplayer"
-	{
-		"ru"		"Для Войны вам необходимо как минимум {purple} один КТ"
-		"pl"		"Do zabawy Wojna potrzeba przynajmniej {purple}jednego CT"
-		"de"		"Für war brauchen wir mindestens {purple}einen CT"
-		"en"		"For a War you need at least {purple}one Guard & one Prisoner!"
-		"da"		"For war skal der mindst være {purple}en CT"
-	}
-
-	"war_name"
-	{
-		"pl"		"Wojna"
-		"ru"		"Война"
-		"de"		"Krieg"
-		"en"		"War"
-	}
-
-	"war_need"
-	{
-		"#format"   "{1:i},{2:N}"
-		"ru"		"{purple}{2}{default} проголосовал. {purple}{1}{default} голосов осталось до {darkred}Войны"
-		"pl"		"{purple}{2}{default} zaglosowal {purple}{1}{default} pozostalo glosow do {darkred}Wojny"
-		"de"		"{purple}{2}{default} hat gevotet. Jetzt noch {purple}{1}{default} votes bis {darkred}War{default} beginnt"
-		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes required to play {darkred}War."
-		"da"		"{purple}{2}{default} har stemt! {purple}{1}{default} stemmer tilbage til {darkred}war"
-	}
-
-	"war_next"
-	{
-		"ru"		"Следующий раунд {purple}Война"
-		"pl"		"Nastepna runda to  {purple}Wojna"
-		"de"		"Nächste Runde ist {purple}War"
-		"en"		"The following round will be: {purple}War."
-		"da"		"Næste runde er {purple}War"
-	}
-
-	"war_next_nc"
-	{
-		"ru"		"Следующий раунд война!"
-		"pl"		"Nastepna runda to Wojna"
-		"de"		"Nächste Runde ist War"
-		"en"		"The following round will be: War."
-		"da"		"Næste runde er War"
-	}
-
-	"war_progress"
-	{
-		"#format"   "{1:s}"
-		"ru"		"Игровой день {darkred}{1} {default}в {purple}процессе."
-		"pl"		"Zabawa  {darkred}{1} {default}sie {purple}rozpoczela"
-		"de"		"Event {darkred}{1} {default}ist {purple}bereits gesetzt."
-		"en"		"The event {darkred}{1} {default}is {purple}already in progress!"
-	}
-
-	"war_rounds"
-	{
-		"#format"   "{1:i},{2:i}"
-		"ru"		"Раунд {purple}{1}{default} о {purple}{2}"
-		"pl"		"Runda {purple}{1}{default} z {purple}{2}"
-		"de"		"Runde {purple}{1}{default} von {purple}{2}"
-		"en"		"Round {purple}{1}{default} of {purple}{2}"
-		"da"		"Runde {purple}{1}{default} af {purple}{2}"
-	}
-
-	"war_setbyadmin"
-	{
-		"ru"		"Администратор {purple}отключил{default} выбор Войны"
-		"pl"		"Wlaczenie Wojny przez admina jest {purple}wylaczone"
-		"de"		"War Aktivierung durch den Admin ist {purple}deaktiviert"
-		"en"		"Set War by Admin is {purple}disabled!"
-		"da"		"Admin bestemmer runde er {purple}slået fra"
-	}
-
-	"war_setbywarden"
-	{
-		"ru"		"Командир {purple}отключил{default} выбор Войны"
-		"pl"		"Glosowanie na Wojne przez Straznika jest {purple}wylaczone"
-		"de"		"War Aktivierung durch den Warden ist {purple}deaktiviert"
-		"en"		"Set War by Warden is {purple}disabled!"
-		"da"		"Warden bestemmer runde er {purple}slået fra"
-	}
-
-	"war_start"
-	{
-		"ru"		"{purple}Война{default} началась!"
-		"pl"		" {purple}Wojna{default} sie rozpoczela!"
-		"de"		"{purple}War{default} ist gestartet!"
-		"en"		"The {purple}War{default} has begun!"
-		"da"		"{purple}War{default} er startet!"
-	}
-
-	"war_start_nc"
-	{
-		"ru"		"Война началась!"
-		"pl"		" Wojna sie rozpoczela!"
-		"de"		"War ist gestartet!"
-		"en"		"The War has begun!"
-		"da"		"War er startet!"
-	}
-
-	"war_tag"
-	{
-		"ru"		"[{green}MyJB.war{default}]"
-		"en"		"[{green}MyJB.war{default}]"
-	}
-
-	"war_timetohide_nc"
-	{
-		"#format"   "{1:i}"
-		"da"		"{1} sekunder til at gemme dig i "
-		"en"		"{1} seconds left to hide!"
-		"de"		"{1} Sekunden zum verstecken"
-		"pl"		"{1} sekund do startu!"
-		"ru"		"{1} секунд, чтобы спрятаться"
-	}
-
-	"war_timetounfreeze_nc"
-	{
-		"#format"   "{1:i}"
-		"da"		"{1} sekunder til du bliver unfreezet!"
-		"en"		"{1} seconds until you will be unfreezed!"
-		"de"		"{1} Sekunden bis zum unfreeze"
-		"pl"		"{1} sekund do odmrozenia"
-		"ru"		"{1} секунд до разморозки"
-	}
-
-	"war_twin_nc"
-	{
-		"ru"		"Террористы одержали победу!"
-		"pl"		"Terrorysci WYGRALI"
-		"de"		"Terrorists haben gewonnen"
-		"en"		"Prisoners win!"
-		"da"		"Terroristerne vinder!"
-	}
-
-	"war_voted"
-	{
-		"ru"		"Вы уже проголосовали за {purple}Войну"
-		"pl"		"Juz glosowales na {purple}Wojne"
-		"de"		"Du hast schon für {purple}War {default}gevotet"
-		"en"		"You have already voted for {purple}War!"
-		"da"		"Du har allerede stemt for {purple}War runde!"
-	}
-
-	"war_voting"
-	{
-		"ru"		"Голосования за Войну {purple}отключено"
-		"pl"		"Glosowanie graczy na Wojne jest {purple}wylaczone"
-		"de"		"Voting für War ist {purple}deaktiviert"
-		"en"		"Voting for War {purple}is disabled"
-		"da"		"Afstemning for war er {purple}slået fra"
 	}
 
 	"war_wait"
 	{
-		"#format"   "{1:i}"
-		"ru"		"Вы должны подождать больше {purple}{1}{default} раундов"
-		"pl"		"Musisz poczekac  {1} rund"
-		"de"		"Du musst noch {purple}{1}{default} Runden warten"
+		"#format"	"{1:i}"
 		"en"		"You must wait {purple}{1}{default} more rounds for an Event Day!"
-		"da"		"Du skal vente i {purple}{1}{default} runder!"
+	}
+
+	"war_timetounfreeze_nc"
+	{
+		"#format"	"{1:i}"
+		"en"		"{1} seconds until you will be unfreezed!"
+	}
+
+	"war_timetohide_nc"
+	{
+		"#format"	"{1:i}"
+		"en"		"{1} seconds left to hide!"
+	}
+
+	"war_name"
+	{
+		"en"		"War"
 	}
 
 }

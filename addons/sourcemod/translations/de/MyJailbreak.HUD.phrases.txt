@@ -1,0 +1,21 @@
+// Exported from SourceMod Translator
+// Date: 2016-12-11 14:23:58 UTC
+// Language: German (de)
+// 
+// To view other translations for this plugin, please visit:
+// http://translator.mitchdempsey.com/sourcemod_plugins/231
+//
+"Phrases"
+{
+
+	"hud_on"
+	{
+		"de"		"HUD {purple}ist aktiv!"
+	}
+
+	"hud_off"
+	{
+		"de"		"HUD {purple}ist deaktiviert!"
+	}
+
+}

@@ -1,0 +1,871 @@
+// Exported from SourceMod Translator
+// Date: 2016-12-11 14:23:48 UTC
+// Language: Italian (it)
+// 
+// To view other translations for this plugin, please visit:
+// http://translator.mitchdempsey.com/sourcemod_plugins/178
+//
+"Phrases"
+{
+
+	"warden_tag"
+	{
+		"it"		"[{green}CAPOCT{default}]"
+	}
+
+	"warden_new"
+	{
+		"it"		"{purple}{1}{default} E'ora il Warden di questa prigione."
+	}
+
+	"warden_new_nc"
+	{
+		"it"		"{1} E'ora il Warden di questa prigione."
+	}
+
+	"warden_playerdead"
+	{
+		"it"		"Solo {purple}i Player in vita{default} possono fare !w!"
+	}
+
+	"warden_ctsonly"
+	{
+		"it"		"Solo {purple}i CT{default} possono fare !w"
+	}
+
+	"warden_exist"
+	{
+		"it"		"Il CAPOCT e': {purple}{1}{default}."
+	}
+
+	"warden_retire"
+	{
+		"it"		"{purple}{1}{default} Si e' ritirato da CapoCT. A questo punto E'possibile scegliere un nuovo Warden!"
+	}
+
+	"warden_retire_nc"
+	{
+		"it"		"{1} Si e' ritirato da CapoCT. A questo punto E'possibile scegliere un nuovo Warden"
+	}
+
+	"warden_notwarden"
+	{
+		"it"		"Devi Essere CapoCT per fare questo comando!"
+	}
+
+	"warden_dead"
+	{
+		"it"		"Il CapoCT {darkred}e' morto{default}. Sceglietene un altro."
+	}
+
+	"warden_nowarden"
+	{
+		"it"		"Al momento non c'e' {purple}Il CapoCT{default}. Scrivi {green}!w{default} per diventarlo!"
+	}
+
+	"warden_nowarden_nc"
+	{
+		"it"		"Al momento non c'e' Il CapoCT. Scrivi !w per diventarlo!"
+	}
+
+	"warden_dead_nc"
+	{
+		"it"		"Il CapoCT e' morto. sceglietene un altro."
+	}
+
+	"warden_disconnected"
+	{
+		"it"		"Il CapoCT {purple}si e' disconnesso{default}. Sceglietene uno nuovo."
+	}
+
+	"warden_disconnected_nc"
+	{
+		"it"		"Il CapoCT si e' disconnesso. Sceglietene un nuovo ct."
+	}
+
+	"warden_removed"
+	{
+		"it"		"Admin: {purple}{1}{default} ha licenziato: {purple}{2}"
+	}
+
+	"warden_removed_nc"
+	{
+		"it"		"Admin: {1} ha licenziato: {2}"
+	}
+
+	"warden_noexist"
+	{
+		"it"		"Non c'e' {purple} CapoCT!"
+	}
+
+	"warden_disabled"
+	{
+		"it"		"Il Warder e' {purple}disabilitato{default}!"
+	}
+
+	"warden_nobecome"
+	{
+		"it"		"Un Nuovo CapoCT e' stato scelto {purple}casualmente{default}!"
+	}
+
+	"warden_adminset"
+	{
+		"it"		"Admin: {purple}{1}{default} ha messo un capoct!"
+	}
+
+	"warden_randomwarden"
+	{
+		"it"		"Un CapoCT e' stato scelto!"
+	}
+
+	"warden_dooropen"
+	{
+		"it"		"Il CapoCt {purple}ha aperto{default} le celle."
+	}
+
+	"warden_doorclose"
+	{
+		"it"		"Il CapoCt {purple}ha chiuso{default} le celle."
+	}
+
+	"warden_openauto"
+	{
+		"it"		"Le porte delle celle {purple}sono state aperte automaticamente!{default}"
+	}
+
+	"warden_opentime"
+	{
+		"it"		"Ora, le {purple}celle sono state aperte{default}!"
+	}
+
+	"warden_ffison"
+	{
+		"it"		"Friendly fire e' {purple}abilitato!"
+	}
+
+	"warden_ffisoff"
+	{
+		"it"		"Friendly fire e'{purple}disattivato!"
+	}
+
+	"warden_voting"
+	{
+		"it"		"Voting to kick the {purple}Warden{default} is currently disabled!"
+	}
+
+	"warden_countdowncanceled"
+	{
+		"it"		"Il Conto alla rovescia {darkred}e' stato cancellato!"
+	}
+
+	"warden_startcountdown_nc"
+	{
+		"it"		"Start in {1} secondi!"
+	}
+
+	"warden_stopcountdown_nc"
+	{
+		"it"		"Stop in {1} secondi!"
+	}
+
+	"warden_startcountdown"
+	{
+		"it"		"Start in {purple}{1}{default} secondi!"
+	}
+
+	"warden_stopcountdown"
+	{
+		"it"		"Stop in {purple}{1}{default} secondi!"
+	}
+
+	"warden_startcountdownhint"
+	{
+		"it"		"ATTENZIONE! Il CapoCT {purple}ha startato il Countdown!"
+	}
+
+	"warden_startcountdownhint_nc"
+	{
+		"it"		"ATTENZIONE! Il CapoCT ha startato il Countdown!!"
+	}
+
+	"warden_startstopcountdownhint"
+	{
+		"it"		"Attenzione! Il CAPOCT {purple} Ha avviato!/Stoppato! un Timer!"
+	}
+
+	"warden_startstopcountdownhint_nc"
+	{
+		"it"		"Attenzione! Il CAPOCT Ha avviato!/Stoppato! un Timer!"
+	}
+
+	"warden_stopcountdownhint"
+	{
+		"it"		"Attenzione! Il CAPOCT {purple} Ha Stoppato un CountDown"
+	}
+
+	"warden_stopcountdownhint_nc"
+	{
+		"it"		"Attenzione! Il CAPOCT Stoppato un CountDown"
+	}
+
+	"warden_countdownstart"
+	{
+		"it"		"{purple}GO! {darkred}START!"
+	}
+
+	"warden_countdownstop"
+	{
+		"it"		"{purple}STOP! {darkred}END!"
+	}
+
+	"warden_countdownrunning"
+	{
+		"it"		"A Countdown is {purple}already in progress!"
+	}
+
+	"warden_countdownstart_nc"
+	{
+		"it"		"GO! START!"
+	}
+
+	"warden_countdownstop_nc"
+	{
+		"it"		"STOP! END!"
+	}
+
+	"warden_noblockoff"
+	{
+		"it"		"The Warden toggled {purple}NoBlock off!"
+	}
+
+	"warden_noblockon"
+	{
+		"it"		"The Warden toggled {purple}NoBlock on!"
+	}
+
+	"warden_need"
+	{
+		"it"		"{1} votes required to {darkred}Kick The Warden!"
+	}
+
+	"warden_voted"
+	{
+		"it"		"You have already voted against the current {purple}Warden{default}!"
+	}
+
+	"warden_israndom"
+	{
+		"it"		"{1} è stato scelto a caso"
+	}
+
+	"warden_israndom"
+	{
+		"it"		"{1} E'stato scelto a caso"
+	}
+
+	"warden_gunplant"
+	{
+		"it"		"Guardia {purple}{1}{default} ha droppato l'arma {green}{2}!"
+	}
+
+	"warden_gunplant_nc"
+	{
+		"it"		"Guardia {1} ha droppato l'arma {2}!"
+	}
+
+	"warden_noplant"
+	{
+		"it"		"E' {darkred}proibito{default} per le Guardie di droppare le armi!"
+	}
+
+	"warden_choose"
+	{
+		"it"		"Seleziona Player"
+	}
+
+	"warden_remove"
+	{
+		"it"		"Rimuovere il CAPOCT?"
+	}
+
+	"warden_laseron"
+	{
+		"it"		"Laser {purple} attivato!"
+	}
+
+	"warden_laseroff"
+	{
+		"it"		"Laser {purple}disabilitato"
+	}
+
+	"warden_draweron"
+	{
+		"it"		"Drawer {purple}attivato"
+	}
+
+	"warden_draweroff"
+	{
+		"it"		"Drawer {purple}disattivato"
+	}
+
+	"warden_drawert"
+	{
+		"it"		"Attiva/Disattiva Matita per i terroristi"
+	}
+
+	"warden_tdraweron"
+	{
+		"it"		"Matita per i T {purple}attivata"
+	}
+
+	"warden_tdraweroff"
+	{
+		"it"		"Matita per i T {purple}Disattivata"
+	}
+
+	"warden_marker_set"
+	{
+		"it"		"{1} Marker Messo!"
+	}
+
+	"warden_marker_remove"
+	{
+		"it"		"{1} Marker Rimosso!"
+	}
+
+	"warden_laser"
+	{
+		"it"		"{1} Laser Pointer is now equipped!"
+	}
+
+	"warden_drawer"
+	{
+		"it"		"{1} Drawer equipt!"
+	}
+
+	"warden_marker_faraway"
+	{
+		"it"		"Il tuo {1} Marker E'stato rimosso! Tu eri lontano da esso."
+	}
+
+	"warden_marker_title"
+	{
+		"it"		"Colore Marker"
+	}
+
+	"warden_laser_title"
+	{
+		"it"		"Laser Pointer Color"
+	}
+
+	"warden_drawer_title"
+	{
+		"it"		"Colore Disegni"
+	}
+
+	"warden_laser_off"
+	{
+		"it"		"Disattiva il puntatore laser"
+	}
+
+	"warden_drawer_off"
+	{
+		"it"		"Disattiva Pennello"
+	}
+
+	"warden_rainbow"
+	{
+		"it"		"Arcobaleno"
+	}
+
+	"warden_red"
+	{
+		"it"		"Rosso"
+	}
+
+	"warden_blue"
+	{
+		"it"		"Blu"
+	}
+
+	"warden_green"
+	{
+		"it"		"Verde"
+	}
+
+	"warden_orange"
+	{
+		"it"		"Orancio"
+	}
+
+	"warden_yellow"
+	{
+		"it"		"Giallo"
+	}
+
+	"warden_white"
+	{
+		"it"		"Bianco"
+	}
+
+	"warden_cyan"
+	{
+		"it"		"Ciano"
+	}
+
+	"warden_magenta"
+	{
+		"it"		"Magenta"
+	}
+
+	"warden_range"
+	{
+		"it"		"La posizione E'fuori portata!"
+	}
+
+	"warden_wrong"
+	{
+		"it"		"Qualcosa E'andato storto! Riprova!"
+	}
+
+	"warden_mute"
+	{
+		"it"		"{2} E'stato mutato dal guardiano {1} {3} secondi!"
+	}
+
+	"warden_muteend"
+	{
+		"it"		"{2} E'stato mutato dal guardiano {1} per il resto del round!"
+	}
+
+	"warden_unmute"
+	{
+		"it"		"{1} smutato"
+	}
+
+	"warden_cdmenu_title"
+	{
+		"it"		"Countdown Menu"
+	}
+
+	"warden_cdmenu_start"
+	{
+		"it"		"Inizia il conto alla rovescia START (10 sec)"
+	}
+
+	"warden_cdmenu_stop"
+	{
+		"it"		"Inizia un conto alla rovescia di STOP (20 sec)"
+	}
+
+	"warden_cdmenu_startstop"
+	{
+		"it"		"Impostare un avvio / arresto conto alla rovescia"
+	}
+
+	"warden_cdmenu_title2"
+	{
+		"it"		"Time Between Start & Stop"
+	}
+
+	"warden_time_title"
+	{
+		"it"		"Per quanto?"
+	}
+
+	"warden_allt"
+	{
+		"it"		"Tutti T"
+	}
+
+	"warden_roundend"
+	{
+		"it"		"Fino estremita' arrotondata"
+	}
+
+	"warden_15"
+	{
+		"it"		"15 Secondi"
+	}
+
+	"warden_30"
+	{
+		"it"		"30 Secondi"
+	}
+
+	"warden_45"
+	{
+		"it"		"45 Secondi"
+	}
+
+	"warden_60"
+	{
+		"it"		"1 Minuti"
+	}
+
+	"warden_90"
+	{
+		"it"		"1 Minuto 30 secondi"
+	}
+
+	"warden_120"
+	{
+		"it"		"2 Minuti"
+	}
+
+	"warden_180"
+	{
+		"it"		"3 Minuti"
+	}
+
+	"warden_300"
+	{
+		"it"		"5 Minuti"
+	}
+
+	"warden_math_correct"
+	{
+		"it"		"{1} ha dato {green} la risposta corretta!{default} La risposta era {purple}{2}"
+	}
+
+	"warden_math_time"
+	{
+		"it"		"Ora fine! Nessuna risposta. {purple}} la risposta era {1}"
+	}
+
+	"warden_startmathquiz"
+	{
+		"it"		"Attenzione! Il CapoCT ha startato {purple}un quiz di matematica!"
+	}
+
+	"warden_startmathquiz_nc"
+	{
+		"it"		"Attenzione! Il Warden ha avviato un Quiz di Matematica!"
+	}
+
+	"warden_sure"
+	{
+		"it"		"Sei Sicuro?"
+	}
+
+	"warden_yes"
+	{
+		"it"		"Si"
+	}
+
+	"warden_no"
+	{
+		"it"		"No"
+	}
+
+	"warden_minrandom"
+	{
+		"it"		"C'E'solo una (non rebeling) Prigioniero sinistra!"
+	}
+
+	"warden_nomuted"
+	{
+		"it"		"Non vi E'alcun prigioniero Mutato!"
+	}
+
+	"warden_mute_title"
+	{
+		"it"		"Mute Menu"
+	}
+
+	"warden_menu_mute"
+	{
+		"it"		"Muta i Prigionieri"
+	}
+
+	"warden_menu_unmute"
+	{
+		"it"		"Smuta i Prigionieri"
+	}
+
+	"warden_cuffson"
+	{
+		"it"		"{purple}{1}{default} arrestato {green}{2}{default}!"
+	}
+
+	"warden_cuffsoff"
+	{
+		"it"		"{purple}{1}{default} ha rimosso le manette a {green}{2}{default} "
+	}
+
+	"warden_cuffsgot"
+	{
+		"it"		"Hai solo {green}{1}{default} manette!"
+	}
+
+	"warden_bulletmarkoff"
+	{
+		"it"		"Pallottola impatto Sparks sono ora {purple}disattivato!"
+	}
+
+	"warden_bulletmarkon"
+	{
+		"it"		"Pallottola impatto Sparks sono ora {purple}attivato!"
+	}
+
+	"warden_extend"
+	{
+		"it"		"Il CapoCT {1} ha esteso da {2} minuti."
+	}
+
+	"warden_backstab"
+	{
+		"it"		"Protezione Backstab E'ora attivato."
+	}
+
+	"warden_extendtimes"
+	{
+		"it"		"Hai gia' esteso {purple}il Round {1} volta{default} Questo round!"
+	}
+
+	"warden_close"
+	{
+		"it"		"Esci"
+	}
+
+	"warden_gotpaperclip"
+	{
+		"it"		"Si segretamente ha una graffetta in mano."
+	}
+
+	"warden_brokepaperclip"
+	{
+		"it"		"Hai rotto il tuo graffetta"
+	}
+
+	"warden_unlock"
+	{
+		"it"		"E'lockpicked tua via d'uscita del vostro manette!"
+	}
+
+	"warden_painter"
+	{
+		"it"		"{1} Painter E'ora equipaggiato!"
+	}
+
+	"warden_painter_title"
+	{
+		"it"		"Painter Color"
+	}
+
+	"warden_painter_off"
+	{
+		"it"		"Disattiva il Painter"
+	}
+
+	"warden_painteron"
+	{
+		"it"		"Painter {purple}is enabled"
+	}
+
+	"warden_painteroff"
+	{
+		"it"		"Painter {purple}e' disattivato"
+	}
+
+	"warden_paintert"
+	{
+		"it"		"Pittore Toggle per i prigionieri"
+	}
+
+	"warden_tpainteron"
+	{
+		"it"		"The Painter for Prisoners is {purple}enabled!"
+	}
+
+	"warden_tpainteroff"
+	{
+		"it"		"The Painter for Prisoners is {purple}disabled!"
+	}
+
+	"warden_disarmed"
+	{
+		"it"		"{1} was disarmed by {2}."
+	}
+
+	"warden_lostgun"
+	{
+		"it"		"Sei stato ferito al braccio! Hai perso la tua arma!"
+	}
+
+	"warden_remaining"
+	{
+		"it"		"Remaining"
+	}
+
+	"warden_dooropen_unavailable"
+	{
+		"it"		"{darkred}Questa mappa non supporta l'apertura porte a distanza. {default}Tu {purple}devi aprire manualmente le porte!"
+	}
+
+	"warden_doorclose_unavailable"
+	{
+		"it"		"{darkred}Questa mappa non supporta la chiusura porte a distanza. {default}Tu {purple}devi chiudere manualmente le porte!"
+	}
+
+	"warden_openauto_unavailable"
+	{
+		"it"		"{darkred}Questa mappa non supporta l'apertura porte a distanza. {default}Tu {purple}devi aprire manualmente le porte!"
+	}
+
+	"warden_menu_muteall"
+	{
+		"it"		"Mute all Prisoners"
+	}
+
+	"warden_menu_unmuteall"
+	{
+		"it"		"Unmute all Prisoners"
+	}
+
+	"warden_votesuccess"
+	{
+		"it"		"The Voting to {purple}kick the Warden{default} was successful!"
+	}
+
+	"warden_mutedefault"
+	{
+		"it"		"Tutti i Prigionieri sono mutati."
+	}
+
+	"warden_rebel_title"
+	{
+		"it"		"Rebels Menu"
+	}
+
+	"warden_rebel_mark"
+	{
+		"it"		"Mark a Player as Rebel"
+	}
+
+	"warden_rebel_unmark"
+	{
+		"it"		"Remove a Player from Rebels"
+	}
+
+	"warden_talkover"
+	{
+		"it"		"Warden speaks, you have been muted."
+	}
+
+	"warden_info_counter"
+	{
+		"it"		"Prisoner in sight:"
+	}
+
+	"warden_counter"
+	{
+		"it"		"There are {1} prisoner in your view"
+	}
+
+	"warden_deputy_playerdead"
+	{
+		"it"		"Only {purple}alive players{default} can become Deputy!"
+	}
+
+	"warden_deputy_ctsonly"
+	{
+		"it"		"Only {purple}Counter-Terrorists{default} can become Deputy!"
+	}
+
+	"warden_deputy_exist"
+	{
+		"it"		"The current Deputy is: {purple}{1}{default}."
+	}
+
+	"warden_deputy_disabled"
+	{
+		"it"		"Deputy is currently {purple}disabled{default}!"
+	}
+
+	"warden_deputy_nobecome"
+	{
+		"it"		"You cannot become deputy, the warden must choose you"
+	}
+
+	"warden_deputy_retire"
+	{
+		"it"		"{purple}{1}{default} has decided to retire as Deputy. You may now choose a new Deputy!"
+	}
+
+	"warden_deputy_retire_nc"
+	{
+		"it"		"{1} has decided to retire as Deputy. You may now choose a new Deputy!"
+	}
+
+	"warden_deputy_fired_nc"
+	{
+		"it"		"Warden: {1} has Fired the Deputy: {2}"
+	}
+
+	"warden_deputy_fired"
+	{
+		"it"		"Warden: {purple}{1}{default} has Fired the Deputy: {purple}{2}"
+	}
+
+	"warden_deputy_dead_nc"
+	{
+		"it"		"The Deputy is now dead. You may now choose a new one."
+	}
+
+	"warden_deputy_dead"
+	{
+		"it"		"The Deputy is now {darkred}dead{default}. You may now choose a new one."
+	}
+
+	"warden_deputy_disconnected"
+	{
+		"it"		"The Deputy has {purple}disconnected{default}. You may now choose a new one."
+	}
+
+	"warden_deputy_disconnected_nc"
+	{
+		"it"		"The Deputy has disconnected. You may now choose a new one."
+	}
+
+	"warden_deputy_new_nc"
+	{
+		"it"		"{1} is now the Deputy of the Warden."
+	}
+
+	"warden_deputy_new"
+	{
+		"it"		"{purple}{1}{default} is now the Deputy of the Warden."
+	}
+
+	"warden_deputy_set"
+	{
+		"it"		"You as {purple}Warden{default} can set a Deputy. Type {green}!deputy{default} to set an Deputy!"
+	}
+
+	"warden_deputy_become"
+	{
+		"it"		"There is no current {purple}Deputy{default}. Type {green}!deputy{default} to become the Deputy!"
+	}
+
+	"warden_givefreeday"
+	{
+		"it"		"Dando Freeday a:"
+	}
+
+	"warden_havefreeday"
+	{
+		"it"		"{1} ora ha Freeday!"
+	}
+
+	"warden_freedayforyou"
+	{
+		"it"		"Il prossimo round avrai freeday"
+	}
+
+	"warden_personalfreeday"
+	{
+		"it"		"{1} ottiene un Freeday per il prossimo round!"
+	}
+
+}

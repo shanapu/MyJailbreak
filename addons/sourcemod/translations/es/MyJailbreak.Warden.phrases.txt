@@ -1,0 +1,91 @@
+// Exported from SourceMod Translator
+// Date: 2016-12-11 14:23:47 UTC
+// Language: Spanish (es)
+// 
+// To view other translations for this plugin, please visit:
+// http://translator.mitchdempsey.com/sourcemod_plugins/178
+//
+"Phrases"
+{
+
+	"warden_new"
+	{
+		"es"		"{purple}{1}{default} Es ahora el AlcÃ¡ide de esta PrisiÃ³n."
+	}
+
+	"warden_new_nc"
+	{
+		"es"		"{1} Es ahora el AlcÃ¡ide de esta PrisiÃ³n."
+	}
+
+	"warden_playerdead"
+	{
+		"es"		"SÃ³lo los {purple}jugadores vivos{default}, pueden ser el AlcÃ¡ide."
+	}
+
+	"warden_ctsonly"
+	{
+		"es"		"SÃ³lo los {purple}Anti-Terroristas{default} pueden ser el AlcÃ¡ide."
+	}
+
+	"warden_exist"
+	{
+		"es"		"AlcÃ¡ide Actual: {purple}{1}{default}"
+	}
+
+	"warden_retire"
+	{
+		"es"		"{purple}{1}{default} ha decidido jubilarse. Ahora toca elegir uno nuevo."
+	}
+
+	"warden_retire_nc"
+	{
+		"es"		"{1} ha decidido jubilarse. Ahora toca elegir uno nuevo."
+	}
+
+	"warden_dead"
+	{
+		"es"		"El AlcÃ¡ide ha {darkred}dead{default}! Ahora toca elegir uno juevo."
+	}
+
+	"warden_dead_nc"
+	{
+		"es"		"El AlcÃ¡ide ha muerto! Ahora toca elegir uno juevo."
+	}
+
+	"warden_disconnected"
+	{
+		"es"		"El AlcÃ¡ide ha desertado. Ahora toca elegir uno nuevo."
+	}
+
+	"warden_disconnected_nc"
+	{
+		"es"		"El AlcÃ¡ide ha desertado. Ahora toca elegir uno nuevo."
+	}
+
+	"warden_removed"
+	{
+		"es"		"Administrador: {purple}{1}{default} ha prejubilado al AlcÃ¡ide: {purple}{2}"
+	}
+
+	"warden_removed_nc"
+	{
+		"es"		"Administrador: {1} ha prejubilado al AlcÃ¡ide: {2}"
+	}
+
+	"warden_15"
+	{
+		"es"		"15 segundos"
+	}
+
+	"warden_120"
+	{
+		"es"		"2 Minutos"
+	}
+
+	"warden_180"
+	{
+		"es"		"3 Minutos"
+	}
+
+}

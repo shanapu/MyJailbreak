@@ -1,0 +1,156 @@
+// Exported from SourceMod Translator
+// Date: 2016-12-11 14:24:03 UTC
+// Language: Italian (it)
+// 
+// To view other translations for this plugin, please visit:
+// http://translator.mitchdempsey.com/sourcemod_plugins/197
+//
+"Phrases"
+{
+
+	"lastguard_tag"
+	{
+		"it"		"[{green}MyJB.UltimaGuardia{default}]"
+	}
+
+	"lastguard_need"
+	{
+		"it"		"{purple}{2}{default} ha votato. {purple}{1}{default} voti richiesti per giocare all' {darkred}Ultima Guardia"
+	}
+
+	"lastguard_twin_nc"
+	{
+		"it"		"I Prigionieri sono sopravvissuti!"
+	}
+
+	"lastguard_minplayer"
+	{
+		"it"		"Per 'Ultima Guardia' sono richiesti minimo {purple}un CT e minimo due T!"
+	}
+
+	"lastguard_hp"
+	{
+		"it"		"The {purple}{1} Prisoners{default} have a combined total of: {purple}{2} HP{default}. The Last Guard {3} now has: {purple}{4} HP{default}."
+	}
+
+	"lastguard_setbyadmin"
+	{
+		"it"		"Settare Last Guard Rule da Admin e' {purple}disabilitato!"
+	}
+
+	"lastguard_ctwin_nc"
+	{
+		"it"		"Le Guardie Hanno Vinto!"
+	}
+
+	"lastguard_end"
+	{
+		"it"		"L'evento {purple}Ultima Guardia{default} e' finito!"
+	}
+
+	"lastguard_startnow"
+	{
+		"it"		"ATTENZIONE! {purple}Ultima Guardia{default} e' ora Attivo!"
+	}
+
+	"lastguard_startnow_nc"
+	{
+		"it"		"ATTENZIONE! L'ultima guardia e' ora attivo!"
+	}
+
+	"lastguard_start"
+	{
+		"it"		"L'evento dell'{purple}Ultima Guardia{default} e' iniziato!"
+	}
+
+	"lastguard_lr"
+	{
+		"it"		"A {purple}LR{default} e' gia' attivo! Le Regole dell' Ultima Guardia non possono essere applicate !"
+	}
+
+	"lastguard_start_nc"
+	{
+		"it"		"L'evento dell'Ultima Guardia e' iniziato!"
+	}
+
+	"lastguard_movenow"
+	{
+		"it"		"Ora puoi' {purple}muoverti!"
+	}
+
+	"lastguard_movenow_nc"
+	{
+		"it"		"Ora puoi muoverti!"
+	}
+
+	"lastguard_voted"
+	{
+		"it"		"hai gia' votato per {purple}L'ultima guardia!"
+	}
+
+	"lastguard_notalive"
+	{
+		"it"		"Tu {purple}devi essere vivo{default} per usare questo comando"
+	}
+
+	"lastguard_progress"
+	{
+		"it"		"L'evento {darkred}{1} {default}e' {purple}gia' in corso! Le regole dell'Ultima Guardia sono disabilitate"
+	}
+
+	"lastguard_running"
+	{
+		"it"		"Ultima Guardia {default}e' {purple}gia' in corso!"
+	}
+
+	"lastguard_disabled"
+	{
+		"it"		"La Regola dell'ultima guardia e' {purple}disattivata!"
+	}
+
+	"lastguard_timeuntilstart_nc"
+	{
+		"it"		"{1} secondi rimanenti all'inizio dell'evento!"
+	}
+
+	"lastguard_info_title"
+	{
+		"it"		"Ultima Guardia Attivato!"
+	}
+
+	"lastguard_info_line1"
+	{
+		"it"		"Ultima Guardia - T VS CT."
+	}
+
+	"lastguard_info_line4"
+	{
+		"it"		"Tutte le regole del jb non sono applicabili in questo round"
+	}
+
+	"lastguard_info_line5"
+	{
+		"it"		"Lr disabilitato in questo round!"
+	}
+
+	"lastguard_info_line7"
+	{
+		"it"		"Non Camperare!"
+	}
+
+	"lastguard_info_line2"
+	{
+		"it"		"Tutti i T Sono Ribelli!"
+	}
+
+	"lastguard_info_line3"
+	{
+		"it"		"L'ultima guardia ha molto piu' vita"
+	}
+
+	"lastguard_info_line6"
+	{
+		"it"		"E' concesso a tutti di andare in tutti i posti!"
+	}
+
+}

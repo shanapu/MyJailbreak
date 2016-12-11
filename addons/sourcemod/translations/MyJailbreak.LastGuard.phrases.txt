@@ -1,232 +1,169 @@
 // Exported from SourceMod Translator
+// Date: 2016-12-11 14:24:03 UTC
+// Language: English (en)
+// 
+// To view other translations for this plugin, please visit:
 // http://translator.mitchdempsey.com/sourcemod_plugins/197
 //
 "Phrases"
 {
-	"lastguard_ctwin_nc"
-	{
-		"ru"		"Counter-Terrorists одержали победу!"
-		"de"		"Counter-Terrorists gewinnen"
-		"en"		"Guards win!"
-	}
 
-	"lastguard_disabled"
+	"lastguard_tag"
 	{
-		"da"		"Last Guard Rule er midlertidigt {purple}slået fra."
-		"ru"		"Правило последнего КТ {purple}отключено."
-		"de"		"Last Guard Rule ist vorübergehend {purple}deaktiviert."
-		"en"		"The Last Guard Rule is currently {purple}disabled!"
-	}
-
-	"lastguard_end"
-	{
-		"ru"		"{purple}Правило последнего КТ{default} окончено"
-		"de"		"{purple}Last Guard Rule{default} beendet"
-		"en"		"The {purple}Last Guard Rule{default} has ended!"
-		"da"		"{purple}Last Guard Rule{default} er afsluttet!"
-	}
-
-	"lastguard_hp"
-	{
-		"#format"   "{1:i},{2:i},{3:N},{4:i}"
-		"en"		"The {purple}{1} Prisoners{default} have a combined total of: {purple}{2} HP{default}. The Last Guard {3} now has: {purple}{4} HP{default}."
-		"ru"		"{purple}{1} живые террористы{default} имеют вместе {purple}{2} здоровья{default}. Последний КТ {4} получил {purple}{3} HP{default}."
-		"de"		"Die {purple}{1} lebenden Terroristen{default} haben zusammen {purple}{2} HP{default}. Der letzte Wärter {3} bekommt deshalb {purple}{4} HP{default}."
-	}
-
-	"lastguard_info_line1"
-	{
-		"ru"		"Правила последнего КТ - КТ vs Т"
-		"de"		"Last Guard Rule - CT gegen T"
-		"en"		"The Last Guard Rule - Prisoners VS Guard."
-	}
-
-	"lastguard_info_line2"
-	{
-		"ru"		"Все террористы бунтуют!"
-		"de"		"Alle Terrors sind Rebelen!"
-		"en"		"All Terrorists are Rebels!"
-	}
-
-	"lastguard_info_line3"
-	{
-		"ru"		"Последний КТ получили много ХП!"
-		"en"		"The last Guard has a lot more health!"
-	}
-
-	"lastguard_info_line4"
-	{
-		"ru"		"Все нормальные правила тюрьмы отменяются"
-		"de"		"Alle normalen Jailregeln sind aufgehoben!"
-		"en"		"All usual Jail Rules do not apply during this round!"
-	}
-
-	"lastguard_info_line5"
-	{
-		"ru"		"Тут нету последнего желания!"
-		"de"		"Der letzte Terrorist hat keinen Wunsch frei!"
-		"en"		"Last Request is disabled during this round!"
-		"da"		"Der kan ikke laves Last Request i denne runde!"
-	}
-
-	"lastguard_info_line6"
-	{
-		"da"		"T kan gå hvor hen de vil - De må bare ikke have våben!"
-		"en"		"Everyone is allowed to go anywhere within the map!"
-		"de"		"Jeder darf überall hin wo er will!"
-		"pl"		"Kazdy moze isc gdzie che i robic co chce"
-		"ru"		"Каждому разрешено ходить везде, где хочет"
-	}
-
-	"lastguard_info_line7"
-	{
-		"ru"		"Не будь мудаком!"
-		"de"		"Bau keine Scheisse!"
-		"en"		"Don't be an Asshole!"
-		"da"		"Alle server regler skal overholdes!"
-	}
-
-	"lastguard_info_title"
-	{
-		"da"		"Last Guard Rule er aktiveret!"
-		"en"		"Last Guard Rule er aktiveret!"
-		"ru"		"Правило последнего КТ активно"
-		"de"		"Last Guard Rule ist aktiv"
-		"en"		"Last Guard Rule er aktiveret!"
-	}
-
-	"lastguard_lr"
-	{
-		"ru"		"{purple}Последнее желание{default} активны! Правила последнего КТ отключены."
-		"de"		"{purple}Last Request{default} ist aktiv! Last Guard Rule deaktiviert."
-		"en"		"A {purple}Last Request{default} is already active! The Last Guard Rule not available!"
-	}
-
-	"lastguard_minplayer"
-	{
-		"de"		"Für die Last Guard Rule brauchen wir maximal {purple}einen CT & mindestens 2 Ts"
-		"ru"		"Для Правила Последнего КТ необходимо максимум {purple}один КТ и минимум 2 Т"
-		"en"		"For The Last Guard Rule you need at maximum pf {purple}one Guard & minimum 2 Prisoners!"
-	}
-
-	"lastguard_movenow"
-	{
-		"ru"		"Вы можете {purple}двигаться!"
-		"de"		"Du kannst dich {purple}jetzt bewegen!"
-		"en"		"You can {purple}move now!"
-	}
-
-	"lastguard_movenow_nc"
-	{
-		"ru"		"Вы можете двигаться!"
-		"de"		"Du kannst dich jetzt bewegen!"
-		"en"		"You can move now!"
+		"en"		"[{green}MyJB.LastGuardRule{default}]"
 	}
 
 	"lastguard_need"
 	{
-		"#format"   "{1:i},{2:N}"
-		"ru"		"{purple}{2}{default} проголосовал. {purple}{1}{default} осталось голосов до {darkred}Правила Последнего КТ"
-		"de"		"{purple}{2}{default} hat gevotet. Jetzt noch {purple}{1}{default} votes bis {darkred}Last Guard Rule{default} beginnt"
+		"#format"	"{1:i},{2:N}"
 		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes required to play {darkred}The Last Guard Rule."
-		"da"		"{purple}{2}{default} har afstemt!. {purple}{1}{default} afstemninger tilbage til {darkred}Last Guard Rule"
 	}
 
-	"lastguard_notalive"
+	"lastguard_twin_nc"
 	{
-		"ru"		"Вы {purple}должны быть живы{default} для это команды."
-		"de"		"Du {purple} must am Leben sein {default}für diesen Befehl."
-		"en"		"You {purple}must be alive{default} to use this command!"
+		"en"		"The Prisoners have survived!"
 	}
 
-	"lastguard_progress"
+	"lastguard_minplayer"
 	{
-		"#format"   "{1:s}"
-		"ru"		"Игровой день {darkred}{1} {default} в {purple}процессе. Правило последнего КТ отключено!"
-		"de"		"Event {darkred}{1} {default}ist {purple}bereits gesetzt. Letzer CT is deaktiviert"
-		"en"		"The event {darkred}{1} {default}is {purple}already in progress! The Last Guard Rule Rule is disabled!"
+		"en"		"For The Last Guard Rule you need at maximum pf {purple}one Guard & minimum 2 Prisoners!"
 	}
 
-	"lastguard_running"
+	"lastguard_hp"
 	{
-		"ru"		"Правила последнего КТ {purple}активированы."
-		"de"		"Last Guard Rule {default}ist {purple}läuft bereits."
-		"en"		"The Last Guard Rule {default}is {purple}already in progress!"
+		"#format"	"{1:i},{2:i},{3:N},{4:i}"
+		"en"		"The {purple}{1} Prisoners{default} have a combined total of: {purple}{2} HP{default}. The Last Guard {3} now has: {purple}{4} HP{default}."
 	}
 
 	"lastguard_setbyadmin"
 	{
-		"ru"		"Установка Правила Последнего КТ от админа {purple}отключено"
-		"de"		"Last Guard Rule Aktivierung durch den Admin ist {purple}deaktiviert"
 		"en"		"Set Last Guard Rule by Admin is {purple}disabled!"
-		"da"		"Admin bestemmer runde for Last Guard Rule er {purple}slået fra"
 	}
 
-	"lastguard_start"
+	"lastguard_ctwin_nc"
 	{
-		"ru"		"{purple}Правило последнего КТ{default} началось!"
-		"de"		"{purple}Last Guard Rule{default} ist gestartet!"
-		"en"		"The {purple}Last Guard Rule{default} has begun!"
-		"da"		"{purple}Last Guard Rule{default} er startet!"
+		"en"		"Guards win!"
 	}
 
-	"lastguard_start_nc"
+	"lastguard_end"
 	{
-		"ru"		"Правило последнего КТ стартовало!"
-		"de"		"Last Guard Rule ist gestartet!"
-		"en"		"The Last Guard Rule begun!"
-		"da"		"Last Guard Rule er startet!"
+		"en"		"The {purple}Last Guard Rule{default} has ended!"
 	}
 
 	"lastguard_startnow"
 	{
-		"ru"		"Внимание! {purple}Последнее Правило КТ{default} установлено!"
-		"de"		"Achtung! {purple}Last Guard Rule{default} startet gleich!"
 		"en"		"Attention! {purple}Last Guard Rule{default} is now Activated!"
 	}
 
 	"lastguard_startnow_nc"
 	{
-		"ru"		"Внимание! Последний Guard установлен!"
-		"de"		"Achtung! Last Guard startet gleich!"
 		"en"		"Attention! Last Guard is now Activated!"
 	}
 
-	"lastguard_tag"
+	"lastguard_start"
 	{
-		"de"		"[{green}MyJB.LastGuardRule{default}]"
-		"ru"		"[{green}MyJB.LastGuardRule{default}]"
-		"en"		"[{green}MyJB.LastGuardRule{default}]"
+		"en"		"The {purple}Last Guard Rule{default} has begun!"
 	}
 
-	"lastguard_timeuntilstart_nc"
+	"lastguard_lr"
 	{
-		"#format"   "{1:i}"
-		"ru"		"{1] секунд до старта"
-		"de"		"{1} Sekunden bis zum Start"
-		"en"		"{1} seconds until round start!"
-		"da"		"{1} sekunder til runden starter!"
+		"en"		"A {purple}Last Request{default} is already active! The Last Guard Rule not available!"
 	}
 
-	"lastguard_twin_nc"
+	"lastguard_start_nc"
 	{
-		"ru"		"Террористы выжили"
-		"de"		"Terroristen überleben"
-		"en"		"The Prisoners have survived!"
+		"en"		"The Last Guard Rule begun!"
+	}
+
+	"lastguard_movenow"
+	{
+		"en"		"You can {purple}move now!"
+	}
+
+	"lastguard_movenow_nc"
+	{
+		"en"		"You can move now!"
 	}
 
 	"lastguard_voted"
 	{
-		"ru"		"Вы уже голосовали за {purple}Правила Последнего КТ"
-		"de"		"Du hast schon für {purple}Last Guard Rule {default}gevotet"
 		"en"		"You have already voted for {purple}The Last Guard Rule!"
-		"da"		"Du har allerede stemt for {purple}Last Guard Rule!"
+	}
+
+	"lastguard_notalive"
+	{
+		"en"		"You {purple}must be alive{default} to use this command!"
+	}
+
+	"lastguard_progress"
+	{
+		"#format"	"{1:s}"
+		"en"		"The event {darkred}{1} {default}is {purple}already in progress! The Last Guard Rule Rule is disabled!"
+	}
+
+	"lastguard_running"
+	{
+		"en"		"The Last Guard Rule {default}is {purple}already in progress!"
+	}
+
+	"lastguard_disabled"
+	{
+		"en"		"The Last Guard Rule is currently {purple}disabled!"
+	}
+
+	"lastguard_timeuntilstart_nc"
+	{
+		"#format"	"{1:i}"
+		"en"		"{1} seconds until round start!"
+	}
+
+	"lastguard_info_title"
+	{
+		"en"		"Last Guard Rule er aktiveret!"
+	}
+
+	"lastguard_info_title"
+	{
+		"en"		"Last Guard Rule er aktiveret!"
+	}
+
+	"lastguard_info_line1"
+	{
+		"en"		"The Last Guard Rule - Prisoners VS Guard."
+	}
+
+	"lastguard_info_line4"
+	{
+		"en"		"All usual Jail Rules do not apply during this round!"
+	}
+
+	"lastguard_info_line5"
+	{
+		"en"		"Last Request is disabled during this round!"
+	}
+
+	"lastguard_info_line7"
+	{
+		"en"		"Don't be an Asshole!"
+	}
+
+	"lastguard_info_line2"
+	{
+		"en"		"All Terrorists are Rebels!"
+	}
+
+	"lastguard_info_line3"
+	{
+		"en"		"The last Guard has a lot more health!"
+	}
+
+	"lastguard_info_line6"
+	{
+		"en"		"Everyone is allowed to go anywhere within the map!"
 	}
 
 	"lastguard_close"
 	{
-		"ru"		"Закрыть"
-		"de"		"Schliessen"
 		"en"		"Exit"
 	}
 

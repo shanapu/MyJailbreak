@@ -1,0 +1,171 @@
+// Exported from SourceMod Translator
+// Date: 2016-12-11 14:24:15 UTC
+// Language: Italian (it)
+// 
+// To view other translations for this plugin, please visit:
+// http://translator.mitchdempsey.com/sourcemod_plugins/187
+//
+"Phrases"
+{
+
+	"ffa_tag"
+	{
+		"it"		"[{green}MyJB.FFA{default}]"
+	}
+
+	"ffa_need"
+	{
+		"it"		"{purple}{2}{default} ha votato. {purple}{1}{default} voti richiesti per giocare a {darkred}FFA."
+	}
+
+	"ffa_voting"
+	{
+		"it"		"La votazione per FFA e' {purple}disabilitata!"
+	}
+
+	"ffa_setbywarden"
+	{
+		"it"		"Settare FFA da Warden e' {purple}disabilitato!"
+	}
+
+	"ffa_setbyadmin"
+	{
+		"it"		"Settare FFA da Admin e' {purple}disabilitato!"
+	}
+
+	"ffa_ctwin_nc"
+	{
+		"it"		"Una Guardia e' sopravvissuta!"
+	}
+
+	"ffa_twin_nc"
+	{
+		"it"		"Un T e' sopravvissuto!"
+	}
+
+	"ffa_minplayer"
+	{
+		"it"		"per FFA sono richiesti {purple}un CT e un T!"
+	}
+
+	"ffa_end"
+	{
+		"it"		"{purple}FFA{default} e' finito!"
+	}
+
+	"ffa_next"
+	{
+		"it"		"Il prossimo round sara': {purple}FFA."
+	}
+
+	"ffa_next_nc"
+	{
+		"it"		"Il prossimo round sara': FFA."
+	}
+
+	"ffa_rounds"
+	{
+		"it"		"Round {purple}{1}{default} di {purple}{2}"
+	}
+
+	"ffa_start"
+	{
+		"it"		"{purple}FFA{default} e' iniziato!"
+	}
+
+	"ffa_start_nc"
+	{
+		"it"		"FFA e' imniziato!"
+	}
+
+	"ffa_voted"
+	{
+		"it"		"Hai gia' votato per {purple}FFA!"
+	}
+
+	"ffa_progress"
+	{
+		"it"		"L'evento {darkred}{1} {default}e' {purple}gia' in corso!"
+	}
+
+	"ffa_disabled"
+	{
+		"it"		"FFA e' momentaneamente {purple}disabilitato!"
+	}
+
+	"ffa_damage_nc"
+	{
+		"it"		"{1} secondi rimanenti all'inizio dell'ffa"
+	}
+
+	"ffa_damage_nc"
+	{
+		"it"		"{1} seconds until damage enabled"
+	}
+
+	"ffa_info_title"
+	{
+		"it"		"Free for All Deathmatch Attivo!"
+	}
+
+	"ffa_info_line1"
+	{
+		"it"		"Verrai Spawnato in Armeria!"
+	}
+
+	"ffa_info_line2"
+	{
+		"it"		"Free for All - Player VS Player - L'ultimo che rimane vince!"
+	}
+
+	"ffa_info_line3"
+	{
+		"it"		"Scappa durante la fase di 'NoDamage'"
+	}
+
+	"ffa_info_line4"
+	{
+		"it"		"Tutte le regole del JB non sono applicabili durante questo round"
+	}
+
+	"ffa_info_line5"
+	{
+		"it"		"LR Disabilitato in questo round"
+	}
+
+	"ffa_info_line6"
+	{
+		"it"		"Tutti possono andare dove vogliono nella mappa!"
+	}
+
+	"ffa_info_line7"
+	{
+		"it"		"Buona Fortuna!"
+	}
+
+	"RoundOne"
+	{
+		"it"		"Round 1 di 3"
+	}
+
+	"RoundTwo"
+	{
+		"it"		"Round 2 di 3"
+	}
+
+	"RoundThree"
+	{
+		"it"		"Questo e' l'ultimo round FFA!"
+	}
+
+	"ffa_wait"
+	{
+		"it"		"Devi aspettare {purple}{1}{default} round per un altro event day!"
+	}
+
+	"ffa_name"
+	{
+		"it"		"Free for All"
+	}
+
+}

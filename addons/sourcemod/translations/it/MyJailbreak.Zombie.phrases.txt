@@ -1,0 +1,156 @@
+// Exported from SourceMod Translator
+// Date: 2016-12-11 14:24:12 UTC
+// Language: Italian (it)
+// 
+// To view other translations for this plugin, please visit:
+// http://translator.mitchdempsey.com/sourcemod_plugins/184
+//
+"Phrases"
+{
+
+	"zombie_tag"
+	{
+		"it"		"[{green}MyJB.Zombie{default}]"
+	}
+
+	"zombie_need"
+	{
+		"it"		"{purple}{2}{default} Ha votato per l'evento zombie. {purple}{1}{default} voti richiesti per giocare all'evento {darkred}Zombie."
+	}
+
+	"zombie_rounds"
+	{
+		"it"		"Round {purple}{1}{default} di {purple}{2}"
+	}
+
+	"zombie_voting"
+	{
+		"it"		"Zombie {purple}Disattivato!"
+	}
+
+	"zombie_setbywarden"
+	{
+		"it"		"Impostare Zombie da Warden e' {purple}disabilitato!"
+	}
+
+	"zombie_setbyadmin"
+	{
+		"it"		"Impostare Zombie da Admin e' {purple}disabilitato!"
+	}
+
+	"zombie_ctwin_nc"
+	{
+		"it"		"Gli Zombi hanno ucciso tutti gli umani!"
+	}
+
+	"zombie_twin_nc"
+	{
+		"it"		"Gli umani sono sopravvissuti!"
+	}
+
+	"zombie_end"
+	{
+		"it"		"{purple}L'evento zombie{default} e' finito."
+	}
+
+	"zombie_next_nc"
+	{
+		"it"		"Il prossimo round sara': Zombie"
+	}
+
+	"zombie_next"
+	{
+		"it"		"Il Prossimo round sara': {purple}Zombie."
+	}
+
+	"zombie_start"
+	{
+		"it"		"{purple}Evento Zombie{default} in corso!"
+	}
+
+	"zombie_start_nc"
+	{
+		"it"		"L'evento zombie e' iniziato!"
+	}
+
+	"zombie_voted"
+	{
+		"it"		"Hai gia' votato per l'evento {purple}Zombie!"
+	}
+
+	"zombie_progress"
+	{
+		"it"		"L'evento {darkred}{1} {default}e' {purple}gia' in corso!"
+	}
+
+	"zombie_minplayer"
+	{
+		"it"		"Per l'evento zombie sono richiesti {purple}una guardia e un Prigioniero!"
+	}
+
+	"zombie_timeuntilzombie_nc"
+	{
+		"it"		"{1} secondi per nascondersi!"
+	}
+
+	"zombie_timetounfreeze_nc"
+	{
+		"it"		"Sarai scongelato tra {1} secondi"
+	}
+
+	"zombie_info_title"
+	{
+		"it"		"Evento Zombie Attivo!"
+	}
+
+	"zombie_info_line1"
+	{
+		"it"		"Zombie(Guardie) VS Umanai(Prigionieri)!"
+	}
+
+	"zombie_info_line2"
+	{
+		"it"		"Gli Zombie Stanno per arrivare. Umani... CORRETTE!"
+	}
+
+	"zombie_info_line3"
+	{
+		"it"		"Gli Zombie hanno tanta vita!"
+	}
+
+	"zombie_info_line4"
+	{
+		"it"		"Tutte le Regole del JailBreak sono disattivate in questo Round!"
+	}
+
+	"zombie_info_line5"
+	{
+		"it"		"!lr disattivo in questo round !"
+	}
+
+	"zombie_info_line6"
+	{
+		"it"		"Tutti possono andare dove voglione nella mappa!"
+	}
+
+	"zombie_info_line7"
+	{
+		"it"		"Buona Fortuna... ne avrai bisogno.."
+	}
+
+	"zombie_wait"
+	{
+		"it"		"Aspetta {purple}{1}{default} piu' round per il prossimo evento!"
+	}
+
+	"zombie_disabled"
+	{
+		"it"		"L'evento zombie e' momentaneamente {purple}disabilitato."
+	}
+
+	"zombie_name"
+	{
+		"it"		"Zombie Day"
+	}
+
+}

@@ -50,7 +50,7 @@ MyJailbreak is a redux rewrite of [URL="https://github.com/Franc1sco/Franug-Jail
 [B][u]Features[/u][/B]
 [LIST]
 [*]SourcePawn Transitional Syntax 1.7
-[*][b][url=https://github.com/shanapu/MyJailbreak/wiki]Wiki[/url] & [url=https://github.com/shanapu/MyJailbreak/wiki/Frequently-Asked-Questions]FAQ[/url][/b]
+[*][b][url=https://github.com/shanapu/MyJailbreak/wiki]Wiki[/url] [/B]&[B] [url=https://github.com/shanapu/MyJailbreak/wiki/Frequently-Asked-Questions]FAQ[/url][/b]
 [*]Multilingual support
 [*]Custom chat commands !mycommand
 [*]Custom chat tags [MyJB.tag]
@@ -516,6 +516,7 @@ sm_menu_cmds_voting - Set your custom chat command for open menu(!menu (no 'sm_'
 [*]Open Cells
 [*]Close Cells
 [*]Set deputy
+[*]Orders
 [*]Countdown
 [/LIST]
 [INDENT][LIST]
@@ -618,6 +619,7 @@ sm_menu_cmds_voting - Set your custom chat command for open menu(!menu (no 'sm_'
 [*]Weapon Menu
 [*]Open Cells
 [*]Close Cells
+[*]Orders
 [*]Countdown
 [/LIST]
 [INDENT][LIST]
@@ -2422,7 +2424,6 @@ devu4, good_live, Weeeishy, UartigZone, Got Sw4g? terminator18, SkeLeXes, 0diete
 
 
 
-
 [rant]
 [B][U]What should I consider if I open a issue on github or post on forum?[/U][/B]
 [LIST]
@@ -2431,7 +2432,7 @@ devu4, good_live, Weeeishy, UartigZone, Got Sw4g? terminator18, SkeLeXes, 0diete
 [*]Use descriptive topic titles & descriptions. "i have idea", "need Help", "Suggestion" or "don't work" isn't helpful & pleasant.
 [*]Try to explain your request with [U][b]so many details as you can.[/b][/U]
 [*][B]USE PROPER ENGLISH![/B]
-[*]Expound every single step to reproduce your train of thought. [U]We're all no clairvoyant or mindreaders.[U]
+[*]Expound every single step to reproduce your train of thought. [U]We're all no clairvoyant or mindreaders.[/U]
 [*]Explain like "I'm an idiot and never I played MyJailbreak before".
 [*]Maybe take a screenshot or make a beautiful picture with paint.
 [*]Provide [U]so many infos as you can[/U]. Like your...
@@ -2445,7 +2446,7 @@ devu4, good_live, Weeeishy, UartigZone, Got Sw4g? terminator18, SkeLeXes, 0diete
 [/LIST][/INDENT][LIST]
 [*]Please open [U]one Issue[/U] per request/errors/problems. Split many requests/errors/problems to different Issues. Thanks!
 [/LIST]
-[COLOR="DarkRed"][B][U]If you are not capable to do this, I going to ignore you![/B][/U][/COLOR]
+[COLOR="DarkRed"][B][U]If you are not capable to do this, I going to ignore you![/B][/U][/COLOR] sry
 [/rant]
 
 
@@ -2474,7 +2475,7 @@ devu4, good_live, Weeeishy, UartigZone, Got Sw4g? terminator18, SkeLeXes, 0diete
 
 
 
-[B][U]Download release pack[/U][/B] new build system!
+[B][U]Download release pack[/U][/B] - new build system!
 [url]https://shanapu.de/MyJailbreak/[/url]
 
 [B][U]Sourcecode & miscellaneous[/U][/B]

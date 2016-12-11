@@ -1,0 +1,206 @@
+// Exported from SourceMod Translator
+// Date: 2016-12-11 14:24:04 UTC
+// Language: Italian (it)
+// 
+// To view other translations for this plugin, please visit:
+// http://translator.mitchdempsey.com/sourcemod_plugins/200
+//
+"Phrases"
+{
+
+	"dealdamage_tag"
+	{
+		"it"		"[{green}MyJB.DealDamage{default}]"
+	}
+
+	"dealdamage_need"
+	{
+		"it"		"{purple}{2}{default} ha votato. {purple}{1}{default} voti richiesti per giocare a {darkred}DealDamage."
+	}
+
+	"dealdamage_rounds"
+	{
+		"it"		"Round {purple}{1}{default} di {purple}{2}."
+	}
+
+	"dealdamage_twin_nc"
+	{
+		"it"		"I Prigioni hanno vinto con {1} danni"
+	}
+
+	"dealdamage_voting"
+	{
+		"it"		"La votazione e' {purple}disabilitata"
+	}
+
+	"dealdamage_setbywarden"
+	{
+		"it"		"Settare Deal Damage da Warden e' {purple}disabilitato!"
+	}
+
+	"dealdamage_setbyadmin"
+	{
+		"it"		"Settare Deal Damage da Admin e' {purple}disabilitato!"
+	}
+
+	"dealdamage_ctwin_nc"
+	{
+		"it"		"Le Guardie hanno vinto con {1} danni!"
+	}
+
+	"dealdamage_end"
+	{
+		"it"		"{purple}Deal Damage {default}e' finito!"
+	}
+
+	"dealdamage_next"
+	{
+		"it"		"Il prossimo round sara': {purple}Deal Damage."
+	}
+
+	"dealdamage_next_nc"
+	{
+		"it"		"Il Prossimo round sara': Deal Damage"
+	}
+
+	"dealdamage_start"
+	{
+		"it"		"{purple}Deal Damage {default} e' iniziato!"
+	}
+
+	"dealdamage_start_nc"
+	{
+		"it"		"Deal Damage e' iniziato!"
+	}
+
+	"dealdamage_voted"
+	{
+		"it"		"Hai gia' votato per {purple}Deal Damage!"
+	}
+
+	"dealdamage_progress"
+	{
+		"it"		"L'evento ({darkred}{1} {default}e' {purple}gia' in corso!"
+	}
+
+	"dealdamage_disabled"
+	{
+		"it"		"Deal Damage e' {purple}disabilitato!"
+	}
+
+	"dealdamage_timeuntilstart_nc"
+	{
+		"it"		"{1} secondi rimanenti all'inizio del round!"
+	}
+
+	"dealdamage_info_title"
+	{
+		"it"		"DealDamage ATTIVO"
+	}
+
+	"dealdamage_info_line1"
+	{
+		"it"		"Deal Damage e' ora attivo"
+	}
+
+	"dealdamage_info_line2"
+	{
+		"it"		"Affrontare più danni possibile per la squadra avversaria!"
+	}
+
+	"dealdamage_info_line3"
+	{
+		"it"		"La Squadra con piu' danni effettuati vince!"
+	}
+
+	"dealdamage_info_line4"
+	{
+		"it"		"Tutte le regole del JB non sono applicabili in questo round"
+	}
+
+	"dealdamage_info_line5"
+	{
+		"it"		"LR disabilitato in questo round!"
+	}
+
+	"dealdamage_info_line6"
+	{
+		"it"		"Tutti possono andare dove voglioni in questo round"
+	}
+
+	"dealdamage_info_line7"
+	{
+		"it"		"Buona Fortuna!"
+	}
+
+	"dealdamage_wait"
+	{
+		"it"		"Devi aspettare {purple}{1}{default} round per un altro event day!"
+	}
+
+	"dealdamage_result"
+	{
+		"it"		"Deal Damage Risultati:"
+	}
+
+	"dealdamage_total"
+	{
+		"it"		"Danni Totali: {1} HP"
+	}
+
+	"dealdamage_most"
+	{
+		"it"		"Maggior Danno Inflitto: {1} Danno: {2} HP"
+	}
+
+	"dealdamage_ct"
+	{
+		"it"		"Danni Guardie: {1} HP"
+	}
+
+	"dealdamage_t"
+	{
+		"it"		"Dani Prigionieri: {1} HP"
+	}
+
+	"dealdamage_bestct"
+	{
+		"it"		"Best Guardia: {1} Danni: {2} HP"
+	}
+
+	"dealdamage_bestt"
+	{
+		"it"		"Best Prigioniere: {1} Danni: {2} HP"
+	}
+
+	"dealdamage_client"
+	{
+		"it"		"Il Tuo Danno: {1} HP"
+	}
+
+	"dealdamage_ctdealed"
+	{
+		"it"		"CT affrontato:"
+	}
+
+	"dealdamage_tdealed"
+	{
+		"it"		"T affrontato:"
+	}
+
+	"dealdamage_clientdealed"
+	{
+		"it"		"Hai causato:"
+	}
+
+	"dealdamage_hpdamage"
+	{
+		"it"		"Danni HP"
+	}
+
+	"dealdamage_name"
+	{
+		"it"		"Deal Damage"
+	}
+
+}

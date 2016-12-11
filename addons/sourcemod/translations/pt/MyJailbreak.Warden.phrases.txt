@@ -1,0 +1,76 @@
+// Exported from SourceMod Translator
+// Date: 2016-12-11 14:23:49 UTC
+// Language: Brazilian Portuguese (pt)
+// 
+// To view other translations for this plugin, please visit:
+// http://translator.mitchdempsey.com/sourcemod_plugins/178
+//
+"Phrases"
+{
+
+	"warden_new"
+	{
+		"pt"		"{purple}{1}{default} Agora, o diretor da prisão.."
+	}
+
+	"warden_new_nc"
+	{
+		"pt"		"{1} Agora, o diretor da prisão.."
+	}
+
+	"warden_playerdead"
+	{
+		"pt"		"Apenas os {purple}jogadores podem{default} viver o diretor.."
+	}
+
+	"warden_ctsonly"
+	{
+		"pt"		"Apenas o diretor pode ser {purple}AntiTerrorista{default}."
+	}
+
+	"warden_exist"
+	{
+		"pt"		"Atual diretor: {purple}{1}{default}"
+	}
+
+	"warden_retire"
+	{
+		"pt"		"{purple}{1}{default} o atual diretor, decidiu se aposentar. Agora começa a escolher um novo.."
+	}
+
+	"warden_retire_nc"
+	{
+		"pt"		"{1} o atual diretor, decidiu se aposentar. Agora começa a escolher um novo.."
+	}
+
+	"warden_dead"
+	{
+		"pt"		"O diretor está {darkred}dead{default}, agora começa a escolher um novo."
+	}
+
+	"warden_dead_nc"
+	{
+		"pt"		"O diretor está morto, agora começa a escolher um novo."
+	}
+
+	"warden_disconnected"
+	{
+		"pt"		"O diretor deixou o jogo. Agora começa a escolher um novo."
+	}
+
+	"warden_disconnected_nc"
+	{
+		"pt"		"O diretor deixou o jogo. Agora começa a escolher um novo."
+	}
+
+	"warden_removed"
+	{
+		"pt"		"O Administrador do: {purple}{1}{default} o diretor se aposentou cedo: {purple}{2}"
+	}
+
+	"warden_removed_nc"
+	{
+		"pt"		"O Administrador do: {1} o diretor se aposentou cedo: {2}"
+	}
+
+}

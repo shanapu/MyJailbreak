@@ -1,0 +1,76 @@
+// Exported from SourceMod Translator
+// Date: 2016-12-11 14:23:59 UTC
+// Language: German (de)
+// 
+// To view other translations for this plugin, please visit:
+// http://translator.mitchdempsey.com/sourcemod_plugins/180
+//
+"Phrases"
+{
+
+	"menu_info"
+	{
+		"de"		"Um das Jailbreak Menü zu öffnen, drücke , oderr schreibe !menu in den chat!"
+	}
+
+	"menu_opencell"
+	{
+		"de"		"Öffne die Zellen"
+	}
+
+	"menu_laser"
+	{
+		"de"		"Laserpointer Menü"
+	}
+
+	"menu_noblock"
+	{
+		"de"		"NoBlock umschalten"
+	}
+
+	"menu_extend"
+	{
+		"de"		"Rundenzeit verlängern"
+	}
+
+	"menu_ffon"
+	{
+		"de"		"Aktiviere FF für Ts"
+	}
+
+	"menu_randomdead"
+	{
+		"de"		"Töte einen zufälligen Häftling"
+	}
+
+	"menu_joint"
+	{
+		"de"		"Werde Häftling"
+	}
+
+	"menu_setwarden"
+	{
+		"de"		"Neuen Warden einteilen"
+	}
+
+	"menu_votewarden"
+	{
+		"de"		"Vote um den Warden zu entlassen"
+	}
+
+	"menu_war"
+	{
+		"de"		"Krieg"
+	}
+
+	"menu_torch"
+	{
+		"de"		"Fackellauf"
+	}
+
+	"menu_disabled"
+	{
+		"de"		"Event voting ist vorübergehend {purple}deaktiviert."
+	}
+
+}

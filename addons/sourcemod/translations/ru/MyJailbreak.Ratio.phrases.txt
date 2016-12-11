@@ -1,0 +1,326 @@
+// Exported from SourceMod Translator
+// Date: 2016-12-11 14:23:58 UTC
+// Language: Russian (ru)
+// 
+// To view other translations for this plugin, please visit:
+// http://translator.mitchdempsey.com/sourcemod_plugins/201
+//
+"Phrases"
+{
+
+	"ratio_tag"
+	{
+		"ru"		"[{green}MyJB.баланс{default}]"
+	}
+
+	"ratio_auto"
+	{
+		"ru"		"Вы не можете использовать автоматический выбор, чтобы присоединиться к команде."
+	}
+
+	"ratio_fullqueue"
+	{
+		"ru"		"Команда КТ заполнена. Вы {green}#%i{default} в очереди."
+	}
+
+	"ratio_info_title"
+	{
+		"ru"		"Очередь за КТ:"
+	}
+
+	"ratio_empty"
+	{
+		"ru"		"В настоящее время очередь {green}пуста{default}."
+	}
+
+	"ratio_noct"
+	{
+		"ru"		"Вы должны быть {green}заключённым{default}, чтобы встать в очередь."
+	}
+
+	"ratio_find"
+	{
+		"ru"		"Поиск следующего КТ из очереди. {green}{1} {default}новый КТ."
+	}
+
+	"ratio_random"
+	{
+		"ru"		"Очередь за КТ пуста. {green}{1} {default}был выбран в качестве случайного нового КТ."
+	}
+
+	"ratio_novalid"
+	{
+		"ru"		"Не удалось найти{green} игрока{default} ,чтобы переместить за КТ. Грёбаный коэффициент."
+	}
+
+	"ratio_number"
+	{
+		"ru"		"Вы {green}{1}{default} в очереди."
+	}
+
+	"ratio_thxvip"
+	{
+		"ru"		"Благодарим за покупку {darkred}VIP{default}! Вы были перемещены в {green}начало очереди!{default}"
+	}
+
+	"ratio_advip"
+	{
+		"ru"		"Получите {darkred}VIP{defailt} , чтобы автоматически переместиться в начало очереди."
+	}
+
+	"ratio_movetot"
+	{
+		"ru"		"Слишком много КТ. {green}{1}{default} был выбран случайным образом и перемещён за Т."
+	}
+
+	"ratio_removed"
+	{
+		"ru"		"Администратора {1} удалил {2} из очереди за КТ!"
+	}
+
+	"ratio_notonqueue"
+	{
+		"ru"		"Вы не в очереди за КТ!"
+	}
+
+	"ratio_leavedqueue"
+	{
+		"ru"		"Вы больше не в очереди за КТ!"
+	}
+
+	"ratio_accept_title"
+	{
+		"ru"		"Квалификация КТ"
+	}
+
+	"ratio_accept_line1"
+	{
+		"ru"		"Перед тем, как вы станете КТ, вы должны принять эти условия:"
+	}
+
+	"ratio_accept_line2"
+	{
+		"ru"		"Я прочитал и я понимаю правила."
+	}
+
+	"ratio_accept_line3"
+	{
+		"ru"		"Я прочитал правила CT дважды!"
+	}
+
+	"ratio_accept_line4"
+	{
+		"ru"		"Я буду играть честно и следовать правилам сервера."
+	}
+
+	"ratio_accept_line5"
+	{
+		"ru"		"Несоблюдение правил приведёт к CT бану."
+	}
+
+	"ratio_accept"
+	{
+		"ru"		"Да, я принимаю эти условия и соглашения."
+	}
+
+	"ratio_notaccept"
+	{
+		"ru"		"Нет, я не хочу стать охранником."
+	}
+
+	"ratio_question_title"
+	{
+		"ru"		"Ответьте на вопросы, чтобы стать охранником."
+	}
+
+	"ratio_question1_line1"
+	{
+		"ru"		"Камеры закрыты, заключенные внутри!"
+	}
+
+	"ratio_question1_line2"
+	{
+		"ru"		"Что вы будете делать?"
+	}
+
+	"ratio_question1_wrong1"
+	{
+		"ru"		"После открытия камер я убью всех!"
+	}
+
+	"ratio_question1_wrong2"
+	{
+		"ru"		"Я убью всех, до ЛР"
+	}
+
+	"ratio_question1_right"
+	{
+		"ru"		"Я буду ждать первого приказа КМД."
+	}
+
+	"ratio_question2_line1"
+	{
+		"ru"		"КМД сосет и этот раунд скучный, как дерьмо."
+	}
+
+	"ratio_question2_line2"
+	{
+		"ru"		"Отдамка своё оружие зэку, дабы ускорить раунд"
+	}
+
+	"ratio_question2_wrong1"
+	{
+		"ru"		"Это хорошая идея."
+	}
+
+	"ratio_question2_wrong2"
+	{
+		"ru"		"Только если заключённый мой приятель!"
+	}
+
+	"ratio_question2_right"
+	{
+		"ru"		"Никогда! Это запрещено!"
+	}
+
+	"ratio_question3_line1"
+	{
+		"ru"		"Вы читали правила сервера?"
+	}
+
+	"ratio_question3_line2"
+	{
+		"ru"		"Поняли ли вы правила?"
+	}
+
+	"ratio_question3_wrong1"
+	{
+		"ru"		"Я не буду следовать правилам сервера."
+	}
+
+	"ratio_question3_wrong2"
+	{
+		"ru"		"Чтение? Я здесь, чтобы играть, lol!"
+	}
+
+	"ratio_question3_right"
+	{
+		"ru"		"Да. Я знаю, как играть здесь."
+	}
+
+	"ratio_question4_line1"
+	{
+		"ru"		"У вас есть рабочий микрофон?"
+	}
+
+	"ratio_question4_line2"
+	{
+		"ru"		"Вы говорите на языке сервера?"
+	}
+
+	"ratio_question4_wrong1"
+	{
+		"ru"		"Простите, что?"
+	}
+
+	"ratio_question4_wrong2"
+	{
+		"ru"		"Мой микрофон сломан."
+	}
+
+	"ratio_question4_right"
+	{
+		"ru"		"У меня есть хороший микрофон."
+	}
+
+	"ratio_question5_line1"
+	{
+		"ru"		"КМД убит, вы один из последних охранников."
+	}
+
+	"ratio_question5_line2"
+	{
+		"ru"		"Станете ли вы командиром?"
+	}
+
+	"ratio_question5_wrong1"
+	{
+		"ru"		"Лучше всего начать freeday.."
+	}
+
+	"ratio_question5_wrong2"
+	{
+		"ru"		"Убью всех зэков, до ЛР"
+	}
+
+	"ratio_question5_right"
+	{
+		"ru"		"Я буду играть в качестве нового командира."
+	}
+
+	"ratio_cooldown"
+	{
+		"ru"		"Вы заблокированы за неверный ответ. Попробуйте в следующем раунде."
+	}
+
+	"ratio_disabled"
+	{
+		"ru"		"Баланс отключен администратором"
+	}
+
+	"ratio_hasdisabled"
+	{
+		"ru"		"Администратор отключил баланс"
+	}
+
+	"ratio_hasactivated"
+	{
+		"ru"		"Администратор активировал баланс. Баланс будет активен в следующем раунде."
+	}
+
+	"ratio_active"
+	{
+		"ru"		"Баланс активен! 1 Охранник на {1} Заключённых"
+	}
+
+	"ratio_stamm"
+	{
+		"ru"		"Вам необходимо как минимум {1} Штамм Очков, чтобы играть за охранника"
+	}
+
+	"ratio_banned_nc"
+	{
+		"ru"		"Вам запрещено играть за КТ, потому что Вы забанены за КТ."
+	}
+
+	"ratio_clearqueue"
+	{
+		"ru"		"Администратор очистил очередь за охрану!"
+	}
+
+	"ratio_reputation"
+	{
+		"ru"		"Вам необходимо как минимум {1} очков репутации, чтобы играть за охрану"
+	}
+
+	"ratio_remove"
+	{
+		"ru"		"Удалить из очереди:"
+	}
+
+	"ratio_banned"
+	{
+		"ru"		"Вам запрещено играть за КТ, потому что Вы {green}забанены{default} за КТ."
+	}
+
+	"ratio_rankme"
+	{
+		"ru"		"Вам необходимо как минимум {1} RankME очков, чтобы играть за охрану"
+	}
+
+	"ratio_close"
+	{
+		"ru"		"Закрыть"
+	}
+
+}

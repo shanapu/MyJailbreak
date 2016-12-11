@@ -1,5 +1,25 @@
 ### Change Log
   
+**[Beta 9.1]** - fixes
+  
+*Added*
+*  Menu: added orders menu for warden/deputy
+*  Ratio: cvar for move to CT and respawned.
+    *  new cvar - sm_ratio_respawn - 0 - Move player on next round to CT / 1 - Move player immediately to CT and respawn
+  
+  
+*Changed*
+*  Translations:  using preferred method of shipping translations (single file per language)
+  
+  
+*Fixed*
+*  Warden - small error with remove warden
+*  Menu - fix showing myjailshop without installed
+*  Minior fixes
+*  fixed build script THX bara!
+  
+  
+  
 **[Beta 9.0]** - icons, 3th party plugins & much more
   
 *Added*
@@ -34,7 +54,6 @@
     *  new cvar - sm_warden_cmds_orders - Set your custom chat command for open menu(!menu (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands))
     *  new config file - addons/sourcemod/configs/MyJailbreak/orders.cfg
 *  New builds system - sourcecode on github / binarys at http://shanapu.de/MyJailbreak
-  
   
   
   
@@ -76,6 +95,7 @@
     *  new overlay - overlays/MyJailbreak/frozen - I recommend this as overlays/MyJailbreak/freeze replacement
 *  Zombie: Removed humans spawn with weapons & nades. Use weapon menu or armory.
     *  new cvar - sm_zombie_ammo - 0 - disabled, 1 - enable infinty ammo (with reload) for humans
+  
   
   
 *Fixed*
