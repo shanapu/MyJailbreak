@@ -1,5 +1,26 @@
 ### Change Log
   
+**[Beta 9.1.dev]** - fixes
+  
+*Added*
+*  : 
+*  : 
+    *  new cvar - 
+  
+  
+*Changed*
+*  Translations:
+  
+  
+*Fixed*
+*  Warden - small error with logging & vote warden
+  
+  
+*Developer stuff*
+*  Builds website - bootstrap website for auto build binary download
+  
+  
+  
 **[Beta 9.1]** - fixes
   
 *Added*
