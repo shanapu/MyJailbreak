@@ -788,27 +788,30 @@ public void DisplayOptionsMenu(int client)
 public Action Timer_GetWeapons(Handle timer, any client)
 {
 	Timers[client] = null;
-	if (GetClientTeam(client) > 1 && IsPlayerAlive(client))
+	if (IsClientInGame(client))
 	{
-		if (gc_bPlugin.BoolValue)	
+		if (GetClientTeam(client) > 1 && IsPlayerAlive(client))
 		{
-			if (gc_bSpawn.BoolValue)
+			if (gc_bPlugin.BoolValue)	
 			{
-				if ((gc_bTerror.BoolValue && GetClientTeam(client) == 2) || (gc_bCTerror.BoolValue && GetClientTeam(client) == 3))
+				if (gc_bSpawn.BoolValue)
 				{
-					// Give weapons or display menu.
-					if (newWeaponsSelected[client])
+					if ((gc_bTerror.BoolValue && GetClientTeam(client) == 2) || (gc_bCTerror.BoolValue && GetClientTeam(client) == 3))
 					{
-						GiveSavedWeapons(client);
-						newWeaponsSelected[client] = false;
-					}
-					else if (rememberChoice[client])
-					{
-						GiveSavedWeapons(client);
-					}
-					else
-					{
-						DisplayOptionsMenu(client);
+						// Give weapons or display menu.
+						if (newWeaponsSelected[client])
+						{
+							GiveSavedWeapons(client);
+							newWeaponsSelected[client] = false;
+						}
+						else if (rememberChoice[client])
+						{
+							GiveSavedWeapons(client);
+						}
+						else
+						{
+							DisplayOptionsMenu(client);
+						}
 					}
 				}
 			}
@@ -820,8 +823,11 @@ public Action Timer_GetWeapons(Handle timer, any client)
 public Action Timer_Fix(Handle timer, any client)
 {
 	Timers[client] = null;
-	if (GetClientTeam(client) > 1 && IsPlayerAlive(client))
+	if (IsClientInGame(client))
 	{
-		GiveSavedWeaponsFix(client);
+		if (GetClientTeam(client) > 1 && IsPlayerAlive(client))
+		{
+			GiveSavedWeaponsFix(client);
+		}
 	}
 }

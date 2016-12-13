@@ -14,6 +14,7 @@
   
 *Fixed*
 *  Warden - small error with logging & vote warden
+*  Weapons - rar error when client left server in timer
   
   
 *Developer stuff*
