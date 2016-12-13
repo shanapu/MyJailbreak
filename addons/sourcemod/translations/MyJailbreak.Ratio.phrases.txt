@@ -322,6 +322,11 @@
 		"en"		"Cannot play on guards because you are {green}CT{default} banned."
 	}
 
+	"ratio_steamrep"
+	{
+		"en"		"Cannot play on guards because you are a {red}SCAMMER{default}. see steamrep.com"
+	}
+
 	"ratio_rankme"
 	{
 		"#format"	"{1:i}"

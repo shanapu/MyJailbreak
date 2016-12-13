@@ -3,13 +3,14 @@
 **[Beta 9.1.dev]** - fixes
   
 *Added*
-*  : 
-*  : 
-    *  new cvar - 
+*  Ratio: Support for SteamRep - prevent scammer vom guard -  required Sockets Extension
+    *  new plugin - disabled/ratio_steamrep.smx - Support plugin for Jameless SteamRep Checker plugin
+        *  new cvar - sm_ratio_steamrep_exclude - Which tags you DO NOT trust for reported scammers. Input the tags here for any community whose bans you DO NOT TRUST.
+        *  new cvar - sm_ratio_steamrep_checkip - Include IP address of connecting players in query. Set to 0 to disable
   
   
 *Changed*
-*  Translations:
+*  :
   
   
 *Fixed*

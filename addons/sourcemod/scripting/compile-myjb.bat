@@ -47,5 +47,6 @@ spcomp MyJailbreak/Add-ons/ratio_stamm.sp -o../plugins/MyJailbreak/disabled/rati
 spcomp MyJailbreak/Add-ons/ratio_teambans.sp -o../plugins/MyJailbreak/disabled/ratio_teambans.smx  
 spcomp MyJailbreak/Add-ons/ratio_reputation.sp -o../plugins/MyJailbreak/disabled/ratio_reputation.smx  
 spcomp MyJailbreak/Add-ons/ratio_rankme.sp -o../plugins/MyJailbreak/disabled/ratio_rankme.smx  
+spcomp MyJailbreak/Add-ons/ratio_steamrep.sp -o../plugins/MyJailbreak/disabled/ratio_steamrep.smx  
 spcomp MyJailbreak/Add-ons/myjailbreak_teamgames.sp -o../plugins/MyJailbreak/disabled/myjailbreak_teamgames.smx  
 pause
