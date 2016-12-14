@@ -23,17 +23,8 @@ do
   rm output.txt
 done
 
-echo "Download 3th party include files"
-wget -q -O addons/sourcemod/scripting/include/CustomPlayerSkins.inc https://raw.githubusercontent.com/MitchDizzle/Custom-Player-Skins/master/scripting/include/CustomPlayerSkins.inc
-wget -q -O addons/sourcemod/scripting/include/autoexecconfig.inc https://raw.githubusercontent.com/Impact123/AutoExecConfig/master/autoexecconfig.inc
-wget -q -O addons/sourcemod/scripting/include/chat-processor.inc https://raw.githubusercontent.com/Drixevel/Chat-Processor/master/scripting/include/chat-processor.inc
-wget -q -O addons/sourcemod/scripting/include/colors.inc https://forums.alliedmods.net/attachment.php?attachmentid=79000&d=1292171445
-wget -q -O addons/sourcemod/scripting/include/emitsoundany.inc https://raw.githubusercontent.com/powerlord/sourcemod-snippets/master/scripting/include/emitsoundany.inc
-wget -q -O addons/sourcemod/scripting/include/lastrequest.inc https://raw.githubusercontent.com/dataviruset/sm-hosties/master/addons/sourcemod/scripting/include/lastrequest.inc
-wget -q -O addons/sourcemod/scripting/include/hosties.inc https://raw.githubusercontent.com/dataviruset/sm-hosties/master/addons/sourcemod/scripting/include/hosties.inc
-wget -q -O addons/sourcemod/scripting/include/smartjaildoors.inc https://raw.githubusercontent.com/Kailo97/smartjaildoors/master/addons/sourcemod/scripting/include/smartjaildoors.inc
-wget -q -O addons/sourcemod/scripting/include/teambans.inc https://raw.githubusercontent.com/Bara20/TeamBans/master/scripting/include/teambans.inc
-wget -q -O addons/sourcemod/scripting/include/voiceannounce_ex.inc https://raw.githubusercontent.com/Franc1sco/VoiceAnnounceEX/master/scripting/include/voiceannounce_ex.inc
+echo "get basecom myjb 1.7"
+wget -q -O addons/sourcemod/scripting/include/basecomm.inc https://raw.githubusercontent.com/shanapu/MyJailbreak/master/addons/sourcemod/scripting/include/basecomm.inc
 
 echo "Move Modules folder for compile"
 mkdir addons/sourcemod/scripting/MyJailbreak/MyJailbreak/
@@ -195,6 +186,7 @@ unzip -qo translations.zip -d build/gameserver/
 
 wget -q -O translations.zip http://translator.mitchdempsey.com/sourcemod_plugins/271/download/MyJailbreak.Ghosts.translations.zip
 unzip -qo translations.zip -d build/gameserver/
+
 
 echo "Clean root folder"
 rm sourcemod.tar.gz

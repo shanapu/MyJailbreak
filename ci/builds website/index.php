@@ -113,7 +113,7 @@
 									
 									<thead>
 										<tr>
-										<th>Build Time</th>
+										<th>Build Time - UTC</th>
 										<th>Commit</th>
 										<th>File Name</th>
 										<th>Download</th>
@@ -159,7 +159,7 @@
 											$filetimestamp = filemtime ($ordner."/".$datei);
 											$filetime = date("d/m/y - H:i:s", $filetimestamp);
 											// Größe ermitteln zur Ausgabe
-											$size = ceil(filesize($ordner."/".$datei)/1048576); 
+											$size = round(filesize($ordner."/".$datei)/1048576,2); 
 											//1024 = kb | 1048576 = MB | 1073741824 = GB
 											
 											// scandir liest alle Dateien im Ordner aus, zusätzlich noch "." , ".." als Ordner
@@ -207,7 +207,7 @@
 									
 									<thead>
 										<tr>
-										<th>Build Time</th>
+										<th>Build Time - UTC</th>
 										<th>Commit</th>
 										<th>File Name</th>
 										<th>Download</th>
@@ -229,7 +229,7 @@
 											$filetimestamp = filemtime ($ordner."/".$datei);
 											$filetime = date("d/m/y - H:i:s", $filetimestamp);
 											
-											$size = ceil(filesize($ordner."/".$datei)/1048576); 
+											$size = round(filesize($ordner."/".$datei)/1048576,2); 
 											
 											if ($datei != "." && $datei != ".."	&& $datei != "_notes") { 
 											?>
@@ -278,7 +278,7 @@
 									
 									<thead>
 										<tr>
-										<th>Build Time</th>
+										<th>Build Time - UTC</th>
 										<th>Commit</th>
 										<th>File Name</th>
 										<th>Download</th>
@@ -300,7 +300,7 @@
 											$filetimestamp = filemtime ($ordner."/".$datei);
 											$filetime = date("d/m/y - H:i:s", $filetimestamp);
 											
-											$size = ceil(filesize($ordner."/".$datei)/1048576);
+											$size = round(filesize($ordner."/".$datei)/1048576,2); 
 											
 											if ($datei != "." && $datei != ".."	&& $datei != "_notes") { 
 										?>
@@ -344,7 +344,7 @@
 									
 									<thead>
 										<tr>
-										<th>Build Time</th>
+										<th>Build Time - UTC</th>
 										<th>Commit</th>
 										<th>File Name</th>
 										<th>Download</th>
@@ -366,7 +366,7 @@
 											$filetimestamp = filemtime ($ordner."/".$datei);
 											$filetime = date("d/m/y - H:i:s", $filetimestamp);
 											
-											$size = ceil(filesize($ordner."/".$datei)/1048576);
+											$size = round(filesize($ordner."/".$datei)/1048576,2); 
 											
 											if ($datei != "." && $datei != ".."	&& $datei != "_notes") { 
 										?>
@@ -415,7 +415,7 @@
 									
 									<thead>
 										<tr>
-										<th>Build Time</th>
+										<th>Build Time - UTC</th>
 										<th>Commit</th>
 										<th>File Name</th>
 										<th>Download</th>
@@ -437,7 +437,7 @@
 											$filetimestamp = filemtime ($ordner."/".$datei);
 											$filetime = date("d/m/y - H:i:s", $filetimestamp);
 											
-											$size = ceil(filesize($ordner."/".$datei)/1048576); 
+											$size = round(filesize($ordner."/".$datei)/1048576,2); 
 											
 											if ($datei != "." && $datei != ".."	&& $datei != "_notes") { 
 										?>
@@ -481,7 +481,7 @@
 									
 									<thead>
 										<tr>
-										<th>Build Time</th>
+										<th>Build Time - UTC</th>
 										<th>Commit</th>
 										<th>File Name</th>
 										<th>Download</th>
@@ -504,7 +504,7 @@
 											$filetimestamp = filemtime ($ordner."/".$datei);
 											$filetime = date("d/m/y - H:i:s", $filetimestamp);
 											
-											$size = ceil(filesize($ordner."/".$datei)/1048576); 
+											$size = round(filesize($ordner."/".$datei)/1048576,2); 
 											
 											if ($datei != "." && $datei != ".."	&& $datei != "_notes") { 
 										?>
