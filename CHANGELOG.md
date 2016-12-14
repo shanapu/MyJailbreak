@@ -7,6 +7,31 @@
     *  new plugin - disabled/ratio_steamrep.smx - Support plugin for Jameless SteamRep Checker plugin
         *  new cvar - sm_ratio_steamrep_exclude - Which tags you DO NOT trust for reported scammers. Input the tags here for any community whose bans you DO NOT TRUST.
         *  new cvar - sm_ratio_steamrep_checkip - Include IP address of connecting players in query. Set to 0 to disable
+*  New Eventday: Ghosts War - All Players are invisbile & immortal - every 6 seconds they go visible and mortal for 2 seconds. Last alive wins.
+    *  new plugin - ghosts.smx - please help translate http://translator.mitchdempsey.com/sourcemod_plugins/201
+        *  new cvar - sm_ghosts_enable - 0 - disabled, 1 - enable this MyJailbreak SourceMod plugin
+        *  new cvar - sm_ghosts_cmds_vote - Set your custom chat command for Event voting(!ghosts (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
+        *  new cvar - sm_ghosts_cmds_set - Set your custom chat command for set Event(!ghosts (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
+        *  new cvar - sm_ghosts_warden - 0 - disabled, 1 - allow warden to set ghosts round
+        *  new cvar - sm_ghosts_admin - 0 - disabled, 1 - allow admin/vip to set ghosts round
+        *  new cvar - sm_ghosts_flag - Set flag for admin/vip to set this Event Day
+        *  new cvar - sm_ghosts_vote - 0 - disabled, 1 - allow player to vote for ghosts
+        *  new cvar - sm_ghosts_spawn - 0 - T teleport to CT spawn, 1 - cell doors auto open
+        *  new cvar - sm_ghosts_rounds - Rounds to play in a row
+        *  new cvar - sm_ghosts_invisible_time - Time in seconds players are invisible & immortal
+        *  new cvar - sm_ghosts_visisble_time - Time in seconds players are visible & mortal
+        *  new cvar - sm_ghosts_roundtime - Round time in minutes for a single ghosts round
+        *  new cvar - sm_ghosts_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
+        *  new cvar - sm_ghosts_trucetime - Time in seconds players can't deal damage
+        *  new cvar - sm_ghosts_cooldown_day - Rounds cooldown after a event until event can be start again
+        *  new cvar - sm_ghosts_cooldown_start - Rounds until event can be start after mapchange
+        *  new cvar - sm_ghosts_cooldown_admin - 0 - disabled, 1 - ignore the cooldown when admin/vip set ghosts round
+        *  new cvar - sm_ghosts_sounds_enable - 0 - disabled, 1 - enable sounds
+        *  new cvar - sm_ghosts_sounds_start - Path to the soundfile which should be played for a start
+        *  new cvar - sm_ghosts_overlays_enable - 0 - disabled, 1 - enable overlays
+        *  new cvar - sm_ghosts_overlays_start - Path to the start Overlay DONT TYPE .vmt or .vft
+        *  new cvar - sm_ghosts_allow_lr - 0 - disabled, 1 - enable LR for last round and end eventday
+    * Menu: added new eventday ghosts to set/voting menu
   
   
 *Changed*

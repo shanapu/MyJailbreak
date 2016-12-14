@@ -37,6 +37,7 @@ spcomp MyJailbreak/dealdamage.sp -o../plugins/MyJailbreak/dealdamage.smx
 spcomp MyJailbreak/hud.sp -o../plugins/MyJailbreak/hud.smx 
 spcomp MyJailbreak/ratio.sp -o../plugins/MyJailbreak/ratio.smx 
 spcomp MyJailbreak/icons.sp -o../plugins/MyJailbreak/icons.smx 
+spcomp MyJailbreak/ghosts.sp -o../plugins/MyJailbreak/ghosts.smx 
 echo.
 echo.
 echo.

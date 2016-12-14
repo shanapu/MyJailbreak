@@ -356,4 +356,9 @@
 		"en"		"Orders"
 	}
 
+	"menu_ghosts"
+	{
+		"en"		"Ghosts War"
+	}
+
 }

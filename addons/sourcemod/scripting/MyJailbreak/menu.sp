@@ -99,6 +99,7 @@ ConVar g_bNoBlock;
 ConVar g_bNoBlockDeputy;
 ConVar g_bZombie;
 ConVar g_bNoScope;
+ConVar g_bGhosts;
 ConVar g_bHEbattle;
 ConVar g_bHide;
 ConVar g_bCatch;
@@ -275,6 +276,7 @@ public void OnConfigsExecuted()
 	g_bSparksDeputy = FindConVar("sm_warden_bulletsparks_deputy");
 	g_bZombie = FindConVar("sm_zombie_enable");
 	g_bDrunk = FindConVar("sm_drunk_enable");
+	g_bGhosts = FindConVar("sm_ghosts_enable");
 	g_bCowboy = FindConVar("sm_cowboy_enable");
 	g_bNoScope = FindConVar("sm_noscope_enable");
 	g_bHide = FindConVar("sm_hide_enable");
@@ -1249,6 +1251,14 @@ public Action Command_VoteEventDays(int client, int args)
 					daysmenu.AddItem("votecatch", menuinfo);
 				}
 			}
+			if (g_bGhosts != null)
+			{
+				if (g_bGhosts.BoolValue)
+				{
+					Format(menuinfo, sizeof(menuinfo), "%T", "menu_ghosts", client);
+					daysmenu.AddItem("voteGhosts", menuinfo);
+				}
+			}
 			if (g_bSuicideBomber != null)
 			{
 				if (g_bSuicideBomber.BoolValue)
@@ -1381,6 +1391,14 @@ public int VoteEventMenuHandler(Menu daysmenu, MenuAction action, int client, in
 		else if (strcmp(info, "votezeus") == 0 )
 		{
 			FakeClientCommand(client, "sm_zeus");
+			if (!gc_bClose.BoolValue)
+			{
+					Command_OpenMenu(client, 0);
+			}
+		}
+		else if (strcmp(info, "voteGhosts") == 0 )
+		{
+			FakeClientCommand(client, "sm_ghosts");
 			if (!gc_bClose.BoolValue)
 			{
 					Command_OpenMenu(client, 0);
@@ -1549,6 +1567,14 @@ public Action Command_SetEventDay(int client, int args)
 					daysmenu.AddItem("setcatch", menuinfo);
 				}
 			}
+			if (g_bGhosts != null)
+			{
+				if (g_bGhosts.BoolValue)
+				{
+					Format(menuinfo, sizeof(menuinfo), "%T", "menu_ghosts", client);
+					daysmenu.AddItem("setGhosts", menuinfo);
+				}
+			}
 			if (g_bSuicideBomber != null)
 			{
 				if (g_bSuicideBomber.BoolValue)
@@ -1689,6 +1715,14 @@ public int SetEventMenuHandler(Menu daysmenu, MenuAction action, int client, int
 		else if (strcmp(info, "setcowboy") == 0 )
 		{
 			FakeClientCommand(client, "sm_setcowboy");
+			if (!gc_bClose.BoolValue)
+			{
+				Command_OpenMenu(client, 0);
+			}
+		}
+		else if (strcmp(info, "setGhosts") == 0 )
+		{
+			FakeClientCommand(client, "sm_setghosts");
 			if (!gc_bClose.BoolValue)
 			{
 				Command_OpenMenu(client, 0);
