@@ -302,7 +302,7 @@ public void OnConfigsExecuted()
 	g_bOpenDeputy = FindConVar("sm_warden_open_deputy");
 	g_bsetFFDeputy = FindConVar("sm_warden_ff_deputy");
 	g_bRandomDeputy = FindConVar("sm_warden_random_deputy");
-	g_bPlayerFreedayDeputy = FindConVar("sm_freekill_freeday_victim_deputy");
+	g_bPlayerFreedayDeputy = FindConVar("sm_warden_freeday_victim_deputy");
 	gc_sAdminFlagBulletSparks = FindConVar("sm_warden_bulletsparks_flag");
 	gc_sAdminFlagLaser = FindConVar("sm_warden_laser_flag");
 	gc_sAdminFlagPainter = FindConVar("sm_warden_painter_flag");
