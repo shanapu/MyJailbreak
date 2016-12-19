@@ -398,4 +398,9 @@
 		"en"		"Stop in {purple}{1}{default} seconds!"
 	}
 
+	"request_freedayforyou"
+	{
+		"en"		"You get a FreeDay next round"
+	}
+
 }
