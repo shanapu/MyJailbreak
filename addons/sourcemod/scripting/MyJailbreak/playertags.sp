@@ -168,7 +168,7 @@ public Action DelayCheck(Handle timer)
 
 
 //Give Tag
-public int HandleTag(int client)
+public void HandleTag(int client)
 {
 	if (gc_bPlugin.BoolValue)
 	{
