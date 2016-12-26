@@ -76,7 +76,7 @@ public void Disarm_Event_RoundStart(Event event, const char[] name, bool dontBro
 
 public Action Disarm_Event_PlayerHurt(Event event, char[] name, bool dontBroadcast)
 {
-	if (gc_bPlugin.BoolValue && gc_bDisarm.BoolValue)
+	if (gc_bPlugin.BoolValue && gc_bDisarm.BoolValue && !IsLR)
 	{
 		int victim 			= GetClientOfUserId(event.GetInt("userid"));
 		int attacker 		= GetClientOfUserId(event.GetInt("attacker"));
