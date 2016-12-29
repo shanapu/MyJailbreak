@@ -41,7 +41,7 @@ native bool IsClientSpeaking(int client);
  *
  */
 
-forward int OnClientSpeakingEx(int client);
+forward void OnClientSpeakingEx(int client);
 
 /**
  *
@@ -52,4 +52,4 @@ forward int OnClientSpeakingEx(int client);
  * @noreturn
  *
  */
-forward int OnClientSpeakingEnd(int client);
+forward void OnClientSpeakingEnd(int client);

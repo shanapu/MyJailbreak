@@ -81,7 +81,7 @@ public void KillReason_Event_PlayerDeath(Event event, const char[] name, bool do
 ******************************************************************************/
 
 
-public int Menu_KillReason(int client, int victim)
+void Menu_KillReason(int client, int victim)
 {
 	if (MyJailbreak_IsEventDayRunning() || MyJailbreak_IsLastGuardRule())
 		return;

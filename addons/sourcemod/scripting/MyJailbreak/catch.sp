@@ -665,7 +665,7 @@ public Action OnWeaponCanUse(int client, int weapon)
 
 
 //Listen for Last Lequest
-public int OnAvailableLR(int Announced)
+public void OnAvailableLR(int Announced)
 {
 	if (IsCatch && gc_bAllowLR.BoolValue && (g_iTsLR > g_iTerrorForLR.IntValue))
 	{

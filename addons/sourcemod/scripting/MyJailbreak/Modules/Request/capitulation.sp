@@ -259,7 +259,7 @@ public Action Capitulation_OnTakedamage(int victim, int &attacker, int &inflicto
 }
 
 
-public int Capitulation_OnAvailableLR(int Announced)
+public void Capitulation_OnAvailableLR(int Announced)
 {
 	LoopClients(i)
 	{

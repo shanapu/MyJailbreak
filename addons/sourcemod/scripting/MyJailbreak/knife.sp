@@ -573,7 +573,7 @@ public void OnMapEnd()
 
 
 //Listen for Last Lequest
-public int OnAvailableLR(int Announced)
+public void OnAvailableLR(int Announced)
 {
 	if (IsKnifeFight && gc_bAllowLR.BoolValue && (g_iTsLR > g_iTerrorForLR.IntValue))
 	{

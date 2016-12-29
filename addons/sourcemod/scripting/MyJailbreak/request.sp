@@ -324,7 +324,7 @@ public void OnClientDisconnect(int client)
 }
 
 
-public int OnAvailableLR(int Announced)
+public void OnAvailableLR(int Announced)
 {
 	Capitulation_OnAvailableLR(Announced);
 	IsLR = true;

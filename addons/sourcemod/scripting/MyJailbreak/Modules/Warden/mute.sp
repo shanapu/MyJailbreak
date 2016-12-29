@@ -259,7 +259,7 @@ public void Mute_OnMapEnd()
 
 
 // Mute Terror when Warden speaks
-public int OnClientSpeakingEx(int client)
+public void OnClientSpeakingEx(int client)
 {
 	if ((warden_iswarden(client) && gc_bMuteTalkOver.BoolValue) || (warden_deputy_isdeputy(client) && gc_bMuteTalkOverDeputy.BoolValue))
 	{
@@ -288,7 +288,7 @@ public int OnClientSpeakingEx(int client)
 
 
 // Mute Terror when Warden end speaking
-public int OnClientSpeakingEnd(int client)
+public void OnClientSpeakingEnd(int client)
 {
 	if ((warden_iswarden(client) && gc_bMuteTalkOver.BoolValue) || (warden_deputy_isdeputy(client) && gc_bMuteTalkOverDeputy.BoolValue))
 	{

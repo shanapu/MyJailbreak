@@ -73,25 +73,25 @@ stock void StripAllPlayerWeapons(int client)
 	{
 		if ((weapon = GetPlayerWeaponSlot(client, i)) != -1)
 		{
-			SDKHooks_DropWeapon(client, weapon, NULL_VECTOR, NULL_VECTOR); 
-			AcceptEntityInput(weapon, "Kill"); 
+			SDKHooks_DropWeapon(client, weapon, NULL_VECTOR, NULL_VECTOR);
+			AcceptEntityInput(weapon, "Kill");
 		}
 	}
 	if ((weapon = GetPlayerWeaponSlot(client, CS_SLOT_KNIFE)) != -1)   //strip knife slot 2 times for taser
 	{
-		SDKHooks_DropWeapon(client, weapon, NULL_VECTOR, NULL_VECTOR); 
-		AcceptEntityInput(weapon, "Kill"); 
+		SDKHooks_DropWeapon(client, weapon, NULL_VECTOR, NULL_VECTOR);
+		AcceptEntityInput(weapon, "Kill");
 	}
 }
 
 
 //Easy show overlay to a client with lifetime | 0.0 = no auto remove
-stock void ShowOverlay(int client, char [] path, float lifetime) 
+stock void ShowOverlay(int client, char [] path, float lifetime)
 {
 	if (IsValidClient(client, false, true))
 	{
-		int iFlag = GetCommandFlags( "r_screenoverlay" ) & ( ~FCVAR_CHEAT ); 
-		SetCommandFlags( "r_screenoverlay", iFlag ); 
+		int iFlag = GetCommandFlags( "r_screenoverlay" ) & ( ~FCVAR_CHEAT );
+		SetCommandFlags( "r_screenoverlay", iFlag );
 		ClientCommand( client, "r_screenoverlay \"%s.vtf\"", path);
 		if (lifetime != 0.0) CreateTimer(lifetime, DeleteOverlay, client);
 	}

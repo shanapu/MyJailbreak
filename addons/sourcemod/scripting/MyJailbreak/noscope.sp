@@ -550,7 +550,7 @@ public void OnMapStart()
 
 
 //Listen for Last Lequest
-public int OnAvailableLR(int Announced)
+public void OnAvailableLR(int Announced)
 {
 	if (IsNoScope && gc_bAllowLR.BoolValue && (g_iTsLR > g_iTerrorForLR.IntValue))
 	{
