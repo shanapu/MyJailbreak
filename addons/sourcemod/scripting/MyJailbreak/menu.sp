@@ -1886,30 +1886,6 @@ public int changemenu(Menu menu, MenuAction action, int client, int selection)
 }
 
 
-public int VotingMenuHandler(Menu menu, MenuAction action, int param1, int param2)
-{
-	if (action == MenuAction_End)
-	{
-		/* This is called after VoteEnd */
-		delete menu;
-	}
-}
-
-public void VotingResults(Menu menu, int num_votes, int num_clients, const int[][] client_info, int num_items, const int[][] item_info)
-{
-	/* See if there were multiple winners */
-	int winner = 0;
-	if (num_items > 1 && (item_info[0][VOTEINFO_ITEM_VOTES] == item_info[1][VOTEINFO_ITEM_VOTES]))
-	{
-		winner = GetRandomInt(0, 1);
-		CPrintToChatAll("%t %t", "menu_tag", "menu_votingdraw");
-	}
-	char event[64];
-	menu.GetItem(item_info[winner][VOTEINFO_ITEM_INDEX], event, sizeof(event));
-	CPrintToChatAll("%t %t", "menu_tag", "menu_votingwon", event, num_clients, num_items);
-	ServerCommand("sm_set%s", event);
-}
-
 public Action Command_VotingMenu(int client, int args)
 {
 	if (gc_bPlugin.BoolValue && gc_bVoting.BoolValue)
@@ -2031,6 +2007,38 @@ public Action Command_VotingMenu(int client, int args)
 	return Plugin_Handled;
 }
 
+
+public int VotingMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+{
+	if (action == MenuAction_End)
+	{
+		/* This is called after VoteEnd */
+		delete menu;
+	}
+}
+
+
+public void VotingResults(Menu menu, int num_votes, int num_clients, const int[][] client_info, int num_items, const int[][] item_info)
+{
+	char EventDay[64];
+	MyJailbreak_GetEventDayName(EventDay);
+	
+	if (StrEqual(EventDay, "none", false))
+	{
+		/* See if there were multiple winners */
+		int winner = 0;
+		if (num_items > 1 && (item_info[0][VOTEINFO_ITEM_VOTES] == item_info[1][VOTEINFO_ITEM_VOTES]))
+		{
+			winner = GetRandomInt(0, 1);
+			CPrintToChatAll("%t %t", "menu_tag", "menu_votingdraw");
+		}
+		char event[64];
+		menu.GetItem(item_info[winner][VOTEINFO_ITEM_INDEX], event, sizeof(event));
+		CPrintToChatAll("%t %t", "menu_tag", "menu_votingwon", event, num_clients, num_items);
+		ServerCommand("sm_set%s", event);
+	}
+	else CPrintToChatAll("%t %t", "menu_tag", "menu_votingcancel", EventDay);
+}
 
 /******************************************************************************
                    TIMER

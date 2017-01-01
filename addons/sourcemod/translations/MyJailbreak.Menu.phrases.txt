@@ -296,6 +296,12 @@
 		"en"		"The vote ended in a 50/50 draw! An Event Day was chosen Randomly!"
 	}
 
+	"menu_votingcancel"
+	{
+		"#format"	"{1:s}"
+		"en"		"The voting was canceled, cause EventDay {purple}{1}{default} was already set!"
+	}
+
 	"menu_disabled"
 	{
 		"en"		"Event voting is currently {purple}disabled!"
