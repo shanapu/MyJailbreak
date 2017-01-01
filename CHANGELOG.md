@@ -3,8 +3,8 @@
 **[Beta 9.1.dev]** - fixes
   
 *Added*
-*  Ratio: Support for SteamRep - prevent scammer vom guard -  required Sockets Extension
-    *  new plugin - disabled/ratio_steamrep.smx - Support plugin for Jameless SteamRep Checker plugin
+*  Ratio: Support for SteamRep.com - prevent scammer vom guard (SteamRep.com/plugin.php) - required Sockets Extension 
+    *  new plugin - disabled/ratio_steamrep.smx - Support plugin for Jameless SteamRep.com Checker plugin
         *  new cvar - sm_ratio_steamrep_exclude - Which tags you DO NOT trust for reported scammers. Input the tags here for any community whose bans you DO NOT TRUST.
         *  new cvar - sm_ratio_steamrep_checkip - Include IP address of connecting players in query. Set to 0 to disable
 *  New Eventday: Ghosts War - All Players are invisbile & immortal - every 6 seconds they go visible and mortal for 2 seconds. Last alive wins.
@@ -32,15 +32,19 @@
         *  new cvar - sm_ghosts_overlays_start - Path to the start Overlay DONT TYPE .vmt or .vft
         *  new cvar - sm_ghosts_allow_lr - 0 - disabled, 1 - enable LR for last round and end eventday
     * Menu: added new eventday ghosts to set/voting menu
-  
+*  Hide: Added last request for hide in the dark
+    *  new cvar - sm_hide_allow_lr - 0 - disabled, 1 - enable LR for last round and end eventday
   
 *Changed*
-*  :
+*  Warden - disarm: disbale weapon disarm (shot hand to drop weapon) on last request
   
   
 *Fixed*
 *  Warden - small error with logging & vote warden
 *  Weapons - rar error when client left server in timer
+*  Menu - Eventday Voting - fix double Event when event was set while voting
+*  Request: missing translation
+*  minor errors
   
   
 *Developer stuff*

@@ -71,11 +71,13 @@ ConVar gc_iTAgrenades;
 ConVar gc_sCustomCommandVote;
 ConVar gc_sCustomCommandSet;
 ConVar gc_sAdminFlag;
+ConVar gc_bAllowLR;
 
 
 //Extern Convars
 ConVar g_iMPRoundTime;
 ConVar g_sOldSkyName;
+ConVar g_iTerrorForLR;
 
 
 //Integers
@@ -87,6 +89,7 @@ int g_iRound;
 int g_iMaxRound;
 int g_iMaxTA;
 int g_iTA[MAXPLAYERS + 1];
+int g_iTsLR;
 
 
 //Handles
@@ -152,6 +155,7 @@ public void OnPluginStart()
 	gc_sSoundStartPath = AutoExecConfig_CreateConVar("sm_hide_sounds_start", "music/MyJailbreak/start.mp3", "Path to the soundfile which should be played for start");
 	gc_bOverlays = AutoExecConfig_CreateConVar("sm_hide_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true,  0.0, true, 1.0);
 	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_hide_overlays_start", "overlays/MyJailbreak/start" , "Path to the start Overlay DONT TYPE .vmt or .vft");
+	gc_bAllowLR = AutoExecConfig_CreateConVar("sm_hide_allow_lr", "0" , "0 - disabled, 1 - enable LR for last round and end eventday", _, true, 0.0, true, 1.0);
 	
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
@@ -404,6 +408,18 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 					GivePlayerItem(client, "weapon_knife");
 				}
 			}
+			
+			//enable lr on last round
+			g_iTsLR = GetAliveTeamCount(CS_TEAM_T);
+			
+			if (gc_bAllowLR.BoolValue)
+			{
+				if ((g_iRound == g_iMaxRound) && (g_iTsLR > g_iTerrorForLR.IntValue))
+				{
+					SetCvar("sm_hosties_lr", 1);
+				}
+			}
+			
 			g_iFreezeTime--;
 			FreezeTimer = CreateTimer(1.0, Timer_StartEvent, _, TIMER_REPEAT);
 		}
@@ -455,7 +471,6 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			SetCvar("sm_menu_enable", 1);
 			g_iMPRoundTime.IntValue = g_iOldRoundTime;
 			MyJailbreak_SetEventDayName("none");
-			MyJailbreak_SetEventDayRunning(false);
 			MyJailbreak_SetEventDayRunning(false);
 			CPrintToChatAll("%t %t", "hide_tag" , "hide_end");
 			
@@ -574,6 +589,45 @@ public Action OnWeaponCanUse(int client, int weapon)
 	}
 	return Plugin_Continue;
 }
+
+
+//Listen for Last Lequest
+public void OnAvailableLR(int Announced)
+{
+	if (IsHide && gc_bAllowLR.BoolValue && (g_iTsLR > g_iTerrorForLR.IntValue))
+	{
+		LoopValidClients(client, false, true)
+		{
+			SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
+			SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
+			g_iTA[client] = 0;
+		}
+		
+		delete FreezeTimer;
+		delete BeaconTimer;
+		
+		if (g_iRound == g_iMaxRound)
+		{
+			IsHide = false;
+			StartHide = false;
+			g_iRound = 0;
+			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
+			SetCvar("sm_hosties_lr", 1);
+			SetCvar("sm_weapons_t", 0);
+			SetCvar("sm_weapons_ct", 1);
+			SetCvarString("sv_skyname", g_sSkyName);
+			SetCvar("sm_warden_enable", 1);
+			SetCvar("sm_menu_enable", 1);
+			g_iMPRoundTime.IntValue = g_iOldRoundTime;
+			MyJailbreak_SetEventDayName("none");
+			MyJailbreak_SetEventDayRunning(false);
+			CPrintToChatAll("%t %t", "hide_tag" , "hide_end");
+			
+			MyJailbreak_FogOff();
+		}
+	}
+}
+
 
 
 /******************************************************************************
