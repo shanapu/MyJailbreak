@@ -443,7 +443,6 @@ public int RespawnHandler(Menu menu, MenuAction action, int client, int Position
 				if (gp_bMyJailBreak) if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sFreeKillLogFile, "Warden/Admin %L accept freekill request and respawned %L in front of warden", client, i);
 				CPrintToChat(i, "%t %t", "request_tag", "request_respawned");
 				CPrintToChatAll("%t %t", "warden_tag", "request_respawnedall", i);
-				CPrintToChatAll("debug warden is %N", warden);
 			}
 		}
 	}
