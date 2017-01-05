@@ -60,6 +60,7 @@ ConVar gc_bBecomeWarden;
 ConVar gc_bChooseRandom;
 ConVar gc_bSounds;
 ConVar gc_bOverlays;
+ConVar gc_iCoolDownRemove;
 ConVar gc_sWarden;
 ConVar gc_sUnWarden;
 ConVar gc_sModelPathWarden;
@@ -90,6 +91,7 @@ bool gp_bChatProcessor = false;
 int g_iWarden = -1;
 int g_iLastWarden = -1;
 int g_iTempWarden[MAXPLAYERS+1] = -1;
+int g_iCoolDownWarden[MAXPLAYERS+1] = 0;
 int g_iVoteCount;
 int g_iBeamSprite = -1;
 int g_iHaloSprite = -1;
@@ -215,6 +217,7 @@ public void OnPluginStart()
 	gc_bChooseRandom = AutoExecConfig_CreateConVar("sm_warden_choose_random", "0", "0 - disabled, 1 - enable pick random warden if there is still no warden after sm_warden_choose_time", _, true,  0.0, true, 1.0);
 	gc_fRandomTimer = AutoExecConfig_CreateConVar("sm_warden_choose_time", "45.0", "Time in seconds a random warden will picked when no warden was set. need sm_warden_choose_random 1", _, true,  1.0);
 	gc_bVote = AutoExecConfig_CreateConVar("sm_warden_vote", "1", "0 - disabled, 1 - enable player vote against warden", _, true,  0.0, true, 1.0);
+	gc_iCoolDownRemove = AutoExecConfig_CreateConVar("sm_warden_cooldown_remove", "3", "0 - disabled, rounds player can't become warden after he was vote out or removed by admin", _, true,  0.0);
 	gc_bStayWarden = AutoExecConfig_CreateConVar("sm_warden_stay", "1", "0 - disabled, 1 - enable warden stay after round end", _, true,  0.0, true, 1.0);
 	gc_bBetterNotes = AutoExecConfig_CreateConVar("sm_warden_better_notifications", "1", "0 - disabled, 1 - Will use hint and center text", _, true, 0.0, true, 1.0);
 	gc_bModel = AutoExecConfig_CreateConVar("sm_warden_model", "1", "0 - disabled, 1 - enable warden model", 0, true, 0.0, true, 1.0);
@@ -445,18 +448,22 @@ public Action Command_BecomeWarden(int client, int args)
 				{
 					if (IsPlayerAlive(client))  //Alive?
 					{
-						SetTheWarden(client);
-						Forward_OnWardenCreatedByUser(client);
+						if (g_iCoolDownWarden[client] < 1)
+						{
+							SetTheWarden(client);
+							Forward_OnWardenCreatedByUser(client);
+						}
+						else CReplyToCommand(client, "%t %t", "warden_tag", "warden_cooldown", g_iCoolDownWarden[client]);
 					}
-					else CReplyToCommand(client, "%t %t", "warden_tag" , "warden_playerdead");
+					else CReplyToCommand(client, "%t %t", "warden_tag", "warden_playerdead");
 				}
-				else CReplyToCommand(client, "%t %t", "warden_tag" , "warden_ctsonly");
+				else CReplyToCommand(client, "%t %t", "warden_tag", "warden_ctsonly");
 			}
-			else CReplyToCommand(client, "%t %t", "warden_tag" , "warden_nobecome", g_iWarden);
+			else CReplyToCommand(client, "%t %t", "warden_tag", "warden_nobecome", g_iWarden);
 		}
-		else CReplyToCommand(client, "%t %t", "warden_tag" , "warden_exist", g_iWarden);
+		else CReplyToCommand(client, "%t %t", "warden_tag", "warden_exist", g_iWarden);
 	}
-	else CReplyToCommand(client, "%t %t", "warden_tag" , "warden_disabled");
+	else CReplyToCommand(client, "%t %t", "warden_tag", "warden_disabled");
 	return Plugin_Handled;
 }
 
@@ -505,6 +512,9 @@ public Action Command_VoteWarden(int client, int args)
 					if (g_iVoteCount > playercount)
 					{
 						if(gp_bMyJailBreak) if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Player %L was kick as warden by voting", g_iWarden);
+						
+						g_iCoolDownWarden[g_iWarden] = gc_iCoolDownRemove.IntValue;
+						
 						RemoveTheWarden();
 						CPrintToChatAll("%t %t", "warden_tag" , "warden_votesuccess");
 					}
@@ -531,6 +541,8 @@ public Action AdminCommand_RemoveWarden(int client, int args)
 			CPrintToChatAll("%t %t", "warden_tag" , "warden_removed", client, g_iWarden);  // if client is console !=
 			if (gc_bBetterNotes.BoolValue) PrintCenterTextAll("%t", "warden_removed_nc", client, g_iWarden);
 			if(gp_bMyJailBreak) if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Admin %L removed player %L as warden", client, g_iWarden);
+			
+			g_iCoolDownWarden[g_iWarden] = gc_iCoolDownRemove.IntValue;
 			
 			RemoveTheWarden();
 			Forward_OnWardenRemovedByAdmin(client);
@@ -661,6 +673,14 @@ public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 	if (g_iWarden != -1)
 	{
 		if (gc_bModel.BoolValue) SetEntityModel(g_iWarden, g_sModelPathWarden);
+	}
+	if (gc_iCoolDownRemove.IntValue != 0)
+	{
+		LoopClients(i)
+		if (g_iCoolDownWarden[i] != 0) 
+		{
+			g_iCoolDownWarden[i]--;
+		}
 	}
 	IsLR = false;
 }

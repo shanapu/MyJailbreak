@@ -929,13 +929,19 @@
 
 	"warden_freedayforyou"
 	{
-		"en"		"You get a FreeDay next round"
+		"en"		"You get a {purple}FreeDay{default} next round"
 	}
 
 	"warden_personalfreeday"
 	{
 		"#format"	"{1:N}"
-		"en"		"{1} gets a FreeDay next round"
+		"en"		"{green}{1}{default} gets a {purple}FreeDay{default} next round"
+	}
+
+	"warden_cooldown"
+	{
+		"#format"	"{1:i}"
+		"en"		"You have a {purple}warden cooldown{default}. Wait {green}{1}{default} rounds"
 	}
 
 }
