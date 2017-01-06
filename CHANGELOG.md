@@ -3,7 +3,8 @@
 **[Beta 9.1.dev]** - fixes
   
 *Added*
-*  Ratio: Support for SteamRep.com - prevent scammer vom guard (SteamRep.com/plugin.php) - required Sockets Extension 
+*  Ratio: Support for SteamRep.com - FantoMs CT Bans
+    *  new plugin - disabled/ratio_ct_bans.smx - Support plugin for FantoMs CT Bans plugin
     *  new plugin - disabled/ratio_steamrep.smx - Support plugin for Jameless SteamRep.com Checker plugin
         *  new cvar - sm_ratio_steamrep_exclude - Which tags you DO NOT trust for reported scammers. Input the tags here for any community whose bans you DO NOT TRUST.
         *  new cvar - sm_ratio_steamrep_checkip - Include IP address of connecting players in query. Set to 0 to disable
@@ -34,6 +35,10 @@
     * Menu: added new eventday ghosts to set/voting menu
 *  Hide: Added last request for hide in the dark
     *  new cvar - sm_hide_allow_lr - 0 - disabled, 1 - enable LR for last round and end eventday
+*  Warden: Player cooldown for become warden after a remove vote or remove warden by admin
+    *  new cvar - sm_warden_cooldown_remove - 0 - disabled, rounds player can't become warden after he was vote out or removed by admin
+  
+  
   
 *Changed*
 *  Warden - disarm: disbale weapon disarm (shot hand to drop weapon) on last request
@@ -44,6 +49,7 @@
 *  Weapons - rar error when client left server in timer
 *  Menu - Eventday Voting - fix double Event when event was set while voting
 *  Request: missing translation
+*  removed some debug messages
 *  minor errors
   
   
