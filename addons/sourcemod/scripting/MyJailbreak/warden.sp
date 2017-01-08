@@ -91,7 +91,6 @@ bool gp_bChatProcessor = false;
 int g_iWarden = -1;
 int g_iLastWarden = -1;
 int g_iTempWarden[MAXPLAYERS+1] = -1;
-int g_iCoolDownWarden[MAXPLAYERS+1] = 0;
 int g_iVoteCount;
 int g_iBeamSprite = -1;
 int g_iHaloSprite = -1;
@@ -120,6 +119,7 @@ Handle gF_OnWardenDeath;
 Handle gF_OnWardenRemovedBySelf;
 Handle gF_OnWardenRemovedByAdmin;
 Handle RandomTimer;
+Handle g_hCooldown;
 
 
 //Strings
@@ -279,6 +279,9 @@ public void OnPluginStart()
 	
 	//Set directory for LogFile - must be created before
 	SetLogFile(g_sMyJBLogFile, "MyJB", "MyJailbreak");
+	
+	
+	g_hCooldown = CreateTrie();
 }
 
 
@@ -448,12 +451,12 @@ public Action Command_BecomeWarden(int client, int args)
 				{
 					if (IsPlayerAlive(client))  //Alive?
 					{
-						if (g_iCoolDownWarden[client] < 1)
+						if (GetCoolDown(client) < 1)
 						{
 							SetTheWarden(client);
 							Forward_OnWardenCreatedByUser(client);
 						}
-						else CReplyToCommand(client, "%t %t", "warden_tag", "warden_cooldown", g_iCoolDownWarden[client]);
+						else CReplyToCommand(client, "%t %t", "warden_tag", "warden_cooldown", GetCoolDown(client));
 					}
 					else CReplyToCommand(client, "%t %t", "warden_tag", "warden_playerdead");
 				}
@@ -513,7 +516,7 @@ public Action Command_VoteWarden(int client, int args)
 					{
 						if(gp_bMyJailBreak) if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Player %L was kick as warden by voting", g_iWarden);
 						
-						g_iCoolDownWarden[g_iWarden] = gc_iCoolDownRemove.IntValue;
+						SetCoolDown(g_iWarden, gc_iCoolDownRemove.IntValue);
 						
 						RemoveTheWarden();
 						CPrintToChatAll("%t %t", "warden_tag" , "warden_votesuccess");
@@ -542,7 +545,7 @@ public Action AdminCommand_RemoveWarden(int client, int args)
 			if (gc_bBetterNotes.BoolValue) PrintCenterTextAll("%t", "warden_removed_nc", client, g_iWarden);
 			if(gp_bMyJailBreak) if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Admin %L removed player %L as warden", client, g_iWarden);
 			
-			g_iCoolDownWarden[g_iWarden] = gc_iCoolDownRemove.IntValue;
+			SetCoolDown(g_iWarden, gc_iCoolDownRemove.IntValue);
 			
 			RemoveTheWarden();
 			Forward_OnWardenRemovedByAdmin(client);
@@ -550,6 +553,7 @@ public Action AdminCommand_RemoveWarden(int client, int args)
 	}
 	return Plugin_Handled;
 }
+
 
 
 //Set new Warden for Admins
@@ -677,9 +681,9 @@ public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 	if (gc_iCoolDownRemove.IntValue != 0)
 	{
 		LoopClients(i)
-		if (g_iCoolDownWarden[i] != 0) 
+		if (GetCoolDown(i) != 0) 
 		{
-			g_iCoolDownWarden[i]--;
+			SetCoolDown(i, GetCoolDown(i)-1);
 		}
 	}
 	IsLR = false;
@@ -725,6 +729,8 @@ public void OnMapStart()
 	g_iBeamSprite = PrecacheModel("materials/sprites/laserbeam.vmt");
 	g_iHaloSprite = PrecacheModel("materials/sprites/glow01.vmt");
 	PrecacheSound(SOUND_THUNDER, true);
+	
+	ClearTrie(g_hCooldown);
 }
 
 
@@ -876,6 +882,30 @@ void RemoveTheWarden()
 	
 	g_iLastWarden = g_iWarden;
 	g_iWarden = -1;
+}
+
+int GetCoolDown(int client)
+{
+	char steamid[64];
+	int cooldown;
+	GetClientAuthId(client, AuthId_Steam2,  steamid, sizeof(steamid));
+	
+	if(!GetTrieValue(g_hCooldown, steamid, cooldown))
+	{
+		cooldown = 0;
+	}
+	return cooldown;
+}
+
+void SetCoolDown(int client, int cooldown)
+{
+	char steamid[64];
+	GetClientAuthId(client, AuthId_Steam2,  steamid, sizeof(steamid));
+	if (cooldown == 0)
+	{
+		RemoveFromTrie(g_hCooldown, steamid);
+	}
+	else SetTrieValue(g_hCooldown, steamid, cooldown);
 }
 
 
