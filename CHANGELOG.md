@@ -37,6 +37,7 @@
     *  new cvar - sm_hide_allow_lr - 0 - disabled, 1 - enable LR for last round and end eventday
 *  Warden: Player cooldown for become warden after a remove vote or remove warden by admin
     *  new cvar - sm_warden_cooldown_remove - 0 - disabled, rounds player can't become warden after he was vote out or removed by admin
+*  Warden - Orders: Set your custom commands for every single order.
   
   
   
