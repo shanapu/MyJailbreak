@@ -3,7 +3,8 @@
 **[Beta 9.1.dev]** - fixes
   
 *Added*
-*  Ratio: Support for SteamRep.com - FantoMs CT Bans
+*  Ratio: Support for SteamRep.com & FantoMs CT Bans - add missing custom commands cvar for !clarqueue
+    *  new cvar - sm_ratio_cmds_clear - Set your custom chat command for admins to clear the guard queue (!clearqueue (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))"); 
     *  new plugin - disabled/ratio_ct_bans.smx - Support plugin for FantoMs CT Bans plugin
     *  new plugin - disabled/ratio_steamrep.smx - Support plugin for Jameless SteamRep.com Checker plugin
         *  new cvar - sm_ratio_steamrep_exclude - Which tags you DO NOT trust for reported scammers. Input the tags here for any community whose bans you DO NOT TRUST.
@@ -43,7 +44,8 @@
   
 *Changed*
 *  Warden - disarm: disbale weapon disarm (shot hand to drop weapon) on last request
-  
+*  Menu: Moved admin commands to !admin menu
+    *  new cvar - sm_menu_admin - 0 - disabled, 1 - display admin menu items also in MyJailbreak Menu
   
 *Fixed*
 *  Warden - small error with logging & vote warden
