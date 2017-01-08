@@ -488,7 +488,6 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			if (IsClientInGame(client)) 
 			{
 				SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true); //disbale noblock
-				SendResults(client);
 			}
 		}
 		delete TruceTimer; //kill start time if still running
@@ -690,7 +689,7 @@ stock void SendResults(int client)
 	Format(info, sizeof(info), "%t", "dealdamage_t", DamageT);
 	DrawPanelText(DealDamageEndMenu, info);
 	if (gc_bConsole.BoolValue) PrintToConsole(client, info);
-	Format(info, sizeof(info), "%t %t", "dealdamage_tag" ,  "dealdamage_ct", DamageT);
+	Format(info, sizeof(info), "%t %t", "dealdamage_tag" ,  "dealdamage_t", DamageT);
 	if (gc_bChat.BoolValue) CPrintToChat(client, info);
 	DrawPanelText(DealDamageEndMenu, "                                   ");
 	Format(info, sizeof(info), "%t", "dealdamage_bestct", BestCT, BestCTdamage);
@@ -797,6 +796,8 @@ public Action Timer_EndTheRound(Handle timer)
 		else BestPlayer = BestT;
 	
 	TotalDamage = DamageCT + DamageT;
+	
+	LoopValidClients(i, true, true) SendResults(i);
 	
 	RoundTimer = null;
 	delete RoundTimer;
