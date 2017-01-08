@@ -332,6 +332,21 @@
 		"en"		"Remove Deputy"
 	}
 
+	"menu_removequeue"
+	{
+		"en"		"Remove player from guard queue"
+	}
+
+	"menu_endround"
+	{
+		"en"		"Force round end"
+	}
+
+	"menu_clearqueue"
+	{
+		"en"		"Clear guard queue"
+	}
+
 	"menu_deputybecome"
 	{
 		"en"		"Become Wardens Deputy"

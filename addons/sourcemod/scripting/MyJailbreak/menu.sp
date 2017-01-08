@@ -35,6 +35,7 @@
 #include <smartjaildoors>
 #include <mystocks>
 #include <myjailbreak>
+#include <adminmenu>
 
 
 //Compiler Options
@@ -71,6 +72,7 @@ ConVar gc_sAdminFlag;
 ConVar gc_bSetW;
 ConVar gc_bSetA;
 ConVar gc_bVoting;
+ConVar gc_bAdminMenu;
 
 
 //3rd party Convars
@@ -190,8 +192,9 @@ public void OnPluginStart()
 	gc_bStart = AutoExecConfig_CreateConVar("sm_menu_start", "1", "0 - disabled, 1 - enable open menu on every roundstart", _, true,  0.0, true, 1.0);
 	gc_bTeam = AutoExecConfig_CreateConVar("sm_menu_team", "1", "0 - disabled, 1 - enable join team on menu", _, true,  0.0, true, 1.0);
 	gc_bWelcome = AutoExecConfig_CreateConVar("sm_menu_welcome", "1", "Show welcome message to newly connected users.", _, true,  0.0, true, 1.0);
-	gc_bVoting = AutoExecConfig_CreateConVar("sm_menu_voteday", "1", "0 - disabled, 1 - enable voteing for a eventday", _, true,  0.0, true, 1.0);
+	gc_bVoting = AutoExecConfig_CreateConVar("sm_menu_voteday", "1", "0 - disabled, 1 - enable voting for a eventday", _, true,  0.0, true, 1.0);
 	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_menu_flag", "g", "Set flag for admin/vip to start a voting & get admin menu");
+	gc_bAdminMenu = AutoExecConfig_CreateConVar("sm_menu_admin", "1", "0 - disabled, 1 - display admin menu items in Myjailbreak Menu", _, true,  0.0, true, 1.0);
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_menu_voteday_warden", "1", "0 - disabled, 1 - allow warden to start a voting", _, true,  0.0, true, 1.0);
 	gc_bSetA = AutoExecConfig_CreateConVar("sm_menu_voteday_admin", "1", "0 - disabled, 1 - allow admin/vip  to start a voting", _, true,  0.0, true, 1.0);
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_menu_voteday_cooldown_day", "3", "Rounds cooldown after a voting until voting can be start again", _, true,  0.0);
@@ -209,8 +212,212 @@ public void OnPluginStart()
 	
 	//Find
 	gc_sAdminFlag.GetString(g_sAdminFlag , sizeof(g_sAdminFlag));
+	
+	
+	Handle topmenu;
+	if (LibraryExists("adminmenu") && ((topmenu = GetAdminTopMenu()) != INVALID_HANDLE))
+	{
+		OnAdminMenuReady(topmenu);
+	}
 }
 
+Handle gH_TopMenu = INVALID_HANDLE;
+TopMenuObject gM_MyJB = INVALID_TOPMENUOBJECT;
+
+public void OnAdminMenuReady(Handle h_TopMenu)
+{
+	// block double calls
+	if (h_TopMenu == gH_TopMenu)
+	{
+		return;
+	}
+	gH_TopMenu = h_TopMenu;
+	
+	
+	// Build MyJailbreak menu
+	gM_MyJB = AddToTopMenu(gH_TopMenu, "MyJailbreak", TopMenuObject_Category, Handler_AdminMenu_Category, INVALID_TOPMENUOBJECT);
+	
+	if (gM_MyJB != INVALID_TOPMENUOBJECT)
+	{
+		if (FindConVar("sm_myjb_allow_endround"))
+		{
+			AddToTopMenu(gH_TopMenu, "sm_endround", TopMenuObject_Item, Handler_AdminMenu_EndRound, gM_MyJB, "sm_endround");
+		}
+		if (gc_bVoting.BoolValue)
+		{
+			AddToTopMenu(gH_TopMenu, "sm_votedays", TopMenuObject_Item, Handler_AdminMenu_VoteDays, gM_MyJB, "sm_voteday");
+		}
+		if (gc_bDays.BoolValue)
+		{
+			AddToTopMenu(gH_TopMenu, "sm_setday", TopMenuObject_Item, Handler_AdminMenu_SetDay, gM_MyJB, "sm_setday");
+		}
+		AddToTopMenu(gH_TopMenu, "sm_setwarden", TopMenuObject_Item, Handler_AdminMenu_SetWarden, gM_MyJB, "sm_setwarden");
+		AddToTopMenu(gH_TopMenu, "sm_removewarden", TopMenuObject_Item, Handler_AdminMenu_RemoveWarden, gM_MyJB, "sm_removewarden");
+		AddToTopMenu(gH_TopMenu, "sm_removedeputy", TopMenuObject_Item, Handler_AdminMenu_RemoveDeputy, gM_MyJB, "sm_removedeputy");
+		AddToTopMenu(gH_TopMenu, "sm_removequeue", TopMenuObject_Item, Handler_AdminMenu_RemoveQueue, gM_MyJB, "sm_removequeue");
+		AddToTopMenu(gH_TopMenu, "sm_clearqueue", TopMenuObject_Item, Handler_AdminMenu_ClearQueue, gM_MyJB, "sm_clearqueue");
+	}
+}
+
+
+public void Handler_AdminMenu_Category(Handle h_TopMenu, TopMenuAction action, TopMenuObject item, int param, char [] buffer, int maxlength)
+{
+	switch (action)
+	{
+		case (TopMenuAction_DisplayTitle):
+		{
+			Format(buffer, maxlength, "MyJailbreak:");
+		}
+		case (TopMenuAction_DisplayOption):
+		{
+			Format(buffer, maxlength, "MyJailbreak");
+		}
+	}
+}
+
+public void Handler_AdminMenu_EndRound(Handle h_TopMenu, TopMenuAction action, TopMenuObject item, int param, char [] buffer, int maxlength)
+{
+	char info[32];
+	
+	switch (action)
+	{
+		case (TopMenuAction_DisplayOption):
+		{
+			Format(info, sizeof(info), "%T", "menu_endround", param);
+			Format(buffer, maxlength, info);
+		}
+		case (TopMenuAction_SelectOption):
+		{
+			FakeClientCommand(param, "sm_endround");
+		}
+	}
+}
+
+public void Handler_AdminMenu_VoteDays(Handle h_TopMenu, TopMenuAction action, TopMenuObject item, int param, char [] buffer, int maxlength)
+{
+	char info[32];
+	
+	switch (action)
+	{
+		case (TopMenuAction_DisplayOption):
+		{
+			Format(info, sizeof(info), "%T", "menu_voteday", param);
+			Format(buffer, maxlength, info);
+		}
+		case (TopMenuAction_SelectOption):
+		{
+			FakeClientCommand(param, "sm_voteday");
+		}
+	}
+}
+
+public void Handler_AdminMenu_SetDay(Handle h_TopMenu, TopMenuAction action, TopMenuObject item, int param, char [] buffer, int maxlength)
+{
+	char info[32];
+	
+	switch (action)
+	{
+		case (TopMenuAction_DisplayOption):
+		{
+			Format(info, sizeof(info), "%T", "menu_seteventdays", param);
+			Format(buffer, maxlength, info);
+		}
+		case (TopMenuAction_SelectOption):
+		{
+			FakeClientCommand(param, "sm_setday");
+		}
+	}
+}
+
+public void Handler_AdminMenu_RemoveWarden(Handle h_TopMenu, TopMenuAction action, TopMenuObject item, int param, char [] buffer, int maxlength)
+{
+	char info[32];
+	
+	switch (action)
+	{
+		case (TopMenuAction_DisplayOption):
+		{
+			Format(info, sizeof(info), "%T", "menu_removewarden", param);
+			Format(buffer, maxlength, info);
+		}
+		case (TopMenuAction_SelectOption):
+		{
+			FakeClientCommand(param, "sm_removewarden");
+		}
+	}
+}
+
+public void Handler_AdminMenu_RemoveDeputy(Handle h_TopMenu, TopMenuAction action, TopMenuObject item, int param, char [] buffer, int maxlength)
+{
+	char info[32];
+	
+	switch (action)
+	{
+		case (TopMenuAction_DisplayOption):
+		{
+			Format(info, sizeof(info), "%T", "menu_removedeputy", param);
+			Format(buffer, maxlength, info);
+		}
+		case (TopMenuAction_SelectOption):
+		{
+			FakeClientCommand(param, "sm_removedeputy");
+		}
+	}
+}
+
+public void Handler_AdminMenu_SetWarden(Handle h_TopMenu, TopMenuAction action, TopMenuObject item, int param, char [] buffer, int maxlength)
+{
+	char info[32];
+	
+	switch (action)
+	{
+		case (TopMenuAction_DisplayOption):
+		{
+			Format(info, sizeof(info), "%T", "menu_setwarden", param);
+			Format(buffer, maxlength, info);
+		}
+		case (TopMenuAction_SelectOption):
+		{
+			FakeClientCommand(param, "sm_setwarden");
+		}
+	}
+}
+
+public void Handler_AdminMenu_RemoveQueue(Handle h_TopMenu, TopMenuAction action, TopMenuObject item, int param, char [] buffer, int maxlength)
+{
+	char info[32];
+	
+	switch (action)
+	{
+		case (TopMenuAction_DisplayOption):
+		{
+			Format(info, sizeof(info), "%T", "menu_removequeue", param);
+			Format(buffer, maxlength, info);
+		}
+		case (TopMenuAction_SelectOption):
+		{
+			FakeClientCommand(param, "sm_removequeue");
+		}
+	}
+}
+
+public void Handler_AdminMenu_ClearQueue(Handle h_TopMenu, TopMenuAction action, TopMenuObject item, int param, char [] buffer, int maxlength)
+{
+	char info[32];
+	
+	switch (action)
+	{
+		case (TopMenuAction_DisplayOption):
+		{
+			Format(info, sizeof(info), "%T", "menu_clearqueue", param);
+			Format(buffer, maxlength, info);
+		}
+		case (TopMenuAction_SelectOption):
+		{
+			FakeClientCommand(param, "sm_clearqueue");
+		}
+	}
+}
 
 //ConVarChange for Strings
 public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
@@ -931,6 +1138,64 @@ public Action Command_OpenMenu(int client, int args)
 					}
 				}
 			}
+			if (CheckVipFlag(client, g_sAdminFlag))
+			{
+				/* ADMIN PLACEHOLDER
+				Format(menuinfo, sizeof(menuinfo), "%T", "menu_PLACEHOLDER", client);
+				mainmenu.AddItem("PLACEHOLDER", menuinfo);
+				*/
+				if (gc_bAdminMenu.BoolValue)
+				{
+					char EventDay[64];
+					MyJailbreak_GetEventDayName(EventDay);
+					
+					if (StrEqual(EventDay, "none", false)) //is an other event running or set?
+					{
+						if (!warden_iswarden(client))
+						{
+							if (gc_bVoting.BoolValue)
+							{
+								Format(menuinfo, sizeof(menuinfo), "%T", "menu_voteday", client);
+								mainmenu.AddItem("voteday", menuinfo);
+							}
+							if (gc_bDays.BoolValue)
+							{
+								Format(menuinfo, sizeof(menuinfo), "%T", "menu_seteventdays", client);
+								mainmenu.AddItem("setdays", menuinfo);
+							}
+						}
+					}
+					if (g_bWarden != null)
+					{
+						if (g_bWarden.BoolValue)
+						{
+							Format(menuinfo, sizeof(menuinfo), "%T", "menu_setwarden", client);
+							mainmenu.AddItem("setwarden", menuinfo);
+							if (warden_exist())
+							{
+								Format(menuinfo, sizeof(menuinfo), "%T", "menu_removewarden", client);
+								mainmenu.AddItem("removewarden", menuinfo);
+							}
+							if (warden_deputy_exist())
+							{
+								Format(menuinfo, sizeof(menuinfo), "%T", "menu_removedeputy", client);
+								mainmenu.AddItem("undeputy", menuinfo);
+							}
+						}
+					}
+					if (LibraryExists("myratio"))
+					{
+						Format(menuinfo, sizeof(menuinfo), "%T", "menu_removequeue", client);
+						mainmenu.AddItem("removequeue", menuinfo);
+						Format(menuinfo, sizeof(menuinfo), "%T", "menu_clearqueue", client);
+						mainmenu.AddItem("clearqueue", menuinfo);
+					}
+					Format(menuinfo, sizeof(menuinfo), "%T", "menu_endround", client);
+					mainmenu.AddItem("endround", menuinfo);
+				}
+				Format(menuinfo, sizeof(menuinfo), "%T", "menu_admin", client);
+				mainmenu.AddItem("admin", menuinfo);
+			}
 			/* PLAYER PLACEHOLDER
 			Format(menuinfo, sizeof(menuinfo), "%T", "menu_PLACEHOLDER", client);
 			mainmenu.AddItem("PLACEHOLDER", menuinfo);
@@ -943,48 +1208,6 @@ public Action Command_OpenMenu(int client, int args)
 					Format(menuinfo, sizeof(menuinfo), "%T", "menu_rules", client);
 					mainmenu.AddItem("rules", menuinfo);
 				}
-			}
-			if (CheckVipFlag(client, g_sAdminFlag))
-			{
-				/* ADMIN PLACEHOLDER
-				Format(menuinfo, sizeof(menuinfo), "%T", "menu_PLACEHOLDER", client);
-				mainmenu.AddItem("PLACEHOLDER", menuinfo);
-				*/
-				
-				char EventDay[64];
-				MyJailbreak_GetEventDayName(EventDay);
-				
-				if (StrEqual(EventDay, "none", false)) //is an other event running or set?
-				{
-					if (!warden_iswarden(client))
-					{
-						if (gc_bVoting.BoolValue)
-						{
-							Format(menuinfo, sizeof(menuinfo), "%T", "menu_voteday", client);
-							mainmenu.AddItem("voteday", menuinfo);
-						}
-						if (gc_bDays.BoolValue)
-						{
-							Format(menuinfo, sizeof(menuinfo), "%T", "menu_seteventdays", client);
-							mainmenu.AddItem("setdays", menuinfo);
-						}
-					}
-				}
-				if (g_bWarden != null)
-				{
-					if (g_bWarden.BoolValue)
-					{
-						if (warden_exist())
-						{
-							Format(menuinfo, sizeof(menuinfo), "%T", "menu_removewarden", client);
-							mainmenu.AddItem("removewarden", menuinfo);
-						}
-						Format(menuinfo, sizeof(menuinfo), "%T", "menu_setwarden", client);
-						mainmenu.AddItem("setwarden", menuinfo);
-					}
-				}
-				Format(menuinfo, sizeof(menuinfo), "%T", "menu_admin", client);
-				mainmenu.AddItem("admin", menuinfo);
 			}
 			mainmenu.ExitButton = true;
 			mainmenu.Display(client, MENU_TIME_FOREVER);
@@ -1012,6 +1235,18 @@ public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selec
 			FakeClientCommand(client, "sm_YOURCOMMAND");
 		}
 		*/
+		else if (strcmp(info, "endround") == 0)
+		{
+			FakeClientCommand(client, "sm_endround");
+		}
+		else if (strcmp(info, "removequeue") == 0)
+		{
+			FakeClientCommand(client, "sm_removequeue");
+		}
+		else if (strcmp(info, "clearqueue") == 0)
+		{
+			FakeClientCommand(client, "sm_clearqueue");
+		}
 		else if (strcmp(info, "request") == 0)
 		{
 			FakeClientCommand(client, "sm_request");
