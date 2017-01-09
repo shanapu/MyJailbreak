@@ -366,9 +366,9 @@ public int FreeKillHandler(Menu menu, MenuAction action, int client, int Positio
 			//	g_bHaveFreeDay[i] = true;
 				warden_freeday_set(i);
 				g_bFreeKilled[i] = false;
-				CPrintToChat(i, "%t %t", "request_tag", "request_freedayforyou");
+				CPrintToChat(i, "%t %t", "request_tag", "warden_freedayforyou");
 				if (gp_bMyJailBreak) if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sFreeKillLogFile, "Warden/Admin %L accept freekill request of %L gave him a personal freeday", client, i);
-				CPrintToChatAll("%t %t", "warden_tag", "request_personalfreeday", i);
+				CPrintToChatAll("%t %t", "warden_tag", "warden_personalfreeday", i);
 			}
 		}
 	}
