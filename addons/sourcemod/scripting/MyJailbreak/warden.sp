@@ -58,9 +58,11 @@ ConVar gc_bVote;
 ConVar gc_bStayWarden;
 ConVar gc_bBecomeWarden;
 ConVar gc_bChooseRandom;
+ConVar gc_iLimitWarden;
+ConVar gc_iCoolDownRemove;
+ConVar gc_iCoolDownLimit;
 ConVar gc_bSounds;
 ConVar gc_bOverlays;
-ConVar gc_iCoolDownRemove;
 ConVar gc_sWarden;
 ConVar gc_sUnWarden;
 ConVar gc_sModelPathWarden;
@@ -120,6 +122,7 @@ Handle gF_OnWardenRemovedBySelf;
 Handle gF_OnWardenRemovedByAdmin;
 Handle RandomTimer;
 Handle g_hCooldown;
+Handle g_hLimit;
 
 
 //Strings
@@ -217,6 +220,8 @@ public void OnPluginStart()
 	gc_bChooseRandom = AutoExecConfig_CreateConVar("sm_warden_choose_random", "0", "0 - disabled, 1 - enable pick random warden if there is still no warden after sm_warden_choose_time", _, true,  0.0, true, 1.0);
 	gc_fRandomTimer = AutoExecConfig_CreateConVar("sm_warden_choose_time", "45.0", "Time in seconds a random warden will picked when no warden was set. need sm_warden_choose_random 1", _, true,  1.0);
 	gc_bVote = AutoExecConfig_CreateConVar("sm_warden_vote", "1", "0 - disabled, 1 - enable player vote against warden", _, true,  0.0, true, 1.0);
+	gc_iLimitWarden = AutoExecConfig_CreateConVar("sm_warden_limit", "5", "0 - disabled, rounds in a row a player can be warden", _, true,  0.0);
+	gc_iCoolDownLimit = AutoExecConfig_CreateConVar("sm_warden_cooldown_limit", "3", "0 - disabled, rounds player can't become warden after he was vote out or removed by admin", _, true,  0.0);
 	gc_iCoolDownRemove = AutoExecConfig_CreateConVar("sm_warden_cooldown_remove", "3", "0 - disabled, rounds player can't become warden after he was vote out or removed by admin", _, true,  0.0);
 	gc_bStayWarden = AutoExecConfig_CreateConVar("sm_warden_stay", "1", "0 - disabled, 1 - enable warden stay after round end", _, true,  0.0, true, 1.0);
 	gc_bBetterNotes = AutoExecConfig_CreateConVar("sm_warden_better_notifications", "1", "0 - disabled, 1 - Will use hint and center text", _, true, 0.0, true, 1.0);
@@ -282,6 +287,7 @@ public void OnPluginStart()
 	
 	
 	g_hCooldown = CreateTrie();
+	g_hLimit = CreateTrie();
 }
 
 
@@ -453,8 +459,16 @@ public Action Command_BecomeWarden(int client, int args)
 					{
 						if (GetCoolDown(client) < 1)
 						{
-							SetTheWarden(client);
-							Forward_OnWardenCreatedByUser(client);
+							if (GetLimit(client) < gc_iLimitWarden.IntValue)
+							{
+								SetTheWarden(client);
+								Forward_OnWardenCreatedByUser(client);
+							}
+							else
+							{
+								SetCoolDown(client, gc_iCoolDownLimit.IntValue);
+								CReplyToCommand(client, "%t %t", "warden_tag", "warden_limit", gc_iLimitWarden.IntValue, GetCoolDown(client));
+							}
 						}
 						else CReplyToCommand(client, "%t %t", "warden_tag", "warden_cooldown", GetCoolDown(client));
 					}
@@ -674,16 +688,53 @@ public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 			}
 		}
 	}
-	if (g_iWarden != -1)
+	
+	if (gc_iLimitWarden.IntValue != 0)
 	{
-		if (gc_bModel.BoolValue) SetEntityModel(g_iWarden, g_sModelPathWarden);
+		LoopClients(i)
+		{
+			
+			if(GetLimit(i) && (i != g_iLastWarden) && (i != g_iWarden))
+			{
+				SetLimit(i, GetLimit(i)-1);  //mode rounds in ROW - so when round with  no warden set 0 / or mode round behinds - so when round with no warden set 'limit'-1 
+			}
+			if (gp_bMyJailBreak && GetLimit(i))
+			{
+				char EventDay[64];
+				MyJailbreak_GetEventDayName(EventDay);
+				if(!StrEqual(EventDay, "none", false) && i == g_iLastWarden)
+				{
+					SetLimit(i, GetLimit(i)-1);  //mode rounds in ROW - so when round with  no warden set 0 / or mode round behinds - so when round with no warden set 'limit'-1 
+				}
+			}
+		}
 	}
-	if (gc_iCoolDownRemove.IntValue != 0)
+	if (gc_iCoolDownRemove.IntValue != 0) // 
 	{
 		LoopClients(i)
 		if (GetCoolDown(i) != 0) 
 		{
 			SetCoolDown(i, GetCoolDown(i)-1);
+		}
+	}
+	
+	if (g_iWarden != -1)  // warden exists
+	{
+		if (gc_iLimitWarden.IntValue != 0 && (GetLimit(g_iWarden) >= gc_iLimitWarden.IntValue)) //remove
+		{
+			SetCoolDown(g_iWarden, gc_iCoolDownLimit.IntValue);
+			SetLimit(g_iWarden, 0);
+			CPrintToChat(g_iWarden, "%t %t", "warden_tag", "warden_limit", gc_iLimitWarden.IntValue, GetCoolDown(g_iWarden));
+			CreateTimer( 0.1, Timer_RemoveColor, g_iWarden);
+			SetEntityModel(g_iWarden, g_sModelPathPrevious);
+			Forward_OnWardenRemoved(g_iWarden);
+			g_iLastWarden = g_iWarden;
+			g_iWarden = -1;
+		}
+		else // stay warden
+		{
+			if (gc_bModel.BoolValue) SetEntityModel(g_iWarden, g_sModelPathWarden);
+			SetLimit(g_iWarden, GetLimit(g_iWarden)+1);
 		}
 	}
 	IsLR = false;
@@ -731,6 +782,7 @@ public void OnMapStart()
 	PrecacheSound(SOUND_THUNDER, true);
 	
 	ClearTrie(g_hCooldown);
+	ClearTrie(g_hLimit);
 }
 
 
@@ -837,6 +889,15 @@ void SetTheWarden(int client)
 		
 		g_iWarden = client;
 		
+		if (GetLimit(client))
+		{
+			SetLimit(client, GetLimit(client)+1);
+		}
+		else
+		{
+			SetLimit(client, 1);
+		}
+		
 		GetEntPropString(client, Prop_Data, "m_ModelName", g_sModelPathPrevious, sizeof(g_sModelPathPrevious));
 		if (gc_bModel.BoolValue)
 		{
@@ -906,6 +967,30 @@ void SetCoolDown(int client, int cooldown)
 		RemoveFromTrie(g_hCooldown, steamid);
 	}
 	else SetTrieValue(g_hCooldown, steamid, cooldown);
+}
+
+int GetLimit(int client)
+{
+	char steamid[64];
+	int limit;
+	GetClientAuthId(client, AuthId_Steam2,  steamid, sizeof(steamid));
+	
+	if(!GetTrieValue(g_hLimit, steamid, limit))
+	{
+		limit = 0;
+	}
+	return limit;
+}
+
+void SetLimit(int client, int limit)
+{
+	char steamid[64];
+	GetClientAuthId(client, AuthId_Steam2,  steamid, sizeof(steamid));
+	if (limit == 0)
+	{
+		RemoveFromTrie(g_hLimit, steamid);
+	}
+	else SetTrieValue(g_hLimit, steamid, limit);
 }
 
 

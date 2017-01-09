@@ -39,6 +39,9 @@
 *  Warden: Player cooldown for become warden after a remove vote or remove warden by admin
     *  new cvar - sm_warden_cooldown_remove - 0 - disabled, rounds player can't become warden after he was vote out or removed by admin
 *  Warden - Orders: Set your custom commands for every single order.
+*  Warden: Limit max rounds in a row as warden incl cooldown
+    *  new cvar - sm_warden_limit - 0 - disabled, rounds in a row a player can be warden
+    *  new cvar - sm_warden_cooldown_limit - 0 - disabled, rounds player can't become warden after he was vote out or removed by admin
   
   
   
@@ -52,6 +55,7 @@
 *  Weapons - rar error when client left server in timer
 *  Menu - Eventday Voting - fix double Event when event was set while voting
 *  Request: missing translation
+*  DealDamage: fix result screen
 *  removed some debug messages
 *  minor errors
   

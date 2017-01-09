@@ -944,4 +944,10 @@
 		"en"		"You have a {purple}warden cooldown{default}. Wait {green}{1}{default} rounds"
 	}
 
+	"warden_limit"
+	{
+		"#format"	"{1:i},{2:i}"
+		"en"		"You have played {purple}{1} round in a row{default} as warden. Wait {green}{2}{default} rounds"
+	}
+
 }
