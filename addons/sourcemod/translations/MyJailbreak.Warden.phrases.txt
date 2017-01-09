@@ -950,4 +950,10 @@
 		"en"		"You have played {purple}{1} round in a row{default} as warden. Wait {green}{2}{default} rounds"
 	}
 
+	"warden_wait"
+	{
+		"#format"	"{1:i}"
+		"en"		"As {green}last round warden{default} you have to wait {purple}{1} seconds{default} to become warden again."
+	}
+
 }

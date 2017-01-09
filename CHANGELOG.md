@@ -42,8 +42,10 @@
     *  new cvar - sm_warden_cooldown_limit - 0 - disabled, rounds player can't become warden after he reached the warden limit (sm_warden_limit)
 *  Warden: Player cooldown for become warden after a remove vote or remove warden by admin
     *  new cvar - sm_warden_cooldown_remove - 0 - disabled, rounds player can't become warden after he was vote out or removed by admin
-  
-  
+*  Warden: Player cooldown for become warden after a roundstart, when player was warden in last round. to give other players chance to become warden
+    *  new cvar - sm_warden_cooldown_roundstart - Time in seconds a the warden of last round must wait until become warden again, to give other player chance to be warden (need sm_warden_stay '0')
+ 
+ 
   
 *Changed*
 *  Warden - disarm: disbale weapon disarm (shot hand to drop weapon) on last request

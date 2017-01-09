@@ -74,6 +74,7 @@ ConVar gc_sCustomCommandVetoWarden;
 ConVar gc_sCustomCommandSetWarden;
 ConVar gc_sCustomCommandRemoveWarden;
 ConVar gc_fRandomTimer;
+ConVar gc_fCMDCooldown;
 
 
 //3rd party Convars 
@@ -87,6 +88,7 @@ bool gp_bHosties = false;
 bool gp_bLastRequest = false;
 bool gp_bSmartJailDoors = false;
 bool gp_bChatProcessor = false;
+bool g_bCMDCoolDown[MAXPLAYERS+1] = false;
 
 
 //Integers
@@ -224,6 +226,7 @@ public void OnPluginStart()
 	gc_iCoolDownLimit = AutoExecConfig_CreateConVar("sm_warden_cooldown_limit", "3", "0 - disabled, rounds player can't become warden after he reached the warden limit (sm_warden_limit)", _, true,  0.0);
 	gc_iCoolDownRemove = AutoExecConfig_CreateConVar("sm_warden_cooldown_remove", "3", "0 - disabled, rounds player can't become warden after he was vote out or removed by admin", _, true,  0.0);
 	gc_bStayWarden = AutoExecConfig_CreateConVar("sm_warden_stay", "1", "0 - disabled, 1 - enable warden stay after round end", _, true,  0.0, true, 1.0);
+	gc_fCMDCooldown = AutoExecConfig_CreateConVar("sm_warden_cooldown_roundstart", "15.0", "Time in seconds a the warden of last round must wait until become warden again, to give other player chance to be warden (need sm_warden_stay '0')", _, true, 5.0);
 	gc_bBetterNotes = AutoExecConfig_CreateConVar("sm_warden_better_notifications", "1", "0 - disabled, 1 - Will use hint and center text", _, true, 0.0, true, 1.0);
 	gc_bModel = AutoExecConfig_CreateConVar("sm_warden_model", "1", "0 - disabled, 1 - enable warden model", 0, true, 0.0, true, 1.0);
 	gc_sModelPathWarden = AutoExecConfig_CreateConVar("sm_warden_model_path", "models/player/custom_player/legacy/security/security.mdl", "Path to the model for warden.");
@@ -459,16 +462,19 @@ public Action Command_BecomeWarden(int client, int args)
 					{
 						if (GetCoolDown(client) < 1)
 						{
-							if (GetLimit(client) < gc_iLimitWarden.IntValue)
+							if (!g_bCMDCoolDown[client])
 							{
-								SetTheWarden(client);
-								Forward_OnWardenCreatedByUser(client);
-							}
-							else
-							{
-								SetCoolDown(client, gc_iCoolDownLimit.IntValue);
-								CReplyToCommand(client, "%t %t", "warden_tag", "warden_limit", gc_iLimitWarden.IntValue, GetCoolDown(client));
-							}
+								if (GetLimit(client) < gc_iLimitWarden.IntValue)
+								{
+									SetTheWarden(client);
+									Forward_OnWardenCreatedByUser(client);
+								}
+								else
+								{
+									SetCoolDown(client, gc_iCoolDownLimit.IntValue);
+									CReplyToCommand(client, "%t %t", "warden_tag", "warden_limit", gc_iLimitWarden.IntValue, GetCoolDown(client));
+								}
+							}else CReplyToCommand(client, "%t %t", "warden_tag", "warden_wait", RoundFloat(gc_fCMDCooldown.FloatValue));
 						}
 						else CReplyToCommand(client, "%t %t", "warden_tag", "warden_cooldown", GetCoolDown(client));
 					}
@@ -676,7 +682,7 @@ public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 		char EventDay[64];
 		MyJailbreak_GetEventDayName(EventDay);
 		
-		if (!StrEqual(EventDay, "none", false) || !gc_bStayWarden.BoolValue)
+		if (!StrEqual(EventDay, "none", false))
 		{
 			if (g_iWarden != -1)
 			{
@@ -688,12 +694,24 @@ public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 			}
 		}
 	}
-	
+	if (!gc_bStayWarden.BoolValue)
+	{
+		if (g_iWarden != -1)
+		{
+			CreateTimer( 0.1, Timer_RemoveColor, g_iWarden);
+			SetEntityModel(g_iWarden, g_sModelPathPrevious);
+			Forward_OnWardenRemoved(g_iWarden);
+			g_iLastWarden = g_iWarden;
+			g_iWarden = -1;
+		}
+		g_bCMDCoolDown[g_iLastWarden] = true;
+		CreateTimer(gc_fCMDCooldown.FloatValue, Timer_CMDCoolDown, g_iLastWarden);
+	}
 	if (gc_iLimitWarden.IntValue != 0)
 	{
 		LoopClients(i)
 		{
-			
+			///shiiet 
 			if(GetLimit(i) && (i != g_iLastWarden) && (i != g_iWarden))
 			{
 				SetLimit(i, GetLimit(i)-1);  //mode rounds in ROW - so when round with  no warden set 0 / or mode round behinds - so when round with no warden set 'limit'-1 
@@ -1143,6 +1161,11 @@ public Action Timer_ChooseRandom(Handle timer, Handle pack)
 		KillTimer(RandomTimer);
 			
 	RandomTimer = null;
+}
+
+public Action Timer_CMDCoolDown(Handle timer, int client)
+{
+	g_bCMDCoolDown[client] = false;
 }
 
 
