@@ -224,9 +224,8 @@ public Action Command_ExitDeputy(int client, int args)
 				PrintCenterTextAll("%t", "warden_deputy_retire_nc", client);
 			}
 		}
-		else if (IsClientWarden(client))  //Is client the deputy
+		else if (IsClientWarden(client) && g_iDeputy != -1)  //Is client the deputy
 		{
-			
 			CPrintToChatAll("%t %t", "warden_tag" , "warden_deputy_fired", client, g_iDeputy);
 			if (gc_bBetterNotes.BoolValue)
 			{
