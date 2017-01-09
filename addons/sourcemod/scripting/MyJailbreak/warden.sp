@@ -221,7 +221,7 @@ public void OnPluginStart()
 	gc_fRandomTimer = AutoExecConfig_CreateConVar("sm_warden_choose_time", "45.0", "Time in seconds a random warden will picked when no warden was set. need sm_warden_choose_random 1", _, true,  1.0);
 	gc_bVote = AutoExecConfig_CreateConVar("sm_warden_vote", "1", "0 - disabled, 1 - enable player vote against warden", _, true,  0.0, true, 1.0);
 	gc_iLimitWarden = AutoExecConfig_CreateConVar("sm_warden_limit", "5", "0 - disabled, rounds in a row a player can be warden", _, true,  0.0);
-	gc_iCoolDownLimit = AutoExecConfig_CreateConVar("sm_warden_cooldown_limit", "3", "0 - disabled, rounds player can't become warden after he was vote out or removed by admin", _, true,  0.0);
+	gc_iCoolDownLimit = AutoExecConfig_CreateConVar("sm_warden_cooldown_limit", "3", "0 - disabled, rounds player can't become warden after he reached the warden limit (sm_warden_limit)", _, true,  0.0);
 	gc_iCoolDownRemove = AutoExecConfig_CreateConVar("sm_warden_cooldown_remove", "3", "0 - disabled, rounds player can't become warden after he was vote out or removed by admin", _, true,  0.0);
 	gc_bStayWarden = AutoExecConfig_CreateConVar("sm_warden_stay", "1", "0 - disabled, 1 - enable warden stay after round end", _, true,  0.0, true, 1.0);
 	gc_bBetterNotes = AutoExecConfig_CreateConVar("sm_warden_better_notifications", "1", "0 - disabled, 1 - Will use hint and center text", _, true, 0.0, true, 1.0);
