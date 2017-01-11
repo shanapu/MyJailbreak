@@ -419,7 +419,7 @@ public int RespawnHandler(Menu menu, MenuAction action, int client, int Position
 		}
 		if (choice == 3) //respawnwarden
 		{
-			LoopValidClients(i, true, true) if (g_bFreeKilled[i])
+			LoopValidClients(i, true, true) if (g_bFreeKilled[i] && warden_exist())
 			{
 				g_bFreeKilled[i] = false;
 				CS_RespawnPlayer(i);

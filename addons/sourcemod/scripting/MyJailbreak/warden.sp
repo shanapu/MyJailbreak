@@ -704,8 +704,11 @@ public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 			g_iLastWarden = g_iWarden;
 			g_iWarden = -1;
 		}
-		g_bCMDCoolDown[g_iLastWarden] = true;
-		CreateTimer(gc_fCMDCooldown.FloatValue, Timer_CMDCoolDown, g_iLastWarden);
+		if (g_iLastWarden != -1)
+		{
+			g_bCMDCoolDown[g_iLastWarden] = true;
+			CreateTimer(gc_fCMDCooldown.FloatValue, Timer_CMDCoolDown, g_iLastWarden);
+		}
 	}
 	if (gc_iLimitWarden.IntValue != 0)
 	{
