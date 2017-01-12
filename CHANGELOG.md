@@ -58,6 +58,7 @@
 *  Menu - Eventday Voting - fix double Event when event was set while voting
 *  Request: missing translation
 *  DealDamage: fix result screen
+*  Icons: fix some *_enable cvars
 *  removed some debug messages
 *  minor errors
   

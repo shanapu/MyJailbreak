@@ -250,7 +250,7 @@ public void OnMapStart()
 	if (gc_bIconPrisoner.BoolValue) PrecacheModelAnyDownload(g_sIconPrisonerPath);
 	if (gc_bIconDeputy.BoolValue) PrecacheModelAnyDownload(g_sIconDeputyPath);
 	if (gc_bIconRebel.BoolValue) PrecacheModelAnyDownload(g_sIconRebelPath);
-	if (gc_bIconCuffed.BoolValue) PrecacheModelAnyDownload(g_sIconCuffedPath);if (gc_bIconFreeday.BoolValue) PrecacheModelAnyDownload(g_sIconFreedayPath);
+	if (gc_bIconCuffed.BoolValue) PrecacheModelAnyDownload(g_sIconCuffedPath);
 	if (gc_bIconFreeday.BoolValue) PrecacheModelAnyDownload(g_sIconFreedayPath);
 	CreateTimer(0.5, Timer_Delay, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 }
@@ -351,7 +351,6 @@ public Action Should_TransmitR(int entity, int client)
 }
 
 
-
 public Action Should_TransmitC(int entity, int client)
 {
 	char m_ModelName[PLATFORM_MAX_PATH];
@@ -382,46 +381,49 @@ public Action Should_TransmitF(int entity, int client)
 
 //TODO bool warden functions
 
-stock int SpawnIcon(int client) 
+void SpawnIcon(int client)
 {
-	if (!IsClientInGame(client) || !IsPlayerAlive(client) || (!gc_bIconWarden.BoolValue && warden_iswarden(client)) || (!gc_bIconGuard.BoolValue && (GetClientTeam(client) == CS_TEAM_CT && !warden_iswarden(client) && !warden_deputy_isdeputy(client))) || (!gc_bIconDeputy.BoolValue && (!warden_iswarden(client) && warden_deputy_isdeputy(client))) || (!gc_bIconPrisoner.BoolValue && (GetClientTeam(client) == CS_TEAM_T))) return -1;
+	if (!IsClientInGame(client) || !IsPlayerAlive(client))
+		return;
 	
 	RemoveIcon(client);
+	
+	if (g_bBlockIcon[client]) 
+		return;
 	
 	char iTarget[16];
 	Format(iTarget, 16, "client%d", client);
 	DispatchKeyValue(client, "targetname", iTarget);
-
-	g_iIcon[client] = CreateEntityByName("env_sprite");
-
-	if (!g_iIcon[client]) return -1;
 	
-	if (g_bBlockIcon[client]) return -1;
+	g_iIcon[client] = CreateEntityByName("env_sprite");
+	
+	if (!g_iIcon[client]) 
+		return;
 	
 	char iconbuffer[256];
 	
 	if(gp_bWarden)
 	{
-		if (warden_iswarden(client)) Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconWardenPath);
-		else if (warden_deputy_isdeputy(client)) Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconDeputyPath);
-		else if (warden_handcuffs_iscuffed(client)) Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconCuffedPath);
-		else if (GetClientTeam(client) == CS_TEAM_CT) Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconGuardPath);
+		if (gc_bIconWarden.BoolValue && warden_iswarden(client)) Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconWardenPath);
+		else if (gc_bIconDeputy.BoolValue && warden_deputy_isdeputy(client)) Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconDeputyPath);
+		else if (gc_bIconCuffed.BoolValue && warden_handcuffs_iscuffed(client)) Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconCuffedPath);
+		else if (gc_bIconGuard.BoolValue && GetClientTeam(client) == CS_TEAM_CT) Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconGuardPath);
 		else if(gp_bHosties)
 		{
-			if (IsClientRebel(client)) Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconRebelPath);
-			else if (warden_freeday_has(client)) Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconFreedayPath);
-			else if (GetClientTeam(client) == CS_TEAM_T) Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconPrisonerPath);
+			if (gc_bIconRebel.BoolValue && IsClientRebel(client)) Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconRebelPath);
+			else if (gc_bIconFreeday.BoolValue && warden_freeday_has(client)) Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconFreedayPath);
+			else if (gc_bIconPrisoner.BoolValue && GetClientTeam(client) == CS_TEAM_T) Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconPrisonerPath);
 		}
-		else if (warden_freeday_has(client)) Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconFreedayPath);
-		else if (GetClientTeam(client) == CS_TEAM_T) Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconPrisonerPath);
+		else if (gc_bIconFreeday.BoolValue && warden_freeday_has(client)) Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconFreedayPath);
+		else if (gc_bIconPrisoner.BoolValue && GetClientTeam(client) == CS_TEAM_T) Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconPrisonerPath);
 	}
-	else if (GetClientTeam(client) == CS_TEAM_CT) Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconGuardPath);
+	else if (gc_bIconGuard.BoolValue && GetClientTeam(client) == CS_TEAM_CT) Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconGuardPath);
 	else if(gp_bHosties)
 	{
-		if (IsClientRebel(client)) Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconRebelPath);
-		else if (GetClientTeam(client) == CS_TEAM_T) Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconPrisonerPath);
+		if (gc_bIconRebel.BoolValue && IsClientRebel(client)) Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconRebelPath);
+		else if (gc_bIconPrisoner.BoolValue && GetClientTeam(client) == CS_TEAM_T) Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconPrisonerPath);
 	}
-	else if (GetClientTeam(client) == CS_TEAM_T) Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconPrisonerPath);
+	else if (gc_bIconPrisoner.BoolValue && GetClientTeam(client) == CS_TEAM_T) Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconPrisonerPath);
 	
 	DispatchKeyValue(g_iIcon[client], "model", iconbuffer);
 	DispatchKeyValue(g_iIcon[client], "classname", "env_sprite");
@@ -441,32 +443,30 @@ stock int SpawnIcon(int client)
 	
 	if(gp_bWarden)
 	{
-		if (warden_iswarden(client)) SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitW);
-		else if (warden_deputy_isdeputy(client)) SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitD);
-		else if (warden_handcuffs_iscuffed(client))  SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitC);
-		else if (GetClientTeam(client) == CS_TEAM_CT)  SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitG);
+		if (gc_bIconWarden.BoolValue && warden_iswarden(client)) SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitW);
+		else if (gc_bIconDeputy.BoolValue && warden_deputy_isdeputy(client)) SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitD);
+		else if (gc_bIconCuffed.BoolValue && warden_handcuffs_iscuffed(client))  SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitC);
+		else if (gc_bIconGuard.BoolValue && GetClientTeam(client) == CS_TEAM_CT)  SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitG);
 		else if(gp_bHosties)
 		{
-			if (IsClientRebel(client))  SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitR);
-			else if (warden_freeday_has(client))  SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitF);
-			else if (GetClientTeam(client) == CS_TEAM_T)  SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitP);
+			if (gc_bIconRebel.BoolValue && IsClientRebel(client))  SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitR);
+			else if (gc_bIconFreeday.BoolValue && warden_freeday_has(client))  SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitF);
+			else if (gc_bIconPrisoner.BoolValue && GetClientTeam(client) == CS_TEAM_T)  SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitP);
 		}
-		else if (warden_freeday_has(client))  SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitF);
-		else if (GetClientTeam(client) == CS_TEAM_T)  SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitP);
+		else if (gc_bIconFreeday.BoolValue && warden_freeday_has(client))  SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitF);
+		else if (gc_bIconPrisoner.BoolValue && GetClientTeam(client) == CS_TEAM_T)  SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitP);
 	}
-	else if (GetClientTeam(client) == CS_TEAM_CT)  SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitG);
+	else if (gc_bIconGuard.BoolValue && GetClientTeam(client) == CS_TEAM_CT)  SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitG);
 	else if(gp_bHosties)
 	{
-		if (IsClientRebel(client))  SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitR);
-		else if (GetClientTeam(client) == CS_TEAM_T)  SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitP);
+		if (gc_bIconRebel.BoolValue && IsClientRebel(client))  SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitR);
+		else if (gc_bIconPrisoner.BoolValue && GetClientTeam(client) == CS_TEAM_T)  SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitP);
 	}
-	else if (GetClientTeam(client) == CS_TEAM_T)  SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitP);
-	
-	return g_iIcon[client];
+	else if (gc_bIconPrisoner.BoolValue && GetClientTeam(client) == CS_TEAM_T)  SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitP);
 }
 
 
-stock void RemoveIcon(int client) 
+void RemoveIcon(int client) 
 {
 	if (g_iIcon[client] > 0 && IsValidEdict(g_iIcon[client]))
 	{
