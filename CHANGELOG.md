@@ -50,7 +50,7 @@
 *Changed*
 *  Warden - disarm: disbale weapon disarm (shot hand to drop weapon) on last request
 *  Menu: Moved admin commands to !admin menu
-    *  new cvar - sm_menu_admin - 0 - disabled, 1 - display admin menu items also in MyJailbreak Menu
+    *  new cvar - sm_menu_admin - 0 - disable admin commands in all menus, 1 - show admin commands only in Myjailbreak menu, 2 - show admin command only in !admin menu, 3 - display admin command in all menus
   
 *Fixed*
 *  Warden - small error with logging & vote warden

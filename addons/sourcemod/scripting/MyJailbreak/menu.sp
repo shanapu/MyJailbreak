@@ -72,7 +72,7 @@ ConVar gc_sAdminFlag;
 ConVar gc_bSetW;
 ConVar gc_bSetA;
 ConVar gc_bVoting;
-ConVar gc_bAdminMenu;
+ConVar gc_iAdminMenu;
 
 
 //3rd party Convars
@@ -147,6 +147,11 @@ char g_sAdminFlagPainter[32];
 char g_sAdminFlag[32];
 
 
+//Handles
+Handle gH_TopMenu = INVALID_HANDLE;
+TopMenuObject gM_MyJB = INVALID_TOPMENUOBJECT;
+
+
 //Info
 public Plugin myinfo = {
 	name = "MyJailbreak - Menus", 
@@ -194,7 +199,7 @@ public void OnPluginStart()
 	gc_bWelcome = AutoExecConfig_CreateConVar("sm_menu_welcome", "1", "Show welcome message to newly connected users.", _, true,  0.0, true, 1.0);
 	gc_bVoting = AutoExecConfig_CreateConVar("sm_menu_voteday", "1", "0 - disabled, 1 - enable voting for a eventday", _, true,  0.0, true, 1.0);
 	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_menu_flag", "g", "Set flag for admin/vip to start a voting & get admin menu");
-	gc_bAdminMenu = AutoExecConfig_CreateConVar("sm_menu_admin", "1", "0 - disabled, 1 - display admin menu items in Myjailbreak Menu", _, true,  0.0, true, 1.0);
+	gc_iAdminMenu = AutoExecConfig_CreateConVar("sm_menu_admin", "2", "0 - disable admin commands in all menus, 1 - show admin commands only in MyJailbreak menu, 2 - show admin commands only in !admin menu, 3 - show admin commands in all menus", _, true,  0.0, true, 3.0);
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_menu_voteday_warden", "1", "0 - disabled, 1 - allow warden to start a voting", _, true,  0.0, true, 1.0);
 	gc_bSetA = AutoExecConfig_CreateConVar("sm_menu_voteday_admin", "1", "0 - disabled, 1 - allow admin/vip  to start a voting", _, true,  0.0, true, 1.0);
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_menu_voteday_cooldown_day", "3", "Rounds cooldown after a voting until voting can be start again", _, true,  0.0);
@@ -212,27 +217,18 @@ public void OnPluginStart()
 	
 	//Find
 	gc_sAdminFlag.GetString(g_sAdminFlag , sizeof(g_sAdminFlag));
-	
-	
-	Handle topmenu;
-	if (LibraryExists("adminmenu") && ((topmenu = GetAdminTopMenu()) != INVALID_HANDLE))
-	{
-		OnAdminMenuReady(topmenu);
-	}
 }
 
-Handle gH_TopMenu = INVALID_HANDLE;
-TopMenuObject gM_MyJB = INVALID_TOPMENUOBJECT;
-
-public void OnAdminMenuReady(Handle h_TopMenu)
+void MyAdminMenuReady(Handle h_TopMenu)
 {
+	if (gc_iAdminMenu.IntValue < 2)
+		return;
+	
 	// block double calls
 	if (h_TopMenu == gH_TopMenu)
-	{
 		return;
-	}
-	gH_TopMenu = h_TopMenu;
 	
+	gH_TopMenu = h_TopMenu;
 	
 	// Build MyJailbreak menu
 	gM_MyJB = AddToTopMenu(gH_TopMenu, "MyJailbreak", TopMenuObject_Category, Handler_AdminMenu_Category, INVALID_TOPMENUOBJECT);
@@ -571,6 +567,12 @@ public void OnConfigsExecuted()
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
 		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
 			RegConsoleCmd(sCommand, Command_VotingMenu, "Allows warden & admin to opens event day voting");
+	}
+	
+	Handle topmenu;
+	if (LibraryExists("adminmenu") && ((topmenu = GetAdminTopMenu()) != INVALID_HANDLE))
+	{
+		MyAdminMenuReady(topmenu);
 	}
 }
 
@@ -1144,7 +1146,7 @@ public Action Command_OpenMenu(int client, int args)
 				Format(menuinfo, sizeof(menuinfo), "%T", "menu_PLACEHOLDER", client);
 				mainmenu.AddItem("PLACEHOLDER", menuinfo);
 				*/
-				if (gc_bAdminMenu.BoolValue)
+				if (gc_iAdminMenu.IntValue == 1 || gc_iAdminMenu.IntValue == 3)
 				{
 					char EventDay[64];
 					MyJailbreak_GetEventDayName(EventDay);
