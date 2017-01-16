@@ -273,6 +273,15 @@ stock int GetAliveTeamCount(int team)
 }
 
 
+//Get alive player count of a team
+stock int GetPlayerTeamCount(int team)
+{
+	int number = 0;
+	LoopClients(i) if (GetClientTeam(i) == team) number++;
+	return number;
+}
+
+
 //Get a alive random player of all teams
 stock int GetRandomAlivePlayer() 
 {

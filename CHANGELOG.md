@@ -39,18 +39,19 @@
 *  Warden - Orders: Set your custom commands for every single order.
 *  Warden: Limit max rounds in a row as warden incl cooldown
     *  new cvar - sm_warden_limit - 0 - disabled, rounds in a row a player can be warden
+    *  new cvar - sm_warden_limit_minplayer - How many CT must be online before sm_warden_limit is active
     *  new cvar - sm_warden_cooldown_limit - 0 - disabled, rounds player can't become warden after he reached the warden limit (sm_warden_limit)
 *  Warden: Player cooldown for become warden after a remove vote or remove warden by admin
     *  new cvar - sm_warden_cooldown_remove - 0 - disabled, rounds player can't become warden after he was vote out or removed by admin
 *  Warden: Player cooldown for become warden after a roundstart, when player was warden in last round. to give other players chance to become warden
     *  new cvar - sm_warden_cooldown_roundstart - Time in seconds a the warden of last round must wait until become warden again, to give other player chance to be warden (need sm_warden_stay '0')
- 
- 
+  
   
 *Changed*
 *  Warden - disarm: disbale weapon disarm (shot hand to drop weapon) on last request
 *  Menu: Moved admin commands to !admin menu
     *  new cvar - sm_menu_admin - 0 - disable admin commands in all menus, 1 - show admin commands only in Myjailbreak menu, 2 - show admin command only in !admin menu, 3 - display admin command in all menus
+  
   
 *Fixed*
 *  Warden - small error with logging & vote warden
@@ -59,6 +60,7 @@
 *  Request: missing translation
 *  DealDamage: fix result screen
 *  Icons: fix some *_enable cvars
+*  rar error weapon not owned by client
 *  removed some debug messages
 *  minor errors
   

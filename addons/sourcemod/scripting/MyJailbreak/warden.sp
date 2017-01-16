@@ -61,6 +61,8 @@ ConVar gc_bChooseRandom;
 ConVar gc_iLimitWarden;
 ConVar gc_iCoolDownRemove;
 ConVar gc_iCoolDownLimit;
+ConVar gc_iCoolDownMinPlayer;
+
 ConVar gc_bSounds;
 ConVar gc_bOverlays;
 ConVar gc_sWarden;
@@ -223,6 +225,7 @@ public void OnPluginStart()
 	gc_fRandomTimer = AutoExecConfig_CreateConVar("sm_warden_choose_time", "45.0", "Time in seconds a random warden will picked when no warden was set. need sm_warden_choose_random 1", _, true,  1.0);
 	gc_bVote = AutoExecConfig_CreateConVar("sm_warden_vote", "1", "0 - disabled, 1 - enable player vote against warden", _, true,  0.0, true, 1.0);
 	gc_iLimitWarden = AutoExecConfig_CreateConVar("sm_warden_limit", "5", "0 - disabled, rounds in a row a player can be warden", _, true,  0.0);
+	gc_iCoolDownMinPlayer = AutoExecConfig_CreateConVar("sm_warden_limit_minplayer", "3", "How many CT must be online before sm_warden_limit is active", _, true,  1.0);
 	gc_iCoolDownLimit = AutoExecConfig_CreateConVar("sm_warden_cooldown_limit", "3", "0 - disabled, rounds player can't become warden after he reached the warden limit (sm_warden_limit)", _, true,  0.0);
 	gc_iCoolDownRemove = AutoExecConfig_CreateConVar("sm_warden_cooldown_remove", "3", "0 - disabled, rounds player can't become warden after he was vote out or removed by admin", _, true,  0.0);
 	gc_bStayWarden = AutoExecConfig_CreateConVar("sm_warden_stay", "1", "0 - disabled, 1 - enable warden stay after round end", _, true,  0.0, true, 1.0);
@@ -464,7 +467,7 @@ public Action Command_BecomeWarden(int client, int args)
 						{
 							if (!g_bCMDCoolDown[client])
 							{
-								if (GetLimit(client) < gc_iLimitWarden.IntValue)
+								if (GetLimit(client) < gc_iLimitWarden.IntValue || gc_iLimitWarden.IntValue == 0 || (gc_iCoolDownMinPlayer.IntValue > GetPlayerTeamCount(CS_TEAM_CT)))
 								{
 									SetTheWarden(client);
 									Forward_OnWardenCreatedByUser(client);
@@ -741,7 +744,7 @@ public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 	
 	if (g_iWarden != -1)  // warden exists
 	{
-		if (gc_iLimitWarden.IntValue != 0 && (GetLimit(g_iWarden) >= gc_iLimitWarden.IntValue)) //remove
+		if (gc_iLimitWarden.IntValue != 0 && (GetLimit(g_iWarden) >= gc_iLimitWarden.IntValue) && (GetPlayerTeamCount(CS_TEAM_CT) >= gc_iCoolDownMinPlayer.IntValue)) //remove
 		{
 			SetCoolDown(g_iWarden, gc_iCoolDownLimit.IntValue);
 			SetLimit(g_iWarden, 0);
