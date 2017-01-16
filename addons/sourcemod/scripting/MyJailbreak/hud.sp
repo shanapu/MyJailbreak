@@ -192,7 +192,7 @@ public Action Timer_ShowHUD(Handle timer, Handle pack)
 ******************************************************************************/
 
 
-public void ShowHUD()
+void ShowHUD()
 {
 	int warden = warden_get();
 	int aliveCT = GetAliveTeamCount(CS_TEAM_CT);
@@ -256,4 +256,3 @@ public void ShowHUD()
 		}
 	}
 }
-

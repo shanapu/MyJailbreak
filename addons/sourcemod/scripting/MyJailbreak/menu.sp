@@ -155,7 +155,7 @@ TopMenuObject gM_MyJB = INVALID_TOPMENUOBJECT;
 //Info
 public Plugin myinfo = {
 	name = "MyJailbreak - Menus", 
-	author = "shanapu, Franc1sco", 
+	author = "shanapu", 
 	description = "Jailbreak Menu", 
 	version = MYJB_VERSION, 
 	url = MYJB_URL_LINK
@@ -416,7 +416,7 @@ public void Handler_AdminMenu_ClearQueue(Handle h_TopMenu, TopMenuAction action,
 }
 
 //ConVarChange for Strings
-public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
+public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
 	if (convar == gc_sAdminFlag)
 	{
@@ -575,13 +575,6 @@ public void OnConfigsExecuted()
 		MyAdminMenuReady(topmenu);
 	}
 }
-
-
-/******************************************************************************
-                   COMMANDS
-******************************************************************************/
-
-
 
 
 /******************************************************************************
@@ -1229,7 +1222,7 @@ public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selec
 		
 		if (strcmp(info, "ChangeTeam") == 0)
 		{
-			ChangeTeam(client, 0);
+			ChangeTeam(client);
 		}
 		/* Command PLACEHOLDER
 		else if (strcmp(info, "PLACEHOLDER") == 0)
@@ -2069,10 +2062,10 @@ public int SetEventMenuHandler(Menu daysmenu, MenuAction action, int client, int
 
 //Switch Team Menu
 
-public Action ChangeTeam(int client, int args)
+void ChangeTeam(int client)
 {
 	char info[255];
-	Menu menu1 = CreateMenu(changemenu);
+	Menu menu1 = CreateMenu(ChangeMenu);
 	Format(info, sizeof(info), "%T", "warden_sure", client);
 	menu1.SetTitle(info);
 	Format(info, sizeof(info), "%T", "warden_no", client);
@@ -2086,7 +2079,7 @@ public Action ChangeTeam(int client, int args)
 
 //Switch Team Handler
 
-public int changemenu(Menu menu, MenuAction action, int client, int selection)
+public int ChangeMenu(Menu menu, MenuAction action, int client, int selection)
 {
 	if (action == MenuAction_Select)
 	{
@@ -2255,7 +2248,7 @@ public int VotingMenuHandler(Menu menu, MenuAction action, int param1, int param
 }
 
 
-public void VotingResults(Menu menu, int num_votes, int num_clients, const int[][] client_info, int num_items, const int[][] item_info)
+public int VotingResults(Menu menu, int num_votes, int num_clients, const int[][] client_info, int num_items, const int[][] item_info)
 {
 	char EventDay[64];
 	MyJailbreak_GetEventDayName(EventDay);

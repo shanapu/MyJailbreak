@@ -169,7 +169,7 @@ public void OnPluginStart()
 
 
 //ConVarChange for Strings
-public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
+public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
 	if (convar == gc_sOverlayStartPath)
 	{
@@ -374,7 +374,7 @@ public void Event_PlayerTeamDeath(Event event, const char[] name, bool dontBroad
 
 
 //Prepare Event
-public Action StartLastGuard()
+void StartLastGuard()
 {
 	if (AllowLastGuard)
 	{
@@ -470,7 +470,7 @@ public Action StartLastGuard()
 
 
 //check count for automatic 
-public Action CheckStatus()
+void CheckStatus()
 {
 	if (gc_bPlugin.BoolValue && !IsLR && !IsLastGuard && gc_bAutomatic.BoolValue)
 	{

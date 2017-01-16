@@ -675,7 +675,7 @@ void MinusDeath(int client)
 }
 
 
-public void AddToQueue(int client)
+void AddToQueue(int client)
 {
 	int iIndex = FindValueInArray(g_aGuardQueue, client);
 	int iQueueSize = GetArraySize(g_aGuardQueue);
@@ -705,7 +705,7 @@ public void AddToQueue(int client)
 }
 
 
-public void FullAddToQueue(int client)
+void FullAddToQueue(int client)
 {
 	int iIndex = FindValueInArray(g_aGuardQueue, client);
 	int iQueueSize = GetArraySize(g_aGuardQueue);
@@ -764,7 +764,7 @@ public void OnMapStart()
 ******************************************************************************/
 
 
-public Action Menu_AcceptGuardRules(int client)
+void Menu_AcceptGuardRules(int client)
 {
 	char info[64];
 	
@@ -828,7 +828,7 @@ public int Handler_AcceptGuardRules(Handle menu, MenuAction action, int param1, 
 }
 
 
-public void Menu_GuardQuestions(int client)
+void Menu_GuardQuestions(int client)
 {
 	char info[64], random[64];
 	
@@ -1027,7 +1027,7 @@ public Action Timer_ForceTSide(Handle timer, any client)
 ******************************************************************************/
 
 
-stock bool RemovePlayerFromGuardQueue(int client)
+bool RemovePlayerFromGuardQueue(int client)
 {
 	int iIndex = FindValueInArray(g_aGuardQueue, client);
 	if (iIndex == -1)
@@ -1037,7 +1037,7 @@ stock bool RemovePlayerFromGuardQueue(int client)
 }
 
 
-stock bool RemovePlayerFromGuardList(int client)
+bool RemovePlayerFromGuardList(int client)
 {
 	int iIndex = FindValueInArray(g_aGuardList, client);
 	if (iIndex == -1)
@@ -1094,7 +1094,7 @@ bool ShouldMovePrisonerToGuard()
 }
 
 
-stock void FixTeamRatio()
+void FixTeamRatio()
 {
 	bool bMovedPlayers;
 	while (ShouldMovePrisonerToGuard())
@@ -1174,7 +1174,7 @@ stock void FixTeamRatio()
 }
 
 
-stock int GetRandomClientFromTeam(int iTeam)
+int GetRandomClientFromTeam(int iTeam)
 {
 	int iNumFound;
 	int clients[MAXPLAYERS];
@@ -1208,7 +1208,7 @@ stock int GetRandomClientFromTeam(int iTeam)
 }
 
 
-stock bool CanClientJoinGuards(int client)
+bool CanClientJoinGuards(int client)
 {
 	int iNumGuards, iNumPrisoners;
 	
@@ -1252,13 +1252,13 @@ stock bool CanClientJoinGuards(int client)
 }
 
 
-stock int GetClientPendingTeam(int client)
+int GetClientPendingTeam(int client)
 {
 	return GetEntProp(client, Prop_Send, "m_iPendingTeamNum");
 }
 
 
-stock void SetClientPendingTeam(int client, int team)
+void SetClientPendingTeam(int client, int team)
 {
 	SetEntProp(client, Prop_Send, "m_iPendingTeamNum", team);
 	// MinusDeath(client);

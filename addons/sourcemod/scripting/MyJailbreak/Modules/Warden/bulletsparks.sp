@@ -77,7 +77,7 @@ public void BulletSparks_OnPluginStart()
 }
 
 
-public int BulletSparks_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
+public void BulletSparks_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
 	if (convar == gc_sAdminFlagBulletSparks)
 	{

@@ -115,7 +115,7 @@ public void Countdown_OnPluginStart()
 }
 
 
-public int Countdown_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
+public void Countdown_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
 	if (convar == gc_sCountdownSoundStartPath)
 	{

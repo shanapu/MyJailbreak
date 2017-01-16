@@ -140,14 +140,8 @@ public void HandCuffs_OnPluginStart()
 	gc_sAdminFlagCuffs.GetString(g_sAdminFlagCuffs , sizeof(g_sAdminFlagCuffs));
 }
 
-/*
-public Action Command_cuff(int client, int args)
-{
-	CuffsEm(client,client);
-}
-*/
 
-public int HandCuffs_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
+public void HandCuffs_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
 	if (convar == gc_sSoundCuffsPath)
 	{
@@ -474,7 +468,7 @@ public void HandCuffs_OnClientPutInServer(int client)
 ******************************************************************************/
 
 
-public Action CuffsEm(int client, int attacker)
+void CuffsEm(int client, int attacker)
 {
 	if (g_iPlayerHandCuffs[attacker] > 0)
 	{
@@ -499,7 +493,7 @@ public Action CuffsEm(int client, int attacker)
 }
 
 
-public Action FreeEm(int client, int attacker)
+void FreeEm(int client, int attacker)
 {
 	SetEntityMoveType(client, MOVETYPE_WALK);
 	SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
@@ -712,9 +706,9 @@ public Action Timer_StillPaperClip(Handle timer, int client)
 ******************************************************************************/
 
 
-stock void StripZeus()
+void StripZeus()
 {
-	LoopValidClients(client, true, false)if ((IsClientWarden(client) || (IsClientDeputy(client) && gc_bHandCuffDeputy.BoolValue)))
+	LoopValidClients(client, true, false) if ((IsClientWarden(client) || (IsClientDeputy(client) && gc_bHandCuffDeputy.BoolValue)))
 	{
 		char sWeapon[64];
 		FakeClientCommand(client, "use weapon_taser");

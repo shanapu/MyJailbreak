@@ -99,7 +99,7 @@ public void Capitulation_OnPluginStart()
 }
 
 
-public int Capitulation_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
+public void Capitulation_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
 	if (convar == gc_sSoundCapitulationPath)
 	{

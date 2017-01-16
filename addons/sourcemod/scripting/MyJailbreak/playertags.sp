@@ -119,7 +119,7 @@ public void OnPluginStart()
 
 public void Event_CheckTag(Event event, char[] name, bool dontBroadcast)
 {
-	CreateTimer(1.0, DelayCheck);
+	CreateTimer(1.0, Timer_DelayCheck);
 }
 
 
@@ -140,7 +140,7 @@ public void warden_OnWardenCreated(int client)
 
 public void warden_OnWardenRemoved(int client)
 {
-	CreateTimer(1.0, DelayCheck);
+	CreateTimer(1.0, Timer_DelayCheck);
 }
 
 
@@ -149,7 +149,7 @@ public void warden_OnWardenRemoved(int client)
 ******************************************************************************/
 
 
-public Action DelayCheck(Handle timer) 
+public Action Timer_DelayCheck(Handle timer) 
 {
 	LoopClients(client)
 	{
@@ -158,7 +158,6 @@ public Action DelayCheck(Handle timer)
 			HandleTag(client);
 		}
 	}
-	return Action;
 }
 
 
@@ -168,7 +167,7 @@ public Action DelayCheck(Handle timer)
 
 
 //Give Tag
-public void HandleTag(int client)
+void HandleTag(int client)
 {
 	if (gc_bPlugin.BoolValue)
 	{

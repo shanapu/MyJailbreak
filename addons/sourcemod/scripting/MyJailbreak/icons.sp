@@ -148,7 +148,7 @@ public void OnPluginStart()
 }
 
 
-public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
+public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
 	if (convar == gc_sIconWardenPath)
 	{

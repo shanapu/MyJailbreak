@@ -195,7 +195,7 @@ public void OnPluginStart()
 
 
 //ConVarChange for Strings
-public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
+public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
 	if (convar == gc_sOverlayStartPath)
 	{
@@ -491,7 +491,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 		{
 			SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
 			SetEntityGravity(client, 1.0);
-			FP(client);
+			FirstPerson(client);
 		}
 		delete TruceTimer;
 		delete BeaconTimer;
@@ -532,7 +532,7 @@ public void Event_PlayerDeath(Event event, char [] name, bool dontBroadcast)
 	if (IsKnifeFight == true)
 	{
 		int client = GetClientOfUserId(event.GetInt("userid"));
-		FP(client);
+		FirstPerson(client);
 	}
 }
 
@@ -568,7 +568,7 @@ public void OnMapEnd()
 	g_iVoteCount = 0;
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0';
-	LoopClients(client) FP(client);
+	LoopClients(client) FirstPerson(client);
 }
 
 
@@ -581,7 +581,7 @@ public void OnAvailableLR(int Announced)
 		{
 			SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
 			SetEntityGravity(client, 1.0);
-			FP(client);
+			FirstPerson(client);
 			StripAllPlayerWeapons(client);
 			if (GetClientTeam(client) == CS_TEAM_CT)
 			{
@@ -618,7 +618,7 @@ public void OnClientDisconnect(int client)
 {
 	if (IsKnifeFight == true)
 	{
-		FP(client);
+		FirstPerson(client);
 	}
 }
 
@@ -676,7 +676,7 @@ void StartNextRound()
 
 
 //Back to First Person
-public Action FP(int client)
+void FirstPerson(int client)
 {
 	if (IsValidClient(client, false, true))
 	{
@@ -690,7 +690,7 @@ public Action FP(int client)
 ******************************************************************************/
 
 
-stock void CreateInfoPanel(int client)
+void CreateInfoPanel(int client)
 {
 	//Create info Panel
 	char info[255];
@@ -752,7 +752,7 @@ public Action Timer_StartEvent(Handle timer)
 			}
 			PrintCenterText(client, "%t", "knifefight_start_nc");
 			if (gc_bOverlays.BoolValue) ShowOverlay(client, g_sOverlayStartPath, 2.0);
-			if (gc_bSounds.BoolValue)	
+			if (gc_bSounds.BoolValue)
 			{
 				EmitSoundToAllAny(g_sSoundStartPath);
 			}

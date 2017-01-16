@@ -96,7 +96,7 @@ public void Painter_OnPluginStart()
 }
 
 
-public int Painter_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
+public void Painter_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
 	if (convar == gc_sAdminFlagPainter)
 	{
@@ -321,7 +321,7 @@ public Action TogglePainterT(int client, int args)
 }
 
 
-public void OnButtonPress(int client, int button)
+void OnButtonPress(int client, int button)
 {
 	if (button == IN_USE)
 	{
@@ -331,7 +331,7 @@ public void OnButtonPress(int client, int button)
 }
 
 
-public void OnButtonRelease(int client, int button)
+void OnButtonRelease(int client, int button)
 {
 	if (button == IN_USE)
 	{

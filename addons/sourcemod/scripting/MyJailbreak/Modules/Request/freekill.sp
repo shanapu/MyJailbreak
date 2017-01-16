@@ -109,7 +109,7 @@ public void Freekill_OnPluginStart()
 }
 
 
-public int Freekill_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
+public void Freekill_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
 	if (convar == gc_sAdminFlag)
 	{
@@ -454,7 +454,7 @@ public int RespawnHandler(Menu menu, MenuAction action, int client, int Position
 ******************************************************************************/
 
 
-stock int GetRandomAdmin()
+int GetRandomAdmin()
 {
 	int[] admins = new int[MaxClients];
 	int adminsCount;

@@ -195,7 +195,7 @@ public void OnPluginStart()
 
 
 //ConVarChange for Strings
-public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
+public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
 	if (convar == gc_sOverlayStartPath)
 	{
@@ -502,7 +502,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 				{
 					SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
 					SetEntityGravity(client, 1.0);
-					FP(client);
+					FirstPerson(client);
 					SetEntityMoveType(client, MOVETYPE_WALK);
 				}
 		}
@@ -573,7 +573,7 @@ public void Event_PlayerDeath(Event event, char [] name, bool dontBroadcast)
 	if (IsDuckHunt == true)
 	{
 		int client = GetClientOfUserId(event.GetInt("userid"));
-		FP(client);
+		FirstPerson(client);
 		SetEntityMoveType(client, MOVETYPE_WALK);
 	}
 }
@@ -619,7 +619,7 @@ public void OnMapEnd()
 	g_sHasVoted[0] = '\0';
 	LoopClients(client)
 	{
-		FP(client);
+		FirstPerson(client);
 		SetEntityMoveType(client, MOVETYPE_WALK);
 	}
 }
@@ -638,7 +638,7 @@ public void OnAvailableLR(int Announced)
 			{
 				SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
 				SetEntityGravity(client, 1.0);
-				FP(client);
+				FirstPerson(client);
 				if (GetClientTeam(client) == CS_TEAM_CT)
 				{
 					FakeClientCommand(client, "sm_weapons");
@@ -721,7 +721,7 @@ public void OnClientDisconnect(int client)
 {
 	if (IsDuckHunt == true)
 	{
-		FP(client);
+		FirstPerson(client);
 	}
 }
 
@@ -732,7 +732,7 @@ public void OnClientDisconnect(int client)
 
 
 //Back to First Person
-public Action FP(int client)
+void FirstPerson(int client)
 {
 	if (IsValidClient(client, false, true))
 	{
@@ -766,7 +766,7 @@ void StartNextRound()
 ******************************************************************************/
 
 
-stock void CreateInfoPanel(int client)
+void CreateInfoPanel(int client)
 {
 	//Create info Panel
 	char info[255];

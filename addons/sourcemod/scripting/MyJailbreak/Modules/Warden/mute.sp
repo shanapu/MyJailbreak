@@ -103,7 +103,7 @@ public void Mute_OnPluginStart()
 }
 
 
-public int Mute_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
+public void Mute_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
 	if (convar == gc_sAdminFlagMute)
 	{

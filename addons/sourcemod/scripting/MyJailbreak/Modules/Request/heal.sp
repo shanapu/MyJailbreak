@@ -99,7 +99,7 @@ public void Heal_OnPluginStart()
 }
 
 
-public int Heal_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
+public void Heal_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
 	if (convar == gc_sAdminFlagHeal)
 	{
@@ -219,19 +219,19 @@ public void Heal_OnClientDisconnect(int client)
 ******************************************************************************/
 
 
-public Action HealMenu(int warden)
+void HealMenu(int client)
 {
-	if (warden_iswarden(warden))
+	if (warden_iswarden(client))
 	{
 		char info5[255], info6[255], info7[255];
 		Menu menu1 = CreateMenu(HealMenuHandler);
-		Format(info5, sizeof(info5), "%T", "request_acceptheal", warden);
+		Format(info5, sizeof(info5), "%T", "request_acceptheal", client);
 		menu1.SetTitle(info5);
-		Format(info6, sizeof(info6), "%T", "warden_no", warden);
-		Format(info7, sizeof(info7), "%T", "warden_yes", warden);
+		Format(info6, sizeof(info6), "%T", "warden_no", client);
+		Format(info7, sizeof(info7), "%T", "warden_yes", client);
 		menu1.AddItem("1", info7);
 		menu1.AddItem("0", info6);
-		menu1.Display(warden, gc_fHealTime.IntValue);
+		menu1.Display(client, gc_fHealTime.IntValue);
 	}
 }
 

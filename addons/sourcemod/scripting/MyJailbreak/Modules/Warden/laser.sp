@@ -84,7 +84,7 @@ public void Laser_OnPluginStart()
 }
 
 
-public int Laser_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
+public void Laser_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
 	if (convar == gc_sAdminFlagLaser)
 	{
@@ -257,7 +257,6 @@ public int Handler_LaserMenu(Menu menu, MenuAction action, int client, int selec
 			g_bLaser[client] = true;
 			g_bLaserColorRainbow[client] = false;
 			g_iLaserColor[client] = 0;
-			
 		}
 		else if (strcmp(info, "red") == 0)
 		{
@@ -266,7 +265,6 @@ public int Handler_LaserMenu(Menu menu, MenuAction action, int client, int selec
 			g_bLaser[client] = true;
 			g_bLaserColorRainbow[client] = false;
 			g_iLaserColor[client] = 1;
-			
 		}
 		else if (strcmp(info, "green") == 0)
 		{
@@ -275,7 +273,6 @@ public int Handler_LaserMenu(Menu menu, MenuAction action, int client, int selec
 			g_bLaser[client] = true;
 			g_bLaserColorRainbow[client] = false;
 			g_iLaserColor[client] = 2;
-			
 		}
 		else if (strcmp(info, "blue") == 0)
 		{
@@ -284,7 +281,6 @@ public int Handler_LaserMenu(Menu menu, MenuAction action, int client, int selec
 			g_bLaser[client] = true;
 			g_bLaserColorRainbow[client] = false;
 			g_iLaserColor[client] = 3;
-			
 		}
 		else if (strcmp(info, "yellow") == 0)
 		{
@@ -293,7 +289,6 @@ public int Handler_LaserMenu(Menu menu, MenuAction action, int client, int selec
 			g_bLaser[client] = true;
 			g_bLaserColorRainbow[client] = false;
 			g_iLaserColor[client] = 4;
-			
 		}
 		else if (strcmp(info, "cyan") == 0)
 		{
@@ -302,7 +297,6 @@ public int Handler_LaserMenu(Menu menu, MenuAction action, int client, int selec
 			g_bLaser[client] = true;
 			g_bLaserColorRainbow[client] = false;
 			g_iLaserColor[client] = 5;
-			
 		}
 		else if (strcmp(info, "magenta") == 0)
 		{
@@ -311,7 +305,6 @@ public int Handler_LaserMenu(Menu menu, MenuAction action, int client, int selec
 			g_bLaser[client] = true;
 			g_bLaserColorRainbow[client] = false;
 			g_iLaserColor[client] = 6;
-			
 		}
 		else if (strcmp(info, "orange") == 0)
 		{
@@ -320,7 +313,6 @@ public int Handler_LaserMenu(Menu menu, MenuAction action, int client, int selec
 			g_bLaser[client] = true;
 			g_bLaserColorRainbow[client] = false;
 			g_iLaserColor[client] = 7;
-			
 		}
 		if (g_bMenuClose != null)
 		{
@@ -349,7 +341,7 @@ public int Handler_LaserMenu(Menu menu, MenuAction action, int client, int selec
 ******************************************************************************/
 
 
-stock void GetClientSightEnd(int client, float out[3])
+void GetClientSightEnd(int client, float out[3])
 {
 	float m_fEyes[3];
 	float m_fAngles[3];

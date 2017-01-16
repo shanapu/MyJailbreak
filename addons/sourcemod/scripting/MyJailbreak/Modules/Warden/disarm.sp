@@ -78,9 +78,9 @@ public Action Disarm_Event_PlayerHurt(Event event, char[] name, bool dontBroadca
 {
 	if (gc_bPlugin.BoolValue && gc_bDisarm.BoolValue && !IsLR)
 	{
-		int victim 			= GetClientOfUserId(event.GetInt("userid"));
-		int attacker 		= GetClientOfUserId(event.GetInt("attacker"));
-		int hitgroup		= event.GetInt("hitgroup");
+		int victim = GetClientOfUserId(event.GetInt("userid"));
+		int attacker = GetClientOfUserId(event.GetInt("attacker"));
+		int hitgroup = event.GetInt("hitgroup");
 		int victimweapon = GetEntPropEnt(victim, Prop_Send, "m_hActiveWeapon");
 		
 		if (IsValidClient(attacker, true, false) && IsValidClient(victim, true, false))

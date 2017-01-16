@@ -197,7 +197,7 @@ public void OnPluginStart()
 
 
 //ConVarChange for Strings
-public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
+public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
 	if (convar == gc_sOverlayStartPath)    //Add overlay to download and precache table if changed
 	{
@@ -223,7 +223,6 @@ public void OnConfigsExecuted()
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iMaxRound = gc_iRounds.IntValue;
-	
 	
 	
 	//Set custom Commands
@@ -402,8 +401,6 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		g_iRound++; //Add Round number
 		StartDealDamage = false;
 		SJD_OpenDoors(); //open Jail
-		
-		
 		
 		//Find Position in CT Spawn
 		
@@ -628,7 +625,7 @@ void StartNextRound()
 ******************************************************************************/
 
 
-stock void CreateInfoPanel(int client)
+void CreateInfoPanel(int client)
 {
 	//Create info Panel
 	char info[255];
@@ -659,7 +656,7 @@ stock void CreateInfoPanel(int client)
 }
 
 
-stock void SendResults(int client)
+void SendResults(int client)
 {
 	char info[128];
 	

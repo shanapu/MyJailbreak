@@ -280,7 +280,7 @@ public int Handle_MarkerMenu(Menu menu, MenuAction action, int client, int itemN
 		
 		if (found)
 		{
-			SetupMarker(client, marker);
+			SetupMarker(marker);
 			CPrintToChatAll("%t %t", "warden_tag", "warden_marker_set", g_sColorNames[marker]);
 		}
 	}
@@ -304,7 +304,7 @@ public Action Timer_DrawMakers(Handle timer, any data)
 ******************************************************************************/
 
 
-stock void Draw_Markers()
+void Draw_Markers()
 {
 	if (g_iWarden == -1)
 		return;
@@ -352,7 +352,7 @@ stock void Draw_Markers()
 }
 
 
-stock void SetupMarker(int client, int marker)
+void SetupMarker(int marker)
 {
 	g_fMarkerOrigin[marker][0] = g_fMarkerSetupStartOrigin[0];
 	g_fMarkerOrigin[marker][1] = g_fMarkerSetupStartOrigin[1];
@@ -367,7 +367,7 @@ stock void SetupMarker(int client, int marker)
 }
 
 
-stock int GetClientAimTargetPos(int client, float g_fPos[3]) 
+int GetClientAimTargetPos(int client, float g_fPos[3]) 
 {
 	if (client < 1) 
 		return -1;
@@ -390,7 +390,7 @@ stock int GetClientAimTargetPos(int client, float g_fPos[3])
 }
 
 
-stock void RemoveMarker(int marker)
+void RemoveMarker(int marker)
 {
 	if (marker != -1)
 	{
@@ -399,14 +399,14 @@ stock void RemoveMarker(int marker)
 }
 
 
-stock void RemoveAllMarkers()
+void RemoveAllMarkers()
 {
 	for (int i = 0; i < 8;i++)
 		RemoveMarker(i);
 }
 
 
-stock int IsMarkerInRange(float g_fPos[3])
+int IsMarkerInRange(float g_fPos[3])
 {
 	for (int i = 0; i < 8;i++)
 	{

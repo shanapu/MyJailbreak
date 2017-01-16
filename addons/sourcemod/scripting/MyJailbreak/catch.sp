@@ -221,7 +221,7 @@ public void OnPluginStart()
 
 
 //ConVarChange for Strings
-public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
+public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
 	if (convar == gc_sSoundFreezePath)
 	{
@@ -732,7 +732,7 @@ void StartNextRound()
 }
 
 
-public Action CatchEm(int client, int attacker)
+void CatchEm(int client, int attacker)
 {
 	SetEntityMoveType(client, MOVETYPE_NONE);
 	SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 0.0);
@@ -752,7 +752,7 @@ public Action CatchEm(int client, int attacker)
 }
 
 
-public Action FreeEm(int client, int attacker)
+void FreeEm(int client, int attacker)
 {
 	SetEntityMoveType(client, MOVETYPE_WALK);
 	SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
@@ -767,7 +767,7 @@ public Action FreeEm(int client, int attacker)
 }
 
 
-public Action CheckStatus()
+void CheckStatus()
 {
 	int number = 0;
 	LoopClients(i) if (IsPlayerAlive(i) && GetClientTeam(i) == CS_TEAM_T && !catched[i]) number++;
@@ -777,7 +777,6 @@ public Action CheckStatus()
 		CS_TerminateRound(5.0, CSRoundEnd_CTWin);
 		CreateTimer( 1.0, DeleteOverlay);
 	}
-	
 }
 
 
@@ -926,7 +925,7 @@ public Action Timer_BeaconOn(Handle timer)
 ******************************************************************************/
 
 
-stock void CreateInfoPanel(int client)
+void CreateInfoPanel(int client)
 {
 	//Create info Panel
 	char info[255];

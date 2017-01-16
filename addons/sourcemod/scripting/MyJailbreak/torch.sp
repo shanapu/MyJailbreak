@@ -219,7 +219,7 @@ public void OnPluginStart()
 
 
 //ConVarChange for Strings
-public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
+public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
 	if (convar == gc_sSoundOnTorchPath)
 	{
@@ -665,7 +665,7 @@ void StartNextRound()
 
 
 //Set client as torch
-public Action TorchEm(int client)
+void TorchEm(int client)
 {
 	SetEntityRenderColor(client, 255, 120, 0, 255);
 	OnTorch[client] = true;
@@ -686,7 +686,7 @@ public Action TorchEm(int client)
 
 
 //remove client as torch
-public Action ExtinguishEm(int client)
+void ExtinguishEm(int client)
 {
 	LoopClients(i) ImmuneTorch[i] = false;
 	SetEntityRenderColor(client, 0, 0, 0, 255);
@@ -707,7 +707,7 @@ public Action ExtinguishEm(int client)
 
 
 //check is torch still alive
-public Action CheckStatus()
+void CheckStatus()
 {
 	int number = 0;
 	LoopClients(i) if (IsPlayerAlive(i) && OnTorch[i]) number++;
@@ -799,7 +799,7 @@ void UnhookWallhack(int client)
 ******************************************************************************/
 
 
-stock void CreateInfoPanel(int client)
+void CreateInfoPanel(int client)
 {
 	//Create info Panel
 	char info[255];

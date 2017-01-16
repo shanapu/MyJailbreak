@@ -116,7 +116,7 @@ public void Deputy_OnPluginStart()
 
 
 //ConVarChange for Strings
-public int Deputy_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
+public void Deputy_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
 	if (convar == gc_sModelPathDeputy)
 	{
@@ -569,7 +569,7 @@ public int Handler_SetDeputy(Menu menu, MenuAction action, int client, int Posit
 ******************************************************************************/
 
 
-stock bool IsClientDeputy(int client)
+bool IsClientDeputy(int client)
 {
 	if (client != g_iDeputy)
 	{
@@ -677,4 +677,3 @@ void Forward_OnDeputyRemoved(int client)
 	Color_OnDeputyRemoved(client);
 	HandCuffs_OnDeputyRemoved(client);
 }
-

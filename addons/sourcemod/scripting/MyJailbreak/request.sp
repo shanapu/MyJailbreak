@@ -83,7 +83,6 @@ float DeathOrigin[MAXPLAYERS+1][3];
 #include "MyJailbreak/Modules/Request/repeat.sp"
 #include "MyJailbreak/Modules/Request/freekill.sp"
 #include "MyJailbreak/Modules/Request/killreason.sp"
-//#include "MyJailbreak/Modules/Request/freedays.sp"
 
 
 //Info
@@ -125,7 +124,6 @@ public void OnPluginStart()
 	Capitulation_OnPluginStart();
 	Freekill_OnPluginStart();
 	KillReason_OnPluginStart();
-	//Freedays_OnPluginStart();
 	
 	
 	AutoExecConfig_ExecuteFile();

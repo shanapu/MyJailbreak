@@ -190,7 +190,7 @@ public void OnPluginStart()
 
 
 //ConVarChange for Strings
-public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
+public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
 	if (convar == gc_sOverlayStartPath)
 	{
@@ -657,7 +657,7 @@ void StartNextRound()
 
 
 //No Scope
-stock void MakeNoScope(int weapon)
+void MakeNoScope(int weapon)
 {
 	if (IsNoScope == true)
 	{
@@ -686,7 +686,7 @@ public Action OnPreThink(int client)
 ******************************************************************************/
 
 
-stock void CreateInfoPanel(int client)
+void CreateInfoPanel(int client)
 {
 	//Create info Panel
 	char info[255];

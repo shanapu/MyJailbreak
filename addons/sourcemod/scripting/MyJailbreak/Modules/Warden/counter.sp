@@ -171,7 +171,7 @@ public void Counter_OnConfigsExecuted()
 ******************************************************************************/
 
 
-stock bool ClientViews(int viewer, int target, float fMaxDistance=0.0, float fThreshold=0.73)
+bool ClientViews(int viewer, int target, float fMaxDistance=0.0, float fThreshold=0.73)
 {
 	// Retrieve view and target eyes position
 	float fViewPos[3];   GetClientEyePosition(viewer, fViewPos);

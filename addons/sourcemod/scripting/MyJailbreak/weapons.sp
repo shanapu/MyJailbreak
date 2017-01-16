@@ -106,7 +106,7 @@ enum weapons
 public Plugin myinfo =
 {
 	name = "MyJailbreak - Weapons", 
-	author = "shanapu, Franc1sco", 
+	author = "shanapu", 
 	description = "Jailbreak weapons script", 
 	version = MYJB_VERSION, 
 	url = "https://github.com/shanapu/MyJailbreak"
@@ -284,7 +284,7 @@ public void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast
 ******************************************************************************/
 
 
-public void GiveSavedWeaponsFix(int client)
+void GiveSavedWeaponsFix(int client)
 {
 	if (IsPlayerAlive(client))
 	{
@@ -324,7 +324,7 @@ public void GiveSavedWeaponsFix(int client)
 }
 
 
-public void SetBuyZones(const char[] status)
+void SetBuyZones(const char[] status)
 {
 	int maxEntities = GetMaxEntities();
 	char class[24];
@@ -341,7 +341,7 @@ public void SetBuyZones(const char[] status)
 }
 
 
-public void GiveSavedWeapons(int client)
+void GiveSavedWeapons(int client)
 {
 	if (((gc_bTerror.BoolValue && GetClientTeam(client) == 2) || (gc_bCTerror.BoolValue && GetClientTeam(client) == 3)) && IsPlayerAlive(client))
 	{
@@ -413,13 +413,13 @@ public void GiveSavedWeapons(int client)
 }
 
 
-public void ResetClientSettings(int client)
+void ResetClientSettings(int client)
 {
 	newWeaponsSelected[client] = false;
 }
 
 
-public void KillAllTimer(int client)
+void KillAllTimer(int client)
 {
 	if (Timers[client] != null)
 	{
@@ -429,7 +429,7 @@ public void KillAllTimer(int client)
 }
 
 
-public void ListWeapons()
+void ListWeapons()
 {
 	ClearArray(array_primary);
 	ClearArray(array_secondary);
@@ -764,7 +764,7 @@ public int Menu_Secondary(Menu menu, MenuAction action, int client, int param2)
 
 
 //Check for display menu
-public void DisplayOptionsMenu(int client)
+void DisplayOptionsMenu(int client)
 {
 	if (gc_bPlugin.BoolValue)	
 	{

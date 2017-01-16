@@ -61,11 +61,13 @@ public void OnPluginStart()
 	HookEvent("round_end", Event_RoundEnd);
 }
 
+
 public void OnConfigsExecuted()
 {
 	SetCvar("sm_warden_ff", 0);
 	SetCvar("sm_warden_ff_deputy", 0);
 }
+
 
 public void Event_RoundStart_Post(Event event, const char[] name, bool dontBroadcast)
 {

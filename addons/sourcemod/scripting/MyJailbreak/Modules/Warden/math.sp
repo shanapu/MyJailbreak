@@ -118,7 +118,7 @@ public void Math_OnPluginStart()
 	gc_sMathOverlayStopPath.GetString(g_sMathOverlayStopPath , sizeof(g_sMathOverlayStopPath));
 }
 
-public int Math_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
+public void Math_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
 	if (convar == gc_sMathSoundStopPath)
 	{

@@ -183,7 +183,7 @@ public void OnPluginStart()
 
 
 //ConVarChange for Strings
-public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
+public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
 	if (convar == gc_sOverlayStartPath)
 	{
@@ -443,7 +443,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 	{
 		char EventDay[64];
 		MyJailbreak_GetEventDayName(EventDay);
-	
+		
 		if (!StrEqual(EventDay, "none", false))
 		{
 			g_iCoolDown = gc_iCooldownDay.IntValue + 1;
@@ -633,11 +633,11 @@ void StartNextRound()
 ******************************************************************************/
 
 
-stock void CreateInfoPanel(int client)
+void CreateInfoPanel(int client)
 {
 	//Create info Panel
 	char info[255];
-
+	
 	ZeusMenu = CreatePanel();
 	Format(info, sizeof(info), "%T", "zeus_info_title", client);
 	SetPanelTitle(ZeusMenu, info);

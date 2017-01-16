@@ -171,7 +171,7 @@ char g_sMyJBLogFile[PLATFORM_MAX_PATH];
 //Info
 public Plugin myinfo = {
 	name = "MyJailbreak - Warden", 
-	author = "shanapu, ecca, ESKO & .#zipcore", 
+	author = "shanapu", 
 	description = "Jailbreak Warden script", 
 	version = MYJB_VERSION, 
 	url = MYJB_URL_LINK
@@ -295,7 +295,7 @@ public void OnPluginStart()
 
 
 //ConVarChange for Strings
-public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
+public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
 	if (convar == gc_sWarden)
 	{
@@ -1177,7 +1177,7 @@ public Action Timer_CMDCoolDown(Handle timer, int client)
 ******************************************************************************/
 
 
-stock bool IsClientWarden(int client)
+bool IsClientWarden(int client)
 {
 	if (client != g_iWarden)
 	{

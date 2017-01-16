@@ -111,7 +111,7 @@ public void Refuse_OnPluginStart()
 }
 
 
-public int Refuse_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
+public void Refuse_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
 	if (convar == gc_sSoundRefusePath)
 	{
@@ -256,13 +256,13 @@ public void Refuse_OnClientDisconnect(int client)
 ******************************************************************************/
 
 
-public Action RefuseMenu(int warden)
+public Action RefuseMenu(int client)
 {
-	if (warden_iswarden(warden) || warden_deputy_isdeputy(warden))
+	if (warden_iswarden(client) || warden_deputy_isdeputy(client))
 	{
 		char info1[255];
 		RefusePanel = CreatePanel();
-		Format(info1, sizeof(info1), "%T", "request_refuser", warden);
+		Format(info1, sizeof(info1), "%T", "request_refuser", client);
 		SetPanelTitle(RefusePanel, info1);
 		DrawPanelText(RefusePanel, "-----------------------------------");
 		DrawPanelText(RefusePanel, "                                   ");
@@ -279,9 +279,9 @@ public Action RefuseMenu(int warden)
 		}
 		DrawPanelText(RefusePanel, "                                   ");
 		DrawPanelText(RefusePanel, "-----------------------------------");
-		Format(info1, sizeof(info1), "%T", "request_close", warden);
+		Format(info1, sizeof(info1), "%T", "request_close", client);
 		DrawPanelItem(RefusePanel, info1); 
-		SendPanelToClient(RefusePanel, warden, Handler_NullCancel, 23);
+		SendPanelToClient(RefusePanel, client, Handler_NullCancel, 23);
 		
 	}
 }
@@ -336,4 +336,3 @@ public Action Timer_NoAllowRefuse(Handle timer)
 	}
 	return Plugin_Continue;
 }
-

@@ -95,7 +95,7 @@ public void Repeat_OnPluginStart()
 }
 
 
-public int Repeat_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
+public void Repeat_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
 	if (convar == gc_sSoundRepeatPath)
 	{
@@ -219,11 +219,11 @@ public void Repeat_OnClientDisconnect(int client)
 ******************************************************************************/
 
 
-public Action RepeatMenu(int warden)
+void RepeatMenu(int client)
 {
 	char info1[255];
 	RepeatPanel = CreatePanel();
-	Format(info1, sizeof(info1), "%T", "request_repeat", warden);
+	Format(info1, sizeof(info1), "%T", "request_repeat", client);
 	SetPanelTitle(RepeatPanel, info1);
 	DrawPanelText(RepeatPanel, "-----------------------------------");
 	DrawPanelText(RepeatPanel, "                                   ");
@@ -240,9 +240,9 @@ public Action RepeatMenu(int warden)
 	}
 	DrawPanelText(RepeatPanel, "                                   ");
 	DrawPanelText(RepeatPanel, "-----------------------------------");
-	Format(info1, sizeof(info1), "%T", "request_close", warden);
+	Format(info1, sizeof(info1), "%T", "request_close", client);
 	DrawPanelItem(RepeatPanel, info1); 
-	SendPanelToClient(RepeatPanel, warden, Handler_NullCancel, 20);
+	SendPanelToClient(RepeatPanel, client, Handler_NullCancel, 20);
 }
 
 

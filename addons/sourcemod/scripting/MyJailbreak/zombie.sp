@@ -206,7 +206,7 @@ public void OnPluginStart()
 
 
 //ConVarChange for Strings
-public int OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
+public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
 	if (convar == gc_sModelPathZombie)
 	{
@@ -753,7 +753,7 @@ void SetupGlow(int iSkin)
 	int iRed = 155;
 	int iGreen = 0;
 	int iBlue = 10;
-
+	
 	SetEntData(iSkin, iOffset, iRed, _, true);
 	SetEntData(iSkin, iOffset + 1, iGreen, _, true);
 	SetEntData(iSkin, iOffset + 2, iBlue, _, true);
@@ -831,7 +831,7 @@ public bool KnockbackTRFilter(int entity, int contentsMask)
 ******************************************************************************/
 
 
-stock void CreateInfoPanel(int client)
+void CreateInfoPanel(int client)
 {
 	//Create info Panel
 	char info[255];
