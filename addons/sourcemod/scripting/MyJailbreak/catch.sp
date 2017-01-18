@@ -8,7 +8,7 @@
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License, version 3.0, as published by the
  * Free Software Foundation.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
@@ -128,10 +128,10 @@ char g_sOverlayStartPath[256];
 
 //Info
 public Plugin myinfo = {
-	name = "MyJailbreak - Catch & Freeze", 
-	author = "shanapu", 
-	description = "Event Day for Jailbreak Server", 
-	version = MYJB_VERSION, 
+	name = "MyJailbreak - Catch & Freeze",
+	author = "shanapu",
+	description = "Event Day for Jailbreak Server",
+	version = MYJB_VERSION,
 	url = MYJB_URL_LINK
 };
 
@@ -142,18 +142,18 @@ public void OnPluginStart()
 	// Translation
 	LoadTranslations("MyJailbreak.Warden.phrases");
 	LoadTranslations("MyJailbreak.Catch.phrases");
-	
-	
+
+
 	//Client Commands
 	RegConsoleCmd("sm_setcatch", Command_SetCatch, "Allows the Admin or Warden to set catch as next round");
 	RegConsoleCmd("sm_catch", Command_VoteCatch, "Allows players to vote for a catch ");
 	RegConsoleCmd("sm_sprint", Command_StartSprint, "Start sprinting!");
-	
-	
+
+
 	//AutoExecConfig
 	AutoExecConfig_SetFile("Catch", "MyJailbreak/EventDays");
 	AutoExecConfig_SetCreateFile(true);
-	
+
 	AutoExecConfig_CreateConVar("sm_catch_version", MYJB_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_catch_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true, 0.0, true, 1.0);
 	gc_sCustomCommandVote = AutoExecConfig_CreateConVar("sm_catch_cmds_vote", "cat, catchfreeze", "Set your custom chat command for Event voting(!catch (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
@@ -185,11 +185,11 @@ public void OnPluginStart()
 	gc_fSprintSpeed = AutoExecConfig_CreateConVar("sm_catch_sprint_speed", "1.25", "Ratio for how fast the player will sprint", _, true, 1.01);
 	gc_fSprintTime = AutoExecConfig_CreateConVar("sm_catch_sprint_time", "3.0", "Time in seconds the player will sprint", _, true, 1.0);
 	gc_bAllowLR = AutoExecConfig_CreateConVar("sm_catch_allow_lr", "0" , "0 - disabled, 1 - enable LR for last round and end eventday", _, true, 0.0, true, 1.0);
-	
+
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
-	
-	
+
+
 	//Hooks
 	HookEvent("round_start", Event_RoundStart);
 	HookEvent("player_spawn", Event_PlayerSpawn);
@@ -202,8 +202,8 @@ public void OnPluginStart()
 	HookConVarChange(gc_sSoundFreezePath, OnSettingChanged);
 	HookConVarChange(gc_sSoundUnFreezePath, OnSettingChanged);
 	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
-	
-	
+
+
 	//FindConVar
 	g_iMaxRound = gc_iRounds.IntValue;
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
@@ -215,7 +215,7 @@ public void OnPluginStart()
 	gc_sSoundUnFreezePath.GetString(g_sSoundUnFreezePath, sizeof(g_sSoundUnFreezePath));
 	gc_sOverlayFreeze.GetString(g_sOverlayFreeze , sizeof(g_sOverlayFreeze));
 	gc_sAdminFlag.GetString(g_sAdminFlag , sizeof(g_sAdminFlag));
-	
+
 	SetLogFile(g_sEventsLogFile, "Events", "MyJailbreak");
 }
 
@@ -261,31 +261,31 @@ public void OnConfigsExecuted()
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iMaxRound = gc_iRounds.IntValue;
-	
+
 	//FindConVar
 	g_iTerrorForLR = FindConVar("sm_hosties_lr_ts_max");
-	
+
 	//Set custom Commands
 	int iCount = 0;
 	char sCommands[128], sCommandsL[12][32], sCommand[32];
-	
+
 	//Vote
 	gc_sCustomCommandVote.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
 	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
-	
+
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
 		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
 			RegConsoleCmd(sCommand, Command_VoteCatch, "Allows players to vote for a catch ");
 	}
-	
+
 	//Set
 	gc_sCustomCommandSet.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
 	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
-	
+
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
@@ -318,7 +318,7 @@ public Action Command_SetCatch(int client, int args)
 				{
 					char EventDay[64];
 					MyJailbreak_GetEventDayName(EventDay);
-					
+
 					if (StrEqual(EventDay, "none", false))
 					{
 						if (g_iCoolDown == 0)
@@ -342,7 +342,7 @@ public Action Command_SetCatch(int client, int args)
 					{
 						char EventDay[64];
 						MyJailbreak_GetEventDayName(EventDay);
-						
+
 						if (StrEqual(EventDay, "none", false))
 						{
 							if ((g_iCoolDown == 0) || gc_bSetABypassCooldown.BoolValue)
@@ -370,7 +370,7 @@ public Action Command_VoteCatch(int client, int args)
 {
 	char steamid[64];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
-	
+
 	if (gc_bPlugin.BoolValue)
 	{
 		if (gc_bVote.BoolValue)
@@ -379,7 +379,7 @@ public Action Command_VoteCatch(int client, int args)
 			{
 				char EventDay[64];
 				MyJailbreak_GetEventDayName(EventDay);
-				
+
 				if (StrEqual(EventDay, "none", false))
 				{
 					if (g_iCoolDown == 0)
@@ -390,7 +390,7 @@ public Action Command_VoteCatch(int client, int args)
 							g_iVoteCount++;
 							int Missing = playercount - g_iVoteCount + 1;
 							Format(g_sHasVoted, sizeof(g_sHasVoted), "%s, %s", g_sHasVoted, steamid);
-							
+
 							if (g_iVoteCount > playercount)
 							{
 								StartNextRound();
@@ -432,9 +432,9 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		g_iRound++;
 		StartCatch = false;
 		SJD_OpenDoors();
-		
+
 		if (gc_fBeaconTime.FloatValue > 0.0) BeaconTimer = CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
-		
+
 		if (g_iRound > 0)
 			{
 				LoopClients(client)
@@ -446,20 +446,20 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 					SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
 					SendPanelToClient(CatchMenu, client, Handler_NullCancel, 20);
 					PrintCenterText(client, "%t", "catch_start_nc");
-					
+
 					g_iCatchCounter[client] = 0;
 					catched[client] = false;
-					
+
 					if (GetClientTeam(client) == CS_TEAM_CT)
 					{
 						SetEntityMoveType(client, MOVETYPE_NONE);
 						SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 0.0);
 					}
 				}
-				
+
 				//enable lr on last round
 				g_iTsLR = GetAliveTeamCount(CS_TEAM_T);
-				
+
 				if (gc_bAllowLR.BoolValue)
 				{
 					if ((g_iRound == g_iMaxRound) && (g_iTsLR > g_iTerrorForLR.IntValue))
@@ -467,7 +467,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 						SetCvar("sm_hosties_lr", 1);
 					}
 				}
-				
+
 				g_iFreezeTime--;
 				FreezeTimer = CreateTimer(1.0, Timer_StartEvent, _, TIMER_REPEAT);
 				CPrintToChatAll("%t %t", "catch_tag" , "catch_rounds", g_iRound, g_iMaxRound);
@@ -477,7 +477,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 	{
 		char EventDay[64];
 		MyJailbreak_GetEventDayName(EventDay);
-		
+
 		if (!StrEqual(EventDay, "none", false))
 		{
 			g_iCoolDown = gc_iCooldownDay.IntValue + 1;
@@ -491,7 +491,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
 	int winner = event.GetInt("winner");
-	
+
 	if (IsCatch)
 	{
 		LoopValidClients(client, true, true)
@@ -507,10 +507,10 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			}
 			if (gc_bWallhack.BoolValue) UnhookWallhack(client);
 		}
-		
+
 		delete FreezeTimer;
 		delete BeaconTimer;
-		
+
 		if (winner == 2) PrintCenterTextAll("%t", "catch_twin_nc");
 		if (winner == 3) PrintCenterTextAll("%t", "catch_ctwin_nc");
 		if (g_iRound == g_iMaxRound)
@@ -521,7 +521,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			SetCvar("sm_hosties_lr", 1);
 			SetCvar("sm_weapons_enable", 1);
 			SetCvar("sm_warden_enable", 1);
-			
+
 			g_iMPRoundTime.IntValue = g_iOldRoundTime;
 			MyJailbreak_SetEventDayName("none");
 			MyJailbreak_SetEventDayRunning(false);
@@ -531,7 +531,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 	if (StartCatch)
 	{
 		LoopClients(i) CreateInfoPanel(i);
-		
+
 		CPrintToChatAll("%t %t", "catch_tag" , "catch_next");
 		PrintCenterTextAll("%t", "catch_next_nc");
 	}
@@ -545,7 +545,7 @@ public void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
 		return;
 	}
 	CheckStatus();
-	
+
 	int iClient = GetClientOfUserId(event.GetInt("userid"));
 	ResetSprint(iClient);
 }
@@ -563,9 +563,9 @@ public void OnMapStart()
 	g_iRound = 0;
 	IsCatch = false;
 	StartCatch = false;
-	
+
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
-	
+
 	if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundFreezePath);
 	if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundUnFreezePath);
 	if (gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayFreeze);
@@ -604,12 +604,12 @@ public Action CS_OnTerminateRound( float &delay,  CSRoundEndReason &reason)
 public Action OnTakedamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (!IsValidClient(victim, true, false)|| attacker == victim || !IsValidClient(attacker, true, false)) return Plugin_Continue;
-	
+
 	if (IsCatch == false)
 	{
 		return Plugin_Continue;
 	}
-	
+
 	if (GetClientTeam(victim) == CS_TEAM_T && GetClientTeam(attacker) == CS_TEAM_CT && !catched[victim])
 	{
 		if ((g_iCatchCounter[victim] >= gc_iCatchCount.IntValue) && (gc_iCatchCount.IntValue != 0)) ForcePlayerSuicide(victim);
@@ -649,7 +649,7 @@ public Action OnWeaponCanUse(int client, int weapon)
 {
 	char sWeapon[32];
 	GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
-	
+
 	if (!StrEqual(sWeapon, "weapon_knife"))
 		{
 			if (IsValidClient(client, true, false))
@@ -677,20 +677,20 @@ public void OnAvailableLR(int Announced)
 			SetEntityRenderColor(client, 255, 255, 255, 0);
 			catched[client] = false;
 			SetEntityHealth(client, 100);
-			
+
 			StripAllPlayerWeapons(client);
 			if (GetClientTeam(client) == CS_TEAM_CT)
 			{
 				FakeClientCommand(client, "sm_weapons");
 			}
 			GivePlayerItem(client, "weapon_knife");
-			
+
 			if (gc_bWallhack.BoolValue) UnhookWallhack(client);
 		}
-		
+
 		delete FreezeTimer;
 		delete BeaconTimer;
-		
+
 		if (g_iRound == g_iMaxRound)
 		{
 			IsCatch = false;
@@ -699,7 +699,7 @@ public void OnAvailableLR(int Announced)
 			SetCvar("sm_hosties_lr", 1);
 			SetCvar("sm_weapons_enable", 1);
 			SetCvar("sm_warden_enable", 1);
-			
+
 			g_iMPRoundTime.IntValue = g_iOldRoundTime;
 			MyJailbreak_SetEventDayName("none");
 			MyJailbreak_SetEventDayRunning(false);
@@ -723,10 +723,10 @@ void StartNextRound()
 	Format(buffer, sizeof(buffer), "%T", "catch_name", LANG_SERVER);
 	MyJailbreak_SetEventDayName(buffer);
 	MyJailbreak_SetEventDayPlanned(true);
-	
+
 	g_iOldRoundTime = g_iMPRoundTime.IntValue; //save original round time
 	g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
-	
+
 	CPrintToChatAll("%t %t", "catch_tag" , "catch_next");
 	PrintCenterTextAll("%t", "catch_next_nc");
 }
@@ -738,13 +738,13 @@ void CatchEm(int client, int attacker)
 	SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 0.0);
 	SetEntityRenderColor(client, 0, 0, 205, 255);
 	catched[client] = true;
-	g_iCatchCounter[client]++; 
+	g_iCatchCounter[client]++;
 	ShowOverlay(client, g_sOverlayFreeze, 0.0);
-	if (gc_bSounds.BoolValue)	
+	if (gc_bSounds.BoolValue)
 	{
 		EmitSoundToAllAny(g_sSoundFreezePath);
 	}
-	if (!gc_bStayOverlay.BoolValue)	
+	if (!gc_bStayOverlay.BoolValue)
 	{
 		CreateTimer( 3.0, DeleteOverlay, client );
 	}
@@ -786,10 +786,10 @@ void Setup_WallhackSkin(int client)
 	char sModel[PLATFORM_MAX_PATH];
 	GetClientModel(client, sModel, sizeof(sModel));
 	int iSkin = CPS_SetSkin(client, sModel, CPS_RENDER);
-	
+
 	if (iSkin == -1)
 		return;
-		
+
 	if (SDKHookEx(iSkin, SDKHook_SetTransmit, OnSetTransmit_Wallhack))
 		Setup_Wallhack(iSkin);
 }
@@ -799,18 +799,18 @@ void Setup_WallhackSkin(int client)
 void Setup_Wallhack(int iSkin)
 {
 	int iOffset;
-	
+
 	if (!iOffset && (iOffset = GetEntSendPropOffs(iSkin, "m_clrGlow")) == -1)
 		return;
-	
+
 	SetEntProp(iSkin, Prop_Send, "m_bShouldGlow", true, true);
 	SetEntProp(iSkin, Prop_Send, "m_nGlowStyle", 0);
 	SetEntPropFloat(iSkin, Prop_Send, "m_flGlowMaxDist", 10000000.0);
-	
+
 	int iRed = 60;
 	int iGreen = 60;
 	int iBlue = 200;
-	
+
 	SetEntData(iSkin, iOffset, iRed, _, true);
 	SetEntData(iSkin, iOffset + 1, iGreen, _, true);
 	SetEntData(iSkin, iOffset + 2, iBlue, _, true);
@@ -823,23 +823,23 @@ public Action OnSetTransmit_Wallhack(int iSkin, int client)
 {
 	if (!IsPlayerAlive(client))
 		return Plugin_Handled;
-	
+
 	LoopClients(target)
 	{
 		if (!CPS_HasSkin(target))
 			continue;
-		
+
 		if (!catched[target])
 			continue;
-		
+
 		if (EntRefToEntIndex(CPS_GetSkin(target)) != iSkin)
 			continue;
-			
+
 		if (GetClientTeam(client) == CS_TEAM_CT)
-		
+
 		return Plugin_Continue;
 	}
-	
+
 	return Plugin_Handled;
 }
 
@@ -883,9 +883,9 @@ public Action Timer_StartEvent(Handle timer)
 		}
 		return Plugin_Continue;
 	}
-	
+
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
-	
+
 	if (g_iRound > 0)
 	{
 		LoopClients(client) if (IsPlayerAlive(client))
@@ -895,7 +895,7 @@ public Action Timer_StartEvent(Handle timer)
 				SetEntityMoveType(client, MOVETYPE_WALK);
 				SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.4);
 			}
-			
+
 			PrintCenterText(client, "%t", "catch_start_nc");
 			if (gc_bOverlays.BoolValue) ShowOverlay(client, g_sOverlayStartPath, 2.0);
 			if (gc_bSounds.BoolValue)
@@ -907,7 +907,7 @@ public Action Timer_StartEvent(Handle timer)
 		CPrintToChatAll("%t %t", "catch_tag" , "catch_start");
 	}
 	FreezeTimer = null;
-	
+
 	return Plugin_Stop;
 }
 
@@ -951,7 +951,7 @@ void CreateInfoPanel(int client)
 	DrawPanelText(CatchMenu, info);
 	DrawPanelText(CatchMenu, "-----------------------------------");
 	Format(info, sizeof(info), "%T", "warden_close", client);
-	DrawPanelItem(CatchMenu, info); 
+	DrawPanelItem(CatchMenu, info);
 	SendPanelToClient(CatchMenu, client, Handler_NullCancel, 20);
 }
 
@@ -1029,8 +1029,8 @@ public Action ResetSprint(int client)
 public Action Timer_SprintEnd(Handle timer, any client)
 {
 	SprintTimer[client] = null;
-	
-	
+
+
 	if (IsClientInGame(client) && (ClientSprintStatus[client] & IsSprintUsing))
 	{
 		SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
