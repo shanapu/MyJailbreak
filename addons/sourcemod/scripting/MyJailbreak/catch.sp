@@ -488,6 +488,8 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		{
 			g_iCoolDown -= 1;
 		}
+
+		return;
 	}
 
 	SetCvar("sm_hosties_lr", 0);
