@@ -98,6 +98,7 @@ int g_iCatchCounter[MAXPLAYERS+1];
 int g_iMaxRound;
 int g_iFreezeTime;
 int g_iTsLR;
+int g_iCollision_Offset;
 
 // Handles
 Handle g_hSprintTimer[MAXPLAYERS+1];
@@ -203,6 +204,9 @@ public void OnPluginStart()
 
 	// Logs
 	SetLogFile(g_sEventsLogFile, "Events", "MyJailbreak");
+
+	// Offsets
+    g_iCollision_Offset = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
 }
 
 
@@ -516,7 +520,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 			StripAllPlayerWeapons(client);
 			GivePlayerItem(client, "weapon_knife");
 
-			SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
+			SetEntData(client, g_iCollision_Offset, 2, 4, true);
 			SendPanelToClient(g_hCatchMenu, client, Handler_NullCancel, 20);
 			PrintCenterText(client, "%t", "catch_start_nc");
 
@@ -554,7 +558,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 	{
 		LoopValidClients(client, true, true)
 		{
-			SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
+			SetEntData(client, g_iCollision_Offset, 0, 4, true);
 
 			CreateTimer(0.0, DeleteOverlay, client);
 			SetEntityRenderColor(client, 255, 255, 255, 0);
@@ -773,7 +777,7 @@ public void OnAvailableLR(int Announced)
 			ClientSprintStatus[client] = 0;
 			g_bCatched[client] = false;
 
-			SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
+			SetEntData(client, g_iCollision_Offset, 0, 4, true);
 
 			CreateTimer(0.0, DeleteOverlay, client);
 
