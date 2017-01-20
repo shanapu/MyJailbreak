@@ -434,7 +434,7 @@ public Action Command_VoteCatch(int client, int args)
 		return Plugin_Handled;
 	}
 
-	char steamid[64];
+	char steamid[24];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
 
 	if (StrContains(g_sHasVoted, steamid, true) != -1)
@@ -512,9 +512,10 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 			g_bCatched[client] = false;
 
 			CreateInfoPanel(client);
-			StripAllPlayerWeapons(client);
 
+			StripAllPlayerWeapons(client);
 			GivePlayerItem(client, "weapon_knife");
+
 			SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
 			SendPanelToClient(g_hCatchMenu, client, Handler_NullCancel, 20);
 			PrintCenterText(client, "%t", "catch_start_nc");
@@ -539,6 +540,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 
 		g_iFreezeTime -= 1;
 		g_hFreezeTimer = CreateTimer(1.0, Timer_StartEvent, _, TIMER_REPEAT);
+
 		CPrintToChatAll("%t %t", "catch_tag", "catch_rounds", g_iRound, g_iMaxRound);
 	}
 }
@@ -578,8 +580,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 		{
 			PrintCenterTextAll("%t", "catch_twin_nc");
 		}
-
-		if (winner == 3)
+		else if (winner == 3)
 		{
 			PrintCenterTextAll("%t", "catch_ctwin_nc");
 		}
@@ -625,8 +626,7 @@ public void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
 
 	CheckStatus();
 
-	int iClient = GetClientOfUserId(event.GetInt("userid"));
-	ResetSprint(iClient);
+	ResetSprint(GetClientOfUserId(event.GetInt("userid")));
 }
 
 
@@ -690,12 +690,12 @@ public Action CS_OnTerminateRound( float &delay,  CSRoundEndReason &reason)
 // Catch & Freeze
 public Action OnTakedamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (!IsValidClient(victim, true, false) || attacker == victim || !IsValidClient(attacker, true, false))
+	if (!g_bIsCatch)
 	{
 		return Plugin_Continue;
 	}
 
-	if (!g_bIsCatch)
+	if (!IsValidClient(victim, true, false) || attacker == victim || !IsValidClient(attacker, true, false))
 	{
 		return Plugin_Continue;
 	}
@@ -713,8 +713,7 @@ public Action OnTakedamage(int victim, int &attacker, int &inflictor, float &dam
 
 		CheckStatus();
 	}
-
-	if (GetClientTeam(victim) == CS_TEAM_T && GetClientTeam(attacker) == CS_TEAM_T && g_bCatched[victim] && !g_bCatched[attacker])
+	else if (GetClientTeam(victim) == CS_TEAM_T && GetClientTeam(attacker) == CS_TEAM_T && g_bCatched[victim] && !g_bCatched[attacker])
 	{
 		FreeEm(victim, attacker);
 		CheckStatus();
@@ -747,18 +746,17 @@ public void OnClientPutInServer(int client)
 // Knife only
 public Action OnWeaponCanUse(int client, int weapon)
 {
+	if (!g_bIsCatch)
+	{
+		return Plugin_Continue;
+	}
+
 	char sWeapon[32];
 	GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
 
-	if (!StrEqual(sWeapon, "weapon_knife"))
+	if (!StrEqual(sWeapon, "weapon_knife") && IsValidClient(client, true, false))
 	{
-		if (IsValidClient(client, true, false))
-		{
-			if (g_bIsCatch)
-			{
-				return Plugin_Handled;
-			}
-		}
+		return Plugin_Handled;
 	}
 
 	return Plugin_Continue;
@@ -932,7 +930,7 @@ void Setup_Wallhack(int iSkin)
 {
 	int iOffset;
 
-	if (!iOffset && (iOffset = GetEntSendPropOffs(iSkin, "m_clrGlow")) == -1)
+	if ((iOffset = GetEntSendPropOffs(iSkin, "m_clrGlow")) == -1)
 	{
 		return;
 	}
@@ -977,7 +975,7 @@ public Action OnSetTransmit_Wallhack(int iSkin, int client)
 			continue;
 		}
 
-		if (GetClientTeam(client) == CS_TEAM_CT)
+		if (GetClientTeam(client) == CS_TEAM_CT) // Something wrong here
 		{
 			return Plugin_Continue;
 		}
@@ -992,9 +990,9 @@ void UnhookWallhack(int client)
 {
 	if (IsValidClient(client, false, true))
 	{
-		char sModel[PLATFORM_MAX_PATH];
-		GetClientModel(client, sModel, sizeof(sModel));
-	// 	SetEntProp(client, Prop_Send, "m_bShouldGlow", false, true);
+		// char sModel[PLATFORM_MAX_PATH];
+		// GetClientModel(client, sModel, sizeof(sModel));
+		// SetEntProp(client, Prop_Send, "m_bShouldGlow", false, true);
 		SDKUnhook(client, SDKHook_SetTransmit, OnSetTransmit_Wallhack);
 	}
 }
