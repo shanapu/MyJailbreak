@@ -206,7 +206,7 @@ public void OnPluginStart()
 	SetLogFile(g_sEventsLogFile, "Events", "MyJailbreak");
 
 	// Offsets
-    g_iCollision_Offset = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
+	g_iCollision_Offset = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
 }
 
 
@@ -996,10 +996,12 @@ void UnhookWallhack(int client)
 {
 	if (IsValidClient(client, false, true))
 	{
-		// char sModel[PLATFORM_MAX_PATH];
-		// GetClientModel(client, sModel, sizeof(sModel));
-		// SetEntProp(client, Prop_Send, "m_bShouldGlow", false, true);
-		SDKUnhook(client, SDKHook_SetTransmit, OnSetTransmit_Wallhack);
+		int iSkin = CPS_GetSkin(client);
+		if (iSkin != INVALID_ENT_REFERENCE)
+		{
+			SetEntProp(client, Prop_Send, "m_bShouldGlow", false, true);
+			SDKUnhook(iSkin, SDKHook_SetTransmit, OnSetTransmit_Wallhack);
+		}
 	}
 }
 
