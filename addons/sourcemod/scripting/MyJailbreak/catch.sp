@@ -974,19 +974,14 @@ void Setup_Wallhack(int iSkin)
 // Who can see wallhack if vaild
 public Action OnSetTransmit_Wallhack(int iSkin, int client)
 {
-	if (!IsPlayerAlive(client))
+	if (!IsPlayerAlive(client) || GetClientTeam(client) != CS_TEAM_CT)
 	{
 		return Plugin_Handled;
 	}
 
 	LoopClients(target)
 	{
-		if (!CPS_HasSkin(target))
-		{
-			continue;
-		}
-
-		if (!g_bCatched[target])
+		if (!CPS_HasSkin(target) || !g_bCatched[target])
 		{
 			continue;
 		}
@@ -996,10 +991,7 @@ public Action OnSetTransmit_Wallhack(int iSkin, int client)
 			continue;
 		}
 
-		if (GetClientTeam(client) == CS_TEAM_CT) // Something wrong here
-		{
-			return Plugin_Continue;
-		}
+		return Plugin_Continue;
 	}
 
 	return Plugin_Handled;
@@ -1014,7 +1006,7 @@ void UnhookWallhack(int client)
 		int iSkin = CPS_GetSkin(client);
 		if (iSkin != INVALID_ENT_REFERENCE)
 		{
-			SetEntProp(client, Prop_Send, "m_bShouldGlow", false, true);
+			SetEntProp(iSkin, Prop_Send, "m_bShouldGlow", false, true);
 			SDKUnhook(iSkin, SDKHook_SetTransmit, OnSetTransmit_Wallhack);
 		}
 	}
