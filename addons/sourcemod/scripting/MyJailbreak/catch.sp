@@ -156,7 +156,7 @@ public void OnPluginStart()
 	gc_bSetA = AutoExecConfig_CreateConVar("sm_catch_admin", "1", "0 - disabled, 1 - allow admin/vip to set catch round", _, true, 0.0, true, 1.0);
 	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_catch_flag", "g", "Set flag for admin/vip to set this Event Day.");
 	gc_bVote = AutoExecConfig_CreateConVar("sm_catch_vote", "1", "0 - disabled, 1 - allow player to vote for catch", _, true, 0.0, true, 1.0);
-	gc_iCatchCount = AutoExecConfig_CreateConVar("sm_catch_count", "0", "How many times a terror can be g_bCatched before he get killed. 0 = T dont get killed ever all T must be g_bCatched", _, true, 0.0);
+	gc_iCatchCount = AutoExecConfig_CreateConVar("sm_catch_count", "0", "How many times a terror can be catched before he get killed. 0 = T dont get killed ever all T must be g_bCatched", _, true, 0.0);
 	gc_fBeaconTime = AutoExecConfig_CreateConVar("sm_catch_beacon_time", "240", "Time in seconds until the beacon turned on (set to 0 to disable)", _, true, 0.0);
 	gc_bWallhack = AutoExecConfig_CreateConVar("sm_catch_wallhack", "1", "0 - disabled, 1 - enable wallhack for CT to see freezed enemeys", _, true,  0.0, true, 1.0);
 	gc_iRounds = AutoExecConfig_CreateConVar("sm_catch_rounds", "1", "Rounds to play in a row", _, true, 1.0);
@@ -570,8 +570,6 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 // Round End
 public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
-	int winner = event.GetInt("winner");
-
 	if (g_bIsCatch)
 	{
 		LoopValidClients(client, true, true)
@@ -598,6 +596,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 		delete g_hFreezeTimer;
 		delete g_hBeaconTimer;
 
+		int winner = event.GetInt("winner");
 		if (winner == 2)
 		{
 			PrintCenterTextAll("%t", "catch_twin_nc");
@@ -692,7 +691,7 @@ public void OnMapEnd()
 
 
 // Terror win Round if time runs out
-public Action CS_OnTerminateRound( float &delay,  CSRoundEndReason &reason)
+public Action CS_OnTerminateRound(float &delay,  CSRoundEndReason &reason)
 {
 	if (g_bIsCatch)   // TODO: does this trigger??
 	{
@@ -710,7 +709,7 @@ public Action CS_OnTerminateRound( float &delay,  CSRoundEndReason &reason)
 
 
 // Catch & Freeze
-public Action OnTakedamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+public Action OnTraceAttack(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &ammotype, int hitbox, int hitgroup)
 {
 	if (!g_bIsCatch)
 	{
@@ -724,7 +723,7 @@ public Action OnTakedamage(int victim, int &attacker, int &inflictor, float &dam
 
 	if (GetClientTeam(victim) == CS_TEAM_T && GetClientTeam(attacker) == CS_TEAM_CT && !g_bCatched[victim])
 	{
-		if ((g_iCatchCounter[victim] >= gc_iCatchCount.IntValue) && (gc_iCatchCount.IntValue != 0))
+		if (gc_iCatchCount.IntValue != 0 && g_iCatchCounter[victim] >= gc_iCatchCount.IntValue)
 		{
 			ForcePlayerSuicide(victim);
 		}
@@ -761,7 +760,7 @@ public void OnClientPutInServer(int client)
 {
 	g_bCatched[client] = false;
 	SDKHook(client, SDKHook_WeaponCanUse, OnWeaponCanUse);
-	SDKHook(client, SDKHook_TraceAttack, OnTakedamage);
+	SDKHook(client, SDKHook_TraceAttack, OnTraceAttack);
 }
 
 
@@ -923,7 +922,7 @@ void CheckStatus()
 		CPrintToChatAll("%t %t", "catch_tag", "catch_win");
 
 		CS_TerminateRound(5.0, CSRoundEnd_CTWin);
-		CreateTimer( 1.0, DeleteOverlay);
+		CreateTimer(1.0, DeleteOverlay);
 	}
 }
 
