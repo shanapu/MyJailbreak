@@ -48,6 +48,7 @@
 #define IsSprintCoolDown (1 << 1)
 
 // Booleans
+bool g_bIsLateLoad = false;
 bool g_bIsCatch = false;
 bool g_bStartCatch = false;
 bool g_bCatched[MAXPLAYERS+1] = { false, ... };
@@ -125,6 +126,12 @@ public Plugin myinfo = {
 	url = MYJB_URL_LINK
 };
 
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+	g_bIsLateLoad = late;
+
+	return APLRes_Success;
+}
 // Start
 public void OnPluginStart()
 {
@@ -207,6 +214,15 @@ public void OnPluginStart()
 
 	// Offsets
 	g_iCollision_Offset = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
+
+	// Late loading
+	if (g_bIsLateLoad)
+	{
+		LoopClients(client)
+		{
+			OnClientPutInServer(client);
+		}
+	}
 }
 
 
@@ -1134,7 +1150,7 @@ public Action Command_StartSprint(int client, int args)
 		return Plugin_Handled;
 	}
 
-	if (gc_bSprint.BoolValue || GetClientTeam(client) != CS_TEAM_T || g_bCatched[client])
+	if (!gc_bSprint.BoolValue || GetClientTeam(client) != CS_TEAM_T || g_bCatched[client])
 	{
 		return Plugin_Handled;
 	}
