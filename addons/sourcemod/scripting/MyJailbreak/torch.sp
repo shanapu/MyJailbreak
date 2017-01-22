@@ -53,6 +53,7 @@
 
 
 // Booleans
+bool g_bIsLateLoad = false;
 bool IsTorch;
 bool StartTorch;
 bool OnTorch[MAXPLAYERS+1];
@@ -135,6 +136,12 @@ public Plugin myinfo = {
 	url = MYJB_URL_LINK
 };
 
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+	g_bIsLateLoad = late;
+
+	return APLRes_Success;
+}
 
 // Start
 public void OnPluginStart()
@@ -215,6 +222,17 @@ public void OnPluginStart()
 	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
 	
 	SetLogFile(g_sEventsLogFile, "Events", "MyJailbreak");
+
+	// Late loading
+	if (g_bIsLateLoad)
+	{
+		LoopClients(i)
+		{
+			OnClientPutInServer(i);
+		}
+
+		g_bIsLateLoad = false;
+	}
 }
 
 

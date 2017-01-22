@@ -40,6 +40,8 @@
 #pragma semicolon 1
 #pragma newdecls required
 
+// Booleans
+bool g_bIsLateLoad = false;
 
 // Console Variables
 ConVar gc_bPlugin;
@@ -59,6 +61,13 @@ public Plugin myinfo =
 	author = "shanapu", 
 	version = MYJB_VERSION, 
 	url = MYJB_URL_LINK
+}
+
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+	g_bIsLateLoad = late;
+
+	return APLRes_Success;
 }
 
 
@@ -87,6 +96,17 @@ public void OnPluginStart()
 	// Hooks - Events to check for Tag
 	HookEvent("player_death", Event_PlayerTeamDeath);
 	HookEvent("player_team", Event_PlayerTeamDeath);
+
+	// Late loading
+	if (g_bIsLateLoad)
+	{
+		LoopClients(i)
+		{
+			OnClientPutInServer(i);
+		}
+
+		g_bIsLateLoad = false;
+	}
 }
 
 

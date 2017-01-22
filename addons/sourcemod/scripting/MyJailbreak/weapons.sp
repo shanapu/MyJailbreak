@@ -47,6 +47,7 @@
 
 
 // Booleans
+bool g_bIsLateLoad = false;
 bool newWeaponsSelected[MAXPLAYERS+1];
 bool rememberChoice[MAXPLAYERS+1];
 bool TA[MAXPLAYERS+1];
@@ -112,6 +113,12 @@ public Plugin myinfo =
 	url = "https://github.com/shanapu/MyJailbreak"
 };
 
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+	g_bIsLateLoad = late;
+
+	return APLRes_Success;
+}
 
 // Start
 public void OnPluginStart()
@@ -156,6 +163,18 @@ public void OnPluginStart()
 	// Cookies
 	weapons1 = RegClientCookie("Primary Weapons", "", CookieAccess_Private);
 	weapons2 = RegClientCookie("Secondary Weapons", "", CookieAccess_Private);
+
+	// Late loading
+	if (g_bIsLateLoad)
+	{
+		LoopClients(i)
+		{
+			OnClientPutInServer(i);
+			OnClientCookiesCached(i);
+		}
+
+		g_bIsLateLoad = false;
+	}
 }
 
 

@@ -132,6 +132,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
+
 // Start
 public void OnPluginStart()
 {
@@ -218,15 +219,14 @@ public void OnPluginStart()
 	// Late loading
 	if (g_bIsLateLoad)
 	{
-		LoopClients(client)
+		LoopClients(i)
 		{
-			OnClientPutInServer(client);
+			OnClientPutInServer(i);
 		}
 
 		g_bIsLateLoad = false;
 	}
 }
-
 
 // ConVarChange for Strings
 public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)

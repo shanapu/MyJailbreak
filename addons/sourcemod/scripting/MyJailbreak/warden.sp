@@ -84,6 +84,7 @@ ConVar g_bMenuClose;
 
 
 // Booleans
+bool g_bIsLateLoad = false;
 bool IsLR = false;
 bool gp_bMyJailBreak = false;
 bool gp_bHosties = false;
@@ -294,6 +295,17 @@ public void OnPluginStart()
 	
 	g_hCooldown = CreateTrie();
 	g_hLimit = CreateTrie();
+
+	// Late loading
+	if (g_bIsLateLoad)
+	{
+		LoopClients(i)
+		{
+			OnClientPutInServer(i);
+		}
+
+		g_bIsLateLoad = false;
+	}
 }
 
 
@@ -1219,6 +1231,9 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char [] error, int err_ma
 	CreateNative("warden_freeday_has", Native_HasClientFreeday);
 	
 	RegPluginLibrary("warden");
+
+	g_bIsLateLoad = late;
+
 	return APLRes_Success;
 }
 

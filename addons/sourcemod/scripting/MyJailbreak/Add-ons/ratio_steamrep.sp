@@ -50,6 +50,7 @@ ConVar gc_iMinSteamRepPoints;
 
 
 // Bools
+bool g_bIsLateLoad = false;
 bool g_IsScammer[MAXPLAYERS+1];
 
 
@@ -67,6 +68,12 @@ public Plugin myinfo = {
 	url = MYJB_URL_LINK
 };
 
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+	g_bIsLateLoad = late;
+
+	return APLRes_Success;
+}
 
 // Start
 public void OnPluginStart()
@@ -88,6 +95,18 @@ public void OnPluginStart()
 	
 	// Hooks
 	HookEvent("player_spawn", Event_OnPlayerSpawn, EventHookMode_Post);
+
+	// Late loading
+	if (g_bIsLateLoad)
+	{
+		LoopClients(i)
+		{
+			OnClientConnected(i);
+			OnClientPostAdminCheck(i);
+		}
+
+		g_bIsLateLoad = false;
+	}
 }
 
 

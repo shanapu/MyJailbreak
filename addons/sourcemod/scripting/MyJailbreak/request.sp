@@ -57,6 +57,7 @@ ConVar gc_sCustomCommandRequest;
 
 
 // Booleans
+bool g_bIsLateLoad = false;
 bool IsRequest;
 bool IsLR;
 bool gp_bMyJailBreak = false;
@@ -95,6 +96,12 @@ public Plugin myinfo =
 	url = MYJB_URL_LINK
 }
 
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+	g_bIsLateLoad = late;
+
+	return APLRes_Success;
+}
 
 // Start
 public void OnPluginStart()
@@ -134,6 +141,17 @@ public void OnPluginStart()
 	HookEvent("round_start", Event_RoundStart);
 	HookEvent("round_end", Event_RoundEnd);
 	HookEvent("player_death", Event_PlayerDeath);
+
+	// Late loading
+	if (g_bIsLateLoad)
+	{
+		LoopClients(i)
+		{
+			OnClientPutInServer(i);
+		}
+
+		g_bIsLateLoad = false;
+	}
 }
 
 
