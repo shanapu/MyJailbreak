@@ -222,6 +222,8 @@ public void OnPluginStart()
 		{
 			OnClientPutInServer(client);
 		}
+
+		g_bIsLateLoad = false;
 	}
 }
 
