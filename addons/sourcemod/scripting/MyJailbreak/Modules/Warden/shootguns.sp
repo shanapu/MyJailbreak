@@ -11,11 +11,11 @@
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
  * details.
  *
  * You should have received a copy of the GNU General Public License along with
- * this program.  If not, see <http://www.gnu.org/licenses/>.
+ * this program. If not, see <http:// www.gnu.org/licenses/>.
  */
 
 
@@ -24,7 +24,7 @@
 ******************************************************************************/
 
 
-//Includes
+// Includes
 #include <sourcemod>
 #include <sdktools>
 #include <sdkhooks>
@@ -35,25 +35,25 @@
 #include <mystocks>
 
 
-//Compiler Options
+// Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
 
 
-//Console Variables
+// Console Variables
 ConVar gc_bShootGuns;
 ConVar gc_iShootGunsMode;
 
 
-//Start
+// Start
 public void ShootGuns_OnPluginStart()
 {
-	//AutoExecConfig
-	gc_bShootGuns = AutoExecConfig_CreateConVar("sm_warden_shootguns_enable", "1", "0 - disabled, 1 - enable shoot guns on ground to remove", _, true,  0.0, true, 1.0);
+	// AutoExecConfig
+	gc_bShootGuns = AutoExecConfig_CreateConVar("sm_warden_shootguns_enable", "1", "0 - disabled, 1 - enable shoot guns on ground to remove", _, true, 0.0, true, 1.0);
 	gc_iShootGunsMode = AutoExecConfig_CreateConVar("sm_warden_shootguns_mode", "1", "1 - only warden / 2 - warden & deputy / 3 - warden, deputy & ct / 4 - all player", _, true, 1.0, true, 4.0);
 	
 	
-	//Hooks
+	// Hooks
 	HookEvent("bullet_impact", ShootGuns_Event_BulletImpact);
 }
 
@@ -65,7 +65,7 @@ public void ShootGuns_OnPluginStart()
 
 public void ShootGuns_Event_BulletImpact(Event event, const char[] name, bool dontBroadcast)
 {
-	int client = GetClientOfUserId(event.GetInt("userid"));  //Get the clients id
+	int client = GetClientOfUserId(event.GetInt("userid")); // Get the clients id
 	
 	int eni = GetClientAimTarget(client, false);
 	

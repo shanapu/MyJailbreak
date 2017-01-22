@@ -11,11 +11,11 @@
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
  * details.
  *
  * You should have received a copy of the GNU General Public License along with
- * this program.  If not, see <http://www.gnu.org/licenses/>.
+ * this program. If not, see <http:// www.gnu.org/licenses/>.
  */
 
 
@@ -24,7 +24,7 @@
 ******************************************************************************/
 
 
-//Includes
+// Includes
 #include <sourcemod>
 #include <sdktools>
 #include <sdkhooks>
@@ -35,30 +35,30 @@
 #include <mystocks>
 
 
-//Compiler Options
+// Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
 
 
-//Console Variables
+// Console Variables
 ConVar gc_bDisarm;
 ConVar gc_iDisarm;
 ConVar gc_iDisarmMode;
 
 
-//Integers
+// Integers
 int g_iDisarm;
 
 
-//Start
+// Start
 public void Disarm_OnPluginStart()
 {
-	//AutoExecConfig
-	gc_bDisarm = AutoExecConfig_CreateConVar("sm_warden_disarm", "1", "0 - disabled, 1 - enable disarm weapon on shot the arms/hands", _, true,  0.0, true, 1.0);
-	gc_iDisarm = AutoExecConfig_CreateConVar("sm_warden_disarm_mode", "1", "1 - Only warden can disarm, 2 - warden & deputy can disarm, 3 - All CT can disarm, 4 - Everyone can disarm (CT & T)", _, true,  1.0, true, 3.0);
-	gc_iDisarmMode = AutoExecConfig_CreateConVar("sm_warden_disarm_drop", "1", "1 - weapon will drop, 2 - weapon  disapear", _, true,  1.0, true, 2.0);
+	// AutoExecConfig
+	gc_bDisarm = AutoExecConfig_CreateConVar("sm_warden_disarm", "1", "0 - disabled, 1 - enable disarm weapon on shot the arms/hands", _, true, 0.0, true, 1.0);
+	gc_iDisarm = AutoExecConfig_CreateConVar("sm_warden_disarm_mode", "1", "1 - Only warden can disarm, 2 - warden & deputy can disarm, 3 - All CT can disarm, 4 - Everyone can disarm (CT & T)", _, true, 1.0, true, 3.0);
+	gc_iDisarmMode = AutoExecConfig_CreateConVar("sm_warden_disarm_drop", "1", "1 - weapon will drop, 2 - weapon  disapear", _, true, 1.0, true, 2.0);
 	
-	//Hooks 
+	// Hooks 
 	HookEvent("player_hurt", Disarm_Event_PlayerHurt);
 	HookEvent("round_start", Disarm_Event_RoundStart);
 }

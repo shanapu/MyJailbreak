@@ -11,11 +11,11 @@
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
  * details.
  *
  * You should have received a copy of the GNU General Public License along with
- * this program.  If not, see <http://www.gnu.org/licenses/>.
+ * this program. If not, see <http:// www.gnu.org/licenses/>.
  */
 
 
@@ -26,7 +26,7 @@
 ******************************************************************************/
 
 
-//Includes
+// Includes
 #include <sourcemod>
 #include <sdktools>
 #include <sdkhooks>
@@ -37,12 +37,12 @@
 #include <mystocks>
 
 
-//Compiler Options
+// Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
 
 
-//Console Variables
+// Console Variables
 ConVar gc_bRepeat;
 ConVar gc_iRepeatLimit;
 ConVar gc_sSoundRepeatPath;
@@ -50,32 +50,32 @@ ConVar gc_sCustomCommandRepeat;
 ConVar gc_sAdminFlagRepeat;
 
 
-//Booleans
+// Booleans
 bool g_bRepeated[MAXPLAYERS+1];
 
 
-//Integers
+// Integers
 int g_iRepeatCounter[MAXPLAYERS+1];
 
 
-//Handles
+// Handles
 Handle RepeatTimer[MAXPLAYERS+1];
 Handle RepeatPanel;
 
 
-//Strings
+// Strings
 char g_sSoundRepeatPath[256];
 char g_sAdminFlagRepeat[32];
 
 
-//Start
+// Start
 public void Repeat_OnPluginStart()
 {
-	//Client commands
+	// Client commands
 	RegConsoleCmd("sm_repeat", Command_Repeat, "Allows a Terrorist request repeat");
 	
 	
-	//AutoExecConfig
+	// AutoExecConfig
 	gc_bRepeat = AutoExecConfig_CreateConVar("sm_repeat_enable", "1", "0 - disabled, 1 - enable repeat");
 	gc_sCustomCommandRepeat = AutoExecConfig_CreateConVar("sm_repeat_cmds", "what, rep, again", "Set your custom chat command for Repeat.(!repeat (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_iRepeatLimit = AutoExecConfig_CreateConVar("sm_repeat_limit", "2", "Сount how many times you can use the command");
@@ -83,15 +83,15 @@ public void Repeat_OnPluginStart()
 	gc_sAdminFlagRepeat = AutoExecConfig_CreateConVar("sm_repeat_flag", "a", "Set flag for admin/vip to get one more repeat. No flag = feature is available for all players!");
 	
 	
-	//Hooks 
+	// Hooks 
 	HookEvent("round_start", Repeat_Event_RoundStart);
 	HookConVarChange(gc_sSoundRepeatPath, Repeat_OnSettingChanged);
 	HookConVarChange(gc_sAdminFlagRepeat, Repeat_OnSettingChanged);
 	
 	
-	//FindConVar
+	// FindConVar
 	gc_sSoundRepeatPath.GetString(g_sSoundRepeatPath, sizeof(g_sSoundRepeatPath));
-	gc_sAdminFlagRepeat.GetString(g_sAdminFlagRepeat , sizeof(g_sAdminFlagRepeat));
+	gc_sAdminFlagRepeat.GetString(g_sAdminFlagRepeat, sizeof(g_sAdminFlagRepeat));
 }
 
 
@@ -181,11 +181,11 @@ public void Repeat_OnMapStart()
 
 public void Repeat_OnConfigsExecuted()
 {
-	//Set custom Commands
+	// Set custom Commands
 	int iCount = 0;
 	char sCommands[128], sCommandsL[12][32], sCommand[32];
 	
-	//Repeat
+	// Repeat
 	gc_sCustomCommandRepeat.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
 	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
@@ -193,7 +193,7 @@ public void Repeat_OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
 			RegConsoleCmd(sCommand, Command_Repeat, "Allows a Terrorist request repeat");
 	}
 }
@@ -227,7 +227,7 @@ void RepeatMenu(int client)
 	SetPanelTitle(RepeatPanel, info1);
 	DrawPanelText(RepeatPanel, "-----------------------------------");
 	DrawPanelText(RepeatPanel, "                                   ");
-	for (int i = 1;i <= MaxClients;i++) if (IsValidClient(i, true))
+	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true))
 	{
 		if (g_bRepeated[i])
 		{
@@ -241,7 +241,7 @@ void RepeatMenu(int client)
 	DrawPanelText(RepeatPanel, "                                   ");
 	DrawPanelText(RepeatPanel, "-----------------------------------");
 	Format(info1, sizeof(info1), "%T", "request_close", client);
-	DrawPanelItem(RepeatPanel, info1); 
+	DrawPanelItem(RepeatPanel, info1);
 	SendPanelToClient(RepeatPanel, client, Handler_NullCancel, 20);
 }
 

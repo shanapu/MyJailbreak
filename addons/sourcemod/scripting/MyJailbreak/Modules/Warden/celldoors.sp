@@ -11,11 +11,11 @@
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
  * details.
  *
  * You should have received a copy of the GNU General Public License along with
- * this program.  If not, see <http://www.gnu.org/licenses/>.
+ * this program. If not, see <http:// www.gnu.org/licenses/>.
  */
 
 
@@ -24,7 +24,7 @@
 ******************************************************************************/
 
 
-//Includes
+// Includes
 #include <sourcemod>
 #include <sdktools>
 #include <sdkhooks>
@@ -39,12 +39,12 @@
 #define REQUIRE_PLUGIN
 
 
-//Compiler Options
+// Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
 
 
-//Console Variables
+// Console Variables
 ConVar gc_bOpen;
 ConVar gc_bOpenDeputy;
 ConVar gc_bOpenTimer;
@@ -54,31 +54,31 @@ ConVar gc_sCustomCommandOpen;
 ConVar gc_sCustomCommandClose;
 
 
-//Integers
+// Integers
 int g_iOpenTimer;
 
 
-//Handles
+// Handles
 Handle OpenCounterTime = null;
 
 
-//Start
+// Start
 public void CellDoors_OnPluginStart()
 {
-	//Client commands
+	// Client commands
 	RegConsoleCmd("sm_open", Command_OpenDoors, "Allows the Warden to open the cell doors");
 	RegConsoleCmd("sm_close", Command_CloseDoors, "Allows the Warden to close the cell doors");
 	
-	//AutoExecConfig
-	gc_bOpen = AutoExecConfig_CreateConVar("sm_warden_open_enable", "1", "0 - disabled, 1 - warden can open/close cells", _, true,  0.0, true, 1.0);
-	gc_bOpenDeputy = AutoExecConfig_CreateConVar("sm_warden_open_deputy", "1", "0 - disabled, 1 - deputy can open/close cells", _, true,  0.0, true, 1.0);
+	// AutoExecConfig
+	gc_bOpen = AutoExecConfig_CreateConVar("sm_warden_open_enable", "1", "0 - disabled, 1 - warden can open/close cells", _, true, 0.0, true, 1.0);
+	gc_bOpenDeputy = AutoExecConfig_CreateConVar("sm_warden_open_deputy", "1", "0 - disabled, 1 - deputy can open/close cells", _, true, 0.0, true, 1.0);
 	gc_sCustomCommandOpen = AutoExecConfig_CreateConVar("sm_warden_cmds_open", "o, unlock, cells", "Set your custom chat commands for open cells(!open (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)");
 	gc_sCustomCommandClose = AutoExecConfig_CreateConVar("sm_warden_cmds_close", "lock, shut", "Set your custom chat commands for close cells(!close (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)");
-	gc_hOpenTimer = AutoExecConfig_CreateConVar("sm_warden_open_time", "60", "Time in seconds for open doors on round start automaticly", _, true, 0.0); 
-	gc_bOpenTimer = AutoExecConfig_CreateConVar("sm_warden_open_time_enable", "1", "should doors open automatic 0- no 1 yes", _, true,  0.0, true, 1.0);
-	gc_bOpenTimerWarden = AutoExecConfig_CreateConVar("sm_warden_open_time_warden", "1", "should doors open automatic after sm_warden_open_time when there is a warden? needs sm_warden_open_time_enable 1", _, true,  0.0, true, 1.0);
+	gc_hOpenTimer = AutoExecConfig_CreateConVar("sm_warden_open_time", "60", "Time in seconds for open doors on round start automaticly", _, true, 0.0);
+	gc_bOpenTimer = AutoExecConfig_CreateConVar("sm_warden_open_time_enable", "1", "should doors open automatic 0- no 1 yes", _, true, 0.0, true, 1.0);
+	gc_bOpenTimerWarden = AutoExecConfig_CreateConVar("sm_warden_open_time_warden", "1", "should doors open automatic after sm_warden_open_time when there is a warden? needs sm_warden_open_time_enable 1", _, true, 0.0, true, 1.0);
 	
-	//Hooks
+	// Hooks
 	HookEvent("round_start", CellDoors_Event_RoundStart);
 }
 
@@ -98,15 +98,15 @@ public Action Command_OpenDoors(int client, int args)
 			{
 				if (gp_bSmartJailDoors) if (SJD_IsCurrentMapConfigured())
 				{
-					CPrintToChatAll("%t %t", "warden_tag" , "warden_dooropen"); 
+					CPrintToChatAll("%t %t", "warden_tag", "warden_dooropen");
 					SJD_OpenDoors();
 					if (OpenCounterTime != null)
 					KillTimer(OpenCounterTime);
 					OpenCounterTime = null;
 				}
-				else CReplyToCommand(client, "%t %t", "warden_tag" , "warden_dooropen_unavailable"); 
+				else CReplyToCommand(client, "%t %t", "warden_tag", "warden_dooropen_unavailable");
 			}
-			else CReplyToCommand(client, "%t %t", "warden_tag" , "warden_notwarden"); 
+			else CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
 		}
 	}
 	return Plugin_Handled;
@@ -123,12 +123,12 @@ public Action Command_CloseDoors(int client, int args)
 			{
 				if (gp_bSmartJailDoors) if (SJD_IsCurrentMapConfigured()) 
 				{
-					CPrintToChatAll("%t %t", "warden_tag" , "warden_doorclose"); 
+					CPrintToChatAll("%t %t", "warden_tag", "warden_doorclose");
 					SJD_CloseDoors();
 				}
-				else CReplyToCommand(client, "%t %t", "warden_tag" , "warden_doorclose_unavailable"); 
+				else CReplyToCommand(client, "%t %t", "warden_tag", "warden_doorclose_unavailable");
 			}
-			else CReplyToCommand(client, "%t %t", "warden_tag" , "warden_notwarden"); 
+			else CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
 		}
 	}
 	return Plugin_Handled;
@@ -154,9 +154,9 @@ public void CellDoors_Event_RoundStart(Event event, const char[] name, bool dont
 			g_iOpenTimer = gc_hOpenTimer.IntValue;
 			OpenCounterTime = CreateTimer(1.0, Timer_OpenCounter, _, TIMER_REPEAT);
 		}
-		else CPrintToChatAll("%t %t", "warden_tag" , "warden_openauto_unavailable");
+		else CPrintToChatAll("%t %t", "warden_tag", "warden_openauto_unavailable");
 	}
-	if(GameRules_GetProp("m_bWarmupPeriod") == 1)
+	if (GameRules_GetProp("m_bWarmupPeriod") == 1)
 	{
 		if (SJD_IsCurrentMapConfigured()) SJD_OpenDoors();
 	}
@@ -170,11 +170,11 @@ public void CellDoors_Event_RoundStart(Event event, const char[] name, bool dont
 
 public void CellDoors_OnConfigsExecuted()
 {
-	//Set custom Commands
+	// Set custom Commands
 	int iCount = 0;
 	char sCommands[128], sCommandsL[12][32], sCommand[32];
 	
-	//Open Cell doors
+	// Open Cell doors
 	gc_sCustomCommandOpen.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
 	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
@@ -182,11 +182,11 @@ public void CellDoors_OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
 			RegConsoleCmd(sCommand, Command_OpenDoors, "Allows the Warden to open the cell doors");
 	}
 	
-	//Close Cell doors
+	// Close Cell doors
 	gc_sCustomCommandClose.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
 	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
@@ -194,7 +194,7 @@ public void CellDoors_OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
 			RegConsoleCmd(sCommand, Command_CloseDoors, "Allows the Warden to close the cell doors");
 	}
 }
@@ -216,8 +216,8 @@ public Action Timer_OpenCounter(Handle timer, Handle pack)
 			{
 				if (gc_bOpenTimer.BoolValue)
 				{
-					SJD_OpenDoors(); 
-					CPrintToChatAll("%t %t", "warden_tag" , "warden_openauto");
+					SJD_OpenDoors();
+					CPrintToChatAll("%t %t", "warden_tag", "warden_openauto");
 					
 					if (OpenCounterTime != null)
 						KillTimer(OpenCounterTime);
@@ -229,10 +229,10 @@ public Action Timer_OpenCounter(Handle timer, Handle pack)
 			{
 				if (gc_bOpenTimerWarden.BoolValue)
 				{
-					SJD_OpenDoors(); 
-					CPrintToChatAll("%t %t", "warden_tag" , "warden_openauto");
+					SJD_OpenDoors();
+					CPrintToChatAll("%t %t", "warden_tag", "warden_openauto");
 				}
-				else CPrintToChatAll("%t %t", "warden_tag" , "warden_opentime"); 
+				else CPrintToChatAll("%t %t", "warden_tag", "warden_opentime");
 				if (OpenCounterTime != null)
 					KillTimer(OpenCounterTime);
 				OpenCounterTime = null;

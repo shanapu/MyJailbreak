@@ -11,11 +11,11 @@
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
  * details.
  *
  * You should have received a copy of the GNU General Public License along with
- * this program.  If not, see <http://www.gnu.org/licenses/>.
+ * this program. If not, see <http:// www.gnu.org/licenses/>.
  */
 
 
@@ -24,7 +24,7 @@
 ******************************************************************************/
 
 
-//Includes
+// Includes
 #include <sourcemod>
 #include <sdktools>
 #include <sdkhooks>
@@ -34,7 +34,7 @@
 #include <autoexecconfig>
 #include <mystocks>
 
-//Optional Plugins
+// Optional Plugins
 #undef REQUIRE_PLUGIN
 #include <myjailbreak>
 #include <smartjaildoors>
@@ -45,38 +45,38 @@
 #include <warden>
 
 
-//Compiler Options
+// Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
 
 
-//Console Variables
+// Console Variables
 ConVar gc_bPlugin;
 ConVar gc_bSounds;
 ConVar gc_sCustomCommandRequest;
 
 
-//Booleans
+// Booleans
 bool IsRequest;
 bool IsLR;
 bool gp_bMyJailBreak = false;
 bool gp_bSmartJailDoors = false;
 
 
-//Integers
+// Integers
 int g_iKilledBy[MAXPLAYERS+1];
 int g_iHasKilled[MAXPLAYERS+1];
 
 
-//Handles
+// Handles
 Handle RequestTimer;
 
 
-//Float
+// Float
 float DeathOrigin[MAXPLAYERS+1][3];
 
 
-//Modules
+// Modules
 #include "MyJailbreak/Modules/Request/refuse.sp"
 #include "MyJailbreak/Modules/Request/capitulation.sp"
 #include "MyJailbreak/Modules/Request/heal.sp"
@@ -85,7 +85,7 @@ float DeathOrigin[MAXPLAYERS+1][3];
 #include "MyJailbreak/Modules/Request/killreason.sp"
 
 
-//Info
+// Info
 public Plugin myinfo = 
 {
 	name = "MyJailbreak - Request", 
@@ -96,7 +96,7 @@ public Plugin myinfo =
 }
 
 
-//Start
+// Start
 public void OnPluginStart()
 {
 	// Translation
@@ -104,17 +104,17 @@ public void OnPluginStart()
 	LoadTranslations("MyJailbreak.Warden.phrases");
 	
 	
-	//Client Commands
+	// Client Commands
 	RegConsoleCmd("sm_request", Command_RequestMenu, "Open the requests menu");
 	
 	
-	//AutoExecConfig
+	// AutoExecConfig
 	AutoExecConfig_SetFile("Request", "MyJailbreak");
 	AutoExecConfig_SetCreateFile(true);
 	
 	AutoExecConfig_CreateConVar("sm_request_version", MYJB_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_request_enable", "1", "0 - disabled, 1 - enable Request Plugin");
-	gc_bSounds = AutoExecConfig_CreateConVar("sm_request_sounds_enable", "1", "0 - disabled, 1 - enable sounds ", _, true,  0.0, true, 1.0);
+	gc_bSounds = AutoExecConfig_CreateConVar("sm_request_sounds_enable", "1", "0 - disabled, 1 - enable sounds ", _, true, 0.0, true, 1.0);
 	gc_sCustomCommandRequest = AutoExecConfig_CreateConVar("sm_request_cmds", "req, requestmenu", "Set your custom chat command for requestmenu (!request (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	
 	
@@ -130,7 +130,7 @@ public void OnPluginStart()
 	AutoExecConfig_CleanFile();
 	
 	
-	//Hooks
+	// Hooks
 	HookEvent("round_start", Event_RoundStart);
 	HookEvent("round_end", Event_RoundEnd);
 	HookEvent("player_death", Event_PlayerDeath);
@@ -238,7 +238,7 @@ public void Event_RoundStart(Event event, char [] name, bool dontBroadcast)
 }
 
 
-//Round End
+// Round End
 public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
 	IsLR = false;
@@ -271,7 +271,7 @@ public void OnMapStart()
 	Refuse_OnMapStart();
 	Capitulation_OnMapStart();
 	Repeat_OnMapStart();
-	//Freedays_OnMapStart();
+	// Freedays_OnMapStart();
 	
 	IsLR = false;
 }
@@ -283,14 +283,14 @@ public void OnConfigsExecuted()
 	Capitulation_OnConfigsExecuted();
 	Heal_OnConfigsExecuted();
 	Repeat_OnConfigsExecuted();
-	//Freedays_OnConfigsExecuted();
+	// Freedays_OnConfigsExecuted();
 	
 	
-	//Set custom Commands
+	// Set custom Commands
 	int iCount = 0;
 	char sCommands[128], sCommandsL[12][32], sCommand[32];
 	
-	//request
+	// request
 	gc_sCustomCommandRequest.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
 	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
@@ -298,7 +298,7 @@ public void OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
 			RegConsoleCmd(sCommand, Command_RequestMenu, "Open the requests menu");
 	}
 }
@@ -357,7 +357,7 @@ public int Command_RequestMenuHandler(Menu reqmenu, MenuAction action, int clien
 		{
 			FakeClientCommand(client, "sm_capitulation");
 		} 
-		else if (strcmp(info, "heal") == 0 )
+		else if (strcmp(info, "heal") == 0)
 		{
 			FakeClientCommand(client, "sm_heal");
 		}

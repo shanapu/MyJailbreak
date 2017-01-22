@@ -11,11 +11,11 @@
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
  * details.
  *
  * You should have received a copy of the GNU General Public License along with
- * this program.  If not, see <http://www.gnu.org/licenses/>.
+ * this program. If not, see <http:// www.gnu.org/licenses/>.
  */
 
 
@@ -24,7 +24,7 @@
 ******************************************************************************/
 
 
-//Includes
+// Includes
 #include <sourcemod>
 #include <sdktools>
 #include <cstrike>
@@ -32,18 +32,18 @@
 #include <mystocks>
 #include <ct_bans>
 
-//Optional Plugins
+// Optional Plugins
 #undef REQUIRE_PLUGIN
 #include <myjailbreak>
 #define REQUIRE_PLUGIN
 
 
-//Compiler Options
+// Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
 
 
-//Info
+// Info
 public Plugin myinfo = {
 	name = "MyJailbreak - Ratio - CT Bans Support", 
 	author = "shanapu, Addicted, good_live", 
@@ -53,10 +53,10 @@ public Plugin myinfo = {
 };
 
 
-//Start
+// Start
 public void OnPluginStart()
 {
-	//Translation
+	// Translation
 	LoadTranslations("MyJailbreak.Ratio.phrases");
 	
 	HookEvent("player_spawn", Event_OnPlayerSpawn, EventHookMode_Post);
@@ -74,7 +74,7 @@ public Action MyJailbreak_OnJoinGuardQueue(int client)
 {
 	if (CTB_IsClientBanned(client))
 	{
-		CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_banned");
+		CPrintToChat(client, "%t %t", "ratio_tag", "ratio_banned");
 		return Plugin_Handled;
 	}
 	return Plugin_Continue;
@@ -93,7 +93,7 @@ public Action Event_OnPlayerSpawn(Event event, const char[] name, bool bDontBroa
 	
 	if (CTB_IsClientBanned(client))
 	{
-		CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_banned");
+		CPrintToChat(client, "%t %t", "ratio_tag", "ratio_banned");
 		CreateTimer(5.0, Timer_SlayPlayer, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 		return Plugin_Continue;
 	}

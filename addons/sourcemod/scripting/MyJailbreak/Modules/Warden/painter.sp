@@ -11,11 +11,11 @@
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
  * details.
  *
  * You should have received a copy of the GNU General Public License along with
- * this program.  If not, see <http://www.gnu.org/licenses/>.
+ * this program. If not, see <http:// www.gnu.org/licenses/>.
  */
 
 
@@ -24,7 +24,7 @@
 ******************************************************************************/
 
 
-//Includes
+// Includes
 #include <sourcemod>
 #include <sdktools>
 #include <sdkhooks>
@@ -35,12 +35,12 @@
 #include <mystocks>
 
 
-//Compiler Options
+// Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
 
 
-//Console Variables
+// Console Variables
 ConVar gc_bPainter;
 ConVar gc_bPainterDeputy;
 ConVar gc_bPainterTDeputy;
@@ -49,50 +49,50 @@ ConVar gc_sAdminFlagPainter;
 ConVar gc_sCustomCommandPainter;
 
 
-//Boolean
+// Boolean
 bool g_bPainterUse[MAXPLAYERS+1] = {false, ...};
 bool g_bPainter[MAXPLAYERS+1] = false;
 bool g_bPainterT = false;
 bool g_bPainterColorRainbow[MAXPLAYERS+1] = true;
 
 
-//Integers
+// Integers
 int g_iPainterColor[MAXPLAYERS+1];
 
 
-//Strings
+// Strings
 char g_sAdminFlagPainter[32];
 
 
-//Floats
+// Floats
 float g_fLastPainter[MAXPLAYERS+1][3];
 
 
-//Start
+// Start
 public void Painter_OnPluginStart()
 {
-	//Client commands
+	// Client commands
 	RegConsoleCmd("sm_painter", Command_PainterMenu, "Allows Warden to toggle on/off the wardens Painter");
 	
 	
-	//AutoExecConfig
-	gc_bPainter = AutoExecConfig_CreateConVar("sm_warden_painter", "1", "0 - disabled, 1 - enable Warden Painter with +E ", _, true,  0.0, true, 1.0);
-	gc_bPainterDeputy = AutoExecConfig_CreateConVar("sm_warden_painter_deputy", "1", "0 - disabled, 1 - enable 'Warden Painter'-feature for deputy, too", _, true,  0.0, true, 1.0);
+	// AutoExecConfig
+	gc_bPainter = AutoExecConfig_CreateConVar("sm_warden_painter", "1", "0 - disabled, 1 - enable Warden Painter with +E ", _, true, 0.0, true, 1.0);
+	gc_bPainterDeputy = AutoExecConfig_CreateConVar("sm_warden_painter_deputy", "1", "0 - disabled, 1 - enable 'Warden Painter'-feature for deputy, too", _, true, 0.0, true, 1.0);
 	gc_sAdminFlagPainter = AutoExecConfig_CreateConVar("sm_warden_painter_flag", "", "Set flag for admin/vip to get warden painter access. No flag = feature is available for all players!");
-	gc_bPainterT= AutoExecConfig_CreateConVar("sm_warden_painter_terror", "1", "0 - disabled, 1 - allow Warden to toggle Painter for Terrorist ", _, true,  0.0, true, 1.0);
-	gc_bPainterTDeputy= AutoExecConfig_CreateConVar("sm_warden_painter_terror_deputy", "1", "0 - disabled, 1 - allow to toggle Painter for Terrorist as deputy, too", _, true,  0.0, true, 1.0);
+	gc_bPainterT= AutoExecConfig_CreateConVar("sm_warden_painter_terror", "1", "0 - disabled, 1 - allow Warden to toggle Painter for Terrorist ", _, true, 0.0, true, 1.0);
+	gc_bPainterTDeputy= AutoExecConfig_CreateConVar("sm_warden_painter_terror_deputy", "1", "0 - disabled, 1 - allow to toggle Painter for Terrorist as deputy, too", _, true, 0.0, true, 1.0);
 	gc_sCustomCommandPainter = AutoExecConfig_CreateConVar("sm_warden_cmds_painter", "paint, draw", "Set your custom chat commands for Painter menu(!painter (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	
 	
-	//Hooks
+	// Hooks
 	HookConVarChange(gc_sAdminFlagPainter, Painter_OnSettingChanged);
 	HookEvent("round_end", Painter_Event_RoundEnd);
 	HookEvent("player_team", Painter_Event_PlayerTeamDeath);
 	HookEvent("player_death", Painter_Event_PlayerTeamDeath);
 	
 	
-	//FindConVar
-	gc_sAdminFlagLaser.GetString(g_sAdminFlagLaser , sizeof(g_sAdminFlagLaser));
+	// FindConVar
+	gc_sAdminFlagLaser.GetString(g_sAdminFlagLaser, sizeof(g_sAdminFlagLaser));
 }
 
 
@@ -190,11 +190,11 @@ public void Painter_Event_RoundEnd(Event event, const char[] name, bool dontBroa
 
 public void Painter_OnConfigsExecuted()
 {
-	//Set custom Commands
+	// Set custom Commands
 	int iCount = 0;
 	char sCommands[128], sCommandsL[12][32], sCommand[32];
 	
-	//Painter
+	// Painter
 	gc_sCustomCommandPainter.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
 	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
@@ -202,7 +202,7 @@ public void Painter_OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
 			RegConsoleCmd(sCommand, Command_PainterMenu, "Allows Warden to toggle on/off the wardens Painter");
 	}
 }
@@ -210,7 +210,7 @@ public void Painter_OnConfigsExecuted()
 
 public Action Painter_OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
 {
-	if(!IsPlayerAlive(client))
+	if (!IsPlayerAlive(client))
 		return;
 	
 	if ((IsClientWarden(client) && gc_bPainter.BoolValue && g_bPainter[client] && CheckVipFlag(client, g_sAdminFlagPainter)) || ((GetClientTeam(client) == CS_TEAM_T) && gc_bPainter.BoolValue && g_bPainterT && g_bPainter[client]) || (IsClientDeputy(client) && gc_bPainterDeputy.BoolValue && g_bPainter[client]))
@@ -493,7 +493,7 @@ public Action Print_Painter(Handle timer)
 {
 	float g_fPos[3];
 	
-	for (int Y = 1; Y <= MaxClients; Y++) 
+	for (int Y = 1;Y <= MaxClients;Y++) 
 	{
 		if (g_bPainterColorRainbow[Y]) g_iPainterColor[Y] = GetRandomInt(0, 6);
 		if (IsClientInGame(Y) && g_bPainterUse[Y])

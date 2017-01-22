@@ -2,7 +2,7 @@
  * MyJailbreak - Ratio - SteamRep Support.
  * by: shanapu
  * https://github.com/shanapu/MyJailbreak/
- * https://steamrep.com/plugin.php
+ * https:// steamrep.com/plugin.php
  *
  * This file is part of the MyJailbreak SourceMod Plugin.
  *
@@ -12,11 +12,11 @@
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
  * details.
  *
  * You should have received a copy of the GNU General Public License along with
- * this program.  If not, see <http://www.gnu.org/licenses/>.
+ * this program. If not, see <http:// www.gnu.org/licenses/>.
  */
 
 
@@ -25,7 +25,7 @@
 ******************************************************************************/
 
 
-//Includes
+// Includes
 #include <sourcemod>
 #include <sdktools>
 #include <cstrike>
@@ -34,31 +34,31 @@
 #include <mystocks>
 #include <socket>
 
-//Optional Plugins
+// Optional Plugins
 #undef REQUIRE_PLUGIN
 #include <myjailbreak>
 #define REQUIRE_PLUGIN
 
 
-//Compiler Options
+// Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
 
 
-//Console Variables
+// Console Variables
 ConVar gc_iMinSteamRepPoints;
 
 
-//Bools
+// Bools
 bool g_IsScammer[MAXPLAYERS+1];
 
 
-//Convars
+// Convars
 ConVar gc_bcheckIP;
 ConVar gc_sExclude;
 
 
-//Info
+// Info
 public Plugin myinfo = {
 	name = "MyJailbreak - Ratio - SteamRep Support", 
 	author = "shanapu, Jameless, good_live", 
@@ -68,14 +68,14 @@ public Plugin myinfo = {
 };
 
 
-//Start
+// Start
 public void OnPluginStart()
 {
-	//Translation
+	// Translation
 	LoadTranslations("MyJailbreak.Ratio.phrases");
 	
 	
-	//AutoExecConfig
+	// AutoExecConfig
 	AutoExecConfig_SetFile("Ratio", "MyJailbreak");
 	AutoExecConfig_SetCreateFile(true);
 	
@@ -86,7 +86,7 @@ public void OnPluginStart()
 	AutoExecConfig_CleanFile();
 	
 	
-	//Hooks
+	// Hooks
 	HookEvent("player_spawn", Event_OnPlayerSpawn, EventHookMode_Post);
 }
 
@@ -122,19 +122,19 @@ public int OnSocketConnected(Handle socket, any userid)
 	// socket is connected, send the http request
 	int client = GetClientOfUserId(userid);
 	
-	if(client == 0) {
+	if (client == 0) {
 		CloseHandle(socket);
 		return;
 	}
-	if(IsClientConnected(client) && !CheckCommandAccess(client, "SkipSR", ADMFLAG_ROOT, true) && !IsFakeClient(client)) {
+	if (IsClientConnected(client) && !CheckCommandAccess(client, "SkipSR", ADMFLAG_ROOT, true) && !IsFakeClient(client)) {
 		char steamid[32];
 		char requestStr[450];
 		char excludetags[128];
 		char ip[17]="";
 		
-		if(GetConVarInt(gc_bcheckIP) == 1){GetClientIP(client,ip,sizeof(ip));}
+		if (GetConVarInt(gc_bcheckIP) == 1){GetClientIP(client,ip,sizeof(ip));}
 		GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
-		//GetClientAuthString(client,steamid,sizeof(steamid));
+		// GetClientAuthString(client,steamid,sizeof(steamid));
 		GetConVarString(gc_sExclude,excludetags,sizeof(excludetags));
 		Format(requestStr, sizeof(requestStr), "GET /%s%s%s%s%s%s%s1.1.5 HTTP/1.0\r\nHost: %s\r\nConnection: close\r\n\r\n", "id2rep.php?steamID32=",steamid,"&ignore=",excludetags,"&IP=",ip,"&version=","steamrep.com");
 		SocketSend(socket, requestStr);
@@ -148,7 +148,7 @@ public int OnSocketReceive(Handle socket, char [] receiveData, const int dataSiz
 {
 	// receive chunk
 	int client = GetClientOfUserId(userid);
-	if(client == 0)
+	if (client == 0)
 	{
 		CloseHandle(socket);
 		return;
@@ -176,7 +176,7 @@ public Action MyJailbreak_OnJoinGuardQueue(int client)
 {
 	if (g_IsScammer[client])
 	{
-		CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_steamrep");
+		CPrintToChat(client, "%t %t", "ratio_tag", "ratio_steamrep");
 		return Plugin_Handled;
 	}
 	return Plugin_Continue;
@@ -195,7 +195,7 @@ public Action Event_OnPlayerSpawn(Event event, const char[] name, bool bDontBroa
 	
 	if (g_IsScammer[client])
 	{
-		CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_steamrep", gc_iMinSteamRepPoints.IntValue);
+		CPrintToChat(client, "%t %t", "ratio_tag", "ratio_steamrep", gc_iMinSteamRepPoints.IntValue);
 		CreateTimer(5.0, Timer_SlayPlayer, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 		return Plugin_Continue;
 	}

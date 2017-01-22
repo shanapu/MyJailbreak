@@ -11,11 +11,11 @@
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
  * details.
  *
  * You should have received a copy of the GNU General Public License along with
- * this program.  If not, see <http://www.gnu.org/licenses/>.
+ * this program. If not, see <http:// www.gnu.org/licenses/>.
  */
 
 
@@ -24,7 +24,7 @@
 ******************************************************************************/
 
 
-//Includes
+// Includes
 #include <sourcemod>
 #include <sdktools>
 #include <sdkhooks>
@@ -34,27 +34,27 @@
 #include <warden>
 #include <mystocks>
 
-//Compiler Options
+// Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
 
 
-//Console Variables
+// Console Variables
 ConVar gc_bMarker;
 ConVar gc_bMarkerDeputy;
 
 
-//Booleans
+// Booleans
 bool g_bMarkerSetup[MAXPLAYERS + 1];
 bool g_bCanZoom[MAXPLAYERS + 1];
 bool g_bHasSilencer[MAXPLAYERS + 1];
 
 
-//Integers
+// Integers
 int g_iWrongWeapon[MAXPLAYERS+1];
 
 
-//Strings
+// Strings
 char g_sColorNamesRed[64];
 char g_sColorNamesBlue[64];
 char g_sColorNamesGreen[64];
@@ -67,7 +67,7 @@ char g_sColorNamesWhite[64];
 char g_sColorNames[8][64] ={{""}, {""}, {""}, {""}, {""}, {""}, {""}, {""}};
 
 
-//float
+// float
 float g_fMarkerRadiusMin = 100.0;
 float g_fMarkerRadiusMax = 500.0;
 float g_fMarkerRangeMax = 1500.0;
@@ -79,14 +79,14 @@ float g_fMarkerOrigin[8][3];
 float g_fMarkerRadius[8];
 
 
-//Start
+// Start
 public void Marker_OnPluginStart()
 {
-	//AutoExecConfig
-	gc_bMarker = AutoExecConfig_CreateConVar("sm_warden_marker", "1", "0 - disabled, 1 - enable Warden advanced markers ", _, true,  0.0, true, 1.0);
-	gc_bMarkerDeputy = AutoExecConfig_CreateConVar("sm_warden_marker_deputy", "1", "0 - disabled, 1 - enable 'advanced markers'-feature for deputy, too", _, true,  0.0, true, 1.0);
+	// AutoExecConfig
+	gc_bMarker = AutoExecConfig_CreateConVar("sm_warden_marker", "1", "0 - disabled, 1 - enable Warden advanced markers ", _, true, 0.0, true, 1.0);
+	gc_bMarkerDeputy = AutoExecConfig_CreateConVar("sm_warden_marker_deputy", "1", "0 - disabled, 1 - enable 'advanced markers'-feature for deputy, too", _, true, 0.0, true, 1.0);
 	
-	//Hooks
+	// Hooks
 	HookEvent("item_equip", Marker_Event_ItemEquip);
 	
 	CreateTimer(1.0, Timer_DrawMakers, _, TIMER_REPEAT);
@@ -96,7 +96,7 @@ public void Marker_OnPluginStart()
 
 public void PrepareMarkerNames()
 {
-	//Prepare translation for marker colors
+	// Prepare translation for marker colors
 	Format(g_sColorNamesRed, sizeof(g_sColorNamesRed), "{darkred}%T{default}", "warden_red", LANG_SERVER);
 	Format(g_sColorNamesBlue, sizeof(g_sColorNamesBlue), "{blue}%T{default}", "warden_blue", LANG_SERVER);
 	Format(g_sColorNamesGreen, sizeof(g_sColorNamesGreen), "{green}%T{default}", "warden_green", LANG_SERVER);
@@ -274,7 +274,7 @@ public int Handle_MarkerMenu(Menu menu, MenuAction action, int client, int itemN
 	
 	if (action == MenuAction_Select)
 	{
-		char info[32]; char info2[32];
+		char info[32];char info2[32];
 		bool found = menu.GetItem(itemNum, info, sizeof(info), _, info2, sizeof(info2));
 		int marker = StringToInt(info);
 		
@@ -372,7 +372,7 @@ int GetClientAimTargetPos(int client, float g_fPos[3])
 	if (client < 1) 
 		return -1;
 	
-	float vAngles[3]; float vOrigin[3];
+	float vAngles[3];float vOrigin[3];
 	
 	GetClientEyePosition(client, vOrigin);
 	GetClientEyeAngles(client, vAngles);
@@ -401,14 +401,14 @@ void RemoveMarker(int marker)
 
 void RemoveAllMarkers()
 {
-	for (int i = 0; i < 8;i++)
+	for (int i = 0; i < 8; i++)
 		RemoveMarker(i);
 }
 
 
 int IsMarkerInRange(float g_fPos[3])
 {
-	for (int i = 0; i < 8;i++)
+	for (int i = 0; i < 8; i++)
 	{
 		if (g_fMarkerRadius[i] <= 0.0)
 			continue;

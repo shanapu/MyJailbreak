@@ -11,11 +11,11 @@
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
  * details.
  *
  * You should have received a copy of the GNU General Public License along with
- * this program.  If not, see <http://www.gnu.org/licenses/>.
+ * this program. If not, see <http:// www.gnu.org/licenses/>.
  */
 
 
@@ -24,7 +24,7 @@
 ******************************************************************************/
 
 
-//Includes
+// Includes
 #include <sourcemod>
 #include <sdktools>
 #include <sdkhooks>
@@ -42,24 +42,24 @@
 #include <CustomPlayerSkins>
 
 
-//Compiler Options
+// Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
 
 
-//Defines
+// Defines
 #define IsSprintUsing   (1<<0)
 #define IsSprintCoolDown  (1<<1)
 
 
-//Booleans
+// Booleans
 bool IsTorch;
 bool StartTorch;
 bool OnTorch[MAXPLAYERS+1];
 bool ImmuneTorch[MAXPLAYERS+1];
 
 
-//Console Variables
+// Console Variables
 ConVar gc_bPlugin;
 ConVar gc_bSetW;
 ConVar gc_bSetA;
@@ -90,11 +90,11 @@ ConVar gc_sCustomCommandSet;
 ConVar gc_sAdminFlag;
 
 
-//Extern Convars
+// Extern Convars
 ConVar g_iMPRoundTime;
 
 
-//Integers
+// Integers
 int g_iVoteCount;
 int g_iOldRoundTime;
 int g_iCoolDown;
@@ -105,13 +105,13 @@ int g_iMaxRound;
 int g_iBurningZero = -1;
 
 
-//Handles
+// Handles
 Handle SprintTimer[MAXPLAYERS+1];
 Handle TorchMenu;
 Handle TruceTimer;
 
 
-//Strings
+// Strings
 char g_sSoundClearTorchPath[256];
 char g_sSoundOnTorchPath[256];
 char g_sHasVoted[1500];
@@ -122,11 +122,11 @@ char g_sAdminFlag[32];
 char g_sOverlayStartPath[256];
 
 
-//Floats
+// Floats
 float g_fPos[3];
 
 
-//Info
+// Info
 public Plugin myinfo = {
 	name = "MyJailbreak - Torch Relay", 
 	author = "shanapu", 
@@ -136,7 +136,7 @@ public Plugin myinfo = {
 };
 
 
-//Start
+// Start
 public void OnPluginStart()
 {
 	// Translation
@@ -144,13 +144,13 @@ public void OnPluginStart()
 	LoadTranslations("MyJailbreak.Torch.phrases");
 	
 	
-	//Client Commands
+	// Client Commands
 	RegConsoleCmd("sm_settorch", Command_SetTorch, "Allows the Admin or Warden to set torch as next round");
 	RegConsoleCmd("sm_torch", Command_VoteTorch, "Allows players to vote for a torch ");
 	RegConsoleCmd("sm_sprint", Command_StartSprint, "Start sprinting!");
 	
 	
-	//AutoExecConfig
+	// AutoExecConfig
 	AutoExecConfig_SetFile("Torch", "MyJailbreak/EventDays");
 	AutoExecConfig_SetCreateFile(true);
 	
@@ -167,13 +167,13 @@ public void OnPluginStart()
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_torch_cooldown_day", "3", "Rounds cooldown after a event until event can be start again", _, true, 0.0);
 	gc_iCooldownStart = AutoExecConfig_CreateConVar("sm_torch_cooldown_start", "3", "Rounds until event can be start after mapchange.", _, true, 0.0);
 	gc_bSetABypassCooldown = AutoExecConfig_CreateConVar("sm_torch_cooldown_admin", "1", "0 - disabled, 1 - ignore the cooldown when admin/vip set torch round", _, true, 0.0, true, 1.0);
-	gc_bSpawnCell = AutoExecConfig_CreateConVar("sm_torch_spawn", "0", "0 - T teleport to CT spawn, 1 - cell doors auto open", _, true,  0.0, true, 1.0);
+	gc_bSpawnCell = AutoExecConfig_CreateConVar("sm_torch_spawn", "0", "0 - T teleport to CT spawn, 1 - cell doors auto open", _, true, 0.0, true, 1.0);
 	gc_bOverlays = AutoExecConfig_CreateConVar("sm_torch_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true, 0.0, true, 1.0);
-	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_torch_overlays_start", "overlays/MyJailbreak/start" , "Path to the start Overlay DONT TYPE .vmt or .vft");
-	gc_sOverlayOnTorch = AutoExecConfig_CreateConVar("sm_torch_overlaytorch_path", "overlays/MyJailbreak/fire" , "Path to the OnTorch Overlay DONT TYPE .vmt or .vft");
-	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_torch_trucetime", "10", "Time in seconds players can't deal damage", _, true,  0.0);
-	gc_bWallhack = AutoExecConfig_CreateConVar("sm_torch_wallhack", "1", "0 - disabled, 1 - enable wallhack for the torch to find enemeys", _, true,  0.0, true, 1.0);
-	gc_bStayOverlay = AutoExecConfig_CreateConVar("sm_torch_stayoverlay", "1", "0 - overlays will removed after 3sec. , 1 - overlays will stay until untorch", _, true, 0.0, true, 1.0);
+	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_torch_overlays_start", "overlays/MyJailbreak/start", "Path to the start Overlay DONT TYPE .vmt or .vft");
+	gc_sOverlayOnTorch = AutoExecConfig_CreateConVar("sm_torch_overlaytorch_path", "overlays/MyJailbreak/fire", "Path to the OnTorch Overlay DONT TYPE .vmt or .vft");
+	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_torch_trucetime", "10", "Time in seconds players can't deal damage", _, true, 0.0);
+	gc_bWallhack = AutoExecConfig_CreateConVar("sm_torch_wallhack", "1", "0 - disabled, 1 - enable wallhack for the torch to find enemeys", _, true, 0.0, true, 1.0);
+	gc_bStayOverlay = AutoExecConfig_CreateConVar("sm_torch_stayoverlay", "1", "0 - overlays will removed after 3sec., 1 - overlays will stay until untorch", _, true, 0.0, true, 1.0);
 	gc_bSounds = AutoExecConfig_CreateConVar("sm_torch_sounds_enable", "1", "0 - disabled, 1 - enable sounds ", _, true, 0.0, true, 1.0);
 	gc_sSoundStartPath = AutoExecConfig_CreateConVar("sm_torch_sounds_start", "music/MyJailbreak/burn.mp3", "Path to the soundfile which should be played for a start.");
 	gc_sSoundOnTorchPath = AutoExecConfig_CreateConVar("sm_torch_sounds_torch", "music/MyJailbreak/fire.mp3", "Path to the soundfile which should be played on torch.");
@@ -188,7 +188,7 @@ public void OnPluginStart()
 	AutoExecConfig_CleanFile();
 	
 	
-	//Hooks
+	// Hooks
 	HookEvent("round_start", Event_RoundStart);
 	HookEvent("player_spawn", Event_PlayerSpawn);
 	HookEvent("round_end", Event_RoundEnd);
@@ -202,23 +202,23 @@ public void OnPluginStart()
 	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
 	
 	
-	//FindConVar
+	// FindConVar
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	g_iMaxRound = gc_iRounds.IntValue;
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iMPRoundTime = FindConVar("mp_roundtime");
 	gc_sSoundOnTorchPath.GetString(g_sSoundOnTorchPath, sizeof(g_sSoundOnTorchPath));
 	gc_sSoundClearTorchPath.GetString(g_sSoundClearTorchPath, sizeof(g_sSoundClearTorchPath));
-	gc_sOverlayOnTorch.GetString(g_sOverlayOnTorch , sizeof(g_sOverlayOnTorch));
-	gc_sOverlayStartPath.GetString(g_sOverlayStartPath , sizeof(g_sOverlayStartPath));
+	gc_sOverlayOnTorch.GetString(g_sOverlayOnTorch, sizeof(g_sOverlayOnTorch));
+	gc_sOverlayStartPath.GetString(g_sOverlayStartPath, sizeof(g_sOverlayStartPath));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
-	gc_sAdminFlag.GetString(g_sAdminFlag , sizeof(g_sAdminFlag));
+	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
 	
 	SetLogFile(g_sEventsLogFile, "Events", "MyJailbreak");
 }
 
 
-//ConVarChange for Strings
+// ConVarChange for Strings
 public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
 	if (convar == gc_sSoundOnTorchPath)
@@ -253,7 +253,7 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 }
 
 
-//Initialize Plugin
+// Initialize Plugin
 public void OnConfigsExecuted()
 {
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
@@ -261,11 +261,11 @@ public void OnConfigsExecuted()
 	g_iMaxRound = gc_iRounds.IntValue;
 	
 	
-	//Set custom Commands
+	// Set custom Commands
 	int iCount = 0;
 	char sCommands[128], sCommandsL[12][32], sCommand[32];
 	
-	//Vote
+	// Vote
 	gc_sCustomCommandVote.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
 	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
@@ -273,11 +273,11 @@ public void OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
 			RegConsoleCmd(sCommand, Command_VoteTorch, "Allows players to vote for a torch ");
 	}
 	
-	//Set
+	// Set
 	gc_sCustomCommandSet.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
 	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
@@ -285,7 +285,7 @@ public void OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
 			RegConsoleCmd(sCommand, Command_SetTorch, "Allows the Admin or Warden to set torch as next round");
 	}
 }
@@ -296,7 +296,7 @@ public void OnConfigsExecuted()
 ******************************************************************************/
 
 
-//Admin & Warden set Event
+// Admin & Warden set Event
 public Action Command_SetTorch(int client, int args)
 {
 	if (gc_bPlugin.BoolValue)	
@@ -322,13 +322,13 @@ public Action Command_SetTorch(int client, int args)
 							StartNextRound();
 							if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Torch was started by warden %L", client);
 						}
-						else CReplyToCommand(client, "%t %t", "torch_tag" , "torch_wait", g_iCoolDown);
+						else CReplyToCommand(client, "%t %t", "torch_tag", "torch_wait", g_iCoolDown);
 					}
-					else CReplyToCommand(client, "%t %t", "torch_tag" , "torch_progress" , EventDay);
+					else CReplyToCommand(client, "%t %t", "torch_tag", "torch_progress", EventDay);
 				}
-				else CReplyToCommand(client, "%t %t", "torch_tag" , "torch_minplayer");
+				else CReplyToCommand(client, "%t %t", "torch_tag", "torch_minplayer");
 			}
-			else CReplyToCommand(client, "%t %t", "warden_tag" , "torch_setbywarden");
+			else CReplyToCommand(client, "%t %t", "warden_tag", "torch_setbywarden");
 		}
 		else if (CheckVipFlag(client, g_sAdminFlag))
 		{
@@ -346,21 +346,21 @@ public Action Command_SetTorch(int client, int args)
 							StartNextRound();
 							if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Torch was started by admin %L", client);
 						}
-						else CReplyToCommand(client, "%t %t", "torch_tag" , "torch_wait", g_iCoolDown);
+						else CReplyToCommand(client, "%t %t", "torch_tag", "torch_wait", g_iCoolDown);
 					}
-					else CReplyToCommand(client, "%t %t", "torch_tag" , "torch_progress" , EventDay);
+					else CReplyToCommand(client, "%t %t", "torch_tag", "torch_progress", EventDay);
 				}
-				else CReplyToCommand(client, "%t %t", "torch_tag" , "torch_minplayer");
+				else CReplyToCommand(client, "%t %t", "torch_tag", "torch_minplayer");
 			}
-			else CReplyToCommand(client, "%t %t", "torch_tag" , "torch_setbyadmin");
+			else CReplyToCommand(client, "%t %t", "torch_tag", "torch_setbyadmin");
 		}
-		else CReplyToCommand(client, "%t %t", "warden_tag" , "warden_notwarden");
+		else CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
 	}
-	else CReplyToCommand(client, "%t %t", "torch_tag" , "torch_disabled");
+	else CReplyToCommand(client, "%t %t", "torch_tag", "torch_disabled");
 }
 
 
-//Voting for Event
+// Voting for Event
 public Action Command_VoteTorch(int client, int args)
 {
 	char steamid[64];
@@ -391,19 +391,19 @@ public Action Command_VoteTorch(int client, int args)
 								StartNextRound();
 								if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Torch was started by voting");
 							}
-							else CPrintToChatAll("%t %t", "torch_tag" , "torch_need", Missing, client);
+							else CPrintToChatAll("%t %t", "torch_tag", "torch_need", Missing, client);
 						}
-						else CReplyToCommand(client, "%t %t", "torch_tag" , "torch_voted");
+						else CReplyToCommand(client, "%t %t", "torch_tag", "torch_voted");
 					}
-					else CReplyToCommand(client, "%t %t", "torch_tag" , "torch_wait", g_iCoolDown);
+					else CReplyToCommand(client, "%t %t", "torch_tag", "torch_wait", g_iCoolDown);
 				}
-				else CReplyToCommand(client, "%t %t", "torch_tag" , "torch_progress" , EventDay);
+				else CReplyToCommand(client, "%t %t", "torch_tag", "torch_progress", EventDay);
 			}
-			else CReplyToCommand(client, "%t %t", "torch_tag" , "torch_minplayer");
+			else CReplyToCommand(client, "%t %t", "torch_tag", "torch_minplayer");
 		}
-		else CReplyToCommand(client, "%t %t", "torch_tag" , "torch_voting");
+		else CReplyToCommand(client, "%t %t", "torch_tag", "torch_voting");
 	}
-	else CReplyToCommand(client, "%t %t", "torch_tag" , "torch_disabled");
+	else CReplyToCommand(client, "%t %t", "torch_tag", "torch_disabled");
 }
 
 
@@ -412,7 +412,7 @@ public Action Command_VoteTorch(int client, int args)
 ******************************************************************************/
 
 
-//Round start
+// Round start
 public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
 	if (StartTorch || IsTorch)
@@ -448,7 +448,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 			{
 				LoopClients(client)
 				{
-					if (!gc_bSpawnCell.BoolValue || (gc_bSpawnCell.BoolValue && (SJD_IsCurrentMapConfigured() != true))) //spawn Terrors to CT Spawn 
+					if (!gc_bSpawnCell.BoolValue || (gc_bSpawnCell.BoolValue && (SJD_IsCurrentMapConfigured() != true))) // spawn Terrors to CT Spawn 
 					{
 						if (IsClientInGame(client))
 						{
@@ -456,7 +456,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 						}
 					}
 				}
-				CPrintToChatAll("%t %t", "torch_tag" , "torch_rounds", g_iRound, g_iMaxRound);
+				CPrintToChatAll("%t %t", "torch_tag", "torch_rounds", g_iRound, g_iMaxRound);
 			}
 			LoopClients(client)
 			{
@@ -488,7 +488,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 }
 
 
-//Round End
+// Round End
 public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
 	if (IsTorch)
@@ -497,7 +497,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 		{
 			SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
 			g_iSprintStatus[client] = 0;
-			CreateTimer( 0.0, DeleteOverlay, client );
+			CreateTimer(0.0, DeleteOverlay, client);
 			SetEntityRenderColor(client, 255, 255, 255, 0);
 			OnTorch[client] = false;
 			ImmuneTorch[client] = false;
@@ -518,20 +518,20 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			g_iMPRoundTime.IntValue = g_iOldRoundTime;
 			MyJailbreak_SetEventDayName("none");
 			MyJailbreak_SetEventDayRunning(false);
-			CPrintToChatAll("%t %t", "torch_tag" , "torch_end");
+			CPrintToChatAll("%t %t", "torch_tag", "torch_end");
 		}
 	}
 	if (StartTorch)
 	{
 		LoopClients(i) CreateInfoPanel(i);
 		
-		CPrintToChatAll("%t %t", "torch_tag" , "torch_next");
+		CPrintToChatAll("%t %t", "torch_tag", "torch_next");
 		PrintCenterTextAll("%t", "torch_next_nc");
 	}
 }
 
 
-//Check for dying torch
+// Check for dying torch
 public void Event_PlayerTeamDeath(Event event, const char[] name, bool dontBroadcast)
 {
 	if (IsTorch == false)
@@ -550,7 +550,7 @@ public void Event_PlayerTeamDeath(Event event, const char[] name, bool dontBroad
 ******************************************************************************/
 
 
-//Initialize Event
+// Initialize Event
 public void OnMapStart()
 {
 	g_iVoteCount = 0;
@@ -570,7 +570,7 @@ public void OnMapStart()
 }
 
 
-//Map End
+// Map End
 public void OnMapEnd()
 {
 	IsTorch = false;
@@ -591,7 +591,7 @@ public void OnClientPutInServer(int client)
 }
 
 
-//Torch & OnTorch
+// Torch & OnTorch
 public Action OnTakedamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (!IsValidClient(victim, true, false)|| attacker == victim || !IsValidClient(attacker, true, false)) return Plugin_Continue;
@@ -609,7 +609,7 @@ public Action OnTakedamage(int victim, int &attacker, int &inflictor, float &dam
 }
 
 
-//Knife only
+// Knife only
 public Action OnWeaponCanUse(int client, int weapon)
 {
 	char sWeapon[32];
@@ -644,7 +644,7 @@ public void OnClientDisconnect_Post(int client)
 ******************************************************************************/
 
 
-//Prepare Event
+// Prepare Event
 void StartNextRound()
 {
 	StartTorch = true;
@@ -656,15 +656,15 @@ void StartNextRound()
 	MyJailbreak_SetEventDayName(buffer);
 	MyJailbreak_SetEventDayPlanned(true);
 	
-	g_iOldRoundTime = g_iMPRoundTime.IntValue; //save original round time
-	g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
+	g_iOldRoundTime = g_iMPRoundTime.IntValue; // save original round time
+	g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue; // set event round time
 	
-	CPrintToChatAll("%t %t", "torch_tag" , "torch_next");
+	CPrintToChatAll("%t %t", "torch_tag", "torch_next");
 	PrintCenterTextAll("%t", "torch_next_nc");
 }
 
 
-//Set client as torch
+// Set client as torch
 void TorchEm(int client)
 {
 	SetEntityRenderColor(client, 255, 120, 0, 255);
@@ -678,14 +678,14 @@ void TorchEm(int client)
 	}
 	if (!gc_bStayOverlay.BoolValue)
 	{
-		CreateTimer( 3.0, DeleteOverlay, client );
+		CreateTimer(3.0, DeleteOverlay, client);
 	}
 	
-	CPrintToChatAll("%t %t", "torch_tag" , "torch_torchem", client);
+	CPrintToChatAll("%t %t", "torch_tag", "torch_torchem", client);
 }
 
 
-//remove client as torch
+// remove client as torch
 void ExtinguishEm(int client)
 {
 	LoopClients(i) ImmuneTorch[i] = false;
@@ -693,20 +693,20 @@ void ExtinguishEm(int client)
 	OnTorch[client] = false;
 	ImmuneTorch[client] = true;
 	SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
-	CreateTimer( 0.0, DeleteOverlay, client);
+	CreateTimer(0.0, DeleteOverlay, client);
 	if (gc_bSounds.BoolValue)	
 	{
 		EmitSoundToClientAny(client, g_sSoundClearTorchPath);
 	}
 	int ent = GetEntPropEnt(client, Prop_Data, "m_hEffectEntity");
 	if (IsValidEdict(ent))
-		SetEntPropFloat(ent, Prop_Data, "m_flLifetime", 0.0);  
+		SetEntPropFloat(ent, Prop_Data, "m_flLifetime", 0.0); 
 	
-	CPrintToChatAll("%t %t", "torch_tag" , "torch_untorch", client);
+	CPrintToChatAll("%t %t", "torch_tag", "torch_untorch", client);
 }
 
 
-//check is torch still alive
+// check is torch still alive
 void CheckStatus()
 {
 	int number = 0;
@@ -715,12 +715,12 @@ void CheckStatus()
 	{
 		CPrintToChatAll("%t %t", "torch_tag", "torch_win");
 		CS_TerminateRound(5.0, CSRoundEnd_Draw);
-		CreateTimer( 1.0, DeleteOverlay);
+		CreateTimer(1.0, DeleteOverlay);
 	}
 }
 
 
-//Perpare client for wallhack
+// Perpare client for wallhack
 void Setup_WallhackSkin(int client)
 {
 	char sModel[PLATFORM_MAX_PATH];
@@ -735,7 +735,7 @@ void Setup_WallhackSkin(int client)
 }
 
 
-//set client wallhacked
+// set client wallhacked
 void Setup_Wallhack(int iSkin)
 {
 	int iOffset;
@@ -758,7 +758,7 @@ void Setup_Wallhack(int iSkin)
 }
 
 
-//Who can see wallhack if vaild
+// Who can see wallhack if vaild
 public Action OnSetTransmit_Wallhack(int iSkin, int client)
 {
 	if (!IsPlayerAlive(client))
@@ -781,14 +781,14 @@ public Action OnSetTransmit_Wallhack(int iSkin, int client)
 }
 
 
-//remove wallhack
+// remove wallhack
 void UnhookWallhack(int client)
 {
 	if (IsValidClient(client, false, true))
 	{
 		char sModel[PLATFORM_MAX_PATH];
 		GetClientModel(client, sModel, sizeof(sModel));
-	//	SetEntProp(client, Prop_Send, "m_bShouldGlow", false, true);
+	// 	SetEntProp(client, Prop_Send, "m_bShouldGlow", false, true);
 		SDKUnhook(client, SDKHook_SetTransmit, OnSetTransmit_Wallhack);
 	}
 }
@@ -801,7 +801,7 @@ void UnhookWallhack(int client)
 
 void CreateInfoPanel(int client)
 {
-	//Create info Panel
+	// Create info Panel
 	char info[255];
 	
 	TorchMenu = CreatePanel();
@@ -825,7 +825,7 @@ void CreateInfoPanel(int client)
 	DrawPanelText(TorchMenu, info);
 	DrawPanelText(TorchMenu, "-----------------------------------");
 	Format(info, sizeof(info), "%T", "warden_close", client);
-	DrawPanelItem(TorchMenu, info); 
+	DrawPanelItem(TorchMenu, info);
 	SendPanelToClient(TorchMenu, client, Handler_NullCancel, 20);
 }
 
@@ -852,7 +852,7 @@ public Action Timer_StartEvent(Handle timer)
 	g_iBurningZero = GetRandomAlivePlayer();
 	if (g_iBurningZero > 0)
 	{
-		CPrintToChatAll("%t %t", "torch_tag", "torch_random", g_iBurningZero); 
+		CPrintToChatAll("%t %t", "torch_tag", "torch_random", g_iBurningZero);
 		
 		SetEntityRenderColor(g_iBurningZero, 255, 120, 0, 255);
 		OnTorch[g_iBurningZero] = true;
@@ -868,7 +868,7 @@ public Action Timer_StartEvent(Handle timer)
 		}
 		if (!gc_bStayOverlay.BoolValue)
 		{
-			CreateTimer( 3.0, DeleteOverlay, g_iBurningZero );
+			CreateTimer(3.0, DeleteOverlay, g_iBurningZero);
 		}
 	}
 	
@@ -886,7 +886,7 @@ public Action Timer_StartEvent(Handle timer)
 			PrintCenterText(client, "%t", "torch_start_nc");
 		}
 	}
-	CPrintToChatAll("%t %t", "torch_tag" , "torch_start");
+	CPrintToChatAll("%t %t", "torch_tag", "torch_start");
 	
 	TruceTimer = null;
 	
@@ -899,7 +899,7 @@ public Action Timer_StartEvent(Handle timer)
 ******************************************************************************/
 
 
-//Sprint
+// Sprint
 public Action Command_StartSprint(int client, int args)
 {
 	if (IsTorch)
@@ -912,14 +912,14 @@ public Action Command_StartSprint(int client, int args)
 					g_iSprintStatus[client] |= IsSprintUsing | IsSprintCoolDown;
 					SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", gc_fSprintSpeed.FloatValue);
 					EmitSoundToClient(client, "player/suit_sprint.wav", SOUND_FROM_PLAYER, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, 0.8);
-					CReplyToCommand(client, "%t %t", "torch_tag" , "torch_sprint");
+					CReplyToCommand(client, "%t %t", "torch_tag", "torch_sprint");
 					SprintTimer[client] = CreateTimer(gc_fSprintTime.FloatValue, Timer_SprintEnd, client);
 				}
 				return(Plugin_Handled);
 			}
 		}
 	}
-	else CReplyToCommand(client, "%t %t", "torch_tag" , "torch_disabled");
+	else CReplyToCommand(client, "%t %t", "torch_tag", "torch_disabled");
 	return(Plugin_Handled);
 }
 
@@ -975,7 +975,7 @@ public Action Timer_SprintEnd(Handle timer, any client)
 		if (IsPlayerAlive(client) && GetClientTeam(client) > 1)
 		{
 			SprintTimer[client] = CreateTimer(gc_iSprintCooldown.FloatValue, Timer_SprintCooldown, client);
-			CPrintToChat(client, "%t %t", "torch_tag" , "torch_sprintend", gc_iSprintCooldown.IntValue);
+			CPrintToChat(client, "%t %t", "torch_tag", "torch_sprintend", gc_iSprintCooldown.IntValue);
 		}
 	}
 	return;
@@ -988,7 +988,7 @@ public Action Timer_SprintCooldown(Handle timer, any client)
 	if (IsClientInGame(client) && (g_iSprintStatus[client] & IsSprintCoolDown))
 	{
 		g_iSprintStatus[client] &= ~ IsSprintCoolDown;
-		CPrintToChat(client, "%t %t", "torch_tag" , "torch_sprintagain", gc_iSprintCooldown.IntValue);
+		CPrintToChat(client, "%t %t", "torch_tag", "torch_sprintagain", gc_iSprintCooldown.IntValue);
 	}
 	return;
 }

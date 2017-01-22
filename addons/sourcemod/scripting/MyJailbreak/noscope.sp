@@ -11,11 +11,11 @@
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
  * details.
  *
  * You should have received a copy of the GNU General Public License along with
- * this program.  If not, see <http://www.gnu.org/licenses/>.
+ * this program. If not, see <http:// www.gnu.org/licenses/>.
  */
 
 
@@ -24,7 +24,7 @@
 ******************************************************************************/
 
 
-//Includes
+// Includes
 #include <sourcemod>
 #include <sdktools>
 #include <sdkhooks>
@@ -40,17 +40,17 @@
 #include <myjailbreak>
 
 
-//Compiler Options
+// Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
 
 
-//Booleans
+// Booleans
 bool IsNoScope;
 bool StartNoScope;
 
 
-//Console Variables
+// Console Variables
 ConVar gc_bPlugin;
 ConVar gc_bSetW;
 ConVar gc_bGrav;
@@ -77,12 +77,12 @@ ConVar gc_sAdminFlag;
 ConVar gc_bAllowLR;
 
 
-//Extern Convars
+// Extern Convars
 ConVar g_iMPRoundTime;
 ConVar g_iTerrorForLR;
 
 
-//Integers
+// Integers
 int g_iOldRoundTime;
 int g_iCoolDown;
 int g_iTruceTime;
@@ -93,18 +93,18 @@ int g_iMaxRound;
 int g_iTsLR;
 
 
-//Handles
+// Handles
 Handle TruceTimer;
 Handle GravityTimer;
 Handle NoScopeMenu;
 Handle BeaconTimer;
 
 
-//Floats
+// Floats
 float g_fPos[3];
 
 
-//Strings
+// Strings
 char g_sHasVoted[1500];
 char g_sSoundStartPath[256];
 char g_sWeapon[32];
@@ -113,7 +113,7 @@ char g_sAdminFlag[32];
 char g_sOverlayStartPath[256];
 
 
-//Info
+// Info
 public Plugin myinfo = {
 	name = "MyJailbreak - NoScope", 
 	author = "shanapu", 
@@ -123,7 +123,7 @@ public Plugin myinfo = {
 };
 
 
-//Start
+// Start
 public void OnPluginStart()
 {
 	// Translation
@@ -131,46 +131,46 @@ public void OnPluginStart()
 	LoadTranslations("MyJailbreak.NoScope.phrases");
 	
 	
-	//Client Commands
+	// Client Commands
 	RegConsoleCmd("sm_setnoscope", Command_SetNoScope, "Allows the Admin or Warden to set noscope as next round");
 	RegConsoleCmd("sm_noscope", Command_VoteNoScope, "Allows players to vote for a noscope");
 	
 	
-	//AutoExecConfig
+	// AutoExecConfig
 	AutoExecConfig_SetFile("NoScope", "MyJailbreak/EventDays");
 	AutoExecConfig_SetCreateFile(true);
 	
 	AutoExecConfig_CreateConVar("sm_noscope_version", MYJB_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
-	gc_bPlugin = AutoExecConfig_CreateConVar("sm_noscope_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true,  0.0, true, 1.0);
+	gc_bPlugin = AutoExecConfig_CreateConVar("sm_noscope_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true, 0.0, true, 1.0);
 	gc_sCustomCommandVote = AutoExecConfig_CreateConVar("sm_noscope_cmds_vote", "scope, ns", "Set your custom chat command for Event voting(!noscope (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_sCustomCommandSet = AutoExecConfig_CreateConVar("sm_noscope_cmds_set", "sscope, sns", "Set your custom chat command for set Event(!setnoscope (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
-	gc_bSetW = AutoExecConfig_CreateConVar("sm_noscope_warden", "1", "0 - disabled, 1 - allow warden to set noscope round", _, true,  0.0, true, 1.0);
-	gc_bSetA = AutoExecConfig_CreateConVar("sm_noscope_admin", "1", "0 - disabled, 1 - allow admin/vip to set noscope round", _, true,  0.0, true, 1.0);
+	gc_bSetW = AutoExecConfig_CreateConVar("sm_noscope_warden", "1", "0 - disabled, 1 - allow warden to set noscope round", _, true, 0.0, true, 1.0);
+	gc_bSetA = AutoExecConfig_CreateConVar("sm_noscope_admin", "1", "0 - disabled, 1 - allow admin/vip to set noscope round", _, true, 0.0, true, 1.0);
 	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_noscope_flag", "g", "Set flag for admin/vip to set this Event Day.");
-	gc_bVote = AutoExecConfig_CreateConVar("sm_noscope_vote", "1", "0 - disabled, 1 - allow player to vote for noscope", _, true,  0.0, true, 1.0);
-	gc_bSpawnCell = AutoExecConfig_CreateConVar("sm_noscope_spawn", "0", "0 - T teleport to CT spawn, 1 - cell doors auto open", _, true,  0.0, true, 1.0);
+	gc_bVote = AutoExecConfig_CreateConVar("sm_noscope_vote", "1", "0 - disabled, 1 - allow player to vote for noscope", _, true, 0.0, true, 1.0);
+	gc_bSpawnCell = AutoExecConfig_CreateConVar("sm_noscope_spawn", "0", "0 - T teleport to CT spawn, 1 - cell doors auto open", _, true, 0.0, true, 1.0);
 	gc_iRounds = AutoExecConfig_CreateConVar("sm_noscope_rounds", "1", "Rounds to play in a row", _, true, 1.0);
-	gc_iWeapon = AutoExecConfig_CreateConVar("sm_noscope_weapon", "1", "1 - ssg08 / 2 - awp / 3 - scar20 / 4 - g3sg1", _, true,  1.0, true, 4.0);
-	gc_bRandom = AutoExecConfig_CreateConVar("sm_noscope_random", "1", "get a random weapon (ssg08, awp, scar20, g3sg1) ignore: sm_noscope_weapon", _, true,  0.0, true, 1.0);
-	gc_bGrav = AutoExecConfig_CreateConVar("sm_noscope_gravity", "1", "0 - disabled, 1 - enable low Gravity for noscope", _, true,  0.0, true, 1.0);
+	gc_iWeapon = AutoExecConfig_CreateConVar("sm_noscope_weapon", "1", "1 - ssg08 / 2 - awp / 3 - scar20 / 4 - g3sg1", _, true, 1.0, true, 4.0);
+	gc_bRandom = AutoExecConfig_CreateConVar("sm_noscope_random", "1", "get a random weapon (ssg08, awp, scar20, g3sg1) ignore: sm_noscope_weapon", _, true, 0.0, true, 1.0);
+	gc_bGrav = AutoExecConfig_CreateConVar("sm_noscope_gravity", "1", "0 - disabled, 1 - enable low Gravity for noscope", _, true, 0.0, true, 1.0);
 	gc_fGravValue= AutoExecConfig_CreateConVar("sm_noscope_gravity_value", "0.3", "Ratio for Gravity 1.0 earth 0.5 moon", _, true, 0.1, true, 1.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_noscope_roundtime", "5", "Round time in minutes for a single noscope round", _, true, 1.0);
 	gc_fBeaconTime = AutoExecConfig_CreateConVar("sm_noscope_beacon_time", "240", "Time in seconds until the beacon turned on (set to 0 to disable)", _, true, 0.0);
-	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_noscope_trucetime", "15", "Time in seconds players can't deal damage", _, true,  0.0);
-	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_noscope_cooldown_day", "3", "Rounds cooldown after a event until event can be start again", _, true,  0.0);
+	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_noscope_trucetime", "15", "Time in seconds players can't deal damage", _, true, 0.0);
+	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_noscope_cooldown_day", "3", "Rounds cooldown after a event until event can be start again", _, true, 0.0);
 	gc_iCooldownStart = AutoExecConfig_CreateConVar("sm_noscope_cooldown_start", "3", "Rounds until event can be start after mapchange.", _, true, 0.0);
 	gc_bSetABypassCooldown = AutoExecConfig_CreateConVar("sm_noscope_cooldown_admin", "1", "0 - disabled, 1 - ignore the cooldown when admin/vip set noscope round", _, true, 0.0, true, 1.0);
 	gc_bSounds = AutoExecConfig_CreateConVar("sm_noscope_sounds_enable", "1", "0 - disabled, 1 - enable sounds ", _, true, 0.1, true, 1.0);
 	gc_sSoundStartPath = AutoExecConfig_CreateConVar("sm_noscope_sounds_start", "music/MyJailbreak/start.mp3", "Path to the soundfile which should be played for a start.");
-	gc_bOverlays = AutoExecConfig_CreateConVar("sm_noscope_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true,  0.0, true, 1.0);
-	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_noscope_overlays_start", "overlays/MyJailbreak/start" , "Path to the start Overlay DONT TYPE .vmt or .vft");
-	gc_bAllowLR = AutoExecConfig_CreateConVar("sm_noscope_allow_lr", "0" , "0 - disabled, 1 - enable LR for last round and end eventday", _, true, 0.0, true, 1.0);
+	gc_bOverlays = AutoExecConfig_CreateConVar("sm_noscope_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true, 0.0, true, 1.0);
+	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_noscope_overlays_start", "overlays/MyJailbreak/start", "Path to the start Overlay DONT TYPE .vmt or .vft");
+	gc_bAllowLR = AutoExecConfig_CreateConVar("sm_noscope_allow_lr", "0", "0 - disabled, 1 - enable LR for last round and end eventday", _, true, 0.0, true, 1.0);
 	
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
 	
 	
-	//Hooks
+	// Hooks
 	HookEvent("round_start", Event_RoundStart);
 	HookEvent("round_end", Event_RoundEnd);
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
@@ -178,18 +178,18 @@ public void OnPluginStart()
 	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
 	
 	
-	//Find
+	// Find
 	g_iMPRoundTime = FindConVar("mp_roundtime");
 	m_flNextSecondaryAttack = FindSendPropInfo("CBaseCombatWeapon", "m_flNextSecondaryAttack");
-	gc_sOverlayStartPath.GetString(g_sOverlayStartPath , sizeof(g_sOverlayStartPath));
+	gc_sOverlayStartPath.GetString(g_sOverlayStartPath, sizeof(g_sOverlayStartPath));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
-	gc_sAdminFlag.GetString(g_sAdminFlag , sizeof(g_sAdminFlag));
+	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
 	
 	SetLogFile(g_sEventsLogFile, "Events", "MyJailbreak");
 }
 
 
-//ConVarChange for Strings
+// ConVarChange for Strings
 public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
 	if (convar == gc_sOverlayStartPath)
@@ -209,14 +209,14 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 }
 
 
-//Initialize Plugin
+// Initialize Plugin
 public void OnConfigsExecuted()
 {
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iMaxRound = gc_iRounds.IntValue;
 	
-	//FindConVar
+	// FindConVar
 	g_iTerrorForLR = FindConVar("sm_hosties_lr_ts_max");
 	
 	if (gc_iWeapon.IntValue == 1) g_sWeapon = "weapon_ssg08";
@@ -225,11 +225,11 @@ public void OnConfigsExecuted()
 	if (gc_iWeapon.IntValue == 4) g_sWeapon = "weapon_g3sg1";
 	
 	
-	//Set custom Commands
+	// Set custom Commands
 	int iCount = 0;
 	char sCommands[128], sCommandsL[12][32], sCommand[32];
 	
-	//Vote
+	// Vote
 	gc_sCustomCommandVote.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
 	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
@@ -237,11 +237,11 @@ public void OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
 			RegConsoleCmd(sCommand, Command_VoteNoScope, "Allows players to vote for a noscope");
 	}
 	
-	//Set
+	// Set
 	gc_sCustomCommandSet.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
 	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
@@ -249,7 +249,7 @@ public void OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
 			RegConsoleCmd(sCommand, Command_SetNoScope, "Allows the Admin or Warden to set noscope as next round");
 	}
 }
@@ -260,7 +260,7 @@ public void OnConfigsExecuted()
 ******************************************************************************/
 
 
-//Admin & Warden set Event
+// Admin & Warden set Event
 public Action Command_SetNoScope(int client, int args)
 {
 	if (gc_bPlugin.BoolValue)
@@ -274,7 +274,7 @@ public Action Command_SetNoScope(int client, int args)
 		{
 			if (gc_bSetW.BoolValue)
 			{
-				if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
+				if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0))
 				{
 					char EventDay[64];
 					MyJailbreak_GetEventDayName(EventDay);
@@ -286,19 +286,19 @@ public Action Command_SetNoScope(int client, int args)
 							StartNextRound();
 							if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event NoScope was started by warden %L", client);
 						}
-						else CReplyToCommand(client, "%t %t", "noscope_tag" , "noscope_wait", g_iCoolDown);
+						else CReplyToCommand(client, "%t %t", "noscope_tag", "noscope_wait", g_iCoolDown);
 					}
-					else CReplyToCommand(client, "%t %t", "noscope_tag" , "noscope_progress" , EventDay);
+					else CReplyToCommand(client, "%t %t", "noscope_tag", "noscope_progress", EventDay);
 				}
-				else CReplyToCommand(client, "%t %t", "noscope_tag" , "noscope_minplayer");
+				else CReplyToCommand(client, "%t %t", "noscope_tag", "noscope_minplayer");
 			}
-			else CReplyToCommand(client, "%t %t", "warden_tag" , "nocscope_setbywarden");
+			else CReplyToCommand(client, "%t %t", "warden_tag", "nocscope_setbywarden");
 		}
 		else if (CheckVipFlag(client, g_sAdminFlag))
 		{
 			if (gc_bSetA.BoolValue)
 			{
-				if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
+				if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0))
 				{
 					char EventDay[64];
 					MyJailbreak_GetEventDayName(EventDay);
@@ -310,22 +310,22 @@ public Action Command_SetNoScope(int client, int args)
 							StartNextRound();
 							if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event NoScope was started by admin %L", client);
 						}
-						else CReplyToCommand(client, "%t %t", "noscope_tag" , "noscope_wait", g_iCoolDown);
+						else CReplyToCommand(client, "%t %t", "noscope_tag", "noscope_wait", g_iCoolDown);
 					}
-					else CReplyToCommand(client, "%t %t", "noscope_tag" , "noscope_progress" , EventDay);
+					else CReplyToCommand(client, "%t %t", "noscope_tag", "noscope_progress", EventDay);
 				}
-				else CReplyToCommand(client, "%t %t", "noscope_tag" , "noscope_minplayer");
+				else CReplyToCommand(client, "%t %t", "noscope_tag", "noscope_minplayer");
 			}
-			else CReplyToCommand(client, "%t %t", "nocscope_tag" , "noscope_setbyadmin");
+			else CReplyToCommand(client, "%t %t", "nocscope_tag", "noscope_setbyadmin");
 		}
-		else CReplyToCommand(client, "%t %t", "warden_tag" , "warden_notwarden");
+		else CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
 	}
-	else CReplyToCommand(client, "%t %t", "noscope_tag" , "noscope_disabled");
+	else CReplyToCommand(client, "%t %t", "noscope_tag", "noscope_disabled");
 	return Plugin_Handled;
 }
 
 
-//Voting for Event
+// Voting for Event
 public Action Command_VoteNoScope(int client, int args)
 {
 	char steamid[64];
@@ -335,7 +335,7 @@ public Action Command_VoteNoScope(int client, int args)
 	{	
 		if (gc_bVote.BoolValue)
 		{
-			if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
+			if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0))
 			{
 				char EventDay[64];
 				MyJailbreak_GetEventDayName(EventDay);
@@ -356,19 +356,19 @@ public Action Command_VoteNoScope(int client, int args)
 								StartNextRound();
 								if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event NoScope was started by voting");
 							}
-							else CPrintToChatAll("%t %t", "noscope_tag" , "noscope_need", Missing, client);
+							else CPrintToChatAll("%t %t", "noscope_tag", "noscope_need", Missing, client);
 						}
-						else CReplyToCommand(client, "%t %t", "noscope_tag" , "noscope_voted");
+						else CReplyToCommand(client, "%t %t", "noscope_tag", "noscope_voted");
 					}
-					else CReplyToCommand(client, "%t %t", "noscope_tag" , "noscope_wait", g_iCoolDown);
+					else CReplyToCommand(client, "%t %t", "noscope_tag", "noscope_wait", g_iCoolDown);
 				}
-				else CReplyToCommand(client, "%t %t", "noscope_tag" , "noscope_progress" , EventDay);
+				else CReplyToCommand(client, "%t %t", "noscope_tag", "noscope_progress", EventDay);
 			}
-			else CReplyToCommand(client, "%t %t", "noscope_tag" , "noscope_minplayer");
+			else CReplyToCommand(client, "%t %t", "noscope_tag", "noscope_minplayer");
 		}
-		else CReplyToCommand(client, "%t %t", "noscope_tag" , "noscope_voting");
+		else CReplyToCommand(client, "%t %t", "noscope_tag", "noscope_voting");
 	}
-	else CReplyToCommand(client, "%t %t", "noscope_tag" , "noscope_disabled");
+	else CReplyToCommand(client, "%t %t", "noscope_tag", "noscope_disabled");
 	return Plugin_Handled;
 }
 
@@ -378,7 +378,7 @@ public Action Command_VoteNoScope(int client, int args)
 ******************************************************************************/
 
 
-//Round start
+// Round start
 public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
 	if (StartNoScope || IsNoScope)
@@ -441,7 +441,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 					{
 						SetEntityGravity(client, gc_fGravValue.FloatValue);	
 					}
-					if (!gc_bSpawnCell.BoolValue || (gc_bSpawnCell.BoolValue && (SJD_IsCurrentMapConfigured() != true))) //spawn Terrors to CT Spawn 
+					if (!gc_bSpawnCell.BoolValue || (gc_bSpawnCell.BoolValue && (SJD_IsCurrentMapConfigured() != true))) // spawn Terrors to CT Spawn 
 					{
 						TeleportEntity(client, g_fPos, NULL_VECTOR, NULL_VECTOR);
 					}
@@ -450,7 +450,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 				TruceTimer = CreateTimer(1.0, Timer_StartEvent, _, TIMER_REPEAT);
 				GravityTimer = CreateTimer(1.0, Timer_CheckGravity, _, TIMER_REPEAT);
 				
-				//enable lr on last round
+				// enable lr on last round
 				g_iTsLR = GetAliveTeamCount(CS_TEAM_T);
 				
 				if (gc_bAllowLR.BoolValue)
@@ -461,7 +461,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 					}
 				}
 				
-				CPrintToChatAll("%t %t", "noscope_tag" , "noscope_rounds", g_iRound, g_iMaxRound);
+				CPrintToChatAll("%t %t", "noscope_tag", "noscope_rounds", g_iRound, g_iMaxRound);
 			}
 			LoopClients(i) if (IsPlayerAlive(i)) SDKHook(i, SDKHook_PreThink, OnPreThink);
 		}
@@ -480,7 +480,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 }
 
 
-//Round End
+// Round End
 public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
 	int winner = event.GetInt("winner");
@@ -513,14 +513,14 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			g_iMPRoundTime.IntValue = g_iOldRoundTime;
 			MyJailbreak_SetEventDayName("none");
 			MyJailbreak_SetEventDayRunning(false);
-			CPrintToChatAll("%t %t", "noscope_tag" , "noscope_end");
+			CPrintToChatAll("%t %t", "noscope_tag", "noscope_end");
 		}
 	}
 	if (StartNoScope)
 	{
 		LoopClients(i) CreateInfoPanel(i);
 		
-		CPrintToChatAll("%t %t", "noscope_tag" , "noscope_next");
+		CPrintToChatAll("%t %t", "noscope_tag", "noscope_next");
 		PrintCenterTextAll("%t", "noscope_next_nc");
 		
 		LoopClients(i) SDKUnhook(i, SDKHook_PreThink, OnPreThink);
@@ -533,7 +533,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 ******************************************************************************/
 
 
-//Initialize Event
+// Initialize Event
 public void OnMapStart()
 {
 	g_iVoteCount = 0;
@@ -544,12 +544,12 @@ public void OnMapStart()
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	
-	if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);    //Add sound to download and precache table
-	if (gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);    //Add overlay to download and precache table
+	if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);   // Add sound to download and precache table
+	if (gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);   // Add overlay to download and precache table
 }
 
 
-//Listen for Last Lequest
+// Listen for Last Lequest
 public void OnAvailableLR(int Announced)
 {
 	if (IsNoScope && gc_bAllowLR.BoolValue && (g_iTsLR > g_iTerrorForLR.IntValue))
@@ -584,12 +584,12 @@ public void OnAvailableLR(int Announced)
 			g_iMPRoundTime.IntValue = g_iOldRoundTime;
 			MyJailbreak_SetEventDayName("none");
 			MyJailbreak_SetEventDayRunning(false);
-			CPrintToChatAll("%t %t", "noscope_tag" , "noscope_end");
+			CPrintToChatAll("%t %t", "noscope_tag", "noscope_end");
 		}
 	}
 }
 
-//Map End
+// Map End
 
 public void OnMapEnd()
 {
@@ -603,7 +603,7 @@ public void OnMapEnd()
 }
 
 
-//Scout only
+// Scout only
 public Action OnWeaponCanUse(int client, int weapon)
 {
 	char sWeapon[32];
@@ -623,7 +623,7 @@ public Action OnWeaponCanUse(int client, int weapon)
 }
 
 
-//Set Client Hooks
+// Set Client Hooks
 public void OnClientPutInServer(int client)
 {
 	SDKHook(client, SDKHook_WeaponCanUse, OnWeaponCanUse);
@@ -636,7 +636,7 @@ public void OnClientPutInServer(int client)
 ******************************************************************************/
 
 
-//Prepare Event
+// Prepare Event
 void StartNextRound()
 {
 	StartNoScope = true;
@@ -648,15 +648,15 @@ void StartNextRound()
 	MyJailbreak_SetEventDayName(buffer);
 	MyJailbreak_SetEventDayPlanned(true);
 	
-	g_iOldRoundTime = g_iMPRoundTime.IntValue; //save original round time
-	g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
+	g_iOldRoundTime = g_iMPRoundTime.IntValue; // save original round time
+	g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue; // set event round time
 	
-	CPrintToChatAll("%t %t", "noscope_tag" , "noscope_next");
+	CPrintToChatAll("%t %t", "noscope_tag", "noscope_next");
 	PrintCenterTextAll("%t", "noscope_next_nc");
 }
 
 
-//No Scope
+// No Scope
 void MakeNoScope(int weapon)
 {
 	if (IsNoScope == true)
@@ -688,7 +688,7 @@ public Action OnPreThink(int client)
 
 void CreateInfoPanel(int client)
 {
-	//Create info Panel
+	// Create info Panel
 	char info[255];
 
 	NoScopeMenu = CreatePanel();
@@ -712,7 +712,7 @@ void CreateInfoPanel(int client)
 	DrawPanelText(NoScopeMenu, info);
 	DrawPanelText(NoScopeMenu, "-----------------------------------");
 	Format(info, sizeof(info), "%T", "warden_close", client);
-	DrawPanelItem(NoScopeMenu, info); 
+	DrawPanelItem(NoScopeMenu, info);
 	SendPanelToClient(NoScopeMenu, client, Handler_NullCancel, 20);
 }
 
@@ -722,7 +722,7 @@ void CreateInfoPanel(int client)
 ******************************************************************************/
 
 
-//Start Timer
+// Start Timer
 public Action Timer_StartEvent(Handle timer)
 {
 	if (g_iTruceTime > 1)
@@ -753,7 +753,7 @@ public Action Timer_StartEvent(Handle timer)
 				EmitSoundToAllAny(g_sSoundStartPath);
 			}
 		}
-		CPrintToChatAll("%t %t", "noscope_tag" , "noscope_start");
+		CPrintToChatAll("%t %t", "noscope_tag", "noscope_start");
 	}
 	TruceTimer = null;
 	
@@ -761,7 +761,7 @@ public Action Timer_StartEvent(Handle timer)
 }
 
 
-//Give back Gravity if it gone -> ladders
+// Give back Gravity if it gone -> ladders
 public Action Timer_CheckGravity(Handle timer)
 {
 	LoopValidClients(client, false, false)
@@ -772,7 +772,7 @@ public Action Timer_CheckGravity(Handle timer)
 }
 
 
-//Beacon Timer
+// Beacon Timer
 public Action Timer_BeaconOn(Handle timer)
 {
 	LoopValidClients(i, true, false) MyJailbreak_BeaconOn(i, 2.0);

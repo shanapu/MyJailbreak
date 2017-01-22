@@ -11,11 +11,11 @@
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
  * details.
  *
  * You should have received a copy of the GNU General Public License along with
- * this program.  If not, see <http://www.gnu.org/licenses/>.
+ * this program. If not, see <http:// www.gnu.org/licenses/>.
  */
 
 
@@ -24,7 +24,7 @@
 ******************************************************************************/
 
 
-//Includes
+// Includes
 #include <sourcemod>
 #include <sdktools>
 #include <sdkhooks>
@@ -39,24 +39,24 @@
 #include <mystocks>
 #include <myjailbreak>
 
-//Optional Plugins
+// Optional Plugins
 #undef REQUIRE_PLUGIN
 #include <myicons>
 #define REQUIRE_PLUGIN
 
 
-//Compiler Options
+// Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
 
 
-//Booleans
+// Booleans
 bool IsGhosts = false;
 bool IsRound = false;
 bool StartGhosts = false;
 bool gp_bMyIcons = false;
 
-//Console Variables
+// Console Variables
 ConVar gc_bPlugin;
 ConVar gc_bSetW;
 ConVar gc_bSetA;
@@ -83,7 +83,7 @@ ConVar gc_fGhostsTime;
 ConVar gc_fVisibleTime;
 
 
-//Integers
+// Integers
 int g_iOldRoundTime;
 int g_iCoolDown;
 int g_iTruceTime;
@@ -93,17 +93,17 @@ int g_iMaxRound;
 int g_iTsLR;
 
 
-//Floats
+// Floats
 float g_fPos[3];
 
 
-//Handles
+// Handles
 Handle TruceTimer;
 Handle GhostsMenu;
 Handle BeaconTimer;
 
 
-//Strings
+// Strings
 char g_sHasVoted[1500];
 char g_sSoundStartPath[256];
 char g_sEventsLogFile[PLATFORM_MAX_PATH];
@@ -111,7 +111,7 @@ char g_sAdminFlag[32];
 char g_sOverlayStartPath[256];
 
 
-//Info
+// Info
 public Plugin myinfo = 
 {
 	name = "MyJailbreak - Ghosts War", 
@@ -122,7 +122,7 @@ public Plugin myinfo =
 };
 
 
-//Start
+// Start
 public void OnPluginStart()
 {
 	// Translation
@@ -130,44 +130,44 @@ public void OnPluginStart()
 	LoadTranslations("MyJailbreak.Ghosts.phrases");
 	
 	
-	//Client Commands
+	// Client Commands
 	RegConsoleCmd("sm_setghosts", Command_SetGhosts, "Allows the Admin or Warden to set Ghosts");
 	RegConsoleCmd("sm_ghosts", Command_VoteGhosts, "Allows players to vote for a Ghosts");
 	
 	
-	//AutoExecConfig
+	// AutoExecConfig
 	AutoExecConfig_SetFile("Ghosts", "MyJailbreak/EventDays");
 	AutoExecConfig_SetCreateFile(true);
 	
 	AutoExecConfig_CreateConVar("sm_ghosts_version", MYJB_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
-	gc_bPlugin = AutoExecConfig_CreateConVar("sm_ghosts_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true,  0.0, true, 1.0);
+	gc_bPlugin = AutoExecConfig_CreateConVar("sm_ghosts_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true, 0.0, true, 1.0);
 	gc_sCustomCommandVote = AutoExecConfig_CreateConVar("sm_ghosts_cmds_vote", "ghostwar, invisiblewar", "Set your custom chat command for Event voting(!ghosts (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_sCustomCommandSet = AutoExecConfig_CreateConVar("sm_ghosts_cmds_set", "sghosts, sghostwar, sg", "Set your custom chat command for set Event(!setghosts (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
-	gc_bSetW = AutoExecConfig_CreateConVar("sm_ghosts_warden", "1", "0 - disabled, 1 - allow warden to set ghosts round", _, true,  0.0, true, 1.0);
-	gc_bSetA = AutoExecConfig_CreateConVar("sm_ghosts_admin", "1", "0 - disabled, 1 - allow admin/vip to set ghosts round", _, true,  0.0, true, 1.0);
+	gc_bSetW = AutoExecConfig_CreateConVar("sm_ghosts_warden", "1", "0 - disabled, 1 - allow warden to set ghosts round", _, true, 0.0, true, 1.0);
+	gc_bSetA = AutoExecConfig_CreateConVar("sm_ghosts_admin", "1", "0 - disabled, 1 - allow admin/vip to set ghosts round", _, true, 0.0, true, 1.0);
 	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_ghosts_flag", "g", "Set flag for admin/vip to set this Event Day.");
-	gc_bVote = AutoExecConfig_CreateConVar("sm_ghosts_vote", "1", "0 - disabled, 1 - allow player to vote for ghosts", _, true,  0.0, true, 1.0);
-	gc_bSpawnCell = AutoExecConfig_CreateConVar("sm_ghosts_spawn", "0", "0 - T teleport to CT spawn, 1 - cell doors auto open", _, true,  0.0, true, 1.0);
+	gc_bVote = AutoExecConfig_CreateConVar("sm_ghosts_vote", "1", "0 - disabled, 1 - allow player to vote for ghosts", _, true, 0.0, true, 1.0);
+	gc_bSpawnCell = AutoExecConfig_CreateConVar("sm_ghosts_spawn", "0", "0 - T teleport to CT spawn, 1 - cell doors auto open", _, true, 0.0, true, 1.0);
 	gc_iRounds = AutoExecConfig_CreateConVar("sm_ghosts_rounds", "1", "Rounds to play in a row", _, true, 1.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_ghosts_roundtime", "5", "Round time in minutes for a single ghosts round", _, true, 1.0);
 	gc_fBeaconTime = AutoExecConfig_CreateConVar("sm_ghosts_beacon_time", "240", "Time in seconds until the beacon turned on (set to 0 to disable)", _, true, 0.0);
-	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_ghosts_trucetime", "30", "Time in seconds players can't deal damage", _, true,  0.0);
+	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_ghosts_trucetime", "30", "Time in seconds players can't deal damage", _, true, 0.0);
 	gc_fGhostsTime = AutoExecConfig_CreateConVar("sm_ghosts_invisible_time", "6.0", "Time in seconds players are invisible & immortal", _, true, 1.0);
 	gc_fVisibleTime = AutoExecConfig_CreateConVar("sm_ghosts_visisble_time", "2.0", "Time in seconds players are visible & mortal", _, true, 1.0);
-	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_ghosts_cooldown_day", "3", "Rounds cooldown after a event until event can be start again", _, true,  0.0);
-	gc_iCooldownStart = AutoExecConfig_CreateConVar("sm_ghosts_cooldown_start", "3", "Rounds until event can be start after mapchange.", _, true,  0.0);
+	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_ghosts_cooldown_day", "3", "Rounds cooldown after a event until event can be start again", _, true, 0.0);
+	gc_iCooldownStart = AutoExecConfig_CreateConVar("sm_ghosts_cooldown_start", "3", "Rounds until event can be start after mapchange.", _, true, 0.0);
 	gc_bSetABypassCooldown = AutoExecConfig_CreateConVar("sm_ghosts_cooldown_admin", "1", "0 - disabled, 1 - ignore the cooldown when admin/vip set ghosts round", _, true, 0.0, true, 1.0);
-	gc_bSounds = AutoExecConfig_CreateConVar("sm_ghosts_sounds_enable", "1", "0 - disabled, 1 - enable sounds", _, true,  0.0, true, 1.0);
+	gc_bSounds = AutoExecConfig_CreateConVar("sm_ghosts_sounds_enable", "1", "0 - disabled, 1 - enable sounds", _, true, 0.0, true, 1.0);
 	gc_sSoundStartPath = AutoExecConfig_CreateConVar("sm_ghosts_sounds_start", "music/MyJailbreak/start.mp3", "Path to the soundfile which should be played for a start.");
-	gc_bOverlays = AutoExecConfig_CreateConVar("sm_ghosts_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true,  0.0, true, 1.0);
-	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_ghosts_overlays_start", "overlays/MyJailbreak/start" , "Path to the start Overlay DONT TYPE .vmt or .vft");
-	gc_bAllowLR = AutoExecConfig_CreateConVar("sm_ghosts_allow_lr", "0" , "0 - disabled, 1 - enable LR for last round and end eventday", _, true, 0.0, true, 1.0);
+	gc_bOverlays = AutoExecConfig_CreateConVar("sm_ghosts_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true, 0.0, true, 1.0);
+	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_ghosts_overlays_start", "overlays/MyJailbreak/start", "Path to the start Overlay DONT TYPE .vmt or .vft");
+	gc_bAllowLR = AutoExecConfig_CreateConVar("sm_ghosts_allow_lr", "0", "0 - disabled, 1 - enable LR for last round and end eventday", _, true, 0.0, true, 1.0);
 	
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
 	
 	
-	//Hooks
+	// Hooks
 	HookEvent("round_start", Event_RoundStart);
 	HookEvent("round_end", Event_RoundEnd);
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
@@ -175,17 +175,17 @@ public void OnPluginStart()
 	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
 	
 	
-	//FindConVar
+	// FindConVar
 	g_iMPRoundTime = FindConVar("mp_roundtime");
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
-	gc_sOverlayStartPath.GetString(g_sOverlayStartPath , sizeof(g_sOverlayStartPath));
-	gc_sAdminFlag.GetString(g_sAdminFlag , sizeof(g_sAdminFlag));
+	gc_sOverlayStartPath.GetString(g_sOverlayStartPath, sizeof(g_sOverlayStartPath));
+	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
 	
 	SetLogFile(g_sEventsLogFile, "Events", "MyJailbreak");
 }
 
 
-//ConVarChange for Strings
+// ConVarChange for Strings
 public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
 	if (convar == gc_sOverlayStartPath)
@@ -205,7 +205,7 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 }
 
 
-//Initialize Plugin
+// Initialize Plugin
 public void OnConfigsExecuted()
 {
 	g_iTruceTime = gc_iTruceTime.IntValue;
@@ -213,15 +213,15 @@ public void OnConfigsExecuted()
 	g_iMaxRound = gc_iRounds.IntValue;
 	
 	
-	//FindConVar
+	// FindConVar
 	g_iTerrorForLR = FindConVar("sm_hosties_lr_ts_max");
 	
 	
-	//Set custom Commands
+	// Set custom Commands
 	int iCount = 0;
 	char sCommands[128], sCommandsL[12][32], sCommand[32];
 	
-	//Vote
+	// Vote
 	gc_sCustomCommandVote.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
 	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
@@ -229,11 +229,11 @@ public void OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
 			RegConsoleCmd(sCommand, Command_VoteGhosts, "Allows players to vote for a Ghosts");
 	}
 	
-	//Set
+	// Set
 	gc_sCustomCommandSet.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
 	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
@@ -241,7 +241,7 @@ public void OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
 			RegConsoleCmd(sCommand, Command_SetGhosts, "Allows the Admin or Warden to set a ghosts");
 	}
 }
@@ -272,7 +272,7 @@ public void OnLibraryAdded(const char[] name)
 ******************************************************************************/
 
 
-//Admin & Warden set Event
+// Admin & Warden set Event
 public Action Command_SetGhosts(int client, int args)
 {
 	if (gc_bPlugin.BoolValue)
@@ -286,7 +286,7 @@ public Action Command_SetGhosts(int client, int args)
 		{
 			if (gc_bSetW.BoolValue)
 			{
-				if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
+				if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0))
 				{
 					char EventDay[64];
 					MyJailbreak_GetEventDayName(EventDay);
@@ -298,19 +298,19 @@ public Action Command_SetGhosts(int client, int args)
 							StartNextRound();
 							if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Ghosts was started by warden %L", client);
 						}
-						else CReplyToCommand(client, "%t %t", "ghosts_tag" , "ghosts_wait", g_iCoolDown);
+						else CReplyToCommand(client, "%t %t", "ghosts_tag", "ghosts_wait", g_iCoolDown);
 					}
-					else CReplyToCommand(client, "%t %t", "ghosts_tag" , "ghosts_progress" , EventDay);
+					else CReplyToCommand(client, "%t %t", "ghosts_tag", "ghosts_progress", EventDay);
 				}
-				else CReplyToCommand(client, "%t %t", "ghosts_tag" , "ghosts_minplayer");
+				else CReplyToCommand(client, "%t %t", "ghosts_tag", "ghosts_minplayer");
 			}
-			else CReplyToCommand(client, "%t %t", "warden_tag" , "war_setbywarden");
+			else CReplyToCommand(client, "%t %t", "warden_tag", "war_setbywarden");
 		}
 		else if (CheckVipFlag(client, g_sAdminFlag))
 			{
 				if (gc_bSetA.BoolValue)
 				{
-					if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
+					if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0))
 					{
 						char EventDay[64];
 						MyJailbreak_GetEventDayName(EventDay);
@@ -322,22 +322,22 @@ public Action Command_SetGhosts(int client, int args)
 								StartNextRound();
 								if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Ghosts was started by admin %L", client);
 							}
-							else CReplyToCommand(client, "%t %t", "ghosts_tag" , "ghosts_wait", g_iCoolDown);
+							else CReplyToCommand(client, "%t %t", "ghosts_tag", "ghosts_wait", g_iCoolDown);
 						}
-						else CReplyToCommand(client, "%t %t", "ghosts_tag" , "ghosts_progress" , EventDay);
+						else CReplyToCommand(client, "%t %t", "ghosts_tag", "ghosts_progress", EventDay);
 					}
-					else CReplyToCommand(client, "%t %t", "ghosts_tag" , "ghosts_minplayer");
+					else CReplyToCommand(client, "%t %t", "ghosts_tag", "ghosts_minplayer");
 				}
-				else CReplyToCommand(client, "%t %t", "ghosts_tag" , "war_setbyadmin");
+				else CReplyToCommand(client, "%t %t", "ghosts_tag", "war_setbyadmin");
 			}
-			else CReplyToCommand(client, "%t %t", "warden_tag" , "warden_notwarden");
+			else CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
 	}
-	else CReplyToCommand(client, "%t %t", "ghosts_tag" , "ghosts_disabled");
+	else CReplyToCommand(client, "%t %t", "ghosts_tag", "ghosts_disabled");
 	return Plugin_Handled;
 }
 
 
-//Voting for Event
+// Voting for Event
 public Action Command_VoteGhosts(int client, int args)
 {
 	char steamid[64];
@@ -347,7 +347,7 @@ public Action Command_VoteGhosts(int client, int args)
 	{	
 		if (gc_bVote.BoolValue)
 		{
-			if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0 ))
+			if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0))
 			{
 				char EventDay[64];
 				MyJailbreak_GetEventDayName(EventDay);
@@ -368,19 +368,19 @@ public Action Command_VoteGhosts(int client, int args)
 								StartNextRound();
 								if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Ghosts was started by voting");
 							}
-							else CPrintToChatAll("%t %t", "ghosts_tag" , "ghosts_need", Missing, client);
+							else CPrintToChatAll("%t %t", "ghosts_tag", "ghosts_need", Missing, client);
 						}
-						else CReplyToCommand(client, "%t %t", "ghosts_tag" , "ghosts_voted");
+						else CReplyToCommand(client, "%t %t", "ghosts_tag", "ghosts_voted");
 					}
-					else CReplyToCommand(client, "%t %t", "ghosts_tag" , "ghosts_wait", g_iCoolDown);
+					else CReplyToCommand(client, "%t %t", "ghosts_tag", "ghosts_wait", g_iCoolDown);
 				}
-				else CReplyToCommand(client, "%t %t", "ghosts_tag" , "ghosts_progress" , EventDay);
+				else CReplyToCommand(client, "%t %t", "ghosts_tag", "ghosts_progress", EventDay);
 			}
-			else CReplyToCommand(client, "%t %t", "ghosts_tag" , "ghosts_minplayer");
+			else CReplyToCommand(client, "%t %t", "ghosts_tag", "ghosts_minplayer");
 		}
-		else CReplyToCommand(client, "%t %t", "ghosts_tag" , "ghosts_voting");
+		else CReplyToCommand(client, "%t %t", "ghosts_tag", "ghosts_voting");
 	}
-	else CReplyToCommand(client, "%t %t", "ghosts_tag" , "ghosts_disabled");
+	else CReplyToCommand(client, "%t %t", "ghosts_tag", "ghosts_disabled");
 	return Plugin_Handled;
 }
 
@@ -390,7 +390,7 @@ public Action Command_VoteGhosts(int client, int args)
 ******************************************************************************/
 
 
-//Round start
+// Round start
 public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
 	if (StartGhosts || IsGhosts)
@@ -432,7 +432,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 			{
 				LoopClients(i)
 				{
-					if (!gc_bSpawnCell.BoolValue || (gc_bSpawnCell.BoolValue && (SJD_IsCurrentMapConfigured() != true))) //spawn Terrors to CT Spawn 
+					if (!gc_bSpawnCell.BoolValue || (gc_bSpawnCell.BoolValue && (SJD_IsCurrentMapConfigured() != true))) // spawn Terrors to CT Spawn 
 					{
 						if (IsClientInGame(i))
 						{
@@ -441,7 +441,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 					}
 				}
 				
-				//enable lr on last round
+				// enable lr on last round
 				g_iTsLR = GetAliveTeamCount(CS_TEAM_T);
 				
 				if (gc_bAllowLR.BoolValue)
@@ -452,7 +452,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 					}
 				}
 				
-				CPrintToChatAll("%t %t", "ghosts_tag" , "ghosts_rounds", g_iRound, g_iMaxRound);
+				CPrintToChatAll("%t %t", "ghosts_tag", "ghosts_rounds", g_iRound, g_iMaxRound);
 			}
 			LoopClients(i)
 			{
@@ -461,7 +461,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 				SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
 				
 				SDKHook(i, SDKHook_SetTransmit, Hook_SetTransmit);
-				if(gp_bMyIcons) MyIcons_BlockClientIcon(i, true);
+				if (gp_bMyIcons) MyIcons_BlockClientIcon(i, true);
 			}
 		}
 		TruceTimer = CreateTimer(1.0, Timer_StartEvent, _, TIMER_REPEAT);
@@ -487,7 +487,7 @@ public Action Hook_SetTransmit(int entity, int client)
 	return Plugin_Continue;
 }
 
-//Round End
+// Round End
 public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
 	int winner = event.GetInt("winner");
@@ -498,7 +498,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 		{
 			SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
 			SDKUnhook(client, SDKHook_SetTransmit, Hook_SetTransmit);
-			if(gp_bMyIcons) MyIcons_BlockClientIcon(client, false);
+			if (gp_bMyIcons) MyIcons_BlockClientIcon(client, false);
 		}
 		delete TruceTimer;
 		delete BeaconTimer;
@@ -521,14 +521,14 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			g_iMPRoundTime.IntValue = g_iOldRoundTime;
 			MyJailbreak_SetEventDayName("none");
 			MyJailbreak_SetEventDayRunning(false);
-			CPrintToChatAll("%t %t", "ghosts_tag" , "ghosts_end");
+			CPrintToChatAll("%t %t", "ghosts_tag", "ghosts_end");
 		}
 	}
 	if (StartGhosts)
 	{
 		LoopClients(i) CreateInfoPanel(i);
 		
-		CPrintToChatAll("%t %t", "ghosts_tag" , "ghosts_next");
+		CPrintToChatAll("%t %t", "ghosts_tag", "ghosts_next");
 		PrintCenterTextAll("%t", "ghosts_next_nc");
 	}
 }
@@ -539,7 +539,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 ******************************************************************************/
 
 
-//Initialize Event
+// Initialize Event
 public void OnMapStart()
 {
 	g_iVoteCount = 0;
@@ -557,7 +557,7 @@ public void OnMapStart()
 }
 
 
-//Map End
+// Map End
 public void OnMapEnd()
 {
 	IsGhosts = false;
@@ -570,7 +570,7 @@ public void OnMapEnd()
 }
 
 
-//Listen for Last Lequest
+// Listen for Last Lequest
 public void OnAvailableLR(int Announced)
 {
 	if (IsGhosts && gc_bAllowLR.BoolValue && (g_iTsLR > g_iTerrorForLR.IntValue))
@@ -580,7 +580,7 @@ public void OnAvailableLR(int Announced)
 			SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
 			
 			SDKUnhook(client, SDKHook_SetTransmit, Hook_SetTransmit);
-			if(gp_bMyIcons) MyIcons_BlockClientIcon(client, false);
+			if (gp_bMyIcons) MyIcons_BlockClientIcon(client, false);
 			
 			StripAllPlayerWeapons(client);
 			if (GetClientTeam(client) == CS_TEAM_CT)
@@ -609,7 +609,7 @@ public void OnAvailableLR(int Announced)
 			g_iMPRoundTime.IntValue = g_iOldRoundTime;
 			MyJailbreak_SetEventDayName("none");
 			MyJailbreak_SetEventDayRunning(false);
-			CPrintToChatAll("%t %t", "ghosts_tag" , "ghosts_end");
+			CPrintToChatAll("%t %t", "ghosts_tag", "ghosts_end");
 		}
 	}
 }
@@ -620,7 +620,7 @@ public void OnAvailableLR(int Announced)
 ******************************************************************************/
 
 
-//Prepare Event for next round
+// Prepare Event for next round
 void StartNextRound()
 {
 	StartGhosts = true;
@@ -632,10 +632,10 @@ void StartNextRound()
 	MyJailbreak_SetEventDayName(buffer);
 	MyJailbreak_SetEventDayPlanned(true);
 	
-	g_iOldRoundTime = g_iMPRoundTime.IntValue; //save original round time
-	g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue;//set event round time
+	g_iOldRoundTime = g_iMPRoundTime.IntValue; // save original round time
+	g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue; // set event round time
 	
-	CPrintToChatAll("%t %t", "ghosts_tag" , "ghosts_next");
+	CPrintToChatAll("%t %t", "ghosts_tag", "ghosts_next");
 	PrintCenterTextAll("%t", "ghosts_next_nc");
 }
 
@@ -647,7 +647,7 @@ void StartNextRound()
 
 void CreateInfoPanel(int client)
 {
-	//Create info Panel
+	// Create info Panel
 	char info[255];
 
 	GhostsMenu = CreatePanel();
@@ -671,7 +671,7 @@ void CreateInfoPanel(int client)
 	DrawPanelText(GhostsMenu, info);
 	DrawPanelText(GhostsMenu, "-----------------------------------");
 	Format(info, sizeof(info), "%T", "warden_close", client);
-	DrawPanelItem(GhostsMenu, info); 
+	DrawPanelItem(GhostsMenu, info);
 	SendPanelToClient(GhostsMenu, client, Handler_NullCancel, 20);
 }
 
@@ -681,7 +681,7 @@ void CreateInfoPanel(int client)
 ******************************************************************************/
 
 
-//Start Timer
+// Start Timer
 public Action Timer_StartEvent(Handle timer)
 {
 	if (g_iTruceTime > 1)
@@ -713,7 +713,7 @@ public Action Timer_StartEvent(Handle timer)
 	}
 	
 	CreateTimer(gc_fVisibleTime.FloatValue, Timer_MakeGhosts);
-	CPrintToChatAll("%t %t", "ghosts_tag" , "ghosts_start");
+	CPrintToChatAll("%t %t", "ghosts_tag", "ghosts_start");
 	TruceTimer = null;
 	
 	return Plugin_Stop;
@@ -747,7 +747,7 @@ public Action Timer_MakeGhosts(Handle timer)
 	}
 }
 
-//Beacon Timer
+// Beacon Timer
 public Action Timer_BeaconOn(Handle timer)
 {
 	LoopValidClients(i, true, false) MyJailbreak_BeaconOn(i, 2.0);

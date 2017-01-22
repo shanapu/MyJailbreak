@@ -11,11 +11,11 @@
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
  * details.
  *
  * You should have received a copy of the GNU General Public License along with
- * this program.  If not, see <http://www.gnu.org/licenses/>.
+ * this program. If not, see <http:// www.gnu.org/licenses/>.
  */
 
 
@@ -24,7 +24,7 @@
 ******************************************************************************/
 
 
-//Includes
+// Includes
 #include <sourcemod>
 #include <sdktools>
 #include <sdkhooks>
@@ -35,33 +35,33 @@
 #include <mystocks>
 
 
-//Compiler Options
+// Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
 
 
-//Console Variables
+// Console Variables
 ConVar gc_sCustomCommandMenu;
 ConVar gc_bOrders;
 ConVar gc_bOrdersDeputy;
 
 
-//Strings
+// Strings
 char g_sMenuFile[64];
 char g_sCurrentMap[64];
 
 
-//Handles
+// Handles
 Handle g_hCommandTrie;
 
-//Info
+// Info
 public void Orders_OnPluginStart()
 {
 	RegConsoleCmd("sm_order", Command_OrderMenu, "opens the order menu");
 	
-	//AutoExecConfig
-	gc_bOrders = AutoExecConfig_CreateConVar("sm_warden_orders", "1", "0 - disabled, 1 - enable allow warden to use the orders menu", _, true,  0.0, true, 1.0);
-	gc_bOrdersDeputy = AutoExecConfig_CreateConVar("sm_warden_orders_deputy", "1", "0 - disabled, 1 - enable orders-feature for deputy, too", _, true,  0.0, true, 1.0);
+	// AutoExecConfig
+	gc_bOrders = AutoExecConfig_CreateConVar("sm_warden_orders", "1", "0 - disabled, 1 - enable allow warden to use the orders menu", _, true, 0.0, true, 1.0);
+	gc_bOrdersDeputy = AutoExecConfig_CreateConVar("sm_warden_orders_deputy", "1", "0 - disabled, 1 - enable orders-feature for deputy, too", _, true, 0.0, true, 1.0);
 	gc_sCustomCommandMenu = CreateConVar("sm_warden_cmds_orders", "orders,calls", "Set your custom chat command for open menu(!menu (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands))");
 	
 	g_hCommandTrie = CreateTrie();
@@ -118,11 +118,11 @@ public void Orders_OnMapStart()
 
 public void Orders_OnConfigsExecuted()
 {
-	//Set custom Commands
+	// Set custom Commands
 	int iCount = 0;
 	char sCommands[128], sCommandsL[12][64], sCommand[64];
 	
-	//Menu
+	// Menu
 	gc_sCustomCommandMenu.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
 	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
@@ -130,7 +130,7 @@ public void Orders_OnConfigsExecuted()
 	for(int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
 			RegConsoleCmd(sCommand, Command_OrderMenu, "Open the wardens orders menu");
 	}
 	
@@ -186,7 +186,7 @@ public Action Event_Say(int client, char [] command,int arg)
 		{
 			if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bOrdersDeputy.BoolValue))
 			{
-				//listen for custom order commands
+				// listen for custom order commands
 				char text[24];
 				GetCmdArgString(text, sizeof(text));
 				StripQuotes(text);
@@ -250,7 +250,7 @@ void Command_Handler(char [] number)
 				for (int iTeam = 0; iTeam < iCount; iTeam++)
 				{
 					LoopValidClients(i, false, false)
-					if (GetClientTeam(i) == StringToInt(szTeam[iTeam])) ShowOverlay(i ,sValue, StringToFloat(sTime));
+					if (GetClientTeam(i) == StringToInt(szTeam[iTeam])) ShowOverlay(i, sValue, StringToFloat(sTime));
 				}
 			}
 			
@@ -280,7 +280,7 @@ public Action Command_OrderMenu(int client, int iItem)
 			{
 				Menu_BuildOrderMenu(client);
 			}
-			else CReplyToCommand(client, "%t %t", "warden_tag" , "warden_notwarden"); 
+			else CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
 		}
 	}
 	return Plugin_Handled;
@@ -400,7 +400,7 @@ public int Handler_Menu(Menu menu, MenuAction action, int client, int param)
 					for (int iTeam = 0; iTeam < iCount; iTeam++)
 					{
 						LoopValidClients(i, false, false)
-						if (GetClientTeam(i) == StringToInt(szTeam[iTeam])) ShowOverlay(i ,sValue, StringToFloat(sTime));
+						if (GetClientTeam(i) == StringToInt(szTeam[iTeam])) ShowOverlay(i, sValue, StringToFloat(sTime));
 					}
 				}
 				

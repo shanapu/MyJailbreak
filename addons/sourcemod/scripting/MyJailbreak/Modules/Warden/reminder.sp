@@ -11,11 +11,11 @@
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
  * details.
  *
  * You should have received a copy of the GNU General Public License along with
- * this program.  If not, see <http://www.gnu.org/licenses/>.
+ * this program. If not, see <http:// www.gnu.org/licenses/>.
  */
 
 
@@ -24,7 +24,7 @@
 ******************************************************************************/
 
 
-//Includes
+// Includes
 #include <sourcemod>
 #include <sdktools>
 #include <sdkhooks>
@@ -39,32 +39,32 @@
 #define REQUIRE_PLUGIN
 
 
-//Compiler Options
+// Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
 
 
-//Console Variables
+// Console Variables
 ConVar gc_bRemindTimer;
 
 
-//Handles
+// Handles
 Handle RemindTimer;
 
 
-//Start
+// Start
 public void Reminder_OnPluginStart()
 {
-	//AutoExecConfig
-	gc_bRemindTimer = CreateConVar("sm_warden_roundtime_reminder", "1", "0 - disabled, 1 - announce remaining round time in chat & hud 3min, 2min, 1min, 30sec before roundend.", _, true,  0.0, true, 1.0);
+	// AutoExecConfig
+	gc_bRemindTimer = CreateConVar("sm_warden_roundtime_reminder", "1", "0 - disabled, 1 - announce remaining round time in chat & hud 3min, 2min, 1min, 30sec before roundend.", _, true, 0.0, true, 1.0);
 	
 	
-	//Hooks
+	// Hooks
 	HookEvent("round_start", Reminder_Event_RoundStart);
 	HookEvent("round_end", Reminder_Event_RoundEnd);
 	
 	
-	//FindConVar
+	// FindConVar
 	g_bFF = FindConVar("mp_teammates_are_enemies");
 }
 
@@ -152,7 +152,7 @@ public Action Timer_RemindTimer(Handle timer)
 			Format(timeinfo, sizeof(timeinfo), "%T %T", "warden_30", g_iWarden, "warden_remaining", g_iWarden);
 			PrintCenterText(g_iWarden, timeinfo);
 		}
-		//Deputy
+		// Deputy
 		if (g_iRoundTime == 180 && (g_iDeputy != -1))
 		{
 			EmitSoundToClient(g_iDeputy, "weapons/c4/c4_beep1.wav", SOUND_FROM_PLAYER, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, 1.0);

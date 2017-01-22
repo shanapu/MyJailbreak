@@ -11,11 +11,11 @@
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
  * details.
  *
  * You should have received a copy of the GNU General Public License along with
- * this program.  If not, see <http://www.gnu.org/licenses/>.
+ * this program. If not, see <http:// www.gnu.org/licenses/>.
  */
 
 
@@ -24,7 +24,7 @@
 ******************************************************************************/
 
 
-//Includes
+// Includes
 #include <sourcemod>
 #include <sdktools>
 #include <sdkhooks>
@@ -35,52 +35,52 @@
 #include <mystocks>
 
 
-//Compiler Options
+// Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
 
 
-//Console Variables
+// Console Variables
 ConVar gc_bLaser;
 ConVar gc_bLaserDeputy;
 ConVar gc_sAdminFlagLaser;
 ConVar gc_sCustomCommandLaser;
 
 
-//Boolean
+// Boolean
 bool g_bLaserUse[MAXPLAYERS+1];
 bool g_bLaser[MAXPLAYERS+1] = true;
 bool g_bLaserColorRainbow[MAXPLAYERS+1] = true;
 
 
-//Integers
+// Integers
 int g_iLaserColor[MAXPLAYERS+1];
 
 
-//Strings
+// Strings
 char g_sAdminFlagLaser[32];
 
 
-//Start
+// Start
 public void Laser_OnPluginStart()
 {
-	//Client commands
+	// Client commands
 	RegConsoleCmd("sm_laser", Command_LaserMenu, "Allows Warden to toggle on/off the wardens Laser pointer");
 	
 	
-	//AutoExecConfig
-	gc_bLaser = AutoExecConfig_CreateConVar("sm_warden_laser", "1", "0 - disabled, 1 - enable Warden Laser Pointer with +E ", _, true,  0.0, true, 1.0);
-	gc_bLaserDeputy = AutoExecConfig_CreateConVar("sm_warden_laser_deputy", "1", "0 - disabled, 1 - enable Laser Pointer for Deputy, too", _, true,  0.0, true, 1.0);
+	// AutoExecConfig
+	gc_bLaser = AutoExecConfig_CreateConVar("sm_warden_laser", "1", "0 - disabled, 1 - enable Warden Laser Pointer with +E ", _, true, 0.0, true, 1.0);
+	gc_bLaserDeputy = AutoExecConfig_CreateConVar("sm_warden_laser_deputy", "1", "0 - disabled, 1 - enable Laser Pointer for Deputy, too", _, true, 0.0, true, 1.0);
 	gc_sAdminFlagLaser = AutoExecConfig_CreateConVar("sm_warden_laser_flag", "", "Set flag for admin/vip to get warden laser pointer. No flag = feature is available for all players!");
 	gc_sCustomCommandLaser = AutoExecConfig_CreateConVar("sm_warden_cmds_laser", "what, rep, again", "Set your custom chat command for Laser Pointer.(!laser (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	
 	
-	//Hooks
+	// Hooks
 	HookConVarChange(gc_sAdminFlagLaser, Laser_OnSettingChanged);
 	
 	
-	//FindConVar
-	gc_sAdminFlagLaser.GetString(g_sAdminFlagLaser , sizeof(g_sAdminFlagLaser));
+	// FindConVar
+	gc_sAdminFlagLaser.GetString(g_sAdminFlagLaser, sizeof(g_sAdminFlagLaser));
 }
 
 
@@ -138,7 +138,7 @@ public Action Command_LaserMenu(int client, int args)
 			}
 			else CReplyToCommand(client, "%t %t", "warden_tag", "warden_vipfeature");
 		}
-		else CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden" );
+		else CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
 	}
 	return Plugin_Handled;
 }
@@ -168,7 +168,7 @@ public Action Laser_OnPlayerRunCmd(int client, int &buttons, int &impulse, float
 					GetClientSightEnd(client, m_fImpact);
 					TE_SetupBeamPoints(m_fOrigin, m_fImpact, g_iBeamSprite, 0, 0, 0, 0.1, 0.12, 0.0, 1, 0.0, g_iColors[g_iLaserColor[client]], 0);
 					TE_SendToAll();
-					TE_SetupGlowSprite(m_fImpact, g_iHaloSprite, 0.1, 0.25, g_iColors[1][3] /*g_iHaloSpritecolor[3] */ );
+					TE_SetupGlowSprite(m_fImpact, g_iHaloSprite, 0.1, 0.25, g_iColors[1][3] /*g_iHaloSpritecolor[3] */);
 					TE_SendToAll();
 				}
 			}
@@ -183,11 +183,11 @@ public Action Laser_OnPlayerRunCmd(int client, int &buttons, int &impulse, float
 
 public void Laser_OnConfigsExecuted()
 {
-	//Set custom Commands
+	// Set custom Commands
 	int iCount = 0;
 	char sCommands[128], sCommandsL[12][32], sCommand[32];
 	
-	//Repeat
+	// Repeat
 	gc_sCustomCommandLaser.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
 	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
@@ -195,7 +195,7 @@ public void Laser_OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
 			RegConsoleCmd(sCommand, Command_LaserMenu, "Allows Warden to toggle on/off the wardens Laser pointer");
 	}
 }

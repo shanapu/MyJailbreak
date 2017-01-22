@@ -10,7 +10,7 @@
 ******************************************************************************/
 
 
-//Check for valid clients with bool for bots & dead player 
+// Check for valid clients with bool for bots & dead player 
 stock bool IsValidClient(int client, bool bAllowBots = false, bool bAllowDead = true)
 {
 	if (!(1 <= client <= MaxClients) || !IsClientInGame(client) || (IsFakeClient(client) && !bAllowBots) || IsClientSourceTV(client) || IsClientReplay(client) || (!bAllowDead && !IsPlayerAlive(client)))
@@ -21,12 +21,12 @@ stock bool IsValidClient(int client, bool bAllowBots = false, bool bAllowDead = 
 }
 
 
-//Easy clean client loops
+// Easy clean client loops
 #define LoopClients(%1) for (int %1 = 1; %1 <= MaxClients; %1++) if (IsClientInGame(%1))
 #define LoopValidClients(%1,%2,%3) for (int %1 = 1; %1 <= MaxClients; %1++) if (IsValidClient(%1,%2,%3))
 
 
-//Easy precache & prepare download for decals
+// Easy precache & prepare download for decals
 stock void PrecacheDecalAnyDownload(char[] sDecal)
 {
 	char sBuffer[256];
@@ -42,7 +42,7 @@ stock void PrecacheDecalAnyDownload(char[] sDecal)
 }
 
 
-//Easy precache & prepare download for models (icons)
+// Easy precache & prepare download for models (icons)
 stock void PrecacheModelAnyDownload(char[] sModel)
 {
 	char sBuffer[256];
@@ -55,7 +55,7 @@ stock void PrecacheModelAnyDownload(char[] sModel)
 }
 
 
-//Easy precache & prepare download for sounds
+// Easy precache & prepare download for sounds
 stock void PrecacheSoundAnyDownload(char[] sSound)
 {
 	char sBuffer[256];
@@ -65,7 +65,7 @@ stock void PrecacheSoundAnyDownload(char[] sSound)
 }
 
 
-//Strip All Weapons & the knife slot twice for taser
+// Strip All Weapons & the knife slot twice for taser
 stock void StripAllPlayerWeapons(int client)
 {
 	int weapon;
@@ -77,7 +77,7 @@ stock void StripAllPlayerWeapons(int client)
 			AcceptEntityInput(weapon, "Kill");
 		}
 	}
-	if ((weapon = GetPlayerWeaponSlot(client, CS_SLOT_KNIFE)) != -1)   //strip knife slot 2 times for taser
+	if ((weapon = GetPlayerWeaponSlot(client, CS_SLOT_KNIFE)) != -1)   // strip knife slot 2 times for taser
 	{
 		CS_DropWeapon(client, weapon, false);
 		AcceptEntityInput(weapon, "Kill");
@@ -85,45 +85,45 @@ stock void StripAllPlayerWeapons(int client)
 }
 
 
-//Easy show overlay to a client with lifetime | 0.0 = no auto remove
+// Easy show overlay to a client with lifetime | 0.0 = no auto remove
 stock void ShowOverlay(int client, char [] path, float lifetime)
 {
 	if (IsValidClient(client, false, true))
 	{
-		int iFlag = GetCommandFlags( "r_screenoverlay" ) & ( ~FCVAR_CHEAT );
-		SetCommandFlags( "r_screenoverlay", iFlag );
-		ClientCommand( client, "r_screenoverlay \"%s.vtf\"", path);
+		int iFlag = GetCommandFlags("r_screenoverlay") & (~FCVAR_CHEAT);
+		SetCommandFlags("r_screenoverlay", iFlag);
+		ClientCommand(client, "r_screenoverlay \"%s.vtf\"", path);
 		if (lifetime != 0.0) CreateTimer(lifetime, DeleteOverlay, client);
 	}
 }
 
 
-//Easy show overlay to all clients with lifetime | 0.0 = no auto remove
+// Easy show overlay to all clients with lifetime | 0.0 = no auto remove
 stock void ShowOverlayAll(char [] path, float deletetime) 
 {
 	LoopValidClients(client, false, true)
 	{
-		int iFlag = GetCommandFlags( "r_screenoverlay" ) & ( ~FCVAR_CHEAT ); 
-		SetCommandFlags( "r_screenoverlay", iFlag ); 
-		ClientCommand( client, "r_screenoverlay \"%s.vtf\"", path);
-		if (deletetime != 0.0) CreateTimer( deletetime, DeleteOverlay, client );
+		int iFlag = GetCommandFlags("r_screenoverlay") & (~FCVAR_CHEAT);
+		SetCommandFlags("r_screenoverlay", iFlag);
+		ClientCommand(client, "r_screenoverlay \"%s.vtf\"", path);
+		if (deletetime != 0.0) CreateTimer(deletetime, DeleteOverlay, client);
 	}
 }
 
 
-//Remove overlay from a client
-public Action DeleteOverlay( Handle timer, any client ) 
+// Remove overlay from a client
+public Action DeleteOverlay(Handle timer, any client) 
 {
 	if (IsValidClient(client, false, true))
 	{
-		int iFlag = GetCommandFlags( "r_screenoverlay" ) & ( ~FCVAR_CHEAT ); 
-		SetCommandFlags( "r_screenoverlay", iFlag ); 
-		ClientCommand( client, "r_screenoverlay \"\"" );
+		int iFlag = GetCommandFlags("r_screenoverlay") & (~FCVAR_CHEAT);
+		SetCommandFlags("r_screenoverlay", iFlag);
+		ClientCommand(client, "r_screenoverlay \"\"");
 	}
 }
 
 
-//Easy silent change of ConVars - Boolean
+// Easy silent change of ConVars - Boolean
 stock void SetCvar(char cvarName[64], int value)
 {
 	Handle IntCvar = FindConVar(cvarName);
@@ -140,7 +140,7 @@ stock void SetCvar(char cvarName[64], int value)
 }
 
 
-//Easy silent change of ConVars - Floats
+// Easy silent change of ConVars - Floats
 stock void SetCvarFloat(char cvarName[64], float value)
 {
 	Handle FloatCvar = FindConVar(cvarName);
@@ -157,7 +157,7 @@ stock void SetCvarFloat(char cvarName[64], float value)
 }
 
 
-//Easy silent change of ConVars - Strings
+// Easy silent change of ConVars - Strings
 stock void SetCvarString(char cvarName[64], char[] value)
 {
 	Handle cvar = FindConVar(cvarName);
@@ -165,7 +165,7 @@ stock void SetCvarString(char cvarName[64], char[] value)
 }
 
 
-//Define filename & path for logging 
+// Define filename & path for logging 
 stock void SetLogFile(char LogFile[PLATFORM_MAX_PATH], char [] FileName, char [] FolderName)
 {
 	char sDate[12];
@@ -176,7 +176,7 @@ stock void SetLogFile(char LogFile[PLATFORM_MAX_PATH], char [] FileName, char []
 }
 
 
-//Set the players Ammo for active weapon
+// Set the players Ammo for active weapon
 stock void SetPlayerWeaponAmmo(int client, int weaponEnt, int clip = -1, int ammo = -1)
 {
 	if (weaponEnt == INVALID_ENT_REFERENCE)
@@ -198,8 +198,8 @@ stock void SetPlayerWeaponAmmo(int client, int weaponEnt, int clip = -1, int amm
 }
 
 
-//Remove a players render color
-public Action Timer_RemoveColor( Handle timer, any client ) 
+// Remove a players render color
+public Action Timer_RemoveColor(Handle timer, any client) 
 {
 	if (IsValidClient(client, true, true))
 	{
@@ -208,7 +208,7 @@ public Action Timer_RemoveColor( Handle timer, any client )
 }
 
 
-//Get random alive & non-rebeling player of a team - need hosties
+// Get random alive & non-rebeling player of a team - need hosties
 stock int GetRandomPlayerNonRebel(int team) 
 {
 	int[] clients = new int[MaxClients];
@@ -223,7 +223,7 @@ stock int GetRandomPlayerNonRebel(int team)
 	return (clientCount == 0) ? -1 : clients[GetRandomInt(0, clientCount-1)];
 }
 
-//Get random alive & non-rebeling player of a team
+// Get random alive & non-rebeling player of a team
 stock int GetRandomPlayer(int team) 
 {
 	int[] clients = new int[MaxClients];
@@ -239,32 +239,32 @@ stock int GetRandomPlayer(int team)
 }
 
 
-//Get alive & non-rebeling player count of a team
+// Get alive & non-rebeling player count of a team
 stock int GetAlivePlayersCount(int team)
 {
 	int iCount, i; iCount = 0;
 	
-	for ( i = 1; i <= MaxClients; i++ )
-		if (IsValidClient(i, true, false) && GetClientTeam( i ) == team )
+	for (i = 1; i <= MaxClients; i++)
+		if (IsValidClient(i, true, false) && GetClientTeam(i) == team)
 		iCount++;
 	
 	return iCount;
 }
 
-//Get alive & non-rebeling player count of a team - need hosties
+// Get alive & non-rebeling player count of a team - need hosties
 stock int GetAlivePlayersCountNonRebel(int team)
 {
 	int iCount, i; iCount = 0;
 	
-	for ( i = 1; i <= MaxClients; i++ )
-		if (IsValidClient(i, true, false) && !IsClientRebel(i) && GetClientTeam( i ) == team )
+	for (i = 1; i <= MaxClients; i++)
+		if (IsValidClient(i, true, false) && !IsClientRebel(i) && GetClientTeam(i) == team)
 		iCount++;
 	
 	return iCount;
 }
 
 
-//Get alive player count of a team
+// Get alive player count of a team
 stock int GetAliveTeamCount(int team)
 {
 	int number = 0;
@@ -273,7 +273,7 @@ stock int GetAliveTeamCount(int team)
 }
 
 
-//Get alive player count of a team
+// Get alive player count of a team
 stock int GetPlayerTeamCount(int team)
 {
 	int number = 0;
@@ -282,7 +282,7 @@ stock int GetPlayerTeamCount(int team)
 }
 
 
-//Get a alive random player of all teams
+// Get a alive random player of all teams
 stock int GetRandomAlivePlayer() 
 {
 	int[] clients = new int[MaxClients];
@@ -298,7 +298,7 @@ stock int GetRandomAlivePlayer()
 }
 
 
-//Get last alive player of a team
+// Get last alive player of a team
 stock int GetLastAlive(int team)
 {
 	int clientCount = 0;
@@ -313,7 +313,7 @@ stock int GetLastAlive(int team)
 }
 
 
-//Get a player for a certain admin flag
+// Get a player for a certain admin flag
 stock bool CheckVipFlag(int client, const char[] flagsNeed)
 {
 	if ((GetUserFlagBits(client) & ReadFlagString(flagsNeed) == ReadFlagString(flagsNeed)) || (GetUserFlagBits(client) & ADMFLAG_ROOT))
@@ -324,14 +324,14 @@ stock bool CheckVipFlag(int client, const char[] flagsNeed)
 }
 
 
-//Menu Handler for Panels
+// Menu Handler for Panels
 public int Handler_NullCancel(Handle menu, MenuAction action, int param1, int param2)
 {
 	if (action == MenuAction_Select) 
 	{
 		switch (param2) 
 		{
-			default: //cancel
+			default: // cancel
 			{
 				return;
 			}

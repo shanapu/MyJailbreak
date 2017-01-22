@@ -11,11 +11,11 @@
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
  * details.
  *
  * You should have received a copy of the GNU General Public License along with
- * this program.  If not, see <http://www.gnu.org/licenses/>.
+ * this program. If not, see <http:// www.gnu.org/licenses/>.
  */
 
 
@@ -24,7 +24,7 @@
 ******************************************************************************/
 
 
-//Includes
+// Includes
 #include <sourcemod>
 #include <sdktools>
 #include <sdkhooks>
@@ -35,12 +35,12 @@
 #include <mystocks>
 
 
-//Compiler Options
+// Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
 
 
-//Console Variables
+// Console Variables
 ConVar gc_fCapitulationTime;
 ConVar gc_bCapitulation;
 ConVar gc_bCapitulationAccept;
@@ -54,28 +54,28 @@ ConVar gc_sSoundCapitulationPath;
 ConVar gc_sCustomCommandCapitulation;
 
 
-//Booleans
+// Booleans
 bool g_bCapitulated[MAXPLAYERS+1];
 bool g_bHasCapitulated[MAXPLAYERS+1];
 
 
-//Handles
+// Handles
 Handle CapitulationTimer[MAXPLAYERS+1];
 Handle RebelTimer[MAXPLAYERS+1];
 
 
-//Strings
+// Strings
 char g_sSoundCapitulationPath[256];
 
 
-//Start
+// Start
 public void Capitulation_OnPluginStart()
 {
-	//Client commands
+	// Client commands
 	RegConsoleCmd("sm_capitulation", Command_Capitulation, "Allows a rebeling terrorist to request a capitulate");
 	
 	
-	//AutoExecConfig
+	// AutoExecConfig
 	gc_bCapitulation = AutoExecConfig_CreateConVar("sm_capitulation_enable", "1", "0 - disabled, 1 - enable Capitulation", _, true, 0.0, true, 1.0);
 	gc_sCustomCommandCapitulation = AutoExecConfig_CreateConVar("sm_capitulation_cmds", "sur, surrender, capi, capitulate, pardon, p", "Set your custom chat commands for Capitulation(!capitulation (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)");
 	gc_fCapitulationTime = AutoExecConfig_CreateConVar("sm_capitulation_timer", "10.0", "Time to decide to accept the capitulation");
@@ -89,12 +89,12 @@ public void Capitulation_OnPluginStart()
 	gc_sSoundCapitulationPath = AutoExecConfig_CreateConVar("sm_capitulation_sound", "music/MyJailbreak/capitulation.mp3", "Path to the soundfile which should be played for a capitulation.");
 	
 	
-	//Hooks 
+	// Hooks 
 	HookEvent("round_start", Capitulation_Event_RoundStart);
 	HookConVarChange(gc_sSoundCapitulationPath, Capitulation_OnSettingChanged);
 	
 	
-	//FindConVar
+	// FindConVar
 	gc_sSoundCapitulationPath.GetString(g_sSoundCapitulationPath, sizeof(g_sSoundCapitulationPath));
 }
 
@@ -135,7 +135,7 @@ public Action Command_Capitulation(int client, int args)
 							
 							float DoubleTime = (gc_fRebelTime.FloatValue * 2);
 							RebelTimer[client] = CreateTimer(DoubleTime, Timer_RebelNoAction, client);
-						//	StripAllPlayerWeapons(client);
+						// 	StripAllPlayerWeapons(client);
 							LoopClients(i) Menu_CapitulationMenu(i);
 							if (gc_bSounds.BoolValue)EmitSoundToAllAny(g_sSoundCapitulationPath);
 						}
@@ -191,11 +191,11 @@ public void Capitulation_OnMapStart()
 
 public void Capitulation_OnConfigsExecuted()
 {
-	//Set custom Commands
+	// Set custom Commands
 	int iCount = 0;
 	char sCommands[128], sCommandsL[12][32], sCommand[32];
 	
-	//Capitulation
+	// Capitulation
 	gc_sCustomCommandCapitulation.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
 	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
@@ -203,7 +203,7 @@ public void Capitulation_OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
 			RegConsoleCmd(sCommand, Command_Capitulation, "Allows a rebeling terrorist to request a capitulate");
 	}
 }
@@ -298,7 +298,7 @@ public int Handler_CapitulationMenu(Menu menu, MenuAction action, int client, in
 		char Item[11];
 		menu.GetItem(Position, Item, sizeof(Item));
 		int choice = StringToInt(Item);
-		if (choice == 1)  //yes
+		if (choice == 1)  // yes
 		{
 			LoopClients(i) if (g_bCapitulated[i])
 			{
@@ -318,7 +318,7 @@ public int Handler_CapitulationMenu(Menu menu, MenuAction action, int client, in
 				ChangeRebelStatus(i, false);
 			}
 		}
-		if (choice == 0)  //no
+		if (choice == 0)  // no
 		{
 			LoopClients(i) if (g_bCapitulated[i])
 			{
@@ -326,7 +326,7 @@ public int Handler_CapitulationMenu(Menu menu, MenuAction action, int client, in
 				if (RequestTimer != null)
 					KillTimer(RequestTimer);
 				RequestTimer = null;
-				SetEntityRenderColor(i, 255, 0, 0, 255); //todo
+				SetEntityRenderColor(i, 255, 0, 0, 255); // todo
 				g_bCapitulated[i] = false;
 				if (RebelTimer[i] != null)
 					KillTimer(RebelTimer[i]);

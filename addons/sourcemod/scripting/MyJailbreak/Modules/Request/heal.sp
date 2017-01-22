@@ -11,11 +11,11 @@
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
  * details.
  *
  * You should have received a copy of the GNU General Public License along with
- * this program.  If not, see <http://www.gnu.org/licenses/>.
+ * this program. If not, see <http:// www.gnu.org/licenses/>.
  */
 
 
@@ -24,7 +24,7 @@
 ******************************************************************************/
 
 
-//Includes
+// Includes
 #include <sourcemod>
 #include <sdktools>
 #include <sdkhooks>
@@ -35,12 +35,12 @@
 #include <mystocks>
 
 
-//Compiler Options
+// Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
 
 
-//Console Variables
+// Console Variables
 ConVar gc_bHeal;
 ConVar gc_bHealthShot;
 ConVar gc_fHealTime;
@@ -53,30 +53,30 @@ ConVar gc_sCustomCommandHeal;
 ConVar gc_sAdminFlagHeal;
 
 
-//Booleans
+// Booleans
 bool g_bHealed[MAXPLAYERS+1];
 
 
-//Integers
+// Integers
 int g_iHealCounter[MAXPLAYERS+1];
 
 
-//Handles
+// Handles
 Handle HealTimer[MAXPLAYERS+1];
 
 
-//Strings
+// Strings
 char g_sAdminFlagHeal[32];
 
 
-//Start
+// Start
 public void Heal_OnPluginStart()
 {
-	//Client commands
+	// Client commands
 	RegConsoleCmd("sm_heal", Command_Heal, "Allows a Terrorist request healing");
 	
 	
-	//AutoExecConfig
+	// AutoExecConfig
 	gc_bHeal = AutoExecConfig_CreateConVar("sm_heal_enable", "1", "0 - disabled, 1 - enable heal");
 	gc_sCustomCommandHeal = AutoExecConfig_CreateConVar("sm_heal_cmds", "cure, h, ouch", "Set your custom chat command for Heal(!heal (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_bHealthShot = AutoExecConfig_CreateConVar("sm_heal_healthshot", "1", "0 - disabled, 1 - enable give healthshot on accept to terror");
@@ -89,13 +89,13 @@ public void Heal_OnPluginStart()
 	gc_sAdminFlagHeal = AutoExecConfig_CreateConVar("sm_heal_flag", "a", "Set flag for admin/vip to get one more heal. No flag = feature is available for all players!");
 	
 	
-	//Hooks 
+	// Hooks 
 	HookEvent("round_start", Heal_Event_RoundStart);
 	HookConVarChange(gc_sAdminFlagHeal, Heal_OnSettingChanged);
 	
 	
-	//FindConVar
-	gc_sAdminFlagHeal.GetString(g_sAdminFlagHeal , sizeof(g_sAdminFlagHeal));
+	// FindConVar
+	gc_sAdminFlagHeal.GetString(g_sAdminFlagHeal, sizeof(g_sAdminFlagHeal));
 }
 
 
@@ -113,7 +113,7 @@ public void Heal_OnSettingChanged(Handle convar, const char[] oldValue, const ch
 ******************************************************************************/
 
 
-//heal
+// heal
 public Action Command_Heal(int client, int args)
 {
 	if (gc_bPlugin.BoolValue)
@@ -184,11 +184,11 @@ public void Heal_Event_RoundStart(Event event, char [] name, bool dontBroadcast)
 
 public void Heal_OnConfigsExecuted()
 {
-	//Set custom Commands
+	// Set custom Commands
 	int iCount = 0;
 	char sCommands[128], sCommandsL[12][32], sCommand[32];
 	
-	//Capitulation
+	// Capitulation
 	gc_sCustomCommandHeal.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
 	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
@@ -196,7 +196,7 @@ public void Heal_OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
 			RegConsoleCmd(sCommand, Command_Heal, "Allows a Terrorist request healing");
 	}
 }

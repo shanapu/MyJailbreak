@@ -10,11 +10,11 @@
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
  * details.
  *
  * You should have received a copy of the GNU General Public License along with
- * this program.  If not, see <http://www.gnu.org/licenses/>.
+ * this program. If not, see <http:// www.gnu.org/licenses/>.
  */
 
 
@@ -23,7 +23,7 @@
 ******************************************************************************/
 
 
-//Console Variables
+// Console Variables
 ConVar gc_fBeaconRadius;
 ConVar gc_fBeaconWidth;
 ConVar gc_iCTColorRed;
@@ -34,16 +34,16 @@ ConVar gc_iCTColorBlue;
 ConVar gc_iTColorBlue;
 
 
-//Integers
+// Integers
 int g_iBeamSprite = -1;
 int g_iHaloSprite = -1;
 
 
-//Booleans
+// Booleans
 bool g_bBeaconOn[MAXPLAYERS+1] = false;
 
 
-//Floats
+// Floats
 public void Beacon_OnPluginStart()
 {
 	gc_fBeaconRadius = AutoExecConfig_CreateConVar("sm_myjb_beacon_radius", "850", "Sets the radius for the beacons rings.", _, true, 50.0, true, 1500.0);
@@ -55,7 +55,7 @@ public void Beacon_OnPluginStart()
 	gc_iTColorGreen = AutoExecConfig_CreateConVar("sm_myjb_beacon_T_color_green", "0", "What color to turn the T beacons into (rGb): x - green value", _, true, 0.0, true, 255.0);
 	gc_iTColorBlue = AutoExecConfig_CreateConVar("sm_myjb_beacon_T_color_blue", "0", "What color to turn the T beacons into (rgB): x - blue value", _, true, 0.0, true, 255.0);
 	
-	//Hooks
+	// Hooks
 	HookEvent("round_end", Beacon_Event_RoundEnd);
 	HookEvent("player_death", Beacon_Event_PlayerTeamDeath);
 	HookEvent("player_team", Beacon_Event_PlayerTeamDeath);
@@ -64,7 +64,7 @@ public void Beacon_OnPluginStart()
 
 public void Beacon_Event_PlayerTeamDeath(Event event, char[] name, bool dontBroadcast)
 {
-	int client = GetClientOfUserId(event.GetInt("userid"));  //Get the dead clients id
+	int client = GetClientOfUserId(event.GetInt("userid")); // Get the dead clients id
 	g_bBeaconOn[client] = false;
 }
 
@@ -124,7 +124,7 @@ public Action Timer_BeaconOn(Handle timer, any client)
 ******************************************************************************/
 
 
-//Start
+// Start
 public void Beacon_OnMapStart()
 {
 	g_iBeamSprite = PrecacheModel("materials/sprites/laserbeam.vmt");
@@ -134,7 +134,7 @@ public void Beacon_OnMapStart()
 }
 
 
-//Start
+// Start
 public void Beacon_OnMapEnd()
 {
 	LoopClients(i) g_bBeaconOn[i] = false;
@@ -151,7 +151,7 @@ public void OnAvailableLR(int Announced)
 ******************************************************************************/
 
 
-//Activate Beacon on client & set interval
+// Activate Beacon on client & set interval
 public int Native_BeaconOn(Handle plugin, int argc)
 {
 	int client = GetNativeCell(1);
@@ -165,7 +165,7 @@ public int Native_BeaconOn(Handle plugin, int argc)
 }
 
 
-//Remove beacon from client
+// Remove beacon from client
 public int Native_BeaconOff(Handle plugin, int argc)
 {
 	int client = GetNativeCell(1);

@@ -11,11 +11,11 @@
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
  * details.
  *
  * You should have received a copy of the GNU General Public License along with
- * this program.  If not, see <http://www.gnu.org/licenses/>.
+ * this program. If not, see <http:// www.gnu.org/licenses/>.
  */
 
 
@@ -24,7 +24,7 @@
 ******************************************************************************/
 
 
-//Includes
+// Includes
 #include <sourcemod>
 #include <sdktools>
 #include <sdkhooks>
@@ -34,19 +34,19 @@
 #include <clientprefs>
 #include <mystocks>
 
-//Optional Plugins
+// Optional Plugins
 #undef REQUIRE_PLUGIN
 #include <myjailbreak>
 #include <warden>
 #define REQUIRE_PLUGIN
 
 
-//Compiler Options
+// Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
 
 
-//Booleans
+// Booleans
 bool newWeaponsSelected[MAXPLAYERS+1];
 bool rememberChoice[MAXPLAYERS+1];
 bool TA[MAXPLAYERS+1];
@@ -55,7 +55,7 @@ bool gp_bWarden = false;
 bool gp_bMyJailBreak = false;
 
 
-//Handles
+// Handles
 Handle optionsMenu1 = null;
 Handle optionsMenu2 = null;
 Handle optionsMenu3 = null;
@@ -67,7 +67,7 @@ Handle weapons1 = null;
 Handle weapons2 = null;
 
 
-//Console Variables
+// Console Variables
 ConVar gc_bSpawn;
 ConVar gc_bPlugin;
 ConVar gc_bTerror;
@@ -85,12 +85,12 @@ ConVar gc_bKevlar;
 ConVar gc_sCustomCommandWeapon;
 
 
-//Extern Convars
+// Extern Convars
 ConVar g_bTaserWarden;
 ConVar g_bTaserDeputy;
 
 
-//Strings
+// Strings
 char primaryWeapon[MAXPLAYERS + 1][24];
 char secondaryWeapon[MAXPLAYERS + 1][24];
 
@@ -102,7 +102,7 @@ enum weapons
 }
 
 
-//Info
+// Info
 public Plugin myinfo =
 {
 	name = "MyJailbreak - Weapons", 
@@ -113,47 +113,47 @@ public Plugin myinfo =
 };
 
 
-//Start
+// Start
 public void OnPluginStart()
 {
 	// Translation
 	LoadTranslations("MyJailbreak.Weapons.phrases");
 	
 	
-	//Client Commands
+	// Client Commands
 	RegConsoleCmd("sm_weapon", Command_Weapons, "Open the weapon menu if enabled (in EventDays/for CT)");
 	
 	
-	//AutoExecConfig
+	// AutoExecConfig
 	AutoExecConfig_SetFile("Weapons", "MyJailbreak");
 	AutoExecConfig_SetCreateFile(true);
 	
 	AutoExecConfig_CreateConVar("sm_weapons_version", MYJB_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
-	gc_bPlugin = AutoExecConfig_CreateConVar("sm_weapons_enable", "1", "0 - disabled, 1 - enable weapons menu - you shouldn't touch these, cause events days will handle them", _, true,  0.0, true, 1.0);
+	gc_bPlugin = AutoExecConfig_CreateConVar("sm_weapons_enable", "1", "0 - disabled, 1 - enable weapons menu - you shouldn't touch these, cause events days will handle them", _, true, 0.0, true, 1.0);
 	gc_sCustomCommandWeapon = AutoExecConfig_CreateConVar("sm_weapons_cmds", "gun, guns, weapons, gunmenu, weaponmenu, giveweapon, arms", "Set your custom chat command for weapon menu(!weapon (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
-	gc_bTerror = AutoExecConfig_CreateConVar("sm_weapons_t", "0", "0 - disabled, 1 - enable weapons menu for T - you shouldn't touch these, cause events days will handle them", _, true,  0.0, true, 1.0);
-	gc_bCTerror = AutoExecConfig_CreateConVar("sm_weapons_ct", "1", "0 - disabled, 1 - enable weapons menu for CT - you shouldn't touch these, cause events days will handle them", _, true,  0.0, true, 1.0);
-	gc_bSpawn = AutoExecConfig_CreateConVar("sm_weapons_spawnmenu", "1", "0 - disabled, 1 -  enable autoopen weapon menu on spawn", _, true,  0.0, true, 1.0);
-	gc_bAWP = AutoExecConfig_CreateConVar("sm_weapons_awp", "1", "0 - disabled, 1 - enable AWP in menu", _, true,  0.0, true, 1.0);
-	gc_bAutoSniper = AutoExecConfig_CreateConVar("sm_weapons_autosniper", "1", "0 - disabled, 1 - enable scar20 & g3sg1 in menu", _, true,  0.0, true, 1.0);
-	gc_bNegev = AutoExecConfig_CreateConVar("sm_weapons_negev", "1", "0 - disabled, 1 - enable negev in menu", _, true,  0.0, true, 1.0);
-	gc_bM249 = AutoExecConfig_CreateConVar("sm_weapons_m249", "1", "0 - disabled, 1 - enable m249 in menu", _, true,  0.0, true, 1.0);
-	gc_bTAWarden = AutoExecConfig_CreateConVar("sm_weapons_warden_tagrenade", "1", "0 - disabled, 1 - warden get a TA grenade with weapons - need MyJB warden", _, true,  0.0, true, 1.0);
-	gc_bHealthWarden = AutoExecConfig_CreateConVar("sm_weapons_warden_healthshot", "1", "0 - disabled, 1 - warden get a healthshot with weapons - need MyJB warden", _, true,  0.0, true, 1.0);
-	gc_bTADeputy = AutoExecConfig_CreateConVar("sm_weapons_warden_tagrenade", "1", "0 - disabled, 1 - warden get a TA grenade with weapons - need MyJB warden", _, true,  0.0, true, 1.0);
-	gc_bHealthDeputy = AutoExecConfig_CreateConVar("sm_weapons_warden_healthshot", "1", "0 - disabled, 1 - warden get a healthshot with weapons - need MyJB warden", _, true,  0.0, true, 1.0);
-	gc_bKevlar = AutoExecConfig_CreateConVar("sm_weapons_kevlar", "1", "0 - disabled, 1 - CT get Kevlar & helm on Spawn", _, true,  0.0, true, 1.0);
-	gc_bJBmenu = AutoExecConfig_CreateConVar("sm_weapons_jbmenu", "1", "0 - disabled, 1 - enable autoopen the MyJailbreak !menu after weapon given.", _, true,  0.0, true, 1.0);
+	gc_bTerror = AutoExecConfig_CreateConVar("sm_weapons_t", "0", "0 - disabled, 1 - enable weapons menu for T - you shouldn't touch these, cause events days will handle them", _, true, 0.0, true, 1.0);
+	gc_bCTerror = AutoExecConfig_CreateConVar("sm_weapons_ct", "1", "0 - disabled, 1 - enable weapons menu for CT - you shouldn't touch these, cause events days will handle them", _, true, 0.0, true, 1.0);
+	gc_bSpawn = AutoExecConfig_CreateConVar("sm_weapons_spawnmenu", "1", "0 - disabled, 1 -  enable autoopen weapon menu on spawn", _, true, 0.0, true, 1.0);
+	gc_bAWP = AutoExecConfig_CreateConVar("sm_weapons_awp", "1", "0 - disabled, 1 - enable AWP in menu", _, true, 0.0, true, 1.0);
+	gc_bAutoSniper = AutoExecConfig_CreateConVar("sm_weapons_autosniper", "1", "0 - disabled, 1 - enable scar20 & g3sg1 in menu", _, true, 0.0, true, 1.0);
+	gc_bNegev = AutoExecConfig_CreateConVar("sm_weapons_negev", "1", "0 - disabled, 1 - enable negev in menu", _, true, 0.0, true, 1.0);
+	gc_bM249 = AutoExecConfig_CreateConVar("sm_weapons_m249", "1", "0 - disabled, 1 - enable m249 in menu", _, true, 0.0, true, 1.0);
+	gc_bTAWarden = AutoExecConfig_CreateConVar("sm_weapons_warden_tagrenade", "1", "0 - disabled, 1 - warden get a TA grenade with weapons - need MyJB warden", _, true, 0.0, true, 1.0);
+	gc_bHealthWarden = AutoExecConfig_CreateConVar("sm_weapons_warden_healthshot", "1", "0 - disabled, 1 - warden get a healthshot with weapons - need MyJB warden", _, true, 0.0, true, 1.0);
+	gc_bTADeputy = AutoExecConfig_CreateConVar("sm_weapons_warden_tagrenade", "1", "0 - disabled, 1 - warden get a TA grenade with weapons - need MyJB warden", _, true, 0.0, true, 1.0);
+	gc_bHealthDeputy = AutoExecConfig_CreateConVar("sm_weapons_warden_healthshot", "1", "0 - disabled, 1 - warden get a healthshot with weapons - need MyJB warden", _, true, 0.0, true, 1.0);
+	gc_bKevlar = AutoExecConfig_CreateConVar("sm_weapons_kevlar", "1", "0 - disabled, 1 - CT get Kevlar & helm on Spawn", _, true, 0.0, true, 1.0);
+	gc_bJBmenu = AutoExecConfig_CreateConVar("sm_weapons_jbmenu", "1", "0 - disabled, 1 - enable autoopen the MyJailbreak !menu after weapon given.", _, true, 0.0, true, 1.0);
 	
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
 	
 	
-	//Hooks
+	// Hooks
 	HookEvent("player_spawn", Event_PlayerSpawn);
 	
 	
-	//Cookies
+	// Cookies
 	weapons1 = RegClientCookie("Primary Weapons", "", CookieAccess_Private);
 	weapons2 = RegClientCookie("Secondary Weapons", "", CookieAccess_Private);
 }
@@ -184,12 +184,12 @@ public void OnAllPluginsLoaded()
 	gp_bWarden = LibraryExists("warden");
 	gp_bMyJailBreak = LibraryExists("myjailbreak");
 	
-	//FindConVar
+	// FindConVar
 	g_bTaserWarden = FindConVar("sm_warden_handcuffs");
 	g_bTaserDeputy = FindConVar("sm_warden_handcuffs_deputy");
 }
 
-//Initialize Plugin
+// Initialize Plugin
 public void OnConfigsExecuted()
 {
 	array_primary = CreateArray(128);
@@ -203,11 +203,11 @@ public void OnConfigsExecuted()
 	optionsMenu4 = Menu_BuildWeaponsMenu(false);
 	
 	
-	//Set custom Commands
+	// Set custom Commands
 	int iCount = 0;
 	char sCommands[128], sCommandsL[12][32], sCommand[32];
 	
-	//weapons
+	// weapons
 	gc_sCustomCommandWeapon.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
 	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
@@ -215,7 +215,7 @@ public void OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
 			RegConsoleCmd(sCommand, Command_Weapons, "Open the weapon menu if enabled (in EventDays/for CT)");
 	}
 }
@@ -226,7 +226,7 @@ public void OnConfigsExecuted()
 ******************************************************************************/
 
 
-//Open the weapon menu
+// Open the weapon menu
 public Action Command_Weapons(int client, int args)
 {
 	if (gc_bPlugin.BoolValue)	
@@ -239,7 +239,7 @@ public Action Command_Weapons(int client, int args)
 		}
 		return Plugin_Continue;
 	}
-	else CReplyToCommand(client, "%t %t", "weapons_tag" , "weapons_disabled");
+	else CReplyToCommand(client, "%t %t", "weapons_tag", "weapons_disabled");
 	return Plugin_Continue;
 }
 
@@ -249,7 +249,7 @@ public Action Command_Weapons(int client, int args)
 ******************************************************************************/
 
 
-//On Player Spawn
+// On Player Spawn
 public void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));
@@ -264,7 +264,7 @@ public void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast
 	{
 		if (gp_bMyJailBreak)
 		{
-			if(MyJailbreak_IsEventDayRunning() || MyJailbreak_IsEventDayPlanned())
+			if (MyJailbreak_IsEventDayRunning() || MyJailbreak_IsEventDayPlanned())
 			return;
 		}
 		
@@ -292,7 +292,7 @@ void GiveSavedWeaponsFix(int client)
 		{
 			if ((gc_bTerror.BoolValue && GetClientTeam(client) == 2) || (gc_bCTerror.BoolValue && GetClientTeam(client) == 3))
 			{
-				//StripAllPlayerWeapons(client);
+				// StripAllPlayerWeapons(client);
 				if (GetPlayerWeaponSlot(client, CS_SLOT_PRIMARY) == -1)
 				{
 					if (StrEqual(primaryWeapon[client], "random"))
@@ -482,7 +482,7 @@ void ListWeapons()
 	{
 		Format(Items[ItemName], 64, "weapon_awp");
 		Format(Items[desc], 64, "AWP");
-		PushArrayArray(array_primary, Items[0]); 
+		PushArrayArray(array_primary, Items[0]);
 	}
 	
 	if (gc_bAutoSniper.BoolValue)
@@ -493,7 +493,7 @@ void ListWeapons()
 		
 		Format(Items[ItemName], 64, "weapon_g3sg1");
 		Format(Items[desc], 64, "G3SG1");
-		PushArrayArray(array_primary, Items[0]); 
+		PushArrayArray(array_primary, Items[0]);
 	}
 	
 	Format(Items[ItemName], 64, "weapon_bizon");
@@ -522,7 +522,7 @@ void ListWeapons()
 	
 	Format(Items[ItemName], 64, "weapon_ssg08");
 	Format(Items[desc], 64, "SSG 08");
-	PushArrayArray(array_primary, Items[0]); 
+	PushArrayArray(array_primary, Items[0]);
 	
 	Format(Items[ItemName], 64, "weapon_nova");
 	Format(Items[desc], 64, "Nova");
@@ -562,7 +562,7 @@ void ListWeapons()
 	
 	Format(Items[ItemName], 64, "weapon_cz75a");
 	Format(Items[desc], 64, "CZ75-Auto");
-	PushArrayArray(array_secondary, Items[0]); 
+	PushArrayArray(array_secondary, Items[0]);
 	
 	Format(Items[ItemName], 64, "weapon_glock");
 	Format(Items[desc], 64, "Glock-18");
@@ -622,7 +622,7 @@ public void OnClientDisconnect(int client)
 ******************************************************************************/
 
 
-//Menu first site - choosing mode
+// Menu first site - choosing mode
 Handle Menu_BuildOptionsMenu(bool sameWeaponsEnabled)
 {
 	char info1[255], info2[255], info3[255], info4[255], info5[255], info6[255];
@@ -646,7 +646,7 @@ Handle Menu_BuildOptionsMenu(bool sameWeaponsEnabled)
 }
 
 
-//Menu Handler first site - choosing mode
+// Menu Handler first site - choosing mode
 public int Handler_BuildOptionsMenu(Menu menu, MenuAction action, int client, int param2)
 {
 	if (action == MenuAction_Select)
@@ -700,7 +700,7 @@ public int Handler_BuildOptionsMenu(Menu menu, MenuAction action, int client, in
 }
 
 
-//Menu choose weapons
+// Menu choose weapons
 Handle Menu_BuildWeaponsMenu(bool primary)
 {
 	
@@ -713,7 +713,7 @@ Handle Menu_BuildWeaponsMenu(bool primary)
 		Format(info7, sizeof(info7), "%T\n ", "weapons_info_prim", LANG_SERVER);
 		SetMenuTitle(menu, info7);
 		menu.ExitButton = true;
-		for (int i=0;i<GetArraySize(array_primary);++i)
+		for (int i=0; i<GetArraySize(array_primary);++i)
 		{
 			GetArrayArray(array_primary, i, Items[0]);
 			AddMenuItem(menu, Items[ItemName], Items[desc]);
@@ -725,7 +725,7 @@ Handle Menu_BuildWeaponsMenu(bool primary)
 		Format(info8, sizeof(info8), "%T\n ", "weapons_info_sec", LANG_SERVER);
 		SetMenuTitle(menu, info8);
 		menu.ExitButton = true;
-		for (int i=0;i<GetArraySize(array_secondary);++i)
+		for (int i=0; i<GetArraySize(array_secondary);++i)
 		{
 			GetArrayArray(array_secondary, i, Items[0]);
 			AddMenuItem(menu, Items[ItemName], Items[desc]);
@@ -735,7 +735,7 @@ Handle Menu_BuildWeaponsMenu(bool primary)
 }
 
 
-//Menu choose primary weapons
+// Menu choose primary weapons
 public int Menu_Primary(Menu menu, MenuAction action, int client, int param2)
 {
 	if (action == MenuAction_Select)
@@ -748,7 +748,7 @@ public int Menu_Primary(Menu menu, MenuAction action, int client, int param2)
 }
 
 
-//Menu choose secondary weapons
+// Menu choose secondary weapons
 public int Menu_Secondary(Menu menu, MenuAction action, int client, int param2)
 {
 	if (action == MenuAction_Select)
@@ -763,7 +763,7 @@ public int Menu_Secondary(Menu menu, MenuAction action, int client, int param2)
 }
 
 
-//Check for display menu
+// Check for display menu
 void DisplayOptionsMenu(int client)
 {
 	if (gc_bPlugin.BoolValue)	
@@ -784,7 +784,7 @@ void DisplayOptionsMenu(int client)
 ******************************************************************************/
 
 
-//Give choosed weapon timer
+// Give choosed weapon timer
 public Action Timer_GetWeapons(Handle timer, any client)
 {
 	Timers[client] = null;

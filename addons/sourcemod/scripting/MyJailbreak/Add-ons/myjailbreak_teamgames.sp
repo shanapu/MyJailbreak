@@ -12,15 +12,15 @@
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
  * details.
  *
  * You should have received a copy of the GNU General Public License along with
- * this program.  If not, see <http://www.gnu.org/licenses/>.
+ * this program. If not, see <http:// www.gnu.org/licenses/>.
  */
 
 
-//Includes
+// Includes
 #include <sourcemod>
 #include <sdktools>
 #include <sdkhooks>
@@ -28,12 +28,12 @@
 #include <myjailbreak>
 
 
-//Compiler Options
+// Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
 
 
-//Variables
+// Variables
 ConVar Cvar_tg_team_none_attack;
 ConVar Cvar_tg_cvar_friendlyfire;
 ConVar Cvar_tg_ct_friendlyfire;
@@ -43,7 +43,7 @@ int OldCvar_tg_ct_friendlyfire;
 bool hastoggled;
 
 
-//Info
+// Info
 public Plugin myinfo = {
 	name = "MyJailbreak - Teamgames - FF toggle", 
 	author = "shanapu", 
@@ -53,10 +53,10 @@ public Plugin myinfo = {
 };
 
 
-//Start
+// Start
 public void OnPluginStart()
 {
-	//Hooks
+	// Hooks
 	HookEvent("round_poststart", Event_RoundStart_Post);
 	HookEvent("round_end", Event_RoundEnd);
 }
@@ -76,17 +76,17 @@ public void Event_RoundStart_Post(Event event, const char[] name, bool dontBroad
 	
 	if (MyJailbreak_IsEventDayRunning() && bFFA.BoolValue)
 	{
-		//Get the Cvar Value
+		// Get the Cvar Value
 		Cvar_tg_team_none_attack = FindConVar("tg_team_none_attack");
 		Cvar_tg_cvar_friendlyfire = FindConVar("tg_cvar_friendlyfire");
 		Cvar_tg_ct_friendlyfire = FindConVar("tg_ct_friendlyfire");
 		
-		//Save the Cvar Value
+		// Save the Cvar Value
 		OldCvar_tg_team_none_attack = Cvar_tg_team_none_attack.IntValue;
 		OldCvar_tg_cvar_friendlyfire = Cvar_tg_cvar_friendlyfire.IntValue;
 		OldCvar_tg_ct_friendlyfire = Cvar_tg_ct_friendlyfire.IntValue;
 		
-		//Change the Cvar Value
+		// Change the Cvar Value
 		Cvar_tg_team_none_attack.IntValue = 1;
 		Cvar_tg_cvar_friendlyfire.IntValue = 1;
 		Cvar_tg_ct_friendlyfire.IntValue = 1;
@@ -100,7 +100,7 @@ public void Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 {
 	if (hastoggled)
 	{
-		//Replace the Cvar Value with old value
+		// Replace the Cvar Value with old value
 		Cvar_tg_team_none_attack.IntValue = OldCvar_tg_team_none_attack;
 		Cvar_tg_cvar_friendlyfire.IntValue = OldCvar_tg_cvar_friendlyfire;
 		Cvar_tg_ct_friendlyfire.IntValue = OldCvar_tg_ct_friendlyfire;

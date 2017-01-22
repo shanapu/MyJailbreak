@@ -11,11 +11,11 @@
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
  * details.
  *
  * You should have received a copy of the GNU General Public License along with
- * this program.  If not, see <http://www.gnu.org/licenses/>.
+ * this program. If not, see <http:// www.gnu.org/licenses/>.
  */
 
 
@@ -24,7 +24,7 @@
 ******************************************************************************/
 
 
-//Includes
+// Includes
 #include <sourcemod>
 #include <sdktools>
 #include <sdkhooks>
@@ -34,29 +34,29 @@
 #include <warden>
 #include <mystocks>
 
-//Optional Plugins
+// Optional Plugins
 #undef REQUIRE_PLUGIN
 #include <myjailbreak>
 #define REQUIRE_PLUGIN
 
 
-//Compiler Options
+// Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
 
 
-//Console Variables
+// Console Variables
 ConVar gc_bKillReason;
 
 
-//Start
+// Start
 public void KillReason_OnPluginStart()
 {
-	//AutoExecConfig
+	// AutoExecConfig
 	gc_bKillReason = AutoExecConfig_CreateConVar("sm_killreason_enable", "1", "0 - disabled, 1 - enable - CT can answer a menu with the kill reason");
 	
 	
-	//Hooks 
+	// Hooks 
 	HookEvent("player_death", KillReason_Event_PlayerDeath);
 }
 
@@ -119,28 +119,28 @@ public int Handler_KillReason(Menu menu, MenuAction action, int client, int Posi
 		
 		if (IsValidClient(victim, true, true) && IsValidClient(client, false, true))
 		{
-			if (choice == 1) //lostgame
+			if (choice == 1) // lostgame
 			{
 				CPrintToChatAll("%t %t", "request_tag", "request_killreason_lostgame_chat", client, victim);
 			}
-			if (choice == 2) //rebel
+			if (choice == 2) // rebel
 			{
 				CPrintToChatAll("%t %t", "request_tag", "request_killreason_rebel_chat", client, victim);
 			}
-			if (choice == 3) //broke rule
+			if (choice == 3) // broke rule
 			{
 				CPrintToChatAll("%t %t", "request_tag", "request_killreason_brokerule_chat", client, victim);
 			}
-			if (choice == 4) //dictate
+			if (choice == 4) // dictate
 			{
 				CPrintToChatAll("%t %t", "request_tag", "request_killreason_notfollow_chat", client, victim);
 			}
-			if (choice == 5) //sry
+			if (choice == 5) // sry
 			{
 				CPrintToChatAll("%t %t", "request_tag", "request_killreason_sry_chat", client, victim);
 				Command_Freekill(victim, 0);
 			}
-			if (choice == 6) //freekill
+			if (choice == 6) // freekill
 			{
 				CPrintToChatAll("%t %t", "request_tag", "request_killreason_freekill_chat", client, victim);
 				Command_Freekill(victim, 0);

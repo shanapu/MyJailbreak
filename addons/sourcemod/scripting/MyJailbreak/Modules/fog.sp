@@ -10,11 +10,11 @@
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
  * details.
  *
  * You should have received a copy of the GNU General Public License along with
- * this program.  If not, see <http://www.gnu.org/licenses/>.
+ * this program. If not, see <http:// www.gnu.org/licenses/>.
  */
 
 
@@ -23,11 +23,11 @@
 ******************************************************************************/
 
 
-//Integers
+// Integers
 int FogIndex = -1;
 
 
-//Floats
+// Floats
 float mapFogStart = 0.0;
 float mapFogEnd = 150.0;
 float mapFogDensity = 0.99;
@@ -38,7 +38,7 @@ float mapFogDensity = 0.99;
 ******************************************************************************/
 
 
-//Magic
+// Magic
 void DoFog()
 {
 	if (FogIndex != -1)
@@ -58,10 +58,10 @@ void DoFog()
 ******************************************************************************/
 
 
-//Start
+// Start
 public void Fog_OnMapStart()
 {
-	int ent; 
+	int ent;
 	ent = FindEntityByClassname(-1, "env_fog_controller");
 	if (ent != -1) 
 	{
@@ -82,14 +82,14 @@ public void Fog_OnMapStart()
 ******************************************************************************/
 
 
-//Set Map fog in module
+// Set Map fog in module
 public int Native_FogOn(Handle plugin, int argc)
 {
 	AcceptEntityInput(FogIndex, "TurnOn");
 }
 
 
-//Remove Map fog OFF in module
+// Remove Map fog OFF in module
 public int Native_FogOff(Handle plugin, int argc)
 {
 	AcceptEntityInput(FogIndex, "TurnOff");

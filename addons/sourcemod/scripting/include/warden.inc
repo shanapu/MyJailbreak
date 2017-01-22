@@ -123,7 +123,7 @@ forward void warden_OnWardenDeath(int client);
  * Checks if any warden exist
  *
  *
- * @true on match , false if not
+ * @true on match, false if not
  *********************************************************/
 native warden_exist();
 
@@ -178,7 +178,7 @@ native warden_getlast();
  * Checks if any Deputy exist
  *
  *
- * @true on match , false if not
+ * @true on match, false if not
  *********************************************************/
 native warden_deputy_exist();
 

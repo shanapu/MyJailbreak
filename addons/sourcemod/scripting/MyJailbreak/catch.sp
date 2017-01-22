@@ -11,11 +11,11 @@
  *
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
  * details.
  *
  * You should have received a copy of the GNU General Public License along with
- * this program.  If not, see <http://www.gnu.org/licenses/>.
+ * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 
@@ -855,7 +855,7 @@ void StartNextRound()
 	MyJailbreak_SetEventDayPlanned(true);
 
 	g_iOldRoundTime = g_iMPRoundTime.IntValue; // save original round time
-	g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue;// set event round time
+	g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue; // set event round time
 
 	CPrintToChatAll("%t %t", "catch_tag", "catch_next");
 	PrintCenterTextAll("%t", "catch_next_nc");

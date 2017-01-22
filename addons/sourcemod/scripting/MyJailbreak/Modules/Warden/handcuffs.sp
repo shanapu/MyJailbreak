@@ -11,11 +11,11 @@
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
  * details.
  *
  * You should have received a copy of the GNU General Public License along with
- * this program.  If not, see <http://www.gnu.org/licenses/>.
+ * this program. If not, see <http:// www.gnu.org/licenses/>.
  */
 
 
@@ -24,7 +24,7 @@
 ******************************************************************************/
 
 
-//Includes
+// Includes
 #include <sourcemod>
 #include <sdktools>
 #include <sdkhooks>
@@ -41,12 +41,12 @@
 #define REQUIRE_PLUGIN
 
 
-//Compiler Options
+// Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
 
 
-//Console Variables
+// Console Variables
 ConVar gc_bHandCuff;
 ConVar gc_bHandCuffDeputy;
 ConVar gc_iHandCuffsNumber;
@@ -67,18 +67,18 @@ ConVar gc_iCuffedColorGreen;
 ConVar gc_iCuffedColorBlue;
 
 
-//Booleans
+// Booleans
 bool g_bCuffed[MAXPLAYERS+1] = false;
 
 
-//Integers
+// Integers
 int g_iPlayerHandCuffs[MAXPLAYERS+1];
 int g_iPlayerPaperClips[MAXPLAYERS+1];
 int g_iCuffed = 0;
 int TickTime[MAXPLAYERS+1];
 
 
-//Strings
+// Strings
 char g_sSoundCuffsPath[256];
 char g_sOverlayCuffsPath[256];
 char g_sAdminFlagCuffs[32];
@@ -87,28 +87,28 @@ char g_sSoundUnLockCuffsPath[256];
 char g_sEquipWeapon[MAXPLAYERS+1][32];
 
 
-//Handles
+// Handles
 Handle BreakTimer[MAXPLAYERS+1];
 Handle ProgressTimer[MAXPLAYERS+1];
 
 
-//Info
+// Info
 public void HandCuffs_OnPluginStart()
 {
-	//AutoExecConfig
-	gc_bHandCuff = AutoExecConfig_CreateConVar("sm_warden_handcuffs", "1", "0 - disabled, 1 - enable handcuffs", _, true,  0.0, true, 1.0);
-	gc_bHandCuffDeputy = AutoExecConfig_CreateConVar("sm_warden_handcuffs_deputy", "1", "0 - disabled, 1 - enable handcuffs for deputy, too", _, true,  0.0, true, 1.0);
-	gc_iHandCuffsNumber = AutoExecConfig_CreateConVar("sm_warden_handcuffs_number", "2", "How many handcuffs a warden got?", _, true,  1.0);
-	gc_iHandCuffsDistance = AutoExecConfig_CreateConVar("sm_warden_handcuffs_distance", "2", "How many meters distance from warden to handcuffed T to pick up?", _, true,  1.0);
-	gc_bHandCuffLR = AutoExecConfig_CreateConVar("sm_warden_handcuffs_lr", "1", "0 - disabled, 1 - free cuffed terrorists on LR", _, true,  0.0, true, 1.0);
-	gc_bHandCuffCT = AutoExecConfig_CreateConVar("sm_warden_handcuffs_ct", "1", "0 - disabled, 1 - Warden can also handcuff CTs", _, true,  0.0, true, 1.0);
+	// AutoExecConfig
+	gc_bHandCuff = AutoExecConfig_CreateConVar("sm_warden_handcuffs", "1", "0 - disabled, 1 - enable handcuffs", _, true, 0.0, true, 1.0);
+	gc_bHandCuffDeputy = AutoExecConfig_CreateConVar("sm_warden_handcuffs_deputy", "1", "0 - disabled, 1 - enable handcuffs for deputy, too", _, true, 0.0, true, 1.0);
+	gc_iHandCuffsNumber = AutoExecConfig_CreateConVar("sm_warden_handcuffs_number", "2", "How many handcuffs a warden got?", _, true, 1.0);
+	gc_iHandCuffsDistance = AutoExecConfig_CreateConVar("sm_warden_handcuffs_distance", "2", "How many meters distance from warden to handcuffed T to pick up?", _, true, 1.0);
+	gc_bHandCuffLR = AutoExecConfig_CreateConVar("sm_warden_handcuffs_lr", "1", "0 - disabled, 1 - free cuffed terrorists on LR", _, true, 0.0, true, 1.0);
+	gc_bHandCuffCT = AutoExecConfig_CreateConVar("sm_warden_handcuffs_ct", "1", "0 - disabled, 1 - Warden can also handcuff CTs", _, true, 0.0, true, 1.0);
 	gc_sAdminFlagCuffs = AutoExecConfig_CreateConVar("sm_warden_handcuffs_flag", "", "Set flag for admin/vip must have to get access to lockpicking feature. No flag = lockpicking is available for all players!");
 	gc_fUnLockTimeMax = AutoExecConfig_CreateConVar("sm_warden_handcuffs_unlock_maxtime", "35.0", "Time in seconds Ts need free themself with a paperclip.", _, true, 0.1);
-	gc_iPaperClipGetChance = AutoExecConfig_CreateConVar("sm_warden_handcuffs_paperclip_chance", "5", "Set the chance (1:x) a cuffed Terroris get a paperclip to free themself", _, true,  1.0);
-	gc_iPaperClipUnLockChance = AutoExecConfig_CreateConVar("sm_warden_handcuffs_unlock_chance", "3", "Set the chance (1:x) a cuffed Terroris who has a paperclip to free themself", _, true,  1.0);
-	gc_fUnLockTimeMin = AutoExecConfig_CreateConVar("sm_warden_handcuffs_unlock_mintime", "15.0", "Min. Time in seconds Ts need free themself with a paperclip.", _, true,  1.0);
-	gc_fUnLockTimeMax = AutoExecConfig_CreateConVar("sm_warden_handcuffs_unlock_maxtime", "35.0", "Max. Time in seconds Ts need free themself with a paperclip.", _, true,  1.0);
-	gc_sOverlayCuffsPath = AutoExecConfig_CreateConVar("sm_warden_overlays_cuffs", "overlays/MyJailbreak/cuffs" , "Path to the cuffs Overlay DONT TYPE .vmt or .vft");
+	gc_iPaperClipGetChance = AutoExecConfig_CreateConVar("sm_warden_handcuffs_paperclip_chance", "5", "Set the chance (1:x) a cuffed Terroris get a paperclip to free themself", _, true, 1.0);
+	gc_iPaperClipUnLockChance = AutoExecConfig_CreateConVar("sm_warden_handcuffs_unlock_chance", "3", "Set the chance (1:x) a cuffed Terroris who has a paperclip to free themself", _, true, 1.0);
+	gc_fUnLockTimeMin = AutoExecConfig_CreateConVar("sm_warden_handcuffs_unlock_mintime", "15.0", "Min. Time in seconds Ts need free themself with a paperclip.", _, true, 1.0);
+	gc_fUnLockTimeMax = AutoExecConfig_CreateConVar("sm_warden_handcuffs_unlock_maxtime", "35.0", "Max. Time in seconds Ts need free themself with a paperclip.", _, true, 1.0);
+	gc_sOverlayCuffsPath = AutoExecConfig_CreateConVar("sm_warden_overlays_cuffs", "overlays/MyJailbreak/cuffs", "Path to the cuffs Overlay DONT TYPE .vmt or .vft");
 	gc_sSoundCuffsPath = AutoExecConfig_CreateConVar("sm_warden_sounds_cuffs", "music/MyJailbreak/cuffs.mp3", "Path to the soundfile which should be played for cuffed player.");
 	gc_sSoundBreakCuffsPath = AutoExecConfig_CreateConVar("sm_warden_sounds_breakcuffs", "music/MyJailbreak/breakcuffs.mp3", "Path to the soundfile which should be played for break cuffs.");
 	gc_sSoundUnLockCuffsPath = AutoExecConfig_CreateConVar("sm_warden_sounds_unlock", "music/MyJailbreak/unlock.mp3", "Path to the soundfile which should be played for unlocking cuffs.");
@@ -118,7 +118,7 @@ public void HandCuffs_OnPluginStart()
 	
 	// RegConsoleCmd("sm_cuff", Command_cuff);
 	
-	//Hooks
+	// Hooks
 	HookEvent("round_start", HandCuffs_Event_RoundStart);
 	HookEvent("round_end", HandCuffs_Event_RoundEnd);
 	HookEvent("player_death", HandCuffs_Event_PlayerTeamDeath);
@@ -132,12 +132,12 @@ public void HandCuffs_OnPluginStart()
 	HookConVarChange(gc_sAdminFlagCuffs, HandCuffs_OnSettingChanged);
 	
 	
-	//FindConVar
+	// FindConVar
 	gc_sSoundCuffsPath.GetString(g_sSoundCuffsPath, sizeof(g_sSoundCuffsPath));
 	gc_sSoundBreakCuffsPath.GetString(g_sSoundBreakCuffsPath, sizeof(g_sSoundBreakCuffsPath));
 	gc_sSoundUnLockCuffsPath.GetString(g_sSoundUnLockCuffsPath, sizeof(g_sSoundUnLockCuffsPath));
-	gc_sOverlayCuffsPath.GetString(g_sOverlayCuffsPath , sizeof(g_sOverlayCuffsPath));
-	gc_sAdminFlagCuffs.GetString(g_sAdminFlagCuffs , sizeof(g_sAdminFlagCuffs));
+	gc_sOverlayCuffsPath.GetString(g_sOverlayCuffsPath, sizeof(g_sOverlayCuffsPath));
+	gc_sAdminFlagCuffs.GetString(g_sAdminFlagCuffs, sizeof(g_sAdminFlagCuffs));
 }
 
 
@@ -215,7 +215,7 @@ public void HandCuffs_Event_PlayerTeamDeath(Event event, const char[] name, bool
 		g_bCuffed[client] = false;
 		SetEntityMoveType(client, MOVETYPE_WALK);
 		SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
-		CreateTimer( 0.0, DeleteOverlay, client );
+		CreateTimer(0.0, DeleteOverlay, client);
 	}
 }
 
@@ -483,8 +483,8 @@ void CuffsEm(int client, int attacker)
 		g_iCuffed++;
 		if (gc_bSounds)EmitSoundToAllAny(g_sSoundCuffsPath);
 		
-		CPrintToChatAll("%t %t", "warden_tag" , "warden_cuffson", attacker, client);
-		CPrintToChat(attacker, "%t %t", "warden_tag" , "warden_cuffsgot", g_iPlayerHandCuffs[attacker]);
+		CPrintToChatAll("%t %t", "warden_tag", "warden_cuffson", attacker, client);
+		CPrintToChat(attacker, "%t %t", "warden_tag", "warden_cuffsgot", g_iPlayerHandCuffs[attacker]);
 		if (CheckVipFlag(client, g_sAdminFlagCuffs))
 		{
 			CreateTimer (2.5, Timer_HasPaperClip, client);
@@ -499,12 +499,12 @@ void FreeEm(int client, int attacker)
 	SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
 	SetEntityRenderColor(client, 255, 255, 255, 255);
 	g_bCuffed[client] = false;
-	CreateTimer( 0.0, DeleteOverlay, client );
+	CreateTimer(0.0, DeleteOverlay, client);
 	g_iCuffed--;
 	ProgressTimer[client] = null;
 	if (gc_bSounds)StopSoundAny(client, SNDCHAN_AUTO, g_sSoundUnLockCuffsPath);
 	if ((attacker != 0) && (g_iCuffed == 0) && (g_iPlayerHandCuffs[attacker] < 1)) SetPlayerWeaponAmmo(attacker, Client_GetActiveWeapon(attacker), _, 0);
-	if (attacker != 0) CPrintToChatAll("%t %t", "warden_tag" , "warden_cuffsoff", attacker, client);
+	if (attacker != 0) CPrintToChatAll("%t %t", "warden_tag", "warden_cuffsoff", attacker, client);
 }
 
 
@@ -513,7 +513,7 @@ void FreeEm(int client, int attacker)
 ******************************************************************************/
 
 
-//Does the player get or already have a paperclip?
+// Does the player get or already have a paperclip?
 public Action Timer_HasPaperClip(Handle timer, int client)
 {
 	if (g_bCuffed[client]) // is player cuffed?
@@ -521,7 +521,7 @@ public Action Timer_HasPaperClip(Handle timer, int client)
 		int paperclip = GetRandomInt(1, gc_iPaperClipGetChance.IntValue);
 		if (paperclip == 1) g_iPlayerPaperClips[client]++;
 		
-		if (g_iPlayerPaperClips[client] > 0) //if yes tell him that
+		if (g_iPlayerPaperClips[client] > 0) // if yes tell him that
 		{
 			CPrintToChat(client, "%t %t", "warden_tag", "warden_gotpaperclip", g_iPlayerPaperClips[client]);
 			PrintCenterText(client, "%t", "warden_gotpaperclip", g_iPlayerPaperClips[client]);
@@ -530,7 +530,7 @@ public Action Timer_HasPaperClip(Handle timer, int client)
 }
 
 
-//Show the progress
+// Show the progress
 public Action Timer_Progress(Handle timer, int client)
 {
 	if (!IsClientInGame(client)) 
@@ -609,7 +609,7 @@ public Action Timer_Progress(Handle timer, int client)
 }
 
 
-//was the lckpick sucessful?
+// was the lckpick sucessful?
 public Action Timer_BreakTheseCuffs(Handle timer, int client)
 {
 	if (ProgressTimer[client] != null)
@@ -621,11 +621,11 @@ public Action Timer_BreakTheseCuffs(Handle timer, int client)
 	{
 		int unlocked = GetRandomInt(1, gc_iPaperClipUnLockChance.IntValue);
 		
-		if (unlocked == 1) //yes
+		if (unlocked == 1) // yes
 		{
 			CreateTimer(1.5, Timer_ProgressOpen, client, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 		}
-		else //no
+		else // no
 		{
 			CreateTimer(1.5, Timer_ProgressBroke, client, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 		}
@@ -634,7 +634,7 @@ public Action Timer_BreakTheseCuffs(Handle timer, int client)
 }
 
 
-//show open progress and remove cuffs
+// show open progress and remove cuffs
 public Action Timer_ProgressOpen(Handle timer, int client)
 {
 	if (TickTime[client] == 13)
@@ -653,7 +653,7 @@ public Action Timer_ProgressOpen(Handle timer, int client)
 		SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
 		SetEntityRenderColor(client, 255, 255, 255, 255);
 		g_bCuffed[client] = false;
-		CreateTimer( 0.0, DeleteOverlay, client );
+		CreateTimer(0.0, DeleteOverlay, client);
 		g_iCuffed--;
 		g_iPlayerPaperClips[client]--;
 	}
@@ -661,7 +661,7 @@ public Action Timer_ProgressOpen(Handle timer, int client)
 }
 
 
-//show break progress, remove paperclip and tell if he got more than one.
+// show break progress, remove paperclip and tell if he got more than one.
 public Action Timer_ProgressBroke(Handle timer, int client)
 {
 	if (TickTime[client] == 13)
@@ -718,7 +718,7 @@ void StripZeus()
 			GetEntityClassname(weapon, sWeapon, sizeof(sWeapon));
 			if (StrEqual(sWeapon, "weapon_taser"))
 			{
-				SDKHooks_DropWeapon(client, weapon, NULL_VECTOR, NULL_VECTOR); 
+				SDKHooks_DropWeapon(client, weapon, NULL_VECTOR, NULL_VECTOR);
 				AcceptEntityInput(weapon, "Kill");
 			}
 		}
@@ -731,7 +731,7 @@ void StripZeus()
 ******************************************************************************/
 
 
-//Remove current Warden
+// Remove current Warden
 public int Native_GivePaperClip(Handle plugin, int argc)
 {
 	int client = GetNativeCell(1);
@@ -745,7 +745,7 @@ public int Native_GivePaperClip(Handle plugin, int argc)
 }
 
 
-//Is Client in handcuffs
+// Is Client in handcuffs
 public int Native_IsClientCuffed(Handle plugin, int argc)
 {
 	int client = GetNativeCell(1);

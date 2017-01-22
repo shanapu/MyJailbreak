@@ -11,11 +11,11 @@
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
  * details.
  *
  * You should have received a copy of the GNU General Public License along with
- * this program.  If not, see <http://www.gnu.org/licenses/>.
+ * this program. If not, see <http:// www.gnu.org/licenses/>.
  */
 
 
@@ -24,7 +24,7 @@
 ******************************************************************************/
 
 
-//Includes
+// Includes
 #include <sourcemod>
 #include <sdktools>
 #include <sdkhooks>
@@ -35,12 +35,12 @@
 #include <mystocks>
 
 
-//Compiler Options
+// Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
 
 
-//Console Variables
+// Console Variables
 ConVar gc_fRefuseTime;
 ConVar gc_bRefuse;
 ConVar gc_bWardenAllowRefuse;
@@ -54,36 +54,36 @@ ConVar gc_sCustomCommandRefuse;
 ConVar gc_sAdminFlagRefuse;
 
 
-//Booleans
+// Booleans
 bool g_bRefused[MAXPLAYERS+1];
 bool g_bAllowRefuse;
 
 
-//Integers
+// Integers
 int g_iRefuseCounter[MAXPLAYERS+1];
 int g_iCountStopTime;
 
 
-//Handles
+// Handles
 Handle RefuseTimer[MAXPLAYERS+1];
 Handle RefusePanel;
 Handle AllowRefuseTimer;
 
 
-//Strings
+// Strings
 char g_sSoundRefusePath[256];
 char g_sSoundRefuseStopPath[256];
 char g_sAdminFlagRefuse[32];
 
 
-//Start
+// Start
 public void Refuse_OnPluginStart()
 {
-	//Client commands
+	// Client commands
 	RegConsoleCmd("sm_refuse", Command_refuse, "Allows the Warden start refusing time and Terrorist to refuse a game");
 	
 	
-	//AutoExecConfig
+	// AutoExecConfig
 	gc_bRefuse = AutoExecConfig_CreateConVar("sm_refuse_enable", "1", "0 - disabled, 1 - enable Refuse");
 	gc_sCustomCommandRefuse = AutoExecConfig_CreateConVar("sm_refuse_cmds", "ref, r", "Set your custom chat commands for Refuse(!refuse (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_bWardenAllowRefuse = AutoExecConfig_CreateConVar("sm_refuse_allow", "0", "0 - disabled, 1 - Warden must allow !refuse before T can use it");
@@ -97,17 +97,17 @@ public void Refuse_OnPluginStart()
 	gc_sAdminFlagRefuse = AutoExecConfig_CreateConVar("sm_refuse_flag", "a", "Set flag for admin/vip to get one more refuse. No flag = feature is available for all players!");
 	
 	
-	//Hooks 
+	// Hooks 
 	HookEvent("round_start", Refuse_Event_RoundStart);
 	HookConVarChange(gc_sSoundRefusePath, Refuse_OnSettingChanged);
 	HookConVarChange(gc_sSoundRefuseStopPath, Refuse_OnSettingChanged);
 	HookConVarChange(gc_sAdminFlagRefuse, Refuse_OnSettingChanged);
 	
 	
-	//FindConVar
+	// FindConVar
 	gc_sSoundRefusePath.GetString(g_sSoundRefusePath, sizeof(g_sSoundRefusePath));
 	gc_sSoundRefuseStopPath.GetString(g_sSoundRefuseStopPath, sizeof(g_sSoundRefuseStopPath));
-	gc_sAdminFlagRefuse.GetString(g_sAdminFlagRefuse , sizeof(g_sAdminFlagRefuse));
+	gc_sAdminFlagRefuse.GetString(g_sAdminFlagRefuse, sizeof(g_sAdminFlagRefuse));
 }
 
 
@@ -221,11 +221,11 @@ public void Refuse_OnConfigsExecuted()
 {
 	g_iCountStopTime = gc_fRefuseTime.IntValue;
 	
-	//Set custom Commands
+	// Set custom Commands
 	int iCount = 0;
 	char sCommands[128], sCommandsL[12][32], sCommand[32];
 	
-	//Refuse Game
+	// Refuse Game
 	gc_sCustomCommandRefuse.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
 	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
@@ -233,7 +233,7 @@ public void Refuse_OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
 			RegConsoleCmd(sCommand, Command_refuse, "Allows the Warden start refusing time and Terrorist to refuse a game");
 	}
 }
@@ -280,7 +280,7 @@ public Action RefuseMenu(int client)
 		DrawPanelText(RefusePanel, "                                   ");
 		DrawPanelText(RefusePanel, "-----------------------------------");
 		Format(info1, sizeof(info1), "%T", "request_close", client);
-		DrawPanelItem(RefusePanel, info1); 
+		DrawPanelItem(RefusePanel, info1);
 		SendPanelToClient(RefusePanel, client, Handler_NullCancel, 23);
 		
 	}
@@ -313,7 +313,7 @@ public Action Timer_NoAllowRefuse(Handle timer)
 			{
 				PrintCenterText(client, "%t", "request_stopcountdown_nc", g_iCountStopTime);
 			}
-			CPrintToChatAll("%t %t", "request_tag" , "request_stopcountdown", g_iCountStopTime);
+			CPrintToChatAll("%t %t", "request_tag", "request_stopcountdown", g_iCountStopTime);
 		}
 		g_iCountStopTime--;
 		return Plugin_Continue;
@@ -332,7 +332,7 @@ public Action Timer_NoAllowRefuse(Handle timer)
 			g_iCountStopTime = gc_fRefuseTime.IntValue;
 			return Plugin_Stop;
 		}
-		CPrintToChatAll("%t %t", "request_tag" , "request_countdownstop");
+		CPrintToChatAll("%t %t", "request_tag", "request_countdownstop");
 	}
 	return Plugin_Continue;
 }

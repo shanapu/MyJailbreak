@@ -11,11 +11,11 @@
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
  * details.
  *
  * You should have received a copy of the GNU General Public License along with
- * this program.  If not, see <http://www.gnu.org/licenses/>.
+ * this program. If not, see <http:// www.gnu.org/licenses/>.
  */
 
 
@@ -24,7 +24,7 @@
 ******************************************************************************/
 
 
-//Includes
+// Includes
 #include <sourcemod>
 #include <sdktools>
 #include <sdkhooks>
@@ -41,41 +41,41 @@
 #define REQUIRE_PLUGIN
 
 
-//Compiler Options
+// Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
 
 
-//Defines
+// Defines
 #define SOUND_THUNDER "ambient/weather/thunder3.wav"
 
 
-//Console Variables
+// Console Variables
 ConVar gc_bRandom;
 ConVar gc_bRandomDeputy;
 ConVar gc_iRandomMode;
 ConVar gc_sCustomCommandRandomKill;
 
 
-//Extern Convars
+// Extern Convars
 ConVar g_iTerrorForLR;
 
 
-//Integers
+// Integers
 int g_iKillKind;
 
 
-//Start
+// Start
 public void RandomKill_OnPluginStart()
 {
-	//Client commands
+	// Client commands
 	RegConsoleCmd("sm_killrandom", Command_KillMenu, "Allows the Warden to kill a random T");
 	
 	
-	//AutoExecConfig
-	gc_bRandom = AutoExecConfig_CreateConVar("sm_warden_random", "1", "0 - disabled, 1 - enable kill a random t for warden", _, true,  0.0, true, 1.0);
-	gc_bRandomDeputy = AutoExecConfig_CreateConVar("sm_warden_random_deputy", "1", "0 - disabled, 1 - enable kill a random t for deputy, too", _, true,  0.0, true, 1.0);
-	gc_iRandomMode = AutoExecConfig_CreateConVar("sm_warden_random_mode", "2", "1 - all random / 2 - Thunder / 3 - Timebomb / 4 - Firebomb / 5 - NoKill(1, 3, 4 needs funcommands.smx enabled)", _, true,  1.0, true, 4.0);
+	// AutoExecConfig
+	gc_bRandom = AutoExecConfig_CreateConVar("sm_warden_random", "1", "0 - disabled, 1 - enable kill a random t for warden", _, true, 0.0, true, 1.0);
+	gc_bRandomDeputy = AutoExecConfig_CreateConVar("sm_warden_random_deputy", "1", "0 - disabled, 1 - enable kill a random t for deputy, too", _, true, 0.0, true, 1.0);
+	gc_iRandomMode = AutoExecConfig_CreateConVar("sm_warden_random_mode", "2", "1 - all random / 2 - Thunder / 3 - Timebomb / 4 - Firebomb / 5 - NoKill(1, 3, 4 needs funcommands.smx enabled)", _, true, 1.0, true, 4.0);
 	gc_sCustomCommandRandomKill = AutoExecConfig_CreateConVar("sm_warden_cmds_randomkill", "randomkill, rk, kr", "Set your custom chat commands for become warden(!killrandom (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 }
 
@@ -103,7 +103,7 @@ public Action Command_KillMenu(int client, int args)
 			menu1.ExitButton = true;
 			menu1.Display(client, MENU_TIME_FOREVER);
 		}
-		else CReplyToCommand(client, "%t %t", "warden_tag" , "warden_notwarden"); 
+		else CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
 	}
 	return Plugin_Handled;
 }
@@ -116,16 +116,16 @@ public Action Command_KillMenu(int client, int args)
 
 public void RandomKill_OnConfigsExecuted()
 {
-	//FindConVar
+	// FindConVar
 	g_iTerrorForLR = FindConVar("sm_hosties_lr_ts_max");
 	g_iKillKind = gc_iRandomMode.IntValue;
 	
 	
-	//Set custom Commands
+	// Set custom Commands
 	int iCount = 0;
 	char sCommands[128], sCommandsL[12][32], sCommand[32];
 	
-	//Give freeday
+	// Give freeday
 	gc_sCustomCommandRandomKill.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
 	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
@@ -133,7 +133,7 @@ public void RandomKill_OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
 			RegConsoleCmd(sCommand, Command_KillMenu, "Allows the Warden to kill a random T");
 	}
 }
@@ -209,12 +209,12 @@ public int Handler_KillMenu(Menu menu, MenuAction action, int client, int Positi
 				if (gp_bHosties && gp_bLastRequest) if (IsClientRebel(i)) i = GetRandomPlayerNonRebel(CS_TEAM_T);
 				if (i > 0)
 				{
-					CreateTimer( 1.0, Timer_KillPlayer, i);
-					CPrintToChatAll("%t %t", "warden_tag", "warden_israndom", i); 
-					if(gp_bMyJailBreak) if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Warden %L killed random player %L", client, i);
+					CreateTimer(1.0, Timer_KillPlayer, i);
+					CPrintToChatAll("%t %t", "warden_tag", "warden_israndom", i);
+					if (gp_bMyJailBreak) if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Warden %L killed random player %L", client, i);
 				}
 			}
-			else CPrintToChatAll("%t %t", "warden_tag", "warden_minrandom"); 
+			else CPrintToChatAll("%t %t", "warden_tag", "warden_minrandom");
 		}
 		if (g_bMenuClose != null)
 		{
@@ -244,7 +244,7 @@ public int Handler_KillMenu(Menu menu, MenuAction action, int client, int Positi
 ******************************************************************************/
 
 
-public Action Timer_KillPlayer( Handle timer, any client) 
+public Action Timer_KillPlayer(Handle timer, any client) 
 {
 	if (g_iKillKind == 1)
 	{

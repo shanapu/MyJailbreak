@@ -11,11 +11,11 @@
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
  * details.
  *
  * You should have received a copy of the GNU General Public License along with
- * this program.  If not, see <http://www.gnu.org/licenses/>.
+ * this program. If not, see <http:// www.gnu.org/licenses/>.
  */
 
 
@@ -24,7 +24,7 @@
 ******************************************************************************/
 
 
-//Includes
+// Includes
 #include <sourcemod>
 #include <sdktools>
 #include <sdkhooks>
@@ -34,43 +34,43 @@
 #include <mystocks>
 
 
-//Compiler Options
+// Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
 
 
-//Console Variables
+// Console Variables
 ConVar gc_bBackstab;
 ConVar gc_bBackstabDeputy;
 ConVar gc_iBackstabNumber;
 ConVar gc_sAdminFlagBackstab;
 
 
-//Integers
+// Integers
 int g_iBackstabNumber[MAXPLAYERS+1];
 
 
-//Strings
+// Strings
 char g_sAdminFlagBackstab[32];
 
 
-//Start
+// Start
 public void BackStab_OnPluginStart()
 {
-	//AutoExecConfig
-	gc_bBackstab = AutoExecConfig_CreateConVar("sm_warden_backstab", "1", "0 - disabled, 1 - enable backstab protection for warden", _, true,  0.0, true, 1.0);
-	gc_bBackstabDeputy = AutoExecConfig_CreateConVar("sm_warden_backstab_deputy", "1", "0 - disabled, 1 - enable backstab protection for deputy, too", _, true,  0.0, true, 1.0);
-	gc_iBackstabNumber = AutoExecConfig_CreateConVar("sm_warden_backstab_number", "1", "How many time a warden get protected? 0 - alltime", _, true,  1.0);
+	// AutoExecConfig
+	gc_bBackstab = AutoExecConfig_CreateConVar("sm_warden_backstab", "1", "0 - disabled, 1 - enable backstab protection for warden", _, true, 0.0, true, 1.0);
+	gc_bBackstabDeputy = AutoExecConfig_CreateConVar("sm_warden_backstab_deputy", "1", "0 - disabled, 1 - enable backstab protection for deputy, too", _, true, 0.0, true, 1.0);
+	gc_iBackstabNumber = AutoExecConfig_CreateConVar("sm_warden_backstab_number", "1", "How many time a warden get protected? 0 - alltime", _, true, 1.0);
 	gc_sAdminFlagBackstab = AutoExecConfig_CreateConVar("sm_warden_backstab_flag", "", "Set flag for admin/vip to get warden/deputy backstab protection. No flag = feature is available for all players!");
 	
 	
-	//Hooks
+	// Hooks
 	HookEvent("round_start", BackStab_Event_RoundStart);
 	HookConVarChange(gc_sAdminFlagBackstab, BackStab_OnSettingChanged);
 	
 	
-	//FindConVar
-	gc_sAdminFlagBackstab.GetString(g_sAdminFlagBackstab , sizeof(g_sAdminFlagBackstab));
+	// FindConVar
+	gc_sAdminFlagBackstab.GetString(g_sAdminFlagBackstab, sizeof(g_sAdminFlagBackstab));
 }
 
 public void BackStab_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)

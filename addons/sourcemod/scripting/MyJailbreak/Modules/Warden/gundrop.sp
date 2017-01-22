@@ -11,11 +11,11 @@
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
  * details.
  *
  * You should have received a copy of the GNU General Public License along with
- * this program.  If not, see <http://www.gnu.org/licenses/>.
+ * this program. If not, see <http:// www.gnu.org/licenses/>.
  */
 
 
@@ -24,7 +24,7 @@
 ******************************************************************************/
 
 
-//Includes
+// Includes
 #include <sourcemod>
 #include <sdktools>
 #include <sdkhooks>
@@ -35,12 +35,12 @@
 #include <mystocks>
 
 
-//Compiler Options
+// Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
 
 
-//Console Variables
+// Console Variables
 ConVar gc_bGunPlant;
 ConVar gc_bGunRemove;
 ConVar gc_fGunRemoveTime;
@@ -50,25 +50,25 @@ ConVar gc_bGunNoDrop;
 ConVar gc_fAllowDropTime;
 
 
-//Booleans
+// Booleans
 bool g_bWeaponDropped[MAXPLAYERS+1] = false;
 bool g_bAllowDrop;
 
 
-//Start
+// Start
 public void GunDropPrevention_OnPluginStart()
 {
-	//AutoExecConfig
-	gc_bGunPlant = AutoExecConfig_CreateConVar("sm_warden_gunplant", "1", "0 - disabled, 1 - enable Gun plant prevention", _, true,  0.0, true, 1.0);
-	gc_fAllowDropTime = AutoExecConfig_CreateConVar("sm_warden_allow_time", "15.0", "Time in seconds CTs allowed to drop weapon on round beginn.", _, true,  0.1);
-	gc_bGunNoDrop = AutoExecConfig_CreateConVar("sm_warden_gunnodrop", "0", "0 - disabled, 1 - disallow gun dropping for ct", _, true,  0.0, true, 1.0);
-	gc_bGunRemove = AutoExecConfig_CreateConVar("sm_warden_gunremove", "1", "0 - disabled, 1 - remove planted guns", _, true,  0.0, true, 1.0);
-	gc_fGunRemoveTime = AutoExecConfig_CreateConVar("sm_warden_gunremove_time", "5.0", "Time in seconds to pick up gun again before.", _, true,  0.1);
-	gc_bGunSlap = AutoExecConfig_CreateConVar("sm_warden_gunslap", "1", "0 - disabled, 1 - Slap the CT for dropping a gun", _, true,  0.0, true, 1.0);
-	gc_iGunSlapDamage = AutoExecConfig_CreateConVar("sm_warden_gunslap_dmg", "10", "Amoung of HP losing on slap for dropping a gun", _, true,  0.0);
+	// AutoExecConfig
+	gc_bGunPlant = AutoExecConfig_CreateConVar("sm_warden_gunplant", "1", "0 - disabled, 1 - enable Gun plant prevention", _, true, 0.0, true, 1.0);
+	gc_fAllowDropTime = AutoExecConfig_CreateConVar("sm_warden_allow_time", "15.0", "Time in seconds CTs allowed to drop weapon on round beginn.", _, true, 0.1);
+	gc_bGunNoDrop = AutoExecConfig_CreateConVar("sm_warden_gunnodrop", "0", "0 - disabled, 1 - disallow gun dropping for ct", _, true, 0.0, true, 1.0);
+	gc_bGunRemove = AutoExecConfig_CreateConVar("sm_warden_gunremove", "1", "0 - disabled, 1 - remove planted guns", _, true, 0.0, true, 1.0);
+	gc_fGunRemoveTime = AutoExecConfig_CreateConVar("sm_warden_gunremove_time", "5.0", "Time in seconds to pick up gun again before.", _, true, 0.1);
+	gc_bGunSlap = AutoExecConfig_CreateConVar("sm_warden_gunslap", "1", "0 - disabled, 1 - Slap the CT for dropping a gun", _, true, 0.0, true, 1.0);
+	gc_iGunSlapDamage = AutoExecConfig_CreateConVar("sm_warden_gunslap_dmg", "10", "Amoung of HP losing on slap for dropping a gun", _, true, 0.0);
 	
 	
-	//Hooks
+	// Hooks
 	HookEvent("round_start", GunDropPrevention_RoundStart);
 }
 
@@ -121,7 +121,7 @@ public Action CS_OnCSWeaponDrop(int client, int weapon)
 					if (gc_bGunNoDrop.BoolValue)
 						return Plugin_Handled;
 						
-				//	g_iWeaponDrop[client] = weapon;
+				// 	g_iWeaponDrop[client] = weapon;
 					
 					Handle hData = CreateDataPack();
 					WritePackCell(hData, client);
@@ -161,18 +161,18 @@ public Action Timer_DroppedWeapon(Handle timer, Handle hData)
 				char g_sWeaponName[80];
 				
 				GetEntityClassname(iWeapon, g_sWeaponName, sizeof(g_sWeaponName));
-				ReplaceString(g_sWeaponName, sizeof(g_sWeaponName), "weapon_", "", false); 
+				ReplaceString(g_sWeaponName, sizeof(g_sWeaponName), "weapon_", "", false);
 				g_bWeaponDropped[client] = true;
 				
 				Handle hData2 = CreateDataPack();
 				WritePackCell(hData2, client);
 				WritePackCell(hData2, iWeapon);
 				
-				CPrintToChat(client, "%t %t", "warden_tag" , "warden_noplant", client , g_sWeaponName);
-				if (g_iWarden != -1) CPrintToChat(g_iWarden, "%t %t", "warden_tag" , "warden_gunplant", client , g_sWeaponName);
-				if ((g_iWarden != -1) && gc_bBetterNotes.BoolValue) PrintCenterText(g_iWarden, "%t", "warden_gunplant_nc", client , g_sWeaponName);
-				if (g_iDeputy != -1) CPrintToChat(g_iDeputy, "%t %t", "warden_tag" , "warden_gunplant", client , g_sWeaponName);
-				if ((g_iDeputy != -1) && gc_bBetterNotes.BoolValue) PrintCenterText(g_iDeputy, "%t", "warden_gunplant_nc", client , g_sWeaponName);
+				CPrintToChat(client, "%t %t", "warden_tag", "warden_noplant", client, g_sWeaponName);
+				if (g_iWarden != -1) CPrintToChat(g_iWarden, "%t %t", "warden_tag", "warden_gunplant", client, g_sWeaponName);
+				if ((g_iWarden != -1) && gc_bBetterNotes.BoolValue) PrintCenterText(g_iWarden, "%t", "warden_gunplant_nc", client, g_sWeaponName);
+				if (g_iDeputy != -1) CPrintToChat(g_iDeputy, "%t %t", "warden_tag", "warden_gunplant", client, g_sWeaponName);
+				if ((g_iDeputy != -1) && gc_bBetterNotes.BoolValue) PrintCenterText(g_iDeputy, "%t", "warden_gunplant_nc", client, g_sWeaponName);
 				if (gc_bGunRemove.BoolValue) CreateTimer(gc_fGunRemoveTime.FloatValue, Timer_RemoveWeapon, hData2, TIMER_FLAG_NO_MAPCHANGE);
 				if (gc_bGunSlap.BoolValue) SlapPlayer(client, gc_iGunSlapDamage.IntValue, true);
 			}

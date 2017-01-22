@@ -11,11 +11,11 @@
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
  * details.
  *
  * You should have received a copy of the GNU General Public License along with
- * this program.  If not, see <http://www.gnu.org/licenses/>.
+ * this program. If not, see <http:// www.gnu.org/licenses/>.
  */
 
 
@@ -24,7 +24,7 @@
 ******************************************************************************/
 
 
-//Includes
+// Includes
 #include <sourcemod>
 #include <sdktools>
 #include <cstrike>
@@ -32,22 +32,22 @@
 #include <mystocks>
 #include <clientprefs>
 
-//Optional Plugins
+// Optional Plugins
 #undef REQUIRE_PLUGIN
 #include <myjailbreak>
 #define REQUIRE_PLUGIN
 
 
-//Compiler Options
+// Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
 
 
-//Handles
+// Handles
 Handle g_hCookieCTBan;
 
 
-//Info
+// Info
 public Plugin myinfo = {
 	name = "MyJailbreak - Ratio - CT Ban Support", 
 	author = "shanapu, Addicted, good_live", 
@@ -57,15 +57,15 @@ public Plugin myinfo = {
 };
 
 
-//Start
+// Start
 public void OnPluginStart()
 {
-	//Translation
+	// Translation
 	LoadTranslations("MyJailbreak.Ratio.phrases");
 	
 	HookEvent("player_spawn", Event_OnPlayerSpawn, EventHookMode_Post);
 	
-	//Cookies
+	// Cookies
 	if ((g_hCookieCTBan = FindClientCookie("Banned_From_CT")) == INVALID_HANDLE)
 		g_hCookieCTBan = RegClientCookie("Banned_From_CT", "Tells if you are restricted from joining the CT team", CookieAccess_Protected);
 }
@@ -84,7 +84,7 @@ public Action MyJailbreak_OnJoinGuardQueue(int client)
 	GetClientCookie(client, g_hCookieCTBan, szCookie, sizeof(szCookie));
 	if (szCookie[0] == '1')
 	{
-		CReplyToCommand(client, "%t %t", "ratio_tag" , "ratio_banned");
+		CReplyToCommand(client, "%t %t", "ratio_tag", "ratio_banned");
 		PrintCenterText(client, "%t", "ratio_banned_nc");
 		FakeClientCommand(client, "sm_isbanned @me");
 		return Plugin_Handled;
@@ -108,7 +108,7 @@ public Action Event_OnPlayerSpawn(Event event, const char[] name, bool bDontBroa
 	
 	if (sData[0] == '1')
 	{
-		CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_banned");
+		CPrintToChat(client, "%t %t", "ratio_tag", "ratio_banned");
 		PrintCenterText(client, "%t", "ratio_banned_nc");
 		CreateTimer(5.0, Timer_SlayPlayer, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 		return Plugin_Continue;
