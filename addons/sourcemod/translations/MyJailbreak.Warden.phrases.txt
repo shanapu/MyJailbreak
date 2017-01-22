@@ -100,6 +100,18 @@
 		"en"		"Admin: {1} has Fired the Warden: {2}"
 	}
 
+	"warden_deputy_removed"
+	{
+		"#format"	"{1:N},{2:N}"
+		"en"		"Admin: {purple}{1}{default} has Fired the Deputy: {purple}{2}"
+	}
+
+	"warden_deputy_removed_nc"
+	{
+		"#format"	"{1:N},{2:N}"
+		"en"		"Admin: {1} has Fired the Deputy: {2}"
+	}
+
 	"warden_noexist"
 	{
 		"en"		"There is no current{purple} Warden!"
