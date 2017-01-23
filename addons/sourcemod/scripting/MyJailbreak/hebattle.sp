@@ -18,11 +18,9 @@
  * this program. If not, see <http:// www.gnu.org/licenses/>.
  */
 
-
 /******************************************************************************
                    STARTUP
 ******************************************************************************/
-
 
 // Includes
 #include <sourcemod>
@@ -39,17 +37,14 @@
 #include <mystocks>
 #include <myjailbreak>
 
-
 // Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
 
-
 // Booleans
 bool g_bIsLateLoad = false;
-bool IsHEbattle;
-bool StartHEbattle;
-
+bool g_bIsHEbattle = false;
+bool g_bStartHEbattle = false;
 
 // Console Variables
 ConVar gc_bPlugin;
@@ -76,11 +71,9 @@ ConVar gc_sCustomCommandSet;
 ConVar gc_sAdminFlag;
 ConVar gc_bAllowLR;
 
-
 // Extern Convars
 ConVar g_iMPRoundTime;
 ConVar g_iTerrorForLR;
-
 
 // Integers
 int g_iOldRoundTime;
@@ -90,18 +83,17 @@ int g_iVoteCount;
 int g_iRound;
 int g_iMaxRound;
 int g_iTsLR;
+int g_iCollision_Offset;
 
 
 // Handles
-Handle TruceTimer;
-Handle GravityTimer;
-Handle HEbattleMenu;
-Handle BeaconTimer;
-
+Handle g_hTimerTruce;
+Handle g_hTimerGravity;
+Handle g_hPanelInfo;
+Handle g_hTimerBeacon;
 
 // Floats
 float g_fPos[3];
-
 
 // Strings
 char g_sHasVoted[1500];
@@ -109,7 +101,6 @@ char g_sSoundStartPath[256];
 char g_sEventsLogFile[PLATFORM_MAX_PATH];
 char g_sAdminFlag[32];
 char g_sOverlayStartPath[256];
-
 
 // Info
 public Plugin myinfo = {
@@ -133,17 +124,15 @@ public void OnPluginStart()
 	// Translation
 	LoadTranslations("MyJailbreak.Warden.phrases");
 	LoadTranslations("MyJailbreak.HEbattle.phrases");
-	
-	
+
 	// Client Commands
 	RegConsoleCmd("sm_sethebattle", Command_SetHEbattle, "Allows the Admin or Warden to set hebattle as next round");
 	RegConsoleCmd("sm_hebattle", Command_VoteHEbattle, "Allows players to vote for a hebattle");
-	
-	
+
 	// AutoExecConfig
 	AutoExecConfig_SetFile("HEbattle", "MyJailbreak/EventDays");
 	AutoExecConfig_SetCreateFile(true);
-	
+
 	AutoExecConfig_CreateConVar("sm_hebattle_version", MYJB_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_hebattle_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true, 0.0, true, 1.0);
 	gc_sCustomCommandVote = AutoExecConfig_CreateConVar("sm_hebattle_cmds_vote", "he, heb", "Set your custom chat command for Event voting(!hebattle_ (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
@@ -168,11 +157,10 @@ public void OnPluginStart()
 	gc_bOverlays = AutoExecConfig_CreateConVar("sm_hebattle_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true, 0.0, true, 1.0);
 	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_hebattle_overlays_start", "overlays/MyJailbreak/start", "Path to the start Overlay DONT TYPE .vmt or .vft");
 	gc_bAllowLR = AutoExecConfig_CreateConVar("sm_hebattle_allow_lr", "0", "0 - disabled, 1 - enable LR for last round and end eventday", _, true, 0.0, true, 1.0);
-	
+
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
-	
-	
+
 	// Hooks
 	HookEvent("round_start", Event_RoundStart);
 	HookEvent("round_end", Event_RoundEnd);
@@ -180,14 +168,17 @@ public void OnPluginStart()
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
 	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
-	
-	
+
 	// Find
 	g_iMPRoundTime = FindConVar("mp_roundtime");
 	gc_sOverlayStartPath.GetString(g_sOverlayStartPath, sizeof(g_sOverlayStartPath));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
-	
+
+	// Offsets
+	g_iCollision_Offset = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
+
+	// Logs
 	SetLogFile(g_sEventsLogFile, "Events", "MyJailbreak");
 
 	// Late loading
@@ -201,7 +192,6 @@ public void OnPluginStart()
 		g_bIsLateLoad = false;
 	}
 }
-
 
 // ConVarChange for Strings
 public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
@@ -222,38 +212,37 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 	}
 }
 
-
 // Initialize Plugin
 public void OnConfigsExecuted()
 {
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iMaxRound = gc_iRounds.IntValue;
-	
+
 	// FindConVar
 	g_iTerrorForLR = FindConVar("sm_hosties_lr_ts_max");
-	
+
 	// Set custom Commands
 	int iCount = 0;
 	char sCommands[128], sCommandsL[12][32], sCommand[32];
-	
+
 	// Vote
 	gc_sCustomCommandVote.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
 	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
-	
+
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
 		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
 			RegConsoleCmd(sCommand, Command_VoteHEbattle, "Allows players to vote for a hebattle");
 	}
-	
+
 	// Set
 	gc_sCustomCommandSet.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
 	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
-	
+
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
@@ -262,11 +251,9 @@ public void OnConfigsExecuted()
 	}
 }
 
-
 /******************************************************************************
                    COMMANDS
 ******************************************************************************/
-
 
 // Admin & Warden set Event
 public Action Command_SetHEbattle(int client, int args)
@@ -329,16 +316,16 @@ public Action Command_SetHEbattle(int client, int args)
 		else CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
 	}
 	else CReplyToCommand(client, "%t %t", "hebattle_tag", "hebattle_disabled");
+
 	return Plugin_Handled;
 }
-
 
 // Voting for Event
 public Action Command_VoteHEbattle(int client, int args)
 {
 	char steamid[64];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
-	
+
 	if (gc_bPlugin.BoolValue)
 	{
 		if (gc_bVote.BoolValue)
@@ -378,36 +365,38 @@ public Action Command_VoteHEbattle(int client, int args)
 		else CReplyToCommand(client, "%t %t", "hebattle_tag", "hebattle_voting");
 	}
 	else CReplyToCommand(client, "%t %t", "hebattle_tag", "hebattle_disabled");
+
 	return Plugin_Handled;
 }
-
 
 /******************************************************************************
                    EVENTS
 ******************************************************************************/
 
-
 // Round start
 public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
-	if (StartHEbattle || IsHEbattle)
+	if (g_bStartHEbattle || g_bIsHEbattle)
 	{
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_weapons_enable", 0);
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("mp_teammates_are_enemies", 1);
 		SetCvar("sm_menu_enable", 0);
+
 		MyJailbreak_SetEventDayPlanned(false);
 		MyJailbreak_SetEventDayRunning(true);
-		IsHEbattle = true;
+
+		g_bIsHEbattle = true;
 		g_iRound++;
-		StartHEbattle = false;
+		g_bStartHEbattle = false;
+
 		SJD_OpenDoors();
-		
+
 		int RandomCT = 0;
-		
-		if (gc_fBeaconTime.FloatValue > 0.0) BeaconTimer = CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
-		
+
+		if (gc_fBeaconTime.FloatValue > 0.0) g_hTimerBeacon = CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
+
 		LoopClients(client)
 		{
 			if (GetClientTeam(client) == CS_TEAM_CT)
@@ -416,6 +405,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 				break;
 			}
 		}
+
 		if (RandomCT)
 		{
 			GetClientAbsOrigin(RandomCT, g_fPos);
@@ -432,7 +422,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 					StripAllPlayerWeapons(client);
 					GivePlayerItem(client, "weapon_hegrenade");
 					SetEntityHealth(client, gc_iPlayerHP.IntValue);
-					SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
+					SetEntData(client, g_iCollision_Offset, 2, 4, true);
 					
 					if (gc_bGrav.BoolValue)
 					{
@@ -444,8 +434,8 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 					}
 				}
 				g_iTruceTime--;
-				TruceTimer = CreateTimer(1.0, Timer_StartEvent, _, TIMER_REPEAT);
-				GravityTimer = CreateTimer(1.0, Timer_CheckGravity, _, TIMER_REPEAT);
+				g_hTimerTruce = CreateTimer(1.0, Timer_StartEvent, _, TIMER_REPEAT);
+				g_hTimerGravity = CreateTimer(1.0, Timer_CheckGravity, _, TIMER_REPEAT);
 				
 				// enable lr on last round
 				g_iTsLR = GetAliveTeamCount(CS_TEAM_T);
@@ -466,7 +456,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 	{
 		char EventDay[64];
 		MyJailbreak_GetEventDayName(EventDay);
-		
+
 		if (!StrEqual(EventDay, "none", false))
 		{
 			g_iCoolDown = gc_iCooldownDay.IntValue + 1;
@@ -475,28 +465,30 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 	}
 }
 
-
 // Round End
 public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
 	int winner = event.GetInt("winner");
-	
-	if (IsHEbattle)
+
+	if (g_bIsHEbattle)
 	{
 		LoopClients(client)
 		{
 			SetEntityGravity(client, 1.0);
-			SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
+			SetEntData(client, g_iCollision_Offset, 0, 4, true);
 		}
-		delete BeaconTimer;
-		delete TruceTimer;
-		delete GravityTimer;
+
+		delete g_hTimerBeacon;
+		delete g_hTimerTruce;
+		delete g_hTimerGravity;
+
 		if (winner == 2) PrintCenterTextAll("%t", "hebattle_twin_nc");
 		if (winner == 3) PrintCenterTextAll("%t", "hebattle_ctwin_nc");
+
 		if (g_iRound == g_iMaxRound)
 		{
-			IsHEbattle = false;
-			StartHEbattle = false;
+			g_bIsHEbattle = false;
+			g_bStartHEbattle = false;
 			g_iRound = 0;
 			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
 			SetCvar("sm_hosties_lr", 1);
@@ -510,7 +502,8 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			CPrintToChatAll("%t %t", "hebattle_tag", "hebattle_end");
 		}
 	}
-	if (StartHEbattle)
+
+	if (g_bStartHEbattle)
 	{
 		LoopClients(i) CreateInfoPanel(i);
 		
@@ -519,80 +512,83 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 	}
 }
 
-
 // Give new Nades after detonation
 public void Event_HE_Detonate(Event event, const char[] name, bool dontBroadcast)
 {
-	if (IsHEbattle == true)
+	if (g_bIsHEbattle == true)
 	{
 		int  target = GetClientOfUserId(event.GetInt("userid"));
 		if (GetClientTeam(target) == 1 && !IsPlayerAlive(target))
 		{
 			return;
 		}
+
 		GivePlayerItem(target, "weapon_hegrenade");
 	}
+
 	return;
 }
-
 
 /******************************************************************************
                    FORWARDS LISTEN
 ******************************************************************************/
-
 
 // Initialize Event
 public void OnMapStart()
 {
 	g_iVoteCount = 0;
 	g_iRound = 0;
-	IsHEbattle = false;
-	StartHEbattle = false;
-	
+	g_bIsHEbattle = false;
+	g_bStartHEbattle = false;
+
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iTruceTime = gc_iTruceTime.IntValue;
-	
+
 	if (gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
 	if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
 }
 
-
 // Map End
 public void OnMapEnd()
 {
-	IsHEbattle = false;
-	StartHEbattle = false;
+	g_bIsHEbattle = false;
+	g_bStartHEbattle = false;
 	g_iVoteCount = 0;
-	delete TruceTimer;
-	delete GravityTimer;
+
+	delete g_hTimerTruce;
+	delete g_hTimerGravity;
+
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0';
 }
 
-
 // Listen for Last Lequest
 public void OnAvailableLR(int Announced)
 {
-	if (IsHEbattle && gc_bAllowLR.BoolValue && (g_iTsLR > g_iTerrorForLR.IntValue))
+	if (g_bIsHEbattle && gc_bAllowLR.BoolValue && (g_iTsLR > g_iTerrorForLR.IntValue))
 	{
 		LoopClients(client)
 		{
 			SetEntityGravity(client, 1.0);
-			SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
+			SetEntData(client, g_iCollision_Offset, 0, 4, true);
 			StripAllPlayerWeapons(client);
+
 			if (GetClientTeam(client) == CS_TEAM_CT)
 			{
 				FakeClientCommand(client, "sm_weapons");
 			}
+
 			GivePlayerItem(client, "weapon_knife");
 		}
-		delete BeaconTimer;
-		delete TruceTimer;
-		delete GravityTimer;
+
+		delete g_hTimerBeacon;
+		delete g_hTimerTruce;
+		delete g_hTimerGravity;
+
 		if (g_iRound == g_iMaxRound)
 		{
-			IsHEbattle = false;
-			StartHEbattle = false;
+			g_bIsHEbattle = false;
+			g_bStartHEbattle = false;
 			g_iRound = 0;
 			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
 			SetCvar("sm_hosties_lr", 1);
@@ -608,21 +604,20 @@ public void OnAvailableLR(int Announced)
 	}
 }
 
-
 // Set Client Hook
 public void OnClientPutInServer(int client)
 {
 	SDKHook(client, SDKHook_WeaponCanUse, OnWeaponCanUse);
 }
 
-
 // HE Grenade only
 public Action OnWeaponCanUse(int client, int weapon)
 {
-	if (IsHEbattle == true)
+	if (g_bIsHEbattle == true)
 	{
 		char sWeapon[32];
 		GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
+
 		if (StrEqual(sWeapon, "weapon_hegrenade"))
 		{
 			if (IsClientInGame(client) && IsPlayerAlive(client))
@@ -630,77 +625,74 @@ public Action OnWeaponCanUse(int client, int weapon)
 				return Plugin_Continue;
 			}
 		}
+
 		return Plugin_Handled;
 	}
+
 	return Plugin_Continue;
 }
-
 
 /******************************************************************************
                    FUNCTIONS
 ******************************************************************************/
 
-
 // Prepare Event
 void StartNextRound()
 {
-	StartHEbattle = true;
+	g_bStartHEbattle = true;
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iVoteCount = 0;
-	
+
 	char buffer[32];
 	Format(buffer, sizeof(buffer), "%T", "hebattle_name", LANG_SERVER);
 	MyJailbreak_SetEventDayName(buffer);
 	MyJailbreak_SetEventDayPlanned(true);
-	
+
 	g_iOldRoundTime = g_iMPRoundTime.IntValue; // save original round time
 	g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue; // set event round time
-	
+
 	CPrintToChatAll("%t %t", "hebattle_tag", "hebattle_next");
 	PrintCenterTextAll("%t", "hebattle_next_nc");
 }
-
 
 /******************************************************************************
                    MENUS
 ******************************************************************************/
 
-
 void CreateInfoPanel(int client)
 {
 	// Create info Panel
 	char info[255];
-	
-	HEbattleMenu = CreatePanel();
-	Format(info, sizeof(info), "%T", "hebattle_info_title", client);
-	SetPanelTitle(HEbattleMenu, info);
-	DrawPanelText(HEbattleMenu, "                                   ");
-	Format(info, sizeof(info), "%T", "hebattle_info_line1", client);
-	DrawPanelText(HEbattleMenu, info);
-	DrawPanelText(HEbattleMenu, "-----------------------------------");
-	Format(info, sizeof(info), "%T", "hebattle_info_line2", client);
-	DrawPanelText(HEbattleMenu, info);
-	Format(info, sizeof(info), "%T", "hebattle_info_line3", client);
-	DrawPanelText(HEbattleMenu, info);
-	Format(info, sizeof(info), "%T", "hebattle_info_line4", client);
-	DrawPanelText(HEbattleMenu, info);
-	Format(info, sizeof(info), "%T", "hebattle_info_line5", client);
-	DrawPanelText(HEbattleMenu, info);
-	Format(info, sizeof(info), "%T", "hebattle_info_line6", client);
-	DrawPanelText(HEbattleMenu, info);
-	Format(info, sizeof(info), "%T", "hebattle_info_line7", client);
-	DrawPanelText(HEbattleMenu, info);
-	DrawPanelText(HEbattleMenu, "-----------------------------------");
-	Format(info, sizeof(info), "%T", "warden_close", client);
-	DrawPanelItem(HEbattleMenu, info);
-	SendPanelToClient(HEbattleMenu, client, Handler_NullCancel, 20);
-}
 
+	g_hPanelInfo = CreatePanel();
+	Format(info, sizeof(info), "%T", "hebattle_info_title", client);
+	SetPanelTitle(g_hPanelInfo, info);
+	DrawPanelText(g_hPanelInfo, "                                   ");
+	Format(info, sizeof(info), "%T", "hebattle_info_line1", client);
+	DrawPanelText(g_hPanelInfo, info);
+	DrawPanelText(g_hPanelInfo, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "hebattle_info_line2", client);
+	DrawPanelText(g_hPanelInfo, info);
+	Format(info, sizeof(info), "%T", "hebattle_info_line3", client);
+	DrawPanelText(g_hPanelInfo, info);
+	Format(info, sizeof(info), "%T", "hebattle_info_line4", client);
+	DrawPanelText(g_hPanelInfo, info);
+	Format(info, sizeof(info), "%T", "hebattle_info_line5", client);
+	DrawPanelText(g_hPanelInfo, info);
+	Format(info, sizeof(info), "%T", "hebattle_info_line6", client);
+	DrawPanelText(g_hPanelInfo, info);
+	Format(info, sizeof(info), "%T", "hebattle_info_line7", client);
+	DrawPanelText(g_hPanelInfo, info);
+	DrawPanelText(g_hPanelInfo, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "warden_close", client);
+	DrawPanelItem(g_hPanelInfo, info);
+
+	SendPanelToClient(g_hPanelInfo, client, Handler_NullCancel, 20);
+}
 
 /******************************************************************************
                    TIMER
 ******************************************************************************/
-
 
 // Start Timer
 public Action Timer_StartEvent(Handle timer)
@@ -708,13 +700,15 @@ public Action Timer_StartEvent(Handle timer)
 	if (g_iTruceTime > 1)
 	{
 		g_iTruceTime--;
+		
 		LoopClients(client) if (IsPlayerAlive(client))
 			PrintCenterText(client, "%t", "hebattle_timeuntilstart_nc", g_iTruceTime);
+
 		return Plugin_Continue;
 	}
-	
+
 	g_iTruceTime = gc_iTruceTime.IntValue;
-	
+
 	if (g_iRound > 0)
 	{
 		for (int client=1;client <= MaxClients;client++)
@@ -737,20 +731,19 @@ public Action Timer_StartEvent(Handle timer)
 		}
 		CPrintToChatAll("%t %t", "hebattle_tag", "hebattle_start");
 	}
-	
-	TruceTimer = null;
-	
+
+	g_hTimerTruce = null;
+
 	return Plugin_Stop;
 }
-
 
 // Beacon Timer
 public Action Timer_BeaconOn(Handle timer)
 {
 	LoopValidClients(i, true, false) MyJailbreak_BeaconOn(i, 2.0);
-	BeaconTimer = null;
-}
 
+	g_hTimerBeacon = null;
+}
 
 // Give back Gravity if it gone -> ladders
 public Action Timer_CheckGravity(Handle timer)

@@ -18,11 +18,9 @@
  * this program. If not, see <http:// www.gnu.org/licenses/>.
  */
 
-
 /******************************************************************************
                    STARTUP
 ******************************************************************************/
-
 
 // Includes
 #include <sourcemod>
@@ -42,22 +40,19 @@
 #include <smartjaildoors>
 #define REQUIRE_PLUGIN
 
-
 // Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
 
-
 // Booleans
-bool IsLastGuard;
-bool AllowLastGuard;
-bool IsLR;
-bool MinCT = false;
+bool g_bIsLastGuard = false;
+bool g_bAllowLastGuard = false;
+bool g_bIsLR = false;
+bool g_bMinCT = false;
 bool gp_bMyJailBreak = false;
 bool gp_bHosties = false;
 bool gp_bLastRequest = false;
 bool gp_bSmartJailDoors = false;
-
 
 // Console Variables
 ConVar gc_bPlugin;
@@ -78,17 +73,15 @@ ConVar gc_sSoundStartPath;
 ConVar gc_sSoundLastCTPath;
 ConVar gc_sCustomCommandLGR;
 
-
 // Integers
 int g_iTruceTime;
 int g_iVoteCount;
-
+int g_iCollision_Offset;
 
 // Handles
-Handle TruceTimer;
-Handle LastGuardMenu;
-Handle BeaconTimer;
-
+Handle g_hTimerTruce;
+Handle g_hPanelInfo;
+Handle g_hTimerBeacon;
 
 // Strings
 char g_sHasVoted[1500];
@@ -96,7 +89,6 @@ char g_sSoundStartPath[256];
 char g_sSoundLastCTPath[256];
 char g_sMyJBLogFile[PLATFORM_MAX_PATH];
 char g_sOverlayStartPath[256];
-
 
 // Info
 public Plugin myinfo = {
@@ -107,22 +99,19 @@ public Plugin myinfo = {
 	url = MYJB_URL_LINK
 };
 
-
 // Start
 public void OnPluginStart()
 {
 	// Translation
 	LoadTranslations("MyJailbreak.LastGuard.phrases");
-	
-	
+
 	// Client Commands
 	RegConsoleCmd("sm_lastguard", Command_VoteLastGuard, "Allows terrors to vote and last CT to set Last Guard Rule");	
-	
-	
+
 	// AutoExecConfig
 	AutoExecConfig_SetFile("LastGuard", "MyJailbreak");
 	AutoExecConfig_SetCreateFile(true);
-	
+
 	AutoExecConfig_CreateConVar("sm_lastguard_version", MYJB_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_lastguard_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true, 0.0, true, 1.0);
 	gc_sCustomCommandLGR = AutoExecConfig_CreateConVar("sm_lastguard_cmds", "lg, lgr, lastguardrule", "Set your custom chat command for Last Guard Rule(!lastguard (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
@@ -141,11 +130,10 @@ public void OnPluginStart()
 	gc_sSoundLastCTPath = AutoExecConfig_CreateConVar("sm_lastguard_sounds_beginn", "music/MyJailbreak/lastct.mp3", "Path to the soundfile which should be played for LGR anouncment.");
 	gc_bOverlays = AutoExecConfig_CreateConVar("sm_lastguard_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true, 0.0, true, 1.0);
 	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_lastguard_overlays_start", "overlays/MyJailbreak/start", "Path to the start Overlay DONT TYPE .vmt or .vft");
-	
+
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
-	
-	
+
 	// Hooks
 	HookEvent("round_start", Event_RoundStart);
 	HookEvent("round_end", Event_RoundEnd);
@@ -154,16 +142,17 @@ public void OnPluginStart()
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundLastCTPath, OnSettingChanged);
-	
-	
+
 	// Find
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	gc_sOverlayStartPath.GetString(g_sOverlayStartPath, sizeof(g_sOverlayStartPath));
 	gc_sSoundLastCTPath.GetString(g_sSoundLastCTPath, sizeof(g_sSoundLastCTPath));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
-	
-	
-	// Set directory for LogFile - must be created before
+
+	// Offsets
+	g_iCollision_Offset = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
+
+	// Logs
 	SetLogFile(g_sMyJBLogFile, "MyJB", "MyJailbreak");
 }
 
@@ -188,7 +177,6 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 	}
 }
 
-
 public void OnAllPluginsLoaded()
 {
 	gp_bMyJailBreak = LibraryExists("myjailbreak");
@@ -197,45 +185,47 @@ public void OnAllPluginsLoaded()
 	gp_bSmartJailDoors = LibraryExists("smartjaildoors");
 }
 
-
 public void OnLibraryRemoved(const char[] name)
 {
 	if (StrEqual(name, "myjailbreak"))
 		gp_bMyJailBreak = false;
+
 	if (StrEqual(name, "hosties"))
 		gp_bHosties = false;
+
 	if (StrEqual(name, "lastrequest"))
 		gp_bLastRequest = false;
+
 	if (StrEqual(name, "smartjaildoors"))
 		gp_bSmartJailDoors = false;
 }
-
 
 public void OnLibraryAdded(const char[] name)
 {
 	if (StrEqual(name, "myjailbreak"))
 		gp_bMyJailBreak = true;
+
 	if (StrEqual(name, "hosties"))
 		gp_bHosties = true;
+
 	if (StrEqual(name, "lastrequest"))
 		gp_bLastRequest = true;
+
 	if (StrEqual(name, "smartjaildoors"))
 		gp_bSmartJailDoors = true;
 }
 
-
 /******************************************************************************
                    COMMANDS
 ******************************************************************************/
-
 
 // Voting for Last Guard Rule
 public Action Command_VoteLastGuard(int client, int args)
 {
 	char steamid[64];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
-	
-	if (gc_bPlugin.BoolValue && !gc_bAutomatic.BoolValue && MinCT)
+
+	if (gc_bPlugin.BoolValue && !gc_bAutomatic.BoolValue && g_bMinCT)
 	{
 		if (gc_bVote.BoolValue && (GetClientTeam(client) == CS_TEAM_T) && IsPlayerAlive(client))
 		{
@@ -252,9 +242,9 @@ public Action Command_VoteLastGuard(int client, int args)
 						return Plugin_Handled;
 					}
 				}
-				if (!IsLastGuard)
+				if (!g_bIsLastGuard)
 				{
-					if (!IsLR)
+					if (!g_bIsLR)
 					{
 						if (StrContains(g_sHasVoted, steamid, true) == -1)
 						{
@@ -293,9 +283,9 @@ public Action Command_VoteLastGuard(int client, int args)
 						return Plugin_Handled;
 					}
 				}
-				if (!IsLastGuard)
+				if (!g_bIsLastGuard)
 				{
-					if (!IsLR)
+					if (!g_bIsLR)
 					{
 						StartLastGuard();
 						if (gp_bMyJailBreak) if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Last Guard Rule was started by last CT %L", client);
@@ -309,100 +299,99 @@ public Action Command_VoteLastGuard(int client, int args)
 		else CReplyToCommand(client, "%t %t", "lastguard_tag", "lastguard_notalive");
 	}
 	else CReplyToCommand(client, "%t %t", "lastguard_tag", "lastguard_disabled");
+
 	return Plugin_Handled;
 }
-
 
 /******************************************************************************
                    EVENTS
 ******************************************************************************/
 
-
 // Initialize Event
 public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
-	IsLR = false;
-	IsLastGuard = false;
-	MinCT = false;
+	g_bIsLR = false;
+	g_bIsLastGuard = false;
+	g_bMinCT = false;
 	g_iVoteCount = 0;
-	AllowLastGuard = false;
-	CreateTimer(2.5, Timer_LastGuardBeginn);
-	if (GetAliveTeamCount(CS_TEAM_CT) >= gc_iMinCT.IntValue) MinCT = true;
-}
+	g_bAllowLastGuard = false;
 
+	CreateTimer(2.5, Timer_LastGuardBeginn);
+
+	if (GetAliveTeamCount(CS_TEAM_CT) >= gc_iMinCT.IntValue) g_bMinCT = true;
+}
 
 // Round End
 public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
 	int winner = event.GetInt("winner");
-	
+
 	Format(g_sHasVoted, sizeof(g_sHasVoted), "");
-	if (IsLastGuard)
+
+	if (g_bIsLastGuard)
 	{
 		LoopClients(client)
 		{
-			SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
+			SetEntData(client, g_iCollision_Offset, 0, 4, true);
 		}
-		delete TruceTimer;
-		delete BeaconTimer;
+		delete g_hTimerTruce;
+		delete g_hTimerBeacon;
 		if (winner == 2) PrintCenterTextAll("%t", "lastguard_twin_nc");
 		if (winner == 3) PrintCenterTextAll("%t", "lastguard_ctwin_nc");
 		
 		if (gp_bMyJailBreak) MyJailbreak_SetLastGuardRule(false);
-		IsLastGuard = false;
+		g_bIsLastGuard = false;
 		if (gp_bHosties && gp_bLastRequest) SetCvar("sm_hosties_lr", 1);
 		if (gp_bMyJailBreak)SetCvar("sm_weapons_t", 0);
 		SetCvar("sm_warden_enable", 1);
 		CPrintToChatAll("%t %t", "lastguard_tag", "lastguard_end");
 	}
-	
-	AllowLastGuard = false;
-	IsLR = false;
-}
 
+	g_bAllowLastGuard = false;
+	g_bIsLR = false;
+}
 
 // Check player count when player dies or change team
 public void Event_PlayerTeamDeath(Event event, const char[] name, bool dontBroadcast)
 {
-	if (AllowLastGuard)CheckStatus();
+	if (g_bAllowLastGuard)CheckStatus();
 }
-
 
 /******************************************************************************
                    FUNCTIONS
 ******************************************************************************/
 
-
 // Prepare Event
 void StartLastGuard()
 {
-	if (AllowLastGuard)
+	if (g_bAllowLastGuard)
 	{
-		IsLastGuard = true;
+		g_bIsLastGuard = true;
 		g_iVoteCount = 0;
-		
+
 		if (gp_bSmartJailDoors) SJD_OpenDoors();
-		
+
 		if (gp_bMyJailBreak)
 		{
 			MyJailbreak_SetLastGuardRule(true);
-			if (gc_fBeaconTime.FloatValue > 0.0) BeaconTimer = CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
+			if (gc_fBeaconTime.FloatValue > 0.0) g_hTimerBeacon = CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
 		}
-		
+
 		if (gp_bHosties && gp_bLastRequest) SetCvar("sm_hosties_lr", 0);
 		if (gp_bMyJailBreak) SetCvar("sm_weapons_t", 1);
 		SetCvar("sm_warden_enable", 0);
 		int Tcount = (GetAliveTeamCount(CS_TEAM_T)*gc_iTimePerT.IntValue);
-		
+
 		if (gc_iTime.IntValue != 0) GameRules_SetProp("m_iRoundTime", (60+Tcount+(gc_iTime.IntValue*60)), 4, 0, true);
-		
+
 		if (gc_bSounds.BoolValue)
 		{
 			CreateTimer(0.5, Timer_LastGuardSound);
 		}
-		
+
 		int HPterrors = 0;
 		int HPterBuffer = 0;
+
 		LoopClients(i) if (IsPlayerAlive(i) && GetClientTeam(i) == CS_TEAM_T)
 		{
 			HPterBuffer = (GetClientHealth(i) + HPterrors);
@@ -415,33 +404,34 @@ void StartLastGuard()
 			CreateTimer(0.0, DeleteOverlay, i);
 			if (gp_bHosties && gp_bLastRequest) ChangeRebelStatus(i, true);
 		}
+
 		int HPCT = RoundToCeil(HPterrors * (gc_iHPmultipler.FloatValue / 100.0));
 		LoopClients(iClient)
 		{
 			char info[64];
-			LastGuardMenu = CreatePanel();
+			g_hPanelInfo = CreatePanel();
 			Format(info, sizeof(info), "%T", "lastguard_info_title", iClient);
-			SetPanelTitle(LastGuardMenu, info);
-			DrawPanelText(LastGuardMenu, "                                   ");
+			SetPanelTitle(g_hPanelInfo, info);
+			DrawPanelText(g_hPanelInfo, "                                   ");
 			Format(info, sizeof(info), "%T", "lastguard_info_line1", iClient);
-			DrawPanelText(LastGuardMenu, info);
-			DrawPanelText(LastGuardMenu, "-----------------------------------");
+			DrawPanelText(g_hPanelInfo, info);
+			DrawPanelText(g_hPanelInfo, "-----------------------------------");
 			Format(info, sizeof(info), "%T", "lastguard_info_line2", iClient);
-			DrawPanelText(LastGuardMenu, info);
+			DrawPanelText(g_hPanelInfo, info);
 			Format(info, sizeof(info), "%T", "lastguard_info_line3", iClient);
-			DrawPanelText(LastGuardMenu, info);
+			DrawPanelText(g_hPanelInfo, info);
 			Format(info, sizeof(info), "%T", "lastguard_info_line4", iClient);
-			DrawPanelText(LastGuardMenu, info);
+			DrawPanelText(g_hPanelInfo, info);
 			Format(info, sizeof(info), "%T", "lastguard_info_line5", iClient);
-			DrawPanelText(LastGuardMenu, info);
+			DrawPanelText(g_hPanelInfo, info);
 			Format(info, sizeof(info), "%T", "lastguard_info_line6", iClient);
-			DrawPanelText(LastGuardMenu, info);
+			DrawPanelText(g_hPanelInfo, info);
 			Format(info, sizeof(info), "%T", "lastguard_info_line7", iClient);
-			DrawPanelText(LastGuardMenu, info);
-			DrawPanelText(LastGuardMenu, "-----------------------------------");
+			DrawPanelText(g_hPanelInfo, info);
+			DrawPanelText(g_hPanelInfo, "-----------------------------------");
 			Format(info, sizeof(info), "%T", "lastguard_close", iClient);
-			DrawPanelItem(LastGuardMenu, info);
-			SendPanelToClient(LastGuardMenu, iClient, Handler_NullCancel, 20);
+			DrawPanelItem(g_hPanelInfo, info);
+			SendPanelToClient(g_hPanelInfo, iClient, Handler_NullCancel, 20);
 			
 			SetEntData(iClient, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
 			SetEntProp(iClient, Prop_Data, "m_takedamage", 0, 1);
@@ -459,67 +449,63 @@ void StartLastGuard()
 				CPrintToChatAll("%t %t", "lastguard_tag", "lastguard_hp", GetAliveTeamCount(CS_TEAM_T), HPterrors, iClient, HPCT);
 			}
 		}
-		
+
 		g_iTruceTime--;
-		TruceTimer = CreateTimer(1.0, Timer_TruceUntilStart, _, TIMER_REPEAT);
-		
+		g_hTimerTruce = CreateTimer(1.0, Timer_TruceUntilStart, _, TIMER_REPEAT);
+
 		CPrintToChatAll("%t %t", "lastguard_tag", "lastguard_startnow");
 		PrintCenterTextAll("%t", "lastguard_startnow_nc");
 	}
 }
 
-
 // check count for automatic 
 void CheckStatus()
 {
-	if (gc_bPlugin.BoolValue && !IsLR && !IsLastGuard && gc_bAutomatic.BoolValue)
+	if (gc_bPlugin.BoolValue && !g_bIsLR && !g_bIsLastGuard && gc_bAutomatic.BoolValue)
 	{
-		if ((GetAliveTeamCount(CS_TEAM_CT) == 1) && (GetAliveTeamCount(CS_TEAM_T) > 1) && !IsLastGuard && !IsLR && MinCT)
+		if ((GetAliveTeamCount(CS_TEAM_CT) == 1) && (GetAliveTeamCount(CS_TEAM_T) > 1) && !g_bIsLastGuard && !g_bIsLR && g_bMinCT)
 		{
 			if (gp_bMyJailBreak) if (MyJailbreak_IsEventDayRunning())
 			return;
 			
 			StartLastGuard();
 			if (gp_bMyJailBreak) if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Last Guard Rule was started automatic");
-			MinCT = false;
+			g_bMinCT = false;
 		}
 	}
 }
-
 
 /******************************************************************************
                    FORWARDS LISTEN
 ******************************************************************************/
 
-
 // Prepare Plugin & modules
 public void OnMapStart()
 {
 	g_iVoteCount = 0;
-	IsLastGuard = false;
-	IsLR = false;
-	
+	g_bIsLastGuard = false;
+	g_bIsLR = false;
+
 	g_iTruceTime = gc_iTruceTime.IntValue;
-	
+
 	if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);   // Add sound to download and precache table
 	if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundLastCTPath);   // Add sound to download and precache table
 	if (gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);   // Add overlay to download and precache table
 }
 
-
 public void OnConfigsExecuted()
 {
 	g_iTruceTime = gc_iTruceTime.IntValue;
-	
+
 	// Set custom Commands
 	int iCount = 0;
 	char sCommands[128], sCommandsL[12][32], sCommand[32];
-	
+
 	// Last guard rule
 	gc_sCustomCommandLGR.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
 	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
-	
+
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
@@ -528,39 +514,37 @@ public void OnConfigsExecuted()
 	}
 }
 
-
 // Map End
 public void OnMapEnd()
 {
-	IsLastGuard = false;
-	AllowLastGuard = false;
-	delete TruceTimer;
+	g_bIsLastGuard = false;
+	g_bAllowLastGuard = false;
+
+	delete g_hTimerTruce;
+
 	g_iVoteCount = 0;
 	g_sHasVoted[0] = '\0';
-	
+
 	if (gp_bMyJailBreak) MyJailbreak_SetLastGuardRule(false);
 }
-
 
 // Client Disconnect
 public void OnClientDisconnect_Post(int client)
 {
-	if (AllowLastGuard)CheckStatus();
+	if (g_bAllowLastGuard)CheckStatus();
 }
-
 
 // When a last request is available
 public void OnAvailableLR(int Announced)
 {
-	IsLR = true;
-	delete BeaconTimer;
-}
+	g_bIsLR = true;
 
+	delete g_hTimerBeacon;
+}
 
 /******************************************************************************
                    TIMER
 ******************************************************************************/
-
 
 // Start Timer
 public Action Timer_TruceUntilStart(Handle timer)
@@ -580,12 +564,12 @@ public Action Timer_TruceUntilStart(Handle timer)
 				
 			}
 		}
-		
+
 		return Plugin_Continue;
 	}
-	
+
 	g_iTruceTime = gc_iTruceTime.IntValue;
-	
+
 	LoopClients(client) if (IsPlayerAlive(client))
 	{
 		SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
@@ -597,27 +581,26 @@ public Action Timer_TruceUntilStart(Handle timer)
 		}
 		FakeClientCommand(client, "sm_weapons");
 	}
+
 	CPrintToChatAll("%t %t", "lastguard_tag", "lastguard_start");
-	
-	TruceTimer = null;
+
+	g_hTimerTruce = null;
+
 	return Plugin_Stop;
 }
-
 
 public Action Timer_LastGuardSound(Handle timer)
 {
 	EmitSoundToAllAny(g_sSoundLastCTPath);
 }
 
-
 public Action Timer_LastGuardBeginn(Handle timer)
 {
-	AllowLastGuard = true;
+	g_bAllowLastGuard = true;
 }
-
 
 public Action Timer_BeaconOn(Handle timer)
 {
 	LoopValidClients(i, true, false) MyJailbreak_BeaconOn(i, 2.0);
-	BeaconTimer = null;
+	g_hTimerBeacon = null;
 }

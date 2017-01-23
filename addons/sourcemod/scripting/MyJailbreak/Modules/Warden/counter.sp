@@ -18,11 +18,9 @@
  * this program. If not, see <http:// www.gnu.org/licenses/>.
  */
 
-
 /******************************************************************************
 					STARTUP
 ******************************************************************************/
-
 
 // Includes
 #include <sourcemod>
@@ -38,21 +36,17 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-
 // Console Variables
 ConVar gc_bCounter;
 ConVar gc_bCounterDeputy;
 ConVar gc_iCounterMode;
 ConVar gc_sCustomCommandCounter;
 
-
 // Boolean
 bool g_bCounted[MAXPLAYERS+1];
 
-
 // Floats
 float g_fDistance[MAXPLAYERS+1];
-
 
 // Start
 public void Counter_OnPluginStart()
@@ -68,11 +62,9 @@ public void Counter_OnPluginStart()
 	gc_sCustomCommandCounter = AutoExecConfig_CreateConVar("sm_warden_cmds_counter", "count, sight", "Set your custom chat command for counter.(!counter (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 }
 
-
 /******************************************************************************
 					COMMANDS
 ******************************************************************************/
-
 
 public Action Command_Counter(int client, any args)
 {
@@ -82,9 +74,8 @@ public Action Command_Counter(int client, any args)
 		{
 			float wardenOrigin[3];
 			GetClientAbsOrigin(client, wardenOrigin);
-			
 			int counter = 0;
-			
+
 			LoopValidClients(i, true, false)
 			{
 				if (GetClientTeam(i) == CS_TEAM_T)
@@ -105,7 +96,7 @@ public Action Command_Counter(int client, any args)
 					}
 				}
 			}
-			
+
 			if ((gc_iCounterMode.IntValue == 1)|| (gc_iCounterMode.IntValue == 3)|| (gc_iCounterMode.IntValue == 5)|| (gc_iCounterMode.IntValue == 7)) CReplyToCommand(client, "%t %t", "warden_tag", "warden_counter", counter);
 			if ((gc_iCounterMode.IntValue == 2)|| (gc_iCounterMode.IntValue == 3)|| (gc_iCounterMode.IntValue == 6)|| (gc_iCounterMode.IntValue == 7)) PrintCenterText(client, "%t", "warden_counter", counter);
 			if ((gc_iCounterMode.IntValue == 4)|| (gc_iCounterMode.IntValue == 5)|| (gc_iCounterMode.IntValue == 6)|| (gc_iCounterMode.IntValue == 7))
@@ -137,26 +128,25 @@ public Action Command_Counter(int client, any args)
 		}
 		else CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
 	}
+
 	return Plugin_Handled;
 }
-
 
 /******************************************************************************
 					FORWARDS LISTENING
 ******************************************************************************/
-
 
 public void Counter_OnConfigsExecuted()
 {
 	// Set custom Commands
 	int iCount = 0;
 	char sCommands[128], sCommandsL[12][32], sCommand[32];
-	
+
 	// Capitulation
 	gc_sCustomCommandCounter.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
 	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
-	
+
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
@@ -165,11 +155,9 @@ public void Counter_OnConfigsExecuted()
 	}
 }
 
-
 /******************************************************************************
 					STOCKS
 ******************************************************************************/
-
 
 bool ClientViews(int viewer, int target, float fMaxDistance=0.0, float fThreshold=0.73)
 {
@@ -180,11 +168,11 @@ bool ClientViews(int viewer, int target, float fMaxDistance=0.0, float fThreshol
 	float fTargetPos[3];GetClientEyePosition(target, fTargetPos);
 	float fTargetDir[3];
 	float fDistance[3];
-	
+
 	// Calculate view direction
 	fViewAng[0] = fViewAng[2] = 0.0;
 	GetAngleVectors(fViewAng, fViewDir, NULL_VECTOR, NULL_VECTOR);
-	
+
 	// Calculate distance to viewer to see if it can be seen.
 	fDistance[0] = fTargetPos[0]-fViewPos[0];
 	fDistance[1] = fTargetPos[1]-fViewPos[1];
@@ -194,26 +182,25 @@ bool ClientViews(int viewer, int target, float fMaxDistance=0.0, float fThreshol
 		if (((fDistance[0]*fDistance[0])+(fDistance[1]*fDistance[1])) >= (fMaxDistance*fMaxDistance))
 			return false;
 	}
-	
+
 	// Check dot product. If it's negative, that means the viewer is facing
 	// backwards to the target.
 	NormalizeVector(fDistance, fTargetDir);
 	if (GetVectorDotProduct(fViewDir, fTargetDir) < fThreshold) return false;
-	
+
 	// Now check if there are no obstacles in between through raycasting
 	Handle hTrace = TR_TraceRayFilterEx(fViewPos, fTargetPos, MASK_PLAYERSOLID_BRUSHONLY, RayType_EndPoint, ClientViewsFilter);
 	if (TR_DidHit(hTrace)) { CloseHandle(hTrace);return false;}
 	CloseHandle(hTrace);
-	
+
 	// Done, it's visible
 	return true;
 }
 
-
 public bool ClientViewsFilter(int Entity, int Mask, any Junk)
 {
-	if (Entity >= 1 && Entity <= MaxClients) return false;
+	if (Entity >= 1 && Entity <= MaxClients) 
+		return false;
+
 	return true;
 }
-
-

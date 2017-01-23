@@ -18,11 +18,9 @@
  * this program. If not, see <http:// www.gnu.org/licenses/>.
  */
 
-
 /******************************************************************************
                    STARTUP
 ******************************************************************************/
-
 
 // Includes
 #include <sourcemod>
@@ -39,55 +37,47 @@
 #include <myjailbreak>
 #define REQUIRE_PLUGIN
 
-
 // Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
 
-
 // Console Variables
 ConVar gc_bKillReason;
-
 
 // Start
 public void KillReason_OnPluginStart()
 {
 	// AutoExecConfig
 	gc_bKillReason = AutoExecConfig_CreateConVar("sm_killreason_enable", "1", "0 - disabled, 1 - enable - CT can answer a menu with the kill reason");
-	
-	
+
 	// Hooks 
 	HookEvent("player_death", KillReason_Event_PlayerDeath);
 }
-
 
 /******************************************************************************
                    EVENTS
 ******************************************************************************/
 
-
 public void KillReason_Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast) 
 {
 	int victim = GetClientOfUserId(event.GetInt("userid")); // Get the dead clients id
 	int attacker = GetClientOfUserId(event.GetInt("attacker")); // Get the attacker clients id
-	
-	if (IsValidClient(victim, true, true) && IsValidClient(attacker, false, true) && !IsLR && gc_bPlugin.BoolValue && gc_bKillReason.BoolValue && ((GetClientTeam(attacker) == CS_TEAM_CT) && (GetClientTeam(victim) == CS_TEAM_T)))
+
+	if (IsValidClient(victim, true, true) && IsValidClient(attacker, false, true) && !g_bIsLR && gc_bPlugin.BoolValue && gc_bKillReason.BoolValue && ((GetClientTeam(attacker) == CS_TEAM_CT) && (GetClientTeam(victim) == CS_TEAM_T)))
 		Menu_KillReason(attacker, victim);
 }
-
 
 /******************************************************************************
                    MENUS
 ******************************************************************************/
 
-
 void Menu_KillReason(int client, int victim)
 {
 	if (MyJailbreak_IsEventDayRunning() || MyJailbreak_IsLastGuardRule())
 		return;
-	
+
 	char info[255];
-	
+
 	Menu menu1 = CreateMenu(Handler_KillReason);
 	Format(info, sizeof(info), "%T", "request_killreason_title", client, victim);
 	menu1.SetTitle(info);
@@ -104,7 +94,6 @@ void Menu_KillReason(int client, int victim)
 	Format(info, sizeof(info), "%T", "request_killreason_freekill", client);
 	if (gc_bFreeKillSwap.BoolValue) menu1.AddItem("6", info);
 	menu1.Display(client, MENU_TIME_FOREVER);
-
 }
 
 
@@ -116,7 +105,7 @@ public int Handler_KillReason(Menu menu, MenuAction action, int client, int Posi
 		menu.GetItem(Position, Item, sizeof(Item));
 		int choice = StringToInt(Item);
 		int victim = GetClientOfUserId(g_iHasKilled[client]);
-		
+
 		if (IsValidClient(victim, true, true) && IsValidClient(client, false, true))
 		{
 			if (choice == 1) // lostgame

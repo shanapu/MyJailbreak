@@ -18,10 +18,10 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 /******************************************************************************
                    STARTUP
 ******************************************************************************/
+
 // Includes
 #include <sourcemod>
 #include <sdktools>
@@ -36,7 +36,6 @@
 #include <smartjaildoors>
 #include <mystocks>
 #include <myjailbreak>
-
 #include <CustomPlayerSkins>
 
 // Compiler Options
@@ -51,7 +50,7 @@
 bool g_bIsLateLoad = false;
 bool g_bIsCatch = false;
 bool g_bStartCatch = false;
-bool g_bCatched[MAXPLAYERS+1] = { false, ... };
+bool g_bCatched[MAXPLAYERS+1] = {false, ...};
 
 // Console Variables
 ConVar gc_bPlugin;
@@ -315,7 +314,7 @@ public void OnConfigsExecuted()
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
 		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS) // if command not already exist
-		{
+		{	
 			RegConsoleCmd(sCommand, Command_SetCatch, "Allows the Admin or Warden to set catch as next round");
 		}
 	}

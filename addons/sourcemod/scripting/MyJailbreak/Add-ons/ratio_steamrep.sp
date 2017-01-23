@@ -19,11 +19,9 @@
  * this program. If not, see <http:// www.gnu.org/licenses/>.
  */
 
-
 /******************************************************************************
                    STARTUP
 ******************************************************************************/
-
 
 // Includes
 #include <sourcemod>
@@ -39,25 +37,20 @@
 #include <myjailbreak>
 #define REQUIRE_PLUGIN
 
-
 // Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
 
-
 // Console Variables
 ConVar gc_iMinSteamRepPoints;
-
 
 // Bools
 bool g_bIsLateLoad = false;
 bool g_IsScammer[MAXPLAYERS+1];
 
-
 // Convars
 ConVar gc_bcheckIP;
 ConVar gc_sExclude;
-
 
 // Info
 public Plugin myinfo = {
@@ -80,19 +73,17 @@ public void OnPluginStart()
 {
 	// Translation
 	LoadTranslations("MyJailbreak.Ratio.phrases");
-	
-	
+
 	// AutoExecConfig
 	AutoExecConfig_SetFile("Ratio", "MyJailbreak");
 	AutoExecConfig_SetCreateFile(true);
-	
+
 	gc_sExclude = AutoExecConfig_CreateConVar("sm_ratio_steamrep_exclude","","Which tags you DO NOT trust for reported scammers. Input the tags here for any community whose bans you DO NOT TRUST.");
 	gc_bcheckIP = AutoExecConfig_CreateConVar("sm_ratio_steamrep_checkip","1","Include IP address of connecting players in query. Set to 0 to disable");
-	
+
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
-	
-	
+
 	// Hooks
 	HookEvent("player_spawn", Event_OnPlayerSpawn, EventHookMode_Post);
 
@@ -109,24 +100,21 @@ public void OnPluginStart()
 	}
 }
 
-
 public void OnAllPluginsLoaded()
 {
 	if (!LibraryExists("myratio"))
 		SetFailState("You're missing the MyJailbreak - Ratio (ratio.smx) plugin");
 }
 
-
 public void OnClientConnected(int client)
 {
 	g_IsScammer[client]=false;
 }
 
-
 public void OnClientPostAdminCheck(int client)
 {
 	g_IsScammer[client]=false;
-	
+
 	Handle socket = SocketCreate(SOCKET_TCP, OnSocketError);
 	SocketSetArg(socket, GetClientUserId(client));
 	SocketSetOption(socket, SocketSendTimeout, 5160);
@@ -135,16 +123,16 @@ public void OnClientPostAdminCheck(int client)
 	SocketConnect(socket, OnSocketConnected, OnSocketReceive, OnSocketDisconnected, "steamrep.com", 80);
 }
 
-
 public int OnSocketConnected(Handle socket, any userid)
 {
 	// socket is connected, send the http request
 	int client = GetClientOfUserId(userid);
-	
+
 	if (client == 0) {
 		CloseHandle(socket);
 		return;
 	}
+
 	if (IsClientConnected(client) && !CheckCommandAccess(client, "SkipSR", ADMFLAG_ROOT, true) && !IsFakeClient(client)) {
 		char steamid[32];
 		char requestStr[450];
@@ -157,31 +145,32 @@ public int OnSocketConnected(Handle socket, any userid)
 		GetConVarString(gc_sExclude,excludetags,sizeof(excludetags));
 		Format(requestStr, sizeof(requestStr), "GET /%s%s%s%s%s%s%s1.1.5 HTTP/1.0\r\nHost: %s\r\nConnection: close\r\n\r\n", "id2rep.php?steamID32=",steamid,"&ignore=",excludetags,"&IP=",ip,"&version=","steamrep.com");
 		SocketSend(socket, requestStr);
-	}else{
+	}
+	else
+	{
 		CloseHandle(socket);
 	}
 }
 
-
-public int OnSocketReceive(Handle socket, char [] receiveData, const int dataSize, any userid)
+public int OnSocketReceive(Handle socket, char[] receiveData, const int dataSize, any userid)
 {
 	// receive chunk
 	int client = GetClientOfUserId(userid);
+
 	if (client == 0)
 	{
 		CloseHandle(socket);
 		return;
 	}
+
 	g_IsScammer[client] = true;
 }
-
 
 public int OnSocketDisconnected(Handle socket, any client)
 {
 	// Connection: close advises the webserver to close the connection when the transfer is finished
 	CloseHandle(socket);
 }
-
 
 public int OnSocketError(Handle socket, const int errorType, const int errorNum, any client)
 {
@@ -190,7 +179,6 @@ public int OnSocketError(Handle socket, const int errorType, const int errorNum,
 	CloseHandle(socket);
 }
 
-
 public Action MyJailbreak_OnJoinGuardQueue(int client)
 {
 	if (g_IsScammer[client])
@@ -198,34 +186,34 @@ public Action MyJailbreak_OnJoinGuardQueue(int client)
 		CPrintToChat(client, "%t %t", "ratio_tag", "ratio_steamrep");
 		return Plugin_Handled;
 	}
+
 	return Plugin_Continue;
 }
-
 
 public Action Event_OnPlayerSpawn(Event event, const char[] name, bool bDontBroadcast) 
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));
-	
+
 	if (GetClientTeam(client) != CS_TEAM_CT) 
 		return Plugin_Continue;
-	
+
 	if (!IsValidClient(client, true, true))
 		return Plugin_Continue;
-	
+
 	if (g_IsScammer[client])
 	{
 		CPrintToChat(client, "%t %t", "ratio_tag", "ratio_steamrep", gc_iMinSteamRepPoints.IntValue);
 		CreateTimer(5.0, Timer_SlayPlayer, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 		return Plugin_Continue;
 	}
+
 	return Plugin_Continue;
 }
-
 
 public Action Timer_SlayPlayer(Handle hTimer, any iUserId) 
 {
 	int client = GetClientOfUserId(iUserId);
-	
+
 	if ((IsValidClient(client, false, false)) && (GetClientTeam(client) == CS_TEAM_CT))
 	{
 		ForcePlayerSuicide(client);
@@ -233,9 +221,9 @@ public Action Timer_SlayPlayer(Handle hTimer, any iUserId)
 		CS_RespawnPlayer(client);
 		MinusDeath(client);
 	}
+
 	return Plugin_Stop;
 }
-
 
 void MinusDeath(int client)
 {

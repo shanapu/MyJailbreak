@@ -18,11 +18,9 @@
  * this program. If not, see <http:// www.gnu.org/licenses/>.
  */
 
-
 /******************************************************************************
                    STARTUP
 ******************************************************************************/
-
 
 // Includes
 #include <sourcemod>
@@ -37,15 +35,12 @@
 #include <myjailbreak>
 #define REQUIRE_PLUGIN
 
-
 // Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
 
-
 // Handles
 Handle g_hCookieCTBan;
-
 
 // Info
 public Plugin myinfo = {
@@ -55,7 +50,6 @@ public Plugin myinfo = {
 	version = MYJB_VERSION, 
 	url = MYJB_URL_LINK
 };
-
 
 // Start
 public void OnPluginStart()
@@ -70,13 +64,11 @@ public void OnPluginStart()
 		g_hCookieCTBan = RegClientCookie("Banned_From_CT", "Tells if you are restricted from joining the CT team", CookieAccess_Protected);
 }
 
-
 public void OnAllPluginsLoaded()
 {
 	if (!LibraryExists("myratio"))
 		SetFailState("You're missing the MyJailbreak - Ratio (ratio.smx) plugin");
 }
-
 
 public Action MyJailbreak_OnJoinGuardQueue(int client)
 {
@@ -92,20 +84,19 @@ public Action MyJailbreak_OnJoinGuardQueue(int client)
 	return Plugin_Continue;
 }
 
-
 public Action Event_OnPlayerSpawn(Event event, const char[] name, bool bDontBroadcast) 
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));
-	
+
 	if (GetClientTeam(client) != 3) 
 		return Plugin_Continue;
-		
+
 	if (!IsValidClient(client, true, false))
 		return Plugin_Continue;
-		
+
 	char sData[2];
 	GetClientCookie(client, g_hCookieCTBan, sData, sizeof(sData));
-	
+
 	if (sData[0] == '1')
 	{
 		CPrintToChat(client, "%t %t", "ratio_tag", "ratio_banned");
@@ -113,15 +104,14 @@ public Action Event_OnPlayerSpawn(Event event, const char[] name, bool bDontBroa
 		CreateTimer(5.0, Timer_SlayPlayer, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 		return Plugin_Continue;
 	}
-	
+
 	return Plugin_Continue;
 }
-
 
 public Action Timer_SlayPlayer(Handle hTimer, any iUserId) 
 {
 	int client = GetClientOfUserId(iUserId);
-	
+
 	if ((IsValidClient(client, false, false)) && (GetClientTeam(client) == CS_TEAM_CT))
 	{
 		ForcePlayerSuicide(client);
@@ -129,9 +119,9 @@ public Action Timer_SlayPlayer(Handle hTimer, any iUserId)
 		CS_RespawnPlayer(client);
 		MinusDeath(client);
 	}
+
 	return Plugin_Stop;
 }
-
 
 void MinusDeath(int client)
 {

@@ -18,11 +18,9 @@
  * this program. If not, see <http:// www.gnu.org/licenses/>.
  */
 
-
 /******************************************************************************
                    STARTUP
 ******************************************************************************/
-
 
 // Includes
 #include <sourcemod>
@@ -38,15 +36,12 @@
 #include <myjailbreak>
 #define REQUIRE_PLUGIN
 
-
 // Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
 
-
 // Console Variables
 ConVar gc_iMinRankMePoints;
-
 
 // Info
 public Plugin myinfo = {
@@ -57,24 +52,21 @@ public Plugin myinfo = {
 	url = MYJB_URL_LINK
 };
 
-
 // Start
 public void OnPluginStart()
 {
 	// Translation
 	LoadTranslations("MyJailbreak.Ratio.phrases");
-	
-	
+
 	// AutoExecConfig
 	AutoExecConfig_SetFile("Ratio", "MyJailbreak");
 	AutoExecConfig_SetCreateFile(true);
-	
+
 	gc_iMinRankMePoints = AutoExecConfig_CreateConVar("sm_ratio_rankme", "0", "0 - disabled, how many rankme points a player need to join ct? (only if stamm is available)", _, true, 1.0);
-	
+
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
-	
-	
+
 	// Hooks
 	HookEvent("player_spawn", Event_OnPlayerSpawn, EventHookMode_Post);
 }
@@ -94,6 +86,7 @@ public Action MyJailbreak_OnJoinGuardQueue(int client)
 		CPrintToChat(client, "%t %t", "ratio_tag", "ratio_rankme", gc_iMinRankMePoints.IntValue);
 		return Plugin_Handled;
 	}
+
 	return Plugin_Continue;
 }
 
@@ -101,19 +94,20 @@ public Action MyJailbreak_OnJoinGuardQueue(int client)
 public Action Event_OnPlayerSpawn(Event event, const char[] name, bool bDontBroadcast) 
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));
-	
+
 	if (GetClientTeam(client) != 3) 
 		return Plugin_Continue;
-		
+
 	if (!IsValidClient(client, false, false))
 		return Plugin_Continue;
-		
+
 	if (RankMe_GetPoints(client) < gc_iMinRankMePoints.IntValue)
 	{
 		CPrintToChat(client, "%t %t", "ratio_tag", "ratio_rankme", gc_iMinRankMePoints.IntValue);
 		CreateTimer(5.0, Timer_SlayPlayer, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 		return Plugin_Continue;
 	}
+
 	return Plugin_Continue;
 }
 
@@ -121,7 +115,7 @@ public Action Event_OnPlayerSpawn(Event event, const char[] name, bool bDontBroa
 public Action Timer_SlayPlayer(Handle hTimer, any iUserId) 
 {
 	int client = GetClientOfUserId(iUserId);
-	
+
 	if ((IsValidClient(client, false, false)) && (GetClientTeam(client) == CS_TEAM_CT))
 	{
 		ForcePlayerSuicide(client);
@@ -129,6 +123,7 @@ public Action Timer_SlayPlayer(Handle hTimer, any iUserId)
 		CS_RespawnPlayer(client);
 		MinusDeath(client);
 	}
+
 	return Plugin_Stop;
 }
 

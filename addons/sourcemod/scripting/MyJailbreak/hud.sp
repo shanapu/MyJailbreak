@@ -18,11 +18,9 @@
  * this program. If not, see <http:// www.gnu.org/licenses/>.
  */
 
-
 /******************************************************************************
                    STARTUP
 ******************************************************************************/
-
 
 // Includes
 #include <sourcemod>
@@ -34,7 +32,6 @@
 #include <warden>
 #include <mystocks>
 #include <myjailbreak>
-
 
 // Compiler Options
 #pragma semicolon 1
@@ -49,9 +46,6 @@ ConVar gc_sCustomCommandHUD;
 
 // Booleans
 g_bEnableHud[MAXPLAYERS+1] = true;
-
-// Strings
-
 
 // Info
 public Plugin myinfo =
@@ -70,29 +64,25 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	return APLRes_Success;
 }
 
-
 // Start
 public void OnPluginStart()
 {
 	// Translation
 	LoadTranslations("MyJailbreak.HUD.phrases");
-	
+
 	RegConsoleCmd("sm_hud", Command_HUD, "Allows player to toggle the hud display.");
-	
-	
+
 	// AutoExecConfig
 	AutoExecConfig_SetFile("HUD", "MyJailbreak");
 	AutoExecConfig_SetCreateFile(true);
-	
+
 	AutoExecConfig_CreateConVar("sm_hud_version", MYJB_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_hud_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true, 0.0, true, 1.0);
 	gc_sCustomCommandHUD = AutoExecConfig_CreateConVar("sm_hud_cmds", "HUD", "Set your custom chat commands for toggle HUD(!hud (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
-	
-	
+
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
-	
-	
+
 	// Hooks - Events to check for Tag
 	HookEvent("player_death", Event_PlayerTeamDeath);
 	HookEvent("player_team", Event_PlayerTeamDeath);
@@ -109,19 +99,18 @@ public void OnPluginStart()
 	}
 }
 
-
 // Initialize Plugin
 public void OnConfigsExecuted()
 {
 	// Set custom Commands
 	int iCount = 0;
 	char sCommands[128], sCommandsL[12][32], sCommand[32];
-	
+
 	// HUd
 	gc_sCustomCommandHUD.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
 	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
-	
+
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
@@ -130,11 +119,9 @@ public void OnConfigsExecuted()
 	}
 }
 
-
 /******************************************************************************
                    COMMANDS
 ******************************************************************************/
-
 
 // Toggle hud
 public Action Command_HUD(int client, int args)
@@ -151,14 +138,13 @@ public Action Command_HUD(int client, int args)
 		CReplyToCommand(client, "%t %t", "hud_tag", "hud_off");
 		
 	}
+
 	return Plugin_Handled;
 }
-
 
 /******************************************************************************
                    EVENTS
 ******************************************************************************/
-
 
 // Warden change Team
 public void Event_PlayerTeamDeath(Event event, const char[] name, bool dontBroadcast)
@@ -166,11 +152,9 @@ public void Event_PlayerTeamDeath(Event event, const char[] name, bool dontBroad
 	ShowHUD();
 }
 
-
 /******************************************************************************
                    FORWARDS LISTEN
 ******************************************************************************/
-
 
 // Prepare Plugin & modules
 public void OnMapStart()
@@ -183,34 +167,28 @@ public void OnClientPutInServer(int client)
 	g_bEnableHud[client] = true;
 }
 
-
 public void warden_OnWardenCreated(int client)
 {
 	ShowHUD();
 }
-
 
 public void warden_OnWardenRemoved(int client)
 {
 	ShowHUD();
 }
 
-
 /******************************************************************************
                    TIMER
 ******************************************************************************/
-
 
 public Action Timer_ShowHUD(Handle timer, Handle pack)
 {
 	ShowHUD();
 }
 
-
 /******************************************************************************
                    FUNCTIONS
 ******************************************************************************/
-
 
 void ShowHUD()
 {
@@ -219,11 +197,10 @@ void ShowHUD()
 	int allCT = GetTeamClientCount(CS_TEAM_CT);
 	int aliveT = GetAliveTeamCount(CS_TEAM_T);
 	int allT = GetTeamClientCount(CS_TEAM_T);
-	
-	
+
 	char EventDay[64];
 	MyJailbreak_GetEventDayName(EventDay);
-	
+
 	if (gc_bPlugin.BoolValue)
 	{
 		LoopValidClients(i, false, true)

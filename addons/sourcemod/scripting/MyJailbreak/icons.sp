@@ -18,11 +18,9 @@
  * this program. If not, see <http:// www.gnu.org/licenses/>.
  */
 
-
 /******************************************************************************
                    STARTUP
 ******************************************************************************/
-
 
 // Includes
 #include <sourcemod>
@@ -46,7 +44,6 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-
 // Console Variables
 ConVar gc_bIconWarden;
 ConVar gc_sIconWardenPath;
@@ -63,15 +60,13 @@ ConVar gc_sIconRebelPath;
 ConVar gc_bIconFreeday;
 ConVar gc_sIconFreedayPath;
 
-
 // Bools
-bool gp_bWarden;
-bool gp_bHosties;
-bool g_bBlockIcon[MAXPLAYERS+1] = false;
+bool gp_bWarden = false;
+bool gp_bHosties = false;
+bool g_bBlockIcon[MAXPLAYERS+1] = {false, ...};
 
 // Integers
 int g_iIcon[MAXPLAYERS + 1] = {-1, ...};
-
 
 // Strings
 char g_sIconWardenPath[256];
@@ -82,7 +77,6 @@ char g_sIconRebelPath[256];
 char g_sIconCuffedPath[256];
 char g_sIconFreedayPath[256];
 
-
 // Info
 public Plugin myinfo = {
 	name = "MyJailbreak - Icons", 
@@ -92,16 +86,13 @@ public Plugin myinfo = {
 	url = MYJB_URL_LINK
 };
 
-
-
 // Start
 public void OnPluginStart()
 {
 	// AutoExecConfig
 	AutoExecConfig_SetFile("Icons", "MyJailbreak");
 	AutoExecConfig_SetCreateFile(true);
-	
-	
+
 	// AutoExecConfig
 	gc_bIconWarden = AutoExecConfig_CreateConVar("sm_icons_warden_enable", "1", "0 - disabled, 1 - enable the icon above the wardens head", _, true, 0.0, true, 1.0);
 	gc_sIconWardenPath = AutoExecConfig_CreateConVar("sm_icons_warden_path", "decals/MyJailbreak/warden", "Path to the warden icon DONT TYPE .vmt or .vft");
@@ -117,13 +108,11 @@ public void OnPluginStart()
 	gc_sIconCuffedPath = AutoExecConfig_CreateConVar("sm_icons_cuffs_path", "decals/MyJailbreak/cuffed", "Path to the cuffed prisoner icon DONT TYPE .vmt or .vft");
 	gc_bIconFreeday = AutoExecConfig_CreateConVar("sm_warden_icons_freeday_enable", "1", "0 - disabled, 1 - enable the icon above the prisoners with freeday head", _, true, 0.0, true, 1.0);
 	gc_sIconFreedayPath = AutoExecConfig_CreateConVar("sm_warden_icons_freeday", "decals/MyJailbreak/freeday", "Path to the freeday icon DONT TYPE .vmt or .vft");
-	
-	
+
 	// AutoExecConfig
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
-	
-	
+
 	// Hooks
 	HookEvent("round_poststart", Event_PostRoundStart);
 	HookEvent("player_death", Event_PlayerDeathTeam);
@@ -135,8 +124,7 @@ public void OnPluginStart()
 	HookConVarChange(gc_sIconRebelPath, OnSettingChanged);
 	HookConVarChange(gc_sIconCuffedPath, OnSettingChanged);
 	HookConVarChange(gc_sIconFreedayPath, OnSettingChanged);
-	
-	
+
 	// FindConVar
 	gc_sIconWardenPath.GetString(g_sIconWardenPath, sizeof(g_sIconWardenPath));
 	gc_sIconWardenPath.GetString(g_sIconDeputyPath, sizeof(g_sIconDeputyPath));
@@ -146,7 +134,6 @@ public void OnPluginStart()
 	gc_sIconCuffedPath.GetString(g_sIconCuffedPath, sizeof(g_sIconCuffedPath));
 	gc_sIconFreedayPath.GetString(g_sIconFreedayPath, sizeof(g_sIconFreedayPath));
 }
-
 
 public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
@@ -187,61 +174,54 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 	}
 }
 
-
-
 public void OnAllPluginsLoaded()
 {
 	gp_bWarden = LibraryExists("warden");
 	gp_bHosties = LibraryExists("lastrequest");
 }
 
-
 public void OnLibraryRemoved(const char[] name)
 {
 	if (StrEqual(name, "warden"))
 		gp_bWarden = false;
+
 	if (StrEqual(name, "lastrequest"))
 		gp_bHosties = false;
 }
-
 
 public void OnLibraryAdded(const char[] name)
 {
 	if (StrEqual(name, "warden"))
 		gp_bWarden = true;
+
 	if (StrEqual(name, "lastrequest"))
 		gp_bHosties = true;
 }
 
-
 /******************************************************************************
                    EVENTS
 ******************************************************************************/
-
 
 public void Event_PostRoundStart(Event event, const char[] name, bool dontBroadcast)
 {
 	CreateTimer(0.1, Timer_Delay);
 }
 
-
 public void Event_PlayerDeathTeam(Event event, const char[] name, bool dontBroadcast) 
 {
 	int client = GetClientOfUserId(event.GetInt("userid")); // Get the dead clients id
+
 	RemoveIcon(client);
 }
-
 
 public void OnClientDisconnect(int client)
 {
 	RemoveIcon(client);
 }
 
-
 /******************************************************************************
                    FORWARDS LISTEN
 ******************************************************************************/
-
 
 public void OnMapStart()
 {
@@ -255,62 +235,58 @@ public void OnMapStart()
 	CreateTimer(0.5, Timer_Delay, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 }
 
-
 public void OnWardenCreation(int client)
 {
 	CreateTimer(0.1, Timer_Delay);
 }
-
 
 public void OnWardenRemoved(int client)
 {
 	CreateTimer(0.1, Timer_Delay);
 }
 
-
 public void OnDeputyCreation(int client)
 {
 	CreateTimer(0.1, Timer_Delay);
 }
-
 
 public void OnDeputyRemoved(int client)
 {
 	CreateTimer(0.1, Timer_Delay);
 }
 
-
 public Action Timer_Delay(Handle timer, Handle pack)
 {
 	LoopValidClients(i, true, false) SpawnIcon(i);
 }
 
-
 /******************************************************************************
                    FUNCTIONS
 ******************************************************************************/
-
 
 public Action Should_TransmitG(int entity, int client)
 {
 	char m_ModelName[PLATFORM_MAX_PATH];
 	char iconbuffer[256];
+
 	Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconGuardPath);
 	GetEntPropString(entity, Prop_Data, "m_ModelName", m_ModelName, sizeof(m_ModelName));
 	if (StrEqual(iconbuffer, m_ModelName))
 		return Plugin_Continue;
+
 	return Plugin_Handled;
 }
-
 
 public Action Should_TransmitW(int entity, int client)
 {
 	char m_ModelName[PLATFORM_MAX_PATH];
 	char iconbuffer[256];
+
 	Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconWardenPath);
 	GetEntPropString(entity, Prop_Data, "m_ModelName", m_ModelName, sizeof(m_ModelName));
 	if (StrEqual(iconbuffer, m_ModelName))
 		return Plugin_Continue;
+
 	return Plugin_Handled;
 }
 
@@ -319,10 +295,12 @@ public Action Should_TransmitD(int entity, int client)
 {
 	char m_ModelName[PLATFORM_MAX_PATH];
 	char iconbuffer[256];
+
 	Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconDeputyPath);
 	GetEntPropString(entity, Prop_Data, "m_ModelName", m_ModelName, sizeof(m_ModelName));
 	if (StrEqual(iconbuffer, m_ModelName))
 		return Plugin_Continue;
+
 	return Plugin_Handled;
 }
 
@@ -331,10 +309,12 @@ public Action Should_TransmitP(int entity, int client)
 {
 	char m_ModelName[PLATFORM_MAX_PATH];
 	char iconbuffer[256];
+
 	Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconPrisonerPath);
 	GetEntPropString(entity, Prop_Data, "m_ModelName", m_ModelName, sizeof(m_ModelName));
 	if (StrEqual(iconbuffer, m_ModelName))
 		return Plugin_Continue;
+
 	return Plugin_Handled;
 }
 
@@ -343,10 +323,12 @@ public Action Should_TransmitR(int entity, int client)
 {
 	char m_ModelName[PLATFORM_MAX_PATH];
 	char iconbuffer[256];
+
 	Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconRebelPath);
 	GetEntPropString(entity, Prop_Data, "m_ModelName", m_ModelName, sizeof(m_ModelName));
 	if (StrEqual(iconbuffer, m_ModelName))
 		return Plugin_Continue;
+
 	return Plugin_Handled;
 }
 
@@ -355,10 +337,12 @@ public Action Should_TransmitC(int entity, int client)
 {
 	char m_ModelName[PLATFORM_MAX_PATH];
 	char iconbuffer[256];
+
 	Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconCuffedPath);
 	GetEntPropString(entity, Prop_Data, "m_ModelName", m_ModelName, sizeof(m_ModelName));
 	if (StrEqual(iconbuffer, m_ModelName))
 		return Plugin_Continue;
+
 	return Plugin_Handled;
 }
 
@@ -367,10 +351,12 @@ public Action Should_TransmitF(int entity, int client)
 {
 	char m_ModelName[PLATFORM_MAX_PATH];
 	char iconbuffer[256];
+
 	Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconFreedayPath);
 	GetEntPropString(entity, Prop_Data, "m_ModelName", m_ModelName, sizeof(m_ModelName));
 	if (StrEqual(iconbuffer, m_ModelName))
 		return Plugin_Continue;
+
 	return Plugin_Handled;
 }
 
@@ -385,23 +371,23 @@ void SpawnIcon(int client)
 {
 	if (!IsClientInGame(client) || !IsPlayerAlive(client))
 		return;
-	
+
 	RemoveIcon(client);
-	
+
 	if (g_bBlockIcon[client]) 
 		return;
-	
+
 	char iTarget[16];
 	Format(iTarget, 16, "client%d", client);
 	DispatchKeyValue(client, "targetname", iTarget);
-	
+
 	g_iIcon[client] = CreateEntityByName("env_sprite");
-	
+
 	if (!g_iIcon[client]) 
 		return;
-	
+
 	char iconbuffer[256];
-	
+
 	if (gp_bWarden)
 	{
 		if (gc_bIconWarden.BoolValue && warden_iswarden(client)) Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconWardenPath);
@@ -424,7 +410,7 @@ void SpawnIcon(int client)
 		else if (gc_bIconPrisoner.BoolValue && GetClientTeam(client) == CS_TEAM_T) Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconPrisonerPath);
 	}
 	else if (gc_bIconPrisoner.BoolValue && GetClientTeam(client) == CS_TEAM_T) Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconPrisonerPath);
-	
+
 	DispatchKeyValue(g_iIcon[client], "model", iconbuffer);
 	DispatchKeyValue(g_iIcon[client], "classname", "env_sprite");
 	DispatchKeyValue(g_iIcon[client], "spawnflags", "1");
@@ -432,15 +418,15 @@ void SpawnIcon(int client)
 	DispatchKeyValue(g_iIcon[client], "rendermode", "1");
 	DispatchKeyValue(g_iIcon[client], "rendercolor", "255 255 255");
 	DispatchSpawn(g_iIcon[client]);
-	
+
 	float origin[3];
 	GetClientAbsOrigin(client, origin);
 	origin[2] = origin[2] + 90.0;
-	
+
 	TeleportEntity(g_iIcon[client], origin, NULL_VECTOR, NULL_VECTOR);
 	SetVariantString(iTarget);
 	AcceptEntityInput(g_iIcon[client], "SetParent", g_iIcon[client], g_iIcon[client], 0);
-	
+
 	if (gp_bWarden)
 	{
 		if (gc_bIconWarden.BoolValue && warden_iswarden(client)) SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitW);
@@ -475,29 +461,27 @@ void RemoveIcon(int client)
 	}
 }
 
-
 /******************************************************************************
                    NATIVES
 ******************************************************************************/
 
-
 // Register Natives
-public APLRes AskPluginLoad2(Handle myself, bool late, char [] error, int err_max)
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	CreateNative("MyIcons_BlockClientIcon", Native_BlockIcon);
-	
+
 	RegPluginLibrary("myicons");
+
 	return APLRes_Success;
 }
-
 
 // Set state of Block Icon (true/false)
 public int Native_BlockIcon(Handle plugin, int argc)
 {
 	int client = GetNativeCell(1);
-	
+
 	if (!IsClientInGame(client) && !IsClientConnected(client))
 		ThrowNativeError(SP_ERROR_INDEX, "Client index %i is invalid", client);
-	
+
 	g_bBlockIcon[client] = GetNativeCell(2);
 }

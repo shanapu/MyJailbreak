@@ -18,11 +18,9 @@
  * this program. If not, see <http:// www.gnu.org/licenses/>.
  */
 
-
 /******************************************************************************
                    STARTUP
 ******************************************************************************/
-
 
 // Includes
 #include <sourcemod>
@@ -34,7 +32,6 @@
 #include <warden>
 #include <mystocks>
 #include <myjailbreak>
-
 
 // Compiler Options
 #pragma semicolon 1
@@ -53,13 +50,11 @@ ConVar gc_sVIPFlag;
 ConVar gc_sVIP2Flag;
 ConVar gc_bNoOverwrite;
 
-
 // Strings
 char g_sAdminFlag[32];
 char g_sOwnerFlag[32];
 char g_sVIP2Flag[32];
 char g_sVIPFlag[32];
-
 
 // Info
 public Plugin myinfo =
@@ -83,12 +78,11 @@ public void OnPluginStart()
 {
 	// Translation
 	LoadTranslations("MyJailbreak.PlayerTags.phrases");
-	
-	
+
 	// AutoExecConfig
 	AutoExecConfig_SetFile("PlayerTags", "MyJailbreak");
 	AutoExecConfig_SetCreateFile(true);
-	
+
 	AutoExecConfig_CreateConVar("sm_playertag_version", MYJB_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_playertag_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true, 0.0, true, 1.0);
 	gc_bStats = AutoExecConfig_CreateConVar("sm_playertag_stats", "1", "0 - disabled, 1 - enable PlayerTag in stats", _, true, 0.0, true, 1.0);
@@ -98,20 +92,17 @@ public void OnPluginStart()
 	gc_sVIPFlag = AutoExecConfig_CreateConVar("sm_playertag_vipflag", "t", "Set the flag for VIP");
 	gc_sVIP2Flag = AutoExecConfig_CreateConVar("sm_playertag_vip2flag", "a", "Set the flag for VIP2");
 	gc_bNoOverwrite = AutoExecConfig_CreateConVar("sm_playertag_overwrite", "1", "0 - only show tags for warden, deputy, admin & vip (no overwrite for prisionor & guards) 1 - enable tags for prisoner & guards, too", _, true, 0.0, true, 1.0);
-	
-	
+
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
-	
-	
+
 	// Hooks - Events to check for Tag
 	HookEvent("player_connect", Event_CheckTag);
 	HookEvent("player_team", Event_CheckTag);
 	HookEvent("player_spawn", Event_CheckTag);
 	HookEvent("player_death", Event_CheckTag);
 	HookEvent("round_start", Event_CheckTag);
-	
-	
+
 	// FindConVar
 	gc_sOwnerFlag.GetString(g_sOwnerFlag, sizeof(g_sOwnerFlag));
 	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
@@ -130,17 +121,14 @@ public void OnPluginStart()
 	}
 }
 
-
 /******************************************************************************
                    EVENTS
 ******************************************************************************/
-
 
 public void Event_CheckTag(Event event, char[] name, bool dontBroadcast)
 {
 	CreateTimer(1.0, Timer_DelayCheck);
 }
-
 
 /******************************************************************************
                    FORWARDS LISTEN
@@ -162,11 +150,9 @@ public void warden_OnWardenRemoved(int client)
 	CreateTimer(1.0, Timer_DelayCheck);
 }
 
-
 /******************************************************************************
                    TIMER
 ******************************************************************************/
-
 
 public Action Timer_DelayCheck(Handle timer) 
 {
@@ -179,11 +165,9 @@ public Action Timer_DelayCheck(Handle timer)
 	}
 }
 
-
 /******************************************************************************
                    FUNCTIONS
 ******************************************************************************/
-
 
 // Give Tag
 void HandleTag(int client)
@@ -310,7 +294,6 @@ void HandleTag(int client)
 	}
 }
 
-
 // Check Chat & add Tag
 public Action OnChatMessage(int& author, ArrayList recipients, eChatFlags& flag, char[] name, char[] message, bool& bProcessColors, bool& bRemoveColors)
 {
@@ -414,5 +397,6 @@ public Action OnChatMessage(int& author, ArrayList recipients, eChatFlags& flag,
 			
 		}
 	}
+
 	return Plugin_Changed;
 }

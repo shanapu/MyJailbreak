@@ -18,11 +18,9 @@
  * this program. If not, see <http:// www.gnu.org/licenses/>.
  */
 
-
 /******************************************************************************
                    STARTUP
 ******************************************************************************/
-
 
 // Includes
 #include <sourcemod>
@@ -39,17 +37,14 @@
 #include <mystocks>
 #include <myjailbreak>
 
-
 // Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
 
-
 // Booleans
 bool g_bIsLateLoad = false;
-bool IsZeus;
-bool StartZeus;
-
+bool g_bIsZeus = false;
+bool g_bStartZeus = false;
 
 // Console Variables
 ConVar gc_bPlugin;
@@ -73,11 +68,9 @@ ConVar gc_sCustomCommandSet;
 ConVar gc_sAdminFlag;
 ConVar gc_bAllowLR;
 
-
 // Extern Convars
 ConVar g_iMPRoundTime;
 ConVar g_iTerrorForLR;
-
 
 // Integers
 int g_iOldRoundTime;
@@ -87,18 +80,16 @@ int g_iVoteCount;
 int g_iRound;
 int g_iMaxRound;
 int g_iTsLR;
-
+int g_iCollision_Offset;
 
 // Floats
 float g_fPos[3];
 
-
 // Handles
-Handle TruceTimer;
-Handle ZeusMenu;
-Handle ClientTimer[MAXPLAYERS+1];
-Handle BeaconTimer;
-
+Handle g_hTimerTruce;
+Handle g_hPanelInfo;
+Handle g_hTimerGiveZeus[MAXPLAYERS+1];
+Handle g_hTimerBeacon;
 
 // Strings
 char g_sHasVoted[1500];
@@ -106,7 +97,6 @@ char g_sSoundStartPath[256];
 char g_sEventsLogFile[PLATFORM_MAX_PATH];
 char g_sAdminFlag[32];
 char g_sOverlayStartPath[256];
-
 
 // Info
 public Plugin myinfo = {
@@ -130,17 +120,15 @@ public void OnPluginStart()
 	// Translation
 	LoadTranslations("MyJailbreak.Warden.phrases");
 	LoadTranslations("MyJailbreak.Zeus.phrases");
-	
-	
+
 	// Client Commands
 	RegConsoleCmd("sm_setzeus", Command_SetZeus, "Allows the Admin or Warden to set zeus as next round");
 	RegConsoleCmd("sm_zeus", Command_VoteZeus, "Allows players to vote for a zeus");
-	
-	
+
 	// AutoExecConfig
 	AutoExecConfig_SetFile("Zeus", "MyJailbreak/EventDays");
 	AutoExecConfig_SetCreateFile(true);
-	
+
 	AutoExecConfig_CreateConVar("sm_zeus_version", MYJB_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_zeus_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true, 0.0, true, 1.0);
 	gc_sCustomCommandVote = AutoExecConfig_CreateConVar("sm_zeus_cmds_vote", "taser", "Set your custom chat command for Event voting(!zeus (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
@@ -162,11 +150,10 @@ public void OnPluginStart()
 	gc_bOverlays = AutoExecConfig_CreateConVar("sm_zeus_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true, 0.0, true, 1.0);
 	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_zeus_overlays_start", "overlays/MyJailbreak/start", "Path to the start Overlay DONT TYPE .vmt or .vft");
 	gc_bAllowLR = AutoExecConfig_CreateConVar("sm_zeus_allow_lr", "0", "0 - disabled, 1 - enable LR for last round and end eventday", _, true, 0.0, true, 1.0);
-	
+
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
-	
-	
+
 	// Hooks
 	HookEvent("round_start", Event_RoundStart);
 	HookEvent("player_death", Event_PlayerDeath);
@@ -174,8 +161,7 @@ public void OnPluginStart()
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
 	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
-	
-	
+
 	// Find
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iTruceTime = gc_iTruceTime.IntValue;
@@ -183,8 +169,11 @@ public void OnPluginStart()
 	gc_sOverlayStartPath.GetString(g_sOverlayStartPath, sizeof(g_sOverlayStartPath));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
-	
-	
+
+	// Offsets
+	g_iCollision_Offset = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
+
+	// Logs
 	SetLogFile(g_sEventsLogFile, "Events", "MyJailbreak");
 
 	// Late loading
@@ -198,7 +187,6 @@ public void OnPluginStart()
 		g_bIsLateLoad = false;
 	}
 }
-
 
 // ConVarChange for Strings
 public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
@@ -219,38 +207,37 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 	}
 }
 
-
 // Initialize Plugin
 public void OnConfigsExecuted()
 {
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iMaxRound = gc_iRounds.IntValue;
-	
+
 	// FindConVar
 	g_iTerrorForLR = FindConVar("sm_hosties_lr_ts_max");
-	
+
 	// Set custom Commands
 	int iCount = 0;
 	char sCommands[128], sCommandsL[12][32], sCommand[32];
-	
+
 	// Vote
 	gc_sCustomCommandVote.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
 	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
-	
+
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
 		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
 			RegConsoleCmd(sCommand, Command_VoteZeus, "Allows players to vote for a zeus");
 	}
-	
+
 	// Set
 	gc_sCustomCommandSet.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
 	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
-	
+
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
@@ -259,11 +246,9 @@ public void OnConfigsExecuted()
 	}
 }
 
-
 /******************************************************************************
                    COMMANDS
 ******************************************************************************/
-
 
 // Admin & Warden set Event
 public Action Command_SetZeus(int client, int args)
@@ -326,18 +311,18 @@ public Action Command_SetZeus(int client, int args)
 		else CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
 	}
 	else CReplyToCommand(client, "%t %t", "zeus_tag", "zeus_disabled");
+
 	return Plugin_Handled;
 }
-
 
 // Voting for Event
 public Action Command_VoteZeus(int client, int args)
 {
 	char steamid[64];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
-	
+
 	if (gc_bPlugin.BoolValue)
-	{	
+	{
 		if (gc_bVote.BoolValue)
 		{
 			if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0))
@@ -374,19 +359,18 @@ public Action Command_VoteZeus(int client, int args)
 		else CReplyToCommand(client, "%t %t", "zeus_tag", "zeus_voting");
 	}
 	else CReplyToCommand(client, "%t %t", "zeus_tag", "zeus_disabled");
+
 	return Plugin_Handled;
 }
-
 
 /******************************************************************************
                    EVENTS
 ******************************************************************************/
 
-
 // Round start
 public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
-	if (StartZeus || IsZeus)
+	if (g_bStartZeus || g_bIsZeus)
 	{
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_weapons_enable", 0);
@@ -395,17 +379,17 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		SetCvar("mp_teammates_are_enemies", 1);
 		MyJailbreak_SetEventDayPlanned(false);
 		MyJailbreak_SetEventDayRunning(true);
-		
-		if (gc_fBeaconTime.FloatValue > 0.0) BeaconTimer = CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
-		
-		IsZeus = true;
-		
+
+		if (gc_fBeaconTime.FloatValue > 0.0) g_hTimerBeacon = CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
+
+		g_bIsZeus = true;
+
 		g_iRound++;
-		StartZeus = false;
+		g_bStartZeus = false;
 		SJD_OpenDoors();
-		
+
 		int RandomCT = 0;
-		
+
 		for (int client=1;client <= MaxClients;client++)
 		{
 			if (IsClientInGame(client))
@@ -417,6 +401,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 				}
 			}
 		}
+
 		if (RandomCT)
 		{
 			GetClientAbsOrigin(RandomCT, g_fPos);
@@ -430,21 +415,22 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 					CreateInfoPanel(client);
 					StripAllPlayerWeapons(client);
 					GivePlayerItem(client, "weapon_knife");
-					SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
+					SetEntData(client, g_iCollision_Offset, 2, 4, true);
 					SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
-					ClientTimer[client] = CreateTimer(0.5, Timer_GiveZeus, client);
-					
+					g_hTimerGiveZeus[client] = CreateTimer(0.5, Timer_GiveZeus, client);
+
 					if (!gc_bSpawnCell.BoolValue || (gc_bSpawnCell.BoolValue && (SJD_IsCurrentMapConfigured() != true))) // spawn Terrors to CT Spawn 
 					{
 						TeleportEntity(client, g_fPos, NULL_VECTOR, NULL_VECTOR);
 					}
 				}
+
 				g_iTruceTime--;
-				TruceTimer = CreateTimer(1.0, Timer_StartEvent, _, TIMER_REPEAT);
-				
+				g_hTimerTruce = CreateTimer(1.0, Timer_StartEvent, _, TIMER_REPEAT);
+
 				// enable lr on last round
 				g_iTsLR = GetAliveTeamCount(CS_TEAM_T);
-				
+
 				if (gc_bAllowLR.BoolValue)
 				{
 					if ((g_iRound == g_iMaxRound) && (g_iTsLR > g_iTerrorForLR.IntValue))
@@ -452,7 +438,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 						SetCvar("sm_hosties_lr", 1);
 					}
 				}
-				
+
 				CPrintToChatAll("%t %t", "zeus_tag", "zeus_rounds", g_iRound, g_iMaxRound);
 			}
 		}
@@ -470,23 +456,25 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 	}
 }
 
-
 // Round End
 public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
 	int winner = event.GetInt("winner");
-	
-	if (IsZeus)
+
+	if (g_bIsZeus)
 	{
-		LoopClients(client) SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
-		delete TruceTimer;
-		delete BeaconTimer;
+		LoopClients(client) SetEntData(client, g_iCollision_Offset, 0, 4, true);
+
+		delete g_hTimerTruce;
+		delete g_hTimerBeacon;
+
 		if (winner == 2) PrintCenterTextAll("%t", "zeus_twin_nc");
 		if (winner == 3) PrintCenterTextAll("%t", "zeus_ctwin_nc");
+
 		if (g_iRound == g_iMaxRound)
 		{
-			IsZeus = false;
-			StartZeus = false;
+			g_bIsZeus = false;
+			g_bStartZeus = false;
 			g_iRound = 0;
 			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
 			SetCvar("sm_hosties_lr", 1);
@@ -501,57 +489,54 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			CPrintToChatAll("%t %t", "zeus_tag", "zeus_end");
 		}
 	}
-	if (StartZeus)
+
+	if (g_bStartZeus)
 	{
 		LoopClients(i) CreateInfoPanel(i);
-		
+
 		CPrintToChatAll("%t %t", "zeus_tag", "zeus_next");
 		PrintCenterTextAll("%t", "zeus_next_nc");
 	}
 }
 
-
 // Give new Zeus on Kill
-public void Event_PlayerDeath(Event event, char [] name, bool dontBroadcast)
+public void Event_PlayerDeath(Event event, char[] name, bool dontBroadcast)
 {
-	if (IsZeus == true)
+	if (g_bIsZeus == true)
 	{
 		int killer = GetClientOfUserId(event.GetInt("attacker"));
-		
-		ClientTimer[killer] = CreateTimer(0.5, Timer_GiveZeus, killer);
+
+		g_hTimerGiveZeus[killer] = CreateTimer(0.5, Timer_GiveZeus, killer);
 	}
 }
-
 
 /******************************************************************************
                    FORWARDS LISTEN
 ******************************************************************************/
-
 
 // Initialize Event
 public void OnMapStart()
 {
 	g_iVoteCount = 0;
 	g_iRound = 0;
-	IsZeus = false;
-	StartZeus = false;
-	
+	g_bIsZeus = false;
+	g_bStartZeus = false;
+
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iTruceTime = gc_iTruceTime.IntValue;
-	
+
 	if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
 	if (gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
 }
 
-
 // Listen for Last Lequest
 public void OnAvailableLR(int Announced)
 {
-	if (IsZeus && gc_bAllowLR.BoolValue && (g_iTsLR > g_iTerrorForLR.IntValue))
+	if (g_bIsZeus && gc_bAllowLR.BoolValue && (g_iTsLR > g_iTerrorForLR.IntValue))
 	{
 		LoopClients(client)
 		{
-			SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
+			SetEntData(client, g_iCollision_Offset, 0, 4, true);
 			StripAllPlayerWeapons(client);
 			if (GetClientTeam(client) == CS_TEAM_CT)
 			{
@@ -560,14 +545,14 @@ public void OnAvailableLR(int Announced)
 			GivePlayerItem(client, "weapon_knife");
 			
 		}
-		
-		delete BeaconTimer;
-		delete TruceTimer;
-		
+
+		delete g_hTimerBeacon;
+		delete g_hTimerTruce;
+
 		if (g_iRound == g_iMaxRound)
 		{
-			IsZeus = false;
-			StartZeus = false;
+			g_bIsZeus = false;
+			g_bStartZeus = false;
 			g_iRound = 0;
 			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
 			SetCvar("sm_hosties_lr", 1);
@@ -584,18 +569,18 @@ public void OnAvailableLR(int Announced)
 	}
 }
 
-
 // Map End
 public void OnMapEnd()
 {
-	IsZeus = false;
-	StartZeus = false;
-	delete TruceTimer;
+	g_bIsZeus = false;
+	g_bStartZeus = false;
+
+	delete g_hTimerTruce;
+
 	g_iVoteCount = 0;
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0';
 }
-
 
 // Set Client Hook
 public void OnClientPutInServer(int client)
@@ -603,14 +588,14 @@ public void OnClientPutInServer(int client)
 	SDKHook(client, SDKHook_WeaponCanUse, OnWeaponCanUse);
 }
 
-
 // Knife & Taser only
 public Action OnWeaponCanUse(int client, int weapon)
 {
-	if (IsZeus == true)
+	if (g_bIsZeus == true)
 	{
 		char sWeapon[32];
 		GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
+
 		if (StrEqual(sWeapon, "weapon_knife", false) || StrEqual(sWeapon, "weapon_taser", false))
 		{
 			return Plugin_Continue;
@@ -629,64 +614,59 @@ public Action OnWeaponCanUse(int client, int weapon)
 // Prepare Event for next round
 void StartNextRound()
 {
-	StartZeus = true;
+	g_bStartZeus = true;
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iVoteCount = 0;
-	
+
 	char buffer[32];
 	Format(buffer, sizeof(buffer), "%T", "zeus_name", LANG_SERVER);
 	MyJailbreak_SetEventDayName(buffer);
 	MyJailbreak_SetEventDayPlanned(true);
-	
+
 	g_iOldRoundTime = g_iMPRoundTime.IntValue; // save original round time
 	g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue; // set event round time
-	
+
 	CPrintToChatAll("%t %t", "zeus_tag", "zeus_next");
 	PrintCenterTextAll("%t", "zeus_next_nc");
 }
-
 
 /******************************************************************************
                    MENUS
 ******************************************************************************/
 
-
 void CreateInfoPanel(int client)
 {
 	// Create info Panel
 	char info[255];
-	
-	ZeusMenu = CreatePanel();
-	Format(info, sizeof(info), "%T", "zeus_info_title", client);
-	SetPanelTitle(ZeusMenu, info);
-	DrawPanelText(ZeusMenu, "                                   ");
-	Format(info, sizeof(info), "%T", "zeus_info_line1", client);
-	DrawPanelText(ZeusMenu, info);
-	DrawPanelText(ZeusMenu, "-----------------------------------");
-	Format(info, sizeof(info), "%T", "zeus_info_line2", client);
-	DrawPanelText(ZeusMenu, info);
-	Format(info, sizeof(info), "%T", "zeus_info_line3", client);
-	DrawPanelText(ZeusMenu, info);
-	Format(info, sizeof(info), "%T", "zeus_info_line4", client);
-	DrawPanelText(ZeusMenu, info);
-	Format(info, sizeof(info), "%T", "zeus_info_line5", client);
-	DrawPanelText(ZeusMenu, info);
-	Format(info, sizeof(info), "%T", "zeus_info_line6", client);
-	DrawPanelText(ZeusMenu, info);
-	Format(info, sizeof(info), "%T", "zeus_info_line7", client);
-	DrawPanelText(ZeusMenu, info);
-	DrawPanelText(ZeusMenu, "-----------------------------------");
-	Format(info, sizeof(info), "%T", "warden_close", client);
-	DrawPanelItem(ZeusMenu, info);
-	SendPanelToClient(ZeusMenu, client, Handler_NullCancel, 20);
-	
-}
 
+	g_hPanelInfo = CreatePanel();
+	Format(info, sizeof(info), "%T", "zeus_info_title", client);
+	SetPanelTitle(g_hPanelInfo, info);
+	DrawPanelText(g_hPanelInfo, "                                   ");
+	Format(info, sizeof(info), "%T", "zeus_info_line1", client);
+	DrawPanelText(g_hPanelInfo, info);
+	DrawPanelText(g_hPanelInfo, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "zeus_info_line2", client);
+	DrawPanelText(g_hPanelInfo, info);
+	Format(info, sizeof(info), "%T", "zeus_info_line3", client);
+	DrawPanelText(g_hPanelInfo, info);
+	Format(info, sizeof(info), "%T", "zeus_info_line4", client);
+	DrawPanelText(g_hPanelInfo, info);
+	Format(info, sizeof(info), "%T", "zeus_info_line5", client);
+	DrawPanelText(g_hPanelInfo, info);
+	Format(info, sizeof(info), "%T", "zeus_info_line6", client);
+	DrawPanelText(g_hPanelInfo, info);
+	Format(info, sizeof(info), "%T", "zeus_info_line7", client);
+	DrawPanelText(g_hPanelInfo, info);
+	DrawPanelText(g_hPanelInfo, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "warden_close", client);
+	DrawPanelItem(g_hPanelInfo, info);
+	SendPanelToClient(g_hPanelInfo, client, Handler_NullCancel, 20);
+}
 
 /******************************************************************************
                    TIMER
 ******************************************************************************/
-
 
 // Start Timer
 public Action Timer_StartEvent(Handle timer)
@@ -697,9 +677,9 @@ public Action Timer_StartEvent(Handle timer)
 		LoopValidClients(client, false, true) PrintCenterText(client, "%t", "zeus_timeuntilstart_nc", g_iTruceTime);
 		return Plugin_Continue;
 	}
-	
+
 	g_iTruceTime = gc_iTruceTime.IntValue;
-	
+
 	if (g_iRound > 0)
 	{
 		LoopClients(client) if (IsPlayerAlive(client))
@@ -715,27 +695,25 @@ public Action Timer_StartEvent(Handle timer)
 		}
 		CPrintToChatAll("%t %t", "zeus_tag", "zeus_start");
 	}
-	
-	TruceTimer = null;
-	
+
+	g_hTimerTruce = null;
+
 	return Plugin_Stop;
 }
-
 
 // Beacon Timer
 public Action Timer_BeaconOn(Handle timer)
 {
 	LoopValidClients(i, true, false) MyJailbreak_BeaconOn(i, 2.0);
-	BeaconTimer = null;
+	g_hTimerBeacon = null;
 }
-
 
 // Delay give Zeus
 public Action Timer_GiveZeus(Handle timer, any client)
 {
 	if (IsValidClient(client, true, false))
 	{
-		ClientTimer[client] = INVALID_HANDLE;
+		g_hTimerGiveZeus[client] = INVALID_HANDLE;
 		GivePlayerItem(client, "weapon_taser");
 	}
 }

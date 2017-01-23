@@ -18,11 +18,9 @@
  * this program. If not, see <http:// www.gnu.org/licenses/>.
  */
 
-
 /******************************************************************************
                    STARTUP
 ******************************************************************************/
-
 
 // Includes
 #include <sourcemod>
@@ -34,21 +32,17 @@
 #include <warden>
 #include <mystocks>
 
-
 // Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
-
 
 // Console Variables
 ConVar gc_bDisarm;
 ConVar gc_iDisarm;
 ConVar gc_iDisarmMode;
 
-
 // Integers
 int g_iDisarm;
-
 
 // Start
 public void Disarm_OnPluginStart()
@@ -57,17 +51,15 @@ public void Disarm_OnPluginStart()
 	gc_bDisarm = AutoExecConfig_CreateConVar("sm_warden_disarm", "1", "0 - disabled, 1 - enable disarm weapon on shot the arms/hands", _, true, 0.0, true, 1.0);
 	gc_iDisarm = AutoExecConfig_CreateConVar("sm_warden_disarm_mode", "1", "1 - Only warden can disarm, 2 - warden & deputy can disarm, 3 - All CT can disarm, 4 - Everyone can disarm (CT & T)", _, true, 1.0, true, 3.0);
 	gc_iDisarmMode = AutoExecConfig_CreateConVar("sm_warden_disarm_drop", "1", "1 - weapon will drop, 2 - weapon  disapear", _, true, 1.0, true, 2.0);
-	
+
 	// Hooks 
 	HookEvent("player_hurt", Disarm_Event_PlayerHurt);
 	HookEvent("round_start", Disarm_Event_RoundStart);
 }
 
-
 /******************************************************************************
                    EVENTS
 ******************************************************************************/
-
 
 public void Disarm_Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
@@ -76,7 +68,7 @@ public void Disarm_Event_RoundStart(Event event, const char[] name, bool dontBro
 
 public Action Disarm_Event_PlayerHurt(Event event, char[] name, bool dontBroadcast)
 {
-	if (gc_bPlugin.BoolValue && gc_bDisarm.BoolValue && !IsLR)
+	if (gc_bPlugin.BoolValue && gc_bDisarm.BoolValue && !g_bIsLR)
 	{
 		int victim = GetClientOfUserId(event.GetInt("userid"));
 		int attacker = GetClientOfUserId(event.GetInt("attacker"));
@@ -117,5 +109,6 @@ public Action Disarm_Event_PlayerHurt(Event event, char[] name, bool dontBroadca
 			}
 		}
 	}
+
 	return Plugin_Continue;
 }

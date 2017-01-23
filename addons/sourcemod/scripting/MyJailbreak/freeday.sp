@@ -18,11 +18,9 @@
  * this program. If not, see <http:// www.gnu.org/licenses/>.
  */
 
-
 /******************************************************************************
                    STARTUP
 ******************************************************************************/
-
 
 // Includes
 #include <sourcemod>
@@ -39,19 +37,16 @@
 #include <mystocks>
 #include <myjailbreak>
 
-
 // Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
 
-
 // Booleans
-bool IsFreeday;
-bool StartFreeday;
-bool AutoFreeday;
-bool AllowRespawn;
-bool RepeatFirstFreeday;
-
+bool g_bIsFreeday = false;
+bool g_bStartFreeday = false;
+bool g_bAutoFreeday = false;
+bool g_bAllowRespawn = false;
+bool g_bRepeatFirstFreeday = false;
 
 // Console Variables
 ConVar gc_bPlugin;
@@ -70,27 +65,22 @@ ConVar gc_sCustomCommandVote;
 ConVar gc_sCustomCommandSet;
 ConVar gc_sAdminFlag;
 
-
 // Extern Convars
 ConVar g_iMPRoundTime;
-
 
 // Integers
 int g_iOldRoundTime;
 int g_iCoolDown;
 int g_iVoteCount;
-int FreedayRound = 0;
-
+int g_iFreedayRound = 0;
 
 // Handles
-Handle FreedayMenu;
-
+Handle g_hPanelInfo;
 
 // Strings
 char g_sHasVoted[1500];
 char g_sEventsLogFile[PLATFORM_MAX_PATH];
 char g_sAdminFlag[32];
-
 
 // Info
 public Plugin myinfo =
@@ -102,24 +92,21 @@ public Plugin myinfo =
 	url = MYJB_URL_LINK
 };
 
-
 // Start
 public void OnPluginStart()
 {
 	// Translation
 	LoadTranslations("MyJailbreak.Warden.phrases");
 	LoadTranslations("MyJailbreak.FreeDay.phrases");
-	
-	
+
 	// Client Commands
 	RegConsoleCmd("sm_setfreeday", Command_SetFreeday, "Allows the Admin or Warden to set freeday as next round");
 	RegConsoleCmd("sm_freeday", Command_VoteFreeday, "Allows players to vote for a freeday");
-	
-	
+
 	// AutoExecConfig
 	AutoExecConfig_SetFile("Freeday", "MyJailbreak/EventDays");
 	AutoExecConfig_SetCreateFile(true);
-	
+
 	AutoExecConfig_CreateConVar("sm_freeday_version", MYJB_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_freeday_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true, 0.0, true, 1.0);
 	gc_sCustomCommandVote = AutoExecConfig_CreateConVar("sm_freeday_cmds_vote", "fd, free", "Set your custom chat command for Event voting(!freeday (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
@@ -136,26 +123,23 @@ public void OnPluginStart()
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_freeday_roundtime", "5", "Round time in minutes for a single freeday round", _, true, 1.0);
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_freeday_cooldown_day", "0", "Rounds until freeday can be started again.", _, true, 0.0);
 	gc_bSetABypassCooldown = AutoExecConfig_CreateConVar("sm_freeday_cooldown_admin", "1", "0 - disabled, 1 - ignore the cooldown when admin/vip set freeday round", _, true, 0.0, true, 1.0);
-	
+
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
-	
-	
+
 	// Hooks
 	HookEvent("round_start", Event_RoundStart);
 	HookEvent("round_end", Event_RoundEnd);
 	HookEvent("player_death", Event_PlayerDeath);
 	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
-	
-	
+
 	// FindConVar
 	g_iMPRoundTime = FindConVar("mp_roundtime");
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
-	
+
 	SetLogFile(g_sEventsLogFile, "Events", "MyJailbreak");
 }
-
 
 // ConVarChange for Strings
 public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
@@ -166,31 +150,30 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 	}
 }
 
-
 // Initialize Event
 public void OnConfigsExecuted()
 {
 	// Set custom Commands
 	int iCount = 0;
 	char sCommands[128], sCommandsL[12][32], sCommand[32];
-	
+
 	// Vote
 	gc_sCustomCommandVote.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
 	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
-	
+
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
 		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
 			RegConsoleCmd(sCommand, Command_VoteFreeday, "Allows players to vote for a freeday");
 	}
-	
+
 	// Set
 	gc_sCustomCommandSet.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
 	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
-	
+
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
@@ -199,11 +182,9 @@ public void OnConfigsExecuted()
 	}
 }
 
-
 /******************************************************************************
                    COMMANDS
 ******************************************************************************/
-
 
 // Admin & Warden set Event
 public Action Command_SetFreeday(int client, int args)
@@ -258,18 +239,18 @@ public Action Command_SetFreeday(int client, int args)
 		else CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
 	}
 	else CReplyToCommand(client, "%t %t", "freeday_tag", "freeday_disabled");
+
 	return Plugin_Handled;
 }
-
 
 // Voting for Event
 public Action Command_VoteFreeday(int client, int args)
 {
 	char steamid[64];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
-	
+
 	if (gc_bPlugin.BoolValue)
-	{	
+	{
 		if (gc_bVote.BoolValue)
 		{
 			char EventDay[64];
@@ -302,37 +283,36 @@ public Action Command_VoteFreeday(int client, int args)
 		else CReplyToCommand(client, "%t %t", "freeday_tag", "freeday_voting");
 	}
 	else CReplyToCommand(client, "%t %t", "freeday_tag", "freeday_disabled");
+
 	return Plugin_Handled;
 }
-
 
 /******************************************************************************
                    EVENTS
 ******************************************************************************/
 
-
 // Round start
-
 public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
 	if ((GetTeamClientCount(CS_TEAM_CT) < 1) && gc_bAuto.BoolValue)
 	{
 		char EventDay[64];
 		MyJailbreak_GetEventDayName(EventDay);
-		
+
 		if (!MyJailbreak_IsEventDayPlanned())
 		{
-			StartFreeday = true;
+			g_bStartFreeday = true;
 			g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 			g_iVoteCount = 0;
 			char buffer[32];
 			Format(buffer, sizeof(buffer), "%T", "freeday_name", LANG_SERVER);
 			MyJailbreak_SetEventDayName(buffer);
 			MyJailbreak_SetEventDayRunning(true);
-			AutoFreeday = true;
+			g_bAutoFreeday = true;
 		}
 	}
-	if (StartFreeday || RepeatFirstFreeday)
+
+	if (g_bStartFreeday || g_bRepeatFirstFreeday)
 	{
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_weapons_enable", 0);
@@ -340,36 +320,38 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		SetCvar("sm_warden_enable", 0);
 		MyJailbreak_SetEventDayPlanned(false);
 		MyJailbreak_SetEventDayRunning(true);
-		IsFreeday = true;
-		FreedayRound++;
-		StartFreeday = false;
+		g_bIsFreeday = true;
+		g_iFreedayRound++;
+		g_bStartFreeday = false;
 		SJD_OpenDoors();
 		
 		CreateTimer (gc_iRespawnTime.FloatValue, Timer_StopRespawn);
-		AllowRespawn = true;
+		g_bAllowRespawn = true;
 		
 		LoopClients(client)
 		{
 			CreateInfoPanel(client);
-			
+
 			if (!gc_bdamage.BoolValue && IsValidClient(client))
 			{
 				SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 			}
+
 			if (IsPlayerAlive(client)) 
 			{
 				PrintCenterText(client, "%t", "freeday_start_nc");
 			}
 		}
 		CPrintToChatAll("%t %t", "freeday_tag", "freeday_start");
-		
-		if (RepeatFirstFreeday)
+
+		if (g_bRepeatFirstFreeday)
 		{
 			SetTeamScore(CS_TEAM_CT, 0);
 			SetTeamScore(CS_TEAM_T, 0);
-			RepeatFirstFreeday = false;
+			g_bRepeatFirstFreeday = false;
 		}
-		if (gc_bFirst.BoolValue) if ((GetTeamClientCount(CS_TEAM_CT) == 0) || (GetTeamClientCount(CS_TEAM_T) == 0) && (GetTeamScore(CS_TEAM_CT) + GetTeamScore(CS_TEAM_T) == 0)) RepeatFirstFreeday = true;
+
+		if (gc_bFirst.BoolValue) if ((GetTeamClientCount(CS_TEAM_CT) == 0) || (GetTeamClientCount(CS_TEAM_T) == 0) && (GetTeamScore(CS_TEAM_CT) + GetTeamScore(CS_TEAM_T) == 0)) g_bRepeatFirstFreeday = true;
 	}
 	else
 	{
@@ -377,28 +359,30 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 	}
 }
 
-
 // Round End
 public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
-	if (IsFreeday)
+	if (g_bIsFreeday)
 	{
-		IsFreeday = false;
-		StartFreeday = false;
-		AllowRespawn = false;
-		FreedayRound = 0;
+		g_bIsFreeday = false;
+		g_bStartFreeday = false;
+		g_bAllowRespawn = false;
+		g_iFreedayRound = 0;
 		Format(g_sHasVoted, sizeof(g_sHasVoted), "");
+
 		SetCvar("sm_hosties_lr", 1);
 		SetCvar("sm_weapons_enable", 1);
 		SetCvar("mp_teammates_are_enemies", 0);
 		SetCvar("sm_warden_enable", 1);
 		g_iMPRoundTime.IntValue = g_iOldRoundTime;
-		AutoFreeday = false;
+
+		g_bAutoFreeday = false;
 		MyJailbreak_SetEventDayName("none");
 		MyJailbreak_SetEventDayRunning(false);
 		CPrintToChatAll("%t %t", "freeday_tag", "freeday_end");
 	}
-	if (StartFreeday || RepeatFirstFreeday)
+
+	if (g_bStartFreeday || g_bRepeatFirstFreeday)
 	{
 		LoopClients(i) CreateInfoPanel(i);
 		
@@ -407,151 +391,142 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 	}
 }
 
-
-
 public void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast) 
 {
-	if ((AutoFreeday && gc_iRespawn.IntValue == 1) || (IsFreeday && gc_iRespawn.IntValue == 2) || ((IsFreeday || AutoFreeday) && gc_iRespawn.IntValue == 3))
+	if ((g_bAutoFreeday && gc_iRespawn.IntValue == 1) || (g_bIsFreeday && gc_iRespawn.IntValue == 2) || ((g_bIsFreeday || g_bAutoFreeday) && gc_iRespawn.IntValue == 3))
 	{
 		int client = GetClientOfUserId(event.GetInt("userid")); // Get the dead clients id
-		
-		if (((GetAliveTeamCount(CS_TEAM_CT) >= 1) && (GetClientTeam(client) == CS_TEAM_CT) && AllowRespawn) || ((GetAliveTeamCount(CS_TEAM_T) >= 1) && (GetClientTeam(client) == CS_TEAM_T) && AllowRespawn))
+
+		if (((GetAliveTeamCount(CS_TEAM_CT) >= 1) && (GetClientTeam(client) == CS_TEAM_CT) && g_bAllowRespawn) || ((GetAliveTeamCount(CS_TEAM_T) >= 1) && (GetClientTeam(client) == CS_TEAM_T) && g_bAllowRespawn))
 		{
 			CreateTimer (2.0, Timer_Respawn, client);
 		}
 	}
 }
 
-
-
-
 /******************************************************************************
                    FORWARDS LISTEN
 ******************************************************************************/
-
 
 // Initialize Event
 public void OnMapStart()
 {
 	g_iVoteCount = 0;
-	FreedayRound = 0;
-	
+	g_iFreedayRound = 0;
+
 	if (gc_bFirst.BoolValue)
 	{
-		StartFreeday = true;
-		
+		g_bStartFreeday = true;
+
 		char buffer[32];
 		Format(buffer, sizeof(buffer), "%T", "freeday_name", LANG_SERVER);
 		MyJailbreak_SetEventDayName(buffer);
-		
+
 		MyJailbreak_SetEventDayRunning(true);
-		
+
 		g_iOldRoundTime = g_iMPRoundTime.IntValue;
 		g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue;
 	}
 	else
 	{
-		StartFreeday = false;
+		g_bStartFreeday = false;
 	}
-	IsFreeday = false;
-	AutoFreeday = false;
-	RepeatFirstFreeday = false;
-}
 
+	g_bIsFreeday = false;
+	g_bAutoFreeday = false;
+	g_bRepeatFirstFreeday = false;
+}
 
 // Map End
 public void OnMapEnd()
 {
 	if (gc_bFirst.BoolValue)
 	{
-		StartFreeday = true;
+		g_bStartFreeday = true;
 	}
 	else
 	{
-		StartFreeday = false;
+		g_bStartFreeday = false;
 	}
-	IsFreeday = false;
-	AutoFreeday = false;
-	AllowRespawn = false;
+
+	g_bIsFreeday = false;
+	g_bAutoFreeday = false;
+	g_bAllowRespawn = false;
 	g_iVoteCount = 0;
-	FreedayRound = 0;
+	g_iFreedayRound = 0;
 	g_sHasVoted[0] = '\0';
+
 	MyJailbreak_SetEventDayName("none");
 }
-
 
 /******************************************************************************
                    FUNCTIONS
 ******************************************************************************/
 
-
 // Prepare Event
 void StartNextRound()
 {
-	StartFreeday = true;
+	g_bStartFreeday = true;
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iVoteCount = 0;
+
 	char buffer[32];
 	Format(buffer, sizeof(buffer), "%T", "freeday_name", LANG_SERVER);
 	MyJailbreak_SetEventDayName(buffer);
 	MyJailbreak_SetEventDayPlanned(true);
+
 	g_iOldRoundTime = g_iMPRoundTime.IntValue;
 	g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue;
-	
+
 	CPrintToChatAll("%t %t", "freeday_tag", "freeday_next");
 	PrintCenterTextAll("%t", "freeday_next_nc");
 }
-
 
 /******************************************************************************
                    MENUS
 ******************************************************************************/
 
-
 void CreateInfoPanel(int client)
 {
 	// Create info Panel
 	char info[255];
-	
-	FreedayMenu = CreatePanel();
-	Format(info, sizeof(info), "%T", "freeday_info_title", client);
-	SetPanelTitle(FreedayMenu, info);
-	DrawPanelText(FreedayMenu, "                                   ");
-	Format(info, sizeof(info), "%T", "freeday_info_line1", client);
-	DrawPanelText(FreedayMenu, info);
-	DrawPanelText(FreedayMenu, "-----------------------------------");
-	Format(info, sizeof(info), "%T", "freeday_info_line2", client);
-	DrawPanelText(FreedayMenu, info);
-	Format(info, sizeof(info), "%T", "freeday_info_line3", client);
-	DrawPanelText(FreedayMenu, info);
-	Format(info, sizeof(info), "%T", "freeday_info_line4", client);
-	DrawPanelText(FreedayMenu, info);
-	Format(info, sizeof(info), "%T", "freeday_info_line5", client);
-	DrawPanelText(FreedayMenu, info);
-	Format(info, sizeof(info), "%T", "freeday_info_line6", client);
-	DrawPanelText(FreedayMenu, info);
-	Format(info, sizeof(info), "%T", "freeday_info_line7", client);
-	DrawPanelText(FreedayMenu, info);
-	DrawPanelText(FreedayMenu, "-----------------------------------");
-	Format(info, sizeof(info), "%T", "warden_close", client);
-	DrawPanelItem(FreedayMenu, info);
-	SendPanelToClient(FreedayMenu, client, Handler_NullCancel, 20);
-}
 
+	g_hPanelInfo = CreatePanel();
+	Format(info, sizeof(info), "%T", "freeday_info_title", client);
+	SetPanelTitle(g_hPanelInfo, info);
+	DrawPanelText(g_hPanelInfo, "                                   ");
+	Format(info, sizeof(info), "%T", "freeday_info_line1", client);
+	DrawPanelText(g_hPanelInfo, info);
+	DrawPanelText(g_hPanelInfo, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "freeday_info_line2", client);
+	DrawPanelText(g_hPanelInfo, info);
+	Format(info, sizeof(info), "%T", "freeday_info_line3", client);
+	DrawPanelText(g_hPanelInfo, info);
+	Format(info, sizeof(info), "%T", "freeday_info_line4", client);
+	DrawPanelText(g_hPanelInfo, info);
+	Format(info, sizeof(info), "%T", "freeday_info_line5", client);
+	DrawPanelText(g_hPanelInfo, info);
+	Format(info, sizeof(info), "%T", "freeday_info_line6", client);
+	DrawPanelText(g_hPanelInfo, info);
+	Format(info, sizeof(info), "%T", "freeday_info_line7", client);
+	DrawPanelText(g_hPanelInfo, info);
+	DrawPanelText(g_hPanelInfo, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "warden_close", client);
+	DrawPanelItem(g_hPanelInfo, info);
+
+	SendPanelToClient(g_hPanelInfo, client, Handler_NullCancel, 20);
+}
 
 /******************************************************************************
                    TIMER
 ******************************************************************************/
 
-
 public Action Timer_StopRespawn(Handle timer)
 {
-	AllowRespawn = false;
+	g_bAllowRespawn = false;
 }
-
 
 public Action Timer_Respawn(Handle timer, any client)
 {
 	CS_RespawnPlayer(client);
 }
-

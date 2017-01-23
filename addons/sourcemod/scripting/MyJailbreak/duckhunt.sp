@@ -18,11 +18,9 @@
  * this program. If not, see <http:// www.gnu.org/licenses/>.
  */
 
-
 /******************************************************************************
                    STARTUP
 ******************************************************************************/
-
 
 // Includes
 #include <sourcemod>
@@ -40,17 +38,14 @@
 #include <mystocks>
 #include <myjailbreak>
 
-
 // Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
 
-
 // Booleans
 bool g_bIsLateLoad = false;
-bool IsDuckHunt;
-bool StartDuckHunt;
-
+bool g_bIsDuckHunt = false;
+bool g_bStartDuckHunt = false;
 
 // Console Variables
 ConVar gc_bPlugin;
@@ -77,12 +72,10 @@ ConVar gc_bAllowLR;
 ConVar gc_sCustomCommandVote;
 ConVar gc_sCustomCommandSet;
 
-
 // Extern Convars
 ConVar g_iMPRoundTime;
 ConVar g_iTerrorForLR;
 ConVar g_bAllowTP;
-
 
 // Integers
 int g_iOldRoundTime;
@@ -92,13 +85,12 @@ int g_iVoteCount;
 int g_iRound;
 int g_iMaxRound;
 int g_iTsLR;
-
+int g_iCollision_Offset;
 
 // Handles
-Handle TruceTimer;
-Handle DuckHuntMenu;
-Handle BeaconTimer;
-
+Handle g_hTimerTruce;
+Handle g_hPanelInfo;
+Handle g_hTimerBeacon;
 
 // Strings
 char g_sHasVoted[1500];
@@ -109,7 +101,6 @@ char g_sAdminFlag[32];
 char g_sModelPathCTPrevious[MAXPLAYERS+1][256];
 char g_sModelPathTPrevious[MAXPLAYERS+1][256];
 char g_sOverlayStartPath[256];
-
 
 // Info
 public Plugin myinfo = {
@@ -133,18 +124,16 @@ public void OnPluginStart()
 	// Translation
 	LoadTranslations("MyJailbreak.Warden.phrases");
 	LoadTranslations("MyJailbreak.DuckHunt.phrases");
-	
-	
+
 	// Client Commands
 	RegConsoleCmd("sm_setduckhunt", Command_SetDuckHunt, "Allows the Admin or Warden to set duckhunt as next round");
 	RegConsoleCmd("sm_duckhunt", Command_VoteDuckHunt, "Allows players to vote for a duckhunt");
 	RegConsoleCmd("drop", Command_ToggleFly);
-	
-	
+
 	// AutoExecConfig
 	AutoExecConfig_SetFile("DuckHunt", "MyJailbreak/EventDays");
 	AutoExecConfig_SetCreateFile(true);
-	
+
 	AutoExecConfig_CreateConVar("sm_duckhunt_version", MYJB_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_duckhunt_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true, 0.0, true, 1.0);
 	gc_sCustomCommandVote = AutoExecConfig_CreateConVar("sm_duckhunt_cmds_vote", "duck, hunt", "Set your custom chat command for Event voting(!duckhunt (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
@@ -169,11 +158,10 @@ public void OnPluginStart()
 	gc_bOverlays = AutoExecConfig_CreateConVar("sm_duckhunt_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true, 0.0, true, 1.0);
 	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_duckhunt_overlays_start", "overlays/MyJailbreak/start", "Path to the start Overlay DONT TYPE .vmt or .vft");
 	gc_bAllowLR = AutoExecConfig_CreateConVar("sm_duckhunt_allow_lr", "0", "0 - disabled, 1 - enable LR for last round and end eventday", _, true, 0.0, true, 1.0);
-	
+
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
-	
-	
+
 	// Hooks
 	HookEvent("round_start", Event_RoundStart);
 	HookEvent("round_end", Event_RoundEnd);
@@ -183,14 +171,16 @@ public void OnPluginStart()
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
 	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
-	
-	
+
 	// FindConVar
 	g_bAllowTP = FindConVar("sv_allow_thirdperson");
 	g_iMPRoundTime = FindConVar("mp_roundtime");
 	gc_sOverlayStartPath.GetString(g_sOverlayStartPath, sizeof(g_sOverlayStartPath));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
+
+	// Offsets
+	g_iCollision_Offset = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
 
 	if (g_bAllowTP == INVALID_HANDLE)
 	{
@@ -211,7 +201,6 @@ public void OnPluginStart()
 	}
 }
 
-
 // ConVarChange for Strings
 public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
@@ -231,38 +220,37 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 	}
 }
 
-
 // Initialize Plugin
 public void OnConfigsExecuted()
 {
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iMaxRound = gc_iRounds.IntValue;
-	
+
 	// FindConVar
 	g_iTerrorForLR = FindConVar("sm_hosties_lr_ts_max");
-	
+
 	// Set custom Commands
 	int iCount = 0;
 	char sCommands[128], sCommandsL[12][32], sCommand[32];
-	
+
 	// Vote
 	gc_sCustomCommandVote.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
 	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
-	
+
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
 		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
 			RegConsoleCmd(sCommand, Command_VoteDuckHunt, "Allows players to vote for a duckhunt");
 	}
-	
+
 	// Set
 	gc_sCustomCommandSet.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
 	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
-	
+
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
@@ -271,11 +259,9 @@ public void OnConfigsExecuted()
 	}
 }
 
-
 /******************************************************************************
                    COMMANDS
 ******************************************************************************/
-
 
 // Admin & Warden set Event
 public Action Command_SetDuckHunt(int client, int args)
@@ -338,18 +324,18 @@ public Action Command_SetDuckHunt(int client, int args)
 			else CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
 	}
 	else CReplyToCommand(client, "%t %t", "duckhunt_tag", "duckhunt_disabled");
+
 	return Plugin_Handled;
 }
-
 
 // Voting for Event
 public Action Command_VoteDuckHunt(int client, int args)
 {
 	char steamid[64];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
-	
+
 	if (gc_bPlugin.BoolValue)
-	{	
+	{
 		if (gc_bVote.BoolValue)
 		{
 			if (GetTeamClientCount(CS_TEAM_CT) > 0)
@@ -389,13 +375,13 @@ public Action Command_VoteDuckHunt(int client, int args)
 		else CReplyToCommand(client, "%t %t", "duckhunt_tag", "duckhunt_voting");
 	}
 	else CReplyToCommand(client, "%t %t", "duckhunt_tag", "duckhunt_disabled");
+
 	return Plugin_Handled;
 }
 
-
 public Action Command_ToggleFly(int client, int args)
 {
-	if (IsDuckHunt && (GetClientTeam(client) == CS_TEAM_T) && gc_bFlyMode.BoolValue)
+	if (g_bIsDuckHunt && (GetClientTeam(client) == CS_TEAM_T) && gc_bFlyMode.BoolValue)
 	{
 		MoveType movetype = GetEntityMoveType(client);
 		
@@ -410,94 +396,94 @@ public Action Command_ToggleFly(int client, int args)
 			return Plugin_Handled;
 		}
 	}
+
 	return Plugin_Continue;
 }
-
 
 /******************************************************************************
                    EVENTS
 ******************************************************************************/
 
-
 // Round start
 public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
-	if (StartDuckHunt || IsDuckHunt)
+	if (g_bStartDuckHunt || g_bIsDuckHunt)
 	{
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("sm_menu_enable", 0);
 		SetCvar("sm_weapons_enable", 0);
 		SetConVarInt(g_bAllowTP, 1);
+
 		MyJailbreak_SetEventDayPlanned(false);
 		MyJailbreak_SetEventDayRunning(true);
-		
-		if (gc_fBeaconTime.FloatValue > 0.0) BeaconTimer = CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
-		
-		IsDuckHunt = true;
+
+		if (gc_fBeaconTime.FloatValue > 0.0) g_hTimerBeacon = CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
+
+		g_bIsDuckHunt = true;
 		g_iRound++;
-		StartDuckHunt = false;
-		
+		g_bStartDuckHunt = false;
+
 		if (g_iRound > 0)
+		{
+			LoopClients(client)
 			{
-				LoopClients(client)
+				CreateInfoPanel(client);
+				
+				StripAllPlayerWeapons(client);
+				SetEntData(client, g_iCollision_Offset, 2, 4, true);
+				SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
+				
+				if (GetClientTeam(client) == CS_TEAM_CT && IsValidClient(client, false, false))
 				{
-					CreateInfoPanel(client);
+					int HunterHP = gc_iHunterHP.IntValue;
+					int difference = (GetAliveTeamCount(CS_TEAM_T) - GetAliveTeamCount(CS_TEAM_CT));
 					
-					StripAllPlayerWeapons(client);
-					SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
-					SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
+					if (difference > 0) HunterHP = HunterHP + (gc_iHunterHPincrease.IntValue * difference);
 					
-					if (GetClientTeam(client) == CS_TEAM_CT && IsValidClient(client, false, false))
-					{
-						int HunterHP = gc_iHunterHP.IntValue;
-						int difference = (GetAliveTeamCount(CS_TEAM_T) - GetAliveTeamCount(CS_TEAM_CT));
-						
-						if (difference > 0) HunterHP = HunterHP + (gc_iHunterHPincrease.IntValue * difference);
-						
-						SetEntityHealth(client, HunterHP);
-						GivePlayerItem(client, "weapon_nova");
-					}
-					if (GetClientTeam(client) == CS_TEAM_T && IsValidClient(client, false, false))
-					{
-						if (gc_bFlyMode.BoolValue)
-						{
-							SetEntityMoveType(client, MOVETYPE_FLY);
-						}
-						else
-						{
-							SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.2);
-							SetEntityGravity(client, 0.3);
-						}
-						SetEntityHealth(client, gc_iChickenHP.IntValue);
-						GivePlayerItem(client, "weapon_hegrenade");
-						ClientCommand(client, "thirdperson");
-					}
+					SetEntityHealth(client, HunterHP);
+					GivePlayerItem(client, "weapon_nova");
 				}
-				
-				CreateTimer (1.1, Timer_SetModel);
-				
-				// enable lr on last round
-				g_iTsLR = GetAliveTeamCount(CS_TEAM_T);
-				
-				if (gc_bAllowLR.BoolValue)
+				if (GetClientTeam(client) == CS_TEAM_T && IsValidClient(client, false, false))
 				{
-					if ((g_iRound == g_iMaxRound) && (g_iTsLR > g_iTerrorForLR.IntValue))
+					if (gc_bFlyMode.BoolValue)
 					{
-						SetCvar("sm_hosties_lr", 1);
+						SetEntityMoveType(client, MOVETYPE_FLY);
 					}
+					else
+					{
+						SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.2);
+						SetEntityGravity(client, 0.3);
+					}
+					SetEntityHealth(client, gc_iChickenHP.IntValue);
+					GivePlayerItem(client, "weapon_hegrenade");
+					ClientCommand(client, "thirdperson");
 				}
-				
-				CPrintToChatAll("%t %t", "duckhunt_tag", "duckhunt_rounds", g_iRound, g_iMaxRound);
-				g_iTruceTime--;
-				TruceTimer = CreateTimer(1.0, Timer_StartEvent, _, TIMER_REPEAT);
 			}
+			
+			CreateTimer (1.1, Timer_SetModel);
+			
+			// enable lr on last round
+			g_iTsLR = GetAliveTeamCount(CS_TEAM_T);
+			
+			if (gc_bAllowLR.BoolValue)
+			{
+				if ((g_iRound == g_iMaxRound) && (g_iTsLR > g_iTerrorForLR.IntValue))
+				{
+					SetCvar("sm_hosties_lr", 1);
+				}
+			}
+			
+			CPrintToChatAll("%t %t", "duckhunt_tag", "duckhunt_rounds", g_iRound, g_iMaxRound);
+			g_iTruceTime--;
+			g_hTimerTruce = CreateTimer(1.0, Timer_StartEvent, _, TIMER_REPEAT);
+		}
 	}
 	else
 	{
 		char EventDay[64];
 		MyJailbreak_GetEventDayName(EventDay);
-		
+
 		if (!StrEqual(EventDay, "none", false))
 		{
 			g_iCoolDown = gc_iCooldownDay.IntValue + 1;
@@ -506,76 +492,80 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 	}
 }
 
-
 // Round End
 public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
 	int winner = event.GetInt("winner");
-	
-	if (IsDuckHunt)
+
+	if (g_bIsDuckHunt)
 	{
 		LoopClients(client)
 		{
 			if (IsValidClient(client, false, true))
 				{
-					SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
+					SetEntData(client, g_iCollision_Offset, 0, 4, true);
 					SetEntityGravity(client, 1.0);
 					FirstPerson(client);
 					SetEntityMoveType(client, MOVETYPE_WALK);
 				}
 		}
-		delete BeaconTimer;
-		if (TruceTimer != null) KillTimer(TruceTimer);
+
+		delete g_hTimerBeacon;
+
+		if (g_hTimerTruce != null) KillTimer(g_hTimerTruce);
+
 		if (winner == 2) PrintCenterTextAll("%t", "duckhunt_twin_nc");
 		if (winner == 3) PrintCenterTextAll("%t", "duckhunt_ctwin_nc");
+
 		if (g_iRound == g_iMaxRound)
 		{
-			IsDuckHunt = false;
-			StartDuckHunt = false;
+			g_bIsDuckHunt = false;
+			g_bStartDuckHunt = false;
 			g_iRound = 0;
 			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
-			
+
 			SetCvar("sm_hosties_lr", 1);
 			SetCvar("sm_weapons_enable", 1);
 			SetCvar("sm_warden_enable", 1);
 			SetCvar("sm_menu_enable", 1);
 			SetConVarInt(g_bAllowTP, 0);
 			g_iMPRoundTime.IntValue = g_iOldRoundTime;
+
 			MyJailbreak_SetEventDayName("none");
 			MyJailbreak_SetEventDayRunning(false);
 			CPrintToChatAll("%t %t", "duckhunt_tag", "duckhunt_end");
 		}
 	}
-	if (StartDuckHunt)
+	if (g_bStartDuckHunt)
 	{
 		LoopClients(i) CreateInfoPanel(i);
-		
+
 		CPrintToChatAll("%t %t", "duckhunt_tag", "duckhunt_next");
 		PrintCenterTextAll("%t", "duckhunt_next_nc");
 	}
 }
 
-
 // Give new Nades after detonation to chicken
 public void Event_HE_Detonate(Event event, const char[] name, bool dontBroadcast)
 {
-	if (IsDuckHunt == true)
+	if (g_bIsDuckHunt == true)
 	{
 		int target = GetClientOfUserId(event.GetInt("userid"));
 		if (GetClientTeam(target) == 1 && !IsPlayerAlive(target))
 		{
 			return;
 		}
+
 		GivePlayerItem(target, "weapon_hegrenade");
 	}
+
 	return;
 }
 
-
 // Give new Ammo to Hunter
-public void Event_WeaponReload(Event event, char [] name, bool dontBroadcast)
+public void Event_WeaponReload(Event event, char[] name, bool dontBroadcast)
 {
-	if (IsDuckHunt == true)
+	if (g_bIsDuckHunt == true)
 	{
 		int client = GetClientOfUserId(event.GetInt("userid"));
 		if (IsValidClient(client, false, false) && (GetClientTeam(client) == CS_TEAM_CT))
@@ -585,36 +575,35 @@ public void Event_WeaponReload(Event event, char [] name, bool dontBroadcast)
 	}
 }
 
-
-public void Event_PlayerDeath(Event event, char [] name, bool dontBroadcast)
+public void Event_PlayerDeath(Event event, char[] name, bool dontBroadcast)
 {
-	if (IsDuckHunt == true)
+	if (g_bIsDuckHunt == true)
 	{
 		int client = GetClientOfUserId(event.GetInt("userid"));
+
 		FirstPerson(client);
 		SetEntityMoveType(client, MOVETYPE_WALK);
 	}
 }
 
-
 /******************************************************************************
                    FORWARDS LISTEN
 ******************************************************************************/
-
 
 // Initialize Event
 public void OnMapStart()
 {
 	g_iVoteCount = 0;
 	g_iRound = 0;
-	IsDuckHunt = false;
-	StartDuckHunt = false;
-	
+	g_bIsDuckHunt = false;
+	g_bStartDuckHunt = false;
+
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iTruceTime = gc_iTruceTime.IntValue;
-	
+
 	if (gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
 	if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
+
 	PrecacheModel("models/chicken/chicken.mdl", true);
 	PrecacheModel(g_sHunterModel, true);
 	AddFileToDownloadsTable("materials/models/props_farm/chicken_white.vmt");
@@ -625,16 +614,18 @@ public void OnMapStart()
 	AddFileToDownloadsTable("models/chicken/chicken.mdl");
 }
 
-
 // Map End
 public void OnMapEnd()
 {
-	IsDuckHunt = false;
-	StartDuckHunt = false;
-	delete TruceTimer;
+	g_bIsDuckHunt = false;
+	g_bStartDuckHunt = false;
+
+	delete g_hTimerTruce;
+
 	g_iVoteCount = 0;
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0';
+
 	LoopClients(client)
 	{
 		FirstPerson(client);
@@ -642,40 +633,41 @@ public void OnMapEnd()
 	}
 }
 
-
 // Listen for Last Lequest
 public void OnAvailableLR(int Announced)
 {
-	if (IsDuckHunt && gc_bAllowLR.BoolValue && (g_iTsLR > g_iTerrorForLR.IntValue))
+	if (g_bIsDuckHunt && gc_bAllowLR.BoolValue && (g_iTsLR > g_iTerrorForLR.IntValue))
 	{
 		LoopClients(client)
 		{
 			StripAllPlayerWeapons(client);
-			
+
 			if (IsValidClient(client, false, true))
 			{
-				SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
+				SetEntData(client, g_iCollision_Offset, 0, 4, true);
 				SetEntityGravity(client, 1.0);
 				FirstPerson(client);
+
 				if (GetClientTeam(client) == CS_TEAM_CT)
 				{
 					FakeClientCommand(client, "sm_weapons");
 					SetEntityModel(client, g_sModelPathCTPrevious[client]);
 				}
-				
+
 				if (GetClientTeam(client) == CS_TEAM_T)
 					SetEntityModel(client, g_sModelPathTPrevious[client]);
 			}
 			GivePlayerItem(client, "weapon_knife");
-			
 		}
-		
-		delete BeaconTimer;
-		if (TruceTimer != null) KillTimer(TruceTimer);
+
+		delete g_hTimerBeacon;
+
+		if (g_hTimerTruce != null) KillTimer(g_hTimerTruce);
+
 		if (g_iRound == g_iMaxRound)
 		{
-			IsDuckHunt = false;
-			StartDuckHunt = false;
+			g_bIsDuckHunt = false;
+			g_bStartDuckHunt = false;
 			g_iRound = 0;
 			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
 			
@@ -692,21 +684,20 @@ public void OnAvailableLR(int Announced)
 	}
 }
 
-
 // Set Client Hook
 public void OnClientPutInServer(int client)
 {
 	SDKHook(client, SDKHook_WeaponCanUse, OnWeaponCanUse);
 }
 
-
 // Nova & Grenade only
 public Action OnWeaponCanUse(int client, int weapon)
 {
-	if (IsDuckHunt == true)
+	if (g_bIsDuckHunt == true)
 	{
 		char sWeapon[32];
 		GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
+
 		if ((GetClientTeam(client) == CS_TEAM_T && StrEqual(sWeapon, "weapon_hegrenade")) || (GetClientTeam(client) == CS_TEAM_CT && StrEqual(sWeapon, "weapon_nova")))
 		{
 		
@@ -715,39 +706,38 @@ public Action OnWeaponCanUse(int client, int weapon)
 				return Plugin_Continue;
 			}
 		}
+
 		return Plugin_Handled;
 	}
+
 	return Plugin_Continue;
 }
-
 
 // Only right click attack for chicken
 public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon) 
 {
-	if (IsDuckHunt == true)
+	if (g_bIsDuckHunt == true)
 	{
 		if ((GetClientTeam(client) == CS_TEAM_T) && IsClientInGame(client) && IsPlayerAlive(client) && buttons & IN_ATTACK)
 		{
 			return Plugin_Handled;
 		}
 	}
+
 	return Plugin_Continue;
 }
 
-
 public void OnClientDisconnect(int client)
 {
-	if (IsDuckHunt == true)
+	if (g_bIsDuckHunt == true)
 	{
 		FirstPerson(client);
 	}
 }
 
-
 /******************************************************************************
                    FUNCTIONS
 ******************************************************************************/
-
 
 // Back to First Person
 void FirstPerson(int client)
@@ -758,67 +748,63 @@ void FirstPerson(int client)
 	}
 }
 
-
 // Prepare Event
 void StartNextRound()
 {
-	StartDuckHunt = true;
+	g_bStartDuckHunt = true;
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iVoteCount = 0;
-	
+
 	char buffer[32];
 	Format(buffer, sizeof(buffer), "%T", "duckhunt_name", LANG_SERVER);
 	MyJailbreak_SetEventDayName(buffer);
 	MyJailbreak_SetEventDayPlanned(true);
-	
+
 	g_iOldRoundTime = g_iMPRoundTime.IntValue; // save original round time
 	g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue; // set event round time
-	
+
 	CPrintToChatAll("%t %t", "duckhunt_tag", "duckhunt_next");
 	PrintCenterTextAll("%t", "duckhunt_next_nc");
 }
-
 
 /******************************************************************************
                    MENUS
 ******************************************************************************/
 
-
 void CreateInfoPanel(int client)
 {
 	// Create info Panel
 	char info[255];
-	
-	DuckHuntMenu = CreatePanel();
-	Format(info, sizeof(info), "%T", "duckhunt_info_title", client);
-	SetPanelTitle(DuckHuntMenu, info);
-	DrawPanelText(DuckHuntMenu, "                                   ");
-	Format(info, sizeof(info), "%T", "duckhunt_info_line1", client);
-	DrawPanelText(DuckHuntMenu, info);
-	DrawPanelText(DuckHuntMenu, "-----------------------------------");
-	Format(info, sizeof(info), "%T", "duckhunt_info_line2", client);
-	DrawPanelText(DuckHuntMenu, info);
-	Format(info, sizeof(info), "%T", "duckhunt_info_line3", client);
-	DrawPanelText(DuckHuntMenu, info);
-	Format(info, sizeof(info), "%T", "duckhunt_info_line4", client);
-	DrawPanelText(DuckHuntMenu, info);
-	Format(info, sizeof(info), "%T", "duckhunt_info_line5", client);
-	DrawPanelText(DuckHuntMenu, info);
-	Format(info, sizeof(info), "%T", "duckhunt_info_line6", client);
-	DrawPanelText(DuckHuntMenu, info);
-	Format(info, sizeof(info), "%T", "duckhunt_info_line7", client);
-	DrawPanelText(DuckHuntMenu, info);
-	DrawPanelText(DuckHuntMenu, "-----------------------------------");
-	Format(info, sizeof(info), "%T", "warden_close", client);
-	DrawPanelItem(DuckHuntMenu, info);
-	SendPanelToClient(DuckHuntMenu, client, Handler_NullCancel, 20);
-}
 
+	g_hPanelInfo = CreatePanel();
+	Format(info, sizeof(info), "%T", "duckhunt_info_title", client);
+	SetPanelTitle(g_hPanelInfo, info);
+	DrawPanelText(g_hPanelInfo, "                                   ");
+	Format(info, sizeof(info), "%T", "duckhunt_info_line1", client);
+	DrawPanelText(g_hPanelInfo, info);
+	DrawPanelText(g_hPanelInfo, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "duckhunt_info_line2", client);
+	DrawPanelText(g_hPanelInfo, info);
+	Format(info, sizeof(info), "%T", "duckhunt_info_line3", client);
+	DrawPanelText(g_hPanelInfo, info);
+	Format(info, sizeof(info), "%T", "duckhunt_info_line4", client);
+	DrawPanelText(g_hPanelInfo, info);
+	Format(info, sizeof(info), "%T", "duckhunt_info_line5", client);
+	DrawPanelText(g_hPanelInfo, info);
+	Format(info, sizeof(info), "%T", "duckhunt_info_line6", client);
+	DrawPanelText(g_hPanelInfo, info);
+	Format(info, sizeof(info), "%T", "duckhunt_info_line7", client);
+	DrawPanelText(g_hPanelInfo, info);
+	DrawPanelText(g_hPanelInfo, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "warden_close", client);
+	DrawPanelItem(g_hPanelInfo, info);
+
+	SendPanelToClient(g_hPanelInfo, client, Handler_NullCancel, 20);
+}
 
 /******************************************************************************
                    TIMER
 ******************************************************************************/
-
 
 // Start Timer
 public Action Timer_StartEvent(Handle timer)
@@ -830,11 +816,12 @@ public Action Timer_StartEvent(Handle timer)
 		{
 			PrintCenterText(client, "%t", "duckhunt_timeuntilstart_nc", g_iTruceTime);
 		}
+
 		return Plugin_Continue;
 	}
-	
+
 	g_iTruceTime = gc_iTruceTime.IntValue;
-	
+
 	if (g_iRound > 0)
 	{
 		LoopClients(client) if (IsPlayerAlive(client))
@@ -857,11 +844,12 @@ public Action Timer_StartEvent(Handle timer)
 		}
 		CPrintToChatAll("%t %t", "duckhunt_tag", "duckhunt_start");
 	}
+
 	SJD_OpenDoors();
-	TruceTimer = null;
+	g_hTimerTruce = null;
+
 	return Plugin_Stop;
 }
-
 
 // Delay Set model for sm_skinchooser
 public Action Timer_SetModel(Handle timer)
@@ -881,10 +869,9 @@ public Action Timer_SetModel(Handle timer)
 	}
 }
 
-
 // Beacon Timer
 public Action Timer_BeaconOn(Handle timer)
 {
 	LoopValidClients(i, true, false) MyJailbreak_BeaconOn(i, 2.0);
-	BeaconTimer = null;
+	g_hTimerBeacon = null;
 }

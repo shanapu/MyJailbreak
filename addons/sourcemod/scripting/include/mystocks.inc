@@ -86,7 +86,7 @@ stock void StripAllPlayerWeapons(int client)
 
 
 // Easy show overlay to a client with lifetime | 0.0 = no auto remove
-stock void ShowOverlay(int client, char [] path, float lifetime)
+stock void ShowOverlay(int client, char[] path, float lifetime)
 {
 	if (IsValidClient(client, false, true))
 	{
@@ -99,7 +99,7 @@ stock void ShowOverlay(int client, char [] path, float lifetime)
 
 
 // Easy show overlay to all clients with lifetime | 0.0 = no auto remove
-stock void ShowOverlayAll(char [] path, float deletetime) 
+stock void ShowOverlayAll(char[] path, float deletetime) 
 {
 	LoopValidClients(client, false, true)
 	{
@@ -166,7 +166,7 @@ stock void SetCvarString(char cvarName[64], char[] value)
 
 
 // Define filename & path for logging 
-stock void SetLogFile(char LogFile[PLATFORM_MAX_PATH], char [] FileName, char [] FolderName)
+stock void SetLogFile(char LogFile[PLATFORM_MAX_PATH], char[] FileName, char[] FolderName)
 {
 	char sDate[12];
 	FormatTime(sDate, sizeof(sDate), "%y-%m-%d");

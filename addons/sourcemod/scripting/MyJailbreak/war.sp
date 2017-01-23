@@ -18,11 +18,9 @@
  * this program. If not, see <http:// www.gnu.org/licenses/>.
  */
 
-
 /******************************************************************************
                    STARTUP
 ******************************************************************************/
-
 
 // Includes
 #include <sourcemod>
@@ -39,16 +37,13 @@
 #include <mystocks>
 #include <myjailbreak>
 
-
 // Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
 
-
 // Booleans
-bool IsWar;
-bool StartWar;
-
+bool g_bIsWar = false;
+bool g_bStartWar = false;
 
 // Console Variables
 ConVar gc_bPlugin;
@@ -73,11 +68,9 @@ ConVar gc_sCustomCommandSet;
 ConVar gc_sAdminFlag;
 ConVar gc_bAllowLR;
 
-
 // Extern Convars
 ConVar g_iMPRoundTime;
 ConVar g_iTerrorForLR;
-
 
 // Integers
 int g_iOldRoundTime;
@@ -88,14 +81,13 @@ int g_iVoteCount;
 int g_iRound;
 int g_iMaxRound;
 int g_iTsLR;
-
+int g_iCollision_Offset;
 
 // Handles
-Handle FreezeTimer;
-Handle TruceTimer;
-Handle WarMenu;
-Handle BeaconTimer;
-
+Handle g_hTimerFreeze;
+Handle g_hTimerTruce;
+Handle g_hPanelInfo;
+Handle g_hTimerBeacon;
 
 // Strings
 char g_sHasVoted[1500];
@@ -104,10 +96,8 @@ char g_sEventsLogFile[PLATFORM_MAX_PATH];
 char g_sAdminFlag[32];
 char g_sOverlayStartPath[256];
 
-
 // Floats
 float g_fPos[3];
-
 
 // Info
 public Plugin myinfo = {
@@ -118,24 +108,21 @@ public Plugin myinfo = {
 	url = MYJB_URL_LINK
 };
 
-
 // Start
 public void OnPluginStart()
 {
 	// Translation
 	LoadTranslations("MyJailbreak.Warden.phrases");
 	LoadTranslations("MyJailbreak.War.phrases");
-	
-	
+
 	// Client Commands
 	RegConsoleCmd("sm_setwar", Command_SetWar, "Allows the Admin or Warden to set a war for next rounds");
 	RegConsoleCmd("sm_war", Command_VoteWar, "Allows players to vote for a war");
-	
-	
+
 	// AutoExecConfig
 	AutoExecConfig_SetFile("Warfare", "MyJailbreak/EventDays");
 	AutoExecConfig_SetCreateFile(true);
-	
+
 	AutoExecConfig_CreateConVar("sm_war_version", MYJB_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_war_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true, 0.0, true, 1.0);
 	gc_sCustomCommandVote = AutoExecConfig_CreateConVar("sm_war_cmds_vote", "warfare", "Set your custom chat command for Event voting(!war (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
@@ -158,28 +145,29 @@ public void OnPluginStart()
 	gc_bOverlays = AutoExecConfig_CreateConVar("sm_war_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true, 0.0, true, 1.0);
 	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_war_overlays_start", "overlays/MyJailbreak/start", "Path to the start Overlay DONT TYPE .vmt or .vft");
 	gc_bAllowLR = AutoExecConfig_CreateConVar("sm_war_allow_lr", "0", "0 - disabled, 1 - enable LR for last round and end eventday", _, true, 0.0, true, 1.0);
-	
+
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
-	
-	
+
 	// Hooks
 	HookEvent("round_start", Event_RoundStart);
 	HookEvent("round_end", Event_RoundEnd);
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
 	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
-	
-	
+
 	// FindConVar
 	g_iMPRoundTime = FindConVar("mp_roundtime");
 	gc_sOverlayStartPath.GetString(g_sOverlayStartPath, sizeof(g_sOverlayStartPath));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
-	
+
+	// Offsets
+	g_iCollision_Offset = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
+
+	// Logs
 	SetLogFile(g_sEventsLogFile, "Events", "MyJailbreak");
 }
-
 
 // ConVarChange for Strings
 public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
@@ -200,7 +188,6 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 	}
 }
 
-
 // Initialize Plugin
 public void OnConfigsExecuted()
 {
@@ -208,8 +195,7 @@ public void OnConfigsExecuted()
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iMaxRound = gc_iRounds.IntValue;
-	
-	
+
 	// FindConVar
 	g_iTerrorForLR = FindConVar("sm_hosties_lr_ts_max");
 	
@@ -217,24 +203,24 @@ public void OnConfigsExecuted()
 	// Set custom Commands
 	int iCount = 0;
 	char sCommands[128], sCommandsL[12][32], sCommand[32];
-	
+
 	// Vote
 	gc_sCustomCommandVote.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
 	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
-	
+
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
 		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
 			RegConsoleCmd(sCommand, Command_VoteWar, "Allows players to vote for a war");
 	}
-	
+
 	// Set
 	gc_sCustomCommandSet.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
 	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
-	
+
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
@@ -243,12 +229,9 @@ public void OnConfigsExecuted()
 	}
 }
 
-
-
 /******************************************************************************
                    COMMANDS
 ******************************************************************************/
-
 
 // Admin & Warden set Event
 public Action Command_SetWar(int client, int args)
@@ -311,16 +294,16 @@ public Action Command_SetWar(int client, int args)
 		else CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
 	}
 	else CReplyToCommand(client, "%t %t", "war_tag", "war_disabled");
+
 	return Plugin_Handled;
 }
-
 
 // Voting for Event
 public Action Command_VoteWar(int client, int args)
 {
 	char steamid[64];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
-	
+
 	if (gc_bPlugin.BoolValue)
 	{
 		if (gc_bVote.BoolValue)
@@ -359,19 +342,18 @@ public Action Command_VoteWar(int client, int args)
 		else CReplyToCommand(client, "%t %t", "war_tag", "war_voting");
 	}
 	else CReplyToCommand(client, "%t %t", "war_tag", "war_disabled");
+
 	return Plugin_Handled;
 }
-
 
 /******************************************************************************
                    EVENTS
 ******************************************************************************/
 
-
 // Round start
 public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
-	if (StartWar || IsWar)
+	if (g_bStartWar || g_bIsWar)
 	{
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_warden_enable", 0);
@@ -381,19 +363,20 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		MyJailbreak_SetEventDayPlanned(false);
 		MyJailbreak_SetEventDayRunning(true);
 		g_iRound++;
-		
-		if (gc_fBeaconTime.FloatValue > 0.0) BeaconTimer = CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
-		
-		IsWar = true;
-		StartWar = false;
+
+		if (gc_fBeaconTime.FloatValue > 0.0) g_hTimerBeacon = CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
+
+		g_bIsWar = true;
+		g_bStartWar = false;
+
 		if (gc_bSpawnCell.BoolValue)
 		{
 			SJD_OpenDoors();
 			g_iFreezeTime = 0;
 		}
-		
+
 		int RandomCT = 0;
-		
+
 		for (int client=1;client <= MaxClients;client++)
 		{
 			if (IsClientInGame(client))
@@ -405,6 +388,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 				}
 			}
 		}
+
 		if (RandomCT)
 		{
 			GetClientAbsOrigin(RandomCT, g_fPos);
@@ -442,7 +426,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 			{
 				CreateInfoPanel(client);
 				
-				SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
+				SetEntData(client, g_iCollision_Offset, 2, 4, true);
 				SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 				
 				if (GetClientTeam(client) == CS_TEAM_CT)
@@ -452,16 +436,16 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 					TeleportEntity(client, g_fPos, NULL_VECTOR, NULL_VECTOR);
 				}
 			}
-			
+
 			g_iFreezeTime--;
-			
+
 			if (!gc_bSpawnCell.BoolValue || (gc_bSpawnCell.BoolValue && (SJD_IsCurrentMapConfigured() != true))) // spawn Terrors to CT Spawn)
 			{
-				FreezeTimer = CreateTimer(1.0, Timer_FreezeOnStart, _, TIMER_REPEAT);
+				g_hTimerFreeze = CreateTimer(1.0, Timer_FreezeOnStart, _, TIMER_REPEAT);
 			}
 			else
 			{
-				TruceTimer = CreateTimer(1.0, Timer_StartEvent, _, TIMER_REPEAT);
+				g_hTimerTruce = CreateTimer(1.0, Timer_StartEvent, _, TIMER_REPEAT);
 			}
 		}
 	}
@@ -469,7 +453,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 	{
 		char EventDay[64];
 		MyJailbreak_GetEventDayName(EventDay);
-	
+
 		if (!StrEqual(EventDay, "none", false))
 		{
 			g_iCoolDown = gc_iCooldownDay.IntValue + 1;
@@ -478,25 +462,25 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 	}
 }
 
-
 // Round End
 public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
 	int winner = event.GetInt("winner");
-	
-	if (IsWar)
+
+	if (g_bIsWar)
 	{
-		LoopValidClients(client, false, true) SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
-		
-		delete FreezeTimer;
-		delete TruceTimer;
-		delete BeaconTimer;
-		
+		LoopValidClients(client, false, true) SetEntData(client, g_iCollision_Offset, 0, 4, true);
+
+		delete g_hTimerFreeze;
+		delete g_hTimerTruce;
+		delete g_hTimerBeacon;
+
 		if (winner == 2) PrintCenterTextAll("%t", "war_twin_nc");
 		if (winner == 3) PrintCenterTextAll("%t", "war_ctwin_nc");
+
 		if (g_iRound == g_iMaxRound)
 		{
-			IsWar = false;
+			g_bIsWar = false;
 			g_iRound = 0;
 			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
 			SetCvar("sm_hosties_lr", 1);
@@ -510,60 +494,58 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			CPrintToChatAll("%t %t", "war_tag", "war_end");
 		}
 	}
-	if (StartWar)
+	if (g_bStartWar)
 	{
 		LoopClients(i) CreateInfoPanel(i);
-		
+
 		CPrintToChatAll("%t %t", "war_tag", "war_next");
 		PrintCenterTextAll("%t", "war_next_nc");
 	}
 }
 
-
 /******************************************************************************
                    FORWARDS LISTEN
 ******************************************************************************/
-
 
 // Initialize Event
 public void OnMapStart()
 {
 	g_iVoteCount = 0;
 	g_iRound = 0;
-	IsWar = false;
-	StartWar = false;
-	
+	g_bIsWar = false;
+	g_bStartWar = false;
+
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
 	g_iTruceTime = gc_iTruceTime.IntValue;
-	
+
 	if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
 	if (gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
 }
 
-
 // Map End
 public void OnMapEnd()
 {
-	IsWar = false;
-	StartWar = false;
-	delete FreezeTimer;
-	delete TruceTimer;
+	g_bIsWar = false;
+	g_bStartWar = false;
+
+	delete g_hTimerFreeze;
+	delete g_hTimerTruce;
+
 	g_iVoteCount = 0;
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0';
 }
 
-
 // Listen for Last Lequest
 public void OnAvailableLR(int Announced)
 {
-	if (IsWar && gc_bAllowLR.BoolValue && (g_iTsLR > g_iTerrorForLR.IntValue))
+	if (g_bIsWar && gc_bAllowLR.BoolValue && (g_iTsLR > g_iTerrorForLR.IntValue))
 	{
 		LoopValidClients(client, false, true) 
 		{
-			SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
-			
+			SetEntData(client, g_iCollision_Offset, 0, 4, true);
+
 			StripAllPlayerWeapons(client);
 			if (GetClientTeam(client) == CS_TEAM_CT)
 			{
@@ -571,14 +553,14 @@ public void OnAvailableLR(int Announced)
 			}
 			GivePlayerItem(client, "weapon_knife");
 		}
-		
-		delete BeaconTimer;
-		delete FreezeTimer;
-		delete TruceTimer;
-		
+
+		delete g_hTimerBeacon;
+		delete g_hTimerFreeze;
+		delete g_hTimerTruce;
+
 		if (g_iRound == g_iMaxRound)
 		{
-			IsWar = false;
+			g_bIsWar = false;
 			g_iRound = 0;
 			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
 			SetCvar("sm_hosties_lr", 1);
@@ -594,75 +576,69 @@ public void OnAvailableLR(int Announced)
 	}
 }
 
-
 /******************************************************************************
                    FUNCTIONS
 ******************************************************************************/
 
-
 // Prepare Event for next round
 void StartNextRound()
 {
-	StartWar = true;
+	g_bStartWar = true;
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iVoteCount = 0;
-	
-	WarMenu = CreatePanel();
-	
+
+	g_hPanelInfo = CreatePanel();
+
 	char buffer[32];
 	Format(buffer, sizeof(buffer), "%T", "war_name", LANG_SERVER);
 	MyJailbreak_SetEventDayName(buffer);
-	
 	MyJailbreak_SetEventDayPlanned(true);
-	
+
 	g_iOldRoundTime = g_iMPRoundTime.IntValue; // save original round time
 	g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue; // set event round time
-	
+
 	CPrintToChatAll("%t %t", "war_tag", "war_next");
 	PrintCenterTextAll("%t", "war_next_nc");
 }
 
-
 /******************************************************************************
                    MENUS
 ******************************************************************************/
-
 
 void CreateInfoPanel(int client)
 {
 	// Create info Panel
 	char info[255];
 
-	WarMenu = CreatePanel();
+	g_hPanelInfo = CreatePanel();
 	Format(info, sizeof(info), "%T", "war_info_title", client);
-	SetPanelTitle(WarMenu, info);
-	DrawPanelText(WarMenu, "                                   ");
+	SetPanelTitle(g_hPanelInfo, info);
+	DrawPanelText(g_hPanelInfo, "                                   ");
 	Format(info, sizeof(info), "%T", "war_info_line1", client);
-	DrawPanelText(WarMenu, info);
-	DrawPanelText(WarMenu, "-----------------------------------");
+	DrawPanelText(g_hPanelInfo, info);
+	DrawPanelText(g_hPanelInfo, "-----------------------------------");
 	Format(info, sizeof(info), "%T", "war_info_line2", client);
-	DrawPanelText(WarMenu, info);
+	DrawPanelText(g_hPanelInfo, info);
 	Format(info, sizeof(info), "%T", "war_info_line3", client);
-	DrawPanelText(WarMenu, info);
+	DrawPanelText(g_hPanelInfo, info);
 	Format(info, sizeof(info), "%T", "war_info_line4", client);
-	DrawPanelText(WarMenu, info);
+	DrawPanelText(g_hPanelInfo, info);
 	Format(info, sizeof(info), "%T", "war_info_line5", client);
-	DrawPanelText(WarMenu, info);
+	DrawPanelText(g_hPanelInfo, info);
 	Format(info, sizeof(info), "%T", "war_info_line6", client);
-	DrawPanelText(WarMenu, info);
+	DrawPanelText(g_hPanelInfo, info);
 	Format(info, sizeof(info), "%T", "war_info_line7", client);
-	DrawPanelText(WarMenu, info);
-	DrawPanelText(WarMenu, "-----------------------------------");
+	DrawPanelText(g_hPanelInfo, info);
+	DrawPanelText(g_hPanelInfo, "-----------------------------------");
 	Format(info, sizeof(info), "%T", "warden_close", client);
-	DrawPanelItem(WarMenu, info);
-	SendPanelToClient(WarMenu, client, Handler_NullCancel, 20);
-}
+	DrawPanelItem(g_hPanelInfo, info);
 
+	SendPanelToClient(g_hPanelInfo, client, Handler_NullCancel, 20);
+}
 
 /******************************************************************************
                    TIMER
 ******************************************************************************/
-
 
 // Freeze Timer
 public Action Timer_FreezeOnStart(Handle timer)
@@ -670,6 +646,7 @@ public Action Timer_FreezeOnStart(Handle timer)
 	if (g_iFreezeTime > 1)
 	{
 		g_iFreezeTime--;
+
 		LoopClients(client) if (IsPlayerAlive(client))
 		{
 			if (GetClientTeam(client) == CS_TEAM_T)
@@ -681,14 +658,14 @@ public Action Timer_FreezeOnStart(Handle timer)
 				PrintCenterText(client, "%t", "war_timetohide_nc", g_iFreezeTime);
 			}
 		}
-		
+
 		return Plugin_Continue;
 	}
-	
+
 	g_fPos[2] = g_fPos[2] - 3;
-	
+
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
-	
+
 	if (g_iRound > 0)
 	{
 		LoopClients(client) if (IsPlayerAlive(client))
@@ -701,12 +678,12 @@ public Action Timer_FreezeOnStart(Handle timer)
 			}
 		}
 	}
-	FreezeTimer = null;
-	TruceTimer = CreateTimer(1.0, Timer_StartEvent, _, TIMER_REPEAT);
-	
+
+	g_hTimerFreeze = null;
+	g_hTimerTruce = CreateTimer(1.0, Timer_StartEvent, _, TIMER_REPEAT);
+
 	return Plugin_Stop;
 }
-
 
 // Start Timer
 public Action Timer_StartEvent(Handle timer)
@@ -714,14 +691,14 @@ public Action Timer_StartEvent(Handle timer)
 	if (g_iTruceTime > 1)
 	{
 		g_iTruceTime--;
-		
+
 		PrintCenterTextAll("%t", "war_damage_nc", g_iTruceTime);
-		
+
 		return Plugin_Continue;
 	}
-	
+
 	g_iTruceTime = gc_iTruceTime.IntValue;
-	
+
 	LoopClients(client) if (IsPlayerAlive(client)) 
 	{
 		SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
@@ -732,8 +709,9 @@ public Action Timer_StartEvent(Handle timer)
 		}
 		PrintCenterText(client, "%t", "war_start_nc");
 	}
+
 	CPrintToChatAll("%t %t", "war_tag", "war_start");
-	TruceTimer = null;
+	g_hTimerTruce = null;
 	return Plugin_Stop;
 }
 
@@ -742,5 +720,5 @@ public Action Timer_StartEvent(Handle timer)
 public Action Timer_BeaconOn(Handle timer)
 {
 	LoopValidClients(i, true, false) MyJailbreak_BeaconOn(i, 2.0);
-	BeaconTimer = null;
+	g_hTimerBeacon = null;
 }

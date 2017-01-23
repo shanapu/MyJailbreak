@@ -18,11 +18,9 @@
  * this program. If not, see <http:// www.gnu.org/licenses/>.
  */
 
-
 /******************************************************************************
                    STARTUP
 ******************************************************************************/
-
 
 // Includes
 #include <sourcemod>
@@ -34,15 +32,14 @@
 #include <warden>
 #include <mystocks>
 
+// Optional Plugins
 #undef REQUIRE_PLUGIN
 #include <myjailbreak>
 #define REQUIRE_PLUGIN
 
-
 // Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
-
 
 // Console Variables
 ConVar gc_bDeputy;
@@ -55,22 +52,18 @@ ConVar gc_bBecomeDeputy;
 ConVar gc_bModelDeputy;
 ConVar gc_bWardenDead;
 
-
 // Handles
 Handle gF_OnDeputyCreated;
 Handle gF_OnDeputyRemoved;
-
 
 // Integers
 int g_iDeputy = -1;
 int g_iLastDeputy = -1;
 int g_iDeputyDelay;
 
-
 // Strings
 char g_sModelDeputyPathPrevious[256];
 char g_sModelPathDeputy[256];
-
 
 // Start
 public void Deputy_OnPluginStart() 
@@ -78,21 +71,18 @@ public void Deputy_OnPluginStart()
 	// Client commands
 	RegConsoleCmd("sm_deputy", Command_SetDeputy, "Allows the warden to choose a deputy or a player to be deputy");
 	RegConsoleCmd("sm_undeputy", Command_ExitDeputy, "Allows the warden to remove the deputy and the deputy to retire from the position");
-	
-	
+
 	// Admin commands
 	RegAdminCmd("sm_removedeputy", AdminCommand_RemoveDeputy, ADMFLAG_GENERIC);
-	
-	
+
 	// Forwards
 	gF_OnDeputyCreated = CreateGlobalForward("warden_OnDeputyCreated", ET_Ignore, Param_Cell);
 	gF_OnDeputyRemoved = CreateGlobalForward("warden_OnDeputyRemoved", ET_Ignore, Param_Cell);
-	
-	
+
 	// AutoExecConfig
 	AutoExecConfig_SetFile("Warden", "MyJailbreak");
 	AutoExecConfig_SetCreateFile(true);
-	
+
 	gc_bDeputy = AutoExecConfig_CreateConVar("sm_warden_deputy_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true, 0.0, true, 1.0);
 	gc_bSetDeputy = AutoExecConfig_CreateConVar("sm_warden_deputy_set", "1", "0 - disabled, 1 - enable !w / !deputy - warden can choose his deputy.", _, true, 0.0, true, 1.0);
 	gc_bBecomeDeputy = AutoExecConfig_CreateConVar("sm_warden_deputy_become", "1", "0 - disabled, 1 - enable !w / !deputy - player can choose to be deputy.", _, true, 0.0, true, 1.0);
@@ -102,18 +92,16 @@ public void Deputy_OnPluginStart()
 	gc_sCustomCommandUnDeputy = AutoExecConfig_CreateConVar("sm_warden_cmds_undeputy", "ud", "Set your custom chat command for open menu(!menu (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)");
 	gc_sCustomCommandRemoveDeputy = AutoExecConfig_CreateConVar("sm_warden_cmds_removedeputy", "rd, fd", "Set your custom chat commands for admins to remove a warden(!removewarden (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)");
 	gc_bWardenDead = AutoExecConfig_CreateConVar("sm_warden_deputy_warden_dead", "1", "0 - Deputy will removed on warden death, 1 - Deputy will be new warden", _, true, 0.0, true, 1.0);
-	
-	
+
+	// Hooks
 	HookEvent("round_start", Deputy_Event_RoundStart);
 	HookEvent("player_death", Deputy_Event_PlayerDeath);
 	HookEvent("player_team", Deputy_Event_PlayerTeam);
 	HookConVarChange(gc_sModelPathDeputy, Deputy_OnSettingChanged);
-	
-	
+
 	// FindConVar
 	gc_sModelPathDeputy.GetString(g_sModelPathDeputy, sizeof(g_sModelPathDeputy));
 }
-
 
 // ConVarChange for Strings
 public void Deputy_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
@@ -125,43 +113,42 @@ public void Deputy_OnSettingChanged(Handle convar, const char[] oldValue, const 
 	}
 }
 
-
 // Initialize Plugin
 public void Deputy_OnConfigsExecuted()
 {
 	// Set custom Commands
 	int iCount = 0;
 	char sCommands[128], sCommandsL[12][32], sCommand[32];
-	
+
 	// Set Deputy
 	gc_sCustomCommandDeputy.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
 	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
-	
+
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
 		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
 			RegConsoleCmd(sCommand, Command_SetDeputy, "Allows the warden to choose a deputy or a player to be deputy");
 	}
-	
+
 	// UnDeputy
 	gc_sCustomCommandUnDeputy.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
 	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
-	
+
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
 		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
 			RegConsoleCmd(sCommand, Command_ExitDeputy, "Allows the warden to remove the deputy and the deputy to retire from the position");
 	}
-	
+
 	// RemoveDeputy
 	gc_sCustomCommandRemoveDeputy.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
 	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
-	
+
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
@@ -170,11 +157,9 @@ public void Deputy_OnConfigsExecuted()
 	}
 }
 
-
 /******************************************************************************
                    COMMANDS
 ******************************************************************************/
-
 
 // Become Deputy
 public Action Command_SetDeputy(int client, int args)
@@ -208,7 +193,6 @@ public Action Command_SetDeputy(int client, int args)
 	else CPrintToChat(client, "%t %t", "warden_tag", "warden_deputy_disabled");
 }
 
-
 // Exit / Retire Deputy
 public Action Command_ExitDeputy(int client, int args) 
 {
@@ -238,7 +222,6 @@ public Action Command_ExitDeputy(int client, int args)
 	else CPrintToChat(client, "%t %t", "warden_tag", "warden_deputy_disabled");
 }
 
-
 // Remove Deputy for Admins
 public Action AdminCommand_RemoveDeputy(int client, int args)
 {
@@ -254,20 +237,19 @@ public Action AdminCommand_RemoveDeputy(int client, int args)
 			RemoveTheDeputy();
 		}
 	}
+
 	return Plugin_Handled;
 }
-
 
 /******************************************************************************
                    EVENTS
 ******************************************************************************/
 
-
 // Deputy Died
 public void Deputy_Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(event.GetInt("userid")); // Get the dead clients id
-	
+
 	if (IsClientDeputy(client))  // The Deputy is dead
 	{
 		Forward_OnDeputyRemoved(client);
@@ -280,6 +262,7 @@ public void Deputy_Event_PlayerDeath(Event event, const char[] name, bool dontBr
 		g_iLastDeputy = g_iDeputy;
 		g_iDeputy = -1;
 	}
+
 	if (IsClientWarden(client))  // The Warden changed team
 	{
 		if (g_iDeputy != -1)
@@ -289,12 +272,11 @@ public void Deputy_Event_PlayerDeath(Event event, const char[] name, bool dontBr
 	}
 }
 
-
 // Deputy change Team
 public void Deputy_Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(event.GetInt("userid")); // Get the clients id
-	
+
 	if (IsClientDeputy(client))  // The Deputy changed team
 	{
 		RemoveTheDeputy();
@@ -305,6 +287,7 @@ public void Deputy_Event_PlayerTeam(Event event, const char[] name, bool dontBro
 			PrintCenterTextAll("%t", "warden_deputy_retire_nc", client);
 		}
 	}
+
 	if (IsClientWarden(client))  // The Warden changed team
 	{
 		if (g_iDeputy != -1)
@@ -313,7 +296,6 @@ public void Deputy_Event_PlayerTeam(Event event, const char[] name, bool dontBro
 		}
 	}
 }
-
 
 // Round Start Post
 public void Deputy_Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
@@ -329,6 +311,7 @@ public void Deputy_Event_RoundStart(Event event, const char[] name, bool dontBro
 			g_iDeputy = -1;
 		}
 	}
+
 	if (gp_bMyJailBreak)
 	{
 		char EventDay[64];
@@ -347,24 +330,22 @@ public void Deputy_Event_RoundStart(Event event, const char[] name, bool dontBro
 			}
 		}
 	}
+
 	if (g_iDeputy != -1)
 	{
 		if (gc_bModelDeputy.BoolValue) SetEntityModel(g_iDeputy, g_sModelPathDeputy);
 	}
 }
 
-
 /******************************************************************************
                    FORWARDS LISTEN
 ******************************************************************************/
-
 
 // Prepare Plugin & modules
 public void Deputy_OnMapStart()
 {
 	PrecacheModel(g_sModelPathDeputy);
 }
-
 
 // Deputy disconnect
 public void Deputy_OnClientDisconnect(int client)
@@ -376,7 +357,7 @@ public void Deputy_OnClientDisconnect(int client)
 		{
 			PrintCenterTextAll("%t", "warden_deputy_disconnected_nc", client);
 		}
-		
+
 		Forward_OnDeputyRemoved(client);
 		g_iLastDeputy = -1;
 		g_iDeputy = -1;
@@ -390,7 +371,6 @@ public void Deputy_OnClientDisconnect(int client)
 	}
 }
 
-
 // Close open timer & reset deputy/module
 public void Deputy_OnMapEnd()
 {
@@ -403,7 +383,6 @@ public void Deputy_OnMapEnd()
 	}
 }
 
-
 // warden removed
 public void Deputy_OnWardenRemoved(int client)
 {
@@ -412,7 +391,6 @@ public void Deputy_OnWardenRemoved(int client)
 		RemoveTheDeputy();
 	}
 }
-
 
 // warden retire
 public void Deputy_OnWardenRemovedBySelf(int client)
@@ -423,18 +401,15 @@ public void Deputy_OnWardenRemovedBySelf(int client)
 	}
 }
 
-
 // Announce feature
 public void Deputy_OnWardenCreation(int client)
 {
 	CreateTimer(10.0, Timer_NoDeputy);
 }
 
-
 /******************************************************************************
                    TIMER
 ******************************************************************************/
-
 
 public Action Timer_DeputyNewWarden(Handle timer)
 {
@@ -443,7 +418,6 @@ public Action Timer_DeputyNewWarden(Handle timer)
 		SetTheWarden(g_iDeputyDelay);
 	}
 }
-
 
 public Action Timer_NoDeputy(Handle timer)
 {
@@ -455,11 +429,9 @@ public Action Timer_NoDeputy(Handle timer)
 }
 
 
-
 /******************************************************************************
                    FUNCTIONS
 ******************************************************************************/
-
 
 // Set a new deputy
 void SetTheDeputy(int client)
@@ -468,10 +440,10 @@ void SetTheDeputy(int client)
 	{
 		CPrintToChatAll("%t %t", "warden_tag", "warden_deputy_new", client);
 		if (gc_bBetterNotes.BoolValue) PrintCenterTextAll("%t", "warden_deputy_new_nc", client);
-		
+
 		g_iDeputy = client;
 		g_iDeputyDelay = g_iDeputy;
-		
+
 		GetEntPropString(client, Prop_Data, "m_ModelName", g_sModelDeputyPathPrevious, sizeof(g_sModelDeputyPathPrevious));
 		if (gc_bModelDeputy.BoolValue)
 		{
@@ -483,36 +455,35 @@ void SetTheDeputy(int client)
 	else CPrintToChat(client, "%t %t", "warden_tag", "warden_deputy_disabled");
 }
 
-
 // Remove the current deputy
 void RemoveTheDeputy()
 {
 	CreateTimer(0.1, Timer_RemoveColor, g_iDeputy);
 	SetEntityModel(g_iDeputy, g_sModelDeputyPathPrevious);
-	
+
 	Forward_OnDeputyRemoved(g_iDeputy);
-	
+
 	g_iVoteCount = 0;
 	Format(g_sHasVoted, sizeof(g_sHasVoted), "");
 	g_sHasVoted[0] = '\0';
-	
+
 	g_iLastDeputy = g_iDeputy;
 	g_iDeputy = -1;
 }
 
-
 /******************************************************************************
                    MENUS
 ******************************************************************************/
-
 
 // Admin set (new) Deputy menu
 void Menu_SetDeputy(int client)
 {
 	char info1[255];
 	Menu menu = CreateMenu(Handler_SetDeputy);
+
 	Format(info1, sizeof(info1), "%T", "warden_choose", client);
 	menu.SetTitle(info1);
+
 	LoopValidClients(i, true, false)
 	{
 		if (GetClientTeam(i) == CS_TEAM_CT && !IsClientWarden(i))
@@ -524,11 +495,11 @@ void Menu_SetDeputy(int client)
 			menu.AddItem(userid, username);
 		}
 	}
+
 	menu.ExitBackButton = true;
 	menu.ExitButton = true;
 	menu.Display(client, MENU_TIME_FOREVER);
 }
-
 
 // Handler set (new) Deputy menu with overwrite/remove query
 public int Handler_SetDeputy(Menu menu, MenuAction action, int client, int Position)
@@ -537,12 +508,13 @@ public int Handler_SetDeputy(Menu menu, MenuAction action, int client, int Posit
 	{
 		char Item[11];
 		menu.GetItem(Position, Item, sizeof(Item));
-		
+
 		LoopValidClients(i, true, false)
 		{
 			if (GetClientTeam(i) == CS_TEAM_CT && IsClientDeputy(i) == false)
 			{
 				int userid = GetClientUserId(i);
+
 				if (userid == StringToInt(Item))
 				{
 					SetTheDeputy(i);
@@ -563,11 +535,9 @@ public int Handler_SetDeputy(Menu menu, MenuAction action, int client, int Posit
 	}
 }
 
-
 /******************************************************************************
                    STOCKS
 ******************************************************************************/
-
 
 bool IsClientDeputy(int client)
 {
@@ -575,14 +545,13 @@ bool IsClientDeputy(int client)
 	{
 		return false;
 	}
+
 	return true;
 }
-
 
 /******************************************************************************
                    NATIVES
 ******************************************************************************/
-
 
 // Booleans Exist Deputy
 public int Native_ExistDeputy(Handle plugin, int argc)
@@ -591,50 +560,47 @@ public int Native_ExistDeputy(Handle plugin, int argc)
 	{
 		return false;
 	}
+
 	return true;
 }
-
 
 // Booleans Is Client Deputy
 public int Native_IsDeputy(Handle plugin, int argc)
 {
 	int client = GetNativeCell(1);
-	
+
 	if (!IsClientInGame(client) && !IsClientConnected(client))
 		ThrowNativeError(SP_ERROR_INDEX, "Client index %i is invalid", client);
-	
+
 	if (IsClientDeputy(client))
 		return true;
-	
+
 	return false;
 }
-
 
 // Set Client as Deputy
 public int Native_SetDeputy(Handle plugin, int argc)
 {
 	int client = GetNativeCell(1);
-	
+
 	if (!IsClientInGame(client) && !IsClientConnected(client))
 		ThrowNativeError(SP_ERROR_INDEX, "Client index %i is invalid", client);
-	
+
 	if (g_iDeputy == -1)
 		SetTheDeputy(client);
 }
-
 
 // Remove current Deputy
 public int Native_RemoveDeputy(Handle plugin, int argc)
 {
 	int client = GetNativeCell(1);
-	
+
 	if (!IsClientInGame(client) && !IsClientConnected(client))
 		ThrowNativeError(SP_ERROR_INDEX, "Client index %i is invalid", client);
-	
+
 	if (IsClientDeputy(client))
 		RemoveTheDeputy();
 }
-
 
 // Get Deputy Client Index
 public int Native_GetDeputy(Handle plugin, int argc)
@@ -642,18 +608,15 @@ public int Native_GetDeputy(Handle plugin, int argc)
 	return g_iDeputy;
 }
 
-
 // Get last deputys Client Index
 public int Native_GetLastDeputy(Handle plugin, int argc)
 {
 	return g_iLastDeputy;
 }
 
-
 /******************************************************************************
                    FORWARDS CALL
 ******************************************************************************/
-
 
 // New Deputy was set (will fire all time - *ByUser *ByAdmin ...)
 void Forward_OnDeputyCreated(int client)
@@ -661,11 +624,10 @@ void Forward_OnDeputyCreated(int client)
 	Call_StartForward(gF_OnDeputyCreated);
 	Call_PushCell(client);
 	Call_Finish();
-	
+
 	Color_OnDeputyCreation(client);
 	HandCuffs_OnDeputyCreation(client);
 }
-
 
 // Deputy was removed (will fire all time - *BySelf *ByAdmin *Death ...)
 void Forward_OnDeputyRemoved(int client)
@@ -673,7 +635,7 @@ void Forward_OnDeputyRemoved(int client)
 	Call_StartForward(gF_OnDeputyRemoved);
 	Call_PushCell(client);
 	Call_Finish();
-	
+
 	Color_OnDeputyRemoved(client);
 	HandCuffs_OnDeputyRemoved(client);
 }

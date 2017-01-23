@@ -18,11 +18,9 @@
  * this program. If not, see <http:// www.gnu.org/licenses/>.
  */
 
-
 /******************************************************************************
                    STARTUP
 ******************************************************************************/
-
 
 // Includes
 #include <sourcemod>
@@ -34,11 +32,9 @@
 #include <warden>
 #include <mystocks>
 
-
 // Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
-
 
 // Console Variables
 ConVar gc_fRefuseTime;
@@ -53,36 +49,30 @@ ConVar gc_sSoundRefuseStopPath;
 ConVar gc_sCustomCommandRefuse;
 ConVar gc_sAdminFlagRefuse;
 
-
 // Booleans
 bool g_bRefused[MAXPLAYERS+1];
 bool g_bAllowRefuse;
-
 
 // Integers
 int g_iRefuseCounter[MAXPLAYERS+1];
 int g_iCountStopTime;
 
-
 // Handles
-Handle RefuseTimer[MAXPLAYERS+1];
-Handle RefusePanel;
-Handle AllowRefuseTimer;
-
+Handle g_hTimerRefuse[MAXPLAYERS+1];
+Handle g_hPanelRefuse;
+Handle g_hTimerAllowRefuse;
 
 // Strings
 char g_sSoundRefusePath[256];
 char g_sSoundRefuseStopPath[256];
 char g_sAdminFlagRefuse[32];
 
-
 // Start
 public void Refuse_OnPluginStart()
 {
 	// Client commands
 	RegConsoleCmd("sm_refuse", Command_refuse, "Allows the Warden start refusing time and Terrorist to refuse a game");
-	
-	
+
 	// AutoExecConfig
 	gc_bRefuse = AutoExecConfig_CreateConVar("sm_refuse_enable", "1", "0 - disabled, 1 - enable Refuse");
 	gc_sCustomCommandRefuse = AutoExecConfig_CreateConVar("sm_refuse_cmds", "ref, r", "Set your custom chat commands for Refuse(!refuse (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
@@ -95,21 +85,18 @@ public void Refuse_OnPluginStart()
 	gc_sSoundRefusePath = AutoExecConfig_CreateConVar("sm_refuse_sound", "music/MyJailbreak/refuse.mp3", "Path to the soundfile which should be played for a refusing.");
 	gc_sSoundRefuseStopPath = AutoExecConfig_CreateConVar("sm_refuse_stop_sound", "music/MyJailbreak/stop.mp3", "Path to the soundfile which should be played after a refusing.");
 	gc_sAdminFlagRefuse = AutoExecConfig_CreateConVar("sm_refuse_flag", "a", "Set flag for admin/vip to get one more refuse. No flag = feature is available for all players!");
-	
-	
+
 	// Hooks 
 	HookEvent("round_start", Refuse_Event_RoundStart);
 	HookConVarChange(gc_sSoundRefusePath, Refuse_OnSettingChanged);
 	HookConVarChange(gc_sSoundRefuseStopPath, Refuse_OnSettingChanged);
 	HookConVarChange(gc_sAdminFlagRefuse, Refuse_OnSettingChanged);
-	
-	
+
 	// FindConVar
 	gc_sSoundRefusePath.GetString(g_sSoundRefusePath, sizeof(g_sSoundRefusePath));
 	gc_sSoundRefuseStopPath.GetString(g_sSoundRefuseStopPath, sizeof(g_sSoundRefuseStopPath));
 	gc_sAdminFlagRefuse.GetString(g_sAdminFlagRefuse, sizeof(g_sAdminFlagRefuse));
 }
-
 
 public void Refuse_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
@@ -129,11 +116,9 @@ public void Refuse_OnSettingChanged(Handle convar, const char[] oldValue, const 
 	}
 }
 
-
 /******************************************************************************
                    COMMANDS
 ******************************************************************************/
-
 
 public Action Command_refuse(int client, int args)
 {
@@ -146,7 +131,7 @@ public Action Command_refuse(int client, int args)
 				if (!g_bAllowRefuse)
 				{
 					g_bAllowRefuse = true;
-					AllowRefuseTimer = CreateTimer(1.0, Timer_NoAllowRefuse, _, TIMER_REPEAT);
+					g_hTimerAllowRefuse = CreateTimer(1.0, Timer_NoAllowRefuse, _, TIMER_REPEAT);
 					CPrintToChatAll("%t %t", "request_tag", "request_openrefuse");
 				}
 			}
@@ -154,7 +139,7 @@ public Action Command_refuse(int client, int args)
 			{
 				if (GetClientTeam(client) == CS_TEAM_T && IsPlayerAlive(client))
 				{
-					if (RefuseTimer[client] == null)
+					if (g_hTimerRefuse[client] == null)
 					{
 						if (g_bAllowRefuse || !gc_bWardenAllowRefuse.BoolValue)
 						{
@@ -165,7 +150,7 @@ public Action Command_refuse(int client, int args)
 								SetEntityRenderColor(client, gc_iRefuseColorRed.IntValue, gc_iRefuseColorGreen.IntValue, gc_iRefuseColorBlue.IntValue, 255);
 								CPrintToChatAll("%t %t", "request_tag", "request_refusing", client);
 								g_iCountStopTime = gc_fRefuseTime.IntValue;
-								RefuseTimer[client] = CreateTimer(gc_fRefuseTime.FloatValue, Timer_ResetColorRefuse, client);
+								g_hTimerRefuse[client] = CreateTimer(gc_fRefuseTime.FloatValue, Timer_ResetColorRefuse, client);
 								if (warden_exist()) LoopClients(i) RefuseMenu(i);
 								if (gc_bSounds.BoolValue)EmitSoundToAllAny(g_sSoundRefusePath);
 							}
@@ -179,36 +164,33 @@ public Action Command_refuse(int client, int args)
 			}
 		}
 	}
+
 	return Plugin_Handled;
 }
-
 
 /******************************************************************************
                    EVENTS
 ******************************************************************************/
 
-
-public void Refuse_Event_RoundStart(Event event, char [] name, bool dontBroadcast)
+public void Refuse_Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
 	LoopClients(client)
 	{
-		delete RefuseTimer[client];
-		delete AllowRefuseTimer;
+		delete g_hTimerRefuse[client];
+		delete g_hTimerAllowRefuse;
 		
 		g_iRefuseCounter[client] = 0;
 		g_bRefused[client] = false;
 		g_bAllowRefuse = false;
 		if (CheckVipFlag(client, g_sAdminFlagRefuse)) g_iRefuseCounter[client] = -1;
 	}
-	
+
 	g_iCountStopTime = gc_fRefuseTime.IntValue;
 }
-
 
 /******************************************************************************
                    FORWARDS LISTENING
 ******************************************************************************/
-
 
 public void Refuse_OnMapStart()
 {
@@ -216,20 +198,19 @@ public void Refuse_OnMapStart()
 	if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundRefuseStopPath);
 }
 
-
 public void Refuse_OnConfigsExecuted()
 {
 	g_iCountStopTime = gc_fRefuseTime.IntValue;
-	
+
 	// Set custom Commands
 	int iCount = 0;
 	char sCommands[128], sCommandsL[12][32], sCommand[32];
-	
+
 	// Refuse Game
 	gc_sCustomCommandRefuse.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
 	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
-	
+
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
@@ -247,25 +228,23 @@ public void Refuse_OnClientPutInServer(int client)
 
 public void Refuse_OnClientDisconnect(int client)
 {
-	delete RefuseTimer[client];
+	delete g_hTimerRefuse[client];
 }
-
 
 /******************************************************************************
                    MENUS
 ******************************************************************************/
-
 
 public Action RefuseMenu(int client)
 {
 	if (warden_iswarden(client) || warden_deputy_isdeputy(client))
 	{
 		char info1[255];
-		RefusePanel = CreatePanel();
+		g_hPanelRefuse = CreatePanel();
 		Format(info1, sizeof(info1), "%T", "request_refuser", client);
-		SetPanelTitle(RefusePanel, info1);
-		DrawPanelText(RefusePanel, "-----------------------------------");
-		DrawPanelText(RefusePanel, "                                   ");
+		SetPanelTitle(g_hPanelRefuse, info1);
+		DrawPanelText(g_hPanelRefuse, "-----------------------------------");
+		DrawPanelText(g_hPanelRefuse, "                                   ");
 		LoopValidClients(i, true, false)
 		{
 			if (g_bRefused[i])
@@ -274,23 +253,20 @@ public Action RefuseMenu(int client)
 				char username[MAX_NAME_LENGTH];
 				IntToString(GetClientUserId(i), userid, sizeof(userid));
 				Format(username, sizeof(username), "%N", i);
-				DrawPanelText(RefusePanel, username);
+				DrawPanelText(g_hPanelRefuse, username);
 			}
 		}
-		DrawPanelText(RefusePanel, "                                   ");
-		DrawPanelText(RefusePanel, "-----------------------------------");
+		DrawPanelText(g_hPanelRefuse, "                                   ");
+		DrawPanelText(g_hPanelRefuse, "-----------------------------------");
 		Format(info1, sizeof(info1), "%T", "request_close", client);
-		DrawPanelItem(RefusePanel, info1);
-		SendPanelToClient(RefusePanel, client, Handler_NullCancel, 23);
-		
+		DrawPanelItem(g_hPanelRefuse, info1);
+		SendPanelToClient(g_hPanelRefuse, client, Handler_NullCancel, 23);
 	}
 }
-
 
 /******************************************************************************
                    TIMER
 ******************************************************************************/
-
 
 public Action Timer_ResetColorRefuse(Handle timer, any client)
 {
@@ -298,10 +274,10 @@ public Action Timer_ResetColorRefuse(Handle timer, any client)
 	{
 		SetEntityRenderColor(client, 255, 255, 255, 255);
 	}
-	RefuseTimer[client] = null;
+
+	g_hTimerRefuse[client] = null;
 	g_bRefused[client] = false;
 }
-
 
 public Action Timer_NoAllowRefuse(Handle timer)
 {
@@ -318,6 +294,7 @@ public Action Timer_NoAllowRefuse(Handle timer)
 		g_iCountStopTime--;
 		return Plugin_Continue;
 	}
+
 	if (g_iCountStopTime == 0)
 	{
 		LoopValidClients(client, false, true)
@@ -328,11 +305,12 @@ public Action Timer_NoAllowRefuse(Handle timer)
 				EmitSoundToAllAny(g_sSoundRefuseStopPath);
 			}
 			g_bAllowRefuse = false;
-			AllowRefuseTimer = null;
+			g_hTimerAllowRefuse = null;
 			g_iCountStopTime = gc_fRefuseTime.IntValue;
 			return Plugin_Stop;
 		}
 		CPrintToChatAll("%t %t", "request_tag", "request_countdownstop");
 	}
+
 	return Plugin_Continue;
 }

@@ -17,26 +17,21 @@
  * this program. If not, see <http:// www.gnu.org/licenses/>.
  */
 
-
 /******************************************************************************
                    STARTUP
 ******************************************************************************/
 
-
 // Integers
 int FogIndex = -1;
-
 
 // Floats
 float mapFogStart = 0.0;
 float mapFogEnd = 150.0;
 float mapFogDensity = 0.99;
 
-
 /******************************************************************************
                    FUNCTIONS
 ******************************************************************************/
-
 
 // Magic
 void DoFog()
@@ -52,17 +47,15 @@ void DoFog()
 	}
 }
 
-
 /******************************************************************************
                    FORWARDS LISTEN
 ******************************************************************************/
 
-
 // Start
 public void Fog_OnMapStart()
 {
-	int ent;
-	ent = FindEntityByClassname(-1, "env_fog_controller");
+	int ent = FindEntityByClassname(-1, "env_fog_controller");
+
 	if (ent != -1) 
 	{
 		FogIndex = ent;
@@ -72,22 +65,21 @@ public void Fog_OnMapStart()
 		FogIndex = CreateEntityByName("env_fog_controller");
 		DispatchSpawn(FogIndex);
 	}
+
 	DoFog();
+
 	AcceptEntityInput(FogIndex, "TurnOff");
 }
-
 
 /******************************************************************************
                    NATIVES
 ******************************************************************************/
-
 
 // Set Map fog in module
 public int Native_FogOn(Handle plugin, int argc)
 {
 	AcceptEntityInput(FogIndex, "TurnOn");
 }
-
 
 // Remove Map fog OFF in module
 public int Native_FogOff(Handle plugin, int argc)

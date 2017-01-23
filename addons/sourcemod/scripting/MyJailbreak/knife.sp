@@ -18,11 +18,9 @@
  * this program. If not, see <http:// www.gnu.org/licenses/>.
  */
 
-
 /******************************************************************************
                    STARTUP
 ******************************************************************************/
-
 
 // Includes
 #include <sourcemod>
@@ -39,17 +37,14 @@
 #include <mystocks>
 #include <myjailbreak>
 
-
 // Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
 
-
 // Booleans
 bool g_bIsLateLoad = false;
-bool IsKnifeFight;
-bool StartKnifeFight;
-
+bool g_bIsKnifeFight = false;
+bool g_bStartKnifeFight = false;
 
 // Console Variables
 ConVar gc_bPlugin;
@@ -77,12 +72,10 @@ ConVar gc_sCustomCommandSet;
 ConVar gc_sAdminFlag;
 ConVar gc_bAllowLR;
 
-
 // Extern Convars
 ConVar g_iMPRoundTime;
 ConVar g_iTerrorForLR;
 ConVar g_bAllowTP;
-
 
 // Integers
 int g_iOldRoundTime;
@@ -92,18 +85,16 @@ int g_iVoteCount;
 int g_iRound;
 int g_iMaxRound;
 int g_iTsLR;
-
+int g_iCollision_Offset;
 
 // Floats
 float g_fPos[3];
 
-
 // Handles
-Handle TruceTimer;
-Handle GravityTimer;
-Handle KnifeFightMenu;
-Handle BeaconTimer;
-
+Handle g_hTimerTruce;
+Handle g_hTimerGravity;
+Handle g_hPanelInfo;
+Handle g_hTimerBeacon;
 
 // Strings
 char g_sHasVoted[1500];
@@ -111,7 +102,6 @@ char g_sSoundStartPath[256];
 char g_sEventsLogFile[PLATFORM_MAX_PATH];
 char g_sAdminFlag[32];
 char g_sOverlayStartPath[256];
-
 
 // Info
 public Plugin myinfo = {
@@ -135,17 +125,15 @@ public void OnPluginStart()
 	// Translation
 	LoadTranslations("MyJailbreak.Warden.phrases");
 	LoadTranslations("MyJailbreak.KnifeFight.phrases");
-	
-	
+
 	// Client Commands
 	RegConsoleCmd("sm_setknifefight", Command_SetKnifeFight, "Allows the Admin or Warden to set knifefight as next round");
 	RegConsoleCmd("sm_knifefight", Command_VoteKnifeFight, "Allows players to vote for a knifefight");
-	
-	
+
 	// AutoExecConfig
 	AutoExecConfig_SetFile("KnifeFight", "MyJailbreak/EventDays");
 	AutoExecConfig_SetCreateFile(true);
-	
+
 	AutoExecConfig_CreateConVar("sm_knifefight_version", MYJB_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_knifefight_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true, 0.0, true, 1.0);
 	gc_sCustomCommandVote = AutoExecConfig_CreateConVar("sm_knifefight_cmds_vote", "knifeday", "Set your custom chat command for Event voting(!knifefight (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
@@ -171,11 +159,10 @@ public void OnPluginStart()
 	gc_bOverlays = AutoExecConfig_CreateConVar("sm_knifefight_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true, 0.0, true, 1.0);
 	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_knifefight_overlays_start", "overlays/MyJailbreak/start", "Path to the start Overlay DONT TYPE .vmt or .vft");
 	gc_bAllowLR = AutoExecConfig_CreateConVar("sm_knifefight_allow_lr", "0", "0 - disabled, 1 - enable LR for last round and end eventday", _, true, 0.0, true, 1.0);
-	
+
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
-	
-	
+
 	// Hooks
 	HookEvent("round_start", Event_RoundStart);
 	HookEvent("round_end", Event_RoundEnd);
@@ -183,20 +170,23 @@ public void OnPluginStart()
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
 	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
-	
-	
+
 	// Find
 	g_bAllowTP = FindConVar("sv_allow_thirdperson");
 	g_iMPRoundTime = FindConVar("mp_roundtime");
 	gc_sOverlayStartPath.GetString(g_sOverlayStartPath, sizeof(g_sOverlayStartPath));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
-	
+
 	if (g_bAllowTP == INVALID_HANDLE)
 	{
 		SetFailState("sv_allow_thirdperson not found!");
 	}
-	
+
+	// Offsets
+	g_iCollision_Offset = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
+
+	// Logs
 	SetLogFile(g_sEventsLogFile, "Events", "MyJailbreak");
 
 	// Late loading
@@ -210,7 +200,6 @@ public void OnPluginStart()
 		g_bIsLateLoad = false;
 	}
 }
-
 
 // ConVarChange for Strings
 public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
@@ -231,40 +220,37 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 	}
 }
 
-
 // Initialize Plugin
 public void OnConfigsExecuted()
 {
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iMaxRound = gc_iRounds.IntValue;
-	
-	
+
 	// FindConVar
 	g_iTerrorForLR = FindConVar("sm_hosties_lr_ts_max");
-	
-	
+
 	// Set custom Commands
 	int iCount = 0;
 	char sCommands[128], sCommandsL[12][32], sCommand[32];
-	
+
 	// Vote
 	gc_sCustomCommandVote.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
 	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
-	
+
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
 		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
 			RegConsoleCmd(sCommand, Command_VoteKnifeFight, "Allows players to vote for a knifefight");
 	}
-	
+
 	// Set
 	gc_sCustomCommandSet.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
 	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
-	
+
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
@@ -273,11 +259,9 @@ public void OnConfigsExecuted()
 	}
 }
 
-
 /******************************************************************************
                    COMMANDS
 ******************************************************************************/
-
 
 // Admin & Warden set Event
 public Action Command_SetKnifeFight(int client, int args)
@@ -340,16 +324,16 @@ public Action Command_SetKnifeFight(int client, int args)
 		else CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
 	}
 	else CReplyToCommand(client, "%t %t", "knifefight_tag", "knifefight_disabled");
+
 	return Plugin_Handled;
 }
-
 
 // Voting for Event
 public Action Command_VoteKnifeFight(int client, int args)
 {
 	char steamid[64];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
-	
+
 	if (gc_bPlugin.BoolValue)
 	{
 		if (gc_bVote.BoolValue)
@@ -388,38 +372,41 @@ public Action Command_VoteKnifeFight(int client, int args)
 		else CReplyToCommand(client, "%t %t", "knifefight_tag", "knifefight_voting");
 	}
 	else CReplyToCommand(client, "%t %t", "knifefight_tag", "knifefight_disabled");
+
 	return Plugin_Handled;
 }
-
 
 /******************************************************************************
                    EVENTS
 ******************************************************************************/
 
-
 // Round start
 public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
-	if (StartKnifeFight || IsKnifeFight)
+	if (g_bStartKnifeFight || g_bIsKnifeFight)
 	{
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_weapons_enable", 0);
 		SetCvar("sm_warden_enable", 0);
 		SetCvar("sm_menu_enable", 0);
 		SetCvar("mp_teammates_are_enemies", 1);
+
 		MyJailbreak_SetEventDayPlanned(false);
 		MyJailbreak_SetEventDayRunning(true);
+
 		SetConVarInt(g_bAllowTP, 1);
-		IsKnifeFight = true;
-		
+		g_bIsKnifeFight = true;
+
 		g_iRound++;
-		StartKnifeFight = false;
+		g_bStartKnifeFight = false;
+
 		SJD_OpenDoors();
-		
-		if (gc_fBeaconTime.FloatValue > 0.0) BeaconTimer = CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
-		
+
+
+		if (gc_fBeaconTime.FloatValue > 0.0) g_hTimerBeacon = CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
+
 		int RandomCT = 0;
-		
+
 		LoopClients(client) 
 		{
 			if (GetClientTeam(client) == CS_TEAM_CT)
@@ -428,6 +415,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 				break;
 			}
 		}
+
 		if (RandomCT)
 		{
 			GetClientAbsOrigin(RandomCT, g_fPos);
@@ -440,7 +428,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 				{
 					CreateInfoPanel(client);
 					
-					SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
+					SetEntData(client, g_iCollision_Offset, 2, 4, true);
 					SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 					StripAllPlayerWeapons(client);
 					GivePlayerItem(client, "weapon_knife");
@@ -463,10 +451,10 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 					}
 				}
 				g_iTruceTime--;
-				TruceTimer = CreateTimer(1.0, Timer_StartEvent, _, TIMER_REPEAT);
+				g_hTimerTruce = CreateTimer(1.0, Timer_StartEvent, _, TIMER_REPEAT);
 				if (gc_bGrav.BoolValue)
 				{
-					GravityTimer = CreateTimer(1.0, Timer_CheckGravity, _, TIMER_REPEAT);
+					g_hTimerGravity = CreateTimer(1.0, Timer_CheckGravity, _, TIMER_REPEAT);
 				}
 				
 				// enable lr on last round
@@ -488,7 +476,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 	{
 		char EventDay[64];
 		MyJailbreak_GetEventDayName(EventDay);
-		
+
 		if (!StrEqual(EventDay, "none", false))
 		{
 			g_iCoolDown = gc_iCooldownDay.IntValue + 1;
@@ -497,29 +485,31 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 	}
 }
 
-
 // Round End
 public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
 	int winner = event.GetInt("winner");
-	
-	if (IsKnifeFight)
+
+	if (g_bIsKnifeFight)
 	{
 		LoopValidClients(client, false, true)
 		{
-			SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
+			SetEntData(client, g_iCollision_Offset, 0, 4, true);
 			SetEntityGravity(client, 1.0);
 			FirstPerson(client);
 		}
-		delete TruceTimer;
-		delete BeaconTimer;
-		delete GravityTimer;
+
+		delete g_hTimerTruce;
+		delete g_hTimerBeacon;
+		delete g_hTimerGravity;
+
 		if (winner == 2) PrintCenterTextAll("%t", "knifefight_twin_nc");
 		if (winner == 3) PrintCenterTextAll("%t", "knifefight_ctwin_nc");
+
 		if (g_iRound == g_iMaxRound)
 		{
-			IsKnifeFight = false;
-			StartKnifeFight = false;
+			g_bIsKnifeFight = false;
+			g_bStartKnifeFight = false;
 			g_iRound = 0;
 			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
 			SetCvar("sm_hosties_lr", 1);
@@ -535,85 +525,87 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			CPrintToChatAll("%t %t", "knifefight_tag", "knifefight_end");
 		}
 	}
-	if (StartKnifeFight)
+	if (g_bStartKnifeFight)
 	{
 		LoopClients(i) CreateInfoPanel(i);
-		
+
 		CPrintToChatAll("%t %t", "knifefight_tag", "knifefight_next");
 		PrintCenterTextAll("%t", "knifefight_next_nc");
 	}
 }
 
-
-public void Event_PlayerDeath(Event event, char [] name, bool dontBroadcast)
+public void Event_PlayerDeath(Event event, char[] name, bool dontBroadcast)
 {
-	if (IsKnifeFight == true)
+	if (g_bIsKnifeFight == true)
 	{
 		int client = GetClientOfUserId(event.GetInt("userid"));
+
 		FirstPerson(client);
 	}
 }
 
-
 /******************************************************************************
                    FORWARDS LISTEN
 ******************************************************************************/
-
 
 // Initialize Event
 public void OnMapStart()
 {
 	g_iVoteCount = 0;
 	g_iRound = 0;
-	IsKnifeFight = false;
-	StartKnifeFight = false;
-	
+	g_bIsKnifeFight = false;
+	g_bStartKnifeFight = false;
+
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iTruceTime = gc_iTruceTime.IntValue;
-	
+
 	if (gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
 	if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
 }
 
-
 // Map End
 public void OnMapEnd()
 {
-	IsKnifeFight = false;
-	StartKnifeFight = false;
-	delete TruceTimer;
-	delete GravityTimer;
+	g_bIsKnifeFight = false;
+	g_bStartKnifeFight = false;
+
+	delete g_hTimerTruce;
+	delete g_hTimerGravity;
+
 	g_iVoteCount = 0;
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0';
 	LoopClients(client) FirstPerson(client);
 }
 
-
 // Listen for Last Lequest
 public void OnAvailableLR(int Announced)
 {
-	if (IsKnifeFight && gc_bAllowLR.BoolValue && (g_iTsLR > g_iTerrorForLR.IntValue))
+	if (g_bIsKnifeFight && gc_bAllowLR.BoolValue && (g_iTsLR > g_iTerrorForLR.IntValue))
 	{
 		LoopValidClients(client, false, true)
 		{
-			SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
+			SetEntData(client, g_iCollision_Offset, 0, 4, true);
 			SetEntityGravity(client, 1.0);
 			FirstPerson(client);
 			StripAllPlayerWeapons(client);
+
 			if (GetClientTeam(client) == CS_TEAM_CT)
 			{
 				FakeClientCommand(client, "sm_weapons");
 			}
+
 			GivePlayerItem(client, "weapon_knife");
 		}
-		delete BeaconTimer;
-		delete TruceTimer;
-		delete GravityTimer;
+
+		delete g_hTimerBeacon;
+		delete g_hTimerTruce;
+		delete g_hTimerGravity;
+
 		if (g_iRound == g_iMaxRound)
 		{
-			IsKnifeFight = false;
-			StartKnifeFight = false;
+			g_bIsKnifeFight = false;
+			g_bStartKnifeFight = false;
 			g_iRound = 0;
 			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
 			SetCvar("sm_hosties_lr", 1);
@@ -631,10 +623,9 @@ public void OnAvailableLR(int Announced)
 	}
 }
 
-
 public void OnClientDisconnect(int client)
 {
-	if (IsKnifeFight == true)
+	if (g_bIsKnifeFight == true)
 	{
 		FirstPerson(client);
 	}
@@ -647,14 +638,14 @@ public void OnClientPutInServer(int client)
 	SDKHook(client, SDKHook_WeaponCanUse, OnWeaponCanUse);
 }
 
-
 // Knife only
 public Action OnWeaponCanUse(int client, int weapon)
 {
-	if (IsKnifeFight == true)
+	if (g_bIsKnifeFight == true)
 	{
 		char sWeapon[32];
 		GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
+
 		if (StrEqual(sWeapon, "weapon_knife"))
 		{
 			if (IsClientInGame(client) && IsPlayerAlive(client))
@@ -662,36 +653,35 @@ public Action OnWeaponCanUse(int client, int weapon)
 				return Plugin_Continue;
 			}
 		}
+
 		return Plugin_Handled;
 	}
+
 	return Plugin_Continue;
 }
-
 
 /******************************************************************************
                    FUNCTIONS
 ******************************************************************************/
 
-
 // Prepare Event
 void StartNextRound()
 {
-	StartKnifeFight = true;
+	g_bStartKnifeFight = true;
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iVoteCount = 0;
-	
+
 	char buffer[32];
 	Format(buffer, sizeof(buffer), "%T", "knifefight_name", LANG_SERVER);
 	MyJailbreak_SetEventDayName(buffer);
 	MyJailbreak_SetEventDayPlanned(true);
-	
+
 	g_iOldRoundTime = g_iMPRoundTime.IntValue; // save original round time
 	g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue; // set event round time
-	
+
 	CPrintToChatAll("%t %t", "knifefight_tag", "knifefight_next");
 	PrintCenterTextAll("%t", "knifefight_next_nc");
 }
-
 
 // Back to First Person
 void FirstPerson(int client)
@@ -702,47 +692,44 @@ void FirstPerson(int client)
 	}
 }
 
-
 /******************************************************************************
                    MENUS
 ******************************************************************************/
-
 
 void CreateInfoPanel(int client)
 {
 	// Create info Panel
 	char info[255];
-	
-	KnifeFightMenu = CreatePanel();
-	Format(info, sizeof(info), "%T", "knifefight_info_title", client);
-	SetPanelTitle(KnifeFightMenu, info);
-	DrawPanelText(KnifeFightMenu, "                                   ");
-	Format(info, sizeof(info), "%T", "knifefight_info_line1", client);
-	DrawPanelText(KnifeFightMenu, info);
-	DrawPanelText(KnifeFightMenu, "-----------------------------------");
-	Format(info, sizeof(info), "%T", "knifefight_info_line2", client);
-	DrawPanelText(KnifeFightMenu, info);
-	Format(info, sizeof(info), "%T", "knifefight_info_line3", client);
-	DrawPanelText(KnifeFightMenu, info);
-	Format(info, sizeof(info), "%T", "knifefight_info_line4", client);
-	DrawPanelText(KnifeFightMenu, info);
-	Format(info, sizeof(info), "%T", "knifefight_info_line5", client);
-	DrawPanelText(KnifeFightMenu, info);
-	Format(info, sizeof(info), "%T", "knifefight_info_line6", client);
-	DrawPanelText(KnifeFightMenu, info);
-	Format(info, sizeof(info), "%T", "knifefight_info_line7", client);
-	DrawPanelText(KnifeFightMenu, info);
-	DrawPanelText(KnifeFightMenu, "-----------------------------------");
-	Format(info, sizeof(info), "%T", "warden_close", client);
-	DrawPanelItem(KnifeFightMenu, info);
-	SendPanelToClient(KnifeFightMenu, client, Handler_NullCancel, 20);
-}
 
+	g_hPanelInfo = CreatePanel();
+	Format(info, sizeof(info), "%T", "knifefight_info_title", client);
+	SetPanelTitle(g_hPanelInfo, info);
+	DrawPanelText(g_hPanelInfo, "                                   ");
+	Format(info, sizeof(info), "%T", "knifefight_info_line1", client);
+	DrawPanelText(g_hPanelInfo, info);
+	DrawPanelText(g_hPanelInfo, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "knifefight_info_line2", client);
+	DrawPanelText(g_hPanelInfo, info);
+	Format(info, sizeof(info), "%T", "knifefight_info_line3", client);
+	DrawPanelText(g_hPanelInfo, info);
+	Format(info, sizeof(info), "%T", "knifefight_info_line4", client);
+	DrawPanelText(g_hPanelInfo, info);
+	Format(info, sizeof(info), "%T", "knifefight_info_line5", client);
+	DrawPanelText(g_hPanelInfo, info);
+	Format(info, sizeof(info), "%T", "knifefight_info_line6", client);
+	DrawPanelText(g_hPanelInfo, info);
+	Format(info, sizeof(info), "%T", "knifefight_info_line7", client);
+	DrawPanelText(g_hPanelInfo, info);
+	DrawPanelText(g_hPanelInfo, "-----------------------------------");
+	Format(info, sizeof(info), "%T", "warden_close", client);
+	DrawPanelItem(g_hPanelInfo, info);
+
+	SendPanelToClient(g_hPanelInfo, client, Handler_NullCancel, 20);
+}
 
 /******************************************************************************
                    TIMER
 ******************************************************************************/
-
 
 // Start Timer
 public Action Timer_StartEvent(Handle timer)
@@ -754,11 +741,12 @@ public Action Timer_StartEvent(Handle timer)
 		{
 			PrintCenterText(client, "%t", "knifefight_timeuntilstart_nc", g_iTruceTime);
 		}
+
 		return Plugin_Continue;
 	}
-	
+
 	g_iTruceTime = gc_iTruceTime.IntValue;
-	
+
 	if (g_iRound > 0)
 	{
 		LoopClients(client) if (IsPlayerAlive(client))
@@ -777,18 +765,19 @@ public Action Timer_StartEvent(Handle timer)
 		}
 		CPrintToChatAll("%t %t", "knifefight_tag", "knifefight_start");
 	}
-	TruceTimer = null;
+
+	g_hTimerTruce = null;
+
 	return Plugin_Stop;
 }
-
 
 // Beacon Timer
 public Action Timer_BeaconOn(Handle timer)
 {
 	LoopValidClients(i, true, false) MyJailbreak_BeaconOn(i, 2.0);
-	BeaconTimer = null;
-}
 
+	g_hTimerBeacon = null;
+}
 
 // Give back Gravity if it gone -> ladders
 public Action Timer_CheckGravity(Handle timer)

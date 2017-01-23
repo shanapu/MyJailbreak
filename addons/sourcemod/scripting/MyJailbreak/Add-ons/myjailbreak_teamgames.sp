@@ -19,7 +19,6 @@
  * this program. If not, see <http:// www.gnu.org/licenses/>.
  */
 
-
 // Includes
 #include <sourcemod>
 #include <sdktools>
@@ -27,11 +26,9 @@
 #include <mystocks>
 #include <myjailbreak>
 
-
 // Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
-
 
 // Variables
 ConVar Cvar_tg_team_none_attack;
@@ -42,7 +39,6 @@ int OldCvar_tg_cvar_friendlyfire;
 int OldCvar_tg_ct_friendlyfire;
 bool hastoggled;
 
-
 // Info
 public Plugin myinfo = {
 	name = "MyJailbreak - Teamgames - FF toggle", 
@@ -52,7 +48,6 @@ public Plugin myinfo = {
 	url = MYJB_URL_LINK
 };
 
-
 // Start
 public void OnPluginStart()
 {
@@ -61,40 +56,37 @@ public void OnPluginStart()
 	HookEvent("round_end", Event_RoundEnd);
 }
 
-
 public void OnConfigsExecuted()
 {
 	SetCvar("sm_warden_ff", 0);
 	SetCvar("sm_warden_ff_deputy", 0);
 }
 
-
 public void Event_RoundStart_Post(Event event, const char[] name, bool dontBroadcast)
 {
 	hastoggled = false;
 	ConVar bFFA = FindConVar("mp_teammates_are_enemies");
-	
+
 	if (MyJailbreak_IsEventDayRunning() && bFFA.BoolValue)
 	{
 		// Get the Cvar Value
 		Cvar_tg_team_none_attack = FindConVar("tg_team_none_attack");
 		Cvar_tg_cvar_friendlyfire = FindConVar("tg_cvar_friendlyfire");
 		Cvar_tg_ct_friendlyfire = FindConVar("tg_ct_friendlyfire");
-		
+
 		// Save the Cvar Value
 		OldCvar_tg_team_none_attack = Cvar_tg_team_none_attack.IntValue;
 		OldCvar_tg_cvar_friendlyfire = Cvar_tg_cvar_friendlyfire.IntValue;
 		OldCvar_tg_ct_friendlyfire = Cvar_tg_ct_friendlyfire.IntValue;
-		
+
 		// Change the Cvar Value
 		Cvar_tg_team_none_attack.IntValue = 1;
 		Cvar_tg_cvar_friendlyfire.IntValue = 1;
 		Cvar_tg_ct_friendlyfire.IntValue = 1;
-		
+
 		hastoggled = true;
 	}
 }
-
 
 public void Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 {

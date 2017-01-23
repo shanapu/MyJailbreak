@@ -18,11 +18,9 @@
  * this program. If not, see <http:// www.gnu.org/licenses/>.
  */
 
-
 /******************************************************************************
                    STARTUP
 ******************************************************************************/
-
 
 // Includes
 #include <sourcemod>
@@ -34,11 +32,9 @@
 #include <warden>
 #include <mystocks>
 
-
 // Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
-
 
 // Console Variables
 ConVar gc_bHeal;
@@ -52,30 +48,24 @@ ConVar gc_iHealColorBlue;
 ConVar gc_sCustomCommandHeal;
 ConVar gc_sAdminFlagHeal;
 
-
 // Booleans
 bool g_bHealed[MAXPLAYERS+1];
-
 
 // Integers
 int g_iHealCounter[MAXPLAYERS+1];
 
-
 // Handles
-Handle HealTimer[MAXPLAYERS+1];
-
+Handle g_hTimerHeal[MAXPLAYERS+1];
 
 // Strings
 char g_sAdminFlagHeal[32];
-
 
 // Start
 public void Heal_OnPluginStart()
 {
 	// Client commands
 	RegConsoleCmd("sm_heal", Command_Heal, "Allows a Terrorist request healing");
-	
-	
+
 	// AutoExecConfig
 	gc_bHeal = AutoExecConfig_CreateConVar("sm_heal_enable", "1", "0 - disabled, 1 - enable heal");
 	gc_sCustomCommandHeal = AutoExecConfig_CreateConVar("sm_heal_cmds", "cure, h, ouch", "Set your custom chat command for Heal(!heal (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
@@ -87,17 +77,14 @@ public void Heal_OnPluginStart()
 	gc_iHealColorGreen = AutoExecConfig_CreateConVar("sm_heal_color_green", "0", "What color to turn the heal Terror into (rGb): x - green value", _, true, 0.0, true, 255.0);
 	gc_iHealColorBlue = AutoExecConfig_CreateConVar("sm_heal_color_blue", "100", "What color to turn the heal Terror into (rgB): x - blue value", _, true, 0.0, true, 255.0);
 	gc_sAdminFlagHeal = AutoExecConfig_CreateConVar("sm_heal_flag", "a", "Set flag for admin/vip to get one more heal. No flag = feature is available for all players!");
-	
-	
+
 	// Hooks 
 	HookEvent("round_start", Heal_Event_RoundStart);
 	HookConVarChange(gc_sAdminFlagHeal, Heal_OnSettingChanged);
-	
-	
+
 	// FindConVar
 	gc_sAdminFlagHeal.GetString(g_sAdminFlagHeal, sizeof(g_sAdminFlagHeal));
 }
-
 
 public void Heal_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
@@ -107,11 +94,9 @@ public void Heal_OnSettingChanged(Handle convar, const char[] oldValue, const ch
 	}
 }
 
-
 /******************************************************************************
                    COMMANDS
 ******************************************************************************/
-
 
 // heal
 public Action Command_Heal(int client, int args)
@@ -122,7 +107,7 @@ public Action Command_Heal(int client, int args)
 		{
 			if (GetClientTeam(client) == CS_TEAM_T && (IsPlayerAlive(client)))
 			{
-				if (HealTimer[client] == null)
+				if (g_hTimerHeal[client] == null)
 				{
 					if (g_iHealCounter[client] < gc_iHealLimit.IntValue)
 					{
@@ -130,15 +115,15 @@ public Action Command_Heal(int client, int args)
 						{
 							if ((GetClientHealth(client) < 100) || !gc_bHealthCheck.BoolValue)
 							{
-								if (!IsRequest)
+								if (!g_bIsRequest)
 								{
-									IsRequest = true;
-									RequestTimer = CreateTimer (gc_fHealTime.FloatValue, Timer_IsRequest);
+									g_bIsRequest = true;
+									g_hTimerRequest = CreateTimer (gc_fHealTime.FloatValue, Timer_IsRequest);
 									g_bHealed[client] = true;
 									g_iHealCounter[client]++;
 									CPrintToChatAll("%t %t", "request_tag", "request_heal", client);
 									SetEntityRenderColor(client, gc_iHealColorRed.IntValue, gc_iHealColorGreen.IntValue, gc_iHealColorBlue.IntValue, 255);
-									HealTimer[client] = CreateTimer(gc_fHealTime.FloatValue, Timer_ResetColorHeal, client);
+									g_hTimerHeal[client] = CreateTimer(gc_fHealTime.FloatValue, Timer_ResetColorHeal, client);
 									LoopClients(i) HealMenu(i);
 								}
 								else CReplyToCommand(client, "%t %t", "request_tag", "request_processing");
@@ -154,6 +139,7 @@ public Action Command_Heal(int client, int args)
 			else CReplyToCommand(client, "%t %t", "request_tag", "request_notalivect");
 		}
 	}
+
 	return Plugin_Handled;
 }
 
@@ -163,11 +149,11 @@ public Action Command_Heal(int client, int args)
 ******************************************************************************/
 
 
-public void Heal_Event_RoundStart(Event event, char [] name, bool dontBroadcast)
+public void Heal_Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
 	LoopClients(client)
 	{
-		delete HealTimer[client];
+		delete g_hTimerHeal[client];
 		
 		g_iHealCounter[client] = 0;
 		g_bHealed[client] = false;
@@ -187,12 +173,12 @@ public void Heal_OnConfigsExecuted()
 	// Set custom Commands
 	int iCount = 0;
 	char sCommands[128], sCommandsL[12][32], sCommand[32];
-	
+
 	// Capitulation
 	gc_sCustomCommandHeal.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
 	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
-	
+
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
@@ -210,7 +196,7 @@ public void Heal_OnClientPutInServer(int client)
 
 public void Heal_OnClientDisconnect(int client)
 {
-	delete HealTimer[client];
+	delete g_hTimerHeal[client];
 }
 
 
@@ -247,8 +233,8 @@ public int HealMenuHandler(Menu menu, MenuAction action, int client, int Positio
 		{
 			LoopClients(i) if (g_bHealed[i])
 			{
-				IsRequest = false;
-				RequestTimer = null;
+				g_bIsRequest = false;
+				g_hTimerRequest = null;
 				if (gc_bHealthShot.BoolValue) GivePlayerItem(i, "weapon_healthshot");
 				CPrintToChat(i, "%t %t", "request_tag", "request_health");
 				CPrintToChatAll("%t %t", "warden_tag", "request_accepted", i, client);
@@ -256,8 +242,8 @@ public int HealMenuHandler(Menu menu, MenuAction action, int client, int Positio
 		}
 		if (choice == 0)
 		{
-			IsRequest = false;
-			RequestTimer = null;
+			g_bIsRequest = false;
+			g_hTimerRequest = null;
 			LoopClients(i) if (g_bHealed[i])
 			{
 				CPrintToChatAll("%t %t", "warden_tag", "request_noaccepted", i, client);
@@ -278,6 +264,7 @@ public Action Timer_ResetColorHeal(Handle timer, any client)
 	{
 		SetEntityRenderColor(client, 255, 255, 255, 255);
 	}
-	HealTimer[client] = null;
+
+	g_hTimerHeal[client] = null;
 	g_bHealed[client] = false;
 }

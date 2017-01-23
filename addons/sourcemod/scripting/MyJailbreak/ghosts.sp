@@ -18,11 +18,9 @@
  * this program. If not, see <http:// www.gnu.org/licenses/>.
  */
 
-
 /******************************************************************************
                    STARTUP
 ******************************************************************************/
-
 
 // Includes
 #include <sourcemod>
@@ -44,16 +42,14 @@
 #include <myicons>
 #define REQUIRE_PLUGIN
 
-
 // Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
 
-
 // Booleans
-bool IsGhosts = false;
-bool IsRound = false;
-bool StartGhosts = false;
+bool g_bIsGhosts = false;
+bool g_bGhostsRunning = false;
+bool g_bStartGhosts = false;
 bool gp_bMyIcons = false;
 
 // Console Variables
@@ -72,16 +68,17 @@ ConVar gc_bSounds;
 ConVar gc_sSoundStartPath;
 ConVar gc_iCooldownDay;
 ConVar gc_iTruceTime;
-ConVar gc_iRounds;
-ConVar g_iMPRoundTime;
 ConVar gc_sCustomCommandVote;
 ConVar gc_sCustomCommandSet;
 ConVar gc_sAdminFlag;
 ConVar gc_bAllowLR;
-ConVar g_iTerrorForLR;
 ConVar gc_fGhostsTime;
+ConVar gc_iRounds;
 ConVar gc_fVisibleTime;
 
+// Extern ConVars
+ConVar g_iMPRoundTime;
+ConVar g_iTerrorForLR;
 
 // Integers
 int g_iOldRoundTime;
@@ -91,17 +88,15 @@ int g_iVoteCount;
 int g_iRound;
 int g_iMaxRound;
 int g_iTsLR;
-
+int g_iCollision_Offset;
 
 // Floats
 float g_fPos[3];
 
-
 // Handles
-Handle TruceTimer;
-Handle GhostsMenu;
-Handle BeaconTimer;
-
+Handle g_hTimerTruce;
+Handle g_hPanelInfo;
+Handle g_hTimerBeacon;
 
 // Strings
 char g_sHasVoted[1500];
@@ -109,7 +104,6 @@ char g_sSoundStartPath[256];
 char g_sEventsLogFile[PLATFORM_MAX_PATH];
 char g_sAdminFlag[32];
 char g_sOverlayStartPath[256];
-
 
 // Info
 public Plugin myinfo = 
@@ -121,24 +115,21 @@ public Plugin myinfo =
 	url = MYJB_URL_LINK
 };
 
-
 // Start
 public void OnPluginStart()
 {
 	// Translation
 	LoadTranslations("MyJailbreak.Warden.phrases");
 	LoadTranslations("MyJailbreak.Ghosts.phrases");
-	
-	
+
 	// Client Commands
 	RegConsoleCmd("sm_setghosts", Command_SetGhosts, "Allows the Admin or Warden to set Ghosts");
 	RegConsoleCmd("sm_ghosts", Command_VoteGhosts, "Allows players to vote for a Ghosts");
-	
-	
+
 	// AutoExecConfig
 	AutoExecConfig_SetFile("Ghosts", "MyJailbreak/EventDays");
 	AutoExecConfig_SetCreateFile(true);
-	
+
 	AutoExecConfig_CreateConVar("sm_ghosts_version", MYJB_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_ghosts_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true, 0.0, true, 1.0);
 	gc_sCustomCommandVote = AutoExecConfig_CreateConVar("sm_ghosts_cmds_vote", "ghostwar, invisiblewar", "Set your custom chat command for Event voting(!ghosts (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
@@ -162,28 +153,29 @@ public void OnPluginStart()
 	gc_bOverlays = AutoExecConfig_CreateConVar("sm_ghosts_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true, 0.0, true, 1.0);
 	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_ghosts_overlays_start", "overlays/MyJailbreak/start", "Path to the start Overlay DONT TYPE .vmt or .vft");
 	gc_bAllowLR = AutoExecConfig_CreateConVar("sm_ghosts_allow_lr", "0", "0 - disabled, 1 - enable LR for last round and end eventday", _, true, 0.0, true, 1.0);
-	
+
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
-	
-	
+
 	// Hooks
 	HookEvent("round_start", Event_RoundStart);
 	HookEvent("round_end", Event_RoundEnd);
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
 	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
-	
-	
+
 	// FindConVar
 	g_iMPRoundTime = FindConVar("mp_roundtime");
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 	gc_sOverlayStartPath.GetString(g_sOverlayStartPath, sizeof(g_sOverlayStartPath));
 	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
-	
+
+	// Offsets
+	g_iCollision_Offset = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
+
+	// Logs
 	SetLogFile(g_sEventsLogFile, "Events", "MyJailbreak");
 }
-
 
 // ConVarChange for Strings
 public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
@@ -204,40 +196,37 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 	}
 }
 
-
 // Initialize Plugin
 public void OnConfigsExecuted()
 {
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iMaxRound = gc_iRounds.IntValue;
-	
-	
+
 	// FindConVar
 	g_iTerrorForLR = FindConVar("sm_hosties_lr_ts_max");
-	
-	
+
 	// Set custom Commands
 	int iCount = 0;
 	char sCommands[128], sCommandsL[12][32], sCommand[32];
-	
+
 	// Vote
 	gc_sCustomCommandVote.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
 	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
-	
+
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
 		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
 			RegConsoleCmd(sCommand, Command_VoteGhosts, "Allows players to vote for a Ghosts");
 	}
-	
+
 	// Set
 	gc_sCustomCommandSet.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
 	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
-	
+
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
@@ -246,20 +235,17 @@ public void OnConfigsExecuted()
 	}
 }
 
-
 // Check for optional Plugins
 public void OnAllPluginsLoaded()
 {
 	gp_bMyIcons = LibraryExists("myicons");
 }
 
-
 public void OnLibraryRemoved(const char[] name)
 {
 	if (StrEqual(name, "myicons"))
 		gp_bMyIcons = false;
 }
-
 
 public void OnLibraryAdded(const char[] name)
 {
@@ -270,7 +256,6 @@ public void OnLibraryAdded(const char[] name)
 /******************************************************************************
                    COMMANDS
 ******************************************************************************/
-
 
 // Admin & Warden set Event
 public Action Command_SetGhosts(int client, int args)
@@ -333,16 +318,16 @@ public Action Command_SetGhosts(int client, int args)
 			else CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
 	}
 	else CReplyToCommand(client, "%t %t", "ghosts_tag", "ghosts_disabled");
+
 	return Plugin_Handled;
 }
-
 
 // Voting for Event
 public Action Command_VoteGhosts(int client, int args)
 {
 	char steamid[64];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
-	
+
 	if (gc_bPlugin.BoolValue)
 	{	
 		if (gc_bVote.BoolValue)
@@ -381,19 +366,18 @@ public Action Command_VoteGhosts(int client, int args)
 		else CReplyToCommand(client, "%t %t", "ghosts_tag", "ghosts_voting");
 	}
 	else CReplyToCommand(client, "%t %t", "ghosts_tag", "ghosts_disabled");
+
 	return Plugin_Handled;
 }
-
 
 /******************************************************************************
                    EVENTS
 ******************************************************************************/
 
-
 // Round start
 public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
-	if (StartGhosts || IsGhosts)
+	if (g_bStartGhosts || g_bIsGhosts)
 	{
 		SetCvar("sm_hosties_lr", 0);
 		SetCvar("sm_warden_enable", 0);
@@ -402,18 +386,21 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		SetCvar("mp_teammates_are_enemies", 1);
 		SetCvar("mp_friendlyfire", 1);
 		SetCvar("sm_menu_enable", 0);
+
 		MyJailbreak_SetEventDayPlanned(false);
 		MyJailbreak_SetEventDayRunning(true);
+
 		g_iRound++;
-		IsGhosts = true;
-		StartGhosts = false;
-		IsRound = true;
+		g_bIsGhosts = true;
+		g_bStartGhosts = false;
+		g_bGhostsRunning = true;
+
 		SJD_OpenDoors();
-		
-		if (gc_fBeaconTime.FloatValue > 0.0) BeaconTimer = CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
-		
+
+		if (gc_fBeaconTime.FloatValue > 0.0) g_hTimerBeacon = CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
+
 		int RandomCT = 0;
-		
+
 		LoopClients(client)
 		{
 			if (GetClientTeam(client) == CS_TEAM_CT)
@@ -422,6 +409,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 				break;
 			}
 		}
+
 		if (RandomCT)
 		{
 			GetClientAbsOrigin(RandomCT, g_fPos);
@@ -457,20 +445,20 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 			LoopClients(i)
 			{
 				CreateInfoPanel(i);
-				SetEntData(i, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
+				SetEntData(i, g_iCollision_Offset, 2, 4, true);
 				SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
 				
 				SDKHook(i, SDKHook_SetTransmit, Hook_SetTransmit);
 				if (gp_bMyIcons) MyIcons_BlockClientIcon(i, true);
 			}
 		}
-		TruceTimer = CreateTimer(1.0, Timer_StartEvent, _, TIMER_REPEAT);
+		g_hTimerTruce = CreateTimer(1.0, Timer_StartEvent, _, TIMER_REPEAT);
 	}
 	else
 	{
 		char EventDay[64];
 		MyJailbreak_GetEventDayName(EventDay);
-	
+
 		if (!StrEqual(EventDay, "none", false))
 		{
 			g_iCoolDown = gc_iCooldownDay.IntValue + 1;
@@ -483,7 +471,7 @@ public Action Hook_SetTransmit(int entity, int client)
 {
 	if (entity != client)
 		return Plugin_Handled;
-	
+
 	return Plugin_Continue;
 }
 
@@ -491,24 +479,27 @@ public Action Hook_SetTransmit(int entity, int client)
 public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
 	int winner = event.GetInt("winner");
-	
-	if (IsGhosts)
+
+	if (g_bIsGhosts)
 	{
 		LoopValidClients(client, true, true)
 		{
-			SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
+			SetEntData(client, g_iCollision_Offset, 0, 4, true);
 			SDKUnhook(client, SDKHook_SetTransmit, Hook_SetTransmit);
 			if (gp_bMyIcons) MyIcons_BlockClientIcon(client, false);
 		}
-		delete TruceTimer;
-		delete BeaconTimer;
-		IsRound = false;
-		
+
+		delete g_hTimerTruce;
+		delete g_hTimerBeacon;
+
+		g_bGhostsRunning = false;
+
 		if (winner == 2) PrintCenterTextAll("%t", "ghosts_twin_nc");
 		if (winner == 3) PrintCenterTextAll("%t", "ghosts_ctwin_nc");
+
 		if (g_iRound == g_iMaxRound)
 		{
-			IsGhosts = false;
+			g_bIsGhosts = false;
 			g_iRound = 0;
 			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
 			SetCvar("sm_hosties_lr", 1);
@@ -524,7 +515,8 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			CPrintToChatAll("%t %t", "ghosts_tag", "ghosts_end");
 		}
 	}
-	if (StartGhosts)
+
+	if (g_bStartGhosts)
 	{
 		LoopClients(i) CreateInfoPanel(i);
 		
@@ -533,70 +525,69 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 	}
 }
 
-
 /******************************************************************************
                    FORWARDS LISTEN
 ******************************************************************************/
-
 
 // Initialize Event
 public void OnMapStart()
 {
 	g_iVoteCount = 0;
 	g_iRound = 0;
-	IsGhosts = false;
-	StartGhosts = false;
-	IsRound = false;
-	
+	g_bIsGhosts = false;
+	g_bStartGhosts = false;
+	g_bGhostsRunning = false;
+
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iTruceTime = gc_iTruceTime.IntValue;
-	
+
 	if (gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
 	if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
-	
 }
 
 
 // Map End
 public void OnMapEnd()
 {
-	IsGhosts = false;
-	StartGhosts = false;
-	IsRound = false;
-	delete TruceTimer;
+	g_bIsGhosts = false;
+	g_bStartGhosts = false;
+	g_bGhostsRunning = false;
+
+	delete g_hTimerTruce;
+
 	g_iVoteCount = 0;
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0';
 }
 
-
 // Listen for Last Lequest
 public void OnAvailableLR(int Announced)
 {
-	if (IsGhosts && gc_bAllowLR.BoolValue && (g_iTsLR > g_iTerrorForLR.IntValue))
+	if (g_bIsGhosts && gc_bAllowLR.BoolValue && (g_iTsLR > g_iTerrorForLR.IntValue))
 	{
 		LoopValidClients(client, false, true)
 		{
-			SetEntData(client, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 0, 4, true);
+			SetEntData(client, g_iCollision_Offset, 0, 4, true);
 			
 			SDKUnhook(client, SDKHook_SetTransmit, Hook_SetTransmit);
 			if (gp_bMyIcons) MyIcons_BlockClientIcon(client, false);
-			
+
 			StripAllPlayerWeapons(client);
 			if (GetClientTeam(client) == CS_TEAM_CT)
 			{
 				FakeClientCommand(client, "sm_weapons");
 			}
+
 			GivePlayerItem(client, "weapon_knife");
 		}
-		IsRound = false;
-		
-		delete BeaconTimer;
-		delete TruceTimer;
-		
+		g_bGhostsRunning = false;
+
+		delete g_hTimerBeacon;
+		delete g_hTimerTruce;
+
 		if (g_iRound == g_iMaxRound)
 		{
-			IsGhosts = false;
+			g_bIsGhosts = false;
 			g_iRound = 0;
 			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
 			SetCvar("sm_hosties_lr", 1);
@@ -614,72 +605,67 @@ public void OnAvailableLR(int Announced)
 	}
 }
 
-
 /******************************************************************************
                    FUNCTIONS
 ******************************************************************************/
 
-
 // Prepare Event for next round
 void StartNextRound()
 {
-	StartGhosts = true;
+	g_bStartGhosts = true;
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iVoteCount = 0;
-	
+
 	char buffer[32];
 	Format(buffer, sizeof(buffer), "%T", "ghosts_name", LANG_SERVER);
 	MyJailbreak_SetEventDayName(buffer);
 	MyJailbreak_SetEventDayPlanned(true);
-	
+
 	g_iOldRoundTime = g_iMPRoundTime.IntValue; // save original round time
 	g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue; // set event round time
-	
+
 	CPrintToChatAll("%t %t", "ghosts_tag", "ghosts_next");
 	PrintCenterTextAll("%t", "ghosts_next_nc");
 }
 
-
 /******************************************************************************
                    MENUS
 ******************************************************************************/
-
 
 void CreateInfoPanel(int client)
 {
 	// Create info Panel
 	char info[255];
 
-	GhostsMenu = CreatePanel();
+	g_hPanelInfo = CreatePanel();
 	Format(info, sizeof(info), "%T", "ghosts_info_title", client);
-	SetPanelTitle(GhostsMenu, info);
-	DrawPanelText(GhostsMenu, "                                   ");
+	SetPanelTitle(g_hPanelInfo, info);
+	DrawPanelText(g_hPanelInfo, "                                   ");
 	Format(info, sizeof(info), "%T", "ghosts_info_line1", client);
-	DrawPanelText(GhostsMenu, info);
-	DrawPanelText(GhostsMenu, "-----------------------------------");
+	DrawPanelText(g_hPanelInfo, info);
+	DrawPanelText(g_hPanelInfo, "-----------------------------------");
 	Format(info, sizeof(info), "%T", "ghosts_info_line2", client);
-	DrawPanelText(GhostsMenu, info);
+	DrawPanelText(g_hPanelInfo, info);
 	Format(info, sizeof(info), "%T", "ghosts_info_line3", client);
-	DrawPanelText(GhostsMenu, info);
+	DrawPanelText(g_hPanelInfo, info);
 	Format(info, sizeof(info), "%T", "ghosts_info_line4", client);
-	DrawPanelText(GhostsMenu, info);
+	DrawPanelText(g_hPanelInfo, info);
 	Format(info, sizeof(info), "%T", "ghosts_info_line5", client);
-	DrawPanelText(GhostsMenu, info);
+	DrawPanelText(g_hPanelInfo, info);
 	Format(info, sizeof(info), "%T", "ghosts_info_line6", client);
-	DrawPanelText(GhostsMenu, info);
+	DrawPanelText(g_hPanelInfo, info);
 	Format(info, sizeof(info), "%T", "ghosts_info_line7", client);
-	DrawPanelText(GhostsMenu, info);
-	DrawPanelText(GhostsMenu, "-----------------------------------");
+	DrawPanelText(g_hPanelInfo, info);
+	DrawPanelText(g_hPanelInfo, "-----------------------------------");
 	Format(info, sizeof(info), "%T", "warden_close", client);
-	DrawPanelItem(GhostsMenu, info);
-	SendPanelToClient(GhostsMenu, client, Handler_NullCancel, 20);
-}
+	DrawPanelItem(g_hPanelInfo, info);
 
+	SendPanelToClient(g_hPanelInfo, client, Handler_NullCancel, 20);
+}
 
 /******************************************************************************
                    TIMER
 ******************************************************************************/
-
 
 // Start Timer
 public Action Timer_StartEvent(Handle timer)
@@ -687,38 +673,38 @@ public Action Timer_StartEvent(Handle timer)
 	if (g_iTruceTime > 1)
 	{
 		g_iTruceTime--;
-		
+
 		PrintCenterTextAll("%t", "ghosts_damage_nc", g_iTruceTime);
-		
+
 		return Plugin_Continue;
 	}
-	
+
 	g_iTruceTime = gc_iTruceTime.IntValue;
-	
+
 	LoopClients(client)
 	{
 		if (IsClientInGame(client) && IsPlayerAlive(client)) 
 		{
 			SDKUnhook(client, SDKHook_SetTransmit, Hook_SetTransmit);
-			
+
 			SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
 			if (gc_bOverlays.BoolValue) ShowOverlay(client, g_sOverlayStartPath, 2.0);
+
 			if (gc_bSounds.BoolValue)
 			{
 				EmitSoundToAllAny(g_sSoundStartPath);
 			}
-			
+
 			PrintCenterText(client, "%t/n<font size='30' color='#FF0000'>%t</font>", "ghosts_start_nc", "ghosts_visible");
 		}
 	}
-	
+
 	CreateTimer(gc_fVisibleTime.FloatValue, Timer_MakeGhosts);
 	CPrintToChatAll("%t %t", "ghosts_tag", "ghosts_start");
-	TruceTimer = null;
-	
+	g_hTimerTruce = null;
+
 	return Plugin_Stop;
 }
-
 
 public Action Timer_ShowGhosts(Handle timer)
 {
@@ -727,29 +713,30 @@ public Action Timer_ShowGhosts(Handle timer)
 		SDKUnhook(client, SDKHook_SetTransmit, Hook_SetTransmit);
 		SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
 	}
+
 	PrintCenterTextAll("<font size='30' color='#FF0000'>%t</font>", "ghosts_visible");
 	EmitAmbientSound("buttons/bell1.wav", NULL_VECTOR, _, SNDLEVEL_RAIDSIREN);
-	if (IsGhosts && IsRound) CreateTimer(gc_fVisibleTime.FloatValue, Timer_MakeGhosts);
-}
 
+	if (g_bIsGhosts && g_bGhostsRunning) CreateTimer(gc_fVisibleTime.FloatValue, Timer_MakeGhosts);
+}
 
 public Action Timer_MakeGhosts(Handle timer)
 {
-	if (IsGhosts && IsRound)
+	if (g_bIsGhosts && g_bGhostsRunning)
 	{
 		LoopValidClients(client, true, true)
 		{
 			SDKHook(client, SDKHook_SetTransmit, Hook_SetTransmit);
 			SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 		}
+
 		PrintCenterTextAll("<font size='30' color='#00FF00'>%t</font>", "ghosts_invisible");
 		CreateTimer(gc_fGhostsTime.FloatValue, Timer_ShowGhosts);
 	}
 }
-
 // Beacon Timer
 public Action Timer_BeaconOn(Handle timer)
 {
 	LoopValidClients(i, true, false) MyJailbreak_BeaconOn(i, 2.0);
-	BeaconTimer = null;
+	g_hTimerBeacon = null;
 }

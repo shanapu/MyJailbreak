@@ -18,11 +18,9 @@
  * this program. If not, see <http:// www.gnu.org/licenses/>.
  */
 
-
 /******************************************************************************
                    STARTUP
 ******************************************************************************/
-
 
 // Includes
 #include <sourcemod>
@@ -34,11 +32,9 @@
 #include <warden>
 #include <mystocks>
 
-
 // Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
-
 
 // Console Variables
 ConVar gc_bLaser;
@@ -46,43 +42,35 @@ ConVar gc_bLaserDeputy;
 ConVar gc_sAdminFlagLaser;
 ConVar gc_sCustomCommandLaser;
 
-
 // Boolean
 bool g_bLaserUse[MAXPLAYERS+1];
 bool g_bLaser[MAXPLAYERS+1] = true;
 bool g_bLaserColorRainbow[MAXPLAYERS+1] = true;
 
-
 // Integers
 int g_iLaserColor[MAXPLAYERS+1];
 
-
 // Strings
 char g_sAdminFlagLaser[32];
-
 
 // Start
 public void Laser_OnPluginStart()
 {
 	// Client commands
 	RegConsoleCmd("sm_laser", Command_LaserMenu, "Allows Warden to toggle on/off the wardens Laser pointer");
-	
-	
+
 	// AutoExecConfig
 	gc_bLaser = AutoExecConfig_CreateConVar("sm_warden_laser", "1", "0 - disabled, 1 - enable Warden Laser Pointer with +E ", _, true, 0.0, true, 1.0);
 	gc_bLaserDeputy = AutoExecConfig_CreateConVar("sm_warden_laser_deputy", "1", "0 - disabled, 1 - enable Laser Pointer for Deputy, too", _, true, 0.0, true, 1.0);
 	gc_sAdminFlagLaser = AutoExecConfig_CreateConVar("sm_warden_laser_flag", "", "Set flag for admin/vip to get warden laser pointer. No flag = feature is available for all players!");
 	gc_sCustomCommandLaser = AutoExecConfig_CreateConVar("sm_warden_cmds_laser", "what, rep, again", "Set your custom chat command for Laser Pointer.(!laser (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
-	
-	
+
 	// Hooks
 	HookConVarChange(gc_sAdminFlagLaser, Laser_OnSettingChanged);
-	
-	
+
 	// FindConVar
 	gc_sAdminFlagLaser.GetString(g_sAdminFlagLaser, sizeof(g_sAdminFlagLaser));
 }
-
 
 public void Laser_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
@@ -92,11 +80,9 @@ public void Laser_OnSettingChanged(Handle convar, const char[] oldValue, const c
 	}
 }
 
-
 /******************************************************************************
                    COMMANDS
 ******************************************************************************/
-
 
 public Action Command_LaserMenu(int client, int args)
 {
@@ -107,10 +93,11 @@ public Action Command_LaserMenu(int client, int args)
 			if (CheckVipFlag(client, g_sAdminFlagLaser))
 			{
 				char menuinfo[255];
-				
 				Menu menu = new Menu(Handler_LaserMenu);
+
 				Format(menuinfo, sizeof(menuinfo), "%T", "warden_laser_title", client);
 				menu.SetTitle(menuinfo);
+
 				Format(menuinfo, sizeof(menuinfo), "%T", "warden_laser_off", client);
 				if (g_bLaser[client]) menu.AddItem("off", menuinfo);
 				Format(menuinfo, sizeof(menuinfo), "%T", "warden_rainbow", client);
@@ -131,7 +118,7 @@ public Action Command_LaserMenu(int client, int args)
 				menu.AddItem("magenta", menuinfo);
 				Format(menuinfo, sizeof(menuinfo), "%T", "warden_orange", client);
 				menu.AddItem("orange", menuinfo);
-				
+
 				menu.ExitBackButton = true;
 				menu.ExitButton = true;
 				menu.Display(client, 20);
@@ -140,14 +127,13 @@ public Action Command_LaserMenu(int client, int args)
 		}
 		else CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
 	}
+
 	return Plugin_Handled;
 }
-
 
 /******************************************************************************
                    FORWARDS LISTEN
 ******************************************************************************/
-
 
 public Action Laser_OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
 {
@@ -161,9 +147,9 @@ public Action Laser_OnPlayerRunCmd(int client, int &buttons, int &impulse, float
 				if (IsClientInGame(client) && g_bLaserUse[client])
 				{
 					float m_fOrigin[3], m_fImpact[3];
-					
+
 					if (g_bLaserColorRainbow[client]) g_iLaserColor[client] = GetRandomInt(0, 6);
-					
+
 					GetClientEyePosition(client, m_fOrigin);
 					GetClientSightEnd(client, m_fImpact);
 					TE_SetupBeamPoints(m_fOrigin, m_fImpact, g_iBeamSprite, 0, 0, 0, 0.1, 0.12, 0.0, 1, 0.0, g_iColors[g_iLaserColor[client]], 0);
@@ -180,18 +166,17 @@ public Action Laser_OnPlayerRunCmd(int client, int &buttons, int &impulse, float
 	}
 }
 
-
 public void Laser_OnConfigsExecuted()
 {
 	// Set custom Commands
 	int iCount = 0;
 	char sCommands[128], sCommandsL[12][32], sCommand[32];
-	
+
 	// Repeat
 	gc_sCustomCommandLaser.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
 	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
-	
+
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
@@ -200,12 +185,13 @@ public void Laser_OnConfigsExecuted()
 	}
 }
 
-
 public void Laser_OnMapStart()
 {
-	LoopClients(i) g_bLaser[i] = true;
+	LoopClients(i)
+	{
+		g_bLaser[i] = true;
+	}
 }
-
 
 public void Laser_OnClientPutInServer(int client)
 {
@@ -213,23 +199,19 @@ public void Laser_OnClientPutInServer(int client)
 	g_bLaserColorRainbow[client] = true;
 }
 
-
 public void Laser_OnWardenCreation(int client)
 {
 	g_bLaser[client] = true;
 }
-
 
 public void Laser_OnWardenRemoved(int client)
 {
 	g_bLaser[client] = false;
 }
 
-
 /******************************************************************************
                    MENUS
 ******************************************************************************/
-
 
 public int Handler_LaserMenu(Menu menu, MenuAction action, int client, int selection)
 {
@@ -237,7 +219,7 @@ public int Handler_LaserMenu(Menu menu, MenuAction action, int client, int selec
 	{
 		char info[32];
 		menu.GetItem(selection, info, sizeof(info));
-		
+
 		if (strcmp(info, "off") == 0)
 		{
 			g_bLaser[client] = false;
@@ -335,16 +317,15 @@ public int Handler_LaserMenu(Menu menu, MenuAction action, int client, int selec
 	}
 }
 
-
 /******************************************************************************
                    STOCKS
 ******************************************************************************/
-
 
 void GetClientSightEnd(int client, float out[3])
 {
 	float m_fEyes[3];
 	float m_fAngles[3];
+
 	GetClientEyePosition(client, m_fEyes);
 	GetClientEyeAngles(client, m_fAngles);
 	TR_TraceRayFilter(m_fEyes, m_fAngles, MASK_PLAYERSOLID, RayType_Infinite, TraceRayDontHitPlayers);
@@ -352,11 +333,10 @@ void GetClientSightEnd(int client, float out[3])
 		TR_GetEndPosition(out);
 }
 
-
 public bool TraceRayDontHitPlayers(int entity, int mask, any data)
 {
 	if (0 < entity <= MaxClients)
 		return false;
+
 	return true;
 }
-

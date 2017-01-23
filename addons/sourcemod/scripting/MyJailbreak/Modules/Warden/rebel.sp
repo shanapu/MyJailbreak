@@ -18,11 +18,9 @@
  * this program. If not, see <http:// www.gnu.org/licenses/>.
  */
 
-
 /******************************************************************************
                    STARTUP
 ******************************************************************************/
-
 
 // Includes
 #include <sourcemod>
@@ -34,22 +32,20 @@
 #include <warden>
 #include <mystocks>
 
+// Optional Plugins
 #undef REQUIRE_PLUGIN
 #include <hosties>
 #include <lastrequest>
 #define REQUIRE_PLUGIN
 
-
 // Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
-
 
 // Console Variables
 ConVar gc_bMarkRebel;
 ConVar gc_bMarkRebelDeputy;
 ConVar gc_sCustomCommandRebel;
-
 
 // Extern Convars
 ConVar g_bHostiesColor;
@@ -59,29 +55,24 @@ ConVar g_iHostiesB;
 ConVar g_bHostiesAnnounce;
 ConVar g_bHostiesAnnounceGlobal;
 
-
 // Start
 public void MarkRebel_OnPluginStart()
 {
 	// Translation
 	LoadTranslations("hosties.phrases");
-	
-	
+
 	// Client commands
 	RegConsoleCmd("sm_markrebel", Command_MarkRebel, "Allows Warden to mark/unmark prisoner as rebel");
-	
-	
+
 	// AutoExecConfig
 	gc_bMarkRebel = AutoExecConfig_CreateConVar("sm_warden_mark_rebel", "1", "0 - disabled, 1 - enable allow warden to mark/unmark prisoner as rebel (hosties)", _, true, 0.0, true, 1.0);
 	gc_bMarkRebelDeputy = AutoExecConfig_CreateConVar("sm_warden_mark_rebel_deputy", "1", "0 - disabled, 1 - enable 'mark/unmark prisoner as rebel'-feature for deputy, too", _, true, 0.0, true, 1.0);
 	gc_sCustomCommandRebel = AutoExecConfig_CreateConVar("sm_warden_cmds_rebel", "sr, srebel, setrebel, rebelmenu", "Set your custom chat commands for un/mark rebel(!markrebel (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)");
 }
 
-
 /******************************************************************************
                    COMMANDS
 ******************************************************************************/
-
 
 public Action Command_MarkRebel(int client, int args)
 {
@@ -96,6 +87,7 @@ public Action Command_MarkRebel(int client, int args)
 			else CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
 		}
 	}
+
 	return Plugin_Handled;
 }
 
@@ -108,18 +100,18 @@ public Action Command_MarkRebel(int client, int args)
 public Action Menu_MarkRebelMenu(int client)
 {
 	char menuinfo[255];
-	
-	Format(menuinfo, sizeof(menuinfo), "%T", "warden_rebel_title", client);
-	
+
 	Menu MarkMenu = new Menu(Handler_MarkRebelMenu);
+
+	Format(menuinfo, sizeof(menuinfo), "%T", "warden_rebel_title", client);
 	MarkMenu.SetTitle(menuinfo);
-	
+
 	Format(menuinfo, sizeof(menuinfo), "%T", "warden_rebel_mark", client);
 	MarkMenu.AddItem("rebel", menuinfo);
-	
+
 	Format(menuinfo, sizeof(menuinfo), "%T", "warden_rebel_unmark", client);
 	MarkMenu.AddItem("unrebel", menuinfo);
-	
+
 	MarkMenu.ExitButton = true;
 	MarkMenu.Display(client, MENU_TIME_FOREVER);
 }
@@ -267,8 +259,7 @@ public void Rebel_OnConfigsExecuted()
 	// Set custom Commands
 	int iCount = 0;
 	char sCommands[128], sCommandsL[12][32], sCommand[32];
-	
-	
+
 	// FindConVar
 	g_bHostiesColor = FindConVar("sm_hosties_rebel_color");
 	g_iHostiesG = FindConVar("sm_hosties_rebel_green");
@@ -276,13 +267,12 @@ public void Rebel_OnConfigsExecuted()
 	g_iHostiesB = FindConVar("sm_hosties_rebel_blue");
 	g_bHostiesAnnounce = FindConVar("sm_hosties_announce_rebel");
 	g_bHostiesAnnounceGlobal = FindConVar("sm_hosties_lr_send_global_msgs");
-	
-	
+
 	// Custom rebel command
 	gc_sCustomCommandRebel.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
 	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
-	
+
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);

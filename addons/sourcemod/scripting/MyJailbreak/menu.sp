@@ -18,11 +18,9 @@
  * this program. If not, see <http:// www.gnu.org/licenses/>.
  */
 
-
 /******************************************************************************
                    STARTUP
 ******************************************************************************/
-
 
 // Includes
 #include <sourcemod>
@@ -37,20 +35,16 @@
 #include <myjailbreak>
 #include <adminmenu>
 
-
 // Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
-
 
 // Booleans
 bool g_bIsLateLoad = false;
 bool gp_bMyJailShop = false;
 
-
 // Integers
 int g_iCoolDown;
-
 
 // Console Variables
 ConVar gc_bPlugin;
@@ -74,7 +68,6 @@ ConVar gc_bSetW;
 ConVar gc_bSetA;
 ConVar gc_bVoting;
 ConVar gc_iAdminMenu;
-
 
 // 3rd party Convars
 ConVar g_bMath;
@@ -140,18 +133,15 @@ ConVar gc_sAdminFlagPainter;
 ConVar gc_bOrders;
 ConVar gc_bOrdersDeputy;
 
-
 // Strings
 char g_sAdminFlagBulletSparks[32];
 char g_sAdminFlagLaser[32];
 char g_sAdminFlagPainter[32];
 char g_sAdminFlag[32];
 
-
 // Handles
 Handle gH_TopMenu = INVALID_HANDLE;
 TopMenuObject gM_MyJB = INVALID_TOPMENUOBJECT;
-
 
 // Info
 public Plugin myinfo = {
@@ -169,27 +159,24 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	return APLRes_Success;
 }
 
-
 // Start
 public void OnPluginStart()
 {
 	// Translation
 	LoadTranslations("MyJailbreak.Warden.phrases");
 	LoadTranslations("MyJailbreak.Menu.phrases");
-	
-	
+
 	// Client Commands
 	RegConsoleCmd("sm_menu", Command_OpenMenu, "opens the menu depends on players team/rank");
 	RegConsoleCmd("buyammo1", Command_OpenMenu, "opens the menu depends on players team/rank");
 	RegConsoleCmd("sm_eventdays", Command_VoteEventDays, "open a vote EventDays menu for player");
 	RegConsoleCmd("sm_setday", Command_SetEventDay, "open a Set EventDays menu for Warden/Admin");
 	RegConsoleCmd("sm_voteday", Command_VotingMenu, "Allows warden & admin to opens event day voting");
-	
-	
+
 	// AutoExecConfig
 	AutoExecConfig_SetFile("Menu", "MyJailbreak");
 	AutoExecConfig_SetCreateFile(true);
-	
+
 	AutoExecConfig_CreateConVar("sm_menu_version", MYJB_VERSION, "The version of the SourceMod plugin MyJailbreak - Menu", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_menu_enable", "1", "0 - disabled, 1 - enable jailbrek menu", _, true, 0.0, true, 1.0);
 	gc_sCustomCommandMenu = AutoExecConfig_CreateConVar("sm_menu_cmds_menu", "panel, menus, m", "Set your custom chat command for open menu(!menu (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
@@ -212,17 +199,15 @@ public void OnPluginStart()
 	gc_bSetA = AutoExecConfig_CreateConVar("sm_menu_voteday_admin", "1", "0 - disabled, 1 - allow admin/vip  to start a voting", _, true, 0.0, true, 1.0);
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_menu_voteday_cooldown_day", "3", "Rounds cooldown after a voting until voting can be start again", _, true, 0.0);
 	gc_iCooldownStart = AutoExecConfig_CreateConVar("sm_menu_voteday_cooldown_start", "3", "Rounds until voting can be start after mapchange.", _, true, 0.0);
-	
+
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
-	
-	
+
 	// Hooks
 	HookEvent("player_spawn", Event_OnPlayerSpawn);
 	HookEvent("round_start", Event_RoundStart);
 	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
-	
-	
+
 	// Find
 	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
 
@@ -242,16 +227,16 @@ void MyAdminMenuReady(Handle h_TopMenu)
 {
 	if (gc_iAdminMenu.IntValue < 2)
 		return;
-	
+
 	// block double calls
 	if (h_TopMenu == gH_TopMenu)
 		return;
-	
+
 	gH_TopMenu = h_TopMenu;
-	
+
 	// Build MyJailbreak menu
 	gM_MyJB = AddToTopMenu(gH_TopMenu, "MyJailbreak", TopMenuObject_Category, Handler_AdminMenu_Category, INVALID_TOPMENUOBJECT);
-	
+
 	if (gM_MyJB != INVALID_TOPMENUOBJECT)
 	{
 		if (FindConVar("sm_myjb_allow_endround"))
@@ -274,8 +259,7 @@ void MyAdminMenuReady(Handle h_TopMenu)
 	}
 }
 
-
-public void Handler_AdminMenu_Category(Handle h_TopMenu, TopMenuAction action, TopMenuObject item, int param, char [] buffer, int maxlength)
+public void Handler_AdminMenu_Category(Handle h_TopMenu, TopMenuAction action, TopMenuObject item, int param, char[] buffer, int maxlength)
 {
 	switch (action)
 	{
@@ -290,10 +274,10 @@ public void Handler_AdminMenu_Category(Handle h_TopMenu, TopMenuAction action, T
 	}
 }
 
-public void Handler_AdminMenu_EndRound(Handle h_TopMenu, TopMenuAction action, TopMenuObject item, int param, char [] buffer, int maxlength)
+public void Handler_AdminMenu_EndRound(Handle h_TopMenu, TopMenuAction action, TopMenuObject item, int param, char[] buffer, int maxlength)
 {
 	char info[32];
-	
+
 	switch (action)
 	{
 		case (TopMenuAction_DisplayOption):
@@ -308,10 +292,10 @@ public void Handler_AdminMenu_EndRound(Handle h_TopMenu, TopMenuAction action, T
 	}
 }
 
-public void Handler_AdminMenu_VoteDays(Handle h_TopMenu, TopMenuAction action, TopMenuObject item, int param, char [] buffer, int maxlength)
+public void Handler_AdminMenu_VoteDays(Handle h_TopMenu, TopMenuAction action, TopMenuObject item, int param, char[] buffer, int maxlength)
 {
 	char info[32];
-	
+
 	switch (action)
 	{
 		case (TopMenuAction_DisplayOption):
@@ -326,10 +310,10 @@ public void Handler_AdminMenu_VoteDays(Handle h_TopMenu, TopMenuAction action, T
 	}
 }
 
-public void Handler_AdminMenu_SetDay(Handle h_TopMenu, TopMenuAction action, TopMenuObject item, int param, char [] buffer, int maxlength)
+public void Handler_AdminMenu_SetDay(Handle h_TopMenu, TopMenuAction action, TopMenuObject item, int param, char[] buffer, int maxlength)
 {
 	char info[32];
-	
+
 	switch (action)
 	{
 		case (TopMenuAction_DisplayOption):
@@ -344,10 +328,10 @@ public void Handler_AdminMenu_SetDay(Handle h_TopMenu, TopMenuAction action, Top
 	}
 }
 
-public void Handler_AdminMenu_RemoveWarden(Handle h_TopMenu, TopMenuAction action, TopMenuObject item, int param, char [] buffer, int maxlength)
+public void Handler_AdminMenu_RemoveWarden(Handle h_TopMenu, TopMenuAction action, TopMenuObject item, int param, char[] buffer, int maxlength)
 {
 	char info[32];
-	
+
 	switch (action)
 	{
 		case (TopMenuAction_DisplayOption):
@@ -362,10 +346,10 @@ public void Handler_AdminMenu_RemoveWarden(Handle h_TopMenu, TopMenuAction actio
 	}
 }
 
-public void Handler_AdminMenu_RemoveDeputy(Handle h_TopMenu, TopMenuAction action, TopMenuObject item, int param, char [] buffer, int maxlength)
+public void Handler_AdminMenu_RemoveDeputy(Handle h_TopMenu, TopMenuAction action, TopMenuObject item, int param, char[] buffer, int maxlength)
 {
 	char info[32];
-	
+
 	switch (action)
 	{
 		case (TopMenuAction_DisplayOption):
@@ -380,10 +364,10 @@ public void Handler_AdminMenu_RemoveDeputy(Handle h_TopMenu, TopMenuAction actio
 	}
 }
 
-public void Handler_AdminMenu_SetWarden(Handle h_TopMenu, TopMenuAction action, TopMenuObject item, int param, char [] buffer, int maxlength)
+public void Handler_AdminMenu_SetWarden(Handle h_TopMenu, TopMenuAction action, TopMenuObject item, int param, char[] buffer, int maxlength)
 {
 	char info[32];
-	
+
 	switch (action)
 	{
 		case (TopMenuAction_DisplayOption):
@@ -398,10 +382,10 @@ public void Handler_AdminMenu_SetWarden(Handle h_TopMenu, TopMenuAction action, 
 	}
 }
 
-public void Handler_AdminMenu_RemoveQueue(Handle h_TopMenu, TopMenuAction action, TopMenuObject item, int param, char [] buffer, int maxlength)
+public void Handler_AdminMenu_RemoveQueue(Handle h_TopMenu, TopMenuAction action, TopMenuObject item, int param, char[] buffer, int maxlength)
 {
 	char info[32];
-	
+
 	switch (action)
 	{
 		case (TopMenuAction_DisplayOption):
@@ -416,10 +400,10 @@ public void Handler_AdminMenu_RemoveQueue(Handle h_TopMenu, TopMenuAction action
 	}
 }
 
-public void Handler_AdminMenu_ClearQueue(Handle h_TopMenu, TopMenuAction action, TopMenuObject item, int param, char [] buffer, int maxlength)
+public void Handler_AdminMenu_ClearQueue(Handle h_TopMenu, TopMenuAction action, TopMenuObject item, int param, char[] buffer, int maxlength)
 {
 	char info[32];
-	
+
 	switch (action)
 	{
 		case (TopMenuAction_DisplayOption):
@@ -443,13 +427,11 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 	}
 }
 
-
 // Check for optional Plugins
 public void OnAllPluginsLoaded()
 {
 	gp_bMyJailShop = LibraryExists("myjailshop");
 }
-
 
 public void OnLibraryRemoved(const char[] name)
 {
@@ -457,13 +439,11 @@ public void OnLibraryRemoved(const char[] name)
 		gp_bMyJailShop = false;
 }
 
-
 public void OnLibraryAdded(const char[] name)
 {
 	if (StrEqual(name, "myjailshop"))
 		gp_bMyJailShop = true;
 }
-
 
 // FindConVar
 public void OnConfigsExecuted()
@@ -530,64 +510,63 @@ public void OnConfigsExecuted()
 	gc_sAdminFlagPainter = FindConVar("sm_warden_painter_flag");
 	gc_bOrders = FindConVar("sm_warden_orders");
 	gc_bOrdersDeputy = FindConVar("sm_warden_orders_deputy");
-	
+
 	gc_sAdminFlagLaser.GetString(g_sAdminFlagLaser, sizeof(g_sAdminFlagLaser));
 	gc_sAdminFlagPainter.GetString(g_sAdminFlagPainter, sizeof(g_sAdminFlagPainter));
 	gc_sAdminFlagBulletSparks.GetString(g_sAdminFlagBulletSparks, sizeof(g_sAdminFlagBulletSparks));
-	
-	
+
 	// Set custom Commands
 	int iCount = 0;
 	char sCommands[128], sCommandsL[12][32], sCommand[32];
-	
+
 	// Menu
 	gc_sCustomCommandMenu.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
 	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
-	
+
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
 		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
 			RegConsoleCmd(sCommand, Command_OpenMenu, "opens the menu depends on players team/rank");
 	}
-	
+
 	// Days Menu
 	gc_sCustomCommandDays.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
 	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
-	
+
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
 		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
 			RegConsoleCmd(sCommand, Command_VoteEventDays, "open a vote EventDays menu for player");
 	}
-	
+
 	// Set Day
 	gc_sCustomCommandSetDay.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
 	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
-	
+
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
 		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
 			RegConsoleCmd(sCommand, Command_SetEventDay, "open a Set EventDays menu for Warden/Admin");
 	}
-	
+
 	// Voting
 	gc_sCustomCommandVoting.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
 	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
-	
+
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
 		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
 			RegConsoleCmd(sCommand, Command_VotingMenu, "Allows warden & admin to opens event day voting");
 	}
-	
+
 	Handle topmenu;
 	if (LibraryExists("adminmenu") && ((topmenu = GetAdminTopMenu()) != INVALID_HANDLE))
 	{
@@ -595,17 +574,15 @@ public void OnConfigsExecuted()
 	}
 }
 
-
 /******************************************************************************
                    EVENTS
 ******************************************************************************/
-
 
 // Open Menu on Spawn
 public void Event_OnPlayerSpawn(Event event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));
-	
+
 	if (gc_bStart.BoolValue)
 	{
 		Command_OpenMenu(client, 0);
@@ -617,6 +594,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
 	char EventDay[64];
 	MyJailbreak_GetEventDayName(EventDay);
+
 	if (!StrEqual(EventDay, "none", false))
 	{
 		g_iCoolDown = gc_iCooldownDay.IntValue + 1;
@@ -624,11 +602,9 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 	else if (g_iCoolDown > 0) g_iCoolDown--;
 }
 
-
 /******************************************************************************
                    FORWARDS LISTEN
 ******************************************************************************/
-
 
 // Welcome/Info Message
 public void OnClientPutInServer(int client)
@@ -639,19 +615,16 @@ public void OnClientPutInServer(int client)
 	}
 }
 
-
 public void OnMapStart()
 {
 	g_iCoolDown = gc_iCooldownStart.IntValue +1;
 }
-
 
 /******************************************************************************
                    MENUS
 ******************************************************************************/
 
 // Main Menu
-
 public Action Command_OpenMenu(int client, int args)
 {
 	if (gc_bPlugin.BoolValue)
@@ -659,11 +632,10 @@ public Action Command_OpenMenu(int client, int args)
 		if (IsValidClient(client, false, true))
 		{
 			char menuinfo[255];
-			
 			Format(menuinfo, sizeof(menuinfo), "%T", "menu_info_title", client);
-			
 			Menu mainmenu = new Menu(JBMenuHandler);
 			mainmenu.SetTitle(menuinfo);
+
 			if (warden_iswarden(client))
 			{
 				if (gc_bWarden.BoolValue) // HERE STARTS THE WARDEN MENU
@@ -1231,7 +1203,6 @@ public Action Command_OpenMenu(int client, int args)
 }
 
 // Main Handle
-
 public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selection)
 {
 	if (action == MenuAction_Select)
@@ -1448,7 +1419,6 @@ public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selec
 }
 
 // Event Day Voting Menu
-
 public Action Command_VoteEventDays(int client, int args)
 {
 	if (gc_bDays.BoolValue)
@@ -1604,7 +1574,6 @@ public Action Command_VoteEventDays(int client, int args)
 }
 
 // Event Day Voting Handler
-
 public int VoteEventMenuHandler(Menu daysmenu, MenuAction action, int client, int selection)
 {
 	if (action == MenuAction_Select)
@@ -1764,7 +1733,6 @@ public int VoteEventMenuHandler(Menu daysmenu, MenuAction action, int client, in
 }
 
 // Event Days Set Menu
-
 public Action Command_SetEventDay(int client, int args)
 {
 	if (gc_bDays.BoolValue && (warden_iswarden(client) || CheckVipFlag(client, g_sAdminFlag)))
@@ -1920,7 +1888,6 @@ public Action Command_SetEventDay(int client, int args)
 }
 
 // Event Days Set Handler
-
 public int SetEventMenuHandler(Menu daysmenu, MenuAction action, int client, int selection)
 {
 	if (action == MenuAction_Select)
@@ -2080,7 +2047,6 @@ public int SetEventMenuHandler(Menu daysmenu, MenuAction action, int client, int
 }
 
 // Switch Team Menu
-
 void ChangeTeam(int client)
 {
 	char info[255];
@@ -2097,7 +2063,6 @@ void ChangeTeam(int client)
 }
 
 // Switch Team Handler
-
 public int ChangeMenu(Menu menu, MenuAction action, int client, int selection)
 {
 	if (action == MenuAction_Select)
@@ -2133,7 +2098,6 @@ public int ChangeMenu(Menu menu, MenuAction action, int client, int selection)
 		delete menu;
 	}
 }
-
 
 public Action Command_VotingMenu(int client, int args)
 {
@@ -2256,7 +2220,6 @@ public Action Command_VotingMenu(int client, int args)
 	return Plugin_Handled;
 }
 
-
 public int VotingMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	if (action == MenuAction_End)
@@ -2265,7 +2228,6 @@ public int VotingMenuHandler(Menu menu, MenuAction action, int param1, int param
 		delete menu;
 	}
 }
-
 
 public int VotingResults(Menu menu, int num_votes, int num_clients, const int[][] client_info, int num_items, const int[][] item_info)
 {
@@ -2292,7 +2254,6 @@ public int VotingResults(Menu menu, int num_votes, int num_clients, const int[][
 /******************************************************************************
                    TIMER
 ******************************************************************************/
-
 
 public Action Timer_WelcomeMessage(Handle timer, any client)
 {
