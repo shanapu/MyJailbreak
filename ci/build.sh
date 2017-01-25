@@ -110,6 +110,9 @@ echo "Remove placeholder files"
 rm -r build/gameserver/addons/sourcemod/logs/MyJailbreak/.gitkeep
 rm -r build/gameserver/cfg/MyJailbreak/EventDays/.gitkeep
 
+echo "Download sourcefiles & create clean scripting folder"
+git clone --depth=50 --branch=$2 https://github.com/shanapu/MyJailbreak.git source/MyJailbreak
+mv source/MyJailbreak/addons/sourcemod/scripting build/gameserver/addons/sourcemod
 
 echo "Create clean translation folder"
 mkdir build/gameserver/addons/sourcemod/translations
