@@ -124,6 +124,7 @@ ConVar g_bWardenCountDeputy;
 ConVar g_bWardenRebelDeputy;
 ConVar g_bSparksDeputy;
 ConVar g_bPlayerFreedayDeputy;
+ConVar g_bPlayerFreedayGuard;
 ConVar g_bSparks;
 ConVar g_bPlayerFreeday;
 ConVar g_bDealDamage;
@@ -504,7 +505,8 @@ public void OnConfigsExecuted()
 	g_bOpenDeputy = FindConVar("sm_warden_open_deputy");
 	g_bsetFFDeputy = FindConVar("sm_warden_ff_deputy");
 	g_bRandomDeputy = FindConVar("sm_warden_random_deputy");
-	g_bPlayerFreedayDeputy = FindConVar("sm_warden_freeday_victim_deputy");
+	g_bPlayerFreedayDeputy = FindConVar("sm_warden_freeday_deputy");
+	g_bPlayerFreedayGuard = FindConVar("sm_warden_freeday_guards");
 	gc_sAdminFlagBulletSparks = FindConVar("sm_warden_bulletsparks_flag");
 	gc_sAdminFlagLaser = FindConVar("sm_warden_laser_flag");
 	gc_sAdminFlagPainter = FindConVar("sm_warden_painter_flag");
@@ -1021,6 +1023,14 @@ public Action Command_OpenMenu(int client, int args)
 								Format(menuinfo, sizeof(menuinfo), "%T", "menu_deputybecome", client);
 								mainmenu.AddItem("becomedeputy", menuinfo);
 							}
+						}
+					}
+					if (g_bPlayerFreeday != null)
+					{
+						if (g_bPlayerFreeday.BoolValue && g_bPlayerFreedayGuard.BoolValue)
+						{
+							Format(menuinfo, sizeof(menuinfo), "%T", "menu_playerfreeday", client);
+							mainmenu.AddItem("playerfreeday", menuinfo);
 						}
 					}
 					
