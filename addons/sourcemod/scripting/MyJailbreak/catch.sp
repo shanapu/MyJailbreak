@@ -102,7 +102,6 @@ int g_iCollision_Offset;
 
 // Handles
 Handle g_hSprintTimer[MAXPLAYERS+1];
-Handle g_hCatchMenu;
 Handle g_hFreezeTimer;
 Handle g_hBeaconTimer;
 
@@ -322,6 +321,7 @@ public void OnConfigsExecuted()
 /******************************************************************************
                    COMMANDS
 ******************************************************************************/
+
 // Admin & Warden set Event
 public Action Command_SetCatch(int client, int args)
 {
@@ -870,7 +870,7 @@ void CatchEm(int client, int attacker)
 
 	if (gc_bSounds.BoolValue)
 	{
-		LoopClients(i) if(g_bClientSounds[i]) EmitSoundToClientAny(i, g_sSoundFreezePath);
+		LoopClients(i) EmitSoundToAllAny(g_sSoundFreezePath);
 	}
 
 	if (!gc_bStayOverlay.BoolValue)
@@ -894,7 +894,7 @@ void FreeEm(int client, int attacker)
 
 	if (gc_bSounds.BoolValue)
 	{
-		LoopClients(i) if(g_bClientSounds[i]) EmitSoundToClientAny(i, g_sSoundUnFreezePath);
+		LoopClients(i) EmitSoundToAllAny(g_sSoundUnFreezePath);
 	}
 
 	CPrintToChatAll("%t %t", "catch_tag", "catch_unfreeze", attacker, client);
@@ -1056,7 +1056,7 @@ public Action Timer_StartEvent(Handle timer)
 
 				if (gc_bSounds.BoolValue)
 				{
-					LoopClients(i) if(g_bClientSounds[i]) EmitSoundToClientAny(i, g_sSoundStartPath);
+					LoopClients(i) EmitSoundToAllAny(g_sSoundStartPath);
 				}
 
 				if (gc_bWallhack.BoolValue)
