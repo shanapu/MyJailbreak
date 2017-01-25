@@ -223,6 +223,11 @@
 		"en"		"No Scope"
 	}
 
+	"menu_noevent"
+	{
+		"en"		"No Event Day"
+	}
+
 	"menu_duckhunt"
 	{
 		"en"		"DuckHunt"

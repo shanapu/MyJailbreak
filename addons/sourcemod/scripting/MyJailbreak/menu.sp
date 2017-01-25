@@ -2124,6 +2124,10 @@ public Action Command_VotingMenu(int client, int args)
 						Format(menuinfo, sizeof(menuinfo), "%T", "menu_voting", LANG_SERVER);
 						menu.SetTitle(menuinfo);
 						
+
+						Format(menuinfo, sizeof(menuinfo), "%T", "menu_noevent", LANG_SERVER);
+						menu.AddItem("No Event", menuinfo);
+
 						if (GetCommandFlags("sm_setwar") != INVALID_FCVAR_FLAGS)
 						{
 								Format(menuinfo, sizeof(menuinfo), "%T", "menu_war", LANG_SERVER);
@@ -2246,7 +2250,8 @@ public int VotingResults(Menu menu, int num_votes, int num_clients, const int[][
 		char event[64];
 		menu.GetItem(item_info[winner][VOTEINFO_ITEM_INDEX], event, sizeof(event));
 		CPrintToChatAll("%t %t", "menu_tag", "menu_votingwon", event, num_clients, num_items);
-		ServerCommand("sm_set%s", event);
+		
+		if (!StrEqual("No Event",event)) ServerCommand("sm_set%s", event);
 	}
 	else CPrintToChatAll("%t %t", "menu_tag", "menu_votingcancel", EventDay);
 }
