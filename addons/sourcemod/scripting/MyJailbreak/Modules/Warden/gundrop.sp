@@ -99,6 +99,13 @@ public Action CS_OnCSWeaponDrop(int client, int weapon)
 			{
 				if (!g_bAllowDrop)
 				{
+					char g_sWeaponName[80];
+					if (GetEntityClassname(weapon, g_sWeaponName, sizeof(g_sWeaponName)))
+					if (StrEqual("weapon_taser", g_sWeaponName, false))
+					{
+						return Plugin_Continue;
+					}
+					
 					if (gp_bHosties && gp_bLastRequest) if (IsClientInLastRequest(client))
 						return Plugin_Continue;
 
