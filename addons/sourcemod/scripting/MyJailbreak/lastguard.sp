@@ -80,7 +80,6 @@ int g_iCollision_Offset;
 
 // Handles
 Handle g_hTimerTruce;
-Handle g_hPanelInfo;
 Handle g_hTimerBeacon;
 
 // Strings
@@ -222,7 +221,7 @@ public void OnLibraryAdded(const char[] name)
 // Voting for Last Guard Rule
 public Action Command_VoteLastGuard(int client, int args)
 {
-	char steamid[64];
+	char steamid[24];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
 
 	if (gc_bPlugin.BoolValue && !gc_bAutomatic.BoolValue && g_bMinCT)
@@ -409,29 +408,29 @@ void StartLastGuard()
 		LoopClients(iClient)
 		{
 			char info[64];
-			g_hPanelInfo = CreatePanel();
+			Panel InfoPanel = new Panel();
 			Format(info, sizeof(info), "%T", "lastguard_info_title", iClient);
-			SetPanelTitle(g_hPanelInfo, info);
-			DrawPanelText(g_hPanelInfo, "                                   ");
+			InfoPanel.SetTitle(info);
+			InfoPanel.DrawText("                                   ");
 			Format(info, sizeof(info), "%T", "lastguard_info_line1", iClient);
-			DrawPanelText(g_hPanelInfo, info);
-			DrawPanelText(g_hPanelInfo, "-----------------------------------");
+			InfoPanel.DrawText(info);
+			InfoPanel.DrawText("-----------------------------------");
 			Format(info, sizeof(info), "%T", "lastguard_info_line2", iClient);
-			DrawPanelText(g_hPanelInfo, info);
+			InfoPanel.DrawText(info);
 			Format(info, sizeof(info), "%T", "lastguard_info_line3", iClient);
-			DrawPanelText(g_hPanelInfo, info);
+			InfoPanel.DrawText(info);
 			Format(info, sizeof(info), "%T", "lastguard_info_line4", iClient);
-			DrawPanelText(g_hPanelInfo, info);
+			InfoPanel.DrawText(info);
 			Format(info, sizeof(info), "%T", "lastguard_info_line5", iClient);
-			DrawPanelText(g_hPanelInfo, info);
+			InfoPanel.DrawText(info);
 			Format(info, sizeof(info), "%T", "lastguard_info_line6", iClient);
-			DrawPanelText(g_hPanelInfo, info);
+			InfoPanel.DrawText(info);
 			Format(info, sizeof(info), "%T", "lastguard_info_line7", iClient);
-			DrawPanelText(g_hPanelInfo, info);
-			DrawPanelText(g_hPanelInfo, "-----------------------------------");
+			InfoPanel.DrawText(info);
+			InfoPanel.DrawText("-----------------------------------");
 			Format(info, sizeof(info), "%T", "lastguard_close", iClient);
-			DrawPanelItem(g_hPanelInfo, info);
-			SendPanelToClient(g_hPanelInfo, iClient, Handler_NullCancel, 20);
+			InfoPanel.DrawItem(info);
+			InfoPanel.Send(iClient, Handler_NullCancel, 20);
 			
 			SetEntData(iClient, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
 			SetEntProp(iClient, Prop_Data, "m_takedamage", 0, 1);
@@ -570,16 +569,16 @@ public Action Timer_TruceUntilStart(Handle timer)
 
 	g_iTruceTime = gc_iTruceTime.IntValue;
 
-	LoopClients(client) if (IsPlayerAlive(client))
+	LoopClients(i) if (IsPlayerAlive(i))
 	{
-		SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
-		PrintCenterText(client, "%t", "lastguard_start_nc");
-		if (gc_bOverlays.BoolValue) ShowOverlay(client, g_sOverlayStartPath, 2.0);
+		SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
+		PrintCenterText(i, "%t", "lastguard_start_nc");
+		if (gc_bOverlays.BoolValue) ShowOverlay(i, g_sOverlayStartPath, 2.0);
 		if (gc_bSounds.BoolValue)
 		{
 			EmitSoundToAllAny(g_sSoundStartPath);
 		}
-		FakeClientCommand(client, "sm_weapons");
+		FakeClientCommand(i, "sm_weapons");
 	}
 
 	CPrintToChatAll("%t %t", "lastguard_tag", "lastguard_start");

@@ -231,10 +231,10 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 	g_bIsRequest = false;
 	g_bIsLR = false;
 
-	LoopClients(client)
+	LoopClients(i)
 	{
-		g_iKilledBy[client] = 0;
-		g_iHasKilled[client] = 0;
+		g_iKilledBy[i] = 0;
+		g_iHasKilled[i] = 0;
 	}
 }
 

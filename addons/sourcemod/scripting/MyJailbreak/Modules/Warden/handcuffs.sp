@@ -243,7 +243,7 @@ public Action HandCuffs_OnPlayerRunCmd(int client, int &buttons, int &impulse, f
 		{
 			int Target = GetClientAimTarget(client, true);
 			
-			if (IsValidClient(Target, true, false) && (g_bCuffed[Target] == true))
+			if (IsValidClient(Target, true, false) && g_bCuffed[Target])
 			{
 				float distance = Entity_GetDistance(client, Target);
 				distance = Math_UnitsToMeters(distance);

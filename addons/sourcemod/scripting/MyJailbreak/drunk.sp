@@ -89,8 +89,7 @@ float g_fPos[3];
 float g_DrunkAngles[20] = {0.0, 5.0, 10.0, 15.0, 20.0, 25.0, 20.0, 15.0, 10.0, 5.0, 0.0, -5.0, -10.0, -15.0, -20.0, -25.0, -20.0, -15.0, -10.0, -5.0};
 
 // Handles
-Handle g_hTimerTruce;
-Handle g_hPanelInfo;
+Handle g_hTimerTruce;
 Handle g_hTimerWiggle;
 Handle g_hTimerBeacon;
 
@@ -170,6 +169,7 @@ public void OnPluginStart()
 	// Offsets
 	g_iCollision_Offset = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
 
+	// Logs
 	SetLogFile(g_sEventsLogFile, "Events", "MyJailbreak");
 }
 
@@ -216,7 +216,9 @@ public void OnConfigsExecuted()
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
 		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		{
 			RegConsoleCmd(sCommand, Command_VoteDrunk, "Allows players to vote for a drunk");
+		}
 	}
 
 	// Set
@@ -228,7 +230,9 @@ public void OnConfigsExecuted()
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
 		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		{
 			RegConsoleCmd(sCommand, Command_SetDrunk, "Allows the Admin or Warden to set drunk as next round");
+		}
 	}
 }
 
@@ -296,7 +300,7 @@ public Action Command_SetDrunk(int client, int args)
 // Voting for Event
 public Action Command_VoteDrunk(int client, int args)
 {
-	char steamid[64];
+	char steamid[24];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
 
 	if (gc_bPlugin.BoolValue) // is plugin enabled?
@@ -363,7 +367,10 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 
 		SJD_OpenDoors(); // open Jail
 
-		if (gc_fBeaconTime.FloatValue > 0.0) g_hTimerBeacon = CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
+		if (gc_fBeaconTime.FloatValue > 0.0)
+		{
+			g_hTimerBeacon = CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
+		}
 
 		// Find Position in CT Spawn
 
@@ -395,28 +402,26 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 					if (IsClientInGame(client))
 					{
 						StripAllPlayerWeapons(client);
-						
-						if (GetClientTeam(client) == CS_TEAM_CT && IsValidClient(client, false, false))
-						{
-							// here start Equiptment & parameters
-						}
-						if (GetClientTeam(client) == CS_TEAM_T && IsValidClient(client, false, false))
-						{
-							// here start Equiptment & parameters
-						}
+
 						CreateInfoPanel(client);
+
 						GivePlayerItem(client, "weapon_knife"); // give Knife
+
 						SetEntData(client, g_iCollision_Offset, 2, 4, true); // NoBlock
-						SendPanelToClient(g_hPanelInfo, client, Handler_NullCancel, 20); // open info Panel
 						SetEntProp(client, Prop_Data, "m_takedamage", 0, 1); // disable damage
+
 						if (!gc_bSpawnCell.BoolValue || (gc_bSpawnCell.BoolValue && (SJD_IsCurrentMapConfigured() != true))) // spawn Terrors to CT Spawn  // spawn Terrors to CT Spawn
 						{
 							TeleportEntity(client, g_fPos, NULL_VECTOR, NULL_VECTOR);
 						}
-						if (gc_bWiggle.BoolValue) g_hTimerWiggle = CreateTimer(1.0, Timer_Drunk, client, TIMER_REPEAT);
+
+						if (gc_bWiggle.BoolValue)
+						{
+							g_hTimerWiggle = CreateTimer(1.0, Timer_Drunk, client, TIMER_REPEAT);
+						}
 					}
 				}
-				
+
 				// Set Start Timer
 				g_iTruceTime--;
 				g_hTimerTruce = CreateTimer(1.0, Timer_StartEvent, _, TIMER_REPEAT);
@@ -457,7 +462,6 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 
 	delete g_hTimerWiggle;
 
-	int winner = event.GetInt("winner");
 
 	if (g_bIsDrunk) // if event was running this round
 	{
@@ -471,8 +475,15 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 		delete g_hTimerBeacon;
 		delete g_hTimerTruce; // kill start time if still running
 
-		if (winner == 2) PrintCenterTextAll("%t", "drunk_twin_nc");
-		if (winner == 3) PrintCenterTextAll("%t", "drunk_ctwin_nc");
+		int winner = event.GetInt("winner");
+		if (winner == 2)
+		{
+			PrintCenterTextAll("%t", "drunk_twin_nc");
+		}
+		if (winner == 3)
+		{
+			PrintCenterTextAll("%t", "drunk_ctwin_nc");
+		}
 
 		if (g_iRound == g_iMaxRound) // if this was the last round
 		{
@@ -528,8 +539,15 @@ public void OnMapStart()
 	g_bStartDrunk = false;
 
 	// Precache Sound & Overlay
-	if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
-	if (gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
+	if (gc_bSounds.BoolValue)
+	{
+		PrecacheSoundAnyDownload(g_sSoundStartPath);
+	}
+
+	if (gc_bOverlays.BoolValue)
+	{
+		PrecacheDecalAnyDownload(g_sOverlayStartPath);
+	}
 }
 
 // Map End
@@ -552,16 +570,23 @@ public void OnAvailableLR(int Announced)
 {
 	if (g_bIsDrunk && gc_bAllowLR.BoolValue && (g_iTsLR > g_iTerrorForLR.IntValue))
 	{
-		LoopClients(client)
+		LoopClients(i)
 		{
-			if (IsClientInGame(client)) SetEntData(client, g_iCollision_Offset, 0, 4, true); // disbale noblock
-			KillDrunk(client);
-			StripAllPlayerWeapons(client);
-			if (GetClientTeam(client) == CS_TEAM_CT)
+			if (IsClientInGame(i))
 			{
-				FakeClientCommand(client, "sm_weapons");
+				SetEntData(i, g_iCollision_Offset, 0, 4, true); // disbale noblock
 			}
-			GivePlayerItem(client, "weapon_knife");
+
+			KillDrunk(i);
+
+			StripAllPlayerWeapons(i);
+
+			if (GetClientTeam(i) == CS_TEAM_CT)
+			{
+				FakeClientCommand(i, "sm_weapons");
+			}
+
+			GivePlayerItem(i, "weapon_knife");
 		}
 
 		delete g_hTimerWiggle;
@@ -575,19 +600,19 @@ public void OnAvailableLR(int Announced)
 			g_bStartDrunk = false;
 			g_iRound = 0;
 			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
-			
-			// enable other pluigns
+
 			SetCvar("sm_hosties_lr", 1);
 			SetCvar("sm_weapons_enable", 1);
 			SetCvar("sv_infinite_ammo", 0);
 			SetCvar("mp_teammates_are_enemies", 0);
 			SetCvar("sm_menu_enable", 1);
 			SetCvar("sm_warden_enable", 1);
-			
+
 			g_iMPRoundTime.IntValue = g_iOldRoundTime; // return to original round time
+
 			MyJailbreak_SetEventDayName("none"); // tell myjailbreak event is ended
 			MyJailbreak_SetEventDayRunning(false);
-			
+
 			CPrintToChatAll("%t %t", "drunk_tag", "drunk_end");
 		}
 	}
@@ -647,6 +672,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 				buttons |= IN_MOVELEFT;
 			}
 		}
+
 		if (gc_bInvertY.BoolValue)
 		{
 			vel[0] = -vel[0];
@@ -669,42 +695,42 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	return Plugin_Continue;
 }
 
-
-
 /******************************************************************************
                    MENUS
 ******************************************************************************/
-
 
 void CreateInfoPanel(int client)
 {
 	// Create info Panel
 	char info[255];
 
-	g_hPanelInfo = CreatePanel();
-	Format(info, sizeof(info), "%T", "drunk_info_title", client);
-	SetPanelTitle(g_hPanelInfo, info);
-	DrawPanelText(g_hPanelInfo, "                                   ");
-	Format(info, sizeof(info), "%T", "drunk_info_line1", client);
-	DrawPanelText(g_hPanelInfo, info);
-	DrawPanelText(g_hPanelInfo, "-----------------------------------");
-	Format(info, sizeof(info), "%T", "drunk_info_line2", client);
-	DrawPanelText(g_hPanelInfo, info);
-	Format(info, sizeof(info), "%T", "drunk_info_line3", client);
-	DrawPanelText(g_hPanelInfo, info);
-	Format(info, sizeof(info), "%T", "drunk_info_line4", client);
-	DrawPanelText(g_hPanelInfo, info);
-	Format(info, sizeof(info), "%T", "drunk_info_line5", client);
-	DrawPanelText(g_hPanelInfo, info);
-	Format(info, sizeof(info), "%T", "drunk_info_line6", client);
-	DrawPanelText(g_hPanelInfo, info);
-	Format(info, sizeof(info), "%T", "drunk_info_line7", client);
-	DrawPanelText(g_hPanelInfo, info);
-	DrawPanelText(g_hPanelInfo, "-----------------------------------");
-	Format(info, sizeof(info), "%T", "warden_close", client);
-	DrawPanelItem(g_hPanelInfo, info);
+	Panel InfoPanel = new Panel();
 
-	SendPanelToClient(g_hPanelInfo, client, Handler_NullCancel, 20); // open info Panel
+	Format(info, sizeof(info), "%T", "drunk_info_title", client);
+	InfoPanel.SetTitle(info);
+
+	InfoPanel.DrawText("                                   ");
+	Format(info, sizeof(info), "%T", "drunk_info_line1", client);
+	InfoPanel.DrawText(info);
+	InfoPanel.DrawText("-----------------------------------");
+	Format(info, sizeof(info), "%T", "drunk_info_line2", client);
+	InfoPanel.DrawText(info);
+	Format(info, sizeof(info), "%T", "drunk_info_line3", client);
+	InfoPanel.DrawText(info);
+	Format(info, sizeof(info), "%T", "drunk_info_line4", client);
+	InfoPanel.DrawText(info);
+	Format(info, sizeof(info), "%T", "drunk_info_line5", client);
+	InfoPanel.DrawText(info);
+	Format(info, sizeof(info), "%T", "drunk_info_line6", client);
+	InfoPanel.DrawText(info);
+	Format(info, sizeof(info), "%T", "drunk_info_line7", client);
+	InfoPanel.DrawText(info);
+	InfoPanel.DrawText("-----------------------------------");
+
+	Format(info, sizeof(info), "%T", "warden_close", client);
+	InfoPanel.DrawItem(info);
+
+	InfoPanel.Send(client, Handler_NullCancel, 20); // open info Panel
 }
 
 /******************************************************************************
@@ -717,10 +743,10 @@ public Action Timer_StartEvent(Handle timer)
 	if (g_iTruceTime > 1) // countdown to start
 	{
 		g_iTruceTime--;
-		LoopClients(client)
-		if (IsClientInGame(client) && IsPlayerAlive(client))
+		LoopClients(i)
+		if (IsClientInGame(i) && IsPlayerAlive(i))
 		{
-			PrintCenterText(client, "%t", "drunk_timeuntilstart_nc", g_iTruceTime);
+			PrintCenterText(i, "%t", "drunk_timeuntilstart_nc", g_iTruceTime);
 		}
 
 		return Plugin_Continue;
@@ -730,19 +756,25 @@ public Action Timer_StartEvent(Handle timer)
 
 	if (g_iRound > 0)
 	{
-		LoopClients(client)
+		LoopClients(i)
 		{
-			if (IsClientInGame(client) && IsPlayerAlive(client))
+			if (IsClientInGame(i) && IsPlayerAlive(i))
 			{
-				SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
-				PrintCenterText(client, "%t", "drunk_start_nc");
+				SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
+				PrintCenterText(i, "%t", "drunk_start_nc");
 			}
-			if (gc_bOverlays.BoolValue) ShowOverlay(client, g_sOverlayStartPath, 5.0);
+
+			if (gc_bOverlays.BoolValue)
+			{
+				ShowOverlay(i, g_sOverlayStartPath, 5.0);
+			}
+
 			if (gc_bSounds.BoolValue)
 			{
 				EmitSoundToAllAny(g_sSoundStartPath);
 			}
 		}
+
 		CPrintToChatAll("%t %t", "drunk_tag", "drunk_start");
 	}
 

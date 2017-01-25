@@ -86,7 +86,6 @@ int g_iCollision_Offset;
 // Handles
 Handle g_hTimerFreeze;
 Handle g_hTimerTruce;
-Handle g_hPanelInfo;
 Handle g_hTimerBeacon;
 
 // Strings
@@ -301,7 +300,7 @@ public Action Command_SetWar(int client, int args)
 // Voting for Event
 public Action Command_VoteWar(int client, int args)
 {
-	char steamid[64];
+	char steamid[24];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
 
 	if (gc_bPlugin.BoolValue)
@@ -587,8 +586,6 @@ void StartNextRound()
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iVoteCount = 0;
 
-	g_hPanelInfo = CreatePanel();
-
 	char buffer[32];
 	Format(buffer, sizeof(buffer), "%T", "war_name", LANG_SERVER);
 	MyJailbreak_SetEventDayName(buffer);
@@ -610,30 +607,30 @@ void CreateInfoPanel(int client)
 	// Create info Panel
 	char info[255];
 
-	g_hPanelInfo = CreatePanel();
+	Panel InfoPanel = new Panel();
 	Format(info, sizeof(info), "%T", "war_info_title", client);
-	SetPanelTitle(g_hPanelInfo, info);
-	DrawPanelText(g_hPanelInfo, "                                   ");
+	InfoPanel.SetTitle(info);
+	InfoPanel.DrawText("                                   ");
 	Format(info, sizeof(info), "%T", "war_info_line1", client);
-	DrawPanelText(g_hPanelInfo, info);
-	DrawPanelText(g_hPanelInfo, "-----------------------------------");
+	InfoPanel.DrawText(info);
+	InfoPanel.DrawText("-----------------------------------");
 	Format(info, sizeof(info), "%T", "war_info_line2", client);
-	DrawPanelText(g_hPanelInfo, info);
+	InfoPanel.DrawText(info);
 	Format(info, sizeof(info), "%T", "war_info_line3", client);
-	DrawPanelText(g_hPanelInfo, info);
+	InfoPanel.DrawText(info);
 	Format(info, sizeof(info), "%T", "war_info_line4", client);
-	DrawPanelText(g_hPanelInfo, info);
+	InfoPanel.DrawText(info);
 	Format(info, sizeof(info), "%T", "war_info_line5", client);
-	DrawPanelText(g_hPanelInfo, info);
+	InfoPanel.DrawText(info);
 	Format(info, sizeof(info), "%T", "war_info_line6", client);
-	DrawPanelText(g_hPanelInfo, info);
+	InfoPanel.DrawText(info);
 	Format(info, sizeof(info), "%T", "war_info_line7", client);
-	DrawPanelText(g_hPanelInfo, info);
-	DrawPanelText(g_hPanelInfo, "-----------------------------------");
+	InfoPanel.DrawText(info);
+	InfoPanel.DrawText("-----------------------------------");
 	Format(info, sizeof(info), "%T", "warden_close", client);
-	DrawPanelItem(g_hPanelInfo, info);
+	InfoPanel.DrawItem(info);
 
-	SendPanelToClient(g_hPanelInfo, client, Handler_NullCancel, 20);
+	InfoPanel.Send(client, Handler_NullCancel, 20);
 }
 
 /******************************************************************************

@@ -154,13 +154,13 @@ public Action Command_Capitulation(int client, int args)
 
 public void Capitulation_Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
-	LoopClients(client)
+	LoopClients(i)
 	{
-		delete g_hTimerCapitulation[client];
-		delete g_hTimerRebel[client];
+		delete g_hTimerCapitulation[i];
+		delete g_hTimerRebel[i];
 
-		g_bCapitulated[client] = false;
-		g_bHasCapitulated[client] = false;
+		g_bCapitulated[i] = false;
+		g_bHasCapitulated[i] = false;
 	}
 }
 

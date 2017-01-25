@@ -99,7 +99,6 @@ int g_iCollision_Offset;
 
 // Handles
 Handle g_hTimerSprint[MAXPLAYERS+1];
-Handle g_hPanelInfo;
 Handle g_hTimerTruce;
 
 // Strings
@@ -367,7 +366,7 @@ public Action Command_SetTorch(int client, int args)
 // Voting for Event
 public Action Command_VoteTorch(int client, int args)
 {
-	char steamid[64];
+	char steamid[24];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
 	
 	if (gc_bPlugin.BoolValue)
@@ -541,15 +540,14 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 // Check for dying torch
 public void Event_PlayerTeamDeath(Event event, const char[] name, bool dontBroadcast)
 {
-	if (g_bIsTorch == false)
+	if (!g_bIsTorch)
 	{
 		return;
 	}
 
 	CheckStatus();
 
-	int iClient = GetClientOfUserId(event.GetInt("userid"));
-	ResetSprint(iClient);
+	ResetSprint(GetClientOfUserId(event.GetInt("userid")));
 }
 
 /******************************************************************************
@@ -596,18 +594,16 @@ public void OnClientPutInServer(int client)
 	g_bImmuneTorch[client] = false;
 
 	SDKHook(client, SDKHook_WeaponCanUse, OnWeaponCanUse);
-	SDKHook(client, SDKHook_TraceAttack, OnTakedamage);
+	SDKHook(client, SDKHook_TraceAttack, OnTraceAttack);
 }
 
 // Torch & g_bOnTorch
-public Action OnTakedamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+public Action OnTraceAttack(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &ammotype, int hitbox, int hitgroup)
 {
 	if (!IsValidClient(victim, true, false)|| attacker == victim || !IsValidClient(attacker, true, false)) return Plugin_Continue;
 
-	if (g_bIsTorch == false)
-	{
+	if (!g_bIsTorch)
 		return Plugin_Continue;
-	}
 
 	if (!g_bImmuneTorch[victim] && g_bOnTorch[attacker])
 	{
@@ -629,7 +625,7 @@ public Action OnWeaponCanUse(int client, int weapon)
 	{
 		if (IsValidClient(client, true, false))
 		{
-			if (g_bIsTorch == true)
+			if (g_bIsTorch)
 			{
 				return Plugin_Handled;
 			}
@@ -641,7 +637,7 @@ public Action OnWeaponCanUse(int client, int weapon)
 
 public void OnClientDisconnect_Post(int client)
 {
-	if (g_bIsTorch == false)
+	if (!g_bIsTorch)
 	{
 		return;
 	}
@@ -753,7 +749,7 @@ void Setup_Wallhack(int iSkin)
 {
 	int iOffset;
 
-	if (!iOffset && (iOffset = GetEntSendPropOffs(iSkin, "m_clrGlow")) == -1)
+	if ((iOffset = GetEntSendPropOffs(iSkin, "m_clrGlow")) == -1)
 		return;
 
 	SetEntProp(iSkin, Prop_Send, "m_bShouldGlow", true, true);
@@ -812,29 +808,29 @@ void CreateInfoPanel(int client)
 	// Create info Panel
 	char info[255];
 
-	g_hPanelInfo = CreatePanel();
+	Panel InfoPanel = new Panel();
 	Format(info, sizeof(info), "%T", "torch_info_title", client);
-	SetPanelTitle(g_hPanelInfo, info);
-	DrawPanelText(g_hPanelInfo, "                                   ");
+	InfoPanel.SetTitle(info);
+	InfoPanel.DrawText("                                   ");
 	Format(info, sizeof(info), "%T", "torch_info_line1", client);
-	DrawPanelText(g_hPanelInfo, info);
-	DrawPanelText(g_hPanelInfo, "-----------------------------------");
+	InfoPanel.DrawText(info);
+	InfoPanel.DrawText("-----------------------------------");
 	Format(info, sizeof(info), "%T", "torch_info_line2", client);
-	DrawPanelText(g_hPanelInfo, info);
+	InfoPanel.DrawText(info);
 	Format(info, sizeof(info), "%T", "torch_info_line3", client);
-	DrawPanelText(g_hPanelInfo, info);
+	InfoPanel.DrawText(info);
 	Format(info, sizeof(info), "%T", "torch_info_line4", client);
-	DrawPanelText(g_hPanelInfo, info);
+	InfoPanel.DrawText(info);
 	Format(info, sizeof(info), "%T", "torch_info_line5", client);
-	DrawPanelText(g_hPanelInfo, info);
+	InfoPanel.DrawText(info);
 	Format(info, sizeof(info), "%T", "torch_info_line6", client);
-	DrawPanelText(g_hPanelInfo, info);
+	InfoPanel.DrawText(info);
 	Format(info, sizeof(info), "%T", "torch_info_line7", client);
-	DrawPanelText(g_hPanelInfo, info);
-	DrawPanelText(g_hPanelInfo, "-----------------------------------");
+	InfoPanel.DrawText(info);
+	InfoPanel.DrawText("-----------------------------------");
 	Format(info, sizeof(info), "%T", "warden_close", client);
-	DrawPanelItem(g_hPanelInfo, info);
-	SendPanelToClient(g_hPanelInfo, client, Handler_NullCancel, 20);
+	InfoPanel.DrawItem(info);
+	InfoPanel.Send(client, Handler_NullCancel, 20);
 }
 
 /******************************************************************************
@@ -912,7 +908,7 @@ public Action Command_StartSprint(int client, int args)
 {
 	if (g_bIsTorch)
 	{
-		if (g_bOnTorch[client] == false)
+		if (!g_bOnTorch[client])
 		{
 			if (gc_bSprint.BoolValue && client > 0 && IsClientInGame(client) && IsPlayerAlive(client) && GetClientTeam(client) > 1 && !(g_iSprintStatus[client] & IsSprintUsing) && !(g_iSprintStatus[client] & IsSprintCoolDown))
 			{
@@ -1003,9 +999,9 @@ public Action Timer_SprintCooldown(Handle timer, any client)
 
 public void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast)
 {
-	int iClient = GetClientOfUserId(event.GetInt("userid"));
-	ResetSprint(iClient);
-	g_iSprintStatus[iClient] &= ~ IsSprintCoolDown;
+	int client = GetClientOfUserId(event.GetInt("userid"));
+	ResetSprint(client);
+	g_iSprintStatus[client] &= ~ IsSprintCoolDown;
 
 	return;
 }

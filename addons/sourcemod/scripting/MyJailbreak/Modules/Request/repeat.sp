@@ -51,7 +51,6 @@ int g_iRepeatCounter[MAXPLAYERS+1];
 
 // Handles
 Handle g_hTimerRepeat[MAXPLAYERS+1];
-Handle g_hPanelRepeat;
 
 // Strings
 char g_sSoundRepeatPath[256];
@@ -138,14 +137,14 @@ public Action Command_Repeat(int client, int args)
 
 public void Repeat_Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
-	LoopClients(client)
+	LoopClients(i)
 	{
-		delete g_hTimerRepeat[client];
+		delete g_hTimerRepeat[i];
 		
-		g_bRepeated[client] = false;
-		g_iRepeatCounter[client] = 0;
+		g_bRepeated[i] = false;
+		g_iRepeatCounter[i] = 0;
 		
-		if (CheckVipFlag(client, g_sAdminFlagRepeat)) g_iRepeatCounter[client] = -1;
+		if (CheckVipFlag(i, g_sAdminFlagRepeat)) g_iRepeatCounter[i] = -1;
 	}
 }
 
@@ -185,28 +184,28 @@ public void Repeat_OnClientPutInServer(int client)
 	g_bRepeated[client] = false;
 }
 
-
 public void Repeat_OnClientDisconnect(int client)
 {
 	delete g_hTimerRepeat[client];
 }
 
-
 /******************************************************************************
                    MENUS
 ******************************************************************************/
-
 
 void RepeatMenu(int client)
 {
 	char info1[255];
 
-	g_hPanelRepeat = CreatePanel();
+	Panel InfoPanel = new Panel();
+
 	Format(info1, sizeof(info1), "%T", "request_repeat", client);
-	SetPanelTitle(g_hPanelRepeat, info1);
-	DrawPanelText(g_hPanelRepeat, "-----------------------------------");
-	DrawPanelText(g_hPanelRepeat, "                                   ");
-	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true))
+	InfoPanel.SetTitle(info1);
+
+	InfoPanel.DrawText("-----------------------------------");
+	InfoPanel.DrawText("                                   ");
+
+	LoopValidClients(i, false, true)
 	{
 		if (g_bRepeated[i])
 		{
@@ -214,14 +213,17 @@ void RepeatMenu(int client)
 			char username[MAX_NAME_LENGTH];
 			IntToString(GetClientUserId(i), userid, sizeof(userid));
 			Format(username, sizeof(username), "%N", i);
-			DrawPanelText(g_hPanelRepeat, username);
+			InfoPanel.DrawText(username);
 		}
 	}
-	DrawPanelText(g_hPanelRepeat, "                                   ");
-	DrawPanelText(g_hPanelRepeat, "-----------------------------------");
+
+	InfoPanel.DrawText("                                   ");
+	InfoPanel.DrawText("-----------------------------------");
+
 	Format(info1, sizeof(info1), "%T", "request_close", client);
-	DrawPanelItem(g_hPanelRepeat, info1);
-	SendPanelToClient(g_hPanelRepeat, client, Handler_NullCancel, 20);
+	InfoPanel.DrawItem(info1);
+
+	InfoPanel.Send(client, Handler_NullCancel, 20);
 }
 
 /******************************************************************************

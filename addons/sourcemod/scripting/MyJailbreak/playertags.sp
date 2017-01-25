@@ -156,12 +156,9 @@ public void warden_OnWardenRemoved(int client)
 
 public Action Timer_DelayCheck(Handle timer) 
 {
-	LoopClients(client)
+	LoopClients(i)
 	{
-		if (0 < client)
-		{
-			HandleTag(client);
-		}
+		HandleTag(i);
 	}
 }
 

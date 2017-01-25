@@ -89,7 +89,6 @@ int g_iCollision_Offset;
 
 // Handles
 Handle g_hTimerTruce;
-Handle g_hPanelInfo;
 Handle g_hTimerBeacon;
 
 // Strings
@@ -243,7 +242,9 @@ public void OnConfigsExecuted()
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
 		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		{
 			RegConsoleCmd(sCommand, Command_VoteDuckHunt, "Allows players to vote for a duckhunt");
+		}
 	}
 
 	// Set
@@ -255,7 +256,9 @@ public void OnConfigsExecuted()
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
 		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		{
 			RegConsoleCmd(sCommand, Command_SetDuckHunt, "Allows the Admin or Warden to set duckhunt as next round");
+		}
 	}
 }
 
@@ -331,7 +334,7 @@ public Action Command_SetDuckHunt(int client, int args)
 // Voting for Event
 public Action Command_VoteDuckHunt(int client, int args)
 {
-	char steamid[64];
+	char steamid[24];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
 
 	if (gc_bPlugin.BoolValue)
@@ -418,7 +421,10 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		MyJailbreak_SetEventDayPlanned(false);
 		MyJailbreak_SetEventDayRunning(true);
 
-		if (gc_fBeaconTime.FloatValue > 0.0) g_hTimerBeacon = CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
+		if (gc_fBeaconTime.FloatValue > 0.0)
+		{
+			g_hTimerBeacon = CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
+		}
 
 		g_bIsDuckHunt = true;
 		g_iRound++;
@@ -495,7 +501,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 // Round End
 public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
-	int winner = event.GetInt("winner");
+
 
 	if (g_bIsDuckHunt)
 	{
@@ -514,8 +520,15 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 
 		if (g_hTimerTruce != null) KillTimer(g_hTimerTruce);
 
-		if (winner == 2) PrintCenterTextAll("%t", "duckhunt_twin_nc");
-		if (winner == 3) PrintCenterTextAll("%t", "duckhunt_ctwin_nc");
+		int winner = event.GetInt("winner");
+		if (winner == 2)
+		{
+			PrintCenterTextAll("%t", "duckhunt_twin_nc");
+		}
+		if (winner == 3)
+		{
+			PrintCenterTextAll("%t", "duckhunt_ctwin_nc");
+		}
 
 		if (g_iRound == g_iMaxRound)
 		{
@@ -529,6 +542,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			SetCvar("sm_warden_enable", 1);
 			SetCvar("sm_menu_enable", 1);
 			SetConVarInt(g_bAllowTP, 0);
+
 			g_iMPRoundTime.IntValue = g_iOldRoundTime;
 
 			MyJailbreak_SetEventDayName("none");
@@ -548,7 +562,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 // Give new Nades after detonation to chicken
 public void Event_HE_Detonate(Event event, const char[] name, bool dontBroadcast)
 {
-	if (g_bIsDuckHunt == true)
+	if (g_bIsDuckHunt)
 	{
 		int target = GetClientOfUserId(event.GetInt("userid"));
 		if (GetClientTeam(target) == 1 && !IsPlayerAlive(target))
@@ -565,7 +579,7 @@ public void Event_HE_Detonate(Event event, const char[] name, bool dontBroadcast
 // Give new Ammo to Hunter
 public void Event_WeaponReload(Event event, char[] name, bool dontBroadcast)
 {
-	if (g_bIsDuckHunt == true)
+	if (g_bIsDuckHunt)
 	{
 		int client = GetClientOfUserId(event.GetInt("userid"));
 		if (IsValidClient(client, false, false) && (GetClientTeam(client) == CS_TEAM_CT))
@@ -577,7 +591,7 @@ public void Event_WeaponReload(Event event, char[] name, bool dontBroadcast)
 
 public void Event_PlayerDeath(Event event, char[] name, bool dontBroadcast)
 {
-	if (g_bIsDuckHunt == true)
+	if (g_bIsDuckHunt)
 	{
 		int client = GetClientOfUserId(event.GetInt("userid"));
 
@@ -693,7 +707,7 @@ public void OnClientPutInServer(int client)
 // Nova & Grenade only
 public Action OnWeaponCanUse(int client, int weapon)
 {
-	if (g_bIsDuckHunt == true)
+	if (g_bIsDuckHunt)
 	{
 		char sWeapon[32];
 		GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
@@ -716,7 +730,7 @@ public Action OnWeaponCanUse(int client, int weapon)
 // Only right click attack for chicken
 public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon) 
 {
-	if (g_bIsDuckHunt == true)
+	if (g_bIsDuckHunt)
 	{
 		if ((GetClientTeam(client) == CS_TEAM_T) && IsClientInGame(client) && IsPlayerAlive(client) && buttons & IN_ATTACK)
 		{
@@ -729,7 +743,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 
 public void OnClientDisconnect(int client)
 {
-	if (g_bIsDuckHunt == true)
+	if (g_bIsDuckHunt)
 	{
 		FirstPerson(client);
 	}
@@ -776,30 +790,33 @@ void CreateInfoPanel(int client)
 	// Create info Panel
 	char info[255];
 
-	g_hPanelInfo = CreatePanel();
-	Format(info, sizeof(info), "%T", "duckhunt_info_title", client);
-	SetPanelTitle(g_hPanelInfo, info);
-	DrawPanelText(g_hPanelInfo, "                                   ");
-	Format(info, sizeof(info), "%T", "duckhunt_info_line1", client);
-	DrawPanelText(g_hPanelInfo, info);
-	DrawPanelText(g_hPanelInfo, "-----------------------------------");
-	Format(info, sizeof(info), "%T", "duckhunt_info_line2", client);
-	DrawPanelText(g_hPanelInfo, info);
-	Format(info, sizeof(info), "%T", "duckhunt_info_line3", client);
-	DrawPanelText(g_hPanelInfo, info);
-	Format(info, sizeof(info), "%T", "duckhunt_info_line4", client);
-	DrawPanelText(g_hPanelInfo, info);
-	Format(info, sizeof(info), "%T", "duckhunt_info_line5", client);
-	DrawPanelText(g_hPanelInfo, info);
-	Format(info, sizeof(info), "%T", "duckhunt_info_line6", client);
-	DrawPanelText(g_hPanelInfo, info);
-	Format(info, sizeof(info), "%T", "duckhunt_info_line7", client);
-	DrawPanelText(g_hPanelInfo, info);
-	DrawPanelText(g_hPanelInfo, "-----------------------------------");
-	Format(info, sizeof(info), "%T", "warden_close", client);
-	DrawPanelItem(g_hPanelInfo, info);
+	Panel InfoPanel = new Panel();
 
-	SendPanelToClient(g_hPanelInfo, client, Handler_NullCancel, 20);
+	Format(info, sizeof(info), "%T", "duckhunt_info_title", client);
+	InfoPanel.SetTitle(info);
+
+	InfoPanel.DrawText("                                   ");
+	Format(info, sizeof(info), "%T", "duckhunt_info_line1", client);
+	InfoPanel.DrawText(info);
+	InfoPanel.DrawText("-----------------------------------");
+	Format(info, sizeof(info), "%T", "duckhunt_info_line2", client);
+	InfoPanel.DrawText(info);
+	Format(info, sizeof(info), "%T", "duckhunt_info_line3", client);
+	InfoPanel.DrawText(info);
+	Format(info, sizeof(info), "%T", "duckhunt_info_line4", client);
+	InfoPanel.DrawText(info);
+	Format(info, sizeof(info), "%T", "duckhunt_info_line5", client);
+	InfoPanel.DrawText(info);
+	Format(info, sizeof(info), "%T", "duckhunt_info_line6", client);
+	InfoPanel.DrawText(info);
+	Format(info, sizeof(info), "%T", "duckhunt_info_line7", client);
+	InfoPanel.DrawText(info);
+	InfoPanel.DrawText("-----------------------------------");
+
+	Format(info, sizeof(info), "%T", "warden_close", client);
+	InfoPanel.DrawItem(info);
+
+	InfoPanel.Send(client, Handler_NullCancel, 20);
 }
 
 /******************************************************************************
@@ -836,8 +853,11 @@ public Action Timer_StartEvent(Handle timer)
 				SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
 			}
 			PrintCenterText(client, "%t", "duckhunt_start_nc");
-			if (gc_bOverlays.BoolValue) ShowOverlay(client, g_sOverlayStartPath, 2.0);
-			if (gc_bSounds.BoolValue)	
+			if (gc_bOverlays.BoolValue)
+			{
+				ShowOverlay(client, g_sOverlayStartPath, 2.0);
+			}
+			if (gc_bSounds.BoolValue)
 			{
 				EmitSoundToAllAny(g_sSoundStartPath);
 			}

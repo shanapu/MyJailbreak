@@ -59,7 +59,6 @@ int g_iCountStopTime;
 
 // Handles
 Handle g_hTimerRefuse[MAXPLAYERS+1];
-Handle g_hPanelRefuse;
 Handle g_hTimerAllowRefuse;
 
 // Strings
@@ -174,15 +173,15 @@ public Action Command_refuse(int client, int args)
 
 public void Refuse_Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
-	LoopClients(client)
+	LoopClients(i)
 	{
-		delete g_hTimerRefuse[client];
+		delete g_hTimerRefuse[i];
 		delete g_hTimerAllowRefuse;
 		
-		g_iRefuseCounter[client] = 0;
-		g_bRefused[client] = false;
+		g_iRefuseCounter[i] = 0;
+		g_bRefused[i] = false;
 		g_bAllowRefuse = false;
-		if (CheckVipFlag(client, g_sAdminFlagRefuse)) g_iRefuseCounter[client] = -1;
+		if (CheckVipFlag(i, g_sAdminFlagRefuse)) g_iRefuseCounter[i] = -1;
 	}
 
 	g_iCountStopTime = gc_fRefuseTime.IntValue;
@@ -240,11 +239,11 @@ public Action RefuseMenu(int client)
 	if (warden_iswarden(client) || warden_deputy_isdeputy(client))
 	{
 		char info1[255];
-		g_hPanelRefuse = CreatePanel();
+		Panel InfoPanel = new Panel();
 		Format(info1, sizeof(info1), "%T", "request_refuser", client);
-		SetPanelTitle(g_hPanelRefuse, info1);
-		DrawPanelText(g_hPanelRefuse, "-----------------------------------");
-		DrawPanelText(g_hPanelRefuse, "                                   ");
+		InfoPanel.SetTitle(info1);
+		InfoPanel.DrawText("-----------------------------------");
+		InfoPanel.DrawText("                                   ");
 		LoopValidClients(i, true, false)
 		{
 			if (g_bRefused[i])
@@ -253,14 +252,14 @@ public Action RefuseMenu(int client)
 				char username[MAX_NAME_LENGTH];
 				IntToString(GetClientUserId(i), userid, sizeof(userid));
 				Format(username, sizeof(username), "%N", i);
-				DrawPanelText(g_hPanelRefuse, username);
+				InfoPanel.DrawText(username);
 			}
 		}
-		DrawPanelText(g_hPanelRefuse, "                                   ");
-		DrawPanelText(g_hPanelRefuse, "-----------------------------------");
+		InfoPanel.DrawText("                                   ");
+		InfoPanel.DrawText("-----------------------------------");
 		Format(info1, sizeof(info1), "%T", "request_close", client);
-		DrawPanelItem(g_hPanelRefuse, info1);
-		SendPanelToClient(g_hPanelRefuse, client, Handler_NullCancel, 23);
+		InfoPanel.DrawItem(info1);
+		InfoPanel.Send(client, Handler_NullCancel, 23);
 	}
 }
 

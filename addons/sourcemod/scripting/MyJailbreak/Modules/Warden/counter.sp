@@ -102,11 +102,11 @@ public Action Command_Counter(int client, any args)
 			if ((gc_iCounterMode.IntValue == 4)|| (gc_iCounterMode.IntValue == 5)|| (gc_iCounterMode.IntValue == 6)|| (gc_iCounterMode.IntValue == 7))
 			{
 				char info1[255];
-				Handle CounterPanel = CreatePanel();
+				Panel InfoPanel = new Panel();
 				Format(info1, sizeof(info1), "%T", "warden_info_counter", client);
-				SetPanelTitle(CounterPanel, info1);
-				DrawPanelText(CounterPanel, "-----------------------------------");
-				DrawPanelText(CounterPanel, "                                   ");
+				InfoPanel.SetTitle(info1);
+				InfoPanel.DrawText("-----------------------------------");
+				InfoPanel.DrawText("                                   ");
 				LoopValidClients(i, true, false)
 				{
 					if (g_bCounted[i])
@@ -116,14 +116,14 @@ public Action Command_Counter(int client, any args)
 						char username[MAX_NAME_LENGTH];
 						IntToString(GetClientUserId(i), userid, sizeof(userid));
 						Format(username, sizeof(username), "%N (%im)", i, userdistance);
-						DrawPanelText(CounterPanel, username);
+						InfoPanel.DrawText(username);
 					}
 				}
-				DrawPanelText(CounterPanel, "                                   ");
-				DrawPanelText(CounterPanel, "-----------------------------------");
+				InfoPanel.DrawText("                                   ");
+				InfoPanel.DrawText("-----------------------------------");
 				Format(info1, sizeof(info1), "%T", "warden_close", client);
-				DrawPanelItem(CounterPanel, info1);
-				SendPanelToClient(CounterPanel, client, Handler_NullCancel, 23);
+				InfoPanel.DrawItem(info1);
+				InfoPanel.Send(client, Handler_NullCancel, 23);
 			}
 		}
 		else CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");

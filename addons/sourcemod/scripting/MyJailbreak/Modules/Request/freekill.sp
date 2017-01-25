@@ -165,10 +165,10 @@ public Action Command_Freekill(int client, int args)
 
 public void Freekill_Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
-	LoopClients(client)
+	LoopClients(i)
 	{
-		g_iFreeKillCounter[client] = 0;
-		g_bFreeKilled[client] = false;
+		g_iFreeKillCounter[i] = 0;
+		g_bFreeKilled[i] = false;
 	}
 }
 

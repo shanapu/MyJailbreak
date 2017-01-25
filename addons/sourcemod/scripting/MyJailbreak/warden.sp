@@ -514,7 +514,7 @@ public Action Command_VoteWarden(int client, int args)
 	{
 		if (gc_bVote.BoolValue)  // "sm_warden_vote" "1"
 		{
-			char steamid[64];
+			char steamid[24];
 			GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid)); // Get client steam ID
 			if (g_iWarden != -1)
 			{
@@ -959,7 +959,7 @@ void RemoveTheWarden()
 
 int GetCoolDown(int client)
 {
-	char steamid[64];
+	char steamid[24];
 	int cooldown;
 
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
@@ -974,7 +974,7 @@ int GetCoolDown(int client)
 
 void SetCoolDown(int client, int cooldown)
 {
-	char steamid[64];
+	char steamid[24];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
 
 	if (cooldown == 0)
@@ -986,7 +986,7 @@ void SetCoolDown(int client, int cooldown)
 
 int GetLimit(int client)
 {
-	char steamid[64];
+	char steamid[24];
 	int limit;
 
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
@@ -1001,7 +1001,7 @@ int GetLimit(int client)
 
 void SetLimit(int client, int limit)
 {
-	char steamid[64];
+	char steamid[24];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
 
 	if (limit == 0)
@@ -1026,7 +1026,7 @@ void Menu_SetWarden(int client)
 
 	LoopValidClients(i, true, false)
 	{
-		if (GetClientTeam(i) == CS_TEAM_CT && IsClientWarden(i) == false)
+		if (GetClientTeam(i) == CS_TEAM_CT && !IsClientWarden(i))
 		{
 			char userid[11];
 			char username[MAX_NAME_LENGTH];
@@ -1051,7 +1051,7 @@ public int Handler_SetWarden(Menu menu, MenuAction action, int client, int Posit
 
 		LoopValidClients(i, true, false)
 		{
-			if (GetClientTeam(i) == CS_TEAM_CT && IsClientWarden(i) == false)
+			if (GetClientTeam(i) == CS_TEAM_CT && !IsClientWarden(i))
 			{
 				char info4[255], info2[255], info3[255];
 				int userid = GetClientUserId(i);

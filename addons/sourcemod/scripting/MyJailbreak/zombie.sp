@@ -95,8 +95,7 @@ int g_iCollision_Offset;
 
 // Handles
 Handle g_hTimerFreeze;
-Handle g_hTimerBeacon;
-Handle g_hPanelInfo;
+Handle g_hTimerBeacon;
 
 // floats
 float g_fPos[3];
@@ -328,7 +327,7 @@ public Action Command_SetZombie(int client, int args)
 // Voting for Event
 public Action Command_VoteZombie(int client, int args)
 {
-	char steamid[64];
+	char steamid[24];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
 
 	if (gc_bPlugin.BoolValue)
@@ -669,7 +668,7 @@ public Action OnWeaponCanUse(int client, int weapon)
 		{
 			if (IsClientInGame(client) && IsPlayerAlive(client))
 			{
-				if (g_bIsZombie == true)
+				if (g_bIsZombie)
 				{
 					return Plugin_Handled;
 				}
@@ -723,7 +722,7 @@ void SetupGlow(int iSkin)
 {
 	int iOffset;
 
-	if (!iOffset && (iOffset = GetEntSendPropOffs(iSkin, "m_clrGlow")) == -1)
+	if ((iOffset = GetEntSendPropOffs(iSkin, "m_clrGlow")) == -1)
 		return;
 
 	SetEntProp(iSkin, Prop_Send, "m_bShouldGlow", true, true);
@@ -808,29 +807,29 @@ void CreateInfoPanel(int client)
 	// Create info Panel
 	char info[255];
 
-	g_hPanelInfo = CreatePanel();
+	Panel InfoPanel = new Panel();
 	Format(info, sizeof(info), "%T", "zombie_info_title", client);
-	SetPanelTitle(g_hPanelInfo, info);
-	DrawPanelText(g_hPanelInfo, "                                   ");
+	InfoPanel.SetTitle(info);
+	InfoPanel.DrawText("                                   ");
 	Format(info, sizeof(info), "%T", "zombie_info_line1", client);
-	DrawPanelText(g_hPanelInfo, info);
-	DrawPanelText(g_hPanelInfo, "-----------------------------------");
+	InfoPanel.DrawText(info);
+	InfoPanel.DrawText("-----------------------------------");
 	Format(info, sizeof(info), "%T", "zombie_info_line2", client);
-	DrawPanelText(g_hPanelInfo, info);
+	InfoPanel.DrawText(info);
 	Format(info, sizeof(info), "%T", "zombie_info_line3", client);
-	DrawPanelText(g_hPanelInfo, info);
+	InfoPanel.DrawText(info);
 	Format(info, sizeof(info), "%T", "zombie_info_line4", client);
-	DrawPanelText(g_hPanelInfo, info);
+	InfoPanel.DrawText(info);
 	Format(info, sizeof(info), "%T", "zombie_info_line5", client);
-	DrawPanelText(g_hPanelInfo, info);
+	InfoPanel.DrawText(info);
 	Format(info, sizeof(info), "%T", "zombie_info_line6", client);
-	DrawPanelText(g_hPanelInfo, info);
+	InfoPanel.DrawText(info);
 	Format(info, sizeof(info), "%T", "zombie_info_line7", client);
-	DrawPanelText(g_hPanelInfo, info);
-	DrawPanelText(g_hPanelInfo, "-----------------------------------");
+	InfoPanel.DrawText(info);
+	InfoPanel.DrawText("-----------------------------------");
 	Format(info, sizeof(info), "%T", "warden_close", client);
-	DrawPanelItem(g_hPanelInfo, info);
-	SendPanelToClient(g_hPanelInfo, client, Handler_NullCancel, 20);
+	InfoPanel.DrawItem(info);
+	InfoPanel.Send(client, Handler_NullCancel, 20);
 }
 
 /******************************************************************************

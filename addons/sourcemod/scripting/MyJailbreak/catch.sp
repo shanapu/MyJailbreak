@@ -93,7 +93,7 @@ int g_iVoteCount;
 int g_iOldRoundTime;
 int g_iCoolDown;
 int g_iRound;
-int ClientSprintStatus[MAXPLAYERS+1];
+int g_iSprintStatus[MAXPLAYERS+1];
 int g_iCatchCounter[MAXPLAYERS+1];
 int g_iMaxRound;
 int g_iFreezeTime;
@@ -276,7 +276,6 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 	}
 }
 
-
 // Initialize Plugin
 public void OnConfigsExecuted()
 {
@@ -314,7 +313,7 @@ public void OnConfigsExecuted()
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
 		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS) // if command not already exist
-		{	
+		{
 			RegConsoleCmd(sCommand, Command_SetCatch, "Allows the Admin or Warden to set catch as next round");
 		}
 	}
@@ -379,7 +378,7 @@ public Action Command_SetCatch(int client, int args)
 	{
 		if (!gc_bSetA.BoolValue)
 		{
-			CReplyToCommand(client, "%t %t", "warden_tag", "catch_setbyadmin");
+			CReplyToCommand(client, "%t %t", "catch_tag", "catch_setbyadmin");
 			return Plugin_Handled;
 		}
 
@@ -417,7 +416,6 @@ public Action Command_SetCatch(int client, int args)
 
 	return Plugin_Handled;
 }
-
 
 // Voting for Event
 public Action Command_VoteCatch(int client, int args)
@@ -489,6 +487,7 @@ public Action Command_VoteCatch(int client, int args)
 /******************************************************************************
                    EVENTS
 ******************************************************************************/
+
 // Round start
 public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
@@ -512,12 +511,13 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 	SetCvar("sm_hosties_lr", 0);
 	SetCvar("sm_warden_enable", 0);
 	SetCvar("sm_weapons_enable", 0);
+
 	MyJailbreak_SetEventDayPlanned(false);
 	MyJailbreak_SetEventDayRunning(true);
 
 	g_bIsCatch = true;
-	g_iRound += 1;
 	g_bStartCatch = false;
+	g_iRound += 1;
 
 	SJD_OpenDoors();
 
@@ -530,7 +530,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 	{
 		LoopClients(client)
 		{
-			ClientSprintStatus[client] = 0;
+			g_iSprintStatus[client] = 0;
 			g_iCatchCounter[client] = 0;
 			g_bCatched[client] = false;
 
@@ -540,7 +540,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 			GivePlayerItem(client, "weapon_knife");
 
 			SetEntData(client, g_iCollision_Offset, 2, 4, true);
-			SendPanelToClient(g_hCatchMenu, client, Handler_NullCancel, 20);
+
 			PrintCenterText(client, "%t", "catch_start_nc");
 
 			if (GetClientTeam(client) == CS_TEAM_CT)
@@ -580,7 +580,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			CreateTimer(0.0, DeleteOverlay, client);
 			SetEntityRenderColor(client, 255, 255, 255, 0);
 
-			ClientSprintStatus[client] = 0;
+			g_iSprintStatus[client] = 0;
 			g_bCatched[client] = false;
 
 			if (GetClientTeam(client) == CS_TEAM_T)
@@ -638,10 +638,9 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 	}
 }
 
-
 public void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
 {
-	if (g_bIsCatch == false)
+	if (!g_bIsCatch)
 	{
 		return;
 	}
@@ -651,10 +650,10 @@ public void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
 	ResetSprint(GetClientOfUserId(event.GetInt("userid")));
 }
 
-
 /******************************************************************************
                    FORWARDS LISTEN
 ******************************************************************************/
+
 // Initialize Event
 public void OnMapStart()
 {
@@ -679,17 +678,16 @@ public void OnMapStart()
 	PrecacheSound("player/suit_sprint.wav", true);
 }
 
-
 // Map End
 public void OnMapEnd()
 {
 	g_bIsCatch = false;
 	g_bStartCatch = false;
+
 	g_iVoteCount = 0;
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0';
 }
-
 
 // Terror win Round if time runs out
 public Action CS_OnTerminateRound(float &delay,  CSRoundEndReason &reason)
@@ -707,7 +705,6 @@ public Action CS_OnTerminateRound(float &delay,  CSRoundEndReason &reason)
 
 	return Plugin_Continue;
 }
-
 
 // Catch & Freeze
 public Action OnTraceAttack(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &ammotype, int hitbox, int hitgroup)
@@ -744,7 +741,6 @@ public Action OnTraceAttack(int victim, int &attacker, int &inflictor, float &da
 	return Plugin_Handled;
 }
 
-
 public void OnClientDisconnect_Post(int client)
 {
 	if (!g_bIsCatch)
@@ -755,7 +751,6 @@ public void OnClientDisconnect_Post(int client)
 	CheckStatus();
 }
 
-
 // Set Client Hook
 public void OnClientPutInServer(int client)
 {
@@ -763,7 +758,6 @@ public void OnClientPutInServer(int client)
 	SDKHook(client, SDKHook_WeaponCanUse, OnWeaponCanUse);
 	SDKHook(client, SDKHook_TraceAttack, OnTraceAttack);
 }
-
 
 // Knife only
 public Action OnWeaponCanUse(int client, int weapon)
@@ -784,7 +778,6 @@ public Action OnWeaponCanUse(int client, int weapon)
 	return Plugin_Continue;
 }
 
-
 // Listen for Last Lequest
 public void OnAvailableLR(int Announced)
 {
@@ -792,7 +785,7 @@ public void OnAvailableLR(int Announced)
 	{
 		LoopValidClients(client, false, true)
 		{
-			ClientSprintStatus[client] = 0;
+			g_iSprintStatus[client] = 0;
 			g_bCatched[client] = false;
 
 			SetEntData(client, g_iCollision_Offset, 0, 4, true);
@@ -843,6 +836,7 @@ public void OnAvailableLR(int Announced)
 /******************************************************************************
                    FUNCTIONS
 ******************************************************************************/
+
 // Prepare Event
 void StartNextRound()
 {
@@ -876,7 +870,7 @@ void CatchEm(int client, int attacker)
 
 	if (gc_bSounds.BoolValue)
 	{
-		EmitSoundToAllAny(g_sSoundFreezePath);
+		LoopClients(i) if(g_bClientSounds[i]) EmitSoundToClientAny(i, g_sSoundFreezePath);
 	}
 
 	if (!gc_bStayOverlay.BoolValue)
@@ -900,7 +894,7 @@ void FreeEm(int client, int attacker)
 
 	if (gc_bSounds.BoolValue)
 	{
-		EmitSoundToAllAny(g_sSoundUnFreezePath);
+		LoopClients(i) if(g_bClientSounds[i]) EmitSoundToClientAny(i, g_sSoundUnFreezePath);
 	}
 
 	CPrintToChatAll("%t %t", "catch_tag", "catch_unfreeze", attacker, client);
@@ -953,9 +947,7 @@ void Setup_Wallhack(int iSkin)
 	int iOffset;
 
 	if ((iOffset = GetEntSendPropOffs(iSkin, "m_clrGlow")) == -1)
-	{
 		return;
-	}
 
 	SetEntProp(iSkin, Prop_Send, "m_bShouldGlow", true, true);
 	SetEntProp(iSkin, Prop_Send, "m_nGlowStyle", 0);
@@ -970,7 +962,6 @@ void Setup_Wallhack(int iSkin)
 	SetEntData(iSkin, iOffset + 2, iBlue, _, true);
 	SetEntData(iSkin, iOffset + 3, 255, _, true);
 }
-
 
 // Who can see wallhack if vaild
 public Action OnSetTransmit_Wallhack(int iSkin, int client)
@@ -1065,7 +1056,7 @@ public Action Timer_StartEvent(Handle timer)
 
 				if (gc_bSounds.BoolValue)
 				{
-					EmitSoundToAllAny(g_sSoundStartPath);
+					LoopClients(i) if(g_bClientSounds[i]) EmitSoundToClientAny(i, g_sSoundStartPath);
 				}
 
 				if (gc_bWallhack.BoolValue)
@@ -1104,35 +1095,39 @@ void CreateInfoPanel(int client)
 	// Create info Panel
 	char info[255];
 
-	g_hCatchMenu = CreatePanel();
-	Format(info, sizeof(info), "%T", "catch_info_title", client);
-	SetPanelTitle(g_hCatchMenu, info);
-	DrawPanelText(g_hCatchMenu, "                                   ");
-	Format(info, sizeof(info), "%T", "catch_info_line1", client);
-	DrawPanelText(g_hCatchMenu, info);
-	DrawPanelText(g_hCatchMenu, "-----------------------------------");
-	Format(info, sizeof(info), "%T", "catch_info_line2", client);
-	DrawPanelText(g_hCatchMenu, info);
-	Format(info, sizeof(info), "%T", "catch_info_line3", client);
-	DrawPanelText(g_hCatchMenu, info);
-	Format(info, sizeof(info), "%T", "catch_info_line4", client);
-	DrawPanelText(g_hCatchMenu, info);
-	Format(info, sizeof(info), "%T", "catch_info_line5", client);
-	DrawPanelText(g_hCatchMenu, info);
-	Format(info, sizeof(info), "%T", "catch_info_line6", client);
-	DrawPanelText(g_hCatchMenu, info);
-	Format(info, sizeof(info), "%T", "catch_info_line7", client);
-	DrawPanelText(g_hCatchMenu, info);
-	DrawPanelText(g_hCatchMenu, "-----------------------------------");
-	Format(info, sizeof(info), "%T", "warden_close", client);
-	DrawPanelItem(g_hCatchMenu, info);
-	SendPanelToClient(g_hCatchMenu, client, Handler_NullCancel, 20);
-}
+	Panel InfoPanel = new Panel();
 
+	Format(info, sizeof(info), "%T", "catch_info_title", client);
+	InfoPanel.SetTitle(info);
+
+	InfoPanel.DrawText("                                   ");
+	Format(info, sizeof(info), "%T", "catch_info_line1", client);
+	InfoPanel.DrawText(info);
+	InfoPanel.DrawText("-----------------------------------");
+	Format(info, sizeof(info), "%T", "catch_info_line2", client);
+	InfoPanel.DrawText(info);
+	Format(info, sizeof(info), "%T", "catch_info_line3", client);
+	InfoPanel.DrawText(info);
+	Format(info, sizeof(info), "%T", "catch_info_line4", client);
+	InfoPanel.DrawText(info);
+	Format(info, sizeof(info), "%T", "catch_info_line5", client);
+	InfoPanel.DrawText(info);
+	Format(info, sizeof(info), "%T", "catch_info_line6", client);
+	InfoPanel.DrawText(info);
+	Format(info, sizeof(info), "%T", "catch_info_line7", client);
+	InfoPanel.DrawText(info);
+	InfoPanel.DrawText("-----------------------------------");
+
+	Format(info, sizeof(info), "%T", "warden_close", client);
+	InfoPanel.DrawItem(info);
+
+	InfoPanel.Send(client, Handler_NullCancel, 20);
+}
 
 /******************************************************************************
                    SPRINT MODULE
 ******************************************************************************/
+
 // Sprint
 public Action Command_StartSprint(int client, int args)
 {
@@ -1147,9 +1142,9 @@ public Action Command_StartSprint(int client, int args)
 		return Plugin_Handled;
 	}
 
-	if (client > 0 && IsClientInGame(client) && IsPlayerAlive(client) && GetClientTeam(client) > 1 && !(ClientSprintStatus[client] & IsSprintUsing) && !(ClientSprintStatus[client] & IsSprintCoolDown))
+	if (client > 0 && IsClientInGame(client) && IsPlayerAlive(client) && GetClientTeam(client) > 1 && !(g_iSprintStatus[client] & IsSprintUsing) && !(g_iSprintStatus[client] & IsSprintCoolDown))
 	{
-		ClientSprintStatus[client] |= IsSprintUsing | IsSprintCoolDown;
+		g_iSprintStatus[client] |= IsSprintUsing | IsSprintCoolDown;
 
 		SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", gc_fSprintSpeed.FloatValue);
 		EmitSoundToClient(client, "player/suit_sprint.wav", SOUND_FROM_PLAYER, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, 0.8);
@@ -1161,7 +1156,6 @@ public Action Command_StartSprint(int client, int args)
 
 	return Plugin_Handled;
 }
-
 
 public void OnGameFrame()
 {
@@ -1179,7 +1173,6 @@ public void OnGameFrame()
 	}
 }
 
-
 void ResetSprint(int client)
 {
 	if (g_hSprintTimer[client] != null)
@@ -1193,21 +1186,20 @@ void ResetSprint(int client)
 		SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
 	}
 
-	if (ClientSprintStatus[client] & IsSprintUsing)
+	if (g_iSprintStatus[client] & IsSprintUsing)
 	{
-		ClientSprintStatus[client] &= ~ IsSprintUsing;
+		g_iSprintStatus[client] &= ~ IsSprintUsing;
 	}
 }
-
 
 public Action Timer_SprintEnd(Handle timer, any client)
 {
 	g_hSprintTimer[client] = null;
 
-	if (IsClientInGame(client) && (ClientSprintStatus[client] & IsSprintUsing))
+	if (IsClientInGame(client) && (g_iSprintStatus[client] & IsSprintUsing))
 	{
 		SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
-		ClientSprintStatus[client] &= ~ IsSprintUsing;
+		g_iSprintStatus[client] &= ~ IsSprintUsing;
 
 		if (IsPlayerAlive(client) && GetClientTeam(client) > 1)
 		{
@@ -1219,25 +1211,23 @@ public Action Timer_SprintEnd(Handle timer, any client)
 	return Plugin_Handled;
 }
 
-
 public Action Timer_SprintCooldown(Handle timer, any client)
 {
 	g_hSprintTimer[client] = null;
 
-	if (IsClientInGame(client) && (ClientSprintStatus[client] & IsSprintCoolDown))
+	if (IsClientInGame(client) && (g_iSprintStatus[client] & IsSprintCoolDown))
 	{
-		ClientSprintStatus[client] &= ~ IsSprintCoolDown;
+		g_iSprintStatus[client] &= ~ IsSprintCoolDown;
 		CPrintToChat(client, "%t %t", "catch_tag", "catch_sprintagain", gc_iSprintCooldown.IntValue);
 	}
 
 	return Plugin_Handled;
 }
 
-
 public void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));
 
 	ResetSprint(client);
-	ClientSprintStatus[client] &= ~ IsSprintCoolDown;
+	g_iSprintStatus[client] &= ~ IsSprintCoolDown;
 }

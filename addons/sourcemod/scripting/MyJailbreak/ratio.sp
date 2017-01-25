@@ -216,7 +216,9 @@ public void OnConfigsExecuted()
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
 		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		{
 			RegConsoleCmd(sCommand, Command_ToggleRatio, "Allows the admin toggle the ratio check and player to see if ratio is enabled");
+		}
 	}
 
 	// Admin remove player from queue
@@ -306,12 +308,13 @@ public Action Command_ViewGuardQueue(int client, int args)
 	}
 	char info[64];
 
-	Handle ViewQueueMenu = CreatePanel();
+	Panel InfoPanel = new Panel();
 
 	Format(info, sizeof(info), "%T", "ratio_info_title", client);
-	SetPanelTitle(ViewQueueMenu, info);
-	DrawPanelText(ViewQueueMenu, "-----------------------------------");
-	DrawPanelText(ViewQueueMenu, "                                   ");
+	InfoPanel.SetTitle(info);
+	
+	InfoPanel.DrawText("-----------------------------------");
+	InfoPanel.DrawText("                                   ");
 
 	for (int i; i < GetArraySize(g_aGuardQueue); i++)
 	{
@@ -320,14 +323,14 @@ public Action Command_ViewGuardQueue(int client, int args)
 		
 		char display[120];
 		Format(display, sizeof(display), "%N", GetArrayCell(g_aGuardQueue, i));
-		DrawPanelText(ViewQueueMenu, display);
+		InfoPanel.DrawText(display);
 	}
 
-	DrawPanelText(ViewQueueMenu, "                                   ");
-	DrawPanelText(ViewQueueMenu, "-----------------------------------");
+	InfoPanel.DrawText("                                   ");
+	InfoPanel.DrawText("-----------------------------------");
 	Format(info, sizeof(info), "%T", "ratio_close", client);
-	DrawPanelItem(ViewQueueMenu, info);
-	SendPanelToClient(ViewQueueMenu, client, Handler_NullCancel, 12);
+	InfoPanel.DrawItem(info);
+	InfoPanel.Send(client, Handler_NullCancel, 12);
 
 	return Plugin_Handled;
 }
@@ -729,31 +732,34 @@ public void OnMapStart()
 void Menu_AcceptGuardRules(int client)
 {
 	char info[64];
-	Handle AcceptMenu = CreatePanel();
+
+	Panel InfoPanel = new Panel();
 
 	Format(info, sizeof(info), "%T", "ratio_accept_title", client);
-	SetPanelTitle(AcceptMenu, info);
-	DrawPanelText(AcceptMenu, "-----------------------------------");
-	Format(info, sizeof(info), "%T", "ratio_accept_line1", client);
-	DrawPanelText(AcceptMenu, info);
-	DrawPanelText(AcceptMenu, "    ");
-	Format(info, sizeof(info), "%T", "ratio_accept_line2", client);
-	DrawPanelText(AcceptMenu, info);
-	Format(info, sizeof(info), "%T", "ratio_accept_line3", client);
-	DrawPanelText(AcceptMenu, info);
-	Format(info, sizeof(info), "%T", "ratio_accept_line4", client);
-	DrawPanelText(AcceptMenu, info);
-	Format(info, sizeof(info), "%T", "ratio_accept_line5", client);
-	DrawPanelText(AcceptMenu, info);
-	DrawPanelText(AcceptMenu, "    ");
-	DrawPanelText(AcceptMenu, "-----------------------------------");
-	DrawPanelText(AcceptMenu, "    ");
-	Format(info, sizeof(info), "%T", "ratio_accept", client);
-	DrawPanelItem(AcceptMenu, info);
-	Format(info, sizeof(info), "%T", "ratio_notaccept", client);
-	DrawPanelItem(AcceptMenu, info);
+	InfoPanel.SetTitle(info);
 
-	SendPanelToClient(AcceptMenu, client, Handler_AcceptGuardRules, 20);
+	InfoPanel.DrawText("-----------------------------------");
+	Format(info, sizeof(info), "%T", "ratio_accept_line1", client);
+	InfoPanel.DrawText(info);
+	InfoPanel.DrawText("    ");
+	Format(info, sizeof(info), "%T", "ratio_accept_line2", client);
+	InfoPanel.DrawText(info);
+	Format(info, sizeof(info), "%T", "ratio_accept_line3", client);
+	InfoPanel.DrawText(info);
+	Format(info, sizeof(info), "%T", "ratio_accept_line4", client);
+	InfoPanel.DrawText(info);
+	Format(info, sizeof(info), "%T", "ratio_accept_line5", client);
+	InfoPanel.DrawText(info);
+	InfoPanel.DrawText("    ");
+	InfoPanel.DrawText("-----------------------------------");
+	InfoPanel.DrawText("    ");
+
+	Format(info, sizeof(info), "%T", "ratio_accept", client);
+	InfoPanel.DrawItem(info);
+	Format(info, sizeof(info), "%T", "ratio_notaccept", client);
+	InfoPanel.DrawItem(info);
+
+	InfoPanel.Send(client, Handler_AcceptGuardRules, 20);
 }
 
 public int Handler_AcceptGuardRules(Handle menu, MenuAction action, int param1, int param2)
@@ -792,56 +798,57 @@ public int Handler_AcceptGuardRules(Handle menu, MenuAction action, int param1, 
 void Menu_GuardQuestions(int client)
 {
 	char info[64], random[64];
-	Handle AcceptMenu = CreatePanel();
+	Panel InfoPanel = new Panel();
 	int randomquestion = GetRandomInt(1, 5);
 	g_iRandomAnswer[client] = GetRandomInt(1, 3);
 
 	Format(info, sizeof(info), "%T", "ratio_question_title", client);
-	SetPanelTitle(AcceptMenu, info);
-	DrawPanelText(AcceptMenu, "-----------------------------------");
+	InfoPanel.SetTitle(info);
+	
+	InfoPanel.DrawText("-----------------------------------");
 	Format(random, sizeof(random), "ratio_question%i_line1", randomquestion);
 	Format(info, sizeof(info), "%T", random, client);
-	DrawPanelText(AcceptMenu, info);
+	InfoPanel.DrawText(info);
 	Format(random, sizeof(random), "ratio_question%i_line2", randomquestion);
 	Format(info, sizeof(info), "%T", random, client);
-	DrawPanelText(AcceptMenu, info);
-	DrawPanelText(AcceptMenu, "-----------------------------------");
+	InfoPanel.DrawText(info);
+	InfoPanel.DrawText("-----------------------------------");
 
 	if (g_iRandomAnswer[client] == 1)
 	{
-		DrawPanelText(AcceptMenu, "    ");
+		InfoPanel.DrawText("    ");
 		Format(random, sizeof(random), "ratio_question%i_right", randomquestion);
 		Format(info, sizeof(info), "%T", random, client);
-		DrawPanelItem(AcceptMenu, info);
+		InfoPanel.DrawItem(info);
 	}
 
-	DrawPanelText(AcceptMenu, "    ");
+	InfoPanel.DrawText("    ");
 	Format(random, sizeof(random), "ratio_question%i_wrong1", randomquestion);
 	Format(info, sizeof(info), "%T", random, client);
-	DrawPanelItem(AcceptMenu, info);
+	InfoPanel.DrawItem(info);
 
 	if (g_iRandomAnswer[client] == 2)
 	{
-		DrawPanelText(AcceptMenu, "    ");
+		InfoPanel.DrawText("    ");
 		Format(random, sizeof(random), "ratio_question%i_right", randomquestion);
 		Format(info, sizeof(info), "%T", random, client);
-		DrawPanelItem(AcceptMenu, info);
+		InfoPanel.DrawItem(info);
 	}
 
-	DrawPanelText(AcceptMenu, "    ");
+	InfoPanel.DrawText("    ");
 	Format(random, sizeof(random), "ratio_question%i_wrong2", randomquestion);
 	Format(info, sizeof(info), "%T", random, client);
-	DrawPanelItem(AcceptMenu, info);
+	InfoPanel.DrawItem(info);
 
 	if (g_iRandomAnswer[client] == 3)
 	{
-		DrawPanelText(AcceptMenu, "    ");
+		InfoPanel.DrawText("    ");
 		Format(random, sizeof(random), "ratio_question%i_right", randomquestion);
 		Format(info, sizeof(info), "%T", random, client);
-		DrawPanelItem(AcceptMenu, info);
+		InfoPanel.DrawItem(info);
 	}
 
-	SendPanelToClient(AcceptMenu, client, Handler_GuardQuestions, 20);
+	InfoPanel.Send(client, Handler_GuardQuestions, 20);
 }
 
 

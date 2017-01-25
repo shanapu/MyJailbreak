@@ -97,7 +97,6 @@ int g_iCollision_Offset;
 
 // Handles
 Handle g_hTimerSprint[MAXPLAYERS+1];
-Handle g_hPanelInfo;
 Handle g_hTimerFreeze;
 Handle g_hTimerBeacon;
 
@@ -351,7 +350,7 @@ public Action Command_SetSuicideBomber(int client, int args)
 // Voting for Event
 public Action Command_VoteSuicideBomber(int client, int args)
 {
-	char steamid[64];
+	char steamid[24];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
 
 	if (gc_bPlugin.BoolValue)
@@ -677,7 +676,7 @@ public Action OnWeaponCanUse(int client, int weapon)
 	{
 		if (IsValidClient(client, true, false))
 		{
-			if (g_bIsSuicideBomber == true)
+			if (g_bIsSuicideBomber)
 			{
 				return Plugin_Handled;
 			}
@@ -719,30 +718,30 @@ void CreateInfoPanel(int client)
 	// Create info Panel
 	char info[255];
 
-	g_hPanelInfo = CreatePanel();
+	Panel InfoPanel = new Panel();
 	Format(info, sizeof(info), "%T", "suicidebomber_info_title", client);
-	SetPanelTitle(g_hPanelInfo, info);
-	DrawPanelText(g_hPanelInfo, "                                   ");
+	InfoPanel.SetTitle(info);
+	InfoPanel.DrawText("                                   ");
 	Format(info, sizeof(info), "%T", "suicidebomber_info_line1", client);
-	DrawPanelText(g_hPanelInfo, info);
-	DrawPanelText(g_hPanelInfo, "-----------------------------------");
+	InfoPanel.DrawText(info);
+	InfoPanel.DrawText("-----------------------------------");
 	Format(info, sizeof(info), "%T", "suicidebomber_info_line2", client);
-	DrawPanelText(g_hPanelInfo, info);
+	InfoPanel.DrawText(info);
 	Format(info, sizeof(info), "%T", "suicidebomber_info_line3", client);
-	DrawPanelText(g_hPanelInfo, info);
+	InfoPanel.DrawText(info);
 	Format(info, sizeof(info), "%T", "suicidebomber_info_line4", client);
-	DrawPanelText(g_hPanelInfo, info);
+	InfoPanel.DrawText(info);
 	Format(info, sizeof(info), "%T", "suicidebomber_info_line5", client);
-	DrawPanelText(g_hPanelInfo, info);
+	InfoPanel.DrawText(info);
 	Format(info, sizeof(info), "%T", "suicidebomber_info_line6", client);
-	DrawPanelText(g_hPanelInfo, info);
+	InfoPanel.DrawText(info);
 	Format(info, sizeof(info), "%T", "suicidebomber_info_line7", client);
-	DrawPanelText(g_hPanelInfo, info);
-	DrawPanelText(g_hPanelInfo, "-----------------------------------");
+	InfoPanel.DrawText(info);
+	InfoPanel.DrawText("-----------------------------------");
 	Format(info, sizeof(info), "%T", "warden_close", client);
-	DrawPanelItem(g_hPanelInfo, info);
+	InfoPanel.DrawItem(info);
 
-	SendPanelToClient(g_hPanelInfo, client, Handler_NullCancel, 20);
+	InfoPanel.Send(client, Handler_NullCancel, 20);
 }
 
 /******************************************************************************
@@ -940,9 +939,9 @@ public Action Timer_SprintCooldown(Handle timer, any client)
 
 public void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast)
 {
-	int iClient = GetClientOfUserId(event.GetInt("userid"));
-	ResetSprint(iClient);
-	g_iSprintStatus[iClient] &= ~ IsSprintCoolDown;
+	int client = GetClientOfUserId(event.GetInt("userid"));
+	ResetSprint(client);
+	g_iSprintStatus[client] &= ~ IsSprintCoolDown;
 
 	return;
 }

@@ -151,14 +151,14 @@ public Action Command_Heal(int client, int args)
 
 public void Heal_Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
-	LoopClients(client)
+	LoopClients(i)
 	{
-		delete g_hTimerHeal[client];
+		delete g_hTimerHeal[i];
 		
-		g_iHealCounter[client] = 0;
-		g_bHealed[client] = false;
+		g_iHealCounter[i] = 0;
+		g_bHealed[i] = false;
 		
-		if (CheckVipFlag(client, g_sAdminFlagHeal)) g_iHealCounter[client] = -1;
+		if (CheckVipFlag(i, g_sAdminFlagHeal)) g_iHealCounter[i] = -1;
 	}
 }
 

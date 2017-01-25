@@ -87,7 +87,6 @@ int g_iCollision_Offset;
 
 // Handles
 Handle g_hTimerTruce;
-Handle g_hPanelInfo;
 Handle g_hTimerBeacon;
 
 // Floats
@@ -179,6 +178,7 @@ public void OnPluginStart()
 	// Offsets
 	g_iCollision_Offset = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
 
+	//Logs
 	SetLogFile(g_sEventsLogFile, "Events", "MyJailbreak");
 
 	// Late loading
@@ -199,12 +199,18 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 	if (convar == gc_sOverlayStartPath)
 	{
 		strcopy(g_sOverlayStartPath, sizeof(g_sOverlayStartPath), newValue);
-		if (gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
+		if (gc_bOverlays.BoolValue)
+		{
+			PrecacheDecalAnyDownload(g_sOverlayStartPath);
+		}
 	}
 	else if (convar == gc_sSoundStartPath)
 	{
 		strcopy(g_sSoundStartPath, sizeof(g_sSoundStartPath), newValue);
-		if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
+		if (gc_bSounds.BoolValue)
+		{
+			PrecacheSoundAnyDownload(g_sSoundStartPath);
+		}
 	}
 	else if (convar == gc_sAdminFlag)
 	{
@@ -219,8 +225,15 @@ public void OnConfigsExecuted()
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iMaxRound = gc_iRounds.IntValue;
 
-	if (gc_iWeapon.IntValue == 1) g_sWeapon = "weapon_revolver";
-	if (gc_iWeapon.IntValue == 2) g_sWeapon = "weapon_elite";
+	if (gc_iWeapon.IntValue == 1)
+	{
+		g_sWeapon = "weapon_revolver";
+	}
+
+	if (gc_iWeapon.IntValue == 2)
+	{
+		g_sWeapon = "weapon_elite";
+	}
 
 	// FindConVar
 	g_iTerrorForLR = FindConVar("sm_hosties_lr_ts_max");
@@ -238,7 +251,9 @@ public void OnConfigsExecuted()
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
 		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		{
 			RegConsoleCmd(sCommand, Command_VoteCowBoy, "Allows players to vote for a cowboy");
+		}
 	}
 
 	// set
@@ -250,7 +265,9 @@ public void OnConfigsExecuted()
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
 		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		{
 			RegConsoleCmd(sCommand, Command_SetCowBoy, "Allows the Admin or Warden to set cowboy as next round");
+		}
 	}
 }
 
@@ -261,65 +278,94 @@ public void OnConfigsExecuted()
 // Admin & Warden set Event
 public Action Command_SetCowBoy(int client, int args)
 {
-	if (gc_bPlugin.BoolValue)
+	if (!gc_bPlugin.BoolValue)
 	{
-		if (client == 0)
-		{
-			StartNextRound();
-			if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event CowBoy was started by groupvoting");
-		}
-		else if (warden_iswarden(client))
-		{
-			if (gc_bSetW.BoolValue)
-			{
-				if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0))
-				{
-					char EventDay[64];
-					MyJailbreak_GetEventDayName(EventDay);
-					
-					if (StrEqual(EventDay, "none", false))
-					{
-						if (g_iCoolDown == 0)
-						{
-							StartNextRound();
-							if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event CowBoy was started by warden %L", client);
-						}
-						else CReplyToCommand(client, "%t %t", "cowboy_tag", "cowboy_wait", g_iCoolDown);
-					}
-					else CReplyToCommand(client, "%t %t", "cowboy_tag", "cowboy_progress", EventDay);
-				}
-				else CReplyToCommand(client, "%t %t", "cowboy_tag", "cowboy_minplayer");
-			}
-			else CReplyToCommand(client, "%t %t", "warden_tag", "nocscope_setbywarden");
-		}
-		else if (CheckVipFlag(client, g_sAdminFlag))
-		{
-			if (gc_bSetA.BoolValue)
-			{
-				if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0))
-				{
-					char EventDay[64];
-					MyJailbreak_GetEventDayName(EventDay);
-					
-					if (StrEqual(EventDay, "none", false))
-					{
-						if ((g_iCoolDown == 0) || gc_bSetABypassCooldown.BoolValue)
-						{
-							StartNextRound();
-							if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event CowBoy was started by admin %L", client);
-						}
-						else CReplyToCommand(client, "%t %t", "cowboy_tag", "cowboy_wait", g_iCoolDown);
-					}
-					else CReplyToCommand(client, "%t %t", "cowboy_tag", "cowboy_progress", EventDay);
-				}
-				else CReplyToCommand(client, "%t %t", "cowboy_tag", "cowboy_minplayer");
-			}
-			else CReplyToCommand(client, "%t %t", "nocscope_tag", "cowboy_setbyadmin");
-		}
-		else CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
-		
+		CReplyToCommand(client, "%t %t", "cowboy_tag", "cowboy_disabled");
+		return Plugin_Handled;
 	}
-	else CReplyToCommand(client, "%t %t", "cowboy_tag", "cowboy_disabled");
+
+	if (client == 0)
+	{
+		StartNextRound();
+		if (MyJailbreak_ActiveLogging())
+		{
+			LogToFileEx(g_sEventsLogFile, "Event CowBoy was started by groupvoting");
+		}
+	}
+	else if (warden_iswarden(client)) // Called by warden
+	{
+		if (!gc_bSetW.BoolValue)
+		{
+			CReplyToCommand(client, "%t %t", "warden_tag", "cowboy_setbywarden");
+			return Plugin_Handled;
+		}
+
+		if (GetTeamClientCount(CS_TEAM_CT) == 0 || GetTeamClientCount(CS_TEAM_T) == 0)
+		{
+			CReplyToCommand(client, "%t %t", "cowboy_tag", "cowboy_minplayer");
+			return Plugin_Handled;
+		}
+
+		char EventDay[64];
+		MyJailbreak_GetEventDayName(EventDay);
+
+		if (!StrEqual(EventDay, "none", false))
+		{
+			CReplyToCommand(client, "%t %t", "cowboy_tag", "cowboy_progress", EventDay);
+			return Plugin_Handled;
+		}
+
+		if (g_iCoolDown > 0)
+		{
+			CReplyToCommand(client, "%t %t", "cowboy_tag", "cowboy_wait", g_iCoolDown);
+			return Plugin_Handled;
+		}
+
+		StartNextRound();
+		if (MyJailbreak_ActiveLogging())
+		{
+			LogToFileEx(g_sEventsLogFile, "Event CowBoy was started by warden %L", client);
+		}
+	}
+	else if (CheckVipFlag(client, g_sAdminFlag)) // Called by admin/VIP
+	{
+		if (!gc_bSetA.BoolValue)
+		{
+			CReplyToCommand(client, "%t %t", "cowboy_tag", "cowboy_setbyadmin");
+			return Plugin_Handled;
+		}
+
+		if (GetTeamClientCount(CS_TEAM_CT) == 0 || GetTeamClientCount(CS_TEAM_T) == 0)
+		{
+			CReplyToCommand(client, "%t %t", "cowboy_tag", "cowboy_minplayer");
+			return Plugin_Handled;
+		}
+
+		char EventDay[64];
+		MyJailbreak_GetEventDayName(EventDay);
+
+		if (!StrEqual(EventDay, "none", false))
+		{
+			CReplyToCommand(client, "%t %t", "cowboy_tag", "cowboy_progress", EventDay);
+			return Plugin_Handled;
+		}
+
+		if (g_iCoolDown > 0 && !gc_bSetABypassCooldown.BoolValue)
+		{
+			CReplyToCommand(client, "%t %t", "cowboy_tag", "cowboy_wait", g_iCoolDown);
+			return Plugin_Handled;
+		}
+
+		StartNextRound();
+		if (MyJailbreak_ActiveLogging())
+		{
+			LogToFileEx(g_sEventsLogFile, "Event CowBoy was started by admin %L", client);
+		}
+	}
+	else
+	{
+		CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+	}
 
 	return Plugin_Handled;
 }
@@ -327,47 +373,66 @@ public Action Command_SetCowBoy(int client, int args)
 // Voting for Event
 public Action Command_VoteCowBoy(int client, int args)
 {
-	char steamid[64];
+	if (!gc_bPlugin.BoolValue)
+	{
+		CReplyToCommand(client, "%t %t", "cowboy_tag", "cowboy_disabled");
+		return Plugin_Handled;
+	}
+
+	if (!gc_bVote.BoolValue)
+	{
+		CReplyToCommand(client, "%t %t", "cowboy_tag", "cowboy_voting");
+		return Plugin_Handled;
+	}
+
+	if (GetTeamClientCount(CS_TEAM_CT) == 0 || GetTeamClientCount(CS_TEAM_T) == 0)
+	{
+		CReplyToCommand(client, "%t %t", "cowboy_tag", "cowboy_minplayer");
+		return Plugin_Handled;
+	}
+
+	char EventDay[64];
+	MyJailbreak_GetEventDayName(EventDay);
+
+	if (!StrEqual(EventDay, "none", false))
+	{
+		CReplyToCommand(client, "%t %t", "cowboy_tag", "cowboy_progress", EventDay);
+		return Plugin_Handled;
+	}
+
+	if (g_iCoolDown > 0)
+	{
+		CReplyToCommand(client, "%t %t", "cowboy_tag", "cowboy_wait", g_iCoolDown);
+		return Plugin_Handled;
+	}
+
+	char steamid[24];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
 
-	if (gc_bPlugin.BoolValue)
+	if (StrContains(g_sHasVoted, steamid, true) != -1)
 	{
-		if (gc_bVote.BoolValue)
-		{
-			if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0))
-			{
-				char EventDay[64];
-				MyJailbreak_GetEventDayName(EventDay);
-
-				if (StrEqual(EventDay, "none", false))
-				{
-					if (g_iCoolDown == 0)
-					{
-						if (StrContains(g_sHasVoted, steamid, true) == -1)
-						{
-							int playercount = (GetClientCount(true) / 2);
-							g_iVoteCount++;
-							int Missing = playercount - g_iVoteCount + 1;
-							Format(g_sHasVoted, sizeof(g_sHasVoted), "%s, %s", g_sHasVoted, steamid);
-							
-							if (g_iVoteCount > playercount)
-							{
-								StartNextRound();
-								if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event CowBoy was started by voting");
-							}
-							else CPrintToChatAll("%t %t", "cowboy_tag", "cowboy_need", Missing, client);
-						}
-						else CReplyToCommand(client, "%t %t", "cowboy_tag", "cowboy_voted");
-					}
-					else CReplyToCommand(client, "%t %t", "cowboy_tag", "cowboy_wait", g_iCoolDown);
-				}
-				else CReplyToCommand(client, "%t %t", "cowboy_tag", "cowboy_progress", EventDay);
-			}
-			else CReplyToCommand(client, "%t %t", "cowboy_tag", "cowboy_minplayer");
-		}
-		else CReplyToCommand(client, "%t %t", "cowboy_tag", "cowboy_voting");
+		CReplyToCommand(client, "%t %t", "cowboy_tag", "cowboy_voted");
+		return Plugin_Handled;
 	}
-	else CReplyToCommand(client, "%t %t", "cowboy_tag", "cowboy_disabled");
+
+	int playercount = (GetClientCount(true) / 2);
+	g_iVoteCount += 1;
+
+	int Missing = playercount - g_iVoteCount + 1;
+	Format(g_sHasVoted, sizeof(g_sHasVoted), "%s, %s", g_sHasVoted, steamid);
+
+	if (g_iVoteCount > playercount)
+	{
+		StartNextRound();
+		if (MyJailbreak_ActiveLogging())
+		{
+			LogToFileEx(g_sEventsLogFile, "Event CowBoy was started by voting");
+		}
+	}
+	else
+	{
+		CPrintToChatAll("%t %t", "cowboy_tag", "cowboy_need", Missing, client);
+	}
 
 	return Plugin_Handled;
 }
@@ -379,85 +444,7 @@ public Action Command_VoteCowBoy(int client, int args)
 // Round start
 public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
-	if (g_bStartCowBoy || g_bIsCowBoy)
-	{
-		SetCvar("sm_hosties_lr", 0);
-		SetCvar("sm_weapons_enable", 0);
-		SetCvar("sm_menu_enable", 0);
-		SetCvar("sv_infinite_ammo", 2);
-		SetCvar("sm_warden_enable", 0);
-		SetCvar("mp_teammates_are_enemies", 1);
-
-		MyJailbreak_SetEventDayPlanned(false);
-		MyJailbreak_SetEventDayRunning(true);
-
-		g_bIsCowBoy = true;
-
-		if (gc_fBeaconTime.FloatValue > 0.0) g_hTimerBeacon = CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
-
-		if (gc_bRandom.BoolValue)
-		{
-			int randomnum = GetRandomInt(0, 1);
-			
-			if (randomnum == 0)g_sWeapon = "weapon_revolver";
-			if (randomnum == 1)g_sWeapon = "weapon_elite";
-		}
-
-		g_iRound++;
-		g_bStartCowBoy = false;
-		SJD_OpenDoors();
-
-		int RandomCT = 0;
-
-		LoopClients(client)
-		{
-			if (GetClientTeam(client) == CS_TEAM_CT)
-			{
-				RandomCT = client;
-				break;
-			}
-		}
-		
-		if (RandomCT)
-		{
-			GetClientAbsOrigin(RandomCT, g_fPos);
-			
-			g_fPos[2] = g_fPos[2] + 5;
-			
-			if (g_iRound > 0)
-			{
-				LoopClients(client)
-				{
-					CreateInfoPanel(client);
-					StripAllPlayerWeapons(client);
-					GivePlayerItem(client, g_sWeapon);
-					SetEntData(client, g_iCollision_Offset, 2, 4, true);
-					SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
-					
-					if (!gc_bSpawnCell.BoolValue || (gc_bSpawnCell.BoolValue && (SJD_IsCurrentMapConfigured() != true))) // spawn Terrors to CT Spawn 
-					{
-						TeleportEntity(client, g_fPos, NULL_VECTOR, NULL_VECTOR);
-					}
-				}
-				g_iTruceTime--;
-				g_hTimerTruce = CreateTimer(1.0, Timer_StartEvent, _, TIMER_REPEAT);
-				
-				// enable lr on last round
-				g_iTsLR = GetAliveTeamCount(CS_TEAM_T);
-				
-				if (gc_bAllowLR.BoolValue)
-				{
-					if ((g_iRound == g_iMaxRound) && (g_iTsLR > g_iTerrorForLR.IntValue))
-					{
-						SetCvar("sm_hosties_lr", 1);
-					}
-				}
-				
-				CPrintToChatAll("%t %t", "cowboy_tag", "cowboy_rounds", g_iRound, g_iMaxRound);
-			}
-		}
-	}
-	else
+	if (!g_bStartCowBoy && !g_bIsCowBoy)
 	{
 		char EventDay[64];
 		MyJailbreak_GetEventDayName(EventDay);
@@ -466,27 +453,128 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		{
 			g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 		}
-		else if (g_iCoolDown > 0) g_iCoolDown--;
+		else if (g_iCoolDown > 0)
+		{
+			g_iCoolDown -= 1;
+		}
+
+		return;
+	}
+
+	SetCvar("sm_hosties_lr", 0);
+	SetCvar("sm_weapons_enable", 0);
+	SetCvar("sm_menu_enable", 0);
+	SetCvar("sv_infinite_ammo", 2);
+	SetCvar("sm_warden_enable", 0);
+	SetCvar("mp_teammates_are_enemies", 1);
+
+	MyJailbreak_SetEventDayPlanned(false);
+	MyJailbreak_SetEventDayRunning(true);
+
+	g_bIsCowBoy = true;
+	g_bStartCowBoy = false;
+	g_iRound += 1;
+
+	SJD_OpenDoors();
+
+	if (gc_fBeaconTime.FloatValue > 0.0)
+	{
+		g_hTimerBeacon = CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
+	}
+
+	if (gc_bRandom.BoolValue)
+	{
+		int randomnum = GetRandomInt(0, 1);
+
+		if (randomnum == 0)
+		{
+			g_sWeapon = "weapon_revolver";
+		}
+		if (randomnum == 1)
+		{
+			g_sWeapon = "weapon_elite";
+		}
+	}
+
+	if (!gc_bSpawnCell.BoolValue || (gc_bSpawnCell.BoolValue && (SJD_IsCurrentMapConfigured() != true))) // spawn Terrors to CT Spawn 
+	{
+		int RandomCT = 0;
+		LoopClients(i)
+		{
+			if (GetClientTeam(i) == CS_TEAM_CT)
+			{
+				RandomCT = i;
+				break;
+			}
+		}
+
+		if (RandomCT)
+		{
+			LoopClients(i)
+			{
+				GetClientAbsOrigin(RandomCT, g_fPos);
+				
+				g_fPos[2] = g_fPos[2] + 5;
+				
+				TeleportEntity(i, g_fPos, NULL_VECTOR, NULL_VECTOR);
+			}
+		}
+	}
+
+	if (g_iRound > 0)
+	{
+		LoopClients(i)
+		{
+			CreateInfoPanel(i);
+
+			StripAllPlayerWeapons(i);
+			GivePlayerItem(i, g_sWeapon);
+
+			SetEntData(i, g_iCollision_Offset, 2, 4, true);
+			SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
+		}
+
+		// enable lr on last round
+		g_iTsLR = GetAliveTeamCount(CS_TEAM_T);
+
+		if (gc_bAllowLR.BoolValue)
+		{
+			if ((g_iRound == g_iMaxRound) && (g_iTsLR > g_iTerrorForLR.IntValue))
+			{
+				SetCvar("sm_hosties_lr", 1);
+			}
+		}
+
+		g_iTruceTime -= 1;
+		g_hTimerTruce = CreateTimer(1.0, Timer_StartEvent, _, TIMER_REPEAT);
+
+		CPrintToChatAll("%t %t", "cowboy_tag", "cowboy_rounds", g_iRound, g_iMaxRound);
+
 	}
 }
 
 // Round End
 public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
-	int winner = event.GetInt("winner");
-
 	if (g_bIsCowBoy)
 	{
-		LoopClients(client)
+		LoopClients(i)
 		{
-			SetEntData(client, g_iCollision_Offset, 0, 4, true);
+			SetEntData(i, g_iCollision_Offset, 0, 4, true);
 		}
 
 		delete g_hTimerTruce;
 		delete g_hTimerBeacon;
 
-		if (winner == 2) PrintCenterTextAll("%t", "cowboy_twin_nc");
-		if (winner == 3) PrintCenterTextAll("%t", "cowboy_ctwin_nc");
+		int winner = event.GetInt("winner");
+		if (winner == 2)
+		{
+			PrintCenterTextAll("%t", "cowboy_twin_nc");
+		}
+		if (winner == 3)
+		{
+			PrintCenterTextAll("%t", "cowboy_ctwin_nc");
+		}
 
 		if (g_iRound == g_iMaxRound)
 		{
@@ -494,23 +582,30 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			g_bStartCowBoy = false;
 			g_iRound = 0;
 			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
+
 			SetCvar("sm_hosties_lr", 1);
 			SetCvar("sm_weapons_enable", 1);
 			SetCvar("sv_infinite_ammo", 0);
 			SetCvar("mp_teammates_are_enemies", 0);
 			SetCvar("sm_menu_enable", 1);
 			SetCvar("sm_warden_enable", 1);
+
 			g_iMPRoundTime.IntValue = g_iOldRoundTime;
+
 			MyJailbreak_SetEventDayName("none");
 			MyJailbreak_SetEventDayRunning(false);
+
 			CPrintToChatAll("%t %t", "cowboy_tag", "cowboy_end");
 		}
 	}
 
 	if (g_bStartCowBoy)
 	{
-		LoopClients(i) CreateInfoPanel(i);
-		
+		LoopClients(i)
+		{
+			CreateInfoPanel(i);
+		}
+
 		CPrintToChatAll("%t %t", "cowboy_tag", "cowboy_next");
 		PrintCenterTextAll("%t", "cowboy_next_nc");
 	}
@@ -544,8 +639,14 @@ public void OnMapStart()
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iTruceTime = gc_iTruceTime.IntValue;
 
-	if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);   // Add sound to download and precache table
-	if (gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);   // Add overlay to download and precache table
+	if (gc_bSounds.BoolValue)
+	{
+		PrecacheSoundAnyDownload(g_sSoundStartPath);   // Add sound to download and precache table
+	}
+	if (gc_bOverlays.BoolValue)
+	{
+		PrecacheDecalAnyDownload(g_sOverlayStartPath);   // Add overlay to download and precache table
+	}
 }
 
 // Map End
@@ -569,11 +670,14 @@ public void OnAvailableLR(int Announced)
 		LoopClients(client)
 		{
 			SetEntData(client, g_iCollision_Offset, 0, 4, true);
+
 			StripAllPlayerWeapons(client);
+
 			if (GetClientTeam(client) == CS_TEAM_CT)
 			{
 				FakeClientCommand(client, "sm_weapons");
 			}
+
 			GivePlayerItem(client, "weapon_knife");
 		}
 
@@ -586,15 +690,19 @@ public void OnAvailableLR(int Announced)
 			g_bStartCowBoy = false;
 			g_iRound = 0;
 			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
+
 			SetCvar("sm_hosties_lr", 1);
 			SetCvar("sm_weapons_enable", 1);
 			SetCvar("sv_infinite_ammo", 0);
 			SetCvar("mp_teammates_are_enemies", 0);
 			SetCvar("sm_menu_enable", 1);
 			SetCvar("sm_warden_enable", 1);
+
 			g_iMPRoundTime.IntValue = g_iOldRoundTime;
+
 			MyJailbreak_SetEventDayName("none");
 			MyJailbreak_SetEventDayRunning(false);
+
 			CPrintToChatAll("%t %t", "cowboy_tag", "cowboy_end");
 		}
 	}
@@ -616,7 +724,8 @@ public Action OnWeaponCanUse(int client, int weapon)
 
 		int index = GetEntProp(weapon, Prop_Send, "m_iItemDefinitionIndex");
 
-		if (index == 64 || (StrEqual(sWeapon, "weapon_elite")))return Plugin_Continue;
+		if (index == 64 || (StrEqual(sWeapon, "weapon_elite")))
+			return Plugin_Continue;
 		else return Plugin_Handled;
 	}
 
@@ -655,30 +764,33 @@ void CreateInfoPanel(int client)
 	// Create info Panel
 	char info[255];
 
-	g_hPanelInfo = CreatePanel();
-	Format(info, sizeof(info), "%T", "cowboy_info_title", client);
-	SetPanelTitle(g_hPanelInfo, info);
-	DrawPanelText(g_hPanelInfo, "                                   ");
-	Format(info, sizeof(info), "%T", "cowboy_info_line1", client);
-	DrawPanelText(g_hPanelInfo, info);
-	DrawPanelText(g_hPanelInfo, "-----------------------------------");
-	Format(info, sizeof(info), "%T", "cowboy_info_line2", client);
-	DrawPanelText(g_hPanelInfo, info);
-	Format(info, sizeof(info), "%T", "cowboy_info_line3", client);
-	DrawPanelText(g_hPanelInfo, info);
-	Format(info, sizeof(info), "%T", "cowboy_info_line4", client);
-	DrawPanelText(g_hPanelInfo, info);
-	Format(info, sizeof(info), "%T", "cowboy_info_line5", client);
-	DrawPanelText(g_hPanelInfo, info);
-	Format(info, sizeof(info), "%T", "cowboy_info_line6", client);
-	DrawPanelText(g_hPanelInfo, info);
-	Format(info, sizeof(info), "%T", "cowboy_info_line7", client);
-	DrawPanelText(g_hPanelInfo, info);
-	DrawPanelText(g_hPanelInfo, "-----------------------------------");
-	Format(info, sizeof(info), "%T", "warden_close", client);
-	DrawPanelItem(g_hPanelInfo, info);
+	Panel InfoPanel = new Panel();
 
-	SendPanelToClient(g_hPanelInfo, client, Handler_NullCancel, 20);
+	Format(info, sizeof(info), "%T", "cowboy_info_title", client);
+	InfoPanel.SetTitle(info);
+
+	InfoPanel.DrawText("                                   ");
+	Format(info, sizeof(info), "%T", "cowboy_info_line1", client);
+	InfoPanel.DrawText(info);
+	InfoPanel.DrawText("-----------------------------------");
+	Format(info, sizeof(info), "%T", "cowboy_info_line2", client);
+	InfoPanel.DrawText(info);
+	Format(info, sizeof(info), "%T", "cowboy_info_line3", client);
+	InfoPanel.DrawText(info);
+	Format(info, sizeof(info), "%T", "cowboy_info_line4", client);
+	InfoPanel.DrawText(info);
+	Format(info, sizeof(info), "%T", "cowboy_info_line5", client);
+	InfoPanel.DrawText(info);
+	Format(info, sizeof(info), "%T", "cowboy_info_line6", client);
+	InfoPanel.DrawText(info);
+	Format(info, sizeof(info), "%T", "cowboy_info_line7", client);
+	InfoPanel.DrawText(info);
+	InfoPanel.DrawText("-----------------------------------");
+
+	Format(info, sizeof(info), "%T", "warden_close", client);
+	InfoPanel.DrawItem(info);
+
+	InfoPanel.Send(client, Handler_NullCancel, 20);
 }
 
 /******************************************************************************
@@ -707,7 +819,10 @@ public Action Timer_StartEvent(Handle timer)
 		{
 			SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
 			PrintCenterText(client, "%t", "cowboy_start_nc");
-			if (gc_bOverlays.BoolValue) ShowOverlay(client, g_sOverlayStartPath, 2.0);
+			if (gc_bOverlays.BoolValue)
+			{
+				ShowOverlay(client, g_sOverlayStartPath, 2.0);
+			}
 			if (gc_bSounds.BoolValue)
 			{
 				EmitSoundToAllAny(g_sSoundStartPath);
@@ -733,6 +848,7 @@ public Action Timer_Hitsound(Handle timer, Handle data)
 	int attacker	= GetClientOfUserId(ReadPackCell(data));
 	int victim		= GetClientOfUserId(ReadPackCell(data));
 
-	if (attacker <= 0 || attacker > MaxClients || victim <= 0 || victim > MaxClients || attacker == victim) return;
+	if (attacker <= 0 || attacker > MaxClients || victim <= 0 || victim > MaxClients || attacker == victim) 
+		return;
 	ClientCommand(attacker, "playgamesound training/bell_normal.wav");
 }

@@ -86,7 +86,6 @@ float g_fPos[3];
 
 // Handles
 Handle g_hTimerTruce;
-Handle g_hPanelInfo;
 Handle g_hTimerBeacon;
 
 // Strings
@@ -297,7 +296,7 @@ public Action Command_Setffa(int client, int args)
 // Voting for Event
 public Action Command_VoteFFA(int client, int args)
 {
-	char steamid[64];
+	char steamid[24];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
 
 	if (gc_bPlugin.BoolValue)
@@ -583,30 +582,30 @@ void CreateInfoPanel(int client)
 	// Create info Panel
 	char info[255];
 
-	g_hPanelInfo = CreatePanel();
+	Panel InfoPanel = new Panel();
 	Format(info, sizeof(info), "%T", "ffa_info_title", client);
-	SetPanelTitle(g_hPanelInfo, info);
-	DrawPanelText(g_hPanelInfo, "                                   ");
+	InfoPanel.SetTitle(info);
+	InfoPanel.DrawText("                                   ");
 	Format(info, sizeof(info), "%T", "ffa_info_line1", client);
-	DrawPanelText(g_hPanelInfo, info);
-	DrawPanelText(g_hPanelInfo, "-----------------------------------");
+	InfoPanel.DrawText(info);
+	InfoPanel.DrawText("-----------------------------------");
 	Format(info, sizeof(info), "%T", "ffa_info_line2", client);
-	DrawPanelText(g_hPanelInfo, info);
+	InfoPanel.DrawText(info);
 	Format(info, sizeof(info), "%T", "ffa_info_line3", client);
-	DrawPanelText(g_hPanelInfo, info);
+	InfoPanel.DrawText(info);
 	Format(info, sizeof(info), "%T", "ffa_info_line4", client);
-	DrawPanelText(g_hPanelInfo, info);
+	InfoPanel.DrawText(info);
 	Format(info, sizeof(info), "%T", "ffa_info_line5", client);
-	DrawPanelText(g_hPanelInfo, info);
+	InfoPanel.DrawText(info);
 	Format(info, sizeof(info), "%T", "ffa_info_line6", client);
-	DrawPanelText(g_hPanelInfo, info);
+	InfoPanel.DrawText(info);
 	Format(info, sizeof(info), "%T", "ffa_info_line7", client);
-	DrawPanelText(g_hPanelInfo, info);
-	DrawPanelText(g_hPanelInfo, "-----------------------------------");
+	InfoPanel.DrawText(info);
+	InfoPanel.DrawText("-----------------------------------");
 	Format(info, sizeof(info), "%T", "warden_close", client);
-	DrawPanelItem(g_hPanelInfo, info);
+	InfoPanel.DrawItem(info);
 
-	SendPanelToClient(g_hPanelInfo, client, Handler_NullCancel, 20);
+	InfoPanel.Send(client, Handler_NullCancel, 20);
 }
 
 /******************************************************************************
@@ -632,12 +631,17 @@ public Action Timer_StartEvent(Handle timer)
 		if (IsClientInGame(client) && IsPlayerAlive(client)) 
 		{
 			SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
-			if (gc_bOverlays.BoolValue) ShowOverlay(client, g_sOverlayStartPath, 2.0);
-			if (gc_bSounds.BoolValue)	
+
+			if (gc_bOverlays.BoolValue)
+			{
+				ShowOverlay(client, g_sOverlayStartPath, 2.0);
+			}
+
+			if (gc_bSounds.BoolValue)
 			{
 				EmitSoundToAllAny(g_sSoundStartPath);
 			}
-			
+
 			PrintCenterText(client, "%t", "ffa_start_nc");
 		}
 	}

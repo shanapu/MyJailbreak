@@ -74,8 +74,7 @@ int g_iCoolDown;
 int g_iVoteCount;
 int g_iFreedayRound = 0;
 
-// Handles
-Handle g_hPanelInfo;
+// Handles
 
 // Strings
 char g_sHasVoted[1500];
@@ -246,7 +245,7 @@ public Action Command_SetFreeday(int client, int args)
 // Voting for Event
 public Action Command_VoteFreeday(int client, int args)
 {
-	char steamid[64];
+	char steamid[24];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
 
 	if (gc_bPlugin.BoolValue)
@@ -328,18 +327,18 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		CreateTimer (gc_iRespawnTime.FloatValue, Timer_StopRespawn);
 		g_bAllowRespawn = true;
 		
-		LoopClients(client)
+		LoopClients(i)
 		{
-			CreateInfoPanel(client);
+			CreateInfoPanel(i);
 
-			if (!gc_bdamage.BoolValue && IsValidClient(client))
+			if (!gc_bdamage.BoolValue && IsValidClient(i))
 			{
-				SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
+				SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
 			}
 
-			if (IsPlayerAlive(client)) 
+			if (IsPlayerAlive(i)) 
 			{
-				PrintCenterText(client, "%t", "freeday_start_nc");
+				PrintCenterText(i, "%t", "freeday_start_nc");
 			}
 		}
 		CPrintToChatAll("%t %t", "freeday_tag", "freeday_start");
@@ -491,30 +490,30 @@ void CreateInfoPanel(int client)
 	// Create info Panel
 	char info[255];
 
-	g_hPanelInfo = CreatePanel();
+	Panel InfoPanel = new Panel();
 	Format(info, sizeof(info), "%T", "freeday_info_title", client);
-	SetPanelTitle(g_hPanelInfo, info);
-	DrawPanelText(g_hPanelInfo, "                                   ");
+	InfoPanel.SetTitle(info);
+	InfoPanel.DrawText("                                   ");
 	Format(info, sizeof(info), "%T", "freeday_info_line1", client);
-	DrawPanelText(g_hPanelInfo, info);
-	DrawPanelText(g_hPanelInfo, "-----------------------------------");
+	InfoPanel.DrawText(info);
+	InfoPanel.DrawText("-----------------------------------");
 	Format(info, sizeof(info), "%T", "freeday_info_line2", client);
-	DrawPanelText(g_hPanelInfo, info);
+	InfoPanel.DrawText(info);
 	Format(info, sizeof(info), "%T", "freeday_info_line3", client);
-	DrawPanelText(g_hPanelInfo, info);
+	InfoPanel.DrawText(info);
 	Format(info, sizeof(info), "%T", "freeday_info_line4", client);
-	DrawPanelText(g_hPanelInfo, info);
+	InfoPanel.DrawText(info);
 	Format(info, sizeof(info), "%T", "freeday_info_line5", client);
-	DrawPanelText(g_hPanelInfo, info);
+	InfoPanel.DrawText(info);
 	Format(info, sizeof(info), "%T", "freeday_info_line6", client);
-	DrawPanelText(g_hPanelInfo, info);
+	InfoPanel.DrawText(info);
 	Format(info, sizeof(info), "%T", "freeday_info_line7", client);
-	DrawPanelText(g_hPanelInfo, info);
-	DrawPanelText(g_hPanelInfo, "-----------------------------------");
+	InfoPanel.DrawText(info);
+	InfoPanel.DrawText("-----------------------------------");
 	Format(info, sizeof(info), "%T", "warden_close", client);
-	DrawPanelItem(g_hPanelInfo, info);
+	InfoPanel.DrawItem(info);
 
-	SendPanelToClient(g_hPanelInfo, client, Handler_NullCancel, 20);
+	InfoPanel.Send(client, Handler_NullCancel, 20);
 }
 
 /******************************************************************************

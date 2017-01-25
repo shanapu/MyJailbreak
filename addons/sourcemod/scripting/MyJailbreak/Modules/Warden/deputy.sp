@@ -511,7 +511,7 @@ public int Handler_SetDeputy(Menu menu, MenuAction action, int client, int Posit
 
 		LoopValidClients(i, true, false)
 		{
-			if (GetClientTeam(i) == CS_TEAM_CT && IsClientDeputy(i) == false)
+			if (GetClientTeam(i) == CS_TEAM_CT && !IsClientDeputy(i))
 			{
 				int userid = GetClientUserId(i);
 
