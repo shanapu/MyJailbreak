@@ -49,6 +49,7 @@ bool g_bHasFreeDay[MAXPLAYERS+1];
 ConVar gc_sCustomCommandGiveFreeDay;
 ConVar gc_bFreeDay;
 ConVar gc_bFreeDayDeputy;
+ConVar gc_bFreeDayGuards;
 ConVar gc_iFreeDayColorRed;
 ConVar gc_iFreeDayColorGreen;
 ConVar gc_iFreeDayColorBlue;
@@ -68,7 +69,8 @@ public void Freedays_OnPluginStart()
 	gc_iFreeDayColorRed = AutoExecConfig_CreateConVar("sm_warden_freeday_color_red", "0", "What color to turn the player with freeday into (set R, G and B values to 255 to disable) (Rgb): x - red value", _, true, 0.0, true, 255.0);
 	gc_iFreeDayColorGreen = AutoExecConfig_CreateConVar("sm_warden_freeday_color_green", "200", "What color to turn the player with freeday into (rGb): x - green value", _, true, 0.0, true, 255.0);
 	gc_iFreeDayColorBlue = AutoExecConfig_CreateConVar("sm_warden_freeday_color_blue", "0", "What color to turn the player with freeday into (rgB): x - blue value", _, true, 0.0, true, 255.0);
-	gc_bFreeDayDeputy = AutoExecConfig_CreateConVar("sm_warden_freeday_victim_deputy", "1", "0 - disabled, 1 - Allow the deputy to set a personal freeday", _, true, 0.0, true, 1.0);
+	gc_bFreeDayDeputy = AutoExecConfig_CreateConVar("sm_warden_freeday_deputy", "1", "0 - disabled, 1 - Allow the deputy to set a personal freeday", _, true, 0.0, true, 1.0);
+	gc_bFreeDayGuards = AutoExecConfig_CreateConVar("sm_warden_freeday_guards", "0", "0 - disabled, 1 - Allow all the guards to set a personal freeday", _, true, 0.0, true, 1.0);
 
 	// Hooks
 	HookEvent("round_poststart", Freedays_Event_RoundStart_Post);
@@ -83,7 +85,7 @@ public Action Command_FreeDay(int client, int args)
 {
 	if (gc_bPlugin.BoolValue && gc_bFreeDay.BoolValue)
 	{
-		if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bFreeDayDeputy.BoolValue))
+		if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bFreeDayDeputy.BoolValue) || (GetClientTeam(client) == CS_TEAM_CT && gc_bFreeDayGuards.BoolValue))
 		{
 			char info1[255];
 			Menu menu5 = CreateMenu(Handler_GiveFreeDayChoose);
