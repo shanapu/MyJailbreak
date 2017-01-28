@@ -30,12 +30,16 @@
 #include <emitsoundany>
 #include <colors>
 #include <autoexecconfig>
+#include <mystocks>
+
+// Optional Plugins
+#undef REQUIRE_PLUGIN
 #include <hosties>
 #include <lastrequest>
 #include <warden>
-#include <smartjaildoors>
-#include <mystocks>
 #include <myjailbreak>
+#include <smartjaildoors>
+#define REQUIRE_PLUGIN
 
 // Compiler Options
 #pragma semicolon 1
@@ -46,6 +50,12 @@ bool g_bIsLateLoad = false;
 bool g_bIsTruce = false;
 bool g_bIsDealDamage = false;
 bool g_bStartDealDamage = false;
+
+// Plugin bools
+bool gp_bWarden;
+bool gp_bHosties;
+bool gp_bSmartJailDoors;
+bool gp_bMyJailbreak;
 
 // Console Variables    gc_i = global convar integer / gc_b = global convar bool ...
 ConVar gc_bPlugin;
@@ -225,6 +235,44 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 	}
 }
 
+public void OnAllPluginsLoaded()
+{
+	gp_bWarden = LibraryExists("warden");
+	gp_bHosties = LibraryExists("lastrequest");
+	gp_bSmartJailDoors = LibraryExists("smartjaildoors");
+	gp_bMyJailbreak = LibraryExists("myjailbreak");
+}
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (StrEqual(name, "warden"))
+		gp_bWarden = false;
+
+	if (StrEqual(name, "lastrequest"))
+		gp_bHosties = false;
+
+	if (StrEqual(name, "smartjaildoors"))
+		gp_bSmartJailDoors = false;
+
+	if (StrEqual(name, "myjailbreak"))
+		gp_bMyJailbreak = false;
+}
+
+public void OnLibraryAdded(const char[] name)
+{
+	if (StrEqual(name, "warden"))
+		gp_bWarden = true;
+
+	if (StrEqual(name, "lastrequest"))
+		gp_bHosties = true;
+
+	if (StrEqual(name, "smartjaildoors"))
+		gp_bSmartJailDoors = true;
+
+	if (StrEqual(name, "myjailbreak"))
+		gp_bMyJailbreak = true;
+}
+
 // Initialize Plugin
 public void OnConfigsExecuted()
 {
@@ -282,38 +330,15 @@ public Action Command_SetDealDamage(int client, int args)
 	if (client == 0) // Called by a server/voting
 	{
 		StartNextRound();
+
+		if (!gp_bMyJailbreak)
+		{
+			return Plugin_Handled;
+		}
+
 		if (MyJailbreak_ActiveLogging())
 		{
 			LogToFileEx(g_sEventsLogFile, "Event Deal Damage was started by groupvoting");
-		}
-	}
-	else if (warden_iswarden(client)) // Called by warden
-	{
-		if (!gc_bSetW.BoolValue)
-		{
-			CReplyToCommand(client, "%t %t", "warden_tag", "dealdamage_setbywarden");
-			return Plugin_Handled;
-		}
-
-		char EventDay[64];
-		MyJailbreak_GetEventDayName(EventDay);
-
-		if (!StrEqual(EventDay, "none", false))
-		{
-			CReplyToCommand(client, "%t %t", "dealdamage_tag", "dealdamage_progress", EventDay);
-			return Plugin_Handled;
-		}
-
-		if (g_iCoolDown > 0)
-		{
-			CReplyToCommand(client, "%t %t", "dealdamage_tag", "dealdamage_wait", g_iCoolDown);
-			return Plugin_Handled;
-		}
-
-		StartNextRound();
-		if (MyJailbreak_ActiveLogging())
-		{
-			LogToFileEx(g_sEventsLogFile, "Event Catch was started by warden %L", client);
 		}
 	}
 	else if (CheckVipFlag(client, g_sAdminFlag)) // Called by admin/VIP
@@ -324,13 +349,16 @@ public Action Command_SetDealDamage(int client, int args)
 			return Plugin_Handled;
 		}
 
-		char EventDay[64];
-		MyJailbreak_GetEventDayName(EventDay);
-
-		if (!StrEqual(EventDay, "none", false))
+		if (gp_bMyJailbreak)
 		{
-			CReplyToCommand(client, "%t %t", "dealdamage_tag", "dealdamage_progress", EventDay);
-			return Plugin_Handled;
+			char EventDay[64];
+			MyJailbreak_GetEventDayName(EventDay);
+
+			if (!StrEqual(EventDay, "none", false))
+			{
+				CReplyToCommand(client, "%t %t", "dealdamage_tag", "dealdamage_progress", EventDay);
+				return Plugin_Handled;
+			}
 		}
 
 		if (g_iCoolDown > 0 && !gc_bSetABypassCooldown.BoolValue)
@@ -340,9 +368,59 @@ public Action Command_SetDealDamage(int client, int args)
 		}
 
 		StartNextRound();
+
+		if (!gp_bMyJailbreak)
+		{
+			return Plugin_Handled;
+		}
+
 		if (MyJailbreak_ActiveLogging())
 		{
 			LogToFileEx(g_sEventsLogFile, "Event Deal Damage was started by admin %L", client);
+		}
+	}
+	else if (gp_bWarden) // Called by warden
+	{
+		if (!warden_iswarden(client))
+		{
+			CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+			return Plugin_Handled;
+		}
+
+		if (!gc_bSetW.BoolValue)
+		{
+			CReplyToCommand(client, "%t %t", "warden_tag", "dealdamage_setbywarden");
+			return Plugin_Handled;
+		}
+
+		if (gp_bMyJailbreak)
+		{
+			char EventDay[64];
+			MyJailbreak_GetEventDayName(EventDay);
+
+			if (!StrEqual(EventDay, "none", false))
+			{
+				CReplyToCommand(client, "%t %t", "dealdamage_tag", "dealdamage_progress", EventDay);
+				return Plugin_Handled;
+			}
+		}
+
+		if (g_iCoolDown > 0)
+		{
+			CReplyToCommand(client, "%t %t", "dealdamage_tag", "dealdamage_wait", g_iCoolDown);
+			return Plugin_Handled;
+		}
+
+		StartNextRound();
+
+		if (!gp_bMyJailbreak)
+		{
+			return Plugin_Handled;
+		}
+
+		if (MyJailbreak_ActiveLogging())
+		{
+			LogToFileEx(g_sEventsLogFile, "Event Deal Damage was started by warden %L", client);
 		}
 	}
 	else
@@ -368,13 +446,16 @@ public Action Command_VoteDealDamage(int client, int args)
 		return Plugin_Handled;
 	}
 
-	char EventDay[64];
-	MyJailbreak_GetEventDayName(EventDay);
-
-	if (!StrEqual(EventDay, "none", false))
+	if (gp_bMyJailbreak)
 	{
-		CReplyToCommand(client, "%t %t", "dealdamage_tag", "dealdamage_progress", EventDay);
-		return Plugin_Handled;
+		char EventDay[64];
+		MyJailbreak_GetEventDayName(EventDay);
+
+		if (!StrEqual(EventDay, "none", false))
+		{
+			CReplyToCommand(client, "%t %t", "dealdamage_tag", "dealdamage_progress", EventDay);
+			return Plugin_Handled;
+		}
 	}
 
 	if (g_iCoolDown > 0)
@@ -401,6 +482,12 @@ public Action Command_VoteDealDamage(int client, int args)
 	if (g_iVoteCount > playercount)
 	{
 		StartNextRound();
+
+		if (!gp_bMyJailbreak)
+		{
+			return Plugin_Handled;
+		}
+
 		if (MyJailbreak_ActiveLogging())
 		{
 			LogToFileEx(g_sEventsLogFile, "Event Deal Damage was started by voting");
@@ -423,12 +510,19 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
 	if (!g_bStartDealDamage && !g_bIsDealDamage)
 	{
-		char EventDay[64];
-		MyJailbreak_GetEventDayName(EventDay);
-
-		if (!StrEqual(EventDay, "none", false))
+		if (gp_bMyJailbreak)
 		{
-			g_iCoolDown = gc_iCooldownDay.IntValue + 1;
+			char EventDay[64];
+			MyJailbreak_GetEventDayName(EventDay);
+
+			if (!StrEqual(EventDay, "none", false))
+			{
+				g_iCoolDown = gc_iCooldownDay.IntValue + 1;
+			}
+			else if (g_iCoolDown > 0)
+			{
+				g_iCoolDown -= 1;
+			}
 		}
 		else if (g_iCoolDown > 0)
 		{
@@ -438,16 +532,32 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		return;
 	}
 
-	SetCvar("sm_hosties_lr", 0);
+	if (gp_bWarden)
+	{
+		SetCvar("sm_warden_enable", 0);
+	}
+
+	if (gp_bHosties)
+	{
+		SetCvar("sm_hosties_lr", 0);
+	}
+
 	SetCvar("sm_weapons_enable", 1);
 	SetCvar("sm_weapons_t", 1);
 	SetCvar("sm_weapons_ct", 1);
 	SetCvar("sm_menu_enable", 0);
-	SetCvar("sm_warden_enable", 0);
 	SetCvar("sm_hud_enable", 0);
 
-	MyJailbreak_SetEventDayPlanned(false);
-	MyJailbreak_SetEventDayRunning(true);
+	if (gp_bMyJailbreak)
+	{
+		MyJailbreak_SetEventDayPlanned(false);
+		MyJailbreak_SetEventDayRunning(true);
+
+		if (gc_fBeaconTime.FloatValue > 0.0)
+		{
+			g_hTimerBeacon = CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
+		}
+	}
 
 	g_iBestT = 0;
 	g_iBestCT = 0;
@@ -466,14 +576,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 	g_bStartDealDamage = false;
 	g_iRound += 1; // Add Round number
 
-	SJD_OpenDoors(); // open Jail
-
-	if (gc_fBeaconTime.FloatValue > 0.0)
-	{
-		g_hTimerBeacon = CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
-	}
-
-	if (!gc_bSpawnCell.BoolValue || (gc_bSpawnCell.BoolValue && (SJD_IsCurrentMapConfigured() != true))) // spawn Terrors to CT Spawn 
+	if (!gc_bSpawnCell.BoolValue || !gp_bSmartJailDoors || (gc_bSpawnCell.BoolValue && (SJD_IsCurrentMapConfigured() != true))) // spawn Terrors to CT Spawn 
 	{
 		int RandomCT = 0;
 		LoopClients(i)
@@ -518,16 +621,11 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 // Round End
 public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
-
-
 	if (g_bIsDealDamage) // if event was running this round
 	{
 		LoopClients(i)
 		{
-			if (IsClientInGame(i))
-			{
-				SetEntData(i, g_iCollision_Offset, 0, 4, true); // disbale noblock
-			}
+			SetEntData(i, g_iCollision_Offset, 0, 4, true); // disbale noblock
 		}
 
 		delete g_hTimerTruce; // kill start time if still running
@@ -551,23 +649,35 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			g_iRound = 0;
 			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
 
-			SetCvar("sm_hosties_lr", 1);
-			SetCvar("sm_weapons_enable", 1);
-			SetCvar("sv_infinite_ammo", 0);
-			SetCvar("sm_menu_enable", 1);
-			SetCvar("sm_warden_enable", 1);
-			SetCvar("sm_weapons_t", 0);
-			SetCvar("sm_hud_enable", g_iOldHUD);
+			if (gp_bHosties)
+			{
+				SetCvar("sm_hosties_lr", 1);
+			}
+
+			if (gp_bWarden)
+			{
+				SetCvar("sm_warden_enable", 1);
+			}
+
 			if (gc_bSpawnRandom.BoolValue)
 			{
 				SetCvar("mp_randomspawn", 0);
 				SetCvar("mp_randomspawn_los", 0);
 			}
 
+			SetCvar("sm_weapons_enable", 1);
+			SetCvar("sv_infinite_ammo", 0);
+			SetCvar("sm_menu_enable", 1);
+			SetCvar("sm_weapons_t", 0);
+			SetCvar("sm_hud_enable", g_iOldHUD);
+
 			g_iMPRoundTime.IntValue = g_iOldRoundTime; // return to original round time
 
-			MyJailbreak_SetEventDayName("none"); // tell myjailbreak event is ended
-			MyJailbreak_SetEventDayRunning(false);
+			if (gp_bMyJailbreak)
+			{
+				MyJailbreak_SetEventDayName("none"); // tell myjailbreak event is ended
+				MyJailbreak_SetEventDayRunning(false);
+			}
 
 			CPrintToChatAll("%t %t", "dealdamage_tag", "dealdamage_end");
 		}
@@ -671,10 +781,13 @@ void StartNextRound()
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iVoteCount = 0;
 
-	char buffer[32];
-	Format(buffer, sizeof(buffer), "%T", "dealdamage_name", LANG_SERVER);
-	MyJailbreak_SetEventDayName(buffer);
-	MyJailbreak_SetEventDayPlanned(true);
+	if (gp_bMyJailbreak)
+	{
+		char buffer[32];
+		Format(buffer, sizeof(buffer), "%T", "dealdamage_name", LANG_SERVER);
+		MyJailbreak_SetEventDayName(buffer);
+		MyJailbreak_SetEventDayPlanned(true);
+	}
 
 	g_iOldRoundTime = g_iMPRoundTime.IntValue; // save original round time
 	g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue; // set event round time
@@ -809,7 +922,7 @@ public Action Timer_StartEvent(Handle timer)
 	{
 		LoopClients(client)
 		{
-			if (IsClientInGame(client) && IsPlayerAlive(client))
+			if (IsPlayerAlive(client))
 			{
 				PrintCenterText(client, "%t", "dealdamage_start_nc");
 				SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
