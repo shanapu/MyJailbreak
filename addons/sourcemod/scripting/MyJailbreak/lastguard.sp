@@ -51,7 +51,6 @@ bool g_bIsLR = false;
 bool g_bMinCT = false;
 bool gp_bMyJailBreak = false;
 bool gp_bHosties = false;
-bool gp_bLastRequest = false;
 bool gp_bSmartJailDoors = false;
 
 // Console Variables
@@ -180,7 +179,6 @@ public void OnAllPluginsLoaded()
 {
 	gp_bMyJailBreak = LibraryExists("myjailbreak");
 	gp_bHosties = LibraryExists("hosties");
-	gp_bLastRequest = LibraryExists("lastrequest");
 	gp_bSmartJailDoors = LibraryExists("smartjaildoors");
 }
 
@@ -191,9 +189,6 @@ public void OnLibraryRemoved(const char[] name)
 
 	if (StrEqual(name, "hosties"))
 		gp_bHosties = false;
-
-	if (StrEqual(name, "lastrequest"))
-		gp_bLastRequest = false;
 
 	if (StrEqual(name, "smartjaildoors"))
 		gp_bSmartJailDoors = false;
@@ -206,9 +201,6 @@ public void OnLibraryAdded(const char[] name)
 
 	if (StrEqual(name, "hosties"))
 		gp_bHosties = true;
-
-	if (StrEqual(name, "lastrequest"))
-		gp_bLastRequest = true;
 
 	if (StrEqual(name, "smartjaildoors"))
 		gp_bSmartJailDoors = true;
@@ -317,35 +309,55 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 
 	CreateTimer(2.5, Timer_LastGuardBeginn);
 
-	if (GetAliveTeamCount(CS_TEAM_CT) >= gc_iMinCT.IntValue) g_bMinCT = true;
+	if (GetAliveTeamCount(CS_TEAM_CT) >= gc_iMinCT.IntValue)
+	{
+		g_bMinCT = true;
+	}
 }
 
 // Round End
 public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
-	int winner = event.GetInt("winner");
-
-	Format(g_sHasVoted, sizeof(g_sHasVoted), "");
 
 	if (g_bIsLastGuard)
 	{
-		LoopClients(client)
+		LoopClients(i)
 		{
-			SetEntData(client, g_iCollision_Offset, 0, 4, true);
+			SetEntData(i, g_iCollision_Offset, 0, 4, true);
 		}
+
 		delete g_hTimerTruce;
 		delete g_hTimerBeacon;
-		if (winner == 2) PrintCenterTextAll("%t", "lastguard_twin_nc");
-		if (winner == 3) PrintCenterTextAll("%t", "lastguard_ctwin_nc");
-		
-		if (gp_bMyJailBreak) MyJailbreak_SetLastGuardRule(false);
-		g_bIsLastGuard = false;
-		if (gp_bHosties && gp_bLastRequest) SetCvar("sm_hosties_lr", 1);
-		if (gp_bMyJailBreak)SetCvar("sm_weapons_t", 0);
+
+		int winner = event.GetInt("winner");
+		if (winner == 2)
+		{
+			PrintCenterTextAll("%t", "lastguard_twin_nc");
+		}
+		if (winner == 3)
+		{
+			PrintCenterTextAll("%t", "lastguard_ctwin_nc");
+		}
+
+		if (gp_bMyJailBreak)
+		{
+			MyJailbreak_SetLastGuardRule(false);
+			SetCvar("sm_weapons_t", 0);
+		}
+
+		if (gp_bHosties)
+		{
+			SetCvar("sm_hosties_lr", 1);
+		}
+
 		SetCvar("sm_warden_enable", 1);
+	
 		CPrintToChatAll("%t %t", "lastguard_tag", "lastguard_end");
 	}
 
+	Format(g_sHasVoted, sizeof(g_sHasVoted), "");
+
+	g_bIsLastGuard = false;
 	g_bAllowLastGuard = false;
 	g_bIsLR = false;
 }
@@ -353,7 +365,10 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 // Check player count when player dies or change team
 public void Event_PlayerTeamDeath(Event event, const char[] name, bool dontBroadcast)
 {
-	if (g_bAllowLastGuard)CheckStatus();
+	if (g_bAllowLastGuard)
+	{
+		CheckStatus();
+	}
 }
 
 /******************************************************************************
@@ -368,20 +383,38 @@ void StartLastGuard()
 		g_bIsLastGuard = true;
 		g_iVoteCount = 0;
 
-		if (gp_bSmartJailDoors) SJD_OpenDoors();
+		if (gp_bSmartJailDoors)
+		{
+			SJD_OpenDoors();
+		}
 
 		if (gp_bMyJailBreak)
 		{
 			MyJailbreak_SetLastGuardRule(true);
-			if (gc_fBeaconTime.FloatValue > 0.0) g_hTimerBeacon = CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
+
+			if (gc_fBeaconTime.FloatValue > 0.0)
+			{
+				g_hTimerBeacon = CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
+			}
 		}
 
-		if (gp_bHosties && gp_bLastRequest) SetCvar("sm_hosties_lr", 0);
-		if (gp_bMyJailBreak) SetCvar("sm_weapons_t", 1);
-		SetCvar("sm_warden_enable", 0);
-		int Tcount = (GetAliveTeamCount(CS_TEAM_T)*gc_iTimePerT.IntValue);
+		if (gp_bHosties)
+		{
+			SetCvar("sm_hosties_lr", 0);
+		}
 
-		if (gc_iTime.IntValue != 0) GameRules_SetProp("m_iRoundTime", (60+Tcount+(gc_iTime.IntValue*60)), 4, 0, true);
+		if (gp_bMyJailBreak)
+		{
+			SetCvar("sm_weapons_t", 1);
+		}
+
+		SetCvar("sm_warden_enable", 0);
+
+		int Tcount = (GetAliveTeamCount(CS_TEAM_T)*gc_iTimePerT.IntValue);
+		if (gc_iTime.IntValue != 0)
+		{
+			GameRules_SetProp("m_iRoundTime", (60+Tcount+(gc_iTime.IntValue*60)), 4, 0, true);
+		}
 
 		if (gc_bSounds.BoolValue)
 		{
@@ -396,56 +429,70 @@ void StartLastGuard()
 			HPterBuffer = (GetClientHealth(i) + HPterrors);
 			HPterrors = HPterBuffer;
 			HPterBuffer = 0;
-			
+
 			SetEntityMoveType(i, MOVETYPE_WALK);
+
 			SetEntPropFloat(i, Prop_Data, "m_flLaggedMovementValue", 1.0);
+
 			SetEntityRenderColor(i, 255, 255, 255, 255);
+
 			CreateTimer(0.0, DeleteOverlay, i);
-			if (gp_bHosties && gp_bLastRequest) ChangeRebelStatus(i, true);
+
+			if (gp_bHosties)
+			{
+				ChangeRebelStatus(i, true);
+			}
 		}
 
 		int HPCT = RoundToCeil(HPterrors * (gc_iHPmultipler.FloatValue / 100.0));
-		LoopClients(iClient)
+
+		LoopClients(i)
 		{
 			char info[64];
+
 			Panel InfoPanel = new Panel();
-			Format(info, sizeof(info), "%T", "lastguard_info_title", iClient);
+
+			Format(info, sizeof(info), "%T", "lastguard_info_title", i);
 			InfoPanel.SetTitle(info);
+
 			InfoPanel.DrawText("                                   ");
-			Format(info, sizeof(info), "%T", "lastguard_info_line1", iClient);
+			Format(info, sizeof(info), "%T", "lastguard_info_line1", i);
 			InfoPanel.DrawText(info);
 			InfoPanel.DrawText("-----------------------------------");
-			Format(info, sizeof(info), "%T", "lastguard_info_line2", iClient);
+			Format(info, sizeof(info), "%T", "lastguard_info_line2", i);
 			InfoPanel.DrawText(info);
-			Format(info, sizeof(info), "%T", "lastguard_info_line3", iClient);
+			Format(info, sizeof(info), "%T", "lastguard_info_line3", i);
 			InfoPanel.DrawText(info);
-			Format(info, sizeof(info), "%T", "lastguard_info_line4", iClient);
+			Format(info, sizeof(info), "%T", "lastguard_info_line4", i);
 			InfoPanel.DrawText(info);
-			Format(info, sizeof(info), "%T", "lastguard_info_line5", iClient);
+			Format(info, sizeof(info), "%T", "lastguard_info_line5", i);
 			InfoPanel.DrawText(info);
-			Format(info, sizeof(info), "%T", "lastguard_info_line6", iClient);
+			Format(info, sizeof(info), "%T", "lastguard_info_line6", i);
 			InfoPanel.DrawText(info);
-			Format(info, sizeof(info), "%T", "lastguard_info_line7", iClient);
+			Format(info, sizeof(info), "%T", "lastguard_info_line7", i);
 			InfoPanel.DrawText(info);
 			InfoPanel.DrawText("-----------------------------------");
-			Format(info, sizeof(info), "%T", "lastguard_close", iClient);
+
+			Format(info, sizeof(info), "%T", "lastguard_close", i);
 			InfoPanel.DrawItem(info);
-			InfoPanel.Send(iClient, Handler_NullCancel, 20);
-			
-			SetEntData(iClient, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
-			SetEntProp(iClient, Prop_Data, "m_takedamage", 0, 1);
-			
+
+			InfoPanel.Send(i, Handler_NullCancel, 20);
+
+			SetEntData(i, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
+			SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
+
 			if (gc_bFreeze.BoolValue)
 			{
-				SetEntityMoveType(iClient, MOVETYPE_NONE);
-				SetEntPropFloat(iClient, Prop_Data, "m_flLaggedMovementValue", 0.0);
+				SetEntityMoveType(i, MOVETYPE_NONE);
+				SetEntPropFloat(i, Prop_Data, "m_flLaggedMovementValue", 0.0);
 			}
-		// 	FakeClientCommand(iClient, "sm_weapons");
-			
-			if (IsPlayerAlive(iClient) && GetClientTeam(iClient) == CS_TEAM_CT)
+
+		//	FakeClientCommand(i, "sm_weapons");
+
+			if (IsPlayerAlive(i) && GetClientTeam(i) == CS_TEAM_CT)
 			{
-				SetEntityHealth(iClient, HPCT);
-				CPrintToChatAll("%t %t", "lastguard_tag", "lastguard_hp", GetAliveTeamCount(CS_TEAM_T), HPterrors, iClient, HPCT);
+				SetEntityHealth(i, HPCT);
+				CPrintToChatAll("%t %t", "lastguard_tag", "lastguard_hp", GetAliveTeamCount(CS_TEAM_T), HPterrors, i, HPCT);
 			}
 		}
 
@@ -466,9 +513,13 @@ void CheckStatus()
 		{
 			if (gp_bMyJailBreak) if (MyJailbreak_IsEventDayRunning())
 			return;
-			
+
 			StartLastGuard();
-			if (gp_bMyJailBreak) if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Last Guard Rule was started automatic");
+			if (gp_bMyJailBreak) if (MyJailbreak_ActiveLogging())
+			{
+				LogToFileEx(g_sMyJBLogFile, "Last Guard Rule was started automatic");
+			}
+
 			g_bMinCT = false;
 		}
 	}
@@ -487,9 +538,20 @@ public void OnMapStart()
 
 	g_iTruceTime = gc_iTruceTime.IntValue;
 
-	if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);   // Add sound to download and precache table
-	if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundLastCTPath);   // Add sound to download and precache table
-	if (gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);   // Add overlay to download and precache table
+	if (gc_bSounds.BoolValue)
+	{
+		PrecacheSoundAnyDownload(g_sSoundStartPath);   // Add sound to download and precache table
+	}
+
+	if (gc_bSounds.BoolValue)
+	{
+		PrecacheSoundAnyDownload(g_sSoundLastCTPath);   // Add sound to download and precache table
+	}
+
+	if (gc_bOverlays.BoolValue)
+	{
+		PrecacheDecalAnyDownload(g_sOverlayStartPath);   // Add overlay to download and precache table
+	}
 }
 
 public void OnConfigsExecuted()
@@ -509,7 +571,9 @@ public void OnConfigsExecuted()
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
 		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		{
 			RegConsoleCmd(sCommand, Command_VoteLastGuard, "Allows terrors to vote and last CT to set Last Guard Rule");	
+		}
 	}
 }
 
@@ -524,7 +588,10 @@ public void OnMapEnd()
 	g_iVoteCount = 0;
 	g_sHasVoted[0] = '\0';
 
-	if (gp_bMyJailBreak) MyJailbreak_SetLastGuardRule(false);
+	if (gp_bMyJailBreak)
+	{
+		MyJailbreak_SetLastGuardRule(false);
+	}
 }
 
 // Client Disconnect
@@ -551,16 +618,16 @@ public Action Timer_TruceUntilStart(Handle timer)
 	if (g_iTruceTime > 1)
 	{
 		g_iTruceTime--;
-		LoopClients(client) if (IsPlayerAlive(client))
+		LoopClients(i) if (IsPlayerAlive(i))
 		{
-			PrintCenterText(client, "%t", "lastguard_timeuntilstart_nc", g_iTruceTime);
-			if (gc_bFreeze.BoolValue && (g_iTruceTime <= (gc_iTruceTime.IntValue / 2)) && (GetEntityMoveType(client) == MOVETYPE_NONE))
+			PrintCenterText(i, "%t", "lastguard_timeuntilstart_nc", g_iTruceTime);
+
+			if (gc_bFreeze.BoolValue && (g_iTruceTime <= (gc_iTruceTime.IntValue / 2)) && (GetEntityMoveType(i) == MOVETYPE_NONE))
 			{
-				SetEntityMoveType(client, MOVETYPE_WALK);
-				SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
-				PrintCenterText(client, "%t", "lastguard_movenow_nc", g_iTruceTime);
-				CPrintToChat(client, "%t %t", "lastguard_tag", "lastguard_movenow");
-				
+				SetEntityMoveType(i, MOVETYPE_WALK);
+				SetEntPropFloat(i, Prop_Data, "m_flLaggedMovementValue", 1.0);
+				PrintCenterText(i, "%t", "lastguard_movenow_nc", g_iTruceTime);
+				CPrintToChat(i, "%t %t", "lastguard_tag", "lastguard_movenow");
 			}
 		}
 
@@ -573,17 +640,22 @@ public Action Timer_TruceUntilStart(Handle timer)
 	{
 		SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
 		PrintCenterText(i, "%t", "lastguard_start_nc");
-		if (gc_bOverlays.BoolValue) ShowOverlay(i, g_sOverlayStartPath, 2.0);
+		if (gc_bOverlays.BoolValue)
+		{
+			ShowOverlay(i, g_sOverlayStartPath, 2.0);
+		}
+
 		if (gc_bSounds.BoolValue)
 		{
 			EmitSoundToAllAny(g_sSoundStartPath);
 		}
+
 		FakeClientCommand(i, "sm_weapons");
 	}
 
-	CPrintToChatAll("%t %t", "lastguard_tag", "lastguard_start");
-
 	g_hTimerTruce = null;
+
+	CPrintToChatAll("%t %t", "lastguard_tag", "lastguard_start");
 
 	return Plugin_Stop;
 }
@@ -600,6 +672,10 @@ public Action Timer_LastGuardBeginn(Handle timer)
 
 public Action Timer_BeaconOn(Handle timer)
 {
-	LoopValidClients(i, true, false) MyJailbreak_BeaconOn(i, 2.0);
+	LoopValidClients(i, true, false)
+	{
+		MyJailbreak_BeaconOn(i, 2.0);
+	}
+
 	g_hTimerBeacon = null;
 }

@@ -115,7 +115,9 @@ public void OnConfigsExecuted()
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
 		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		{
 			RegConsoleCmd(sCommand, Command_HUD, "Allows player to toggle the hud display.");
+		}
 	}
 }
 
@@ -130,13 +132,11 @@ public Action Command_HUD(int client, int args)
 	{
 		g_bEnableHud[client] = true;
 		CReplyToCommand(client, "%t %t", "hud_tag", "hud_on");
-		
 	}
 	else
 	{
 		g_bEnableHud[client] = false;
 		CReplyToCommand(client, "%t %t", "hud_tag", "hud_off");
-		
 	}
 
 	return Plugin_Handled;
@@ -159,7 +159,10 @@ public void Event_PlayerTeamDeath(Event event, const char[] name, bool dontBroad
 // Prepare Plugin & modules
 public void OnMapStart()
 {
-	if (gc_bPlugin.BoolValue) CreateTimer(1.0, Timer_ShowHUD, _, TIMER_REPEAT);
+	if (gc_bPlugin.BoolValue)
+	{
+		CreateTimer(1.0, Timer_ShowHUD, _, TIMER_REPEAT);
+	}
 }
 
 public void OnClientPutInServer(int client)
@@ -210,7 +213,7 @@ void ShowHUD()
 				if (MyJailbreak_IsLastGuardRule())
 				{
 					int lastCT = GetLastAlive(CS_TEAM_CT);
-					
+
 					if (lastCT != -1)
 					{
 						if (MyJailbreak_IsEventDayPlanned())

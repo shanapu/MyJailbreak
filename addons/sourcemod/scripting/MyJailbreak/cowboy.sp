@@ -972,7 +972,10 @@ public Action Timer_StartEvent(Handle timer)
 
 public Action Timer_BeaconOn(Handle timer)
 {
-	LoopValidClients(i, true, false) MyJailbreak_BeaconOn(i, 2.0);
+	LoopValidClients(i, true, false) 
+	{
+		MyJailbreak_BeaconOn(i, 2.0);
+	}
 
 	g_hTimerBeacon = null;
 }

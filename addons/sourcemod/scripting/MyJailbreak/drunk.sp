@@ -798,7 +798,7 @@ void StartNextRound()
 	if (gp_bMyJailbreak)
 	{
 		char buffer[32];
-		Format(buffer, sizeof(buffer), "%T", "cowboy_name", LANG_SERVER);
+		Format(buffer, sizeof(buffer), "%T", "drunk_name", LANG_SERVER);
 		MyJailbreak_SetEventDayName(buffer);
 		MyJailbreak_SetEventDayPlanned(true);
 	}

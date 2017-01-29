@@ -140,37 +140,58 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 	if (convar == gc_sIconWardenPath)
 	{
 		strcopy(g_sIconWardenPath, sizeof(g_sIconWardenPath), newValue);
-		if (gc_bIconWarden.BoolValue) PrecacheModelAnyDownload(g_sIconWardenPath);
+		if (gc_bIconWarden.BoolValue)
+		{
+			PrecacheModelAnyDownload(g_sIconWardenPath);
+		}
 	}
 	else if (convar == gc_sIconDeputyPath)
 	{
 		strcopy(g_sIconDeputyPath, sizeof(g_sIconDeputyPath), newValue);
-		if (gc_bIconDeputy.BoolValue) PrecacheModelAnyDownload(g_sIconDeputyPath);
+		if (gc_bIconDeputy.BoolValue)
+		{
+			PrecacheModelAnyDownload(g_sIconDeputyPath);
+		}
 	}
 	else if (convar == gc_sIconGuardPath)
 	{
 		strcopy(g_sIconGuardPath, sizeof(g_sIconGuardPath), newValue);
-		if (gc_bIconGuard.BoolValue) PrecacheModelAnyDownload(g_sIconGuardPath);
+		if (gc_bIconGuard.BoolValue)
+		{
+			PrecacheModelAnyDownload(g_sIconGuardPath);
+		}
 	}
 	else if (convar == gc_sIconPrisonerPath)
 	{
 		strcopy(g_sIconPrisonerPath, sizeof(g_sIconPrisonerPath), newValue);
-		if (gc_bIconPrisoner.BoolValue) PrecacheModelAnyDownload(g_sIconPrisonerPath);
+		if (gc_bIconPrisoner.BoolValue)
+		{
+			PrecacheModelAnyDownload(g_sIconPrisonerPath);
+		}
 	}
 	else if (convar == gc_sIconRebelPath)
 	{
 		strcopy(g_sIconRebelPath, sizeof(g_sIconRebelPath), newValue);
-		if (gc_bIconRebel.BoolValue) PrecacheModelAnyDownload(g_sIconRebelPath);
+		if (gc_bIconRebel.BoolValue)
+		{
+			PrecacheModelAnyDownload(g_sIconRebelPath);
+		}
 	}
 	else if (convar == gc_sIconCuffedPath)
 	{
 		strcopy(g_sIconCuffedPath, sizeof(g_sIconCuffedPath), newValue);
-		if (gc_bIconCuffed.BoolValue) PrecacheModelAnyDownload(g_sIconCuffedPath);
+		if (gc_bIconCuffed.BoolValue)
+		{
+			PrecacheModelAnyDownload(g_sIconCuffedPath);
+		}
 	}
 	else if (convar == gc_sIconFreedayPath)
 	{
 		strcopy(g_sIconFreedayPath, sizeof(g_sIconFreedayPath), newValue);
-		if (gc_bIconFreeday.BoolValue) PrecacheModelAnyDownload(g_sIconFreedayPath);
+		if (gc_bIconFreeday.BoolValue)
+		{
+			PrecacheModelAnyDownload(g_sIconFreedayPath);
+		}
 	}
 }
 
@@ -225,13 +246,41 @@ public void OnClientDisconnect(int client)
 
 public void OnMapStart()
 {
-	if (gc_bIconWarden.BoolValue) PrecacheModelAnyDownload(g_sIconWardenPath);
-	if (gc_bIconGuard.BoolValue) PrecacheModelAnyDownload(g_sIconGuardPath);
-	if (gc_bIconPrisoner.BoolValue) PrecacheModelAnyDownload(g_sIconPrisonerPath);
-	if (gc_bIconDeputy.BoolValue) PrecacheModelAnyDownload(g_sIconDeputyPath);
-	if (gc_bIconRebel.BoolValue) PrecacheModelAnyDownload(g_sIconRebelPath);
-	if (gc_bIconCuffed.BoolValue) PrecacheModelAnyDownload(g_sIconCuffedPath);
-	if (gc_bIconFreeday.BoolValue) PrecacheModelAnyDownload(g_sIconFreedayPath);
+	if (gc_bIconWarden.BoolValue)
+	{
+		PrecacheModelAnyDownload(g_sIconWardenPath);
+	}
+
+	if (gc_bIconGuard.BoolValue)
+	{
+		PrecacheModelAnyDownload(g_sIconGuardPath);
+	}
+
+	if (gc_bIconPrisoner.BoolValue)
+	{
+		PrecacheModelAnyDownload(g_sIconPrisonerPath);
+	}
+
+	if (gc_bIconDeputy.BoolValue)
+	{
+		PrecacheModelAnyDownload(g_sIconDeputyPath);
+	}
+
+	if (gc_bIconRebel.BoolValue)
+	{
+		PrecacheModelAnyDownload(g_sIconRebelPath);
+	}
+
+	if (gc_bIconCuffed.BoolValue)
+	{
+		PrecacheModelAnyDownload(g_sIconCuffedPath);
+	}
+
+	if (gc_bIconFreeday.BoolValue)
+	{
+		PrecacheModelAnyDownload(g_sIconFreedayPath);
+	}
+
 	CreateTimer(0.5, Timer_Delay, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 }
 
@@ -257,7 +306,10 @@ public void OnDeputyRemoved(int client)
 
 public Action Timer_Delay(Handle timer, Handle pack)
 {
-	LoopValidClients(i, true, false) SpawnIcon(i);
+	LoopValidClients(i, true, false)
+	{
+		SpawnIcon(i);
+	}
 }
 
 /******************************************************************************
@@ -270,9 +322,13 @@ public Action Should_TransmitG(int entity, int client)
 	char iconbuffer[256];
 
 	Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconGuardPath);
+
 	GetEntPropString(entity, Prop_Data, "m_ModelName", m_ModelName, sizeof(m_ModelName));
+
 	if (StrEqual(iconbuffer, m_ModelName))
+	{
 		return Plugin_Continue;
+	}
 
 	return Plugin_Handled;
 }
@@ -283,9 +339,13 @@ public Action Should_TransmitW(int entity, int client)
 	char iconbuffer[256];
 
 	Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconWardenPath);
+
 	GetEntPropString(entity, Prop_Data, "m_ModelName", m_ModelName, sizeof(m_ModelName));
+
 	if (StrEqual(iconbuffer, m_ModelName))
+	{
 		return Plugin_Continue;
+	}
 
 	return Plugin_Handled;
 }
@@ -297,9 +357,13 @@ public Action Should_TransmitD(int entity, int client)
 	char iconbuffer[256];
 
 	Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconDeputyPath);
+
 	GetEntPropString(entity, Prop_Data, "m_ModelName", m_ModelName, sizeof(m_ModelName));
+
 	if (StrEqual(iconbuffer, m_ModelName))
+	{
 		return Plugin_Continue;
+	}
 
 	return Plugin_Handled;
 }
@@ -311,9 +375,13 @@ public Action Should_TransmitP(int entity, int client)
 	char iconbuffer[256];
 
 	Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconPrisonerPath);
+
 	GetEntPropString(entity, Prop_Data, "m_ModelName", m_ModelName, sizeof(m_ModelName));
+
 	if (StrEqual(iconbuffer, m_ModelName))
+	{
 		return Plugin_Continue;
+	}
 
 	return Plugin_Handled;
 }
@@ -325,9 +393,13 @@ public Action Should_TransmitR(int entity, int client)
 	char iconbuffer[256];
 
 	Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconRebelPath);
+
 	GetEntPropString(entity, Prop_Data, "m_ModelName", m_ModelName, sizeof(m_ModelName));
+
 	if (StrEqual(iconbuffer, m_ModelName))
+	{
 		return Plugin_Continue;
+	}
 
 	return Plugin_Handled;
 }
@@ -339,9 +411,13 @@ public Action Should_TransmitC(int entity, int client)
 	char iconbuffer[256];
 
 	Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconCuffedPath);
+
 	GetEntPropString(entity, Prop_Data, "m_ModelName", m_ModelName, sizeof(m_ModelName));
+
 	if (StrEqual(iconbuffer, m_ModelName))
+	{
 		return Plugin_Continue;
+	}
 
 	return Plugin_Handled;
 }
@@ -353,9 +429,13 @@ public Action Should_TransmitF(int entity, int client)
 	char iconbuffer[256];
 
 	Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconFreedayPath);
+
 	GetEntPropString(entity, Prop_Data, "m_ModelName", m_ModelName, sizeof(m_ModelName));
+
 	if (StrEqual(iconbuffer, m_ModelName))
+	{
 		return Plugin_Continue;
+	}
 
 	return Plugin_Handled;
 }
@@ -390,26 +470,65 @@ void SpawnIcon(int client)
 
 	if (gp_bWarden)
 	{
-		if (gc_bIconWarden.BoolValue && warden_iswarden(client)) Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconWardenPath);
-		else if (gc_bIconDeputy.BoolValue && warden_deputy_isdeputy(client)) Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconDeputyPath);
-		else if (gc_bIconCuffed.BoolValue && warden_handcuffs_iscuffed(client)) Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconCuffedPath);
-		else if (gc_bIconGuard.BoolValue && GetClientTeam(client) == CS_TEAM_CT) Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconGuardPath);
+		if (gc_bIconWarden.BoolValue && warden_iswarden(client))
+		{
+			Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconWardenPath);
+		}
+		else if (gc_bIconDeputy.BoolValue && warden_deputy_isdeputy(client))
+		{
+			Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconDeputyPath);
+		}
+		else if (gc_bIconCuffed.BoolValue && warden_handcuffs_iscuffed(client))
+		{
+			Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconCuffedPath);
+		}
+		else if (gc_bIconGuard.BoolValue && GetClientTeam(client) == CS_TEAM_CT)
+		{
+			Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconGuardPath);
+		}
 		else if (gp_bHosties)
 		{
-			if (gc_bIconRebel.BoolValue && IsClientRebel(client)) Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconRebelPath);
-			else if (gc_bIconFreeday.BoolValue && warden_freeday_has(client)) Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconFreedayPath);
-			else if (gc_bIconPrisoner.BoolValue && GetClientTeam(client) == CS_TEAM_T) Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconPrisonerPath);
+			if (gc_bIconRebel.BoolValue && IsClientRebel(client))
+			{
+				Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconRebelPath);
+			}
+				else if (gc_bIconFreeday.BoolValue && warden_freeday_has(client))
+			{
+				Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconFreedayPath);
+			}
+				else if (gc_bIconPrisoner.BoolValue && GetClientTeam(client) == CS_TEAM_T)
+			{
+				Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconPrisonerPath);
+			}
 		}
-		else if (gc_bIconFreeday.BoolValue && warden_freeday_has(client)) Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconFreedayPath);
-		else if (gc_bIconPrisoner.BoolValue && GetClientTeam(client) == CS_TEAM_T) Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconPrisonerPath);
+		else if (gc_bIconFreeday.BoolValue && warden_freeday_has(client))
+		{
+			Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconFreedayPath);
+		}
+		else if (gc_bIconPrisoner.BoolValue && GetClientTeam(client) == CS_TEAM_T)
+		{
+			Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconPrisonerPath);
+		}
 	}
-	else if (gc_bIconGuard.BoolValue && GetClientTeam(client) == CS_TEAM_CT) Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconGuardPath);
+	else if (gc_bIconGuard.BoolValue && GetClientTeam(client) == CS_TEAM_CT)
+	{
+		Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconGuardPath);
+	}
 	else if (gp_bHosties)
 	{
-		if (gc_bIconRebel.BoolValue && IsClientRebel(client)) Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconRebelPath);
-		else if (gc_bIconPrisoner.BoolValue && GetClientTeam(client) == CS_TEAM_T) Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconPrisonerPath);
+		if (gc_bIconRebel.BoolValue && IsClientRebel(client))
+		{
+			Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconRebelPath);
+		}
+		else if (gc_bIconPrisoner.BoolValue && GetClientTeam(client) == CS_TEAM_T)
+		{
+			Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconPrisonerPath);
+		}
 	}
-	else if (gc_bIconPrisoner.BoolValue && GetClientTeam(client) == CS_TEAM_T) Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconPrisonerPath);
+	else if (gc_bIconPrisoner.BoolValue && GetClientTeam(client) == CS_TEAM_T)
+	{
+		Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconPrisonerPath);
+	}
 
 	DispatchKeyValue(g_iIcon[client], "model", iconbuffer);
 	DispatchKeyValue(g_iIcon[client], "classname", "env_sprite");
@@ -429,28 +548,66 @@ void SpawnIcon(int client)
 
 	if (gp_bWarden)
 	{
-		if (gc_bIconWarden.BoolValue && warden_iswarden(client)) SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitW);
-		else if (gc_bIconDeputy.BoolValue && warden_deputy_isdeputy(client)) SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitD);
-		else if (gc_bIconCuffed.BoolValue && warden_handcuffs_iscuffed(client))  SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitC);
-		else if (gc_bIconGuard.BoolValue && GetClientTeam(client) == CS_TEAM_CT)  SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitG);
+		if (gc_bIconWarden.BoolValue && warden_iswarden(client))
+		{
+			SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitW);
+		}
+		else if (gc_bIconDeputy.BoolValue && warden_deputy_isdeputy(client))
+		{
+			SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitD);
+		}
+		else if (gc_bIconCuffed.BoolValue && warden_handcuffs_iscuffed(client))
+		{
+			SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitC);
+		}
+		else if (gc_bIconGuard.BoolValue && GetClientTeam(client) == CS_TEAM_CT)
+		{
+			SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitG);
+		}
 		else if (gp_bHosties)
 		{
-			if (gc_bIconRebel.BoolValue && IsClientRebel(client))  SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitR);
-			else if (gc_bIconFreeday.BoolValue && warden_freeday_has(client))  SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitF);
-			else if (gc_bIconPrisoner.BoolValue && GetClientTeam(client) == CS_TEAM_T)  SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitP);
+			if (gc_bIconRebel.BoolValue && IsClientRebel(client))
+			{
+				SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitR);
+			}
+				else if (gc_bIconFreeday.BoolValue && warden_freeday_has(client))
+			{
+				SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitF);
+			}
+				else if (gc_bIconPrisoner.BoolValue && GetClientTeam(client) == CS_TEAM_T)
+			{
+				SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitP);
+			}
 		}
-		else if (gc_bIconFreeday.BoolValue && warden_freeday_has(client))  SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitF);
-		else if (gc_bIconPrisoner.BoolValue && GetClientTeam(client) == CS_TEAM_T)  SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitP);
+		else if (gc_bIconFreeday.BoolValue && warden_freeday_has(client))
+		{
+			SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitF);
+		}
+		else if (gc_bIconPrisoner.BoolValue && GetClientTeam(client) == CS_TEAM_T)
+		{
+			SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitP);
+		}
 	}
-	else if (gc_bIconGuard.BoolValue && GetClientTeam(client) == CS_TEAM_CT)  SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitG);
+	else if (gc_bIconGuard.BoolValue && GetClientTeam(client) == CS_TEAM_CT)
+	{
+		SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitG);
+	}
 	else if (gp_bHosties)
 	{
-		if (gc_bIconRebel.BoolValue && IsClientRebel(client))  SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitR);
-		else if (gc_bIconPrisoner.BoolValue && GetClientTeam(client) == CS_TEAM_T)  SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitP);
+		if (gc_bIconRebel.BoolValue && IsClientRebel(client))
+		{
+			SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitR);
+		}
+		else if (gc_bIconPrisoner.BoolValue && GetClientTeam(client) == CS_TEAM_T)
+		{
+			SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitP);
+		}
 	}
-	else if (gc_bIconPrisoner.BoolValue && GetClientTeam(client) == CS_TEAM_T)  SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitP);
+	else if (gc_bIconPrisoner.BoolValue && GetClientTeam(client) == CS_TEAM_T)
+	{
+		SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitP);
+	}
 }
-
 
 void RemoveIcon(int client) 
 {
@@ -481,7 +638,9 @@ public int Native_BlockIcon(Handle plugin, int argc)
 	int client = GetNativeCell(1);
 
 	if (!IsClientInGame(client) && !IsClientConnected(client))
+	{
 		ThrowNativeError(SP_ERROR_INDEX, "Client index %i is invalid", client);
+	}
 
 	g_bBlockIcon[client] = GetNativeCell(2);
 }
