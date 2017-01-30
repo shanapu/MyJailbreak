@@ -49,6 +49,8 @@ ConVar gc_sCustomCommandLeave;
 ConVar gc_sCustomCommandRatio;
 ConVar gc_sCustomCommandRemove;
 ConVar gc_sCustomCommandClear;
+ConVar gc_sCustomCommandPrisoner;
+ConVar gc_sCustomCommandSpec;
 ConVar gc_sAdminFlag;
 ConVar gc_bToggle;
 ConVar gc_bToggleAnnounce;
@@ -72,6 +74,7 @@ bool gp_bWarden = false;
 Handle g_aGuardQueue;
 Handle g_aGuardList;
 Handle g_hOnClientJoinGuards;
+Handle g_hDataPackTeam;
 
 // Integer
 int g_iRandomAnswer[MAXPLAYERS+1];
@@ -99,6 +102,8 @@ public void OnPluginStart()
 
 	// Client commands
 	RegConsoleCmd("sm_guard", Command_JoinGuardQueue, "Allows the prisoners to queue to CT");
+	RegConsoleCmd("sm_prisoner", Command_JoinTerror, "Allows a player to join prisoner");
+	RegConsoleCmd("sm_spectator", Command_JoinSpec, "Allows a player to join Spectator");
 	RegConsoleCmd("sm_viewqueue", Command_ViewGuardQueue, "Allows a player to show queue to CT");
 	RegConsoleCmd("sm_leavequeue", Command_LeaveQueue, "Allows a player to leave queue to CT");
 	RegConsoleCmd("sm_ratio", Command_ToggleRatio, "Allows the admin toggle the ratio check and player to see if ratio is enabled");
@@ -118,6 +123,8 @@ public void OnPluginStart()
 	gc_sCustomCommandRatio = AutoExecConfig_CreateConVar("sm_ratio_cmds_ratio", "balance", "Set your custom chat command for view/toggle ratio (!ratio (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_sCustomCommandRemove = AutoExecConfig_CreateConVar("sm_ratio_cmds_remove", "rq", "Set your custom chat command for admins to remove a player from guard queue (!removequeue (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_sCustomCommandClear = AutoExecConfig_CreateConVar("sm_ratio_cmds_clear", "cq", "Set your custom chat command for admins to clear the guard queue (!clearqueue (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
+	gc_sCustomCommandPrisoner = AutoExecConfig_CreateConVar("sm_ratio_cmds_prisoner", "t,terror", "Set your custom chat command for player to move to prisoner (!prisoner (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
+	gc_sCustomCommandSpec = AutoExecConfig_CreateConVar("sm_ratio_cmds_spec", "spec", "Set your custom chat command for player to move to spectator (!spectator (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_fPrisonerPerGuard = AutoExecConfig_CreateConVar("sm_ratio_T_per_CT", "2", "How many prisoners for each guard.", _, true, 1.0);
 	gc_bVIPQueue = AutoExecConfig_CreateConVar("sm_ratio_flag", "1", "0 - disabled, 1 - enable VIPs moved to front of queue", _, true, 0.0, true, 1.0);
 	gc_bForceTConnect = AutoExecConfig_CreateConVar("sm_ratio_force_t", "1", "0 - disabled, 1 - force player on connect to join T side", _, true, 0.0, true, 1.0);
@@ -181,6 +188,30 @@ public void OnConfigsExecuted()
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
 		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
 			RegConsoleCmd(sCommand, Command_JoinGuardQueue, "Allows the prisoners to queue to CT");
+	}
+
+	// Join Prisoners
+	gc_sCustomCommandPrisoner.GetString(sCommands, sizeof(sCommands));
+	ReplaceString(sCommands, sizeof(sCommands), " ", "");
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+
+	for (int i = 0; i < iCount; i++)
+	{
+		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+			RegConsoleCmd(sCommand, Command_JoinTerror, "Allows the player to join prisoners");
+	}
+
+	// Join spectator
+	gc_sCustomCommandSpec.GetString(sCommands, sizeof(sCommands));
+	ReplaceString(sCommands, sizeof(sCommands), " ", "");
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+
+	for (int i = 0; i < iCount; i++)
+	{
+		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+			RegConsoleCmd(sCommand, Command_JoinSpec, "Allows the player to join spectator");
 	}
 
 	// View guardqueue
@@ -348,12 +379,14 @@ public Action Command_JoinGuardQueue(int client, int iArgNum)
 		return Plugin_Handled;
 	}
 
+/*
 	if (GetClientTeam(client) != CS_TEAM_T)
 	{
 		ClientCommand(client, "play %s", g_sRestrictedSound);
 		CReplyToCommand(client, "%t %t", "ratio_tag", "ratio_noct");
 		return Plugin_Handled;
 	}
+*/
 
 	if (g_bQueueCooldown[client])
 	{
@@ -1143,9 +1176,6 @@ int GetRandomClientFromTeam(int iTeam)
 
 	LoopValidClients(i, true, true)
 	{
-		if (!IsClientInGame(i))
-			continue;
-		
 		if (GetClientPendingTeam(i) != iTeam)
 			continue;
 		
@@ -1222,4 +1252,82 @@ void SetClientPendingTeam(int client, int team)
 {
 	SetEntProp(client, Prop_Send, "m_iPendingTeamNum", team);
 	// MinusDeath(client);
+}
+
+
+
+
+public Action Command_JoinTerror(int client, int args)
+{
+	ChangeTeam(client, CS_TEAM_T);
+
+	return Plugin_Handled;
+}
+
+public Action Command_JoinSpec(int client, int args)
+{
+	ChangeTeam(client, CS_TEAM_SPECTATOR);
+
+	return Plugin_Handled;
+}
+
+// Switch Team Menu
+void ChangeTeam(int client, int team)
+{
+	g_hDataPackTeam = CreateDataPack();
+	WritePackCell(g_hDataPackTeam, team);
+
+	char info[255];
+
+	Menu menu1 = CreateMenu(ChangeMenu);
+
+	Format(info, sizeof(info), "%T", "ratio_sure", client);
+	menu1.SetTitle(info);
+
+	Format(info, sizeof(info), "%T", "ratio_no", client);
+	menu1.AddItem("1", info);
+	Format(info, sizeof(info), "%T", "ratio_yes", client);
+	menu1.AddItem("0", info);
+
+	menu1.ExitBackButton = true;
+	menu1.ExitButton = true;
+	menu1.Display(client, MENU_TIME_FOREVER);
+}
+
+// Switch Team Handler
+public int ChangeMenu(Menu menu, MenuAction action, int client, int selection)
+{
+	if (action == MenuAction_Select)
+	{
+		ResetPack(g_hDataPackTeam);
+		int team = ReadPackCell(g_hDataPackTeam);
+
+		char Item[11];
+		menu.GetItem(selection, Item, sizeof(Item));
+
+		int choice = StringToInt(Item);
+		if (choice == 1)
+		{
+			FakeClientCommand(client, "sm_menu");
+		}
+		else if (choice == 0)
+		{
+			if (IsPlayerAlive(client))
+			{
+				ForcePlayerSuicide(client);
+			}
+			ChangeClientTeam(client, team);
+		}
+	}
+	else if (action == MenuAction_Cancel) 
+	{
+		if (selection == MenuCancel_ExitBack) 
+		{
+			FakeClientCommand(client, "sm_menu");
+		}
+	}
+	else if (action == MenuAction_End)
+	{
+		delete menu;
+	}
 }

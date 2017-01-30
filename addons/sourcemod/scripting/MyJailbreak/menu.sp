@@ -1057,7 +1057,10 @@ public Action Command_OpenMenu(int client, int args)
 					if (gc_bTeam.BoolValue)
 					{
 						Format(menuinfo, sizeof(menuinfo), "%T", "menu_joint", client);
-						mainmenu.AddItem("ChangeTeam", menuinfo);
+						mainmenu.AddItem("ChangeTeamT", menuinfo);
+
+						Format(menuinfo, sizeof(menuinfo), "%T", "menu_joinspec", client);
+						mainmenu.AddItem("ChangeTeamSpec", menuinfo);
 					}
 				}// HERE END THE CT MENU
 			}
@@ -1131,7 +1134,40 @@ public Action Command_OpenMenu(int client, int args)
 							Format(menuinfo, sizeof(menuinfo), "%T", "menu_joinct", client);
 							mainmenu.AddItem("ChangeTeamCT", menuinfo);
 						}
+
+						Format(menuinfo, sizeof(menuinfo), "%T", "menu_joinspec", client);
+						mainmenu.AddItem("ChangeTeamSpec", menuinfo);
 					}
+				}
+			}
+			else if (GetClientTeam(client) == CS_TEAM_SPECTATOR) // HERE STARTS THE SPEC MENU
+			{
+				if (gc_bTeam.BoolValue)
+				{
+					Format(menuinfo, sizeof(menuinfo), "%T", "menu_joint", client);
+					mainmenu.AddItem("ChangeTeamT", menuinfo);
+
+					if (GetCommandFlags("sm_guard") != INVALID_FCVAR_FLAGS)
+					{
+						Format(menuinfo, sizeof(menuinfo), "%T", "menu_guardct", client);
+						mainmenu.AddItem("guard", menuinfo);
+					}
+					else
+					{
+						Format(menuinfo, sizeof(menuinfo), "%T", "menu_joinct", client);
+						mainmenu.AddItem("ChangeTeamCT", menuinfo);
+					}
+
+					Format(menuinfo, sizeof(menuinfo), "%T", "menu_joinspec", client);
+					mainmenu.AddItem("ChangeTeamSpec", menuinfo);
+				}
+			}
+			if (g_bRules != null)
+			{
+				if (g_bRules.BoolValue)
+				{
+					Format(menuinfo, sizeof(menuinfo), "%T", "menu_rules", client);
+					mainmenu.AddItem("rules", menuinfo);
 				}
 			}
 			if (CheckVipFlag(client, g_sAdminFlag))
@@ -1197,14 +1233,6 @@ public Action Command_OpenMenu(int client, int args)
 			mainmenu.AddItem("PLACEHOLDER", menuinfo);
 			*/
 			
-			if (g_bRules != null)
-			{
-				if (g_bRules.BoolValue)
-				{
-					Format(menuinfo, sizeof(menuinfo), "%T", "menu_rules", client);
-					mainmenu.AddItem("rules", menuinfo);
-				}
-			}
 			mainmenu.ExitButton = true;
 			mainmenu.Display(client, MENU_TIME_FOREVER);
 		}
@@ -1220,9 +1248,17 @@ public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selec
 		char info[32];
 		mainmenu.GetItem(selection, info, sizeof(info));
 		
-		if (strcmp(info, "ChangeTeam") == 0)
+		if (strcmp(info, "ChangeTeamT") == 0)
 		{
-			ChangeTeam(client);
+			FakeClientCommand(client, "sm_prisoner");
+		}
+		if (strcmp(info, "ChangeTeamCT") == 0)
+		{
+			ClientCommand(client, "jointeam %i", CS_TEAM_CT);
+		}
+		if (strcmp(info, "ChangeTeamSpec") == 0)
+		{
+			FakeClientCommand(client, "sm_spectator");
 		}
 		/* Command PLACEHOLDER
 		else if (strcmp(info, "PLACEHOLDER") == 0)
@@ -2053,59 +2089,6 @@ public int SetEventMenuHandler(Menu daysmenu, MenuAction action, int client, int
 	else if (action == MenuAction_End)
 	{
 		delete daysmenu;
-	}
-}
-
-// Switch Team Menu
-void ChangeTeam(int client)
-{
-	char info[255];
-	Menu menu1 = CreateMenu(ChangeMenu);
-	Format(info, sizeof(info), "%T", "warden_sure", client);
-	menu1.SetTitle(info);
-	Format(info, sizeof(info), "%T", "warden_no", client);
-	menu1.AddItem("1", info);
-	Format(info, sizeof(info), "%T", "warden_yes", client);
-	menu1.AddItem("0", info);
-	menu1.ExitBackButton = true;
-	menu1.ExitButton = true;
-	menu1.Display(client, MENU_TIME_FOREVER);
-}
-
-// Switch Team Handler
-public int ChangeMenu(Menu menu, MenuAction action, int client, int selection)
-{
-	if (action == MenuAction_Select)
-	{
-		char Item[11];
-		menu.GetItem(selection, Item, sizeof(Item));
-		int choice = StringToInt(Item);
-		if (choice == 1)
-		{
-			Command_OpenMenu(client, 0);
-		}
-		else if (choice == 0)
-		{
-			if (GetClientTeam(client) == CS_TEAM_T)
-			{
-				ClientCommand(client, "jointeam %i", CS_TEAM_CT);
-			}
-			if (GetClientTeam(client) == CS_TEAM_CT)
-			{
-				ClientCommand(client, "jointeam %i", CS_TEAM_T);
-			}
-		}
-	}
-	else if (action == MenuAction_Cancel) 
-	{
-		if (selection == MenuCancel_ExitBack) 
-		{
-			FakeClientCommand(client, "sm_menu");
-		}
-	}
-	else if (action == MenuAction_End)
-	{
-		delete menu;
 	}
 }
 

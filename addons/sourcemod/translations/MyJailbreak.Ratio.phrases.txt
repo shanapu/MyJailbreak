@@ -338,4 +338,19 @@
 		"en"		"Exit"
 	}
 
+	"ratio_sure"
+	{
+		"en"		"Are you sure?"
+	}
+
+	"ratio_yes"
+	{
+		"en"		"Yes"
+	}
+
+	"ratio_no"
+	{
+		"en"		"No"
+	}
+
 }

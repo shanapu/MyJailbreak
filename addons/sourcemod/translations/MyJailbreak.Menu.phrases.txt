@@ -85,17 +85,22 @@
 
 	"menu_unwarden"
 	{
-		"en"		"Retire From Warden"
+		"en"		"Retire from Warden"
 	}
 
 	"menu_getwarden"
 	{
-		"en"		"Become The Warden"
+		"en"		"Become the Warden"
 	}
 
 	"menu_joint"
 	{
 		"en"		"Become a Prisoner"
+	}
+
+	"menu_joinspec"
+	{
+		"en"		"Go Spectator"
 	}
 
 	"menu_check"
