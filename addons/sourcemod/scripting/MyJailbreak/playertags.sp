@@ -292,7 +292,7 @@ void HandleTag(int client)
 }
 
 // Check Chat & add Tag
-public Action OnChatMessage(int& author, ArrayList recipients, eChatFlags& flag, char[] name, char[] message, bool& bProcessColors, bool& bRemoveColors)
+public Action CP_OnChatMessage(int& author, ArrayList recipients, char[] flagstring, char[] name, char[] message, bool& processcolors, bool& removecolors)
 {
 	if (gc_bPlugin.BoolValue)
 	{

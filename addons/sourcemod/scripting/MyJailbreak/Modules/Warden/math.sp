@@ -212,7 +212,7 @@ public void Math_OnMapEnd()
 	g_bCanAnswer = false;
 }
 
-public Action OnChatMessage(int& author, ArrayList recipients, eChatFlags& flag, char[] name, char[] message, bool& bProcessColors, bool& bRemoveColors)
+public Action CP_OnChatMessage(int& author, ArrayList recipients, char[] flagstring, char[] name, char[] message, bool& processcolors, bool& removecolors)
 {
 	if (g_bIsMathQuiz && g_bCanAnswer)
 	{
