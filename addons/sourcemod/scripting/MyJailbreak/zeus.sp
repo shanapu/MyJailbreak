@@ -30,12 +30,16 @@
 #include <emitsoundany>
 #include <colors>
 #include <autoexecconfig>
+#include <mystocks>
+
+// Optional Plugins
+#undef REQUIRE_PLUGIN
 #include <hosties>
 #include <lastrequest>
 #include <warden>
-#include <smartjaildoors>
-#include <mystocks>
 #include <myjailbreak>
+#include <smartjaildoors>
+#define REQUIRE_PLUGIN
 
 // Compiler Options
 #pragma semicolon 1
@@ -45,6 +49,12 @@
 bool g_bIsLateLoad = false;
 bool g_bIsZeus = false;
 bool g_bStartZeus = false;
+
+// Plugin bools
+bool gp_bWarden;
+bool gp_bHosties;
+bool gp_bSmartJailDoors;
+bool gp_bMyJailbreak;
 
 // Console Variables
 ConVar gc_bPlugin;
@@ -193,17 +203,61 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 	if (convar == gc_sOverlayStartPath)
 	{
 		strcopy(g_sOverlayStartPath, sizeof(g_sOverlayStartPath), newValue);
-		if (gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
+		if (gc_bOverlays.BoolValue)
+		{
+			PrecacheDecalAnyDownload(g_sOverlayStartPath);
+		}
+	}
+	else if (convar == gc_sSoundStartPath)
+	{
+		strcopy(g_sSoundStartPath, sizeof(g_sSoundStartPath), newValue);
+		if (gc_bSounds.BoolValue)
+		{
+			PrecacheSoundAnyDownload(g_sSoundStartPath);
+		}
 	}
 	else if (convar == gc_sAdminFlag)
 	{
 		strcopy(g_sAdminFlag, sizeof(g_sAdminFlag), newValue);
 	}
-	else if (convar == gc_sSoundStartPath)
-	{
-		strcopy(g_sSoundStartPath, sizeof(g_sSoundStartPath), newValue);
-		if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
-	}
+}
+
+public void OnAllPluginsLoaded()
+{
+	gp_bWarden = LibraryExists("warden");
+	gp_bHosties = LibraryExists("lastrequest");
+	gp_bSmartJailDoors = LibraryExists("smartjaildoors");
+	gp_bMyJailbreak = LibraryExists("myjailbreak");
+}
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (StrEqual(name, "warden"))
+		gp_bWarden = false;
+
+	if (StrEqual(name, "lastrequest"))
+		gp_bHosties = false;
+
+	if (StrEqual(name, "smartjaildoors"))
+		gp_bSmartJailDoors = false;
+
+	if (StrEqual(name, "myjailbreak"))
+		gp_bMyJailbreak = false;
+}
+
+public void OnLibraryAdded(const char[] name)
+{
+	if (StrEqual(name, "warden"))
+		gp_bWarden = true;
+
+	if (StrEqual(name, "lastrequest"))
+		gp_bHosties = true;
+
+	if (StrEqual(name, "smartjaildoors"))
+		gp_bSmartJailDoors = true;
+
+	if (StrEqual(name, "myjailbreak"))
+		gp_bMyJailbreak = true;
 }
 
 // Initialize Plugin
@@ -214,7 +268,10 @@ public void OnConfigsExecuted()
 	g_iMaxRound = gc_iRounds.IntValue;
 
 	// FindConVar
-	g_iTerrorForLR = FindConVar("sm_hosties_lr_ts_max");
+	if (gp_bHosties)
+	{
+		g_iTerrorForLR = FindConVar("sm_hosties_lr_ts_max");
+	}
 
 	// Set custom Commands
 	int iCount = 0;
@@ -229,7 +286,9 @@ public void OnConfigsExecuted()
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
 		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		{
 			RegConsoleCmd(sCommand, Command_VoteZeus, "Allows players to vote for a zeus");
+		}
 	}
 
 	// Set
@@ -241,7 +300,9 @@ public void OnConfigsExecuted()
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
 		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		{
 			RegConsoleCmd(sCommand, Command_SetZeus, "Allows the Admin or Warden to set zeus as next round");
+		}
 	}
 }
 
@@ -252,64 +313,124 @@ public void OnConfigsExecuted()
 // Admin & Warden set Event
 public Action Command_SetZeus(int client, int args)
 {
-	if (gc_bPlugin.BoolValue)
+	if (!gc_bPlugin.BoolValue)
 	{
-		if (client == 0)
-		{
-			StartNextRound();
-			if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event zeus was started by groupvoting");
-		}
-		else if (warden_iswarden(client))
-		{
-			if (gc_bSetW.BoolValue)
-			{
-				if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0))
-				{
-					char EventDay[64];
-					MyJailbreak_GetEventDayName(EventDay);
-					
-					if (StrEqual(EventDay, "none", false))
-					{
-						if (g_iCoolDown == 0)
-						{
-							StartNextRound();
-							if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Zeus was started by warden %L", client);
-						}
-						else CReplyToCommand(client, "%t %t", "zeus_tag", "zeus_wait", g_iCoolDown);
-					}
-					else CReplyToCommand(client, "%t %t", "zeus_tag", "zeus_progress", EventDay);
-				}
-				else CReplyToCommand(client, "%t %t", "zeus_tag", "zeus_minplayer");
-			}
-			else CReplyToCommand(client, "%t %t", "warden_tag", "zeus_setbywarden");
-		}
-		else if (CheckVipFlag(client, g_sAdminFlag))
-		{
-			if (gc_bSetA.BoolValue)
-			{
-				if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0))
-				{
-					char EventDay[64];
-					MyJailbreak_GetEventDayName(EventDay);
-					
-					if (StrEqual(EventDay, "none", false))
-					{
-						if ((g_iCoolDown == 0) || gc_bSetABypassCooldown.BoolValue)
-						{
-							StartNextRound();
-							if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Zeus was started by admin %L", client);
-						}
-						else CReplyToCommand(client, "%t %t", "zeus_tag", "zeus_wait", g_iCoolDown);
-					}
-					else CReplyToCommand(client, "%t %t", "zeus_tag", "zeus_progress", EventDay);
-				}
-				else CReplyToCommand(client, "%t %t", "zeus_tag", "zeus_minplayer");
-			}
-			else CReplyToCommand(client, "%t %t", "zeus_tag", "zeus_setbyadmin");
-		}
-		else CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+		CReplyToCommand(client, "%t %t", "zeus_tag", "zeus_disabled");
+		return Plugin_Handled;
 	}
-	else CReplyToCommand(client, "%t %t", "zeus_tag", "zeus_disabled");
+
+	if (client == 0) // Called by a server/voting
+	{
+		StartNextRound();
+
+		if (!gp_bMyJailbreak)
+		{
+			return Plugin_Handled;
+		}
+
+		if (MyJailbreak_ActiveLogging())
+		{
+			LogToFileEx(g_sEventsLogFile, "Event Zeus was started by groupvoting");
+		}
+	}
+	else if (CheckVipFlag(client, g_sAdminFlag)) // Called by admin/VIP
+	{
+		if (!gc_bSetA.BoolValue)
+		{
+			CReplyToCommand(client, "%t %t", "zeus_tag", "zeus_setbyadmin");
+			return Plugin_Handled;
+		}
+
+		if (GetTeamClientCount(CS_TEAM_CT) == 0 || GetTeamClientCount(CS_TEAM_T) == 0)
+		{
+			CReplyToCommand(client, "%t %t", "zeus_tag", "zeus_minplayer");
+			return Plugin_Handled;
+		}
+
+		if (gp_bMyJailbreak)
+		{
+			char EventDay[64];
+			MyJailbreak_GetEventDayName(EventDay);
+
+			if (!StrEqual(EventDay, "none", false))
+			{
+				CReplyToCommand(client, "%t %t", "zeus_tag", "zeus_progress", EventDay);
+				return Plugin_Handled;
+			}
+		}
+
+		if (g_iCoolDown > 0 && !gc_bSetABypassCooldown.BoolValue)
+		{
+			CReplyToCommand(client, "%t %t", "zeus_tag", "zeus_wait", g_iCoolDown);
+			return Plugin_Handled;
+		}
+
+		StartNextRound();
+
+		if (!gp_bMyJailbreak)
+		{
+			return Plugin_Handled;
+		}
+
+		if (MyJailbreak_ActiveLogging())
+		{
+			LogToFileEx(g_sEventsLogFile, "Event Zeus was started by admin %L", client);
+		}
+	}
+	else if (gp_bWarden) // Called by warden
+	{
+		if (!warden_iswarden(client))
+		{
+			CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+			return Plugin_Handled;
+		}
+		
+		if (!gc_bSetW.BoolValue)
+		{
+			CReplyToCommand(client, "%t %t", "warden_tag", "zeus_setbywarden");
+			return Plugin_Handled;
+		}
+
+		if (GetTeamClientCount(CS_TEAM_CT) == 0 || GetTeamClientCount(CS_TEAM_T) == 0)
+		{
+			CReplyToCommand(client, "%t %t", "zeus_tag", "zeus_minplayer");
+			return Plugin_Handled;
+		}
+
+		if (gp_bMyJailbreak)
+		{
+			char EventDay[64];
+			MyJailbreak_GetEventDayName(EventDay);
+
+			if (!StrEqual(EventDay, "none", false))
+			{
+				CReplyToCommand(client, "%t %t", "zeus_tag", "zeus_progress", EventDay);
+				return Plugin_Handled;
+			}
+		}
+
+		if (g_iCoolDown > 0)
+		{
+			CReplyToCommand(client, "%t %t", "zeus_tag", "zeus_wait", g_iCoolDown);
+			return Plugin_Handled;
+		}
+
+		StartNextRound();
+
+		if (!gp_bMyJailbreak)
+		{
+			return Plugin_Handled;
+		}
+
+		if (MyJailbreak_ActiveLogging())
+		{
+			LogToFileEx(g_sEventsLogFile, "Event Zeus was started by warden %L", client);
+		}
+	}
+	else
+	{
+		CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+	}
 
 	return Plugin_Handled;
 }
@@ -317,47 +438,75 @@ public Action Command_SetZeus(int client, int args)
 // Voting for Event
 public Action Command_VoteZeus(int client, int args)
 {
+	if (!gc_bPlugin.BoolValue)
+	{
+		CReplyToCommand(client, "%t %t", "zeus_tag", "zeus_disabled");
+		return Plugin_Handled;
+	}
+
+	if (!gc_bVote.BoolValue)
+	{
+		CReplyToCommand(client, "%t %t", "zeus_tag", "zeus_voting");
+		return Plugin_Handled;
+	}
+
+	if (GetTeamClientCount(CS_TEAM_CT) == 0 || GetTeamClientCount(CS_TEAM_T) == 0)
+	{
+		CReplyToCommand(client, "%t %t", "zeus_tag", "zeus_minplayer");
+		return Plugin_Handled;
+	}
+
+	if (gp_bMyJailbreak)
+	{
+		char EventDay[64];
+		MyJailbreak_GetEventDayName(EventDay);
+
+		if (!StrEqual(EventDay, "none", false))
+		{
+			CReplyToCommand(client, "%t %t", "zeus_tag", "zeus_progress", EventDay);
+			return Plugin_Handled;
+		}
+	}
+
+	if (g_iCoolDown > 0)
+	{
+		CReplyToCommand(client, "%t %t", "zeus_tag", "zeus_wait", g_iCoolDown);
+		return Plugin_Handled;
+	}
+
 	char steamid[24];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
 
-	if (gc_bPlugin.BoolValue)
+	if (StrContains(g_sHasVoted, steamid, true) != -1)
 	{
-		if (gc_bVote.BoolValue)
-		{
-			if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0))
-			{
-				char EventDay[64];
-				MyJailbreak_GetEventDayName(EventDay);
-				
-				if (StrEqual(EventDay, "none", false))
-				{
-					if (g_iCoolDown == 0)
-					{
-						if (StrContains(g_sHasVoted, steamid, true) == -1)
-						{
-							int playercount = (GetClientCount(true) / 2);
-							g_iVoteCount++;
-							int Missing = playercount - g_iVoteCount + 1;
-							Format(g_sHasVoted, sizeof(g_sHasVoted), "%s, %s", g_sHasVoted, steamid);
-							
-							if (g_iVoteCount > playercount)
-							{
-								StartNextRound();
-								if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event zeus was started by voting");
-							}
-							else CPrintToChatAll("%t %t", "zeus_tag", "zeus_need", Missing, client);
-						}
-						else CReplyToCommand(client, "%t %t", "zeus_tag", "zeus_voted");
-					}
-					else CReplyToCommand(client, "%t %t", "zeus_tag", "zeus_wait", g_iCoolDown);
-				}
-				else CReplyToCommand(client, "%t %t", "zeus_tag", "zeus_progress", EventDay);
-			}
-			else CReplyToCommand(client, "%t %t", "zeus_tag", "zeus_minplayer");
-		}
-		else CReplyToCommand(client, "%t %t", "zeus_tag", "zeus_voting");
+		CReplyToCommand(client, "%t %t", "zeus_tag", "zeus_voted");
+		return Plugin_Handled;
 	}
-	else CReplyToCommand(client, "%t %t", "zeus_tag", "zeus_disabled");
+
+	int playercount = (GetClientCount(true) / 2);
+	g_iVoteCount += 1;
+
+	int Missing = playercount - g_iVoteCount + 1;
+	Format(g_sHasVoted, sizeof(g_sHasVoted), "%s, %s", g_sHasVoted, steamid);
+
+	if (g_iVoteCount > playercount)
+	{
+		StartNextRound();
+
+		if (!gp_bMyJailbreak)
+		{
+			return Plugin_Handled;
+		}
+
+		if (MyJailbreak_ActiveLogging())
+		{
+			LogToFileEx(g_sEventsLogFile, "Event Zeus was started by voting");
+		}
+	}
+	else
+	{
+		CPrintToChatAll("%t %t", "zeus_tag", "zeus_need", Missing, client);
+	}
 
 	return Plugin_Handled;
 }
@@ -369,106 +518,148 @@ public Action Command_VoteZeus(int client, int args)
 // Round start
 public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
-	if (g_bStartZeus || g_bIsZeus)
+	if (!g_bStartZeus && !g_bIsZeus)
+	{
+		if (gp_bMyJailbreak)
+		{
+			char EventDay[64];
+			MyJailbreak_GetEventDayName(EventDay);
+
+			if (!StrEqual(EventDay, "none", false))
+			{
+				g_iCoolDown = gc_iCooldownDay.IntValue + 1;
+			}
+			else if (g_iCoolDown > 0)
+			{
+				g_iCoolDown -= 1;
+			}
+		}
+		else if (g_iCoolDown > 0)
+		{
+			g_iCoolDown -= 1;
+		}
+
+		return;
+	}
+
+	if (gp_bWarden)
+	{
+		SetCvar("sm_warden_enable", 0);
+	}
+
+	if (gp_bHosties)
 	{
 		SetCvar("sm_hosties_lr", 0);
-		SetCvar("sm_weapons_enable", 0);
-		SetCvar("sm_menu_enable", 0);
-		SetCvar("sm_warden_enable", 0);
-		SetCvar("mp_teammates_are_enemies", 1);
+	}
+	SetCvar("sm_weapons_enable", 0);
+	SetCvar("sm_menu_enable", 0);
+	SetCvar("mp_teammates_are_enemies", 1);
+
+	if (gp_bMyJailbreak)
+	{
 		MyJailbreak_SetEventDayPlanned(false);
 		MyJailbreak_SetEventDayRunning(true);
 
-		if (gc_fBeaconTime.FloatValue > 0.0) g_hTimerBeacon = CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
-
-		g_bIsZeus = true;
-
-		g_iRound++;
-		g_bStartZeus = false;
-		SJD_OpenDoors();
-
-		int RandomCT = 0;
-
-		for (int client=1;client <= MaxClients;client++)
+		if (gc_fBeaconTime.FloatValue > 0.0)
 		{
-			if (IsClientInGame(client))
+			g_hTimerBeacon = CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
+		}
+	}
+
+	g_bIsZeus = true;
+	g_iRound++;
+	g_bStartZeus = false;
+
+	if (gp_bSmartJailDoors)
+	{
+		SJD_OpenDoors();
+	}
+
+	if (!gc_bSpawnCell.BoolValue || !gp_bSmartJailDoors || (gc_bSpawnCell.BoolValue && (SJD_IsCurrentMapConfigured() != true))) // spawn Terrors to CT Spawn 
+	{
+		int RandomCT = 0;
+		LoopClients(i)
+		{
+			if (GetClientTeam(i) == CS_TEAM_CT)
 			{
-				if (GetClientTeam(client) == CS_TEAM_CT)
-				{
-					RandomCT = client;
-					break;
-				}
+				RandomCT = i;
+				break;
 			}
 		}
 
 		if (RandomCT)
 		{
-			GetClientAbsOrigin(RandomCT, g_fPos);
-			
-			g_fPos[2] = g_fPos[2] + 5;
-			
-			if (g_iRound > 0)
+			LoopClients(i)
 			{
-				LoopClients(client)
-				{
-					CreateInfoPanel(client);
-					StripAllPlayerWeapons(client);
-					GivePlayerItem(client, "weapon_knife");
-					SetEntData(client, g_iCollision_Offset, 2, 4, true);
-					SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
-					g_hTimerGiveZeus[client] = CreateTimer(0.5, Timer_GiveZeus, client);
-
-					if (!gc_bSpawnCell.BoolValue || (gc_bSpawnCell.BoolValue && (SJD_IsCurrentMapConfigured() != true))) // spawn Terrors to CT Spawn 
-					{
-						TeleportEntity(client, g_fPos, NULL_VECTOR, NULL_VECTOR);
-					}
-				}
-
-				g_iTruceTime--;
-				g_hTimerTruce = CreateTimer(1.0, Timer_StartEvent, _, TIMER_REPEAT);
-
-				// enable lr on last round
-				g_iTsLR = GetAliveTeamCount(CS_TEAM_T);
-
-				if (gc_bAllowLR.BoolValue)
-				{
-					if ((g_iRound == g_iMaxRound) && (g_iTsLR > g_iTerrorForLR.IntValue))
-					{
-						SetCvar("sm_hosties_lr", 1);
-					}
-				}
-
-				CPrintToChatAll("%t %t", "zeus_tag", "zeus_rounds", g_iRound, g_iMaxRound);
+				GetClientAbsOrigin(RandomCT, g_fPos);
+				
+				g_fPos[2] = g_fPos[2] + 5;
+				
+				TeleportEntity(i, g_fPos, NULL_VECTOR, NULL_VECTOR);
 			}
 		}
 	}
-	else
+
+	if (g_iRound > 0)
 	{
-		char EventDay[64];
-		MyJailbreak_GetEventDayName(EventDay);
-		
-		if (!StrEqual(EventDay, "none", false))
+		LoopClients(client)
 		{
-			g_iCoolDown = gc_iCooldownDay.IntValue + 1;
+			CreateInfoPanel(client);
+
+			StripAllPlayerWeapons(client);
+			GivePlayerItem(client, "weapon_knife");
+
+			SetEntData(client, g_iCollision_Offset, 2, 4, true);
+			SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
+
+			g_hTimerGiveZeus[client] = CreateTimer(0.5, Timer_GiveZeus, client);
 		}
-		else if (g_iCoolDown > 0) g_iCoolDown--;
+
+		if (gp_bHosties)
+		{
+			// enable lr on last round
+			g_iTsLR = GetAliveTeamCount(CS_TEAM_T);
+
+			if (gc_bAllowLR.BoolValue)
+			{
+				if (g_iRound == g_iMaxRound && g_iTsLR > g_iTerrorForLR.IntValue)
+				{
+					SetCvar("sm_hosties_lr", 1);
+				}
+			}
+		}
+
+		g_iTruceTime--;
+		g_hTimerTruce = CreateTimer(1.0, Timer_StartEvent, _, TIMER_REPEAT);
+
+		CPrintToChatAll("%t %t", "zeus_tag", "zeus_rounds", g_iRound, g_iMaxRound);
 	}
 }
 
 // Round End
 public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
-	int winner = event.GetInt("winner");
+
 
 	if (g_bIsZeus)
 	{
-		LoopClients(client) SetEntData(client, g_iCollision_Offset, 0, 4, true);
+		LoopClients(i)
+		{
+			SetEntData(i, g_iCollision_Offset, 0, 4, true);
+		}
 
 		delete g_hTimerTruce;
 		delete g_hTimerBeacon;
 
-		if (winner == 2) PrintCenterTextAll("%t", "zeus_twin_nc");
-		if (winner == 3) PrintCenterTextAll("%t", "zeus_ctwin_nc");
+		int winner = event.GetInt("winner");
+		if (winner == 2)
+		{
+			PrintCenterTextAll("%t", "zeus_twin_nc");
+		}
+		if (winner == 3)
+		{
+			PrintCenterTextAll("%t", "zeus_ctwin_nc");
+		}
 
 		if (g_iRound == g_iMaxRound)
 		{
@@ -476,22 +667,39 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			g_bStartZeus = false;
 			g_iRound = 0;
 			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
-			SetCvar("sm_hosties_lr", 1);
+
+			if (gp_bHosties)
+			{
+				SetCvar("sm_hosties_lr", 1);
+			}
+
+			if (gp_bWarden)
+			{
+				SetCvar("sm_warden_enable", 1);
+			}
+
 			SetCvar("sm_weapons_enable", 1);
 			SetCvar("sv_infinite_ammo", 0);
 			SetCvar("mp_teammates_are_enemies", 0);
 			SetCvar("sm_menu_enable", 1);
-			SetCvar("sm_warden_enable", 1);
 			g_iMPRoundTime.IntValue = g_iOldRoundTime;
-			MyJailbreak_SetEventDayName("none");
-			MyJailbreak_SetEventDayRunning(false);
+
+			if (gp_bMyJailbreak)
+			{
+				MyJailbreak_SetEventDayName("none");
+				MyJailbreak_SetEventDayRunning(false);
+			}
+
 			CPrintToChatAll("%t %t", "zeus_tag", "zeus_end");
 		}
 	}
 
 	if (g_bStartZeus)
 	{
-		LoopClients(i) CreateInfoPanel(i);
+		LoopClients(i)
+		{
+			CreateInfoPanel(i);
+		}
 
 		CPrintToChatAll("%t %t", "zeus_tag", "zeus_next");
 		PrintCenterTextAll("%t", "zeus_next_nc");
@@ -524,8 +732,15 @@ public void OnMapStart()
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iTruceTime = gc_iTruceTime.IntValue;
 
-	if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
-	if (gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
+	if (gc_bOverlays.BoolValue)
+	{
+		PrecacheDecalAnyDownload(g_sOverlayStartPath);
+	}
+
+	if (gc_bSounds.BoolValue)
+	{
+		PrecacheSoundAnyDownload(g_sSoundStartPath);
+	}
 }
 
 // Listen for Last Lequest
@@ -536,13 +751,14 @@ public void OnAvailableLR(int Announced)
 		LoopClients(client)
 		{
 			SetEntData(client, g_iCollision_Offset, 0, 4, true);
+
 			StripAllPlayerWeapons(client);
 			if (GetClientTeam(client) == CS_TEAM_CT)
 			{
 				FakeClientCommand(client, "sm_weapons");
 			}
 			GivePlayerItem(client, "weapon_knife");
-			
+
 		}
 
 		delete g_hTimerBeacon;
@@ -554,15 +770,26 @@ public void OnAvailableLR(int Announced)
 			g_bStartZeus = false;
 			g_iRound = 0;
 			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
+
 			SetCvar("sm_hosties_lr", 1);
 			SetCvar("sm_weapons_enable", 1);
 			SetCvar("sv_infinite_ammo", 0);
 			SetCvar("mp_teammates_are_enemies", 0);
 			SetCvar("sm_menu_enable", 1);
-			SetCvar("sm_warden_enable", 1);
+
+			if(gp_bWarden)
+			{
+				SetCvar("sm_warden_enable", 1);
+			}
+
 			g_iMPRoundTime.IntValue = g_iOldRoundTime;
-			MyJailbreak_SetEventDayName("none");
-			MyJailbreak_SetEventDayRunning(false);
+
+			if (gp_bMyJailbreak)
+			{
+				MyJailbreak_SetEventDayName("none");
+				MyJailbreak_SetEventDayRunning(false);
+			}
+
 			CPrintToChatAll("%t %t", "zeus_tag", "zeus_end");
 		}
 	}
@@ -590,18 +817,19 @@ public void OnClientPutInServer(int client)
 // Knife & Taser only
 public Action OnWeaponCanUse(int client, int weapon)
 {
-	if (g_bIsZeus)
+	if (!g_bIsZeus)
 	{
-		char sWeapon[32];
-		GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
-
-		if (StrEqual(sWeapon, "weapon_knife", false) || StrEqual(sWeapon, "weapon_taser", false))
-		{
-			return Plugin_Continue;
-		}
-		else return Plugin_Handled;
+		return Plugin_Continue;
 	}
-	else return Plugin_Continue;
+
+	char sWeapon[32];
+	GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
+
+	if (StrEqual(sWeapon, "weapon_knife", false) || StrEqual(sWeapon, "weapon_taser", false))
+	{
+		return Plugin_Continue;
+	}
+	else return Plugin_Handled;
 }
 
 
@@ -617,10 +845,14 @@ void StartNextRound()
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iVoteCount = 0;
 
-	char buffer[32];
-	Format(buffer, sizeof(buffer), "%T", "zeus_name", LANG_SERVER);
-	MyJailbreak_SetEventDayName(buffer);
-	MyJailbreak_SetEventDayPlanned(true);
+
+	if (gp_bMyJailbreak)
+	{
+		char buffer[32];
+		Format(buffer, sizeof(buffer), "%T", "zeus_name", LANG_SERVER);
+		MyJailbreak_SetEventDayName(buffer);
+		MyJailbreak_SetEventDayPlanned(true);
+	}
 
 	g_iOldRoundTime = g_iMPRoundTime.IntValue; // save original round time
 	g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue; // set event round time
@@ -639,8 +871,10 @@ void CreateInfoPanel(int client)
 	char info[255];
 
 	Panel InfoPanel = new Panel();
+
 	Format(info, sizeof(info), "%T", "zeus_info_title", client);
 	InfoPanel.SetTitle(info);
+
 	InfoPanel.DrawText("                                   ");
 	Format(info, sizeof(info), "%T", "zeus_info_line1", client);
 	InfoPanel.DrawText(info);
@@ -659,6 +893,7 @@ void CreateInfoPanel(int client)
 	InfoPanel.DrawText(info);
 	InfoPanel.DrawText("-----------------------------------");
 	Format(info, sizeof(info), "%T", "warden_close", client);
+
 	InfoPanel.DrawItem(info);
 	InfoPanel.Send(client, Handler_NullCancel, 20);
 }
@@ -673,7 +908,9 @@ public Action Timer_StartEvent(Handle timer)
 	if (g_iTruceTime > 1)
 	{
 		g_iTruceTime--;
-		LoopValidClients(client, false, true) PrintCenterText(client, "%t", "zeus_timeuntilstart_nc", g_iTruceTime);
+
+		PrintCenterTextAll("%t", "zeus_timeuntilstart_nc", g_iTruceTime);
+
 		return Plugin_Continue;
 	}
 
@@ -681,17 +918,22 @@ public Action Timer_StartEvent(Handle timer)
 
 	if (g_iRound > 0)
 	{
-		LoopClients(client) if (IsPlayerAlive(client))
+		LoopClients(i) if (IsPlayerAlive(i))
 		{
-			SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
-			PrintCenterText(client, "%t", "zeus_start_nc");
-			if (gc_bOverlays.BoolValue) ShowOverlay(client, g_sOverlayStartPath, 2.0);
-			if (gc_bSounds.BoolValue)	
+			SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
+
+			if (gc_bOverlays.BoolValue)
 			{
-				EmitSoundToAllAny(g_sSoundStartPath);
+				ShowOverlay(i, g_sOverlayStartPath, 2.0);
 			}
-			
 		}
+
+		if (gc_bSounds.BoolValue)
+		{
+			EmitSoundToAllAny(g_sSoundStartPath);
+		}
+
+		PrintCenterTextAll("%t", "zeus_start_nc");
 		CPrintToChatAll("%t %t", "zeus_tag", "zeus_start");
 	}
 
@@ -703,7 +945,11 @@ public Action Timer_StartEvent(Handle timer)
 // Beacon Timer
 public Action Timer_BeaconOn(Handle timer)
 {
-	LoopValidClients(i, true, false) MyJailbreak_BeaconOn(i, 2.0);
+	LoopValidClients(i, true, false)
+	{
+		MyJailbreak_BeaconOn(i, 2.0);
+	}
+
 	g_hTimerBeacon = null;
 }
 

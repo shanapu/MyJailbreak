@@ -189,12 +189,18 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 	if (convar == gc_sOverlayStartPath)    // Add overlay to download and precache table if changed
 	{
 		strcopy(g_sOverlayStartPath, sizeof(g_sOverlayStartPath), newValue);
-		if (gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
+		if (gc_bOverlays.BoolValue)
+		{
+			PrecacheDecalAnyDownload(g_sOverlayStartPath);
+		}
 	}
 	else if (convar == gc_sSoundStartPath)    // Add sound to download and precache table if changed
 	{
 		strcopy(g_sSoundStartPath, sizeof(g_sSoundStartPath), newValue);
-		if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
+		if (gc_bSounds.BoolValue)
+		{
+			PrecacheSoundAnyDownload(g_sSoundStartPath);
+		}
 	}
 	else if (convar == gc_sAdminFlag)
 	{
@@ -912,10 +918,8 @@ public Action Timer_StartEvent(Handle timer)
 	if (g_iTruceTime > 1) // countdown to start
 	{
 		g_iTruceTime--;
-		LoopClients(i) if (IsPlayerAlive(i))
-		{
-			PrintCenterText(i, "%t", "drunk_timeuntilstart_nc", g_iTruceTime);
-		}
+
+		PrintCenterTextAll("%t", "drunk_timeuntilstart_nc", g_iTruceTime);
 
 		return Plugin_Continue;
 	}
@@ -929,20 +933,20 @@ public Action Timer_StartEvent(Handle timer)
 			if (IsPlayerAlive(i))
 			{
 				SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
-				PrintCenterText(i, "%t", "drunk_start_nc");
 			}
 
 			if (gc_bOverlays.BoolValue)
 			{
 				ShowOverlay(i, g_sOverlayStartPath, 5.0);
 			}
-
-			if (gc_bSounds.BoolValue)
-			{
-				EmitSoundToAllAny(g_sSoundStartPath);
-			}
 		}
 
+		if (gc_bSounds.BoolValue)
+		{
+			EmitSoundToAllAny(g_sSoundStartPath);
+		}
+
+		PrintCenterTextAll("%t", "drunk_start_nc");
 		CPrintToChatAll("%t %t", "drunk_tag", "drunk_start");
 	}
 

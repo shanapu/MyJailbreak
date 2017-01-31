@@ -620,8 +620,6 @@ public Action Timer_TruceUntilStart(Handle timer)
 		g_iTruceTime--;
 		LoopClients(i) if (IsPlayerAlive(i))
 		{
-			PrintCenterText(i, "%t", "lastguard_timeuntilstart_nc", g_iTruceTime);
-
 			if (gc_bFreeze.BoolValue && (g_iTruceTime <= (gc_iTruceTime.IntValue / 2)) && (GetEntityMoveType(i) == MOVETYPE_NONE))
 			{
 				SetEntityMoveType(i, MOVETYPE_WALK);
@@ -629,6 +627,8 @@ public Action Timer_TruceUntilStart(Handle timer)
 				PrintCenterText(i, "%t", "lastguard_movenow_nc", g_iTruceTime);
 				CPrintToChat(i, "%t %t", "lastguard_tag", "lastguard_movenow");
 			}
+
+			PrintCenterTextAll("%t", "lastguard_timeuntilstart_nc", g_iTruceTime);
 		}
 
 		return Plugin_Continue;
@@ -639,22 +639,23 @@ public Action Timer_TruceUntilStart(Handle timer)
 	LoopClients(i) if (IsPlayerAlive(i))
 	{
 		SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
-		PrintCenterText(i, "%t", "lastguard_start_nc");
+
 		if (gc_bOverlays.BoolValue)
 		{
 			ShowOverlay(i, g_sOverlayStartPath, 2.0);
 		}
 
-		if (gc_bSounds.BoolValue)
-		{
-			EmitSoundToAllAny(g_sSoundStartPath);
-		}
-
 		FakeClientCommand(i, "sm_weapons");
+	}
+
+	if (gc_bSounds.BoolValue)
+	{
+		EmitSoundToAllAny(g_sSoundStartPath);
 	}
 
 	g_hTimerTruce = null;
 
+	PrintCenterTextAll("%t", "lastguard_start_nc");
 	CPrintToChatAll("%t %t", "lastguard_tag", "lastguard_start");
 
 	return Plugin_Stop;

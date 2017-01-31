@@ -510,11 +510,6 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		{
 			SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
 		}
-
-		if (IsPlayerAlive(i)) 
-		{
-			PrintCenterText(i, "%t", "freeday_start_nc");
-		}
 	}
 
 	if (g_bRepeatFirstFreeday)
@@ -532,6 +527,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		}
 	}
 
+	PrintCenterTextAll("%t", "freeday_start_nc");
 	CPrintToChatAll("%t %t", "freeday_tag", "freeday_start");
 }
 

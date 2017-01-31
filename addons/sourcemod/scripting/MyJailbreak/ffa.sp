@@ -851,24 +851,19 @@ public Action Timer_StartEvent(Handle timer)
 
 	g_iTruceTime = gc_iTruceTime.IntValue;
 
-	for (int client=1;client <= MaxClients;client++) 
+	LoopClients(i) if (IsPlayerAlive(i))
 	{
-		if (IsClientInGame(client) && IsPlayerAlive(client)) 
+		SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
+
+		if (gc_bOverlays.BoolValue)
 		{
-			SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
-
-			if (gc_bOverlays.BoolValue)
-			{
-				ShowOverlay(client, g_sOverlayStartPath, 2.0);
-			}
-
-			if (gc_bSounds.BoolValue)
-			{
-				EmitSoundToAllAny(g_sSoundStartPath);
-			}
-
-			PrintCenterText(client, "%t", "ffa_start_nc");
+			ShowOverlay(i, g_sOverlayStartPath, 2.0);
 		}
+	}
+
+	if (gc_bSounds.BoolValue)
+	{
+		EmitSoundToAllAny(g_sSoundStartPath);
 	}
 
 	if (gp_bMyJailbreak)
@@ -878,6 +873,7 @@ public Action Timer_StartEvent(Handle timer)
 
 	g_hTimerTruce = null;
 
+	PrintCenterTextAll("%t", "ffa_start_nc");
 	CPrintToChatAll("%t %t", "ffa_tag", "ffa_start");
 
 	return Plugin_Stop;

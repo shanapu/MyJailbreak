@@ -30,12 +30,16 @@
 #include <emitsoundany>
 #include <colors>
 #include <autoexecconfig>
+#include <mystocks>
+
+// Optional Plugins
+#undef REQUIRE_PLUGIN
 #include <hosties>
 #include <lastrequest>
 #include <warden>
-#include <smartjaildoors>
-#include <mystocks>
 #include <myjailbreak>
+#include <smartjaildoors>
+#define REQUIRE_PLUGIN
 
 // Compiler Options
 #pragma semicolon 1
@@ -45,6 +49,12 @@
 bool g_bIsLateLoad = false;
 bool g_bIsNoScope = false;
 bool g_bStartNoScope = false;
+
+// Plugin bools
+bool gp_bWarden;
+bool gp_bHosties;
+bool gp_bSmartJailDoors;
+bool gp_bMyJailbreak;
 
 // Console Variables
 ConVar gc_bPlugin;
@@ -201,7 +211,10 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 	if (convar == gc_sOverlayStartPath)
 	{
 		strcopy(g_sOverlayStartPath, sizeof(g_sOverlayStartPath), newValue);
-		if (gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
+		if (gc_bOverlays.BoolValue)
+		{
+			PrecacheDecalAnyDownload(g_sOverlayStartPath);
+		}
 	}
 	else if (convar == gc_sAdminFlag)
 	{
@@ -210,8 +223,49 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 	else if (convar == gc_sSoundStartPath)
 	{
 		strcopy(g_sSoundStartPath, sizeof(g_sSoundStartPath), newValue);
-		if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
+		if (gc_bSounds.BoolValue)
+		{
+			PrecacheSoundAnyDownload(g_sSoundStartPath);
+		}
 	}
+}
+
+public void OnAllPluginsLoaded()
+{
+	gp_bWarden = LibraryExists("warden");
+	gp_bHosties = LibraryExists("lastrequest");
+	gp_bSmartJailDoors = LibraryExists("smartjaildoors");
+	gp_bMyJailbreak = LibraryExists("myjailbreak");
+}
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (StrEqual(name, "warden"))
+		gp_bWarden = false;
+
+	if (StrEqual(name, "lastrequest"))
+		gp_bHosties = false;
+
+	if (StrEqual(name, "smartjaildoors"))
+		gp_bSmartJailDoors = false;
+
+	if (StrEqual(name, "myjailbreak"))
+		gp_bMyJailbreak = false;
+}
+
+public void OnLibraryAdded(const char[] name)
+{
+	if (StrEqual(name, "warden"))
+		gp_bWarden = true;
+
+	if (StrEqual(name, "lastrequest"))
+		gp_bHosties = true;
+
+	if (StrEqual(name, "smartjaildoors"))
+		gp_bSmartJailDoors = true;
+
+	if (StrEqual(name, "myjailbreak"))
+		gp_bMyJailbreak = true;
 }
 
 // Initialize Plugin
@@ -222,12 +276,27 @@ public void OnConfigsExecuted()
 	g_iMaxRound = gc_iRounds.IntValue;
 
 	// FindConVar
-	g_iTerrorForLR = FindConVar("sm_hosties_lr_ts_max");
+	if (gp_bHosties)
+	{
+		g_iTerrorForLR = FindConVar("sm_hosties_lr_ts_max");
+	}
 
-	if (gc_iWeapon.IntValue == 1) g_sWeapon = "weapon_ssg08";
-	if (gc_iWeapon.IntValue == 2) g_sWeapon = "weapon_awp";
-	if (gc_iWeapon.IntValue == 3) g_sWeapon = "weapon_scar20";
-	if (gc_iWeapon.IntValue == 4) g_sWeapon = "weapon_g3sg1";
+	if (gc_iWeapon.IntValue == 1)
+	{
+		g_sWeapon = "weapon_ssg08";
+	}
+	if (gc_iWeapon.IntValue == 2)
+	{
+		g_sWeapon = "weapon_awp";
+	}
+	if (gc_iWeapon.IntValue == 3)
+	{
+		g_sWeapon = "weapon_scar20";
+	}
+	if (gc_iWeapon.IntValue == 4)
+	{
+		g_sWeapon = "weapon_g3sg1";
+	}
 
 	// Set custom Commands
 	int iCount = 0;
@@ -242,7 +311,9 @@ public void OnConfigsExecuted()
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
 		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		{
 			RegConsoleCmd(sCommand, Command_VoteNoScope, "Allows players to vote for a noscope");
+		}
 	}
 
 	// Set
@@ -254,7 +325,9 @@ public void OnConfigsExecuted()
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
 		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		{
 			RegConsoleCmd(sCommand, Command_SetNoScope, "Allows the Admin or Warden to set noscope as next round");
+		}
 	}
 }
 
@@ -265,64 +338,124 @@ public void OnConfigsExecuted()
 // Admin & Warden set Event
 public Action Command_SetNoScope(int client, int args)
 {
-	if (gc_bPlugin.BoolValue)
+	if (!gc_bPlugin.BoolValue)
 	{
-		if (client == 0)
-		{
-			StartNextRound();
-			if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event noscope was started by groupvoting");
-		}
-		else if (warden_iswarden(client))
-		{
-			if (gc_bSetW.BoolValue)
-			{
-				if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0))
-				{
-					char EventDay[64];
-					MyJailbreak_GetEventDayName(EventDay);
-					
-					if (StrEqual(EventDay, "none", false))
-					{
-						if (g_iCoolDown == 0)
-						{
-							StartNextRound();
-							if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event NoScope was started by warden %L", client);
-						}
-						else CReplyToCommand(client, "%t %t", "noscope_tag", "noscope_wait", g_iCoolDown);
-					}
-					else CReplyToCommand(client, "%t %t", "noscope_tag", "noscope_progress", EventDay);
-				}
-				else CReplyToCommand(client, "%t %t", "noscope_tag", "noscope_minplayer");
-			}
-			else CReplyToCommand(client, "%t %t", "warden_tag", "nocscope_setbywarden");
-		}
-		else if (CheckVipFlag(client, g_sAdminFlag))
-		{
-			if (gc_bSetA.BoolValue)
-			{
-				if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0))
-				{
-					char EventDay[64];
-					MyJailbreak_GetEventDayName(EventDay);
-					
-					if (StrEqual(EventDay, "none", false))
-					{
-						if ((g_iCoolDown == 0) || gc_bSetABypassCooldown.BoolValue)
-						{
-							StartNextRound();
-							if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event NoScope was started by admin %L", client);
-						}
-						else CReplyToCommand(client, "%t %t", "noscope_tag", "noscope_wait", g_iCoolDown);
-					}
-					else CReplyToCommand(client, "%t %t", "noscope_tag", "noscope_progress", EventDay);
-				}
-				else CReplyToCommand(client, "%t %t", "noscope_tag", "noscope_minplayer");
-			}
-			else CReplyToCommand(client, "%t %t", "nocscope_tag", "noscope_setbyadmin");
-		}
-		else CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+		CReplyToCommand(client, "%t %t", "noscope_tag", "noscope_disabled");
+		return Plugin_Handled;
 	}
-	else CReplyToCommand(client, "%t %t", "noscope_tag", "noscope_disabled");
+
+	if (client == 0) // Called by a server/voting
+	{
+		StartNextRound();
+
+		if (!gp_bMyJailbreak)
+		{
+			return Plugin_Handled;
+		}
+
+		if (MyJailbreak_ActiveLogging())
+		{
+			LogToFileEx(g_sEventsLogFile, "Event No Scope was started by groupvoting");
+		}
+	}
+	else if (CheckVipFlag(client, g_sAdminFlag)) // Called by admin/VIP
+	{
+		if (!gc_bSetA.BoolValue)
+		{
+			CReplyToCommand(client, "%t %t", "noscope_tag", "noscope_setbyadmin");
+			return Plugin_Handled;
+		}
+
+		if (GetTeamClientCount(CS_TEAM_CT) == 0 || GetTeamClientCount(CS_TEAM_T) == 0)
+		{
+			CReplyToCommand(client, "%t %t", "noscope_tag", "noscope_minplayer");
+			return Plugin_Handled;
+		}
+
+		if (gp_bMyJailbreak)
+		{
+			char EventDay[64];
+			MyJailbreak_GetEventDayName(EventDay);
+
+			if (!StrEqual(EventDay, "none", false))
+			{
+				CReplyToCommand(client, "%t %t", "noscope_tag", "noscope_progress", EventDay);
+				return Plugin_Handled;
+			}
+		}
+
+		if (g_iCoolDown > 0 && !gc_bSetABypassCooldown.BoolValue)
+		{
+			CReplyToCommand(client, "%t %t", "noscope_tag", "noscope_wait", g_iCoolDown);
+			return Plugin_Handled;
+		}
+
+		StartNextRound();
+
+		if (!gp_bMyJailbreak)
+		{
+			return Plugin_Handled;
+		}
+
+		if (MyJailbreak_ActiveLogging())
+		{
+			LogToFileEx(g_sEventsLogFile, "Event No Scope was started by admin %L", client);
+		}
+	}
+	else if (gp_bWarden) // Called by warden
+	{
+		if (!warden_iswarden(client))
+		{
+			CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+			return Plugin_Handled;
+		}
+		
+		if (!gc_bSetW.BoolValue)
+		{
+			CReplyToCommand(client, "%t %t", "warden_tag", "noscope_setbywarden");
+			return Plugin_Handled;
+		}
+
+		if (GetTeamClientCount(CS_TEAM_CT) == 0 || GetTeamClientCount(CS_TEAM_T) == 0)
+		{
+			CReplyToCommand(client, "%t %t", "noscope_tag", "noscope_minplayer");
+			return Plugin_Handled;
+		}
+
+		if (gp_bMyJailbreak)
+		{
+			char EventDay[64];
+			MyJailbreak_GetEventDayName(EventDay);
+
+			if (!StrEqual(EventDay, "none", false))
+			{
+				CReplyToCommand(client, "%t %t", "noscope_tag", "noscope_progress", EventDay);
+				return Plugin_Handled;
+			}
+		}
+
+		if (g_iCoolDown > 0)
+		{
+			CReplyToCommand(client, "%t %t", "noscope_tag", "noscope_wait", g_iCoolDown);
+			return Plugin_Handled;
+		}
+
+		StartNextRound();
+
+		if (!gp_bMyJailbreak)
+		{
+			return Plugin_Handled;
+		}
+
+		if (MyJailbreak_ActiveLogging())
+		{
+			LogToFileEx(g_sEventsLogFile, "Event No Scope was started by warden %L", client);
+		}
+	}
+	else
+	{
+		CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+	}
 
 	return Plugin_Handled;
 }
@@ -330,47 +463,75 @@ public Action Command_SetNoScope(int client, int args)
 // Voting for Event
 public Action Command_VoteNoScope(int client, int args)
 {
+	if (!gc_bPlugin.BoolValue)
+	{
+		CReplyToCommand(client, "%t %t", "noscope_tag", "noscope_disabled");
+		return Plugin_Handled;
+	}
+
+	if (!gc_bVote.BoolValue)
+	{
+		CReplyToCommand(client, "%t %t", "noscope_tag", "noscope_voting");
+		return Plugin_Handled;
+	}
+
+	if (GetTeamClientCount(CS_TEAM_CT) == 0 || GetTeamClientCount(CS_TEAM_T) == 0)
+	{
+		CReplyToCommand(client, "%t %t", "noscope_tag", "noscope_minplayer");
+		return Plugin_Handled;
+	}
+
+	if (gp_bMyJailbreak)
+	{
+		char EventDay[64];
+		MyJailbreak_GetEventDayName(EventDay);
+
+		if (!StrEqual(EventDay, "none", false))
+		{
+			CReplyToCommand(client, "%t %t", "noscope_tag", "noscope_progress", EventDay);
+			return Plugin_Handled;
+		}
+	}
+
+	if (g_iCoolDown > 0)
+	{
+		CReplyToCommand(client, "%t %t", "noscope_tag", "noscope_wait", g_iCoolDown);
+		return Plugin_Handled;
+	}
+
 	char steamid[24];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
 
-	if (gc_bPlugin.BoolValue)
+	if (StrContains(g_sHasVoted, steamid, true) != -1)
 	{
-		if (gc_bVote.BoolValue)
-		{
-			if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0))
-			{
-				char EventDay[64];
-				MyJailbreak_GetEventDayName(EventDay);
-				
-				if (StrEqual(EventDay, "none", false))
-				{
-					if (g_iCoolDown == 0)
-					{
-						if (StrContains(g_sHasVoted, steamid, true) == -1)
-						{
-							int playercount = (GetClientCount(true) / 2);
-							g_iVoteCount++;
-							int Missing = playercount - g_iVoteCount + 1;
-							Format(g_sHasVoted, sizeof(g_sHasVoted), "%s, %s", g_sHasVoted, steamid);
-							
-							if (g_iVoteCount > playercount)
-							{
-								StartNextRound();
-								if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event NoScope was started by voting");
-							}
-							else CPrintToChatAll("%t %t", "noscope_tag", "noscope_need", Missing, client);
-						}
-						else CReplyToCommand(client, "%t %t", "noscope_tag", "noscope_voted");
-					}
-					else CReplyToCommand(client, "%t %t", "noscope_tag", "noscope_wait", g_iCoolDown);
-				}
-				else CReplyToCommand(client, "%t %t", "noscope_tag", "noscope_progress", EventDay);
-			}
-			else CReplyToCommand(client, "%t %t", "noscope_tag", "noscope_minplayer");
-		}
-		else CReplyToCommand(client, "%t %t", "noscope_tag", "noscope_voting");
+		CReplyToCommand(client, "%t %t", "noscope_tag", "noscope_voted");
+		return Plugin_Handled;
 	}
-	else CReplyToCommand(client, "%t %t", "noscope_tag", "noscope_disabled");
+
+	int playercount = (GetClientCount(true) / 2);
+	g_iVoteCount += 1;
+
+	int Missing = playercount - g_iVoteCount + 1;
+	Format(g_sHasVoted, sizeof(g_sHasVoted), "%s, %s", g_sHasVoted, steamid);
+
+	if (g_iVoteCount > playercount)
+	{
+		StartNextRound();
+
+		if (!gp_bMyJailbreak)
+		{
+			return Plugin_Handled;
+		}
+
+		if (MyJailbreak_ActiveLogging())
+		{
+			LogToFileEx(g_sEventsLogFile, "Event No Scope was started by voting");
+		}
+	}
+	else
+	{
+		CPrintToChatAll("%t %t", "noscope_tag", "noscope_need", Missing, client);
+	}
 
 	return Plugin_Handled;
 }
@@ -382,111 +543,161 @@ public Action Command_VoteNoScope(int client, int args)
 // Round start
 public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
-	if (g_bStartNoScope || g_bIsNoScope)
+	if (!g_bStartNoScope && !g_bIsNoScope)
+	{
+		if (gp_bMyJailbreak)
+		{
+			char EventDay[64];
+			MyJailbreak_GetEventDayName(EventDay);
+
+			if (!StrEqual(EventDay, "none", false))
+			{
+				g_iCoolDown = gc_iCooldownDay.IntValue + 1;
+			}
+			else if (g_iCoolDown > 0)
+			{
+				g_iCoolDown -= 1;
+			}
+		}
+		else if (g_iCoolDown > 0)
+		{
+			g_iCoolDown -= 1;
+		}
+
+		return;
+	}
+
+	if (gp_bWarden)
+	{
+		SetCvar("sm_warden_enable", 0);
+	}
+
+	if (gp_bHosties)
 	{
 		SetCvar("sm_hosties_lr", 0);
-		SetCvar("sm_weapons_enable", 0);
-		SetCvar("sm_menu_enable", 0);
-		SetCvar("sv_infinite_ammo", 2);
-		SetCvar("sm_warden_enable", 0);
-		SetCvar("mp_teammates_are_enemies", 1);
+	}
+
+	SetCvar("sm_weapons_enable", 0);
+	SetCvar("sm_menu_enable", 0);
+	SetCvar("sv_infinite_ammo", 2);
+	SetCvar("mp_teammates_are_enemies", 1);
+
+	if (gp_bMyJailbreak)
+	{
 		MyJailbreak_SetEventDayPlanned(false);
 		MyJailbreak_SetEventDayRunning(true);
 
-		g_bIsNoScope = true;
-
-		if (gc_fBeaconTime.FloatValue > 0.0) g_hTimerBeacon = CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
-
-		if (gc_bRandom.BoolValue)
+		if (gc_fBeaconTime.FloatValue > 0.0)
 		{
-			int randomnum = GetRandomInt(0, 3);
-			
-			if (randomnum == 0)g_sWeapon = "weapon_ssg08";
-			if (randomnum == 1)g_sWeapon = "weapon_awp";
-			if (randomnum == 2)g_sWeapon = "weapon_scar20";
-			if (randomnum == 3)g_sWeapon = "weapon_g3sg1";
+			g_hTimerBeacon = CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
 		}
+	}
 
-		g_iRound++;
-		g_bStartNoScope = false;
+	if (gc_bRandom.BoolValue)
+	{
+		int randomnum = GetRandomInt(0, 3);
 
-		SJD_OpenDoors();
-
-		int RandomCT = 0;
-
-		LoopClients(client)
+		if (randomnum == 0)
 		{
-			if (GetClientTeam(client) == CS_TEAM_CT)
+			g_sWeapon = "weapon_ssg08";
+		}
+		if (randomnum == 1)
+		{
+			g_sWeapon = "weapon_awp";
+		}
+		if (randomnum == 2)
+		{
+			g_sWeapon = "weapon_scar20";
+		}
+		if (randomnum == 3)
+		{
+			g_sWeapon = "weapon_g3sg1";
+		}
+	}
+
+	g_iRound++;
+	g_bIsNoScope = true;
+	g_bStartNoScope = false;
+
+	if (gp_bSmartJailDoors)
+	{
+		SJD_OpenDoors();
+	}
+
+	if (!gc_bSpawnCell.BoolValue || !gp_bSmartJailDoors || (gc_bSpawnCell.BoolValue && (SJD_IsCurrentMapConfigured() != true))) // spawn Terrors to CT Spawn 
+	{
+		int RandomCT = 0;
+		LoopClients(i)
+		{
+			if (GetClientTeam(i) == CS_TEAM_CT)
 			{
-				RandomCT = client;
+				RandomCT = i;
 				break;
 			}
 		}
 
 		if (RandomCT)
 		{
-			GetClientAbsOrigin(RandomCT, g_fPos);
-			
-			g_fPos[2] = g_fPos[2] + 5;
-			
-			if (g_iRound > 0)
+			LoopClients(i)
 			{
-				LoopClients(client)
-				{
-					
-					CreateInfoPanel(client);
-					StripAllPlayerWeapons(client);
-					GivePlayerItem(client, g_sWeapon);
-					SetEntData(client, g_iCollision_Offset, 2, 4, true);
-					SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
-					
-					if (gc_bGrav.BoolValue)
-					{
-						SetEntityGravity(client, gc_fGravValue.FloatValue);	
-					}
-					if (!gc_bSpawnCell.BoolValue || (gc_bSpawnCell.BoolValue && (SJD_IsCurrentMapConfigured() != true))) // spawn Terrors to CT Spawn 
-					{
-						TeleportEntity(client, g_fPos, NULL_VECTOR, NULL_VECTOR);
-					}
-				}
-				g_iTruceTime--;
-				g_hTimerTruce = CreateTimer(1.0, Timer_StartEvent, _, TIMER_REPEAT);
-				g_hTimerGravity = CreateTimer(1.0, Timer_CheckGravity, _, TIMER_REPEAT);
+				GetClientAbsOrigin(RandomCT, g_fPos);
 				
-				// enable lr on last round
-				g_iTsLR = GetAliveTeamCount(CS_TEAM_T);
+				g_fPos[2] = g_fPos[2] + 5;
 				
-				if (gc_bAllowLR.BoolValue)
-				{
-					if ((g_iRound == g_iMaxRound) && (g_iTsLR > g_iTerrorForLR.IntValue))
-					{
-						SetCvar("sm_hosties_lr", 1);
-					}
-				}
-				
-				CPrintToChatAll("%t %t", "noscope_tag", "noscope_rounds", g_iRound, g_iMaxRound);
+				TeleportEntity(i, g_fPos, NULL_VECTOR, NULL_VECTOR);
 			}
-			LoopClients(i) if (IsPlayerAlive(i)) SDKHook(i, SDKHook_PreThink, OnPreThink);
 		}
 	}
-	else
-	{
-		char EventDay[64];
-		MyJailbreak_GetEventDayName(EventDay);
 
-		if (!StrEqual(EventDay, "none", false))
+	if (g_iRound > 0)
+	{
+		LoopClients(i)
 		{
-			g_iCoolDown = gc_iCooldownDay.IntValue + 1;
+			CreateInfoPanel(i);
+
+			StripAllPlayerWeapons(i);
+			GivePlayerItem(i, g_sWeapon);
+
+			SetEntData(i, g_iCollision_Offset, 2, 4, true);
+			SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
+
+			if (IsPlayerAlive(i))
+			{
+				SDKHook(i, SDKHook_PreThink, OnPreThink);
+			}
+
+			if (gc_bGrav.BoolValue)
+			{
+				SetEntityGravity(i, gc_fGravValue.FloatValue);	
+			}
 		}
-		else if (g_iCoolDown > 0) g_iCoolDown--;
+
+		if (gp_bHosties)
+		{
+			// enable lr on last round
+			g_iTsLR = GetAliveTeamCount(CS_TEAM_T);
+
+			if (gc_bAllowLR.BoolValue)
+			{
+				if (g_iRound == g_iMaxRound && g_iTsLR > g_iTerrorForLR.IntValue)
+				{
+					SetCvar("sm_hosties_lr", 1);
+				}
+			}
+		}
+
+		g_iTruceTime--;
+		g_hTimerTruce = CreateTimer(1.0, Timer_StartEvent, _, TIMER_REPEAT);
+		g_hTimerGravity = CreateTimer(1.0, Timer_CheckGravity, _, TIMER_REPEAT);
+
+		CPrintToChatAll("%t %t", "noscope_tag", "noscope_rounds", g_iRound, g_iMaxRound);
 	}
 }
+
 
 // Round End
 public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
-	int winner = event.GetInt("winner");
-
 	if (g_bIsNoScope)
 	{
 		LoopClients(client)
@@ -499,8 +710,15 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 		delete g_hTimerGravity;
 		delete g_hTimerBeacon;
 
-		if (winner == 2) PrintCenterTextAll("%t", "noscope_twin_nc");
-		if (winner == 3) PrintCenterTextAll("%t", "noscope_ctwin_nc");
+		int winner = event.GetInt("winner");
+		if (winner == 2)
+		{
+			PrintCenterTextAll("%t", "noscope_twin_nc");
+		}
+		if (winner == 3)
+		{
+			PrintCenterTextAll("%t", "noscope_ctwin_nc");
+		}
 
 		if (g_iRound == g_iMaxRound)
 		{
@@ -508,27 +726,44 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			g_bStartNoScope = false;
 			g_iRound = 0;
 			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
-			SetCvar("sm_hosties_lr", 1);
+
+			if (gp_bHosties)
+			{
+				SetCvar("sm_hosties_lr", 1);
+			}
+
+			if (gp_bWarden)
+			{
+				SetCvar("sm_warden_enable", 1);
+			}
+
 			SetCvar("sm_weapons_enable", 1);
 			SetCvar("sv_infinite_ammo", 0);
 			SetCvar("mp_teammates_are_enemies", 0);
 			SetCvar("sm_menu_enable", 1);
-			SetCvar("sm_warden_enable", 1);
+
 			g_iMPRoundTime.IntValue = g_iOldRoundTime;
-			MyJailbreak_SetEventDayName("none");
-			MyJailbreak_SetEventDayRunning(false);
+
+			if (gp_bMyJailbreak)
+			{
+				MyJailbreak_SetEventDayName("none");
+				MyJailbreak_SetEventDayRunning(false);
+			}
+
 			CPrintToChatAll("%t %t", "noscope_tag", "noscope_end");
 		}
 	}
 
 	if (g_bStartNoScope)
 	{
-		LoopClients(i) CreateInfoPanel(i);
-		
+		LoopClients(i)
+		{
+			CreateInfoPanel(i);
+			SDKUnhook(i, SDKHook_PreThink, OnPreThink);
+		}
+
 		CPrintToChatAll("%t %t", "noscope_tag", "noscope_next");
 		PrintCenterTextAll("%t", "noscope_next_nc");
-		
-		LoopClients(i) SDKUnhook(i, SDKHook_PreThink, OnPreThink);
 	}
 }
 
@@ -547,8 +782,14 @@ public void OnMapStart()
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iTruceTime = gc_iTruceTime.IntValue;
 
-	if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);   // Add sound to download and precache table
-	if (gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);   // Add overlay to download and precache table
+	if (gc_bSounds.BoolValue)
+	{
+		PrecacheSoundAnyDownload(g_sSoundStartPath);   // Add sound to download and precache table
+	}
+	if (gc_bOverlays.BoolValue)
+	{
+		PrecacheDecalAnyDownload(g_sOverlayStartPath);   // Add overlay to download and precache table
+	}
 }
 
 // Listen for Last Lequest
@@ -556,17 +797,17 @@ public void OnAvailableLR(int Announced)
 {
 	if (g_bIsNoScope && gc_bAllowLR.BoolValue && (g_iTsLR > g_iTerrorForLR.IntValue))
 	{
-		LoopClients(client)
+		LoopClients(i)
 		{
-			SetEntData(client, g_iCollision_Offset, 0, 4, true);
-			SetEntityGravity(client, 1.0);
-			StripAllPlayerWeapons(client);
+			SetEntData(i, g_iCollision_Offset, 0, 4, true);
+			SetEntityGravity(i, 1.0);
 
-			if (GetClientTeam(client) == CS_TEAM_CT)
+			StripAllPlayerWeapons(i);
+			if (GetClientTeam(i) == CS_TEAM_CT)
 			{
-				FakeClientCommand(client, "sm_weapons");
+				FakeClientCommand(i, "sm_weapons");
 			}
-			GivePlayerItem(client, "weapon_knife");
+			GivePlayerItem(i, "weapon_knife");
 		}
 
 		delete g_hTimerBeacon;
@@ -579,15 +820,25 @@ public void OnAvailableLR(int Announced)
 			g_bStartNoScope = false;
 			g_iRound = 0;
 			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
+
+			if(gp_bWarden)
+			{
+				SetCvar("sm_warden_enable", 1);
+			}
 			SetCvar("sm_hosties_lr", 1);
 			SetCvar("sm_weapons_enable", 1);
 			SetCvar("sv_infinite_ammo", 0);
 			SetCvar("mp_teammates_are_enemies", 0);
 			SetCvar("sm_menu_enable", 1);
-			SetCvar("sm_warden_enable", 1);
+
 			g_iMPRoundTime.IntValue = g_iOldRoundTime;
-			MyJailbreak_SetEventDayName("none");
-			MyJailbreak_SetEventDayRunning(false);
+
+			if (gp_bMyJailbreak)
+			{
+				MyJailbreak_SetEventDayName("none");
+				MyJailbreak_SetEventDayRunning(false);
+			}
+
 			CPrintToChatAll("%t %t", "noscope_tag", "noscope_end");
 		}
 	}
@@ -610,18 +861,17 @@ public void OnMapEnd()
 // Scout only
 public Action OnWeaponCanUse(int client, int weapon)
 {
+	if (!g_bIsNoScope)
+	{
+		return Plugin_Continue;
+	}
+
 	char sWeapon[32];
 	GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
 
-	if (!StrEqual(sWeapon, g_sWeapon))
+	if (!StrEqual(sWeapon, g_sWeapon) && IsValidClient(client, true, false))
 	{
-		if (IsClientInGame(client) && IsPlayerAlive(client))
-		{
-			if (g_bIsNoScope)
-			{
-				return Plugin_Handled;
-			}
-		}
+		return Plugin_Handled;
 	}
 
 	return Plugin_Continue;
@@ -645,10 +895,13 @@ void StartNextRound()
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iVoteCount = 0;
 
-	char buffer[32];
-	Format(buffer, sizeof(buffer), "%T", "noscope_name", LANG_SERVER);
-	MyJailbreak_SetEventDayName(buffer);
-	MyJailbreak_SetEventDayPlanned(true);
+	if (gp_bMyJailbreak)
+	{
+		char buffer[32];
+		Format(buffer, sizeof(buffer), "%T", "noscope_name", LANG_SERVER);
+		MyJailbreak_SetEventDayName(buffer);
+		MyJailbreak_SetEventDayPlanned(true);
+	}
 
 	g_iOldRoundTime = g_iMPRoundTime.IntValue; // save original round time
 	g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue; // set event round time
@@ -660,16 +913,20 @@ void StartNextRound()
 // No Scope
 void MakeNoScope(int weapon)
 {
-	if (g_bIsNoScope)
+	if (!g_bIsNoScope)
 	{
-		if (IsValidEdict(weapon))
-		{
-			char classname[MAX_NAME_LENGTH];
-			if (GetEdictClassname(weapon, classname, sizeof(classname)) || StrEqual(classname[7], g_sWeapon))
-			{
-				SetEntDataFloat(weapon, m_flNextSecondaryAttack, GetGameTime() + 1.0);
-			}
-		}
+		return;
+	}
+
+	if (!IsValidEdict(weapon))
+	{
+		return;
+	}
+
+	char classname[MAX_NAME_LENGTH];
+	if (GetEdictClassname(weapon, classname, sizeof(classname)) || StrEqual(classname[7], g_sWeapon))
+	{
+		SetEntDataFloat(weapon, m_flNextSecondaryAttack, GetGameTime() + 1.0);
 	}
 }
 
@@ -730,10 +987,8 @@ public Action Timer_StartEvent(Handle timer)
 	if (g_iTruceTime > 1)
 	{
 		g_iTruceTime--;
-		LoopClients(client) if (IsPlayerAlive(client))
-		{
-			PrintCenterText(client, "%t", "noscope_timeuntilstart_nc", g_iTruceTime);
-		}
+
+		PrintCenterTextAll("%t", "noscope_timeuntilstart_nc", g_iTruceTime);
 
 		return Plugin_Continue;
 	}
@@ -742,20 +997,27 @@ public Action Timer_StartEvent(Handle timer)
 
 	if (g_iRound > 0)
 	{
-		LoopClients(client) if (IsPlayerAlive(client))
+		LoopClients(i) if (IsPlayerAlive(i))
 		{
-			SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
+			SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
+
 			if (gc_bGrav.BoolValue)
 			{
-				SetEntityGravity(client, gc_fGravValue.FloatValue);	
+				SetEntityGravity(i, gc_fGravValue.FloatValue);	
 			}
-			PrintCenterText(client, "%t", "noscope_start_nc");
-			if (gc_bOverlays.BoolValue) ShowOverlay(client, g_sOverlayStartPath, 2.0);
-			if (gc_bSounds.BoolValue)
+
+			if (gc_bOverlays.BoolValue)
 			{
-				EmitSoundToAllAny(g_sSoundStartPath);
+				ShowOverlay(i, g_sOverlayStartPath, 2.0);
 			}
 		}
+
+		if (gc_bSounds.BoolValue)
+		{
+			EmitSoundToAllAny(g_sSoundStartPath);
+		}
+
+		PrintCenterTextAll("%t", "noscope_start_nc");
 		CPrintToChatAll("%t %t", "noscope_tag", "noscope_start");
 	}
 
@@ -767,16 +1029,22 @@ public Action Timer_StartEvent(Handle timer)
 // Give back Gravity if it gone -> ladders
 public Action Timer_CheckGravity(Handle timer)
 {
-	LoopValidClients(client, false, false)
+	LoopValidClients(i, false, false)
 	{
-		if (GetEntityGravity(client) != 1.0)
-			SetEntityGravity(client, gc_fGravValue.FloatValue);
+		if (GetEntityGravity(i) != 1.0)
+		{
+			SetEntityGravity(i, gc_fGravValue.FloatValue);
+		}
 	}
 }
 
 // Beacon Timer
 public Action Timer_BeaconOn(Handle timer)
 {
-	LoopValidClients(i, true, false) MyJailbreak_BeaconOn(i, 2.0);
+	LoopValidClients(i, true, false)
+	{
+		MyJailbreak_BeaconOn(i, 2.0);
+	}
+
 	g_hTimerBeacon = null;
 }

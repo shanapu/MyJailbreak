@@ -908,10 +908,7 @@ public Action Timer_StartEvent(Handle timer)
 	{
 		g_iTruceTime--;
 
-		LoopValidClients(i, false, true)
-		{
-			PrintCenterText(i, "%t", "dealdamage_timeuntilstart_nc", g_iTruceTime);
-		}
+		PrintCenterTextAll("%t", "dealdamage_timeuntilstart_nc", g_iTruceTime);
 
 		return Plugin_Continue;
 	}
@@ -920,25 +917,25 @@ public Action Timer_StartEvent(Handle timer)
 
 	if (g_iRound > 0)
 	{
-		LoopClients(client)
+		LoopClients(i)
 		{
-			if (IsPlayerAlive(client))
+			if (IsPlayerAlive(i))
 			{
-				PrintCenterText(client, "%t", "dealdamage_start_nc");
-				SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
+				SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
 			}
 
 			if (gc_bOverlays.BoolValue)
 			{
-				ShowOverlay(client, g_sOverlayStartPath, 2.0);
-			}
-
-			if (gc_bSounds.BoolValue)
-			{
-				EmitSoundToAllAny(g_sSoundStartPath);
+				ShowOverlay(i, g_sOverlayStartPath, 2.0);
 			}
 		}
 
+		if (gc_bSounds.BoolValue)
+		{
+			EmitSoundToAllAny(g_sSoundStartPath);
+		}
+
+		PrintCenterTextAll("%t", "dealdamage_start_nc");
 		CPrintToChatAll("%t %t", "dealdamage_tag", "dealdamage_start");
 	}
 

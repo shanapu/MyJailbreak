@@ -208,16 +208,22 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 	if (convar == gc_sOverlayStartPath)
 	{
 		strcopy(g_sOverlayStartPath, sizeof(g_sOverlayStartPath), newValue);
-		if (gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
-	}
-	else if (convar == gc_sAdminFlag)
-	{
-		strcopy(g_sAdminFlag, sizeof(g_sAdminFlag), newValue);
+		if (gc_bOverlays.BoolValue)
+		{
+			PrecacheDecalAnyDownload(g_sOverlayStartPath);
+		}
 	}
 	else if (convar == gc_sSoundStartPath)
 	{
 		strcopy(g_sSoundStartPath, sizeof(g_sSoundStartPath), newValue);
-		if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
+		if (gc_bSounds.BoolValue)
+		{
+			PrecacheSoundAnyDownload(g_sSoundStartPath);
+		}
+	}
+	else if (convar == gc_sAdminFlag)
+	{
+		strcopy(g_sAdminFlag, sizeof(g_sAdminFlag), newValue);
 	}
 }
 
@@ -927,11 +933,8 @@ public Action Timer_StartEvent(Handle timer)
 	if (g_iTruceTime > 1)
 	{
 		g_iTruceTime--;
-		
-		LoopClients(i) if (IsPlayerAlive(i))
-		{
-			PrintCenterText(i, "%t", "hebattle_timeuntilstart_nc", g_iTruceTime);
-		}
+
+		PrintCenterTextAll("%t", "hebattle_timeuntilstart_nc", g_iTruceTime);
 
 		return Plugin_Continue;
 	}
@@ -949,20 +952,20 @@ public Action Timer_StartEvent(Handle timer)
 				{
 					SetEntityGravity(client, gc_fGravValue.FloatValue);	
 				}
-
-				PrintCenterText(client, "%t", "hebattle_start_nc");
 			}
 
 			if (gc_bOverlays.BoolValue)
 			{
 				ShowOverlay(client, g_sOverlayStartPath, 2.0);
 			}
-
-			if (gc_bSounds.BoolValue)	
-			{
-				EmitSoundToAllAny(g_sSoundStartPath);
-			}
 		}
+
+		if (gc_bSounds.BoolValue)
+		{
+			EmitSoundToAllAny(g_sSoundStartPath);
+		}
+
+		PrintCenterTextAll("%t", "hebattle_start_nc");
 		CPrintToChatAll("%t %t", "hebattle_tag", "hebattle_start");
 	}
 

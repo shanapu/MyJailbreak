@@ -1033,10 +1033,8 @@ public Action Timer_StartEvent(Handle timer)
 	if (g_iTruceTime > 1)
 	{
 		g_iTruceTime--;
-		LoopClients(client) if (IsPlayerAlive(client))
-		{
-			PrintCenterText(client, "%t", "duckhunt_timeuntilstart_nc", g_iTruceTime);
-		}
+
+		PrintCenterTextAll("%t", "duckhunt_timeuntilstart_nc", g_iTruceTime);
 
 		return Plugin_Continue;
 	}
@@ -1045,27 +1043,29 @@ public Action Timer_StartEvent(Handle timer)
 
 	if (g_iRound > 0)
 	{
-		LoopClients(client) if (IsPlayerAlive(client))
+		LoopClients(i) if (IsPlayerAlive(i))
 		{
-			if (GetClientTeam(client) == CS_TEAM_T)
+			if (GetClientTeam(i) == CS_TEAM_T)
 			{
-				SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
-				SetEntityGravity(client, 0.3);
+				SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
+				SetEntityGravity(i, 0.3);
 			}
-			if (GetClientTeam(client) == CS_TEAM_CT)
+			if (GetClientTeam(i) == CS_TEAM_CT)
 			{
-				SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
+				SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
 			}
-			PrintCenterText(client, "%t", "duckhunt_start_nc");
 			if (gc_bOverlays.BoolValue)
 			{
-				ShowOverlay(client, g_sOverlayStartPath, 2.0);
-			}
-			if (gc_bSounds.BoolValue)
-			{
-				EmitSoundToAllAny(g_sSoundStartPath);
+				ShowOverlay(i, g_sOverlayStartPath, 2.0);
 			}
 		}
+
+		if (gc_bSounds.BoolValue)
+		{
+			EmitSoundToAllAny(g_sSoundStartPath);
+		}
+
+		PrintCenterTextAll("%t", "duckhunt_start_nc");
 		CPrintToChatAll("%t %t", "duckhunt_tag", "duckhunt_start");
 	}
 

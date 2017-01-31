@@ -30,12 +30,7 @@
 #include <emitsoundany>
 #include <colors>
 #include <autoexecconfig>
-#include <hosties>
-#include <lastrequest>
-#include <warden>
-#include <smartjaildoors>
 #include <mystocks>
-#include <myjailbreak>
 
 // Optional Plugins
 #undef REQUIRE_PLUGIN
@@ -653,11 +648,14 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
 	if (g_bIsGhosts)
 	{
-		LoopValidClients(client, true, true)
+		LoopValidClients(i, true, true)
 		{
-			SetEntData(client, g_iCollision_Offset, 0, 4, true);
-			SDKUnhook(client, SDKHook_SetTransmit, Hook_SetTransmit);
-			if (gp_bMyIcons) MyIcons_BlockClientIcon(client, false);
+			SetEntData(i, g_iCollision_Offset, 0, 4, true);
+			SDKUnhook(i, SDKHook_SetTransmit, Hook_SetTransmit);
+			if (gp_bMyIcons)
+			{
+				MyIcons_BlockClientIcon(i, false);
+			}
 		}
 
 		delete g_hTimerTruce;
@@ -768,21 +766,22 @@ public void OnAvailableLR(int Announced)
 {
 	if (g_bIsGhosts && gc_bAllowLR.BoolValue && (g_iTsLR > g_iTerrorForLR.IntValue))
 	{
-		LoopValidClients(client, false, true)
+		LoopValidClients(i, false, true)
 		{
-			SetEntData(client, g_iCollision_Offset, 0, 4, true);
+			SetEntData(i, g_iCollision_Offset, 0, 4, true);
 			
-			SDKUnhook(client, SDKHook_SetTransmit, Hook_SetTransmit);
-			if (gp_bMyIcons) MyIcons_BlockClientIcon(client, false);
+			SDKUnhook(i, SDKHook_SetTransmit, Hook_SetTransmit);
+			if (gp_bMyIcons) MyIcons_BlockClientIcon(i, false);
 
-			StripAllPlayerWeapons(client);
-			if (GetClientTeam(client) == CS_TEAM_CT)
+			StripAllPlayerWeapons(i);
+			if (GetClientTeam(i) == CS_TEAM_CT)
 			{
-				FakeClientCommand(client, "sm_weapons");
+				FakeClientCommand(i, "sm_weapons");
 			}
 
-			GivePlayerItem(client, "weapon_knife");
+			GivePlayerItem(i, "weapon_knife");
 		}
+
 		g_bGhostsRunning = false;
 
 		delete g_hTimerBeacon;
@@ -900,27 +899,29 @@ public Action Timer_StartEvent(Handle timer)
 
 	g_iTruceTime = gc_iTruceTime.IntValue;
 
-	LoopClients(client)
+	LoopClients(i)
 	{
-		if (IsPlayerAlive(client)) 
+		if (IsPlayerAlive(i))
 		{
-			SDKUnhook(client, SDKHook_SetTransmit, Hook_SetTransmit);
+			SDKUnhook(i, SDKHook_SetTransmit, Hook_SetTransmit);
 
-			SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
-			if (gc_bOverlays.BoolValue) ShowOverlay(client, g_sOverlayStartPath, 2.0);
-
-			if (gc_bSounds.BoolValue)
+			SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
+			if (gc_bOverlays.BoolValue)
 			{
-				EmitSoundToAllAny(g_sSoundStartPath);
+				ShowOverlay(i, g_sOverlayStartPath, 2.0);
 			}
-
-			PrintCenterText(client, "%t/n<font size='30' color='#FF0000'>%t</font>", "ghosts_start_nc", "ghosts_visible");
 		}
+	}
+
+	if (gc_bSounds.BoolValue)
+	{
+		EmitSoundToAllAny(g_sSoundStartPath);
 	}
 
 	g_hTimerTruce = null;
 	CreateTimer(gc_fVisibleTime.FloatValue, Timer_MakeGhosts);
 
+	PrintCenterTextAll("%t/n<font size='30' color='#FF0000'>%t</font>", "ghosts_start_nc", "ghosts_visible");
 	CPrintToChatAll("%t %t", "ghosts_tag", "ghosts_start");
 
 	return Plugin_Stop;

@@ -660,8 +660,6 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 
 			SetEntData(client, g_iCollision_Offset, 2, 4, true);
 
-			PrintCenterText(client, "%t", "catch_start_nc");
-
 			if (GetClientTeam(client) == CS_TEAM_CT)
 			{
 				SetEntityMoveType(client, MOVETYPE_NONE);
@@ -1200,16 +1198,16 @@ public Action Timer_StartEvent(Handle timer)
 					ShowOverlay(client, g_sOverlayStartPath, 2.0);
 				}
 
-				if (gc_bSounds.BoolValue)
-				{
-					LoopClients(i) EmitSoundToAllAny(g_sSoundStartPath);
-				}
-
 				if (gc_bWallhack.BoolValue && gp_bCustomPlayerSkins)
 				{
 					Setup_WallhackSkin(client);
 				}
 			}
+		}
+
+		if (gc_bSounds.BoolValue)
+		{
+			EmitSoundToAllAny(g_sSoundStartPath);
 		}
 
 		CPrintToChatAll("%t %t", "catch_tag", "catch_start");

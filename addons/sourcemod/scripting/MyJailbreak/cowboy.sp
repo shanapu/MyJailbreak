@@ -767,6 +767,7 @@ public void OnMapStart()
 	{
 		PrecacheSoundAnyDownload(g_sSoundStartPath);   // Add sound to download and precache table
 	}
+
 	if (gc_bOverlays.BoolValue)
 	{
 		PrecacheDecalAnyDownload(g_sOverlayStartPath);   // Add overlay to download and precache table
@@ -937,10 +938,8 @@ public Action Timer_StartEvent(Handle timer)
 	if (g_iTruceTime > 1)
 	{
 		g_iTruceTime--;
-		LoopClients(client) if (IsPlayerAlive(client))
-		{
-			PrintCenterText(client, "%t", "cowboy_timeuntilstart_nc", g_iTruceTime);
-		}
+
+		PrintCenterTextAll("%t", "cowboy_timeuntilstart_nc", g_iTruceTime);
 
 		return Plugin_Continue;
 	}
@@ -949,19 +948,21 @@ public Action Timer_StartEvent(Handle timer)
 
 	if (g_iRound > 0)
 	{
-		LoopClients(client) if (IsPlayerAlive(client))
+		LoopClients(i) if (IsPlayerAlive(i))
 		{
-			SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
-			PrintCenterText(client, "%t", "cowboy_start_nc");
+			SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
 			if (gc_bOverlays.BoolValue)
 			{
-				ShowOverlay(client, g_sOverlayStartPath, 2.0);
-			}
-			if (gc_bSounds.BoolValue)
-			{
-				EmitSoundToAllAny(g_sSoundStartPath);
+				ShowOverlay(i, g_sOverlayStartPath, 2.0);
 			}
 		}
+
+		if (gc_bSounds.BoolValue)
+		{
+			EmitSoundToAllAny(g_sSoundStartPath);
+		}
+
+		PrintCenterTextAll("%t", "cowboy_start_nc");
 		CPrintToChatAll("%t %t", "cowboy_tag", "cowboy_start");
 	}
 

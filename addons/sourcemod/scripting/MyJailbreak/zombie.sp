@@ -30,13 +30,17 @@
 #include <emitsoundany>
 #include <colors>
 #include <autoexecconfig>
+#include <mystocks>
+
+// Optional Plugins
+#undef REQUIRE_PLUGIN
 #include <hosties>
 #include <lastrequest>
 #include <warden>
 #include <smartjaildoors>
-#include <mystocks>
-#include <myjailbreak>
 #include <CustomPlayerSkins>
+#include <myjailbreak>
+#define REQUIRE_PLUGIN
 
 // Compiler Options
 #pragma semicolon 1
@@ -45,6 +49,13 @@
 // Booleans
 bool g_bIsZombie = false;
 bool g_bStartZombie = false;
+
+// Plugin bools
+bool gp_bWarden;
+bool gp_bHosties;
+bool gp_bSmartJailDoors;
+bool gp_bCustomPlayerSkins;
+bool gp_bMyJailbreak;
 
 // Console Variables
 ConVar gc_bPlugin;
@@ -96,7 +107,6 @@ int g_iCollision_Offset;
 // Handles
 Handle g_hTimerFreeze;
 Handle g_hTimerBeacon;
-
 // floats
 float g_fPos[3];
 
@@ -200,20 +210,71 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 		strcopy(g_sModelPathZombie, sizeof(g_sModelPathZombie), newValue);
 		PrecacheModel(g_sModelPathZombie);
 	}
-	else if (convar == gc_sAdminFlag)
-	{
-		strcopy(g_sAdminFlag, sizeof(g_sAdminFlag), newValue);
-	}
 	else if (convar == gc_sOverlayStartPath)
 	{
 		strcopy(g_sOverlayStartPath, sizeof(g_sOverlayStartPath), newValue);
-		if (gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
+		if (gc_bOverlays.BoolValue)
+		{
+			PrecacheDecalAnyDownload(g_sOverlayStartPath);
+		}
 	}
 	else if (convar == gc_sSoundStartPath)
 	{
 		strcopy(g_sSoundStartPath, sizeof(g_sSoundStartPath), newValue);
-		if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
+		if (gc_bSounds.BoolValue)
+		{
+			PrecacheSoundAnyDownload(g_sSoundStartPath);
+		}
 	}
+	else if (convar == gc_sAdminFlag)
+	{
+		strcopy(g_sAdminFlag, sizeof(g_sAdminFlag), newValue);
+	}
+}
+
+public void OnAllPluginsLoaded()
+{
+	gp_bWarden = LibraryExists("warden");
+	gp_bHosties = LibraryExists("lastrequest");
+	gp_bSmartJailDoors = LibraryExists("smartjaildoors");
+	gp_bCustomPlayerSkins = LibraryExists("CustomPlayerSkins");
+	gp_bMyJailbreak = LibraryExists("myjailbreak");
+}
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (StrEqual(name, "warden"))
+		gp_bWarden = false;
+
+	if (StrEqual(name, "lastrequest"))
+		gp_bHosties = false;
+
+	if (StrEqual(name, "smartjaildoors"))
+		gp_bSmartJailDoors = false;
+
+	if (StrEqual(name, "CustomPlayerSkins"))
+		gp_bCustomPlayerSkins = false;
+
+	if (StrEqual(name, "myjailbreak"))
+		gp_bMyJailbreak = false;
+}
+
+public void OnLibraryAdded(const char[] name)
+{
+	if (StrEqual(name, "warden"))
+		gp_bWarden = true;
+
+	if (StrEqual(name, "lastrequest"))
+		gp_bHosties = true;
+
+	if (StrEqual(name, "smartjaildoors"))
+		gp_bSmartJailDoors = true;
+
+	if (StrEqual(name, "CustomPlayerSkins"))
+		gp_bCustomPlayerSkins = true;
+
+	if (StrEqual(name, "myjailbreak"))
+		gp_bMyJailbreak = true;
 }
 
 // Initialize Plugin
@@ -224,7 +285,10 @@ public void OnConfigsExecuted()
 	g_iMaxRound = gc_iRounds.IntValue;
 
 	// FindConVar
-	g_iTerrorForLR = FindConVar("sm_hosties_lr_ts_max");
+	if (gp_bHosties)
+	{
+		g_iTerrorForLR = FindConVar("sm_hosties_lr_ts_max");
+	}
 
 	// Set custom Commands
 	int iCount = 0;
@@ -239,7 +303,9 @@ public void OnConfigsExecuted()
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
 		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		{
 			RegConsoleCmd(sCommand, Command_VoteZombie, "Allows players to vote for a Zombie");
+		}
 	}
 
 	// Set
@@ -251,7 +317,9 @@ public void OnConfigsExecuted()
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
 		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		{
 			RegConsoleCmd(sCommand, Command_SetZombie, "Allows the Admin or Warden to set Zombie as next round");
+		}
 	}
 }
 
@@ -262,64 +330,124 @@ public void OnConfigsExecuted()
 // Admin & Warden set Event
 public Action Command_SetZombie(int client, int args)
 {
-	if (gc_bPlugin.BoolValue)
+	if (!gc_bPlugin.BoolValue)
 	{
-		if (client == 0)
-		{
-			StartNextRound();
-			if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event zombie was started by groupvoting");
-		}
-		else if (warden_iswarden(client))
-		{
-			if (gc_bSetW.BoolValue)
-			{
-				if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0))
-				{
-					char EventDay[64];
-					MyJailbreak_GetEventDayName(EventDay);
-					
-					if (StrEqual(EventDay, "none", false))
-					{
-						if (g_iCoolDown == 0)
-						{
-							StartNextRound();
-							if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Zombie was started by warden %L", client);
-						}
-						else CReplyToCommand(client, "%t %t", "zombie_tag", "zombie_wait", g_iCoolDown);
-					}
-					else CReplyToCommand(client, "%t %t", "zombie_tag", "zombie_progress", EventDay);
-				}
-				else CReplyToCommand(client, "%t %t", "zombie_tag", "zombie_minplayer");
-			}
-			else CReplyToCommand(client, "%t %t", "warden_tag", "zombie_setbywarden");
-		}
-		else if (CheckVipFlag(client, g_sAdminFlag))
-		{
-			if (gc_bSetA.BoolValue)
-			{
-				if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0))
-				{
-					char EventDay[64];
-					MyJailbreak_GetEventDayName(EventDay);
-					
-					if (StrEqual(EventDay, "none", false))
-					{
-						if ((g_iCoolDown == 0) || gc_bSetABypassCooldown.BoolValue)
-						{
-							StartNextRound();
-							if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Zombie was started by admin %L", client);
-						}
-						else CReplyToCommand(client, "%t %t", "zombie_tag", "zombie_wait", g_iCoolDown);
-					}
-					else CReplyToCommand(client, "%t %t", "zombie_tag", "zombie_progress", EventDay);
-				}
-				else CReplyToCommand(client, "%t %t", "zombie_tag", "zombie_minplayer");
-			}
-			else CReplyToCommand(client, "%t %t", "zombie_tag", "zombie_setbyadmin");
-		}
-		else CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+		CReplyToCommand(client, "%t %t", "zombie_tag", "zombie_disabled");
+		return Plugin_Handled;
 	}
-	else CReplyToCommand(client, "%t %t", "zombie_tag", "zombie_disabled");
+
+	if (client == 0) // Called by a server/voting
+	{
+		StartNextRound();
+
+		if (!gp_bMyJailbreak)
+		{
+			return Plugin_Handled;
+		}
+
+		if (MyJailbreak_ActiveLogging())
+		{
+			LogToFileEx(g_sEventsLogFile, "Event Catch was started by groupvoting");
+		}
+	}
+	else if (CheckVipFlag(client, g_sAdminFlag)) // Called by admin/VIP
+	{
+		if (!gc_bSetA.BoolValue)
+		{
+			CReplyToCommand(client, "%t %t", "zombie_tag", "zombie_setbyadmin");
+			return Plugin_Handled;
+		}
+
+		if (GetTeamClientCount(CS_TEAM_CT) == 0 || GetTeamClientCount(CS_TEAM_T) == 0)
+		{
+			CReplyToCommand(client, "%t %t", "zombie_tag", "zombie_minplayer");
+			return Plugin_Handled;
+		}
+
+		if (gp_bMyJailbreak)
+		{
+			char EventDay[64];
+			MyJailbreak_GetEventDayName(EventDay);
+
+			if (!StrEqual(EventDay, "none", false))
+			{
+				CReplyToCommand(client, "%t %t", "zombie_tag", "zombie_progress", EventDay);
+				return Plugin_Handled;
+			}
+		}
+
+		if (g_iCoolDown > 0 && !gc_bSetABypassCooldown.BoolValue)
+		{
+			CReplyToCommand(client, "%t %t", "zombie_tag", "zombie_wait", g_iCoolDown);
+			return Plugin_Handled;
+		}
+
+		StartNextRound();
+
+		if (!gp_bMyJailbreak)
+		{
+			return Plugin_Handled;
+		}
+
+		if (MyJailbreak_ActiveLogging())
+		{
+			LogToFileEx(g_sEventsLogFile, "Event Catch was started by admin %L", client);
+		}
+	}
+	else if (gp_bWarden) // Called by warden
+	{
+		if (!warden_iswarden(client))
+		{
+			CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+			return Plugin_Handled;
+		}
+		
+		if (!gc_bSetW.BoolValue)
+		{
+			CReplyToCommand(client, "%t %t", "warden_tag", "zombie_setbywarden");
+			return Plugin_Handled;
+		}
+
+		if (GetTeamClientCount(CS_TEAM_CT) == 0 || GetTeamClientCount(CS_TEAM_T) == 0)
+		{
+			CReplyToCommand(client, "%t %t", "zombie_tag", "zombie_minplayer");
+			return Plugin_Handled;
+		}
+
+		if (gp_bMyJailbreak)
+		{
+			char EventDay[64];
+			MyJailbreak_GetEventDayName(EventDay);
+
+			if (!StrEqual(EventDay, "none", false))
+			{
+				CReplyToCommand(client, "%t %t", "zombie_tag", "zombie_progress", EventDay);
+				return Plugin_Handled;
+			}
+		}
+
+		if (g_iCoolDown > 0)
+		{
+			CReplyToCommand(client, "%t %t", "zombie_tag", "zombie_wait", g_iCoolDown);
+			return Plugin_Handled;
+		}
+
+		StartNextRound();
+
+		if (!gp_bMyJailbreak)
+		{
+			return Plugin_Handled;
+		}
+
+		if (MyJailbreak_ActiveLogging())
+		{
+			LogToFileEx(g_sEventsLogFile, "Event Catch was started by warden %L", client);
+		}
+	}
+	else
+	{
+		CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+	}
 
 	return Plugin_Handled;
 }
@@ -327,47 +455,75 @@ public Action Command_SetZombie(int client, int args)
 // Voting for Event
 public Action Command_VoteZombie(int client, int args)
 {
+	if (!gc_bPlugin.BoolValue)
+	{
+		CReplyToCommand(client, "%t %t", "zombie_tag", "zombie_disabled");
+		return Plugin_Handled;
+	}
+
+	if (!gc_bVote.BoolValue)
+	{
+		CReplyToCommand(client, "%t %t", "zombie_tag", "zombie_voting");
+		return Plugin_Handled;
+	}
+
+	if (GetTeamClientCount(CS_TEAM_CT) == 0 || GetTeamClientCount(CS_TEAM_T) == 0)
+	{
+		CReplyToCommand(client, "%t %t", "zombie_tag", "zombie_minplayer");
+		return Plugin_Handled;
+	}
+
+	if (gp_bMyJailbreak)
+	{
+		char EventDay[64];
+		MyJailbreak_GetEventDayName(EventDay);
+
+		if (!StrEqual(EventDay, "none", false))
+		{
+			CReplyToCommand(client, "%t %t", "zombie_tag", "zombie_progress", EventDay);
+			return Plugin_Handled;
+		}
+	}
+
+	if (g_iCoolDown > 0)
+	{
+		CReplyToCommand(client, "%t %t", "zombie_tag", "zombie_wait", g_iCoolDown);
+		return Plugin_Handled;
+	}
+
 	char steamid[24];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
 
-	if (gc_bPlugin.BoolValue)
+	if (StrContains(g_sHasVoted, steamid, true) != -1)
 	{
-		if (gc_bVote.BoolValue)
-		{
-			if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0))
-			{
-				char EventDay[64];
-				MyJailbreak_GetEventDayName(EventDay);
-
-				if (StrEqual(EventDay, "none", false))
-				{
-					if (g_iCoolDown == 0)
-					{
-						if (StrContains(g_sHasVoted, steamid, true) == -1)
-						{
-							int playercount = (GetClientCount(true) / 2);
-							g_iVoteCount++;
-							int Missing = playercount - g_iVoteCount + 1;
-							Format(g_sHasVoted, sizeof(g_sHasVoted), "%s, %s", g_sHasVoted, steamid);
-
-							if (g_iVoteCount > playercount)
-							{
-								StartNextRound();
-								if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Zombie was started by voting");
-							}
-							else CPrintToChatAll("%t %t", "zombie_tag", "zombie_need", Missing, client);
-						}
-						else CReplyToCommand(client, "%t %t", "zombie_tag", "zombie_voted");
-					}
-					else CReplyToCommand(client, "%t %t", "zombie_tag", "zombie_wait", g_iCoolDown);
-				}
-				else CReplyToCommand(client, "%t %t", "zombie_tag", "zombie_progress", EventDay);
-			}
-			else CReplyToCommand(client, "%t %t", "zombie_tag", "zombie_minplayer");
-		}
-		else CReplyToCommand(client, "%t %t", "zombie_tag", "zombie_voting");
+		CReplyToCommand(client, "%t %t", "zombie_tag", "zombie_voted");
+		return Plugin_Handled;
 	}
-	else CReplyToCommand(client, "%t %t", "zombie_tag", "zombie_disabled");
+
+	int playercount = (GetClientCount(true) / 2);
+	g_iVoteCount += 1;
+
+	int Missing = playercount - g_iVoteCount + 1;
+	Format(g_sHasVoted, sizeof(g_sHasVoted), "%s, %s", g_sHasVoted, steamid);
+
+	if (g_iVoteCount > playercount)
+	{
+		StartNextRound();
+
+		if (!gp_bMyJailbreak)
+		{
+			return Plugin_Handled;
+		}
+
+		if (MyJailbreak_ActiveLogging())
+		{
+			LogToFileEx(g_sEventsLogFile, "Event Catch was started by voting");
+		}
+	}
+	else
+	{
+		CPrintToChatAll("%t %t", "zombie_tag", "zombie_need", Missing, client);
+	}
 
 	return Plugin_Handled;
 }
@@ -379,151 +535,221 @@ public Action Command_VoteZombie(int client, int args)
 // Round start
 public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
-	if (g_bStartZombie || g_bIsZombie)
+	if (!g_bStartZombie && !g_bIsZombie)
+	{
+		if (gp_bMyJailbreak)
+		{
+			char EventDay[64];
+			MyJailbreak_GetEventDayName(EventDay);
+
+			if (!StrEqual(EventDay, "none", false))
+			{
+				g_iCoolDown = gc_iCooldownDay.IntValue + 1;
+			}
+			else if (g_iCoolDown > 0)
+			{
+				g_iCoolDown -= 1;
+			}
+		}
+		else if (g_iCoolDown > 0)
+		{
+			g_iCoolDown -= 1;
+		}
+
+		return;
+	}
+
+	if (gp_bWarden)
+	{
+		SetCvar("sm_warden_enable", 0);
+	}
+
+	if (gp_bHosties)
 	{
 		SetCvar("sm_hosties_lr", 0);
-		SetCvar("sm_warden_enable", 0);
-		SetCvarString("sv_skyname", "cs_baggage_skybox_");
-		SetCvar("sm_weapons_t", 1);
-		SetCvar("sm_weapons_ct", 0);
-		if (gc_bAmmo.BoolValue) SetCvar("sv_infinite_ammo", 2);
-		SetCvar("sm_menu_enable", 0);
+	}
+
+	if (gc_bAmmo.BoolValue)
+	{
+		SetCvar("sv_infinite_ammo", 2);
+	}
+
+	SetCvarString("sv_skyname", "cs_baggage_skybox_");
+	SetCvar("sm_weapons_t", 1);
+	SetCvar("sm_weapons_ct", 0);
+	SetCvar("sm_menu_enable", 0);
+
+	if (gp_bMyJailbreak)
+	{
 		MyJailbreak_SetEventDayPlanned(false);
 		MyJailbreak_SetEventDayRunning(true);
-		g_bIsZombie = true;
-		g_iRound++;
-		g_bStartZombie = false;
-		SJD_OpenDoors();
 
-		if (gc_fBeaconTime.FloatValue > 0.0) g_hTimerBeacon = CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
-
-		int RandomCT = 0;
-
-		LoopClients(client)
+		if (gc_fBeaconTime.FloatValue > 0.0)
 		{
-			if (GetClientTeam(client) == CS_TEAM_CT)
+			g_hTimerBeacon = CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
+		}
+	}
+
+	g_bIsZombie = true;
+	g_iRound++;
+	g_bStartZombie = false;
+
+	if (gp_bSmartJailDoors)
+	{
+		SJD_OpenDoors();
+	}
+
+	if (!gc_bSpawnCell.BoolValue || !gp_bSmartJailDoors || (gc_bSpawnCell.BoolValue && (SJD_IsCurrentMapConfigured() != true))) // spawn Terrors to CT Spawn 
+	{
+		int RandomCT = 0;
+		LoopClients(i)
+		{
+			if (GetClientTeam(i) == CS_TEAM_CT)
 			{
-				RandomCT = client;
+				RandomCT = i;
 				break;
 			}
 		}
 
 		if (RandomCT)
 		{
-			GetClientAbsOrigin(RandomCT, g_fPos);
-			
-			g_fPos[2] = g_fPos[2] + 6;
-			
-			if (g_iRound > 0)
+			LoopClients(i)
 			{
-				LoopClients(client)
-				{
-					CreateInfoPanel(client);
-					SetEntData(client, g_iCollision_Offset, 2, 4, true);
-					SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
-					
-					if (GetClientTeam(client) == CS_TEAM_CT)
-					{
-						SetEntityMoveType(client, MOVETYPE_NONE);
-						SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 0.0);
-						
-						int zombieHP = gc_iZombieHP.IntValue;
-						int difference = (GetAliveTeamCount(CS_TEAM_T) - GetAliveTeamCount(CS_TEAM_CT));
-						
-						if (difference > 0) zombieHP = zombieHP + (gc_iZombieHPincrease.IntValue * difference);
-						
-						SetEntityHealth(client, zombieHP);
-						
-						StripAllPlayerWeapons(client);
-						GivePlayerItem(client, "weapon_knife");
-					}
-					if (GetClientTeam(client) == CS_TEAM_T)
-					{
-						SetEntityHealth(client, gc_iHumanHP.IntValue);
-					}
-					if (!gc_bSpawnCell.BoolValue || (gc_bSpawnCell.BoolValue && (SJD_IsCurrentMapConfigured() != true))) // spawn Terrors to CT Spawn 
-					{
-						TeleportEntity(client, g_fPos, NULL_VECTOR, NULL_VECTOR);
-					}
-				}
-
-				CreateTimer (1.1, Timer_SetModel);
+				GetClientAbsOrigin(RandomCT, g_fPos);
 				
-				// enable lr on last round
-				g_iTsLR = GetAliveTeamCount(CS_TEAM_T);
+				g_fPos[2] = g_fPos[2] + 5;
 				
-				if (gc_bAllowLR.BoolValue)
-				{
-					if ((g_iRound == g_iMaxRound) && (g_iTsLR > g_iTerrorForLR.IntValue))
-					{
-						SetCvar("sm_hosties_lr", 1);
-					}
-				}
+				TeleportEntity(i, g_fPos, NULL_VECTOR, NULL_VECTOR);
 			}
-
-			g_iFreezeTime--;
-			g_hTimerFreeze = CreateTimer(1.0, Timer_StartEvent, _, TIMER_REPEAT);
-
-			CPrintToChatAll("%t %t", "zombie_tag", "zombie_rounds", g_iRound, g_iMaxRound);
 		}
 	}
-	else
-	{
-		char EventDay[64];
-		MyJailbreak_GetEventDayName(EventDay);
 
-		if (!StrEqual(EventDay, "none", false))
+	if (g_iRound > 0)
+	{
+		LoopClients(client)
 		{
-			g_iCoolDown = gc_iCooldownDay.IntValue + 1;
+			CreateInfoPanel(client);
+			SetEntData(client, g_iCollision_Offset, 2, 4, true);
+			SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
+
+			if (GetClientTeam(client) == CS_TEAM_CT)
+			{
+				SetEntityMoveType(client, MOVETYPE_NONE);
+				SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 0.0);
+
+				int zombieHP = gc_iZombieHP.IntValue;
+				int difference = (GetAliveTeamCount(CS_TEAM_T) - GetAliveTeamCount(CS_TEAM_CT));
+				if (difference > 0)
+				{
+					zombieHP = zombieHP + (gc_iZombieHPincrease.IntValue * difference);
+				}
+
+				SetEntityHealth(client, zombieHP);
+
+				StripAllPlayerWeapons(client);
+				GivePlayerItem(client, "weapon_knife");
+			}
+
+			if (GetClientTeam(client) == CS_TEAM_T)
+			{
+				SetEntityHealth(client, gc_iHumanHP.IntValue);
+			}
 		}
-		else if (g_iCoolDown > 0) g_iCoolDown--;
+
+		if (gp_bHosties)
+		{
+			// enable lr on last round
+			g_iTsLR = GetAliveTeamCount(CS_TEAM_T);
+
+			if (gc_bAllowLR.BoolValue)
+			{
+				if (g_iRound == g_iMaxRound && g_iTsLR > g_iTerrorForLR.IntValue)
+				{
+					SetCvar("sm_hosties_lr", 1);
+				}
+			}
+		}
+
+		g_iFreezeTime--;
+
+		CreateTimer (1.1, Timer_SetModel);
+		g_hTimerFreeze = CreateTimer(1.0, Timer_StartEvent, _, TIMER_REPEAT);
+
+		CPrintToChatAll("%t %t", "zombie_tag", "zombie_rounds", g_iRound, g_iMaxRound);
 	}
 }
 
 // Round End
 public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
-	int winner = event.GetInt("winner");
-
 	if (g_bIsZombie)
 	{
 		LoopValidClients(client, false, true)
 		{
 			SetEntData(client, g_iCollision_Offset, 0, 4, true);
-			if (gc_bGlow.BoolValue) UnhookGlow(client);
 			SetEntProp(client, Prop_Send, "m_bNightVisionOn", 0);
+			if (gp_bCustomPlayerSkins && gc_bGlow.BoolValue)
+			{
+				UnhookGlow(client);
+			}
 		}
 
 		delete g_hTimerFreeze;
 		delete g_hTimerBeacon;
 
-		if (winner == 2) PrintCenterTextAll("%t", "zombie_twin_nc");
-		if (winner == 3) PrintCenterTextAll("%t", "zombie_ctwin_nc");
+		int winner = event.GetInt("winner");
+		if (winner == 2)
+		{
+			PrintCenterTextAll("%t", "zombie_twin_nc");
+		}
+		if (winner == 3) 
+		{
+			PrintCenterTextAll("%t", "zombie_ctwin_nc");
+		}
+
 		if (g_iRound == g_iMaxRound)
 		{
 			g_bIsZombie = false;
 			g_bStartZombie = false;
 			g_iRound = 0;
 			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
-			SetCvar("sm_hosties_lr", 1);
+
+			if (gp_bHosties)
+			{
+				SetCvar("sm_hosties_lr", 1);
+			}
+
+			if (gp_bWarden)
+			{
+				SetCvar("sm_warden_enable", 1);
+			}
+
 			SetCvar("sm_weapons_t", 0);
 			SetCvar("sm_weapons_ct", 1);
 			SetCvarString("sv_skyname", g_sSkyName);
 			SetCvar("sv_infinite_ammo", 0);
-			SetCvar("sm_warden_enable", 1);
 			SetCvar("sm_menu_enable", 1);
+
 			g_iMPRoundTime.IntValue = g_iOldRoundTime;
-			MyJailbreak_SetEventDayName("none");
-			MyJailbreak_SetEventDayRunning(false);
-			MyJailbreak_FogOff();
+
+			if (gp_bMyJailbreak)
+			{
+				MyJailbreak_SetEventDayName("none");
+				MyJailbreak_SetEventDayRunning(false);
+				MyJailbreak_FogOff();
+			}
+			
 			CPrintToChatAll("%t %t", "zombie_tag", "zombie_end");
 		}
 	}
 
 	if (g_bStartZombie)
 	{
-		LoopClients(i) CreateInfoPanel(i);
-		
+		LoopClients(i)
+		{
+			CreateInfoPanel(i);
+		}
+
 		CPrintToChatAll("%t %t", "zombie_tag", "zombie_next");
 		PrintCenterTextAll("%t", "zombie_next_nc");
 	}
@@ -582,8 +808,16 @@ public void OnMapStart()
 	g_sOldSkyName = FindConVar("sv_skyname");
 	g_sOldSkyName.GetString(g_sSkyName, sizeof(g_sSkyName));
 
-	if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
-	if (gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
+	if (gc_bSounds.BoolValue)
+	{
+		PrecacheSoundAnyDownload(g_sSoundStartPath);   // Add sound to download and precache table
+	}
+
+	if (gc_bOverlays.BoolValue)
+	{
+		PrecacheDecalAnyDownload(g_sOverlayStartPath);   // Add overlay to download and precache table
+	}
+
 	PrecacheModel(g_sModelPathZombie);
 }
 
@@ -610,13 +844,17 @@ public void OnAvailableLR(int Announced)
 		{
 			SetEntData(client, g_iCollision_Offset, 0, 4, true);
 
-			if (gc_bGlow.BoolValue) UnhookGlow(client);
+			if (gp_bCustomPlayerSkins && gc_bGlow.BoolValue)
+			{
+				UnhookGlow(client);
+			}
 
 			SetEntProp(client, Prop_Send, "m_bNightVisionOn", 0);
 
 			SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
 
 			StripAllPlayerWeapons(client);
+
 			if (GetClientTeam(client) == CS_TEAM_CT)
 			{
 				FakeClientCommand(client, "sm_weapons");
@@ -635,17 +873,28 @@ public void OnAvailableLR(int Announced)
 			g_bStartZombie = false;
 			g_iRound = 0;
 			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
+
 			SetCvar("sm_hosties_lr", 1);
 			SetCvar("sm_weapons_t", 0);
 			SetCvar("sm_weapons_ct", 1);
 			SetCvarString("sv_skyname", g_sSkyName);
 			SetCvar("sv_infinite_ammo", 0);
-			SetCvar("sm_warden_enable", 1);
 			SetCvar("sm_menu_enable", 1);
+
+			if (gp_bWarden)
+			{
+				SetCvar("sm_warden_enable", 1);
+			}
+
 			g_iMPRoundTime.IntValue = g_iOldRoundTime;
-			MyJailbreak_SetEventDayName("none");
-			MyJailbreak_SetEventDayRunning(false);
-			MyJailbreak_FogOff();
+
+			if (gp_bMyJailbreak)
+			{
+				MyJailbreak_SetEventDayName("none");
+				MyJailbreak_SetEventDayRunning(false);
+				MyJailbreak_FogOff();
+			}
+
 			CPrintToChatAll("%t %t", "zombie_tag", "zombie_end");
 		}
 	}
@@ -659,21 +908,22 @@ public void OnClientPutInServer(int client)
 // Knife only for Zombies
 public Action OnWeaponCanUse(int client, int weapon)
 {
+	if (!g_bIsZombie)
+	{
+		return Plugin_Continue;
+	}
+
+	if (GetClientTeam(client) != CS_TEAM_CT)
+	{
+		return Plugin_Continue;
+	}
+
 	char sWeapon[32];
 	GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
 
-	if (!StrEqual(sWeapon, "weapon_knife"))
+	if (!StrEqual(sWeapon, "weapon_knife") && IsValidClient(client, true, false))
 	{
-		if (GetClientTeam(client) == CS_TEAM_CT)
-		{
-			if (IsClientInGame(client) && IsPlayerAlive(client))
-			{
-				if (g_bIsZombie)
-				{
-					return Plugin_Handled;
-				}
-			}
-		}
+		return Plugin_Handled;
 	}
 
 	return Plugin_Continue;
@@ -690,10 +940,13 @@ void StartNextRound()
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iVoteCount = 0;
 
-	char buffer[32];
-	Format(buffer, sizeof(buffer), "%T", "zombie_name", LANG_SERVER);
-	MyJailbreak_SetEventDayName(buffer);
-	MyJailbreak_SetEventDayPlanned(true);
+	if (gp_bMyJailbreak)
+	{
+		char buffer[32];
+		Format(buffer, sizeof(buffer), "%T", "zombie_name", LANG_SERVER);
+		MyJailbreak_SetEventDayName(buffer);
+		MyJailbreak_SetEventDayPlanned(true);
+	}
 
 	g_iOldRoundTime = g_iMPRoundTime.IntValue; // save original round time
 	g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue; // set event round time
@@ -808,8 +1061,10 @@ void CreateInfoPanel(int client)
 	char info[255];
 
 	Panel InfoPanel = new Panel();
+
 	Format(info, sizeof(info), "%T", "zombie_info_title", client);
 	InfoPanel.SetTitle(info);
+
 	InfoPanel.DrawText("                                   ");
 	Format(info, sizeof(info), "%T", "zombie_info_line1", client);
 	InfoPanel.DrawText(info);
@@ -827,8 +1082,10 @@ void CreateInfoPanel(int client)
 	Format(info, sizeof(info), "%T", "zombie_info_line7", client);
 	InfoPanel.DrawText(info);
 	InfoPanel.DrawText("-----------------------------------");
+
 	Format(info, sizeof(info), "%T", "warden_close", client);
 	InfoPanel.DrawItem(info);
+
 	InfoPanel.Send(client, Handler_NullCancel, 20);
 }
 
@@ -842,15 +1099,15 @@ public Action Timer_StartEvent(Handle timer)
 	if (g_iFreezeTime > 1)
 	{
 		g_iFreezeTime--;
-		LoopClients(client) if (IsPlayerAlive(client))
+		LoopClients(i) if (IsPlayerAlive(i))
 		{
-			if (GetClientTeam(client) == CS_TEAM_CT)
+			if (GetClientTeam(i) == CS_TEAM_CT)
 			{
-				PrintCenterText(client, "%t", "zombie_timetounfreeze_nc", g_iFreezeTime);
+				PrintCenterText(i, "%t", "zombie_timetounfreeze_nc", g_iFreezeTime);
 			}
-			else if (GetClientTeam(client) == CS_TEAM_T)
+			else if (GetClientTeam(i) == CS_TEAM_T)
 			{
-				PrintCenterText(client, "%t", "zombie_timeuntilzombie_nc", g_iFreezeTime);
+				PrintCenterText(i, "%t", "zombie_timeuntilzombie_nc", g_iFreezeTime);
 			}
 		}
 
@@ -867,25 +1124,41 @@ public Action Timer_StartEvent(Handle timer)
 			{
 				SetEntityMoveType(client, MOVETYPE_WALK);
 				SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.4);
-				if (gc_bVision.BoolValue) SetEntProp(client, Prop_Send, "m_bNightVisionOn", 1);
+
+				if (gc_bVision.BoolValue)
+				{
+					SetEntProp(client, Prop_Send, "m_bNightVisionOn", 1);
+				}
 			}
-			
-			if (gc_bGlow.BoolValue && (IsValidClient(client, true, true)) && (GetClientTeam(client) == CS_TEAM_T)) SetupGlowSkin(client);
-			
-			SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
-			PrintCenterText(client, "%t", "zombie_start_nc");
-			if (gc_bOverlays.BoolValue) ShowOverlay(client, g_sOverlayStartPath, 2.0);
-			if (gc_bSounds.BoolValue)
+
+			if (gp_bCustomPlayerSkins && gc_bGlow.BoolValue && (IsValidClient(client, true, true)) && (GetClientTeam(client) == CS_TEAM_T))
 			{
-				EmitSoundToAllAny(g_sSoundStartPath);
+				SetupGlowSkin(client);
+			}
+
+			SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
+
+			if (gc_bOverlays.BoolValue)
+			{
+				ShowOverlay(client, g_sOverlayStartPath, 2.0);
 			}
 		}
+
+		if (gc_bSounds.BoolValue)
+		{
+			EmitSoundToAllAny(g_sSoundStartPath);
+		}
+
+		PrintCenterTextAll("%t", "zombie_start_nc");
 		CPrintToChatAll("%t %t", "zombie_tag", "zombie_start");
 	}
 
-	g_hTimerFreeze = null;
+	if (gp_bMyJailbreak && gc_bDark.BoolValue && g_iRound == 1)
+	{
+		MyJailbreak_FogOn();
+	}
 
-	if (gc_bDark.BoolValue && (g_iRound = 1)) MyJailbreak_FogOn();
+	g_hTimerFreeze = null;
 
 	return Plugin_Stop;
 }
@@ -893,19 +1166,22 @@ public Action Timer_StartEvent(Handle timer)
 // Delay Set model for sm_skinchooser
 public Action Timer_SetModel(Handle timer)
 {
-	LoopValidClients(client, true, false)
+	LoopValidClients(i, true, false)
 	{
-		if (GetClientTeam(client) == CS_TEAM_CT)
+		if (GetClientTeam(i) == CS_TEAM_CT)
 		{
-			GetEntPropString(client, Prop_Data, "m_ModelName", g_sModelPathPrevious[client], sizeof(g_sModelPathPrevious[]));
-			SetEntityModel(client, g_sModelPathZombie);
+			GetEntPropString(i, Prop_Data, "m_ModelName", g_sModelPathPrevious[i], sizeof(g_sModelPathPrevious[]));
+			SetEntityModel(i, g_sModelPathZombie);
 		}
 	}
 }
 
-// Beacon Timer
 public Action Timer_BeaconOn(Handle timer)
 {
-	LoopValidClients(i, true, false) MyJailbreak_BeaconOn(i, 2.0);
+	LoopValidClients(i, true, false)
+	{
+		MyJailbreak_BeaconOn(i, 2.0);
+	}
+
 	g_hTimerBeacon = null;
 }

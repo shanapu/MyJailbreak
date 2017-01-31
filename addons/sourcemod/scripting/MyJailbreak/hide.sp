@@ -30,12 +30,16 @@
 #include <emitsoundany>
 #include <colors>
 #include <autoexecconfig>
+#include <mystocks>
+
+// Optional Plugins
+#undef REQUIRE_PLUGIN
 #include <hosties>
 #include <lastrequest>
 #include <warden>
-#include <smartjaildoors>
-#include <mystocks>
 #include <myjailbreak>
+#include <smartjaildoors>
+#define REQUIRE_PLUGIN
 
 // Compiler Options
 #pragma semicolon 1
@@ -45,6 +49,12 @@
 bool g_bIsLateLoad = false;
 bool g_bIsHide = false;
 bool g_bStartHide = false;
+
+// Plugin bools
+bool gp_bWarden;
+bool gp_bHosties;
+bool gp_bSmartJailDoors;
+bool gp_bMyJailbreak;
 
 // Console Variables
 ConVar gc_bPlugin;
@@ -195,12 +205,18 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 	if (convar == gc_sOverlayStartPath)
 	{
 		strcopy(g_sOverlayStartPath, sizeof(g_sOverlayStartPath), newValue);
-		if (gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
+		if (gc_bOverlays.BoolValue)
+		{
+			PrecacheDecalAnyDownload(g_sOverlayStartPath);
+		}
 	}
 	else if (convar == gc_sSoundStartPath)
 	{
 		strcopy(g_sSoundStartPath, sizeof(g_sSoundStartPath), newValue);
-		if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
+		if (gc_bSounds.BoolValue)
+		{
+			PrecacheSoundAnyDownload(g_sSoundStartPath);
+		}
 	}
 	else if (convar == gc_sAdminFlag)
 	{
@@ -229,7 +245,9 @@ public void OnConfigsExecuted()
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
 		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		{
 			RegConsoleCmd(sCommand, Command_VoteHide, "Allows players to vote for a hide");
+		}
 	}
 
 	// Set
@@ -241,7 +259,9 @@ public void OnConfigsExecuted()
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
 		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		{
 			RegConsoleCmd(sCommand, Command_SetHide, "Allows the Admin or Warden to set hide as next round");
+		}
 	}
 }
 
@@ -252,64 +272,124 @@ public void OnConfigsExecuted()
 // Admin & Warden set Event
 public Action Command_SetHide(int client, int args)
 {
-	if (gc_bPlugin.BoolValue)	
+	if (!gc_bPlugin.BoolValue)
 	{
-		if (client == 0)
-		{
-			StartNextRound();
-			if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Hide was started by groupvoting");
-		}
-		else if (warden_iswarden(client))
-		{
-			if (gc_bSetW.BoolValue)	
-			{
-				if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0))
-				{
-					char EventDay[64];
-					MyJailbreak_GetEventDayName(EventDay);
-					
-					if (StrEqual(EventDay, "none", false))
-					{
-						if (g_iCoolDown == 0)
-						{
-							StartNextRound();
-							if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Hide was started by warden %L", client);
-						}
-						else CReplyToCommand(client, "%t %t", "hide_tag", "hide_wait", g_iCoolDown);
-					}
-					else CReplyToCommand(client, "%t %t", "hide_tag", "hide_progress", EventDay);
-				}
-				else CReplyToCommand(client, "%t %t", "hide_tag", "hide_minplayer");
-			}
-			else CReplyToCommand(client, "%t %t", "hide_tag", "hide_setbywarden");
-		}
-		else if (CheckVipFlag(client, g_sAdminFlag))
-		{
-			if (gc_bSetA.BoolValue)
-			{
-				if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0))
-				{
-					char EventDay[64];
-					MyJailbreak_GetEventDayName(EventDay);
-					
-					if (StrEqual(EventDay, "none", false))
-					{
-						if ((g_iCoolDown == 0) || gc_bSetABypassCooldown.BoolValue)
-						{
-							StartNextRound();
-							if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Hide was started by admin %L", client);
-						}
-						else CReplyToCommand(client, "%t %t", "hide_tag", "hide_wait", g_iCoolDown);
-					}
-					else CReplyToCommand(client, "%t %t", "hide_tag", "hide_progress", EventDay);
-				}
-				else CReplyToCommand(client, "%t %t", "hide_tag", "hide_minplayer");
-			}
-			else CReplyToCommand(client, "%t %t", "hide_tag", "hide_setbyadmin");
-		}
-		else CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+		CReplyToCommand(client, "%t %t", "hide_tag", "hide_disabled");
+		return Plugin_Handled;
 	}
-	else CReplyToCommand(client, "%t %t", "hide_tag", "hide_disabled");
+
+	if (client == 0) // Called by a server/voting
+	{
+		StartNextRound();
+
+		if (!gp_bMyJailbreak)
+		{
+			return Plugin_Handled;
+		}
+
+		if (MyJailbreak_ActiveLogging())
+		{
+			LogToFileEx(g_sEventsLogFile, "Event Hide was started by groupvoting");
+		}
+	}
+	else if (CheckVipFlag(client, g_sAdminFlag)) // Called by admin/VIP
+	{
+		if (!gc_bSetA.BoolValue)
+		{
+			CReplyToCommand(client, "%t %t", "hide_tag", "hide_setbyadmin");
+			return Plugin_Handled;
+		}
+
+		if (GetTeamClientCount(CS_TEAM_CT) == 0 || GetTeamClientCount(CS_TEAM_T) == 0)
+		{
+			CReplyToCommand(client, "%t %t", "hide_tag", "hide_minplayer");
+			return Plugin_Handled;
+		}
+
+		if (gp_bMyJailbreak)
+		{
+			char EventDay[64];
+			MyJailbreak_GetEventDayName(EventDay);
+
+			if (!StrEqual(EventDay, "none", false))
+			{
+				CReplyToCommand(client, "%t %t", "hide_tag", "hide_progress", EventDay);
+				return Plugin_Handled;
+			}
+		}
+
+		if (g_iCoolDown > 0 && !gc_bSetABypassCooldown.BoolValue)
+		{
+			CReplyToCommand(client, "%t %t", "hide_tag", "hide_wait", g_iCoolDown);
+			return Plugin_Handled;
+		}
+
+		StartNextRound();
+
+		if (!gp_bMyJailbreak)
+		{
+			return Plugin_Handled;
+		}
+
+		if (MyJailbreak_ActiveLogging())
+		{
+			LogToFileEx(g_sEventsLogFile, "Event Hide was started by admin %L", client);
+		}
+	}
+	else if (gp_bWarden) // Called by warden
+	{
+		if (!warden_iswarden(client))
+		{
+			CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+			return Plugin_Handled;
+		}
+		
+		if (!gc_bSetW.BoolValue)
+		{
+			CReplyToCommand(client, "%t %t", "warden_tag", "hide_setbywarden");
+			return Plugin_Handled;
+		}
+
+		if (GetTeamClientCount(CS_TEAM_CT) == 0 || GetTeamClientCount(CS_TEAM_T) == 0)
+		{
+			CReplyToCommand(client, "%t %t", "hide_tag", "hide_minplayer");
+			return Plugin_Handled;
+		}
+
+		if (gp_bMyJailbreak)
+		{
+			char EventDay[64];
+			MyJailbreak_GetEventDayName(EventDay);
+
+			if (!StrEqual(EventDay, "none", false))
+			{
+				CReplyToCommand(client, "%t %t", "hide_tag", "hide_progress", EventDay);
+				return Plugin_Handled;
+			}
+		}
+
+		if (g_iCoolDown > 0)
+		{
+			CReplyToCommand(client, "%t %t", "hide_tag", "hide_wait", g_iCoolDown);
+			return Plugin_Handled;
+		}
+
+		StartNextRound();
+
+		if (!gp_bMyJailbreak)
+		{
+			return Plugin_Handled;
+		}
+
+		if (MyJailbreak_ActiveLogging())
+		{
+			LogToFileEx(g_sEventsLogFile, "Event Hide was started by warden %L", client);
+		}
+	}
+	else
+	{
+		CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+	}
 
 	return Plugin_Handled;
 }
@@ -317,47 +397,75 @@ public Action Command_SetHide(int client, int args)
 // Voting for Event
 public Action Command_VoteHide(int client, int args)
 {
+	if (!gc_bPlugin.BoolValue)
+	{
+		CReplyToCommand(client, "%t %t", "hide_tag", "hide_disabled");
+		return Plugin_Handled;
+	}
+
+	if (!gc_bVote.BoolValue)
+	{
+		CReplyToCommand(client, "%t %t", "hide_tag", "hide_voting");
+		return Plugin_Handled;
+	}
+
+	if (GetTeamClientCount(CS_TEAM_CT) == 0 || GetTeamClientCount(CS_TEAM_T) == 0)
+	{
+		CReplyToCommand(client, "%t %t", "hide_tag", "hide_minplayer");
+		return Plugin_Handled;
+	}
+
+	if (gp_bMyJailbreak)
+	{
+		char EventDay[64];
+		MyJailbreak_GetEventDayName(EventDay);
+
+		if (!StrEqual(EventDay, "none", false))
+		{
+			CReplyToCommand(client, "%t %t", "hide_tag", "hide_progress", EventDay);
+			return Plugin_Handled;
+		}
+	}
+
+	if (g_iCoolDown > 0)
+	{
+		CReplyToCommand(client, "%t %t", "hide_tag", "hide_wait", g_iCoolDown);
+		return Plugin_Handled;
+	}
+
 	char steamid[24];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
 
-	if (gc_bPlugin.BoolValue)
+	if (StrContains(g_sHasVoted, steamid, true) != -1)
 	{
-		if (gc_bVote.BoolValue)
-		{
-			if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0))
-			{
-				char EventDay[64];
-				MyJailbreak_GetEventDayName(EventDay);
-				
-				if (StrEqual(EventDay, "none", false))
-				{
-					if (g_iCoolDown == 0)
-					{
-						if (StrContains(g_sHasVoted, steamid, true) == -1)
-						{
-							int playercount = (GetClientCount(true) / 2);
-							g_iVoteCount++;
-							int Missing = playercount - g_iVoteCount + 1;
-							Format(g_sHasVoted, sizeof(g_sHasVoted), "%s, %s", g_sHasVoted, steamid);
-							
-							if (g_iVoteCount > playercount)
-							{
-								StartNextRound();
-								if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sEventsLogFile, "Event Hide was started by voting");
-							}
-							else CPrintToChatAll("%t %t", "hide_tag", "hide_need", Missing, client);
-						}
-						else CReplyToCommand(client, "%t %t", "hide_tag", "hide_voted");
-					}
-					else CReplyToCommand(client, "%t %t", "hide_tag", "hide_wait", g_iCoolDown);
-				}
-				else CReplyToCommand(client, "%t %t", "hide_tag", "hide_progress", EventDay);
-			}
-			else CReplyToCommand(client, "%t %t", "hide_tag", "hide_minplayer");
-		}
-		else CReplyToCommand(client, "%t %t", "hide_tag", "hide_voting");
+		CReplyToCommand(client, "%t %t", "hide_tag", "hide_voted");
+		return Plugin_Handled;
 	}
-	else CReplyToCommand(client, "%t %t", "hide_tag", "hide_disabled");
+
+	int playercount = (GetClientCount(true) / 2);
+	g_iVoteCount += 1;
+
+	int Missing = playercount - g_iVoteCount + 1;
+	Format(g_sHasVoted, sizeof(g_sHasVoted), "%s, %s", g_sHasVoted, steamid);
+
+	if (g_iVoteCount > playercount)
+	{
+		StartNextRound();
+
+		if (!gp_bMyJailbreak)
+		{
+			return Plugin_Handled;
+		}
+
+		if (MyJailbreak_ActiveLogging())
+		{
+			LogToFileEx(g_sEventsLogFile, "Event Hide was started by voting");
+		}
+	}
+	else
+	{
+		CPrintToChatAll("%t %t", "hide_tag", "hide_need", Missing, client);
+	}
 
 	return Plugin_Handled;
 }
@@ -369,85 +477,119 @@ public Action Command_VoteHide(int client, int args)
 // Round start
 public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
-	if (g_bStartHide || g_bIsHide)
+	if (!g_bStartHide && !g_bIsHide)
+	{
+		if (gp_bMyJailbreak)
+		{
+			char EventDay[64];
+			MyJailbreak_GetEventDayName(EventDay);
+
+			if (!StrEqual(EventDay, "none", false))
+			{
+				g_iCoolDown = gc_iCooldownDay.IntValue + 1;
+			}
+			else if (g_iCoolDown > 0)
+			{
+				g_iCoolDown -= 1;
+			}
+		}
+		else if (g_iCoolDown > 0)
+		{
+			g_iCoolDown -= 1;
+		}
+
+		return;
+	}
+
+	if (gp_bWarden)
+	{
+		SetCvar("sm_warden_enable", 0);
+	}
+
+	if (gp_bHosties)
 	{
 		SetCvar("sm_hosties_lr", 0);
-		SetCvar("sm_warden_enable", 0);
-		SetCvarString("sv_skyname", "cs_baggage_skybox_");
-		SetCvar("sm_weapons_t", 0);
-		SetCvar("sm_weapons_ct", 0);
-		SetCvar("sm_menu_enable", 0);
+	}
 
+	SetCvarString("sv_skyname", "cs_baggage_skybox_");
+	SetCvar("sm_weapons_t", 0);
+	SetCvar("sm_weapons_ct", 0);
+	SetCvar("sm_menu_enable", 0);
+
+	if (gp_bMyJailbreak)
+	{
 		MyJailbreak_SetEventDayPlanned(false);
 		MyJailbreak_SetEventDayRunning(true);
 
-		g_bIsHide = true;
-		g_iRound++;
-		g_bStartHide = false;
-
-		SJD_OpenDoors();
-
 		MyJailbreak_FogOn();
 
-		if (gc_fBeaconTime.FloatValue > 0.0) g_hTimerBeacon = CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
-
-		if (g_iRound > 0)
+		if (gc_fBeaconTime.FloatValue > 0.0)
 		{
-			LoopClients(client)
-			{
-				CreateInfoPanel(client);
+			g_hTimerBeacon = CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
+		}
+	}
 
-				if (GetClientTeam(client) == CS_TEAM_CT)
+	g_bIsHide = true;
+	g_iRound++;
+	g_bStartHide = false;
+
+	if (gp_bSmartJailDoors)
+	{
+		SJD_OpenDoors();
+	}
+
+	if (g_iRound > 0)
+	{
+		LoopClients(client)
+		{
+			CreateInfoPanel(client);
+
+			if (GetClientTeam(client) == CS_TEAM_CT)
+			{
+				if (gp_bSmartJailDoors)
 				{
-					StripAllPlayerWeapons(client);
 					SetEntityMoveType(client, MOVETYPE_NONE);
 					SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 0.0);
-					SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
-					GivePlayerItem(client, "weapon_tagrenade");
-					GivePlayerItem(client, "weapon_knife");
 				}
 
-				if (GetClientTeam(client) == CS_TEAM_T)
-				{
-					StripAllPlayerWeapons(client);
-					SetEntData(client, g_iCollision_Offset, 2, 4, true);
-					GivePlayerItem(client, "weapon_knife");
-				}
+				SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
+
+				StripAllPlayerWeapons(client);
+				GivePlayerItem(client, "weapon_tagrenade");
+				GivePlayerItem(client, "weapon_knife");
 			}
 
+			if (GetClientTeam(client) == CS_TEAM_T)
+			{
+				StripAllPlayerWeapons(client);
+				GivePlayerItem(client, "weapon_knife");
+			}
+
+			SetEntData(client, g_iCollision_Offset, 2, 4, true);
+		}
+
+		if (gp_bHosties)
+		{
 			// enable lr on last round
 			g_iTsLR = GetAliveTeamCount(CS_TEAM_T);
 
 			if (gc_bAllowLR.BoolValue)
 			{
-				if ((g_iRound == g_iMaxRound) && (g_iTsLR > g_iTerrorForLR.IntValue))
+				if (g_iRound == g_iMaxRound && g_iTsLR > g_iTerrorForLR.IntValue)
 				{
 					SetCvar("sm_hosties_lr", 1);
 				}
 			}
-
-			g_iFreezeTime--;
-			g_hTimerFreeze = CreateTimer(1.0, Timer_StartEvent, _, TIMER_REPEAT);
 		}
-	}
-	else
-	{
-		char EventDay[64];
-		MyJailbreak_GetEventDayName(EventDay);
 
-		if (!StrEqual(EventDay, "none", false))
-		{
-			g_iCoolDown = gc_iCooldownDay.IntValue + 1;
-		}
-		else if (g_iCoolDown > 0) g_iCoolDown--;
+		g_iFreezeTime--;
+		g_hTimerFreeze = CreateTimer(1.0, Timer_StartEvent, _, TIMER_REPEAT);
 	}
 }
 
 // Round End
 public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
-	int winner = event.GetInt("winner");
-
 	if (g_bIsHide)
 	{
 		LoopClients(client)
@@ -460,8 +602,15 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 		delete g_hTimerBeacon;
 		delete g_hTimerFreeze;
 
-		if (winner == 2) PrintCenterTextAll("%t", "hide_twin_nc");
-		if (winner == 3) PrintCenterTextAll("%t", "hide_ctwin_nc");
+		int winner = event.GetInt("winner");
+		if (winner == 2)
+		{
+			PrintCenterTextAll("%t", "hide_twin_nc");
+		}
+		if (winner == 3)
+		{
+			PrintCenterTextAll("%t", "hide_ctwin_nc");
+		}
 
 		if (g_iRound == g_iMaxRound)
 		{
@@ -469,23 +618,41 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			g_bStartHide = false;
 			g_iRound = 0;
 			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
-			SetCvar("sm_hosties_lr", 1);
+
+			if (gp_bHosties)
+			{
+				SetCvar("sm_hosties_lr", 1);
+			}
+
+			if (gp_bWarden)
+			{
+				SetCvar("sm_warden_enable", 1);
+			}
+
 			SetCvar("sm_weapons_t", 0);
 			SetCvar("sm_weapons_ct", 1);
 			SetCvarString("sv_skyname", g_sSkyName);
-			SetCvar("sm_warden_enable", 1);
 			SetCvar("sm_menu_enable", 1);
-			g_iMPRoundTime.IntValue = g_iOldRoundTime;
-			MyJailbreak_SetEventDayName("none");
-			MyJailbreak_SetEventDayRunning(false);
-			CPrintToChatAll("%t %t", "hide_tag", "hide_end");
 
-			MyJailbreak_FogOff();
+			g_iMPRoundTime.IntValue = g_iOldRoundTime;
+
+			if (gp_bMyJailbreak)
+			{
+				MyJailbreak_SetEventDayName("none");
+				MyJailbreak_SetEventDayRunning(false);
+				MyJailbreak_FogOff();
+			}
+
+			CPrintToChatAll("%t %t", "hide_tag", "hide_end");
 		}
 	}
+
 	if (g_bStartHide)
 	{
-		LoopClients(i) CreateInfoPanel(i);
+		LoopClients(i)
+		{
+			CreateInfoPanel(i);
+		}
 
 		CPrintToChatAll("%t %t", "hide_tag", "hide_next");
 		PrintCenterTextAll("%t", "hide_next_nc");
@@ -508,13 +675,11 @@ public void Event_TA_Detonate(Event event, const char[] name, bool dontBroadcast
 			GivePlayerItem(target, "weapon_tagrenade");
 			int g_iTAgot = (g_iMaxTA - g_iTA[target]);
 			g_iTA[target]++;
-			
+
 			CPrintToChat(target, "%t %t", "hide_tag", "hide_stillta", g_iTAgot);
 		}
 		else CPrintToChat(target, "%t %t", "hide_tag", "hide_nota");
 	}
-
-	return;
 }
 
 /******************************************************************************
@@ -534,10 +699,18 @@ public void OnMapStart()
 	g_sOldSkyName = FindConVar("sv_skyname");
 	g_sOldSkyName.GetString(g_sSkyName, sizeof(g_sSkyName));
 
-	if (gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
-	if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
+	// Precache Sound & Overlay
+	if (gc_bSounds.BoolValue)
+	{
+		PrecacheSoundAnyDownload(g_sSoundStartPath);
+	}
 
-	for (int client=1;client <= MaxClients;client++) g_iTA[client] = 0;
+	if (gc_bOverlays.BoolValue)
+	{
+		PrecacheDecalAnyDownload(g_sOverlayStartPath);
+	}
+
+	LoopClients(i) g_iTA[i] = 0;
 }
 
 // Terror win Round if time runs out
@@ -578,24 +751,23 @@ public void OnClientPutInServer(int client)
 // Knife only for Terrorists
 public Action OnWeaponCanUse(int client, int weapon)
 {
-	if (g_bIsHide)
+	if (!g_bIsHide)
 	{
-		char sWeapon[32];
-		GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
-
-		if ((GetClientTeam(client) == CS_TEAM_T && StrEqual(sWeapon, "weapon_knife")) || (GetClientTeam(client) == CS_TEAM_CT))
-		{
-		
-			if (IsClientInGame(client) && IsPlayerAlive(client))
-			{
-				return Plugin_Continue;
-			}
-		}
-
-		return Plugin_Handled;
+		return Plugin_Continue;
 	}
 
-	return Plugin_Continue;
+	char sWeapon[32];
+	GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
+
+	if ((GetClientTeam(client) == CS_TEAM_T && StrEqual(sWeapon, "weapon_knife")) || (GetClientTeam(client) == CS_TEAM_CT))
+	{
+		if (IsClientInGame(client) && IsPlayerAlive(client))
+		{
+			return Plugin_Continue;
+		}
+	}
+
+	return Plugin_Handled;
 }
 
 // Listen for Last Lequest
@@ -619,18 +791,29 @@ public void OnAvailableLR(int Announced)
 			g_bStartHide = false;
 			g_iRound = 0;
 			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
+
+			if(gp_bWarden)
+			{
+				SetCvar("sm_warden_enable", 1);
+			}
+
 			SetCvar("sm_hosties_lr", 1);
 			SetCvar("sm_weapons_t", 0);
 			SetCvar("sm_weapons_ct", 1);
 			SetCvarString("sv_skyname", g_sSkyName);
-			SetCvar("sm_warden_enable", 1);
 			SetCvar("sm_menu_enable", 1);
+
 			g_iMPRoundTime.IntValue = g_iOldRoundTime;
-			MyJailbreak_SetEventDayName("none");
-			MyJailbreak_SetEventDayRunning(false);
+
+			if (gp_bMyJailbreak)
+			{
+				MyJailbreak_SetEventDayName("none");
+				MyJailbreak_SetEventDayRunning(false);
+
+				MyJailbreak_FogOff();
+			}
+
 			CPrintToChatAll("%t %t", "hide_tag", "hide_end");
-			
-			MyJailbreak_FogOff();
 		}
 	}
 }
@@ -643,17 +826,20 @@ public void OnAvailableLR(int Announced)
 void StartNextRound()
 {
 	g_bStartHide = true;
+	g_iVoteCount = 0;
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 
-	char buffer[32];
-	Format(buffer, sizeof(buffer), "%T", "hide_name", LANG_SERVER);
-	MyJailbreak_SetEventDayName(buffer);
-	MyJailbreak_SetEventDayPlanned(true);
+	if (gp_bMyJailbreak)
+	{
+		char buffer[32];
+		Format(buffer, sizeof(buffer), "%T", "hide_name", LANG_SERVER);
+		MyJailbreak_SetEventDayName(buffer);
+		MyJailbreak_SetEventDayPlanned(true);
+	}
 
 	g_iOldRoundTime = g_iMPRoundTime.IntValue; // save original round time
 	g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue; // set event round time
 
-	g_iVoteCount = 0;
 	CPrintToChatAll("%t %t", "hide_tag", "hide_next");
 	PrintCenterTextAll("%t", "hide_next_nc");
 }
@@ -668,8 +854,10 @@ void CreateInfoPanel(int client)
 	char info[255];
 
 	Panel InfoPanel = new Panel();
+
 	Format(info, sizeof(info), "%T", "hide_info_title", client);
 	InfoPanel.SetTitle(info);
+
 	InfoPanel.DrawText("                                   ");
 	Format(info, sizeof(info), "%T", "hide_info_line1", client);
 	InfoPanel.DrawText(info);
@@ -687,6 +875,7 @@ void CreateInfoPanel(int client)
 	Format(info, sizeof(info), "%T", "hide_info_line7", client);
 	InfoPanel.DrawText(info);
 	InfoPanel.DrawText("-----------------------------------");
+
 	Format(info, sizeof(info), "%T", "warden_close", client);
 	InfoPanel.DrawItem(info);
 
@@ -741,13 +930,19 @@ public Action Timer_StartEvent(Handle timer)
 					SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 0.9);
 				}
 			}
-			if (gc_bOverlays.BoolValue) ShowOverlay(client, g_sOverlayStartPath, 2.0);
-			if (gc_bSounds.BoolValue)
+
+			if (gc_bOverlays.BoolValue)
 			{
-				EmitSoundToAllAny(g_sSoundStartPath);
+				ShowOverlay(client, g_sOverlayStartPath, 2.0);
 			}
-			PrintCenterText(client, "%t", "hide_start_nc");
 		}
+
+		if (gc_bSounds.BoolValue)
+		{
+			EmitSoundToAllAny(g_sSoundStartPath);
+		}
+
+		PrintCenterTextAll("%t", "hide_start_nc");
 		CPrintToChatAll("%t %t", "hide_tag", "hide_start");
 	}
 
@@ -759,7 +954,10 @@ public Action Timer_StartEvent(Handle timer)
 // Beacon Timer
 public Action Timer_BeaconOn(Handle timer)
 {
-	LoopValidClients(i, true, false) MyJailbreak_BeaconOn(i, 2.0);
+	LoopValidClients(i, true, false)
+	{
+		MyJailbreak_BeaconOn(i, 2.0);
+	}
 
 	g_hTimerBeacon = null;
 }
