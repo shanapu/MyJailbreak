@@ -635,6 +635,11 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 	{
 		MyJailbreak_SetEventDayPlanned(false);
 		MyJailbreak_SetEventDayRunning(true);
+
+		if (gc_fBeaconTime.FloatValue > 0.0)
+		{
+			g_hTimerBeacon = CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
+		}
 	}
 
 	g_iRound++;
