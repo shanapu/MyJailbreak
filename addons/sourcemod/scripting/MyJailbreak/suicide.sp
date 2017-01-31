@@ -678,7 +678,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 		}
 
 		delete g_hTimerFreeze;
-		delete g_hTimerBeacon
+		delete g_hTimerBeacon;
 
 		int winner = event.GetInt("winner");
 		if (winner == 2)
