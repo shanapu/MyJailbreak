@@ -268,8 +268,8 @@ public void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast
 
 	if (gc_bKevlar.BoolValue && (GetClientTeam(client) == CS_TEAM_CT))
 	{
-		SetEntProp(i, Prop_Send, "m_ArmorValue", 100);
-		SetEntProp(i, Prop_Send, "m_bHasHelmet", 1);
+		SetEntProp(client, Prop_Send, "m_ArmorValue", 100);
+		SetEntProp(client, Prop_Send, "m_bHasHelmet", 1);
 	}
 	
 	if (!gp_bMyJailBreak)
@@ -284,13 +284,13 @@ public void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast
 
 	if (gc_bKevlarDays.BoolValue)
 	{
-		SetEntProp(i, Prop_Send, "m_ArmorValue", 100);
-		SetEntProp(i, Prop_Send, "m_bHasHelmet", 1);
+		SetEntProp(client, Prop_Send, "m_ArmorValue", 100);
+		SetEntProp(client, Prop_Send, "m_bHasHelmet", 1);
 	}
 	else
 	{
-		SetEntProp(i, Prop_Send, "m_ArmorValue", 0);
-		SetEntProp(i, Prop_Send, "m_bHasHelmet", 0);
+		SetEntProp(client, Prop_Send, "m_ArmorValue", 0);
+		SetEntProp(client, Prop_Send, "m_bHasHelmet", 0);
 	}
 
 }
