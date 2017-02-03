@@ -961,17 +961,21 @@ void SetupGlowSkin(int client)
 {
 	char sModel[PLATFORM_MAX_PATH];
 	GetClientModel(client, sModel, sizeof(sModel));
-	int iSkin = CPS_SetSkin(client, sModel, CPS_RENDER);
 
+	int iSkin = CPS_SetSkin(client, sModel, CPS_RENDER);
 	if (iSkin == -1)
+	{
 		return;
+	}
 
 	if (SDKHookEx(iSkin, SDKHook_SetTransmit, OnSetTransmit_GlowSkin))
-		SetupGlow(iSkin);
+	{
+		GlowSkin(iSkin);
+	}
 }
 
 // set client glow
-void SetupGlow(int iSkin)
+void GlowSkin(int iSkin)
 {
 	int iOffset;
 
@@ -996,18 +1000,20 @@ void SetupGlow(int iSkin)
 // Who can see the glow if vaild
 public Action OnSetTransmit_GlowSkin(int iSkin, int client)
 {
-	if (!IsPlayerAlive(client))
+	if (!IsPlayerAlive(client) || GetClientTeam(client) != CS_TEAM_CT)
 		return Plugin_Handled;
 
 	LoopClients(target)
 	{
 		if (!CPS_HasSkin(target))
+		{
 			continue;
+		}
 
 		if (EntRefToEntIndex(CPS_GetSkin(target)) != iSkin)
+		{
 			continue;
-
-		if (GetClientTeam(client) == CS_TEAM_CT)
+		}
 
 		return Plugin_Continue;
 	}
@@ -1020,7 +1026,12 @@ void UnhookGlow(int client)
 {
 	if (IsValidClient(client, false, true))
 	{
-		SDKUnhook(client, SDKHook_SetTransmit, OnSetTransmit_GlowSkin);
+		int iSkin = CPS_GetSkin(client);
+		if (iSkin != INVALID_ENT_REFERENCE)
+		{
+			SetEntProp(iSkin, Prop_Send, "m_bShouldGlow", false, true);
+			SDKUnhook(iSkin, SDKHook_SetTransmit, OnSetTransmit_GlowSkin);
+		}
 	}
 }
 
