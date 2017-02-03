@@ -77,6 +77,7 @@ ConVar gc_bNegev;
 ConVar gc_bHealthWarden;
 ConVar gc_bHealthDeputy;
 ConVar gc_bKevlar;
+ConVar gc_bKevlarDays;
 ConVar gc_sCustomCommandWeapon;
 
 // Extern Convars
@@ -138,6 +139,7 @@ public void OnPluginStart()
 	gc_bTADeputy = AutoExecConfig_CreateConVar("sm_weapons_warden_tagrenade", "1", "0 - disabled, 1 - warden get a TA grenade with weapons - need MyJB warden", _, true, 0.0, true, 1.0);
 	gc_bHealthDeputy = AutoExecConfig_CreateConVar("sm_weapons_warden_healthshot", "1", "0 - disabled, 1 - warden get a healthshot with weapons - need MyJB warden", _, true, 0.0, true, 1.0);
 	gc_bKevlar = AutoExecConfig_CreateConVar("sm_weapons_kevlar", "1", "0 - disabled, 1 - CT get Kevlar & helm on Spawn", _, true, 0.0, true, 1.0);
+	gc_bKevlarDays = AutoExecConfig_CreateConVar("sm_weapons_kevlar_eventdays", "1", "0 - remove all armor on eventdays, 1 - give all player armor on eventdays", _, true, 0.0, true, 1.0);
 	gc_bJBmenu = AutoExecConfig_CreateConVar("sm_weapons_jbmenu", "1", "0 - disabled, 1 - enable autoopen the MyJailbreak !menu after weapon given.", _, true, 0.0, true, 1.0);
 
 	AutoExecConfig_ExecuteFile();
@@ -256,6 +258,9 @@ public void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast
 
 	KillAllTimer(client);
 
+	Health[client] = false;
+	TA[client] = false;
+
 	if (gc_bSpawn.BoolValue)
 	{
 		Timers[client] = CreateTimer(1.0, Timer_GetWeapons, client);
@@ -263,21 +268,31 @@ public void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast
 
 	if (gc_bKevlar.BoolValue && (GetClientTeam(client) == CS_TEAM_CT))
 	{
-		if (gp_bMyJailBreak)
-		{
-			if (MyJailbreak_IsEventDayRunning() || MyJailbreak_IsEventDayPlanned())
-			return;
-		}
-
-		int iHelmet = FindSendPropInfo("CCSPlayer", "m_bHasHelmet");
-		int iKevlar = FindSendPropInfo("CCSPlayer", "m_ArmorValue");
-
-		SetEntData(client, iHelmet, 1);
-		SetEntData(client, iKevlar, 100);
+		SetEntProp(i, Prop_Send, "m_ArmorValue", 100);
+		SetEntProp(i, Prop_Send, "m_bHasHelmet", 1);
+	}
+	
+	if (!gp_bMyJailBreak)
+	{
+		return;
+	}
+	
+	if (!MyJailbreak_IsEventDayRunning() && !MyJailbreak_IsEventDayPlanned())
+	{
+		return;
 	}
 
-	Health[client] = false;
-	TA[client] = false;
+	if (gc_bKevlarDays.BoolValue)
+	{
+		SetEntProp(i, Prop_Send, "m_ArmorValue", 100);
+		SetEntProp(i, Prop_Send, "m_bHasHelmet", 1);
+	}
+	else
+	{
+		SetEntProp(i, Prop_Send, "m_ArmorValue", 0);
+		SetEntProp(i, Prop_Send, "m_bHasHelmet", 0);
+	}
+
 }
 
 /******************************************************************************
