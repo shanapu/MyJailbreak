@@ -80,10 +80,10 @@ float g_fDeathOrigin[MAXPLAYERS+1][3];
 // Info
 public Plugin myinfo = 
 {
-	name = "MyJailbreak - Request", 
-	author = "shanapu", 
-	description = "Requests - refuse, capitulation/pardon, heal", 
-	version = MYJB_VERSION, 
+	name = "MyJailbreak - Request",
+	author = "shanapu",
+	description = "Requests - refuse, capitulation/pardon, heal",
+	version = MYJB_VERSION,
 	url = MYJB_URL_LINK
 }
 

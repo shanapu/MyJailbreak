@@ -37,12 +37,13 @@
 
 public SharedPlugin:__pl_myjailbreak =
 {
-	name = "myjailbreak", 
-	file = "myjailbreak.smx", 
+	name = "myjailbreak",
+	file = "myjailbreak.smx",
+	
 	#if defined REQUIRE_PLUGIN
-	required = 1, 
+	required = 1,
 	#else
-	required = 0, 
+	required = 0,
 	#endif
 };
 
@@ -56,11 +57,15 @@ public __pl_myjailbreak_SetNTVOptional()
 	MarkNativeAsOptional("MyJailbreak_IsEventDayRunning");
 	MarkNativeAsOptional("MyJailbreak_SetEventDayPlanned");
 	MarkNativeAsOptional("MyJailbreak_IsEventDayPlanned");
+
 	MarkNativeAsOptional("MyJailbreak_SetLastGuardRule");
 	MarkNativeAsOptional("MyJailbreak_IsLastGuardRule");
+
 	MarkNativeAsOptional("MyJailbreak_ActiveLogging");
+
 	MarkNativeAsOptional("MyJailbreak_FogOn");
 	MarkNativeAsOptional("MyJailbreak_FogOff");
+
 	MarkNativeAsOptional("MyJailbreak_BeaconOn");
 	MarkNativeAsOptional("MyJailbreak_BeaconOff");
 }

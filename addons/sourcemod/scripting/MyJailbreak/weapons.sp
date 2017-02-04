@@ -97,10 +97,10 @@ enum weapons
 // Info
 public Plugin myinfo =
 {
-	name = "MyJailbreak - Weapons", 
-	author = "shanapu", 
-	description = "Jailbreak weapons script", 
-	version = MYJB_VERSION, 
+	name = "MyJailbreak - Weapons",
+	author = "shanapu",
+	description = "Jailbreak weapons script",
+	version = MYJB_VERSION,
 	url = "https://github.com/shanapu/MyJailbreak"
 };
 

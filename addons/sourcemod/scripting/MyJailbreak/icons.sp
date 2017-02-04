@@ -79,10 +79,10 @@ char g_sIconFreedayPath[256];
 
 // Info
 public Plugin myinfo = {
-	name = "MyJailbreak - Icons", 
-	author = "shanapu", 
-	description = "Show Team & status icons above player heads", 
-	version = MYJB_VERSION, 
+	name = "MyJailbreak - Icons",
+	author = "shanapu",
+	description = "Show Team & status icons above player heads",
+	version = MYJB_VERSION,
 	url = MYJB_URL_LINK
 };
 

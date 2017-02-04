@@ -121,10 +121,10 @@ char g_sOverlayStartPath[256];
 
 // Info
 public Plugin myinfo = {
-	name = "MyJailbreak - Suicide Bomber", 
-	author = "shanapu", 
-	description = "Event Day for Jailbreak Server", 
-	version = MYJB_VERSION, 
+	name = "MyJailbreak - Suicide Bomber",
+	author = "shanapu",
+	description = "Event Day for Jailbreak Server",
+	version = MYJB_VERSION,
 	url = MYJB_URL_LINK
 };
 

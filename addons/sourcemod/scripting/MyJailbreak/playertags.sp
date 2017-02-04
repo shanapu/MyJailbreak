@@ -59,10 +59,10 @@ char g_sVIPFlag[32];
 // Info
 public Plugin myinfo =
 {
-	name = "MyJailbreak - PlayerTags", 
-	description = "Define player tags in chat & stats for Jailbreak Server", 
-	author = "shanapu", 
-	version = MYJB_VERSION, 
+	name = "MyJailbreak - PlayerTags",
+	description = "Define player tags in chat & stats for Jailbreak Server",
+	author = "shanapu",
+	version = MYJB_VERSION,
 	url = MYJB_URL_LINK
 }
 

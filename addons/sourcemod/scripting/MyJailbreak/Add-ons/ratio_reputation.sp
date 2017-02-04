@@ -62,7 +62,7 @@ public void OnPluginStart()
 	AutoExecConfig_SetFile("Ratio", "MyJailbreak");
 	AutoExecConfig_SetCreateFile(true);
 
-	gc_iMinReputation = AutoExecConfig_CreateConVar("sm_ratio_reputation", "0", "0 - disabled, how many reputation a player need to join ct? (only if reputation is available)", _, true, 1.0);
+	gc_iMinReputation = AutoExecConfig_CreateConVar("sm_ratio_reputation", "0", "0 - disabled, how many reputation a player need to join ct? (only if reputation is available)", _, true, 0.0);
 
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();

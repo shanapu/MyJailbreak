@@ -50,10 +50,10 @@ g_bEnableHud[MAXPLAYERS+1] = true;
 // Info
 public Plugin myinfo =
 {
-	name = "MyJailbreak - Player HUD", 
-	description = "A player HUD to display game informations", 
-	author = "shanapu", 
-	version = MYJB_VERSION, 
+	name = "MyJailbreak - Player HUD",
+	description = "A player HUD to display game informations",
+	author = "shanapu",
+	version = MYJB_VERSION,
 	url = MYJB_URL_LINK
 }
 

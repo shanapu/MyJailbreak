@@ -77,6 +77,7 @@ stock void StripAllPlayerWeapons(int client)
 			AcceptEntityInput(weapon, "Kill");
 		}
 	}
+
 	if ((weapon = GetPlayerWeaponSlot(client, CS_SLOT_KNIFE)) != -1)   // strip knife slot 2 times for taser
 	{
 //		CS_DropWeapon(client, weapon, false);
@@ -128,13 +129,13 @@ stock void SetCvar(char cvarName[64], int value)
 {
 	Handle IntCvar = FindConVar(cvarName);
 	if (IntCvar == null) return;
-	
+
 	int flags = GetConVarFlags(IntCvar);
 	flags &= ~FCVAR_NOTIFY;
 	SetConVarFlags(IntCvar, flags);
-	
+
 	SetConVarInt(IntCvar, value);
-	
+
 	flags |= FCVAR_NOTIFY;
 	SetConVarFlags(IntCvar, flags);
 }
@@ -145,13 +146,13 @@ stock void SetCvarFloat(char cvarName[64], float value)
 {
 	Handle FloatCvar = FindConVar(cvarName);
 	if (FloatCvar == INVALID_HANDLE) return;
-	
+
 	new flags = GetConVarFlags(FloatCvar);
 	flags &= ~FCVAR_NOTIFY;
 	SetConVarFlags(FloatCvar, flags);
-	
+
 	SetConVarFloat(FloatCvar, value);
-	
+
 	flags |= FCVAR_NOTIFY;
 	SetConVarFlags(FloatCvar, flags);
 }
@@ -171,7 +172,7 @@ stock void SetLogFile(char LogFile[PLATFORM_MAX_PATH], char[] FileName, char[] F
 	char sDate[12];
 	FormatTime(sDate, sizeof(sDate), "%y-%m-%d");
 	Format(LogFile, sizeof(LogFile), "logs/%s/%s-%s.log", FolderName, FileName, sDate);
-	
+
 	BuildPath(Path_SM, LogFile, sizeof(LogFile), LogFile);
 }
 
@@ -181,10 +182,10 @@ stock void SetPlayerWeaponAmmo(int client, int weaponEnt, int clip = -1, int amm
 {
 	if (weaponEnt == INVALID_ENT_REFERENCE)
 		return;
-	
+
 	if (clip != -1)
 		SetEntProp(weaponEnt, Prop_Send, "m_iClip1", clip);
-	
+
 	if (ammo != -1)
 	{
 		int iOffset = FindDataMapInfo(client, "m_iAmmo") + (GetEntProp(weaponEnt, Prop_Data, "m_iPrimaryAmmoType") * 4);
@@ -213,6 +214,7 @@ stock int GetRandomPlayerNonRebel(int team)
 {
 	int[] clients = new int[MaxClients];
 	int clientCount;
+
 	LoopClients(i)
 	{
 		if ((GetClientTeam(i) == team) && IsPlayerAlive(i) && IsClientRebel(i))
@@ -220,6 +222,7 @@ stock int GetRandomPlayerNonRebel(int team)
 			clients[clientCount++] = i;
 		}
 	}
+
 	return (clientCount == 0) ? -1 : clients[GetRandomInt(0, clientCount-1)];
 }
 
@@ -228,6 +231,7 @@ stock int GetRandomPlayer(int team)
 {
 	int[] clients = new int[MaxClients];
 	int clientCount;
+
 	LoopClients(i)
 	{
 		if ((GetClientTeam(i) == team) && IsPlayerAlive(i))
@@ -235,6 +239,7 @@ stock int GetRandomPlayer(int team)
 			clients[clientCount++] = i;
 		}
 	}
+
 	return (clientCount == 0) ? -1 : clients[GetRandomInt(0, clientCount-1)];
 }
 
@@ -243,11 +248,11 @@ stock int GetRandomPlayer(int team)
 stock int GetAlivePlayersCount(int team)
 {
 	int iCount, i; iCount = 0;
-	
+
 	for (i = 1; i <= MaxClients; i++)
 		if (IsValidClient(i, true, false) && GetClientTeam(i) == team)
 		iCount++;
-	
+
 	return iCount;
 }
 
@@ -255,11 +260,11 @@ stock int GetAlivePlayersCount(int team)
 stock int GetAlivePlayersCountNonRebel(int team)
 {
 	int iCount, i; iCount = 0;
-	
+
 	for (i = 1; i <= MaxClients; i++)
 		if (IsValidClient(i, true, false) && !IsClientRebel(i) && GetClientTeam(i) == team)
 		iCount++;
-	
+
 	return iCount;
 }
 
@@ -287,6 +292,7 @@ stock int GetRandomAlivePlayer()
 {
 	int[] clients = new int[MaxClients];
 	int clientCount;
+
 	LoopClients(i)
 	{
 		if (IsPlayerAlive(i))
@@ -294,6 +300,7 @@ stock int GetRandomAlivePlayer()
 			clients[clientCount++] = i;
 		}
 	}
+
 	return (clientCount == 0) ? -1 : clients[GetRandomInt(0, clientCount-1)];
 }
 
@@ -303,12 +310,13 @@ stock int GetLastAlive(int team)
 {
 	int clientCount = 0;
 	int client;
-	
+
 	LoopValidClients(i, true, false) if (GetClientTeam(i) == team)
 	{
 		clientCount++;
 		client = i;
 	}
+
 	return (clientCount > 1) ? -1 : client;
 }
 
@@ -320,6 +328,7 @@ stock bool CheckVipFlag(int client, const char[] flagsNeed)
 	{
 		return true;
 	}
+
 	return false;
 }
 
@@ -337,5 +346,6 @@ public int Handler_NullCancel(Handle menu, MenuAction action, int param1, int pa
 			}
 		}
 	}
+
 	return;
 }

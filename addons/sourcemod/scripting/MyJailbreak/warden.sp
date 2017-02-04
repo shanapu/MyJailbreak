@@ -160,10 +160,10 @@ char g_sMyJBLogFile[PLATFORM_MAX_PATH];
 
 // Info
 public Plugin myinfo = {
-	name = "MyJailbreak - Warden", 
-	author = "shanapu", 
-	description = "Jailbreak Warden script", 
-	version = MYJB_VERSION, 
+	name = "MyJailbreak - Warden",
+	author = "shanapu",
+	description = "Jailbreak Warden script",
+	version = MYJB_VERSION,
 	url = MYJB_URL_LINK
 };
 

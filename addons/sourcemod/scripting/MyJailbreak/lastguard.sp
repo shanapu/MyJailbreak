@@ -90,10 +90,10 @@ char g_sOverlayStartPath[256];
 
 // Info
 public Plugin myinfo = {
-	name = "MyJailbreak - Last Guard Rule", 
-	author = "shanapu", 
-	description = "Last Guard Rule for Jailbreak Server", 
-	version = MYJB_VERSION, 
+	name = "MyJailbreak - Last Guard Rule",
+	author = "shanapu",
+	description = "Last Guard Rule for Jailbreak Server",
+	version = MYJB_VERSION,
 	url = MYJB_URL_LINK
 };
 

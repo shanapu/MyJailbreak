@@ -56,10 +56,10 @@ char IsEventDay[128] = "none";
 
 // Info
 public Plugin myinfo = {
-	name = "MyJailbreak - Core", 
-	author = "shanapu", 
-	description = "MyJailbreak - core plugin", 
-	version = MYJB_VERSION, 
+	name = "MyJailbreak - Core",
+	author = "shanapu",
+	description = "MyJailbreak - core plugin",
+	version = MYJB_VERSION,
 	url = MYJB_URL_LINK
 };
 

@@ -62,7 +62,7 @@ public void OnPluginStart()
 	AutoExecConfig_SetFile("Ratio", "MyJailbreak");
 	AutoExecConfig_SetCreateFile(true);
 
-	gc_iMinRankMePoints = AutoExecConfig_CreateConVar("sm_ratio_rankme", "0", "0 - disabled, how many rankme points a player need to join ct? (only if stamm is available)", _, true, 1.0);
+	gc_iMinRankMePoints = AutoExecConfig_CreateConVar("sm_ratio_rankme", "0", "0 - disabled, how many rankme points a player need to join ct? (only if stamm is available)", _, true, 0.0);
 
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();

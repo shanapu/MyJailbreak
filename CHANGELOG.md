@@ -3,8 +3,12 @@
 **[Beta 9.1.dev]** - fixes
   
 *Added*
-*  Ratio: Support for SteamRep.com & FantoMs CT Bans - add missing custom commands cvar for !clarqueue
-    *  new cvar - sm_ratio_cmds_clear - Set your custom chat command for admins to clear the guard queue (!clearqueue (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))"); 
+*  Ratio: Support for SteamRep.com & FantoMs CT Bans - add missing custom commands cvar for !clarqueue & new swicth commands
+    *  new command - sm_prisoner - Allows a player to join prisoner
+    *  new command - sm_spectator - Allows a player to join spectator
+    *  new cvar - sm_ratio_cmds_clear - Set your custom chat command for admins to clear the guard queue (!clearqueue (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
+    *  new cvar - sm_ratio_cmds_prisoner - Set your custom chat command for player to move to prisoner (!prisoner (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
+    *  new cvar - sm_ratio_cmds_spec - Set your custom chat command for player to move to spectator (!spectator (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
     *  new plugin - disabled/ratio_ct_bans.smx - Support plugin for FantoMs CT Bans plugin
     *  new plugin - disabled/ratio_steamrep.smx - Support plugin for Jameless SteamRep.com Checker plugin
         *  new cvar - sm_ratio_steamrep_exclude - Which tags you DO NOT trust for reported scammers. Input the tags here for any community whose bans you DO NOT TRUST.
@@ -12,8 +16,8 @@
 *  New Eventday: Ghosts War - All Players are invisbile & immortal - every 6 seconds they go visible and mortal for 2 seconds. Last alive wins.
     *  new plugin - ghosts.smx - please help translate http://translator.mitchdempsey.com/sourcemod_plugins/201
         *  new cvar - sm_ghosts_enable - 0 - disabled, 1 - enable this MyJailbreak SourceMod plugin
-        *  new cvar - sm_ghosts_cmds_vote - Set your custom chat command for Event voting(!ghosts (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
-        *  new cvar - sm_ghosts_cmds_set - Set your custom chat command for set Event(!ghosts (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
+        *  new cvar - sm_ghosts_cmds_vote - Set your custom chat command for Event voting(!ghosts (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
+        *  new cvar - sm_ghosts_cmds_set - Set your custom chat command for set Event(!ghosts (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
         *  new cvar - sm_ghosts_warden - 0 - disabled, 1 - allow warden to set ghosts round
         *  new cvar - sm_ghosts_admin - 0 - disabled, 1 - allow admin/vip to set ghosts round
         *  new cvar - sm_ghosts_flag - Set flag for admin/vip to set this Event Day
@@ -45,28 +49,41 @@
     *  new cvar - sm_warden_cooldown_remove - 0 - disabled, rounds player can't become warden after he was vote out or removed by admin
 *  Warden: Player cooldown for become warden after a roundstart, when player was warden in last round. to give other players chance to become warden
     *  new cvar - sm_warden_cooldown_roundstart - Time in seconds a the warden of last round must wait until become warden again, to give other player chance to be warden (need sm_warden_stay '0')
+*  Warden: Cvar to allow all Guards to give personal freedays
+    *  new cvar - sm_warden_freeday_guard - 0 - disabled, 1 - Allow all the guards to set a personal freeday. Default 0
   
   
 *Changed*
 *  Warden - disarm: disbale weapon disarm (shot hand to drop weapon) on last request
 *  Menu: Moved admin commands to !admin menu
     *  new cvar - sm_menu_admin - 0 - disable admin commands in all menus, 1 - show admin commands only in Myjailbreak menu, 2 - show admin command only in !admin menu, 3 - display admin command in all menus
+*  Warden - freeday: changed cvar 'sm_warden_freeday_victim_deputy' to 'sm_warden_freeday_deputy'
+    *  removed cvar - sm_warden_freeday_victim_deputy - obsolete cvar. **Please remove them from your configs!**
+    *  new cvar - sm_warden_freeday_deputy - 0 - disabled, 1 - Allow the deputy to set a personal freeday
+*  Menu: Add voteitem 'No Eventday' to a event day voting
   
   
 *Fixed*
 *  Warden - small error with logging & vote warden
 *  Weapons - rar error when client left server in timer
 *  Menu - Eventday Voting - fix double Event when event was set while voting
+*  Warden - dropguns: no more punishment on empty taser
+*  Warden - deputy: missing translation
 *  Request: missing translation
 *  DealDamage: fix result screen
-*  Icons: fix some *_enable cvars
+*  Icons: fix some *_enable cvars 
+*  Late loading: re/load plugin in round Thx @olegtsvetkov
 *  rar error weapon not owned by client
 *  removed some debug messages
 *  minor errors
   
   
 *Developer stuff*
+*  Add source code files to travis auto builds.
 *  Builds website - bootstrap website for auto build binary download
+*  Code optimizing Thx @olegtsvetkov
+*  Changed code style on many parts
+*  Clean up code
   
   
   

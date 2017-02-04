@@ -6,12 +6,13 @@
 
 public SharedPlugin:__pl_warden =
 {
-	name = "warden", 
-	file = "warden.smx", 
+	name = "warden",
+	file = "warden.smx",
+
 	#if defined REQUIRE_PLUGIN
-	required = 1, 
+	required = 1,
 	#else
-	required = 0, 
+	required = 0,
 	#endif
 };
 
@@ -25,17 +26,17 @@ public __pl_warden_SetNTVOptional()
 	MarkNativeAsOptional("warden_remove");
 	MarkNativeAsOptional("warden_get");
 	MarkNativeAsOptional("warden_getlast");
-	
+
 	MarkNativeAsOptional("warden_deputy_exist");
 	MarkNativeAsOptional("warden_deputy_isdeputy");
 	MarkNativeAsOptional("warden_deputy_set");
 	MarkNativeAsOptional("warden_deputy_remove");
 	MarkNativeAsOptional("warden_deputy_get");
 	MarkNativeAsOptional("warden_deputy_getlast");
-	
+
 	MarkNativeAsOptional("warden_handcuffs_givepaperclip");
 	MarkNativeAsOptional("warden_handcuffs_iscuffed");
-	
+
 	MarkNativeAsOptional("warden_freeday_set");
 	MarkNativeAsOptional("warden_freeday_has");
 }

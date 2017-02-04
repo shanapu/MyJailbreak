@@ -110,10 +110,10 @@ float g_fPos[3];
 
 // Info
 public Plugin myinfo = {
-	name = "MyJailbreak - War", 
-	author = "shanapu", 
-	description = "Event Day for Jailbreak Server", 
-	version = MYJB_VERSION, 
+	name = "MyJailbreak - War",
+	author = "shanapu",
+	description = "Event Day for Jailbreak Server",
+	version = MYJB_VERSION,
 	url = MYJB_URL_LINK
 };
 
@@ -140,7 +140,7 @@ public void OnPluginStart()
 	gc_bSetA = AutoExecConfig_CreateConVar("sm_war_admin", "1", "0 - disabled, 1 - allow admin/vip to set war round", _, true, 0.0, true, 1.0);
 	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_war_flag", "g", "Set flag for admin/vip to set this Event Day.");
 	gc_bVote = AutoExecConfig_CreateConVar("sm_war_vote", "1", "0 - disabled, 1 - allow player to vote for war", _, true, 0.0, true, 1.0);
-	gc_bSpawnCell = AutoExecConfig_CreateConVar("sm_war_spawn", "0", "0 - teleport to ct and freeze, 1 - T teleport to CT spawn, 1 - standart spawn & cell doors auto open", _, true, 0.0, true, 1.0);
+	gc_bSpawnCell = AutoExecConfig_CreateConVar("sm_war_spawn", "0", "0 - teleport to ct and freeze, 1 - standart spawn & cell doors auto open", _, true, 0.0, true, 1.0);
 	gc_iRounds = AutoExecConfig_CreateConVar("sm_war_rounds", "3", "Rounds to play in a row", _, true, 1.0);
 	gc_iFreezeTime = AutoExecConfig_CreateConVar("sm_war_freezetime", "30", "Time in seconds the Terrorists freezed - need sm_war_spawn 0", _, true, 0.0);
 	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_war_trucetime", "15", "Time after freezetime damage disbaled", _, true, 0.0);
@@ -552,11 +552,15 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 	g_iRound++;
 	g_bIsWar = true;
 	g_bStartWar = false;
-	g_iFreezeTime = 0;
 
 	if (gp_bSmartJailDoors)
 	{
 		SJD_OpenDoors();
+	}
+
+	if (gc_bSpawnCell.BoolValue)
+	{
+		g_iFreezeTime = 0;
 	}
 
 	if (!gc_bSpawnCell.BoolValue || !gp_bSmartJailDoors || (gc_bSpawnCell.BoolValue && (SJD_IsCurrentMapConfigured() != true))) // spawn Terrors to CT Spawn 
@@ -623,10 +627,12 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 	if (!gc_bSpawnCell.BoolValue || !gp_bSmartJailDoors || (gc_bSpawnCell.BoolValue && (SJD_IsCurrentMapConfigured() != true))) // spawn Terrors to CT Spawn)
 	{
 		g_hTimerFreeze = CreateTimer(1.0, Timer_FreezeOnStart, _, TIMER_REPEAT);
+		PrintToChatAll("Timer_FreezeOnStart %i", g_iFreezeTime);
 	}
 	else
 	{
 		g_hTimerTruce = CreateTimer(1.0, Timer_StartEvent, _, TIMER_REPEAT);
+		PrintToChatAll("Timer_StartEvent %i", g_iFreezeTime);
 	}
 
 	CPrintToChatAll("%t %t", "war_tag", "war_rounds", g_iRound, g_iMaxRound);

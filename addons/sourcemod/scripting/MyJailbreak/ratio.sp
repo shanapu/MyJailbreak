@@ -87,10 +87,10 @@ char g_sAdminFlag[32];
 
 // Info
 public Plugin myinfo = {
-	name = "MyJailbreak - Ratio", 
-	author = "shanapu, Addicted", 
-	description = "Jailbreak team balance / ratio plugin", 
-	version = MYJB_VERSION, 
+	name = "MyJailbreak - Ratio",
+	author = "shanapu, Addicted",
+	description = "Jailbreak team balance / ratio plugin",
+	version = MYJB_VERSION,
 	url = MYJB_URL_LINK
 };
 

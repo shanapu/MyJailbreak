@@ -146,10 +146,10 @@ TopMenuObject gM_MyJB = INVALID_TOPMENUOBJECT;
 
 // Info
 public Plugin myinfo = {
-	name = "MyJailbreak - Menus", 
-	author = "shanapu", 
-	description = "Jailbreak Menu", 
-	version = MYJB_VERSION, 
+	name = "MyJailbreak - Menus",
+	author = "shanapu",
+	description = "Jailbreak Menu",
+	version = MYJB_VERSION,
 	url = MYJB_URL_LINK
 };
 
@@ -2214,6 +2214,7 @@ public Action Command_VotingMenu(int client, int args)
 		else CReplyToCommand(client, "%t %t", "menu_tag", "warden_notwarden");
 	}
 	else CReplyToCommand(client, "%t %t", "menu_tag", "menu_disabled");
+
 	return Plugin_Handled;
 }
 
