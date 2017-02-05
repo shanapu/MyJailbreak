@@ -627,12 +627,10 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 	if (!gc_bSpawnCell.BoolValue || !gp_bSmartJailDoors || (gc_bSpawnCell.BoolValue && (SJD_IsCurrentMapConfigured() != true))) // spawn Terrors to CT Spawn)
 	{
 		g_hTimerFreeze = CreateTimer(1.0, Timer_FreezeOnStart, _, TIMER_REPEAT);
-		PrintToChatAll("Timer_FreezeOnStart %i", g_iFreezeTime);
 	}
 	else
 	{
 		g_hTimerTruce = CreateTimer(1.0, Timer_StartEvent, _, TIMER_REPEAT);
-		PrintToChatAll("Timer_StartEvent %i", g_iFreezeTime);
 	}
 
 	CPrintToChatAll("%t %t", "war_tag", "war_rounds", g_iRound, g_iMaxRound);
