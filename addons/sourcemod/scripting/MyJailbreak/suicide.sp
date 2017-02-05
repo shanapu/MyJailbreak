@@ -569,21 +569,24 @@ public Action Command_BombSuicideBomber(int client, int args)
 		int weapon = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
 		char weaponName[64];
 
-		GetEdictClassname(weapon, weaponName, sizeof(weaponName));
-
-		if (GetClientTeam(client) == CS_TEAM_T)
+		if(IsValidEdict(weapon))
 		{
-			if (StrEqual(weaponName, "weapon_c4"))
+			GetEdictClassname(weapon, weaponName, sizeof(weaponName));
+
+			if (GetClientTeam(client) == CS_TEAM_T)
 			{
-				EmitSoundToAllAny(g_sSoundSuicideBomberPath);
-				CreateTimer(1.0, Timer_DetonateBomb, client);
-				if (gc_bStandStill.BoolValue)
+				if (StrEqual(weaponName, "weapon_c4"))
 				{
-					SetEntityMoveType(client, MOVETYPE_NONE);
-					SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 0.0);
+					EmitSoundToAllAny(g_sSoundSuicideBomberPath);
+					CreateTimer(1.0, Timer_DetonateBomb, client);
+					if (gc_bStandStill.BoolValue)
+					{
+						SetEntityMoveType(client, MOVETYPE_NONE);
+						SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 0.0);
+					}
 				}
+				// else CPrintToChat(client, "%t %t", "suicidebomber_tag", "suicidebomber_needc4");
 			}
-			// else CPrintToChat(client, "%t %t", "suicidebomber_tag", "suicidebomber_needc4");
 		}
 	}
 }
