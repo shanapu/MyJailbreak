@@ -48,7 +48,7 @@ bool g_bEventDayRunning = false;
 bool g_bLastGuardRuleActive = false;
 
 // Strings
-char IsEventDay[128] = "none";
+char g_sEventDayName[128] = "none";
 
 // Modules
 #include "MyJailbreak/Modules/fog.sp"
@@ -194,7 +194,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	CreateNative("MyJailbreak_SetEventDayName", Native_SetEventDayName);
 	CreateNative("MyJailbreak_GetEventDayName", Native_GetEventDayName);
 	CreateNative("MyJailbreak_IsEventDayRunning", Native_IsEventDayRunning);
-	CreateNative("MyJailbreak_SetEventDayRunning", Native_SetEventDayNameRunning);
+	CreateNative("MyJailbreak_SetEventDayRunning", Native_SetEventDayRunning);
 	CreateNative("MyJailbreak_SetEventDayPlanned", Native_SetEventDayPlanned);
 	CreateNative("MyJailbreak_IsEventDayPlanned", Native_IsEventDayPlanned);
 	CreateNative("MyJailbreak_IsLastGuardRule", Native_IsLastGuardRule);
@@ -226,7 +226,7 @@ public int Native_IsEventDayRunning(Handle plugin, int argc)
 }
 
 // Boolean Set Event Day running (true = running)
-public int Native_SetEventDayNameRunning(Handle plugin, int argc)
+public int Native_SetEventDayRunning(Handle plugin, int argc)
 {
 	g_bEventDayRunning = GetNativeCell(1);
 }
@@ -254,13 +254,13 @@ public int Native_SetEventDayName(Handle plugin, int argc)
 	char buffer[64];
 	GetNativeString(1, buffer, 64);
 
-	Format(IsEventDay, sizeof(IsEventDay), buffer);
+	Format(g_sEventDayName, sizeof(g_sEventDayName), buffer);
 }
 
 // Get Event Day Name
 public int Native_GetEventDayName(Handle plugin, int argc)
 {
-	SetNativeString(1, IsEventDay, sizeof(IsEventDay));
+	SetNativeString(1, g_sEventDayName, sizeof(g_sEventDayName));
 }
 
 // Boolean Is Last Guard Rule active (true = active)

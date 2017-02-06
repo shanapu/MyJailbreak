@@ -116,7 +116,7 @@ Handle gF_OnWardenDisconnected;
 Handle gF_OnWardenDeath;
 Handle gF_OnWardenRemovedBySelf;
 Handle gF_OnWardenRemovedByAdmin;
-Handle RandomTimer;
+Handle g_hTimerRandom;
 Handle g_hCooldown;
 Handle g_hLimit;
 
@@ -606,11 +606,11 @@ public void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast
 			EmitSoundToAllAny(g_sUnWarden);
 		}
 
-		if (RandomTimer != null)
-		KillTimer(RandomTimer);
+		if (g_hTimerRandom != null)
+		KillTimer(g_hTimerRandom);
 
-		RandomTimer = null;
-		RandomTimer = CreateTimer(gc_fRandomTimer.FloatValue, Timer_ChooseRandom);
+		g_hTimerRandom = null;
+		g_hTimerRandom = CreateTimer(gc_fRandomTimer.FloatValue, Timer_ChooseRandom);
 
 		g_iLastWarden = g_iWarden;
 		g_iWarden = -1;
@@ -642,7 +642,7 @@ public void Event_PostRoundStart(Event event, const char[] name, bool dontBroadc
 	{
 		if ((g_iWarden == -1) && gc_bBecomeWarden.BoolValue)
 		{
-			RandomTimer = CreateTimer(gc_fRandomTimer.FloatValue, Timer_ChooseRandom);
+			g_hTimerRandom = CreateTimer(gc_fRandomTimer.FloatValue, Timer_ChooseRandom);
 
 			LoopValidClients(i, false, false) if (GetClientTeam(i) == CS_TEAM_CT)
 			{
@@ -924,9 +924,9 @@ void SetTheWarden(int client)
 			EmitSoundToAllAny(g_sWarden);
 		}
 
-		if (RandomTimer != null)
-		KillTimer(RandomTimer);
-		RandomTimer = null;
+		if (g_hTimerRandom != null)
+		KillTimer(g_hTimerRandom);
+		g_hTimerRandom = null;
 	}
 	else CReplyToCommand(client, "%t %t", "warden_tag", "warden_disabled");
 }
@@ -937,11 +937,11 @@ void RemoveTheWarden()
 	CreateTimer(0.1, Timer_RemoveColor, g_iWarden);
 	SetEntityModel(g_iWarden, g_sModelPathPrevious);
 
-	if (RandomTimer != null)
-		KillTimer(RandomTimer);
-	RandomTimer = null;
+	if (g_hTimerRandom != null)
+		KillTimer(g_hTimerRandom);
+	g_hTimerRandom = null;
 
-	RandomTimer = CreateTimer(gc_fRandomTimer.FloatValue, Timer_ChooseRandom);
+	g_hTimerRandom = CreateTimer(gc_fRandomTimer.FloatValue, Timer_ChooseRandom);
 
 	if (gc_bSounds.BoolValue)
 	{
@@ -1159,9 +1159,9 @@ public Action Timer_ChooseRandom(Handle timer, Handle pack)
 		}
 	}
 
-	if (RandomTimer != null)
-		KillTimer(RandomTimer);
-	RandomTimer = null;
+	if (g_hTimerRandom != null)
+		KillTimer(g_hTimerRandom);
+	g_hTimerRandom = null;
 }
 
 public Action Timer_CMDCoolDown(Handle timer, int client)

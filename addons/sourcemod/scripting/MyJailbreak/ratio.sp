@@ -73,8 +73,8 @@ bool gp_bWarden = false;
 // Handles
 Handle g_aGuardQueue;
 Handle g_aGuardList;
-Handle g_hOnClientJoinGuards;
 Handle g_hDataPackTeam;
+Handle gF_OnClientJoinGuards;
 
 // Integer
 int g_iRandomAnswer[MAXPLAYERS+1];
@@ -159,7 +159,7 @@ public void OnPluginStart()
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	g_hOnClientJoinGuards = CreateGlobalForward("MyJailbreak_OnJoinGuardQueue", ET_Event, Param_Cell);
+	gF_OnClientJoinGuards = CreateGlobalForward("MyJailbreak_OnJoinGuardQueue", ET_Event, Param_Cell);
 	
 	RegPluginLibrary("myratio");
 	return APLRes_Success;
@@ -395,7 +395,7 @@ public Action Command_JoinGuardQueue(int client, int iArgNum)
 	}
 
 	Action res = Plugin_Continue;
-	Call_StartForward(g_hOnClientJoinGuards);
+	Call_StartForward(gF_OnClientJoinGuards);
 	Call_PushCell(client);
 	Call_Finish(res);
 
@@ -624,7 +624,7 @@ public Action Event_OnJoinTeam(int client, const char[] szCommand, int iArgCount
 	}
 
 	Action res = Plugin_Continue;
-	Call_StartForward(g_hOnClientJoinGuards);
+	Call_StartForward(gF_OnClientJoinGuards);
 	Call_PushCell(client);
 	Call_Finish(res);
 
@@ -1183,7 +1183,7 @@ int GetRandomClientFromTeam(int iTeam)
 			continue;
 		
 		Action res = Plugin_Continue;
-		Call_StartForward(g_hOnClientJoinGuards);
+		Call_StartForward(gF_OnClientJoinGuards);
 		Call_PushCell(i);
 		Call_Finish(res);
 		
