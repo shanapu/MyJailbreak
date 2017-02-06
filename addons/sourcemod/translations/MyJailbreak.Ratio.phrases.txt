@@ -327,6 +327,11 @@
 		"en"		"Cannot play on guards because you are a {red}SCAMMER{default}. see steamrep.com"
 	}
 
+	"ratio_steamgroup"
+	{
+		"en"		"Cannot play on guards, you need to join our steamgroup first"
+	}
+
 	"ratio_rankme"
 	{
 		"#format"	"{1:i}"

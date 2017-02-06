@@ -3,7 +3,7 @@
 **[Beta 9.1.dev]** - fixes
   
 *Added*
-*  Ratio: Support for SteamRep.com & FantoMs CT Bans - add missing custom commands cvar for !clarqueue & new swicth commands
+*  Ratio: Support for SteamRep.com, FantoMs CT Bans & Steam Groups - new switch commands & more
     *  new command - sm_prisoner - Allows a player to join prisoner
     *  new command - sm_spectator - Allows a player to join spectator
     *  new cvar - sm_ratio_cmds_clear - Set your custom chat command for admins to clear the guard queue (!clearqueue (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
@@ -13,6 +13,8 @@
     *  new plugin - disabled/ratio_steamrep.smx - Support plugin for Jameless SteamRep.com Checker plugin
         *  new cvar - sm_ratio_steamrep_exclude - Which tags you DO NOT trust for reported scammers. Input the tags here for any community whose bans you DO NOT TRUST.
         *  new cvar - sm_ratio_steamrep_checkip - Include IP address of connecting players in query. Set to 0 to disable
+    *  new plugin - disabled/ratio_steamgroup.smx - Support plugin for Steam Groups (need SteamWorks extension!)
+        *  new cvar - sm_ratio_steamgroup - Your Steam Group ID (Find it on your steam groups edit page)
 *  New Eventday: Ghosts War - All Players are invisbile & immortal - every 6 seconds they go visible and mortal for 2 seconds. Last alive wins.
     *  new plugin - ghosts.smx - please help translate http://translator.mitchdempsey.com/sourcemod_plugins/201
         *  new cvar - sm_ghosts_enable - 0 - disabled, 1 - enable this MyJailbreak SourceMod plugin

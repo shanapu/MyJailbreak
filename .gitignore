@@ -72,7 +72,6 @@ addons/sourcemod/scripting/include/sdktools_trace.inc
 addons/sourcemod/scripting/include/sdktools_voice.inc
 addons/sourcemod/scripting/include/sorting.inc
 addons/sourcemod/scripting/include/sourcemod.inc
-addons/sourcemod/scripting/include/SteamWorks.inc
 addons/sourcemod/scripting/include/string.inc
 addons/sourcemod/scripting/include/testing.inc
 addons/sourcemod/scripting/include/textparse.inc
