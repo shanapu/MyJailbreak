@@ -43,6 +43,10 @@
 // Console Variables
 ConVar gc_iGroupsID;
 
+//Bools
+bool g_bIsLateLoad = false;
+bool IsMember[MAXPLAYERS+1] = {false, ...};
+
 // Info
 public Plugin myinfo = {
 	name = "MyJailbreak - Ratio - Steam Groups Support", 
@@ -51,6 +55,13 @@ public Plugin myinfo = {
 	version = MYJB_VERSION, 
 	url = MYJB_URL_LINK
 };
+
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+	g_bIsLateLoad = late;
+
+	return APLRes_Success;
+}
 
 // Start
 public void OnPluginStart()
@@ -69,6 +80,17 @@ public void OnPluginStart()
 
 	// Hooks
 	HookEvent("player_spawn", Event_OnPlayerSpawn, EventHookMode_Post);
+
+	// Late loading
+	if (g_bIsLateLoad)
+	{
+		LoopClients(i)
+		{
+			OnClientPostAdminCheck(i);
+		}
+
+		g_bIsLateLoad = false;
+	}
 }
 
 public void OnAllPluginsLoaded()
@@ -79,7 +101,7 @@ public void OnAllPluginsLoaded()
 
 public Action MyJailbreak_OnJoinGuardQueue(int client)
 {
-	if (!SteamWorks_GetUserGroupStatus(client, gc_iGroupsID.IntValue))
+	if (!IsMember[client])
 	{
 		CPrintToChat(client, "%t %t", "ratio_tag", "ratio_steamgroup");
 		return Plugin_Handled;
@@ -88,6 +110,13 @@ public Action MyJailbreak_OnJoinGuardQueue(int client)
 	return Plugin_Continue;
 }
 
+public void OnClientPostAdminCheck(int client)
+{
+	if (SteamWorks_GetUserGroupStatus(client, gc_iGroupsID.IntValue))
+	{
+		IsMember[client] = true;
+	}
+}
 
 public Action Event_OnPlayerSpawn(Event event, const char[] name, bool bDontBroadcast) 
 {
@@ -99,7 +128,7 @@ public Action Event_OnPlayerSpawn(Event event, const char[] name, bool bDontBroa
 	if (!IsValidClient(client, false, false))
 		return Plugin_Continue;
 
-	if (!SteamWorks_GetUserGroupStatus(client, gc_iGroupsID.IntValue))
+	if (!IsMember[client])
 	{
 		CPrintToChat(client, "%t %t", "ratio_tag", "ratio_steamgroup");
 		CreateTimer(5.0, Timer_SlayPlayer, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
