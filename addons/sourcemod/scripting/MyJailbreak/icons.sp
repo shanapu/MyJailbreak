@@ -284,22 +284,27 @@ public void OnMapStart()
 	CreateTimer(0.5, Timer_Delay, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 }
 
-public void OnWardenCreation(int client)
+public void warden_OnWardenCreatedByUser(int client)
 {
 	CreateTimer(0.1, Timer_Delay);
 }
 
-public void OnWardenRemoved(int client)
+public void warden_OnWardenCreatedByAdmin(int client)
 {
 	CreateTimer(0.1, Timer_Delay);
 }
 
-public void OnDeputyCreation(int client)
+public void warden_OnWardenRemoved(int client)
 {
 	CreateTimer(0.1, Timer_Delay);
 }
 
-public void OnDeputyRemoved(int client)
+public void warden_OnDeputyCreated(int client)
+{
+	CreateTimer(0.1, Timer_Delay);
+}
+
+public void warden_OnDeputyRemoved(int client)
 {
 	CreateTimer(0.1, Timer_Delay);
 }
