@@ -86,6 +86,25 @@ public __pl_myjailbreak_SetNTVOptional()
 forward Action MyJailbreak_OnJoinGuardQueue(int client);
 
 
+/*********************************************************
+ * Called when a eventday has started
+ *
+ * @param EventDayName	The name of the event day
+ * @return 				Return Plugin_Handled to block & Plugin_Continue to pass the client.
+ *********************************************************/
+forward Action MyJailbreak_OnEventDayStart(char[] EventDayName);
+
+
+/*********************************************************
+ * Called when a eventday has ended
+ *
+ * @param EventDayName	The name of the event day
+ * @param winner		The winner team of this eventday. 0/1 = no winner
+ * @return 				Return Plugin_Handled to block & Plugin_Continue to pass the client.
+ *********************************************************/
+forward Action MyJailbreak_OnEventDayEnd(char[] EventDayName, int winner);
+
+
 
 /******************************************************************************
                    NATIVES
@@ -114,9 +133,10 @@ native void MyJailbreak_GetEventDayName(char[] name);
  * Set Boolean Event Day is running
  *
  * @param status		Boolean is running (true = running)
+ * @param winner		Winning team when event day ends
  * @NoReturn
  *********************************************************/
-native void MyJailbreak_SetEventDayRunning(bool status);
+native void MyJailbreak_SetEventDayRunning(bool status, int winner);
 
 
 /*********************************************************

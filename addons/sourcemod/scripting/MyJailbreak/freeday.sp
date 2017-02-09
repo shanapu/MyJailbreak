@@ -441,7 +441,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 				char buffer[32];
 				Format(buffer, sizeof(buffer), "%T", "freeday_name", LANG_SERVER);
 				MyJailbreak_SetEventDayName(buffer);
-				MyJailbreak_SetEventDayRunning(true);
+				MyJailbreak_SetEventDayRunning(true, 0);
 				g_bAutoFreeday = true;
 			}
 		}
@@ -487,7 +487,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 	if (gp_bMyJailbreak)
 	{
 		MyJailbreak_SetEventDayPlanned(false);
-		MyJailbreak_SetEventDayRunning(true);
+		MyJailbreak_SetEventDayRunning(true, 0);
 	}
 
 	g_bIsFreeday = true;
@@ -561,7 +561,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 		if (gp_bMyJailbreak)
 		{
 			MyJailbreak_SetEventDayName("none"); // tell myjailbreak event is ended
-			MyJailbreak_SetEventDayRunning(false);
+			MyJailbreak_SetEventDayRunning(false, 0);
 		}
 
 		CPrintToChatAll("%t %t", "freeday_tag", "freeday_end");
@@ -615,7 +615,7 @@ public void OnMapStart()
 			char buffer[32];
 			Format(buffer, sizeof(buffer), "%T", "freeday_name", LANG_SERVER);
 			MyJailbreak_SetEventDayName(buffer);
-			MyJailbreak_SetEventDayRunning(true);
+			MyJailbreak_SetEventDayRunning(true, 0);
 		}
 
 		g_iOldRoundTime = g_iMPRoundTime.IntValue;

@@ -108,7 +108,7 @@ int g_iColors[8][4] =
 };
 
 // Handles
-Handle gF_OnWardenCreated;
+Handle gF_OnWardenCreate;
 Handle gF_OnWardenRemoved;
 Handle gF_OnWardenCreatedByUser;
 Handle gF_OnWardenCreatedByAdmin;
@@ -182,16 +182,6 @@ public void OnPluginStart()
 	// Admin commands
 	RegAdminCmd("sm_setwarden", AdminCommand_SetWarden, ADMFLAG_GENERIC);
 	RegAdminCmd("sm_removewarden", AdminCommand_RemoveWarden, ADMFLAG_GENERIC);
-
-	// Forwards
-	gF_OnWardenCreated = CreateGlobalForward("warden_OnWardenCreate", ET_Event, Param_Cell);
-	gF_OnWardenRemoved = CreateGlobalForward("warden_OnWardenRemoved", ET_Ignore, Param_Cell);
-	gF_OnWardenCreatedByUser = CreateGlobalForward("warden_OnWardenCreatedByUser", ET_Ignore, Param_Cell);
-	gF_OnWardenCreatedByAdmin = CreateGlobalForward("warden_OnWardenCreatedByAdmin", ET_Ignore, Param_Cell);
-	gF_OnWardenDisconnected = CreateGlobalForward("warden_OnWardenDisconnected", ET_Ignore, Param_Cell);
-	gF_OnWardenDeath = CreateGlobalForward("warden_OnWardenDeath", ET_Ignore, Param_Cell);
-	gF_OnWardenRemovedBySelf = CreateGlobalForward("warden_OnWardenRemovedBySelf", ET_Ignore, Param_Cell);
-	gF_OnWardenRemovedByAdmin = CreateGlobalForward("warden_OnWardenRemovedByAdmin", ET_Ignore, Param_Cell);
 
 	// AutoExecConfig
 	AutoExecConfig_SetFile("Warden", "MyJailbreak");
@@ -900,7 +890,7 @@ Action SetTheWarden(int client)
 	{
 		Action res = Plugin_Continue;
 
-		Call_StartForward(gF_OnWardenCreated);
+		Call_StartForward(gF_OnWardenCreate);
 		Call_PushCell(client);
 		Call_Finish(res);
 
@@ -1228,6 +1218,7 @@ bool IsClientWarden(int client)
 // Register Natives
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
+	//Natives
 	CreateNative("warden_exist", Native_ExistWarden);
 	CreateNative("warden_iswarden", Native_IsWarden);
 	CreateNative("warden_set", Native_SetWarden);
@@ -1247,6 +1238,17 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	CreateNative("warden_freeday_set", Native_GiveFreeday);
 	CreateNative("warden_freeday_has", Native_HasClientFreeday);
+
+	// Forwards
+	gF_OnWardenCreate = CreateGlobalForward("warden_OnWardenCreate", ET_Event, Param_Cell);
+	gF_OnWardenRemoved = CreateGlobalForward("warden_OnWardenRemoved", ET_Ignore, Param_Cell);
+	gF_OnWardenCreatedByUser = CreateGlobalForward("warden_OnWardenCreatedByUser", ET_Ignore, Param_Cell);
+	gF_OnWardenCreatedByAdmin = CreateGlobalForward("warden_OnWardenCreatedByAdmin", ET_Ignore, Param_Cell);
+	gF_OnWardenDisconnected = CreateGlobalForward("warden_OnWardenDisconnected", ET_Ignore, Param_Cell);
+	gF_OnWardenDeath = CreateGlobalForward("warden_OnWardenDeath", ET_Ignore, Param_Cell);
+	gF_OnWardenRemovedBySelf = CreateGlobalForward("warden_OnWardenRemovedBySelf", ET_Ignore, Param_Cell);
+	gF_OnWardenRemovedByAdmin = CreateGlobalForward("warden_OnWardenRemovedByAdmin", ET_Ignore, Param_Cell);
+
 
 	RegPluginLibrary("warden");
 

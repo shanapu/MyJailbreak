@@ -50,6 +50,10 @@ bool g_bLastGuardRuleActive = false;
 // Strings
 char g_sEventDayName[128] = "none";
 
+//Handles
+Handle gF_OnEventDayStart;
+Handle gF_OnEventDayEnd;
+
 // Modules
 #include "MyJailbreak/Modules/fog.sp"
 #include "MyJailbreak/Modules/beacon.sp"
@@ -208,6 +212,9 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	CreateNative("MyJailbreak_BeaconOn", Native_BeaconOn);
 	CreateNative("MyJailbreak_BeaconOff", Native_BeaconOff);
 
+	gF_OnEventDayStart = CreateGlobalForward("MyJailbreak_OnEventDayStart", ET_Ignore, Param_String);
+	gF_OnEventDayEnd = CreateGlobalForward("MyJailbreak_OnEventDayEnd", ET_Ignore, Param_String, Param_Cell);
+
 	RegPluginLibrary("myjailbreak");
 
 	return APLRes_Success;
@@ -229,6 +236,21 @@ public int Native_IsEventDayRunning(Handle plugin, int argc)
 public int Native_SetEventDayRunning(Handle plugin, int argc)
 {
 	g_bEventDayRunning = GetNativeCell(1);
+	int winner = GetNativeCell(2);
+
+	if (g_bEventDayRunning)
+	{
+		Call_StartForward(gF_OnEventDayStart);
+		Call_PushString(g_sEventDayName);
+		Call_Finish();
+	}
+	else
+	{
+		Call_StartForward(gF_OnEventDayEnd);
+		Call_PushString(g_sEventDayName);
+		Call_PushCell(winner);
+		Call_Finish();
+	}
 }
 
 // Boolean Is Event Day planned (true = planned)

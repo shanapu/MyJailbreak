@@ -540,7 +540,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 	if (gp_bMyJailbreak)
 	{
 		MyJailbreak_SetEventDayPlanned(false);
-		MyJailbreak_SetEventDayRunning(true);
+		MyJailbreak_SetEventDayRunning(true, 0);
 
 		MyJailbreak_FogOn();
 
@@ -659,8 +659,8 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 
 			if (gp_bMyJailbreak)
 			{
+				MyJailbreak_SetEventDayRunning(false, winner);
 				MyJailbreak_SetEventDayName("none");
-				MyJailbreak_SetEventDayRunning(false);
 			}
 
 			CPrintToChatAll("%t %t", "ffa_tag", "ffa_end");
@@ -761,7 +761,7 @@ public void OnAvailableLR(int Announced)
 			if (gp_bMyJailbreak)
 			{
 				MyJailbreak_SetEventDayName("none");
-				MyJailbreak_SetEventDayRunning(false);
+				MyJailbreak_SetEventDayRunning(false, 0);
 			}
 
 			CPrintToChatAll("%t %t", "ffa_tag", "ffa_end");

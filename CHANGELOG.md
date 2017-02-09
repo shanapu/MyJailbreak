@@ -1,6 +1,6 @@
 ### Change Log
   
-**[Beta 9.1.dev]** - fixes
+**[Beta 9.1.dev]** - Ghosts War, Warden restrict & limits
   
 *Added*
 *  Ratio: Support for SteamRep.com, FantoMs CT Bans & Steam Groups - new switch commands & more
@@ -13,8 +13,13 @@
     *  new plugin - disabled/ratio_steamrep.smx - Support plugin for Jameless SteamRep.com Checker plugin
         *  new cvar - sm_ratio_steamrep_exclude - Which tags you DO NOT trust for reported scammers. Input the tags here for any community whose bans you DO NOT TRUST.
         *  new cvar - sm_ratio_steamrep_checkip - Include IP address of connecting players in query. Set to 0 to disable
-    *  new plugin - disabled/ratio_steamgroup.smx - Support plugin for Steam Groups (need SteamWorks extension!)
-        *  new cvar - sm_ratio_steamgroup - Your Steam Group ID (Find it on your steam groups edit page)
+*  Warden: Added restict system for become warden like ratio restricts
+    *  new cvar - sm_warden_stamm - 0 - disabled, how many stamm points a player need to become warden? (only if stamm is available)
+    *  new cvar - sm_warden_reputation - 0 - disabled, how many reputation a player need to join ct? (only if reputation is available)
+    *  new cvar - sm_warden_rankme - 0 - disabled, how many rankme points a player need to become warden? (only if stamm is available)
+    *  new plugin - disabled/myjailbreak_steamgroup.smx - Warden & Ratio support plugin for Steam Groups (need SteamWorks extension!)
+        *  new cvar - sm_ratio_steamgroup - Steamgroup a player must be member before join CT (Find it on your steam groups edit page) (0000000 = disabled)
+        *  new cvar - sm_warden_steamgroup - Steamgroup a player must be member before become Warden (Find it on your steam groups edit page) (0000000 = disabled)
 *  New Eventday: Ghosts War - All Players are invisbile & immortal - every 6 seconds they go visible and mortal for 2 seconds. Last alive wins.
     *  new plugin - ghosts.smx - please help translate http://translator.mitchdempsey.com/sourcemod_plugins/201
         *  new cvar - sm_ghosts_enable - 0 - disabled, 1 - enable this MyJailbreak SourceMod plugin
@@ -63,6 +68,11 @@
     *  removed cvar - sm_warden_freeday_victim_deputy - obsolete cvar. **Please remove them from your configs!**
     *  new cvar - sm_warden_freeday_deputy - 0 - disabled, 1 - Allow the deputy to set a personal freeday
 *  Menu: Add voteitem 'No Eventday' to a event day voting
+*  Support Plugins: changed name for plugins which support ratio & warden
+    *  renamed plugin - ratio_kento_rankme to myjailbreak_kento_rankme
+    *  renamed plugin - ratio_rankme to myjailbreak_rankme
+    *  renamed plugin - ratio_reputation to myjailbreak_reputation
+    *  renamed plugin - ratio_stamm to myjailbreak_stamm
   
   
 *Fixed*
@@ -81,6 +91,10 @@
   
   
 *Developer stuff*
+*  Forwards: New Forwards for start/end of a Eventday
+    *  new Forwards - MyJailbreak_OnEventDayStart(char[] EventDayName)
+    *  new Forwards - MyJailbreak_OnEventDayEnd(char[] EventDayName, int winner)
+*  Change forward warden_OnWardenCreated from void to Action to block warden creation
 *  Add source code files to travis auto builds.
 *  Builds website - bootstrap website for auto build binary download
 *  Code optimizing Thx @olegtsvetkov

@@ -605,7 +605,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 	if (gp_bMyJailbreak)
 	{
 		MyJailbreak_SetEventDayPlanned(false);
-		MyJailbreak_SetEventDayRunning(true);
+		MyJailbreak_SetEventDayRunning(true, 0);
 	}
 
 	g_bIsTorch = true;
@@ -714,8 +714,8 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 
 			if (gp_bMyJailbreak)
 			{
+				MyJailbreak_SetEventDayRunning(false, 0);
 				MyJailbreak_SetEventDayName("none");
-				MyJailbreak_SetEventDayRunning(false);
 			}
 
 			CPrintToChatAll("%t %t", "torch_tag", "torch_end");

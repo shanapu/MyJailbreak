@@ -21,7 +21,7 @@
 /******************************************************************************
                    STARTUP
 ******************************************************************************/
-
+//77todo sm_war_vote/set cvonavr check & round end on "0"
 // Includes
 #include <sourcemod>
 #include <sdktools>

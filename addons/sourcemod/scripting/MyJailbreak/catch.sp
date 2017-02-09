@@ -112,8 +112,8 @@ int g_iTsLR;
 int g_iCollision_Offset;
 
 // Handles
-Handle g_hSprintTimer[MAXPLAYERS+1];
-Handle g_hFreezeTimer;
+Handle g_hTimerSprint[MAXPLAYERS+1];
+Handle g_hTimerFreeze;
 Handle g_hTimerBeacon;
 
 // Strings
@@ -628,7 +628,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 	if (gp_bMyJailbreak)
 	{
 		MyJailbreak_SetEventDayPlanned(false);
-		MyJailbreak_SetEventDayRunning(true);
+		MyJailbreak_SetEventDayRunning(true, 0);
 
 		if (gc_fBeaconTime.FloatValue > 0.0)
 		{
@@ -682,7 +682,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		}
 
 		g_iFreezeTime -= 1;
-		g_hFreezeTimer = CreateTimer(1.0, Timer_StartEvent, _, TIMER_REPEAT);
+		g_hTimerFreeze = CreateTimer(1.0, Timer_StartEvent, _, TIMER_REPEAT);
 
 		CPrintToChatAll("%t %t", "catch_tag", "catch_rounds", g_iRound, g_iMaxRound);
 	}
@@ -714,7 +714,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			}
 		}
 
-		delete g_hFreezeTimer;
+		delete g_hTimerFreeze;
 		delete g_hTimerBeacon;
 
 		int winner = event.GetInt("winner");
@@ -749,8 +749,8 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 
 			if (gp_bMyJailbreak)
 			{
+				MyJailbreak_SetEventDayRunning(false, winner);
 				MyJailbreak_SetEventDayName("none");
-				MyJailbreak_SetEventDayRunning(false);
 			}
 
 			CPrintToChatAll("%t %t", "catch_tag", "catch_end");
@@ -942,7 +942,7 @@ public void OnAvailableLR(int Announced)
 			}
 		}
 
-		delete g_hFreezeTimer;
+		delete g_hTimerFreeze;
 		delete g_hTimerBeacon;
 
 		if (g_iRound == g_iMaxRound)
@@ -965,7 +965,7 @@ public void OnAvailableLR(int Announced)
 			if (gp_bMyJailbreak)
 			{
 				MyJailbreak_SetEventDayName("none");
-				MyJailbreak_SetEventDayRunning(false);
+				MyJailbreak_SetEventDayRunning(false, 0);
 			}
 
 			CPrintToChatAll("%t %t", "catch_tag", "catch_end");
@@ -1213,7 +1213,7 @@ public Action Timer_StartEvent(Handle timer)
 		CPrintToChatAll("%t %t", "catch_tag", "catch_start");
 	}
 
-	g_hFreezeTimer = null;
+	g_hTimerFreeze = null;
 
 	return Plugin_Stop;
 }
@@ -1294,7 +1294,7 @@ public Action Command_StartSprint(int client, int args)
 
 		CReplyToCommand(client, "%t %t", "catch_tag", "catch_sprint");
 
-		g_hSprintTimer[client] = CreateTimer(gc_fSprintTime.FloatValue, Timer_SprintEnd, client);
+		g_hTimerSprint[client] = CreateTimer(gc_fSprintTime.FloatValue, Timer_SprintEnd, client);
 	}
 
 	return Plugin_Handled;
@@ -1318,10 +1318,10 @@ public void OnGameFrame()
 
 void ResetSprint(int client)
 {
-	if (g_hSprintTimer[client] != null)
+	if (g_hTimerSprint[client] != null)
 	{
-		KillTimer(g_hSprintTimer[client]);
-		g_hSprintTimer[client] = null;
+		KillTimer(g_hTimerSprint[client]);
+		g_hTimerSprint[client] = null;
 	}
 
 	if (GetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue") != 1)
@@ -1337,7 +1337,7 @@ void ResetSprint(int client)
 
 public Action Timer_SprintEnd(Handle timer, any client)
 {
-	g_hSprintTimer[client] = null;
+	g_hTimerSprint[client] = null;
 
 	if (IsClientInGame(client) && (g_iSprintStatus[client] & IsSprintUsing))
 	{
@@ -1346,7 +1346,7 @@ public Action Timer_SprintEnd(Handle timer, any client)
 
 		if (IsPlayerAlive(client) && GetClientTeam(client) > 1)
 		{
-			g_hSprintTimer[client] = CreateTimer(gc_iSprintCooldown.FloatValue, Timer_SprintCooldown, client);
+			g_hTimerSprint[client] = CreateTimer(gc_iSprintCooldown.FloatValue, Timer_SprintCooldown, client);
 			CPrintToChat(client, "%t %t", "catch_tag", "catch_sprintend", gc_iSprintCooldown.IntValue);
 		}
 	}
@@ -1356,7 +1356,7 @@ public Action Timer_SprintEnd(Handle timer, any client)
 
 public Action Timer_SprintCooldown(Handle timer, any client)
 {
-	g_hSprintTimer[client] = null;
+	g_hTimerSprint[client] = null;
 
 	if (IsClientInGame(client) && (g_iSprintStatus[client] & IsSprintCoolDown))
 	{
