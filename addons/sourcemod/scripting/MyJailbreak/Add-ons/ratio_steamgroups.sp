@@ -1,5 +1,5 @@
 /*
- * MyJailbreak - Ratio - Steam Groups Support.
+ * MyJailbreak - Steam Groups Support.
  * by: shanapu
  * https://github.com/shanapu/MyJailbreak/
  *
@@ -15,7 +15,7 @@
  * details.
  *
  * You should have received a copy of the GNU General Public License along with
- * this program. If not, see <http:// www.gnu.org/licenses/>.
+ * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 /******************************************************************************
@@ -41,17 +41,19 @@
 #pragma newdecls required
 
 // Console Variables
-ConVar gc_iGroupsID;
+ConVar gc_iGroupRatio;
+ConVar gc_iGroupWarden;
 
 //Bools
 bool g_bIsLateLoad = false;
-bool IsMember[MAXPLAYERS+1] = {false, ...};
+bool IsMemberRatio[MAXPLAYERS+1] = {false, ...};
+bool IsMemberWarden[MAXPLAYERS+1] = {false, ...};
 
 // Info
 public Plugin myinfo = {
-	name = "MyJailbreak - Ratio - Steam Groups Support", 
+	name = "MyJailbreak - Steam Groups Support for Ratio & Warden", 
 	author = "shanapu, Addicted, good_live", 
-	description = "Adds support for steam groups to MyJB ratio", 
+	description = "Adds support for steam groups to MyJB ratio & warden", 
 	version = MYJB_VERSION, 
 	url = MYJB_URL_LINK
 };
@@ -68,12 +70,22 @@ public void OnPluginStart()
 {
 	// Translation
 	LoadTranslations("MyJailbreak.Ratio.phrases");
+	LoadTranslations("MyJailbreak.Warden.phrases");
 
 	// AutoExecConfig
 	AutoExecConfig_SetFile("Ratio", "MyJailbreak");
 	AutoExecConfig_SetCreateFile(true);
 
-	gc_iGroupsID = AutoExecConfig_CreateConVar("sm_ratio_steamgroup", "0000000", "Your Steam Group ID (Find it on your steam groups edit page)");
+	gc_iGroupRatio = AutoExecConfig_CreateConVar("sm_ratio_steamgroup", "0000000", "Steamgroup a player must be member before join CT (Find it on your steam groups edit page) (0000000 = disabled)");
+
+	AutoExecConfig_ExecuteFile();
+	AutoExecConfig_CleanFile();
+
+	// AutoExecConfig
+	AutoExecConfig_SetFile("Warden", "MyJailbreak");
+	AutoExecConfig_SetCreateFile(true);
+
+	gc_iGroupWarden = AutoExecConfig_CreateConVar("sm_warden_steamgroup", "0000000", "Steamgroup a player must be member before become Warden (Find it on your steam groups edit page) (0000000 = disabled");
 
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
@@ -95,13 +107,26 @@ public void OnPluginStart()
 
 public void OnAllPluginsLoaded()
 {
-	if (!LibraryExists("myratio"))
-		SetFailState("You're missing the MyJailbreak - Ratio (ratio.smx) plugin");
+	if (!LibraryExists("myratio") && !LibraryExists("warden"))
+	{
+		SetFailState("MyJailbreaks Ratio (ratio.smx) and Warden (warden.smx) plugins are missing. You need at least one of them.");
+	}
+}
+
+public Action warden_OnWardenCreate(int client)
+{
+	if (!IsMemberWarden[client] && gc_iGroupWarden.IntValue != 0)
+	{
+		CPrintToChat(client, "%t %t", "warden_tag", "warden_steamgroup");
+		return Plugin_Handled;
+	}
+
+	return Plugin_Continue;
 }
 
 public Action MyJailbreak_OnJoinGuardQueue(int client)
 {
-	if (!IsMember[client])
+	if (!IsMemberRatio[client] && gc_iGroupRatio.IntValue != 0)
 	{
 		CPrintToChat(client, "%t %t", "ratio_tag", "ratio_steamgroup");
 		return Plugin_Handled;
@@ -112,10 +137,23 @@ public Action MyJailbreak_OnJoinGuardQueue(int client)
 
 public void OnClientPostAdminCheck(int client)
 {
-	if (SteamWorks_GetUserGroupStatus(client, gc_iGroupsID.IntValue))
+	if (SteamWorks_GetUserGroupStatus(client, gc_iGroupRatio.IntValue))
 	{
-		IsMember[client] = true;
+		IsMemberRatio[client] = true;
 	}
+	else IsMemberRatio[client] = false;
+
+	if (SteamWorks_GetUserGroupStatus(client, gc_iGroupWarden.IntValue))
+	{
+		IsMemberWarden[client] = true;
+	}
+	else IsMemberWarden[client] = false;
+}
+
+public void OnClientDisconnect(int client)
+{
+	IsMemberRatio[client] = false;
+	IsMemberWarden[client] = false;
 }
 
 public Action Event_OnPlayerSpawn(Event event, const char[] name, bool bDontBroadcast) 
@@ -128,7 +166,7 @@ public Action Event_OnPlayerSpawn(Event event, const char[] name, bool bDontBroa
 	if (!IsValidClient(client, false, false))
 		return Plugin_Continue;
 
-	if (!IsMember[client])
+	if (!IsMemberRatio[client] && gc_iGroupRatio.IntValue != 0)
 	{
 		CPrintToChat(client, "%t %t", "ratio_tag", "ratio_steamgroup");
 		CreateTimer(5.0, Timer_SlayPlayer, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);

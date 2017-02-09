@@ -15,7 +15,7 @@
  * details.
  *
  * You should have received a copy of the GNU General Public License along with
- * this program. If not, see <http:// www.gnu.org/licenses/>.
+ * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 /******************************************************************************
@@ -127,6 +127,7 @@ char g_sModelPathWarden[256];
 char g_sUnWarden[256];
 char g_sWarden[256];
 char g_sMyJBLogFile[PLATFORM_MAX_PATH];
+char g_sRestrictedSound[32] = "buttons/button11.wav";
 
 // Modules
 #include "MyJailbreak/Modules/Warden/celldoors.sp"
@@ -183,7 +184,7 @@ public void OnPluginStart()
 	RegAdminCmd("sm_removewarden", AdminCommand_RemoveWarden, ADMFLAG_GENERIC);
 
 	// Forwards
-	gF_OnWardenCreated = CreateGlobalForward("warden_OnWardenCreated", ET_Ignore, Param_Cell);
+	gF_OnWardenCreated = CreateGlobalForward("warden_OnWardenCreate", ET_Event, Param_Cell);
 	gF_OnWardenRemoved = CreateGlobalForward("warden_OnWardenRemoved", ET_Ignore, Param_Cell);
 	gF_OnWardenCreatedByUser = CreateGlobalForward("warden_OnWardenCreatedByUser", ET_Ignore, Param_Cell);
 	gF_OnWardenCreatedByAdmin = CreateGlobalForward("warden_OnWardenCreatedByAdmin", ET_Ignore, Param_Cell);
@@ -459,8 +460,10 @@ public Action Command_BecomeWarden(int client, int args)
 							{
 								if (GetLimit(client) < gc_iLimitWarden.IntValue || gc_iLimitWarden.IntValue == 0 || (gc_iCoolDownMinPlayer.IntValue > GetPlayerTeamCount(CS_TEAM_CT)))
 								{
-									SetTheWarden(client);
-									Forward_OnWardenCreatedByUser(client);
+									if(SetTheWarden(client) != Plugin_Handled)
+									{
+										Forward_OnWardenCreatedByUser(client);
+									}
 								}
 								else
 								{
@@ -891,12 +894,29 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 ******************************************************************************/
 
 // Set a new warden
-void SetTheWarden(int client)
+Action SetTheWarden(int client)
 {
 	if (gc_bPlugin.BoolValue)
 	{
+		Action res = Plugin_Continue;
+
+		Call_StartForward(gF_OnWardenCreated);
+		Call_PushCell(client);
+		Call_Finish(res);
+
+		if (res >= Plugin_Handled)
+		{
+			ClientCommand(client, "play %s", g_sRestrictedSound);
+			return Plugin_Handled;
+		}
+
+		OnWardenCreation(client);
+
 		CPrintToChatAll("%t %t", "warden_tag", "warden_new", client);
-		if (gc_bBetterNotes.BoolValue) PrintCenterTextAll("%t", "warden_new_nc", client);
+		if (gc_bBetterNotes.BoolValue)
+		{
+			PrintCenterTextAll("%t", "warden_new_nc", client);
+		}
 
 		g_iWarden = client;
 
@@ -917,7 +937,6 @@ void SetTheWarden(int client)
 		}
 
 		SetClientListeningFlags(client, VOICE_NORMAL);
-		Forward_OnWardenCreated(client);
 
 		if (gc_bSounds.BoolValue)
 		{
@@ -929,6 +948,8 @@ void SetTheWarden(int client)
 		g_hTimerRandom = null;
 	}
 	else CReplyToCommand(client, "%t %t", "warden_tag", "warden_disabled");
+
+	return Plugin_Continue;
 }
 
 // Remove the current warden
@@ -1074,8 +1095,10 @@ public int Handler_SetWarden(Menu menu, MenuAction action, int client, int Posit
 					}
 					else
 					{
-						SetTheWarden(i);
-						Forward_OnWardenCreatedByAdmin(i);
+						if(SetTheWarden(i) != Plugin_Handled)
+						{
+							Forward_OnWardenCreatedByAdmin(i);
+						}
 					}
 				}
 			}
@@ -1106,12 +1129,24 @@ public int Handler_SetWardenOverwrite(Menu menu, MenuAction action, int client, 
 		if (choice == 1)
 		{
 			int newwarden = GetClientOfUserId(g_iTempWarden[client]);
-			if (g_iWarden != -1)CPrintToChatAll("%t %t", "warden_tag", "warden_removed", client, g_iWarden);
-			
+			if (g_iWarden != -1)
+			{
+				CPrintToChatAll("%t %t", "warden_tag", "warden_removed", client, g_iWarden);
+			}
+
 			RemoveTheWarden();
-			SetTheWarden(newwarden);
-			Forward_OnWardenCreatedByAdmin(newwarden);
-			if (gp_bMyJailBreak) if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Admin %L kick player %L warden and set %L as new", client, g_iWarden, newwarden);
+			if(SetTheWarden(newwarden) != Plugin_Handled)
+			{
+				Forward_OnWardenCreatedByAdmin(newwarden);
+
+				if (gp_bMyJailBreak)
+				{
+					if (MyJailbreak_ActiveLogging())
+					{
+						LogToFileEx(g_sMyJBLogFile, "Admin %L kick player %L warden and set %L as new", client, g_iWarden, newwarden);
+					}
+				}
+			}
 		}
 
 		if (g_bMenuClose != null)
@@ -1140,7 +1175,7 @@ public int Handler_SetWardenOverwrite(Menu menu, MenuAction action, int client, 
 ******************************************************************************/
 
 // Choose a random Warden after a defined time
-public Action Timer_ChooseRandom(Handle timer, Handle pack)
+public Action Timer_ChooseRandom(Handle timer)
 {
 	if (gc_bPlugin.BoolValue)
 	{
@@ -1152,8 +1187,11 @@ public Action Timer_ChooseRandom(Handle timer, Handle pack)
 
 				if (i > 0)
 				{
-					CPrintToChatAll("%t %t", "warden_tag", "warden_randomwarden");
-					SetTheWarden(i);
+					if (SetTheWarden(i) != Plugin_Handled)
+					{
+						CPrintToChatAll("%t %t", "warden_tag", "warden_randomwarden");
+					}
+					else CreateTimer (0.1, Timer_ChooseRandom);
 				}
 			}
 		}
@@ -1283,19 +1321,6 @@ public int Native_GetLastWarden(Handle plugin, int argc)
                    FORWARDS CALL
 ******************************************************************************/
 
-// New Warden was set (will fire all time - *ByUser *ByAdmin ...)
-void Forward_OnWardenCreated(int client)
-{
-	Call_StartForward(gF_OnWardenCreated);
-	Call_PushCell(client);
-	Call_Finish();
-
-	Deputy_OnWardenCreation(client);
-	Color_OnWardenCreation(client);
-	Laser_OnWardenCreation(client);
-	HandCuffs_OnWardenCreation(client);
-}
-
 // New Warden was set (will only fire on set ByUser)
 void Forward_OnWardenCreatedByUser(int client)
 {
@@ -1359,4 +1384,13 @@ void Forward_OnWardenDeath(int client)
 	Call_StartForward(gF_OnWardenDeath);
 	Call_PushCell(client);
 	Call_Finish();
+}
+
+//Not a real forward
+void OnWardenCreation(int client)
+{
+	Deputy_OnWardenCreation(client);
+	Color_OnWardenCreation(client);
+	Laser_OnWardenCreation(client);
+	HandCuffs_OnWardenCreation(client);
 }

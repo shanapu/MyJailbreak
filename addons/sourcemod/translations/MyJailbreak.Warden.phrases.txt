@@ -968,4 +968,27 @@
 		"en"		"As {green}last round warden{default} you have to wait {purple}{1} seconds{default} to become warden again."
 	}
 
+	"warden_steamgroup"
+	{
+		"en"		"Cannot play as warden, you need to join our steamgroup first"
+	}
+
+	"warden_rankme"
+	{
+		"#format"	"{1:i}"
+		"en"		"You need at least {1} RankMe Points to play as warden"
+	}
+
+	"warden_reputation"
+	{
+		"#format"	"{1:i}"
+		"en"		"You need at least {1} Reputation Points to play as warden"
+	}
+
+	"warden_stamm"
+	{
+		"#format"	"{1:i}"
+		"en"		"You need at least {1} Stamm Points to play as warden"
+	}
+
 }

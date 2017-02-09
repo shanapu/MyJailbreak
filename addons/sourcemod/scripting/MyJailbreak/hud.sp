@@ -170,7 +170,7 @@ public void OnClientPutInServer(int client)
 	g_bEnableHud[client] = true;
 }
 
-public void warden_OnWardenCreated(int client)
+public void warden_OnWardenCreate(int client)
 {
 	ShowHUD();
 }

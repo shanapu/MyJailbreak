@@ -140,7 +140,12 @@ public void OnClientPutInServer(int client)
 	HandleTag(client);
 }
 
-public void warden_OnWardenCreated(int client)
+public void warden_OnWardenCreatedByUser(int client)
+{
+	HandleTag(client);
+}
+
+public void warden_OnWardenCreatedByAdmin(int client)
 {
 	HandleTag(client);
 }

@@ -45,13 +45,13 @@ public __pl_warden_SetNTVOptional()
 
 
 /*********************************************************
- * Called when a new warden was created
+ * Called when a client trys to set/become warden
  * By player, admin, randomchoose...
  *
- * @param client		The client who was warden
- * @NoReturn
+ * @param client		The client who try to become warden
+ * @return 				Return Plugin_Handled to block & Plugin_Continue to pass the client.
  *********************************************************/
-forward void warden_OnWardenCreated(int client);
+forward Action warden_OnWardenCreate(int client);
 
 
 /*********************************************************
@@ -117,6 +117,26 @@ forward void warden_OnWardenDisconnected(int client);
  *********************************************************/
 forward void warden_OnWardenDeath(int client);
 
+
+
+/*********************************************************
+ * Called everytime the deputy position become free.
+ * On depury dead, disconnect, removed, move to warden...
+ * 
+ * @param client		The client who was deputy
+ * @NoReturn
+ *********************************************************/
+forward void warden_OnDeputyRemoved(int client);
+
+
+/*********************************************************
+ * Called when a client trys to become deputy
+ * By player, admin, randomchoose...
+ *
+ * @param client		The client who try to become deputy
+ * @NoReturn
+ *********************************************************/
+forward void warden_OnDeputyCreated(int client);
 
 
 
@@ -230,7 +250,6 @@ native warden_deputy_getlast();
 
 
 
-
 /*********************************************************
  * Give a client a amount of paperclips
  *
@@ -248,7 +267,6 @@ native warden_handcuffs_givepaperclip(int client, int amount);
  * @true on match, false if not
  *********************************************************/
 native warden_handcuffs_iscuffed(int client);
-
 
 
 
