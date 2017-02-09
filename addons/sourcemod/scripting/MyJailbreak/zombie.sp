@@ -88,6 +88,7 @@ ConVar gc_sCustomCommandSet;
 ConVar gc_sAdminFlag;
 ConVar gc_bAllowLR;
 ConVar gc_fKnockbackAmount;
+ConVar gc_iRegen;
 
 // Extern Convars
 ConVar g_iTerrorForLR;
@@ -106,7 +107,8 @@ int g_iCollision_Offset;
 
 // Handles
 Handle g_hTimerFreeze;
-Handle g_hTimerBeacon;
+Handle g_hTimerBeacon;
+Handle g_hTimerRegen;
 // floats
 float g_fPos[3];
 
@@ -161,6 +163,7 @@ public void OnPluginStart()
 	gc_iZombieHP = AutoExecConfig_CreateConVar("sm_zombie_zombie_hp", "4000", "HP the Zombies got on Spawn", _, true, 1.0);
 	gc_iZombieHPincrease = AutoExecConfig_CreateConVar("sm_zombie_zombie_hp_extra", "1000", "HP the Zombies get additional per extra Human", _, true, 1.0);
 	gc_iHumanHP = AutoExecConfig_CreateConVar("sm_zombie_human_hp", "65", "HP the Humans got on Spawn", _, true, 1.0);
+	gc_iRegen = AutoExecConfig_CreateConVar("sm_zombie_zombie_regen", "5", "0 - disabled, HPs a Zombie regenerates every 5 seconds", _, true, 0.0);
 	gc_bDark = AutoExecConfig_CreateConVar("sm_zombie_dark", "1", "0 - disabled, 1 - enable Map Darkness", _, true, 0.0, true, 1.0);
 	gc_bGlow = AutoExecConfig_CreateConVar("sm_zombie_glow", "1", "0 - disabled, 1 - enable Glow effect for humans", _, true, 0.0, true, 1.0);
 	gc_iGlowMode = AutoExecConfig_CreateConVar("sm_zombie_glow_mode", "1", "1 - human contours with wallhack for zombies, 2 - human glow effect without wallhack for zombies", _, true, 1.0, true, 2.0);
@@ -670,9 +673,15 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 			}
 		}
 
+		if (gc_iRegen.IntValue != 0) 
+		{
+			g_hTimerRegen = CreateTimer(5.0, Timer_ReGenHealth, _, TIMER_REPEAT);
+		}
+
 		g_iFreezeTime--;
 
 		CreateTimer (1.1, Timer_SetModel);
+
 		g_hTimerFreeze = CreateTimer(1.0, Timer_StartEvent, _, TIMER_REPEAT);
 
 		CPrintToChatAll("%t %t", "zombie_tag", "zombie_rounds", g_iRound, g_iMaxRound);
@@ -696,6 +705,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 
 		delete g_hTimerFreeze;
 		delete g_hTimerBeacon;
+		delete g_hTimerRegen;
 
 		int winner = event.GetInt("winner");
 		if (winner == 2)
@@ -829,6 +839,7 @@ public void OnMapEnd()
 
 	delete g_hTimerFreeze;
 	delete g_hTimerBeacon;
+	delete g_hTimerRegen;
 
 	g_iVoteCount = 0;
 	g_iRound = 0;
@@ -1195,4 +1206,15 @@ public Action Timer_BeaconOn(Handle timer)
 	}
 
 	g_hTimerBeacon = null;
+}
+
+public Action Timer_ReGenHealth(Handle timer)
+{
+	LoopValidClients(i, true, false)
+	{
+		if (GetClientTeam(i) == CS_TEAM_CT)
+		{
+			SetEntityHealth(i, GetClientHealth(i)+gc_iRegen.IntValue);
+		}
+	}
 }
