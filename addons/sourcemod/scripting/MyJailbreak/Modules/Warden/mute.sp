@@ -333,7 +333,7 @@ public void UnMuteClient(any client, int unmuter)
 
 public Action MuteMenuPlayer(int client, int args)
 {
-	if (gc_bPlugin.BoolValue)	
+	if (gc_bPlugin.BoolValue)
 	{
 		if ((IsClientWarden(client) || (IsClientDeputy(client) && gc_bMuteDeputy.BoolValue)) && gc_bMute.BoolValue)
 		{

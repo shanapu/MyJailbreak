@@ -513,6 +513,18 @@ public Action Command_VoteHide(int client, int args)
                    EVENTS
 ******************************************************************************/
 
+public Action Hook_OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)  // todo clean up a bit
+{
+	if (attacker > 0 && attacker <= MaxClients && victim > 0 && victim <= MaxClients)
+	{
+		if (g_bIsHide && GetClientTeam(victim) == CS_TEAM_CT)
+		{
+			return Plugin_Handled;
+		}
+	}
+	return Plugin_Continue;
+}
+
 // Round start
 public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
@@ -591,7 +603,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 					SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 0.0);
 				}
 
-				SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
+		//		SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
 
 				StripAllPlayerWeapons(client);
 				GivePlayerItem(client, "weapon_tagrenade");
@@ -785,6 +797,7 @@ public void OnMapEnd()
 public void OnClientPutInServer(int client)
 {
 	SDKHook(client, SDKHook_WeaponCanUse, OnWeaponCanUse);
+	SDKHook(client, SDKHook_OnTakeDamage, Hook_OnTakeDamage);
 }
 
 // Knife only for Terrorists
