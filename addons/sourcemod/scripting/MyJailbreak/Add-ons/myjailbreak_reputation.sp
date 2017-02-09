@@ -1,5 +1,5 @@
 /*
- * MyJailbreak - Steam Groups Support.
+ * MyJailbreak - Reputation Support.
  * by: shanapu
  * https://github.com/shanapu/MyJailbreak/
  *
@@ -29,7 +29,7 @@
 #include <colors>
 #include <autoexecconfig>
 #include <mystocks>
-#include <SteamWorks>
+#include <reputation>
 
 // Optional Plugins
 #undef REQUIRE_PLUGIN
@@ -41,29 +41,17 @@
 #pragma newdecls required
 
 // Console Variables
-ConVar gc_iGroupRatio;
-ConVar gc_iGroupWarden;
-
-//Bools
-bool g_bIsLateLoad = false;
-bool IsMemberRatio[MAXPLAYERS+1] = {false, ...};
-bool IsMemberWarden[MAXPLAYERS+1] = {false, ...};
+ConVar gc_iMinReputationRatio;
+ConVar gc_iMinReputationWarden;
 
 // Info
 public Plugin myinfo = {
-	name = "MyJailbreak - Steam Groups Support for Ratio & Warden", 
+	name = "MyJailbreak - Reputation Support for Ratio & Warden", 
 	author = "shanapu, Addicted, good_live", 
-	description = "Adds support for steam groups to MyJB ratio & warden", 
+	description = "Adds support for addicted Player Reputations plugin to MyJB ratio & warden", 
 	version = MYJB_VERSION, 
 	url = MYJB_URL_LINK
 };
-
-public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
-{
-	g_bIsLateLoad = late;
-
-	return APLRes_Success;
-}
 
 // Start
 public void OnPluginStart()
@@ -76,7 +64,7 @@ public void OnPluginStart()
 	AutoExecConfig_SetFile("Ratio", "MyJailbreak");
 	AutoExecConfig_SetCreateFile(true);
 
-	gc_iGroupRatio = AutoExecConfig_CreateConVar("sm_ratio_steamgroup", "0000000", "Steamgroup a player must be member before join CT (Find it on your steam groups edit page) (0000000 = disabled)");
+	gc_iMinReputationRatio = AutoExecConfig_CreateConVar("sm_ratio_reputation", "0", "0 - disabled, how many reputation a player need to join ct? (only if reputation is available)", _, true, 0.0);
 
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
@@ -85,24 +73,13 @@ public void OnPluginStart()
 	AutoExecConfig_SetFile("Warden", "MyJailbreak");
 	AutoExecConfig_SetCreateFile(true);
 
-	gc_iGroupWarden = AutoExecConfig_CreateConVar("sm_warden_steamgroup", "0000000", "Steamgroup a player must be member before become Warden (Find it on your steam groups edit page) (0000000 = disabled");
+	gc_iMinReputationWarden = AutoExecConfig_CreateConVar("sm_warden_reputation", "0", "0 - disabled, how many reputation a player need to join ct? (only if reputation is available)", _, true, 0.0);
 
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
 
 	// Hooks
 	HookEvent("player_spawn", Event_OnPlayerSpawn, EventHookMode_Post);
-
-	// Late loading
-	if (g_bIsLateLoad)
-	{
-		LoopClients(i)
-		{
-			OnClientPostAdminCheck(i);
-		}
-
-		g_bIsLateLoad = false;
-	}
 }
 
 public void OnAllPluginsLoaded()
@@ -113,47 +90,26 @@ public void OnAllPluginsLoaded()
 	}
 }
 
-public Action warden_OnWardenCreate(int client)
-{
-	if (!IsMemberWarden[client] && gc_iGroupWarden.IntValue != 0)
-	{
-		CPrintToChat(client, "%t %t", "warden_tag", "warden_steamgroup");
-		return Plugin_Handled;
-	}
-
-	return Plugin_Continue;
-}
-
 public Action MyJailbreak_OnJoinGuardQueue(int client)
 {
-	if (!IsMemberRatio[client] && gc_iGroupRatio.IntValue != 0)
+	if (Reputation_GetRep(client) < gc_iMinReputationRatio.IntValue)
 	{
-		CPrintToChat(client, "%t %t", "ratio_tag", "ratio_steamgroup");
+		CPrintToChat(client, "%t %t", "ratio_tag", "ratio_reputation", gc_iMinReputationRatio.IntValue);
 		return Plugin_Handled;
 	}
 
 	return Plugin_Continue;
 }
 
-public void OnClientPostAdminCheck(int client)
+public Action warden_OnWardenCreate(int client)
 {
-	if (SteamWorks_GetUserGroupStatus(client, gc_iGroupRatio.IntValue))
+	if (Reputation_GetRep(client) < gc_iMinReputationWarden.IntValue)
 	{
-		IsMemberRatio[client] = true;
+		CPrintToChat(client, "%t %t", "warden_tag", "warden_reputation", gc_iMinReputationWarden.IntValue);
+		return Plugin_Handled;
 	}
-	else IsMemberRatio[client] = false;
 
-	if (SteamWorks_GetUserGroupStatus(client, gc_iGroupWarden.IntValue))
-	{
-		IsMemberWarden[client] = true;
-	}
-	else IsMemberWarden[client] = false;
-}
-
-public void OnClientDisconnect(int client)
-{
-	IsMemberRatio[client] = false;
-	IsMemberWarden[client] = false;
+	return Plugin_Continue;
 }
 
 public Action Event_OnPlayerSpawn(Event event, const char[] name, bool bDontBroadcast) 
@@ -166,9 +122,9 @@ public Action Event_OnPlayerSpawn(Event event, const char[] name, bool bDontBroa
 	if (!IsValidClient(client, false, false))
 		return Plugin_Continue;
 
-	if (!IsMemberRatio[client] && gc_iGroupRatio.IntValue != 0)
+	if (Reputation_GetRep(client) < gc_iMinReputationRatio.IntValue)
 	{
-		CPrintToChat(client, "%t %t", "ratio_tag", "ratio_steamgroup");
+		CPrintToChat(client, "%t %t", "ratio_tag", "ratio_reputation", gc_iMinReputationRatio.IntValue);
 		CreateTimer(5.0, Timer_SlayPlayer, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 		return Plugin_Continue;
 	}
@@ -176,8 +132,7 @@ public Action Event_OnPlayerSpawn(Event event, const char[] name, bool bDontBroa
 	return Plugin_Continue;
 }
 
-
-public Action Timer_SlayPlayer(Handle hTimer, any iUserId)
+public Action Timer_SlayPlayer(Handle hTimer, any iUserId) 
 {
 	int client = GetClientOfUserId(iUserId);
 
@@ -191,7 +146,6 @@ public Action Timer_SlayPlayer(Handle hTimer, any iUserId)
 
 	return Plugin_Stop;
 }
-
 
 void MinusDeath(int client)
 {
