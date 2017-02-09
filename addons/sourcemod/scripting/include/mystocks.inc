@@ -113,7 +113,7 @@ stock void ShowOverlayAll(char[] path, float deletetime)
 
 
 // Remove overlay from a client
-public Action DeleteOverlay(Handle timer, any client) 
+stock Action DeleteOverlay(Handle timer, any client) 
 {
 	if (IsValidClient(client, false, true))
 	{
@@ -200,7 +200,7 @@ stock void SetPlayerWeaponAmmo(int client, int weaponEnt, int clip = -1, int amm
 
 
 // Remove a players render color
-public Action Timer_RemoveColor(Handle timer, any client) 
+stock Action Timer_RemoveColor(Handle timer, any client) 
 {
 	if (IsValidClient(client, true, true))
 	{
@@ -334,7 +334,7 @@ stock bool CheckVipFlag(int client, const char[] flagsNeed)
 
 
 // Menu Handler for Panels
-public int Handler_NullCancel(Handle menu, MenuAction action, int param1, int param2)
+stock int Handler_NullCancel(Handle menu, MenuAction action, int param1, int param2)
 {
 	if (action == MenuAction_Select) 
 	{
