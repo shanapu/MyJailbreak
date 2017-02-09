@@ -124,23 +124,23 @@ public void OnPluginStart()
 	AutoExecConfig_SetFile("Weapons", "MyJailbreak");
 	AutoExecConfig_SetCreateFile(true);
 
-	AutoExecConfig_CreateConVar("sm_g_hWeapons_version", MYJB_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
-	gc_bPlugin = AutoExecConfig_CreateConVar("sm_g_hWeapons_enable", "1", "0 - disabled, 1 - enable g_hWeapons menu - you shouldn't touch these, cause events days will handle them", _, true, 0.0, true, 1.0);
-	gc_sCustomCommandWeapon = AutoExecConfig_CreateConVar("sm_g_hWeapons_cmds", "gun, guns, g_hWeapons, gunmenu, weaponmenu, giveweapon, arms", "Set your custom chat command for weapon menu(!weapon (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
-	gc_bTerror = AutoExecConfig_CreateConVar("sm_g_hWeapons_t", "0", "0 - disabled, 1 - enable g_hWeapons menu for T - you shouldn't touch these, cause events days will handle them", _, true, 0.0, true, 1.0);
-	gc_bCTerror = AutoExecConfig_CreateConVar("sm_g_hWeapons_ct", "1", "0 - disabled, 1 - enable g_hWeapons menu for CT - you shouldn't touch these, cause events days will handle them", _, true, 0.0, true, 1.0);
-	gc_bSpawn = AutoExecConfig_CreateConVar("sm_g_hWeapons_spawnmenu", "1", "0 - disabled, 1 -  enable autoopen weapon menu on spawn", _, true, 0.0, true, 1.0);
-	gc_bAWP = AutoExecConfig_CreateConVar("sm_g_hWeapons_awp", "1", "0 - disabled, 1 - enable AWP in menu", _, true, 0.0, true, 1.0);
-	gc_bAutoSniper = AutoExecConfig_CreateConVar("sm_g_hWeapons_autosniper", "1", "0 - disabled, 1 - enable scar20 & g3sg1 in menu", _, true, 0.0, true, 1.0);
-	gc_bNegev = AutoExecConfig_CreateConVar("sm_g_hWeapons_negev", "1", "0 - disabled, 1 - enable negev in menu", _, true, 0.0, true, 1.0);
-	gc_bM249 = AutoExecConfig_CreateConVar("sm_g_hWeapons_m249", "1", "0 - disabled, 1 - enable m249 in menu", _, true, 0.0, true, 1.0);
-	gc_bTAWarden = AutoExecConfig_CreateConVar("sm_g_hWeapons_warden_tagrenade", "1", "0 - disabled, 1 - warden get a g_bTA grenade with g_hWeapons - need MyJB warden", _, true, 0.0, true, 1.0);
-	gc_bHealthWarden = AutoExecConfig_CreateConVar("sm_g_hWeapons_warden_healthshot", "1", "0 - disabled, 1 - warden get a healthshot with g_hWeapons - need MyJB warden", _, true, 0.0, true, 1.0);
-	gc_bTADeputy = AutoExecConfig_CreateConVar("sm_g_hWeapons_warden_tagrenade", "1", "0 - disabled, 1 - warden get a g_bTA grenade with g_hWeapons - need MyJB warden", _, true, 0.0, true, 1.0);
-	gc_bHealthDeputy = AutoExecConfig_CreateConVar("sm_g_hWeapons_warden_healthshot", "1", "0 - disabled, 1 - warden get a healthshot with g_hWeapons - need MyJB warden", _, true, 0.0, true, 1.0);
-	gc_bKevlar = AutoExecConfig_CreateConVar("sm_g_hWeapons_kevlar", "1", "0 - disabled, 1 - CT get Kevlar & helm on Spawn", _, true, 0.0, true, 1.0);
-	gc_bKevlarDays = AutoExecConfig_CreateConVar("sm_g_hWeapons_kevlar_eventdays", "1", "0 - remove all armor on eventdays, 1 - give all player armor on eventdays", _, true, 0.0, true, 1.0);
-	gc_bJBmenu = AutoExecConfig_CreateConVar("sm_g_hWeapons_jbmenu", "1", "0 - disabled, 1 - enable autoopen the MyJailbreak !menu after weapon given.", _, true, 0.0, true, 1.0);
+	AutoExecConfig_CreateConVar("sm_weapons_version", MYJB_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
+	gc_bPlugin = AutoExecConfig_CreateConVar("sm_weapons_enable", "1", "0 - disabled, 1 - enable g_hWeapons menu - you shouldn't touch these, cause events days will handle them", _, true, 0.0, true, 1.0);
+	gc_sCustomCommandWeapon = AutoExecConfig_CreateConVar("sm_weapons_cmds", "gun, guns, g_hWeapons, gunmenu, weaponmenu, giveweapon, arms", "Set your custom chat command for weapon menu(!weapon (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
+	gc_bTerror = AutoExecConfig_CreateConVar("sm_weapons_t", "0", "0 - disabled, 1 - enable g_hWeapons menu for T - you shouldn't touch these, cause events days will handle them", _, true, 0.0, true, 1.0);
+	gc_bCTerror = AutoExecConfig_CreateConVar("sm_weapons_ct", "1", "0 - disabled, 1 - enable g_hWeapons menu for CT - you shouldn't touch these, cause events days will handle them", _, true, 0.0, true, 1.0);
+	gc_bSpawn = AutoExecConfig_CreateConVar("sm_weapons_spawnmenu", "1", "0 - disabled, 1 -  enable autoopen weapon menu on spawn", _, true, 0.0, true, 1.0);
+	gc_bAWP = AutoExecConfig_CreateConVar("sm_weapons_awp", "1", "0 - disabled, 1 - enable AWP in menu", _, true, 0.0, true, 1.0);
+	gc_bAutoSniper = AutoExecConfig_CreateConVar("sm_weapons_autosniper", "1", "0 - disabled, 1 - enable scar20 & g3sg1 in menu", _, true, 0.0, true, 1.0);
+	gc_bNegev = AutoExecConfig_CreateConVar("sm_weapons_negev", "1", "0 - disabled, 1 - enable negev in menu", _, true, 0.0, true, 1.0);
+	gc_bM249 = AutoExecConfig_CreateConVar("sm_weapons_m249", "1", "0 - disabled, 1 - enable m249 in menu", _, true, 0.0, true, 1.0);
+	gc_bTAWarden = AutoExecConfig_CreateConVar("sm_weapons_warden_tagrenade", "1", "0 - disabled, 1 - warden get a g_bTA grenade with g_hWeapons - need MyJB warden", _, true, 0.0, true, 1.0);
+	gc_bHealthWarden = AutoExecConfig_CreateConVar("sm_weapons_warden_healthshot", "1", "0 - disabled, 1 - warden get a healthshot with g_hWeapons - need MyJB warden", _, true, 0.0, true, 1.0);
+	gc_bTADeputy = AutoExecConfig_CreateConVar("sm_weapons_warden_tagrenade", "1", "0 - disabled, 1 - warden get a g_bTA grenade with g_hWeapons - need MyJB warden", _, true, 0.0, true, 1.0);
+	gc_bHealthDeputy = AutoExecConfig_CreateConVar("sm_weapons_warden_healthshot", "1", "0 - disabled, 1 - warden get a healthshot with g_hWeapons - need MyJB warden", _, true, 0.0, true, 1.0);
+	gc_bKevlar = AutoExecConfig_CreateConVar("sm_weapons_kevlar", "1", "0 - disabled, 1 - CT get Kevlar & helm on Spawn", _, true, 0.0, true, 1.0);
+	gc_bKevlarDays = AutoExecConfig_CreateConVar("sm_weapons_kevlar_eventdays", "1", "0 - remove all armor on eventdays, 1 - give all player armor on eventdays", _, true, 0.0, true, 1.0);
+	gc_bJBmenu = AutoExecConfig_CreateConVar("sm_weapons_jbmenu", "1", "0 - disabled, 1 - enable autoopen the MyJailbreak !menu after weapon given.", _, true, 0.0, true, 1.0);
 
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
@@ -242,7 +242,7 @@ public Action Command_Weapons(int client, int args)
 
 		return Plugin_Continue;
 	}
-	else CReplyToCommand(client, "%t %t", "g_hWeapons_tag", "g_hWeapons_disabled");
+	else CReplyToCommand(client, "%t %t", "weapons_tag", "weapons_disabled");
 
 	return Plugin_Continue;
 }
@@ -368,14 +368,14 @@ void GiveSavedWeapons(int client)
 				if (gc_bHealthWarden.BoolValue && !g_bTA[client])
 				{
 					GivePlayerItem(client, "weapon_healthshot");
-					CPrintToChat(client, "%t %t", "g_hWeapons_tag", "g_hWeapons_health");
+					CPrintToChat(client, "%t %t", "weapons_tag", "weapons_health");
 					g_bTA[client] = true;
 				}
 
 				if (gc_bTAWarden.BoolValue && !g_bHealth[client])
 				{
 					GivePlayerItem(client, "weapon_tagrenade");
-					CPrintToChat(client, "%t %t", "g_hWeapons_tag", "g_hWeapons_ta");
+					CPrintToChat(client, "%t %t", "weapons_tag", "weapons_ta");
 					g_bHealth[client] = true;
 				}
 
@@ -391,14 +391,14 @@ void GiveSavedWeapons(int client)
 				if (gc_bHealthDeputy.BoolValue && !g_bTA[client])
 				{
 					GivePlayerItem(client, "weapon_healthshot");
-					CPrintToChat(client, "%t %t", "g_hWeapons_tag", "g_hWeapons_health");
+					CPrintToChat(client, "%t %t", "weapons_tag", "weapons_health");
 					g_bTA[client] = true;
 				}
 
 				if (gc_bTADeputy.BoolValue && !g_bHealth[client])
 				{
 					GivePlayerItem(client, "weapon_tagrenade");
-					CPrintToChat(client, "%t %t", "g_hWeapons_tag", "g_hWeapons_ta");
+					CPrintToChat(client, "%t %t", "weapons_tag", "weapons_ta");
 					g_bHealth[client] = true;
 				}
 
@@ -642,20 +642,20 @@ Handle Menu_BuildOptionsMenu(bool sameWeaponsEnabled)
 	int sameWeaponsStyle = (sameWeaponsEnabled) ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED;
 	Menu menu3 = CreateMenu(Handler_BuildOptionsMenu);
 
-	Format(info1, sizeof(info1), "%T\n ", "g_hWeapons_info_title", LANG_SERVER);
+	Format(info1, sizeof(info1), "%T\n ", "weapons_info_title", LANG_SERVER);
 	SetMenuTitle(menu3, info1);
 
 	SetMenuExitButton(menu3, true);
 
-	Format(info2, sizeof(info2), "%T", "g_hWeapons_info_choose", LANG_SERVER);
+	Format(info2, sizeof(info2), "%T", "weapons_info_choose", LANG_SERVER);
 	AddMenuItem(menu3, "New", info2);
-	Format(info3, sizeof(info3), "%T", "g_hWeapons_info_same", LANG_SERVER);
+	Format(info3, sizeof(info3), "%T", "weapons_info_same", LANG_SERVER);
 	AddMenuItem(menu3, "Same 1", info3, sameWeaponsStyle);
-	Format(info4, sizeof(info4), "%T", "g_hWeapons_info_sameall", LANG_SERVER);
+	Format(info4, sizeof(info4), "%T", "weapons_info_sameall", LANG_SERVER);
 	AddMenuItem(menu3, "Same All", info4, sameWeaponsStyle);
-	Format(info5, sizeof(info5), "%T", "g_hWeapons_info_random", LANG_SERVER);
+	Format(info5, sizeof(info5), "%T", "weapons_info_random", LANG_SERVER);
 	AddMenuItem(menu3, "Random 1", info5);
-	Format(info6, sizeof(info6), "%T", "g_hWeapons_info_randomall", LANG_SERVER);
+	Format(info6, sizeof(info6), "%T", "weapons_info_randomall", LANG_SERVER);
 	AddMenuItem(menu3, "Random All", info6);
 
 	return menu3;
@@ -679,24 +679,24 @@ public int Handler_BuildOptionsMenu(Menu menu, MenuAction action, int client, in
 		else if (StrEqual(info, "Same 1"))
 		{
 			g_bWeaponsSelected[client] = true;
-			if (!IsPlayerAlive(client)) CPrintToChat(client, "%t %t", "g_hWeapons_tag", "g_hWeapons_next");
-			else CPrintToChat(client, "%t %t", "g_hWeapons_tag", "g_hWeapons_same");
+			if (!IsPlayerAlive(client)) CPrintToChat(client, "%t %t", "weapons_tag", "weapons_next");
+			else CPrintToChat(client, "%t %t", "weapons_tag", "weapons_same");
 			
 			GiveSavedWeapons(client);
 			g_bRememberChoice[client] = false;
 		}
 		else if (StrEqual(info, "Same All"))
 		{
-			if (!IsPlayerAlive(client)) CPrintToChat(client, "%t %t", "g_hWeapons_tag", "g_hWeapons_next");
-			else CPrintToChat(client, "%t %t", "g_hWeapons_tag", "g_hWeapons_sameall");
+			if (!IsPlayerAlive(client)) CPrintToChat(client, "%t %t", "weapons_tag", "weapons_next");
+			else CPrintToChat(client, "%t %t", "weapons_tag", "weapons_sameall");
 			GiveSavedWeapons(client);
 			g_bRememberChoice[client] = true;
 		}
 		else if (StrEqual(info, "Random 1"))
 		{
 			g_bWeaponsSelected[client] = true;
-			if (!IsPlayerAlive(client)) CPrintToChat(client, "%t %t", "g_hWeapons_tag", "g_hWeapons_next");
-			else CPrintToChat(client, "%t %t", "g_hWeapons_tag", "g_hWeapons_random");
+			if (!IsPlayerAlive(client)) CPrintToChat(client, "%t %t", "weapons_tag", "weapons_next");
+			else CPrintToChat(client, "%t %t", "weapons_tag", "weapons_random");
 			
 			primaryWeapon[client] = "random";
 			secondaryWeapon[client] = "random";
@@ -705,8 +705,8 @@ public int Handler_BuildOptionsMenu(Menu menu, MenuAction action, int client, in
 		}
 		else if (StrEqual(info, "Random All"))
 		{
-			if (!IsPlayerAlive(client)) CPrintToChat(client, "%t %t", "g_hWeapons_tag", "g_hWeapons_next");
-			else CPrintToChat(client, "%t %t", "g_hWeapons_tag", "g_hWeapons_randomall");
+			if (!IsPlayerAlive(client)) CPrintToChat(client, "%t %t", "weapons_tag", "weapons_next");
+			else CPrintToChat(client, "%t %t", "weapons_tag", "weapons_randomall");
 			primaryWeapon[client] = "random";
 			secondaryWeapon[client] = "random";
 			GiveSavedWeapons(client);
@@ -725,7 +725,7 @@ Handle Menu_BuildWeaponsMenu(bool primary)
 	if (primary)
 	{
 		menu = CreateMenu(Menu_Primary);
-		Format(info7, sizeof(info7), "%T\n ", "g_hWeapons_info_prim", LANG_SERVER);
+		Format(info7, sizeof(info7), "%T\n ", "weapons_info_prim", LANG_SERVER);
 		SetMenuTitle(menu, info7);
 		menu.ExitButton = true;
 
@@ -738,7 +738,7 @@ Handle Menu_BuildWeaponsMenu(bool primary)
 	else
 	{
 		menu = CreateMenu(Menu_Secondary);
-		Format(info8, sizeof(info8), "%T\n ", "g_hWeapons_info_sec", LANG_SERVER);
+		Format(info8, sizeof(info8), "%T\n ", "weapons_info_sec", LANG_SERVER);
 		SetMenuTitle(menu, info8);
 		menu.ExitButton = true;
 
@@ -774,7 +774,7 @@ public int Menu_Secondary(Menu menu, MenuAction action, int client, int param2)
 		secondaryWeapon[client] = info;
 		GiveSavedWeapons(client);
 		if (!IsPlayerAlive(client))
-			CPrintToChat(client, "%t %t", "g_hWeapons_tag", "g_hWeapons_next");
+			CPrintToChat(client, "%t %t", "weapons_tag", "weapons_next");
 	}
 }
 
