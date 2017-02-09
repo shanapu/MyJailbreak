@@ -673,11 +673,6 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 			}
 		}
 
-		if (gc_iRegen.IntValue != 0) 
-		{
-			g_hTimerRegen = CreateTimer(5.0, Timer_ReGenHealth, _, TIMER_REPEAT);
-		}
-
 		g_iFreezeTime--;
 
 		CreateTimer (1.1, Timer_SetModel);
@@ -1178,6 +1173,11 @@ public Action Timer_StartEvent(Handle timer)
 	if (gp_bMyJailbreak && gc_bDark.BoolValue && g_iRound == 1)
 	{
 		MyJailbreak_FogOn();
+	}
+
+	if (gc_iRegen.IntValue != 0) 
+	{
+		g_hTimerRegen = CreateTimer(5.0, Timer_ReGenHealth, _, TIMER_REPEAT);
 	}
 
 	g_hTimerFreeze = null;
