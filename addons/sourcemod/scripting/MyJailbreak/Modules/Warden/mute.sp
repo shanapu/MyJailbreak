@@ -138,7 +138,7 @@ public void Mute_OnConfigsExecuted()
 
 public Action Command_UnMuteMenu(int client, any args)
 {
-	if (gc_bPlugin.BoolValue)	
+	if (gc_bPlugin.BoolValue)
 	{
 		if ((IsClientWarden(client) || (IsClientDeputy(client) && gc_bMuteDeputy.BoolValue)) && gc_bMute.BoolValue)
 		{

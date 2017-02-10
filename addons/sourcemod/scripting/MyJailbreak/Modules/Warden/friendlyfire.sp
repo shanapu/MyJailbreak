@@ -43,6 +43,14 @@ ConVar gc_sCustomCommandFF;
 
 // Extern Convars
 ConVar g_bFF;
+ConVar Cvar_tg_team_none_attack;
+ConVar Cvar_tg_cvar_friendlyfire;
+ConVar Cvar_tg_ct_friendlyfire;
+
+//Integer
+int OldCvar_tg_team_none_attack;
+int OldCvar_tg_cvar_friendlyfire;
+int OldCvar_tg_ct_friendlyfire;
 
 // Start
 public void FriendlyFire_OnPluginStart()
@@ -77,6 +85,14 @@ public Action Command_FriendlyFire(int client, int args)
 				SetCvar("mp_teammates_are_enemies", 0);
 				g_bFF = FindConVar("mp_teammates_are_enemies");
 				CPrintToChatAll("%t %t", "warden_tag", "warden_ffisoff");
+
+				if (Cvar_tg_team_none_attack != null)
+				{
+					// Replace the Cvar Value with old value
+					Cvar_tg_team_none_attack.IntValue = OldCvar_tg_team_none_attack;
+					Cvar_tg_cvar_friendlyfire.IntValue = OldCvar_tg_cvar_friendlyfire;
+					Cvar_tg_ct_friendlyfire.IntValue = OldCvar_tg_ct_friendlyfire;
+				}
 			}
 			else CPrintToChatAll("%t %t", "warden_tag", "warden_ffison");
 		}
@@ -87,6 +103,13 @@ public Action Command_FriendlyFire(int client, int args)
 				SetCvar("mp_teammates_are_enemies", 1);
 				g_bFF = FindConVar("mp_teammates_are_enemies");
 				CPrintToChatAll("%t %t", "warden_tag", "warden_ffison");
+
+				if (Cvar_tg_team_none_attack != null)
+				{
+					Cvar_tg_team_none_attack.IntValue = 1;
+					Cvar_tg_cvar_friendlyfire.IntValue = 1;
+					Cvar_tg_ct_friendlyfire.IntValue = 1;
+				}
 			}
 			else CPrintToChatAll("%t %t", "warden_tag", "warden_ffisoff");
 		}
@@ -99,15 +122,24 @@ public Action Command_FriendlyFire(int client, int args)
                    EVENTS
 ******************************************************************************/
 
+
 public void FriendlyFire_Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 {
 	if (gc_bPlugin.BoolValue)
 	{
-		if (g_bFF.BoolValue) 
+		if (g_bFF.BoolValue)
 		{
 			SetCvar("mp_teammates_are_enemies", 0);
 			g_bFF = FindConVar("mp_teammates_are_enemies");
 			CPrintToChatAll("%t %t", "warden_tag", "warden_ffisoff");
+
+			if (Cvar_tg_team_none_attack != null)
+			{
+				// Replace the Cvar Value with old value
+				Cvar_tg_team_none_attack.IntValue = OldCvar_tg_team_none_attack;
+				Cvar_tg_cvar_friendlyfire.IntValue = OldCvar_tg_cvar_friendlyfire;
+				Cvar_tg_ct_friendlyfire.IntValue = OldCvar_tg_ct_friendlyfire;
+			}
 		}
 	}
 }
@@ -118,6 +150,11 @@ public void FriendlyFire_Event_RoundEnd(Event event, const char[] name, bool don
 
 public void FriendlyFire_OnConfigsExecuted()
 {
+	// Get the Cvar Value
+	Cvar_tg_team_none_attack = FindConVar("tg_team_none_attack");
+	Cvar_tg_cvar_friendlyfire = FindConVar("tg_cvar_friendlyfire");
+	Cvar_tg_ct_friendlyfire = FindConVar("tg_ct_friendlyfire");
+
 	// Set custom Commands
 	int iCount = 0;
 	char sCommands[128], sCommandsL[12][32], sCommand[32];

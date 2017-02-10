@@ -312,6 +312,7 @@ public void OnConfigsExecuted()
 	Counter_OnConfigsExecuted();
 	Orders_OnConfigsExecuted();
 	Freedays_OnConfigsExecuted();
+	FriendlyFire_OnConfigsExecuted();
 
 	// Set custom Commands
 	int iCount = 0;
