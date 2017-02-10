@@ -90,7 +90,7 @@ public void OnPluginStart()
 	// Late loading
 	if (g_bIsLateLoad)
 	{
-		LoopClients(i)
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 		{
 			OnClientPutInServer(i);
 		}
@@ -211,7 +211,7 @@ void ShowHUD()
 
 	if (gc_bPlugin.BoolValue)
 	{
-		LoopValidClients(i, false, true)
+		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, true))
 		{
 			if (g_bEnableHud[i])
 			{

@@ -228,7 +228,7 @@ public void OnPluginStart()
 	// Late loading
 	if (g_bIsLateLoad)
 	{
-		LoopClients(i)
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 		{
 			OnClientPutInServer(i);
 		}
@@ -647,23 +647,23 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 
 	if (g_iRound > 0)
 	{
-		LoopClients(client)
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 		{
-			g_iSprintStatus[client] = 0;
-			g_iCatchCounter[client] = 0;
-			g_bCatched[client] = false;
+			g_iSprintStatus[i] = 0;
+			g_iCatchCounter[i] = 0;
+			g_bCatched[i] = false;
 
-			CreateInfoPanel(client);
+			CreateInfoPanel(i);
 
-			StripAllPlayerWeapons(client);
-			GivePlayerItem(client, "weapon_knife");
+			StripAllPlayerWeapons(i);
+			GivePlayerItem(i, "weapon_knife");
 
-			SetEntData(client, g_iCollision_Offset, 2, 4, true);
+			SetEntData(i, g_iCollision_Offset, 2, 4, true);
 
-			if (GetClientTeam(client) == CS_TEAM_CT)
+			if (GetClientTeam(i) == CS_TEAM_CT)
 			{
-				SetEntityMoveType(client, MOVETYPE_NONE);
-				SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 0.0);
+				SetEntityMoveType(i, MOVETYPE_NONE);
+				SetEntPropFloat(i, Prop_Data, "m_flLaggedMovementValue", 0.0);
 			}
 		}
 
@@ -693,24 +693,24 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
 	if (g_bIsCatch)
 	{
-		LoopValidClients(client, true, true)
+		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true))
 		{
-			SetEntData(client, g_iCollision_Offset, 0, 4, true);
+			SetEntData(i, g_iCollision_Offset, 0, 4, true);
 
-			CreateTimer(0.0, DeleteOverlay, client);
-			SetEntityRenderColor(client, 255, 255, 255, 0);
+			CreateTimer(0.0, DeleteOverlay, i);
+			SetEntityRenderColor(i, 255, 255, 255, 0);
 
-			g_iSprintStatus[client] = 0;
-			g_bCatched[client] = false;
+			g_iSprintStatus[i] = 0;
+			g_bCatched[i] = false;
 
-			if (GetClientTeam(client) == CS_TEAM_T)
+			if (GetClientTeam(i) == CS_TEAM_T)
 			{
-				StripAllPlayerWeapons(client);
+				StripAllPlayerWeapons(i);
 			}
 
 			if (gc_bWallhack.BoolValue && gp_bCustomPlayerSkins)
 			{
-				UnhookWallhack(client);
+				UnhookWallhack(i);
 			}
 		}
 
@@ -759,7 +759,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 
 	if (g_bStartCatch)
 	{
-		LoopClients(i)
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 		{
 			CreateInfoPanel(i);
 		}
@@ -915,30 +915,30 @@ public void OnAvailableLR(int Announced)
 {
 	if (g_bIsCatch && gc_bAllowLR.BoolValue && (g_iTsLR > g_iTerrorForLR.IntValue))
 	{
-		LoopValidClients(client, false, true)
+		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, true))
 		{
-			g_iSprintStatus[client] = 0;
-			g_bCatched[client] = false;
+			g_iSprintStatus[i] = 0;
+			g_bCatched[i] = false;
 
-			SetEntData(client, g_iCollision_Offset, 0, 4, true);
+			SetEntData(i, g_iCollision_Offset, 0, 4, true);
 
-			CreateTimer(0.0, DeleteOverlay, client);
+			CreateTimer(0.0, DeleteOverlay, i);
 
-			SetEntityRenderColor(client, 255, 255, 255, 0);
-			SetEntityHealth(client, 100);
+			SetEntityRenderColor(i, 255, 255, 255, 0);
+			SetEntityHealth(i, 100);
 
-			StripAllPlayerWeapons(client);
+			StripAllPlayerWeapons(i);
 
-			if (GetClientTeam(client) == CS_TEAM_CT)
+			if (GetClientTeam(i) == CS_TEAM_CT)
 			{
-				FakeClientCommand(client, "sm_weapons");
+				FakeClientCommand(i, "sm_weapons");
 			}
 
-			GivePlayerItem(client, "weapon_knife");
+			GivePlayerItem(i, "weapon_knife");
 
 			if (gc_bWallhack.BoolValue && gp_bCustomPlayerSkins)
 			{
-				UnhookWallhack(client);
+				UnhookWallhack(i);
 			}
 		}
 
@@ -1013,7 +1013,7 @@ void CatchEm(int client, int attacker)
 
 	if (gc_bSounds.BoolValue)
 	{
-		LoopClients(i) EmitSoundToAllAny(g_sSoundFreezePath);
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) EmitSoundToAllAny(g_sSoundFreezePath);
 	}
 
 	if (!gc_bStayOverlay.BoolValue)
@@ -1037,7 +1037,7 @@ void FreeEm(int client, int attacker)
 
 	if (gc_bSounds.BoolValue)
 	{
-		LoopClients(i) EmitSoundToAllAny(g_sSoundUnFreezePath);
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) EmitSoundToAllAny(g_sSoundUnFreezePath);
 	}
 
 	CPrintToChatAll("%t %t", "catch_tag", "catch_unfreeze", attacker, client);
@@ -1047,7 +1047,7 @@ void FreeEm(int client, int attacker)
 void CheckStatus()
 {
 	int count = 0;
-	LoopClients(i)
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 	{
 		if (IsPlayerAlive(i) && GetClientTeam(i) == CS_TEAM_T && !g_bCatched[i])
 		{
@@ -1114,14 +1114,14 @@ public Action OnSetTransmit_Wallhack(int iSkin, int client)
 		return Plugin_Handled;
 	}
 
-	LoopClients(target)
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 	{
-		if (!CPS_HasSkin(target) || !g_bCatched[target])
+		if (!CPS_HasSkin(i) || !g_bCatched[i])
 		{
 			continue;
 		}
 
-		if (EntRefToEntIndex(CPS_GetSkin(target)) != iSkin)
+		if (EntRefToEntIndex(CPS_GetSkin(i)) != iSkin)
 		{
 			continue;
 		}
@@ -1159,17 +1159,17 @@ public Action Timer_StartEvent(Handle timer)
 	{
 		g_iFreezeTime--;
 
-		LoopClients(client)
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 		{
-			if (IsPlayerAlive(client))
+			if (IsPlayerAlive(i))
 			{
-				if (GetClientTeam(client) == CS_TEAM_CT)
+				if (GetClientTeam(i) == CS_TEAM_CT)
 				{
-					PrintCenterText(client, "%t", "catch_timetounfreeze_nc", g_iFreezeTime);
+					PrintCenterText(i, "%t", "catch_timetounfreeze_nc", g_iFreezeTime);
 				}
-				else if (GetClientTeam(client) == CS_TEAM_T)
+				else if (GetClientTeam(i) == CS_TEAM_T)
 				{
-					PrintCenterText(client, "%t", "catch_timeuntilstart_nc", g_iFreezeTime);
+					PrintCenterText(i, "%t", "catch_timeuntilstart_nc", g_iFreezeTime);
 				}
 			}
 		}
@@ -1181,26 +1181,26 @@ public Action Timer_StartEvent(Handle timer)
 
 	if (g_iRound > 0)
 	{
-		LoopClients(client)
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 		{
-			if (IsPlayerAlive(client))
+			if (IsPlayerAlive(i))
 			{
-				if (GetClientTeam(client) == CS_TEAM_CT)
+				if (GetClientTeam(i) == CS_TEAM_CT)
 				{
-					SetEntityMoveType(client, MOVETYPE_WALK);
-					SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.4);
+					SetEntityMoveType(i, MOVETYPE_WALK);
+					SetEntPropFloat(i, Prop_Data, "m_flLaggedMovementValue", 1.4);
 				}
 
-				PrintCenterText(client, "%t", "catch_start_nc");
+				PrintCenterText(i, "%t", "catch_start_nc");
 
 				if (gc_bOverlays.BoolValue)
 				{
-					ShowOverlay(client, g_sOverlayStartPath, 2.0);
+					ShowOverlay(i, g_sOverlayStartPath, 2.0);
 				}
 
 				if (gc_bWallhack.BoolValue && gp_bCustomPlayerSkins)
 				{
-					Setup_WallhackSkin(client);
+					Setup_WallhackSkin(i);
 				}
 			}
 		}
@@ -1221,7 +1221,7 @@ public Action Timer_StartEvent(Handle timer)
 // Beacon Timer
 public Action Timer_BeaconOn(Handle timer)
 {
-	LoopValidClients(i, true, false)
+	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
 	{
 		MyJailbreak_BeaconOn(i, 2.0);
 	}
@@ -1307,7 +1307,7 @@ public void OnGameFrame()
 		return;
 	}
 
-	LoopClients(i)
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 	{
 		if (GetClientButtons(i) & IN_USE)
 		{

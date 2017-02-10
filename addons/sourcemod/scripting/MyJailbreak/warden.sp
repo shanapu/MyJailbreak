@@ -266,7 +266,7 @@ public void OnPluginStart()
 	// Late loading
 	if (g_bIsLateLoad)
 	{
-		LoopClients(i)
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 		{
 			OnClientPutInServer(i);
 		}
@@ -638,7 +638,7 @@ public void Event_PostRoundStart(Event event, const char[] name, bool dontBroadc
 		{
 			g_hTimerRandom = CreateTimer(gc_fRandomTimer.FloatValue, Timer_ChooseRandom);
 
-			LoopValidClients(i, false, false) if (GetClientTeam(i) == CS_TEAM_CT)
+			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, false)) if (GetClientTeam(i) == CS_TEAM_CT)
 			{
 				CPrintToChat(i, "%t %t", "warden_tag", "warden_nowarden");
 				
@@ -701,7 +701,7 @@ public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 
 	if (gc_iLimitWarden.IntValue != 0)
 	{
-		LoopClients(i)
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 		{
 			// /shiiet 
 			if (GetLimit(i) && (i != g_iLastWarden) && (i != g_iWarden))
@@ -723,7 +723,7 @@ public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 
 	if (gc_iCoolDownRemove.IntValue != 0) // 
 	{
-		LoopClients(i) if (GetCoolDown(i) != 0) 
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (GetCoolDown(i) != 0) 
 		{
 			SetCoolDown(i, GetCoolDown(i)-1);
 		}
@@ -1036,7 +1036,7 @@ void Menu_SetWarden(int client)
 	Format(info1, sizeof(info1), "%T", "warden_choose", client);
 	menu.SetTitle(info1);
 
-	LoopValidClients(i, true, false)
+	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
 	{
 		if (GetClientTeam(i) == CS_TEAM_CT && !IsClientWarden(i))
 		{
@@ -1061,7 +1061,7 @@ public int Handler_SetWarden(Menu menu, MenuAction action, int client, int Posit
 		char Item[11];
 		menu.GetItem(Position, Item, sizeof(Item));
 
-		LoopValidClients(i, true, false)
+		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
 		{
 			if (GetClientTeam(i) == CS_TEAM_CT && !IsClientWarden(i))
 			{

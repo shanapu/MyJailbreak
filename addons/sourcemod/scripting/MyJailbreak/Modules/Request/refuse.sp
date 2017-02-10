@@ -150,7 +150,7 @@ public Action Command_refuse(int client, int args)
 								CPrintToChatAll("%t %t", "request_tag", "request_refusing", client);
 								g_iCountStopTime = gc_fRefuseTime.IntValue;
 								g_hTimerRefuse[client] = CreateTimer(gc_fRefuseTime.FloatValue, Timer_ResetColorRefuse, client);
-								if (warden_exist()) LoopClients(i) RefuseMenu(i);
+								if (warden_exist()) for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) RefuseMenu(i);
 								if (gc_bSounds.BoolValue)EmitSoundToAllAny(g_sSoundRefusePath);
 							}
 							else CReplyToCommand(client, "%t %t", "request_tag", "request_refusedtimes", gc_iRefuseLimit.IntValue);
@@ -173,7 +173,7 @@ public Action Command_refuse(int client, int args)
 
 public void Refuse_Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
-	LoopClients(i)
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 	{
 		delete g_hTimerRefuse[i];
 		delete g_hTimerAllowRefuse;
@@ -244,7 +244,7 @@ public Action RefuseMenu(int client)
 		InfoPanel.SetTitle(info1);
 		InfoPanel.DrawText("-----------------------------------");
 		InfoPanel.DrawText("                                   ");
-		LoopValidClients(i, true, false)
+		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
 		{
 			if (g_bRefused[i])
 			{
@@ -284,9 +284,9 @@ public Action Timer_NoAllowRefuse(Handle timer)
 	{
 		if (g_iCountStopTime < 4)
 		{
-			LoopValidClients(client, false, true)
+			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, true))
 			{
-				PrintCenterText(client, "%t", "request_stopcountdown_nc", g_iCountStopTime);
+				PrintCenterText(i, "%t", "request_stopcountdown_nc", g_iCountStopTime);
 			}
 			CPrintToChatAll("%t %t", "request_tag", "request_stopcountdown", g_iCountStopTime);
 		}
@@ -296,9 +296,9 @@ public Action Timer_NoAllowRefuse(Handle timer)
 
 	if (g_iCountStopTime == 0)
 	{
-		LoopValidClients(client, false, true)
+		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, true))
 		{
-			PrintCenterText(client, "%t", "request_countdownstop_nc");
+			PrintCenterText(i, "%t", "request_countdownstop_nc");
 			if (gc_bSounds.BoolValue)
 			{
 				EmitSoundToAllAny(g_sSoundRefuseStopPath);

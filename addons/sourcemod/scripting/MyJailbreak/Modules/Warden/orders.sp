@@ -240,7 +240,7 @@ void Command_Handler(char[] number)
 				
 				for (int iTeam = 0; iTeam < iCount; iTeam++)
 				{
-					LoopValidClients(i, false, false)
+					for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, false))
 					if (GetClientTeam(i) == StringToInt(szTeam[iTeam])) ShowOverlay(i, sValue, StringToFloat(sTime));
 				}
 			}
@@ -390,7 +390,7 @@ public int Handler_Menu(Menu menu, MenuAction action, int client, int param)
 					
 					for (int iTeam = 0; iTeam < iCount; iTeam++)
 					{
-						LoopValidClients(i, false, false)
+						for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, false))
 						if (GetClientTeam(i) == StringToInt(szTeam[iTeam])) ShowOverlay(i, sValue, StringToFloat(sTime));
 					}
 				}

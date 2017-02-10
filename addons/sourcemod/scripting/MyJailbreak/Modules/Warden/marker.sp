@@ -287,39 +287,39 @@ void Draw_Markers()
 	if (g_iWarden == -1)
 		return;
 
-	for (int i = 0; i<8; i++)
+	for (int j = 0; j<8; j++)
 	{
-		if (g_fMarkerRadius[i] <= 0.0)
+		if (g_fMarkerRadius[j] <= 0.0)
 			continue;
 
 		// FIX OR FEATURE    TODO ASK ZIPCORE
 		float fWardenOrigin[3];
 		Entity_GetAbsOrigin(g_iWarden, fWardenOrigin);
 
-		if (GetVectorDistance(fWardenOrigin, g_fMarkerOrigin[i]) > g_fMarkerRangeMax)
+		if (GetVectorDistance(fWardenOrigin, g_fMarkerOrigin[j]) > g_fMarkerRangeMax)
 		{
-			CPrintToChat(g_iWarden, "%t %t", "warden_tag", "warden_marker_faraway", g_sColorNames[i]);
-			RemoveMarker(i);
+			CPrintToChat(g_iWarden, "%t %t", "warden_tag", "warden_marker_faraway", g_sColorNames[j]);
+			RemoveMarker(j);
 			continue;
 		}
 
 		// FIX OR FEATURE    TODO ASK ZIPCORE
-		LoopValidClients(iClient, false, false)
+		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, false))
 		{
 			// Show the ring
-			TE_SetupBeamRingPoint(g_fMarkerOrigin[i], g_fMarkerRadius[i], g_fMarkerRadius[i]+0.1, g_iBeamSprite, g_iHaloSprite, 0, 10, 1.0, 2.0, 0.0, g_iColors[i], 10, 0);
+			TE_SetupBeamRingPoint(g_fMarkerOrigin[j], g_fMarkerRadius[j], g_fMarkerRadius[j]+0.1, g_iBeamSprite, g_iHaloSprite, 0, 10, 1.0, 2.0, 0.0, g_iColors[j], 10, 0);
 			TE_SendToAll();
 
 			// Show the arrow
 			float fStart[3];
-			AddVectors(fStart, g_fMarkerOrigin[i], fStart);
+			AddVectors(fStart, g_fMarkerOrigin[j], fStart);
 			fStart[2] += g_fMarkerArrowHeight;
 
 			float fEnd[3];
 			AddVectors(fEnd, fStart, fEnd);
 			fEnd[2] += g_fMarkerArrowLength;
 
-			TE_SetupBeamPoints(fStart, fEnd, g_iBeamSprite, g_iHaloSprite, 0, 10, 1.0, 2.0, 16.0, 1, 0.0, g_iColors[i], 5);
+			TE_SetupBeamPoints(fStart, fEnd, g_iBeamSprite, g_iHaloSprite, 0, 10, 1.0, 2.0, 16.0, 1, 0.0, g_iColors[j], 5);
 			TE_SendToAll();
 		}
 	}

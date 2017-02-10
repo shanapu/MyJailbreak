@@ -93,7 +93,7 @@ public Action Command_FreeDay(int client, int args)
 			Format(info1, sizeof(info1), "%T", "warden_givefreeday", client);
 			menu5.SetTitle(info1);
 
-			LoopValidClients(i, true, true)
+			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true))
 			{
 				if ((GetClientTeam(i) == CS_TEAM_T) && !g_bGetFreeDay[i] && !g_bHasFreeDay[i])
 				{
@@ -131,7 +131,7 @@ public void Freedays_Event_RoundStart_Post(Event event, char[] name, bool dontBr
 			return;
 	}
 
-	LoopClients(i)
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 	{
 		if (g_bGetFreeDay[i])
 		{
@@ -145,7 +145,7 @@ public void Freedays_Event_RoundStart_Post(Event event, char[] name, bool dontBr
 
 public void Freedays_Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
-	LoopClients(i)
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 	{
 		g_bHasFreeDay[i] = false;
 	}
@@ -162,7 +162,7 @@ public void Freedays_OnClientDisconnect(int client)
 
 public void Freedays_OnMapStart()
 {
-	LoopClients(i)
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 	{
 		g_bGetFreeDay[i] = false;
 		g_bHasFreeDay[i] = false;

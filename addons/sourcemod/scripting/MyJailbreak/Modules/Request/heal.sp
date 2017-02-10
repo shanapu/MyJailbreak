@@ -124,7 +124,7 @@ public Action Command_Heal(int client, int args)
 									CPrintToChatAll("%t %t", "request_tag", "request_heal", client);
 									SetEntityRenderColor(client, gc_iHealColorRed.IntValue, gc_iHealColorGreen.IntValue, gc_iHealColorBlue.IntValue, 255);
 									g_hTimerHeal[client] = CreateTimer(gc_fHealTime.FloatValue, Timer_ResetColorHeal, client);
-									LoopClients(i) HealMenu(i);
+									for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) HealMenu(i);
 								}
 								else CReplyToCommand(client, "%t %t", "request_tag", "request_processing");
 							}
@@ -151,7 +151,7 @@ public Action Command_Heal(int client, int args)
 
 public void Heal_Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
-	LoopClients(i)
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 	{
 		delete g_hTimerHeal[i];
 		
@@ -231,7 +231,7 @@ public int HealMenuHandler(Menu menu, MenuAction action, int client, int Positio
 		int choice = StringToInt(Item);
 		if (choice == 1)
 		{
-			LoopClients(i) if (g_bHealed[i])
+			for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (g_bHealed[i])
 			{
 				g_bIsRequest = false;
 				g_hTimerRequest = null;
@@ -244,7 +244,7 @@ public int HealMenuHandler(Menu menu, MenuAction action, int client, int Positio
 		{
 			g_bIsRequest = false;
 			g_hTimerRequest = null;
-			LoopClients(i) if (g_bHealed[i])
+			for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (g_bHealed[i])
 			{
 				CPrintToChatAll("%t %t", "warden_tag", "request_noaccepted", i, client);
 			}

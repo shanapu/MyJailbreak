@@ -566,7 +566,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 	if (!gc_bSpawnCell.BoolValue || !gp_bSmartJailDoors || (gc_bSpawnCell.BoolValue && (SJD_IsCurrentMapConfigured() != true))) // spawn Terrors to CT Spawn 
 	{
 		int RandomCT = 0;
-		LoopClients(i)
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 		{
 			if (GetClientTeam(i) == CS_TEAM_CT)
 			{
@@ -577,7 +577,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 
 		if (RandomCT)
 		{
-			LoopClients(i)
+			for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 			{
 				GetClientAbsOrigin(RandomCT, g_fPos);
 				
@@ -590,7 +590,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 
 	if (g_iRound > 0)
 	{
-		LoopClients(i)
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 		{
 			CreateInfoPanel(i);
 
@@ -641,7 +641,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
 	if (g_bIsWar)
 	{
-		LoopValidClients(i, false, true)
+		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, true))
 		{
 			SetEntData(i, g_iCollision_Offset, 0, 4, true);
 		}
@@ -694,7 +694,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 
 	if (g_bStartWar)
 	{
-		LoopClients(i)
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 		{
 			CreateInfoPanel(i);
 		}
@@ -751,7 +751,7 @@ public void OnAvailableLR(int Announced)
 {
 	if (g_bIsWar && gc_bAllowLR.BoolValue && (g_iTsLR > g_iTerrorForLR.IntValue))
 	{
-		LoopValidClients(i, false, true) 
+		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, true)) 
 		{
 			SetEntData(i, g_iCollision_Offset, 0, 4, true);
 
@@ -870,7 +870,7 @@ public Action Timer_FreezeOnStart(Handle timer)
 	{
 		g_iFreezeTime--;
 
-		LoopClients(i) if (IsPlayerAlive(i))
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (IsPlayerAlive(i))
 		{
 			if (GetClientTeam(i) == CS_TEAM_T)
 			{
@@ -891,7 +891,7 @@ public Action Timer_FreezeOnStart(Handle timer)
 
 	if (g_iRound > 0)
 	{
-		LoopClients(i) if (IsPlayerAlive(i))
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (IsPlayerAlive(i))
 		{
 			if (GetClientTeam(i) == CS_TEAM_T)
 			{
@@ -922,7 +922,7 @@ public Action Timer_StartEvent(Handle timer)
 
 	g_iTruceTime = gc_iTruceTime.IntValue;
 
-	LoopClients(i) if (IsPlayerAlive(i)) 
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (IsPlayerAlive(i)) 
 	{
 		SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
 
@@ -947,7 +947,7 @@ public Action Timer_StartEvent(Handle timer)
 
 public Action Timer_BeaconOn(Handle timer)
 {
-	LoopValidClients(i, true, false)
+	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
 	{
 		MyJailbreak_BeaconOn(i, 2.0);
 	}

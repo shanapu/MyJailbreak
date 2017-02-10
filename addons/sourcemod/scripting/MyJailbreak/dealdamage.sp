@@ -201,7 +201,7 @@ public void OnPluginStart()
 	// Late loading
 	if (g_bIsLateLoad)
 	{
-		LoopClients(i)
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 		{
 			OnClientPutInServer(i);
 		}
@@ -579,7 +579,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 	if (!gc_bSpawnCell.BoolValue || !gp_bSmartJailDoors || (gc_bSpawnCell.BoolValue && (SJD_IsCurrentMapConfigured() != true))) // spawn Terrors to CT Spawn 
 	{
 		int RandomCT = 0;
-		LoopClients(i)
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 		{
 			if (GetClientTeam(i) == CS_TEAM_CT)
 			{
@@ -590,7 +590,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 
 		if (RandomCT)
 		{
-			LoopClients(i)
+			for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 			{
 				GetClientAbsOrigin(RandomCT, g_fPos);
 				
@@ -603,7 +603,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 
 	if (g_iRound > 0)
 	{
-		LoopClients(i)
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 		{
 			SetEntData(i, g_iCollision_Offset, 2, 4, true); // NoBlock
 			CreateInfoPanel(i);
@@ -623,7 +623,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
 	if (g_bIsDealDamage) // if event was running this round
 	{
-		LoopClients(i)
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 		{
 			SetEntData(i, g_iCollision_Offset, 0, 4, true); // disbale noblock
 		}
@@ -685,7 +685,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 
 	if (g_bStartDealDamage)
 	{
-		LoopClients(i)
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 		{
 			CreateInfoPanel(i);
 		}
@@ -757,7 +757,7 @@ public Action OnTakedamage(int victim, int &attacker, int &inflictor, float &dam
 		g_iDamageT = g_iDamageT + RoundToCeil(damage);
 	}
 
-	LoopClients(i)
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 	{
 		PrintHintText(i, "<font face='Arial' color='#0055FF'>%t  </font> %i %t \n<font face='Arial' color='#FF0000'>%t  </font> %i %t \n<font face='Arial' color='#00FF00'>%t  </font> %i %t", "dealdamage_ctdealed", g_iDamageCT, "dealdamage_hpdamage", "dealdamage_tdealed", g_iDamageT, "dealdamage_hpdamage", "dealdamage_clientdealed", g_iDamageDealed[i], "dealdamage_hpdamage");
 	}
@@ -917,7 +917,7 @@ public Action Timer_StartEvent(Handle timer)
 
 	if (g_iRound > 0)
 	{
-		LoopClients(i)
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 		{
 			if (IsPlayerAlive(i))
 			{
@@ -947,7 +947,7 @@ public Action Timer_StartEvent(Handle timer)
 
 public Action Timer_BeaconOn(Handle timer)
 {
-	LoopValidClients(i, true, false)
+	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
 	{
 		MyJailbreak_BeaconOn(i, 2.0);
 	}
@@ -961,7 +961,7 @@ public Action Timer_EndTheRound(Handle timer)
 	{
 		CS_TerminateRound(5.0, CSRoundEnd_CTWin);
 
-		LoopClients(i) if (GetClientTeam(i) == CS_TEAM_T)
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (GetClientTeam(i) == CS_TEAM_T)
 		{
 			ForcePlayerSuicide(i);
 		}
@@ -970,7 +970,7 @@ public Action Timer_EndTheRound(Handle timer)
 	{
 		CS_TerminateRound(5.0, CSRoundEnd_TerroristWin);
 
-		LoopClients(i) if (GetClientTeam(i) == CS_TEAM_CT)
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (GetClientTeam(i) == CS_TEAM_CT)
 		{
 			ForcePlayerSuicide(i);
 		}
@@ -980,7 +980,7 @@ public Action Timer_EndTheRound(Handle timer)
 		CS_TerminateRound(5.0, CSRoundEnd_Draw);
 	}
 
-	LoopClients(i)
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 	{
 		if (GetClientTeam(i) == CS_TEAM_CT && (g_iDamageDealed[i] > g_iBestCTdamage))
 		{
@@ -1003,7 +1003,7 @@ public Action Timer_EndTheRound(Handle timer)
 
 	g_iTotalDamage = g_iDamageCT + g_iDamageT;
 
-	LoopValidClients(i, true, true)
+	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true))
 	{
 		SendResults(i);
 	}

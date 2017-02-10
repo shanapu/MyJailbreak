@@ -112,7 +112,7 @@ public void OnPluginStart()
 	// Late loading
 	if (g_bIsLateLoad)
 	{
-		LoopClients(i)
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 		{
 			OnClientPutInServer(i);
 		}
@@ -161,7 +161,7 @@ public void warden_OnWardenRemoved(int client)
 
 public Action Timer_DelayCheck(Handle timer) 
 {
-	LoopClients(i)
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 	{
 		HandleTag(i);
 	}

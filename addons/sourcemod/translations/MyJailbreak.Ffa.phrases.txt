@@ -1,177 +1,99 @@
-// Exported from SourceMod Translator
-// Date: 2016-12-11 14:24:15 UTC
-// Language: English (en)
-// 
-// To view other translations for this plugin, please visit:
-// http://translator.mitchdempsey.com/sourcemod_plugins/187
-//
 "Phrases"
 {
 
-	"ffa_tag"
+	"Last Mine"
 	{
-		"en"		"[{green}MyJB.FFA{default}]"
+		"en"		"That was your last mine"
+		"cz"		"Vyházel jsi všechny miny"
 	}
 
-	"ffa_need"
+	"Remaing Mines"
 	{
-		"#format"	"{1:i},{2:N}"
-		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} vote(s) required to play {darkred}FFA."
+		"#format"	"{1:i}"
+		"en"		"You have {1} mines remaining"
+		"cz"		"Počet zbývajících min {1}"
 	}
 
-	"ffa_voting"
+	"Run out of mines"
 	{
-		"en"		"Voting for FFA is {purple}disabled!"
+		"en"		"You have no more mines"
+		"cz"		"Došly ti miny"
 	}
 
-	"ffa_setbywarden"
+
+	"Remaing Rockets"
 	{
-		"en"		"Set FFA by Warden is {purple}disabled!"
+		"#format"	"{1:i}"
+		"en"		"You have {1} rockets remaining"
+		"cz"		"Počet zbývajících raket {1}"
 	}
 
-	"ffa_setbyadmin"
+	"Last Rocket"
 	{
-		"en"		"Set FFA by Admin is {purple}disabled!"
+		"en"		"That was your last rocket"
+		"cz"		"Vystřelil jsi všechny rakety"
 	}
 
-	"ffa_ctwin_nc"
+	"Run out of Rockets"
 	{
-		"en"		"A Guard has survived!"
+		"en"		"You have no more rockets"
+		"cz"		"Nemáš již žádné rakety"
 	}
 
-	"ffa_twin_nc"
+
+	"Remaing Knives"
 	{
-		"en"		"A Prisoner has survived!"
+		"#format"	"{1:i}"
+		"en"		"You have {1} knives remaining"
+		"cz"		"Počet zbývajících nožů {1}"
 	}
 
-	"ffa_minplayer"
+	"Last Knife"
 	{
-		"en"		"For FFA you need at least {purple}one Guard, & one Prisoner!"
+		"en"		"That was your last knife"
+		"cz"		"Vyházel jsi všechny nože"
 	}
 
-	"ffa_end"
+	"Run out of Knives"
 	{
-		"en"		"{purple}FFA{default} has ended!"
+		"en"		"You have no more knives"
+		"cz"		"Nemáš již žádné házecí nože"
 	}
 
-	"ffa_next"
-	{
-		"en"		"The following round will be: {purple}FFA."
-	}
 
-	"ffa_next_nc"
-	{
-		"en"		"The following round will be: FFA."
-	}
-
-	"ffa_rounds"
-	{
-		"#format"	"{1:i},{2:i}"
-		"en"		"Round {purple}{1}{default} of {purple}{2}"
-	}
-
-	"ffa_start"
-	{
-		"en"		"{purple}FFA{default} has begun!"
-	}
-
-	"ffa_start_nc"
-	{
-		"en"		"FFA has begun!"
-	}
-
-	"ffa_voted"
-	{
-		"en"		"You have already voted for {purple}FFA!"
-	}
-
-	"ffa_progress"
+	"Your Class"
 	{
 		"#format"	"{1:s}"
-		"en"		"The event {darkred}{1} {default}is {purple}already in progress!"
+		"en"		"Your class: {1}"
+		"cz"		"Nyní jsi {1}"
 	}
 
-	"ffa_disabled"
+	"Your Class next round"
 	{
-		"en"		"FFA is currently {purple}disabled!"
+		"#format"	"{1:s}"
+		"en"		"Your class for next round: {1}"
+		"cz"		"Tvoje class se změní na začátku příštího kola na {1}"
 	}
 
-	"ffa_damage_nc"
+	"You selected Class"
 	{
-		"#format"	"{1:i}"
-		"en"		"{1} seconds until damage enabled"
+		"#format"	"{1:s}"
+		"en"		"You selected class: {1}"
+		"cz"		"Změnil sis class na {1}"
 	}
 
-	"ffa_damage_nc"
+	"Dropped item"
 	{
-		"#format"	"{1:i}"
-		"en"		"{1} seconds until damage enabled"
+		"#format"	"{1:s}"
+		"en"		"You dropped item: {1}"
+		"cz"		"Zahodil jsem item  {1}"
 	}
 
-	"ffa_info_title"
+	"No items"
 	{
-		"en"		"Free for All Deathmatch is now Activated!"
+		"en"		"You have no item"
+		"cz"		"Nemáš žádný item"
 	}
 
-	"ffa_info_line1"
-	{
-		"en"		"Don't be suprised if you've spawned in the Armory!"
-	}
-
-	"ffa_info_line2"
-	{
-		"en"		"Free for All - Player VS Player - The last man standing wins!"
-	}
-
-	"ffa_info_line3"
-	{
-		"en"		"Run away during the 'NoDamage' phase!"
-	}
-
-	"ffa_info_line4"
-	{
-		"en"		"All usual Jailbreak Rules do not apply during this round!"
-	}
-
-	"ffa_info_line5"
-	{
-		"en"		"Last Request is disabled during this round!"
-	}
-
-	"ffa_info_line6"
-	{
-		"en"		"Everyone is allowed to go anywhere within the map!"
-	}
-
-	"ffa_info_line7"
-	{
-		"en"		"Don't be an Asshole!"
-	}
-
-	"RoundOne"
-	{
-		"en"		"Round 1 of 3"
-	}
-
-	"RoundTwo"
-	{
-		"en"		"Round 2 of 3"
-	}
-
-	"RoundThree"
-	{
-		"en"		"This is the last FFA round!"
-	}
-
-	"ffa_wait"
-	{
-		"#format"	"{1:i}"
-		"en"		"You must wait {purple}{1}{default} more rounds for an Event Day!"
-	}
-
-	"ffa_name"
-	{
-		"en"		"Free for All"
-	}
 
 }

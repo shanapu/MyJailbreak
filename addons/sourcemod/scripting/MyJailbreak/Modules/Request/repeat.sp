@@ -114,9 +114,9 @@ public Action Command_Repeat(int client, int args)
 						g_hTimerRepeat[client] = CreateTimer(10.0, Timer_RepeatEnd, client);
 						if (warden_exist())
 						{
-							LoopClients(i) if (warden_iswarden(i) || warden_deputy_isdeputy(i)) RepeatMenu(i);
+							for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (warden_iswarden(i) || warden_deputy_isdeputy(i)) RepeatMenu(i);
 						}
-						else LoopValidClients(i, false, false) if (GetClientTeam(client) == CS_TEAM_CT) RepeatMenu(i);
+						else for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, false)) if (GetClientTeam(client) == CS_TEAM_CT) RepeatMenu(i);
 						
 						if (gc_bSounds.BoolValue)EmitSoundToAllAny(g_sSoundRepeatPath);
 					}
@@ -137,7 +137,7 @@ public Action Command_Repeat(int client, int args)
 
 public void Repeat_Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
-	LoopClients(i)
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 	{
 		delete g_hTimerRepeat[i];
 		
@@ -205,7 +205,7 @@ void RepeatMenu(int client)
 	InfoPanel.DrawText("-----------------------------------");
 	InfoPanel.DrawText("                                   ");
 
-	LoopValidClients(i, false, true)
+	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, true))
 	{
 		if (g_bRepeated[i])
 		{

@@ -502,7 +502,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 
 	CreateTimer (gc_iRespawnTime.FloatValue, Timer_StopRespawn);
 
-	LoopClients(i)
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 	{
 		CreateInfoPanel(i);
 
@@ -569,7 +569,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 
 	if (g_bStartFreeday || g_bRepeatFirstFreeday)
 	{
-		LoopClients(i)
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 		{
 			CreateInfoPanel(i);
 		}

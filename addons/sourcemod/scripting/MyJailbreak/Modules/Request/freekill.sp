@@ -139,7 +139,7 @@ public Action Command_Freekill(int client, int args)
 								CPrintToChatAll("%t %t", "request_tag", "request_freekill", client, attacker, a);
 								if (gp_bMyJailBreak) if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sFreeKillLogFile, "Player %L claiming %L freekilled him. Reported to admin %L", client, attacker, a);
 							}
-							else LoopValidClients(i, false, true) if (warden_iswarden(i) && gc_bReportWarden.BoolValue)
+							else for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, true)) if (warden_iswarden(i) && gc_bReportWarden.BoolValue)
 							{
 								g_iFreeKillCounter[client]++;
 								FreeKillAcceptMenu(i);
@@ -165,7 +165,7 @@ public Action Command_Freekill(int client, int args)
 
 public void Freekill_Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
-	LoopClients(i)
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 	{
 		g_iFreeKillCounter[i] = 0;
 		g_bFreeKilled[i] = false;
@@ -264,14 +264,14 @@ public int FreeKillAcceptHandler(Menu menu, MenuAction action, int client, int P
 			Format(info, sizeof(info), "%T", "request_swapfreekiller", client);
 			if (gc_bFreeKillSwap.BoolValue) menu1.AddItem("4", info);
 			menu1.Display(client, MENU_TIME_FOREVER);
-			LoopClients(i) if (g_bFreeKilled[i]) CPrintToChatAll("%t %t", "warden_tag", "request_accepted", i, client);
+			for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (g_bFreeKilled[i]) CPrintToChatAll("%t %t", "warden_tag", "request_accepted", i, client);
 		}
 		if (choice == 0) // no
 		{
 			g_bIsRequest = false;
 			g_hTimerRequest = null;
 			
-			LoopValidClients(i, true, true) if (g_bFreeKilled[i])
+			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true)) if (g_bFreeKilled[i])
 			{
 				CPrintToChatAll("%t %t", "warden_tag", "request_noaccepted", i, client);
 				g_bFreeKilled[i] = false;
@@ -308,7 +308,7 @@ public int FreeKillHandler(Menu menu, MenuAction action, int client, int Positio
 		}
 		if (choice == 2) // kill freekiller
 		{
-			LoopValidClients(i, true, true) if (g_bFreeKilled[i])
+			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true)) if (g_bFreeKilled[i])
 			{
 				g_bFreeKilled[i] = false;
 
@@ -322,7 +322,7 @@ public int FreeKillHandler(Menu menu, MenuAction action, int client, int Positio
 		}
 		if (choice == 3) // freeday event for all
 		{
-			LoopValidClients(i, true, true) if (g_bFreeKilled[i])
+			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true)) if (g_bFreeKilled[i])
 			{
 				g_bFreeKilled[i] = false;
 				if (gp_bMyJailBreak) if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sFreeKillLogFile, "Warden/Admin %L accept freekill request of %L give a freeday", client, i);
@@ -331,7 +331,7 @@ public int FreeKillHandler(Menu menu, MenuAction action, int client, int Positio
 		}
 		if (choice == 4) // swap freekiller
 		{
-			LoopValidClients(i, true, true) if (g_bFreeKilled[i])
+			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true)) if (g_bFreeKilled[i])
 			{
 				int attacker = GetClientOfUserId(g_iKilledBy[i]);
 
@@ -344,7 +344,7 @@ public int FreeKillHandler(Menu menu, MenuAction action, int client, int Positio
 		}
 		if (choice == 5) // freeday to victim
 		{
-			LoopValidClients(i, true, true) if (g_bFreeKilled[i])
+			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true)) if (g_bFreeKilled[i])
 			{
 			// 	g_bHaveFreeDay[i] = true;
 				warden_freeday_set(i);
@@ -374,7 +374,7 @@ public int RespawnHandler(Menu menu, MenuAction action, int client, int Position
 
 		if (choice == 1) // respawnbody
 		{
-			LoopValidClients(i, true, true) if (g_bFreeKilled[i])
+			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true)) if (g_bFreeKilled[i])
 			{
 				g_bFreeKilled[i] = false;
 				CS_RespawnPlayer(i);
@@ -388,7 +388,7 @@ public int RespawnHandler(Menu menu, MenuAction action, int client, int Position
 		}
 		if (choice == 2) // respawncell
 		{
-			LoopValidClients(i, true, true) if (g_bFreeKilled[i])
+			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true)) if (g_bFreeKilled[i])
 			{
 				g_bFreeKilled[i] = false;
 				
@@ -402,7 +402,7 @@ public int RespawnHandler(Menu menu, MenuAction action, int client, int Position
 		}
 		if (choice == 3) // respawnwarden
 		{
-			LoopValidClients(i, true, true) if (g_bFreeKilled[i] && warden_exist())
+			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true)) if (g_bFreeKilled[i] && warden_exist())
 			{
 				g_bFreeKilled[i] = false;
 				CS_RespawnPlayer(i);
@@ -440,7 +440,7 @@ int GetRandomAdmin()
 	int[] admins = new int[MaxClients];
 	int adminsCount;
 
-	LoopClients(i)
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 	{
 		if (CheckVipFlag(i, g_sAdminFlag))
 		{

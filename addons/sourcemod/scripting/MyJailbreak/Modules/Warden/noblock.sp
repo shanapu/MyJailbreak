@@ -87,7 +87,7 @@ public Action Command_ToggleNoBlock(int client, int args)
 			{
 				g_bNoBlock = true;
 				CPrintToChatAll("%t %t", "warden_tag", "warden_noblockon");
-				LoopValidClients(i, true, true)
+				for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true))
 				{
 					SetEntData(i, g_iCollision_Offset, 2, 4, true);
 				}
@@ -97,7 +97,7 @@ public Action Command_ToggleNoBlock(int client, int args)
 			{
 				g_bNoBlock = false;
 				CPrintToChatAll("%t %t", "warden_tag", "warden_noblockoff");
-				LoopValidClients(i, true, true)
+				for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true))
 				{
 					SetEntData(i, g_iCollision_Offset, 5, 4, true);
 				}

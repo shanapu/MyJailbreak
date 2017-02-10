@@ -107,7 +107,7 @@ public Action Command_ExtendRoundTime(int client, int args)
 
 public void ExtendTime_Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
-	LoopClients(i) g_iExtendNumber[i] = gc_iExtendLimit.IntValue;
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) g_iExtendNumber[i] = gc_iExtendLimit.IntValue;
 
 	g_iMPRoundTime = FindConVar("mp_roundtime");
 	g_iRoundTime = g_iMPRoundTime.IntValue * 60;

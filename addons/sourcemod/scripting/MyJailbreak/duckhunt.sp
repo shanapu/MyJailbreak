@@ -201,7 +201,7 @@ public void OnPluginStart()
 	// Late loading
 	if (g_bIsLateLoad)
 	{
-		LoopClients(i)
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 		{
 			OnClientPutInServer(i);
 		}
@@ -609,38 +609,38 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 
 	if (g_iRound > 0)
 	{
-		LoopClients(client)
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 		{
-			CreateInfoPanel(client);
+			CreateInfoPanel(i);
 			
-			StripAllPlayerWeapons(client);
-			SetEntData(client, g_iCollision_Offset, 2, 4, true);
-			SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
+			StripAllPlayerWeapons(i);
+			SetEntData(i, g_iCollision_Offset, 2, 4, true);
+			SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
 			
-			if (GetClientTeam(client) == CS_TEAM_CT && IsValidClient(client, false, false))
+			if (GetClientTeam(i) == CS_TEAM_CT && IsValidClient(i, false, false))
 			{
 				int HunterHP = gc_iHunterHP.IntValue;
 				int difference = (GetAliveTeamCount(CS_TEAM_T) - GetAliveTeamCount(CS_TEAM_CT));
 				
 				if (difference > 0) HunterHP = HunterHP + (gc_iHunterHPincrease.IntValue * difference);
 				
-				SetEntityHealth(client, HunterHP);
-				GivePlayerItem(client, "weapon_nova");
+				SetEntityHealth(i, HunterHP);
+				GivePlayerItem(i, "weapon_nova");
 			}
-			if (GetClientTeam(client) == CS_TEAM_T && IsValidClient(client, false, false))
+			if (GetClientTeam(i) == CS_TEAM_T && IsValidClient(i, false, false))
 			{
 				if (gc_bFlyMode.BoolValue)
 				{
-					SetEntityMoveType(client, MOVETYPE_FLY);
+					SetEntityMoveType(i, MOVETYPE_FLY);
 				}
 				else
 				{
-					SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.2);
-					SetEntityGravity(client, 0.3);
+					SetEntPropFloat(i, Prop_Data, "m_flLaggedMovementValue", 1.2);
+					SetEntityGravity(i, 0.3);
 				}
-				SetEntityHealth(client, gc_iChickenHP.IntValue);
-				GivePlayerItem(client, "weapon_hegrenade");
-				ClientCommand(client, "thirdperson");
+				SetEntityHealth(i, gc_iChickenHP.IntValue);
+				GivePlayerItem(i, "weapon_hegrenade");
+				ClientCommand(i, "thirdperson");
 			}
 		}
 
@@ -672,7 +672,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
 	if (g_bIsDuckHunt)
 	{
-		LoopValidClients(i, false, true)
+		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, true))
 		{
 			SetEntData(i, g_iCollision_Offset, 0, 4, true);
 
@@ -731,7 +731,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 
 	if (g_bStartDuckHunt)
 	{
-		LoopClients(i)
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 		{
 			CreateInfoPanel(i);
 		}
@@ -832,7 +832,7 @@ public void OnMapEnd()
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0';
 
-	LoopClients(i)
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 	{
 		FirstPerson(i);
 		SetEntityMoveType(i, MOVETYPE_WALK);
@@ -844,26 +844,26 @@ public void OnAvailableLR(int Announced)
 {
 	if (g_bIsDuckHunt && gc_bAllowLR.BoolValue && (g_iTsLR > g_iTerrorForLR.IntValue))
 	{
-		LoopClients(client)
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 		{
-			StripAllPlayerWeapons(client);
+			StripAllPlayerWeapons(i);
 
-			if (IsValidClient(client, false, true))
+			if (IsValidClient(i, false, true))
 			{
-				SetEntData(client, g_iCollision_Offset, 0, 4, true);
-				SetEntityGravity(client, 1.0);
-				FirstPerson(client);
+				SetEntData(i, g_iCollision_Offset, 0, 4, true);
+				SetEntityGravity(i, 1.0);
+				FirstPerson(i);
 
-				if (GetClientTeam(client) == CS_TEAM_CT)
+				if (GetClientTeam(i) == CS_TEAM_CT)
 				{
-					FakeClientCommand(client, "sm_weapons");
-					SetEntityModel(client, g_sModelPathCTPrevious[client]);
+					FakeClientCommand(i, "sm_weapons");
+					SetEntityModel(i, g_sModelPathCTPrevious[i]);
 				}
 
-				if (GetClientTeam(client) == CS_TEAM_T)
-					SetEntityModel(client, g_sModelPathTPrevious[client]);
+				if (GetClientTeam(i) == CS_TEAM_T)
+					SetEntityModel(i, g_sModelPathTPrevious[i]);
 			}
-			GivePlayerItem(client, "weapon_knife");
+			GivePlayerItem(i, "weapon_knife");
 		}
 
 		delete g_hTimerBeacon;
@@ -1043,7 +1043,7 @@ public Action Timer_StartEvent(Handle timer)
 
 	if (g_iRound > 0)
 	{
-		LoopClients(i) if (IsPlayerAlive(i))
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (IsPlayerAlive(i))
 		{
 			if (GetClientTeam(i) == CS_TEAM_T)
 			{
@@ -1082,18 +1082,18 @@ public Action Timer_StartEvent(Handle timer)
 // Delay Set model for sm_skinchooser
 public Action Timer_SetModel(Handle timer)
 {
-	LoopValidClients(client, true, false)
+	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
 	{
-		if (GetClientTeam(client) == CS_TEAM_CT)
+		if (GetClientTeam(i) == CS_TEAM_CT)
 		{
-			GetEntPropString(client, Prop_Data, "m_ModelName", g_sModelPathCTPrevious[client], sizeof(g_sModelPathCTPrevious[]));
-			SetEntityModel(client, g_sHunterModel);
+			GetEntPropString(i, Prop_Data, "m_ModelName", g_sModelPathCTPrevious[i], sizeof(g_sModelPathCTPrevious[]));
+			SetEntityModel(i, g_sHunterModel);
 		}
 
-		if (GetClientTeam(client) == CS_TEAM_T)
+		if (GetClientTeam(i) == CS_TEAM_T)
 		{
-			GetEntPropString(client, Prop_Data, "m_ModelName", g_sModelPathTPrevious[client], sizeof(g_sModelPathTPrevious[]));
-			SetEntityModel(client, "models/chicken/chicken.mdl");
+			GetEntPropString(i, Prop_Data, "m_ModelName", g_sModelPathTPrevious[i], sizeof(g_sModelPathTPrevious[]));
+			SetEntityModel(i, "models/chicken/chicken.mdl");
 		}
 	}
 }
@@ -1101,7 +1101,7 @@ public Action Timer_SetModel(Handle timer)
 // Beacon Timer
 public Action Timer_BeaconOn(Handle timer)
 {
-	LoopValidClients(i, true, false) 
+	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false)) 
 	{
 		MyJailbreak_BeaconOn(i, 2.0);
 	}

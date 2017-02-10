@@ -224,7 +224,7 @@ public void OnPluginStart()
 	// Late loading
 	if (g_bIsLateLoad)
 	{
-		LoopClients(i)
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 		{
 			OnClientPutInServer(i);
 		}
@@ -620,7 +620,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 	if (!gc_bSpawnCell.BoolValue || !gp_bSmartJailDoors || (gc_bSpawnCell.BoolValue && (SJD_IsCurrentMapConfigured() != true))) // spawn Terrors to CT Spawn 
 	{
 		int RandomCT = 0;
-		LoopClients(i)
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 		{
 			if (GetClientTeam(i) == CS_TEAM_CT)
 			{
@@ -631,7 +631,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 
 		if (RandomCT)
 		{
-			LoopClients(i)
+			for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 			{
 				GetClientAbsOrigin(RandomCT, g_fPos);
 				
@@ -644,7 +644,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 
 	if (g_iRound > 0)
 	{
-		LoopClients(i)
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 		{
 			StripAllPlayerWeapons(i);
 
@@ -670,7 +670,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
 	if (g_bIsTorch)
 	{
-		LoopValidClients(i, true, true)
+		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true))
 		{
 			SetEntData(i, g_iCollision_Offset, 0, 4, true);
 
@@ -724,7 +724,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 
 	if (g_bStartTorch)
 	{
-		LoopClients(i)
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 		{
 			CreateInfoPanel(i);
 		}
@@ -904,7 +904,7 @@ void TorchEm(int client)
 // remove client as torch
 void ExtinguishEm(int client)
 {
-	LoopClients(i)
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 	{
 		g_bImmuneTorch[i] = false;
 	}
@@ -936,7 +936,7 @@ void CheckStatus()
 {
 	int number = 0;
 
-	LoopClients(i) if (IsPlayerAlive(i) && g_bOnTorch[i])
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (IsPlayerAlive(i) && g_bOnTorch[i])
 		number++;
 
 	if (number == 0)
@@ -993,14 +993,14 @@ public Action OnSetTransmit_Wallhack(int iSkin, int client)
 	if (!IsPlayerAlive(client) || GetClientTeam(client) != CS_TEAM_CT)
 		return Plugin_Handled;
 
-	LoopClients(target)
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 	{
-		if (!CPS_HasSkin(target) || !g_bOnTorch[client])
+		if (!CPS_HasSkin(i) || !g_bOnTorch[client])
 		{
 			continue;
 		}
 
-		if (EntRefToEntIndex(CPS_GetSkin(target)) != iSkin)
+		if (EntRefToEntIndex(CPS_GetSkin(i)) != iSkin)
 		{
 			continue;
 		}
@@ -1104,7 +1104,7 @@ public Action Timer_StartEvent(Handle timer)
 		}
 	}
 
-	LoopClients(i)
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 	{
 		if (gp_bCustomPlayerSkins && gc_bWallhack.BoolValue)
 		{
@@ -1175,7 +1175,7 @@ public void OnGameFrame()
 		return;
 	}
 
-	LoopClients(i)
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 	{
 		if (GetClientButtons(i) & IN_USE)
 		{

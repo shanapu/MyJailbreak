@@ -605,7 +605,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 	if (!gc_bSpawnCell.BoolValue || !gp_bSmartJailDoors || (gc_bSpawnCell.BoolValue && (SJD_IsCurrentMapConfigured() != true))) // spawn Terrors to CT Spawn 
 	{
 		int RandomCT = 0;
-		LoopClients(i)
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 		{
 			if (GetClientTeam(i) == CS_TEAM_CT)
 			{
@@ -616,7 +616,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 
 		if (RandomCT)
 		{
-			LoopClients(i)
+			for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 			{
 				GetClientAbsOrigin(RandomCT, g_fPos);
 				
@@ -629,16 +629,16 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 
 	if (g_iRound > 0)
 	{
-		LoopClients(client)
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 		{
-			CreateInfoPanel(client);
-			SetEntData(client, g_iCollision_Offset, 2, 4, true);
-			SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
+			CreateInfoPanel(i);
+			SetEntData(i, g_iCollision_Offset, 2, 4, true);
+			SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
 
-			if (GetClientTeam(client) == CS_TEAM_CT)
+			if (GetClientTeam(i) == CS_TEAM_CT)
 			{
-				SetEntityMoveType(client, MOVETYPE_NONE);
-				SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 0.0);
+				SetEntityMoveType(i, MOVETYPE_NONE);
+				SetEntPropFloat(i, Prop_Data, "m_flLaggedMovementValue", 0.0);
 
 				int zombieHP = gc_iZombieHP.IntValue;
 				int difference = (GetAliveTeamCount(CS_TEAM_T) - GetAliveTeamCount(CS_TEAM_CT));
@@ -647,15 +647,15 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 					zombieHP = zombieHP + (gc_iZombieHPincrease.IntValue * difference);
 				}
 
-				SetEntityHealth(client, zombieHP);
+				SetEntityHealth(i, zombieHP);
 
-				StripAllPlayerWeapons(client);
-				GivePlayerItem(client, "weapon_knife");
+				StripAllPlayerWeapons(i);
+				GivePlayerItem(i, "weapon_knife");
 			}
 
-			if (GetClientTeam(client) == CS_TEAM_T)
+			if (GetClientTeam(i) == CS_TEAM_T)
 			{
-				SetEntityHealth(client, gc_iHumanHP.IntValue);
+				SetEntityHealth(i, gc_iHumanHP.IntValue);
 			}
 		}
 
@@ -688,13 +688,13 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
 	if (g_bIsZombie)
 	{
-		LoopValidClients(client, false, true)
+		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, true))
 		{
-			SetEntData(client, g_iCollision_Offset, 0, 4, true);
-			SetEntProp(client, Prop_Send, "m_bNightVisionOn", 0);
+			SetEntData(i, g_iCollision_Offset, 0, 4, true);
+			SetEntProp(i, Prop_Send, "m_bNightVisionOn", 0);
 			if (gp_bCustomPlayerSkins && gc_bGlow.BoolValue)
 			{
-				UnhookGlow(client);
+				UnhookGlow(i);
 			}
 		}
 
@@ -750,7 +750,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 
 	if (g_bStartZombie)
 	{
-		LoopClients(i)
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 		{
 			CreateInfoPanel(i);
 		}
@@ -846,28 +846,28 @@ public void OnAvailableLR(int Announced)
 {
 	if (g_bIsZombie && gc_bAllowLR.BoolValue && (g_iTsLR > g_iTerrorForLR.IntValue))
 	{
-		LoopValidClients(client, false, true)
+		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, true))
 		{
-			SetEntData(client, g_iCollision_Offset, 0, 4, true);
+			SetEntData(i, g_iCollision_Offset, 0, 4, true);
 
 			if (gp_bCustomPlayerSkins && gc_bGlow.BoolValue)
 			{
-				UnhookGlow(client);
+				UnhookGlow(i);
 			}
 
-			SetEntProp(client, Prop_Send, "m_bNightVisionOn", 0);
+			SetEntProp(i, Prop_Send, "m_bNightVisionOn", 0);
 
-			SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
+			SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
 
-			StripAllPlayerWeapons(client);
+			StripAllPlayerWeapons(i);
 
-			if (GetClientTeam(client) == CS_TEAM_CT)
+			if (GetClientTeam(i) == CS_TEAM_CT)
 			{
-				FakeClientCommand(client, "sm_weapons");
-				SetEntityModel(client, g_sModelPathPrevious[client]);
-				SetEntityHealth(client, 100);
+				FakeClientCommand(i, "sm_weapons");
+				SetEntityModel(i, g_sModelPathPrevious[i]);
+				SetEntityHealth(i, 100);
 			}
-			GivePlayerItem(client, "weapon_knife");
+			GivePlayerItem(i, "weapon_knife");
 		}
 
 		delete g_hTimerFreeze;
@@ -1009,14 +1009,14 @@ public Action OnSetTransmit_GlowSkin(int iSkin, int client)
 	if (!IsPlayerAlive(client) || GetClientTeam(client) != CS_TEAM_CT)
 		return Plugin_Handled;
 
-	LoopClients(target)
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 	{
-		if (!CPS_HasSkin(target))
+		if (!CPS_HasSkin(i))
 		{
 			continue;
 		}
 
-		if (EntRefToEntIndex(CPS_GetSkin(target)) != iSkin)
+		if (EntRefToEntIndex(CPS_GetSkin(i)) != iSkin)
 		{
 			continue;
 		}
@@ -1116,7 +1116,7 @@ public Action Timer_StartEvent(Handle timer)
 	if (g_iFreezeTime > 1)
 	{
 		g_iFreezeTime--;
-		LoopClients(i) if (IsPlayerAlive(i))
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (IsPlayerAlive(i))
 		{
 			if (GetClientTeam(i) == CS_TEAM_CT)
 			{
@@ -1135,29 +1135,29 @@ public Action Timer_StartEvent(Handle timer)
 
 	if (g_iRound > 0)
 	{
-		LoopClients(client) if (IsPlayerAlive(client))
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (IsPlayerAlive(i))
 		{
-			if (GetClientTeam(client) == CS_TEAM_CT)
+			if (GetClientTeam(i) == CS_TEAM_CT)
 			{
-				SetEntityMoveType(client, MOVETYPE_WALK);
-				SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.4);
+				SetEntityMoveType(i, MOVETYPE_WALK);
+				SetEntPropFloat(i, Prop_Data, "m_flLaggedMovementValue", 1.4);
 
 				if (gc_bVision.BoolValue)
 				{
-					SetEntProp(client, Prop_Send, "m_bNightVisionOn", 1);
+					SetEntProp(i, Prop_Send, "m_bNightVisionOn", 1);
 				}
 			}
 
-			if (gp_bCustomPlayerSkins && gc_bGlow.BoolValue && (IsValidClient(client, true, true)) && (GetClientTeam(client) == CS_TEAM_T))
+			if (gp_bCustomPlayerSkins && gc_bGlow.BoolValue && (IsValidClient(i, true, true)) && (GetClientTeam(i) == CS_TEAM_T))
 			{
-				SetupGlowSkin(client);
+				SetupGlowSkin(i);
 			}
 
-			SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
+			SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
 
 			if (gc_bOverlays.BoolValue)
 			{
-				ShowOverlay(client, g_sOverlayStartPath, 2.0);
+				ShowOverlay(i, g_sOverlayStartPath, 2.0);
 			}
 		}
 
@@ -1188,7 +1188,7 @@ public Action Timer_StartEvent(Handle timer)
 // Delay Set model for sm_skinchooser
 public Action Timer_SetModel(Handle timer)
 {
-	LoopValidClients(i, true, false)
+	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
 	{
 		if (GetClientTeam(i) == CS_TEAM_CT)
 		{
@@ -1200,7 +1200,7 @@ public Action Timer_SetModel(Handle timer)
 
 public Action Timer_BeaconOn(Handle timer)
 {
-	LoopValidClients(i, true, false)
+	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
 	{
 		MyJailbreak_BeaconOn(i, 2.0);
 	}
@@ -1210,7 +1210,7 @@ public Action Timer_BeaconOn(Handle timer)
 
 public Action Timer_ReGenHealth(Handle timer)
 {
-	LoopValidClients(i, true, false)
+	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
 	{
 		if (GetClientTeam(i) == CS_TEAM_CT)
 		{

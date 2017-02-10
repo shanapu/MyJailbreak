@@ -580,7 +580,7 @@ public Action Event_RoundEnd_Post(Event event, const char[] szName, bool bDontBr
 {
 	if (g_bRatioEnable) FixTeamRatio();
 	else if (gc_bToggleAnnounce.BoolValue) CPrintToChatAll("%t %t", "ratio_tag", "ratio_disabled");
-	LoopClients(i) g_bQueueCooldown[i] = false;
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) g_bQueueCooldown[i] = false;
 }
 
 public Action Event_OnFullConnect(Event event, const char[] name, bool dontBroadcast)
@@ -1048,7 +1048,7 @@ bool ShouldMoveGuardToPrisoner()
 {
 	int iNumGuards, iNumPrisoners;
 
-	LoopValidClients(i, true, true)
+	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true))
 	{
 		if (GetClientPendingTeam(i) == CS_TEAM_T)
 			iNumPrisoners++;
@@ -1069,7 +1069,7 @@ bool ShouldMovePrisonerToGuard()
 {
 	int iNumGuards, iNumPrisoners;
 
-	LoopValidClients(i, true, true)
+	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true))
 	{
 		if (GetClientPendingTeam(i) == CS_TEAM_T)
 			iNumPrisoners++;
@@ -1174,7 +1174,7 @@ int GetRandomClientFromTeam(int iTeam)
 	int iNumFound;
 	int clients[MAXPLAYERS];
 
-	LoopValidClients(i, true, true)
+	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true))
 	{
 		if (GetClientPendingTeam(i) != iTeam)
 			continue;
@@ -1203,7 +1203,7 @@ bool CanClientJoinGuards(int client)
 {
 	int iNumGuards, iNumPrisoners;
 
-	LoopValidClients(i, true, true)
+	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true))
 	{
 		if (GetClientPendingTeam(i) == CS_TEAM_T)
 			iNumPrisoners++;

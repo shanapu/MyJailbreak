@@ -125,7 +125,7 @@ public Action Command_Capitulation(int client, int args)
 							float DoubleTime = (gc_fRebelTime.FloatValue * 2);
 							g_hTimerRebel[client] = CreateTimer(DoubleTime, Timer_RebelNoAction, client);
 						// 	StripAllPlayerWeapons(client);
-							LoopClients(i) Menu_CapitulationMenu(i);
+							for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) Menu_CapitulationMenu(i);
 							if (gc_bSounds.BoolValue)EmitSoundToAllAny(g_sSoundCapitulationPath);
 						}
 						else CReplyToCommand(client, "%t %t", "request_tag", "request_processing");
@@ -154,7 +154,7 @@ public Action Command_Capitulation(int client, int args)
 
 public void Capitulation_Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
-	LoopClients(i)
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 	{
 		delete g_hTimerCapitulation[i];
 		delete g_hTimerRebel[i];
@@ -243,7 +243,7 @@ public Action Capitulation_OnTakedamage(int victim, int &attacker, int &inflicto
 
 public void Capitulation_OnAvailableLR(int Announced)
 {
-	LoopClients(i)
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 	{
 		g_bCapitulated[i] = false;
 		g_bHasCapitulated[i] = false;
@@ -279,7 +279,7 @@ public int Handler_CapitulationMenu(Menu menu, MenuAction action, int client, in
 		int choice = StringToInt(Item);
 		if (choice == 1)  // yes
 		{
-			LoopClients(i) if (g_bCapitulated[i])
+			for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (g_bCapitulated[i])
 			{
 				g_bIsRequest = false;
 				if (g_hTimerRequest != null)
@@ -299,7 +299,7 @@ public int Handler_CapitulationMenu(Menu menu, MenuAction action, int client, in
 		}
 		if (choice == 0)  // no
 		{
-			LoopClients(i) if (g_bCapitulated[i])
+			for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (g_bCapitulated[i])
 			{
 				g_bIsRequest = false;
 				if (g_hTimerRequest != null)

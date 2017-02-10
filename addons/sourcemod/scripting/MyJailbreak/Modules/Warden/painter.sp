@@ -161,7 +161,7 @@ public void Painter_Event_PlayerTeamDeath(Event event, const char[] name, bool d
 public void Painter_Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 {
 	g_bPainterT = false;
-	LoopClients(i) if (g_bPainter[i]) g_bPainter[i] = false;
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (g_bPainter[i]) g_bPainter[i] = false;
 }
 
 /******************************************************************************
@@ -219,14 +219,14 @@ public void Painter_OnMapStart()
 	CreateTimer(0.1, Print_Painter, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 	
 	g_bPainterT = false;
-	LoopClients(i) g_bPainter[i] = false;
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) g_bPainter[i] = false;
 }
 
 public void Painter_OnMapEnd()
 {
 	g_bPainterT = false;
 
-	LoopClients(i)
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 	{
 		g_fLastPainter[i][0] = 0.0;
 		g_fLastPainter[i][1] = 0.0;
@@ -268,14 +268,14 @@ public Action TogglePainterT(int client, int args)
 				g_bPainterT = true;
 				CPrintToChatAll("%t %t", "warden_tag", "warden_tpainteron");
 				
-				LoopValidClients(i, false, true)
+				for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, true))
 				{
 					if (GetClientTeam(i) == CS_TEAM_T) Command_PainterMenu(i, 0);
 				}
 			}
 			else
 			{
-				LoopValidClients(i, false, true)
+				for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, true))
 				{
 					if (GetClientTeam(i) == CS_TEAM_T)
 					{

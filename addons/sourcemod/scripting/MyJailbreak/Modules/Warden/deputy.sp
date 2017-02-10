@@ -484,7 +484,7 @@ void Menu_SetDeputy(int client)
 	Format(info1, sizeof(info1), "%T", "warden_choose", client);
 	menu.SetTitle(info1);
 
-	LoopValidClients(i, true, false)
+	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
 	{
 		if (GetClientTeam(i) == CS_TEAM_CT && !IsClientWarden(i))
 		{
@@ -509,7 +509,7 @@ public int Handler_SetDeputy(Menu menu, MenuAction action, int client, int Posit
 		char Item[11];
 		menu.GetItem(Position, Item, sizeof(Item));
 
-		LoopValidClients(i, true, false)
+		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
 		{
 			if (GetClientTeam(i) == CS_TEAM_CT && !IsClientDeputy(i))
 			{

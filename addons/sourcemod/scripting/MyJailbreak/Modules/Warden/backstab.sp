@@ -78,7 +78,7 @@ public void BackStab_OnSettingChanged(Handle convar, const char[] oldValue, cons
 
 public void BackStab_Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
-	LoopClients(i) g_iBackstabNumber[i] = gc_iBackstabNumber.IntValue;
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) g_iBackstabNumber[i] = gc_iBackstabNumber.IntValue;
 }
 
 public Action BackStab_OnTakedamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &weapon, float damageForce[3], float damagePosition[3], int damagecustom)

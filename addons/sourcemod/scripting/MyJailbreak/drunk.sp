@@ -548,7 +548,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 	if (!gc_bSpawnCell.BoolValue || !gp_bSmartJailDoors || (gc_bSpawnCell.BoolValue && (SJD_IsCurrentMapConfigured() != true))) // spawn Terrors to CT Spawn 
 	{
 		int RandomCT = 0;
-		LoopClients(i)
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 		{
 			if (GetClientTeam(i) == CS_TEAM_CT)
 			{
@@ -559,7 +559,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 
 		if (RandomCT)
 		{
-			LoopClients(i)
+			for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 			{
 				GetClientAbsOrigin(RandomCT, g_fPos);
 				
@@ -572,7 +572,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 
 	if (g_iRound > 0)
 	{
-		LoopClients(i)
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 		{
 			// Give Players Start Equiptment & parameters
 			StripAllPlayerWeapons(i);
@@ -617,7 +617,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
 	if (g_bIsDrunk) // if event was running this round
 	{
-		LoopClients(i)
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 		{
 			SetEntData(i, g_iCollision_Offset, 0, 4, true); // disbale noblock
 			KillDrunk(i);
@@ -676,7 +676,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 
 	if (g_bStartDrunk)
 	{
-		LoopClients(i)
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 		{
 			CreateInfoPanel(i);
 		}
@@ -738,7 +738,7 @@ public void OnAvailableLR(int Announced)
 {
 	if (g_bIsDrunk && gc_bAllowLR.BoolValue && (g_iTsLR > g_iTerrorForLR.IntValue))
 	{
-		LoopClients(i)
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 		{
 			SetEntData(i, g_iCollision_Offset, 0, 4, true); // disbale noblock
 
@@ -928,7 +928,7 @@ public Action Timer_StartEvent(Handle timer)
 
 	if (g_iRound > 0)
 	{
-		LoopClients(i)
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 		{
 			if (IsPlayerAlive(i))
 			{
@@ -957,7 +957,7 @@ public Action Timer_StartEvent(Handle timer)
 
 public Action Timer_BeaconOn(Handle timer)
 {
-	LoopValidClients(i, true, false)
+	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
 	{
 		float random = GetRandomFloat(0.5, 4.0);
 		MyJailbreak_BeaconOn(i, random);

@@ -20,11 +20,11 @@ stock bool IsValidClient(int client, bool bAllowBots = false, bool bAllowDead = 
 	return true;
 }
 
-
+/*
 // Easy clean client loops
 #define LoopClients(%1) for (int %1 = 1; %1 <= MaxClients; %1++) if (IsClientInGame(%1))
 #define LoopValidClients(%1,%2,%3) for (int %1 = 1; %1 <= MaxClients; %1++) if (IsValidClient(%1,%2,%3))
-
+*/
 
 // Easy precache & prepare download for decals
 stock void PrecacheDecalAnyDownload(char[] sDecal)
@@ -102,12 +102,12 @@ stock void ShowOverlay(int client, char[] path, float lifetime)
 // Easy show overlay to all clients with lifetime | 0.0 = no auto remove
 stock void ShowOverlayAll(char[] path, float deletetime) 
 {
-	LoopValidClients(client, false, true)
+	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, true))
 	{
 		int iFlag = GetCommandFlags("r_screenoverlay") & (~FCVAR_CHEAT);
 		SetCommandFlags("r_screenoverlay", iFlag);
-		ClientCommand(client, "r_screenoverlay \"%s.vtf\"", path);
-		if (deletetime != 0.0) CreateTimer(deletetime, DeleteOverlay, client);
+		ClientCommand(i, "r_screenoverlay \"%s.vtf\"", path);
+		if (deletetime != 0.0) CreateTimer(deletetime, DeleteOverlay, i);
 	}
 }
 
@@ -215,7 +215,7 @@ stock int GetRandomPlayerNonRebel(int team)
 	int[] clients = new int[MaxClients];
 	int clientCount;
 
-	LoopClients(i)
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 	{
 		if ((GetClientTeam(i) == team) && IsPlayerAlive(i) && IsClientRebel(i))
 		{
@@ -232,7 +232,7 @@ stock int GetRandomPlayer(int team)
 	int[] clients = new int[MaxClients];
 	int clientCount;
 
-	LoopClients(i)
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 	{
 		if ((GetClientTeam(i) == team) && IsPlayerAlive(i))
 		{
@@ -273,7 +273,7 @@ stock int GetAlivePlayersCountNonRebel(int team)
 stock int GetAliveTeamCount(int team)
 {
 	int number = 0;
-	LoopClients(i) if (IsPlayerAlive(i) && GetClientTeam(i) == team) number++;
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (IsPlayerAlive(i) && GetClientTeam(i) == team) number++;
 	return number;
 }
 
@@ -282,7 +282,7 @@ stock int GetAliveTeamCount(int team)
 stock int GetPlayerTeamCount(int team)
 {
 	int number = 0;
-	LoopClients(i) if (GetClientTeam(i) == team) number++;
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (GetClientTeam(i) == team) number++;
 	return number;
 }
 
@@ -293,7 +293,7 @@ stock int GetRandomAlivePlayer()
 	int[] clients = new int[MaxClients];
 	int clientCount;
 
-	LoopClients(i)
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 	{
 		if (IsPlayerAlive(i))
 		{
@@ -311,7 +311,7 @@ stock int GetLastAlive(int team)
 	int clientCount = 0;
 	int client;
 
-	LoopValidClients(i, true, false) if (GetClientTeam(i) == team)
+	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false)) if (GetClientTeam(i) == team)
 	{
 		clientCount++;
 		client = i;

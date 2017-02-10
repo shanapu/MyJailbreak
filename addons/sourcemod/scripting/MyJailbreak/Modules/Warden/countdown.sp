@@ -281,7 +281,7 @@ public void Countdown_Event_RoundEnd(Event event, const char[] name, bool dontBr
 	if (g_hStartTimer != null) KillTimer(g_hStartTimer);
 	if (g_hStartStopTimer != null) KillTimer(g_hStartStopTimer);
 
-	LoopClients(i)
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 	{
 		Command_CancelCountDown(i, 0);
 	}
@@ -308,7 +308,7 @@ public void Countdown_OnMapStart()
 
 public void Countdown_OnMapEnd()
 {
-	LoopClients(i) Command_CancelCountDown(i, 0);
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) Command_CancelCountDown(i, 0);
 }
 
 public void Countdown_OnConfigsExecuted()

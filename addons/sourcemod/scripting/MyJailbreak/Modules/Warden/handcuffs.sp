@@ -171,7 +171,7 @@ public void HandCuffs_Event_RoundStart(Event event, const char[] name, bool dont
 
 	g_iCuffed = 0;
 
-	LoopClients(i)
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 	{
 		g_iPlayerHandCuffs[i] = gc_iHandCuffsNumber.IntValue;
 		g_bCuffed[i] = false;
@@ -225,7 +225,7 @@ public void HandCuffs_Event_WeaponFire(Event event, char[] name, bool dontBroadc
 
 public void HandCuffs_Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 {
-	LoopClients(i) if (g_bCuffed[i]) 
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (g_bCuffed[i]) 
 	{
 		FreeEm(i, 0);
 	}
@@ -358,7 +358,7 @@ public Action HandCuffs_OnTakedamage(int victim, int &attacker, int &inflictor, 
 
 public void HandCuffs_OnAvailableLR(int Announced)
 {
-	LoopClients(i)
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 	{
 		g_iPlayerHandCuffs[i] = 0;
 
@@ -425,7 +425,7 @@ public void HandCuffs_OnClientDisconnect(int client)
 
 public void HandCuffs_OnMapEnd()
 {
-	LoopClients(i)
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 	{
 		if (g_bCuffed[i])
 		{
@@ -702,18 +702,18 @@ public Action Timer_StillPaperClip(Handle timer, int client)
 
 void StripZeus()
 {
-	LoopValidClients(client, true, false) if ((IsClientWarden(client) || (IsClientDeputy(client) && gc_bHandCuffDeputy.BoolValue)))
+	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false)) if ((IsClientWarden(i) || (IsClientDeputy(i) && gc_bHandCuffDeputy.BoolValue)))
 	{
 		char sWeapon[64];
-		FakeClientCommand(client, "use weapon_taser");
-		int weapon = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
+		FakeClientCommand(i, "use weapon_taser");
+		int weapon = GetEntPropEnt(i, Prop_Send, "m_hActiveWeapon");
 
 		if (weapon != -1)
 		{
 			GetEntityClassname(weapon, sWeapon, sizeof(sWeapon));
 			if (StrEqual(sWeapon, "weapon_taser"))
 			{
-				SDKHooks_DropWeapon(client, weapon, NULL_VECTOR, NULL_VECTOR);
+				SDKHooks_DropWeapon(i, weapon, NULL_VECTOR, NULL_VECTOR);
 				AcceptEntityInput(weapon, "Kill");
 			}
 		}

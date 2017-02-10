@@ -130,7 +130,7 @@ public int Handler_MarkRebelMenu(Menu MarkMenu, MenuAction action, int client, i
 			Menu MarkRebel = CreateMenu(Handler_MarkRebel);
 			Format(info1, sizeof(info1), "%T", "warden_choose", client);
 			MarkRebel.SetTitle(info1);
-			LoopValidClients(i, true, true)
+			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true))
 			{
 				if (!IsClientRebel(i)&& (GetClientTeam(i) == CS_TEAM_T))
 				{
@@ -151,7 +151,7 @@ public int Handler_MarkRebelMenu(Menu MarkMenu, MenuAction action, int client, i
 			Menu UnMarkMenu = CreateMenu(Handler_UnMarkRebel);
 			Format(info1, sizeof(info1), "%T", "warden_choose", client);
 			UnMarkMenu.SetTitle(info1);
-			LoopValidClients(i, true, true)
+			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true))
 			{
 				if (IsClientRebel(i))
 				{

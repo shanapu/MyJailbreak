@@ -148,7 +148,7 @@ public Action Command_UnMuteMenu(int client, any args)
 			Format(info1, sizeof(info1), "%T", "warden_choose", client);
 			menu4.SetTitle(info1);
 
-			LoopValidClients(i, true, true)
+			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true))
 			{
 				if ((GetClientTeam(i) == CS_TEAM_T) && IsMuted[i])
 				{
@@ -209,7 +209,7 @@ public void Mute_Event_RoundStart(Event event, const char[] name, bool dontBroad
 {
 	if (gc_bMuteDefault.BoolValue)
 	{
-		LoopValidClients(i, true, true)if (!CheckVipFlag(i, g_sAdminFlagMute))
+		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true))if (!CheckVipFlag(i, g_sAdminFlagMute))
 		{
 			if (GetClientTeam(i) == CS_TEAM_T)
 			{
@@ -223,7 +223,7 @@ public void Mute_Event_RoundStart(Event event, const char[] name, bool dontBroad
 
 public void Mute_Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 {
-	LoopClients(i) if (IsMuted[i]) UnMuteClient(i, -1);
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (IsMuted[i]) UnMuteClient(i, -1);
 }
 
 /******************************************************************************
@@ -232,12 +232,12 @@ public void Mute_Event_RoundEnd(Event event, const char[] name, bool dontBroadca
 
 public void Mute_OnAvailableLR(int Announced)
 {
-	LoopClients(i) if (IsMuted[i] && IsPlayerAlive(i)) UnMuteClient(i, -1);
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (IsMuted[i] && IsPlayerAlive(i)) UnMuteClient(i, -1);
 }
 
 public void Mute_OnMapEnd()
 {
-	LoopClients(i) if (IsMuted[i]) UnMuteClient(i, -1);
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (IsMuted[i]) UnMuteClient(i, -1);
 }
 
 // Mute Terror when Warden speaks
@@ -245,7 +245,7 @@ public void OnClientSpeakingEx(int client)
 {
 	if ((warden_iswarden(client) && gc_bMuteTalkOver.BoolValue) || (warden_deputy_isdeputy(client) && gc_bMuteTalkOverDeputy.BoolValue))
 	{
-		LoopValidClients(i, false, true)
+		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, true))
 		{
 			if (!CheckVipFlag(i, g_sAdminFlagMute))
 			{
@@ -273,7 +273,7 @@ public void OnClientSpeakingEnd(int client)
 {
 	if ((warden_iswarden(client) && gc_bMuteTalkOver.BoolValue) || (warden_deputy_isdeputy(client) && gc_bMuteTalkOverDeputy.BoolValue))
 	{
-		LoopValidClients(i, false, true)
+		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, true))
 		{
 			if (TempMuted[i] && !IsMuted[i] && !BaseComm_IsClientMuted(i))
 			{
@@ -343,7 +343,7 @@ public Action MuteMenuPlayer(int client, int args)
 			Format(info1, sizeof(info1), "%T", "warden_choose", client);
 			menu5.SetTitle(info1);
 
-			LoopValidClients(i, true, true)
+			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true))
 			{
 				if ((GetClientTeam(i) == CS_TEAM_T) && !CheckVipFlag(i, g_sAdminFlagMute) && !IsMuted[i])
 				{
@@ -501,7 +501,7 @@ public int Handler_MuteMenu(Menu menu, MenuAction action, int client, int Positi
 
 		if (choice == 3)
 		{
-			LoopClients(i) UnMuteClient(i, client);
+			for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) UnMuteClient(i, client);
 		}
 	}
 	else if (action == MenuAction_Cancel)
@@ -559,7 +559,7 @@ public int Handler_MuteMenuTeam(Menu menu6, MenuAction action, int client, int s
 		menu6.GetItem(selection, info, sizeof(info));
 		int duration = StringToInt(info);
 
-		LoopClients(i) MuteClient(i, duration, client);
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) MuteClient(i, duration, client);
 
 		if (g_bMenuClose != null)
 		{

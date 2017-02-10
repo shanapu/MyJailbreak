@@ -190,7 +190,7 @@ public void OnPluginStart()
 	// Late loading
 	if (g_bIsLateLoad)
 	{
-		LoopClients(i)
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 		{
 			OnClientPutInServer(i);
 		}
@@ -591,32 +591,32 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 
 	if (g_iRound > 0)
 	{
-		LoopClients(client)
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 		{
-			CreateInfoPanel(client);
+			CreateInfoPanel(i);
 
-			if (GetClientTeam(client) == CS_TEAM_CT)
+			if (GetClientTeam(i) == CS_TEAM_CT)
 			{
 				if (gp_bSmartJailDoors)
 				{
-					SetEntityMoveType(client, MOVETYPE_NONE);
-					SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 0.0);
+					SetEntityMoveType(i, MOVETYPE_NONE);
+					SetEntPropFloat(i, Prop_Data, "m_flLaggedMovementValue", 0.0);
 				}
 
-		//		SetEntProp(client, Prop_Data, "m_takedamage", 0, 1);
+		//		SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
 
-				StripAllPlayerWeapons(client);
-				GivePlayerItem(client, "weapon_tagrenade");
-				GivePlayerItem(client, "weapon_knife");
+				StripAllPlayerWeapons(i);
+				GivePlayerItem(i, "weapon_tagrenade");
+				GivePlayerItem(i, "weapon_knife");
 			}
 
-			if (GetClientTeam(client) == CS_TEAM_T)
+			if (GetClientTeam(i) == CS_TEAM_T)
 			{
-				StripAllPlayerWeapons(client);
-				GivePlayerItem(client, "weapon_knife");
+				StripAllPlayerWeapons(i);
+				GivePlayerItem(i, "weapon_knife");
 			}
 
-			SetEntData(client, g_iCollision_Offset, 2, 4, true);
+			SetEntData(i, g_iCollision_Offset, 2, 4, true);
 		}
 
 		if (gp_bHosties)
@@ -643,11 +643,11 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
 	if (g_bIsHide)
 	{
-		LoopClients(client)
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 		{
-			SetEntData(client, g_iCollision_Offset, 0, 4, true);
-			SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
-			g_iTA[client] = 0;
+			SetEntData(i, g_iCollision_Offset, 0, 4, true);
+			SetEntPropFloat(i, Prop_Data, "m_flLaggedMovementValue", 1.0);
+			g_iTA[i] = 0;
 		}
 
 		delete g_hTimerBeacon;
@@ -700,7 +700,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 
 	if (g_bStartHide)
 	{
-		LoopClients(i)
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 		{
 			CreateInfoPanel(i);
 		}
@@ -761,7 +761,7 @@ public void OnMapStart()
 		PrecacheDecalAnyDownload(g_sOverlayStartPath);
 	}
 
-	LoopClients(i) g_iTA[i] = 0;
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) g_iTA[i] = 0;
 }
 
 // Terror win Round if time runs out
@@ -827,11 +827,11 @@ public void OnAvailableLR(int Announced)
 {
 	if (g_bIsHide && gc_bAllowLR.BoolValue && (g_iTsLR > g_iTerrorForLR.IntValue))
 	{
-		LoopValidClients(client, false, true)
+		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, true))
 		{
-			SetEntData(client, g_iCollision_Offset, 0, 4, true);
-			SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
-			g_iTA[client] = 0;
+			SetEntData(i, g_iCollision_Offset, 0, 4, true);
+			SetEntPropFloat(i, Prop_Data, "m_flLaggedMovementValue", 1.0);
+			g_iTA[i] = 0;
 		}
 
 		delete g_hTimerFreeze;
@@ -944,15 +944,15 @@ public Action Timer_StartEvent(Handle timer)
 	if (g_iFreezeTime > 1)
 	{
 		g_iFreezeTime--;
-		LoopClients(client)if (IsPlayerAlive(client))
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))if (IsPlayerAlive(i))
 		{
-			if (GetClientTeam(client) == CS_TEAM_CT)
+			if (GetClientTeam(i) == CS_TEAM_CT)
 			{
-				PrintCenterText(client, "%t", "hide_timetounfreeze_nc", g_iFreezeTime);
+				PrintCenterText(i, "%t", "hide_timetounfreeze_nc", g_iFreezeTime);
 			}
-			else if (GetClientTeam(client) == CS_TEAM_T)
+			else if (GetClientTeam(i) == CS_TEAM_T)
 			{
-				PrintCenterText(client, "%t", "hide_timetohide_nc", g_iFreezeTime);
+				PrintCenterText(i, "%t", "hide_timetohide_nc", g_iFreezeTime);
 			}
 		}
 
@@ -963,29 +963,29 @@ public Action Timer_StartEvent(Handle timer)
 
 	if (g_iRound > 0)
 	{
-		LoopClients(client) if (IsPlayerAlive(client))
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (IsPlayerAlive(i))
 		{
-			if (GetClientTeam(client) == CS_TEAM_CT)
+			if (GetClientTeam(i) == CS_TEAM_CT)
 			{
-				SetEntityMoveType(client, MOVETYPE_WALK);
-				SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.4);
+				SetEntityMoveType(i, MOVETYPE_WALK);
+				SetEntPropFloat(i, Prop_Data, "m_flLaggedMovementValue", 1.4);
 			}
-			if (GetClientTeam(client) == CS_TEAM_T)
+			if (GetClientTeam(i) == CS_TEAM_T)
 			{
 				if (gc_bFreezeHider)
 				{
-					SetEntityMoveType(client, MOVETYPE_NONE);
-					SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 0.0);
+					SetEntityMoveType(i, MOVETYPE_NONE);
+					SetEntPropFloat(i, Prop_Data, "m_flLaggedMovementValue", 0.0);
 				}
 				else
 				{
-					SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 0.9);
+					SetEntPropFloat(i, Prop_Data, "m_flLaggedMovementValue", 0.9);
 				}
 			}
 
 			if (gc_bOverlays.BoolValue)
 			{
-				ShowOverlay(client, g_sOverlayStartPath, 2.0);
+				ShowOverlay(i, g_sOverlayStartPath, 2.0);
 			}
 		}
 
@@ -1006,7 +1006,7 @@ public Action Timer_StartEvent(Handle timer)
 // Beacon Timer
 public Action Timer_BeaconOn(Handle timer)
 {
-	LoopValidClients(i, true, false)
+	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
 	{
 		MyJailbreak_BeaconOn(i, 2.0);
 	}

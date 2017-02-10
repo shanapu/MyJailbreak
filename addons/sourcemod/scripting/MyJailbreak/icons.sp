@@ -311,7 +311,7 @@ public void warden_OnDeputyRemoved(int client)
 
 public Action Timer_Delay(Handle timer, Handle pack)
 {
-	LoopValidClients(i, true, false)
+	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
 	{
 		SpawnIcon(i);
 	}

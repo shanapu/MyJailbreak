@@ -65,7 +65,7 @@ public void Beacon_Event_PlayerTeamDeath(Event event, char[] name, bool dontBroa
 
 public void Beacon_Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
-	LoopClients(i) g_bBeaconOn[i] = false;
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) g_bBeaconOn[i] = false;
 }
 
 /******************************************************************************
@@ -124,12 +124,12 @@ public void Beacon_OnMapStart()
 // Start
 public void Beacon_OnMapEnd()
 {
-	LoopClients(i) g_bBeaconOn[i] = false;
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) g_bBeaconOn[i] = false;
 }
 
 public void OnAvailableLR(int Announced)
 {
-	LoopClients(i) g_bBeaconOn[i] = false;
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) g_bBeaconOn[i] = false;
 }
 
 /******************************************************************************

@@ -76,7 +76,7 @@ public Action Command_Counter(int client, any args)
 			GetClientAbsOrigin(client, wardenOrigin);
 			int counter = 0;
 
-			LoopValidClients(i, true, false)
+			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
 			{
 				if (GetClientTeam(i) == CS_TEAM_T)
 				{
@@ -107,7 +107,7 @@ public Action Command_Counter(int client, any args)
 				InfoPanel.SetTitle(info1);
 				InfoPanel.DrawText("-----------------------------------");
 				InfoPanel.DrawText("                                   ");
-				LoopValidClients(i, true, false)
+				for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
 				{
 					if (g_bCounted[i])
 					{

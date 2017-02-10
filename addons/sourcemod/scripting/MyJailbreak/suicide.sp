@@ -214,7 +214,7 @@ public void OnPluginStart()
 	// Late loading
 	if (g_bIsLateLoad)
 	{
-		LoopClients(i)
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 		{
 			OnClientPutInServer(i);
 		}
@@ -651,21 +651,21 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 
 	if (g_iRound > 0)
 	{
-		LoopClients(client) 
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) 
 		{
-			CreateInfoPanel(client);
+			CreateInfoPanel(i);
 			
-			StripAllPlayerWeapons(client);
-			g_iSprintStatus[client] = 0;
-			SetEntData(client, g_iCollision_Offset, 2, 4, true);
+			StripAllPlayerWeapons(i);
+			g_iSprintStatus[i] = 0;
+			SetEntData(i, g_iCollision_Offset, 2, 4, true);
 			
-			if (GetClientTeam(client) == CS_TEAM_T)
+			if (GetClientTeam(i) == CS_TEAM_T)
 			{
-				GivePlayerItem(client, "weapon_c4");
+				GivePlayerItem(i, "weapon_c4");
 			}
-			if (GetClientTeam(client) == CS_TEAM_CT)
+			if (GetClientTeam(i) == CS_TEAM_CT)
 			{
-				GivePlayerItem(client, "weapon_knife");
+				GivePlayerItem(i, "weapon_knife");
 			}
 		}
 		g_iFreezeTime--;
@@ -679,10 +679,10 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
 	if (g_bIsSuicideBomber)
 	{
-		LoopClients(client)
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 		{
-			SetEntData(client, g_iCollision_Offset, 0, 4, true);
-			g_iSprintStatus[client] = 0;
+			SetEntData(i, g_iCollision_Offset, 0, 4, true);
+			g_iSprintStatus[i] = 0;
 		}
 
 		delete g_hTimerFreeze;
@@ -736,7 +736,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 
 	if (g_bStartSuicideBomber)
 	{
-		LoopClients(i)
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 		{
 			CreateInfoPanel(i);
 		}
@@ -797,7 +797,7 @@ public void OnGameFrame()
 {
 	if (g_bIsSuicideBomber)
 	{
-		LoopClients(i) 
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) 
 		{
 			if (gc_iKey.IntValue == 2)
 			{
@@ -962,7 +962,7 @@ public Action Timer_StartEvent(Handle timer)
 	{
 		g_iFreezeTime--;
 
-		LoopValidClients(i, false, false)
+		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, false))
 		{
 			if (GetClientTeam(i) == CS_TEAM_CT)
 			{
@@ -981,17 +981,17 @@ public Action Timer_StartEvent(Handle timer)
 
 	if (g_iRound > 0)
 	{
-		LoopClients(client) 
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) 
 		{
-			if (IsValidClient(client, true, true))
+			if (IsValidClient(i, true, true))
 			{
-				SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
-				PrintCenterText(client, "%t", "suicidebomber_start_nc");
+				SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
+				PrintCenterText(i, "%t", "suicidebomber_start_nc");
 			}
 
 			if (gc_bOverlays.BoolValue)
 			{
-				ShowOverlay(client, g_sOverlayStartPath, 2.0);
+				ShowOverlay(i, g_sOverlayStartPath, 2.0);
 			}
 
 			if (gc_bSounds.BoolValue)
@@ -1016,7 +1016,7 @@ public Action Timer_StartEvent(Handle timer)
 // Beacon Timer
 public Action Timer_BeaconOn(Handle timer)
 {
-	LoopValidClients(i, true, false)
+	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
 	{
 		MyJailbreak_BeaconOn(i, 2.0);
 	}
@@ -1035,7 +1035,7 @@ public Action Timer_DetonateBomb(Handle timer, any client)
 	int deathList[MAXPLAYERS+1]; // store players that this bomb kills
 	int numKilledPlayers = 0;
 
-	LoopClients(i)
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 	{
 		// Check that client is a real player who is alive and is a CT
 		if (IsClientInGame(i) && IsPlayerAlive(i))

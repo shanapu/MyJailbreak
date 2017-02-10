@@ -187,7 +187,7 @@ public void Laser_OnConfigsExecuted()
 
 public void Laser_OnMapStart()
 {
-	LoopClients(i)
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 	{
 		g_bLaser[i] = true;
 	}

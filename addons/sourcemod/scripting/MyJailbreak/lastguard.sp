@@ -321,7 +321,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 
 	if (g_bIsLastGuard)
 	{
-		LoopClients(i)
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 		{
 			SetEntData(i, g_iCollision_Offset, 0, 4, true);
 		}
@@ -424,7 +424,7 @@ void StartLastGuard()
 		int HPterrors = 0;
 		int HPterBuffer = 0;
 
-		LoopClients(i) if (IsPlayerAlive(i) && GetClientTeam(i) == CS_TEAM_T)
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (IsPlayerAlive(i) && GetClientTeam(i) == CS_TEAM_T)
 		{
 			HPterBuffer = (GetClientHealth(i) + HPterrors);
 			HPterrors = HPterBuffer;
@@ -446,7 +446,7 @@ void StartLastGuard()
 
 		int HPCT = RoundToCeil(HPterrors * (gc_iHPmultipler.FloatValue / 100.0));
 
-		LoopClients(i)
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 		{
 			char info[64];
 
@@ -618,7 +618,7 @@ public Action Timer_TruceUntilStart(Handle timer)
 	if (g_iTruceTime > 1)
 	{
 		g_iTruceTime--;
-		LoopClients(i) if (IsPlayerAlive(i))
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (IsPlayerAlive(i))
 		{
 			if (gc_bFreeze.BoolValue && (g_iTruceTime <= (gc_iTruceTime.IntValue / 2)) && (GetEntityMoveType(i) == MOVETYPE_NONE))
 			{
@@ -636,7 +636,7 @@ public Action Timer_TruceUntilStart(Handle timer)
 
 	g_iTruceTime = gc_iTruceTime.IntValue;
 
-	LoopClients(i) if (IsPlayerAlive(i))
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (IsPlayerAlive(i))
 	{
 		SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
 
@@ -673,7 +673,7 @@ public Action Timer_LastGuardBeginn(Handle timer)
 
 public Action Timer_BeaconOn(Handle timer)
 {
-	LoopValidClients(i, true, false)
+	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
 	{
 		MyJailbreak_BeaconOn(i, 2.0);
 	}

@@ -131,7 +131,7 @@ public void OnPluginStart()
 	// Late loading
 	if (g_bIsLateLoad)
 	{
-		LoopClients(i)
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 		{
 			OnClientPutInServer(i);
 		}
@@ -231,7 +231,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 	g_bIsRequest = false;
 	g_bIsLR = false;
 
-	LoopClients(i)
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 	{
 		g_iKilledBy[i] = 0;
 		g_iHasKilled[i] = 0;
@@ -370,5 +370,5 @@ public Action Timer_IsRequest(Handle timer, any client)
 	g_bIsRequest = false;
 	g_hTimerRequest = null;
 
-	LoopClients(i) if (g_bFreeKilled[i]) g_bFreeKilled[i] = false;
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (g_bFreeKilled[i]) g_bFreeKilled[i] = false;
 }
