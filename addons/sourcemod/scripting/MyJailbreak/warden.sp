@@ -451,7 +451,7 @@ public Action Command_BecomeWarden(int client, int args)
 							{
 								if (GetLimit(client) < gc_iLimitWarden.IntValue || gc_iLimitWarden.IntValue == 0 || (gc_iCoolDownMinPlayer.IntValue > GetPlayerTeamCount(CS_TEAM_CT)))
 								{
-									if(SetTheWarden(client) != Plugin_Handled)
+									if (SetTheWarden(client) != Plugin_Handled)
 									{
 										Forward_OnWardenCreatedByUser(client);
 									}
@@ -1086,7 +1086,7 @@ public int Handler_SetWarden(Menu menu, MenuAction action, int client, int Posit
 					}
 					else
 					{
-						if(SetTheWarden(i) != Plugin_Handled)
+						if (SetTheWarden(i) != Plugin_Handled)
 						{
 							Forward_OnWardenCreatedByAdmin(i);
 						}
@@ -1126,7 +1126,7 @@ public int Handler_SetWardenOverwrite(Menu menu, MenuAction action, int client, 
 			}
 
 			RemoveTheWarden();
-			if(SetTheWarden(newwarden) != Plugin_Handled)
+			if (SetTheWarden(newwarden) != Plugin_Handled)
 			{
 				Forward_OnWardenCreatedByAdmin(newwarden);
 

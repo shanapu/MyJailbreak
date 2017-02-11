@@ -525,6 +525,8 @@ public Action Timer_HasPaperClip(Handle timer, int client)
 			PrintCenterText(client, "%t", "warden_gotpaperclip", g_iPlayerPaperClips[client]);
 		}
 	}
+
+	return Plugin_Stop;
 }
 
 // Show the progress

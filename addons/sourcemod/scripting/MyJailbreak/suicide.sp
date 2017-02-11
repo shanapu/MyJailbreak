@@ -569,7 +569,7 @@ public Action Command_BombSuicideBomber(int client, int args)
 		int weapon = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
 		char weaponName[64];
 
-		if(IsValidEdict(weapon))
+		if (IsValidEdict(weapon))
 		{
 			GetEdictClassname(weapon, weaponName, sizeof(weaponName));
 

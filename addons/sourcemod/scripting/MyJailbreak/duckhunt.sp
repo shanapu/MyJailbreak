@@ -882,7 +882,7 @@ public void OnAvailableLR(int Announced)
 			SetCvar("sm_menu_enable", 1);
 			SetConVarInt(g_bAllowTP, 0);
 
-			if(gp_bWarden)
+			if (gp_bWarden)
 			{
 				SetCvar("sm_warden_enable", 1);
 			}

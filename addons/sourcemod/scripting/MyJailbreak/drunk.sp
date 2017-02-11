@@ -772,7 +772,7 @@ public void OnAvailableLR(int Announced)
 			SetCvar("mp_teammates_are_enemies", 0);
 			SetCvar("sm_menu_enable", 1);
 
-			if(gp_bWarden)
+			if (gp_bWarden)
 			{
 				SetCvar("sm_warden_enable", 1);
 			}

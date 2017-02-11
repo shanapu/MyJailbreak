@@ -833,7 +833,7 @@ public void OnAvailableLR(int Announced)
 			g_iRound = 0;
 			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
 
-			if(gp_bWarden)
+			if (gp_bWarden)
 			{
 				SetCvar("sm_warden_enable", 1);
 			}

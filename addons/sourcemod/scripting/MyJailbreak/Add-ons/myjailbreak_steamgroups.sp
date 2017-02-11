@@ -169,7 +169,7 @@ int GetUserAuthID(int authid)
 		char[] authchar = new char[64];
 		GetClientAuthId(i, AuthId_Steam3, charauth, 64);
 		IntToString(authid, authchar, 64);
-		if(StrContains(charauth, authchar) != -1) return i;
+		if (StrContains(charauth, authchar) != -1) return i;
 	}
 	
 	return -1;

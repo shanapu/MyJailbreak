@@ -39,6 +39,7 @@
 #include <warden>
 #include <myjailbreak>
 #include <smartjaildoors>
+#include <myicons>
 #define REQUIRE_PLUGIN
 
 // Compiler Options
@@ -55,6 +56,7 @@ bool gp_bWarden;
 bool gp_bHosties;
 bool gp_bSmartJailDoors;
 bool gp_bMyJailbreak;
+bool gp_bMyIcons;
 
 // Console Variables
 ConVar gc_bPlugin;
@@ -230,6 +232,7 @@ public void OnAllPluginsLoaded()
 	gp_bHosties = LibraryExists("lastrequest");
 	gp_bSmartJailDoors = LibraryExists("smartjaildoors");
 	gp_bMyJailbreak = LibraryExists("myjailbreak");
+	gp_bMyIcons = LibraryExists("myicons");
 }
 
 public void OnLibraryRemoved(const char[] name)
@@ -245,6 +248,9 @@ public void OnLibraryRemoved(const char[] name)
 
 	if (StrEqual(name, "myjailbreak"))
 		gp_bMyJailbreak = false;
+
+	if (StrEqual(name, "myicons"))
+		gp_bMyIcons = false;
 }
 
 public void OnLibraryAdded(const char[] name)
@@ -260,6 +266,9 @@ public void OnLibraryAdded(const char[] name)
 
 	if (StrEqual(name, "myjailbreak"))
 		gp_bMyJailbreak = true;
+
+	if (StrEqual(name, "myicons"))
+		gp_bMyIcons = true;
 }
 
 
@@ -614,6 +623,12 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 			{
 				StripAllPlayerWeapons(i);
 				GivePlayerItem(i, "weapon_knife");
+
+				if (gp_bMyIcons)
+				{
+					MyIcons_BlockClientIcon(i, true);
+				}
+
 			}
 
 			SetEntData(i, g_iCollision_Offset, 2, 4, true);
@@ -648,6 +663,11 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			SetEntData(i, g_iCollision_Offset, 0, 4, true);
 			SetEntPropFloat(i, Prop_Data, "m_flLaggedMovementValue", 1.0);
 			g_iTA[i] = 0;
+
+			if (gp_bMyIcons)
+			{
+				MyIcons_BlockClientIcon(i, false);
+			}
 		}
 
 		delete g_hTimerBeacon;
@@ -832,6 +852,11 @@ public void OnAvailableLR(int Announced)
 			SetEntData(i, g_iCollision_Offset, 0, 4, true);
 			SetEntPropFloat(i, Prop_Data, "m_flLaggedMovementValue", 1.0);
 			g_iTA[i] = 0;
+
+			if (gp_bMyIcons)
+			{
+				MyIcons_BlockClientIcon(i, false);
+			}
 		}
 
 		delete g_hTimerFreeze;
@@ -844,7 +869,7 @@ public void OnAvailableLR(int Announced)
 			g_iRound = 0;
 			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
 
-			if(gp_bWarden)
+			if (gp_bWarden)
 			{
 				SetCvar("sm_warden_enable", 1);
 			}
