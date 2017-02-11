@@ -507,6 +507,9 @@ void FreeEm(int client, int attacker)
 // Does the player get or already have a paperclip?
 public Action Timer_HasPaperClip(Handle timer, int client)
 {
+	if (!IsClientInGame(client))
+		return Plugin_Stop;
+
 	if (g_bCuffed[client]) // is player cuffed?
 	{
 		int paperclip = GetRandomInt(1, gc_iPaperClipGetChance.IntValue);
@@ -527,7 +530,7 @@ public Action Timer_HasPaperClip(Handle timer, int client)
 // Show the progress
 public Action Timer_Progress(Handle timer, int client)
 {
-	if (!IsClientInGame(client)) 
+	if (!IsClientInGame(client))
 		return Plugin_Stop;
 
 	if (TickTime[client] == 0)
