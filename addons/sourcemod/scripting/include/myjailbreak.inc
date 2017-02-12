@@ -87,12 +87,21 @@ forward Action MyJailbreak_OnJoinGuardQueue(int client);
 
 
 /*********************************************************
+ * Called when a the Last Guard Rule is active
+ * 
+ * @NoReturn
+ *********************************************************/
+forward void MyJailbreak_OnLastGuardRuleStart();
+
+
+
+/*********************************************************
  * Called when a eventday has started
  *
  * @param EventDayName	The name of the event day
- * @return 				Return Plugin_Handled to block & Plugin_Continue to pass the client.
+ * @NoReturn
  *********************************************************/
-forward Action MyJailbreak_OnEventDayStart(char[] EventDayName);
+forward void MyJailbreak_OnEventDayStart(char[] EventDayName);
 
 
 /*********************************************************
@@ -100,9 +109,9 @@ forward Action MyJailbreak_OnEventDayStart(char[] EventDayName);
  *
  * @param EventDayName	The name of the event day
  * @param winner		The winner team of this eventday. 0/1 = no winner
- * @return 				Return Plugin_Handled to block & Plugin_Continue to pass the client.
+ * @NoReturn
  *********************************************************/
-forward Action MyJailbreak_OnEventDayEnd(char[] EventDayName, int winner);
+forward void MyJailbreak_OnEventDayEnd(char[] EventDayName, int winner);
 
 
 

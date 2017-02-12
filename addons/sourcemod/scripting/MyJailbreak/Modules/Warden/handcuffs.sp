@@ -218,7 +218,7 @@ public void HandCuffs_Event_WeaponFire(Event event, char[] name, bool dontBroadc
 
 		if (StrEqual(sWeapon, "weapon_taser"))
 		{
-			SetPlayerWeaponAmmo(client, Client_GetActiveWeapon(client), _, 2);
+			SetPlayerAmmo(client, Client_GetActiveWeapon(client), _, 2);
 		}
 	}
 }
@@ -496,7 +496,7 @@ void FreeEm(int client, int attacker)
 	ProgressTimer[client] = null;
 
 	if (gc_bSounds)StopSoundAny(client, SNDCHAN_AUTO, g_sSoundUnLockCuffsPath);
-	if ((attacker != 0) && (g_iCuffed == 0) && (g_iPlayerHandCuffs[attacker] < 1)) SetPlayerWeaponAmmo(attacker, Client_GetActiveWeapon(attacker), _, 0);
+	if ((attacker != 0) && (g_iCuffed == 0) && (g_iPlayerHandCuffs[attacker] < 1)) SetPlayerAmmo(attacker, Client_GetActiveWeapon(attacker), _, 0);
 	if (attacker != 0) CPrintToChatAll("%t %t", "warden_tag", "warden_cuffsoff", attacker, client);
 }
 

@@ -80,6 +80,7 @@ int g_iCollision_Offset;
 // Handles
 Handle g_hTimerTruce;
 Handle g_hTimerBeacon;
+Handle gF_OnLastGuardStart;
 
 // Strings
 char g_sHasVoted[1500];
@@ -140,6 +141,9 @@ public void OnPluginStart()
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundLastCTPath, OnSettingChanged);
+
+	//Forward
+	gF_OnLastGuardStart = CreateGlobalForward("MyJailbreak_OnLastGuardRuleStart", ET_Ignore, Param_Cell);
 
 	// Find
 	g_iTruceTime = gc_iTruceTime.IntValue;
@@ -391,6 +395,9 @@ void StartLastGuard()
 		if (gp_bMyJailBreak)
 		{
 			MyJailbreak_SetLastGuardRule(true);
+
+			Call_StartForward(gF_OnLastGuardStart);
+			Call_Finish();
 
 			if (gc_fBeaconTime.FloatValue > 0.0)
 			{

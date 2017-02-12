@@ -25,6 +25,7 @@
 #include <sdkhooks>
 #include <mystocks>
 #include <myjailbreak>
+#include <teamgames>
 
 // Compiler Options
 #pragma semicolon 1
@@ -91,4 +92,14 @@ public void Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 		Cvar_tg_cvar_friendlyfire.IntValue = OldCvar_tg_cvar_friendlyfire;
 		Cvar_tg_ct_friendlyfire.IntValue = OldCvar_tg_ct_friendlyfire;
 	}
+}
+
+public void MyJailbreak_OnLastGuardRuleStart()
+{
+	TG_StopGame(TG_ErrorTeam, _, true, true);
+
+	TG_ClearTeam(TG_RedTeam);
+	TG_ClearTeam(TG_BlueTeam);
+
+	TG_FenceDestroy();
 }

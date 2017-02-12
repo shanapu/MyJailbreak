@@ -178,7 +178,7 @@ stock void SetLogFile(char LogFile[PLATFORM_MAX_PATH], char[] FileName, char[] F
 
 
 // Set the players Ammo for active weapon
-stock void SetPlayerWeaponAmmo(int client, int weaponEnt, int clip = -1, int ammo = -1)
+stock void SetPlayerAmmo(int client, int weaponEnt, int clip = -1, int ammo = -1)
 {
 	if (weaponEnt == INVALID_ENT_REFERENCE)
 		return;

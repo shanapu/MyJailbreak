@@ -768,7 +768,7 @@ public void Event_WeaponReload(Event event, char[] name, bool dontBroadcast)
 
 		if (IsValidClient(client, false, false) && (GetClientTeam(client) == CS_TEAM_CT))
 		{
-			SetPlayerWeaponAmmo(client, Client_GetActiveWeapon(client), _, 32);
+			SetPlayerAmmo(client, Client_GetActiveWeapon(client), _, 32);
 		}
 	}
 }
