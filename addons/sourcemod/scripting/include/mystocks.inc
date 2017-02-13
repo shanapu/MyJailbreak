@@ -190,7 +190,7 @@ stock void SetPlayerAmmo(int client, int weaponEnt, int clip = -1, int ammo = -1
 	{
 		int iOffset = FindDataMapInfo(client, "m_iAmmo") + (GetEntProp(weaponEnt, Prop_Data, "m_iPrimaryAmmoType") * 4);
 		SetEntData(client, iOffset, ammo, 4, true);
-		
+
 		if (GetEngineVersion() == Engine_CSGO) 
 		{
 			SetEntProp(weaponEnt, Prop_Send, "m_iPrimaryReserveAmmoCount", ammo);

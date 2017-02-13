@@ -15,7 +15,7 @@
  * details.
  *
  * You should have received a copy of the GNU General Public License along with
- * this program. If not, see <http:// www.gnu.org/licenses/>.
+ * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 /******************************************************************************
@@ -568,12 +568,16 @@ void ListWeapons()
 	Format(Items[desc], 64, "Desert Eagle");
 	PushArrayArray(g_aSecondary, Items[0]);
 
-	Format(Items[ItemName], 64, "weapon_elite");
-	Format(Items[desc], 64, "Dual Berettas");
+	Format(Items[ItemName], 64, "weapon_revolver");
+	Format(Items[desc], 64, "Revolver");
 	PushArrayArray(g_aSecondary, Items[0]);
 
 	Format(Items[ItemName], 64, "weapon_tec9");
 	Format(Items[desc], 64, "Tec-9");
+	PushArrayArray(g_aSecondary, Items[0]);
+
+	Format(Items[ItemName], 64, "weapon_elite");
+	Format(Items[desc], 64, "Dual Berettas");
 	PushArrayArray(g_aSecondary, Items[0]);
 
 	Format(Items[ItemName], 64, "weapon_fiveseven");

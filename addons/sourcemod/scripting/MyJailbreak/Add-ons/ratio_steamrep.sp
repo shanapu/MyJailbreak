@@ -2,7 +2,7 @@
  * MyJailbreak - Ratio - SteamRep Support.
  * by: shanapu
  * https://github.com/shanapu/MyJailbreak/
- * https:// steamrep.com/plugin.php
+ * https://steamrep.com/plugin.php
  *
  * This file is part of the MyJailbreak SourceMod Plugin.
  *

@@ -44,11 +44,13 @@ echo.
 echo Compile: MyJailbreak  Add-ons
 echo.
 spcomp MyJailbreak/Add-ons/ratio_ctban.sp -o../plugins/MyJailbreak/disabled/ratio_ctban.smx 
-spcomp MyJailbreak/Add-ons/myjailbreak_stamm.sp -o../plugins/MyJailbreak/disabled/myjailbreak_stamm.smx  
+spcomp MyJailbreak/Add-ons/ratio_ct_bans.sp -o../plugins/MyJailbreak/disabled/ratio_ct_bans.smx  
 spcomp MyJailbreak/Add-ons/ratio_teambans.sp -o../plugins/MyJailbreak/disabled/ratio_teambans.smx  
-spcomp MyJailbreak/Add-ons/myjailbreak_reputation.sp -o../plugins/MyJailbreak/disabled/myjailbreak_reputation.smx  
-spcomp MyJailbreak/Add-ons/myjailbreak_rankme.sp -o../plugins/MyJailbreak/disabled/myjailbreak_rankme.smx  
 spcomp MyJailbreak/Add-ons/ratio_steamrep.sp -o../plugins/MyJailbreak/disabled/ratio_steamrep.smx  
 spcomp MyJailbreak/Add-ons/myjailbreak_teamgames.sp -o../plugins/MyJailbreak/disabled/myjailbreak_teamgames.smx  
 spcomp MyJailbreak/Add-ons/myjailbreak_steamgroups.sp -o../plugins/MyJailbreak/disabled/myjailbreak_steamgroups.smx  
+spcomp MyJailbreak/Add-ons/myjailbreak_stamm.sp -o../plugins/MyJailbreak/disabled/myjailbreak_stamm.smx  
+spcomp MyJailbreak/Add-ons/myjailbreak_reputation.sp -o../plugins/MyJailbreak/disabled/myjailbreak_reputation.smx  
+spcomp MyJailbreak/Add-ons/myjailbreak_rankme.sp -o../plugins/MyJailbreak/disabled/myjailbreak_rankme.smx  
+spcomp MyJailbreak/Add-ons/myjailbreak_kento_rankme.sp -o../plugins/MyJailbreak/disabled/myjailbreak_kento_rankme.smx  
 pause
