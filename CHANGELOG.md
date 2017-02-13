@@ -13,12 +13,13 @@
     *  new plugin - disabled/ratio_steamrep.smx - Support plugin for Jameless SteamRep.com Checker plugin
         *  new cvar - sm_ratio_steamrep_exclude - Which tags you DO NOT trust for reported scammers. Input the tags here for any community whose bans you DO NOT TRUST.
         *  new cvar - sm_ratio_steamrep_checkip - Include IP address of connecting players in query. Set to 0 to disable
+    *  new plugin - disabled/myjailbreak_steamgroup.smx - Warden & Ratio support plugin for Steam Groups (need SteamWorks extension!)
+        *  new cvar - sm_ratio_steamgroup - Steamgroup a player must be member before join CT (Find it on your steam groups edit page) (0000000 = disabled)
 *  Warden: Added restict system for become warden like ratio restricts
     *  new cvar - sm_warden_stamm - 0 - disabled, how many stamm points a player need to become warden? (only if stamm is available)
     *  new cvar - sm_warden_reputation - 0 - disabled, how many reputation a player need to join ct? (only if reputation is available)
     *  new cvar - sm_warden_rankme - 0 - disabled, how many rankme points a player need to become warden? (only if stamm is available)
     *  new plugin - disabled/myjailbreak_steamgroup.smx - Warden & Ratio support plugin for Steam Groups (need SteamWorks extension!)
-        *  new cvar - sm_ratio_steamgroup - Steamgroup a player must be member before join CT (Find it on your steam groups edit page) (0000000 = disabled)
         *  new cvar - sm_warden_steamgroup - Steamgroup a player must be member before become Warden (Find it on your steam groups edit page) (0000000 = disabled)
 *  New Eventday: Ghosts War - All Players are invisbile & immortal - every 6 seconds they go visible and mortal for 2 seconds. Last alive wins.
     *  new plugin - ghosts.smx - please help translate http://translator.mitchdempsey.com/sourcemod_plugins/271
@@ -60,6 +61,8 @@
     *  new cvar - sm_warden_freeday_guard - 0 - disabled, 1 - Allow all the guards to set a personal freeday. Default 0
 *  Zombie: Health Regeneration for zombies
     *  new cvar - sm_zombie_zombie_regen - 0 - disabled, HPs a Zombie regenerates every 5 seconds
+*  Weapons: Added Revolver
+*  TeamGames: Stop current game, remove player from teams & destroy fence on active LastGuardRule
   
   
 *Changed*
@@ -84,8 +87,10 @@
 *  Warden - dropguns: no more punishment on empty taser
 *  Warden - deputy: missing translation
 *  Request: missing translation
+*  Hide: Remove icons on hide in the dark
 *  DealDamage: fix result screen
-*  Icons: fix some *_enable cvars 
+*  Icons: fix some *_enable cvars
+*  Weapons: restrict !guns for player in LastRequest
 *  Late loading: re/load plugin in round Thx @olegtsvetkov
 *  rar error weapon not owned by client
 *  removed some debug messages
@@ -93,7 +98,8 @@
   
   
 *Developer stuff*
-*  Forwards: New Forwards for start/end of a Eventday
+*  Forwards: New Forwards for start/end of a Eventday & lastGuardRuleStart
+    *  new Forwards - MyJailbreak_OnLastGuardRuleStart()
     *  new Forwards - MyJailbreak_OnEventDayStart(char[] EventDayName)
     *  new Forwards - MyJailbreak_OnEventDayEnd(char[] EventDayName, int winner)
 *  Change forward warden_OnWardenCreated from void to Action to block warden creation

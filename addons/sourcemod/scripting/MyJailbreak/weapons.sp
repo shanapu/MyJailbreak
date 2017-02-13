@@ -34,6 +34,8 @@
 
 // Optional Plugins
 #undef REQUIRE_PLUGIN
+#include <hosties>
+#include <lastrequest>
 #include <myjailbreak>
 #include <warden>
 #define REQUIRE_PLUGIN
@@ -50,6 +52,7 @@ bool g_bTA[MAXPLAYERS+1] = {false, ...};
 bool g_bHealth[MAXPLAYERS+1] = {false, ...};
 bool gp_bWarden = false;
 bool gp_bMyJailBreak = false;
+bool gp_bHosties = false;
 
 // Handles
 Handle g_hMenu1 = null;
@@ -172,6 +175,9 @@ public void OnLibraryRemoved(const char[] name)
 
 	if (StrEqual(name, "myjailbreak"))
 		gp_bMyJailBreak = false;
+
+	if (StrEqual(name, "hosties"))
+		gp_bHosties = false;
 }
 
 public void OnLibraryAdded(const char[] name)
@@ -181,12 +187,16 @@ public void OnLibraryAdded(const char[] name)
 
 	if (StrEqual(name, "myjailbreak"))
 		gp_bMyJailBreak = true;
+
+	if (StrEqual(name, "hosties"))
+		gp_bHosties = true;
 }
 
 public void OnAllPluginsLoaded()
 {
 	gp_bWarden = LibraryExists("warden");
 	gp_bMyJailBreak = LibraryExists("myjailbreak");
+	gp_bHosties = LibraryExists("hosties");
 
 	// FindConVar
 	g_bTaserWarden = FindConVar("sm_warden_handcuffs");
@@ -230,10 +240,16 @@ public void OnConfigsExecuted()
 // Open the weapon menu
 public Action Command_Weapons(int client, int args)
 {
-	if (gc_bPlugin.BoolValue)	
+	if (gc_bPlugin.BoolValue)
 	{
 		if (client != 0 && IsClientInGame(client))
 		{
+			if (gp_bHosties)
+			{
+				if (IsClientInLastRequest(client) != false)
+					return Plugin_Handled;
+			}
+
 			g_bRememberChoice[client] = false;
 			DisplayOptionsMenu(client);
 

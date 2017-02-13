@@ -143,7 +143,7 @@ public void OnPluginStart()
 	HookConVarChange(gc_sSoundLastCTPath, OnSettingChanged);
 
 	//Forward
-	gF_OnLastGuardStart = CreateGlobalForward("MyJailbreak_OnLastGuardRuleStart", ET_Ignore, Param_Cell);
+	gF_OnLastGuardStart = CreateGlobalForward("MyJailbreak_OnLastGuardRuleStart", ET_Ignore);
 
 	// Find
 	g_iTruceTime = gc_iTruceTime.IntValue;
