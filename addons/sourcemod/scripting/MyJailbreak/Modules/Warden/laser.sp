@@ -51,7 +51,7 @@ bool g_bLaserColorRainbow[MAXPLAYERS+1] = true;
 int g_iLaserColor[MAXPLAYERS+1];
 
 // Strings
-char g_sAdminFlagLaser[32];
+char g_sAdminFlagLaser[4];
 
 // Start
 public void Laser_OnPluginStart()

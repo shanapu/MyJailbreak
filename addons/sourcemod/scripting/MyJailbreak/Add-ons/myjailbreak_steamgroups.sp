@@ -41,8 +41,12 @@
 #pragma newdecls required
 
 // Console Variables
-ConVar gc_iGroupRatio;
-ConVar gc_iGroupWarden;
+ConVar gc_sGroupRatio;
+ConVar gc_sGroupWarden;
+
+//Strings
+char g_sGroupRatio[12];
+char g_sGroupWarden[12];
 
 //Bools
 bool g_bIsLateLoad = false;
@@ -76,7 +80,7 @@ public void OnPluginStart()
 	AutoExecConfig_SetFile("Ratio", "MyJailbreak");
 	AutoExecConfig_SetCreateFile(true);
 
-	gc_iGroupRatio = AutoExecConfig_CreateConVar("sm_ratio_steamgroup", "0000000", "Steamgroup a player must be member before join CT (Find it on your steam groups edit page) (0000000 = disabled)");
+	gc_sGroupRatio = AutoExecConfig_CreateConVar("sm_ratio_steamgroup", "0000000", "Steamgroup a player must be member before join CT (Find it on your steam groups edit page) (0000000 = disabled)");
 
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
@@ -85,7 +89,7 @@ public void OnPluginStart()
 	AutoExecConfig_SetFile("Warden", "MyJailbreak");
 	AutoExecConfig_SetCreateFile(true);
 
-	gc_iGroupWarden = AutoExecConfig_CreateConVar("sm_warden_steamgroup", "0000000", "Steamgroup a player must be member before become Warden (Find it on your steam groups edit page) (0000000 = disabled)");
+	gc_sGroupWarden = AutoExecConfig_CreateConVar("sm_warden_steamgroup", "0000000", "Steamgroup a player must be member before become Warden (Find it on your steam groups edit page) (0000000 = disabled)");
 
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
@@ -103,6 +107,26 @@ public void OnPluginStart()
 
 		g_bIsLateLoad = false;
 	}
+
+	gc_sGroupRatio.GetString(g_sGroupRatio, sizeof(g_sGroupRatio));
+	gc_sGroupWarden.GetString(g_sGroupWarden, sizeof(g_sGroupWarden));
+
+	HookConVarChange(gc_sGroupRatio, OnSettingChanged);
+	HookConVarChange(gc_sGroupWarden, OnSettingChanged);
+
+}
+
+// ConVarChange for Strings
+public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
+{
+	if (convar == gc_sGroupRatio)
+	{
+		strcopy(g_sGroupRatio, sizeof(g_sGroupRatio), newValue);
+	}
+	else if (convar == gc_sGroupWarden)
+	{
+		strcopy(g_sGroupWarden, sizeof(g_sGroupWarden), newValue);
+	}
 }
 
 public void OnAllPluginsLoaded()
@@ -115,7 +139,7 @@ public void OnAllPluginsLoaded()
 
 public Action warden_OnWardenCreate(int client)
 {
-	if (!IsMemberWarden[client] && gc_iGroupWarden.IntValue != 0)
+	if (!IsMemberWarden[client] && gc_sGroupWarden.IntValue != 0)
 	{
 		CPrintToChat(client, "%t %t", "warden_tag", "warden_steamgroup");
 		return Plugin_Handled;
@@ -126,7 +150,7 @@ public Action warden_OnWardenCreate(int client)
 
 public Action MyJailbreak_OnJoinGuardQueue(int client)
 {
-	if (!IsMemberRatio[client] && gc_iGroupRatio.IntValue != 0)
+	if (!IsMemberRatio[client] && gc_sGroupRatio.IntValue != 0)
 	{
 		CPrintToChat(client, "%t %t", "ratio_tag", "ratio_steamgroup");
 		return Plugin_Handled;
@@ -137,8 +161,8 @@ public Action MyJailbreak_OnJoinGuardQueue(int client)
 
 public void OnClientPostAdminCheck(int client)
 {
-	SteamWorks_GetUserGroupStatus(client, gc_iGroupRatio.IntValue);
-	SteamWorks_GetUserGroupStatus(client, gc_iGroupWarden.IntValue);
+	SteamWorks_GetUserGroupStatus(client, StringToInt(g_sGroupRatio));
+	SteamWorks_GetUserGroupStatus(client, StringToInt(g_sGroupWarden));
 }
 
 public int SteamWorks_OnClientGroupStatus(int authid, int groupAccountID, bool isMember, bool isOfficer)
@@ -149,8 +173,8 @@ public int SteamWorks_OnClientGroupStatus(int authid, int groupAccountID, bool i
 
 	if (isMember)
 	{
-		if (groupAccountID == gc_iGroupRatio.IntValue) IsMemberRatio[client] = true;
-		if (groupAccountID == gc_iGroupWarden.IntValue) IsMemberWarden[client] = true;
+		if (groupAccountID == StringToInt(g_sGroupRatio)) IsMemberRatio[client] = true;
+		if (groupAccountID == StringToInt(g_sGroupWarden)) IsMemberWarden[client] = true;
 	}
 	else
 	{
@@ -171,7 +195,7 @@ int GetUserAuthID(int authid)
 		IntToString(authid, authchar, 64);
 		if (StrContains(charauth, authchar) != -1) return i;
 	}
-	
+
 	return -1;
 }
 
@@ -191,7 +215,7 @@ public Action Event_OnPlayerSpawn(Event event, const char[] name, bool bDontBroa
 	if (!IsValidClient(client, false, false))
 		return Plugin_Continue;
 
-	if (!IsMemberRatio[client] && gc_iGroupRatio.IntValue != 0)
+	if (!IsMemberRatio[client] && gc_sGroupRatio.IntValue != 0)
 	{
 		CPrintToChat(client, "%t %t", "ratio_tag", "ratio_steamgroup");
 		CreateTimer(5.0, Timer_SlayPlayer, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);

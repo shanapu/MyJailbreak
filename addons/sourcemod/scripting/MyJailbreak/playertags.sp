@@ -51,7 +51,7 @@ ConVar gc_sVIP2Flag;
 ConVar gc_bNoOverwrite;
 
 // Strings
-char g_sAdminFlag[32];
+char g_sAdminFlag[4];
 char g_sOwnerFlag[32];
 char g_sVIP2Flag[32];
 char g_sVIPFlag[32];

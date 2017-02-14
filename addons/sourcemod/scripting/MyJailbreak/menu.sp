@@ -135,10 +135,10 @@ ConVar gc_bOrders;
 ConVar gc_bOrdersDeputy;
 
 // Strings
-char g_sAdminFlagBulletSparks[32];
-char g_sAdminFlagLaser[32];
-char g_sAdminFlagPainter[32];
-char g_sAdminFlag[32];
+char g_sAdminFlagBulletSparks[4];
+char g_sAdminFlagLaser[4];
+char g_sAdminFlagPainter[4];
+char g_sAdminFlag[4];
 
 // Handles
 Handle gH_TopMenu = INVALID_HANDLE;

@@ -62,7 +62,7 @@ bool TempMuted[MAXPLAYERS+1] = {false, ...};
 
 // Strings
 char g_sMuteUser[32];
-char g_sAdminFlagMute[32];
+char g_sAdminFlagMute[4];
 
 // Start
 public void Mute_OnPluginStart()

@@ -64,7 +64,7 @@ Handle g_hTimerAllowRefuse;
 // Strings
 char g_sSoundRefusePath[256];
 char g_sSoundRefuseStopPath[256];
-char g_sAdminFlagRefuse[32];
+char g_sAdminFlagRefuse[4];
 
 // Start
 public void Refuse_OnPluginStart()

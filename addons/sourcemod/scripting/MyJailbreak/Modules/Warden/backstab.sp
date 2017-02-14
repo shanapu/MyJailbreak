@@ -45,7 +45,7 @@ ConVar gc_sAdminFlagBackstab;
 int g_iBackstabNumber[MAXPLAYERS+1];
 
 // Strings
-char g_sAdminFlagBackstab[32];
+char g_sAdminFlagBackstab[4];
 
 // Start
 public void BackStab_OnPluginStart()

@@ -45,7 +45,7 @@ ConVar gc_sAdminFlagBulletSparks;
 bool g_bBulletSparks[MAXPLAYERS+1] = true;
 
 // Strings
-char g_sAdminFlagBulletSparks[32];
+char g_sAdminFlagBulletSparks[4];
 
 // Start
 public void BulletSparks_OnPluginStart()

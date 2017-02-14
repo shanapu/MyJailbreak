@@ -83,7 +83,7 @@ int g_iQuestionTimes[MAXPLAYERS+1];
 // Strings
 char g_sRestrictedSound[32] = "buttons/button11.wav";
 char g_sRightAnswerSound[32] = "buttons/button14.wav";
-char g_sAdminFlag[32];
+char g_sAdminFlag[4];
 
 // Info
 public Plugin myinfo = {

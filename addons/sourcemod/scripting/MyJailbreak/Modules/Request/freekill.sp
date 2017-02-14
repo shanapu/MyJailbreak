@@ -64,7 +64,7 @@ int g_iFreeKillCounter[MAXPLAYERS+1];
 
 // Strings
 char g_sFreeKillLogFile[PLATFORM_MAX_PATH];
-char g_sAdminFlag[32];
+char g_sAdminFlag[4];
 
 // Start
 public void Freekill_OnPluginStart()

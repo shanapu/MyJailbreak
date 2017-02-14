@@ -54,7 +54,7 @@ bool g_bPainterColorRainbow[MAXPLAYERS+1] = true;
 int g_iPainterColor[MAXPLAYERS+1];
 
 // Strings
-char g_sAdminFlagPainter[32];
+char g_sAdminFlagPainter[4];
 
 // Floats
 float g_fLastPainter[MAXPLAYERS+1][3];
