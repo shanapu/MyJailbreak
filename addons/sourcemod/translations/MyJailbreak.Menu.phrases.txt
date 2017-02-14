@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2016-12-11 14:24:00 UTC
+// Date: 2017-02-13 03:57:22 UTC
 // Language: English (en)
 // 
 // To view other translations for this plugin, please visit:
@@ -390,6 +390,31 @@
 	"menu_ghosts"
 	{
 		"en"		"Ghosts War"
+	}
+
+	"menu_removequeue"
+	{
+		"en"		"Remove player from guard queue"
+	}
+
+	"menu_endround"
+	{
+		"en"		"Force round end"
+	}
+
+	"menu_clearqueue"
+	{
+		"en"		"Clear guard queue"
+	}
+
+	"menu_noevent"
+	{
+		"en"		"No Event Day"
+	}
+
+	"menu_joinspec"
+	{
+		"en"		"Go Spectator"
 	}
 
 }

@@ -1,99 +1,177 @@
+// Exported from SourceMod Translator
+// Date: 2017-02-13 03:57:24 UTC
+// Language: English (en)
+// 
+// To view other translations for this plugin, please visit:
+// http://translator.mitchdempsey.com/sourcemod_plugins/187
+//
 "Phrases"
 {
 
-	"Last Mine"
+	"ffa_tag"
 	{
-		"en"		"That was your last mine"
-		"cz"		"Vyházel jsi všechny miny"
+		"en"		"[{green}MyJB.FFA{default}]"
 	}
 
-	"Remaing Mines"
+	"ffa_need"
+	{
+		"#format"	"{1:i},{2:N}"
+		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} vote(s) required to play {darkred}FFA."
+	}
+
+	"ffa_voting"
+	{
+		"en"		"Voting for FFA is {purple}disabled!"
+	}
+
+	"ffa_setbywarden"
+	{
+		"en"		"Set FFA by Warden is {purple}disabled!"
+	}
+
+	"ffa_setbyadmin"
+	{
+		"en"		"Set FFA by Admin is {purple}disabled!"
+	}
+
+	"ffa_ctwin_nc"
+	{
+		"en"		"A Guard has survived!"
+	}
+
+	"ffa_twin_nc"
+	{
+		"en"		"A Prisoner has survived!"
+	}
+
+	"ffa_minplayer"
+	{
+		"en"		"For FFA you need at least {purple}one Guard, & one Prisoner!"
+	}
+
+	"ffa_end"
+	{
+		"en"		"{purple}FFA{default} has ended!"
+	}
+
+	"ffa_next"
+	{
+		"en"		"The following round will be: {purple}FFA."
+	}
+
+	"ffa_next_nc"
+	{
+		"en"		"The following round will be: FFA."
+	}
+
+	"ffa_rounds"
+	{
+		"#format"	"{1:i},{2:i}"
+		"en"		"Round {purple}{1}{default} of {purple}{2}"
+	}
+
+	"ffa_start"
+	{
+		"en"		"{purple}FFA{default} has begun!"
+	}
+
+	"ffa_start_nc"
+	{
+		"en"		"FFA has begun!"
+	}
+
+	"ffa_voted"
+	{
+		"en"		"You have already voted for {purple}FFA!"
+	}
+
+	"ffa_progress"
+	{
+		"#format"	"{1:s}"
+		"en"		"The event {darkred}{1} {default}is {purple}already in progress!"
+	}
+
+	"ffa_disabled"
+	{
+		"en"		"FFA is currently {purple}disabled!"
+	}
+
+	"ffa_damage_nc"
 	{
 		"#format"	"{1:i}"
-		"en"		"You have {1} mines remaining"
-		"cz"		"Počet zbývajících min {1}"
+		"en"		"{1} seconds until damage enabled"
 	}
 
-	"Run out of mines"
-	{
-		"en"		"You have no more mines"
-		"cz"		"Došly ti miny"
-	}
-
-
-	"Remaing Rockets"
+	"ffa_damage_nc"
 	{
 		"#format"	"{1:i}"
-		"en"		"You have {1} rockets remaining"
-		"cz"		"Počet zbývajících raket {1}"
+		"en"		"{1} seconds until damage enabled"
 	}
 
-	"Last Rocket"
+	"ffa_info_title"
 	{
-		"en"		"That was your last rocket"
-		"cz"		"Vystřelil jsi všechny rakety"
+		"en"		"Free for All Deathmatch is now Activated!"
 	}
 
-	"Run out of Rockets"
+	"ffa_info_line1"
 	{
-		"en"		"You have no more rockets"
-		"cz"		"Nemáš již žádné rakety"
+		"en"		"Don't be suprised if you've spawned in the Armory!"
 	}
 
+	"ffa_info_line2"
+	{
+		"en"		"Free for All - Player VS Player - The last man standing wins!"
+	}
 
-	"Remaing Knives"
+	"ffa_info_line3"
+	{
+		"en"		"Run away during the 'NoDamage' phase!"
+	}
+
+	"ffa_info_line4"
+	{
+		"en"		"All usual Jailbreak Rules do not apply during this round!"
+	}
+
+	"ffa_info_line5"
+	{
+		"en"		"Last Request is disabled during this round!"
+	}
+
+	"ffa_info_line6"
+	{
+		"en"		"Everyone is allowed to go anywhere within the map!"
+	}
+
+	"ffa_info_line7"
+	{
+		"en"		"Don't be an Asshole!"
+	}
+
+	"RoundOne"
+	{
+		"en"		"Round 1 of 3"
+	}
+
+	"RoundTwo"
+	{
+		"en"		"Round 2 of 3"
+	}
+
+	"RoundThree"
+	{
+		"en"		"This is the last FFA round!"
+	}
+
+	"ffa_wait"
 	{
 		"#format"	"{1:i}"
-		"en"		"You have {1} knives remaining"
-		"cz"		"Počet zbývajících nožů {1}"
+		"en"		"You must wait {purple}{1}{default} more rounds for an Event Day!"
 	}
 
-	"Last Knife"
+	"ffa_name"
 	{
-		"en"		"That was your last knife"
-		"cz"		"Vyházel jsi všechny nože"
+		"en"		"Free for All"
 	}
-
-	"Run out of Knives"
-	{
-		"en"		"You have no more knives"
-		"cz"		"Nemáš již žádné házecí nože"
-	}
-
-
-	"Your Class"
-	{
-		"#format"	"{1:s}"
-		"en"		"Your class: {1}"
-		"cz"		"Nyní jsi {1}"
-	}
-
-	"Your Class next round"
-	{
-		"#format"	"{1:s}"
-		"en"		"Your class for next round: {1}"
-		"cz"		"Tvoje class se změní na začátku příštího kola na {1}"
-	}
-
-	"You selected Class"
-	{
-		"#format"	"{1:s}"
-		"en"		"You selected class: {1}"
-		"cz"		"Změnil sis class na {1}"
-	}
-
-	"Dropped item"
-	{
-		"#format"	"{1:s}"
-		"en"		"You dropped item: {1}"
-		"cz"		"Zahodil jsem item  {1}"
-	}
-
-	"No items"
-	{
-		"en"		"You have no item"
-		"cz"		"Nemáš žádný item"
-	}
-
 
 }

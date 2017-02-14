@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2016-12-11 14:24:09 UTC
+// Date: 2017-02-13 03:57:26 UTC
 // Language: Russian (ru)
 // 
 // To view other translations for this plugin, please visit:
@@ -141,6 +141,11 @@
 	"noscope_wait"
 	{
 		"ru"		"Вы должны подождать ещё {1} пару раундов"
+	}
+
+	"noscope_name"
+	{
+		"ru"		"Битва без прицела"
 	}
 
 }

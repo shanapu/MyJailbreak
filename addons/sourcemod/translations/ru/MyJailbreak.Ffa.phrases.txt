@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2016-12-11 14:24:15 UTC
+// Date: 2017-02-13 03:57:24 UTC
 // Language: Russian (ru)
 // 
 // To view other translations for this plugin, please visit:
@@ -161,6 +161,11 @@
 	"ffa_wait"
 	{
 		"ru"		"Вы должны подождать больше {purple}{1}{default} раундов"
+	}
+
+	"ffa_name"
+	{
+		"ru"		"Все против всех"
 	}
 
 }

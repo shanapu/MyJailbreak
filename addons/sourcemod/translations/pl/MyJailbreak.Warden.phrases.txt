@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2016-12-11 14:23:48 UTC
+// Date: 2017-02-13 03:57:20 UTC
 // Language: Polish (pl)
 // 
 // To view other translations for this plugin, please visit:
@@ -593,6 +593,11 @@
 		"pl"		"Masz {green}{1}{default} jedne Kajdanki"
 	}
 
+	"warden_brokepaperclip"
+	{
+		"pl"		"Złamałeś spinacz!"
+	}
+
 	"warden_painter"
 	{
 		"pl"		"{1} Marker w wyposazeniu!"
@@ -633,9 +638,34 @@
 		"pl"		"Marker dla Terrorystow jest{purple}wylaczony"
 	}
 
+	"warden_rebel_unmark"
+	{
+		"pl"		"Usuń gracza z buntowników "
+	}
+
+	"warden_counter"
+	{
+		"pl"		"Istnieje {1} więzień w twoim widoku"
+	}
+
 	"warden_deputy_disabled"
 	{
 		"pl"		"Deputy jest {purple}wylaczony{default}."
+	}
+
+	"warden_deputy_disconnected_nc"
+	{
+		"pl"		"Zastępca został odłączony. Teraz można wybrać nowego."
+	}
+
+	"warden_pickingaborted"
+	{
+		"pl"		"Owocobranie przerwane "
+	}
+
+	"warden_freedaynow"
+	{
+		"pl"		"Ta runda "
 	}
 
 }

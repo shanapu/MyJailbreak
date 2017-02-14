@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2016-12-11 14:23:49 UTC
+// Date: 2017-02-13 03:57:20 UTC
 // Language: English (en)
 // 
 // To view other translations for this plugin, please visit:
@@ -98,18 +98,6 @@
 	{
 		"#format"	"{1:N},{2:N}"
 		"en"		"Admin: {1} has Fired the Warden: {2}"
-	}
-
-	"warden_deputy_removed"
-	{
-		"#format"	"{1:N},{2:N}"
-		"en"		"Admin: {purple}{1}{default} has Fired the Deputy: {purple}{2}"
-	}
-
-	"warden_deputy_removed_nc"
-	{
-		"#format"	"{1:N},{2:N}"
-		"en"		"Admin: {1} has Fired the Deputy: {2}"
 	}
 
 	"warden_noexist"
@@ -966,6 +954,18 @@
 	{
 		"#format"	"{1:i}"
 		"en"		"As {green}last round warden{default} you have to wait {purple}{1} seconds{default} to become warden again."
+	}
+
+	"warden_deputy_removed"
+	{
+		"#format"	"{1:N},{2:N}"
+		"en"		"Admin: {purple}{1}{default} has Fired the Deputy: {purple}{2}"
+	}
+
+	"warden_deputy_removed_nc"
+	{
+		"#format"	"{1:N},{2:N}"
+		"en"		"Admin: {1} has Fired the Deputy: {2}"
 	}
 
 	"warden_steamgroup"

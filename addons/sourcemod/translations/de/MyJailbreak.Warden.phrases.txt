@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2016-12-11 14:23:46 UTC
+// Date: 2017-02-13 03:57:19 UTC
 // Language: German (de)
 // 
 // To view other translations for this plugin, please visit:
@@ -628,6 +628,11 @@
 		"de"		"Schliessen"
 	}
 
+	"warden_gotpaperclip"
+	{
+		"de"		"Du hast {1} Büroklammer(n) in deiner Tasche. Halte +use (E)"
+	}
+
 	"warden_brokepaperclip"
 	{
 		"de"		"Die Büroklammer ist zerbrochen!"
@@ -695,7 +700,17 @@
 
 	"warden_dooropen_unavailable"
 	{
-		"de"		"{darkred}Diese Map unterstützt das öffnen der Türen aus der Ferne. {default}Du {purple} musst die Türen manuell öffnen!"
+		"de"		"{darkred}Diese Map unterstützt kein automatisches Türöffnen. {default}Du {purple} musst die Türen manuell öffnen!"
+	}
+
+	"warden_doorclose_unavailable"
+	{
+		"de"		"{darkred}Diese Map unterstützt kein automatisches Türöffnen. {default}Du {purple}musst die Türen manuell schließen!"
+	}
+
+	"warden_openauto_unavailable"
+	{
+		"de"		"{darkred}Diese Map unterstützt kein automatisches Türöffnen. {default} Der Warden {purple} muss die Türen manuell öffnen!"
 	}
 
 	"warden_menu_muteall"
@@ -743,6 +758,16 @@
 		"de"		"Der Wärter spricht nun, du wurdest gemutet."
 	}
 
+	"warden_info_counter"
+	{
+		"de"		"Gefangene in Sicht:"
+	}
+
+	"warden_counter"
+	{
+		"de"		"Es befinden sich {1} Gefangene in deinem Sichtfeld."
+	}
+
 	"warden_deputy_playerdead"
 	{
 		"de"		"Nur {purple}lebende Spieler{default} können Deputy werden."
@@ -761,6 +786,11 @@
 	"warden_deputy_disabled"
 	{
 		"de"		"Deputy ist {purple}deaktiviert{default}."
+	}
+
+	"warden_deputy_nobecome"
+	{
+		"de"		"Du kannst kein Deputy werden, der Warden muss dich auswählen."
 	}
 
 	"warden_deputy_retire"
@@ -866,6 +896,16 @@
 	"warden_personalfreeday"
 	{
 		"de"		"{1} bekommst nächste Runde einen FreeDay"
+	}
+
+	"warden_cooldown"
+	{
+		"de"		"Du hast einen {purple} Warden Cooldown{default}. Warte {green}{1}{default} Runden."
+	}
+
+	"warden_limit"
+	{
+		"de"		"Du hast {purple}{1} Runden hintereinander{default} als Warden gespielt. Warte {green}{2}{default} Runden"
 	}
 
 }

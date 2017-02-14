@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2016-12-11 14:23:59 UTC
+// Date: 2017-02-13 03:57:21 UTC
 // Language: German (de)
 // 
 // To view other translations for this plugin, please visit:
@@ -10,12 +10,22 @@
 
 	"menu_info"
 	{
-		"de"		"Um das Jailbreak Menü zu öffnen, drücke , oderr schreibe !menu in den chat!"
+		"de"		"Um das Jailbreak Menü zu öffnen, drücke (,)-Komma oder schreibe !menu in den chat!"
+	}
+
+	"menu_info_title"
+	{
+		"de"		"MyJailBreak Menu"
 	}
 
 	"menu_opencell"
 	{
 		"de"		"Öffne die Zellen"
+	}
+
+	"menu_guns"
+	{
+		"de"		"Waffenmenü"
 	}
 
 	"menu_laser"
@@ -48,9 +58,29 @@
 		"de"		"Werde Häftling"
 	}
 
+	"menu_check"
+	{
+		"de"		"Rebellen überprüfen"
+	}
+
+	"menu_lr"
+	{
+		"de"		"Wunsch"
+	}
+
 	"menu_setwarden"
 	{
 		"de"		"Neuen Warden einteilen"
+	}
+
+	"menu_rules"
+	{
+		"de"		"Regeln"
+	}
+
+	"menu_joinct"
+	{
+		"de"		"Werde ein Wächter"
 	}
 
 	"menu_votewarden"
@@ -58,9 +88,44 @@
 		"de"		"Vote um den Warden zu entlassen"
 	}
 
+	"menu_event_Titlevote"
+	{
+		"de"		"Stimme für einen Event Tag"
+	}
+
 	"menu_war"
 	{
 		"de"		"Krieg"
+	}
+
+	"menu_zombie"
+	{
+		"de"		"Zombietag"
+	}
+
+	"menu_dealdamge"
+	{
+		"de"		"Schaden Verteilen"
+	}
+
+	"menu_hide"
+	{
+		"de"		"Verstecken im Dunkeln"
+	}
+
+	"menu_knifefight"
+	{
+		"de"		"Messerkampf"
+	}
+
+	"menu_hebattle"
+	{
+		"de"		"HE Kampf"
+	}
+
+	"menu_drunk"
+	{
+		"de"		"Betrunken"
 	}
 
 	"menu_torch"
@@ -68,9 +133,79 @@
 		"de"		"Fackellauf"
 	}
 
+	"menu_Freeday"
+	{
+		"de"		"Freitag"
+	}
+
+	"menu_admin"
+	{
+		"de"		"Adminmenü"
+	}
+
+	"menu_painter"
+	{
+		"de"		"Maler Menü"
+	}
+
+	"menu_closecell"
+	{
+		"de"		"Zellentüren schließen"
+	}
+
+	"menu_voting"
+	{
+		"de"		"Stimme für einen Event Tag:"
+	}
+
+	"menu_voteday"
+	{
+		"de"		"Starte eine Eventtagsabstimmung."
+	}
+
+	"menu_minplayer"
+	{
+		"de"		"Für eine Eventtagsabstimmung brauchst du mindestens {purple}einen Wächter & einen Gefangenen"
+	}
+
+	"menu_progress"
+	{
+		"de"		"Das Event {darkred}{1} {default}ist {purple} breits im Gange!"
+	}
+
 	"menu_disabled"
 	{
 		"de"		"Event voting ist vorübergehend {purple}deaktiviert."
+	}
+
+	"menu_playerfreeday"
+	{
+		"de"		"Gib einem Spieler einen Freeday"
+	}
+
+	"menu_teamgamesmenu"
+	{
+		"de"		"TeamGames - Menü"
+	}
+
+	"menu_deputybecome"
+	{
+		"de"		"Werde Wardens Stellvertreter"
+	}
+
+	"menu_rebel"
+	{
+		"de"		"Un/Markiere einen Spieler als Rebell."
+	}
+
+	"menu_removequeue"
+	{
+		"de"		"Spieler von der Wächter Warteschlange entfernen"
+	}
+
+	"menu_endround"
+	{
+		"de"		"Rundenende erzwingen"
 	}
 
 }
