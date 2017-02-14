@@ -128,11 +128,67 @@ ConVar g_bPlayerFreedayGuard;
 ConVar g_bSparks;
 ConVar g_bPlayerFreeday;
 ConVar g_bDealDamage;
+ConVar g_bEndRound;
 ConVar gc_sAdminFlagBulletSparks;
 ConVar gc_sAdminFlagLaser;
 ConVar gc_sAdminFlagPainter;
 ConVar gc_bOrders;
 ConVar gc_bOrdersDeputy;
+
+ConVar g_bVoteWar;
+ConVar g_bVoteZeus;
+ConVar g_bVoteFFA;
+ConVar g_bVoteTorch;
+ConVar g_bVoteZombie;
+ConVar g_bVoteDrunk;
+ConVar g_bVoteGhosts;
+ConVar g_bVoteCowboy;
+ConVar g_bVoteNoScope;
+ConVar g_bVoteHide;
+ConVar g_bVoteKnife;
+ConVar g_bVoteSuicideBomber;
+ConVar g_bVoteCatch;
+ConVar g_bVoteHEbattle;
+ConVar g_bVoteFreeday;
+ConVar g_bVoteDuckHunt;
+ConVar g_bVoteDealDamage;
+
+ConVar g_bSetWar;
+ConVar g_bSetZeus;
+ConVar g_bSetFFA;
+ConVar g_bSetTorch;
+ConVar g_bSetZombie;
+ConVar g_bSetDrunk;
+ConVar g_bSetGhosts;
+ConVar g_bSetCowboy;
+ConVar g_bSetNoScope;
+ConVar g_bSetHide;
+ConVar g_bSetKnife;
+ConVar g_bSetSuicideBomber;
+ConVar g_bSetCatch;
+ConVar g_bSetHEbattle;
+ConVar g_bSetFreeday;
+ConVar g_bSetDuckHunt;
+ConVar g_bSetDealDamage;
+
+ConVar g_bWardenWar;
+ConVar g_bWardenZeus;
+ConVar g_bWardenFFA;
+ConVar g_bWardenTorch;
+ConVar g_bWardenZombie;
+ConVar g_bWardenDrunk;
+ConVar g_bWardenGhosts;
+ConVar g_bWardenCowboy;
+ConVar g_bWardenNoScope;
+ConVar g_bWardenHide;
+ConVar g_bWardenKnife;
+ConVar g_bWardenSuicideBomber;
+ConVar g_bWardenCatch;
+ConVar g_bWardenHEbattle;
+ConVar g_bWardenFreeday;
+ConVar g_bWardenDuckHunt;
+ConVar g_bWardenDealDamage;
+
 
 // Strings
 char g_sAdminFlagBulletSparks[4];
@@ -240,7 +296,7 @@ void MyAdminMenuReady(Handle h_TopMenu)
 
 	if (gM_MyJB != INVALID_TOPMENUOBJECT)
 	{
-		if (FindConVar("sm_myjb_allow_endround"))
+		if (g_bEndRound.BoolValue)
 		{
 			AddToTopMenu(gH_TopMenu, "sm_endround", TopMenuObject_Item, Handler_AdminMenu_EndRound, gM_MyJB, "sm_endround");
 		}
@@ -465,30 +521,14 @@ public void OnConfigsExecuted()
 	g_bMath = FindConVar("sm_warden_math");
 	g_bNoBlock = FindConVar("sm_warden_noblock");
 	g_bExtend = FindConVar("sm_warden_extend");
-	g_bWar = FindConVar("sm_war_enable");
-	g_bZeus = FindConVar("sm_zeus_enable");
-	g_bFFA = FindConVar("sm_ffa_enable");
 	g_bMute = FindConVar("sm_warden_mute");
 	g_bMuteDeputy = FindConVar("sm_warden_mute_deputy");
-	g_bTorch = FindConVar("sm_torch_enable");
 	g_bPainter = FindConVar("sm_warden_painter");
 	g_bLaser = FindConVar("sm_warden_laser");
 	g_bSparks = FindConVar("sm_warden_bulletsparks");
 	g_bPainterDeputy = FindConVar("sm_warden_painter_deputy");
 	g_bLaserDeputy = FindConVar("sm_warden_laser_deputy");
 	g_bSparksDeputy = FindConVar("sm_warden_bulletsparks_deputy");
-	g_bZombie = FindConVar("sm_zombie_enable");
-	g_bDrunk = FindConVar("sm_drunk_enable");
-	g_bGhosts = FindConVar("sm_ghosts_enable");
-	g_bCowboy = FindConVar("sm_cowboy_enable");
-	g_bNoScope = FindConVar("sm_noscope_enable");
-	g_bHide = FindConVar("sm_hide_enable");
-	g_bKnife = FindConVar("sm_knifefight_enable");
-	g_bSuicideBomber = FindConVar("sm_suicidebomber_enable");
-	g_bCatch = FindConVar("sm_catch_enable");
-	g_bHEbattle = FindConVar("sm_hebattle_enable");
-	g_bFreeday = FindConVar("sm_freeday_enable");
-	g_bDuckHunt = FindConVar("sm_duckhunt_enable");
 	g_bCountdown = FindConVar("sm_warden_countdown");
 	g_bCountdownDeputy = FindConVar("sm_warden_countdown_deputy");
 	g_bVote = FindConVar("sm_warden_vote");
@@ -497,7 +537,6 @@ public void OnConfigsExecuted()
 	g_bGuns = FindConVar("sm_weapons_enable");
 	g_bFF = FindConVar("mp_teammates_are_enemies");
 	g_bRequest = FindConVar("sm_request_enable");
-	g_bDealDamage = FindConVar("sm_dealdamage_enable");
 	g_bOpen = FindConVar("sm_warden_open_enable");
 	g_bsetFF = FindConVar("sm_warden_ff");
 	g_bRandom = FindConVar("sm_warden_random");
@@ -512,6 +551,79 @@ public void OnConfigsExecuted()
 	gc_sAdminFlagPainter = FindConVar("sm_warden_painter_flag");
 	gc_bOrders = FindConVar("sm_warden_orders");
 	gc_bOrdersDeputy = FindConVar("sm_warden_orders_deputy");
+	g_bEndRound = FindConVar("sm_myjb_allow_endround");
+
+	g_bWar = FindConVar("sm_war_enable");
+	g_bZeus = FindConVar("sm_zeus_enable");
+	g_bFFA = FindConVar("sm_ffa_enable");
+	g_bTorch = FindConVar("sm_torch_enable");
+	g_bZombie = FindConVar("sm_zombie_enable");
+	g_bDrunk = FindConVar("sm_drunk_enable");
+	g_bGhosts = FindConVar("sm_ghosts_enable");
+	g_bCowboy = FindConVar("sm_cowboy_enable");
+	g_bNoScope = FindConVar("sm_noscope_enable");
+	g_bHide = FindConVar("sm_hide_enable");
+	g_bKnife = FindConVar("sm_knifefight_enable");
+	g_bSuicideBomber = FindConVar("sm_suicidebomber_enable");
+	g_bCatch = FindConVar("sm_catch_enable");
+	g_bHEbattle = FindConVar("sm_hebattle_enable");
+	g_bFreeday = FindConVar("sm_freeday_enable");
+	g_bDuckHunt = FindConVar("sm_duckhunt_enable");
+	g_bDealDamage = FindConVar("sm_dealdamage_enable");
+
+	g_bVoteWar = FindConVar("sm_war_vote");
+	g_bVoteZeus = FindConVar("sm_zeus_vote");
+	g_bVoteFFA = FindConVar("sm_ffa_vote");
+	g_bVoteTorch = FindConVar("sm_torch_vote");
+	g_bVoteZombie = FindConVar("sm_zombie_vote");
+	g_bVoteDrunk = FindConVar("sm_drunk_vote");
+	g_bVoteGhosts = FindConVar("sm_ghosts_vote");
+	g_bVoteCowboy = FindConVar("sm_cowboy_vote");
+	g_bVoteNoScope = FindConVar("sm_noscope_vote");
+	g_bVoteHide = FindConVar("sm_hide_vote");
+	g_bVoteKnife = FindConVar("sm_knifefight_vote");
+	g_bVoteSuicideBomber = FindConVar("sm_suicidebomber_vote");
+	g_bVoteCatch = FindConVar("sm_catch_vote");
+	g_bVoteHEbattle = FindConVar("sm_hebattle_vote");
+	g_bVoteFreeday = FindConVar("sm_freeday_vote");
+	g_bVoteDuckHunt = FindConVar("sm_duckhunt_vote");
+	g_bVoteDealDamage = FindConVar("sm_dealdamage_vote");
+
+	g_bSetWar = FindConVar("sm_war_enable");
+	g_bSetZeus = FindConVar("sm_zeus_enable");
+	g_bSetFFA = FindConVar("sm_ffa_enable");
+	g_bSetTorch = FindConVar("sm_torch_enable");
+	g_bSetZombie = FindConVar("sm_zombie_enable");
+	g_bSetDrunk = FindConVar("sm_drunk_enable");
+	g_bSetGhosts = FindConVar("sm_ghosts_enable");
+	g_bSetCowboy = FindConVar("sm_cowboy_enable");
+	g_bSetNoScope = FindConVar("sm_noscope_enable");
+	g_bSetHide = FindConVar("sm_hide_enable");
+	g_bSetKnife = FindConVar("sm_knifefight_enable");
+	g_bSetSuicideBomber = FindConVar("sm_suicidebomber_enable");
+	g_bSetCatch = FindConVar("sm_catch_enable");
+	g_bSetHEbattle = FindConVar("sm_hebattle_enable");
+	g_bSetFreeday = FindConVar("sm_freeday_enable");
+	g_bSetDuckHunt = FindConVar("sm_duckhunt_enable");
+	g_bSetDealDamage = FindConVar("sm_dealdamage_enable");
+
+	g_bWardenWar = FindConVar("sm_war_enable");
+	g_bWardenZeus = FindConVar("sm_zeus_enable");
+	g_bWardenFFA = FindConVar("sm_ffa_enable");
+	g_bWardenTorch = FindConVar("sm_torch_enable");
+	g_bWardenZombie = FindConVar("sm_zombie_enable");
+	g_bWardenDrunk = FindConVar("sm_drunk_enable");
+	g_bWardenGhosts = FindConVar("sm_ghosts_enable");
+	g_bWardenCowboy = FindConVar("sm_cowboy_enable");
+	g_bWardenNoScope = FindConVar("sm_noscope_enable");
+	g_bWardenHide = FindConVar("sm_hide_enable");
+	g_bWardenKnife = FindConVar("sm_knifefight_enable");
+	g_bWardenSuicideBomber = FindConVar("sm_suicidebomber_enable");
+	g_bWardenCatch = FindConVar("sm_catch_enable");
+	g_bWardenHEbattle = FindConVar("sm_hebattle_enable");
+	g_bWardenFreeday = FindConVar("sm_freeday_enable");
+	g_bWardenDuckHunt = FindConVar("sm_duckhunt_enable");
+	g_bWardenDealDamage = FindConVar("sm_dealdamage_enable");
 
 	gc_sAdminFlagLaser.GetString(g_sAdminFlagLaser, sizeof(g_sAdminFlagLaser));
 	gc_sAdminFlagPainter.GetString(g_sAdminFlagPainter, sizeof(g_sAdminFlagPainter));
@@ -1222,8 +1334,14 @@ public Action Command_OpenMenu(int client, int args)
 						Format(menuinfo, sizeof(menuinfo), "%T", "menu_clearqueue", client);
 						mainmenu.AddItem("clearqueue", menuinfo);
 					}
-					Format(menuinfo, sizeof(menuinfo), "%T", "menu_endround", client);
-					mainmenu.AddItem("endround", menuinfo);
+					if (g_bEndRound != null)
+					{
+						if (g_bEndRound.BoolValue)
+						{
+							Format(menuinfo, sizeof(menuinfo), "%T", "menu_endround", client);
+							mainmenu.AddItem("endround", menuinfo);
+						}
+					}
 				}
 				Format(menuinfo, sizeof(menuinfo), "%T", "menu_admin", client);
 				mainmenu.AddItem("admin", menuinfo);
@@ -1478,7 +1596,7 @@ public Action Command_VoteEventDays(int client, int args)
 			
 			if (g_bWar != null)
 			{
-				if (g_bWar.BoolValue)
+				if (g_bWar.BoolValue && g_bVoteWar.BoolValue)
 				{
 					Format(menuinfo, sizeof(menuinfo), "%T", "menu_war", client);
 					daysmenu.AddItem("votewar", menuinfo);
@@ -1486,7 +1604,7 @@ public Action Command_VoteEventDays(int client, int args)
 			}
 			if (g_bFFA != null)
 			{
-				if (g_bFFA.BoolValue)
+				if (g_bFFA.BoolValue && g_bVoteFFA.BoolValue)
 				{
 					Format(menuinfo, sizeof(menuinfo), "%T", "menu_ffa", client);
 					daysmenu.AddItem("voteffa", menuinfo);
@@ -1494,7 +1612,7 @@ public Action Command_VoteEventDays(int client, int args)
 			}
 			if (g_bZombie != null)
 			{
-				if (g_bZombie.BoolValue)
+				if (g_bZombie.BoolValue && g_bVoteZombie.BoolValue)
 				{
 					Format(menuinfo, sizeof(menuinfo), "%T", "menu_zombie", client);
 					daysmenu.AddItem("votezombie", menuinfo);
@@ -1502,7 +1620,7 @@ public Action Command_VoteEventDays(int client, int args)
 			}
 			if (g_bHide != null)
 			{
-				if (g_bHide.BoolValue)
+				if (g_bHide.BoolValue && g_bVoteHide.BoolValue)
 				{
 					Format(menuinfo, sizeof(menuinfo), "%T", "menu_hide", client);
 					daysmenu.AddItem("votehide", menuinfo);
@@ -1510,7 +1628,7 @@ public Action Command_VoteEventDays(int client, int args)
 			}
 			if (g_bCatch != null)
 			{
-				if (g_bCatch.BoolValue)
+				if (g_bCatch.BoolValue && g_bVoteCatch.BoolValue)
 				{
 					Format(menuinfo, sizeof(menuinfo), "%T", "menu_catch", client);
 					daysmenu.AddItem("votecatch", menuinfo);
@@ -1518,7 +1636,7 @@ public Action Command_VoteEventDays(int client, int args)
 			}
 			if (g_bGhosts != null)
 			{
-				if (g_bGhosts.BoolValue)
+				if (g_bGhosts.BoolValue && g_bVoteGhosts.BoolValue)
 				{
 					Format(menuinfo, sizeof(menuinfo), "%T", "menu_ghosts", client);
 					daysmenu.AddItem("voteGhosts", menuinfo);
@@ -1526,7 +1644,7 @@ public Action Command_VoteEventDays(int client, int args)
 			}
 			if (g_bSuicideBomber != null)
 			{
-				if (g_bSuicideBomber.BoolValue)
+				if (g_bSuicideBomber.BoolValue && g_bVoteSuicideBomber.BoolValue)
 				{
 					Format(menuinfo, sizeof(menuinfo), "%T", "menu_suicidebomber", client);
 					daysmenu.AddItem("voteSuicideBomber", menuinfo);
@@ -1534,7 +1652,7 @@ public Action Command_VoteEventDays(int client, int args)
 			}
 			if (g_bHEbattle != null)
 			{
-				if (g_bHEbattle.BoolValue)
+				if (g_bHEbattle.BoolValue && g_bVoteHEbattle.BoolValue)
 				{
 					Format(menuinfo, sizeof(menuinfo), "%T", "menu_hebattle", client);
 					daysmenu.AddItem("votehebattle", menuinfo);
@@ -1542,7 +1660,7 @@ public Action Command_VoteEventDays(int client, int args)
 			}
 			if (g_bNoScope != null)
 			{
-				if (g_bNoScope.BoolValue)
+				if (g_bNoScope.BoolValue && g_bVoteNoScope.BoolValue)
 				{
 					Format(menuinfo, sizeof(menuinfo), "%T", "menu_noscope", client);
 					daysmenu.AddItem("votenoscope", menuinfo);
@@ -1550,7 +1668,7 @@ public Action Command_VoteEventDays(int client, int args)
 			}
 			if (g_bDuckHunt != null)
 			{
-				if (g_bDuckHunt.BoolValue)
+				if (g_bDuckHunt.BoolValue && g_bVoteDuckHunt.BoolValue)
 				{
 					Format(menuinfo, sizeof(menuinfo), "%T", "menu_duckhunt", client);
 					daysmenu.AddItem("voteduckhunt", menuinfo);
@@ -1558,7 +1676,7 @@ public Action Command_VoteEventDays(int client, int args)
 			}
 			if (g_bZeus != null)
 			{
-				if (g_bZeus.BoolValue)
+				if (g_bZeus.BoolValue && g_bVoteZeus.BoolValue)
 				{
 					Format(menuinfo, sizeof(menuinfo), "%T", "menu_zeus", client);
 					daysmenu.AddItem("votezeus", menuinfo);
@@ -1566,7 +1684,7 @@ public Action Command_VoteEventDays(int client, int args)
 			}
 			if (g_bDealDamage != null)
 			{
-				if (g_bDealDamage.BoolValue)
+				if (g_bDealDamage.BoolValue && g_bVoteDealDamage.BoolValue)
 				{
 					Format(menuinfo, sizeof(menuinfo), "%T", "menu_dealdamge", client);
 					daysmenu.AddItem("votedeal", menuinfo);
@@ -1574,7 +1692,7 @@ public Action Command_VoteEventDays(int client, int args)
 			}
 			if (g_bDrunk != null)
 			{
-				if (g_bDrunk.BoolValue)
+				if (g_bDrunk.BoolValue && g_bVoteDrunk.BoolValue)
 				{
 					Format(menuinfo, sizeof(menuinfo), "%T", "menu_drunk", client);
 					daysmenu.AddItem("votedrunk", menuinfo);
@@ -1582,7 +1700,7 @@ public Action Command_VoteEventDays(int client, int args)
 			}
 			if (g_bKnife != null)
 			{
-				if (g_bKnife.BoolValue)
+				if (g_bKnife.BoolValue && g_bVoteKnife.BoolValue)
 				{
 					Format(menuinfo, sizeof(menuinfo), "%T", "menu_knifefight", client);
 					daysmenu.AddItem("voteknife", menuinfo);
@@ -1590,7 +1708,7 @@ public Action Command_VoteEventDays(int client, int args)
 			}
 			if (g_bTorch != null)
 			{
-				if (g_bTorch.BoolValue)
+				if (g_bTorch.BoolValue && g_bVoteTorch.BoolValue)
 				{
 					Format(menuinfo, sizeof(menuinfo), "%T", "menu_torch", client);
 					daysmenu.AddItem("votetorch", menuinfo);
@@ -1598,7 +1716,7 @@ public Action Command_VoteEventDays(int client, int args)
 			}
 			if (g_bCowboy != null)
 			{
-				if (g_bCowboy.BoolValue)
+				if (g_bCowboy.BoolValue && g_bVoteCowboy.BoolValue)
 				{
 					Format(menuinfo, sizeof(menuinfo), "%T", "menu_cowboy", client);
 					daysmenu.AddItem("votecowboy", menuinfo);
@@ -1606,7 +1724,7 @@ public Action Command_VoteEventDays(int client, int args)
 			}
 			if (g_bFreeday != null)
 			{
-				if (g_bFreeday.BoolValue)
+				if (g_bFreeday.BoolValue && g_bVoteFreeday.BoolValue)
 				{
 					Format(menuinfo, sizeof(menuinfo), "%T", "menu_Freeday", client);
 					daysmenu.AddItem("voteFreeday", menuinfo);
@@ -1781,7 +1899,19 @@ public int VoteEventMenuHandler(Menu daysmenu, MenuAction action, int client, in
 // Event Days Set Menu
 public Action Command_SetEventDay(int client, int args)
 {
-	if (gc_bDays.BoolValue && (warden_iswarden(client) || CheckVipFlag(client, g_sAdminFlag)))
+	if (CheckVipFlag(client, g_sAdminFlag))
+	{
+		Command_SetAdminEventDay(client);
+	}
+	else if (warden_iswarden(client))
+	{
+		Command_SetWardenEventDay(client);
+	}
+}
+// Wardens Event Days Set  Menu
+void Command_SetWardenEventDay(int client)
+{
+	if (gc_bDays.BoolValue)
 	{
 			Menu daysmenu = new Menu(SetEventMenuHandler);
 			
@@ -1792,7 +1922,7 @@ public Action Command_SetEventDay(int client, int args)
 			
 			if (g_bWar != null)
 			{
-				if (g_bWar.BoolValue)
+				if (g_bWar.BoolValue && g_bWardenWar.BoolValue)
 				{
 					Format(menuinfo, sizeof(menuinfo), "%T", "menu_war", client);
 					daysmenu.AddItem("setwar", menuinfo);
@@ -1800,7 +1930,7 @@ public Action Command_SetEventDay(int client, int args)
 			}
 			if (g_bFFA != null)
 			{
-				if (g_bFFA.BoolValue)
+				if (g_bFFA.BoolValue && g_bWardenFFA.BoolValue)
 				{
 					Format(menuinfo, sizeof(menuinfo), "%T", "menu_ffa", client);
 					daysmenu.AddItem("setffa", menuinfo);
@@ -1808,7 +1938,7 @@ public Action Command_SetEventDay(int client, int args)
 			}
 			if (g_bZombie != null)
 			{
-				if (g_bZombie.BoolValue)
+				if (g_bZombie.BoolValue && g_bWardenZombie.BoolValue)
 				{
 					Format(menuinfo, sizeof(menuinfo), "%T", "menu_zombie", client);
 					daysmenu.AddItem("setzombie", menuinfo);
@@ -1816,7 +1946,7 @@ public Action Command_SetEventDay(int client, int args)
 			}
 			if (g_bHide != null)
 			{
-				if (g_bHide.BoolValue)
+				if (g_bHide.BoolValue && g_bWardenHide.BoolValue)
 				{
 					Format(menuinfo, sizeof(menuinfo), "%T", "menu_hide", client);
 					daysmenu.AddItem("sethide", menuinfo);
@@ -1824,7 +1954,7 @@ public Action Command_SetEventDay(int client, int args)
 			}
 			if (g_bCatch != null)
 			{
-				if (g_bCatch.BoolValue)
+				if (g_bCatch.BoolValue && g_bWardenCatch.BoolValue)
 				{
 					Format(menuinfo, sizeof(menuinfo), "%T", "menu_catch", client);
 					daysmenu.AddItem("setcatch", menuinfo);
@@ -1832,7 +1962,7 @@ public Action Command_SetEventDay(int client, int args)
 			}
 			if (g_bGhosts != null)
 			{
-				if (g_bGhosts.BoolValue)
+				if (g_bGhosts.BoolValue && g_bWardenGhosts.BoolValue)
 				{
 					Format(menuinfo, sizeof(menuinfo), "%T", "menu_ghosts", client);
 					daysmenu.AddItem("setGhosts", menuinfo);
@@ -1840,7 +1970,7 @@ public Action Command_SetEventDay(int client, int args)
 			}
 			if (g_bSuicideBomber != null)
 			{
-				if (g_bSuicideBomber.BoolValue)
+				if (g_bSuicideBomber.BoolValue && g_bWardenSuicideBomber.BoolValue)
 				{
 					Format(menuinfo, sizeof(menuinfo), "%T", "menu_suicidebomber", client);
 					daysmenu.AddItem("setSuicideBomber", menuinfo);
@@ -1848,7 +1978,7 @@ public Action Command_SetEventDay(int client, int args)
 			}
 			if (g_bHEbattle != null)
 			{
-				if (g_bHEbattle.BoolValue)
+				if (g_bHEbattle.BoolValue && g_bWardenHEbattle.BoolValue)
 				{
 					Format(menuinfo, sizeof(menuinfo), "%T", "menu_hebattle", client);
 					daysmenu.AddItem("sethebattle", menuinfo);
@@ -1856,7 +1986,7 @@ public Action Command_SetEventDay(int client, int args)
 			}
 			if (g_bNoScope != null)
 			{
-				if (g_bNoScope.BoolValue)
+				if (g_bNoScope.BoolValue && g_bWardenNoScope.BoolValue)
 				{
 					Format(menuinfo, sizeof(menuinfo), "%T", "menu_noscope", client);
 					daysmenu.AddItem("setnoscope", menuinfo);
@@ -1864,7 +1994,7 @@ public Action Command_SetEventDay(int client, int args)
 			}
 			if (g_bDuckHunt != null)
 			{
-				if (g_bDuckHunt.BoolValue)
+				if (g_bDuckHunt.BoolValue && g_bWardenDuckHunt.BoolValue)
 				{
 					Format(menuinfo, sizeof(menuinfo), "%T", "menu_duckhunt", client);
 					daysmenu.AddItem("setduckhunt", menuinfo);
@@ -1872,7 +2002,7 @@ public Action Command_SetEventDay(int client, int args)
 			}
 			if (g_bDealDamage != null)
 			{
-				if (g_bDealDamage.BoolValue)
+				if (g_bDealDamage.BoolValue && g_bWardenDealDamage.BoolValue)
 				{
 					Format(menuinfo, sizeof(menuinfo), "%T", "menu_dealdamge", client);
 					daysmenu.AddItem("setdeal", menuinfo);
@@ -1880,7 +2010,7 @@ public Action Command_SetEventDay(int client, int args)
 			}
 			if (g_bZeus != null)
 			{
-				if (g_bZeus.BoolValue)
+				if (g_bZeus.BoolValue && g_bWardenZeus.BoolValue)
 				{
 					Format(menuinfo, sizeof(menuinfo), "%T", "menu_zeus", client);
 					daysmenu.AddItem("setzeus", menuinfo);
@@ -1888,7 +2018,7 @@ public Action Command_SetEventDay(int client, int args)
 			}
 			if (g_bDrunk != null)
 			{
-				if (g_bDrunk.BoolValue)
+				if (g_bDrunk.BoolValue && g_bWardenDrunk.BoolValue)
 				{
 					Format(menuinfo, sizeof(menuinfo), "%T", "menu_drunk", client);
 					daysmenu.AddItem("setdrunk", menuinfo);
@@ -1896,7 +2026,7 @@ public Action Command_SetEventDay(int client, int args)
 			}
 			if (g_bKnife != null)
 			{
-				if (g_bKnife.BoolValue)
+				if (g_bKnife.BoolValue && g_bWardenKnife.BoolValue)
 				{
 					Format(menuinfo, sizeof(menuinfo), "%T", "menu_knifefight", client);
 					daysmenu.AddItem("setknife", menuinfo);
@@ -1904,7 +2034,7 @@ public Action Command_SetEventDay(int client, int args)
 			}
 			if (g_bTorch != null)
 			{
-				if (g_bTorch.BoolValue)
+				if (g_bTorch.BoolValue && g_bWardenTorch.BoolValue)
 				{
 					Format(menuinfo, sizeof(menuinfo), "%T", "menu_torch", client);
 					daysmenu.AddItem("settorch", menuinfo);
@@ -1912,7 +2042,7 @@ public Action Command_SetEventDay(int client, int args)
 			}
 			if (g_bCowboy != null)
 			{
-				if (g_bCowboy.BoolValue)
+				if (g_bCowboy.BoolValue && g_bWardenCowboy.BoolValue)
 				{
 					Format(menuinfo, sizeof(menuinfo), "%T", "menu_cowboy", client);
 					daysmenu.AddItem("setcowboy", menuinfo);
@@ -1920,7 +2050,7 @@ public Action Command_SetEventDay(int client, int args)
 			}
 			if (g_bFreeday != null)
 			{
-				if (g_bFreeday.BoolValue)
+				if (g_bFreeday.BoolValue && g_bWardenFreeday.BoolValue)
 				{
 					Format(menuinfo, sizeof(menuinfo), "%T", "menu_Freeday", client);
 					daysmenu.AddItem("setFreeday", menuinfo);
@@ -1930,7 +2060,160 @@ public Action Command_SetEventDay(int client, int args)
 			daysmenu.ExitBackButton = true;
 			daysmenu.Display(client, MENU_TIME_FOREVER);
 	}
-	return Plugin_Handled;
+}
+
+// Admins Event Days Set Menu
+void Command_SetAdminEventDay(int client)
+{
+	if (gc_bDays.BoolValue)
+	{
+			Menu daysmenu = new Menu(SetEventMenuHandler);
+			
+			char menuinfo[255];
+			
+			Format(menuinfo, sizeof(menuinfo), "%T", "menu_event_Titlestart", client);
+			daysmenu.SetTitle(menuinfo);
+			
+			if (g_bWar != null)
+			{
+				if (g_bWar.BoolValue && g_bSetWar.BoolValue)
+				{
+					Format(menuinfo, sizeof(menuinfo), "%T", "menu_war", client);
+					daysmenu.AddItem("setwar", menuinfo);
+				}
+			}
+			if (g_bFFA != null)
+			{
+				if (g_bFFA.BoolValue && g_bSetFFA.BoolValue)
+				{
+					Format(menuinfo, sizeof(menuinfo), "%T", "menu_ffa", client);
+					daysmenu.AddItem("setffa", menuinfo);
+				}
+			}
+			if (g_bZombie != null)
+			{
+				if (g_bZombie.BoolValue && g_bSetZombie.BoolValue)
+				{
+					Format(menuinfo, sizeof(menuinfo), "%T", "menu_zombie", client);
+					daysmenu.AddItem("setzombie", menuinfo);
+				}
+			}
+			if (g_bHide != null)
+			{
+				if (g_bHide.BoolValue && g_bSetHide.BoolValue)
+				{
+					Format(menuinfo, sizeof(menuinfo), "%T", "menu_hide", client);
+					daysmenu.AddItem("sethide", menuinfo);
+				}
+			}
+			if (g_bCatch != null)
+			{
+				if (g_bCatch.BoolValue && g_bSetCatch.BoolValue)
+				{
+					Format(menuinfo, sizeof(menuinfo), "%T", "menu_catch", client);
+					daysmenu.AddItem("setcatch", menuinfo);
+				}
+			}
+			if (g_bGhosts != null)
+			{
+				if (g_bGhosts.BoolValue && g_bSetGhosts.BoolValue)
+				{
+					Format(menuinfo, sizeof(menuinfo), "%T", "menu_ghosts", client);
+					daysmenu.AddItem("setGhosts", menuinfo);
+				}
+			}
+			if (g_bSuicideBomber != null)
+			{
+				if (g_bSuicideBomber.BoolValue && g_bSetSuicideBomber.BoolValue)
+				{
+					Format(menuinfo, sizeof(menuinfo), "%T", "menu_suicidebomber", client);
+					daysmenu.AddItem("setSuicideBomber", menuinfo);
+				}
+			}
+			if (g_bHEbattle != null)
+			{
+				if (g_bHEbattle.BoolValue && g_bSetHEbattle.BoolValue)
+				{
+					Format(menuinfo, sizeof(menuinfo), "%T", "menu_hebattle", client);
+					daysmenu.AddItem("sethebattle", menuinfo);
+				}
+			}
+			if (g_bNoScope != null)
+			{
+				if (g_bNoScope.BoolValue && g_bSetNoScope.BoolValue)
+				{
+					Format(menuinfo, sizeof(menuinfo), "%T", "menu_noscope", client);
+					daysmenu.AddItem("setnoscope", menuinfo);
+				}
+			}
+			if (g_bDuckHunt != null)
+			{
+				if (g_bDuckHunt.BoolValue && g_bSetDuckHunt.BoolValue)
+				{
+					Format(menuinfo, sizeof(menuinfo), "%T", "menu_duckhunt", client);
+					daysmenu.AddItem("setduckhunt", menuinfo);
+				}
+			}
+			if (g_bDealDamage != null)
+			{
+				if (g_bDealDamage.BoolValue && g_bSetDealDamage.BoolValue)
+				{
+					Format(menuinfo, sizeof(menuinfo), "%T", "menu_dealdamge", client);
+					daysmenu.AddItem("setdeal", menuinfo);
+				}
+			}
+			if (g_bZeus != null)
+			{
+				if (g_bZeus.BoolValue && g_bSetZeus.BoolValue)
+				{
+					Format(menuinfo, sizeof(menuinfo), "%T", "menu_zeus", client);
+					daysmenu.AddItem("setzeus", menuinfo);
+				}
+			}
+			if (g_bDrunk != null)
+			{
+				if (g_bDrunk.BoolValue && g_bSetDrunk.BoolValue)
+				{
+					Format(menuinfo, sizeof(menuinfo), "%T", "menu_drunk", client);
+					daysmenu.AddItem("setdrunk", menuinfo);
+				}
+			}
+			if (g_bKnife != null)
+			{
+				if (g_bKnife.BoolValue && g_bSetKnife.BoolValue)
+				{
+					Format(menuinfo, sizeof(menuinfo), "%T", "menu_knifefight", client);
+					daysmenu.AddItem("setknife", menuinfo);
+				}
+			}
+			if (g_bTorch != null)
+			{
+				if (g_bTorch.BoolValue && g_bSetTorch.BoolValue)
+				{
+					Format(menuinfo, sizeof(menuinfo), "%T", "menu_torch", client);
+					daysmenu.AddItem("settorch", menuinfo);
+				}
+			}
+			if (g_bCowboy != null)
+			{
+				if (g_bCowboy.BoolValue && g_bSetCowboy.BoolValue)
+				{
+					Format(menuinfo, sizeof(menuinfo), "%T", "menu_cowboy", client);
+					daysmenu.AddItem("setcowboy", menuinfo);
+				}
+			}
+			if (g_bFreeday != null)
+			{
+				if (g_bFreeday.BoolValue && g_bSetFreeday.BoolValue)
+				{
+					Format(menuinfo, sizeof(menuinfo), "%T", "menu_Freeday", client);
+					daysmenu.AddItem("setFreeday", menuinfo);
+				}
+			}
+			daysmenu.ExitButton = true;
+			daysmenu.ExitBackButton = true;
+			daysmenu.Display(client, MENU_TIME_FOREVER);
+	}
 }
 
 // Event Days Set Handler

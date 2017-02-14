@@ -113,7 +113,6 @@ public void OnPluginStart()
 
 	HookConVarChange(gc_sGroupRatio, OnSettingChanged);
 	HookConVarChange(gc_sGroupWarden, OnSettingChanged);
-
 }
 
 // ConVarChange for Strings
