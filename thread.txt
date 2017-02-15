@@ -37,6 +37,7 @@ MyJailbreak is a redux rewrite of [URL="https://github.com/Franc1sco/Franug-Jail
 [*][B]Duckhunt[/B] - CT(hunter) with nova vs T(chicken in 3th person) with 'nades
 [*][B]Suicide Bomber[/B] - Ts got suicide bombs to kill all CTs
 [*][B]Drunken[/B] - Deathmatch under bad condisions
+[*][B]Ghost War[/B] - Deathmatch - you can see the enemy just for seconds
 [*][B]Deal Damage[/B] - Deal so much damage as you can to enemy team. Team with most damage dealed wins
 [*][B]Zeus[/B] - Taser Deathmatch and gets a new Zeus on Kill
 [*][B]Torch Relay[/b] - Random player set on fire. He must burn other to extinguish the fire
@@ -2329,6 +2330,8 @@ sm_guard - Allows the prisoners to queue to CT
 sm_viewqueue  - Allows a player to show queue to CT.
 sm_leavequeue - Allows a player to leave queue to CT.
 sm_ratio - Allows the admin toggle the ratio check and player to see if ratio is enabled
+sm_prisoner - Allows a player to join prisoner
+sm_spectator - Allows a player to join spectator
 
 set your own custom guard command. take a look at "sm_ratio_cmd"
 [/CODE]
@@ -5143,9 +5146,9 @@ sm_torch_sprint_speed "1.25"
 // -
 // Default: "3.0"
 // Minimum: "1.000000"
-sm_torch_sprint_time "3.0"[/SPOILER]
+sm_torch_sprint_time "3.0"
 [/CODE]
-
+[/SPOILER]
 
 [U][B]Cowboy[/B][/U]
 This plugin allows players to vote and warden to set next rounds to cowboy  
@@ -5310,6 +5313,162 @@ sm_cowboy_allow_lr "0"
 [/CODE]
 [/SPOILER]
 
+
+
+[U][B]Ghost War[/B][/U]
+This plugin allows players to vote and warden to set next round to ghost war.  
+On Round start all players are invisible with godmode, every 5 seconds all players become visible & lose godemode for 3 seconds, after that become invisible again. and so on.
+
+[b]Commands[/b]
+[SPOILER]
+[CODE]
+sm_setghosts - Allows the Admin or Warden to set Ghosts
+sm_ghosts - Allows players to vote for a Ghosts"
+  
+set your own custom command. take a look at "sm_ghosts_cmds_***"
+[/CODE]
+[/SPOILER]
+[b]ConVars[/b]
+[SPOILER]
+[CODE]
+// 0 - disabled, 1 - enable this MyJailbreak SourceMod plugin
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_ghosts_enable "1"
+
+// Set your custom chat command for Event voting(!ghosts (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
+// -
+// Default: "ghostwar, invisiblewar"
+sm_ghosts_cmds_vote "ghostwar, invisiblewar"
+
+// Set your custom chat command for set Event(!setghosts (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
+// -
+// Default: "sghosts, sghostwar, sg"
+sm_ghosts_cmds_set "sghosts, sghostwar, sg"
+
+// 0 - disabled, 1 - allow warden to set ghosts round
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_ghosts_warden "1"
+
+// 0 - disabled, 1 - allow admin/vip to set ghosts round
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_ghosts_admin "1"
+
+// Set flag for admin/vip to set this Event Day.
+// -
+// Default: "g"
+sm_ghosts_flag "g"
+
+// 0 - disabled, 1 - allow player to vote for ghosts
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_ghosts_vote "1"
+
+// 0 - T teleport to CT spawn, 1 - cell doors auto open
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_ghosts_spawn "0"
+
+// Rounds to play in a row
+// -
+// Default: "1"
+// Minimum: "1.000000"
+sm_ghosts_rounds "1"
+
+// Round time in minutes for a single ghosts round
+// -
+// Default: "5"
+// Minimum: "1.000000"
+sm_ghosts_roundtime "5"
+
+// Time in seconds until the beacon turned on (set to 0 to disable)
+// -
+// Default: "240"
+// Minimum: "0.000000"
+sm_ghosts_beacon_time "240"
+
+// Time in seconds players can't deal damage
+// -
+// Default: "30"
+// Minimum: "0.000000"
+sm_ghosts_trucetime "30"
+
+// Time in seconds players are invisible & immortal
+// -
+// Default: "6.0"
+// Minimum: "1.000000"
+sm_ghosts_invisible_time "6.0"
+
+// Time in seconds players are visible & mortal
+// -
+// Default: "2.0"
+// Minimum: "1.000000"
+sm_ghosts_visisble_time "2.0"
+
+// Rounds cooldown after a event until event can be start again
+// -
+// Default: "3"
+// Minimum: "0.000000"
+sm_ghosts_cooldown_day "3"
+
+// Rounds until event can be start after mapchange.
+// -
+// Default: "3"
+// Minimum: "0.000000"
+sm_ghosts_cooldown_start "3"
+
+// 0 - disabled, 1 - ignore the cooldown when admin/vip set ghosts round
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_ghosts_cooldown_admin "1"
+
+// 0 - disabled, 1 - enable sounds
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_ghosts_sounds_enable "1"
+
+// Path to the soundfile which should be played for a start.
+// -
+// Default: "music/MyJailbreak/start.mp3"
+sm_ghosts_sounds_start "music/MyJailbreak/start.mp3"
+
+// 0 - disabled, 1 - enable overlays
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_ghosts_overlays_enable "1"
+
+// Path to the start Overlay DONT TYPE .vmt or .vft
+// -
+// Default: "overlays/MyJailbreak/start"
+sm_ghosts_overlays_start "overlays/MyJailbreak/start"
+
+// 0 - disabled, 1 - enable LR for last round and end eventday
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_ghosts_allow_lr "0"
+
+[/CODE]
+[/SPOILER]
 
 
 [U][B]Freeday[/B][/U]
@@ -5942,6 +6101,8 @@ native MyIcons_BlockClientIcon(int client, bool status);
     [*]new plugin - ghosts.smx - please help translate http://translator.mitchdempsey.com/sourcemod_plugins/271
     [/LIST][INDENT][LIST]
     [*]new cvar - sm_ghosts_enable - 0 - disabled, 1 - enable this MyJailbreak SourceMod plugin
+        [*]new command - sm_setghosts - Allows the Admin or Warden to set Ghosts
+        [*]new command - sm_ghosts - Allows players to vote for a Ghosts"
         [*]new cvar - sm_ghosts_cmds_vote - Set your custom chat command for Event voting(!ghosts (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
         [*]new cvar - sm_ghosts_cmds_set - Set your custom chat command for set Event(!ghosts (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
         [*]new cvar - sm_ghosts_warden - 0 - disabled, 1 - allow warden to set ghosts round

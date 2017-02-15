@@ -246,7 +246,7 @@ public Action Command_Weapons(int client, int args)
 		{
 			if (gp_bHosties)
 			{
-				if (IsClientInLastRequest(client) != false)
+				if (IsClientInLastRequest(client) != 0)
 					return Plugin_Handled;
 			}
 
