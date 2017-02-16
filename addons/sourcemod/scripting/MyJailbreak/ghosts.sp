@@ -606,7 +606,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 			SetEntData(i, g_iCollision_Offset, 2, 4, true);
 
 			SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
-			
+
 			SDKHook(i, SDKHook_SetTransmit, Hook_SetTransmit);
 
 			if (gp_bMyIcons)
@@ -658,6 +658,8 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			}
 		}
 
+		g_bGhostsRunning = false;
+
 		delete g_hTimerTruce;
 		delete g_hTimerBeacon;
 
@@ -674,7 +676,6 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 		if (g_iRound == g_iMaxRound)
 		{
 			g_bIsGhosts = false;
-			g_bGhostsRunning = false;
 			g_iRound = 0;
 			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
 
@@ -921,7 +922,7 @@ public Action Timer_StartEvent(Handle timer)
 	g_hTimerTruce = null;
 	CreateTimer(gc_fVisibleTime.FloatValue, Timer_MakeGhosts);
 
-	PrintCenterTextAll("%t/n<font size='30' color='#FF0000'>%t</font>", "ghosts_start_nc", "ghosts_visible");
+	PrintCenterTextAll("%t\n<font size='30' color='#FF0000'>%t</font>", "ghosts_start_nc", "ghosts_visible");
 	CPrintToChatAll("%t %t", "ghosts_tag", "ghosts_start");
 
 	return Plugin_Stop;
