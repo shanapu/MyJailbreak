@@ -52,7 +52,8 @@ ConVar gc_bTerror;
 ConVar gc_bCTerror;
 ConVar gc_bWarden;
 ConVar gc_bDeputy;
-ConVar gc_bDays;
+ConVar gc_bDaysSet;
+ConVar gc_bDaysVote;
 ConVar gc_bClose;
 ConVar gc_bStart;
 ConVar gc_bWelcome;
@@ -244,7 +245,8 @@ public void OnPluginStart()
 	gc_bTerror = AutoExecConfig_CreateConVar("sm_menu_t", "1", "0 - disabled, 1 - enable t jailbreak menu", _, true, 0.0, true, 1.0);
 	gc_bWarden = AutoExecConfig_CreateConVar("sm_menu_warden", "1", "0 - disabled, 1 - enable warden jailbreak menu", _, true, 0.0, true, 1.0);
 	gc_bDeputy = AutoExecConfig_CreateConVar("sm_menu_deputy", "1", "0 - disabled, 1 - enable deputy jailbreak menu", _, true, 0.0, true, 1.0);
-	gc_bDays = AutoExecConfig_CreateConVar("sm_menu_days", "1", "0 - disabled, 1 - enable vote/set eventdays menu", _, true, 0.0, true, 1.0);
+	gc_bDaysVote = AutoExecConfig_CreateConVar("sm_menu_votedays", "1", "0 - disabled, 1 - enable vote eventdays menu", _, true, 0.0, true, 1.0);
+	gc_bDaysSet = AutoExecConfig_CreateConVar("sm_menu_setdays", "1", "0 - disabled, 1 - enable set eventdays menu", _, true, 0.0, true, 1.0);
 	gc_bClose = AutoExecConfig_CreateConVar("sm_menu_close", "0", "0 - disabled, 1 - enable close menu after action", _, true, 0.0, true, 1.0);
 	gc_bStart = AutoExecConfig_CreateConVar("sm_menu_start", "1", "0 - disabled, 1 - enable open menu on every roundstart", _, true, 0.0, true, 1.0);
 	gc_bTeam = AutoExecConfig_CreateConVar("sm_menu_team", "1", "0 - disabled, 1 - enable join team on menu", _, true, 0.0, true, 1.0);
@@ -304,7 +306,7 @@ void MyAdminMenuReady(Handle h_TopMenu)
 		{
 			AddToTopMenu(gH_TopMenu, "sm_votedays", TopMenuObject_Item, Handler_AdminMenu_VoteDays, gM_MyJB, "sm_voteday");
 		}
-		if (gc_bDays.BoolValue)
+		if (gc_bDaysSet.BoolValue)
 		{
 			AddToTopMenu(gH_TopMenu, "sm_setday", TopMenuObject_Item, Handler_AdminMenu_SetDay, gM_MyJB, "sm_setday");
 		}
@@ -840,7 +842,7 @@ public Action Command_OpenMenu(int client, int args)
 						Format(menuinfo, sizeof(menuinfo), "%T", "menu_voteday", client);
 						mainmenu.AddItem("voteday", menuinfo);
 					}
-					if (gc_bDays.BoolValue)
+					if (gc_bDaysSet.BoolValue)
 					{
 						Format(menuinfo, sizeof(menuinfo), "%T", "menu_seteventdays", client);
 						mainmenu.AddItem("setdays", menuinfo);
@@ -1151,7 +1153,7 @@ public Action Command_OpenMenu(int client, int args)
 					
 					if (StrEqual(EventDay, "none", false)) // is an other event running or set?
 					{
-						if (gc_bDays.BoolValue)
+						if (gc_bDaysVote.BoolValue)
 						{
 							Format(menuinfo, sizeof(menuinfo), "%T", "menu_voteeventdays", client);
 							mainmenu.AddItem("votedays", menuinfo);
@@ -1228,7 +1230,7 @@ public Action Command_OpenMenu(int client, int args)
 					
 					if (StrEqual(EventDay, "none", false)) // is an other event running or set?
 					{
-						if (gc_bDays.BoolValue)
+						if (gc_bDaysVote.BoolValue)
 						{
 							Format(menuinfo, sizeof(menuinfo), "%T", "menu_voteeventdays", client);
 							mainmenu.AddItem("votedays", menuinfo);
@@ -1302,7 +1304,7 @@ public Action Command_OpenMenu(int client, int args)
 								Format(menuinfo, sizeof(menuinfo), "%T", "menu_voteday", client);
 								mainmenu.AddItem("voteday", menuinfo);
 							}
-							if (gc_bDays.BoolValue)
+							if (gc_bDaysSet.BoolValue)
 							{
 								Format(menuinfo, sizeof(menuinfo), "%T", "menu_seteventdays", client);
 								mainmenu.AddItem("setdays", menuinfo);
@@ -1585,7 +1587,7 @@ public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selec
 // Event Day Voting Menu
 public Action Command_VoteEventDays(int client, int args)
 {
-	if (gc_bDays.BoolValue)
+	if (gc_bDaysVote.BoolValue)
 	{
 			Menu daysmenu = new Menu(VoteEventMenuHandler);
 			
@@ -1911,7 +1913,7 @@ public Action Command_SetEventDay(int client, int args)
 // Wardens Event Days Set  Menu
 void Command_SetWardenEventDay(int client)
 {
-	if (gc_bDays.BoolValue)
+	if (gc_bDaysSet.BoolValue)
 	{
 			Menu daysmenu = new Menu(SetEventMenuHandler);
 			
@@ -2065,7 +2067,7 @@ void Command_SetWardenEventDay(int client)
 // Admins Event Days Set Menu
 void Command_SetAdminEventDay(int client)
 {
-	if (gc_bDays.BoolValue)
+	if (gc_bDaysSet.BoolValue)
 	{
 			Menu daysmenu = new Menu(SetEventMenuHandler);
 			

@@ -1,6 +1,6 @@
 ### Change Log
   
-**[Beta 10.0.dev]** - Ghosts War, Warden restrict & limits
+**[Beta 9.1.dev]** - Ghosts War, Warden restrict & limits
   
 *Added*
 *  Ratio: Support for SteamRep.com, FantoMs CT Bans & Steam Groups - new switch commands & more
@@ -69,8 +69,11 @@
   
 *Changed*
 *  Warden - disarm: disbale weapon disarm (shot hand to drop weapon) on last request
-*  Menu: Moved admin commands to !admin menu
+*  Menu: Moved admin commands to !admin menu & split vote/set menu with changed cvars
     *  new cvar - sm_menu_admin - 0 - disable admin commands in all menus, 1 - show admin commands only in Myjailbreak menu, 2 - show admin command only in !admin menu, 3 - display admin command in all menus
+    *  removed cvar - sm_menu_days - obsolete cvar. **Please remove from your config!**
+    *  new cvar - sm_menu_setdays - 0 - disable, 1 - enable set eventdays menu for warden & admins
+    *  new cvar - sm_menu_votedays - 0 - disable, 1 - enable vote eventdays menu all players
 *  Warden - freeday: changed cvar 'sm_warden_freeday_victim_deputy' to 'sm_warden_freeday_deputy'
     *  removed cvar - sm_warden_freeday_victim_deputy - obsolete cvar. **Please remove them from your configs!**
     *  new cvar - sm_warden_freeday_deputy - 0 - disabled, 1 - Allow the deputy to set a personal freeday
@@ -80,6 +83,7 @@
     *  renamed plugin - ratio_rankme to myjailbreak_rankme
     *  renamed plugin - ratio_reputation to myjailbreak_reputation
     *  renamed plugin - ratio_stamm to myjailbreak_stamm
+*  Removed: 
   
   
 *Fixed*
@@ -88,19 +92,20 @@
 *  Menu - Eventday Voting - fix double Event when event was set while voting
 *  Warden - dropguns: no more punishment on empty taser
 *  Warden - deputy: missing translation
-*  Request: missing translation
+*  Warden - friendly fire: working toggle with TeamGames
 *  Hide: Remove icons on hide in the dark
 *  DealDamage: fix result screen
 *  Icons: fix some *_enable cvars
 *  Weapons: restrict !guns for player in LastRequest
 *  Late loading: re/load plugin in round Thx @olegtsvetkov
+*  some translation
 *  rar error weapon not owned by client
 *  removed some debug messages
 *  minor errors
   
   
 *Developer stuff*
-*  Forwards: New Forwards for start/end of a Eventday & lastGuardRuleStart
+*  Forwards: New Forwards for start/end of a Eventday & LastGuardRuleStart
     *  new Forwards - MyJailbreak_OnLastGuardRuleStart()
     *  new Forwards - MyJailbreak_OnEventDayStart(char[] EventDayName)
     *  new Forwards - MyJailbreak_OnEventDayEnd(char[] EventDayName, int winner)

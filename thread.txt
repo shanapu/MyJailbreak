@@ -41,7 +41,7 @@ MyJailbreak is a redux rewrite of [URL="https://github.com/Franc1sco/Franug-Jail
 [*][B]Deal Damage[/B] - Deal so much damage as you can to enemy team. Team with most damage dealed wins
 [*][B]Zeus[/B] - Taser Deathmatch and gets a new Zeus on Kill
 [*][B]Torch Relay[/b] - Random player set on fire. He must burn other to extinguish the fire
-[*][B]Cowboy[/b] - Deatmacth with revolver or dual barettas
+[*][B]Cowboy[/b] - Deathmatch with revolver or dual barettas
 [*][B]Knife[/B] - Knife Deathmatch with configurable gravity, iceskate, and thirdperson
 [*][B]Freeday[/B] - Auto freeday on first round &/or if there is no CT
 [/LIST][/INDENT]
@@ -6064,7 +6064,7 @@ native MyIcons_BlockClientIcon(int client, bool status);
 [B][u]Latest Changes[/u][/B]
 [QUOTE] 
 
-[b][Beta 10.0.dev][/b] - Ghosts War, Warden restrict & limits
+[b][Beta 10.0][/b] - Ghosts War, Warden restrict & limits
   [SPOILER]
 [i]Added[/i]
 [LIST]
@@ -6167,9 +6167,12 @@ native MyIcons_BlockClientIcon(int client, bool status);
 [i]Changed[/i]
 [LIST]
 [*]Warden - disarm: disbale weapon disarm (shot hand to drop weapon) on last request
-[*]Menu: Moved admin commands to !admin menu
+[*]Menu: Moved admin commands to !admin menu & split vote/set menu with changed cvars
 [/LIST][INDENT][LIST]
     [*]new cvar - sm_menu_admin - 0 - disable admin commands in all menus, 1 - show admin commands only in Myjailbreak menu, 2 - show admin command only in !admin menu, 3 - display admin command in all menus
+    [*]removed cvar - sm_menu_days - obsolete cvar. **Please remove from your config!**
+    [*]new cvar - sm_menu_setdays - 0 - disable, 1 - enable set eventdays menu for warden & admins
+    [*]new cvar - sm_menu_votedays - 0 - disable, 1 - enable vote eventdays menu all players
 [/LIST][/INDENT]
 [LIST]
 [*]Warden - freeday: changed cvar 'sm_warden_freeday_victim_deputy' to 'sm_warden_freeday_deputy'
@@ -6515,7 +6518,7 @@ based/merged/used code/idea plugins:
 [/SPOILER]
 [SIZE="5"]THANKS FOR MAKING FREE SOFTWARE![/SIZE] :bacon!: :bacon!:
 [U]Much Thanks: [/U]
-devu4, good_live, Weeeishy, [s]UartigZone[/s](FAKER), Got Sw4g? terminator18, SkeLeXes, 0dieter0, maKs, TomseN48, Horoxx, zeddy, NrX, ElleVen, Bchewy, Include1, alsacchi, Murr, poppin-fresh, databomb, r3D w0LF, JacobThePigeon, mrkos9i4ok for bughunting, translation & great ideas!
+devu4, good_live, olegtsvetkov, Weeeishy, kiko, Got Sw4g? terminator18, SkeLeXes, 0dieter0, maKs, TomseN48, Horoxx, zeddy, NrX, ElleVen, Bchewy, Include1, alsacchi, Murr, poppin-fresh, databomb, r3D w0LF, JacobThePigeon, mrkos9i4ok, caaine, Murr, Hexer10 for bughunting, translation & great ideas!
 
 
 
