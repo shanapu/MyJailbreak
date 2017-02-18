@@ -73,14 +73,14 @@ stock void StripAllPlayerWeapons(int client)
 	{
 		if ((weapon = GetPlayerWeaponSlot(client, i)) != -1)
 		{
-			RemovePlayerItem(client, weapon, false);
+			RemovePlayerItem(client, weapon);
 			AcceptEntityInput(weapon, "Kill");
 		}
 	}
 
 	if ((weapon = GetPlayerWeaponSlot(client, CS_SLOT_KNIFE)) != -1)   // strip knife slot 2 times for taser
 	{
-		RemovePlayerItem(client, weapon, false);
+		RemovePlayerItem(client, weapon);
 		AcceptEntityInput(weapon, "Kill");
 	}
 }
