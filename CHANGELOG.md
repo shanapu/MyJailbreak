@@ -1,5 +1,123 @@
 ### Change Log
   
+**[Beta 9.1.dev]** - Ghosts War, Warden restrict & limits
+  
+*Added*
+*  Ratio: Support for SteamRep.com, FantoMs CT Bans & Steam Groups - new switch commands & more
+    *  new command - sm_prisoner - Allows a player to join prisoner
+    *  new command - sm_spectator - Allows a player to join spectator
+    *  new cvar - sm_ratio_cmds_clear - Set your custom chat command for admins to clear the guard queue (!clearqueue (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
+    *  new cvar - sm_ratio_cmds_prisoner - Set your custom chat command for player to move to prisoner (!prisoner (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
+    *  new cvar - sm_ratio_cmds_spec - Set your custom chat command for player to move to spectator (!spectator (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
+    *  new plugin - disabled/ratio_ct_bans.smx - Support plugin for FantoMs CT Bans plugin
+    *  new plugin - disabled/ratio_steamrep.smx - Support plugin for Jameless SteamRep.com Checker plugin
+        *  new cvar - sm_ratio_steamrep_exclude - Which tags you DO NOT trust for reported scammers. Input the tags here for any community whose bans you DO NOT TRUST.
+        *  new cvar - sm_ratio_steamrep_checkip - Include IP address of connecting players in query. Set to 0 to disable
+    *  new plugin - disabled/myjailbreak_steamgroup.smx - Warden & Ratio support plugin for Steam Groups (need SteamWorks extension!)
+        *  new cvar - sm_ratio_steamgroup - Steamgroup a player must be member before join CT (Find it on your steam groups edit page) (0000000 = disabled)
+*  Warden: Added restict system for become warden like ratio restricts
+    *  new cvar - sm_warden_stamm - 0 - disabled, how many stamm points a player need to become warden? (only if stamm is available)
+    *  new cvar - sm_warden_reputation - 0 - disabled, how many reputation a player need to join ct? (only if reputation is available)
+    *  new cvar - sm_warden_rankme - 0 - disabled, how many rankme points a player need to become warden? (only if stamm is available)
+    *  new plugin - disabled/myjailbreak_steamgroup.smx - Warden & Ratio support plugin for Steam Groups (need SteamWorks extension!)
+        *  new cvar - sm_warden_steamgroup - Steamgroup a player must be member before become Warden (Find it on your steam groups edit page) (0000000 = disabled)
+*  New Eventday: Ghosts War - All Players are invisbile & immortal - every 6 seconds they go visible and mortal for 2 seconds. Last alive wins.
+    *  new plugin - ghosts.smx - please help translate http://translator.mitchdempsey.com/sourcemod_plugins/271
+        *  new command - sm_setghosts - Allows the Admin or Warden to set Ghosts
+        *  new command - sm_ghosts - Allows players to vote for a Ghosts"
+        *  new cvar - sm_ghosts_enable - 0 - disabled, 1 - enable this MyJailbreak SourceMod plugin
+        *  new cvar - sm_ghosts_cmds_vote - Set your custom chat command for Event voting(!ghosts (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
+        *  new cvar - sm_ghosts_cmds_set - Set your custom chat command for set Event(!ghosts (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
+        *  new cvar - sm_ghosts_warden - 0 - disabled, 1 - allow warden to set ghosts round
+        *  new cvar - sm_ghosts_admin - 0 - disabled, 1 - allow admin/vip to set ghosts round
+        *  new cvar - sm_ghosts_flag - Set flag for admin/vip to set this Event Day
+        *  new cvar - sm_ghosts_vote - 0 - disabled, 1 - allow player to vote for ghosts
+        *  new cvar - sm_ghosts_spawn - 0 - T teleport to CT spawn, 1 - cell doors auto open
+        *  new cvar - sm_ghosts_rounds - Rounds to play in a row
+        *  new cvar - sm_ghosts_invisible_time - Time in seconds players are invisible & immortal
+        *  new cvar - sm_ghosts_visisble_time - Time in seconds players are visible & mortal
+        *  new cvar - sm_ghosts_roundtime - Round time in minutes for a single ghosts round
+        *  new cvar - sm_ghosts_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
+        *  new cvar - sm_ghosts_trucetime - Time in seconds players can't deal damage
+        *  new cvar - sm_ghosts_cooldown_day - Rounds cooldown after a event until event can be start again
+        *  new cvar - sm_ghosts_cooldown_start - Rounds until event can be start after mapchange
+        *  new cvar - sm_ghosts_cooldown_admin - 0 - disabled, 1 - ignore the cooldown when admin/vip set ghosts round
+        *  new cvar - sm_ghosts_sounds_enable - 0 - disabled, 1 - enable sounds
+        *  new cvar - sm_ghosts_sounds_start - Path to the soundfile which should be played for a start
+        *  new cvar - sm_ghosts_overlays_enable - 0 - disabled, 1 - enable overlays
+        *  new cvar - sm_ghosts_overlays_start - Path to the start Overlay DONT TYPE .vmt or .vft
+        *  new cvar - sm_ghosts_allow_lr - 0 - disabled, 1 - enable LR for last round and end eventday
+    * Menu: added new eventday ghosts to set/voting menu
+*  Hide: Added last request for hide in the dark
+    *  new cvar - sm_hide_allow_lr - 0 - disabled, 1 - enable LR for last round and end eventday
+*  Warden - Orders: Set your custom commands for every single order.
+*  Warden: Limit max rounds in a row as warden incl cooldown
+    *  new cvar - sm_warden_limit - 0 - disabled, rounds in a row a player can be warden
+    *  new cvar - sm_warden_limit_minplayer - How many CT must be online before sm_warden_limit is active
+    *  new cvar - sm_warden_cooldown_limit - 0 - disabled, rounds player can't become warden after he reached the warden limit (sm_warden_limit)
+*  Warden: Player cooldown for become warden after a remove vote or remove warden by admin
+    *  new cvar - sm_warden_cooldown_remove - 0 - disabled, rounds player can't become warden after he was vote out or removed by admin
+*  Warden: Player cooldown for become warden after a roundstart, when player was warden in last round. to give other players chance to become warden
+    *  new cvar - sm_warden_cooldown_roundstart - Time in seconds a the warden of last round must wait until become warden again, to give other player chance to be warden (need sm_warden_stay '0')
+*  Warden: Cvar to allow all Guards to give personal freedays
+    *  new cvar - sm_warden_freeday_guard - 0 - disabled, 1 - Allow all the guards to set a personal freeday. Default 0
+*  Zombie: Health Regeneration for zombies
+    *  new cvar - sm_zombie_zombie_regen - 0 - disabled, HPs a Zombie regenerates every 5 seconds
+*  Weapons: Added Revolver
+*  TeamGames: Stop current game, remove player from teams & destroy fence on active LastGuardRule
+  
+  
+*Changed*
+*  Warden - disarm: disbale weapon disarm (shot hand to drop weapon) on last request
+*  Menu: Moved admin commands to !admin menu & split vote/set menu with changed cvars
+    *  new cvar - sm_menu_admin - 0 - disable admin commands in all menus, 1 - show admin commands only in Myjailbreak menu, 2 - show admin command only in !admin menu, 3 - display admin command in all menus
+    *  removed cvar - sm_menu_days - obsolete cvar. **Please remove from your config!**
+    *  new cvar - sm_menu_setdays - 0 - disable, 1 - enable set eventdays menu for warden & admins
+    *  new cvar - sm_menu_votedays - 0 - disable, 1 - enable vote eventdays menu all players
+*  Warden - freeday: changed cvar 'sm_warden_freeday_victim_deputy' to 'sm_warden_freeday_deputy'
+    *  removed cvar - sm_warden_freeday_victim_deputy - obsolete cvar. **Please remove them from your configs!**
+    *  new cvar - sm_warden_freeday_deputy - 0 - disabled, 1 - Allow the deputy to set a personal freeday
+*  Menu: Add voteitem 'No Eventday' to a event day voting
+*  Support Plugins: changed name for plugins which support ratio & warden
+    *  renamed plugin - ratio_kento_rankme to myjailbreak_kento_rankme
+    *  renamed plugin - ratio_rankme to myjailbreak_rankme
+    *  renamed plugin - ratio_reputation to myjailbreak_reputation
+    *  renamed plugin - ratio_stamm to myjailbreak_stamm
+*  Removed: 
+  
+  
+*Fixed*
+*  Warden - small error with logging & vote warden
+*  Weapons - rar error when client left server in timer
+*  Menu - Eventday Voting - fix double Event when event was set while voting
+*  Warden - dropguns: no more punishment on empty taser
+*  Warden - deputy: missing translation
+*  Warden - friendly fire: working toggle with TeamGames
+*  Hide: Remove icons on hide in the dark
+*  DealDamage: fix result screen
+*  Icons: fix some *_enable cvars
+*  Weapons: restrict !guns for player in LastRequest
+*  Late loading: re/load plugin in round Thx @olegtsvetkov
+*  some translation
+*  rar error weapon not owned by client
+*  removed some debug messages
+*  minor errors
+  
+  
+*Developer stuff*
+*  Forwards: New Forwards for start/end of a Eventday & LastGuardRuleStart
+    *  new Forwards - MyJailbreak_OnLastGuardRuleStart()
+    *  new Forwards - MyJailbreak_OnEventDayStart(char[] EventDayName)
+    *  new Forwards - MyJailbreak_OnEventDayEnd(char[] EventDayName, int winner)
+*  Change forward warden_OnWardenCreated from void to Action to block warden creation
+*  Add source code files to travis auto builds.
+*  Builds website - bootstrap website for auto build binary download
+*  Code optimizing Thx @olegtsvetkov
+*  Changed code style on many parts
+*  Clean up code
+  
+  
+  
 **[Beta 9.1]** - fixes
   
 *Added*

@@ -11,20 +11,18 @@
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
  * details.
  *
  * You should have received a copy of the GNU General Public License along with
- * this program.  If not, see <http://www.gnu.org/licenses/>.
+ * this program. If not, see <http://www.gnu.org/licenses/>.
  */
-
 
 /******************************************************************************
                    STARTUP
 ******************************************************************************/
 
-
-//Includes
+// Includes
 #include <sourcemod>
 #include <sdktools>
 #include <sdkhooks>
@@ -34,19 +32,17 @@
 #include <warden>
 #include <mystocks>
 
-//Optional Plugins
+// Optional Plugins
 #undef REQUIRE_PLUGIN
 #include <myjailbreak>
 #include <smartjaildoors>
 #define REQUIRE_PLUGIN
 
-
-//Compiler Options
+// Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
 
-
-//Console Variables
+// Console Variables
 ConVar gc_sCustomCommandFreekill;
 ConVar gc_bFreeKill;
 ConVar gc_iFreeKillLimit;
@@ -60,28 +56,23 @@ ConVar gc_bReportWarden;
 ConVar gc_bRespawnCellClosed;
 ConVar gc_sAdminFlag;
 
-
-//Booleans
+// Booleans
 bool g_bFreeKilled[MAXPLAYERS+1];
 
-
-//Integers
+// Integers
 int g_iFreeKillCounter[MAXPLAYERS+1];
 
-
-//Strings
+// Strings
 char g_sFreeKillLogFile[PLATFORM_MAX_PATH];
-char g_sAdminFlag[32];
+char g_sAdminFlag[4];
 
-
-//Start
+// Start
 public void Freekill_OnPluginStart()
 {
-	//Client commands
+	// Client commands
 	RegConsoleCmd("sm_freekill", Command_Freekill, "Allows a Dead Terrorist report a Freekill");
-	
-	
-	//AutoExecConfig
+
+	// AutoExecConfig
 	gc_bFreeKill = AutoExecConfig_CreateConVar("sm_freekill_enable", "1", "0 - disabled, 1 - enable freekill report");
 	gc_sCustomCommandFreekill = AutoExecConfig_CreateConVar("sm_freekill_cmds", "fk, reportfk, rfk", "Set your custom chat commands for freekill(!freekill (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_iFreeKillLimit = AutoExecConfig_CreateConVar("sm_freekill_limit", "2", "Сount how many times you can report a freekill");
@@ -94,22 +85,20 @@ public void Freekill_OnPluginStart()
 	gc_bReportAdmin = AutoExecConfig_CreateConVar("sm_freekill_admin", "1", "0 - disabled, 1 - Report will be send to admins - if there is no admin its send to warden");
 	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_freekill_flag", "g", "Set flag for admin/vip get reported freekills to decide.");
 	gc_bReportWarden = AutoExecConfig_CreateConVar("sm_freekill_warden", "1", "0 - disabled, 1 - Report will be send to Warden if there is no admin");
-	
-	
-	//Hooks 
+
+	// Hooks 
 	HookEvent("round_start", Freekill_Event_RoundStart);
 	HookEvent("player_death", Freekill_Event_PlayerDeath);
 	HookConVarChange(gc_sAdminFlag, Freekill_OnSettingChanged);
-	
-	
-	//FindConVar
-	gc_sAdminFlag.GetString(g_sAdminFlag , sizeof(g_sAdminFlag));
-	
+
+	// FindConVar
+	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
+
+	// Logs
 	SetLogFile(g_sFreeKillLogFile, "Freekills", "MyJailbreak");
 }
 
-
-public int Freekill_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
+public void Freekill_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
 	if (convar == gc_sAdminFlag)
 	{
@@ -117,11 +106,9 @@ public int Freekill_OnSettingChanged(Handle convar, const char[] oldValue, const
 	}
 }
 
-
 /******************************************************************************
                    COMMANDS
 ******************************************************************************/
-
 
 public Action Command_Freekill(int client, int args)
 {
@@ -131,7 +118,7 @@ public Action Command_Freekill(int client, int args)
 		{
 			if (GetClientTeam(client) == CS_TEAM_T && (!IsPlayerAlive(client)))
 			{
-				if (!IsRequest)
+				if (!g_bIsRequest)
 				{
 					int attacker = GetClientOfUserId(g_iKilledBy[client]);
 					
@@ -139,8 +126,8 @@ public Action Command_Freekill(int client, int args)
 					{
 						if (g_iFreeKillCounter[client] < gc_iFreeKillLimit.IntValue)
 						{
-							IsRequest = true;
-							RequestTimer = CreateTimer (20.0, Timer_IsRequest);
+							g_bIsRequest = true;
+							g_hTimerRequest = CreateTimer (20.0, Timer_IsRequest);
 							g_bFreeKilled[client] = true;
 							
 							
@@ -152,7 +139,7 @@ public Action Command_Freekill(int client, int args)
 								CPrintToChatAll("%t %t", "request_tag", "request_freekill", client, attacker, a);
 								if (gp_bMyJailBreak) if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sFreeKillLogFile, "Player %L claiming %L freekilled him. Reported to admin %L", client, attacker, a);
 							}
-							else LoopValidClients(i, false, true) if (warden_iswarden(i) && gc_bReportWarden.BoolValue)
+							else for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, true)) if (warden_iswarden(i) && gc_bReportWarden.BoolValue)
 							{
 								g_iFreeKillCounter[client]++;
 								FreeKillAcceptMenu(i);
@@ -172,71 +159,68 @@ public Action Command_Freekill(int client, int args)
 	return Plugin_Handled;
 }
 
-
 /******************************************************************************
                    EVENTS
 ******************************************************************************/
 
-public void Freekill_Event_RoundStart(Event event, char [] name, bool dontBroadcast)
+public void Freekill_Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
-	LoopClients(client)
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 	{
-		g_iFreeKillCounter[client] = 0;
-		g_bFreeKilled[client] = false;
+		g_iFreeKillCounter[i] = 0;
+		g_bFreeKilled[i] = false;
 	}
 }
-
 
 public void Freekill_Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast) 
 {
 	int victim = GetClientOfUserId(event.GetInt("userid")); // Get the dead clients id
-	
-	if (IsValidClient(victim, false, true)) GetClientAbsOrigin(victim, DeathOrigin[victim]);
-}
 
+	if (IsValidClient(victim, false, true))
+	{
+		GetClientAbsOrigin(victim, g_fDeathOrigin[victim]);
+	}
+}
 
 /******************************************************************************
                    FORWARDS LISTENING
 ******************************************************************************/
 
-
 public void Freekill_OnMapStart()
 {
-	if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundCapitulationPath);
-}
-
-
-public void Freekill_OnConfigsExecuted()
-{
-	//Set custom Commands
-	int iCount = 0;
-	char sCommands[128], sCommandsL[12][32], sCommand[32];
-	
-	//Report freekill
-	gc_sCustomCommandFreekill.GetString(sCommands, sizeof(sCommands));
-	ReplaceString(sCommands, sizeof(sCommands), " ", "");
-	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
-	
-	for (int i = 0; i < iCount; i++)
+	if (gc_bSounds.BoolValue)
 	{
-		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
-			RegConsoleCmd(sCommand, Command_Freekill, "Allows a Dead Terrorist report a Freekill");
+		PrecacheSoundAnyDownload(g_sSoundCapitulationPath);
 	}
 }
 
+public void Freekill_OnConfigsExecuted()
+{
+	// Set custom Commands
+	int iCount = 0;
+	char sCommands[128], sCommandsL[12][32], sCommand[32];
+
+	// Report freekill
+	gc_sCustomCommandFreekill.GetString(sCommands, sizeof(sCommands));
+	ReplaceString(sCommands, sizeof(sCommands), " ", "");
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+
+	for (int i = 0; i < iCount; i++)
+	{
+		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+			RegConsoleCmd(sCommand, Command_Freekill, "Allows a Dead Terrorist report a Freekill");
+	}
+}
 
 public void Freekill_OnClientPutInServer(int client)
 {
 	g_iFreeKillCounter[client] = 0;
 }
 
-
-
 /******************************************************************************
                    MENUS
 ******************************************************************************/
-
 
 public Action FreeKillAcceptMenu(int client)
 {
@@ -262,7 +246,7 @@ public int FreeKillAcceptHandler(Menu menu, MenuAction action, int client, int P
 		char Item[11];
 		menu.GetItem(Position, Item, sizeof(Item));
 		int choice = StringToInt(Item);
-		if (choice == 1) //yes
+		if (choice == 1) // yes
 		{
 			char info[255];
 			
@@ -280,14 +264,14 @@ public int FreeKillAcceptHandler(Menu menu, MenuAction action, int client, int P
 			Format(info, sizeof(info), "%T", "request_swapfreekiller", client);
 			if (gc_bFreeKillSwap.BoolValue) menu1.AddItem("4", info);
 			menu1.Display(client, MENU_TIME_FOREVER);
-			LoopClients(i) if (g_bFreeKilled[i]) CPrintToChatAll("%t %t", "warden_tag", "request_accepted", i, client);
+			for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (g_bFreeKilled[i]) CPrintToChatAll("%t %t", "warden_tag", "request_accepted", i, client);
 		}
-		if (choice == 0) //no
+		if (choice == 0) // no
 		{
-			IsRequest = false;
-			RequestTimer = null;
+			g_bIsRequest = false;
+			g_hTimerRequest = null;
 			
-			LoopValidClients(i, true, true) if (g_bFreeKilled[i])
+			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true)) if (g_bFreeKilled[i])
 			{
 				CPrintToChatAll("%t %t", "warden_tag", "request_noaccepted", i, client);
 				g_bFreeKilled[i] = false;
@@ -296,7 +280,6 @@ public int FreeKillAcceptHandler(Menu menu, MenuAction action, int client, int P
 	}
 }
 
-
 public int FreeKillHandler(Menu menu, MenuAction action, int client, int Position)
 {
 	if (action == MenuAction_Select)
@@ -304,14 +287,14 @@ public int FreeKillHandler(Menu menu, MenuAction action, int client, int Positio
 		char Item[11];
 		menu.GetItem(Position, Item, sizeof(Item));
 		int choice = StringToInt(Item);
-		
-		IsRequest = false;
-		RequestTimer = null;
-		
-		if (choice == 1) //respawn
+
+		g_bIsRequest = false;
+		g_hTimerRequest = null;
+
+		if (choice == 1) // respawn
 		{
 			char info[255];
-			
+
 			Menu menu1 = CreateMenu(RespawnHandler);
 			Format(info, sizeof(info), "%T", "request_handlerespawn", client);
 			menu1.SetTitle(info);
@@ -323,35 +306,35 @@ public int FreeKillHandler(Menu menu, MenuAction action, int client, int Positio
 			if (warden_exist()) menu1.AddItem("3", info);
 			menu1.Display(client, MENU_TIME_FOREVER);
 		}
-		if (choice == 2) //kill freekiller
+		if (choice == 2) // kill freekiller
 		{
-			LoopValidClients(i, true, true) if (g_bFreeKilled[i])
+			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true)) if (g_bFreeKilled[i])
 			{
 				g_bFreeKilled[i] = false;
-				
+
 				int attacker = GetClientOfUserId(g_iKilledBy[i]);
 				ForcePlayerSuicide(attacker);
-				
+
 				if (gp_bMyJailBreak) if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sFreeKillLogFile, "Warden/Admin %L accept freekill request of %L  and killed %L", client, i, attacker);
 				CPrintToChat(attacker, "%t %t", "request_tag", "request_killbcfreekill");
 				CPrintToChatAll("%t %t", "warden_tag", "request_killbcfreekillall", attacker);
 			}
 		}
-		if (choice == 3) //freeday event for all
+		if (choice == 3) // freeday event for all
 		{
-			LoopValidClients(i, true, true) if (g_bFreeKilled[i])
+			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true)) if (g_bFreeKilled[i])
 			{
 				g_bFreeKilled[i] = false;
 				if (gp_bMyJailBreak) if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sFreeKillLogFile, "Warden/Admin %L accept freekill request of %L give a freeday", client, i);
 				FakeClientCommand(client, "sm_setfreeday");
 			}
 		}
-		if (choice == 4) //swap freekiller
+		if (choice == 4) // swap freekiller
 		{
-			LoopValidClients(i, true, true) if (g_bFreeKilled[i])
+			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true)) if (g_bFreeKilled[i])
 			{
 				int attacker = GetClientOfUserId(g_iKilledBy[i]);
-				
+
 				g_bFreeKilled[i] = false;
 				ClientCommand(attacker, "jointeam %i", CS_TEAM_T);
 				CPrintToChat(attacker, "%t %t", "request_tag", "request_swapbcfreekill");
@@ -359,16 +342,16 @@ public int FreeKillHandler(Menu menu, MenuAction action, int client, int Positio
 				CPrintToChatAll("%t %t", "warden_tag", "request_swapbcfreekillall", i);
 			}
 		}
-		if (choice == 5) //freeday to victim
+		if (choice == 5) // freeday to victim
 		{
-			LoopValidClients(i, true, true) if (g_bFreeKilled[i])
+			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true)) if (g_bFreeKilled[i])
 			{
-			//	g_bHaveFreeDay[i] = true;
+			// 	g_bHaveFreeDay[i] = true;
 				warden_freeday_set(i);
 				g_bFreeKilled[i] = false;
-				CPrintToChat(i, "%t %t", "request_tag", "request_freedayforyou");
+				CPrintToChat(i, "%t %t", "request_tag", "warden_freedayforyou");
 				if (gp_bMyJailBreak) if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sFreeKillLogFile, "Warden/Admin %L accept freekill request of %L gave him a personal freeday", client, i);
-				CPrintToChatAll("%t %t", "warden_tag", "request_personalfreeday", i);
+				CPrintToChatAll("%t %t", "warden_tag", "warden_personalfreeday", i);
 			}
 		}
 	}
@@ -385,27 +368,27 @@ public int RespawnHandler(Menu menu, MenuAction action, int client, int Position
 		char Item[11];
 		menu.GetItem(Position, Item, sizeof(Item));
 		int choice = StringToInt(Item);
-		
-		IsRequest = false;
-		RequestTimer = null;
-		
-		if (choice == 1) //respawnbody
+
+		g_bIsRequest = false;
+		g_hTimerRequest = null;
+
+		if (choice == 1) // respawnbody
 		{
-			LoopValidClients(i, true, true) if (g_bFreeKilled[i])
+			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true)) if (g_bFreeKilled[i])
 			{
 				g_bFreeKilled[i] = false;
 				CS_RespawnPlayer(i);
 				
-				TeleportEntity(i, DeathOrigin[i], NULL_VECTOR, NULL_VECTOR);
+				TeleportEntity(i, g_fDeathOrigin[i], NULL_VECTOR, NULL_VECTOR);
 				
 				if (gp_bMyJailBreak) if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sFreeKillLogFile, "Warden/Admin %L accept freekill request and respawned %L on his body", client, i);
 				CPrintToChat(i, "%t %t", "request_tag", "request_respawned");
 				CPrintToChatAll("%t %t", "warden_tag", "request_respawnedall", i);
 			}
 		}
-		if (choice == 2) //respawncell
+		if (choice == 2) // respawncell
 		{
-			LoopValidClients(i, true, true) if (g_bFreeKilled[i])
+			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true)) if (g_bFreeKilled[i])
 			{
 				g_bFreeKilled[i] = false;
 				
@@ -417,9 +400,9 @@ public int RespawnHandler(Menu menu, MenuAction action, int client, int Position
 				CPrintToChatAll("%t %t", "warden_tag", "request_respawnedall", i);
 			}
 		}
-		if (choice == 3) //respawnwarden
+		if (choice == 3) // respawnwarden
 		{
-			LoopValidClients(i, true, true) if (g_bFreeKilled[i])
+			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true)) if (g_bFreeKilled[i] && warden_exist())
 			{
 				g_bFreeKilled[i] = false;
 				CS_RespawnPlayer(i);
@@ -443,23 +426,21 @@ public int RespawnHandler(Menu menu, MenuAction action, int client, int Position
 				if (gp_bMyJailBreak) if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sFreeKillLogFile, "Warden/Admin %L accept freekill request and respawned %L in front of warden", client, i);
 				CPrintToChat(i, "%t %t", "request_tag", "request_respawned");
 				CPrintToChatAll("%t %t", "warden_tag", "request_respawnedall", i);
-				CPrintToChatAll("debug warden is %N", warden);
 			}
 		}
 	}
 }
 
-
 /******************************************************************************
                    STOCKS
 ******************************************************************************/
 
-
-stock int GetRandomAdmin()
+int GetRandomAdmin()
 {
 	int[] admins = new int[MaxClients];
 	int adminsCount;
-	LoopClients(i)
+
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 	{
 		if (CheckVipFlag(i, g_sAdminFlag))
 		{

@@ -11,11 +11,11 @@
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
  * details.
  *
  * You should have received a copy of the GNU General Public License along with
- * this program.  If not, see <http://www.gnu.org/licenses/>.
+ * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 
@@ -24,8 +24,8 @@
 ******************************************************************************/
 
 
-//Defines
-#define MYJB_VERSION "Beta 9.1-<COMMIT>"
+// Defines
+#define MYJB_VERSION "Beta 10.0.dev-<COMMIT>"
 #define MYJB_URL_LINK "https://github.com/shanapu/MyJailbreak"
 
 
@@ -37,12 +37,13 @@
 
 public SharedPlugin:__pl_myjailbreak =
 {
-	name = "myjailbreak", 
-	file = "myjailbreak.smx", 
+	name = "myjailbreak",
+	file = "myjailbreak.smx",
+	
 	#if defined REQUIRE_PLUGIN
-	required = 1, 
+	required = 1,
 	#else
-	required = 0, 
+	required = 0,
 	#endif
 };
 
@@ -56,11 +57,15 @@ public __pl_myjailbreak_SetNTVOptional()
 	MarkNativeAsOptional("MyJailbreak_IsEventDayRunning");
 	MarkNativeAsOptional("MyJailbreak_SetEventDayPlanned");
 	MarkNativeAsOptional("MyJailbreak_IsEventDayPlanned");
+
 	MarkNativeAsOptional("MyJailbreak_SetLastGuardRule");
 	MarkNativeAsOptional("MyJailbreak_IsLastGuardRule");
+
 	MarkNativeAsOptional("MyJailbreak_ActiveLogging");
+
 	MarkNativeAsOptional("MyJailbreak_FogOn");
 	MarkNativeAsOptional("MyJailbreak_FogOff");
+
 	MarkNativeAsOptional("MyJailbreak_BeaconOn");
 	MarkNativeAsOptional("MyJailbreak_BeaconOff");
 }
@@ -79,6 +84,34 @@ public __pl_myjailbreak_SetNTVOptional()
  * @return 				Return Plugin_Handled to block & Plugin_Continue to pass the client.
  *********************************************************/
 forward Action MyJailbreak_OnJoinGuardQueue(int client);
+
+
+/*********************************************************
+ * Called when a the Last Guard Rule is active
+ * 
+ * @NoReturn
+ *********************************************************/
+forward void MyJailbreak_OnLastGuardRuleStart();
+
+
+
+/*********************************************************
+ * Called when a eventday has started
+ *
+ * @param EventDayName	The name of the event day
+ * @NoReturn
+ *********************************************************/
+forward void MyJailbreak_OnEventDayStart(char[] EventDayName);
+
+
+/*********************************************************
+ * Called when a eventday has ended
+ *
+ * @param EventDayName	The name of the event day
+ * @param winner		The winner team of this eventday. 0/1 = no winner
+ * @NoReturn
+ *********************************************************/
+forward void MyJailbreak_OnEventDayEnd(char[] EventDayName, int winner);
 
 
 
@@ -109,9 +142,10 @@ native void MyJailbreak_GetEventDayName(char[] name);
  * Set Boolean Event Day is running
  *
  * @param status		Boolean is running (true = running)
+ * @param winner		Winning team when event day ends
  * @NoReturn
  *********************************************************/
-native void MyJailbreak_SetEventDayRunning(bool status);
+native void MyJailbreak_SetEventDayRunning(bool status, int winner);
 
 
 /*********************************************************

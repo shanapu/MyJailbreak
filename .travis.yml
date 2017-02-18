@@ -18,3 +18,5 @@ script:
   - 'if [[ $TRAVIS_PULL_REQUEST != "false" ]]; then bash ci/test.sh $VERSION $TRAVIS_BRANCH; fi'
   - 'if [[ $TRAVIS_PULL_REQUEST == "false" ]]; then bash ci/build.sh $VERSION $TRAVIS_BRANCH $FTP_HOST $FTP_USER $FTP_PASS ${TRAVIS_COMMIT::7}; fi'
 
+notifications:
+    email: false

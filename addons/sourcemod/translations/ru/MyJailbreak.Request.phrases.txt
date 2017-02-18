@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2016-12-11 14:24:02 UTC
+// Date: 2017-02-13 03:57:22 UTC
 // Language: Russian (ru)
 // 
 // To view other translations for this plugin, please visit:
@@ -160,7 +160,7 @@
 
 	"request_menu_capitulation"
 	{
-		"ru"		"Капитуляция."
+		"ru"		"Капитуляция"
 	}
 
 	"request_menu_freekill"
@@ -210,7 +210,7 @@
 
 	"request_nokiller"
 	{
-		"ru"		"Простите, мы не можем найти Вашего убийцу?"
+		"ru"		"Простите, мы не можем найти Вашего убийцу"
 	}
 
 	"request_respawned"

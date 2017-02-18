@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2016-12-11 14:24:03 UTC
+// Date: 2017-02-13 03:57:22 UTC
 // Language: Russian (ru)
 // 
 // To view other translations for this plugin, please visit:
@@ -110,7 +110,7 @@
 
 	"lastguard_timeuntilstart_nc"
 	{
-		"ru"		"{1] секунд до старта"
+		"ru"		"{1} секунд до старта!"
 	}
 
 	"lastguard_info_title"

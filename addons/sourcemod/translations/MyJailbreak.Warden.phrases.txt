@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2016-12-11 14:23:49 UTC
+// Date: 2017-02-13 03:57:20 UTC
 // Language: English (en)
 // 
 // To view other translations for this plugin, please visit:
@@ -929,13 +929,66 @@
 
 	"warden_freedayforyou"
 	{
-		"en"		"You get a FreeDay next round"
+		"en"		"You get a {purple}FreeDay{default} next round"
 	}
 
 	"warden_personalfreeday"
 	{
 		"#format"	"{1:N}"
-		"en"		"{1} gets a FreeDay next round"
+		"en"		"{green}{1}{default} gets a {purple}FreeDay{default} next round"
+	}
+
+	"warden_cooldown"
+	{
+		"#format"	"{1:i}"
+		"en"		"You have a {purple}warden cooldown{default}. Wait {green}{1}{default} rounds"
+	}
+
+	"warden_limit"
+	{
+		"#format"	"{1:i},{2:i}"
+		"en"		"You have played {purple}{1} round in a row{default} as warden. Wait {green}{2}{default} rounds"
+	}
+
+	"warden_wait"
+	{
+		"#format"	"{1:i}"
+		"en"		"As {green}last round warden{default} you have to wait {purple}{1} seconds{default} to become warden again."
+	}
+
+	"warden_deputy_removed"
+	{
+		"#format"	"{1:N},{2:N}"
+		"en"		"Admin: {purple}{1}{default} has Fired the Deputy: {purple}{2}"
+	}
+
+	"warden_deputy_removed_nc"
+	{
+		"#format"	"{1:N},{2:N}"
+		"en"		"Admin: {1} has Fired the Deputy: {2}"
+	}
+
+	"warden_steamgroup"
+	{
+		"en"		"Cannot play as warden, you need to join our steamgroup first"
+	}
+
+	"warden_rankme"
+	{
+		"#format"	"{1:i}"
+		"en"		"You need at least {1} RankMe Points to play as warden"
+	}
+
+	"warden_reputation"
+	{
+		"#format"	"{1:i}"
+		"en"		"You need at least {1} Reputation Points to play as warden"
+	}
+
+	"warden_stamm"
+	{
+		"#format"	"{1:i}"
+		"en"		"You need at least {1} Stamm Points to play as warden"
 	}
 
 }

@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2016-12-11 14:24:00 UTC
+// Date: 2017-02-13 03:57:22 UTC
 // Language: Russian (ru)
 // 
 // To view other translations for this plugin, please visit:
@@ -346,6 +346,46 @@
 	"menu_jailshop"
 	{
 		"ru"		"Открыть магазин тюрьмы"
+	}
+
+	"menu_orders"
+	{
+		"ru"		"Приказы"
+	}
+
+	"menu_ghosts"
+	{
+		"ru"		"Война призраков"
+	}
+
+	"menu_votingcancel"
+	{
+		"ru"		"Голосование было отменено, поскольку игровой день {purple}{1}{default} уже выбран!"
+	}
+
+	"menu_removequeue"
+	{
+		"ru"		"Удалить игрока из очереди за КТ"
+	}
+
+	"menu_endround"
+	{
+		"ru"		"Закончить раунд досрочно"
+	}
+
+	"menu_clearqueue"
+	{
+		"ru"		"Очистить очередь за КТ"
+	}
+
+	"menu_noevent"
+	{
+		"ru"		"Нет игровому дню"
+	}
+
+	"menu_joinspec"
+	{
+		"ru"		"Перейти за наблюдателя"
 	}
 
 }

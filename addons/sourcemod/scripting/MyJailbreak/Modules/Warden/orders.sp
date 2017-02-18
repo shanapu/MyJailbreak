@@ -11,20 +11,18 @@
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
  * details.
  *
  * You should have received a copy of the GNU General Public License along with
- * this program.  If not, see <http://www.gnu.org/licenses/>.
+ * this program. If not, see <http://www.gnu.org/licenses/>.
  */
-
 
 /******************************************************************************
                    STARTUP
 ******************************************************************************/
 
-
-//Includes
+// Includes
 #include <sourcemod>
 #include <sdktools>
 #include <sdkhooks>
@@ -34,58 +32,59 @@
 #include <warden>
 #include <mystocks>
 
-
-//Compiler Options
+// Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
 
-
-//Console Variables
+// Console Variables
 ConVar gc_sCustomCommandMenu;
 ConVar gc_bOrders;
 ConVar gc_bOrdersDeputy;
 
-
-//Strings
+// Strings
 char g_sMenuFile[64];
 char g_sCurrentMap[64];
 
+// Handles
+Handle g_hCommandTrie;
 
-//Info
+// Info
 public void Orders_OnPluginStart()
 {
 	RegConsoleCmd("sm_order", Command_OrderMenu, "opens the order menu");
-	
-	//AutoExecConfig
-	gc_bOrders = AutoExecConfig_CreateConVar("sm_warden_orders", "1", "0 - disabled, 1 - enable allow warden to use the orders menu", _, true,  0.0, true, 1.0);
-	gc_bOrdersDeputy = AutoExecConfig_CreateConVar("sm_warden_orders_deputy", "1", "0 - disabled, 1 - enable orders-feature for deputy, too", _, true,  0.0, true, 1.0);
-	gc_sCustomCommandMenu = CreateConVar("sm_warden_cmds_orders", "order", "Set your custom chat command for open menu(!menu (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands))");
-	
-	BuildPath(Path_SM, g_sMenuFile, sizeof(g_sMenuFile), "configs/MyJailbreak/orders.cfg");
-	
-//	AddCommandListener(Event_Say, "say");
-//	AddCommandListener(Event_Say, "say_team");
-}
 
+	// AutoExecConfig
+	gc_bOrders = AutoExecConfig_CreateConVar("sm_warden_orders", "1", "0 - disabled, 1 - enable allow warden to use the orders menu", _, true, 0.0, true, 1.0);
+	gc_bOrdersDeputy = AutoExecConfig_CreateConVar("sm_warden_orders_deputy", "1", "0 - disabled, 1 - enable orders-feature for deputy, too", _, true, 0.0, true, 1.0);
+	gc_sCustomCommandMenu = CreateConVar("sm_warden_cmds_orders", "orders,calls", "Set your custom chat command for open menu(!menu (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands))");
+
+	//Commands Array
+	g_hCommandTrie = CreateTrie();
+
+	//Configs Path
+	BuildPath(Path_SM, g_sMenuFile, sizeof(g_sMenuFile), "configs/MyJailbreak/orders.cfg");
+
+	AddCommandListener(Event_Say, "say");
+	AddCommandListener(Event_Say, "say_team");
+}
 
 /******************************************************************************
                    FORWARDS LISTEN
 ******************************************************************************/
 
-
 public void Orders_OnMapStart()
 {
 	GetCurrentMap(g_sCurrentMap, sizeof(g_sCurrentMap));
-	
+
 	Handle hFile = OpenFile(g_sMenuFile, "rt");
 	if (!hFile)
 	{
 		SetFailState("MyJailbreak Warden - Can't open File: %s", g_sMenuFile);
 		// return Plugin_Handled;
 	}
-	
+
 	KeyValues kvMenu = CreateKeyValues("Menu");
-	
+
 	if (!kvMenu.ImportFromFile(g_sMenuFile))
 	{
 		SetFailState("MyJailbreak Warden - Can't read %s correctly! (ImportFromFile)", g_sMenuFile);
@@ -107,149 +106,158 @@ public void Orders_OnMapStart()
 	while (kvMenu.GotoNextKey());
 }
 
-
-// char g_sCommand[][128]; // some vale  todo
-
-
 public void Orders_OnConfigsExecuted()
 {
-	//Set custom Commands
+	// Set custom Commands
 	int iCount = 0;
 	char sCommands[128], sCommandsL[12][64], sCommand[64];
-	
-	//Menu
+
+	// Menu
 	gc_sCustomCommandMenu.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
 	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
-	
+
 	for(int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
-			RegConsoleCmd(sCommand, Command_OrderMenu, "opens the menu");
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+			RegConsoleCmd(sCommand, Command_OrderMenu, "Open the wardens orders menu");
 	}
-	/*
-	
+
 	Handle hFile = OpenFile(g_sMenuFile, "rt");
 	if (!hFile)
 	{
 		SetFailState("MyJailbreak Warden - Can't open File: %s", g_sMenuFile);
 		// return Plugin_Handled;
 	}
-	
+
 	KeyValues kvMenu = CreateKeyValues("Menu");
-	
+
+	ClearTrie(g_hCommandTrie);
+
 	if (!kvMenu.ImportFromFile(g_sMenuFile))
 	{
 		SetFailState("MyJailbreak Warden - Can't read %s correctly! (ImportFromFile)", g_sMenuFile);
 	}
+
 	if (!kvMenu.GotoFirstSubKey())
 	{
 		SetFailState("MyJailbreak Warden - Can't read %s correctly! (GotoFirstSubKey)", g_sMenuFile);
 	}
 	do
 	{
+		char sMaps[PLATFORM_MAX_PATH];
 		char sNumber[4];
-		int num = StringToInt(sNumber);
 		
 		kvMenu.GetSectionName(sNumber, sizeof(sNumber));
-		kvMenu.GetString("commands", sCommands, sizeof(sCommands));
+		int num = StringToInt(sNumber);
 		
-		Format(g_sCommand[num], sizeof(sCommands), sCommands);
+		kvMenu.GetString("commands", sCommands, sizeof(sCommands));
+		kvMenu.GetString("maps", sMaps, sizeof(sMaps));
+		if ((strlen(sCommands) > 0) && (StrContains(sMaps, g_sCurrentMap, true) == -1))
+		{
+			ReplaceString(sCommands, sizeof(sCommands), " ", "");
+			iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+			
+			for (int i = 0; i < iCount; i++)
+			{
+				SetTrieValue(g_hCommandTrie, sCommandsL[i], num);
+			}
+		}
 	}
 	while (kvMenu.GotoNextKey());
-	*/
 }
 
-/*
-public Action Event_Say(int client, char [] command,int arg)
+
+public Action Event_Say(int client, char[] command,int arg)
 {
-	//listen for custom order commands
-	
-	char text[24];
-	GetCmdArgString(text, sizeof(text));
-	StripQuotes(text);
-	TrimString(text);
-	
-	
-	for(int i = 0; i < sizeof(g_sCommand); i++)
+	if (gc_bPlugin.BoolValue)
 	{
-		if (StrEqual(text, g_sCommand[i], false))
+		if (gc_bOrders.BoolValue)
 		{
-			PrintToChatAll("Hello world %i", i+1);
-			char num[4];
-			IntToString(i+1,num,sizeof(num));
-			Command_Handler(num);
+			if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bOrdersDeputy.BoolValue))
+			{
+				// listen for custom order commands
+				char text[24];
+				GetCmdArgString(text, sizeof(text));
+				StripQuotes(text);
+				TrimString(text);
+
+				int inum;
+				if (GetTrieValue(g_hCommandTrie, text, inum))
+				{
+					char num[4];
+					IntToString(inum,num,sizeof(num));
+					Command_Handler(num);
+				}
+			}
 		}
 	}
-	
 }
-*/
 
-public Action Command_Handler(char [] number)
+
+void Command_Handler(char[] number)
 {
-		Handle hFile = OpenFile(g_sMenuFile, "rt");
-		
-		if (hFile)
+	Handle hFile = OpenFile(g_sMenuFile, "rt");
+
+	if (hFile)
+	{
+		KeyValues kvMenu = CreateKeyValues("Orders");
+
+		if (!kvMenu.ImportFromFile(g_sMenuFile))
 		{
-			KeyValues kvMenu = CreateKeyValues("Menu");
-			
-			if (!kvMenu.ImportFromFile(g_sMenuFile))
+			SetFailState("MyJailbreak Warden - Can't read %s correctly! (ImportFromFile)", g_sMenuFile);
+			delete kvMenu;
+		}
+
+		if (kvMenu.JumpToKey(number, false))
+		{
+			char sValue[PLATFORM_MAX_PATH];
+
+			kvMenu.GetString("chat", sValue, sizeof(sValue));
+			if (strlen(sValue) > 0)
 			{
-				SetFailState("MyJailbreak Warden - Can't read %s correctly! (ImportFromFile)", g_sMenuFile);
-				delete kvMenu;
+				CPrintToChatAll("%t %s", "warden_tag", sValue);
 			}
-			
-			if (kvMenu.JumpToKey(number, false))
+
+			kvMenu.GetString("HUD", sValue, sizeof(sValue));
+			if (strlen(sValue) > 0)
 			{
-				char sValue[PLATFORM_MAX_PATH];
+				PrintCenterTextAll("%s", sValue);
+			}
+
+			kvMenu.GetString("overlay", sValue, sizeof(sValue));
+			if (strlen(sValue) > 0)
+			{
+				char sTime[12];
+				char sTeam[6];
+				char szTeam[4][6];
+				kvMenu.GetString("overlay_time", sTime, sizeof(sTime));
+				kvMenu.GetString("overlay_team", sTeam, sizeof(sTeam));
 				
-				kvMenu.GetString("chat", sValue, sizeof(sValue));
-				if (strlen(sValue) > 0)
-				{
-					CPrintToChatAll("%t %s", "warden_tag", sValue);
-				}
+				ReplaceString(sTeam, sizeof(sTeam), " ", "");
+				int iCount = ExplodeString(sTeam, ",", szTeam, sizeof(szTeam), sizeof(szTeam[]));
 				
-				kvMenu.GetString("HUD", sValue, sizeof(sValue));
-				if (strlen(sValue) > 0)
+				for (int iTeam = 0; iTeam < iCount; iTeam++)
 				{
-					PrintCenterTextAll("%s", sValue);
+					for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, false))
+					if (GetClientTeam(i) == StringToInt(szTeam[iTeam])) ShowOverlay(i, sValue, StringToFloat(sTime));
 				}
-				
-				kvMenu.GetString("overlay", sValue, sizeof(sValue));
-				if (strlen(sValue) > 0)
-				{
-					char sTime[12];
-					char sTeam[6];
-					char szTeam[4][6];
-					kvMenu.GetString("overlay_time", sTime, sizeof(sTime));
-					kvMenu.GetString("overlay_team", sTeam, sizeof(sTeam));
-					
-					ReplaceString(sTeam, sizeof(sTeam), " ", "");
-					int iCount = ExplodeString(sTeam, ",", szTeam, sizeof(szTeam), sizeof(szTeam[]));
-					
-					for (int iTeam = 0; iTeam < iCount; iTeam++)
-					{
-						LoopValidClients(i, false, false)
-						if (GetClientTeam(i) == StringToInt(szTeam[iTeam])) ShowOverlay(i ,sValue, StringToFloat(sTime));
-					}
-				}
-				
-				kvMenu.GetString("sound", sValue, sizeof(sValue));
-				if (strlen(sValue) > 0)
-				{
-					EmitSoundToAllAny(sValue);
-				}
+			}
+
+			kvMenu.GetString("sound", sValue, sizeof(sValue));
+			if (strlen(sValue) > 0)
+			{
+				EmitSoundToAllAny(sValue);
 			}
 		}
-		else SetFailState("MyJailbreak Warden - Can't open File: %s", g_sMenuFile);
-	
+	}
+	else SetFailState("MyJailbreak Warden - Can't open File: %s", g_sMenuFile);
 }
 
 /******************************************************************************
                    COMMANDS
 ******************************************************************************/
-
 
 public Action Command_OrderMenu(int client, int iItem)
 {
@@ -261,9 +269,10 @@ public Action Command_OrderMenu(int client, int iItem)
 			{
 				Menu_BuildOrderMenu(client);
 			}
-			else CReplyToCommand(client, "%t %t", "warden_tag" , "warden_notwarden"); 
+			else CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
 		}
 	}
+
 	return Plugin_Handled;
 }
 
@@ -277,25 +286,26 @@ public Action Menu_BuildOrderMenu(int client)
 {
 	char sText[512];
 	Format(sText, sizeof(sText), "Menu");
-	
+
 	Menu menu = new Menu(Handler_Menu);
 	menu.SetTitle(sText);
-	
+
 	Handle hFile = OpenFile(g_sMenuFile, "rt");
-	
+
 	if (!hFile)
 	{
 		SetFailState("MyJailbreak Warden - Can't open File: %s", g_sMenuFile);
 		// return Plugin_Handled;
 	}
-	
-	KeyValues kvMenu = CreateKeyValues("Menu");
-	
+
+	KeyValues kvMenu = CreateKeyValues("Orders");
+
 	if (!kvMenu.ImportFromFile(g_sMenuFile))
 	{
 		SetFailState("MyJailbreak Warden - Can't read %s correctly! (ImportFromFile)", g_sMenuFile);
 		return Plugin_Handled;
 	}
+
 	if (!kvMenu.GotoFirstSubKey())
 	{
 		SetFailState("MyJailbreak Warden - Can't read %s correctly! (GotoFirstSubKey)", g_sMenuFile);
@@ -317,16 +327,16 @@ public Action Menu_BuildOrderMenu(int client)
 		}
 	}
 	while (kvMenu.GotoNextKey());
-	
+
 	if (kvMenu)
 	{
 		delete kvMenu;
 	}
-	
+
 	menu.Display(client, MENU_TIME_FOREVER);
 	menu.ExitButton = true;
 	menu.ExitBackButton = true;
-	
+
 	return Plugin_Continue;
 }
 
@@ -337,35 +347,35 @@ public int Handler_Menu(Menu menu, MenuAction action, int client, int param)
 	{
 		char sParam[32];
 		GetMenuItem(menu, param, sParam, sizeof(sParam));
-		
+
 		Handle hFile = OpenFile(g_sMenuFile, "rt");
-		
+
 		if (hFile)
 		{
 			KeyValues kvMenu = CreateKeyValues("Menu");
-			
+
 			if (!kvMenu.ImportFromFile(g_sMenuFile))
 			{
 				SetFailState("MyJailbreak Warden - Can't read %s correctly! (ImportFromFile)", g_sMenuFile);
 				delete kvMenu;
 			}
-			
+
 			if (kvMenu.JumpToKey(sParam, false))
 			{
 				char sValue[PLATFORM_MAX_PATH];
-				
+
 				kvMenu.GetString("chat", sValue, sizeof(sValue));
 				if (strlen(sValue) > 0)
 				{
 					CPrintToChatAll("%t %s", "warden_tag", sValue);
 				}
-				
+
 				kvMenu.GetString("HUD", sValue, sizeof(sValue));
 				if (strlen(sValue) > 0)
 				{
 					PrintCenterTextAll("%s", sValue);
 				}
-				
+
 				kvMenu.GetString("overlay", sValue, sizeof(sValue));
 				if (strlen(sValue) > 0)
 				{
@@ -380,11 +390,11 @@ public int Handler_Menu(Menu menu, MenuAction action, int client, int param)
 					
 					for (int iTeam = 0; iTeam < iCount; iTeam++)
 					{
-						LoopValidClients(i, false, false)
-						if (GetClientTeam(i) == StringToInt(szTeam[iTeam])) ShowOverlay(i ,sValue, StringToFloat(sTime));
+						for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, false))
+						if (GetClientTeam(i) == StringToInt(szTeam[iTeam])) ShowOverlay(i, sValue, StringToFloat(sTime));
 					}
 				}
-				
+
 				kvMenu.GetString("sound", sValue, sizeof(sValue));
 				if (strlen(sValue) > 0)
 				{
@@ -400,7 +410,6 @@ public int Handler_Menu(Menu menu, MenuAction action, int client, int param)
 		if (param == MenuCancel_ExitBack)
 		{
 			Menu_BuildOrderMenu(client);
-		
 		}
 	}
 	else if (action == MenuAction_End)

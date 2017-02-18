@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2016-12-11 14:23:58 UTC
+// Date: 2017-02-13 03:57:23 UTC
 // Language: English (en)
 // 
 // To view other translations for this plugin, please visit:
@@ -331,6 +331,31 @@
 	"ratio_close"
 	{
 		"en"		"Exit"
+	}
+
+	"ratio_steamrep"
+	{
+		"en"		"Cannot play on guards because you are a {red}SCAMMER{default}. see steamrep.com"
+	}
+
+	"ratio_sure"
+	{
+		"en"		"Are you sure?"
+	}
+
+	"ratio_yes"
+	{
+		"en"		"Yes"
+	}
+
+	"ratio_no"
+	{
+		"en"		"No"
+	}
+
+	"ratio_steamgroup"
+	{
+		"en"		"Cannot play on guards, you need to join our steamgroup first"
 	}
 
 }

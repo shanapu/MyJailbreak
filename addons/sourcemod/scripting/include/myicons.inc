@@ -6,12 +6,13 @@
 
 public SharedPlugin:__pl_myicons =
 {
-	name = "myicons", 
-	file = "myicons.smx", 
+	name = "myicons",
+	file = "myicons.smx",
+
 	#if defined REQUIRE_PLUGIN
-	required = 1, 
+	required = 1,
 	#else
-	required = 0, 
+	required = 0,
 	#endif
 };
 

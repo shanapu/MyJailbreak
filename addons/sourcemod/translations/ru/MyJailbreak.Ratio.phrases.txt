@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2016-12-11 14:23:58 UTC
+// Date: 2017-02-13 03:57:23 UTC
 // Language: Russian (ru)
 // 
 // To view other translations for this plugin, please visit:
@@ -321,6 +321,31 @@
 	"ratio_close"
 	{
 		"ru"		"Закрыть"
+	}
+
+	"ratio_steamrep"
+	{
+		"ru"		"Вы не можете играть за КТ, потому что вы {red}МОШЕННИК{default}. посетите steamrep.com"
+	}
+
+	"ratio_sure"
+	{
+		"ru"		"Вы уверены?"
+	}
+
+	"ratio_yes"
+	{
+		"ru"		"Да"
+	}
+
+	"ratio_no"
+	{
+		"ru"		"Нет"
+	}
+
+	"ratio_steamgroup"
+	{
+		"ru"		"Невозможно играть за охрану, для начала необходимо вступить в группу steam."
 	}
 
 }

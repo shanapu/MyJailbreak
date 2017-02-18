@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2016-12-11 14:24:00 UTC
+// Date: 2017-02-13 03:57:22 UTC
 // Language: English (en)
 // 
 // To view other translations for this plugin, please visit:
@@ -85,17 +85,22 @@
 
 	"menu_unwarden"
 	{
-		"en"		"Retire From Warden"
+		"en"		"Retire from Warden"
 	}
 
 	"menu_getwarden"
 	{
-		"en"		"Become The Warden"
+		"en"		"Become the Warden"
 	}
 
 	"menu_joint"
 	{
 		"en"		"Become a Prisoner"
+	}
+
+	"menu_joinspec"
+	{
+		"en"		"Go Spectator"
 	}
 
 	"menu_check"
@@ -223,6 +228,11 @@
 		"en"		"No Scope"
 	}
 
+	"menu_noevent"
+	{
+		"en"		"No Event Day"
+	}
+
 	"menu_duckhunt"
 	{
 		"en"		"DuckHunt"
@@ -296,6 +306,12 @@
 		"en"		"The vote ended in a 50/50 draw! An Event Day was chosen Randomly!"
 	}
 
+	"menu_votingcancel"
+	{
+		"#format"	"{1:s}"
+		"en"		"The voting was canceled, cause EventDay {purple}{1}{default} was already set!"
+	}
+
 	"menu_disabled"
 	{
 		"en"		"Event voting is currently {purple}disabled!"
@@ -326,6 +342,21 @@
 		"en"		"Remove Deputy"
 	}
 
+	"menu_removequeue"
+	{
+		"en"		"Remove player from guard queue"
+	}
+
+	"menu_endround"
+	{
+		"en"		"Force round end"
+	}
+
+	"menu_clearqueue"
+	{
+		"en"		"Clear guard queue"
+	}
+
 	"menu_deputybecome"
 	{
 		"en"		"Become Wardens Deputy"
@@ -354,6 +385,36 @@
 	"menu_orders"
 	{
 		"en"		"Orders"
+	}
+
+	"menu_ghosts"
+	{
+		"en"		"Ghosts War"
+	}
+
+	"menu_removequeue"
+	{
+		"en"		"Remove player from guard queue"
+	}
+
+	"menu_endround"
+	{
+		"en"		"Force round end"
+	}
+
+	"menu_clearqueue"
+	{
+		"en"		"Clear guard queue"
+	}
+
+	"menu_noevent"
+	{
+		"en"		"No Event Day"
+	}
+
+	"menu_joinspec"
+	{
+		"en"		"Go Spectator"
 	}
 
 }

@@ -11,20 +11,18 @@
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
  * details.
  *
  * You should have received a copy of the GNU General Public License along with
- * this program.  If not, see <http://www.gnu.org/licenses/>.
+ * this program. If not, see <http://www.gnu.org/licenses/>.
  */
-
 
 /******************************************************************************
                    STARTUP
 ******************************************************************************/
 
-
-//Includes
+// Includes
 #include <sourcemod>
 #include <sdktools>
 #include <sdkhooks>
@@ -34,13 +32,11 @@
 #include <warden>
 #include <mystocks>
 
-
-//Compiler Options
+// Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
 
-
-//Console Variables
+// Console Variables
 ConVar gc_bPainter;
 ConVar gc_bPainterDeputy;
 ConVar gc_bPainterTDeputy;
@@ -48,55 +44,46 @@ ConVar gc_bPainterT;
 ConVar gc_sAdminFlagPainter;
 ConVar gc_sCustomCommandPainter;
 
-
-//Boolean
+// Boolean
 bool g_bPainterUse[MAXPLAYERS+1] = {false, ...};
 bool g_bPainter[MAXPLAYERS+1] = false;
 bool g_bPainterT = false;
 bool g_bPainterColorRainbow[MAXPLAYERS+1] = true;
 
-
-//Integers
+// Integers
 int g_iPainterColor[MAXPLAYERS+1];
 
+// Strings
+char g_sAdminFlagPainter[4];
 
-//Strings
-char g_sAdminFlagPainter[32];
-
-
-//Floats
+// Floats
 float g_fLastPainter[MAXPLAYERS+1][3];
 
-
-//Start
+// Start
 public void Painter_OnPluginStart()
 {
-	//Client commands
+	// Client commands
 	RegConsoleCmd("sm_painter", Command_PainterMenu, "Allows Warden to toggle on/off the wardens Painter");
-	
-	
-	//AutoExecConfig
-	gc_bPainter = AutoExecConfig_CreateConVar("sm_warden_painter", "1", "0 - disabled, 1 - enable Warden Painter with +E ", _, true,  0.0, true, 1.0);
-	gc_bPainterDeputy = AutoExecConfig_CreateConVar("sm_warden_painter_deputy", "1", "0 - disabled, 1 - enable 'Warden Painter'-feature for deputy, too", _, true,  0.0, true, 1.0);
+
+	// AutoExecConfig
+	gc_bPainter = AutoExecConfig_CreateConVar("sm_warden_painter", "1", "0 - disabled, 1 - enable Warden Painter with +E ", _, true, 0.0, true, 1.0);
+	gc_bPainterDeputy = AutoExecConfig_CreateConVar("sm_warden_painter_deputy", "1", "0 - disabled, 1 - enable 'Warden Painter'-feature for deputy, too", _, true, 0.0, true, 1.0);
 	gc_sAdminFlagPainter = AutoExecConfig_CreateConVar("sm_warden_painter_flag", "", "Set flag for admin/vip to get warden painter access. No flag = feature is available for all players!");
-	gc_bPainterT= AutoExecConfig_CreateConVar("sm_warden_painter_terror", "1", "0 - disabled, 1 - allow Warden to toggle Painter for Terrorist ", _, true,  0.0, true, 1.0);
-	gc_bPainterTDeputy= AutoExecConfig_CreateConVar("sm_warden_painter_terror_deputy", "1", "0 - disabled, 1 - allow to toggle Painter for Terrorist as deputy, too", _, true,  0.0, true, 1.0);
+	gc_bPainterT= AutoExecConfig_CreateConVar("sm_warden_painter_terror", "1", "0 - disabled, 1 - allow Warden to toggle Painter for Terrorist ", _, true, 0.0, true, 1.0);
+	gc_bPainterTDeputy= AutoExecConfig_CreateConVar("sm_warden_painter_terror_deputy", "1", "0 - disabled, 1 - allow to toggle Painter for Terrorist as deputy, too", _, true, 0.0, true, 1.0);
 	gc_sCustomCommandPainter = AutoExecConfig_CreateConVar("sm_warden_cmds_painter", "paint, draw", "Set your custom chat commands for Painter menu(!painter (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
-	
-	
-	//Hooks
+
+	// Hooks
 	HookConVarChange(gc_sAdminFlagPainter, Painter_OnSettingChanged);
 	HookEvent("round_end", Painter_Event_RoundEnd);
 	HookEvent("player_team", Painter_Event_PlayerTeamDeath);
 	HookEvent("player_death", Painter_Event_PlayerTeamDeath);
-	
-	
-	//FindConVar
-	gc_sAdminFlagLaser.GetString(g_sAdminFlagLaser , sizeof(g_sAdminFlagLaser));
+
+	// FindConVar
+	gc_sAdminFlagLaser.GetString(g_sAdminFlagLaser, sizeof(g_sAdminFlagLaser));
 }
 
-
-public int Painter_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
+public void Painter_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
 	if (convar == gc_sAdminFlagPainter)
 	{
@@ -104,11 +91,9 @@ public int Painter_OnSettingChanged(Handle convar, const char[] oldValue, const 
 	}
 }
 
-
 /******************************************************************************
                    COMMANDS
 ******************************************************************************/
-
 
 public Action Command_PainterMenu(int client, int args)
 {
@@ -119,7 +104,7 @@ public Action Command_PainterMenu(int client, int args)
 			if (CheckVipFlag(client, g_sAdminFlagPainter) || (GetClientTeam(client) == CS_TEAM_T))
 			{
 				char menuinfo[255];
-				
+
 				Menu menu = new Menu(Handler_PainterMenu);
 				Format(menuinfo, sizeof(menuinfo), "%T", "warden_painter_title", client);
 				menu.SetTitle(menuinfo);
@@ -145,7 +130,7 @@ public Action Command_PainterMenu(int client, int args)
 				menu.AddItem("magenta", menuinfo);
 				Format(menuinfo, sizeof(menuinfo), "%T", "warden_orange", client);
 				menu.AddItem("orange", menuinfo);
-				
+
 				menu.ExitBackButton = true;
 				menu.ExitButton = true;
 				menu.Display(client, 20);
@@ -153,66 +138,60 @@ public Action Command_PainterMenu(int client, int args)
 			else CReplyToCommand(client, "%t %t", "warden_tag", "warden_vipfeature");
 		}
 	}
+
 	return Plugin_Handled;
 }
-
 
 /******************************************************************************
                    EVENTS
 ******************************************************************************/
 
-
 public void Painter_Event_PlayerTeamDeath(Event event, const char[] name, bool dontBroadcast) 
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));
-	
+
 	g_fLastPainter[client][0] = 0.0;
 	g_fLastPainter[client][1] = 0.0;
 	g_fLastPainter[client][2] = 0.0;
 	g_bPainterUse[client] = false;
 	g_bPainter[client] = false;
-	
 	g_iLastButtons[client] = 0;
 }
-
 
 public void Painter_Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 {
 	g_bPainterT = false;
-	LoopClients(i) if (g_bPainter[i]) g_bPainter[i] = false;
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (g_bPainter[i]) g_bPainter[i] = false;
 }
-
 
 /******************************************************************************
                    FORWARDS LISTENING
 ******************************************************************************/
 
-
 public void Painter_OnConfigsExecuted()
 {
-	//Set custom Commands
+	// Set custom Commands
 	int iCount = 0;
 	char sCommands[128], sCommandsL[12][32], sCommand[32];
-	
-	//Painter
+
+	// Painter
 	gc_sCustomCommandPainter.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
 	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
-	
+
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
 			RegConsoleCmd(sCommand, Command_PainterMenu, "Allows Warden to toggle on/off the wardens Painter");
 	}
 }
 
-
 public Action Painter_OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
 {
-	if(!IsPlayerAlive(client))
+	if (!IsPlayerAlive(client))
 		return;
-	
+
 	if ((IsClientWarden(client) && gc_bPainter.BoolValue && g_bPainter[client] && CheckVipFlag(client, g_sAdminFlagPainter)) || ((GetClientTeam(client) == CS_TEAM_T) && gc_bPainter.BoolValue && g_bPainterT && g_bPainter[client]) || (IsClientDeputy(client) && gc_bPainterDeputy.BoolValue && g_bPainter[client]))
 	{
 		for (int i = 0; i < MAX_BUTTONS; i++)
@@ -235,21 +214,19 @@ public Action Painter_OnPlayerRunCmd(int client, int &buttons, int &impulse, flo
 	}
 }
 
-
 public void Painter_OnMapStart()
 {
 	CreateTimer(0.1, Print_Painter, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 	
 	g_bPainterT = false;
-	LoopClients(i) g_bPainter[i] = false;
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) g_bPainter[i] = false;
 }
-
 
 public void Painter_OnMapEnd()
 {
 	g_bPainterT = false;
-	
-	LoopClients(i)
+
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 	{
 		g_fLastPainter[i][0] = 0.0;
 		g_fLastPainter[i][1] = 0.0;
@@ -259,19 +236,16 @@ public void Painter_OnMapEnd()
 	}
 }
 
-
 public void Painter_OnClientPutInServer(int client)
 {
 	g_bPainterUse[client] = false;
 	g_bPainterColorRainbow[client] = true;
 }
 
-
 public void Painter_OnWardenRemoved(int client)
 {
 	g_bPainterT = false;
 }
-
 
 public void Painter_OnClientDisconnect(int client)
 {
@@ -279,11 +253,9 @@ public void Painter_OnClientDisconnect(int client)
 	g_iLastButtons[client] = 0;
 }
 
-
 /******************************************************************************
                    FUNCTIONS
 ******************************************************************************/
-
 
 public Action TogglePainterT(int client, int args)
 {
@@ -296,14 +268,14 @@ public Action TogglePainterT(int client, int args)
 				g_bPainterT = true;
 				CPrintToChatAll("%t %t", "warden_tag", "warden_tpainteron");
 				
-				LoopValidClients(i, false, true)
+				for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, true))
 				{
 					if (GetClientTeam(i) == CS_TEAM_T) Command_PainterMenu(i, 0);
 				}
 			}
 			else
 			{
-				LoopValidClients(i, false, true)
+				for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, true))
 				{
 					if (GetClientTeam(i) == CS_TEAM_T)
 					{
@@ -320,8 +292,7 @@ public Action TogglePainterT(int client, int args)
 	}
 }
 
-
-public void OnButtonPress(int client, int button)
+void OnButtonPress(int client, int button)
 {
 	if (button == IN_USE)
 	{
@@ -330,8 +301,7 @@ public void OnButtonPress(int client, int button)
 	}
 }
 
-
-public void OnButtonRelease(int client, int button)
+void OnButtonRelease(int client, int button)
 {
 	if (button == IN_USE)
 	{
@@ -342,13 +312,11 @@ public void OnButtonRelease(int client, int button)
 	}
 }
 
-
 public Action Connect_Painter(float start[3], float end[3], int color[4])
 {
 	TE_SetupBeamPoints(start, end, g_iBeamSprite, 0, 0, 0, 25.0, 2.0, 2.0, 10, 0.0, color, 0);
 	TE_SendToAll();
 }
-
 
 public Action TraceEye(int client, float g_fPos[3]) 
 {
@@ -356,10 +324,10 @@ public Action TraceEye(int client, float g_fPos[3])
 	GetClientEyePosition(client, vOrigin);
 	GetClientEyeAngles(client, vAngles);
 	TR_TraceRayFilter(vOrigin, vAngles, MASK_SHOT, RayType_Infinite, TraceEntityFilterPlayer);
+
 	if (TR_DidHit(INVALID_HANDLE)) TR_GetEndPosition(g_fPos, INVALID_HANDLE);
 	return;
 }
-
 
 public bool TraceEntityFilterPlayer(int entity, int contentsMask)
 {
@@ -367,19 +335,17 @@ public bool TraceEntityFilterPlayer(int entity, int contentsMask)
 }
 
 
-
 /******************************************************************************
                    MENUS
 ******************************************************************************/
 
-
 public int Handler_PainterMenu(Menu menu, MenuAction action, int client, int selection)
 {
-if (action == MenuAction_Select)
+	if (action == MenuAction_Select)
 	{
 		char info[32];
 		menu.GetItem(selection, info, sizeof(info));
-		
+
 		if (strcmp(info, "off") == 0)
 		{
 			g_bPainter[client] = false;
@@ -395,7 +361,6 @@ if (action == MenuAction_Select)
 			CPrintToChat(client, "%t %t", "warden_tag", "warden_painter", g_sColorNamesRainbow);
 			g_bPainter[client] = true;
 			g_bPainterColorRainbow[client] = true;
-			
 		}
 		else if (strcmp(info, "white") == 0)
 		{
@@ -404,7 +369,6 @@ if (action == MenuAction_Select)
 			g_bPainter[client] = true;
 			g_bPainterColorRainbow[client] = false;
 			g_iPainterColor[client] = 0;
-			
 		}
 		else if (strcmp(info, "red") == 0)
 		{
@@ -413,7 +377,6 @@ if (action == MenuAction_Select)
 			g_bPainter[client] = true;
 			g_bPainterColorRainbow[client] = false;
 			g_iPainterColor[client] = 1;
-			
 		}
 		else if (strcmp(info, "green") == 0)
 		{
@@ -422,7 +385,6 @@ if (action == MenuAction_Select)
 			g_bPainter[client] = true;
 			g_bPainterColorRainbow[client] = false;
 			g_iPainterColor[client] = 2;
-			
 		}
 		else if (strcmp(info, "blue") == 0)
 		{
@@ -431,7 +393,6 @@ if (action == MenuAction_Select)
 			g_bPainter[client] = true;
 			g_bPainterColorRainbow[client] = false;
 			g_iPainterColor[client] = 3;
-			
 		}
 		else if (strcmp(info, "yellow") == 0)
 		{
@@ -440,7 +401,6 @@ if (action == MenuAction_Select)
 			g_bPainter[client] = true;
 			g_bPainterColorRainbow[client] = false;
 			g_iPainterColor[client] = 4;
-			
 		}
 		else if (strcmp(info, "cyan") == 0)
 		{
@@ -449,7 +409,6 @@ if (action == MenuAction_Select)
 			g_bPainter[client] = true;
 			g_bPainterColorRainbow[client] = false;
 			g_iPainterColor[client] = 5;
-			
 		}
 		else if (strcmp(info, "magenta") == 0)
 		{
@@ -458,7 +417,6 @@ if (action == MenuAction_Select)
 			g_bPainter[client] = true;
 			g_bPainterColorRainbow[client] = false;
 			g_iPainterColor[client] = 6;
-			
 		}
 		else if (strcmp(info, "orange") == 0)
 		{
@@ -467,7 +425,6 @@ if (action == MenuAction_Select)
 			g_bPainter[client] = true;
 			g_bPainterColorRainbow[client] = false;
 			g_iPainterColor[client] = 7;
-			
 		}
 	}
 	else if (action == MenuAction_Cancel)
@@ -483,17 +440,15 @@ if (action == MenuAction_Select)
 	}
 }
 
-
 /******************************************************************************
                    TIMER
 ******************************************************************************/
 
-
 public Action Print_Painter(Handle timer)
 {
 	float g_fPos[3];
-	
-	for (int Y = 1; Y <= MaxClients; Y++) 
+
+	for (int Y = 1;Y <= MaxClients;Y++) 
 	{
 		if (g_bPainterColorRainbow[Y]) g_iPainterColor[Y] = GetRandomInt(0, 6);
 		if (IsClientInGame(Y) && g_bPainterUse[Y])

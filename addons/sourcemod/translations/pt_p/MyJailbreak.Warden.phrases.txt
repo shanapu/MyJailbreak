@@ -1,0 +1,21 @@
+// Exported from SourceMod Translator
+// Date: 2017-02-13 03:57:20 UTC
+// Language: Portuguese (pt_p)
+// 
+// To view other translations for this plugin, please visit:
+// http://translator.mitchdempsey.com/sourcemod_plugins/178
+//
+"Phrases"
+{
+
+	"warden_cdmenu_startstop"
+	{
+		"pt_p"		"Começa e para uma contagem"
+	}
+
+	"warden_dooropen_unavailable"
+	{
+		"pt_p"		"Este mapa não suporta celas automáticas. Tu deves abrir manualmente as celas!"
+	}
+
+}

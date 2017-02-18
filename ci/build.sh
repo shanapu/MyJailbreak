@@ -10,8 +10,7 @@ PASS=$5
 
 
 echo "Download und extract sourcemod"
-wget -q "http://www.sourcemod.net/latest.php?version=$1&os=linux" -O sourcemod.tar.gz
-# wget "http://www.sourcemod.net/latest.php?version=$1&os=linux" -O sourcemod.tar.gz
+wget "http://www.sourcemod.net/latest.php?version=$1&os=linux" -O sourcemod.tar.gz
 tar -xzf sourcemod.tar.gz
 
 echo "Give compiler rights for compile"
@@ -24,6 +23,17 @@ do
   rm output.txt
 done
 
+if [ $1 == "1.7" ]
+then echo "Fix include for SM1.7"
+for file in addons/sourcemod/scripting/include/mystocks.inc
+do
+  sed -i "s/stock int Handler_NullCancel(Handle menu, MenuAction action, int param1, int param2)/public int Handler_NullCancel(Handle menu, MenuAction action, int param1, int param2)/g" $file > output.txt
+  sed -i "s/stock Action DeleteOverlay(Handle timer, any client)/public Action DeleteOverlay(Handle timer, any client)/g" $file > output.txt
+  sed -i "s/stock Action Timer_RemoveColor(Handle timer, any client)/public Action Timer_RemoveColor(Handle timer, any client)/g" $file > output.txt
+  rm output.txt
+done
+fi
+
 echo "get basecom myjb 1.7"
 wget -q -O addons/sourcemod/scripting/include/basecomm.inc https://raw.githubusercontent.com/shanapu/MyJailbreak/master/addons/sourcemod/scripting/include/basecomm.inc
 
@@ -34,12 +44,14 @@ mv addons/sourcemod/scripting/MyJailbreak/Modules addons/sourcemod/scripting/MyJ
 echo "Compile MyJailbreak plugins"
 for file in addons/sourcemod/scripting/MyJailbreak/*.sp
 do
+echo "Compile $file"
   addons/sourcemod/scripting/spcomp -E -v0 $file
 done
 
 echo "Compile MyJailbreak Add-ons"
 for file in addons/sourcemod/scripting/MyJailbreak/Add-ons/*.sp
 do
+echo "Compile $file"
   addons/sourcemod/scripting/spcomp -E -v0 $file
 done
 
@@ -60,13 +72,16 @@ do
 done
 
 echo "Move all other binary files to plugins folder"
+  mv addons/sourcemod/plugins/MyJailbreak/myjailbreak_kento_rankme.smx addons/sourcemod/plugins/MyJailbreak/disabled
+  mv addons/sourcemod/plugins/MyJailbreak/myjailbreak_rankme.smx addons/sourcemod/plugins/MyJailbreak/disabled
+  mv addons/sourcemod/plugins/MyJailbreak/myjailbreak_reputation.smx addons/sourcemod/plugins/MyJailbreak/disabled
   mv addons/sourcemod/plugins/MyJailbreak/myjailbreak_teamgames.smx addons/sourcemod/plugins/MyJailbreak/disabled
-  mv addons/sourcemod/plugins/MyJailbreak/ratio_ctban.smx addons/sourcemod/plugins/MyJailbreak/disabled
-  mv addons/sourcemod/plugins/MyJailbreak/ratio_kento_rankme.smx addons/sourcemod/plugins/MyJailbreak/disabled
-  mv addons/sourcemod/plugins/MyJailbreak/ratio_rankme.smx addons/sourcemod/plugins/MyJailbreak/disabled
-  mv addons/sourcemod/plugins/MyJailbreak/ratio_reputation.smx addons/sourcemod/plugins/MyJailbreak/disabled
+  mv addons/sourcemod/plugins/MyJailbreak/myjailbreak_steamgroups.smx addons/sourcemod/plugins/MyJailbreak/disabled
+  mv addons/sourcemod/plugins/MyJailbreak/myjailbreak_stamm.smx addons/sourcemod/plugins/MyJailbreak/disabled
   mv addons/sourcemod/plugins/MyJailbreak/ratio_teambans.smx addons/sourcemod/plugins/MyJailbreak/disabled
-  mv addons/sourcemod/plugins/MyJailbreak/ratio_stamm.smx addons/sourcemod/plugins/MyJailbreak/disabled
+  mv addons/sourcemod/plugins/MyJailbreak/ratio_steamrep.smx addons/sourcemod/plugins/MyJailbreak/disabled
+  mv addons/sourcemod/plugins/MyJailbreak/ratio_ct_bans.smx addons/sourcemod/plugins/MyJailbreak/disabled
+  mv addons/sourcemod/plugins/MyJailbreak/ratio_ctban.smx addons/sourcemod/plugins/MyJailbreak/disabled
 
 echo "Remove build folder if exists"
 if [ -d "build" ]; then
@@ -186,6 +201,10 @@ unzip -qo translations.zip -d build/gameserver/
 
 wget -q -O translations.zip http://translator.mitchdempsey.com/sourcemod_plugins/185/download/MyJailbreak.Catch.translations.zip
 unzip -qo translations.zip -d build/gameserver/
+
+wget -q -O translations.zip http://translator.mitchdempsey.com/sourcemod_plugins/271/download/MyJailbreak.Ghosts.translations.zip
+unzip -qo translations.zip -d build/gameserver/
+
 
 echo "Clean root folder"
 rm sourcemod.tar.gz

@@ -1,0 +1,16 @@
+// Exported from SourceMod Translator
+// Date: 2017-02-13 03:57:20 UTC
+// Language: Turkish (tr)
+// 
+// To view other translations for this plugin, please visit:
+// http://translator.mitchdempsey.com/sourcemod_plugins/178
+//
+"Phrases"
+{
+
+	"warden_playerdead"
+	{
+		"tr"		"Sadece {purple}canlı oyuncular {default}komutçu olabilir!"
+	}
+
+}

@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2016-12-11 14:23:49 UTC
+// Date: 2017-02-13 03:57:20 UTC
 // Language: Russian (ru)
 // 
 // To view other translations for this plugin, please visit:
@@ -320,7 +320,7 @@
 
 	"warden_marker_set"
 	{
-		"ru"		"{1} маркер поставлен."
+		"ru"		"{1} маркер установлен."
 	}
 
 	"warden_marker_remove"
@@ -891,6 +891,51 @@
 	"warden_personalfreeday"
 	{
 		"ru"		"{1} получит персональный фридей в следующем раунде"
+	}
+
+	"warden_cooldown"
+	{
+		"ru"		"Вы были командиром {purple}слишком долго{default}. Подождите {green}{1}{default} раундов"
+	}
+
+	"warden_limit"
+	{
+		"ru"		"Вы играли {purple}{1} раундов подряд{default} командиром. Подождите {green}{2}{default} раундов"
+	}
+
+	"warden_wait"
+	{
+		"ru"		"Поскольку {green}последний раунд вы были командиром{default} вы должны подождать {purple}{1} секунд{default}, чтобы стать командиром снова."
+	}
+
+	"warden_deputy_removed"
+	{
+		"ru"		"Админ: {purple}{1}{default} уволил ЗАМа: {purple}{2}"
+	}
+
+	"warden_deputy_removed_nc"
+	{
+		"ru"		"Админ: {1} уволил ЗАМа: {2}"
+	}
+
+	"warden_steamgroup"
+	{
+		"ru"		"Невозможно играть за командира, для начала необходимо вступить в группу steam."
+	}
+
+	"warden_rankme"
+	{
+		"ru"		"Вы должны иметь как минимум {1} очков, чтобы играть за командира"
+	}
+
+	"warden_reputation"
+	{
+		"ru"		"Вы должны иметь как минимум {1} очков репутации, чтобы играть за командира"
+	}
+
+	"warden_stamm"
+	{
+		"ru"		"Вы должны иметь как минимум {1} очков, чтобы играть за командира"
 	}
 
 }

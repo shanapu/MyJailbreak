@@ -78,7 +78,7 @@ enum LR_Structure
 	DataType:TheDataPack
 };
 
-public SharedPlugin:__pl_lastrequest =
+public SharedPlugin __pl_lastrequest =
 {
 	name = "lastrequest",
 	file = "sm_hosties.smx",
@@ -89,7 +89,7 @@ public SharedPlugin:__pl_lastrequest =
 	#endif
 };
 
-public __pl_lastrequest_SetNTVOptional()
+public void __pl_lastrequest_SetNTVOptional()
 {
 	MarkNativeAsOptional("IsClientRebel");
 	MarkNativeAsOptional("IsClientInLastRequest");
@@ -106,16 +106,16 @@ functag FuncLastRequest public(type, prisoner, guard);
 functag FuncProcessLR public(Handle:array, iLRNumber);
 
 
-forward OnStartLR(PrisonerIndex, GuardIndex, LR_Type);
+forward void OnStartLR(int PrisonerIndex, int GuardIndex, int LR_Type);
 
-forward OnAvailableLR(Announced);
+forward void OnAvailableLR(int Announced);
 
 /**
  * Find if last request is available.
  * 
  * @return						True if last request is available, false otherwise.
  */
-native bool:IsLastRequestAvailable(IsLR);
+native bool IsLastRequestAvailable(bool IsLR);
 
 /**
  * Find if a client is listed as a rebel.
@@ -124,7 +124,7 @@ native bool:IsLastRequestAvailable(IsLR);
  * @return						True if rebel, false otherwise.
  * @error                       Invalid client index.
  */
-native bool:IsClientRebel(client);
+native bool IsClientRebel(int client);
 
 /**
  * Find if a client is in a last request.
@@ -134,7 +134,7 @@ native bool:IsClientRebel(client);
  *									Otherwise client index of partner or -1 if in LR but no partner exists
  * @error                       Invalid client index.
  */
-native IsClientInLastRequest(client);
+native int IsClientInLastRequest(int client);
 
 /**
  * Adds a custom last request.
@@ -145,7 +145,7 @@ native IsClientInLastRequest(client);
  * @param AutoStart				Whether the LR will start immediately (true) or if additional menus are needed (false).
  * @return						The type index of the LR added.
  */
-native AddLastRequestToList(FuncProcessLR:Start, FuncLastRequest:Stop, String:LR_Name[], bool:AutoStart = true);
+native int AddLastRequestToList(FuncProcessLR Start, FuncLastRequest Stop, char[] LR_Name, bool AutoStart = true);
 
 /**
  * Removes a custom last request.
@@ -156,7 +156,7 @@ native AddLastRequestToList(FuncProcessLR:Start, FuncLastRequest:Stop, String:LR
  * @noreturn						
  * @error                     	Last request not found.
  */
-native void RemoveLastRequestFromList(FuncProcessLR:Start, FuncLastRequest:Stop, String:LR_Name[]);
+native void RemoveLastRequestFromList(FuncProcessLR Start, FuncLastRequest Stop, char[] LR_Name);
 
 /**
  * Provides iteration for all active last requests.
@@ -165,7 +165,7 @@ native void RemoveLastRequestFromList(FuncProcessLR:Start, FuncLastRequest:Stop,
  * @param iLastRequestIndex		Index number of last request in array.
  * @return						Number of last requests in progress.
  */
-native ProcessAllLastRequests(FuncProcessLR:ProcessLR, iLastRequestIndex);
+native int ProcessAllLastRequests(FuncProcessLR ProcessLR, int iLastRequestIndex);
 
 /**
  * Alters the boolean array determining if a given client is considered a rebel.
@@ -175,7 +175,7 @@ native ProcessAllLastRequests(FuncProcessLR:ProcessLR, iLastRequestIndex);
  * @noreturn
  * @error						Invalid parameters
  */
-native ChangeRebelStatus(client, status);
+native void ChangeRebelStatus(int client, int status);
 
 /**
  * Starts the lr if autostart is false.
@@ -184,7 +184,7 @@ native ChangeRebelStatus(client, status);
  * @noreturn
  * @error						Invalid parameters or wrong client index
  */
-native InitializeLR(prisoner);
+native void InitializeLR(int prisoner);
 
 /**
  * Cleanup the data about the autostart LR for a client.
@@ -194,47 +194,33 @@ native InitializeLR(prisoner);
  * @noreturn
  * @error						Invalid parameters or wrong client index
  */
-native CleanupLR(prisoner);
+native void CleanupLR(int prisoner);
 
-stock SetThirdPerson(client, GameType:game = Game_Unknown)
+stock void SetThirdPerson(int client)
 {
 	if (IsValidEntity(client) && IsClientInGame(client))
 	{
-		if (game == Game_CSGO)
-		{
-			ClientCommand(client, "thirdperson");
-		}
-		else
-		{
-			SetEntPropEnt(client, Prop_Send, "m_hObserverTarget", 0);
-			SetEntProp(client, Prop_Send, "m_iObserverMode", 1);
-			SetEntProp(client, Prop_Send, "m_bDrawViewmodel", 0);
-			SetEntProp(client, Prop_Send, "m_iFOV", 120);
-		}
+		SetEntPropEnt(client, Prop_Send, "m_hObserverTarget", 0);
+		SetEntProp(client, Prop_Send, "m_iObserverMode", 1);
+		SetEntProp(client, Prop_Send, "m_bDrawViewmodel", 0);
+		SetEntProp(client, Prop_Send, "m_iFOV", 120);
 	}
 }
 
-stock SetFirstPerson(client, GameType:game = Game_Unknown)
+stock void SetFirstPerson(int client)
 {
 	if (IsValidEntity(client) && IsClientInGame(client))
 	{
-		if (game == Game_CSGO)
-		{
-			ClientCommand(client, "firstperson");
-		}
-		else
-		{
-			SetEntPropEnt(client, Prop_Send, "m_hObserverTarget", 1);
-			SetEntProp(client, Prop_Send, "m_iObserverMode", 0);
-			SetEntProp(client, Prop_Send, "m_bDrawViewmodel", 1);
-			SetEntProp(client, Prop_Send, "m_iFOV", 90);
-		}
+		SetEntPropEnt(client, Prop_Send, "m_hObserverTarget", 1);
+		SetEntProp(client, Prop_Send, "m_iObserverMode", 0);
+		SetEntProp(client, Prop_Send, "m_bDrawViewmodel", 1);
+		SetEntProp(client, Prop_Send, "m_iFOV", 90);
 	}
 }
 
-stock CancelAllMenus()
+stock void CancelAllMenus()
 {
-	for (new idx = 1; idx < MaxClients; idx++)
+	for (int idx = 1; idx < MaxClients; idx++)
 	{
 		if (IsClientInGame(idx))
 		{
@@ -246,9 +232,9 @@ stock CancelAllMenus()
 	}
 }
 
-stock ClosePotentialLRMenus()
+stock void ClosePotentialLRMenus()
 {
-   for (new idx = 1; idx < MaxClients; idx++)
+   for (int idx = 1; idx < MaxClients; idx++)
    {
       if (IsClientInGame(idx))
       {
@@ -263,7 +249,7 @@ stock ClosePotentialLRMenus()
    }
 }
 
-stock bool:PlayerHasGun(client)
+stock bool PlayerHasGun(int client)
 {
 	if (PlayerHasPrimary(client) || PlayerHasSecondary(client))
 	{
@@ -272,7 +258,7 @@ stock bool:PlayerHasGun(client)
 	return false;
 }
 
-stock bool:PlayerHasPrimary(client)
+stock bool PlayerHasPrimary(int client)
 {
 	if (GetPlayerWeaponSlot(client, CS_SLOT_PRIMARY) != -1)
 	{
@@ -281,7 +267,7 @@ stock bool:PlayerHasPrimary(client)
 	return false;
 }
 
-stock bool:PlayerHasSecondary(client)
+stock bool PlayerHasSecondary(int client)
 {
 	if (GetPlayerWeaponSlot(client, CS_SLOT_SECONDARY) != -1)
 	{
@@ -291,24 +277,25 @@ stock bool:PlayerHasSecondary(client)
 }
 
 // filter function to ignore everything
-public bool:Trace_FilterNothing(entity, contentsMask)
+public bool Trace_FilterNothing(int entity, int contentsMask)
 {
 	return entity == 0;
 }
 
 // Based on Client_IsLookingAtWall, Edict_GetClosestToEdict from SM-LIB with permission from Berni
 // detects if it's safe to teleport a player where the player is aiming
-stock bool:IsClientTooNearObstacle(client, Float:distance = 110.0, bool:checkAllEntities = false)
+stock bool IsClientTooNearObstacle(int client, float distance = 110.0, bool checkAllEntities = false)
 {
-	decl Float:posEye[3], Float:posEyeAngles[3], Float:vecOrigin[3], Float:vecOrigin_edict[3], String:Class_edict[64];
-	new bool:isClientLookingAtWall = false;
-	new bool:isClientCloseToEdict = false;
+	float posEye[3], posEyeAngles[3], vecOrigin[3], vecOrigin_edict[3];
+	char Class_edict[64];
+	bool isClientLookingAtWall = false;
+	bool isClientCloseToEdict = false;
 	
 	GetClientAbsOrigin(client, vecOrigin);
 	
 	if (checkAllEntities)
 	{
-		for (new edict=1; edict <= GetMaxEntities(); edict++)
+		for (int edict=1; edict <= GetMaxEntities(); edict++)
 		{
 			
 			if (!IsValidEntity(edict))
@@ -335,7 +322,7 @@ stock bool:IsClientTooNearObstacle(client, Float:distance = 110.0, bool:checkAll
 			
 			GetEntPropVector(edict, Prop_Data, "m_vecOrigin", vecOrigin_edict);
 			
-			new Float:edict_distance = GetVectorDistance(vecOrigin, vecOrigin_edict);
+			float edict_distance = GetVectorDistance(vecOrigin, vecOrigin_edict);
 			
 			if (edict_distance <= distance)
 			{
@@ -349,19 +336,19 @@ stock bool:IsClientTooNearObstacle(client, Float:distance = 110.0, bool:checkAll
 	
 	posEyeAngles[0] = 0.0;
 	
-	new Handle:trace = TR_TraceRayFilterEx(posEye, posEyeAngles, CONTENTS_SOLID, RayType_Infinite, Trace_FilterNothing);
+	Handle trace = TR_TraceRayFilterEx(posEye, posEyeAngles, CONTENTS_SOLID, RayType_Infinite, Trace_FilterNothing);
 	
 	if (TR_DidHit(trace))
 	{
-		decl Float:posEnd[3];
+		float posEnd[3];
 
 		TR_GetEndPosition(posEnd, trace);
 		
 		if (GetVectorDistance(posEye, posEnd) <= distance)
 		{
-			new Float:m_vHullMin[3] = {-16.0, -16.0, 0.0};
-			new Float:m_vHullMax[3] = {16.0, 16.0, 72.0};
-			new Handle:hullTrace = 	TR_TraceHullEx(posEye, posEnd, m_vHullMin, m_vHullMax, CONTENTS_SOLID);
+			float m_vHullMin[3] = {-16.0, -16.0, 0.0};
+			float m_vHullMax[3] = {16.0, 16.0, 72.0};
+			Handle hullTrace = 	TR_TraceHullEx(posEye, posEnd, m_vHullMin, m_vHullMax, CONTENTS_SOLID);
 			if (TR_DidHit(hullTrace))
 			{
 				TR_GetEndPosition(posEnd, hullTrace);

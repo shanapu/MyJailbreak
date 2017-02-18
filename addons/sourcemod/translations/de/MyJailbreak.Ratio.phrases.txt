@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2016-12-11 14:23:58 UTC
+// Date: 2017-02-13 03:57:23 UTC
 // Language: German (de)
 // 
 // To view other translations for this plugin, please visit:
@@ -13,6 +13,31 @@
 		"de"		"[{green}MyJB.ratio{default}]"
 	}
 
+	"ratio_auto"
+	{
+		"de"		"Du kannst nicht die automatische Teamauswahl verwenden, um einem Team beizutreten."
+	}
+
+	"ratio_fullqueue"
+	{
+		"de"		"Wächterteam ist voll. Du bist {green}#{1]{default} in der Warteschlange."
+	}
+
+	"ratio_info_title"
+	{
+		"de"		"Wärter Warteliste:"
+	}
+
+	"ratio_empty"
+	{
+		"de"		"Die Warteschlange ist zur Zeit {green}leer{default}."
+	}
+
+	"ratio_noct"
+	{
+		"de"		"Du musst ein {green}Gefangener{default} sein, um der Warteschlange beizutreten."
+	}
+
 	"ratio_find"
 	{
 		"de"		"Wähle den nächsten Anwärter aus der Liste. {green}{1} {default}ist neuer Guard"
@@ -23,9 +48,264 @@
 		"de"		"Anwärter Liste ist leer. {green}{1} {default}wurde als neuer Zufälliger Guard gewählt"
 	}
 
+	"ratio_novalid"
+	{
+		"de"		"Konnte keinen {green}berechtigten Spieler{default} finden um ihn zu CT zu wechseln. Kontaktiere einen Admin."
+	}
+
+	"ratio_number"
+	{
+		"de"		"Du bist {green}#{1}{default} in der Wächter Warteschlange."
+	}
+
+	"ratio_thxvip"
+	{
+		"de"		"Danke dass du ein {darkred}VIP{default} bist! Du wurdest an den {green}Anfang der Warteschlange{default} gesetzt!"
+	}
+
+	"ratio_advip"
+	{
+		"de"		"Werde ein {darkred}VIP{default} um automatischj an die Spitze der Warteschlange gesetzt zu werden."
+	}
+
+	"ratio_movetot"
+	{
+		"de"		"Es gibt zu viele Wächter. {green}{1}{default} wurde zufällig ausgewählt und zu den Gefangenen gewechselt."
+	}
+
+	"ratio_removed"
+	{
+		"de"		"Der Admin {1} hat {2} von der Wächter Warteschlange entfernt."
+	}
+
+	"ratio_notonqueue"
+	{
+		"de"		"Du bist nicht in der Wächter Warteschlange!"
+	}
+
+	"ratio_leavedqueue"
+	{
+		"de"		"Du bist nicht mehr in der Wächter Warteschlange!"
+	}
+
+	"ratio_accept_title"
+	{
+		"de"		"Wächterqualifikationen"
+	}
+
+	"ratio_accept_line1"
+	{
+		"de"		"Befor du ein Wärter wirst musst du die folgenden Bedingungen akzeptieren:"
+	}
+
+	"ratio_accept_line2"
+	{
+		"de"		"Ich versichere dass ich die Regeln gelesen & verstanden habe."
+	}
+
+	"ratio_accept_line3"
+	{
+		"de"		"Ich bestätige dass ich die CT-Regeln zwei Mal gelesen habe!"
+	}
+
+	"ratio_accept_line4"
+	{
+		"de"		"Ich bestätige dass ich fair spielen & die Serverregeln befolgen werde."
+	}
+
+	"ratio_accept_line5"
+	{
+		"de"		"Fehler diese Regeln einzuhalten resultiert in einem CT Ban."
+	}
+
+	"ratio_accept"
+	{
+		"de"		"Ja, ich akzeptiere diese Bedingungen."
+	}
+
+	"ratio_notaccept"
+	{
+		"de"		"Nein, ich will kein Wächter werden."
+	}
+
+	"ratio_question_title"
+	{
+		"de"		"Bitte beantworte die folgenden Fragen um ein Wächter zu werden."
+	}
+
+	"ratio_question1_line1"
+	{
+		"de"		"Die Zellentüren sind geschlossen, die Gefangenen sind drinnen!"
+	}
+
+	"ratio_question1_line2"
+	{
+		"de"		"Was wirst du tun?"
+	}
+
+	"ratio_question1_wrong1"
+	{
+		"de"		"Ich warte bis alle Zellen offen sind und töte sie alle!"
+	}
+
+	"ratio_question1_wrong2"
+	{
+		"de"		"Bring einen nach dem anderen um bis zum Last Request."
+	}
+
+	"ratio_question1_right"
+	{
+		"de"		"Ich warte auf die erste Ansage."
+	}
+
+	"ratio_question2_line1"
+	{
+		"de"		"Der Warden ist scheiße & diese Runde ist total langweilig."
+	}
+
+	"ratio_question2_line2"
+	{
+		"de"		"Werf deine Waffe weg und gib sie an einen Gefangenen um die Runde zu beschleunigen!"
+	}
+
+	"ratio_question2_wrong1"
+	{
+		"de"		"Das ist eine gute Idee."
+	}
+
+	"ratio_question2_wrong2"
+	{
+		"de"		"Nie! Nur wenn der Gefangene mein Kumpel ist!"
+	}
+
+	"ratio_question2_right"
+	{
+		"de"		"Nie! Waffenschieben ist verboten!"
+	}
+
+	"ratio_question3_line1"
+	{
+		"de"		"Hast du die Servrregeln gelesen?"
+	}
+
+	"ratio_question3_line2"
+	{
+		"de"		"Verstehst du die Serverregeln?"
+	}
+
+	"ratio_question3_wrong1"
+	{
+		"de"		"Ja, ich habe sie gelesen. Ich werde sie nicht befolgen."
+	}
+
+	"ratio_question3_wrong2"
+	{
+		"de"		"Lesen? Ich bin hier um zu spielen lol!"
+	}
+
+	"ratio_question3_right"
+	{
+		"de"		"Ja, ich habe sie gelesen. Ich weiß wie man auf diesem Server spielt."
+	}
+
+	"ratio_question4_line1"
+	{
+		"de"		"Hast du ein funktionierendes Mikrofon?"
+	}
+
+	"ratio_question4_line2"
+	{
+		"de"		"Sprichst du die Serversprache?"
+	}
+
+	"ratio_question4_wrong1"
+	{
+		"de"		"Entschuldigung was?"
+	}
+
+	"ratio_question4_wrong2"
+	{
+		"de"		"Mein Mikrofon ist defekt, ich werde die Befehle schreiben."
+	}
+
+	"ratio_question4_right"
+	{
+		"de"		"Ich habe ein funktionierendes und akzeptables Mikrofon."
+	}
+
+	"ratio_question5_line1"
+	{
+		"de"		"Der Warden wurde getötet und du bist einer der letzten Wächter."
+	}
+
+	"ratio_question5_line2"
+	{
+		"de"		"Würdest du als Warden spielen?"
+	}
+
+	"ratio_question5_wrong1"
+	{
+		"de"		"Starte besser einen Freeday..."
+	}
+
+	"ratio_question5_wrong2"
+	{
+		"de"		"Bring alle Gefangenen nacheinander um bis zum Wunsch."
+	}
+
+	"ratio_question5_right"
+	{
+		"de"		"Als Wächter werde ich natürlich als der neue Warden spielen müssen."
+	}
+
+	"ratio_cooldown"
+	{
+		"de"		"Du bist aufgrund einer falschen Antwort geblockt. Versuch es nächste Runde."
+	}
+
+	"ratio_disabled"
+	{
+		"de"		"Rate wurde vom Admin deaktiviert."
+	}
+
+	"ratio_hasdisabled"
+	{
+		"de"		"Ein Admin hat die Rate deaktiviert."
+	}
+
+	"ratio_hasactivated"
+	{
+		"de"		"Ein Admin hat die Rate aktiviert. Ratenfix nächste Runde."
+	}
+
+	"ratio_active"
+	{
+		"de"		"Rate ist aktiv! 1 Wächter auf {1} Gefangene."
+	}
+
+	"ratio_stamm"
+	{
+		"de"		"Du brauchst mindestens {1} Stammpunkte um als Wächter zu spielen."
+	}
+
 	"ratio_banned_nc"
 	{
 		"de"		"Du kannst nicht als Wärter spielen. Du bist als CT gebanned."
+	}
+
+	"ratio_clearqueue"
+	{
+		"de"		"Ein Admin hat die Wächter Warteschlange geleert!"
+	}
+
+	"ratio_reputation"
+	{
+		"de"		"Du brauchst mindestsens {1} Rufpunkte um als Wächter zu spielen."
+	}
+
+	"ratio_remove"
+	{
+		"de"		"Entferne aus der Warteschlange:"
 	}
 
 	"ratio_banned"
@@ -33,9 +313,19 @@
 		"de"		"Du kannst nicht als Wärter spielen. Du bist als{green}CT{default} gebanned."
 	}
 
+	"ratio_rankme"
+	{
+		"de"		"Du brauchst mindestens {1} RankMe Punkte um als Wächter zu spielen."
+	}
+
 	"ratio_close"
 	{
 		"de"		"Schliessen"
+	}
+
+	"ratio_steamrep"
+	{
+		"de"		"Du kannst nicht als Wächter spielen weil du ein {red}BETRÜGER{default} bist. Schau auf steamrep.com"
 	}
 
 }

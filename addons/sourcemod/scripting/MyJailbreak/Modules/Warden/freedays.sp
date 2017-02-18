@@ -11,20 +11,18 @@
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
  * details.
  *
  * You should have received a copy of the GNU General Public License along with
- * this program.  If not, see <http://www.gnu.org/licenses/>.
+ * this program. If not, see <http://www.gnu.org/licenses/>.
  */
-
 
 /******************************************************************************
                    STARTUP
 ******************************************************************************/
 
-
-//Includes
+// Includes
 #include <sourcemod>
 #include <sdktools>
 #include <sdkhooks>
@@ -34,74 +32,68 @@
 #include <warden>
 #include <mystocks>
 
-
-//Optional Plugins
+// Optional Plugins
 #undef REQUIRE_PLUGIN
 #include <myjailbreak>
 #define REQUIRE_PLUGIN
 
-
-//Compiler Options
+// Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
 
-
-//Booleans
+// Booleans
 bool g_bGetFreeDay[MAXPLAYERS+1];
 bool g_bHasFreeDay[MAXPLAYERS+1];
 
-
-//Console Variables
+// Console Variables
 ConVar gc_sCustomCommandGiveFreeDay;
 ConVar gc_bFreeDay;
 ConVar gc_bFreeDayDeputy;
+ConVar gc_bFreeDayGuards;
 ConVar gc_iFreeDayColorRed;
 ConVar gc_iFreeDayColorGreen;
 ConVar gc_iFreeDayColorBlue;
 
+// Handle
+Handle g_hDataPackFreeday;
 
-//Handle
-Handle hData3;
-
-
-//Start
+// Start
 public void Freedays_OnPluginStart()
 {
-	//Client Commands
+	// Client Commands
 	RegConsoleCmd("sm_givefreeday", Command_FreeDay, "Allows a warden to give a freeday to a player");
-	
-	
-	//AutoExecConfig
+
+	// AutoExecConfig
 	gc_bFreeDay = AutoExecConfig_CreateConVar("sm_warden_freeday_enable", "1", "0 - disabled, 1 - Allow the warden to set a personal freeday", _, true, 0.0, true, 1.0);
 	gc_sCustomCommandGiveFreeDay = AutoExecConfig_CreateConVar("sm_warden_cmds_freeday", "gfd, setfreeday, sfd", "Set your custom chat command for give a freeday(!givefreeday (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))", _, true, 0.0, true, 1.0);
 	gc_iFreeDayColorRed = AutoExecConfig_CreateConVar("sm_warden_freeday_color_red", "0", "What color to turn the player with freeday into (set R, G and B values to 255 to disable) (Rgb): x - red value", _, true, 0.0, true, 255.0);
 	gc_iFreeDayColorGreen = AutoExecConfig_CreateConVar("sm_warden_freeday_color_green", "200", "What color to turn the player with freeday into (rGb): x - green value", _, true, 0.0, true, 255.0);
 	gc_iFreeDayColorBlue = AutoExecConfig_CreateConVar("sm_warden_freeday_color_blue", "0", "What color to turn the player with freeday into (rgB): x - blue value", _, true, 0.0, true, 255.0);
-	gc_bFreeDayDeputy = AutoExecConfig_CreateConVar("sm_warden_freeday_victim_deputy", "1", "0 - disabled, 1 - Allow the deputy to set a personal freeday", _, true, 0.0, true, 1.0);
-	
-	
-	//Hooks
-	HookEvent("round_poststart",  Freedays_Event_RoundStart_Post);
-	HookEvent("round_end",  Freedays_Event_RoundEnd);
-}
+	gc_bFreeDayDeputy = AutoExecConfig_CreateConVar("sm_warden_freeday_deputy", "1", "0 - disabled, 1 - Allow the deputy to set a personal freeday", _, true, 0.0, true, 1.0);
+	gc_bFreeDayGuards = AutoExecConfig_CreateConVar("sm_warden_freeday_guards", "0", "0 - disabled, 1 - Allow all the guards to set a personal freeday", _, true, 0.0, true, 1.0);
 
+	// Hooks
+	HookEvent("round_poststart", Freedays_Event_RoundStart_Post);
+	HookEvent("round_end", Freedays_Event_RoundEnd);
+}
 
 /******************************************************************************
                     COMMANDS
 ******************************************************************************/
 
-
 public Action Command_FreeDay(int client, int args)
 {
 	if (gc_bPlugin.BoolValue && gc_bFreeDay.BoolValue)
 	{
-		if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bFreeDayDeputy.BoolValue))
+		if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bFreeDayDeputy.BoolValue) || (GetClientTeam(client) == CS_TEAM_CT && gc_bFreeDayGuards.BoolValue))
 		{
 			char info1[255];
 			Menu menu5 = CreateMenu(Handler_GiveFreeDayChoose);
+
 			Format(info1, sizeof(info1), "%T", "warden_givefreeday", client);
 			menu5.SetTitle(info1);
-			LoopValidClients(i, true, true)
+
+			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true))
 			{
 				if ((GetClientTeam(i) == CS_TEAM_T) && !g_bGetFreeDay[i] && !g_bHasFreeDay[i])
 				{
@@ -113,22 +105,22 @@ public Action Command_FreeDay(int client, int args)
 					menu5.AddItem(userid, username);
 				}
 			}
+
 			menu5.ExitBackButton = true;
 			menu5.ExitButton = true;
 			menu5.Display(client, MENU_TIME_FOREVER);
 		}
-		else CReplyToCommand(client, "%t %t", "warden_tag" , "warden_notwarden"); 
+		else CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
 	}
+
 	return Plugin_Handled;
 }
-
 
 /******************************************************************************
                    EVENTS
 ******************************************************************************/
 
-
-public void Freedays_Event_RoundStart_Post(Event event, char [] name, bool dontBroadcast)
+public void Freedays_Event_RoundStart_Post(Event event, char[] name, bool dontBroadcast)
 {
 	if (gp_bMyJailBreak)
 	{
@@ -138,7 +130,8 @@ public void Freedays_Event_RoundStart_Post(Event event, char [] name, bool dontB
 		if (!StrEqual(EventDay, "none", false))
 			return;
 	}
-	LoopClients(i)
+
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 	{
 		if (g_bGetFreeDay[i])
 		{
@@ -150,9 +143,9 @@ public void Freedays_Event_RoundStart_Post(Event event, char [] name, bool dontB
 	}
 }
 
-public void Freedays_Event_RoundEnd(Event event, char [] name, bool dontBroadcast)
+public void Freedays_Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
-	LoopClients(i)
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 	{
 		g_bHasFreeDay[i] = false;
 	}
@@ -163,29 +156,26 @@ public void Freedays_OnClientDisconnect(int client)
 		g_bHasFreeDay[client] = false;
 }
 
-
 /******************************************************************************
                    FORWARDS LISTENING
 ******************************************************************************/
 
-
 public void Freedays_OnMapStart()
 {
-	LoopClients(i)
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 	{
 		g_bGetFreeDay[i] = false;
 		g_bHasFreeDay[i] = false;
 	}
 }
 
-
 public void Freedays_OnConfigsExecuted()
 {
-	//Set custom Commands
+	// Set custom Commands
 	int iCount = 0;
 	char sCommands[128], sCommandsL[12][32], sCommand[32];
 	
-	//Give freeday
+	// Give freeday
 	gc_sCustomCommandGiveFreeDay.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
 	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
@@ -193,16 +183,14 @@ public void Freedays_OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  //if command not already exist
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
 			RegConsoleCmd(sCommand, Command_FreeDay, "Allows a warden to give a freeday to a player");
 	}
 }
 
-
 /******************************************************************************
                    MENUS
 ******************************************************************************/
-
 
 public int Handler_GiveFreeDayChoose(Menu menu5, MenuAction action, int client, int Position)
 {
@@ -210,13 +198,13 @@ public int Handler_GiveFreeDayChoose(Menu menu5, MenuAction action, int client, 
 	{
 		char name[32];
 		menu5.GetItem(Position, name, sizeof(name));
-		int user = GetClientOfUserId(StringToInt(name)); 
-		
+		int user = GetClientOfUserId(StringToInt(name));
+
 		if (IsPlayerAlive(user))
 		{
-			hData3 = CreateDataPack();
-			WritePackCell(hData3, user);
-			
+			g_hDataPackFreeday = CreateDataPack();
+			WritePackCell(g_hDataPackFreeday, user);
+
 			char info[255];
 			Menu menu6 = CreateMenu(Handler_GiveFreeDay);
 			
@@ -235,7 +223,7 @@ public int Handler_GiveFreeDayChoose(Menu menu5, MenuAction action, int client, 
 			g_bGetFreeDay[user] = true;
 			CPrintToChatAll("%t %t", "warden_tag", "warden_personalfreeday", user);
 			CPrintToChat(user, "%t %t", "warden_tag", "warden_freedayforyou");
-			Command_FreeDay(client, 0); //reopen menu
+			Command_FreeDay(client, 0); // reopen menu
 		}
 	}
 	else if (action == MenuAction_Cancel)
@@ -256,25 +244,25 @@ public int Handler_GiveFreeDay(Menu menu6, MenuAction action, int client, int Po
 	if (action == MenuAction_Select)
 	{
 		char info[32];
-		
-		ResetPack(hData3);
-		int user = ReadPackCell(hData3);
-		
+
+		ResetPack(g_hDataPackFreeday);
+		int user = ReadPackCell(g_hDataPackFreeday);
+
 		menu6.GetItem(Position, info, sizeof(info));
-		
-		if (strcmp(info, "0") == 0) //next round
+
+		if (strcmp(info, "0") == 0) // next round
 		{
 			g_bGetFreeDay[user] = true;
 			CPrintToChatAll("%t %t", "warden_tag", "warden_personalfreeday", user);
 			CPrintToChat(user, "%t %t", "warden_tag", "warden_freedayforyou");
 			Command_FreeDay(client, 0);
 		}
-		else if (strcmp(info, "1") == 0) //thisround
+		else if (strcmp(info, "1") == 0) // thisround
 		{
 			g_bHasFreeDay[user] = true;
 			CPrintToChatAll("%t %t", "warden_tag", "warden_havefreeday", user);
 			SetEntityRenderColor(user, gc_iFreeDayColorRed.IntValue, gc_iFreeDayColorGreen.IntValue, gc_iFreeDayColorBlue.IntValue, 255);
-			Command_FreeDay(client, 0); //reopen freeday menu
+			Command_FreeDay(client, 0); // reopen freeday menu
 		}
 	}
 	else if (action == MenuAction_Cancel)
@@ -290,34 +278,31 @@ public int Handler_GiveFreeDay(Menu menu6, MenuAction action, int client, int Po
 	}
 }
 
-
 /******************************************************************************
                    NATIVES
 ******************************************************************************/
 
-
-//Remove current Warden
+// Remove current Warden
 public int Native_GiveFreeday(Handle plugin, int argc)
 {
 	int client = GetNativeCell(1);
-	
+
 	if (!IsClientInGame(client) && !IsClientConnected(client))
 		ThrowNativeError(SP_ERROR_INDEX, "Client index %i is invalid", client);
-	
+
 	g_bGetFreeDay[client] = true;
 }
 
-
-//Is Client in handcuffs
+// Is Client in handcuffs
 public int Native_HasClientFreeday(Handle plugin, int argc)
 {
 	int client = GetNativeCell(1);
-	
+
 	if (!IsClientInGame(client) && !IsClientConnected(client))
 		ThrowNativeError(SP_ERROR_INDEX, "Client index %i is invalid", client);
-	
+
 	if (g_bHasFreeDay[client])
 		return true;
-	
+
 	return false;
 }

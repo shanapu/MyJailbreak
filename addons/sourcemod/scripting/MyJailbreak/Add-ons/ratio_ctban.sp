@@ -11,20 +11,18 @@
  * 
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
  * details.
  *
  * You should have received a copy of the GNU General Public License along with
- * this program.  If not, see <http://www.gnu.org/licenses/>.
+ * this program. If not, see <http://www.gnu.org/licenses/>.
  */
-
 
 /******************************************************************************
                    STARTUP
 ******************************************************************************/
 
-
-//Includes
+// Includes
 #include <sourcemod>
 #include <sdktools>
 #include <cstrike>
@@ -32,22 +30,19 @@
 #include <mystocks>
 #include <clientprefs>
 
-//Optional Plugins
+// Optional Plugins
 #undef REQUIRE_PLUGIN
 #include <myjailbreak>
 #define REQUIRE_PLUGIN
 
-
-//Compiler Options
+// Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
 
-
-//Handles
+// Handles
 Handle g_hCookieCTBan;
 
-
-//Info
+// Info
 public Plugin myinfo = {
 	name = "MyJailbreak - Ratio - CT Ban Support", 
 	author = "shanapu, Addicted, good_live", 
@@ -56,20 +51,18 @@ public Plugin myinfo = {
 	url = MYJB_URL_LINK
 };
 
-
-//Start
+// Start
 public void OnPluginStart()
 {
-	//Translation
+	// Translation
 	LoadTranslations("MyJailbreak.Ratio.phrases");
 	
 	HookEvent("player_spawn", Event_OnPlayerSpawn, EventHookMode_Post);
 	
-	//Cookies
+	// Cookies
 	if ((g_hCookieCTBan = FindClientCookie("Banned_From_CT")) == INVALID_HANDLE)
 		g_hCookieCTBan = RegClientCookie("Banned_From_CT", "Tells if you are restricted from joining the CT team", CookieAccess_Protected);
 }
-
 
 public void OnAllPluginsLoaded()
 {
@@ -77,14 +70,13 @@ public void OnAllPluginsLoaded()
 		SetFailState("You're missing the MyJailbreak - Ratio (ratio.smx) plugin");
 }
 
-
 public Action MyJailbreak_OnJoinGuardQueue(int client)
 {
 	char szCookie[2];
 	GetClientCookie(client, g_hCookieCTBan, szCookie, sizeof(szCookie));
 	if (szCookie[0] == '1')
 	{
-		CReplyToCommand(client, "%t %t", "ratio_tag" , "ratio_banned");
+		CReplyToCommand(client, "%t %t", "ratio_tag", "ratio_banned");
 		PrintCenterText(client, "%t", "ratio_banned_nc");
 		FakeClientCommand(client, "sm_isbanned @me");
 		return Plugin_Handled;
@@ -92,36 +84,34 @@ public Action MyJailbreak_OnJoinGuardQueue(int client)
 	return Plugin_Continue;
 }
 
-
 public Action Event_OnPlayerSpawn(Event event, const char[] name, bool bDontBroadcast) 
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));
-	
+
 	if (GetClientTeam(client) != 3) 
 		return Plugin_Continue;
-		
+
 	if (!IsValidClient(client, true, false))
 		return Plugin_Continue;
-		
+
 	char sData[2];
 	GetClientCookie(client, g_hCookieCTBan, sData, sizeof(sData));
-	
+
 	if (sData[0] == '1')
 	{
-		CPrintToChat(client, "%t %t", "ratio_tag" , "ratio_banned");
+		CPrintToChat(client, "%t %t", "ratio_tag", "ratio_banned");
 		PrintCenterText(client, "%t", "ratio_banned_nc");
 		CreateTimer(5.0, Timer_SlayPlayer, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 		return Plugin_Continue;
 	}
-	
+
 	return Plugin_Continue;
 }
-
 
 public Action Timer_SlayPlayer(Handle hTimer, any iUserId) 
 {
 	int client = GetClientOfUserId(iUserId);
-	
+
 	if ((IsValidClient(client, false, false)) && (GetClientTeam(client) == CS_TEAM_CT))
 	{
 		ForcePlayerSuicide(client);
@@ -129,9 +119,9 @@ public Action Timer_SlayPlayer(Handle hTimer, any iUserId)
 		CS_RespawnPlayer(client);
 		MinusDeath(client);
 	}
+
 	return Plugin_Stop;
 }
-
 
 void MinusDeath(int client)
 {
