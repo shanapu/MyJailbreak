@@ -1749,12 +1749,19 @@ sm_menu_warden "1"
 // Maximum: "1.000000"
 sm_menu_deputy "1"
 
-// 0 - disabled, 1 - enable vote/set eventdays menu
+// 0 - disabled, 1 - enable vote eventdays menu
 // -
 // Default: "1"
 // Minimum: "0.000000"
 // Maximum: "1.000000"
-sm_menu_days "1"
+sm_menu_setdays "1"
+
+// 0 - disabled, 1 - enable set eventdays menu
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_menu_votedays "1"
 
 // 0 - disabled, 1 - enable close menu after action
 // -
@@ -1871,6 +1878,7 @@ sm_menu_voteday_cooldown_start "3"
 [*]Zombie
 [*]Hide
 [*]Catch & Freeze
+[*]Ghosts War
 [*]Suicide Bomber
 [*]HEbattle
 [*]NoScope
@@ -2031,6 +2039,7 @@ sm_menu_voteday_cooldown_start "3"
 [*]Zombie
 [*]Hide
 [*]Catch & Freeze
+[*]Ghosts War
 [*]Suicide Bomber
 [*]HEbattle
 [*]NoScope
@@ -2077,6 +2086,7 @@ sm_menu_voteday_cooldown_start "3"
 [*]Zombie
 [*]Hide
 [*]Catch & Freeze
+[*]Ghosts War
 [*]Suicide Bomber
 [*]HEbattle
 [*]NoScope
@@ -2114,6 +2124,7 @@ sm_menu_voteday_cooldown_start "3"
 [*]Zombie
 [*]Hide
 [*]Catch & Freeze
+[*]Ghosts War
 [*]Suicide Bomber
 [*]HEbattle
 [*]NoScope
@@ -6042,10 +6053,11 @@ native MyIcons_BlockClientIcon(int client, bool status);
 [*][url=https://forums.alliedmods.net/showthread.php?t=240703]CustomPlayerSkins[/url]
 [/LIST]
 
-[U][B]Optional plugins[/B][/U]
+[U][B]Optional plugins/extensions[/B][/U]
 [LIST]
 [*][url=https://forums.alliedmods.net/showthread.php?p=2177167][ANY] VoiceannounceEX (VoiceHook)[/url] - needed for wardens voiceover
-[*][url=https://forums.alliedmods.net/showthread.php?t=180114]DHooks (Dynamic Hooks - Dev Preview)[/url] - needed for wardens voiceover
+[*][url=https://forums.alliedmods.net/showthread.php?t=180114]DHooks (Dynamic Hooks - Dev Preview)[/url] - needed for wardens
+[*][url=https://forums.alliedmods.net/showthread.php?t=229556][ANY] SteamWorks[/url] - needed for myjailbreak_steamgroups
 [/LIST]
 
 
