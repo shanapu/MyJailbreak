@@ -23,7 +23,7 @@ do
   rm output.txt
 done
 
-if [ $1=1.7 ]
+if [ $1 == "1.7" ]
 then echo "Fix include for SM1.7"
 for file in addons/sourcemod/scripting/include/mystocks.inc
 do
