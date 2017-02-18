@@ -1,6 +1,6 @@
 ### Change Log
   
-**[Beta 9.1.dev]** - Ghosts War, Warden restrict & limits
+**[Beta 10.0]** - Ghosts War, Warden restrict & limits
   
 *Added*
 *  Ratio: Support for SteamRep.com, FantoMs CT Bans & Steam Groups - new switch commands & more
