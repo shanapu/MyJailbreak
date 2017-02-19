@@ -1,6 +1,19 @@
 ### Change Log
   
-**[Beta 9.1.dev]** - Ghosts War, Warden restrict & limits
+**[Beta 10.0.dev]** - 
+  
+*Added*
+*  Ratio: Support for new CTBans plugin by addicted
+    *  new plugin - disabled/ratio_ctbans_addicted.smx - Support plugin for addicted CT Bans plugin
+  
+*Changed*
+*  Support Plugins: changed name for ctbans plugins - to many ct bans
+    *  renamed plugin - ratio_ctban to ratio_ctbans_databomb
+    *  renamed plugin - ratio_ct_bans to ratio_ctbans_fantom
+  
+  
+  
+**[Beta 10]** - Ghosts War, Warden restrict & limits
   
 *Added*
 *  Ratio: Support for SteamRep.com, FantoMs CT Bans & Steam Groups - new switch commands & more
