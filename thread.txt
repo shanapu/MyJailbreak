@@ -6076,6 +6076,19 @@ native MyIcons_BlockClientIcon(int client, bool status);
 [B][u]Latest Changes[/u][/B]
 [QUOTE] 
 
+**[Beta 11.0]** - Support for addicted CT Bans plugin
+  [SPOILER]
+*Added*
+*  Ratio: Support for new CTBans plugin by addicted
+    *  new plugin - disabled/ratio_ctbans_addicted.smx - Support plugin for addicted CT Bans plugin
+  
+*Changed*
+*  Support Plugins: changed name for ctbans plugins - to many ct bans
+    *  renamed plugin - ratio_ctban to ratio_ctbans_databomb
+    *  renamed plugin - ratio_ct_bans to ratio_ctbans_fantom
+[/SPOILER]
+  
+
 [b][Beta 10.0][/b] - Ghosts War, Warden restrict & limits
   [SPOILER]
 [i]Added[/i]
