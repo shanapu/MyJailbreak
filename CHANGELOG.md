@@ -1,6 +1,6 @@
 ### Change Log
   
-**[Beta 10.0.dev]** - Support for addicted CT Bans plugin
+**[Beta 11.0]** - Support for addicted CT Bans plugin
   
 *Added*
 *  Ratio: Support for new CTBans plugin by addicted
