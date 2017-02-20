@@ -6076,6 +6076,19 @@ native MyIcons_BlockClientIcon(int client, bool status);
 [B][u]Latest Changes[/u][/B]
 [QUOTE] 
 
+**[Beta 11.0]** - Support for addicted CT Bans plugin
+  [SPOILER]
+*Added*
+*  Ratio: Support for new CTBans plugin by addicted
+    *  new plugin - disabled/ratio_ctbans_addicted.smx - Support plugin for addicted CT Bans plugin
+  
+*Changed*
+*  Support Plugins: changed name for ctbans plugins - to many ct bans
+    *  renamed plugin - ratio_ctban to ratio_ctbans_databomb
+    *  renamed plugin - ratio_ct_bans to ratio_ctbans_fantom
+[/SPOILER]
+  
+
 [b][Beta 10.0][/b] - Ghosts War, Warden restrict & limits
   [SPOILER]
 [i]Added[/i]
@@ -6110,7 +6123,7 @@ native MyIcons_BlockClientIcon(int client, bool status);
 [LIST]
 [*]New Eventday: Ghosts War - All Players are invisbile & immortal - every 6 seconds they go visible and mortal for 2 seconds. Last alive wins.
 [/LIST][INDENT][LIST]
-    [*]new plugin - ghosts.smx - please help translate http://translator.mitchdempsey.com/sourcemod_plugins/271
+    [*]new plugin - ghosts.smx - please help translate [url]http://translator.mitchdempsey.com/sourcemod_plugins/271[/url]
     [/LIST][INDENT][LIST]
     [*]new cvar - sm_ghosts_enable - 0 - disabled, 1 - enable this MyJailbreak SourceMod plugin
         [*]new command - sm_setghosts - Allows the Admin or Warden to set Ghosts
@@ -6238,237 +6251,6 @@ native MyIcons_BlockClientIcon(int client, bool status);
 [*]Clean up code
 [/LIST]
 [/SPOILER]
-
-[b][Beta 9.1][/b] - fixes
-[SPOILER] 
-
-[i]Added[/i]
-[LIST]
-[*]Menu: added orders menu for warden/deputy
-[*]Ratio: cvar for move to CT and respawned.
-[/LIST][INDENT][LIST]
-    [*]new cvar - sm_ratio_respawn - 0 - Move player on next round to CT / 1 - Move player immediately to CT and respawn[/INDENT][/LIST]
-
-  
-[i]Changed[/i]
-[LIST]
-[*]Translations:  using preferred method of shipping translations (single file per language)
-  [/LIST]
-  
-[i]Fixed[/i]
-[LIST]
-[*]Warden - small error with remove warden
-[*]Menu - fix showing myjailshop without installed
-[*]Minior fixes
-[*]fixed build script THX bara!
-  [/LIST]
-[/SPOILER] 
-[b][Beta 9.0][/B] - icons, 3th party plugins & much more
-  
-[SPOILER] 
-[i]Added[/i]
-[LIST]
-[*]Weapons: allow maschine-guns per cvar
-[/LIST]
-[INDENT][LIST]
-[*]new cvar - sm_weapons_negev - 0 - disabled, 1 - enable negev in weapon menu
-[*]new cvar - sm_weapons_m249 - 0 - disabled, 1 - enable m249 in weapon menu
-[/LIST][/INDENT]
-[LIST]
-[*]Ratio: Support for 3rd party plugins (moved CT Bans support to extra plugin)
-[/LIST]
-[INDENT][LIST]
-[*]new plugin - disabled/ratio_ctban.smx - Support plugin for databombs CT Bans plugin
-[*]new plugin - ratio_reputation.smx - Support plugin for oaaron99 Player Reputations plugin
-[/LIST]
-[INDENT][LIST]
-[*]new cvar -sm_ratio_reputation - 0 - disabled, how many reputation a player need to join ct? (only if reputation is available)
-[/LIST][/INDENT]
-[LIST]
-[*]new plugin - disabled/ratio_stamm.smx - Support plugin for popoklopsis Stamm plugin
-[/LIST]
-[INDENT][LIST]
-[*]new cvar - sm_ratio_stamm - 0 - disabled, how many stamm points a player need to join ct? (only if stamm is available)
-[/LIST][/INDENT]
-[LIST]
-[*]new plugin - disabled/ratio_rankme.smx - Support plugin for lok1s, Scoobys RankMe plugin
-[/LIST]
-[INDENT][LIST]
-[*]new cvar - sm_ratio_rankme - 0 - disabled, how many rankme points a player need to join ct? (only if rankme is available)
-[/LIST][/INDENT]
-[LIST]
-[*]new plugin - disabled/ratio_kento_rankme.smx - Support plugin for Kentos RankMe plugin
-[/LIST]
-[INDENT][LIST]
-[*]new cvar - sm_ratio_rankme - 0 - disabled, how many rankme points a player need to join ct? (only if kento rankme is available)
-[/LIST][/INDENT]
-[LIST]
-[*]new plugin - disabled/ratio_teambans.smx - Support plugin for baras TeamBans plugin
-[/LIST][/INDENT]
-[LIST]
-[*]Zombie: KnockbackFix
-[/LIST]
-[INDENT][LIST]
-[*]new cvar - sm_zombie_knockback - Force of the knockback when shot at. Zombies only
-[/LIST][/INDENT]
-[LIST]
-[*]Menu: Added MyJailshop for Prisoners when installed
-[*]Request - Capitulation: Allow capitulated players to take up weapons per cvar & healthshot & c4 as standart
-[/LIST]
-[INDENT][LIST]
-[*]new cvar - sm_capitulation_weapons - 0 - disabled, 1 - enable Terror can not pick up weapons after capitulation
-[/LIST][/INDENT]
-[LIST]
-[*]Request/Warden - freedays: Menu to choose the personal freeday for this or next round. !givefreeday
-[*]MyJailbreak: Disabled command !endround (& sm_myjb_cmds_endround) on default. This command was thought for testing/debug
-[/LIST]
-[INDENT][LIST]
-[*]new cvar - sm_myjb_allow_endround - 0 - disabled, 1 - enable !endround command for testing (disable against abusing)
-[/LIST][/INDENT]
-[LIST]
-[*]TeamGames: Better Support on FFA-Events for KissLicks TeamGames (TeamGames 1.1.0.7)
-[/LIST]
-[INDENT][LIST]
-[*]new plugin - disabled/myjailbreak_teamgames.smx - Support plugin for KissLicks TeamGames plugin
-[/LIST][/INDENT]
-[LIST]
-[*]Warden: Orders menu for preconfigured order/calls with chat, hud, sounds & overlays support. Each order can be dis/enabled per map.
-[/LIST]
-[INDENT][LIST]
-[*]new config file - addons/sourcemod/configs/MyJailbreak/orders.cfg
-[/LIST][/INDENT]
-[LIST]
-[*]New builds system - sourcecode on github / binarys at [url]https://shanapu.de/MyJailbreak[/url]
-[/LIST]
-  
-  
-  
-  
-[i]Changed[/i]
-[LIST]
-[*]Warden - Handcuffs: a cuffed player have to press & hold +USE to lockpick with small progress animation
-[*]Warden - icons: Moved wardens icon module to a seperate plugin. New icons for cuffed, rebel & freeday
-[/LIST]
-[INDENT][LIST]
-    [*]removed cvars - sm_warden_icon_*** - obsolete cvars. [b]Please remove them from your configs![/B]
-    [*]new plugin - icons.smx - new icons & native to remove icon for client
-[/LIST]
-[INDENT][LIST]
-    [*]new cvar - sm_icons_warden_enable - 0 - disabled, 1 - enable the icon above the wardens head
-    [*]new cvar - sm_icons_warden_path - Path to the warden icon DONT TYPE .vmt or .vft
-    [*]new cvar - sm_icons_deputy_enable - 0 - disabled, 1 - enable the icon above the deputy head
-    [*]new cvar - sm_icons_deputy_path - Path to the deputy icon DONT TYPE .vmt or .vft
-    [*]new cvar - sm_icons_ct_enable - 0 - disabled, 1 - enable the icon above the guards head
-    [*]new cvar - sm_icons_ct_path - Path to the guard icon DONT TYPE .vmt or .vft
-    [*]new cvar - sm_icons_t_enable - 0 - disabled, 1 - enable the icon above the prisoners head
-    [*]new cvar - sm_icons_t_path - Path to the prisoner icon DONT TYPE .vmt or .vft
-    [*]new cvar - sm_icons_rebel_enable - 0 - disabled, 1 - enable the icon above the rebel prisoners head
-    [*]new cvar - sm_icons_rebel_path - Path to the rebel icon DONT TYPE .vmt or .vft
-    [*]new cvar - sm_icons_cuffs_enable - 0 - disabled, 1 - enable the icon above the cuffed prisoners head
-    [*]new cvar - sm_icons_cuffs_path - Path to the cuffed prisoner icon DONT TYPE .vmt or .vft
-    [*]new cvar - sm_icons_freeday_enable - 0 - disabled, 1 - enable the icon above the freeday prisoners head
-    [*]new cvar - sm_icons_freeday_path - Path to the freeday icon DONT TYPE .vmt or .vft
-    [*]new config file - cfg/MyJailbreak/Icons.cfg
-[/LIST][/INDENT]
-[/INDENT]
-[LIST]
-[*]Warden: Choose color of handcuffed client
-[/LIST]
-[INDENT][LIST]
-    [*]new cvar - sm_warden_color_cuffs_red - What color to turn the cuffed player into (set R, G and B values to 255 to disable) (Rgb): x - red value
-    [*]new cvar - sm_warden_color_cuffs_green - What color to turn the cuffed player into (rGb): x - green value
-    [*]new cvar - sm_warden_color_cuffs_blue - What color to turn the cuffed player into (rgB): x - blue value
-[/LIST][/INDENT]
-[LIST]
-[*]Ratio: T will be moved instandly to CT and respawned when there is space.
-[*]Request/Warden - freedays:  Moved requests freeday module to warden plugin
-[/LIST]
-[INDENT][LIST]
-    [*]removed cvars - sm_freekill_freeday_*** - obsolete cvars. [b]Please remove them from your configs![/B]
-[/LIST]
-[INDENT][LIST]
-    [*]new cvar - sm_warden_freeday_enable - Allows a warden to give a freeday to a player
-    [*]new cvar - sm_warden_freeday_cmd - Set your custom chat command for give a freeday. no need for sm_ or !
-    [*]new cvar - sm_warden_freeday_color_red - What color to turn the warden into (set R, G and B values to 255 to disable) (Rgb): x - red value
-    [*]new cvar - sm_warden_freeday_color_green - What color to turn the warden into (rGb): x - green value
-    [*]new cvar - sm_warden_freeday_color_blue - What color to turn the warden into (rgB): x - blue value  
-    [*]new cvar - sm_warden_freeday_victim_deputy - 0 - disabled, 1 - Allow the deputy to set a personal freeday next round");
-[/LIST][/INDENT]
-[/INDENT]
-[LIST]
-[*]Catch: new overlay to fix misspelling. Frozen instead of freezed
-[/LIST]
-[INDENT][LIST]
-    [*]removed overlay - overlays/MyJailbreak/freeze - I recommend to change it in you config to:
-[*]new overlay - overlays/MyJailbreak/frozen - I recommend this as overlays/MyJailbreak/freeze replacement
-[/LIST][/INDENT]
-[LIST]
-[*]Zombie: Removed humans spawn with weapons & nades. Use weapon menu or armory.
-[/LIST]
-[INDENT][LIST]
-    [*]new cvar - sm_zombie_ammo - 0 - disabled, 1 - enable infinty ammo (with reload) for humans
-[/LIST][/INDENT]
-  
-  
-  
-[i]Fixed[/i]
-[LIST]
-[*]Warden - Painter: fix bug when enabled for t and t dies paint still active
-[*]Freeday: fix problem on sm_freeday_firstround and roundrestart
-[*]Drunk: fix invert movement on the x-axis/y-axis much thanks @ peace-maker!
-[*]Ratio: Unmute CT on teambalance
-[*]Eventdays with freeze: rar glitch player push out of map
-[*]download.txt: removed .bz2 file extension for deputy
-[*]Cowboy: Fix command sm_setcowboy
-[*]Request: Fix chat messages or freekill
-[*]Zeus: fix missing en translation
-[*]minor errors & smaller fixes
-[/LIST]
-  
-  
-  
-[i]Removed[/i]
-[LIST]
-[*]Removed Dependencies of the required plugins. So the plugins can be used as standalone
-[/LIST]
-[INDENT][LIST]
-    [*]Warden: Dependencies of MyJailbreak(core), hosties, smartjaildoors, chat-processor, VoiceannounceEX
-[*]Ratio: Dependencies of MyJailbreak(core), warden
-[*]Last Guard Rule: Dependencies of MyJailbreak(core), hosties, smartjaildoors, warden
-[*]Weapons: Dependencies of MyJailbreak(core), warden
-[/LIST][/INDENT]
-[LIST]
-[*]removed cvars - sm_warden_icon_*** - obsolete cvars. **Please remove them from your configs!**
-[*]added & removed arms support.
-[/LIST]
-  
-  
-  
-[i]Developer stuff[/i]
-[LIST]
-[*]Warden: New native to add paperclips (for MyJailShop support)
-[/LIST]
-[INDENT][LIST]
-    [*]new native - warden_handcuff_givepaperclip - Give a player a specific amount of paperclips
-[*]new native - warden_handcuff_iscuffed - Check is player is in handcuffs
-[*]new native - warden_freeday_has - returns if client has a freeday now
-[*]new native - warden_freeday_set - Set the client get a freeday
-[/LIST][/INDENT]
-[LIST]
-[*]MyJailbreak Natives: Changed all native names by adding MyJailbreak_* in front to avoid conflicts with 3rd party plugins
-[*]Forwards: New Forwards to add ratio support (restrict from guards/CT) for 3rd party plugins
-[/LIST]
-[INDENT][LIST]
-    [*]new forward - MyJailbreak_OnJoinGuardQueue - Called when a client trys to join the Guards(CT) or GuardQueue
-[/LIST][/INDENT]
-[LIST]
-[*]Icons: New native to block a client icon
-[/LIST]
-[INDENT][LIST]
-    [*]new native - MyIcons_BlockClientIcon - Set status (true/false) if the icon of a player will be displayed
-[/LIST][/INDENT][LIST]
-[*]more comments in code[/LIST]
-[/SPOILER] 
   
 [U][B]Full Change Log:[/B][/U]
 [url=https://github.com/shanapu/MyJailbreak/blob/master/CHANGELOG.md]CHANGELOG.md[/url]

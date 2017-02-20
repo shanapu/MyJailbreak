@@ -28,7 +28,7 @@
 #include <cstrike>
 #include <colors>
 #include <mystocks>
-#include <ct_bans>
+#include <ctbans>
 
 // Optional Plugins
 #undef REQUIRE_PLUGIN
@@ -41,10 +41,10 @@
 
 // Info
 public Plugin myinfo = {
-	name = "MyJailbreak - Ratio - CT Bans Support", 
-	author = "shanapu, Addicted, good_live", 
-	description = "Adds support for FantoMs CT Bans plugin to MyJB ratio", 
-	version = MYJB_VERSION, 
+	name = "MyJailbreak - Ratio - CT Bans Support",
+	author = "shanapu, Addicted, good_live",
+	description = "Adds support for addicted CTBans plugin to MyJB ratio",
+	version = MYJB_VERSION,
 	url = MYJB_URL_LINK
 };
 
@@ -65,7 +65,7 @@ public void OnAllPluginsLoaded()
 
 public Action MyJailbreak_OnJoinGuardQueue(int client)
 {
-	if (CTB_IsClientBanned(client))
+	if (CTBans_IsCTBanned(client))
 	{
 		CPrintToChat(client, "%t %t", "ratio_tag", "ratio_banned");
 		return Plugin_Handled;
@@ -84,7 +84,7 @@ public Action Event_OnPlayerSpawn(Event event, const char[] name, bool bDontBroa
 	if (!IsValidClient(client, true, false))
 		return Plugin_Continue;
 
-	if (CTB_IsClientBanned(client))
+	if (CTBans_IsCTBanned(client))
 	{
 		CPrintToChat(client, "%t %t", "ratio_tag", "ratio_banned");
 		CreateTimer(5.0, Timer_SlayPlayer, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
