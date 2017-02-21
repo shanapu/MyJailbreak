@@ -1,6 +1,12 @@
 ### Change Log
   
-**[Beta 10.0.dev]** - Support for addicted CT Bans plugin
+**[Beta 11.0-dev]** - 
+  
+*Fixed*
+*  Warden: Mathquiz with latest chat-processor
+  
+  
+**[Beta 11.0]** - Support for addicted CT Bans plugin
   
 *Added*
 *  Ratio: Support for new CTBans plugin by addicted
@@ -123,7 +129,8 @@
     *  new Forwards - MyJailbreak_OnEventDayStart(char[] EventDayName)
     *  new Forwards - MyJailbreak_OnEventDayEnd(char[] EventDayName, int winner)
 *  Change forward warden_OnWardenCreated from void to Action to block warden creation
-*  Add source code files to travis auto builds.
+*  Removed define marco loops - LoopClients(i) & LoopValidClients(i) https://forums.alliedmods.net/showthread.php?t=250251
+*  Add source code files to travis auto builds
 *  Builds website - bootstrap website for auto build binary download
 *  Code optimizing Thx @olegtsvetkov
 *  Changed code style on many parts

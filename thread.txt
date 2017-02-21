@@ -6076,19 +6076,25 @@ native MyIcons_BlockClientIcon(int client, bool status);
 [B][u]Latest Changes[/u][/B]
 [QUOTE] 
 
-**[Beta 11.0]** - Support for addicted CT Bans plugin
+[b][Beta 11.0][/b] - Support for addicted CT Bans plugin
   [SPOILER]
-*Added*
-*  Ratio: Support for new CTBans plugin by addicted
-    *  new plugin - disabled/ratio_ctbans_addicted.smx - Support plugin for addicted CT Bans plugin
+[i]Added[/i]
+[LIST]
+[*]Ratio: Support for new CTBans plugin by addicted
+[/LIST][INDENT][LIST]
+    [*]new plugin - disabled/ratio_ctbans_addicted.smx - Support plugin for addicted CT Bans plugin
+[/LIST][/INDENT]
   
-*Changed*
-*  Support Plugins: changed name for ctbans plugins - to many ct bans
-    *  renamed plugin - ratio_ctban to ratio_ctbans_databomb
-    *  renamed plugin - ratio_ct_bans to ratio_ctbans_fantom
+[i]Changed[/i]
+[LIST]
+[*]Support Plugins: changed name for ctbans plugins - to many ct bans
+[/LIST][INDENT][LIST]
+    [*]renamed plugin - ratio_ctban to ratio_ctbans_databomb
+    [*]renamed plugin - ratio_ct_bans to ratio_ctbans_fantom
+[/LIST][/INDENT]
 [/SPOILER]
   
-
+  
 [b][Beta 10.0][/b] - Ghosts War, Warden restrict & limits
   [SPOILER]
 [i]Added[/i]
@@ -6244,6 +6250,7 @@ native MyIcons_BlockClientIcon(int client, bool status);
 [/LIST][/INDENT]
 [LIST]
 [*]Change forward warden_OnWardenCreated from void to Action to block warden creation
+[*]Removed define marco loops - LoopClients(i) & LoopValidClients(i) [url]https://forums.alliedmods.net/showthread.php?t=250251[/url]
 [*]Add source code files to travis auto builds.
 [*]Builds website - bootstrap website for auto build binary download
 [*]Code optimizing Thx @olegtsvetkov
