@@ -1,5 +1,5 @@
 /*
- * MyJailbreak - Zephyrus store warden paperclips
+ * MyJailbreak Warden - Zephyrus store PaperClips
  * by: shanapu
  * https://github.com/shanapu/MyJailbreak/
  *
@@ -55,7 +55,7 @@ char g_sTag[12];
 public Plugin myinfo = {
 	name = "MyJailbreak - Wardens Paperclips Support for Zephyrus Store",
 	author = "shanapu",
-	description = "Adds support for MyJB wardens paperclips to zephyrus Store plugin",
+	description = "Adds support for MyJB wardens paperclips to Zephyrus Store plugin",
 	version = MYJB_VERSION,
 	url = MYJB_URL_LINK
 };
@@ -87,11 +87,10 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 	for (int i = 1; i <= MaxClients; i++)
 	{
 		if (!IsClientInGame(i))
-			return;
+			continue;
 
 		g_iRoundLimit[i] = 0;
 	}
-
 }
 
 public void PaperClips_OnMapStart()
