@@ -2,6 +2,10 @@
   
 **[Beta 11.0-dev]** - 
   
+*Added*
+*  Support: Support for adding paperclips to Zephyrus store
+  
+  
 *Fixed*
 *  Warden: Mathquiz with latest chat-processor
   

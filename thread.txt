@@ -15,17 +15,7 @@ MyJailbreak is a redux rewrite of [URL="https://github.com/Franc1sco/Franug-Jail
 [*] [B]Icons[/B] - add a icon above players head for T, CT, warden, deputy, rebel, cuffed & freeday
 [*] [B]HUD[/B] - a players HUD to display game informations
 [*] [B]Ratio[/B] - Manage team ratios and a queue system for prisoners to join guard through
-[/LIST][INDENT][LIST]
-[*][B]CT Ban Support[/B] - Support plugin for [URL="https://forums.alliedmods.net/showthread.php?t=166080"]databombs CT Bans plugin[/URL]
-[*][B]RankMe Support[/B] - Support plugin for [URL="https://forums.alliedmods.net/showthread.php?t=155621"]lok1s, Scoobys RankMe plugin[/URL] & [URL="https://forums.alliedmods.net/showthread.php?t=290063"]Kentos RankMe plugin[/URL]
-[*][B]Reputation Support[/B] - Support plugin for [URL="https://forums.alliedmods.net/showthread.php?p=2411490"]oaaron99 Player Reputations plugin[/URL]
-[*][B]Stamm Support[/B] - Support plugin for [URL="https://forums.alliedmods.net/showthread.php?p=1338942"]popoklopsis Stamm plugin[/URL]
-[*][B]TeamBans Support[/B] - Support plugin for [URL="https://forums.alliedmods.net/showthread.php?t=270761"]baras TeamBans plugin[/URL]
-[*][B]SteamRep Support[/B] - Support plugin for [URL="https://steamrep.com/plugin.php"]SteamRep[/URL]
-[*][B]CT Bans Support[/B] - Support plugin for FantoMs [i]private[/i] CT Bans
-[*][B]Steam Groups Support[/B] - Support plugin for restriction based on steam groups
-[/LIST][/INDENT][LIST]
-[*][B]Event Days[/B] - vote/set a Event Day for next round with cooldowns, rounds in row, sounds & overlays
+[*] [B]Event Days[/B] - vote/set a Event Day for next round with cooldowns, rounds in row, sounds & overlays
 [/LIST][INDENT][LIST]
 [*][B]War[/B] - CT vs T Team Deathmatch
 [*][B]Free For All[/B] - Deathmatch
@@ -46,7 +36,17 @@ MyJailbreak is a redux rewrite of [URL="https://github.com/Franc1sco/Franug-Jail
 [*][B]Freeday[/B] - Auto freeday on first round &/or if there is no CT
 [/LIST][/INDENT]
 [LIST]
+[*][B]Steam Groups Support[/B] - Support plugin for restriction based on steam groups
 [*][B]TeamGames Support[/B] - Support plugin for [url=https://forums.alliedmods.net/showthread.php?t=286045]KissLicks TeamGames[/url]
+[*][B]Store Support[/B] - Support plugin for adding paperclips to [url=https://forums.alliedmods.net/showthread.php?t=276677]Zephyrus store[/url]
+[*][B]CT Ban Support[/B] - Support plugin for [URL="https://forums.alliedmods.net/showthread.php?t=166080"]databombs CT Bans plugin[/URL]
+[*][B]RankMe Support[/B] - Support plugin for [URL="https://forums.alliedmods.net/showthread.php?t=155621"]lok1s, Scoobys RankMe plugin[/URL] & [URL="https://forums.alliedmods.net/showthread.php?t=290063"]Kentos RankMe plugin[/URL]
+[*][B]Reputation Support[/B] - Support plugin for [URL="https://forums.alliedmods.net/showthread.php?p=2411490"]oaaron99 Player Reputations plugin[/URL]
+[*][B]Stamm Support[/B] - Support plugin for [URL="https://forums.alliedmods.net/showthread.php?p=1338942"]popoklopsis Stamm plugin[/URL]
+[*][B]TeamBans Support[/B] - Support plugin for [URL="https://forums.alliedmods.net/showthread.php?t=270761"]baras TeamBans plugin[/URL]
+[*][B]SteamRep Support[/B] - Support plugin for [URL="https://steamrep.com/plugin.php"]SteamRep[/URL]
+[*][B]CT Bans Support[/B] - Support plugin for FantoMs [i]private[/i] CT Bans
+[/LIST]
 [/LIST]
 
 
