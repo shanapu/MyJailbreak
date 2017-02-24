@@ -692,9 +692,10 @@ public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 			g_iWarden = -1;
 		}
 
-		if (g_iLastWarden != -1)
+		if (g_iLastWarden != -1 && GetAlivePlayersCount(CS_TEAM_CT) > 1 )
 		{
 			g_bCMDCoolDown[g_iLastWarden] = true;
+
 			CreateTimer(gc_fCMDCooldown.FloatValue, Timer_CMDCoolDown, g_iLastWarden);
 		}
 	}
@@ -1219,7 +1220,7 @@ bool IsClientWarden(int client)
 // Register Natives
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	//Natives
+	// Natives
 	CreateNative("warden_exist", Native_ExistWarden);
 	CreateNative("warden_iswarden", Native_IsWarden);
 	CreateNative("warden_set", Native_SetWarden);
@@ -1389,7 +1390,7 @@ void Forward_OnWardenDeath(int client)
 	Call_Finish();
 }
 
-//Not a real forward
+// Not a real forward
 void OnWardenCreation(int client)
 {
 	Deputy_OnWardenCreation(client);

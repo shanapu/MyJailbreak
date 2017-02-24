@@ -39,16 +39,16 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-//Integers
+// Integers
 int g_iRoundLimit[MAXPLAYERS+1] = {0,...};
 
-//ConVars
+// ConVars
 ConVar gc_iRoundLimit;
 ConVar gc_iAmount;
 
 ConVar gc_sTag;
 
-//Strings
+// Strings
 char g_sTag[12];
 
 // Info
@@ -110,7 +110,7 @@ public int PaperClips_Config(Handle kv, int itemid)
 
 public int PaperClips_Equip(int client,int  id)
 {
-	if(g_iRoundLimit[client] >= gc_iRoundLimit.IntValue)
+	if (g_iRoundLimit[client] >= gc_iRoundLimit.IntValue)
 	{
 		PrintToChat(client, "%s You have reached the maximum amount of paperclips you can buy this round.", g_sTag);
 		return 1;

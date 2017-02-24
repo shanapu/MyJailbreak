@@ -27,13 +27,13 @@
 #include <mystocks>
 #include <store>
 
-//ConVars
+// ConVars
 ConVar gc_iAmount;
 ConVar gc_bAlive;
 
 ConVar gc_sTag;
 
-//Strings
+// Strings
 char g_sTag[12];
 
 public Plugin myinfo = 
