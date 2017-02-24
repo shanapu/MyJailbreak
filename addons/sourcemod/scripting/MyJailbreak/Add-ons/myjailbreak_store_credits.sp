@@ -26,6 +26,7 @@
 #include <myjailbreak>
 #include <mystocks>
 #include <store>
+#include <autoexecconfig>
 
 // ConVars
 ConVar gc_iAmount;
