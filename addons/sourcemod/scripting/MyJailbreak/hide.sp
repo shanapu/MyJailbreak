@@ -637,7 +637,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		if (gp_bHosties)
 		{
 			// enable lr on last round
-			g_iTsLR = GetAliveTeamCount(CS_TEAM_T);
+			g_iTsLR = GetAlivePlayersCount(CS_TEAM_T);
 
 			if (gc_bAllowLR.BoolValue)
 			{

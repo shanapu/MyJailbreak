@@ -783,7 +783,7 @@ public Action Command_OpenMenu(int client, int args)
 					}
 					if (g_bDeputy != null && g_bDeputySet != null)
 					{
-						if (g_bDeputy.BoolValue && g_bDeputySet.BoolValue && !warden_deputy_exist() && (GetAliveTeamCount(CS_TEAM_CT) > 1))
+						if (g_bDeputy.BoolValue && g_bDeputySet.BoolValue && !warden_deputy_exist() && (GetAlivePlayersCount(CS_TEAM_CT) > 1))
 						{
 							Format(menuinfo, sizeof(menuinfo), "%T", "menu_deputyset", client);
 							mainmenu.AddItem("setdeputy", menuinfo);

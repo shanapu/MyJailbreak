@@ -201,9 +201,9 @@ public Action Timer_ShowHUD(Handle timer, Handle pack)
 void ShowHUD()
 {
 	int warden = warden_get();
-	int aliveCT = GetAliveTeamCount(CS_TEAM_CT);
+	int aliveCT = GetAlivePlayersCount(CS_TEAM_CT);
 	int allCT = GetTeamClientCount(CS_TEAM_CT);
-	int aliveT = GetAliveTeamCount(CS_TEAM_T);
+	int aliveT = GetAlivePlayersCount(CS_TEAM_T);
 	int allT = GetTeamClientCount(CS_TEAM_T);
 
 	char EventDay[64];

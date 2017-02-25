@@ -585,7 +585,7 @@ public void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast
 	{
 		int client = GetClientOfUserId(event.GetInt("userid")); // Get the dead clients id
 
-		if (((GetAliveTeamCount(CS_TEAM_CT) >= 1) && (GetClientTeam(client) == CS_TEAM_CT) && g_bAllowRespawn) || ((GetAliveTeamCount(CS_TEAM_T) >= 1) && (GetClientTeam(client) == CS_TEAM_T) && g_bAllowRespawn))
+		if (((GetAlivePlayersCount(CS_TEAM_CT) >= 1) && (GetClientTeam(client) == CS_TEAM_CT) && g_bAllowRespawn) || ((GetAlivePlayersCount(CS_TEAM_T) >= 1) && (GetClientTeam(client) == CS_TEAM_T) && g_bAllowRespawn))
 		{
 			CreateTimer (2.0, Timer_Respawn, client);
 		}

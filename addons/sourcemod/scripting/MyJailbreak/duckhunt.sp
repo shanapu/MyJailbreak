@@ -620,7 +620,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 			if (GetClientTeam(i) == CS_TEAM_CT && IsValidClient(i, false, false))
 			{
 				int HunterHP = gc_iHunterHP.IntValue;
-				int difference = (GetAliveTeamCount(CS_TEAM_T) - GetAliveTeamCount(CS_TEAM_CT));
+				int difference = (GetAlivePlayersCount(CS_TEAM_T) - GetAlivePlayersCount(CS_TEAM_CT));
 				
 				if (difference > 0) HunterHP = HunterHP + (gc_iHunterHPincrease.IntValue * difference);
 				
@@ -647,7 +647,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		if (gp_bHosties)
 		{
 			// enable lr on last round
-			g_iTsLR = GetAliveTeamCount(CS_TEAM_T);
+			g_iTsLR = GetAlivePlayersCount(CS_TEAM_T);
 
 			if (gc_bAllowLR.BoolValue)
 			{
