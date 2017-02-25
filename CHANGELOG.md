@@ -12,6 +12,8 @@
         *  new cvar - sm_store_credit_amount_eventdays - Number of credits to give out for winning an eventday (find in plugin.store.cfg)
         *  new cvar - sm_store_credit_eventdays_alive- Give out credits for winning an eventday for dead & alive player (find in plugin.store.cfg)
   
+*Changed*
+*  Warden: No command cooldown on roundstart when only one CT
   
 *Fixed*
 *  Warden: Mathquiz with latest chat-processor
