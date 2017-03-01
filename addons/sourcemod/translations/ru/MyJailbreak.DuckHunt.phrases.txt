@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2016-12-11 14:24:18 UTC
+// Date: 2017-03-01 14:01:51 UTC
 // Language: Russian (ru)
 // 
 // To view other translations for this plugin, please visit:
@@ -138,14 +138,14 @@
 		"ru"		"Не будь мудаком!"
 	}
 
-	"duckhunt_wait"
-	{
-		"ru"		"Вы должны подождать больше {purple}{1}{default} раундов"
-	}
-
 	"duckhunt_name"
 	{
 		"ru"		"Охота на уток"
+	}
+
+	"duckhunt_wait"
+	{
+		"ru"		"Вы должны подождать больше {purple}{1}{default} раундов"
 	}
 
 }

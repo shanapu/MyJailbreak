@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2016-12-11 14:24:04 UTC
+// Date: 2017-03-01 14:02:33 UTC
 // Language: English (en)
 // 
 // To view other translations for this plugin, please visit:
@@ -102,16 +102,6 @@
 		"en"		"{1} seconds until round start!"
 	}
 
-	"cowboy_info_title"
-	{
-		"en"		"Cowboy er aktiveret!"
-	}
-
-	"cowboy_info_title"
-	{
-		"en"		"Cowboy er aktiveret!"
-	}
-
 	"cowboy_info_line1"
 	{
 		"en"		"Cowboy - Free for all!"
@@ -161,6 +151,11 @@
 	"cowboy_name"
 	{
 		"en"		"Cowboy"
+	}
+
+	"cowboy_info_title"
+	{
+		"en"		"Cowboy is now Activated!"
 	}
 
 }

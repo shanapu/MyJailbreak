@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2016-12-11 14:24:18 UTC
+// Date: 2017-03-01 14:01:51 UTC
 // Language: Italian (it)
 // 
 // To view other translations for this plugin, please visit:
@@ -80,7 +80,7 @@
 
 	"duckhunt_progress"
 	{
-		"it"		"L'evento {darkred}{1} {default}e' {purple}gia' in corso."
+		"it"		"Event {darkred}{1} {default}is {purple}already in progress."
 	}
 
 	"duckhunt_progress"
@@ -143,14 +143,14 @@
 		"it"		"Buona Fortuna"
 	}
 
-	"duckhunt_wait"
-	{
-		"it"		"Bisogna attendere {purple}{1}{default} round per un altro evento!"
-	}
-
 	"duckhunt_name"
 	{
 		"it"		"Duckhunt"
+	}
+
+	"duckhunt_wait"
+	{
+		"it"		"Bisogna attendere {purple}{1}{default} round per un altro evento!"
 	}
 
 }
