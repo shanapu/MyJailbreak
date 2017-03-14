@@ -778,7 +778,10 @@ public void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
 
 	CheckStatus();
 
-	ResetSprint(GetClientOfUserId(event.GetInt("userid")));
+	int client = GetClientOfUserId(event.GetInt("userid"));
+
+	g_bCatched[client] = false,
+	ResetSprint(client);
 }
 
 /******************************************************************************
