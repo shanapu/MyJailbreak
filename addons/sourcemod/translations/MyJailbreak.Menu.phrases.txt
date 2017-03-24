@@ -417,4 +417,9 @@
 		"en"		"Go Spectator"
 	}
 
+	"menu_gangs"
+	{
+		"en"		"Gangs Menu"
+	}
+
 }

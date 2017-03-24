@@ -1191,6 +1191,11 @@ public Action Command_OpenMenu(int client, int args)
 						Format(menuinfo, sizeof(menuinfo), "%T", "menu_jailshop", client);
 						mainmenu.AddItem("jailshop", menuinfo);
 					}
+					if (GetCommandFlags("sm_gangs") != INVALID_FCVAR_FLAGS)
+					{
+						Format(menuinfo, sizeof(menuinfo), "%T", "menu_gangs", client);
+						mainmenu.AddItem("gangs", menuinfo);
+					}
 					if (g_bGuns != null)
 					{
 						if (g_bGuns.BoolValue)
