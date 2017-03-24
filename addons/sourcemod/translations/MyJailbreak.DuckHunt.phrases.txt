@@ -86,12 +86,6 @@
 		"en"		"Event {darkred}{1} {default}is {purple}already in progress."
 	}
 
-	"duckhunt_progress"
-	{
-		"#format"	"{1:s}"
-		"en"		"Event {darkred}{1} {default}is {purple}already in progress."
-	}
-
 	"duckhunt_minplayer"
 	{
 		"en"		"For Duckhunt, you must have at least {purple}one Guard, & one Prisoner"

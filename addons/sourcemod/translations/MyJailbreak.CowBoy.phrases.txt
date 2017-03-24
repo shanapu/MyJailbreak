@@ -139,7 +139,7 @@
 
 	"cowboy_info_line7"
 	{
-		"en"		"Don't be an AssholeAsshole!"
+		"en"		"Don't be an Asshole!"
 	}
 
 	"cowboy_wait"
