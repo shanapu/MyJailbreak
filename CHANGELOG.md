@@ -11,6 +11,9 @@
     *  new plugin - disabled/myjailbreak_store_credits.smx
         *  new cvar - sm_store_credit_amount_eventdays - Number of credits to give out for winning an eventday (find in plugin.store.cfg)
         *  new cvar - sm_store_credit_eventdays_alive- Give out credits for winning an eventday for dead & alive player (find in plugin.store.cfg)
+*  Zombie: respawn dead terrors as zombie - experimental
+        *  new cvar - sm_zombie_terror - 0 - disabled, 1 - transform terrors into Zombie on death
+        *  new cvar - sm_zombie_terror_infect - 0 - all dead terrors become zombie, 1 - only terrors killed by zombie transform into Zombie
   
 *Changed*
 *  Warden: No command cooldown on roundstart when only one CT
