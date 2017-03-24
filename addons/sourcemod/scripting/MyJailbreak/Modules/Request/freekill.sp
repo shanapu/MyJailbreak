@@ -52,6 +52,7 @@ ConVar gc_bFreeKillFreeDay;
 ConVar gc_bFreeKillSwap;
 ConVar gc_bFreeKillFreeDayVictim;
 ConVar gc_bReportAdmin;
+ConVar gc_bReportAdminSpec;
 ConVar gc_bReportWarden;
 ConVar gc_bRespawnCellClosed;
 ConVar gc_sAdminFlag;
@@ -83,6 +84,7 @@ public void Freekill_OnPluginStart()
 	gc_bFreeKillFreeDayVictim= AutoExecConfig_CreateConVar("sm_freekill_freeday_victim", "1", "0 - disabled, 1 - Allow the warden to set a personal freeday next round as pardon for the victim");
 	gc_bFreeKillSwap = AutoExecConfig_CreateConVar("sm_freekill_swap", "1", "0 - disabled, 1 - Allow the warden to swap a freekiller to terrorist");
 	gc_bReportAdmin = AutoExecConfig_CreateConVar("sm_freekill_admin", "1", "0 - disabled, 1 - Report will be send to admins - if there is no admin its send to warden");
+	gc_bReportAdminSpec = AutoExecConfig_CreateConVar("sm_freekill_admin_spec", "1", "0 - disabled, 1 - Report will be send to admins even if he is in spec");
 	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_freekill_flag", "g", "Set flag for admin/vip get reported freekills to decide.");
 	gc_bReportWarden = AutoExecConfig_CreateConVar("sm_freekill_warden", "1", "0 - disabled, 1 - Report will be send to Warden if there is no admin");
 
@@ -134,10 +136,23 @@ public Action Command_Freekill(int client, int args)
 							int a = GetRandomAdmin();
 							if ((a != -1) && gc_bReportAdmin.BoolValue)
 							{
-								g_iFreeKillCounter[client]++;
-								FreeKillAcceptMenu(a);
-								CPrintToChatAll("%t %t", "request_tag", "request_freekill", client, attacker, a);
-								if (gp_bMyJailBreak) if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sFreeKillLogFile, "Player %L claiming %L freekilled him. Reported to admin %L", client, attacker, a);
+								if (!gc_bReportAdminSpec.BoolValue && GetClientTeam(a) == CS_TEAM_SPECTATOR)
+								{
+									for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, true)) if (warden_iswarden(i) && gc_bReportWarden.BoolValue)
+									{
+										g_iFreeKillCounter[client]++;
+										FreeKillAcceptMenu(i);
+										CPrintToChatAll("%t %t", "request_tag", "request_freekill", client, attacker, i);
+										if (gp_bMyJailBreak) if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sFreeKillLogFile, "Player %L claiming %L freekilled him. Reported to warden %L", client, attacker, i);
+									}
+								}
+								else
+								{
+									g_iFreeKillCounter[client]++;
+									FreeKillAcceptMenu(a);
+									CPrintToChatAll("%t %t", "request_tag", "request_freekill", client, attacker, a);
+									if (gp_bMyJailBreak) if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sFreeKillLogFile, "Player %L claiming %L freekilled him. Reported to admin %L", client, attacker, a);
+								}
 							}
 							else for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, true)) if (warden_iswarden(i) && gc_bReportWarden.BoolValue)
 							{
