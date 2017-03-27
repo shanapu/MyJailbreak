@@ -12,14 +12,20 @@
         *  new cvar - sm_store_credit_amount_eventdays - Number of credits to give out for winning an eventday (find in plugin.store.cfg)
         *  new cvar - sm_store_credit_eventdays_alive- Give out credits for winning an eventday for dead & alive player (find in plugin.store.cfg)
 *  Zombie: respawn dead terrors as zombie - experimental
-        *  new cvar - sm_zombie_terror - 0 - disabled, 1 - transform terrors into Zombie on death
-        *  new cvar - sm_zombie_terror_infect - 0 - all dead terrors become zombie, 1 - only terrors killed by zombie transform into Zombie
+    *  new cvar - sm_zombie_terror - 0 - disabled, 1 - transform terrors into Zombie on death
+    *  new cvar - sm_zombie_terror_infect - 0 - all dead terrors become zombie, 1 - only terrors killed by zombie transform into Zombie
+*  Warden: remove a freeday from player
+    *  new command - sm_removefreeday - Allows a warden to remove a freeday from a player
+    *  new cvar - sm_warden_cmds_freeday_remove - Set your custom chat command for give a freeday(!givefreeday (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)
+  
   
 *Changed*
 *  Warden: No command cooldown on roundstart when only one CT
   
+  
 *Fixed*
 *  Warden: Mathquiz with latest chat-processor
+  
   
   
 **[Beta 11.0]** - Support for addicted CT Bans plugin
@@ -27,6 +33,7 @@
 *Added*
 *  Ratio: Support for new CTBans plugin by addicted
     *  new plugin - disabled/ratio_ctbans_addicted.smx - Support plugin for addicted CT Bans plugin
+  
   
 *Changed*
 *  Support Plugins: changed name for ctbans plugins - to many ct bans
