@@ -189,7 +189,7 @@ public void Freedays_Event_RoundStart_Post(Event event, char[] name, bool dontBr
 
 	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 	{
-		if (g_bGetFreeDay[i])
+		if (g_bGetFreeDay[i] && GetClientTeam(i) == CS_TEAM_T)
 		{
 			CPrintToChatAll("%t %t", "warden_tag", "warden_havefreeday", i);
 			SetEntityRenderColor(i, gc_iFreeDayColorRed.IntValue, gc_iFreeDayColorGreen.IntValue, gc_iFreeDayColorBlue.IntValue, 255);
