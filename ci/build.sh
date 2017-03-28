@@ -33,7 +33,7 @@ do
   rm output.txt
 done
 echo "Fix freedays for SM1.7"
-for file in addons/sourcemod/scripting/MyJailbreak/MyJailbreak/Modules/Warden/freedays.sp
+for file in addons/sourcemod/scripting/MyJailbreak/Modules/Warden/freedays.sp
 do
   sed -e "321,325d;327d;" $file > output.txt
   rm output.txt
