@@ -32,7 +32,7 @@ do
   sed -i "s/stock Action Timer_RemoveColor(Handle timer, any client)/public Action Timer_RemoveColor(Handle timer, any client)/g" $file > output.txt
   rm output.txt
 done
-then echo "Fix freedays for SM1.7"
+echo "Fix freedays for SM1.7"
 for file in addons/sourcemod/scripting/MyJailbreak/MyJailbreak/Modules/Warden/freedays.sp
 do
   sed -e "321,325d;327d;" $file > output.txt
