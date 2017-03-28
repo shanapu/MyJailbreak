@@ -587,7 +587,7 @@ public void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast
 
 		if (((GetAlivePlayersCount(CS_TEAM_CT) >= 1) && (GetClientTeam(client) == CS_TEAM_CT) && g_bAllowRespawn) || ((GetAlivePlayersCount(CS_TEAM_T) >= 1) && (GetClientTeam(client) == CS_TEAM_T) && g_bAllowRespawn))
 		{
-			CreateTimer (2.0, Timer_Respawn, client);
+			CreateTimer (2.0, Timer_Respawn, GetClientUserId(client));
 		}
 	}
 }
@@ -721,7 +721,8 @@ public Action Timer_StopRespawn(Handle timer)
 	g_bAllowRespawn = false;
 }
 
-public Action Timer_Respawn(Handle timer, any client)
+public Action Timer_Respawn(Handle timer, int userid)
 {
+	int client = GetClientOfUserId(userid);
 	CS_RespawnPlayer(client);
 }
