@@ -30,10 +30,14 @@
 #include <colors>
 #include <autoexecconfig>
 #include <warden>
-#include <smartjaildoors>
 #include <mystocks>
 #include <myjailbreak>
 #include <adminmenu>
+
+// Optional Plugins
+#undef REQUIRE_PLUGIN
+#include <smartjaildoors>
+#define REQUIRE_PLUGIN
 
 // Compiler Options
 #pragma semicolon 1
@@ -42,6 +46,7 @@
 // Booleans
 bool g_bIsLateLoad = false;
 bool gp_bMyJailShop = false;
+bool gp_bSmartJailDoors = false;
 
 // Integers
 int g_iCoolDown;
@@ -490,18 +495,25 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 public void OnAllPluginsLoaded()
 {
 	gp_bMyJailShop = LibraryExists("myjailshop");
+	gp_bSmartJailDoors = LibraryExists("smartjaildoors");
 }
 
 public void OnLibraryRemoved(const char[] name)
 {
 	if (StrEqual(name, "myjailshop"))
 		gp_bMyJailShop = false;
+
+	if (StrEqual(name, "smartjaildoors"))
+		gp_bSmartJailDoors = false;
 }
 
 public void OnLibraryAdded(const char[] name)
 {
 	if (StrEqual(name, "myjailshop"))
 		gp_bMyJailShop = true;
+
+	if (StrEqual(name, "smartjaildoors"))
+		gp_bSmartJailDoors = true;
 }
 
 // FindConVar
@@ -771,7 +783,7 @@ public Action Command_OpenMenu(int client, int args)
 							}
 						}
 					}
-					if (g_bOpen != null)
+					if (g_bOpen != null && gp_bSmartJailDoors)
 					{
 						if (g_bOpen.BoolValue && SJD_IsCurrentMapConfigured())
 						{
@@ -958,7 +970,7 @@ public Action Command_OpenMenu(int client, int args)
 							}
 						}
 					}
-					if (g_bOpen != null)
+					if (g_bOpen != null && gp_bSmartJailDoors)
 					{
 						if (g_bOpen.BoolValue && g_bOpenDeputy.BoolValue && SJD_IsCurrentMapConfigured())
 						{
