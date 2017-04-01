@@ -1427,6 +1427,10 @@ public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selec
 		{
 			FakeClientCommand(client, "sm_sw");
 		}
+		else if (strcmp(info, "gangs") == 0)
+		{
+			FakeClientCommand(client, "sm_gangs");
+		}
 		else if (strcmp(info, "rules") == 0)
 		{
 			FakeClientCommand(client, "sm_rules");
