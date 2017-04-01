@@ -23,26 +23,6 @@ do
   rm output.txt
 done
 
-if [ $1 == "1.7" ]
-then echo "Fix include for SM1.7"
-for file in addons/sourcemod/scripting/include/mystocks.inc
-do
-  sed -i "s/stock int Handler_NullCancel(Handle menu, MenuAction action, int param1, int param2)/public int Handler_NullCancel(Handle menu, MenuAction action, int param1, int param2)/g" $file > output.txt
-  sed -i "s/stock Action DeleteOverlay(Handle timer, any client)/public Action DeleteOverlay(Handle timer, any client)/g" $file > output.txt
-  sed -i "s/stock Action Timer_RemoveColor(Handle timer, any client)/public Action Timer_RemoveColor(Handle timer, any client)/g" $file > output.txt
-  rm output.txt
-done
-echo "Fix freedays for SM1.7"
-for file in addons/sourcemod/scripting/MyJailbreak/Modules/Warden/freedays.sp
-do
-  sed -e "321,325d;327d;" $file > output.txt
-  rm output.txt
-done
-fi
-
-echo "get basecom myjb 1.7"
-wget -q -O addons/sourcemod/scripting/include/basecomm.inc https://raw.githubusercontent.com/shanapu/MyJailbreak/master/addons/sourcemod/scripting/include/basecomm.inc
-
 echo "Move Modules folder for compile"
 mkdir addons/sourcemod/scripting/MyJailbreak/MyJailbreak/
 mv addons/sourcemod/scripting/MyJailbreak/Modules addons/sourcemod/scripting/MyJailbreak/MyJailbreak/

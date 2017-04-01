@@ -1,6 +1,6 @@
 ### Change Log
   
-**[Beta 11.0-dev]** - 
+**[Beta 11.0-dev]** - removed dependencies & store support
   
 *Added*
 *  Add-On: Support for adding paperclips to Zephyrus store
@@ -17,14 +17,21 @@
 *  Warden: remove a freeday from player
     *  new command - sm_removefreeday - Allows a warden to remove a freeday from a player
     *  new cvar - sm_warden_cmds_freeday_remove - Set your custom chat command for give a freeday(!givefreeday (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)
+*  Menu: Added gangs for terror when a gangs plugin is installed
   
   
 *Changed*
+*  *Sourcemod: Cancled support for sourcemod lower 1.8.0-git5597*
 *  Warden: No command cooldown on roundstart when only one CT
   
   
 *Fixed*
 *  Warden: Mathquiz with latest chat-processor
+*  Warden - freedays: When player get freeday but joins ct
+  
+  
+*Removed*
+*  Dependencies: removed dependencies of chat-processor & smartjaildoors (both are optional now)
   
   
   

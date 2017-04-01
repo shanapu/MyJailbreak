@@ -85,7 +85,6 @@ public void OnPluginStart()
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
 
-	// AutoExecConfig
 	AutoExecConfig_SetFile("Warden", "MyJailbreak");
 	AutoExecConfig_SetCreateFile(true);
 
