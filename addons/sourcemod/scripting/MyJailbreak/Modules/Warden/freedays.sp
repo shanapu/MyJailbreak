@@ -115,7 +115,7 @@ public Action Command_FreeDay(int client, int args)
 
 			if (iValidCount == 0)
 			{
-				Format(info1, sizeof(info1), "%T","warden_noplayer");
+				Format(info1, sizeof(info1), "%T", "warden_noplayer", client);
 				menu.AddItem("", info1, ITEMDRAW_DISABLED);
 			}
 
@@ -158,7 +158,7 @@ public Action Command_RemoveFreeDay(int client, int args)
 
 			if (iValidCount == 0)
 			{
-				Format(info1, sizeof(info1), "%T","warden_noplayer");
+				Format(info1, sizeof(info1), "%T","warden_noplayer", client);
 				menu.AddItem("", info1, ITEMDRAW_DISABLED);
 			}
 

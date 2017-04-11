@@ -6085,11 +6085,11 @@ native MyIcons_BlockClientIcon(int client, bool status);
 
 [U][B]Optional plugins/extensions[/B][/U]
 [LIST]
+[*][url=https://forums.alliedmods.net/showthread.php?t=264100]Smart Jail Doors[/url] - need for auto jail open on event days & toggle for warden
 [*][url=https://forums.alliedmods.net/showthread.php?p=2177167][ANY] VoiceannounceEX (VoiceHook)[/url] - needed for wardens voiceover
 [*][url=https://forums.alliedmods.net/showthread.php?t=180114]DHooks (Dynamic Hooks - Dev Preview)[/url] - needed for wardens voiceover
 [*][url=https://forums.alliedmods.net/showthread.php?t=229556][ANY] SteamWorks[/url] - needed for myjailbreak_steamgroups
 [*][url=https://forums.alliedmods.net/showthread.php?t=286913][ANY] Chat Prozessor[/url] - needed for smoother wardens mathquiz & player chat tags
-[*][url=https://github.com/Kailo97/smartjaildoors]Smart Jail Doors[/url] - need for auto jail open on event days & toggle for warden
 [*][url=https://forums.alliedmods.net/showthread.php?t=240703]Custom Player Skins (Core)[/url] - need for wallhack feature on eventdays(catch,zombie,torch)
 [/LIST]
 
@@ -6160,6 +6160,8 @@ native MyIcons_BlockClientIcon(int client, bool status);
 [i]Fixed[/i]
 [LIST]
 [*]Warden: Mathquiz with latest chat-processor
+[*]Warden - freedays: When player get freeday but joins ct
+[*] some minor fixes
 [/LIST]
   
 [i]Removed[/i]

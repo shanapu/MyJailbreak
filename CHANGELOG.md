@@ -21,13 +21,14 @@
   
   
 *Changed*
-*  *Sourcemod: Cancled support for sourcemod lower 1.8.0-git5597*
+*  *Sourcemod: Canceled support for sourcemod lower 1.8.0-git5597*
 *  Warden: No command cooldown on roundstart when only one CT
   
   
 *Fixed*
 *  Warden: Mathquiz with latest chat-processor
 *  Warden - freedays: When player get freeday but joins ct
+*  some minor fixes
   
   
 *Removed*
