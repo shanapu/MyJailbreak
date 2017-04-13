@@ -41,6 +41,7 @@ ConVar gc_bMarker;
 ConVar gc_bMarkerDeputy;
 
 // Booleans
+bool g_bCanMarker[MAXPLAYERS + 1];
 bool g_bMarkerSetup[MAXPLAYERS + 1];
 bool g_bCanZoom[MAXPLAYERS + 1];
 bool g_bHasSilencer[MAXPLAYERS + 1];
@@ -77,6 +78,10 @@ public void Marker_OnPluginStart()
 	// AutoExecConfig
 	gc_bMarker = AutoExecConfig_CreateConVar("sm_warden_marker", "1", "0 - disabled, 1 - enable Warden advanced markers ", _, true, 0.0, true, 1.0);
 	gc_bMarkerDeputy = AutoExecConfig_CreateConVar("sm_warden_marker_deputy", "1", "0 - disabled, 1 - enable 'advanced markers'-feature for deputy, too", _, true, 0.0, true, 1.0);
+	
+	//Commands
+	RegConsoleCmd("+beacons", Command_Beacons);
+	RegConsoleCmd("-beacons", Command_Beacons);
 
 	// Hooks
 	HookEvent("item_equip", Marker_Event_ItemEquip);
@@ -110,6 +115,23 @@ public void PrepareMarkerNames()
 }
 
 /******************************************************************************
+                   COMMANDS
+******************************************************************************/
+
+public Action Command_Beacons(int client, int args)
+{
+	char sCommand[32];
+	GetCmdArg(0, sCommand, sizeof(sCommand));
+	
+	if (client > 0)
+	{
+		g_bCanMarker[client] = StrContains(sCommand, "+") != -1;
+	}
+	
+	return Plugin_Handled;
+}
+
+/******************************************************************************
                    EVENTS
 ******************************************************************************/
 
@@ -128,7 +150,7 @@ public void Marker_Event_ItemEquip(Event event, const char[] name, bool dontBroa
 
 public Action Marker_OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
 {
-	if (buttons & IN_ATTACK2)
+	if (buttons & IN_ATTACK2 || g_bCanMarker[client])
 	{
 		if (gc_bMarker.BoolValue && !g_bCanZoom[client] && !g_bHasSilencer[client] && (g_iWrongWeapon[client] != 0) && (g_iWrongWeapon[client] != 8) && (!StrEqual(g_sEquipWeapon[client], "taser")) && (IsClientWarden(client) || (IsClientDeputy(client) && gc_bMarkerDeputy.BoolValue)) && gc_bPlugin.BoolValue)
 		{
