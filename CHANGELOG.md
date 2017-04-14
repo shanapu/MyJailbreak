@@ -1,6 +1,7 @@
 ### Change Log
   
-**[Beta 11.0-dev]** - removed dependencies & store support
+
+**[Beta 12.0]** - removed dependencies & store support
   
 *Added*
 *  Add-On: Support for adding paperclips to Zephyrus store
@@ -38,8 +39,7 @@
 *Removed*
 *  Dependencies: removed dependencies of chat-processor & smartjaildoors (both are optional now)
   
-  
-  
+
 **[Beta 11.0]** - Support for addicted CT Bans plugin
   
 *Added*
