@@ -32,6 +32,8 @@
 #include <warden>
 #include <mystocks>
 #include <myjailbreak>
+#include <hosties>
+#include <lastrequest>
 
 // Compiler Options
 #pragma semicolon 1
@@ -213,7 +215,7 @@ void ShowHUD()
 	{
 		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, true))
 		{
-			if (g_bEnableHud[i])
+			if (g_bEnableHud[i] && !IsClientInLastRequest(i))
 			{
 				if (MyJailbreak_IsLastGuardRule())
 				{
