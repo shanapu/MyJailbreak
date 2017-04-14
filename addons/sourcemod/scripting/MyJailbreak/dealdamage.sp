@@ -576,6 +576,11 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 	g_bStartDealDamage = false;
 	g_iRound += 1; // Add Round number
 
+	if (gp_bSmartJailDoors)
+	{
+		SJD_OpenDoors();
+	}
+
 	if (!gc_bSpawnCell.BoolValue || !gp_bSmartJailDoors || (gc_bSpawnCell.BoolValue && (SJD_IsCurrentMapConfigured() != true))) // spawn Terrors to CT Spawn 
 	{
 		int RandomCT = 0;

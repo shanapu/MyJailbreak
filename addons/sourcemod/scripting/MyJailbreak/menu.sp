@@ -30,10 +30,14 @@
 #include <colors>
 #include <autoexecconfig>
 #include <warden>
-#include <smartjaildoors>
 #include <mystocks>
 #include <myjailbreak>
 #include <adminmenu>
+
+// Optional Plugins
+#undef REQUIRE_PLUGIN
+#include <smartjaildoors>
+#define REQUIRE_PLUGIN
 
 // Compiler Options
 #pragma semicolon 1
@@ -42,6 +46,7 @@
 // Booleans
 bool g_bIsLateLoad = false;
 bool gp_bMyJailShop = false;
+bool gp_bSmartJailDoors = false;
 
 // Integers
 int g_iCoolDown;
@@ -490,18 +495,25 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 public void OnAllPluginsLoaded()
 {
 	gp_bMyJailShop = LibraryExists("myjailshop");
+	gp_bSmartJailDoors = LibraryExists("smartjaildoors");
 }
 
 public void OnLibraryRemoved(const char[] name)
 {
 	if (StrEqual(name, "myjailshop"))
 		gp_bMyJailShop = false;
+
+	if (StrEqual(name, "smartjaildoors"))
+		gp_bSmartJailDoors = false;
 }
 
 public void OnLibraryAdded(const char[] name)
 {
 	if (StrEqual(name, "myjailshop"))
 		gp_bMyJailShop = true;
+
+	if (StrEqual(name, "smartjaildoors"))
+		gp_bSmartJailDoors = true;
 }
 
 // FindConVar
@@ -771,7 +783,7 @@ public Action Command_OpenMenu(int client, int args)
 							}
 						}
 					}
-					if (g_bOpen != null)
+					if (g_bOpen != null && gp_bSmartJailDoors)
 					{
 						if (g_bOpen.BoolValue && SJD_IsCurrentMapConfigured())
 						{
@@ -783,7 +795,7 @@ public Action Command_OpenMenu(int client, int args)
 					}
 					if (g_bDeputy != null && g_bDeputySet != null)
 					{
-						if (g_bDeputy.BoolValue && g_bDeputySet.BoolValue && !warden_deputy_exist() && (GetAliveTeamCount(CS_TEAM_CT) > 1))
+						if (g_bDeputy.BoolValue && g_bDeputySet.BoolValue && !warden_deputy_exist() && (GetAlivePlayersCount(CS_TEAM_CT) > 1))
 						{
 							Format(menuinfo, sizeof(menuinfo), "%T", "menu_deputyset", client);
 							mainmenu.AddItem("setdeputy", menuinfo);
@@ -958,7 +970,7 @@ public Action Command_OpenMenu(int client, int args)
 							}
 						}
 					}
-					if (g_bOpen != null)
+					if (g_bOpen != null && gp_bSmartJailDoors)
 					{
 						if (g_bOpen.BoolValue && g_bOpenDeputy.BoolValue && SJD_IsCurrentMapConfigured())
 						{
@@ -1191,6 +1203,11 @@ public Action Command_OpenMenu(int client, int args)
 						Format(menuinfo, sizeof(menuinfo), "%T", "menu_jailshop", client);
 						mainmenu.AddItem("jailshop", menuinfo);
 					}
+					if (GetCommandFlags("sm_gangs") != INVALID_FCVAR_FLAGS)
+					{
+						Format(menuinfo, sizeof(menuinfo), "%T", "menu_gangs", client);
+						mainmenu.AddItem("gangs", menuinfo);
+					}
 					if (g_bGuns != null)
 					{
 						if (g_bGuns.BoolValue)
@@ -1409,6 +1426,10 @@ public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selec
 		else if (strcmp(info, "setwarden") == 0)
 		{
 			FakeClientCommand(client, "sm_sw");
+		}
+		else if (strcmp(info, "gangs") == 0)
+		{
+			FakeClientCommand(client, "sm_gangs");
 		}
 		else if (strcmp(info, "rules") == 0)
 		{

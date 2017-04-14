@@ -1,10 +1,51 @@
 ### Change Log
   
+
+**[Beta 12.0]** - removed dependencies & store support
+  
+*Added*
+*  Add-On: Support for adding paperclips to Zephyrus store
+    *  new plugin - disabled/warden_zephstore_paperclips.smx
+        *  new cvar - sm_store_paperclips_round_limit - Number of times you can buy paperclips in a round (find in plugin.store.cfg)
+        *  new cvar - sm_store_paperclips_amount - Number of paperclips you get (find in plugin.store.cfg)
+*  Add-On: Support plugins for get credits for Zephyrus store & SM-Store on event day win
+    *  new plugin - disabled/myjailbreak_zephstore_credits.smx
+    *  new plugin - disabled/myjailbreak_sm-store_credits.smx
+        *  new cvar - sm_store_credit_amount_eventdays - Number of credits to give out for winning an eventday (find in plugin.store.cfg)
+        *  new cvar - sm_store_credit_eventdays_alive- Give out credits for winning an eventday for dead & alive player (find in plugin.store.cfg)
+*  Zombie: respawn dead terrors as zombie - experimental
+    *  new cvar - sm_zombie_terror - 0 - disabled, 1 - transform terrors into Zombie on death - experimental!
+    *  new cvar - sm_zombie_terror_infect - 0 - all dead terrors become zombie, 1 - only terrors killed by zombie transform into Zombie
+*  Warden: remove a freeday from player
+    *  new command - sm_removefreeday - Allows a warden to remove a freeday from a player
+    *  new cvar - sm_warden_cmds_freeday_remove - Set your custom chat command for give a freeday(!givefreeday (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)
+*  Menu: Added gangs for terror when a gangs plugin is installed
+*  Warden - Marker: new command for clients to bind for marker
+    *  new command - +beacons - Bind for markers to use instead rightclick mouse
+  
+  
+*Changed*
+*  *Sourcemod: Canceled support for sourcemod lower 1.8.0-git5597*
+*  Warden: No command cooldown on roundstart when only one CT
+*  HUD: Disable hud when player is in a last request
+  
+  
+*Fixed*
+*  Warden: Mathquiz with latest chat-processor
+*  Warden - freedays: When player get freeday but joins ct
+*  some minor fixes
+  
+  
+*Removed*
+*  Dependencies: removed dependencies of chat-processor & smartjaildoors (both are optional now)
+  
+
 **[Beta 11.0]** - Support for addicted CT Bans plugin
   
 *Added*
 *  Ratio: Support for new CTBans plugin by addicted
     *  new plugin - disabled/ratio_ctbans_addicted.smx - Support plugin for addicted CT Bans plugin
+  
   
 *Changed*
 *  Support Plugins: changed name for ctbans plugins - to many ct bans
@@ -123,7 +164,8 @@
     *  new Forwards - MyJailbreak_OnEventDayStart(char[] EventDayName)
     *  new Forwards - MyJailbreak_OnEventDayEnd(char[] EventDayName, int winner)
 *  Change forward warden_OnWardenCreated from void to Action to block warden creation
-*  Add source code files to travis auto builds.
+*  Removed define marco loops - LoopClients(i) & LoopValidClients(i) https://forums.alliedmods.net/showthread.php?t=250251
+*  Add source code files to travis auto builds
 *  Builds website - bootstrap website for auto build binary download
 *  Code optimizing Thx @olegtsvetkov
 *  Changed code style on many parts

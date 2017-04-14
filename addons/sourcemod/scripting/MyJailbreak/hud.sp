@@ -32,6 +32,8 @@
 #include <warden>
 #include <mystocks>
 #include <myjailbreak>
+#include <hosties>
+#include <lastrequest>
 
 // Compiler Options
 #pragma semicolon 1
@@ -201,9 +203,9 @@ public Action Timer_ShowHUD(Handle timer, Handle pack)
 void ShowHUD()
 {
 	int warden = warden_get();
-	int aliveCT = GetAliveTeamCount(CS_TEAM_CT);
+	int aliveCT = GetAlivePlayersCount(CS_TEAM_CT);
 	int allCT = GetTeamClientCount(CS_TEAM_CT);
-	int aliveT = GetAliveTeamCount(CS_TEAM_T);
+	int aliveT = GetAlivePlayersCount(CS_TEAM_T);
 	int allT = GetTeamClientCount(CS_TEAM_T);
 
 	char EventDay[64];
@@ -213,7 +215,7 @@ void ShowHUD()
 	{
 		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, true))
 		{
-			if (g_bEnableHud[i])
+			if (g_bEnableHud[i] && !IsClientInLastRequest(i))
 			{
 				if (MyJailbreak_IsLastGuardRule())
 				{

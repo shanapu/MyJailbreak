@@ -110,6 +110,9 @@ char g_sSkyName[256];
 char g_sAdminFlag[4];
 char g_sOverlayStartPath[256];
 
+// Floats
+float g_fPos[3];
+
 // Info
 public Plugin myinfo = {
 	name = "MyJailbreak - HideInTheDark",
@@ -598,6 +601,31 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		SJD_OpenDoors();
 	}
 
+	if (!gp_bSmartJailDoors || (gp_bSmartJailDoors && (SJD_IsCurrentMapConfigured() != true))) // spawn Terrors to CT Spawn 
+	{
+		int RandomCT = 0;
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+		{
+			if (GetClientTeam(i) == CS_TEAM_CT)
+			{
+				RandomCT = i;
+				break;
+			}
+		}
+
+		if (RandomCT)
+		{
+			for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+			{
+				GetClientAbsOrigin(RandomCT, g_fPos);
+				
+				g_fPos[2] = g_fPos[2] + 5;
+				
+				TeleportEntity(i, g_fPos, NULL_VECTOR, NULL_VECTOR);
+			}
+		}
+	}
+
 	if (g_iRound > 0)
 	{
 		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
@@ -637,7 +665,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		if (gp_bHosties)
 		{
 			// enable lr on last round
-			g_iTsLR = GetAliveTeamCount(CS_TEAM_T);
+			g_iTsLR = GetAlivePlayersCount(CS_TEAM_T);
 
 			if (gc_bAllowLR.BoolValue)
 			{

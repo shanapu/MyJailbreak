@@ -20,11 +20,6 @@ stock bool IsValidClient(int client, bool bAllowBots = false, bool bAllowDead = 
 	return true;
 }
 
-/*
-// Easy clean client loops
-#define LoopClients(%1) for (int %1 = 1; %1 <= MaxClients; %1++) if (IsClientInGame(%1))
-#define LoopValidClients(%1,%2,%3) for (int %1 = 1; %1 <= MaxClients; %1++) if (IsValidClient(%1,%2,%3))
-*/
 
 // Easy precache & prepare download for decals
 stock void PrecacheDecalAnyDownload(char[] sDecal)
@@ -209,7 +204,7 @@ stock Action Timer_RemoveColor(Handle timer, any client)
 }
 
 
-// Get random alive & non-rebeling player of a team - need hosties
+// Get random alive & non-rebeling player of a team (need lastrequest.inc)
 stock int GetRandomPlayerNonRebel(int team) 
 {
 	int[] clients = new int[MaxClients];
@@ -226,7 +221,7 @@ stock int GetRandomPlayerNonRebel(int team)
 	return (clientCount == 0) ? -1 : clients[GetRandomInt(0, clientCount-1)];
 }
 
-// Get random alive & non-rebeling player of a team
+// Get random alive player
 stock int GetRandomPlayer(int team) 
 {
 	int[] clients = new int[MaxClients];
@@ -244,7 +239,7 @@ stock int GetRandomPlayer(int team)
 }
 
 
-// Get alive & non-rebeling player count of a team
+// Get alive player count of a team
 stock int GetAlivePlayersCount(int team)
 {
 	int iCount, i; iCount = 0;
@@ -256,7 +251,8 @@ stock int GetAlivePlayersCount(int team)
 	return iCount;
 }
 
-// Get alive & non-rebeling player count of a team - need hosties
+
+// Get alive & non-rebeling player count of a team (need lastrequest.inc)
 stock int GetAlivePlayersCountNonRebel(int team)
 {
 	int iCount, i; iCount = 0;
@@ -269,21 +265,16 @@ stock int GetAlivePlayersCountNonRebel(int team)
 }
 
 
-// Get alive player count of a team
-stock int GetAliveTeamCount(int team)
+// Get all player count of a team
+stock int GetAllPlayersCount(int team)
 {
-	int number = 0;
-	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (IsPlayerAlive(i) && GetClientTeam(i) == team) number++;
-	return number;
-}
+	int iCount, i; iCount = 0;
 
+	for (i = 1; i <= MaxClients; i++)
+		if (IsValidClient(i, true, true) && GetClientTeam(i) == team)
+		iCount++;
 
-// Get alive player count of a team
-stock int GetPlayerTeamCount(int team)
-{
-	int number = 0;
-	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (GetClientTeam(i) == team) number++;
-	return number;
+	return iCount;
 }
 
 

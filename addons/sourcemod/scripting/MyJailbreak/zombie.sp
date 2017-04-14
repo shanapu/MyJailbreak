@@ -57,6 +57,8 @@ bool gp_bSmartJailDoors;
 bool gp_bCustomPlayerSkins;
 bool gp_bMyJailbreak;
 
+bool g_bTerrorZombies[MAXPLAYERS+1];
+
 // Console Variables
 ConVar gc_bPlugin;
 ConVar gc_bSetW;
@@ -89,6 +91,8 @@ ConVar gc_sAdminFlag;
 ConVar gc_bAllowLR;
 ConVar gc_fKnockbackAmount;
 ConVar gc_iRegen;
+ConVar gc_bTerrorZombie;
+ConVar gc_bTerrorInfect;
 
 // Extern Convars
 ConVar g_iTerrorForLR;
@@ -169,6 +173,8 @@ public void OnPluginStart()
 	gc_iGlowMode = AutoExecConfig_CreateConVar("sm_zombie_glow_mode", "1", "1 - human contours with wallhack for zombies, 2 - human glow effect without wallhack for zombies", _, true, 1.0, true, 2.0);
 	gc_bVision = AutoExecConfig_CreateConVar("sm_zombie_vision", "1", "0 - disabled, 1 - enable NightVision View for Zombies", _, true, 0.0, true, 1.0);
 	gc_fKnockbackAmount = AutoExecConfig_CreateConVar("sm_zombie_knockback", "20.0", "Force of the knockback when shot at. Zombies only", _, true, 1.0, true, 100.0);
+	gc_bTerrorZombie = AutoExecConfig_CreateConVar("sm_zombie_terror", "0", "0 - disabled, 1 - transform terrors into Zombie on death - experimental!", _, true, 0.0, true, 1.0);
+	gc_bTerrorInfect = AutoExecConfig_CreateConVar("sm_zombie_terror_infect", "0", "0 - all dead terrors become zombie, 1 - only terrors killed by zombie transform into Zombie", _, true, 0.0, true, 1.0);
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_zombie_cooldown_day", "3", "Rounds cooldown after a event until event can be start again", _, true, 0.0);
 	gc_iCooldownStart = AutoExecConfig_CreateConVar("sm_zombie_cooldown_start", "3", "Rounds until event can be start after mapchange.", _, true, 0.0);
 	gc_bSetABypassCooldown = AutoExecConfig_CreateConVar("sm_zombie_cooldown_admin", "1", "0 - disabled, 1 - ignore the cooldown when admin/vip set zombie round", _, true, 0.0, true, 1.0);
@@ -184,8 +190,9 @@ public void OnPluginStart()
 
 	// Hooks
 	HookEvent("round_start", Event_RoundStart);
-	HookEvent("round_end", Event_RoundEnd);
+	HookEvent("round_end", Event_RoundEnd_Pre, EventHookMode_Pre);
 	HookEvent("player_hurt", Event_PlayerHurt);
+	HookEvent("player_death", Event_PlayerDeath);
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sModelPathZombie, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
@@ -635,13 +642,15 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 			SetEntData(i, g_iCollision_Offset, 2, 4, true);
 			SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
 
+			g_bTerrorZombies[i] = false;
+
 			if (GetClientTeam(i) == CS_TEAM_CT)
 			{
 				SetEntityMoveType(i, MOVETYPE_NONE);
 				SetEntPropFloat(i, Prop_Data, "m_flLaggedMovementValue", 0.0);
 
 				int zombieHP = gc_iZombieHP.IntValue;
-				int difference = (GetAliveTeamCount(CS_TEAM_T) - GetAliveTeamCount(CS_TEAM_CT));
+				int difference = (GetAlivePlayersCount(CS_TEAM_T) - GetAlivePlayersCount(CS_TEAM_CT));
 				if (difference > 0)
 				{
 					zombieHP = zombieHP + (gc_iZombieHPincrease.IntValue * difference);
@@ -651,6 +660,8 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 
 				StripAllPlayerWeapons(i);
 				GivePlayerItem(i, "weapon_knife");
+
+				CreateTimer (1.1, Timer_SetModel, i);
 			}
 
 			if (GetClientTeam(i) == CS_TEAM_T)
@@ -662,7 +673,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		if (gp_bHosties)
 		{
 			// enable lr on last round
-			g_iTsLR = GetAliveTeamCount(CS_TEAM_T);
+			g_iTsLR = GetAlivePlayersCount(CS_TEAM_T);
 
 			if (gc_bAllowLR.BoolValue)
 			{
@@ -675,7 +686,6 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 
 		g_iFreezeTime--;
 
-		CreateTimer (1.1, Timer_SetModel);
 
 		g_hTimerFreeze = CreateTimer(1.0, Timer_StartEvent, _, TIMER_REPEAT);
 
@@ -684,17 +694,23 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 }
 
 // Round End
-public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
+public void Event_RoundEnd_Pre(Event event, char[] name, bool dontBroadcast)
 {
 	if (g_bIsZombie)
 	{
-		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, true))
+		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true))
 		{
 			SetEntData(i, g_iCollision_Offset, 0, 4, true);
 			SetEntProp(i, Prop_Send, "m_bNightVisionOn", 0);
+
 			if (gp_bCustomPlayerSkins && gc_bGlow.BoolValue)
 			{
 				UnhookGlow(i);
+			}
+
+			if (g_bTerrorZombies[i])
+			{
+				ChangeClientTeam(i, CS_TEAM_T);
 			}
 		}
 
@@ -796,6 +812,62 @@ public Action Event_PlayerHurt(Handle event, char[] name, bool dontBroadcast)
 	KnockbackSetVelocity(victim, attackerloc, clientloc, knockback);
 }
 
+public Action Event_PlayerDeath(Handle event, char[] name, bool dontBroadcast)
+{
+	int victim = GetClientOfUserId(GetEventInt(event, "userid"));
+	int attacker = GetClientOfUserId(GetEventInt(event, "attacker"));
+
+	if (!g_bIsZombie || !gc_bTerrorZombie.BoolValue || (gc_bTerrorInfect.BoolValue && !IsValidClient(attacker, true, false)))
+		return;
+
+	if (GetClientTeam(victim) == CS_TEAM_CT || GetAlivePlayersCount(CS_TEAM_T) <= 1)
+		return;
+	
+	g_bTerrorZombies[victim] = true;
+
+	CreateTimer(4.0, Timer_MakeZombie, victim, TIMER_FLAG_NO_MAPCHANGE);
+}
+
+public Action Timer_MakeZombie(Handle hTimer, any client)
+{
+	if (IsValidClient(client, true, true))
+	{
+		ChangeClientTeam(client, CS_TEAM_CT);
+		CS_RespawnPlayer(client);
+
+		int zombieHP = gc_iZombieHP.IntValue;
+		int difference = (GetAlivePlayersCount(CS_TEAM_T) - GetAlivePlayersCount(CS_TEAM_CT));
+		if (difference > 0)
+		{
+			zombieHP = zombieHP + (gc_iZombieHPincrease.IntValue * difference);
+		}
+
+		SetEntityHealth(client, zombieHP);
+
+		StripAllPlayerWeapons(client);
+		GivePlayerItem(client, "weapon_knife");
+
+		if (gc_bVision.BoolValue)
+		{
+			SetEntProp(client, Prop_Send, "m_bNightVisionOn", 1);
+		}
+
+		if (gc_bOverlays.BoolValue)
+		{
+			ShowOverlay(client, g_sOverlayStartPath, 2.0);
+		}
+
+		if (gc_bSounds.BoolValue)
+		{
+			EmitSoundToClientAny(client, g_sSoundStartPath);
+		}
+
+		CreateTimer (0.1, Timer_SetModel, client);
+	}
+
+	return Plugin_Stop;
+}
+
 /******************************************************************************
                    FORWARDS LISTEN
 ******************************************************************************/
@@ -846,7 +918,7 @@ public void OnAvailableLR(int Announced)
 {
 	if (g_bIsZombie && gc_bAllowLR.BoolValue && (g_iTsLR > g_iTerrorForLR.IntValue))
 	{
-		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, true))
+		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true))
 		{
 			SetEntData(i, g_iCollision_Offset, 0, 4, true);
 
@@ -868,6 +940,11 @@ public void OnAvailableLR(int Announced)
 				SetEntityHealth(i, 100);
 			}
 			GivePlayerItem(i, "weapon_knife");
+
+			if (g_bTerrorZombies[i])
+			{
+				ChangeClientTeam(i, CS_TEAM_T);
+			}
 		}
 
 		delete g_hTimerFreeze;
@@ -1186,15 +1263,12 @@ public Action Timer_StartEvent(Handle timer)
 }
 
 // Delay Set model for sm_skinchooser
-public Action Timer_SetModel(Handle timer)
+public Action Timer_SetModel(Handle timer, int client)
 {
-	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+	if (GetClientTeam(client) == CS_TEAM_CT)
 	{
-		if (GetClientTeam(i) == CS_TEAM_CT)
-		{
-			GetEntPropString(i, Prop_Data, "m_ModelName", g_sModelPathPrevious[i], sizeof(g_sModelPathPrevious[]));
-			SetEntityModel(i, g_sModelPathZombie);
-		}
+		GetEntPropString(client, Prop_Data, "m_ModelName", g_sModelPathPrevious[client], sizeof(g_sModelPathPrevious[]));
+		SetEntityModel(client, g_sModelPathZombie);
 	}
 }
 

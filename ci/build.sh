@@ -23,20 +23,6 @@ do
   rm output.txt
 done
 
-if [ $1 == "1.7" ]
-then echo "Fix include for SM1.7"
-for file in addons/sourcemod/scripting/include/mystocks.inc
-do
-  sed -i "s/stock int Handler_NullCancel(Handle menu, MenuAction action, int param1, int param2)/public int Handler_NullCancel(Handle menu, MenuAction action, int param1, int param2)/g" $file > output.txt
-  sed -i "s/stock Action DeleteOverlay(Handle timer, any client)/public Action DeleteOverlay(Handle timer, any client)/g" $file > output.txt
-  sed -i "s/stock Action Timer_RemoveColor(Handle timer, any client)/public Action Timer_RemoveColor(Handle timer, any client)/g" $file > output.txt
-  rm output.txt
-done
-fi
-
-echo "get basecom myjb 1.7"
-wget -q -O addons/sourcemod/scripting/include/basecomm.inc https://raw.githubusercontent.com/shanapu/MyJailbreak/master/addons/sourcemod/scripting/include/basecomm.inc
-
 echo "Move Modules folder for compile"
 mkdir addons/sourcemod/scripting/MyJailbreak/MyJailbreak/
 mv addons/sourcemod/scripting/MyJailbreak/Modules addons/sourcemod/scripting/MyJailbreak/MyJailbreak/
@@ -78,11 +64,14 @@ echo "Move all other binary files to plugins folder"
   mv addons/sourcemod/plugins/MyJailbreak/myjailbreak_teamgames.smx addons/sourcemod/plugins/MyJailbreak/disabled
   mv addons/sourcemod/plugins/MyJailbreak/myjailbreak_steamgroups.smx addons/sourcemod/plugins/MyJailbreak/disabled
   mv addons/sourcemod/plugins/MyJailbreak/myjailbreak_stamm.smx addons/sourcemod/plugins/MyJailbreak/disabled
+  mv addons/sourcemod/plugins/MyJailbreak/myjailbreak_zephstore_credits.smx addons/sourcemod/plugins/MyJailbreak/disabled
+  mv addons/sourcemod/plugins/MyJailbreak/myjailbreak_sm-store_credits.smx addons/sourcemod/plugins/MyJailbreak/disabled
   mv addons/sourcemod/plugins/MyJailbreak/ratio_teambans.smx addons/sourcemod/plugins/MyJailbreak/disabled
   mv addons/sourcemod/plugins/MyJailbreak/ratio_steamrep.smx addons/sourcemod/plugins/MyJailbreak/disabled
   mv addons/sourcemod/plugins/MyJailbreak/ratio_ctbans_addicted.smx addons/sourcemod/plugins/MyJailbreak/disabled
   mv addons/sourcemod/plugins/MyJailbreak/ratio_ctbans_databomb.smx addons/sourcemod/plugins/MyJailbreak/disabled
   mv addons/sourcemod/plugins/MyJailbreak/ratio_ctbans_fantom.smx addons/sourcemod/plugins/MyJailbreak/disabled
+  mv addons/sourcemod/plugins/MyJailbreak/warden_zephstore_paperclips.smx addons/sourcemod/plugins/MyJailbreak/disabled
 
 echo "Remove build folder if exists"
 if [ -d "build" ]; then
@@ -126,6 +115,13 @@ rm -r build/gameserver/cfg/MyJailbreak/EventDays/.gitkeep
 echo "Download sourcefiles & create clean scripting folder"
 git clone --depth=50 --branch=$2 https://github.com/shanapu/MyJailbreak.git source/MyJailbreak
 mv source/MyJailbreak/addons/sourcemod/scripting build/gameserver/addons/sourcemod
+
+echo "Set plugins version in source"
+for file in build/gameserver/addons/sourcemod/scripting/include/myjailbreak.inc
+do
+  sed -i "s/<COMMIT>/$BID/g" $file > output.txt
+  rm output.txt
+done
 
 echo "Create clean translation folder"
 mkdir build/gameserver/addons/sourcemod/translations

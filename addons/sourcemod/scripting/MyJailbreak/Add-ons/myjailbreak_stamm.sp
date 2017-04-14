@@ -119,7 +119,7 @@ public Action Event_OnPlayerSpawn(Event event, const char[] name, bool bDontBroa
 	if (GetClientTeam(client) != CS_TEAM_CT) 
 		return Plugin_Continue;
 
-	if (!IsValidClient(client, true, true))
+	if (!IsValidClient(client, false, true))
 		return Plugin_Continue;
 
 	if (STAMM_GetClientPoints(client) < gc_iMinStammPointsRatio.IntValue)

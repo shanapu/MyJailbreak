@@ -905,6 +905,11 @@
 		"en"		"Give FreeDay to:"
 	}
 
+	"warden_removefreeday"
+	{
+		"en"		"Remove FreeDay from:"
+	}
+
 	"warden_havefreeday"
 	{
 		"#format"	"{1:N}"
@@ -936,6 +941,17 @@
 	{
 		"#format"	"{1:N}"
 		"en"		"{green}{1}{default} gets a {purple}FreeDay{default} next round"
+	}
+
+	"warden_removefreedayforyou"
+	{
+		"en"		"Your {purple}FreeDay{default} was removed."
+	}
+
+	"warden_removepersonalfreeday"
+	{
+		"#format"	"{1:N}"
+		"en"		"{green}{1}s{default} {purple}FreeDay{default} was removed"
 	}
 
 	"warden_cooldown"
@@ -989,6 +1005,11 @@
 	{
 		"#format"	"{1:i}"
 		"en"		"You need at least {1} Stamm Points to play as warden"
+	}
+
+	"warden_noplayer"
+	{
+		"en"		"No players to choose"
 	}
 
 }

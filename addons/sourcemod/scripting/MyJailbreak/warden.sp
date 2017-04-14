@@ -35,6 +35,7 @@
 
 // Optional Plugins
 #undef REQUIRE_PLUGIN
+#include <basecomm>
 #include <myjailbreak>
 #include <hosties>
 #include <lastrequest>
@@ -84,6 +85,7 @@ bool gp_bHosties = false;
 bool gp_bLastRequest = false;
 bool gp_bSmartJailDoors = false;
 bool gp_bChatProcessor = false;
+bool gp_bBasecomm = false;
 bool g_bCMDCoolDown[MAXPLAYERS+1] = {false, ...};
 
 // Integers
@@ -390,6 +392,7 @@ public void OnAllPluginsLoaded()
 	gp_bLastRequest = LibraryExists("lastrequest");
 	gp_bSmartJailDoors = LibraryExists("smartjaildoors");
 	gp_bChatProcessor = LibraryExists("chat-processor");
+	gp_bBasecomm = LibraryExists("basecomm");
 }
 
 public void OnLibraryRemoved(const char[] name)
@@ -408,6 +411,9 @@ public void OnLibraryRemoved(const char[] name)
 
 	if (StrEqual(name, "chat-processor"))
 		gp_bChatProcessor = false;
+
+	if (StrEqual(name, "basecomm"))
+		gp_bBasecomm = false;
 }
 
 public void OnLibraryAdded(const char[] name)
@@ -426,6 +432,9 @@ public void OnLibraryAdded(const char[] name)
 
 	if (StrEqual(name, "chat-processor"))
 		gp_bChatProcessor = true;
+
+	if (StrEqual(name, "basecomm"))
+		gp_bBasecomm = true;
 }
 
 /******************************************************************************
@@ -449,7 +458,7 @@ public Action Command_BecomeWarden(int client, int args)
 						{
 							if (!g_bCMDCoolDown[client])
 							{
-								if (GetLimit(client) < gc_iLimitWarden.IntValue || gc_iLimitWarden.IntValue == 0 || (gc_iCoolDownMinPlayer.IntValue > GetPlayerTeamCount(CS_TEAM_CT)))
+								if (GetLimit(client) < gc_iLimitWarden.IntValue || gc_iLimitWarden.IntValue == 0 || (gc_iCoolDownMinPlayer.IntValue > GetAllPlayersCount(CS_TEAM_CT)))
 								{
 									if (SetTheWarden(client) != Plugin_Handled)
 									{
@@ -692,9 +701,10 @@ public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 			g_iWarden = -1;
 		}
 
-		if (g_iLastWarden != -1)
+		if (g_iLastWarden != -1 && GetAlivePlayersCount(CS_TEAM_CT) > 1 )
 		{
 			g_bCMDCoolDown[g_iLastWarden] = true;
+
 			CreateTimer(gc_fCMDCooldown.FloatValue, Timer_CMDCoolDown, g_iLastWarden);
 		}
 	}
@@ -731,7 +741,7 @@ public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 
 	if (g_iWarden != -1)  // warden exists
 	{
-		if (gc_iLimitWarden.IntValue != 0 && (GetLimit(g_iWarden) >= gc_iLimitWarden.IntValue) && (GetPlayerTeamCount(CS_TEAM_CT) >= gc_iCoolDownMinPlayer.IntValue)) // remove
+		if (gc_iLimitWarden.IntValue != 0 && (GetLimit(g_iWarden) >= gc_iLimitWarden.IntValue) && (GetAllPlayersCount(CS_TEAM_CT) >= gc_iCoolDownMinPlayer.IntValue)) // remove
 		{
 			SetCoolDown(g_iWarden, gc_iCoolDownLimit.IntValue);
 			SetLimit(g_iWarden, 0);
@@ -1219,7 +1229,7 @@ bool IsClientWarden(int client)
 // Register Natives
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	//Natives
+	// Natives
 	CreateNative("warden_exist", Native_ExistWarden);
 	CreateNative("warden_iswarden", Native_IsWarden);
 	CreateNative("warden_set", Native_SetWarden);
@@ -1389,7 +1399,7 @@ void Forward_OnWardenDeath(int client)
 	Call_Finish();
 }
 
-//Not a real forward
+// Not a real forward
 void OnWardenCreation(int client)
 {
 	Deputy_OnWardenCreation(client);

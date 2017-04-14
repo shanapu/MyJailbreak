@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2016-12-11 14:24:18 UTC
+// Date: 2017-03-01 14:01:51 UTC
 // Language: Polish (pl)
 // 
 // To view other translations for this plugin, please visit:
@@ -138,14 +138,14 @@
 		"pl"		"Nie badz DUPKIEM!"
 	}
 
-	"duckhunt_wait"
-	{
-		"pl"		"Musisz odczekac  {purple}{1}{default} rund"
-	}
-
 	"duckhunt_name"
 	{
 		"pl"		"Polowanie na kaczki"
+	}
+
+	"duckhunt_wait"
+	{
+		"pl"		"Musisz odczekac  {purple}{1}{default} rund"
 	}
 
 }

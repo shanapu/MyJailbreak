@@ -30,7 +30,6 @@
 #include <colors>
 #include <autoexecconfig>
 #include <warden>
-#include <basecomm>
 #include <mystocks>
 
 // Optional Plugins
@@ -57,8 +56,9 @@ ConVar gc_sCustomCommandMute;
 ConVar gc_sCustomCommandUnMute;
 
 // Boolean
-bool IsMuted[MAXPLAYERS+1] = {false, ...};
-bool TempMuted[MAXPLAYERS+1] = {false, ...};
+bool g_bIsMuted[MAXPLAYERS+1] = {false, ...};
+bool g_bTempMuted[MAXPLAYERS+1] = {false, ...};
+
 
 // Strings
 char g_sMuteUser[32];
@@ -150,7 +150,7 @@ public Action Command_UnMuteMenu(int client, any args)
 
 			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true))
 			{
-				if ((GetClientTeam(i) == CS_TEAM_T) && IsMuted[i])
+				if ((GetClientTeam(i) == CS_TEAM_T) && g_bIsMuted[i])
 				{
 					char userid[11];
 					char username[MAX_NAME_LENGTH];
@@ -214,7 +214,7 @@ public void Mute_Event_RoundStart(Event event, const char[] name, bool dontBroad
 			if (GetClientTeam(i) == CS_TEAM_T)
 			{
 				SetClientListeningFlags(i, VOICE_MUTED);
-				IsMuted[i] = true;
+				g_bIsMuted[i] = true;
 			}
 		}
 		CPrintToChatAll("%t %t", "warden_tag", "warden_mutedefault");
@@ -223,7 +223,7 @@ public void Mute_Event_RoundStart(Event event, const char[] name, bool dontBroad
 
 public void Mute_Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 {
-	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (IsMuted[i]) UnMuteClient(i, -1);
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (g_bIsMuted[i]) UnMuteClient(i, -1);
 }
 
 /******************************************************************************
@@ -232,12 +232,12 @@ public void Mute_Event_RoundEnd(Event event, const char[] name, bool dontBroadca
 
 public void Mute_OnAvailableLR(int Announced)
 {
-	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (IsMuted[i] && IsPlayerAlive(i)) UnMuteClient(i, -1);
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (g_bIsMuted[i] && IsPlayerAlive(i)) UnMuteClient(i, -1);
 }
 
 public void Mute_OnMapEnd()
 {
-	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (IsMuted[i]) UnMuteClient(i, -1);
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (g_bIsMuted[i]) UnMuteClient(i, -1);
 }
 
 // Mute Terror when Warden speaks
@@ -249,20 +249,20 @@ public void OnClientSpeakingEx(int client)
 		{
 			if (!CheckVipFlag(i, g_sAdminFlagMute))
 			{
-				if ((GetClientTeam(i) == CS_TEAM_T) && (!IsMuted[i] || (GetClientListeningFlags(i) != VOICE_MUTED)) || 
+				if ((GetClientTeam(i) == CS_TEAM_T) && (!g_bIsMuted[i] || (GetClientListeningFlags(i) != VOICE_MUTED)) || 
 					(!gc_bMuteTalkOverTeam.BoolValue && !warden_iswarden(i) && !warden_deputy_isdeputy(i) && (GetClientTeam(i) == CS_TEAM_CT) && (GetClientListeningFlags(i) != VOICE_MUTED)))
 				{
 					if ((gc_bMuteTalkOverDead.BoolValue && IsPlayerAlive(i)) || !gc_bMuteTalkOverDead.BoolValue)
 					{
 						PrintCenterText(i, "%t", "warden_talkover");
-						TempMuted[i] = true;
+						g_bTempMuted[i] = true;
 						SetClientListeningFlags(i, VOICE_MUTED);
 					}
 				}
 			}
 		}
 	}
-	else if (TempMuted[client])
+	else if (g_bTempMuted[client])
 	{
 		PrintCenterText(client, "%t", "warden_talkover");
 	}
@@ -275,9 +275,15 @@ public void OnClientSpeakingEnd(int client)
 	{
 		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, true))
 		{
-			if (TempMuted[i] && !IsMuted[i] && !BaseComm_IsClientMuted(i))
+			if (g_bTempMuted[i] && !g_bIsMuted[i])
 			{
-				TempMuted[i] = false;
+				if (gp_bBasecomm)
+				{
+					if (BaseComm_IsClientMuted(client))
+						return;
+				}
+
+				g_bTempMuted[i] = false;
 				SetClientListeningFlags(i, VOICE_NORMAL);
 			}
 		}
@@ -295,7 +301,7 @@ public Action MuteClient(int client, int time, int muter)
 		if (GetClientTeam(client) == CS_TEAM_T)
 		{
 			SetClientListeningFlags(client, VOICE_MUTED);
-			IsMuted[client] = true;
+			g_bIsMuted[client] = true;
 
 			if (time == 0)
 			{
@@ -312,18 +318,29 @@ public Action MuteClient(int client, int time, int muter)
 	if (time > 0)
 	{
 		float timing = float(time);
-		CreateTimer(timing, Timer_UnMute, client);
+		CreateTimer(timing, Timer_UnMute, GetClientUserId(client));
 	}
 }
 
 public void UnMuteClient(any client, int unmuter)
 {
-	if (IsValidClient(client, true, true) && IsMuted[client] && !BaseComm_IsClientMuted(client))
+	if (IsValidClient(client, false, true) && g_bIsMuted[client])
 	{
+		if (gp_bBasecomm)
+		{
+			if (BaseComm_IsClientMuted(client))
+				return;
+		}
+
 		SetClientListeningFlags(client, VOICE_NORMAL);
-		IsMuted[client] = false;
+		g_bIsMuted[client] = false;
+
 		CPrintToChat(client, "%t %t", "warden_tag", "warden_unmute", client);
-		if (unmuter != -1) CPrintToChat(unmuter, "%t %t", "warden_tag", "warden_unmute", client);
+
+		if (unmuter != -1)
+		{
+			CPrintToChat(unmuter, "%t %t", "warden_tag", "warden_unmute", client);
+		}
 	}
 }
 
@@ -345,7 +362,7 @@ public Action MuteMenuPlayer(int client, int args)
 
 			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true))
 			{
-				if ((GetClientTeam(i) == CS_TEAM_T) && !CheckVipFlag(i, g_sAdminFlagMute) && !IsMuted[i])
+				if ((GetClientTeam(i) == CS_TEAM_T) && !CheckVipFlag(i, g_sAdminFlagMute) && !g_bIsMuted[i])
 				{
 					char userid[11];
 					char username[MAX_NAME_LENGTH];
@@ -586,7 +603,9 @@ public int Handler_MuteMenuTeam(Menu menu6, MenuAction action, int client, int s
                    TIMER
 ******************************************************************************/
 
-public Action Timer_UnMute(Handle timer, any client)
+public Action Timer_UnMute(Handle timer, int userid)
 {
+	int client = GetClientOfUserId(userid);
+
 	UnMuteClient(client, -1);
 }

@@ -216,10 +216,10 @@ public Action CP_OnChatMessage(int& author, ArrayList recipients, char[] flagstr
 {
 	if (g_bIsMathQuiz && g_bCanAnswer)
 	{
-		char bit[1][5];
-		ExplodeString(message, " ", bit, sizeof bit, sizeof bit[]);
+		char bit[2][5];
+		ExplodeString(message, "{default}", bit, sizeof bit, sizeof bit[]);
 
-		if (ProcessSolution(author, StringToInt(bit[0])))
+		if (ProcessSolution(author, StringToInt(bit[1])))
 			SendEndMathQuestion(author);
 	}
 }

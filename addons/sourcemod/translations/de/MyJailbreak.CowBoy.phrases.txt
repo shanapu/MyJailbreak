@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2016-12-11 14:24:04 UTC
+// Date: 2017-03-01 14:02:32 UTC
 // Language: German (de)
 // 
 // To view other translations for this plugin, please visit:
@@ -7,6 +7,11 @@
 //
 "Phrases"
 {
+
+	"cowboy_tag"
+	{
+		"de"		"[{green}MyJB.cowboy{default}]"
+	}
 
 	"cowboy_need"
 	{
@@ -93,11 +98,6 @@
 		"de"		"{1} Sekunden bis zum Start"
 	}
 
-	"cowboy_info_title"
-	{
-		"de"		"Cowboy ist aktiv"
-	}
-
 	"cowboy_info_line1"
 	{
 		"de"		"Cowboy - Jeder gegen Jeden"
@@ -136,6 +136,16 @@
 	"cowboy_wait"
 	{
 		"de"		"Du musst noch {1} Runden warten"
+	}
+
+	"cowboy_name"
+	{
+		"de"		"Cowboy"
+	}
+
+	"cowboy_info_title"
+	{
+		"de"		"Cowboy ist aktiv"
 	}
 
 }

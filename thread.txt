@@ -15,16 +15,6 @@ MyJailbreak is a redux rewrite of [URL="https://github.com/Franc1sco/Franug-Jail
 [*] [B]Icons[/B] - add a icon above players head for T, CT, warden, deputy, rebel, cuffed & freeday
 [*] [B]HUD[/B] - a players HUD to display game informations
 [*] [B]Ratio[/B] - Manage team ratios and a queue system for prisoners to join guard through
-[/LIST][INDENT][LIST]
-[*][B]CT Ban Support[/B] - Support plugin for [URL="https://forums.alliedmods.net/showthread.php?t=166080"]databombs CT Bans plugin[/URL]
-[*][B]RankMe Support[/B] - Support plugin for [URL="https://forums.alliedmods.net/showthread.php?t=155621"]lok1s, Scoobys RankMe plugin[/URL] & [URL="https://forums.alliedmods.net/showthread.php?t=290063"]Kentos RankMe plugin[/URL]
-[*][B]Reputation Support[/B] - Support plugin for [URL="https://forums.alliedmods.net/showthread.php?p=2411490"]oaaron99 Player Reputations plugin[/URL]
-[*][B]Stamm Support[/B] - Support plugin for [URL="https://forums.alliedmods.net/showthread.php?p=1338942"]popoklopsis Stamm plugin[/URL]
-[*][B]TeamBans Support[/B] - Support plugin for [URL="https://forums.alliedmods.net/showthread.php?t=270761"]baras TeamBans plugin[/URL]
-[*][B]SteamRep Support[/B] - Support plugin for [URL="https://steamrep.com/plugin.php"]SteamRep[/URL]
-[*][B]CT Bans Support[/B] - Support plugin for FantoMs [i]private[/i] CT Bans
-[*][B]Steam Groups Support[/B] - Support plugin for restriction based on steam groups
-[/LIST][/INDENT][LIST]
 [*][B]Event Days[/B] - vote/set a Event Day for next round with cooldowns, rounds in row, sounds & overlays
 [/LIST][INDENT][LIST]
 [*][B]War[/B] - CT vs T Team Deathmatch
@@ -45,15 +35,36 @@ MyJailbreak is a redux rewrite of [URL="https://github.com/Franc1sco/Franug-Jail
 [*][B]Knife[/B] - Knife Deathmatch with configurable gravity, iceskate, and thirdperson
 [*][B]Freeday[/B] - Auto freeday on first round &/or if there is no CT
 [/LIST][/INDENT]
+
+[U]Add-ons:[/U]
+
 [LIST]
-[*][B]TeamGames Support[/B] - Support plugin for [url=https://forums.alliedmods.net/showthread.php?t=286045]KissLicks TeamGames[/url]
-[/LIST]
+[*][B]CT Bans Support[/B] - Support plugin for [URL="https://forums.alliedmods.net/showthread.php?t=166080"]databombs CT Bans plugin[/URL]
+[*][B]CT Bans Support[/B] - Support plugin for [URL="https://forums.alliedmods.net/showthread.php?t=294093"]oaaron99/addicted CT Bans plugin[/URL]
+[*][B]CT Bans Support[/B] - Support plugin for FantoMs [i]private[/i] CT Bans
+[*][B]TeamBans Support[/B] - Support plugin for [URL="https://forums.alliedmods.net/showthread.php?t=270761"]baras TeamBans plugin[/URL]
+[*][B]TeamGames Support[/B] - Support plugin for [url=https://forums.alliedmods.net/showthread.php?t=286045]KissLicks TeamGames[/url] v1.1.0.7
+[*][B]Steam Groups Support[/B] - Support plugin for restriction based on steam groups
+[*][B]RankMe Support[/B] - Support plugin for [URL="https://forums.alliedmods.net/showthread.php?t=155621"]lok1s, Scoobys RankMe plugin[/URL] & [URL="https://forums.alliedmods.net/showthread.php?t=290063"]Kentos RankMe plugin[/URL]
+[*][B]Reputation Support[/B] - Support plugin for [URL="https://forums.alliedmods.net/showthread.php?p=2411490"]oaaron99 Player Reputations plugin[/URL]
+[*][B]Stamm Support[/B] - Support plugin for [URL="https://forums.alliedmods.net/showthread.php?p=1338942"]popoklopsis Stamm plugin[/URL]
+[*][B]SteamRep Support[/B] - Support plugin for [URL="https://steamrep.com/plugin.php"]SteamRep[/URL]
+[*][B]Store Support[/B] - Support plugin for get Credits when win EventDay for [url=https://forums.alliedmods.net/showthread.php?t=276677]Zephyrus store[/url]
+[*][B]Store Support[/B] - Support plugin for adding paperclips to [url=https://forums.alliedmods.net/showthread.php?t=276677]Zephyrus store[/url]
+[code]
+"PaperClips"
+{
+	"price" "800"
+	"type" "paperclips"
+}
+[/code]
+[/list]
 
 
 
 [B][u]Features[/u][/B]
 [LIST]
-[*]SourcePawn Transitional Syntax 1.7
+[*]SourcePawn Transitional Syntax
 [*][b][url=https://github.com/shanapu/MyJailbreak/wiki]Wiki[/url] [/B]&[B] [url=https://github.com/shanapu/MyJailbreak/wiki/Frequently-Asked-Questions]FAQ[/url][/b]
 [*]Multilingual support
 [*]Custom chat commands !mycommand
@@ -104,6 +115,7 @@ sm_wunmute - Allows the warden to unmute a muted terrorist
 sm_markrebel - Allows Warden to mark/unmark prisoner as rebel
 sm_count - Allows Warden to count the prisoners in his field of view
 sm_givefreeday - Allows the Warden to give a freeday to a player
++beacons - bind "+beacons" for markers to use instead rightclick mouse
 [/CODE]
 
 [u]AdminCommands // ADMFLAG_GENERIC[/u]
@@ -1083,6 +1095,13 @@ sm_warden_freeday_enable "1"
 // Maximum: "1.000000"
 sm_warden_cmds_freeday "gfd, setfreeday, sfd"
 
+// Set your custom chat command for remove a freeday(!removefreeday (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
+// -
+// Default: "rfd, nofreeday"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_warden_cmds_freeday_remove "rfd, nofreeday"
+
 // What color to turn the player with freeday into (set R, G and B values to 255 to disable) (Rgb): x - red value
 // -
 // Default: "0"
@@ -1117,6 +1136,13 @@ sm_warden_freeday_deputy "1"
 // Minimum: "0.000000"
 // Maximum: "1.000000"
 sm_warden_freeday_guards "0"
+
+// Set your custom chat command for give a freeday(!givefreeday (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
+// -
+// Default: "rfd, nofreeday"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_warden_cmds_freeday_remove "rfd, nofreeday"
 
 // 0 - disabled, how many stamm points a player need to become warden (only if stamm is available)
 // -
@@ -3258,6 +3284,20 @@ sm_zombie_model "models/player/custom_player/zombie/revenant/revenant_v2.mdl"
 // Minimum: "0.000000"
 // Maximum: "1.000000"
 sm_zombie_allow_lr "0"
+
+// 0 - disabled, 1 - transform terrors into Zombie on death - experimental!
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_zombie_terror "0"
+
+// 0 - all dead terrors become zombie, 1 - only terrors killed by zombie transform into Zombie
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_zombie_terror_infect "1"
 [/CODE]
 recomment for sm_zombie_glow "1", put sv_force_transmit_players "1" to your .cfg
 [/SPOILER]
@@ -6043,214 +6083,106 @@ native MyIcons_BlockClientIcon(int client, bool status);
 [/SPOILER]
 
 
-[U][B]Requires plugins[/B][/U]
+[U][B]Required plugins[/B][/U]
 [LIST]
-[*]Sourcemod 1.7.0+
+[*][url=http://www.sourcemod.net/downloads.php?branch=1.8]Sourcemod 1.8.0+[/url] [color=red](support for SM1.7 ended with MyJB Beta 12)[/color]
 [*][url=https://forums.alliedmods.net/showthread.php?t=108810]SM hosties 2[/url]
-[*][url=https://github.com/Kailo97/smartjaildoors]Smart Jail Doors[/url]
 [*][url=https://forums.alliedmods.net/showthread.php?p=602270]SM File/Folder Downloader and Precacher[/url] - for zombie/warden model download
-[*][url=https://forums.alliedmods.net/showthread.php?t=286913][ANY] Chat Prozessor[/url]
-[*][url=https://forums.alliedmods.net/showthread.php?t=240703]CustomPlayerSkins[/url]
+
 [/LIST]
 
-[U][B]Optional plugins/extensions[/B][/U]
+[U][B]Recommend/Optional plugins/extensions[/B][/U]
 [LIST]
+[*][url=https://forums.alliedmods.net/showthread.php?t=264100]Smart Jail Doors[/url] - need for auto jail open on event days & toggle for warden
 [*][url=https://forums.alliedmods.net/showthread.php?p=2177167][ANY] VoiceannounceEX (VoiceHook)[/url] - needed for wardens voiceover
-[*][url=https://forums.alliedmods.net/showthread.php?t=180114]DHooks (Dynamic Hooks - Dev Preview)[/url] - needed for wardens
+[*][url=https://forums.alliedmods.net/showthread.php?t=180114]DHooks (Dynamic Hooks - Dev Preview)[/url] - needed for wardens voiceover
 [*][url=https://forums.alliedmods.net/showthread.php?t=229556][ANY] SteamWorks[/url] - needed for myjailbreak_steamgroups
+[*][url=https://forums.alliedmods.net/showthread.php?t=286913][ANY] Chat Prozessor[/url] - needed for smoother wardens mathquiz & player chat tags
+[*][url=https://forums.alliedmods.net/showthread.php?t=240703]Custom Player Skins (Core)[/url] - need for wallhack feature on eventdays(catch,zombie,torch)
 [/LIST]
 
 
 [U][B]Supported 3th party plugins[/B][/U]
 [LIST]
-[*][url=https://forums.alliedmods.net/showthread.php?p=1338942]Stamm 2.28 Final by Popoklopsi[/url] - support for ratio & warden (min stamm point to join ct)
 [*][url=https://forums.alliedmods.net/showthread.php?p=1544101][CS:S/CS:GO] CT Bans by databomb[/url] - support for ratio (is banned)
-[*][url=https://forums.alliedmods.net/showthread.php?t=155621][CS:S] RankMe[/url] - support for ratio & warden (min rankme points to join ct)
-[*][url=https://forums.alliedmods.net/showthread.php?t=290063][CS:GO] RankMe Kento Edition[/url] - support for ratio & warden (min rankme points to join ct)
-[*][url=https://forums.alliedmods.net/showthread.php?p=2411490][ANY] Player Reputations[/url] - support for ratio & warden (min reputation points to join ct)
-[*][url=https://forums.alliedmods.net/showthread.php?t=286045]TeamGames (JailBreak teams, games, marks, fences, ...)[/url]
+[*][url=https://forums.alliedmods.net/showthread.php?t=294093][ANY] CT Bans by oaaron99/addicted[/url] - support for ratio (is banned)
+[*][CS:S/CS:GO] CT Bans by R1KO/FantoM - support for ratio (is banned)
+[*][url=https://forums.alliedmods.net/showthread.php?t=270761][CS:S/CS:GO]TeamBans (CT Bans + T Bans) [1.0.0][/url] - support for ratio (is banned)
+[*][url=https://forums.alliedmods.net/showthread.php?t=286045]TeamGames (JailBreak teams, games, marks, fences, ...)[/url] - friendlyfire handling
+[*][url=https://forums.alliedmods.net/showthread.php?t=155621][CS:S] RankMe[/url] - support for ratio & warden (min rankme points to join ct & warden)
+[*][url=https://forums.alliedmods.net/showthread.php?t=290063][CS:GO] RankMe Kento Edition[/url] - support for ratio & warden (min rankme points to join ct & warden)
+[*][url=https://forums.alliedmods.net/showthread.php?p=2411490][ANY] Player Reputations[/url] - support for ratio & warden (min reputation points to join ct & warden)
+[*][url=https://forums.alliedmods.net/showthread.php?p=1338942]Stamm 2.28 Final by Popoklopsi[/url] - support for ratio & warden (min stamm point to join ct & warden)
+[*][url=https://forums.alliedmods.net/showthread.php?t=276677][ANY] Store by Zephyrus [1.1 - 03.01.2016][/url] - support for wardens paperclips feature & win credits through EventDays
 [/LIST]
-
 
 
 [B][u]Latest Changes[/u][/B]
 [QUOTE] 
 
-**[Beta 11.0]** - Support for addicted CT Bans plugin
-  [SPOILER]
-*Added*
-*  Ratio: Support for new CTBans plugin by addicted
-    *  new plugin - disabled/ratio_ctbans_addicted.smx - Support plugin for addicted CT Bans plugin
-  
-*Changed*
-*  Support Plugins: changed name for ctbans plugins - to many ct bans
-    *  renamed plugin - ratio_ctban to ratio_ctbans_databomb
-    *  renamed plugin - ratio_ct_bans to ratio_ctbans_fantom
-[/SPOILER]
-  
-
-[b][Beta 10.0][/b] - Ghosts War, Warden restrict & limits
+[b][Beta 12.0][/b] - removed dependencies & store support
   [SPOILER]
 [i]Added[/i]
 [LIST]
-[*]Ratio: Support for SteamRep.com, FantoMs CT Bans & Steam Groups - new switch commands & more
+[*]Add-On: Support for adding paperclips to Zephyrus store
 [/LIST][INDENT][LIST]
-    [*]new command - sm_prisoner - Allows a player to join prisoner
-    [*]new command - sm_spectator - Allows a player to join spectator
-    [*]new cvar - sm_ratio_cmds_clear - Set your custom chat command for admins to clear the guard queue (!clearqueue (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
-    [*]new cvar - sm_ratio_cmds_prisoner - Set your custom chat command for player to move to prisoner (!prisoner (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
-    [*]new cvar - sm_ratio_cmds_spec - Set your custom chat command for player to move to spectator (!spectator (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
-    [*]new plugin - disabled/ratio_ct_bans.smx - Support plugin for FantoMs CT Bans plugin
-    [*]new plugin - disabled/ratio_steamrep.smx - Support plugin for Jameless SteamRep.com Checker plugin
+    [*]new plugin - disabled/warden_zephstore_paperclips.smx - Support plugin for Zephyrus store plugin
     [/LIST][INDENT][LIST]
-    [*]new cvar - sm_ratio_steamrep_exclude - Which tags you DO NOT trust for reported scammers. Input the tags here for any community whose bans you DO NOT TRUST.
-    [*]new cvar - sm_ratio_steamrep_checkip - Include IP address of connecting players in query. Set to 0 to disable
-    [/LIST][/INDENT][LIST]
-    [*]new plugin - disabled/myjailbreak_steamgroup.smx - Warden & Ratio support plugin for Steam Groups (need SteamWorks extension!)
+        [*]new cvar - sm_store_paperclips_round_limit - Number of times you can buy paperclips in a round (find in plugin.store.cfg)
+        [*]new cvar - sm_store_paperclips_amount - Number of paperclips you get (find in plugin.store.cfg)
+[/LIST][/INDENT]
+[/INDENT]
+[LIST]
+[*]Add-On: Support plugins for get credits for Zephyrus store & SM-Store  on event day win
+[/LIST][INDENT][LIST]
+    [*]new plugin - disabled/myjailbreak_zephstore_credits.smx - Support plugin for Zephyrus store plugin
+    [*]new plugin - disabled/myjailbreak_sm-store_credits.smx - Support plugin for SM-Store plugin
     [/LIST][INDENT][LIST]
-    [*]new cvar - sm_ratio_steamgroup - Steamgroup a player must be member before join CT (Find it on your steam groups edit page) (0000000 = disabled)
-[/LIST][/INDENT][/INDENT]
-[LIST]
-[*]Warden: Added restict system for become warden like ratio restricts
-[/LIST][INDENT][LIST]
-    [*]new cvar - sm_warden_stamm - 0 - disabled, how many stamm points a player need to become warden? (only if stamm is available)
-    [*]new cvar - sm_warden_reputation - 0 - disabled, how many reputation a player need to join ct? (only if reputation is available)
-    [*]new cvar - sm_warden_rankme - 0 - disabled, how many rankme points a player need to become warden? (only if stamm is available)
-    [*]new plugin - disabled/myjailbreak_steamgroup.smx - Warden & Ratio support plugin for Steam Groups (need SteamWorks extension!)
-    [/LIST][INDENT][LIST]
-    [*]new cvar - sm_warden_steamgroup - Steamgroup a player must be member before become Warden (Find it on your steam groups edit page) (0000000 = disabled)
-[/LIST][/INDENT][/INDENT]
-[LIST]
-[*]New Eventday: Ghosts War - All Players are invisbile & immortal - every 6 seconds they go visible and mortal for 2 seconds. Last alive wins.
-[/LIST][INDENT][LIST]
-    [*]new plugin - ghosts.smx - please help translate [url]http://translator.mitchdempsey.com/sourcemod_plugins/271[/url]
-    [/LIST][INDENT][LIST]
-    [*]new cvar - sm_ghosts_enable - 0 - disabled, 1 - enable this MyJailbreak SourceMod plugin
-        [*]new command - sm_setghosts - Allows the Admin or Warden to set Ghosts
-        [*]new command - sm_ghosts - Allows players to vote for a Ghosts"
-        [*]new cvar - sm_ghosts_cmds_vote - Set your custom chat command for Event voting(!ghosts (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
-        [*]new cvar - sm_ghosts_cmds_set - Set your custom chat command for set Event(!ghosts (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
-        [*]new cvar - sm_ghosts_warden - 0 - disabled, 1 - allow warden to set ghosts round
-        [*]new cvar - sm_ghosts_admin - 0 - disabled, 1 - allow admin/vip to set ghosts round
-        [*]new cvar - sm_ghosts_flag - Set flag for admin/vip to set this Event Day
-        [*]new cvar - sm_ghosts_vote - 0 - disabled, 1 - allow player to vote for ghosts
-        [*]new cvar - sm_ghosts_spawn - 0 - T teleport to CT spawn, 1 - cell doors auto open
-        [*]new cvar - sm_ghosts_rounds - Rounds to play in a row
-        [*]new cvar - sm_ghosts_invisible_time - Time in seconds players are invisible & immortal
-        [*]new cvar - sm_ghosts_visisble_time - Time in seconds players are visible & mortal
-        [*]new cvar - sm_ghosts_roundtime - Round time in minutes for a single ghosts round
-        [*]new cvar - sm_ghosts_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
-        [*]new cvar - sm_ghosts_trucetime - Time in seconds players can't deal damage
-        [*]new cvar - sm_ghosts_cooldown_day - Rounds cooldown after a event until event can be start again
-        [*]new cvar - sm_ghosts_cooldown_start - Rounds until event can be start after mapchange
-        [*]new cvar - sm_ghosts_cooldown_admin - 0 - disabled, 1 - ignore the cooldown when admin/vip set ghosts round
-        [*]new cvar - sm_ghosts_sounds_enable - 0 - disabled, 1 - enable sounds
-        [*]new cvar - sm_ghosts_sounds_start - Path to the soundfile which should be played for a start
-        [*]new cvar - sm_ghosts_overlays_enable - 0 - disabled, 1 - enable overlays
-        [*]new cvar - sm_ghosts_overlays_start - Path to the start Overlay DONT TYPE .vmt or .vft
-        [*]new cvar - sm_ghosts_allow_lr - 0 - disabled, 1 - enable LR for last round and end eventday
-    [/LIST][/INDENT][LIST]
-	[*]Menu: added new eventday ghosts to set/voting menu
-	[/LIST][/INDENT][LIST]
-[*]Hide: Added last request for hide in the dark
-[/LIST][INDENT][LIST]
-    [*]new cvar - sm_hide_allow_lr - 0 - disabled, 1 - enable LR for last round and end eventday
+        [*]new cvar - sm_store_credit_amount_eventdays - Number of credits to give out for winning an eventday (find in plugin.store.cfg)
+        [*]new cvar - sm_store_credit_eventdays_alive - Give out credits for winning an eventday for dead & alive player (find in plugin.store.cfg)
 [/LIST][/INDENT]
+[/INDENT]
 [LIST]
-[*]Warden - Orders: Set your custom commands for every single order.
-[*]Warden: Limit max rounds in a row as warden incl cooldown
+[*]Zombie: respawn dead terrors as zombie - [b]experimental[/b]
 [/LIST][INDENT][LIST]
-    [*]new cvar - sm_warden_limit - 0 - disabled, rounds in a row a player can be warden
-    [*]new cvar - sm_warden_limit_minplayer - How many CT must be online before sm_warden_limit is active
-    [*]new cvar - sm_warden_cooldown_limit - 0 - disabled, rounds player can't become warden after he reached the warden limit (sm_warden_limit)
-[/LIST][/INDENT]
+    [*]new cvar - sm_zombie_terror - 0 - disabled, 1 - transform terrors into Zombie on death - experimental!
+    [*]new cvar - sm_zombie_terror_infect - 0 - all dead terrors become zombie, 1 - only terrors killed by zombie transform into Zombie
+    [/LIST]
+[/INDENT]
 [LIST]
-[*]Warden: Player cooldown for become warden after a remove vote or remove warden by admin
+[*]Warden: remove a freeday from player
 [/LIST][INDENT][LIST]
-    [*]new cvar - sm_warden_cooldown_remove - 0 - disabled, rounds player can't become warden after he was vote out or removed by admin
-[/LIST][/INDENT]
+    [*]new command - sm_removefreeday - Allows a warden to remove a freeday from a player
+    [*]new cvar - sm_warden_cmds_freeday_remove - Set your custom chat command for give a freeday(!givefreeday (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)
+    [/LIST][/INDENT]
 [LIST]
-[*]Warden: Player cooldown for become warden after a roundstart, when player was warden in last round. to give other players chance to become warden
+[*]Menu: Added gangs for terror when a gangs plugin is installed
+[*]Warden - Marker: new command for clients to bind for marker
 [/LIST][INDENT][LIST]
-    [*]new cvar - sm_warden_cooldown_roundstart - Time in seconds a the warden of last round must wait until become warden again, to give other player chance to be warden (need sm_warden_stay '0')
+    [*]new command - +beacons - Bind for markers to use instead rightclick mouse THX@Drixevel
 [/LIST][/INDENT]
-[LIST]
-[*]Warden: Cvar to allow all Guards to give personal freedays
-[/LIST][INDENT][LIST]
-    [*]new cvar - sm_warden_freeday_guard - 0 - disabled, 1 - Allow all the guards to set a personal freeday. Default 0
-[/LIST][/INDENT]
-[LIST]
-[*]Zombie: Health Regeneration for zombies
-[/LIST][INDENT][LIST]
-    [*]new cvar - sm_zombie_zombie_regen - 0 - disabled, HPs a Zombie regenerates every 5 seconds
-[/LIST][/INDENT]
-[LIST]
-[*]Weapons: Added Revolver
-[*]TeamGames: Stop current game, remove player from teams & destroy fence on active LastGuardRule
-  [/LIST]
+  
   
 [i]Changed[/i]
 [LIST]
-[*]Warden - disarm: disbale weapon disarm (shot hand to drop weapon) on last request
-[*]Menu: Moved admin commands to !admin menu & split vote/set menu with changed cvars
-[/LIST][INDENT][LIST]
-    [*]new cvar - sm_menu_admin - 0 - disable admin commands in all menus, 1 - show admin commands only in Myjailbreak menu, 2 - show admin command only in !admin menu, 3 - display admin command in all menus
-    [*]removed cvar - sm_menu_days - obsolete cvar. **Please remove from your config!**
-    [*]new cvar - sm_menu_setdays - 0 - disable, 1 - enable set eventdays menu for warden & admins
-    [*]new cvar - sm_menu_votedays - 0 - disable, 1 - enable vote eventdays menu all players
-[/LIST][/INDENT]
-[LIST]
-[*]Warden - freeday: changed cvar 'sm_warden_freeday_victim_deputy' to 'sm_warden_freeday_deputy'
-[/LIST][INDENT][LIST]
-    [*]removed cvar - sm_warden_freeday_victim_deputy - obsolete cvar. **Please remove them from your configs!**
-    [*]new cvar - sm_warden_freeday_deputy - 0 - disabled, 1 - Allow the deputy to set a personal freeday
-[/LIST][/INDENT]
-[LIST]
-[*]Menu: Add voteitem 'No Eventday' to a event day voting
-[*]Support Plugins: changed name for plugins which support ratio & warden
-[/LIST][INDENT][LIST]
-    [*]renamed plugin - ratio_kento_rankme to myjailbreak_kento_rankme
-    [*]renamed plugin - ratio_rankme to myjailbreak_rankme
-    [*]renamed plugin - ratio_reputation to myjailbreak_reputation
-    [*]renamed plugin - ratio_stamm to myjailbreak_stamm
-[/LIST][/INDENT]
-  
+[*][b]SourceMod: Cancled support for sourcemod lower 1.8.0-git5597[/b]
+[*]Warden: No command cooldown on roundstart when only one CT
+[*]HUD: Disable hud when player is in a last request
+[/LIST]
   
 [i]Fixed[/i]
 [LIST]
-[*]Warden - small error with logging & vote warden
-[*]Weapons - rar error when client left server in timer
-[*]Menu - Eventday Voting - fix double Event when event was set while voting
-[*]Warden - dropguns: no more punishment on empty taser
-[*]Warden - deputy: missing translation
-[*]Request: missing translation
-[*]Hide: Remove icons on hide in the dark
-[*]DealDamage: fix result screen
-[*]Icons: fix some *_enable cvars
-[*]Weapons: restrict !guns for player in LastRequest
-[*]Late loading: re/load plugin in round Thx @olegtsvetkov
-[*]rar error weapon not owned by client
-[*]removed some debug messages
-[*]minor errors
-  [/LIST]
+[*]Warden: Mathquiz with latest chat-processor
+[*]Warden - freedays: When player get freeday but joins ct
+[*]some minor fixes
+[/LIST]
   
-[i]Developer stuff[/i]
+[i]Removed[/i]
 [LIST]
-[*]Forwards: New Forwards for start/end of a Eventday & lastGuardRuleStart
-[/LIST][INDENT][LIST]
-    [*]new Forwards - MyJailbreak_OnLastGuardRuleStart()
-    [*]new Forwards - MyJailbreak_OnEventDayStart(char[] EventDayName)
-    [*]new Forwards - MyJailbreak_OnEventDayEnd(char[] EventDayName, int winner)
-[/LIST][/INDENT]
-[LIST]
-[*]Change forward warden_OnWardenCreated from void to Action to block warden creation
-[*]Add source code files to travis auto builds.
-[*]Builds website - bootstrap website for auto build binary download
-[*]Code optimizing Thx @olegtsvetkov
-[*]Changed code style on many parts
-[*]Clean up code
+[*]Dependencies: removed dependencies of chat-processor & smartjaildoors (both are optional now) (recommend sjd for smooth suicidebomber & duckhunt)
 [/LIST]
 [/SPOILER]
+  
   
 [U][B]Full Change Log:[/B][/U]
 [url=https://github.com/shanapu/MyJailbreak/blob/master/CHANGELOG.md]CHANGELOG.md[/url]
@@ -6258,12 +6190,12 @@ native MyIcons_BlockClientIcon(int client, bool status);
 
 
 
-[B][u]Known Bugs[/u][/B]
+[B][u]Known [url=https://github.com/shanapu/MyJailbreak/issues]Issues[/URL]/Bugs[/u][/B]
 [QUOTE]
 [LIST]
+[*]Warden: Player in handcuffs can be drag into walls [i]- need help[/i]
 [*]Weapons: sm_weapons_ct/sm_weapons_t is blocking "[url=https://github.com/popoklopsi/Stamm/blob/master/stamm_models.sp]Stamm - Vip Models Menu[/url]" [i]- can anyone tell me why?[/i]
 [*]Duckhunt & HE Battle: player gets new grenade but sometimes rarly can't throw anymore[i] - need help![/i]
-[*]Warden - MathQuiz: Response is not detected if user using Zephyrus stores message color
 [*]RU translation - Not shown completly in rules menu cause cyrillic letters.[i] - need help![/i]
 [/LIST]
 [i]you found a bug? tell me please![/i]
@@ -6312,7 +6244,7 @@ based/merged/used code/idea plugins:
 [/SPOILER]
 [SIZE="5"]THANKS FOR MAKING FREE SOFTWARE![/SIZE] :bacon!: :bacon!:
 [U]Much Thanks: [/U]
-devu4, good_live, olegtsvetkov, Weeeishy, kiko, Got Sw4g? terminator18, SkeLeXes, 0dieter0, maKs, TomseN48, Horoxx, zeddy, NrX, ElleVen, Bchewy, Include1, alsacchi, Murr, poppin-fresh, databomb, r3D w0LF, JacobThePigeon, mrkos9i4ok, caaine, Murr, Hexer10 for bughunting, translation & great ideas!
+Drixevel, devu4, good_live, olegtsvetkov, headline, Weeeishy, kiko, Got Sw4g? terminator18, SkeLeXes, 0dieter0, maKs, TomseN48, Horoxx, zeddy, NrX, ElleVen, Bchewy, Include1, alsacchi, Murr, poppin-fresh, databomb, r3D w0LF, JacobThePigeon, mrkos9i4ok, caaine, Murr, Hexer10 for bughunting, translation, contributions & great ideas!
 
 
 
@@ -6403,4 +6335,4 @@ If you own a feature or extension for jail or have an idea that would fit in, i 
 This is my first public project. please note that the code may is messy, stupid and inconsequent or mix different coding styles. I do my best to clean it up!  
 
 
-[SIZE="1"]my golden faucets not finance itself...[/SIZE] [URL="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=QT8TVRSYWP53J"] [IMG]http://shanapu.de/donate.gif[/IMG][/URL]
+[SIZE="1"]my golden faucets not finance itself...[/SIZE] [URL="https://www.paypal.me/shanapu"] [IMG]http://shanapu.de/donate.gif[/IMG][/URL]

@@ -44,11 +44,11 @@
 ConVar gc_sGroupRatio;
 ConVar gc_sGroupWarden;
 
-//Strings
+// Strings
 char g_sGroupRatio[12];
 char g_sGroupWarden[12];
 
-//Bools
+// Bools
 bool g_bIsLateLoad = false;
 bool IsMemberRatio[MAXPLAYERS+1] = {false, ...};
 bool IsMemberWarden[MAXPLAYERS+1] = {false, ...};
@@ -85,7 +85,6 @@ public void OnPluginStart()
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
 
-	// AutoExecConfig
 	AutoExecConfig_SetFile("Warden", "MyJailbreak");
 	AutoExecConfig_SetCreateFile(true);
 

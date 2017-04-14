@@ -89,6 +89,9 @@ char g_sHasVoted[1500];
 char g_sEventsLogFile[PLATFORM_MAX_PATH];
 char g_sAdminFlag[4];
 
+// Floats
+float g_fPos[3];
+
 // Info
 public Plugin myinfo =
 {
@@ -500,6 +503,32 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		SJD_OpenDoors();
 	}
 
+	if (!gp_bSmartJailDoors || (gp_bSmartJailDoors && (SJD_IsCurrentMapConfigured() != true))) // spawn Terrors to CT Spawn 
+	{
+		int RandomCT = 0;
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+		{
+			if (GetClientTeam(i) == CS_TEAM_CT)
+			{
+				RandomCT = i;
+				break;
+			}
+		}
+
+		if (RandomCT)
+		{
+			for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+			{
+				GetClientAbsOrigin(RandomCT, g_fPos);
+				
+				g_fPos[2] = g_fPos[2] + 5;
+				
+				TeleportEntity(i, g_fPos, NULL_VECTOR, NULL_VECTOR);
+			}
+		}
+	}
+
+
 	CreateTimer (gc_iRespawnTime.FloatValue, Timer_StopRespawn);
 
 	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
@@ -585,9 +614,9 @@ public void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast
 	{
 		int client = GetClientOfUserId(event.GetInt("userid")); // Get the dead clients id
 
-		if (((GetAliveTeamCount(CS_TEAM_CT) >= 1) && (GetClientTeam(client) == CS_TEAM_CT) && g_bAllowRespawn) || ((GetAliveTeamCount(CS_TEAM_T) >= 1) && (GetClientTeam(client) == CS_TEAM_T) && g_bAllowRespawn))
+		if (((GetAlivePlayersCount(CS_TEAM_CT) >= 1) && (GetClientTeam(client) == CS_TEAM_CT) && g_bAllowRespawn) || ((GetAlivePlayersCount(CS_TEAM_T) >= 1) && (GetClientTeam(client) == CS_TEAM_T) && g_bAllowRespawn))
 		{
-			CreateTimer (2.0, Timer_Respawn, client);
+			CreateTimer (2.0, Timer_Respawn, GetClientUserId(client));
 		}
 	}
 }
@@ -721,7 +750,8 @@ public Action Timer_StopRespawn(Handle timer)
 	g_bAllowRespawn = false;
 }
 
-public Action Timer_Respawn(Handle timer, any client)
+public Action Timer_Respawn(Handle timer, int userid)
 {
+	int client = GetClientOfUserId(userid);
 	CS_RespawnPlayer(client);
 }

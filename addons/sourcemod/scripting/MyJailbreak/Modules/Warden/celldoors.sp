@@ -150,7 +150,7 @@ public void CellDoors_Event_RoundStart(Event event, const char[] name, bool dont
 
 	if (GameRules_GetProp("m_bWarmupPeriod") == 1)
 	{
-		if (SJD_IsCurrentMapConfigured()) SJD_OpenDoors();
+		if (gp_bSmartJailDoors) if (SJD_IsCurrentMapConfigured()) SJD_OpenDoors();
 	}
 }
 
