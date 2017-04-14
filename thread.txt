@@ -6136,7 +6136,7 @@ native MyIcons_BlockClientIcon(int client, bool status);
 [LIST]
 [*]Zombie: respawn dead terrors as zombie - [b]experimental[/b]
 [/LIST][INDENT][LIST]
-    [*]new cvar - sm_zombie_terror - 0 - disabled, 1 - transform terrors into Zombie on death
+    [*]new cvar - sm_zombie_terror - 0 - disabled, 1 - transform terrors into Zombie on death - experimental!
     [*]new cvar - sm_zombie_terror_infect - 0 - all dead terrors become zombie, 1 - only terrors killed by zombie transform into Zombie
     [/LIST]
 [/INDENT]

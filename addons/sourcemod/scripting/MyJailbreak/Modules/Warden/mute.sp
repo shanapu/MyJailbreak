@@ -318,7 +318,7 @@ public Action MuteClient(int client, int time, int muter)
 	if (time > 0)
 	{
 		float timing = float(time);
-		CreateTimer(timing, Timer_UnMute, client);
+		CreateTimer(timing, Timer_UnMute, GetClientUserId(client));
 	}
 }
 
@@ -603,7 +603,9 @@ public int Handler_MuteMenuTeam(Menu menu6, MenuAction action, int client, int s
                    TIMER
 ******************************************************************************/
 
-public Action Timer_UnMute(Handle timer, any client)
+public Action Timer_UnMute(Handle timer, int userid)
 {
+	int client = GetClientOfUserId(userid);
+
 	UnMuteClient(client, -1);
 }

@@ -111,7 +111,7 @@ public Action Command_Repeat(int client, int args)
 						g_iRepeatCounter[client]++;
 						g_bRepeated[client] = true;
 						CPrintToChatAll("%t %t", "request_tag", "request_repeatpls", client);
-						g_hTimerRepeat[client] = CreateTimer(10.0, Timer_RepeatEnd, client);
+						g_hTimerRepeat[client] = CreateTimer(10.0, Timer_RepeatEnd, GetClientUserId(client));
 						if (warden_exist())
 						{
 							for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (warden_iswarden(i) || warden_deputy_isdeputy(i)) RepeatMenu(i);
@@ -230,8 +230,10 @@ void RepeatMenu(int client)
                    TIMER
 ******************************************************************************/
 
-public Action Timer_RepeatEnd(Handle timer, any client)
+public Action Timer_RepeatEnd(Handle timer, int userid)
 {
+	int client = GetClientOfUserId(userid);
+
 	g_hTimerRepeat[client] = null;
 	g_bRepeated[client] = false;
 }

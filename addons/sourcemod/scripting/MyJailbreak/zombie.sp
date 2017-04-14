@@ -173,7 +173,7 @@ public void OnPluginStart()
 	gc_iGlowMode = AutoExecConfig_CreateConVar("sm_zombie_glow_mode", "1", "1 - human contours with wallhack for zombies, 2 - human glow effect without wallhack for zombies", _, true, 1.0, true, 2.0);
 	gc_bVision = AutoExecConfig_CreateConVar("sm_zombie_vision", "1", "0 - disabled, 1 - enable NightVision View for Zombies", _, true, 0.0, true, 1.0);
 	gc_fKnockbackAmount = AutoExecConfig_CreateConVar("sm_zombie_knockback", "20.0", "Force of the knockback when shot at. Zombies only", _, true, 1.0, true, 100.0);
-	gc_bTerrorZombie = AutoExecConfig_CreateConVar("sm_zombie_terror", "1", "0 - disabled, 1 - transform terrors into Zombie on death - experimental!", _, true, 0.0, true, 1.0);
+	gc_bTerrorZombie = AutoExecConfig_CreateConVar("sm_zombie_terror", "0", "0 - disabled, 1 - transform terrors into Zombie on death - experimental!", _, true, 0.0, true, 1.0);
 	gc_bTerrorInfect = AutoExecConfig_CreateConVar("sm_zombie_terror_infect", "0", "0 - all dead terrors become zombie, 1 - only terrors killed by zombie transform into Zombie", _, true, 0.0, true, 1.0);
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_zombie_cooldown_day", "3", "Rounds cooldown after a event until event can be start again", _, true, 0.0);
 	gc_iCooldownStart = AutoExecConfig_CreateConVar("sm_zombie_cooldown_start", "3", "Rounds until event can be start after mapchange.", _, true, 0.0);
