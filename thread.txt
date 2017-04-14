@@ -6148,13 +6148,17 @@ native MyIcons_BlockClientIcon(int client, bool status);
     [/LIST]
 [LIST]
 [*]Menu: Added gangs for terror when a gangs plugin is installed
-[/LIST]
-[/INDENT]
+[*]Warden - Marker: new command for clients to bind for marker
+[/LIST][INDENT][LIST]
+    [*]new command - +beacons - Bind for markers to use instead rightclick mouse
+[/LIST][/INDENT]
+  
   
 [i]Changed[/i]
 [LIST]
 [*][b]SourceMod: Cancled support for sourcemod lower 1.8.0-git5597[/b]
 [*]Warden: No command cooldown on roundstart when only one CT
+[*]HUD: Disable hud when player is in a last request
 [/LIST]
   
 [i]Fixed[/i]
@@ -6166,7 +6170,7 @@ native MyIcons_BlockClientIcon(int client, bool status);
   
 [i]Removed[/i]
 [LIST]
-[*]Dependencies: removed dependencies of chat-processor & smartjaildoors (both are optional now)
+[*]Dependencies: removed dependencies of chat-processor & smartjaildoors (both are optional now) (recommend sjd for smooth suicidebomber & duckhunt)
 [/LIST]
 [/SPOILER]
   

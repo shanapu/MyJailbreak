@@ -18,11 +18,14 @@
     *  new command - sm_removefreeday - Allows a warden to remove a freeday from a player
     *  new cvar - sm_warden_cmds_freeday_remove - Set your custom chat command for give a freeday(!givefreeday (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)
 *  Menu: Added gangs for terror when a gangs plugin is installed
+*  Warden - Marker: new command for clients to bind for marker
+    *  new command - +beacons - Bind for markers to use instead rightclick mouse
   
   
 *Changed*
 *  *Sourcemod: Canceled support for sourcemod lower 1.8.0-git5597*
 *  Warden: No command cooldown on roundstart when only one CT
+*  HUD: Disable hud when player is in a last request
   
   
 *Fixed*
