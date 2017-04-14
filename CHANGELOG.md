@@ -4,11 +4,12 @@
   
 *Added*
 *  Add-On: Support for adding paperclips to Zephyrus store
-    *  new plugin - disabled/warden_store_paperclips.smx
+    *  new plugin - disabled/warden_zephstore_paperclips.smx
         *  new cvar - sm_store_paperclips_round_limit - Number of times you can buy paperclips in a round (find in plugin.store.cfg)
         *  new cvar - sm_store_paperclips_amount - Number of paperclips you get (find in plugin.store.cfg)
-*  Add-On: Support for get credits for Zephyrus store on event day win
-    *  new plugin - disabled/myjailbreak_store_credits.smx
+*  Add-On: Support plugins for get credits for Zephyrus store & SM-Store on event day win
+    *  new plugin - disabled/myjailbreak_zephstore_credits.smx
+    *  new plugin - disabled/myjailbreak_sm-store_credits.smx
         *  new cvar - sm_store_credit_amount_eventdays - Number of credits to give out for winning an eventday (find in plugin.store.cfg)
         *  new cvar - sm_store_credit_eventdays_alive- Give out credits for winning an eventday for dead & alive player (find in plugin.store.cfg)
 *  Zombie: respawn dead terrors as zombie - experimental
