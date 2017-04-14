@@ -126,6 +126,9 @@ char g_sAdminFlag[4];
 char g_sSoundStartPath[256];
 char g_sOverlayStartPath[256];
 
+// Floats
+float g_fPos[3];
+
 // Info
 public Plugin myinfo = {
 	name = "MyJailbreak - Catch & Freeze",
