@@ -103,6 +103,12 @@
 									
 									<p>
 									
+									<div class="alert alert-danger" role="alert">
+										<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+										<span class="sr-only">Note:</span>
+										Support for SourceMod 1.7 ended with MyJailbreak Beta 12. Please update to <a href="http://www.sourcemod.net/downloads.php?branch=stable">latest stable SourceMod!</a>
+									</div>
+									
 									<p>
 									<a href="http://shanapu.de/MyJailbreak/downloads/SM1.7/MyJB-master-latest.zip"><button type="button" class="btn btn-success"><span class="glyphicon glyphicon-save" aria-hidden="true"></span>&nbsp;&nbsp;&nbsp;download latest</button></a>
 									<a href="http://github.com/shanapu/MyJailbreak/" target="_blank"><button type="button" class="btn btn-default"><span class="icon-code"></span>&nbsp;&nbsp;&nbsp;sourcecode</button></a>
@@ -196,6 +202,12 @@
 								<table class="table table-striped">
 									
 									<p>
+									
+									<div class="alert alert-danger" role="alert">
+										<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+										<span class="sr-only">Note:</span>
+										Support for SourceMod 1.7 ended with MyJailbreak Beta 12. Please update to <a href="http://www.sourcemod.net/downloads.php?branch=stable">latest stable SourceMod!</a>
+									</div>
 									
 									<p>
 									<a href="http://shanapu.de/MyJailbreak/downloads/SM1.7/MyJB-dev-latest.zip"><button type="button" class="btn btn-success"><span class="glyphicon glyphicon-save" aria-hidden="true"></span>&nbsp;&nbsp;&nbsp;download latest</button></a>

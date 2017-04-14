@@ -115,6 +115,7 @@ sm_wunmute - Allows the warden to unmute a muted terrorist
 sm_markrebel - Allows Warden to mark/unmark prisoner as rebel
 sm_count - Allows Warden to count the prisoners in his field of view
 sm_givefreeday - Allows the Warden to give a freeday to a player
++beacons - bind "+beacons" for markers to use instead rightclick mouse
 [/CODE]
 
 [u]AdminCommands // ADMFLAG_GENERIC[/u]
@@ -1135,6 +1136,13 @@ sm_warden_freeday_deputy "1"
 // Minimum: "0.000000"
 // Maximum: "1.000000"
 sm_warden_freeday_guards "0"
+
+// Set your custom chat command for give a freeday(!givefreeday (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
+// -
+// Default: "rfd, nofreeday"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_warden_cmds_freeday_remove "rfd, nofreeday"
 
 // 0 - disabled, how many stamm points a player need to become warden (only if stamm is available)
 // -
@@ -6083,7 +6091,7 @@ native MyIcons_BlockClientIcon(int client, bool status);
 
 [/LIST]
 
-[U][B]Optional plugins/extensions[/B][/U]
+[U][B]Recommend/Optional plugins/extensions[/B][/U]
 [LIST]
 [*][url=https://forums.alliedmods.net/showthread.php?t=264100]Smart Jail Doors[/url] - need for auto jail open on event days & toggle for warden
 [*][url=https://forums.alliedmods.net/showthread.php?p=2177167][ANY] VoiceannounceEX (VoiceHook)[/url] - needed for wardens voiceover
@@ -6112,7 +6120,7 @@ native MyIcons_BlockClientIcon(int client, bool status);
 [B][u]Latest Changes[/u][/B]
 [QUOTE] 
 
-[b][Beta 12.0][/b] - 
+[b][Beta 12.0][/b] - removed dependencies & store support
   [SPOILER]
 [i]Added[/i]
 [LIST]
@@ -6146,12 +6154,12 @@ native MyIcons_BlockClientIcon(int client, bool status);
 [/LIST][INDENT][LIST]
     [*]new command - sm_removefreeday - Allows a warden to remove a freeday from a player
     [*]new cvar - sm_warden_cmds_freeday_remove - Set your custom chat command for give a freeday(!givefreeday (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)
-    [/LIST]
+    [/LIST][/INDENT]
 [LIST]
 [*]Menu: Added gangs for terror when a gangs plugin is installed
 [*]Warden - Marker: new command for clients to bind for marker
 [/LIST][INDENT][LIST]
-    [*]new command - +beacons - Bind for markers to use instead rightclick mouse
+    [*]new command - +beacons - Bind for markers to use instead rightclick mouse THX@Drixevel
 [/LIST][/INDENT]
   
   
@@ -6166,7 +6174,7 @@ native MyIcons_BlockClientIcon(int client, bool status);
 [LIST]
 [*]Warden: Mathquiz with latest chat-processor
 [*]Warden - freedays: When player get freeday but joins ct
-[*] some minor fixes
+[*]some minor fixes
 [/LIST]
   
 [i]Removed[/i]
@@ -6236,7 +6244,7 @@ based/merged/used code/idea plugins:
 [/SPOILER]
 [SIZE="5"]THANKS FOR MAKING FREE SOFTWARE![/SIZE] :bacon!: :bacon!:
 [U]Much Thanks: [/U]
-devu4, good_live, olegtsvetkov, headline, Weeeishy, kiko, Got Sw4g? terminator18, SkeLeXes, 0dieter0, maKs, TomseN48, Horoxx, zeddy, NrX, ElleVen, Bchewy, Include1, alsacchi, Murr, poppin-fresh, databomb, r3D w0LF, JacobThePigeon, mrkos9i4ok, caaine, Murr, Hexer10 for bughunting, translation, contributions & great ideas!
+Drixevel, devu4, good_live, olegtsvetkov, headline, Weeeishy, kiko, Got Sw4g? terminator18, SkeLeXes, 0dieter0, maKs, TomseN48, Horoxx, zeddy, NrX, ElleVen, Bchewy, Include1, alsacchi, Murr, poppin-fresh, databomb, r3D w0LF, JacobThePigeon, mrkos9i4ok, caaine, Murr, Hexer10 for bughunting, translation, contributions & great ideas!
 
 
 

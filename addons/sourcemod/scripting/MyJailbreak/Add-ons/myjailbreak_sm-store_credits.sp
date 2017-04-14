@@ -1,5 +1,5 @@
 /*
- * MyJailbreak EventDays - Zephyrus store credits
+ * MyJailbreak EventDays - Sourcemod store credits
  * by: shanapu
  * https://github.com/shanapu/MyJailbreak/
  *
@@ -39,9 +39,9 @@ char g_sTag[12];
 
 public Plugin myinfo = 
 {
-	name = "MyJailbreak - Zephyrus Store Credits",
+	name = "MyJailbreak - Sourcemod Store Credits",
 	author = "shanapu",
-	description = "Zephyrus Store Credits for winner team on MyJailbreaks Event Days",
+	description = "Sourcemod Store Credits for winner team on MyJailbreaks Event Days",
 	version = MYJB_VERSION,
 	url = MYJB_URL_LINK
 };
