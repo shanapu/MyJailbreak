@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-02-13 03:57:20 UTC
+// Date: 2017-04-20 21:44:25 UTC
 // Language: English (en)
 // 
 // To view other translations for this plugin, please visit:
@@ -163,7 +163,7 @@
 
 	"warden_countdowncanceled"
 	{
-		"en"		"The Counddown was {darkred}canceled!"
+		"en"		"The Countdown was {darkred}canceled!"
 	}
 
 	"warden_startcountdown_nc"
@@ -905,11 +905,6 @@
 		"en"		"Give FreeDay to:"
 	}
 
-	"warden_removefreeday"
-	{
-		"en"		"Remove FreeDay from:"
-	}
-
 	"warden_havefreeday"
 	{
 		"#format"	"{1:N}"
@@ -941,17 +936,6 @@
 	{
 		"#format"	"{1:N}"
 		"en"		"{green}{1}{default} gets a {purple}FreeDay{default} next round"
-	}
-
-	"warden_removefreedayforyou"
-	{
-		"en"		"Your {purple}FreeDay{default} was removed."
-	}
-
-	"warden_removepersonalfreeday"
-	{
-		"#format"	"{1:N}"
-		"en"		"{green}{1}s{default} {purple}FreeDay{default} was removed"
 	}
 
 	"warden_cooldown"
@@ -1005,6 +989,22 @@
 	{
 		"#format"	"{1:i}"
 		"en"		"You need at least {1} Stamm Points to play as warden"
+	}
+
+	"warden_removefreeday"
+	{
+		"en"		"Remove FreeDay from:"
+	}
+
+	"warden_removefreedayforyou"
+	{
+		"en"		"Your {purple}FreeDay{default} was removed."
+	}
+
+	"warden_removepersonalfreeday"
+	{
+		"#format"	"{1:N}"
+		"en"		"{green}{1}s{default} {purple}FreeDay{default} was removed"
 	}
 
 	"warden_noplayer"

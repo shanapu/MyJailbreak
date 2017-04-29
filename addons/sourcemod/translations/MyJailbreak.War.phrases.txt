@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2016-12-11 14:24:18 UTC
+// Date: 2017-04-20 21:44:26 UTC
 // Language: English (en)
 // 
 // To view other translations for this plugin, please visit:
@@ -92,11 +92,6 @@
 		"en"		"Voting for War {purple}is disabled"
 	}
 
-	"war_voting"
-	{
-		"en"		"Afstemning for war er {purple}slået fra"
-	}
-
 	"war_setbywarden"
 	{
 		"en"		"Set War by Warden is {purple}disabled!"
@@ -135,11 +130,6 @@
 	"war_info_line5"
 	{
 		"en"		"Last Request is disabled during this round!"
-	}
-
-	"war_info_line6"
-	{
-		"en"		"Everyone is allowed to go everywhere where he wants"
 	}
 
 	"war_info_line6"

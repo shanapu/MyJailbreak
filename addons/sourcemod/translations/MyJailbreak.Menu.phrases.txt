@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-02-13 03:57:22 UTC
+// Date: 2017-04-20 21:44:27 UTC
 // Language: English (en)
 // 
 // To view other translations for this plugin, please visit:
@@ -390,6 +390,12 @@
 	"menu_ghosts"
 	{
 		"en"		"Ghosts War"
+	}
+
+	"menu_votingcancel"
+	{
+		"#format"	"{1:s}"
+		"en"		"The voting was canceled, cause EventDay {purple}{1}{default} was already set!"
 	}
 
 	"menu_removequeue"

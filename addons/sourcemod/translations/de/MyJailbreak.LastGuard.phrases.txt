@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2016-12-11 14:24:02 UTC
+// Date: 2017-04-20 21:44:28 UTC
 // Language: German (de)
 // 
 // To view other translations for this plugin, please visit:
@@ -141,6 +141,11 @@
 	"lastguard_info_line2"
 	{
 		"de"		"Alle Terrors sind Rebelen!"
+	}
+
+	"lastguard_info_line3"
+	{
+		"de"		"Der letzte Wärter hat viel mehr Leben!"
 	}
 
 	"lastguard_info_line6"

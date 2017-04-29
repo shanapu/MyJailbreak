@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2016-12-11 14:24:17 UTC
+// Date: 2017-04-20 21:44:26 UTC
 // Language: Italian (it)
 // 
 // To view other translations for this plugin, please visit:
@@ -83,11 +83,6 @@
 		"it"		"{1} secondi fino a quando il danno è abilitato!"
 	}
 
-	"war_voting"
-	{
-		"it"		"Voting for War {purple}is disabled"
-	}
-
 	"war_setbywarden"
 	{
 		"it"		"Set War by Warden is {purple}disabled!"
@@ -131,11 +126,6 @@
 	"war_info_line6"
 	{
 		"it"		"Tutti i posti sono accessibili a tutti"
-	}
-
-	"war_info_line6"
-	{
-		"it"		"Everyone is allowed to go everywhere where he wants"
 	}
 
 	"war_info_line7"

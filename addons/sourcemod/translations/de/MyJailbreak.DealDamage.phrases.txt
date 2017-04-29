@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2016-12-11 14:24:03 UTC
+// Date: 2017-04-20 21:44:30 UTC
 // Language: German (de)
 // 
 // To view other translations for this plugin, please visit:
@@ -7,6 +7,11 @@
 //
 "Phrases"
 {
+
+	"dealdamage_tag"
+	{
+		"de"		"[{green}MyJB.DealDamage{default}]"
+	}
 
 	"dealdamage_need"
 	{
@@ -131,6 +136,71 @@
 	"dealdamage_wait"
 	{
 		"de"		"Du musst noch {1} Runden warten"
+	}
+
+	"dealdamage_result"
+	{
+		"de"		"Deal Damage Day Ergebnisse:"
+	}
+
+	"dealdamage_total"
+	{
+		"de"		"Schaden insgesamt: {1} HP"
+	}
+
+	"dealdamage_most"
+	{
+		"de"		"Am meisten Schaden verursacht: {1} ({2} HP)"
+	}
+
+	"dealdamage_ct"
+	{
+		"de"		"Wärter Schaden: {1} HP"
+	}
+
+	"dealdamage_t"
+	{
+		"de"		"Häftlings Schaden: {1} HP"
+	}
+
+	"dealdamage_bestct"
+	{
+		"de"		"Bester Wärter: {1} ({2} HP)"
+	}
+
+	"dealdamage_bestt"
+	{
+		"de"		"Bester Häftling: {1} ({2} HP)"
+	}
+
+	"dealdamage_client"
+	{
+		"de"		"Dein Schaden: {1} HP"
+	}
+
+	"dealdamage_ctdealed"
+	{
+		"de"		"CT verursacht:"
+	}
+
+	"dealdamage_tdealed"
+	{
+		"de"		"T Schaden:"
+	}
+
+	"dealdamage_clientdealed"
+	{
+		"de"		"Du hast verursacht:"
+	}
+
+	"dealdamage_hpdamage"
+	{
+		"de"		"HP Schaden"
+	}
+
+	"dealdamage_name"
+	{
+		"de"		"Deal Damage Day"
 	}
 
 }

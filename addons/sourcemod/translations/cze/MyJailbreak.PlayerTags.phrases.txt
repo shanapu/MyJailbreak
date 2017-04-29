@@ -1,0 +1,216 @@
+// Exported from SourceMod Translator
+// Date: 2017-04-20 21:44:32 UTC
+// Language: Czech (cze)
+// 
+// To view other translations for this plugin, please visit:
+// http://translator.mitchdempsey.com/sourcemod_plugins/181
+//
+"Phrases"
+{
+
+	"tags_TA"
+	{
+		"cze"		"[Vezen.Admin]"
+	}
+
+	"tags_T"
+	{
+		"cze"		"[Vezen]"
+	}
+
+	"tags_CTA"
+	{
+		"cze"		"[Dozorce.Admin]"
+	}
+
+	"tags_CT"
+	{
+		"cze"		"[Dozorce]"
+	}
+
+	"tags_WA"
+	{
+		"cze"		"[Warden.Admin]"
+	}
+
+	"tags_W"
+	{
+		"cze"		"[Warden]"
+	}
+
+	"tags_TVIP1"
+	{
+		"cze"		"[Vezen.VIP]"
+	}
+
+	"tags_TVIP2"
+	{
+		"cze"		"[Vezen.sVIP]"
+	}
+
+	"tags_TVIP2"
+	{
+		"cze"		"[Vezen.sVIP]"
+	}
+
+	"tags_CTVIP1"
+	{
+		"cze"		"[Dozorce.VIP]"
+	}
+
+	"tags_CTVIP2"
+	{
+		"cze"		"[Dozorce.sVIP]"
+	}
+
+	"tags_WVIP1"
+	{
+		"cze"		"[Warden.VIP]"
+	}
+
+	"tags_WVIP2"
+	{
+		"cze"		"[Warden.sVIP]"
+	}
+
+	"tags_TOWN"
+	{
+		"cze"		"[Vezen.Majitel]"
+	}
+
+	"tags_CTOWN"
+	{
+		"cze"		"[Dozorce.Majitel]"
+	}
+
+	"tags_WOWN"
+	{
+		"cze"		"[Warden.Majitel]"
+	}
+
+	"tags_CT_chat"
+	{
+		"cze"		"[Dozorce]"
+	}
+
+	"tags_CTA_chat"
+	{
+		"cze"		"[Dozorce.Admin]"
+	}
+
+	"tags_CTOWN_chat"
+	{
+		"cze"		"[Dozorce.Majitel]"
+	}
+
+	"tags_CTVIP1_chat"
+	{
+		"cze"		"[Dozorce.VIP]"
+	}
+
+	"tags_CTVIP2_chat"
+	{
+		"cze"		"[Dozorce.sVIP]"
+	}
+
+	"tags_T_chat"
+	{
+		"cze"		"[Vezen]"
+	}
+
+	"tags_TA_chat"
+	{
+		"cze"		"[Vezen.Admin]"
+	}
+
+	"tags_TOWN_chat"
+	{
+		"cze"		"[Vezen.Majitel]"
+	}
+
+	"tags_TVIP1_chat"
+	{
+		"cze"		"[Dozorce.VIP]"
+	}
+
+	"tags_TVIP2_chat"
+	{
+		"cze"		"[Vezen.sVIP]"
+	}
+
+	"tags_W_chat"
+	{
+		"cze"		"[Warden]"
+	}
+
+	"tags_WA_chat"
+	{
+		"cze"		"[Warden.Admin]"
+	}
+
+	"tags_WOWN_chat"
+	{
+		"cze"		"[Warden.Majitel]"
+	}
+
+	"tags_WVIP1_chat"
+	{
+		"cze"		"[Warden.VIP]"
+	}
+
+	"tags_WVIP2_chat"
+	{
+		"cze"		"[Warden.sVIP]"
+	}
+
+	"tags_D"
+	{
+		"cze"		"[Zastupce]"
+	}
+
+	"tags_DA"
+	{
+		"cze"		"[Zastupce.Admin]"
+	}
+
+	"tags_DA_chat"
+	{
+		"cze"		"[Zastupce.Admin]"
+	}
+
+	"tags_D_chat"
+	{
+		"cze"		"[Zastupce]"
+	}
+
+	"tags_DOWN"
+	{
+		"cze"		"[Zastupce.Majitel]"
+	}
+
+	"tags_DOWN_chat"
+	{
+		"cze"		"[Zastupce.Majitel]"
+	}
+
+	"tags_DVIP1"
+	{
+		"cze"		"[Zastupce.VIP]"
+	}
+
+	"tags_DVIP1_chat"
+	{
+		"cze"		"[Zastupce.VIP]"
+	}
+
+	"tags_DVIP2"
+	{
+		"cze"		"[Zastupce.VIP]"
+	}
+
+	"tags_DVIP2_chat"
+	{
+		"cze"		"[Zastupce.sVIP]"
+	}
+
+}

@@ -1,3 +1,5 @@
+[URL="https://forums.alliedmods.net/showthread.php?p=2422609&nojs=1#goto_threadrating"]Rate Thread		 [IMG]https://forums.alliedmods.net/images/misc/menu_open.gif[/IMG][IMG]https://forums.alliedmods.net/images/rating/rating_5.gif[/IMG][/URL]
+
 [SIZE="5"][B]MyJailbreak [/B][/SIZE] a plugin pack for CS:GO jailserver
 
 MyJailbreak is a redux rewrite of [URL="https://github.com/Franc1sco/Franug-Jailbreak/"]Franugs Special Jailbreak[/URL] a merge/redux of [URL="http://www.sourcemod.net/plugins.php?cat=0&mod=-1&title=warden&author=&description=&search=1"]eccas, ESK0s & zipcores Jailbreak warden[/URL] and many other plugins.
@@ -50,6 +52,7 @@ MyJailbreak is a redux rewrite of [URL="https://github.com/Franc1sco/Franug-Jail
 [*][B]Stamm Support[/B] - Support plugin for [URL="https://forums.alliedmods.net/showthread.php?p=1338942"]popoklopsis Stamm plugin[/URL]
 [*][B]SteamRep Support[/B] - Support plugin for [URL="https://steamrep.com/plugin.php"]SteamRep[/URL]
 [*][B]Store Support[/B] - Support plugin for get Credits when win EventDay for [url=https://forums.alliedmods.net/showthread.php?t=276677]Zephyrus store[/url]
+[*][B]Store Support[/B] - Support plugin for get Credits when win EventDay for [url=https://forums.alliedmods.net/forumdisplay.php?f=157]SourceMod Store[/url]
 [*][B]Store Support[/B] - Support plugin for adding paperclips to [url=https://forums.alliedmods.net/showthread.php?t=276677]Zephyrus store[/url]
 [code]
 "PaperClips"

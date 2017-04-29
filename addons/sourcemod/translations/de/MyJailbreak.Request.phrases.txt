@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2016-12-11 14:24:01 UTC
+// Date: 2017-04-20 21:44:27 UTC
 // Language: German (de)
 // 
 // To view other translations for this plugin, please visit:
@@ -271,6 +271,76 @@
 	"request_freedayvictim"
 	{
 		"de"		"Nächste Runde Freeday für Opfer"
+	}
+
+	"request_killreason_title"
+	{
+		"de"		"Du hast {1} getötet???"
+	}
+
+	"request_killreason_lostgame"
+	{
+		"de"		"Er hat das Spiel verloren"
+	}
+
+	"request_killreason_rebel"
+	{
+		"de"		"Er war ein Rebell"
+	}
+
+	"request_killreason_brokerule"
+	{
+		"de"		"Er hat die Regeln gebrochen"
+	}
+
+	"request_killreason_notfollow"
+	{
+		"de"		"Er hat die Anweisungen nicht befolgt"
+	}
+
+	"request_killreason_sry"
+	{
+		"de"		"Mein Fehler! Ich entschuldige mich :/"
+	}
+
+	"request_killreason_freekill"
+	{
+		"de"		"Ich habe ihn gefreekillt"
+	}
+
+	"request_killreason_lostgame_chat"
+	{
+		"de"		"Der Wärter {purple}{1}{default} behaupttet, dass {purple}{2}{default} das Spiel verloren hat."
+	}
+
+	"request_killreason_rebel_chat"
+	{
+		"de"		"Der Wärter {purple}{1}{default} behauptet, dass {purple}{2}{default} ein Rebell war!"
+	}
+
+	"request_killreason_brokerule_chat"
+	{
+		"de"		"Der Wärter {purple}{1}{default} behauptet, dass {purple}{2}{default} die Regeln nicht befolgt hat!"
+	}
+
+	"request_killreason_notfollow_chat"
+	{
+		"de"		"Der Wärter {purple}{1}{default} behauptet, dass {purple}{2}{default} die Anweisungen nicht befolgt hat!"
+	}
+
+	"request_killreason_sry_chat"
+	{
+		"de"		"Der Wärter {purple}{1}{default} entschuldigt sich für den freekill an {purple}{2}{default}"
+	}
+
+	"request_killreason_freekill_chat"
+	{
+		"de"		"Der Wärter {purple}{1}{default} gesteht einen freekill an {purple}{2}{default}"
+	}
+
+	"request_killreason_noanswer"
+	{
+		"de"		"Der Wärter {purple}{1}{default} hat keine Erklärung für den Kill an {purple}{2}{default}"
 	}
 
 	"request_capitulated"

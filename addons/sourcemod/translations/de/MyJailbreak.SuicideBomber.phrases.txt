@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2016-12-11 14:24:03 UTC
+// Date: 2017-04-20 21:44:31 UTC
 // Language: German (de)
 // 
 // To view other translations for this plugin, please visit:
@@ -161,6 +161,11 @@
 	"suicidebomber_wait"
 	{
 		"de"		"Du musst noch {purple}{1}{default} Runden warten"
+	}
+
+	"suicidebomber_name"
+	{
+		"de"		"Suicide Bomber"
 	}
 
 }

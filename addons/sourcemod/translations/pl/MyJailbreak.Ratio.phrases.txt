@@ -1,0 +1,86 @@
+// Exported from SourceMod Translator
+// Date: 2017-04-20 21:44:29 UTC
+// Language: Polish (pl)
+// 
+// To view other translations for this plugin, please visit:
+// http://translator.mitchdempsey.com/sourcemod_plugins/201
+//
+"Phrases"
+{
+
+	"ratio_tag"
+	{
+		"pl"		"[{green}MyJB.Ratio{default}]"
+	}
+
+	"ratio_accept_title"
+	{
+		"pl"		"Kwalifikacje Straznika"
+	}
+
+	"ratio_accept_title"
+	{
+		"pl"		"Kwalifikacje Straznika"
+	}
+
+	"ratio_accept_line1"
+	{
+		"pl"		"Przed zostaniem straznikiem, musisz zaakceptowac zasady panujace na serwerze:"
+	}
+
+	"ratio_accept_line2"
+	{
+		"pl"		"Potwierdzam, ze przeczytalem oraz rozumiem zasady."
+	}
+
+	"ratio_accept_line3"
+	{
+		"pl"		"Potwierdzam, ze przeczytalem dwukrotnie zasady!"
+	}
+
+	"ratio_accept_line4"
+	{
+		"pl"		"Potwierdzam, ze bede gral zgodnie z zasadami."
+	}
+
+	"ratio_accept_line5"
+	{
+		"pl"		"Nieprzestrzeganie zasad bedzie skutkowalo banem na CT."
+	}
+
+	"ratio_accept"
+	{
+		"pl"		"Tak, akceptuj zasady panujace na serwerze."
+	}
+
+	"ratio_question_title"
+	{
+		"pl"		"Prosze odpowiedziec na ponizsze pytania, aby zostac straznikiem."
+	}
+
+	"ratio_active"
+	{
+		"pl"		"Ratio jest aktywne! 1 Straznik do {1} Wiezniow"
+	}
+
+	"ratio_remove"
+	{
+		"pl"		"Usun z kolejki:"
+	}
+
+	"ratio_sure"
+	{
+		"pl"		"Jestes pewny?"
+	}
+
+	"ratio_yes"
+	{
+		"pl"		"Tak"
+	}
+
+	"ratio_no"
+	{
+		"pl"		"Nie"
+	}
+
+}

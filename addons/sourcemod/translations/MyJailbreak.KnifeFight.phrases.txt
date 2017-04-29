@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2016-12-11 14:24:14 UTC
+// Date: 2017-04-20 21:44:42 UTC
 // Language: English (en)
 // 
 // To view other translations for this plugin, please visit:
@@ -82,12 +82,7 @@
 
 	"knifefight_voted"
 	{
-		"en"		"Du har allerede stemt på {purple}knifefight"
-	}
-
-	"knifefight_voted"
-	{
-		"en"		"Du har allerede stemt på {purple}knifefight"
+		"en"		"You have already voted for {purple}Knife Fight"
 	}
 
 	"knifefight_progress"
@@ -110,11 +105,6 @@
 	"knifefight_info_title"
 	{
 		"en"		"FFA Knife Fight - Free for All is now activated"
-	}
-
-	"knifefight_info_line1"
-	{
-		"en"		"Do not be surprised if ported to CT Spawn"
 	}
 
 	"knifefight_info_line1"

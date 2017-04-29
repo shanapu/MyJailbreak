@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2016-12-11 14:24:07 UTC
+// Date: 2017-04-20 21:44:37 UTC
 // Language: English (en)
 // 
 // To view other translations for this plugin, please visit:
@@ -7,11 +7,6 @@
 //
 "Phrases"
 {
-
-	"drunk_tag"
-	{
-		"en"		"[{green}MyJB.drunk{default}]"
-	}
 
 	"drunk_tag"
 	{

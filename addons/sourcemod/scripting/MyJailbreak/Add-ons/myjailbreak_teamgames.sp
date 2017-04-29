@@ -3,6 +3,8 @@
  * by: shanapu
  * https://github.com/shanapu/MyJB-TG-friendlyfire/
  * https://github.com/KissLick/TeamGames
+ * 
+ * Copyright (C) 2016-2017 Thomas Schmidt (shanapu)
  *
  * This file is part of the MyJailbreak SourceMod Plugin.
  *

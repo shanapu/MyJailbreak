@@ -1,3 +1,10 @@
+// Exported from SourceMod Translator
+// Date: 2017-04-20 21:44:43 UTC
+// Language: English (en)
+// 
+// To view other translations for this plugin, please visit:
+// http://translator.mitchdempsey.com/sourcemod_plugins/271
+//
 "Phrases"
 {
 
@@ -87,12 +94,6 @@
 	"ghosts_disabled"
 	{
 		"en"		"Ghosts is currently {purple}disabled!"
-	}
-
-	"ghosts_damage_nc"
-	{
-		"#format"	"{1:i}"
-		"en"		"{1} seconds until damage enabled"
 	}
 
 	"ghosts_damage_nc"

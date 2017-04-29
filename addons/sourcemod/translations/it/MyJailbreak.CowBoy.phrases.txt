@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-03-01 14:02:33 UTC
+// Date: 2017-04-20 21:44:30 UTC
 // Language: Italian (it)
 // 
 // To view other translations for this plugin, please visit:
@@ -121,11 +121,6 @@
 	"cowboy_info_line5"
 	{
 		"it"		"LR disabilitato in questo round"
-	}
-
-	"cowboy_info_line6"
-	{
-		"it"		"State nella JailRoom. Non andare in condotti e posti segreti"
 	}
 
 	"cowboy_info_line6"

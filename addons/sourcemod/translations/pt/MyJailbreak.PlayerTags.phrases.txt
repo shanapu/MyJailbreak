@@ -1,0 +1,26 @@
+// Exported from SourceMod Translator
+// Date: 2017-04-20 21:44:33 UTC
+// Language: Brazilian Portuguese (pt)
+// 
+// To view other translations for this plugin, please visit:
+// http://translator.mitchdempsey.com/sourcemod_plugins/181
+//
+"Phrases"
+{
+
+	"tags_TA"
+	{
+		"pt"		"[Prisoner.Admin]"
+	}
+
+	"tags_TVIP2"
+	{
+		"pt"		"[Prisioneiro.sVIP]"
+	}
+
+	"tags_CTOWN"
+	{
+		"pt"		"[Guard.Owner]"
+	}
+
+}

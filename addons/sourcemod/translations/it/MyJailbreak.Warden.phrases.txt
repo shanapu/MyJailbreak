@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2016-12-11 14:23:48 UTC
+// Date: 2017-04-20 21:44:25 UTC
 // Language: Italian (it)
 // 
 // To view other translations for this plugin, please visit:
@@ -583,6 +583,11 @@
 		"it"		"Smuta i Prigionieri"
 	}
 
+	"warden_cuffs"
+	{
+		"it"		"Usa il Taser come manette"
+	}
+
 	"warden_cuffson"
 	{
 		"it"		"{purple}{1}{default} arrestato {green}{2}{default}!"
@@ -858,6 +863,11 @@
 		"it"		"{1} ora ha Freeday!"
 	}
 
+	"warden_freedaynext"
+	{
+		"it"		"Prossimo Round"
+	}
+
 	"warden_freedayforyou"
 	{
 		"it"		"Il prossimo round avrai freeday"
@@ -866,6 +876,26 @@
 	"warden_personalfreeday"
 	{
 		"it"		"{1} ottiene un Freeday per il prossimo round!"
+	}
+
+	"warden_limit"
+	{
+		"it"		"Hai giocato {purple}{1} round di fila {default} come CapoCT. Aspetta {green}{2}{default} rounds"
+	}
+
+	"warden_deputy_removed"
+	{
+		"it"		"Admin: {purple}{1}{default} ha rimosso il CoCapoCT: {purple}{2}"
+	}
+
+	"warden_steamgroup"
+	{
+		"it"		"Non puoi diventare CapoCT, entra nel nostro gruppo steam prima"
+	}
+
+	"warden_rankme"
+	{
+		"it"		"Devi avere almeno {1} RankMe punti per diventare CapoCT"
 	}
 
 }

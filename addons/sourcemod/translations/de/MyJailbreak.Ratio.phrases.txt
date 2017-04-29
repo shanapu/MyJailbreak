@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-02-13 03:57:23 UTC
+// Date: 2017-04-20 21:44:29 UTC
 // Language: German (de)
 // 
 // To view other translations for this plugin, please visit:
@@ -326,6 +326,26 @@
 	"ratio_steamrep"
 	{
 		"de"		"Du kannst nicht als Wächter spielen weil du ein {red}BETRÜGER{default} bist. Schau auf steamrep.com"
+	}
+
+	"ratio_sure"
+	{
+		"de"		"Bist du dir sicher?"
+	}
+
+	"ratio_yes"
+	{
+		"de"		"Ja"
+	}
+
+	"ratio_no"
+	{
+		"de"		"Nein"
+	}
+
+	"ratio_steamgroup"
+	{
+		"de"		"Du kannst nicht als Wärter spielen, du musst erst unserer Steamgruppe beitreten."
 	}
 
 }

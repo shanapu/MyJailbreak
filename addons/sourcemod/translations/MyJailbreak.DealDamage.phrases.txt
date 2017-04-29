@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2016-12-11 14:24:04 UTC
+// Date: 2017-04-20 21:44:30 UTC
 // Language: English (en)
 // 
 // To view other translations for this plugin, please visit:
@@ -101,12 +101,7 @@
 
 	"dealdamage_info_title"
 	{
-		"en"		"DealDamageDay er aktiveret!"
-	}
-
-	"dealdamage_info_title"
-	{
-		"en"		"DealDamageDay er aktiveret!"
+		"en"		"Deal Damage Day is now Activated"
 	}
 
 	"dealdamage_info_line1"

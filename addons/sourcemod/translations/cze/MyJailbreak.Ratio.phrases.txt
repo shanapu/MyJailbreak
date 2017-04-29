@@ -1,0 +1,351 @@
+// Exported from SourceMod Translator
+// Date: 2017-04-20 21:44:29 UTC
+// Language: Czech (cze)
+// 
+// To view other translations for this plugin, please visit:
+// http://translator.mitchdempsey.com/sourcemod_plugins/201
+//
+"Phrases"
+{
+
+	"ratio_tag"
+	{
+		"cze"		"[{green}MyJB.ratio{default}]"
+	}
+
+	"ratio_auto"
+	{
+		"cze"		"Nemuzes pouzit automaticke vybrati tymu."
+	}
+
+	"ratio_fullqueue"
+	{
+		"cze"		"Tym dozorcu je plny. Jsi  {green}#{1}{default} ve fronte."
+	}
+
+	"ratio_info_title"
+	{
+		"cze"		"Fronta Dozorcu:"
+	}
+
+	"ratio_empty"
+	{
+		"cze"		"Fronta je prave {green}prazdna{default}."
+	}
+
+	"ratio_noct"
+	{
+		"cze"		"Musis byt {green}vezen{default} aby si mohl do fronty."
+	}
+
+	"ratio_find"
+	{
+		"cze"		"Hledani dalsiho dozorce z fronty. {green}{1} {default}je novym dozorcem."
+	}
+
+	"ratio_random"
+	{
+		"cze"		"Fronta dozorcu je prave prazdna. {green}{1} {default}byl nahodne vybran jako novy dozorce."
+	}
+
+	"ratio_novalid"
+	{
+		"cze"		"Nebyl nalezen{green} vyhovujici hrac{default} ktery by byl dozorcem. Kontaktuj admina."
+	}
+
+	"ratio_number"
+	{
+		"cze"		"Jsi {green}#{1}{default} v poradovaniku na dozorce."
+	}
+
+	"ratio_thxvip"
+	{
+		"cze"		"Dekujeme za  {darkred}VIP{default}! Byl jsi presunuty do {green}popredi fronty !{default}"
+	}
+
+	"ratio_advip"
+	{
+		"cze"		"Kup si {darkred}VIP{default} a bud automaticky presunut do popredi ve fronte dozorcu."
+	}
+
+	"ratio_movetot"
+	{
+		"cze"		"Prilis mnoho dozorcu. {green}{1}{default} byl vybran a presunut k veznum."
+	}
+
+	"ratio_removed"
+	{
+		"cze"		"Admin {1} odstranil {2} z fronty na dozorce !"
+	}
+
+	"ratio_notonqueue"
+	{
+		"cze"		"Nejsi ve fronte na dozorce !"
+	}
+
+	"ratio_leavedqueue"
+	{
+		"cze"		"Uz se nenachazis ve fronte dozorcu !"
+	}
+
+	"ratio_accept_title"
+	{
+		"cze"		"Kvalifikace na dozorce"
+	}
+
+	"ratio_accept_line1"
+	{
+		"cze"		"Pred tim jak se stanes dozorcem, musis potvrdit tito podminky a dohody:"
+	}
+
+	"ratio_accept_line2"
+	{
+		"cze"		"Muzu potvrdit ze jsem cetl a pochopil pravidlum."
+	}
+
+	"ratio_accept_line3"
+	{
+		"cze"		"Potvrzuji ze jsem cetl CT pravidla dva krat !"
+	}
+
+	"ratio_accept_line4"
+	{
+		"cze"		"Potvrzuji ze budu hrat fer a budu dodrzovat pravidla servru."
+	}
+
+	"ratio_accept_line5"
+	{
+		"cze"		"Selhani v dodrzeni pravidel vyusti v CT ban."
+	}
+
+	"ratio_accept"
+	{
+		"cze"		"Ano, rozumim temto podminkam a dohodam."
+	}
+
+	"ratio_notaccept"
+	{
+		"cze"		"Ne, nechci se stat dozorcem."
+	}
+
+	"ratio_question_title"
+	{
+		"cze"		"Prosim odpovezte na nasledujici otazky aby ste se stali Dozorcem"
+	}
+
+	"ratio_question1_line1"
+	{
+		"cze"		"Dvere na cele jsou zavreny, vezni jsou uvnitr !"
+	}
+
+	"ratio_question1_line2"
+	{
+		"cze"		"Co udelas?"
+	}
+
+	"ratio_question1_wrong1"
+	{
+		"cze"		"Pockam az se otevrou cely, a pak je vsechny zabiju !"
+	}
+
+	"ratio_question1_wrong2"
+	{
+		"cze"		"Zabij je jednoho po druhym az po posledni prani."
+	}
+
+	"ratio_question1_right"
+	{
+		"cze"		"Pockam na Wardenove prvni oznameni."
+	}
+
+	"ratio_question2_line1"
+	{
+		"cze"		"Warden je velice spatny & toto kolo je nudny jak prase."
+	}
+
+	"ratio_question2_line2"
+	{
+		"cze"		"Upusti svoji zbran a dej ji veznovi pro urychleni kola !"
+	}
+
+	"ratio_question2_wrong1"
+	{
+		"cze"		"Tohle je dobry napad."
+	}
+
+	"ratio_question2_wrong2"
+	{
+		"cze"		"Nikdy ! Hlavne kdyz vezen je muj kamos !"
+	}
+
+	"ratio_question2_right"
+	{
+		"cze"		"Nikdy ! Upusteni zbrane je zakazano !"
+	}
+
+	"ratio_question3_line1"
+	{
+		"cze"		"Cetl si pravidla servru ?"
+	}
+
+	"ratio_question3_line2"
+	{
+		"cze"		"Rozumis pravidlam servru ?"
+	}
+
+	"ratio_question3_wrong1"
+	{
+		"cze"		"Ano, cetl jsem je. Nebudu je nasledovat."
+	}
+
+	"ratio_question3_wrong2"
+	{
+		"cze"		"Ctes ? Ja jsem tady abych hral LOL !"
+	}
+
+	"ratio_question3_right"
+	{
+		"cze"		"Ano, cetl jsem je. Vim jak se hraje na tomhle servru."
+	}
+
+	"ratio_question4_line1"
+	{
+		"cze"		"Mas fungujici mikrofon ?"
+	}
+
+	"ratio_question4_line2"
+	{
+		"cze"		"Mluvis jazykem ktery se pouziva na servru ?"
+	}
+
+	"ratio_question4_wrong1"
+	{
+		"cze"		"Promin coze ?"
+	}
+
+	"ratio_question4_wrong2"
+	{
+		"cze"		"Muj mikrofon je rozbity, budu psat prikazy."
+	}
+
+	"ratio_question4_right"
+	{
+		"cze"		"Mam fungujici mikrofon se slusnou kvalitou."
+	}
+
+	"ratio_question5_line1"
+	{
+		"cze"		"Warden byl zabit, a ty jsi jeden z poslednich dozorcu."
+	}
+
+	"ratio_question5_line2"
+	{
+		"cze"		"Hral by jsi za Wardena ?"
+	}
+
+	"ratio_question5_wrong1"
+	{
+		"cze"		"Bude dobry zacit ten volny den..."
+	}
+
+	"ratio_question5_wrong2"
+	{
+		"cze"		"Zabij vsechny vezne jednoho po druhym az po posledni prani."
+	}
+
+	"ratio_question5_right"
+	{
+		"cze"		"Jako dozorce, budu samozrejme muset hrat jako novy Warden."
+	}
+
+	"ratio_cooldown"
+	{
+		"cze"		"Byli jste zablokovani pro nespravnou odpoved. Skuste to dalsi kolo."
+	}
+
+	"ratio_disabled"
+	{
+		"cze"		"Pomer je vypnuty Adminem"
+	}
+
+	"ratio_hasdisabled"
+	{
+		"cze"		"Admin vypnul pomer."
+	}
+
+	"ratio_hasactivated"
+	{
+		"cze"		"Admin aktivoval pomer. Pomer bude upraven dalsi kolo."
+	}
+
+	"ratio_active"
+	{
+		"cze"		"Pomer je aktivni ! 1 Dozorce k {1} Veznum"
+	}
+
+	"ratio_stamm"
+	{
+		"cze"		"Potrebujes alespon {1} Stamm bodu abys mohl hrat za dozorce"
+	}
+
+	"ratio_banned_nc"
+	{
+		"cze"		"Nemuzes hrat za dozorce protoze mas CT ban."
+	}
+
+	"ratio_clearqueue"
+	{
+		"cze"		"Admin zmazal frontu Dozorcu !"
+	}
+
+	"ratio_reputation"
+	{
+		"cze"		"Potrebujes alespon {1} Reputation bodu abys mohl hrat jako dozorce"
+	}
+
+	"ratio_remove"
+	{
+		"cze"		"Odstranit z Fronty:"
+	}
+
+	"ratio_banned"
+	{
+		"cze"		"Nemuzes hrat jako dozorce protoze mas {green}CT{default} ban."
+	}
+
+	"ratio_rankme"
+	{
+		"cze"		"Potrebujes alespon {1} RankMe bodu abys mohl hrat za dozorce"
+	}
+
+	"ratio_close"
+	{
+		"cze"		"Exit"
+	}
+
+	"ratio_steamrep"
+	{
+		"cze"		"Nemuzes hrat jako dozorce protoze jsi {red}SCAMMER{default}. koukni se na steamrep.com"
+	}
+
+	"ratio_sure"
+	{
+		"cze"		"Jsi si isty ?"
+	}
+
+	"ratio_yes"
+	{
+		"cze"		"Ano"
+	}
+
+	"ratio_no"
+	{
+		"cze"		"Ne"
+	}
+
+	"ratio_steamgroup"
+	{
+		"cze"		"Nemuzes hrat jako dozorce, musis se nejprve pripojit do nasi steam skupiny"
+	}
+
+}

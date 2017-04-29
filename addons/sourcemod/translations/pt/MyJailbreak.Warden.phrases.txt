@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2016-12-11 14:23:49 UTC
+// Date: 2017-04-20 21:44:25 UTC
 // Language: Brazilian Portuguese (pt)
 // 
 // To view other translations for this plugin, please visit:
@@ -48,6 +48,11 @@
 		"pt"		"O diretor está {darkred}dead{default}, agora começa a escolher um novo."
 	}
 
+	"warden_nowarden"
+	{
+		"pt"		"Não existe um {purple}Warden{default}. Digite {green}!w{default} para se tornar o Warden!"
+	}
+
 	"warden_dead_nc"
 	{
 		"pt"		"O diretor está morto, agora começa a escolher um novo."
@@ -71,6 +76,56 @@
 	"warden_removed_nc"
 	{
 		"pt"		"O Administrador do: {1} o diretor se aposentou cedo: {2}"
+	}
+
+	"warden_noexist"
+	{
+		"pt"		"Não existe nenhum{purple} Warden! "
+	}
+
+	"warden_adminset"
+	{
+		"pt"		"Admin: {purple}{1}{default} escolheu o Warden!"
+	}
+
+	"warden_ffisoff"
+	{
+		"pt"		"O fogo amigo está{purple}desativado!"
+	}
+
+	"warden_stopcountdownhint_nc"
+	{
+		"pt"		"Atenção! O Warden começou uma contagem regressiva de STOP! Se apresse!"
+	}
+
+	"warden_voted"
+	{
+		"pt"		"Você já votou contra o atual {purple}Warden{default}!"
+	}
+
+	"warden_draweron"
+	{
+		"pt"		"Drawer {purple} ativado"
+	}
+
+	"warden_cdmenu_title"
+	{
+		"pt"		"Menu de contagem regressiva"
+	}
+
+	"warden_15"
+	{
+		"pt"		"15 Segundos"
+	}
+
+	"warden_180"
+	{
+		"pt"		"3 minutos"
+	}
+
+	"warden_startmathquiz"
+	{
+		"pt"		"Atenção! O Warden iniciou um {purple}Quiz de Matemática!"
 	}
 
 }

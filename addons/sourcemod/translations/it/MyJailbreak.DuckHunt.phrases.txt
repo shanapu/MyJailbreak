@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-03-01 14:01:51 UTC
+// Date: 2017-04-20 21:44:41 UTC
 // Language: Italian (it)
 // 
 // To view other translations for this plugin, please visit:
@@ -76,16 +76,6 @@
 	"duckhunt_voted"
 	{
 		"it"		"Hai gia' votato per {purple}Duckhunt!"
-	}
-
-	"duckhunt_progress"
-	{
-		"it"		"Event {darkred}{1} {default}is {purple}already in progress."
-	}
-
-	"duckhunt_progress"
-	{
-		"it"		"Event {darkred}{1} {default}is {purple}already in progress."
 	}
 
 	"duckhunt_minplayer"

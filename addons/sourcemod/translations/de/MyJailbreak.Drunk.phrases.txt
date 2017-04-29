@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2016-12-11 14:24:07 UTC
+// Date: 2017-04-20 21:44:37 UTC
 // Language: German (de)
 // 
 // To view other translations for this plugin, please visit:
@@ -7,6 +7,11 @@
 //
 "Phrases"
 {
+
+	"drunk_tag"
+	{
+		"de"		"[{green}MyJB.drunk{default}]"
+	}
 
 	"drunk_need"
 	{
@@ -131,6 +136,11 @@
 	"drunk_wait"
 	{
 		"de"		"Du musst noch {1} Runden warten"
+	}
+
+	"drunk_name"
+	{
+		"de"		"Drunken Day"
 	}
 
 }

@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2016-12-11 14:24:12 UTC
+// Date: 2017-04-20 21:44:42 UTC
 // Language: German (de)
 // 
 // To view other translations for this plugin, please visit:
@@ -7,6 +7,11 @@
 //
 "Phrases"
 {
+
+	"catch_tag"
+	{
+		"de"		"[{green}MyJB.Catch{default}]"
+	}
 
 	"catch_need"
 	{
@@ -161,6 +166,11 @@
 	"catch_win"
 	{
 		"de"		"Alle Häftlinge wurden {purple}eingefangen"
+	}
+
+	"catch_name"
+	{
+		"de"		"Catch and Freeze"
 	}
 
 	"catch_timetounfreeze_nc"

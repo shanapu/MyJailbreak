@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2016-12-11 14:24:13 UTC
+// Date: 2017-04-20 21:44:41 UTC
 // Language: German (de)
 // 
 // To view other translations for this plugin, please visit:
@@ -7,6 +7,11 @@
 //
 "Phrases"
 {
+
+	"knifefight_tag"
+	{
+		"de"		"[{green}MyJB.Knife Fight{default}]"
+	}
 
 	"knifefight_need"
 	{
@@ -136,6 +141,11 @@
 	"knifefight_wait"
 	{
 		"de"		"Du musst noch {1} Runden warten"
+	}
+
+	"knifefight_name"
+	{
+		"de"		"Knife Fight"
 	}
 
 }

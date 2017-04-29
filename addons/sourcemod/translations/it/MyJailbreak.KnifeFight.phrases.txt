@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2016-12-11 14:24:14 UTC
+// Date: 2017-04-20 21:44:41 UTC
 // Language: Italian (it)
 // 
 // To view other translations for this plugin, please visit:
@@ -106,11 +106,6 @@
 	"knifefight_info_line1"
 	{
 		"it"		"Verrete portarti al CT Spawn"
-	}
-
-	"knifefight_info_line1"
-	{
-		"it"		"Do not be surprised if ported to CT Spawn"
 	}
 
 	"knifefight_info_line2"

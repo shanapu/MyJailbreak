@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-02-13 03:57:20 UTC
+// Date: 2017-04-20 21:44:25 UTC
 // Language: Turkish (tr)
 // 
 // To view other translations for this plugin, please visit:
@@ -11,6 +11,71 @@
 	"warden_playerdead"
 	{
 		"tr"		"Sadece {purple}canlı oyuncular {default}komutçu olabilir!"
+	}
+
+	"warden_retire_nc"
+	{
+		"tr"		"{1} Komuttan çıktı. Yeni komutçu seçebilirsiniz."
+	}
+
+	"warden_dooropen"
+	{
+		"tr"		"Komutçu, hücre kapılarını {purple}Açtı{default}"
+	}
+
+	"warden_ffison"
+	{
+		"tr"		"Dost ateşi {purple}açıldı!"
+	}
+
+	"warden_ffisoff"
+	{
+		"tr"		"Dost ateşi {purple}kapatıldı!"
+	}
+
+	"warden_israndom"
+	{
+		"tr"		"{1} rasgele seçildi!"
+	}
+
+	"warden_gunplant"
+	{
+		"tr"		"Komutçu {purple}{1}{default} silahını düşürdü {green}{2}!"
+	}
+
+	"warden_drawert"
+	{
+		"tr"		"İsyancılar için işaretçiyi aç"
+	}
+
+	"warden_marker_remove"
+	{
+		"tr"		"{1} İşaretçi kaldırıldı."
+	}
+
+	"warden_laser_title"
+	{
+		"tr"		"Lazer işaretçi rengi"
+	}
+
+	"warden_cdmenu_title"
+	{
+		"tr"		"Geri sayım menüsü"
+	}
+
+	"warden_15"
+	{
+		"tr"		"15 saniye"
+	}
+
+	"warden_mute_title"
+	{
+		"tr"		"Susturma Menüsü"
+	}
+
+	"warden_doorclose_unavailable"
+	{
+		"tr"		"{darkred}Bu harita uzaktan kapı kontrolünü desteklemiyor. {default} Kapıları elle kapatman gerek."
 	}
 
 }

@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2016-12-11 14:24:05 UTC
+// Date: 2017-04-20 21:44:32 UTC
 // Language: Polish (pl)
 // 
 // To view other translations for this plugin, please visit:
@@ -156,6 +156,56 @@
 	"tags_WVIP2_chat"
 	{
 		"pl"		"[Warden.sVIP]"
+	}
+
+	"tags_D"
+	{
+		"pl"		"[Deputy]"
+	}
+
+	"tags_DA"
+	{
+		"pl"		"[Deputy.Admin]"
+	}
+
+	"tags_DA_chat"
+	{
+		"pl"		"[Deputy.Admin]"
+	}
+
+	"tags_D_chat"
+	{
+		"pl"		"[Deputy]"
+	}
+
+	"tags_DOWN"
+	{
+		"pl"		"[Deputy.Wlasciciel]"
+	}
+
+	"tags_DOWN_chat"
+	{
+		"pl"		"[Deputy.Wlasciciel]"
+	}
+
+	"tags_DVIP1"
+	{
+		"pl"		"[Deputy.VIP]"
+	}
+
+	"tags_DVIP1_chat"
+	{
+		"pl"		"[Deputy.VIP]"
+	}
+
+	"tags_DVIP2"
+	{
+		"pl"		"[Deputy.sVIP]"
+	}
+
+	"tags_DVIP2_chat"
+	{
+		"pl"		"[Deputy.sVIP]"
 	}
 
 }

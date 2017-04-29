@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-03-01 14:02:33 UTC
+// Date: 2017-04-20 21:44:31 UTC
 // Language: English (en)
 // 
 // To view other translations for this plugin, please visit:
@@ -125,11 +125,6 @@
 	"cowboy_info_line5"
 	{
 		"en"		"Last requests are disabled during this round!"
-	}
-
-	"cowboy_info_line6"
-	{
-		"en"		"Stay in the main jailroom! Don't enter secrets!"
 	}
 
 	"cowboy_info_line6"

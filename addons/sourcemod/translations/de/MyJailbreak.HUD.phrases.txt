@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2016-12-11 14:23:58 UTC
+// Date: 2017-04-20 21:44:26 UTC
 // Language: German (de)
 // 
 // To view other translations for this plugin, please visit:
@@ -7,6 +7,41 @@
 //
 "Phrases"
 {
+
+	"hud_planned"
+	{
+		"de"		"Nächste Runde:"
+	}
+
+	"hud_running"
+	{
+		"de"		"Diese Runde:"
+	}
+
+	"hud_warden"
+	{
+		"de"		"Warden:"
+	}
+
+	"hud_nowarden"
+	{
+		"de"		"Zurzeit gibt es keinen Warden"
+	}
+
+	"hud_guards"
+	{
+		"de"		"Wärter:"
+	}
+
+	"hud_prisoner"
+	{
+		"de"		"Häftling:"
+	}
+
+	"hud_tag"
+	{
+		"de"		"[MyJB.HUD]"
+	}
 
 	"hud_on"
 	{
@@ -16,6 +51,11 @@
 	"hud_off"
 	{
 		"de"		"HUD {purple}ist deaktiviert!"
+	}
+
+	"hud_lastCT"
+	{
+		"de"		"Letzter Wärter:"
 	}
 
 }

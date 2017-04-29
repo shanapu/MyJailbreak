@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2016-12-11 14:24:15 UTC
+// Date: 2017-04-20 21:44:33 UTC
 // Language: German (de)
 // 
 // To view other translations for this plugin, please visit:
@@ -7,6 +7,11 @@
 //
 "Phrases"
 {
+
+	"ffa_tag"
+	{
+		"de"		"[{green}MyJB.FFA{default}]"
+	}
 
 	"ffa_need"
 	{
@@ -51,6 +56,11 @@
 	"ffa_next"
 	{
 		"de"		"Nächste Runde ist {purple}FFA"
+	}
+
+	"ffa_next_nc"
+	{
+		"de"		"Die nächste Runde wird: FFA."
 	}
 
 	"ffa_rounds"
