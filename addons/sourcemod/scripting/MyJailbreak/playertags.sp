@@ -111,6 +111,11 @@ public void OnPluginStart()
 	gc_sVIPFlag.GetString(g_sVIPFlag, sizeof(g_sVIPFlag));
 	gc_sVIP2Flag.GetString(g_sVIP2Flag, sizeof(g_sVIP2Flag));
 
+	HookConVarChange(gc_sOwnerFlag, OnSettingChanged);
+	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
+	HookConVarChange(gc_sVIPFlag, OnSettingChanged);
+	HookConVarChange(gc_sVIP2Flag, OnSettingChanged);
+
 	// Late loading
 	if (g_bIsLateLoad)
 	{
@@ -136,6 +141,26 @@ public void Event_CheckTag(Event event, char[] name, bool dontBroadcast)
                    FORWARDS LISTEN
 ******************************************************************************/
 
+// ConVarChange for Strings
+public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
+{
+	if (convar == gc_sOwnerFlag)
+	{
+		strcopy(g_sOwnerFlag, sizeof(g_sOwnerFlag), newValue);
+	}
+	else if (convar == gc_sAdminFlag)
+	{
+		strcopy(g_sAdminFlag, sizeof(g_sAdminFlag), newValue);
+	}
+	else if (convar == gc_sVIPFlag)
+	{
+		strcopy(g_sVIPFlag, sizeof(g_sVIPFlag), newValue);
+	}
+	else if (convar == gc_sVIP2Flag)
+	{
+		strcopy(g_sVIP2Flag, sizeof(g_sVIP2Flag), newValue);
+	}
+}
 
 public void OnClientPutInServer(int client)
 {
