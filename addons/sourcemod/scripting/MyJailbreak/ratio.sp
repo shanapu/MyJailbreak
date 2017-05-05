@@ -150,13 +150,23 @@ public void OnPluginStart()
 	HookEvent("player_connect_full", Event_OnFullConnect, EventHookMode_Pre);
 	HookEvent("player_team", Event_PlayerTeam_Post, EventHookMode_Post);
 	HookEvent("round_end", Event_RoundEnd_Post, EventHookMode_Post);
-
+	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
+	
 	// FindConVar
 	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
 
 	// Prepare
 	g_aGuardQueue = CreateArray();
 	g_aGuardList = CreateArray();
+}
+
+// ConVarChange for Strings
+public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
+{
+	if (convar == gc_sAdminFlag)
+	{
+		strcopy(g_sAdminFlag, sizeof(g_sAdminFlag), newValue);
+	}
 }
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
