@@ -52,6 +52,7 @@
 bool g_bIsLateLoad = false;
 bool g_bIsDuckHunt = false;
 bool g_bStartDuckHunt = false;
+bool g_bLadder[MAXPLAYERS+1] = false;
 
 // Plugin bools
 bool gp_bWarden;
@@ -933,11 +934,26 @@ public Action OnWeaponCanUse(int client, int weapon)
 // Only right click attack for chicken
 public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon) 
 {
-	if (g_bIsDuckHunt)
+	if (g_bIsDuckHunt && (GetClientTeam(client) == CS_TEAM_T) && IsClientInGame(client) && IsPlayerAlive(client))
 	{
-		if ((GetClientTeam(client) == CS_TEAM_T) && IsClientInGame(client) && IsPlayerAlive(client) && buttons & IN_ATTACK)
+		if (buttons & IN_ATTACK)
 		{
 			return Plugin_Handled;
+		}
+		if(!gc_bFlyMode.BoolValue)
+		{
+			if (GetEntityMoveType(client) == MOVETYPE_LADDER)
+			{
+				g_bLadder[client] = true;
+			}
+			else
+			{
+				if (g_bLadder[client])
+				{
+					SetEntityGravity(client, 0.3);
+					g_bLadder[client] = false;
+				}
+			}
 		}
 	}
 
