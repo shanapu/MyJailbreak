@@ -51,6 +51,7 @@
 bool g_bIsLateLoad = false;
 bool g_bIsKnifeFight = false;
 bool g_bStartKnifeFight = false;
+bool g_bLadder[MAXPLAYERS+1] = false;
 
 // Plugin bools
 bool gp_bWarden;
@@ -106,7 +107,6 @@ float g_fPos[3];
 
 // Handles
 Handle g_hTimerTruce;
-Handle g_hTimerGravity;
 Handle g_hTimerBeacon;
 
 // Strings
@@ -666,11 +666,6 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 			}
 		}
 
-		if (gc_bGrav.BoolValue)
-		{
-			g_hTimerGravity = CreateTimer(1.0, Timer_CheckGravity, _, TIMER_REPEAT);
-		}
-
 		g_iTruceTime--;
 		g_hTimerTruce = CreateTimer(1.0, Timer_StartEvent, _, TIMER_REPEAT);
 
@@ -692,7 +687,6 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 
 		delete g_hTimerTruce;
 		delete g_hTimerBeacon;
-		delete g_hTimerGravity;
 
 		int winner = event.GetInt("winner");
 		if (winner == 2)
@@ -793,7 +787,6 @@ public void OnMapEnd()
 	g_bStartKnifeFight = false;
 
 	delete g_hTimerTruce;
-	delete g_hTimerGravity;
 
 	g_iVoteCount = 0;
 	g_iRound = 0;
@@ -826,7 +819,6 @@ public void OnAvailableLR(int Announced)
 
 		delete g_hTimerBeacon;
 		delete g_hTimerTruce;
-		delete g_hTimerGravity;
 
 		if (g_iRound == g_iMaxRound)
 		{
@@ -894,6 +886,28 @@ public Action OnWeaponCanUse(int client, int weapon)
 	}
 
 	return Plugin_Continue;
+}
+
+public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
+{
+	if (IsPlayerAlive(client))
+	{
+		if(g_bIsKnifeFight && gc_bGrav.BoolValue)
+		{
+			if (GetEntityMoveType(client) == MOVETYPE_LADDER)
+			{
+				g_bLadder[client] = true;
+			}
+			else
+			{
+				if (g_bLadder[client])
+				{
+					SetEntityGravity(client, gc_fGravValue.FloatValue);
+					g_bLadder[client] = false;
+				}
+			}
+		}
+	}
 }
 
 /******************************************************************************
@@ -1028,16 +1042,4 @@ public Action Timer_BeaconOn(Handle timer)
 	}
 
 	g_hTimerBeacon = null;
-}
-
-// Give back Gravity if it gone -> ladders
-public Action Timer_CheckGravity(Handle timer)
-{
-	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, false))
-	{
-		if (GetEntityGravity(i) != 1.0)
-		{
-			SetEntityGravity(i, gc_fGravValue.FloatValue);
-		}
-	}
 }
