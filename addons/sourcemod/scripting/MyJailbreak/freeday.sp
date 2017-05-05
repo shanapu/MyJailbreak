@@ -85,6 +85,7 @@ int g_iOldRoundTime;
 int g_iCoolDown;
 int g_iVoteCount;
 int g_iFreedayRound = 0;
+int g_iCollision_Offset;
 
 // Strings
 char g_sHasVoted[1500];
@@ -149,6 +150,9 @@ public void OnPluginStart()
 	g_iMPRoundTime = FindConVar("mp_roundtime");
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
+
+	// Offsets
+	g_iCollision_Offset = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
 
 	// Logs
 	SetLogFile(g_sEventsLogFile, "Events", "MyJailbreak");
@@ -530,12 +534,13 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		}
 	}
 
-
 	CreateTimer (gc_iRespawnTime.FloatValue, Timer_StopRespawn);
 
 	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 	{
 		CreateInfoPanel(i);
+
+		SetEntData(i, g_iCollision_Offset, 2, 4, true);
 
 		if (!gc_bdamage.BoolValue && IsValidClient(i))
 		{
@@ -567,6 +572,11 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
 	if (g_bIsFreeday)
 	{
+		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, true))
+		{
+			SetEntData(i, g_iCollision_Offset, 0, 4, true);
+		}
+
 		g_bIsFreeday = false;
 		g_bStartFreeday = false;
 		g_bAllowRespawn = false;
