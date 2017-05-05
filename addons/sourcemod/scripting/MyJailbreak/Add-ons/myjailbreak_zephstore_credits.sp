@@ -29,6 +29,7 @@
 #include <mystocks>
 #include <store>
 #include <autoexecconfig>
+#include <colors>
 
 // ConVars
 ConVar gc_iAmount;
@@ -80,7 +81,7 @@ public void MyJailbreak_OnEventDayEnd(char[] name, int winner)
 		{
 			Store_SetClientCredits(i, Store_GetClientCredits(i) + gc_iAmount.IntValue);
 
-			PrintToChat(i, "%s You earned %i credits for winning the EventDay.", g_sTag, gc_iAmount.IntValue);
+			CPrintToChat(i, "%s You earned %i credits for winning the EventDay.", g_sTag, gc_iAmount.IntValue);
 		}
 	}
 }
