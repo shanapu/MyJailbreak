@@ -644,7 +644,7 @@ public Action Event_OnJoinTeam(int client, const char[] szCommand, int iArgCount
 
 		if (iIndex == -1)
 		{
-			if ((gc_iJoinMode.IntValue == 0) || (gc_bAdminBypass.BoolValue && CheckVipFlag(client, g_sAdminFlag))) FullAddToQueue(client);
+			if ((gc_iJoinMode.IntValue == 0) || (gc_bAdminBypass.BoolValue && CheckVipFlag(client, g_sAdminFlag))) AddToQueue(client);
 			if ((gc_iJoinMode.IntValue == 1) && ((gc_bAdminBypass.BoolValue && !CheckVipFlag(client, g_sAdminFlag)) || (!gc_bAdminBypass.BoolValue))) Menu_AcceptGuardRules(client);
 			if ((gc_iJoinMode.IntValue == 2) && ((gc_bAdminBypass.BoolValue && !CheckVipFlag(client, g_sAdminFlag)) || (!gc_bAdminBypass.BoolValue))) Menu_GuardQuestions(client);
 			g_iQuestionTimes[client] = gc_iQuestionTimes.IntValue-1;
@@ -683,35 +683,6 @@ void MinusDeath(int client)
 }
 
 void AddToQueue(int client)
-{
-	int iIndex = FindValueInArray(g_aGuardQueue, client);
-	int iQueueSize = GetArraySize(g_aGuardQueue);
-
-	if (iIndex == -1)
-	{
-		if (CheckVipFlag(client, g_sAdminFlag) && gc_bVIPQueue.BoolValue)
-		{
-			if (iQueueSize == 0)
-				iIndex = PushArrayCell(g_aGuardQueue, client);
-			else
-			{
-				ShiftArrayUp(g_aGuardQueue, 0);
-				SetArrayCell(g_aGuardQueue, 0, client);
-			}
-			CPrintToChat(client, "%t %t", "ratio_tag", "ratio_thxvip");
-			CPrintToChat(client, "%t %t", "ratio_tag", "ratio_number", iIndex + 1);
-		}
-		else
-		{
-			iIndex = PushArrayCell(g_aGuardQueue, client);
-			
-			CPrintToChat(client, "%t %t", "ratio_tag", "ratio_number", iIndex + 1);
-			if (gc_bAdsVIP.BoolValue && gc_bVIPQueue.BoolValue) CPrintToChat(client, "%t %t", "ratio_tag", "ratio_advip");
-		}
-	}
-}
-
-void FullAddToQueue(int client)
 {
 	int iIndex = FindValueInArray(g_aGuardQueue, client);
 	int iQueueSize = GetArraySize(g_aGuardQueue);
