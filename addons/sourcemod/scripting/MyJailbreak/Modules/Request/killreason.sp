@@ -84,17 +84,17 @@ void Menu_KillReason(int client, int victim)
 	Format(info, sizeof(info), "%T", "request_killreason_title", client, victim);
 	menu1.SetTitle(info);
 	Format(info, sizeof(info), "%T", "request_killreason_lostgame", client, victim);
-	if (gc_bFreeKillRespawn.BoolValue) menu1.AddItem("1", info);
+	menu1.AddItem("1", info);
 	Format(info, sizeof(info), "%T", "request_killreason_rebel", client);
-	if (gc_bFreeKillKill.BoolValue) menu1.AddItem("2", info);
+	menu1.AddItem("2", info);
 	Format(info, sizeof(info), "%T", "request_killreason_brokerule", client);
-	if (gc_bFreeKillFreeDay.BoolValue) menu1.AddItem("3", info);
+	menu1.AddItem("3", info);
 	Format(info, sizeof(info), "%T", "request_killreason_notfollow", client);
-	if (gc_bFreeKillFreeDayVictim.BoolValue) menu1.AddItem("4", info);
+	menu1.AddItem("4", info);
 	Format(info, sizeof(info), "%T", "request_killreason_sry", client);
-	if (gc_bFreeKillSwap.BoolValue) menu1.AddItem("5", info);
+	menu1.AddItem("5", info);
 	Format(info, sizeof(info), "%T", "request_killreason_freekill", client);
-	if (gc_bFreeKillSwap.BoolValue) menu1.AddItem("6", info);
+	menu1.AddItem("6", info);
 	menu1.Display(client, MENU_TIME_FOREVER);
 }
 
@@ -129,12 +129,20 @@ public int Handler_KillReason(Menu menu, MenuAction action, int client, int Posi
 			if (choice == 5) // sry
 			{
 				CPrintToChatAll("%t %t", "request_tag", "request_killreason_sry_chat", client, victim);
-				Command_Freekill(victim, 0);
+
+				if (gc_bFreeKill.BoolValue)
+				{
+					Command_Freekill(victim, 0);
+				}
 			}
 			if (choice == 6) // freekill
 			{
 				CPrintToChatAll("%t %t", "request_tag", "request_killreason_freekill_chat", client, victim);
-				Command_Freekill(victim, 0);
+
+				if (gc_bFreeKill.BoolValue)
+				{
+					Command_Freekill(victim, 0);
+				}
 			}
 		}
 	}
