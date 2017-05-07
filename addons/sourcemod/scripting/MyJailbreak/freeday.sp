@@ -131,7 +131,7 @@ public void OnPluginStart()
 	gc_bAuto = AutoExecConfig_CreateConVar("sm_freeday_noct", "1", "0 - disabled, 1 - auto freeday when there is no CT", _, true, 0.0, true, 1.0);
 	gc_iRespawn = AutoExecConfig_CreateConVar("sm_freeday_respawn", "1", "1 - respawn on NoCT Freeday / 2 - respawn on firstround/vote/set Freeday / 3 - Both", _, true, 1.0, true, 3.0);
 	gc_iRespawnTime = AutoExecConfig_CreateConVar("sm_freeday_respawn_time", "120", "Time in seconds player will respawn after round begin", _, true, 1.0);
-	gc_bFirst = AutoExecConfig_CreateConVar("sm_freeday_firstround", "1", "0 - disabled, 1 - auto freeday first round after mapstart", _, true, 0.0, true, 1.0);
+	gc_bFirst = AutoExecConfig_CreateConVar("sm_freeday_firstround", "0", "0 - disabled, 1 - auto freeday first round after mapstart", _, true, 0.0, true, 1.0);
 	gc_bdamage = AutoExecConfig_CreateConVar("sm_freeday_damage", "1", "0 - disabled, 1 - enable damage on freedays", _, true, 0.0, true, 1.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_freeday_roundtime", "5", "Round time in minutes for a single freeday round", _, true, 1.0);
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_freeday_cooldown_day", "0", "Rounds until freeday can be started again.", _, true, 0.0);
@@ -557,7 +557,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 
 	if (gc_bFirst.BoolValue)
 	{
-		if ((GetTeamClientCount(CS_TEAM_CT) == 0) || (GetTeamClientCount(CS_TEAM_T) == 0) && (GetTeamScore(CS_TEAM_CT) + GetTeamScore(CS_TEAM_T) == 0))
+		if (((GetTeamClientCount(CS_TEAM_CT) == 0) || (GetTeamClientCount(CS_TEAM_T) == 0)) && (GetTeamScore(CS_TEAM_CT) + GetTeamScore(CS_TEAM_T) == 0))
 		{
 			g_bRepeatFirstFreeday = true;
 		}
@@ -597,7 +597,10 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 		SetCvar("sm_weapons_enable", 1);
 		SetCvar("mp_teammates_are_enemies", 0);
 
-		g_iMPRoundTime.IntValue = g_iOldRoundTime;
+		if (!g_bRepeatFirstFreeday)
+		{
+			g_iMPRoundTime.IntValue = g_iOldRoundTime;
+		}
 
 		if (gp_bMyJailbreak)
 		{
