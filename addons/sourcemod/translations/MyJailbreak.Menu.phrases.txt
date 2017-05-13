@@ -392,6 +392,11 @@
 		"en"		"Ghosts War"
 	}
 
+	"menu_teleport"
+	{
+		"en"		"Teleport War"
+	}
+
 	"menu_votingcancel"
 	{
 		"#format"	"{1:s}"

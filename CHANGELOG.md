@@ -1,5 +1,57 @@
 ### Change Log
   
+  
+**[Beta 12.dev]** - Teleport War & fixes
+  
+*Added*
+*  New Eventday: Teleport War - A FreeForAll Deathmatch where attacker & victim switch positions on hit.
+    *  new plugin - teleport.smx - please help translate http://translator.mitchdempsey.com/sourcemod_plugins/277
+        *  new command - sm_setteleport - Allows the Admin or Warden to set Teleport War
+        *  new command - sm_teleport - Allows players to vote for a Teleport War
+        *  new cvar - sm_teleport_enable - 0 - disabled, 1 - enable this MyJailbreak SourceMod plugin
+        *  new cvar - sm_teleport_cmds_vote - Set your custom chat command for Event voting(!teleport (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
+        *  new cvar - sm_teleport_cmds_set - Set your custom chat command for set Event(!teleport (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
+        *  new cvar - sm_teleport_warden - 0 - disabled, 1 - allow warden to set teleport round
+        *  new cvar - sm_teleport_admin - 0 - disabled, 1 - allow admin/vip to set teleport round
+        *  new cvar - sm_teleport_flag - Set flag for admin/vip to set this Event Day
+        *  new cvar - sm_teleport_vote - 0 - disabled, 1 - allow player to vote for teleport
+        *  new cvar - sm_teleport_spawn - 0 - T teleport to CT spawn, 1 - cell doors auto open
+        *  new cvar - sm_teleport_rounds - Rounds to play in a row
+        *  new cvar - sm_teleport_aim - 0 - Keep your aim angle on switch, 1 - Use attacker/victims aim angle
+        *  new cvar - sm_teleport_roundtime - Round time in minutes for a single teleport round
+        *  new cvar - sm_teleport_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
+        *  new cvar - sm_teleport_trucetime - Time in seconds players can't deal damage
+        *  new cvar - sm_teleport_cooldown_day - Rounds cooldown after a event until event can be start again
+        *  new cvar - sm_teleport_cooldown_start - Rounds until event can be start after mapchange
+        *  new cvar - sm_teleport_cooldown_admin - 0 - disabled, 1 - ignore the cooldown when admin/vip set teleport round
+        *  new cvar - sm_teleport_sounds_enable - 0 - disabled, 1 - enable sounds
+        *  new cvar - sm_teleport_sounds_start - Path to the soundfile which should be played for a start
+        *  new cvar - sm_teleport_overlays_enable - 0 - disabled, 1 - enable overlays
+        *  new cvar - sm_teleport_overlays_start - Path to the start Overlay DONT TYPE .vmt or .vft
+        *  new cvar - sm_teleport_allow_lr - 0 - disabled, 1 - enable LR for last round and end eventday
+    * Menu: added new eventday teleport to set/voting menu
+  
+  
+*Changed*
+*  
+  
+  
+*Fixed*
+*  Menu: fixed setdays for warden (don't show restricted/disabled days)
+*  Ratio: fixed custom VIP/Admin flags
+*  PlayerTags: fixed custom VIP/Admin flags
+*  Freeday: fixed roundtime when only one team has player
+*  Freeday: NoBlock (no player collision)
+*  Request - Killreason: fixed display all reasons
+*  Duckhunt & KnifeFight: fix gravity ladderfix
+*  Store Credits & paperclips: fix chat colors
+  
+  
+*Removed*
+*  
+  
+  
+  
 
 **[Beta 12.0]** - removed dependencies & store support
   
@@ -78,7 +130,7 @@
 *  New Eventday: Ghosts War - All Players are invisbile & immortal - every 6 seconds they go visible and mortal for 2 seconds. Last alive wins.
     *  new plugin - ghosts.smx - please help translate http://translator.mitchdempsey.com/sourcemod_plugins/271
         *  new command - sm_setghosts - Allows the Admin or Warden to set Ghosts
-        *  new command - sm_ghosts - Allows players to vote for a Ghosts"
+        *  new command - sm_ghosts - Allows players to vote for a Ghosts
         *  new cvar - sm_ghosts_enable - 0 - disabled, 1 - enable this MyJailbreak SourceMod plugin
         *  new cvar - sm_ghosts_cmds_vote - Set your custom chat command for Event voting(!ghosts (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
         *  new cvar - sm_ghosts_cmds_set - Set your custom chat command for set Event(!ghosts (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))

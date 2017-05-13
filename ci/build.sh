@@ -202,6 +202,9 @@ unzip -qo translations.zip -d build/gameserver/
 wget -q -O translations.zip http://translator.mitchdempsey.com/sourcemod_plugins/271/download/MyJailbreak.Ghosts.translations.zip
 unzip -qo translations.zip -d build/gameserver/
 
+wget -q -O translations.zip http://translator.mitchdempsey.com/sourcemod_plugins/277/download/MyJailbreak.Teleport.translations.zip
+unzip -qo translations.zip -d build/gameserver/
+
 
 echo "Clean root folder"
 rm sourcemod.tar.gz
