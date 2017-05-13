@@ -1,4 +1,4 @@
-[URL="https://forums.alliedmods.net/showthread.php?p=2422609&nojs=1#goto_threadrating"]Rate Thread		 [IMG]https://forums.alliedmods.net/images/misc/menu_open.gif[/IMG][IMG]https://forums.alliedmods.net/images/rating/rating_5.gif[/IMG][/URL]
+[URL="https://forums.alliedmods.net/showthread.php?p=2422609&nojs=1#goto_threadrating"]Rate Thread		 [IMG]https://forums.alliedmods.net/images/misc/menu_open.svg[/IMG][IMG]https://forums.alliedmods.net/images/rating/rating_5.svg[/IMG][/URL]
 
 [SIZE="5"][B]MyJailbreak [/B][/SIZE] a plugin pack for CS:GO jailserver
 
@@ -43,7 +43,7 @@ MyJailbreak is a redux rewrite of [URL="https://github.com/Franc1sco/Franug-Jail
 [LIST]
 [*][B]CT Bans Support[/B] - Support plugin for [URL="https://forums.alliedmods.net/showthread.php?t=166080"]databombs CT Bans plugin[/URL]
 [*][B]CT Bans Support[/B] - Support plugin for [URL="https://forums.alliedmods.net/showthread.php?t=294093"]oaaron99/addicted CT Bans plugin[/URL]
-[*][B]CT Bans Support[/B] - Support plugin for FantoMs [i]private[/i] CT Bans
+[*][B]CT Bans Support[/B] - Support plugin for [URL="https://forums.alliedmods.net/member.php?u=237200"]R1KO[/URL]s [i]private[/i] CT Bans
 [*][B]TeamBans Support[/B] - Support plugin for [URL="https://forums.alliedmods.net/showthread.php?t=270761"]baras TeamBans plugin[/URL]
 [*][B]TeamGames Support[/B] - Support plugin for [url=https://forums.alliedmods.net/showthread.php?t=286045]KissLicks TeamGames[/url] v1.1.0.7
 [*][B]Steam Groups Support[/B] - Support plugin for restriction based on steam groups
@@ -6109,7 +6109,7 @@ native MyIcons_BlockClientIcon(int client, bool status);
 [LIST]
 [*][url=https://forums.alliedmods.net/showthread.php?p=1544101][CS:S/CS:GO] CT Bans by databomb[/url] - support for ratio (is banned)
 [*][url=https://forums.alliedmods.net/showthread.php?t=294093][ANY] CT Bans by oaaron99/addicted[/url] - support for ratio (is banned)
-[*][CS:S/CS:GO] CT Bans by R1KO/FantoM - support for ratio (is banned)
+[*][CS:S/CS:GO] CT Bans by [URL="https://forums.alliedmods.net/member.php?u=237200"]R1KO[/URL] - support for ratio (is banned)
 [*][url=https://forums.alliedmods.net/showthread.php?t=270761][CS:S/CS:GO]TeamBans (CT Bans + T Bans) [1.0.0][/url] - support for ratio (is banned)
 [*][url=https://forums.alliedmods.net/showthread.php?t=286045]TeamGames (JailBreak teams, games, marks, fences, ...)[/url] - friendlyfire handling
 [*][url=https://forums.alliedmods.net/showthread.php?t=155621][CS:S] RankMe[/url] - support for ratio & warden (min rankme points to join ct & warden)
@@ -6207,7 +6207,7 @@ native MyIcons_BlockClientIcon(int client, bool status);
 
 [B][U]Credits:[/U][/B]
 used code & stuff from: 
-[B]Addicted, ecca, Zipcore, ESK0, Floody.de, Franc1sco, databomb, walmar, KeepCalm, bara, Arkarr, KissLick, headline, MasterOfTheXP, Damizean,Hipster, ReFlexPoison, 8guawong, Mitchell, Xines, Jackmaster, Impact123, Kaesar, andi67[/B] and many other I cant remember, unfortunately!
+[B]Addicted, ecca, Zipcore, ESK0, Floody.de, Franc1sco, databomb, walmar, KeepCalm, bara, Arkarr, KissLick, headline, MasterOfTheXP, Rachnus, Damizean, Hipster, ReFlexPoison, 8guawong, Mitchell, Xines, Jackmaster, Impact123, Kaesar, andi67[/B] and many other I cant remember, unfortunately!
 
 Also big thanks to all sourcemod & metamod developers out there!
 [SPOILER]
@@ -6224,6 +6224,7 @@ based/merged/used code/idea plugins:
 * [url]https://forums.alliedmods.net/showthread.php?t=231473[/url]
 * [url]https://forums.alliedmods.net/showthread.php?p=1922088[/url]
 * [url]https://github.com/walmar/ShortSprint[/url]
+* [url]https://github.com/Rachnus/Small-SourceMod-Plugins/blob/master/teleportgamemode.sp[/url]
 * [url]https://github.com/KissLick/TeamGames/[/url]
 * [url]https://github.com/TiBarification/Jail-Warden-Pro[/url]
 * [url]https://github.com/AG-Headline/Hunger-Games-Beacon[/url]

@@ -104,6 +104,7 @@ ConVar g_bNoBlockDeputy;
 ConVar g_bZombie;
 ConVar g_bNoScope;
 ConVar g_bGhosts;
+ConVar g_bTeleport;
 ConVar g_bHEbattle;
 ConVar g_bHide;
 ConVar g_bCatch;
