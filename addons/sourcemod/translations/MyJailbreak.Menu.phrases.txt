@@ -203,6 +203,11 @@
 		"en"		"Knife Fight"
 	}
 
+	"menu_armsrace"
+	{
+		"en"		"Arms Race"
+	}
+
 	"menu_hebattle"
 	{
 		"en"		"HE Battle"

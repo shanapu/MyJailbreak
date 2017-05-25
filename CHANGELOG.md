@@ -30,6 +30,34 @@
         *  new cvar - sm_teleport_overlays_start - Path to the start Overlay DONT TYPE .vmt or .vft
         *  new cvar - sm_teleport_allow_lr - 0 - disabled, 1 - enable LR for last round and end eventday
     * Menu: added new eventday teleport to set/voting menu
+*  New Eventday: Arms Race - A FreeForAll Deathmatch where 
+    *  new plugin - armsrace.smx - please help translate http://translator.mitchdempsey.com/sourcemod_plugins/277
+        *  new config file - addons/sourcemod/configs/MyJailbreak/armsrace.ini - define weapons & order
+        *  new command - sm_setarmsrace - Allows the Admin or Warden to set Teleport War
+        *  new command - sm_armsrace - Allows players to vote for a Teleport War
+        *  new cvar - sm_armsrace_enable - 0 - disabled, 1 - enable this MyJailbreak SourceMod plugin
+        *  new cvar - sm_armsrace_cmds_vote - Set your custom chat command for Event voting(!armsrace (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
+        *  new cvar - sm_armsrace_cmds_set - Set your custom chat command for set Event(!setarmsrace (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
+        *  new cvar - sm_armsrace_warden - 0 - disabled, 1 - allow warden to set armsrace round
+        *  new cvar - sm_armsrace_admin - 0 - disabled, 1 - allow admin/vip to set armsrace round
+        *  new cvar - sm_armsrace_flag - Set flag for admin/vip to set this Event Day
+        *  new cvar - sm_armsrace_vote - 0 - disabled, 1 - allow player to vote for armsrace
+        *  new cvar - sm_armsrace_spawn - 0 - T teleport to CT spawn, 1 - cell doors auto open
+        *  new cvar - sm_armsrace_randomspawn - 0 - disabled, 1 - use random spawns on map (sm_armsrace_spawn 1)
+        *  new cvar - sm_armsrace_rounds - Rounds to play in a row
+        *  new cvar - sm_armsrace_roundtime - Round time in minutes for a single armsrace round
+        *  new cvar - sm_armsrace_trucetime - Time in seconds players can't deal damage
+        *  new cvar - sm_armsrace_cooldown_day - Rounds cooldown after a event until event can be start again
+        *  new cvar - sm_armsrace_cooldown_start - Rounds until event can be start after mapchange
+        *  new cvar - sm_armsrace_cooldown_admin - 0 - disabled, 1 - ignore the cooldown when admin/vip set armsrace round
+        *  new cvar - sm_armsrace_sounds_enable - 0 - disabled, 1 - enable sounds
+        *  new cvar - sm_armsrace_sounds_start - Path to the soundfile which should be played for a start
+        *  new cvar - sm_armsrace_overlays_enable - 0 - disabled, 1 - enable overlays
+        *  new cvar - sm_armsrace_overlays_start - Path to the start Overlay DONT TYPE .vmt or .vft
+    * Menu: added new eventday armsrace to set/voting menu
+*  PlayerTags: Two new Tags SuperAdmin & CoOwner Thx @ ichiballs
+    *  new cvar - sm_playertag_coownerflag - Set the flag for CoOwner. Default 'r'
+    *  new cvar - sm_playertag_superadminflag - Set the flag for Super Admin. Default 's'
   
   
 *Changed*

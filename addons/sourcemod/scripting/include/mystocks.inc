@@ -340,3 +340,16 @@ stock int Handler_NullCancel(Handle menu, MenuAction action, int param1, int par
 
 	return;
 }
+
+stock void StringToUpper(char [] sz)
+{
+	int len = strlen(sz);
+
+	for (int i = 0; i < len; i++)
+	{
+		if (IsCharLower(sz[i]))
+		{
+			sz[i] = CharToUpper(sz[i]);
+		}
+	}
+}
