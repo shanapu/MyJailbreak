@@ -161,6 +161,7 @@ public void OnPluginStart()
 	HookEvent("round_start", Event_RoundStart);
 	HookEvent("round_end", Event_RoundEnd);
 	HookEvent("player_death", Event_PlayerDeath);
+	HookEvent("player_death", Event_PrePlayerDeath, EventHookMode_Pre);
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
 	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
@@ -1028,6 +1029,17 @@ public Action CS_OnTerminateRound(float &delay, CSRoundEndReason &reason)
 	return Plugin_Handled;
 }
 
+public void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast) 
+{
+	if (!g_bIsArmsRace)
+		return;
+
+	int victim = GetClientOfUserId(event.GetInt("userid")); // Get the dead clients id
+	
+	StripAllPlayerWeapons(victim);
+}
+
+/*
 public Action CS_OnCSWeaponDrop(int client, int iWeapon)
 {
 	if (g_bIsArmsRace)
@@ -1040,3 +1052,4 @@ public Action CS_OnCSWeaponDrop(int client, int iWeapon)
 
 	return Plugin_Continue;
 }
+*/
