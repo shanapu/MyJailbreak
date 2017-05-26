@@ -1029,7 +1029,7 @@ public Action CS_OnTerminateRound(float &delay, CSRoundEndReason &reason)
 	return Plugin_Handled;
 }
 
-public void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast) 
+public void Event_PrePlayerDeath(Event event, const char[] name, bool dontBroadcast) 
 {
 	if (!g_bIsArmsRace)
 		return;
