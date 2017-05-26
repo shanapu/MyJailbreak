@@ -655,7 +655,13 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			SetCvar("mp_teammates_are_enemies", 0);
 			SetCvar("mp_friendlyfire", 0);
 			SetCvar("sm_menu_enable", 1);
-
+			
+			if (gc_bSpawnRandom.BoolValue)
+			{
+					SetCvar("mp_randomspawn", 0);
+					SetCvar("mp_randomspawn_los", 0);
+			}
+			
 			g_iMPRoundTime.IntValue = g_iOldRoundTime;
 
 			if (gp_bMyJailbreak)
