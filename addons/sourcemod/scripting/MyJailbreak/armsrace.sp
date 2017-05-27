@@ -161,7 +161,6 @@ public void OnPluginStart()
 	HookEvent("round_start", Event_RoundStart);
 	HookEvent("round_end", Event_RoundEnd);
 	HookEvent("player_death", Event_PlayerDeath);
-	HookEvent("player_death", Event_PrePlayerDeath, EventHookMode_Pre);
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
 	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
@@ -531,6 +530,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		SetCvar("sm_hosties_lr", 0);
 	}
 
+	SetCvar("mp_death_drop_gun", 0);
 	SetCvar("sm_weapons_t", 0);
 	SetCvar("sm_weapons_ct", 0);
 	SetCvar("mp_teammates_are_enemies", 1);
@@ -656,6 +656,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			SetCvar("mp_teammates_are_enemies", 0);
 			SetCvar("mp_friendlyfire", 0);
 			SetCvar("sm_menu_enable", 1);
+			SetCvar("mp_death_drop_gun", 1);
 			
 			if (gc_bSpawnRandom.BoolValue)
 			{
@@ -909,10 +910,11 @@ public void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast
 	{
 		char sWeaponUsed[50];
 		GetEventString(event, "weapon", sWeaponUsed, sizeof(sWeaponUsed));
+
 		if (g_iLevel[attacker] == g_iMaxLevel)
 		{
-			CPrintToChat(attacker, "%t", "armsrace_youwon");
-			CPrintToChatAll("%t", "armsrace_winner", attacker);
+			CPrintToChat(attacker, "%t %t", "armsrace_tag", "armsrace_youwon");
+			CPrintToChatAll("%t %t", "armsrace_tag", "armsrace_winner", attacker);
 			CS_TerminateRound(5.0, CSRoundEnd_Draw);
 			return;
 		}
@@ -925,28 +927,33 @@ public void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast
 				g_iLevel[victim] = 0;
 			}
 			
-			CPrintToChat(victim, "%t", "armsrace_downgraded");
-			CPrintToChat(attacker, "%t", "armsrace_downgrade", victim);
+			CPrintToChat(victim, "%t %t", "armsrace_tag", "armsrace_downgraded");
+			CPrintToChat(attacker, "%t %t", "armsrace_tag", "armsrace_downgrade", victim);
 		}
 		else
 		{
 			StripAllPlayerWeapons(attacker);
-
-			if (GetClientTeam(attacker) == CS_TEAM_CT)
-			{
-				GivePlayerItem(attacker, "weapon_knife");
-			}
-			else
-			{
-				GivePlayerItem(attacker, "weapon_knife_t");
-			}
 			
 			char buffer[32];
 			GetArrayString(g_aWeapons, g_iLevel[attacker], buffer, sizeof(buffer));
 			GivePlayerItem(attacker, buffer);
+			
+			if (g_iLevel[attacker] != g_iMaxLevel)
+			{
+				if (GetClientTeam(attacker) == CS_TEAM_CT)
+				{
+					GivePlayerItem(attacker, "weapon_knife");
+				}
+				else
+				{
+					GivePlayerItem(attacker, "weapon_knife_t");
+				}
+			}
+			
+
 			ReplaceString(buffer, sizeof(buffer), "weapon_", "", false);
 			StringToUpper(buffer);
-			CPrintToChat(attacker, "%t", "armsrace_levelup", buffer);
+			CPrintToChat(attacker, "%t %t", "armsrace_tag", "armsrace_levelup", buffer);
 		}
 	}
 	
@@ -965,6 +972,10 @@ public Action Timer_Respawn(Handle timer, int userid)
 
 	StripAllPlayerWeapons(client);
 
+	char buffer[32];
+	GetArrayString(g_aWeapons, g_iLevel[client], buffer, sizeof(buffer));
+	GivePlayerItem(client, buffer);
+
 	if (g_iLevel[client] != g_iMaxLevel)
 	{
 		if (GetClientTeam(client) == CS_TEAM_CT)
@@ -976,10 +987,6 @@ public Action Timer_Respawn(Handle timer, int userid)
 			GivePlayerItem(client, "weapon_knife_t");
 		}
 	}
-
-	char buffer[32];
-	GetArrayString(g_aWeapons, g_iLevel[client], buffer, sizeof(buffer));
-	GivePlayerItem(client, buffer);
 
 	return Plugin_Handled;
 }
@@ -1028,28 +1035,3 @@ public Action CS_OnTerminateRound(float &delay, CSRoundEndReason &reason)
 	
 	return Plugin_Handled;
 }
-
-public void Event_PrePlayerDeath(Event event, const char[] name, bool dontBroadcast) 
-{
-	if (!g_bIsArmsRace)
-		return;
-
-	int victim = GetClientOfUserId(event.GetInt("userid")); // Get the dead clients id
-	
-	StripAllPlayerWeapons(victim);
-}
-
-/*
-public Action CS_OnCSWeaponDrop(int client, int iWeapon)
-{
-	if (g_bIsArmsRace)
-	{
-		if (IsValidEdict(iWeapon) && !IsPlayerAlive(client))
-		{
-			AcceptEntityInput(iWeapon, "Kill");
-		}
-	}
-
-	return Plugin_Continue;
-}
-*/
