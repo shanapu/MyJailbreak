@@ -904,10 +904,10 @@ public void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast
 	int victim = GetClientOfUserId(event.GetInt("userid")); // Get the dead clients id
 	int attacker = GetClientOfUserId(event.GetInt("attacker")); // Get the dead clients id
 
-	g_iLevel[attacker] += 1;
-
 	if (IsValidClient(attacker, true, false) && (attacker != victim) && IsValidClient(victim, true, true))
 	{
+		g_iLevel[attacker] += 1;
+
 		char sWeaponUsed[50];
 		GetEventString(event, "weapon", sWeaponUsed, sizeof(sWeaponUsed));
 
@@ -1024,7 +1024,7 @@ public Action CS_OnTerminateRound(float &delay, CSRoundEndReason &reason)
 	{
 		return Plugin_Continue;
 	}
-	
+
 	for(int i = 1; i <= MaxClients; i++)
 	{
 		if (g_iLevel[i] == g_iMaxLevel)
@@ -1032,6 +1032,6 @@ public Action CS_OnTerminateRound(float &delay, CSRoundEndReason &reason)
 			return Plugin_Continue;
 		}
 	}
-	
+
 	return Plugin_Handled;
 }
