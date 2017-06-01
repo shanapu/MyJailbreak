@@ -915,7 +915,8 @@ public void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast
 		{
 			CPrintToChat(attacker, "%t %t", "armsrace_tag", "armsrace_youwon");
 			CPrintToChatAll("%t %t", "armsrace_tag", "armsrace_winner", attacker);
-			g_iLevel[attacker] -= 1;
+		//	g_iLevel[attacker] -= 1;
+			g_bIsArmsRace = false;
 			CS_TerminateRound(5.0, CSRoundEnd_Draw);
 			return;
 		}
