@@ -1,0 +1,211 @@
+// Exported from SourceMod Translator
+// Date: 2017-05-17 21:17:11 UTC
+// Language: English (en)
+// 
+// To view other translations for this plugin, please visit:
+// http://translator.mitchdempsey.com/sourcemod_plugins/181
+//
+"Phrases"
+{
+
+	"tags_TA"
+	{
+		"es"		"[Prisionero.Admin]"
+	}
+
+	"tags_T"
+	{
+		"es"		"[Prisionero]"
+	}
+
+	"tags_CTA"
+	{
+		"es"		"[Guardia.Admin]"
+	}
+
+	"tags_CT"
+	{
+		"es"		"[Guardia]"
+	}
+
+	"tags_WA"
+	{
+		"es"		"[Capitán.Admin]"
+	}
+
+	"tags_W"
+	{
+		"es"		"[Capitán]"
+	}
+
+	"tags_TVIP1"
+	{
+		"es"		"[Prisionero.VIP]"
+	}
+
+	"tags_TVIP2"
+	{
+		"es"		"[Prisionero.sVIP]"
+	}
+
+	"tags_CTVIP1"
+	{
+		"es"		"[Guardia.VIP]"
+	}
+
+	"tags_CTVIP2"
+	{
+		"es"		"[Guardia.sVIP]"
+	}
+
+	"tags_WVIP1"
+	{
+		"es"		"[Capitán.VIP]"
+	}
+
+	"tags_WVIP2"
+	{
+		"es"		"[Capitán.sVIP]"
+	}
+
+	"tags_TOWN"
+	{
+		"es"		"[Prisionero.Owner]"
+	}
+
+	"tags_CTOWN"
+	{
+		"es"		"[Guardia.Owner]"
+	}
+
+	"tags_WOWN"
+	{
+		"es"		"[Capitán.Owner]"
+	}
+
+	"tags_CT_chat"
+	{
+		"es"		"[Guardia]"
+	}
+
+	"tags_CTA_chat"
+	{
+		"es"		"[Guardia.Admin]"
+	}
+
+	"tags_CTOWN_chat"
+	{
+		"es"		"[Guardia.Owner]"
+	}
+
+	"tags_CTVIP1_chat"
+	{
+		"es"		"[Guardia.VIP]"
+	}
+
+	"tags_CTVIP2_chat"
+	{
+		"es"		"[Guardia.sVIP]"
+	}
+
+	"tags_T_chat"
+	{
+		"es"		"[Prisionero]"
+	}
+
+	"tags_TA_chat"
+	{
+		"es"		"[Prisionero.Admin]"
+	}
+
+	"tags_TOWN_chat"
+	{
+		"es"		"[Prisionero.Owner]"
+	}
+
+	"tags_TVIP1_chat"
+	{
+		"es"		"[Prisionero.VIP]"
+	}
+
+	"tags_TVIP2_chat"
+	{
+		"es"		"[Prisionero.sVIP]"
+	}
+
+	"tags_W_chat"
+	{
+		"es"		"[Capitán]"
+	}
+
+	"tags_WA_chat"
+	{
+		"es"		"[Capitán.Admin]"
+	}
+
+	"tags_WOWN_chat"
+	{
+		"es"		"[Capitán.Owner]"
+	}
+
+	"tags_WVIP1_chat"
+	{
+		"es"		"[Capitán.VIP]"
+	}
+
+	"tags_WVIP2_chat"
+	{
+		"es"		"[Capitán.sVIP]"
+	}
+
+	"tags_D"
+	{
+		"es"		"[Comisario]"
+	}
+
+	"tags_DA"
+	{
+		"es"		"[Comisario.Admin]"
+	}
+
+	"tags_DA_chat"
+	{
+		"es"		"[Comisario.Admin]"
+	}
+
+	"tags_D_chat"
+	{
+		"es"		"[Comisario]"
+	}
+
+	"tags_DOWN"
+	{
+		"es"		"[Comisario.Owner]"
+	}
+
+	"tags_DOWN_chat"
+	{
+		"es"		"[Comisario.Owner]"
+	}
+
+	"tags_DVIP1"
+	{
+		"es"		"[Comisario.VIP]"
+	}
+
+	"tags_DVIP1_chat"
+	{
+		"es"		"[Comisario.VIP]"
+	}
+
+	"tags_DVIP2"
+	{
+		"es"		"[Comisario.sVIP]"
+	}
+
+	"tags_DVIP2_chat"
+	{
+		"es"		"[Comisario.sVIP]"
+	}
+
+}
