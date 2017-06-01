@@ -30,7 +30,6 @@
 #include <cstrike>
 #include <colors>
 #include <autoexecconfig>
-#include <mystocks>
 #include <lvl_ranks>
 
 // Optional Plugins
@@ -121,7 +120,7 @@ public Action Event_OnPlayerSpawn(Event event, const char[] name, bool bDontBroa
 	if (GetClientTeam(client) != CS_TEAM_CT) 
 		return Plugin_Continue;
 
-	if (!IsValidClient(client, false, true))
+	if (!IsValidClient(client))
 		return Plugin_Continue;
 
 	if (LR_GetClientRank(client) < gc_iMinRankRatio.IntValue)
@@ -138,7 +137,7 @@ public Action Timer_SlayPlayer(Handle hTimer, any iUserId)
 {
 	int client = GetClientOfUserId(iUserId);
 
-	if ((IsValidClient(client, false, false)) && (GetClientTeam(client) == CS_TEAM_CT))
+	if ((IsValidClient(client)) && (GetClientTeam(client) == CS_TEAM_CT))
 	{
 		ForcePlayerSuicide(client);
 		ChangeClientTeam(client, CS_TEAM_T);
@@ -151,7 +150,7 @@ public Action Timer_SlayPlayer(Handle hTimer, any iUserId)
 
 void MinusDeath(int client)
 {
-	if (IsValidClient(client, true, true))
+	if (IsValidClient(client))
 	{
 		int frags = GetEntProp(client, Prop_Data, "m_iFrags");
 		int deaths = GetEntProp(client, Prop_Data, "m_iDeaths");
