@@ -660,8 +660,8 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			
 			if (gc_bSpawnRandom.BoolValue)
 			{
-					SetCvar("mp_randomspawn", 0);
-					SetCvar("mp_randomspawn_los", 0);
+				SetCvar("mp_randomspawn", 0);
+				SetCvar("mp_randomspawn_los", 0);
 			}
 			
 			g_iMPRoundTime.IntValue = g_iOldRoundTime;
@@ -915,8 +915,6 @@ public void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast
 		{
 			CPrintToChat(attacker, "%t %t", "armsrace_tag", "armsrace_youwon");
 			CPrintToChatAll("%t %t", "armsrace_tag", "armsrace_winner", attacker);
-		//	g_iLevel[attacker] -= 1;
-			g_bIsArmsRace = false;
 			CS_TerminateRound(5.0, CSRoundEnd_Draw);
 			return;
 		}
@@ -1003,6 +1001,11 @@ public void OnClientPutInServer(int client)
 public Action OnWeaponCanUse(int client, int weapon)
 {
 	if (!g_bIsArmsRace)
+	{
+		return Plugin_Continue;
+	}
+
+	if(g_iLevel[client] == g_iMaxLevel)
 	{
 		return Plugin_Continue;
 	}
