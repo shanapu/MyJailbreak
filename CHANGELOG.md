@@ -68,6 +68,7 @@
 *  Menu: fixed setdays for warden (don't show restricted/disabled days)
 *  Ratio: fixed custom VIP/Admin flags
 *  PlayerTags: fixed custom VIP/Admin flags
+*  Zombie: respawn with ratio restriction
 *  Freeday: fixed roundtime when only one team has player
 *  Freeday: NoBlock (no player collision)
 *  Request - Killreason: fixed display all reasons
