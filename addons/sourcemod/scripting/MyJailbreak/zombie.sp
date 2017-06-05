@@ -359,7 +359,7 @@ public Action Command_SetZombie(int client, int args)
 
 		if (MyJailbreak_ActiveLogging())
 		{
-			LogToFileEx(g_sEventsLogFile, "Event Catch was started by groupvoting");
+			LogToFileEx(g_sEventsLogFile, "Event Zombie was started by groupvoting");
 		}
 	}
 	else if (CheckVipFlag(client, g_sAdminFlag)) // Called by admin/VIP
@@ -403,7 +403,7 @@ public Action Command_SetZombie(int client, int args)
 
 		if (MyJailbreak_ActiveLogging())
 		{
-			LogToFileEx(g_sEventsLogFile, "Event Catch was started by admin %L", client);
+			LogToFileEx(g_sEventsLogFile, "Event Zombie was started by admin %L", client);
 		}
 	}
 	else if (gp_bWarden) // Called by warden
@@ -453,7 +453,7 @@ public Action Command_SetZombie(int client, int args)
 
 		if (MyJailbreak_ActiveLogging())
 		{
-			LogToFileEx(g_sEventsLogFile, "Event Catch was started by warden %L", client);
+			LogToFileEx(g_sEventsLogFile, "Event Zombie was started by warden %L", client);
 		}
 	}
 	else
@@ -529,7 +529,7 @@ public Action Command_VoteZombie(int client, int args)
 
 		if (MyJailbreak_ActiveLogging())
 		{
-			LogToFileEx(g_sEventsLogFile, "Event Catch was started by voting");
+			LogToFileEx(g_sEventsLogFile, "Event Zombie was started by voting");
 		}
 	}
 	else
@@ -940,8 +940,12 @@ public void OnAvailableLR(int Announced)
 				FakeClientCommand(i, "sm_weapons");
 				SetEntityModel(i, g_sModelPathPrevious[i]);
 				SetEntityHealth(i, 100);
+				GivePlayerItem(i, "weapon_knife");
 			}
-			GivePlayerItem(i, "weapon_knife");
+			else
+			{
+				GivePlayerItem(i, "weapon_knife_t");
+			}
 
 			if (g_bTerrorZombies[i])
 			{
