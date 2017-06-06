@@ -676,7 +676,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 		{
 			SetEntData(i, g_iCollision_Offset, 0, 4, true);
 
-			CreateTimer(0.0, DeleteOverlay, i);
+			CreateTimer(0.0, DeleteOverlay, GetClientUserId(i));
 
 			SetEntityRenderColor(i, 255, 255, 255, 0);
 
@@ -897,7 +897,7 @@ void TorchEm(int client)
 
 	if (!gc_bStayOverlay.BoolValue)
 	{
-		CreateTimer(3.0, DeleteOverlay, client);
+		CreateTimer(3.0, DeleteOverlay, GetClientUserId(client));
 	}
 
 	CPrintToChatAll("%t %t", "torch_tag", "torch_torchem", client);
@@ -918,7 +918,7 @@ void ExtinguishEm(int client)
 
 	SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
 
-	CreateTimer(0.0, DeleteOverlay, client);
+	CreateTimer(0.0, DeleteOverlay, GetClientUserId(client));
 
 	if (gc_bSounds.BoolValue)
 	{
@@ -944,7 +944,6 @@ void CheckStatus()
 	if (number == 0)
 	{
 		CS_TerminateRound(5.0, CSRoundEnd_Draw);
-		CreateTimer(1.0, DeleteOverlay);
 		CPrintToChatAll("%t %t", "torch_tag", "torch_win");
 	}
 }
@@ -1102,7 +1101,7 @@ public Action Timer_StartEvent(Handle timer)
 
 		if (!gc_bStayOverlay.BoolValue)
 		{
-			CreateTimer(3.0, DeleteOverlay, g_iBurningZero);
+			CreateTimer(3.0, DeleteOverlay, GetClientUserId(g_iBurningZero));
 		}
 	}
 

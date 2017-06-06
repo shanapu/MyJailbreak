@@ -727,7 +727,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 		{
 			SetEntData(i, g_iCollision_Offset, 0, 4, true);
 
-			CreateTimer(0.0, DeleteOverlay, i);
+			CreateTimer(0.0, DeleteOverlay, GetClientUserId(i));
 			SetEntityRenderColor(i, 255, 255, 255, 0);
 
 			g_iSprintStatus[i] = 0;
@@ -955,7 +955,7 @@ public void OnAvailableLR(int Announced)
 
 			SetEntData(i, g_iCollision_Offset, 0, 4, true);
 
-			CreateTimer(0.0, DeleteOverlay, i);
+			CreateTimer(0.0, DeleteOverlay, GetClientUserId(i));
 
 			SetEntityRenderColor(i, 255, 255, 255, 0);
 			SetEntityHealth(i, 100);
@@ -1051,7 +1051,7 @@ void CatchEm(int client, int attacker)
 
 	if (!gc_bStayOverlay.BoolValue)
 	{
-		CreateTimer(3.0, DeleteOverlay, client);
+		CreateTimer(3.0, DeleteOverlay, GetClientUserId(client));
 	}
 
 	CPrintToChatAll("%t %t", "catch_tag", "catch_catch", attacker, client);
@@ -1066,7 +1066,7 @@ void FreeEm(int client, int attacker)
 
 	g_bCatched[client] = false;
 
-	CreateTimer(0.0, DeleteOverlay, client);
+	CreateTimer(0.0, DeleteOverlay, GetClientUserId(client));
 
 	if (gc_bSounds.BoolValue)
 	{
@@ -1093,7 +1093,6 @@ void CheckStatus()
 		CPrintToChatAll("%t %t", "catch_tag", "catch_win");
 
 		CS_TerminateRound(5.0, CSRoundEnd_CTWin);
-		CreateTimer(1.0, DeleteOverlay);
 	}
 }
 

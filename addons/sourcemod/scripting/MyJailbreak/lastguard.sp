@@ -445,7 +445,7 @@ void StartLastGuard()
 
 			SetEntityRenderColor(i, 255, 255, 255, 255);
 
-			CreateTimer(0.0, DeleteOverlay, i);
+			CreateTimer(0.0, DeleteOverlay, GetClientUserId(i));
 
 			if (gp_bHosties)
 			{

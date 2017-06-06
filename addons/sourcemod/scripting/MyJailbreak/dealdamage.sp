@@ -633,6 +633,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 		{
 			SetEntData(i, g_iCollision_Offset, 0, 4, true); // disbale noblock
+			CreateTimer(0.5, DeleteOverlay, GetClientUserId(i));
 		}
 
 		delete g_hTimerTruce; // kill start time if still running

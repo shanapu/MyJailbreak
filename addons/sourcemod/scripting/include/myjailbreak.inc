@@ -39,7 +39,7 @@
 #define _myjailbreak_included_
 
 
-public SharedPlugin:__pl_myjailbreak =
+public SharedPlugin __pl_myjailbreak =
 {
 	name = "myjailbreak",
 	file = "myjailbreak.smx",

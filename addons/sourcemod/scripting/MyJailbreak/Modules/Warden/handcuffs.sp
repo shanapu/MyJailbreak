@@ -205,7 +205,7 @@ public void HandCuffs_Event_PlayerTeamDeath(Event event, const char[] name, bool
 		g_bCuffed[client] = false;
 		SetEntityMoveType(client, MOVETYPE_WALK);
 		SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
-		CreateTimer(0.0, DeleteOverlay, client);
+		CreateTimer(0.0, DeleteOverlay, GetClientUserId(client));
 	}
 }
 
@@ -493,7 +493,7 @@ void FreeEm(int client, int attacker)
 	SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
 	SetEntityRenderColor(client, 255, 255, 255, 255);
 	g_bCuffed[client] = false;
-	CreateTimer(0.0, DeleteOverlay, client);
+	CreateTimer(0.0, DeleteOverlay, GetClientUserId(client));
 	g_iCuffed--;
 	ProgressTimer[client] = null;
 
@@ -656,7 +656,7 @@ public Action Timer_ProgressOpen(Handle timer, int client)
 		SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
 		SetEntityRenderColor(client, 255, 255, 255, 255);
 		g_bCuffed[client] = false;
-		CreateTimer(0.0, DeleteOverlay, client);
+		CreateTimer(0.0, DeleteOverlay, GetClientUserId(client));
 		g_iCuffed--;
 		g_iPlayerPaperClips[client]--;
 	}
