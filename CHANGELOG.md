@@ -61,7 +61,7 @@
   
   
 *Changed*
-*  
+*  Flags: all ConVars to set admin/vip flag was exentendet to support mutliple flags "r,s,t" use comma
   
   
 *Fixed*
@@ -74,6 +74,7 @@
 *  Request - Killreason: fixed display all reasons
 *  Duckhunt & KnifeFight: fix gravity ladderfix
 *  Store Credits & paperclips: fix chat colors
+*  Zombie: Respawn with restiction addon
   
   
 *Removed*

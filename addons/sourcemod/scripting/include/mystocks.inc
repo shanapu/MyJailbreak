@@ -347,23 +347,15 @@ stock bool CheckVipFlag(int client, char [] flagsNeed)
 	int iCount = 0;
 	char sflagNeed[22][8], sflagFormat[64];
 	bool bEntitled = false;
-	
-	PrintToServer("Input: %s",flagsNeed);
 
 	Format(sflagFormat, sizeof(sflagFormat), flagsNeed);
-	PrintToServer("InputFormat: %s",sflagFormat);
 	ReplaceString(sflagFormat, sizeof(sflagFormat), " ", "");
-	PrintToServer("InputReplace: %s",sflagFormat);
 	iCount = ExplodeString(sflagFormat, ",", sflagNeed, sizeof(sflagNeed), sizeof(sflagNeed[]));
-	PrintToServer("ExplodeCount: %i",iCount);
 
 	for (int i = 0; i < iCount; i++)
 	{
-		PrintToServer("Loop Flag: %s",sflagNeed[i]);
-
 		if ((GetUserFlagBits(client) & ReadFlagString(sflagNeed[i]) == ReadFlagString(sflagNeed[i])) || (GetUserFlagBits(client) & ADMFLAG_ROOT))
 		{
-			PrintToServer("Loop Flag success: %s",sflagNeed[i]);
 			bEntitled = true;
 			break;
 		}
