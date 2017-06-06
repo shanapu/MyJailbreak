@@ -113,7 +113,7 @@ Handle g_hTimerBeacon;
 char g_sHasVoted[1500];
 char g_sSoundStartPath[256];
 char g_sEventsLogFile[PLATFORM_MAX_PATH];
-char g_sAdminFlag[4];
+char g_sAdminFlag[64];
 char g_sOverlayStartPath[256];
 
 // Info

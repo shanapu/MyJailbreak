@@ -342,14 +342,34 @@ stock int GetLastAlive(int team)
 
 
 // Get a player for a certain admin flag
-stock bool CheckVipFlag(int client, const char[] flagsNeed)
+stock bool CheckVipFlag(int client, char [] flagsNeed)
 {
-	if ((GetUserFlagBits(client) & ReadFlagString(flagsNeed) == ReadFlagString(flagsNeed)) || (GetUserFlagBits(client) & ADMFLAG_ROOT))
+	int iCount = 0;
+	char sflagNeed[22][8], sflagFormat[64];
+	bool bEntitled = false;
+	
+	PrintToServer("Input: %s",flagsNeed);
+
+	Format(sflagFormat, sizeof(sflagFormat), flagsNeed);
+	PrintToServer("InputFormat: %s",sflagFormat);
+	ReplaceString(sflagFormat, sizeof(sflagFormat), " ", "");
+	PrintToServer("InputReplace: %s",sflagFormat);
+	iCount = ExplodeString(sflagFormat, ",", sflagNeed, sizeof(sflagNeed), sizeof(sflagNeed[]));
+	PrintToServer("ExplodeCount: %i",iCount);
+
+	for (int i = 0; i < iCount; i++)
 	{
-		return true;
+		PrintToServer("Loop Flag: %s",sflagNeed[i]);
+
+		if ((GetUserFlagBits(client) & ReadFlagString(sflagNeed[i]) == ReadFlagString(sflagNeed[i])) || (GetUserFlagBits(client) & ADMFLAG_ROOT))
+		{
+			PrintToServer("Loop Flag success: %s",sflagNeed[i]);
+			bEntitled = true;
+			break;
+		}
 	}
 
-	return false;
+	return bEntitled;
 }
 
 

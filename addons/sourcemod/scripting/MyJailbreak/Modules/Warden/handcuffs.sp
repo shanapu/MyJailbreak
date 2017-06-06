@@ -77,7 +77,7 @@ int TickTime[MAXPLAYERS+1];
 // Strings
 char g_sSoundCuffsPath[256];
 char g_sOverlayCuffsPath[256];
-char g_sAdminFlagCuffs[4];
+char g_sAdminFlagCuffs[64];
 char g_sSoundBreakCuffsPath[256];
 char g_sSoundUnLockCuffsPath[256];
 char g_sEquipWeapon[MAXPLAYERS+1][32];

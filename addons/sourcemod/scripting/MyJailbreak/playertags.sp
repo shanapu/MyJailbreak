@@ -55,12 +55,12 @@ ConVar gc_sVIP2Flag;
 ConVar gc_bNoOverwrite;
 
 // Strings
-char g_sAdminFlag[4];
-char g_sOwnerFlag[32];
-char g_sVIP2Flag[32];
-char g_sVIPFlag[32];
-char g_sSuperAdminFlag[32];
-char g_sCoOwnerFlag[32];
+char g_sAdminFlag[64];
+char g_sOwnerFlag[64];
+char g_sVIP2Flag[64];
+char g_sVIPFlag[64];
+char g_sSuperAdminFlag[64];
+char g_sCoOwnerFlag[64];
 
 // Info
 public Plugin myinfo =

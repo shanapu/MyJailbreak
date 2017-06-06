@@ -56,7 +56,7 @@ Handle g_hTimerRepeat[MAXPLAYERS+1];
 
 // Strings
 char g_sSoundRepeatPath[256];
-char g_sAdminFlagRepeat[4];
+char g_sAdminFlagRepeat[64];
 
 // Start
 public void Repeat_OnPluginStart()

@@ -60,7 +60,7 @@ int g_iHealCounter[MAXPLAYERS+1];
 Handle g_hTimerHeal[MAXPLAYERS+1];
 
 // Strings
-char g_sAdminFlagHeal[4];
+char g_sAdminFlagHeal[64];
 
 // Start
 public void Heal_OnPluginStart()

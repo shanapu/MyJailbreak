@@ -207,10 +207,10 @@ ConVar g_bWardenArmsRace;
 
 
 // Strings
-char g_sAdminFlagBulletSparks[4];
-char g_sAdminFlagLaser[4];
-char g_sAdminFlagPainter[4];
-char g_sAdminFlag[4];
+char g_sAdminFlagBulletSparks[64];
+char g_sAdminFlagLaser[64];
+char g_sAdminFlagPainter[64];
+char g_sAdminFlag[64];
 
 // Handles
 Handle gH_TopMenu = INVALID_HANDLE;
