@@ -231,5 +231,4 @@ int SecondsToString(int Time, char[] buffer, int buffersize, int client)
 	{
 		Format(buffer, buffersize, "%d %t", iSeconds, "ratio_seconds", client);
 	}
-	PrintToChat(client, "%s", buffer);
 }
