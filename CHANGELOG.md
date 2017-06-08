@@ -55,13 +55,19 @@
         *  new cvar - sm_armsrace_overlays_enable - 0 - disabled, 1 - enable overlays
         *  new cvar - sm_armsrace_overlays_start - Path to the start Overlay DONT TYPE .vmt or .vft
     * Menu: added new eventday armsrace to set/voting menu
+*  Add-On: Support for frans1cos Most Active
+    *  new plugin - disabled/myjailbreak_mostactive.smx
+        *  new cvar - sm_ratio_mostactive - 0 - disabled, how many seconds a player need to join ct? (only if MostActive is available)
+        *  new cvar - sm_ratio_mostactive_team - 1 - playtime as Terror / 2 - playtime in Total (CT,T&Spec)
+        *  new cvar - sm_warden_mostactive - 0 - disabled, how many seconds a player need to become warden? (only if MostActive is available)
+        *  new cvar - sm_warden_mostactive_team - 0 - playtime as Counter-Terror / 1 - playtime as Terror / 2 - playtime in Total (CT,T&Spec)
 *  PlayerTags: Two new Tags SuperAdmin & CoOwner Thx @ ichiballs
     *  new cvar - sm_playertag_coownerflag - Set the flag for CoOwner. Default 'r'
     *  new cvar - sm_playertag_superadminflag - Set the flag for Super Admin. Default 's'
   
   
 *Changed*
-*  Flags: all ConVars to set admin/vip flag was exentendet to support mutliple flags "r,s,t" use comma
+*  Flags: all ConVars to set admin/vip flag has been extended to support mutliple flags ex. "r,s,t" use comma
   
   
 *Fixed*

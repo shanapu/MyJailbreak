@@ -61,6 +61,7 @@ echo "Move all other binary files to plugins folder"
   mv addons/sourcemod/plugins/MyJailbreak/myjailbreak_kento_rankme.smx addons/sourcemod/plugins/MyJailbreak/disabled
   mv addons/sourcemod/plugins/MyJailbreak/myjailbreak_rankme.smx addons/sourcemod/plugins/MyJailbreak/disabled
   mv addons/sourcemod/plugins/MyJailbreak/myjailbreak_reputation.smx addons/sourcemod/plugins/MyJailbreak/disabled
+  mv addons/sourcemod/plugins/MyJailbreak/myjailbreak_mostactive.smx addons/sourcemod/plugins/MyJailbreak/disabled
   mv addons/sourcemod/plugins/MyJailbreak/myjailbreak_teamgames.smx addons/sourcemod/plugins/MyJailbreak/disabled
   mv addons/sourcemod/plugins/MyJailbreak/myjailbreak_steamgroups.smx addons/sourcemod/plugins/MyJailbreak/disabled
   mv addons/sourcemod/plugins/MyJailbreak/myjailbreak_stamm.smx addons/sourcemod/plugins/MyJailbreak/disabled
