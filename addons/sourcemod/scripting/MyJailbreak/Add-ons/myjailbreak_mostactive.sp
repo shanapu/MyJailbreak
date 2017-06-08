@@ -1,5 +1,5 @@
 /*
- * MyJailbreak - Ratio - RankMe Support.
+ * MyJailbreak - Ratio - Most Active Support.
  * by: shanapu
  * https://github.com/shanapu/MyJailbreak/
  * 
