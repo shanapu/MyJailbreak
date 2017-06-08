@@ -114,7 +114,7 @@
 
 	"cowboy_info_line3"
 	{
-		"es"		"Puedes moverte durante la fase "Sin Daño"!"
+		"es"		"Puedes moverte durante la fase 'Sin Daño'!"
 	}
 
 	"cowboy_info_line4"

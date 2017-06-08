@@ -125,7 +125,7 @@
 
 	"ffa_info_line3"
 	{
-		"es"		"Huye durante la fase "Sin Daño"!"
+		"es"		"Huye durante la fase 'Sin Daño'!"
 	}
 
 	"ffa_info_line4"

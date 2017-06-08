@@ -1018,4 +1018,22 @@
 		"en"		"No players to choose"
 	}
 
+	"warden_mostactive"
+	{
+		"#format"	"{1:s}"
+		"en"		"You must have played at least {1} to play as a warden."
+	}
+
+	"warden_mostactive_guard"
+	{
+		"#format"	"{1:s}"
+		"en"		"You must have played at least {1} as guard to play as a warden."
+	}
+
+	"warden_mostactive_terror"
+	{
+		"#format"	"{1:s}"
+		"en"		"You must have played at least {1} as terror to play as a warden."
+	}
+
 }

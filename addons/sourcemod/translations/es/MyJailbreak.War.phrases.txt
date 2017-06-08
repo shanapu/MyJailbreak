@@ -119,7 +119,7 @@
 
 	"war_info_line3"
 	{
-		"es"		"Huye durante la fase "Sin Daño"!"
+		"es"		"Huye durante la fase 'Sin Daño'!"
 	}
 
 	"war_info_line4"
