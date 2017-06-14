@@ -239,9 +239,6 @@ public void OnConfigsExecuted()
 			RegConsoleCmd(sCommand, Command_SetFreeday, "Allows the Admin or Warden to set freeday as next round");
 		}
 	}
-
-	g_iOldRoundTime = g_iMPRoundTime.IntValue;
-	g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue;
 }
 
 /******************************************************************************
@@ -573,7 +570,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 // Round End
 public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
-	if (g_bIsFreeday)
+	if (g_bIsFreeday && !g_bRepeatFirstFreeday)
 	{
 		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, true))
 		{
@@ -600,12 +597,9 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 		SetCvar("sm_weapons_enable", 1);
 		SetCvar("mp_teammates_are_enemies", 0);
 
-		if (!g_bRepeatFirstFreeday && g_iOldRoundTime != -1)
-		{
-			g_iMPRoundTime.IntValue = g_iOldRoundTime;
-		}
+		g_iMPRoundTime.IntValue = g_iOldRoundTime;
 
-		if (!g_bRepeatFirstFreeday && gp_bMyJailbreak)
+		if (gp_bMyJailbreak)
 		{
 			MyJailbreak_SetEventDayName("none"); // tell myjailbreak event is ended
 			MyJailbreak_SetEventDayRunning(false, 0);
@@ -614,7 +608,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 		CPrintToChatAll("%t %t", "freeday_tag", "freeday_end");
 	}
 
-	if (g_bStartFreeday || g_bRepeatFirstFreeday)
+	if (g_bStartFreeday)
 	{
 		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 		{
@@ -656,6 +650,9 @@ public void OnMapStart()
 	if (gc_bFirst.BoolValue)
 	{
 		g_bStartFreeday = true;
+
+		g_iOldRoundTime = g_iMPRoundTime.IntValue;
+		g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue;
 
 		if (gp_bMyJailbreak)
 		{
