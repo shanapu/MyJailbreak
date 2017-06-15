@@ -72,7 +72,7 @@ echo "Move all other binary files to plugins folder"
   mv addons/sourcemod/plugins/MyJailbreak/ratio_steamrep.smx addons/sourcemod/plugins/MyJailbreak/disabled
   mv addons/sourcemod/plugins/MyJailbreak/ratio_ctbans_addicted.smx addons/sourcemod/plugins/MyJailbreak/disabled
   mv addons/sourcemod/plugins/MyJailbreak/ratio_ctbans_databomb.smx addons/sourcemod/plugins/MyJailbreak/disabled
-  mv addons/sourcemod/plugins/MyJailbreak/ratio_ctbans_fantom.smx addons/sourcemod/plugins/MyJailbreak/disabled
+  mv addons/sourcemod/plugins/MyJailbreak/ratio_ctbans_r1ko.smx addons/sourcemod/plugins/MyJailbreak/disabled
   mv addons/sourcemod/plugins/MyJailbreak/warden_zephstore_paperclips.smx addons/sourcemod/plugins/MyJailbreak/disabled
 
 echo "Remove build folder if exists"
