@@ -47,6 +47,7 @@
 #pragma newdecls required
 
 // Console Variables
+ConVar gc_bEventDay;
 ConVar gc_bIconWarden;
 ConVar gc_sIconWardenPath;
 ConVar gc_bIconDeputy;
@@ -96,6 +97,7 @@ public void OnPluginStart()
 	AutoExecConfig_SetCreateFile(true);
 
 	// AutoExecConfig
+	gc_bEventDay = AutoExecConfig_CreateConVar("sm_icons_eventday", "1", "0 - use the icons, 1 - disable icons on EventDays", _, true, 0.0, true, 1.0);
 	gc_bIconWarden = AutoExecConfig_CreateConVar("sm_icons_warden_enable", "1", "0 - disabled, 1 - enable the icon above the wardens head", _, true, 0.0, true, 1.0);
 	gc_sIconWardenPath = AutoExecConfig_CreateConVar("sm_icons_warden_path", "decals/MyJailbreak/warden", "Path to the warden icon DONT TYPE .vmt or .vft");
 	gc_bIconDeputy = AutoExecConfig_CreateConVar("sm_icons_deputy_enable", "1", "0 - disabled, 1 - enable the icon above the deputy head", _, true, 0.0, true, 1.0);
@@ -461,7 +463,10 @@ void SpawnIcon(int client)
 
 	RemoveIcon(client);
 
-	if (g_bBlockIcon[client]) 
+	if(gc_bEventDay.BoolValue && MyJailbreak_IsEventDayRunning())
+		return;
+
+	if (g_bBlockIcon[client])
 		return;
 
 	char iTarget[16];
@@ -470,7 +475,7 @@ void SpawnIcon(int client)
 
 	g_iIcon[client] = CreateEntityByName("env_sprite");
 
-	if (!g_iIcon[client]) 
+	if (!g_iIcon[client])
 		return;
 
 	char iconbuffer[256];

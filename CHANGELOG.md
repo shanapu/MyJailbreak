@@ -61,18 +61,29 @@
         *  new cvar - sm_ratio_mostactive_team - 1 - playtime as Terror / 2 - playtime in Total (CT,T&Spec)
         *  new cvar - sm_warden_mostactive - 0 - disabled, how many seconds a player need to become warden? (only if MostActive is available)
         *  new cvar - sm_warden_mostactive_team - 0 - playtime as Counter-Terror / 1 - playtime as Terror / 2 - playtime in Total (CT,T&Spec)
+*  Add-On: Support for Levels Ranks Core 2.2.0 http://hlmod.ru/resources/levels-ranks-core.177/
+    *  new plugin - disabled/myjailbreak_lvl_ranks.smx
+        *  new cvar - sm_ratio_mostactive - 0 - what level a player need to join ct? (only if lvlranks is available)
+        *  new cvar - sm_warden_mostactive - 0 - what level a player need to become warden? (only if lvlranks is available)
 *  PlayerTags: Two new Tags SuperAdmin & CoOwner Thx @ ichiballs
     *  new cvar - sm_playertag_coownerflag - Set the flag for CoOwner. Default 'r'
     *  new cvar - sm_playertag_superadminflag - Set the flag for Super Admin. Default 's'
+*  Icons: ConVar to disable Icons on all eventdays
+    *  new cvar - sm_icon_eventday - 0 - use the icons, 1 - disable icons on EventDays
+*  Weapons: ConVar to disable weapons for CTs on not eventday rounds. (use armory)
+    *  new cvar - sm_weapons_noeventday - 0 - disabled, 1 - enable the weapon menu on non-EventDays round (normal/simon rounds)
+  
   
   
 *Changed*
 *  Flags: all ConVars to set admin/vip flag has been extended to support mutliple flags ex. "r,s,t" use comma
-  
+*  renamed plugin - ratio_ctbans_fantom to ratio_ctbans_r1ko
+
   
 *Fixed*
 *  Menu: fixed setdays for warden (don't show restricted/disabled days)
 *  Ratio: fixed custom VIP/Admin flags
+*  Warden - mute: fixed confict with sourcecomms
 *  PlayerTags: fixed custom VIP/Admin flags
 *  Zombie: respawn with ratio restriction
 *  Freeday: fixed roundtime when only one team has player
@@ -84,7 +95,14 @@
   
   
 *Removed*
-*  
+*  removed cvars - sm_weapons_ct - obsolete cvars. **Please remove them from your configs!**
+*  removed cvars - sm_weapons_t - obsolete cvars. **Please remove them from your configs!**
+  
+  
+*Developer stuff*
+*  Changed the way how weapons access is handled. natives insetad of switch ConVars
+    *  new native - MyWeapons_AllowTeam(int client, bool status) - Allow a team to pick weapons from weapons menu 
+    *  new native - MyWeapons_GetTeamStatus(int iTeam) - Get team status if weapons are allowed
   
   
   
