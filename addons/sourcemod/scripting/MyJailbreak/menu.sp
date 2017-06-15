@@ -39,6 +39,7 @@
 // Optional Plugins
 #undef REQUIRE_PLUGIN
 #include <smartjaildoors>
+#include <myweapons>
 #define REQUIRE_PLUGIN
 
 // Compiler Options
@@ -46,9 +47,10 @@
 #pragma newdecls required
 
 // Booleans
-bool g_bIsLateLoad = false;
-bool gp_bMyJailShop = false;
-bool gp_bSmartJailDoors = false;
+bool g_bIsLateLoad;
+bool gp_bMyJailShop;
+bool gp_bSmartJailDoors;
+bool gp_bMyWeapons;
 
 // Integers
 int g_iCoolDown;
@@ -116,9 +118,6 @@ ConVar g_bDuckHunt;
 ConVar g_bCountdown;
 ConVar g_bCountdownDeputy;
 ConVar g_bVote;
-ConVar g_bGuns;
-ConVar g_bGunsT;
-ConVar g_bGunsCT;
 ConVar g_bOpen;
 ConVar g_bOpenDeputy;
 ConVar g_bRandomDeputy;
@@ -556,9 +555,6 @@ public void OnConfigsExecuted()
 	g_bCountdown = FindConVar("sm_warden_countdown");
 	g_bCountdownDeputy = FindConVar("sm_warden_countdown_deputy");
 	g_bVote = FindConVar("sm_warden_vote");
-	g_bGunsCT = FindConVar("sm_weapons_ct");
-	g_bGunsT = FindConVar("sm_weapons_t");
-	g_bGuns = FindConVar("sm_weapons_enable");
 	g_bFF = FindConVar("mp_teammates_are_enemies");
 	g_bRequest = FindConVar("sm_request_enable");
 	g_bOpen = FindConVar("sm_warden_open_enable");
@@ -790,15 +786,12 @@ public Action Command_OpenMenu(int client, int args)
 					Format(menuinfo, sizeof(menuinfo), "%T", "menu_PLACEHOLDER", client);
 					mainmenu.AddItem("PLACEHOLDER", menuinfo);
 					*/
-					if (g_bGuns != null)
+					if (gp_bMyWeapons)
 					{
-						if (g_bGuns.BoolValue)
+						if (MyWeapons_GetTeamStatus(CS_TEAM_CT))
 						{
-							if (g_bGunsCT.BoolValue)
-							{
-								Format(menuinfo, sizeof(menuinfo), "%T", "menu_guns", client);
-								mainmenu.AddItem("guns", menuinfo);
-							}
+							Format(menuinfo, sizeof(menuinfo), "%T", "menu_guns", client);
+							mainmenu.AddItem("guns", menuinfo);
 						}
 					}
 					if (g_bOpen != null && gp_bSmartJailDoors)
@@ -977,15 +970,12 @@ public Action Command_OpenMenu(int client, int args)
 					Format(menuinfo, sizeof(menuinfo), "%T", "menu_PLACEHOLDER", client);
 					mainmenu.AddItem("PLACEHOLDER", menuinfo);
 					*/
-					if (g_bGuns != null)
+					if (gp_bMyWeapons)
 					{
-						if (g_bGuns.BoolValue)
+						if (MyWeapons_GetTeamStatus(CS_TEAM_CT))
 						{
-							if (g_bGunsCT.BoolValue)
-							{
-								Format(menuinfo, sizeof(menuinfo), "%T", "menu_guns", client);
-								mainmenu.AddItem("guns", menuinfo);
-							}
+							Format(menuinfo, sizeof(menuinfo), "%T", "menu_guns", client);
+							mainmenu.AddItem("guns", menuinfo);
 						}
 					}
 					if (g_bOpen != null && gp_bSmartJailDoors)
@@ -1138,15 +1128,12 @@ public Action Command_OpenMenu(int client, int args)
 					Format(menuinfo, sizeof(menuinfo), "%T", "menu_PLACEHOLDER", client);
 					mainmenu.AddItem("PLACEHOLDER", menuinfo);
 					*/
-					if (g_bGuns != null)
+					if (gp_bMyWeapons)
 					{
-						if (g_bGuns.BoolValue)
+						if (MyWeapons_GetTeamStatus(CS_TEAM_CT))
 						{
-							if (g_bGunsCT.BoolValue)
-							{
-								Format(menuinfo, sizeof(menuinfo), "%T", "menu_guns", client);
-								mainmenu.AddItem("guns", menuinfo);
-							}
+							Format(menuinfo, sizeof(menuinfo), "%T", "menu_guns", client);
+							mainmenu.AddItem("guns", menuinfo);
 						}
 					}
 					if (g_bWarden != null)
@@ -1216,6 +1203,14 @@ public Action Command_OpenMenu(int client, int args)
 					Format(menuinfo, sizeof(menuinfo), "%T", "menu_PLACEHOLDER", client);
 					mainmenu.AddItem("PLACEHOLDER", menuinfo);
 					*/
+					if (gp_bMyWeapons)
+					{
+						if (MyWeapons_GetTeamStatus(CS_TEAM_T))
+						{
+							Format(menuinfo, sizeof(menuinfo), "%T", "menu_guns", client);
+							mainmenu.AddItem("guns", menuinfo);
+						}
+					}
 					if (gp_bMyJailShop)
 					{
 						Format(menuinfo, sizeof(menuinfo), "%T", "menu_jailshop", client);
@@ -1225,17 +1220,6 @@ public Action Command_OpenMenu(int client, int args)
 					{
 						Format(menuinfo, sizeof(menuinfo), "%T", "menu_gangs", client);
 						mainmenu.AddItem("gangs", menuinfo);
-					}
-					if (g_bGuns != null)
-					{
-						if (g_bGuns.BoolValue)
-						{
-							if (g_bGunsT.BoolValue)
-							{
-								Format(menuinfo, sizeof(menuinfo), "%T", "menu_guns", client);
-								mainmenu.AddItem("guns", menuinfo);
-							}
-						}
 					}
 					if (g_bRequest != null)
 					{

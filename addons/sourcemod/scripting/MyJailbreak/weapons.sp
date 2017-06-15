@@ -55,6 +55,8 @@ bool g_bHealth[MAXPLAYERS+1] = {false, ...};
 bool gp_bWarden = false;
 bool gp_bMyJailBreak = false;
 bool gp_bHosties = false;
+bool g_bAllowCT = true;
+bool g_bAllowT = false;
 
 // Handles
 Handle g_hMenu1 = null;
@@ -70,10 +72,9 @@ Handle g_hWeapons2 = null;
 // Console Variables
 ConVar gc_bSpawn;
 ConVar gc_bPlugin;
-ConVar gc_bTerror;
-ConVar gc_bCTerror;
 ConVar gc_bTAWarden;
 ConVar gc_bTADeputy;
+ConVar gc_bEventDay;
 ConVar gc_bJBmenu;
 ConVar gc_bAWP;
 ConVar gc_bAutoSniper;
@@ -111,9 +112,44 @@ public Plugin myinfo =
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
+	CreateNative("MyWeapons_AllowTeam", Native_AllowTeam);
+	CreateNative("MyWeapons_GetTeamStatus", Native_TeamStatus);
+
+	RegPluginLibrary("myweapons");
+
 	g_bIsLateLoad = late;
 
 	return APLRes_Success;
+}
+
+public int Native_AllowTeam(Handle plugin, int argc)
+{
+	int iTeam = GetNativeCell(1);
+
+	if (iTeam == CS_TEAM_CT)
+	{
+		g_bAllowCT = GetNativeCell(2);
+	}
+	if (iTeam == CS_TEAM_T)
+	{
+		g_bAllowT = GetNativeCell(2);
+	}
+}
+
+public int Native_TeamStatus(Handle plugin, int argc)
+{
+	int iTeam = GetNativeCell(1);
+
+	if (iTeam == CS_TEAM_CT)
+	{
+		return g_bAllowCT;
+	}
+	if (iTeam == CS_TEAM_T)
+	{
+		return g_bAllowT;
+	}
+
+	return false;
 }
 
 // Start
@@ -130,11 +166,10 @@ public void OnPluginStart()
 	AutoExecConfig_SetCreateFile(true);
 
 	AutoExecConfig_CreateConVar("sm_weapons_version", MYJB_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
-	gc_bPlugin = AutoExecConfig_CreateConVar("sm_weapons_enable", "1", "0 - disabled, 1 - enable weapons menu - you shouldn't touch these, cause events days will handle them", _, true, 0.0, true, 1.0);
+	gc_bPlugin = AutoExecConfig_CreateConVar("sm_weapons_enable", "1", "0 - disabled, 1 - enable weapons menu", _, true, 0.0, true, 1.0);
 	gc_sCustomCommandWeapon = AutoExecConfig_CreateConVar("sm_weapons_cmds", "gun, guns, weapons, gunmenu, weaponmenu, giveweapon, arms", "Set your custom chat command for weapon menu(!weapon (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
-	gc_bTerror = AutoExecConfig_CreateConVar("sm_weapons_t", "0", "0 - disabled, 1 - enable weapons menu for T - you shouldn't touch these, cause events days will handle them", _, true, 0.0, true, 1.0);
-	gc_bCTerror = AutoExecConfig_CreateConVar("sm_weapons_ct", "1", "0 - disabled, 1 - enable weapons menu for CT - you shouldn't touch these, cause events days will handle them", _, true, 0.0, true, 1.0);
 	gc_bSpawn = AutoExecConfig_CreateConVar("sm_weapons_spawnmenu", "1", "0 - disabled, 1 -  enable autoopen weapon menu on spawn", _, true, 0.0, true, 1.0);
+	gc_bEventDay = AutoExecConfig_CreateConVar("sm_weapons_noeventday", "1", "0 - disabled, 1 - enable the weapon menu on non-EventDays round (normal/simon rounds)", _, true, 0.0, true, 1.0);
 	gc_bAWP = AutoExecConfig_CreateConVar("sm_weapons_awp", "1", "0 - disabled, 1 - enable AWP in menu", _, true, 0.0, true, 1.0);
 	gc_bAutoSniper = AutoExecConfig_CreateConVar("sm_weapons_autosniper", "1", "0 - disabled, 1 - enable scar20 & g3sg1 in menu", _, true, 0.0, true, 1.0);
 	gc_bNegev = AutoExecConfig_CreateConVar("sm_weapons_negev", "1", "0 - disabled, 1 - enable negev in menu", _, true, 0.0, true, 1.0);
@@ -319,11 +354,14 @@ public void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast
 
 void GiveSavedWeaponsFix(int client)
 {
+	if (!gc_bEventDay.BoolValue && !MyJailbreak_IsEventDayRunning())
+		return;
+
 	if (IsPlayerAlive(client))
 	{
 		if (gc_bPlugin.BoolValue)
 		{
-			if ((gc_bTerror.BoolValue && GetClientTeam(client) == 2) || (gc_bCTerror.BoolValue && GetClientTeam(client) == 3))
+			if ((g_bAllowT && GetClientTeam(client) == CS_TEAM_T) || (g_bAllowCT && GetClientTeam(client) == CS_TEAM_CT))
 			{
 				// StripAllPlayerWeapons(client);
 				if (GetPlayerWeaponSlot(client, CS_SLOT_PRIMARY) == -1)
@@ -374,7 +412,10 @@ void SetBuyZones(const char[] status)
 
 void GiveSavedWeapons(int client)
 {
-	if (((gc_bTerror.BoolValue && GetClientTeam(client) == 2) || (gc_bCTerror.BoolValue && GetClientTeam(client) == 3)) && IsPlayerAlive(client))
+	if (!gc_bEventDay.BoolValue && !MyJailbreak_IsEventDayRunning())
+		return;
+
+	if (((g_bAllowT && GetClientTeam(client) == CS_TEAM_T) || (g_bAllowCT && GetClientTeam(client) == CS_TEAM_CT)) && IsPlayerAlive(client))
 	{
 		StripAllPlayerWeapons(client);
 		GivePlayerItem(client, "weapon_knife");
@@ -803,9 +844,12 @@ public int Menu_Secondary(Menu menu, MenuAction action, int client, int param2)
 // Check for display menu
 void DisplayOptionsMenu(int client)
 {
-	if (gc_bPlugin.BoolValue)	
+	if (!gc_bEventDay.BoolValue && !MyJailbreak_IsEventDayRunning())
+		return;
+
+	if (gc_bPlugin.BoolValue)
 	{
-		if ((gc_bTerror.BoolValue && GetClientTeam(client) == 2) || (gc_bCTerror.BoolValue && GetClientTeam(client) == 3))
+		if ((g_bAllowT && GetClientTeam(client) == CS_TEAM_T) || (g_bAllowCT && GetClientTeam(client) == CS_TEAM_CT))
 		{
 			if (strcmp(primaryWeapon[client], "") == 0 || strcmp(secondaryWeapon[client], "") == 0)
 				DisplayMenu(g_hMenu2, client, 30);
@@ -824,15 +868,18 @@ public Action Timer_GetWeapons(Handle timer, any client)
 {
 	g_hTimers[client] = null;
 
+	if (!gc_bEventDay.BoolValue && !MyJailbreak_IsEventDayRunning())
+		return;
+
 	if (IsClientInGame(client))
 	{
 		if (GetClientTeam(client) > 1 && IsPlayerAlive(client))
 		{
-			if (gc_bPlugin.BoolValue)	
+			if (gc_bPlugin.BoolValue)
 			{
 				if (gc_bSpawn.BoolValue)
 				{
-					if ((gc_bTerror.BoolValue && GetClientTeam(client) == 2) || (gc_bCTerror.BoolValue && GetClientTeam(client) == 3))
+					if ((g_bAllowT && GetClientTeam(client) == CS_TEAM_T) || (g_bAllowCT && GetClientTeam(client) == CS_TEAM_CT))
 					{
 						// Give weapons or display menu.
 						if (g_bWeaponsSelected[client])

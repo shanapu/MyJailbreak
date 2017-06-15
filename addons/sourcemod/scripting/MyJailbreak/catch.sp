@@ -42,6 +42,7 @@
 #include <smartjaildoors>
 #include <CustomPlayerSkins>
 #include <myjailbreak>
+#include <myweapons>
 #define REQUIRE_PLUGIN
 
 // Compiler Options
@@ -64,6 +65,7 @@ bool gp_bHosties;
 bool gp_bSmartJailDoors;
 bool gp_bCustomPlayerSkins;
 bool gp_bMyJailbreak;
+bool gp_bMyWeapons;
 
 // Console Variables
 ConVar gc_bPlugin;
@@ -298,6 +300,7 @@ public void OnAllPluginsLoaded()
 	gp_bSmartJailDoors = LibraryExists("smartjaildoors");
 	gp_bCustomPlayerSkins = LibraryExists("CustomPlayerSkins");
 	gp_bMyJailbreak = LibraryExists("myjailbreak");
+	gp_bMyWeapons = LibraryExists("myweapons");
 }
 
 public void OnLibraryRemoved(const char[] name)
@@ -316,6 +319,9 @@ public void OnLibraryRemoved(const char[] name)
 
 	if (StrEqual(name, "myjailbreak"))
 		gp_bMyJailbreak = false;
+
+	if (StrEqual(name, "myweapons"))
+		gp_bMyWeapons = false;
 }
 
 public void OnLibraryAdded(const char[] name)
@@ -334,6 +340,9 @@ public void OnLibraryAdded(const char[] name)
 
 	if (StrEqual(name, "myjailbreak"))
 		gp_bMyJailbreak = true;
+
+	if (StrEqual(name, "myweapons"))
+		gp_bMyWeapons = true;
 }
 
 // Initialize Plugin
@@ -628,10 +637,16 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		SetCvar("sm_hosties_lr", 0);
 	}
 
-	SetCvar("sm_weapons_enable", 0);
+	if (gp_bMyWeapons)
+	{
+		MyWeapons_AllowTeam(CS_TEAM_T, false);
+		MyWeapons_AllowTeam(CS_TEAM_CT, false);
+	}
 
 	if (gp_bMyJailbreak)
 	{
+		SetCvar("sm_menu_enable", 0);
+
 		MyJailbreak_SetEventDayPlanned(false);
 		MyJailbreak_SetEventDayRunning(true, 0);
 
@@ -773,15 +788,19 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 				SetCvar("sm_hosties_lr", 1);
 			}
 
-			SetCvar("sm_weapons_enable", 1);
-
-			g_iMPRoundTime.IntValue = g_iOldRoundTime;
+			if (gp_bMyWeapons)
+			{
+				MyWeapons_AllowTeam(CS_TEAM_T, false);
+				MyWeapons_AllowTeam(CS_TEAM_CT, true);
+			}
 
 			if (gp_bMyJailbreak)
 			{
 				MyJailbreak_SetEventDayRunning(false, winner);
 				MyJailbreak_SetEventDayName("none");
 			}
+
+			g_iMPRoundTime.IntValue = g_iOldRoundTime;
 
 			CPrintToChatAll("%t %t", "catch_tag", "catch_end");
 		}
@@ -986,20 +1005,26 @@ public void OnAvailableLR(int Announced)
 
 			SetCvar("sm_hosties_lr", 1);
 
-			SetCvar("sm_weapons_enable", 1);
+			if (gp_bMyWeapons)
+			{
+				MyWeapons_AllowTeam(CS_TEAM_T, false);
+				MyWeapons_AllowTeam(CS_TEAM_CT, true);
+			}
 
 			if (gp_bWarden)
 			{
 				SetCvar("sm_warden_enable", 0);
 			}
 
-			g_iMPRoundTime.IntValue = g_iOldRoundTime;
-
 			if (gp_bMyJailbreak)
 			{
+				SetCvar("sm_menu_enable", 1);
+
 				MyJailbreak_SetEventDayName("none");
 				MyJailbreak_SetEventDayRunning(false, 0);
 			}
+
+			g_iMPRoundTime.IntValue = g_iOldRoundTime;
 
 			CPrintToChatAll("%t %t", "catch_tag", "catch_end");
 		}

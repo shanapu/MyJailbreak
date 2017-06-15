@@ -40,6 +40,7 @@
 #include <lastrequest>
 #include <warden>
 #include <myjailbreak>
+#include <myweapons>
 #include <smartjaildoors>
 #define REQUIRE_PLUGIN
 
@@ -58,6 +59,7 @@ bool gp_bWarden;
 bool gp_bHosties;
 bool gp_bSmartJailDoors;
 bool gp_bMyJailbreak;
+bool gp_bMyWeapons;
 
 // Console Variables    gc_i = global convar integer / gc_b = global convar bool ...
 ConVar gc_bPlugin;
@@ -243,6 +245,7 @@ public void OnAllPluginsLoaded()
 	gp_bHosties = LibraryExists("lastrequest");
 	gp_bSmartJailDoors = LibraryExists("smartjaildoors");
 	gp_bMyJailbreak = LibraryExists("myjailbreak");
+	gp_bMyWeapons = LibraryExists("myweapons");
 }
 
 public void OnLibraryRemoved(const char[] name)
@@ -258,6 +261,9 @@ public void OnLibraryRemoved(const char[] name)
 
 	if (StrEqual(name, "myjailbreak"))
 		gp_bMyJailbreak = false;
+
+	if (StrEqual(name, "myweapons"))
+		gp_bMyWeapons = false;
 }
 
 public void OnLibraryAdded(const char[] name)
@@ -273,6 +279,9 @@ public void OnLibraryAdded(const char[] name)
 
 	if (StrEqual(name, "myjailbreak"))
 		gp_bMyJailbreak = true;
+
+	if (StrEqual(name, "myweapons"))
+		gp_bMyWeapons = true;
 }
 
 // Initialize Plugin
@@ -544,14 +553,16 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		SetCvar("sm_hosties_lr", 0);
 	}
 
-	SetCvar("sm_weapons_enable", 1);
-	SetCvar("sm_weapons_t", 1);
-	SetCvar("sm_weapons_ct", 1);
-	SetCvar("sm_menu_enable", 0);
-	SetCvar("sm_hud_enable", 0);
+	if (gp_bMyWeapons)
+	{
+		MyWeapons_AllowTeam(CS_TEAM_T, true);
+		MyWeapons_AllowTeam(CS_TEAM_CT, true);
+	}
 
 	if (gp_bMyJailbreak)
 	{
+		SetCvar("sm_menu_enable", 0);
+
 		MyJailbreak_SetEventDayPlanned(false);
 		MyJailbreak_SetEventDayRunning(true, 0);
 
@@ -560,6 +571,8 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 			g_hTimerBeacon = CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
 		}
 	}
+
+	SetCvar("sm_hud_enable", 0); 
 
 	g_iBestT = 0;
 	g_iBestCT = 0;
@@ -673,19 +686,24 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 				SetCvar("mp_randomspawn_los", 0);
 			}
 
-			SetCvar("sm_weapons_enable", 1);
-			SetCvar("sv_infinite_ammo", 0);
-			SetCvar("sm_menu_enable", 1);
-			SetCvar("sm_weapons_t", 0);
-			SetCvar("sm_hud_enable", g_iOldHUD);
-
-			g_iMPRoundTime.IntValue = g_iOldRoundTime; // return to original round time
+			if (gp_bMyWeapons)
+			{
+				MyWeapons_AllowTeam(CS_TEAM_T, false);
+				MyWeapons_AllowTeam(CS_TEAM_CT, true);
+			}
 
 			if (gp_bMyJailbreak)
 			{
+				SetCvar("sm_menu_enable", 1);
+
 				MyJailbreak_SetEventDayRunning(false, winner);
 				MyJailbreak_SetEventDayName("none"); // tell myjailbreak event is ended
 			}
+
+			SetCvar("sv_infinite_ammo", 0);
+			SetCvar("sm_hud_enable", g_iOldHUD);
+
+			g_iMPRoundTime.IntValue = g_iOldRoundTime; // return to original round time
 
 			CPrintToChatAll("%t %t", "dealdamage_tag", "dealdamage_end");
 		}

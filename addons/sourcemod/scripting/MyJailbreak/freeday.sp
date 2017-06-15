@@ -40,6 +40,7 @@
 #include <lastrequest>
 #include <warden>
 #include <myjailbreak>
+#include <myweapons>
 #include <smartjaildoors>
 #define REQUIRE_PLUGIN
 
@@ -59,6 +60,7 @@ bool gp_bWarden;
 bool gp_bHosties;
 bool gp_bSmartJailDoors;
 bool gp_bMyJailbreak;
+bool gp_bMyWeapons;
 
 // Console Variables
 ConVar gc_bPlugin;
@@ -173,6 +175,7 @@ public void OnAllPluginsLoaded()
 	gp_bHosties = LibraryExists("lastrequest");
 	gp_bSmartJailDoors = LibraryExists("smartjaildoors");
 	gp_bMyJailbreak = LibraryExists("myjailbreak");
+	gp_bMyWeapons = LibraryExists("myweapons");
 }
 
 public void OnLibraryRemoved(const char[] name)
@@ -188,6 +191,9 @@ public void OnLibraryRemoved(const char[] name)
 
 	if (StrEqual(name, "myjailbreak"))
 		gp_bMyJailbreak = false;
+
+	if (StrEqual(name, "myweapons"))
+		gp_bMyWeapons = false;
 }
 
 public void OnLibraryAdded(const char[] name)
@@ -203,6 +209,9 @@ public void OnLibraryAdded(const char[] name)
 
 	if (StrEqual(name, "myjailbreak"))
 		gp_bMyJailbreak = true;
+
+	if (StrEqual(name, "myweapons"))
+		gp_bMyWeapons = true;
 }
 
 // Initialize Event
@@ -490,8 +499,11 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		SetCvar("sm_hosties_lr", 0);
 	}
 
-	SetCvar("sm_weapons_enable", 0);
-	SetCvar("sm_weapons_t", 0);
+	if (gp_bMyWeapons)
+	{
+		MyWeapons_AllowTeam(CS_TEAM_T, false);
+		MyWeapons_AllowTeam(CS_TEAM_CT, true);
+	}
 
 	if (gp_bMyJailbreak)
 	{
@@ -594,16 +606,21 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			SetCvar("sm_warden_enable", 1);
 		}
 
-		SetCvar("sm_weapons_enable", 1);
-		SetCvar("mp_teammates_are_enemies", 0);
-
-		g_iMPRoundTime.IntValue = g_iOldRoundTime;
+		if (gp_bMyWeapons)
+		{
+			MyWeapons_AllowTeam(CS_TEAM_T, true);
+			MyWeapons_AllowTeam(CS_TEAM_CT, true);
+		}
 
 		if (gp_bMyJailbreak)
 		{
 			MyJailbreak_SetEventDayName("none"); // tell myjailbreak event is ended
 			MyJailbreak_SetEventDayRunning(false, 0);
 		}
+
+		SetCvar("mp_teammates_are_enemies", 0);
+
+		g_iMPRoundTime.IntValue = g_iOldRoundTime;
 
 		CPrintToChatAll("%t %t", "freeday_tag", "freeday_end");
 	}

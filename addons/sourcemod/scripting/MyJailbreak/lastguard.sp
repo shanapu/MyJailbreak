@@ -37,6 +37,7 @@
 // Optional Plugins
 #undef REQUIRE_PLUGIN
 #include <myjailbreak>
+#include <myweapons>
 #include <hosties>
 #include <lastrequest>
 #include <smartjaildoors>
@@ -51,9 +52,11 @@ bool g_bIsLastGuard = false;
 bool g_bAllowLastGuard = false;
 bool g_bIsLR = false;
 bool g_bMinCT = false;
-bool gp_bMyJailBreak = false;
-bool gp_bHosties = false;
-bool gp_bSmartJailDoors = false;
+
+bool gp_bMyJailBreak;
+bool gp_bHosties;
+bool gp_bSmartJailDoors;
+bool gp_bMyWeapons;
 
 // Console Variables
 ConVar gc_bPlugin;
@@ -186,6 +189,7 @@ public void OnAllPluginsLoaded()
 	gp_bMyJailBreak = LibraryExists("myjailbreak");
 	gp_bHosties = LibraryExists("hosties");
 	gp_bSmartJailDoors = LibraryExists("smartjaildoors");
+	gp_bMyWeapons = LibraryExists("myweapons");
 }
 
 public void OnLibraryRemoved(const char[] name)
@@ -198,6 +202,9 @@ public void OnLibraryRemoved(const char[] name)
 
 	if (StrEqual(name, "smartjaildoors"))
 		gp_bSmartJailDoors = false;
+
+	if (StrEqual(name, "myweapons"))
+		gp_bMyWeapons = false;
 }
 
 public void OnLibraryAdded(const char[] name)
@@ -210,6 +217,9 @@ public void OnLibraryAdded(const char[] name)
 
 	if (StrEqual(name, "smartjaildoors"))
 		gp_bSmartJailDoors = true;
+
+	if (StrEqual(name, "myweapons"))
+		gp_bMyWeapons = true;
 }
 
 /******************************************************************************
@@ -348,7 +358,12 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 		if (gp_bMyJailBreak)
 		{
 			MyJailbreak_SetLastGuardRule(false);
-			SetCvar("sm_weapons_t", 0);
+		}
+		
+		if (gp_bMyWeapons)
+		{
+			MyWeapons_AllowTeam(CS_TEAM_T, false);
+			MyWeapons_AllowTeam(CS_TEAM_CT, true);
 		}
 
 		if (gp_bHosties)
@@ -357,7 +372,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 		}
 
 		SetCvar("sm_warden_enable", 1);
-	
+
 		CPrintToChatAll("%t %t", "lastguard_tag", "lastguard_end");
 	}
 
@@ -412,9 +427,10 @@ void StartLastGuard()
 			SetCvar("sm_hosties_lr", 0);
 		}
 
-		if (gp_bMyJailBreak)
+		if (gp_bMyWeapons)
 		{
-			SetCvar("sm_weapons_t", 1);
+			MyWeapons_AllowTeam(CS_TEAM_T, true);
+			MyWeapons_AllowTeam(CS_TEAM_CT, true);
 		}
 
 		SetCvar("sm_warden_enable", 0);
@@ -495,8 +511,6 @@ void StartLastGuard()
 				SetEntityMoveType(i, MOVETYPE_NONE);
 				SetEntPropFloat(i, Prop_Data, "m_flLaggedMovementValue", 0.0);
 			}
-
-		//	FakeClientCommand(i, "sm_weapons");
 
 			if (IsPlayerAlive(i) && GetClientTeam(i) == CS_TEAM_CT)
 			{

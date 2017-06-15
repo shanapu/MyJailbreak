@@ -40,6 +40,7 @@
 #include <lastrequest>
 #include <warden>
 #include <myjailbreak>
+#include <myweapons>
 #include <smartjaildoors>
 #include <myicons>
 #define REQUIRE_PLUGIN
@@ -59,6 +60,7 @@ bool gp_bHosties;
 bool gp_bSmartJailDoors;
 bool gp_bMyJailbreak;
 bool gp_bMyIcons;
+bool gp_bMyWeapons;
 
 // Console Variables
 ConVar gc_bPlugin;
@@ -238,6 +240,7 @@ public void OnAllPluginsLoaded()
 	gp_bSmartJailDoors = LibraryExists("smartjaildoors");
 	gp_bMyJailbreak = LibraryExists("myjailbreak");
 	gp_bMyIcons = LibraryExists("myicons");
+	gp_bMyWeapons = LibraryExists("myweapons");
 }
 
 public void OnLibraryRemoved(const char[] name)
@@ -256,6 +259,9 @@ public void OnLibraryRemoved(const char[] name)
 
 	if (StrEqual(name, "myicons"))
 		gp_bMyIcons = false;
+
+	if (StrEqual(name, "myweapons"))
+		gp_bMyWeapons = false;
 }
 
 public void OnLibraryAdded(const char[] name)
@@ -274,6 +280,9 @@ public void OnLibraryAdded(const char[] name)
 
 	if (StrEqual(name, "myicons"))
 		gp_bMyIcons = true;
+
+	if (StrEqual(name, "myweapons"))
+		gp_bMyWeapons = true;
 }
 
 
@@ -566,6 +575,8 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		return;
 	}
 
+	SetCvarString("sv_skyname", "cs_baggage_skybox_");
+
 	if (gp_bWarden)
 	{
 		SetCvar("sm_warden_enable", 0);
@@ -576,13 +587,16 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		SetCvar("sm_hosties_lr", 0);
 	}
 
-	SetCvarString("sv_skyname", "cs_baggage_skybox_");
-	SetCvar("sm_weapons_t", 0);
-	SetCvar("sm_weapons_ct", 0);
-	SetCvar("sm_menu_enable", 0);
+	if (gp_bMyWeapons)
+	{
+		MyWeapons_AllowTeam(CS_TEAM_T, false);
+		MyWeapons_AllowTeam(CS_TEAM_CT, false);
+	}
 
 	if (gp_bMyJailbreak)
 	{
+		SetCvar("sm_menu_enable", 0);
+
 		MyJailbreak_SetEventDayPlanned(false);
 		MyJailbreak_SetEventDayRunning(true, 0);
 
@@ -720,6 +734,8 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			g_iRound = 0;
 			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
 
+			SetCvarString("sv_skyname", g_sSkyName);
+
 			if (gp_bHosties)
 			{
 				SetCvar("sm_hosties_lr", 1);
@@ -730,15 +746,18 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 				SetCvar("sm_warden_enable", 1);
 			}
 
-			SetCvar("sm_weapons_t", 0);
-			SetCvar("sm_weapons_ct", 1);
-			SetCvarString("sv_skyname", g_sSkyName);
-			SetCvar("sm_menu_enable", 1);
+			if (gp_bMyWeapons)
+			{
+				MyWeapons_AllowTeam(CS_TEAM_T, false);
+				MyWeapons_AllowTeam(CS_TEAM_CT, true);
+			}
 
 			g_iMPRoundTime.IntValue = g_iOldRoundTime;
 
 			if (gp_bMyJailbreak)
 			{
+				SetCvar("sm_menu_enable", 1);
+
 				MyJailbreak_SetEventDayRunning(false, winner);
 				MyJailbreak_SetEventDayName("none");
 				MyJailbreak_FogOff();
@@ -904,21 +923,26 @@ public void OnAvailableLR(int Announced)
 				SetCvar("sm_warden_enable", 1);
 			}
 
-			SetCvar("sm_hosties_lr", 1);
-			SetCvar("sm_weapons_t", 0);
-			SetCvar("sm_weapons_ct", 1);
 			SetCvarString("sv_skyname", g_sSkyName);
-			SetCvar("sm_menu_enable", 1);
+			SetCvar("sm_hosties_lr", 1);
 
-			g_iMPRoundTime.IntValue = g_iOldRoundTime;
+			if (gp_bMyWeapons)
+			{
+				MyWeapons_AllowTeam(CS_TEAM_T, false);
+				MyWeapons_AllowTeam(CS_TEAM_CT, true);
+			}
 
 			if (gp_bMyJailbreak)
 			{
+				SetCvar("sm_menu_enable", 1);
+
 				MyJailbreak_SetEventDayName("none");
 				MyJailbreak_SetEventDayRunning(false, 0);
 
 				MyJailbreak_FogOff();
 			}
+
+			g_iMPRoundTime.IntValue = g_iOldRoundTime;
 
 			CPrintToChatAll("%t %t", "hide_tag", "hide_end");
 		}

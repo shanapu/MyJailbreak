@@ -1238,9 +1238,6 @@ void SetClientPendingTeam(int client, int team)
 	// MinusDeath(client);
 }
 
-
-
-
 public Action Command_JoinTerror(int client, int args)
 {
 	ChangeTeam(client, CS_TEAM_T);

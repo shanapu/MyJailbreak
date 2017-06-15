@@ -40,6 +40,7 @@
 #include <lastrequest>
 #include <warden>
 #include <myjailbreak>
+#include <myweapons>
 #include <smartjaildoors>
 #define REQUIRE_PLUGIN
 
@@ -56,6 +57,7 @@ bool gp_bWarden;
 bool gp_bHosties;
 bool gp_bSmartJailDoors;
 bool gp_bMyJailbreak;
+bool gp_bMyWeapons;
 
 // Console Variables
 ConVar gc_bPlugin;
@@ -210,6 +212,7 @@ public void OnAllPluginsLoaded()
 	gp_bHosties = LibraryExists("lastrequest");
 	gp_bSmartJailDoors = LibraryExists("smartjaildoors");
 	gp_bMyJailbreak = LibraryExists("myjailbreak");
+	gp_bMyWeapons = LibraryExists("myweapons");
 }
 
 public void OnLibraryRemoved(const char[] name)
@@ -225,6 +228,9 @@ public void OnLibraryRemoved(const char[] name)
 
 	if (StrEqual(name, "myjailbreak"))
 		gp_bMyJailbreak = false;
+
+	if (StrEqual(name, "myweapons"))
+		gp_bMyWeapons = false;
 }
 
 public void OnLibraryAdded(const char[] name)
@@ -240,6 +246,9 @@ public void OnLibraryAdded(const char[] name)
 
 	if (StrEqual(name, "myjailbreak"))
 		gp_bMyJailbreak = true;
+
+	if (StrEqual(name, "myweapons"))
+		gp_bMyWeapons = true;
 }
 
 // Initialize Plugin
@@ -530,20 +539,25 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		SetCvar("sm_hosties_lr", 0);
 	}
 
-	SetCvar("mp_death_drop_gun", 0);
-	SetCvar("sm_weapons_t", 0);
-	SetCvar("sm_weapons_ct", 0);
-	SetCvar("mp_teammates_are_enemies", 1);
-	SetCvar("mp_friendlyfire", 1);
-	SetCvar("sm_menu_enable", 0);
+	if (gp_bMyWeapons)
+	{
+		MyWeapons_AllowTeam(CS_TEAM_T, false);
+		MyWeapons_AllowTeam(CS_TEAM_CT, false);
+	}
 
 	if (gp_bMyJailbreak)
 	{
+		SetCvar("sm_menu_enable", 0);
+
 		MyJailbreak_SetEventDayPlanned(false);
 		MyJailbreak_SetEventDayRunning(true, 0);
 
 		MyJailbreak_FogOn();
 	}
+
+	SetCvar("mp_death_drop_gun", 0);
+	SetCvar("mp_teammates_are_enemies", 1);
+	SetCvar("mp_friendlyfire", 1);
 
 	g_iRound++;
 	g_bIsArmsRace = true;
@@ -651,26 +665,30 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 				SetCvar("sm_warden_enable", 1);
 			}
 
-			SetCvar("sm_weapons_t", 0);
-			SetCvar("sm_weapons_ct", 1);
-			SetCvar("mp_teammates_are_enemies", 0);
-			SetCvar("mp_friendlyfire", 0);
-			SetCvar("sm_menu_enable", 1);
-			SetCvar("mp_death_drop_gun", 1);
-			
+			if (gp_bMyWeapons)
+			{
+				MyWeapons_AllowTeam(CS_TEAM_T, false);
+				MyWeapons_AllowTeam(CS_TEAM_CT, true);
+			}
+
 			if (gc_bSpawnRandom.BoolValue)
 			{
 				SetCvar("mp_randomspawn", 0);
 				SetCvar("mp_randomspawn_los", 0);
 			}
-			
-			g_iMPRoundTime.IntValue = g_iOldRoundTime;
 
 			if (gp_bMyJailbreak)
 			{
 				MyJailbreak_SetEventDayRunning(false, winner);
 				MyJailbreak_SetEventDayName("none");
 			}
+
+			SetCvar("mp_friendlyfire", 0);
+			SetCvar("sm_menu_enable", 1);
+			SetCvar("mp_death_drop_gun", 1);
+			SetCvar("mp_teammates_are_enemies", 0);
+
+			g_iMPRoundTime.IntValue = g_iOldRoundTime;
 
 			CPrintToChatAll("%t %t", "armsrace_tag", "armsrace_end");
 		}
