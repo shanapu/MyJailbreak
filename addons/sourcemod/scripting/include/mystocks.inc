@@ -108,8 +108,6 @@ stock void ShowOverlay(int client, char[] path, float lifetime)
 	if (!IsClientInGame(client) || IsFakeClient(client) || IsClientSourceTV(client) || IsClientReplay(client))
 		return;
 
-	int iFlag = GetCommandFlags("r_screenoverlay") & (~FCVAR_CHEAT);
-	SetCommandFlags("r_screenoverlay", iFlag);
 	ClientCommand(client, "r_screenoverlay \"%s.vtf\"", path);
 
 	if (lifetime != 0.0)
@@ -125,8 +123,6 @@ stock void ShowOverlayAll(char[] path, float lifetime)
 		if (!IsClientInGame(i) || IsFakeClient(i) || IsClientSourceTV(i) || IsClientReplay(i))
 			continue;
 
-		int iFlag = GetCommandFlags("r_screenoverlay") & (~FCVAR_CHEAT);
-		SetCommandFlags("r_screenoverlay", iFlag);
 		ClientCommand(i, "r_screenoverlay \"%s.vtf\"", path);
 
 		if (lifetime != 0.0)
@@ -142,8 +138,6 @@ stock Action DeleteOverlay(Handle timer, any userid)
 	if (client <= 0 || !IsClientInGame(client) || IsFakeClient(client) || IsClientSourceTV(client) || IsClientReplay(client))
 		return;
 
-	int iFlag = GetCommandFlags("r_screenoverlay") & (~FCVAR_CHEAT);
-	SetCommandFlags("r_screenoverlay", iFlag);
 	ClientCommand(client, "r_screenoverlay \"\"");
 }
 
