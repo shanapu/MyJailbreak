@@ -1312,12 +1312,12 @@ public int ChangeMenu(Menu menu, MenuAction action, int client, int selection)
 					{
 						newGuard = GetArrayCell(g_aGuardQueue, 0);
 						RemovePlayerFromGuardQueue(newGuard);
-						CGOPrintToChatAll("%t %t", "ratio_tag", "ratio_find", newGuard);
+						CPrintToChatAll("%t %t", "ratio_tag", "ratio_find", newGuard);
 					}
 					else if (gc_bBalanceTerror.BoolValue)
 					{
 						newGuard = GetRandomClientFromTeam(CS_TEAM_T);
-						CGOPrintToChatAll("%t %t", "ratio_tag", "ratio_random", newGuard);
+						CPrintToChatAll("%t %t", "ratio_tag", "ratio_random", newGuard);
 					}
 					else
 					{
@@ -1326,7 +1326,7 @@ public int ChangeMenu(Menu menu, MenuAction action, int client, int selection)
 
 					if (!IsValidClient(newGuard, true, true))
 					{
-						CGOPrintToChatAll("%t %t", "ratio_tag", "ratio_novalid");
+						CPrintToChatAll("%t %t", "ratio_tag", "ratio_novalid");
 					}
 
 					ChangeClientTeam(newGuard, CS_TEAM_CT);
