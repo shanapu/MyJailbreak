@@ -1084,12 +1084,13 @@ void FixTeamRatio()
 		{
 			client = GetArrayCell(g_aGuardQueue, 0);
 			RemovePlayerFromGuardQueue(client);
-			
+
 			CPrintToChatAll("%t %t", "ratio_tag", "ratio_find", client);
 		}
 		else if (gc_bBalanceTerror.BoolValue)
 		{
 			client = GetRandomClientFromTeam(CS_TEAM_T);
+
 			CPrintToChatAll("%t %t", "ratio_tag", "ratio_random", client);
 		}
 		else
@@ -1100,9 +1101,10 @@ void FixTeamRatio()
 		if (!IsValidClient(client, true, true))
 		{
 			CPrintToChatAll("%t %t", "ratio_tag", "ratio_novalid");
+
 			break;
 		}
-		
+
 		SetClientPendingTeam(client, CS_TEAM_CT);
 		SetClientListeningFlags(client, VOICE_NORMAL); // unmute if sm_hosties or admin has muted prisoners on round start
 		MinusDeath(client);
@@ -1297,7 +1299,45 @@ public int ChangeMenu(Menu menu, MenuAction action, int client, int selection)
 			{
 				ForcePlayerSuicide(client);
 			}
-			ChangeClientTeam(client, team);
+
+			if ((GetClientTeam(client) == CS_TEAM_CT) && (GetTeamClientCount(CS_TEAM_CT) == 1) && (GetTeamClientCount(CS_TEAM_T) >= 1))
+			{
+				ChangeClientTeam(client, team);
+
+				if (GetTeamClientCount(CS_TEAM_CT) == 0)
+				{
+					int newGuard;
+
+					if (GetArraySize(g_aGuardQueue))
+					{
+						newGuard = GetArrayCell(g_aGuardQueue, 0);
+						RemovePlayerFromGuardQueue(newGuard);
+						CGOPrintToChatAll("%t %t", "ratio_tag", "ratio_find", newGuard);
+					}
+					else if (gc_bBalanceTerror.BoolValue)
+					{
+						newGuard = GetRandomClientFromTeam(CS_TEAM_T);
+						CGOPrintToChatAll("%t %t", "ratio_tag", "ratio_random", newGuard);
+					}
+					else
+					{
+						return;
+					}
+
+					if (!IsValidClient(newGuard, true, true))
+					{
+						CGOPrintToChatAll("%t %t", "ratio_tag", "ratio_novalid");
+					}
+
+					ChangeClientTeam(newGuard, CS_TEAM_CT);
+					SetClientListeningFlags(newGuard, VOICE_NORMAL);
+					MinusDeath(newGuard);
+				}
+			}
+			else
+			{
+				ChangeClientTeam(client, team);
+			}
 		}
 	}
 	else if (action == MenuAction_Cancel) 

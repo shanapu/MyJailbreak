@@ -76,6 +76,7 @@
   
   
 *Changed*
+*  Ratio: When last guard move to prisoners, a prisoner from queue or random will be moved to guard THX @mrkos9i4ok
 *  Flags: all ConVars to set admin/vip flag has been extended to support mutliple flags ex. "r,s,t" use comma
 *  renamed plugin - ratio_ctbans_fantom to ratio_ctbans_r1ko
 
