@@ -505,6 +505,7 @@ public void OnAllPluginsLoaded()
 {
 	gp_bMyJailShop = LibraryExists("myjailshop");
 	gp_bSmartJailDoors = LibraryExists("smartjaildoors");
+	gp_bMyWeapons = LibraryExists("myweapons");
 }
 
 public void OnLibraryRemoved(const char[] name)
@@ -514,6 +515,9 @@ public void OnLibraryRemoved(const char[] name)
 
 	if (StrEqual(name, "smartjaildoors"))
 		gp_bSmartJailDoors = false;
+
+	if (StrEqual(name, "myweapons"))
+		gp_bMyWeapons = false;
 }
 
 public void OnLibraryAdded(const char[] name)
@@ -523,6 +527,9 @@ public void OnLibraryAdded(const char[] name)
 
 	if (StrEqual(name, "smartjaildoors"))
 		gp_bSmartJailDoors = true;
+
+	if (StrEqual(name, "myweapons"))
+		gp_bMyWeapons = true;
 }
 
 // FindConVar
