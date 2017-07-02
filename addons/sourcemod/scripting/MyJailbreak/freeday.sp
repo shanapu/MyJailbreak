@@ -40,6 +40,7 @@
 #include <lastrequest>
 #include <warden>
 #include <myjailbreak>
+#include <myweapons>
 #include <smartjaildoors>
 #define REQUIRE_PLUGIN
 
@@ -59,6 +60,7 @@ bool gp_bWarden;
 bool gp_bHosties;
 bool gp_bSmartJailDoors;
 bool gp_bMyJailbreak;
+bool gp_bMyWeapons;
 
 // Console Variables
 ConVar gc_bPlugin;
@@ -85,11 +87,12 @@ int g_iOldRoundTime;
 int g_iCoolDown;
 int g_iVoteCount;
 int g_iFreedayRound = 0;
+int g_iCollision_Offset;
 
 // Strings
 char g_sHasVoted[1500];
 char g_sEventsLogFile[PLATFORM_MAX_PATH];
-char g_sAdminFlag[4];
+char g_sAdminFlag[64];
 
 // Floats
 float g_fPos[3];
@@ -130,7 +133,7 @@ public void OnPluginStart()
 	gc_bAuto = AutoExecConfig_CreateConVar("sm_freeday_noct", "1", "0 - disabled, 1 - auto freeday when there is no CT", _, true, 0.0, true, 1.0);
 	gc_iRespawn = AutoExecConfig_CreateConVar("sm_freeday_respawn", "1", "1 - respawn on NoCT Freeday / 2 - respawn on firstround/vote/set Freeday / 3 - Both", _, true, 1.0, true, 3.0);
 	gc_iRespawnTime = AutoExecConfig_CreateConVar("sm_freeday_respawn_time", "120", "Time in seconds player will respawn after round begin", _, true, 1.0);
-	gc_bFirst = AutoExecConfig_CreateConVar("sm_freeday_firstround", "1", "0 - disabled, 1 - auto freeday first round after mapstart", _, true, 0.0, true, 1.0);
+	gc_bFirst = AutoExecConfig_CreateConVar("sm_freeday_firstround", "0", "0 - disabled, 1 - auto freeday first round after mapstart", _, true, 0.0, true, 1.0);
 	gc_bdamage = AutoExecConfig_CreateConVar("sm_freeday_damage", "1", "0 - disabled, 1 - enable damage on freedays", _, true, 0.0, true, 1.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_freeday_roundtime", "5", "Round time in minutes for a single freeday round", _, true, 1.0);
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_freeday_cooldown_day", "0", "Rounds until freeday can be started again.", _, true, 0.0);
@@ -149,6 +152,9 @@ public void OnPluginStart()
 	g_iMPRoundTime = FindConVar("mp_roundtime");
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
+
+	// Offsets
+	g_iCollision_Offset = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
 
 	// Logs
 	SetLogFile(g_sEventsLogFile, "Events", "MyJailbreak");
@@ -169,6 +175,7 @@ public void OnAllPluginsLoaded()
 	gp_bHosties = LibraryExists("lastrequest");
 	gp_bSmartJailDoors = LibraryExists("smartjaildoors");
 	gp_bMyJailbreak = LibraryExists("myjailbreak");
+	gp_bMyWeapons = LibraryExists("myweapons");
 }
 
 public void OnLibraryRemoved(const char[] name)
@@ -184,6 +191,9 @@ public void OnLibraryRemoved(const char[] name)
 
 	if (StrEqual(name, "myjailbreak"))
 		gp_bMyJailbreak = false;
+
+	if (StrEqual(name, "myweapons"))
+		gp_bMyWeapons = false;
 }
 
 public void OnLibraryAdded(const char[] name)
@@ -199,6 +209,9 @@ public void OnLibraryAdded(const char[] name)
 
 	if (StrEqual(name, "myjailbreak"))
 		gp_bMyJailbreak = true;
+
+	if (StrEqual(name, "myweapons"))
+		gp_bMyWeapons = true;
 }
 
 // Initialize Event
@@ -486,8 +499,11 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		SetCvar("sm_hosties_lr", 0);
 	}
 
-	SetCvar("sm_weapons_enable", 0);
-	SetCvar("sm_weapons_t", 0);
+	if (gp_bMyWeapons)
+	{
+		MyWeapons_AllowTeam(CS_TEAM_T, false);
+		MyWeapons_AllowTeam(CS_TEAM_CT, true);
+	}
 
 	if (gp_bMyJailbreak)
 	{
@@ -530,12 +546,13 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		}
 	}
 
-
 	CreateTimer (gc_iRespawnTime.FloatValue, Timer_StopRespawn);
 
 	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 	{
 		CreateInfoPanel(i);
+
+		SetEntData(i, g_iCollision_Offset, 2, 4, true);
 
 		if (!gc_bdamage.BoolValue && IsValidClient(i))
 		{
@@ -552,7 +569,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 
 	if (gc_bFirst.BoolValue)
 	{
-		if ((GetTeamClientCount(CS_TEAM_CT) == 0) || (GetTeamClientCount(CS_TEAM_T) == 0) && (GetTeamScore(CS_TEAM_CT) + GetTeamScore(CS_TEAM_T) == 0))
+		if (((GetTeamClientCount(CS_TEAM_CT) == 0) || (GetTeamClientCount(CS_TEAM_T) == 0)) && (GetTeamScore(CS_TEAM_CT) + GetTeamScore(CS_TEAM_T) == 0))
 		{
 			g_bRepeatFirstFreeday = true;
 		}
@@ -565,8 +582,13 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 // Round End
 public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
-	if (g_bIsFreeday)
+	if (g_bIsFreeday && !g_bRepeatFirstFreeday)
 	{
+		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, true))
+		{
+			SetEntData(i, g_iCollision_Offset, 0, 4, true);
+		}
+
 		g_bIsFreeday = false;
 		g_bStartFreeday = false;
 		g_bAllowRespawn = false;
@@ -584,10 +606,11 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			SetCvar("sm_warden_enable", 1);
 		}
 
-		SetCvar("sm_weapons_enable", 1);
-		SetCvar("mp_teammates_are_enemies", 0);
-
-		g_iMPRoundTime.IntValue = g_iOldRoundTime;
+		if (gp_bMyWeapons)
+		{
+			MyWeapons_AllowTeam(CS_TEAM_T, false);
+			MyWeapons_AllowTeam(CS_TEAM_CT, true);
+		}
 
 		if (gp_bMyJailbreak)
 		{
@@ -595,10 +618,14 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			MyJailbreak_SetEventDayRunning(false, 0);
 		}
 
+		SetCvar("mp_teammates_are_enemies", 0);
+
+		g_iMPRoundTime.IntValue = g_iOldRoundTime;
+
 		CPrintToChatAll("%t %t", "freeday_tag", "freeday_end");
 	}
 
-	if (g_bStartFreeday || g_bRepeatFirstFreeday)
+	if (g_bStartFreeday)
 	{
 		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 		{
@@ -641,6 +668,9 @@ public void OnMapStart()
 	{
 		g_bStartFreeday = true;
 
+		g_iOldRoundTime = g_iMPRoundTime.IntValue;
+		g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue;
+
 		if (gp_bMyJailbreak)
 		{
 			char buffer[32];
@@ -648,9 +678,6 @@ public void OnMapStart()
 			MyJailbreak_SetEventDayName(buffer);
 			MyJailbreak_SetEventDayRunning(true, 0);
 		}
-
-		g_iOldRoundTime = g_iMPRoundTime.IntValue;
-		g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue;
 	}
 	else
 	{

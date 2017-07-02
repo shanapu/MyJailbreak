@@ -1,0 +1,157 @@
+// Exported from SourceMod Translator
+// http://translator.mitchdempsey.com/sourcemod_plugins/184
+//
+"Phrases"
+{
+	"zombie_ctwin_nc"
+	{
+		"svn"		"Zombiji so ubili vse Ljudi!"
+	}
+
+	"zombie_disabled"
+	{
+		"svn"		"Zombi je trenutno {purple}onemogocen."
+	}
+
+	"zombie_end"
+	{
+		"svn"		"{purple}Zombi dan {default} koncan."
+	}
+
+	"zombie_info_line1"
+	{
+		"svn"		"Zombiji (Guards) VS Ljudje(Prisoners)!"
+	}
+
+	"zombie_info_line2"
+	{
+		"svn"		"Zombiji so zamrznjeni! Ljudje bežite!"
+	}
+
+	"zombie_info_line3"
+	{
+		"svn"		"Zombiji imajo veliko HP-ja!"
+	}
+
+	"zombie_info_line4"
+	{
+		"svn"		"Vsa ostala pravila jailbreaka niso omogocena!"
+	}
+
+	"zombie_info_line5"
+	{
+		"svn"		"LR Bitka je onemogocena!"
+	}
+
+	"zombie_info_line6"
+	{
+		"svn"		"Dovoljeno se je skrivati povsod!"
+	}
+
+	"zombie_info_line7"
+	{
+		"svn"		"Spostujte igralce!"
+	}
+
+	"zombie_info_title"
+	{
+		"svn"		"Zombi dan aktiviran!"
+	}
+
+	"zombie_minplayer"
+	{
+		"svn"		"Za Zombi dan potrebujes vsaj {purple}enega zapornika in enega policaja!"
+	}
+
+	"zombie_name"
+	{
+		"svn"		"Zombi dan"
+	}
+
+	"zombie_need"
+	{
+		"#format"   "{1:i},{2:N}"
+		"svn"		"{purple}{2}{default} je glasoval. {purple}{1}{default} glasov potrebnih, da se zacne {darkred}Zombi dan."
+	}
+
+	"zombie_next"
+	{
+		"svn"		"Prihajajoca runda bo: {purple}Zombi dan."
+	}
+
+	"zombie_next_nc"
+	{
+		"svn"		"Prihajajoca runda bo: Zombi dan"
+	}
+
+	"zombie_progress"
+	{
+		"#format"   "{1:s}"
+		"svn"		"Dogodek {darkred}{1} {default}je {purple} že v teku!"
+	}
+
+	"zombie_rounds"
+	{
+		"#format"   "{1:i},{2:i}"
+		"svn"		"Round {purple}{1}{default} od {purple}{2}"
+	}
+
+	"zombie_setbyadmin"
+	{
+		"svn"		"Nastavitev Zombi dana ADMINA {purple}onemogocena!"
+	}
+
+	"zombie_setbywarden"
+	{
+		"svn"		"Natavitev Zombi dana WARDENA {purple}onemogocena!"
+	}
+
+	"zombie_start"
+	{
+		"svn"		"{purple}Zombi dan{default} se je zacel!"
+	}
+
+	"zombie_start_nc"
+	{
+		"svn"		"Zombi dan se je zacel!"
+	}
+
+	"zombie_tag"
+	{
+		"svn"		"[{green}MyJB.Zombie{default}]"
+	}
+
+	"zombie_timetounfreeze_nc"
+	{
+		"#format"   "{1:i}"
+		"svn"		"{1} sekund, preden bos odmrznjen!"
+	}
+
+	"zombie_timeuntilzombie_nc"
+	{
+		"#format"   "{1:i}"
+		"svn"		"{1} sekund, da se skrijes!"
+	}
+
+	"zombie_twin_nc"
+	{
+		"svn"		"Ljudje so preziveli!"
+	}
+
+	"zombie_voted"
+	{
+		"svn"		"Si ze glasoval za {purple} Zombi dan!"
+	}
+
+	"zombie_voting"
+	{
+		"svn"		"Glasovanje za Zombi dan je {purple}onemegoceno!"
+	}
+
+	"zombie_wait"
+	{
+		"#format"   "{1:i}"
+		"svn"		"Pocakati moras se {purple}{1}{default}rund, da se lahko zacne Dogodek!"
+	}
+
+}

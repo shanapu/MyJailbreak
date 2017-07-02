@@ -1,0 +1,146 @@
+// Exported from SourceMod Translator
+// http://translator.mitchdempsey.com/sourcemod_plugins/191
+//
+"Phrases"
+{
+	"drunk_ctwin_nc"
+	{
+		"svn"		"Paznik je preživel!"
+	}
+
+	"drunk_disabled"
+	{
+		"svn"		"Vinjen dan je trenutno {purple}onemogočen!"
+	}
+
+	"drunk_end"
+	{
+		"svn"		"{purple}Vinjen dan{default} se je zaključil."
+	}
+
+	"drunk_info_line1"
+	{
+		"svn"		"Vinjen dan je sedaj aktiviran"
+	}
+
+	"drunk_info_line2"
+	{
+		"svn"		"-----------------------------------"
+	}
+
+	"drunk_info_line3"
+	{
+		"svn"		"-----------------------------------"
+	}
+
+	"drunk_info_line4"
+	{
+		"svn"		"To rundo ne veljajo običajna pravila Jailbreak-a!"
+	}
+
+	"drunk_info_line5"
+	{
+		"svn"		"Last request(!lr) je to rundo onemogočen!"
+	}
+
+	"drunk_info_line6"
+	{
+		"svn"		"Vsakdo lahko gre kamorkoli na mapi!"
+	}
+
+	"drunk_info_line7"
+	{
+		"svn"		"Pravila strežnika to rundo še vedno veljajo!"
+	}
+
+	"drunk_info_title"
+	{
+		"svn"		"Vinjen dan je sedaj aktiviran!"
+	}
+
+	"drunk_name"
+	{
+		"svn"		"Vinjen dan"
+	}
+
+	"drunk_need"
+	{
+		"#format"   "{1:i},{2:N}"
+		"svn"		"{purple}{2}{default} je glasoval. Število glasov potrebnih za {darkred}Vinjen dan: {purple}{1}{default}"
+	}
+
+	"drunk_next"
+	{
+		"svn"		"Naslednja runda bo: {purple}Vinjen dan."
+	}
+
+	"drunk_next_nc"
+	{
+		"svn"		"Naslednja runda bo: Vinjen dan."
+	}
+
+	"drunk_progress"
+	{
+		"#format"   "{1:s}"
+		"svn"		"Dogodek {darkred}{1} {default}se {purple}že izvaja!"
+	}
+
+	"drunk_rounds"
+	{
+		"#format"   "{1:i},{2:i}"
+		"svn"		"Runda {purple}{1}{default} od {purple}{2}."
+	}
+
+	"drunk_setbyadmin"
+	{
+		"svn"		"Nastavitev vinjenega dne s strani adminov je {purple}onemogočena!"
+	}
+
+	"drunk_setbywarden"
+	{
+		"svn"		"Nastavitev vinjenega dne s strani wardena je {purple}onemogočena!"
+	}
+
+	"drunk_start"
+	{
+		"svn"		"{purple}Vinjen dan{default} se je začel!"
+	}
+
+	"drunk_start_nc"
+	{
+		"svn"		"Vinjen dan se je začel!"
+	}
+
+	"drunk_tag"
+	{
+		"svn"		"[{green}MyJB.Vinjen{default}]"
+	}
+
+	"drunk_timeuntilstart_nc"
+	{
+		"#format"   "{1:i}"
+		"svn"		"{1} sekund pred začetkom runde!"
+	}
+
+	"drunk_twin_nc"
+	{
+		"svn"		"Zapornik je preživel"
+	}
+
+	"drunk_voted"
+	{
+		"svn"		"Ti si že glasoval za {purple}Vinjen dan!"
+	}
+
+	"drunk_voting"
+	{
+		"svn"		"Glasovanje za vinjen dan je {purple}onemogočeno!"
+	}
+
+	"drunk_wait"
+	{
+		"#format"   "{1:i}"
+		"svn"		"Počakati moraš še {purple}{1}{default} rund za Dan Dogodkov!"
+	}
+
+}

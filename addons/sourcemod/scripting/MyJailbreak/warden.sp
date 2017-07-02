@@ -38,6 +38,7 @@
 // Optional Plugins
 #undef REQUIRE_PLUGIN
 #include <basecomm>
+#include <sourcecomms>
 #include <myjailbreak>
 #include <hosties>
 #include <lastrequest>
@@ -88,6 +89,7 @@ bool gp_bLastRequest = false;
 bool gp_bSmartJailDoors = false;
 bool gp_bChatProcessor = false;
 bool gp_bBasecomm = false;
+bool gp_bSourceComms = false;
 bool g_bCMDCoolDown[MAXPLAYERS+1] = {false, ...};
 
 // Integers
@@ -395,6 +397,7 @@ public void OnAllPluginsLoaded()
 	gp_bSmartJailDoors = LibraryExists("smartjaildoors");
 	gp_bChatProcessor = LibraryExists("chat-processor");
 	gp_bBasecomm = LibraryExists("basecomm");
+	gp_bSourceComms = LibraryExists("sourcecomms");
 }
 
 public void OnLibraryRemoved(const char[] name)
@@ -416,6 +419,9 @@ public void OnLibraryRemoved(const char[] name)
 
 	if (StrEqual(name, "basecomm"))
 		gp_bBasecomm = false;
+
+	if (StrEqual(name, "sourcecomms"))
+		gp_bSourceComms = false;
 }
 
 public void OnLibraryAdded(const char[] name)
@@ -437,6 +443,9 @@ public void OnLibraryAdded(const char[] name)
 
 	if (StrEqual(name, "basecomm"))
 		gp_bBasecomm = true;
+
+	if (StrEqual(name, "sourcecomms"))
+		gp_bSourceComms = true;
 }
 
 /******************************************************************************

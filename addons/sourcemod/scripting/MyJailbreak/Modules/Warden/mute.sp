@@ -37,6 +37,8 @@
 // Optional Plugins
 #undef REQUIRE_PLUGIN
 #include <voiceannounce_ex>
+#include <basecomm>
+#include <sourcecomms>
 #include <myjailbreak>
 #define REQUIRE_PLUGIN
 
@@ -64,7 +66,7 @@ bool g_bTempMuted[MAXPLAYERS+1] = {false, ...};
 
 // Strings
 char g_sMuteUser[32];
-char g_sAdminFlagMute[4];
+char g_sAdminFlagMute[64];
 
 // Start
 public void Mute_OnPluginStart()
@@ -285,6 +287,12 @@ public void OnClientSpeakingEnd(int client)
 						return;
 				}
 
+				if (gp_bSourceComms)
+				{
+					if (SourceComms_GetClientMuteType(client) != bNot)
+						return;
+				}
+
 				g_bTempMuted[i] = false;
 				SetClientListeningFlags(i, VOICE_NORMAL);
 			}
@@ -331,6 +339,12 @@ public void UnMuteClient(any client, int unmuter)
 		if (gp_bBasecomm)
 		{
 			if (BaseComm_IsClientMuted(client))
+				return;
+		}
+
+		if (gp_bSourceComms)
+		{
+			if (SourceComms_GetClientMuteType(client) != bNot)
 				return;
 		}
 

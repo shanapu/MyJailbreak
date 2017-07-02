@@ -1,0 +1,233 @@
+
+"Phrases"
+{
+
+	"evenwar_tag"
+	{
+		"en"		"[{green}MyJB.EvenWar{default}]"
+	}
+
+	"evenwar_need"
+	{
+		"#format"	"{1:i},{2:N}"
+		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} vote(s) required to play {darkred}50/50 - EvenWar."
+	}
+
+	"evenwar_voting"
+	{
+		"en"		"Voting for 50/50 - EvenWar is {purple}disabled!"
+	}
+
+	"evenwar_setbywarden"
+	{
+		"en"		"Set 50/50 - EvenWar by Warden is {purple}disabled!"
+	}
+
+	"evenwar_setbyadmin"
+	{
+		"en"		"Set 50/50 - EvenWar by Admin is {purple}disabled!"
+	}
+
+	"evenwar_bluewin"
+	{
+		"en"		"TEAM {blue}BLUE {default}WON!"
+	}
+
+	"evenwar_redwin"
+	{
+		"en"		"TEAM {darkred}RED {default}WON!"
+	}
+
+	"evenwar_bluewin_nc"
+	{
+		"en"		"TEAM BLUE WON!"
+	}
+
+	"evenwar_redwin_nc"
+	{
+		"en"		"TEAM RED WON!"
+	}
+
+	"evenwar_minplayer"
+	{
+		"en"		"For 50/50 - EvenWar you need at least {purple}one Guard, & one Prisoner!"
+	}
+
+	"evenwar_end"
+	{
+		"en"		"{purple}50/50 - EvenWar{default} has ended!"
+	}
+
+	"evenwar_next"
+	{
+		"en"		"The following round will be: {purple}50/50 - EvenWar."
+	}
+
+	"evenwar_next_nc"
+	{
+		"en"		"The following round will be: 50/50 - EvenWar."
+	}
+
+	"evenwar_rounds"
+	{
+		"#format"	"{1:i},{2:i}"
+		"en"		"Round {purple}{1}{default} of {purple}{2}"
+	}
+
+	"evenwar_start"
+	{
+		"en"		"{purple}50/50 - EvenWar{default} has begun!"
+	}
+
+	"evenwar_start_nc"
+	{
+		"en"		"50/50 - EvenWar has begun!"
+	}
+
+	"evenwar_voted"
+	{
+		"en"		"You have already voted for {purple}50/50 - EvenWar!"
+	}
+
+	"evenwar_progress"
+	{
+		"#format"	"{1:s}"
+		"en"		"The event {darkred}{1} {default}is {purple}already in progress!"
+	}
+
+	"evenwar_disabled"
+	{
+		"en"		"50/50 - EvenWar is currently {purple}disabled!"
+	}
+
+	"evenwar_damage_nc"
+	{
+		"#format"	"{1:i}"
+		"en"		"{1} seconds until damage enabled"
+	}
+
+	"evenwar_damage_nc"
+	{
+		"#format"	"{1:i}"
+		"en"		"{1} seconds until damage enabled"
+	}
+
+	"evenwar_info_title"
+	{
+		"en"		"50/50 - EvenWar is now Activated!"
+	}
+
+	"evenwar_info_blueteam"
+	{
+		"en"		"You are in TEAM BLUE"
+	}
+
+	"evenwar_info_redteam"
+	{
+		"en"		"You are in TEAM RED"
+	}
+
+	"evenwar_info_line1"
+	{
+		"en"		"Team BLUE vs Team RED"
+	}
+
+	"evenwar_info_line2"
+	{
+		"en"		"Team Deathmatch - kill the enemey Team!"
+	}
+
+	"evenwar_info_line3"
+	{
+		"en"		"Run away & teamup during the 'NoDamage' phase!"
+	}
+
+	"evenwar_info_line4"
+	{
+		"en"		"All usual Jailbreak Rules do not apply during this round!"
+	}
+
+	"evenwar_info_line5"
+	{
+		"en"		"Last Request is disabled during this round!"
+	}
+
+	"evenwar_info_line6"
+	{
+		"en"		"Everyone is allowed to go anywhere within the map!"
+	}
+
+	"evenwar_info_line7"
+	{
+		"en"		"Don't be an Asshole!"
+	}
+
+	"RoundOne"
+	{
+		"en"		"Round 1 of 3"
+	}
+
+	"RoundTwo"
+	{
+		"en"		"Round 2 of 3"
+	}
+
+	"RoundThree"
+	{
+		"en"		"This is the last 50/50 - EvenWar round!"
+	}
+
+	"evenwar_wait"
+	{
+		"#format"	"{1:i}"
+		"en"		"You must wait {purple}{1}{default} more rounds for an Event Day!"
+	}
+
+	"evenwar_name"
+	{
+		"en"		"50/50 Even War"
+	}
+
+	"evenwar_teamblue"
+	{
+		"en"		"You are in {blue}TEAM BLUE"
+	}
+
+	"evenwar_teamred"
+	{
+		"en"		"You are in {darkred}TEAM RED"
+	}
+
+	"evenwar_teamblue_nc"
+	{
+		"en"		"You are in TEAM BLUE"
+	}
+
+	"evenwar_teamred_nc"
+	{
+		"en"		"You are in TEAM RED"
+	}
+
+	"evenwar_playerteamblue"
+	{
+		"#format"	"{1:N}"
+		"en"		"{purple}{1}{default} is in {blue}TEAM BLUE"
+	}
+
+	"evenwar_playerteamred"
+	{
+		"#format"	"{1:N}"
+		"en"		"{purple}{1}{default} is in {darkred}TEAM RED"
+	}
+
+	"evenwar_blue_nc"
+	{
+		"en"		"BLUE"
+	}
+
+	"evenwar_red_nc"
+	{
+		"en"		"RED"
+	}
+
+}

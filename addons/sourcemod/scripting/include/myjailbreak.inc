@@ -28,7 +28,7 @@
 
 // Defines
 
-#define MYJB_VERSION "Beta 12.0-<COMMIT>"
+#define MYJB_VERSION "Beta 12.0.dev-<COMMIT>"
 
 #define MYJB_URL_LINK "https://github.com/shanapu/MyJailbreak"
 
@@ -39,7 +39,7 @@
 #define _myjailbreak_included_
 
 
-public SharedPlugin:__pl_myjailbreak =
+public SharedPlugin __pl_myjailbreak =
 {
 	name = "myjailbreak",
 	file = "myjailbreak.smx",

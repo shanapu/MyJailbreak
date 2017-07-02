@@ -42,6 +42,7 @@
 #include <smartjaildoors>
 #include <CustomPlayerSkins>
 #include <myjailbreak>
+#include <myweapons>
 #define REQUIRE_PLUGIN
 
 // Compiler Options
@@ -65,6 +66,7 @@ bool gp_bHosties;
 bool gp_bSmartJailDoors;
 bool gp_bCustomPlayerSkins;
 bool gp_bMyJailbreak;
+bool gp_bMyWeapons;
 
 // Console Variables
 ConVar gc_bPlugin;
@@ -121,7 +123,7 @@ char g_sHasVoted[1500];
 char g_sOverlayOnTorch[256];
 char g_sSoundStartPath[256];
 char g_sEventsLogFile[PLATFORM_MAX_PATH];
-char g_sAdminFlag[4];
+char g_sAdminFlag[64];
 char g_sOverlayStartPath[256];
 
 // Floats
@@ -277,6 +279,7 @@ public void OnAllPluginsLoaded()
 	gp_bSmartJailDoors = LibraryExists("smartjaildoors");
 	gp_bCustomPlayerSkins = LibraryExists("CustomPlayerSkins");
 	gp_bMyJailbreak = LibraryExists("myjailbreak");
+	gp_bMyWeapons = LibraryExists("myweapons");
 }
 
 public void OnLibraryRemoved(const char[] name)
@@ -295,6 +298,9 @@ public void OnLibraryRemoved(const char[] name)
 
 	if (StrEqual(name, "myjailbreak"))
 		gp_bMyJailbreak = false;
+
+	if (StrEqual(name, "myweapons"))
+		gp_bMyWeapons = false;
 }
 
 public void OnLibraryAdded(const char[] name)
@@ -313,6 +319,9 @@ public void OnLibraryAdded(const char[] name)
 
 	if (StrEqual(name, "myjailbreak"))
 		gp_bMyJailbreak = true;
+
+	if (StrEqual(name, "myweapons"))
+		gp_bMyWeapons = true;
 }
 
 // Initialize Plugin
@@ -602,7 +611,11 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		SetCvar("sm_hosties_lr", 0);
 	}
 
-	SetCvar("sm_weapons_enable", 0);
+	if (gp_bMyWeapons)
+	{
+		MyWeapons_AllowTeam(CS_TEAM_T, false);
+		MyWeapons_AllowTeam(CS_TEAM_CT, false);
+	}
 
 	if (gp_bMyJailbreak)
 	{
@@ -676,7 +689,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 		{
 			SetEntData(i, g_iCollision_Offset, 0, 4, true);
 
-			CreateTimer(0.0, DeleteOverlay, i);
+			CreateTimer(0.0, DeleteOverlay, GetClientUserId(i));
 
 			SetEntityRenderColor(i, 255, 255, 255, 0);
 
@@ -710,7 +723,11 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 				SetCvar("sm_warden_enable", 1);
 			}
 
-			SetCvar("sm_weapons_enable", 1);
+			if (gp_bMyWeapons)
+			{
+				MyWeapons_AllowTeam(CS_TEAM_T, false);
+				MyWeapons_AllowTeam(CS_TEAM_CT, true);
+			}
 
 			g_iMPRoundTime.IntValue = g_iOldRoundTime;
 
@@ -897,7 +914,7 @@ void TorchEm(int client)
 
 	if (!gc_bStayOverlay.BoolValue)
 	{
-		CreateTimer(3.0, DeleteOverlay, client);
+		CreateTimer(3.0, DeleteOverlay, GetClientUserId(client));
 	}
 
 	CPrintToChatAll("%t %t", "torch_tag", "torch_torchem", client);
@@ -918,7 +935,7 @@ void ExtinguishEm(int client)
 
 	SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
 
-	CreateTimer(0.0, DeleteOverlay, client);
+	CreateTimer(0.0, DeleteOverlay, GetClientUserId(client));
 
 	if (gc_bSounds.BoolValue)
 	{
@@ -944,7 +961,6 @@ void CheckStatus()
 	if (number == 0)
 	{
 		CS_TerminateRound(5.0, CSRoundEnd_Draw);
-		CreateTimer(1.0, DeleteOverlay);
 		CPrintToChatAll("%t %t", "torch_tag", "torch_win");
 	}
 }
@@ -1102,7 +1118,7 @@ public Action Timer_StartEvent(Handle timer)
 
 		if (!gc_bStayOverlay.BoolValue)
 		{
-			CreateTimer(3.0, DeleteOverlay, g_iBurningZero);
+			CreateTimer(3.0, DeleteOverlay, GetClientUserId(g_iBurningZero));
 		}
 	}
 

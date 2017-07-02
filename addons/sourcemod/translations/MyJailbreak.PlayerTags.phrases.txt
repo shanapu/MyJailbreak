@@ -13,6 +13,11 @@
 		"en"		"[Prisoner.Admin]"
 	}
 
+	"tags_TSA"
+	{
+		"en"		"[Prisoner.SuperAdmin]"
+	}
+
 	"tags_T"
 	{
 		"en"		"[Prisoner]"
@@ -23,6 +28,11 @@
 		"en"		"[Guard.Admin]"
 	}
 
+	"tags_CTSA"
+	{
+		"en"		"[Guard.SuperAdmin]"
+	}
+
 	"tags_CT"
 	{
 		"en"		"[Guard]"
@@ -31,6 +41,11 @@
 	"tags_WA"
 	{
 		"en"		"[Warden.Admin]"
+	}
+
+	"tags_WSA"
+	{
+		"en"		"[Warden.SuperAdmin]"
 	}
 
 	"tags_W"
@@ -83,6 +98,21 @@
 		"en"		"[Warden.Owner]"
 	}
 
+	"tags_TCO"
+	{
+		"en"		"[Prisoner.CoOwner]"
+	}
+
+	"tags_CTCO"
+	{
+		"en"		"[Guard.CoOwner]"
+	}
+
+	"tags_WCO"
+	{
+		"en"		"[Warden.CoOwner]"
+	}
+
 	"tags_CT_chat"
 	{
 		"en"		"[Guard]"
@@ -96,6 +126,16 @@
 	"tags_CTOWN_chat"
 	{
 		"en"		"[Guard.Owner]"
+	}
+
+	"tags_CTSA_chat"
+	{
+		"en"		"[Guard.SuperAdmin]"
+	}
+
+	"tags_CTCO_chat"
+	{
+		"en"		"[Guard.CoOwner]"
 	}
 
 	"tags_CTVIP1_chat"
@@ -123,6 +163,16 @@
 		"en"		"[Prisoner.Owner]"
 	}
 
+	"tags_TSA_chat"
+	{
+		"en"		"[Prisoner.SuperAdmin]"
+	}
+
+	"tags_TCO_chat"
+	{
+		"en"		"[Prisoner.CoOwner]"
+	}
+
 	"tags_TVIP1_chat"
 	{
 		"en"		"[Prisoner.VIP]"
@@ -146,6 +196,16 @@
 	"tags_WOWN_chat"
 	{
 		"en"		"[Warden.Owner]"
+	}
+
+	"tags_WSA_chat"
+	{
+		"en"		"[Warden.SuperAdmin]"
+	}
+
+	"tags_WCO_chat"
+	{
+		"en"		"[Warden.CoOwner]"
 	}
 
 	"tags_WVIP1_chat"
@@ -173,6 +233,16 @@
 		"en"		"[Deputy.Admin]"
 	}
 
+	"tags_DSA"
+	{
+		"en"		"[Deputy.SuperAdmin]"
+	}
+
+	"tags_DSA_chat"
+	{
+		"en"		"[Deputy.SuperAdmin]"
+	}
+
 	"tags_D_chat"
 	{
 		"en"		"[Deputy]"
@@ -186,6 +256,16 @@
 	"tags_DOWN_chat"
 	{
 		"en"		"[Deputy.Owner]"
+	}
+
+	"tags_DCO"
+	{
+		"en"		"[Deputy.CoOwner]"
+	}
+
+	"tags_DCO_chat"
+	{
+		"en"		"[Deputy.CoOwner]"
 	}
 
 	"tags_DVIP1"

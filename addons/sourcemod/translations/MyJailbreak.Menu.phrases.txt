@@ -203,6 +203,11 @@
 		"en"		"Knife Fight"
 	}
 
+	"menu_armsrace"
+	{
+		"en"		"Arms Race"
+	}
+
 	"menu_hebattle"
 	{
 		"en"		"HE Battle"
@@ -390,6 +395,11 @@
 	"menu_ghosts"
 	{
 		"en"		"Ghosts War"
+	}
+
+	"menu_teleport"
+	{
+		"en"		"Teleport War"
 	}
 
 	"menu_votingcancel"

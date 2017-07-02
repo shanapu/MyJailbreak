@@ -28,7 +28,7 @@
 #include <sourcemod>
 #include <sdktools>
 #include <autoexecconfig>
-
+#include <colors>
 #include <warden>
 #include <store>
 
@@ -114,7 +114,7 @@ public int PaperClips_Equip(int client,int  id)
 {
 	if (g_iRoundLimit[client] >= gc_iRoundLimit.IntValue)
 	{
-		PrintToChat(client, "%s You have reached the maximum amount of paperclips you can buy this round.", g_sTag);
+		CPrintToChat(client, "%s You have reached the maximum amount of paperclips you can buy this round.", g_sTag);
 		return 1;
 	}
 

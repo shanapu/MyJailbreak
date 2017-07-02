@@ -32,11 +32,7 @@
 #include <autoexecconfig>
 #include <mystocks>
 #include <SteamWorks>
-
-// Optional Plugins
-#undef REQUIRE_PLUGIN
 #include <myjailbreak>
-#define REQUIRE_PLUGIN
 
 // Compiler Options
 #pragma semicolon 1
@@ -213,6 +209,9 @@ public Action Event_OnPlayerSpawn(Event event, const char[] name, bool bDontBroa
 		return Plugin_Continue;
 
 	if (!IsValidClient(client, false, false))
+		return Plugin_Continue;
+
+	if (MyJailbreak_IsEventDayRunning())
 		return Plugin_Continue;
 
 	if (!IsMemberRatio[client] && gc_sGroupRatio.IntValue != 0)
