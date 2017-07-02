@@ -469,10 +469,6 @@ void SpawnIcon(int client)
 	if (g_bBlockIcon[client])
 		return;
 
-	char iTarget[16];
-	Format(iTarget, 16, "client%d", client);
-	DispatchKeyValue(client, "targetname", iTarget);
-
 	g_iIcon[client] = CreateEntityByName("env_sprite");
 
 	if (!g_iIcon[client])
@@ -555,7 +551,7 @@ void SpawnIcon(int client)
 	origin[2] = origin[2] + 90.0;
 
 	TeleportEntity(g_iIcon[client], origin, NULL_VECTOR, NULL_VECTOR);
-	SetVariantString(iTarget);
+	SetVariantString("!activator");
 	AcceptEntityInput(g_iIcon[client], "SetParent", g_iIcon[client], g_iIcon[client], 0);
 
 	if (gp_bWarden)
