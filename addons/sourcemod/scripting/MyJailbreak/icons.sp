@@ -552,7 +552,7 @@ void SpawnIcon(int client)
 
 	TeleportEntity(g_iIcon[client], origin, NULL_VECTOR, NULL_VECTOR);
 	SetVariantString("!activator");
-	AcceptEntityInput(g_iIcon[client], "SetParent", g_iIcon[client], g_iIcon[client], 0);
+	AcceptEntityInput(g_iIcon[client], "SetParent", client, g_iIcon[client], 0);
 
 	if (gp_bWarden)
 	{
