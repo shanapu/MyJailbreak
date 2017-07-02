@@ -40,6 +40,7 @@
 #include <lastrequest>
 #include <warden>
 #include <myjailbreak>
+#include <myweapons>
 #include <smartjaildoors>
 #define REQUIRE_PLUGIN
 
@@ -51,13 +52,14 @@
 bool g_bIsLateLoad = false;
 bool g_bIsKnifeFight = false;
 bool g_bStartKnifeFight = false;
+bool g_bLadder[MAXPLAYERS+1] = false;
 
 // Plugin bools
 bool gp_bWarden;
 bool gp_bHosties;
 bool gp_bSmartJailDoors;
 bool gp_bMyJailbreak;
-
+bool gp_bMyWeapons;
 
 // Console Variables
 ConVar gc_bPlugin;
@@ -106,14 +108,13 @@ float g_fPos[3];
 
 // Handles
 Handle g_hTimerTruce;
-Handle g_hTimerGravity;
 Handle g_hTimerBeacon;
 
 // Strings
 char g_sHasVoted[1500];
 char g_sSoundStartPath[256];
 char g_sEventsLogFile[PLATFORM_MAX_PATH];
-char g_sAdminFlag[4];
+char g_sAdminFlag[64];
 char g_sOverlayStartPath[256];
 
 // Info
@@ -293,6 +294,7 @@ public void OnAllPluginsLoaded()
 	gp_bHosties = LibraryExists("lastrequest");
 	gp_bSmartJailDoors = LibraryExists("smartjaildoors");
 	gp_bMyJailbreak = LibraryExists("myjailbreak");
+	gp_bMyWeapons = LibraryExists("myweapons");
 }
 
 public void OnLibraryRemoved(const char[] name)
@@ -308,6 +310,9 @@ public void OnLibraryRemoved(const char[] name)
 
 	if (StrEqual(name, "myjailbreak"))
 		gp_bMyJailbreak = false;
+
+	if (StrEqual(name, "myweapons"))
+		gp_bMyWeapons = false;
 }
 
 public void OnLibraryAdded(const char[] name)
@@ -323,6 +328,9 @@ public void OnLibraryAdded(const char[] name)
 
 	if (StrEqual(name, "myjailbreak"))
 		gp_bMyJailbreak = true;
+
+	if (StrEqual(name, "myweapons"))
+		gp_bMyWeapons = true;
 }
 
 
@@ -572,13 +580,19 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		SetCvar("sm_hosties_lr", 0);
 	}
 
-	SetCvar("sm_weapons_enable", 0);
-	SetCvar("sm_menu_enable", 0);
+	if (gp_bMyWeapons)
+	{
+		MyWeapons_AllowTeam(CS_TEAM_T, false);
+		MyWeapons_AllowTeam(CS_TEAM_CT, false);
+	}
+
 	SetCvar("mp_teammates_are_enemies", 1);
 	SetConVarInt(g_bAllowTP, 1);
 
 	if (gp_bMyJailbreak)
 	{
+		SetCvar("sm_menu_enable", 0);
+
 		MyJailbreak_SetEventDayPlanned(false);
 		MyJailbreak_SetEventDayRunning(true, 0);
 
@@ -666,11 +680,6 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 			}
 		}
 
-		if (gc_bGrav.BoolValue)
-		{
-			g_hTimerGravity = CreateTimer(1.0, Timer_CheckGravity, _, TIMER_REPEAT);
-		}
-
 		g_iTruceTime--;
 		g_hTimerTruce = CreateTimer(1.0, Timer_StartEvent, _, TIMER_REPEAT);
 
@@ -692,7 +701,6 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 
 		delete g_hTimerTruce;
 		delete g_hTimerBeacon;
-		delete g_hTimerGravity;
 
 		int winner = event.GetInt("winner");
 		if (winner == 2)
@@ -721,8 +729,12 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 				SetCvar("sm_warden_enable", 1);
 			}
 
-			SetCvar("sm_weapons_enable", 1);
-			SetCvar("sm_menu_enable", 1);
+			if (gp_bMyWeapons)
+			{
+				MyWeapons_AllowTeam(CS_TEAM_T, false);
+				MyWeapons_AllowTeam(CS_TEAM_CT, true);
+			}
+
 			SetCvar("mp_teammates_are_enemies", 0);
 			SetCvarFloat("sv_friction", 5.2);
 			SetConVarInt(g_bAllowTP, 0);
@@ -731,6 +743,8 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 
 			if (gp_bMyJailbreak)
 			{
+				SetCvar("sm_menu_enable", 1);
+
 				MyJailbreak_SetEventDayRunning(false, winner);
 				MyJailbreak_SetEventDayName("none");
 			}
@@ -793,7 +807,6 @@ public void OnMapEnd()
 	g_bStartKnifeFight = false;
 
 	delete g_hTimerTruce;
-	delete g_hTimerGravity;
 
 	g_iVoteCount = 0;
 	g_iRound = 0;
@@ -826,7 +839,6 @@ public void OnAvailableLR(int Announced)
 
 		delete g_hTimerBeacon;
 		delete g_hTimerTruce;
-		delete g_hTimerGravity;
 
 		if (g_iRound == g_iMaxRound)
 		{
@@ -839,9 +851,14 @@ public void OnAvailableLR(int Announced)
 			{
 				SetCvar("sm_warden_enable", 1);
 			}
+
+			if (gp_bMyWeapons)
+			{
+				MyWeapons_AllowTeam(CS_TEAM_T, false);
+				MyWeapons_AllowTeam(CS_TEAM_CT, true);
+			}
+
 			SetCvar("sm_hosties_lr", 1);
-			SetCvar("sm_weapons_enable", 1);
-			SetCvar("sm_menu_enable", 1);
 			SetCvar("mp_teammates_are_enemies", 0);
 			SetCvarFloat("sv_friction", 5.2);
 			SetConVarInt(g_bAllowTP, 0);
@@ -850,6 +867,8 @@ public void OnAvailableLR(int Announced)
 
 			if (gp_bMyJailbreak)
 			{
+				SetCvar("sm_menu_enable", 1);
+
 				MyJailbreak_SetEventDayName("none");
 				MyJailbreak_SetEventDayRunning(false, 0);
 			}
@@ -894,6 +913,28 @@ public Action OnWeaponCanUse(int client, int weapon)
 	}
 
 	return Plugin_Continue;
+}
+
+public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
+{
+	if (IsPlayerAlive(client))
+	{
+		if(g_bIsKnifeFight && gc_bGrav.BoolValue)
+		{
+			if (GetEntityMoveType(client) == MOVETYPE_LADDER)
+			{
+				g_bLadder[client] = true;
+			}
+			else
+			{
+				if (g_bLadder[client])
+				{
+					SetEntityGravity(client, gc_fGravValue.FloatValue);
+					g_bLadder[client] = false;
+				}
+			}
+		}
+	}
 }
 
 /******************************************************************************
@@ -1028,16 +1069,4 @@ public Action Timer_BeaconOn(Handle timer)
 	}
 
 	g_hTimerBeacon = null;
-}
-
-// Give back Gravity if it gone -> ladders
-public Action Timer_CheckGravity(Handle timer)
-{
-	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, false))
-	{
-		if (GetEntityGravity(i) != 1.0)
-		{
-			SetEntityGravity(i, gc_fGravValue.FloatValue);
-		}
-	}
 }

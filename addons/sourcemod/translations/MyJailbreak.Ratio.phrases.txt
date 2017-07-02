@@ -328,6 +328,12 @@
 		"en"		"You need at least {1} RankMe Points to play as a guard"
 	}
 
+	"ratio_lvlranks"
+	{
+		"#format"	"{1:i}"
+		"en"		"You need at least Level {1} to play as a guard"
+	}
+
 	"ratio_close"
 	{
 		"en"		"Exit"
@@ -358,4 +364,30 @@
 		"en"		"Cannot play on guards, you need to join our steamgroup first"
 	}
 
+	"ratio_hours"
+	{
+		"en"		"hour(s)"
+	}
+
+	"ratio_seconds"
+	{
+		"en"		"seconds"
+	}
+
+	"ratio_minutes"
+	{
+		"en"		"minute(s)"
+	}
+
+	"ratio_mostactive"
+	{
+		"#format"	"{1:s}"
+		"en"		"You must have played at least {1} to play as a guard."
+	}
+
+	"ratio_mostactive_terror"
+	{
+		"#format"	"{1:s}"
+		"en"		"You must have played at least {1} as terror to play as a guard."
+	}
 }

@@ -1,0 +1,151 @@
+// Exported from SourceMod Translator
+// http://translator.mitchdempsey.com/sourcemod_plugins/193
+//
+"Phrases"
+{
+	"hebattle_ctwin_nc"
+	{
+		"svn"		"Paznik je preživel!"
+	}
+
+	"hebattle_disabled"
+	{
+		"svn"		"Boj granat je trenutno {purple}onemogočen!"
+	}
+
+	"hebattle_end"
+	{
+		"svn"		"{purple}Boj granat{default} se je zaključil."
+	}
+
+	"hebattle_info_line1"
+	{
+		"svn"		"FFA boj granat z nizko gravitacijo je omogočen!"
+	}
+
+	"hebattle_info_line2"
+	{
+		"svn"		"Ne biti presenečen če se pojaviš v orožarni!"
+	}
+
+	"hebattle_info_line3"
+	{
+		"svn"		"Škoda je onemogočena dokler se runda ne začne!"
+	}
+
+	"hebattle_info_line4"
+	{
+		"svn"		"To rundo ne veljajo običajna pravila Jailbreak-a!"
+	}
+
+	"hebattle_info_line5"
+	{
+		"svn"		"Last request(!lr) je to rundo onemogočen."
+	}
+
+	"hebattle_info_line6"
+	{
+		"svn"		"Ostati moraš v glavnih prostorih! Ne vstopaj v zračnike ali skrivne prostore!"
+	}
+
+	"hebattle_info_line7"
+	{
+		"svn"		"Pravila strežnika to rundo še vedno veljajo!"
+	}
+
+	"hebattle_info_title"
+	{
+		"svn"		"Boj granat je sedaj aktiviran"
+	}
+
+	"hebattle_minplayer"
+	{
+		"svn"		"Za boj granat potrebuješ vsaj {purple}enega Paznika"
+	}
+
+	"hebattle_name"
+	{
+		"svn"		"Boj granat"
+	}
+
+	"hebattle_need"
+	{
+		"#format"   "{1:i},{2:N}"
+		"svn"		"{purple}{2}{default} je glasoval. Število potrebnih glasov za {darkred}Boj granat:{purple}{1}"
+	}
+
+	"hebattle_next"
+	{
+		"svn"		"Naslednja runda bo: {purple}Boj granat."
+	}
+
+	"hebattle_next_nc"
+	{
+		"svn"		"Naslednja runda bo: Boj granat."
+	}
+
+	"hebattle_progress"
+	{
+		"#format"   "{1:s}"
+		"svn"		"Dogodek {darkred}{1} {default}se {purple}že izvaja!"
+	}
+
+	"hebattle_rounds"
+	{
+		"#format"   "{1:i},{2:i}"
+		"svn"		"Runda {purple}{1}{default} od {purple}{2}"
+	}
+
+	"hebattle_setbyadmin"
+	{
+		"svn"		"Nastavitev Boja granat s strani adminov je {purple}onemogočena!"
+	}
+
+	"hebattle_setbywarden"
+	{
+		"svn"		"Nastavitev Boja granat s strani vodje je {purple}onemogočena!"
+	}
+
+	"hebattle_start"
+	{
+		"svn"		"{purple}Boj granat{default} se je začel!"
+	}
+
+	"hebattle_start_nc"
+	{
+		"svn"		"Boj granat se je začel!"
+	}
+
+	"hebattle_tag"
+	{
+		"svn"		"[{green}MyJB.BojGranat{default}]"
+	}
+
+	"hebattle_timeuntilstart_nc"
+	{
+		"#format"   "{1:i}"
+		"svn"		"{1} sekund do začetka runde!"
+	}
+
+	"hebattle_twin_nc"
+	{
+		"svn"		"Zapornik je preživel!"
+	}
+
+	"hebattle_voted"
+	{
+		"svn"		"Ti si že glasoval za {purple}Boj granat"
+	}
+
+	"hebattle_voting"
+	{
+		"svn"		"Glasovanje za boj granat je {purple}onemogočeno!"
+	}
+
+	"hebattle_wait"
+	{
+		"#format"   "{1:i}"
+		"svn"		"Počakati moraš še {purple}{1}{default} rund za Dan Dogodkov!"
+	}
+
+}

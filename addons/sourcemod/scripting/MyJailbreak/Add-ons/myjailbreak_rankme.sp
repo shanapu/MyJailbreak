@@ -32,11 +32,7 @@
 #include <autoexecconfig>
 #include <mystocks>
 #include <rankme>
-
-// Optional Plugins
-#undef REQUIRE_PLUGIN
 #include <myjailbreak>
-#define REQUIRE_PLUGIN
 
 // Compiler Options
 #pragma semicolon 1
@@ -124,6 +120,9 @@ public Action Event_OnPlayerSpawn(Event event, const char[] name, bool bDontBroa
 		return Plugin_Continue;
 
 	if (!IsValidClient(client, false, false))
+		return Plugin_Continue;
+
+	if (MyJailbreak_IsEventDayRunning())
 		return Plugin_Continue;
 
 	if (RankMe_GetPoints(client) < gc_iMinRankMePointsRatio.IntValue)

@@ -1,0 +1,270 @@
+// Exported from SourceMod Translator
+// http://translator.mitchdempsey.com/sourcemod_plugins/181
+//
+"Phrases"
+{
+	"tags_CT"
+	{
+		"svn"		"[Paznik]"
+	}
+
+	"tags_CTA"
+	{
+		"svn"		"[Paznik-A]"
+	}
+
+	"tags_CTA_chat"
+	{
+		"svn"		"[Admin-P]"
+	}
+
+	"tags_CT_chat"
+	{
+		"svn"		"[Paznik]"
+	}
+
+	"tags_CTOWN"
+	{
+		"svn"		"[Paznik-L]"
+	}
+	"tags_CTCO"
+	{
+		"svn"		"[Paznik-SL]"
+	}
+	"tags_CTSA"
+	{
+		"svn"		"[Paznik-SA]"
+	}
+
+	"tags_CTOWN_chat"
+	{
+		"svn"		"[LASTNIK-P]"
+	}
+	"tags_CTCO_chat"
+	{		
+		"svn"		"[SOLASTNIK-P]"
+	}
+	"tags_CTSA_chat"
+	{		
+		"svn"		"[SuperAdmin-P]"
+	}
+
+	"tags_CTVIP1"
+	{
+		"svn"		"[Paznik-VIP]"
+	}
+
+	"tags_CTVIP1_chat"
+	{
+		"svn"		"[Paznik-VIP]"
+	}
+
+	"tags_CTVIP2"
+	{
+		"svn"		"[Paznik-VIP]"
+	}
+
+	"tags_CTVIP2_chat"
+	{
+		"svn"		"[Paznik-VIP]"
+	}
+
+	"tags_T"
+	{
+		"svn"		"[Zapornik]"
+	}
+
+	"tags_TA"
+	{
+		"svn"		"[Zapornik-A]"
+	}
+
+	"tags_TA_chat"
+	{
+		"svn"		"[Admin-Z]"
+	}
+
+	"tags_T_chat"
+	{
+		"svn"		"[Zapornik]"
+	}
+
+	"tags_TOWN"
+	{
+		"svn"		"[Zapornik-L]"
+	}
+	"tags_TCO"
+	{		
+		"svn"		"[Zapornik-SL]"		
+	}
+	"tags_TSA"
+	{		
+		"svn"		"[Zapornik-SA]"		
+	}
+
+	"tags_TOWN_chat"
+	{
+		"svn"		"[LASTNIK-Z]"
+	}
+	"tags_TCO_chat"
+	{		
+		"svn"		"[SOLASTNIK-Z]"		
+	}
+	"tags_TSA_chat"
+	{		
+		"svn"		"[SuperAdmin-Z]"		
+	}
+
+	"tags_TVIP1"
+	{
+		"svn"		"[Zapornik-VIP]"
+	}
+
+	"tags_TVIP1_chat"
+	{
+		"svn"		"[Zapornik-VIP]"
+	}
+
+	"tags_TVIP2"
+	{
+		"svn"		"[Zapornik-VIP]"
+	}
+
+	"tags_TVIP2_chat"
+	{
+		"svn"		"[Zapornik-VIP]"
+	}
+
+	"tags_W"
+	{
+		"svn"		"[Vodja]"
+	}
+
+	"tags_WA"
+	{
+		"svn"		"[Vodja-A]"
+	}
+
+	"tags_WA_chat"
+	{
+		"svn"		"[Admin-V]"
+	}
+
+	"tags_W_chat"
+	{
+		"svn"		"[Vodja]"
+	}
+
+	"tags_WOWN"
+	{
+		"svn"		"[Vodja-L]"
+	}
+	"tags_WCO"
+	{		
+		"svn"		"[Vodja-SL]"		
+	}
+	"tags_WSA"
+	{		
+		"svn"		"[Vodja-SA]"		
+	}
+
+	"tags_WOWN_chat"
+	{
+		"svn"		"[LASTNIK-V]"
+	}
+	"tags_WCO_chat"
+	{		
+		"svn"		"[SOLASTNIK-V]"		
+	}
+	"tags_WSA_chat"
+	{		
+		"svn"		"[SuperAdmin-V]"		
+	}
+
+	"tags_WVIP1"
+	{
+		"svn"		"[Vodja-VIP]"
+	}
+
+	"tags_WVIP1_chat"
+	{
+		"svn"		"[Vodja-VIP]"
+	}
+
+	"tags_WVIP2"
+	{
+		"svn"		"[Vodja-VIP]"
+	}
+
+	"tags_WVIP2_chat"
+	{
+		"svn"		"[Vodja-VIP]"
+	}
+
+	"tags_D"
+	{
+		"svn"		"[Namestnik]"
+	}
+
+	"tags_DA"
+	{
+		"svn"		"[Namestnik-A]"
+	}
+
+	"tags_DA_chat"
+	{
+		"svn"		"[Admin-N]"
+	}
+
+	"tags_D_chat"
+	{
+		"svn"		"[Namestnik]"
+	}
+
+	"tags_DOWN"
+	{
+		"svn"		"[Namestnik-L]"
+	}
+	"tags_DCO"
+	{		
+		"svn"		"[Namestnik-SL]"
+	}
+	"tags_DSA"
+	{		
+		"svn"		"[Namestnik-SA]"
+	}
+
+	"tags_DOWN_chat"
+	{
+		"svn"		"[LASTNIK-N]"
+	}
+	"tags_DCO_chat"
+	{
+		"svn"		"[SOLASTNIK-N]"	
+	}
+	"tags_DSA_chat"
+	{
+		"svn"		"[SuperAdmin-N]"		
+	}
+
+	"tags_DVIP1"
+	{
+		"svn"		"[Namestnik-VIP]"
+	}
+
+	"tags_DVIP1_chat"
+	{
+		"svn"		"[Namestnik-VIP]"
+	}
+
+	"tags_DVIP2"
+	{
+		"svn"		"[Namestnik-VIP]"
+	}
+
+	"tags_DVIP2_chat"
+	{
+		"svn"		"[Namestnik-VIP]"
+	}
+
+}

@@ -6,8 +6,8 @@
 
 public SharedPlugin:__pl_myicons =
 {
-	name = "myicons",
-	file = "myicons.smx",
+	name = "icons",
+	file = "icons.smx",
 
 	#if defined REQUIRE_PLUGIN
 	required = 1,
@@ -31,4 +31,4 @@ public __pl_myicons_SetNTVOptional()
  * @param status		true or false
  * @NoReturn
  *********************************************************/
-native MyIcons_BlockClientIcon(int client, bool status);
+native void MyIcons_BlockClientIcon(int client, bool status);

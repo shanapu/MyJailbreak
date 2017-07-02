@@ -1,0 +1,361 @@
+// Exported from SourceMod Translator
+// Date: 2017-05-17 21:17:10 UTC
+// Language: English (en)
+// 
+// To view other translations for this plugin, please visit:
+// http://translator.mitchdempsey.com/sourcemod_plugins/201
+//
+"Phrases"
+{
+
+	"ratio_tag"
+	{
+		"es"		"[{green}PhoenixJail.ratio{default}]"
+	}
+
+	"ratio_auto"
+	{
+		"es"		"No se puede usar la selección automática para unirse a un equipo."
+	}
+
+	"ratio_fullqueue"
+	{
+		"#format"	"{1:i}"
+		"es"		"El equipo de Guardias esta lleno. Estas {green}#{1}{default} en la fila."
+	}
+
+	"ratio_info_title"
+	{
+		"es"		"Fila de Guardias:"
+	}
+
+	"ratio_empty"
+	{
+		"es"		"La fila esta actualmente {green}vacía{default}."
+	}
+
+	"ratio_noct"
+	{
+		"es"		"Debes ser un {green}prisionero{default} para entrar en la fila."
+	}
+
+	"ratio_find"
+	{
+		"#format"	"{1:N}"
+		"es"		"Buscando al siguiente Guardia en la fila. {green}{1} {default}es un nuevo Guardia."
+	}
+
+	"ratio_random"
+	{
+		"#format"	"{1:N}"
+		"es"		"La fila de guardias esta vacía. {green}{1} {default}fue elegido aleatoriamente para ser Guardia."
+	}
+
+	"ratio_novalid"
+	{
+		"es"		"No se pudo encontrar un{green} jugador válido{default} para ser guardia. Contacta a un administrador."
+	}
+
+	"ratio_number"
+	{
+		"#format"	"{1:i}"
+		"es"		"Eres {green}#{1}{default} en la fila de Guardias."
+	}
+
+	"ratio_thxvip"
+	{
+		"es"		"Gracias por ser un {darkred}VIP{default}! Fuiste movido al {green}frente de la fila!{default}"
+	}
+
+	"ratio_advip"
+	{
+		"es"		"Obtén membresia {darkred}VIP{default} para ser movido automaticamente al frente de la fila."
+	}
+
+	"ratio_movetot"
+	{
+		"#format"	"{1:N}"
+		"es"		"Hay demasiados Guardias. {green}{1}{default} fue elegido aleatoriamente y movido a los Prisioneros."
+	}
+
+	"ratio_removed"
+	{
+		"#format"	"{1:N},{2:N}"
+		"es"		"El administrador {1} removió a {2} de la fila de Guardias!"
+	}
+
+	"ratio_notonqueue"
+	{
+		"es"		"No estas en la fila de Guardias!"
+	}
+
+	"ratio_leavedqueue"
+	{
+		"es"		"Ya no estás en la fila de Guardias!"
+	}
+
+	"ratio_accept_title"
+	{
+		"es"		"Calificaciones de Guardia"
+	}
+
+	"ratio_accept_line1"
+	{
+		"es"		"Antes de ser Guardia, debes aceptar estos terminos y condiciones:"
+	}
+
+	"ratio_accept_line2"
+	{
+		"es"		"Confirmo que he leido y entendido las reglas del servidor."
+	}
+
+	"ratio_accept_line3"
+	{
+		"es"		"Confirmo que me he leido las reglas del CT tambien!"
+	}
+
+	"ratio_accept_line4"
+	{
+		"es"		"Confirmo que jugaré limpio, siguiendo las reglas del servidor."
+	}
+
+	"ratio_accept_line5"
+	{
+		"es"		"El incumplimiento de las normas resultará en la prohibición de ser CT."
+	}
+
+	"ratio_accept"
+	{
+		"es"		"Sí, acepto estos términos y condiciones."
+	}
+
+	"ratio_notaccept"
+	{
+		"es"		"No, no quiero ser guardia."
+	}
+
+	"ratio_question_title"
+	{
+		"es"		"Por favor, responda las siguientes preguntas para convertirse en Guardia."
+	}
+
+	"ratio_question1_line1"
+	{
+		"es"		"Las puertas de la celda están cerradas, los prisioneros están dentro!"
+	}
+
+	"ratio_question1_line2"
+	{
+		"es"		"What will you do?"
+	}
+
+	"ratio_question1_wrong1"
+	{
+		"es"		"I wait until cells open, and kill'em all!"
+	}
+
+	"ratio_question1_wrong2"
+	{
+		"es"		"Kill'em one by one until Last Request."
+	}
+
+	"ratio_question1_right"
+	{
+		"es"		"I wait for the warden first announcement."
+	}
+
+	"ratio_question2_line1"
+	{
+		"es"		"The warden sucks & this round is boring as shit."
+	}
+
+	"ratio_question2_line2"
+	{
+		"es"		"Drop your gun and give it to an prisoner to accelerate the round!"
+	}
+
+	"ratio_question2_wrong1"
+	{
+		"es"		"This is a good idea."
+	}
+
+	"ratio_question2_wrong2"
+	{
+		"es"		"Never! Just when the prisoner is my mate!"
+	}
+
+	"ratio_question2_right"
+	{
+		"es"		"Never! Dropping a gun (Gun Planting) is forbidden!"
+	}
+
+	"ratio_question3_line1"
+	{
+		"es"		"Have you read the server rules?"
+	}
+
+	"ratio_question3_line2"
+	{
+		"es"		"Do you understand the server rules?"
+	}
+
+	"ratio_question3_wrong1"
+	{
+		"es"		"Yeah, I read them. I'm not going to follow them."
+	}
+
+	"ratio_question3_wrong2"
+	{
+		"es"		"Reading? I'm here to play lol!"
+	}
+
+	"ratio_question3_right"
+	{
+		"es"		"Yeah, I read them. I know how to play on this server."
+	}
+
+	"ratio_question4_line1"
+	{
+		"es"		"Do you have a working microphone?"
+	}
+
+	"ratio_question4_line2"
+	{
+		"es"		"Do you speak the server language?"
+	}
+
+	"ratio_question4_wrong1"
+	{
+		"es"		"Sorry what?"
+	}
+
+	"ratio_question4_wrong2"
+	{
+		"es"		"My microphone is broken, I will type the commands."
+	}
+
+	"ratio_question4_right"
+	{
+		"es"		"I have a working, decent quality microphone."
+	}
+
+	"ratio_question5_line1"
+	{
+		"es"		"The Warden has been killed, and you are one of the last guards."
+	}
+
+	"ratio_question5_line2"
+	{
+		"es"		"Would you play as Warden?"
+	}
+
+	"ratio_question5_wrong1"
+	{
+		"es"		"Better start a freeday..."
+	}
+
+	"ratio_question5_wrong2"
+	{
+		"es"		"Kill every prisoner one by one until Last Request."
+	}
+
+	"ratio_question5_right"
+	{
+		"es"		"As guard, of course I will have to play as the new Warden."
+	}
+
+	"ratio_cooldown"
+	{
+		"es"		"Usted está bloqueado por falta de respuesta correcta. Prueba la siguiente ronda."
+	}
+
+	"ratio_disabled"
+	{
+		"es"		"Ratio está deshabilitado por el Administrador"
+	}
+
+	"ratio_hasdisabled"
+	{
+		"es"		"El Administrador ha deshabilitado el Ratio"
+	}
+
+	"ratio_hasactivated"
+	{
+		"es"		"El Administrador ha habilitado el Ratio. El Ratio se activará la siguiente ronda."
+	}
+
+	"ratio_active"
+	{
+		"#format"	"{1:f}"
+		"es"		"El ratio esta activado! 1 Guardia para {1} Prisioneros"
+	}
+
+	"ratio_stamm"
+	{
+		"#format"	"{1:i}"
+		"es"		"Necesitas como mínimo {1} Puntos VIP para jugar como Guardia"
+	}
+
+	"ratio_banned_nc"
+	{
+		"es"		"No puedes jugar en los guardias porque estas baneado de CT."
+	}
+
+	"ratio_clearqueue"
+	{
+		"es"		"El Administrador a eliminado la fila de Guardias!"
+	}
+
+	"ratio_reputation"
+	{
+		"#format"	"{1:i}"
+		"es"		"Necesitas como minimo {1} Puntos de Reputacion para jugar como Guardia"
+	}
+
+	"ratio_remove"
+	{
+		"es"		"Eliminar de la cola:"
+	}
+
+	"ratio_banned"
+	{
+		"es"		"No puedes jugar en los guardias porque eres un {green}CT{default} baneado."
+	}
+
+	"ratio_rankme"
+	{
+		"#format"	"{1:i}"
+		"es"		"Necesitar por lo menos {1} puntos RankMe para jugar como Guardia"
+	}
+
+	"ratio_close"
+	{
+		"es"		"Salir"
+	}
+
+	"ratio_steamrep"
+	{
+		"es"		"No puedes jugar en los guardias porque eres un {red}SCAMMER{default}. ve a steamrep.com"
+	}
+
+	"ratio_sure"
+	{
+		"es"		"Estas seguro?"
+	}
+
+	"ratio_yes"
+	{
+		"es"		"Si"
+	}
+
+	"ratio_no"
+	{
+		"es"		"No"
+	}
+
+	"ratio_steamgroup"
+	{
+		"es"		"No puedes jugar de Guardia, Necesitas unirte a nuestro Grupo de Steam Primero"
+	}
+
+}

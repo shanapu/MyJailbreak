@@ -58,7 +58,7 @@ public void Orders_OnPluginStart()
 	// AutoExecConfig
 	gc_bOrders = AutoExecConfig_CreateConVar("sm_warden_orders", "1", "0 - disabled, 1 - enable allow warden to use the orders menu", _, true, 0.0, true, 1.0);
 	gc_bOrdersDeputy = AutoExecConfig_CreateConVar("sm_warden_orders_deputy", "1", "0 - disabled, 1 - enable orders-feature for deputy, too", _, true, 0.0, true, 1.0);
-	gc_sCustomCommandMenu = CreateConVar("sm_warden_cmds_orders", "orders,calls", "Set your custom chat command for open menu(!menu (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands))");
+	gc_sCustomCommandMenu = AutoExecConfig_CreateConVar("sm_warden_cmds_orders", "orders,calls", "Set your custom chat command for open menu(!menu (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands))");
 
 	//Commands Array
 	g_hCommandTrie = CreateTrie();

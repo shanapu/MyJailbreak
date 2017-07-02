@@ -1,5 +1,112 @@
 ### Change Log
   
+  
+**[Beta 12.dev]** - Teleport War & fixes
+  
+*Added*
+*  New Eventday: Teleport War - A FreeForAll Deathmatch where attacker & victim switch positions on hit.
+    *  new plugin - teleport.smx - please help translate http://translator.mitchdempsey.com/sourcemod_plugins/277
+        *  new command - sm_setteleport - Allows the Admin or Warden to set Teleport War
+        *  new command - sm_teleport - Allows players to vote for a Teleport War
+        *  new cvar - sm_teleport_enable - 0 - disabled, 1 - enable this MyJailbreak SourceMod plugin
+        *  new cvar - sm_teleport_cmds_vote - Set your custom chat command for Event voting(!teleport (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
+        *  new cvar - sm_teleport_cmds_set - Set your custom chat command for set Event(!teleport (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
+        *  new cvar - sm_teleport_warden - 0 - disabled, 1 - allow warden to set teleport round
+        *  new cvar - sm_teleport_admin - 0 - disabled, 1 - allow admin/vip to set teleport round
+        *  new cvar - sm_teleport_flag - Set flag for admin/vip to set this Event Day
+        *  new cvar - sm_teleport_vote - 0 - disabled, 1 - allow player to vote for teleport
+        *  new cvar - sm_teleport_spawn - 0 - T teleport to CT spawn, 1 - cell doors auto open
+        *  new cvar - sm_teleport_rounds - Rounds to play in a row
+        *  new cvar - sm_teleport_aim - 0 - Keep your aim angle on switch, 1 - Use attacker/victims aim angle
+        *  new cvar - sm_teleport_roundtime - Round time in minutes for a single teleport round
+        *  new cvar - sm_teleport_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
+        *  new cvar - sm_teleport_trucetime - Time in seconds players can't deal damage
+        *  new cvar - sm_teleport_cooldown_day - Rounds cooldown after a event until event can be start again
+        *  new cvar - sm_teleport_cooldown_start - Rounds until event can be start after mapchange
+        *  new cvar - sm_teleport_cooldown_admin - 0 - disabled, 1 - ignore the cooldown when admin/vip set teleport round
+        *  new cvar - sm_teleport_sounds_enable - 0 - disabled, 1 - enable sounds
+        *  new cvar - sm_teleport_sounds_start - Path to the soundfile which should be played for a start
+        *  new cvar - sm_teleport_overlays_enable - 0 - disabled, 1 - enable overlays
+        *  new cvar - sm_teleport_overlays_start - Path to the start Overlay DONT TYPE .vmt or .vft
+        *  new cvar - sm_teleport_allow_lr - 0 - disabled, 1 - enable LR for last round and end eventday
+    * Menu: added new eventday teleport to set/voting menu
+*  New Eventday: Arms Race - A FreeForAll Deathmatch where 
+    *  new plugin - armsrace.smx - please help translate http://translator.mitchdempsey.com/sourcemod_plugins/277
+        *  new config file - addons/sourcemod/configs/MyJailbreak/armsrace.ini - define weapons & order
+        *  new command - sm_setarmsrace - Allows the Admin or Warden to set Teleport War
+        *  new command - sm_armsrace - Allows players to vote for a Teleport War
+        *  new cvar - sm_armsrace_enable - 0 - disabled, 1 - enable this MyJailbreak SourceMod plugin
+        *  new cvar - sm_armsrace_cmds_vote - Set your custom chat command for Event voting(!armsrace (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
+        *  new cvar - sm_armsrace_cmds_set - Set your custom chat command for set Event(!setarmsrace (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
+        *  new cvar - sm_armsrace_warden - 0 - disabled, 1 - allow warden to set armsrace round
+        *  new cvar - sm_armsrace_admin - 0 - disabled, 1 - allow admin/vip to set armsrace round
+        *  new cvar - sm_armsrace_flag - Set flag for admin/vip to set this Event Day
+        *  new cvar - sm_armsrace_vote - 0 - disabled, 1 - allow player to vote for armsrace
+        *  new cvar - sm_armsrace_spawn - 0 - T teleport to CT spawn, 1 - cell doors auto open
+        *  new cvar - sm_armsrace_randomspawn - 0 - disabled, 1 - use random spawns on map (sm_armsrace_spawn 1)
+        *  new cvar - sm_armsrace_rounds - Rounds to play in a row
+        *  new cvar - sm_armsrace_roundtime - Round time in minutes for a single armsrace round
+        *  new cvar - sm_armsrace_trucetime - Time in seconds players can't deal damage
+        *  new cvar - sm_armsrace_cooldown_day - Rounds cooldown after a event until event can be start again
+        *  new cvar - sm_armsrace_cooldown_start - Rounds until event can be start after mapchange
+        *  new cvar - sm_armsrace_cooldown_admin - 0 - disabled, 1 - ignore the cooldown when admin/vip set armsrace round
+        *  new cvar - sm_armsrace_sounds_enable - 0 - disabled, 1 - enable sounds
+        *  new cvar - sm_armsrace_sounds_start - Path to the soundfile which should be played for a start
+        *  new cvar - sm_armsrace_overlays_enable - 0 - disabled, 1 - enable overlays
+        *  new cvar - sm_armsrace_overlays_start - Path to the start Overlay DONT TYPE .vmt or .vft
+    * Menu: added new eventday armsrace to set/voting menu
+*  Add-On: Support for frans1cos Most Active
+    *  new plugin - disabled/myjailbreak_mostactive.smx
+        *  new cvar - sm_ratio_mostactive - 0 - disabled, how many seconds a player need to join ct? (only if MostActive is available)
+        *  new cvar - sm_ratio_mostactive_team - 1 - playtime as Terror / 2 - playtime in Total (CT,T&Spec)
+        *  new cvar - sm_warden_mostactive - 0 - disabled, how many seconds a player need to become warden? (only if MostActive is available)
+        *  new cvar - sm_warden_mostactive_team - 0 - playtime as Counter-Terror / 1 - playtime as Terror / 2 - playtime in Total (CT,T&Spec)
+*  Add-On: Support for Levels Ranks Core 2.2.0 http://hlmod.ru/resources/levels-ranks-core.177/
+    *  new plugin - disabled/myjailbreak_lvl_ranks.smx
+        *  new cvar - sm_ratio_mostactive - 0 - what level a player need to join ct? (only if lvlranks is available)
+        *  new cvar - sm_warden_mostactive - 0 - what level a player need to become warden? (only if lvlranks is available)
+*  PlayerTags: Two new Tags SuperAdmin & CoOwner Thx @ ichiballs
+    *  new cvar - sm_playertag_coownerflag - Set the flag for CoOwner. Default 'r'
+    *  new cvar - sm_playertag_superadminflag - Set the flag for Super Admin. Default 's'
+*  Icons: ConVar to disable Icons on all eventdays
+    *  new cvar - sm_icon_eventday - 0 - use the icons, 1 - disable icons on EventDays
+*  Weapons: ConVar to disable weapons for CTs on not eventday rounds. (use armory)
+    *  new cvar - sm_weapons_noeventday - 0 - disabled, 1 - enable the weapon menu on non-EventDays round (normal/simon rounds)
+  
+  
+  
+*Changed*
+*  Ratio: When last guard move to prisoners, a prisoner from queue or random will be moved to guard THX @mrkos9i4ok
+*  Flags: all ConVars to set admin/vip flag has been extended to support mutliple flags ex. "r,s,t" use comma
+*  renamed plugin - ratio_ctbans_fantom to ratio_ctbans_r1ko
+
+  
+*Fixed*
+*  Menu: fixed setdays for warden (don't show restricted/disabled days)
+*  Ratio: fixed custom VIP/Admin flags
+*  Warden - mute: fixed confict with sourcecomms
+*  PlayerTags: fixed custom VIP/Admin flags
+*  Zombie: respawn with ratio restriction
+*  Freeday: fixed roundtime when only one team has player
+*  Freeday: NoBlock (no player collision)
+*  Request - Killreason: fixed display all reasons
+*  Duckhunt & KnifeFight: fix gravity ladderfix
+*  Store Credits & paperclips: fix chat colors
+*  Zombie: Respawn with restiction addon
+  
+  
+*Removed*
+*  removed cvars - sm_weapons_ct - obsolete cvars. **Please remove them from your configs!**
+*  removed cvars - sm_weapons_t - obsolete cvars. **Please remove them from your configs!**
+  
+  
+*Developer stuff*
+*  Changed the way how weapons access is handled. natives insetad of switch ConVars
+    *  new native - MyWeapons_AllowTeam(int client, bool status) - Allow a team to pick weapons from weapons menu 
+    *  new native - MyWeapons_GetTeamStatus(int iTeam) - Get team status if weapons are allowed
+  
+  
+  
 
 **[Beta 12.0]** - removed dependencies & store support
   
@@ -78,7 +185,7 @@
 *  New Eventday: Ghosts War - All Players are invisbile & immortal - every 6 seconds they go visible and mortal for 2 seconds. Last alive wins.
     *  new plugin - ghosts.smx - please help translate http://translator.mitchdempsey.com/sourcemod_plugins/271
         *  new command - sm_setghosts - Allows the Admin or Warden to set Ghosts
-        *  new command - sm_ghosts - Allows players to vote for a Ghosts"
+        *  new command - sm_ghosts - Allows players to vote for a Ghosts
         *  new cvar - sm_ghosts_enable - 0 - disabled, 1 - enable this MyJailbreak SourceMod plugin
         *  new cvar - sm_ghosts_cmds_vote - Set your custom chat command for Event voting(!ghosts (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
         *  new cvar - sm_ghosts_cmds_set - Set your custom chat command for set Event(!ghosts (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))

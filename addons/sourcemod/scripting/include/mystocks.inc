@@ -1,3 +1,24 @@
+/*
+ * MyStocks - include file - function libary.
+ * by: shanapu
+ * https://github.com/shanapu/
+ * 
+ * Copyright (C) 2016-2017 Thomas Schmidt (shanapu)
+ *
+ * Version 12.0
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, version 3.0, as published by the
+ * Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 #if defined _mystocks_included_
 	#endinput
@@ -29,7 +50,7 @@ stock void PrecacheDecalAnyDownload(char[] sDecal)
 	PrecacheDecal(sBuffer, true);
 	Format(sBuffer, sizeof(sBuffer), "materials/%s.vmt", sDecal);
 	AddFileToDownloadsTable(sBuffer);
-	
+
 	Format(sBuffer, sizeof(sBuffer), "%s.vtf", sDecal);
 	PrecacheDecal(sBuffer, true);
 	Format(sBuffer, sizeof(sBuffer), "materials/%s.vtf", sDecal);
@@ -81,41 +102,43 @@ stock void StripAllPlayerWeapons(int client)
 }
 
 
-// Easy show overlay to a client with lifetime | 0.0 = no auto remove
+// Show overlay to a client with lifetime | 0.0 = no auto remove
 stock void ShowOverlay(int client, char[] path, float lifetime)
 {
-	if (IsValidClient(client, false, true))
-	{
-		int iFlag = GetCommandFlags("r_screenoverlay") & (~FCVAR_CHEAT);
-		SetCommandFlags("r_screenoverlay", iFlag);
-		ClientCommand(client, "r_screenoverlay \"%s.vtf\"", path);
-		if (lifetime != 0.0) CreateTimer(lifetime, DeleteOverlay, client);
-	}
+	if (!IsClientInGame(client) || IsFakeClient(client) || IsClientSourceTV(client) || IsClientReplay(client))
+		return;
+
+	ClientCommand(client, "r_screenoverlay \"%s.vtf\"", path);
+
+	if (lifetime != 0.0)
+		CreateTimer(lifetime, DeleteOverlay, GetClientUserId(client));
 }
 
 
-// Easy show overlay to all clients with lifetime | 0.0 = no auto remove
-stock void ShowOverlayAll(char[] path, float deletetime) 
+// Show overlay to all clients with lifetime | 0.0 = no auto remove
+stock void ShowOverlayAll(char[] path, float lifetime)
 {
-	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, true))
+	for (int i = 1; i <= MaxClients; i++)
 	{
-		int iFlag = GetCommandFlags("r_screenoverlay") & (~FCVAR_CHEAT);
-		SetCommandFlags("r_screenoverlay", iFlag);
+		if (!IsClientInGame(i) || IsFakeClient(i) || IsClientSourceTV(i) || IsClientReplay(i))
+			continue;
+
 		ClientCommand(i, "r_screenoverlay \"%s.vtf\"", path);
-		if (deletetime != 0.0) CreateTimer(deletetime, DeleteOverlay, i);
+
+		if (lifetime != 0.0)
+			CreateTimer(lifetime, DeleteOverlay, GetClientUserId(i));
 	}
 }
 
 
 // Remove overlay from a client
-stock Action DeleteOverlay(Handle timer, any client) 
+stock Action DeleteOverlay(Handle timer, any userid)
 {
-	if (IsValidClient(client, false, true))
-	{
-		int iFlag = GetCommandFlags("r_screenoverlay") & (~FCVAR_CHEAT);
-		SetCommandFlags("r_screenoverlay", iFlag);
-		ClientCommand(client, "r_screenoverlay \"\"");
-	}
+	int client = GetClientOfUserId(userid);
+	if (client <= 0 || !IsClientInGame(client) || IsFakeClient(client) || IsClientSourceTV(client) || IsClientReplay(client))
+		return;
+
+	ClientCommand(client, "r_screenoverlay \"\"");
 }
 
 
@@ -313,14 +336,26 @@ stock int GetLastAlive(int team)
 
 
 // Get a player for a certain admin flag
-stock bool CheckVipFlag(int client, const char[] flagsNeed)
+stock bool CheckVipFlag(int client, char [] flagsNeed)
 {
-	if ((GetUserFlagBits(client) & ReadFlagString(flagsNeed) == ReadFlagString(flagsNeed)) || (GetUserFlagBits(client) & ADMFLAG_ROOT))
+	int iCount = 0;
+	char sflagNeed[22][8], sflagFormat[64];
+	bool bEntitled = false;
+
+	Format(sflagFormat, sizeof(sflagFormat), flagsNeed);
+	ReplaceString(sflagFormat, sizeof(sflagFormat), " ", "");
+	iCount = ExplodeString(sflagFormat, ",", sflagNeed, sizeof(sflagNeed), sizeof(sflagNeed[]));
+
+	for (int i = 0; i < iCount; i++)
 	{
-		return true;
+		if ((GetUserFlagBits(client) & ReadFlagString(sflagNeed[i]) == ReadFlagString(sflagNeed[i])) || (GetUserFlagBits(client) & ADMFLAG_ROOT))
+		{
+			bEntitled = true;
+			break;
+		}
 	}
 
-	return false;
+	return bEntitled;
 }
 
 
@@ -339,4 +374,17 @@ stock int Handler_NullCancel(Handle menu, MenuAction action, int param1, int par
 	}
 
 	return;
+}
+
+stock void StringToUpper(char [] sz)
+{
+	int len = strlen(sz);
+
+	for (int i = 0; i < len; i++)
+	{
+		if (IsCharLower(sz[i]))
+		{
+			sz[i] = CharToUpper(sz[i]);
+		}
+	}
 }

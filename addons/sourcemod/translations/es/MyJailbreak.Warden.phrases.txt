@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-04-20 21:44:24 UTC
+// Date: 2017-05-17 21:17:05 UTC
 // Language: Spanish (es)
 // 
 // To view other translations for this plugin, please visit:
@@ -10,27 +10,27 @@
 
 	"warden_new"
 	{
-		"es"		"{purple}{1}{default} Es ahora el AlcÃ¡ide de esta PrisiÃ³n."
+		"es"		"{purple}{1}{default} Es ahora el Capitán de esta Prision."
 	}
 
 	"warden_new_nc"
 	{
-		"es"		"{1} Es ahora el AlcÃ¡ide de esta PrisiÃ³n."
+		"es"		"{1} Es ahora el Capitán de esta Prision."
 	}
 
 	"warden_playerdead"
 	{
-		"es"		"SÃ³lo los {purple}jugadores vivos{default}, pueden ser el AlcÃ¡ide."
+		"es"		"Solo los {purple}jugadores vivos{default}, pueden ser el Capitán."
 	}
 
 	"warden_ctsonly"
 	{
-		"es"		"SÃ³lo los {purple}Anti-Terroristas{default} pueden ser el AlcÃ¡ide."
+		"es"		"Solo los {purple}Anti-Terroristas{default} pueden ser el Capitán."
 	}
 
 	"warden_exist"
 	{
-		"es"		"AlcÃ¡ide Actual: {purple}{1}{default}"
+		"es"		"Capitán Actual: {purple}{1}{default}"
 	}
 
 	"warden_retire"
@@ -45,32 +45,32 @@
 
 	"warden_dead"
 	{
-		"es"		"El AlcÃ¡ide ha {darkred}dead{default}! Ahora toca elegir uno juevo."
+		"es"		"El Capitán ha {darkred}muerto{default}! Ahora toca elegir uno nuevo."
 	}
 
 	"warden_dead_nc"
 	{
-		"es"		"El AlcÃ¡ide ha muerto! Ahora toca elegir uno juevo."
+		"es"		"El Capitán ha muerto! Ahora toca elegir uno nuevo."
 	}
 
 	"warden_disconnected"
 	{
-		"es"		"El AlcÃ¡ide ha desertado. Ahora toca elegir uno nuevo."
+		"es"		"El Capitán ha desertado. Ahora toca elegir uno nuevo."
 	}
 
 	"warden_disconnected_nc"
 	{
-		"es"		"El AlcÃ¡ide ha desertado. Ahora toca elegir uno nuevo."
+		"es"		"El Capitán ha desertado. Ahora toca elegir uno nuevo."
 	}
 
 	"warden_removed"
 	{
-		"es"		"Administrador: {purple}{1}{default} ha prejubilado al AlcÃ¡ide: {purple}{2}"
+		"es"		"Administrador: {purple}{1}{default} ha jubilado al Capitán: {purple}{2}"
 	}
 
 	"warden_removed_nc"
 	{
-		"es"		"Administrador: {1} ha prejubilado al AlcÃ¡ide: {2}"
+		"es"		"Administrador: {1} ha prejubilado al Capitán: {2}"
 	}
 
 	"warden_15"

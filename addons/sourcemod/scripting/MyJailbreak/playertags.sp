@@ -47,16 +47,20 @@ ConVar gc_bPlugin;
 ConVar gc_bStats;
 ConVar gc_bChat;
 ConVar gc_sOwnerFlag;
+ConVar gc_sCoOwnerFlag;
+ConVar gc_sSuperAdminFlag;
 ConVar gc_sAdminFlag;
 ConVar gc_sVIPFlag;
 ConVar gc_sVIP2Flag;
 ConVar gc_bNoOverwrite;
 
 // Strings
-char g_sAdminFlag[4];
-char g_sOwnerFlag[32];
-char g_sVIP2Flag[32];
-char g_sVIPFlag[32];
+char g_sAdminFlag[64];
+char g_sOwnerFlag[64];
+char g_sVIP2Flag[64];
+char g_sVIPFlag[64];
+char g_sSuperAdminFlag[64];
+char g_sCoOwnerFlag[64];
 
 // Info
 public Plugin myinfo =
@@ -90,6 +94,8 @@ public void OnPluginStart()
 	gc_bStats = AutoExecConfig_CreateConVar("sm_playertag_stats", "1", "0 - disabled, 1 - enable PlayerTag in stats", _, true, 0.0, true, 1.0);
 	gc_bChat = AutoExecConfig_CreateConVar("sm_playertag_chat", "1", "0 - disabled, 1 - enable PlayerTag in chat", _, true, 0.0, true, 1.0);
 	gc_sOwnerFlag = AutoExecConfig_CreateConVar("sm_playertag_ownerflag", "z", "Set the flag for Owner");
+	gc_sCoOwnerFlag = AutoExecConfig_CreateConVar("sm_playertag_coownerflag", "r", "Set the flag for CoOwner");
+	gc_sSuperAdminFlag = AutoExecConfig_CreateConVar("sm_playertag_superadminflag", "s", "Set the flag for Super Admin");
 	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_playertag_adminflag", "d", "Set the flag for admin");
 	gc_sVIPFlag = AutoExecConfig_CreateConVar("sm_playertag_vipflag", "t", "Set the flag for VIP");
 	gc_sVIP2Flag = AutoExecConfig_CreateConVar("sm_playertag_vip2flag", "a", "Set the flag for VIP2");
@@ -107,9 +113,18 @@ public void OnPluginStart()
 
 	// FindConVar
 	gc_sOwnerFlag.GetString(g_sOwnerFlag, sizeof(g_sOwnerFlag));
+	gc_sCoOwnerFlag.GetString(g_sCoOwnerFlag, sizeof(g_sCoOwnerFlag));
+	gc_sSuperAdminFlag.GetString(g_sSuperAdminFlag, sizeof(g_sSuperAdminFlag));
 	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
 	gc_sVIPFlag.GetString(g_sVIPFlag, sizeof(g_sVIPFlag));
 	gc_sVIP2Flag.GetString(g_sVIP2Flag, sizeof(g_sVIP2Flag));
+
+	HookConVarChange(gc_sOwnerFlag, OnSettingChanged);
+	HookConVarChange(gc_sCoOwnerFlag, OnSettingChanged);
+	HookConVarChange(gc_sSuperAdminFlag, OnSettingChanged);
+	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
+	HookConVarChange(gc_sVIPFlag, OnSettingChanged);
+	HookConVarChange(gc_sVIP2Flag, OnSettingChanged);
 
 	// Late loading
 	if (g_bIsLateLoad)
@@ -136,6 +151,34 @@ public void Event_CheckTag(Event event, char[] name, bool dontBroadcast)
                    FORWARDS LISTEN
 ******************************************************************************/
 
+// ConVarChange for Strings
+public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
+{
+	if (convar == gc_sOwnerFlag)
+	{
+		strcopy(g_sOwnerFlag, sizeof(g_sOwnerFlag), newValue);
+	}
+	else if (convar == gc_sCoOwnerFlag)
+	{
+		strcopy(g_sCoOwnerFlag, sizeof(g_sCoOwnerFlag), newValue);
+	}
+	else if (convar == gc_sSuperAdminFlag)
+	{
+		strcopy(g_sSuperAdminFlag, sizeof(g_sSuperAdminFlag), newValue);
+	}
+	else if (convar == gc_sAdminFlag)
+	{
+		strcopy(g_sAdminFlag, sizeof(g_sAdminFlag), newValue);
+	}
+	else if (convar == gc_sVIPFlag)
+	{
+		strcopy(g_sVIPFlag, sizeof(g_sVIPFlag), newValue);
+	}
+	else if (convar == gc_sVIP2Flag)
+	{
+		strcopy(g_sVIP2Flag, sizeof(g_sVIP2Flag), newValue);
+	}
+}
 
 public void OnClientPutInServer(int client)
 {
@@ -189,6 +232,16 @@ void HandleTag(int client)
 					Format(tags, sizeof(tags), "%t", "tags_TOWN", LANG_SERVER);
 					CS_SetClientClanTag(client, tags);
 				}
+				else if (CheckVipFlag(client, g_sCoOwnerFlag))
+				{
+					Format(tags, sizeof(tags), "%t", "tags_TCO", LANG_SERVER);
+					CS_SetClientClanTag(client, tags);
+				}
+				else if (CheckVipFlag(client, g_sSuperAdminFlag))
+				{
+					Format(tags, sizeof(tags), "%t", "tags_TSA", LANG_SERVER);
+					CS_SetClientClanTag(client, tags);
+				}
 				else if (CheckVipFlag(client, g_sAdminFlag))
 				{
 					Format(tags, sizeof(tags), "%t", "tags_TA", LANG_SERVER);
@@ -219,6 +272,16 @@ void HandleTag(int client)
 						Format(tags, sizeof(tags), "%t", "tags_WOWN", LANG_SERVER);
 						CS_SetClientClanTag(client, tags);
 					}
+					else if (CheckVipFlag(client, g_sCoOwnerFlag))
+					{
+						Format(tags, sizeof(tags), "%t", "tags_WCO", LANG_SERVER);
+						CS_SetClientClanTag(client, tags);
+					}
+					else if (CheckVipFlag(client, g_sSuperAdminFlag))
+					{
+						Format(tags, sizeof(tags), "%t", "tags_WSA", LANG_SERVER);
+						CS_SetClientClanTag(client, tags);
+					}
 					else if (CheckVipFlag(client, g_sAdminFlag))
 					{
 						Format(tags, sizeof(tags), "%t", "tags_WA", LANG_SERVER);
@@ -247,6 +310,16 @@ void HandleTag(int client)
 						Format(tags, sizeof(tags), "%t", "tags_DOWN", LANG_SERVER);
 						CS_SetClientClanTag(client, tags);
 					}
+					else if (CheckVipFlag(client, g_sCoOwnerFlag))
+					{
+						Format(tags, sizeof(tags), "%t", "tags_DCO", LANG_SERVER);
+						CS_SetClientClanTag(client, tags);
+					}
+					else if (CheckVipFlag(client, g_sSuperAdminFlag))
+					{
+						Format(tags, sizeof(tags), "%t", "tags_DSA", LANG_SERVER);
+						CS_SetClientClanTag(client, tags);
+					}
 					else if (CheckVipFlag(client, g_sAdminFlag))
 					{
 						Format(tags, sizeof(tags), "%t", "tags_DA", LANG_SERVER);
@@ -271,6 +344,16 @@ void HandleTag(int client)
 				else if (CheckVipFlag(client, g_sOwnerFlag))
 				{
 					Format(tags, sizeof(tags), "%t", "tags_CTOWN", LANG_SERVER);
+					CS_SetClientClanTag(client, tags);
+				}
+				else if (CheckVipFlag(client, g_sCoOwnerFlag))
+				{
+					Format(tags, sizeof(tags), "%t", "tags_CTCO", LANG_SERVER);
+					CS_SetClientClanTag(client, tags);
+				}
+				else if (CheckVipFlag(client, g_sSuperAdminFlag))
+				{
+					Format(tags, sizeof(tags), "%t", "tags_CTSA", LANG_SERVER);
 					CS_SetClientClanTag(client, tags);
 				}
 				else if (CheckVipFlag(client, g_sAdminFlag))
@@ -311,6 +394,14 @@ public Action CP_OnChatMessage(int& author, ArrayList recipients, char[] flagstr
 				{
 					Format(name, MAXLENGTH_NAME, "%t %s", "tags_TOWN_chat", name);
 				}
+				else if (CheckVipFlag(author, g_sCoOwnerFlag))
+				{
+					Format(name, MAXLENGTH_NAME, "%t %s", "tags_TCO_chat", name);
+				}
+				else if (CheckVipFlag(author, g_sSuperAdminFlag))
+				{
+					Format(name, MAXLENGTH_NAME, "%t %s", "tags_TSA_chat", name);
+				}
 				else if (CheckVipFlag(author, g_sAdminFlag))
 				{
 					Format(name, MAXLENGTH_NAME, "%t %s", "tags_TA_chat", name);
@@ -336,6 +427,14 @@ public Action CP_OnChatMessage(int& author, ArrayList recipients, char[] flagstr
 					{
 						Format(name, MAXLENGTH_NAME, "%t %s", "tags_WOWN_chat", name);
 					}
+					else if (CheckVipFlag(author, g_sCoOwnerFlag))
+					{
+						Format(name, MAXLENGTH_NAME, "%t %s", "tags_WCO_chat", name);
+					}
+					else if (CheckVipFlag(author, g_sSuperAdminFlag))
+					{
+						Format(name, MAXLENGTH_NAME, "%t %s", "tags_WSA_chat", name);
+					}
 					else if (CheckVipFlag(author, g_sAdminFlag))
 					{
 						Format(name, MAXLENGTH_NAME, "%t %s", "tags_WA_chat", name);
@@ -359,6 +458,14 @@ public Action CP_OnChatMessage(int& author, ArrayList recipients, char[] flagstr
 					{
 						Format(name, MAXLENGTH_NAME, "%t %s", "tags_DOWN_chat", name);
 					}
+					else if (CheckVipFlag(author, g_sCoOwnerFlag))
+					{
+						Format(name, MAXLENGTH_NAME, "%t %s", "tags_DCO_chat", name);
+					}
+					else if (CheckVipFlag(author, g_sSuperAdminFlag))
+					{
+						Format(name, MAXLENGTH_NAME, "%t %s", "tags_DSA_chat", name);
+					}
 					else if (CheckVipFlag(author, g_sAdminFlag))
 					{
 						Format(name, MAXLENGTH_NAME, "%t %s", "tags_DA_chat", name);
@@ -379,6 +486,14 @@ public Action CP_OnChatMessage(int& author, ArrayList recipients, char[] flagstr
 				else if (CheckVipFlag(author, g_sOwnerFlag))
 				{
 					Format(name, MAXLENGTH_NAME, "%t %s", "tags_CTOWN_chat", name);
+				}
+				else if (CheckVipFlag(author, g_sCoOwnerFlag))
+				{
+					Format(name, MAXLENGTH_NAME, "%t %s", "tags_CTCO_chat", name);
+				}
+				else if (CheckVipFlag(author, g_sSuperAdminFlag))
+				{
+					Format(name, MAXLENGTH_NAME, "%t %s", "tags_CTSA_chat", name);
 				}
 				else if (CheckVipFlag(author, g_sAdminFlag))
 				{
