@@ -1130,12 +1130,18 @@ void FixTeamRatio()
 				if (gp_bWarden) if ((warden_iswarden(client) || warden_deputy_isdeputy(client) || (!warden_exist() && (warden_getlast() == client)) || (!warden_deputy_exist() && (warden_deputy_getlast() == client))) && gc_bBalanceWarden.BoolValue)
 				{
 					iListNum--;
+					if (iListNum == -1)
+						break;
+					
 					client = GetArrayCell(g_aGuardList, iListNum);
 					
 					if (warden_iswarden(client) || warden_deputy_isdeputy(client) || (!warden_exist() && (warden_getlast() == client)) || (!warden_deputy_exist() && (warden_deputy_getlast() == client)))
 					{
 						iListNum--;
-						if (iListNum != -1) client = GetArrayCell(g_aGuardList, iListNum);
+						if (iListNum == -1)
+							break;
+						
+						client = GetArrayCell(g_aGuardList, iListNum);
 					}
 				}
 			}
