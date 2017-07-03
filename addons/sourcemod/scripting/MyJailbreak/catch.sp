@@ -796,6 +796,8 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 
 			if (gp_bMyJailbreak)
 			{
+				SetCvar("sm_menu_enable", 1);
+				
 				MyJailbreak_SetEventDayRunning(false, winner);
 				MyJailbreak_SetEventDayName("none");
 			}
