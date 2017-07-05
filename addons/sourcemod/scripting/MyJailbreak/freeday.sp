@@ -274,7 +274,7 @@ public Action Command_SetFreeday(int client, int args)
 
 		if (MyJailbreak_ActiveLogging())
 		{
-			LogToFileEx(g_sEventsLogFile, "Event Deal Damage was started by groupvoting");
+			LogToFileEx(g_sEventsLogFile, "Event Freeday was started by groupvoting");
 		}
 	}
 	else if (CheckVipFlag(client, g_sAdminFlag)) // Called by admin/VIP
