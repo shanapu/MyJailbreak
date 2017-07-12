@@ -49,9 +49,10 @@ public __pl_warden_SetNTVOptional()
  * By player, admin, randomchoose...
  *
  * @param client		The client who try to become warden
+ * @param caller		The client who called the set or become warden command
  * @return 				Return Plugin_Handled to block & Plugin_Continue to pass the client.
  *********************************************************/
-forward Action warden_OnWardenCreate(int client);
+forward Action warden_OnWardenCreate(int client, int caller);
 
 
 /*********************************************************
@@ -162,9 +163,10 @@ native warden_iswarden(int client);
  * Set a client as warden
  *
  * @param client		The client to set as warden
+ * @param caller		The client who set the new warden
  * @NoReturn
  *********************************************************/
-native warden_set(int client);
+native warden_set(int client, int caller);
 
 
 /*********************************************************

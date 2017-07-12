@@ -471,7 +471,7 @@ public Action Command_BecomeWarden(int client, int args)
 							{
 								if (GetLimit(client) < gc_iLimitWarden.IntValue || gc_iLimitWarden.IntValue == 0 || (gc_iCoolDownMinPlayer.IntValue > GetAllPlayersCount(CS_TEAM_CT)))
 								{
-									if (SetTheWarden(client) != Plugin_Handled)
+									if (SetTheWarden(client, client) != Plugin_Handled)
 									{
 										Forward_OnWardenCreatedByUser(client);
 									}
@@ -906,7 +906,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 ******************************************************************************/
 
 // Set a new warden
-Action SetTheWarden(int client)
+Action SetTheWarden(int client, int caller)
 {
 	if (gc_bPlugin.BoolValue)
 	{
@@ -914,6 +914,7 @@ Action SetTheWarden(int client)
 
 		Call_StartForward(gF_OnWardenCreate);
 		Call_PushCell(client);
+		Call_PushCell(caller);
 		Call_Finish(res);
 
 		if (res >= Plugin_Handled)
@@ -1107,7 +1108,7 @@ public int Handler_SetWarden(Menu menu, MenuAction action, int client, int Posit
 					}
 					else
 					{
-						if (SetTheWarden(i) != Plugin_Handled)
+						if (SetTheWarden(i, client) != Plugin_Handled)
 						{
 							Forward_OnWardenCreatedByAdmin(i);
 						}
@@ -1147,7 +1148,7 @@ public int Handler_SetWardenOverwrite(Menu menu, MenuAction action, int client, 
 			}
 
 			RemoveTheWarden();
-			if (SetTheWarden(newwarden) != Plugin_Handled)
+			if (SetTheWarden(newwarden, client) != Plugin_Handled)
 			{
 				Forward_OnWardenCreatedByAdmin(newwarden);
 
@@ -1199,7 +1200,7 @@ public Action Timer_ChooseRandom(Handle timer)
 
 				if (i > 0)
 				{
-					if (SetTheWarden(i) != Plugin_Handled)
+					if (SetTheWarden(i, client) != Plugin_Handled)
 					{
 						CPrintToChatAll("%t %t", "warden_tag", "warden_randomwarden");
 					}
@@ -1262,7 +1263,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	CreateNative("warden_freeday_has", Native_HasClientFreeday);
 
 	// Forwards
-	gF_OnWardenCreate = CreateGlobalForward("warden_OnWardenCreate", ET_Event, Param_Cell);
+	gF_OnWardenCreate = CreateGlobalForward("warden_OnWardenCreate", ET_Event, Param_Cell, Param_Cell);
 	gF_OnWardenRemoved = CreateGlobalForward("warden_OnWardenRemoved", ET_Ignore, Param_Cell);
 	gF_OnWardenCreatedByUser = CreateGlobalForward("warden_OnWardenCreatedByUser", ET_Ignore, Param_Cell);
 	gF_OnWardenCreatedByAdmin = CreateGlobalForward("warden_OnWardenCreatedByAdmin", ET_Ignore, Param_Cell);
@@ -1309,12 +1310,13 @@ public int Native_IsWarden(Handle plugin, int argc)
 public int Native_SetWarden(Handle plugin, int argc)
 {
 	int client = GetNativeCell(1);
+	int caller = GetNativeCell(2);
 
 	if (!IsClientInGame(client) && !IsClientConnected(client))
 		ThrowNativeError(SP_ERROR_INDEX, "Client index %i is invalid", client);
 
 	if (g_iWarden == -1)
-		SetTheWarden(client);
+		SetTheWarden(client, caller);
 }
 
 // Remove current Warden
