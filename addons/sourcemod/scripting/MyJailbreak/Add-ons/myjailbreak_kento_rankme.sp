@@ -101,7 +101,7 @@ public Action MyJailbreak_OnJoinGuardQueue(int client)
 	return Plugin_Continue;
 }
 
-public Action warden_OnWardenCreate(int client)
+public Action warden_OnWardenCreate(int client, int caller)
 {
 	if (RankMe_GetPoints(client) < gc_iMinRankMePointsWarden.IntValue)
 	{

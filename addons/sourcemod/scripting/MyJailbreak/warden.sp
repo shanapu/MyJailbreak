@@ -1200,7 +1200,7 @@ public Action Timer_ChooseRandom(Handle timer)
 
 				if (i > 0)
 				{
-					if (SetTheWarden(i, client) != Plugin_Handled)
+					if (SetTheWarden(i, 0) != Plugin_Handled)
 					{
 						CPrintToChatAll("%t %t", "warden_tag", "warden_randomwarden");
 					}

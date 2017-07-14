@@ -115,7 +115,7 @@ public Action MyJailbreak_OnJoinGuardQueue(int client)
 }
 
 
-public Action warden_OnWardenCreate(int client)
+public Action warden_OnWardenCreate(int client, int caller)
 {
 	if ((gc_iTeamWarden.IntValue == 0 && MostActive_GetPlayTimeCT(client) < gc_iMinTimeWarden.IntValue) ||
 		(gc_iTeamWarden.IntValue == 1 && MostActive_GetPlayTimeT(client) < gc_iMinTimeWarden.IntValue) ||

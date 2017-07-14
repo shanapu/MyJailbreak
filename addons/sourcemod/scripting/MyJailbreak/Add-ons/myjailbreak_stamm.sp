@@ -99,7 +99,7 @@ public Action MyJailbreak_OnJoinGuardQueue(int client)
 	return Plugin_Continue;
 }
 
-public Action warden_OnWardenCreate(int client)
+public Action warden_OnWardenCreate(int client, int caller)
 {
 	if (STAMM_GetClientPoints(client) < gc_iMinStammPointsWarden.IntValue)
 	{

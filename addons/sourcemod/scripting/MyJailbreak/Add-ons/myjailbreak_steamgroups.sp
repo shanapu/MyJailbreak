@@ -133,7 +133,7 @@ public void OnAllPluginsLoaded()
 	}
 }
 
-public Action warden_OnWardenCreate(int client)
+public Action warden_OnWardenCreate(int client, int caller)
 {
 	if (!IsMemberWarden[client] && gc_sGroupWarden.IntValue != 0)
 	{

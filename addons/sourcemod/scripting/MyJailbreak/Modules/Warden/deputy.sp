@@ -417,7 +417,7 @@ public Action Timer_DeputyNewWarden(Handle timer)
 {
 	if (IsValidClient(g_iDeputyDelay, true, false))
 	{
-		SetTheWarden(g_iDeputyDelay);
+		SetTheWarden(g_iDeputyDelay, 0);
 	}
 }
 
