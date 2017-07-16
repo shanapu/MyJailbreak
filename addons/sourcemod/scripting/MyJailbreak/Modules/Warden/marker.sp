@@ -147,7 +147,6 @@ public void Marker_Event_ItemEquip(Event event, const char[] name, bool dontBroa
 	g_iWrongWeapon[client] = event.GetInt("weptype");
 }
 
-
 /******************************************************************************
                    FORWARDS LISTEN
 ******************************************************************************/
