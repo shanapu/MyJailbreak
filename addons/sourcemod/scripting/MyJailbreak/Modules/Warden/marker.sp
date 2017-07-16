@@ -156,8 +156,7 @@ public Action Marker_OnPlayerRunCmd(int client, int &buttons, int &impulse, floa
 {
 	if (buttons & IN_ATTACK2 || g_bCanMarker[client])
 	{
-		if (gc_bMarker.BoolValue && !g_bCanZoom[client] && !g_bHasSilencer[client] && (g_iWrongWeapon[client] != 0) && (g_iWrongWeapon[client] != 8) &&
-		!(StrContains(g_sWeaponBlackList, g_sEquipWeapon[client]) != -1) && (IsClientWarden(client) || (IsClientDeputy(client) && gc_bMarkerDeputy.BoolValue)) && gc_bPlugin.BoolValue)
+		if (gc_bMarker.BoolValue && !g_bCanZoom[client] && !g_bHasSilencer[client] && (g_iWrongWeapon[client] != 0) && (g_iWrongWeapon[client] != 8) && !(StrContains(g_sWeaponBlackList, g_sEquipWeapon[client]) != -1) && (IsClientWarden(client) || (IsClientDeputy(client) && gc_bMarkerDeputy.BoolValue)) && gc_bPlugin.BoolValue)
 		{
 			if (!g_bMarkerSetup[client])
 				GetClientAimTargetPos(client, g_fMarkerSetupStartOrigin);
