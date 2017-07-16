@@ -62,7 +62,7 @@ char g_sColorNamesYellow[64];
 char g_sColorNamesCyan[64];
 char g_sColorNamesWhite[64];
 char g_sColorNames[8][64] ={{""}, {""}, {""}, {""}, {""}, {""}, {""}, {""}};
-char g_sWeaponBlackList[128+1] = "weapon_hegrenade weapon_smokegrenade weapon_flashbang weapon_incgrenade weapon_tagrenade weapon_molotov weapon_decoy weapon_taser"; //For 1 char...
+char g_sWeaponBlackList[128+1] = "weapon_hegrenade weapon_smokegrenade weapon_flashbang weapon_incgrenade weapon_tagrenade weapon_molotov weapon_decoy weapon_taser";
 
 // float
 float g_fMarkerRadiusMin = 100.0;
