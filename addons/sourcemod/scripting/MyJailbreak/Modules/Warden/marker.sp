@@ -144,6 +144,11 @@ public void Marker_Event_ItemEquip(Event event, const char[] name, bool dontBroa
 	g_bCanZoom[client] = event.GetBool("canzoom");
 	g_bHasSilencer[client] = event.GetBool("hassilencer");
 	g_iWrongWeapon[client] = event.GetInt("weptype");
+	/*
+	WEAPONTYPE_KNIFE = 0
+	WEAPONTYPE_TASER 8
+	WEAPONTYPE_GRENADE 9
+	*/
 }
 
 /******************************************************************************
