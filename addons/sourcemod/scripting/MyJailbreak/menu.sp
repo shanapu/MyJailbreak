@@ -1607,10 +1607,10 @@ public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selec
 				Command_OpenMenu(client, 0);
 			}
 		} 
-		else if (action == MenuAction_End)
-		{
+	}
+	else if (action == MenuAction_End)
+	{
 		delete mainmenu;
-		}
 	}
 }
 
