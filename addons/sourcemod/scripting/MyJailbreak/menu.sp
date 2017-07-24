@@ -849,6 +849,8 @@ public Action Command_OpenMenu(int client, int args)
 						{
 							Format(menuinfo, sizeof(menuinfo), "%T", "menu_playerfreeday", client);
 							mainmenu.AddItem("playerfreeday", menuinfo);
+							Format(menuinfo, sizeof(menuinfo), "%T", "menu_playerremovefreeday", client);
+							mainmenu.AddItem("playerremovefreeday", menuinfo);
 						}
 					}
 					if (g_bWardenRebel != null)
@@ -1025,6 +1027,8 @@ public Action Command_OpenMenu(int client, int args)
 						{
 							Format(menuinfo, sizeof(menuinfo), "%T", "menu_playerfreeday", client);
 							mainmenu.AddItem("playerfreeday", menuinfo);
+							Format(menuinfo, sizeof(menuinfo), "%T", "menu_playerremovefreeday", client);
+							mainmenu.AddItem("playerremovefreeday", menuinfo);
 						}
 					}
 					if (g_bWardenRebel != null)
@@ -1169,6 +1173,8 @@ public Action Command_OpenMenu(int client, int args)
 						{
 							Format(menuinfo, sizeof(menuinfo), "%T", "menu_playerfreeday", client);
 							mainmenu.AddItem("playerfreeday", menuinfo);
+							Format(menuinfo, sizeof(menuinfo), "%T", "menu_playerremovefreeday", client);
+							mainmenu.AddItem("playerremovefreeday", menuinfo);
 						}
 					}
 					
@@ -1455,6 +1461,10 @@ public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selec
 		else if (strcmp(info, "playerfreeday") == 0)
 		{
 			FakeClientCommand(client, "sm_givefreeday");
+		}
+		else if (strcmp(info, "playerremovefreeday") == 0)
+		{
+			FakeClientCommand(client, "sm_removefreeday");
 		}
 		else if (strcmp(info, "votedays") == 0)
 		{

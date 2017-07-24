@@ -83,16 +83,6 @@
 		"es"		"Matar un prisionero Aleatorio"
 	}
 
-	"menu_unCapitán"
-	{
-		"es"		"Salirse de Capitán"
-	}
-
-	"menu_getCapitán"
-	{
-		"es"		"Ser Capitán"
-	}
-
 	"menu_joint"
 	{
 		"es"		"Become a Prisoner"
@@ -113,10 +103,6 @@
 		"es"		"Remover Capitán"
 	}
 
-	"menu_setCwarden"
-	{
-		"es"		"Setear nuevo Capitán"
-	}
 
 	"menu_rules"
 	{

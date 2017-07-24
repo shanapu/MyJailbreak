@@ -327,6 +327,11 @@
 		"en"		"Give a Player a Freeday"
 	}
 
+	"menu_playerremovefreeday"
+	{
+		"en"		"Remove a Players Freeday"
+	}
+
 	"menu_teamgamesmenu"
 	{
 		"en"		"Team Games - Menu"
