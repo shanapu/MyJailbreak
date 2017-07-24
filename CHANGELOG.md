@@ -63,8 +63,10 @@
         *  new cvar - sm_warden_mostactive_team - 0 - playtime as Counter-Terror / 1 - playtime as Terror / 2 - playtime in Total (CT,T&Spec)
 *  Add-On: Support for Levels Ranks Core 2.2.0 http://hlmod.ru/resources/levels-ranks-core.177/
     *  new plugin - disabled/myjailbreak_lvl_ranks.smx
-        *  new cvar - sm_ratio_mostactive - 0 - what level a player need to join ct? (only if lvlranks is available)
-        *  new cvar - sm_warden_mostactive - 0 - what level a player need to become warden? (only if lvlranks is available)
+        *  new cvar - sm_ratio_lvlranks - 0 - what level a player need to join ct? (only if lvlranks is available)
+        *  new cvar - sm_warden_lvlranks - 0 - what level a player need to become warden? (only if lvlranks is available)
+*  Add-On: Support for Healines gangs - disable gang perks on event days
+    *  new plugin - disabled/myjailbreak_gangs.smx
 *  PlayerTags: Two new Tags SuperAdmin & CoOwner Thx @ ichiballs
     *  new cvar - sm_playertag_coownerflag - Set the flag for CoOwner. Default 'r'
     *  new cvar - sm_playertag_superadminflag - Set the flag for Super Admin. Default 's'
@@ -72,19 +74,20 @@
     *  new cvar - sm_icon_eventday - 0 - use the icons, 1 - disable icons on EventDays
 *  Weapons: ConVar to disable weapons for CTs on not eventday rounds. (use armory)
     *  new cvar - sm_weapons_noeventday - 0 - disabled, 1 - enable the weapon menu on non-EventDays round (normal/simon rounds)
-  
+*  Menu: added !removefreeday for warden,deputy/guard to menu
   
   
 *Changed*
 *  Ratio: When last guard move to prisoners, a prisoner from queue or random will be moved to guard THX @mrkos9i4ok
 *  Flags: all ConVars to set admin/vip flag has been extended to support mutliple flags ex. "r,s,t" use comma
 *  renamed plugin - ratio_ctbans_fantom to ratio_ctbans_r1ko
-
+  
   
 *Fixed*
 *  Menu: fixed setdays for warden (don't show restricted/disabled days)
 *  Ratio: fixed custom VIP/Admin flags
 *  Warden - mute: fixed confict with sourcecomms
+*  Warden - bulletspark: fixed
 *  PlayerTags: fixed custom VIP/Admin flags
 *  Zombie: respawn with ratio restriction
 *  Freeday: fixed roundtime when only one team has player
@@ -104,6 +107,10 @@
 *  Changed the way how weapons access is handled. natives insetad of switch ConVars
     *  new native - MyWeapons_AllowTeam(int client, bool status) - Allow a team to pick weapons from weapons menu 
     *  new native - MyWeapons_GetTeamStatus(int iTeam) - Get team status if weapons are allowed
+*  Extented parameter of a warden forwards & native - new caller clientid - 0 on random
+    *  changed forward - warden_OnWardenCreate(int client, int caller) - The client who called the set or become warden command
+    *  changed native - warden_set(int client, int caller) -  The client who set the new warden
+
   
   
   

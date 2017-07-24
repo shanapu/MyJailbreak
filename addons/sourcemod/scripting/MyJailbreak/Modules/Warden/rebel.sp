@@ -54,8 +54,6 @@ ConVar g_bHostiesColor;
 ConVar g_iHostiesR;
 ConVar g_iHostiesG;
 ConVar g_iHostiesB;
-ConVar g_bHostiesAnnounce;
-ConVar g_bHostiesAnnounceGlobal;
 
 // Start
 public void MarkRebel_OnPluginStart()
@@ -191,23 +189,6 @@ public int Handler_MarkRebel(Menu MarkRebel, MenuAction action, int client, int 
 		MarkRebel.GetItem(selection, info, sizeof(info));
 		int i = GetClientOfUserId(StringToInt(info));
 		ChangeRebelStatus(i, true);
-		
-		if (g_bHostiesAnnounce.BoolValue && IsClientInGame(i))  // hosties cvars
-		{
-			if (g_bHostiesAnnounceGlobal.BoolValue) // hosties cvars
-			{
-				CPrintToChatAll("%t %t", "warden_tag", "New Rebel", i); // hosties phrases
-			}
-			else
-			{
-				CPrintToChat(i, "%t %t", "warden_tag", "New Rebel", i); // hosties phrases
-				CPrintToChat(client, "%t %t", "warden_tag", "New Rebel", i); // hosties phrases
-			}
-		}
-		if (g_bHostiesColor.BoolValue) // hosties cvars
-		{
-			SetEntityRenderColor(i, g_iHostiesR.IntValue, g_iHostiesG.IntValue, g_iHostiesB.IntValue, 255); // hosties cvars
-		}
 		
 		Menu_MarkRebelMenu(client);
 	}
