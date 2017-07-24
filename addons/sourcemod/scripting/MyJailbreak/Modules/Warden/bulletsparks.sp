@@ -115,20 +115,23 @@ public Action BulletSparks_Event_BulletImpact(Event event, char[] sName, bool bD
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));
 
-	if (!gc_bPlugin.BoolValue || !gc_bBulletSparks.BoolValue || (!IsClientWarden(client) || (!IsClientDeputy(client) && gc_bBulletSparksDeputy.BoolValue)) || !g_bBulletSparks[client] || !CheckVipFlag(client, g_sAdminFlagBulletSparks))
+	if (!gc_bPlugin.BoolValue || !gc_bBulletSparks.BoolValue || !g_bBulletSparks[client] || !CheckVipFlag(client, g_sAdminFlagBulletSparks))
 		return Plugin_Continue;
 
-	float startpos[3];
-	float dir[3] = {0.0, 0.0, 0.0};
+	if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bBulletSparksDeputy.BoolValue))
+	{
+		float startpos[3];
+		float dir[3] = {0.0, 0.0, 0.0};
 
-	startpos[0] = event.GetFloat("x");
-	startpos[1] = event.GetFloat("y");
-	startpos[2] = event.GetFloat("z");
+		startpos[0] = event.GetFloat("x");
+		startpos[1] = event.GetFloat("y");
+		startpos[2] = event.GetFloat("z");
 
-	if (warden_iswarden(client))TE_SetupSparks(startpos, dir, 2500, 500);
-	if (warden_deputy_isdeputy(client))TE_SetupSparks(startpos, dir, 1500, 300);
+		if (IsClientWarden(client))TE_SetupSparks(startpos, dir, 2500, 500);
+		if (IsClientDeputy(client))TE_SetupSparks(startpos, dir, 1500, 300);
 
-	TE_SendToAll();
+		TE_SendToAll();
+	}
 
 	return Plugin_Continue;
 }
