@@ -49,11 +49,6 @@ ConVar gc_bMarkRebel;
 ConVar gc_bMarkRebelDeputy;
 ConVar gc_sCustomCommandRebel;
 
-// Extern Convars
-ConVar g_bHostiesColor;
-ConVar g_iHostiesR;
-ConVar g_iHostiesG;
-ConVar g_iHostiesB;
 
 // Start
 public void MarkRebel_OnPluginStart()
@@ -242,14 +237,6 @@ public void Rebel_OnConfigsExecuted()
 	// Set custom Commands
 	int iCount = 0;
 	char sCommands[128], sCommandsL[12][32], sCommand[32];
-
-	// FindConVar
-	g_bHostiesColor = FindConVar("sm_hosties_rebel_color");
-	g_iHostiesG = FindConVar("sm_hosties_rebel_green");
-	g_iHostiesR = FindConVar("sm_hosties_rebel_red");
-	g_iHostiesB = FindConVar("sm_hosties_rebel_blue");
-	g_bHostiesAnnounce = FindConVar("sm_hosties_announce_rebel");
-	g_bHostiesAnnounceGlobal = FindConVar("sm_hosties_lr_send_global_msgs");
 
 	// Custom rebel command
 	gc_sCustomCommandRebel.GetString(sCommands, sizeof(sCommands));
