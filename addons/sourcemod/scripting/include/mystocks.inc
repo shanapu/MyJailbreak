@@ -289,12 +289,24 @@ stock int GetAlivePlayersCountNonRebel(int team)
 
 
 // Get all player count of a team
-stock int GetAllPlayersCount(int team)
+stock int GetTeamPlayersCount(int team)
 {
 	int iCount, i; iCount = 0;
 
 	for (i = 1; i <= MaxClients; i++)
 		if (IsValidClient(i, true, true) && GetClientTeam(i) == team)
+		iCount++;
+
+	return iCount;
+}
+
+// Get all player count of a team
+stock int GetAllPlayersCount()
+{
+	int iCount, i; iCount = 0;
+
+	for (i = 1; i <= MaxClients; i++)
+		if (IsValidClient(i, true, true))
 		iCount++;
 
 	return iCount;

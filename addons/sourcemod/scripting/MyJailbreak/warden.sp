@@ -469,7 +469,7 @@ public Action Command_BecomeWarden(int client, int args)
 						{
 							if (!g_bCMDCoolDown[client])
 							{
-								if (GetLimit(client) < gc_iLimitWarden.IntValue || gc_iLimitWarden.IntValue == 0 || (gc_iCoolDownMinPlayer.IntValue > GetAllPlayersCount(CS_TEAM_CT)))
+								if (GetLimit(client) < gc_iLimitWarden.IntValue || gc_iLimitWarden.IntValue == 0 || (gc_iCoolDownMinPlayer.IntValue > GetTeamPlayersCount(CS_TEAM_CT)))
 								{
 									if (SetTheWarden(client, client) != Plugin_Handled)
 									{
@@ -752,7 +752,7 @@ public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 
 	if (g_iWarden != -1)  // warden exists
 	{
-		if (gc_iLimitWarden.IntValue != 0 && (GetLimit(g_iWarden) >= gc_iLimitWarden.IntValue) && (GetAllPlayersCount(CS_TEAM_CT) >= gc_iCoolDownMinPlayer.IntValue)) // remove
+		if (gc_iLimitWarden.IntValue != 0 && (GetLimit(g_iWarden) >= gc_iLimitWarden.IntValue) && (GetTeamPlayersCount(CS_TEAM_CT) >= gc_iCoolDownMinPlayer.IntValue)) // remove
 		{
 			SetCoolDown(g_iWarden, gc_iCoolDownLimit.IntValue);
 			SetLimit(g_iWarden, 0);
