@@ -70,6 +70,7 @@ ConVar gc_bAuto;
 ConVar gc_iRespawn;
 ConVar gc_iRespawnTime;
 ConVar gc_bdamage;
+ConVar gc_bWarden;
 ConVar gc_bSetA;
 ConVar gc_bSetABypassCooldown;
 ConVar gc_bVote;
@@ -131,6 +132,7 @@ public void OnPluginStart()
 	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_freeday_flag", "g", "Set flag for admin/vip to set this Event Day.");
 	gc_bVote = AutoExecConfig_CreateConVar("sm_freeday_vote", "1", "0 - disabled, 1 - allow player to vote for freeday", _, true, 0.0, true, 1.0);
 	gc_bAuto = AutoExecConfig_CreateConVar("sm_freeday_noct", "1", "0 - disabled, 1 - auto freeday when there is no CT", _, true, 0.0, true, 1.0);
+	gc_bWarden = AutoExecConfig_CreateConVar("sm_freeday_allow_warden", "0", "0 - warden disabled, 1 - allow player to become warden", _, true, 0.0, true, 1.0);
 	gc_iRespawn = AutoExecConfig_CreateConVar("sm_freeday_respawn", "1", "1 - respawn on NoCT Freeday / 2 - respawn on firstround/vote/set Freeday / 3 - Both", _, true, 1.0, true, 3.0);
 	gc_iRespawnTime = AutoExecConfig_CreateConVar("sm_freeday_respawn_time", "120", "Time in seconds player will respawn after round begin", _, true, 1.0);
 	gc_bFirst = AutoExecConfig_CreateConVar("sm_freeday_firstround", "0", "0 - disabled, 1 - auto freeday first round after mapstart", _, true, 0.0, true, 1.0);
@@ -489,7 +491,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		return;
 	}
 
-	if (gp_bWarden)
+	if (gp_bWarden && !gc_bWarden.BoolValue)
 	{
 		SetCvar("sm_warden_enable", 0);
 	}
