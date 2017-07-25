@@ -1273,6 +1273,9 @@ void ChangeTeam(int client, int team)
 	Format(info, sizeof(info), "%T", "ratio_sure", client);
 	menu1.SetTitle(info);
 
+	menu1.AddItem("1", "0", ITEMDRAW_SPACER);
+	menu1.AddItem("1", "0", ITEMDRAW_SPACER);
+
 	Format(info, sizeof(info), "%T", "ratio_no", client);
 	menu1.AddItem("1", info);
 	Format(info, sizeof(info), "%T", "ratio_yes", client);
