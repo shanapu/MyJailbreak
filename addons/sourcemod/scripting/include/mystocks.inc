@@ -400,3 +400,25 @@ stock void StringToUpper(char [] sz)
 		}
 	}
 }
+
+stock bool IsClientStuck(int client)
+{
+	float vOrigin[3], float vMins[3], float vMaxs[3];
+
+	GetClientAbsOrigin(client, vOrigin);
+
+	GetEntPropVector(client, Prop_Send, "m_vecMins", vMins);
+	GetEntPropVector(client, Prop_Send, "m_vecMaxs", vMaxs);
+
+	TR_TraceHullFilter(vOrigin, vOrigin, vMins, vMaxs, MASK_ALL, FilterOnlyPlayers, client);
+
+	return TR_DidHit();
+}
+
+stock bool FilterOnlyPlayers(int entity, int contentsMask, any data)
+{
+	if(entity != data && entity > 0 && entity <= MaxClients) 
+		return true;
+	
+	return false;
+}
