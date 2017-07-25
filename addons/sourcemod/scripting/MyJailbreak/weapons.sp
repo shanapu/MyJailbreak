@@ -181,6 +181,8 @@ public void OnPluginStart()
 	gc_bKevlar = AutoExecConfig_CreateConVar("sm_weapons_kevlar", "1", "0 - disabled, 1 - CT get Kevlar & helm on Spawn", _, true, 0.0, true, 1.0);
 	gc_bKevlarDays = AutoExecConfig_CreateConVar("sm_weapons_kevlar_eventdays", "1", "0 - remove all armor on eventdays, 1 - give all player armor on eventdays", _, true, 0.0, true, 1.0);
 	gc_bJBmenu = AutoExecConfig_CreateConVar("sm_weapons_jbmenu", "1", "0 - disabled, 1 - enable autoopen the MyJailbreak !menu after weapon given.", _, true, 0.0, true, 1.0);
+	gc_bCleanMenu = AutoExecConfig_CreateConVar("sm_weapons_cleanmenu", "1", "remove 1. & 2. on first page, to avoid conflict with weapon switch", _, true, 0.0, true, 1.0);
+
 
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
@@ -709,6 +711,12 @@ Handle Menu_BuildOptionsMenu(bool sameWeaponsEnabled)
 	SetMenuTitle(menu3, info1);
 
 	SetMenuExitButton(menu3, true);
+
+	if (gc_bCleanMenu.BoolValue)
+	{
+		AddMenuItem(menu3, "1", "0", ITEMDRAW_SPACER);
+		AddMenuItem(menu3, "1", "0", ITEMDRAW_SPACER);
+	}
 
 	Format(info2, sizeof(info2), "%T", "weapons_info_choose", LANG_SERVER);
 	AddMenuItem(menu3, "New", info2);
