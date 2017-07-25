@@ -78,6 +78,7 @@ ConVar gc_bSetW;
 ConVar gc_bSetA;
 ConVar gc_bVoting;
 ConVar gc_iAdminMenu;
+ConVar gc_bCleanMenu;
 
 // 3rd party Convars
 ConVar g_bMath;
@@ -261,6 +262,7 @@ public void OnPluginStart()
 	gc_bDeputy = AutoExecConfig_CreateConVar("sm_menu_deputy", "1", "0 - disabled, 1 - enable deputy jailbreak menu", _, true, 0.0, true, 1.0);
 	gc_bDaysVote = AutoExecConfig_CreateConVar("sm_menu_votedays", "1", "0 - disabled, 1 - enable vote eventdays menu", _, true, 0.0, true, 1.0);
 	gc_bDaysSet = AutoExecConfig_CreateConVar("sm_menu_setdays", "1", "0 - disabled, 1 - enable set eventdays menu", _, true, 0.0, true, 1.0);
+	gc_bCleanMenu = AutoExecConfig_CreateConVar("sm_menu_clean", "1", "remove 1. & 2. on first page, cause conflict with weapon switch", _, true, 0.0, true, 1.0);
 	gc_bClose = AutoExecConfig_CreateConVar("sm_menu_close", "0", "0 - disabled, 1 - enable close menu after action", _, true, 0.0, true, 1.0);
 	gc_bStart = AutoExecConfig_CreateConVar("sm_menu_start", "1", "0 - disabled, 1 - enable open menu on every roundstart", _, true, 0.0, true, 1.0);
 	gc_bTeam = AutoExecConfig_CreateConVar("sm_menu_team", "1", "0 - disabled, 1 - enable join team on menu", _, true, 0.0, true, 1.0);
@@ -784,6 +786,12 @@ public Action Command_OpenMenu(int client, int args)
 			Format(menuinfo, sizeof(menuinfo), "%T", "menu_info_title", client);
 			Menu mainmenu = new Menu(JBMenuHandler);
 			mainmenu.SetTitle(menuinfo);
+
+			if(gc_bCleanMenu.BoolValue)
+			{
+				mainmenu.AddItem("1", "0", ITEMDRAW_SPACER);
+				mainmenu.AddItem("1", "0", ITEMDRAW_SPACER);
+			}
 
 			if (warden_iswarden(client) && gc_bWarden.BoolValue) // HERE STARTS THE WARDEN MENU
 			{
@@ -1623,6 +1631,12 @@ public Action Command_VoteEventDays(int client, int args)
 			
 			Format(menuinfo, sizeof(menuinfo), "%T", "menu_event_Titlevote", client);
 			daysmenu.SetTitle(menuinfo);
+
+			if(gc_bCleanMenu.BoolValue)
+			{
+				daysmenu.AddItem("1", "0", ITEMDRAW_SPACER);
+				daysmenu.AddItem("1", "0", ITEMDRAW_SPACER);
+			}
 			
 			if (g_bWar != null)
 			{
@@ -2509,6 +2523,12 @@ public Action Command_VotingMenu(int client, int args)
 						menu.VoteResultCallback = VotingResults;
 						Format(menuinfo, sizeof(menuinfo), "%T", "menu_voting", LANG_SERVER);
 						menu.SetTitle(menuinfo);
+						
+						if(gc_bCleanMenu.BoolValue)
+						{
+							menu.AddItem("1", "0", ITEMDRAW_SPACER);
+							menu.AddItem("1", "0", ITEMDRAW_SPACER);
+						}
 						
 
 						Format(menuinfo, sizeof(menuinfo), "%T", "menu_noevent", LANG_SERVER);
