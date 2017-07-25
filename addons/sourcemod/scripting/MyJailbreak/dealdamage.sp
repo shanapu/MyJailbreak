@@ -649,6 +649,8 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			CreateTimer(0.5, DeleteOverlay, GetClientUserId(i));
 		}
 
+		g_hTimerRound = null;
+		delete g_hTimerRound;
 		delete g_hTimerTruce; // kill start time if still running
 		delete g_hTimerBeacon;
 

@@ -793,6 +793,7 @@ public void OnMapEnd()
 	g_bStartHEbattle = false;
 	g_iVoteCount = 0;
 
+	delete g_hTimerBeacon;
 	delete g_hTimerTruce;
 	delete g_hTimerGravity;
 

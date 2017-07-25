@@ -869,6 +869,9 @@ public void OnMapEnd()
 	g_bIsCatch = false;
 	g_bStartCatch = false;
 
+	delete g_hTimerFreeze;
+	delete g_hTimerBeacon;
+
 	g_iVoteCount = 0;
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0';

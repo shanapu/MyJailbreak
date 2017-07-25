@@ -734,6 +734,7 @@ public void OnMapEnd()
 	g_bIsFFA = false;
 	g_bStartFFA = false;
 
+	delete g_hTimerBeacon;
 	delete g_hTimerTruce;
 
 	g_iVoteCount = 0;

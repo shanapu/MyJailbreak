@@ -607,6 +607,7 @@ public void OnMapEnd()
 	g_bAllowLastGuard = false;
 
 	delete g_hTimerTruce;
+	delete g_hTimerBeacon;
 
 	g_iVoteCount = 0;
 	g_sHasVoted[0] = '\0';

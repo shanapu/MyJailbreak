@@ -748,8 +748,9 @@ public void OnMapEnd()
 	g_bIsDrunk = false;
 	g_bStartDrunk = false;
 
+	delete g_hTimerWiggle;
+	delete g_hTimerBeacon;
 	delete g_hTimerTruce; // kill start time if still running
-	delete g_hTimerWiggle; // kill start time if still running
 
 	g_iVoteCount = 0;
 	g_iRound = 0;

@@ -776,6 +776,7 @@ public void OnMapEnd()
 	g_bStartGhosts = false;
 	g_bGhostsRunning = false;
 
+	delete g_hTimerBeacon;
 	delete g_hTimerTruce;
 
 	g_iVoteCount = 0;

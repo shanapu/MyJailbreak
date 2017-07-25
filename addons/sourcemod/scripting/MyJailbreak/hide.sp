@@ -855,6 +855,7 @@ public void OnMapEnd()
 	g_bIsHide = false;
 	g_bStartHide = false;
 
+	delete g_hTimerBeacon;
 	delete g_hTimerFreeze;
 
 	g_iVoteCount = 0;

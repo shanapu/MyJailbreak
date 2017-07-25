@@ -808,6 +808,7 @@ public void OnMapEnd()
 	g_bBombActive = false;
 
 	delete g_hTimerFreeze;
+	delete g_hTimerBeacon;
 
 	g_hTimerFreeze = null;
 	g_iVoteCount = 0;
