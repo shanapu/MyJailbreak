@@ -85,6 +85,7 @@ ConVar gc_bHealthDeputy;
 ConVar gc_bKevlar;
 ConVar gc_bKevlarDays;
 ConVar gc_sCustomCommandWeapon;
+ConVar gc_bCleanMenu;
 
 // Extern Convars
 ConVar g_bTaserWarden;
