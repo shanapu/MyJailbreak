@@ -24,6 +24,9 @@
                    STARTUP
 ******************************************************************************/
 
+#define TEAM_BLUE 1
+#define TEAM_RED 2
+
 // Includes
 #include <sourcemod>
 #include <sdktools>
@@ -41,6 +44,8 @@
 #include <warden>
 #include <myjailbreak>
 #include <myweapons>
+#include <myicons>
+#include <CustomPlayerSkins>
 #include <smartjaildoors>
 #define REQUIRE_PLUGIN
 
@@ -58,7 +63,9 @@ bool g_bStartDealDamage = false;
 bool gp_bWarden;
 bool gp_bHosties;
 bool gp_bSmartJailDoors;
+bool gp_bCustomPlayerSkins;
 bool gp_bMyJailbreak;
+bool gp_bMyIcons;
 bool gp_bMyWeapons;
 
 // Console Variables    gc_i = global convar integer / gc_b = global convar bool ...
@@ -86,6 +93,12 @@ ConVar gc_bShowPanel;
 ConVar gc_bSpawnRandom;
 ConVar gc_sAdminFlag;
 
+ConVar gc_sModelPathBlue;
+ConVar gc_sModelPathRed;
+ConVar gc_bColor;
+ConVar gc_sOverlayBluePath;
+ConVar gc_sOverlayRedPath;
+
 // Extern Convars
 ConVar g_iMPRoundTime;
 ConVar g_bHUD;
@@ -109,8 +122,9 @@ int g_iBestPlayer = -1;
 int g_iTotalDamage = 0;
 int g_iCollision_Offset;
 
-// Floats    g_i = global float
-float g_fPos[3];
+int g_iClientTeam[MAXPLAYERS+1] = -1;
+int g_iBlueTeamCount;
+int g_iRedTeamCount;
 
 // Handles
 Handle g_hTimerTruce;
@@ -123,6 +137,11 @@ char g_sSoundStartPath[256];
 char g_sEventsLogFile[PLATFORM_MAX_PATH];
 char g_sAdminFlag[64];
 char g_sOverlayStartPath[256];
+char g_sOverlayBluePath[256];
+char g_sOverlayRedPath[256];
+char g_sModelPathBlue[256];
+char g_sModelPathRed[256];
+char g_sModelPathPrevious[MAXPLAYERS+1][256];
 
 // Info
 public Plugin myinfo = {
@@ -168,9 +187,12 @@ public void OnPluginStart()
 	gc_bShowPanel = AutoExecConfig_CreateConVar("sm_dealdamage_panel", "1", "0 - disabled, 1 - enable show results on a Panel", _, true, 0.0, true, 1.0);
 	gc_bChat = AutoExecConfig_CreateConVar("sm_dealdamage_chat", "1", "0 - disabled, 1 - enable print results in chat", _, true, 0.0, true, 1.0);
 	gc_bConsole = AutoExecConfig_CreateConVar("sm_dealdamage_console", "1", "0 - disabled, 1 - enable print results in client console", _, true, 0.0, true, 1.0);
+	gc_bColor = AutoExecConfig_CreateConVar("sm_dealdamage_color", "1", "0 - disabled, 1 - color the model of the players", _, true, 0.0, true, 1.0);
+	gc_sModelPathBlue = AutoExecConfig_CreateConVar("sm_dealdamage_model_blue", "models/player/prisoner/prisoner_new_blue.mdl", "Path to the model for team blue.");
+	gc_sModelPathRed = AutoExecConfig_CreateConVar("sm_dealdamage_model_red", "models/player/prisoner/prisoner_new_red.mdl", "Path to the model for team red.");
 	gc_iRounds = AutoExecConfig_CreateConVar("sm_dealdamage_rounds", "2", "Rounds to play in a row", _, true, 1.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_dealdamage_roundtime", "2", "Round time in minutes for a single dealdamage round", _, true, 1.0);
-	gc_fBeaconTime = AutoExecConfig_CreateConVar("sm_dealdamage_beacon_time", "90", "Time in seconds until the beacon turned on (set to 0 to disable)", _, true, 0.0);
+	gc_fBeaconTime = AutoExecConfig_CreateConVar("sm_dealdamage_beacon_time", "110", "Time in seconds until the beacon turned on (set to 0 to disable)", _, true, 0.0);
 	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_dealdamage_trucetime", "15", "Time in seconds players can't deal damage", _, true, 0.0);
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_dealdamage_cooldown_day", "3", "Rounds cooldown after a event until event can be start again", _, true, 0.0);
 	gc_iCooldownStart = AutoExecConfig_CreateConVar("sm_dealdamage_cooldown_start", "3", "Rounds until event can be start after mapchange.", _, true, 0.0);
@@ -179,7 +201,9 @@ public void OnPluginStart()
 	gc_sSoundStartPath = AutoExecConfig_CreateConVar("sm_dealdamage_sounds_start", "music/MyJailbreak/start.mp3", "Path to the soundfile which should be played for a start.");
 	gc_bOverlays = AutoExecConfig_CreateConVar("sm_dealdamage_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true, 0.0, true, 1.0);
 	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_dealdamage_overlays_start", "overlays/MyJailbreak/start", "Path to the start Overlay DONT TYPE .vmt or .vft");
-
+	gc_sOverlayBluePath = AutoExecConfig_CreateConVar("sm_dealdamage_overlays_blue", "overlays/MyJailbreak/blue", "Path to the blue Overlay DONT TYPE .vmt or .vft");
+	gc_sOverlayRedPath = AutoExecConfig_CreateConVar("sm_dealdamage_overlays_red", "overlays/MyJailbreak/red", "Path to the red Overlay DONT TYPE .vmt or .vft");
+	
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
 
@@ -189,11 +213,19 @@ public void OnPluginStart()
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
 	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
+	HookConVarChange(gc_sOverlayBluePath, OnSettingChanged);
+	HookConVarChange(gc_sOverlayRedPath, OnSettingChanged);
+	HookConVarChange(gc_sModelPathRed, OnSettingChanged);
+	HookConVarChange(gc_sModelPathBlue, OnSettingChanged);
 
 	// Find
 	g_iMPRoundTime = FindConVar("mp_roundtime");
 	gc_sOverlayStartPath.GetString(g_sOverlayStartPath, sizeof(g_sOverlayStartPath));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
+	gc_sOverlayBluePath.GetString(g_sOverlayBluePath, sizeof(g_sOverlayBluePath));
+	gc_sOverlayRedPath.GetString(g_sOverlayRedPath, sizeof(g_sOverlayRedPath));
+	gc_sModelPathRed.GetString(g_sModelPathRed, sizeof(g_sModelPathRed));
+	gc_sModelPathBlue.GetString(g_sModelPathBlue, sizeof(g_sModelPathBlue));
 	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
 
 	// Offsets
@@ -217,12 +249,38 @@ public void OnPluginStart()
 // ConVarChange for Strings
 public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
-	if (convar == gc_sOverlayStartPath)    // Add overlay to download and precache table if changed
+	if (convar == gc_sModelPathRed)
+	{
+		strcopy(g_sModelPathRed, sizeof(g_sModelPathRed), newValue);
+		PrecacheModel(g_sModelPathRed);
+	}
+	else if (convar == gc_sModelPathBlue)
+	{
+		strcopy(g_sModelPathBlue, sizeof(g_sModelPathBlue), newValue);
+		PrecacheModel(g_sModelPathBlue);
+	}
+	else if (convar == gc_sOverlayStartPath)    // Add overlay to download and precache table if changed
 	{
 		strcopy(g_sOverlayStartPath, sizeof(g_sOverlayStartPath), newValue);
 		if (gc_bOverlays.BoolValue)
 		{
 			PrecacheDecalAnyDownload(g_sOverlayStartPath);
+		}
+	}
+	else if (convar == gc_sOverlayBluePath)
+	{
+		strcopy(g_sOverlayBluePath, sizeof(g_sOverlayBluePath), newValue);
+		if (gc_bOverlays.BoolValue)
+		{
+			PrecacheDecalAnyDownload(g_sOverlayBluePath);
+		}
+	}
+	else if (convar == gc_sOverlayRedPath)
+	{
+		strcopy(g_sOverlayRedPath, sizeof(g_sOverlayRedPath), newValue);
+		if (gc_bOverlays.BoolValue)
+		{
+			PrecacheDecalAnyDownload(g_sOverlayRedPath);
 		}
 	}
 	else if (convar == gc_sSoundStartPath)    // Add sound to download and precache table if changed
@@ -244,12 +302,17 @@ public void OnAllPluginsLoaded()
 	gp_bWarden = LibraryExists("warden");
 	gp_bHosties = LibraryExists("lastrequest");
 	gp_bSmartJailDoors = LibraryExists("smartjaildoors");
+	gp_bCustomPlayerSkins = LibraryExists("CustomPlayerSkins");
 	gp_bMyJailbreak = LibraryExists("myjailbreak");
 	gp_bMyWeapons = LibraryExists("myweapons");
+	gp_bMyIcons = LibraryExists("myicons");
 }
 
 public void OnLibraryRemoved(const char[] name)
 {
+	if (StrEqual(name, "myicons"))
+		gp_bMyIcons = false;
+
 	if (StrEqual(name, "warden"))
 		gp_bWarden = false;
 
@@ -262,12 +325,18 @@ public void OnLibraryRemoved(const char[] name)
 	if (StrEqual(name, "myjailbreak"))
 		gp_bMyJailbreak = false;
 
+	if (StrEqual(name, "CustomPlayerSkins"))
+		gp_bCustomPlayerSkins = false;
+
 	if (StrEqual(name, "myweapons"))
 		gp_bMyWeapons = false;
 }
 
 public void OnLibraryAdded(const char[] name)
 {
+	if (StrEqual(name, "myicons"))
+		gp_bMyIcons = true;
+
 	if (StrEqual(name, "warden"))
 		gp_bWarden = true;
 
@@ -279,6 +348,9 @@ public void OnLibraryAdded(const char[] name)
 
 	if (StrEqual(name, "myjailbreak"))
 		gp_bMyJailbreak = true;
+
+	if (StrEqual(name, "CustomPlayerSkins"))
+		gp_bCustomPlayerSkins = true;
 
 	if (StrEqual(name, "myweapons"))
 		gp_bMyWeapons = true;
@@ -599,36 +671,96 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 	if (!gc_bSpawnCell.BoolValue || !gp_bSmartJailDoors || (gc_bSpawnCell.BoolValue && (SJD_IsCurrentMapConfigured() != true))) // spawn Terrors to CT Spawn 
 	{
 		int RandomCT = 0;
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+		int RandomT = 0;
+
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i) && IsPlayerAlive(i))
 		{
 			if (GetClientTeam(i) == CS_TEAM_CT)
 			{
 				RandomCT = i;
+			}
+			else if (GetClientTeam(i) == CS_TEAM_T)
+			{
+				RandomT = i;
+			}
+			if (RandomCT != 0 && RandomT != 0)
+			{
 				break;
 			}
 		}
 
-		if (RandomCT)
+		if (RandomCT && RandomT)
 		{
+			float g_fPosT[3], g_fPosCT[3];
+			GetClientAbsOrigin(RandomT, g_fPosT);
+			GetClientAbsOrigin(RandomCT, g_fPosCT);
+			g_fPosT[2] = g_fPosT[2] + 5;
+			g_fPosCT[2] = g_fPosCT[2] + 5;
+
 			for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 			{
-				GetClientAbsOrigin(RandomCT, g_fPos);
-				
-				g_fPos[2] = g_fPos[2] + 5;
-				
-				TeleportEntity(i, g_fPos, NULL_VECTOR, NULL_VECTOR);
+				if (gc_bSpawnCell.BoolValue || !gp_bSmartJailDoors || (gp_bSmartJailDoors && (SJD_IsCurrentMapConfigured() != true)))
+				{
+					TeleportEntity(i, g_fPosCT, NULL_VECTOR, NULL_VECTOR);
+				}
+				else if (g_iClientTeam[i] == TEAM_BLUE)
+				{
+					TeleportEntity(i, g_fPosT, NULL_VECTOR, NULL_VECTOR);
+				}
+				else if (g_iClientTeam[i] == TEAM_RED)
+				{
+					TeleportEntity(i, g_fPosCT, NULL_VECTOR, NULL_VECTOR);
+				}
 			}
 		}
 	}
 
 	if (g_iRound > 0)
 	{
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+		bool bFlip = view_as<bool>(GetRandomInt(0,1));
+		g_iBlueTeamCount = 0;
+		g_iRedTeamCount = 0;
+
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i) && IsPlayerAlive(i))
 		{
+			SetEntData(i, g_iCollision_Offset, 2, 4, true);
+			SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
 			SetEntData(i, g_iCollision_Offset, 2, 4, true); // NoBlock
 			CreateInfoPanel(i);
 			SetEntProp(i, Prop_Data, "m_takedamage", 0, 1); // disable damage
 			g_iDamageDealed[i] = 0;
+
+			if (bFlip)
+			{
+				g_iClientTeam[i] = TEAM_BLUE;
+				g_iBlueTeamCount++;
+				bFlip = false;
+				CreateInfoPanel(i);
+				if (gc_bColor.BoolValue) SetEntityRenderColor(i, 0, 0, 240, 0);
+				CPrintToChat(i, "%t %t", "dealdamage_tag", "dealdamage_teamblue");
+				CPrintToChatAll("%t %t", "dealdamage_tag", "dealdamage_playerteamblue", i);
+				PrintCenterText(i, "%t \n<font face='Arial' color='#0000FF'>%t</font>", "dealdamage_start_nc", "dealdamage_teamblue_nc");
+				if (gc_bOverlays.BoolValue)ShowOverlay(i, g_sOverlayBluePath, 0.0);
+			}
+			else
+			{
+				g_iClientTeam[i] = TEAM_RED;
+				g_iRedTeamCount++;
+				bFlip = true;
+				CreateInfoPanel(i);
+				if (gc_bColor.BoolValue) SetEntityRenderColor(i, 240, 0, 0, 0);
+				CPrintToChat(i, "%t %t", "dealdamage_tag", "dealdamage_teamred");
+				CPrintToChatAll("%t %t", "dealdamage_tag", "dealdamage_playerteamred", i);
+				PrintCenterText(i, "%t \n<font face='Arial' color='#FF0000'>%t</font>", "dealdamage_start_nc", "dealdamage_teamred_nc");
+				if (gc_bOverlays.BoolValue)ShowOverlay(i, g_sOverlayRedPath, 0.0);
+			}
+			
+			if (gp_bMyIcons)
+			{
+				MyIcons_BlockClientIcon(i, true);
+			}
+			
+			CreateTimer (1.1, Timer_SetModel, i);
 		}
 
 		// Set Start Timer
@@ -646,7 +778,14 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 		{
 			SetEntData(i, g_iCollision_Offset, 0, 4, true); // disbale noblock
+			SetEntityModel(i, g_sModelPathPrevious[i]);
+			if (gp_bCustomPlayerSkins) UnhookGlow(i);
 			CreateTimer(0.5, DeleteOverlay, GetClientUserId(i));
+			g_iClientTeam[i] = 0;
+			if (gp_bMyIcons)
+			{
+				MyIcons_BlockClientIcon(i, false);
+			}
 		}
 
 		g_hTimerRound = null;
@@ -739,13 +878,18 @@ public void OnMapStart()
 	// Precache Sound & Overlay
 	if (gc_bSounds.BoolValue)
 	{
-		PrecacheSoundAnyDownload(g_sSoundStartPath);
+		PrecacheDecalAnyDownload(g_sOverlayStartPath);
+		PrecacheDecalAnyDownload(g_sOverlayBluePath);
+		PrecacheDecalAnyDownload(g_sOverlayRedPath);
 	}
 
 	if (gc_bOverlays.BoolValue)
 	{
 		PrecacheDecalAnyDownload(g_sOverlayStartPath);
 	}
+	
+	PrecacheModel(g_sModelPathBlue);
+	PrecacheModel(g_sModelPathRed);
 }
 
 // Map End
@@ -767,20 +911,20 @@ public void OnMapEnd()
 // Set Client Hook
 public void OnClientPutInServer(int client)
 {
-	SDKHook(client, SDKHook_OnTakeDamage, OnTakedamage);
+	SDKHook(client, SDKHook_TraceAttack, OnTraceAttack);
 }
 
-public Action OnTakedamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &weapon, float damageForce[3], float damagePosition[3], int damagecustom)
+public Action OnTraceAttack(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &weapon, float damageForce[3], float damagePosition[3], int damagecustom)
 {
 	if (!IsValidClient(victim, true, false) || attacker == victim || !IsValidClient(attacker, true, false) || !g_bIsDealDamage)
 		return Plugin_Continue;
 
-	if ((GetClientTeam(attacker) == CS_TEAM_CT) && (GetClientTeam(victim) == CS_TEAM_T) && !g_bIsTruce)
+	if (g_iClientTeam[attacker] == TEAM_BLUE && g_iClientTeam[victim] == TEAM_RED && !g_bIsTruce)
 	{
 		g_iDamageCT = g_iDamageCT + RoundToCeil(damage);
 	}
 
-	if ((GetClientTeam(attacker) == CS_TEAM_T) && (GetClientTeam(victim) == CS_TEAM_CT) && !g_bIsTruce)
+	if (g_iClientTeam[attacker] == TEAM_RED && g_iClientTeam[victim] == TEAM_BLUE && !g_bIsTruce)
 	{
 		g_iDamageT = g_iDamageT + RoundToCeil(damage);
 	}
@@ -790,7 +934,7 @@ public Action OnTakedamage(int victim, int &attacker, int &inflictor, float &dam
 		PrintHintText(i, "<font face='Arial' color='#0055FF'>%t  </font> %i %t \n<font face='Arial' color='#FF0000'>%t  </font> %i %t \n<font face='Arial' color='#00FF00'>%t  </font> %i %t", "dealdamage_ctdealed", g_iDamageCT, "dealdamage_hpdamage", "dealdamage_tdealed", g_iDamageT, "dealdamage_hpdamage", "dealdamage_clientdealed", g_iDamageDealed[i], "dealdamage_hpdamage");
 	}
 
-	if ((GetClientTeam(attacker) != GetClientTeam(victim)))
+	if (g_iClientTeam[attacker] !=  g_iClientTeam[victim])
 	{
 		g_iDamageDealed[attacker] = g_iDamageDealed[attacker] + RoundToCeil(damage);
 	}
@@ -843,13 +987,19 @@ void CreateInfoPanel(int client)
 	char info[255];
 
 	Panel InfoPanel = new Panel();
-
-	Format(info, sizeof(info), "%T", "dealdamage_info_title", client);
-	InfoPanel.SetTitle(info);
-
+	if (g_iClientTeam[client] == TEAM_BLUE)
+	{
+		Format(info, sizeof(info), "%T", "dealdamage_info_blueteam", client);
+	}
+	else if (g_iClientTeam[client] == TEAM_RED)
+	{
+		Format(info, sizeof(info), "%T", "dealdamage_info_redteam", client);
+	}
+	else
+	{
+		Format(info, sizeof(info), "%T", "dealdamage_info_line1", client);
+	}
 	InfoPanel.DrawText("                                   ");
-	Format(info, sizeof(info), "%T", "dealdamage_info_line1", client);
-	InfoPanel.DrawText(info);
 	InfoPanel.DrawText("-----------------------------------");
 	Format(info, sizeof(info), "%T", "dealdamage_info_line2", client);
 	InfoPanel.DrawText(info);
@@ -967,6 +1117,8 @@ public Action Timer_StartEvent(Handle timer)
 		CPrintToChatAll("%t %t", "dealdamage_tag", "dealdamage_start");
 	}
 
+	CreateTimer(2.2, Timer_Overlay);
+
 	g_hTimerTruce = null;
 	g_bIsTruce = false;
 
@@ -989,16 +1141,16 @@ public Action Timer_EndTheRound(Handle timer)
 	{
 		CS_TerminateRound(5.0, CSRoundEnd_CTWin);
 
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (GetClientTeam(i) == CS_TEAM_T)
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (g_iClientTeam[i] == TEAM_RED)
 		{
 			ForcePlayerSuicide(i);
 		}
 	}
-	else if (g_iDamageCT < g_iDamageT) 
+	else if (g_iDamageCT < g_iDamageT)
 	{
 		CS_TerminateRound(5.0, CSRoundEnd_TerroristWin);
 
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (GetClientTeam(i) == CS_TEAM_CT)
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (g_iClientTeam[i] == TEAM_BLUE)
 		{
 			ForcePlayerSuicide(i);
 		}
@@ -1010,13 +1162,13 @@ public Action Timer_EndTheRound(Handle timer)
 
 	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 	{
-		if (GetClientTeam(i) == CS_TEAM_CT && (g_iDamageDealed[i] > g_iBestCTdamage))
+		if (g_iClientTeam[i] == TEAM_BLUE && (g_iDamageDealed[i] > g_iBestCTdamage))
 		{
 			g_iBestCTdamage = g_iDamageDealed[i];
 			g_iBestCT = i;
 		}
 
-		if (GetClientTeam(i) == CS_TEAM_T && (g_iDamageDealed[i] > g_iBestTdamage))
+		if (g_iClientTeam[i] == TEAM_RED && (g_iDamageDealed[i] > g_iBestTdamage))
 		{
 			g_iBestTdamage = g_iDamageDealed[i];
 			g_iBestT = i;
@@ -1042,5 +1194,132 @@ public Action Timer_EndTheRound(Handle timer)
 	if (MyJailbreak_ActiveLogging())
 	{
 		LogToFileEx(g_sEventsLogFile, "Damage Deal Result: g_iBestCT: %N Dmg: %i g_iBestT: %N Dmg: %i CT Damage: %i T Damage: %i Total Damage: %i", g_iBestCT, g_iBestCTdamage, g_iBestT, g_iBestTdamage, g_iDamageCT, g_iDamageT, g_iTotalDamage);
+	}
+}
+
+
+// Perpare client for glow
+void SetupGlowSkin(int client)
+{
+	char sModel[PLATFORM_MAX_PATH];
+	GetClientModel(client, sModel, sizeof(sModel));
+
+	int iSkin = CPS_SetSkin(client, sModel, CPS_RENDER);
+	if (iSkin == -1)
+	{
+		return;
+	}
+
+	if (SDKHookEx(iSkin, SDKHook_SetTransmit, OnSetTransmit_GlowSkin))
+	{
+		GlowSkin(client, iSkin);
+	}
+}
+
+// set client glow
+void GlowSkin(int client, int iSkin)
+{
+	int iOffset;
+
+	if ((iOffset = GetEntSendPropOffs(iSkin, "m_clrGlow")) == -1)
+		return;
+
+	SetEntProp(iSkin, Prop_Send, "m_bShouldGlow", true, true);
+	SetEntProp(iSkin, Prop_Send, "m_nGlowStyle", 1);
+	SetEntPropFloat(iSkin, Prop_Send, "m_flGlowMaxDist", 10000000.0);
+
+	int iRed = 255;
+	int iGreen = 255;
+	int iBlue = 255;
+
+	if (g_iClientTeam[client] == TEAM_BLUE)
+	{
+		iRed = 0;
+		iGreen = 0;
+		iBlue = 255;
+	}
+	else if (g_iClientTeam[client] == TEAM_RED)
+	{
+		iRed = 255;
+		iGreen = 0;
+		iBlue = 0;
+	}
+
+	SetEntData(iSkin, iOffset, iRed, _, true);
+	SetEntData(iSkin, iOffset + 1, iGreen, _, true);
+	SetEntData(iSkin, iOffset + 2, iBlue, _, true);
+	SetEntData(iSkin, iOffset + 3, 255, _, true);
+}
+
+// Who can see the glow if vaild
+public Action OnSetTransmit_GlowSkin(int iSkin, int client)
+{
+	if (!IsPlayerAlive(client))
+		return Plugin_Handled;
+
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+	{
+		if (!CPS_HasSkin(i))
+		{
+			continue;
+		}
+
+		if (EntRefToEntIndex(CPS_GetSkin(i)) != iSkin)
+		{
+			continue;
+		}
+
+		return Plugin_Continue;
+	}
+
+	return Plugin_Handled;
+}
+
+// remove glow
+void UnhookGlow(int client)
+{
+	if (IsValidClient(client, false, true))
+	{
+		int iSkin = CPS_GetSkin(client);
+		if (iSkin != INVALID_ENT_REFERENCE)
+		{
+			SetEntProp(iSkin, Prop_Send, "m_bShouldGlow", false, true);
+			SDKUnhook(iSkin, SDKHook_SetTransmit, OnSetTransmit_GlowSkin);
+		}
+	}
+}
+
+
+public Action Timer_SetModel(Handle timer, int client)
+{
+	GetEntPropString(client, Prop_Data, "m_ModelName", g_sModelPathPrevious[client], sizeof(g_sModelPathPrevious[]));
+
+	if (g_iClientTeam[client] == TEAM_BLUE)
+	{
+		SetEntityModel(client, g_sModelPathBlue);
+	}
+	else if (g_iClientTeam[client] == TEAM_RED)
+	{
+		SetEntityModel(client, g_sModelPathRed);
+	}
+
+	if (gp_bCustomPlayerSkins) SetupGlowSkin(client);
+}
+
+
+public Action Timer_Overlay(Handle timer, int client)
+{
+	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true))
+	{
+		if (g_iClientTeam[i] == TEAM_BLUE)
+		{
+			PrintCenterText(i, "%t \n<font face='Arial' color='#0000FF'>%t</font>", "dealdamage_start_nc", "dealdamage_teamblue_nc");
+			if (gc_bOverlays.BoolValue)ShowOverlay(i, g_sOverlayBluePath, 0.0);
+		}
+		else if (g_iClientTeam[i] == TEAM_RED)
+		{
+			PrintCenterText(i, "%t \n<font face='Arial' color='#FF0000'>%t</font>", "dealdamage_start_nc", "dealdamage_teamred_nc");
+			if (gc_bOverlays.BoolValue)ShowOverlay(i, g_sOverlayRedPath, 0.0);
+		}
 	}
 }
