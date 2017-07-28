@@ -1413,7 +1413,7 @@ public Action Command_OpenMenu(int client, int args)
 public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selection)
 {
 	Call_StartForward(gF_hMenuHandler);
-	Call_PushCell(menu);
+	Call_PushCell(mainmenu);
 	Call_PushCell(action);
 	Call_PushCell(client);
 	Call_PushCell(selection);
