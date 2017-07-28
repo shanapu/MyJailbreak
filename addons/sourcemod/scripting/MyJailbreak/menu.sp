@@ -216,6 +216,11 @@ char g_sAdminFlag[64];
 Handle gH_TopMenu = INVALID_HANDLE;
 TopMenuObject gM_MyJB = INVALID_TOPMENUOBJECT;
 
+Handle gF_hMenuStart;
+Handle gF_hMenuEnd;
+Handle gF_hMenuHandler;
+
+
 // Info
 public Plugin myinfo = {
 	name = "MyJailbreak - Menus",
@@ -228,6 +233,10 @@ public Plugin myinfo = {
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	g_bIsLateLoad = late;
+
+	gF_hMenuStart = CreateGlobalForward("MyJailbreak_MenuStart", ET_Ignore, Param_Cell, Param_Cell);
+	gF_hMenuEnd = CreateGlobalForward("MyJailbreak_MenuEnd", ET_Ignore, Param_Cell, Param_Cell);
+	gF_hMenuHandler = CreateGlobalForward("MyJailbreak_MenuHandler", ET_Ignore, Param_Cell, Param_Cell, Param_Cell, Param_Cell);
 
 	return APLRes_Success;
 }
@@ -792,6 +801,12 @@ public Action Command_OpenMenu(int client, int args)
 				mainmenu.AddItem("1", "0", ITEMDRAW_SPACER);
 				mainmenu.AddItem("1", "0", ITEMDRAW_SPACER);
 			}
+			
+			Call_StartForward(gF_hMenuStart);
+			Call_PushCell(client);
+			Call_PushCell(mainmenu);
+			Call_Finish();
+			
 
 			if (warden_iswarden(client) && gc_bWarden.BoolValue) // HERE STARTS THE WARDEN MENU
 			{
@@ -1304,6 +1319,12 @@ public Action Command_OpenMenu(int client, int args)
 					mainmenu.AddItem("ChangeTeamSpec", menuinfo);
 				}
 			}
+			
+			Call_StartForward(gF_hMenuEnd);
+			Call_PushCell(client);
+			Call_PushCell(mainmenu);
+			Call_Finish();
+			
 			if (g_bRules != null)
 			{
 				if (g_bRules.BoolValue)
@@ -1391,6 +1412,13 @@ public Action Command_OpenMenu(int client, int args)
 // Main Handle
 public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selection)
 {
+	Call_StartForward(gF_hMenuHandler);
+	Call_PushCell(menu);
+	Call_PushCell(action);
+	Call_PushCell(client);
+	Call_PushCell(selection);
+	Call_Finish();
+	
 	if (action == MenuAction_Select)
 	{
 		char info[32];

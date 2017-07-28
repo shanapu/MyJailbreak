@@ -119,6 +119,39 @@ forward void MyJailbreak_OnEventDayEnd(char[] EventDayName, int winner);
 
 
 
+/*********************************************************
+ * Called before the menu is built, so new item start with 1.
+ * This is where you can add custom item on menu beginn. See MyJailShop_MenuHandler
+ *
+ * @param client		client Player's index.
+ * @param menu			Menu being displayed to the client.
+ * @NoReturn
+ *********************************************************/
+forward void MyJailbreak_OnMenuStart(int client, Menu menu);
+
+
+/*********************************************************
+ * Called after the role specific item are built & before admin item will build.
+ * This is where you can add custom item on menu end. See MyJailShop_MenuHandler
+ *
+ * @param client		client Player's index.
+ * @param menu			Menu being displayed to the client.
+ * @NoReturn
+ *********************************************************/
+forward void MyJailbreak_OnMenuEnd(int client, Menu menu);
+
+
+/*********************************************************
+ * Called once a shop menu item has been selected
+ * @param menu Menu displayed
+ * @param action		Menu Action
+ * @param client		client index
+ * @param itemNum		selected item number
+ * @NoReturn
+ *********************************************************/
+forward void MyJailbreak_MenuHandler(Menu menu, MenuAction action, int client, int itemNum);
+
+
 /******************************************************************************
                    NATIVES
 ******************************************************************************/
