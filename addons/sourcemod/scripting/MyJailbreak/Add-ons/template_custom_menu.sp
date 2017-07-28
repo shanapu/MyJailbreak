@@ -27,6 +27,7 @@
 #include <sdkhooks>
 #include <cstrike>
 #include <myjailbreak>
+#include <mystocks>
 #include <warden>
 
 
@@ -56,7 +57,7 @@ public void MyJailbreak_OnMenuStart(int client, Menu menu)
 
 		menu.AddItem("WardenSay", info);
 	}
-	else if (warden_isdeputy(client))
+	else if (warden_deputy_isdeputy(client))
 	{
 		char info[64];
 		Format(info, sizeof(info), "New Item on beginn for Deputy");
@@ -90,7 +91,7 @@ public void MyJailbreak_OnMenuEnd(int client, Menu menu)
 
 		menu.AddItem("WardenSay", info);
 	}
-	else if (warden_isdeputy(client))
+	else if (warden_deputy_isdeputy(client))
 	{
 		char info[64];
 		Format(info, sizeof(info), "New Item on end for Deputy");
@@ -124,28 +125,26 @@ public void MyJailShop_OnShopMenuHandler(Menu menu, MenuAction action, int clien
 
 	if (action == MenuAction_Select)
 	{
-		if (MyJailShop_IsBuyTime())
-		{
-			char info[64];
-			menu.GetItem(itemNum, info, sizeof(info));
+		char info[64];
+		menu.GetItem(itemNum, info, sizeof(info));
 
-			if (StrEqual(info, "WardenSay"))
-			{
-				FakeClientCommand(client, "say warden test item!");
-			}
-			else if (StrEqual(info, "DeputySay"))
-			{
-				FakeClientCommand(client, "say deputy test item!");
-			}
-			else if (StrEqual(info, "GuardSay"))
-			{
-				FakeClientCommand(client, "say guard test item!");
-			}
-			else if (StrEqual(info, "PrisonerSay"))
-			{
-				FakeClientCommand(client, "say prisoner test item!");
-			}
+		if (StrEqual(info, "WardenSay"))
+		{
+			FakeClientCommand(client, "say warden test item!");
 		}
+		else if (StrEqual(info, "DeputySay"))
+		{
+			FakeClientCommand(client, "say deputy test item!");
+		}
+		else if (StrEqual(info, "GuardSay"))
+		{
+			FakeClientCommand(client, "say guard test item!");
+		}
+		else if (StrEqual(info, "PrisonerSay"))
+		{
+			FakeClientCommand(client, "say prisoner test item!");
+		}
+
 	}
 
 	return;
