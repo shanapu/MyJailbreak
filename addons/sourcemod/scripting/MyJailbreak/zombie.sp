@@ -974,6 +974,7 @@ public void OnAvailableLR(int Announced)
 
 		delete g_hTimerFreeze;
 		delete g_hTimerBeacon;
+		delete g_hTimerRegen;
 
 		if (g_iRound == g_iMaxRound)
 		{
