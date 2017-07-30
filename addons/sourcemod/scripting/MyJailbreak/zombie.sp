@@ -600,7 +600,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 	if (gp_bMyWeapons)
 	{
 		MyWeapons_AllowTeam(CS_TEAM_T, true);
-		MyWeapons_AllowTeam(CS_TEAM_CT, true);
+		MyWeapons_AllowTeam(CS_TEAM_CT, false);
 	}
 
 	if (gp_bMyJailbreak)
@@ -1285,7 +1285,7 @@ public Action Timer_StartEvent(Handle timer)
 
 	if (gc_iRegen.IntValue != 0) 
 	{
-		g_hTimerRegen = CreateTimer(5.0, Timer_ReGenHealth, _, TIMER_REPEAT);
+		g_hTimerRegen = CreateTimer(5.0, Timer_ReGenHealth, _, TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
 	}
 
 	g_hTimerFreeze = null;
