@@ -600,7 +600,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 	if (gp_bMyWeapons)
 	{
 		MyWeapons_AllowTeam(CS_TEAM_T, true);
-		MyWeapons_AllowTeam(CS_TEAM_CT, true);
+		MyWeapons_AllowTeam(CS_TEAM_CT, false);
 	}
 
 	if (gp_bMyJailbreak)
