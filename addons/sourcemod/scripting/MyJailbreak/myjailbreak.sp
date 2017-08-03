@@ -43,18 +43,46 @@ ConVar gc_bLogging;
 ConVar gc_bShootButton;
 ConVar gc_sCustomCommandEndRound;
 ConVar gc_bEndRound;
+ConVar gc_iRandomEventDay;
+ConVar gc_iRandomEventDayPercent;
+ConVar gc_iRandomEventDayStartDelay;
 
 // Booleans
 bool g_bEventDayPlanned = false;
 bool g_bEventDayRunning = false;
 bool g_bLastGuardRuleActive = false;
 
-// Strings
-char g_sEventDayName[128] = "none";
+// Integers
+int g_iRandomArraySize = 0;
+int g_iRoundNumber = 0;
 
-//Handles
+// Handles
 Handle gF_OnEventDayStart;
 Handle gF_OnEventDayEnd;
+Handle g_aRandomList;
+
+// Strings
+char g_sEventDayName[128] = "none";
+char g_sEventDays[][32] = {
+						"war",
+						"ffa",
+						"zombie",
+						"hide",
+						"catch",
+						"suicidebomber",
+						"ghosts",
+						"teleport",
+						"armsrace",
+						"hebattle",
+						"noscope",
+						"duckhunt",
+						"zeus",
+						"dealdamage",
+						"drunk",
+						"knifefight",
+						"cowboy",
+						"freeday"
+						}; // 18 event days
 
 // Modules
 #include "MyJailbreak/Modules/fog.sp"
@@ -85,6 +113,9 @@ public void OnPluginStart()
 	gc_bShootButton = AutoExecConfig_CreateConVar("sm_myjb_shoot_buttons", "1", "0 - disabled, 1 - allow player to trigger a map button by shooting it", _, true, 0.0, true, 1.0);
 	gc_sCustomCommandEndRound = AutoExecConfig_CreateConVar("sm_myjb_cmds_endround", "er, stopround, end", "Set your custom chat commands for admins to end the current round(!endround (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)");
 	gc_bEndRound = AutoExecConfig_CreateConVar("sm_myjb_allow_endround", "0", "0 - disabled, 1 - enable !endround command for testing (disable against abusing)");
+	gc_iRandomEventDay = AutoExecConfig_CreateConVar("sm_myjb_random_round", "6", "Every x round could be an event day");
+	gc_iRandomEventDayPercent = AutoExecConfig_CreateConVar("sm_myjb_random_chance", "60", "Chance that the choosen round would be an event day");
+	gc_iRandomEventDayStartDelay = AutoExecConfig_CreateConVar("sm_myjb_random_mapstart_delay", "6", "Wait after mapchange x rounds before try first event day");
 
 	Beacon_OnPluginStart();
 
@@ -94,6 +125,8 @@ public void OnPluginStart()
 	// Hooks
 	HookEvent("round_start", Event_RoundStart);
 	HookEvent("round_end", Event_RoundEnd);
+	
+	g_aRandomList = CreateArray();
 }
 
 // Initialize Plugin - check/set sv_tags for MyJailbreak
@@ -109,6 +142,23 @@ public void OnConfigsExecuted()
 			StrCat(sTags, sizeof(sTags), ", MyJailbreak");
 			hTags.SetString(sTags);
 		}
+	}
+
+	if (gc_iRandomEventDay.IntValue != 0)
+	{
+		ClearArray(g_aRandomList);
+
+		char buffer[64];
+		
+		for(int i = 0; i <= sizeof(g_sEventDays)-1; i++)
+		{
+			Format(buffer, sizeof(buffer), "sm_%s", g_sEventDays[i]);
+			if (GetCommandFlags(buffer) != INVALID_FCVAR_FLAGS)
+			{
+				PushArrayString(g_aRandomList, g_sEventDays[i]);
+			}
+		}
+		g_iRandomArraySize = GetArraySize(g_aRandomList);
 	}
 
 	// Set custom Commands
@@ -154,6 +204,26 @@ public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 			SetEntProp(ent, Prop_Data, "m_spawnflags", GetEntProp(ent, Prop_Data, "m_spawnflags")|512);
 		}
 	}
+
+	if (gc_iRandomEventDay.IntValue == 0 || g_iRandomArraySize == 0)
+		return;
+
+	if (MyJailbreak_IsEventDayPlanned() || MyJailbreak_IsEventDayRunning())
+		return;
+
+	g_iRoundNumber++;
+
+	if (g_iRoundNumber <= gc_iRandomEventDayStartDelay.IntValue)
+		return;
+
+	g_iRoundNumber -= gc_iRandomEventDay.IntValue;
+
+	int chance = GetRandomInt(0, 100);
+	if (chance > gc_iRandomEventDayPercent.IntValue)
+		return;
+
+	int randomEvent = GetRandomInt(0, g_iRandomArraySize-1);
+	ServerCommand("sm_set%s", g_sEventDays[randomEvent]);
 }
 
 public void Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
@@ -171,6 +241,7 @@ public void OnMapStart()
 	Fog_OnMapStart();
 	Beacon_OnMapStart();
 	g_bLastGuardRuleActive = false;
+	g_iRoundNumber = 0;
 }
 
 // Reset Plugin
@@ -221,7 +292,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
-
 
 // Boolean Is Event Day running (true = running)
 public int Native_IsEventDayRunning(Handle plugin, int argc)
