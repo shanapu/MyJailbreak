@@ -57,9 +57,10 @@ do
   mv $file addons/sourcemod/plugins/MyJailbreak
 done
 
-echo "Move all other binary files to plugins folder"
+echo "Move all addons binary files to disbaled folder"
   mv addons/sourcemod/plugins/MyJailbreak/myjailbreak_kento_rankme.smx addons/sourcemod/plugins/MyJailbreak/disabled
   mv addons/sourcemod/plugins/MyJailbreak/myjailbreak_rankme.smx addons/sourcemod/plugins/MyJailbreak/disabled
+  mv addons/sourcemod/plugins/MyJailbreak/myjailbreak_gangs.smx addons/sourcemod/plugins/MyJailbreak/disabled
   mv addons/sourcemod/plugins/MyJailbreak/myjailbreak_reputation.smx addons/sourcemod/plugins/MyJailbreak/disabled
   mv addons/sourcemod/plugins/MyJailbreak/myjailbreak_mostactive.smx addons/sourcemod/plugins/MyJailbreak/disabled
   mv addons/sourcemod/plugins/MyJailbreak/myjailbreak_teamgames.smx addons/sourcemod/plugins/MyJailbreak/disabled
@@ -74,6 +75,7 @@ echo "Move all other binary files to plugins folder"
   mv addons/sourcemod/plugins/MyJailbreak/ratio_ctbans_databomb.smx addons/sourcemod/plugins/MyJailbreak/disabled
   mv addons/sourcemod/plugins/MyJailbreak/ratio_ctbans_r1ko.smx addons/sourcemod/plugins/MyJailbreak/disabled
   mv addons/sourcemod/plugins/MyJailbreak/warden_zephstore_paperclips.smx addons/sourcemod/plugins/MyJailbreak/disabled
+  mv addons/sourcemod/plugins/MyJailbreak/menu_custom.smx addons/sourcemod/plugins/MyJailbreak/disabled
 
 echo "Remove build folder if exists"
 if [ -d "build" ]; then

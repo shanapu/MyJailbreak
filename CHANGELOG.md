@@ -29,7 +29,6 @@
         *  new cvar - sm_teleport_overlays_enable - 0 - disabled, 1 - enable overlays
         *  new cvar - sm_teleport_overlays_start - Path to the start Overlay DONT TYPE .vmt or .vft
         *  new cvar - sm_teleport_allow_lr - 0 - disabled, 1 - enable LR for last round and end eventday
-    * Menu: added new eventday teleport to set/voting menu
 *  New Eventday: Arms Race - A FreeForAll Deathmatch where 
     *  new plugin - armsrace.smx - please help translate http://translator.mitchdempsey.com/sourcemod_plugins/277
         *  new config file - addons/sourcemod/configs/MyJailbreak/armsrace.ini - define weapons & order
@@ -54,17 +53,12 @@
         *  new cvar - sm_armsrace_sounds_start - Path to the soundfile which should be played for a start
         *  new cvar - sm_armsrace_overlays_enable - 0 - disabled, 1 - enable overlays
         *  new cvar - sm_armsrace_overlays_start - Path to the start Overlay DONT TYPE .vmt or .vft
-    * Menu: added new eventday armsrace to set/voting menu
 *  Add-On: Support for frans1cos Most Active
     *  new plugin - disabled/myjailbreak_mostactive.smx
         *  new cvar - sm_ratio_mostactive - 0 - disabled, how many seconds a player need to join ct? (only if MostActive is available)
         *  new cvar - sm_ratio_mostactive_team - 1 - playtime as Terror / 2 - playtime in Total (CT,T&Spec)
         *  new cvar - sm_warden_mostactive - 0 - disabled, how many seconds a player need to become warden? (only if MostActive is available)
         *  new cvar - sm_warden_mostactive_team - 0 - playtime as Counter-Terror / 1 - playtime as Terror / 2 - playtime in Total (CT,T&Spec)
-*  Add-On: Support for Levels Ranks Core 2.2.0 http://hlmod.ru/resources/levels-ranks-core.177/
-    *  new plugin - disabled/myjailbreak_lvl_ranks.smx
-        *  new cvar - sm_ratio_lvlranks - 0 - what level a player need to join ct? (only if lvlranks is available)
-        *  new cvar - sm_warden_lvlranks - 0 - what level a player need to become warden? (only if lvlranks is available)
 *  Add-On: Support for Healines gangs - disable gang perks on event days
     *  new plugin - disabled/myjailbreak_gangs.smx
 *  PlayerTags: Two new Tags SuperAdmin & CoOwner Thx @ ichiballs
@@ -75,9 +69,25 @@
 *  Weapons: ConVar to disable weapons for CTs on not eventday rounds. (use armory)
     *  new cvar - sm_weapons_noeventday - 0 - disabled, 1 - enable the weapon menu on non-EventDays round (normal/simon rounds)
 *  Menu: added !removefreeday for warden,deputy/guard to menu
+*  Menu Add-On: Add your own menu items to top/botton of wardens/deputys/guards/prisoners jailmenu with .cfg
+    *  new plugin - disabled/menu_custom.smx
+    *  new config file - addons/sourcemod/configs/MyJailbreak/menu_custom.ini
   
   
 *Changed*
+*  Freeday: Allow warden on freeday event day
+    *  new cvar - sm_freeday_allow_warden - 0 - warden disabled, 1 - allow player to become warden
+*  Menu: Moved menu items 1. & 2. backwords so menu start on 3.
+    *  new cvar - sm_menu_clean - remove 1. & 2. on first page, to avoid conflict with weapon switch
+*  Weapons: Moved menu items 1. & 2. backwords so menu start on 3.
+    *  new cvar - sm_weapons_cleanmenu - remove 1. & 2. on first page, to avoid conflict with weapon switch
+*  Ratio: Moved menu items 1. & 2. (Yes / No)to 3. & 4. to avoid conflict with weapon switch
+*  DealDamage: Changed from T vs CT to even teams Blue vs Red (model,glow,colorize) - Thx skyprah for great idea!
+    *  new cvar - sm_dealdamage_color - 0 - disabled, 1 - color the model of the players
+    *  new cvar - sm_dealdamage_model_blue - Path to the model for team blue.
+    *  new cvar - sm_dealdamage_model_red - Path to the model for team red.
+    *  new cvar - sm_dealdamage_overlays_blue - Path to the blue Overlay DONT TYPE .vmt or .vft
+    *  new cvar - sm_dealdamage_overlays_red - Path to the red Overlay DONT TYPE .vmt or .vft
 *  Ratio: When last guard move to prisoners, a prisoner from queue or random will be moved to guard THX @mrkos9i4ok
 *  Flags: all ConVars to set admin/vip flag has been extended to support mutliple flags ex. "r,s,t" use comma
 *  renamed plugin - ratio_ctbans_fantom to ratio_ctbans_r1ko
@@ -96,6 +106,7 @@
 *  Duckhunt & KnifeFight: fix gravity ladderfix
 *  Store Credits & paperclips: fix chat colors
 *  Zombie: Respawn with restiction addon
+*  Many minor fixes -> study commits!
   
   
 *Removed*
@@ -110,6 +121,10 @@
 *  Extented parameter of a warden forwards & native - new caller clientid - 0 on random
     *  changed forward - warden_OnWardenCreate(int client, int caller) - The client who called the set or become warden command
     *  changed native - warden_set(int client, int caller) -  The client who set the new warden
+*  New Forwards for add items to menu - see template_custom_menu.sp
+    *  new forward - MyJailbreak_MenuStart(int client, Menu menu)
+    *  new forward - MyJailbreak_MenuEnd(int client, Menu menu)
+    *  new forward - MyJailbreak_MenuHandler(Menu menu, MenuAction action, int client, int itemNum)
 
   
   

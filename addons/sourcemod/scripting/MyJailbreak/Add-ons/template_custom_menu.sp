@@ -48,7 +48,7 @@ public Plugin myinfo =
 
 
 // Here we add an new item to the beginn of the menu
-public void MyJailbreak_OnMenuStart(int client, Menu menu)
+public void MyJailbreak_MenuStart(int client, Menu menu)
 {
 	if (warden_iswarden(client))
 	{
@@ -82,7 +82,7 @@ public void MyJailbreak_OnMenuStart(int client, Menu menu)
 
 
 // Here we add an new item to the end of themenu
-public void MyJailbreak_OnMenuEnd(int client, Menu menu)
+public void MyJailbreak_MenuEnd(int client, Menu menu)
 {
 	if (warden_iswarden(client))
 	{
@@ -116,7 +116,7 @@ public void MyJailbreak_OnMenuEnd(int client, Menu menu)
 
 
 // What should we do when new item was picked?
-public void MyJailShop_OnShopMenuHandler(Menu menu, MenuAction action, int client, int itemNum)
+public void MyJailbreak_MenuHandler(Menu menu, MenuAction action, int client, int itemNum)
 {
 	if (!IsValidClient(client, false, true))
 	{
@@ -146,17 +146,14 @@ public void MyJailShop_OnShopMenuHandler(Menu menu, MenuAction action, int clien
 		}
 
 	}
-
-	return;
 }
 
 
 
 
-
-
-// Remove this part for your plugin!
+// Remove this part for your own custom plugin!
 public void OnMapStart()
 {
 	SetFailState("This file is an template for developer and should'n run on productive servers! please remove");
 }
+

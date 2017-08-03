@@ -127,7 +127,7 @@ forward void MyJailbreak_OnEventDayEnd(char[] EventDayName, int winner);
  * @param menu			Menu being displayed to the client.
  * @NoReturn
  *********************************************************/
-forward void MyJailbreak_OnMenuStart(int client, Menu menu);
+forward void MyJailbreak_MenuStart(int client, Menu menu);
 
 
 /*********************************************************
@@ -138,7 +138,7 @@ forward void MyJailbreak_OnMenuStart(int client, Menu menu);
  * @param menu			Menu being displayed to the client.
  * @NoReturn
  *********************************************************/
-forward void MyJailbreak_OnMenuEnd(int client, Menu menu);
+forward void MyJailbreak_MenuEnd(int client, Menu menu);
 
 
 /*********************************************************
