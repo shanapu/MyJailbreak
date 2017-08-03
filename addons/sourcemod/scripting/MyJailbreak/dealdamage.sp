@@ -99,12 +99,19 @@ ConVar gc_bColor;
 ConVar gc_sOverlayBluePath;
 ConVar gc_sOverlayRedPath;
 
+ConVar gc_bBeginSetA;
+ConVar gc_bBeginSetW;
+ConVar gc_bBeginSetV;
+ConVar gc_bBeginSetVW;
+ConVar gc_bTeleportSpawn;
+
+
 // Extern Convars
-ConVar g_iMPRoundTime;
+//ConVar g_iMPRoundTime;
 ConVar g_bHUD;
 
 // Integers    g_i = global integer
-int g_iOldRoundTime;
+//int g_iOldRoundTime;
 int g_iOldHUD;
 int g_iCoolDown;
 int g_iTruceTime;
@@ -184,6 +191,13 @@ public void OnPluginStart()
 	gc_bVote = AutoExecConfig_CreateConVar("sm_dealdamage_vote", "1", "0 - disabled, 1 - allow player to vote for dealdamage", _, true, 0.0, true, 1.0);
 	gc_bSpawnCell = AutoExecConfig_CreateConVar("sm_dealdamage_spawn", "1", "0 - T teleport to CT spawn, 1 - cell doors auto open", _, true, 0.0, true, 1.0);
 	gc_bSpawnRandom = AutoExecConfig_CreateConVar("sm_dealdamage_randomspawn", "1", "0 - disabled, 1 - use random spawns on map (sm_dealdamage_spawn 1)", _, true, 0.0, true, 1.0);
+
+	gc_bBeginSetA = AutoExecConfig_CreateConVar("sm_dealdamage_begin_admin", "1", "When admin set event (!setdealdamage) = 0 - start event next round, 1 - start event current round", _, true, 0.0, true, 1.0);
+	gc_bBeginSetW = AutoExecConfig_CreateConVar("sm_dealdamage_begin_warden", "1", "When warden set event (!setdealdamage) = 0 - start event next round, 1 - start event current round", _, true, 0.0, true, 1.0);
+	gc_bBeginSetV = AutoExecConfig_CreateConVar("sm_dealdamage_begin_vote", "0", "When users vote for event (!dealdamage) = 0 - start event next round, 1 - start event current round", _, true, 0.0, true, 1.0);
+	gc_bBeginSetVW = AutoExecConfig_CreateConVar("sm_dealdamage_begin_daysvote", "0", "When warden/admin start eventday voting (!sm_voteday) and event wins = 0 - start event next round, 1 - start event current round", _, true, 0.0, true, 1.0);
+	gc_bTeleportSpawn = AutoExecConfig_CreateConVar("sm_dealdamage_teleport_spawn", "0", "0 - start event in current round from current player positions, 1 - teleport players to spawn when start event on current round(only when sm_*_begin_admin, sm_*_begin_warden, sm_*_begin_vote or sm_*_begin_daysvote is on '1')", _, true, 0.0, true, 1.0);
+
 	gc_bShowPanel = AutoExecConfig_CreateConVar("sm_dealdamage_panel", "1", "0 - disabled, 1 - enable show results on a Panel", _, true, 0.0, true, 1.0);
 	gc_bChat = AutoExecConfig_CreateConVar("sm_dealdamage_chat", "1", "0 - disabled, 1 - enable print results in chat", _, true, 0.0, true, 1.0);
 	gc_bConsole = AutoExecConfig_CreateConVar("sm_dealdamage_console", "1", "0 - disabled, 1 - enable print results in client console", _, true, 0.0, true, 1.0);
@@ -219,7 +233,7 @@ public void OnPluginStart()
 	HookConVarChange(gc_sModelPathBlue, OnSettingChanged);
 
 	// Find
-	g_iMPRoundTime = FindConVar("mp_roundtime");
+//	g_iMPRoundTime = FindConVar("mp_roundtime");
 	gc_sOverlayStartPath.GetString(g_sOverlayStartPath, sizeof(g_sOverlayStartPath));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 	gc_sOverlayBluePath.GetString(g_sOverlayBluePath, sizeof(g_sOverlayBluePath));
@@ -412,7 +426,7 @@ public Action Command_SetDealDamage(int client, int args)
 
 	if (client == 0) // Called by a server/voting
 	{
-		StartNextRound();
+		StartEventRound(gc_bBeginSetVW.BoolValue);
 
 		if (!gp_bMyJailbreak)
 		{
@@ -450,7 +464,7 @@ public Action Command_SetDealDamage(int client, int args)
 			return Plugin_Handled;
 		}
 
-		StartNextRound();
+		StartEventRound(gc_bBeginSetA.BoolValue);
 
 		if (!gp_bMyJailbreak)
 		{
@@ -494,7 +508,7 @@ public Action Command_SetDealDamage(int client, int args)
 			return Plugin_Handled;
 		}
 
-		StartNextRound();
+		StartEventRound(gc_bBeginSetW.BoolValue);
 
 		if (!gp_bMyJailbreak)
 		{
@@ -564,7 +578,7 @@ public Action Command_VoteDealDamage(int client, int args)
 
 	if (g_iVoteCount > playercount)
 	{
-		StartNextRound();
+		StartEventRound(gc_bBeginSetV.BoolValue);
 
 		if (!gp_bMyJailbreak)
 		{
@@ -615,159 +629,11 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		return;
 	}
 
-	if (gp_bWarden)
-	{
-		SetCvar("sm_warden_enable", 0);
-	}
-
-	if (gp_bHosties)
-	{
-		SetCvar("sm_hosties_lr", 0);
-	}
-
-	if (gp_bMyWeapons)
-	{
-		MyWeapons_AllowTeam(CS_TEAM_T, true);
-		MyWeapons_AllowTeam(CS_TEAM_CT, true);
-	}
-
-	if (gp_bMyJailbreak)
-	{
-		SetCvar("sm_menu_enable", 0);
-
-		MyJailbreak_SetEventDayPlanned(false);
-		MyJailbreak_SetEventDayRunning(true, 0);
-
-		if (gc_fBeaconTime.FloatValue > 0.0)
-		{
-			g_hTimerBeacon = CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
-		}
-	}
-
-	SetCvar("sm_hud_enable", 0); 
-
-	g_iBestT = 0;
-	g_iBestCT = 0;
-	g_iBestTdamage = 0;
-	g_iBestCTdamage = 0;
-	g_iBestPlayer = 0;
-	g_iDamageCT = 0;
-	g_iDamageT = 0;
-	g_iTotalDamage = 0;
-
-	float RoundTime = (gc_iRoundTime.FloatValue*60-5);
-	g_hTimerRound = CreateTimer (RoundTime, Timer_EndTheRound);
 
 	g_bIsDealDamage = true;
-	g_bIsTruce = true;
 	g_bStartDealDamage = false;
-	g_iRound += 1; // Add Round number
 
-	if (gp_bSmartJailDoors)
-	{
-		SJD_OpenDoors();
-	}
-
-	if (!gc_bSpawnCell.BoolValue || !gp_bSmartJailDoors || (gc_bSpawnCell.BoolValue && (SJD_IsCurrentMapConfigured() != true))) // spawn Terrors to CT Spawn 
-	{
-		int RandomCT = 0;
-		int RandomT = 0;
-
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i) && IsPlayerAlive(i))
-		{
-			if (GetClientTeam(i) == CS_TEAM_CT)
-			{
-				RandomCT = i;
-			}
-			else if (GetClientTeam(i) == CS_TEAM_T)
-			{
-				RandomT = i;
-			}
-			if (RandomCT != 0 && RandomT != 0)
-			{
-				break;
-			}
-		}
-
-		if (RandomCT && RandomT)
-		{
-			float g_fPosT[3], g_fPosCT[3];
-			GetClientAbsOrigin(RandomT, g_fPosT);
-			GetClientAbsOrigin(RandomCT, g_fPosCT);
-			g_fPosT[2] = g_fPosT[2] + 5;
-			g_fPosCT[2] = g_fPosCT[2] + 5;
-
-			for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
-			{
-				if (gc_bSpawnCell.BoolValue || !gp_bSmartJailDoors || (gp_bSmartJailDoors && (SJD_IsCurrentMapConfigured() != true)))
-				{
-					TeleportEntity(i, g_fPosCT, NULL_VECTOR, NULL_VECTOR);
-				}
-				else if (g_iClientTeam[i] == TEAM_BLUE)
-				{
-					TeleportEntity(i, g_fPosT, NULL_VECTOR, NULL_VECTOR);
-				}
-				else if (g_iClientTeam[i] == TEAM_RED)
-				{
-					TeleportEntity(i, g_fPosCT, NULL_VECTOR, NULL_VECTOR);
-				}
-			}
-		}
-	}
-
-	if (g_iRound > 0)
-	{
-		bool bFlip = view_as<bool>(GetRandomInt(0,1));
-		g_iBlueTeamCount = 0;
-		g_iRedTeamCount = 0;
-
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i) && IsPlayerAlive(i))
-		{
-			SetEntData(i, g_iCollision_Offset, 2, 4, true);
-			SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
-			SetEntData(i, g_iCollision_Offset, 2, 4, true); // NoBlock
-			CreateInfoPanel(i);
-			SetEntProp(i, Prop_Data, "m_takedamage", 0, 1); // disable damage
-			g_iDamageDealed[i] = 0;
-
-			if (bFlip)
-			{
-				g_iClientTeam[i] = TEAM_BLUE;
-				g_iBlueTeamCount++;
-				bFlip = false;
-				CreateInfoPanel(i);
-				if (gc_bColor.BoolValue) SetEntityRenderColor(i, 0, 0, 240, 0);
-				CPrintToChat(i, "%t %t", "dealdamage_tag", "dealdamage_teamblue");
-				CPrintToChatAll("%t %t", "dealdamage_tag", "dealdamage_playerteamblue", i);
-				PrintCenterText(i, "%t \n<font face='Arial' color='#0000FF'>%t</font>", "dealdamage_start_nc", "dealdamage_teamblue_nc");
-				if (gc_bOverlays.BoolValue)ShowOverlay(i, g_sOverlayBluePath, 0.0);
-			}
-			else
-			{
-				g_iClientTeam[i] = TEAM_RED;
-				g_iRedTeamCount++;
-				bFlip = true;
-				CreateInfoPanel(i);
-				if (gc_bColor.BoolValue) SetEntityRenderColor(i, 240, 0, 0, 0);
-				CPrintToChat(i, "%t %t", "dealdamage_tag", "dealdamage_teamred");
-				CPrintToChatAll("%t %t", "dealdamage_tag", "dealdamage_playerteamred", i);
-				PrintCenterText(i, "%t \n<font face='Arial' color='#FF0000'>%t</font>", "dealdamage_start_nc", "dealdamage_teamred_nc");
-				if (gc_bOverlays.BoolValue)ShowOverlay(i, g_sOverlayRedPath, 0.0);
-			}
-			
-			if (gp_bMyIcons)
-			{
-				MyIcons_BlockClientIcon(i, true);
-			}
-			
-			CreateTimer (1.1, Timer_SetModel, i);
-		}
-
-		// Set Start Timer
-		g_iTruceTime -= 1;
-		g_hTimerTruce = CreateTimer(1.0, Timer_StartEvent, _, TIMER_REPEAT);
-		CPrintToChatAll("%t %t", "dealdamage_tag", "dealdamage_rounds", g_iRound, g_iMaxRound);
-	}
+	PrepareDay(false);
 }
 
 // Round End
@@ -844,7 +710,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			SetCvar("sv_infinite_ammo", 0);
 			SetCvar("sm_hud_enable", g_iOldHUD);
 
-			g_iMPRoundTime.IntValue = g_iOldRoundTime; // return to original round time
+//			g_iMPRoundTime.IntValue = g_iOldRoundTime; // return to original round time
 
 			CPrintToChatAll("%t %t", "dealdamage_tag", "dealdamage_end");
 		}
@@ -947,11 +813,16 @@ public Action OnTraceAttack(int victim, int &attacker, int &inflictor, float &da
 ******************************************************************************/
 
 // Prepare Event
-void StartNextRound()
+void StartEventRound(bool thisround)
 {
-	g_bStartDealDamage = true;
-	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
+	g_iCoolDown = gc_iCooldownDay.IntValue;
 	g_iVoteCount = 0;
+
+	g_bHUD = FindConVar("sm_hud_enable");
+	g_iOldHUD = g_bHUD.IntValue;
+
+//	g_iOldRoundTime = g_iMPRoundTime.IntValue; // save original round time
+//	g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue; // set event round time
 
 	if (gp_bMyJailbreak)
 	{
@@ -961,21 +832,198 @@ void StartNextRound()
 		MyJailbreak_SetEventDayPlanned(true);
 	}
 
-	g_iOldRoundTime = g_iMPRoundTime.IntValue; // save original round time
-	g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue; // set event round time
-
-	g_bHUD = FindConVar("sm_hud_enable");
-	g_iOldHUD = g_bHUD.IntValue;
-
-	if (gc_bSpawnRandom.BoolValue)
+	if (thisround)
 	{
-		SetCvar("mp_randomspawn", 1);
-		SetCvar("mp_randomspawn_los", 1);
+		g_bIsDealDamage = true;
+		g_bIsTruce = true;
+
+		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+		{
+			SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
+
+			SetEntityMoveType(i, MOVETYPE_NONE);
+		}
+
+		CreateTimer(3.0, Timer_PrepareEvent);
+
+		CPrintToChatAll("%t %s", "dealdamage_tag", "dealdamage_now");
+		PrintCenterTextAll("%s", "dealdamage_now_nc");
+	}
+	else
+	{
+		g_bStartDealDamage = true;
+		g_iCoolDown++;
+
+		if (gc_bSpawnRandom.BoolValue)
+		{
+			SetCvar("mp_randomspawn", 1);
+			SetCvar("mp_randomspawn_los", 1);
+		}
+
+		CPrintToChatAll("%t %t", "dealdamage_tag", "dealdamage_next");
+		PrintCenterTextAll("%t", "dealdamage_next_nc");
+	}
+}
+
+public Action Timer_PrepareEvent(Handle timer)
+{
+	PrepareDay(true);
+}
+
+void PrepareDay(bool thisround)
+{
+	g_iRound++;
+
+	bool bFlip = view_as<bool>(GetRandomInt(0,1));
+	g_iBlueTeamCount = 0;
+	g_iRedTeamCount = 0;
+
+	g_iBestT = 0;
+	g_iBestCT = 0;
+	g_iBestTdamage = 0;
+	g_iBestCTdamage = 0;
+	g_iBestPlayer = 0;
+	g_iDamageCT = 0;
+	g_iDamageT = 0;
+	g_iTotalDamage = 0;
+
+	if (gp_bSmartJailDoors)
+	{
+		SJD_OpenDoors();
 	}
 
-	CPrintToChatAll("%t %t", "dealdamage_tag", "dealdamage_next");
-	PrintCenterTextAll("%t", "dealdamage_next_nc");
+	if ((thisround && gc_bTeleportSpawn.BoolValue) || !gc_bSpawnCell.BoolValue || !gp_bSmartJailDoors || (gc_bSpawnCell.BoolValue && (SJD_IsCurrentMapConfigured() != true))) // spawn Terrors to CT Spawn 
+	{
+		int RandomCT = 0;
+		int RandomT = 0;
+
+		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+		{
+			if (GetClientTeam(i) == CS_TEAM_CT)
+			{
+				CS_RespawnPlayer(i);
+				RandomCT = i;
+			}
+			else if (GetClientTeam(i) == CS_TEAM_T)
+			{
+				CS_RespawnPlayer(i);
+				RandomT = i;
+			}
+			if (RandomCT != 0 && RandomT != 0)
+			{
+				break;
+			}
+		}
+
+		if (RandomCT && RandomT)
+		{
+			float g_fPosT[3], g_fPosCT[3];
+			GetClientAbsOrigin(RandomT, g_fPosT);
+			GetClientAbsOrigin(RandomCT, g_fPosCT);
+			g_fPosT[2] = g_fPosT[2] + 5;
+			g_fPosCT[2] = g_fPosCT[2] + 5;
+
+			for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+			{
+				if (gc_bSpawnCell.BoolValue || !gp_bSmartJailDoors || (gp_bSmartJailDoors && (SJD_IsCurrentMapConfigured() != true)))
+				{
+					TeleportEntity(i, g_fPosCT, NULL_VECTOR, NULL_VECTOR);
+				}
+				else if (g_iClientTeam[i] == TEAM_BLUE)
+				{
+					TeleportEntity(i, g_fPosT, NULL_VECTOR, NULL_VECTOR);
+				}
+				else if (g_iClientTeam[i] == TEAM_RED)
+				{
+					TeleportEntity(i, g_fPosCT, NULL_VECTOR, NULL_VECTOR);
+				}
+			}
+		}
+	}
+
+	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+	{
+		SetEntData(i, g_iCollision_Offset, 2, 4, true);
+
+		SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
+
+		SetEntityMoveType(i, MOVETYPE_NONE);
+		
+		g_iDamageDealed[i] = 0;
+
+		if (bFlip)
+		{
+			g_iClientTeam[i] = TEAM_BLUE;
+			g_iBlueTeamCount++;
+			bFlip = false;
+			if (gc_bColor.BoolValue) SetEntityRenderColor(i, 0, 0, 240, 0);
+			CPrintToChat(i, "%t %t", "dealdamage_tag", "dealdamage_teamblue");
+			CPrintToChatAll("%t %t", "dealdamage_tag", "dealdamage_playerteamblue", i);
+			PrintCenterText(i, "%t \n<font face='Arial' color='#0000FF'>%t</font>", "dealdamage_start_nc", "dealdamage_teamblue_nc");
+			if (gc_bOverlays.BoolValue)ShowOverlay(i, g_sOverlayBluePath, 0.0);
+		}
+		else
+		{
+			g_iClientTeam[i] = TEAM_RED;
+			g_iRedTeamCount++;
+			bFlip = true;
+			if (gc_bColor.BoolValue) SetEntityRenderColor(i, 240, 0, 0, 0);
+			CPrintToChat(i, "%t %t", "dealdamage_tag", "dealdamage_teamred");
+			CPrintToChatAll("%t %t", "dealdamage_tag", "dealdamage_playerteamred", i);
+			PrintCenterText(i, "%t \n<font face='Arial' color='#FF0000'>%t</font>", "dealdamage_start_nc", "dealdamage_teamred_nc");
+			if (gc_bOverlays.BoolValue)ShowOverlay(i, g_sOverlayRedPath, 0.0);
+		}
+
+		CreateInfoPanel(i);
+
+		if (gp_bMyIcons)
+		{
+			MyIcons_BlockClientIcon(i, true);
+		}
+
+		CreateTimer (1.1, Timer_SetModel, i);
+	}
+
+	if (gp_bMyJailbreak)
+	{
+		SetCvar("sm_menu_enable", 0);
+
+		MyJailbreak_SetEventDayPlanned(false);
+		MyJailbreak_SetEventDayRunning(true, 0);
+
+		if (gc_fBeaconTime.FloatValue > 0.0)
+		{
+			g_hTimerBeacon = CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
+		}
+	}
+
+	if (gp_bWarden)
+	{
+		SetCvar("sm_warden_enable", 0);
+	}
+
+	if (gp_bHosties)
+	{
+		SetCvar("sm_hosties_lr", 0);
+	}
+
+	if (gp_bMyWeapons)
+	{
+		MyWeapons_AllowTeam(CS_TEAM_T, true);
+		MyWeapons_AllowTeam(CS_TEAM_CT, true);
+	}
+
+	CPrintToChatAll("%t %t", "dealdamage_tag", "dealdamage_rounds", g_iRound, g_iMaxRound);
+
+	GameRules_SetProp("m_iRoundTime", gc_iRoundTime.IntValue*60, 4, 0, true);
+
+	SetCvar("sm_hud_enable", 0); 
+
+	g_hTimerRound = CreateTimer (float(GameRules_GetProp("m_iRoundTime")-3), Timer_EndTheRound, _, TIMER_FLAG_NO_MAPCHANGE);
+
+	g_hTimerTruce = CreateTimer(1.0, Timer_StartEvent, _, TIMER_REPEAT);
 }
+
 
 /******************************************************************************
                    MENUS
@@ -1082,9 +1130,17 @@ void SendResults(int client)
 // Start Timer
 public Action Timer_StartEvent(Handle timer)
 {
-	if (g_iTruceTime > 1) // countdown to start
+	if (g_iTruceTime > 0) // countdown to start
 	{
 		g_iTruceTime--;
+
+		if (g_iTruceTime == gc_iTruceTime.IntValue-3)
+		{
+			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+			{
+				SetEntityMoveType(i, MOVETYPE_WALK);
+			}
+		}
 
 		PrintCenterTextAll("%t", "dealdamage_timeuntilstart_nc", g_iTruceTime);
 
@@ -1093,33 +1149,30 @@ public Action Timer_StartEvent(Handle timer)
 
 	g_iTruceTime = gc_iTruceTime.IntValue;
 
-	if (g_iRound > 0)
+
+	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
 	{
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+		SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
+
+		if (gc_bOverlays.BoolValue)
 		{
-			if (IsPlayerAlive(i))
-			{
-				SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
-			}
-
-			if (gc_bOverlays.BoolValue)
-			{
-				ShowOverlay(i, g_sOverlayStartPath, 2.0);
-			}
+			ShowOverlay(i, g_sOverlayStartPath, 2.0);
 		}
-
-		if (gc_bSounds.BoolValue)
-		{
-			EmitSoundToAllAny(g_sSoundStartPath);
-		}
-
-		PrintCenterTextAll("%t", "dealdamage_start_nc");
-		CPrintToChatAll("%t %t", "dealdamage_tag", "dealdamage_start");
 	}
+
+	if (gc_bSounds.BoolValue)
+	{
+		EmitSoundToAllAny(g_sSoundStartPath);
+	}
+
+	PrintCenterTextAll("%t", "dealdamage_start_nc");
+	
+	CPrintToChatAll("%t %t", "dealdamage_tag", "dealdamage_start");
 
 	CreateTimer(2.2, Timer_Overlay);
 
 	g_hTimerTruce = null;
+
 	g_bIsTruce = false;
 
 	return Plugin_Stop;

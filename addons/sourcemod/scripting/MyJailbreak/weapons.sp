@@ -348,7 +348,23 @@ public void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast
 		SetEntProp(client, Prop_Send, "m_ArmorValue", 0);
 		SetEntProp(client, Prop_Send, "m_bHasHelmet", 0);
 	}
+}
 
+public void MyJailbreak_OnEventDayStart(char [] EventDayName)
+{
+	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+	{
+		if (gc_bKevlarDays.BoolValue)
+		{
+			SetEntProp(i, Prop_Send, "m_ArmorValue", 100);
+			SetEntProp(i, Prop_Send, "m_bHasHelmet", 1);
+		}
+		else
+		{
+			SetEntProp(i, Prop_Send, "m_ArmorValue", 0);
+			SetEntProp(i, Prop_Send, "m_bHasHelmet", 0);
+		}
+	}
 }
 
 /******************************************************************************

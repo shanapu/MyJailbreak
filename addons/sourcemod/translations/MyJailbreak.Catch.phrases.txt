@@ -129,7 +129,7 @@
 
 	"catch_info_line3"
 	{
-		"en"		"Hold E to {blue}sprint!"
+		"en"		"Hold E to sprint!"
 	}
 
 	"catch_info_line4"

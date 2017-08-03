@@ -85,12 +85,18 @@ ConVar gc_sCustomCommandSet;
 ConVar gc_sAdminFlag;
 ConVar gc_bAllowLR;
 
+ConVar gc_bBeginSetA;
+ConVar gc_bBeginSetW;
+ConVar gc_bBeginSetV;
+ConVar gc_bBeginSetVW;
+ConVar gc_bTeleportSpawn;
+
 // Extern Convars
-ConVar g_iMPRoundTime;
+//ConVar g_iMPRoundTime;
 ConVar g_iTerrorForLR;
 
 // Integers
-int g_iOldRoundTime;
+//int g_iOldRoundTime;
 int g_iCoolDown;
 int g_iTruceTime;
 int g_iVoteCount;
@@ -155,6 +161,13 @@ public void OnPluginStart()
 	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_hebattle_flag", "g", "Set flag for admin/vip to set this Event Day.");
 	gc_bVote = AutoExecConfig_CreateConVar("sm_hebattle_vote", "1", "0 - disabled, 1 - allow player to vote for hebattle", _, true, 0.0, true, 1.0);
 	gc_bSpawnCell = AutoExecConfig_CreateConVar("sm_hebattle_spawn", "0", "0 - T teleport to CT spawn, 1 - cell doors auto open", _, true, 0.0, true, 1.0);
+
+	gc_bBeginSetA = AutoExecConfig_CreateConVar("sm_hebattle_begin_admin", "1", "When admin set event (!sethebattle) = 0 - start event next round, 1 - start event current round", _, true, 0.0, true, 1.0);
+	gc_bBeginSetW = AutoExecConfig_CreateConVar("sm_hebattle_begin_warden", "1", "When warden set event (!sethebattle) = 0 - start event next round, 1 - start event current round", _, true, 0.0, true, 1.0);
+	gc_bBeginSetV = AutoExecConfig_CreateConVar("sm_hebattle_begin_vote", "0", "When users vote for event (!hebattle) = 0 - start event next round, 1 - start event current round", _, true, 0.0, true, 1.0);
+	gc_bBeginSetVW = AutoExecConfig_CreateConVar("sm_hebattle_begin_daysvote", "0", "When warden/admin start eventday voting (!sm_voteday) and event wins = 0 - start event next round, 1 - start event current round", _, true, 0.0, true, 1.0);
+	gc_bTeleportSpawn = AutoExecConfig_CreateConVar("sm_hebattle_teleport_spawn", "0", "0 - start event in current round from current player positions, 1 - teleport players to spawn when start event on current round(only when sm_*_begin_admin, sm_*_begin_warden, sm_*_begin_vote or sm_*_begin_daysvote is on '1')", _, true, 0.0, true, 1.0);
+
 	gc_iPlayerHP = AutoExecConfig_CreateConVar("sm_hebattle_hp", "85", "HP a Player get on Spawn", _, true, 1.0);
 	gc_bGrav = AutoExecConfig_CreateConVar("sm_hebattle_gravity", "1", "0 - disabled, 1 - enable low gravity", _, true, 0.0, true, 1.0);
 	gc_fGravValue= AutoExecConfig_CreateConVar("sm_hebattle_gravity_value", "0.3", "Ratio for gravity 0.5 moon / 1.0 earth ", _, true, 0.1, true, 1.0);
@@ -183,7 +196,7 @@ public void OnPluginStart()
 	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
 
 	// Find
-	g_iMPRoundTime = FindConVar("mp_roundtime");
+//	g_iMPRoundTime = FindConVar("mp_roundtime");
 	gc_sOverlayStartPath.GetString(g_sOverlayStartPath, sizeof(g_sOverlayStartPath));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
@@ -337,7 +350,7 @@ public Action Command_SetHEbattle(int client, int args)
 
 	if (client == 0) // Called by a server/voting
 	{
-		StartNextRound();
+		StartEventRound(gc_bBeginSetVW.BoolValue);
 
 		if (!gp_bMyJailbreak)
 		{
@@ -381,7 +394,7 @@ public Action Command_SetHEbattle(int client, int args)
 			return Plugin_Handled;
 		}
 
-		StartNextRound();
+		StartEventRound(gc_bBeginSetA.BoolValue);
 
 		if (!gp_bMyJailbreak)
 		{
@@ -431,7 +444,7 @@ public Action Command_SetHEbattle(int client, int args)
 			return Plugin_Handled;
 		}
 
-		StartNextRound();
+		StartEventRound(gc_bBeginSetW.BoolValue);
 
 		if (!gp_bMyJailbreak)
 		{
@@ -507,7 +520,7 @@ public Action Command_VoteHEbattle(int client, int args)
 
 	if (g_iVoteCount > playercount)
 	{
-		StartNextRound();
+		StartEventRound(gc_bBeginSetV.BoolValue);
 
 		if (!gp_bMyJailbreak)
 		{
@@ -558,113 +571,10 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		return;
 	}
 
-	if (gp_bWarden)
-	{
-		SetCvar("sm_warden_enable", 0);
-	}
-
-	if (gp_bHosties)
-	{
-		SetCvar("sm_hosties_lr", 0);
-	}
-
-	if (gp_bMyWeapons)
-	{
-		MyWeapons_AllowTeam(CS_TEAM_T, false);
-		MyWeapons_AllowTeam(CS_TEAM_CT, false);
-	}
-
-	SetCvar("mp_teammates_are_enemies", 1);
-
-	if (gp_bMyJailbreak)
-	{
-		SetCvar("sm_menu_enable", 0);
-
-		MyJailbreak_SetEventDayPlanned(false);
-		MyJailbreak_SetEventDayRunning(true, 0);
-
-		if (gc_fBeaconTime.FloatValue > 0.0)
-		{
-			g_hTimerBeacon = CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
-		}
-	}
-
 	g_bIsHEbattle = true;
-	g_iRound++;
 	g_bStartHEbattle = false;
 
-	if (gp_bSmartJailDoors)
-	{
-		SJD_OpenDoors();
-	}
-
-	if (!gc_bSpawnCell.BoolValue || !gp_bSmartJailDoors || (gc_bSpawnCell.BoolValue && (SJD_IsCurrentMapConfigured() != true))) // spawn Terrors to CT Spawn 
-	{
-		int RandomCT = 0;
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
-		{
-			if (GetClientTeam(i) == CS_TEAM_CT)
-			{
-				RandomCT = i;
-				break;
-			}
-		}
-
-		if (RandomCT)
-		{
-			for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
-			{
-				GetClientAbsOrigin(RandomCT, g_fPos);
-				
-				g_fPos[2] = g_fPos[2] + 5;
-				
-				TeleportEntity(i, g_fPos, NULL_VECTOR, NULL_VECTOR);
-			}
-		}
-	}
-
-	if (g_iRound > 0)
-	{
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
-		{
-			CreateInfoPanel(i);
-			
-			SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
-
-			StripAllPlayerWeapons(i);
-
-			GivePlayerItem(i, "weapon_hegrenade");
-
-			SetEntityHealth(i, gc_iPlayerHP.IntValue);
-
-			SetEntData(i, g_iCollision_Offset, 2, 4, true);
-
-			if (gc_bGrav.BoolValue)
-			{
-				SetEntityGravity(i, gc_fGravValue.FloatValue);	
-			}
-		}
-
-		if (gp_bHosties)
-		{
-			// enable lr on last round
-			g_iTsLR = GetAlivePlayersCount(CS_TEAM_T);
-
-			if (gc_bAllowLR.BoolValue)
-			{
-				if (g_iRound == g_iMaxRound && g_iTsLR > g_iTerrorForLR.IntValue)
-				{
-					SetCvar("sm_hosties_lr", 1);
-				}
-			}
-		}
-		
-		g_iTruceTime--;
-		g_hTimerTruce = CreateTimer(1.0, Timer_StartEvent, _, TIMER_REPEAT);
-		g_hTimerGravity = CreateTimer(1.0, Timer_CheckGravity, _, TIMER_REPEAT);
-
-		CPrintToChatAll("%t %t", "hebattle_tag", "hebattle_rounds", g_iRound, g_iMaxRound);
-	}
+	PrepareDay(false);
 }
 
 // Round End
@@ -719,7 +629,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 
 			SetCvar("mp_teammates_are_enemies", 0);
 
-			g_iMPRoundTime.IntValue = g_iOldRoundTime;
+//			g_iMPRoundTime.IntValue = g_iOldRoundTime;
 
 			if (gp_bMyJailbreak)
 			{
@@ -845,7 +755,7 @@ public void OnAvailableLR(int Announced)
 				SetCvar("sm_warden_enable", 1);
 			}
 
-			g_iMPRoundTime.IntValue = g_iOldRoundTime;
+//			g_iMPRoundTime.IntValue = g_iOldRoundTime;
 
 			if (gp_bMyJailbreak)
 			{
@@ -893,11 +803,13 @@ public Action OnWeaponCanUse(int client, int weapon)
 ******************************************************************************/
 
 // Prepare Event
-void StartNextRound()
+void StartEventRound(bool thisround)
 {
-	g_bStartHEbattle = true;
-	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
+	g_iCoolDown = gc_iCooldownDay.IntValue;
 	g_iVoteCount = 0;
+	
+//	g_iOldRoundTime = g_iMPRoundTime.IntValue; // save original round time
+//	g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue; // set event round time
 
 	if (gp_bMyJailbreak)
 	{
@@ -907,11 +819,143 @@ void StartNextRound()
 		MyJailbreak_SetEventDayPlanned(true);
 	}
 
-	g_iOldRoundTime = g_iMPRoundTime.IntValue; // save original round time
-	g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue; // set event round time
+	if (thisround)
+	{
+		g_bIsHEbattle = true;
 
-	CPrintToChatAll("%t %t", "hebattle_tag", "hebattle_next");
-	PrintCenterTextAll("%t", "hebattle_next_nc");
+		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+		{
+			SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
+
+			SetEntityMoveType(i, MOVETYPE_NONE);
+		}
+
+		CreateTimer(3.0, Timer_PrepareEvent);
+
+		CPrintToChatAll("%t %s", "hebattle_tag", "hebattle_now");
+		PrintCenterTextAll("%s", "hebattle_now_nc");
+	}
+	else
+	{
+		g_bStartHEbattle = true;
+		g_iCoolDown++;
+
+		CPrintToChatAll("%t %t", "hebattle_tag", "hebattle_next");
+		PrintCenterTextAll("%t", "hebattle_next_nc");
+	}
+}
+
+public Action Timer_PrepareEvent(Handle timer)
+{
+	PrepareDay(true);
+}
+
+void PrepareDay(bool thisround)
+{
+	g_iRound++;
+
+	if (gp_bSmartJailDoors)
+	{
+		SJD_OpenDoors();
+	}
+
+	if ((thisround && gc_bTeleportSpawn.BoolValue) || !gc_bSpawnCell.BoolValue || !gp_bSmartJailDoors || (gc_bSpawnCell.BoolValue && (SJD_IsCurrentMapConfigured() != true))) // spawn Terrors to CT Spawn 
+	{
+		int RandomCT = 0;
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+		{
+			if (GetClientTeam(i) == CS_TEAM_CT)
+			{
+				CS_RespawnPlayer(i);
+				RandomCT = i;
+				break;
+			}
+		}
+
+		if (RandomCT)
+		{
+			for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+			{
+				GetClientAbsOrigin(RandomCT, g_fPos);
+				
+				g_fPos[2] = g_fPos[2] + 5;
+				
+				TeleportEntity(i, g_fPos, NULL_VECTOR, NULL_VECTOR);
+			}
+		}
+	}
+
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+	{
+		CreateInfoPanel(i);
+		
+		SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
+
+		StripAllPlayerWeapons(i);
+
+		GivePlayerItem(i, "weapon_hegrenade");
+
+		SetEntityHealth(i, gc_iPlayerHP.IntValue);
+
+		SetEntData(i, g_iCollision_Offset, 2, 4, true);
+
+		if (gc_bGrav.BoolValue)
+		{
+			SetEntityGravity(i, gc_fGravValue.FloatValue);	
+		}
+	}
+
+	if (gp_bMyJailbreak)
+	{
+		SetCvar("sm_menu_enable", 0);
+
+		MyJailbreak_SetEventDayPlanned(false);
+		MyJailbreak_SetEventDayRunning(true, 0);
+
+		if (gc_fBeaconTime.FloatValue > 0.0)
+		{
+			g_hTimerBeacon = CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
+		}
+	}
+
+	if (gp_bWarden)
+	{
+		SetCvar("sm_warden_enable", 0);
+	}
+
+	if (gp_bHosties)
+	{
+		SetCvar("sm_hosties_lr", 0);
+	}
+
+	if (gp_bMyWeapons)
+	{
+		MyWeapons_AllowTeam(CS_TEAM_T, false);
+		MyWeapons_AllowTeam(CS_TEAM_CT, false);
+	}
+
+	if (gp_bHosties)
+	{
+		// enable lr on last round
+		g_iTsLR = GetAlivePlayersCount(CS_TEAM_T);
+
+		if (gc_bAllowLR.BoolValue)
+		{
+			if (g_iRound == g_iMaxRound && g_iTsLR > g_iTerrorForLR.IntValue)
+			{
+				SetCvar("sm_hosties_lr", 1);
+			}
+		}
+	}
+
+	CPrintToChatAll("%t %t", "hebattle_tag", "hebattle_rounds", g_iRound, g_iMaxRound);
+
+	GameRules_SetProp("m_iRoundTime", gc_iRoundTime.IntValue*60, 4, 0, true);
+
+	SetCvar("mp_teammates_are_enemies", 1);
+
+	g_hTimerTruce = CreateTimer(1.0, Timer_StartEvent, _, TIMER_REPEAT);
+	g_hTimerGravity = CreateTimer(1.0, Timer_CheckGravity, _, TIMER_REPEAT);
 }
 
 /******************************************************************************
@@ -959,9 +1003,17 @@ void CreateInfoPanel(int client)
 // Start Timer
 public Action Timer_StartEvent(Handle timer)
 {
-	if (g_iTruceTime > 1)
+	if (g_iTruceTime > 0)
 	{
 		g_iTruceTime--;
+
+		if (g_iTruceTime == gc_iTruceTime.IntValue-3)
+		{
+			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+			{
+				SetEntityMoveType(i, MOVETYPE_WALK);
+			}
+		}
 
 		PrintCenterTextAll("%t", "hebattle_timeuntilstart_nc", g_iTruceTime);
 
@@ -970,33 +1022,32 @@ public Action Timer_StartEvent(Handle timer)
 
 	g_iTruceTime = gc_iTruceTime.IntValue;
 
-	if (g_iRound > 0)
+	for (int i = 1; i <= MaxClients; i++)
 	{
-		for (int client=1;client <= MaxClients;client++)
+		if (IsValidClient(i, true, false))
 		{
-			if (IsClientInGame(client) && IsPlayerAlive(client))
-			{
-				SetEntProp(client, Prop_Data, "m_takedamage", 2, 1);
-				if (gc_bGrav.BoolValue)
-				{
-					SetEntityGravity(client, gc_fGravValue.FloatValue);	
-				}
-			}
+			SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
 
-			if (gc_bOverlays.BoolValue)
+			if (gc_bGrav.BoolValue)
 			{
-				ShowOverlay(client, g_sOverlayStartPath, 2.0);
+				SetEntityGravity(i, gc_fGravValue.FloatValue);	
 			}
 		}
 
-		if (gc_bSounds.BoolValue)
+		if (gc_bOverlays.BoolValue)
 		{
-			EmitSoundToAllAny(g_sSoundStartPath);
+			ShowOverlay(i, g_sOverlayStartPath, 2.0);
 		}
-
-		PrintCenterTextAll("%t", "hebattle_start_nc");
-		CPrintToChatAll("%t %t", "hebattle_tag", "hebattle_start");
 	}
+
+	if (gc_bSounds.BoolValue)
+	{
+		EmitSoundToAllAny(g_sSoundStartPath);
+	}
+
+	PrintCenterTextAll("%t", "hebattle_start_nc");
+
+	CPrintToChatAll("%t %t", "hebattle_tag", "hebattle_start");
 
 	g_hTimerTruce = null;
 

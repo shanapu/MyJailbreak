@@ -98,12 +98,18 @@ ConVar gc_sCustomCommandVote;
 ConVar gc_sCustomCommandSet;
 ConVar gc_sAdminFlag;
 
+ConVar gc_bBeginSetA;
+ConVar gc_bBeginSetW;
+ConVar gc_bBeginSetV;
+ConVar gc_bBeginSetVW;
+ConVar gc_bTeleportSpawn;
+
 // Extern Convars
-ConVar g_iMPRoundTime;
+//ConVar g_iMPRoundTime;
 
 // Integers
 int g_iVoteCount;
-int g_iOldRoundTime;
+//int g_iOldRoundTime;
 int g_iCoolDown;
 int g_iTruceTime;
 int g_iRound;
@@ -169,6 +175,13 @@ public void OnPluginStart()
 	gc_bSetA = AutoExecConfig_CreateConVar("sm_torch_admin", "1", "0 - disabled, 1 - allow admin/vip to set torch round", _, true, 0.0, true, 1.0);
 	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_torch_flag", "g", "Set flag for admin/vip to set this Event Day.");
 	gc_bVote = AutoExecConfig_CreateConVar("sm_torch_vote", "1", "0 - disabled, 1 - allow player to vote for torch", _, true, 0.0, true, 1.0);
+
+	gc_bBeginSetA = AutoExecConfig_CreateConVar("sm_torch_begin_admin", "1", "When admin set event (!settorch) = 0 - start event next round, 1 - start event current round", _, true, 0.0, true, 1.0);
+	gc_bBeginSetW = AutoExecConfig_CreateConVar("sm_torch_begin_warden", "1", "When warden set event (!settorch) = 0 - start event next round, 1 - start event current round", _, true, 0.0, true, 1.0);
+	gc_bBeginSetV = AutoExecConfig_CreateConVar("sm_torch_begin_vote", "0", "When users vote for event (!torch) = 0 - start event next round, 1 - start event current round", _, true, 0.0, true, 1.0);
+	gc_bBeginSetVW = AutoExecConfig_CreateConVar("sm_torch_begin_daysvote", "0", "When warden/admin start eventday voting (!sm_voteday) and event wins = 0 - start event next round, 1 - start event current round", _, true, 0.0, true, 1.0);
+	gc_bTeleportSpawn = AutoExecConfig_CreateConVar("sm_torch_teleport_spawn", "0", "0 - start event in current round from current player positions, 1 - teleport players to spawn when start event on current round(only when sm_*_begin_admin, sm_*_begin_warden, sm_*_begin_vote or sm_*_begin_daysvote is on '1')", _, true, 0.0, true, 1.0);
+
 	gc_iRounds = AutoExecConfig_CreateConVar("sm_torch_rounds", "3", "Rounds to play in a row", _, true, 1.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_torch_roundtime", "9", "Round time in minutes for a single torch round", _, true, 1.0);
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_torch_cooldown_day", "3", "Rounds cooldown after a event until event can be start again", _, true, 0.0);
@@ -211,7 +224,7 @@ public void OnPluginStart()
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	g_iMaxRound = gc_iRounds.IntValue;
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
-	g_iMPRoundTime = FindConVar("mp_roundtime");
+//	g_iMPRoundTime = FindConVar("mp_roundtime");
 	gc_sSoundOnTorchPath.GetString(g_sSoundOnTorchPath, sizeof(g_sSoundOnTorchPath));
 	gc_sSoundClearTorchPath.GetString(g_sSoundClearTorchPath, sizeof(g_sSoundClearTorchPath));
 	gc_sOverlayOnTorch.GetString(g_sOverlayOnTorch, sizeof(g_sOverlayOnTorch));
@@ -379,7 +392,7 @@ public Action Command_SetTorch(int client, int args)
 
 	if (client == 0) // Called by a server/voting
 	{
-		StartNextRound();
+		StartEventRound(gc_bBeginSetVW.BoolValue);
 
 		if (!gp_bMyJailbreak)
 		{
@@ -423,7 +436,7 @@ public Action Command_SetTorch(int client, int args)
 			return Plugin_Handled;
 		}
 
-		StartNextRound();
+		StartEventRound(gc_bBeginSetA.BoolValue);
 
 		if (!gp_bMyJailbreak)
 		{
@@ -473,7 +486,7 @@ public Action Command_SetTorch(int client, int args)
 			return Plugin_Handled;
 		}
 
-		StartNextRound();
+		StartEventRound(gc_bBeginSetW.BoolValue);
 
 		if (!gp_bMyJailbreak)
 		{
@@ -550,7 +563,7 @@ public Action Command_VoteTorch(int client, int args)
 
 	if (g_iVoteCount > playercount)
 	{
-		StartNextRound();
+		StartEventRound(gc_bBeginSetV.BoolValue);
 
 		if (!gp_bMyJailbreak)
 		{
@@ -601,83 +614,10 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		return;
 	}
 
-	if (gp_bWarden)
-	{
-		SetCvar("sm_warden_enable", 0);
-	}
-
-	if (gp_bHosties)
-	{
-		SetCvar("sm_hosties_lr", 0);
-	}
-
-	if (gp_bMyWeapons)
-	{
-		MyWeapons_AllowTeam(CS_TEAM_T, false);
-		MyWeapons_AllowTeam(CS_TEAM_CT, false);
-	}
-
-	if (gp_bMyJailbreak)
-	{
-		MyJailbreak_SetEventDayPlanned(false);
-		MyJailbreak_SetEventDayRunning(true, 0);
-	}
-
 	g_bIsTorch = true;
-	g_iRound++;
 	g_bStartTorch = false;
 
-	if (gp_bSmartJailDoors)
-	{
-		SJD_OpenDoors();
-	}
-
-	if (!gc_bSpawnCell.BoolValue || !gp_bSmartJailDoors || (gc_bSpawnCell.BoolValue && (SJD_IsCurrentMapConfigured() != true))) // spawn Terrors to CT Spawn 
-	{
-		int RandomCT = 0;
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
-		{
-			if (GetClientTeam(i) == CS_TEAM_CT)
-			{
-				RandomCT = i;
-				break;
-			}
-		}
-
-		if (RandomCT)
-		{
-			for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
-			{
-				GetClientAbsOrigin(RandomCT, g_fPos);
-				
-				g_fPos[2] = g_fPos[2] + 5;
-				
-				TeleportEntity(i, g_fPos, NULL_VECTOR, NULL_VECTOR);
-			}
-		}
-	}
-
-	if (g_iRound > 0)
-	{
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
-		{
-			StripAllPlayerWeapons(i);
-
-			GivePlayerItem(i, "weapon_knife");
-
-			SetEntData(i, g_iCollision_Offset, 2, 4, true);
-
-			CreateInfoPanel(i);
-
-			g_iSprintStatus[i] = 0;
-			g_bOnTorch[i] = false;
-			g_bImmuneTorch[i] = false;
-		}
-
-		g_hTimerTruce = CreateTimer(1.0, Timer_StartEvent, _, TIMER_REPEAT);
-
-		CPrintToChatAll("%t %t", "torch_tag", "torch_rounds", g_iRound, g_iMaxRound);
-	}
+	PrepareDay(false);
 }
 
 // Round End
@@ -729,7 +669,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 				MyWeapons_AllowTeam(CS_TEAM_CT, true);
 			}
 
-			g_iMPRoundTime.IntValue = g_iOldRoundTime;
+//			g_iMPRoundTime.IntValue = g_iOldRoundTime;
 
 			if (gp_bMyJailbreak)
 			{
@@ -873,11 +813,13 @@ public void OnClientDisconnect_Post(int client)
 ******************************************************************************/
 
 // Prepare Event
-void StartNextRound()
+void StartEventRound(bool thisround)
 {
-	g_bStartTorch = true;
-	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
+	g_iCoolDown = gc_iCooldownDay.IntValue;
 	g_iVoteCount = 0;
+	
+//	g_iOldRoundTime = g_iMPRoundTime.IntValue; // save original round time
+//	g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue; // set event round time
 
 	if (gp_bMyJailbreak)
 	{
@@ -887,11 +829,119 @@ void StartNextRound()
 		MyJailbreak_SetEventDayPlanned(true);
 	}
 
-	g_iOldRoundTime = g_iMPRoundTime.IntValue; // save original round time
-	g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue; // set event round time
+	if (thisround)
+	{
+		g_bIsTorch = true;
 
-	CPrintToChatAll("%t %t", "torch_tag", "torch_next");
-	PrintCenterTextAll("%t", "torch_next_nc");
+		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+		{
+			SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
+
+			SetEntityMoveType(i, MOVETYPE_NONE);
+		}
+
+		CreateTimer(3.0, Timer_PrepareEvent);
+
+		CPrintToChatAll("%t %s", "torch_tag", "torch_now");
+		PrintCenterTextAll("%s", "torch_now_nc");
+	}
+	else
+	{
+		g_bStartTorch = true;
+		g_iCoolDown++;
+
+		CPrintToChatAll("%t %t", "torch_tag", "torch_next");
+		PrintCenterTextAll("%t", "torch_next_nc");
+	}
+}
+
+public Action Timer_PrepareEvent(Handle timer)
+{
+	PrepareDay(true);
+}
+
+void PrepareDay(bool thisround)
+{
+	g_iRound++;
+
+	if (gp_bSmartJailDoors)
+	{
+		SJD_OpenDoors();
+	}
+
+	if ((thisround && gc_bTeleportSpawn.BoolValue) || !gc_bSpawnCell.BoolValue || !gp_bSmartJailDoors || (gc_bSpawnCell.BoolValue && (SJD_IsCurrentMapConfigured() != true))) // spawn Terrors to CT Spawn 
+	{
+		int RandomCT = 0;
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+		{
+			if (GetClientTeam(i) == CS_TEAM_CT)
+			{
+				RandomCT = i;
+				break;
+			}
+		}
+
+		if (RandomCT)
+		{
+			for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+			{
+				GetClientAbsOrigin(RandomCT, g_fPos);
+				
+				g_fPos[2] = g_fPos[2] + 5;
+				
+				TeleportEntity(i, g_fPos, NULL_VECTOR, NULL_VECTOR);
+			}
+		}
+	}
+
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+	{
+		SetEntData(i, g_iCollision_Offset, 2, 4, true);
+
+		SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
+
+		SetEntityMoveType(i, MOVETYPE_NONE);
+		
+		StripAllPlayerWeapons(i);
+
+		GivePlayerItem(i, "weapon_knife");
+
+		CreateInfoPanel(i);
+
+		g_iSprintStatus[i] = 0;
+		g_bOnTorch[i] = false;
+		g_bImmuneTorch[i] = false;
+	}
+
+	if (gp_bMyJailbreak)
+	{
+		SetCvar("sm_menu_enable", 0);
+
+		MyJailbreak_SetEventDayPlanned(false);
+		MyJailbreak_SetEventDayRunning(true, 0);
+	}
+
+	if (gp_bWarden)
+	{
+		SetCvar("sm_warden_enable", 0);
+	}
+
+	if (gp_bHosties)
+	{
+		SetCvar("sm_hosties_lr", 0);
+	}
+
+	if (gp_bMyWeapons)
+	{
+		MyWeapons_AllowTeam(CS_TEAM_T, false);
+		MyWeapons_AllowTeam(CS_TEAM_CT, false);
+	}
+
+	GameRules_SetProp("m_iRoundTime", gc_iRoundTime.IntValue*60, 4, 0, true);
+
+	g_hTimerTruce = CreateTimer(1.0, Timer_StartEvent, _, TIMER_REPEAT);
+
+	CPrintToChatAll("%t %t", "torch_tag", "torch_rounds", g_iRound, g_iMaxRound);
 }
 
 // Set client as torch
@@ -1087,9 +1137,17 @@ void CreateInfoPanel(int client)
 
 public Action Timer_StartEvent(Handle timer)
 {
-	if (g_iTruceTime > 1)
+	if (g_iTruceTime > 0)
 	{
 		g_iTruceTime--;
+
+		if (g_iTruceTime == gc_iTruceTime.IntValue-3)
+		{
+			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+			{
+				SetEntityMoveType(i, MOVETYPE_WALK);
+			}
+		}
 
 		PrintCenterTextAll("%t", "torch_damage_nc", g_iTruceTime);
 
@@ -1122,14 +1180,14 @@ public Action Timer_StartEvent(Handle timer)
 		}
 	}
 
-	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)&& IsPlayerAlive(i))
 	{
 		if (gp_bCustomPlayerSkins && gc_bWallhack.BoolValue)
 		{
 			Setup_WallhackSkin(i);
 		}
 
-		if (IsPlayerAlive(i) && (i != g_iBurningZero)) 
+		if (i != g_iBurningZero)
 		{
 			SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
 

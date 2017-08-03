@@ -52,6 +52,8 @@
 bool g_bIsLateLoad = false;
 bool g_bIsNoScope = false;
 bool g_bStartNoScope = false;
+bool g_bLadder[MAXPLAYERS+1] = false;
+
 
 // Plugin bools
 bool gp_bWarden;
@@ -86,12 +88,18 @@ ConVar gc_sCustomCommandSet;
 ConVar gc_sAdminFlag;
 ConVar gc_bAllowLR;
 
+ConVar gc_bBeginSetA;
+ConVar gc_bBeginSetW;
+ConVar gc_bBeginSetV;
+ConVar gc_bBeginSetVW;
+ConVar gc_bTeleportSpawn;
+
 // Extern Convars
-ConVar g_iMPRoundTime;
+//ConVar g_iMPRoundTime;
 ConVar g_iTerrorForLR;
 
 // Integers
-int g_iOldRoundTime;
+//int g_iOldRoundTime;
 int g_iCoolDown;
 int g_iTruceTime;
 int g_iVoteCount;
@@ -103,7 +111,6 @@ int g_iCollision_Offset;
 
 // Handles
 Handle g_hTimerTruce;
-Handle g_hTimerGravity;
 Handle g_hTimerBeacon;
 
 // Floats
@@ -157,6 +164,12 @@ public void OnPluginStart()
 	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_noscope_flag", "g", "Set flag for admin/vip to set this Event Day.");
 	gc_bVote = AutoExecConfig_CreateConVar("sm_noscope_vote", "1", "0 - disabled, 1 - allow player to vote for noscope", _, true, 0.0, true, 1.0);
 	gc_bSpawnCell = AutoExecConfig_CreateConVar("sm_noscope_spawn", "0", "0 - T teleport to CT spawn, 1 - cell doors auto open", _, true, 0.0, true, 1.0);
+	gc_bBeginSetA = AutoExecConfig_CreateConVar("sm_noscope_begin_admin", "1", "When admin set event (!setnoscope) = 0 - start event next round, 1 - start event current round", _, true, 0.0, true, 1.0);
+	gc_bBeginSetW = AutoExecConfig_CreateConVar("sm_noscope_begin_warden", "1", "When warden set event (!setnoscope) = 0 - start event next round, 1 - start event current round", _, true, 0.0, true, 1.0);
+	gc_bBeginSetV = AutoExecConfig_CreateConVar("sm_noscope_begin_vote", "0", "When users vote for event (!noscope) = 0 - start event next round, 1 - start event current round", _, true, 0.0, true, 1.0);
+	gc_bBeginSetVW = AutoExecConfig_CreateConVar("sm_noscope_begin_daysvote", "0", "When warden/admin start eventday voting (!sm_voteday) and event wins = 0 - start event next round, 1 - start event current round", _, true, 0.0, true, 1.0);
+	gc_bTeleportSpawn = AutoExecConfig_CreateConVar("sm_noscope_teleport_spawn", "0", "0 - start event in current round from current player positions, 1 - teleport players to spawn when start event on current round(only when sm_*_begin_admin, sm_*_begin_warden, sm_*_begin_vote or sm_*_begin_daysvote is on '1')", _, true, 0.0, true, 1.0);
+
 	gc_iRounds = AutoExecConfig_CreateConVar("sm_noscope_rounds", "1", "Rounds to play in a row", _, true, 1.0);
 	gc_iWeapon = AutoExecConfig_CreateConVar("sm_noscope_weapon", "1", "1 - ssg08 / 2 - awp / 3 - scar20 / 4 - g3sg1", _, true, 1.0, true, 4.0);
 	gc_bRandom = AutoExecConfig_CreateConVar("sm_noscope_random", "1", "get a random weapon (ssg08, awp, scar20, g3sg1) ignore: sm_noscope_weapon", _, true, 0.0, true, 1.0);
@@ -185,7 +198,7 @@ public void OnPluginStart()
 	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
 
 	// Find
-	g_iMPRoundTime = FindConVar("mp_roundtime");
+//	g_iMPRoundTime = FindConVar("mp_roundtime");
 	m_flNextSecondaryAttack = FindSendPropInfo("CBaseCombatWeapon", "m_flNextSecondaryAttack");
 	gc_sOverlayStartPath.GetString(g_sOverlayStartPath, sizeof(g_sOverlayStartPath));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
@@ -292,23 +305,6 @@ public void OnConfigsExecuted()
 		g_iTerrorForLR = FindConVar("sm_hosties_lr_ts_max");
 	}
 
-	if (gc_iWeapon.IntValue == 1)
-	{
-		g_sWeapon = "weapon_ssg08";
-	}
-	if (gc_iWeapon.IntValue == 2)
-	{
-		g_sWeapon = "weapon_awp";
-	}
-	if (gc_iWeapon.IntValue == 3)
-	{
-		g_sWeapon = "weapon_scar20";
-	}
-	if (gc_iWeapon.IntValue == 4)
-	{
-		g_sWeapon = "weapon_g3sg1";
-	}
-
 	// Set custom Commands
 	int iCount = 0;
 	char sCommands[128], sCommandsL[12][32], sCommand[32];
@@ -357,7 +353,7 @@ public Action Command_SetNoScope(int client, int args)
 
 	if (client == 0) // Called by a server/voting
 	{
-		StartNextRound();
+		StartEventRound(gc_bBeginSetVW.BoolValue);
 
 		if (!gp_bMyJailbreak)
 		{
@@ -401,7 +397,7 @@ public Action Command_SetNoScope(int client, int args)
 			return Plugin_Handled;
 		}
 
-		StartNextRound();
+		StartEventRound(gc_bBeginSetA.BoolValue);
 
 		if (!gp_bMyJailbreak)
 		{
@@ -451,7 +447,7 @@ public Action Command_SetNoScope(int client, int args)
 			return Plugin_Handled;
 		}
 
-		StartNextRound();
+		StartEventRound(gc_bBeginSetW.BoolValue);
 
 		if (!gp_bMyJailbreak)
 		{
@@ -527,7 +523,7 @@ public Action Command_VoteNoScope(int client, int args)
 
 	if (g_iVoteCount > playercount)
 	{
-		StartNextRound();
+		StartEventRound(gc_bBeginSetV.BoolValue);
 
 		if (!gp_bMyJailbreak)
 		{
@@ -578,137 +574,8 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		return;
 	}
 
-	if (gp_bWarden)
-	{
-		SetCvar("sm_warden_enable", 0);
-	}
-
-	if (gp_bHosties)
-	{
-		SetCvar("sm_hosties_lr", 0);
-	}
-
-	if (gp_bMyWeapons)
-	{
-		MyWeapons_AllowTeam(CS_TEAM_T, false);
-		MyWeapons_AllowTeam(CS_TEAM_CT, false);
-	}
-
-	SetCvar("sv_infinite_ammo", 2);
-	SetCvar("mp_teammates_are_enemies", 1);
-
-	if (gp_bMyJailbreak)
-	{
-		SetCvar("sm_menu_enable", 0);
-
-		MyJailbreak_SetEventDayPlanned(false);
-		MyJailbreak_SetEventDayRunning(true, 0);
-
-		if (gc_fBeaconTime.FloatValue > 0.0)
-		{
-			g_hTimerBeacon = CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
-		}
-	}
-
-	if (gc_bRandom.BoolValue)
-	{
-		int randomnum = GetRandomInt(0, 3);
-
-		if (randomnum == 0)
-		{
-			g_sWeapon = "weapon_ssg08";
-		}
-		if (randomnum == 1)
-		{
-			g_sWeapon = "weapon_awp";
-		}
-		if (randomnum == 2)
-		{
-			g_sWeapon = "weapon_scar20";
-		}
-		if (randomnum == 3)
-		{
-			g_sWeapon = "weapon_g3sg1";
-		}
-	}
-
-	g_iRound++;
 	g_bIsNoScope = true;
 	g_bStartNoScope = false;
-
-	if (gp_bSmartJailDoors)
-	{
-		SJD_OpenDoors();
-	}
-
-	if (!gc_bSpawnCell.BoolValue || !gp_bSmartJailDoors || (gc_bSpawnCell.BoolValue && (SJD_IsCurrentMapConfigured() != true))) // spawn Terrors to CT Spawn 
-	{
-		int RandomCT = 0;
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
-		{
-			if (GetClientTeam(i) == CS_TEAM_CT)
-			{
-				RandomCT = i;
-				break;
-			}
-		}
-
-		if (RandomCT)
-		{
-			for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
-			{
-				GetClientAbsOrigin(RandomCT, g_fPos);
-				
-				g_fPos[2] = g_fPos[2] + 5;
-				
-				TeleportEntity(i, g_fPos, NULL_VECTOR, NULL_VECTOR);
-			}
-		}
-	}
-
-	if (g_iRound > 0)
-	{
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
-		{
-			CreateInfoPanel(i);
-
-			StripAllPlayerWeapons(i);
-			GivePlayerItem(i, g_sWeapon);
-
-			SetEntData(i, g_iCollision_Offset, 2, 4, true);
-			SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
-
-			if (IsPlayerAlive(i))
-			{
-				SDKHook(i, SDKHook_PreThink, OnPreThink);
-			}
-
-			if (gc_bGrav.BoolValue)
-			{
-				SetEntityGravity(i, gc_fGravValue.FloatValue);	
-			}
-		}
-
-		if (gp_bHosties)
-		{
-			// enable lr on last round
-			g_iTsLR = GetAlivePlayersCount(CS_TEAM_T);
-
-			if (gc_bAllowLR.BoolValue)
-			{
-				if (g_iRound == g_iMaxRound && g_iTsLR > g_iTerrorForLR.IntValue)
-				{
-					SetCvar("sm_hosties_lr", 1);
-				}
-			}
-		}
-
-		g_iTruceTime--;
-		g_hTimerTruce = CreateTimer(1.0, Timer_StartEvent, _, TIMER_REPEAT);
-		g_hTimerGravity = CreateTimer(1.0, Timer_CheckGravity, _, TIMER_REPEAT);
-
-		CPrintToChatAll("%t %t", "noscope_tag", "noscope_rounds", g_iRound, g_iMaxRound);
-	}
 }
 
 
@@ -724,7 +591,6 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 		}
 
 		delete g_hTimerTruce;
-		delete g_hTimerGravity;
 		delete g_hTimerBeacon;
 
 		int winner = event.GetInt("winner");
@@ -763,7 +629,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			SetCvar("sv_infinite_ammo", 0);
 			SetCvar("mp_teammates_are_enemies", 0);
 
-			g_iMPRoundTime.IntValue = g_iOldRoundTime;
+//			g_iMPRoundTime.IntValue = g_iOldRoundTime;
 
 			if (gp_bMyJailbreak)
 			{
@@ -835,7 +701,6 @@ public void OnAvailableLR(int Announced)
 
 		delete g_hTimerBeacon;
 		delete g_hTimerTruce;
-		delete g_hTimerGravity;
 
 		if (g_iRound == g_iMaxRound)
 		{
@@ -860,7 +725,7 @@ public void OnAvailableLR(int Announced)
 			SetCvar("sv_infinite_ammo", 0);
 			SetCvar("mp_teammates_are_enemies", 0);
 
-			g_iMPRoundTime.IntValue = g_iOldRoundTime;
+//			g_iMPRoundTime.IntValue = g_iOldRoundTime;
 
 			if (gp_bMyJailbreak)
 			{
@@ -882,7 +747,6 @@ public void OnMapEnd()
 	g_bStartNoScope = false;
 
 	delete g_hTimerTruce;
-	delete g_hTimerGravity;
 	delete g_hTimerBeacon;
 
 	g_iVoteCount = 0;
@@ -920,12 +784,15 @@ public void OnClientPutInServer(int client)
                    FUNCTIONS
 ******************************************************************************/
 
+
 // Prepare Event
-void StartNextRound()
+void StartEventRound(bool thisround)
 {
-	g_bStartNoScope = true;
-	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
+	g_iCoolDown = gc_iCooldownDay.IntValue;
 	g_iVoteCount = 0;
+	
+//	g_iOldRoundTime = g_iMPRoundTime.IntValue; // save original round time
+//	g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue; // set event round time
 
 	if (gp_bMyJailbreak)
 	{
@@ -935,11 +802,184 @@ void StartNextRound()
 		MyJailbreak_SetEventDayPlanned(true);
 	}
 
-	g_iOldRoundTime = g_iMPRoundTime.IntValue; // save original round time
-	g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue; // set event round time
+	if (thisround)
+	{
+		g_bIsNoScope = true;
 
-	CPrintToChatAll("%t %t", "noscope_tag", "noscope_next");
-	PrintCenterTextAll("%t", "noscope_next_nc");
+		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+		{
+			SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
+
+			SetEntityMoveType(i, MOVETYPE_NONE);
+		}
+
+		CreateTimer(3.0, Timer_PrepareEvent);
+
+		CPrintToChatAll("%t %s", "noscope_tag", "noscope_now");
+		PrintCenterTextAll("%s", "noscope_now_nc");
+	}
+	else
+	{
+		g_bStartNoScope = true;
+		g_iCoolDown++;
+
+		CPrintToChatAll("%t %t", "noscope_tag", "noscope_next");
+		PrintCenterTextAll("%t", "noscope_next_nc");
+	}
+}
+
+public Action Timer_PrepareEvent(Handle timer)
+{
+	PrepareDay(true);
+}
+
+void PrepareDay(bool thisround)
+{
+	g_iRound++;
+
+	if (gp_bSmartJailDoors)
+	{
+		SJD_OpenDoors();
+	}
+
+	if ((thisround && gc_bTeleportSpawn.BoolValue) || !gc_bSpawnCell.BoolValue || !gp_bSmartJailDoors || (gc_bSpawnCell.BoolValue && (SJD_IsCurrentMapConfigured() != true))) // spawn Terrors to CT Spawn 
+	{
+		int RandomCT = 0;
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+		{
+			if (GetClientTeam(i) == CS_TEAM_CT)
+			{
+				CS_RespawnPlayer(i);
+				RandomCT = i;
+				break;
+			}
+		}
+
+		if (RandomCT)
+		{
+			for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+			{
+				GetClientAbsOrigin(RandomCT, g_fPos);
+				
+				g_fPos[2] = g_fPos[2] + 5;
+				
+				TeleportEntity(i, g_fPos, NULL_VECTOR, NULL_VECTOR);
+			}
+		}
+	}
+
+	if (gc_iWeapon.IntValue == 1)
+	{
+		g_sWeapon = "weapon_ssg08";
+	}
+	else if (gc_iWeapon.IntValue == 2)
+	{
+		g_sWeapon = "weapon_awp";
+	}
+	else if (gc_iWeapon.IntValue == 3)
+	{
+		g_sWeapon = "weapon_scar20";
+	}
+	else if (gc_iWeapon.IntValue == 4)
+	{
+		g_sWeapon = "weapon_g3sg1";
+	}
+
+	if (gc_bRandom.BoolValue)
+	{
+		int randomnum = GetRandomInt(0, 3);
+
+		if (randomnum == 0)
+		{
+			g_sWeapon = "weapon_ssg08";
+		}
+		if (randomnum == 1)
+		{
+			g_sWeapon = "weapon_awp";
+		}
+		if (randomnum == 2)
+		{
+			g_sWeapon = "weapon_scar20";
+		}
+		if (randomnum == 3)
+		{
+			g_sWeapon = "weapon_g3sg1";
+		}
+	}
+
+	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+	{
+		SetEntData(i, g_iCollision_Offset, 2, 4, true);
+
+		SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
+
+		SetEntityMoveType(i, MOVETYPE_NONE);
+
+		CreateInfoPanel(i);
+
+		StripAllPlayerWeapons(i);
+
+		GivePlayerItem(i, g_sWeapon);
+
+		SDKHook(i, SDKHook_PreThink, OnPreThink);
+
+		if (gc_bGrav.BoolValue)
+		{
+			SetEntityGravity(i, gc_fGravValue.FloatValue);
+		}
+	}
+
+	if (gp_bMyJailbreak)
+	{
+		SetCvar("sm_menu_enable", 0);
+
+		MyJailbreak_SetEventDayPlanned(false);
+		MyJailbreak_SetEventDayRunning(true, 0);
+
+		if (gc_fBeaconTime.FloatValue > 0.0)
+		{
+			g_hTimerBeacon = CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
+		}
+	}
+
+	if (gp_bWarden)
+	{
+		SetCvar("sm_warden_enable", 0);
+	}
+
+	if (gp_bHosties)
+	{
+		SetCvar("sm_hosties_lr", 0);
+	}
+
+	if (gp_bMyWeapons)
+	{
+		MyWeapons_AllowTeam(CS_TEAM_T, false);
+		MyWeapons_AllowTeam(CS_TEAM_CT, false);
+	}
+
+	if (gp_bHosties)
+	{
+		// enable lr on last round
+		g_iTsLR = GetAlivePlayersCount(CS_TEAM_T);
+
+		if (gc_bAllowLR.BoolValue)
+		{
+			if (g_iRound == g_iMaxRound && g_iTsLR > g_iTerrorForLR.IntValue)
+			{
+				SetCvar("sm_hosties_lr", 1);
+			}
+		}
+	}
+
+	CPrintToChatAll("%t %t", "noscope_tag", "noscope_rounds", g_iRound, g_iMaxRound);
+
+	GameRules_SetProp("m_iRoundTime", gc_iRoundTime.IntValue*60, 4, 0, true);
+
+	SetCvar("sv_infinite_ammo", 2);
+	SetCvar("mp_teammates_are_enemies", 1);
+
+	g_hTimerTruce = CreateTimer(1.0, Timer_StartEvent, _, TIMER_REPEAT);
 }
 
 // No Scope
@@ -1016,9 +1056,17 @@ void CreateInfoPanel(int client)
 // Start Timer
 public Action Timer_StartEvent(Handle timer)
 {
-	if (g_iTruceTime > 1)
+	if (g_iTruceTime > 0)
 	{
 		g_iTruceTime--;
+
+		if (g_iTruceTime == gc_iTruceTime.IntValue-3)
+		{
+			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+			{
+				SetEntityMoveType(i, MOVETYPE_WALK);
+			}
+		}
 
 		PrintCenterTextAll("%t", "noscope_timeuntilstart_nc", g_iTruceTime);
 
@@ -1027,47 +1075,56 @@ public Action Timer_StartEvent(Handle timer)
 
 	g_iTruceTime = gc_iTruceTime.IntValue;
 
-	if (g_iRound > 0)
+	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
 	{
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (IsPlayerAlive(i))
+		SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
+
+		if (gc_bGrav.BoolValue)
 		{
-			SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
-
-			if (gc_bGrav.BoolValue)
-			{
-				SetEntityGravity(i, gc_fGravValue.FloatValue);	
-			}
-
-			if (gc_bOverlays.BoolValue)
-			{
-				ShowOverlay(i, g_sOverlayStartPath, 2.0);
-			}
+			SetEntityGravity(i, gc_fGravValue.FloatValue);
 		}
 
-		if (gc_bSounds.BoolValue)
+		if (gc_bOverlays.BoolValue)
 		{
-			EmitSoundToAllAny(g_sSoundStartPath);
+			ShowOverlay(i, g_sOverlayStartPath, 2.0);
 		}
-
-		PrintCenterTextAll("%t", "noscope_start_nc");
-		CPrintToChatAll("%t %t", "noscope_tag", "noscope_start");
 	}
+
+	if (gc_bSounds.BoolValue)
+	{
+		EmitSoundToAllAny(g_sSoundStartPath);
+	}
+
+	PrintCenterTextAll("%t", "noscope_start_nc");
+
+	CPrintToChatAll("%t %t", "noscope_tag", "noscope_start");
 
 	g_hTimerTruce = null;
 
 	return Plugin_Stop;
 }
 
-// Give back Gravity if it gone -> ladders
-public Action Timer_CheckGravity(Handle timer)
+
+// Only right click attack for chicken
+public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon) 
 {
-	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, false))
+	if (g_bIsNoScope && IsClientInGame(client) && IsPlayerAlive(client))
 	{
-		if (GetEntityGravity(i) != 1.0)
+		if (GetEntityMoveType(client) == MOVETYPE_LADDER)
 		{
-			SetEntityGravity(i, gc_fGravValue.FloatValue);
+			g_bLadder[client] = true;
+		}
+		else
+		{
+			if (g_bLadder[client])
+			{
+				SetEntityGravity(client, gc_fGravValue.FloatValue);
+				g_bLadder[client] = false;
+			}
 		}
 	}
+
+	return Plugin_Continue;
 }
 
 // Beacon Timer

@@ -72,9 +72,19 @@
 *  Menu Add-On: Add your own menu items to top/botton of wardens/deputys/guards/prisoners jailmenu with .cfg
     *  new plugin - disabled/menu_custom.smx
     *  new config file - addons/sourcemod/configs/MyJailbreak/menu_custom.ini
+*  MyJailbreak: Automatic random eventday every x round
+    *  new cvar - sm_myjb_random_round - Every x round could be an event day
+    *  new cvar - sm_myjb_random_chance - Chance that the choosen round would be an event day
+    *  new cvar - sm_myjb_random_mapstart_delay - Wait after mapchange x rounds before try first event day
   
   
 *Changed*
+*  All Event Days: Possibility to start an event during the current round, instead wait for next round
+    *  new cvars - sm_EVENTNAME_begin_admin - When admin set event (!setEVENTNAME) = 0 - start event next round, 1 - start event current round - Default 1
+    *  new cvars - sm_EVENTNAME_begin_warden - When warden set event (!setEVENTNAME) = 0 - start event next round, 1 - start event current round - Default 1
+    *  new cvars - sm_EVENTNAME_begin_vote - When users vote for event (!EVENTNAME) = 0 - start event next round, 1 - start event current round - Default 0
+    *  new cvars - sm_EVENTNAME_begin_daysvote - When warden/admin start eventday voting (!sm_voteday) and event wins = 0 - start event next round, 1 - start event current round - Default 0
+    *  new cvars - sm_EVENTNAME_teleport_spawn - 0 - start event in current round from current player positions, 1 - teleport players to spawn
 *  Freeday: Allow warden on freeday event day
     *  new cvar - sm_freeday_allow_warden - 0 - warden disabled, 1 - allow player to become warden
 *  Menu: Moved menu items 1. & 2. backwords so menu start on 3.
@@ -88,6 +98,7 @@
     *  new cvar - sm_dealdamage_model_red - Path to the model for team red.
     *  new cvar - sm_dealdamage_overlays_blue - Path to the blue Overlay DONT TYPE .vmt or .vft
     *  new cvar - sm_dealdamage_overlays_red - Path to the red Overlay DONT TYPE .vmt or .vft
+*  Hide/War/Zombie: Darken screen while in freeze
 *  Ratio: When last guard move to prisoners, a prisoner from queue or random will be moved to guard THX @mrkos9i4ok
 *  Flags: all ConVars to set admin/vip flag has been extended to support mutliple flags ex. "r,s,t" use comma
 *  renamed plugin - ratio_ctbans_fantom to ratio_ctbans_r1ko
@@ -106,6 +117,7 @@
 *  Duckhunt & KnifeFight: fix gravity ladderfix
 *  Store Credits & paperclips: fix chat colors
 *  Zombie: Respawn with restiction addon
+*  Weapons: add/remove kevlar/helmet on eventday
 *  Many minor fixes -> study commits!
   
   
