@@ -76,6 +76,10 @@
     *  new cvar - sm_myjb_random_round - Every x round could be an event day
     *  new cvar - sm_myjb_random_chance - Chance that the choosen round would be an event day
     *  new cvar - sm_myjb_random_mapstart_delay - Wait after mapchange x rounds before try first event day
+*  Add-On: Support for nhnkl159s Simple Stats
+    *  new plugin - disabled/myjailbreak_simplestats.smx
+        *  new cvar - sm_ratio_simplestats - 0 - disabled, how many seconds a player need to join ct? (only if simplestats is available)
+        *  new cvar - sm_warden_simplestats - 0 - disabled, how many seconds a player need to become warden? (only if simplestats is available)
   
   
 *Changed*
