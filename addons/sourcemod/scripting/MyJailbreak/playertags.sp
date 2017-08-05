@@ -29,11 +29,16 @@
 #include <sdktools>
 #include <sdkhooks>
 #include <cstrike>
-#include <chat-processor>
 #include <autoexecconfig>
 #include <warden>
 #include <mystocks>
 #include <myjailbreak>
+
+// Optional Plugins
+#undef REQUIRE_PLUGIN
+#include <chat-processor>
+#define REQUIRE_PLUGIN
+
 
 // Compiler Options
 #pragma semicolon 1
