@@ -112,7 +112,7 @@ public Action MyJailbreak_OnJoinGuardQueue(int client)
 
 public Action warden_OnWardenCreate(int client, int caller)
 {
-	if (SS_GetPlayTimeAmount < gc_iMinTimeWarden.IntValue)
+	if (SS_GetPlayTimeAmount(client) < gc_iMinTimeWarden.IntValue)
 	{
 		char buffer[124];
 		SecondsToString(gc_iMinTimeWarden.IntValue, buffer, sizeof(buffer), client);
