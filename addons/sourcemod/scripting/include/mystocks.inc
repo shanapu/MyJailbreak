@@ -423,12 +423,12 @@ stock bool FilterOnlyPlayers(int entity, int contentsMask, any data)
 	return false;
 }
 
-stock void DarkenScreen(int client, bool onoff)
+stock void DarkenScreen(int client, bool darkOn)
 {
 	Handle hFadeClient = StartMessageOne("Fade", client);
 	PbSetInt(hFadeClient, "duration", 1);
 	PbSetInt(hFadeClient, "hold_time", 3);
-	if(onoff)
+	if(!darkOn)
 	{
 		PbSetInt(hFadeClient, "flags", 0x0010); // FFADE_STAYOUT	0x0008		ignores the duration, stays faded out until new ScreenFade message received
 	}
