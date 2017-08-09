@@ -785,6 +785,7 @@ void StartEventRound(bool thisround)
 	if (thisround)
 	{
 		g_bIsGhosts = true;
+		g_bGhostsRunning = true;
 
 		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
 		{
