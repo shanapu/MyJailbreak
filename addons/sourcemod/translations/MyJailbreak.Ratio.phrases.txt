@@ -390,4 +390,14 @@
 		"#format"	"{1:s}"
 		"en"		"You must have played at least {1} as terror to play as a guard."
 	}
+
+	"ratio_guard_enable"
+	{
+		"en"		"You allow to be picked as random guard when guard queue is empty"
+	}
+
+	"ratio_guard_disable"
+	{
+		"en"		"You deny to be picked as random guard when guard queue is empty"
+	}
 }
