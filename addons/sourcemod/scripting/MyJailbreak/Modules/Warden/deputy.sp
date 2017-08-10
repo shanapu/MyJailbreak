@@ -50,7 +50,7 @@ ConVar gc_sCustomCommandDeputy;
 ConVar gc_sCustomCommandUnDeputy;
 ConVar gc_sCustomCommandRemoveDeputy;
 ConVar gc_bSetDeputy;
-ConVar gc_bRemoveLR;
+ConVar gc_bRemoveLRDeputy;
 ConVar gc_bBecomeDeputy;
 ConVar gc_bModelDeputy;
 ConVar gc_bWardenDead;
@@ -89,7 +89,7 @@ public void Deputy_OnPluginStart()
 	gc_bDeputy = AutoExecConfig_CreateConVar("sm_warden_deputy_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true, 0.0, true, 1.0);
 	gc_bSetDeputy = AutoExecConfig_CreateConVar("sm_warden_deputy_set", "1", "0 - disabled, 1 - enable !w / !deputy - warden can choose his deputy.", _, true, 0.0, true, 1.0);
 	gc_bBecomeDeputy = AutoExecConfig_CreateConVar("sm_warden_deputy_become", "1", "0 - disabled, 1 - enable !w / !deputy - player can choose to be deputy.", _, true, 0.0, true, 1.0);
-	gc_bRemoveLR = AutoExecConfig_CreateConVar("sm_warden_deputy_remove_lr", "0", "0 - disabled, 1 - enable deputy will be removed on last request", _, true, 0.0, true, 1.0);
+	gc_bRemoveLRDeputy = AutoExecConfig_CreateConVar("sm_warden_deputy_remove_lr", "0", "0 - disabled, 1 - enable deputy will be removed on last request", _, true, 0.0, true, 1.0);
 	gc_bModelDeputy = AutoExecConfig_CreateConVar("sm_warden_deputy_model", "1", "0 - disabled, 1 - enable deputy model", 0, true, 0.0, true, 1.0);
 	gc_sModelPathDeputy = AutoExecConfig_CreateConVar("sm_warden_deputy_model_path", "models/player/custom_player/kuristaja/jailbreak/guard3/guard3.mdl", "Path to the model for deputy.");
 	gc_sCustomCommandDeputy = AutoExecConfig_CreateConVar("sm_warden_cmds_deputy", "d", "Set your custom chat command for open menu(!menu (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)");
@@ -417,7 +417,7 @@ public void Deputy_OnAvailableLR(int Announced)
 {
 	g_bIsLR = true;
 
-	if (gc_bRemoveLR.BoolValue)
+	if (gc_bRemoveLRDeputy.BoolValue)
 	{
 		RemoveTheDeputy();
 		Forward_OnDeputyRemoved(0); // 0 = console

@@ -893,15 +893,15 @@ void PrepareDay(bool thisround)
 		{
 			g_sWeapon = "weapon_ssg08";
 		}
-		if (randomnum == 1)
+		else if (randomnum == 1)
 		{
 			g_sWeapon = "weapon_awp";
 		}
-		if (randomnum == 2)
+		else if (randomnum == 2)
 		{
 			g_sWeapon = "weapon_scar20";
 		}
-		if (randomnum == 3)
+		else if (randomnum == 3)
 		{
 			g_sWeapon = "weapon_g3sg1";
 		}

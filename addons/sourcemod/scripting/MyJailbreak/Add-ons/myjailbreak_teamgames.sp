@@ -52,20 +52,20 @@ public Plugin myinfo = {
 
 public void MyJailbreak_OnEventDayStart(char[] EventDayName)
 {
-		// Get the Cvar Value
-		Cvar_tg_team_none_attack = FindConVar("tg_team_none_attack");
-		Cvar_tg_cvar_friendlyfire = FindConVar("tg_cvar_friendlyfire");
-		Cvar_tg_ct_friendlyfire = FindConVar("tg_ct_friendlyfire");
+	// Get the Cvar Value
+	Cvar_tg_team_none_attack = FindConVar("tg_team_none_attack");
+	Cvar_tg_cvar_friendlyfire = FindConVar("tg_cvar_friendlyfire");
+	Cvar_tg_ct_friendlyfire = FindConVar("tg_ct_friendlyfire");
 
-		// Save the Cvar Value
-		OldCvar_tg_team_none_attack = Cvar_tg_team_none_attack.IntValue;
-		OldCvar_tg_cvar_friendlyfire = Cvar_tg_cvar_friendlyfire.IntValue;
-		OldCvar_tg_ct_friendlyfire = Cvar_tg_ct_friendlyfire.IntValue;
+	// Save the Cvar Value
+	OldCvar_tg_team_none_attack = Cvar_tg_team_none_attack.IntValue;
+	OldCvar_tg_cvar_friendlyfire = Cvar_tg_cvar_friendlyfire.IntValue;
+	OldCvar_tg_ct_friendlyfire = Cvar_tg_ct_friendlyfire.IntValue;
 
-		// Change the Cvar Value
-		Cvar_tg_team_none_attack.IntValue = 1;
-		Cvar_tg_cvar_friendlyfire.IntValue = 1;
-		Cvar_tg_ct_friendlyfire.IntValue = 1;
+	// Change the Cvar Value
+	Cvar_tg_team_none_attack.IntValue = 1;
+	Cvar_tg_cvar_friendlyfire.IntValue = 1;
+	Cvar_tg_ct_friendlyfire.IntValue = 1;
 }
 
 public void MyJailbreak_OnEventDayEnd(char[] EventDayName, int winner)

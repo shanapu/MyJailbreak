@@ -135,8 +135,6 @@ public Action Command_CloseDoors(int client, int args)
 
 public void CellDoors_Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
-	delete g_hTimerOpen;
-
 	if (gc_bPlugin.BoolValue)
 	{
 		if (gp_bSmartJailDoors) if (SJD_IsCurrentMapConfigured())
@@ -207,7 +205,7 @@ public Action Timer_OpenCounter(Handle timer, Handle pack)
 					SJD_OpenDoors();
 					CPrintToChatAll("%t %t", "warden_tag", "warden_openauto");
 
-					delete g_hTimerOpen;
+					return Plugin_Stop;
 				}
 			}
 			else if (gc_bOpenTimer.BoolValue)
@@ -219,10 +217,14 @@ public Action Timer_OpenCounter(Handle timer, Handle pack)
 				}
 				else CPrintToChatAll("%t %t", "warden_tag", "warden_opentime");
 
-				delete g_hTimerOpen;
+				return Plugin_Stop;
 			}
 		}
+		
+		return Plugin_Continue;
 	}
+
+	return Plugin_Stop;
 }
 
 public void SJD_DoorsOpened(int caller, int activator)
