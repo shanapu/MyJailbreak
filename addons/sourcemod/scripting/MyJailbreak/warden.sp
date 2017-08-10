@@ -66,6 +66,7 @@ ConVar gc_bSounds;
 ConVar gc_bOverlays;
 ConVar gc_sWarden;
 ConVar gc_sUnWarden;
+ConVar gc_bRemoveLR;
 ConVar gc_sModelPathWarden;
 ConVar gc_bModel;
 ConVar gc_bBetterNotes;
@@ -209,6 +210,7 @@ public void OnPluginStart()
 	gc_iCoolDownLimit = AutoExecConfig_CreateConVar("sm_warden_cooldown_limit", "3", "0 - disabled, rounds player can't become warden after he reached the warden limit (sm_warden_limit)", _, true, 0.0);
 	gc_iCoolDownRemove = AutoExecConfig_CreateConVar("sm_warden_cooldown_remove", "3", "0 - disabled, rounds player can't become warden after he was vote out or removed by admin", _, true, 0.0);
 	gc_bStayWarden = AutoExecConfig_CreateConVar("sm_warden_stay", "1", "0 - disabled, 1 - enable warden stay after round end", _, true, 0.0, true, 1.0);
+	gc_bRemoveLR = AutoExecConfig_CreateConVar("sm_warden_remove_lr", "0", "0 - disabled, 1 - enable warden will be removed on last request", _, true, 0.0, true, 1.0);
 	gc_fCMDCooldown = AutoExecConfig_CreateConVar("sm_warden_cooldown_roundstart", "15.0", "Time in seconds a the warden of last round must wait until become warden again, to give other player chance to be warden (need sm_warden_stay '0')", _, true, 5.0);
 	gc_bBetterNotes = AutoExecConfig_CreateConVar("sm_warden_better_notifications", "1", "0 - disabled, 1 - Will use hint and center text", _, true, 0.0, true, 1.0);
 	gc_bModel = AutoExecConfig_CreateConVar("sm_warden_model", "1", "0 - disabled, 1 - enable warden model", 0, true, 0.0, true, 1.0);
@@ -455,7 +457,7 @@ public void OnLibraryAdded(const char[] name)
 // Become Warden
 public Action Command_BecomeWarden(int client, int args)
 {
-	if (gc_bPlugin.BoolValue)  // "sm_warden_enable" "1"
+	if (gc_bPlugin.BoolValue || g_bIsLR)  // "sm_warden_enable" "1"
 	{
 		if (g_iWarden == -1)  // Is there already a warden
 		{
@@ -884,6 +886,13 @@ public void OnAvailableLR(int Announced)
 	GunDropPrevention_OnAvailableLR(Announced);
 	Mute_OnAvailableLR(Announced);
 	HandCuffs_OnAvailableLR(Announced);
+	Deputy_OnAvailableLR(Announced);
+
+	if (gc_bRemoveLR.BoolValue)
+	{
+		RemoveTheWarden();
+		Forward_OnWardenRemovedByAdmin(0); // 0 = console
+	}
 }
 
 // Check Keyboard Input for modules
