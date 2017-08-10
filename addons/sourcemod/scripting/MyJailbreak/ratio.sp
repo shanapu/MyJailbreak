@@ -54,6 +54,7 @@ ConVar gc_sCustomCommandRemove;
 ConVar gc_sCustomCommandClear;
 ConVar gc_sCustomCommandPrisoner;
 ConVar gc_sCustomCommandSpec;
+ConVar gc_sCustomCommandNoCT;
 ConVar gc_sAdminFlag;
 ConVar gc_bToggle;
 ConVar gc_bToggleAnnounce;
@@ -71,6 +72,7 @@ ConVar gc_bRespawn;
 // Booleans
 bool g_bRatioEnable = true;
 bool g_bQueueCooldown[MAXPLAYERS+1] = {false, ...};
+bool g_bEnableGuard[MAXPLAYERS+1] = {true, ...};
 bool gp_bWarden = false;
 
 // Handles
@@ -110,6 +112,7 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_viewqueue", Command_ViewGuardQueue, "Allows a player to show queue to CT");
 	RegConsoleCmd("sm_leavequeue", Command_LeaveQueue, "Allows a player to leave queue to CT");
 	RegConsoleCmd("sm_ratio", Command_ToggleRatio, "Allows the admin toggle the ratio check and player to see if ratio is enabled");
+	RegConsoleCmd("sm_noguard", Command_NoGuard, "Allows a player to choose to become a random guard when guard queue is empty");
 
 	// Admin commands
 	RegAdminCmd("sm_removequeue", AdminCommand_RemoveFromQueue, ADMFLAG_GENERIC, "Allows the admin to remove player from queue to CT");
@@ -128,6 +131,7 @@ public void OnPluginStart()
 	gc_sCustomCommandClear = AutoExecConfig_CreateConVar("sm_ratio_cmds_clear", "cq", "Set your custom chat command for admins to clear the guard queue (!clearqueue (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_sCustomCommandPrisoner = AutoExecConfig_CreateConVar("sm_ratio_cmds_prisoner", "t,terror", "Set your custom chat command for player to move to prisoner (!prisoner (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_sCustomCommandSpec = AutoExecConfig_CreateConVar("sm_ratio_cmds_spec", "spec", "Set your custom chat command for player to move to spectator (!spectator (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
+	gc_sCustomCommandNoCT = AutoExecConfig_CreateConVar("sm_ratio_cmds_noct", "noct", "Set your custom chat command for player to move to spectator (!noguard (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_fPrisonerPerGuard = AutoExecConfig_CreateConVar("sm_ratio_T_per_CT", "2", "How many prisoners for each guard.", _, true, 1.0);
 	gc_bVIPQueue = AutoExecConfig_CreateConVar("sm_ratio_flag", "1", "0 - disabled, 1 - enable VIPs moved to front of queue", _, true, 0.0, true, 1.0);
 	gc_bForceTConnect = AutoExecConfig_CreateConVar("sm_ratio_force_t", "1", "0 - disabled, 1 - force player on connect to join T side", _, true, 0.0, true, 1.0);
@@ -262,6 +266,20 @@ public void OnConfigsExecuted()
 		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
 		{
 			RegConsoleCmd(sCommand, Command_ToggleRatio, "Allows the admin toggle the ratio check and player to see if ratio is enabled");
+		}
+	}
+
+	// toggle enable ct
+	gc_sCustomCommandNoCT.GetString(sCommands, sizeof(sCommands));
+	ReplaceString(sCommands, sizeof(sCommands), " ", "");
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+
+	for (int i = 0; i < iCount; i++)
+	{
+		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		{
+			RegConsoleCmd(sCommand, Command_NoGuard, "Allows a player to choose to become a random guard when guard queue is empty");
 		}
 	}
 
@@ -418,6 +436,12 @@ public Action Command_JoinGuardQueue(int client, int iArgNum)
 		return Plugin_Handled;
 	}
 
+	if (!g_bEnableGuard[client])
+	{
+		g_bEnableGuard[client] = true;
+		CReplyToCommand(client, "%t %t", "ratio_tag", "ratio_guard_enable");
+	}
+
 	if (!CanClientJoinGuards(client))
 	{
 		int iIndex = FindValueInArray(g_aGuardQueue, client);
@@ -565,6 +589,22 @@ public Action Command_ToggleRatio(int client, int args)
 	return Plugin_Handled;
 }
 
+public Action Command_NoGuard(int client, int args)
+{
+	if (!g_bEnableGuard[client])
+	{
+		g_bEnableGuard[client] = true;
+		CReplyToCommand(client, "%t %t", "ratio_tag", "ratio_guard_enable");
+	}
+	else
+	{
+		g_bEnableGuard[client] = false;
+		CReplyToCommand(client, "%t %t", "ratio_tag", "ratio_guard_disable");
+	}
+
+	return Plugin_Handled;
+}
+
 /******************************************************************************
                    EVENTS
 ******************************************************************************/
@@ -645,6 +685,12 @@ public Action Event_OnJoinTeam(int client, const char[] szCommand, int iArgCount
 	{
 		ClientCommand(client, "play %s", g_sRestrictedSound);
 		return Plugin_Handled;
+	}
+
+	if (!g_bEnableGuard[client])
+	{
+		g_bEnableGuard[client] = true;
+		CReplyToCommand(client, "%t %t", "ratio_tag", "ratio_guard_enable");
 	}
 
 	if (!CanClientJoinGuards(client))
@@ -1090,6 +1136,10 @@ void FixTeamRatio()
 		else if (gc_bBalanceTerror.BoolValue)
 		{
 			client = GetRandomClientFromTeam(CS_TEAM_T);
+			while (!g_bEnableGuard[client])
+			{
+				client = GetRandomClientFromTeam(CS_TEAM_T);
+			}
 
 			CPrintToChatAll("%t %t", "ratio_tag", "ratio_random", client);
 		}
