@@ -78,7 +78,7 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_hud", Command_HUD, "Allows player to toggle the hud display.");
 
 	// AutoExecConfig
-	AutoExecConfig_SetFile("HUD", "MyJailbreak");
+	AutoExecConfig_SetFile("PlayerHUD", "MyJailbreak");
 	AutoExecConfig_SetCreateFile(true);
 
 	AutoExecConfig_CreateConVar("sm_hud_version", MYJB_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
