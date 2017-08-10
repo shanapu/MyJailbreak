@@ -195,6 +195,13 @@ public int Handler_KillMenu(Menu menu, MenuAction action, int client, int Positi
 			{
 				int i = GetRandomPlayer(CS_TEAM_T);
 				if (gp_bHosties && gp_bLastRequest) if (IsClientRebel(i)) i = GetRandomPlayerNonRebel(CS_TEAM_T);
+				
+				while (!ClientViews(client, i))
+				{
+					i = GetRandomPlayer(CS_TEAM_T);
+					if (gp_bHosties && gp_bLastRequest) if (IsClientRebel(i)) i = GetRandomPlayerNonRebel(CS_TEAM_T);
+				}
+				
 				if (i > 0)
 				{
 					CreateTimer(1.0, Timer_KillPlayer, i);
