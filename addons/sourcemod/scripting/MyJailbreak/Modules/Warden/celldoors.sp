@@ -94,9 +94,7 @@ public Action Command_OpenDoors(int client, int args)
 				{
 					CPrintToChatAll("%t %t", "warden_tag", "warden_dooropen");
 					SJD_OpenDoors();
-					if (g_hTimerOpen != null)
-					KillTimer(g_hTimerOpen);
-					g_hTimerOpen = null;
+					delete g_hTimerOpen;
 				}
 				else CReplyToCommand(client, "%t %t", "warden_tag", "warden_dooropen_unavailable");
 			}
@@ -139,6 +137,7 @@ public void CellDoors_Event_RoundStart(Event event, const char[] name, bool dont
 	{
 		if (gp_bSmartJailDoors) if (SJD_IsCurrentMapConfigured())
 		{
+			delete g_hTimerOpen;
 			g_iOpenTimer = gc_iOpenTimer.IntValue;
 			g_hTimerOpen = CreateTimer(1.0, Timer_OpenCounter, _, TIMER_REPEAT);
 		}
@@ -205,6 +204,7 @@ public Action Timer_OpenCounter(Handle timer, Handle pack)
 					SJD_OpenDoors();
 					CPrintToChatAll("%t %t", "warden_tag", "warden_openauto");
 
+					g_hTimerOpen = null;
 					return Plugin_Stop;
 				}
 			}
@@ -217,6 +217,7 @@ public Action Timer_OpenCounter(Handle timer, Handle pack)
 				}
 				else CPrintToChatAll("%t %t", "warden_tag", "warden_opentime");
 
+				g_hTimerOpen = null;
 				return Plugin_Stop;
 			}
 		}
@@ -224,6 +225,7 @@ public Action Timer_OpenCounter(Handle timer, Handle pack)
 		return Plugin_Continue;
 	}
 
+	g_hTimerOpen = null;
 	return Plugin_Stop;
 }
 

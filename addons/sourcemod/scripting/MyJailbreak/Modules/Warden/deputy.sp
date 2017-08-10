@@ -417,7 +417,7 @@ public void Deputy_OnAvailableLR(int Announced)
 {
 	g_bIsLR = true;
 
-	if (gc_bRemoveLRDeputy.BoolValue)
+	if (gc_bRemoveLRDeputy.BoolValue && g_iDeputy != -1)
 	{
 		RemoveTheDeputy();
 		Forward_OnDeputyRemoved(0); // 0 = console
