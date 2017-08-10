@@ -47,6 +47,7 @@ bool g_bIsLateLoad = false;
 // Console Variables
 ConVar gc_bPlugin;
 ConVar gc_sCustomCommandHUD;
+ConVar gc_bAlive;
 
 // Booleans
 g_bEnableHud[MAXPLAYERS+1] = true;
@@ -82,6 +83,7 @@ public void OnPluginStart()
 
 	AutoExecConfig_CreateConVar("sm_hud_version", MYJB_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_hud_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true, 0.0, true, 1.0);
+	gc_bAlive = AutoExecConfig_CreateConVar("sm_hud_alive", "1", "0 - show hud only to alive player, 1 - show hud to dead & alive player", _, true, 0.0, true, 1.0);
 	gc_sCustomCommandHUD = AutoExecConfig_CreateConVar("sm_hud_cmds", "HUD", "Set your custom chat commands for toggle HUD(!hud (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 
 	AutoExecConfig_ExecuteFile();
@@ -215,7 +217,7 @@ void ShowHUD()
 
 	if (gc_bPlugin.BoolValue)
 	{
-		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, true))
+		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, gc_bAlive.BoolValue))
 		{
 			if (g_bEnableHud[i] && !IsClientInLastRequest(i))
 			{
