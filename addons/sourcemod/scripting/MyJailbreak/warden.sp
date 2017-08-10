@@ -1199,25 +1199,28 @@ public int Handler_SetWardenOverwrite(Menu menu, MenuAction action, int client, 
 // Choose a random Warden after a defined time
 public Action Timer_ChooseRandom(Handle timer)
 {
-	if (gc_bPlugin.BoolValue)
-	{
-		if (g_iWarden == -1)
-		{
-			if (gc_bChooseRandom.BoolValue)
-			{
-				int i = GetRandomPlayer(CS_TEAM_CT);
+	if (!gc_bPlugin.BoolValue)
+		return;
 
-				if (i > 0)
-				{
-					if (SetTheWarden(i, 0) != Plugin_Handled)
-					{
-						CPrintToChatAll("%t %t", "warden_tag", "warden_randomwarden");
-					}
-					else CreateTimer (0.1, Timer_ChooseRandom);
-				}
-			}
-		}
+	if (g_bIsLR)
+		return;
+
+	if (g_iWarden != -1)
+		return;
+
+	if (!gc_bChooseRandom.BoolValue)
+		return;
+
+	int i = GetRandomPlayer(CS_TEAM_CT);
+
+	if (i < 1)
+		return;
+
+	if (SetTheWarden(i, 0) != Plugin_Handled)
+	{
+		CPrintToChatAll("%t %t", "warden_tag", "warden_randomwarden");
 	}
+	else CreateTimer (0.1, Timer_ChooseRandom);
 
 	if (g_hTimerRandom != null)
 		KillTimer(g_hTimerRandom);
