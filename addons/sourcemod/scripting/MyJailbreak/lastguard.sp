@@ -40,6 +40,7 @@
 #include <myweapons>
 #include <hosties>
 #include <lastrequest>
+#include <CustomPlayerSkins>
 #include <smartjaildoors>
 #define REQUIRE_PLUGIN
 
@@ -56,6 +57,7 @@ bool g_bMinCT = false;
 bool gp_bMyJailBreak;
 bool gp_bHosties;
 bool gp_bSmartJailDoors;
+bool gp_bCustomPlayerSkins;
 bool gp_bMyWeapons;
 
 // Console Variables
@@ -67,6 +69,7 @@ ConVar gc_iMinCT;
 ConVar gc_fBeaconTime;
 ConVar gc_iTruceTime;
 ConVar gc_iTime;
+ConVar gc_bWallhack;
 ConVar gc_iTimePerT;
 ConVar gc_bFreeze;
 ConVar gc_iHPmultipler;
@@ -126,6 +129,7 @@ public void OnPluginStart()
 	gc_iHPmultipler = AutoExecConfig_CreateConVar("sm_lastguard_hp", "50", "How many percent of the combined Terror Health the CT get? (3 terror alive with 100HP = 300HP / 50% = CT get 150HP)", _, true, 0.0);
 	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_lastguard_trucetime", "10", "Time in seconds players can't deal damage. Half of this time you are freezed", _, true, 8.0);
 	gc_iTime = AutoExecConfig_CreateConVar("sm_lastguard_time", "5", "Time in minutes to end the last guard rule - 0 = keep original time", _, true, 0.0);
+	gc_bWallhack = AutoExecConfig_CreateConVar("sm_lastguard_wallhack", "1", "0 - disabled, 1 - enable wallhack for last guard", _, true,  0.0, true, 1.0);
 	gc_fBeaconTime = AutoExecConfig_CreateConVar("sm_lastguard_beacon_time", "300", "Time in seconds until the beacon turned on (set to 0 to disable)", _, true, 0.0);
 	gc_iTimePerT = AutoExecConfig_CreateConVar("sm_lastguard_time_per_T", "60", "Time in seconds to add to sm_lastguard_time per living terror - 0 = no extra time per t", _, true, 0.0);
 	gc_bFreeze = AutoExecConfig_CreateConVar("sm_lastguard_freeze", "0", "0 - disabled, 1 - Freeze all players the half of trucetime.", _, true, 0.0, true, 1.0);
@@ -189,6 +193,7 @@ public void OnAllPluginsLoaded()
 	gp_bMyJailBreak = LibraryExists("myjailbreak");
 	gp_bHosties = LibraryExists("hosties");
 	gp_bSmartJailDoors = LibraryExists("smartjaildoors");
+	gp_bCustomPlayerSkins = LibraryExists("CustomPlayerSkins");
 	gp_bMyWeapons = LibraryExists("myweapons");
 }
 
@@ -202,6 +207,9 @@ public void OnLibraryRemoved(const char[] name)
 
 	if (StrEqual(name, "smartjaildoors"))
 		gp_bSmartJailDoors = false;
+
+	if (StrEqual(name, "CustomPlayerSkins"))
+		gp_bCustomPlayerSkins = false;
 
 	if (StrEqual(name, "myweapons"))
 		gp_bMyWeapons = false;
@@ -217,6 +225,9 @@ public void OnLibraryAdded(const char[] name)
 
 	if (StrEqual(name, "smartjaildoors"))
 		gp_bSmartJailDoors = true;
+
+	if (StrEqual(name, "CustomPlayerSkins"))
+		gp_bCustomPlayerSkins = true;
 
 	if (StrEqual(name, "myweapons"))
 		gp_bMyWeapons = true;
@@ -340,6 +351,11 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 		{
 			SetEntData(i, g_iCollision_Offset, 0, 4, true);
+
+			if (gc_bWallhack.BoolValue && gp_bCustomPlayerSkins)
+			{
+				UnhookWallhack(i);
+			}
 		}
 
 		delete g_hTimerTruce;
@@ -466,6 +482,11 @@ void StartLastGuard()
 			if (gp_bHosties)
 			{
 				ChangeRebelStatus(i, true);
+			}
+
+			if (gc_bWallhack.BoolValue && gp_bCustomPlayerSkins)
+			{
+				Setup_WallhackSkin(i);
 			}
 		}
 
@@ -703,4 +724,88 @@ public Action Timer_BeaconOn(Handle timer)
 	}
 
 	g_hTimerBeacon = null;
+}
+
+
+
+// Perpare client for wallhack
+void Setup_WallhackSkin(int client)
+{
+	char sModel[PLATFORM_MAX_PATH];
+	GetClientModel(client, sModel, sizeof(sModel));
+
+	int iSkin = CPS_SetSkin(client, sModel, CPS_RENDER);
+	if (iSkin == -1)
+	{
+		return;
+	}
+
+	if (SDKHookEx(iSkin, SDKHook_SetTransmit, OnSetTransmit_Wallhack))
+	{
+		Setup_Wallhack(iSkin);
+	}
+}
+
+
+// set client wallhacked
+void Setup_Wallhack(int iSkin)
+{
+	int iOffset;
+
+	if ((iOffset = GetEntSendPropOffs(iSkin, "m_clrGlow")) == -1)
+		return;
+
+	SetEntProp(iSkin, Prop_Send, "m_bShouldGlow", true, true);
+	SetEntProp(iSkin, Prop_Send, "m_nGlowStyle", 0);
+	SetEntPropFloat(iSkin, Prop_Send, "m_flGlowMaxDist", 10000000.0);
+
+	int iRed = 254;
+	int iGreen = 0;
+	int iBlue = 0;
+
+	SetEntData(iSkin, iOffset, iRed, _, true);
+	SetEntData(iSkin, iOffset + 1, iGreen, _, true);
+	SetEntData(iSkin, iOffset + 2, iBlue, _, true);
+	SetEntData(iSkin, iOffset + 3, 255, _, true);
+}
+
+// Who can see wallhack if vaild
+public Action OnSetTransmit_Wallhack(int iSkin, int client)
+{
+	if (!IsPlayerAlive(client) || GetClientTeam(client) != CS_TEAM_CT)
+	{
+		return Plugin_Handled;
+	}
+
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+	{
+		if (!CPS_HasSkin(i))
+		{
+			continue;
+		}
+
+		if (EntRefToEntIndex(CPS_GetSkin(i)) != iSkin)
+		{
+			continue;
+		}
+
+		return Plugin_Continue;
+	}
+
+	return Plugin_Handled;
+}
+
+
+// remove wallhack
+void UnhookWallhack(int client)
+{
+	if (IsValidClient(client, false, true))
+	{
+		int iSkin = CPS_GetSkin(client);
+		if (iSkin != INVALID_ENT_REFERENCE)
+		{
+			SetEntProp(iSkin, Prop_Send, "m_bShouldGlow", false, true);
+			SDKUnhook(iSkin, SDKHook_SetTransmit, OnSetTransmit_Wallhack);
+		}
+	}
 }
