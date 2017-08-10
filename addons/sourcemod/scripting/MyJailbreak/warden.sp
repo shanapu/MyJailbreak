@@ -888,7 +888,7 @@ public void OnAvailableLR(int Announced)
 	HandCuffs_OnAvailableLR(Announced);
 	Deputy_OnAvailableLR(Announced);
 
-	if (gc_bRemoveLR.BoolValue)
+	if (gc_bRemoveLR.BoolValue && g_iWarden != -1)
 	{
 		RemoveTheWarden();
 		Forward_OnWardenRemovedByAdmin(0); // 0 = console
