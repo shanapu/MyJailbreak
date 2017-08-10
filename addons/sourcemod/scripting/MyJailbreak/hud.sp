@@ -211,10 +211,28 @@ void ShowHUD()
 	int allCT = GetTeamClientCount(CS_TEAM_CT);
 	int aliveT = GetAlivePlayersCount(CS_TEAM_T);
 	int allT = GetTeamClientCount(CS_TEAM_T);
-
+	int iLastCT = -1;
+	char sLastCT[32];
+	char sWarden[32];
+	
+	if (MyJailbreak_IsLastGuardRule())
+	{
+		iLastCT = GetLastAlive(CS_TEAM_CT);
+		GetClientName(iLastCT, sLastCT, sizeof(sLastCT));
+		ReplaceString(sLastCT, sizeof(sLastCT), "<", "", false);
+		ReplaceString(sLastCT, sizeof(sLastCT), "%", "", false);
+	}
+	
+	if (warden != -1)
+	{
+		GetClientName(warden, sWarden, sizeof(sWarden));
+		ReplaceString(sWarden, sizeof(sWarden), "<", "", false);
+		ReplaceString(sWarden, sizeof(sWarden), "%", "", false);
+	}
+	
 	char EventDay[64];
 	MyJailbreak_GetEventDayName(EventDay);
-
+	
 	if (gc_bPlugin.BoolValue)
 	{
 		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, gc_bAlive.BoolValue))
@@ -223,17 +241,15 @@ void ShowHUD()
 			{
 				if (MyJailbreak_IsLastGuardRule())
 				{
-					int lastCT = GetLastAlive(CS_TEAM_CT);
-
-					if (lastCT != -1)
+					if (iLastCT != -1)
 					{
 						if (MyJailbreak_IsEventDayPlanned())
 						{
-							PrintHintText(i, "<font face='Arial' color='#006699'>%t </font>%N</font>\n<font face='Arial' color='#B980EF'>%t</font> %s\n<font color='#5E97D8'>%t</font> %i/%i\t<font color='#E3AD39'>%t</font> %i/%i\n", "hud_lastCT", lastCT, "hud_planned", EventDay, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
+							PrintHintText(i, "<font face='Arial' color='#006699'>%t </font>%s</font>\n<font face='Arial' color='#B980EF'>%t</font> %s\n<font color='#5E97D8'>%t</font> %i/%i\t<font color='#E3AD39'>%t</font> %i/%i\n", "hud_lastCT", sLastCT, "hud_planned", EventDay, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
 						}
 						else
 						{
-							PrintHintText(i, "<font face='Arial' color='#006699'>%t </font>%N</font>\n<font color='#5E97D8'>%t</font> %i/%i\t<font color='#E3AD39'>%t</font> %i/%i\n", "hud_lastCT", lastCT, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
+							PrintHintText(i, "<font face='Arial' color='#006699'>%t </font>%s</font>\n<font color='#5E97D8'>%t</font> %i/%i\t<font color='#E3AD39'>%t</font> %i/%i\n", "hud_lastCT", sLastCT, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
 						}
 					}
 				}
@@ -256,11 +272,11 @@ void ShowHUD()
 				{
 					if (MyJailbreak_IsEventDayPlanned())
 					{
-						PrintHintText(i, "<font face='Arial' color='#006699'>%t </font>%N\n<font face='Arial' color='#B980EF'>%t</font> %s\n<font color='#5E97D8'>%t</font> %i/%i\t<font color='#E3AD39'>%t</font> %i/%i\n", "hud_warden", warden, "hud_planned", EventDay, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
+						PrintHintText(i, "<font face='Arial' color='#006699'>%t </font>%s\n<font face='Arial' color='#B980EF'>%t</font> %s\n<font color='#5E97D8'>%t</font> %i/%i\t<font color='#E3AD39'>%t</font> %i/%i\n", "hud_warden", sWarden, "hud_planned", EventDay, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
 					}
 					else
 					{
-						PrintHintText(i, "<font face='Arial' color='#006699'>%t </font>%N\n<font color='#5E97D8'>%t</font> %i/%i\t<font color='#E3AD39'>%t</font> %i/%i\n", "hud_warden", warden, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
+						PrintHintText(i, "<font face='Arial' color='#006699'>%t </font>%s\n<font color='#5E97D8'>%t</font> %i/%i\t<font color='#E3AD39'>%t</font> %i/%i\n", "hud_warden", sWarden, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
 					}
 				}
 			}
