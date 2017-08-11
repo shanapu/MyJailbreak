@@ -220,14 +220,12 @@ void ShowHUD()
 		iLastCT = GetLastAlive(CS_TEAM_CT);
 		GetClientName(iLastCT, sLastCT, sizeof(sLastCT));
 		ReplaceString(sLastCT, sizeof(sLastCT), "<", "", false);
-		ReplaceString(sLastCT, sizeof(sLastCT), "%", "", false);
 	}
 	
 	if (warden != -1)
 	{
 		GetClientName(warden, sWarden, sizeof(sWarden));
 		ReplaceString(sWarden, sizeof(sWarden), "<", "", false);
-		ReplaceString(sWarden, sizeof(sWarden), "%", "", false);
 	}
 	
 	char EventDay[64];
