@@ -622,10 +622,7 @@ public void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast
 			EmitSoundToAllAny(g_sUnWarden);
 		}
 
-		if (g_hTimerRandom != null)
-		KillTimer(g_hTimerRandom);
-
-		g_hTimerRandom = null;
+		delete g_hTimerRandom;
 		g_hTimerRandom = CreateTimer(gc_fRandomTimer.FloatValue, Timer_ChooseRandom);
 
 		g_iLastWarden = g_iWarden;
@@ -658,6 +655,7 @@ public void Event_PostRoundStart(Event event, const char[] name, bool dontBroadc
 	{
 		if ((g_iWarden == -1) && gc_bBecomeWarden.BoolValue)
 		{
+			delete g_hTimerRandom;
 			g_hTimerRandom = CreateTimer(gc_fRandomTimer.FloatValue, Timer_ChooseRandom);
 
 			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, false)) if (GetClientTeam(i) == CS_TEAM_CT)
@@ -965,9 +963,7 @@ Action SetTheWarden(int client, int caller)
 			EmitSoundToAllAny(g_sWarden);
 		}
 
-		if (g_hTimerRandom != null)
-		KillTimer(g_hTimerRandom);
-		g_hTimerRandom = null;
+	//	delete g_hTimerRandom;
 	}
 	else CReplyToCommand(client, "%t %t", "warden_tag", "warden_disabled");
 
@@ -980,10 +976,7 @@ void RemoveTheWarden()
 	CreateTimer(0.1, Timer_RemoveColor, g_iWarden);
 	SetEntityModel(g_iWarden, g_sModelPathPrevious);
 
-	if (g_hTimerRandom != null)
-		KillTimer(g_hTimerRandom);
-	g_hTimerRandom = null;
-
+	delete g_hTimerRandom;
 	g_hTimerRandom = CreateTimer(gc_fRandomTimer.FloatValue, Timer_ChooseRandom);
 
 	if (gc_bSounds.BoolValue)
@@ -1199,22 +1192,13 @@ public int Handler_SetWardenOverwrite(Menu menu, MenuAction action, int client, 
 // Choose a random Warden after a defined time
 public Action Timer_ChooseRandom(Handle timer)
 {
-	if (!gc_bPlugin.BoolValue)
-		return;
-
-	if (g_bIsLR)
-		return;
-
-	if (g_iWarden != -1)
-		return;
-
-	if (!gc_bChooseRandom.BoolValue)
-		return;
+	if (!gc_bPlugin.BoolValue || g_bIsLR || g_iWarden != -1 || !gc_bChooseRandom.BoolValue)
+	{
+		g_hTimerRandom = null;
+		return Plugin_Stop;
+	}
 
 	int i = GetRandomPlayer(CS_TEAM_CT);
-
-	if (i < 1)
-		return;
 
 	if (SetTheWarden(i, 0) != Plugin_Handled)
 	{
@@ -1222,9 +1206,8 @@ public Action Timer_ChooseRandom(Handle timer)
 	}
 	else CreateTimer (0.1, Timer_ChooseRandom);
 
-	if (g_hTimerRandom != null)
-		KillTimer(g_hTimerRandom);
 	g_hTimerRandom = null;
+	return Plugin_Stop;
 }
 
 public Action Timer_CMDCoolDown(Handle timer, int client)

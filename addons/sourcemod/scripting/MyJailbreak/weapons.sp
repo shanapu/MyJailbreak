@@ -184,7 +184,6 @@ public void OnPluginStart()
 	gc_bJBmenu = AutoExecConfig_CreateConVar("sm_weapons_jbmenu", "1", "0 - disabled, 1 - enable autoopen the MyJailbreak !menu after weapon given.", _, true, 0.0, true, 1.0);
 	gc_bCleanMenu = AutoExecConfig_CreateConVar("sm_weapons_cleanmenu", "1", "remove 1. & 2. on first page, to avoid conflict with weapon switch", _, true, 0.0, true, 1.0);
 
-
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
 

@@ -629,7 +629,6 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		return;
 	}
 
-
 	g_bIsDealDamage = true;
 	g_bStartDealDamage = false;
 

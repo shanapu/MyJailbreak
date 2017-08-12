@@ -137,7 +137,6 @@ public void CellDoors_Event_RoundStart(Event event, const char[] name, bool dont
 	{
 		if (gp_bSmartJailDoors) if (SJD_IsCurrentMapConfigured())
 		{
-			delete g_hTimerOpen;
 			g_iOpenTimer = gc_iOpenTimer.IntValue;
 			g_hTimerOpen = CreateTimer(1.0, Timer_OpenCounter, _, TIMER_REPEAT);
 		}
