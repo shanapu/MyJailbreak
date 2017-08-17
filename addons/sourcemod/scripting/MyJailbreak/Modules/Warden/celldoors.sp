@@ -92,9 +92,16 @@ public Action Command_OpenDoors(int client, int args)
 			{
 				if (gp_bSmartJailDoors) if (SJD_IsCurrentMapConfigured())
 				{
-					CPrintToChatAll("%t %t", "warden_tag", "warden_dooropen");
 					SJD_OpenDoors();
-					delete g_hTimerOpen;
+
+				//	delete g_hTimerOpen; // why delete don't work?
+					if (g_hTimerOpen != null)
+					{
+						KillTimer(g_hTimerOpen);
+					}
+					g_hTimerOpen = null;
+
+					CPrintToChatAll("%t %t", "warden_tag", "warden_dooropen");
 				}
 				else CReplyToCommand(client, "%t %t", "warden_tag", "warden_dooropen_unavailable");
 			}
@@ -115,8 +122,9 @@ public Action Command_CloseDoors(int client, int args)
 			{
 				if (gp_bSmartJailDoors) if (SJD_IsCurrentMapConfigured()) 
 				{
-					CPrintToChatAll("%t %t", "warden_tag", "warden_doorclose");
 					SJD_CloseDoors();
+
+					CPrintToChatAll("%t %t", "warden_tag", "warden_doorclose");
 				}
 				else CReplyToCommand(client, "%t %t", "warden_tag", "warden_doorclose_unavailable");
 			}
@@ -230,5 +238,10 @@ public Action Timer_OpenCounter(Handle timer, Handle pack)
 
 public void SJD_DoorsOpened(int caller, int activator)
 {
-	delete g_hTimerOpen;
+//	delete g_hTimerOpen; // why delete don't work?
+	if (g_hTimerOpen != null)
+	{
+		KillTimer(g_hTimerOpen);
+	}
+	g_hTimerOpen = null;
 }

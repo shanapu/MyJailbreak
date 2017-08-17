@@ -45,6 +45,9 @@ stock bool IsValidClient(int client, bool bAllowBots = false, bool bAllowDead = 
 // Easy precache & prepare download for decals
 stock void PrecacheDecalAnyDownload(char[] sDecal)
 {
+	if (strlen(sDecal) == 0)
+		return;
+
 	char sBuffer[256];
 	Format(sBuffer, sizeof(sBuffer), "%s.vmt", sDecal);
 	PrecacheDecal(sBuffer, true);
@@ -61,6 +64,9 @@ stock void PrecacheDecalAnyDownload(char[] sDecal)
 // Easy precache & prepare download for models (icons)
 stock void PrecacheModelAnyDownload(char[] sModel)
 {
+	if (strlen(sModel) == 0)
+		return;
+
 	char sBuffer[256];
 	Format(sBuffer, sizeof(sBuffer), "materials/%s.vmt", sModel);
 	AddFileToDownloadsTable(sBuffer);
@@ -74,6 +80,9 @@ stock void PrecacheModelAnyDownload(char[] sModel)
 // Easy precache & prepare download for sounds
 stock void PrecacheSoundAnyDownload(char[] sSound)
 {
+	if (strlen(sSound) == 0)
+		return;
+
 	char sBuffer[256];
 	PrecacheSoundAny(sSound);
 	Format(sBuffer, sizeof(sBuffer), "sound/%s", sSound);

@@ -165,7 +165,10 @@ public void HandCuffs_OnSettingChanged(Handle convar, const char[] oldValue, con
 
 public void HandCuffs_Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
-	if (gc_bHandCuff.BoolValue && !g_bIsLR && gc_bStayWarden.BoolValue)
+	if (!gc_bPlugin.BoolValue || !gc_bHandCuff.BoolValue)
+		return;
+
+	if (!g_bIsLR && gc_bStayWarden.BoolValue)
 	{
 		if (g_iWarden != -1) GivePlayerItem(g_iWarden, "weapon_taser");
 		if (g_iDeputy != -1) GivePlayerItem(g_iDeputy, "weapon_taser");
@@ -183,6 +186,9 @@ public void HandCuffs_Event_RoundStart(Event event, const char[] name, bool dont
 
 public void HandCuffs_Event_ItemEquip(Event event, const char[] name, bool dontBroadcast)
 {
+	if (!gc_bPlugin.BoolValue || !gc_bHandCuff.BoolValue)
+		return;
+
 	int client = GetClientOfUserId(event.GetInt("userid"));
 
 	char weapon[32];
@@ -197,6 +203,9 @@ public void HandCuffs_Event_ItemEquip(Event event, const char[] name, bool dontB
 
 public void HandCuffs_Event_PlayerTeamDeath(Event event, const char[] name, bool dontBroadcast) 
 {
+	if (!gc_bPlugin.BoolValue || !gc_bHandCuff.BoolValue)
+		return;
+
 	int client = GetClientOfUserId(event.GetInt("userid")); // Get the dead clients id
 
 	if (g_bCuffed[client])
@@ -211,9 +220,12 @@ public void HandCuffs_Event_PlayerTeamDeath(Event event, const char[] name, bool
 
 public void HandCuffs_Event_WeaponFire(Event event, char[] name, bool dontBroadcast)
 {
+	if (!gc_bPlugin.BoolValue || !gc_bHandCuff.BoolValue)
+		return;
+
 	int client = GetClientOfUserId(event.GetInt("userid"));
 
-	if (gc_bPlugin.BoolValue && gc_bHandCuff.BoolValue && (IsClientWarden(client) || (IsClientDeputy(client) && gc_bHandCuffDeputy.BoolValue)) && ((g_iPlayerHandCuffs[client] != 0) || ((g_iPlayerHandCuffs[client] == 0) && (g_iCuffed > 0))))
+	if ((IsClientWarden(client) || (IsClientDeputy(client) && gc_bHandCuffDeputy.BoolValue)) && ((g_iPlayerHandCuffs[client] != 0) || ((g_iPlayerHandCuffs[client] == 0) && (g_iCuffed > 0))))
 	{
 		char sWeapon[64];
 		event.GetString("weapon", sWeapon, sizeof(sWeapon));
@@ -401,7 +413,8 @@ public void HandCuffs_OnMapStart()
 		PrecacheSoundAnyDownload(g_sSoundBreakCuffsPath);
 		PrecacheSoundAnyDownload(g_sSoundUnLockCuffsPath);
 	}
-	if (gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayCuffsPath);
+	if (gc_bOverlays.BoolValue)
+		PrecacheDecalAnyDownload(g_sOverlayCuffsPath);
 }
 
 public void HandCuffs_OnClientDisconnect(int client)

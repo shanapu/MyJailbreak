@@ -58,7 +58,7 @@ forward Action warden_OnWardenCreate(int client, int caller);
 /*********************************************************
  * Called when a client become new warden
  *
- * @param client		The client who was warden
+ * @param client		The client who is new warden
  * @NoReturn
  *********************************************************/
 forward void warden_OnWardenCreatedByUser(int client);
@@ -67,7 +67,7 @@ forward void warden_OnWardenCreatedByUser(int client);
 /*********************************************************
  * Called when a admin set a new warden
  *
- * @param client		The client who was warden
+ * @param client		The client is new warden
  * @NoReturn
  *********************************************************/
 forward void warden_OnWardenCreatedByAdmin(int client);

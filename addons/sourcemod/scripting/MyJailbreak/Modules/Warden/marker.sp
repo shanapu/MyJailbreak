@@ -88,7 +88,7 @@ public void Marker_OnPluginStart()
 	// Hooks
 	HookEvent("item_equip", Marker_Event_ItemEquip);
 
-	CreateTimer(1.0, Timer_DrawMakers, _, TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
+	CreateTimer(1.0, Timer_DrawMakers, _, TIMER_REPEAT);
 
 	PrepareMarkerNames();
 }

@@ -99,11 +99,14 @@ public void Orders_OnMapStart()
 	{
 		char sSound[64];
 		char sOverlay[64];
-		
 		kvMenu.GetString("overlay", sOverlay, sizeof(sOverlay));
 		kvMenu.GetString("sound", sSound, sizeof(sSound));
-		if (strlen(sOverlay) > 0)PrecacheDecalAnyDownload(sOverlay);
-		if (strlen(sSound) > 0)PrecacheSoundAnyDownload(sSound);
+
+		if (strlen(sOverlay) > 0 && gc_bOverlays.BoolValue)
+			PrecacheDecalAnyDownload(sOverlay);
+
+		if (strlen(sSound) > 0 && gc_bSounds.BoolValue)
+			PrecacheSoundAnyDownload(sSound);
 	}
 	while (kvMenu.GotoNextKey());
 }

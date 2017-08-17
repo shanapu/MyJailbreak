@@ -457,7 +457,7 @@ public void OnLibraryAdded(const char[] name)
 // Become Warden
 public Action Command_BecomeWarden(int client, int args)
 {
-	if (gc_bPlugin.BoolValue || g_bIsLR)  // "sm_warden_enable" "1"
+	if (gc_bPlugin.BoolValue && !g_bIsLR)  // "sm_warden_enable" "1" and no last request
 	{
 		if (g_iWarden == -1)  // Is there already a warden
 		{
@@ -622,7 +622,13 @@ public void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast
 			EmitSoundToAllAny(g_sUnWarden);
 		}
 
-		delete g_hTimerRandom;
+	//	delete g_hTimerOpen; // why delete don't work?
+		if (g_hTimerRandom != null)
+		{
+			KillTimer(g_hTimerRandom);
+		}
+		g_hTimerRandom = null;
+
 		g_hTimerRandom = CreateTimer(gc_fRandomTimer.FloatValue, Timer_ChooseRandom);
 
 		g_iLastWarden = g_iWarden;
@@ -655,7 +661,13 @@ public void Event_PostRoundStart(Event event, const char[] name, bool dontBroadc
 	{
 		if ((g_iWarden == -1) && gc_bBecomeWarden.BoolValue)
 		{
-			delete g_hTimerRandom;
+			//	delete g_hTimerOpen; // why delete don't work?
+			if (g_hTimerRandom != null)
+			{
+				KillTimer(g_hTimerRandom);
+			}
+			g_hTimerRandom = null;
+
 			g_hTimerRandom = CreateTimer(gc_fRandomTimer.FloatValue, Timer_ChooseRandom);
 
 			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, false)) if (GetClientTeam(i) == CS_TEAM_CT)
@@ -915,6 +927,11 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 // Set a new warden
 Action SetTheWarden(int client, int caller)
 {
+	if(!IsValidClient(client, true, false))
+	{
+		return Plugin_Handled;
+	}
+
 	if (gc_bPlugin.BoolValue)
 	{
 		Action res = Plugin_Continue;
@@ -963,7 +980,12 @@ Action SetTheWarden(int client, int caller)
 			EmitSoundToAllAny(g_sWarden);
 		}
 
-	//	delete g_hTimerRandom;
+	//	delete g_hTimerOpen; // why delete don't work?
+		if (g_hTimerRandom != null)
+		{
+			KillTimer(g_hTimerRandom);
+		}
+		g_hTimerRandom = null;
 	}
 	else CReplyToCommand(client, "%t %t", "warden_tag", "warden_disabled");
 
@@ -976,7 +998,6 @@ void RemoveTheWarden()
 	CreateTimer(0.1, Timer_RemoveColor, g_iWarden);
 	SetEntityModel(g_iWarden, g_sModelPathPrevious);
 
-	delete g_hTimerRandom;
 	g_hTimerRandom = CreateTimer(gc_fRandomTimer.FloatValue, Timer_ChooseRandom);
 
 	if (gc_bSounds.BoolValue)
