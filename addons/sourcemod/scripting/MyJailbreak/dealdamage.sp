@@ -118,13 +118,13 @@ int g_iTruceTime;
 int g_iVoteCount;
 int g_iRound;
 int g_iMaxRound;
-int g_iDamageCT;
-int g_iDamageT;
+int g_iDamageBLUE;
+int g_iDamageRED;
 int g_iDamageDealed[MAXPLAYERS+1];
-int g_iBestT = -1;
-int g_iBestCT = -1;
-int g_iBestTdamage = 0;
-int g_iBestCTdamage = 0;
+int g_iBestRED = -1;
+int g_iBestBLUE = -1;
+int g_iBestREDdamage = 0;
+int g_iBestBLUEdamage = 0;
 int g_iBestPlayer = -1;
 int g_iTotalDamage = 0;
 int g_iCollision_Offset;
@@ -135,7 +135,6 @@ int g_iRedTeamCount;
 
 // Handles
 Handle g_hTimerTruce;
-Handle g_hTimerRound;
 Handle g_hTimerBeacon;
 
 // Strings    g_s = global string
@@ -640,6 +639,25 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
 	if (g_bIsDealDamage) // if event was running this round
 	{
+		CalcResults();
+		
+		if (g_iDamageBLUE > g_iDamageRED) 
+		{
+
+			for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (g_iClientTeam[i] == TEAM_RED)
+			{
+				ForcePlayerSuicide(i);
+			}
+		}
+		else if (g_iDamageBLUE < g_iDamageRED)
+		{
+
+			for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (g_iClientTeam[i] == TEAM_BLUE)
+			{
+				ForcePlayerSuicide(i);
+			}
+		}
+
 		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 		{
 			SetEntData(i, g_iCollision_Offset, 0, 4, true); // disbale noblock
@@ -653,19 +671,17 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			}
 		}
 
-		g_hTimerRound = null;
-		delete g_hTimerRound;
 		delete g_hTimerTruce; // kill start time if still running
 		delete g_hTimerBeacon;
 
 		int winner = event.GetInt("winner");
 		if (winner == 2)
 		{
-			PrintCenterTextAll("%t", "dealdamage_twin_nc", g_iDamageT);
+			PrintCenterTextAll("%t", "dealdamage_twin_nc", g_iDamageRED);
 		}
 		if (winner == 3)
 		{
-			PrintCenterTextAll("%t", "dealdamage_ctwin_nc", g_iDamageCT);
+			PrintCenterTextAll("%t", "dealdamage_ctwin_nc", g_iDamageBLUE);
 		}
 
 		if (g_iRound == g_iMaxRound) // if this was the last round
@@ -727,6 +743,17 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 	}
 }
 
+public Action CS_OnTerminateRound(float &delay,  CSRoundEndReason &reason)
+{
+	if (g_bIsDealDamage)   // TODO: does this trigger??
+	{
+		reason = CSRoundEnd_Draw;
+		return Plugin_Changed;
+	}
+
+	return Plugin_Continue;
+}
+
 /******************************************************************************
                    FORWARDS LISTEN
 ******************************************************************************/
@@ -765,7 +792,6 @@ public void OnMapEnd()
 	g_bStartDealDamage = false;
 
 	delete g_hTimerTruce; // kill start time if still running
-	delete g_hTimerRound; // kill start time if still running
 	delete g_hTimerBeacon;
 
 	g_iVoteCount = 0;
@@ -786,17 +812,17 @@ public Action OnTraceAttack(int victim, int &attacker, int &inflictor, float &da
 
 	if (g_iClientTeam[attacker] == TEAM_BLUE && g_iClientTeam[victim] == TEAM_RED && !g_bIsTruce)
 	{
-		g_iDamageCT = g_iDamageCT + RoundToCeil(damage);
+		g_iDamageBLUE = g_iDamageBLUE + RoundToCeil(damage);
 	}
 
 	if (g_iClientTeam[attacker] == TEAM_RED && g_iClientTeam[victim] == TEAM_BLUE && !g_bIsTruce)
 	{
-		g_iDamageT = g_iDamageT + RoundToCeil(damage);
+		g_iDamageRED = g_iDamageRED + RoundToCeil(damage);
 	}
 
 	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 	{
-		PrintHintText(i, "<font face='Arial' color='#0055FF'>%t  </font> %i %t \n<font face='Arial' color='#FF0000'>%t  </font> %i %t \n<font face='Arial' color='#00FF00'>%t  </font> %i %t", "dealdamage_ctdealed", g_iDamageCT, "dealdamage_hpdamage", "dealdamage_tdealed", g_iDamageT, "dealdamage_hpdamage", "dealdamage_clientdealed", g_iDamageDealed[i], "dealdamage_hpdamage");
+		PrintHintText(i, "<font face='Arial' color='#0055FF'>%t  </font> %i %t \n<font face='Arial' color='#FF0000'>%t  </font> %i %t \n<font face='Arial' color='#00FF00'>%t  </font> %i %t", "dealdamage_ctdealed", g_iDamageBLUE, "dealdamage_hpdamage", "dealdamage_tdealed", g_iDamageRED, "dealdamage_hpdamage", "dealdamage_clientdealed", g_iDamageDealed[i], "dealdamage_hpdamage");
 	}
 
 	if (g_iClientTeam[attacker] !=  g_iClientTeam[victim])
@@ -818,7 +844,8 @@ void StartEventRound(bool thisround)
 	g_iVoteCount = 0;
 
 	g_bHUD = FindConVar("sm_hud_enable");
-	g_iOldHUD = g_bHUD.IntValue;
+	if (g_bHUD != null)
+		g_iOldHUD = g_bHUD.IntValue;
 
 //	g_iOldRoundTime = g_iMPRoundTime.IntValue; // save original round time
 //	g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue; // set event round time
@@ -877,13 +904,13 @@ void PrepareDay(bool thisround)
 	g_iBlueTeamCount = 0;
 	g_iRedTeamCount = 0;
 
-	g_iBestT = 0;
-	g_iBestCT = 0;
-	g_iBestTdamage = 0;
-	g_iBestCTdamage = 0;
+	g_iBestRED = 0;
+	g_iBestBLUE = 0;
+	g_iBestREDdamage = 0;
+	g_iBestBLUEdamage = 0;
 	g_iBestPlayer = 0;
-	g_iDamageCT = 0;
-	g_iDamageT = 0;
+	g_iDamageBLUE = 0;
+	g_iDamageRED = 0;
 	g_iTotalDamage = 0;
 
 	if (gp_bSmartJailDoors)
@@ -1018,8 +1045,6 @@ void PrepareDay(bool thisround)
 
 	SetCvar("sm_hud_enable", 0); 
 
-	g_hTimerRound = CreateTimer (float(GameRules_GetProp("m_iRoundTime")-3), Timer_EndTheRound, _, TIMER_FLAG_NO_MAPCHANGE);
-
 	g_hTimerTruce = CreateTimer(1.0, Timer_StartEvent, _, TIMER_REPEAT);
 }
 
@@ -1091,26 +1116,26 @@ void SendResults(int client)
 	Format(info, sizeof(info), "%t %t", "dealdamage_tag", "dealdamage_most", g_iBestPlayer, g_iDamageDealed[g_iBestPlayer]);
 	if (gc_bChat.BoolValue) CPrintToChat(client, info);
 	InfoPanel.DrawText("                                   ");
-	Format(info, sizeof(info), "%t", "dealdamage_ct", g_iDamageCT);
+	Format(info, sizeof(info), "%t", "dealdamage_ct", g_iDamageBLUE);
 	InfoPanel.DrawText(info);
 	if (gc_bConsole.BoolValue) PrintToConsole(client, info);
-	Format(info, sizeof(info), "%t %t", "dealdamage_tag", "dealdamage_ct", g_iDamageCT);
+	Format(info, sizeof(info), "%t %t", "dealdamage_tag", "dealdamage_ct", g_iDamageBLUE);
 	if (gc_bChat.BoolValue) CPrintToChat(client, info);
-	Format(info, sizeof(info), "%t", "dealdamage_t", g_iDamageT);
+	Format(info, sizeof(info), "%t", "dealdamage_t", g_iDamageRED);
 	InfoPanel.DrawText(info);
 	if (gc_bConsole.BoolValue) PrintToConsole(client, info);
-	Format(info, sizeof(info), "%t %t", "dealdamage_tag", "dealdamage_t", g_iDamageT);
+	Format(info, sizeof(info), "%t %t", "dealdamage_tag", "dealdamage_t", g_iDamageRED);
 	if (gc_bChat.BoolValue) CPrintToChat(client, info);
 	InfoPanel.DrawText("                                   ");
-	Format(info, sizeof(info), "%t", "dealdamage_bestct", g_iBestCT, g_iBestCTdamage);
+	Format(info, sizeof(info), "%t", "dealdamage_bestct", g_iBestBLUE, g_iBestBLUEdamage);
 	InfoPanel.DrawText(info);
 	if (gc_bConsole.BoolValue) PrintToConsole(client, info);
-	Format(info, sizeof(info), "%t %t", "dealdamage_tag", "dealdamage_bestct", g_iBestCT, g_iBestCTdamage);
+	Format(info, sizeof(info), "%t %t", "dealdamage_tag", "dealdamage_bestct", g_iBestBLUE, g_iBestBLUEdamage);
 	if (gc_bChat.BoolValue) CPrintToChat(client, info);
-	Format(info, sizeof(info), "%t", "dealdamage_bestt", g_iBestT, g_iBestTdamage);
+	Format(info, sizeof(info), "%t", "dealdamage_bestt", g_iBestRED, g_iBestREDdamage);
 	InfoPanel.DrawText(info);
 	if (gc_bConsole.BoolValue) PrintToConsole(client, info);
-	Format(info, sizeof(info), "%t %t", "dealdamage_tag", "dealdamage_bestt", g_iBestT, g_iBestTdamage);
+	Format(info, sizeof(info), "%t %t", "dealdamage_tag", "dealdamage_bestt", g_iBestRED, g_iBestREDdamage);
 	if (gc_bChat.BoolValue) CPrintToChat(client, info);
 	Format(info, sizeof(info), "%t", "dealdamage_client", g_iDamageDealed[client]);
 	InfoPanel.DrawText(info);
@@ -1187,68 +1212,40 @@ public Action Timer_BeaconOn(Handle timer)
 	g_hTimerBeacon = null;
 }
 
-public Action Timer_EndTheRound(Handle timer)
+void CalcResults()
 {
-	if (g_iDamageCT > g_iDamageT) 
-	{
-		CS_TerminateRound(5.0, CSRoundEnd_CTWin);
-
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (g_iClientTeam[i] == TEAM_RED)
-		{
-			ForcePlayerSuicide(i);
-		}
-	}
-	else if (g_iDamageCT < g_iDamageT)
-	{
-		CS_TerminateRound(5.0, CSRoundEnd_TerroristWin);
-
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (g_iClientTeam[i] == TEAM_BLUE)
-		{
-			ForcePlayerSuicide(i);
-		}
-	}
-	else
-	{
-		CS_TerminateRound(5.0, CSRoundEnd_Draw);
-	}
-
 	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 	{
-		if (g_iClientTeam[i] == TEAM_BLUE && (g_iDamageDealed[i] > g_iBestCTdamage))
+		if (g_iClientTeam[i] == TEAM_BLUE && (g_iDamageDealed[i] > g_iBestBLUEdamage))
 		{
-			g_iBestCTdamage = g_iDamageDealed[i];
-			g_iBestCT = i;
+			g_iBestBLUEdamage = g_iDamageDealed[i];
+			g_iBestBLUE = i;
 		}
-
-		if (g_iClientTeam[i] == TEAM_RED && (g_iDamageDealed[i] > g_iBestTdamage))
+		else if (g_iClientTeam[i] == TEAM_RED && (g_iDamageDealed[i] > g_iBestREDdamage))
 		{
-			g_iBestTdamage = g_iDamageDealed[i];
-			g_iBestT = i;
+			g_iBestREDdamage = g_iDamageDealed[i];
+			g_iBestRED = i;
 		}
 	}
 
-	if (g_iBestCTdamage > g_iBestTdamage)
+	if (g_iBestBLUEdamage > g_iBestREDdamage)
 	{
-		g_iBestPlayer = g_iBestCT;
+		g_iBestPlayer = g_iBestBLUE;
 	}
-	else g_iBestPlayer = g_iBestT;
+	else g_iBestPlayer = g_iBestRED;
 
-	g_iTotalDamage = g_iDamageCT + g_iDamageT;
+	g_iTotalDamage = g_iDamageBLUE + g_iDamageRED;
 
-	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true))
+	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, true))
 	{
 		SendResults(i);
 	}
 
-	g_hTimerRound = null;
-	delete g_hTimerRound;
-
 	if (MyJailbreak_ActiveLogging())
 	{
-		LogToFileEx(g_sEventsLogFile, "Damage Deal Result: g_iBestCT: %N Dmg: %i g_iBestT: %N Dmg: %i CT Damage: %i T Damage: %i Total Damage: %i", g_iBestCT, g_iBestCTdamage, g_iBestT, g_iBestTdamage, g_iDamageCT, g_iDamageT, g_iTotalDamage);
+		LogToFileEx(g_sEventsLogFile, "Damage Deal Result: Best Blue: %N Dmg: %i Best Red: %N Dmg: %i CT Damage: %i T Damage: %i Total Damage: %i", g_iBestBLUE, g_iBestBLUEdamage, g_iBestRED, g_iBestREDdamage, g_iDamageBLUE, g_iDamageRED, g_iTotalDamage);
 	}
 }
-
 
 // Perpare client for glow
 void SetupGlowSkin(int client)
