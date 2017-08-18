@@ -85,3 +85,12 @@ public void MyJailbreak_OnLastGuardRuleStart()
 
 	TG_FenceDestroy();
 }
+
+public Action TG_OnPlayerRebel(int client, TG_Team team)
+{
+	if(MyJailbreak_IsEventDayRunning())
+	{
+		return Plugin_Handled;
+	}
+	else return Plugin_Continue;
+}
