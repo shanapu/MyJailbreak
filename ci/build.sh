@@ -68,6 +68,7 @@ echo "Move all addons binary files to disbaled folder"
   mv addons/sourcemod/plugins/MyJailbreak/myjailbreak_stamm.smx addons/sourcemod/plugins/MyJailbreak/disabled
   mv addons/sourcemod/plugins/MyJailbreak/myjailbreak_zephstore_credits.smx addons/sourcemod/plugins/MyJailbreak/disabled
   mv addons/sourcemod/plugins/MyJailbreak/myjailbreak_sm-store_credits.smx addons/sourcemod/plugins/MyJailbreak/disabled
+  mv addons/sourcemod/plugins/MyJailbreak/myjailbreak_simplestats.smx addons/sourcemod/plugins/MyJailbreak/disabled
 #   mv addons/sourcemod/plugins/MyJailbreak/myjailbreak_lvl_ranks.smx addons/sourcemod/plugins/MyJailbreak/disabled
   mv addons/sourcemod/plugins/MyJailbreak/ratio_teambans.smx addons/sourcemod/plugins/MyJailbreak/disabled
   mv addons/sourcemod/plugins/MyJailbreak/ratio_steamrep.smx addons/sourcemod/plugins/MyJailbreak/disabled

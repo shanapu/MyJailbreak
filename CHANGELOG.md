@@ -74,7 +74,8 @@
     *  new config file - addons/sourcemod/configs/MyJailbreak/menu_custom.ini
 *  MyJailbreak: Automatic random eventday every x round
     *  new cvar - sm_myjb_random_round - Every x round could be an event day
-    *  new cvar - sm_myjb_random_chance - Chance that the choosen round would be an event day
+    *  new cvar - sm_myjb_random_chance - Chance that the choosen round would be an event day/voting
+    *  new cvar - sm_myjb_random_type - 0 - Start an eventday voting / 1 - start an random eventday
     *  new cvar - sm_myjb_random_mapstart_delay - Wait after mapchange x rounds before try first event day
 *  Add-On: Support for nhnkl159s Simple Stats
     *  new plugin - disabled/myjailbreak_simplestats.smx
