@@ -194,6 +194,11 @@ public void Marker_OnWardenRemoved()
 	RemoveAllMarkers();
 }
 
+public void Marker_OnAvailableLR(int announced)
+{
+	RemoveAllMarkers();
+}
+
 public void Marker_OnMapEnd()
 {
 	RemoveAllMarkers();

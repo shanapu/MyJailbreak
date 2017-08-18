@@ -113,7 +113,8 @@
     *  new cvar - sm_warden_deputy_remove_lr - 0 - disabled, 1 - enable deputy will be removed on last request
 *  HUD: disbale hud for dead player
     *  new cvar - sm_hud_alive - 0 - show hud only to alive player, 1 - show hud to dead & alive player
-  
+*  MyJailbreak: disable hosties announcements on event days
+*  Warden - Marker: remove on Last request.
   
 *Fixed*
 *  Menu: fixed setdays for warden (don't show restricted/disabled days)

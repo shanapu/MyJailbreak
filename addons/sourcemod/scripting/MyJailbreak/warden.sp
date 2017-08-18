@@ -897,6 +897,7 @@ public void OnAvailableLR(int Announced)
 	Mute_OnAvailableLR(Announced);
 	HandCuffs_OnAvailableLR(Announced);
 	Deputy_OnAvailableLR(Announced);
+	Marker_OnAvailableLR(Announced);
 
 	if (gc_bRemoveLR.BoolValue && g_iWarden != -1)
 	{
