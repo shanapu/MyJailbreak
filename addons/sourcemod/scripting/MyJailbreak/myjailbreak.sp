@@ -33,6 +33,10 @@
 #include <mystocks>
 #include <myjailbreak>
 
+#undef REQUIRE_PLUGIN
+#include <hosties>
+#define REQUIRE_PLUGIN
+
 // Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
@@ -52,6 +56,7 @@ ConVar gc_iRandomEventDayType;
 bool g_bEventDayPlanned = false;
 bool g_bEventDayRunning = false;
 bool g_bLastGuardRuleActive = false;
+bool gp_bHosties;
 
 // Integers
 int g_iRandomArraySize = 0;
@@ -61,6 +66,23 @@ int g_iRoundNumber = 0;
 Handle gF_OnEventDayStart;
 Handle gF_OnEventDayEnd;
 Handle g_aRandomList;
+
+
+ConVar Cvar_sm_hosties_announce_rebel_down;
+ConVar Cvar_sm_hosties_rebel_color;
+ConVar Cvar_sm_hosties_mute;
+ConVar Cvar_sm_hosties_announce_attack;
+ConVar Cvar_sm_hosties_announce_wpn_attack;
+ConVar Cvar_sm_hosties_freekill_notify;
+ConVar Cvar_sm_hosties_freekill_treshold;
+
+int OldCvar_sm_hosties_rebel_color;
+int OldCvar_sm_hosties_announce_rebel_down;
+int OldCvar_sm_hosties_mute;
+int OldCvar_sm_hosties_announce_attack;
+int OldCvar_sm_hosties_announce_wpn_attack;
+int OldCvar_sm_hosties_freekill_notify;
+int OldCvar_sm_hosties_freekill_treshold;
 
 // Strings
 char g_sEventDayName[128] = "none";
@@ -129,6 +151,23 @@ public void OnPluginStart()
 	HookEvent("round_end", Event_RoundEnd);
 	
 	g_aRandomList = CreateArray();
+}
+
+public void OnAllPluginsLoaded()
+{
+	gp_bHosties = LibraryExists("lastrequest");
+}
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (StrEqual(name, "lastrequest"))
+		gp_bHosties = false;
+}
+
+public void OnLibraryAdded(const char[] name)
+{
+	if (StrEqual(name, "lastrequest"))
+		gp_bHosties = true;
 }
 
 // Initialize Plugin - check/set sv_tags for MyJailbreak
@@ -322,6 +361,11 @@ public int Native_SetEventDayRunning(Handle plugin, int argc)
 		Call_StartForward(gF_OnEventDayStart);
 		Call_PushString(g_sEventDayName);
 		Call_Finish();
+
+		if (gp_bHosties)
+		{
+			ToggleConVars(true);
+		}
 	}
 	else
 	{
@@ -329,6 +373,55 @@ public int Native_SetEventDayRunning(Handle plugin, int argc)
 		Call_PushString(g_sEventDayName);
 		Call_PushCell(winner);
 		Call_Finish();
+
+		if (gp_bHosties)
+		{
+			ToggleConVars(false);
+		}
+	}
+}
+
+void ToggleConVars(bool IsEventDay)
+{
+	if (IsEventDay)
+	{
+		// Get the Cvar Value
+		Cvar_sm_hosties_announce_rebel_down = FindConVar("sm_hosties_announce_rebel_down");
+		Cvar_sm_hosties_rebel_color = FindConVar("sm_hosties_rebel_color");
+		Cvar_sm_hosties_mute = FindConVar("sm_hosties_mute");
+		Cvar_sm_hosties_announce_attack = FindConVar("sm_hosties_announce_attack");
+		Cvar_sm_hosties_announce_wpn_attack = FindConVar("sm_hosties_announce_wpn_attack");
+		Cvar_sm_hosties_freekill_notify = FindConVar("sm_hosties_freekill_notify");
+		Cvar_sm_hosties_freekill_treshold = FindConVar("sm_hosties_freekill_treshold");
+
+		// Save the Cvar Value
+		OldCvar_sm_hosties_rebel_color = Cvar_sm_hosties_rebel_color.IntValue;
+		OldCvar_sm_hosties_announce_rebel_down = Cvar_sm_hosties_announce_rebel_down.IntValue;
+		OldCvar_sm_hosties_mute = Cvar_sm_hosties_mute.IntValue;
+		OldCvar_sm_hosties_announce_attack = Cvar_sm_hosties_announce_attack.IntValue;
+		OldCvar_sm_hosties_announce_wpn_attack = Cvar_sm_hosties_announce_wpn_attack.IntValue;
+		OldCvar_sm_hosties_freekill_notify = Cvar_sm_hosties_freekill_notify.IntValue;
+		OldCvar_sm_hosties_freekill_treshold = Cvar_sm_hosties_freekill_treshold.IntValue;
+
+		// Change the Cvar Value
+		Cvar_sm_hosties_announce_rebel_down.IntValue = 0;
+		Cvar_sm_hosties_rebel_color.IntValue = 0;
+		Cvar_sm_hosties_mute.IntValue = 0;
+		Cvar_sm_hosties_announce_attack.IntValue = 0;
+		Cvar_sm_hosties_announce_wpn_attack.IntValue = 0;
+		Cvar_sm_hosties_freekill_notify.IntValue = 0;
+		Cvar_sm_hosties_freekill_treshold.IntValue = 0;
+	}
+	else
+	{
+		// Replace the Cvar Value with old value
+		Cvar_sm_hosties_announce_rebel_down.IntValue = OldCvar_sm_hosties_announce_rebel_down;
+		Cvar_sm_hosties_rebel_color.IntValue = OldCvar_sm_hosties_rebel_color;
+		Cvar_sm_hosties_mute.IntValue = OldCvar_sm_hosties_mute;
+		Cvar_sm_hosties_announce_attack.IntValue = OldCvar_sm_hosties_announce_attack;
+		Cvar_sm_hosties_announce_wpn_attack.IntValue = OldCvar_sm_hosties_announce_wpn_attack;
+		Cvar_sm_hosties_freekill_notify.IntValue = OldCvar_sm_hosties_freekill_notify;
+		Cvar_sm_hosties_freekill_treshold.IntValue = OldCvar_sm_hosties_freekill_treshold;
 	}
 }
 
