@@ -46,6 +46,7 @@ ConVar gc_bEndRound;
 ConVar gc_iRandomEventDay;
 ConVar gc_iRandomEventDayPercent;
 ConVar gc_iRandomEventDayStartDelay;
+ConVar gc_iRandomEventDayType;
 
 // Booleans
 bool g_bEventDayPlanned = false;
@@ -113,10 +114,11 @@ public void OnPluginStart()
 	gc_bShootButton = AutoExecConfig_CreateConVar("sm_myjb_shoot_buttons", "1", "0 - disabled, 1 - allow player to trigger a map button by shooting it", _, true, 0.0, true, 1.0);
 	gc_sCustomCommandEndRound = AutoExecConfig_CreateConVar("sm_myjb_cmds_endround", "er, stopround, end", "Set your custom chat commands for admins to end the current round(!endround (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)");
 	gc_bEndRound = AutoExecConfig_CreateConVar("sm_myjb_allow_endround", "0", "0 - disabled, 1 - enable !endround command for testing (disable against abusing)");
-	gc_iRandomEventDay = AutoExecConfig_CreateConVar("sm_myjb_random_round", "6", "Every x round could be an event day");
+	gc_iRandomEventDayType = AutoExecConfig_CreateConVar("sm_myjb_random_type", "1", "0 - Start an eventday voting / 1 - start an random eventday");
+	gc_iRandomEventDay = AutoExecConfig_CreateConVar("sm_myjb_random_round", "6", "Every x round could be an event day or voting");
 	gc_iRandomEventDayPercent = AutoExecConfig_CreateConVar("sm_myjb_random_chance", "60", "Chance that the choosen round would be an event day");
-	gc_iRandomEventDayStartDelay = AutoExecConfig_CreateConVar("sm_myjb_random_mapstart_delay", "6", "Wait after mapchange x rounds before try first event day");
-
+	gc_iRandomEventDayStartDelay = AutoExecConfig_CreateConVar("sm_myjb_random_mapstart_delay", "6", "Wait after mapchange x rounds before try first random eventday or voting");
+	
 	Beacon_OnPluginStart();
 
 	AutoExecConfig_ExecuteFile();
@@ -222,8 +224,13 @@ public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 	if (chance > gc_iRandomEventDayPercent.IntValue)
 		return;
 
-	int randomEvent = GetRandomInt(0, g_iRandomArraySize-1);
-	ServerCommand("sm_set%s", g_sEventDays[randomEvent]);
+	if (gc_iRandomEventDayType.BoolValue)
+	{
+		int randomEvent = GetRandomInt(0, g_iRandomArraySize-1);
+		ServerCommand("sm_set%s", g_sEventDays[randomEvent]);
+	}
+	else ServerCommand("sm_voteday");
+
 }
 
 public void Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
