@@ -73,7 +73,7 @@
     *  new plugin - disabled/menu_custom.smx
     *  new config file - addons/sourcemod/configs/MyJailbreak/menu_custom.ini
 *  MyJailbreak: Automatic random eventday every x round
-    *  new cvar - sm_myjb_random_round - Every x round could be an event day
+    *  new cvar - sm_myjb_random_round - 0 - disabled / Every x round could be an event day
     *  new cvar - sm_myjb_random_chance - Chance that the choosen round would be an event day/voting
     *  new cvar - sm_myjb_random_type - 0 - Start an eventday voting / 1 - start an random eventday
     *  new cvar - sm_myjb_random_mapstart_delay - Wait after mapchange x rounds before try first event day
@@ -81,6 +81,12 @@
     *  new plugin - disabled/myjailbreak_simplestats.smx
         *  new cvar - sm_ratio_simplestats - 0 - disabled, how many seconds a player need to join ct? (only if simplestats is available)
         *  new cvar - sm_warden_simplestats - 0 - disabled, how many seconds a player need to become warden? (only if simplestats is available)
+*  Catch: ConVar to kill loser team
+    *  new cvar - sm_catch_kill_loser - 0 - disabled, 1 - Kill loserteam on event end / not for sm_catch_allow_lr '1'
+*  Armsrace: ConVar to kill loser team
+    *  new cvar - sm_armsrace_kill_loser - 0 - disabled, 1 - Kill loserteam on event end
+*  DealDamage: ConVar to kill loser team
+    *  new cvar - sm_dealdamage_kill_loser - 0 - disabled, 1 - Kill loserteam on event end
   
   
 *Changed*
