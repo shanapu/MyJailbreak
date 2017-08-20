@@ -56,6 +56,7 @@ ConVar gc_bOp;
 ConVar gc_iMinimumNumber;
 ConVar gc_iMaximumNumber;
 ConVar gc_bMathOverlays;
+ConVar gc_bAllowCT;
 ConVar gc_sMathOverlayStopPath;
 ConVar gc_bMathSounds;
 ConVar gc_sMathSoundStopPath;
@@ -93,6 +94,7 @@ public void Math_OnPluginStart()
 	gc_iMaximumNumber = AutoExecConfig_CreateConVar("sm_warden_math_max", "100", "What should be the maximum number for questions?", _, true, 2.0);
 	gc_bOp = AutoExecConfig_CreateConVar("sm_warden_math_mode", "1", "0 - only addition & subtraction, 1 -  addition, subtraction, multiplication & division", _, true, 0.0, true, 1.0);
 	gc_iTimeAnswer = AutoExecConfig_CreateConVar("sm_warden_math_time", "10", "Time in seconds to give a answer to a question.", _, true, 3.0);
+	gc_bAllowCT = AutoExecConfig_CreateConVar("sm_warden_math_allow_ct", "1", "0 - disabled, 1 - cts answers will also reconized", _, true, 0.0, true, 1.0);
 	gc_bMathSounds = AutoExecConfig_CreateConVar("sm_warden_math_sounds_enable", "1", "0 - disabled, 1 - enable sounds ", _, true, 0.0, true, 1.0);
 	gc_sMathSoundStopPath = AutoExecConfig_CreateConVar("sm_warden_math_sounds_stop", "music/MyJailbreak/stop.mp3", "Path to the soundfile which should be played for stop countdown.");
 	gc_bMathOverlays = AutoExecConfig_CreateConVar("sm_warden_math_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true, 0.0, true, 1.0);
@@ -218,11 +220,18 @@ public Action CP_OnChatMessage(int& author, ArrayList recipients, char[] flagstr
 {
 	if (g_bIsMathQuiz && g_bCanAnswer)
 	{
+		if (!IsPlayerAlive(author))
+			return Plugin_Continue;
+
+		if(!gc_bAllowCT.BoolValue && GetClientTeam(author) != CS_TEAM_T)
+			return Plugin_Continue;
+		
 		char bit[2][5];
 		ExplodeString(message, "{default}", bit, sizeof bit, sizeof bit[]);
 
 		if (ProcessSolution(author, StringToInt(bit[1])))
 			SendEndMathQuestion(author);
+
 	}
 }
 
