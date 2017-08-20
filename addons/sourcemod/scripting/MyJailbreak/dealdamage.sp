@@ -92,6 +92,7 @@ ConVar gc_bConsole;
 ConVar gc_bShowPanel;
 ConVar gc_bSpawnRandom;
 ConVar gc_sAdminFlag;
+ConVar gc_bKillLoser;
 
 ConVar gc_sModelPathBlue;
 ConVar gc_sModelPathRed;
@@ -196,6 +197,7 @@ public void OnPluginStart()
 	gc_bBeginSetV = AutoExecConfig_CreateConVar("sm_dealdamage_begin_vote", "0", "When users vote for event (!dealdamage) = 0 - start event next round, 1 - start event current round", _, true, 0.0, true, 1.0);
 	gc_bBeginSetVW = AutoExecConfig_CreateConVar("sm_dealdamage_begin_daysvote", "0", "When warden/admin start eventday voting (!sm_voteday) and event wins = 0 - start event next round, 1 - start event current round", _, true, 0.0, true, 1.0);
 	gc_bTeleportSpawn = AutoExecConfig_CreateConVar("sm_dealdamage_teleport_spawn", "0", "0 - start event in current round from current player positions, 1 - teleport players to spawn when start event on current round(only when sm_*_begin_admin, sm_*_begin_warden, sm_*_begin_vote or sm_*_begin_daysvote is on '1')", _, true, 0.0, true, 1.0);
+	gc_bKillLoser = AutoExecConfig_CreateConVar("sm_dealdamage_kill_loser", "0", "0 - disabled, 1 - Kill loserteam on event end", _, true, 0.0, true, 1.0);
 
 	gc_bShowPanel = AutoExecConfig_CreateConVar("sm_dealdamage_panel", "1", "0 - disabled, 1 - enable show results on a Panel", _, true, 0.0, true, 1.0);
 	gc_bChat = AutoExecConfig_CreateConVar("sm_dealdamage_chat", "1", "0 - disabled, 1 - enable print results in chat", _, true, 0.0, true, 1.0);
@@ -641,20 +643,23 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 	{
 		CalcResults();
 		
-		if (g_iDamageBLUE > g_iDamageRED) 
+		if(gc_bKillLoser.BoolValue)
 		{
-
-			for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (g_iClientTeam[i] == TEAM_RED)
+			if (g_iDamageBLUE > g_iDamageRED) 
 			{
-				ForcePlayerSuicide(i);
+
+				for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (g_iClientTeam[i] == TEAM_RED)
+				{
+					ForcePlayerSuicide(i);
+				}
 			}
-		}
-		else if (g_iDamageBLUE < g_iDamageRED)
-		{
-
-			for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (g_iClientTeam[i] == TEAM_BLUE)
+			else if (g_iDamageBLUE < g_iDamageRED)
 			{
-				ForcePlayerSuicide(i);
+
+				for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (g_iClientTeam[i] == TEAM_BLUE)
+				{
+					ForcePlayerSuicide(i);
+				}
 			}
 		}
 

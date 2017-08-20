@@ -79,6 +79,7 @@ ConVar gc_iRounds;
 ConVar gc_sCustomCommandVote;
 ConVar gc_sCustomCommandSet;
 ConVar gc_sAdminFlag;
+ConVar gc_bKillLoser;
 
 ConVar gc_bBeginSetA;
 ConVar gc_bBeginSetW;
@@ -168,6 +169,7 @@ public void OnPluginStart()
 	gc_sSoundStartPath = AutoExecConfig_CreateConVar("sm_armsrace_sounds_start", "music/MyJailbreak/start.mp3", "Path to the soundfile which should be played for a start.");
 	gc_bOverlays = AutoExecConfig_CreateConVar("sm_armsrace_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true, 0.0, true, 1.0);
 	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_armsrace_overlays_start", "overlays/MyJailbreak/start", "Path to the start Overlay DONT TYPE .vmt or .vft");
+	gc_bKillLoser = AutoExecConfig_CreateConVar("sm_armsrace_kill_loser", "0", "0 - disabled, 1 - Kill loserteam on event end / not for sm_armsrace_allow_lr '1'", _, true, 0.0, true, 1.0);
 
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
@@ -553,14 +555,6 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
 	if (g_bIsArmsRace)
 	{
-		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, true))
-		{
-			SetEntData(i, g_iCollision_Offset, 0, 4, true);
-		}
-
-		delete g_hTimerTruce;
-		delete g_hTimerBeacon;
-
 		int winner = event.GetInt("winner");
 		if (winner == 2)
 		{
@@ -570,6 +564,19 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 		{
 			PrintCenterTextAll("%t", "armsrace_ctwin_nc");
 		}
+
+		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true))
+		{
+			SetEntData(i, g_iCollision_Offset, 0, 4, true);
+
+			if (gc_bKillLoser.BoolValue && g_iLevel[i] != g_iMaxLevel)
+			{
+				ForcePlayerSuicide(i);
+			}
+		}
+
+		delete g_hTimerTruce;
+		delete g_hTimerBeacon;
 
 		if (g_iRound == g_iMaxRound)
 		{

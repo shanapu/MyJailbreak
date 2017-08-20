@@ -98,6 +98,7 @@ ConVar gc_sCustomCommandSet;
 ConVar gc_sAdminFlag;
 ConVar gc_iCatchCount;
 ConVar gc_bAllowLR;
+ConVar gc_bKillLoser;
 
 ConVar gc_bBeginSetA;
 ConVar gc_bBeginSetW;
@@ -206,6 +207,7 @@ public void OnPluginStart()
 	gc_fSprintSpeed = AutoExecConfig_CreateConVar("sm_catch_sprint_speed", "1.25", "Ratio for how fast the player will sprint", _, true, 1.01);
 	gc_fSprintTime = AutoExecConfig_CreateConVar("sm_catch_sprint_time", "3.0", "Time in seconds the player will sprint", _, true, 1.0);
 	gc_bAllowLR = AutoExecConfig_CreateConVar("sm_catch_allow_lr", "0", "0 - disabled, 1 - enable LR for last round and end eventday", _, true, 0.0, true, 1.0);
+	gc_bKillLoser = AutoExecConfig_CreateConVar("sm_catch_kill_loser", "0", "0 - disabled, 1 - Kill loserteam on event end / not for sm_catch_allow_lr '1'", _, true, 0.0, true, 1.0);
 
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
@@ -648,6 +650,16 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
 	if (g_bIsCatch)
 	{
+		int winner = event.GetInt("winner");
+		if (winner == 2)
+		{
+			PrintCenterTextAll("%t", "catch_twin_nc");
+		}
+		else if (winner == 3)
+		{
+			PrintCenterTextAll("%t", "catch_ctwin_nc");
+		}
+
 		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true))
 		{
 			SetEntData(i, g_iCollision_Offset, 0, 4, true);
@@ -667,20 +679,15 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			{
 				UnhookWallhack(i);
 			}
+
+			if (gc_bKillLoser.BoolValue && GetClientTeam(i) != winner)
+			{
+				ForcePlayerSuicide(i);
+			}
 		}
 
 		delete g_hTimerFreeze;
 		delete g_hTimerBeacon;
-
-		int winner = event.GetInt("winner");
-		if (winner == 2)
-		{
-			PrintCenterTextAll("%t", "catch_twin_nc");
-		}
-		else if (winner == 3)
-		{
-			PrintCenterTextAll("%t", "catch_ctwin_nc");
-		}
 
 		if (g_iRound == g_iMaxRound)
 		{
