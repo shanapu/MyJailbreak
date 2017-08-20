@@ -233,6 +233,8 @@ public Action CP_OnChatMessage(int& author, ArrayList recipients, char[] flagstr
 			SendEndMathQuestion(author);
 
 	}
+
+	return Plugin_Continue;
 }
 
 /******************************************************************************
