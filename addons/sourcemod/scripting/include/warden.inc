@@ -86,7 +86,7 @@ forward void warden_OnWardenRemoved(int client);
 /*********************************************************
  * Called when a the warden was removed by an admin
  *
- * @param client		The client who was warden
+ * @param client		The admin who removed the warden
  * @NoReturn
  *********************************************************/
 forward void warden_OnWardenRemovedByAdmin(int client);

@@ -457,7 +457,7 @@ public void OnLibraryAdded(const char[] name)
 // Become Warden
 public Action Command_BecomeWarden(int client, int args)
 {
-	if (gc_bPlugin.BoolValue && !g_bIsLR)  // "sm_warden_enable" "1" and no last request
+	if (gc_bPlugin.BoolValue && ((g_bIsLR && gc_bRemoveLR.BoolValue) || (!gc_bRemoveLR.BoolValue)))  // "sm_warden_enable" "1" and no last request
 	{
 		if (g_iWarden == -1)  // Is there already a warden
 		{
@@ -1172,6 +1172,7 @@ public int Handler_SetWardenOverwrite(Menu menu, MenuAction action, int client, 
 			}
 
 			RemoveTheWarden();
+			Forward_OnWardenRemovedByAdmin(client);
 			if (SetTheWarden(newwarden, client) != Plugin_Handled)
 			{
 				Forward_OnWardenCreatedByAdmin(newwarden);
@@ -1214,7 +1215,7 @@ public int Handler_SetWardenOverwrite(Menu menu, MenuAction action, int client, 
 // Choose a random Warden after a defined time
 public Action Timer_ChooseRandom(Handle timer)
 {
-	if (!gc_bPlugin.BoolValue || g_bIsLR || g_iWarden != -1 || !gc_bChooseRandom.BoolValue)
+	if (!gc_bPlugin.BoolValue || (g_bIsLR && gc_bRemoveLR.BoolValue) || g_iWarden != -1 || !gc_bChooseRandom.BoolValue)
 	{
 		g_hTimerRandom = null;
 		return Plugin_Stop;
