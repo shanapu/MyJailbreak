@@ -47,11 +47,7 @@ int g_iRoundLimit[MAXPLAYERS+1] = {0,...};
 // ConVars
 ConVar gc_iRoundLimit;
 ConVar gc_iAmount;
-
 ConVar gc_sTag;
-
-// Strings
-char g_sTag[12];
 
 // Info
 public Plugin myinfo = {
@@ -81,7 +77,6 @@ public void OnPluginStart()
 public void OnConfigsExecuted()
 {
 	gc_sTag = FindConVar("sm_store_chat_tag");
-	gc_sTag.GetString(g_sTag, sizeof(g_sTag));
 }
 
 public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
@@ -112,9 +107,12 @@ public int PaperClips_Config(Handle kv, int itemid)
 
 public int PaperClips_Equip(int client,int  id)
 {
+	char sTag[12];
+	gc_sTag.GetString(sTag, sizeof(sTag));
+
 	if (g_iRoundLimit[client] >= gc_iRoundLimit.IntValue)
 	{
-		CPrintToChat(client, "%s You have reached the maximum amount of paperclips you can buy this round.", g_sTag);
+		CPrintToChat(client, "%s You have reached the maximum amount of paperclips you can buy this round.", sTag);
 		return 1;
 	}
 
