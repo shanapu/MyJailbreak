@@ -33,6 +33,7 @@
 #include <autoexecconfig>
 #include <warden>
 #include <mystocks>
+#include <smartdm>
 
 // Optional Plugins
 #undef REQUIRE_PLUGIN
@@ -113,7 +114,11 @@ public void Deputy_OnSettingChanged(Handle convar, const char[] oldValue, const 
 	if (convar == gc_sModelPathDeputy)
 	{
 		strcopy(g_sModelPathDeputy, sizeof(g_sModelPathDeputy), newValue);
-		if (gc_bModelDeputy.BoolValue) PrecacheModel(g_sModelPathDeputy);
+		if (gc_bModelDeputy.BoolValue) 
+		{
+			Downloader_AddFileToDownloadsTable(g_sModelPathDeputy);
+			PrecacheModel(g_sModelPathDeputy);
+		}
 	}
 }
 
@@ -348,6 +353,7 @@ public void Deputy_Event_RoundStart(Event event, const char[] name, bool dontBro
 // Prepare Plugin & modules
 public void Deputy_OnMapStart()
 {
+	Downloader_AddFileToDownloadsTable(g_sModelPathDeputy);
 	PrecacheModel(g_sModelPathDeputy);
 }
 

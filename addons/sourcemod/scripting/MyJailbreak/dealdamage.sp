@@ -36,6 +36,7 @@
 #include <colors>
 #include <autoexecconfig>
 #include <mystocks>
+#include <smartdm>
 
 // Optional Plugins
 #undef REQUIRE_PLUGIN
@@ -267,11 +268,13 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 	if (convar == gc_sModelPathRed)
 	{
 		strcopy(g_sModelPathRed, sizeof(g_sModelPathRed), newValue);
+		Downloader_AddFileToDownloadsTable(g_sModelPathRed);
 		PrecacheModel(g_sModelPathRed);
 	}
 	else if (convar == gc_sModelPathBlue)
 	{
 		strcopy(g_sModelPathBlue, sizeof(g_sModelPathBlue), newValue);
+		Downloader_AddFileToDownloadsTable(g_sModelPathBlue);
 		PrecacheModel(g_sModelPathBlue);
 	}
 	else if (convar == gc_sOverlayStartPath)    // Add overlay to download and precache table if changed
@@ -785,6 +788,8 @@ public void OnMapStart()
 		PrecacheDecalAnyDownload(g_sOverlayStartPath);
 	}
 	
+	Downloader_AddFileToDownloadsTable(g_sModelPathRed);
+	Downloader_AddFileToDownloadsTable(g_sModelPathBlue);
 	PrecacheModel(g_sModelPathBlue);
 	PrecacheModel(g_sModelPathRed);
 }

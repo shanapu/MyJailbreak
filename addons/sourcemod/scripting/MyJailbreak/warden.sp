@@ -34,6 +34,7 @@
 #include <colors>
 #include <autoexecconfig>
 #include <warden>
+#include <smartdm>
 
 // Optional Plugins
 #undef REQUIRE_PLUGIN
@@ -299,7 +300,11 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 	else if (convar == gc_sModelPathWarden)
 	{
 		strcopy(g_sModelPathWarden, sizeof(g_sModelPathWarden), newValue);
-		if (gc_bModel.BoolValue) PrecacheModel(g_sModelPathWarden);
+		if (gc_bModel.BoolValue) 
+		{
+			Downloader_AddFileToDownloadsTable(g_sModelPathWarden);
+			PrecacheModel(g_sModelPathWarden);
+		}
 	}
 }
 
@@ -817,6 +822,7 @@ public void OnMapStart()
 
 	g_iVoteCount = 0;
 
+	Downloader_AddFileToDownloadsTable(g_sModelPathWarden);
 	PrecacheModel(g_sModelPathWarden);
 	g_iSmokeSprite = PrecacheModel("materials/sprites/steam1.vmt");
 	g_iBeamSprite = PrecacheModel("materials/sprites/laserbeam.vmt");
