@@ -64,6 +64,16 @@
 		"en"		"The following round will be: Ghosts."
 	}
 
+	"ghosts_now_nc"
+	{
+		"en"		"Now a ghosts round begins."
+	}
+
+	"ghosts_now"
+	{
+		"en"		"Now a {purple}ghosts{default} round begins."
+	}
+
 	"ghosts_rounds"
 	{
 		"#format"	"{1:i},{2:i}"

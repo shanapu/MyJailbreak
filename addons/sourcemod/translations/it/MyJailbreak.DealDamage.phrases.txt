@@ -23,11 +23,6 @@
 		"it"		"Round {purple}{1}{default} di {purple}{2}."
 	}
 
-	"dealdamage_twin_nc"
-	{
-		"it"		"I Prigioni hanno vinto con {1} danni"
-	}
-
 	"dealdamage_voting"
 	{
 		"it"		"La votazione e' {purple}disabilitata"
@@ -41,11 +36,6 @@
 	"dealdamage_setbyadmin"
 	{
 		"it"		"Settare Deal Damage da Admin e' {purple}disabilitato!"
-	}
-
-	"dealdamage_ctwin_nc"
-	{
-		"it"		"Le Guardie hanno vinto con {1} danni!"
 	}
 
 	"dealdamage_end"
@@ -153,39 +143,9 @@
 		"it"		"Maggior Danno Inflitto: {1} Danno: {2} HP"
 	}
 
-	"dealdamage_ct"
-	{
-		"it"		"Danni Guardie: {1} HP"
-	}
-
-	"dealdamage_t"
-	{
-		"it"		"Dani Prigionieri: {1} HP"
-	}
-
-	"dealdamage_bestct"
-	{
-		"it"		"Best Guardia: {1} Danni: {2} HP"
-	}
-
-	"dealdamage_bestt"
-	{
-		"it"		"Best Prigioniere: {1} Danni: {2} HP"
-	}
-
 	"dealdamage_client"
 	{
 		"it"		"Il Tuo Danno: {1} HP"
-	}
-
-	"dealdamage_ctdealed"
-	{
-		"it"		"CT affrontato:"
-	}
-
-	"dealdamage_tdealed"
-	{
-		"it"		"T affrontato:"
 	}
 
 	"dealdamage_clientdealed"

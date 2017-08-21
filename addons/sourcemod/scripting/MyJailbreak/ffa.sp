@@ -755,8 +755,8 @@ void StartEventRound(bool thisround)
 
 		CreateTimer(3.0, Timer_PrepareEvent);
 
-		CPrintToChatAll("%t %s", "ffa_tag", "ffa_now");
-		PrintCenterTextAll("%s", "ffa_now_nc");
+		CPrintToChatAll("%t %t", "ffa_tag", "ffa_now");
+		PrintCenterTextAll("%t", "ffa_now_nc");
 	}
 	else
 	{

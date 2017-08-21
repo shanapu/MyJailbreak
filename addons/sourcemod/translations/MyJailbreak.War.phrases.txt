@@ -50,6 +50,16 @@
 		"en"		"The following round will be: War."
 	}
 
+	"war_now_nc"
+	{
+		"en"		"Now a war round begins."
+	}
+
+	"war_now"
+	{
+		"en"		"Now a {purple}war{default} round begins."
+	}
+
 	"war_start"
 	{
 		"en"		"The {purple}War{default} has begun!"

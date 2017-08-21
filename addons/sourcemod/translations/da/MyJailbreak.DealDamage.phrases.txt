@@ -20,17 +20,17 @@
 
 	"dealdamage_voting"
 	{
-		"da"		"Afstemninger for No Scope er {purple}slået fra"
+		"da"		"Afstemninger for Deal Damage er {purple}slået fra"
 	}
 
 	"dealdamage_setbywarden"
 	{
-		"da"		"Warden bestemmer runde for No Scope er {purple}slået fra"
+		"da"		"Warden bestemmer runde for Deal Damage er {purple}slået fra"
 	}
 
 	"dealdamage_setbyadmin"
 	{
-		"da"		"Admin bestemmer runde for No Scope er {purple}slået fra"
+		"da"		"Admin bestemmer runde for Deal Damage er {purple}slået fra"
 	}
 
 	"dealdamage_end"
@@ -55,7 +55,7 @@
 
 	"dealdamage_start_nc"
 	{
-		"da"		"No Scope er startet!"
+		"da"		"Deal Damage er startet!"
 	}
 
 	"dealdamage_voted"

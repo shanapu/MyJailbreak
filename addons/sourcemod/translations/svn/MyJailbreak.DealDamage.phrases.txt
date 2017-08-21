@@ -35,12 +35,6 @@
 		"svn"		"Runda {purple}{1}{default} od {purple}{2}."
 	}
 
-	"dealdamage_twin_nc"
-	{
-		"#format"   "{1:i}"
-		"svn"		"Zaporniki zmagajo z {1} HP škode"
-	}
-
 	"dealdamage_wait"
 	{
 		"#format"   "{1:i}"
@@ -73,12 +67,6 @@
 		"svn"		"Skupna škoda: {1} HP"
 	}
 
-	"dealdamage_ctwin_nc"
-	{
-		"#format"   "{1:i}"
-		"svn"		"Pazniki zmagajo z {1} HP škode!"
-	}
-
 	"dealdamage_end"
 	{
 		"svn"		"{purple}Dan povzročitve škode{default} se je zaključil!"
@@ -95,21 +83,9 @@
 		"svn"		"Naslednja runda bo: {purple}Dan povzročitve škode."
 	}
 
-	"dealdamage_ct"
-	{
-		"#format"   "{1:i}"
-		"svn"		"Škoda paznikov: {1} HP"
-	}
-
 	"dealdamage_next_nc"
 	{
 		"svn"		"Naslednja runda bo: Dan povzročitve škode."
-	}
-
-	"dealdamage_t"
-	{
-		"#format"   "{1:i}"
-		"svn"		"Škoda zapornikov: {1} HP"
 	}
 
 	"dealdamage_start"
@@ -117,21 +93,9 @@
 		"svn"		"{purple}Dan povzročitve škode{default} se je začel!"
 	}
 
-	"dealdamage_bestct"
-	{
-		"#format"   "{1:N},{2:i}"
-		"svn"		"Najboljši paznik: {1} Škoda: {2} HP"
-	}
-
 	"dealdamage_start_nc"
 	{
 		"svn"		"Dan povzročitve škode se je začel!"
-	}
-
-	"dealdamage_bestt"
-	{
-		"#format"   "{1:N},{2:i}"
-		"svn"		"Najboljši zapornik: {1} Škoda: {2} HP"
 	}
 
 	"dealdamage_voted"
@@ -151,19 +115,9 @@
 		"svn"		"Dogodek {darkred}{1} {default}se {purple}že izvaja!"
 	}
 
-	"dealdamage_ctdealed"
-	{
-		"svn"		"Povzročeno Pazniki:"
-	}
-
 	"dealdamage_disabled"
 	{
 		"svn"		"Dan povzročitve škode je trenutno {purple}onemogočen!"
-	}
-
-	"dealdamage_tdealed"
-	{
-		"svn"		"Povzročeno zaporniki:"
 	}
 
 	"dealdamage_timeuntilstart_nc"

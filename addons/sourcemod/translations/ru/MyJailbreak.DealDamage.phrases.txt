@@ -23,11 +23,6 @@
 		"ru"		"Раунд {purple}{1}{default} о {purple}{2}"
 	}
 
-	"dealdamage_twin_nc"
-	{
-		"ru"		"Террористы одержали победу. Они нанесли {1} урона"
-	}
-
 	"dealdamage_voting"
 	{
 		"ru"		"Голосования за День Урона {purple}отключено"
@@ -41,11 +36,6 @@
 	"dealdamage_setbyadmin"
 	{
 		"ru"		"Администратор {purple}отключил{default} выбор День Урона"
-	}
-
-	"dealdamage_ctwin_nc"
-	{
-		"ru"		"КТ одержали победу. Они нанесли {1} урона"
 	}
 
 	"dealdamage_end"
@@ -153,39 +143,9 @@
 		"ru"		"Большинство урона: {1} урона: {2} жизни"
 	}
 
-	"dealdamage_ct"
-	{
-		"ru"		"CT урон: {1} HP"
-	}
-
-	"dealdamage_t"
-	{
-		"ru"		"Т урон: {1} жизни"
-	}
-
-	"dealdamage_bestct"
-	{
-		"ru"		"Лучший CT: {1} урона: {2} жизни"
-	}
-
-	"dealdamage_bestt"
-	{
-		"ru"		"Лучший Т: {1} урона: {2} жизни"
-	}
-
 	"dealdamage_client"
 	{
 		"ru"		"Ваш урон: {1} жизни"
-	}
-
-	"dealdamage_ctdealed"
-	{
-		"ru"		"КТ нанесли:"
-	}
-
-	"dealdamage_tdealed"
-	{
-		"ru"		"Т нанесли:"
 	}
 
 	"dealdamage_clientdealed"

@@ -963,8 +963,8 @@ void StartEventRound(bool thisround)
 
 		CreateTimer(3.0, Timer_PrepareEvent);
 
-		CPrintToChatAll("%t %s", "duckhunt_tag", "duckhunt_now");
-		PrintCenterTextAll("%s", "duckhunt_now_nc");
+		CPrintToChatAll("%t %t", "duckhunt_tag", "duckhunt_now");
+		PrintCenterTextAll("%t", "duckhunt_now_nc");
 	}
 	else
 	{

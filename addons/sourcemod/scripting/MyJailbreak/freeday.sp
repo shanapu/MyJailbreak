@@ -666,8 +666,8 @@ void StartEventRound(bool thisround)
 
 		CreateTimer(3.0, Timer_PrepareEvent);
 
-		CPrintToChatAll("%t %s", "freeday_tag", "freeday_now");
-		PrintCenterTextAll("%s", "freeday_now_nc");
+		CPrintToChatAll("%t %t", "freeday_tag", "freeday_now");
+		PrintCenterTextAll("%t", "freeday_now_nc");
 	}
 	else
 	{

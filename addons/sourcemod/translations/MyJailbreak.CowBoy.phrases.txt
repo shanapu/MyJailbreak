@@ -70,6 +70,16 @@
 		"en"		"The following round will be: Cowboy."
 	}
 
+	"cowboy_now_nc"
+	{
+		"en"		"Now a cowboy round begins."
+	}
+
+	"cowboy_now"
+	{
+		"en"		"Now a {purple}cowboy{default} round begins."
+	}
+
 	"cowboy_start"
 	{
 		"en"		"{purple}Cowboy{default} has begun!"

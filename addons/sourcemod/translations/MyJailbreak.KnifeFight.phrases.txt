@@ -70,6 +70,16 @@
 		"en"		"The following round will be: Knife Fight."
 	}
 
+	"knifefight_now_nc"
+	{
+		"en"		"Now a knifefight round begins."
+	}
+
+	"knifefight_now"
+	{
+		"en"		"Now a {purple}knifefight{default} round begins."
+	}
+
 	"knifefight_start"
 	{
 		"en"		"{purple}Knife Fight{default} has begun!"

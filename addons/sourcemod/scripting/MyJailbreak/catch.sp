@@ -987,8 +987,8 @@ void StartEventRound(bool thisround)
 
 		CreateTimer(3.0, Timer_PrepareEvent);
 
-		CPrintToChatAll("%t %s", "catch_tag", "catch_now");
-		PrintCenterTextAll("%s", "catch_now_nc");
+		CPrintToChatAll("%t %t", "catch_tag", "catch_now");
+		PrintCenterTextAll("%t", "catch_now_nc");
 	}
 	else
 	{

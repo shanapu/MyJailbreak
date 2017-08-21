@@ -70,6 +70,16 @@
 		"en"		"The following round will be: Suicide Bomber."
 	}
 
+	"suicidebomber_now_nc"
+	{
+		"en"		"Now a suicidebomber round begins."
+	}
+
+	"suicidebomber_now"
+	{
+		"en"		"Now a {purple}suicidebomber{default} round begins."
+	}
+
 	"suicidebomber_start"
 	{
 		"en"		"{purple}Suicide Bomber{default} has begun!"

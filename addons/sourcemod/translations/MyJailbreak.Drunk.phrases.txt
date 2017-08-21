@@ -65,6 +65,16 @@
 		"en"		"The following round will be: Drunken Day."
 	}
 
+	"drunk_now_nc"
+	{
+		"en"		"Now a drunk round begins."
+	}
+
+	"drunk_now"
+	{
+		"en"		"Now a {purple}drunk{default} round begins."
+	}
+
 	"drunk_start"
 	{
 		"en"		"{purple}Drunken Day{default} has begun!"

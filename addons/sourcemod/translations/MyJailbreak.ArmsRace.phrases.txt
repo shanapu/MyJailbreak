@@ -65,6 +65,16 @@
 		"en"		"The following round will be: Arms Race."
 	}
 
+	"armsrace_now_nc"
+	{
+		"en"		"Now a Arms Race round begins."
+	}
+
+	"armsrace_now"
+	{
+		"en"		"Now a {purple}Arms Race{default} round begins."
+	}
+
 	"armsrace_rounds"
 	{
 		"#format"	"{1:i},{2:i}"

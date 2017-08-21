@@ -50,6 +50,16 @@
 		"en"		"The following round will be: {purple}Hide in the Dark."
 	}
 
+	"hide_now_nc"
+	{
+		"en"		"Now a hide round begins."
+	}
+
+	"hide_now"
+	{
+		"en"		"Now a {purple}hide{default} round begins."
+	}
+
 	"hide_start"
 	{
 		"en"		"{purple}Hide in the Dark{default} has begun!"

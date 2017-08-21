@@ -815,8 +815,8 @@ void StartEventRound(bool thisround)
 
 		CreateTimer(3.0, Timer_PrepareEvent);
 
-		CPrintToChatAll("%t %s", "noscope_tag", "noscope_now");
-		PrintCenterTextAll("%s", "noscope_now_nc");
+		CPrintToChatAll("%t %t", "noscope_tag", "noscope_now");
+		PrintCenterTextAll("%t", "noscope_now_nc");
 	}
 	else
 	{

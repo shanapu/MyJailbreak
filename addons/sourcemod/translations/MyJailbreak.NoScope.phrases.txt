@@ -70,6 +70,16 @@
 		"en"		"The following round will be: No Scope Battle."
 	}
 
+	"noscope_now_nc"
+	{
+		"en"		"Now a noscope round begins."
+	}
+
+	"noscope_now"
+	{
+		"en"		"Now a {purple}noscope{default} round begins."
+	}
+
 	"noscope_start"
 	{
 		"en"		"The {purple}No Scope Battle Battle{default} has begun!"

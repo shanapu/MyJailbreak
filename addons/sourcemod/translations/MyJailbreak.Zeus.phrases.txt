@@ -70,6 +70,16 @@
 		"en"		"The following round will be: Zeus Day."
 	}
 
+	"zeus_now_nc"
+	{
+		"en"		"Now a Zeus round begins."
+	}
+
+	"zeus_now"
+	{
+		"en"		"Now a {purple}Zeus{default} round begins."
+	}
+
 	"zeus_start"
 	{
 		"en"		"{purple}Zeus Day{default} has begun!"

@@ -23,11 +23,6 @@
 		"de"		"Runde {purple}{1}{default} von {purple}{2}"
 	}
 
-	"dealdamage_twin_nc"
-	{
-		"de"		"Terrorist gewinnen mit {1} HP Schaden"
-	}
-
 	"dealdamage_voting"
 	{
 		"de"		"Voting für Deal Damage Day ist {purple}deaktiviert"
@@ -41,11 +36,6 @@
 	"dealdamage_setbyadmin"
 	{
 		"de"		"Deal Damage Day Aktivierung durch den Admin ist {purple}deaktiviert"
-	}
-
-	"dealdamage_ctwin_nc"
-	{
-		"de"		"Counter-Terrorist gewinnen mit {1} HP Schaden"
 	}
 
 	"dealdamage_end"
@@ -153,39 +143,9 @@
 		"de"		"Am meisten Schaden verursacht: {1} ({2} HP)"
 	}
 
-	"dealdamage_ct"
-	{
-		"de"		"Wärter Schaden: {1} HP"
-	}
-
-	"dealdamage_t"
-	{
-		"de"		"Häftlings Schaden: {1} HP"
-	}
-
-	"dealdamage_bestct"
-	{
-		"de"		"Bester Wärter: {1} ({2} HP)"
-	}
-
-	"dealdamage_bestt"
-	{
-		"de"		"Bester Häftling: {1} ({2} HP)"
-	}
-
 	"dealdamage_client"
 	{
 		"de"		"Dein Schaden: {1} HP"
-	}
-
-	"dealdamage_ctdealed"
-	{
-		"de"		"CT verursacht:"
-	}
-
-	"dealdamage_tdealed"
-	{
-		"de"		"T Schaden:"
 	}
 
 	"dealdamage_clientdealed"

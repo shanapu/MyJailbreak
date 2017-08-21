@@ -65,6 +65,16 @@
 		"en"		"The following round will be: Catch."
 	}
 
+	"armsrace_now_nc"
+	{
+		"en"		"Now a Catch round begins."
+	}
+
+	"zombie_now"
+	{
+		"en"		"Now a {purple}Catch{default} round begins."
+	}
+
 	"catch_start"
 	{
 		"en"		"{purple}Catch{default} has begun!"

@@ -907,8 +907,8 @@ void StartEventRound(bool thisround)
 
 		CreateTimer(3.0, Timer_PrepareEvent);
 
-		CPrintToChatAll("%t %s", "suicidebomber_tag", "suicidebomber_now");
-		PrintCenterTextAll("%s", "suicidebomber_now_nc");
+		CPrintToChatAll("%t %t", "suicidebomber_tag", "suicidebomber_now");
+		PrintCenterTextAll("%t", "suicidebomber_now_nc");
 	}
 	else
 	{

@@ -57,6 +57,16 @@
 		"en"		"The following round will be: Teleport War."
 	}
 
+	"teleport_now_nc"
+	{
+		"en"		"Now a teleport round begins."
+	}
+
+	"teleport_now"
+	{
+		"en"		"Now a {purple}teleport{default} round begins."
+	}
+
 	"teleport_rounds"
 	{
 		"#format"	"{1:i},{2:i}"

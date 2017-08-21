@@ -34,6 +34,16 @@
 		"en"		"The following round will be: Freeday."
 	}
 
+	"freeday_now_nc"
+	{
+		"en"		"Now a freeday round begins."
+	}
+
+	"freeday_now"
+	{
+		"en"		"Now a {purple}freeday{default} round begins."
+	}
+
 	"freeday_voting"
 	{
 		"en"		"Voting for Freeday is {purple}disabled!"

@@ -757,8 +757,8 @@ void StartEventRound(bool thisround)
 
 		CreateTimer(3.0, Timer_PrepareEvent);
 
-		CPrintToChatAll("%t %s", "teleport_tag", "teleport_now");
-		PrintCenterTextAll("%s", "teleport_now_nc");
+		CPrintToChatAll("%t %t", "teleport_tag", "teleport_now");
+		PrintCenterTextAll("%t", "teleport_now_nc");
 	}
 	else
 	{

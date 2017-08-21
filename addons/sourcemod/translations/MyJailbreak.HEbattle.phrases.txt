@@ -75,6 +75,16 @@
 		"en"		"The following round will be: HE Battle"
 	}
 
+	"hebattle_now_nc"
+	{
+		"en"		"Now a hebattle round begins."
+	}
+
+	"hebattle_now"
+	{
+		"en"		"Now a {purple}hebattle{default} round begins."
+	}
+
 	"hebattle_start"
 	{
 		"en"		"{purple}HE Battle{default} has begun!"

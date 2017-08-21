@@ -154,7 +154,7 @@ unzip -qo translations.zip -d build/gameserver/
 wget -q -O translations.zip http://translator.mitchdempsey.com/sourcemod_plugins/201/download/MyJailbreak.Ratio.translations.zip
 unzip -qo translations.zip -d build/gameserver/
 
-wget -q -O translations.zip http://translator.mitchdempsey.com/sourcemod_plugins/200/download/MyJailbreak.DealDamage.translations.zip
+wget -q -O translations.zip http://translator.mitchdempsey.com/sourcemod_plugins/281/download/MyJailbreak.DealDamage.translations.zip
 unzip -qo translations.zip -d build/gameserver/
 
 wget -q -O translations.zip http://translator.mitchdempsey.com/sourcemod_plugins/190/download/MyJailbreak.CowBoy.translations.zip

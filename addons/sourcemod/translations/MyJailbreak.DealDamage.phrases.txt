@@ -72,6 +72,16 @@
 		"en"		"{purple}Deal Damage Day{default} has begun!"
 	}
 
+	"dealdamage_now_nc"
+	{
+		"en"		"Now a Deal Damage round begins."
+	}
+
+	"dealdamage_now"
+	{
+		"en"		"Now a {purple}Deal Damage{default} round begins."
+	}
+
 	"dealdamage_start_nc"
 	{
 		"en"		"Deal Damage Day has begun!"

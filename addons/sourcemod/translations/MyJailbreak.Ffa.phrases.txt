@@ -64,6 +64,26 @@
 		"en"		"The following round will be: FFA."
 	}
 
+	"ffa_now_nc"
+	{
+		"en"		"Now a ffa round begins."
+	}
+
+	"ffa_now"
+	{
+		"en"		"Now a {purple}ffa{default} round begins."
+	}
+
+	"ffa_now_nc"
+	{
+		"en"		"Now a ffa round begins."
+	}
+
+	"ffa_now"
+	{
+		"en"		"Now a {purple}ffa{default} round begins."
+	}
+
 	"ffa_rounds"
 	{
 		"#format"	"{1:i},{2:i}"

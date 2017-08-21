@@ -25,12 +25,6 @@
 		"es"		"Ronda {purple}{1}{default} de {purple}{2}."
 	}
 
-	"dealdamage_twin_nc"
-	{
-		"#format"	"{1:i}"
-		"es"		"Los Prisioneros ganan con {1} HP de daño hecho!
-	}
-
 	"dealdamage_voting"
 	{
 		"es"		"El voto para Deal Damage Day está {purple}deshabilitado"
@@ -44,12 +38,6 @@
 	"dealdamage_setbyadmin"
 	{
 		"es"		"El seteo de Deal Damage Day por el Admin está {purple}deshabilitado!"
-	}
-
-	"dealdamage_ctwin_nc"
-	{
-		"#format"	"{1:i}"
-		"es"		"Los Guardias ganan con {1} HP de daño hecho!"
 	}
 
 	"dealdamage_end"
@@ -162,44 +150,10 @@
 		"es"		"Mayor daño hecho: {1} Damage: {2} HP"
 	}
 
-	"dealdamage_ct"
-	{
-		"#format"	"{1:i}"
-		"es"		"Daño de Guardias: {1} HP"
-	}
-
-	"dealdamage_t"
-	{
-		"#format"	"{1:i}"
-		"es"		"Daño de Prisioneros: {1} HP"
-	}
-
-	"dealdamage_bestct"
-	{
-		"#format"	"{1:N},{2:i}"
-		"es"		"Mejor Guardia: {1} Daño: {2} HP"
-	}
-
-	"dealdamage_bestt"
-	{
-		"#format"	"{1:N},{2:i}"
-		"es"		"Mejor Prisionero: {1} Daño: {2} HP"
-	}
-
 	"dealdamage_client"
 	{
 		"#format"	"{1:i}"
 		"es"		"Tu daño: {1} HP"
-	}
-
-	"dealdamage_ctdealed"
-	{
-		"es"		"CT infringido:"
-	}
-
-	"dealdamage_tdealed"
-	{
-		"es"		"T infringido:"
 	}
 
 	"dealdamage_clientdealed"

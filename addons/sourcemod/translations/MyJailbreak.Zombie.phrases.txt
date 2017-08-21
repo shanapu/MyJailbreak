@@ -10,13 +10,13 @@
 
 	"zombie_tag"
 	{
-		"en"		"[{green}MyJB.Zombie{default}]"
+		"en"		"[{green}MyJB.Zeus{default}]"
 	}
 
 	"zombie_need"
 	{
 		"#format"	"{1:i},{2:N}"
-		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes required to play {darkred}Zombie."
+		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes required to play {darkred}Zeus."
 	}
 
 	"zombie_rounds"
@@ -27,22 +27,22 @@
 
 	"zombie_voting"
 	{
-		"en"		"Voting for Zombie is {purple}disabled!"
+		"en"		"Voting for Zeus is {purple}disabled!"
 	}
 
 	"zombie_setbywarden"
 	{
-		"en"		"Set Zombie by Warden is {purple}disabled!"
+		"en"		"Set Zeus by Warden is {purple}disabled!"
 	}
 
 	"zombie_setbyadmin"
 	{
-		"en"		"Set Zombie by Admin is {purple}disabled!"
+		"en"		"Set Zeus by Admin is {purple}disabled!"
 	}
 
 	"zombie_ctwin_nc"
 	{
-		"en"		"The Zombies have killed all the Humans!"
+		"en"		"The Zeuss have killed all the Humans!"
 	}
 
 	"zombie_twin_nc"
@@ -52,32 +52,42 @@
 
 	"zombie_end"
 	{
-		"en"		"{purple}Zombie{default} has ended."
+		"en"		"{purple}Zeus{default} has ended."
 	}
 
 	"zombie_next_nc"
 	{
-		"en"		"The following round will be: Zombie."
+		"en"		"The following round will be: Zeus."
 	}
 
 	"zombie_next"
 	{
-		"en"		"The following round will be: {purple}Zombie."
+		"en"		"The following round will be: {purple}Zeus."
+	}
+
+	"zombie_now_nc"
+	{
+		"en"		"Now a Zeus round begins."
+	}
+
+	"zombie_now"
+	{
+		"en"		"Now a {purple}Zeus{default} round begins."
 	}
 
 	"zombie_start"
 	{
-		"en"		"{purple}Zombie{default} has begun!"
+		"en"		"{purple}Zeus{default} has begun!"
 	}
 
 	"zombie_start_nc"
 	{
-		"en"		"Zombie has begun!"
+		"en"		"Zeus has begun!"
 	}
 
 	"zombie_voted"
 	{
-		"en"		"You have already voted for {purple}Zombie!"
+		"en"		"You have already voted for {purple}Zeus!"
 	}
 
 	"zombie_progress"
@@ -88,7 +98,7 @@
 
 	"zombie_minplayer"
 	{
-		"en"		"For Zombie you need at least {purple}one Guard & one Prisoner!"
+		"en"		"For Zeus you need at least {purple}one Guard & one Prisoner!"
 	}
 
 	"zombie_timeuntilzombie_nc"
@@ -105,22 +115,22 @@
 
 	"zombie_info_title"
 	{
-		"en"		"Zombie is now Activated!"
+		"en"		"Zeus is now Activated!"
 	}
 
 	"zombie_info_line1"
 	{
-		"en"		"Zombies(Guards) VS Humans(Prisoners)!"
+		"en"		"Zeuss(Guards) VS Humans(Prisoners)!"
 	}
 
 	"zombie_info_line2"
 	{
-		"en"		"Zombies are freezed! Humans should run!"
+		"en"		"Zeuss are freezed! Humans should run!"
 	}
 
 	"zombie_info_line3"
 	{
-		"en"		"Zombies have a large amount of HP!"
+		"en"		"Zeuss have a large amount of HP!"
 	}
 
 	"zombie_info_line4"
@@ -151,12 +161,12 @@
 
 	"zombie_disabled"
 	{
-		"en"		"Zombie is currently {purple}disabled."
+		"en"		"Zeus is currently {purple}disabled."
 	}
 
 	"zombie_name"
 	{
-		"en"		"Zombie Day"
+		"en"		"Zeus Day"
 	}
 
 }

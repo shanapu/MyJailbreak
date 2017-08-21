@@ -844,8 +844,8 @@ void StartEventRound(bool thisround)
 
 		CreateTimer(3.0, Timer_PrepareEvent);
 
-		CPrintToChatAll("%t %s", "torch_tag", "torch_now");
-		PrintCenterTextAll("%s", "torch_now_nc");
+		CPrintToChatAll("%t %t", "torch_tag", "torch_now");
+		PrintCenterTextAll("%t", "torch_now_nc");
 	}
 	else
 	{

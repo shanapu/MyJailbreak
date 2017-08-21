@@ -879,8 +879,8 @@ void StartEventRound(bool thisround)
 
 		CreateTimer(3.0, Timer_PrepareEvent);
 
-		CPrintToChatAll("%t %s", "hide_tag", "hide_now");
-		PrintCenterTextAll("%s", "hide_now_nc");
+		CPrintToChatAll("%t %t", "hide_tag", "hide_now");
+		PrintCenterTextAll("%t", "hide_now_nc");
 	}
 	else
 	{

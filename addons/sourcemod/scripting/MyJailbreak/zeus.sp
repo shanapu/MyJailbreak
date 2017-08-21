@@ -817,8 +817,8 @@ void StartEventRound(bool thisround)
 
 		CreateTimer(3.0, Timer_PrepareEvent);
 
-		CPrintToChatAll("%t %s", "zeus_tag", "zeus_now");
-		PrintCenterTextAll("%s", "zeus_now_nc");
+		CPrintToChatAll("%t %t", "zeus_tag", "zeus_now");
+		PrintCenterTextAll("%t", "zeus_now_nc");
 	}
 	else
 	{

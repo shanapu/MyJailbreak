@@ -55,6 +55,16 @@
 		"en"		"The following round will be: Torch Relay."
 	}
 
+	"torch_now_nc"
+	{
+		"en"		"Now a torch round begins."
+	}
+
+	"torch_now"
+	{
+		"en"		"Now a {purple}torch{default} round begins."
+	}
+
 	"torch_start"
 	{
 		"en"		"{purple}Torch Relay{default} has begun!"
