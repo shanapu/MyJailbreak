@@ -37,6 +37,7 @@
 // Optional Plugins
 #undef REQUIRE_PLUGIN
 #include <chat-processor>
+#include <scp>
 #define REQUIRE_PLUGIN
 
 // Compiler Options
@@ -149,7 +150,7 @@ public Action Command_MathQuestion(int client, int args)
 				return Plugin_Handled;
 			}
 		}
-		if (!gp_bChatProcessor && g_bIsMathQuiz)
+		if (!gp_bSimpleChatProcessor && !gp_bChatProcessor && g_bIsMathQuiz)
 		{
 			if (args != 1) // Not enough parameters
 			{
@@ -192,8 +193,10 @@ public void Math_OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)
+		{
 			RegConsoleCmd(sCommand, Command_MathQuestion, "Allows the Warden to start a MathQuiz. Show player with first right Answer");
+		}
 	}
 }
 
@@ -216,6 +219,28 @@ public void Math_OnMapEnd()
 	g_bCanAnswer = false;
 }
 
+public Action OnChatMessage(int &author, Handle recipients, char [] name, char [] message)
+{
+	if (g_bIsMathQuiz && g_bCanAnswer && !gp_bChatProcessor)
+	{
+		if (!IsPlayerAlive(author))
+			return Plugin_Continue;
+
+		if(!gc_bAllowCT.BoolValue && GetClientTeam(author) != CS_TEAM_T)
+			return Plugin_Continue;
+
+		char bit[1][5];
+		ExplodeString(message, " ", bit, sizeof bit, sizeof bit[]);
+
+		if (ProcessSolution(author, StringToInt(bit[0])))
+		{
+			SendEndMathQuestion(author);
+		}
+	}
+
+	return Plugin_Continue;
+}
+
 public Action CP_OnChatMessage(int& author, ArrayList recipients, char[] flagstring, char[] name, char[] message, bool& processcolors, bool& removecolors)
 {
 	if (g_bIsMathQuiz && g_bCanAnswer)
@@ -225,12 +250,14 @@ public Action CP_OnChatMessage(int& author, ArrayList recipients, char[] flagstr
 
 		if(!gc_bAllowCT.BoolValue && GetClientTeam(author) != CS_TEAM_T)
 			return Plugin_Continue;
-		
+
 		char bit[2][5];
 		ExplodeString(message, "{default}", bit, sizeof bit, sizeof bit[]);
 
 		if (ProcessSolution(author, StringToInt(bit[1])))
+		{
 			SendEndMathQuestion(author);
+		}
 
 	}
 
@@ -276,7 +303,7 @@ public void SendEndMathQuestion(int client)
 		ShowOverlayAll(g_sMathOverlayStopPath, 2.0);
 	}
 
-	if (gc_bMathSounds.BoolValue)	
+	if (gc_bMathSounds.BoolValue)
 	{
 		EmitSoundToAllAny(g_sMathSoundStopPath);
 	}
@@ -298,12 +325,15 @@ public Action Timer_CreateMathQuestion(Handle timer, any client)
 	{
 		int NumOne = GetRandomInt(g_iMathMin, g_iMathMax);
 		int NumTwo = GetRandomInt(g_iMathMin, g_iMathMax);
-		
+
 		if (gc_bOp.BoolValue) 
 		{
 			Format(g_sOp, sizeof(g_sOp), g_sOperators[GetRandomInt(0, 3)]);
 		}
-		else Format(g_sOp, sizeof(g_sOp), g_sOperators[GetRandomInt(0, 1)]);
+		else
+		{
+			Format(g_sOp, sizeof(g_sOp), g_sOperators[GetRandomInt(0, 1)]);
+		}
 
 		if (StrEqual(g_sOp, PLUS))
 		{
@@ -321,6 +351,7 @@ public Action Timer_CreateMathQuestion(Handle timer, any client)
 				NumTwo = GetRandomInt(g_iMathMin, g_iMathMax);
 			}
 			while (NumOne % NumTwo != 0);
+
 			g_iMathResult = NumOne / NumTwo;
 		}
 		else if (StrEqual(g_sOp, MULTIPL))
@@ -330,9 +361,15 @@ public Action Timer_CreateMathQuestion(Handle timer, any client)
 
 		CPrintToChatAll("%t %N: %i %s %i = ?? ", "warden_tag", client, NumOne, g_sOp, NumTwo);
 
-		if (gc_bBetterNotes.BoolValue) PrintCenterTextAll("%i %s %i = ?? ", NumOne, g_sOp, NumTwo);
+		if (gc_bBetterNotes.BoolValue)
+		{
+			PrintCenterTextAll("%i %s %i = ?? ", NumOne, g_sOp, NumTwo);
+		}
 
-		if (!gp_bChatProcessor) CPrintToChatAll("%t Use: sm_math <number>", "warden_tag");
+		if (!gp_bChatProcessor && !gp_bSimpleChatProcessor)
+		{
+			CPrintToChatAll("%t Use: sm_math <number>", "warden_tag");
+		}
 
 		g_bCanAnswer = true;
 

@@ -32,11 +32,12 @@
 #include <autoexecconfig>
 #include <warden>
 #include <mystocks>
-#include <myjailbreak>
 
 // Optional Plugins
 #undef REQUIRE_PLUGIN
+#include <myjailbreak>
 #include <chat-processor>
+#include <scp>
 #define REQUIRE_PLUGIN
 
 
@@ -46,6 +47,7 @@
 
 // Booleans
 bool g_bIsLateLoad = false;
+bool gp_bChatProcessor = false;
 
 // Console Variables
 ConVar gc_bPlugin;
@@ -141,6 +143,23 @@ public void OnPluginStart()
 
 		g_bIsLateLoad = false;
 	}
+}
+
+public void OnAllPluginsLoaded()
+{
+	gp_bChatProcessor = LibraryExists("chat-processor");
+}
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (StrEqual(name, "chat-processor"))
+		gp_bChatProcessor = false;
+}
+
+public void OnLibraryAdded(const char[] name)
+{
+	if (StrEqual(name, "chat-processor"))
+		gp_bChatProcessor = true;
 }
 
 /******************************************************************************
@@ -519,8 +538,147 @@ public Action CP_OnChatMessage(int& author, ArrayList recipients, char[] flagstr
 			}
 			Format(message, MAXLENGTH_MESSAGE, "{default}%s", message);
 			
+			return Plugin_Changed;
 		}
 	}
 
-	return Plugin_Changed;
+	return Plugin_Continue;
+}
+
+public Action OnChatMessage(int &author, Handle recipients, char[] name, char[] message)
+{
+	if (gc_bPlugin.BoolValue && !gp_bChatProcessor)
+	{
+		if (gc_bChat.BoolValue)
+		{
+			if (GetClientTeam(author) == CS_TEAM_T) 
+			{
+				if (CheckVipFlag(author, g_sOwnerFlag))
+				{
+					Format(name, MAXLENGTH_NAME, "%t %s", "tags_TOWN_chat", name);
+				}
+				else if (CheckVipFlag(author, g_sCoOwnerFlag))
+				{
+					Format(name, MAXLENGTH_NAME, "%t %s", "tags_TCO_chat", name);
+				}
+				else if (CheckVipFlag(author, g_sSuperAdminFlag))
+				{
+					Format(name, MAXLENGTH_NAME, "%t %s", "tags_TSA_chat", name);
+				}
+				else if (CheckVipFlag(author, g_sAdminFlag))
+				{
+					Format(name, MAXLENGTH_NAME, "%t %s", "tags_TA_chat", name);
+				}
+				else if (CheckVipFlag(author, g_sVIPFlag))
+				{
+					Format(name, MAXLENGTH_NAME, "%t %s", "tags_TVIP1_chat", name);
+				}
+				else if (CheckVipFlag(author, g_sVIP2Flag))
+				{
+					Format(name, MAXLENGTH_NAME, "%t %s", "tags_TVIP2_chat", name);
+				}
+				else if (gc_bNoOverwrite.BoolValue)
+				{
+					Format(name, MAXLENGTH_NAME, "%t %s", "tags_T_chat", name);
+				}
+			}
+			else if (GetClientTeam(author) == CS_TEAM_CT)
+			{
+				if (warden_iswarden(author))
+				{
+					if (CheckVipFlag(author, g_sOwnerFlag))
+					{
+						Format(name, MAXLENGTH_NAME, "%t %s", "tags_WOWN_chat", name);
+					}
+					else if (CheckVipFlag(author, g_sCoOwnerFlag))
+					{
+						Format(name, MAXLENGTH_NAME, "%t %s", "tags_WCO_chat", name);
+					}
+					else if (CheckVipFlag(author, g_sSuperAdminFlag))
+					{
+						Format(name, MAXLENGTH_NAME, "%t %s", "tags_WSA_chat", name);
+					}
+					else if (CheckVipFlag(author, g_sAdminFlag))
+					{
+						Format(name, MAXLENGTH_NAME, "%t %s", "tags_WA_chat", name);
+					}
+					else if (CheckVipFlag(author, g_sVIPFlag))
+					{
+						Format(name, MAXLENGTH_NAME, "%t %s", "tags_WVIP1_chat", name);
+					}
+					else if (CheckVipFlag(author, g_sVIP2Flag))
+					{
+						Format(name, MAXLENGTH_NAME, "%t %s", "tags_WVIP2_chat", name);
+					}
+					else if (gc_bNoOverwrite.BoolValue)
+					{
+						Format(name, MAXLENGTH_NAME, "%t %s", "tags_W_chat", name);
+					}
+				}
+				else if (warden_deputy_isdeputy(author))
+				{
+					if (CheckVipFlag(author, g_sOwnerFlag))
+					{
+						Format(name, MAXLENGTH_NAME, "%t %s", "tags_DOWN_chat", name);
+					}
+					else if (CheckVipFlag(author, g_sCoOwnerFlag))
+					{
+						Format(name, MAXLENGTH_NAME, "%t %s", "tags_DCO_chat", name);
+					}
+					else if (CheckVipFlag(author, g_sSuperAdminFlag))
+					{
+						Format(name, MAXLENGTH_NAME, "%t %s", "tags_DSA_chat", name);
+					}
+					else if (CheckVipFlag(author, g_sAdminFlag))
+					{
+						Format(name, MAXLENGTH_NAME, "%t %s", "tags_DA_chat", name);
+					}
+					else if (CheckVipFlag(author, g_sVIPFlag))
+					{
+						Format(name, MAXLENGTH_NAME, "%t %s", "tags_DVIP1_chat", name);
+					}
+					else if (CheckVipFlag(author, g_sVIP2Flag))
+					{
+						Format(name, MAXLENGTH_NAME, "%t %s", "tags_DVIP2_chat", name);
+					}
+					else if (gc_bNoOverwrite.BoolValue)
+					{
+						Format(name, MAXLENGTH_NAME, "%t %s", "tags_D_chat", name);
+					}
+				}
+				else if (CheckVipFlag(author, g_sOwnerFlag))
+				{
+					Format(name, MAXLENGTH_NAME, "%t %s", "tags_CTOWN_chat", name);
+				}
+				else if (CheckVipFlag(author, g_sCoOwnerFlag))
+				{
+					Format(name, MAXLENGTH_NAME, "%t %s", "tags_CTCO_chat", name);
+				}
+				else if (CheckVipFlag(author, g_sSuperAdminFlag))
+				{
+					Format(name, MAXLENGTH_NAME, "%t %s", "tags_CTSA_chat", name);
+				}
+				else if (CheckVipFlag(author, g_sAdminFlag))
+				{
+					Format(name, MAXLENGTH_NAME, "%t %s", "tags_CTA_chat", name);
+				}
+				else if (CheckVipFlag(author, g_sVIPFlag))
+				{
+					Format(name, MAXLENGTH_NAME, "%t %s", "tags_CTVIP1_chat", name);
+				}
+				else if (CheckVipFlag(author, g_sVIP2Flag))
+				{
+					Format(name, MAXLENGTH_NAME, "%t %s", "tags_CTVIP2_chat", name);
+				}
+				else if (gc_bNoOverwrite.BoolValue)
+				{
+					Format(name, MAXLENGTH_NAME, "%t %s", "tags_CT_chat", name);
+				}
+			}
+
+			return Plugin_Changed;
+		}
+	}
+
+	return Plugin_Continue;
 }

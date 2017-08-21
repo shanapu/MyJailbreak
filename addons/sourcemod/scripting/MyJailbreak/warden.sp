@@ -46,6 +46,7 @@
 #include <smartjaildoors>
 #include <voiceannounce_ex>
 #include <chat-processor>
+#include <scp>
 #define REQUIRE_PLUGIN
 
 #include <mystocks>
@@ -90,6 +91,7 @@ bool gp_bHosties = false;
 bool gp_bLastRequest = false;
 bool gp_bSmartJailDoors = false;
 bool gp_bChatProcessor = false;
+bool gp_bSimpleChatProcessor = false;
 bool gp_bBasecomm = false;
 bool gp_bSourceComms = false;
 bool g_bCMDCoolDown[MAXPLAYERS+1] = {false, ...};
@@ -402,6 +404,7 @@ public void OnAllPluginsLoaded()
 	gp_bHosties = LibraryExists("hosties");
 	gp_bLastRequest = LibraryExists("lastrequest");
 	gp_bSmartJailDoors = LibraryExists("smartjaildoors");
+	gp_bSimpleChatProcessor = LibraryExists("scp");
 	gp_bChatProcessor = LibraryExists("chat-processor");
 	gp_bBasecomm = LibraryExists("basecomm");
 	gp_bSourceComms = LibraryExists("sourcecomms");
@@ -423,6 +426,9 @@ public void OnLibraryRemoved(const char[] name)
 
 	if (StrEqual(name, "chat-processor"))
 		gp_bChatProcessor = false;
+
+	if (StrEqual(name, "scp"))
+		gp_bSimpleChatProcessor = false;
 
 	if (StrEqual(name, "basecomm"))
 		gp_bBasecomm = false;
@@ -447,6 +453,9 @@ public void OnLibraryAdded(const char[] name)
 
 	if (StrEqual(name, "chat-processor"))
 		gp_bChatProcessor = true;
+
+	if (StrEqual(name, "scp"))
+		gp_bSimpleChatProcessor = true;
 
 	if (StrEqual(name, "basecomm"))
 		gp_bBasecomm = true;
