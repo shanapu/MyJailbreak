@@ -87,6 +87,9 @@
     *  new cvar - sm_armsrace_kill_loser - 0 - disabled, 1 - Kill loserteam on event end
 *  DealDamage: ConVar to kill loser team
     *  new cvar - sm_dealdamage_kill_loser - 0 - disabled, 1 - Kill loserteam on event end
+*  Warden - Mathquiz: resume support for simplechatprocessor. Now support both scp or chat-processor.
+*  PlayerTags: resume support for simplechatprocessor. Now support both scp or chat-processor.
+
   
   
 *Changed*
@@ -122,6 +125,7 @@
 *  MyJailbreak: disable hosties announcements on event days
 *  Warden - Marker: remove on Last request.
   
+  
 *Fixed*
 *  Menu: fixed setdays for warden (don't show restricted/disabled days)
 *  Ratio: fixed custom VIP/Admin flags
@@ -140,6 +144,8 @@
   
   
 *Removed*
+*  removed dependencies of 'File/Folder Downloader and Precacher'-plugin. No need of downloads.txt or such plugins
+    *  files will be downloaded automaticly. smartdm awesomeshit @zephyrus
 *  removed cvars - sm_weapons_ct - obsolete cvars. **Please remove them from your configs!**
 *  removed cvars - sm_weapons_t - obsolete cvars. **Please remove them from your configs!**
   

@@ -96,7 +96,7 @@ echo "Move FastDL folder"
 mv fastDL/materials fastDL/models fastDL/sound build/fastDL
 
 echo "Move license to build"
-mv install.txt license.txt downloads.txt CHANGELOG.md build/
+mv install.txt license.txt CHANGELOG.md build/
 
 echo "Remove sourcemod folders"
 rm -r build/gameserver/addons/metamod
@@ -223,7 +223,7 @@ echo "Go to build folder"
 cd build
 
 echo "Compress directories and files"
-zip -9rq $FILE gameserver fastDL install.txt license.txt downloads.txt CHANGELOG.md
+zip -9rq $FILE gameserver fastDL install.txt license.txt CHANGELOG.md
 
 echo "Upload file"
 lftp -c "set ftp:ssl-allow no; set ssl:verify-certificate no; open -u $USER,$PASS $HOST; put -O MyJailbreak/downloads/SM$1/$2/ $FILE"
