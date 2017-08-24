@@ -461,11 +461,6 @@ public void HandCuffs_OnMapEnd()
 	}
 }
 
-public void HandCuffs_OnConfigsExecuted()
-{
-	g_iKillKind = gc_iRandomMode.IntValue;
-}
-
 public void HandCuffs_OnClientPutInServer(int client)
 {
 	g_iPlayerPaperClips[client] = 0;
