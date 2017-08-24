@@ -1,5 +1,5 @@
 /*
- * MyJailbreak - Zeus Event Day Plugin.
+ * MyJailbreak - Zombie Event Day Plugin.
  * by: shanapu
  * https://github.com/shanapu/MyJailbreak/
  * 
@@ -51,8 +51,8 @@
 #pragma newdecls required
 
 // Booleans
-bool g_bIsZeus = false;
-bool g_bStartZeus = false;
+bool g_bIsZombie = false;
+bool g_bStartZombie = false;
 
 // Plugin bools
 bool gp_bWarden;
@@ -62,7 +62,7 @@ bool gp_bCustomPlayerSkins;
 bool gp_bMyJailbreak;
 bool gp_bMyWeapons;
 
-bool g_bTerrorZeuss[MAXPLAYERS+1];
+bool g_bTerrorZombies[MAXPLAYERS+1];
 
 // Console Variables
 ConVar gc_bPlugin;
@@ -77,14 +77,14 @@ ConVar gc_iCooldownDay;
 ConVar gc_iFreezeTime;
 ConVar gc_bSpawnCell;
 ConVar gc_bAmmo;
-ConVar gc_iZeusHP;
-ConVar gc_iZeusHPincrease;
+ConVar gc_iZombieHP;
+ConVar gc_iZombieHPincrease;
 ConVar gc_iHumanHP;
 ConVar gc_bDark;
 ConVar gc_bVision;
 ConVar gc_bGlow;
 ConVar gc_iGlowMode;
-ConVar gc_sModelPathZeus;
+ConVar gc_sModelPathZombie;
 ConVar gc_bSounds;
 ConVar gc_sSoundStartPath;
 ConVar gc_bOverlays;
@@ -96,7 +96,7 @@ ConVar gc_sAdminFlag;
 ConVar gc_bAllowLR;
 ConVar gc_fKnockbackAmount;
 ConVar gc_iRegen;
-ConVar gc_bTerrorZeus;
+ConVar gc_bTerrorZombie;
 ConVar gc_bTerrorInfect;
 
 ConVar gc_bBeginSetA;
@@ -128,7 +128,7 @@ Handle g_hTimerRegen;
 float g_fPos[3];
 
 // Strings
-char g_sModelPathZeus[256];
+char g_sModelPathZombie[256];
 char g_sHasVoted[1500];
 char g_sSoundStartPath[256];
 char g_sSkyName[256];
@@ -139,7 +139,7 @@ char g_sOverlayStartPath[256];
 
 // Info
 public Plugin myinfo = {
-	name = "MyJailbreak - Zeus",
+	name = "MyJailbreak - Zombie",
 	author = "shanapu",
 	description = "Event Day for Jailbreak Server",
 	version = MYJB_VERSION,
@@ -151,14 +151,14 @@ public void OnPluginStart()
 {
 	// Translation
 	LoadTranslations("MyJailbreak.Warden.phrases");
-	LoadTranslations("MyJailbreak.Zeus.phrases");
+	LoadTranslations("MyJailbreak.Zombie.phrases");
 
 	// Client Commands
-	RegConsoleCmd("sm_setzombie", Command_SetZeus, "Allows the Admin or Warden to set Zeus as next round");
-	RegConsoleCmd("sm_zombie", Command_VoteZeus, "Allows players to vote for a Zeus");
+	RegConsoleCmd("sm_setzombie", Command_SetZombie, "Allows the Admin or Warden to set Zombie as next round");
+	RegConsoleCmd("sm_zombie", Command_VoteZombie, "Allows players to vote for a Zombie");
 
 	// AutoExecConfig
-	AutoExecConfig_SetFile("Zeus", "MyJailbreak/EventDays");
+	AutoExecConfig_SetFile("Zombie", "MyJailbreak/EventDays");
 	AutoExecConfig_SetCreateFile(true);
 
 	AutoExecConfig_CreateConVar("sm_zombie_version", MYJB_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_NOTIFY|FCVAR_DONTRECORD);
@@ -182,17 +182,17 @@ public void OnPluginStart()
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_zombie_roundtime", "5", "Round time in minutes for a single zombie round", _, true, 1.0);
 	gc_fBeaconTime = AutoExecConfig_CreateConVar("sm_zombie_beacon_time", "240", "Time in seconds until the beacon turned on (set to 0 to disable)", _, true, 0.0);
 	gc_iFreezeTime = AutoExecConfig_CreateConVar("sm_zombie_freezetime", "35", "Time in seconds the zombies freezed", _, true, 0.0);
-	gc_iZeusHP = AutoExecConfig_CreateConVar("sm_zombie_zombie_hp", "4000", "HP the Zeuss got on Spawn", _, true, 1.0);
-	gc_iZeusHPincrease = AutoExecConfig_CreateConVar("sm_zombie_zombie_hp_extra", "1000", "HP the Zeuss get additional per extra Human", _, true, 1.0);
+	gc_iZombieHP = AutoExecConfig_CreateConVar("sm_zombie_zombie_hp", "4000", "HP the Zombies got on Spawn", _, true, 1.0);
+	gc_iZombieHPincrease = AutoExecConfig_CreateConVar("sm_zombie_zombie_hp_extra", "1000", "HP the Zombies get additional per extra Human", _, true, 1.0);
 	gc_iHumanHP = AutoExecConfig_CreateConVar("sm_zombie_human_hp", "65", "HP the Humans got on Spawn", _, true, 1.0);
-	gc_iRegen = AutoExecConfig_CreateConVar("sm_zombie_zombie_regen", "5", "0 - disabled, HPs a Zeus regenerates every 5 seconds", _, true, 0.0);
+	gc_iRegen = AutoExecConfig_CreateConVar("sm_zombie_zombie_regen", "5", "0 - disabled, HPs a Zombie regenerates every 5 seconds", _, true, 0.0);
 	gc_bDark = AutoExecConfig_CreateConVar("sm_zombie_dark", "1", "0 - disabled, 1 - enable Map Darkness", _, true, 0.0, true, 1.0);
 	gc_bGlow = AutoExecConfig_CreateConVar("sm_zombie_glow", "1", "0 - disabled, 1 - enable Glow effect for humans", _, true, 0.0, true, 1.0);
 	gc_iGlowMode = AutoExecConfig_CreateConVar("sm_zombie_glow_mode", "1", "1 - human contours with wallhack for zombies, 2 - human glow effect without wallhack for zombies", _, true, 1.0, true, 2.0);
-	gc_bVision = AutoExecConfig_CreateConVar("sm_zombie_vision", "1", "0 - disabled, 1 - enable NightVision View for Zeuss", _, true, 0.0, true, 1.0);
-	gc_fKnockbackAmount = AutoExecConfig_CreateConVar("sm_zombie_knockback", "20.0", "Force of the knockback when shot at. Zeuss only", _, true, 1.0, true, 100.0);
-	gc_bTerrorZeus = AutoExecConfig_CreateConVar("sm_zombie_terror", "0", "0 - disabled, 1 - transform terrors into Zeus on death - experimental!", _, true, 0.0, true, 1.0);
-	gc_bTerrorInfect = AutoExecConfig_CreateConVar("sm_zombie_terror_infect", "0", "0 - all dead terrors become zombie, 1 - only terrors killed by zombie transform into Zeus", _, true, 0.0, true, 1.0);
+	gc_bVision = AutoExecConfig_CreateConVar("sm_zombie_vision", "1", "0 - disabled, 1 - enable NightVision View for Zombies", _, true, 0.0, true, 1.0);
+	gc_fKnockbackAmount = AutoExecConfig_CreateConVar("sm_zombie_knockback", "20.0", "Force of the knockback when shot at. Zombies only", _, true, 1.0, true, 100.0);
+	gc_bTerrorZombie = AutoExecConfig_CreateConVar("sm_zombie_terror", "0", "0 - disabled, 1 - transform terrors into Zombie on death - experimental!", _, true, 0.0, true, 1.0);
+	gc_bTerrorInfect = AutoExecConfig_CreateConVar("sm_zombie_terror_infect", "0", "0 - all dead terrors become zombie, 1 - only terrors killed by zombie transform into Zombie", _, true, 0.0, true, 1.0);
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_zombie_cooldown_day", "3", "Rounds cooldown after a event until event can be start again", _, true, 0.0);
 	gc_iCooldownStart = AutoExecConfig_CreateConVar("sm_zombie_cooldown_start", "3", "Rounds until event can be start after mapchange.", _, true, 0.0);
 	gc_bSetABypassCooldown = AutoExecConfig_CreateConVar("sm_zombie_cooldown_admin", "1", "0 - disabled, 1 - ignore the cooldown when admin/vip set zombie round", _, true, 0.0, true, 1.0);
@@ -200,7 +200,7 @@ public void OnPluginStart()
 	gc_sSoundStartPath = AutoExecConfig_CreateConVar("sm_zombie_sounds_start", "music/MyJailbreak/zombie.mp3", "Path to the soundfile which should be played for a start.");
 	gc_bOverlays = AutoExecConfig_CreateConVar("sm_zombie_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true, 0.0, true, 1.0);
 	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_zombie_overlays_start", "overlays/MyJailbreak/zombie", "Path to the start Overlay DONT TYPE .vmt or .vft");
-	gc_sModelPathZeus = AutoExecConfig_CreateConVar("sm_zombie_model", "models/player/custom_player/zombie/revenant/revenant_v2.mdl", "Path to the model for zombies.");
+	gc_sModelPathZombie = AutoExecConfig_CreateConVar("sm_zombie_model", "models/player/custom_player/zombie/revenant/revenant_v2.mdl", "Path to the model for zombies.");
 	gc_bAllowLR = AutoExecConfig_CreateConVar("sm_zombie_allow_lr", "0", "0 - disabled, 1 - enable LR for last round and end eventday", _, true, 0.0, true, 1.0);
 
 	AutoExecConfig_ExecuteFile();
@@ -212,14 +212,14 @@ public void OnPluginStart()
 	HookEvent("player_hurt", Event_PlayerHurt);
 	HookEvent("player_death", Event_PlayerDeath);
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
-	HookConVarChange(gc_sModelPathZeus, OnSettingChanged);
+	HookConVarChange(gc_sModelPathZombie, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
 	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
 
 	// FindConVar
 //	g_iMPRoundTime = FindConVar("mp_roundtime");
 	gc_sOverlayStartPath.GetString(g_sOverlayStartPath, sizeof(g_sOverlayStartPath));
-	gc_sModelPathZeus.GetString(g_sModelPathZeus, sizeof(g_sModelPathZeus));
+	gc_sModelPathZombie.GetString(g_sModelPathZombie, sizeof(g_sModelPathZombie));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
 
@@ -233,11 +233,11 @@ public void OnPluginStart()
 // ConVarChange for Strings
 public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
-	if (convar == gc_sModelPathZeus)
+	if (convar == gc_sModelPathZombie)
 	{
-		strcopy(g_sModelPathZeus, sizeof(g_sModelPathZeus), newValue);
-		Downloader_AddFileToDownloadsTable(g_sModelPathZeus);
-		PrecacheModel(g_sModelPathZeus);
+		strcopy(g_sModelPathZombie, sizeof(g_sModelPathZombie), newValue);
+		Downloader_AddFileToDownloadsTable(g_sModelPathZombie);
+		PrecacheModel(g_sModelPathZombie);
 	}
 	else if (convar == gc_sOverlayStartPath)
 	{
@@ -340,7 +340,7 @@ public void OnConfigsExecuted()
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
 		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
 		{
-			RegConsoleCmd(sCommand, Command_VoteZeus, "Allows players to vote for a Zeus");
+			RegConsoleCmd(sCommand, Command_VoteZombie, "Allows players to vote for a Zombie");
 		}
 	}
 
@@ -354,7 +354,7 @@ public void OnConfigsExecuted()
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
 		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
 		{
-			RegConsoleCmd(sCommand, Command_SetZeus, "Allows the Admin or Warden to set Zeus as next round");
+			RegConsoleCmd(sCommand, Command_SetZombie, "Allows the Admin or Warden to set Zombie as next round");
 		}
 	}
 }
@@ -364,7 +364,7 @@ public void OnConfigsExecuted()
 ******************************************************************************/
 
 // Admin & Warden set Event
-public Action Command_SetZeus(int client, int args)
+public Action Command_SetZombie(int client, int args)
 {
 	if (!gc_bPlugin.BoolValue)
 	{
@@ -383,7 +383,7 @@ public Action Command_SetZeus(int client, int args)
 
 		if (MyJailbreak_ActiveLogging())
 		{
-			LogToFileEx(g_sEventsLogFile, "Event Zeus was started by groupvoting");
+			LogToFileEx(g_sEventsLogFile, "Event Zombie was started by groupvoting");
 		}
 	}
 	else if (CheckVipFlag(client, g_sAdminFlag)) // Called by admin/VIP
@@ -427,7 +427,7 @@ public Action Command_SetZeus(int client, int args)
 
 		if (MyJailbreak_ActiveLogging())
 		{
-			LogToFileEx(g_sEventsLogFile, "Event Zeus was started by admin %L", client);
+			LogToFileEx(g_sEventsLogFile, "Event Zombie was started by admin %L", client);
 		}
 	}
 	else if (gp_bWarden) // Called by warden
@@ -477,7 +477,7 @@ public Action Command_SetZeus(int client, int args)
 
 		if (MyJailbreak_ActiveLogging())
 		{
-			LogToFileEx(g_sEventsLogFile, "Event Zeus was started by warden %L", client);
+			LogToFileEx(g_sEventsLogFile, "Event Zombie was started by warden %L", client);
 		}
 	}
 	else
@@ -489,7 +489,7 @@ public Action Command_SetZeus(int client, int args)
 }
 
 // Voting for Event
-public Action Command_VoteZeus(int client, int args)
+public Action Command_VoteZombie(int client, int args)
 {
 	if (!gc_bPlugin.BoolValue)
 	{
@@ -553,7 +553,7 @@ public Action Command_VoteZeus(int client, int args)
 
 		if (MyJailbreak_ActiveLogging())
 		{
-			LogToFileEx(g_sEventsLogFile, "Event Zeus was started by voting");
+			LogToFileEx(g_sEventsLogFile, "Event Zombie was started by voting");
 		}
 	}
 	else
@@ -571,7 +571,7 @@ public Action Command_VoteZeus(int client, int args)
 // Round start
 public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
-	if (!g_bStartZeus && !g_bIsZeus)
+	if (!g_bStartZombie && !g_bIsZombie)
 	{
 		if (gp_bMyJailbreak)
 		{
@@ -596,8 +596,8 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 	}
 
 
-	g_bIsZeus = true;
-	g_bStartZeus = false;
+	g_bIsZombie = true;
+	g_bStartZombie = false;
 
 	PrepareDay(false);
 }
@@ -605,7 +605,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 // Round End
 public void Event_RoundEnd_Pre(Event event, char[] name, bool dontBroadcast)
 {
-	if (g_bIsZeus)
+	if (g_bIsZombie)
 	{
 		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true))
 		{
@@ -617,7 +617,7 @@ public void Event_RoundEnd_Pre(Event event, char[] name, bool dontBroadcast)
 				UnhookGlow(i);
 			}
 
-			if (g_bTerrorZeuss[i])
+			if (g_bTerrorZombies[i])
 			{
 				ChangeClientTeam(i, CS_TEAM_T);
 			}
@@ -639,8 +639,8 @@ public void Event_RoundEnd_Pre(Event event, char[] name, bool dontBroadcast)
 
 		if (g_iRound == g_iMaxRound)
 		{
-			g_bIsZeus = false;
-			g_bStartZeus = false;
+			g_bIsZombie = false;
+			g_bStartZombie = false;
 			g_iRound = 0;
 			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
 
@@ -678,7 +678,7 @@ public void Event_RoundEnd_Pre(Event event, char[] name, bool dontBroadcast)
 		}
 	}
 
-	if (g_bStartZeus)
+	if (g_bStartZombie)
 	{
 		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 		{
@@ -695,7 +695,7 @@ public Action Event_PlayerHurt(Handle event, char[] name, bool dontBroadcast)
 	int victim = GetClientOfUserId(GetEventInt(event, "userid"));
 	int attacker = GetClientOfUserId(GetEventInt(event, "attacker"));
 
-	if (!g_bIsZeus || !IsValidClient(attacker) || GetClientTeam(victim) == CS_TEAM_T)
+	if (!g_bIsZombie || !IsValidClient(attacker) || GetClientTeam(victim) == CS_TEAM_T)
 		return;
 
 	int damage = GetEventInt(event, "dmg_health");
@@ -731,29 +731,29 @@ public Action Event_PlayerDeath(Handle event, char[] name, bool dontBroadcast)
 	int victim = GetClientOfUserId(GetEventInt(event, "userid"));
 	int attacker = GetClientOfUserId(GetEventInt(event, "attacker"));
 
-	if (!g_bIsZeus || !gc_bTerrorZeus.BoolValue || (gc_bTerrorInfect.BoolValue && !IsValidClient(attacker, true, false)))
+	if (!g_bIsZombie || !gc_bTerrorZombie.BoolValue || (gc_bTerrorInfect.BoolValue && !IsValidClient(attacker, true, false)))
 		return;
 
 	if (GetClientTeam(victim) == CS_TEAM_CT || GetAlivePlayersCount(CS_TEAM_T) <= 1)
 		return;
 	
-	g_bTerrorZeuss[victim] = true;
+	g_bTerrorZombies[victim] = true;
 
-	CreateTimer(4.0, Timer_MakeZeus, victim, TIMER_FLAG_NO_MAPCHANGE);
+	CreateTimer(4.0, Timer_MakeZombie, victim, TIMER_FLAG_NO_MAPCHANGE);
 }
 
-public Action Timer_MakeZeus(Handle hTimer, any client)
+public Action Timer_MakeZombie(Handle hTimer, any client)
 {
 	if (IsValidClient(client, true, true))
 	{
 		ChangeClientTeam(client, CS_TEAM_CT);
 		CS_RespawnPlayer(client);
 
-		int zombieHP = gc_iZeusHP.IntValue;
+		int zombieHP = gc_iZombieHP.IntValue;
 		int difference = (GetAlivePlayersCount(CS_TEAM_T) - GetAlivePlayersCount(CS_TEAM_CT));
 		if (difference > 0)
 		{
-			zombieHP = zombieHP + (gc_iZeusHPincrease.IntValue * difference);
+			zombieHP = zombieHP + (gc_iZombieHPincrease.IntValue * difference);
 		}
 
 		SetEntityHealth(client, zombieHP);
@@ -791,8 +791,8 @@ public void OnMapStart()
 {
 	g_iVoteCount = 0;
 	g_iRound = 0;
-	g_bIsZeus = false;
-	g_bStartZeus = false;
+	g_bIsZombie = false;
+	g_bStartZombie = false;
 
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
@@ -809,15 +809,15 @@ public void OnMapStart()
 		PrecacheDecalAnyDownload(g_sOverlayStartPath);   // Add overlay to download and precache table
 	}
 
-	Downloader_AddFileToDownloadsTable(g_sModelPathZeus);
-	PrecacheModel(g_sModelPathZeus);
+	Downloader_AddFileToDownloadsTable(g_sModelPathZombie);
+	PrecacheModel(g_sModelPathZombie);
 }
 
 // Map End
 public void OnMapEnd()
 {
-	g_bIsZeus = false;
-	g_bStartZeus = false;
+	g_bIsZombie = false;
+	g_bStartZombie = false;
 
 	delete g_hTimerFreeze;
 	delete g_hTimerBeacon;
@@ -831,7 +831,7 @@ public void OnMapEnd()
 // Listen for Last Lequest
 public void OnAvailableLR(int Announced)
 {
-	if (g_bIsZeus && gc_bAllowLR.BoolValue && (g_iTsLR > g_iTerrorForLR.IntValue))
+	if (g_bIsZombie && gc_bAllowLR.BoolValue && (g_iTsLR > g_iTerrorForLR.IntValue))
 	{
 		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true))
 		{
@@ -860,7 +860,7 @@ public void OnAvailableLR(int Announced)
 				GivePlayerItem(i, "weapon_knife_t");
 			}
 
-			if (g_bTerrorZeuss[i])
+			if (g_bTerrorZombies[i])
 			{
 				ChangeClientTeam(i, CS_TEAM_T);
 			}
@@ -872,8 +872,8 @@ public void OnAvailableLR(int Announced)
 
 		if (g_iRound == g_iMaxRound)
 		{
-			g_bIsZeus = false;
-			g_bStartZeus = false;
+			g_bIsZombie = false;
+			g_bStartZombie = false;
 			g_iRound = 0;
 			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
 
@@ -914,10 +914,10 @@ public void OnClientPutInServer(int client)
 	SDKHook(client, SDKHook_WeaponCanUse, OnWeaponCanUse);
 }
 
-// Knife only for Zeuss
+// Knife only for Zombies
 public Action OnWeaponCanUse(int client, int weapon)
 {
-	if (!g_bIsZeus)
+	if (!g_bIsZombie)
 	{
 		return Plugin_Continue;
 	}
@@ -961,7 +961,7 @@ void StartEventRound(bool thisround)
 
 	if (thisround)
 	{
-		g_bIsZeus = true;
+		g_bIsZombie = true;
 
 		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
 		{
@@ -977,7 +977,7 @@ void StartEventRound(bool thisround)
 	}
 	else
 	{
-		g_bStartZeus = true;
+		g_bStartZombie = true;
 		g_iCoolDown++;
 		
 		CPrintToChatAll("%t %t", "zombie_tag", "zombie_next");
@@ -1025,11 +1025,11 @@ void PrepareDay(bool thisround)
 		}
 	}
 
-	int zombieHP = gc_iZeusHP.IntValue;
+	int zombieHP = gc_iZombieHP.IntValue;
 	int difference = (GetAlivePlayersCount(CS_TEAM_T) - GetAlivePlayersCount(CS_TEAM_CT));
 	if (difference > 0)
 	{
-		zombieHP = zombieHP + (gc_iZeusHPincrease.IntValue * difference);
+		zombieHP = zombieHP + (gc_iZombieHPincrease.IntValue * difference);
 	}
 
 	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
@@ -1044,7 +1044,7 @@ void PrepareDay(bool thisround)
 
 		StripAllPlayerWeapons(i);
 		
-		g_bTerrorZeuss[i] = false;
+		g_bTerrorZombies[i] = false;
 
 		GivePlayerItem(i, "weapon_knife");
 
@@ -1360,7 +1360,7 @@ public Action Timer_SetModel(Handle timer, int client)
 	if (GetClientTeam(client) == CS_TEAM_CT)
 	{
 		GetEntPropString(client, Prop_Data, "m_ModelName", g_sModelPathPrevious[client], sizeof(g_sModelPathPrevious[]));
-		SetEntityModel(client, g_sModelPathZeus);
+		SetEntityModel(client, g_sModelPathZombie);
 	}
 }
 
