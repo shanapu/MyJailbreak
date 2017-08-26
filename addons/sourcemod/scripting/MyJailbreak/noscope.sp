@@ -576,6 +576,8 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 
 	g_bIsNoScope = true;
 	g_bStartNoScope = false;
+
+	PrepareDay(false);
 }
 
 
