@@ -955,7 +955,8 @@ void TorchEm(int client)
 
 	SetEntityRenderColor(client, 255, 120, 0, 255);
 
-	IgniteEntity(client, 200.0);
+	ExtinguishEntity(client);
+	IgniteEntity(client, 999.0);
 
 	SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", gc_fSprintSpeed.FloatValue);
 
@@ -983,6 +984,7 @@ void ExtinguishEm(int client)
 	g_bOnTorch[client] = false;
 	g_bImmuneTorch[client] = true;
 
+	ExtinguishEntity(client);
 	SetEntityRenderColor(client, 0, 0, 0, 255);
 
 	SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
@@ -993,11 +995,6 @@ void ExtinguishEm(int client)
 	{
 		EmitSoundToClientAny(client, g_sSoundClearTorchPath);
 	}
-
-	int ent = GetEntPropEnt(client, Prop_Data, "m_hEffectEntity");
-
-	if (IsValidEdict(ent))
-		SetEntPropFloat(ent, Prop_Data, "m_flLifetime", 0.0); 
 
 	CPrintToChatAll("%t %t", "torch_tag", "torch_untorch", client);
 }
