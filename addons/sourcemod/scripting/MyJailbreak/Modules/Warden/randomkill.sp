@@ -201,25 +201,13 @@ public int Handler_KillMenu(Menu menu, MenuAction action, int client, int Positi
 
 			if (playercount > minT)
 			{
-				int i = GetRandomPlayer(CS_TEAM_T);
+				int i = GetRandomPlayerInView(CS_TEAM_T, client);
 
 				if (gp_bHosties && gp_bLastRequest)
 				{
-					if (IsClientRebel(i))
+					while (!IsClientRebel(i))
 					{
-						i = GetRandomPlayerNonRebel(CS_TEAM_T);
-					}
-				}
-
-				while (!ClientViews(client, i))
-				{
-					i = GetRandomPlayer(CS_TEAM_T);
-					if (gp_bHosties && gp_bLastRequest)
-					{
-						if (IsClientRebel(i))
-						{
-							i = GetRandomPlayerNonRebel(CS_TEAM_T);
-						}
+						i = GetRandomPlayerInView(CS_TEAM_T, client);
 					}
 				}
 

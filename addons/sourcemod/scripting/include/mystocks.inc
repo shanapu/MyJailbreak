@@ -449,6 +449,24 @@ stock void DarkenScreen(int client, bool darkOn)
 	EndMessage();
 }
 
+stock int GetRandomPlayerInView(int team, int client)
+{
+	int[] clients = new int[MaxClients];
+	int clientCount;
+
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+	{
+		if ((GetClientTeam(i) == team) && IsPlayerAlive(i))
+		{
+			if (!ClientViews(client, i))
+				continue;
+
+			clients[clientCount++] = i;
+		}
+	}
+
+	return (clientCount == 0) ? -1 : clients[GetRandomInt(0, clientCount-1)];
+}
 
 stock bool ClientViews(int viewer, int target, float fMaxDistance=0.0, float fThreshold=0.73)
 {
