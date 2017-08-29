@@ -203,16 +203,16 @@ public int Handler_KillMenu(Menu menu, MenuAction action, int client, int Positi
 			{
 				int i = GetRandomPlayerInView(CS_TEAM_T, client);
 
-				if (gp_bHosties && gp_bLastRequest)
+				if (IsValidClient(i, true, false))
 				{
-					while (!IsClientRebel(i))
+					if (gp_bHosties && gp_bLastRequest)
 					{
-						i = GetRandomPlayerInView(CS_TEAM_T, client);
+						while (!IsClientRebel(i))
+						{
+							i = GetRandomPlayerInView(CS_TEAM_T, client);
+						}
 					}
-				}
 
-				if (i > 0)
-				{
 					CreateTimer(1.0, Timer_KillPlayer, i);
 					CPrintToChatAll("%t %t", "warden_tag", "warden_israndom", i);
 
@@ -224,6 +224,7 @@ public int Handler_KillMenu(Menu menu, MenuAction action, int client, int Positi
 						}
 					}
 				}
+				else CPrintToChatAll("%t %t", "warden_tag", "warden_novalid");
 			}
 			else CPrintToChatAll("%t %t", "warden_tag", "warden_minrandom");
 		}

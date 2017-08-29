@@ -70,7 +70,7 @@ public void Counter_OnPluginStart()
 
 public Action Command_Counter(int client, any args)
 {
-	if (gc_bPlugin.BoolValue)	
+	if (gc_bPlugin.BoolValue)
 	{
 		if ((IsClientWarden(client) || (IsClientDeputy(client) && gc_bCounterDeputy.BoolValue)) && gc_bCounter.BoolValue)
 		{

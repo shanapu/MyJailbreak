@@ -1036,4 +1036,9 @@
 		"en"		"You must have played at least {1} as terror to play as a warden."
 	}
 
+	"warden_novalid"
+	{
+		"en"		"Could not find a {green}valid non-rebeling{default} prisoner in view."
+	}
+
 }
