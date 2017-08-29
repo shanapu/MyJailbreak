@@ -59,8 +59,6 @@ public void OnPluginStart()
 	// Translation
 	LoadTranslations("MyJailbreak.Ratio.phrases");
 	
-	HookEvent("player_spawn", Event_OnPlayerSpawn, EventHookMode_Post);
-	
 	// Cookies
 	if ((g_hCookieCTBan = FindClientCookie("Banned_From_CT")) == INVALID_HANDLE)
 		g_hCookieCTBan = RegClientCookie("Banned_From_CT", "Tells if you are restricted from joining the CT team", CookieAccess_Protected);
@@ -84,54 +82,4 @@ public Action MyJailbreak_OnJoinGuardQueue(int client)
 		return Plugin_Handled;
 	}
 	return Plugin_Continue;
-}
-
-public Action Event_OnPlayerSpawn(Event event, const char[] name, bool bDontBroadcast) 
-{
-	int client = GetClientOfUserId(event.GetInt("userid"));
-
-	if (GetClientTeam(client) != 3) 
-		return Plugin_Continue;
-
-	if (!IsValidClient(client, true, false))
-		return Plugin_Continue;
-
-	char sData[2];
-	GetClientCookie(client, g_hCookieCTBan, sData, sizeof(sData));
-
-	if (sData[0] == '1')
-	{
-		CPrintToChat(client, "%t %t", "ratio_tag", "ratio_banned");
-		PrintCenterText(client, "%t", "ratio_banned_nc");
-		CreateTimer(5.0, Timer_SlayPlayer, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
-		return Plugin_Continue;
-	}
-
-	return Plugin_Continue;
-}
-
-public Action Timer_SlayPlayer(Handle hTimer, any iUserId) 
-{
-	int client = GetClientOfUserId(iUserId);
-
-	if ((IsValidClient(client, false, false)) && (GetClientTeam(client) == CS_TEAM_CT))
-	{
-		ForcePlayerSuicide(client);
-		ChangeClientTeam(client, CS_TEAM_T);
-		CS_RespawnPlayer(client);
-		MinusDeath(client);
-	}
-
-	return Plugin_Stop;
-}
-
-void MinusDeath(int client)
-{
-	if (IsValidClient(client, true, true))
-	{
-		int frags = GetEntProp(client, Prop_Data, "m_iFrags");
-		int deaths = GetEntProp(client, Prop_Data, "m_iDeaths");
-		SetEntProp(client, Prop_Data, "m_iFrags", (frags+1));
-		SetEntProp(client, Prop_Data, "m_iDeaths", (deaths-1));
-	}
 }
