@@ -471,45 +471,60 @@ public void OnLibraryAdded(const char[] name)
 // Become Warden
 public Action Command_BecomeWarden(int client, int args)
 {
-	if (gc_bPlugin.BoolValue && ((g_bIsLR && gc_bRemoveLR.BoolValue) || (!gc_bRemoveLR.BoolValue)))  // "sm_warden_enable" "1" and no last request
+	if (!gc_bPlugin.BoolValue || (g_bIsLR && gc_bRemoveLR.BoolValue))  // "sm_warden_enable" "1" and no last request
 	{
-		if (g_iWarden == -1)  // Is there already a warden
-		{
-			if (gc_bBecomeWarden.BoolValue)  // "sm_warden_become" "1"
-			{
-				if (GetClientTeam(client) == CS_TEAM_CT)  // Is player a guard
-				{
-					if (IsPlayerAlive(client))  // Alive?
-					{
-						if (GetCoolDown(client) < 1)
-						{
-							if (!g_bCMDCoolDown[client])
-							{
-								if (GetLimit(client) < gc_iLimitWarden.IntValue || gc_iLimitWarden.IntValue == 0 || (gc_iCoolDownMinPlayer.IntValue > GetTeamPlayersCount(CS_TEAM_CT)))
-								{
-									if (SetTheWarden(client, client) != Plugin_Handled)
-									{
-										Forward_OnWardenCreatedByUser(client);
-									}
-								}
-								else
-								{
-									SetCoolDown(client, gc_iCoolDownLimit.IntValue);
-									CReplyToCommand(client, "%t %t", "warden_tag", "warden_limit", gc_iLimitWarden.IntValue, GetCoolDown(client));
-								}
-							}else CReplyToCommand(client, "%t %t", "warden_tag", "warden_wait", RoundFloat(gc_fCMDCooldown.FloatValue));
-						}
-						else CReplyToCommand(client, "%t %t", "warden_tag", "warden_cooldown", GetCoolDown(client));
-					}
-					else CReplyToCommand(client, "%t %t", "warden_tag", "warden_playerdead");
-				}
-				else CReplyToCommand(client, "%t %t", "warden_tag", "warden_ctsonly");
-			}
-			else CReplyToCommand(client, "%t %t", "warden_tag", "warden_nobecome", g_iWarden);
-		}
-		else CReplyToCommand(client, "%t %t", "warden_tag", "warden_exist", g_iWarden);
+		CReplyToCommand(client, "%t %t", "warden_tag", "warden_disabled");
+		return Plugin_Handled;
 	}
-	else CReplyToCommand(client, "%t %t", "warden_tag", "warden_disabled");
+
+	if (g_iWarden != -1)  // Is there already a warden
+	{
+		CReplyToCommand(client, "%t %t", "warden_tag", "warden_exist", g_iWarden);
+		return Plugin_Handled;
+	}
+
+	if (!gc_bBecomeWarden.BoolValue)  // "sm_warden_become" "1"
+	{
+		CReplyToCommand(client, "%t %t", "warden_tag", "warden_nobecome", g_iWarden);
+		return Plugin_Handled;
+	}
+
+	if (GetClientTeam(client) != CS_TEAM_CT)  // Is player a guard
+	{
+		CReplyToCommand(client, "%t %t", "warden_tag", "warden_ctsonly");
+		return Plugin_Handled;
+	}
+
+	if (!IsPlayerAlive(client))  // Alive?
+	{
+		CReplyToCommand(client, "%t %t", "warden_tag", "warden_playerdead");
+		return Plugin_Handled;
+	}
+
+	if (GetCoolDown(client) > 0)
+	{
+		CReplyToCommand(client, "%t %t", "warden_tag", "warden_cooldown", GetCoolDown(client));
+		return Plugin_Handled;
+	}
+
+	if (g_bCMDCoolDown[client])
+	{
+		CReplyToCommand(client, "%t %t", "warden_tag", "warden_wait", RoundFloat(gc_fCMDCooldown.FloatValue));
+		return Plugin_Handled;
+	}
+
+	if (GetLimit(client) < gc_iLimitWarden.IntValue || gc_iLimitWarden.IntValue == 0 || (gc_iCoolDownMinPlayer.IntValue > GetTeamPlayersCount(CS_TEAM_CT)))
+	{
+		if (SetTheWarden(client, client) != Plugin_Handled)
+		{
+			Forward_OnWardenCreatedByUser(client);
+		}
+	}
+	else
+	{
+		SetCoolDown(client, gc_iCoolDownLimit.IntValue);
+		CReplyToCommand(client, "%t %t", "warden_tag", "warden_limit", gc_iLimitWarden.IntValue, GetCoolDown(client));
+	}
 
 	return Plugin_Handled;
 }
@@ -517,22 +532,26 @@ public Action Command_BecomeWarden(int client, int args)
 // Exit / Retire Warden
 public Action Command_ExitWarden(int client, int args) 
 {
-	if (gc_bPlugin.BoolValue)  // "sm_warden_enable" "1"
+	if (!gc_bPlugin.BoolValue)  // "sm_warden_enable" "1"
 	{
-		if (IsClientWarden(client))  // Is client the warden
-		{
-			Forward_OnWardenRemovedBySelf(client);
-			RemoveTheWarden();
-			
-			CPrintToChatAll("%t %t", "warden_tag", "warden_retire", client);
-			if (gc_bBetterNotes.BoolValue)
-			{
-				PrintCenterTextAll("%t", "warden_retire_nc", client);
-			}
-		}
-		else CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+		CReplyToCommand(client, "%t %t", "warden_tag", "warden_disabled");
+		return Plugin_Handled;
 	}
-	else CReplyToCommand(client, "%t %t", "warden_tag", "warden_disabled");
+
+	if (!IsClientWarden(client))  // Is client the warden
+	{
+		CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+		return Plugin_Handled;
+	}
+
+	Forward_OnWardenRemovedBySelf(client);
+	RemoveTheWarden();
+
+	CPrintToChatAll("%t %t", "warden_tag", "warden_retire", client);
+	if (gc_bBetterNotes.BoolValue)
+	{
+		PrintCenterTextAll("%t", "warden_retire_nc", client);
+	}
 
 	return Plugin_Handled;
 }
@@ -540,39 +559,56 @@ public Action Command_ExitWarden(int client, int args)
 // Voting against Warden
 public Action Command_VoteWarden(int client, int args)
 {
-	if (gc_bPlugin.BoolValue)  // "sm_warden_enable" "1"
+	if (!gc_bPlugin.BoolValue)  // "sm_warden_enable" "1"
 	{
-		if (gc_bVote.BoolValue)  // "sm_warden_vote" "1"
-		{
-			char steamid[24];
-			GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid)); // Get client steam ID
-			if (g_iWarden != -1)
-			{
-				if (StrContains(g_sHasVoted, steamid, true) == -1)  // Check steam ID has already voted
-				{
-					int playercount = (GetClientCount(true) / 2);
-					g_iVoteCount++;
-					int Missing = playercount - g_iVoteCount + 1;
-					Format(g_sHasVoted, sizeof(g_sHasVoted), "%s, %s", g_sHasVoted, steamid);
-					
-					if (g_iVoteCount > playercount)
-					{
-						if (gp_bMyJailBreak) if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Player %L was kick as warden by voting", g_iWarden);
-						
-						SetCoolDown(g_iWarden, gc_iCoolDownRemove.IntValue);
-						
-						RemoveTheWarden();
-						CPrintToChatAll("%t %t", "warden_tag", "warden_votesuccess");
-					}
-					else CPrintToChatAll("%t %t", "warden_tag", "warden_need", Missing, client);
-				}
-				else CReplyToCommand(client, "%t %t", "warden_tag", "warden_voted");
-			}
-			else CReplyToCommand(client, "%t %t", "warden_tag", "warden_noexist");
-		}
-		else CReplyToCommand(client, "%t %t", "warden_tag", "warden_voting");
+		CReplyToCommand(client, "%t %t", "warden_tag", "warden_disabled");
+		return Plugin_Handled;
 	}
-	else CReplyToCommand(client, "%t %t", "warden_tag", "warden_disabled");
+
+	if (!gc_bVote.BoolValue)  // "sm_warden_vote" "1"
+	{
+		CReplyToCommand(client, "%t %t", "warden_tag", "warden_voting");
+		return Plugin_Handled;
+	}
+
+	if (g_iWarden == -1)
+	{
+		CReplyToCommand(client, "%t %t", "warden_tag", "warden_noexist");
+		return Plugin_Handled;
+	}
+
+	char steamid[24];
+	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid)); // Get client steam ID
+
+	if (StrContains(g_sHasVoted, steamid, true) != -1)  // Check steam ID has already voted
+	{
+		CReplyToCommand(client, "%t %t", "warden_tag", "warden_voted");
+		return Plugin_Handled;
+	}
+
+	int playercount = (GetClientCount(true) / 2);
+	g_iVoteCount++;
+	int Missing = playercount - g_iVoteCount + 1;
+	Format(g_sHasVoted, sizeof(g_sHasVoted), "%s, %s", g_sHasVoted, steamid);
+
+	if (g_iVoteCount < playercount)
+	{
+		CPrintToChatAll("%t %t", "warden_tag", "warden_need", Missing, client);
+		return Plugin_Handled;
+	}
+
+	SetCoolDown(g_iWarden, gc_iCoolDownRemove.IntValue);
+
+	RemoveTheWarden();
+	CPrintToChatAll("%t %t", "warden_tag", "warden_votesuccess");
+
+	if (!gp_bMyJailBreak)
+		return Plugin_Handled;
+
+	if (!MyJailbreak_ActiveLogging())
+		return Plugin_Handled;
+
+	LogToFileEx(g_sMyJBLogFile, "Player %L was kick as warden by voting", g_iWarden);
 
 	return Plugin_Handled;
 }
@@ -580,20 +616,33 @@ public Action Command_VoteWarden(int client, int args)
 // Remove Warden for Admins
 public Action AdminCommand_RemoveWarden(int client, int args)
 {
-	if (gc_bPlugin.BoolValue)  // "sm_warden_enable" "1"
+	if (!gc_bPlugin.BoolValue)  // "sm_warden_enable" "1"
+		return Plugin_Handled;
+
+	if (g_iWarden == -1)
 	{
-		if (g_iWarden != -1)  // Is there a warden to remove
-		{
-			CPrintToChatAll("%t %t", "warden_tag", "warden_removed", client, g_iWarden); // if client is console !=
-			if (gc_bBetterNotes.BoolValue) PrintCenterTextAll("%t", "warden_removed_nc", client, g_iWarden);
-			if (gp_bMyJailBreak) if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Admin %L removed player %L as warden", client, g_iWarden);
-
-			SetCoolDown(g_iWarden, gc_iCoolDownRemove.IntValue);
-
-			RemoveTheWarden();
-			Forward_OnWardenRemovedByAdmin(client);
-		}
+		CReplyToCommand(client, "%t %t", "warden_tag", "warden_noexist");
+		return Plugin_Handled;
 	}
+
+	SetCoolDown(g_iWarden, gc_iCoolDownRemove.IntValue);
+
+	RemoveTheWarden();
+	Forward_OnWardenRemovedByAdmin(client);
+
+	CPrintToChatAll("%t %t", "warden_tag", "warden_removed", client, g_iWarden); // if client is console !=
+	if (gc_bBetterNotes.BoolValue)
+	{
+		PrintCenterTextAll("%t", "warden_removed_nc", client, g_iWarden);
+	}
+
+	if (!gp_bMyJailBreak)
+		return Plugin_Handled;
+
+	if (!MyJailbreak_ActiveLogging())
+		return Plugin_Handled;
+
+	LogToFileEx(g_sMyJBLogFile, "Admin %L removed player %L as warden", client, g_iWarden);
 
 	return Plugin_Handled;
 }
@@ -602,10 +651,10 @@ public Action AdminCommand_RemoveWarden(int client, int args)
 // Set new Warden for Admins
 public Action AdminCommand_SetWarden(int client, int args)
 {
-	if (gc_bPlugin.BoolValue)  // "sm_warden_enable" "1"
-	{
-		Menu_SetWarden(client);
-	}
+	if (!gc_bPlugin.BoolValue)  // "sm_warden_enable" "1"
+		return Plugin_Handled;
+
+	Menu_SetWarden(client);
 
 	return Plugin_Handled;
 }
