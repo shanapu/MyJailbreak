@@ -304,6 +304,12 @@ public void OnConfigsExecuted()
 	g_iMaxRound = gc_iRounds.IntValue;
 	g_iMaxTA = gc_iTAgrenades.IntValue - 1;
 
+	// FindConVar
+	if (gp_bHosties)
+	{
+		g_iTerrorForLR = FindConVar("sm_hosties_lr_ts_max");
+	}
+
 	// Set custom Commands
 	int iCount = 0;
 	char sCommands[128], sCommandsL[12][32], sCommand[32];
