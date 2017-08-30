@@ -43,6 +43,7 @@
 
 // Handles
 Handle g_hCookieCTBan;
+Handle g_hIsBannedAllowed;
 
 // Info
 public Plugin myinfo = {
@@ -68,6 +69,7 @@ public void OnPluginStart()
 
 public void OnAllPluginsLoaded()
 {
+	g_hIsBannedAllowed = FindConVar("sm_ctban_isbanned_selftarget");
 	if (!LibraryExists("myratio"))
 		SetFailState("You're missing the MyJailbreak - Ratio (ratio.smx) plugin");
 }
@@ -80,7 +82,8 @@ public Action MyJailbreak_OnJoinGuardQueue(int client)
 	{
 		CReplyToCommand(client, "%t %t", "ratio_tag", "ratio_banned");
 		PrintCenterText(client, "%t", "ratio_banned_nc");
-		FakeClientCommand(client, "sm_isbanned @me");
+		if (g_hIsBannedAllowed != null && GetConVarBool(g_hIsBannedAllowed))
+			FakeClientCommand(client, "sm_isbanned @me");
 		return Plugin_Handled;
 	}
 	return Plugin_Continue;
