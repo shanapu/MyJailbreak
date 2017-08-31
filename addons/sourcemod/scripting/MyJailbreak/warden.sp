@@ -608,7 +608,7 @@ public Action Command_VoteWarden(int client, int args)
 	if (!MyJailbreak_ActiveLogging())
 		return Plugin_Handled;
 
-	LogToFileEx(g_sMyJBLogFile, "Player %L was kick as warden by voting", g_iWarden);
+	LogToFileEx(g_sMyJBLogFile, "Player %L was kick as warden by voting", g_iLastWarden);
 
 	return Plugin_Handled;
 }
@@ -642,7 +642,7 @@ public Action AdminCommand_RemoveWarden(int client, int args)
 	if (!MyJailbreak_ActiveLogging())
 		return Plugin_Handled;
 
-	LogToFileEx(g_sMyJBLogFile, "Admin %L removed player %L as warden", client, g_iWarden);
+	LogToFileEx(g_sMyJBLogFile, "Admin %L removed player %L as warden", client, g_iLastWarden);
 
 	return Plugin_Handled;
 }
