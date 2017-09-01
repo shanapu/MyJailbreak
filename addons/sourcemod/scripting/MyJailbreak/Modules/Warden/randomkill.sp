@@ -207,7 +207,7 @@ public int Handler_KillMenu(Menu menu, MenuAction action, int client, int Positi
 				{
 					if (gp_bHosties && gp_bLastRequest)
 					{
-						while (!IsClientRebel(i))
+						while (IsClientRebel(i))
 						{
 							i = GetRandomPlayerInView(CS_TEAM_T, client);
 						}
