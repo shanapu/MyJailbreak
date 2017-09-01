@@ -3,6 +3,8 @@ echo.
 echo MyJailbreak compile script
 echo.
 echo.
+echo. Check if plugin folder exist.
+if not exist "../plugins/MyJailbreak/" mkdir "../plugins/MyJailbreak/"
 echo.
 echo Compile: MyJailbreak Core
 echo.
@@ -58,6 +60,6 @@ spcomp MyJailbreak/Add-ons/myjailbreak_rankme.sp -o../plugins/MyJailbreak/disabl
 spcomp MyJailbreak/Add-ons/myjailbreak_kento_rankme.sp -o../plugins/MyJailbreak/disabled/myjailbreak_kento_rankme.smx  
 spcomp MyJailbreak/Add-ons/myjailbreak_sm-store_credits.sp -o../plugins/MyJailbreak/disabled/myjailbreak_sm-store_credits.smx  
 spcomp MyJailbreak/Add-ons/myjailbreak_zephstore_credits.sp -o../plugins/MyJailbreak/disabled/myjailbreak_zephstore_credits.smx  
-spcomp MyJailbreak/Add-ons/myjailbreak_lvl_ranks.sp -o../plugins/MyJailbreak/disabled/myjailbreak_lvl_ranks.smx
+spcomp MyJailbreak/Add-ons/myjailbreak_simplestats.sp -o../plugins/MyJailbreak/disabled/myjailbreak_simplestats.smx
 spcomp MyJailbreak/Add-ons/warden_zephstore_paperclips.sp -o../plugins/MyJailbreak/disabled/warden_zephstore_paperclips.smx
 pause
