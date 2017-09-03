@@ -37,7 +37,12 @@
 #undef REQUIRE_PLUGIN
 #include <myjailbreak>
 #include <chat-processor>
-#include <scp>
+
+#tryinclude <scp>
+#if !defined _scp_included
+#include <cp-scp-wrapper>
+#endif
+ 
 #define REQUIRE_PLUGIN
 
 
