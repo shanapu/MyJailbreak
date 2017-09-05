@@ -985,14 +985,14 @@ public void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast
 		return;
 
 	int victim = GetClientOfUserId(event.GetInt("userid")); // Get the dead clients id
-	int attacker = GetClientOfUserId(event.GetInt("attacker")); // Get the dead clients id
+	int attacker = GetClientOfUserId(event.GetInt("attacker")); // Get the attacker clients id
 
 	if (IsValidClient(attacker, true, false) && (attacker != victim) && IsValidClient(victim, true, true))
 	{
 		g_iLevel[attacker] += 1;
 
 		char sWeaponUsed[50];
-		GetEventString(event, "weapon", sWeaponUsed, sizeof(sWeaponUsed));
+		event.GetString("weapon", sWeaponUsed, sizeof(sWeaponUsed));
 
 		if (g_iLevel[attacker] == g_iMaxLevel)
 		{
