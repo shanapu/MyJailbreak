@@ -400,4 +400,9 @@
 	{
 		"en"		"You deny to be picked as random guard when guard queue is empty"
 	}
+	
+	"ratio_swap_spec"
+	{
+		"en"		"You was swapped to T Team, since you joined in the guard queue"
+	}
 }

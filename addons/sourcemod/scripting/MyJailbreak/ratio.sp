@@ -68,6 +68,7 @@ ConVar gc_bBalanceTerror;
 ConVar gc_bBalanceGuards;
 ConVar gc_bBalanceWarden;
 ConVar gc_bRespawn;
+ConVar gc_bSwapSpecT;
 
 // Booleans
 bool g_bRatioEnable = true;
@@ -147,6 +148,7 @@ public void OnPluginStart()
 	gc_bBalanceGuards = AutoExecConfig_CreateConVar("sm_ratio_balance_guard", "1", "Mode to choose a guard to be switch to T on balance the teams. 1 = Last In First Out / 0 = Random Guard", _, true, 0.0, true, 1.0);
 	gc_bBalanceWarden = AutoExecConfig_CreateConVar("sm_ratio_balance_warden", "1", "Prevent warden & deputy to be switch to T on balance the teams. Could result in unbalanced teams", _, true, 0.0, true, 1.0);
 	gc_bRespawn = AutoExecConfig_CreateConVar("sm_ratio_respawn", "1", "0 - Move player on next round to CT / 1 - Move player immediately to CT and respawn", _, true, 0.0, true, 1.0);
+	gc_bSwapSpecT = AutoExecConfig_CreateConVar("sm_ratio_swap_spec_queue", "1", "0 - Don't do anything if a Spec join in queue / 1 - Swap to T the Spectators who join in queue", _, true, 0.0, true, 1.0);
 
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
@@ -411,14 +413,23 @@ public Action Command_JoinGuardQueue(int client, int iArgNum)
 		return Plugin_Handled;
 	}
 
-/*
-	if (GetClientTeam(client) != CS_TEAM_T)
+	int team = GetClientTeam(client);
+	
+	if (team == CS_TEAM_CT)
 	{
 		ClientCommand(client, "play %s", g_sRestrictedSound);
 		CReplyToCommand(client, "%t %t", "ratio_tag", "ratio_noct");
 		return Plugin_Handled;
 	}
-*/
+	else if (team == CS_TEAM_SPECTATOR)
+	{
+		if (gc_bSwapSpecT.BoolValue)
+		{
+			CReplyToCommand(client, "%t %t", "ratio_tag", "ratio_swap_spec");
+			ChangeClientTeam(client, CS_TEAM_T);
+		}
+	}
+
 
 	if (g_bQueueCooldown[client])
 	{
