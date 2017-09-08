@@ -247,7 +247,7 @@ public void Mute_OnMapEnd()
 // Mute Terror when Warden speaks
 public void OnClientSpeakingEx(int client)
 {
-	if ((warden_iswarden(client) && gc_bMuteTalkOver.BoolValue) || (warden_deputy_isdeputy(client) && gc_bMuteTalkOverDeputy.BoolValue))
+	if (((warden_iswarden(client) && gc_bMuteTalkOver.BoolValue) || (warden_deputy_isdeputy(client) && gc_bMuteTalkOverDeputy.BoolValue)) && !g_bIsLR)
 	{
 		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, true))
 		{
