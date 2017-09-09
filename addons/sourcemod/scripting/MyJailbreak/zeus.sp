@@ -760,6 +760,7 @@ public void OnMapEnd()
 public void OnClientPutInServer(int client)
 {
 	SDKHook(client, SDKHook_WeaponCanUse, OnWeaponCanUse);
+	SDKHook(client, SDKHook_WeaponDrop, OnWeaponDropped);
 }
 
 // Knife & Taser only
@@ -778,6 +779,16 @@ public Action OnWeaponCanUse(int client, int weapon)
 		return Plugin_Continue;
 	}
 	else return Plugin_Handled;
+}
+
+//Deny weapon drops
+public Action OnWeaponDrop(int client, int weapon)
+{
+	if (!g_bIsZeus)
+	{
+		return Plugin_Continue;
+	}
+	return Plugin_Handled;
 }
 
 
