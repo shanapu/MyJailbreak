@@ -1,0 +1,159 @@
+"Phrases"
+{
+
+	"OITC_tag"
+	{
+		"en"		"[{green}MyJB.OITC{default}]"
+	}
+
+	"OITC_need"
+	{
+		"#format"	"{1:i},{2:N}"
+		"en"		"{purple}{2}{default} has voted. {purple}{1}{default} votes required to play {darkred}OneInTheChamber Day."
+	}
+
+	"OITC_rounds"
+	{
+		"#format"	"{1:i},{2:i}"
+		"en"		"Round {purple}{1}{default} of {purple}{2}"
+	}
+
+	"OITC_twin_nc"
+	{
+		"en"		"A Prisoner has survived!"
+	}
+
+	"OITC_voting"
+	{
+		"en"		"Voting for OneInTheChamber Day is {purple}disabled!"
+	}
+
+	"OITC_setbywarden"
+	{
+		"en"		"Set OneInTheChamber Day by Warden is {purple}disabled!"
+	}
+
+	"OITC_setbyadmin"
+	{
+		"en"		"Set OneInTheChamber Day by Admin is {purple}disabled!"
+	}
+
+	"OITC_minplayer"
+	{
+		"en"		"For OneInTheChamber Day you need at least {purple}one Guard and one Prisoner!"
+	}
+
+	"OITC_ctwin_nc"
+	{
+		"en"		"A Guard has survived!"
+	}
+
+	"OITC_end"
+	{
+		"en"		"{purple}OneInTheChamber Day{default} has ended."
+	}
+
+	"OITC_next"
+	{
+		"en"		"The following round will be: {purple}OneInTheChamber Day."
+	}
+
+	"OITC_next_nc"
+	{
+		"en"		"The following round will be: OneInTheChamber Day."
+	}
+
+	"OITC_now_nc"
+	{
+		"en"		"Now a OneInTheChamber round begins."
+	}
+
+	"OITC_now"
+	{
+		"en"		"Now a {purple}OneInTheChamber{default} round begins."
+	}
+
+	"OITC_start"
+	{
+		"en"		"{purple}OneInTheChamber Day{default} has begun!"
+	}
+
+	"OITC_start_nc"
+	{
+		"en"		"OneInTheChamber Day has begun!"
+	}
+
+	"OITC_voted"
+	{
+		"en"		"You have already voted for {purple}OneInTheChamber Day!"
+	}
+
+	"OITC_progress"
+	{
+		"#format"	"{1:s}"
+		"en"		"The event {darkred}{1} {default}is {purple}already in progress!"
+	}
+
+	"OITC_disabled"
+	{
+		"en"		"OneInTheChamber Day is currently {purple}disabled!"
+	}
+
+	"OITC_timeuntilstart_nc"
+	{
+		"#format"	"{1:i}"
+		"en"		"{1} seconds until round start!"
+	}
+
+	"OITC_info_title"
+	{
+		"en"		"OneInTheChamber Day is now Activated!"
+	}
+
+	"OITC_info_line1"
+	{
+		"en"		"OneInTheChamber Day - Free for All!"
+	}
+
+	"OITC_info_line2"
+	{
+		"en"		"You only have one shot in your deagle!"
+	}
+
+	"OITC_info_line3"
+	{
+		"en"		"When you get a kill, you will be rewarded with another bullet!"
+	}
+
+	"OITC_info_line4"
+	{
+		"en"		"All usual Jailbreak Rules do not apply during this round!"
+	}
+
+	"OITC_info_line5"
+	{
+		"en"		"Last Request is disabled during this round!"
+	}
+
+	"OITC_info_line6"
+	{
+		"en"		"You must stay in the main Jailroom! Don't enter vents or secrets!"
+	}
+
+	"OITC_info_line7"
+	{
+		"en"		"Don't be an Asshole!"
+	}
+
+	"OITC_wait"
+	{
+		"#format"	"{1:i}"
+		"en"		"You must wait {purple}{1}{default} more rounds for an Event Day!"
+	}
+
+	"OITC_name"
+	{
+		"en"		"OneInTheChamber Day"
+	}
+
+}
