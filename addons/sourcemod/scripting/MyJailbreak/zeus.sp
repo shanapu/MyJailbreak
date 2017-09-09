@@ -760,7 +760,7 @@ public void OnMapEnd()
 public void OnClientPutInServer(int client)
 {
 	SDKHook(client, SDKHook_WeaponCanUse, OnWeaponCanUse);
-	SDKHook(client, SDKHook_WeaponDrop, OnWeaponDropped);
+	SDKHook(client, SDKHook_WeaponDrop, OnWeaponDrop);
 }
 
 // Knife & Taser only
