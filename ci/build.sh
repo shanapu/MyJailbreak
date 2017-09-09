@@ -214,6 +214,11 @@ unzip -qo translations.zip -d build/gameserver/
 wget -q -O translations.zip http://translator.mitchdempsey.com/sourcemod_plugins/278/download/MyJailbreak.ArmsRace.translations.zip
 unzip -qo translations.zip -d build/gameserver/
 
+wget -q -O translations.zip http://translator.mitchdempsey.com/sourcemod_plugins/282/download/MyJailbreak.OITC.translations.zip
+unzip -qo translations.zip -d build/gameserver/
+
+
+
 
 echo "Clean root folder"
 rm sourcemod.tar.gz
