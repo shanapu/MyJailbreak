@@ -104,7 +104,7 @@ int g_iCollision_Offset;
 
 // Handles
 Handle g_hTimerTruce;
-Handle g_hTimerGiveAmmo[MAXPLAYERS+1];
+Handle g_hTimerGiveDeagle[MAXPLAYERS+1];
 Handle g_hTimerBeacon;
 
 // Strings
@@ -655,7 +655,7 @@ public void Event_PlayerDeath(Event event, char[] name, bool dontBroadcast)
 	{
 		int killer = GetClientOfUserId(event.GetInt("attacker"));
 		
-		g_hTimerGiveAmmo[killer] = CreateTimer(0.5, Timer_GiveAmmo, killer);
+		GiveAmmo(killer);
 	}
 }
 
@@ -922,7 +922,7 @@ void PrepareDay(bool thisround)
 		
 		GivePlayerItem(i, "weapon_knife");
 		
-		g_hTimerGiveAmmo[i] = CreateTimer(0.5, Timer_GiveAmmo, i);
+		g_hTimerGiveDeagle[i] = CreateTimer(0.5, Timer_GiveAmmo, i);
 	}
 	
 	if (gp_bMyJailbreak)
@@ -976,6 +976,16 @@ void PrepareDay(bool thisround)
 	
 	CPrintToChatAll("%t %t", "OITC_tag", "OITC_rounds", g_iRound, g_iMaxRound);
 }
+
+// Give Ammo
+void GiveAmmo(int client)
+{
+	if (IsValidClient(client, true, false))
+	{
+		int weaponEnt = GetPlayerWeaponSlot(client, CS_SLOT_SECONDARY);
+		SetPlayerAmmo(client, GetEntProp(weaponEnt, Prop_Send, "m_iClip1") + 1);
+	}
+} 
 
 /******************************************************************************
                    MENUS
@@ -1075,15 +1085,16 @@ public Action Timer_BeaconOn(Handle timer)
 	g_hTimerBeacon = null;
 }
 
-// Delay give Ammo
+// Delay give Deagle
 public Action Timer_GiveAmmo(Handle timer, any client)
 {
 	if (IsValidClient(client, true, false))
 	{
 		int weaponEnt = GetPlayerWeaponSlot(client, CS_SLOT_SECONDARY);
-		g_hTimerGiveAmmo[client] = INVALID_HANDLE;
+		g_hTimerGiveDeagle[client] = INVALID_HANDLE;
 		
 		SetPlayerAmmo(client, GetEntProp(weaponEnt, Prop_Send, "m_iClip1") + 1);
 	}
 	
 } 
+
