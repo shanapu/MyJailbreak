@@ -630,10 +630,10 @@ public Action AdminCommand_RemoveWarden(int client, int args)
 	RemoveTheWarden();
 	Forward_OnWardenRemovedByAdmin(client);
 
-	CPrintToChatAll("%t %t", "warden_tag", "warden_removed", client, g_iWarden); // if client is console !=
+	CReplyToCommand("%t %t", "warden_tag", "warden_removed", client, g_iLastWarden);
 	if (gc_bBetterNotes.BoolValue)
 	{
-		PrintCenterTextAll("%t", "warden_removed_nc", client, g_iWarden);
+		PrintCenterTextAll("%t", "warden_removed_nc", client, g_iLastWarden);
 	}
 
 	if (!gp_bMyJailBreak)
