@@ -3,7 +3,7 @@
  * by: shanapu
  * https://github.com/shanapu/MyJailbreak/
  * 
- * Copyright (C) 2016-2017 Thomas Schmidt (shanapu)
+ * Copyright (C) 2016-2017 Thomas Schmidt (shanapu) & Hexah
  *
  * This file is part of the MyJailbreak SourceMod Plugin.
  *
@@ -104,7 +104,6 @@ int g_iCollision_Offset;
 
 // Handles
 Handle g_hTimerTruce;
-Handle g_hTimerGiveDeagle[MAXPLAYERS+1];
 Handle g_hTimerBeacon;
 
 // Strings
@@ -120,7 +119,7 @@ float g_fPos[3];
 // Info
 public Plugin myinfo =  {
 	name = "MyJailbreak - OneInTheChamber", 
-	author = "shanapu | Hexah", 
+	author = "Hexah | shanapu", 
 	description = "Event Day for Jailbreak Server", 
 	version = MYJB_VERSION, 
 	url = MYJB_URL_LINK
@@ -138,45 +137,45 @@ public void OnPluginStart()
 {
 	// Translation
 	LoadTranslations("MyJailbreak.Warden.phrases");
-	LoadTranslations("MyJailbreak.OITC.phrases");
+	LoadTranslations("MyJailbreak.OneInTheChamber.phrases");
 	
 	// Client Commands
-	RegConsoleCmd("sm_setoitc", Command_SetOITC, "Allows the Admin or Warden to set OneInTheChamber as next round");
-	RegConsoleCmd("sm_oitc", Command_VoteOITC, "Allows players to vote for a OneInTheChamber");
+	RegConsoleCmd("sm_setoneinthechamber", Command_SetOITC, "Allows the Admin or Warden to set OneInTheChamber as next round");
+	RegConsoleCmd("sm_oneinthechamber", Command_VoteOITC, "Allows players to vote for a OneInTheChamber");
 	
 	// AutoExecConfig
-	AutoExecConfig_SetFile("OITC", "MyJailbreak/EventDays");
+	AutoExecConfig_SetFile("OneInTheChamber", "MyJailbreak/EventDays");
 	AutoExecConfig_SetCreateFile(true);
 	
-	AutoExecConfig_CreateConVar("sm_oitc_version", MYJB_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY | FCVAR_REPLICATED | FCVAR_NOTIFY | FCVAR_DONTRECORD);
-	gc_bPlugin = AutoExecConfig_CreateConVar("sm_oitc_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true, 0.0, true, 1.0);
-	gc_sCustomCommandVote = AutoExecConfig_CreateConVar("sm_oitc_cmds_vote", "oneinthechamber", "Set your custom chat command for Event voting(!oitc (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
-	gc_sCustomCommandSet = AutoExecConfig_CreateConVar("sm_oitc_cmds_set", "soitc, soneinthechamber", "Set your custom chat command for set Event(!setoitc (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
-	gc_bSetW = AutoExecConfig_CreateConVar("sm_oitc_warden", "1", "0 - disabled, 1 - allow warden to set oitc round", _, true, 0.0, true, 1.0);
-	gc_bSetA = AutoExecConfig_CreateConVar("sm_oitc_admin", "1", "0 - disabled, 1 - allow admin/vip to set oitc round", _, true, 0.0, true, 1.0);
-	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_oitc_flag", "g", "Set flag for admin/vip to set this Event Day.");
-	gc_bVote = AutoExecConfig_CreateConVar("sm_oitc_vote", "1", "0 - disabled, 1 - allow player to vote for oitc", _, true, 0.0, true, 1.0);
-	gc_bSpawnCell = AutoExecConfig_CreateConVar("sm_oitc_spawn", "0", "0 - T teleport to CT spawn, 1 - cell doors auto open", _, true, 0.0, true, 1.0);
-	gc_bKnifeOneHit = AutoExecConfig_CreateConVar("sm_oitc_knife_onehit", "1", "0 - Knife does normal damage, 1 - Knife one-hit", _, true, 0.0, true, 1.0);
+	AutoExecConfig_CreateConVar("sm_oneinthechamber_version", MYJB_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY | FCVAR_REPLICATED | FCVAR_NOTIFY | FCVAR_DONTRECORD);
+	gc_bPlugin = AutoExecConfig_CreateConVar("sm_oneinthechamber_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true, 0.0, true, 1.0);
+	gc_sCustomCommandVote = AutoExecConfig_CreateConVar("sm_oneinthechamber_cmds_vote", "oitc", "Set your custom chat command for Event voting(!oneinthechamber (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
+	gc_sCustomCommandSet = AutoExecConfig_CreateConVar("sm_oneinthechamber_cmds_set", "soitc, soneinthechamber", "Set your custom chat command for set Event(!setoneinthechamber (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
+	gc_bSetW = AutoExecConfig_CreateConVar("sm_oneinthechamber_warden", "1", "0 - disabled, 1 - allow warden to set one in the chamber round", _, true, 0.0, true, 1.0);
+	gc_bSetA = AutoExecConfig_CreateConVar("sm_oneinthechamber_admin", "1", "0 - disabled, 1 - allow admin/vip to set one in the chamber round", _, true, 0.0, true, 1.0);
+	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_oneinthechamber_flag", "g", "Set flag for admin/vip to set this Event Day.");
+	gc_bVote = AutoExecConfig_CreateConVar("sm_oneinthechamber_vote", "1", "0 - disabled, 1 - allow player to vote for one in the chamber", _, true, 0.0, true, 1.0);
+	gc_bSpawnCell = AutoExecConfig_CreateConVar("sm_oneinthechamber_spawn", "0", "0 - T teleport to CT spawn, 1 - cell doors auto open", _, true, 0.0, true, 1.0);
+	gc_bKnifeOneHit = AutoExecConfig_CreateConVar("sm_oneinthechamber_knife_onehit", "1", "0 - Knife does normal damage, 1 - Knife one-hit", _, true, 0.0, true, 1.0);
 	
-	gc_bBeginSetA = AutoExecConfig_CreateConVar("sm_oitc_begin_admin", "1", "When admin set event (!setoitc) = 0 - start event next round, 1 - start event current round", _, true, 0.0, true, 1.0);
-	gc_bBeginSetW = AutoExecConfig_CreateConVar("sm_oitc_begin_warden", "1", "When warden set event (!setoitc) = 0 - start event next round, 1 - start event current round", _, true, 0.0, true, 1.0);
-	gc_bBeginSetV = AutoExecConfig_CreateConVar("sm_oitc_begin_vote", "0", "When users vote for event (!oitc) = 0 - start event next round, 1 - start event current round", _, true, 0.0, true, 1.0);
-	gc_bBeginSetVW = AutoExecConfig_CreateConVar("sm_oitc_begin_daysvote", "0", "When warden/admin start eventday voting (!sm_voteday) and event wins = 0 - start event next round, 1 - start event current round", _, true, 0.0, true, 1.0);
-	gc_bTeleportSpawn = AutoExecConfig_CreateConVar("sm_oitc_teleport_spawn", "0", "0 - start event in current round from current player positions, 1 - teleport players to spawn when start event on current round(only when sm_*_begin_admin, sm_*_begin_warden, sm_*_begin_vote or sm_*_begin_daysvote is on '1')", _, true, 0.0, true, 1.0);
+	gc_bBeginSetA = AutoExecConfig_CreateConVar("sm_oneinthechamber_begin_admin", "1", "When admin set event (!setoitc) = 0 - start event next round, 1 - start event current round", _, true, 0.0, true, 1.0);
+	gc_bBeginSetW = AutoExecConfig_CreateConVar("sm_oneinthechamber_begin_warden", "1", "When warden set event (!setoitc) = 0 - start event next round, 1 - start event current round", _, true, 0.0, true, 1.0);
+	gc_bBeginSetV = AutoExecConfig_CreateConVar("sm_oneinthechamber_begin_vote", "0", "When users vote for event (!oitc) = 0 - start event next round, 1 - start event current round", _, true, 0.0, true, 1.0);
+	gc_bBeginSetVW = AutoExecConfig_CreateConVar("sm_oneinthechamber_begin_daysvote", "0", "When warden/admin start eventday voting (!sm_voteday) and event wins = 0 - start event next round, 1 - start event current round", _, true, 0.0, true, 1.0);
+	gc_bTeleportSpawn = AutoExecConfig_CreateConVar("sm_oneinthechamber_teleport_spawn", "0", "0 - start event in current round from current player positions, 1 - teleport players to spawn when start event on current round(only when sm_*_begin_admin, sm_*_begin_warden, sm_*_begin_vote or sm_*_begin_daysvote is on '1')", _, true, 0.0, true, 1.0);
 	
-	gc_iRounds = AutoExecConfig_CreateConVar("sm_oitc_rounds", "3", "Rounds to play in a row", _, true, 1.0);
-	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_oitc_roundtime", "5", "Round time in minutes for a single oitc round", _, true, 1.0);
-	gc_fBeaconTime = AutoExecConfig_CreateConVar("sm_oitc_beacon_time", "240", "Time in seconds until the beacon turned on (set to 0 to disable)", _, true, 0.0);
-	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_oitc_trucetime", "15", "Time in seconds players can't deal damage", _, true, 0.0);
-	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_oitc_cooldown_day", "3", "Rounds cooldown after a event until event can be start again", _, true, 0.0);
-	gc_iCooldownStart = AutoExecConfig_CreateConVar("sm_oitc_cooldown_start", "3", "Rounds until event can be start after mapchange.", _, true, 0.0);
-	gc_bSetABypassCooldown = AutoExecConfig_CreateConVar("sm_oitc_cooldown_admin", "1", "0 - disabled, 1 - ignore the cooldown when admin/vip set oitc round", _, true, 0.0, true, 1.0);
-	gc_bSounds = AutoExecConfig_CreateConVar("sm_oitc_sounds_enable", "1", "0 - disabled, 1 - enable sounds ", _, true, 0.1, true, 1.0);
-	gc_sSoundStartPath = AutoExecConfig_CreateConVar("sm_oitc_sounds_start", "music/MyJailbreak/start.mp3", "Path to the soundfile which should be played for a start.");
-	gc_bOverlays = AutoExecConfig_CreateConVar("sm_oitc_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true, 0.0, true, 1.0);
-	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_oitc_overlays_start", "overlays/MyJailbreak/start", "Path to the start Overlay DONT TYPE .vmt or .vft");
-	gc_bAllowLR = AutoExecConfig_CreateConVar("sm_oitc_allow_lr", "0", "0 - disabled, 1 - enable LR for last round and end eventday", _, true, 0.0, true, 1.0);
+	gc_iRounds = AutoExecConfig_CreateConVar("sm_oneinthechamber_rounds", "3", "Rounds to play in a row", _, true, 1.0);
+	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_oneinthechamber_roundtime", "5", "Round time in minutes for a single one in the chamber round", _, true, 1.0);
+	gc_fBeaconTime = AutoExecConfig_CreateConVar("sm_oneinthechamber_beacon_time", "240", "Time in seconds until the beacon turned on (set to 0 to disable)", _, true, 0.0);
+	gc_iTruceTime = AutoExecConfig_CreateConVar("sm_oneinthechamber_trucetime", "15", "Time in seconds players can't deal damage", _, true, 0.0);
+	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_oneinthechamber_cooldown_day", "3", "Rounds cooldown after a event until event can be start again", _, true, 0.0);
+	gc_iCooldownStart = AutoExecConfig_CreateConVar("sm_oneinthechamber_cooldown_start", "3", "Rounds until event can be start after mapchange.", _, true, 0.0);
+	gc_bSetABypassCooldown = AutoExecConfig_CreateConVar("sm_oneinthechamber_cooldown_admin", "1", "0 - disabled, 1 - ignore the cooldown when admin/vip set one in the chamber round", _, true, 0.0, true, 1.0);
+	gc_bSounds = AutoExecConfig_CreateConVar("sm_oneinthechamber_sounds_enable", "1", "0 - disabled, 1 - enable sounds ", _, true, 0.1, true, 1.0);
+	gc_sSoundStartPath = AutoExecConfig_CreateConVar("sm_oneinthechamber_sounds_start", "music/MyJailbreak/start.mp3", "Path to the soundfile which should be played for a start.");
+	gc_bOverlays = AutoExecConfig_CreateConVar("sm_oneinthechamber_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true, 0.0, true, 1.0);
+	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_oneinthechamber_overlays_start", "overlays/MyJailbreak/start", "Path to the start Overlay DONT TYPE .vmt or .vft");
+	gc_bAllowLR = AutoExecConfig_CreateConVar("sm_oneinthechamber_allow_lr", "0", "0 - disabled, 1 - enable LR for last round and end eventday", _, true, 0.0, true, 1.0);
 	
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
@@ -340,7 +339,7 @@ public Action Command_SetOITC(int client, int args)
 {
 	if (!gc_bPlugin.BoolValue)
 	{
-		CReplyToCommand(client, "%t %t", "OITC_tag", "OITC_disabled");
+		CReplyToCommand(client, "%t %t", "oneinthechamber_tag", "oneinthechamber_disabled");
 		return Plugin_Handled;
 	}
 	
@@ -362,13 +361,13 @@ public Action Command_SetOITC(int client, int args)
 	{
 		if (!gc_bSetA.BoolValue)
 		{
-			CReplyToCommand(client, "%t %t", "OITC_tag", "OITC_setbyadmin");
+			CReplyToCommand(client, "%t %t", "oneinthechamber_tag", "oneinthechamber_setbyadmin");
 			return Plugin_Handled;
 		}
 		
 		if (GetTeamClientCount(CS_TEAM_CT) == 0 || GetTeamClientCount(CS_TEAM_T) == 0)
 		{
-			CReplyToCommand(client, "%t %t", "OITC_tag", "OITC_minplayer");
+			CReplyToCommand(client, "%t %t", "oneinthechamber_tag", "oneinthechamber_minplayer");
 			return Plugin_Handled;
 		}
 		
@@ -379,14 +378,14 @@ public Action Command_SetOITC(int client, int args)
 			
 			if (!StrEqual(EventDay, "none", false))
 			{
-				CReplyToCommand(client, "%t %t", "OITC_tag", "OITC_progress", EventDay);
+				CReplyToCommand(client, "%t %t", "oneinthechamber_tag", "oneinthechamber_progress", EventDay);
 				return Plugin_Handled;
 			}
 		}
 		
 		if (g_iCoolDown > 0 && !gc_bSetABypassCooldown.BoolValue)
 		{
-			CReplyToCommand(client, "%t %t", "OITC_tag", "OITC_wait", g_iCoolDown);
+			CReplyToCommand(client, "%t %t", "oneinthechamber_tag", "oneinthechamber_wait", g_iCoolDown);
 			return Plugin_Handled;
 		}
 		
@@ -412,13 +411,13 @@ public Action Command_SetOITC(int client, int args)
 		
 		if (!gc_bSetW.BoolValue)
 		{
-			CReplyToCommand(client, "%t %t", "warden_tag", "OITC_setbywarden");
+			CReplyToCommand(client, "%t %t", "warden_tag", "oneinthechamber_setbywarden");
 			return Plugin_Handled;
 		}
 		
 		if (GetTeamClientCount(CS_TEAM_CT) == 0 || GetTeamClientCount(CS_TEAM_T) == 0)
 		{
-			CReplyToCommand(client, "%t %t", "OITC_tag", "OITC_minplayer");
+			CReplyToCommand(client, "%t %t", "oneinthechamber_tag", "oneinthechamber_minplayer");
 			return Plugin_Handled;
 		}
 		
@@ -429,14 +428,14 @@ public Action Command_SetOITC(int client, int args)
 			
 			if (!StrEqual(EventDay, "none", false))
 			{
-				CReplyToCommand(client, "%t %t", "OITC_tag", "OITC_progress", EventDay);
+				CReplyToCommand(client, "%t %t", "oneinthechamber_tag", "oneinthechamber_progress", EventDay);
 				return Plugin_Handled;
 			}
 		}
 		
 		if (g_iCoolDown > 0)
 		{
-			CReplyToCommand(client, "%t %t", "OITC_tag", "OITC_wait", g_iCoolDown);
+			CReplyToCommand(client, "%t %t", "oneinthechamber_tag", "oneinthechamber_wait", g_iCoolDown);
 			return Plugin_Handled;
 		}
 		
@@ -465,19 +464,19 @@ public Action Command_VoteOITC(int client, int args)
 {
 	if (!gc_bPlugin.BoolValue)
 	{
-		CReplyToCommand(client, "%t %t", "OITC_tag", "OITC_disabled");
+		CReplyToCommand(client, "%t %t", "oneinthechamber_tag", "oneinthechamber_disabled");
 		return Plugin_Handled;
 	}
 	
 	if (!gc_bVote.BoolValue)
 	{
-		CReplyToCommand(client, "%t %t", "OITC_tag", "OITC_voting");
+		CReplyToCommand(client, "%t %t", "oneinthechamber_tag", "oneinthechamber_voting");
 		return Plugin_Handled;
 	}
 	
 	if (GetTeamClientCount(CS_TEAM_CT) == 0 || GetTeamClientCount(CS_TEAM_T) == 0)
 	{
-		CReplyToCommand(client, "%t %t", "OITC_tag", "OITC_minplayer");
+		CReplyToCommand(client, "%t %t", "oneinthechamber_tag", "oneinthechamber_minplayer");
 		return Plugin_Handled;
 	}
 	
@@ -488,14 +487,14 @@ public Action Command_VoteOITC(int client, int args)
 		
 		if (!StrEqual(EventDay, "none", false))
 		{
-			CReplyToCommand(client, "%t %t", "OITC_tag", "OITC_progress", EventDay);
+			CReplyToCommand(client, "%t %t", "oneinthechamber_tag", "oneinthechamber_progress", EventDay);
 			return Plugin_Handled;
 		}
 	}
 	
 	if (g_iCoolDown > 0)
 	{
-		CReplyToCommand(client, "%t %t", "OITC_tag", "OITC_wait", g_iCoolDown);
+		CReplyToCommand(client, "%t %t", "oneinthechamber_tag", "oneinthechamber_wait", g_iCoolDown);
 		return Plugin_Handled;
 	}
 	
@@ -504,7 +503,7 @@ public Action Command_VoteOITC(int client, int args)
 	
 	if (StrContains(g_sHasVoted, steamid, true) != -1)
 	{
-		CReplyToCommand(client, "%t %t", "OITC_tag", "OITC_voted");
+		CReplyToCommand(client, "%t %t", "oneinthechamber_tag", "oneinthechamber_voted");
 		return Plugin_Handled;
 	}
 	
@@ -530,7 +529,7 @@ public Action Command_VoteOITC(int client, int args)
 	}
 	else
 	{
-		CPrintToChatAll("%t %t", "OITC_tag", "OITC_need", Missing, client);
+		CPrintToChatAll("%t %t", "oneinthechamber_tag", "oneinthechamber_need", Missing, client);
 	}
 	
 	return Plugin_Handled;
@@ -589,11 +588,11 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 		int winner = event.GetInt("winner");
 		if (winner == 2)
 		{
-			PrintCenterTextAll("%t", "OITC_twin_nc");
+			PrintCenterTextAll("%t", "oneinthechamber_twin_nc");
 		}
 		if (winner == 3)
 		{
-			PrintCenterTextAll("%t", "OITC_ctwin_nc");
+			PrintCenterTextAll("%t", "oneinthechamber_ctwin_nc");
 		}
 		
 		if (g_iRound == g_iMaxRound)
@@ -632,7 +631,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			
 			//			g_iMPRoundTime.IntValue = g_iOldRoundTime;
 			
-			CPrintToChatAll("%t %t", "OITC_tag", "OITC_end");
+			CPrintToChatAll("%t %t", "oneinthechamber_tag", "oneinthechamber_end");
 		}
 	}
 	
@@ -643,8 +642,8 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			CreateInfoPanel(i);
 		}
 		
-		CPrintToChatAll("%t %t", "OITC_tag", "OITC_next");
-		PrintCenterTextAll("%t", "OITC_next_nc");
+		CPrintToChatAll("%t %t", "oneinthechamber_tag", "oneinthechamber_next");
+		PrintCenterTextAll("%t", "oneinthechamber_next_nc");
 	}
 }
 
@@ -653,9 +652,8 @@ public void Event_PlayerDeath(Event event, char[] name, bool dontBroadcast)
 {
 	if (g_bIsOITC)
 	{
-		int killer = GetClientOfUserId(event.GetInt("attacker"));
-		
-		GiveAmmo(killer);
+		int userid = event.GetInt("attacker");
+		CreateTimer(0.1, Timer_GiveAmmo, userid);
 	}
 }
 
@@ -738,7 +736,7 @@ public void OnAvailableLR(int Announced)
 			
 			//			g_iMPRoundTime.IntValue = g_iOldRoundTime;
 			
-			CPrintToChatAll("%t %t", "OITC_tag", "OITC_end");
+			CPrintToChatAll("%t %t", "oneinthechamber_tag", "oneinthechamber_end");
 		}
 	}
 }
@@ -769,9 +767,8 @@ public void OnClientPutInServer(int client)
 public Action OnWeaponCanUse(int client, int weapon)
 {
 	if (!g_bIsOITC)
-	{
 		return Plugin_Continue;
-	}
+
 	
 	char sWeapon[32];
 	GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
@@ -793,30 +790,33 @@ public Action OnWeaponDrop(int client, int weapon)
 	return Plugin_Handled;
 }
 
-public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &weapon, float damageForce[3], float damagePosition[3], int damagecustom)
 {
 	if (!g_bIsOITC)
 		return Plugin_Continue;
-	
-	if (damagetype != DMG_BULLET)
-		return Plugin_Continue;
-	
-	char sWeaponName[64];
-	GetEdictClassname(inflictor, sWeaponName, sizeof(sWeaponName));
-	
-	if (!StrEqual(sWeaponName, "weapon_knife"))
+
+	if (damagetype & DMG_BULLET || damagetype & DMG_SLASH)
 	{
-		damage = 1000.0;
+		char sWeapon[32];
+		GetEntityClassname(weapon, sWeapon, sizeof(sWeapon));
+		
+		if (!StrEqual(sWeapon, "weapon_knife"))
+		{
+			damage = 1000.0;   // if is not knife -> is deagle  -  don't work?!
+		}
+		else if (gc_bKnifeOneHit.BoolValue)
+		{
+			damage = 1000.0;
+		}
+		else
+		{
+			return Plugin_Continue;
+		}
+
+		return Plugin_Changed;
 	}
-	else if (gc_bKnifeOneHit.BoolValue)
-	{
-		damage = 1000.0;
-	}
-	else
-	{
-		return Plugin_Continue;
-	}
-	return Plugin_Changed;
+
+	return Plugin_Continue;
 }
 
 /******************************************************************************
@@ -837,7 +837,7 @@ void StartEventRound(bool thisround)
 	if (gp_bMyJailbreak)
 	{
 		char buffer[32];
-		Format(buffer, sizeof(buffer), "%T", "OITC_name", LANG_SERVER);
+		Format(buffer, sizeof(buffer), "%T", "oneinthechamber_name", LANG_SERVER);
 		MyJailbreak_SetEventDayName(buffer);
 		MyJailbreak_SetEventDayPlanned(true);
 	}
@@ -855,16 +855,16 @@ void StartEventRound(bool thisround)
 		
 		CreateTimer(3.0, Timer_PrepareEvent);
 		
-		CPrintToChatAll("%t %t", "OITC_tag", "OITC_now");
-		PrintCenterTextAll("%t", "OITC_now_nc");
+		CPrintToChatAll("%t %t", "oneinthechamber_tag", "oneinthechamber_now");
+		PrintCenterTextAll("%t", "oneinthechamber_now_nc");
 	}
 	else
 	{
 		g_bStartOITC = true;
 		g_iCoolDown++;
 		
-		CPrintToChatAll("%t %t", "OITC_tag", "OITC_next");
-		PrintCenterTextAll("%t", "OITC_next_nc");
+		CPrintToChatAll("%t %t", "oneinthechamber_tag", "oneinthechamber_next");
+		PrintCenterTextAll("%t", "oneinthechamber_next_nc");
 	}
 }
 
@@ -921,8 +921,12 @@ void PrepareDay(bool thisround)
 		StripAllPlayerWeapons(i);
 		
 		GivePlayerItem(i, "weapon_knife");
-		
-		g_hTimerGiveDeagle[i] = CreateTimer(0.5, Timer_GiveAmmo, i);
+
+		int iDeagle = GivePlayerItem(i, "weapon_deagle");
+		SetEntProp(iDeagle, Prop_Data, "m_iClip1", 0);
+		SetEntProp(iDeagle, Prop_Send, "m_iPrimaryReserveAmmoCount", 0);
+		SetEntProp(iDeagle, Prop_Send, "m_iSecondaryReserveAmmoCount", 0);
+		CreateTimer(0.3, Timer_GiveAmmo, GetClientUserId(i));
 	}
 	
 	if (gp_bMyJailbreak)
@@ -974,18 +978,9 @@ void PrepareDay(bool thisround)
 	
 	g_hTimerTruce = CreateTimer(1.0, Timer_StartEvent, _, TIMER_REPEAT);
 	
-	CPrintToChatAll("%t %t", "OITC_tag", "OITC_rounds", g_iRound, g_iMaxRound);
+	CPrintToChatAll("%t %t", "oneinthechamber_tag", "oneinthechamber_rounds", g_iRound, g_iMaxRound);
 }
 
-// Give Ammo
-void GiveAmmo(int client)
-{
-	if (IsValidClient(client, true, false))
-	{
-		int weaponEnt = GetPlayerWeaponSlot(client, CS_SLOT_SECONDARY);
-		SetPlayerAmmo(client, GetEntProp(weaponEnt, Prop_Send, "m_iClip1") + 1);
-	}
-} 
 
 /******************************************************************************
                    MENUS
@@ -998,24 +993,24 @@ void CreateInfoPanel(int client)
 	
 	Panel InfoPanel = new Panel();
 	
-	Format(info, sizeof(info), "%T", "OITC_info_title", client);
+	Format(info, sizeof(info), "%T", "oneinthechamber_info_title", client);
 	InfoPanel.SetTitle(info);
 	
 	InfoPanel.DrawText("                                   ");
-	Format(info, sizeof(info), "%T", "OITC_info_line1", client);
+	Format(info, sizeof(info), "%T", "oneinthechamber_info_line1", client);
 	InfoPanel.DrawText(info);
 	InfoPanel.DrawText("-----------------------------------");
-	Format(info, sizeof(info), "%T", "OITC_info_line2", client);
+	Format(info, sizeof(info), "%T", "oneinthechamber_info_line2", client);
 	InfoPanel.DrawText(info);
-	Format(info, sizeof(info), "%T", "OITC_info_line3", client);
+	Format(info, sizeof(info), "%T", "oneinthechamber_info_line3", client);
 	InfoPanel.DrawText(info);
-	Format(info, sizeof(info), "%T", "OITC_info_line4", client);
+	Format(info, sizeof(info), "%T", "oneinthechamber_info_line4", client);
 	InfoPanel.DrawText(info);
-	Format(info, sizeof(info), "%T", "OITC_info_line5", client);
+	Format(info, sizeof(info), "%T", "oneinthechamber_info_line5", client);
 	InfoPanel.DrawText(info);
-	Format(info, sizeof(info), "%T", "OITC_info_line6", client);
+	Format(info, sizeof(info), "%T", "oneinthechamber_info_line6", client);
 	InfoPanel.DrawText(info);
-	Format(info, sizeof(info), "%T", "OITC_info_line7", client);
+	Format(info, sizeof(info), "%T", "oneinthechamber_info_line7", client);
 	InfoPanel.DrawText(info);
 	InfoPanel.DrawText("-----------------------------------");
 	Format(info, sizeof(info), "%T", "warden_close", client);
@@ -1043,7 +1038,7 @@ public Action Timer_StartEvent(Handle timer)
 			}
 		}
 		
-		PrintCenterTextAll("%t", "OITC_timeuntilstart_nc", g_iTruceTime);
+		PrintCenterTextAll("%t", "oneinthechamber_timeuntilstart_nc", g_iTruceTime);
 		
 		return Plugin_Continue;
 	}
@@ -1065,9 +1060,9 @@ public Action Timer_StartEvent(Handle timer)
 		EmitSoundToAllAny(g_sSoundStartPath);
 	}
 	
-	PrintCenterTextAll("%t", "OITC_start_nc");
+	PrintCenterTextAll("%t", "oneinthechamber_start_nc");
 	
-	CPrintToChatAll("%t %t", "OITC_tag", "OITC_start");
+	CPrintToChatAll("%t %t", "oneinthechamber_tag", "oneinthechamber_start");
 	
 	g_hTimerTruce = null;
 	
@@ -1086,15 +1081,15 @@ public Action Timer_BeaconOn(Handle timer)
 }
 
 // Delay give Deagle
-public Action Timer_GiveAmmo(Handle timer, any client)
+public Action Timer_GiveAmmo(Handle timer, int userid)
 {
+	int client = GetClientOfUserId(userid);
+
 	if (IsValidClient(client, true, false))
 	{
-		int weaponEnt = GetPlayerWeaponSlot(client, CS_SLOT_SECONDARY);
-		g_hTimerGiveDeagle[client] = INVALID_HANDLE;
-		
-		SetPlayerAmmo(client, GetEntProp(weaponEnt, Prop_Send, "m_iClip1") + 1);
+		int weapon = GetPlayerWeaponSlot(client, CS_SLOT_SECONDARY);
+		SetEntProp(weapon, Prop_Data, "m_iClip1", GetEntProp(weapon, Prop_Data, "m_iClip1")+1);
+		SetEntProp(weapon, Prop_Send, "m_iPrimaryReserveAmmoCount", 0);
+		SetEntProp(weapon, Prop_Send, "m_iSecondaryReserveAmmoCount", 0);
 	}
-	
-} 
-
+}

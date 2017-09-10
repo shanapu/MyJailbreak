@@ -214,7 +214,7 @@ unzip -qo translations.zip -d build/gameserver/
 wget -q -O translations.zip http://translator.mitchdempsey.com/sourcemod_plugins/278/download/MyJailbreak.ArmsRace.translations.zip
 unzip -qo translations.zip -d build/gameserver/
 
-wget -q -O translations.zip http://translator.mitchdempsey.com/sourcemod_plugins/282/download/MyJailbreak.OITC.translations.zip
+wget -q -O translations.zip http://translator.mitchdempsey.com/sourcemod_plugins/283/download/MyJailbreak.OneIntheChamber.translations.zip
 unzip -qo translations.zip -d build/gameserver/
 
 

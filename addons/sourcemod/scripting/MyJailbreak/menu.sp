@@ -116,6 +116,7 @@ ConVar g_bArmsRace;
 ConVar g_bDrunk;
 ConVar g_bFreeday;
 ConVar g_bDuckHunt;
+ConVar g_bOneInTheChamber;
 ConVar g_bCountdown;
 ConVar g_bCountdownDeputy;
 ConVar g_bVote;
@@ -164,6 +165,7 @@ ConVar g_bVoteDuckHunt;
 ConVar g_bVoteDealDamage;
 ConVar g_bVoteTeleport;
 ConVar g_bVoteArmsRace;
+ConVar g_bVoteOneInTheChamber;
 
 ConVar g_bAdminWar;
 ConVar g_bAdminZeus;
@@ -184,6 +186,7 @@ ConVar g_bAdminDuckHunt;
 ConVar g_bAdminDealDamage;
 ConVar g_bAdminTeleport;
 ConVar g_bAdminArmsRace;
+ConVar g_bAdminOneInTheChamber;
 
 ConVar g_bWardenWar;
 ConVar g_bWardenZeus;
@@ -204,6 +207,7 @@ ConVar g_bWardenDuckHunt;
 ConVar g_bWardenDealDamage;
 ConVar g_bWardenTeleport;
 ConVar g_bWardenArmsRace;
+ConVar g_bWardenOneInTheChamber;
 
 
 // Strings
@@ -610,7 +614,8 @@ public void OnConfigsExecuted()
 	g_bDealDamage = FindConVar("sm_dealdamage_enable");
 	g_bTeleport = FindConVar("sm_teleport_enable");
 	g_bArmsRace = FindConVar("sm_armsrace_enable");
-
+	g_bOneInTheChamber = FindConVar("sm_oneinthechamber_enable");
+	
 	g_bVoteWar = FindConVar("sm_war_vote");
 	g_bVoteZeus = FindConVar("sm_zeus_vote");
 	g_bVoteFFA = FindConVar("sm_ffa_vote");
@@ -630,6 +635,7 @@ public void OnConfigsExecuted()
 	g_bVoteDealDamage = FindConVar("sm_dealdamage_vote");
 	g_bVoteTeleport = FindConVar("sm_teleport_vote");
 	g_bVoteArmsRace = FindConVar("sm_armsrace_vote");
+	g_bVoteOneInTheChamber = FindConVar("sm_oneinthechamber_vote");
 
 	g_bAdminWar = FindConVar("sm_war_admin");
 	g_bAdminZeus = FindConVar("sm_zeus_admin");
@@ -650,6 +656,7 @@ public void OnConfigsExecuted()
 	g_bAdminDealDamage = FindConVar("sm_dealdamage_admin");
 	g_bAdminTeleport = FindConVar("sm_teleport_admin");
 	g_bAdminArmsRace = FindConVar("sm_armsrace_admin");
+	g_bAdminOneInTheChamber = FindConVar("sm_oneinthechamber_admin");
 
 	g_bWardenWar = FindConVar("sm_war_warden");
 	g_bWardenZeus = FindConVar("sm_zeus_warden");
@@ -670,6 +677,7 @@ public void OnConfigsExecuted()
 	g_bWardenDealDamage = FindConVar("sm_dealdamage_warden");
 	g_bWardenTeleport = FindConVar("sm_teleport_warden");
 	g_bWardenArmsRace = FindConVar("sm_armsrace_warden");
+	g_bWardenOneInTheChamber = FindConVar("sm_oneinthechamber_warden");
 
 	gc_sAdminFlagLaser.GetString(g_sAdminFlagLaser, sizeof(g_sAdminFlagLaser));
 	gc_sAdminFlagPainter.GetString(g_sAdminFlagPainter, sizeof(g_sAdminFlagPainter));
@@ -1722,6 +1730,14 @@ public Action Command_VoteEventDays(int client, int args)
 					daysmenu.AddItem("voteTeleport", menuinfo);
 				}
 			}
+			if (g_bOneInTheChamber != null)
+			{
+				if (g_bOneInTheChamber.BoolValue && g_bVoteOneInTheChamber.BoolValue)
+				{
+					Format(menuinfo, sizeof(menuinfo), "%T", "menu_oneinthechamber", client);
+					daysmenu.AddItem("voteOneInTheChamber", menuinfo);
+				}
+			}
 			if (g_bArmsRace != null)
 			{
 				if (g_bArmsRace.BoolValue && g_bVoteArmsRace.BoolValue)
@@ -1853,6 +1869,14 @@ public int VoteEventMenuHandler(Menu daysmenu, MenuAction action, int client, in
 		else if (strcmp(info, "voteArmsRace") == 0)
 		{
 			FakeClientCommand(client, "sm_armsrace");
+			if (!gc_bClose.BoolValue)
+			{
+				Command_OpenMenu(client, 0);
+			}
+		}
+		else if (strcmp(info, "voteOneInTheChamber") == 0)
+		{
+			FakeClientCommand(client, "sm_oneinthechamber");
 			if (!gc_bClose.BoolValue)
 			{
 				Command_OpenMenu(client, 0);
@@ -2072,6 +2096,14 @@ void Command_SetWardenEventDay(int client)
 					daysmenu.AddItem("setTeleport", menuinfo);
 				}
 			}
+			if (g_bOneInTheChamber != null)
+			{
+				if (g_bOneInTheChamber.BoolValue && g_bWardenOneInTheChamber.BoolValue)
+				{
+					Format(menuinfo, sizeof(menuinfo), "%T", "menu_oneinthechamber", client);
+					daysmenu.AddItem("setOneInTheChamber", menuinfo);
+				}
+			}
 			if (g_bArmsRace != null)
 			{
 				if (g_bArmsRace.BoolValue && g_bWardenArmsRace.BoolValue)
@@ -2216,6 +2248,14 @@ void Command_SetAdminEventDay(int client)
 				{
 					Format(menuinfo, sizeof(menuinfo), "%T", "menu_teleport", client);
 					daysmenu.AddItem("setTeleport", menuinfo);
+				}
+			}
+			if (g_bOneInTheChamber != null)
+			{
+				if (g_bOneInTheChamber.BoolValue && g_bAdminOneInTheChamber.BoolValue)
+				{
+					Format(menuinfo, sizeof(menuinfo), "%T", "menu_oneinthechamber", client);
+					daysmenu.AddItem("setOneInTheChamber", menuinfo);
 				}
 			}
 			if (g_bArmsRace != null)
@@ -2380,6 +2420,14 @@ public int SetEventMenuHandler(Menu daysmenu, MenuAction action, int client, int
 		else if (strcmp(info, "setTeleport") == 0)
 		{
 			FakeClientCommand(client, "sm_setteleport");
+			if (!gc_bClose.BoolValue)
+			{
+				Command_OpenMenu(client, 0);
+			}
+		}
+		else if (strcmp(info, "setOneInTheChamber") == 0)
+		{
+			FakeClientCommand(client, "sm_setoneinthechamber");
 			if (!gc_bClose.BoolValue)
 			{
 				Command_OpenMenu(client, 0);
@@ -2606,6 +2654,11 @@ public Action Command_VotingMenu(int client, int args)
 						{
 								Format(menuinfo, sizeof(menuinfo), "%T", "menu_armsrace", LANG_SERVER);
 								menu.AddItem("armsrace", menuinfo);
+						}
+						if (GetCommandFlags("sm_setoneinthechamber") != INVALID_FCVAR_FLAGS)
+						{
+								Format(menuinfo, sizeof(menuinfo), "%T", "menu_armsrace", LANG_SERVER);
+								menu.AddItem("oneinthechamber", menuinfo);
 						}
 						if (GetCommandFlags("sm_sethebattle") != INVALID_FCVAR_FLAGS)
 						{

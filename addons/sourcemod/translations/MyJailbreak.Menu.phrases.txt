@@ -443,4 +443,9 @@
 		"en"		"Gangs Menu"
 	}
 
+	"menu_oneinthechamber"
+	{
+		"en"		"One in the chamber"
+	}
+
 }

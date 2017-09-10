@@ -96,6 +96,7 @@ char g_sEventDays[][32] = {
 						"ghosts",
 						"teleport",
 						"armsrace",
+						"oneinthechamber",
 						"hebattle",
 						"noscope",
 						"duckhunt",
@@ -105,7 +106,7 @@ char g_sEventDays[][32] = {
 						"knifefight",
 						"cowboy",
 						"freeday"
-						}; // 18 event days
+						}; // 19 event days
 
 // Modules
 #include "MyJailbreak/Modules/fog.sp"
