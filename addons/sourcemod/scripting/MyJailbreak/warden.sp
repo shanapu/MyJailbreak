@@ -630,7 +630,7 @@ public Action AdminCommand_RemoveWarden(int client, int args)
 	RemoveTheWarden();
 	Forward_OnWardenRemovedByAdmin(client);
 
-	CReplyToCommand("%t %t", "warden_tag", "warden_removed", client, g_iLastWarden);
+	CPrintToChatAll("%t %t", "warden_tag", "warden_removed", client, g_iLastWarden); 
 	if (gc_bBetterNotes.BoolValue)
 	{
 		PrintCenterTextAll("%t", "warden_removed_nc", client, g_iLastWarden);
