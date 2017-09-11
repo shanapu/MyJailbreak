@@ -104,7 +104,6 @@ int g_iCollision_Offset;
 
 // Handles
 Handle g_hTimerTruce;
-Handle g_hTimerGiveZeus[MAXPLAYERS+1];
 Handle g_hTimerBeacon;
 
 // Strings
@@ -652,9 +651,9 @@ public void Event_PlayerDeath(Event event, char[] name, bool dontBroadcast)
 {
 	if (g_bIsZeus)
 	{
-		int killer = GetClientOfUserId(event.GetInt("attacker"));
+		int userid = event.GetInt("attacker");
 
-		g_hTimerGiveZeus[killer] = CreateTimer(0.5, Timer_GiveZeus, killer);
+		CreateTimer(0.5, Timer_GiveZeus, userid);
 	}
 }
 
@@ -895,7 +894,7 @@ void PrepareDay(bool thisround)
 
 		GivePlayerItem(i, "weapon_knife");
 
-		g_hTimerGiveZeus[i] = CreateTimer(0.5, Timer_GiveZeus, i);
+		CreateTimer(0.5, Timer_GiveZeus, GetClientUserId(i));
 	}
 
 	if (gp_bMyJailbreak)
@@ -1049,11 +1048,12 @@ public Action Timer_BeaconOn(Handle timer)
 }
 
 // Delay give Zeus
-public Action Timer_GiveZeus(Handle timer, any client)
+public Action Timer_GiveZeus(Handle timer, int userid)
 {
+	int client = GetClientOfUserId(userid);
+
 	if (IsValidClient(client, true, false))
 	{
-		g_hTimerGiveZeus[client] = INVALID_HANDLE;
 		GivePlayerItem(client, "weapon_taser");
 	}
 }
