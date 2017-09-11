@@ -1078,6 +1078,7 @@ public Action Timer_Respawn(Handle timer, int userid)
 public void OnClientPutInServer(int client)
 {
 	SDKHook(client, SDKHook_WeaponCanUse, OnWeaponCanUse);
+	SDKHook(client, SDKHook_WeaponDrop, OnWeaponDrop);
 }
 
 // Knife only
@@ -1103,6 +1104,16 @@ public Action OnWeaponCanUse(int client, int weapon)
 		return Plugin_Continue;
 	}
 
+	return Plugin_Handled;
+}
+
+//Deny weapon drops
+public Action OnWeaponDrop(int client, int weapon)
+{
+	if (!g_bIsArmsRace)
+	{
+		return Plugin_Continue;
+	}
 	return Plugin_Handled;
 }
 
