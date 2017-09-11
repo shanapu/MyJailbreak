@@ -31,7 +31,6 @@
 #include <cstrike>
 #include <emitsoundany>
 #include <colors>
-#include <smlib>
 #include <autoexecconfig>
 #include <mystocks>
 
@@ -194,6 +193,7 @@ public void OnPluginStart()
 	HookEvent("round_end", Event_RoundEnd);
 	HookEvent("player_death", Event_PlayerDeath);
 	HookEvent("weapon_reload", Event_WeaponReload);
+	HookEvent("weapon_outofammo", Event_WeaponReload);
 	HookEvent("hegrenade_detonate", Event_HE_Detonate);
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
@@ -716,7 +716,8 @@ public void Event_WeaponReload(Event event, char[] name, bool dontBroadcast)
 
 		if (IsValidClient(client, false, false) && (GetClientTeam(client) == CS_TEAM_CT))
 		{
-			SetPlayerAmmo(client, Client_GetActiveWeapon(client), _, 32);
+			int weapon =  GetEntPropEnt(client, Prop_Data, "m_hActiveWeapon");
+			SetEntProp(weapon, Prop_Send, "m_iPrimaryReserveAmmoCount", 32);
 		}
 	}
 }
@@ -1003,6 +1004,7 @@ void PrepareDay(bool thisround)
 				CS_RespawnPlayer(i);
 				RandomT = i;
 			}
+
 			if (RandomCT != 0 && RandomT != 0)
 			{
 				break;
@@ -1238,8 +1240,7 @@ public Action Timer_SetModel(Handle timer)
 			GetEntPropString(i, Prop_Data, "m_ModelName", g_sModelPathCTPrevious[i], sizeof(g_sModelPathCTPrevious[]));
 			SetEntityModel(i, g_sHunterModel);
 		}
-
-		if (GetClientTeam(i) == CS_TEAM_T)
+		else if (GetClientTeam(i) == CS_TEAM_T)
 		{
 			GetEntPropString(i, Prop_Data, "m_ModelName", g_sModelPathTPrevious[i], sizeof(g_sModelPathTPrevious[]));
 			SetEntityModel(i, "models/chicken/chicken.mdl");
