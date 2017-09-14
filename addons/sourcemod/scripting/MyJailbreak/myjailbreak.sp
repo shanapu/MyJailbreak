@@ -65,6 +65,7 @@ int g_iRoundNumber = 0;
 // Handles
 Handle gF_OnEventDayStart;
 Handle gF_OnEventDayEnd;
+Handle gF_ResetEventDay;
 Handle g_aRandomList;
 
 
