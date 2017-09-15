@@ -65,7 +65,6 @@ int g_iRoundNumber = 0;
 // Handles
 Handle gF_OnEventDayStart;
 Handle gF_OnEventDayEnd;
-Handle gF_ResetEventDay;
 Handle g_aRandomList;
 
 
@@ -385,6 +384,9 @@ public int Native_SetEventDayRunning(Handle plugin, int argc)
 
 void ToggleConVars(bool IsEventDay)
 {
+	if (!gp_bHosties)
+		return;
+
 	if (IsEventDay)
 	{
 		// Get the Cvar Value
