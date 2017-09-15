@@ -4,7 +4,7 @@
 #define _warden_included
 
 
-public SharedPlugin:__pl_warden =
+public SharedPlugin __pl_warden =
 {
 	name = "warden",
 	file = "warden.smx",
@@ -145,18 +145,18 @@ forward void warden_OnDeputyCreated(int client);
  * Checks if any warden exist
  *
  *
- * @true on match, false if not
+ * @return 				true on match, false if not
  *********************************************************/
-native warden_exist();
+native bool warden_exist();
 
 
 /*********************************************************
  * returns if client is warden
  *
  * @param client		The client to run the check on
- * @true on match, false if not
+ * @return				true on match, false if not
  *********************************************************/
-native warden_iswarden(int client);
+native bool warden_iswarden(int client);
 
 
 /*********************************************************
@@ -166,7 +166,7 @@ native warden_iswarden(int client);
  * @param caller		The client who set the new warden
  * @NoReturn
  *********************************************************/
-native warden_set(int client, int caller);
+native void warden_set(int client, int caller);
 
 
 /*********************************************************
@@ -175,7 +175,7 @@ native warden_set(int client, int caller);
  * @param client		The warden client to remove
  * @NoReturn
  *********************************************************/
-native warden_remove(int client);
+native void warden_remove(int client);
 
 
 /*********************************************************
@@ -184,7 +184,7 @@ native warden_remove(int client);
  *
  * @Return				Client Index of warden
  *********************************************************/
-native warden_get();
+native int warden_get();
 
 
 /*********************************************************
@@ -193,7 +193,7 @@ native warden_get();
  *
  * @Return				Client Index of last warden
  *********************************************************/
-native warden_getlast();
+native int warden_getlast();
 
 
 
@@ -201,18 +201,18 @@ native warden_getlast();
  * Checks if any Deputy exist
  *
  *
- * @true on match, false if not
+ * @Return				true on match, false if not
  *********************************************************/
-native warden_deputy_exist();
+native bool warden_deputy_exist();
 
 
 /*********************************************************
  * returns if client is Deputy
  *
  * @param client		The client to run the check on
- * @true on match, false if not
+ * @Return 				true on match, false if not
  *********************************************************/
-native warden_deputy_isdeputy(int client);
+native bool warden_deputy_isdeputy(int client);
 
 
 /*********************************************************
@@ -221,7 +221,7 @@ native warden_deputy_isdeputy(int client);
  * @param client		The client to set as Deputy
  * @NoReturn
  *********************************************************/
-native warden_deputy_set(int client);
+native void warden_deputy_set(int client);
 
 
 /*********************************************************
@@ -230,7 +230,7 @@ native warden_deputy_set(int client);
  * @param client		The Deputy client to remove
  * @NoReturn
  *********************************************************/
-native warden_deputy_remove(int client);
+native void warden_deputy_remove(int client);
 
 
 /*********************************************************
@@ -239,7 +239,7 @@ native warden_deputy_remove(int client);
  *
  * @Return				Client index of deputy
  *********************************************************/
-native warden_deputy_get();
+native int warden_deputy_get();
 
 
 /*********************************************************
@@ -248,7 +248,7 @@ native warden_deputy_get();
  *
  * @Return				Client Index of last deputy
  *********************************************************/
-native warden_deputy_getlast();
+native int warden_deputy_getlast();
 
 
 
@@ -259,16 +259,16 @@ native warden_deputy_getlast();
  * @param amount		The amount of paperclips
  * @NoReturn
  *********************************************************/
-native warden_handcuffs_givepaperclip(int client, int amount);
+native void warden_handcuffs_givepaperclip(int client, int amount);
 
 
 /*********************************************************
  * returns if client is in handcuffs
  *
  * @param client		The client to run the check on
- * @true on match, false if not
+ * @Retrun 				true on match, false if not
  *********************************************************/
-native warden_handcuffs_iscuffed(int client);
+native bool warden_handcuffs_iscuffed(int client);
 
 
 
@@ -276,7 +276,7 @@ native warden_handcuffs_iscuffed(int client);
  * Set the client get a freeday
  *
  * @param client		The client to run the check on
- * @no return
+ * @NoReturn
  *********************************************************/
 native warden_freeday_set(int client);
 
@@ -285,6 +285,6 @@ native warden_freeday_set(int client);
  * returns if client has a freeday now
  *
  * @param client		The client to run the check on
- * @true on match, false if not
+ * @Return 				true on match, false if not
  *********************************************************/
-native warden_freeday_has(int client);
+native bool warden_freeday_has(int client);
