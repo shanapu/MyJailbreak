@@ -1054,6 +1054,10 @@ public Action Timer_GiveZeus(Handle timer, int userid)
 
 	if (IsValidClient(client, true, false))
 	{
+		StripAllPlayerWeapons(client);
+
+		GivePlayerItem(client, "weapon_knife");
+
 		GivePlayerItem(client, "weapon_taser");
 	}
 }
