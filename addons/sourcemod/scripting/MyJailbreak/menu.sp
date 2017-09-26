@@ -98,6 +98,8 @@ ConVar g_bKnife;
 ConVar g_bFFA;
 ConVar g_bExtend;
 ConVar g_bExtendDeputy;
+ConVar g_bNoLR;
+ConVar g_bNoLRDeputy;
 ConVar g_bLaserDeputy;
 ConVar g_bPainterDeputy;
 ConVar g_bLaser;
@@ -568,6 +570,8 @@ public void OnConfigsExecuted()
 	g_bExtend = FindConVar("sm_warden_extend");
 	g_bMute = FindConVar("sm_warden_mute");
 	g_bMuteDeputy = FindConVar("sm_warden_mute_deputy");
+	g_bNoLR = FindConVar("sm_warden_withheld_lr_enable");
+	g_bNoLRDeputy = FindConVar("sm_warden_withheld_lr_deputy");
 	g_bPainter = FindConVar("sm_warden_painter");
 	g_bLaser = FindConVar("sm_warden_laser");
 	g_bSparks = FindConVar("sm_warden_bulletsparks");
@@ -890,6 +894,14 @@ public Action Command_OpenMenu(int client, int args)
 						mainmenu.AddItem("rebel", menuinfo);
 					}
 				}
+				if (g_bNoLR != null)
+				{
+					if (g_bNoLR.BoolValue)
+					{
+						Format(menuinfo, sizeof(menuinfo), "%T", "menu_nolr", client);
+						mainmenu.AddItem("nolr", menuinfo);
+					}
+				}
 				if (g_bMath != null)
 				{
 					if (g_bMath.BoolValue)
@@ -1063,6 +1075,14 @@ public Action Command_OpenMenu(int client, int args)
 					{
 						Format(menuinfo, sizeof(menuinfo), "%T", "menu_rebel", client);
 						mainmenu.AddItem("rebel", menuinfo);
+					}
+				}
+				if (g_bNoLR != null)
+				{
+					if (g_bNoLR.BoolValue && g_bNoLRDeputy.BoolValue)
+					{
+						Format(menuinfo, sizeof(menuinfo), "%T", "menu_nolr", client);
+						mainmenu.AddItem("nolr", menuinfo);
 					}
 				}
 				if (g_bMath != null)
@@ -1469,6 +1489,10 @@ public int JBMenuHandler(Menu mainmenu, MenuAction action, int client, int selec
 		else if (strcmp(info, "lastR") == 0)
 		{
 			FakeClientCommand(client, "sm_lr");
+		}
+		else if (strcmp(info, "nolr") == 0)
+		{
+			FakeClientCommand(client, "sm_nolastrequest");
 		}
 		else if (strcmp(info, "setwarden") == 0)
 		{

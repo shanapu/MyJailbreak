@@ -1041,4 +1041,19 @@
 		"en"		"Could not find a {green}valid non-rebeling{default} prisoner in view."
 	}
 
+	"warden_withhold_lr"
+	{
+		"en"		"The warden {purple}withholds{default} your last request"
+	}
+
+	"warden_withhold_on"
+	{
+		"en"		"The warden {purple}withhold{default} the last request"
+	}
+
+	"warden_withhold_off"
+	{
+		"en"		"The warden {purple}has released{default} the last request"
+	}
+
 }

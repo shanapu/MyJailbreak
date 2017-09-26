@@ -164,6 +164,7 @@ char g_sRestrictedSound[32] = "buttons/button11.wav";
 #include "MyJailbreak/Modules/Warden/shootguns.sp"
 #include "MyJailbreak/Modules/Warden/orders.sp"
 #include "MyJailbreak/Modules/Warden/freedays.sp"
+#include "MyJailbreak/Modules/Warden/withheldLR.sp"
 
 // Compiler Options
 #pragma semicolon 1
@@ -248,6 +249,7 @@ public void OnPluginStart()
 	ShootGuns_OnPluginStart();
 	Orders_OnPluginStart();
 	Freedays_OnPluginStart();
+	NoLR_OnPluginStart();
 
 	// AutoExecConfig
 	AutoExecConfig_ExecuteFile();
@@ -328,6 +330,7 @@ public void OnConfigsExecuted()
 	Orders_OnConfigsExecuted();
 	Freedays_OnConfigsExecuted();
 	FriendlyFire_OnConfigsExecuted();
+	NoLR_OnConfigsExecuted();
 
 	// Set custom Commands
 	int iCount = 0;
