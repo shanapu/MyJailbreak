@@ -58,14 +58,14 @@ public void NoLR_OnPluginStart()
 	gc_bNoLR = AutoExecConfig_CreateConVar("sm_warden_withheld_lr_enable", "1", "0 - disabled, 1 - warden can witheld prisoners Last request commands (need sm_hosties_lr_autodisplay = 0", _, true, 0.0, true, 1.0);
 	gc_bNoLRDeputy = AutoExecConfig_CreateConVar("sm_warden_withheld_lr_deputy", "1", "0 - disabled, 1 - deputy can witheld prisoners Last request commands", _, true, 0.0, true, 1.0);
 	gc_sCustomCommandNoLR = AutoExecConfig_CreateConVar("sm_warden_cmds_withheld_lr", "nolr, noLR", "Set your custom chat commands for witheld Last request(!nolastrequest (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)");
-	gc_sCustomCommandLR = AutoExecConfig_CreateConVar("sm_warden_cmds_lr", "lr,lastrequest", "Set your last request commands (add custom !lr cmds)(no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)");
+	gc_sCustomCommandLR = AutoExecConfig_CreateConVar("sm_warden_cmds_lr", "lr,lastrequest,!lr,!lastrequest,sm_lr,sm_lastrequest", "Set your last request commands (add custom !lr cmds)(no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)");
 
 	// Hooks
 	AddCommandListener(NoLR_Event_Say, "say");
 	AddCommandListener(NoLR_Event_Say, "say_team");
 	HookEvent("round_start", NoLR_Event_RoundStart);
 
-	g_aLRcmds = CreateArray();
+	g_aLRcmds = CreateArray(16);
 }
 
 /******************************************************************************
@@ -143,16 +143,42 @@ public void NoLR_OnConfigsExecuted()
 	}
 }
 
+//Tested all ways I can imagine. I#m dumb?!
+//I don't get it. It won't work. I don't know why. I'm too confused. I going to sleep. 
 
-public Action NoLR_Event_Say(int client, char[] command, int arg)
+
+public Action NoLR_Event_Say(int client, char[] command, int args)
 {
 	if(!g_bIsNoLR || !gc_bNoLR.BoolValue || !gc_bPlugin.BoolValue)
 		return Plugin_Continue;
 
-	if (FindStringInArray(g_aLRcmds, command) != 0)
+	char sBuffer[32];
+	GetCmdArg(1, sBuffer, sizeof(sBuffer));
+
+	CPrintToChat(client, "%t NoLR_Event_Say - command : %s - args: %i - buffer: %s", "warden_tag", command, args, sBuffer);
+
+	if (FindStringInArray(g_aLRcmds, sBuffer) != -1)
 	{
 		CPrintToChat(client, "%t %t", "warden_tag", "warden_withhold_lr");
 		return Plugin_Handled;
+	}
+
+	return Plugin_Continue;
+}
+
+
+//https://forums.alliedmods.net/showpost.php?p=2077110&postcount=10
+public Action OnClientSayCommand(int client, const char[] command, const char[] sArgs)
+{
+	if(!g_bIsNoLR || !gc_bNoLR.BoolValue || !gc_bPlugin.BoolValue)
+		return Plugin_Continue;
+
+	CPrintToChat(client, "%t OnClientSayCommand - command : %s - args: %s", "warden_tag", command, sArgs);
+
+	if (FindStringInArray(g_aLRcmds, sArgs) != -1)
+	{
+		CPrintToChat(client, "%t %t", "warden_tag", "warden_withhold_lr");
+		return Plugin_Stop; ///also return Plugin_Handled;
 	}
 
 	return Plugin_Continue;
