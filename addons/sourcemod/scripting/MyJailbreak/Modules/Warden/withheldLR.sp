@@ -58,7 +58,7 @@ public void NoLR_OnPluginStart()
 	gc_bNoLR = AutoExecConfig_CreateConVar("sm_warden_withheld_lr_enable", "1", "0 - disabled, 1 - warden can witheld prisoners Last request commands (need sm_hosties_lr_autodisplay = 0", _, true, 0.0, true, 1.0);
 	gc_bNoLRDeputy = AutoExecConfig_CreateConVar("sm_warden_withheld_lr_deputy", "1", "0 - disabled, 1 - deputy can witheld prisoners Last request commands", _, true, 0.0, true, 1.0);
 	gc_sCustomCommandNoLR = AutoExecConfig_CreateConVar("sm_warden_cmds_withheld_lr", "nolr, noLR", "Set your custom chat commands for witheld Last request(!nolastrequest (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)");
-	gc_sCustomCommandLR = AutoExecConfig_CreateConVar("sm_warden_cmds_lr", "lr,lastrequest,!lr,!lastrequest,sm_lr,sm_lastrequest", "Set your last request commands (add custom !lr cmds)(no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)");
+	gc_sCustomCommandLR = AutoExecConfig_CreateConVar("sm_warden_cmds_lr", "lr,lastrequest,lr,lastrequest,", "Set your last request commands (add custom !lr cmds)(no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)");
 
 	// Hooks
 	AddCommandListener(NoLR_Event_Say, "say");
