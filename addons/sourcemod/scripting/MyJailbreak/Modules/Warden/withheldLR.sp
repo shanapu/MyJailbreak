@@ -46,7 +46,7 @@ ConVar gc_bNoLRDeputy;
 ConVar gc_sCustomCommandNoLR;
 ConVar gc_sCustomCommandLR;
 
-ArrayList g_aLRcmds;
+Handle g_aLRcmds;
 
 // Start
 public void NoLR_OnPluginStart()
@@ -65,7 +65,7 @@ public void NoLR_OnPluginStart()
 	
 	HookEvent("round_start", NoLR_Event_RoundStart);
 	
-	g_aLRcmds = new ArrayList(16);
+	g_aLRcmds = CreateArray(16);
 }
 
 /******************************************************************************
@@ -135,12 +135,12 @@ public void NoLR_OnConfigsExecuted()
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
 	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
 	
-	g_aLRcmds.Clear();
+	ClearArray(g_aLRcmds);
 	
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommandsL[i], sizeof(sCommandsL[]), "sm_%s", sCommandsL[i]);
-		g_aLRcmds.PushString(sCommandsL[i]);
+		PushArrayString(g_aLRcmds, sCommandsL[i]);
 	}
 }
 
@@ -160,7 +160,6 @@ public Action OnCommand(int client, const char[] command, int args)
 		
 		Format(sCmd, sizeof(sCmd), "sm_%s", sCmd[1]); //Start from the 1 array to remove the ChatTrigger
 		
-		if (g_aLRcmds.FindString(sCmd) != -1)
 		{
 			CPrintToChat(client, "%t %t", "warden_tag", "warden_withhold_lr");
 			return Plugin_Stop;
@@ -169,7 +168,6 @@ public Action OnCommand(int client, const char[] command, int args)
 		return Plugin_Continue;
 	}
 	
-	if (g_aLRcmds.FindString(command) != -1)
 	{
 		CPrintToChat(client, "%t %t", "warden_tag", "warden_withhold_lr");
 		return Plugin_Stop; ///also return Plugin_Handled;
