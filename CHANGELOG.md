@@ -126,7 +126,12 @@
     *  new cvar - sm_dealdamage_kill_loser - 0 - disabled, 1 - Kill loserteam on event end
 *  Warden - Mathquiz: resume support for simplechatprocessor. Now support both scp or chat-processor.
 *  PlayerTags: resume support for simplechatprocessor. Now support both scp or chat-processor.
-
+*  Warden: Withheld (forbid) last request command (need sm_hosties_lr_autodisplay "0") ThX Hexah
+    *  new command - sm_nolastrequest - toggle withheld/release the last request
+    *  new cvar - sm_warden_withheld_lr_enable - 0 - disabled, 1 - warden can witheld prisoners Last request commands
+    *  new cvar - sm_warden_withheld_lr_deputy - 0 - disabled, 1 - deputy can witheld prisoners Last request commands
+    *  new cvar - sm_warden_cmds_withheld_lr - Set your custom chat commands for witheld Last request(!nolastrequest (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)
+    *  new cvar - sm_warden_cmds_lr - Set your last request commands (add custom !lr cmds)(no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)
   
   
 *Changed*
@@ -161,7 +166,7 @@
     *  new cvar - sm_hud_alive - 0 - show hud only to alive player, 1 - show hud to dead & alive player
 *  MyJailbreak: disable hosties announcements on event days
 *  Warden - Marker: remove on Last request.
-*  Ratio CTbans: updated for databombs CTbans v2. You must update to CTbans v2!
+*  Ratio CTbans: updated for databombs CTbans v2. You must update to CTbans v2! - Thx @databomb!
 *  Ratio: Swap Spectators to T when joining guard queue - Thx @hexah!
     *  new cvar - sm_ratio_swap_spec_queue - 0 - Don't do anything if a Spec join in queue / 1 - Swap to T the Spectators who join in queue
 *  Warden - Mute/Talkover: disable Warden/Deputy TalkOver after LR Announced - Thx @hexah!
