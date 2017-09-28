@@ -55,7 +55,7 @@ public void NoLR_OnPluginStart()
 	RegConsoleCmd("sm_nolastrequest", Command_NoLR, "Allows the Warden to witheld the last request");
 
 	// AutoExecConfig
-	gc_bNoLR = AutoExecConfig_CreateConVar("sm_warden_withheld_lr_enable", "1", "0 - disabled, 1 - warden can witheld prisoners Last request commands (need sm_hosties_lr_autodisplay = 0", _, true, 0.0, true, 1.0);
+	gc_bNoLR = AutoExecConfig_CreateConVar("sm_warden_withheld_lr_enable", "1", "0 - disabled, 1 - warden can witheld prisoners Last request commands (need sm_hosties_lr_autodisplay '0')", _, true, 0.0, true, 1.0);
 	gc_bNoLRDeputy = AutoExecConfig_CreateConVar("sm_warden_withheld_lr_deputy", "1", "0 - disabled, 1 - deputy can witheld prisoners Last request commands", _, true, 0.0, true, 1.0);
 	gc_sCustomCommandNoLR = AutoExecConfig_CreateConVar("sm_warden_cmds_withheld_lr", "nolr, noLR", "Set your custom chat commands for witheld Last request(!nolastrequest (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)");
 	gc_sCustomCommandLR = AutoExecConfig_CreateConVar("sm_warden_cmds_lr", "lr,lastrequest", "Set your last request commands (add custom !lr cmds)(no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)");
@@ -165,29 +165,10 @@ public Action Listen_OnCommand(int client, const char[] command, int args)
 	if (!g_bIsNoLR || !gc_bNoLR.BoolValue || !gc_bPlugin.BoolValue)
 		return Plugin_Continue;
 
-	//When the command comes from chat
-	if (StrEqual(command, "say") || StrEqual(command, "say_team"))
-	{
-		//Get the say args
-		char sCmd[32];
-		GetCmdArgString(sCmd, sizeof(sCmd));
-		StripQuotes(sCmd);
-
-		//Seach for command in cmd array
-		if (FindStringInArray(g_aLRcmds, sCmd) != -1)
-		{
-			CPrintToChat(client, "%t %t", "warden_tag", "warden_withhold_lr");
-
-			return Plugin_Stop;
-		}
-
-		return Plugin_Continue;
-	}
-
-	//When the command comes from clients console
+	//Seach for command in cmd array
 	if (FindStringInArray(g_aLRcmds, command[3]) != -1) //command[3] so that we can skip the "sm_"
 	{
-		CPrintToChat(client, "%t %t", "warden_tag", "warden_withhold_lr");
+		CPrintToChat(client, "%t %t %s", "warden_tag", "warden_withhold_lr", command);
 
 		return Plugin_Stop;
 	}
