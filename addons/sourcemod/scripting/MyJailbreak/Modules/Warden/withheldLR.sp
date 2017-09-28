@@ -168,7 +168,7 @@ public Action Listen_OnCommand(int client, const char[] command, int args)
 	//Seach for command in cmd array
 	if (FindStringInArray(g_aLRcmds, command[3]) != -1) //command[3] so that we can skip the "sm_"
 	{
-		CPrintToChat(client, "%t %t %s", "warden_tag", "warden_withhold_lr", command);
+		CPrintToChat(client, "%t %t", "warden_tag", "warden_withhold_lr");
 
 		return Plugin_Stop;
 	}
