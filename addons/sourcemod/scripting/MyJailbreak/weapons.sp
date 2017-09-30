@@ -689,6 +689,9 @@ void ListWeapons()
 public void OnMapStart()
 {
 	SetBuyZones("Disable");
+
+	g_bAllowCT = true;
+	g_bAllowT = false;
 }
 
 public void OnClientPutInServer(int client)
