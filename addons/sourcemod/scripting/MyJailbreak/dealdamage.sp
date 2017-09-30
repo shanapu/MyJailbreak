@@ -59,6 +59,7 @@ bool g_bIsLateLoad = false;
 bool g_bIsTruce = false;
 bool g_bIsDealDamage = false;
 bool g_bStartDealDamage = false;
+bool g_bIsRoundEnd = true;
 
 // Plugin bools
 bool gp_bWarden;
@@ -609,6 +610,8 @@ public Action Command_VoteDealDamage(int client, int args)
 // Round start
 public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
+	g_bIsRoundEnd = false;
+
 	if (!g_bStartDealDamage && !g_bIsDealDamage)
 	{
 		if (gp_bMyJailbreak)
@@ -642,6 +645,8 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 // Round End
 public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
+	g_bIsRoundEnd = true;
+
 	if (g_bIsDealDamage) // if event was running this round
 	{
 		CalcResults();
@@ -857,15 +862,17 @@ void StartEventRound(bool thisround)
 	if (g_bHUD != null)
 		g_iOldHUD = g_bHUD.IntValue;
 
-//	g_iOldRoundTime = g_iMPRoundTime.IntValue; // save original round time
-//	g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue; // set event round time
-
 	if (gp_bMyJailbreak)
 	{
 		char buffer[32];
 		Format(buffer, sizeof(buffer), "%T", "dealdamage_name", LANG_SERVER);
 		MyJailbreak_SetEventDayName(buffer);
 		MyJailbreak_SetEventDayPlanned(true);
+	}
+
+	if(thisround && g_bIsRoundEnd)
+	{
+		thisround = false;
 	}
 
 	if (thisround)

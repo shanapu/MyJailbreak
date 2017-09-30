@@ -53,6 +53,7 @@ bool g_bIsLateLoad = false;
 bool g_bIsKnifeFight = false;
 bool g_bStartKnifeFight = false;
 bool g_bLadder[MAXPLAYERS+1] = false;
+bool g_bIsRoundEnd = true;
 
 // Plugin bools
 bool gp_bWarden;
@@ -559,6 +560,8 @@ public Action Command_VoteKnifeFight(int client, int args)
 // Round start
 public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
+	g_bIsRoundEnd = false;
+
 	if (!g_bStartKnifeFight && !g_bIsKnifeFight)
 	{
 		if (gp_bMyJailbreak)
@@ -593,6 +596,8 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 // Round End
 public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
+	g_bIsRoundEnd = true;
+
 	if (g_bIsKnifeFight)
 	{
 		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, true))
@@ -850,9 +855,6 @@ void StartEventRound(bool thisround)
 {
 	g_iCoolDown = gc_iCooldownDay.IntValue;
 	g_iVoteCount = 0;
-	
-//	g_iOldRoundTime = g_iMPRoundTime.IntValue; // save original round time
-//	g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue; // set event round time
 
 	if (gp_bMyJailbreak)
 	{
@@ -860,6 +862,11 @@ void StartEventRound(bool thisround)
 		Format(buffer, sizeof(buffer), "%T", "knifefight_name", LANG_SERVER);
 		MyJailbreak_SetEventDayName(buffer);
 		MyJailbreak_SetEventDayPlanned(true);
+	}
+
+	if(thisround && g_bIsRoundEnd)
+	{
+		thisround = false;
 	}
 
 	if (thisround)

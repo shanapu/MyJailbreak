@@ -53,6 +53,8 @@
 bool g_bIsGhosts = false;
 bool g_bGhostsRunning = false;
 bool g_bStartGhosts = false;
+bool g_bIsRoundEnd = true;
+
 bool gp_bMyIcons = false;
 
 // Plugin bools
@@ -535,6 +537,8 @@ public Action Command_VoteGhosts(int client, int args)
 // Round start
 public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
+	g_bIsRoundEnd = false;
+
 	if (!g_bStartGhosts && !g_bIsGhosts)
 	{
 		if (gp_bMyJailbreak)
@@ -577,6 +581,8 @@ public Action Hook_SetTransmit(int entity, int client)
 // Round End
 public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
+	g_bIsRoundEnd = true;
+
 	if (g_bIsGhosts)
 	{
 		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true))
@@ -754,8 +760,6 @@ public void OnAvailableLR(int Announced)
 				MyJailbreak_SetEventDayRunning(false, 0);
 			}
 
-//			g_iMPRoundTime.IntValue = g_iOldRoundTime;
-
 			CPrintToChatAll("%t %t", "ghosts_tag", "ghosts_end");
 		}
 	}
@@ -770,9 +774,6 @@ void StartEventRound(bool thisround)
 {
 	g_iCoolDown = gc_iCooldownDay.IntValue;
 	g_iVoteCount = 0;
-	
-//	g_iOldRoundTime = g_iMPRoundTime.IntValue; // save original round time
-//	g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue; // set event round time
 
 	if (gp_bMyJailbreak)
 	{
@@ -780,6 +781,11 @@ void StartEventRound(bool thisround)
 		Format(buffer, sizeof(buffer), "%T", "ghosts_name", LANG_SERVER);
 		MyJailbreak_SetEventDayName(buffer);
 		MyJailbreak_SetEventDayPlanned(true);
+	}
+
+	if(thisround && g_bIsRoundEnd)
+	{
+		thisround = false;
 	}
 
 	if (thisround)

@@ -51,6 +51,7 @@
 // Booleans
 bool g_bIsDrunk = false;
 bool g_bStartDrunk = false;
+bool g_bIsRoundEnd = true;
 
 // Plugin bools
 bool gp_bWarden;
@@ -511,6 +512,8 @@ public Action Command_VoteDrunk(int client, int args)
 // Round start
 public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
+	g_bIsRoundEnd = false;
+
 	if (!g_bStartDrunk && !g_bIsDrunk)
 	{
 		if (gp_bMyJailbreak)
@@ -544,6 +547,8 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 // Round End
 public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
+	g_bIsRoundEnd = true;
+
 	if (g_bIsDrunk) // if event was running this round
 	{
 		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
@@ -749,6 +754,11 @@ void StartEventRound(bool thisround)
 		Format(buffer, sizeof(buffer), "%T", "drunk_name", LANG_SERVER);
 		MyJailbreak_SetEventDayName(buffer);
 		MyJailbreak_SetEventDayPlanned(true);
+	}
+
+	if(thisround && g_bIsRoundEnd)
+	{
+		thisround = false;
 	}
 
 	if (thisround)
