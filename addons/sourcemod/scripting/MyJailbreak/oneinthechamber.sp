@@ -52,6 +52,7 @@
 bool g_bIsLateLoad = false;
 bool g_bIsOITC = false;
 bool g_bStartOITC = false;
+bool g_bIsRoundEnd = true;
 
 // Plugin bools
 bool gp_bWarden;
@@ -542,6 +543,8 @@ public Action Command_VoteOITC(int client, int args)
 // Round start
 public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
+	g_bIsRoundEnd = false;
+
 	if (!g_bStartOITC && !g_bIsOITC)
 	{
 		if (gp_bMyJailbreak)
@@ -575,6 +578,8 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 // Round End
 public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
+	g_bIsRoundEnd = true;
+
 	if (g_bIsOITC)
 	{
 		for (int i = 1; i <= MaxClients; i++)if (IsClientInGame(i))
@@ -824,16 +829,12 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 ******************************************************************************/
 
 
-// Prepare Event for next round
 // Prepare Event
 void StartEventRound(bool thisround)
 {
 	g_iCoolDown = gc_iCooldownDay.IntValue;
 	g_iVoteCount = 0;
-	
-	//	g_iOldRoundTime = g_iMPRoundTime.IntValue; // save original round time
-	//	g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue; // set event round time
-	
+
 	if (gp_bMyJailbreak)
 	{
 		char buffer[32];
@@ -841,7 +842,12 @@ void StartEventRound(bool thisround)
 		MyJailbreak_SetEventDayName(buffer);
 		MyJailbreak_SetEventDayPlanned(true);
 	}
-	
+
+	if(thisround && g_bIsRoundEnd)
+	{
+		thisround = false;
+	}
+
 	if (thisround)
 	{
 		g_bIsOITC = true;
