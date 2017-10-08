@@ -12,7 +12,7 @@
 	
 		<!-- Bootstrap CSS -->
 	
-		<link href="../../dist/css/bootstrap.superhero.min.css" rel="stylesheet">
+		<link href="bootstrap.superhero.min.css" rel="stylesheet">
 	
 		<!-- Custom styles for this template -->
 	
