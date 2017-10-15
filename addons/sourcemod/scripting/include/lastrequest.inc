@@ -115,7 +115,7 @@ forward void OnAvailableLR(int Announced);
  * 
  * @return						True if last request is available, false otherwise.
  */
-native bool IsLastRequestAvailable(bool IsLR);
+native bool IsLastRequestAvailable();
 
 /**
  * Find if a client is listed as a rebel.
