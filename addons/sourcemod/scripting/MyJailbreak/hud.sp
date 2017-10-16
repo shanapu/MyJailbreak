@@ -219,7 +219,6 @@ void ShowHUD()
 	char sLastCT[32];
 	char sWarden[32];
 	
-
 	if (MyJailbreak_IsLastGuardRule())
 	{
 		iLastCT = GetLastAlive(CS_TEAM_CT);
