@@ -37,6 +37,10 @@
 #include <hosties>
 #include <lastrequest>
 
+#undef REQUIRE_PLUGIN
+#include <teamgames>
+#define REQUIRE_PLUGIN
+
 // Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
@@ -215,6 +219,7 @@ void ShowHUD()
 	char sLastCT[32];
 	char sWarden[32];
 	
+
 	if (MyJailbreak_IsLastGuardRule())
 	{
 		iLastCT = GetLastAlive(CS_TEAM_CT);
@@ -237,6 +242,15 @@ void ShowHUD()
 		{
 			if (g_bEnableHud[i] && !IsClientInLastRequest(i))
 			{
+				ConVar cv_TGNotification = FindConVar("tg_team_notification");
+				
+				if (cv_TGNotification != null && (cv_TGNotification.IntValue == 1 || cv_TGNotification.IntValue == 2))
+				{
+					TG_Team iTGTeam = TG_GetPlayerTeam(i);
+					if ((iTGTeam == TG_RedTeam) || (iTGTeam == TG_BlueTeam))
+						return;
+				}
+	
 				if (MyJailbreak_IsLastGuardRule())
 				{
 					if (iLastCT != -1)
