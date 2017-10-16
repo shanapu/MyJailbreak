@@ -245,8 +245,7 @@ void ShowHUD()
 				
 				if (cv_TGNotification != null && (cv_TGNotification.IntValue == 1 || cv_TGNotification.IntValue == 2))
 				{
-					TG_Team iTGTeam = TG_GetPlayerTeam(i);
-					if ((iTGTeam == TG_RedTeam) || (iTGTeam == TG_BlueTeam))
+					if ((TG_GetPlayerTeam(i) == TG_RedTeam) || (TG_GetPlayerTeam(i) == TG_BlueTeam))
 						return;
 				}
 	
