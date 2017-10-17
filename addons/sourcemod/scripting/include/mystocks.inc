@@ -412,7 +412,7 @@ stock void StringToUpper(char [] sz)
 
 stock bool IsClientStuck(int client)
 {
-	float vOrigin[3], float vMins[3], float vMaxs[3];
+	float vOrigin[3], vMins[3], vMaxs[3];
 
 	GetClientAbsOrigin(client, vOrigin);
 
