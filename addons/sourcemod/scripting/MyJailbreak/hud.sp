@@ -37,13 +37,22 @@
 #include <hosties>
 #include <lastrequest>
 
-#undef REQUIRE_PLUGIN
-#include <teamgames>
-#define REQUIRE_PLUGIN
-
 // Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
+
+/**
+ * TeamGames teams
+ */
+enum TG_Team
+{
+	TG_ErrorTeam = -1, // CTs, dead Ts, etc...
+	TG_NoneTeam, // Ts who are not in TeamGames team
+	TG_RedTeam, // Ts who are in TeamGames Red team
+	TG_BlueTeam // Ts who are in TeamGames Blue team
+};
+
+TG_Team TGTeam[MAXPLAYERS+1];
 
 // Booleans
 bool g_bIsLateLoad = false;
@@ -55,6 +64,7 @@ ConVar gc_bAlive;
 
 // Booleans
 g_bEnableHud[MAXPLAYERS+1] = true;
+
 
 // Info
 public Plugin myinfo =
@@ -162,6 +172,11 @@ public void Event_PlayerTeamDeath(Event event, const char[] name, bool dontBroad
 	ShowHUD();
 }
 
+public void TG_OnPlayerTeam(int client, int activator, TG_Team teamBefore, TG_Team teamAfter)
+{
+	TGTeam[client] = teamAfter;
+}
+
 /******************************************************************************
                    FORWARDS LISTEN
 ******************************************************************************/
@@ -245,7 +260,7 @@ void ShowHUD()
 				
 				if (cv_TGNotification != null && (cv_TGNotification.IntValue == 1 || cv_TGNotification.IntValue == 2))
 				{
-					if ((TG_GetPlayerTeam(i) == TG_RedTeam) || (TG_GetPlayerTeam(i) == TG_BlueTeam))
+					if ((TGTeam[i] == TG_RedTeam) || (TGTeam[i] == TG_BlueTeam))
 						return;
 				}
 	
