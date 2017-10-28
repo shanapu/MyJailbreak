@@ -1094,8 +1094,13 @@ public Action Timer_GiveAmmo(Handle timer, int userid)
 	if (IsValidClient(client, true, false))
 	{
 		int weapon = GetPlayerWeaponSlot(client, CS_SLOT_SECONDARY);
+		if (!IsValidEntity(weapon))
+			return Plugin_Handled;
+		
 		SetEntProp(weapon, Prop_Data, "m_iClip1", GetEntProp(weapon, Prop_Data, "m_iClip1")+1);
 		SetEntProp(weapon, Prop_Send, "m_iPrimaryReserveAmmoCount", 0);
 		SetEntProp(weapon, Prop_Send, "m_iSecondaryReserveAmmoCount", 0);
 	}
+
+	return Plugin_Handled;
 }
