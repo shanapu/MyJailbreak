@@ -421,31 +421,31 @@ public Action CP_OnChatMessage(int& author, ArrayList recipients, char[] flagstr
 			{
 				if (CheckVipFlag(author, g_sOwnerFlag))
 				{
-					Format(name, MAXLENGTH_NAME, "%t %s", "tags_TOWN_chat", name);
+					Format(name, MAXLENGTH_NAME, "%t %s", "tags_TOWN_chat", LANG_SERVER, name);
 				}
 				else if (CheckVipFlag(author, g_sCoOwnerFlag))
 				{
-					Format(name, MAXLENGTH_NAME, "%t %s", "tags_TCO_chat", name);
+					Format(name, MAXLENGTH_NAME, "%t %s", "tags_TCO_chat", LANG_SERVER, name);
 				}
 				else if (CheckVipFlag(author, g_sSuperAdminFlag))
 				{
-					Format(name, MAXLENGTH_NAME, "%t %s", "tags_TSA_chat", name);
+					Format(name, MAXLENGTH_NAME, "%t %s", "tags_TSA_chat", LANG_SERVER, name);
 				}
 				else if (CheckVipFlag(author, g_sAdminFlag))
 				{
-					Format(name, MAXLENGTH_NAME, "%t %s", "tags_TA_chat", name);
+					Format(name, MAXLENGTH_NAME, "%t %s", "tags_TA_chat", LANG_SERVER, name);
 				}
 				else if (CheckVipFlag(author, g_sVIPFlag))
 				{
-					Format(name, MAXLENGTH_NAME, "%t %s", "tags_TVIP1_chat", name);
+					Format(name, MAXLENGTH_NAME, "%t %s", "tags_TVIP1_chat", LANG_SERVER, name);
 				}
 				else if (CheckVipFlag(author, g_sVIP2Flag))
 				{
-					Format(name, MAXLENGTH_NAME, "%t %s", "tags_TVIP2_chat", name);
+					Format(name, MAXLENGTH_NAME, "%t %s", "tags_TVIP2_chat", LANG_SERVER, name);
 				}
 				else if (gc_bNoOverwrite.BoolValue)
 				{
-					Format(name, MAXLENGTH_NAME, "%t %s", "tags_T_chat", name);
+					Format(name, MAXLENGTH_NAME, "%t %s", "tags_T_chat", LANG_SERVER, name);
 				}
 			}
 			else if (GetClientTeam(author) == CS_TEAM_CT)
@@ -454,91 +454,91 @@ public Action CP_OnChatMessage(int& author, ArrayList recipients, char[] flagstr
 				{
 					if (CheckVipFlag(author, g_sOwnerFlag))
 					{
-						Format(name, MAXLENGTH_NAME, "%t %s", "tags_WOWN_chat", name);
+						Format(name, MAXLENGTH_NAME, "%t %s", "tags_WOWN_chat", LANG_SERVER, name);
 					}
 					else if (CheckVipFlag(author, g_sCoOwnerFlag))
 					{
-						Format(name, MAXLENGTH_NAME, "%t %s", "tags_WCO_chat", name);
+						Format(name, MAXLENGTH_NAME, "%t %s", "tags_WCO_chat", LANG_SERVER, name);
 					}
 					else if (CheckVipFlag(author, g_sSuperAdminFlag))
 					{
-						Format(name, MAXLENGTH_NAME, "%t %s", "tags_WSA_chat", name);
+						Format(name, MAXLENGTH_NAME, "%t %s", "tags_WSA_chat", LANG_SERVER, name);
 					}
 					else if (CheckVipFlag(author, g_sAdminFlag))
 					{
-						Format(name, MAXLENGTH_NAME, "%t %s", "tags_WA_chat", name);
+						Format(name, MAXLENGTH_NAME, "%t %s", "tags_WA_chat", LANG_SERVER, name);
 					}
 					else if (CheckVipFlag(author, g_sVIPFlag))
 					{
-						Format(name, MAXLENGTH_NAME, "%t %s", "tags_WVIP1_chat", name);
+						Format(name, MAXLENGTH_NAME, "%t %s", "tags_WVIP1_chat", LANG_SERVER, name);
 					}
 					else if (CheckVipFlag(author, g_sVIP2Flag))
 					{
-						Format(name, MAXLENGTH_NAME, "%t %s", "tags_WVIP2_chat", name);
+						Format(name, MAXLENGTH_NAME, "%t %s", "tags_WVIP2_chat", LANG_SERVER, name);
 					}
 					else if (gc_bNoOverwrite.BoolValue)
 					{
-						Format(name, MAXLENGTH_NAME, "%t %s", "tags_W_chat", name);
+						Format(name, MAXLENGTH_NAME, "%t %s", "tags_W_chat", LANG_SERVER, name);
 					}
 				}
 				else if (warden_deputy_isdeputy(author))
 				{
 					if (CheckVipFlag(author, g_sOwnerFlag))
 					{
-						Format(name, MAXLENGTH_NAME, "%t %s", "tags_DOWN_chat", name);
+						Format(name, MAXLENGTH_NAME, "%t %s", "tags_DOWN_chat", LANG_SERVER, name);
 					}
 					else if (CheckVipFlag(author, g_sCoOwnerFlag))
 					{
-						Format(name, MAXLENGTH_NAME, "%t %s", "tags_DCO_chat", name);
+						Format(name, MAXLENGTH_NAME, "%t %s", "tags_DCO_chat", LANG_SERVER, name);
 					}
 					else if (CheckVipFlag(author, g_sSuperAdminFlag))
 					{
-						Format(name, MAXLENGTH_NAME, "%t %s", "tags_DSA_chat", name);
+						Format(name, MAXLENGTH_NAME, "%t %s", "tags_DSA_chat", LANG_SERVER, name);
 					}
 					else if (CheckVipFlag(author, g_sAdminFlag))
 					{
-						Format(name, MAXLENGTH_NAME, "%t %s", "tags_DA_chat", name);
+						Format(name, MAXLENGTH_NAME, "%t %s", "tags_DA_chat", LANG_SERVER, name);
 					}
 					else if (CheckVipFlag(author, g_sVIPFlag))
 					{
-						Format(name, MAXLENGTH_NAME, "%t %s", "tags_DVIP1_chat", name);
+						Format(name, MAXLENGTH_NAME, "%t %s", "tags_DVIP1_chat", LANG_SERVER, name);
 					}
 					else if (CheckVipFlag(author, g_sVIP2Flag))
 					{
-						Format(name, MAXLENGTH_NAME, "%t %s", "tags_DVIP2_chat", name);
+						Format(name, MAXLENGTH_NAME, "%t %s", "tags_DVIP2_chat", LANG_SERVER, name);
 					}
 					else if (gc_bNoOverwrite.BoolValue)
 					{
-						Format(name, MAXLENGTH_NAME, "%t %s", "tags_D_chat", name);
+						Format(name, MAXLENGTH_NAME, "%t %s", "tags_D_chat", LANG_SERVER, name);
 					}
 				}
 				else if (CheckVipFlag(author, g_sOwnerFlag))
 				{
-					Format(name, MAXLENGTH_NAME, "%t %s", "tags_CTOWN_chat", name);
+					Format(name, MAXLENGTH_NAME, "%t %s", "tags_CTOWN_chat", LANG_SERVER, name);
 				}
 				else if (CheckVipFlag(author, g_sCoOwnerFlag))
 				{
-					Format(name, MAXLENGTH_NAME, "%t %s", "tags_CTCO_chat", name);
+					Format(name, MAXLENGTH_NAME, "%t %s", "tags_CTCO_chat", LANG_SERVER, name);
 				}
 				else if (CheckVipFlag(author, g_sSuperAdminFlag))
 				{
-					Format(name, MAXLENGTH_NAME, "%t %s", "tags_CTSA_chat", name);
+					Format(name, MAXLENGTH_NAME, "%t %s", "tags_CTSA_chat", LANG_SERVER, name);
 				}
 				else if (CheckVipFlag(author, g_sAdminFlag))
 				{
-					Format(name, MAXLENGTH_NAME, "%t %s", "tags_CTA_chat", name);
+					Format(name, MAXLENGTH_NAME, "%t %s", "tags_CTA_chat", LANG_SERVER, name);
 				}
 				else if (CheckVipFlag(author, g_sVIPFlag))
 				{
-					Format(name, MAXLENGTH_NAME, "%t %s", "tags_CTVIP1_chat", name);
+					Format(name, MAXLENGTH_NAME, "%t %s", "tags_CTVIP1_chat", LANG_SERVER, name);
 				}
 				else if (CheckVipFlag(author, g_sVIP2Flag))
 				{
-					Format(name, MAXLENGTH_NAME, "%t %s", "tags_CTVIP2_chat", name);
+					Format(name, MAXLENGTH_NAME, "%t %s", "tags_CTVIP2_chat", LANG_SERVER, name);
 				}
 				else if (gc_bNoOverwrite.BoolValue)
 				{
-					Format(name, MAXLENGTH_NAME, "%t %s", "tags_CT_chat", name);
+					Format(name, MAXLENGTH_NAME, "%t %s", "tags_CT_chat", LANG_SERVER, name);
 				}
 			}
 			Format(message, MAXLENGTH_MESSAGE, "{default}%s", message);
@@ -560,31 +560,31 @@ public Action OnChatMessage(int &author, Handle recipients, char[] name, char[] 
 			{
 				if (CheckVipFlag(author, g_sOwnerFlag))
 				{
-					Format(name, MAXLENGTH_NAME, "%t %s", "tags_TOWN_chat", name);
+					Format(name, MAXLENGTH_NAME, "%t %s", "tags_TOWN_chat", LANG_SERVER, name);
 				}
 				else if (CheckVipFlag(author, g_sCoOwnerFlag))
 				{
-					Format(name, MAXLENGTH_NAME, "%t %s", "tags_TCO_chat", name);
+					Format(name, MAXLENGTH_NAME, "%t %s", "tags_TCO_chat", LANG_SERVER, name);
 				}
 				else if (CheckVipFlag(author, g_sSuperAdminFlag))
 				{
-					Format(name, MAXLENGTH_NAME, "%t %s", "tags_TSA_chat", name);
+					Format(name, MAXLENGTH_NAME, "%t %s", "tags_TSA_chat", LANG_SERVER, name);
 				}
 				else if (CheckVipFlag(author, g_sAdminFlag))
 				{
-					Format(name, MAXLENGTH_NAME, "%t %s", "tags_TA_chat", name);
+					Format(name, MAXLENGTH_NAME, "%t %s", "tags_TA_chat", LANG_SERVER, name);
 				}
 				else if (CheckVipFlag(author, g_sVIPFlag))
 				{
-					Format(name, MAXLENGTH_NAME, "%t %s", "tags_TVIP1_chat", name);
+					Format(name, MAXLENGTH_NAME, "%t %s", "tags_TVIP1_chat", LANG_SERVER, name);
 				}
 				else if (CheckVipFlag(author, g_sVIP2Flag))
 				{
-					Format(name, MAXLENGTH_NAME, "%t %s", "tags_TVIP2_chat", name);
+					Format(name, MAXLENGTH_NAME, "%t %s", "tags_TVIP2_chat", LANG_SERVER, name);
 				}
 				else if (gc_bNoOverwrite.BoolValue)
 				{
-					Format(name, MAXLENGTH_NAME, "%t %s", "tags_T_chat", name);
+					Format(name, MAXLENGTH_NAME, "%t %s", "tags_T_chat", LANG_SERVER, name);
 				}
 			}
 			else if (GetClientTeam(author) == CS_TEAM_CT)
@@ -593,91 +593,91 @@ public Action OnChatMessage(int &author, Handle recipients, char[] name, char[] 
 				{
 					if (CheckVipFlag(author, g_sOwnerFlag))
 					{
-						Format(name, MAXLENGTH_NAME, "%t %s", "tags_WOWN_chat", name);
+						Format(name, MAXLENGTH_NAME, "%t %s", "tags_WOWN_chat", LANG_SERVER, name);
 					}
 					else if (CheckVipFlag(author, g_sCoOwnerFlag))
 					{
-						Format(name, MAXLENGTH_NAME, "%t %s", "tags_WCO_chat", name);
+						Format(name, MAXLENGTH_NAME, "%t %s", "tags_WCO_chat", LANG_SERVER, name);
 					}
 					else if (CheckVipFlag(author, g_sSuperAdminFlag))
 					{
-						Format(name, MAXLENGTH_NAME, "%t %s", "tags_WSA_chat", name);
+						Format(name, MAXLENGTH_NAME, "%t %s", "tags_WSA_chat", LANG_SERVER, name);
 					}
 					else if (CheckVipFlag(author, g_sAdminFlag))
 					{
-						Format(name, MAXLENGTH_NAME, "%t %s", "tags_WA_chat", name);
+						Format(name, MAXLENGTH_NAME, "%t %s", "tags_WA_chat", LANG_SERVER, name);
 					}
 					else if (CheckVipFlag(author, g_sVIPFlag))
 					{
-						Format(name, MAXLENGTH_NAME, "%t %s", "tags_WVIP1_chat", name);
+						Format(name, MAXLENGTH_NAME, "%t %s", "tags_WVIP1_chat", LANG_SERVER, name);
 					}
 					else if (CheckVipFlag(author, g_sVIP2Flag))
 					{
-						Format(name, MAXLENGTH_NAME, "%t %s", "tags_WVIP2_chat", name);
+						Format(name, MAXLENGTH_NAME, "%t %s", "tags_WVIP2_chat", LANG_SERVER, name);
 					}
 					else if (gc_bNoOverwrite.BoolValue)
 					{
-						Format(name, MAXLENGTH_NAME, "%t %s", "tags_W_chat", name);
+						Format(name, MAXLENGTH_NAME, "%t %s", "tags_W_chat", LANG_SERVER, name);
 					}
 				}
 				else if (warden_deputy_isdeputy(author))
 				{
 					if (CheckVipFlag(author, g_sOwnerFlag))
 					{
-						Format(name, MAXLENGTH_NAME, "%t %s", "tags_DOWN_chat", name);
+						Format(name, MAXLENGTH_NAME, "%t %s", "tags_DOWN_chat", LANG_SERVER, name);
 					}
 					else if (CheckVipFlag(author, g_sCoOwnerFlag))
 					{
-						Format(name, MAXLENGTH_NAME, "%t %s", "tags_DCO_chat", name);
+						Format(name, MAXLENGTH_NAME, "%t %s", "tags_DCO_chat", LANG_SERVER, name);
 					}
 					else if (CheckVipFlag(author, g_sSuperAdminFlag))
 					{
-						Format(name, MAXLENGTH_NAME, "%t %s", "tags_DSA_chat", name);
+						Format(name, MAXLENGTH_NAME, "%t %s", "tags_DSA_chat", LANG_SERVER, name);
 					}
 					else if (CheckVipFlag(author, g_sAdminFlag))
 					{
-						Format(name, MAXLENGTH_NAME, "%t %s", "tags_DA_chat", name);
+						Format(name, MAXLENGTH_NAME, "%t %s", "tags_DA_chat", LANG_SERVER, name);
 					}
 					else if (CheckVipFlag(author, g_sVIPFlag))
 					{
-						Format(name, MAXLENGTH_NAME, "%t %s", "tags_DVIP1_chat", name);
+						Format(name, MAXLENGTH_NAME, "%t %s", "tags_DVIP1_chat", LANG_SERVER, name);
 					}
 					else if (CheckVipFlag(author, g_sVIP2Flag))
 					{
-						Format(name, MAXLENGTH_NAME, "%t %s", "tags_DVIP2_chat", name);
+						Format(name, MAXLENGTH_NAME, "%t %s", "tags_DVIP2_chat", LANG_SERVER, name);
 					}
 					else if (gc_bNoOverwrite.BoolValue)
 					{
-						Format(name, MAXLENGTH_NAME, "%t %s", "tags_D_chat", name);
+						Format(name, MAXLENGTH_NAME, "%t %s", "tags_D_chat", LANG_SERVER, name);
 					}
 				}
 				else if (CheckVipFlag(author, g_sOwnerFlag))
 				{
-					Format(name, MAXLENGTH_NAME, "%t %s", "tags_CTOWN_chat", name);
+					Format(name, MAXLENGTH_NAME, "%t %s", "tags_CTOWN_chat", LANG_SERVER, name);
 				}
 				else if (CheckVipFlag(author, g_sCoOwnerFlag))
 				{
-					Format(name, MAXLENGTH_NAME, "%t %s", "tags_CTCO_chat", name);
+					Format(name, MAXLENGTH_NAME, "%t %s", "tags_CTCO_chat", LANG_SERVER, name);
 				}
 				else if (CheckVipFlag(author, g_sSuperAdminFlag))
 				{
-					Format(name, MAXLENGTH_NAME, "%t %s", "tags_CTSA_chat", name);
+					Format(name, MAXLENGTH_NAME, "%t %s", "tags_CTSA_chat", LANG_SERVER, name);
 				}
 				else if (CheckVipFlag(author, g_sAdminFlag))
 				{
-					Format(name, MAXLENGTH_NAME, "%t %s", "tags_CTA_chat", name);
+					Format(name, MAXLENGTH_NAME, "%t %s", "tags_CTA_chat", LANG_SERVER, name);
 				}
 				else if (CheckVipFlag(author, g_sVIPFlag))
 				{
-					Format(name, MAXLENGTH_NAME, "%t %s", "tags_CTVIP1_chat", name);
+					Format(name, MAXLENGTH_NAME, "%t %s", "tags_CTVIP1_chat", LANG_SERVER, name);
 				}
 				else if (CheckVipFlag(author, g_sVIP2Flag))
 				{
-					Format(name, MAXLENGTH_NAME, "%t %s", "tags_CTVIP2_chat", name);
+					Format(name, MAXLENGTH_NAME, "%t %s", "tags_CTVIP2_chat", LANG_SERVER, name);
 				}
 				else if (gc_bNoOverwrite.BoolValue)
 				{
-					Format(name, MAXLENGTH_NAME, "%t %s", "tags_CT_chat", name);
+					Format(name, MAXLENGTH_NAME, "%t %s", "tags_CT_chat", LANG_SERVER, name);
 				}
 			}
 
