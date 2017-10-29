@@ -196,10 +196,13 @@ public Action Event_OnPlayerSpawn(Event event, const char[] name, bool bDontBroa
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));
 
-	if (GetClientTeam(client) != CS_TEAM_CT) 
+	if (!IsValidClient(client, false, false))
 		return Plugin_Continue;
 
-	if (!IsValidClient(client, true, true))
+	if (GetClientTeam(client) != CS_TEAM_CT)
+		return Plugin_Continue;
+
+	if (MyJailbreak_IsEventDayRunning())
 		return Plugin_Continue;
 
 	if (g_IsScammer[client])

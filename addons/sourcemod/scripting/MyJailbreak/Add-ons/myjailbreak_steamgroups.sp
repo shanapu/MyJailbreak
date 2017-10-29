@@ -205,10 +205,10 @@ public Action Event_OnPlayerSpawn(Event event, const char[] name, bool bDontBroa
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));
 
-	if (GetClientTeam(client) != 3) 
+	if (!IsValidClient(client, false, false))
 		return Plugin_Continue;
 
-	if (!IsValidClient(client, false, false))
+	if (GetClientTeam(client) != CS_TEAM_CT)
 		return Plugin_Continue;
 
 	if (MyJailbreak_IsEventDayRunning())
