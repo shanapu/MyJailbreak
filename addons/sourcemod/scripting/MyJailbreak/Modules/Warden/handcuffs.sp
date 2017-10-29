@@ -382,7 +382,8 @@ public void HandCuffs_OnAvailableLR(int Announced)
 		}
 	}
 
-	StripZeus();
+	StripZeus(g_iWarden);
+	StripZeus(g_iDeputy);
 }
 
 public void HandCuffs_OnWardenCreation(int client)
@@ -392,7 +393,7 @@ public void HandCuffs_OnWardenCreation(int client)
 
 public void HandCuffs_OnWardenRemoved(int client)
 {
-	StripZeus();
+	StripZeus(client);
 }
 
 public void HandCuffs_OnDeputyCreation(int client)
@@ -402,7 +403,7 @@ public void HandCuffs_OnDeputyCreation(int client)
 
 public void HandCuffs_OnDeputyRemoved(int client)
 {
-	StripZeus();
+	StripZeus(client);
 }
 
 public void HandCuffs_OnMapStart()
@@ -715,23 +716,26 @@ public Action Timer_StillPaperClip(Handle timer, int client)
                    STOCKS
 ******************************************************************************/
 
-void StripZeus()
+void StripZeus(int client)
 {
-	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false)) if ((IsClientWarden(i) || (IsClientDeputy(i) && gc_bHandCuffDeputy.BoolValue)))
-	{
-		char sWeapon[64];
-		FakeClientCommand(i, "use weapon_taser");
-		int weapon = GetEntPropEnt(i, Prop_Send, "m_hActiveWeapon");
+	if (!IsValidClient(client, true, false))
+		return;
 
-		if (weapon != -1)
-		{
-			GetEntityClassname(weapon, sWeapon, sizeof(sWeapon));
-			if (StrEqual(sWeapon, "weapon_taser"))
-			{
-				SDKHooks_DropWeapon(i, weapon, NULL_VECTOR, NULL_VECTOR);
-				AcceptEntityInput(weapon, "Kill");
-			}
-		}
+	if ((!IsClientWarden(client) && (!IsClientDeputyclient(i) && gc_bHandCuffDeputy.BoolValue)))
+		return;
+
+	char sWeapon[64];
+	FakeClientCommand(client, "use weapon_taser");
+	int weapon = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
+
+	if (weapon == -1)
+		return;
+
+	GetEntityClassname(weapon, sWeapon, sizeof(sWeapon));
+	if (StrEqual(sWeapon, "weapon_taser"))
+	{
+		SDKHooks_DropWeapon(client, weapon, NULL_VECTOR, NULL_VECTOR);
+		AcceptEntityInput(weapon, "Kill");
 	}
 }
 
