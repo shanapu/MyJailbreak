@@ -82,6 +82,7 @@ ConVar gc_sCustomCommandVote;
 ConVar gc_sCustomCommandSet;
 ConVar gc_sAdminFlag;
 ConVar gc_bAllowLR;
+ConVar gc_bDrop;
 
 ConVar gc_bBeginSetA;
 ConVar gc_bBeginSetW;
@@ -157,6 +158,7 @@ public void OnPluginStart()
 	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_zeus_flag", "g", "Set flag for admin/vip to set this Event Day.");
 	gc_bVote = AutoExecConfig_CreateConVar("sm_zeus_vote", "1", "0 - disabled, 1 - allow player to vote for zeus", _, true, 0.0, true, 1.0);
 	gc_bSpawnCell = AutoExecConfig_CreateConVar("sm_zeus_spawn", "0", "0 - T teleport to CT spawn, 1 - cell doors auto open", _, true, 0.0, true, 1.0);
+	gc_bDrop = AutoExecConfig_CreateConVar("sm_zeus_drop", "0", "0 - disabled, 1 - allow player to drop their zeus", _, true, 0.0, true, 1.0);
 
 	gc_bBeginSetA = AutoExecConfig_CreateConVar("sm_zeus_begin_admin", "1", "When admin set event (!setzeus) = 0 - start event next round, 1 - start event current round", _, true, 0.0, true, 1.0);
 	gc_bBeginSetW = AutoExecConfig_CreateConVar("sm_zeus_begin_warden", "1", "When warden set event (!setzeus) = 0 - start event next round, 1 - start event current round", _, true, 0.0, true, 1.0);
@@ -788,7 +790,7 @@ public Action OnWeaponCanUse(int client, int weapon)
 //Deny weapon drops
 public Action OnWeaponDrop(int client, int weapon)
 {
-	if (!g_bIsZeus)
+	if (!g_bIsZeus || gc_bDrop.BoolValue)
 	{
 		return Plugin_Continue;
 	}
