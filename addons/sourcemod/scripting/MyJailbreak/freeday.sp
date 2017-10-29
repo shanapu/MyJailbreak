@@ -733,6 +733,8 @@ void PrepareDay()
 		{
 			SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
 		}
+
+		SetEntityMoveType(i, MOVETYPE_WALK);
 	}
 
 	if (gp_bMyJailbreak)
