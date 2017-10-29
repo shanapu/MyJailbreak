@@ -721,7 +721,7 @@ void StripZeus(int client)
 	if (!IsValidClient(client, true, false))
 		return;
 
-	if ((!IsClientWarden(client) && (!IsClientDeputyclient(i) && gc_bHandCuffDeputy.BoolValue)))
+	if ((!IsClientWarden(client) && (!IsClientDeputy(client) && gc_bHandCuffDeputy.BoolValue)))
 		return;
 
 	char sWeapon[64];
