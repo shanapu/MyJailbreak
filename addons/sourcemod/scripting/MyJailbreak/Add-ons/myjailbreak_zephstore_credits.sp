@@ -68,7 +68,7 @@ public void MyJailbreak_OnEventDayEnd(char[] name, int winner)
 	if (winner <= 1)
 		return;
 
-	char sTag[12];
+	char sTag[64];
 	gc_sTag.GetString(sTag, sizeof(sTag));
 
 	for (int i = 1; i <= MaxClients; i++)

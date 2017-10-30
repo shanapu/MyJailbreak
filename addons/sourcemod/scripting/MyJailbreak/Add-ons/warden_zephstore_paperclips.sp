@@ -107,7 +107,7 @@ public int PaperClips_Config(Handle kv, int itemid)
 
 public int PaperClips_Equip(int client,int  id)
 {
-	char sTag[12];
+	char sTag[64];
 	gc_sTag.GetString(sTag, sizeof(sTag));
 
 	if (g_iRoundLimit[client] >= gc_iRoundLimit.IntValue)

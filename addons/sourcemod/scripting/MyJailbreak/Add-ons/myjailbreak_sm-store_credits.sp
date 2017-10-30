@@ -38,7 +38,7 @@ ConVar gc_bAlive;
 ConVar gc_sTag;
 
 // Strings
-char g_sTag[12];
+char g_sTag[64];
 
 public Plugin myinfo = 
 {
