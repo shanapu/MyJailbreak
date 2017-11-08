@@ -973,6 +973,19 @@ public void OnAvailableLR(int Announced)
 	}
 }
 
+// When a event game starts during round.
+public void MyJailbreak_OnEventDayStart(char[] EventDayName)
+{
+	if (g_iWarden != -1)
+	{
+		CreateTimer(0.1, Timer_RemoveColor, g_iWarden);
+		SetEntityModel(g_iWarden, g_sModelPathPrevious);
+		Forward_OnWardenRemoved(g_iWarden);
+		g_iLastWarden = g_iWarden;
+		g_iWarden = -1;
+	}
+}
+
 // Check Keyboard Input for modules
 public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
 {
