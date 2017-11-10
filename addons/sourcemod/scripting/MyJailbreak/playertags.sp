@@ -37,6 +37,7 @@
 #undef REQUIRE_PLUGIN
 #include <myjailbreak>
 #include <chat-processor>
+#include <ccc>
 
 #tryinclude <scp>
 #if !defined _scp_included
@@ -53,6 +54,7 @@
 // Booleans
 bool g_bIsLateLoad = false;
 bool gp_bChatProcessor = false;
+bool gp_bCCC = false;
 
 // Console Variables
 ConVar gc_bPlugin;
@@ -153,18 +155,25 @@ public void OnPluginStart()
 public void OnAllPluginsLoaded()
 {
 	gp_bChatProcessor = LibraryExists("chat-processor");
+	gp_bCCC = LibraryExists("ccc");
 }
 
 public void OnLibraryRemoved(const char[] name)
 {
 	if (StrEqual(name, "chat-processor"))
 		gp_bChatProcessor = false;
+		
+	if (StrEqual(name, "ccc"))
+		gp_bCCC = false;
 }
 
 public void OnLibraryAdded(const char[] name)
 {
 	if (StrEqual(name, "chat-processor"))
 		gp_bChatProcessor = true;
+		
+	if (StrEqual(name, "ccc"))
+		gp_bCCC = true;
 }
 
 /******************************************************************************
@@ -417,6 +426,14 @@ public Action CP_OnChatMessage(int& author, ArrayList recipients, char[] flagstr
 	{
 		if (gc_bChat.BoolValue)
 		{
+			if (gp_bCCC)
+			{
+				char sColor[32];
+				CCC_GetTag(author, sColor, sizeof(sColor));
+				
+				if (strlen(sColor) > 0)
+					return Plugin_Continue;
+			}
 			if (GetClientTeam(author) == CS_TEAM_T) 
 			{
 				if (CheckVipFlag(author, g_sOwnerFlag))
