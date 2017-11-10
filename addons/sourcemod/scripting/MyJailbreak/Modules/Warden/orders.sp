@@ -32,6 +32,7 @@
 #include <autoexecconfig>
 #include <emitsoundany>
 #include <warden>
+#include <myjbwarden>
 #include <mystocks>
 
 // Compiler Options

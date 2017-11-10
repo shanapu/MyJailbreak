@@ -31,6 +31,7 @@
 #include <cstrike>
 #include <autoexecconfig>
 #include <warden>
+#include <myjbwarden>
 #include <mystocks>
 
 // Compiler Options

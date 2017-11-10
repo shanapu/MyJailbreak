@@ -34,6 +34,7 @@
 #include <colors>
 #include <autoexecconfig>
 #include <warden>
+#include <myjbwarden>
 #include <smartdm>
 
 // Optional Plugins
@@ -1344,6 +1345,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	CreateNative("warden_iswarden", Native_IsWarden);
 	CreateNative("warden_set", Native_SetWarden);
 	CreateNative("warden_removed", Native_RemoveWarden);
+
 	CreateNative("warden_get", Native_GetWarden);
 	CreateNative("warden_getlast", Native_GetLastWarden);
 
@@ -1372,6 +1374,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 
 	RegPluginLibrary("warden");
+	RegPluginLibrary("myjbwarden");
 
 	g_bIsLateLoad = late;
 

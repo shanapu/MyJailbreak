@@ -40,6 +40,7 @@
 #include <lastrequest>
 #include <myjailbreak>
 #include <warden>
+#include <myjbwarden>
 #define REQUIRE_PLUGIN
 
 // Compiler Options
@@ -52,6 +53,7 @@ bool g_bWeaponsSelected[MAXPLAYERS+1] = {false, ...};
 bool g_bRememberChoice[MAXPLAYERS+1] = {false, ...};
 bool g_bTA[MAXPLAYERS+1] = {false, ...};
 bool g_bHealth[MAXPLAYERS+1] = {false, ...};
+bool gp_bMyJBWarden = false;
 bool gp_bWarden = false;
 bool gp_bMyJailBreak = false;
 bool gp_bHosties = false;
@@ -212,6 +214,9 @@ public void OnLibraryRemoved(const char[] name)
 	if (StrEqual(name, "warden"))
 		gp_bWarden = false;
 
+	if (StrEqual(name, "myjbwarden"))
+		gp_bMyJBWarden = false;
+
 	if (StrEqual(name, "myjailbreak"))
 		gp_bMyJailBreak = false;
 
@@ -224,6 +229,9 @@ public void OnLibraryAdded(const char[] name)
 	if (StrEqual(name, "warden"))
 		gp_bWarden = true;
 
+	if (StrEqual(name, "myjbwarden"))
+		gp_bMyJBWarden = true;
+
 	if (StrEqual(name, "myjailbreak"))
 		gp_bMyJailBreak = true;
 
@@ -234,6 +242,7 @@ public void OnLibraryAdded(const char[] name)
 public void OnAllPluginsLoaded()
 {
 	gp_bWarden = LibraryExists("warden");
+	gp_bMyJBWarden = LibraryExists("myjbwarden");
 	gp_bMyJailBreak = LibraryExists("myjailbreak");
 	gp_bHosties = LibraryExists("hosties");
 
@@ -463,25 +472,28 @@ void GiveSavedWeapons(int client)
 
 			}
 
-			if (warden_deputy_isdeputy(client))
+			if (gp_bMyJBWarden)
 			{
-				if (gc_bHealthDeputy.BoolValue && !g_bTA[client])
+				if (warden_deputy_isdeputy(client))
 				{
-					GivePlayerItem(client, "weapon_healthshot");
-					CPrintToChat(client, "%t %t", "weapons_tag", "weapons_health");
-					g_bTA[client] = true;
-				}
+					if (gc_bHealthDeputy.BoolValue && !g_bTA[client])
+					{
+						GivePlayerItem(client, "weapon_healthshot");
+						CPrintToChat(client, "%t %t", "weapons_tag", "weapons_health");
+						g_bTA[client] = true;
+					}
 
-				if (gc_bTADeputy.BoolValue && !g_bHealth[client])
-				{
-					GivePlayerItem(client, "weapon_tagrenade");
-					CPrintToChat(client, "%t %t", "weapons_tag", "weapons_ta");
-					g_bHealth[client] = true;
-				}
+					if (gc_bTADeputy.BoolValue && !g_bHealth[client])
+					{
+						GivePlayerItem(client, "weapon_tagrenade");
+						CPrintToChat(client, "%t %t", "weapons_tag", "weapons_ta");
+						g_bHealth[client] = true;
+					}
 
-				if ((g_bTaserDeputy != null) && g_bTaserDeputy.BoolValue)
-				{
-					GivePlayerItem(client, "weapon_taser");
+					if (g_bTaserDeputy.BoolValue)
+					{
+						GivePlayerItem(client, "weapon_taser");
+					}
 				}
 			}
 		}

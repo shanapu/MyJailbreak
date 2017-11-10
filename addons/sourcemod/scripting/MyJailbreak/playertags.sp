@@ -30,7 +30,6 @@
 #include <sdkhooks>
 #include <cstrike>
 #include <autoexecconfig>
-#include <warden>
 #include <mystocks>
 
 // Optional Plugins
@@ -38,12 +37,14 @@
 #include <myjailbreak>
 #include <chat-processor>
 #include <ccc>
+#include <warden>
+#include <myjbwarden>
 
 #tryinclude <scp>
 #if !defined _scp_included
 #include <cp-scp-wrapper>
 #endif
- 
+
 #define REQUIRE_PLUGIN
 
 
@@ -55,6 +56,8 @@
 bool g_bIsLateLoad = false;
 bool gp_bChatProcessor = false;
 bool gp_bCCC = false;
+bool gp_bMyJBWarden = false;
+bool gp_bWarden = false;
 
 // Console Variables
 ConVar gc_bPlugin;
@@ -156,24 +159,39 @@ public void OnAllPluginsLoaded()
 {
 	gp_bChatProcessor = LibraryExists("chat-processor");
 	gp_bCCC = LibraryExists("ccc");
+	gp_bWarden = LibraryExists("warden");
+	gp_bMyJBWarden = LibraryExists("myjbwarden");
 }
 
 public void OnLibraryRemoved(const char[] name)
 {
 	if (StrEqual(name, "chat-processor"))
 		gp_bChatProcessor = false;
-		
+
 	if (StrEqual(name, "ccc"))
 		gp_bCCC = false;
+
+	if (StrEqual(name, "warden"))
+		gp_bWarden = false;
+
+	if (StrEqual(name, "myjbwarden"))
+		gp_bMyJBWarden = false;
 }
 
 public void OnLibraryAdded(const char[] name)
 {
 	if (StrEqual(name, "chat-processor"))
 		gp_bChatProcessor = true;
-		
+
 	if (StrEqual(name, "ccc"))
 		gp_bCCC = true;
+
+	if (StrEqual(name, "warden"))
+		gp_bWarden = true;
+
+	if (StrEqual(name, "myjbwarden"))
+		gp_bMyJBWarden = true;
+
 }
 
 /******************************************************************************
@@ -303,7 +321,7 @@ void HandleTag(int client)
 			}
 			else if (GetClientTeam(client) == CS_TEAM_CT)
 			{
-				if (warden_iswarden(client))
+				if (gp_bWarden && warden_iswarden(client))
 				{
 					if (CheckVipFlag(client, g_sOwnerFlag))
 					{
@@ -341,7 +359,7 @@ void HandleTag(int client)
 						CS_SetClientClanTag(client, tags);
 					}
 				}
-				else if (warden_deputy_isdeputy(client))
+				else if (gp_bMyJBWarden && warden_deputy_isdeputy(client))
 				{
 					if (CheckVipFlag(client, g_sOwnerFlag))
 					{
@@ -467,7 +485,7 @@ public Action CP_OnChatMessage(int& author, ArrayList recipients, char[] flagstr
 			}
 			else if (GetClientTeam(author) == CS_TEAM_CT)
 			{
-				if (warden_iswarden(author))
+				if (gp_bWarden && warden_iswarden(author))
 				{
 					if (CheckVipFlag(author, g_sOwnerFlag))
 					{
@@ -498,7 +516,7 @@ public Action CP_OnChatMessage(int& author, ArrayList recipients, char[] flagstr
 						Format(name, MAXLENGTH_NAME, "%t %s", "tags_W_chat", LANG_SERVER, name);
 					}
 				}
-				else if (warden_deputy_isdeputy(author))
+				else if (gp_bMyJBWarden && warden_deputy_isdeputy(author))
 				{
 					if (CheckVipFlag(author, g_sOwnerFlag))
 					{
@@ -606,7 +624,7 @@ public Action OnChatMessage(int &author, Handle recipients, char[] name, char[] 
 			}
 			else if (GetClientTeam(author) == CS_TEAM_CT)
 			{
-				if (warden_iswarden(author))
+				if (gp_bWarden && warden_iswarden(author))
 				{
 					if (CheckVipFlag(author, g_sOwnerFlag))
 					{
@@ -637,7 +655,7 @@ public Action OnChatMessage(int &author, Handle recipients, char[] name, char[] 
 						Format(name, MAXLENGTH_NAME, "%t %s", "tags_W_chat", LANG_SERVER, name);
 					}
 				}
-				else if (warden_deputy_isdeputy(author))
+				else if (gp_bMyJBWarden && warden_deputy_isdeputy(author))
 				{
 					if (CheckVipFlag(author, g_sOwnerFlag))
 					{

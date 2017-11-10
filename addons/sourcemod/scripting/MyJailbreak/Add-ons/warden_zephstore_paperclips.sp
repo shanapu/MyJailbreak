@@ -30,6 +30,7 @@
 #include <autoexecconfig>
 #include <colors>
 #include <warden>
+#include <myjbwarden>
 #include <store>
 
 // Optional Plugins

@@ -38,6 +38,7 @@
 #undef REQUIRE_PLUGIN
 #include <myjailbreak>
 #include <warden>
+#include <myjbwarden>
 #define REQUIRE_PLUGIN
 
 // Compiler Options
@@ -76,6 +77,7 @@ bool g_bQueueCooldown[MAXPLAYERS+1] = {false, ...};
 bool g_bEnableGuard[MAXPLAYERS+1] = {true, ...};
 
 bool gp_bWarden = false;
+bool gp_bMyJBWarden = false;
 
 // Handles
 Handle g_aGuardQueue;
@@ -313,17 +315,24 @@ public void OnConfigsExecuted()
 
 public void OnAllPluginsLoaded()
 {
+	gp_bMyJBWarden = LibraryExists("myjbwarden");
 	gp_bWarden = LibraryExists("warden");
 }
 
 public void OnLibraryRemoved(const char[] name)
 {
+	if (StrEqual(name, "myjbwarden"))
+		gp_bMyJBWarden = false;
+
 	if (StrEqual(name, "warden"))
 		gp_bWarden = false;
 }
 
 public void OnLibraryAdded(const char[] name)
 {
+	if (StrEqual(name, "myjbwarden"))
+		gp_bMyJBWarden = true;
+
 	if (StrEqual(name, "warden"))
 		gp_bWarden = true;
 }
@@ -385,7 +394,7 @@ public Action Command_ViewGuardQueue(int client, int args)
 	{
 		if (!IsValidClient(GetArrayCell(g_aGuardQueue, i), true, true))
 			continue;
-		
+
 		char display[120];
 		Format(display, sizeof(display), "%N", GetArrayCell(g_aGuardQueue, i));
 		InfoPanel.DrawText(display);
@@ -581,7 +590,7 @@ public Action AdminCommand_RemoveFromQueue(int client, int args)
 	{
 		if (!IsValidClient(GetArrayCell(g_aGuardQueue, i), true, true))
 			continue;
-		
+
 		char userid[11];
 		char username[MAX_NAME_LENGTH];
 		IntToString(GetClientUserId(i+1), userid, sizeof(userid));
@@ -843,7 +852,7 @@ void AddToQueue(int client)
 		else
 		{
 			iIndex = PushArrayCell(g_aGuardQueue, client);
-			
+
 			CPrintToChat(client, "%t %t", "ratio_tag", "ratio_number", iIndex + 1);
 			if (gc_bAdsVIP.BoolValue && gc_bVIPQueue.BoolValue) CPrintToChat(client, "%t %t", "ratio_tag", "ratio_advip");
 		}
@@ -1229,7 +1238,7 @@ void FixTeamRatio()
 		{
 			return;
 		}
-		
+
 		if (!IsValidClient(client, true, true))
 		{
 			CPrintToChatAll("%t %t", "ratio_tag", "ratio_novalid");
@@ -1249,46 +1258,67 @@ void FixTeamRatio()
 	while (ShouldMoveGuardToPrisoner())
 	{
 		int client;
-		
+
 		if (gc_bBalanceGuards.BoolValue)
 		{
 			int iListSize = GetArraySize(g_aGuardList);
 			int iListNum = iListSize-1;
-			
+
 			if (GetArraySize(g_aGuardList))
 			{
 				client = GetArrayCell(g_aGuardList, iListNum);
-				
+
 				if (gp_bWarden)
 				{
-					if ((warden_iswarden(client) || warden_deputy_isdeputy(client) || (!warden_exist() && (warden_getlast() == client)) || (!warden_deputy_exist() && (warden_deputy_getlast() == client))) && gc_bBalanceWarden.BoolValue)
+					if (warden_iswarden(client) && gc_bBalanceWarden.BoolValue)
 					{
 						iListNum--;
 						if (iListNum == -1)
 							break;
-						
+
 						client = GetArrayCell(g_aGuardList, iListNum);
-						
-						if (warden_iswarden(client) || warden_deputy_isdeputy(client) || (!warden_exist() && (warden_getlast() == client)) || (!warden_deputy_exist() && (warden_deputy_getlast() == client)))
+
+						if (warden_iswarden(client))
 						{
 							iListNum--;
 							if (iListNum == -1)
 								break;
-							
+
 							client = GetArrayCell(g_aGuardList, iListNum);
+						}
+					}
+
+					if (gp_bMyJBWarden)
+					{
+						if ((warden_deputy_isdeputy(client) || (!warden_exist() && (warden_getlast() == client)) || (!warden_deputy_exist() && (warden_deputy_getlast() == client))) && gc_bBalanceWarden.BoolValue)
+						{
+							iListNum--;
+							if (iListNum == -1)
+								break;
+
+							client = GetArrayCell(g_aGuardList, iListNum);
+
+							if (warden_deputy_isdeputy(client) || (!warden_exist() && (warden_getlast() == client)) || (!warden_deputy_exist() && (warden_deputy_getlast() == client)))
+							{
+								iListNum--;
+								if (iListNum == -1)
+									break;
+
+								client = GetArrayCell(g_aGuardList, iListNum);
+							}
 						}
 					}
 				}
 			}
-			
+
 			if (iListNum == -1)
 				break;
 		}
 		else client = GetRandomClientFromTeam(CS_TEAM_CT);
-		
+
 		if (!client)
 			break;
-		
+
 		CPrintToChatAll("%t %t", "ratio_tag", "ratio_movetot", client);
 		SetClientPendingTeam(client, CS_TEAM_T);
 		MinusDeath(client);
@@ -1305,21 +1335,21 @@ int GetRandomClientFromTeam(int iTeam)
 	{
 		if (GetClientPendingTeam(i) != iTeam)
 			continue;
-		
+
 		if (gp_bWarden)
 		{
 			if ((warden_iswarden(i) || warden_deputy_isdeputy(i)) && gc_bBalanceWarden.BoolValue)
 				continue;
 		}
-		
+
 		Action res = Plugin_Continue;
 		Call_StartForward(gF_OnClientJoinGuards);
 		Call_PushCell(i);
 		Call_Finish(res);
-		
+
 		if (res >= Plugin_Handled)
 			continue;
-		
+
 		clients[iNumFound++] = i;
 	}
 
@@ -1365,7 +1395,7 @@ bool CanClientJoinGuards(int client)
 	{
 		if (!IsValidClient(i, true, true))
 			continue;
-		
+
 		if (client == GetArrayCell(g_aGuardQueue, i))
 			return true;
 	}
