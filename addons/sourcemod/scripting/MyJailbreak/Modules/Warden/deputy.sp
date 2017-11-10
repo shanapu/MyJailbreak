@@ -354,8 +354,11 @@ public void Deputy_Event_RoundStart(Event event, const char[] name, bool dontBro
 // Prepare Plugin & modules
 public void Deputy_OnMapStart()
 {
-	Downloader_AddFileToDownloadsTable(g_sModelPathDeputy);
-	PrecacheModel(g_sModelPathDeputy);
+	if (gc_bModelDeputy.BoolValue)
+	{
+		Downloader_AddFileToDownloadsTable(g_sModelPathDeputy);
+		PrecacheModel(g_sModelPathDeputy);
+	}
 }
 
 // Deputy disconnect

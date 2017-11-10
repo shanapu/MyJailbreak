@@ -882,10 +882,15 @@ public void OnMapStart()
 		PrecacheSoundAnyDownload(g_sUnWarden);
 	}
 
+	if (gc_bModel.BoolValue)
+	{
+		Downloader_AddFileToDownloadsTable(g_sModelPathWarden);
+		PrecacheModel(g_sModelPathWarden);
+	}
+
 	g_iVoteCount = 0;
 
-	Downloader_AddFileToDownloadsTable(g_sModelPathWarden);
-	PrecacheModel(g_sModelPathWarden);
+	
 	g_iSmokeSprite = PrecacheModel("materials/sprites/steam1.vmt");
 	g_iBeamSprite = PrecacheModel("materials/sprites/laserbeam.vmt");
 	g_iHaloSprite = PrecacheModel("materials/sprites/glow01.vmt");
