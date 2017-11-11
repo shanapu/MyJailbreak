@@ -908,6 +908,7 @@ public void OnClientPutInServer(int client)
 	BackStab_OnClientPutInServer(client);
 	Laser_OnClientPutInServer(client);
 	Painter_OnClientPutInServer(client);
+	FriendlyFire_OnClientPutInServer(client);
 }
 
 // Warden disconnect

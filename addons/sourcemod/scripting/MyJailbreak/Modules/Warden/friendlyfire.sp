@@ -43,6 +43,7 @@
 ConVar gc_bFF;
 ConVar gc_bFFDeputy;
 ConVar gc_sCustomCommandFF;
+ConVar gc_sFFCT;
 
 // Extern Convars
 ConVar g_bFF;
@@ -63,9 +64,10 @@ public void FriendlyFire_OnPluginStart()
 
 	// AutoExecConfig
 	gc_bFF = AutoExecConfig_CreateConVar("sm_warden_ff", "1", "0 - disabled, 1 - enable switch ff for the warden", _, true, 0.0, true, 1.0);
+	gc_sFFCT = AutoExecConfig_CreateConVar("sm_warden_ff_ct_enable", "0", "0 - disabled, 1 - enable ff for cts also", _, true, 0.0, true, 1.0);
 	gc_bFFDeputy = AutoExecConfig_CreateConVar("sm_warden_ff_deputy", "1", "0 - disabled, 1 - enable switch ff for the deputy, too", _, true, 0.0, true, 1.0);
 	gc_sCustomCommandFF = AutoExecConfig_CreateConVar("sm_warden_cmds_ff", "isff, friendlyfire", "Set your custom chat commands for set/see friendly fire(!ff is reservered)(!setff (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)");
-
+	
 	// Hooks
 	HookEvent("round_end", FriendlyFire_Event_RoundEnd);
 
@@ -147,6 +149,18 @@ public void FriendlyFire_Event_RoundEnd(Event event, const char[] name, bool don
 	}
 }
 
+public Action FriendlyFire_OnTraceAttack(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &ammotype, int hitbox, int hitgroup)
+{
+	if (gc_sFFCT.BoolValue)
+		return Plugin_Continue;
+		
+	if ((victim != attacker) && ((GetClientTeam(victim) == GetClientTeam(attacker)) && (GetClientTeam(victim) == CS_TEAM_CT)))
+	{
+		return Plugin_Handled;
+	}
+	return Plugin_Continue;
+}
+
 /******************************************************************************
                    FORWARDS LISTENING
 ******************************************************************************/
@@ -173,4 +187,9 @@ public void FriendlyFire_OnConfigsExecuted()
 		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
 			RegConsoleCmd(sCommand, Command_FriendlyFire, "Allows player to see the state and the Warden to toggle friendly fire");
 	}
+}
+
+public void FriendlyFire_OnClientPutInServer(int client)
+{
+	SDKHook(client, SDKHook_TraceAttack, FriendlyFire_OnTraceAttack);
 }
