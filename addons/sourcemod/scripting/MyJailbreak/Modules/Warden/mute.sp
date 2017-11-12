@@ -155,7 +155,7 @@ public Action Command_UnMuteMenu(int client, any args)
 
 			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true))
 			{
-				if ((GetClientTeam(i) == CS_TEAM_T) && g_bIsMuted[i])
+				if (GetClientTeam(i) != CS_TEAM_CT && g_bIsMuted[i])
 				{
 					char userid[11];
 					char username[MAX_NAME_LENGTH];
@@ -216,7 +216,7 @@ public void Mute_Event_RoundStart(Event event, const char[] name, bool dontBroad
 	{
 		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true))if (!CheckVipFlag(i, g_sAdminFlagMute))
 		{
-			if (GetClientTeam(i) == CS_TEAM_T)
+			if (GetClientTeam(i) != CS_TEAM_CT)
 			{
 				SetClientListeningFlags(i, VOICE_MUTED);
 				g_bIsMuted[i] = true;
@@ -254,7 +254,7 @@ public void OnClientSpeakingEx(int client)
 		{
 			if (!CheckVipFlag(i, g_sAdminFlagMute))
 			{
-				if ((GetClientTeam(i) == CS_TEAM_T) && (!g_bIsMuted[i] || (GetClientListeningFlags(i) != VOICE_MUTED)) || 
+				if ((GetClientTeam(i) != CS_TEAM_CT) && (!g_bIsMuted[i] || (GetClientListeningFlags(i) != VOICE_MUTED)) || 
 					(!gc_bMuteTalkOverTeam.BoolValue && !warden_iswarden(i) && !warden_deputy_isdeputy(i) && (GetClientTeam(i) == CS_TEAM_CT) && (GetClientListeningFlags(i) != VOICE_MUTED)))
 				{
 					if ((gc_bMuteTalkOverDead.BoolValue && IsPlayerAlive(i)) || !gc_bMuteTalkOverDead.BoolValue)
@@ -309,7 +309,7 @@ public Action MuteClient(int client, int time, int muter)
 {
 	if (IsValidClient(client, true, true) && !CheckVipFlag(client, g_sAdminFlagMute))
 	{
-		if (GetClientTeam(client) == CS_TEAM_T)
+		if (GetClientTeam(client) != CS_TEAM_CT)
 		{
 			SetClientListeningFlags(client, VOICE_MUTED);
 			g_bIsMuted[client] = true;
@@ -379,7 +379,7 @@ public Action MuteMenuPlayer(int client, int args)
 
 			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true))
 			{
-				if ((GetClientTeam(i) == CS_TEAM_T) && !CheckVipFlag(i, g_sAdminFlagMute) && !g_bIsMuted[i])
+				if ((GetClientTeam(i) != CS_TEAM_CT) && !CheckVipFlag(i, g_sAdminFlagMute) && !g_bIsMuted[i])
 				{
 					char userid[11];
 					char username[MAX_NAME_LENGTH];
