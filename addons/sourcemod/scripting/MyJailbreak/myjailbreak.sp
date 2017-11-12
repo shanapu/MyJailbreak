@@ -65,7 +65,8 @@ int g_iRoundNumber = 0;
 // Handles
 Handle gF_OnEventDayStart;
 Handle gF_OnEventDayEnd;
-Handle g_aRandomList;
+
+ArrayList g_aEventDayList = null;
 
 
 ConVar Cvar_sm_hosties_announce_rebel_down;
@@ -86,28 +87,6 @@ int OldCvar_sm_hosties_freekill_treshold;
 
 // Strings
 char g_sEventDayName[128] = "none";
-char g_sEventDays[][32] = {
-						"war",
-						"ffa",
-						"zombie",
-						"hide",
-						"catch",
-						"suicidebomber",
-						"ghosts",
-						"teleport",
-						"armsrace",
-						"oneinthechamber",
-						"hebattle",
-						"noscope",
-						"duckhunt",
-						"zeus",
-						"dealdamage",
-						"torch",
-						"drunk",
-						"knifefight",
-						"cowboy",
-						"freeday"
-						}; // 20 event days
 
 // Modules
 #include "MyJailbreak/Modules/fog.sp"
@@ -151,8 +130,8 @@ public void OnPluginStart()
 	// Hooks
 	HookEvent("round_start", Event_RoundStart);
 	HookEvent("round_end", Event_RoundEnd);
-	
-	g_aRandomList = CreateArray();
+
+	g_aEventDayList = new ArrayList(32);
 }
 
 public void OnAllPluginsLoaded()
@@ -185,23 +164,6 @@ public void OnConfigsExecuted()
 			StrCat(sTags, sizeof(sTags), ", MyJailbreak");
 			hTags.SetString(sTags);
 		}
-	}
-
-	if (gc_iRandomEventDay.IntValue != 0)
-	{
-		ClearArray(g_aRandomList);
-
-		char buffer[64];
-		
-		for(int i = 0; i <= sizeof(g_sEventDays)-1; i++)
-		{
-			Format(buffer, sizeof(buffer), "sm_%s", g_sEventDays[i]);
-			if (GetCommandFlags(buffer) != INVALID_FCVAR_FLAGS)
-			{
-				PushArrayString(g_aRandomList, g_sEventDays[i]);
-			}
-		}
-		g_iRandomArraySize = GetArraySize(g_aRandomList);
 	}
 
 	// Set custom Commands
@@ -267,8 +229,10 @@ public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 
 	if (gc_iRandomEventDayType.BoolValue)
 	{
-		int randomEvent = GetRandomInt(0, g_iRandomArraySize-1);
-		ServerCommand("sm_set%s", g_sEventDays[randomEvent]);
+		char buffer[32];
+		int randomEvent = GetRandomInt(0, g_aEventDayList.Length-1);
+		g_aEventDayList.GetString(randomEvent, buffer, sizeof(buffer));
+		ServerCommand("sm_set%s", buffer);
 	}
 	else ServerCommand("sm_voteday");
 
@@ -290,6 +254,8 @@ public void OnMapStart()
 	Beacon_OnMapStart();
 	g_bLastGuardRuleActive = false;
 	g_iRoundNumber = 0;
+
+	g_aEventDayList.Clear();
 }
 
 // Reset Plugin
@@ -304,6 +270,31 @@ public void OnMapEnd()
 	Beacon_OnMapEnd();
 }
 
+void SortEventDays()
+{
+	char sBuffer[64];
+	BuildPath(Path_SM, sBuffer, sizeof(sBuffer), "configs/MyJailbreak/sorting_events.ini");
+	Handle hFile = OpenFile(sBuffer, "r");
+	if (hFile != INVALID_HANDLE)
+	{
+		int num = -1;
+		while (!IsEndOfFile(hFile) && ReadFileLine(hFile, sBuffer, sizeof(sBuffer)))
+		{
+			TrimString(sBuffer);
+
+			int index = g_aEventDayList.FindString(sBuffer);
+			if (index != -1)
+			{
+				num++;
+				g_aEventDayList.ShiftUp(num);
+				g_aEventDayList.SetString(num, sBuffer);
+				g_aEventDayList.Erase(index+1);
+			}
+		}
+	}
+	else LogError("couldn't read from file: %s", sBuffer);
+}
+
 /******************************************************************************
                    NATIVES
 ******************************************************************************/
@@ -315,6 +306,11 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	{
 		SetFailState("Game is not supported. CS:GO ONLY");
 	}
+
+	CreateNative("MyJailbreak_AddEventDay", Native_AddEventDay);
+	CreateNative("MyJailbreak_RemoveEventDay", Native_RemoveEventDay);
+
+	CreateNative("MyJailbreak_GetEventDays", Native_GetEventDays);
 
 	CreateNative("MyJailbreak_SetEventDayName", Native_SetEventDayName);
 	CreateNative("MyJailbreak_GetEventDayName", Native_GetEventDayName);
@@ -339,6 +335,48 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	RegPluginLibrary("myjailbreak");
 
 	return APLRes_Success;
+}
+
+
+public int Native_GetEventDays(Handle plugin, int argc)
+{
+	ArrayList array = view_as<ArrayList>(GetNativeCell(1));
+	
+	if (array == null)
+		return;
+
+	char eventname[PLATFORM_MAX_PATH];
+
+	for (int i = 0; i < g_aEventDayList.Length; i++)
+	{
+		g_aEventDayList.GetString(i, eventname, sizeof(eventname));
+		array.PushString(eventname);
+	}
+
+	return;
+}
+
+
+public int Native_AddEventDay(Handle plugin, int argc)
+{
+	char sBuffer[32];
+
+	GetNativeString(1, sBuffer, sizeof(sBuffer));
+	g_aEventDayList.PushString(sBuffer);
+
+	SortEventDays();
+}
+
+public int Native_RemoveEventDay(Handle plugin, int argc)
+{
+	char sBuffer[32];
+	GetNativeString(1, sBuffer, sizeof(sBuffer));
+
+	int iIndex = g_aEventDayList.FindString(sBuffer);
+	if (iIndex != -1)
+	{
+		g_aEventDayList.Erase(iIndex);
+	}
 }
 
 // Boolean Is Event Day running (true = running)

@@ -158,6 +158,31 @@ forward void MyJailbreak_MenuHandler(Menu menu, MenuAction action, int client, i
 
 
 /*********************************************************
+ * Add a Event Day to myjailbreak core
+ *
+ * @param name		name of the Event Day
+ * @NoReturn
+ *********************************************************/
+native int MyJailbreak_AddEventDay(char [] name);
+
+/*********************************************************
+ * Remove a Event Day to myjailbreak core
+ *
+ * @param name		name of the Event Day
+ * @NoReturn
+ *********************************************************/
+native int MyJailbreak_RemoveEventDay(char [] name);
+
+/*********************************************************
+ * Get a array with all installed Event Days
+ *
+ * @param eventdays		ArrayList with Event Day names
+ * @NoReturn
+ *********************************************************/
+native void MyJailbreak_GetEventDays(ArrayList eventdays);
+
+
+/*********************************************************
  * Set the name of the planned/running Event Day
  *
  * @param name			The name of the Event Day
