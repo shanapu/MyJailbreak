@@ -330,7 +330,15 @@ public void OnConfigsExecuted()
 			RegConsoleCmd(sCommand, Command_SetZeus, "Allows the Admin or Warden to set zeus as next round");
 		}
 	}
+
+	MyJailbreak_AddEventDay("zeus");
 }
+
+public void OnPluginEnd()
+{
+	MyJailbreak_RemoveEventDay("zeus");
+}
+
 
 /******************************************************************************
                    COMMANDS

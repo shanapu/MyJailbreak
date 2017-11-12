@@ -337,7 +337,15 @@ public void OnConfigsExecuted()
 			RegConsoleCmd(sCommand, Command_SetNoScope, "Allows the Admin or Warden to set noscope as next round");
 		}
 	}
+
+	MyJailbreak_AddEventDay("noscope");
 }
+
+public void OnPluginEnd()
+{
+	MyJailbreak_RemoveEventDay("noscope");
+}
+
 
 /******************************************************************************
                    COMMANDS

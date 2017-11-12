@@ -261,7 +261,16 @@ public void OnConfigsExecuted()
 			RegConsoleCmd(sCommand, Command_SetFreeday, "Allows the Admin or Warden to set freeday as next round");
 		}
 	}
+
+	MyJailbreak_AddEventDay("freeday");
 }
+
+public void OnPluginEnd()
+{
+	MyJailbreak_RemoveEventDay("freeday");
+}
+
+
 
 /******************************************************************************
                    COMMANDS

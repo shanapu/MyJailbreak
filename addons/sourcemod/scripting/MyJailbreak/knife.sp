@@ -298,7 +298,15 @@ public void OnConfigsExecuted()
 			RegConsoleCmd(sCommand, Command_SetKnifeFight, "Allows the Admin or Warden to set knifefight as next round");
 		}
 	}
+
+	MyJailbreak_AddEventDay("knifefight");
 }
+
+public void OnPluginEnd()
+{
+	MyJailbreak_RemoveEventDay("knifefight");
+}
+
 
 // Check for optional Plugins
 public void OnAllPluginsLoaded()

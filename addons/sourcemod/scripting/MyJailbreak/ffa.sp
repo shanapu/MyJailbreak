@@ -308,7 +308,16 @@ public void OnConfigsExecuted()
 			RegConsoleCmd(sCommand, Command_Setffa, "Allows the Admin or Warden to set a ffa");
 		}
 	}
+
+	MyJailbreak_AddEventDay("ffa");
 }
+
+public void OnPluginEnd()
+{
+	MyJailbreak_RemoveEventDay("ffa");
+}
+
+
 
 /******************************************************************************
                    COMMANDS

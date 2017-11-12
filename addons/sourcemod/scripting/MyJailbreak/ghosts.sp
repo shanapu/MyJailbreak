@@ -270,7 +270,15 @@ public void OnConfigsExecuted()
 			RegConsoleCmd(sCommand, Command_SetGhosts, "Allows the Admin or Warden to set a ghosts");
 		}
 	}
+
+	MyJailbreak_AddEventDay("ghosts");
 }
+
+public void OnPluginEnd()
+{
+	MyJailbreak_RemoveEventDay("ghosts");
+}
+
 
 // Check for optional Plugins
 public void OnAllPluginsLoaded()

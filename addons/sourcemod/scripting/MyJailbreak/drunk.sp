@@ -316,7 +316,16 @@ public void OnConfigsExecuted()
 			RegConsoleCmd(sCommand, Command_SetDrunk, "Allows the Admin or Warden to set drunk as next round");
 		}
 	}
+
+	MyJailbreak_AddEventDay("drunk");
 }
+
+public void OnPluginEnd()
+{
+	MyJailbreak_RemoveEventDay("drunk");
+}
+
+
 
 /******************************************************************************
                    COMMANDS

@@ -311,7 +311,15 @@ public void OnConfigsExecuted()
 			RegConsoleCmd(sCommand, Command_SetWar, "Allows the Admin or Warden to set a war for next rounds");
 		}
 	}
+
+	MyJailbreak_AddEventDay("war");
 }
+
+public void OnPluginEnd()
+{
+	MyJailbreak_RemoveEventDay("war");
+}
+
 
 /******************************************************************************
                    COMMANDS

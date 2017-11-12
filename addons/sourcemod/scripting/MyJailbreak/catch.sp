@@ -402,7 +402,15 @@ public void OnConfigsExecuted()
 			RegConsoleCmd(sCommand, Command_SetCatch, "Allows the Admin or Warden to set catch as next round");
 		}
 	}
+
+	MyJailbreak_AddEventDay("catch");
 }
+
+public void OnPluginEnd()
+{
+	MyJailbreak_RemoveEventDay("catch");
+}
+
 
 /******************************************************************************
                    COMMANDS

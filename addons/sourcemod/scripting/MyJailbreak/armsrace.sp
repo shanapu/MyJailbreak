@@ -307,7 +307,16 @@ public void OnConfigsExecuted()
 			RegConsoleCmd(sCommand, Command_Setarmsrace, "Allows the Admin or Warden to set a armsrace");
 		}
 	}
+
+	MyJailbreak_AddEventDay("armsrace");
 }
+
+public void OnPluginEnd()
+{
+	MyJailbreak_RemoveEventDay("armsrace");
+}
+
+
 
 /******************************************************************************
                    COMMANDS

@@ -365,7 +365,15 @@ public void OnConfigsExecuted()
 			RegConsoleCmd(sCommand, Command_SetSuicideBomber, "Allows the Admin or Warden to set Suicide Bomber as next round");
 		}
 	}
+
+	MyJailbreak_AddEventDay("suicidebomber");
 }
+
+public void OnPluginEnd()
+{
+	MyJailbreak_RemoveEventDay("suicidebomber");
+}
+
 
 /******************************************************************************
                    COMMANDS

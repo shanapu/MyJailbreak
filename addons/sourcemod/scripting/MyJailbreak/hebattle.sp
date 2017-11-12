@@ -334,7 +334,15 @@ public void OnConfigsExecuted()
 			RegConsoleCmd(sCommand, Command_SetHEbattle, "Allows the Admin or Warden to set hebattle as next round");
 		}
 	}
+
+	MyJailbreak_AddEventDay("hebattle");
 }
+
+public void OnPluginEnd()
+{
+	MyJailbreak_RemoveEventDay("hebattle");
+}
+
 
 /******************************************************************************
                    COMMANDS

@@ -345,7 +345,16 @@ public void OnConfigsExecuted()
 			RegConsoleCmd(sCommand, Command_SetCowBoy, "Allows the Admin or Warden to set cowboy as next round");
 		}
 	}
+
+	MyJailbreak_AddEventDay("cowboy");
 }
+
+public void OnPluginEnd()
+{
+	MyJailbreak_RemoveEventDay("cowboy");
+}
+
+
 
 /******************************************************************************
                    COMMANDS

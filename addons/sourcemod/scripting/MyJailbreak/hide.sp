@@ -342,7 +342,16 @@ public void OnConfigsExecuted()
 			RegConsoleCmd(sCommand, Command_SetHide, "Allows the Admin or Warden to set hide as next round");
 		}
 	}
+
+	MyJailbreak_AddEventDay("hide");
 }
+
+public void OnPluginEnd()
+{
+	MyJailbreak_RemoveEventDay("hide");
+}
+
+
 
 /******************************************************************************
                    COMMANDS

@@ -343,7 +343,15 @@ public void OnConfigsExecuted()
 			RegConsoleCmd(sCommand, Command_SetDuckHunt, "Allows the Admin or Warden to set duckhunt as next round");
 		}
 	}
+
+	MyJailbreak_AddEventDay("duckhunt");
 }
+
+public void OnPluginEnd()
+{
+	MyJailbreak_RemoveEventDay("duckhunt");
+}
+
 
 /******************************************************************************
                    COMMANDS

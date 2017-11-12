@@ -414,7 +414,15 @@ public void OnConfigsExecuted()
 			RegConsoleCmd(sCommand, Command_SetDealDamage, "Allows the Admin or Warden to set dealdamage as next round");
 		}
 	}
+
+	MyJailbreak_AddEventDay("dealdamage");
 }
+
+public void OnPluginEnd()
+{
+	MyJailbreak_RemoveEventDay("dealdamage");
+}
+
 
 /******************************************************************************
                    COMMANDS

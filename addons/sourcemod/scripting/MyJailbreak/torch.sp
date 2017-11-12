@@ -376,7 +376,15 @@ public void OnConfigsExecuted()
 			RegConsoleCmd(sCommand, Command_SetTorch, "Allows the Admin or Warden to set torch as next round");
 		}
 	}
+
+	MyJailbreak_AddEventDay("torch");
 }
+
+public void OnPluginEnd()
+{
+	MyJailbreak_RemoveEventDay("torch");
+}
+
 
 /******************************************************************************
                    COMMANDS

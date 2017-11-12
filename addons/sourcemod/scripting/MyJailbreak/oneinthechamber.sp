@@ -329,7 +329,16 @@ public void OnConfigsExecuted()
 			RegConsoleCmd(sCommand, Command_SetOITC, "Allows the Admin or Warden to set OneInTheChamber as next round");
 		}
 	}
+
+	MyJailbreak_AddEventDay("oneinthechamber");
 }
+
+public void OnPluginEnd()
+{
+	MyJailbreak_RemoveEventDay("oneinthechamber");
+}
+
+
 
 /******************************************************************************
                    COMMANDS

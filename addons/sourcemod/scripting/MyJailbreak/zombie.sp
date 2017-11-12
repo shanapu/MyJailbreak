@@ -358,6 +358,13 @@ public void OnConfigsExecuted()
 			RegConsoleCmd(sCommand, Command_SetZombie, "Allows the Admin or Warden to set Zombie as next round");
 		}
 	}
+
+	MyJailbreak_AddEventDay("zombie");
+}
+
+public void OnPluginEnd()
+{
+	MyJailbreak_RemoveEventDay("zombie");
 }
 
 /******************************************************************************

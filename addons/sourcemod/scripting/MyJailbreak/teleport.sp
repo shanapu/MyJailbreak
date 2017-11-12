@@ -310,7 +310,15 @@ public void OnConfigsExecuted()
 			RegConsoleCmd(sCommand, Command_Setteleport, "Allows the Admin or Warden to set a teleport");
 		}
 	}
+
+	MyJailbreak_AddEventDay("teleport");
 }
+
+public void OnPluginEnd()
+{
+	MyJailbreak_RemoveEventDay("teleport");
+}
+
 
 /******************************************************************************
                    COMMANDS
