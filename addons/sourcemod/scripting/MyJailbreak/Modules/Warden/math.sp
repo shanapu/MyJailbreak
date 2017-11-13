@@ -158,7 +158,7 @@ public Action Command_MathQuestion(int client, int args)
 				return Plugin_Handled;
 			}
 		}
-		if (g_bIsMathQuiz && (!gc_bMode.BoolValue || (!gp_bSimpleChatProcessor && !gp_bChatProcessor))
+		if (g_bIsMathQuiz && (!gc_bMode.BoolValue || (!gp_bSimpleChatProcessor && !gp_bChatProcessor)))
 		{
 			if (args != 1) // Not enough parameters
 			{
