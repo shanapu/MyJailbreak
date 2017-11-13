@@ -69,6 +69,7 @@ ConVar gc_bMathSounds;
 ConVar gc_sMathSoundStopPath;
 ConVar gc_iTimeAnswer;
 ConVar gc_sCustomCommandMath;
+ConVar gc_bMode;
 
 // Booleans
 bool g_bIsMathQuiz = false;
@@ -100,8 +101,9 @@ public void Math_OnPluginStart()
 	gc_iMinimumNumber = AutoExecConfig_CreateConVar("sm_warden_math_min", "1", "What should be the minimum number for questions?", _, true, 1.0);
 	gc_iMaximumNumber = AutoExecConfig_CreateConVar("sm_warden_math_max", "100", "What should be the maximum number for questions?", _, true, 2.0);
 	gc_bOp = AutoExecConfig_CreateConVar("sm_warden_math_mode", "1", "0 - only addition & subtraction, 1 -  addition, subtraction, multiplication & division", _, true, 0.0, true, 1.0);
+	gc_bMode = AutoExecConfig_CreateConVar("sm_warden_math_input", "1", "0 - use chat trigger to recieve chat input e.g. answer = '!math 526'. This is forced when no chat-processor is installed / 1 - use a chat-processor to recieve chat input e.g. answer = '526' / use '0' when chat input of will not recognized cause conflics with chat manipulation plugins like 'CCC'", _, true, 0.0, true, 1.0);
 	gc_iTimeAnswer = AutoExecConfig_CreateConVar("sm_warden_math_time", "10", "Time in seconds to give a answer to a question.", _, true, 3.0);
-	gc_bAllowCT = AutoExecConfig_CreateConVar("sm_warden_math_allow_ct", "1", "0 - disabled, 1 - cts answers will also reconized", _, true, 0.0, true, 1.0);
+	gc_bAllowCT = AutoExecConfig_CreateConVar("sm_warden_math_allow_ct", "1", "0 - disabled, 1 - cts answers will also recognized", _, true, 0.0, true, 1.0);
 	gc_bMathSounds = AutoExecConfig_CreateConVar("sm_warden_math_sounds_enable", "1", "0 - disabled, 1 - enable sounds ", _, true, 0.0, true, 1.0);
 	gc_sMathSoundStopPath = AutoExecConfig_CreateConVar("sm_warden_math_sounds_stop", "music/MyJailbreak/stop.mp3", "Path to the soundfile which should be played for stop countdown.");
 	gc_bMathOverlays = AutoExecConfig_CreateConVar("sm_warden_math_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true, 0.0, true, 1.0);
@@ -156,7 +158,7 @@ public Action Command_MathQuestion(int client, int args)
 				return Plugin_Handled;
 			}
 		}
-		if (!gp_bSimpleChatProcessor && !gp_bChatProcessor && g_bIsMathQuiz)
+		if (g_bIsMathQuiz && (!gc_bMode.BoolValue || (!gp_bSimpleChatProcessor && !gp_bChatProcessor))
 		{
 			if (args != 1) // Not enough parameters
 			{
