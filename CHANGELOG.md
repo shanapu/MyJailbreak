@@ -183,6 +183,10 @@
 *  Warden - Mute/Talkover: disable Warden/Deputy TalkOver after LR Announced - Thx @hexah!*
 *  Warden - Mute/Talkover: disable Spectators also.
 *  HUD - disable HUD on TeamGames game.
+*  Menu: Allow player to vote for no event.
+    *  new cvar - sm_menu_vote_noevent - 0 - disabled, 1 - allow player vote for 'no Event Day' on eventday voting
+
+
   
   *Fixed*
 *  Menu: fixed setdays for warden (don't show restricted/disabled days)

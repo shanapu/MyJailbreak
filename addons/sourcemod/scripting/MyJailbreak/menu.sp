@@ -129,6 +129,7 @@ ConVar gc_sAdminFlagLaser;
 ConVar gc_sAdminFlagPainter;
 ConVar gc_bOrders;
 ConVar gc_bOrdersDeputy;
+ConVar gc_bVoteNoMenu;
 
 // Strings
 char g_sAdminFlagBulletSparks[64];
@@ -192,10 +193,11 @@ public void OnPluginStart()
 	gc_bTerror = AutoExecConfig_CreateConVar("sm_menu_t", "1", "0 - disabled, 1 - enable t jailbreak menu", _, true, 0.0, true, 1.0);
 	gc_bWarden = AutoExecConfig_CreateConVar("sm_menu_warden", "1", "0 - disabled, 1 - enable warden jailbreak menu", _, true, 0.0, true, 1.0);
 	gc_bDeputy = AutoExecConfig_CreateConVar("sm_menu_deputy", "1", "0 - disabled, 1 - enable deputy jailbreak menu", _, true, 0.0, true, 1.0);
-	gc_bDaysVote = AutoExecConfig_CreateConVar("sm_menu_votedays", "1", "0 - disabled, 1 - enable vote eventdays menu", _, true, 0.0, true, 1.0);
 	gc_bDaysSet = AutoExecConfig_CreateConVar("sm_menu_setdays", "1", "0 - disabled, 1 - enable set eventdays menu", _, true, 0.0, true, 1.0);
+	gc_bDaysVote = AutoExecConfig_CreateConVar("sm_menu_votedays", "1", "0 - disabled, 1 - enable vote eventdays menu", _, true, 0.0, true, 1.0);
 	gc_bCleanMenu = AutoExecConfig_CreateConVar("sm_menu_clean", "1", "remove 1. & 2. on first page, to avoid conflict with weapon switch", _, true, 0.0, true, 1.0);
 	gc_bShuffle = AutoExecConfig_CreateConVar("sm_menu_shuffle", "1", "0 - use 'config/sorting-eventdays.ini' on event day voting / 1 - Shuffle EventDays on voting", _, true, 0.0, true, 1.0);
+	gc_bVoteNoMenu = AutoExecConfig_CreateConVar("sm_menu_vote_noevent", "1", "0 - disabled, 1 - allow player vote for 'no Event Day' on eventday voting", _, true, 0.0, true, 1.0);
 	gc_bClose = AutoExecConfig_CreateConVar("sm_menu_close", "0", "0 - disabled, 1 - enable close menu after action", _, true, 0.0, true, 1.0);
 	gc_bStart = AutoExecConfig_CreateConVar("sm_menu_start", "1", "0 - disabled, 1 - enable open menu on every roundstart", _, true, 0.0, true, 1.0);
 	gc_bTeam = AutoExecConfig_CreateConVar("sm_menu_team", "1", "0 - disabled, 1 - enable join team on menu", _, true, 0.0, true, 1.0);
@@ -1776,8 +1778,11 @@ public Action Command_VotingMenu(int client, int args)
 							menu.AddItem("1", "0", ITEMDRAW_SPACER);
 						}
 
-						Format(menuinfo, sizeof(menuinfo), "%T", "menu_noevent", LANG_SERVER);
-						menu.AddItem("No Event", menuinfo);
+						if(gc_bVoteNoMenu.BoolValue)
+						{
+							Format(menuinfo, sizeof(menuinfo), "%T", "menu_noevent", LANG_SERVER);
+							menu.AddItem("No Event", menuinfo);
+						}
 
 						ArrayList EventDaysArray = new ArrayList(32);
 						MyJailbreak_GetEventDays(EventDaysArray);
