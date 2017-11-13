@@ -178,7 +178,7 @@
 		"de"		"Zombietag"
 	}
 
-	"menu_dealdamge"
+	"menu_dealdamage"
 	{
 		"de"		"Mach Schaden Tag"
 	}
@@ -233,7 +233,7 @@
 		"de"		"DuckHunt"
 	}
 
-	"menu_Freeday"
+	"menu_freeday"
 	{
 		"de"		"Freitag"
 	}

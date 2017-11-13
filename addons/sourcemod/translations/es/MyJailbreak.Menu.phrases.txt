@@ -159,7 +159,7 @@
 		"es"		"Zombie Day"
 	}
 
-	"menu_dealdamge"
+	"menu_dealdamage"
 	{
 		"es"		"Deal Damage Day"
 	}
@@ -214,7 +214,7 @@
 		"es"		"DuckHunt"
 	}
 
-	"menu_Freeday"
+	"menu_freeday"
 	{
 		"es"		"Freeday"
 	}

@@ -173,7 +173,7 @@
 		"it"		"Zombie"
 	}
 
-	"menu_dealdamge"
+	"menu_dealdamage"
 	{
 		"it"		"Deal Damage"
 	}
@@ -228,7 +228,7 @@
 		"it"		"DuckHunt"
 	}
 
-	"menu_Freeday"
+	"menu_freeday"
 	{
 		"it"		"Freeday"
 	}

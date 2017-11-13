@@ -218,7 +218,7 @@
 		"pl"		"Polowanie na Kaczki"
 	}
 
-	"menu_Freeday"
+	"menu_freeday"
 	{
 		"pl"		"Freeday"
 	}

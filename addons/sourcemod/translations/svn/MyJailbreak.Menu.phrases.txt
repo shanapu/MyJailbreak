@@ -173,7 +173,7 @@
 		"svn"		"Zombie dan"
 	}
 
-	"menu_dealdamge"
+	"menu_dealdamage"
 	{
 		"svn"		"Povzroči damage dan"
 	}
@@ -228,7 +228,7 @@
 		"svn"		"Racelov"
 	}
 
-	"menu_Freeday"
+	"menu_freeday"
 	{
 		"svn"		"Prost dan"
 	}

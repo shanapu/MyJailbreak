@@ -173,7 +173,7 @@
 		"ru"		"Зомби день"
 	}
 
-	"menu_dealdamge"
+	"menu_dealdamage"
 	{
 		"ru"		"День урона"
 	}
@@ -228,7 +228,7 @@
 		"ru"		"Охота на уток"
 	}
 
-	"menu_Freeday"
+	"menu_freeday"
 	{
 		"ru"		"Фридей"
 	}

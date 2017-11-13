@@ -173,12 +173,7 @@
 		"cze"		"Zombie den"
 	}
 
-	"menu_dealdamge"
-	{
-		"cze"		"Den spusobovani poskozeni"
-	}
-
-	"menu_dealdamge"
+	"menu_dealdamage"
 	{
 		"cze"		"Den spusobovani poskozeni"
 	}
@@ -233,7 +228,7 @@
 		"cze"		"Lov kachen"
 	}
 
-	"menu_Freeday"
+	"menu_freeday"
 	{
 		"cze"		"Volny den"
 	}

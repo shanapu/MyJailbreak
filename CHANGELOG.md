@@ -132,7 +132,18 @@
     *  new cvar - sm_warden_withheld_lr_deputy - 0 - disabled, 1 - deputy can witheld prisoners Last request commands
     *  new cvar - sm_warden_cmds_withheld_lr - Set your custom chat commands for witheld Last request(!nolastrequest (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)
     *  new cvar - sm_warden_cmds_lr - Set your last request commands (add custom !lr cmds)(no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)
-  
+*  Warden - Math quiz: force using chat trigger as input for answers instead of using an installed chat processor
+    *  new cvar - sm_warden_math_input - 0 - use chat trigger to receive chat input e.g. answer = '!math 526'. This is forced when no chat-processor is installed / 1 - use a chat-processor to recieve chat input e.g. answer = '526' / use '0' when chat input of will not recognized cause conflics with chat manipulation plugins like 'CCC'
+*  Warden frienldy fire - toggle also cts ff - Thx @hexah!*
+    *  new cvar - sm_warden_ff_ct_enable - 0 - disabled, 1 - enable ff for cts also
+*  MyJailbreak: you can sort the order of event days in menus with config file
+    *  new config file - addons/sourcemod/configs/MyJailbreak/config/sorting-eventdays.ini
+*  Menu: Suffle the eventdays in menu on a event day voting 
+    *  new cvar - sm_menu_shuffle - 0 - use 'sorting-eventdays.ini' on event day voting / 1 - Shuffle EventDays on voting
+*  Zeus: Dis/Allow droping Zeus
+    *  new cvar - sm_zeus_drop - 0 - disabled, 1 - allow player to drop their zeus - Thx @hexah!*
+*  Warden - Disarm: Dis/Allow disarm knife on shoting hands
+    *  new cvar - "sm_warden_disarm_knife - 0 - negate the knife disarm, 1 - disarm all weapon - Thx @hexah!*
   
 *Changed*
 *  All Event Days: Possibility to start an event during the current round, instead wait for next round
@@ -157,7 +168,7 @@
 *  Hide/War/Zombie: Darken screen while in freeze
 *  Ratio: When last guard move to prisoners, a prisoner from queue or random will be moved to guard - THX @mrkos9i4ok
 *  Flags: all ConVars to set admin/vip flag has been extended to support mutliple flags ex. "r,s,t" use comma
-*  renamed plugin - ratio_ctbans_fantom to ratio_ctbans_r1ko
+*  renamed plugin - ratio_ctbans_fantom to ratio_ctbans_r1ko on authors request
 *  PlayerTags: removed dependencies of chat-processor(optional now)
 *  Warden: no warden/deputy on Last Request
     *  new cvar - sm_warden_remove_lr - 0 - disabled, 1 - enable warden will be removed on last request
@@ -169,14 +180,17 @@
 *  Ratio CTbans: updated for databombs CTbans v2. You must update to CTbans v2! - Thx @databomb!
 *  Ratio: Swap Spectators to T when joining guard queue - Thx @hexah!
     *  new cvar - sm_ratio_swap_spec_queue - 0 - Don't do anything if a Spec join in queue / 1 - Swap to T the Spectators who join in queue
-*  Warden - Mute/Talkover: disable Warden/Deputy TalkOver after LR Announced - Thx @hexah!
+*  Warden - Mute/Talkover: disable Warden/Deputy TalkOver after LR Announced - Thx @hexah!*
+*  Warden - Mute/Talkover: disable Spectators also.
+*  HUD - disable HUD on TeamGames game.
   
-*Fixed*
+  *Fixed*
 *  Menu: fixed setdays for warden (don't show restricted/disabled days)
 *  Ratio: fixed custom VIP/Admin flags
 *  Warden - mute: fixed confict with sourcecomms
 *  Warden - bulletspark: fixed
 *  PlayerTags: fixed custom VIP/Admin flags
+*  PlayerTags: fixed tags in chat on foreign national players
 *  Zombie: respawn with ratio restriction
 *  Freeday: fixed roundtime when only one team has player
 *  Freeday: NoBlock (no player collision)
@@ -186,7 +200,7 @@
 *  Zombie: Respawn with restiction addon
 *  Weapons: add/remove kevlar/helmet on eventday
 *  Zeus: disable dropping taser - Thx @hexah!
-*  Many minor fixes -> study commits!
+*  Many minor fixes -> study commits ;D
   
   
 *Removed*
@@ -197,12 +211,18 @@
   
   
 *Developer stuff*
+*  Register EventDays plugins to myjb core and recieve them
+    *  new native - MyJailbreak_AddEventDay(char[] name) - Register a eventday to myjailbreak core
+    *  new native - MyJailbreak_RemoveEventDay(char[] name) - Remove a eventday to myjailbreak core
+    *  new native - MyJailbreak_GetEventDays(char[] name) - Get a array with all event day name
 *  Changed the way how weapons access is handled. natives insetad of switch ConVars
     *  new native - MyWeapons_AllowTeam(int client, bool status) - Allow a team to pick weapons from weapons menu 
     *  new native - MyWeapons_GetTeamStatus(int iTeam) - Get team status if weapons are allowed
 *  Extented parameter of a warden forwards & native - new caller clientid - 0 on random
     *  changed forward - warden_OnWardenCreate(int client, int caller) - The client who called the set or become warden command
-    *  changed native - warden_set(int client, int caller) -  The client who set the new warden
+ ....................................
+ *  changed native - warden_set(int client, int caller----------) -  The client who set the new warden
+	................................
 *  New Forwards for add items to menu - see template_custom_menu.sp
     *  new forward - MyJailbreak_MenuStart(int client, Menu menu)
     *  new forward - MyJailbreak_MenuEnd(int client, Menu menu)
