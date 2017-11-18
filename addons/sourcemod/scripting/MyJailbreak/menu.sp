@@ -31,8 +31,6 @@
 #include <cstrike>
 #include <colors>
 #include <autoexecconfig>
-#include <warden>
-#include <myjbwarden>
 #include <mystocks>
 #include <myjailbreak>
 #include <adminmenu>
@@ -41,6 +39,8 @@
 #undef REQUIRE_PLUGIN
 #include <smartjaildoors>
 #include <myweapons>
+#include <warden>
+#include <myjbwarden>
 #define REQUIRE_PLUGIN
 
 // Compiler Options
@@ -52,6 +52,9 @@ bool g_bIsLateLoad;
 bool gp_bMyJailShop;
 bool gp_bSmartJailDoors;
 bool gp_bMyWeapons;
+
+bool gp_bWarden = false;
+bool gp_bMyJBWarden = false;
 
 // Integers
 int g_iCoolDown;
@@ -443,6 +446,8 @@ public void OnAllPluginsLoaded()
 	gp_bMyJailShop = LibraryExists("myjailshop");
 	gp_bSmartJailDoors = LibraryExists("smartjaildoors");
 	gp_bMyWeapons = LibraryExists("myweapons");
+	gp_bMyJBWarden = LibraryExists("myjbwarden");
+	gp_bWarden = LibraryExists("warden");
 }
 
 public void OnLibraryRemoved(const char[] name)
@@ -455,6 +460,12 @@ public void OnLibraryRemoved(const char[] name)
 
 	if (StrEqual(name, "myweapons"))
 		gp_bMyWeapons = false;
+
+	if (StrEqual(name, "myjbwarden"))
+		gp_bMyJBWarden = false;
+
+	if (StrEqual(name, "warden"))
+		gp_bWarden = false;
 }
 
 public void OnLibraryAdded(const char[] name)
@@ -467,6 +478,12 @@ public void OnLibraryAdded(const char[] name)
 
 	if (StrEqual(name, "myweapons"))
 		gp_bMyWeapons = true;
+
+	if (StrEqual(name, "myjbwarden"))
+		gp_bMyJBWarden = true;
+
+	if (StrEqual(name, "warden"))
+		gp_bWarden = true;
 }
 
 // FindConVar
@@ -519,9 +536,12 @@ public void OnConfigsExecuted()
 	gc_bOrdersDeputy = FindConVar("sm_warden_orders_deputy");
 	g_bEndRound = FindConVar("sm_myjb_allow_endround");
 
-	gc_sAdminFlagLaser.GetString(g_sAdminFlagLaser, sizeof(g_sAdminFlagLaser));
-	gc_sAdminFlagPainter.GetString(g_sAdminFlagPainter, sizeof(g_sAdminFlagPainter));
-	gc_sAdminFlagBulletSparks.GetString(g_sAdminFlagBulletSparks, sizeof(g_sAdminFlagBulletSparks));
+	if (gp_bMyJBWarden)
+	{
+		gc_sAdminFlagLaser.GetString(g_sAdminFlagLaser, sizeof(g_sAdminFlagLaser));
+		gc_sAdminFlagPainter.GetString(g_sAdminFlagPainter, sizeof(g_sAdminFlagPainter));
+		gc_sAdminFlagBulletSparks.GetString(g_sAdminFlagBulletSparks, sizeof(g_sAdminFlagBulletSparks));
+	}
 
 	// Set custom Commands
 	int iCount = 0;
@@ -655,7 +675,7 @@ public Action Command_OpenMenu(int client, int args)
 			Call_PushCell(mainmenu);
 			Call_Finish();
 
-			if (warden_iswarden(client) && gc_bWarden.BoolValue)
+			if ((gp_bWarden || gp_bMyJBWarden) && warden_iswarden(client) && gc_bWarden.BoolValue)
 			{
 				if (gp_bMyWeapons)
 				{
@@ -864,7 +884,7 @@ public Action Command_OpenMenu(int client, int args)
 				Format(menuinfo, sizeof(menuinfo), "%T", "menu_unwarden", client);
 				mainmenu.AddItem("unwarden", menuinfo);
 			}// HERE END THE WARDEN MENU
-			else if (warden_deputy_isdeputy(client) && gc_bDeputy.BoolValue) // HERE STARTS THE DEPUTY MENU)
+			else if (gp_bMyJBWarden && warden_deputy_isdeputy(client) && gc_bDeputy.BoolValue) // HERE STARTS THE DEPUTY MENU)
 			{
 				if (gp_bMyWeapons)
 				{
@@ -1055,7 +1075,7 @@ public Action Command_OpenMenu(int client, int args)
 					}
 				}
 
-				if (g_bWarden != null)
+				if (g_bWarden != null || g_bWarden)
 				{
 					if (!warden_exist() && IsPlayerAlive(client))
 					{
@@ -1244,7 +1264,7 @@ public Action Command_OpenMenu(int client, int args)
 					
 					if (StrEqual(EventDay, "none", false)) // is an other event running or set?
 					{
-						if (!warden_iswarden(client))
+						if ((gp_bWarden || gp_bMyJBWarden) && !warden_iswarden(client))
 						{
 							if (gc_bVoting.BoolValue)
 							{
@@ -1624,7 +1644,7 @@ public Action Command_SetEventDay(int client, int args)
 	{
 		Command_SetAdminEventDay(client);
 	}
-	else if (warden_iswarden(client))
+	else if ((gp_bWarden || gp_bMyJBWarden) && warden_iswarden(client))
 	{
 		Command_SetWardenEventDay(client);
 	}
@@ -1750,7 +1770,7 @@ public Action Command_VotingMenu(int client, int args)
 {
 	if (gc_bPlugin.BoolValue && gc_bVoting.BoolValue)
 	{
-		if ((warden_iswarden(client) && gc_bSetW.BoolValue) || (CheckVipFlag(client, g_sAdminFlag) && gc_bSetA.BoolValue) || client == 0)
+		if (((gp_bWarden || gp_bMyJBWarden) && warden_iswarden(client) && gc_bSetW.BoolValue) || (CheckVipFlag(client, g_sAdminFlag) && gc_bSetA.BoolValue) || client == 0)
 		{
 			if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0))
 			{
