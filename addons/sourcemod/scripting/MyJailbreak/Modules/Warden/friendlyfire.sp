@@ -154,6 +154,9 @@ public Action FriendlyFire_OnTraceAttack(int victim, int &attacker, int &inflict
 	if (gc_sFFCT.BoolValue)
 		return Plugin_Continue;
 
+	if (gp_bMyJailBreak && MyJailbreak_IsEventDayRunning())
+		return Plugin_Continue;
+
 	if (!IsValidClient(victim, true, false) || !IsValidClient(attacker, true, false))
 	{
 		return Plugin_Continue;
