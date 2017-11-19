@@ -108,6 +108,8 @@ public void OnPluginStart()
 	RegAdminCmd("sm_endround", Command_EndRound, ADMFLAG_CHANGEMAP);
 
 	// AutoExecConfig
+	DirExistsEx("cfg/MyJailbreak/EventDays");
+
 	AutoExecConfig_SetFile("MyJailbreak", "MyJailbreak");
 	AutoExecConfig_SetCreateFile(true);
 
@@ -126,6 +128,10 @@ public void OnPluginStart()
 
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
+
+	char sBuffer[256];
+	BuildPath(Path_SM, sBuffer, sizeof(sBuffer), "logs/MyJailbreak");
+	DirExistsEx(sBuffer);
 
 	// Hooks
 	HookEvent("round_start", Event_RoundStart);

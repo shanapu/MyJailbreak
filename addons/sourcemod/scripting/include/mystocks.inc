@@ -5,7 +5,7 @@
  * 
  * Copyright (C) 2016-2017 Thomas Schmidt (shanapu)
  *
- * Version 12.0
+ * Version 12.1
  *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License, version 3.0, as published by the
@@ -510,6 +510,22 @@ stock bool ClientViewsFilter(int Entity, int Mask, any Junk)
 {
 	if (Entity >= 1 && Entity <= MaxClients) 
 		return false;
+
+	return true;
+}
+
+stock bool DirExistsEx( const char[] szPath )
+{
+	if (!DirExists(szPath))
+	{
+		CreateDirectory(szPath, 511);
+		
+		if (!DirExists(szPath))
+		{
+			LogError("Couldn't create folder! (%s)", szPath);
+			return false;
+		}
+	}
 
 	return true;
 }

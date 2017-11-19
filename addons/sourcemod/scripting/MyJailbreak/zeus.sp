@@ -907,10 +907,6 @@ void PrepareDay(bool thisround)
 
 		CreateInfoPanel(i);
 
-		StripAllPlayerWeapons(i);
-
-		GivePlayerItem(i, "weapon_knife");
-
 		CreateTimer(0.5, Timer_GiveZeus, GetClientUserId(i));
 	}
 
