@@ -70,6 +70,7 @@ public void FriendlyFire_OnPluginStart()
 
 	// Hooks
 	HookEvent("round_end", FriendlyFire_Event_RoundEnd);
+	HookEvent("player_death", FriendlyFire_Event_PlayerDeath);
 
 	// FindConVar
 	g_bFF = FindConVar("mp_teammates_are_enemies");
@@ -127,6 +128,21 @@ public Action Command_FriendlyFire(int client, int args)
                    EVENTS
 ******************************************************************************/
 
+
+public void FriendlyFire_Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
+{
+	if (!gc_bPlugin.BoolValue)
+		return;
+
+	if (!g_bFF.BoolValue)
+		return;
+
+	if (GetAlivePlayersCount(CS_TEAM_T) < 1)
+	{
+		SetCvar("mp_teammates_are_enemies", 0);
+		CS_TerminateRound(5.0, CSRoundEnd_CTWin, false);
+	}
+}
 
 public void FriendlyFire_Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 {
