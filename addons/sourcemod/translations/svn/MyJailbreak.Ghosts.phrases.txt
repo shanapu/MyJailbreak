@@ -1,3 +1,10 @@
+// Exported from SourceMod Translator
+// Date: 2017-11-20 02:35:19 UTC
+// Language: svn (svn)
+// 
+// To view other translations for this plugin, please visit:
+// http://translator.mitchdempsey.com/sourcemod_plugins/271
+//
 "Phrases"
 {
 
@@ -8,7 +15,6 @@
 
 	"ghosts_need"
 	{
-		"#format"	"{1:i},{2:N}"
 		"svn"		"{purple}{2}{default} Je glasoval. {purple}{1}{default} glasov potrebnih za igranje {darkred}Duhov."
 	}
 
@@ -59,7 +65,6 @@
 
 	"ghosts_rounds"
 	{
-		"#format"	"{1:i},{2:i}"
 		"svn"		"Runda {purple}{1}{default} od {purple}{2}"
 	}
 
@@ -80,7 +85,6 @@
 
 	"ghosts_progress"
 	{
-		"#format"	"{1:s}"
 		"svn"		"Dogodek {darkred}{1} {default}se {purple}že izvaja!"
 	}
 
@@ -91,13 +95,6 @@
 
 	"ghosts_damage_nc"
 	{
-		"#format"	"{1:i}"
-		"svn"		"{1} sekund pred omogočenjem škode!"
-	}
-
-	"ghosts_damage_nc"
-	{
-		"#format"	"{1:i}"
 		"svn"		"{1} sekund pred omogočenjem škode!"
 	}
 
@@ -143,7 +140,6 @@
 
 	"ghosts_wait"
 	{
-		"#format"	"{1:i}"
 		"svn"		"Počakati moraš še {purple}{1}{default} rund za Dan Dogodkov!"
 	}
 

@@ -1,6 +1,6 @@
 // Exported from SourceMod Translator
-// Date: 2016-12-11 14:24:09 UTC
-// Language: English (en)
+// Date: 2017-11-20 02:35:15 UTC
+// Language: svn (svn)
 // 
 // To view other translations for this plugin, please visit:
 // http://translator.mitchdempsey.com/sourcemod_plugins/189
@@ -15,13 +15,11 @@
 
 	"zeus_need"
 	{
-		"#format"	"{1:i},{2:N}"
 		"svn"		"{purple}{2}{default} je glasoval {purple}{1}{default} potrebnih, da se začne {darkred}Zeus dan."
 	}
 
 	"zeus_rounds"
 	{
-		"#format"	"{1:i},{2:i}"
 		"svn"		"Runda {purple}{1}{default} od {purple}{2}"
 	}
 
@@ -87,7 +85,6 @@
 
 	"zeus_progress"
 	{
-		"#format"	"{1:s}"
 		"svn"		"Poseben dan{darkred}{1} {default}že {purple}poteka!"
 	}
 
@@ -98,7 +95,6 @@
 
 	"zeus_timeuntilstart_nc"
 	{
-		"#format"	"{1:i}"
 		"svn"		"{1} sekund, preden se začne Zeus dan!"
 	}
 
@@ -144,7 +140,6 @@
 
 	"zeus_wait"
 	{
-		"#format"	"{1:i}"
 		"svn"		"Počakati moraš še {purple}{1}{default} rund, da začneš z Zeus dnevom!"
 	}
 

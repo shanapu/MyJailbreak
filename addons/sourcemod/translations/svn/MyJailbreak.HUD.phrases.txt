@@ -1,37 +1,46 @@
+// Exported from SourceMod Translator
+// Date: 2017-11-20 02:34:58 UTC
+// Language: svn (svn)
+// 
+// To view other translations for this plugin, please visit:
+// http://translator.mitchdempsey.com/sourcemod_plugins/231
+//
 "Phrases"
 {
+
 	"hud_planned"
 	{
 		"svn"		"Naslednja runda:"
 	}
+
 	"hud_running"
 	{
 		"svn"		"Ta runda:"
 	}
+
 	"hud_warden"
 	{
 		"svn"		"Vodja:"
 	}
+
 	"hud_nowarden"
 	{
 		"svn"		"Ni vodje"
 	}
+
 	"hud_guards"
 	{
 		"svn"		"Policaji:"
 	}
+
 	"hud_prisoner"
 	{
 		"svn"		"Zaporniki:"
 	}
+
 	"hud_tag"
 	{
 		"svn"		"[MyJB.HUD]"
-	}
-	
-	"hud_lastCT"
-	{
-		"svn"		"Zadnji policaj:"
 	}
 
 	"hud_on"
@@ -43,4 +52,10 @@
 	{
 		"svn"		"HUD {purple}onemogočen"
 	}
+
+	"hud_lastCT"
+	{
+		"svn"		"Zadnji policaj:"
+	}
+
 }

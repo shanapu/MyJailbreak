@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-04-20 21:44:31 UTC
+// Date: 2017-11-20 02:35:08 UTC
 // Language: Italian (it)
 // 
 // To view other translations for this plugin, please visit:
@@ -15,7 +15,7 @@
 
 	"suicidebomber_need"
 	{
-		"it"		"{purple}{2}{default} ha votato. {purple}{1}{default} voti richiesti per giocare a {darkred}Suicide Bomber."
+		"it"		"{purple}{2}{default} ha votato. {purple}{1}{default} voti richiesti per fare {darkred}Suicide Bomber."
 	}
 
 	"suicidebomber_rounds"
@@ -30,27 +30,27 @@
 
 	"suicidebomber_voting"
 	{
-		"it"		"Votazione per Suicide Bomber e' {purple}disabilitata!"
+		"it"		"Le votazioni per Suicide Bomber sono {purple}disattvate!"
 	}
 
 	"suicidebomber_setbywarden"
 	{
-		"it"		"Settare Suicide Bomber da Warden e'  {purple}disabilitato!"
+		"it"		"Impostare  come CapoCT e' {purple}disattivato!"
 	}
 
 	"suicidebomber_minplayer"
 	{
-		"it"		"For Suicide Bomber e' necessario almeno {purple}una Guardia e un Prigioniero!"
+		"it"		"Per fare Suicide Bomber c'e bisogno almeno di {purple}una Guardia, & un Prigioniere!"
 	}
 
 	"suicidebomber_setbyadmin"
 	{
-		"it"		"Settare Suicide Bomber da Admin e' {purple}disabilitato!"
+		"it"		"Impostare Suicide Bomber come Admin e' {purple}disattivato!"
 	}
 
 	"suicidebomber_ctwin_nc"
 	{
-		"it"		"Una Guardia e' sopravvisuta!"
+		"it"		"Una Guardia e' sopravvissuta!"
 	}
 
 	"suicidebomber_end"
@@ -60,12 +60,12 @@
 
 	"suicidebomber_next"
 	{
-		"it"		"il prossimo round si giochera' a: {purple}Suicide Bomber."
+		"it"		"Il prossimo round ci sara': {purple}Suicide Bomber."
 	}
 
 	"suicidebomber_next_nc"
 	{
-		"it"		"Il prossimo round si giochera' a: Suicide Bomber."
+		"it"		"Il prossimo round ci sara': Suicide Bomber."
 	}
 
 	"suicidebomber_start"
@@ -80,87 +80,87 @@
 
 	"suicidebomber_voted"
 	{
-		"it"		"hai gia' votato per {purple}Suicide Bomber!"
+		"it"		"Hai gia' votato per{purple}Suicide Bomber!"
 	}
 
 	"suicidebomber_progress"
 	{
-		"it"		"L'evento {darkred}{1} {default}e' {purple}gia' in corso!"
+		"it"		"L'evento {darkred}{1} {default}e' {purple}in corso"
 	}
 
 	"suicidebomber_disabled"
 	{
-		"it"		"Suicide Bomber e' momentaneamnete {purple}disabilitato!"
+		"it"		"Suicide Bomber e' {purple}disattivato!"
 	}
 
 	"suicidebomber_sprint"
 	{
-		"it"		"Stai {blue}Correndo!"
+		"it"		"Ora stai {blue}Spritando!"
 	}
 
 	"suicidebomber_sprintend"
 	{
-		"it"		"{blue}Sei troppo stanco per correre!{default} Riposa per {1} Secondi."
+		"it"		"{blue}Sei troppo stanco per usare lo sprint{default} Riposati per {1} secondi."
 	}
 
 	"suicidebomber_sprintagain"
 	{
-		"it"		"Hai preso il respiro. Ora puoi {blue}correre {default}ancora!"
+		"it"		"Ti sei ripostato! Puoi usare {blue}lo sprint {default}di nuovo!"
 	}
 
 	"suicidebomber_timetohide_nc"
 	{
-		"it"		"{1} secondi rimanenti per nascondersi"
+		"it"		"{1} secondi rimasti per nascondersi!"
 	}
 
 	"suicidebomber_timeuntilopen_nc"
 	{
-		"it"		"{1} Secondi finche' le celle saranno aperte!"
+		"it"		"{1} secondi rimasti prima del apertura delle celle!"
 	}
 
 	"suicidebomber_info_title"
 	{
-		"it"		"Suicide Bomber e' ora attivo"
+		"it"		"Suicide Bomber e' inizato!"
 	}
 
 	"suicidebomber_info_line1"
 	{
-		"it"		"I kamikaze sono ovunque"
+		"it"		"Suicide Bombers sono dappertutto!"
 	}
 
 	"suicidebomber_info_line2"
 	{
-		"it"		"I prigionieri hanno ora jihad e si possono suicidare con +lookweapon tasto 'F'"
+		"it"		"I Prigionieri hanno Jihads Bomb e possono esplodere(suicidarsi) con +lookweapon 'F' -key!"
 	}
 
 	"suicidebomber_info_line3"
 	{
-		"it"		"Premere E per correre!"
+		"it"		"Tieni premuto E per sprintare!"
 	}
 
 	"suicidebomber_info_line4"
 	{
-		"it"		"Tutte le Regole del JailBreak sono disattivate in questo Round!"
+		"it"		"Tutte le normali regole del JB non vengono applicate durante questo round!"
 	}
 
 	"suicidebomber_info_line5"
 	{
-		"it"		"LR disabilitato in questo round!"
+		"it"		"Gli LR sono disattivati durante questo round!"
 	}
 
 	"suicidebomber_info_line6"
 	{
-		"it"		"Tutti Possono Andare Dove Vogliono"
+		"it"		"A tutti e' permesso andare ovunque in questo round!"
 	}
 
 	"suicidebomber_info_line7"
 	{
-		"it"		"Buona Fortuna!"
+		"it"		"Non fate i cani!"
 	}
 
 	"suicidebomber_wait"
 	{
-		"it"		"Devi aspettare {purple}{1}{default} round per giocare ancora all'event day!"
+		"it"		"Devi aspettare {purple}{1}{default} prima di dare un altro evento!"
 	}
 
 	"suicidebomber_name"

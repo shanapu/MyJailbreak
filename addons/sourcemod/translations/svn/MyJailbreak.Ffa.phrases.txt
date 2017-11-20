@@ -1,17 +1,91 @@
 // Exported from SourceMod Translator
+// Date: 2017-11-20 02:35:11 UTC
+// Language: svn (svn)
+// 
+// To view other translations for this plugin, please visit:
 // http://translator.mitchdempsey.com/sourcemod_plugins/187
 //
 "Phrases"
 {
+
+	"ffa_tag"
+	{
+		"svn"		"[{green}MyJB.FFA{default}]"
+	}
+
+	"ffa_need"
+	{
+		"svn"		"{purple}{2}{default} je glasoval. Število potrebnih glasov za {darkred}FFA: {purple}{1}"
+	}
+
+	"ffa_voting"
+	{
+		"svn"		"Glasovanje za FFA je {purple}onemogočeno!"
+	}
+
+	"ffa_setbywarden"
+	{
+		"svn"		"Nastavitev FFA s strani vodje je {purple}onemogočena!"
+	}
+
+	"ffa_setbyadmin"
+	{
+		"svn"		"Nastavitev FFA s strani adminov je {purple}onemogočena!"
+	}
+
 	"ffa_ctwin_nc"
 	{
 		"svn"		"Paznik je preživel!"
 	}
 
-	"ffa_damage_nc"
+	"ffa_twin_nc"
 	{
-		"#format"   "{1:i}"
-		"svn"		"{1} sekund pred aktivacijo igre!"
+		"svn"		"Zapornik je preživel!"
+	}
+
+	"ffa_minplayer"
+	{
+		"svn"		"Za FFA potrebuješ vsaj {purple}enega Paznika & enega Zapornika!"
+	}
+
+	"ffa_end"
+	{
+		"svn"		"{purple}FFA{default} je zaključen!"
+	}
+
+	"ffa_next"
+	{
+		"svn"		"Naslednjo rundo bo: {purple}FFA."
+	}
+
+	"ffa_next_nc"
+	{
+		"svn"		"Naslednjo rundo bo: FFA."
+	}
+
+	"ffa_rounds"
+	{
+		"svn"		"Runda {purple}{1}{default} od {purple}{2}"
+	}
+
+	"ffa_start"
+	{
+		"svn"		"{purple}FFA{default} se je začel!"
+	}
+
+	"ffa_start_nc"
+	{
+		"svn"		"FFA se je začel!"
+	}
+
+	"ffa_voted"
+	{
+		"svn"		"Ti si že glasoval za {purple}FFA!"
+	}
+
+	"ffa_progress"
+	{
+		"svn"		"Dogodek {darkred}{1} {default}se {purple}že izvaja!"
 	}
 
 	"ffa_disabled"
@@ -19,9 +93,14 @@
 		"svn"		"FFA je trenutno {purple}onemogočen!"
 	}
 
-	"ffa_end"
+	"ffa_damage_nc"
 	{
-		"svn"		"{purple}FFA{default} je zaključen!"
+		"svn"		"{1} sekund pred aktivacijo igre!"
+	}
+
+	"ffa_info_title"
+	{
+		"svn"		"Free for All Deathmatch je sedaj aktiviran!"
 	}
 
 	"ffa_info_line1"
@@ -59,93 +138,14 @@
 		"svn"		"Pravila strežnika to rundo še vedno veljajo!"
 	}
 
-	"ffa_info_title"
+	"ffa_wait"
 	{
-		"svn"		"Free for All Deathmatch je sedaj aktiviran!"
-	}
-
-	"ffa_minplayer"
-	{
-		"svn"		"Za FFA potrebuješ vsaj {purple}enega Paznika & enega Zapornika!"
+		"svn"		"Počakati moraš še {purple}{1}{default} za Dan Dogodkov!"
 	}
 
 	"ffa_name"
 	{
 		"svn"		"Vsak Proti Vsakem(FFA)"
-	}
-
-	"ffa_need"
-	{
-		"#format"   "{1:i},{2:N}"
-		"svn"		"{purple}{2}{default} je glasoval. Število potrebnih glasov za {darkred}FFA: {purple}{1}"
-	}
-
-	"ffa_next"
-	{
-		"svn"		"Naslednjo rundo bo: {purple}FFA."
-	}
-
-	"ffa_next_nc"
-	{
-		"svn"		"Naslednjo rundo bo: FFA."
-	}
-
-	"ffa_progress"
-	{
-		"#format"   "{1:s}"
-		"svn"		"Dogodek {darkred}{1} {default}se {purple}že izvaja!"
-	}
-
-	"ffa_rounds"
-	{
-		"#format"   "{1:i},{2:i}"
-		"svn"		"Runda {purple}{1}{default} od {purple}{2}"
-	}
-
-	"ffa_setbyadmin"
-	{
-		"svn"		"Nastavitev FFA s strani adminov je {purple}onemogočena!"
-	}
-
-	"ffa_setbywarden"
-	{
-		"svn"		"Nastavitev FFA s strani vodje je {purple}onemogočena!"
-	}
-
-	"ffa_start"
-	{
-		"svn"		"{purple}FFA{default} se je začel!"
-	}
-
-	"ffa_start_nc"
-	{
-		"svn"		"FFA se je začel!"
-	}
-
-	"ffa_tag"
-	{
-		"svn"		"[{green}MyJB.FFA{default}]"
-	}
-
-	"ffa_twin_nc"
-	{
-		"svn"		"Zapornik je preživel!"
-	}
-
-	"ffa_voted"
-	{
-		"svn"		"Ti si že glasoval za {purple}FFA!"
-	}
-
-	"ffa_voting"
-	{
-		"svn"		"Glasovanje za FFA je {purple}onemogočeno!"
-	}
-
-	"ffa_wait"
-	{
-		"#format"   "{1:i}"
-		"svn"		"Počakati moraš še {purple}{1}{default} za Dan Dogodkov!"
 	}
 
 }

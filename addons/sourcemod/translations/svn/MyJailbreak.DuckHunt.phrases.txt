@@ -1,11 +1,91 @@
 // Exported from SourceMod Translator
+// Date: 2017-11-20 02:35:17 UTC
+// Language: svn (svn)
+// 
+// To view other translations for this plugin, please visit:
 // http://translator.mitchdempsey.com/sourcemod_plugins/186
 //
 "Phrases"
 {
+
+	"duckhunt_tag"
+	{
+		"svn"		"[{green}MyJB.Racolov{default}]"
+	}
+
+	"duckhunt_rounds"
+	{
+		"svn"		"Runda {purple}{1}{default} od {purple}{2}"
+	}
+
+	"duckhunt_need"
+	{
+		"svn"		"{purple}{2}{default} je glasoval. Število potrebnih glasov za {darkred}Racolov: {purple}{1}"
+	}
+
+	"duckhunt_voting"
+	{
+		"svn"		"Glasovanje za Racolov je {purple}onemogočeno!"
+	}
+
+	"duckhunt_setbywarden"
+	{
+		"svn"		"Nastavitev s strani vodje je {purple}onemogočena!"
+	}
+
+	"duckhunt_setbyadmin"
+	{
+		"svn"		"Nastavitev racolova s strani adminov je {purple}onemogočena!"
+	}
+
 	"duckhunt_ctwin_nc"
 	{
 		"svn"		"Vse race so bile polovljene!"
+	}
+
+	"duckhunt_twin_nc"
+	{
+		"svn"		"Racolovec je bil ulovljen!"
+	}
+
+	"duckhunt_end"
+	{
+		"svn"		"{purple}Racolov{default} se je zaključil."
+	}
+
+	"duckhunt_next"
+	{
+		"svn"		"Naslednja runda bo: {purple}Racolov."
+	}
+
+	"duckhunt_next_nc"
+	{
+		"svn"		"Naslednja runda bo: Racolov."
+	}
+
+	"duckhunt_start"
+	{
+		"svn"		"{purple}Racolov{default} se je začel!"
+	}
+
+	"duckhunt_start_nc"
+	{
+		"svn"		"Racolov se je začel!"
+	}
+
+	"duckhunt_voted"
+	{
+		"svn"		"Ti si že glasoval za {purple}Racolov!"
+	}
+
+	"duckhunt_progress"
+	{
+		"svn"		"Event {darkred}{1} {default}is {purple}already in progress."
+	}
+
+	"duckhunt_minplayer"
+	{
+		"svn"		"Za racolov potrebuješ vsaj {purple}enega Paznika & enega Zapornika"
 	}
 
 	"duckhunt_disabled"
@@ -13,9 +93,14 @@
 		"svn"		"Racolov je trenutno {purple}onemogočen!"
 	}
 
-	"duckhunt_end"
+	"duckhunt_timeuntilstart_nc"
 	{
-		"svn"		"{purple}Racolov{default} se je zaključil."
+		"svn"		"{1} sekund pred začetkom runde!"
+	}
+
+	"duckhunt_info_title"
+	{
+		"svn"		"Racolov je sedaj aktiviran!"
 	}
 
 	"duckhunt_info_line1"
@@ -53,98 +138,13 @@
 		"svn"		"Pravila strežnika to rundo še vedno veljajo!"
 	}
 
-	"duckhunt_info_title"
-	{
-		"svn"		"Racolov je sedaj aktiviran!"
-	}
-
-	"duckhunt_minplayer"
-	{
-		"svn"		"Za racolov potrebuješ vsaj {purple}enega Paznika & enega Zapornika"
-	}
-
 	"duckhunt_name"
 	{
 		"svn"		"Racolov"
 	}
 
-	"duckhunt_need"
-	{
-		"#format"   "{1:i},{2:N}"
-		"svn"		"{purple}{2}{default} je glasoval. Število potrebnih glasov za {darkred}Racolov: {purple}{1}"
-	}
-
-	"duckhunt_next"
-	{
-		"svn"		"Naslednja runda bo: {purple}Racolov."
-	}
-
-	"duckhunt_next_nc"
-	{
-		"svn"		"Naslednja runda bo: Racolov."
-	}
-
-	"duckhunt_progress"
-	{
-		"#format"   "{1:s}"
-		"svn"		"Event {darkred}{1} {default}is {purple}already in progress."
-	}
-
-	"duckhunt_rounds"
-	{
-		"#format"   "{1:i},{2:i}"
-		"svn"		"Runda {purple}{1}{default} od {purple}{2}"
-	}
-
-	"duckhunt_setbyadmin"
-	{
-		"svn"		"Nastavitev racolova s strani adminov je {purple}onemogočena!"
-	}
-
-	"duckhunt_setbywarden"
-	{
-		"svn"		"Nastavitev s strani vodje je {purple}onemogočena!"
-	}
-
-	"duckhunt_start"
-	{
-		"svn"		"{purple}Racolov{default} se je začel!"
-	}
-
-	"duckhunt_start_nc"
-	{
-		"svn"		"Racolov se je začel!"
-	}
-
-	"duckhunt_tag"
-	{
-		"svn"		"[{green}MyJB.Racolov{default}]"
-	}
-
-	"duckhunt_timeuntilstart_nc"
-	{
-		"#format"   "{1:i}"
-		"svn"		"{1} sekund pred začetkom runde!"
-	}
-
-	"duckhunt_twin_nc"
-	{
-		"svn"		"Racolovec je bil ulovljen!"
-	}
-
-	"duckhunt_voted"
-	{
-		"svn"		"Ti si že glasoval za {purple}Racolov!"
-	}
-
-	"duckhunt_voting"
-	{
-		"svn"		"Glasovanje za Racolov je {purple}onemogočeno!"
-	}
-
 	"duckhunt_wait"
 	{
-		"#format"   "{1:i}"
 		"svn"		"Počakati moraš še {purple}{1}{default} rund za Dan Dogodkov!"
 	}
 

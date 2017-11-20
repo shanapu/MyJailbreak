@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-04-20 21:44:33 UTC
+// Date: 2017-11-20 02:35:09 UTC
 // Language: Italian (it)
 // 
 // To view other translations for this plugin, please visit:
@@ -70,17 +70,17 @@
 
 	"tags_TOWN"
 	{
-		"it"		"[Prigioniere.Owner]"
+		"it"		"[Prigioniere.Founder]"
 	}
 
 	"tags_CTOWN"
 	{
-		"it"		"[Guardia.Owner]"
+		"it"		"[Guardia.Founder]"
 	}
 
 	"tags_WOWN"
 	{
-		"it"		"[CapoCT.Owner]"
+		"it"		"[CapoCT.Founder]"
 	}
 
 	"tags_CT_chat"
@@ -95,7 +95,7 @@
 
 	"tags_CTOWN_chat"
 	{
-		"it"		"[Guardia.Owner]"
+		"it"		"[Guardia.Founder]"
 	}
 
 	"tags_CTVIP1_chat"
@@ -120,7 +120,7 @@
 
 	"tags_TOWN_chat"
 	{
-		"it"		"[Prigioniere.Owner]"
+		"it"		"[Prigioniere.Founder]"
 	}
 
 	"tags_TVIP1_chat"
@@ -145,7 +145,7 @@
 
 	"tags_WOWN_chat"
 	{
-		"it"		"[CapoCT.Owner]"
+		"it"		"[CapoCT.Founder]"
 	}
 
 	"tags_WVIP1_chat"
@@ -160,52 +160,52 @@
 
 	"tags_D"
 	{
-		"it"		"[Deputato]"
+		"it"		"[ViceCapoCT]"
 	}
 
 	"tags_DA"
 	{
-		"it"		"[Deputato.Admin]"
+		"it"		"[ViceCapoCT.Admin]"
 	}
 
 	"tags_DA_chat"
 	{
-		"it"		"[Deputato.Admin]"
+		"it"		"[ViceCapoCT.Admin]"
 	}
 
 	"tags_D_chat"
 	{
-		"it"		"[Deputato]"
+		"it"		"[ViceCapoCT]"
 	}
 
 	"tags_DOWN"
 	{
-		"it"		"[Deputato.Owner]"
+		"it"		"[ViceCapoCT.Founder]"
 	}
 
 	"tags_DOWN_chat"
 	{
-		"it"		"[Deputato.Owner]"
+		"it"		"[ViceCapoCT.Founder]"
 	}
 
 	"tags_DVIP1"
 	{
-		"it"		"[Deputato.VIP]"
+		"it"		"[ViceCapoCT.VIP]"
 	}
 
 	"tags_DVIP1_chat"
 	{
-		"it"		"[Deputato.VIP]"
+		"it"		"[ViceCapoCT.VIP]"
 	}
 
 	"tags_DVIP2"
 	{
-		"it"		"[Deputato.sVIP]"
+		"it"		"[ViceCapoCT.sVIP]"
 	}
 
 	"tags_DVIP2_chat"
 	{
-		"it"		"[Deputato.sVIP]"
+		"it"		"[ViceCapoCT.sVIP]"
 	}
 
 }

@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-04-20 21:44:30 UTC
+// Date: 2017-11-20 02:35:07 UTC
 // Language: Italian (it)
 // 
 // To view other translations for this plugin, please visit:
@@ -15,7 +15,7 @@
 
 	"cowboy_need"
 	{
-		"it"		"{purple}{2}{default} ha votato. {purple}{1}{default} voti richiesti per giocare {darkred}Cowboy!"
+		"it"		"{purple}{2}{default} ha votato. {purple}{1}{default} voto(i) richiesti per fare {darkred}Cowboy!"
 	}
 
 	"cowboy_rounds"
@@ -25,32 +25,32 @@
 
 	"cowboy_twin_nc"
 	{
-		"it"		"Un T e' sopravvisuto"
+		"it"		"I Prigionieri sono sopravvissuti!"
 	}
 
 	"cowboy_voting"
 	{
-		"it"		"La Votazione e' disabilitata"
+		"it"		"Le votazioni per Cowboy sono{purple} disattivate!"
 	}
 
 	"cowboy_setbywarden"
 	{
-		"it"		"Settare Cowboy da warden e' {purple}disabilitato!"
+		"it"		"Impostare Cowboy tramite CapoCT e' {purple}disattivato!"
 	}
 
 	"cowboy_minplayer"
 	{
-		"it"		"Per l'evento sono richiesti {purple}un CT e un T"
+		"it"		"Per fare Cowboy c'e bisogno di almeno {purple}una Guardia, & un Prigioniere"
 	}
 
 	"cowboy_setbyadmin"
 	{
-		"it"		"Settare Cowboy da Admin e' {purple}disabilitato!"
+		"it"		"Impostare Cowboy tramite Admin e' {purple}disattivato!"
 	}
 
 	"cowboy_ctwin_nc"
 	{
-		"it"		"Un CT e' sopravvisuto!"
+		"it"		"Una Guardia e' sopravvisuta!"
 	}
 
 	"cowboy_end"
@@ -60,32 +60,32 @@
 
 	"cowboy_next"
 	{
-		"it"		"Il prossimo round sara': {purple}Cowboy."
+		"it"		"Il prossimo round ci sara': {purple}Cowboy."
 	}
 
 	"cowboy_next_nc"
 	{
-		"it"		"Il prossimo round sara': Cowboy."
+		"it"		"Il prossimo round ci sara': Cowboy."
 	}
 
 	"cowboy_start"
 	{
-		"it"		"{purple}Cowboy{default} e' inziato!"
+		"it"		"{purple}Cowboy{default} e' iniziato!"
 	}
 
 	"cowboy_start_nc"
 	{
-		"it"		"Cowboy e' inziato!"
+		"it"		"Cowboy e' iniziato!"
 	}
 
 	"cowboy_voted"
 	{
-		"it"		"Hai gia' votato per {purple}Cowboy!"
+		"it"		"Hai gia votato per {purple}Cowboy!"
 	}
 
 	"cowboy_progress"
 	{
-		"it"		"L'evento {darkred}{1} {default}e' {purple}gia' in corso!"
+		"it"		"L'evento {darkred}{1} {default}e' gia' {purple}in progresso!"
 	}
 
 	"cowboy_disabled"
@@ -95,12 +95,12 @@
 
 	"cowboy_timeuntilstart_nc"
 	{
-		"it"		"{1} secondi rimanti all'inizio del round!"
+		"it"		"{1} secondi rimasti per iniziare il round!"
 	}
 
 	"cowboy_info_line1"
 	{
-		"it"		"Cowboy - Free for all!"
+		"it"		"Cowboy - FFFA"
 	}
 
 	"cowboy_info_line2"
@@ -110,32 +110,32 @@
 
 	"cowboy_info_line3"
 	{
-		"it"		"È possibile camminare durante la fase di 'NoDamage'"
+		"it"		"Puoi muoverti durante la fase di NO-Damage!"
 	}
 
 	"cowboy_info_line4"
 	{
-		"it"		"Tutte le Regole del JB Non sono applicabili in questo round"
+		"it"		"Le normale regole del JB non sono applicate durante questo round!"
 	}
 
 	"cowboy_info_line5"
 	{
-		"it"		"LR disabilitato in questo round"
+		"it"		"Gli LR sono disattivati durante questo round!"
 	}
 
 	"cowboy_info_line6"
 	{
-		"it"		"State nella JailRoom. Non andare in condotti e posti segreti"
+		"it"		"Rimanere nella zona celle! Vietato andare condotti o aree segrete!"
 	}
 
 	"cowboy_info_line7"
 	{
-		"it"		"Buona fortuna!"
+		"it"		"Non fate i cani!"
 	}
 
 	"cowboy_wait"
 	{
-		"it"		"Devi aspettare {purple}{1}{default} round per un event day"
+		"it"		"Devi aspettare {purple}{1}{default} round per dare un Event Day!"
 	}
 
 	"cowboy_name"
@@ -145,7 +145,7 @@
 
 	"cowboy_info_title"
 	{
-		"it"		"Cowboy Attivato"
+		"it"		"Cowboy  e' iniziato!"
 	}
 
 }

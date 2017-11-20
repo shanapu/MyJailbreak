@@ -1,6 +1,6 @@
 // Exported from SourceMod Translator
-// Date: 2017-05-17 21:17:09 UTC
-// Language: English (en)
+// Date: 2017-11-20 02:35:03 UTC
+// Language: Spanish (es)
 // 
 // To view other translations for this plugin, please visit:
 // http://translator.mitchdempsey.com/sourcemod_plugins/197
@@ -15,7 +15,6 @@
 
 	"lastguard_need"
 	{
-		"#format"	"{1:i},{2:N}"
 		"es"		"{purple}{2}{default} ha votado. {purple}{1}{default} votos requeridos para jugar {darkred}The Last Guard Rule."
 	}
 
@@ -31,7 +30,6 @@
 
 	"lastguard_hp"
 	{
-		"#format"	"{1:i},{2:i},{3:N},{4:i}"
 		"es"		"El {purple}{1} Prisionero{default} tiene una combinacion total de: {purple}{2} HP{default}. El ultimo Guardia {3} ahora tiene: {purple}{4} HP{default}."
 	}
 
@@ -97,7 +95,6 @@
 
 	"lastguard_progress"
 	{
-		"#format"	"{1:s}"
 		"es"		"El Evento {darkred}{1} {default}ya esta {purple}en progreso! La Última regla del Guardia esta desactivada!"
 	}
 
@@ -113,13 +110,7 @@
 
 	"lastguard_timeuntilstart_nc"
 	{
-		"#format"	"{1:i}"
 		"es"		"{1} segundos hasta que la ronda comience!"
-	}
-
-	"lastguard_info_title"
-	{
-		"es"		"La Última regla del Guardia esta habilitado!"
 	}
 
 	"lastguard_info_title"

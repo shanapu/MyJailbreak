@@ -1,6 +1,6 @@
 // Exported from SourceMod Translator
-// Date: 2017-05-17 21:17:20 UTC
-// Language: English (en)
+// Date: 2017-11-20 02:35:17 UTC
+// Language: Spanish (es)
 // 
 // To view other translations for this plugin, please visit:
 // http://translator.mitchdempsey.com/sourcemod_plugins/195
@@ -15,13 +15,11 @@
 
 	"knifefight_need"
 	{
-		"#format"	"{1:i},{2:N}"
 		"es"		"{purple}{2}{default} ha votado. {purple}{1}{default} votos requeridos para jugar {darkred}Knife Fight."
 	}
 
 	"knifefight_rounds"
 	{
-		"#format"	"{1:i},{2:i}"
 		"es"		"Ronda {purple}{1}{default} de {purple}{2}"
 	}
 
@@ -87,7 +85,6 @@
 
 	"knifefight_progress"
 	{
-		"#format"	"{1:s}"
 		"es"		"El evento {darkred}{1} {default}ya {purple}está en progreso!"
 	}
 
@@ -98,7 +95,6 @@
 
 	"knifefight_timeuntilstart_nc"
 	{
-		"#format"	"{1:i}"
 		"es"		"{1} segundos hasta que la ronda comience!"
 	}
 
@@ -144,7 +140,6 @@
 
 	"knifefight_wait"
 	{
-		"#format"	"{1:i}"
 		"es"		"Debes esperar {purple}{1}{default} rondas mas para otro {purple} Evento!"
 	}
 

@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-04-20 21:44:33 UTC
+// Date: 2017-11-20 02:35:10 UTC
 // Language: Russian (ru)
 // 
 // To view other translations for this plugin, please visit:
@@ -206,6 +206,86 @@
 	"tags_DVIP2_chat"
 	{
 		"ru"		"[Заместитель.sVIP]"
+	}
+
+	"tags_TSA"
+	{
+		"ru"		"[Заключённый.СуперАдмин]"
+	}
+
+	"tags_CTSA"
+	{
+		"ru"		"[Охранник.СуперАдмин]"
+	}
+
+	"tags_WSA"
+	{
+		"ru"		"[Командир.СуперАдмин]"
+	}
+
+	"tags_TCO"
+	{
+		"ru"		"[Заключённый.Совладелец]"
+	}
+
+	"tags_CTCO"
+	{
+		"ru"		"[Охранник.Совладелец]"
+	}
+
+	"tags_WCO"
+	{
+		"ru"		"[Командир.Совладелец]"
+	}
+
+	"tags_CTSA_chat"
+	{
+		"ru"		"[Охранник.СуперАдмин]"
+	}
+
+	"tags_CTCO_chat"
+	{
+		"ru"		"[Охранник.Совладелец]"
+	}
+
+	"tags_TSA_chat"
+	{
+		"ru"		"[Заключённый.СуперАдмин]"
+	}
+
+	"tags_WSA_chat"
+	{
+		"ru"		"[Командир.СуперАдмин]"
+	}
+
+	"tags_WCO_chat"
+	{
+		"ru"		"[Командир.Совладелец]"
+	}
+
+	"tags_DSA"
+	{
+		"ru"		"[Зам.Командира.СуперАдмин]"
+	}
+
+	"tags_DSA_chat"
+	{
+		"ru"		"[Зам.Командира.СуперАдмин]"
+	}
+
+	"tags_DCO"
+	{
+		"ru"		"[Зам.Командира.Совладелец]"
+	}
+
+	"tags_DCO_chat"
+	{
+		"ru"		"[Зам.Командира.Совладелец]"
+	}
+
+	"tags_TCO_chat"
+	{
+		"ru"		"[Заключённый.Совладелец]"
 	}
 
 }

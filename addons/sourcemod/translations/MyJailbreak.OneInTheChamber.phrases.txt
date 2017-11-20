@@ -1,3 +1,10 @@
+// Exported from SourceMod Translator
+// Date: 2017-11-20 02:35:20 UTC
+// Language: English (en)
+// 
+// To view other translations for this plugin, please visit:
+// http://translator.mitchdempsey.com/sourcemod_plugins/283
+//
 "Phrases"
 {
 

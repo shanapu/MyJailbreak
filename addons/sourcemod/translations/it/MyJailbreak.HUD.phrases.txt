@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-04-20 21:44:26 UTC
+// Date: 2017-11-20 02:34:58 UTC
 // Language: Italian (it)
 // 
 // To view other translations for this plugin, please visit:
@@ -10,12 +10,12 @@
 
 	"hud_planned"
 	{
-		"it"		"Prossimo Round:"
+		"it"		"Prossimo round:"
 	}
 
 	"hud_running"
 	{
-		"it"		"Questo Round:"
+		"it"		"Qursto round:"
 	}
 
 	"hud_warden"
@@ -25,7 +25,7 @@
 
 	"hud_nowarden"
 	{
-		"it"		"Non c'e' un capo ct"
+		"it"		"Non c'e nessun CapoCT"
 	}
 
 	"hud_guards"
@@ -45,17 +45,17 @@
 
 	"hud_on"
 	{
-		"it"		"HUD {purple}is enabled!"
+		"it"		"L'HUD e' stata {purple}attivata!"
 	}
 
 	"hud_off"
 	{
-		"it"		"HUD {purple}disabilitato"
+		"it"		"L'HUD e' stata {purple}disattivata"
 	}
 
 	"hud_lastCT"
 	{
-		"it"		"Ultima Guardia:"
+		"it"		"Ultima guardia:"
 	}
 
 }

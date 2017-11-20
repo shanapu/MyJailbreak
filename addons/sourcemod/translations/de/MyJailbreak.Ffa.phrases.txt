@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-04-20 21:44:33 UTC
+// Date: 2017-11-20 02:35:10 UTC
 // Language: German (de)
 // 
 // To view other translations for this plugin, please visit:
@@ -136,21 +136,6 @@
 	"ffa_info_line7"
 	{
 		"de"		"Bau keine Scheisse!"
-	}
-
-	"RoundOne"
-	{
-		"de"		"Runde 1 von 3"
-	}
-
-	"RoundTwo"
-	{
-		"de"		"Runde 2 von 3"
-	}
-
-	"RoundThree"
-	{
-		"de"		"letzte FFA runde"
 	}
 
 	"ffa_wait"

@@ -1,3 +1,10 @@
+// Exported from SourceMod Translator
+// Date: 2017-11-20 02:35:19 UTC
+// Language: English (en)
+// 
+// To view other translations for this plugin, please visit:
+// http://translator.mitchdempsey.com/sourcemod_plugins/277
+//
 "Phrases"
 {
 
@@ -55,16 +62,6 @@
 	"teleport_next_nc"
 	{
 		"en"		"The following round will be: Teleport War."
-	}
-
-	"teleport_now_nc"
-	{
-		"en"		"Now a teleport round begins."
-	}
-
-	"teleport_now"
-	{
-		"en"		"Now a {purple}teleport{default} round begins."
 	}
 
 	"teleport_rounds"
@@ -145,21 +142,6 @@
 		"en"		"Don't be an Asshole!"
 	}
 
-	"RoundOne"
-	{
-		"en"		"Round 1 of 3"
-	}
-
-	"RoundTwo"
-	{
-		"en"		"Round 2 of 3"
-	}
-
-	"RoundThree"
-	{
-		"en"		"This is the last Teleport War round!"
-	}
-
 	"teleport_wait"
 	{
 		"#format"	"{1:i}"
@@ -169,6 +151,16 @@
 	"teleport_name"
 	{
 		"en"		"Teleport War"
+	}
+
+	"teleport_now_nc"
+	{
+		"en"		"Now a teleport round begins."
+	}
+
+	"teleport_now"
+	{
+		"en"		"Now a {purple}teleport{default} round begins."
 	}
 
 }

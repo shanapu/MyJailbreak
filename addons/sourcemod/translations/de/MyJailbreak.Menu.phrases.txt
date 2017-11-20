@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-04-20 21:44:27 UTC
+// Date: 2017-11-20 02:34:58 UTC
 // Language: German (de)
 // 
 // To view other translations for this plugin, please visit:
@@ -10,7 +10,7 @@
 
 	"menu_info"
 	{
-		"de"		"Um das Jailbreak Menü zu öffnen, drücke , oderr schreibe !menu in den chat!"
+		"de"		"Um das Jailbreak Menü zu öffnen drücke , oder schreibe !menu in den chat!"
 	}
 
 	"menu_info_title"
@@ -178,11 +178,6 @@
 		"de"		"Zombietag"
 	}
 
-	"menu_dealdamage"
-	{
-		"de"		"Mach Schaden Tag"
-	}
-
 	"menu_hide"
 	{
 		"de"		"Verstecken im Dunkeln"
@@ -231,11 +226,6 @@
 	"menu_duckhunt"
 	{
 		"de"		"DuckHunt"
-	}
-
-	"menu_freeday"
-	{
-		"de"		"Freitag"
 	}
 
 	"menu_admin"
@@ -391,6 +381,16 @@
 	"menu_joinspec"
 	{
 		"de"		"Zu Spectator wechseln"
+	}
+
+	"menu_dealdamage"
+	{
+		"de"		"Schaden austeilen Tag"
+	}
+
+	"menu_freeday"
+	{
+		"de"		"Freeday"
 	}
 
 }

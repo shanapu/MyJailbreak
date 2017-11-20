@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-04-20 21:44:41 UTC
+// Date: 2017-11-20 02:35:17 UTC
 // Language: Italian (it)
 // 
 // To view other translations for this plugin, please visit:
@@ -10,12 +10,12 @@
 
 	"knifefight_tag"
 	{
-		"it"		"[{green}MyJB.Battaglia Coltelli{default}]"
+		"it"		"[{green}MyJB.Knife Fight{default}]"
 	}
 
 	"knifefight_need"
 	{
-		"it"		"{purple}{2}{default} ha votato. {purple}{1}{default} voti richiesti per fare {darkred}Battaglia Coltelli."
+		"it"		"{purple}{2}{default} ha votato. {purple}{1}{default} voti richiesti per fare {darkred}Knife Fight."
 	}
 
 	"knifefight_rounds"
@@ -25,127 +25,127 @@
 
 	"knifefight_twin_nc"
 	{
-		"it"		"Un T e' sopravvissuto!"
+		"it"		"Un Prigioniere e' sopravvissuto!"
 	}
 
 	"knifefight_voting"
 	{
-		"it"		"La votazione e' disabilitata!"
+		"it"		"Le votazioni per Knife Fight is {purple}disabled!"
 	}
 
 	"knifefight_setbywarden"
 	{
-		"it"		"Settare Battaglia Coltelli da Warden e' {purple}disabilitato!"
+		"it"		"Impostare Knife Fight come CapoCT e' {purple}disattivato!"
 	}
 
 	"knifefight_setbyadmin"
 	{
-		"it"		"Settare Battaglia Coltelli da Admin e' {purple}disabilitato!"
+		"it"		"Impostare Knife Fight come Admin e' {purple}disattivato!"
 	}
 
 	"knifefight_ctwin_nc"
 	{
-		"it"		"Una Guardia e' Sopravvissuta!"
+		"it"		"Una Guardia e' sopravvissuta!"
 	}
 
 	"knifefight_minplayer"
 	{
-		"it"		"Per la battaglia coltelli sono richiesti {purple}un CT e un T!"
+		"it"		"Per fare Knife Fight c'e bisogno di almeno{purple}una Guardia ed un Prigoniere"
 	}
 
 	"knifefight_end"
 	{
-		"it"		"{purple}Battaglia Coltelli{default} e' finito."
+		"it"		"{purple}Knife Fight{default} e' finito."
 	}
 
 	"knifefight_next"
 	{
-		"it"		"Il Prossimo round sara': {purple}Battaglia Coltelli."
+		"it"		"Il prossimo round ci sara': {purple}Knife Fight."
 	}
 
 	"knifefight_next_nc"
 	{
-		"it"		"Il Prossimo round sara': Battaglia Coltelli."
+		"it"		"Il prossimo round ci sara': Knife Fight."
 	}
 
 	"knifefight_start"
 	{
-		"it"		"{purple}La Battaglia Coltelli{default} e' iniziata!"
+		"it"		"{purple}Knife Fight{default} e' iniziato!"
 	}
 
 	"knifefight_start_nc"
 	{
-		"it"		"La Battaglia Coltelli e' iniziata!"
+		"it"		"Knife Fight e' iniziato!"
 	}
 
 	"knifefight_voted"
 	{
-		"it"		"Hai già votato per {purple}knifefight"
+		"it"		"Hai gia' votato per {purple}knifefight"
 	}
 
 	"knifefight_progress"
 	{
-		"it"		"L'evento {darkred}{1} {default}e' {purple}gia' in corso!"
+		"it"		"L'evento {darkred}{1} {default}e' {purple}in corso"
 	}
 
 	"knifefight_disabled"
 	{
-		"it"		"Battaglia Coltelli e' {purple}disabilitato!"
+		"it"		"Knife Fight e' {purple}disattivato!"
 	}
 
 	"knifefight_timeuntilstart_nc"
 	{
-		"it"		"{1} secondi rimanenti all'inizio del round"
+		"it"		"{1} secondi prima che inizi il round!"
 	}
 
 	"knifefight_info_title"
 	{
-		"it"		"FFA Battaglia Coltelli - Free for All"
+		"it"		"FFA Knife Fight - Free for All e' inizato"
 	}
 
 	"knifefight_info_line1"
 	{
-		"it"		"Verrete portarti al CT Spawn"
+		"it"		"Non sorprenderti se spawni in armeria"
 	}
 
 	"knifefight_info_line2"
 	{
-		"it"		"Pattini da ghiaccio, Thirdperson & Terza persona e bassa gravità.."
+		"it"		"Scivolamento, Terza persona & graivita' diminiuta sono attivati."
 	}
 
 	"knifefight_info_line3"
 	{
-		"it"		"Scappa durante la fase di 'NoDamage'!"
+		"it"		"Corri durante la fase di 'no damage'!"
 	}
 
 	"knifefight_info_line4"
 	{
-		"it"		"Tutte le regole del JB Non sono apllicabili in questo round"
+		"it"		"Tutte le normali regole del JB non vengono applicate durante questo round!"
 	}
 
 	"knifefight_info_line5"
 	{
-		"it"		"LR e' disattivato in questo round!"
+		"it"		"Gli LR sono disattivati durante questo round!"
 	}
 
 	"knifefight_info_line6"
 	{
-		"it"		"State nella 'JailRoom' Non e' permesso andare in condotti o posti segreti!"
+		"it"		"Bisogna stare nella zona celle! E' vietato andare codotti o aree segrete!"
 	}
 
 	"knifefight_info_line7"
 	{
-		"it"		"Buona Fortuna!"
+		"it"		"Non fate i cani!"
 	}
 
 	"knifefight_wait"
 	{
-		"it"		"Devi aspettare {purple}{1}{default} round per un evento!"
+		"it"		"Devi aspettare {purple}{1}{default} prima di dare un altro evento!"
 	}
 
 	"knifefight_name"
 	{
-		"it"		"Battaglia Coltelli"
+		"it"		"Knife Fight"
 	}
 
 }

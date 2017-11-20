@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-04-20 21:44:35 UTC
+// Date: 2017-11-20 02:35:12 UTC
 // Language: Italian (it)
 // 
 // To view other translations for this plugin, please visit:
@@ -10,17 +10,17 @@
 
 	"hide_tag"
 	{
-		"it"		"[{green}Ezic.Nascondino{default}]"
+		"it"		"[{green}MyJB.hide{default}]"
 	}
 
 	"hide_need"
 	{
-		"it"		"{purple}{2}{default} ha votato. {purple}{1}{default} voti richiesti per giocare a {darkred}Nascondino."
+		"it"		"{purple}{2}{default} ha votato. {purple}{1}{default} voti richiesti per fare {darkred}Hide in the Dark."
 	}
 
 	"hide_twin_nc"
 	{
-		"it"		"I Prigionieri hanno vinto!"
+		"it"		"Gli Hiders hanno vinto!"
 	}
 
 	"hide_rounds"
@@ -30,137 +30,137 @@
 
 	"hide_ctwin_nc"
 	{
-		"it"		"I CT Hanno vinto!"
+		"it"		"I Seekers hanno vinto!"
 	}
 
 	"hide_end"
 	{
-		"it"		"{purple}Nascondino{default} e' finito."
+		"it"		"{purple}Hide in the Dark{default} e' finito."
 	}
 
 	"hide_next_nc"
 	{
-		"it"		"Il Prossimo round sara': Nascondino"
+		"it"		"Il prossimo round ci sara': Hide in the Dark."
 	}
 
 	"hide_next"
 	{
-		"it"		"Il Prossimo Round sara': {purple}Nascondino."
+		"it"		"Il prossimo round ci sara': {purple}Hide in the Dark."
 	}
 
 	"hide_start"
 	{
-		"it"		"{purple}Il Nascondino{default} e' iniziato!"
+		"it"		"{purple}Hide in the Dark{default} e' iniziato!"
 	}
 
 	"hide_start_nc"
 	{
-		"it"		"Il Nascondino e' iniziato!"
+		"it"		"Hide in the Dark e' iniziato!"
 	}
 
 	"hide_voted"
 	{
-		"it"		"tu hai gia' votato per il {purple}Nascondino"
+		"it"		"Hai gia' votato per {purple}Hide in the Dark!"
 	}
 
 	"hide_progress"
 	{
-		"it"		"L'evento{darkred}{1} {default}e' {purple}gia' in corso!"
+		"it"		"L'evento {darkred}{1} {default}e' {purple}in corso"
 	}
 
 	"hide_minplayer"
 	{
-		"it"		"per il nascondino sono richiesti {purple}un CT e un T!"
+		"it"		"Per fare Hide in the Dark c'e bisogno di almeno{purple}una Guardia ed un Prigoniere"
 	}
 
 	"hide_disabled"
 	{
-		"it"		"Nascondersi nel buio {purple}e' disabilitato!"
+		"it"		"Hide in the Dark e' {purple} disattivato!"
 	}
 
 	"hide_voting"
 	{
-		"it"		"La votazione per il nascondino e' {purple}disabilitata!"
+		"it"		"Le votazioni per Hide in the Dark sono {purple}sono disattivate!"
 	}
 
 	"hide_setbyWarden"
 	{
-		"it"		"Settare Nascondino da Warden e' {purple}disabilitato!"
+		"it"		"Impostare Duckhunt come CapoCT e' {purple}disattivato!"
 	}
 
 	"hide_setbyadmin"
 	{
-		"it"		"Settare Nascondino da Admin e' {purple}disabilitato!"
+		"it"		"Impostare  Duckhunt come Admin e' {purple}disattivato!"
 	}
 
 	"hide_timetohide_nc"
 	{
-		"it"		"{1} secondi rimanenti per nascondersi!"
+		"it"		"{1} secondi rimasti per nascondersi!"
 	}
 
 	"hide_timetounfreeze_nc"
 	{
-		"it"		"{1} secondi rimanenti per l'inizio del nascondino!"
+		"it"		"{1} secondi rimasti prima dello scongelamento!"
 	}
 
 	"hide_stillta"
 	{
-		"it"		"Hai {green}{1}{default} Granate rimanenti."
+		"it"		"Hai {green}{1}{default} TAGrenade(s) rimaste."
 	}
 
 	"hide_nota"
 	{
-		"it"		"Tu Non hai piu' granate"
+		"it"		"Hai {green}finito{default} le TAGrenades!"
 	}
 
 	"hide_info_title"
 	{
-		"it"		"Nascondino Attivo!"
+		"it"		"Hide In The Dark e' inizato!"
 	}
 
 	"hide_info_line1"
 	{
-		"it"		"I T Hanno tempo per nascondersi!"
+		"it"		"Gli Hider devono nascondersi all'inizio round!"
 	}
 
 	"hide_info_line2"
 	{
-		"it"		"i T saranno congelati Quando i CT verranno a cercarvi!"
+		"it"		"Gli Hiders verranno congelati e i Hunter scongelati!"
 	}
 
 	"hide_info_line3"
 	{
-		"it"		"Hai CT Verranno date delle granate"
+		"it"		"AI Seeker gli e' stata data una TAGrenades!"
 	}
 
 	"hide_info_line4"
 	{
-		"it"		"Le Regole del JB Non sono applicabili in questo round!"
+		"it"		"Tutte le normali regole del JB non vengono applicate durante questo round!"
 	}
 
 	"hide_info_line5"
 	{
-		"it"		"LR disabilitato in questo round!"
+		"it"		"Gli LR sono disattivati durante questo round!"
 	}
 
 	"hide_info_line6"
 	{
-		"it"		"Tutti Possono Andare dove vogliono"
+		"it"		"A tutti e' permesso andare ovunque in questo round!"
 	}
 
 	"hide_info_line7"
 	{
-		"it"		"Buona Fortuna!"
+		"it"		"Non fate i cani!"
 	}
 
 	"hide_wait"
 	{
-		"it"		"Devi aspettare {purple}{1}{default} round per fare un evento!"
+		"it"		"Devi aspettare {purple}{1}{default} prima di dare un altro evento!"
 	}
 
 	"hide_name"
 	{
-		"it"		"Nascondino"
+		"it"		"Hide in the Dark"
 	}
 
 }

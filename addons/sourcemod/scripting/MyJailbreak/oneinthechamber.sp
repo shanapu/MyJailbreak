@@ -129,7 +129,7 @@ public Plugin myinfo =  {
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	g_bIsLateLoad = late;
-	
+
 	return APLRes_Success;
 }
 
@@ -139,15 +139,15 @@ public void OnPluginStart()
 	// Translation
 	LoadTranslations("MyJailbreak.Warden.phrases");
 	LoadTranslations("MyJailbreak.OneInTheChamber.phrases");
-	
+
 	// Client Commands
 	RegConsoleCmd("sm_setoneinthechamber", Command_SetOITC, "Allows the Admin or Warden to set OneInTheChamber as next round");
 	RegConsoleCmd("sm_oneinthechamber", Command_VoteOITC, "Allows players to vote for a OneInTheChamber");
-	
+
 	// AutoExecConfig
 	AutoExecConfig_SetFile("OneInTheChamber", "MyJailbreak/EventDays");
 	AutoExecConfig_SetCreateFile(true);
-	
+
 	AutoExecConfig_CreateConVar("sm_oneinthechamber_version", MYJB_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY | FCVAR_REPLICATED | FCVAR_NOTIFY | FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_oneinthechamber_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true, 0.0, true, 1.0);
 	gc_sCustomCommandVote = AutoExecConfig_CreateConVar("sm_oneinthechamber_cmds_vote", "oitc", "Set your custom chat command for Event voting(!oneinthechamber (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
@@ -158,13 +158,13 @@ public void OnPluginStart()
 	gc_bVote = AutoExecConfig_CreateConVar("sm_oneinthechamber_vote", "1", "0 - disabled, 1 - allow player to vote for one in the chamber", _, true, 0.0, true, 1.0);
 	gc_bSpawnCell = AutoExecConfig_CreateConVar("sm_oneinthechamber_spawn", "0", "0 - T teleport to CT spawn, 1 - cell doors auto open", _, true, 0.0, true, 1.0);
 	gc_bKnifeOneHit = AutoExecConfig_CreateConVar("sm_oneinthechamber_knife_onehit", "1", "0 - Knife does normal damage, 1 - Knife one-hit", _, true, 0.0, true, 1.0);
-	
+
 	gc_bBeginSetA = AutoExecConfig_CreateConVar("sm_oneinthechamber_begin_admin", "1", "When admin set event (!setoitc) = 0 - start event next round, 1 - start event current round", _, true, 0.0, true, 1.0);
 	gc_bBeginSetW = AutoExecConfig_CreateConVar("sm_oneinthechamber_begin_warden", "1", "When warden set event (!setoitc) = 0 - start event next round, 1 - start event current round", _, true, 0.0, true, 1.0);
 	gc_bBeginSetV = AutoExecConfig_CreateConVar("sm_oneinthechamber_begin_vote", "0", "When users vote for event (!oitc) = 0 - start event next round, 1 - start event current round", _, true, 0.0, true, 1.0);
 	gc_bBeginSetVW = AutoExecConfig_CreateConVar("sm_oneinthechamber_begin_daysvote", "0", "When warden/admin start eventday voting (!sm_voteday) and event wins = 0 - start event next round, 1 - start event current round", _, true, 0.0, true, 1.0);
 	gc_bTeleportSpawn = AutoExecConfig_CreateConVar("sm_oneinthechamber_teleport_spawn", "0", "0 - start event in current round from current player positions, 1 - teleport players to spawn when start event on current round(only when sm_*_begin_admin, sm_*_begin_warden, sm_*_begin_vote or sm_*_begin_daysvote is on '1')", _, true, 0.0, true, 1.0);
-	
+
 	gc_iRounds = AutoExecConfig_CreateConVar("sm_oneinthechamber_rounds", "3", "Rounds to play in a row", _, true, 1.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_oneinthechamber_roundtime", "5", "Round time in minutes for a single one in the chamber round", _, true, 1.0);
 	gc_fBeaconTime = AutoExecConfig_CreateConVar("sm_oneinthechamber_beacon_time", "240", "Time in seconds until the beacon turned on (set to 0 to disable)", _, true, 0.0);
@@ -177,10 +177,10 @@ public void OnPluginStart()
 	gc_bOverlays = AutoExecConfig_CreateConVar("sm_oneinthechamber_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true, 0.0, true, 1.0);
 	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_oneinthechamber_overlays_start", "overlays/MyJailbreak/start", "Path to the start Overlay DONT TYPE .vmt or .vft");
 	gc_bAllowLR = AutoExecConfig_CreateConVar("sm_oneinthechamber_allow_lr", "0", "0 - disabled, 1 - enable LR for last round and end eventday", _, true, 0.0, true, 1.0);
-	
+
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
-	
+
 	// Hooks
 	HookEvent("round_start", Event_RoundStart);
 	HookEvent("player_death", Event_PlayerDeath);
@@ -188,21 +188,20 @@ public void OnPluginStart()
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
 	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
-	
+
 	// Find
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iTruceTime = gc_iTruceTime.IntValue;
-	//	g_iMPRoundTime = FindConVar("mp_roundtime");
 	gc_sOverlayStartPath.GetString(g_sOverlayStartPath, sizeof(g_sOverlayStartPath));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
-	
+
 	// Offsets
 	g_iCollision_Offset = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
-	
+
 	// Logs
 	SetLogFile(g_sEventsLogFile, "Events", "MyJailbreak");
-	
+
 	// Late loading
 	if (g_bIsLateLoad)
 	{
@@ -210,7 +209,7 @@ public void OnPluginStart()
 		{
 			OnClientPutInServer(i);
 		}
-		
+
 		g_bIsLateLoad = false;
 	}
 }
@@ -253,16 +252,16 @@ public void OnLibraryRemoved(const char[] name)
 {
 	if (StrEqual(name, "warden"))
 		gp_bWarden = false;
-	
+
 	if (StrEqual(name, "lastrequest"))
 		gp_bHosties = false;
-	
+
 	if (StrEqual(name, "smartjaildoors"))
 		gp_bSmartJailDoors = false;
-	
+
 	if (StrEqual(name, "myjailbreak"))
 		gp_bMyJailbreak = false;
-	
+
 	if (StrEqual(name, "myweapons"))
 		gp_bMyWeapons = false;
 }
@@ -271,16 +270,16 @@ public void OnLibraryAdded(const char[] name)
 {
 	if (StrEqual(name, "warden"))
 		gp_bWarden = true;
-	
+
 	if (StrEqual(name, "lastrequest"))
 		gp_bHosties = true;
-	
+
 	if (StrEqual(name, "smartjaildoors"))
 		gp_bSmartJailDoors = true;
-	
+
 	if (StrEqual(name, "myjailbreak"))
 		gp_bMyJailbreak = true;
-	
+
 	if (StrEqual(name, "myweapons"))
 		gp_bMyWeapons = true;
 }
@@ -291,22 +290,22 @@ public void OnConfigsExecuted()
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iMaxRound = gc_iRounds.IntValue;
-	
+
 	// FindConVar
 	if (gp_bHosties)
 	{
 		g_iTerrorForLR = FindConVar("sm_hosties_lr_ts_max");
 	}
-	
+
 	// Set custom Commands
 	int iCount = 0;
 	char sCommands[128], sCommandsL[12][32], sCommand[32];
-	
+
 	// Vote
 	gc_sCustomCommandVote.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
 	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
-	
+
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
@@ -315,12 +314,12 @@ public void OnConfigsExecuted()
 			RegConsoleCmd(sCommand, Command_VoteOITC, "Allows players to vote for a OnInTheChamber");
 		}
 	}
-	
+
 	// Set
 	gc_sCustomCommandSet.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
 	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
-	
+
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
@@ -352,16 +351,16 @@ public Action Command_SetOITC(int client, int args)
 		CReplyToCommand(client, "%t %t", "oneinthechamber_tag", "oneinthechamber_disabled");
 		return Plugin_Handled;
 	}
-	
+
 	if (client == 0) // Called by a server/voting
 	{
 		StartEventRound(gc_bBeginSetVW.BoolValue);
-		
+
 		if (!gp_bMyJailbreak)
 		{
 			return Plugin_Handled;
 		}
-		
+
 		if (MyJailbreak_ActiveLogging())
 		{
 			LogToFileEx(g_sEventsLogFile, "Event OneInTheChamber was started by groupvoting");
@@ -374,38 +373,38 @@ public Action Command_SetOITC(int client, int args)
 			CReplyToCommand(client, "%t %t", "oneinthechamber_tag", "oneinthechamber_setbyadmin");
 			return Plugin_Handled;
 		}
-		
+
 		if (GetTeamClientCount(CS_TEAM_CT) == 0 || GetTeamClientCount(CS_TEAM_T) == 0)
 		{
 			CReplyToCommand(client, "%t %t", "oneinthechamber_tag", "oneinthechamber_minplayer");
 			return Plugin_Handled;
 		}
-		
+
 		if (gp_bMyJailbreak)
 		{
 			char EventDay[64];
 			MyJailbreak_GetEventDayName(EventDay);
-			
+
 			if (!StrEqual(EventDay, "none", false))
 			{
 				CReplyToCommand(client, "%t %t", "oneinthechamber_tag", "oneinthechamber_progress", EventDay);
 				return Plugin_Handled;
 			}
 		}
-		
+
 		if (g_iCoolDown > 0 && !gc_bSetABypassCooldown.BoolValue)
 		{
 			CReplyToCommand(client, "%t %t", "oneinthechamber_tag", "oneinthechamber_wait", g_iCoolDown);
 			return Plugin_Handled;
 		}
-		
+
 		StartEventRound(gc_bBeginSetA.BoolValue);
-		
+
 		if (!gp_bMyJailbreak)
 		{
 			return Plugin_Handled;
 		}
-		
+
 		if (MyJailbreak_ActiveLogging())
 		{
 			LogToFileEx(g_sEventsLogFile, "Event OnInTheChamber was started by admin %L", client);
@@ -418,44 +417,44 @@ public Action Command_SetOITC(int client, int args)
 			CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
 			return Plugin_Handled;
 		}
-		
+
 		if (!gc_bSetW.BoolValue)
 		{
 			CReplyToCommand(client, "%t %t", "warden_tag", "oneinthechamber_setbywarden");
 			return Plugin_Handled;
 		}
-		
+
 		if (GetTeamClientCount(CS_TEAM_CT) == 0 || GetTeamClientCount(CS_TEAM_T) == 0)
 		{
 			CReplyToCommand(client, "%t %t", "oneinthechamber_tag", "oneinthechamber_minplayer");
 			return Plugin_Handled;
 		}
-		
+
 		if (gp_bMyJailbreak)
 		{
 			char EventDay[64];
 			MyJailbreak_GetEventDayName(EventDay);
-			
+
 			if (!StrEqual(EventDay, "none", false))
 			{
 				CReplyToCommand(client, "%t %t", "oneinthechamber_tag", "oneinthechamber_progress", EventDay);
 				return Plugin_Handled;
 			}
 		}
-		
+
 		if (g_iCoolDown > 0)
 		{
 			CReplyToCommand(client, "%t %t", "oneinthechamber_tag", "oneinthechamber_wait", g_iCoolDown);
 			return Plugin_Handled;
 		}
-		
+
 		StartEventRound(gc_bBeginSetW.BoolValue);
-		
+
 		if (!gp_bMyJailbreak)
 		{
 			return Plugin_Handled;
 		}
-		
+
 		if (MyJailbreak_ActiveLogging())
 		{
 			LogToFileEx(g_sEventsLogFile, "Event OneInTheChamber was started by warden %L", client);
@@ -465,7 +464,7 @@ public Action Command_SetOITC(int client, int args)
 	{
 		CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
 	}
-	
+
 	return Plugin_Handled;
 }
 
@@ -477,61 +476,61 @@ public Action Command_VoteOITC(int client, int args)
 		CReplyToCommand(client, "%t %t", "oneinthechamber_tag", "oneinthechamber_disabled");
 		return Plugin_Handled;
 	}
-	
+
 	if (!gc_bVote.BoolValue)
 	{
 		CReplyToCommand(client, "%t %t", "oneinthechamber_tag", "oneinthechamber_voting");
 		return Plugin_Handled;
 	}
-	
+
 	if (GetTeamClientCount(CS_TEAM_CT) == 0 || GetTeamClientCount(CS_TEAM_T) == 0)
 	{
 		CReplyToCommand(client, "%t %t", "oneinthechamber_tag", "oneinthechamber_minplayer");
 		return Plugin_Handled;
 	}
-	
+
 	if (gp_bMyJailbreak)
 	{
 		char EventDay[64];
 		MyJailbreak_GetEventDayName(EventDay);
-		
+
 		if (!StrEqual(EventDay, "none", false))
 		{
 			CReplyToCommand(client, "%t %t", "oneinthechamber_tag", "oneinthechamber_progress", EventDay);
 			return Plugin_Handled;
 		}
 	}
-	
+
 	if (g_iCoolDown > 0)
 	{
 		CReplyToCommand(client, "%t %t", "oneinthechamber_tag", "oneinthechamber_wait", g_iCoolDown);
 		return Plugin_Handled;
 	}
-	
+
 	char steamid[24];
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
-	
+
 	if (StrContains(g_sHasVoted, steamid, true) != -1)
 	{
 		CReplyToCommand(client, "%t %t", "oneinthechamber_tag", "oneinthechamber_voted");
 		return Plugin_Handled;
 	}
-	
+
 	int playercount = (GetClientCount(true) / 2);
 	g_iVoteCount += 1;
-	
+
 	int Missing = playercount - g_iVoteCount + 1;
 	Format(g_sHasVoted, sizeof(g_sHasVoted), "%s, %s", g_sHasVoted, steamid);
-	
+
 	if (g_iVoteCount > playercount)
 	{
 		StartEventRound(gc_bBeginSetV.BoolValue);
-		
+
 		if (!gp_bMyJailbreak)
 		{
 			return Plugin_Handled;
 		}
-		
+
 		if (MyJailbreak_ActiveLogging())
 		{
 			LogToFileEx(g_sEventsLogFile, "Event OneInTheChamber was started by voting");
@@ -541,7 +540,7 @@ public Action Command_VoteOITC(int client, int args)
 	{
 		CPrintToChatAll("%t %t", "oneinthechamber_tag", "oneinthechamber_need", Missing, client);
 	}
-	
+
 	return Plugin_Handled;
 }
 
@@ -560,7 +559,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		{
 			char EventDay[64];
 			MyJailbreak_GetEventDayName(EventDay);
-			
+
 			if (!StrEqual(EventDay, "none", false))
 			{
 				g_iCoolDown = gc_iCooldownDay.IntValue + 1;
@@ -574,13 +573,13 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		{
 			g_iCoolDown -= 1;
 		}
-		
+
 		return;
 	}
-	
+
 	g_bIsOITC = true;
 	g_bStartOITC = false;
-	
+
 	PrepareDay(false);
 }
 
@@ -595,67 +594,66 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 		{
 			SetEntData(i, g_iCollision_Offset, 0, 4, true);
 		}
-		
+
 		delete g_hTimerTruce;
 		delete g_hTimerBeacon;
-		
+
 		int winner = event.GetInt("winner");
 		if (winner == 2)
 		{
 			PrintCenterTextAll("%t", "oneinthechamber_twin_nc");
 		}
+
 		if (winner == 3)
 		{
 			PrintCenterTextAll("%t", "oneinthechamber_ctwin_nc");
 		}
-		
+
 		if (g_iRound == g_iMaxRound)
 		{
 			g_bIsOITC = false;
 			g_bStartOITC = false;
 			g_iRound = 0;
 			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
-			
+
 			if (gp_bHosties)
 			{
 				SetCvar("sm_hosties_lr", 1);
 			}
-			
+
 			if (gp_bWarden)
 			{
 				SetCvar("sm_warden_enable", 1);
 			}
-			
+
 			if (gp_bMyWeapons)
 			{
 				MyWeapons_AllowTeam(CS_TEAM_T, false);
 				MyWeapons_AllowTeam(CS_TEAM_CT, true);
 			}
-			
+
 			SetCvar("sv_infinite_ammo", 0);
 			SetCvar("mp_teammates_are_enemies", 0);
-			
+
 			if (gp_bMyJailbreak)
 			{
 				SetCvar("sm_menu_enable", 1);
-				
+
 				MyJailbreak_SetEventDayRunning(false, winner);
 				MyJailbreak_SetEventDayName("none");
 			}
-			
-			//			g_iMPRoundTime.IntValue = g_iOldRoundTime;
-			
+
 			CPrintToChatAll("%t %t", "oneinthechamber_tag", "oneinthechamber_end");
 		}
 	}
-	
+
 	if (g_bStartOITC)
 	{
 		for (int i = 1; i <= MaxClients; i++)if (IsClientInGame(i))
 		{
 			CreateInfoPanel(i);
 		}
-		
+
 		CPrintToChatAll("%t %t", "oneinthechamber_tag", "oneinthechamber_next");
 		PrintCenterTextAll("%t", "oneinthechamber_next_nc");
 	}
@@ -682,15 +680,15 @@ public void OnMapStart()
 	g_iRound = 0;
 	g_bIsOITC = false;
 	g_bStartOITC = false;
-	
+
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iTruceTime = gc_iTruceTime.IntValue;
-	
+
 	if (gc_bOverlays.BoolValue)
 	{
 		PrecacheDecalAnyDownload(g_sOverlayStartPath);
 	}
-	
+
 	if (gc_bSounds.BoolValue)
 	{
 		PrecacheSoundAnyDownload(g_sSoundStartPath);
@@ -705,51 +703,48 @@ public void OnAvailableLR(int Announced)
 		for (int i = 1; i <= MaxClients; i++)if (IsClientInGame(i))
 		{
 			SetEntData(i, g_iCollision_Offset, 0, 4, true);
-			
+
 			StripAllPlayerWeapons(i);
 			if (GetClientTeam(i) == CS_TEAM_CT)
 			{
 				FakeClientCommand(i, "sm_weapons");
 			}
 			GivePlayerItem(i, "weapon_knife");
-			
 		}
-		
+
 		delete g_hTimerBeacon;
 		delete g_hTimerTruce;
-		
+
 		if (g_iRound == g_iMaxRound)
 		{
 			g_bIsOITC = false;
 			g_bStartOITC = false;
 			g_iRound = 0;
 			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
-			
+
 			SetCvar("sm_hosties_lr", 1);
 			SetCvar("sv_infinite_ammo", 0);
 			SetCvar("mp_teammates_are_enemies", 0);
-			
+
 			if (gp_bWarden)
 			{
 				SetCvar("sm_warden_enable", 1);
 			}
-			
+
 			if (gp_bMyWeapons)
 			{
 				MyWeapons_AllowTeam(CS_TEAM_T, false);
 				MyWeapons_AllowTeam(CS_TEAM_CT, true);
 			}
-			
+
 			if (gp_bMyJailbreak)
 			{
 				SetCvar("sm_menu_enable", 1);
-				
+
 				MyJailbreak_SetEventDayName("none");
 				MyJailbreak_SetEventDayRunning(false, 0);
 			}
-			
-			//			g_iMPRoundTime.IntValue = g_iOldRoundTime;
-			
+
 			CPrintToChatAll("%t %t", "oneinthechamber_tag", "oneinthechamber_end");
 		}
 	}
@@ -760,10 +755,10 @@ public void OnMapEnd()
 {
 	g_bIsOITC = false;
 	g_bStartOITC = false;
-	
+
 	delete g_hTimerTruce;
 	delete g_hTimerBeacon;
-	
+
 	g_iVoteCount = 0;
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0';
@@ -783,7 +778,6 @@ public Action OnWeaponCanUse(int client, int weapon)
 	if (!g_bIsOITC)
 		return Plugin_Continue;
 
-	
 	char sWeapon[32];
 	GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
 	
@@ -813,7 +807,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	{
 		char sWeapon[32];
 		GetEntityClassname(weapon, sWeapon, sizeof(sWeapon));
-		
+
 		if (!StrEqual(sWeapon, "weapon_knife"))
 		{
 			damage = 1000.0;   // if is not knife -> is deagle  -  don't work?!
@@ -860,16 +854,16 @@ void StartEventRound(bool thisround)
 	if (thisround)
 	{
 		g_bIsOITC = true;
-		
+
 		for (int i = 1; i <= MaxClients; i++)if (IsValidClient(i, true, false))
 		{
 			SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
-			
+
 			SetEntityMoveType(i, MOVETYPE_NONE);
 		}
-		
+
 		CreateTimer(3.0, Timer_PrepareEvent);
-		
+
 		CPrintToChatAll("%t %t", "oneinthechamber_tag", "oneinthechamber_now");
 		PrintCenterTextAll("%t", "oneinthechamber_now_nc");
 	}
@@ -877,7 +871,7 @@ void StartEventRound(bool thisround)
 	{
 		g_bStartOITC = true;
 		g_iCoolDown++;
-		
+
 		CPrintToChatAll("%t %t", "oneinthechamber_tag", "oneinthechamber_next");
 		PrintCenterTextAll("%t", "oneinthechamber_next_nc");
 	}
@@ -891,12 +885,12 @@ public Action Timer_PrepareEvent(Handle timer)
 void PrepareDay(bool thisround)
 {
 	g_iRound++;
-	
+
 	if (gp_bSmartJailDoors)
 	{
 		SJD_OpenDoors();
 	}
-	
+
 	if ((thisround && gc_bTeleportSpawn.BoolValue) || !gc_bSpawnCell.BoolValue || !gp_bSmartJailDoors || (gc_bSpawnCell.BoolValue && (SJD_IsCurrentMapConfigured() != true))) // spawn Terrors to CT Spawn 
 	{
 		int RandomCT = 0;
@@ -909,32 +903,30 @@ void PrepareDay(bool thisround)
 				break;
 			}
 		}
-		
+
 		if (RandomCT)
 		{
 			for (int i = 1; i <= MaxClients; i++)if (IsValidClient(i, true, false))
 			{
 				GetClientAbsOrigin(RandomCT, g_fPos);
-				
+
 				g_fPos[2] = g_fPos[2] + 5;
-				
+
 				TeleportEntity(i, g_fPos, NULL_VECTOR, NULL_VECTOR);
 			}
 		}
 	}
-	
+
 	for (int i = 1; i <= MaxClients; i++)if (IsClientInGame(i))
 	{
 		SetEntData(i, g_iCollision_Offset, 2, 4, true);
-		
 		SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
-		
 		SetEntityMoveType(i, MOVETYPE_NONE);
-		
+
 		CreateInfoPanel(i);
-		
+
 		StripAllPlayerWeapons(i);
-		
+
 		GivePlayerItem(i, "weapon_knife");
 
 		int iDeagle = GivePlayerItem(i, "weapon_deagle");
@@ -943,38 +935,38 @@ void PrepareDay(bool thisround)
 		SetEntProp(iDeagle, Prop_Send, "m_iSecondaryReserveAmmoCount", 0);
 		CreateTimer(0.3, Timer_GiveAmmo, GetClientUserId(i));
 	}
-	
+
 	if (gp_bMyJailbreak)
 	{
 		SetCvar("sm_menu_enable", 0);
-		
+
 		MyJailbreak_SetEventDayPlanned(false);
 		MyJailbreak_SetEventDayRunning(true, 0);
-		
+
 		if (gc_fBeaconTime.FloatValue > 0.0)
 		{
 			g_hTimerBeacon = CreateTimer(gc_fBeaconTime.FloatValue, Timer_BeaconOn, TIMER_FLAG_NO_MAPCHANGE);
 		}
 	}
-	
+
 	if (gp_bWarden)
 	{
 		SetCvar("sm_warden_enable", 0);
 	}
-	
+
 	if (gp_bHosties)
 	{
 		SetCvar("sm_hosties_lr", 0);
 	}
-	
+
 	SetCvar("mp_teammates_are_enemies", 1);
-	
+
 	if (gp_bMyWeapons)
 	{
 		MyWeapons_AllowTeam(CS_TEAM_T, false);
 		MyWeapons_AllowTeam(CS_TEAM_CT, false);
 	}
-	
+
 	if (gp_bHosties)
 	{
 		// enable lr on last round
@@ -988,11 +980,11 @@ void PrepareDay(bool thisround)
 			}
 		}
 	}
-	
+
 	GameRules_SetProp("m_iRoundTime", gc_iRoundTime.IntValue * 60, 4, 0, true);
-	
+
 	g_hTimerTruce = CreateTimer(1.0, Timer_StartEvent, _, TIMER_REPEAT);
-	
+
 	CPrintToChatAll("%t %t", "oneinthechamber_tag", "oneinthechamber_rounds", g_iRound, g_iMaxRound);
 }
 
@@ -1005,12 +997,12 @@ void CreateInfoPanel(int client)
 {
 	// Create info Panel
 	char info[255];
-	
+
 	Panel InfoPanel = new Panel();
-	
+
 	Format(info, sizeof(info), "%T", "oneinthechamber_info_title", client);
 	InfoPanel.SetTitle(info);
-	
+
 	InfoPanel.DrawText("                                   ");
 	Format(info, sizeof(info), "%T", "oneinthechamber_info_line1", client);
 	InfoPanel.DrawText(info);
@@ -1029,7 +1021,7 @@ void CreateInfoPanel(int client)
 	InfoPanel.DrawText(info);
 	InfoPanel.DrawText("-----------------------------------");
 	Format(info, sizeof(info), "%T", "warden_close", client);
-	
+
 	InfoPanel.DrawItem(info);
 	InfoPanel.Send(client, Handler_NullCancel, 20);
 }
@@ -1044,7 +1036,7 @@ public Action Timer_StartEvent(Handle timer)
 	if (g_iTruceTime > 0)
 	{
 		g_iTruceTime--;
-		
+
 		if (g_iTruceTime == gc_iTruceTime.IntValue - 3)
 		{
 			for (int i = 1; i <= MaxClients; i++)if (IsValidClient(i, true, false))
@@ -1052,14 +1044,14 @@ public Action Timer_StartEvent(Handle timer)
 				SetEntityMoveType(i, MOVETYPE_WALK);
 			}
 		}
-		
+
 		PrintCenterTextAll("%t", "oneinthechamber_timeuntilstart_nc", g_iTruceTime);
-		
+
 		return Plugin_Continue;
 	}
-	
+
 	g_iTruceTime = gc_iTruceTime.IntValue;
-	
+
 	for (int i = 1; i <= MaxClients; i++)if (IsValidClient(i, true, false))
 	{
 		SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
@@ -1069,18 +1061,18 @@ public Action Timer_StartEvent(Handle timer)
 			ShowOverlay(i, g_sOverlayStartPath, 2.0);
 		}
 	}
-	
+
 	if (gc_bSounds.BoolValue)
 	{
 		EmitSoundToAllAny(g_sSoundStartPath);
 	}
-	
+
 	PrintCenterTextAll("%t", "oneinthechamber_start_nc");
-	
+
 	CPrintToChatAll("%t %t", "oneinthechamber_tag", "oneinthechamber_start");
-	
+
 	g_hTimerTruce = null;
-	
+
 	return Plugin_Stop;
 }
 
@@ -1091,7 +1083,7 @@ public Action Timer_BeaconOn(Handle timer)
 	{
 		MyJailbreak_BeaconOn(i, 2.0);
 	}
-	
+
 	g_hTimerBeacon = null;
 }
 
@@ -1105,7 +1097,7 @@ public Action Timer_GiveAmmo(Handle timer, int userid)
 		int weapon = GetPlayerWeaponSlot(client, CS_SLOT_SECONDARY);
 		if (!IsValidEntity(weapon))
 			return Plugin_Handled;
-		
+
 		SetEntProp(weapon, Prop_Data, "m_iClip1", GetEntProp(weapon, Prop_Data, "m_iClip1")+1);
 		SetEntProp(weapon, Prop_Send, "m_iPrimaryReserveAmmoCount", 0);
 		SetEntProp(weapon, Prop_Send, "m_iSecondaryReserveAmmoCount", 0);

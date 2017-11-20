@@ -1,9 +1,9 @@
 // Exported from SourceMod Translator
-// Date: 2017-05-17 21:17:10 UTC
-// Language: English (en)
+// Date: 2017-11-20 02:35:06 UTC
+// Language: Spanish (es)
 // 
 // To view other translations for this plugin, please visit:
-// http://translator.mitchdempsey.com/sourcemod_plugins/200
+// http://translator.mitchdempsey.com/sourcemod_plugins/281
 //
 "Phrases"
 {
@@ -15,13 +15,11 @@
 
 	"dealdamage_need"
 	{
-		"#format"	"{1:i},{2:N}"
 		"es"		"{purple}{2}{default} ha votado. {purple}{1}{default} voto(s) requerido para jugar {darkred}DealDamage."
 	}
 
 	"dealdamage_rounds"
 	{
-		"#format"	"{1:i},{2:i}"
 		"es"		"Ronda {purple}{1}{default} de {purple}{2}."
 	}
 
@@ -72,7 +70,6 @@
 
 	"dealdamage_progress"
 	{
-		"#format"	"{1:s}"
 		"es"		"El evento {darkred}{1} {default}ya {purple}está en progreso!"
 	}
 
@@ -83,7 +80,6 @@
 
 	"dealdamage_timeuntilstart_nc"
 	{
-		"#format"	"{1:i}"
 		"es"		"{1} segundos hasta que la ronda comience!"
 	}
 
@@ -129,7 +125,6 @@
 
 	"dealdamage_wait"
 	{
-		"#format"	"{1:i}"
 		"es"		"Debes esperar {purple}{1}{default} rondas mas para otro {purple} Evento!"
 	}
 
@@ -140,19 +135,16 @@
 
 	"dealdamage_total"
 	{
-		"#format"	"{1:i}"
 		"es"		"Daño total: {1} HP"
 	}
 
 	"dealdamage_most"
 	{
-		"#format"	"{1:N},{2:i}"
 		"es"		"Mayor daño hecho: {1} Damage: {2} HP"
 	}
 
 	"dealdamage_client"
 	{
-		"#format"	"{1:i}"
 		"es"		"Tu daño: {1} HP"
 	}
 

@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-04-20 21:44:34 UTC
+// Date: 2017-11-20 02:35:12 UTC
 // Language: Italian (it)
 // 
 // To view other translations for this plugin, please visit:
@@ -10,7 +10,7 @@
 
 	"freeday_tag"
 	{
-		"it"		"[{green}MyJB.Freeday{default}]"
+		"it"		"[{green}JB.Freeday{default}]"
 	}
 
 	"freeday_end"
@@ -20,67 +20,67 @@
 
 	"freeday_need"
 	{
-		"it"		"{purple}{2}{default} ha votato. {purple}{1}{default} voti richiesti per il {darkred}Freeday."
+		"it"		"{purple}{2}{default} ha votato. {purple}{1}{default} voti(o) richiest per fare {darkred}Freeday."
 	}
 
 	"freeday_next"
 	{
-		"it"		"Il prossimo round sara': {purple}Freeday."
+		"it"		"Il prossimo round ci sara' un : {purple}Freeday."
 	}
 
 	"freeday_next_nc"
 	{
-		"it"		"Il Prossimo round sara': Freeday."
+		"it"		"Il prossimo round ci sara' un : Freeday."
 	}
 
 	"freeday_voting"
 	{
-		"it"		"Votazione {purple}disabilitata!"
+		"it"		"Le votazione per fare FreeDay sono {purple}disattivate!"
 	}
 
 	"freeday_setbywarden"
 	{
-		"it"		"Settare il freeday da warden e' {purple}disabilitato!"
+		"it"		"Impostare FreeDay tramite CapoCT e' {purple}disattivato!"
 	}
 
 	"freeday_setbyadmin"
 	{
-		"it"		"Settato Freeday da Admin e' {purple}disabilitato!"
+		"it"		"Impostare FreeDay come Admi e' {purple}disattivato!"
 	}
 
 	"freeday_start_nc"
 	{
-		"it"		"Freeday e' iniziato!"
+		"it"		"Il Freeday e' inizato!"
 	}
 
 	"freeday_start"
 	{
-		"it"		"{purple}Freeday{default} e' iniziato!"
+		"it"		"{purple}Il Freeday{default} e' iniziato!"
 	}
 
 	"freeday_voted"
 	{
-		"it"		"Hai gia' votato per il {purple}Freeday!"
+		"it"		"Hai gia' votato per fare {purple}Freeday!"
 	}
 
 	"freeday_progress"
 	{
-		"it"		"L'evento {darkred}{1} {default}e' {purple}gia' in corso!"
+		"it"		"L'evento {darkred}{1} {default}e' {purple}in corso!"
 	}
 
 	"freeday_disabled"
 	{
-		"it"		"Il Freeday e' {purple}disabilitato!"
+		"it"		"Freeday e'{purple}disattivato!"
 	}
 
 	"freeday_info_title"
 	{
-		"it"		"E' Freeday!"
+		"it"		"E' freeday!"
 	}
 
 	"freeday_info_line1"
 	{
-		"it"		"E' FREEDAY!"
+		"it"		"E' freeaday!"
 	}
 
 	"freeday_info_line2"
@@ -95,27 +95,27 @@
 
 	"freeday_info_line4"
 	{
-		"it"		"Tutte le regole del JB sono disattivate in questo round"
+		"it"		"Tutte le regole del JB di base non vengono applicate durante questo round!"
 	}
 
 	"freeday_info_line5"
 	{
-		"it"		"LR e' disabilitato"
+		"it"		"-----------------------------------"
 	}
 
 	"freeday_info_line6"
 	{
-		"it"		"Tutti possono andare dove vogliono!"
+		"it"		"-----------------------------------"
 	}
 
 	"freeday_info_line7"
 	{
-		"it"		"Buona Fortuna!"
+		"it"		"Non fate i cani"
 	}
 
 	"freeday_wait"
 	{
-		"it"		"e' necessario attendere {1} round!"
+		"it"		"Devi aspettare {1} per dare un altro Event Day!"
 	}
 
 	"freeday_name"

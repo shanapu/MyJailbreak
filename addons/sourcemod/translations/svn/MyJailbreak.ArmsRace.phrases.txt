@@ -1,6 +1,6 @@
 // Exported from SourceMod Translator
-// Date: 2017-06-05 04:18:04 UTC
-// Language: English (en)
+// Date: 2017-11-20 02:35:20 UTC
+// Language: svn (svn)
 // 
 // To view other translations for this plugin, please visit:
 // http://translator.mitchdempsey.com/sourcemod_plugins/278
@@ -15,7 +15,6 @@
 
 	"armsrace_need"
 	{
-		"#format"	"{1:i},{2:N}"
 		"svn"		"{purple}{2}{default} je glasoval. Število glasov potrebnih za {darkred}Bitko orožij: {purple}{1}{default}"
 	}
 
@@ -41,7 +40,6 @@
 
 	"armsrace_winner"
 	{
-		"#format"	"{1:N}"
 		"svn"		"Oseba {purple}{1}{default} je zmagala bitko orožij!"
 	}
 
@@ -67,7 +65,6 @@
 
 	"armsrace_rounds"
 	{
-		"#format"	"{1:i},{2:i}"
 		"svn"		"Runda {purple}{1}{default} od {purple}{2}"
 	}
 
@@ -88,7 +85,6 @@
 
 	"armsrace_progress"
 	{
-		"#format"	"{1:s}"
 		"svn"		"Dogodek {darkred}{1} {default}se {purple}že izvaja!"
 	}
 
@@ -99,7 +95,6 @@
 
 	"armsrace_damage_nc"
 	{
-		"#format"	"{1:i}"
 		"svn"		"{1} sekund pred omogočenjem škode."
 	}
 
@@ -160,7 +155,6 @@
 
 	"armsrace_wait"
 	{
-		"#format"	"{1:i}"
 		"svn"		"Počakati moraš še {purple}{1}{default} rund za Dan Dogodkov!"
 	}
 
@@ -176,13 +170,11 @@
 
 	"armsrace_downgrade"
 	{
-		"#format"	"{1:N}"
 		"svn"		"Znižal si raven {purple}{1}{default} z nožem!"
 	}
 
 	"armsrace_levelup"
 	{
-		"#format"	"{1:s}"
 		"svn"		"{purple}Nadgradnja!{default} Sedaj imaš {1}!"
 	}
 

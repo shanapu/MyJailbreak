@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-04-20 21:44:25 UTC
+// Date: 2017-11-20 02:34:56 UTC
 // Language: Turkish (tr)
 // 
 // To view other translations for this plugin, please visit:
@@ -10,12 +10,22 @@
 
 	"warden_playerdead"
 	{
-		"tr"		"Sadece {purple}canlı oyuncular {default}komutçu olabilir!"
+		"tr"		"Sadece {purple} canlı oyuncular {default} komutçu olabilir!"
+	}
+
+	"warden_retire"
+	{
+		"tr"		"{purple}{1}{default} Komutçu Atıldı. Yeni bir Komutçu seçebilirsin!"
 	}
 
 	"warden_retire_nc"
 	{
 		"tr"		"{1} Komuttan çıktı. Yeni komutçu seçebilirsiniz."
+	}
+
+	"warden_noexist"
+	{
+		"tr"		"Şuan Herhangi bir {purple} Komutçu Bulunmamakta !"
 	}
 
 	"warden_dooropen"
@@ -31,6 +41,16 @@
 	"warden_ffisoff"
 	{
 		"tr"		"Dost ateşi {purple}kapatıldı!"
+	}
+
+	"warden_countdownstart_nc"
+	{
+		"tr"		"GİT! BAŞLADI!"
+	}
+
+	"warden_need"
+	{
+		"tr"		"{1} oy sonra {darkred}Komutçu Atılabilecek!"
 	}
 
 	"warden_israndom"
@@ -68,9 +88,19 @@
 		"tr"		"15 saniye"
 	}
 
+	"warden_sure"
+	{
+		"tr"		"Eminmisin?"
+	}
+
 	"warden_mute_title"
 	{
 		"tr"		"Susturma Menüsü"
+	}
+
+	"warden_cuffsoff"
+	{
+		"tr"		"{purple}{1}{default} adlı oyuncu {green}{2}'oyuncunun{default} kelepçesini kaldırdı"
 	}
 
 	"warden_doorclose_unavailable"

@@ -1,17 +1,76 @@
 // Exported from SourceMod Translator
+// Date: 2017-11-20 02:34:58 UTC
+// Language: svn (svn)
+// 
+// To view other translations for this plugin, please visit:
 // http://translator.mitchdempsey.com/sourcemod_plugins/179
 //
 "Phrases"
 {
+
+	"war_tag"
+	{
+		"svn"		"[{green}MyJB.Vojna{default}]"
+	}
+
+	"war_need"
+	{
+		"svn"		"{purple}{2}{default} je glasoval. {purple}{1}{default} potrebnih, da se začne {darkred}Vojna."
+	}
+
+	"war_rounds"
+	{
+		"svn"		"Runda {purple}{1}{default} od {purple}{2}"
+	}
+
+	"war_twin_nc"
+	{
+		"svn"		"Zaporniki so zmagali!"
+	}
+
 	"war_ctwin_nc"
 	{
 		"svn"		"Policaji so zmagali!"
 	}
 
-	"war_damage_nc"
+	"war_end"
 	{
-		"#format"   "{1:i}"
-		"svn"		"{1} sekund, preden bo omogočeno ubijanje!"
+		"svn"		"{purple}Vojna{default} se je končala."
+	}
+
+	"war_next"
+	{
+		"svn"		"Prihajajoča runda bo: {purple}Vojna."
+	}
+
+	"war_next_nc"
+	{
+		"svn"		"Prihajajoča runda bo: Vojna"
+	}
+
+	"war_start"
+	{
+		"svn"		"{purple}Vojna{default} se je začela!"
+	}
+
+	"war_start_nc"
+	{
+		"svn"		"Vojna se je začela!"
+	}
+
+	"war_voted"
+	{
+		"svn"		"Si že glasoval za {purple}Vojno!"
+	}
+
+	"war_progress"
+	{
+		"svn"		"Poseben dan {darkred}{1} {default}je {purple}že v teku!"
+	}
+
+	"war_minplayer"
+	{
+		"svn"		"Za vojno potrebuješ vsaj {purple}enega policaja in enega zapornika!"
 	}
 
 	"war_disabled"
@@ -19,9 +78,29 @@
 		"svn"		"Vojna je trenutno {purple}onemogočena!"
 	}
 
-	"war_end"
+	"war_damage_nc"
 	{
-		"svn"		"{purple}Vojna{default} se je končala."
+		"svn"		"{1} sekund, preden bo omogočeno ubijanje!"
+	}
+
+	"war_voting"
+	{
+		"svn"		"Glasovanje za Vojno je {purple}onemogočeno"
+	}
+
+	"war_setbywarden"
+	{
+		"svn"		"Nastavitev Vojne s strani Vodje {purple}onemogočena!"
+	}
+
+	"war_setbyadmin"
+	{
+		"svn"		"Nastavitev Vojne admina {purple}onemogočena!"
+	}
+
+	"war_info_title"
+	{
+		"svn"		"Vojna aktivirana!"
 	}
 
 	"war_info_line1"
@@ -59,105 +138,24 @@
 		"svn"		"Spoštuj igralce!"
 	}
 
-	"war_info_title"
+	"war_wait"
 	{
-		"svn"		"Vojna aktivirana!"
+		"svn"		"Počakati moraš {purple}{1}{default} rund, preden lahko nastaviš Vojno!"
 	}
 
-	"war_minplayer"
+	"war_timetounfreeze_nc"
 	{
-		"svn"		"Za vojno potrebuješ vsaj {purple}enega policaja in enega zapornika!"
+		"svn"		"{1} sekund, preden boš odmrznjen!"
+	}
+
+	"war_timetohide_nc"
+	{
+		"svn"		"{1} sekund da se skrijete!"
 	}
 
 	"war_name"
 	{
 		"svn"		"Vojna"
-	}
-
-	"war_need"
-	{
-		"#format"   "{1:i},{2:N}"
-		"svn"		"{purple}{2}{default} je glasoval. {purple}{1}{default} potrebnih, da se začne {darkred}Vojna."
-	}
-
-	"war_next"
-	{
-		"svn"		"Prihajajoča runda bo: {purple}Vojna."
-	}
-
-	"war_next_nc"
-	{
-		"svn"		"Prihajajoča runda bo: Vojna"
-	}
-
-	"war_progress"
-	{
-		"#format"   "{1:s}"
-		"svn"		"Poseben dan {darkred}{1} {default}je {purple}že v teku!"
-	}
-
-	"war_rounds"
-	{
-		"#format"   "{1:i},{2:i}"
-		"svn"		"Runda {purple}{1}{default} od {purple}{2}"
-	}
-
-	"war_setbyadmin"
-	{
-		"svn"		"Nastavitev Vojne admina {purple}onemogočena!"
-	}
-
-	"war_setbywarden"
-	{
-		"svn"		"Nastavitev Vojne s strani Vodje {purple}onemogočena!"
-	}
-
-	"war_start"
-	{
-		"svn"		"{purple}Vojna{default} se je začela!"
-	}
-
-	"war_start_nc"
-	{
-		"svn"		"Vojna se je začela!"
-	}
-
-	"war_tag"
-	{
-		"svn"		"[{green}MyJB.Vojna{default}]"
-	}
-
-	"war_timetohide_nc"
-	{
-		"#format"   "{1:i}"
-		"svn"		"{1} sekund da se skrijete!"
-	}
-
-	"war_timetounfreeze_nc"
-	{
-		"#format"   "{1:i}"
-		"svn"		"{1} sekund, preden boš odmrznjen!"
-	}
-
-	"war_twin_nc"
-	{
-		"svn"		"Zaporniki so zmagali!"
-	}
-
-	"war_voted"
-	{
-		"svn"		"Si že glasoval za {purple}Vojno!"
-	}
-
-	"war_voting"
-	{
-		"svn"		"Glasovanje za Vojno je {purple}onemogočeno"
-	}
-
-	"war_wait"
-	{
-		"#format"   "{1:i}"
-		"svn"		"Počakati moraš {purple}{1}{default} rund, preden lahko nastaviš Vojno!"
 	}
 
 }

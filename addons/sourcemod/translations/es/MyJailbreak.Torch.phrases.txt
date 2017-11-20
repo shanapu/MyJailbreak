@@ -1,6 +1,6 @@
 // Exported from SourceMod Translator
-// Date: 2017-05-17 21:17:13 UTC
-// Language: English (en)
+// Date: 2017-11-20 02:35:13 UTC
+// Language: Spanish (es)
 // 
 // To view other translations for this plugin, please visit:
 // http://translator.mitchdempsey.com/sourcemod_plugins/183
@@ -15,13 +15,11 @@
 
 	"torch_need"
 	{
-		"#format"	"{1:i},{2:N}"
 		"es"		"{purple}{2}{default} ha votado. {purple}{1}{default} votos requeridos para jugar {darkred}Torch Relay."
 	}
 
 	"torch_rounds"
 	{
-		"#format"	"{1:i},{2:i}"
 		"es"		"Ronda {purple}{1}{default} de {purple}{2}"
 	}
 
@@ -72,7 +70,6 @@
 
 	"torch_progress"
 	{
-		"#format"	"{1:s}"
 		"es"		"El evento {darkred}{1} {default}ya {purple}está en progreso!"
 	}
 
@@ -88,13 +85,11 @@
 
 	"torch_sprintend"
 	{
-		"#format"	"{1:i}"
 		"es"		"{blue}Estas muy cansado para correr!{default} Descansa durante {1} Segundos."
 	}
 
 	"torch_random"
 	{
-		"#format"	"{1:N}"
 		"es"		"{darkred}La antorcha aleatoria es... {1}"
 	}
 
@@ -148,27 +143,18 @@
 		"es"		"Debes seguir las reglas del servidor!"
 	}
 
-	"torch_wait"
-	{
-		"#format"	"{1:i}"
-		"es"		"Debes esperar {purple}{1}{default} rondas mas para otro {purple} Evento!
-	}
-
 	"torch_damage_nc"
 	{
-		"#format"	"{1:i}"
 		"es"		"Un jugador aleatorio ardera en llamas en {1} segundos!"
 	}
 
 	"torch_torchem"
 	{
-		"#format"	"{1:N}"
 		"es"		"{purple}{1}{default} es la antorcha!"
 	}
 
 	"torch_untorch"
 	{
-		"#format"	"{1:N}"
 		"es"		"{purple}{1}{default} no es mas una antorcha!"
 	}
 

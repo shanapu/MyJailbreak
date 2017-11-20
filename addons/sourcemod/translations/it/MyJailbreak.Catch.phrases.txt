@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-04-20 21:44:42 UTC
+// Date: 2017-11-20 02:35:18 UTC
 // Language: Italian (it)
 // 
 // To view other translations for this plugin, please visit:
@@ -10,177 +10,177 @@
 
 	"catch_tag"
 	{
-		"it"		"[{green}MyJB.Catch{default}]"
+		"it"		"[{green}MyJB.Caccia{default}]"
 	}
 
 	"catch_need"
 	{
-		"it"		"{purple}{2}{default} ha votato. {purple}{1}{default} voti richiesti per giocare a: {darkred}Catch!"
+		"it"		"{purple}{2}{default} ha votato. {purple}{1}{default} voti richiesit per fare: {darkred}Caccia!"
 	}
 
 	"catch_rounds"
 	{
-		"it"		"Round {purple}{1}{default} di {purple}{2}"
+		"it"		"round {purple}{1}{default} di {purple}{2}"
 	}
 
 	"catch_twin_nc"
 	{
-		"it"		"i Terroristi sono scappati!"
+		"it"		"I terroristi sono fuggiti!"
 	}
 
 	"catch_ctwin_nc"
 	{
-		"it"		"Tutti i terroristi sono stati presi!"
+		"it"		"Tutti i terristi sono stati catturati!"
 	}
 
 	"catch_end"
 	{
-		"it"		"{purple}Catch{default} e' finito."
+		"it"		"{purple}La caccia{default} e' finiti."
 	}
 
 	"catch_voting"
 	{
-		"it"		"La votazione e' {purple}disabilitata!"
+		"it"		"Le votazioni per la caccia sono{purple} disattivate!"
 	}
 
 	"catch_setbywarden"
 	{
-		"it"		"Settare Catch da warden e' {purple}disabilitata!"
+		"it"		"Impostare la caccia come CapoCT e' {purple}disattivato!"
 	}
 
 	"catch_setbyadmin"
 	{
-		"it"		"Settare Catch da Admin e' {purple}disabilitata!"
+		"it"		"Impostare la caccia come Admin e' {purple}disattivato!"
 	}
 
 	"catch_next"
 	{
-		"it"		"Il prossimo round sara': {purple}Catch."
+		"it"		"Il prossimo round sara': {purple}Caccia."
 	}
 
 	"catch_next_nc"
 	{
-		"it"		"Il prossimo round sara': Catch."
+		"it"		"Il prossimo round sara': Caccia."
 	}
 
 	"catch_start"
 	{
-		"it"		"{purple}Catch{default} e' iniziato!"
+		"it"		"{purple}La caccia{default} e' iniziata!"
 	}
 
 	"catch_start_nc"
 	{
-		"it"		"Catch e' iniziato!"
+		"it"		"La caccia e' iniziata!"
 	}
 
 	"catch_voted"
 	{
-		"it"		"Hai gia' votato per {purple}Catch!"
+		"it"		"Hai gia' votato per fare {purple}Caccia!"
 	}
 
 	"catch_progress"
 	{
-		"it"		"L'evento {darkred}{1} {default}e' {purple}gia' in corso!"
+		"it"		"L'evento {darkred}{1} {default}e' {purple}in progresso!"
 	}
 
 	"catch_minplayer"
 	{
-		"it"		"Per Catch, sono richiesti {purple}un CT, e un T"
+		"it"		"Per fare caccia ci devono essere almeno {purple}una Guardi, & un Prigioniero"
 	}
 
 	"catch_sprint"
 	{
-		"it"		"Stai ora {blue}Correndo!"
+		"it"		"Ora stai {blue}Sprintando!"
 	}
 
 	"catch_sprintend"
 	{
-		"it"		"{blue}Sei stanco per correre!{default} Riposati per {1} Secondi."
+		"it"		"{blue}Sei troppo stanco per usare lo sprint!{default} Ripostati per {1} Secondi."
 	}
 
 	"catch_sprintagain"
 	{
-		"it"		"Hai preso il fiato. Ora puoi {blue}correre {default}ancora!"
+		"it"		"Ti sei riposato! Puoi usare lo {blue}sprint {default}ancora!"
 	}
 
 	"catch_disabled"
 	{
-		"it"		"Catch e' ora {purple}disabilitato."
+		"it"		"La caccia e' {purple}disattivata."
 	}
 
 	"catch_info_title"
 	{
-		"it"		"Catch Attivato!"
+		"it"		"La caccia e' iniziata!"
 	}
 
 	"catch_info_line1"
 	{
-		"it"		"Le Guardie devono catturare e congelare i prigionieri con il coltello"
+		"it"		"Le guardie devono accoltellare i T per congelarli."
 	}
 
 	"catch_info_line2"
 	{
-		"it"		"I Prigionieri possono essere scongellati se attaccati dal proprio compagno!"
+		"it"		"I T possono liberare gli altri T accoltellandogli!"
 	}
 
 	"catch_info_line3"
 	{
-		"it"		"Premi E per {blue}correre!"
+		"it"		"Tieni premuto E to {blue}sprint!"
 	}
 
 	"catch_info_line4"
 	{
-		"it"		"Niente regole JB per questo round!"
+		"it"		"Le regole del JB non si applicano durante questo round!"
 	}
 
 	"catch_info_line5"
 	{
-		"it"		"LR disabilitato."
+		"it"		"Gli LR sono disattivati durante questo round."
 	}
 
 	"catch_info_line6"
 	{
-		"it"		"State nella JailRoom! Non entrare in condotti"
+		"it"		"Bisogna stare nella zone celle! E' vietato entrare condotti o andare in aree segrete"
 	}
 
 	"catch_info_line7"
 	{
-		"it"		"Buona Fortuna!"
+		"it"		"Le regole di base sono comunque applicate!"
 	}
 
 	"catch_wait"
 	{
-		"it"		"Devi aspettare {purple}{1}{default} round per un altro evento!"
+		"it"		"Devi aspettare {purple}{1}{default} round per fare un nuovo evento!"
 	}
 
 	"catch_unfreeze"
 	{
-		"it"		"Il T {purple}{1}{default} Ha Scongelato {blue}{2}!"
+		"it"		"{purple}{1}{default} ha liberato {blue}{2}!"
 	}
 
 	"catch_catch"
 	{
-		"it"		"La Guardia {purple}{1}{default} ha congelato {blue}{2}{default}!"
+		"it"		"{purple}{1}{default} ha catturato {blue}{2}{default}!"
 	}
 
 	"catch_win"
 	{
-		"it"		"Tutti i T sono stati {purple}presi!"
+		"it"		"Tutti i terroristi sono stati{purple} catturati!"
 	}
 
 	"catch_name"
 	{
-		"it"		"Acchiapparella"
+		"it"		"Caccia e ghiaccia"
 	}
 
 	"catch_timetounfreeze_nc"
 	{
-		"it"		"{1} secondi rimanenti fino a quando si sarà sfrezzati"
+		"it"		"{1} secondi rimasti per essere scongelati"
 	}
 
 	"catch_timeuntilstart_nc"
 	{
-		"it"		"{1} secondi rimanenti per nascondersi!"
+		"it"		"{1} secondi rimasti per nascondersi!"
 	}
 
 }

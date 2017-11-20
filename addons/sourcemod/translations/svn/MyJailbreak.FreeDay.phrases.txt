@@ -1,16 +1,81 @@
 // Exported from SourceMod Translator
+// Date: 2017-11-20 02:35:12 UTC
+// Language: svn (svn)
+// 
+// To view other translations for this plugin, please visit:
 // http://translator.mitchdempsey.com/sourcemod_plugins/192
 //
 "Phrases"
 {
-	"freeday_disabled"
+
+	"freeday_tag"
 	{
-		"svn"		"Freeday je trenutno {purple}onemogočen!"
+		"svn"		"[{green}MyJB.Freeday{default}]"
 	}
 
 	"freeday_end"
 	{
 		"svn"		"{purple}Freeday{default} se je zaključil."
+	}
+
+	"freeday_need"
+	{
+		"svn"		"{purple}{2}{default} je glasoval. Število glasov potrebnih za {darkred}Freeday: {purple}{1}"
+	}
+
+	"freeday_next"
+	{
+		"svn"		"Naslednja runda bo: {purple}Freeday."
+	}
+
+	"freeday_next_nc"
+	{
+		"svn"		"Naslednja runda bo: Freeday."
+	}
+
+	"freeday_voting"
+	{
+		"svn"		"Glasovanje za Freeday je {purple}onemogočeno!"
+	}
+
+	"freeday_setbywarden"
+	{
+		"svn"		"Nastavitev racolova s strani vodje je {purple}onemogočena!"
+	}
+
+	"freeday_setbyadmin"
+	{
+		"svn"		"Nastavitev Freeday s strani adminov je {purple}onemogočena!"
+	}
+
+	"freeday_start_nc"
+	{
+		"svn"		"Freeday se je začel!"
+	}
+
+	"freeday_start"
+	{
+		"svn"		"{purple}Freeday{default} se je začel!"
+	}
+
+	"freeday_voted"
+	{
+		"svn"		"Ti si že glasoval za {purple}Freeday!"
+	}
+
+	"freeday_progress"
+	{
+		"svn"		"Dogodek {darkred}{1} {default}se {purple}že izvaja!"
+	}
+
+	"freeday_disabled"
+	{
+		"svn"		"Freeday je trenutno {purple}onemogočen!"
+	}
+
+	"freeday_info_title"
+	{
+		"svn"		"Sedaj je Freeday!"
 	}
 
 	"freeday_info_line1"
@@ -48,77 +113,14 @@
 		"svn"		"Pravila strežnika to rundo še vedno veljajo!"
 	}
 
-	"freeday_info_title"
+	"freeday_wait"
 	{
-		"svn"		"Sedaj je Freeday!"
+		"svn"		"Počakati moraš še {purple}{1}{default} rund za Dan Dogodkov!"
 	}
 
 	"freeday_name"
 	{
 		"svn"		"Freeday"
-	}
-
-	"freeday_need"
-	{
-		"#format"   "{1:i},{2:N}"
-		"svn"		"{purple}{2}{default} je glasoval. Število glasov potrebnih za {darkred}Freeday: {purple}{1}"
-	}
-
-	"freeday_next"
-	{
-		"svn"		"Naslednja runda bo: {purple}Freeday."
-	}
-
-	"freeday_next_nc"
-	{
-		"svn"		"Naslednja runda bo: Freeday."
-	}
-
-	"freeday_progress"
-	{
-		"#format"   "{1:s}"
-		"svn"		"Dogodek {darkred}{1} {default}se {purple}že izvaja!"
-	}
-
-	"freeday_setbyadmin"
-	{
-		"svn"		"Nastavitev Freeday s strani adminov je {purple}onemogočena!"
-	}
-
-	"freeday_setbywarden"
-	{
-		"svn"		"Nastavitev racolova s strani vodje je {purple}onemogočena!"
-	}
-
-	"freeday_start"
-	{
-		"svn"		"{purple}Freeday{default} se je začel!"
-	}
-
-	"freeday_start_nc"
-	{
-		"svn"		"Freeday se je začel!"
-	}
-
-	"freeday_tag"
-	{
-		"svn"		"[{green}MyJB.Freeday{default}]"
-	}
-
-	"freeday_voted"
-	{
-		"svn"		"Ti si že glasoval za {purple}Freeday!"
-	}
-
-	"freeday_voting"
-	{
-		"svn"		"Glasovanje za Freeday je {purple}onemogočeno!"
-	}
-
-	"freeday_wait"
-	{
-		"#format"   "{1:i}"
-		"svn"		"Počakati moraš še {purple}{1}{default} rund za Dan Dogodkov!"
 	}
 
 }

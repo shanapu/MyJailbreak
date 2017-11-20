@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-04-20 21:44:25 UTC
+// Date: 2017-11-20 02:34:56 UTC
 // Language: English (en)
 // 
 // To view other translations for this plugin, please visit:
@@ -979,12 +979,6 @@
 		"en"		"You need at least {1} RankMe Points to play as warden"
 	}
 
-	"warden_lvlranks"
-	{
-		"#format"	"{1:i}"
-		"en"		"You need at least Level {1} to play as warden"
-	}
-
 	"warden_reputation"
 	{
 		"#format"	"{1:i}"
@@ -1016,6 +1010,12 @@
 	"warden_noplayer"
 	{
 		"en"		"No players to choose"
+	}
+
+	"warden_lvlranks"
+	{
+		"#format"	"{1:i}"
+		"en"		"You need at least Level {1} to play as warden"
 	}
 
 	"warden_mostactive"

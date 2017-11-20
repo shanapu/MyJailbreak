@@ -1,6 +1,6 @@
 // Exported from SourceMod Translator
-// Date: 2017-05-17 21:17:09 UTC
-// Language: English (en)
+// Date: 2017-11-20 02:35:01 UTC
+// Language: Spanish (es)
 // 
 // To view other translations for this plugin, please visit:
 // http://translator.mitchdempsey.com/sourcemod_plugins/196
@@ -20,7 +20,6 @@
 
 	"request_refusing"
 	{
-		"#format"	"{1:N}"
 		"es"		"{purple}{1} {default}ha {purple}rechazado el juego!"
 	}
 
@@ -46,13 +45,11 @@
 
 	"request_refusedtimes"
 	{
-		"#format"	"{1:i}"
 		"es"		"Ya has {purple}rechazado {1} veces{default} durante esta ronda!"
 	}
 
 	"request_capitulation"
 	{
-		"#format"	"{1:N}"
 		"es"		"{purple}{1} {default}se ha {purple}rendido! {default}¿El Capitán aceptará la rendición?"
 	}
 
@@ -68,13 +65,11 @@
 
 	"request_accepted"
 	{
-		"#format"	"{1:N},{2:N}"
 		"es"		"{2} ha aceptado la petición de {1}."
 	}
 
 	"request_noaccepted"
 	{
-		"#format"	"{1:N},{2:N}"
 		"es"		"{2} {purple} no ha aceptado{default} la petición de {1}."
 	}
 
@@ -100,13 +95,11 @@
 
 	"request_heal"
 	{
-		"#format"	"{1:N}"
 		"es"		"{purple}{1} {default}ha pedido {purple}curarse! {default}¿El Capitán aceptará la rendición?"
 	}
 
 	"request_healtimes"
 	{
-		"#format"	"{1:i}"
 		"es"		"Ya has pedido curarte{purple}{1} veces{default} durante esta ronda!"
 	}
 
@@ -127,13 +120,11 @@
 
 	"request_repeatpls"
 	{
-		"#format"	"{1:N}"
 		"es"		"{purple}{1} {default}ha pedido una {purple}repetición!{default}"
 	}
 
 	"request_repeattimes"
 	{
-		"#format"	"{1:i}"
 		"es"		"Ya has pedido una {purple}Repetición {1} veces{default} durante esta ronda!"
 	}
 
@@ -179,7 +170,6 @@
 
 	"request_freekill"
 	{
-		"#format"	"{1:N},{2:N},{3:N}"
 		"es"		"{green}{1}{default} envió un reporte de Freekill {darkred}{2}{default} de {purple}{3}!"
 	}
 
@@ -230,7 +220,6 @@
 
 	"request_respawnedall"
 	{
-		"#format"	"{1:N}"
 		"es"		"{1} fue revivido debido a un {darkred}Freekill!"
 	}
 
@@ -241,7 +230,6 @@
 
 	"request_killbcfreekillall"
 	{
-		"#format"	"{1:N}"
 		"es"		"{green}{1}{default} fue slayeado por hacer {darkred}Freekill!"
 	}
 
@@ -252,7 +240,6 @@
 
 	"request_swapbcfreekillall"
 	{
-		"#format"	"{1:N}"
 		"es"		"{green}{1}{default} fue movido a los Prisioneros por hacer {darkred}freekill{default} !"
 	}
 
@@ -278,7 +265,6 @@
 
 	"request_freekilltimes"
 	{
-		"#format"	"{1:i}"
 		"es"		"Ya has reportado Freekills {purple}{1}{default} veces durante esta ronda."
 	}
 
@@ -289,7 +275,6 @@
 
 	"request_killreason_title"
 	{
-		"#format"	"{1:N}"
 		"es"		"¿¿¿Mataste a {1}???"
 	}
 
@@ -325,49 +310,41 @@
 
 	"request_killreason_lostgame_chat"
 	{
-		"#format"	"{1:N},{2:N}"
 		"es"		"El Capitán {green}{1}{default} declara que {darkred}{2}{default} Perdió el juego"
 	}
 
 	"request_killreason_rebel_chat"
 	{
-		"#format"	"{1:N},{2:N}"
 		"es"		"El Capitán {green}{1}{default} declara que {darkred}{2}{default} era un rebelde"
 	}
 
 	"request_killreason_brokerule_chat"
 	{
-		"#format"	"{1:N},{2:N}"
 		"es"		"El Capitán {green}{1}{default} declara que {darkred}{2}{default} rompio las reglas"
 	}
 
 	"request_killreason_notfollow_chat"
 	{
-		"#format"	"{1:N},{2:N}"
 		"es"		"El Capitán {green}{1}{default} declara que {darkred}{2}{default} no siguió las ordenes"
 	}
 
 	"request_killreason_sry_chat"
 	{
-		"#format"	"{1:N},{2:N}"
 		"es"		"El Capitán {green}{1}{default} quiere pedir disculpas por el error, {darkred}{2}{default}"
 	}
 
 	"request_killreason_freekill_chat"
 	{
-		"#format"	"{1:N},{2:N}"
 		"es"		"El Capitán {green}{1}{default} confesó el freekill en {darkred}{2}{default}"
 	}
 
 	"request_killreason_noanswer"
 	{
-		"#format"	"{1:N},{2:N}"
 		"es"		"El Capitán {green}{1}{default} no ha declarado por el asesinato de {darkred}{2}{default}"
 	}
 
 	"request_capitulated"
 	{
-		"#format"	"{1:N}"
 		"es"		"{purple}{1} {default}se ha{purple} rendido!"
 	}
 
@@ -388,13 +365,11 @@
 
 	"request_stopcountdown_nc"
 	{
-		"#format"	"{1:i}"
 		"es"		"Parar/terminar en {1} segundos!"
 	}
 
 	"request_stopcountdown"
 	{
-		"#format"	"{1:i}"
 		"es"		"Parar en {purple}{1}{default} segundos!"
 	}
 

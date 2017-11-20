@@ -1,6 +1,6 @@
 // Exported from SourceMod Translator
-// Date: 2017-06-05 04:18:04 UTC
-// Language: English (en)
+// Date: 2017-11-20 02:35:19 UTC
+// Language: svn (svn)
 // 
 // To view other translations for this plugin, please visit:
 // http://translator.mitchdempsey.com/sourcemod_plugins/277
@@ -15,7 +15,6 @@
 
 	"teleport_need"
 	{
-		"#format"	"{1:i},{2:N}"
 		"svn"		"{purple}{2}{default} je glasoval. Število glasov potrebnih za {darkred}Vinjen dan: {purple}{1}{default}"
 	}
 
@@ -66,7 +65,6 @@
 
 	"teleport_rounds"
 	{
-		"#format"	"{1:i},{2:i}"
 		"svn"		"Runda {purple}{1}{default} od {purple}{2}"
 	}
 
@@ -87,7 +85,6 @@
 
 	"teleport_progress"
 	{
-		"#format"	"{1:s}"
 		"svn"		"Dogodek {darkred}{1} {default}se {purple}že izvaja!"
 	}
 
@@ -98,7 +95,6 @@
 
 	"teleport_damage_nc"
 	{
-		"#format"	"{1:i}"
 		"svn"		"{1} sekund pred se omogoči škoda."
 	}
 
@@ -142,24 +138,8 @@
 		"svn"		"Osnovna pravila strežnika to rundo še vedno veljajo!"
 	}
 
-	"RoundOne"
-	{
-		"svn"		"Runda 1 od 3"
-	}
-
-	"RoundTwo"
-	{
-		"svn"		"Runda 2 od 3"
-	}
-
-	"RoundThree"
-	{
-		"svn"		"To je zadnja runda teleportacijske bitke!"
-	}
-
 	"teleport_wait"
 	{
-		"#format"	"{1:i}"
 		"svn"		"Počakati moraš še {purple}{1}{default} rund za Dan Dogodkov!"
 	}
 

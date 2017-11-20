@@ -1,26 +1,26 @@
 // Exported from SourceMod Translator
+// Date: 2017-11-20 02:34:56 UTC
+// Language: svn (svn)
+// 
+// To view other translations for this plugin, please visit:
 // http://translator.mitchdempsey.com/sourcemod_plugins/178
 //
 "Phrases"
 {
+
 	"warden_tag"
 	{
 		"svn"		"[{green}MyJB.Vodja{default}]"
 	}
 
-	"warden_dooropen_unavailable"
+	"warden_new"
 	{
-		"svn"		"{darkred}Trenutna mapa ne podpira avtomatskega odpiranja vrat. {default}Ti {purple}moraš sam odpreti vrata!"
+		"svn"		"{purple}{1}{default} je sedaj vodja zapora."
 	}
 
-	"warden_doorclose_unavailable"
+	"warden_new_nc"
 	{
-		"svn"		"{darkred}Trenutna mapa ne podpira zapiranja vrat. . {default}Ti {purple}moraš sam zapreti vrata!"
-	}
-
-	"warden_openauto_unavailable"
-	{
-		"svn"		"{darkred}Trenutna mapa ne podpira avtomatskega odpiranja vrat. {default}Vodja {purple}mora sam odpreti vrata!"
+		"svn"		"{1} je sedaj vodja zapora."
 	}
 
 	"warden_playerdead"
@@ -35,30 +35,27 @@
 
 	"warden_exist"
 	{
-		"#format"   "{1:N}"
 		"svn"		"Trenutni Vodja {purple}{1}{default}."
 	}
 
 	"warden_retire"
 	{
-		"#format"   "{1:N}"
 		"svn"		"{purple}{1}{default} Se je odločil, da ne bo več Vodja. Sedaj lahko postaneš ti!"
-	}
-
-	"warden_disabled"
-	{
-		"svn"		"Vodja je trenutno {purple}onemogočen{default}!"
-	}
-
-	"warden_noexist"
-	{
-		"svn"		"Trenutno ni {purple} Vodje!"
 	}
 
 	"warden_retire_nc"
 	{
-		"#format"   "{1:N}"
 		"svn"		"{1} se je odločil, da ne bo več vodja. Sedaj lahko izberete novega!"
+	}
+
+	"warden_notwarden"
+	{
+		"svn"		"Biti moraš {purple}Vodja{default} da uporabiš to komando!"
+	}
+
+	"warden_dead"
+	{
+		"svn"		"Vodja je {darkred}mrtev{default}. Sedaj lahko izberete novega."
 	}
 
 	"warden_nowarden"
@@ -71,37 +68,9 @@
 		"svn"		"Trenutno ni vodje, napiši !w da postaneš vodja"
 	}
 
-	"warden_notwarden"
-	{
-		"svn"		"Biti moraš {purple}Vodja{default} da uporabiš to komando!"
-	}
-
 	"warden_dead_nc"
 	{
 		"svn"		"Vodja je mrtev. Lahko izberete novega."
-	}
-
-	"warden_dead"
-	{
-		"svn"		"Vodja je {darkred}mrtev{default}. Sedaj lahko izberete novega."
-	}
-
-	"warden_removed_nc"
-	{
-		"#format"   "{1:N},{2:N}"
-		"svn"		"Admin: {1} je odpustil vodjo: {2}"
-	}
-
-	"warden_removed"
-	{
-		"#format"   "{1:N},{2:N}"
-		"svn"		"Admin: {purple}{1}{default} je odpustil Vodjo: {purple}{2}"
-	}
-
-	"warden_adminset"
-	{
-		"#format"   "{1:N}"
-		"svn"		"Admin: {purple}{1}{default} je nastavil Vodjo!"
 	}
 
 	"warden_disconnected"
@@ -114,19 +83,44 @@
 		"svn"		"Vodja je odšel, lahko izberete novega."
 	}
 
+	"warden_removed"
+	{
+		"svn"		"Admin: {purple}{1}{default} je odpustil Vodjo: {purple}{2}"
+	}
+
+	"warden_removed_nc"
+	{
+		"svn"		"Admin: {1} je odpustil vodjo: {2}"
+	}
+
+	"warden_noexist"
+	{
+		"svn"		"Trenutno ni {purple} Vodje!"
+	}
+
+	"warden_disabled"
+	{
+		"svn"		"Vodja je trenutno {purple}onemogočen{default}!"
+	}
+
 	"warden_nobecome"
 	{
 		"svn"		"Nov vodja bo izbran {purple}naključno{default}!"
 	}
 
-	"warden_dooropen"
+	"warden_adminset"
 	{
-		"svn"		"Vodja je {purple}odprl{default} celice."
+		"svn"		"Admin: {purple}{1}{default} je nastavil Vodjo!"
 	}
 
 	"warden_randomwarden"
 	{
 		"svn"		"Naključen vodja je bil izbran!"
+	}
+
+	"warden_dooropen"
+	{
+		"svn"		"Vodja je {purple}odprl{default} celice."
 	}
 
 	"warden_doorclose"
@@ -166,25 +160,21 @@
 
 	"warden_startcountdown_nc"
 	{
-		"#format"   "{1:i}"
 		"svn"		"Začni čez {1} sekund!"
 	}
 
 	"warden_stopcountdown_nc"
 	{
-		"#format"   "{1:i}"
 		"svn"		"Ustavi/zaključi čez {1} sekund!"
 	}
 
 	"warden_startcountdown"
 	{
-		"#format"   "{1:i}"
 		"svn"		"Začni čez {purple}{1}{default} sekund!"
 	}
 
 	"warden_stopcountdown"
 	{
-		"#format"   "{1:i}"
 		"svn"		"Ustavi čez {purple}{1}{default} sekund"
 	}
 
@@ -233,21 +223,9 @@
 		"svn"		"Odštevanje {purple}že poteka!"
 	}
 
-	"warden_drawer"
-	{
-		"#format"   "{1:s}"
-		"svn"		"{1} risalnik omogočen!"
-	}
-
 	"warden_countdownstart_nc"
 	{
 		"svn"		"Pojdi! Začni!"
-	}
-
-	"warden_marker_faraway"
-	{
-		"#format"   "{1:s}"
-		"svn"		"Tvoj {1} marker je bil izbrisan, bil si predaleč stran od njega."
 	}
 
 	"warden_countdownstop_nc"
@@ -255,25 +233,9 @@
 		"svn"		"STOP! Končaj!"
 	}
 
-	"warden_unmute"
-	{
-		"#format"   "{1:N}"
-		"svn"		"{1} je bil utišan."
-	}
-
 	"warden_noblockoff"
 	{
 		"svn"		"Vodja je onemogočil {purple}NoBlock!"
-	}
-
-	"warden_marker_title"
-	{
-		"svn"		"Barva markerja"
-	}
-
-	"warden_90"
-	{
-		"svn"		"1 minuta 30 sekund"
 	}
 
 	"warden_noblockon"
@@ -281,20 +243,9 @@
 		"svn"		"Vodja je omogočil{purple}NoBlock!"
 	}
 
-	"warden_laser_title"
-	{
-		"svn"		"Barva laserskega risalnik"
-	}
-
 	"warden_need"
 	{
-		"#format"   "{1:i}"
 		"svn"		"{1} glasov potrebnih, da bo Vodja {darkred} odletel iz strežnika!"
-	}
-
-	"warden_votesuccess"
-	{
-		"svn"		"Glasovanje za {purple}odstranitev Vodje iz strežnika{default} je bilo uspešno"
 	}
 
 	"warden_voted"
@@ -302,36 +253,18 @@
 		"svn"		"Proti trenutni vodji si že {purple}glasoval{default}!"
 	}
 
-	"warden_drawer_title"
-	{
-		"svn"		"Barva risalnika"
-	}
-
-	"warden_cdmenu_title"
-	{
-		"svn"		"Odštevanje (čas)"
-	}
-
 	"warden_israndom"
 	{
-		"#format"   "{1:N}"
 		"svn"		"{1} je bil izbran naključno!"
 	}
 
 	"warden_gunplant"
 	{
-		"#format"   "{1:N},{2:s}"
 		"svn"		"Policaj {purple}{1}{default} je vrgel orožje zaporniku: {green}{2}!"
-	}
-
-	"warden_laser_off"
-	{
-		"svn"		"Onemogoči laserski merilnik"
 	}
 
 	"warden_gunplant_nc"
 	{
-		"#format"   "{1:N},{2:s}"
 		"svn"		"Policaj {1} je odvrgel orožje {2}!"
 	}
 
@@ -345,11 +278,6 @@
 		"svn"		"Izberi igralca"
 	}
 
-	"warden_drawer_off"
-	{
-		"svn"		"Onemogoči risalnik"
-	}
-
 	"warden_remove"
 	{
 		"svn"		"Odstavi trenutno vodjo?"
@@ -358,11 +286,6 @@
 	"warden_laseron"
 	{
 		"svn"		"Laser {purple}je omogočen!"
-	}
-
-	"warden_rainbow"
-	{
-		"svn"		"Mavričen"
 	}
 
 	"warden_laseroff"
@@ -375,24 +298,9 @@
 		"svn"		"Risalnik {purple}omogočen"
 	}
 
-	"warden_red"
-	{
-		"svn"		"Rdeč"
-	}
-
-	"warden_cdmenu_start"
-	{
-		"svn"		"Začni z odštevanjem (10 sekund)"
-	}
-
 	"warden_draweroff"
 	{
 		"svn"		"Risalnik {purple}onemogočen"
-	}
-
-	"warden_blue"
-	{
-		"svn"		"Moder"
 	}
 
 	"warden_drawert"
@@ -405,11 +313,6 @@
 		"svn"		"Risalnik za zapornike {purple}omogočen"
 	}
 
-	"warden_120"
-	{
-		"svn"		"2 minuti"
-	}
-
 	"warden_tdraweroff"
 	{
 		"svn"		"Risalnik za zapornike je {purple}onemogočen"
@@ -417,8 +320,67 @@
 
 	"warden_marker_set"
 	{
-		"#format"   "{1:s}"
 		"svn"		"{1} marker postavljen!"
+	}
+
+	"warden_marker_remove"
+	{
+		"svn"		"{1} marker izbrisan!"
+	}
+
+	"warden_laser"
+	{
+		"svn"		"{1} laserski merilec omogočen!"
+	}
+
+	"warden_drawer"
+	{
+		"svn"		"{1} risalnik omogočen!"
+	}
+
+	"warden_marker_faraway"
+	{
+		"svn"		"Tvoj {1} marker je bil izbrisan, bil si predaleč stran od njega."
+	}
+
+	"warden_marker_title"
+	{
+		"svn"		"Barva markerja"
+	}
+
+	"warden_laser_title"
+	{
+		"svn"		"Barva laserskega risalnik"
+	}
+
+	"warden_drawer_title"
+	{
+		"svn"		"Barva risalnika"
+	}
+
+	"warden_laser_off"
+	{
+		"svn"		"Onemogoči laserski merilnik"
+	}
+
+	"warden_drawer_off"
+	{
+		"svn"		"Onemogoči risalnik"
+	}
+
+	"warden_rainbow"
+	{
+		"svn"		"Mavričen"
+	}
+
+	"warden_red"
+	{
+		"svn"		"Rdeč"
+	}
+
+	"warden_blue"
+	{
+		"svn"		"Moder"
 	}
 
 	"warden_green"
@@ -426,36 +388,14 @@
 		"svn"		"Zelen"
 	}
 
-	"warden_marker_remove"
-	{
-		"#format"   "{1:s}"
-		"svn"		"{1} marker izbrisan!"
-	}
-
-	"warden_laser"
-	{
-		"#format"   "{1:s}"
-		"svn"		"{1} laserski merilec omogočen!"
-	}
-
 	"warden_orange"
 	{
 		"svn"		"Oranžen"
 	}
 
-	"warden_cdmenu_stop"
-	{
-		"svn"		"Begin a STOP Countdown (20 sec)"
-	}
-
 	"warden_yellow"
 	{
 		"svn"		"Rumen"
-	}
-
-	"warden_sure"
-	{
-		"svn"		"Ali si prepričan?"
 	}
 
 	"warden_white"
@@ -466,11 +406,6 @@
 	"warden_cyan"
 	{
 		"svn"		"Svetlo moder"
-	}
-
-	"warden_cdmenu_startstop"
-	{
-		"svn"		"Nastavi Start/stop števec"
 	}
 
 	"warden_magenta"
@@ -488,31 +423,44 @@
 		"svn"		"Nekaj je šlo narobe! Probaj znova"
 	}
 
-	"warden_cdmenu_title2"
-	{
-		"svn"		"Čas med začetkom in koncem"
-	}
-
 	"warden_mute"
 	{
-		"#format"   "{1:N},{2:N},{3:i}"
 		"svn"		"{2} je bil utišan s strani Vodje {1} za {3} sekund!"
-	}
-
-	"warden_180"
-	{
-		"svn"		"3 minute"
-	}
-
-	"warden_mutedefault"
-	{
-		"svn"		"Vsi zaporniki so utišani."
 	}
 
 	"warden_muteend"
 	{
-		"#format"   "{1:N},{2:N}"
 		"svn"		"{2} je bil utišan s strani Vodje {1} do konca runde!"
+	}
+
+	"warden_unmute"
+	{
+		"svn"		"{1} je bil utišan."
+	}
+
+	"warden_cdmenu_title"
+	{
+		"svn"		"Odštevanje (čas)"
+	}
+
+	"warden_cdmenu_start"
+	{
+		"svn"		"Začni z odštevanjem (10 sekund)"
+	}
+
+	"warden_cdmenu_stop"
+	{
+		"svn"		"Begin a STOP Countdown (20 sec)"
+	}
+
+	"warden_cdmenu_startstop"
+	{
+		"svn"		"Nastavi Start/stop števec"
+	}
+
+	"warden_cdmenu_title2"
+	{
+		"svn"		"Čas med začetkom in koncem"
 	}
 
 	"warden_time_title"
@@ -530,11 +478,6 @@
 		"svn"		"Do konca runde"
 	}
 
-	"warden_300"
-	{
-		"svn"		"5 minut"
-	}
-
 	"warden_15"
 	{
 		"svn"		"15 sekund"
@@ -550,24 +493,38 @@
 		"svn"		"45 sekund"
 	}
 
-	"warden_math_correct"
+	"warden_90"
 	{
-		"#format"   "{1:N},{2:i}"
-		"svn"		"{1} je povedal{green} pravilen odgovor!{default} Odgovor je bil {purple}{2}!"
+		"svn"		"1 minuta 30 sekund"
+	}
 
-	"warden_60"
+	"warden_120"
+	{
+		"svn"		"2 minuti"
+	}
+
+	"warden_180"
+	{
+		"svn"		"3 minute"
+	}
+
+	"warden_300"
+	{
+		"svn"		"5 minut"
+	}
+
+	"warden_math_correct"
 	{
 		"svn"		"1 minuta"
 	}
 
-	"warden_yes"
+	"warden_math_correct"
 	{
-		"svn"		"Ja"
+		"svn"		"{1} je povedal{green} pravilen odgovor!{default} Odgovor je bil {purple}{2}!"
 	}
 
 	"warden_math_time"
 	{
-		"#format"   "{1:i}"
 		"svn"		"Čas je potekel.Nihče ni izračunal. {purple}Rezultat je {1}"
 	}
 
@@ -576,31 +533,29 @@
 		"svn"		"Pozor! Vodja je začel {purple}Matematični kviz!"
 	}
 
-	"warden_no"
-	{
-		"svn"		"Ne"
-	}
-
 	"warden_startmathquiz_nc"
 	{
 		"svn"		"Pozor! Vodja je začel Matematični kviz!"
 	}
 
+	"warden_sure"
+	{
+		"svn"		"Ali si prepričan?"
+	}
+
+	"warden_yes"
+	{
+		"svn"		"Ja"
+	}
+
+	"warden_no"
+	{
+		"svn"		"Ne"
+	}
+
 	"warden_minrandom"
 	{
 		"svn"		"Samo še en ne-uporniški zapornik je živ!"
-	}
-
-	"warden_new_nc"
-	{
-		"#format"   "{1:N}"
-		"svn"		"{1} je sedaj vodja zapora."
-	}
-
-	"warden_new"
-	{
-		"#format"   "{1:N}"
-		"svn"		"{purple}{1}{default} je sedaj vodja zapora."
 	}
 
 	"warden_nomuted"
@@ -630,31 +585,17 @@
 
 	"warden_cuffson"
 	{
-		"#format"   "{1:N},{2:N}"
 		"svn"		"{purple}{1}{default} je aretiral {green}{2}{default}!"
 	}
 
 	"warden_cuffsoff"
 	{
-		"#format"   "{1:N},{2:N}"
 		"svn"		"{purple}{1}{default} je odstranil {green}{2}{default} lisice."
 	}
 
 	"warden_cuffsgot"
 	{
-		"#format"   "{1:i}"
 		"svn"		"Imas samo še {green}{1}{default} lisic!"
-	}
-
-	"warden_backstab"
-	{
-		"svn"		"Zaščiten imaš hrbet (zaporniki te z nožem ne morejo ubiti iz hrbta)."
-	}
-
-	"warden_extendtimes"
-	{
-		"#format"   "{1:i}"
-		"svn"		"Rundo  {purple}si že podaljšal {1} x{default} v tej rundi!"
 	}
 
 	"warden_bulletmarkoff"
@@ -669,34 +610,22 @@
 
 	"warden_extend"
 	{
-		"#format"   "{1:N},{2:i}"
 		"svn"		"Vodja {1} je podaljšal rundo za {2} minut"
+	}
+
+	"warden_backstab"
+	{
+		"svn"		"Zaščiten imaš hrbet (zaporniki te z nožem ne morejo ubiti iz hrbta)."
+	}
+
+	"warden_extendtimes"
+	{
+		"svn"		"Rundo  {purple}si že podaljšal {1} x{default} v tej rundi!"
 	}
 
 	"warden_close"
 	{
 		"svn"		"Zapusti"
-	}
-
-	"warden_paintert"
-	{
-		"svn"		"Omogoči risalnik za zapornike"
-	}
-
-	"warden_painter"
-	{
-		"#format"   "{1:s}"
-		"svn"		"{1} risalnik omogočen!"
-	}
-
-	"warden_painter_off"
-	{
-		"svn"		"Onemogoči risalnik"
-	}
-
-	"warden_painteroff"
-	{
-		"svn"		"Risalnik {purple}onemogočen"
 	}
 
 	"warden_gotpaperclip"
@@ -714,9 +643,19 @@
 		"svn"		"Izmuznil si se lisic!"
 	}
 
+	"warden_painter"
+	{
+		"svn"		"{1} risalnik omogočen!"
+	}
+
 	"warden_painter_title"
 	{
 		"svn"		"Barva risalnika"
+	}
+
+	"warden_painter_off"
+	{
+		"svn"		"Onemogoči risalnik"
 	}
 
 	"warden_painteron"
@@ -724,14 +663,19 @@
 		"svn"		"Risalnik {purple}omogočen"
 	}
 
+	"warden_painteroff"
+	{
+		"svn"		"Risalnik {purple}onemogočen"
+	}
+
+	"warden_paintert"
+	{
+		"svn"		"Omogoči risalnik za zapornike"
+	}
+
 	"warden_tpainteron"
 	{
 		"svn"		"Risalnik za teroriste {purple}omogočen!"
-	}
-
-	"warden_lostgun"
-	{
-		"svn"		"Bil si ranjen v roko, izgubil si orožje"
 	}
 
 	"warden_tpainteroff"
@@ -741,13 +685,32 @@
 
 	"warden_disarmed"
 	{
-		"#format"   "{1:N},{2:N}"
 		"svn"		"{2} je razorožil igralca {1}."
+	}
+
+	"warden_lostgun"
+	{
+		"svn"		"Bil si ranjen v roko, izgubil si orožje"
 	}
 
 	"warden_remaining"
 	{
 		"svn"		"Preostalo"
+	}
+
+	"warden_dooropen_unavailable"
+	{
+		"svn"		"{darkred}Trenutna mapa ne podpira avtomatskega odpiranja vrat. {default}Ti {purple}moraš sam odpreti vrata!"
+	}
+
+	"warden_doorclose_unavailable"
+	{
+		"svn"		"{darkred}Trenutna mapa ne podpira zapiranja vrat. . {default}Ti {purple}moraš sam zapreti vrata!"
+	}
+
+	"warden_openauto_unavailable"
+	{
+		"svn"		"{darkred}Trenutna mapa ne podpira avtomatskega odpiranja vrat. {default}Vodja {purple}mora sam odpreti vrata!"
 	}
 
 	"warden_menu_muteall"
@@ -758,6 +721,16 @@
 	"warden_menu_unmuteall"
 	{
 		"svn"		"Ne utišaj vseh zapornikov"
+	}
+
+	"warden_votesuccess"
+	{
+		"svn"		"Glasovanje za {purple}odstranitev Vodje iz strežnika{default} je bilo uspešno"
+	}
+
+	"warden_mutedefault"
+	{
+		"svn"		"Vsi zaporniki so utišani."
 	}
 
 	"warden_rebel_title"
@@ -787,7 +760,6 @@
 
 	"warden_counter"
 	{
-		"#format"   "{1:i}"
 		"svn"		"Tukaj je še {1}zapornikov v tvojem dosegu"
 	}
 
@@ -803,7 +775,6 @@
 
 	"warden_deputy_exist"
 	{
-		"#format"   "{1:N}"
 		"svn"		"Trenutni namestnik: {purple}{1}{default}."
 	}
 
@@ -819,25 +790,21 @@
 
 	"warden_deputy_retire"
 	{
-		"#format"   "{1:N}"
 		"svn"		"{purple}{1}{default} se je odločil zapustiti mesto namestnika, izberete lahko novega!"
 	}
 
 	"warden_deputy_retire_nc"
 	{
-		"#format"   "{1:N}"
 		"svn"		"{1} se je odločil zapustiti mesto namestnika, izberete lahko novega!"
 	}
 
 	"warden_deputy_fired_nc"
 	{
-		"#format"   "{1:N},{2:N}"
 		"svn"		"Vodja: {1} je odpustil namestnika: {2}"
 	}
 
 	"warden_deputy_fired"
 	{
-		"#format"   "{1:N},{2:N}"
 		"svn"		"Vodja: {purple}{1}{default} je odpustil namestnika: {purple}{2}"
 	}
 
@@ -863,13 +830,11 @@
 
 	"warden_deputy_new_nc"
 	{
-		"#format"   "{1:N}"
 		"svn"		"{1} je sedaj namestnik vodje."
 	}
 
 	"warden_deputy_new"
 	{
-		"#format"   "{1:N}"
 		"svn"		"{purple}{1}{default} je sedaj namestnik vodje."
 	}
 
@@ -882,6 +847,7 @@
 	{
 		"svn"		"Trenutno ni {purple}namestnika{default}. Napiši {green}!deputy{default} ,da postaneš namestnik!"
 	}
+
 	"warden_picking"
 	{
 		"svn"		"Izbiranje"
@@ -899,13 +865,11 @@
 
 	"warden_havefreeday"
 	{
-		"#format"	"{1:N}"
 		"svn"		"{1} ima sedaj FreeDay!"
 	}
 
 	"warden_freeday_title"
 	{
-		"#format"	"{1:N}"
 		"svn"		"Freeday za {1}"
 	}
 
@@ -926,25 +890,21 @@
 
 	"warden_personalfreeday"
 	{
-		"#format"	"{1:N}"
 		"svn"		"{green}{1}{default} dobi {purple}Freeday{default} naslednjo rundo"
 	}
 
 	"warden_cooldown"
 	{
-		"#format"	"{1:i}"
 		"svn"		"Si na {purple}čakanju za vodjo{default}. Počakaj {green}{1}{default} rund"
 	}
 
 	"warden_limit"
 	{
-		"#format"	"{1:i},{2:i}"
 		"svn"		"Kot vodja si igral že {purple}{1} rund zapored{default}. Počakaj {green}{2}{default} rund"
 	}
 
 	"warden_wait"
 	{
-		"#format"	"{1:i}"
 		"svn"		"Kot {green}vodja prejšnje runde{default} moraš počakati {purple}{1} sekund{default} da spet postaneš vodja."
 	}
 

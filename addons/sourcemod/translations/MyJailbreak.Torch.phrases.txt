@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-04-20 21:44:37 UTC
+// Date: 2017-11-20 02:35:14 UTC
 // Language: English (en)
 // 
 // To view other translations for this plugin, please visit:
@@ -53,16 +53,6 @@
 	"torch_next_nc"
 	{
 		"en"		"The following round will be: Torch Relay."
-	}
-
-	"torch_now_nc"
-	{
-		"en"		"Now a torch round begins."
-	}
-
-	"torch_now"
-	{
-		"en"		"Now a {purple}torch{default} round begins."
 	}
 
 	"torch_start"
@@ -190,6 +180,16 @@
 	"torch_name"
 	{
 		"en"		"Torch Relay"
+	}
+
+	"torch_now_nc"
+	{
+		"en"		"Now a torch round begins."
+	}
+
+	"torch_now"
+	{
+		"en"		"Now a {purple}torch{default} round begins."
 	}
 
 }

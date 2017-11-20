@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-04-20 21:44:41 UTC
+// Date: 2017-11-20 02:35:17 UTC
 // Language: Italian (it)
 // 
 // To view other translations for this plugin, please visit:
@@ -20,32 +20,32 @@
 
 	"duckhunt_need"
 	{
-		"it"		"{purple}{2}{default} ha votato. {purple}{1}{default} voti richiesti per giocare a {darkred}Duckhunt."
+		"it"		"{purple}{2}{default} ha votato. {purple}{1}{default} voto(i) richiesti per fare {darkred}Duckhunt."
 	}
 
 	"duckhunt_voting"
 	{
-		"it"		"La votazione e' {purple}disabilitata!"
+		"it"		"Le votazioni per Duckhunt sono {purple}disattivate!"
 	}
 
 	"duckhunt_setbywarden"
 	{
-		"it"		"Settare Duckhunt da Warden e' {purple}disabilitato!"
+		"it"		"Impostare DuckHunt come CapoCT e' {purple}disattivato!"
 	}
 
 	"duckhunt_setbyadmin"
 	{
-		"it"		"Settare Duckhunt da Admin e' {purple}disabilitato!"
+		"it"		"Impostare DuckHunt come Admin e' {purple}disattivato!"
 	}
 
 	"duckhunt_ctwin_nc"
 	{
-		"it"		"Tutte le anatre sono stati cacciate!"
+		"it"		"Tutte le papere sono state catturate!"
 	}
 
 	"duckhunt_twin_nc"
 	{
-		"it"		"I Duckhunter sono stati cacciati!"
+		"it"		"Tutti i cacciatore di papere sono stati catturati!"
 	}
 
 	"duckhunt_end"
@@ -55,12 +55,12 @@
 
 	"duckhunt_next"
 	{
-		"it"		"Il Prossimo round sara': {purple}Duckhunt."
+		"it"		"Il prossimo round ci sara': {purple}Duckhunt."
 	}
 
 	"duckhunt_next_nc"
 	{
-		"it"		"Il Prossimo round sara': Duckhunt."
+		"it"		"Il prossimo round ci sara': Duckhunt."
 	}
 
 	"duckhunt_start"
@@ -75,62 +75,67 @@
 
 	"duckhunt_voted"
 	{
-		"it"		"Hai gia' votato per {purple}Duckhunt!"
+		"it"		"Hai gia' votato per{purple}Duckhunt!"
+	}
+
+	"duckhunt_progress"
+	{
+		"it"		"L'evento {darkred}{1}{default}e' {purple}in corso."
 	}
 
 	"duckhunt_minplayer"
 	{
-		"it"		"Per Duckhunt, sono richiesti {purple}una Guardia e un Prigioniero"
+		"it"		"Per fare Duckhunt, c'e bisogno di almeno {purple}una Guardia, & un Prigioniere"
 	}
 
 	"duckhunt_disabled"
 	{
-		"it"		"Duckhunt e'  {purple}disabilitato!"
+		"it"		"Duckhunt e' {purple}disattivato!"
 	}
 
 	"duckhunt_timeuntilstart_nc"
 	{
-		"it"		"{1} secondi rimanenti all'inizio del round!"
+		"it"		"{1} secondi prima che inizi il round!"
 	}
 
 	"duckhunt_info_title"
 	{
-		"it"		"Duckhunt Attivato"
+		"it"		"Duckhunt e' inizato!"
 	}
 
 	"duckhunt_info_line1"
 	{
-		"it"		"Spara a tutte le anatre"
+		"it"		"Spara a tutte le papere!"
 	}
 
 	"duckhunt_info_line2"
 	{
-		"it"		"Le guardie hanno un Nova!"
+		"it"		"Le Guardie hanno un nova!"
 	}
 
 	"duckhunt_info_line3"
 	{
-		"it"		"I prigionieri sono ora polli e hanno granate. Solo Tasto Destro!"
+		"it"		"I Prigionieri sono papere ed hanno solo HE Nade. Tasto destro solo!"
 	}
 
 	"duckhunt_info_line4"
 	{
-		"it"		"Tutte le regole del JB non sono applicabili in questo round"
+		"it"		"Tutte le normali regole del JB non vengono applicate durante questo round!"
 	}
 
 	"duckhunt_info_line5"
 	{
-		"it"		"LR disabilitato in questo round"
+		"it"		"Gli LR sono disattivati durante questo round!"
 	}
 
 	"duckhunt_info_line6"
 	{
-		"it"		"State nella 'JailRoom'! Non entrare in condotti!"
+		"it"		"Bisogna stare nella zone celle! E' vietato andare codotti o aree segrete!"
 	}
 
 	"duckhunt_info_line7"
 	{
-		"it"		"Buona Fortuna"
+		"it"		"Non fate i cani!"
 	}
 
 	"duckhunt_name"
@@ -140,7 +145,7 @@
 
 	"duckhunt_wait"
 	{
-		"it"		"Bisogna attendere {purple}{1}{default} round per un altro evento!"
+		"it"		"Devi aspettare {purple}{1}{default} prima di dare un altro evento!!"
 	}
 
 }

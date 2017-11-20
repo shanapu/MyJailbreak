@@ -1,9 +1,9 @@
 // Exported from SourceMod Translator
-// Date: 2017-04-20 21:44:30 UTC
+// Date: 2017-11-20 02:35:06 UTC
 // Language: Danish (da)
 // 
 // To view other translations for this plugin, please visit:
-// http://translator.mitchdempsey.com/sourcemod_plugins/200
+// http://translator.mitchdempsey.com/sourcemod_plugins/281
 //
 "Phrases"
 {

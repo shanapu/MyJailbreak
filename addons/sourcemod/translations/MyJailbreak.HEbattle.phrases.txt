@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-04-20 21:44:39 UTC
+// Date: 2017-11-20 02:35:16 UTC
 // Language: English (en)
 // 
 // To view other translations for this plugin, please visit:
@@ -73,16 +73,6 @@
 	"hebattle_next_nc"
 	{
 		"en"		"The following round will be: HE Battle"
-	}
-
-	"hebattle_now_nc"
-	{
-		"en"		"Now a hebattle round begins."
-	}
-
-	"hebattle_now"
-	{
-		"en"		"Now a {purple}hebattle{default} round begins."
 	}
 
 	"hebattle_start"
@@ -166,6 +156,16 @@
 	"hebattle_name"
 	{
 		"en"		"HE Battle"
+	}
+
+	"hebattle_now_nc"
+	{
+		"en"		"Now a hebattle round begins."
+	}
+
+	"hebattle_now"
+	{
+		"en"		"Now a {purple}hebattle{default} round begins."
 	}
 
 }

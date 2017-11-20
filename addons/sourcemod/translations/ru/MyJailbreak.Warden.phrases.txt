@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-04-20 21:44:25 UTC
+// Date: 2017-11-20 02:34:56 UTC
 // Language: Russian (ru)
 // 
 // To view other translations for this plugin, please visit:
@@ -936,6 +936,51 @@
 	"warden_stamm"
 	{
 		"ru"		"Вы должны иметь как минимум {1} очков, чтобы играть за командира"
+	}
+
+	"warden_removefreeday"
+	{
+		"ru"		"Окончить свободный день:"
+	}
+
+	"warden_removefreedayforyou"
+	{
+		"ru"		"Ваш {purple}Свободный день{default} окончен."
+	}
+
+	"warden_removepersonalfreeday"
+	{
+		"ru"		"{purple}Свободный день{default} заключённого {green}{1}{default} окончен"
+	}
+
+	"warden_noplayer"
+	{
+		"ru"		"Нет игроков для выбора"
+	}
+
+	"warden_lvlranks"
+	{
+		"ru"		"Для игры за командира вам необходим минимум {1} уровень"
+	}
+
+	"warden_mostactive"
+	{
+		"ru"		"Вы должны сыграть хотя бы {1} раз как командир."
+	}
+
+	"warden_mostactive_guard"
+	{
+		"ru"		"Вам должны сыграть за охрану хотя бы {1} раз, чтобы играть за командира."
+	}
+
+	"warden_mostactive_terror"
+	{
+		"ru"		"Вам должны сыграть за заключённых хотя бы {1} раз, чтобы играть за охрану."
+	}
+
+	"warden_mostactive_terror"
+	{
+		"ru"		"Вам должны сыграть за заключённых хотя бы {1} раз, чтобы играть за охрану."
 	}
 
 }

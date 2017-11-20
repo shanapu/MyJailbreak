@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-04-20 21:44:38 UTC
+// Date: 2017-11-20 02:35:15 UTC
 // Language: Italian (it)
 // 
 // To view other translations for this plugin, please visit:
@@ -10,12 +10,12 @@
 
 	"noscope_tag"
 	{
-		"it"		"[{green}Ezic.NoScope{default}]"
+		"it"		"[{green}MyJB.noscope{default}]"
 	}
 
 	"noscope_need"
 	{
-		"it"		"{purple}{2}{default} ha votato. {purple}{1}{default} voti richiesti per fare l'evento {darkred}NoScope "
+		"it"		"{purple}{2}{default} ha votato. {purple}{1}{default} voti richiesti per fare {darkred}No Scope Battle."
 	}
 
 	"noscope_rounds"
@@ -25,27 +25,27 @@
 
 	"noscope_twin_nc"
 	{
-		"it"		"Un T e' Sopravvissuto!"
+		"it"		"Un Prigioniere e' sopravvissuto!"
 	}
 
 	"noscope_voting"
 	{
-		"it"		"Battaglia NoScope {purple}disabilitato!"
+		"it"		"Le votazioni per No Scope Battle sono {purple}disattivate!"
 	}
 
 	"noscope_setbywarden"
 	{
-		"it"		"Settare No Scope Battle da Warden e' {purple}disabilitato!"
+		"it"		"Impostare No Scope Battle come CapoCT e' {purple}disattivato!"
 	}
 
 	"noscope_minplayer"
 	{
-		"it"		"Per la Battaglia Noscope e' richiesta {purple}un CT e un T!"
+		"it"		"Per fare No Scope Battle c'e bisogno almeno di {purple}una Guardia, & un Prigioniere!"
 	}
 
 	"noscope_setbyadmin"
 	{
-		"it"		"Settare No Scope Battle da Admin e' {purple}disabilitato!"
+		"it"		"Impostare No Scope Battle come Admin e' {purple}disabled!"
 	}
 
 	"noscope_ctwin_nc"
@@ -55,97 +55,97 @@
 
 	"noscope_end"
 	{
-		"it"		"{purple}L'evento NoScope{default} e' finito."
+		"it"		"{purple}No Scope Battle{default} e' finito."
 	}
 
 	"noscope_next"
 	{
-		"it"		"Il Prossimo Round Sara': {purple}Battaglia NoScope."
+		"it"		"Il prossimo round ci sara': {purple}No Scope Battle."
 	}
 
 	"noscope_next_nc"
 	{
-		"it"		"Il Prossimo Round Sara': Battaglia NoScope."
+		"it"		"Il prossimo round ci sara': No Scope Battle."
 	}
 
 	"noscope_start"
 	{
-		"it"		"L'evento {purple}Battaglia NoScope{default} e' iniziato!"
+		"it"		"The {purple}No Scope Battle Battle{default} e' iniziato!"
 	}
 
 	"noscope_start_nc"
 	{
-		"it"		"L'evento Battaglia Noscope e' iniziato!"
+		"it"		"The No Scope Battle Battle e' iniziato!"
 	}
 
 	"noscope_voted"
 	{
-		"it"		"Tu hai gia' votato per l'evento {purple}Battaglia NoScope!"
+		"it"		"Hai gia' votato per{purple}No Scope Battle!"
 	}
 
 	"noscope_progress"
 	{
-		"it"		"L'evento {darkred}{1} {default}e' {purple}gia' in corso!"
+		"it"		"L'evento {darkred}{1} {default}e' {purple}in corso"
 	}
 
 	"noscope_disabled"
 	{
-		"it"		"L'evento NoScope e' {purple}disabilitato!"
+		"it"		"No Scope Battle e' {purple}disattivato!"
 	}
 
 	"noscope_timeuntilstart_nc"
 	{
-		"it"		"{1} secondi rimanenti all' inizio dell'evento!"
+		"it"		"{1} secondi prima che inizi il round!"
 	}
 
 	"noscope_info_title"
 	{
-		"it"		"NoScope attivato!"
+		"it"		"NoScope e' attivato!"
 	}
 
 	"noscope_info_line1"
 	{
-		"it"		"Battaglia NoScope  - Free for All!"
+		"it"		"No Scope Battle - Free for All!"
 	}
 
 	"noscope_info_line2"
 	{
-		"it"		"Gravita' bassa Attivata!"
+		"it"		"Bassa gravita'!"
 	}
 
 	"noscope_info_line3"
 	{
-		"it"		"Scappa durante la fase di 'NoDamage'"
+		"it"		"Scappa durante la fase di 'no-damage'!"
 	}
 
 	"noscope_info_line4"
 	{
-		"it"		"Tutte le Regole del JB Non sono valide per questo round!"
+		"it"		"Tutte le normali regole del JB non vengono applicate durante questo round!"
 	}
 
 	"noscope_info_line5"
 	{
-		"it"		"Lr disabilitato in questo round!"
+		"it"		"Gli LR sono disattivati durante questo round!"
 	}
 
 	"noscope_info_line6"
 	{
-		"it"		"State nella 'JailRoom'! Non andate in condotti o posti segreti!"
+		"it"		"Devi stare nella zona celle. E' vietato andare condotti o aree segrete!"
 	}
 
 	"noscope_info_line7"
 	{
-		"it"		"Buona Fortuna!"
+		"it"		"Non fate i cani!"
 	}
 
 	"noscope_wait"
 	{
-		"it"		"Devi Aspettare {purple}{1}{default} round per un altro event day!"
+		"it"		"Devi aspettare {purple}{1}{default} prima di dare un altro evento!"
 	}
 
 	"noscope_name"
 	{
-		"it"		"Battaglia NoScope"
+		"it"		"No Scope Battle"
 	}
 
 }

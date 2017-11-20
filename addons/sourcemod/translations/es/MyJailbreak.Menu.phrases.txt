@@ -1,6 +1,6 @@
 // Exported from SourceMod Translator
-// Date: 2017-05-17 21:17:08 UTC
-// Language: English (en)
+// Date: 2017-11-20 02:34:59 UTC
+// Language: Spanish (es)
 // 
 // To view other translations for this plugin, please visit:
 // http://translator.mitchdempsey.com/sourcemod_plugins/180
@@ -83,6 +83,16 @@
 		"es"		"Matar un prisionero Aleatorio"
 	}
 
+	"menu_unwarden"
+	{
+		"es"		"El Alcalde se ha retirado"
+	}
+
+	"menu_getwarden"
+	{
+		"es"		"Convertirse en Alcalde"
+	}
+
 	"menu_joint"
 	{
 		"es"		"Become a Prisoner"
@@ -103,6 +113,10 @@
 		"es"		"Remover Capitán"
 	}
 
+	"menu_setwarden"
+	{
+		"es"		"Elegir nuevo Alcalde"
+	}
 
 	"menu_rules"
 	{
@@ -159,11 +173,6 @@
 		"es"		"Zombie Day"
 	}
 
-	"menu_dealdamage"
-	{
-		"es"		"Deal Damage Day"
-	}
-
 	"menu_hide"
 	{
 		"es"		"Hide in The Dark"
@@ -214,11 +223,6 @@
 		"es"		"DuckHunt"
 	}
 
-	"menu_freeday"
-	{
-		"es"		"Freeday"
-	}
-
 	"menu_admin"
 	{
 		"es"		"Admin Menu"
@@ -256,7 +260,6 @@
 
 	"menu_votingwon"
 	{
-		"#format"	"{1:s},{2:i},{3:i}"
 		"es"		"El voto ha terminado con {2} votos. {green}{1} {default}ganó con {3} votos."
 	}
 
@@ -267,13 +270,11 @@
 
 	"menu_progress"
 	{
-		"#format"	"{1:s}"
 		"es"		"El evento {darkred}{1} {default}ya {purple}está en progreso!"
 	}
 
 	"menu_wait"
 	{
-		"#format"	"{1:i}"
 		"es"		"Debes esperar {purple}{1}{default} rondas más para un voto de Evento!"
 	}
 
@@ -349,7 +350,6 @@
 
 	"menu_votingcancel"
 	{
-		"#format"	"{1:s}"
 		"es"		"La votacion fue cancelada, porque un Evento {purple}{1}{default} ya estaba seteado!"
 	}
 
@@ -386,6 +386,21 @@
 	"menu_teleport"
 	{
 		"es"		"Teleport War"
+	}
+
+	"menu_armsrace"
+	{
+		"es"		"Armas"
+	}
+
+	"menu_dealdamage"
+	{
+		"es"		"Deal Damage Day"
+	}
+
+	"menu_freeday"
+	{
+		"es"		"Freeday"
 	}
 
 }

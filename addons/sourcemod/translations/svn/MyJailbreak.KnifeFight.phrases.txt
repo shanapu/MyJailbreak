@@ -1,11 +1,91 @@
 // Exported from SourceMod Translator
+// Date: 2017-11-20 02:35:18 UTC
+// Language: svn (svn)
+// 
+// To view other translations for this plugin, please visit:
 // http://translator.mitchdempsey.com/sourcemod_plugins/195
 //
 "Phrases"
 {
+
+	"knifefight_tag"
+	{
+		"svn"		"[{green}MyJB.Boj.z.noži{default}]"
+	}
+
+	"knifefight_need"
+	{
+		"svn"		"{purple}{2}{default} je glasoval. Število glasov potrebnih za {darkred}Boj z noži: {purple}{1}"
+	}
+
+	"knifefight_rounds"
+	{
+		"svn"		"Runda {purple}{1}{default} od {purple}{2}"
+	}
+
+	"knifefight_twin_nc"
+	{
+		"svn"		"Zapornik je preživel!"
+	}
+
+	"knifefight_voting"
+	{
+		"svn"		"Glasovanje za boj z noži je {purple}onemogočeno!"
+	}
+
+	"knifefight_setbywarden"
+	{
+		"svn"		"Nastavitev Boja z noži s strani vodje je {purple}onemogočena!"
+	}
+
+	"knifefight_setbyadmin"
+	{
+		"svn"		"Nastavitev Boja z noži s strani adminov je {purple}onemogočena!"
+	}
+
 	"knifefight_ctwin_nc"
 	{
 		"svn"		"Paznik je preživel!"
+	}
+
+	"knifefight_minplayer"
+	{
+		"svn"		"Za boj z noži potrebujep vsaj {purple}enega Paznika in enega Zapornika!"
+	}
+
+	"knifefight_end"
+	{
+		"svn"		"{purple}Boj z noži{default} je zaključen."
+	}
+
+	"knifefight_next"
+	{
+		"svn"		"Naslednja runda bo: {purple}Boj z noži."
+	}
+
+	"knifefight_next_nc"
+	{
+		"svn"		"Naslednja runda bo: Boj z noži."
+	}
+
+	"knifefight_start"
+	{
+		"svn"		"{purple}Boj z noži{default} se je začel!"
+	}
+
+	"knifefight_start_nc"
+	{
+		"svn"		"Boj z noži se je začel!"
+	}
+
+	"knifefight_voted"
+	{
+		"svn"		"Du har allerede stemt på {purple}Knife Fight"
+	}
+
+	"knifefight_progress"
+	{
+		"svn"		"Dogodek {darkred}{1} {default}se {purple}že izvaja!"
 	}
 
 	"knifefight_disabled"
@@ -13,9 +93,14 @@
 		"svn"		"Boj z noži je trenutno {purple}onemogočen!"
 	}
 
-	"knifefight_end"
+	"knifefight_timeuntilstart_nc"
 	{
-		"svn"		"{purple}Boj z noži{default} je zaključen."
+		"svn"		"{1} sekund do začetka runde!"
+	}
+
+	"knifefight_info_title"
+	{
+		"svn"		"FFA Boj z noži - Vsak proti vsakem je sedaj aktiviran"
 	}
 
 	"knifefight_info_line1"
@@ -53,99 +138,14 @@
 		"svn"		"Pravila strežnika to rundo še vedno veljajo!"
 	}
 
-	"knifefight_info_title"
+	"knifefight_wait"
 	{
-		"svn"		"FFA Boj z noži - Vsak proti vsakem je sedaj aktiviran"
-	}
-
-	"knifefight_minplayer"
-	{
-		"svn"		"Za boj z noži potrebujep vsaj {purple}enega Paznika in enega Zapornika!"
+		"svn"		"Počakati moraš še {purple}{1}{default} rund za Dan Dogodkov!"
 	}
 
 	"knifefight_name"
 	{
 		"svn"		"Boj z noži"
-	}
-
-	"knifefight_need"
-	{
-		"#format"   "{1:i},{2:N}"
-		"svn"		"{purple}{2}{default} je glasoval. Število glasov potrebnih za {darkred}Boj z noži: {purple}{1}"
-	}
-
-	"knifefight_next"
-	{
-		"svn"		"Naslednja runda bo: {purple}Boj z noži."
-	}
-
-	"knifefight_next_nc"
-	{
-		"svn"		"Naslednja runda bo: Boj z noži."
-	}
-
-	"knifefight_progress"
-	{
-		"#format"   "{1:s}"
-		"svn"		"Dogodek {darkred}{1} {default}se {purple}že izvaja!"
-	}
-
-	"knifefight_rounds"
-	{
-		"#format"   "{1:i},{2:i}"
-		"svn"		"Runda {purple}{1}{default} od {purple}{2}"
-	}
-
-	"knifefight_setbyadmin"
-	{
-		"svn"		"Nastavitev Boja z noži s strani adminov je {purple}onemogočena!"
-	}
-
-	"knifefight_setbywarden"
-	{
-		"svn"		"Nastavitev Boja z noži s strani vodje je {purple}onemogočena!"
-	}
-
-	"knifefight_start"
-	{
-		"svn"		"{purple}Boj z noži{default} se je začel!"
-	}
-
-	"knifefight_start_nc"
-	{
-		"svn"		"Boj z noži se je začel!"
-	}
-
-	"knifefight_tag"
-	{
-		"svn"		"[{green}MyJB.Boj.z.noži{default}]"
-	}
-
-	"knifefight_timeuntilstart_nc"
-	{
-		"#format"   "{1:i}"
-		"svn"		"{1} sekund do začetka runde!"
-	}
-
-	"knifefight_twin_nc"
-	{
-		"svn"		"Zapornik je preživel!"
-	}
-
-	"knifefight_voted"
-	{
-		"svn"		"Du har allerede stemt på {purple}Knife Fight"
-	}
-
-	"knifefight_voting"
-	{
-		"svn"		"Glasovanje za boj z noži je {purple}onemogočeno!"
-	}
-
-	"knifefight_wait"
-	{
-		"#format"   "{1:i}"
-		"svn"		"Počakati moraš še {purple}{1}{default} rund za Dan Dogodkov!"
 	}
 
 }

@@ -1,9 +1,9 @@
 // Exported from SourceMod Translator
-// Date: 2017-04-20 21:44:34 UTC
+// Date: 2017-11-20 02:35:20 UTC
 // Language: English (en)
 // 
 // To view other translations for this plugin, please visit:
-// http://translator.mitchdempsey.com/sourcemod_plugins/187
+// http://translator.mitchdempsey.com/sourcemod_plugins/278
 //
 "Phrases"
 {
@@ -65,16 +65,6 @@
 		"en"		"The following round will be: Arms Race."
 	}
 
-	"armsrace_now_nc"
-	{
-		"en"		"Now a Arms Race round begins."
-	}
-
-	"armsrace_now"
-	{
-		"en"		"Now a {purple}Arms Race{default} round begins."
-	}
-
 	"armsrace_rounds"
 	{
 		"#format"	"{1:i},{2:i}"
@@ -105,12 +95,6 @@
 	"armsrace_disabled"
 	{
 		"en"		"Arms Race is currently {purple}disabled!"
-	}
-
-	"armsrace_damage_nc"
-	{
-		"#format"	"{1:i}"
-		"en"		"{1} seconds until damage enabled"
 	}
 
 	"armsrace_damage_nc"
@@ -200,6 +184,16 @@
 	{
 		"#format"	"{1:s}"
 		"en"		"{purple}Level Up!{default} Now you got a {1}!"
+	}
+
+	"armsrace_now_nc"
+	{
+		"en"		"Now a Arms Race round begins."
+	}
+
+	"armsrace_now"
+	{
+		"en"		"Now a {purple}Arms Race{default} round begins."
 	}
 
 }

@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-04-20 21:44:31 UTC
+// Date: 2017-11-20 02:35:07 UTC
 // Language: English (en)
 // 
 // To view other translations for this plugin, please visit:
@@ -68,16 +68,6 @@
 	"cowboy_next_nc"
 	{
 		"en"		"The following round will be: Cowboy."
-	}
-
-	"cowboy_now_nc"
-	{
-		"en"		"Now a cowboy round begins."
-	}
-
-	"cowboy_now"
-	{
-		"en"		"Now a {purple}cowboy{default} round begins."
 	}
 
 	"cowboy_start"
@@ -161,6 +151,16 @@
 	"cowboy_info_title"
 	{
 		"en"		"Cowboy is now Activated!"
+	}
+
+	"cowboy_now_nc"
+	{
+		"en"		"Now a cowboy round begins."
+	}
+
+	"cowboy_now"
+	{
+		"en"		"Now a {purple}cowboy{default} round begins."
 	}
 
 }

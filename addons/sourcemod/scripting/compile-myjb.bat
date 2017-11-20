@@ -42,6 +42,7 @@ spcomp MyJailbreak/ratio.sp -o../plugins/MyJailbreak/ratio.smx
 spcomp MyJailbreak/icons.sp -o../plugins/MyJailbreak/icons.smx 
 spcomp MyJailbreak/ghosts.sp -o../plugins/MyJailbreak/ghosts.smx 
 spcomp MyJailbreak/oneinthechamber.sp -o../plugins/MyJailbreak/oneinthechamber.smx 
+spcomp MyJailbreak/teleport.sp -o../plugins/MyJailbreak/teleport.smx 
 echo.
 echo.
 echo.

@@ -1,17 +1,12 @@
 // Exported from SourceMod Translator
-// http://translator.mitchdempsey.com/sourcemod_plugins/200
+// Date: 2017-11-20 02:35:07 UTC
+// Language: svn (svn)
+// 
+// To view other translations for this plugin, please visit:
+// http://translator.mitchdempsey.com/sourcemod_plugins/281
 //
 "Phrases"
 {
-	"dealdamage_info_line5"
-	{
-		"svn"		"Last request(!lr) je to rundo onemogočen!"
-	}
-
-	"dealdamage_info_line6"
-	{
-		"svn"		"Vsakdo lahko gre kamorkoli na mapi!"
-	}
 
 	"dealdamage_tag"
 	{
@@ -20,25 +15,12 @@
 
 	"dealdamage_need"
 	{
-		"#format"   "{1:i},{2:N}"
 		"svn"		"{purple}{2}{default} je glasoval. Število glasov potrebnih za {darkred}Povzroči škodo dan: {purple}{1}{default}"
-	}
-
-	"dealdamage_info_line7"
-	{
-		"svn"		"Pravila strežnika to rundo še vedno veljajo!"
 	}
 
 	"dealdamage_rounds"
 	{
-		"#format"   "{1:i},{2:i}"
 		"svn"		"Runda {purple}{1}{default} od {purple}{2}."
-	}
-
-	"dealdamage_wait"
-	{
-		"#format"   "{1:i}"
-		"svn"		"Počakati moraš še {purple}{1}{default} rund za Dan Dogodkov!"
 	}
 
 	"dealdamage_voting"
@@ -51,31 +33,14 @@
 		"svn"		"Nastavitev dneva povzročitve škoda s strani wardena je {purple}onemogočena!"
 	}
 
-	"dealdamage_result"
-	{
-		"svn"		"Rezultati povzročene škode:"
-	}
-
 	"dealdamage_setbyadmin"
 	{
 		"svn"		"Nastavitev dne povzročitve škoda s strani adminov je {purple}onemogočena!"
 	}
 
-	"dealdamage_total"
-	{
-		"#format"   "{1:i}"
-		"svn"		"Skupna škoda: {1} HP"
-	}
-
 	"dealdamage_end"
 	{
 		"svn"		"{purple}Dan povzročitve škode{default} se je zaključil!"
-	}
-
-	"dealdamage_most"
-	{
-		"#format"   "{1:N},{2:i}"
-		"svn"		"Največ škode povzročila oseba: {1} Škoda: {2} HP"
 	}
 
 	"dealdamage_next"
@@ -103,15 +68,8 @@
 		"svn"		"Ti si že glasoval za {purple}Dan povzročitve škode"
 	}
 
-	"dealdamage_client"
-	{
-		"#format"   "{1:i}"
-		"svn"		"Tvoja škoda: {1} HP"
-	}
-
 	"dealdamage_progress"
 	{
-		"#format"   "{1:s}"
 		"svn"		"Dogodek {darkred}{1} {default}se {purple}že izvaja!"
 	}
 
@@ -122,23 +80,12 @@
 
 	"dealdamage_timeuntilstart_nc"
 	{
-		"#format"   "{1:i}"
 		"svn"		"{1} Sekund pred začetkom!"
-	}
-
-	"dealdamage_clientdealed"
-	{
-		"svn"		"Tvoje povzročeno:"
 	}
 
 	"dealdamage_info_title"
 	{
 		"svn"		"Dan povzročitve škode je aktiviran!"
-	}
-
-	"dealdamage_hpdamage"
-	{
-		"svn"		"HP škoda"
 	}
 
 	"dealdamage_info_line1"
@@ -159,6 +106,56 @@
 	"dealdamage_info_line4"
 	{
 		"svn"		"To rundo ne veljajo običajna pravila Jailbreak-a!"
+	}
+
+	"dealdamage_info_line5"
+	{
+		"svn"		"Last request(!lr) je to rundo onemogočen!"
+	}
+
+	"dealdamage_info_line6"
+	{
+		"svn"		"Vsakdo lahko gre kamorkoli na mapi!"
+	}
+
+	"dealdamage_info_line7"
+	{
+		"svn"		"Pravila strežnika to rundo še vedno veljajo!"
+	}
+
+	"dealdamage_wait"
+	{
+		"svn"		"Počakati moraš še {purple}{1}{default} rund za Dan Dogodkov!"
+	}
+
+	"dealdamage_result"
+	{
+		"svn"		"Rezultati povzročene škode:"
+	}
+
+	"dealdamage_total"
+	{
+		"svn"		"Skupna škoda: {1} HP"
+	}
+
+	"dealdamage_most"
+	{
+		"svn"		"Največ škode povzročila oseba: {1} Škoda: {2} HP"
+	}
+
+	"dealdamage_client"
+	{
+		"svn"		"Tvoja škoda: {1} HP"
+	}
+
+	"dealdamage_clientdealed"
+	{
+		"svn"		"Tvoje povzročeno:"
+	}
+
+	"dealdamage_hpdamage"
+	{
+		"svn"		"HP škoda"
 	}
 
 	"dealdamage_name"

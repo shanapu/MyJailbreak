@@ -1,8 +1,38 @@
 // Exported from SourceMod Translator
+// Date: 2017-11-20 02:35:02 UTC
+// Language: svn (svn)
+// 
+// To view other translations for this plugin, please visit:
 // http://translator.mitchdempsey.com/sourcemod_plugins/196
 //
 "Phrases"
 {
+
+	"request_tag"
+	{
+		"svn"		"[{green}MyJB.Prošnje{default}]"
+	}
+
+	"request_openrefuse"
+	{
+		"svn"		"Vodja je omogočil zavrnitve.{purple} napiši !refuse da zavrneš igro!"
+	}
+
+	"request_refusing"
+	{
+		"svn"		"{purple}{1} {default}je {purple}zavrnil igro!"
+	}
+
+	"request_alreadyrefused"
+	{
+		"svn"		"Ti si {purple}že zavrnil igro!"
+	}
+
+	"request_refuseallow"
+	{
+		"svn"		"Vodja mora najprej {purple}omogočiti zavrnitve z !refuse"
+	}
+
 	"request_notalivect"
 	{
 		"svn"		"Si mrtev ali pa policaj!"
@@ -15,20 +45,12 @@
 
 	"request_refusedtimes"
 	{
-		"#format"   "{1:i}"
 		"svn"		"Si bil že {purple}zavrnjen {1}x{default} v tej rundi!"
 	}
 
 	"request_capitulation"
 	{
-		"#format"   "{1:N}"
 		"svn"		"{purple}{1} {default}je {purple}kapituliral! {default}Ali bo vodja sprejel zahtevo?"
-	}
-
-	"request_capitulated"
-	{
-		"#format"   "{1:N}"
-		"svn"		"{purple}{1} {default}je {purple}kapituliral!"
 	}
 
 	"request_alreadycapitulated"
@@ -43,13 +65,11 @@
 
 	"request_accepted"
 	{
-		"#format"   "{1:N},{2:N}"
 		"svn"		"{2} je sprejel prošnjo igralca {1}."
 	}
 
 	"request_noaccepted"
 	{
-		"#format"   "{1:N},{2:N}"
 		"svn"		"{2} nažalost {purple}ni {default} sprejel prošnje igralca {1}."
 	}
 
@@ -73,26 +93,24 @@
 		"svn"		"Dobil si {purple} Healthshot{default}!"
 	}
 
-	"request_healtimes"
-	{
-		"#format"   "{1:i}"
-		"svn"		"Zdravljenje si zaprosil že{purple}{1} x{default} v tej rundi!"
-	}
-
-	"request_nodamage"
-	{
-		"svn"		"Po kapitulaciji {purple}ne moraš delati damage-a!"
-	}
-
 	"request_heal"
 	{
-		"#format"   "{1:N}"
 		"svn"		"{purple}{1} {default}zahteva {purple}zdravljenje! {default}Ali bo vodja sprejel zahtevo?"
+	}
+
+	"request_healtimes"
+	{
+		"svn"		"Zdravljenje si zaprosil že{purple}{1} x{default} v tej rundi!"
 	}
 
 	"request_alreadyhealed"
 	{
 		"svn"		"Ti si že zaheteval {purple}zdravljenje!"
+	}
+
+	"request_nodamage"
+	{
+		"svn"		"Po kapitulaciji {purple}ne moraš delati damage-a!"
 	}
 
 	"request_processing"
@@ -102,13 +120,11 @@
 
 	"request_repeatpls"
 	{
-		"#format"   "{1:N}"
 		"svn"		"{purple}{1} {default}je zahteval {purple}ponovitev!{default}"
 	}
 
 	"request_repeattimes"
 	{
-		"#format"   "{1:i}"
 		"svn"		"Zahtevo za {purple} ponovitev si zahteval že {1}x{default} med to rundo!"
 	}
 
@@ -147,40 +163,24 @@
 		"svn"		"Predaja"
 	}
 
-	"request_openrefuse"
+	"request_menu_freekill"
 	{
-		"svn"		"Vodja je omogočil zavrnitve.{purple} napiši !refuse da zavrneš igro!"
+		"svn"		"Prijavi freekill"
 	}
 
-	"request_tag"
+	"request_freekill"
 	{
-		"svn"		"[{green}MyJB.Prošnje{default}]"
+		"svn"		"{green}{1}{default} je poslal prijavo freekilla igralca {darkred}{2}{default} za {purple}{3}!"
 	}
 
-	"request_refusing"
+	"request_pardonfreekill"
 	{
-		"#format"   "{1:N}"
-		"svn"		"{purple}{1} {default}je {purple}zavrnil igro!"
-	}
-
-	"request_alreadyrefused"
-	{
-		"svn"		"Ti si {purple}že zavrnil igro!"
-	}
-
-	"request_refuseallow"
-	{
-		"svn"		"Vodja mora najprej {purple}omogočiti zavrnitve z !refuse"
+		"svn"		"Je bil to freekill?"
 	}
 
 	"request_handlefreekill"
 	{
 		"svn"		"Kako želiš obravnavati ta freekill?"
-	}
-
-	"request_respawncell"
-	{
-		"svn"		"Respawn v celici"
 	}
 
 	"request_respawnvictim"
@@ -191,11 +191,6 @@
 	"request_killfreekiller"
 	{
 		"svn"		"Usmrtitev povzročitelja"
-	}
-
-	"request_respawnwarden"
-	{
-		"svn"		"Respawn pred wardenom"
 	}
 
 	"request_freeday"
@@ -225,14 +220,7 @@
 
 	"request_respawnedall"
 	{
-		"#format"   "{1:N}"
 		"svn"		"{1} je bil respawnan zaradi {darkred}Freekilla!"
-	}
-
-	"request_freekilltimes"
-	{
-		"#format"   "{1:i}"
-		"svn"		"Ti si že prijavil Freekill {purple}{1}x{default} v tej rundi."
 	}
 
 	"request_killbcfreekill"
@@ -242,7 +230,6 @@
 
 	"request_killbcfreekillall"
 	{
-		"#format"   "{1:N}"
 		"svn"		"{green}{1}{default} je bil usmrčen zaradi {darkred}Freekilla!"
 	}
 
@@ -253,24 +240,7 @@
 
 	"request_swapbcfreekillall"
 	{
-		"#format"   "{1:N}"
 		"svn"		"{green}{1}{default} je bil premaknjen v zapornike zaradi {darkred}freekilla!"
-	}
-
-	"request_menu_freekill"
-	{
-		"svn"		"Prijavi freekill"
-	}
-
-	"request_freekill"
-	{
-		"#format"   "{1:N},{2:N},{3:N}"
-		"svn"		"{green}{1}{default} je poslal prijavo freekilla igralca {darkred}{2}{default} za {purple}{3}!"
-	}
-
-	"request_pardonfreekill"
-	{
-		"svn"		"Je bil to freekill?"
 	}
 
 	"request_handlerespawn"
@@ -283,22 +253,19 @@
 		"svn"		"Respawn na kraju smrti"
 	}
 
-	"request_killreason_notfollow_chat"
+	"request_respawncell"
 	{
-		"#format"   "{1:N},{2:N}"
-		"svn"		"Paznik {green}{1}{default} trdi da {darkred}{2}{default} ni sledil zahtevam"
+		"svn"		"Respawn v celici"
 	}
 
-	"request_killreason_sry_chat"
+	"request_respawnwarden"
 	{
-		"#format"   "{1:N},{2:N}"
-		"svn"		"Paznik {green}{1}{default} se želi opravičiti za freekill osebe {darkred}{2}{default}"
+		"svn"		"Respawn pred wardenom"
 	}
 
-	"request_killreason_freekill_chat"
+	"request_freekilltimes"
 	{
-		"#format"   "{1:N},{2:N}"
-		"svn"		"Paznik {green}{1}{default} priznava freekill osebe {darkred}{2}{default}"
+		"svn"		"Ti si že prijavil Freekill {purple}{1}x{default} v tej rundi."
 	}
 
 	"request_freedayvictim"
@@ -306,43 +273,14 @@
 		"svn"		"Daj žrtvi freeday naslednjo rundo"
 	}
 
-	"request_personalfreeday"
-	{
-		"#format"   "{1:N}"
-		"svn"		"{1} dobi osebni freeday naslednjo rundo"
-	}
-
-	"request_havefreeday"
-	{
-		"#format"   "{1:N}"
-		"svn"		"{1} ima sedaj osebni freeday!"
-	}
-
-	"request_freedayforyou"
-	{
-		"svn"		"Naslednjo rundo dobiš osebni freeday"
-	}
-
-	"request_givefreeday"
-	{
-		"svn"		"Dodeli freeday osebi:"
-	}
-
 	"request_killreason_title"
 	{
-		"#format"   "{1:N}"
 		"svn"		"Si ubil {1}???"
 	}
 
 	"request_killreason_lostgame"
 	{
 		"svn"		"Je izgubil igro"
-	}
-
-	"request_killreason_noanswer"
-	{
-		"#format"   "{1:N},{2:N}"
-		"svn"		"Paznik {green}{1}{default} nima izjave za umor igralca {darkred}{2}{default}"
 	}
 
 	"request_killreason_rebel"
@@ -372,27 +310,44 @@
 
 	"request_killreason_lostgame_chat"
 	{
-		"#format"   "{1:N},{2:N}"
 		"svn"		"Paznik {green}{1}{default} trdi da je  {darkred}{2}{default} izgubil igro"
 	}
 
 	"request_killreason_rebel_chat"
 	{
-		"#format"   "{1:N},{2:N}"
 		"svn"		"Paznik {green}{1}{default} trdi da je {darkred}{2}{default} bil upornik"
 	}
 
 	"request_killreason_brokerule_chat"
 	{
-		"#format"   "{1:N},{2:N}"
 		"svn"		"Paznik {green}{1}{default} trdi da je {darkred}{2}{default} kršil pravila"
 	}
+
 	"request_killreason_notfollow_chat"
 	{
-		"#format"	"{1:N},{2:N}"
 		"svn"		"Paznik {green}{1}{default} trdi da oseba {darkred}{2}{default} ni sledila ukazom"
-	}	
-	
+	}
+
+	"request_killreason_sry_chat"
+	{
+		"svn"		"Paznik {green}{1}{default} se želi opravičiti za freekill osebe {darkred}{2}{default}"
+	}
+
+	"request_killreason_freekill_chat"
+	{
+		"svn"		"Paznik {green}{1}{default} priznava freekill osebe {darkred}{2}{default}"
+	}
+
+	"request_killreason_noanswer"
+	{
+		"svn"		"Paznik {green}{1}{default} nima izjave za umor igralca {darkred}{2}{default}"
+	}
+
+	"request_capitulated"
+	{
+		"svn"		"{purple}{1} {default}je {purple}kapituliral!"
+	}
+
 	"request_close"
 	{
 		"svn"		"Izhod"
@@ -410,13 +365,11 @@
 
 	"request_stopcountdown_nc"
 	{
-		"#format"	"{1:i}"
 		"svn"		"Ustavi/zaključi čez {1} sekund!"
 	}
 
 	"request_stopcountdown"
 	{
-		"#format"	"{1:i}"
 		"svn"		"Ustavi se čez {purple}{1}{default} sekund!"
 	}
 

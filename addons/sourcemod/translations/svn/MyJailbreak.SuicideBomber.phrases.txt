@@ -1,8 +1,13 @@
 // Exported from SourceMod Translator
+// Date: 2017-11-20 02:35:08 UTC
+// Language: svn (svn)
+// 
+// To view other translations for this plugin, please visit:
 // http://translator.mitchdempsey.com/sourcemod_plugins/182
 //
 "Phrases"
 {
+
 	"suicidebomber_tag"
 	{
 		"svn"		"[{green}MyJB.Samomorilec{default}]"
@@ -10,30 +15,17 @@
 
 	"suicidebomber_need"
 	{
-		"#format"   "{1:i},{2:N}"
 		"svn"		"{purple}{2}{default} je glasoval. Število glasov potrebnih za {darkred}Samomorilca: {purple}{1}"
-	}
-
-	"suicidebomber_timeuntilopen_nc"
-	{
-		"#format"   "{1:i}"
-		"svn"		"{1} Sekund preden se odprejo celice!"
 	}
 
 	"suicidebomber_rounds"
 	{
-		"#format"   "{1:i},{2:i}"
 		"svn"		"Runda {purple}{1}{default} od {purple}{2}"
 	}
 
 	"suicidebomber_twin_nc"
 	{
 		"svn"		"Vsi pazniki so bili eliminirani!"
-	}
-
-	"suicidebomber_info_title"
-	{
-		"svn"		"Samomorilec je sedaj aktiviran!"
 	}
 
 	"suicidebomber_voting"
@@ -46,19 +38,9 @@
 		"svn"		"Nastavitev samomorilca s strani vodje je {purple}onemogočena!"
 	}
 
-	"suicidebomber_info_line1"
-	{
-		"svn"		"Samomorilci so povsod!"
-	}
-
 	"suicidebomber_minplayer"
 	{
 		"svn"		"Za samomorilca potrebuješ vsaj {purple}enega Paznika & enega Zapornika!"
-	}
-
-	"suicidebomber_info_line2"
-	{
-		"svn"		"Zaporniki so sedaj Jihadi in se lahko ubijejo z +lookweapon 'F' -gumbom!"
 	}
 
 	"suicidebomber_setbyadmin"
@@ -69,11 +51,6 @@
 	"suicidebomber_ctwin_nc"
 	{
 		"svn"		"Paznik je preživel!"
-	}
-
-	"suicidebomber_info_line3"
-	{
-		"svn"		"Drži E za tek!"
 	}
 
 	"suicidebomber_end"
@@ -91,11 +68,6 @@
 		"svn"		"Naslednja runda bo: Samomorilec."
 	}
 
-	"suicidebomber_info_line4"
-	{
-		"svn"		"To rundo ne veljajo običajna pravila Jailbreak-a!"
-	}
-
 	"suicidebomber_start"
 	{
 		"svn"		"{purple}Samomorilec{default} se je začel!"
@@ -106,11 +78,6 @@
 		"svn"		"Samomorilec se je začel!"
 	}
 
-	"suicidebomber_info_line5"
-	{
-		"svn"		"Last request(!lr) je to rundo onemogočen."
-	}
-
 	"suicidebomber_voted"
 	{
 		"svn"		"Ti si že glasoval za {purple}Samomorilca!"
@@ -118,13 +85,7 @@
 
 	"suicidebomber_progress"
 	{
-		"#format"   "{1:s}"
 		"svn"		"Dogodek {darkred}{1} {default}se {purple}že izvaja!"
-	}
-
-	"suicidebomber_info_line6"
-	{
-		"svn"		"Vsakdo lahko gre kamorkoli na mapi!"
 	}
 
 	"suicidebomber_disabled"
@@ -137,14 +98,8 @@
 		"svn"		"Sedaj {blue}Tečeš!"
 	}
 
-	"suicidebomber_info_line7"
-	{
-		"svn"		"Pravila strežnika to rundo še vedno veljajo!"
-	}
-
 	"suicidebomber_sprintend"
 	{
-		"#format"   "{1:i}"
 		"svn"		"{blue}Preveč si utrujen za tek!{default} Počivaj {1} sekund."
 	}
 
@@ -153,16 +108,59 @@
 		"svn"		"Sedaj si odpočit. Spet lahko {blue}tečeš!"
 	}
 
-	"suicidebomber_wait"
-	{
-		"#format"   "{1:i}"
-		"svn"		"Počakati moraš še {purple}{1}{default} rund za Dan Dogodkov!"
-	}
-
 	"suicidebomber_timetohide_nc"
 	{
-		"#format"   "{1:i}"
 		"svn"		"{1} preostalih sekund da se skriješ!"
+	}
+
+	"suicidebomber_timeuntilopen_nc"
+	{
+		"svn"		"{1} Sekund preden se odprejo celice!"
+	}
+
+	"suicidebomber_info_title"
+	{
+		"svn"		"Samomorilec je sedaj aktiviran!"
+	}
+
+	"suicidebomber_info_line1"
+	{
+		"svn"		"Samomorilci so povsod!"
+	}
+
+	"suicidebomber_info_line2"
+	{
+		"svn"		"Zaporniki so sedaj Jihadi in se lahko ubijejo z +lookweapon 'F' -gumbom!"
+	}
+
+	"suicidebomber_info_line3"
+	{
+		"svn"		"Drži E za tek!"
+	}
+
+	"suicidebomber_info_line4"
+	{
+		"svn"		"To rundo ne veljajo običajna pravila Jailbreak-a!"
+	}
+
+	"suicidebomber_info_line5"
+	{
+		"svn"		"Last request(!lr) je to rundo onemogočen."
+	}
+
+	"suicidebomber_info_line6"
+	{
+		"svn"		"Vsakdo lahko gre kamorkoli na mapi!"
+	}
+
+	"suicidebomber_info_line7"
+	{
+		"svn"		"Pravila strežnika to rundo še vedno veljajo!"
+	}
+
+	"suicidebomber_wait"
+	{
+		"svn"		"Počakati moraš še {purple}{1}{default} rund za Dan Dogodkov!"
 	}
 
 	"suicidebomber_name"

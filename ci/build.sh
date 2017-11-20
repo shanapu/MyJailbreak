@@ -122,6 +122,13 @@ echo "Download sourcefiles & create clean scripting folder"
 git clone --depth=50 --branch=$2 https://github.com/shanapu/MyJailbreak.git source/MyJailbreak
 mv source/MyJailbreak/addons/sourcemod/scripting build/gameserver/addons/sourcemod
 
+echo "Set plugins version"
+for file in addons/sourcemod/scripting/include/myjailbreak.inc
+do
+  sed -i "s/<COMMIT>/$BID/g" $file > output.txt
+  rm output.txt
+done
+
 echo "Set plugins version in source"
 for file in build/gameserver/addons/sourcemod/scripting/include/myjailbreak.inc
 do

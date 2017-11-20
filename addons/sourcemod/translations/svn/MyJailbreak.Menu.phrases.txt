@@ -1,6 +1,6 @@
 // Exported from SourceMod Translator
-// Date: 2017-01-09 19:41:25 UTC
-// Language: English (en)
+// Date: 2017-11-20 02:35:00 UTC
+// Language: svn (svn)
 // 
 // To view other translations for this plugin, please visit:
 // http://translator.mitchdempsey.com/sourcemod_plugins/180
@@ -173,11 +173,6 @@
 		"svn"		"Zombie dan"
 	}
 
-	"menu_dealdamage"
-	{
-		"svn"		"Povzroči damage dan"
-	}
-
 	"menu_hide"
 	{
 		"svn"		"Skrij se v temi"
@@ -228,11 +223,6 @@
 		"svn"		"Racelov"
 	}
 
-	"menu_freeday"
-	{
-		"svn"		"Prost dan"
-	}
-
 	"menu_admin"
 	{
 		"svn"		"Admin Menu"
@@ -270,7 +260,6 @@
 
 	"menu_votingwon"
 	{
-		"#format"	"{1:s},{2:i},{3:i}"
 		"svn"		"Glasovanje se je končalo z {2} glasovi. {green}{1} {default} je zmagal z{3} glasovi."
 	}
 
@@ -281,13 +270,11 @@
 
 	"menu_progress"
 	{
-		"#format"	"{1:s}"
 		"svn"		"Poseben dan {darkred}{1} {default}je {purple}že v teku!"
 	}
 
 	"menu_wait"
 	{
-		"#format"	"{1:i}"
 		"svn"		"Počakati moraš {purple}{1}{default} rund, da se lahko začne glasovanje!"
 	}
 
@@ -363,7 +350,6 @@
 
 	"menu_votingcancel"
 	{
-		"#format"	"{1:s}"
 		"svn"		"Glasovanje je prekinjeno saj je poseben dan {purple}{1}{default} že nastavljen!"
 	}
 
@@ -381,25 +367,40 @@
 	{
 		"svn"		"Izprazni vrsto paznikov"
 	}
+
 	"menu_noevent"
 	{
 		"svn"		"Brez posebnega dneva"
 	}
+
 	"menu_joinspec"
 	{
 		"svn"		"Pojdi opazovat"
 	}
+
 	"menu_gangs"
 	{
 		"svn"		"Menu tolpe"
-	}		
-			
-	"menu_teleport"		
-	{		
-		"svn"		"Teleportacijska bitka"		
-	}		
-	"menu_armsrace"		
-	{		
-		"svn"		"Bitka orožij"		
 	}
+
+	"menu_teleport"
+	{
+		"svn"		"Teleportacijska bitka"
+	}
+
+	"menu_armsrace"
+	{
+		"svn"		"Bitka orožij"
+	}
+
+	"menu_dealdamage"
+	{
+		"svn"		"Povzroči damage dan"
+	}
+
+	"menu_freeday"
+	{
+		"svn"		"Prost dan"
+	}
+
 }

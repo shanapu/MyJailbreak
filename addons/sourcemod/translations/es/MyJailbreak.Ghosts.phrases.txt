@@ -1,6 +1,6 @@
 // Exported from SourceMod Translator
-// Date: 2017-05-17 21:17:21 UTC
-// Language: English (en)
+// Date: 2017-11-20 02:35:19 UTC
+// Language: Spanish (es)
 // 
 // To view other translations for this plugin, please visit:
 // http://translator.mitchdempsey.com/sourcemod_plugins/271
@@ -15,7 +15,6 @@
 
 	"ghosts_need"
 	{
-		"#format"	"{1:i},{2:N}"
 		"es"		"{purple}{2}{default} ha votado. {purple}{1}{default} voto(s) requerido para jugar {darkred}Ghosts."
 	}
 
@@ -66,7 +65,6 @@
 
 	"ghosts_rounds"
 	{
-		"#format"	"{1:i},{2:i}"
 		"es"		"Ronda {purple}{1}{default} de {purple}{2}"
 	}
 
@@ -87,7 +85,6 @@
 
 	"ghosts_progress"
 	{
-		"#format"	"{1:s}"
 		"es"		"El evento {darkred}{1} {default}ya {purple}está en progreso!"
 	}
 
@@ -98,7 +95,6 @@
 
 	"ghosts_damage_nc"
 	{
-		"#format"	"{1:i}"
 		"es"		"{1} segundos hasta que el daño sea activado"
 	}
 
@@ -144,7 +140,6 @@
 
 	"ghosts_wait"
 	{
-		"#format"	"{1:i}"
 		"es"		"Debes esperar {purple}{1}{default} rondas mas para otro {purple} Evento!"
 	}
 
