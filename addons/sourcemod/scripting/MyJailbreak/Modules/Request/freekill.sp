@@ -31,12 +31,12 @@
 #include <cstrike>
 #include <colors>
 #include <autoexecconfig>
-#include <warden>
-#include <myjbwarden>
 #include <mystocks>
 
 // Optional Plugins
 #undef REQUIRE_PLUGIN
+#include <warden>
+#include <myjbwarden>
 #include <myjailbreak>
 #include <smartjaildoors>
 #define REQUIRE_PLUGIN
@@ -139,7 +139,7 @@ public Action Command_Freekill(int client, int args)
 							int a = GetRandomAdmin();
 							if ((a != -1) && gc_bReportAdmin.BoolValue)
 							{
-								if (!gc_bReportAdminSpec.BoolValue && GetClientTeam(a) == CS_TEAM_SPECTATOR)
+								if (!gc_bReportAdminSpec.BoolValue && GetClientTeam(a) == CS_TEAM_SPECTATOR && (gp_bWarden || gp_bMyJBWarden))
 								{
 									for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, true)) if (warden_iswarden(i) && gc_bReportWarden.BoolValue)
 									{
@@ -157,7 +157,7 @@ public Action Command_Freekill(int client, int args)
 									if (gp_bMyJailBreak) if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sFreeKillLogFile, "Player %L claiming %L freekilled him. Reported to admin %L", client, attacker, a);
 								}
 							}
-							else for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, true)) if (warden_iswarden(i) && gc_bReportWarden.BoolValue)
+							else for (int i = 1; i <= MaxClients; i++) if (gp_bWarden || gp_bMyJBWarden) if (IsValidClient(i, false, true)) if (warden_iswarden(i) && gc_bReportWarden.BoolValue)
 							{
 								g_iFreeKillCounter[client]++;
 								FreeKillAcceptMenu(i);
@@ -278,7 +278,7 @@ public int FreeKillAcceptHandler(Menu menu, MenuAction action, int client, int P
 			Format(info, sizeof(info), "%T", "request_freeday", client);
 			if (gc_bFreeKillFreeDay.BoolValue) menu1.AddItem("3", info);
 			Format(info, sizeof(info), "%T", "request_freedayvictim", client);
-			if (gc_bFreeKillFreeDayVictim.BoolValue) menu1.AddItem("5", info);
+			if (gc_bFreeKillFreeDayVictim.BoolValue && gp_bMyJBWarden) menu1.AddItem("5", info);
 			Format(info, sizeof(info), "%T", "request_swapfreekiller", client);
 			if (gc_bFreeKillSwap.BoolValue) menu1.AddItem("4", info);
 			menu1.Display(client, MENU_TIME_FOREVER);
@@ -321,7 +321,7 @@ public int FreeKillHandler(Menu menu, MenuAction action, int client, int Positio
 			Format(info, sizeof(info), "%T", "request_respawncell", client);
 			menu1.AddItem("2", info);
 			Format(info, sizeof(info), "%T", "request_respawnwarden", client);
-			if (warden_exist()) menu1.AddItem("3", info);
+			if (gp_bWarden || gp_bMyJBWarden) if (warden_exist()) menu1.AddItem("3", info);
 			menu1.Display(client, MENU_TIME_FOREVER);
 		}
 		if (choice == 2) // kill freekiller

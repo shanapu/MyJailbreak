@@ -38,13 +38,13 @@
 #undef REQUIRE_PLUGIN
 #include <myjailbreak>
 #include <smartjaildoors>
+#include <warden>
+#include <myjbwarden>
 #define REQUIRE_PLUGIN
 
 // Required Plugins
 #include <hosties>
 #include <lastrequest>
-#include <warden>
-#include <myjbwarden>
 
 // Compiler Options
 #pragma semicolon 1
@@ -61,6 +61,8 @@ bool g_bIsRequest = false;
 bool g_bIsLR = false;
 bool gp_bMyJailBreak = false;
 bool gp_bSmartJailDoors = false;
+bool gp_bWarden = false;
+bool gp_bMyJBWarden = false;
 
 // Integers
 int g_iKilledBy[MAXPLAYERS+1];
@@ -147,6 +149,8 @@ public void OnAllPluginsLoaded()
 {
 	gp_bMyJailBreak = LibraryExists("myjailbreak");
 	gp_bSmartJailDoors = LibraryExists("smartjaildoors");
+	gp_bWarden = LibraryExists("warden");
+	gp_bMyJBWarden = LibraryExists("myjbwarden");
 }
 
 public void OnLibraryRemoved(const char[] name)
@@ -156,6 +160,12 @@ public void OnLibraryRemoved(const char[] name)
 
 	if (StrEqual(name, "smartjaildoors"))
 		gp_bSmartJailDoors = false;
+
+	if (StrEqual(name, "warden"))
+		gp_bWarden = false;
+
+	if (StrEqual(name, "myjbwarden"))
+		gp_bMyJBWarden = false;
 }
 
 public void OnLibraryAdded(const char[] name)
@@ -165,6 +175,12 @@ public void OnLibraryAdded(const char[] name)
 
 	if (StrEqual(name, "smartjaildoors"))
 		gp_bSmartJailDoors = true;
+
+	if (StrEqual(name, "warden"))
+		gp_bWarden = true;
+
+	if (StrEqual(name, "myjbwarden"))
+		gp_bMyJBWarden = true;
 }
 
 /******************************************************************************

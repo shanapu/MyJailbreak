@@ -35,6 +35,11 @@
 #include <myjbwarden>
 #include <mystocks>
 
+#undef REQUIRE_PLUGIN
+#include <warden>
+#include <myjbwarden>
+#define REQUIRE_PLUGIN
+
 // Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
@@ -115,7 +120,7 @@ public Action Command_Repeat(int client, int args)
 						g_bRepeated[client] = true;
 						CPrintToChatAll("%t %t", "request_tag", "request_repeatpls", client);
 						g_hTimerRepeat[client] = CreateTimer(10.0, Timer_RepeatEnd, GetClientUserId(client));
-						if (warden_exist())
+						if ((gp_bWarden || gp_bMyJBWarden) && warden_exist())
 						{
 							for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (warden_iswarden(i) || warden_deputy_isdeputy(i)) RepeatMenu(i);
 						}

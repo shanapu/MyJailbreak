@@ -128,7 +128,7 @@ public Action Command_refuse(int client, int args)
 	{
 		if (gc_bRefuse.BoolValue)
 		{
-			if (warden_iswarden(client) && gc_bWardenAllowRefuse.BoolValue)
+			if ((gp_bWarden || gp_bMyJBWarden) && warden_iswarden(client) && gc_bWardenAllowRefuse.BoolValue)
 			{
 				if (!g_bAllowRefuse)
 				{
@@ -137,7 +137,7 @@ public Action Command_refuse(int client, int args)
 					CPrintToChatAll("%t %t", "request_tag", "request_openrefuse");
 				}
 			}
-			if (!warden_iswarden(client))
+			if ((!gp_bWarden && !gp_bMyJBWarden) || !warden_iswarden(client))
 			{
 				if (GetClientTeam(client) == CS_TEAM_T && IsPlayerAlive(client))
 				{
