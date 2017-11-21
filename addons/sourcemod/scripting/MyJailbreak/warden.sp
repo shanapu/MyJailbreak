@@ -30,7 +30,6 @@
 #include <sdkhooks>
 #include <cstrike>
 #include <emitsoundany>
-#include <smlib>
 #include <colors>
 #include <autoexecconfig>
 #include <warden>

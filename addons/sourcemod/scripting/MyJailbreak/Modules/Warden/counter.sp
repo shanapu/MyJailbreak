@@ -114,7 +114,7 @@ public Action Command_Counter(int client, any args)
 				{
 					if (g_bCounted[i])
 					{
-						int userdistance = RoundToNearest(Math_UnitsToMeters(g_fDistance[i]));
+						int userdistance = RoundToNearest(g_fDistance[i] * 0.01905);  // 0.01905 GAMEUNITS_TO_METERS
 						char userid[11];
 						char username[MAX_NAME_LENGTH];
 						IntToString(GetClientUserId(i), userid, sizeof(userid));

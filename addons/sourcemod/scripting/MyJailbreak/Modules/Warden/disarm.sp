@@ -107,7 +107,7 @@ public Action Disarm_Event_PlayerHurt(Event event, char[] name, bool dontBroadca
 							
 							if (IsValidEdict(victimweapon))
 							{
-								if (Entity_GetOwner(victimweapon) == -1)
+								if (GetEntPropEnt(victimweapon, Prop_Data, "m_hOwnerEntity") == -1)
 								{
 									AcceptEntityInput(victimweapon, "Kill");
 								}

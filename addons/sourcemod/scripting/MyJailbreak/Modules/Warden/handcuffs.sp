@@ -36,6 +36,7 @@
 #include <myjbwarden>
 #include <mystocks>
 
+
 //Optional Plugins
 #undef REQUIRE_PLUGIN
 #include <hosties>
@@ -233,7 +234,8 @@ public void HandCuffs_Event_WeaponFire(Event event, char[] name, bool dontBroadc
 
 		if (StrEqual(sWeapon, "weapon_taser"))
 		{
-			SetPlayerAmmo(client, Client_GetActiveWeapon(client), _, 2);
+			int weapon = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
+			SetPlayerAmmo(client, weapon, _, 2);
 		}
 	}
 }
@@ -260,10 +262,15 @@ public Action HandCuffs_OnPlayerRunCmd(int client, int &buttons, int &impulse, f
 			
 			if (IsValidClient(Target, true, false) && g_bCuffed[Target])
 			{
-				float distance = Entity_GetDistance(client, Target);
-				distance = Math_UnitsToMeters(distance);
+				float distance = 0.0;
 				
-				if ((gc_iHandCuffsDistance.IntValue > distance) && !Client_IsLookingAtWall(client, Entity_GetDistance(client, Target)+40.0))
+				float clientOrigin[3];
+				float targetOrigin[3];
+				GetClientAbsOrigin(client, clientOrigin);
+				GetClientAbsOrigin(Target, targetOrigin);
+				distance = GetVectorDistance(clientOrigin, targetOrigin, false) * 0.01905;  // 0.01905 GAMEUNITS_TO_METERS
+				
+				if ((gc_iHandCuffsDistance.IntValue > distance) && !IsLookingAtWall(client, GetDistance(client, Target)+40.0))
 				{
 					float origin[3];
 					GetClientAbsOrigin(client, origin);
@@ -508,7 +515,11 @@ void FreeEm(int client, int attacker)
 	ProgressTimer[client] = null;
 
 	if (gc_bSounds)StopSoundAny(client, SNDCHAN_AUTO, g_sSoundUnLockCuffsPath);
-	if ((attacker != 0) && (g_iCuffed == 0) && (g_iPlayerHandCuffs[attacker] < 1)) SetPlayerAmmo(attacker, Client_GetActiveWeapon(attacker), _, 0);
+	if ((attacker != 0) && (g_iCuffed == 0) && (g_iPlayerHandCuffs[attacker] < 1))
+	{
+		int weapon = GetEntPropEnt(attacker, Prop_Send, "m_hActiveWeapon");
+		SetPlayerAmmo(attacker, weapon, _, 0);
+	}
 	if (attacker != 0) CPrintToChatAll("%t %t", "warden_tag", "warden_cuffsoff", attacker, client);
 }
 
@@ -739,6 +750,54 @@ void StripZeus(int client)
 		AcceptEntityInput(weapon, "Kill");
 	}
 }
+
+bool IsLookingAtWall(int client, float distance=40.0) {
+
+	float posEye[3], posEyeAngles[3];
+	bool isClientLookingAtWall = false;
+
+	GetClientEyePosition(client,	posEye);
+	GetClientEyeAngles(client,		posEyeAngles);
+
+	posEyeAngles[0] = 0.0;
+
+	Handle trace = TR_TraceRayFilterEx(posEye, posEyeAngles, CONTENTS_SOLID, RayType_Infinite, LookingWall_TraceEntityFilter);
+
+	if (TR_DidHit(trace)) {
+
+		if (TR_GetEntityIndex(trace) > 0) {
+			CloseHandle(trace);
+			return false;
+		}
+
+		float posEnd[3];
+
+		TR_GetEndPosition(posEnd, trace);
+
+		if (GetVectorDistance(posEye, posEnd, true) <= (distance * distance)) {
+			isClientLookingAtWall = true;
+		}
+	}
+
+	CloseHandle(trace);
+
+	return isClientLookingAtWall;
+}
+
+public bool LookingWall_TraceEntityFilter(int entity, int contentsMask)
+{
+	return entity == 0;
+}
+
+float GetDistance(int client, int target)
+{
+	float targetVec[3],clientVec[3];
+	GetEntPropVector(target, Prop_Send, "m_vecOrigin", targetVec);
+	GetEntPropVector(client, Prop_Send, "m_vecOrigin", clientVec);
+
+	return GetVectorDistance(clientVec, targetVec);
+}
+
 
 /******************************************************************************
                    NATIVES

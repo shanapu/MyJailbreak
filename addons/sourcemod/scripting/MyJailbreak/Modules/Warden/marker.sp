@@ -239,7 +239,7 @@ stock void MarkerMenu(int client)
 	}
 
 	float g_fPos[3];
-	Entity_GetAbsOrigin(client, g_fPos);
+	GetEntPropVector(client, Prop_Send, "m_vecOrigin", g_fPos);
 
 	float range = GetVectorDistance(g_fPos, g_fMarkerSetupStartOrigin);
 	if (range > g_fMarkerRangeMax)
@@ -329,7 +329,7 @@ void Draw_Markers()
 
 		// FIX OR FEATURE    TODO ASK ZIPCORE
 		float fWardenOrigin[3];
-		Entity_GetAbsOrigin(g_iWarden, fWardenOrigin);
+		GetEntPropVector(g_iWarden, Prop_Send, "m_vecOrigin", fWardenOrigin);
 
 		if (GetVectorDistance(fWardenOrigin, g_fMarkerOrigin[j]) > g_fMarkerRangeMax)
 		{
