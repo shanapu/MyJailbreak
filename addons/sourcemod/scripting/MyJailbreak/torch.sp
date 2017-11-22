@@ -770,7 +770,7 @@ void ResetEventDay()
 
 		SetEntityRenderColor(i, 255, 255, 255, 0);
 
-		IgniteEntity(client, 0.0);
+		IgniteEntity(i, 0.0);
 
 		g_iSprintStatus[i] = 0;
 		g_bOnTorch[i] = false;
