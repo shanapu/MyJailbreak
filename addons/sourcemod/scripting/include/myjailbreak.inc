@@ -55,12 +55,18 @@ public SharedPlugin __pl_myjailbreak =
 #if !defined REQUIRE_PLUGIN
 public __pl_myjailbreak_SetNTVOptional()
 {
+	MarkNativeAsOptional("MyJailbreak_AddEventDay");
+	MarkNativeAsOptional("MyJailbreak_RemoveEventDay");
+	MarkNativeAsOptional("MyJailbreak_GetEventDays");
+
 	MarkNativeAsOptional("MyJailbreak_SetEventDayName");
 	MarkNativeAsOptional("MyJailbreak_GetEventDayName");
 	MarkNativeAsOptional("MyJailbreak_SetEventDayRunning");
 	MarkNativeAsOptional("MyJailbreak_IsEventDayRunning");
 	MarkNativeAsOptional("MyJailbreak_SetEventDayPlanned");
 	MarkNativeAsOptional("MyJailbreak_IsEventDayPlanned");
+
+	MarkNativeAsOptional("MyJailbreak_ResetEventDay");
 
 	MarkNativeAsOptional("MyJailbreak_SetLastGuardRule");
 	MarkNativeAsOptional("MyJailbreak_IsLastGuardRule");
@@ -116,6 +122,15 @@ forward void MyJailbreak_OnEventDayStart(char[] EventDayName);
  * @NoReturn
  *********************************************************/
 forward void MyJailbreak_OnEventDayEnd(char[] EventDayName, int winner);
+
+
+/*********************************************************
+ * Called when a admin reset/end any planned or running EventDay
+ *
+ *
+ * @NoReturn
+ *********************************************************/
+forward void MyJailbreak_ResetEventDay();
 
 
 
@@ -235,6 +250,7 @@ native void MyJailbreak_SetEventDayPlanned(bool status);
  * @Return			true on planned, false if not
  *********************************************************/
 native bool MyJailbreak_IsEventDayPlanned();
+
 
 
 /*********************************************************

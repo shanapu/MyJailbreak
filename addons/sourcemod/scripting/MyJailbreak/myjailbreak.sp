@@ -51,6 +51,7 @@ ConVar gc_iRandomEventDay;
 ConVar gc_iRandomEventDayPercent;
 ConVar gc_iRandomEventDayStartDelay;
 ConVar gc_iRandomEventDayType;
+ConVar gc_bDisableMedic;
 
 // Booleans
 bool g_bEventDayPlanned = false;
@@ -65,6 +66,7 @@ int g_iRoundNumber = 0;
 // Handles
 Handle gF_OnEventDayStart;
 Handle gF_OnEventDayEnd;
+Handle gF_ResetEventDay;
 
 ArrayList g_aEventDayList = null;
 
@@ -105,7 +107,8 @@ public Plugin myinfo = {
 public void OnPluginStart()
 {
 	// Admin commands
-	RegAdminCmd("sm_endround", Command_EndRound, ADMFLAG_CHANGEMAP);
+	RegAdminCmd("sm_endround", Command_EndRound, ADMFLAG_ROOT);
+	RegAdminCmd("sm_resetevent", Command_ResetEvent, ADMFLAG_ROOT);
 
 	// AutoExecConfig
 	DirExistsEx("cfg/MyJailbreak/EventDays");
@@ -118,12 +121,13 @@ public void OnPluginStart()
 	gc_bLogging = AutoExecConfig_CreateConVar("sm_myjb_log", "1", "Allow MyJailbreak to log events, freekills & eventdays in logs/MyJailbreak", _, true, 0.0, true, 1.0);
 	gc_bShootButton = AutoExecConfig_CreateConVar("sm_myjb_shoot_buttons", "1", "0 - disabled, 1 - allow player to trigger a map button by shooting it", _, true, 0.0, true, 1.0);
 	gc_sCustomCommandEndRound = AutoExecConfig_CreateConVar("sm_myjb_cmds_endround", "er, stopround, end", "Set your custom chat commands for admins to end the current round(!endround (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)");
-	gc_bEndRound = AutoExecConfig_CreateConVar("sm_myjb_allow_endround", "0", "0 - disabled, 1 - enable !endround command for testing (disable against abusing)");
-	gc_iRandomEventDay = AutoExecConfig_CreateConVar("sm_myjb_random_round", "6", "0 - disabled / Every x round could be an event day or voting");
-	gc_iRandomEventDayType = AutoExecConfig_CreateConVar("sm_myjb_random_type", "1", "0 - Start an eventday voting / 1 - start an random eventday");
-	gc_iRandomEventDayPercent = AutoExecConfig_CreateConVar("sm_myjb_random_chance", "60", "Chance that the choosen round would be an event day");
-	gc_iRandomEventDayStartDelay = AutoExecConfig_CreateConVar("sm_myjb_random_mapstart_delay", "6", "Wait after mapchange x rounds before try first random eventday or voting");
-	
+	gc_bEndRound = AutoExecConfig_CreateConVar("sm_myjb_allow_endround", "0", "0 - disabled, 1 - enable !endround command for testing (disable against abusing)", _, true, 0.0, true, 1.0);
+	gc_iRandomEventDay = AutoExecConfig_CreateConVar("sm_myjb_random_round", "6", "0 - disabled / Every x round could be an event day or voting", _, true, 0.0);
+	gc_iRandomEventDayType = AutoExecConfig_CreateConVar("sm_myjb_random_type", "1", "0 - Start an eventday voting / 1 - start an random eventday", _, true, 0.0, true, 1.0);
+	gc_iRandomEventDayPercent = AutoExecConfig_CreateConVar("sm_myjb_random_chance", "60", "Chance that the choosen round would be an event day", _, true, 1.0, true, 100.0);
+	gc_iRandomEventDayStartDelay = AutoExecConfig_CreateConVar("sm_myjb_random_mapstart_delay", "6", "Wait after mapchange x rounds before try first random eventday or voting", _, true, 0.0);
+	gc_bDisableMedic = AutoExecConfig_CreateConVar("sm_myjb_medic", "1", "0 - disabled, 1 - disable medic room when event day running", _, true, 0.0, true, 1.0);
+
 	Beacon_OnPluginStart();
 
 	AutoExecConfig_ExecuteFile();
@@ -196,7 +200,29 @@ public void OnConfigsExecuted()
 // End the current round instandly
 public Action Command_EndRound(int client, int args)
 {
-	if (gc_bEndRound.BoolValue) CS_TerminateRound(5.5, CSRoundEnd_Draw, true);
+	if (!gc_bEndRound.BoolValue)
+		return Plugin_Handled;
+
+	CS_TerminateRound(5.5, CSRoundEnd_Draw, true);
+
+	return Plugin_Handled;
+}
+
+public Action Command_ResetEvent(int client, int args)
+{
+	if (g_bEventDayPlanned || g_bEventDayRunning)
+	{
+		g_bEventDayPlanned = false;
+		g_bEventDayRunning = false;
+		Format(g_sEventDayName, sizeof(g_sEventDayName), "none");
+
+		Call_StartForward(gF_ResetEventDay);
+		Call_Finish();
+	}
+	else
+	{
+		ReplyToCommand(client, "No Event Day planned/running");
+	}
 
 	return Plugin_Handled;
 }
@@ -233,6 +259,8 @@ public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 	if (chance > gc_iRandomEventDayPercent.IntValue)
 		return;
 
+	//hinweis chat random round
+
 	if (gc_iRandomEventDayType.BoolValue)
 	{
 		char buffer[32];
@@ -240,8 +268,10 @@ public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 		g_aEventDayList.GetString(randomEvent, buffer, sizeof(buffer));
 		ServerCommand("sm_set%s", buffer);
 	}
-	else ServerCommand("sm_voteday");
-
+	else
+	{
+		ServerCommand("sm_voteday");
+	}
 }
 
 public void Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
@@ -276,30 +306,6 @@ public void OnMapEnd()
 	Beacon_OnMapEnd();
 }
 
-void SortEventDays()
-{
-	char sBuffer[64];
-	BuildPath(Path_SM, sBuffer, sizeof(sBuffer), "configs/MyJailbreak/sorting_events.ini");
-	Handle hFile = OpenFile(sBuffer, "r");
-	if (hFile != INVALID_HANDLE)
-	{
-		int num = -1;
-		while (!IsEndOfFile(hFile) && ReadFileLine(hFile, sBuffer, sizeof(sBuffer)))
-		{
-			TrimString(sBuffer);
-
-			int index = g_aEventDayList.FindString(sBuffer);
-			if (index != -1)
-			{
-				num++;
-				g_aEventDayList.ShiftUp(num);
-				g_aEventDayList.SetString(num, sBuffer);
-				g_aEventDayList.Erase(index+1);
-			}
-		}
-	}
-	else LogError("couldn't read from file: %s", sBuffer);
-}
 
 /******************************************************************************
                    NATIVES
@@ -337,6 +343,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	gF_OnEventDayStart = CreateGlobalForward("MyJailbreak_OnEventDayStart", ET_Ignore, Param_String);
 	gF_OnEventDayEnd = CreateGlobalForward("MyJailbreak_OnEventDayEnd", ET_Ignore, Param_String, Param_Cell);
+	gF_ResetEventDay = CreateGlobalForward("MyJailbreak_ResetEventDay", ET_Ignore);
 
 	RegPluginLibrary("myjailbreak");
 
@@ -396,84 +403,6 @@ public int Native_IsEventDayRunning(Handle plugin, int argc)
 	return true;
 }
 
-// Boolean Set Event Day running (true = running)
-public int Native_SetEventDayRunning(Handle plugin, int argc)
-{
-	g_bEventDayRunning = GetNativeCell(1);
-	int winner = GetNativeCell(2);
-
-	if (g_bEventDayRunning)
-	{
-		Call_StartForward(gF_OnEventDayStart);
-		Call_PushString(g_sEventDayName);
-		Call_Finish();
-
-		if (gp_bHosties)
-		{
-			ToggleConVars(true);
-		}
-	}
-	else
-	{
-		Call_StartForward(gF_OnEventDayEnd);
-		Call_PushString(g_sEventDayName);
-		Call_PushCell(winner);
-		Call_Finish();
-
-		if (gp_bHosties)
-		{
-			ToggleConVars(false);
-		}
-	}
-}
-
-void ToggleConVars(bool IsEventDay)
-{
-	if (!gp_bHosties)
-		return;
-
-	if (IsEventDay)
-	{
-		// Get the Cvar Value
-		Cvar_sm_hosties_announce_rebel_down = FindConVar("sm_hosties_announce_rebel_down");
-		Cvar_sm_hosties_rebel_color = FindConVar("sm_hosties_rebel_color");
-		Cvar_sm_hosties_mute = FindConVar("sm_hosties_mute");
-		Cvar_sm_hosties_announce_attack = FindConVar("sm_hosties_announce_attack");
-		Cvar_sm_hosties_announce_wpn_attack = FindConVar("sm_hosties_announce_wpn_attack");
-		Cvar_sm_hosties_freekill_notify = FindConVar("sm_hosties_freekill_notify");
-		Cvar_sm_hosties_freekill_treshold = FindConVar("sm_hosties_freekill_treshold");
-
-		// Save the Cvar Value
-		OldCvar_sm_hosties_rebel_color = Cvar_sm_hosties_rebel_color.IntValue;
-		OldCvar_sm_hosties_announce_rebel_down = Cvar_sm_hosties_announce_rebel_down.IntValue;
-		OldCvar_sm_hosties_mute = Cvar_sm_hosties_mute.IntValue;
-		OldCvar_sm_hosties_announce_attack = Cvar_sm_hosties_announce_attack.IntValue;
-		OldCvar_sm_hosties_announce_wpn_attack = Cvar_sm_hosties_announce_wpn_attack.IntValue;
-		OldCvar_sm_hosties_freekill_notify = Cvar_sm_hosties_freekill_notify.IntValue;
-		OldCvar_sm_hosties_freekill_treshold = Cvar_sm_hosties_freekill_treshold.IntValue;
-
-		// Change the Cvar Value
-		Cvar_sm_hosties_announce_rebel_down.IntValue = 0;
-		Cvar_sm_hosties_rebel_color.IntValue = 0;
-		Cvar_sm_hosties_mute.IntValue = 0;
-		Cvar_sm_hosties_announce_attack.IntValue = 0;
-		Cvar_sm_hosties_announce_wpn_attack.IntValue = 0;
-		Cvar_sm_hosties_freekill_notify.IntValue = 0;
-		Cvar_sm_hosties_freekill_treshold.IntValue = 0;
-	}
-	else
-	{
-		// Replace the Cvar Value with old value
-		Cvar_sm_hosties_announce_rebel_down.IntValue = OldCvar_sm_hosties_announce_rebel_down;
-		Cvar_sm_hosties_rebel_color.IntValue = OldCvar_sm_hosties_rebel_color;
-		Cvar_sm_hosties_mute.IntValue = OldCvar_sm_hosties_mute;
-		Cvar_sm_hosties_announce_attack.IntValue = OldCvar_sm_hosties_announce_attack;
-		Cvar_sm_hosties_announce_wpn_attack.IntValue = OldCvar_sm_hosties_announce_wpn_attack;
-		Cvar_sm_hosties_freekill_notify.IntValue = OldCvar_sm_hosties_freekill_notify;
-		Cvar_sm_hosties_freekill_treshold.IntValue = OldCvar_sm_hosties_freekill_treshold;
-	}
-}
-
 // Boolean Is Event Day planned (true = planned)
 public int Native_IsEventDayPlanned(Handle plugin, int argc)
 {
@@ -528,4 +457,126 @@ public int Native_GetActiveLogging(Handle plugin, int argc)
 {
 	if (gc_bLogging.BoolValue) return true;
 	else return false;
+}
+
+// Boolean Set Event Day running (true = running)
+public int Native_SetEventDayRunning(Handle plugin, int argc)
+{
+	g_bEventDayRunning = GetNativeCell(1);
+	int winner = GetNativeCell(2);
+
+	if (g_bEventDayRunning)
+	{
+		Call_StartForward(gF_OnEventDayStart);
+		Call_PushString(g_sEventDayName);
+		Call_Finish();
+
+		if (gp_bHosties)
+		{
+			ToggleConVars(true);
+		}
+
+		ToggleHeal(false);
+	}
+	else
+	{
+		Call_StartForward(gF_OnEventDayEnd);
+		Call_PushString(g_sEventDayName);
+		Call_PushCell(winner);
+		Call_Finish();
+
+		if (gp_bHosties)
+		{
+			ToggleConVars(false);
+		}
+
+		ToggleHeal(true);
+	}
+}
+
+void ToggleConVars(bool IsEventDay)
+{
+	if (!gp_bHosties)
+		return;
+
+	if (IsEventDay)
+	{
+		// Get the Cvar Value
+		Cvar_sm_hosties_announce_rebel_down = FindConVar("sm_hosties_announce_rebel_down");
+		Cvar_sm_hosties_rebel_color = FindConVar("sm_hosties_rebel_color");
+		Cvar_sm_hosties_mute = FindConVar("sm_hosties_mute");
+		Cvar_sm_hosties_announce_attack = FindConVar("sm_hosties_announce_attack");
+		Cvar_sm_hosties_announce_wpn_attack = FindConVar("sm_hosties_announce_wpn_attack");
+		Cvar_sm_hosties_freekill_notify = FindConVar("sm_hosties_freekill_notify");
+		Cvar_sm_hosties_freekill_treshold = FindConVar("sm_hosties_freekill_treshold");
+
+		// Save the Cvar Value
+		OldCvar_sm_hosties_rebel_color = Cvar_sm_hosties_rebel_color.IntValue;
+		OldCvar_sm_hosties_announce_rebel_down = Cvar_sm_hosties_announce_rebel_down.IntValue;
+		OldCvar_sm_hosties_mute = Cvar_sm_hosties_mute.IntValue;
+		OldCvar_sm_hosties_announce_attack = Cvar_sm_hosties_announce_attack.IntValue;
+		OldCvar_sm_hosties_announce_wpn_attack = Cvar_sm_hosties_announce_wpn_attack.IntValue;
+		OldCvar_sm_hosties_freekill_notify = Cvar_sm_hosties_freekill_notify.IntValue;
+		OldCvar_sm_hosties_freekill_treshold = Cvar_sm_hosties_freekill_treshold.IntValue;
+
+		// Change the Cvar Value
+		Cvar_sm_hosties_announce_rebel_down.IntValue = 0;
+		Cvar_sm_hosties_rebel_color.IntValue = 0;
+		Cvar_sm_hosties_mute.IntValue = 0;
+		Cvar_sm_hosties_announce_attack.IntValue = 0;
+		Cvar_sm_hosties_announce_wpn_attack.IntValue = 0;
+		Cvar_sm_hosties_freekill_notify.IntValue = 0;
+		Cvar_sm_hosties_freekill_treshold.IntValue = 0;
+	}
+	else
+	{
+		// Replace the Cvar Value with old value
+		Cvar_sm_hosties_announce_rebel_down.IntValue = OldCvar_sm_hosties_announce_rebel_down;
+		Cvar_sm_hosties_rebel_color.IntValue = OldCvar_sm_hosties_rebel_color;
+		Cvar_sm_hosties_mute.IntValue = OldCvar_sm_hosties_mute;
+		Cvar_sm_hosties_announce_attack.IntValue = OldCvar_sm_hosties_announce_attack;
+		Cvar_sm_hosties_announce_wpn_attack.IntValue = OldCvar_sm_hosties_announce_wpn_attack;
+		Cvar_sm_hosties_freekill_notify.IntValue = OldCvar_sm_hosties_freekill_notify;
+		Cvar_sm_hosties_freekill_treshold.IntValue = OldCvar_sm_hosties_freekill_treshold;
+	}
+}
+
+void ToggleHeal(bool heal)
+{
+	if (!gc_bDisableMedic.BoolValue)
+		return;
+
+	int ent = -1;
+	while ((ent = FindEntityByClassname(ent, "trigger_hurt")) != -1)
+	{
+		if (GetEntPropFloat(ent, Prop_Data, "m_flDamage") < 0)
+		{
+			AcceptEntityInput(ent, heal ? "Enable" : "Disable");
+		}
+	}
+}
+
+void SortEventDays()
+{
+	char sBuffer[64];
+	BuildPath(Path_SM, sBuffer, sizeof(sBuffer), "configs/MyJailbreak/sorting_events.ini");
+	Handle hFile = OpenFile(sBuffer, "r");
+	if (hFile != INVALID_HANDLE)
+	{
+		int num = -1;
+		while (!IsEndOfFile(hFile) && ReadFileLine(hFile, sBuffer, sizeof(sBuffer)))
+		{
+			TrimString(sBuffer);
+
+			int index = g_aEventDayList.FindString(sBuffer);
+			if (index != -1)
+			{
+				num++;
+				g_aEventDayList.ShiftUp(num);
+				g_aEventDayList.SetString(num, sBuffer);
+				g_aEventDayList.Erase(index+1);
+			}
+		}
+	}
+	else LogError("couldn't read from file: %s", sBuffer);
 }

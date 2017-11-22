@@ -752,6 +752,71 @@ public void OnMapStart()
 	PrecacheSound("player/suit_sprint.wav", true);
 }
 
+public void MyJailbreak_ResetEventDay()
+{
+	g_bStartTorch = false;
+
+	if (g_bIsTorch)
+		ResetEventDay();
+}
+
+void ResetEventDay()
+{
+	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true))
+	{
+		SetEntData(i, g_iCollision_Offset, 0, 4, true);
+
+		CreateTimer(0.0, DeleteOverlay, GetClientUserId(i));
+
+		SetEntityRenderColor(i, 255, 255, 255, 0);
+
+		IgniteEntity(client, 0.0);
+
+		g_iSprintStatus[i] = 0;
+		g_bOnTorch[i] = false;
+		g_bImmuneTorch[i] = false;
+
+		if (gp_bCustomPlayerSkins && gc_bWallhack.BoolValue)
+		{
+			UnhookWallhack(i);
+		}
+	}
+
+	g_iBurningZero = -1;
+
+	delete g_hTimerTruce;
+
+	g_bIsTorch = false;
+	g_iRound = 0;
+	Format(g_sHasVoted, sizeof(g_sHasVoted), "");
+
+	if (gp_bHosties)
+	{
+		SetCvar("sm_hosties_lr", 1);
+	}
+
+	if (gp_bWarden)
+	{
+		SetCvar("sm_warden_enable", 1);
+	}
+
+	if (gp_bMyWeapons)
+	{
+		MyWeapons_AllowTeam(CS_TEAM_T, false);
+		MyWeapons_AllowTeam(CS_TEAM_CT, true);
+	}
+
+	if (gp_bMyJailbreak)
+	{
+		SetCvar("sm_menu_enable", 1);
+
+		MyJailbreak_SetEventDayRunning(false, 0);
+		MyJailbreak_SetEventDayName("none");
+	}
+
+	CPrintToChatAll("%t %t", "torch_tag", "torch_end");
+}
+
 // Map End
 public void OnMapEnd()
 {
@@ -874,7 +939,12 @@ void StartEventRound(bool thisround)
 
 public Action Timer_PrepareEvent(Handle timer)
 {
+	if (!g_bIsTorch)
+		return Plugin_Handled;
+
 	PrepareDay(true);
+
+	return Plugin_Handled;
 }
 
 void PrepareDay(bool thisround)
