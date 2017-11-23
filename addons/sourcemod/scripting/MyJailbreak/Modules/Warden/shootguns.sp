@@ -68,7 +68,14 @@ public void ShootGuns_Event_BulletImpact(Event event, const char[] name, bool do
 	{
 		if (IsValidEdict(weapon) && !IsValidClient(weapon, true, true))
 		{
-			AcceptEntityInput(weapon, "Kill");
+			char buffer[8];
+			if (!GetEdictClassname(weapon, buffer, sizeof(buffer)))
+				return;
+
+			if (StrContains(buffer, "weapon_", false) != -1)
+			{
+				AcceptEntityInput(weapon, "Kill");
+			}
 		}
 	}
 }

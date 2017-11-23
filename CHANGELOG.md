@@ -185,8 +185,9 @@
 *  HUD - disable HUD on TeamGames game.
 *  Menu: Allow player to vote for no event.
     *  new cvar - sm_menu_vote_noevent - 0 - disabled, 1 - allow player vote for 'no Event Day' on eventday voting
-
-
+*  MyJailbreak: disable Medic room / heal stations while eventday
+    *  new cvar - sm_myjb_medic - 0 - disabled, 1 - disable medic room when event day running
+  
   
   *Fixed*
 *  Menu: fixed setdays for warden (don't show restricted/disabled days)
@@ -224,9 +225,7 @@
     *  new native - MyWeapons_GetTeamStatus(int iTeam) - Get team status if weapons are allowed
 *  Extented parameter of a warden forwards & native - new caller clientid - 0 on random
     *  changed forward - warden_OnWardenCreate(int client, int caller) - The client who called the set or become warden command
- ....................................
- *  changed native - warden_set(int client, int caller----------) -  The client who set the new warden
-	................................
+ *  changed native - warden_set(int client, int caller) -  The client who set the new warden
 *  New Forwards for add items to menu - see template_custom_menu.sp
     *  new forward - MyJailbreak_MenuStart(int client, Menu menu)
     *  new forward - MyJailbreak_MenuEnd(int client, Menu menu)
