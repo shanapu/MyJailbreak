@@ -110,11 +110,9 @@ ConVar gc_bTeleportSpawn;
 
 
 // Extern Convars
-//ConVar g_iMPRoundTime;
 ConVar g_bHUD;
 
 // Integers    g_i = global integer
-//int g_iOldRoundTime;
 int g_iOldHUD;
 int g_iCoolDown;
 int g_iTruceTime;
@@ -131,7 +129,6 @@ int g_iBestBLUEdamage = 0;
 int g_iBestPlayer = -1;
 int g_iTotalDamage = 0;
 int g_iCollision_Offset;
-
 int g_iClientTeam[MAXPLAYERS+1] = -1;
 int g_iBlueTeamCount;
 int g_iRedTeamCount;
@@ -236,7 +233,6 @@ public void OnPluginStart()
 	HookConVarChange(gc_sModelPathBlue, OnSettingChanged);
 
 	// Find
-//	g_iMPRoundTime = FindConVar("mp_roundtime");
 	gc_sOverlayStartPath.GetString(g_sOverlayStartPath, sizeof(g_sOverlayStartPath));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 	gc_sOverlayBluePath.GetString(g_sOverlayBluePath, sizeof(g_sOverlayBluePath));
@@ -746,8 +742,6 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			SetCvar("sv_infinite_ammo", 0);
 			SetCvar("sm_hud_enable", g_iOldHUD);
 
-//			g_iMPRoundTime.IntValue = g_iOldRoundTime; // return to original round time
-
 			CPrintToChatAll("%t %t", "dealdamage_tag", "dealdamage_end");
 		}
 	}
@@ -820,6 +814,86 @@ public void OnMapEnd()
 	g_iVoteCount = 0;
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0';
+}
+
+public void MyJailbreak_ResetEventDay()
+{
+	g_bStartDealDamage = false;
+
+	if (g_bIsDealDamage)
+		ResetEventDay();
+}
+
+void ResetEventDay()
+{
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+	{
+		SetEntData(i, g_iCollision_Offset, 0, 4, true); // disbale noblock
+
+		SetEntityModel(i, g_sModelPathPrevious[i]);
+
+		if (gp_bCustomPlayerSkins)
+		{
+			UnhookGlow(i);
+		}
+
+		CreateTimer(0.5, DeleteOverlay, GetClientUserId(i));
+
+		g_iClientTeam[i] = 0;
+
+		if (gp_bMyIcons)
+		{
+			MyIcons_BlockClientIcon(i, false);
+		}
+
+		SetEntityMoveType(i, MOVETYPE_WALK);
+
+		SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
+	}
+
+	delete g_hTimerTruce; // kill start time if still running
+	delete g_hTimerBeacon;
+
+	// return to default start values
+	g_bIsDealDamage = false;
+	g_bStartDealDamage = false;
+	g_iRound = 0;
+	Format(g_sHasVoted, sizeof(g_sHasVoted), "");
+
+	if (gp_bHosties)
+	{
+		SetCvar("sm_hosties_lr", 1);
+	}
+
+	if (gp_bWarden)
+	{
+		SetCvar("sm_warden_enable", 1);
+	}
+
+	if (gc_bSpawnRandom.BoolValue)
+	{
+		SetCvar("mp_randomspawn", 0);
+		SetCvar("mp_randomspawn_los", 0);
+	}
+
+	if (gp_bMyWeapons)
+	{
+		MyWeapons_AllowTeam(CS_TEAM_T, false);
+		MyWeapons_AllowTeam(CS_TEAM_CT, true);
+	}
+
+	if (gp_bMyJailbreak)
+	{
+		SetCvar("sm_menu_enable", 1);
+
+		MyJailbreak_SetEventDayRunning(false, 0);
+		MyJailbreak_SetEventDayName("none"); // tell myjailbreak event is ended
+	}
+
+	SetCvar("sv_infinite_ammo", 0);
+	SetCvar("sm_hud_enable", g_iOldHUD);
+
+	CPrintToChatAll("%t %t", "dealdamage_tag", "dealdamage_end");
 }
 
 // Set Client Hook
@@ -918,7 +992,12 @@ void StartEventRound(bool thisround)
 
 public Action Timer_PrepareEvent(Handle timer)
 {
+	if (!g_bIsDealDamage)
+		return Plugin_Handled;
+
 	PrepareDay(true);
+
+	return Plugin_Handled;
 }
 
 void PrepareDay(bool thisround)

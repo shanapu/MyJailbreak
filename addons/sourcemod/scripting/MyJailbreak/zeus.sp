@@ -91,11 +91,9 @@ ConVar gc_bBeginSetVW;
 ConVar gc_bTeleportSpawn;
 
 // Extern Convars
-//ConVar g_iMPRoundTime;
 ConVar g_iTerrorForLR;
 
 // Integers
-//int g_iOldRoundTime;
 int g_iCoolDown;
 int g_iTruceTime;
 int g_iVoteCount;
@@ -193,7 +191,6 @@ public void OnPluginStart()
 	// Find
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iTruceTime = gc_iTruceTime.IntValue;
-//	g_iMPRoundTime = FindConVar("mp_roundtime");
 	gc_sOverlayStartPath.GetString(g_sOverlayStartPath, sizeof(g_sOverlayStartPath));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
@@ -643,8 +640,6 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 				MyJailbreak_SetEventDayName("none");
 			}
 
-//			g_iMPRoundTime.IntValue = g_iOldRoundTime;
-
 			CPrintToChatAll("%t %t", "zeus_tag", "zeus_end");
 		}
 	}
@@ -731,6 +726,9 @@ void ResetEventDay()
 		}
 		GivePlayerItem(i, "weapon_knife");
 
+		SetEntityMoveType(i, MOVETYPE_WALK);
+
+		SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
 	}
 
 	delete g_hTimerBeacon;

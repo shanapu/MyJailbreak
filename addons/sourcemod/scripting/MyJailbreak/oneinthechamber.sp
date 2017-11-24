@@ -89,12 +89,11 @@ ConVar gc_bBeginSetV;
 ConVar gc_bBeginSetVW;
 ConVar gc_bTeleportSpawn;
 ConVar gc_bKnifeOneHit;
+
 // Extern Convars
-//ConVar g_iMPRoundTime;
 ConVar g_iTerrorForLR;
 
 // Integers
-//int g_iOldRoundTime;
 int g_iCoolDown;
 int g_iTruceTime;
 int g_iVoteCount;
@@ -695,58 +694,79 @@ public void OnMapStart()
 	}
 }
 
+public void MyJailbreak_ResetEventDay()
+{
+	g_bStartOITC = false;
+
+	if (g_bIsOITC)
+	{
+		g_iRound = g_iMaxRound;
+		ResetEventDay();
+	}
+}
+
 // Listen for Last Lequest
 public void OnAvailableLR(int Announced)
 {
 	if (g_bIsOITC && gc_bAllowLR.BoolValue && (g_iTsLR > g_iTerrorForLR.IntValue))
 	{
-		for (int i = 1; i <= MaxClients; i++)if (IsClientInGame(i))
-		{
-			SetEntData(i, g_iCollision_Offset, 0, 4, true);
+		ResetEventDay();
+	}
+}
 
-			StripAllPlayerWeapons(i);
-			if (GetClientTeam(i) == CS_TEAM_CT)
-			{
-				FakeClientCommand(i, "sm_weapons");
-			}
-			GivePlayerItem(i, "weapon_knife");
+void ResetEventDay()
+{
+	for (int i = 1; i <= MaxClients; i++)if (IsClientInGame(i))
+	{
+		SetEntData(i, g_iCollision_Offset, 0, 4, true);
+
+		StripAllPlayerWeapons(i);
+		if (GetClientTeam(i) == CS_TEAM_CT)
+		{
+			FakeClientCommand(i, "sm_weapons");
 		}
 
-		delete g_hTimerBeacon;
-		delete g_hTimerTruce;
+		GivePlayerItem(i, "weapon_knife");
 
-		if (g_iRound == g_iMaxRound)
+		SetEntityMoveType(i, MOVETYPE_WALK);
+
+		SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
+	}
+
+	delete g_hTimerBeacon;
+	delete g_hTimerTruce;
+
+	if (g_iRound == g_iMaxRound)
+	{
+		g_bIsOITC = false;
+		g_bStartOITC = false;
+		g_iRound = 0;
+		Format(g_sHasVoted, sizeof(g_sHasVoted), "");
+
+		SetCvar("sm_hosties_lr", 1);
+		SetCvar("sv_infinite_ammo", 0);
+		SetCvar("mp_teammates_are_enemies", 0);
+
+		if (gp_bWarden)
 		{
-			g_bIsOITC = false;
-			g_bStartOITC = false;
-			g_iRound = 0;
-			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
-
-			SetCvar("sm_hosties_lr", 1);
-			SetCvar("sv_infinite_ammo", 0);
-			SetCvar("mp_teammates_are_enemies", 0);
-
-			if (gp_bWarden)
-			{
-				SetCvar("sm_warden_enable", 1);
-			}
-
-			if (gp_bMyWeapons)
-			{
-				MyWeapons_AllowTeam(CS_TEAM_T, false);
-				MyWeapons_AllowTeam(CS_TEAM_CT, true);
-			}
-
-			if (gp_bMyJailbreak)
-			{
-				SetCvar("sm_menu_enable", 1);
-
-				MyJailbreak_SetEventDayName("none");
-				MyJailbreak_SetEventDayRunning(false, 0);
-			}
-
-			CPrintToChatAll("%t %t", "oneinthechamber_tag", "oneinthechamber_end");
+			SetCvar("sm_warden_enable", 1);
 		}
+
+		if (gp_bMyWeapons)
+		{
+			MyWeapons_AllowTeam(CS_TEAM_T, false);
+			MyWeapons_AllowTeam(CS_TEAM_CT, true);
+		}
+
+		if (gp_bMyJailbreak)
+		{
+			SetCvar("sm_menu_enable", 1);
+
+			MyJailbreak_SetEventDayName("none");
+			MyJailbreak_SetEventDayRunning(false, 0);
+		}
+
+		CPrintToChatAll("%t %t", "oneinthechamber_tag", "oneinthechamber_end");
 	}
 }
 
@@ -879,7 +899,12 @@ void StartEventRound(bool thisround)
 
 public Action Timer_PrepareEvent(Handle timer)
 {
+	if (!g_bIsOITC)
+		return Plugin_Handled;
+
 	PrepareDay(true);
+
+	return Plugin_Handled;
 }
 
 void PrepareDay(bool thisround)

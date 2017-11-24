@@ -108,11 +108,9 @@ ConVar gc_bTeleportSpawn;
 
 // Extern Convars
 ConVar g_iTerrorForLR;
-//ConVar g_iMPRoundTime;
 ConVar g_sOldSkyName;
 
 // Integers
-//int g_iOldRoundTime;
 int g_iFreezeTime;
 int g_iCoolDown;
 int g_iVoteCount;
@@ -218,7 +216,6 @@ public void OnPluginStart()
 	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
 
 	// FindConVar
-//	g_iMPRoundTime = FindConVar("mp_roundtime");
 	gc_sOverlayStartPath.GetString(g_sOverlayStartPath, sizeof(g_sOverlayStartPath));
 	gc_sModelPathZombie.GetString(g_sModelPathZombie, sizeof(g_sModelPathZombie));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
@@ -667,8 +664,6 @@ public void Event_RoundEnd_Pre(Event event, char[] name, bool dontBroadcast)
 			SetCvarString("sv_skyname", g_sSkyName);
 			SetCvar("sv_infinite_ammo", 0);
 
-//			g_iMPRoundTime.IntValue = g_iOldRoundTime;
-
 			if (gp_bMyWeapons)
 			{
 				MyWeapons_AllowTeam(CS_TEAM_T, false);
@@ -838,84 +833,99 @@ public void OnMapEnd()
 	g_sHasVoted[0] = '\0';
 }
 
+public void MyJailbreak_ResetEventDay()
+{
+	g_bStartZombie = false;
+
+	if (g_bIsZombie)
+	{
+		g_iRound = g_iMaxRound;
+		ResetEventDay();
+	}
+}
+
 // Listen for Last Lequest
 public void OnAvailableLR(int Announced)
 {
 	if (g_bIsZombie && gc_bAllowLR.BoolValue && (g_iTsLR > g_iTerrorForLR.IntValue))
 	{
-		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true))
+		ResetEventDay();
+	}
+}
+
+void ResetEventDay()
+{
+	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true))
+	{
+		SetEntData(i, g_iCollision_Offset, 0, 4, true);
+
+		if (gp_bCustomPlayerSkins && gc_bGlow.BoolValue)
 		{
-			SetEntData(i, g_iCollision_Offset, 0, 4, true);
-
-			if (gp_bCustomPlayerSkins && gc_bGlow.BoolValue)
-			{
-				UnhookGlow(i);
-			}
-
-			SetEntProp(i, Prop_Send, "m_bNightVisionOn", 0);
-
-			SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
-
-			StripAllPlayerWeapons(i);
-
-			if (GetClientTeam(i) == CS_TEAM_CT)
-			{
-				FakeClientCommand(i, "sm_weapons");
-				SetEntityModel(i, g_sModelPathPrevious[i]);
-				SetEntityHealth(i, 100);
-				GivePlayerItem(i, "weapon_knife");
-			}
-			else
-			{
-				GivePlayerItem(i, "weapon_knife_t");
-			}
-
-			if (g_bTerrorZombies[i])
-			{
-				ChangeClientTeam(i, CS_TEAM_T);
-			}
+			UnhookGlow(i);
 		}
 
-		delete g_hTimerFreeze;
-		delete g_hTimerBeacon;
-		delete g_hTimerRegen;
+		SetEntProp(i, Prop_Send, "m_bNightVisionOn", 0);
 
-		if (g_iRound == g_iMaxRound)
+		SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
+
+		StripAllPlayerWeapons(i);
+
+		if (GetClientTeam(i) == CS_TEAM_CT)
 		{
-			g_bIsZombie = false;
-			g_bStartZombie = false;
-			g_iRound = 0;
-			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
-
-			SetCvar("sm_hosties_lr", 1);
-
-			if (gp_bMyWeapons)
-			{
-				MyWeapons_AllowTeam(CS_TEAM_T, false);
-				MyWeapons_AllowTeam(CS_TEAM_CT, true);
-			}
-
-			SetCvarString("sv_skyname", g_sSkyName);
-			SetCvar("sv_infinite_ammo", 0);
-
-			if (gp_bWarden)
-			{
-				SetCvar("sm_warden_enable", 1);
-			}
-
-//			g_iMPRoundTime.IntValue = g_iOldRoundTime;
-
-			if (gp_bMyJailbreak)
-			{
-				SetCvar("sm_menu_enable", 1);
-
-				MyJailbreak_SetEventDayName("none");
-				MyJailbreak_SetEventDayRunning(false, 0);
-				MyJailbreak_FogOff();
-			}
-
-			CPrintToChatAll("%t %t", "zombie_tag", "zombie_end");
+			FakeClientCommand(i, "sm_weapons");
+			SetEntityModel(i, g_sModelPathPrevious[i]);
+			SetEntityHealth(i, 100);
 		}
+
+		GivePlayerItem(i, "weapon_knife_t");
+
+		if (g_bTerrorZombies[i])
+		{
+			ChangeClientTeam(i, CS_TEAM_T);
+		}
+
+		SetEntityMoveType(i, MOVETYPE_WALK);
+
+		SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
+	}
+
+	delete g_hTimerFreeze;
+	delete g_hTimerBeacon;
+	delete g_hTimerRegen;
+
+	if (g_iRound == g_iMaxRound)
+	{
+		g_bIsZombie = false;
+		g_bStartZombie = false;
+		g_iRound = 0;
+		Format(g_sHasVoted, sizeof(g_sHasVoted), "");
+
+		SetCvar("sm_hosties_lr", 1);
+
+		if (gp_bMyWeapons)
+		{
+			MyWeapons_AllowTeam(CS_TEAM_T, false);
+			MyWeapons_AllowTeam(CS_TEAM_CT, true);
+		}
+
+		SetCvarString("sv_skyname", g_sSkyName);
+		SetCvar("sv_infinite_ammo", 0);
+
+		if (gp_bWarden)
+		{
+			SetCvar("sm_warden_enable", 1);
+		}
+
+		if (gp_bMyJailbreak)
+		{
+			SetCvar("sm_menu_enable", 1);
+
+			MyJailbreak_SetEventDayName("none");
+			MyJailbreak_SetEventDayRunning(false, 0);
+			MyJailbreak_FogOff();
+		}
+
+		CPrintToChatAll("%t %t", "zombie_tag", "zombie_end");
 	}
 }
 
@@ -999,7 +1009,12 @@ void StartEventRound(bool thisround)
 
 public Action Timer_PrepareEvent(Handle timer)
 {
+	if (!g_bIsZombie)
+		return Plugin_Handled;
+
 	PrepareDay(true);
+
+	return Plugin_Handled;
 }
 
 void PrepareDay(bool thisround)

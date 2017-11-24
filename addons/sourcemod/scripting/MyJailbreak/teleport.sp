@@ -90,11 +90,9 @@ ConVar gc_bBeginSetVW;
 ConVar gc_bTeleportSpawn;
 
 // Extern Convars
-//ConVar g_iMPRoundTime;
 ConVar g_iTerrorForLR;
 
 // Integers
-//int g_iOldRoundTime;
 int g_iCoolDown;
 int g_iTruceTime;
 int g_iVoteCount;
@@ -183,7 +181,6 @@ public void OnPluginStart()
 	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
 
 	// FindConVar
-//	g_iMPRoundTime = FindConVar("mp_roundtime");
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 	gc_sOverlayStartPath.GetString(g_sOverlayStartPath, sizeof(g_sOverlayStartPath));
 	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
@@ -622,8 +619,6 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 				MyJailbreak_SetEventDayName("none");
 			}
 
-//			g_iMPRoundTime.IntValue = g_iOldRoundTime;
-
 			CPrintToChatAll("%t %t", "teleport_tag", "teleport_end");
 		}
 	}
@@ -679,60 +674,78 @@ public void OnMapEnd()
 	g_sHasVoted[0] = '\0';
 }
 
+public void MyJailbreak_ResetEventDay()
+{
+	g_bStartTeleport = false;
+
+	if (g_bIsTeleport)
+	{
+		g_iRound = g_iMaxRound;
+		ResetEventDay();
+	}
+}
+
 // Listen for Last Lequest
 public void OnAvailableLR(int Announced)
 {
 	if (g_bIsTeleport && gc_bAllowLR.BoolValue && (g_iTsLR > g_iTerrorForLR.IntValue))
 	{
-		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, true))
+		ResetEventDay();
+	}
+}
+
+void ResetEventDay()
+{
+	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, true))
+	{
+		SetEntData(i, g_iCollision_Offset, 0, 4, true);
+
+		StripAllPlayerWeapons(i);
+
+		if (GetClientTeam(i) == CS_TEAM_CT)
 		{
-			SetEntData(i, g_iCollision_Offset, 0, 4, true);
+			FakeClientCommand(i, "sm_weapons");
+		}
+		GivePlayerItem(i, "weapon_knife");
 
-			StripAllPlayerWeapons(i);
+		SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
 
-			if (GetClientTeam(i) == CS_TEAM_CT)
-			{
-				FakeClientCommand(i, "sm_weapons");
-			}
-			GivePlayerItem(i, "weapon_knife");
+		SetEntityMoveType(i, MOVETYPE_WALK);
+	}
+
+	delete g_hTimerBeacon;
+	delete g_hTimerTruce;
+
+	if (g_iRound == g_iMaxRound)
+	{
+		g_bIsTeleport = false;
+		g_iRound = 0;
+		Format(g_sHasVoted, sizeof(g_sHasVoted), "");
+
+		SetCvar("sm_hosties_lr", 1);
+		SetCvar("mp_teammates_are_enemies", 0);
+		SetCvar("mp_friendlyfire", 0);
+
+		if (gp_bMyWeapons)
+		{
+			MyWeapons_AllowTeam(CS_TEAM_T, false);
+			MyWeapons_AllowTeam(CS_TEAM_CT, true);
 		}
 
-		delete g_hTimerBeacon;
-		delete g_hTimerTruce;
-
-		if (g_iRound == g_iMaxRound)
+		if (gp_bWarden)
 		{
-			g_bIsTeleport = false;
-			g_iRound = 0;
-			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
-
-			SetCvar("sm_hosties_lr", 1);
-			SetCvar("mp_teammates_are_enemies", 0);
-			SetCvar("mp_friendlyfire", 0);
-
-			if (gp_bMyWeapons)
-			{
-				MyWeapons_AllowTeam(CS_TEAM_T, false);
-				MyWeapons_AllowTeam(CS_TEAM_CT, true);
-			}
-
-			if (gp_bWarden)
-			{
-				SetCvar("sm_warden_enable", 1);
-			}
-
-			if (gp_bMyJailbreak)
-			{
-				SetCvar("sm_menu_enable", 1);
-
-				MyJailbreak_SetEventDayName("none");
-				MyJailbreak_SetEventDayRunning(false, 0);
-			}
-
-//			g_iMPRoundTime.IntValue = g_iOldRoundTime;
-
-			CPrintToChatAll("%t %t", "teleport_tag", "teleport_end");
+			SetCvar("sm_warden_enable", 1);
 		}
+
+		if (gp_bMyJailbreak)
+		{
+			SetCvar("sm_menu_enable", 1);
+
+			MyJailbreak_SetEventDayName("none");
+			MyJailbreak_SetEventDayRunning(false, 0);
+		}
+
+		CPrintToChatAll("%t %t", "teleport_tag", "teleport_end");
 	}
 }
 
@@ -787,7 +800,12 @@ void StartEventRound(bool thisround)
 
 public Action Timer_PrepareEvent(Handle timer)
 {
+	if (!g_bIsTeleport)
+		return Plugin_Handled;
+
 	PrepareDay(true);
+
+	return Plugin_Handled;
 }
 
 void PrepareDay(bool thisround)

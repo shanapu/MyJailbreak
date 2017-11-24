@@ -103,12 +103,9 @@ ConVar gc_bBeginSetV;
 ConVar gc_bBeginSetVW;
 ConVar gc_bTeleportSpawn;
 
-// Extern Convars
-//ConVar g_iMPRoundTime;
 
 // Integers
 int g_iVoteCount;
-//int g_iOldRoundTime;
 int g_iCoolDown;
 int g_iFreezeTime;
 int g_iRound;
@@ -214,7 +211,6 @@ public void OnPluginStart()
 	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
 
 	// FindConVar
-//	g_iMPRoundTime = FindConVar("mp_roundtime");
 	gc_sSoundSuicideBomberPath.GetString(g_sSoundSuicideBomberPath, sizeof(g_sSoundSuicideBomberPath));
 	gc_sSoundBoomPath.GetString(g_sSoundBoomPath, sizeof(g_sSoundBoomPath));
 	gc_sOverlayStartPath.GetString(g_sOverlayStartPath, sizeof(g_sOverlayStartPath));
@@ -618,7 +614,6 @@ public Action Command_BombSuicideBomber(int client, int args)
 						SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 0.0);
 					}
 				}
-				// else CPrintToChat(client, "%t %t", "suicidebomber_tag", "suicidebomber_needc4");
 			}
 		}
 	}
@@ -717,8 +712,6 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 
 			SetCvar("sv_infinite_ammo", 0);
 
-//			g_iMPRoundTime.IntValue = g_iOldRoundTime;
-
 			if (gp_bMyJailbreak)
 			{
 				SetCvar("sm_menu_enable", 1);
@@ -788,6 +781,70 @@ public void OnMapEnd()
 	g_iVoteCount = 0;
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0';
+}
+
+public void MyJailbreak_ResetEventDay()
+{
+	g_bStartSuicideBomber = false;
+
+	if (g_bIsSuicideBomber)
+	{
+		g_iRound = g_iMaxRound;
+		ResetEventDay();
+	}
+}
+
+
+void ResetEventDay()
+{
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+	{
+		SetEntData(i, g_iCollision_Offset, 0, 4, true);
+		g_iSprintStatus[i] = 0;
+
+		SetEntityMoveType(i, MOVETYPE_WALK);
+
+		SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
+	}
+
+	delete g_hTimerFreeze;
+	delete g_hTimerBeacon;
+
+	g_bBombActive = false;
+
+	g_bIsSuicideBomber = false;
+	g_bStartSuicideBomber = false;
+	g_bBombActive = false;
+	g_iRound = 0;
+	Format(g_sHasVoted, sizeof(g_sHasVoted), "");
+
+	if (gp_bHosties)
+	{
+		SetCvar("sm_hosties_lr", 1);
+	}
+
+	if (gp_bWarden)
+	{
+		SetCvar("sm_warden_enable", 1);
+	}
+
+	if (gp_bMyWeapons)
+	{
+		MyWeapons_AllowTeam(CS_TEAM_T, false);
+		MyWeapons_AllowTeam(CS_TEAM_CT, true);
+	}
+
+	SetCvar("sv_infinite_ammo", 0);
+
+	if (gp_bMyJailbreak)
+	{
+		SetCvar("sm_menu_enable", 1);
+
+		MyJailbreak_SetEventDayRunning(false, 0);
+		MyJailbreak_SetEventDayName("none");
+	}
+
+	CPrintToChatAll("%t %t", "suicidebomber_tag", "suicidebomber_end");
 }
 
 // Check pressed buttons
@@ -937,7 +994,12 @@ void StartEventRound(bool thisround)
 
 public Action Timer_PrepareEvent(Handle timer)
 {
+	if (!g_bIsSuicideBomber)
+		return Plugin_Handled;
+
 	PrepareDay(true);
+
+	return Plugin_Handled;
 }
 
 void PrepareDay(bool thisround)

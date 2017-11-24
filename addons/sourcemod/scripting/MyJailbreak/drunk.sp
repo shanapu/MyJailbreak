@@ -92,11 +92,9 @@ ConVar gc_bBeginSetVW;
 ConVar gc_bTeleportSpawn;
 
 // Extern Convars
-//ConVar g_iMPRoundTime;
 ConVar g_iTerrorForLR;
 
 // Integers    g_i = global integer
-//int g_iOldRoundTime;
 int g_iCoolDown;
 int g_iTruceTime;
 int g_iVoteCount;
@@ -189,7 +187,6 @@ public void OnPluginStart()
 	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
 
 	// Find
-//	g_iMPRoundTime = FindConVar("mp_roundtime");
 	gc_sOverlayStartPath.GetString(g_sOverlayStartPath, sizeof(g_sOverlayStartPath));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
@@ -617,8 +614,6 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			SetCvar("sv_infinite_ammo", 0);
 			SetCvar("mp_teammates_are_enemies", 0);
 
-//			g_iMPRoundTime.IntValue = g_iOldRoundTime; // return to original round time
-
 			CPrintToChatAll("%t %t", "drunk_tag", "drunk_end");
 		}
 	}
@@ -683,69 +678,88 @@ public void OnMapEnd()
 	g_sHasVoted[0] = '\0';
 }
 
+public void MyJailbreak_ResetEventDay()
+{
+	g_bStartDrunk = false;
+
+	if (g_bIsDrunk)
+	{
+		g_iRound = g_iMaxRound;
+		ResetEventDay();
+	}
+}
+
 // Listen for Last Lequest
 public void OnAvailableLR(int Announced)
 {
 	if (g_bIsDrunk && gc_bAllowLR.BoolValue && (g_iTsLR > g_iTerrorForLR.IntValue))
 	{
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
-		{
-			SetEntData(i, g_iCollision_Offset, 0, 4, true); // disbale noblock
-
-			KillDrunk(i);
-
-			StripAllPlayerWeapons(i);
-
-			if (GetClientTeam(i) == CS_TEAM_CT)
-			{
-				FakeClientCommand(i, "sm_weapons");
-			}
-
-			GivePlayerItem(i, "weapon_knife");
-		}
-
-		delete g_hTimerWiggle;
-		delete g_hTimerBeacon;
-		delete g_hTimerTruce; // kill start time if still running
-
-		if (g_iRound == g_iMaxRound) // if this was the last round
-		{
-			// return to default start values
-			g_bIsDrunk = false;
-			g_bStartDrunk = false;
-			g_iRound = 0;
-			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
-
-			SetCvar("sm_hosties_lr", 1);
-
-			if (gp_bMyWeapons)
-			{
-				MyWeapons_AllowTeam(CS_TEAM_T, false);
-				MyWeapons_AllowTeam(CS_TEAM_CT, true);
-			}
-
-			if (gp_bWarden)
-			{
-				SetCvar("sm_warden_enable", 1);
-			}
-
-			if (gp_bMyJailbreak)
-			{
-				SetCvar("sm_menu_enable", 1);
-
-				MyJailbreak_SetEventDayName("none");
-				MyJailbreak_SetEventDayRunning(false, 0);
-			}
-
-			SetCvar("sv_infinite_ammo", 0);
-			SetCvar("mp_teammates_are_enemies", 0);
-
-//			g_iMPRoundTime.IntValue = g_iOldRoundTime; // return to original round time
-
-			CPrintToChatAll("%t %t", "drunk_tag", "drunk_end");
-		}
+		ResetEventDay();
 	}
 }
+
+void ResetEventDay()
+{
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+	{
+		SetEntData(i, g_iCollision_Offset, 0, 4, true); // disbale noblock
+
+		KillDrunk(i);
+
+		StripAllPlayerWeapons(i);
+
+		if (GetClientTeam(i) == CS_TEAM_CT)
+		{
+			FakeClientCommand(i, "sm_weapons");
+		}
+
+		GivePlayerItem(i, "weapon_knife");
+
+		SetEntityMoveType(i, MOVETYPE_WALK);
+
+		SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
+	}
+
+	delete g_hTimerWiggle;
+	delete g_hTimerBeacon;
+	delete g_hTimerTruce; // kill start time if still running
+
+	if (g_iRound == g_iMaxRound) // if this was the last round
+	{
+		// return to default start values
+		g_bIsDrunk = false;
+		g_bStartDrunk = false;
+		g_iRound = 0;
+		Format(g_sHasVoted, sizeof(g_sHasVoted), "");
+
+		SetCvar("sm_hosties_lr", 1);
+
+		if (gp_bMyWeapons)
+		{
+			MyWeapons_AllowTeam(CS_TEAM_T, false);
+			MyWeapons_AllowTeam(CS_TEAM_CT, true);
+		}
+
+		if (gp_bWarden)
+		{
+			SetCvar("sm_warden_enable", 1);
+		}
+
+		if (gp_bMyJailbreak)
+		{
+			SetCvar("sm_menu_enable", 1);
+
+			MyJailbreak_SetEventDayName("none");
+			MyJailbreak_SetEventDayRunning(false, 0);
+		}
+
+		SetCvar("sv_infinite_ammo", 0);
+		SetCvar("mp_teammates_are_enemies", 0);
+
+		CPrintToChatAll("%t %t", "drunk_tag", "drunk_end");
+	}
+}
+
 
 /******************************************************************************
                    FUNCTIONS
@@ -798,7 +812,12 @@ void StartEventRound(bool thisround)
 
 public Action Timer_PrepareEvent(Handle timer)
 {
+	if (!g_bIsDrunk)
+		return Plugin_Handled;
+
 	PrepareDay(true);
+
+	return Plugin_Handled;
 }
 
 void PrepareDay(bool thisround)

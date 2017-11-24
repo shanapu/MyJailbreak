@@ -96,12 +96,10 @@ ConVar gc_bBeginSetVW;
 ConVar gc_bTeleportSpawn;
 
 // Extern Convars
-//ConVar g_iMPRoundTime;
 ConVar g_iTerrorForLR;
 ConVar g_bAllowTP;
 
 // Integers
-//int g_iOldRoundTime;
 int g_iCoolDown;
 int g_iTruceTime;
 int g_iVoteCount;
@@ -201,7 +199,6 @@ public void OnPluginStart()
 
 	// Find
 	g_bAllowTP = FindConVar("sv_allow_thirdperson");
-//	g_iMPRoundTime = FindConVar("mp_roundtime");
 	gc_sOverlayStartPath.GetString(g_sOverlayStartPath, sizeof(g_sOverlayStartPath));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
@@ -655,8 +652,6 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			SetCvarFloat("sv_friction", 5.2);
 			SetConVarInt(g_bAllowTP, 0);
 
-//			g_iMPRoundTime.IntValue = g_iOldRoundTime;
-
 			if (gp_bMyJailbreak)
 			{
 				SetCvar("sm_menu_enable", 1);
@@ -734,64 +729,82 @@ public void OnMapEnd()
 	}
 }
 
+public void MyJailbreak_ResetEventDay()
+{
+	g_bStartKnifeFight = false;
+
+	if (g_bIsKnifeFight)
+	{
+		g_iRound = g_iMaxRound;
+		ResetEventDay();
+	}
+}
+
 // Listen for Last Lequest
 public void OnAvailableLR(int Announced)
 {
 	if (g_bIsKnifeFight && gc_bAllowLR.BoolValue && (g_iTsLR > g_iTerrorForLR.IntValue))
 	{
-		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, true))
+		ResetEventDay();
+	}
+}
+
+void ResetEventDay()
+{
+	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, true))
+	{
+		SetEntData(i, g_iCollision_Offset, 0, 4, true);
+		SetEntityGravity(i, 1.0);
+		FirstPerson(i);
+		StripAllPlayerWeapons(i);
+
+		if (GetClientTeam(i) == CS_TEAM_CT)
 		{
-			SetEntData(i, g_iCollision_Offset, 0, 4, true);
-			SetEntityGravity(i, 1.0);
-			FirstPerson(i);
-			StripAllPlayerWeapons(i);
-
-			if (GetClientTeam(i) == CS_TEAM_CT)
-			{
-				FakeClientCommand(i, "sm_weapons");
-			}
-
-			GivePlayerItem(i, "weapon_knife");
+			FakeClientCommand(i, "sm_weapons");
 		}
 
-		delete g_hTimerBeacon;
-		delete g_hTimerTruce;
+		GivePlayerItem(i, "weapon_knife");
 
-		if (g_iRound == g_iMaxRound)
+		SetEntityMoveType(i, MOVETYPE_WALK);
+
+		SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
+	}
+
+	delete g_hTimerBeacon;
+	delete g_hTimerTruce;
+
+	if (g_iRound == g_iMaxRound)
+	{
+		g_bIsKnifeFight = false;
+		g_bStartKnifeFight = false;
+		g_iRound = 0;
+		Format(g_sHasVoted, sizeof(g_sHasVoted), "");
+
+		if (gp_bWarden)
 		{
-			g_bIsKnifeFight = false;
-			g_bStartKnifeFight = false;
-			g_iRound = 0;
-			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
-
-			if (gp_bWarden)
-			{
-				SetCvar("sm_warden_enable", 1);
-			}
-
-			if (gp_bMyWeapons)
-			{
-				MyWeapons_AllowTeam(CS_TEAM_T, false);
-				MyWeapons_AllowTeam(CS_TEAM_CT, true);
-			}
-
-			SetCvar("sm_hosties_lr", 1);
-			SetCvar("mp_teammates_are_enemies", 0);
-			SetCvarFloat("sv_friction", 5.2);
-			SetConVarInt(g_bAllowTP, 0);
-
-//			g_iMPRoundTime.IntValue = g_iOldRoundTime;
-
-			if (gp_bMyJailbreak)
-			{
-				SetCvar("sm_menu_enable", 1);
-
-				MyJailbreak_SetEventDayName("none");
-				MyJailbreak_SetEventDayRunning(false, 0);
-			}
-
-			CPrintToChatAll("%t %t", "knifefight_tag", "knifefight_end");
+			SetCvar("sm_warden_enable", 1);
 		}
+
+		if (gp_bMyWeapons)
+		{
+			MyWeapons_AllowTeam(CS_TEAM_T, false);
+			MyWeapons_AllowTeam(CS_TEAM_CT, true);
+		}
+
+		SetCvar("sm_hosties_lr", 1);
+		SetCvar("mp_teammates_are_enemies", 0);
+		SetCvarFloat("sv_friction", 5.2);
+		SetConVarInt(g_bAllowTP, 0);
+
+		if (gp_bMyJailbreak)
+		{
+			SetCvar("sm_menu_enable", 1);
+
+			MyJailbreak_SetEventDayName("none");
+			MyJailbreak_SetEventDayRunning(false, 0);
+		}
+
+		CPrintToChatAll("%t %t", "knifefight_tag", "knifefight_end");
 	}
 }
 
@@ -905,7 +918,12 @@ void StartEventRound(bool thisround)
 
 public Action Timer_PrepareEvent(Handle timer)
 {
+	if (!g_bIsKnifeFight)
+		return Plugin_Handled;
+
 	PrepareDay(true);
+
+	return Plugin_Handled;
 }
 
 void PrepareDay(bool thisround)

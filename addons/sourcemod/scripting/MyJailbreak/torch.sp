@@ -105,12 +105,8 @@ ConVar gc_bBeginSetV;
 ConVar gc_bBeginSetVW;
 ConVar gc_bTeleportSpawn;
 
-// Extern Convars
-//ConVar g_iMPRoundTime;
-
 // Integers
 int g_iVoteCount;
-//int g_iOldRoundTime;
 int g_iCoolDown;
 int g_iTruceTime;
 int g_iRound;
@@ -225,7 +221,6 @@ public void OnPluginStart()
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	g_iMaxRound = gc_iRounds.IntValue;
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
-//	g_iMPRoundTime = FindConVar("mp_roundtime");
 	gc_sSoundOnTorchPath.GetString(g_sSoundOnTorchPath, sizeof(g_sSoundOnTorchPath));
 	gc_sSoundClearTorchPath.GetString(g_sSoundClearTorchPath, sizeof(g_sSoundClearTorchPath));
 	gc_sOverlayOnTorch.GetString(g_sOverlayOnTorch, sizeof(g_sOverlayOnTorch));
@@ -682,8 +677,6 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 				MyWeapons_AllowTeam(CS_TEAM_CT, true);
 			}
 
-//			g_iMPRoundTime.IntValue = g_iOldRoundTime;
-
 			if (gp_bMyJailbreak)
 			{
 				SetCvar("sm_menu_enable", 1);
@@ -780,6 +773,10 @@ void ResetEventDay()
 		{
 			UnhookWallhack(i);
 		}
+
+		SetEntityMoveType(i, MOVETYPE_WALK);
+
+		SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
 	}
 
 	g_iBurningZero = -1;

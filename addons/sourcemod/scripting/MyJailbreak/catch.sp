@@ -108,12 +108,10 @@ ConVar gc_bBeginSetVW;
 ConVar gc_bTeleportSpawn;
 
 // Extern Convars
-//ConVar g_iMPRoundTime;
 ConVar g_iTerrorForLR;
 
 // Integers
 int g_iVoteCount;
-//int g_iOldRoundTime;
 int g_iCoolDown;
 int g_iRound;
 int g_iSprintStatus[MAXPLAYERS+1];
@@ -231,7 +229,6 @@ public void OnPluginStart()
 	g_iMaxRound = gc_iRounds.IntValue;
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
-//	g_iMPRoundTime = FindConVar("mp_roundtime");
 	gc_sOverlayStartPath.GetString(g_sOverlayStartPath, sizeof(g_sOverlayStartPath));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 	gc_sSoundFreezePath.GetString(g_sSoundFreezePath, sizeof(g_sSoundFreezePath));
@@ -732,8 +729,6 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 				MyJailbreak_SetEventDayName("none");
 			}
 
-//			g_iMPRoundTime.IntValue = g_iOldRoundTime;
-
 			CPrintToChatAll("%t %t", "catch_tag", "catch_end");
 		}
 	}
@@ -897,72 +892,90 @@ public Action OnWeaponCanUse(int client, int weapon)
 	return Plugin_Continue;
 }
 
+public void MyJailbreak_ResetEventDay()
+{
+	g_bStartCatch = false;
+
+	if (g_bIsCatch)
+	{
+		g_iRound = g_iMaxRound;
+		ResetEventDay();
+	}
+}
+
 // Listen for Last Lequest
 public void OnAvailableLR(int Announced)
 {
 	if (g_bIsCatch && gc_bAllowLR.BoolValue && (g_iTsLR > g_iTerrorForLR.IntValue))
 	{
-		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, true))
+		ResetEventDay();
+	}
+}
+
+void ResetEventDay()
+{
+	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, true))
+	{
+		g_iSprintStatus[i] = 0;
+		g_bCatched[i] = false;
+
+		SetEntData(i, g_iCollision_Offset, 0, 4, true);
+
+		CreateTimer(0.0, DeleteOverlay, GetClientUserId(i));
+
+		SetEntityRenderColor(i, 255, 255, 255, 0);
+		SetEntityHealth(i, 100);
+
+		StripAllPlayerWeapons(i);
+
+		if (GetClientTeam(i) == CS_TEAM_CT)
 		{
-			g_iSprintStatus[i] = 0;
-			g_bCatched[i] = false;
-
-			SetEntData(i, g_iCollision_Offset, 0, 4, true);
-
-			CreateTimer(0.0, DeleteOverlay, GetClientUserId(i));
-
-			SetEntityRenderColor(i, 255, 255, 255, 0);
-			SetEntityHealth(i, 100);
-
-			StripAllPlayerWeapons(i);
-
-			if (GetClientTeam(i) == CS_TEAM_CT)
-			{
-				FakeClientCommand(i, "sm_weapons");
-			}
-
-			GivePlayerItem(i, "weapon_knife");
-
-			if (gc_bWallhack.BoolValue && gp_bCustomPlayerSkins)
-			{
-				UnhookWallhack(i);
-			}
+			FakeClientCommand(i, "sm_weapons");
 		}
 
-		delete g_hTimerFreeze;
-		delete g_hTimerBeacon;
+		GivePlayerItem(i, "weapon_knife");
 
-		if (g_iRound == g_iMaxRound)
+		if (gc_bWallhack.BoolValue && gp_bCustomPlayerSkins)
 		{
-			g_bIsCatch = false;
-			g_iRound = 0;
-			Format(g_sHasVoted, sizeof(g_sHasVoted), "");
-
-			SetCvar("sm_hosties_lr", 1);
-
-			if (gp_bMyWeapons)
-			{
-				MyWeapons_AllowTeam(CS_TEAM_T, false);
-				MyWeapons_AllowTeam(CS_TEAM_CT, true);
-			}
-
-			if (gp_bWarden)
-			{
-				SetCvar("sm_warden_enable", 0);
-			}
-
-			if (gp_bMyJailbreak)
-			{
-				SetCvar("sm_menu_enable", 1);
-
-				MyJailbreak_SetEventDayName("none");
-				MyJailbreak_SetEventDayRunning(false, 0);
-			}
-
-//			g_iMPRoundTime.IntValue = g_iOldRoundTime;
-
-			CPrintToChatAll("%t %t", "catch_tag", "catch_end");
+			UnhookWallhack(i);
 		}
+
+		SetEntityMoveType(i, MOVETYPE_WALK);
+
+		SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
+	}
+
+	delete g_hTimerFreeze;
+	delete g_hTimerBeacon;
+
+	if (g_iRound == g_iMaxRound)
+	{
+		g_bIsCatch = false;
+		g_iRound = 0;
+		Format(g_sHasVoted, sizeof(g_sHasVoted), "");
+
+		SetCvar("sm_hosties_lr", 1);
+
+		if (gp_bMyWeapons)
+		{
+			MyWeapons_AllowTeam(CS_TEAM_T, false);
+			MyWeapons_AllowTeam(CS_TEAM_CT, true);
+		}
+
+		if (gp_bWarden)
+		{
+			SetCvar("sm_warden_enable", 0);
+		}
+
+		if (gp_bMyJailbreak)
+		{
+			SetCvar("sm_menu_enable", 1);
+
+			MyJailbreak_SetEventDayName("none");
+			MyJailbreak_SetEventDayRunning(false, 0);
+		}
+
+		CPrintToChatAll("%t %t", "catch_tag", "catch_end");
 	}
 }
 
@@ -1017,7 +1030,12 @@ void StartEventRound(bool thisround)
 
 public Action Timer_PrepareEvent(Handle timer)
 {
+	if (!g_bIsCatch)
+		return Plugin_Handled;
+
 	PrepareDay(true);
+
+	return Plugin_Handled;
 }
 
 void PrepareDay(bool thisround)
