@@ -47,7 +47,7 @@ Handle g_hIsBannedAllowed;
 
 // Info
 public Plugin myinfo = {
-	name = "MyJailbreak - Ratio - CT Ban Support", 
+	name = "MyJailbreak - Ratio - CT Ban Support - Databomb", 
 	author = "shanapu, Addicted, good_live", 
 	description = "Adds support for databombs CT Bans plugin to MyJB ratio", 
 	version = MYJB_VERSION, 

@@ -43,7 +43,7 @@
 
 // Info
 public Plugin myinfo = {
-	name = "MyJailbreak - Ratio - CT Bans Support",
+	name = "MyJailbreak - Ratio - CT Bans Support - r1ko",
 	author = "shanapu, Addicted, good_live",
 	description = "Adds support for FantoMs CT Bans plugin to MyJB ratio",
 	version = MYJB_VERSION,
