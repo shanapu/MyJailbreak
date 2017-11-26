@@ -1,6 +1,8 @@
-[URL="https://forums.alliedmods.net/showthread.php?p=2422609&nojs=1#goto_threadrating"]Rate Thread		 [IMG]https://forums.alliedmods.net/images/misc/menu_open.svg[/IMG][IMG]https://forums.alliedmods.net/images/rating/rating_5.svg[/IMG][/URL]
+[URL="https://github.com/shanapu/MyJailbreak/stargazers"][IMG]https://img.shields.io/github/stars/shanapu/MyJailbreak.svg?style=flat-square[/IMG][/url]
 
-[SIZE="5"][B]MyJailbreak [/B][/SIZE] a plugin pack for CS:GO jailserver
+[URL="https://forums.alliedmods.net/showthread.php?p=2422609&nojs=1#goto_threadrating"]Rate Thread		 [IMG]https://forums.alliedmods.net/images/misc/menu_open.svg?style=flat-square[/IMG][IMG]https://forums.alliedmods.net/images/rating/rating_5.svg[/IMG][/URL]
+
+[SIZE="5"][B]MyJailbreak [/B][/SIZE] a plugin pack for CS:GO jail server
 
 MyJailbreak is a redux rewrite of [URL="https://github.com/Franc1sco/Franug-Jailbreak/"]Franugs Special Jailbreak[/URL] a merge/redux of [URL="http://www.sourcemod.net/plugins.php?cat=0&mod=-1&title=warden&author=&description=&search=1"]eccas, ESK0s & zipcores Jailbreak warden[/URL] and many other plugins.
 
@@ -11,34 +13,41 @@ MyJailbreak is a redux rewrite of [URL="https://github.com/Franc1sco/Franug-Jail
 [*] [B]Warden[/B] - set/become warden,vote retire warden, model, icon, open cells,gun plant prevention, extend roundtime, handcuffs, laser pointer, painter, set marker/quiz/EventDays/countdown/FF/nobock/mute
 [*] [B]Requests[/B] - terror requests. refuse a game, request Capitulation/Pardon, healing or repeating, report freekill
 [*] [B]Last Guard Rule[/B] - When Last Guard Rule is set the last CT gets more HP and all terrors become rebel
-[*] [B]Menu[/B] - player menus for T, CT, warden & admin
-[*] [B]Weapons[/B] - weapon menus for CT &/or T(in event round)
-[*] [B]Player Tags[/B] - add player tags for T, T.Admin, CT, CT.Admin, W, WA.Admin in chat &/or stats
-[*] [B]Icons[/B] - add a icon above players head for T, CT, warden, deputy, rebel, cuffed & freeday
-[*] [B]HUD[/B] - a players HUD to display game informations
-[*] [B]Ratio[/B] - Manage team ratios and a queue system for prisoners to join guard through
-[*][B]Event Days[/B] - vote/set a Event Day for next round with cooldowns, rounds in row, sounds & overlays
+[*] [B]Menu[/B] - player menus for wardens, deputys, guards, prisoner or spectator
 [/LIST][INDENT][LIST]
-[*][B]War[/B] - CT vs T Team Deathmatch
-[*][B]Free For All[/B] - Deathmatch
-[*][B]Zombie[/B] - CT(zombie) vs T(Human) stripped down zombiereloaded
-[*][B]No Scope[/B] - No Scope Deathmatch with low gravity & configurable or random sniper
-[*][B]HE Battle[/B] - Grenade Deathmatch with low gravity
-[*][B]Hide in the Dark[/B] - CT(Seeker) vs T(Hider) kind of HideNseek
-[*][B]Catch & Freeze[/B] - CT must catch all T (freeze tag)
-[*][B]Duckhunt[/B] - CT(hunter) with nova vs T(chicken in 3th person) with 'nades
-[*][B]Suicide Bomber[/B] - Ts got suicide bombs to kill all CTs
-[*][B]Drunken[/B] - Deathmatch under bad condisions
-[*][B]Ghost War[/B] - Deathmatch - you can see the enemy just for seconds
-[*][B]Deal Damage[/B] - Deal so much damage as you can to enemy team. Team with most damage dealed wins
-[*][B]Zeus[/B] - Taser Deathmatch and gets a new Zeus on Kill
-[*][B]Torch Relay[/b] - Random player set on fire. He must burn other to extinguish the fire
-[*][B]Cowboy[/b] - Deathmatch with revolver or dual barettas
-[*][B]Knife[/B] - Knife Deathmatch with configurable gravity, iceskate, and thirdperson
-[*][B]Freeday[/B] - Auto freeday on first round &/or if there is no CT
+[*] Menu custom - add custom item to wardens, deputys, guards, prisoner or spectator
+[/LIST][/INDENT][LIST]
+[*] [B]Weapons[/B] - weapon menus for guards, prisoner(in event round)
+[*] [B]Player Tags[/B] - add player tags for T, T.Admin, CT, CT.Admin, W, WA.Admin in chat &/or stats
+[*] [B]Icons[/B] - add a icon above players head for guards, prisoner, warden, deputy, rebel, cuffed & freeday
+[*] [B]HUD[/B] - a player HUD to display game informations
+[*] [B]Ratio[/B] - Manage team ratios and a queue system for prisoners to join guard through
+[*] [B]Event Days[/B] - vote/set a Event Day to start the current or next round with cooldowns, rounds in row, sounds & overlays
+[/LIST][INDENT][LIST]
+[*] [B]War[/B] - CT vs T Team Deathmatch
+[*] [B]Free For All[/B] - Deathmatch
+[*] [B]Zombie[/B] - CT(zombie) vs T(Human) stripped down zombie reloaded
+[*] [B]No Scope[/B] - No Scope Deathmatch with low gravity & configurable or random sniper
+[*] [B]HE Battle[/B] - Grenade Deathmatch with low gravity
+[*] [B]Hide in the Dark[/B] - CT(Seeker) vs T(Hider) kind of HideNseek
+[*] [B]Catch & Freeze[/B] - CT must catch all T (freeze tag)
+[*] [B]Duck Hunt[/B] - CT(hunter) with nova vs T(chicken in 3th person) with 'nades
+[*] [B]Arms Race[/B] - Deathmatch - inspired by csgos arms race
+[*] [B]One in the Chamber[/B] - Deathmatch - inspired by cods oitc
+[*] [B]Teleport War[/B] - Deathmatch - Change you position with your victim on hit.
+[*] [B]Suicide Bomber[/B] - Ts got suicide bombs to kill all CTs
+[*] [B]Drunken[/B] - Deathmatch under bad conditions
+[*] [B]Ghost War[/B] - Deathmatch - you can see the enemy just for seconds
+[*] [B]Deal Damage[/B] - Deal so much damage as you can to enemy team. Team with most damage dealt wins
+[*] [B]Zeus[/B] - Taser Deathmatch and gets a new Zeus on Kill
+[*] [B]Torch Relay[/b] - Random player set on fire. He must burn other to extinguish the fire
+[*] [B]Cowboy[/b] - Deathmatch with revolver or dual barettas and acustic hit marker
+[*] [B]Knife[/B] - Knife Deathmatch with configurable gravity, iceskate, and third person
+[*] [B]Freeday[/B] - Auto freeday on first round &/or if there is no CT
 [/LIST][/INDENT]
+[B]All plugins can be used as standalone without need of any other plugins of MyJailbreak.[/B] [SIZE="1"]When using two EventDays you'll need myjailbreak.smx too.[/SIZE]
 
-[U]Add-ons:[/U]
+[U]Add-ons:[/U] (you need them to interact with these plugins)
 
 [LIST]
 [*][B]CT Bans Support[/B] - Support plugin for [URL="https://forums.alliedmods.net/showthread.php?t=166080"]databombs CT Bans plugin[/URL]
@@ -46,6 +55,9 @@ MyJailbreak is a redux rewrite of [URL="https://github.com/Franc1sco/Franug-Jail
 [*][B]CT Bans Support[/B] - Support plugin for [URL="https://forums.alliedmods.net/member.php?u=237200"]R1KO[/URL]s [i]private[/i] CT Bans
 [*][B]TeamBans Support[/B] - Support plugin for [URL="https://forums.alliedmods.net/showthread.php?t=270761"]baras TeamBans plugin[/URL]
 [*][B]TeamGames Support[/B] - Support plugin for [url=https://forums.alliedmods.net/showthread.php?t=286045]KissLicks TeamGames[/url] v1.1.0.7
+[*][B]Gangs Support[/B] - Support plugin for [url=https://forums.alliedmods.net/showthread.php?p=2495755]Headlines Gangs[/url]
+[*][B]MostActive Support[/B] - Support plugin for [url=https://forums.alliedmods.net/showthread.php?p=1751973]Franc1scos MostActive[/url]
+[*][B]SimpleStats Support[/B] - Support plugin for [url=https://forums.alliedmods.net/showthread.php?p=2533148]nhnkl159s Simple Stats[/url]
 [*][B]Steam Groups Support[/B] - Support plugin for restriction based on steam groups
 [*][B]RankMe Support[/B] - Support plugin for [URL="https://forums.alliedmods.net/showthread.php?t=155621"]lok1s, Scoobys RankMe plugin[/URL] & [URL="https://forums.alliedmods.net/showthread.php?t=290063"]Kentos RankMe plugin[/URL]
 [*][B]Reputation Support[/B] - Support plugin for [URL="https://forums.alliedmods.net/showthread.php?p=2411490"]oaaron99 Player Reputations plugin[/URL]
@@ -53,7 +65,7 @@ MyJailbreak is a redux rewrite of [URL="https://github.com/Franc1sco/Franug-Jail
 [*][B]SteamRep Support[/B] - Support plugin for [URL="https://steamrep.com/plugin.php"]SteamRep[/URL]
 [*][B]Store Support[/B] - Support plugin for get Credits when win EventDay for [url=https://forums.alliedmods.net/showthread.php?t=276677]Zephyrus store[/url]
 [*][B]Store Support[/B] - Support plugin for get Credits when win EventDay for [url=https://forums.alliedmods.net/forumdisplay.php?f=157]SourceMod Store[/url]
-[*][B]Store Support[/B] - Support plugin for adding paperclips to [url=https://forums.alliedmods.net/showthread.php?t=276677]Zephyrus store[/url]
+[*][B]Store Support[/B] - Support plugin for adding paper clips to [url=https://forums.alliedmods.net/showthread.php?t=276677]Zephyrus store[/url]
 [code]
 "PaperClips"
 {
@@ -67,12 +79,14 @@ MyJailbreak is a redux rewrite of [URL="https://github.com/Franc1sco/Franug-Jail
 
 [B][u]Features[/u][/B]
 [LIST]
+[*]Activly maintained & further development
 [*]SourcePawn Transitional Syntax
 [*][b][url=https://github.com/shanapu/MyJailbreak/wiki]Wiki[/url] [/B]&[B] [url=https://github.com/shanapu/MyJailbreak/wiki/Frequently-Asked-Questions]FAQ[/url][/b]
 [*]Multilingual support
+[*]Extensive API
 [*]Custom chat commands !mycommand
 [*]Custom chat tags [MyJB.tag]
-[*]Colors
+[*]Chat colors
 [*]Sounds & overlays
 [*]Flag system - restrict some features only for admin/VIP
 [*]Natives & forwards of the [URL="http://www.sourcemod.net/plugins.php?cat=0&mod=-1&title=warden&author=&description=&search=1"]original warden plugins[/URL] to keep compatibility
@@ -84,11 +98,9 @@ MyJailbreak is a redux rewrite of [URL="https://github.com/Franc1sco/Franug-Jail
 
 [B][u]Plugin descriptions, pictures, commands & convars[/u][/B]
 [SPOILER]
-
-
 [U][B]Warden[/B][/U]
-This plugins allows players to take control over the prison as warden/Headguard/Commander.  
-Chat, hud & sound notifications about warden / no warden. Vote to retire the warden. Colorized warden and define the color. Set warden Model and icon above pleayers head. Open & close cell doors & automatic open. Mute terroist for a amoung of time or round end. Extend roundtime. Gun plant prevention - CT can drop weapons only on round beginn without punishment & report to warden. Use Zeus as Handcuffs and move the cuffed T around. Cuffed T got a chance to gets a paperclip to unlock cuffs. Give warden laser pointer & painter(LaZzZers) with menu to choose color. Warden can toggle painter for terrorists. Set different countdowns (start/stop) with overlays, sound & chat notifications. Start a MathQuiz with endtimer & show the player with the first right answer. Toggle Friendly Fire & No Block. Kill/pick a random T (excluding rebels & last T) with different kill effects(Lighting,Timebomb,Firebomb). Count Player in wardens field of view. Mark or UnMark a player as Rebel. Automute Player when warden Talks & give freeday
+This plugins allows players to take control over the prison as warden/Head Guard/Commander.  
+Chat, hud & sound notifications about warden / no warden. Vote to retire the warden. Colorized warden and define the color. Set warden Model and icon above players head. Open & close cell doors & automatic open. Mute terrorist for a amount of time or round end. Extend round time. Gun plant prevention - CT can drop weapons only on round beginn without punishment & report to warden. Use Zeus as Handcuffs and move the cuffed T around. Cuffed T got a chance to gets a paperclip to unlock cuffs. Give warden laser pointer & painter(LaZzZers) with menu to choose color. Warden can toggle painter for terrorists. Set different countdowns (start/stop) with overlays, sound & chat notifications. Start a Math Quiz with endtimer & show the player with the first right answer. Toggle Friendly Fire & No Block. Kill/pick a random T (excluding rebels & last T) with different kill effects(Lighting,Time Bomb,Firebomb). Count Player in wardens field of view. Mark or UnMark a player as Rebel. Automute Player when warden Talks & give freeday
 
 [b]Commands[/b]
 [SPOILER]
@@ -107,21 +119,21 @@ sm_painter - Allows the warden to toggle the wardens Painter
 sm_noblock - Allows the warden to toggle no block 
 sm_setff - Allows player to see the state and the warden to toggle friendly fire
 sm_cdmenu - Allows the warden to open the Countdown Menu
-sm_cdstart - Allows the warden to start a START Countdown! (start after 10sec.) - start without menu
-sm_cdstop - Allows the warden to start a STOP Countdown! (stop after 20sec.) - start without menu
-sm_cdstartstop - Allows the warden to start a START/STOP Countdown! (start after 10sec./stop after 20sec.) - start without menu
+sm_cdstart - Allows the warden to start a START Countdown! (start after 10 sec.) - start without menu
+sm_cdstop - Allows the warden to start a STOP Countdown! (stop after 20 sec.) - start without menu
+sm_cdstartstop - Allows the warden to start a START/STOP Countdown! (start after 10sec./stop after 20 sec.) - start without menu
 sm_cdcancel - Allows the warden to cancel a running Countdown disabled / bugged
 sm_killrandom - Allows the warden to kill a random T
-sm_math - Allows the warden to start a MathQuiz. Show player with first right Answer
+sm_math - Allows the warden to start a Math Quiz. Show player with first right Answer
 sm_wmute - Allows the warden to mute a terrorist
 sm_wunmute - Allows the warden to unmute a muted terrorist
 sm_markrebel - Allows Warden to mark/unmark prisoner as rebel
 sm_count - Allows Warden to count the prisoners in his field of view
 sm_givefreeday - Allows the Warden to give a freeday to a player
-+beacons - bind "+beacons" for markers to use instead rightclick mouse
++beacons - bind "+beacons" for markers to use instead right click mouse
 [/CODE]
 
-[u]AdminCommands // ADMFLAG_GENERIC[/u]
+[u]Admin Commands // ADMFLAG_GENERIC[/u]
 [CODE]
 sm_setwarden - Allows the Admin to set a player to warden
 sm_removewarden - Allows the Admin to remove a player from warden
@@ -222,6 +234,13 @@ sm_warden_cooldown_remove "3"
 // Maximum: "1.000000"
 sm_warden_stay "1"
 
+// 0 - disabled, 1 - enable warden will be removed on last request
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_warden_remove_lr "0"
+
 // Time in seconds a the warden of last round must wait until become warden again, to give other player chance to be warden (need sm_warden_stay '0')
 // -
 // Default: "15.0"
@@ -291,6 +310,13 @@ sm_warden_deputy_set "1"
 // Minimum: "0.000000"
 // Maximum: "1.000000"
 sm_warden_deputy_become "1"
+
+// 0 - disabled, 1 - enable deputy will be removed on last request
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_warden_deputy_remove_lr "0"
 
 // 0 - disabled, 1 - enable deputy model
 // -
@@ -418,6 +444,13 @@ sm_warden_disarm_mode "1"
 // Maximum: "2.000000"
 sm_warden_disarm_drop "1"
 
+// 0 - negate the knife disarm, 1 - disarm all weapons
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_warden_disarm_knife "1"
+
 // 0 - disabled, 1 - enable Warden bulletimpact sparks
 // -
 // Default: "1"
@@ -523,11 +556,25 @@ sm_warden_math_max "100"
 // Maximum: "1.000000"
 sm_warden_math_mode "1"
 
+// 0 - use chat trigger to recieve chat input e.g. answer = '!math 526'. This is forced when no chat-processor is installed / 1 - use a chat-processor to recieve chat input e.g. answer = '526' / use '0' when chat input of will not recognized cause conflics with chat manipulation plugins like 'CCC'
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_warden_math_input "1"
+
 // Time in seconds to give a answer to a question.
 // -
 // Default: "10"
 // Minimum: "3.000000"
 sm_warden_math_time "10"
+
+// 0 - disabled, 1 - cts answers will also recognized
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_warden_math_allow_ct "1"
 
 // 0 - disabled, 1 - enable sounds 
 // -
@@ -660,6 +707,13 @@ sm_warden_cmds_extend "extendtime, moretime"
 // Maximum: "1.000000"
 sm_warden_ff "1"
 
+// 0 - disabled, 1 - enable ff for cts also
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_warden_ff_ct_enable "0"
+
 // 0 - disabled, 1 - enable switch ff for the deputy, too
 // -
 // Default: "1"
@@ -671,6 +725,13 @@ sm_warden_ff_deputy "1"
 // -
 // Default: "isff, friendlyfire"
 sm_warden_cmds_ff "isff, friendlyfire"
+
+// 0 - disabled, 1 - announce remaining round time in chat & hud 3min, 2min, 1min, 30sec before roundend.
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_warden_roundtime_reminder "1"
 
 // 0 - disabled, 1 - enable kill a random t for warden
 // -
@@ -1084,6 +1145,11 @@ sm_warden_orders "1"
 // Maximum: "1.000000"
 sm_warden_orders_deputy "1"
 
+// Set your custom chat command for open menu(!menu (no 'sm_'/'!')(seperate with comma ',')(max. 12 commands))
+// -
+// Default: "orders,calls"
+sm_warden_cmds_orders "orders,calls"
+
 // 0 - disabled, 1 - Allow the warden to set a personal freeday
 // -
 // Default: "1"
@@ -1098,7 +1164,7 @@ sm_warden_freeday_enable "1"
 // Maximum: "1.000000"
 sm_warden_cmds_freeday "gfd, setfreeday, sfd"
 
-// Set your custom chat command for remove a freeday(!removefreeday (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
+// Set your custom chat command for give a freeday(!givefreeday (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
 // -
 // Default: "rfd, nofreeday"
 // Minimum: "0.000000"
@@ -1140,35 +1206,29 @@ sm_warden_freeday_deputy "1"
 // Maximum: "1.000000"
 sm_warden_freeday_guards "0"
 
-// Set your custom chat command for give a freeday(!givefreeday (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
+// 0 - disabled, 1 - warden can witheld prisoners Last request commands (need sm_hosties_lr_autodisplay '0')
 // -
-// Default: "rfd, nofreeday"
+// Default: "1"
 // Minimum: "0.000000"
 // Maximum: "1.000000"
-sm_warden_cmds_freeday_remove "rfd, nofreeday"
+sm_warden_withheld_lr_enable "1"
 
-// 0 - disabled, how many stamm points a player need to become warden (only if stamm is available)
+// 0 - disabled, 1 - deputy can witheld prisoners Last request commands
 // -
-// Default: "0"
+// Default: "1"
 // Minimum: "0.000000"
-sm_warden_stamm "0"
+// Maximum: "1.000000"
+sm_warden_withheld_lr_deputy "1"
 
-// 0 - disabled, how many rankem points a player need to  become warden (only if stamm is available)
+// Set your custom chat commands for witheld Last request(!nolastrequest (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)
 // -
-// Default: "0"
-// Minimum: "0.000000"
-sm_warden_rankme "0"
+// Default: "nolr, noLR"
+sm_warden_cmds_withheld_lr "nolr, noLR"
 
-// 0 - disabled, how many reputation points a player need to become warden (only if stamm is available)
+// Set your last request commands (add custom !lr cmds)(no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)
 // -
-// Default: "0"
-// Minimum: "0.000000"
-sm_warden_reputation "0"
-
-// Steamgroup a player must be member before become warden (Find it on your steam groups edit page) (0000000 = disabled)
-// -
-// Default: "0000000"
-sm_warden_steamgroup "0000000"
+// Default: "lr,lastrequest"
+sm_warden_cmds_lr "lr,lastrequest"
 [/CODE]
 [/SPOILER]
 [b]Default order config as example[/b]
@@ -1256,7 +1316,7 @@ sm_warden_steamgroup "0000000"
 }
 [/php]
 [/SPOILER]
-[IMG]http://shanapu.de/myjb/warden.jpg[/IMG]
+[IMG]http://shanapu.de/myjb/warden2.jpg[/IMG]
 
 [IMG]http://shanapu.de/myjb/sparks.jpg[/IMG]
 
@@ -1563,6 +1623,11 @@ sm_freekill_swap "1"
 // Default: "1"
 sm_freekill_admin "1"
 
+// 0 - disabled, 1 - Report will be send to admins even if he is in spec
+// -
+// Default: "1"
+sm_freekill_admin_spec "1"
+
 // Set flag for admin/vip get reported freekills to decide.
 // -
 // Default: "g"
@@ -1652,6 +1717,13 @@ sm_lastguard_trucetime "10"
 // Default: "5"
 // Minimum: "0.000000"
 sm_lastguard_time "5"
+
+// 0 - disabled, 1 - enable wallhack for last guard
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_lastguard_wallhack "1"
 
 // Time in seconds until the beacon turned on (set to 0 to disable)
 // -
@@ -1778,19 +1850,40 @@ sm_menu_warden "1"
 // Maximum: "1.000000"
 sm_menu_deputy "1"
 
-// 0 - disabled, 1 - enable vote eventdays menu
+// 0 - disabled, 1 - enable set eventdays menu
 // -
 // Default: "1"
 // Minimum: "0.000000"
 // Maximum: "1.000000"
 sm_menu_setdays "1"
 
-// 0 - disabled, 1 - enable set eventdays menu
+// 0 - disabled, 1 - enable vote eventdays menu
 // -
 // Default: "1"
 // Minimum: "0.000000"
 // Maximum: "1.000000"
 sm_menu_votedays "1"
+
+// remove 1. & 2. on first page, to avoid conflict with weapon switch
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_menu_clean "1"
+
+// 0 - use 'config/sorting-eventdays.ini' on event day voting / 1 - Shuffle EventDays on voting
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_menu_shuffle "1"
+
+// 0 - disabled, 1 - allow player vote for 'no Event Day' on eventday voting
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_menu_vote_noevent "1"
 
 // 0 - disabled, 1 - enable close menu after action
 // -
@@ -1866,6 +1959,51 @@ sm_menu_voteday_cooldown_day "3"
 sm_menu_voteday_cooldown_start "3"
 [/CODE]
 [/SPOILER]
+
+
+With extra plugin MyJailbreak - Custom Menu items - [i]plugins/MyJailbreak/disabled/menu_custom.smx[i] you can add your own items to the menus.  
+Check the config file for custom menu items [i]configs/MyJailbreak/menu_custom.cfg[i]
+[SPOILER]
+[CODE]
+"CustomMenuItems" // You need to enable custom_menu.smx to use this!
+{
+	"SoccerBall" // unique ID
+	{
+		// https://forums.alliedmods.net/showthread.php?t=283311
+		"title"			"Soccer Ball" // title show in menu
+		"command"		"ball" // command to execute
+		"role"			"1,2" // 1 = warden, 2 = deputy, 3 = guard, 4 = prisoner, 5 = spec
+		"flags"			"a" // flags for admins/vip
+		"postion"		"top" // position in menu
+	}
+	"Store" // unique ID
+	{
+		"title"			"Store" // title show in menu
+		"command"		"sm_store" // command to execute
+		"role"			"3,4,5" // 1 = warden, 2 = deputy, 3 = guard, 4 = prisoner, 5 = spec
+		"flags"			"" // flags for admins/vip
+		"postion"		"top" // position in menu,
+	}
+	"Suicide" // unique ID
+	{
+		"title"			"Kill yourself" // title show in menu
+		"command"		"kill" // command to execute
+		"role"			"1,2,3,4,5" // 1 = warden, 2 = deputy, 3 = guard, 4 = prisoner, 5 = spec
+		"flags"			"" // flags for admins/vip
+		"postion"		"bottom" // position in menu
+	}
+	"CTBan" // unique ID
+	{
+		"title"			"CT Ban" // title show in menu
+		"command"		"sm_ctban" // command to execute
+		"role"			"1,2,3,4,5" // 1 = warden, 2 = deputy, 3 = guard, 4 = prisoner, 5 = spec
+		"flags"			"a,b,g" // flags for admins/vip
+		"postion"		"bottom" // position in menu
+	}
+}
+[/CODE]
+[/SPOILER]
+
 [b]Menu Structure[/b]
 [SPOILER]
 
@@ -2182,7 +2320,6 @@ sm_menu_voteday_cooldown_start "3"
 [*]Admin menu
 [/LIST]
 [/SPOILER]
-[IMG]http://shanapu.de/myjb/menu.png[/IMG]
 
 
 [U][B]Weapons[/B][/U]
@@ -2199,7 +2336,7 @@ set your own custom command. take a look at "sm_weapons_cmds"
 [b]ConVars[/b]
 [SPOILER]
 [CODE]
-// 0 - disabled, 1 - enable g_hWeapons menu - you shouldn't touch these, cause events days will handle them
+// 0 - disabled, 1 - enable weapons menu
 // -
 // Default: "1"
 // Minimum: "0.000000"
@@ -2208,22 +2345,8 @@ sm_weapons_enable "1"
 
 // Set your custom chat command for weapon menu(!weapon (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
 // -
-// Default: "gun, guns, g_hWeapons, gunmenu, weaponmenu, giveweapon, arms"
-sm_weapons_cmds "gun, guns, g_hWeapons, gunmenu, weaponmenu, giveweapon, arms"
-
-// 0 - disabled, 1 - enable g_hWeapons menu for T - you shouldn't touch these, cause events days will handle them
-// -
-// Default: "0"
-// Minimum: "0.000000"
-// Maximum: "1.000000"
-sm_weapons_t "0"
-
-// 0 - disabled, 1 - enable g_hWeapons menu for CT - you shouldn't touch these, cause events days will handle them
-// -
-// Default: "1"
-// Minimum: "0.000000"
-// Maximum: "1.000000"
-sm_weapons_ct "1"
+// Default: "gun, guns, weapons, gunmenu, weaponmenu, giveweapon, arms"
+sm_weapons_cmds "gun, guns, weapons, gunmenu, weaponmenu, giveweapon, arms"
 
 // 0 - disabled, 1 -  enable autoopen weapon menu on spawn
 // -
@@ -2231,6 +2354,13 @@ sm_weapons_ct "1"
 // Minimum: "0.000000"
 // Maximum: "1.000000"
 sm_weapons_spawnmenu "1"
+
+// 0 - disabled, 1 - enable the weapon menu on non-EventDays round (normal/simon rounds)
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_weapons_noeventday "1"
 
 // 0 - disabled, 1 - enable AWP in menu
 // -
@@ -2260,14 +2390,14 @@ sm_weapons_negev "1"
 // Maximum: "1.000000"
 sm_weapons_m249 "1"
 
-// 0 - disabled, 1 - warden get a g_bTA grenade with g_hWeapons - need MyJB warden
+// 0 - disabled, 1 - warden get a TA grenade with weapons - need MyJB warden
 // -
 // Default: "1"
 // Minimum: "0.000000"
 // Maximum: "1.000000"
 sm_weapons_warden_tagrenade "1"
 
-// 0 - disabled, 1 - warden get a healthshot with g_hWeapons - need MyJB warden
+// 0 - disabled, 1 - warden get a healthshot with weapons - need MyJB warden
 // -
 // Default: "1"
 // Minimum: "0.000000"
@@ -2294,6 +2424,13 @@ sm_weapons_kevlar_eventdays "1"
 // Minimum: "0.000000"
 // Maximum: "1.000000"
 sm_weapons_jbmenu "1"
+
+// remove 1. & 2. on first page, to avoid conflict with weapon switch
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_weapons_cleanmenu "1"
 [/CODE]
 [/SPOILER]
 [IMG]http://shanapu.de/myjb/weapons.jpg[/IMG]
@@ -2331,6 +2468,16 @@ sm_playertag_chat "1"
 // -
 // Default: "z"
 sm_playertag_ownerflag "z"
+
+// Set the flag for CoOwner
+// -
+// Default: "r"
+sm_playertag_coownerflag "r"
+
+// Set the flag for Super Admin
+// -
+// Default: "s"
+sm_playertag_superadminflag "s"
 
 // Set the flag for admin
 // -
@@ -2423,6 +2570,11 @@ sm_ratio_cmds_prisoner "t,terror"
 // Default: "spec"
 sm_ratio_cmds_spec "spec"
 
+// Set your custom chat command for player to move to spectator (!noguard (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
+// -
+// Default: "noct"
+sm_ratio_cmds_noct "noct"
+
 // How many prisoners for each guard.
 // -
 // Default: "2"
@@ -2462,7 +2614,7 @@ sm_ratio_disable "0"
 // Maximum: "1.000000"
 sm_ratio_disable_announce "0"
 
-// 0 - disabled, 1 - enable adverstiment for 'VIPs moved to front of queue' when player types !quard 
+// 0 - disabled, 1 - enable adverstiment for 'VIPs moved to front of queue' when player types !guard 
 // -
 // Default: "1"
 // Minimum: "0.000000"
@@ -2518,6 +2670,13 @@ sm_ratio_balance_warden "1"
 // Maximum: "1.000000"
 sm_ratio_respawn "1"
 
+// 0 - Don't do anything if a Spec join in queue / 1 - Swap to T the Spectators who join in queue
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_ratio_swap_spec_queue "1"
+
 // 0 - disabled, how many stamm points a player need to join ct? (only if stamm is available)
 // -
 // Default: "0"
@@ -2550,7 +2709,6 @@ sm_ratio_steamrep_exclude ""
 // -
 // Default: ""
 sm_ratio_steamrep_checkip ""
-
 [/CODE]
 [/SPOILER]
 
@@ -2570,13 +2728,21 @@ sm_hud - Allows player to toggle the hud display.
 // 0 - disabled, 1 - enable this MyJailbreak SourceMod plugin
 // -
 // Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
 sm_hud_enable "1"
 
-// Set your custom chat commands for toggle HUD(!hud (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)) Default HUD
+// 0 - show hud only to alive player, 1 - show hud to dead & alive player
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_hud_alive "1"
+
+// Set your custom chat commands for toggle HUD(!hud (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
 // -
 // Default: "HUD"
 sm_hud_cmds "HUD"
-
 [/CODE]
 [/SPOILER]
 
@@ -2587,6 +2753,13 @@ Shows a icon above the players head for guard, prisoner, warden, deputy, cuffed,
 [b]ConVars[/b]
 [SPOILER]
 [CODE]
+// 0 - use the icons, 1 - disable icons on EventDays
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_icons_eventday "1"
+
 // 0 - disabled, 1 - enable the icon above the wardens head
 // -
 // Default: "1"
@@ -2682,6 +2855,7 @@ This plugins is the "interface" between Eventdays. Need for cooldowns and disabl
 [SPOILER]
 [CODE]
 sm_endround - Allows admin to force end the round
+sm_resetevent - Allows admin end all running/planned event days
 [/CODE]
 set your own custom command. take a look at "sm_myjb_cmds_endround"
 [/SPOILER]
@@ -2717,7 +2891,42 @@ sm_myjb_cmds_endround "er, stopround, end"
 // 0 - disabled, 1 - enable !endround command for testing (disable against abusing)
 // -
 // Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
 sm_myjb_allow_endround "0"
+
+// 0 - disabled / Every x round could be an event day or voting
+// -
+// Default: "6"
+// Minimum: "0.000000"
+sm_myjb_random_round "6"
+
+// 0 - Start an eventday voting / 1 - start an random eventday
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_myjb_random_type "1"
+
+// Chance that the choosen round would be an event day
+// -
+// Default: "60"
+// Minimum: "1.000000"
+// Maximum: "100.000000"
+sm_myjb_random_chance "60"
+
+// Wait after mapchange x rounds before try first random eventday or voting
+// -
+// Default: "6"
+// Minimum: "0.000000"
+sm_myjb_random_mapstart_delay "6"
+
+// 0 - disabled, 1 - disable medic room when event day running
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_myjb_medic "1"
 
 // Sets the radius for the beacons rings.
 // -
@@ -2774,14 +2983,12 @@ sm_myjb_beacon_T_color_green "0"
 // Minimum: "0.000000"
 // Maximum: "255.000000"
 sm_myjb_beacon_T_color_blue "0"
-
 [/CODE]
 [/SPOILER]
 
 
 
 [U][B]War[/B][/U]
-This plugin allows to vote or set a war CT vs T for next rounds.  
 On Round start Ts spawn freezed next to CT. CTs must leave the spawn and spread on map. After unfreeze time (def. 30sec) Ts can Move. After nodamage time (def. 30sec) the war CT vs T starts.  
 Or on Round start Ts spawn in open cells with weapons and weaponmenu. No Freeze/-time. (Default)  
   
@@ -2846,6 +3053,41 @@ sm_war_vote "1"
 // Minimum: "0.000000"
 // Maximum: "1.000000"
 sm_war_spawn "0"
+
+// When admin set event (!setwar) = 0 - start event next round, 1 - start event current round
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_war_begin_admin "1"
+
+// When warden set event (!setwar) = 0 - start event next round, 1 - start event current round
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_war_begin_warden "1"
+
+// When users vote for event (!war) = 0 - start event next round, 1 - start event current round
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_war_begin_vote "0"
+
+// When warden/admin start eventday voting (!sm_voteday) and event wins = 0 - start event next round, 1 - start event current round
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_war_begin_daysvote "0"
+
+// 0 - start event in current round from current player positions, 1 - teleport players to spawn when start event on current round(only when sm_*_begin_admin, sm_*_begin_warden, sm_*_begin_vote or sm_*_begin_daysvote is on '1')
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_war_teleport_spawn "0"
 
 // Rounds to play in a row
 // -
@@ -2932,7 +3174,6 @@ sm_war_allow_lr "0"
 
 
 [U][B]FreeForAll[/B][/U]
-This plugin allows to vote or set a FFA war for next rounds.  
 On Round start Ts spawn next to CT. CTs & Ts can gets Weapon an Move. MapFog is on for better hiding. After nodamage time (def. 30sec) the war CT vs T starts and MapFog disabled.  
 Or on Round start Ts spawn in open cells with weapons & weaponmenu. (Default)  
 
@@ -2997,6 +3238,41 @@ sm_ffa_vote "1"
 // Minimum: "0.000000"
 // Maximum: "1.000000"
 sm_ffa_spawn "0"
+
+// When admin set event (!setffa) = 0 - start event next round, 1 - start event current round
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_ffa_begin_admin "1"
+
+// When warden set event (!setffa) = 0 - start event next round, 1 - start event current round
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_ffa_begin_warden "1"
+
+// When users vote for event (!ffa) = 0 - start event next round, 1 - start event current round
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_ffa_begin_vote "0"
+
+// When warden/admin start eventday voting (!sm_voteday) and event wins = 0 - start event next round, 1 - start event current round
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_ffa_begin_daysvote "0"
+
+// 0 - start event in current round from current player positions, 1 - teleport players to spawn when start event on current round(only when sm_*_begin_admin, sm_*_begin_warden, sm_*_begin_vote or sm_*_begin_daysvote is on '1')
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_ffa_teleport_spawn "0"
 
 // Rounds to play in a row
 // -
@@ -3077,7 +3353,6 @@ sm_ffa_allow_lr "0"
 
 
 [U][B]Zombie[/B][/U]
-This plugin allows players to vote and warden to set next rounds to zombie escape.  
 On Round start Ts spawn in open cells with weapons & weaponmenu. CT are zombies with a zombie model, and with increased HP per Human.  
 Zombies freezed for 35sec (default) so T can hide &/or climb. Zombies got wallhack and nightvision.  
 
@@ -3135,6 +3410,41 @@ sm_zombie_flag "g"
 // Minimum: "0.000000"
 // Maximum: "1.000000"
 sm_zombie_vote "1"
+
+// When admin set event (!setzombie) = 0 - start event next round, 1 - start event current round
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_zombie_begin_admin "1"
+
+// When warden set event (!setzombie) = 0 - start event next round, 1 - start event current round
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_zombie_begin_warden "1"
+
+// When users vote for event (!zombie) = 0 - start event next round, 1 - start event current round
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_zombie_begin_vote "0"
+
+// When warden/admin start eventday voting (!sm_voteday) and event wins = 0 - start event next round, 1 - start event current round
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_zombie_begin_daysvote "0"
+
+// 0 - start event in current round from current player positions, 1 - teleport players to spawn when start event on current round(only when sm_*_begin_admin, sm_*_begin_warden, sm_*_begin_vote or sm_*_begin_daysvote is on '1')
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_zombie_teleport_spawn "0"
 
 // 0 - T teleport to CT spawn, 1 - cell doors auto open
 // -
@@ -3233,6 +3543,20 @@ sm_zombie_vision "1"
 // Maximum: "100.000000"
 sm_zombie_knockback "20.0"
 
+// 0 - disabled, 1 - transform terrors into Zombie on death - experimental!
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_zombie_terror "0"
+
+// 0 - all dead terrors become zombie, 1 - only terrors killed by zombie transform into Zombie
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_zombie_terror_infect "0"
+
 // Rounds cooldown after a event until event can be start again
 // -
 // Default: "3"
@@ -3287,20 +3611,6 @@ sm_zombie_model "models/player/custom_player/zombie/revenant/revenant_v2.mdl"
 // Minimum: "0.000000"
 // Maximum: "1.000000"
 sm_zombie_allow_lr "0"
-
-// 0 - disabled, 1 - transform terrors into Zombie on death - experimental!
-// -
-// Default: "1"
-// Minimum: "0.000000"
-// Maximum: "1.000000"
-sm_zombie_terror "0"
-
-// 0 - all dead terrors become zombie, 1 - only terrors killed by zombie transform into Zombie
-// -
-// Default: "0"
-// Minimum: "0.000000"
-// Maximum: "1.000000"
-sm_zombie_terror_infect "1"
 [/CODE]
 recomment for sm_zombie_glow "1", put sv_force_transmit_players "1" to your .cfg
 [/SPOILER]
@@ -3309,7 +3619,6 @@ recomment for sm_zombie_glow "1", put sv_force_transmit_players "1" to your .cfg
 
 
 [U][B]Noscope[/B][/U]
-This plugin allows players to vote and warden to set next rounds to noscope  
 On Round start cells open everybody got sniper rifle with noscope and low gravity. Nodamage time (def. 30sec).
 
 [b]Commands[/b]
@@ -3373,6 +3682,41 @@ sm_noscope_vote "1"
 // Minimum: "0.000000"
 // Maximum: "1.000000"
 sm_noscope_spawn "0"
+
+// When admin set event (!setnoscope) = 0 - start event next round, 1 - start event current round
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_noscope_begin_admin "1"
+
+// When warden set event (!setnoscope) = 0 - start event next round, 1 - start event current round
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_noscope_begin_warden "1"
+
+// When users vote for event (!noscope) = 0 - start event next round, 1 - start event current round
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_noscope_begin_vote "0"
+
+// When warden/admin start eventday voting (!sm_voteday) and event wins = 0 - start event next round, 1 - start event current round
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_noscope_begin_daysvote "0"
+
+// 0 - start event in current round from current player positions, 1 - teleport players to spawn when start event on current round(only when sm_*_begin_admin, sm_*_begin_warden, sm_*_begin_vote or sm_*_begin_daysvote is on '1')
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_noscope_teleport_spawn "0"
 
 // Rounds to play in a row
 // -
@@ -3481,7 +3825,6 @@ sm_noscope_allow_lr "0"
 
 
 [B][U]HE Battle[/U][/B]
-This plugin allows players to vote and warden to set next round to HEbattle.  
 On Round start cells open everybody got HE grenate with low gravity(Default) and reduced HP.
 
 [b]Commands[/b]
@@ -3545,6 +3888,41 @@ sm_hebattle_vote "1"
 // Minimum: "0.000000"
 // Maximum: "1.000000"
 sm_hebattle_spawn "0"
+
+// When admin set event (!sethebattle) = 0 - start event next round, 1 - start event current round
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_hebattle_begin_admin "1"
+
+// When warden set event (!sethebattle) = 0 - start event next round, 1 - start event current round
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_hebattle_begin_warden "1"
+
+// When users vote for event (!hebattle) = 0 - start event next round, 1 - start event current round
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_hebattle_begin_vote "0"
+
+// When warden/admin start eventday voting (!sm_voteday) and event wins = 0 - start event next round, 1 - start event current round
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_hebattle_begin_daysvote "0"
+
+// 0 - start event in current round from current player positions, 1 - teleport players to spawn when start event on current round(only when sm_*_begin_admin, sm_*_begin_warden, sm_*_begin_vote or sm_*_begin_daysvote is on '1')
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_hebattle_teleport_spawn "0"
 
 // HP a Player get on Spawn
 // -
@@ -3645,7 +4023,6 @@ sm_hebattle_allow_lr "0"
 
 
 [U][B]Catch & Freeze[/B][/U]
-This plugin allows players to vote and warden to set next round to catch.  
 On Round start cells open an Ts must "runaway". CT must catch and freeze all Ts by knifing.  
 Ts can unfreeze Freezed Ts by knife them again.  
 CT and T can Sprint with USE-Key (default). 
@@ -3724,6 +4101,41 @@ sm_catch_beacon_time "240"
 // Minimum: "0.000000"
 // Maximum: "1.000000"
 sm_catch_wallhack "1"
+
+// When admin set event (!setcatch) = 0 - start event next round, 1 - start event current round
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_catch_begin_admin "1"
+
+// When warden set event (!setcatch) = 0 - start event next round, 1 - start event current round
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_catch_begin_warden "1"
+
+// When users vote for event (!catch) = 0 - start event next round, 1 - start event current round
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_catch_begin_vote "0"
+
+// When warden/admin start eventday voting (!sm_voteday) and event wins = 0 - start event next round, 1 - start event current round
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_catch_begin_daysvote "0"
+
+// 0 - start event in current round from current player positions, 1 - teleport players to spawn when start event on current round(only when sm_*_begin_admin, sm_*_begin_warden, sm_*_begin_vote or sm_*_begin_daysvote is on '1')
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_catch_teleport_spawn "0"
 
 // Rounds to play in a row
 // -
@@ -3846,6 +4258,13 @@ sm_catch_sprint_time "3.0"
 // Minimum: "0.000000"
 // Maximum: "1.000000"
 sm_catch_allow_lr "0"
+
+// 0 - disabled, 1 - Kill loserteam on event end / not for sm_catch_allow_lr '1'
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_catch_kill_loser "0"
 [/CODE]
 [/SPOILER]
 [IMG]http://shanapu.de/myjb/catch.jpg[/IMG]
@@ -3853,7 +4272,6 @@ sm_catch_allow_lr "0"
 
 
 [U][B]Hide in the Dark[/B][/U]
-This plugin allows players to vote and warden to set next round to hide in the dark.  
 The map is darkened. CTs froze, Cells open and Ts got time to hide on map. CT got a TA grenades & more movement speed.  
 When CT unfroze (30sec. default) Ts gets frozen (default).  
 
@@ -3924,6 +4342,41 @@ sm_hide_freezehider "1"
 // Default: "3"
 // Minimum: "1.000000"
 sm_hide_tagrenades "3"
+
+// When admin set event (!sethide) = 0 - start event next round, 1 - start event current round
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_hide_begin_admin "1"
+
+// When warden set event (!sethide) = 0 - start event next round, 1 - start event current round
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_hide_begin_warden "1"
+
+// When users vote for event (!hide) = 0 - start event next round, 1 - start event current round
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_hide_begin_vote "0"
+
+// When warden/admin start eventday voting (!sm_voteday) and event wins = 0 - start event next round, 1 - start event current round
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_hide_begin_daysvote "0"
+
+// 0 - start event in current round from current player positions, 1 - teleport players to spawn when start event on current round(only when sm_*_begin_admin, sm_*_begin_warden, sm_*_begin_vote or sm_*_begin_daysvote is on '1')
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_hide_teleport_spawn "0"
 
 // Rounds to play in a row
 // -
@@ -4004,7 +4457,6 @@ sm_hide_allow_lr "0"
 
 
 [U][B]DuckHunt[/B][/U]
-This plugin allows players to vote and warden to set next round to duckhunt.  
 T are Chicken in Thirdperson. After trucetime, the cells open and T got HE grenade **but only secondary Attack!** CT as heavy with nova .  
 
 [b]Commands[/b]
@@ -4073,6 +4525,41 @@ sm_duckhunt_rounds "1"
 // Default: "5"
 // Minimum: "1.000000"
 sm_duckhunt_roundtime "5"
+
+// When admin set event (!setduckhunt) = 0 - start event next round, 1 - start event current round
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_duckhunt_begin_admin "1"
+
+// When warden set event (!setduckhunt) = 0 - start event next round, 1 - start event current round
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_duckhunt_begin_warden "1"
+
+// When users vote for event (!duckhunt) = 0 - start event next round, 1 - start event current round
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_duckhunt_begin_vote "0"
+
+// When warden/admin start eventday voting (!sm_voteday) and event wins = 0 - start event next round, 1 - start event current round
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_duckhunt_begin_daysvote "0"
+
+// 0 - start event in current round from current player positions, 1 - teleport players to spawn when start event on current round(only when sm_*_begin_admin, sm_*_begin_warden, sm_*_begin_vote or sm_*_begin_daysvote is on '1')
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_duckhunt_teleport_spawn "0"
 
 // Time in seconds until the beacon turned on (set to 0 to disable)
 // -
@@ -4166,7 +4653,6 @@ sm_duckhunt_allow_lr "0"
 
 
 [U][B]Suicide Bomber[/B][/U]
-This plugin allows players to vote and warden to set next round to Suicide Bomber.  
 On Round start, CTs got time to hide before cells open and Ts got Suicide bombs to kill all CT.  
 CT and T can Sprint with USE-Key (default).  
 
@@ -4246,6 +4732,41 @@ sm_suicidebomber_standstill "1"
 // Default: "1"
 // Minimum: "1.000000"
 sm_suicidebomber_rounds "1"
+
+// When admin set event (!setsuicidebomber) = 0 - start event next round, 1 - start event current round
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_suicidebomber_begin_admin "1"
+
+// When warden set event (!setsuicidebomber) = 0 - start event next round, 1 - start event current round
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_suicidebomber_begin_warden "1"
+
+// When users vote for event (!suicidebomber) = 0 - start event next round, 1 - start event current round
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_suicidebomber_begin_vote "0"
+
+// When warden/admin start eventday voting (!sm_voteday) and event wins = 0 - start event next round, 1 - start event current round
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_suicidebomber_begin_daysvote "0"
+
+// 0 - start event in current round from current player positions, 1 - teleport players to spawn when start event on current round(only when sm_*_begin_admin, sm_*_begin_warden, sm_*_begin_vote or sm_*_begin_daysvote is on '1')
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_suicidebomber_teleport_spawn "0"
 
 // Radius for bomb damage
 // -
@@ -4363,7 +4884,6 @@ sm_suicidebomber_sprint_time "2.5"
 
 
 [U][B]Deal Damage[/B][/U]
-This plugin allows players to vote and warden to set next round to deal damage  
 On Round start cells open everybody got god mode. Damage will be shown in mid of screen. Do so muhc damage as you can to enemy team. Team with most damage wins.
 
 [b]Commands[/b]
@@ -4435,6 +4955,48 @@ sm_dealdamage_spawn "1"
 // Maximum: "1.000000"
 sm_dealdamage_randomspawn "1"
 
+// When admin set event (!setdealdamage) = 0 - start event next round, 1 - start event current round
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_dealdamage_begin_admin "1"
+
+// When warden set event (!setdealdamage) = 0 - start event next round, 1 - start event current round
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_dealdamage_begin_warden "1"
+
+// When users vote for event (!dealdamage) = 0 - start event next round, 1 - start event current round
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_dealdamage_begin_vote "0"
+
+// When warden/admin start eventday voting (!sm_voteday) and event wins = 0 - start event next round, 1 - start event current round
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_dealdamage_begin_daysvote "0"
+
+// 0 - start event in current round from current player positions, 1 - teleport players to spawn when start event on current round(only when sm_*_begin_admin, sm_*_begin_warden, sm_*_begin_vote or sm_*_begin_daysvote is on '1')
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_dealdamage_teleport_spawn "0"
+
+// 0 - disabled, 1 - Kill loserteam on event end
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_dealdamage_kill_loser "0"
+
 // 0 - disabled, 1 - enable show results on a Panel
 // -
 // Default: "1"
@@ -4456,6 +5018,23 @@ sm_dealdamage_chat "1"
 // Maximum: "1.000000"
 sm_dealdamage_console "1"
 
+// 0 - disabled, 1 - color the model of the players
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_dealdamage_color "1"
+
+// Path to the model for team blue.
+// -
+// Default: "models/player/prisoner/prisoner_new_blue.mdl"
+sm_dealdamage_model_blue "models/player/prisoner/prisoner_new_blue.mdl"
+
+// Path to the model for team red.
+// -
+// Default: "models/player/prisoner/prisoner_new_red.mdl"
+sm_dealdamage_model_red "models/player/prisoner/prisoner_new_red.mdl"
+
 // Rounds to play in a row
 // -
 // Default: "2"
@@ -4470,9 +5049,9 @@ sm_dealdamage_roundtime "2"
 
 // Time in seconds until the beacon turned on (set to 0 to disable)
 // -
-// Default: "90"
+// Default: "110"
 // Minimum: "0.000000"
-sm_dealdamage_beacon_time "90"
+sm_dealdamage_beacon_time "110"
 
 // Time in seconds players can't deal damage
 // -
@@ -4522,13 +5101,22 @@ sm_dealdamage_overlays_enable "1"
 // -
 // Default: "overlays/MyJailbreak/start"
 sm_dealdamage_overlays_start "overlays/MyJailbreak/start"
+
+// Path to the blue Overlay DONT TYPE .vmt or .vft
+// -
+// Default: "overlays/MyJailbreak/blue"
+sm_dealdamage_overlays_blue "overlays/MyJailbreak/blue"
+
+// Path to the red Overlay DONT TYPE .vmt or .vft
+// -
+// Default: "overlays/MyJailbreak/red"
+sm_dealdamage_overlays_red "overlays/MyJailbreak/red"
 [/CODE]
 [/SPOILER]
 [IMG]http://shanapu.de/myjb/deal.jpg[/IMG]
 
 
 [U][B]Zeus[/B][/U]
-This plugin allows players to vote and warden to set next round to zeus  
 On Round start cells, open everybody got a zeus & knife. On kill, you get a new zeus. Nodamage time (def. 30sec).
 
 [b]Commands[/b]
@@ -4592,6 +5180,48 @@ sm_zeus_vote "1"
 // Minimum: "0.000000"
 // Maximum: "1.000000"
 sm_zeus_spawn "0"
+
+// 0 - disabled, 1 - allow player to drop their zeus
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_zeus_drop "0"
+
+// When admin set event (!setzeus) = 0 - start event next round, 1 - start event current round
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_zeus_begin_admin "1"
+
+// When warden set event (!setzeus) = 0 - start event next round, 1 - start event current round
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_zeus_begin_warden "1"
+
+// When users vote for event (!zeus) = 0 - start event next round, 1 - start event current round
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_zeus_begin_vote "0"
+
+// When warden/admin start eventday voting (!sm_voteday) and event wins = 0 - start event next round, 1 - start event current round
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_zeus_begin_daysvote "0"
+
+// 0 - start event in current round from current player positions, 1 - teleport players to spawn when start event on current round(only when sm_*_begin_admin, sm_*_begin_warden, sm_*_begin_vote or sm_*_begin_daysvote is on '1')
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_zeus_teleport_spawn "0"
 
 // Rounds to play in a row
 // -
@@ -4672,7 +5302,6 @@ sm_zeus_allow_lr "0"
 
 
 [U][B]Drunken[/B][/U]
-This plugin allows players to vote and warden to set next round to drunk day.  
 On Round start cells open everybody got a wiggle screen and inverted movement Keys. No damage time (def. 30sec).
 
 [b]Commands[/b]
@@ -4736,6 +5365,41 @@ sm_drunk_vote "1"
 // Minimum: "0.000000"
 // Maximum: "1.000000"
 sm_drunk_spawn "0"
+
+// When admin set event (!setdrunk) = 0 - start event next round, 1 - start event current round
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_drunk_begin_admin "1"
+
+// When warden set event (!setdrunk) = 0 - start event next round, 1 - start event current round
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_drunk_begin_warden "1"
+
+// When users vote for event (!drunk) = 0 - start event next round, 1 - start event current round
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_drunk_begin_vote "0"
+
+// When warden/admin start eventday voting (!sm_voteday) and event wins = 0 - start event next round, 1 - start event current round
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_drunk_begin_daysvote "0"
+
+// 0 - start event in current round from current player positions, 1 - teleport players to spawn when start event on current round(only when sm_*_begin_admin, sm_*_begin_warden, sm_*_begin_vote or sm_*_begin_daysvote is on '1')
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_drunk_teleport_spawn "0"
 
 // Invert movement on the x-axis (left & right)
 // -
@@ -4830,13 +5494,13 @@ sm_drunk_overlays_start "overlays/MyJailbreak/drunk"
 // Default: "0"
 // Minimum: "0.000000"
 // Maximum: "1.000000"
-sm_drunk_allow_lr "0"[/CODE]
+sm_drunk_allow_lr "0"
+[/CODE]
 [/SPOILER]
 
 
 
 [U][B]KnifeFight[/B][/U]
-This plugin allows players to vote and warden to set next round to knife fight.  
 On Round start cells open everybody KnifeOnly with thirdperson, low gravity(Default), Iceskates and reduced HP(Default).
 
 [b]Commands[/b]
@@ -4901,6 +5565,41 @@ sm_knifefight_vote "1"
 // Maximum: "1.000000"
 sm_knifefight_spawn "0"
 
+// When admin set event (!setknifefight) = 0 - start event next round, 1 - start event current round
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_knifefight_begin_admin "1"
+
+// When warden set event (!setknifefight) = 0 - start event next round, 1 - start event current round
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_knifefight_begin_warden "1"
+
+// When users vote for event (!knifefight) = 0 - start event next round, 1 - start event current round
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_knifefight_begin_vote "0"
+
+// When warden/admin start eventday voting (!sm_voteday) and event wins = 0 - start event next round, 1 - start event current round
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_knifefight_begin_daysvote "0"
+
+// 0 - start event in current round from current player positions, 1 - teleport players to spawn when start event on current round(only when sm_*_begin_admin, sm_*_begin_warden, sm_*_begin_vote or sm_*_begin_daysvote is on '1')
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_knifefight_teleport_spawn "0"
+
 // Rounds to play in a row
 // -
 // Default: "1"
@@ -4937,10 +5636,10 @@ sm_knifefight_iceskate "1"
 
 // Ratio iceskate (5.2 normal)
 // -
-// Default: "c"
+// Default: "0.2"
 // Minimum: "0.100000"
 // Maximum: "5.199999"
-sm_knifefight_iceskate_value "c"
+sm_knifefight_iceskate_value "0.2"
 
 // Round time in minutes for a single knifefight round
 // -
@@ -5015,7 +5714,6 @@ sm_knifefight_allow_lr "0"
 
 
 [U][B]Torch Relay[/B][/U]
-This plugin allows players to vote and warden to set next round to torch relay.  
 On Round start after 10 sec (default) one random player gets burned. he got more speed but lose hp. The torch must knife an other player to burn him & extinguish himself. The old torch is immune to be torch against until an other player war the torch. Round end when a player dies as torch.
 
 [b]Commands[/b]
@@ -5072,6 +5770,41 @@ sm_torch_flag "g"
 // Minimum: "0.000000"
 // Maximum: "1.000000"
 sm_torch_vote "1"
+
+// When admin set event (!settorch) = 0 - start event next round, 1 - start event current round
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_torch_begin_admin "1"
+
+// When warden set event (!settorch) = 0 - start event next round, 1 - start event current round
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_torch_begin_warden "1"
+
+// When users vote for event (!torch) = 0 - start event next round, 1 - start event current round
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_torch_begin_vote "0"
+
+// When warden/admin start eventday voting (!sm_voteday) and event wins = 0 - start event next round, 1 - start event current round
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_torch_begin_daysvote "0"
+
+// 0 - start event in current round from current player positions, 1 - teleport players to spawn when start event on current round(only when sm_*_begin_admin, sm_*_begin_warden, sm_*_begin_vote or sm_*_begin_daysvote is on '1')
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_torch_teleport_spawn "0"
 
 // Rounds to play in a row
 // -
@@ -5205,7 +5938,6 @@ sm_torch_sprint_time "3.0"
 [/SPOILER]
 
 [U][B]Cowboy[/B][/U]
-This plugin allows players to vote and warden to set next rounds to cowboy  
 On Round start cells, open everybody got a revolver or dual barettas. No damage time (def. 30sec).
 
 [b]Commands[/b]
@@ -5269,6 +6001,41 @@ sm_cowboy_vote "1"
 // Minimum: "0.000000"
 // Maximum: "1.000000"
 sm_cowboy_spawn "0"
+
+// When admin set event (!setcowboy) = 0 - start event next round, 1 - start event current round
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_cowboy_begin_admin "1"
+
+// When warden set event (!setcowboy) = 0 - start event next round, 1 - start event current round
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_cowboy_begin_warden "1"
+
+// When users vote for event (!cowboy) = 0 - start event next round, 1 - start event current round
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_cowboy_begin_vote "0"
+
+// When warden/admin start eventday voting (!sm_voteday) and event wins = 0 - start event next round, 1 - start event current round
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_cowboy_begin_daysvote "0"
+
+// 0 - start event in current round from current player positions, 1 - teleport players to spawn when start event on current round(only when sm_*_begin_admin, sm_*_begin_warden, sm_*_begin_vote or sm_*_begin_daysvote is on '1')
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_cowboy_teleport_spawn "0"
 
 // Rounds to play in a row
 // -
@@ -5370,7 +6137,6 @@ sm_cowboy_allow_lr "0"
 
 
 [U][B]Ghost War[/B][/U]
-This plugin allows players to vote and warden to set next round to ghost war.  
 On Round start all players are invisible with godmode, every 5 seconds all players become visible & lose godemode for 3 seconds, after that become invisible again. and so on.
 
 [b]Commands[/b]
@@ -5434,6 +6200,41 @@ sm_ghosts_vote "1"
 // Minimum: "0.000000"
 // Maximum: "1.000000"
 sm_ghosts_spawn "0"
+
+// When admin set event (!setghosts) = 0 - start event next round, 1 - start event current round
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_ghosts_begin_admin "1"
+
+// When warden set event (!setghosts) = 0 - start event next round, 1 - start event current round
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_ghosts_begin_warden "1"
+
+// When users vote for event (!ghosts) = 0 - start event next round, 1 - start event current round
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_ghosts_begin_vote "0"
+
+// When warden/admin start eventday voting (!sm_voteday) and event wins = 0 - start event next round, 1 - start event current round
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_ghosts_begin_daysvote "0"
+
+// 0 - start event in current round from current player positions, 1 - teleport players to spawn when start event on current round(only when sm_*_begin_admin, sm_*_begin_warden, sm_*_begin_vote or sm_*_begin_daysvote is on '1')
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_ghosts_teleport_spawn "0"
 
 // Rounds to play in a row
 // -
@@ -5520,15 +6321,12 @@ sm_ghosts_overlays_start "overlays/MyJailbreak/start"
 // Minimum: "0.000000"
 // Maximum: "1.000000"
 sm_ghosts_allow_lr "0"
-
 [/CODE]
 [/SPOILER]
 
 
 [U][B]Freeday[/B][/U]
-This plugin allows players to vote and warden to set next round to freeday.  
-Auto Freeday on first round after mapstart (Default).
-On Round start cells open for freeday and enabled damage (Default).
+On Round start cells open for freeday and enabled damage.
 
 [b]Commands[/b]
 [SPOILER]
@@ -5585,12 +6383,47 @@ sm_freeday_flag "g"
 // Maximum: "1.000000"
 sm_freeday_vote "1"
 
+// When admin set event (!setfreeday) = 0 - start event next round, 1 - start event current round
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_freeday_begin_admin "1"
+
+// When warden set event (!setfreeday) = 0 - start event next round, 1 - start event current round
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_freeday_begin_warden "1"
+
+// When users vote for event (!freeday) = 0 - start event next round, 1 - start event current round
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_freeday_begin_vote "0"
+
+// When warden/admin start eventday voting (!sm_voteday) and event wins = 0 - start event next round, 1 - start event current round
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_freeday_begin_daysvote "0"
+
 // 0 - disabled, 1 - auto freeday when there is no CT
 // -
 // Default: "1"
 // Minimum: "0.000000"
 // Maximum: "1.000000"
 sm_freeday_noct "1"
+
+// 0 - warden disabled, 1 - allow player to become warden
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_freeday_allow_warden "0"
 
 // 1 - respawn on NoCT Freeday / 2 - respawn on firstround/vote/set Freeday / 3 - Both
 // -
@@ -5607,10 +6440,10 @@ sm_freeday_respawn_time "120"
 
 // 0 - disabled, 1 - auto freeday first round after mapstart
 // -
-// Default: "1"
+// Default: "0"
 // Minimum: "0.000000"
 // Maximum: "1.000000"
-sm_freeday_firstround "1"
+sm_freeday_firstround "0"
 
 // 0 - disabled, 1 - enable damage on freedays
 // -
@@ -5683,10 +6516,72 @@ forward void MyJailbreak_OnEventDayStart(char[] EventDayName);
 forward void MyJailbreak_OnEventDayEnd(char[] EventDayName, int winner);
 
 
+/*********************************************************
+ * Called when a admin reset/end any planned or running EventDay
+ *
+ *
+ * @NoReturn
+ *********************************************************/
+forward void MyJailbreak_ResetEventDay();
 
-/******************************************************************************
-                   NATIVES
-******************************************************************************/
+
+
+/*********************************************************
+ * Called before the menu is built, so new item start with 1.
+ * This is where you can add custom item on menu beginn. See MyJailShop_MenuHandler
+ *
+ * @param client		client Player's index.
+ * @param menu			Menu being displayed to the client.
+ * @NoReturn
+ *********************************************************/
+forward void MyJailbreak_MenuStart(int client, Menu menu);
+
+
+/*********************************************************
+ * Called after the role specific item are built & before admin item will build.
+ * This is where you can add custom item on menu end. See MyJailShop_MenuHandler
+ *
+ * @param client		client Player's index.
+ * @param menu			Menu being displayed to the client.
+ * @NoReturn
+ *********************************************************/
+forward void MyJailbreak_MenuEnd(int client, Menu menu);
+
+
+/*********************************************************
+ * Called once a shop menu item has been selected
+ * @param menu Menu displayed
+ * @param action		Menu Action
+ * @param client		client index
+ * @param itemNum		selected item number
+ * @NoReturn
+ *********************************************************/
+forward void MyJailbreak_MenuHandler(Menu menu, MenuAction action, int client, int itemNum);
+
+
+/*********************************************************
+ * Add a Event Day to myjailbreak core
+ *
+ * @param name		name of the Event Day
+ * @NoReturn
+ *********************************************************/
+native int MyJailbreak_AddEventDay(char [] name);
+
+/*********************************************************
+ * Remove a Event Day to myjailbreak core
+ *
+ * @param name		name of the Event Day
+ * @NoReturn
+ *********************************************************/
+native int MyJailbreak_RemoveEventDay(char [] name);
+
+/*********************************************************
+ * Get a array with all installed Event Days
+ *
+ * @param eventdays		ArrayList with Event Day names
+ * @NoReturn
+ *********************************************************/
+native void MyJailbreak_GetEventDays(ArrayList eventdays);
 
 
 /*********************************************************
@@ -5742,6 +6637,7 @@ native void MyJailbreak_SetEventDayPlanned(bool status);
  * @Return			true on planned, false if not
  *********************************************************/
 native bool MyJailbreak_IsEventDayPlanned();
+
 
 
 /*********************************************************
@@ -5809,34 +6705,6 @@ native void MyJailbreak_BeaconOff(int client);
 warden.inc
 [php]
 /*********************************************************
- * Called when a client trys to set/become warden
- * By player, admin, randomchoose...
- *
- * @param client		The client who try to become warden
- * @return 				Return Plugin_Handled to block & Plugin_Continue to pass the client.
- *********************************************************/
-forward Action warden_OnWardenCreate(int client);
-
-
-/*********************************************************
- * Called when a client become new warden
- *
- * @param client		The client who was warden
- * @NoReturn
- *********************************************************/
-forward void warden_OnWardenCreatedByUser(int client);
-
-
-/*********************************************************
- * Called when a admin set a new warden
- *
- * @param client		The client who was warden
- * @NoReturn
- *********************************************************/
-forward void warden_OnWardenCreatedByAdmin(int client);
-
-
-/*********************************************************
  * Called everytime the warden position become free.
  * On wardens dead, disconnect, removed...
  * 
@@ -5847,9 +6715,87 @@ forward void warden_OnWardenRemoved(int client);
 
 
 /*********************************************************
+ * Called when a client trys to become deputy
+ * By player, admin, randomchoose...
+ *
+ * @param client		The client who try to become deputy
+ * @NoReturn
+ *********************************************************/
+forward void warden_OnWardenCreated(int client);
+
+
+
+/*********************************************************
+ * Checks if any warden exist
+ *
+ *
+ * @return 				true on match, false if not
+ *********************************************************/
+native bool warden_exist();
+
+
+/*********************************************************
+ * returns if client is warden
+ *
+ * @param client		The client to run the check on
+ * @return				true on match, false if not
+ *********************************************************/
+native bool warden_iswarden(int client);
+
+
+/*********************************************************
+ * Set a client as warden
+ *
+ * @param client		The client to set as warden
+ * @param caller		The client who set the new warden
+ * @NoReturn
+ *********************************************************/
+native void warden_set(int client, int caller);
+
+
+/*********************************************************
+ * Removes the current warden if he exists
+ *
+ * @param client		The warden client to remove
+ * @NoReturn
+ *********************************************************/
+native void warden_remove(int client);
+[/php]
+myjbwarden.inc
+[php]
+/*********************************************************
+ * Called when a client trys to set/become warden
+ * By player, admin, randomchoose...
+ *
+ * @param client		The client who try to become warden
+ * @param caller		The client who called the set or become warden command
+ * @return 				Return Plugin_Handled to block & Plugin_Continue to pass the client.
+ *********************************************************/
+forward Action warden_OnWardenCreate(int client, int caller);
+
+
+/*********************************************************
+ * Called when a client become new warden
+ *
+ * @param client		The client who is new warden
+ * @NoReturn
+ *********************************************************/
+forward void warden_OnWardenCreatedByUser(int client);
+
+
+/*********************************************************
+ * Called when a admin set a new warden
+ *
+ * @param client		The client is new warden
+ * @NoReturn
+ *********************************************************/
+forward void warden_OnWardenCreatedByAdmin(int client);
+
+
+/*********************************************************
  * Called when a the warden was removed by an admin
  *
- * @param client		The client who was warden
+ * @param client		The admin who removed the warden
  * @NoReturn
  *********************************************************/
 forward void warden_OnWardenRemovedByAdmin(int client);
@@ -5905,48 +6851,12 @@ forward void warden_OnDeputyCreated(int client);
 
 
 /*********************************************************
- * Checks if any warden exist
- *
- *
- * @true on match, false if not
- *********************************************************/
-native warden_exist();
-
-
-/*********************************************************
- * returns if client is warden
- *
- * @param client		The client to run the check on
- * @true on match, false if not
- *********************************************************/
-native warden_iswarden(int client);
-
-
-/*********************************************************
- * Set a client as warden
- *
- * @param client		The client to set as warden
- * @NoReturn
- *********************************************************/
-native warden_set(int client);
-
-
-/*********************************************************
- * Removes the current warden if he exists
- *
- * @param client		The warden client to remove
- * @NoReturn
- *********************************************************/
-native warden_remove(int client);
-
-
-/*********************************************************
  * get the current warden if he exists
  *
  *
  * @Return				Client Index of warden
  *********************************************************/
-native warden_get();
+native int warden_get();
 
 
 /*********************************************************
@@ -5955,7 +6865,7 @@ native warden_get();
  *
  * @Return				Client Index of last warden
  *********************************************************/
-native warden_getlast();
+native int warden_getlast();
 
 
 
@@ -5963,18 +6873,18 @@ native warden_getlast();
  * Checks if any Deputy exist
  *
  *
- * @true on match, false if not
+ * @Return				true on match, false if not
  *********************************************************/
-native warden_deputy_exist();
+native bool warden_deputy_exist();
 
 
 /*********************************************************
  * returns if client is Deputy
  *
  * @param client		The client to run the check on
- * @true on match, false if not
+ * @Return 				true on match, false if not
  *********************************************************/
-native warden_deputy_isdeputy(int client);
+native bool warden_deputy_isdeputy(int client);
 
 
 /*********************************************************
@@ -5983,7 +6893,7 @@ native warden_deputy_isdeputy(int client);
  * @param client		The client to set as Deputy
  * @NoReturn
  *********************************************************/
-native warden_deputy_set(int client);
+native void warden_deputy_set(int client);
 
 
 /*********************************************************
@@ -5992,7 +6902,7 @@ native warden_deputy_set(int client);
  * @param client		The Deputy client to remove
  * @NoReturn
  *********************************************************/
-native warden_deputy_remove(int client);
+native void warden_deputy_remove(int client);
 
 
 /*********************************************************
@@ -6001,7 +6911,7 @@ native warden_deputy_remove(int client);
  *
  * @Return				Client index of deputy
  *********************************************************/
-native warden_deputy_get();
+native int warden_deputy_get();
 
 
 /*********************************************************
@@ -6010,7 +6920,7 @@ native warden_deputy_get();
  *
  * @Return				Client Index of last deputy
  *********************************************************/
-native warden_deputy_getlast();
+native int warden_deputy_getlast();
 
 
 
@@ -6021,16 +6931,16 @@ native warden_deputy_getlast();
  * @param amount		The amount of paperclips
  * @NoReturn
  *********************************************************/
-native warden_handcuffs_givepaperclip(int client, int amount);
+native void warden_handcuffs_givepaperclip(int client, int amount);
 
 
 /*********************************************************
  * returns if client is in handcuffs
  *
  * @param client		The client to run the check on
- * @true on match, false if not
+ * @Retrun 				true on match, false if not
  *********************************************************/
-native warden_handcuffs_iscuffed(int client);
+native bool warden_handcuffs_iscuffed(int client);
 
 
 
@@ -6038,23 +6948,23 @@ native warden_handcuffs_iscuffed(int client);
  * Set the client get a freeday
  *
  * @param client		The client to run the check on
- * @no return
+ * @NoReturn
  *********************************************************/
-native warden_freeday_set(int client);
+native void warden_freeday_set(int client);
 
 
 /*********************************************************
  * returns if client has a freeday now
  *
  * @param client		The client to run the check on
- * @true on match, false if not
+ * @Return 				true on match, false if not
  *********************************************************/
-native warden_freeday_has(int client);
+native bool warden_freeday_has(int client);
 [/php]
-myicons.inc
+myicon.inc
 [php]
 /*********************************************************
- * Block the players icon bool
+ * Block the player icon bool
  *
  * @param client		The client to block icon
  * @param status		true or false
@@ -6076,12 +6986,13 @@ native MyIcons_BlockClientIcon(int client, bool status);
 [*]myicons.inc - [url]https://github.com/shanapu/MyJailbreak/blob/master/addons/sourcemod/scripting/include/myicons.inc[/url]
 [*]chat-processor.inc - [url]https://forums.alliedmods.net/showthread.php?t=286913[/url]
 [*]smartjaildoors.inc - [url]https://forums.alliedmods.net/showthread.php?p=2306289[/url]
-[*]warden.inc - [url]https://github.com/shanapu/MyJailbreak/blob/master/addons/sourcemod/scripting/include/warden.inc[/url] (myjailbreak version)
+[*]myjbwarden.inc - [url]https://github.com/shanapu/MyJailbreak/blob/master/addons/sourcemod/scripting/include/myjbwarden.inc[/url]
+[*]warden.inc - [url]https://github.com/shanapu/MyJailbreak/blob/master/addons/sourcemod/scripting/include/warden.inc[/url] or eccas
 [*]hosties.inc - [url]https://github.com/dataviruset/sm-hosties/blob/beta/addons/sourcemod/scripting/include/hosties.inc[/url] 
 [*]lastrequest.inc - [url]https://github.com/dataviruset/sm-hosties/blob/beta/addons/sourcemod/scripting/include/lastrequest.inc[/url] 
-[*]smlib.inc - [url]https://github.com/bcserv/smlib[/url]
 [*]CustomPlayerSkins.inc - [url]https://forums.alliedmods.net/showthread.php?t=240703[/url]
 [*]voiceannounce_ex.inc - [url]https://github.com/shanapu/MyJailbreak/blob/master/addons/sourcemod/scripting/include/voiceannounce_ex.inc [/url] (myjailbreak version)
+[*]smartdm.inc - [url]https://forums.alliedmods.net/showthread.php?p=2364585#post2364585[/url]
 [/LIST]
 [/SPOILER]
 
@@ -6090,28 +7001,27 @@ native MyIcons_BlockClientIcon(int client, bool status);
 [LIST]
 [*][url=http://www.sourcemod.net/downloads.php?branch=1.8]Sourcemod 1.8.0+[/url] [color=red](support for SM1.7 ended with MyJB Beta 12)[/color]
 [*][url=https://forums.alliedmods.net/showthread.php?t=108810]SM hosties 2[/url]
-[*][url=https://forums.alliedmods.net/showthread.php?p=602270]SM File/Folder Downloader and Precacher[/url] - for zombie/warden model download
 
 [/LIST]
 
-[U][B]Recommend/Optional plugins/extensions[/B][/U]
+[U][B]Recommend/Optional plugins/extensions[/B][/U] - these extend & improve the features of MyJailbreak
 [LIST]
 [*][url=https://forums.alliedmods.net/showthread.php?t=264100]Smart Jail Doors[/url] - need for auto jail open on event days & toggle for warden
 [*][url=https://forums.alliedmods.net/showthread.php?p=2177167][ANY] VoiceannounceEX (VoiceHook)[/url] - needed for wardens voiceover
 [*][url=https://forums.alliedmods.net/showthread.php?t=180114]DHooks (Dynamic Hooks - Dev Preview)[/url] - needed for wardens voiceover
 [*][url=https://forums.alliedmods.net/showthread.php?t=229556][ANY] SteamWorks[/url] - needed for myjailbreak_steamgroups
-[*][url=https://forums.alliedmods.net/showthread.php?t=286913][ANY] Chat Prozessor[/url] - needed for smoother wardens mathquiz & player chat tags
+[*][url=https://forums.alliedmods.net/showthread.php?t=286913][ANY] Chat Processor[/url] - needed for smoother wardens math quiz & player chat tags
 [*][url=https://forums.alliedmods.net/showthread.php?t=240703]Custom Player Skins (Core)[/url] - need for wallhack feature on eventdays(catch,zombie,torch)
 [/LIST]
 
 
-[U][B]Supported 3th party plugins[/B][/U]
+[U][B]Supported 3th party plugins[/B][/U] - enable the related support plugins in [i]plugins/MyJailbreak/disabled[/i] to use their features
 [LIST]
 [*][url=https://forums.alliedmods.net/showthread.php?p=1544101][CS:S/CS:GO] CT Bans by databomb[/url] - support for ratio (is banned)
 [*][url=https://forums.alliedmods.net/showthread.php?t=294093][ANY] CT Bans by oaaron99/addicted[/url] - support for ratio (is banned)
 [*][CS:S/CS:GO] CT Bans by [URL="https://forums.alliedmods.net/member.php?u=237200"]R1KO[/URL] - support for ratio (is banned)
 [*][url=https://forums.alliedmods.net/showthread.php?t=270761][CS:S/CS:GO]TeamBans (CT Bans + T Bans) [1.0.0][/url] - support for ratio (is banned)
-[*][url=https://forums.alliedmods.net/showthread.php?t=286045]TeamGames (JailBreak teams, games, marks, fences, ...)[/url] - friendlyfire handling
+[*][url=https://forums.alliedmods.net/showthread.php?t=286045]TeamGames (JailBreak teams, games, marks, fences, ...)[/url] v1.1.0.7 - friendly fire handling 
 [*][url=https://forums.alliedmods.net/showthread.php?t=155621][CS:S] RankMe[/url] - support for ratio & warden (min rankme points to join ct & warden)
 [*][url=https://forums.alliedmods.net/showthread.php?t=290063][CS:GO] RankMe Kento Edition[/url] - support for ratio & warden (min rankme points to join ct & warden)
 [*][url=https://forums.alliedmods.net/showthread.php?p=2411490][ANY] Player Reputations[/url] - support for ratio & warden (min reputation points to join ct & warden)
@@ -6121,72 +7031,410 @@ native MyIcons_BlockClientIcon(int client, bool status);
 
 
 [B][u]Latest Changes[/u][/B]
-[QUOTE] 
+[QUOTE]
+[Spoiler]
 
-[b][Beta 12.0][/b] - removed dependencies & store support
-  [SPOILER]
-[i]Added[/i]
+[b][u]Added[/b][/u]
 [LIST]
-[*]Add-On: Support for adding paperclips to Zephyrus store
-[/LIST][INDENT][LIST]
-    [*]new plugin - disabled/warden_zephstore_paperclips.smx - Support plugin for Zephyrus store plugin
-    [/LIST][INDENT][LIST]
-        [*]new cvar - sm_store_paperclips_round_limit - Number of times you can buy paperclips in a round (find in plugin.store.cfg)
-        [*]new cvar - sm_store_paperclips_amount - Number of paperclips you get (find in plugin.store.cfg)
+[*]New Eventday: Teleport War - A FreeForAll Deathmatch where attacker & victim switch positions on hit.
+[/LIST]
+[INDENT][LIST]
+    [*]new plugin - teleport.smx - please help translate http://translator.mitchdempsey.com/sourcemod_plugins/277
+[/LIST]
+[INDENT][LIST]
+        [*]new command - sm_setteleport - Allows the Admin or Warden to set Teleport War
+        [*]new command - sm_teleport - Allows players to vote for a Teleport War
+        [*]new cvar - sm_teleport_enable - 0 - disabled, 1 - enable this MyJailbreak SourceMod plugin
+        [*]new cvar - sm_teleport_cmds_vote - Set your custom chat command for Event voting(!teleport (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
+        [*]new cvar - sm_teleport_cmds_set - Set your custom chat command for set Event(!teleport (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
+        [*]new cvar - sm_teleport_warden - 0 - disabled, 1 - allow warden to set teleport round
+        [*]new cvar - sm_teleport_admin - 0 - disabled, 1 - allow admin/vip to set teleport round
+        [*]new cvar - sm_teleport_flag - Set flag for admin/vip to set this Event Day
+        [*]new cvar - sm_teleport_vote - 0 - disabled, 1 - allow player to vote for teleport
+        [*]new cvar - sm_teleport_begin_admin - When admin set event (!setteleport) = 0 - start event next round, 1 - start event current round - Default 1
+        [*]new cvar - sm_teleport_begin_warden - When warden set event (!setteleport) = 0 - start event next round, 1 - start event current round - Default 1
+        [*]new cvar - sm_teleport_begin_vote - When users vote for event (!teleport) = 0 - start event next round, 1 - start event current round - Default 0
+        [*]new cvar - sm_teleport_begin_daysvote - When warden/admin start eventday voting (!sm_voteday) and event wins = 0 - start event next round, 1 - start event current round - Default 0
+        [*]new cvar - sm_teleport_teleport_spawn - 0 - start event in current round from current player positions, 1 - teleport players to spawn
+        [*]new cvar - sm_teleport_spawn - 0 - T teleport to CT spawn, 1 - cell doors auto open
+        [*]new cvar - sm_teleport_rounds - Rounds to play in a row
+        [*]new cvar - sm_teleport_aim - 0 - Keep your aim angle on switch, 1 - Use attacker/victims aim angle
+        [*]new cvar - sm_teleport_roundtime - Round time in minutes for a single teleport round
+        [*]new cvar - sm_teleport_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
+        [*]new cvar - sm_teleport_trucetime - Time in seconds players can't deal damage
+        [*]new cvar - sm_teleport_cooldown_day - Rounds cooldown after a event until event can be start again
+        [*]new cvar - sm_teleport_cooldown_start - Rounds until event can be start after mapchange
+        [*]new cvar - sm_teleport_cooldown_admin - 0 - disabled, 1 - ignore the cooldown when admin/vip set teleport round
+        [*]new cvar - sm_teleport_sounds_enable - 0 - disabled, 1 - enable sounds
+        [*]new cvar - sm_teleport_sounds_start - Path to the soundfile which should be played for a start
+        [*]new cvar - sm_teleport_overlays_enable - 0 - disabled, 1 - enable overlays
+        [*]new cvar - sm_teleport_overlays_start - Path to the start Overlay DONT TYPE .vmt or .vft
+        [*]new cvar - sm_teleport_allow_lr - 0 - disabled, 1 - enable LR for last round and end eventday
+[/LIST][/INDENT][/INDENT]
+[LIST]
+[*]New Eventday: Arms Race - A FreeForAll Deathmatch like original arms race
+[/LIST]
+[INDENT][LIST]
+    [*]new plugin - armsrace.smx - please help translate http://translator.mitchdempsey.com/sourcemod_plugins/277
+[/LIST]
+[INDENT][LIST]
+        [*]new config file - addons/sourcemod/configs/MyJailbreak/armsrace.ini - define weapons & order
+        [*]new command - sm_setarmsrace - Allows the Admin or Warden to set Arms Race
+        [*]new command - sm_armsrace - Allows players to vote for a Arms Race
+        [*]new cvar - sm_armsrace_enable - 0 - disabled, 1 - enable this MyJailbreak SourceMod plugin
+        [*]new cvar - sm_armsrace_cmds_vote - Set your custom chat command for Event voting(!armsrace (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
+        [*]new cvar - sm_armsrace_cmds_set - Set your custom chat command for set Event(!setarmsrace (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
+        [*]new cvar - sm_armsrace_warden - 0 - disabled, 1 - allow warden to set armsrace round
+        [*]new cvar - sm_armsrace_admin - 0 - disabled, 1 - allow admin/vip to set armsrace round
+        [*]new cvar - sm_armsrace_flag - Set flag for admin/vip to set this Event Day
+        [*]new cvar - sm_armsrace_vote - 0 - disabled, 1 - allow player to vote for armsrace
+        [*]new cvar - sm_armsrace_kill_loser - 0 - disabled, 1 - Kill loser on event end
+        [*]new cvar - sm_armsrace_begin_admin - When admin set event (!setarmsrace) = 0 - start event next round, 1 - start event current round - Default 1
+        [*]new cvar - sm_armsrace_begin_warden - When warden set event (!setarmsrace) = 0 - start event next round, 1 - start event current round - Default 1
+        [*]new cvar - sm_armsrace_begin_vote - When users vote for event (!armsrace) = 0 - start event next round, 1 - start event current round - Default 0
+        [*]new cvar - sm_armsrace_begin_daysvote - When warden/admin start eventday voting (!sm_voteday) and event wins = 0 - start event next round, 1 - start event current round - Default 0
+        [*]new cvar - sm_armsrace_teleport_spawn - 0 - start event in current round from current player positions, 1 - teleport players to spawn
+        [*]new cvar - sm_armsrace_spawn - 0 - T teleport to CT spawn, 1 - cell doors auto open
+        [*]new cvar - sm_armsrace_randomspawn - 0 - disabled, 1 - use random spawns on map (sm_armsrace_spawn 1)
+        [*]new cvar - sm_armsrace_rounds - Rounds to play in a row
+        [*]new cvar - sm_armsrace_roundtime - Round time in minutes for a single armsrace round
+        [*]new cvar - sm_armsrace_trucetime - Time in seconds players can't deal damage
+        [*]new cvar - sm_armsrace_cooldown_day - Rounds cooldown after a event until event can be start again
+        [*]new cvar - sm_armsrace_cooldown_start - Rounds until event can be start after mapchange
+        [*]new cvar - sm_armsrace_cooldown_admin - 0 - disabled, 1 - ignore the cooldown when admin/vip set armsrace round
+        [*]new cvar - sm_armsrace_sounds_enable - 0 - disabled, 1 - enable sounds
+        [*]new cvar - sm_armsrace_sounds_start - Path to the soundfile which should be played for a start
+        [*]new cvar - sm_armsrace_overlays_enable - 0 - disabled, 1 - enable overlays
+        [*]new cvar - sm_armsrace_overlays_start - Path to the start Overlay DONT TYPE .vmt or .vft
+[/LIST][/INDENT][/INDENT]
+[LIST]
+[*]New Eventday: One in the Chamber - A FreeForAll Deathmatch like CODs One in the Chamber - Thx @hexah!
+[/LIST]
+[INDENT][LIST]
+    [*]new plugin - oneinthechamber.smx - please help translate http://translator.mitchdempsey.com/sourcemod_plugins/282
+[/LIST]
+[INDENT][LIST]
+        [*]new command - sm_setoneinthechamber - Allows the Admin or Warden to set One in the Chamber
+        [*]new command - sm_oneinthechamber - Allows players to vote for a One in the Chamber
+        [*]new cvar - sm_oneinthechamber_enable - 0 - disabled, 1 - enable this MyJailbreak SourceMod plugin
+        [*]new cvar - sm_oneinthechamber_cmds_vote - Set your custom chat command for Event voting(!oneinthechamber (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
+        [*]new cvar - sm_oneinthechamber_cmds_set - Set your custom chat command for set Event(!setoneinthechamber (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
+        [*]new cvar - sm_oneinthechamber_warden - 0 - disabled, 1 - allow warden to set oneinthechamber round
+        [*]new cvar - sm_oneinthechamber_admin - 0 - disabled, 1 - allow admin/vip to set oneinthechamber round
+        [*]new cvar - sm_oneinthechamber_flag - Set flag for admin/vip to set this Event Day
+        [*]new cvar - sm_oneinthechamber_vote - 0 - disabled, 1 - allow player to vote for oneinthechamber
+        [*]new cvar - sm_oneinthechamber_begin_admin - When admin set event (!setoneinthechamber) = 0 - start event next round, 1 - start event current round - Default 1
+        [*]new cvar - sm_oneinthechamber_begin_warden - When warden set event (!setoneinthechamber) = 0 - start event next round, 1 - start event current round - Default 1
+        [*]new cvar - sm_oneinthechamber_begin_vote - When users vote for event (!oneinthechamber) = 0 - start event next round, 1 - start event current round - Default 0
+        [*]new cvar - sm_oneinthechamber_begin_daysvote - When warden/admin start eventday voting (!sm_voteday) and event wins = 0 - start event next round, 1 - start event current round - Default 0
+        [*]new cvar - sm_oneinthechamber_teleport_spawn - 0 - start event in current round from current player positions, 1 - teleport players to spawn
+        [*]new cvar - sm_oneinthechamber_spawn - 0 - T teleport to CT spawn, 1 - cell doors auto open
+        [*]new cvar - sm_oneinthechamber_randomspawn - 0 - disabled, 1 - use random spawns on map (sm_oneinthechamber_spawn 1)
+        [*]new cvar - sm_oneinthechamber_rounds - Rounds to play in a row
+        [*]new cvar - sm_oneinthechamber_roundtime - Round time in minutes for a single oneinthechamber round
+        [*]new cvar - sm_oneinthechamber_trucetime - Time in seconds players can't deal damage
+        [*]new cvar - sm_oneinthechamber_cooldown_day - Rounds cooldown after a event until event can be start again
+        [*]new cvar - sm_oneinthechamber_cooldown_start - Rounds until event can be start after mapchange
+        [*]new cvar - sm_oneinthechamber_cooldown_admin - 0 - disabled, 1 - ignore the cooldown when admin/vip set oneinthechamber round
+        [*]new cvar - sm_oneinthechamber_sounds_enable - 0 - disabled, 1 - enable sounds
+        [*]new cvar - sm_oneinthechamber_sounds_start - Path to the soundfile which should be played for a start
+        [*]new cvar - sm_oneinthechamber_overlays_enable - 0 - disabled, 1 - enable overlays
+        [*]new cvar - sm_oneinthechamber_overlays_start - Path to the start Overlay DONT TYPE .vmt or .vft
+[/LIST][/INDENT][/INDENT]
+[LIST]
+[*]Add-On: Support for frans1cos Most Active
+[/LIST]
+[INDENT][LIST]
+    [*]new plugin - disabled/myjailbreak_mostactive.smx
+[/LIST]
+[INDENT][LIST]
+        [*]new cvar - sm_ratio_mostactive - 0 - disabled, how many seconds a player need to join ct? (only if MostActive is available)
+        [*]new cvar - sm_ratio_mostactive_team - 1 - playtime as Terror / 2 - playtime in Total (CT,T&Spec)
+        [*]new cvar - sm_warden_mostactive - 0 - disabled, how many seconds a player need to become warden? (only if MostActive is available)
+        [*]new cvar - sm_warden_mostactive_team - 0 - playtime as Counter-Terror / 1 - playtime as Terror / 2 - playtime in Total (CT,T&Spec)
+[/LIST][/INDENT][/INDENT]
+[LIST]
+[*]Add-On: Support for Healines gangs - disable gang perks on event days
+[/LIST]
+[LIST]
+    [*]new plugin - disabled/myjailbreak_gangs.smx
+[/LIST]
+[LIST]
+[*]PlayerTags: Two new Tags SuperAdmin & CoOwner Thx @ ichiballs
+[/LIST]
+[INDENT][LIST]
+    [*]new cvar - sm_playertag_coownerflag - Set the flag for CoOwner. Default 'r'
+    [*]new cvar - sm_playertag_superadminflag - Set the flag for Super Admin. Default 's'
 [/LIST][/INDENT]
-[/INDENT]
 [LIST]
-[*]Add-On: Support plugins for get credits for Zephyrus store & SM-Store  on event day win
-[/LIST][INDENT][LIST]
-    [*]new plugin - disabled/myjailbreak_zephstore_credits.smx - Support plugin for Zephyrus store plugin
-    [*]new plugin - disabled/myjailbreak_sm-store_credits.smx - Support plugin for SM-Store plugin
-    [/LIST][INDENT][LIST]
-        [*]new cvar - sm_store_credit_amount_eventdays - Number of credits to give out for winning an eventday (find in plugin.store.cfg)
-        [*]new cvar - sm_store_credit_eventdays_alive - Give out credits for winning an eventday for dead & alive player (find in plugin.store.cfg)
+[*]Icons: ConVar to disable Icons on all eventdays
+[/LIST]
+[INDENT][LIST]
+    [*]new cvar - sm_icon_eventday - 0 - use the icons, 1 - disable icons on EventDays
 [/LIST][/INDENT]
-[/INDENT]
 [LIST]
-[*]Zombie: respawn dead terrors as zombie - [b]experimental[/b]
-[/LIST][INDENT][LIST]
-    [*]new cvar - sm_zombie_terror - 0 - disabled, 1 - transform terrors into Zombie on death - experimental!
-    [*]new cvar - sm_zombie_terror_infect - 0 - all dead terrors become zombie, 1 - only terrors killed by zombie transform into Zombie
-    [/LIST]
-[/INDENT]
+[*]Weapons: ConVar to disable weapons for CTs on not eventday rounds. (use armory)
+[/LIST]
+[INDENT][LIST]
+    [*]new cvar - sm_weapons_noeventday - 0 - disabled, 1 - enable the weapon menu on non-EventDays round (normal/simon rounds)
+[/LIST][/INDENT]
 [LIST]
-[*]Warden: remove a freeday from player
-[/LIST][INDENT][LIST]
-    [*]new command - sm_removefreeday - Allows a warden to remove a freeday from a player
-    [*]new cvar - sm_warden_cmds_freeday_remove - Set your custom chat command for give a freeday(!givefreeday (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)
-    [/LIST][/INDENT]
+[*]Menu: added !removefreeday for warden,deputy/guard to menu
+[*]Menu Add-On: Add your own menu items to top/botton of wardens/deputys/guards/prisoners jailmenu with .cfg
+[/LIST]
+[INDENT][LIST]
+    [*]new plugin - disabled/menu_custom.smx
+    [*]new config file - addons/sourcemod/configs/MyJailbreak/menu_custom.ini
+[/LIST][/INDENT]
 [LIST]
-[*]Menu: Added gangs for terror when a gangs plugin is installed
-[*]Warden - Marker: new command for clients to bind for marker
-[/LIST][INDENT][LIST]
-    [*]new command - +beacons - Bind for markers to use instead rightclick mouse THX@Drixevel
+[*]MyJailbreak: Automatic random eventday every x round
+[/LIST]
+[INDENT][LIST]
+    [*]new cvar - sm_myjb_random_round - 0 - disabled / Every x round could be an event day
+    [*]new cvar - sm_myjb_random_chance - Chance that the choosen round would be an event day/voting
+    [*]new cvar - sm_myjb_random_type - 0 - Start an eventday voting / 1 - start an random eventday
+    [*]new cvar - sm_myjb_random_mapstart_delay - Wait after mapchange x rounds before try first event day
+[/LIST][/INDENT]
+[LIST]
+[*]Add-On: Support for nhnkl159s Simple Stats
+[/LIST]
+[INDENT][LIST]
+    [*]new plugin - disabled/myjailbreak_simplestats.smx
+[/LIST]
+[INDENT][LIST]
+        [*]new cvar - sm_ratio_simplestats - 0 - disabled, how many seconds a player need to join ct? (only if simplestats is available)
+        [*]new cvar - sm_warden_simplestats - 0 - disabled, how many seconds a player need to become warden? (only if simplestats is available)
+[/LIST][/INDENT][/INDENT]
+[LIST]
+[*]Catch: ConVar to kill loser team
+[/LIST]
+[INDENT][LIST]
+    [*]new cvar - sm_catch_kill_loser - 0 - disabled, 1 - Kill loserteam on event end / not for sm_catch_allow_lr '1'
+[/LIST][/INDENT]
+[LIST]
+[*]DealDamage: ConVar to kill loser team
+[/LIST]
+[INDENT][LIST]
+    [*]new cvar - sm_dealdamage_kill_loser - 0 - disabled, 1 - Kill loserteam on event end
+[/LIST][/INDENT]
+[LIST]
+[*]Warden - Mathquiz: resume support for simplechatprocessor. Now support both scp or chat-processor.
+[*]PlayerTags: resume support for simplechatprocessor. Now support both scp or chat-processor.
+[*]Warden: Withheld (forbid) last request command (need sm_hosties_lr_autodisplay "0") ThX Hexah
+[/LIST]
+[INDENT][LIST]
+    [*]new command - sm_nolastrequest - toggle withheld/release the last request
+    [*]new cvar - sm_warden_withheld_lr_enable - 0 - disabled, 1 - warden can witheld prisoners Last request commands
+    [*]new cvar - sm_warden_withheld_lr_deputy - 0 - disabled, 1 - deputy can witheld prisoners Last request commands
+    [*]new cvar - sm_warden_cmds_withheld_lr - Set your custom chat commands for witheld Last request(!nolastrequest (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)
+    [*]new cvar - sm_warden_cmds_lr - Set your last request commands (add custom !lr cmds)(no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)
+[/LIST][/INDENT]
+[LIST]
+[*]Warden - Math quiz: force using chat trigger as input for answers instead of using an installed chat processor
+[/LIST]
+[INDENT][LIST]
+    [*]new cvar - sm_warden_math_input - 0 - use chat trigger to receive chat input e.g. answer = '!math 526'. This is forced when no chat-processor is installed / 1 - use a chat-processor to recieve chat input e.g. answer = '526' / use '0' when chat input of will not recognized cause conflics with chat manipulation plugins like 'CCC'
+[/LIST][/INDENT]
+[LIST]
+[*]Warden frienldy fire - toggle also cts ff - Thx @hexah!*
+[/LIST]
+[INDENT][LIST]
+    [*]new cvar - sm_warden_ff_ct_enable - 0 - disabled, 1 - enable ff for cts also
+[/LIST][/INDENT]
+[LIST]
+[*]MyJailbreak: you can sort the order of event days in menus with config file
+[/LIST]
+[INDENT][LIST]
+    [*]new config file - addons/sourcemod/configs/MyJailbreak/config/sorting-eventdays.ini
+[/LIST][/INDENT]
+[LIST]
+[*]Menu: Suffle the eventdays in menu on a event day voting 
+[/LIST]
+[INDENT][LIST]
+    [*]new cvar - sm_menu_shuffle - 0 - use 'sorting-eventdays.ini' on event day voting / 1 - Shuffle EventDays on voting
+[/LIST][/INDENT]
+[LIST]
+[*]Zeus: Dis/Allow droping Zeus
+[/LIST]
+[INDENT][LIST]
+    [*]new cvar - sm_zeus_drop - 0 - disabled, 1 - allow player to drop their zeus - Thx @hexah!*
+[/LIST][/INDENT]
+[LIST]
+[*]Warden - Disarm: Dis/Allow disarm knife on shoting hands
+[/LIST]
+[INDENT][LIST]
+    [*]new cvar - sm_warden_disarm_knife - 0 - negate the knife disarm, 1 - disarm all weapon - Thx @hexah!*
+[/LIST][/INDENT]
+[LIST]
+[*]MyJailbreak: the possibility to end a planned or running event
+[/LIST]
+[INDENT][LIST]
+    [*]new command - sm_resetevent - End all running or planned event days
+[/LIST][/INDENT]
+  
+[b][u]Changed[/b][/u]
+[LIST]
+[*]All Event Days: Possibility to start an event during the current round, instead wait for next round
+[/LIST]
+[INDENT][LIST]
+    [*]new cvars - sm_EVENTNAME_begin_admin - When admin set event (!setEVENTNAME) = 0 - start event next round, 1 - start event current round - Default 1
+    [*]new cvars - sm_EVENTNAME_begin_warden - When warden set event (!setEVENTNAME) = 0 - start event next round, 1 - start event current round - Default 1
+    [*]new cvars - sm_EVENTNAME_begin_vote - When users vote for event (!EVENTNAME) = 0 - start event next round, 1 - start event current round - Default 0
+    [*]new cvars - sm_EVENTNAME_begin_daysvote - When warden/admin start eventday voting (!sm_voteday) and event wins = 0 - start event next round, 1 - start event current round - Default 0
+    [*]new cvars - sm_EVENTNAME_teleport_spawn - 0 - start event in current round from current player positions, 1 - teleport players to spawn
+[/LIST][/INDENT]
+[LIST]
+[*]Freeday: Allow warden on freeday event day
+[/LIST]
+[INDENT][LIST]
+    [*]new cvar - sm_freeday_allow_warden - 0 - warden disabled, 1 - allow player to become warden
+[/LIST][/INDENT]
+[LIST]
+[*]Menu: Moved menu items 1. & 2. backwords so menu start on 3.
+[/LIST]
+[INDENT][LIST]
+    [*]new cvar - sm_menu_clean - remove 1. & 2. on first page, to avoid conflict with weapon switch
+[/LIST][/INDENT]
+[LIST]
+[*]Weapons: Moved menu items 1. & 2. backwords so menu start on 3.
+[/LIST]
+[INDENT][LIST]
+    [*]new cvar - sm_weapons_cleanmenu - remove 1. & 2. on first page, to avoid conflict with weapon switch
+[/LIST][/INDENT]
+[LIST]
+[*]Ratio: Moved menu items 1. & 2. (Yes / No)to 3. & 4. to avoid conflict with weapon switch
+[*]DealDamage: Changed from T vs CT to even teams Blue vs Red (model,glow,colorize) - Thx skyprah for great idea!
+[/LIST]
+[INDENT][LIST]
+    [*]new cvar - sm_dealdamage_color - 0 - disabled, 1 - color the model of the players
+    [*]new cvar - sm_dealdamage_model_blue - Path to the model for team blue.
+    [*]new cvar - sm_dealdamage_model_red - Path to the model for team red.
+    [*]new cvar - sm_dealdamage_overlays_blue - Path to the blue Overlay DONT TYPE .vmt or .vft
+    [*]new cvar - sm_dealdamage_overlays_red - Path to the red Overlay DONT TYPE .vmt or .vft
+[/LIST][/INDENT]
+[LIST]
+[*]Hide/War/Zombie: Darken screen while in freeze
+[*]Ratio: When last guard move to prisoners, a prisoner from queue or random will be moved to guard - THX @mrkos9i4ok
+[*]Flags: all ConVars to set admin/vip flag has been extended to support mutliple flags ex. "r,s,t" use comma
+[*]renamed plugin - ratio_ctbans_fantom to ratio_ctbans_r1ko on authors request
+[*]PlayerTags: removed dependencies of chat-processor(optional now)
+[*]Warden: no warden/deputy on Last Request
+[/LIST]
+[INDENT][LIST]
+    [*]new cvar - sm_warden_remove_lr - 0 - disabled, 1 - enable warden will be removed on last request
+    [*]new cvar - sm_warden_deputy_remove_lr - 0 - disabled, 1 - enable deputy will be removed on last request
+[/LIST][/INDENT]
+[LIST]
+[*]HUD: disbale hud for dead player
+[/LIST]
+[INDENT][LIST]
+    [*]new cvar - sm_hud_alive - 0 - show hud only to alive player, 1 - show hud to dead & alive player
+[/LIST][/INDENT]
+[LIST]
+[*]MyJailbreak: disable hosties announcements on event days
+[*]Warden - Marker: remove on Last request.
+[*]Ratio CTbans: updated for databombs CTbans v2. You must update to CTbans v2! - Thx @databomb!
+[*]Ratio: Swap Spectators to T when joining guard queue - Thx @hexah!
+[/LIST]
+[INDENT][LIST]
+    [*]new cvar - sm_ratio_swap_spec_queue - 0 - Don't do anything if a Spec join in queue / 1 - Swap to T the Spectators who join in queue
+[/LIST][/INDENT]
+[LIST]
+[*]Warden - Mute/Talkover: disable Warden/Deputy TalkOver after LR Announced - Thx @hexah!*
+[*]Warden - Mute/Talkover: disable Spectators also.
+[*]HUD - disable HUD on TeamGames game.
+[*]Menu: Allow player to vote for no event.
+[/LIST]
+[INDENT][LIST]
+    [*]new cvar - sm_menu_vote_noevent - 0 - disabled, 1 - allow player vote for 'no Event Day' on eventday voting
+[/LIST][/INDENT]
+[LIST]
+[*]MyJailbreak: disable Medic room / heal stations while eventday
+[/LIST]
+[INDENT][LIST]
+    [*]new cvar - sm_myjb_medic - 0 - disabled, 1 - disable medic room when event day running
 [/LIST][/INDENT]
   
   
-[i]Changed[/i]
+[b][u]Fixed[/b][/u]
 [LIST]
-[*][b]SourceMod: Cancled support for sourcemod lower 1.8.0-git5597[/b]
-[*]Warden: No command cooldown on roundstart when only one CT
-[*]HUD: Disable hud when player is in a last request
+[*]Menu: fixed setdays for warden (don't show restricted/disabled days)
+[*]Ratio: fixed custom VIP/Admin flags
+[*]Warden - mute: fixed confict with sourcecomms
+[*]Warden - bulletspark: fixed
+[*]PlayerTags: fixed custom VIP/Admin flags
+[*]PlayerTags: fixed tags in chat on foreign national players
+[*]Zombie: respawn with ratio restriction
+[*]Freeday: fixed roundtime when only one team has player
+[*]Freeday: NoBlock (no player collision)
+[*]Request - Killreason: fixed display all reasons
+[*]Duckhunt & KnifeFight: fix gravity ladderfix
+[*]Store Credits & paperclips: fix chat colors
+[*]Zombie: Respawn with restiction addon
+[*]Weapons: add/remove kevlar/helmet on eventday
+[*]Zeus: disable dropping taser - Thx @hexah!
+[*]Many minor fixes -> study commits ;D
 [/LIST]
   
-[i]Fixed[/i]
+  
+[b][u]Removed[/b][/u]
 [LIST]
-[*]Warden: Mathquiz with latest chat-processor
-[*]Warden - freedays: When player get freeday but joins ct
-[*]some minor fixes
+[*]removed dependencies of 'File/Folder Downloader and Precacher'-plugin. No need of downloads.txt or such plugins
+[/LIST]
+[INDENT][LIST]
+    [*]files will be downloaded automaticly. smartdm awesomeshit @zephyrus
+[/LIST][/INDENT]
+[LIST]
+[*]removed cvars - sm_weapons_ct - obsolete cvars. **Please remove them from your configs!**
+[/LIST]
+[LIST]
+[*]removed cvars - sm_weapons_t - obsolete cvars. **Please remove them from your configs!**
 [/LIST]
   
-[i]Removed[/i]
+  
+[b][u]Developer stuff[/b][/u]
 [LIST]
-[*]Dependencies: removed dependencies of chat-processor & smartjaildoors (both are optional now) (recommend sjd for smooth suicidebomber & duckhunt)
+[*]Register EventDays plugins to myjb core and recieve them
 [/LIST]
-[/SPOILER]
-  
-  
+[INDENT][LIST]
+    [*]new native - MyJailbreak_AddEventDay(char[] name) - Register a eventday to myjailbreak core
+    [*]new native - MyJailbreak_RemoveEventDay(char[] name) - Remove a eventday to myjailbreak core
+    [*]new native - MyJailbreak_GetEventDays(char[] name) - Get a array with all event day name
+[/LIST][/INDENT]
+[LIST]
+[*]New Forward for end and running or planned event day
+[/LIST]
+[INDENT][LIST]
+    [*]new forward - MyJailbreak_ResetEventDay()
+[/LIST][/INDENT]
+[LIST]
+[*]Changed the way how weapons access is handled. natives insetad of switch ConVars
+[/LIST]
+[INDENT][LIST]
+    [*]new native - MyWeapons_AllowTeam(int client, bool status) - Allow a team to pick weapons from weapons menu 
+    [*]new native - MyWeapons_GetTeamStatus(int iTeam) - Get team status if weapons are allowed
+[/LIST][/INDENT]
+[LIST]
+[*]Extented parameter of a warden forwards & native - new caller clientid - 0 on random
+[/LIST]
+[INDENT][LIST]
+    [*]changed forward - warden_OnWardenCreate(int client, int caller) - The client who called the set or become warden command
+    [*]changed native - warden_set(int client, int caller) -  The client who set the new warden
+[/LIST][/INDENT]
+[LIST]
+[*]New Forwards for add items to menu - see template_custom_menu.sp
+[/LIST]
+[INDENT][LIST]
+    [*]new forward - MyJailbreak_MenuStart(int client, Menu menu)
+    [*]new forward - MyJailbreak_MenuEnd(int client, Menu menu)
+    [*]new forward - MyJailbreak_MenuHandler(Menu menu, MenuAction action, int client, int itemNum)
+[/LIST][/INDENT]
+[LIST]
+[*]Removed smlib
+[/LIST]
+
+
+[/Spoiler]
 [U][B]Full Change Log:[/B][/U]
 [url=https://github.com/shanapu/MyJailbreak/blob/master/CHANGELOG.md]CHANGELOG.md[/url]
 [/QUOTE]
@@ -6196,9 +7444,10 @@ native MyIcons_BlockClientIcon(int client, bool status);
 [B][u]Known [url=https://github.com/shanapu/MyJailbreak/issues]Issues[/URL]/Bugs[/u][/B]
 [QUOTE]
 [LIST]
+[*]Custom models: player can't see their hands. the weapon is floating  
+temp fix https://forums.alliedmods.net/showpost.php?p=2525507&postcount=6
 [*]Warden: Player in handcuffs can be drag into walls [i]- need help[/i]
-[*]Weapons: sm_weapons_ct/sm_weapons_t is blocking "[url=https://github.com/popoklopsi/Stamm/blob/master/stamm_models.sp]Stamm - Vip Models Menu[/url]" [i]- can anyone tell me why?[/i]
-[*]Duckhunt & HE Battle: player gets new grenade but sometimes rarly can't throw anymore[i] - need help![/i]
+[*]Duckhunt & HE Battle: player gets new grenade but [u]sometimes rarly[/u] can't throw anymore[i] - need help![/i]
 [*]RU translation - Not shown completly in rules menu cause cyrillic letters.[i] - need help![/i]
 [/LIST]
 [i]you found a bug? tell me please![/i]
@@ -6207,9 +7456,9 @@ native MyIcons_BlockClientIcon(int client, bool status);
 
 [B][U]Credits:[/U][/B]
 used code & stuff from: 
-[B]Addicted, ecca, Zipcore, ESK0, Floody.de, Franc1sco, databomb, walmar, KeepCalm, bara, Arkarr, KissLick, headline, MasterOfTheXP, Rachnus, Damizean, Hipster, ReFlexPoison, 8guawong, Mitchell, Xines, Jackmaster, Impact123, Kaesar, andi67[/B] and many other I cant remember, unfortunately!
+[B]Addicted, ecca, Zipcore, ESK0, Floody.de, Franc1sco, databomb, walmar, KeepCalm, bara, Arkarr, KissLick, headline, MasterOfTheXP, Rachnus, Damizean, Hipster, ReFlexPoison, 8guawong, Mitchell, Xines, Jackmaster, Impact123, Kaesar, andi67, Dr.Doctor[/B] and many other I can't remember, unfortunately!
 
-Also big thanks to all sourcemod & metamod developers out there!
+Also big thanks to all sourcemod and metamod developers out there!
 [SPOILER]
 based/merged/used code/idea plugins:
 * [url]https://forums.alliedmods.net/showpost.php?p=2427305&postcount=63[/url]
@@ -6239,7 +7488,8 @@ based/merged/used code/idea plugins:
 * [url]https://forums.alliedmods.net/showpost.php?p=2393733&postcount=12[/url]
 * [url]https://forums.alliedmods.net/showthread.php?p=1965643[/url]
 * [url]https://forums.alliedmods.net/showpost.php?p=2231099&postcount=22[/url]
-+ [url]https://github.com/Zipcore/Timer/[/url] (sound)
+* [url]https://forums.alliedmods.net/showthread.php?t=301656[/url]
+* [url]https://github.com/Zipcore/Timer/[/url] (sound)
 * [url]https://github.com/Bara20/TroubleinTerroristTown/[/url] (sound)
 * [url]https://forums.alliedmods.net/showthread.php?t=262170[/url] (model)
 * [url]http://www.andi67.bplaced.net/Forum/viewtopic.php?f=40&t=342[/url] (model)
@@ -6248,7 +7498,7 @@ based/merged/used code/idea plugins:
 [/SPOILER]
 [SIZE="5"]THANKS FOR MAKING FREE SOFTWARE![/SIZE] :bacon!: :bacon!:
 [U]Much Thanks: [/U]
-Drixevel, devu4, good_live, olegtsvetkov, headline, Weeeishy, kiko, Got Sw4g? terminator18, SkeLeXes, 0dieter0, maKs, TomseN48, Horoxx, zeddy, NrX, ElleVen, Bchewy, Include1, alsacchi, Murr, poppin-fresh, databomb, r3D w0LF, JacobThePigeon, mrkos9i4ok, caaine, Murr, Hexer10 for bughunting, translation, contributions & great ideas!
+Drixevel, devu4, good_live, olegtsvetkov, headline, Weeeishy, kiko, Got Sw4g? terminator18, SkeLeXes, 0dieter0, maKs, TomseN48, Horoxx, zeddy, NrX, ElleVen, Bchewy, Include1, alsacchi, .ichiballs, Murr, poppin-fresh, databomb, r3D w0LF, JacobThePigeon, mrkos9i4ok, caaine, Murr, Hexer10 for bughunting, translation, contributions & great ideas!
 
 
 
@@ -6288,25 +7538,32 @@ Drixevel, devu4, good_live, olegtsvetkov, headline, Weeeishy, kiko, Got Sw4g? te
   
 [*]Open [u]gameserver[/u] folder and copy the folders [B]addons/[/B],[B] cfg/[/B], [B]materials/[/B], [B]models/[/B] &[B] sound/[/B] to [U]your gameservers root[/U] [B]csgo/[/B] directory  
   
-[*]Open [u]fastDL[/u] folder and copy the folders [B]materials/[/B], [B]models/[/B] & [B]sound/[/B] to your [U]FastDownload servers[/U] [B]csgo/[/B] directory  
-  
-[*]Open [U]your[/U] [B]downloads.ini [/B]in [U]your csgo/addons/sourcemod/configs[/U] directory and add the content of [B]downloads.txt[/B]  
+[*]Open [u]fastDL[/u] folder and copy the folders [B]materials/[/B], [B]models/[/B] & [B]sound/[/B] to your [U]Fast Download servers[/U] [B]csgo/[/B] directory  
   
 [*]Run plugin for the first time and [U]all necessary .cfg files will be generated[/U]  
   
 [*]Configure all settings in [U]cfg/MyJailbreak[/U] & [U]addons/sourcemod/configs/MyJailbreak[/U] to your needs
+
+[*][I]OPTIONAL:[/I] [B]When using a "Supported 3th party plugin" like [URL="https://forums.alliedmods.net/showthread.php?t=286045"]TeamGames[/URL] or any [URL="https://www.sourcemod.net/plugins.php?cat=0&mod=-1&title=ct+bans&author=&description=&search=1"]CTbans[/URL], move the corresponding support-plugin on your server from [U]plugins/MyJailbreak/disabled[/U] folder to [U]plugins/MyJailbreak[/U][/B]
+  
   
 [*]Have fun! Give feedback!
 [/LIST]
 [/QUOTE]
 
 
+[SIZE="3"][B]The DEV (developers) branch is thought for developers & experienced server operators. Expect errors, crashes & unfinished features. Only use it, when you know what you are doing. [/B][/SIZE]
 
 
-[B][U]Download release pack[/U][/B] - new build system!
-[url]https://shanapu.de/MyJailbreak/[/url]
+[url=https://github.com/shanapu/MyJailbreak/blob/master/license.txt][img]https://img.shields.io/badge/license-AGPL-blue.svg?style=flat-square[/img][/url]
 
-[B][U]Sourcecode & miscellaneous[/U][/B]
+[URL="https://travis-ci.org/shanapu/MyJailbreak/branches"][IMG]https://img.shields.io/travis/shanapu/MyJailbreak/master.svg?style=flat-square[/IMG][/url]   [URL="https://travis-ci.org/shanapu/MyJailbreak/branches"][IMG]https://img.shields.io/travis/shanapu/MyJailbreak/dev.svg?style=flat-square[/IMG][/URL]
+
+[SIZE="3"]
+[B][U]Download release pack[/U][/B]
+[url]https://shanapu.de/MyJailbreak/[/url][/SIZE]
+
+[B][U]Sourcecode & miscellaneous at github[/U][/B]
 [url]https://github.com/shanapu/MyJailbreak/[/url]
 
 
@@ -6316,8 +7573,11 @@ Drixevel, devu4, good_live, olegtsvetkov, headline, Weeeishy, kiko, Got Sw4g? te
 [B][U]Wiki:[/U][/B]
 [url]https://github.com/shanapu/MyJailbreak/wiki/[/url]
 
+
+ [URL="https://github.com/shanapu/MyJailbreak/issues"][IMG]https://img.shields.io/github/issues-raw/shanapu/MyJailbreak.svg?style=flat-square[/IMG][/url]
 [U][B]Report Bugs, Ideas, Requests & see todo:[/B][/U]
 [url]https://github.com/shanapu/MyJailbreak/issues[/url]
+
 
 [U][B]Code changes:[/B][/U]
 [url]https://github.com/shanapu/MyJailbreak/commits/master[/url]
@@ -6328,15 +7588,13 @@ Drixevel, devu4, good_live, olegtsvetkov, headline, Weeeishy, kiko, Got Sw4g? te
 [url]https://github.com/shanapu/MyJailbreak/blob/dev/CHANGELOG.md[/url]
 
 
-
-
 coded with [IMG]http://shanapu.de/githearth-small.png[/IMG] free software
 
-[b]I would be happy and very pleased if you want to join this project as an equal collaborator. 
-Even if you are a beginner and willing to learn or you just want to [url=http://translator.mitchdempsey.com/users/378/sourcemod_plugins]help with translations.[/url][/b] 
-If you own a feature or extension for jail or have an idea that would fit in, i would be happy when you [U]share it with us[/U].
+Main Developers: [URL="https://github.com/shanapu/"]shanapu[/url] & [URL="https://github.com/Hexer10/"]papero[/url]
 
-This is my first public project. please note that the code may is messy, stupid and inconsequent or mix different coding styles. I do my best to clean it up!  
+[b]We would be happy and very pleased if you want to join our project as an equal collaborator. 
+[u]Even if you are a beginner and willing to learn[/u] or you just want to [url=http://translator.mitchdempsey.com/users/378/sourcemod_plugins]help with translations.[/url][/b] 
+If you own a feature or extension for jail or have an idea that would fit in, I would be happy when you [U]share it with us[/U].
 
 
-[SIZE="1"]my golden faucets not finance itself...[/SIZE] [URL="https://www.paypal.me/shanapu"] [IMG]http://shanapu.de/donate.gif[/IMG][/URL]
+[SIZE="1"]you can donate when you like my work for the community...[/SIZE] [URL="https://www.paypal.me/shanapu"] [IMG]https://www.paypalobjects.com/webstatic/en_US/i/btn/png/silver-rect-paypal-26px.png[/IMG][/URL]

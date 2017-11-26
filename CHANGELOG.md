@@ -1,7 +1,12 @@
 ### Change Log
   
   
-**[Beta 12.dev]** - Teleport War & fixes
+**[Beta 13]** - New Events, new features & many changes
+  
+*Thanks* 
+Thank you, all you known & anonymous donators out there! You strengthen my motivation on this project!
+Also Thanks go out to all the patient testers and bug reporter, Wihtout you we couldn't make this!
+Much Thanks goes out to hexer10 aka papero for his massiv help on this update and joining the MyJailbreak project as equal collaborator. ty
   
 *Added*
 *  New Eventday: Teleport War - A FreeForAll Deathmatch where attacker & victim switch positions on hit.
@@ -143,7 +148,9 @@
 *  Zeus: Dis/Allow droping Zeus
     *  new cvar - sm_zeus_drop - 0 - disabled, 1 - allow player to drop their zeus - Thx @hexah!*
 *  Warden - Disarm: Dis/Allow disarm knife on shoting hands
-    *  new cvar - "sm_warden_disarm_knife - 0 - negate the knife disarm, 1 - disarm all weapon - Thx @hexah!*
+    *  new cvar - sm_warden_disarm_knife - 0 - negate the knife disarm, 1 - disarm all weapon - Thx @hexah!*
+*  MyJailbreak: the possibility to end a planned or running event
+    *  new command - sm_resetevent - End all running or planned event days
   
 *Changed*
 *  All Event Days: Possibility to start an event during the current round, instead wait for next round
@@ -220,16 +227,19 @@
     *  new native - MyJailbreak_AddEventDay(char[] name) - Register a eventday to myjailbreak core
     *  new native - MyJailbreak_RemoveEventDay(char[] name) - Remove a eventday to myjailbreak core
     *  new native - MyJailbreak_GetEventDays(char[] name) - Get a array with all event day name
+*  New Forward for end and running or planned event day
+    *  new forward - MyJailbreak_ResetEventDay()
 *  Changed the way how weapons access is handled. natives insetad of switch ConVars
     *  new native - MyWeapons_AllowTeam(int client, bool status) - Allow a team to pick weapons from weapons menu 
     *  new native - MyWeapons_GetTeamStatus(int iTeam) - Get team status if weapons are allowed
 *  Extented parameter of a warden forwards & native - new caller clientid - 0 on random
     *  changed forward - warden_OnWardenCreate(int client, int caller) - The client who called the set or become warden command
- *  changed native - warden_set(int client, int caller) -  The client who set the new warden
+    *  changed native - warden_set(int client, int caller) -  The client who set the new warden
 *  New Forwards for add items to menu - see template_custom_menu.sp
     *  new forward - MyJailbreak_MenuStart(int client, Menu menu)
     *  new forward - MyJailbreak_MenuEnd(int client, Menu menu)
     *  new forward - MyJailbreak_MenuHandler(Menu menu, MenuAction action, int client, int itemNum)
+*  Removed smlib
 
   
   
