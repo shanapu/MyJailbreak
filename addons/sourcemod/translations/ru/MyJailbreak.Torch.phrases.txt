@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-04-20 21:44:37 UTC
+// Date: 2017-11-20 02:35:14 UTC
 // Language: Russian (ru)
 // 
 // To view other translations for this plugin, please visit:
@@ -176,6 +176,16 @@
 	"torch_name"
 	{
 		"ru"		"Эстафета Олимпийского огня"
+	}
+
+	"torch_now_nc"
+	{
+		"ru"		"Начинается Факел раунд."
+	}
+
+	"torch_now"
+	{
+		"ru"		"Начинается {purple}Факел{default} раунд."
 	}
 
 }

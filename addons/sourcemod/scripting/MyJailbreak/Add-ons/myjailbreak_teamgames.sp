@@ -40,7 +40,6 @@ ConVar Cvar_tg_ct_friendlyfire;
 int OldCvar_tg_team_none_attack;
 int OldCvar_tg_cvar_friendlyfire;
 int OldCvar_tg_ct_friendlyfire;
-bool hastoggled;
 
 // Info
 public Plugin myinfo = {
@@ -51,49 +50,30 @@ public Plugin myinfo = {
 	url = MYJB_URL_LINK
 };
 
-// Start
-public void OnPluginStart()
+public void MyJailbreak_OnEventDayStart(char[] EventDayName)
 {
-	// Hooks
-	HookEvent("round_poststart", Event_RoundStart_Post);
-	HookEvent("round_end", Event_RoundEnd);
+	// Get the Cvar Value
+	Cvar_tg_team_none_attack = FindConVar("tg_team_none_attack");
+	Cvar_tg_cvar_friendlyfire = FindConVar("tg_cvar_friendlyfire");
+	Cvar_tg_ct_friendlyfire = FindConVar("tg_ct_friendlyfire");
+
+	// Save the Cvar Value
+	OldCvar_tg_team_none_attack = Cvar_tg_team_none_attack.IntValue;
+	OldCvar_tg_cvar_friendlyfire = Cvar_tg_cvar_friendlyfire.IntValue;
+	OldCvar_tg_ct_friendlyfire = Cvar_tg_ct_friendlyfire.IntValue;
+
+	// Change the Cvar Value
+	Cvar_tg_team_none_attack.IntValue = 1;
+	Cvar_tg_cvar_friendlyfire.IntValue = 1;
+	Cvar_tg_ct_friendlyfire.IntValue = 1;
 }
 
-public void Event_RoundStart_Post(Event event, const char[] name, bool dontBroadcast)
+public void MyJailbreak_OnEventDayEnd(char[] EventDayName, int winner)
 {
-	hastoggled = false;
-	ConVar bFFA = FindConVar("mp_teammates_are_enemies");
-
-	if (MyJailbreak_IsEventDayRunning() && bFFA.BoolValue)
-	{
-		// Get the Cvar Value
-		Cvar_tg_team_none_attack = FindConVar("tg_team_none_attack");
-		Cvar_tg_cvar_friendlyfire = FindConVar("tg_cvar_friendlyfire");
-		Cvar_tg_ct_friendlyfire = FindConVar("tg_ct_friendlyfire");
-
-		// Save the Cvar Value
-		OldCvar_tg_team_none_attack = Cvar_tg_team_none_attack.IntValue;
-		OldCvar_tg_cvar_friendlyfire = Cvar_tg_cvar_friendlyfire.IntValue;
-		OldCvar_tg_ct_friendlyfire = Cvar_tg_ct_friendlyfire.IntValue;
-
-		// Change the Cvar Value
-		Cvar_tg_team_none_attack.IntValue = 1;
-		Cvar_tg_cvar_friendlyfire.IntValue = 1;
-		Cvar_tg_ct_friendlyfire.IntValue = 1;
-
-		hastoggled = true;
-	}
-}
-
-public void Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
-{
-	if (hastoggled)
-	{
-		// Replace the Cvar Value with old value
-		Cvar_tg_team_none_attack.IntValue = OldCvar_tg_team_none_attack;
-		Cvar_tg_cvar_friendlyfire.IntValue = OldCvar_tg_cvar_friendlyfire;
-		Cvar_tg_ct_friendlyfire.IntValue = OldCvar_tg_ct_friendlyfire;
-	}
+	// Replace the Cvar Value with old value
+	Cvar_tg_team_none_attack.IntValue = OldCvar_tg_team_none_attack;
+	Cvar_tg_cvar_friendlyfire.IntValue = OldCvar_tg_cvar_friendlyfire;
+	Cvar_tg_ct_friendlyfire.IntValue = OldCvar_tg_ct_friendlyfire;
 }
 
 public void MyJailbreak_OnLastGuardRuleStart()
@@ -104,4 +84,13 @@ public void MyJailbreak_OnLastGuardRuleStart()
 	TG_ClearTeam(TG_BlueTeam);
 
 	TG_FenceDestroy();
+}
+
+public Action TG_OnPlayerRebel(int client, TG_Team team)
+{
+	if(MyJailbreak_IsEventDayRunning())
+	{
+		return Plugin_Handled;
+	}
+	else return Plugin_Continue;
 }

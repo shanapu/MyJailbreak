@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-04-20 21:44:33 UTC
+// Date: 2017-11-20 02:35:11 UTC
 // Language: Russian (ru)
 // 
 // To view other translations for this plugin, please visit:
@@ -143,21 +143,6 @@
 		"ru"		"Не будь мудаком!"
 	}
 
-	"RoundOne"
-	{
-		"ru"		"Раунд 1 из 3"
-	}
-
-	"RoundTwo"
-	{
-		"ru"		"Раунд 2 из 3"
-	}
-
-	"RoundThree"
-	{
-		"ru"		"Последний FFA раунд"
-	}
-
 	"ffa_wait"
 	{
 		"ru"		"Вы должны подождать больше {purple}{1}{default} раундов"
@@ -166,6 +151,16 @@
 	"ffa_name"
 	{
 		"ru"		"Все против всех"
+	}
+
+	"ffa_now_nc"
+	{
+		"ru"		"Начинается Все-Против-Всех раунд"
+	}
+
+	"ffa_now"
+	{
+		"ru"		"Начинается {purple}Все-Против-Всех{default} раунд."
 	}
 
 }

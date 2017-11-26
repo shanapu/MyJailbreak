@@ -1,0 +1,16 @@
+// Exported from SourceMod Translator
+// Date: 2017-11-20 02:34:54 UTC
+// Language: Romanian (ro)
+// 
+// To view other translations for this plugin, please visit:
+// http://translator.mitchdempsey.com/sourcemod_plugins/178
+//
+"Phrases"
+{
+
+	"warden_ctsonly"
+	{
+		"ro"		"Doar  {purple}Counter-Terrorists{default} pot deveni Simon !"
+	}
+
+}

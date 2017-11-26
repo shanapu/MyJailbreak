@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-04-20 21:44:40 UTC
+// Date: 2017-11-20 02:35:16 UTC
 // Language: Italian (it)
 // 
 // To view other translations for this plugin, please visit:
@@ -15,42 +15,42 @@
 
 	"weapons_disabled"
 	{
-		"it"		"The {purple}weapons menu is currently {default} disabled!"
+		"it"		"Attualmente il {purple}menù delle armi{default} è disabilitato!"
 	}
 
 	"weapons_same"
 	{
-		"it"		"You will get the {purple}Same Weapon{default}."
+		"it"		"Riceverai le {purple}stesse armi{default}."
 	}
 
 	"weapons_sameall"
 	{
-		"it"		"You will now get the{purple} Same Weapon{default} every round."
+		"it"		"Riceverai le{purple} stesse armi{default} ogni round."
 	}
 
 	"weapons_random"
 	{
-		"it"		"You will get a {purple} Random Weapon{default}."
+		"it"		"Riceverai delle armi {purple} casuali{default}."
 	}
 
 	"weapons_randomall"
 	{
-		"it"		"You will now get a{purple} Random Weapon{default} every round."
+		"it"		"Riceverai delle{purple} armi casuali{default} ogni round."
 	}
 
 	"weapons_next"
 	{
-		"it"		"Your settings will be{purple} applied{default} next round."
+		"it"		"Le tue modifiche verranno applicate il prossimo round."
 	}
 
 	"weapons_ta"
 	{
-		"it"		"You've been given a{purple} TAGrenade{default}!"
+		"it"		"Ti è stata data una{purple} Granata di Rilevamento Tattica{default}!"
 	}
 
 	"weapons_health"
 	{
-		"it"		"You've got a {purple} healthshot{default}"
+		"it"		"Ti è stato dato un {purple}kit di cura{default}."
 	}
 
 	"weapons_health"
@@ -60,42 +60,42 @@
 
 	"weapons_info_title"
 	{
-		"it"		"MyJailbreak Weapon Menu"
+		"it"		"CS:ITA JB: MENÙ DELLE ARMI"
 	}
 
 	"weapons_info_choose"
 	{
-		"it"		"Choose a Weapon"
+		"it"		"Scegli un'arma"
 	}
 
 	"weapons_info_same"
 	{
-		"it"		"Same Weapon"
+		"it"		"Stesse armi"
 	}
 
 	"weapons_info_sameall"
 	{
-		"it"		"Same Weapon Every Round"
+		"it"		"Stesse armi ogni round"
 	}
 
 	"weapons_info_random"
 	{
-		"it"		"Random Weapon"
+		"it"		"Armi casuali"
 	}
 
 	"weapons_info_randomall"
 	{
-		"it"		"Random Weapon Every Round"
+		"it"		"Armi casuali ogni round"
 	}
 
 	"weapons_info_prim"
 	{
-		"it"		"Primary Weapon:"
+		"it"		"Arma primaria:"
 	}
 
 	"weapons_info_sec"
 	{
-		"it"		"Secondary Weapon:"
+		"it"		"Arma secondaria:"
 	}
 
 }

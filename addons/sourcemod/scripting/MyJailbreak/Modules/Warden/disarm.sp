@@ -32,6 +32,7 @@
 #include <colors>
 #include <autoexecconfig>
 #include <warden>
+#include <myjbwarden>
 #include <mystocks>
 
 // Compiler Options
@@ -42,6 +43,7 @@
 ConVar gc_bDisarm;
 ConVar gc_iDisarm;
 ConVar gc_iDisarmMode;
+ConVar gc_bDisarmKnife;
 
 // Integers
 int g_iDisarm;
@@ -53,6 +55,7 @@ public void Disarm_OnPluginStart()
 	gc_bDisarm = AutoExecConfig_CreateConVar("sm_warden_disarm", "1", "0 - disabled, 1 - enable disarm weapon on shot the arms/hands", _, true, 0.0, true, 1.0);
 	gc_iDisarm = AutoExecConfig_CreateConVar("sm_warden_disarm_mode", "1", "1 - Only warden can disarm, 2 - warden & deputy can disarm, 3 - All CT can disarm, 4 - Everyone can disarm (CT & T)", _, true, 1.0, true, 3.0);
 	gc_iDisarmMode = AutoExecConfig_CreateConVar("sm_warden_disarm_drop", "1", "1 - weapon will drop, 2 - weapon  disapear", _, true, 1.0, true, 2.0);
+	gc_bDisarmKnife = AutoExecConfig_CreateConVar("sm_warden_disarm_knife", "1", "0 - negate the knife disarm, 1 - disarm all weapons", _, true, 0.0, true, 1.0); 
 
 	// Hooks 
 	HookEvent("player_hurt", Disarm_Event_PlayerHurt);
@@ -85,6 +88,11 @@ public Action Disarm_Event_PlayerHurt(Event event, char[] name, bool dontBroadca
 				{
 					if (victimweapon != -1)
 					{
+						char sWeaponName[64];
+						GetEdictClassname(victimweapon, sWeaponName, sizeof(sWeaponName));
+						if (gc_bDisarmKnife.BoolValue && (StrContains(sWeaponName, "knife") != -1))
+							return Plugin_Handled;
+						
 						CPrintToChatAll("%t %t", "warden_tag", "warden_disarmed", victim, attacker);
 						PrintCenterText(victim, "%t", "warden_lostgun");
 						
@@ -99,7 +107,7 @@ public Action Disarm_Event_PlayerHurt(Event event, char[] name, bool dontBroadca
 							
 							if (IsValidEdict(victimweapon))
 							{
-								if (Entity_GetOwner(victimweapon) == -1)
+								if (GetEntPropEnt(victimweapon, Prop_Data, "m_hOwnerEntity") == -1)
 								{
 									AcceptEntityInput(victimweapon, "Kill");
 								}

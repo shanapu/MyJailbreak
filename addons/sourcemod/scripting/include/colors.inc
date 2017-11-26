@@ -2,7 +2,7 @@
  *                                                                        *
  *                       Colored Chat Functions                           *
  *                   Author: exvel, Editor: Popoklopsi, Powerlord, Bara   *
- *                           Version: 1.2.0                               *
+ *                           Version: 1.2.3                               *
  *                                                                        *
  **************************************************************************/
  
@@ -11,8 +11,6 @@
  #endinput
 #endif
 #define _colors_included
-
-#pragma semicolon 1
  
 #define MAX_MESSAGE_LENGTH 250
 #define MAX_COLORS 12
@@ -49,7 +47,7 @@ new bool:CProfile_Colors[] = {true, false, true, false, false, false, false, fal
 new CProfile_TeamIndex[] = {NO_INDEX, NO_INDEX, NO_INDEX, NO_INDEX, NO_INDEX, NO_INDEX, NO_INDEX, NO_INDEX, NO_INDEX, NO_INDEX};
 new bool:CProfile_SayText2 = false;
 
-new Handle:sm_show_activity = INVALID_HANDLE;
+static Handle:sm_show_activity = INVALID_HANDLE;
 
 /**
  * Prints a message to a specific client in the chat area.
@@ -305,7 +303,7 @@ stock CReplaceColor(Colors:color, Colors:newColor)
 	CProfile_TeamIndex[color] = CProfile_TeamIndex[newColor];
 	
 	CTagReqSayText2[color] = CTagReqSayText2[newColor];
-	Format(CTagCode[color], sizeof(CTagCode[]), CTagCode[newColor]);
+	Format(CTagCode[color], sizeof(CTagCode[]), CTagCode[newColor])
 }
 
 /**
@@ -640,6 +638,7 @@ stock CShowActivity(client, const String:format[], any:...)
 			
 			CRemoveTags(szBuffer, sizeof(szBuffer));
 			PrintToConsole(client, "%s%s\n", tag, szBuffer);
+			display_in_chat = true;
 		}
 	}
 	else
@@ -748,16 +747,17 @@ stock CShowActivityEx(client, const String:tag[], const String:format[], any:...
 		if (replyto == SM_REPLY_TO_CONSOLE)
 		{
 			SetGlobalTransTarget(client);
-			VFormat(szBuffer, sizeof(szBuffer), format, 3);
+			VFormat(szBuffer, sizeof(szBuffer), format, 4);
 			
 			CRemoveTags(szBuffer, sizeof(szBuffer));
 			PrintToConsole(client, "%s%s\n", tag, szBuffer);
+			display_in_chat = true;
 		}
 	}
 	else
 	{
 		SetGlobalTransTarget(LANG_SERVER);
-		VFormat(szBuffer, sizeof(szBuffer), format, 3);
+		VFormat(szBuffer, sizeof(szBuffer), format, 4);
 		
 		CRemoveTags(szBuffer, sizeof(szBuffer));
 		PrintToServer("%s%s\n", tag, szBuffer);
@@ -790,7 +790,7 @@ stock CShowActivityEx(client, const String:tag[], const String:format[], any:...
 				{
 					newsign = name;
 				}
-				VFormat(szBuffer, sizeof(szBuffer), format, 3);
+				VFormat(szBuffer, sizeof(szBuffer), format, 4);
 				
 				CPrintToChatEx(i, client, "%s%s: %s", tag, newsign, szBuffer);
 			}
@@ -809,7 +809,7 @@ stock CShowActivityEx(client, const String:tag[], const String:format[], any:...
 				{
 					newsign = name;
 				}
-				VFormat(szBuffer, sizeof(szBuffer), format, 3);
+				VFormat(szBuffer, sizeof(szBuffer), format, 4);
 				
 				CPrintToChatEx(i, client, "%s%s: %s", tag, newsign, szBuffer);
 			}
@@ -835,7 +835,7 @@ stock CShowActivityEx(client, const String:tag[], const String:format[], any:...
 stock CShowActivity2(client, const String:tag[], const String:format[], any:...)
 {
 	if (sm_show_activity == INVALID_HANDLE)
-	sm_show_activity = FindConVar("sm_show_activity");
+		sm_show_activity = FindConVar("sm_show_activity");
 	
 	decl String:szBuffer[MAX_MESSAGE_LENGTH];
 	//decl String:szCMessage[MAX_MESSAGE_LENGTH];
@@ -858,25 +858,18 @@ stock CShowActivity2(client, const String:tag[], const String:format[], any:...)
 		}
 		
 		SetGlobalTransTarget(client);
-		VFormat(szBuffer, sizeof(szBuffer), format, 3);
+		VFormat(szBuffer, sizeof(szBuffer), format, 4);
 		
 		/* We don't display directly to the console because the chat text 
 		 * simply gets added to the console, so we don't want it to print 
 		 * twice.
 		 */		
-		if (replyto == SM_REPLY_TO_CONSOLE)
-		{
-			CPrintToChatEx(client, client, "%s%s", tag, buffer);
-		}
-		else
-		{
-			CPrintToChatEx(client, client, "%s%s", tag, buffer);
-		}			
+		CPrintToChatEx(client, client, "%s%s", tag, szBuffer);
 	}
 	else
 	{
 		SetGlobalTransTarget(LANG_SERVER);
-		VFormat(szBuffer, sizeof(szBuffer), format, 3);
+		VFormat(szBuffer, sizeof(szBuffer), format, 4);
 		
 		CRemoveTags(szBuffer, sizeof(szBuffer));
 		PrintToServer("%s%s\n", tag, szBuffer);
@@ -909,7 +902,7 @@ stock CShowActivity2(client, const String:tag[], const String:format[], any:...)
 				{
 					newsign = name;
 				}
-				VFormat(szBuffer, sizeof(szBuffer), format, 3);
+				VFormat(szBuffer, sizeof(szBuffer), format, 4);
 				
 				CPrintToChatEx(i, client, "%s%s: %s", tag, newsign, szBuffer);
 			}
@@ -928,7 +921,7 @@ stock CShowActivity2(client, const String:tag[], const String:format[], any:...)
 				{
 					newsign = name;
 				}
-				VFormat(szBuffer, sizeof(szBuffer), format, 3);
+				VFormat(szBuffer, sizeof(szBuffer), format, 4);
 				
 				CPrintToChatEx(i, client, "%s%s: %s", tag, newsign, szBuffer);
 			}

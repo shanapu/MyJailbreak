@@ -32,7 +32,13 @@
 #include <colors>
 #include <autoexecconfig>
 #include <warden>
+#include <myjbwarden>
 #include <mystocks>
+
+#undef REQUIRE_PLUGIN
+#include <warden>
+#include <myjbwarden>
+#define REQUIRE_PLUGIN
 
 // Compiler Options
 #pragma semicolon 1
@@ -56,7 +62,7 @@ Handle g_hTimerRepeat[MAXPLAYERS+1];
 
 // Strings
 char g_sSoundRepeatPath[256];
-char g_sAdminFlagRepeat[4];
+char g_sAdminFlagRepeat[64];
 
 // Start
 public void Repeat_OnPluginStart()
@@ -114,7 +120,7 @@ public Action Command_Repeat(int client, int args)
 						g_bRepeated[client] = true;
 						CPrintToChatAll("%t %t", "request_tag", "request_repeatpls", client);
 						g_hTimerRepeat[client] = CreateTimer(10.0, Timer_RepeatEnd, GetClientUserId(client));
-						if (warden_exist())
+						if ((gp_bWarden || gp_bMyJBWarden) && warden_exist())
 						{
 							for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (warden_iswarden(i) || warden_deputy_isdeputy(i)) RepeatMenu(i);
 						}

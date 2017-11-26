@@ -1,0 +1,16 @@
+// Exported from SourceMod Translator
+// Date: 2017-11-20 02:35:17 UTC
+// Language: French (fr)
+// 
+// To view other translations for this plugin, please visit:
+// http://translator.mitchdempsey.com/sourcemod_plugins/188
+//
+"Phrases"
+{
+
+	"weapons_info_prim"
+	{
+		"fr"		"Arme principale:"
+	}
+
+}

@@ -32,6 +32,7 @@
 #include <colors>
 #include <autoexecconfig>
 #include <warden>
+#include <myjbwarden>
 #include <mystocks>
 
 // Optional Plugins
@@ -53,7 +54,7 @@ Handle g_hTimerReminder;
 public void Reminder_OnPluginStart()
 {
 	// AutoExecConfig
-	gc_bg_hTimerReminder = CreateConVar("sm_warden_roundtime_reminder", "1", "0 - disabled, 1 - announce remaining round time in chat & hud 3min, 2min, 1min, 30sec before roundend.", _, true, 0.0, true, 1.0);
+	gc_bg_hTimerReminder = AutoExecConfig_CreateConVar("sm_warden_roundtime_reminder", "1", "0 - disabled, 1 - announce remaining round time in chat & hud 3min, 2min, 1min, 30sec before roundend.", _, true, 0.0, true, 1.0);
 
 	// Hooks
 	HookEvent("round_start", Reminder_Event_RoundStart);

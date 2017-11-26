@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-04-20 21:44:33 UTC
+// Date: 2017-11-20 02:35:10 UTC
 // Language: Italian (it)
 // 
 // To view other translations for this plugin, please visit:
@@ -10,57 +10,57 @@
 
 	"ffa_tag"
 	{
-		"it"		"[{green}MyJB.FFA{default}]"
+		"it"		"[{green}CSitaJB.FFA{default}]"
 	}
 
 	"ffa_need"
 	{
-		"it"		"{purple}{2}{default} ha votato. {purple}{1}{default} voti richiesti per giocare a {darkred}FFA."
+		"it"		"{purple}{2}{default} hanno votato. {purple}{1}{default} voti richiesti per startare l' {darkred}FFA."
 	}
 
 	"ffa_voting"
 	{
-		"it"		"La votazione per FFA e' {purple}disabilitata!"
+		"it"		"Non si può votare per l'FFA!"
 	}
 
 	"ffa_setbywarden"
 	{
-		"it"		"Settare FFA da Warden e' {purple}disabilitato!"
+		"it"		"Il Capo CT non può dare FFA!"
 	}
 
 	"ffa_setbyadmin"
 	{
-		"it"		"Settare FFA da Admin e' {purple}disabilitato!"
+		"it"		"Lo Staff non può dare FFA!"
 	}
 
 	"ffa_ctwin_nc"
 	{
-		"it"		"Una Guardia e' sopravvissuta!"
+		"it"		"Una guardia è sopravvissuta!"
 	}
 
 	"ffa_twin_nc"
 	{
-		"it"		"Un T e' sopravvissuto!"
+		"it"		"Un prigioniero è sopravvissuto!"
 	}
 
 	"ffa_minplayer"
 	{
-		"it"		"per FFA sono richiesti {purple}un CT e un T!"
+		"it"		"Per dare FFA ci devono essere almeno un T e un CT!"
 	}
 
 	"ffa_end"
 	{
-		"it"		"{purple}FFA{default} e' finito!"
+		"it"		"L'{purple}FFA{default} è finito!"
 	}
 
 	"ffa_next"
 	{
-		"it"		"Il prossimo round sara': {purple}FFA."
+		"it"		"{darkred}IL PROSSIMO ROUND SARÀ: FFA!"
 	}
 
 	"ffa_next_nc"
 	{
-		"it"		"Il prossimo round sara': FFA."
+		"it"		"Il prossimo round sarà: FFA."
 	}
 
 	"ffa_rounds"
@@ -70,32 +70,32 @@
 
 	"ffa_start"
 	{
-		"it"		"{purple}FFA{default} e' iniziato!"
+		"it"		"{darkred}L'FFA È INIZIATO: CHE VINCA IL MIGLIORE!"
 	}
 
 	"ffa_start_nc"
 	{
-		"it"		"FFA e' imniziato!"
+		"it"		"L'FFA è iniziato!"
 	}
 
 	"ffa_voted"
 	{
-		"it"		"Hai gia' votato per {purple}FFA!"
+		"it"		"Hai gia votato per {purple}FFA!"
 	}
 
 	"ffa_progress"
 	{
-		"it"		"L'evento {darkred}{1} {default}e' {purple}gia' in corso!"
+		"it"		"L'evento {darkred}{1} {default}è {purple}già in corso!"
 	}
 
 	"ffa_disabled"
 	{
-		"it"		"FFA e' momentaneamente {purple}disabilitato!"
+		"it"		"Attualmente l'FFA è disabilitato!"
 	}
 
 	"ffa_damage_nc"
 	{
-		"it"		"{1} secondi rimanenti all'inizio dell'ffa"
+		"it"		"Mancano {1} secondi all'attivazione del danno"
 	}
 
 	"ffa_damage_nc"
@@ -110,57 +110,42 @@
 
 	"ffa_info_line1"
 	{
-		"it"		"Verrai Spawnato in Armeria!"
+		"it"		"Tutti contro Tutti - L'ultimo giocatore che rimanere in vita VINCE!"
 	}
 
 	"ffa_info_line2"
 	{
-		"it"		"Free for All - Player VS Player - L'ultimo che rimane vince!"
+		"it"		"Scrivi !guns per scegliere le tue armi, in qualsiasi momento!"
 	}
 
 	"ffa_info_line3"
 	{
-		"it"		"Scappa durante la fase di 'NoDamage'"
+		"it"		"Ricorda: non si può camperare in infermeria!"
 	}
 
 	"ffa_info_line4"
 	{
-		"it"		"Tutte le regole del JB non sono applicabili durante questo round"
+		"it"		"Le normali regole del JB non sono applicate durante questo round!"
 	}
 
 	"ffa_info_line5"
 	{
-		"it"		"LR Disabilitato in questo round"
+		"it"		"A chiunque è permesso andare ovunque nella mappa!"
 	}
 
 	"ffa_info_line6"
 	{
-		"it"		"Tutti possono andare dove vogliono nella mappa!"
+		"it"		"Rimanere nella zona celle! Vietato andare condotti o aree segrete"
 	}
 
 	"ffa_info_line7"
 	{
-		"it"		"Buona Fortuna!"
-	}
-
-	"RoundOne"
-	{
-		"it"		"Round 1 di 3"
-	}
-
-	"RoundTwo"
-	{
-		"it"		"Round 2 di 3"
-	}
-
-	"RoundThree"
-	{
-		"it"		"Questo e' l'ultimo round FFA!"
+		"it"		"Non fate i cani!"
 	}
 
 	"ffa_wait"
 	{
-		"it"		"Devi aspettare {purple}{1}{default} round per un altro event day!"
+		"it"		"Devi aspettare {purple}{1}{default} altri round per un Event Day!"
 	}
 
 	"ffa_name"

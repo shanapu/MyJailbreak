@@ -32,11 +32,7 @@
 #include <autoexecconfig>
 #include <mystocks>
 #include <kento_rankme/rankme>
-
-// Optional Plugins
-#undef REQUIRE_PLUGIN
 #include <myjailbreak>
-#define REQUIRE_PLUGIN
 
 // Compiler Options
 #pragma semicolon 1
@@ -105,7 +101,7 @@ public Action MyJailbreak_OnJoinGuardQueue(int client)
 	return Plugin_Continue;
 }
 
-public Action warden_OnWardenCreate(int client)
+public Action warden_OnWardenCreate(int client, int caller)
 {
 	if (RankMe_GetPoints(client) < gc_iMinRankMePointsWarden.IntValue)
 	{
@@ -122,10 +118,13 @@ public Action Event_OnPlayerSpawn(Event event, const char[] name, bool bDontBroa
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));
 
-	if (GetClientTeam(client) != 3) 
+	if (!IsValidClient(client, false, false))
 		return Plugin_Continue;
 
-	if (!IsValidClient(client, false, false))
+	if (GetClientTeam(client) != CS_TEAM_CT)
+		return Plugin_Continue;
+
+	if (MyJailbreak_IsEventDayRunning())
 		return Plugin_Continue;
 
 	if (RankMe_GetPoints(client) < gc_iMinRankMePointsRatio.IntValue)

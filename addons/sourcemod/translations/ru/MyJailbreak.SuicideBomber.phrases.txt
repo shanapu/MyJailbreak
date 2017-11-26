@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-04-20 21:44:31 UTC
+// Date: 2017-11-20 02:35:08 UTC
 // Language: Russian (ru)
 // 
 // To view other translations for this plugin, please visit:
@@ -166,6 +166,16 @@
 	"suicidebomber_name"
 	{
 		"ru"		"Смертник"
+	}
+
+	"suicidebomber_now_nc"
+	{
+		"ru"		"Начинается Суицид раунд."
+	}
+
+	"suicidebomber_now"
+	{
+		"ru"		"Начинается {purple}Суицид{default} раунд."
 	}
 
 }

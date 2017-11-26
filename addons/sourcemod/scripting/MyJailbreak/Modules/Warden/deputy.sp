@@ -32,7 +32,9 @@
 #include <colors>
 #include <autoexecconfig>
 #include <warden>
+#include <myjbwarden>
 #include <mystocks>
+#include <smartdm>
 
 // Optional Plugins
 #undef REQUIRE_PLUGIN
@@ -50,6 +52,7 @@ ConVar gc_sCustomCommandDeputy;
 ConVar gc_sCustomCommandUnDeputy;
 ConVar gc_sCustomCommandRemoveDeputy;
 ConVar gc_bSetDeputy;
+ConVar gc_bRemoveLRDeputy;
 ConVar gc_bBecomeDeputy;
 ConVar gc_bModelDeputy;
 ConVar gc_bWardenDead;
@@ -88,6 +91,7 @@ public void Deputy_OnPluginStart()
 	gc_bDeputy = AutoExecConfig_CreateConVar("sm_warden_deputy_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true, 0.0, true, 1.0);
 	gc_bSetDeputy = AutoExecConfig_CreateConVar("sm_warden_deputy_set", "1", "0 - disabled, 1 - enable !w / !deputy - warden can choose his deputy.", _, true, 0.0, true, 1.0);
 	gc_bBecomeDeputy = AutoExecConfig_CreateConVar("sm_warden_deputy_become", "1", "0 - disabled, 1 - enable !w / !deputy - player can choose to be deputy.", _, true, 0.0, true, 1.0);
+	gc_bRemoveLRDeputy = AutoExecConfig_CreateConVar("sm_warden_deputy_remove_lr", "0", "0 - disabled, 1 - enable deputy will be removed on last request", _, true, 0.0, true, 1.0);
 	gc_bModelDeputy = AutoExecConfig_CreateConVar("sm_warden_deputy_model", "1", "0 - disabled, 1 - enable deputy model", 0, true, 0.0, true, 1.0);
 	gc_sModelPathDeputy = AutoExecConfig_CreateConVar("sm_warden_deputy_model_path", "models/player/custom_player/kuristaja/jailbreak/guard3/guard3.mdl", "Path to the model for deputy.");
 	gc_sCustomCommandDeputy = AutoExecConfig_CreateConVar("sm_warden_cmds_deputy", "d", "Set your custom chat command for open menu(!menu (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)");
@@ -111,7 +115,11 @@ public void Deputy_OnSettingChanged(Handle convar, const char[] oldValue, const 
 	if (convar == gc_sModelPathDeputy)
 	{
 		strcopy(g_sModelPathDeputy, sizeof(g_sModelPathDeputy), newValue);
-		if (gc_bModelDeputy.BoolValue) PrecacheModel(g_sModelPathDeputy);
+		if (gc_bModelDeputy.BoolValue) 
+		{
+			Downloader_AddFileToDownloadsTable(g_sModelPathDeputy);
+			PrecacheModel(g_sModelPathDeputy);
+		}
 	}
 }
 
@@ -166,7 +174,7 @@ public void Deputy_OnConfigsExecuted()
 // Become Deputy
 public Action Command_SetDeputy(int client, int args)
 {
-	if (gc_bDeputy.BoolValue && gc_bPlugin.BoolValue)  // "sm_warden_deputy_enable" "1"
+	if (gc_bDeputy.BoolValue && gc_bPlugin.BoolValue && !g_bIsLR)  // "sm_warden_deputy_enable" "1"
 	{
 		if (g_iDeputy == -1)  // Is there already a deputy
 		{
@@ -346,7 +354,11 @@ public void Deputy_Event_RoundStart(Event event, const char[] name, bool dontBro
 // Prepare Plugin & modules
 public void Deputy_OnMapStart()
 {
-	PrecacheModel(g_sModelPathDeputy);
+	if (gc_bModelDeputy.BoolValue)
+	{
+		Downloader_AddFileToDownloadsTable(g_sModelPathDeputy);
+		PrecacheModel(g_sModelPathDeputy);
+	}
 }
 
 // Deputy disconnect
@@ -409,6 +421,18 @@ public void Deputy_OnWardenCreation(int client)
 	CreateTimer(10.0, Timer_NoDeputy);
 }
 
+
+// When a last request is available
+public void Deputy_OnAvailableLR(int Announced)
+{
+	g_bIsLR = true;
+
+	if (gc_bRemoveLRDeputy.BoolValue && g_iDeputy != -1)
+	{
+		RemoveTheDeputy();
+		Forward_OnDeputyRemoved(0); // 0 = console
+	}
+}
 /******************************************************************************
                    TIMER
 ******************************************************************************/
@@ -417,7 +441,7 @@ public Action Timer_DeputyNewWarden(Handle timer)
 {
 	if (IsValidClient(g_iDeputyDelay, true, false))
 	{
-		SetTheWarden(g_iDeputyDelay);
+		SetTheWarden(g_iDeputyDelay, 0);
 	}
 }
 

@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-04-20 21:44:38 UTC
+// Date: 2017-11-20 02:35:15 UTC
 // Language: Russian (ru)
 // 
 // To view other translations for this plugin, please visit:
@@ -146,6 +146,16 @@
 	"noscope_name"
 	{
 		"ru"		"Битва без прицела"
+	}
+
+	"noscope_now_nc"
+	{
+		"ru"		"Раунд Битва-Без-Прицела начинается"
+	}
+
+	"noscope_now"
+	{
+		"ru"		"Начинается {purple}Битва-Без-Прицела{default} раунд."
 	}
 
 }

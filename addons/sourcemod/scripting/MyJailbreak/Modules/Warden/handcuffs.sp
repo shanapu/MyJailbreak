@@ -33,7 +33,9 @@
 #include <autoexecconfig>
 #include <emitsoundany>
 #include <warden>
+#include <myjbwarden>
 #include <mystocks>
+
 
 //Optional Plugins
 #undef REQUIRE_PLUGIN
@@ -77,7 +79,7 @@ int TickTime[MAXPLAYERS+1];
 // Strings
 char g_sSoundCuffsPath[256];
 char g_sOverlayCuffsPath[256];
-char g_sAdminFlagCuffs[4];
+char g_sAdminFlagCuffs[64];
 char g_sSoundBreakCuffsPath[256];
 char g_sSoundUnLockCuffsPath[256];
 char g_sEquipWeapon[MAXPLAYERS+1][32];
@@ -165,7 +167,10 @@ public void HandCuffs_OnSettingChanged(Handle convar, const char[] oldValue, con
 
 public void HandCuffs_Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
-	if (gc_bHandCuff.BoolValue && !g_bIsLR && gc_bStayWarden.BoolValue)
+	if (!gc_bPlugin.BoolValue || !gc_bHandCuff.BoolValue)
+		return;
+
+	if (!g_bIsLR && gc_bStayWarden.BoolValue)
 	{
 		if (g_iWarden != -1) GivePlayerItem(g_iWarden, "weapon_taser");
 		if (g_iDeputy != -1) GivePlayerItem(g_iDeputy, "weapon_taser");
@@ -183,6 +188,9 @@ public void HandCuffs_Event_RoundStart(Event event, const char[] name, bool dont
 
 public void HandCuffs_Event_ItemEquip(Event event, const char[] name, bool dontBroadcast)
 {
+	if (!gc_bPlugin.BoolValue || !gc_bHandCuff.BoolValue)
+		return;
+
 	int client = GetClientOfUserId(event.GetInt("userid"));
 
 	char weapon[32];
@@ -197,6 +205,9 @@ public void HandCuffs_Event_ItemEquip(Event event, const char[] name, bool dontB
 
 public void HandCuffs_Event_PlayerTeamDeath(Event event, const char[] name, bool dontBroadcast) 
 {
+	if (!gc_bPlugin.BoolValue || !gc_bHandCuff.BoolValue)
+		return;
+
 	int client = GetClientOfUserId(event.GetInt("userid")); // Get the dead clients id
 
 	if (g_bCuffed[client])
@@ -205,22 +216,26 @@ public void HandCuffs_Event_PlayerTeamDeath(Event event, const char[] name, bool
 		g_bCuffed[client] = false;
 		SetEntityMoveType(client, MOVETYPE_WALK);
 		SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
-		CreateTimer(0.0, DeleteOverlay, client);
+		CreateTimer(0.0, DeleteOverlay, GetClientUserId(client));
 	}
 }
 
 public void HandCuffs_Event_WeaponFire(Event event, char[] name, bool dontBroadcast)
 {
+	if (!gc_bPlugin.BoolValue || !gc_bHandCuff.BoolValue)
+		return;
+
 	int client = GetClientOfUserId(event.GetInt("userid"));
 
-	if (gc_bPlugin.BoolValue && gc_bHandCuff.BoolValue && (IsClientWarden(client) || (IsClientDeputy(client) && gc_bHandCuffDeputy.BoolValue)) && ((g_iPlayerHandCuffs[client] != 0) || ((g_iPlayerHandCuffs[client] == 0) && (g_iCuffed > 0))))
+	if ((IsClientWarden(client) || (IsClientDeputy(client) && gc_bHandCuffDeputy.BoolValue)) && ((g_iPlayerHandCuffs[client] != 0) || ((g_iPlayerHandCuffs[client] == 0) && (g_iCuffed > 0))))
 	{
 		char sWeapon[64];
 		event.GetString("weapon", sWeapon, sizeof(sWeapon));
 
 		if (StrEqual(sWeapon, "weapon_taser"))
 		{
-			SetPlayerAmmo(client, Client_GetActiveWeapon(client), _, 2);
+			int weapon = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
+			SetPlayerAmmo(client, weapon, _, 2);
 		}
 	}
 }
@@ -247,10 +262,15 @@ public Action HandCuffs_OnPlayerRunCmd(int client, int &buttons, int &impulse, f
 			
 			if (IsValidClient(Target, true, false) && g_bCuffed[Target])
 			{
-				float distance = Entity_GetDistance(client, Target);
-				distance = Math_UnitsToMeters(distance);
+				float distance = 0.0;
 				
-				if ((gc_iHandCuffsDistance.IntValue > distance) && !Client_IsLookingAtWall(client, Entity_GetDistance(client, Target)+40.0))
+				float clientOrigin[3];
+				float targetOrigin[3];
+				GetClientAbsOrigin(client, clientOrigin);
+				GetClientAbsOrigin(Target, targetOrigin);
+				distance = GetVectorDistance(clientOrigin, targetOrigin, false) * 0.01905;  // 0.01905 GAMEUNITS_TO_METERS
+				
+				if ((gc_iHandCuffsDistance.IntValue > distance) && !IsLookingAtWall(client, GetDistance(client, Target)+40.0))
 				{
 					float origin[3];
 					GetClientAbsOrigin(client, origin);
@@ -370,7 +390,8 @@ public void HandCuffs_OnAvailableLR(int Announced)
 		}
 	}
 
-	StripZeus();
+	StripZeus(g_iWarden);
+	StripZeus(g_iDeputy);
 }
 
 public void HandCuffs_OnWardenCreation(int client)
@@ -380,7 +401,7 @@ public void HandCuffs_OnWardenCreation(int client)
 
 public void HandCuffs_OnWardenRemoved(int client)
 {
-	StripZeus();
+	StripZeus(client);
 }
 
 public void HandCuffs_OnDeputyCreation(int client)
@@ -390,7 +411,7 @@ public void HandCuffs_OnDeputyCreation(int client)
 
 public void HandCuffs_OnDeputyRemoved(int client)
 {
-	StripZeus();
+	StripZeus(client);
 }
 
 public void HandCuffs_OnMapStart()
@@ -401,7 +422,8 @@ public void HandCuffs_OnMapStart()
 		PrecacheSoundAnyDownload(g_sSoundBreakCuffsPath);
 		PrecacheSoundAnyDownload(g_sSoundUnLockCuffsPath);
 	}
-	if (gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayCuffsPath);
+	if (gc_bOverlays.BoolValue)
+		PrecacheDecalAnyDownload(g_sOverlayCuffsPath);
 }
 
 public void HandCuffs_OnClientDisconnect(int client)
@@ -448,11 +470,6 @@ public void HandCuffs_OnMapEnd()
 	}
 }
 
-public void HandCuffs_OnConfigsExecuted()
-{
-	g_iKillKind = gc_iRandomMode.IntValue;
-}
-
 public void HandCuffs_OnClientPutInServer(int client)
 {
 	g_iPlayerPaperClips[client] = 0;
@@ -493,12 +510,16 @@ void FreeEm(int client, int attacker)
 	SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
 	SetEntityRenderColor(client, 255, 255, 255, 255);
 	g_bCuffed[client] = false;
-	CreateTimer(0.0, DeleteOverlay, client);
+	CreateTimer(0.0, DeleteOverlay, GetClientUserId(client));
 	g_iCuffed--;
 	ProgressTimer[client] = null;
 
 	if (gc_bSounds)StopSoundAny(client, SNDCHAN_AUTO, g_sSoundUnLockCuffsPath);
-	if ((attacker != 0) && (g_iCuffed == 0) && (g_iPlayerHandCuffs[attacker] < 1)) SetPlayerAmmo(attacker, Client_GetActiveWeapon(attacker), _, 0);
+	if ((attacker != 0) && (g_iCuffed == 0) && (g_iPlayerHandCuffs[attacker] < 1))
+	{
+		int weapon = GetEntPropEnt(attacker, Prop_Send, "m_hActiveWeapon");
+		SetPlayerAmmo(attacker, weapon, _, 0);
+	}
 	if (attacker != 0) CPrintToChatAll("%t %t", "warden_tag", "warden_cuffsoff", attacker, client);
 }
 
@@ -656,7 +677,7 @@ public Action Timer_ProgressOpen(Handle timer, int client)
 		SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
 		SetEntityRenderColor(client, 255, 255, 255, 255);
 		g_bCuffed[client] = false;
-		CreateTimer(0.0, DeleteOverlay, client);
+		CreateTimer(0.0, DeleteOverlay, GetClientUserId(client));
 		g_iCuffed--;
 		g_iPlayerPaperClips[client]--;
 	}
@@ -707,25 +728,76 @@ public Action Timer_StillPaperClip(Handle timer, int client)
                    STOCKS
 ******************************************************************************/
 
-void StripZeus()
+void StripZeus(int client)
 {
-	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false)) if ((IsClientWarden(i) || (IsClientDeputy(i) && gc_bHandCuffDeputy.BoolValue)))
-	{
-		char sWeapon[64];
-		FakeClientCommand(i, "use weapon_taser");
-		int weapon = GetEntPropEnt(i, Prop_Send, "m_hActiveWeapon");
+	if (!IsValidClient(client, true, false))
+		return;
 
-		if (weapon != -1)
-		{
-			GetEntityClassname(weapon, sWeapon, sizeof(sWeapon));
-			if (StrEqual(sWeapon, "weapon_taser"))
-			{
-				SDKHooks_DropWeapon(i, weapon, NULL_VECTOR, NULL_VECTOR);
-				AcceptEntityInput(weapon, "Kill");
-			}
-		}
+	if ((!IsClientWarden(client) && (!IsClientDeputy(client) && gc_bHandCuffDeputy.BoolValue)))
+		return;
+
+	char sWeapon[64];
+	FakeClientCommand(client, "use weapon_taser");
+	int weapon = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
+
+	if (weapon == -1)
+		return;
+
+	GetEntityClassname(weapon, sWeapon, sizeof(sWeapon));
+	if (StrEqual(sWeapon, "weapon_taser"))
+	{
+		SDKHooks_DropWeapon(client, weapon, NULL_VECTOR, NULL_VECTOR);
+		AcceptEntityInput(weapon, "Kill");
 	}
 }
+
+bool IsLookingAtWall(int client, float distance=40.0) {
+
+	float posEye[3], posEyeAngles[3];
+	bool isClientLookingAtWall = false;
+
+	GetClientEyePosition(client,	posEye);
+	GetClientEyeAngles(client,		posEyeAngles);
+
+	posEyeAngles[0] = 0.0;
+
+	Handle trace = TR_TraceRayFilterEx(posEye, posEyeAngles, CONTENTS_SOLID, RayType_Infinite, LookingWall_TraceEntityFilter);
+
+	if (TR_DidHit(trace)) {
+
+		if (TR_GetEntityIndex(trace) > 0) {
+			CloseHandle(trace);
+			return false;
+		}
+
+		float posEnd[3];
+
+		TR_GetEndPosition(posEnd, trace);
+
+		if (GetVectorDistance(posEye, posEnd, true) <= (distance * distance)) {
+			isClientLookingAtWall = true;
+		}
+	}
+
+	CloseHandle(trace);
+
+	return isClientLookingAtWall;
+}
+
+public bool LookingWall_TraceEntityFilter(int entity, int contentsMask)
+{
+	return entity == 0;
+}
+
+float GetDistance(int client, int target)
+{
+	float targetVec[3],clientVec[3];
+	GetEntPropVector(target, Prop_Send, "m_vecOrigin", targetVec);
+	GetEntPropVector(client, Prop_Send, "m_vecOrigin", clientVec);
+
+	return GetVectorDistance(clientVec, targetVec);
+}
+
 
 /******************************************************************************
                    NATIVES

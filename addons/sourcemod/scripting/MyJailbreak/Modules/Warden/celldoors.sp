@@ -32,6 +32,7 @@
 #include <colors>
 #include <autoexecconfig>
 #include <warden>
+#include <myjbwarden>
 #include <mystocks>
 
 // Optional Plugins
@@ -47,7 +48,7 @@
 ConVar gc_bOpen;
 ConVar gc_bOpenDeputy;
 ConVar gc_bOpenTimer;
-ConVar gc_hOpenTimer;
+ConVar gc_iOpenTimer;
 ConVar gc_bOpenTimerWarden;
 ConVar gc_sCustomCommandOpen;
 ConVar gc_sCustomCommandClose;
@@ -70,7 +71,7 @@ public void CellDoors_OnPluginStart()
 	gc_bOpenDeputy = AutoExecConfig_CreateConVar("sm_warden_open_deputy", "1", "0 - disabled, 1 - deputy can open/close cells", _, true, 0.0, true, 1.0);
 	gc_sCustomCommandOpen = AutoExecConfig_CreateConVar("sm_warden_cmds_open", "o, unlock, cells", "Set your custom chat commands for open cells(!open (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)");
 	gc_sCustomCommandClose = AutoExecConfig_CreateConVar("sm_warden_cmds_close", "lock, shut", "Set your custom chat commands for close cells(!close (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)");
-	gc_hOpenTimer = AutoExecConfig_CreateConVar("sm_warden_open_time", "60", "Time in seconds for open doors on round start automaticly", _, true, 0.0);
+	gc_iOpenTimer = AutoExecConfig_CreateConVar("sm_warden_open_time", "60", "Time in seconds for open doors on round start automaticly", _, true, 0.0);
 	gc_bOpenTimer = AutoExecConfig_CreateConVar("sm_warden_open_time_enable", "1", "should doors open automatic 0- no 1 yes", _, true, 0.0, true, 1.0);
 	gc_bOpenTimerWarden = AutoExecConfig_CreateConVar("sm_warden_open_time_warden", "1", "should doors open automatic after sm_warden_open_time when there is a warden? needs sm_warden_open_time_enable 1", _, true, 0.0, true, 1.0);
 
@@ -92,11 +93,16 @@ public Action Command_OpenDoors(int client, int args)
 			{
 				if (gp_bSmartJailDoors) if (SJD_IsCurrentMapConfigured())
 				{
-					CPrintToChatAll("%t %t", "warden_tag", "warden_dooropen");
 					SJD_OpenDoors();
+
+				//	delete g_hTimerOpen; // why delete don't work?
 					if (g_hTimerOpen != null)
-					KillTimer(g_hTimerOpen);
+					{
+						KillTimer(g_hTimerOpen);
+					}
 					g_hTimerOpen = null;
+
+					CPrintToChatAll("%t %t", "warden_tag", "warden_dooropen");
 				}
 				else CReplyToCommand(client, "%t %t", "warden_tag", "warden_dooropen_unavailable");
 			}
@@ -117,8 +123,9 @@ public Action Command_CloseDoors(int client, int args)
 			{
 				if (gp_bSmartJailDoors) if (SJD_IsCurrentMapConfigured()) 
 				{
-					CPrintToChatAll("%t %t", "warden_tag", "warden_doorclose");
 					SJD_CloseDoors();
+
+					CPrintToChatAll("%t %t", "warden_tag", "warden_doorclose");
 				}
 				else CReplyToCommand(client, "%t %t", "warden_tag", "warden_doorclose_unavailable");
 			}
@@ -135,16 +142,11 @@ public Action Command_CloseDoors(int client, int args)
 
 public void CellDoors_Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
-	if (g_hTimerOpen != null)
-		KillTimer(g_hTimerOpen);
-
-	g_hTimerOpen = null;
-
 	if (gc_bPlugin.BoolValue)
 	{
 		if (gp_bSmartJailDoors) if (SJD_IsCurrentMapConfigured())
 		{
-			g_iOpenTimer = gc_hOpenTimer.IntValue;
+			g_iOpenTimer = gc_iOpenTimer.IntValue;
 			g_hTimerOpen = CreateTimer(1.0, Timer_OpenCounter, _, TIMER_REPEAT);
 		}
 		else CPrintToChatAll("%t %t", "warden_tag", "warden_openauto_unavailable");
@@ -210,10 +212,8 @@ public Action Timer_OpenCounter(Handle timer, Handle pack)
 					SJD_OpenDoors();
 					CPrintToChatAll("%t %t", "warden_tag", "warden_openauto");
 
-					if (g_hTimerOpen != null)
-						KillTimer(g_hTimerOpen);
-
 					g_hTimerOpen = null;
+					return Plugin_Stop;
 				}
 			}
 			else if (gc_bOpenTimer.BoolValue)
@@ -225,10 +225,24 @@ public Action Timer_OpenCounter(Handle timer, Handle pack)
 				}
 				else CPrintToChatAll("%t %t", "warden_tag", "warden_opentime");
 
-				if (g_hTimerOpen != null)
-					KillTimer(g_hTimerOpen);
 				g_hTimerOpen = null;
+				return Plugin_Stop;
 			}
 		}
+		
+		return Plugin_Continue;
 	}
+
+	g_hTimerOpen = null;
+	return Plugin_Stop;
+}
+
+public void SJD_DoorsOpened(int caller, int activator)
+{
+//	delete g_hTimerOpen; // why delete don't work?
+	if (g_hTimerOpen != null)
+	{
+		KillTimer(g_hTimerOpen);
+	}
+	g_hTimerOpen = null;
 }

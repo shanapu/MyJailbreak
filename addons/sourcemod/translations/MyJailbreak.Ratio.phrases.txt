@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-04-20 21:44:29 UTC
+// Date: 2017-11-20 02:35:05 UTC
 // Language: English (en)
 // 
 // To view other translations for this plugin, please visit:
@@ -356,6 +356,54 @@
 	"ratio_steamgroup"
 	{
 		"en"		"Cannot play on guards, you need to join our steamgroup first"
+	}
+
+	"ratio_lvlranks"
+	{
+		"#format"	"{1:i}"
+		"en"		"You need at least Level {1} to play as a guard"
+	}
+
+	"ratio_hours"
+	{
+		"en"		"hour(s)"
+	}
+
+	"ratio_seconds"
+	{
+		"en"		"seconds"
+	}
+
+	"ratio_minutes"
+	{
+		"en"		"minute(s)"
+	}
+
+	"ratio_mostactive"
+	{
+		"#format"	"{1:s}"
+		"en"		"You must have played at least {1} to play as a guard."
+	}
+
+	"ratio_mostactive_terror"
+	{
+		"#format"	"{1:s}"
+		"en"		"You must have played at least {1} as terror to play as a guard."
+	}
+
+	"ratio_guard_enable"
+	{
+		"en"		"You allow to be picked as random guard when guard queue is empty"
+	}
+
+	"ratio_guard_disable"
+	{
+		"en"		"You deny to be picked as random guard when guard queue is empty"
+	}
+
+	"ratio_swap_spec"
+	{
+		"en"		"You was swapped to T Team, since you joined in the guard queue"
 	}
 
 }

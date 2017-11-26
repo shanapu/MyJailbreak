@@ -31,8 +31,12 @@
 #include <cstrike>
 #include <colors>
 #include <autoexecconfig>
-#include <warden>
 #include <mystocks>
+
+#undef REQUIRE_PLUGIN
+#include <warden>
+#include <myjbwarden>
+#define REQUIRE_PLUGIN
 
 // Compiler Options
 #pragma semicolon 1
@@ -60,7 +64,7 @@ int g_iHealCounter[MAXPLAYERS+1];
 Handle g_hTimerHeal[MAXPLAYERS+1];
 
 // Strings
-char g_sAdminFlagHeal[4];
+char g_sAdminFlagHeal[64];
 
 // Start
 public void Heal_OnPluginStart()
@@ -103,7 +107,7 @@ public void Heal_OnSettingChanged(Handle convar, const char[] oldValue, const ch
 // heal
 public Action Command_Heal(int client, int args)
 {
-	if (gc_bPlugin.BoolValue)
+	if (gc_bPlugin.BoolValue && (gp_bWarden || gp_bMyJBWarden))
 	{
 		if (gc_bHeal.BoolValue)
 		{

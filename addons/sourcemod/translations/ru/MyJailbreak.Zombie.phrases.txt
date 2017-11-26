@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-04-20 21:44:40 UTC
+// Date: 2017-11-20 02:35:16 UTC
 // Language: Russian (ru)
 // 
 // To view other translations for this plugin, please visit:
@@ -156,6 +156,16 @@
 	"zombie_name"
 	{
 		"ru"		"Зомби день"
+	}
+
+	"zombie_now_nc"
+	{
+		"ru"		"Начинается Зомби раунд."
+	}
+
+	"zombie_now"
+	{
+		"ru"		"Начинается {purple}Зомби{default} раунд."
 	}
 
 }

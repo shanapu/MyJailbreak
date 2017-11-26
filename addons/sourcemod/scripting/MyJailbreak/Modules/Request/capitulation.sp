@@ -31,8 +31,12 @@
 #include <cstrike>
 #include <colors>
 #include <autoexecconfig>
-#include <warden>
 #include <mystocks>
+
+#undef REQUIRE_PLUGIN
+#include <warden>
+#include <myjbwarden>
+#define REQUIRE_PLUGIN
 
 // Compiler Options
 #pragma semicolon 1
@@ -115,9 +119,9 @@ public Action Command_Capitulation(int client, int args)
 			{
 				if (!g_bCapitulated[client] && !g_bHasCapitulated[client])
 				{
-					if (warden_exist() && gc_bCapitulationAccept.BoolValue)
+					if ((gp_bWarden || gp_bMyJBWarden) && gc_bCapitulationAccept.BoolValue)
 					{
-						if (!g_bIsRequest)
+						if (warden_exist() && !g_bIsRequest)
 						{
 							g_bIsRequest = true;
 							g_hTimerRequest = CreateTimer (gc_fCapitulationTime.FloatValue, Timer_IsRequest);

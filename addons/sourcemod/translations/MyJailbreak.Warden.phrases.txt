@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-04-20 21:44:25 UTC
+// Date: 2017-11-20 02:34:56 UTC
 // Language: English (en)
 // 
 // To view other translations for this plugin, please visit:
@@ -1010,6 +1010,50 @@
 	"warden_noplayer"
 	{
 		"en"		"No players to choose"
+	}
+
+	"warden_lvlranks"
+	{
+		"#format"	"{1:i}"
+		"en"		"You need at least Level {1} to play as warden"
+	}
+
+	"warden_mostactive"
+	{
+		"#format"	"{1:s}"
+		"en"		"You must have played at least {1} to play as a warden."
+	}
+
+	"warden_mostactive_guard"
+	{
+		"#format"	"{1:s}"
+		"en"		"You must have played at least {1} as guard to play as a warden."
+	}
+
+	"warden_mostactive_terror"
+	{
+		"#format"	"{1:s}"
+		"en"		"You must have played at least {1} as terror to play as a warden."
+	}
+
+	"warden_novalid"
+	{
+		"en"		"Could not find a {green}valid non-rebeling{default} prisoner in view."
+	}
+
+	"warden_withhold_lr"
+	{
+		"en"		"The warden {purple}withholds{default} your last request"
+	}
+
+	"warden_withhold_on"
+	{
+		"en"		"The warden {purple}withhold{default} the last request"
+	}
+
+	"warden_withhold_off"
+	{
+		"en"		"The warden {purple}has released{default} the last request"
 	}
 
 }

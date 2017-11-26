@@ -32,11 +32,18 @@
 #include <colors>
 #include <autoexecconfig>
 #include <warden>
+#include <myjbwarden>
 #include <mystocks>
 
 // Optional Plugins
 #undef REQUIRE_PLUGIN
 #include <chat-processor>
+
+#tryinclude <scp>
+#if !defined _scp_included
+#include <cp-scp-wrapper>
+#endif
+
 #define REQUIRE_PLUGIN
 
 // Compiler Options
@@ -56,11 +63,13 @@ ConVar gc_bOp;
 ConVar gc_iMinimumNumber;
 ConVar gc_iMaximumNumber;
 ConVar gc_bMathOverlays;
+ConVar gc_bAllowCT;
 ConVar gc_sMathOverlayStopPath;
 ConVar gc_bMathSounds;
 ConVar gc_sMathSoundStopPath;
 ConVar gc_iTimeAnswer;
 ConVar gc_sCustomCommandMath;
+ConVar gc_bMode;
 
 // Booleans
 bool g_bIsMathQuiz = false;
@@ -92,7 +101,9 @@ public void Math_OnPluginStart()
 	gc_iMinimumNumber = AutoExecConfig_CreateConVar("sm_warden_math_min", "1", "What should be the minimum number for questions?", _, true, 1.0);
 	gc_iMaximumNumber = AutoExecConfig_CreateConVar("sm_warden_math_max", "100", "What should be the maximum number for questions?", _, true, 2.0);
 	gc_bOp = AutoExecConfig_CreateConVar("sm_warden_math_mode", "1", "0 - only addition & subtraction, 1 -  addition, subtraction, multiplication & division", _, true, 0.0, true, 1.0);
+	gc_bMode = AutoExecConfig_CreateConVar("sm_warden_math_input", "1", "0 - use chat trigger to recieve chat input e.g. answer = '!math 526'. This is forced when no chat-processor is installed / 1 - use a chat-processor to recieve chat input e.g. answer = '526' / use '0' when chat input of will not recognized cause conflics with chat manipulation plugins like 'CCC'", _, true, 0.0, true, 1.0);
 	gc_iTimeAnswer = AutoExecConfig_CreateConVar("sm_warden_math_time", "10", "Time in seconds to give a answer to a question.", _, true, 3.0);
+	gc_bAllowCT = AutoExecConfig_CreateConVar("sm_warden_math_allow_ct", "1", "0 - disabled, 1 - cts answers will also recognized", _, true, 0.0, true, 1.0);
 	gc_bMathSounds = AutoExecConfig_CreateConVar("sm_warden_math_sounds_enable", "1", "0 - disabled, 1 - enable sounds ", _, true, 0.0, true, 1.0);
 	gc_sMathSoundStopPath = AutoExecConfig_CreateConVar("sm_warden_math_sounds_stop", "music/MyJailbreak/stop.mp3", "Path to the soundfile which should be played for stop countdown.");
 	gc_bMathOverlays = AutoExecConfig_CreateConVar("sm_warden_math_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true, 0.0, true, 1.0);
@@ -147,7 +158,7 @@ public Action Command_MathQuestion(int client, int args)
 				return Plugin_Handled;
 			}
 		}
-		if (!gp_bChatProcessor && g_bIsMathQuiz)
+		if (g_bIsMathQuiz && (!gc_bMode.BoolValue || (!gp_bSimpleChatProcessor && !gp_bChatProcessor)))
 		{
 			if (args != 1) // Not enough parameters
 			{
@@ -190,8 +201,10 @@ public void Math_OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)
+		{
 			RegConsoleCmd(sCommand, Command_MathQuestion, "Allows the Warden to start a MathQuiz. Show player with first right Answer");
+		}
 	}
 }
 
@@ -214,16 +227,49 @@ public void Math_OnMapEnd()
 	g_bCanAnswer = false;
 }
 
+public Action OnChatMessage(int &author, Handle recipients, char [] name, char [] message)
+{
+	if (g_bIsMathQuiz && g_bCanAnswer && !gp_bChatProcessor)
+	{
+		if (!IsPlayerAlive(author))
+			return Plugin_Continue;
+
+		if(!gc_bAllowCT.BoolValue && GetClientTeam(author) != CS_TEAM_T)
+			return Plugin_Continue;
+
+		char bit[1][5];
+		ExplodeString(message, " ", bit, sizeof bit, sizeof bit[]);
+
+		if (ProcessSolution(author, StringToInt(bit[0])))
+		{
+			SendEndMathQuestion(author);
+		}
+	}
+
+	return Plugin_Continue;
+}
+
 public Action CP_OnChatMessage(int& author, ArrayList recipients, char[] flagstring, char[] name, char[] message, bool& processcolors, bool& removecolors)
 {
 	if (g_bIsMathQuiz && g_bCanAnswer)
 	{
+		if (!IsPlayerAlive(author))
+			return Plugin_Continue;
+
+		if(!gc_bAllowCT.BoolValue && GetClientTeam(author) != CS_TEAM_T)
+			return Plugin_Continue;
+
 		char bit[2][5];
 		ExplodeString(message, "{default}", bit, sizeof bit, sizeof bit[]);
 
 		if (ProcessSolution(author, StringToInt(bit[1])))
+		{
 			SendEndMathQuestion(author);
+		}
+
 	}
+
+	return Plugin_Continue;
 }
 
 /******************************************************************************
@@ -265,7 +311,7 @@ public void SendEndMathQuestion(int client)
 		ShowOverlayAll(g_sMathOverlayStopPath, 2.0);
 	}
 
-	if (gc_bMathSounds.BoolValue)	
+	if (gc_bMathSounds.BoolValue)
 	{
 		EmitSoundToAllAny(g_sMathSoundStopPath);
 	}
@@ -287,12 +333,15 @@ public Action Timer_CreateMathQuestion(Handle timer, any client)
 	{
 		int NumOne = GetRandomInt(g_iMathMin, g_iMathMax);
 		int NumTwo = GetRandomInt(g_iMathMin, g_iMathMax);
-		
+
 		if (gc_bOp.BoolValue) 
 		{
 			Format(g_sOp, sizeof(g_sOp), g_sOperators[GetRandomInt(0, 3)]);
 		}
-		else Format(g_sOp, sizeof(g_sOp), g_sOperators[GetRandomInt(0, 1)]);
+		else
+		{
+			Format(g_sOp, sizeof(g_sOp), g_sOperators[GetRandomInt(0, 1)]);
+		}
 
 		if (StrEqual(g_sOp, PLUS))
 		{
@@ -310,6 +359,7 @@ public Action Timer_CreateMathQuestion(Handle timer, any client)
 				NumTwo = GetRandomInt(g_iMathMin, g_iMathMax);
 			}
 			while (NumOne % NumTwo != 0);
+
 			g_iMathResult = NumOne / NumTwo;
 		}
 		else if (StrEqual(g_sOp, MULTIPL))
@@ -319,9 +369,15 @@ public Action Timer_CreateMathQuestion(Handle timer, any client)
 
 		CPrintToChatAll("%t %N: %i %s %i = ?? ", "warden_tag", client, NumOne, g_sOp, NumTwo);
 
-		if (gc_bBetterNotes.BoolValue) PrintCenterTextAll("%i %s %i = ?? ", NumOne, g_sOp, NumTwo);
+		if (gc_bBetterNotes.BoolValue)
+		{
+			PrintCenterTextAll("%i %s %i = ?? ", NumOne, g_sOp, NumTwo);
+		}
 
-		if (!gp_bChatProcessor) CPrintToChatAll("%t Use: sm_math <number>", "warden_tag");
+		if (!gp_bChatProcessor && !gp_bSimpleChatProcessor)
+		{
+			CPrintToChatAll("%t Use: sm_math <number>", "warden_tag");
+		}
 
 		g_bCanAnswer = true;
 

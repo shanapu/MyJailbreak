@@ -32,6 +32,7 @@
 #include <colors>
 #include <autoexecconfig>
 #include <warden>
+#include <myjbwarden>
 #include <mystocks>
 
 // Optional Plugins
@@ -57,8 +58,6 @@ ConVar gc_sCustomCommandRandomKill;
 // Extern Convars
 ConVar g_iTerrorForLR;
 
-// Integers
-int g_iKillKind;
 
 // Start
 public void RandomKill_OnPluginStart()
@@ -109,7 +108,6 @@ public void RandomKill_OnConfigsExecuted()
 {
 	// FindConVar
 	g_iTerrorForLR = FindConVar("sm_hosties_lr_ts_max");
-	g_iKillKind = gc_iRandomMode.IntValue;
 
 	// Set custom Commands
 	int iCount = 0;
@@ -182,25 +180,52 @@ public int Handler_KillMenu(Menu menu, MenuAction action, int client, int Positi
 {
 	if (action == MenuAction_Select)
 	{
-		char Item[11];
-		menu.GetItem(Position, Item, sizeof(Item));
-		int choice = StringToInt(Item);
+		char sBuffer[11];
+		menu.GetItem(Position, sBuffer, sizeof(sBuffer));
+		int choice = StringToInt(sBuffer);
+
 		if (choice == 1)
 		{
+			int minT;
 			int playercount;
-			if (gp_bHosties && gp_bLastRequest) playercount = GetAlivePlayersCountNonRebel(CS_TEAM_T);
-			else playercount = GetAlivePlayersCount(CS_TEAM_T);
-			
-			if (playercount > g_iTerrorForLR.IntValue)
+
+			if (gp_bHosties && gp_bLastRequest)
 			{
-				int i = GetRandomPlayer(CS_TEAM_T);
-				if (gp_bHosties && gp_bLastRequest) if (IsClientRebel(i)) i = GetRandomPlayerNonRebel(CS_TEAM_T);
-				if (i > 0)
+				playercount = GetAlivePlayersCountNonRebel(CS_TEAM_T);
+				minT = g_iTerrorForLR.IntValue;
+			}
+			else
+			{
+				playercount = GetAlivePlayersCount(CS_TEAM_T);
+				minT = 1;
+			}
+
+			if (playercount > minT)
+			{
+				int i = GetRandomPlayerInView(CS_TEAM_T, client);
+
+				if (IsValidClient(i, true, false))
 				{
+					if (gp_bHosties && gp_bLastRequest)
+					{
+						while (IsClientRebel(i))
+						{
+							i = GetRandomPlayerInView(CS_TEAM_T, client);
+						}
+					}
+
 					CreateTimer(1.0, Timer_KillPlayer, i);
 					CPrintToChatAll("%t %t", "warden_tag", "warden_israndom", i);
-					if (gp_bMyJailBreak) if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Warden %L killed random player %L", client, i);
+
+					if (gp_bMyJailBreak)
+					{
+						if (MyJailbreak_ActiveLogging())
+						{
+							LogToFileEx(g_sMyJBLogFile, "Warden %L killed random player %L", client, i);
+						}
+					}
 				}
+				else CPrintToChatAll("%t %t", "warden_tag", "warden_novalid");
 			}
 			else CPrintToChatAll("%t %t", "warden_tag", "warden_minrandom");
 		}
@@ -232,15 +257,15 @@ public int Handler_KillMenu(Menu menu, MenuAction action, int client, int Positi
 
 public Action Timer_KillPlayer(Handle timer, any client) 
 {
-	if (g_iKillKind == 1)
+	if (gc_iRandomMode.IntValue == 1)
 	{
 		int randomnum = GetRandomInt(0, 2);
-		
-		if (randomnum == 0)PerformSmite(0, client);
-		if (randomnum == 1)ServerCommand("sm_timebomb %N 1", client);
-		if (randomnum == 2)ServerCommand("sm_firebomb %N 1", client);
+
+		if (randomnum == 0) PerformSmite(0, client);
+		else if (randomnum == 1) ServerCommand("sm_timebomb %N 1", client);
+		else if (randomnum == 2) ServerCommand("sm_firebomb %N 1", client);
 	}
-	else if (g_iKillKind == 2)PerformSmite(0, client);
-	else if (g_iKillKind == 3)ServerCommand("sm_timebomb %N 1", client);
-	else if (g_iKillKind == 4)ServerCommand("sm_firebomb %N 1", client);
+	else if (gc_iRandomMode.IntValue == 2) PerformSmite(0, client);
+	else if (gc_iRandomMode.IntValue == 3) ServerCommand("sm_timebomb %N 1", client);
+	else if (gc_iRandomMode.IntValue == 4) ServerCommand("sm_firebomb %N 1", client);
 }

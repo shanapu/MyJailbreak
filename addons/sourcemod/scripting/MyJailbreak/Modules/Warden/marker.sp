@@ -32,6 +32,7 @@
 #include <colors>
 #include <autoexecconfig>
 #include <warden>
+#include <myjbwarden>
 #include <mystocks>
 
 // Compiler Options
@@ -144,6 +145,11 @@ public void Marker_Event_ItemEquip(Event event, const char[] name, bool dontBroa
 	g_bCanZoom[client] = event.GetBool("canzoom");
 	g_bHasSilencer[client] = event.GetBool("hassilencer");
 	g_iWrongWeapon[client] = event.GetInt("weptype");
+	/*
+	WEAPONTYPE_KNIFE = 0
+	WEAPONTYPE_TASER 8
+	WEAPONTYPE_GRENADE 9
+	*/
 }
 
 /******************************************************************************
@@ -154,7 +160,7 @@ public Action Marker_OnPlayerRunCmd(int client, int &buttons, int &impulse, floa
 {
 	if (buttons & IN_ATTACK2 || g_bCanMarker[client])
 	{
-		if (gc_bMarker.BoolValue && !g_bCanZoom[client] && !g_bHasSilencer[client] && (g_iWrongWeapon[client] != 0) && (g_iWrongWeapon[client] != 8) && (!StrEqual(g_sEquipWeapon[client], "taser")) && (IsClientWarden(client) || (IsClientDeputy(client) && gc_bMarkerDeputy.BoolValue)) && gc_bPlugin.BoolValue)
+		if (gc_bMarker.BoolValue && !g_bCanZoom[client] && !g_bHasSilencer[client] && (g_iWrongWeapon[client] != 0) && (g_iWrongWeapon[client] != 8) && (g_iWrongWeapon[client] != 9) && (IsClientWarden(client) || (IsClientDeputy(client) && gc_bMarkerDeputy.BoolValue)) && gc_bPlugin.BoolValue)
 		{
 			if (!g_bMarkerSetup[client])
 				GetClientAimTargetPos(client, g_fMarkerSetupStartOrigin);
@@ -185,6 +191,11 @@ public Action Marker_OnPlayerRunCmd(int client, int &buttons, int &impulse, floa
 }
 
 public void Marker_OnWardenRemoved()
+{
+	RemoveAllMarkers();
+}
+
+public void Marker_OnAvailableLR(int announced)
 {
 	RemoveAllMarkers();
 }
@@ -228,7 +239,7 @@ stock void MarkerMenu(int client)
 	}
 
 	float g_fPos[3];
-	Entity_GetAbsOrigin(client, g_fPos);
+	GetEntPropVector(client, Prop_Send, "m_vecOrigin", g_fPos);
 
 	float range = GetVectorDistance(g_fPos, g_fMarkerSetupStartOrigin);
 	if (range > g_fMarkerRangeMax)
@@ -318,7 +329,7 @@ void Draw_Markers()
 
 		// FIX OR FEATURE    TODO ASK ZIPCORE
 		float fWardenOrigin[3];
-		Entity_GetAbsOrigin(g_iWarden, fWardenOrigin);
+		GetEntPropVector(g_iWarden, Prop_Send, "m_vecOrigin", fWardenOrigin);
 
 		if (GetVectorDistance(fWardenOrigin, g_fMarkerOrigin[j]) > g_fMarkerRangeMax)
 		{

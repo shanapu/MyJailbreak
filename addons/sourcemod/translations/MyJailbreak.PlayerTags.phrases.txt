@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-04-20 21:44:33 UTC
+// Date: 2017-11-20 02:35:10 UTC
 // Language: English (en)
 // 
 // To view other translations for this plugin, please visit:
@@ -206,6 +206,86 @@
 	"tags_DVIP2_chat"
 	{
 		"en"		"[Deputy.sVIP]"
+	}
+
+	"tags_TSA"
+	{
+		"en"		"[Prisoner.SuperAdmin]"
+	}
+
+	"tags_CTSA"
+	{
+		"en"		"[Guard.SuperAdmin]"
+	}
+
+	"tags_WSA"
+	{
+		"en"		"[Warden.SuperAdmin]"
+	}
+
+	"tags_TCO"
+	{
+		"en"		"[Prisoner.CoOwner]"
+	}
+
+	"tags_CTCO"
+	{
+		"en"		"[Guard.CoOwner]"
+	}
+
+	"tags_WCO"
+	{
+		"en"		"[Warden.CoOwner]"
+	}
+
+	"tags_CTSA_chat"
+	{
+		"en"		"[Guard.SuperAdmin]"
+	}
+
+	"tags_CTCO_chat"
+	{
+		"en"		"[Guard.CoOwner]"
+	}
+
+	"tags_TSA_chat"
+	{
+		"en"		"[Prisoner.SuperAdmin]"
+	}
+
+	"tags_WSA_chat"
+	{
+		"en"		"[Warden.SuperAdmin]"
+	}
+
+	"tags_WCO_chat"
+	{
+		"en"		"[Warden.CoOwner]"
+	}
+
+	"tags_DSA"
+	{
+		"en"		"[Deputy.SuperAdmin]"
+	}
+
+	"tags_DSA_chat"
+	{
+		"en"		"[Deputy.SuperAdmin]"
+	}
+
+	"tags_DCO"
+	{
+		"en"		"[Deputy.CoOwner]"
+	}
+
+	"tags_DCO_chat"
+	{
+		"en"		"[Deputy.CoOwner]"
+	}
+
+	"tags_TCO_chat"
+	{
+		"en"		"[Prisoner.CoOwner]"
 	}
 
 }

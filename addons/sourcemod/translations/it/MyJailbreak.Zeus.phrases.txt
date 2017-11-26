@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-04-20 21:44:38 UTC
+// Date: 2017-11-20 02:35:15 UTC
 // Language: Italian (it)
 // 
 // To view other translations for this plugin, please visit:
@@ -10,12 +10,12 @@
 
 	"zeus_tag"
 	{
-		"it"		"[{green}EziJB.Zeus{default}]"
+		"it"		"[{green}MyJB.zeus{default}]"
 	}
 
 	"zeus_need"
 	{
-		"it"		"{purple}{2}{default} ha votato per l'evento {green}Zeus. {purple}{1}{default} Voti richiesti per l'evento {darkred}Zeus"
+		"it"		"{purple}{2}{default} ha votato. {purple}{1}{default} voti richiesti per fare {darkred}Zeus Day."
 	}
 
 	"zeus_rounds"
@@ -25,122 +25,127 @@
 
 	"zeus_twin_nc"
 	{
-		"it"		"A Prisoner has survived!"
+		"it"		"Un Prigioniere e' sopravvissuto!"
 	}
 
 	"zeus_voting"
 	{
-		"it"		"Voting for Zeus Day is {purple}disabled!"
+		"it"		"Le votazioni per Zeus Day sono {purple}disattivate!"
 	}
 
 	"zeus_setbywarden"
 	{
-		"it"		"Set Zeus Day by Warden is {purple}disabled!"
+		"it"		"Impostare Zeus come CapoCT e' {purple}disattivato!"
 	}
 
 	"zeus_setbyadmin"
 	{
-		"it"		"Set Zeus Day by Admin is {purple}disabled!"
+		"it"		"Impostare Zeus come Admin e' {purple}disattivato!"
 	}
 
 	"zeus_minplayer"
 	{
-		"it"		"Per questo evento e' neccessario {purple}una Guardia e un Prigioniero!"
+		"it"		"Per fare Zeus Day c'e bisogno di almeno{purple}una Guardia ed un Prigoniere"
 	}
 
 	"zeus_ctwin_nc"
 	{
-		"it"		"Una guardia è sopravvissuta!"
+		"it"		"Una Guardia e' sopravvissuta!"
 	}
 
 	"zeus_end"
 	{
-		"it"		"{purple}L'evento Zeus{default} e' finito."
+		"it"		"{purple}Zeus Day{default} e' finito."
 	}
 
 	"zeus_next"
 	{
-		"it"		"Il prossimo round si fara' l'evento: {purple}Zeus"
+		"it"		"Il prossimo round ci sara': {purple}Zeus Day."
 	}
 
 	"zeus_next_nc"
 	{
-		"it"		"Il prossimo round si fara' l'evento Zeus."
+		"it"		"Il prossimo round ci sara': Zeus Day."
 	}
 
 	"zeus_start"
 	{
-		"it"		"{purple}Evento Zeus{default} Iniziato!"
+		"it"		"{purple}Zeus Day{default} e' iniziato!"
 	}
 
 	"zeus_start_nc"
 	{
-		"it"		"Evento Zeus Startato!"
+		"it"		"Zeus Day e' iniziato!"
 	}
 
 	"zeus_voted"
 	{
-		"it"		"hai già votato per {purple}Zeus!"
+		"it"		"Hai gia' votato per{purple}Zeus Day!"
 	}
 
 	"zeus_progress"
 	{
-		"it"		"L'evento {darkred}{1} {default}e' {purple}gia' in corso!"
+		"it"		"L'evento {darkred}{1} {default}e' {purple}in corso"
 	}
 
 	"zeus_disabled"
 	{
-		"it"		"Evento Zeus {purple}disabilitato!"
+		"it"		"Zeus Day e' {purple}disattivato !"
 	}
 
 	"zeus_timeuntilstart_nc"
 	{
-		"it"		"{1} secondi fino a inizio turno!"
+		"it"		"{1} secondi prima che inizi il round!"
 	}
 
 	"zeus_info_title"
 	{
-		"it"		"Evento Zeus Attivato!"
+		"it"		"Zeus Day e' inizato!"
 	}
 
 	"zeus_info_line1"
 	{
-		"it"		"Evento Zeus - Free for All!"
+		"it"		"Zeus Day - Free for All!"
 	}
 
 	"zeus_info_line2"
 	{
-		"it"		"Hai un solo colpo nella zeus!"
+		"it"		"Hai solo un colpo nella Zeus!"
 	}
 
 	"zeus_info_line3"
 	{
-		"it"		"Quando si ottiene un kill, sarete ricompensati con un altro Zeus!"
+		"it"		"Quando uccidi qualcuno te ne viene aggiunto un altro colpo!"
 	}
 
 	"zeus_info_line4"
 	{
-		"it"		"Tutte le Regole del JailBreak sono disattivate in questo Round!"
+		"it"		"Tutte le normali regole del JB non vengono applicate durante questo round!"
 	}
 
 	"zeus_info_line5"
 	{
-		"it"		"!lr disattivo in questo round!"
+		"it"		"Gli LR sono disattivati durante questo round!"
 	}
 
 	"zeus_info_line6"
 	{
-		"it"		"Non e' concesso entrare nei posti segreti/condotti. State nella 'JailRoom'"
+		"it"		"Devi stare nella zona celle. E' vietato andare condotti o aree segrete!"
 	}
 
 	"zeus_info_line7"
 	{
-		"it"		"Buona Fortuna!"
+		"it"		"Non fate i cani!"
 	}
 
 	"zeus_wait"
 	{
-		"it"		"Aspetta {purple}{1}{default} piu' round per l'evento Zeus!"
+		"it"		"Devi aspettare {purple}{1}{default} prima di dare un altro evento!"
+	}
+
+	"zeus_name"
+	{
+		"it"		"Zeus Day"
 	}
 
 }

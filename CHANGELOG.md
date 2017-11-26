@@ -1,5 +1,249 @@
 ### Change Log
   
+  
+**[Beta 13]** - New Events, new features & many changes
+  
+*Thanks* 
+Thank you, all you known & anonymous donators out there! You strengthen my motivation on this project!
+Also Thanks go out to all the patient testers and bug reporter, Wihtout you we couldn't make this!
+Much Thanks goes out to hexer10 aka papero for his massiv help on this update and joining the MyJailbreak project as equal collaborator. ty
+  
+*Added*
+*  New Eventday: Teleport War - A FreeForAll Deathmatch where attacker & victim switch positions on hit.
+    *  new plugin - teleport.smx - please help translate http://translator.mitchdempsey.com/sourcemod_plugins/277
+        *  new command - sm_setteleport - Allows the Admin or Warden to set Teleport War
+        *  new command - sm_teleport - Allows players to vote for a Teleport War
+        *  new cvar - sm_teleport_enable - 0 - disabled, 1 - enable this MyJailbreak SourceMod plugin
+        *  new cvar - sm_teleport_cmds_vote - Set your custom chat command for Event voting(!teleport (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
+        *  new cvar - sm_teleport_cmds_set - Set your custom chat command for set Event(!teleport (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
+        *  new cvar - sm_teleport_warden - 0 - disabled, 1 - allow warden to set teleport round
+        *  new cvar - sm_teleport_admin - 0 - disabled, 1 - allow admin/vip to set teleport round
+        *  new cvar - sm_teleport_flag - Set flag for admin/vip to set this Event Day
+        *  new cvar - sm_teleport_vote - 0 - disabled, 1 - allow player to vote for teleport
+        *  new cvar - sm_teleport_begin_admin - When admin set event (!setteleport) = 0 - start event next round, 1 - start event current round - Default 1
+        *  new cvar - sm_teleport_begin_warden - When warden set event (!setteleport) = 0 - start event next round, 1 - start event current round - Default 1
+        *  new cvar - sm_teleport_begin_vote - When users vote for event (!teleport) = 0 - start event next round, 1 - start event current round - Default 0
+        *  new cvar - sm_teleport_begin_daysvote - When warden/admin start eventday voting (!sm_voteday) and event wins = 0 - start event next round, 1 - start event current round - Default 0
+        *  new cvar - sm_teleport_teleport_spawn - 0 - start event in current round from current player positions, 1 - teleport players to spawn
+        *  new cvar - sm_teleport_spawn - 0 - T teleport to CT spawn, 1 - cell doors auto open
+        *  new cvar - sm_teleport_rounds - Rounds to play in a row
+        *  new cvar - sm_teleport_aim - 0 - Keep your aim angle on switch, 1 - Use attacker/victims aim angle
+        *  new cvar - sm_teleport_roundtime - Round time in minutes for a single teleport round
+        *  new cvar - sm_teleport_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
+        *  new cvar - sm_teleport_trucetime - Time in seconds players can't deal damage
+        *  new cvar - sm_teleport_cooldown_day - Rounds cooldown after a event until event can be start again
+        *  new cvar - sm_teleport_cooldown_start - Rounds until event can be start after mapchange
+        *  new cvar - sm_teleport_cooldown_admin - 0 - disabled, 1 - ignore the cooldown when admin/vip set teleport round
+        *  new cvar - sm_teleport_sounds_enable - 0 - disabled, 1 - enable sounds
+        *  new cvar - sm_teleport_sounds_start - Path to the soundfile which should be played for a start
+        *  new cvar - sm_teleport_overlays_enable - 0 - disabled, 1 - enable overlays
+        *  new cvar - sm_teleport_overlays_start - Path to the start Overlay DONT TYPE .vmt or .vft
+        *  new cvar - sm_teleport_allow_lr - 0 - disabled, 1 - enable LR for last round and end eventday
+*  New Eventday: Arms Race - A FreeForAll Deathmatch like original arms race
+    *  new plugin - armsrace.smx - please help translate http://translator.mitchdempsey.com/sourcemod_plugins/277
+        *  new config file - addons/sourcemod/configs/MyJailbreak/armsrace.ini - define weapons & order
+        *  new command - sm_setarmsrace - Allows the Admin or Warden to set Arms Race
+        *  new command - sm_armsrace - Allows players to vote for a Arms Race
+        *  new cvar - sm_armsrace_enable - 0 - disabled, 1 - enable this MyJailbreak SourceMod plugin
+        *  new cvar - sm_armsrace_cmds_vote - Set your custom chat command for Event voting(!armsrace (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
+        *  new cvar - sm_armsrace_cmds_set - Set your custom chat command for set Event(!setarmsrace (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
+        *  new cvar - sm_armsrace_warden - 0 - disabled, 1 - allow warden to set armsrace round
+        *  new cvar - sm_armsrace_admin - 0 - disabled, 1 - allow admin/vip to set armsrace round
+        *  new cvar - sm_armsrace_flag - Set flag for admin/vip to set this Event Day
+        *  new cvar - sm_armsrace_vote - 0 - disabled, 1 - allow player to vote for armsrace
+        *  new cvar - sm_armsrace_kill_loser - 0 - disabled, 1 - Kill loser on event end
+        *  new cvar - sm_armsrace_begin_admin - When admin set event (!setarmsrace) = 0 - start event next round, 1 - start event current round - Default 1
+        *  new cvar - sm_armsrace_begin_warden - When warden set event (!setarmsrace) = 0 - start event next round, 1 - start event current round - Default 1
+        *  new cvar - sm_armsrace_begin_vote - When users vote for event (!armsrace) = 0 - start event next round, 1 - start event current round - Default 0
+        *  new cvar - sm_armsrace_begin_daysvote - When warden/admin start eventday voting (!sm_voteday) and event wins = 0 - start event next round, 1 - start event current round - Default 0
+        *  new cvar - sm_armsrace_teleport_spawn - 0 - start event in current round from current player positions, 1 - teleport players to spawn
+        *  new cvar - sm_armsrace_spawn - 0 - T teleport to CT spawn, 1 - cell doors auto open
+        *  new cvar - sm_armsrace_randomspawn - 0 - disabled, 1 - use random spawns on map (sm_armsrace_spawn 1)
+        *  new cvar - sm_armsrace_rounds - Rounds to play in a row
+        *  new cvar - sm_armsrace_roundtime - Round time in minutes for a single armsrace round
+        *  new cvar - sm_armsrace_trucetime - Time in seconds players can't deal damage
+        *  new cvar - sm_armsrace_cooldown_day - Rounds cooldown after a event until event can be start again
+        *  new cvar - sm_armsrace_cooldown_start - Rounds until event can be start after mapchange
+        *  new cvar - sm_armsrace_cooldown_admin - 0 - disabled, 1 - ignore the cooldown when admin/vip set armsrace round
+        *  new cvar - sm_armsrace_sounds_enable - 0 - disabled, 1 - enable sounds
+        *  new cvar - sm_armsrace_sounds_start - Path to the soundfile which should be played for a start
+        *  new cvar - sm_armsrace_overlays_enable - 0 - disabled, 1 - enable overlays
+        *  new cvar - sm_armsrace_overlays_start - Path to the start Overlay DONT TYPE .vmt or .vft
+*  New Eventday: One in the Chamber - A FreeForAll Deathmatch like CODs One in the Chamber - Thx @hexah!
+    *  new plugin - oneinthechamber.smx - please help translate http://translator.mitchdempsey.com/sourcemod_plugins/282
+        *  new command - sm_setoneinthechamber - Allows the Admin or Warden to set One in the Chamber
+        *  new command - sm_oneinthechamber - Allows players to vote for a One in the Chamber
+        *  new cvar - sm_oneinthechamber_enable - 0 - disabled, 1 - enable this MyJailbreak SourceMod plugin
+        *  new cvar - sm_oneinthechamber_cmds_vote - Set your custom chat command for Event voting(!oneinthechamber (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
+        *  new cvar - sm_oneinthechamber_cmds_set - Set your custom chat command for set Event(!setoneinthechamber (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
+        *  new cvar - sm_oneinthechamber_warden - 0 - disabled, 1 - allow warden to set oneinthechamber round
+        *  new cvar - sm_oneinthechamber_admin - 0 - disabled, 1 - allow admin/vip to set oneinthechamber round
+        *  new cvar - sm_oneinthechamber_flag - Set flag for admin/vip to set this Event Day
+        *  new cvar - sm_oneinthechamber_vote - 0 - disabled, 1 - allow player to vote for oneinthechamber
+        *  new cvar - sm_oneinthechamber_begin_admin - When admin set event (!setoneinthechamber) = 0 - start event next round, 1 - start event current round - Default 1
+        *  new cvar - sm_oneinthechamber_begin_warden - When warden set event (!setoneinthechamber) = 0 - start event next round, 1 - start event current round - Default 1
+        *  new cvar - sm_oneinthechamber_begin_vote - When users vote for event (!oneinthechamber) = 0 - start event next round, 1 - start event current round - Default 0
+        *  new cvar - sm_oneinthechamber_begin_daysvote - When warden/admin start eventday voting (!sm_voteday) and event wins = 0 - start event next round, 1 - start event current round - Default 0
+        *  new cvar - sm_oneinthechamber_teleport_spawn - 0 - start event in current round from current player positions, 1 - teleport players to spawn
+        *  new cvar - sm_oneinthechamber_spawn - 0 - T teleport to CT spawn, 1 - cell doors auto open
+        *  new cvar - sm_oneinthechamber_randomspawn - 0 - disabled, 1 - use random spawns on map (sm_oneinthechamber_spawn 1)
+        *  new cvar - sm_oneinthechamber_rounds - Rounds to play in a row
+        *  new cvar - sm_oneinthechamber_roundtime - Round time in minutes for a single oneinthechamber round
+        *  new cvar - sm_oneinthechamber_trucetime - Time in seconds players can't deal damage
+        *  new cvar - sm_oneinthechamber_cooldown_day - Rounds cooldown after a event until event can be start again
+        *  new cvar - sm_oneinthechamber_cooldown_start - Rounds until event can be start after mapchange
+        *  new cvar - sm_oneinthechamber_cooldown_admin - 0 - disabled, 1 - ignore the cooldown when admin/vip set oneinthechamber round
+        *  new cvar - sm_oneinthechamber_sounds_enable - 0 - disabled, 1 - enable sounds
+        *  new cvar - sm_oneinthechamber_sounds_start - Path to the soundfile which should be played for a start
+        *  new cvar - sm_oneinthechamber_overlays_enable - 0 - disabled, 1 - enable overlays
+        *  new cvar - sm_oneinthechamber_overlays_start - Path to the start Overlay DONT TYPE .vmt or .vft
+*  Add-On: Support for frans1cos Most Active
+    *  new plugin - disabled/myjailbreak_mostactive.smx
+        *  new cvar - sm_ratio_mostactive - 0 - disabled, how many seconds a player need to join ct? (only if MostActive is available)
+        *  new cvar - sm_ratio_mostactive_team - 1 - playtime as Terror / 2 - playtime in Total (CT,T&Spec)
+        *  new cvar - sm_warden_mostactive - 0 - disabled, how many seconds a player need to become warden? (only if MostActive is available)
+        *  new cvar - sm_warden_mostactive_team - 0 - playtime as Counter-Terror / 1 - playtime as Terror / 2 - playtime in Total (CT,T&Spec)
+*  Add-On: Support for Healines gangs - disable gang perks on event days
+    *  new plugin - disabled/myjailbreak_gangs.smx
+*  PlayerTags: Two new Tags SuperAdmin & CoOwner Thx @ ichiballs
+    *  new cvar - sm_playertag_coownerflag - Set the flag for CoOwner. Default 'r'
+    *  new cvar - sm_playertag_superadminflag - Set the flag for Super Admin. Default 's'
+*  Icons: ConVar to disable Icons on all eventdays
+    *  new cvar - sm_icon_eventday - 0 - use the icons, 1 - disable icons on EventDays
+*  Weapons: ConVar to disable weapons for CTs on not eventday rounds. (use armory)
+    *  new cvar - sm_weapons_noeventday - 0 - disabled, 1 - enable the weapon menu on non-EventDays round (normal/simon rounds)
+*  Menu: added !removefreeday for warden,deputy/guard to menu
+*  Menu Add-On: Add your own menu items to top/botton of wardens/deputys/guards/prisoners jailmenu with .cfg
+    *  new plugin - disabled/menu_custom.smx
+    *  new config file - addons/sourcemod/configs/MyJailbreak/menu_custom.ini
+*  MyJailbreak: Automatic random eventday every x round
+    *  new cvar - sm_myjb_random_round - 0 - disabled / Every x round could be an event day
+    *  new cvar - sm_myjb_random_chance - Chance that the choosen round would be an event day/voting
+    *  new cvar - sm_myjb_random_type - 0 - Start an eventday voting / 1 - start an random eventday
+    *  new cvar - sm_myjb_random_mapstart_delay - Wait after mapchange x rounds before try first event day
+*  Add-On: Support for nhnkl159s Simple Stats
+    *  new plugin - disabled/myjailbreak_simplestats.smx
+        *  new cvar - sm_ratio_simplestats - 0 - disabled, how many seconds a player need to join ct? (only if simplestats is available)
+        *  new cvar - sm_warden_simplestats - 0 - disabled, how many seconds a player need to become warden? (only if simplestats is available)
+*  Catch: ConVar to kill loser team
+    *  new cvar - sm_catch_kill_loser - 0 - disabled, 1 - Kill loserteam on event end / not for sm_catch_allow_lr '1'
+*  DealDamage: ConVar to kill loser team
+    *  new cvar - sm_dealdamage_kill_loser - 0 - disabled, 1 - Kill loserteam on event end
+*  Warden - Mathquiz: resume support for simplechatprocessor. Now support both scp or chat-processor.
+*  PlayerTags: resume support for simplechatprocessor. Now support both scp or chat-processor.
+*  Warden: Withheld (forbid) last request command (need sm_hosties_lr_autodisplay "0") ThX Hexah
+    *  new command - sm_nolastrequest - toggle withheld/release the last request
+    *  new cvar - sm_warden_withheld_lr_enable - 0 - disabled, 1 - warden can witheld prisoners Last request commands
+    *  new cvar - sm_warden_withheld_lr_deputy - 0 - disabled, 1 - deputy can witheld prisoners Last request commands
+    *  new cvar - sm_warden_cmds_withheld_lr - Set your custom chat commands for witheld Last request(!nolastrequest (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)
+    *  new cvar - sm_warden_cmds_lr - Set your last request commands (add custom !lr cmds)(no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)
+*  Warden - Math quiz: force using chat trigger as input for answers instead of using an installed chat processor
+    *  new cvar - sm_warden_math_input - 0 - use chat trigger to receive chat input e.g. answer = '!math 526'. This is forced when no chat-processor is installed / 1 - use a chat-processor to recieve chat input e.g. answer = '526' / use '0' when chat input of will not recognized cause conflics with chat manipulation plugins like 'CCC'
+*  Warden frienldy fire - toggle also cts ff - Thx @hexah!*
+    *  new cvar - sm_warden_ff_ct_enable - 0 - disabled, 1 - enable ff for cts also
+*  MyJailbreak: you can sort the order of event days in menus with config file
+    *  new config file - addons/sourcemod/configs/MyJailbreak/config/sorting-eventdays.ini
+*  Menu: Suffle the eventdays in menu on a event day voting 
+    *  new cvar - sm_menu_shuffle - 0 - use 'sorting-eventdays.ini' on event day voting / 1 - Shuffle EventDays on voting
+*  Zeus: Dis/Allow droping Zeus
+    *  new cvar - sm_zeus_drop - 0 - disabled, 1 - allow player to drop their zeus - Thx @hexah!*
+*  Warden - Disarm: Dis/Allow disarm knife on shoting hands
+    *  new cvar - sm_warden_disarm_knife - 0 - negate the knife disarm, 1 - disarm all weapon - Thx @hexah!*
+*  MyJailbreak: the possibility to end a planned or running event
+    *  new command - sm_resetevent - End all running or planned event days
+  
+*Changed*
+*  All Event Days: Possibility to start an event during the current round, instead wait for next round
+    *  new cvars - sm_EVENTNAME_begin_admin - When admin set event (!setEVENTNAME) = 0 - start event next round, 1 - start event current round - Default 1
+    *  new cvars - sm_EVENTNAME_begin_warden - When warden set event (!setEVENTNAME) = 0 - start event next round, 1 - start event current round - Default 1
+    *  new cvars - sm_EVENTNAME_begin_vote - When users vote for event (!EVENTNAME) = 0 - start event next round, 1 - start event current round - Default 0
+    *  new cvars - sm_EVENTNAME_begin_daysvote - When warden/admin start eventday voting (!sm_voteday) and event wins = 0 - start event next round, 1 - start event current round - Default 0
+    *  new cvars - sm_EVENTNAME_teleport_spawn - 0 - start event in current round from current player positions, 1 - teleport players to spawn
+*  Freeday: Allow warden on freeday event day
+    *  new cvar - sm_freeday_allow_warden - 0 - warden disabled, 1 - allow player to become warden
+*  Menu: Moved menu items 1. & 2. backwords so menu start on 3.
+    *  new cvar - sm_menu_clean - remove 1. & 2. on first page, to avoid conflict with weapon switch
+*  Weapons: Moved menu items 1. & 2. backwords so menu start on 3.
+    *  new cvar - sm_weapons_cleanmenu - remove 1. & 2. on first page, to avoid conflict with weapon switch
+*  Ratio: Moved menu items 1. & 2. (Yes / No)to 3. & 4. to avoid conflict with weapon switch
+*  DealDamage: Changed from T vs CT to even teams Blue vs Red (model,glow,colorize) - Thx skyprah for great idea!
+    *  new cvar - sm_dealdamage_color - 0 - disabled, 1 - color the model of the players
+    *  new cvar - sm_dealdamage_model_blue - Path to the model for team blue.
+    *  new cvar - sm_dealdamage_model_red - Path to the model for team red.
+    *  new cvar - sm_dealdamage_overlays_blue - Path to the blue Overlay DONT TYPE .vmt or .vft
+    *  new cvar - sm_dealdamage_overlays_red - Path to the red Overlay DONT TYPE .vmt or .vft
+*  Hide/War/Zombie: Darken screen while in freeze
+*  Ratio: When last guard move to prisoners, a prisoner from queue or random will be moved to guard - THX @mrkos9i4ok
+*  Flags: all ConVars to set admin/vip flag has been extended to support mutliple flags ex. "r,s,t" use comma
+*  renamed plugin - ratio_ctbans_fantom to ratio_ctbans_r1ko on authors request
+*  PlayerTags: removed dependencies of chat-processor(optional now)
+*  Warden: no warden/deputy on Last Request
+    *  new cvar - sm_warden_remove_lr - 0 - disabled, 1 - enable warden will be removed on last request
+    *  new cvar - sm_warden_deputy_remove_lr - 0 - disabled, 1 - enable deputy will be removed on last request
+*  HUD: disbale hud for dead player
+    *  new cvar - sm_hud_alive - 0 - show hud only to alive player, 1 - show hud to dead & alive player
+*  MyJailbreak: disable hosties announcements on event days
+*  Warden - Marker: remove on Last request.
+*  Ratio CTbans: updated for databombs CTbans v2. You must update to CTbans v2! - Thx @databomb!
+*  Ratio: Swap Spectators to T when joining guard queue - Thx @hexah!
+    *  new cvar - sm_ratio_swap_spec_queue - 0 - Don't do anything if a Spec join in queue / 1 - Swap to T the Spectators who join in queue
+*  Warden - Mute/Talkover: disable Warden/Deputy TalkOver after LR Announced - Thx @hexah!*
+*  Warden - Mute/Talkover: disable Spectators also.
+*  HUD - disable HUD on TeamGames game.
+*  Menu: Allow player to vote for no event.
+    *  new cvar - sm_menu_vote_noevent - 0 - disabled, 1 - allow player vote for 'no Event Day' on eventday voting
+*  MyJailbreak: disable Medic room / heal stations while eventday
+    *  new cvar - sm_myjb_medic - 0 - disabled, 1 - disable medic room when event day running
+  
+  
+  *Fixed*
+*  Menu: fixed setdays for warden (don't show restricted/disabled days)
+*  Ratio: fixed custom VIP/Admin flags
+*  Warden - mute: fixed confict with sourcecomms
+*  Warden - bulletspark: fixed
+*  PlayerTags: fixed custom VIP/Admin flags
+*  PlayerTags: fixed tags in chat on foreign national players
+*  Zombie: respawn with ratio restriction
+*  Freeday: fixed roundtime when only one team has player
+*  Freeday: NoBlock (no player collision)
+*  Request - Killreason: fixed display all reasons
+*  Duckhunt & KnifeFight: fix gravity ladderfix
+*  Store Credits & paperclips: fix chat colors
+*  Zombie: Respawn with restiction addon
+*  Weapons: add/remove kevlar/helmet on eventday
+*  Zeus: disable dropping taser - Thx @hexah!
+*  Many minor fixes -> study commits ;D
+  
+  
+*Removed*
+*  removed dependencies of 'File/Folder Downloader and Precacher'-plugin. No need of downloads.txt or such plugins
+    *  files will be downloaded automaticly. smartdm awesomeshit @zephyrus
+*  removed cvars - sm_weapons_ct - obsolete cvars. **Please remove them from your configs!**
+*  removed cvars - sm_weapons_t - obsolete cvars. **Please remove them from your configs!**
+  
+  
+*Developer stuff*
+*  Register EventDays plugins to myjb core and recieve them
+    *  new native - MyJailbreak_AddEventDay(char[] name) - Register a eventday to myjailbreak core
+    *  new native - MyJailbreak_RemoveEventDay(char[] name) - Remove a eventday to myjailbreak core
+    *  new native - MyJailbreak_GetEventDays(char[] name) - Get a array with all event day name
+*  New Forward for end and running or planned event day
+    *  new forward - MyJailbreak_ResetEventDay()
+*  Changed the way how weapons access is handled. natives insetad of switch ConVars
+    *  new native - MyWeapons_AllowTeam(int client, bool status) - Allow a team to pick weapons from weapons menu 
+    *  new native - MyWeapons_GetTeamStatus(int iTeam) - Get team status if weapons are allowed
+*  Extented parameter of a warden forwards & native - new caller clientid - 0 on random
+    *  changed forward - warden_OnWardenCreate(int client, int caller) - The client who called the set or become warden command
+    *  changed native - warden_set(int client, int caller) -  The client who set the new warden
+*  New Forwards for add items to menu - see template_custom_menu.sp
+    *  new forward - MyJailbreak_MenuStart(int client, Menu menu)
+    *  new forward - MyJailbreak_MenuEnd(int client, Menu menu)
+    *  new forward - MyJailbreak_MenuHandler(Menu menu, MenuAction action, int client, int itemNum)
+*  Removed smlib
+
+  
+  
+  
 
 **[Beta 12.0]** - removed dependencies & store support
   
@@ -78,7 +322,7 @@
 *  New Eventday: Ghosts War - All Players are invisbile & immortal - every 6 seconds they go visible and mortal for 2 seconds. Last alive wins.
     *  new plugin - ghosts.smx - please help translate http://translator.mitchdempsey.com/sourcemod_plugins/271
         *  new command - sm_setghosts - Allows the Admin or Warden to set Ghosts
-        *  new command - sm_ghosts - Allows players to vote for a Ghosts"
+        *  new command - sm_ghosts - Allows players to vote for a Ghosts
         *  new cvar - sm_ghosts_enable - 0 - disabled, 1 - enable this MyJailbreak SourceMod plugin
         *  new cvar - sm_ghosts_cmds_vote - Set your custom chat command for Event voting(!ghosts (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
         *  new cvar - sm_ghosts_cmds_set - Set your custom chat command for set Event(!ghosts (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))

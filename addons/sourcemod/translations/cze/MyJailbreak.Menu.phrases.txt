@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-04-20 21:44:27 UTC
+// Date: 2017-11-20 02:34:59 UTC
 // Language: Czech (cze)
 // 
 // To view other translations for this plugin, please visit:
@@ -173,16 +173,6 @@
 		"cze"		"Zombie den"
 	}
 
-	"menu_dealdamge"
-	{
-		"cze"		"Den spusobovani poskozeni"
-	}
-
-	"menu_dealdamge"
-	{
-		"cze"		"Den spusobovani poskozeni"
-	}
-
 	"menu_hide"
 	{
 		"cze"		"Schovka ve tme"
@@ -231,11 +221,6 @@
 	"menu_duckhunt"
 	{
 		"cze"		"Lov kachen"
-	}
-
-	"menu_Freeday"
-	{
-		"cze"		"Volny den"
 	}
 
 	"menu_admin"
@@ -396,6 +381,16 @@
 	"menu_gangs"
 	{
 		"cze"		"Menu gangu"
+	}
+
+	"menu_dealdamage"
+	{
+		"cze"		"Den spusobovani poskozeni"
+	}
+
+	"menu_freeday"
+	{
+		"cze"		"Volny den"
 	}
 
 }

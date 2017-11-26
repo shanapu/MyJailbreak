@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-04-20 21:44:27 UTC
+// Date: 2017-11-20 02:34:59 UTC
 // Language: Italian (it)
 // 
 // To view other translations for this plugin, please visit:
@@ -173,11 +173,6 @@
 		"it"		"Zombie"
 	}
 
-	"menu_dealdamge"
-	{
-		"it"		"Deal Damage"
-	}
-
 	"menu_hide"
 	{
 		"it"		"Hide in The Dark"
@@ -226,11 +221,6 @@
 	"menu_duckhunt"
 	{
 		"it"		"DuckHunt"
-	}
-
-	"menu_Freeday"
-	{
-		"it"		"Freeday"
 	}
 
 	"menu_admin"
@@ -303,6 +293,16 @@
 		"it"		"Freeday per un Player"
 	}
 
+	"menu_teamgamesmenu"
+	{
+		"it"		"Team Games - Menù"
+	}
+
+	"menu_teamgamesgames"
+	{
+		"it"		"Team Games - Giochi"
+	}
+
 	"menu_undeputy"
 	{
 		"it"		"Ritirati da Deputato"
@@ -331,6 +331,66 @@
 	"menu_count"
 	{
 		"it"		"calcolare i prigionieri"
+	}
+
+	"menu_jailshop"
+	{
+		"it"		"Apri lo shop"
+	}
+
+	"menu_orders"
+	{
+		"it"		"Ordini"
+	}
+
+	"menu_ghosts"
+	{
+		"it"		"Ghosts War"
+	}
+
+	"menu_votingcancel"
+	{
+		"it"		"Il voto è stato cancellato, Perchè l'evento {purple}{1}{default} era gia settato!"
+	}
+
+	"menu_removequeue"
+	{
+		"it"		"Remuovi un giocatore dalla coda per i CT"
+	}
+
+	"menu_endround"
+	{
+		"it"		"Fai finire il round"
+	}
+
+	"menu_clearqueue"
+	{
+		"it"		"Svuota la coda per i CT"
+	}
+
+	"menu_noevent"
+	{
+		"it"		"No Event Day"
+	}
+
+	"menu_joinspec"
+	{
+		"it"		"Vai negli spettatori"
+	}
+
+	"menu_gangs"
+	{
+		"it"		"Menu delle gang"
+	}
+
+	"menu_dealdamage"
+	{
+		"it"		"Deal Damage"
+	}
+
+	"menu_freeday"
+	{
+		"it"		"Freeday"
 	}
 
 }

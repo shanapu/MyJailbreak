@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-04-20 21:44:25 UTC
+// Date: 2017-11-20 02:34:55 UTC
 // Language: Polish (pl)
 // 
 // To view other translations for this plugin, please visit:
@@ -593,6 +593,11 @@
 		"pl"		"Masz {green}{1}{default} jedne Kajdanki"
 	}
 
+	"warden_extendtimes"
+	{
+		"pl"		"Już przedłużyłeś rundę {1} razy w tej rundzie!"
+	}
+
 	"warden_brokepaperclip"
 	{
 		"pl"		"Złamałeś spinacz!"
@@ -638,9 +643,29 @@
 		"pl"		"Marker dla Terrorystow jest{purple}wylaczony"
 	}
 
+	"warden_menu_unmuteall"
+	{
+		"pl"		"Zdejmij wyciszenie wszystkim Więźniom"
+	}
+
+	"warden_votesuccess"
+	{
+		"pl"		"Głosowanie za {purple}wyrzuceniem Wardena{default} przebiegło pomyślnie!"
+	}
+
+	"warden_rebel_title"
+	{
+		"pl"		"Menu Buntowników"
+	}
+
 	"warden_rebel_unmark"
 	{
 		"pl"		"Usuń gracza z buntowników "
+	}
+
+	"warden_talkover"
+	{
+		"pl"		"Warden mówi, zostałeś wyciszony."
 	}
 
 	"warden_counter"
@@ -653,6 +678,11 @@
 		"pl"		"Deputy jest {purple}wylaczony{default}."
 	}
 
+	"warden_deputy_fired_nc"
+	{
+		"pl"		"Warden: {1} zwolnił Deputy: {2}"
+	}
+
 	"warden_deputy_disconnected_nc"
 	{
 		"pl"		"Zastępca został odłączony. Teraz można wybrać nowego."
@@ -663,9 +693,39 @@
 		"pl"		"Owocobranie przerwane "
 	}
 
+	"warden_havefreeday"
+	{
+		"pl"		"{1} ma teraz FreeDay!"
+	}
+
+	"warden_freeday_title"
+	{
+		"pl"		"Freeday dla {1}"
+	}
+
+	"warden_freedaynext"
+	{
+		"pl"		"Następna Runda"
+	}
+
 	"warden_freedaynow"
 	{
 		"pl"		"Ta runda "
+	}
+
+	"warden_freedayforyou"
+	{
+		"pl"		"Dostajesz {purple}FreeDay{default} w następnej rundzie"
+	}
+
+	"warden_cooldown"
+	{
+		"pl"		"Posiadasz {purple}blokade wardena{default}. Poczekaj {green}{1}{default} rundy"
+	}
+
+	"warden_deputy_removed_nc"
+	{
+		"pl"		"Admin: {1} zwolnił Deputy: {2}"
 	}
 
 }

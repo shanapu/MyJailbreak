@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-04-20 21:44:27 UTC
+// Date: 2017-11-20 02:34:59 UTC
 // Language: Polish (pl)
 // 
 // To view other translations for this plugin, please visit:
@@ -218,11 +218,6 @@
 		"pl"		"Polowanie na Kaczki"
 	}
 
-	"menu_Freeday"
-	{
-		"pl"		"Freeday"
-	}
-
 	"menu_admin"
 	{
 		"pl"		"Admin Menu"
@@ -243,6 +238,11 @@
 		"pl"		"Menu Painter"
 	}
 
+	"menu_wait"
+	{
+		"pl"		"Musisz odczekać {purple}{1}{default} rundy, aby zacząć Event Day Voting!"
+	}
+
 	"menu_count"
 	{
 		"pl"		"Policz wiezniow na widoku"
@@ -256,6 +256,16 @@
 	"menu_endround"
 	{
 		"pl"		"Zakoncz runde"
+	}
+
+	"menu_joinspec"
+	{
+		"pl"		"Przejdź do obserwatorów"
+	}
+
+	"menu_freeday"
+	{
+		"pl"		"Freeday"
 	}
 
 }

@@ -1,9 +1,9 @@
 // Exported from SourceMod Translator
-// Date: 2017-04-20 21:44:30 UTC
+// Date: 2017-11-20 02:35:07 UTC
 // Language: English (en)
 // 
 // To view other translations for this plugin, please visit:
-// http://translator.mitchdempsey.com/sourcemod_plugins/200
+// http://translator.mitchdempsey.com/sourcemod_plugins/281
 //
 "Phrases"
 {
@@ -28,7 +28,7 @@
 	"dealdamage_twin_nc"
 	{
 		"#format"	"{1:i}"
-		"en"		"Prisoners win with {1} HP damage"
+		"en"		"TEAM RED win with {1} HP damage"
 	}
 
 	"dealdamage_voting"
@@ -49,7 +49,7 @@
 	"dealdamage_ctwin_nc"
 	{
 		"#format"	"{1:i}"
-		"en"		"The Guards win with {1} HP damage!"
+		"en"		"The BLUE TEAM win with {1} HP damage!"
 	}
 
 	"dealdamage_end"
@@ -70,6 +70,16 @@
 	"dealdamage_start"
 	{
 		"en"		"{purple}Deal Damage Day{default} has begun!"
+	}
+
+	"dealdamage_now_nc"
+	{
+		"en"		"Now a Deal Damage round begins."
+	}
+
+	"dealdamage_now"
+	{
+		"en"		"Now a {purple}Deal Damage{default} round begins."
 	}
 
 	"dealdamage_start_nc"
@@ -106,7 +116,7 @@
 
 	"dealdamage_info_line1"
 	{
-		"en"		"Deal Damage Day is now Activated!"
+		"en"		"Team BLUE vs Team RED"
 	}
 
 	"dealdamage_info_line2"
@@ -165,25 +175,25 @@
 	"dealdamage_ct"
 	{
 		"#format"	"{1:i}"
-		"en"		"Guard Damage: {1} HP"
+		"en"		"BLUE Damage: {1} HP"
 	}
 
 	"dealdamage_t"
 	{
 		"#format"	"{1:i}"
-		"en"		"Prisoner Damage: {1} HP"
+		"en"		"RED Damage: {1} HP"
 	}
 
 	"dealdamage_bestct"
 	{
 		"#format"	"{1:N},{2:i}"
-		"en"		"Best Guard: {1} Damage: {2} HP"
+		"en"		"Best BLUE: {1} Damage: {2} HP"
 	}
 
 	"dealdamage_bestt"
 	{
 		"#format"	"{1:N},{2:i}"
-		"en"		"Best Prisoner: {1} Damage: {2} HP"
+		"en"		"Best RED: {1} Damage: {2} HP"
 	}
 
 	"dealdamage_client"
@@ -194,12 +204,12 @@
 
 	"dealdamage_ctdealed"
 	{
-		"en"		"CT dealt:"
+		"en"		"BLUE dealt:"
 	}
 
 	"dealdamage_tdealed"
 	{
-		"en"		"T dealt:"
+		"en"		"RED dealt:"
 	}
 
 	"dealdamage_clientdealed"
@@ -215,6 +225,58 @@
 	"dealdamage_name"
 	{
 		"en"		"Deal Damage Day"
+	}
+
+	"dealdamage_teamblue"
+	{
+		"en"		"You are in {blue}TEAM BLUE"
+	}
+
+	"dealdamage_teamred"
+	{
+		"en"		"You are in {darkred}TEAM RED"
+	}
+
+	"dealdamage_teamblue_nc"
+	{
+		"en"		"You are in TEAM BLUE"
+	}
+
+	"dealdamage_teamred_nc"
+	{
+		"en"		"You are in TEAM RED"
+	}
+
+	"dealdamage_playerteamblue"
+	{
+		"#format"	"{1:N}"
+		"en"		"{purple}{1}{default} is in {blue}TEAM BLUE"
+	}
+
+	"dealdamage_playerteamred"
+	{
+		"#format"	"{1:N}"
+		"en"		"{purple}{1}{default} is in {darkred}TEAM RED"
+	}
+
+	"dealdamage_blue_nc"
+	{
+		"en"		"BLUE"
+	}
+
+	"dealdamage_red_nc"
+	{
+		"en"		"RED"
+	}
+
+	"dealdamage_info_blueteam"
+	{
+		"en"		"You are in TEAM BLUE"
+	}
+
+	"dealdamage_info_redteam"
+	{
+		"en"		"You are in TEAM RED"
 	}
 
 }

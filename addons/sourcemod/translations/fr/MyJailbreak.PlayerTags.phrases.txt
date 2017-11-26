@@ -1,0 +1,56 @@
+// Exported from SourceMod Translator
+// Date: 2017-11-20 02:35:09 UTC
+// Language: French (fr)
+// 
+// To view other translations for this plugin, please visit:
+// http://translator.mitchdempsey.com/sourcemod_plugins/181
+//
+"Phrases"
+{
+
+	"tags_TA"
+	{
+		"fr"		"[Prisonnier.Admin]"
+	}
+
+	"tags_CT"
+	{
+		"fr"		" [Gardien]"
+	}
+
+	"tags_WA"
+	{
+		"fr"		"[Gardien.Admin]"
+	}
+
+	"tags_W"
+	{
+		"fr"		"[Gardien]"
+	}
+
+	"tags_TVIP2"
+	{
+		"fr"		"[Prisonnier.sVIP]"
+	}
+
+	"tags_CTOWN"
+	{
+		"fr"		"[Gardien.Owner]"
+	}
+
+	"tags_CT_chat"
+	{
+		"fr"		"[Gardien]"
+	}
+
+	"tags_CTA_chat"
+	{
+		"fr"		"[Gardien.Admin]"
+	}
+
+	"tags_WA_chat"
+	{
+		"fr"		"[Gardien.Admin]"
+	}
+
+}

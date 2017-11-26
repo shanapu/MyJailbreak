@@ -32,6 +32,7 @@
 #include <colors>
 #include <autoexecconfig>
 #include <warden>
+#include <myjbwarden>
 #include <mystocks>
 
 // Compiler Options
@@ -66,7 +67,7 @@ Handle g_hTimerAllowRefuse;
 // Strings
 char g_sSoundRefusePath[256];
 char g_sSoundRefuseStopPath[256];
-char g_sAdminFlagRefuse[4];
+char g_sAdminFlagRefuse[64];
 
 // Start
 public void Refuse_OnPluginStart()
@@ -127,7 +128,7 @@ public Action Command_refuse(int client, int args)
 	{
 		if (gc_bRefuse.BoolValue)
 		{
-			if (warden_iswarden(client) && gc_bWardenAllowRefuse.BoolValue)
+			if ((gp_bWarden || gp_bMyJBWarden) && warden_iswarden(client) && gc_bWardenAllowRefuse.BoolValue)
 			{
 				if (!g_bAllowRefuse)
 				{
@@ -136,7 +137,7 @@ public Action Command_refuse(int client, int args)
 					CPrintToChatAll("%t %t", "request_tag", "request_openrefuse");
 				}
 			}
-			if (!warden_iswarden(client))
+			if ((!gp_bWarden && !gp_bMyJBWarden) || !warden_iswarden(client))
 			{
 				if (GetClientTeam(client) == CS_TEAM_T && IsPlayerAlive(client))
 				{

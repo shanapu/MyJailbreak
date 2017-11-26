@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-04-20 21:44:33 UTC
+// Date: 2017-11-20 02:35:11 UTC
 // Language: Polish (pl)
 // 
 // To view other translations for this plugin, please visit:
@@ -131,21 +131,6 @@
 	"ffa_info_line7"
 	{
 		"pl"		"Nie badz DUPKIEM!"
-	}
-
-	"RoundOne"
-	{
-		"pl"		"Runda  1 z 3"
-	}
-
-	"RoundTwo"
-	{
-		"pl"		"Runda 2 z 3"
-	}
-
-	"RoundThree"
-	{
-		"pl"		"ostatnie FFA runda"
 	}
 
 	"ffa_wait"

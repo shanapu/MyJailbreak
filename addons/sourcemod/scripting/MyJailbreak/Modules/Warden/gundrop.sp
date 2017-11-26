@@ -32,6 +32,7 @@
 #include <colors>
 #include <autoexecconfig>
 #include <warden>
+#include <myjbwarden>
 #include <mystocks>
 
 // Compiler Options
@@ -145,7 +146,7 @@ public Action Timer_DroppedWeapon(Handle timer, Handle hData)
 
 	if (IsValidEdict(iWeapon))
 	{
-		if (Entity_GetOwner(iWeapon) == -1)
+		if (GetEntPropEnt(iWeapon, Prop_Data, "m_hOwnerEntity") == -1)
 		{
 			if (IsValidClient(client, false, false))  // && !IsClientInLastRequest(client)
 			{
@@ -179,7 +180,7 @@ public Action Timer_RemoveWeapon(Handle timer, Handle hData2)
 
 	if (IsValidEdict(iWeapon))
 	{
-		if (Entity_GetOwner(iWeapon) == -1)
+		if (GetEntPropEnt(iWeapon, Prop_Data, "m_hOwnerEntity") == -1)
 		{
 			AcceptEntityInput(iWeapon, "Kill");
 		}

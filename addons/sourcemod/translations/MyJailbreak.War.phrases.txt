@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-04-20 21:44:26 UTC
+// Date: 2017-11-20 02:34:58 UTC
 // Language: English (en)
 // 
 // To view other translations for this plugin, please visit:
@@ -163,6 +163,16 @@
 	"war_name"
 	{
 		"en"		"War"
+	}
+
+	"war_now_nc"
+	{
+		"en"		"Now a war round begins."
+	}
+
+	"war_now"
+	{
+		"en"		"Now a {purple}war{default} round begins."
 	}
 
 }

@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-04-20 21:44:26 UTC
+// Date: 2017-11-20 02:34:58 UTC
 // Language: Italian (it)
 // 
 // To view other translations for this plugin, please visit:
@@ -15,22 +15,22 @@
 
 	"war_need"
 	{
-		"it"		"{purple}{2}{default} ha votato guerra. {purple}{1}{default} voti richiesti per la {darkred}guerratr."
+		"it"		"{purple}{2}{default} ha votato. {purple}{1}{default} voti richiesti per fare {darkred}War."
 	}
 
 	"war_rounds"
 	{
-		"it"		"Round {purple}{1}{default} of {purple}{2}"
+		"it"		"Round {purple}{1}{default} di {purple}{2}"
 	}
 
 	"war_twin_nc"
 	{
-		"it"		"Prisoners win!"
+		"it"		"I Prigionieri hanno vinto!"
 	}
 
 	"war_ctwin_nc"
 	{
-		"it"		"Le Guardie hanno vinto!"
+		"it"		"Le Guardia hanno vinto!"
 	}
 
 	"war_end"
@@ -40,67 +40,72 @@
 
 	"war_next"
 	{
-		"it"		"Il Prossimo Round Sara': {purple}Guerra."
+		"it"		"Il prossimo round ci sara': {purple}War."
 	}
 
 	"war_next_nc"
 	{
-		"it"		"The following round will be: War."
+		"it"		"Il prossimo round ci sara': War."
 	}
 
 	"war_start"
 	{
-		"it"		"The {purple}War{default} has begun!"
+		"it"		"The {purple}War{default} e' iniziato!"
 	}
 
 	"war_start_nc"
 	{
-		"it"		"The War has begun!"
+		"it"		"The War e' iniziato!"
 	}
 
 	"war_voted"
 	{
-		"it"		"You have already voted for {purple}War!"
+		"it"		"Hai gia' votato per{purple}War!"
 	}
 
 	"war_progress"
 	{
-		"it"		"The event {darkred}{1} {default}is {purple}already in progress!"
+		"it"		"L'evento {darkred}{1} {default}e' {purple}in corso"
 	}
 
 	"war_minplayer"
 	{
-		"it"		"per la guerra sono richiesti {purple}un CT e un T!"
+		"it"		"Per fare War c'e bisogno almeno di {purple}una Guardia, & un Prigioniere!"
 	}
 
 	"war_disabled"
 	{
-		"it"		"War e' momentaneamente {purple}disattato!"
+		"it"		"War e' {purple}disattivato!"
 	}
 
 	"war_damage_nc"
 	{
-		"it"		"{1} secondi fino a quando il danno è abilitato!"
+		"it"		"{1} secondi prima che in danno sia attivato!"
+	}
+
+	"war_voting"
+	{
+		"it"		"Afstemning for war er {purple}slået fra"
 	}
 
 	"war_setbywarden"
 	{
-		"it"		"Set War by Warden is {purple}disabled!"
+		"it"		"Impostare War come CapoCT e' {purple}disattivato!"
 	}
 
 	"war_setbyadmin"
 	{
-		"it"		"Set War by Admin is {purple}disabled!"
+		"it"		"Impostare War come Admin e' {purple}disattivato!"
 	}
 
 	"war_info_title"
 	{
-		"it"		"Guarra Attivata"
+		"it"		"War e' inizato!"
 	}
 
 	"war_info_line1"
 	{
-		"it"		"Non stupitevi se si è congelati in aria"
+		"it"		"Non soprenderti se sei ghiacciato in aria!"
 	}
 
 	"war_info_line2"
@@ -115,42 +120,42 @@
 
 	"war_info_line4"
 	{
-		"it"		"Tutte le Regole del JailBreak sono disattivate in questo Round"
+		"it"		"Tutte le normali regole del JB non vengono applicate durante questo round!"
 	}
 
 	"war_info_line5"
 	{
-		"it"		"!lr disattivo in questo round!"
+		"it"		"Gli LR sono disattivati durante questo round!"
 	}
 
 	"war_info_line6"
 	{
-		"it"		"Tutti i posti sono accessibili a tutti"
+		"it"		"A tutti e' permesso andare ovunque durante questo round"
 	}
 
 	"war_info_line7"
 	{
-		"it"		"Buona Fortuna!"
+		"it"		"Non fate i cani!"
 	}
 
 	"war_wait"
 	{
-		"it"		"You must wait {purple}{1}{default} more rounds for an Event Day!"
+		"it"		"Devi aspettare {purple}{1}{default} prima di dare un altro evento!"
 	}
 
 	"war_timetounfreeze_nc"
 	{
-		"it"		"{1} seconds until you will be unfreezed!"
+		"it"		"{1} secondi rimasti per essere scongelato!"
 	}
 
 	"war_timetohide_nc"
 	{
-		"it"		"{1} seconds left to hide!"
+		"it"		"{1} secondi rimasti per nascondersis!"
 	}
 
 	"war_name"
 	{
-		"it"		"Guerra"
+		"it"		"War"
 	}
 
 }

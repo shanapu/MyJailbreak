@@ -42,6 +42,7 @@
 #include <smartjaildoors>
 #include <CustomPlayerSkins>
 #include <myjailbreak>
+#include <myweapons>
 #define REQUIRE_PLUGIN
 
 // Compiler Options
@@ -58,6 +59,7 @@ bool g_bIsTorch = false;
 bool g_bStartTorch = false;
 bool g_bOnTorch[MAXPLAYERS+1] = {false, ...};
 bool g_bImmuneTorch[MAXPLAYERS+1] = {false, ...};
+bool g_bIsRoundEnd = true;
 
 // Plugin bools
 bool gp_bWarden;
@@ -65,6 +67,7 @@ bool gp_bHosties;
 bool gp_bSmartJailDoors;
 bool gp_bCustomPlayerSkins;
 bool gp_bMyJailbreak;
+bool gp_bMyWeapons;
 
 // Console Variables
 ConVar gc_bPlugin;
@@ -96,12 +99,14 @@ ConVar gc_sCustomCommandVote;
 ConVar gc_sCustomCommandSet;
 ConVar gc_sAdminFlag;
 
-// Extern Convars
-ConVar g_iMPRoundTime;
+ConVar gc_bBeginSetA;
+ConVar gc_bBeginSetW;
+ConVar gc_bBeginSetV;
+ConVar gc_bBeginSetVW;
+ConVar gc_bTeleportSpawn;
 
 // Integers
 int g_iVoteCount;
-int g_iOldRoundTime;
 int g_iCoolDown;
 int g_iTruceTime;
 int g_iRound;
@@ -121,7 +126,7 @@ char g_sHasVoted[1500];
 char g_sOverlayOnTorch[256];
 char g_sSoundStartPath[256];
 char g_sEventsLogFile[PLATFORM_MAX_PATH];
-char g_sAdminFlag[4];
+char g_sAdminFlag[64];
 char g_sOverlayStartPath[256];
 
 // Floats
@@ -167,6 +172,13 @@ public void OnPluginStart()
 	gc_bSetA = AutoExecConfig_CreateConVar("sm_torch_admin", "1", "0 - disabled, 1 - allow admin/vip to set torch round", _, true, 0.0, true, 1.0);
 	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_torch_flag", "g", "Set flag for admin/vip to set this Event Day.");
 	gc_bVote = AutoExecConfig_CreateConVar("sm_torch_vote", "1", "0 - disabled, 1 - allow player to vote for torch", _, true, 0.0, true, 1.0);
+
+	gc_bBeginSetA = AutoExecConfig_CreateConVar("sm_torch_begin_admin", "1", "When admin set event (!settorch) = 0 - start event next round, 1 - start event current round", _, true, 0.0, true, 1.0);
+	gc_bBeginSetW = AutoExecConfig_CreateConVar("sm_torch_begin_warden", "1", "When warden set event (!settorch) = 0 - start event next round, 1 - start event current round", _, true, 0.0, true, 1.0);
+	gc_bBeginSetV = AutoExecConfig_CreateConVar("sm_torch_begin_vote", "0", "When users vote for event (!torch) = 0 - start event next round, 1 - start event current round", _, true, 0.0, true, 1.0);
+	gc_bBeginSetVW = AutoExecConfig_CreateConVar("sm_torch_begin_daysvote", "0", "When warden/admin start eventday voting (!sm_voteday) and event wins = 0 - start event next round, 1 - start event current round", _, true, 0.0, true, 1.0);
+	gc_bTeleportSpawn = AutoExecConfig_CreateConVar("sm_torch_teleport_spawn", "0", "0 - start event in current round from current player positions, 1 - teleport players to spawn when start event on current round(only when sm_*_begin_admin, sm_*_begin_warden, sm_*_begin_vote or sm_*_begin_daysvote is on '1')", _, true, 0.0, true, 1.0);
+
 	gc_iRounds = AutoExecConfig_CreateConVar("sm_torch_rounds", "3", "Rounds to play in a row", _, true, 1.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_torch_roundtime", "9", "Round time in minutes for a single torch round", _, true, 1.0);
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_torch_cooldown_day", "3", "Rounds cooldown after a event until event can be start again", _, true, 0.0);
@@ -209,7 +221,6 @@ public void OnPluginStart()
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	g_iMaxRound = gc_iRounds.IntValue;
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
-	g_iMPRoundTime = FindConVar("mp_roundtime");
 	gc_sSoundOnTorchPath.GetString(g_sSoundOnTorchPath, sizeof(g_sSoundOnTorchPath));
 	gc_sSoundClearTorchPath.GetString(g_sSoundClearTorchPath, sizeof(g_sSoundClearTorchPath));
 	gc_sOverlayOnTorch.GetString(g_sOverlayOnTorch, sizeof(g_sOverlayOnTorch));
@@ -277,6 +288,7 @@ public void OnAllPluginsLoaded()
 	gp_bSmartJailDoors = LibraryExists("smartjaildoors");
 	gp_bCustomPlayerSkins = LibraryExists("CustomPlayerSkins");
 	gp_bMyJailbreak = LibraryExists("myjailbreak");
+	gp_bMyWeapons = LibraryExists("myweapons");
 }
 
 public void OnLibraryRemoved(const char[] name)
@@ -295,6 +307,9 @@ public void OnLibraryRemoved(const char[] name)
 
 	if (StrEqual(name, "myjailbreak"))
 		gp_bMyJailbreak = false;
+
+	if (StrEqual(name, "myweapons"))
+		gp_bMyWeapons = false;
 }
 
 public void OnLibraryAdded(const char[] name)
@@ -313,6 +328,9 @@ public void OnLibraryAdded(const char[] name)
 
 	if (StrEqual(name, "myjailbreak"))
 		gp_bMyJailbreak = true;
+
+	if (StrEqual(name, "myweapons"))
+		gp_bMyWeapons = true;
 }
 
 // Initialize Plugin
@@ -353,7 +371,15 @@ public void OnConfigsExecuted()
 			RegConsoleCmd(sCommand, Command_SetTorch, "Allows the Admin or Warden to set torch as next round");
 		}
 	}
+
+	MyJailbreak_AddEventDay("torch");
 }
+
+public void OnPluginEnd()
+{
+	MyJailbreak_RemoveEventDay("torch");
+}
+
 
 /******************************************************************************
                    COMMANDS
@@ -370,7 +396,7 @@ public Action Command_SetTorch(int client, int args)
 
 	if (client == 0) // Called by a server/voting
 	{
-		StartNextRound();
+		StartEventRound(gc_bBeginSetVW.BoolValue);
 
 		if (!gp_bMyJailbreak)
 		{
@@ -414,7 +440,7 @@ public Action Command_SetTorch(int client, int args)
 			return Plugin_Handled;
 		}
 
-		StartNextRound();
+		StartEventRound(gc_bBeginSetA.BoolValue);
 
 		if (!gp_bMyJailbreak)
 		{
@@ -464,7 +490,7 @@ public Action Command_SetTorch(int client, int args)
 			return Plugin_Handled;
 		}
 
-		StartNextRound();
+		StartEventRound(gc_bBeginSetW.BoolValue);
 
 		if (!gp_bMyJailbreak)
 		{
@@ -541,7 +567,7 @@ public Action Command_VoteTorch(int client, int args)
 
 	if (g_iVoteCount > playercount)
 	{
-		StartNextRound();
+		StartEventRound(gc_bBeginSetV.BoolValue);
 
 		if (!gp_bMyJailbreak)
 		{
@@ -568,6 +594,8 @@ public Action Command_VoteTorch(int client, int args)
 // Round start
 public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
+	g_bIsRoundEnd = false;
+
 	if (!g_bStartTorch && !g_bIsTorch)
 	{
 		if (gp_bMyJailbreak)
@@ -592,91 +620,24 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		return;
 	}
 
-	if (gp_bWarden)
-	{
-		SetCvar("sm_warden_enable", 0);
-	}
-
-	if (gp_bHosties)
-	{
-		SetCvar("sm_hosties_lr", 0);
-	}
-
-	SetCvar("sm_weapons_enable", 0);
-
-	if (gp_bMyJailbreak)
-	{
-		MyJailbreak_SetEventDayPlanned(false);
-		MyJailbreak_SetEventDayRunning(true, 0);
-	}
-
 	g_bIsTorch = true;
-	g_iRound++;
 	g_bStartTorch = false;
 
-	if (gp_bSmartJailDoors)
-	{
-		SJD_OpenDoors();
-	}
-
-	if (!gc_bSpawnCell.BoolValue || !gp_bSmartJailDoors || (gc_bSpawnCell.BoolValue && (SJD_IsCurrentMapConfigured() != true))) // spawn Terrors to CT Spawn 
-	{
-		int RandomCT = 0;
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
-		{
-			if (GetClientTeam(i) == CS_TEAM_CT)
-			{
-				RandomCT = i;
-				break;
-			}
-		}
-
-		if (RandomCT)
-		{
-			for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
-			{
-				GetClientAbsOrigin(RandomCT, g_fPos);
-				
-				g_fPos[2] = g_fPos[2] + 5;
-				
-				TeleportEntity(i, g_fPos, NULL_VECTOR, NULL_VECTOR);
-			}
-		}
-	}
-
-	if (g_iRound > 0)
-	{
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
-		{
-			StripAllPlayerWeapons(i);
-
-			GivePlayerItem(i, "weapon_knife");
-
-			SetEntData(i, g_iCollision_Offset, 2, 4, true);
-
-			CreateInfoPanel(i);
-
-			g_iSprintStatus[i] = 0;
-			g_bOnTorch[i] = false;
-			g_bImmuneTorch[i] = false;
-		}
-
-		g_hTimerTruce = CreateTimer(1.0, Timer_StartEvent, _, TIMER_REPEAT);
-
-		CPrintToChatAll("%t %t", "torch_tag", "torch_rounds", g_iRound, g_iMaxRound);
-	}
+	PrepareDay(false);
 }
 
 // Round End
 public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
+	g_bIsRoundEnd = true;
+
 	if (g_bIsTorch)
 	{
 		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true))
 		{
 			SetEntData(i, g_iCollision_Offset, 0, 4, true);
 
-			CreateTimer(0.0, DeleteOverlay, i);
+			CreateTimer(0.0, DeleteOverlay, GetClientUserId(i));
 
 			SetEntityRenderColor(i, 255, 255, 255, 0);
 
@@ -710,12 +671,16 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 				SetCvar("sm_warden_enable", 1);
 			}
 
-			SetCvar("sm_weapons_enable", 1);
-
-			g_iMPRoundTime.IntValue = g_iOldRoundTime;
+			if (gp_bMyWeapons)
+			{
+				MyWeapons_AllowTeam(CS_TEAM_T, false);
+				MyWeapons_AllowTeam(CS_TEAM_CT, true);
+			}
 
 			if (gp_bMyJailbreak)
 			{
+				SetCvar("sm_menu_enable", 1);
+
 				MyJailbreak_SetEventDayRunning(false, 0);
 				MyJailbreak_SetEventDayName("none");
 			}
@@ -778,6 +743,75 @@ public void OnMapStart()
 	}
 
 	PrecacheSound("player/suit_sprint.wav", true);
+}
+
+public void MyJailbreak_ResetEventDay()
+{
+	g_bStartTorch = false;
+
+	if (g_bIsTorch)
+		ResetEventDay();
+}
+
+void ResetEventDay()
+{
+	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true))
+	{
+		SetEntData(i, g_iCollision_Offset, 0, 4, true);
+
+		CreateTimer(0.0, DeleteOverlay, GetClientUserId(i));
+
+		SetEntityRenderColor(i, 255, 255, 255, 0);
+
+		IgniteEntity(i, 0.0);
+
+		g_iSprintStatus[i] = 0;
+		g_bOnTorch[i] = false;
+		g_bImmuneTorch[i] = false;
+
+		if (gp_bCustomPlayerSkins && gc_bWallhack.BoolValue)
+		{
+			UnhookWallhack(i);
+		}
+
+		SetEntityMoveType(i, MOVETYPE_WALK);
+
+		SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
+	}
+
+	g_iBurningZero = -1;
+
+	delete g_hTimerTruce;
+
+	g_bIsTorch = false;
+	g_iRound = 0;
+	Format(g_sHasVoted, sizeof(g_sHasVoted), "");
+
+	if (gp_bHosties)
+	{
+		SetCvar("sm_hosties_lr", 1);
+	}
+
+	if (gp_bWarden)
+	{
+		SetCvar("sm_warden_enable", 1);
+	}
+
+	if (gp_bMyWeapons)
+	{
+		MyWeapons_AllowTeam(CS_TEAM_T, false);
+		MyWeapons_AllowTeam(CS_TEAM_CT, true);
+	}
+
+	if (gp_bMyJailbreak)
+	{
+		SetCvar("sm_menu_enable", 1);
+
+		MyJailbreak_SetEventDayRunning(false, 0);
+		MyJailbreak_SetEventDayName("none");
+	}
+
+	CPrintToChatAll("%t %t", "torch_tag", "torch_end");
 }
 
 // Map End
@@ -856,10 +890,9 @@ public void OnClientDisconnect_Post(int client)
 ******************************************************************************/
 
 // Prepare Event
-void StartNextRound()
+void StartEventRound(bool thisround)
 {
-	g_bStartTorch = true;
-	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
+	g_iCoolDown = gc_iCooldownDay.IntValue;
 	g_iVoteCount = 0;
 
 	if (gp_bMyJailbreak)
@@ -870,11 +903,129 @@ void StartNextRound()
 		MyJailbreak_SetEventDayPlanned(true);
 	}
 
-	g_iOldRoundTime = g_iMPRoundTime.IntValue; // save original round time
-	g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue; // set event round time
+	if(thisround && g_bIsRoundEnd)
+	{
+		thisround = false;
+	}
 
-	CPrintToChatAll("%t %t", "torch_tag", "torch_next");
-	PrintCenterTextAll("%t", "torch_next_nc");
+	if (thisround)
+	{
+		g_bIsTorch = true;
+
+		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+		{
+			SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
+
+			SetEntityMoveType(i, MOVETYPE_NONE);
+		}
+
+		CreateTimer(3.0, Timer_PrepareEvent);
+
+		CPrintToChatAll("%t %t", "torch_tag", "torch_now");
+		PrintCenterTextAll("%t", "torch_now_nc");
+	}
+	else
+	{
+		g_bStartTorch = true;
+		g_iCoolDown++;
+
+		CPrintToChatAll("%t %t", "torch_tag", "torch_next");
+		PrintCenterTextAll("%t", "torch_next_nc");
+	}
+}
+
+public Action Timer_PrepareEvent(Handle timer)
+{
+	if (!g_bIsTorch)
+		return Plugin_Handled;
+
+	PrepareDay(true);
+
+	return Plugin_Handled;
+}
+
+void PrepareDay(bool thisround)
+{
+	g_iRound++;
+
+	if (gp_bSmartJailDoors)
+	{
+		SJD_OpenDoors();
+	}
+
+	if ((thisround && gc_bTeleportSpawn.BoolValue) || !gc_bSpawnCell.BoolValue || !gp_bSmartJailDoors || (gc_bSpawnCell.BoolValue && (SJD_IsCurrentMapConfigured() != true))) // spawn Terrors to CT Spawn 
+	{
+		int RandomCT = 0;
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+		{
+			if (GetClientTeam(i) == CS_TEAM_CT)
+			{
+				RandomCT = i;
+				break;
+			}
+		}
+
+		if (RandomCT)
+		{
+			for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+			{
+				GetClientAbsOrigin(RandomCT, g_fPos);
+				
+				g_fPos[2] = g_fPos[2] + 5;
+				
+				TeleportEntity(i, g_fPos, NULL_VECTOR, NULL_VECTOR);
+			}
+		}
+	}
+
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+	{
+		SetEntData(i, g_iCollision_Offset, 2, 4, true);
+
+		SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
+
+		SetEntityMoveType(i, MOVETYPE_NONE);
+		
+		StripAllPlayerWeapons(i);
+
+		GivePlayerItem(i, "weapon_knife");
+
+		CreateInfoPanel(i);
+
+		g_iSprintStatus[i] = 0;
+		g_bOnTorch[i] = false;
+		g_bImmuneTorch[i] = false;
+	}
+
+	if (gp_bMyJailbreak)
+	{
+		SetCvar("sm_menu_enable", 0);
+
+		MyJailbreak_SetEventDayPlanned(false);
+		MyJailbreak_SetEventDayRunning(true, 0);
+	}
+
+	if (gp_bWarden)
+	{
+		SetCvar("sm_warden_enable", 0);
+	}
+
+	if (gp_bHosties)
+	{
+		SetCvar("sm_hosties_lr", 0);
+	}
+
+	if (gp_bMyWeapons)
+	{
+		MyWeapons_AllowTeam(CS_TEAM_T, false);
+		MyWeapons_AllowTeam(CS_TEAM_CT, false);
+	}
+
+	GameRules_SetProp("m_iRoundTime", gc_iRoundTime.IntValue*60, 4, 0, true);
+
+	g_hTimerTruce = CreateTimer(1.0, Timer_StartEvent, _, TIMER_REPEAT);
+
+	CPrintToChatAll("%t %t", "torch_tag", "torch_rounds", g_iRound, g_iMaxRound);
 }
 
 // Set client as torch
@@ -886,7 +1037,8 @@ void TorchEm(int client)
 
 	SetEntityRenderColor(client, 255, 120, 0, 255);
 
-	IgniteEntity(client, 200.0);
+	ExtinguishEntity(client);
+	IgniteEntity(client, 999.0);
 
 	SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", gc_fSprintSpeed.FloatValue);
 
@@ -897,7 +1049,7 @@ void TorchEm(int client)
 
 	if (!gc_bStayOverlay.BoolValue)
 	{
-		CreateTimer(3.0, DeleteOverlay, client);
+		CreateTimer(3.0, DeleteOverlay, GetClientUserId(client));
 	}
 
 	CPrintToChatAll("%t %t", "torch_tag", "torch_torchem", client);
@@ -914,21 +1066,17 @@ void ExtinguishEm(int client)
 	g_bOnTorch[client] = false;
 	g_bImmuneTorch[client] = true;
 
+	ExtinguishEntity(client);
 	SetEntityRenderColor(client, 0, 0, 0, 255);
 
 	SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
 
-	CreateTimer(0.0, DeleteOverlay, client);
+	CreateTimer(0.0, DeleteOverlay, GetClientUserId(client));
 
 	if (gc_bSounds.BoolValue)
 	{
 		EmitSoundToClientAny(client, g_sSoundClearTorchPath);
 	}
-
-	int ent = GetEntPropEnt(client, Prop_Data, "m_hEffectEntity");
-
-	if (IsValidEdict(ent))
-		SetEntPropFloat(ent, Prop_Data, "m_flLifetime", 0.0); 
 
 	CPrintToChatAll("%t %t", "torch_tag", "torch_untorch", client);
 }
@@ -944,7 +1092,6 @@ void CheckStatus()
 	if (number == 0)
 	{
 		CS_TerminateRound(5.0, CSRoundEnd_Draw);
-		CreateTimer(1.0, DeleteOverlay);
 		CPrintToChatAll("%t %t", "torch_tag", "torch_win");
 	}
 }
@@ -1071,9 +1218,17 @@ void CreateInfoPanel(int client)
 
 public Action Timer_StartEvent(Handle timer)
 {
-	if (g_iTruceTime > 1)
+	if (g_iTruceTime > 0)
 	{
 		g_iTruceTime--;
+
+		if (g_iTruceTime == gc_iTruceTime.IntValue-3)
+		{
+			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+			{
+				SetEntityMoveType(i, MOVETYPE_WALK);
+			}
+		}
 
 		PrintCenterTextAll("%t", "torch_damage_nc", g_iTruceTime);
 
@@ -1102,18 +1257,18 @@ public Action Timer_StartEvent(Handle timer)
 
 		if (!gc_bStayOverlay.BoolValue)
 		{
-			CreateTimer(3.0, DeleteOverlay, g_iBurningZero);
+			CreateTimer(3.0, DeleteOverlay, GetClientUserId(g_iBurningZero));
 		}
 	}
 
-	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)&& IsPlayerAlive(i))
 	{
 		if (gp_bCustomPlayerSkins && gc_bWallhack.BoolValue)
 		{
 			Setup_WallhackSkin(i);
 		}
 
-		if (IsPlayerAlive(i) && (i != g_iBurningZero)) 
+		if (i != g_iBurningZero)
 		{
 			SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
 

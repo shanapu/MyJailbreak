@@ -32,6 +32,7 @@
 #include <colors>
 #include <autoexecconfig>
 #include <warden>
+#include <myjbwarden>
 #include <mystocks>
 
 // Compiler Options
@@ -70,7 +71,7 @@ public void Counter_OnPluginStart()
 
 public Action Command_Counter(int client, any args)
 {
-	if (gc_bPlugin.BoolValue)	
+	if (gc_bPlugin.BoolValue)
 	{
 		if ((IsClientWarden(client) || (IsClientDeputy(client) && gc_bCounterDeputy.BoolValue)) && gc_bCounter.BoolValue)
 		{
@@ -113,7 +114,7 @@ public Action Command_Counter(int client, any args)
 				{
 					if (g_bCounted[i])
 					{
-						int userdistance = RoundToNearest(Math_UnitsToMeters(g_fDistance[i]));
+						int userdistance = RoundToNearest(g_fDistance[i] * 0.01905);  // 0.01905 GAMEUNITS_TO_METERS
 						char userid[11];
 						char username[MAX_NAME_LENGTH];
 						IntToString(GetClientUserId(i), userid, sizeof(userid));
@@ -155,54 +156,4 @@ public void Counter_OnConfigsExecuted()
 		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
 			RegConsoleCmd(sCommand, Command_Counter, "Allows a warden to count all terrorists in sight");
 	}
-}
-
-/******************************************************************************
-					STOCKS
-******************************************************************************/
-
-bool ClientViews(int viewer, int target, float fMaxDistance=0.0, float fThreshold=0.73)
-{
-	// Retrieve view and target eyes position
-	float fViewPos[3];  GetClientEyePosition(viewer, fViewPos);
-	float fViewAng[3];  GetClientEyeAngles(viewer, fViewAng);
-	float fViewDir[3];
-	float fTargetPos[3];GetClientEyePosition(target, fTargetPos);
-	float fTargetDir[3];
-	float fDistance[3];
-
-	// Calculate view direction
-	fViewAng[0] = fViewAng[2] = 0.0;
-	GetAngleVectors(fViewAng, fViewDir, NULL_VECTOR, NULL_VECTOR);
-
-	// Calculate distance to viewer to see if it can be seen.
-	fDistance[0] = fTargetPos[0]-fViewPos[0];
-	fDistance[1] = fTargetPos[1]-fViewPos[1];
-	fDistance[2] = 0.0;
-	if (fMaxDistance != 0.0)
-	{
-		if (((fDistance[0]*fDistance[0])+(fDistance[1]*fDistance[1])) >= (fMaxDistance*fMaxDistance))
-			return false;
-	}
-
-	// Check dot product. If it's negative, that means the viewer is facing
-	// backwards to the target.
-	NormalizeVector(fDistance, fTargetDir);
-	if (GetVectorDotProduct(fViewDir, fTargetDir) < fThreshold) return false;
-
-	// Now check if there are no obstacles in between through raycasting
-	Handle hTrace = TR_TraceRayFilterEx(fViewPos, fTargetPos, MASK_PLAYERSOLID_BRUSHONLY, RayType_EndPoint, ClientViewsFilter);
-	if (TR_DidHit(hTrace)) { CloseHandle(hTrace);return false;}
-	CloseHandle(hTrace);
-
-	// Done, it's visible
-	return true;
-}
-
-public bool ClientViewsFilter(int Entity, int Mask, any Junk)
-{
-	if (Entity >= 1 && Entity <= MaxClients) 
-		return false;
-
-	return true;
 }

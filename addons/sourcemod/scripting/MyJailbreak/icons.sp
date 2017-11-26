@@ -37,6 +37,7 @@
 // Optional Plugins
 #undef REQUIRE_PLUGIN
 #include <warden>
+#include <myjbwarden>
 #include <hosties>
 #include <lastrequest>
 #include <myjailbreak>
@@ -47,6 +48,7 @@
 #pragma newdecls required
 
 // Console Variables
+ConVar gc_bEventDay;
 ConVar gc_bIconWarden;
 ConVar gc_sIconWardenPath;
 ConVar gc_bIconDeputy;
@@ -64,6 +66,7 @@ ConVar gc_sIconFreedayPath;
 
 // Bools
 bool gp_bWarden = false;
+bool gp_bMyJBWarden = false;
 bool gp_bHosties = false;
 bool g_bBlockIcon[MAXPLAYERS+1] = {false, ...};
 
@@ -96,6 +99,7 @@ public void OnPluginStart()
 	AutoExecConfig_SetCreateFile(true);
 
 	// AutoExecConfig
+	gc_bEventDay = AutoExecConfig_CreateConVar("sm_icons_eventday", "1", "0 - use the icons, 1 - disable icons on EventDays", _, true, 0.0, true, 1.0);
 	gc_bIconWarden = AutoExecConfig_CreateConVar("sm_icons_warden_enable", "1", "0 - disabled, 1 - enable the icon above the wardens head", _, true, 0.0, true, 1.0);
 	gc_sIconWardenPath = AutoExecConfig_CreateConVar("sm_icons_warden_path", "decals/MyJailbreak/warden", "Path to the warden icon DONT TYPE .vmt or .vft");
 	gc_bIconDeputy = AutoExecConfig_CreateConVar("sm_icons_deputy_enable", "1", "0 - disabled, 1 - enable the icon above the deputy head", _, true, 0.0, true, 1.0);
@@ -200,6 +204,7 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 public void OnAllPluginsLoaded()
 {
 	gp_bWarden = LibraryExists("warden");
+	gp_bMyJBWarden = LibraryExists("myjbwarden");
 	gp_bHosties = LibraryExists("lastrequest");
 }
 
@@ -207,6 +212,9 @@ public void OnLibraryRemoved(const char[] name)
 {
 	if (StrEqual(name, "warden"))
 		gp_bWarden = false;
+
+	if (StrEqual(name, "myjbwarden"))
+		gp_bMyJBWarden = false;
 
 	if (StrEqual(name, "lastrequest"))
 		gp_bHosties = false;
@@ -216,6 +224,9 @@ public void OnLibraryAdded(const char[] name)
 {
 	if (StrEqual(name, "warden"))
 		gp_bWarden = true;
+
+	if (StrEqual(name, "myjbwarden"))
+		gp_bMyJBWarden = true;
 
 	if (StrEqual(name, "lastrequest"))
 		gp_bHosties = true;
@@ -461,16 +472,15 @@ void SpawnIcon(int client)
 
 	RemoveIcon(client);
 
-	if (g_bBlockIcon[client]) 
+	if(gc_bEventDay.BoolValue && MyJailbreak_IsEventDayRunning())
 		return;
 
-	char iTarget[16];
-	Format(iTarget, 16, "client%d", client);
-	DispatchKeyValue(client, "targetname", iTarget);
+	if (g_bBlockIcon[client])
+		return;
 
 	g_iIcon[client] = CreateEntityByName("env_sprite");
 
-	if (!g_iIcon[client]) 
+	if (!g_iIcon[client])
 		return;
 
 	char iconbuffer[256];
@@ -481,11 +491,11 @@ void SpawnIcon(int client)
 		{
 			Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconWardenPath);
 		}
-		else if (gc_bIconDeputy.BoolValue && warden_deputy_isdeputy(client))
+		else if (gp_bMyJBWarden && gc_bIconDeputy.BoolValue && warden_deputy_isdeputy(client))
 		{
 			Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconDeputyPath);
 		}
-		else if (gc_bIconCuffed.BoolValue && warden_handcuffs_iscuffed(client))
+		else if (gp_bMyJBWarden && gc_bIconCuffed.BoolValue && warden_handcuffs_iscuffed(client))
 		{
 			Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconCuffedPath);
 		}
@@ -499,7 +509,7 @@ void SpawnIcon(int client)
 			{
 				Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconRebelPath);
 			}
-				else if (gc_bIconFreeday.BoolValue && warden_freeday_has(client))
+				else if (gp_bMyJBWarden && gc_bIconFreeday.BoolValue && warden_freeday_has(client))
 			{
 				Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconFreedayPath);
 			}
@@ -508,7 +518,7 @@ void SpawnIcon(int client)
 				Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconPrisonerPath);
 			}
 		}
-		else if (gc_bIconFreeday.BoolValue && warden_freeday_has(client))
+		else if (gp_bMyJBWarden && gc_bIconFreeday.BoolValue && warden_freeday_has(client))
 		{
 			Format(iconbuffer, sizeof(iconbuffer), "materials/%s.vmt", g_sIconFreedayPath);
 		}
@@ -550,8 +560,8 @@ void SpawnIcon(int client)
 	origin[2] = origin[2] + 90.0;
 
 	TeleportEntity(g_iIcon[client], origin, NULL_VECTOR, NULL_VECTOR);
-	SetVariantString(iTarget);
-	AcceptEntityInput(g_iIcon[client], "SetParent", g_iIcon[client], g_iIcon[client], 0);
+	SetVariantString("!activator");
+	AcceptEntityInput(g_iIcon[client], "SetParent", client, g_iIcon[client], 0);
 
 	if (gp_bWarden)
 	{
@@ -559,11 +569,11 @@ void SpawnIcon(int client)
 		{
 			SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitW);
 		}
-		else if (gc_bIconDeputy.BoolValue && warden_deputy_isdeputy(client))
+		else if (gp_bMyJBWarden && gc_bIconDeputy.BoolValue && warden_deputy_isdeputy(client))
 		{
 			SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitD);
 		}
-		else if (gc_bIconCuffed.BoolValue && warden_handcuffs_iscuffed(client))
+		else if (gp_bMyJBWarden && gc_bIconCuffed.BoolValue && warden_handcuffs_iscuffed(client))
 		{
 			SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitC);
 		}
@@ -577,7 +587,7 @@ void SpawnIcon(int client)
 			{
 				SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitR);
 			}
-				else if (gc_bIconFreeday.BoolValue && warden_freeday_has(client))
+				else if (gp_bMyJBWarden && gc_bIconFreeday.BoolValue && warden_freeday_has(client))
 			{
 				SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitF);
 			}
@@ -586,7 +596,7 @@ void SpawnIcon(int client)
 				SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitP);
 			}
 		}
-		else if (gc_bIconFreeday.BoolValue && warden_freeday_has(client))
+		else if (gp_bMyJBWarden && gc_bIconFreeday.BoolValue && warden_freeday_has(client))
 		{
 			SDKHook(g_iIcon[client], SDKHook_SetTransmit, Should_TransmitF);
 		}

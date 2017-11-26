@@ -32,6 +32,7 @@
 #include <colors>
 #include <autoexecconfig>
 #include <warden>
+#include <myjbwarden>
 #include <mystocks>
 
 // Compiler Options
@@ -60,14 +61,20 @@ public void ShootGuns_OnPluginStart()
 public void ShootGuns_Event_BulletImpact(Event event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(event.GetInt("userid")); // Get the clients id
-
-	int eni = GetClientAimTarget(client, false);
+	int weapon = GetClientAimTarget(client, false);
 
 	if (gc_bShootGuns.BoolValue && ((gc_iShootGunsMode.IntValue == 1 && IsClientWarden(client)) || (gc_iShootGunsMode.IntValue == 2 && (IsClientWarden(client) || IsClientDeputy(client)) || (gc_iShootGunsMode.IntValue == 3 && (GetClientTeam(client) == CS_TEAM_CT)) || (gc_iShootGunsMode.IntValue == 4))))
 	{
-		if (Weapon_IsValid(eni) && !IsValidClient(eni, true, true))
+		if (IsValidEdict(weapon) && !IsValidClient(weapon, true, true))
 		{
-			AcceptEntityInput(eni, "Kill");
+			char buffer[8];
+			if (!GetEdictClassname(weapon, buffer, sizeof(buffer)))
+				return;
+
+			if (StrContains(buffer, "weapon_", false) != -1)
+			{
+				AcceptEntityInput(weapon, "Kill");
+			}
 		}
 	}
 }

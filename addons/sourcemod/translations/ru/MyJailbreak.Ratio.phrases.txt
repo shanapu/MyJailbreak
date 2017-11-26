@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-04-20 21:44:29 UTC
+// Date: 2017-11-20 02:35:05 UTC
 // Language: Russian (ru)
 // 
 // To view other translations for this plugin, please visit:
@@ -346,6 +346,56 @@
 	"ratio_steamgroup"
 	{
 		"ru"		"Невозможно играть за охрану, для начала необходимо вступить в группу steam."
+	}
+
+	"ratio_lvlranks"
+	{
+		"ru"		"Вам необходим минимум {1} уровень, чтобы играть за охрану"
+	}
+
+	"ratio_hours"
+	{
+		"ru"		"час(ов)"
+	}
+
+	"ratio_seconds"
+	{
+		"ru"		"секунды"
+	}
+
+	"ratio_minutes"
+	{
+		"ru"		"минут(а)"
+	}
+
+	"ratio_minutes"
+	{
+		"ru"		"минут(ы)"
+	}
+
+	"ratio_mostactive"
+	{
+		"ru"		"Вы должны сыграть хотя бы {1} раз, чтобы играть за охрану."
+	}
+
+	"ratio_mostactive_terror"
+	{
+		"ru"		"Вы должны сыграть хотя бы {1} раз как заключённый, чтобы играть за охрану."
+	}
+
+	"ratio_mostactive_terror"
+	{
+		"ru"		"Вы должны сыграть хотя бы {1} как заключённый, чтобы играть за охрану."
+	}
+
+	"ratio_guard_enable"
+	{
+		"ru"		" Вы можете быть выбраны в качестве случайного охранника, когда очередь охраны пуста"
+	}
+
+	"ratio_guard_disable"
+	{
+		"ru"		"Вы не можете быть выбраны в качестве случайного охранника, когда очередь охраны пуста"
 	}
 
 }

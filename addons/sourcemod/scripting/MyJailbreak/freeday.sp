@@ -40,6 +40,7 @@
 #include <lastrequest>
 #include <warden>
 #include <myjailbreak>
+#include <myweapons>
 #include <smartjaildoors>
 #define REQUIRE_PLUGIN
 
@@ -53,12 +54,14 @@ bool g_bStartFreeday = false;
 bool g_bAutoFreeday = false;
 bool g_bAllowRespawn = false;
 bool g_bRepeatFirstFreeday = false;
+bool g_bIsRoundEnd = true;
 
 // Plugin bools
 bool gp_bWarden;
 bool gp_bHosties;
 bool gp_bSmartJailDoors;
 bool gp_bMyJailbreak;
+bool gp_bMyWeapons;
 
 // Console Variables
 ConVar gc_bPlugin;
@@ -68,6 +71,7 @@ ConVar gc_bAuto;
 ConVar gc_iRespawn;
 ConVar gc_iRespawnTime;
 ConVar gc_bdamage;
+ConVar gc_bWarden;
 ConVar gc_bSetA;
 ConVar gc_bSetABypassCooldown;
 ConVar gc_bVote;
@@ -77,19 +81,24 @@ ConVar gc_sCustomCommandVote;
 ConVar gc_sCustomCommandSet;
 ConVar gc_sAdminFlag;
 
+ConVar gc_bBeginSetA;
+ConVar gc_bBeginSetW;
+ConVar gc_bBeginSetV;
+ConVar gc_bBeginSetVW;
+
 // Extern Convars
-ConVar g_iMPRoundTime;
+//ConVar g_iMPRoundTime;
 
 // Integers
-int g_iOldRoundTime;
+//int g_iOldRoundTime;
 int g_iCoolDown;
 int g_iVoteCount;
-int g_iFreedayRound = 0;
+int g_iCollision_Offset;
 
 // Strings
 char g_sHasVoted[1500];
 char g_sEventsLogFile[PLATFORM_MAX_PATH];
-char g_sAdminFlag[4];
+char g_sAdminFlag[64];
 
 // Floats
 float g_fPos[3];
@@ -127,10 +136,17 @@ public void OnPluginStart()
 	gc_bSetA = AutoExecConfig_CreateConVar("sm_freeday_admin", "1", "0 - disabled, 1 - allow admin/vip to set freeday round", _, true, 0.0, true, 1.0);
 	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_freeday_flag", "g", "Set flag for admin/vip to set this Event Day.");
 	gc_bVote = AutoExecConfig_CreateConVar("sm_freeday_vote", "1", "0 - disabled, 1 - allow player to vote for freeday", _, true, 0.0, true, 1.0);
+
+	gc_bBeginSetA = AutoExecConfig_CreateConVar("sm_freeday_begin_admin", "1", "When admin set event (!setfreeday) = 0 - start event next round, 1 - start event current round", _, true, 0.0, true, 1.0);
+	gc_bBeginSetW = AutoExecConfig_CreateConVar("sm_freeday_begin_warden", "1", "When warden set event (!setfreeday) = 0 - start event next round, 1 - start event current round", _, true, 0.0, true, 1.0);
+	gc_bBeginSetV = AutoExecConfig_CreateConVar("sm_freeday_begin_vote", "0", "When users vote for event (!freeday) = 0 - start event next round, 1 - start event current round", _, true, 0.0, true, 1.0);
+	gc_bBeginSetVW = AutoExecConfig_CreateConVar("sm_freeday_begin_daysvote", "0", "When warden/admin start eventday voting (!sm_voteday) and event wins = 0 - start event next round, 1 - start event current round", _, true, 0.0, true, 1.0);
+
 	gc_bAuto = AutoExecConfig_CreateConVar("sm_freeday_noct", "1", "0 - disabled, 1 - auto freeday when there is no CT", _, true, 0.0, true, 1.0);
+	gc_bWarden = AutoExecConfig_CreateConVar("sm_freeday_allow_warden", "0", "0 - warden disabled, 1 - allow player to become warden", _, true, 0.0, true, 1.0);
 	gc_iRespawn = AutoExecConfig_CreateConVar("sm_freeday_respawn", "1", "1 - respawn on NoCT Freeday / 2 - respawn on firstround/vote/set Freeday / 3 - Both", _, true, 1.0, true, 3.0);
 	gc_iRespawnTime = AutoExecConfig_CreateConVar("sm_freeday_respawn_time", "120", "Time in seconds player will respawn after round begin", _, true, 1.0);
-	gc_bFirst = AutoExecConfig_CreateConVar("sm_freeday_firstround", "1", "0 - disabled, 1 - auto freeday first round after mapstart", _, true, 0.0, true, 1.0);
+	gc_bFirst = AutoExecConfig_CreateConVar("sm_freeday_firstround", "0", "0 - disabled, 1 - auto freeday first round after mapstart", _, true, 0.0, true, 1.0);
 	gc_bdamage = AutoExecConfig_CreateConVar("sm_freeday_damage", "1", "0 - disabled, 1 - enable damage on freedays", _, true, 0.0, true, 1.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_freeday_roundtime", "5", "Round time in minutes for a single freeday round", _, true, 1.0);
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_freeday_cooldown_day", "0", "Rounds until freeday can be started again.", _, true, 0.0);
@@ -146,9 +162,12 @@ public void OnPluginStart()
 	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
 
 	// FindConVar
-	g_iMPRoundTime = FindConVar("mp_roundtime");
+//	g_iMPRoundTime = FindConVar("mp_roundtime");
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
+
+	// Offsets
+	g_iCollision_Offset = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
 
 	// Logs
 	SetLogFile(g_sEventsLogFile, "Events", "MyJailbreak");
@@ -169,6 +188,7 @@ public void OnAllPluginsLoaded()
 	gp_bHosties = LibraryExists("lastrequest");
 	gp_bSmartJailDoors = LibraryExists("smartjaildoors");
 	gp_bMyJailbreak = LibraryExists("myjailbreak");
+	gp_bMyWeapons = LibraryExists("myweapons");
 }
 
 public void OnLibraryRemoved(const char[] name)
@@ -184,6 +204,9 @@ public void OnLibraryRemoved(const char[] name)
 
 	if (StrEqual(name, "myjailbreak"))
 		gp_bMyJailbreak = false;
+
+	if (StrEqual(name, "myweapons"))
+		gp_bMyWeapons = false;
 }
 
 public void OnLibraryAdded(const char[] name)
@@ -199,6 +222,9 @@ public void OnLibraryAdded(const char[] name)
 
 	if (StrEqual(name, "myjailbreak"))
 		gp_bMyJailbreak = true;
+
+	if (StrEqual(name, "myweapons"))
+		gp_bMyWeapons = true;
 }
 
 // Initialize Event
@@ -235,7 +261,16 @@ public void OnConfigsExecuted()
 			RegConsoleCmd(sCommand, Command_SetFreeday, "Allows the Admin or Warden to set freeday as next round");
 		}
 	}
+
+	MyJailbreak_AddEventDay("freeday");
 }
+
+public void OnPluginEnd()
+{
+	MyJailbreak_RemoveEventDay("freeday");
+}
+
+
 
 /******************************************************************************
                    COMMANDS
@@ -252,7 +287,7 @@ public Action Command_SetFreeday(int client, int args)
 
 	if (client == 0) // Called by a server/voting
 	{
-		StartNextRound();
+		StartEventRound(gc_bBeginSetVW.BoolValue);
 
 		if (!gp_bMyJailbreak)
 		{
@@ -261,7 +296,7 @@ public Action Command_SetFreeday(int client, int args)
 
 		if (MyJailbreak_ActiveLogging())
 		{
-			LogToFileEx(g_sEventsLogFile, "Event Deal Damage was started by groupvoting");
+			LogToFileEx(g_sEventsLogFile, "Event Freeday was started by groupvoting");
 		}
 	}
 	else if (CheckVipFlag(client, g_sAdminFlag)) // Called by admin/VIP
@@ -290,7 +325,7 @@ public Action Command_SetFreeday(int client, int args)
 			return Plugin_Handled;
 		}
 
-		StartNextRound();
+		StartEventRound(gc_bBeginSetA.BoolValue);
 
 		if (!gp_bMyJailbreak)
 		{
@@ -334,7 +369,7 @@ public Action Command_SetFreeday(int client, int args)
 			return Plugin_Handled;
 		}
 
-		StartNextRound();
+		StartEventRound(gc_bBeginSetW.BoolValue);
 
 		if (!gp_bMyJailbreak)
 		{
@@ -404,7 +439,7 @@ public Action Command_VoteFreeday(int client, int args)
 
 	if (g_iVoteCount > playercount)
 	{
-		StartNextRound();
+		StartEventRound(gc_bBeginSetV.BoolValue);
 
 		if (!gp_bMyJailbreak)
 		{
@@ -431,6 +466,8 @@ public Action Command_VoteFreeday(int client, int args)
 // Round start
 public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
+	g_bIsRoundEnd = false;
+
 	if ((GetTeamClientCount(CS_TEAM_CT) < 1) && gc_bAuto.BoolValue)
 	{
 		if (gp_bMyJailbreak)
@@ -476,102 +513,29 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		return;
 	}
 
-	if (gp_bWarden)
-	{
-		SetCvar("sm_warden_enable", 0);
-	}
-
-	if (gp_bHosties)
-	{
-		SetCvar("sm_hosties_lr", 0);
-	}
-
-	SetCvar("sm_weapons_enable", 0);
-	SetCvar("sm_weapons_t", 0);
-
-	if (gp_bMyJailbreak)
-	{
-		MyJailbreak_SetEventDayPlanned(false);
-		MyJailbreak_SetEventDayRunning(true, 0);
-	}
-
 	g_bIsFreeday = true;
-	g_iFreedayRound++;
 	g_bStartFreeday = false;
 	g_bAllowRespawn = true;
 
-	if (gp_bSmartJailDoors)
-	{
-		SJD_OpenDoors();
-	}
-
-	if (!gp_bSmartJailDoors || (gp_bSmartJailDoors && (SJD_IsCurrentMapConfigured() != true))) // spawn Terrors to CT Spawn 
-	{
-		int RandomCT = 0;
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
-		{
-			if (GetClientTeam(i) == CS_TEAM_CT)
-			{
-				RandomCT = i;
-				break;
-			}
-		}
-
-		if (RandomCT)
-		{
-			for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
-			{
-				GetClientAbsOrigin(RandomCT, g_fPos);
-				
-				g_fPos[2] = g_fPos[2] + 5;
-				
-				TeleportEntity(i, g_fPos, NULL_VECTOR, NULL_VECTOR);
-			}
-		}
-	}
-
-
-	CreateTimer (gc_iRespawnTime.FloatValue, Timer_StopRespawn);
-
-	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
-	{
-		CreateInfoPanel(i);
-
-		if (!gc_bdamage.BoolValue && IsValidClient(i))
-		{
-			SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
-		}
-	}
-
-	if (g_bRepeatFirstFreeday)
-	{
-		SetTeamScore(CS_TEAM_CT, 0);
-		SetTeamScore(CS_TEAM_T, 0);
-		g_bRepeatFirstFreeday = false;
-	}
-
-	if (gc_bFirst.BoolValue)
-	{
-		if ((GetTeamClientCount(CS_TEAM_CT) == 0) || (GetTeamClientCount(CS_TEAM_T) == 0) && (GetTeamScore(CS_TEAM_CT) + GetTeamScore(CS_TEAM_T) == 0))
-		{
-			g_bRepeatFirstFreeday = true;
-		}
-	}
-
-	PrintCenterTextAll("%t", "freeday_start_nc");
-	CPrintToChatAll("%t %t", "freeday_tag", "freeday_start");
+	PrepareDay();
 }
 
 // Round End
 public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 {
-	if (g_bIsFreeday)
+	g_bIsRoundEnd = true;
+
+	if (g_bIsFreeday && !g_bRepeatFirstFreeday)
 	{
+		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, true))
+		{
+			SetEntData(i, g_iCollision_Offset, 0, 4, true);
+		}
+
 		g_bIsFreeday = false;
 		g_bStartFreeday = false;
 		g_bAllowRespawn = false;
 		g_bAutoFreeday = false;
-		g_iFreedayRound = 0;
 		Format(g_sHasVoted, sizeof(g_sHasVoted), "");
 
 		if (gp_bHosties)
@@ -584,10 +548,11 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			SetCvar("sm_warden_enable", 1);
 		}
 
-		SetCvar("sm_weapons_enable", 1);
-		SetCvar("mp_teammates_are_enemies", 0);
-
-		g_iMPRoundTime.IntValue = g_iOldRoundTime;
+		if (gp_bMyWeapons)
+		{
+			MyWeapons_AllowTeam(CS_TEAM_T, false);
+			MyWeapons_AllowTeam(CS_TEAM_CT, true);
+		}
 
 		if (gp_bMyJailbreak)
 		{
@@ -595,10 +560,14 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			MyJailbreak_SetEventDayRunning(false, 0);
 		}
 
+		SetCvar("mp_teammates_are_enemies", 0);
+
+//		g_iMPRoundTime.IntValue = g_iOldRoundTime;
+
 		CPrintToChatAll("%t %t", "freeday_tag", "freeday_end");
 	}
 
-	if (g_bStartFreeday || g_bRepeatFirstFreeday)
+	if (g_bStartFreeday)
 	{
 		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 		{
@@ -631,7 +600,6 @@ public void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast
 public void OnMapStart()
 {
 	g_iVoteCount = 0;
-	g_iFreedayRound = 0;
 
 	g_bIsFreeday = false;
 	g_bAutoFreeday = false;
@@ -641,6 +609,9 @@ public void OnMapStart()
 	{
 		g_bStartFreeday = true;
 
+//		g_iOldRoundTime = g_iMPRoundTime.IntValue;
+//		g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue;
+
 		if (gp_bMyJailbreak)
 		{
 			char buffer[32];
@@ -648,9 +619,6 @@ public void OnMapStart()
 			MyJailbreak_SetEventDayName(buffer);
 			MyJailbreak_SetEventDayRunning(true, 0);
 		}
-
-		g_iOldRoundTime = g_iMPRoundTime.IntValue;
-		g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue;
 	}
 	else
 	{
@@ -675,7 +643,6 @@ public void OnMapEnd()
 	g_bAllowRespawn = false;
 
 	g_iVoteCount = 0;
-	g_iFreedayRound = 0;
 	g_sHasVoted[0] = '\0';
 }
 
@@ -684,10 +651,9 @@ public void OnMapEnd()
 ******************************************************************************/
 
 // Prepare Event
-void StartNextRound()
+void StartEventRound(bool thisround)
 {
-	g_bStartFreeday = true;
-	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
+	g_iCoolDown = gc_iCooldownDay.IntValue;
 	g_iVoteCount = 0;
 
 	if (gp_bMyJailbreak)
@@ -698,11 +664,131 @@ void StartNextRound()
 		MyJailbreak_SetEventDayPlanned(true);
 	}
 
-	g_iOldRoundTime = g_iMPRoundTime.IntValue;
-	g_iMPRoundTime.IntValue = gc_iRoundTime.IntValue;
+	if(thisround && g_bIsRoundEnd)
+	{
+		thisround = false;
+	}
 
-	CPrintToChatAll("%t %t", "freeday_tag", "freeday_next");
-	PrintCenterTextAll("%t", "freeday_next_nc");
+	if (thisround)
+	{
+		g_bIsFreeday = true;
+
+		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+		{
+			SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
+
+			SetEntityMoveType(i, MOVETYPE_NONE);
+		}
+
+		CreateTimer(3.0, Timer_PrepareEvent);
+
+		CPrintToChatAll("%t %t", "freeday_tag", "freeday_now");
+		PrintCenterTextAll("%t", "freeday_now_nc");
+	}
+	else
+	{
+		g_bStartFreeday = true;
+		g_iCoolDown++;
+
+		CPrintToChatAll("%t %t", "freeday_tag", "freeday_next");
+		PrintCenterTextAll("%t", "freeday_next_nc");
+	}
+}
+
+public Action Timer_PrepareEvent(Handle timer)
+{
+	PrepareDay();
+}
+
+void PrepareDay()
+{
+	if (gp_bSmartJailDoors)
+	{
+		SJD_OpenDoors();
+	}
+
+	if (!gp_bSmartJailDoors || (gp_bSmartJailDoors && (SJD_IsCurrentMapConfigured() != true))) // spawn Terrors to CT Spawn 
+	{
+		int RandomCT = 0;
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+		{
+			if (GetClientTeam(i) == CS_TEAM_CT)
+			{
+				RandomCT = i;
+				break;
+			}
+		}
+
+		if (RandomCT)
+		{
+			for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+			{
+				GetClientAbsOrigin(RandomCT, g_fPos);
+				
+				g_fPos[2] = g_fPos[2] + 5;
+				
+				TeleportEntity(i, g_fPos, NULL_VECTOR, NULL_VECTOR);
+			}
+		}
+	}
+
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+	{
+		CreateInfoPanel(i);
+
+		SetEntData(i, g_iCollision_Offset, 2, 4, true);
+
+		if (!gc_bdamage.BoolValue && IsValidClient(i))
+		{
+			SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
+		}
+
+		SetEntityMoveType(i, MOVETYPE_WALK);
+	}
+
+	if (gp_bMyJailbreak)
+	{
+		MyJailbreak_SetEventDayPlanned(false);
+		MyJailbreak_SetEventDayRunning(true, 0);
+	}
+
+	if (gp_bWarden && !gc_bWarden.BoolValue)
+	{
+		SetCvar("sm_warden_enable", 0);
+	}
+
+	if (gp_bHosties)
+	{
+		SetCvar("sm_hosties_lr", 0);
+	}
+
+	if (gp_bMyWeapons)
+	{
+		MyWeapons_AllowTeam(CS_TEAM_T, false);
+		MyWeapons_AllowTeam(CS_TEAM_CT, true);
+	}
+
+	if (g_bRepeatFirstFreeday)
+	{
+		SetTeamScore(CS_TEAM_CT, 0);
+		SetTeamScore(CS_TEAM_T, 0);
+		g_bRepeatFirstFreeday = false;
+	}
+
+	if (gc_bFirst.BoolValue)
+	{
+		if (((GetTeamClientCount(CS_TEAM_CT) == 0) || (GetTeamClientCount(CS_TEAM_T) == 0)) && (GetTeamScore(CS_TEAM_CT) + GetTeamScore(CS_TEAM_T) == 0))
+		{
+			g_bRepeatFirstFreeday = true;
+		}
+	}
+
+	GameRules_SetProp("m_iRoundTime", gc_iRoundTime.IntValue*60, 4, 0, true);
+
+	CreateTimer (gc_iRespawnTime.FloatValue, Timer_StopRespawn);
+
+	PrintCenterTextAll("%t", "freeday_start_nc");
+	CPrintToChatAll("%t %t", "freeday_tag", "freeday_start");
 }
 
 /******************************************************************************

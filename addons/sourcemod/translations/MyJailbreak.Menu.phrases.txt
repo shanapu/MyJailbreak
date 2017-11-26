@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-04-20 21:44:27 UTC
+// Date: 2017-11-20 02:35:00 UTC
 // Language: English (en)
 // 
 // To view other translations for this plugin, please visit:
@@ -98,11 +98,6 @@
 		"en"		"Become a Prisoner"
 	}
 
-	"menu_joinspec"
-	{
-		"en"		"Go Spectator"
-	}
-
 	"menu_check"
 	{
 		"en"		"Check Rebellers"
@@ -178,11 +173,6 @@
 		"en"		"Zombie Day"
 	}
 
-	"menu_dealdamge"
-	{
-		"en"		"Deal Damage Day"
-	}
-
 	"menu_hide"
 	{
 		"en"		"Hide in The Dark"
@@ -228,19 +218,9 @@
 		"en"		"No Scope"
 	}
 
-	"menu_noevent"
-	{
-		"en"		"No Event Day"
-	}
-
 	"menu_duckhunt"
 	{
 		"en"		"DuckHunt"
-	}
-
-	"menu_Freeday"
-	{
-		"en"		"Freeday"
 	}
 
 	"menu_admin"
@@ -306,12 +286,6 @@
 		"en"		"The vote ended in a 50/50 draw! An Event Day was chosen Randomly!"
 	}
 
-	"menu_votingcancel"
-	{
-		"#format"	"{1:s}"
-		"en"		"The voting was canceled, cause EventDay {purple}{1}{default} was already set!"
-	}
-
 	"menu_disabled"
 	{
 		"en"		"Event voting is currently {purple}disabled!"
@@ -340,21 +314,6 @@
 	"menu_removedeputy"
 	{
 		"en"		"Remove Deputy"
-	}
-
-	"menu_removequeue"
-	{
-		"en"		"Remove player from guard queue"
-	}
-
-	"menu_endround"
-	{
-		"en"		"Force round end"
-	}
-
-	"menu_clearqueue"
-	{
-		"en"		"Clear guard queue"
 	}
 
 	"menu_deputybecome"
@@ -426,6 +385,41 @@
 	"menu_gangs"
 	{
 		"en"		"Gangs Menu"
+	}
+
+	"menu_teleport"
+	{
+		"en"		"Teleport War"
+	}
+
+	"menu_armsrace"
+	{
+		"en"		"Arms Race"
+	}
+
+	"menu_playerremovefreeday"
+	{
+		"en"		"Remove a Players Freeday"
+	}
+
+	"menu_oneinthechamber"
+	{
+		"en"		"One in the chamber"
+	}
+
+	"menu_nolr"
+	{
+		"en"		"Toggle withheld Last Request"
+	}
+
+	"menu_dealdamage"
+	{
+		"en"		"Deal Damage Day"
+	}
+
+	"menu_freeday"
+	{
+		"en"		"Freeday"
 	}
 
 }

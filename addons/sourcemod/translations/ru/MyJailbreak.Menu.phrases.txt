@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-04-20 21:44:27 UTC
+// Date: 2017-11-20 02:35:00 UTC
 // Language: Russian (ru)
 // 
 // To view other translations for this plugin, please visit:
@@ -173,11 +173,6 @@
 		"ru"		"Зомби день"
 	}
 
-	"menu_dealdamge"
-	{
-		"ru"		"День урона"
-	}
-
 	"menu_hide"
 	{
 		"ru"		"Прятки в темноте"
@@ -226,11 +221,6 @@
 	"menu_duckhunt"
 	{
 		"ru"		"Охота на уток"
-	}
-
-	"menu_Freeday"
-	{
-		"ru"		"Фридей"
 	}
 
 	"menu_admin"
@@ -386,6 +376,36 @@
 	"menu_joinspec"
 	{
 		"ru"		"Перейти за наблюдателя"
+	}
+
+	"menu_gangs"
+	{
+		"ru"		"Меню банд"
+	}
+
+	"menu_teleport"
+	{
+		"ru"		"Телепорт Война"
+	}
+
+	"menu_armsrace"
+	{
+		"ru"		"Гонка вооружений"
+	}
+
+	"menu_playerremovefreeday"
+	{
+		"ru"		"Закончить свободный день игроков"
+	}
+
+	"menu_dealdamage"
+	{
+		"ru"		"День урона"
+	}
+
+	"menu_freeday"
+	{
+		"ru"		"Фридей"
 	}
 
 }

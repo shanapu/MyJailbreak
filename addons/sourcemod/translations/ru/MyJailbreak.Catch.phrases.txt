@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-04-20 21:44:42 UTC
+// Date: 2017-11-20 02:35:18 UTC
 // Language: Russian (ru)
 // 
 // To view other translations for this plugin, please visit:
@@ -186,6 +186,16 @@
 	"catch_timeuntilstart_nc"
 	{
 		"ru"		"{1} секунд, чтобы спрятаться"
+	}
+
+	"catch_now_nc"
+	{
+		"ru"		"Начинается Поймай раунд."
+	}
+
+	"catch_now"
+	{
+		"ru"		"Начинается {purple}Поймай{default} раунд."
 	}
 
 }

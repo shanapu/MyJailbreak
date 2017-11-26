@@ -57,21 +57,27 @@ do
   mv $file addons/sourcemod/plugins/MyJailbreak
 done
 
-echo "Move all other binary files to plugins folder"
+echo "Move all addons binary files to disbaled folder"
   mv addons/sourcemod/plugins/MyJailbreak/myjailbreak_kento_rankme.smx addons/sourcemod/plugins/MyJailbreak/disabled
   mv addons/sourcemod/plugins/MyJailbreak/myjailbreak_rankme.smx addons/sourcemod/plugins/MyJailbreak/disabled
+  mv addons/sourcemod/plugins/MyJailbreak/myjailbreak_gangs.smx addons/sourcemod/plugins/MyJailbreak/disabled
   mv addons/sourcemod/plugins/MyJailbreak/myjailbreak_reputation.smx addons/sourcemod/plugins/MyJailbreak/disabled
+  mv addons/sourcemod/plugins/MyJailbreak/myjailbreak_mostactive.smx addons/sourcemod/plugins/MyJailbreak/disabled
   mv addons/sourcemod/plugins/MyJailbreak/myjailbreak_teamgames.smx addons/sourcemod/plugins/MyJailbreak/disabled
   mv addons/sourcemod/plugins/MyJailbreak/myjailbreak_steamgroups.smx addons/sourcemod/plugins/MyJailbreak/disabled
   mv addons/sourcemod/plugins/MyJailbreak/myjailbreak_stamm.smx addons/sourcemod/plugins/MyJailbreak/disabled
   mv addons/sourcemod/plugins/MyJailbreak/myjailbreak_zephstore_credits.smx addons/sourcemod/plugins/MyJailbreak/disabled
   mv addons/sourcemod/plugins/MyJailbreak/myjailbreak_sm-store_credits.smx addons/sourcemod/plugins/MyJailbreak/disabled
+  mv addons/sourcemod/plugins/MyJailbreak/myjailbreak_simplestats.smx addons/sourcemod/plugins/MyJailbreak/disabled
+#   mv addons/sourcemod/plugins/MyJailbreak/myjailbreak_lvl_ranks.smx addons/sourcemod/plugins/MyJailbreak/disabled
   mv addons/sourcemod/plugins/MyJailbreak/ratio_teambans.smx addons/sourcemod/plugins/MyJailbreak/disabled
   mv addons/sourcemod/plugins/MyJailbreak/ratio_steamrep.smx addons/sourcemod/plugins/MyJailbreak/disabled
   mv addons/sourcemod/plugins/MyJailbreak/ratio_ctbans_addicted.smx addons/sourcemod/plugins/MyJailbreak/disabled
   mv addons/sourcemod/plugins/MyJailbreak/ratio_ctbans_databomb.smx addons/sourcemod/plugins/MyJailbreak/disabled
-  mv addons/sourcemod/plugins/MyJailbreak/ratio_ctbans_fantom.smx addons/sourcemod/plugins/MyJailbreak/disabled
+  mv addons/sourcemod/plugins/MyJailbreak/ratio_ctbans_r1ko.smx addons/sourcemod/plugins/MyJailbreak/disabled
   mv addons/sourcemod/plugins/MyJailbreak/warden_zephstore_paperclips.smx addons/sourcemod/plugins/MyJailbreak/disabled
+  mv addons/sourcemod/plugins/MyJailbreak/menu_custom.smx addons/sourcemod/plugins/MyJailbreak/disabled
+  rm -r addons/sourcemod/plugins/MyJailbreak/template_custom_menu.smx
 
 echo "Remove build folder if exists"
 if [ -d "build" ]; then
@@ -90,7 +96,7 @@ echo "Move FastDL folder"
 mv fastDL/materials fastDL/models fastDL/sound build/fastDL
 
 echo "Move license to build"
-mv install.txt license.txt downloads.txt CHANGELOG.md build/
+mv install.txt license.txt CHANGELOG.md build/
 
 echo "Remove sourcemod folders"
 rm -r build/gameserver/addons/metamod
@@ -148,7 +154,7 @@ unzip -qo translations.zip -d build/gameserver/
 wget -q -O translations.zip http://translator.mitchdempsey.com/sourcemod_plugins/201/download/MyJailbreak.Ratio.translations.zip
 unzip -qo translations.zip -d build/gameserver/
 
-wget -q -O translations.zip http://translator.mitchdempsey.com/sourcemod_plugins/200/download/MyJailbreak.DealDamage.translations.zip
+wget -q -O translations.zip http://translator.mitchdempsey.com/sourcemod_plugins/281/download/MyJailbreak.DealDamage.translations.zip
 unzip -qo translations.zip -d build/gameserver/
 
 wget -q -O translations.zip http://translator.mitchdempsey.com/sourcemod_plugins/190/download/MyJailbreak.CowBoy.translations.zip
@@ -202,6 +208,17 @@ unzip -qo translations.zip -d build/gameserver/
 wget -q -O translations.zip http://translator.mitchdempsey.com/sourcemod_plugins/271/download/MyJailbreak.Ghosts.translations.zip
 unzip -qo translations.zip -d build/gameserver/
 
+wget -q -O translations.zip http://translator.mitchdempsey.com/sourcemod_plugins/277/download/MyJailbreak.Teleport.translations.zip
+unzip -qo translations.zip -d build/gameserver/
+
+wget -q -O translations.zip http://translator.mitchdempsey.com/sourcemod_plugins/278/download/MyJailbreak.ArmsRace.translations.zip
+unzip -qo translations.zip -d build/gameserver/
+
+wget -q -O translations.zip http://translator.mitchdempsey.com/sourcemod_plugins/283/download/MyJailbreak.OneIntheChamber.translations.zip
+unzip -qo translations.zip -d build/gameserver/
+
+
+
 
 echo "Clean root folder"
 rm sourcemod.tar.gz
@@ -211,7 +228,7 @@ echo "Go to build folder"
 cd build
 
 echo "Compress directories and files"
-zip -9rq $FILE gameserver fastDL install.txt license.txt downloads.txt CHANGELOG.md
+zip -9rq $FILE gameserver fastDL install.txt license.txt CHANGELOG.md
 
 echo "Upload file"
 lftp -c "set ftp:ssl-allow no; set ssl:verify-certificate no; open -u $USER,$PASS $HOST; put -O MyJailbreak/downloads/SM$1/$2/ $FILE"

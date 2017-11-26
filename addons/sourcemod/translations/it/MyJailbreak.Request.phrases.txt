@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-04-20 21:44:28 UTC
+// Date: 2017-11-20 02:35:02 UTC
 // Language: Italian (it)
 // 
 // To view other translations for this plugin, please visit:
@@ -10,57 +10,57 @@
 
 	"request_tag"
 	{
-		"it"		"[{green}MyJB.requests{default}]"
+		"it"		"[{green}MyJB.richieste{default}]"
 	}
 
 	"request_openrefuse"
 	{
-		"it"		"Il CapoCT ha permesso negazioni.{purple} Scrivi !refuse per rifiutare il gioco!"
+		"it"		"Il Capo CT ha permesso di astenersi.{purple} Scrivi !refuse per astenerti dal gioco!"
 	}
 
 	"request_refusing"
 	{
-		"it"		"{purple}{1} {default}ha {purple}Rifiutato il Gioco!"
+		"it"		"{purple}{1} {default}si è astenuto dal gioco!"
 	}
 
 	"request_alreadyrefused"
 	{
-		"it"		"Tu hai gia' {purple}Rifiutato il Gioco"
+		"it"		"Ti sei già astenuto dal gioco!"
 	}
 
 	"request_refuseallow"
 	{
-		"it"		"Il CapoCT deve {purple}permettere di rifiutare!"
+		"it"		"Il Capo CT deve permettere di astenersi con il comando !refuse"
 	}
 
 	"request_notalivect"
 	{
-		"it"		"Sei morto o sei Guardia!"
+		"it"		"Sei morto o sei un CT!"
 	}
 
 	"request_fullhp"
 	{
-		"it"		"Bel tentativo! Sei in piena salute"
+		"it"		"Ehh voooolevi! Hai già tutta la vita!"
 	}
 
 	"request_refusedtimes"
 	{
-		"it"		"Hai gia' {purple}rifiutato {1} volte{default} durante questo roud0!"
+		"it"		"Ti sei già astenuto {1} volte durante questo round!"
 	}
 
 	"request_capitulation"
 	{
-		"it"		"{purple}{1} {default}ha {purple}Capitolato! {default}Il Warder accettera' la richiesta?"
+		"it"		"{purple}{1} {default}ha chiesto di tornare all'{purple}ordine! {default}Il Capo CT accetterà?"
 	}
 
 	"request_alreadycapitulated"
 	{
-		"it"		"Tu hai gia' {purple}capitolato!"
+		"it"		"Hai già chiesto di tornare all'{purple}ordine!"
 	}
 
 	"request_knifeback"
 	{
-		"it"		"ti hanno dato {purple}il coltello sulla schiena."
+		"it"		"Ti è stato ridato il coltello."
 	}
 
 	"request_accepted"
@@ -70,107 +70,107 @@
 
 	"request_noaccepted"
 	{
-		"it"		"{2} Non {purple}ha{default} accettato {1}la richiesta."
+		"it"		"{2} {purple}non{default} ha accettato la richiesta di {1}."
 	}
 
 	"request_refuser"
 	{
-		"it"		"Un giocatore si rifiuta!"
+		"it"		"Un Player si sta rifiutando!"
 	}
 
 	"request_acceptcapitulation"
 	{
-		"it"		"Accettate Il Capitualation?"
+		"it"		"Accetti la richiesta di tornare all'ordine?"
 	}
 
 	"request_acceptheal"
 	{
-		"it"		"Accetti la guarigione?"
+		"it"		"Accetti la richiesta di cura?"
 	}
 
 	"request_health"
 	{
-		"it"		"Hai ricevuto una {purple} Healthshot{default}!"
+		"it"		"Hai ricevuto una{purple} siringa{default}!"
 	}
 
 	"request_heal"
 	{
-		"it"		"{purple}{1} {default}ha richiesto la {purple}guarigione! {default}Il CapoCT accettera' la richiesta"
+		"it"		"{purple}{1} {default}ha fatto una richiesta di {purple}cura! {default}Il Capo CT accetterà?"
 	}
 
 	"request_healtimes"
 	{
-		"it"		"Hai gia' richiesto la guarigione{purple}{1} volte{default} durante questo round!"
+		"it"		"Hai già richiesto di curarti{purple}{1} volte{default} in questo round!"
 	}
 
 	"request_alreadyhealed"
 	{
-		"it"		"Tu hai gia' richiestp la {purple}guarigione!"
+		"it"		"Hai già fatto una richiesta di{purple} cura!"
 	}
 
 	"request_nodamage"
 	{
-		"it"		"Non si può fare {purple}danni dopo la capitolazione!"
+		"it"		"Non puoi infliggere {purple}danno {default}dopo essere tornato all'ordine!"
 	}
 
 	"request_processing"
 	{
-		"it"		"C'e' gia' una {purple}richiesta in corso. Aspetta un attimo!"
+		"it"		"C'è già una {purple}richiesta {default}in corso. Aspetta un attimo!"
 	}
 
 	"request_repeatpls"
 	{
-		"it"		"{purple}{1} {default}ha richiesto di {purple}Ripetere!{default}"
+		"it"		"{purple}{1} {default}ha chiesto di {purple}ripetere{default}!"
 	}
 
 	"request_repeattimes"
 	{
-		"it"		"Hai gia' chiesto di {purple} Ripetere {1} volte{default} durante questo round!"
+		"it"		"Hai già chiesto di {purple} ripetere {1} volte{default} in questo round!"
 	}
 
 	"request_alreadyrepeat"
 	{
-		"it"		"Hai gia' richiesto di {purple}ripetere!"
+		"it"		"Hai già chiesto di {purple}ripetere!"
 	}
 
 	"request_repeat"
 	{
-		"it"		"Un Player Ha Chiesto Di Ripete!!"
+		"it"		"Un giocatore chiede di ripetere!"
 	}
 
 	"request_menu_title"
 	{
-		"it"		"Fai una Richiesta"
+		"it"		"Fai una richiesta"
 	}
 
 	"request_menu_repeat"
 	{
-		"it"		"Ripetere Annuncio"
+		"it"		"Ripetere gli ordini"
 	}
 
 	"request_menu_refuse"
 	{
-		"it"		"Rifiutare la partita in corso"
+		"it"		"Rifiutare il minigame attuale"
 	}
 
 	"request_menu_heal"
 	{
-		"it"		"Richiesta di Guarigione"
+		"it"		"Richiedere la cura"
 	}
 
 	"request_menu_capitulation"
 	{
-		"it"		"Resa"
+		"it"		"Richiedere di tornare all'ordine"
 	}
 
 	"request_menu_freekill"
 	{
-		"it"		"Segnala RDM"
+		"it"		"Segnala un RDM"
 	}
 
 	"request_freekill"
 	{
-		"it"		"{green}{1}{default} inviato un rapporto di Freekill {darkred}{2}{default} per {purple}{3}!"
+		"it"		"{green}{1}{default} ha segnalato un RDM di {darkred}{2}{default} a {purple}{3}!"
 	}
 
 	"request_pardonfreekill"
@@ -180,172 +180,197 @@
 
 	"request_handlefreekill"
 	{
-		"it"		"Come si desidera gestire questo freekill?"
+		"it"		"Come vuoi procedere?"
 	}
 
 	"request_respawnvictim"
 	{
-		"it"		"Respawn la vittima"
+		"it"		"Rianima la vittima"
 	}
 
 	"request_killfreekiller"
 	{
-		"it"		"Slay il Freekiller"
+		"it"		"Uccidi il CT che ha fatto RDM"
 	}
 
 	"request_freeday"
 	{
-		"it"		"Prossimo Round Freeday"
+		"it"		"Freeday al prossimo round"
 	}
 
 	"request_swapfreekiller"
 	{
-		"it"		"Spostato il 'freekiller' nei Prigionieri"
+		"it"		"Sposta colui che ha fatto RDM nei T"
 	}
 
 	"request_aliveorct"
 	{
-		"it"		"Tu sei Vivo o Sei Una Guardia"
+		"it"		"Sei vivo e/o sei un CT!"
 	}
 
 	"request_nokiller"
 	{
-		"it"		"Siamo spiacenti, non riusciamo a trovare il tuo assassino"
+		"it"		"Non riusciamo a trovare il killer!"
 	}
 
 	"request_respawned"
 	{
-		"it"		"Tu sei stato respawnato!"
+		"it"		"Sei stato rianimato!"
 	}
 
 	"request_respawnedall"
 	{
-		"it"		"{1} e' stato respawnato a casua di un {darkred}RDM!"
+		"it"		"{1} è stato rianimato a causa di un {darkred}RDM!"
 	}
 
 	"request_killbcfreekill"
 	{
-		"it"		"È stato ucciso a causa di un {darkred}RDM!"
+		"it"		"Sei stato ucciso per aver fatto {darkred}RDM!"
 	}
 
 	"request_killbcfreekillall"
 	{
-		"it"		"{green}{1}{default} è stato ucciso a causa di un {darkred}RDM!"
+		"it"		"{green}{1}{default} è stato ucciso per aver fatto {darkred}RDM!"
 	}
 
 	"request_swapbcfreekill"
 	{
-		"it"		"Sei stato swappato nei prigionieri a causa di un {darkred}RDM!"
+		"it"		"Sei stato spostato nei T per aver fatto {darkred}RDM!"
 	}
 
 	"request_swapbcfreekillall"
 	{
-		"it"		"{green}{1}{default}, a causa di un  {darkred}rdm,{default} e' stato spostato nei prigionieri!"
+		"it"		"{green}{1}{default} è stato spostato nei T per aver fatto {darkred}RDM{default}!"
 	}
 
 	"request_handlerespawn"
 	{
-		"it"		"Dove vuoi il respawn?"
+		"it"		"Dove vuoi essere rianimato?"
 	}
 
 	"request_respawnbody"
 	{
-		"it"		"Respawn sul luogo del crimine"
+		"it"		"Rianimati nel posto in cui sei morto"
 	}
 
 	"request_respawncell"
 	{
-		"it"		"Respawn in una cella"
+		"it"		"Rianimati in una cella"
 	}
 
 	"request_respawnwarden"
 	{
-		"it"		"Respawn in Front of the Warden"
+		"it"		"Rianimati di fronte al Capo CT"
 	}
 
 	"request_freekilltimes"
 	{
-		"it"		"Hai già segnalato un Freekill {purple}{1}{default} volte durante questo round."
+		"it"		"Hai già segnalato un RDM {purple}{1}{default} volte in questo round."
 	}
 
 	"request_freedayvictim"
 	{
-		"it"		"La Vittima dell'rdm il prossimo round avra' freeday"
+		"it"		"Dai un FreeDay alla vittima"
 	}
 
 	"request_killreason_title"
 	{
-		"it"		"Hai ucciso {1}???"
+		"it"		"Hai ucciso {1}?"
 	}
 
 	"request_killreason_lostgame"
 	{
-		"it"		"Ha perso la partita"
+		"it"		"Ha perso in un minigioco"
 	}
 
 	"request_killreason_rebel"
 	{
-		"it"		"Lui era un ribelle"
+		"it"		"Era ribelle"
 	}
 
 	"request_killreason_brokerule"
 	{
-		"it"		"Ha Infranto il Regolamento"
+		"it"		"Ha infranto il regolamento"
 	}
 
 	"request_killreason_notfollow"
 	{
-		"it"		"Non esegue i comandi"
+		"it"		"Non ha seguito gli ordini"
 	}
 
 	"request_killreason_sry"
 	{
-		"it"		"Colpa mia, voglio chiedere scusa"
+		"it"		"Colpa mia, mi scuso"
 	}
 
 	"request_killreason_freekill"
 	{
-		"it"		"ho fatto rdm"
+		"it"		"Ho fatto RDM"
 	}
 
 	"request_killreason_lostgame_chat"
 	{
-		"it"		"La Guardia {green}{1}{default} ha reclamato {darkred}{2}{default} perso la partita"
+		"it"		"La guardia {green}{1}{default} dice che {darkred}{2}{default} ha perso in un minigioco"
 	}
 
 	"request_killreason_rebel_chat"
 	{
-		"it"		"La Guardia {green}{1}{default} ha reclamato {darkred}{2}{default} era ribelle"
+		"it"		"La guardia {green}{1}{default} dice che {darkred}{2}{default} era ribelle"
 	}
 
 	"request_killreason_brokerule_chat"
 	{
-		"it"		"La Guardia {green}{1}{default} ha reclamato {darkred}{2}{default} ha infranto il regolamento"
+		"it"		"La guardia {green}{1}{default} dice che {darkred}{2}{default} ha infranto il regolamento"
 	}
 
 	"request_killreason_notfollow_chat"
 	{
-		"it"		"La Guardia {green}{1}{default} ha reclamato {darkred}{2}{default} Non ha seguito il dettato"
+		"it"		"La guardia {green}{1}{default} dice che {darkred}{2}{default} non ha seguito gli ordini"
 	}
 
 	"request_killreason_sry_chat"
 	{
-		"it"		"La Guardia {green}{1}{default} vuole chiedere scusa per l'uccisione {darkred}{2}{default}"
+		"it"		"La guardia {green}{1}{default} si scusa per aver ucciso {darkred}{2}{default}per sbaglio"
 	}
 
 	"request_killreason_freekill_chat"
 	{
-		"it"		"La Guardia {green}{1}{default} Ha confessato l'rdm su {darkred}{2}{default}"
+		"it"		"La guardia {green}{1}{default} ammette di aver fatto RDM su {darkred}{2}{default}"
 	}
 
 	"request_killreason_noanswer"
 	{
-		"it"		"La Guardia {green}{1}{default} non ha dichiarazioni per l'uccisione su {darkred}{2}{default}"
+		"it"		"La guardia {green}{1}{default} non ha nulla da dire nei confronti dell'uccisione di {darkred}{2}{default}"
 	}
 
 	"request_capitulated"
 	{
-		"it"		"{purple}{1} {default}ha {purple}capitolato!"
+		"it"		"{purple}{1} {default}è tornato all'{purple}ordine!"
+	}
+
+	"request_close"
+	{
+		"it"		"Esci"
+	}
+
+	"request_countdownstop"
+	{
+		"it"		"{purple}STOP! {darkred}FINE!"
+	}
+
+	"request_countdownstop_nc"
+	{
+		"it"		"STOP! FINE!"
+	}
+
+	"request_stopcountdown_nc"
+	{
+		"it"		"Fine in {1} secondi!"
+	}
+
+	"request_stopcountdown"
+	{
+		"it"		"Stop in {purple}{1}{default} secondi!"
 	}
 
 }

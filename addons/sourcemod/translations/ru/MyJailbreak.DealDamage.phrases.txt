@@ -1,9 +1,9 @@
 // Exported from SourceMod Translator
-// Date: 2017-04-20 21:44:30 UTC
+// Date: 2017-11-20 02:35:06 UTC
 // Language: Russian (ru)
 // 
 // To view other translations for this plugin, please visit:
-// http://translator.mitchdempsey.com/sourcemod_plugins/200
+// http://translator.mitchdempsey.com/sourcemod_plugins/281
 //
 "Phrases"
 {
@@ -25,7 +25,7 @@
 
 	"dealdamage_twin_nc"
 	{
-		"ru"		"Террористы одержали победу. Они нанесли {1} урона"
+		"ru"		"Команда КРАСНЫХ победила нанеся {1} урона!"
 	}
 
 	"dealdamage_voting"
@@ -45,7 +45,7 @@
 
 	"dealdamage_ctwin_nc"
 	{
-		"ru"		"КТ одержали победу. Они нанесли {1} урона"
+		"ru"		"Команда СИНИХ победила нанеся {1} урона!"
 	}
 
 	"dealdamage_end"
@@ -66,6 +66,16 @@
 	"dealdamage_start"
 	{
 		"ru"		"{purple}День урона{default} начался!"
+	}
+
+	"dealdamage_now_nc"
+	{
+		"ru"		"Начинается Наноси Урон раунд."
+	}
+
+	"dealdamage_now"
+	{
+		"ru"		"Начинается {purple}Наноси Урон{default} раунд."
 	}
 
 	"dealdamage_start_nc"
@@ -155,22 +165,22 @@
 
 	"dealdamage_ct"
 	{
-		"ru"		"CT урон: {1} HP"
+		"ru"		"СИНИЕ нанесли: {1} ХП"
 	}
 
 	"dealdamage_t"
 	{
-		"ru"		"Т урон: {1} жизни"
+		"ru"		"урон КРАСНЫХ: {1} ХП"
 	}
 
 	"dealdamage_bestct"
 	{
-		"ru"		"Лучший CT: {1} урона: {2} жизни"
+		"ru"		"Лучший СИНИХ: {1} урон: {2} ХП"
 	}
 
 	"dealdamage_bestt"
 	{
-		"ru"		"Лучший Т: {1} урона: {2} жизни"
+		"ru"		"Лучший КРАСНЫХ: {1} урон: {2} ХП"
 	}
 
 	"dealdamage_client"
@@ -180,12 +190,12 @@
 
 	"dealdamage_ctdealed"
 	{
-		"ru"		"КТ нанесли:"
+		"ru"		"СИНИЕ нанесли:"
 	}
 
 	"dealdamage_tdealed"
 	{
-		"ru"		"Т нанесли:"
+		"ru"		"КРАСНЫЕ нанесли:"
 	}
 
 	"dealdamage_clientdealed"
@@ -201,6 +211,56 @@
 	"dealdamage_name"
 	{
 		"ru"		"День урона"
+	}
+
+	"dealdamage_teamblue"
+	{
+		"ru"		"Вы в {blue}команде СИНИХ"
+	}
+
+	"dealdamage_teamred"
+	{
+		"ru"		"Вы в {darkred}команде КРАСНЫХ"
+	}
+
+	"dealdamage_teamblue_nc"
+	{
+		"ru"		"Вы в команде СИНИХ"
+	}
+
+	"dealdamage_teamred_nc"
+	{
+		"ru"		"Вы в команде КРАСНЫХ"
+	}
+
+	"dealdamage_playerteamblue"
+	{
+		"ru"		"{purple}{1}{default} в {darkred}команде СИНИХ"
+	}
+
+	"dealdamage_playerteamred"
+	{
+		"ru"		"{purple}{1}{default} в {darkred}команде КРАСНЫХ"
+	}
+
+	"dealdamage_blue_nc"
+	{
+		"ru"		"СИНИЙ"
+	}
+
+	"dealdamage_red_nc"
+	{
+		"ru"		"КРАСНЫЙ"
+	}
+
+	"dealdamage_info_blueteam"
+	{
+		"ru"		"Вы в команде СИНИХ"
+	}
+
+	"dealdamage_info_redteam"
+	{
+		"ru"		"Вы в команде КРАСНЫХ"
 	}
 
 }

@@ -29,6 +29,7 @@
 #include <mystocks>
 #include <store/store-core>
 #include <autoexecconfig>
+#include <colors>
 
 // ConVars
 ConVar gc_iAmount;
@@ -37,7 +38,7 @@ ConVar gc_bAlive;
 ConVar gc_sTag;
 
 // Strings
-char g_sTag[12];
+char g_sTag[64];
 
 public Plugin myinfo = 
 {
@@ -82,7 +83,7 @@ public void MyJailbreak_OnEventDayEnd(char[] name, int winner)
 			int oldCredits = Store_GetCreditsEx(accountId);
 			Store_GiveCredits(accountId, (oldCredits + gc_iAmount.IntValue));
 
-			PrintToChat(i, "%s You earned %i credits for winning the EventDay.", g_sTag, gc_iAmount.IntValue);
+			CPrintToChat(i, "%s You earned %i credits for winning the EventDay.", g_sTag, gc_iAmount.IntValue);
 		}
 	}
 }

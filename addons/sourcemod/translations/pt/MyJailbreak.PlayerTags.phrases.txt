@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-04-20 21:44:33 UTC
+// Date: 2017-11-20 02:35:10 UTC
 // Language: Brazilian Portuguese (pt)
 // 
 // To view other translations for this plugin, please visit:
@@ -13,6 +13,11 @@
 		"pt"		"[Prisoner.Admin]"
 	}
 
+	"tags_WA"
+	{
+		"pt"		"[Warden.Admin]"
+	}
+
 	"tags_TVIP2"
 	{
 		"pt"		"[Prisioneiro.sVIP]"
@@ -21,6 +26,11 @@
 	"tags_CTOWN"
 	{
 		"pt"		"[Guard.Owner]"
+	}
+
+	"tags_CTVIP1_chat"
+	{
+		"pt"		"[Guard.VIP]"
 	}
 
 }

@@ -3,6 +3,8 @@ echo.
 echo MyJailbreak compile script
 echo.
 echo.
+echo. Check if plugin folder exist.
+if not exist "../plugins/MyJailbreak/" mkdir "../plugins/MyJailbreak/"
 echo.
 echo Compile: MyJailbreak Core
 echo.
@@ -12,6 +14,7 @@ echo.
 echo.
 echo Compile: MyJailbreak Plugins
 echo.
+spcomp MyJailbreak/armsrace.sp -o../plugins/MyJailbreak/armsrace.smx 
 spcomp MyJailbreak/catch.sp -o../plugins/MyJailbreak/catch.smx 
 spcomp MyJailbreak/duckhunt.sp -o../plugins/MyJailbreak/duckhunt.smx 
 spcomp MyJailbreak/ffa.sp -o../plugins/MyJailbreak/ffa.smx 
@@ -38,19 +41,27 @@ spcomp MyJailbreak/hud.sp -o../plugins/MyJailbreak/hud.smx
 spcomp MyJailbreak/ratio.sp -o../plugins/MyJailbreak/ratio.smx 
 spcomp MyJailbreak/icons.sp -o../plugins/MyJailbreak/icons.smx 
 spcomp MyJailbreak/ghosts.sp -o../plugins/MyJailbreak/ghosts.smx 
+spcomp MyJailbreak/oneinthechamber.sp -o../plugins/MyJailbreak/oneinthechamber.smx 
+spcomp MyJailbreak/teleport.sp -o../plugins/MyJailbreak/teleport.smx 
 echo.
 echo.
 echo.
 echo Compile: MyJailbreak  Add-ons
 echo.
-spcomp MyJailbreak/Add-ons/ratio_ctban.sp -o../plugins/MyJailbreak/disabled/ratio_ctban.smx 
-spcomp MyJailbreak/Add-ons/ratio_ct_bans.sp -o../plugins/MyJailbreak/disabled/ratio_ct_bans.smx  
+spcomp MyJailbreak/Add-ons/ratio_ctbans_addicted.sp -o../plugins/MyJailbreak/disabled/ratio_ctbans_addicted.smx 
+spcomp MyJailbreak/Add-ons/ratio_ctbans_databomb.sp -o../plugins/MyJailbreak/disabled/ratio_ctbans_databomb.smx  
+spcomp MyJailbreak/Add-ons/ratio_ctbans_r1ko.sp -o../plugins/MyJailbreak/disabled/ratio_ctbans_r1ko.smx  
 spcomp MyJailbreak/Add-ons/ratio_teambans.sp -o../plugins/MyJailbreak/disabled/ratio_teambans.smx  
 spcomp MyJailbreak/Add-ons/ratio_steamrep.sp -o../plugins/MyJailbreak/disabled/ratio_steamrep.smx  
+spcomp MyJailbreak/Add-ons/myjailbreak_mostactive.sp -o../plugins/MyJailbreak/disabled/myjailbreak_mostactive.smx  
 spcomp MyJailbreak/Add-ons/myjailbreak_teamgames.sp -o../plugins/MyJailbreak/disabled/myjailbreak_teamgames.smx  
 spcomp MyJailbreak/Add-ons/myjailbreak_steamgroups.sp -o../plugins/MyJailbreak/disabled/myjailbreak_steamgroups.smx  
 spcomp MyJailbreak/Add-ons/myjailbreak_stamm.sp -o../plugins/MyJailbreak/disabled/myjailbreak_stamm.smx  
 spcomp MyJailbreak/Add-ons/myjailbreak_reputation.sp -o../plugins/MyJailbreak/disabled/myjailbreak_reputation.smx  
 spcomp MyJailbreak/Add-ons/myjailbreak_rankme.sp -o../plugins/MyJailbreak/disabled/myjailbreak_rankme.smx  
 spcomp MyJailbreak/Add-ons/myjailbreak_kento_rankme.sp -o../plugins/MyJailbreak/disabled/myjailbreak_kento_rankme.smx  
+spcomp MyJailbreak/Add-ons/myjailbreak_sm-store_credits.sp -o../plugins/MyJailbreak/disabled/myjailbreak_sm-store_credits.smx  
+spcomp MyJailbreak/Add-ons/myjailbreak_zephstore_credits.sp -o../plugins/MyJailbreak/disabled/myjailbreak_zephstore_credits.smx  
+spcomp MyJailbreak/Add-ons/myjailbreak_simplestats.sp -o../plugins/MyJailbreak/disabled/myjailbreak_simplestats.smx
+spcomp MyJailbreak/Add-ons/warden_zephstore_paperclips.sp -o../plugins/MyJailbreak/disabled/warden_zephstore_paperclips.smx
 pause

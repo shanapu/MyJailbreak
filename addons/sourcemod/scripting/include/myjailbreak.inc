@@ -28,7 +28,7 @@
 
 // Defines
 
-#define MYJB_VERSION "Beta 12.0-<COMMIT>"
+#define MYJB_VERSION "Beta 13.0-<COMMIT>"
 
 #define MYJB_URL_LINK "https://github.com/shanapu/MyJailbreak"
 
@@ -39,7 +39,7 @@
 #define _myjailbreak_included_
 
 
-public SharedPlugin:__pl_myjailbreak =
+public SharedPlugin __pl_myjailbreak =
 {
 	name = "myjailbreak",
 	file = "myjailbreak.smx",
@@ -55,12 +55,18 @@ public SharedPlugin:__pl_myjailbreak =
 #if !defined REQUIRE_PLUGIN
 public __pl_myjailbreak_SetNTVOptional()
 {
+	MarkNativeAsOptional("MyJailbreak_AddEventDay");
+	MarkNativeAsOptional("MyJailbreak_RemoveEventDay");
+	MarkNativeAsOptional("MyJailbreak_GetEventDays");
+
 	MarkNativeAsOptional("MyJailbreak_SetEventDayName");
 	MarkNativeAsOptional("MyJailbreak_GetEventDayName");
 	MarkNativeAsOptional("MyJailbreak_SetEventDayRunning");
 	MarkNativeAsOptional("MyJailbreak_IsEventDayRunning");
 	MarkNativeAsOptional("MyJailbreak_SetEventDayPlanned");
 	MarkNativeAsOptional("MyJailbreak_IsEventDayPlanned");
+
+	MarkNativeAsOptional("MyJailbreak_ResetEventDay");
 
 	MarkNativeAsOptional("MyJailbreak_SetLastGuardRule");
 	MarkNativeAsOptional("MyJailbreak_IsLastGuardRule");
@@ -118,10 +124,77 @@ forward void MyJailbreak_OnEventDayStart(char[] EventDayName);
 forward void MyJailbreak_OnEventDayEnd(char[] EventDayName, int winner);
 
 
+/*********************************************************
+ * Called when a admin reset/end any planned or running EventDay
+ *
+ *
+ * @NoReturn
+ *********************************************************/
+forward void MyJailbreak_ResetEventDay();
+
+
+
+/*********************************************************
+ * Called before the menu is built, so new item start with 1.
+ * This is where you can add custom item on menu beginn. See MyJailShop_MenuHandler
+ *
+ * @param client		client Player's index.
+ * @param menu			Menu being displayed to the client.
+ * @NoReturn
+ *********************************************************/
+forward void MyJailbreak_MenuStart(int client, Menu menu);
+
+
+/*********************************************************
+ * Called after the role specific item are built & before admin item will build.
+ * This is where you can add custom item on menu end. See MyJailShop_MenuHandler
+ *
+ * @param client		client Player's index.
+ * @param menu			Menu being displayed to the client.
+ * @NoReturn
+ *********************************************************/
+forward void MyJailbreak_MenuEnd(int client, Menu menu);
+
+
+/*********************************************************
+ * Called once a shop menu item has been selected
+ * @param menu Menu displayed
+ * @param action		Menu Action
+ * @param client		client index
+ * @param itemNum		selected item number
+ * @NoReturn
+ *********************************************************/
+forward void MyJailbreak_MenuHandler(Menu menu, MenuAction action, int client, int itemNum);
+
 
 /******************************************************************************
                    NATIVES
 ******************************************************************************/
+
+
+/*********************************************************
+ * Add a Event Day to myjailbreak core
+ *
+ * @param name		name of the Event Day
+ * @NoReturn
+ *********************************************************/
+native int MyJailbreak_AddEventDay(char [] name);
+
+/*********************************************************
+ * Remove a Event Day to myjailbreak core
+ *
+ * @param name		name of the Event Day
+ * @NoReturn
+ *********************************************************/
+native int MyJailbreak_RemoveEventDay(char [] name);
+
+/*********************************************************
+ * Get a array with all installed Event Days
+ *
+ * @param eventdays		ArrayList with Event Day names
+ * @NoReturn
+ *********************************************************/
+native void MyJailbreak_GetEventDays(ArrayList eventdays);
 
 
 /*********************************************************
@@ -177,6 +250,7 @@ native void MyJailbreak_SetEventDayPlanned(bool status);
  * @Return			true on planned, false if not
  *********************************************************/
 native bool MyJailbreak_IsEventDayPlanned();
+
 
 
 /*********************************************************

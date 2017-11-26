@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-04-20 21:44:36 UTC
+// Date: 2017-11-20 02:35:13 UTC
 // Language: Italian (it)
 // 
 // To view other translations for this plugin, please visit:
@@ -15,7 +15,7 @@
 
 	"torch_need"
 	{
-		"it"		"{purple}{2}{default} ha votato per l'evento Torch. {purple}{1}{default} voti richiesti per giocare a {darkred}Torch Relay."
+		"it"		"{purple}{2}{default} ha votato. {purple}{1}{default} voti richiesti per fare {darkred}Torch Relay."
 	}
 
 	"torch_rounds"
@@ -25,32 +25,32 @@
 
 	"torch_end"
 	{
-		"it"		"{purple}Torch Relay{default} e' finito"
+		"it"		"{purple}Torch Relay{default} e' finito."
 	}
 
 	"torch_voting"
 	{
-		"it"		"La votazione per giocare a Torch Relay e' {purple}disabilitata"
+		"it"		"Le votazioni per Torch Relay is {purple}disabled"
 	}
 
 	"torch_setbywarden"
 	{
-		"it"		"Settare Torch Relay da Warden e' {purple}disabilitato!"
+		"it"		"Impostare Torch Relay come CapoCT e' {purple}disattivato!"
 	}
 
 	"torch_setbyadmin"
 	{
-		"it"		"Settare Torch Relay da Admin {purple}disabilitato!"
+		"it"		"Impostare Torch Relay come Admin e' {purple}disabled!"
 	}
 
 	"torch_next"
 	{
-		"it"		"Il Prossimo Round si giochera' a: {purple}Torch Relay."
+		"it"		"Il prossimo round ci sara': {purple}Torch Relay."
 	}
 
 	"torch_next_nc"
 	{
-		"it"		"Il Prossimo Round si giochera' a: Torch Relay."
+		"it"		"Il prossimo round ci sara': Torch Relay."
 	}
 
 	"torch_start"
@@ -65,92 +65,92 @@
 
 	"torch_voted"
 	{
-		"it"		"hai gia' votato per {purple}Torch Relay!"
+		"it"		"Hai gia' votato per{purple}Torch Relay!"
 	}
 
 	"torch_progress"
 	{
-		"it"		"L'evento {darkred}{1} {default}e' {purple}gia' in corso!"
+		"it"		"L'evento {darkred}{1} {default}e' {purple}in corso"
 	}
 
 	"torch_minplayer"
 	{
-		"it"		"Per Torch Relay sono richiesti {purple}tre player, uno di questi deve essere guardia"
+		"it"		"Per fare Torch Relay ci devono essere {purple}tree player, di cui uno deve essere Guardie!"
 	}
 
 	"torch_sprint"
 	{
-		"it"		"Stai {blue}Correndo!"
+		"it"		"Ora stai {blue}Spritando!"
 	}
 
 	"torch_sprintend"
 	{
-		"it"		"{blue}Sei troppo stanco per correre!{default} Riposa per {1} secondi."
+		"it"		"{blue}Sei troppo stanco per usare lo sprint{default} Riposati per {1} secondi."
 	}
 
 	"torch_random"
 	{
-		"it"		"{darkred}La torcia umana  e'.......  {1}"
+		"it"		"{darkred}La torcia e'... {1}"
 	}
 
 	"torch_sprintagain"
 	{
-		"it"		"Hai preso il respiro. Ora puoi {blue}corre {default}ancora!"
+		"it"		"Ti sei ripostato! Puoi usare {blue}lo sprint {default}di nuovo!"
 	}
 
 	"torch_disabled"
 	{
-		"it"		"Torch Relay e' momentaneamente {purple}disabilitato!"
+		"it"		"Torch Relay e' {purple}disattivato!"
 	}
 
 	"torch_info_title"
 	{
-		"it"		"Torch Relay e' ora attivo!"
+		"it"		"Torch Relay e' inizato!"
 	}
 
 	"torch_info_line1"
 	{
-		"it"		"Un giocatore casuale sarà dato alle fiamme!"
+		"it"		"Un player casuale brucera'!"
 	}
 
 	"torch_info_line2"
 	{
-		"it"		"Trasmettere la fiamma accoltellando altri giocatori!"
+		"it"		"Passa la fiammia danneggiando gli altri giocatori!"
 	}
 
 	"torch_info_line3"
 	{
-		"it"		"Tieni Premuto E per correre! La Torcia è più veloce di te!"
+		"it"		"Tieni premuto E per sprintare! La Torcia e' piu' veloce di te!"
 	}
 
 	"torch_info_line4"
 	{
-		"it"		"Tutte le Regole del JailBreak sono disattivate in questo Round!"
+		"it"		"Tutte le normali regole del JB non vengono applicate durante questo round!"
 	}
 
 	"torch_info_line5"
 	{
-		"it"		"!lr disattivato in questo round!"
+		"it"		"Gli LR sono disattivati durante questo round!"
 	}
 
 	"torch_info_line6"
 	{
-		"it"		"Stare nella 'JailRoom' non entrare in condotti e in posti segreti"
+		"it"		"Devi stare nella zona celle. E' vietato andare condotti o aree segrete!"
 	}
 
 	"torch_info_line7"
 	{
-		"it"		"Buona Fortuna"
+		"it"		"Devi seguire le regole del server!"
 	}
 
 	"torch_wait"
 	{
-		"it"		"Devi Aspettare {purple}{1}{default}  round per un nuovo event day!"
+		"it"		"Devi aspettare {purple}{1}{default} prima di dare un altro evento!"
 	}
 
 	"torch_damage_nc"
 	{
-		"it"		"Un giocatore a caso brucerà in {1} secondi!"
+		"it"		"Un player casuale brucera' tra {1} secondi!"
 	}
 
 	"torch_torchem"
@@ -160,12 +160,12 @@
 
 	"torch_untorch"
 	{
-		"it"		"{purple}{1}{default} Non e' piu' la torcia !"
+		"it"		"{purple}{1}{default} non e' piu' la torcia!"
 	}
 
 	"torch_win"
 	{
-		"it"		"La torcia e' stata spenta!"
+		"it"		"The torch si e' estinta!"
 	}
 
 	"torch_name"
