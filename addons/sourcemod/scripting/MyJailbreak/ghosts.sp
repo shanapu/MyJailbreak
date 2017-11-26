@@ -746,6 +746,7 @@ void ResetEventDay()
 
 		SetEntityMoveType(i, MOVETYPE_WALK);
 
+		SDKUnhook(i, SDKHook_SetTransmit, Hook_SetTransmit);
 		SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
 	}
 
