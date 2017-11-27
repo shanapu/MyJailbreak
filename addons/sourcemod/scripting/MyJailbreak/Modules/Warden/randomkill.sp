@@ -94,7 +94,7 @@ public Action Command_KillMenu(int client, int args)
 			menu1.ExitButton = true;
 			menu1.Display(client, MENU_TIME_FOREVER);
 		}
-		else CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+		else CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
 	}
 
 	return Plugin_Handled;
@@ -215,7 +215,7 @@ public int Handler_KillMenu(Menu menu, MenuAction action, int client, int Positi
 					}
 
 					CreateTimer(1.0, Timer_KillPlayer, i);
-					CPrintToChatAll("%t %t", "warden_tag", "warden_israndom", i);
+					CPrintToChatAll("%s %t", g_sPrefix, "warden_israndom", i);
 
 					if (gp_bMyJailBreak)
 					{
@@ -225,9 +225,9 @@ public int Handler_KillMenu(Menu menu, MenuAction action, int client, int Positi
 						}
 					}
 				}
-				else CPrintToChatAll("%t %t", "warden_tag", "warden_novalid");
+				else CPrintToChatAll("%s %t", g_sPrefix, "warden_novalid");
 			}
-			else CPrintToChatAll("%t %t", "warden_tag", "warden_minrandom");
+			else CPrintToChatAll("%s %t", g_sPrefix, "warden_minrandom");
 		}
 		if (g_bMenuClose != null)
 		{

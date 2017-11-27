@@ -67,6 +67,7 @@ bool g_bTerrorZombies[MAXPLAYERS+1];
 
 // Console Variables
 ConVar gc_bPlugin;
+ConVar gc_sPrefix;
 ConVar gc_bSetW;
 ConVar gc_bSetA;
 ConVar gc_bSetABypassCooldown;
@@ -127,6 +128,7 @@ Handle g_hTimerRegen;
 float g_fPos[3];
 
 // Strings
+char g_sPrefix[64];
 char g_sModelPathZombie[256];
 char g_sHasVoted[1500];
 char g_sSoundStartPath[256];
@@ -162,6 +164,7 @@ public void OnPluginStart()
 
 	AutoExecConfig_CreateConVar("sm_zombie_version", MYJB_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_zombie_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true, 0.0, true, 1.0);
+	gc_sPrefix = AutoExecConfig_CreateConVar("sm_zombie_prefix", "[{green}MyJB.Zombie{default}]", "Set your chat prefix for this plugin.");
 	gc_sCustomCommandVote = AutoExecConfig_CreateConVar("sm_zombie_cmds_vote", "zd, zomb, z", "Set your custom chat command for Event voting(!zombie (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_sCustomCommandSet = AutoExecConfig_CreateConVar("sm_zombie_cmds_set", "sz, szd, szombie", "Set your custom chat command for set Event(!setzombie (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_zombie_warden", "1", "0 - disabled, 1 - allow warden to set zombie round", _, true, 0.0, true, 1.0);
@@ -214,6 +217,7 @@ public void OnPluginStart()
 	HookConVarChange(gc_sModelPathZombie, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
 	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
+	HookConVarChange(gc_sPrefix, OnSettingChanged);
 
 	// FindConVar
 	gc_sOverlayStartPath.GetString(g_sOverlayStartPath, sizeof(g_sOverlayStartPath));
@@ -256,6 +260,10 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 	else if (convar == gc_sAdminFlag)
 	{
 		strcopy(g_sAdminFlag, sizeof(g_sAdminFlag), newValue);
+	}
+	else if (convar == gc_sPrefix)
+	{
+		strcopy(g_sPrefix, sizeof(g_sPrefix), newValue);
 	}
 }
 
@@ -314,9 +322,16 @@ public void OnLibraryAdded(const char[] name)
 // Initialize Plugin
 public void OnConfigsExecuted()
 {
+	// FindConVar
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iMaxRound = gc_iRounds.IntValue;
+
+	gc_sPrefix.GetString(g_sPrefix, sizeof(g_sPrefix));
+	gc_sOverlayStartPath.GetString(g_sOverlayStartPath, sizeof(g_sOverlayStartPath));
+	gc_sModelPathZombie.GetString(g_sModelPathZombie, sizeof(g_sModelPathZombie));
+	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
+	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
 
 	// FindConVar
 	if (gp_bHosties)
@@ -373,7 +388,7 @@ public Action Command_SetZombie(int client, int args)
 {
 	if (!gc_bPlugin.BoolValue)
 	{
-		CReplyToCommand(client, "%t %t", "zombie_tag", "zombie_disabled");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "zombie_disabled");
 		return Plugin_Handled;
 	}
 
@@ -395,13 +410,13 @@ public Action Command_SetZombie(int client, int args)
 	{
 		if (!gc_bSetA.BoolValue)
 		{
-			CReplyToCommand(client, "%t %t", "zombie_tag", "zombie_setbyadmin");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "zombie_setbyadmin");
 			return Plugin_Handled;
 		}
 
 		if (GetTeamClientCount(CS_TEAM_CT) == 0 || GetTeamClientCount(CS_TEAM_T) == 0)
 		{
-			CReplyToCommand(client, "%t %t", "zombie_tag", "zombie_minplayer");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "zombie_minplayer");
 			return Plugin_Handled;
 		}
 
@@ -412,14 +427,14 @@ public Action Command_SetZombie(int client, int args)
 
 			if (!StrEqual(EventDay, "none", false))
 			{
-				CReplyToCommand(client, "%t %t", "zombie_tag", "zombie_progress", EventDay);
+				CReplyToCommand(client, "%s %t", g_sPrefix, "zombie_progress", EventDay);
 				return Plugin_Handled;
 			}
 		}
 
 		if (g_iCoolDown > 0 && !gc_bSetABypassCooldown.BoolValue)
 		{
-			CReplyToCommand(client, "%t %t", "zombie_tag", "zombie_wait", g_iCoolDown);
+			CReplyToCommand(client, "%s %t", g_sPrefix, "zombie_wait", g_iCoolDown);
 			return Plugin_Handled;
 		}
 
@@ -439,19 +454,19 @@ public Action Command_SetZombie(int client, int args)
 	{
 		if (!warden_iswarden(client))
 		{
-			CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
 			return Plugin_Handled;
 		}
 		
 		if (!gc_bSetW.BoolValue)
 		{
-			CReplyToCommand(client, "%t %t", "warden_tag", "zombie_setbywarden");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "zombie_setbywarden");
 			return Plugin_Handled;
 		}
 
 		if (GetTeamClientCount(CS_TEAM_CT) == 0 || GetTeamClientCount(CS_TEAM_T) == 0)
 		{
-			CReplyToCommand(client, "%t %t", "zombie_tag", "zombie_minplayer");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "zombie_minplayer");
 			return Plugin_Handled;
 		}
 
@@ -462,14 +477,14 @@ public Action Command_SetZombie(int client, int args)
 
 			if (!StrEqual(EventDay, "none", false))
 			{
-				CReplyToCommand(client, "%t %t", "zombie_tag", "zombie_progress", EventDay);
+				CReplyToCommand(client, "%s %t", g_sPrefix, "zombie_progress", EventDay);
 				return Plugin_Handled;
 			}
 		}
 
 		if (g_iCoolDown > 0)
 		{
-			CReplyToCommand(client, "%t %t", "zombie_tag", "zombie_wait", g_iCoolDown);
+			CReplyToCommand(client, "%s %t", g_sPrefix, "zombie_wait", g_iCoolDown);
 			return Plugin_Handled;
 		}
 
@@ -487,7 +502,7 @@ public Action Command_SetZombie(int client, int args)
 	}
 	else
 	{
-		CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
 	}
 
 	return Plugin_Handled;
@@ -498,19 +513,19 @@ public Action Command_VoteZombie(int client, int args)
 {
 	if (!gc_bPlugin.BoolValue)
 	{
-		CReplyToCommand(client, "%t %t", "zombie_tag", "zombie_disabled");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "zombie_disabled");
 		return Plugin_Handled;
 	}
 
 	if (!gc_bVote.BoolValue)
 	{
-		CReplyToCommand(client, "%t %t", "zombie_tag", "zombie_voting");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "zombie_voting");
 		return Plugin_Handled;
 	}
 
 	if (GetTeamClientCount(CS_TEAM_CT) == 0 || GetTeamClientCount(CS_TEAM_T) == 0)
 	{
-		CReplyToCommand(client, "%t %t", "zombie_tag", "zombie_minplayer");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "zombie_minplayer");
 		return Plugin_Handled;
 	}
 
@@ -521,14 +536,14 @@ public Action Command_VoteZombie(int client, int args)
 
 		if (!StrEqual(EventDay, "none", false))
 		{
-			CReplyToCommand(client, "%t %t", "zombie_tag", "zombie_progress", EventDay);
+			CReplyToCommand(client, "%s %t", g_sPrefix, "zombie_progress", EventDay);
 			return Plugin_Handled;
 		}
 	}
 
 	if (g_iCoolDown > 0)
 	{
-		CReplyToCommand(client, "%t %t", "zombie_tag", "zombie_wait", g_iCoolDown);
+		CReplyToCommand(client, "%s %t", g_sPrefix, "zombie_wait", g_iCoolDown);
 		return Plugin_Handled;
 	}
 
@@ -537,7 +552,7 @@ public Action Command_VoteZombie(int client, int args)
 
 	if (StrContains(g_sHasVoted, steamid, true) != -1)
 	{
-		CReplyToCommand(client, "%t %t", "zombie_tag", "zombie_voted");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "zombie_voted");
 		return Plugin_Handled;
 	}
 
@@ -563,7 +578,7 @@ public Action Command_VoteZombie(int client, int args)
 	}
 	else
 	{
-		CPrintToChatAll("%t %t", "zombie_tag", "zombie_need", Missing, client);
+		CPrintToChatAll("%s %t", g_sPrefix, "zombie_need", Missing, client);
 	}
 
 	return Plugin_Handled;
@@ -679,7 +694,7 @@ public void Event_RoundEnd_Pre(Event event, char[] name, bool dontBroadcast)
 				MyJailbreak_FogOff();
 			}
 			
-			CPrintToChatAll("%t %t", "zombie_tag", "zombie_end");
+			CPrintToChatAll("%s %t", g_sPrefix, "zombie_end");
 		}
 	}
 
@@ -690,7 +705,7 @@ public void Event_RoundEnd_Pre(Event event, char[] name, bool dontBroadcast)
 			CreateInfoPanel(i);
 		}
 
-		CPrintToChatAll("%t %t", "zombie_tag", "zombie_next");
+		CPrintToChatAll("%s %t", g_sPrefix, "zombie_next");
 		PrintCenterTextAll("%t", "zombie_next_nc");
 	}
 }
@@ -925,7 +940,7 @@ void ResetEventDay()
 			MyJailbreak_FogOff();
 		}
 
-		CPrintToChatAll("%t %t", "zombie_tag", "zombie_end");
+		CPrintToChatAll("%s %t", g_sPrefix, "zombie_end");
 	}
 }
 
@@ -994,7 +1009,7 @@ void StartEventRound(bool thisround)
 
 		CreateTimer(3.0, Timer_PrepareEvent);
 
-		CPrintToChatAll("%t %t", "zombie_tag", "zombie_now");
+		CPrintToChatAll("%s %t", g_sPrefix, "zombie_now");
 		PrintCenterTextAll("%t", "zombie_now_nc");
 	}
 	else
@@ -1002,7 +1017,7 @@ void StartEventRound(bool thisround)
 		g_bStartZombie = true;
 		g_iCoolDown++;
 		
-		CPrintToChatAll("%t %t", "zombie_tag", "zombie_next");
+		CPrintToChatAll("%s %t", g_sPrefix, "zombie_next");
 		PrintCenterTextAll("%t", "zombie_next_nc");
 	}
 }
@@ -1143,7 +1158,7 @@ void PrepareDay(bool thisround)
 
 	g_hTimerFreeze = CreateTimer(1.0, Timer_StartEvent, _, TIMER_REPEAT);
 
-	CPrintToChatAll("%t %t", "zombie_tag", "zombie_rounds", g_iRound, g_iMaxRound);
+	CPrintToChatAll("%s %t", g_sPrefix, "zombie_rounds", g_iRound, g_iMaxRound);
 }
 
 // Perpare client for glow
@@ -1374,7 +1389,7 @@ public Action Timer_StartEvent(Handle timer)
 
 	PrintCenterTextAll("%t", "zombie_start_nc");
 
-	CPrintToChatAll("%t %t", "zombie_tag", "zombie_start");
+	CPrintToChatAll("%s %t", g_sPrefix, "zombie_start");
 
 	g_hTimerFreeze = null;
 

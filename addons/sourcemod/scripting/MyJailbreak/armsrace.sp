@@ -62,6 +62,7 @@ bool gp_bMyWeapons;
 
 // Console Variables
 ConVar gc_bPlugin;
+ConVar gc_sPrefix;
 ConVar gc_bSetW;
 ConVar gc_bSetA;
 ConVar gc_bSetABypassCooldown;
@@ -110,6 +111,7 @@ Handle g_hTimerBeacon;
 Handle g_aWeapons;
 
 // Strings
+char g_sPrefix[64];
 char g_sHasVoted[1500];
 char g_sSoundStartPath[256];
 char g_sEventsLogFile[PLATFORM_MAX_PATH];
@@ -143,6 +145,7 @@ public void OnPluginStart()
 
 	AutoExecConfig_CreateConVar("sm_armsrace_version", MYJB_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_armsrace_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true, 0.0, true, 1.0);
+	gc_sPrefix = AutoExecConfig_CreateConVar("sm_armsrace_prefix", "[{green}MyJB.ArmsRace{default}]", "Set your chat prefix for this plugin.");
 	gc_sCustomCommandVote = AutoExecConfig_CreateConVar("sm_armsrace_cmds_vote", "arms, ar", "Set your custom chat command for Event voting(!armsrace (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_sCustomCommandSet = AutoExecConfig_CreateConVar("sm_armsrace_cmds_set", "sar, setarms", "Set your custom chat command for set Event(!setarmsrace (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_armsrace_warden", "1", "0 - disabled, 1 - allow warden to set armsrace round", _, true, 0.0, true, 1.0);
@@ -180,6 +183,7 @@ public void OnPluginStart()
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
 	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
+	HookConVarChange(gc_sPrefix, OnSettingChanged);
 
 	// FindConVar
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
@@ -216,6 +220,10 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 	else if (convar == gc_sAdminFlag)
 	{
 		strcopy(g_sAdminFlag, sizeof(g_sAdminFlag), newValue);
+	}
+	else if (convar == gc_sPrefix)
+	{
+		strcopy(g_sPrefix, sizeof(g_sPrefix), newValue);
 	}
 }
 
@@ -267,9 +275,15 @@ public void OnLibraryAdded(const char[] name)
 // Initialize Plugin
 public void OnConfigsExecuted()
 {
+	// FindConVar
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iMaxRound = gc_iRounds.IntValue;
+
+	gc_sPrefix.GetString(g_sPrefix, sizeof(g_sPrefix));
+	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
+	gc_sOverlayStartPath.GetString(g_sOverlayStartPath, sizeof(g_sOverlayStartPath));
+	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
 
 	GetWeapons();
 
@@ -324,7 +338,7 @@ public Action Command_Setarmsrace(int client, int args)
 {
 	if (!gc_bPlugin.BoolValue)
 	{
-		CReplyToCommand(client, "%t %t", "armsrace_tag", "armsrace_disabled");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "armsrace_disabled");
 		return Plugin_Handled;
 	}
 
@@ -346,13 +360,13 @@ public Action Command_Setarmsrace(int client, int args)
 	{
 		if (!gc_bSetA.BoolValue)
 		{
-			CReplyToCommand(client, "%t %t", "armsrace_tag", "armsrace_setbyadmin");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "armsrace_setbyadmin");
 			return Plugin_Handled;
 		}
 
 		if (GetTeamClientCount(CS_TEAM_CT) == 0 || GetTeamClientCount(CS_TEAM_T) == 0)
 		{
-			CReplyToCommand(client, "%t %t", "armsrace_tag", "armsrace_minplayer");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "armsrace_minplayer");
 			return Plugin_Handled;
 		}
 
@@ -363,14 +377,14 @@ public Action Command_Setarmsrace(int client, int args)
 
 			if (!StrEqual(EventDay, "none", false))
 			{
-				CReplyToCommand(client, "%t %t", "armsrace_tag", "armsrace_progress", EventDay);
+				CReplyToCommand(client, "%s %t", g_sPrefix, "armsrace_progress", EventDay);
 				return Plugin_Handled;
 			}
 		}
 
 		if (g_iCoolDown > 0 && !gc_bSetABypassCooldown.BoolValue)
 		{
-			CReplyToCommand(client, "%t %t", "armsrace_tag", "armsrace_wait", g_iCoolDown);
+			CReplyToCommand(client, "%s %t", g_sPrefix, "armsrace_wait", g_iCoolDown);
 			return Plugin_Handled;
 		}
 
@@ -390,19 +404,19 @@ public Action Command_Setarmsrace(int client, int args)
 	{
 		if (!warden_iswarden(client))
 		{
-			CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
 			return Plugin_Handled;
 		}
 		
 		if (!gc_bSetW.BoolValue)
 		{
-			CReplyToCommand(client, "%t %t", "warden_tag", "armsrace_setbywarden");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "armsrace_setbywarden");
 			return Plugin_Handled;
 		}
 
 		if (GetTeamClientCount(CS_TEAM_CT) == 0 || GetTeamClientCount(CS_TEAM_T) == 0)
 		{
-			CReplyToCommand(client, "%t %t", "armsrace_tag", "armsrace_minplayer");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "armsrace_minplayer");
 			return Plugin_Handled;
 		}
 
@@ -413,14 +427,14 @@ public Action Command_Setarmsrace(int client, int args)
 
 			if (!StrEqual(EventDay, "none", false))
 			{
-				CReplyToCommand(client, "%t %t", "armsrace_tag", "armsrace_progress", EventDay);
+				CReplyToCommand(client, "%s %t", g_sPrefix, "armsrace_progress", EventDay);
 				return Plugin_Handled;
 			}
 		}
 
 		if (g_iCoolDown > 0)
 		{
-			CReplyToCommand(client, "%t %t", "armsrace_tag", "armsrace_wait", g_iCoolDown);
+			CReplyToCommand(client, "%s %t", g_sPrefix, "armsrace_wait", g_iCoolDown);
 			return Plugin_Handled;
 		}
 
@@ -438,7 +452,7 @@ public Action Command_Setarmsrace(int client, int args)
 	}
 	else
 	{
-		CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
 	}
 
 	return Plugin_Handled;
@@ -449,19 +463,19 @@ public Action Command_VoteArmsRace(int client, int args)
 {
 	if (!gc_bPlugin.BoolValue)
 	{
-		CReplyToCommand(client, "%t %t", "armsrace_tag", "armsrace_disabled");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "armsrace_disabled");
 		return Plugin_Handled;
 	}
 
 	if (!gc_bVote.BoolValue)
 	{
-		CReplyToCommand(client, "%t %t", "armsrace_tag", "armsrace_voting");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "armsrace_voting");
 		return Plugin_Handled;
 	}
 
 	if (GetTeamClientCount(CS_TEAM_CT) == 0 || GetTeamClientCount(CS_TEAM_T) == 0)
 	{
-		CReplyToCommand(client, "%t %t", "armsrace_tag", "armsrace_minplayer");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "armsrace_minplayer");
 		return Plugin_Handled;
 	}
 
@@ -472,14 +486,14 @@ public Action Command_VoteArmsRace(int client, int args)
 
 		if (!StrEqual(EventDay, "none", false))
 		{
-			CReplyToCommand(client, "%t %t", "armsrace_tag", "armsrace_progress", EventDay);
+			CReplyToCommand(client, "%s %t", g_sPrefix, "armsrace_progress", EventDay);
 			return Plugin_Handled;
 		}
 	}
 
 	if (g_iCoolDown > 0)
 	{
-		CReplyToCommand(client, "%t %t", "armsrace_tag", "armsrace_wait", g_iCoolDown);
+		CReplyToCommand(client, "%s %t", g_sPrefix, "armsrace_wait", g_iCoolDown);
 		return Plugin_Handled;
 	}
 
@@ -488,7 +502,7 @@ public Action Command_VoteArmsRace(int client, int args)
 
 	if (StrContains(g_sHasVoted, steamid, true) != -1)
 	{
-		CReplyToCommand(client, "%t %t", "armsrace_tag", "armsrace_voted");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "armsrace_voted");
 		return Plugin_Handled;
 	}
 
@@ -514,7 +528,7 @@ public Action Command_VoteArmsRace(int client, int args)
 	}
 	else
 	{
-		CPrintToChatAll("%t %t", "armsrace_tag", "armsrace_need", Missing, client);
+		CPrintToChatAll("%s %t", g_sPrefix, "armsrace_need", Missing, client);
 	}
 
 	return Plugin_Handled;
@@ -628,7 +642,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			SetCvar("mp_death_drop_gun", 1);
 			SetCvar("mp_teammates_are_enemies", 0);
 
-			CPrintToChatAll("%t %t", "armsrace_tag", "armsrace_end");
+			CPrintToChatAll("%s %t", g_sPrefix, "armsrace_end");
 		}
 	}
 	if (g_bStartArmsRace)
@@ -638,7 +652,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			CreateInfoPanel(i);
 		}
 
-		CPrintToChatAll("%t %t", "armsrace_tag", "armsrace_next");
+		CPrintToChatAll("%s %t", g_sPrefix, "armsrace_next");
 		PrintCenterTextAll("%t", "armsrace_next_nc");
 	}
 }
@@ -754,7 +768,7 @@ void ResetEventDay()
 	SetCvar("mp_death_drop_gun", 1);
 	SetCvar("mp_teammates_are_enemies", 0);
 
-	CPrintToChatAll("%t %t", "armsrace_tag", "armsrace_end");
+	CPrintToChatAll("%s %t", g_sPrefix, "armsrace_end");
 }
 
 /******************************************************************************
@@ -793,7 +807,7 @@ void StartEventRound(bool thisround)
 		
 		CreateTimer(3.0, Timer_PrepareEvent);
 		
-		CPrintToChatAll("%t %t", "armsrace_tag", "armsrace_now");
+		CPrintToChatAll("%s %t", g_sPrefix, "armsrace_now");
 		PrintCenterTextAll("%t", "armsrace_now_nc");
 		
 	}
@@ -808,7 +822,7 @@ void StartEventRound(bool thisround)
 			SetCvar("mp_randomspawn_los", 1);
 		}
 
-		CPrintToChatAll("%t %t", "armsrace_tag", "armsrace_next");
+		CPrintToChatAll("%s %t", g_sPrefix, "armsrace_next");
 		PrintCenterTextAll("%t", "armsrace_next_nc");
 	}
 }
@@ -912,7 +926,7 @@ void PrepareDay(bool thisround)
 		MyWeapons_AllowTeam(CS_TEAM_CT, false);
 	}
 
-	CPrintToChatAll("%t %t", "armsrace_tag", "armsrace_rounds", g_iRound, g_iMaxRound);
+	CPrintToChatAll("%s %t", g_sPrefix, "armsrace_rounds", g_iRound, g_iMaxRound);
 
 	GameRules_SetProp("m_iRoundTime", gc_iRoundTime.IntValue*60, 4, 0, true);
 
@@ -1010,7 +1024,7 @@ public Action Timer_StartEvent(Handle timer)
 	g_hTimerTruce = null;
 
 	PrintCenterTextAll("%t", "armsrace_start_nc");
-	CPrintToChatAll("%t %t", "armsrace_tag", "armsrace_start");
+	CPrintToChatAll("%s %t", g_sPrefix, "armsrace_start");
 
 	return Plugin_Stop;
 }
@@ -1086,8 +1100,8 @@ public void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast
 
 		if (g_iLevel[attacker] == g_iMaxLevel)
 		{
-			CPrintToChat(attacker, "%t %t", "armsrace_tag", "armsrace_youwon");
-			CPrintToChatAll("%t %t", "armsrace_tag", "armsrace_winner", attacker);
+			CPrintToChat(attacker, "%s %t", g_sPrefix, "armsrace_youwon");
+			CPrintToChatAll("%s %t", g_sPrefix, "armsrace_winner", attacker);
 			CS_TerminateRound(5.0, CSRoundEnd_Draw);
 			return;
 		}
@@ -1100,8 +1114,8 @@ public void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast
 				g_iLevel[victim] = 0;
 			}
 			
-			CPrintToChat(victim, "%t %t", "armsrace_tag", "armsrace_downgraded");
-			CPrintToChat(attacker, "%t %t", "armsrace_tag", "armsrace_downgrade", victim);
+			CPrintToChat(victim, "%s %t", g_sPrefix, "armsrace_downgraded");
+			CPrintToChat(attacker, "%s %t", g_sPrefix, "armsrace_downgrade", victim);
 		}
 		else
 		{
@@ -1126,7 +1140,7 @@ public void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast
 
 			ReplaceString(buffer, sizeof(buffer), "weapon_", "", false);
 			StringToUpper(buffer);
-			CPrintToChat(attacker, "%t %t", "armsrace_tag", "armsrace_levelup", buffer);
+			CPrintToChat(attacker, "%s %t", g_sPrefix, "armsrace_levelup", buffer);
 		}
 	}
 	

@@ -90,7 +90,7 @@ public Action Command_FriendlyFire(int client, int args)
 			{
 				SetCvar("mp_teammates_are_enemies", 0);
 				g_bFF = FindConVar("mp_teammates_are_enemies");
-				CPrintToChatAll("%t %t", "warden_tag", "warden_ffisoff");
+				CPrintToChatAll("%s %t", g_sPrefix, "warden_ffisoff");
 
 				if (Cvar_tg_team_none_attack != null)
 				{
@@ -100,7 +100,7 @@ public Action Command_FriendlyFire(int client, int args)
 					Cvar_tg_ct_friendlyfire.IntValue = OldCvar_tg_ct_friendlyfire;
 				}
 			}
-			else CPrintToChatAll("%t %t", "warden_tag", "warden_ffison");
+			else CPrintToChatAll("%s %t", g_sPrefix, "warden_ffison");
 		}
 		else
 		{
@@ -108,7 +108,7 @@ public Action Command_FriendlyFire(int client, int args)
 			{
 				SetCvar("mp_teammates_are_enemies", 1);
 				g_bFF = FindConVar("mp_teammates_are_enemies");
-				CPrintToChatAll("%t %t", "warden_tag", "warden_ffison");
+				CPrintToChatAll("%s %t", g_sPrefix, "warden_ffison");
 
 				if (Cvar_tg_team_none_attack != null)
 				{
@@ -117,7 +117,7 @@ public Action Command_FriendlyFire(int client, int args)
 					Cvar_tg_ct_friendlyfire.IntValue = 1;
 				}
 			}
-			else CPrintToChatAll("%t %t", "warden_tag", "warden_ffisoff");
+			else CPrintToChatAll("%s %t", g_sPrefix, "warden_ffisoff");
 		}
 	}
 
@@ -152,7 +152,7 @@ public void FriendlyFire_Event_RoundEnd(Event event, const char[] name, bool don
 		{
 			SetCvar("mp_teammates_are_enemies", 0);
 			g_bFF = FindConVar("mp_teammates_are_enemies");
-			CPrintToChatAll("%t %t", "warden_tag", "warden_ffisoff");
+			CPrintToChatAll("%s %t", g_sPrefix, "warden_ffisoff");
 
 			if (Cvar_tg_team_none_attack != null)
 			{

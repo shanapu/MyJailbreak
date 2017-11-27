@@ -1,11 +1,5 @@
 "Phrases"
 {
-
-	"OITC_tag"
-	{
-		"en"		"[{green}MyJB.OITC{default}]"
-	}
-
 	"OITC_need"
 	{
 		"#format"	"{1:i},{2:N}"

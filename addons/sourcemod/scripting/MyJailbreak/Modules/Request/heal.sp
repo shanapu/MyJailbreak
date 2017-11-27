@@ -127,22 +127,22 @@ public Action Command_Heal(int client, int args)
 									g_hTimerRequest = CreateTimer (gc_fHealTime.FloatValue, Timer_IsRequest);
 									g_bHealed[client] = true;
 									g_iHealCounter[client]++;
-									CPrintToChatAll("%t %t", "request_tag", "request_heal", client);
+									CPrintToChatAll("%s %t", g_sPrefix, "request_heal", client);
 									SetEntityRenderColor(client, gc_iHealColorRed.IntValue, gc_iHealColorGreen.IntValue, gc_iHealColorBlue.IntValue, 255);
 									g_hTimerHeal[client] = CreateTimer(gc_fHealTime.FloatValue, Timer_ResetColorHeal, client);
 									for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) HealMenu(i);
 								}
-								else CReplyToCommand(client, "%t %t", "request_tag", "request_processing");
+								else CReplyToCommand(client, "%s %t", g_sPrefix, "request_processing");
 							}
-							else CReplyToCommand(client, "%t %t", "request_tag", "request_fullhp");
+							else CReplyToCommand(client, "%s %t", g_sPrefix, "request_fullhp");
 						}
-						else CReplyToCommand(client, "%t %t", "request_tag", "warden_noexist");
+						else CReplyToCommand(client, "%s %t", g_sPrefix, "warden_noexist");
 					}
-					else CReplyToCommand(client, "%t %t", "request_tag", "request_healtimes", gc_iHealLimit.IntValue);
+					else CReplyToCommand(client, "%s %t", g_sPrefix, "request_healtimes", gc_iHealLimit.IntValue);
 				}
-				else CReplyToCommand(client, "%t %t", "request_tag", "request_alreadyhealed");
+				else CReplyToCommand(client, "%s %t", g_sPrefix, "request_alreadyhealed");
 			}
-			else CReplyToCommand(client, "%t %t", "request_tag", "request_notalivect");
+			else CReplyToCommand(client, "%s %t", g_sPrefix, "request_notalivect");
 		}
 	}
 
@@ -242,8 +242,8 @@ public int HealMenuHandler(Menu menu, MenuAction action, int client, int Positio
 				g_bIsRequest = false;
 				g_hTimerRequest = null;
 				if (gc_bHealthShot.BoolValue) GivePlayerItem(i, "weapon_healthshot");
-				CPrintToChat(i, "%t %t", "request_tag", "request_health");
-				CPrintToChatAll("%t %t", "warden_tag", "request_accepted", i, client);
+				CPrintToChat(i, "%s %t", g_sPrefix, "request_health");
+				CPrintToChatAll("%s %t", g_sPrefix, "request_accepted", i, client);
 			}
 		}
 		if (choice == 0)
@@ -252,7 +252,7 @@ public int HealMenuHandler(Menu menu, MenuAction action, int client, int Positio
 			g_hTimerRequest = null;
 			for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (g_bHealed[i])
 			{
-				CPrintToChatAll("%t %t", "warden_tag", "request_noaccepted", i, client);
+				CPrintToChatAll("%s %t", g_sPrefix, "request_noaccepted", i, client);
 			}
 		}
 	}

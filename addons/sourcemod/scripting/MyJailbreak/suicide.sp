@@ -69,6 +69,7 @@ bool gp_bMyWeapons;
 
 // Console Variables
 ConVar gc_bPlugin;
+ConVar gc_sPrefix;
 ConVar gc_bSetW;
 ConVar gc_bSetA;
 ConVar gc_bSetABypassCooldown;
@@ -119,6 +120,7 @@ Handle g_hTimerFreeze;
 Handle g_hTimerBeacon;
 
 // Strings
+char g_sPrefix[64];
 char g_sSoundBoomPath[256];
 char g_sSoundSuicideBomberPath[256];
 char g_sHasVoted[1500];
@@ -162,6 +164,7 @@ public void OnPluginStart()
 
 	AutoExecConfig_CreateConVar("sm_suicidebomber_version", MYJB_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_suicidebomber_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true, 0.0, true, 1.0);
+	gc_sPrefix = AutoExecConfig_CreateConVar("sm_suicidebomber_prefix", "[{green}MyJB.SuicideBomber{default}]", "Set your chat prefix for this plugin.");
 	gc_sCustomCommandVote = AutoExecConfig_CreateConVar("sm_suicidebomber_cmds_vote", "suicide, jihad, bomber", "Set your custom chat commands for Event voting(!suicidebomber (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_sCustomCommandSet = AutoExecConfig_CreateConVar("sm_suicidebomber_cmds_set", "ssuicidebomber, ssuicide, sbomber, sjihad, setjihad", "Set your custom chat commands for set Event(!setsuicidebomber (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_suicidebomber_warden", "1", "0 - disabled, 1 - allow warden to set Suicide Bomber round", _, true, 0.0, true, 1.0);
@@ -209,6 +212,7 @@ public void OnPluginStart()
 	HookConVarChange(gc_sSoundSuicideBomberPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundBoomPath, OnSettingChanged);
 	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
+	HookConVarChange(gc_sPrefix, OnSettingChanged);
 
 	// FindConVar
 	gc_sSoundSuicideBomberPath.GetString(g_sSoundSuicideBomberPath, sizeof(g_sSoundSuicideBomberPath));
@@ -276,6 +280,10 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 	{
 		strcopy(g_sAdminFlag, sizeof(g_sAdminFlag), newValue);
 	}
+	else if (convar == gc_sAdminFlag)
+	{
+		strcopy(g_sAdminFlag, sizeof(g_sAdminFlag), newValue);
+	}
 }
 
 public void OnAllPluginsLoaded()
@@ -326,9 +334,17 @@ public void OnLibraryAdded(const char[] name)
 // Initialize Plugin
 public void OnConfigsExecuted()
 {
+	// FindConVar
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
 	g_iMaxRound = gc_iRounds.IntValue;
+
+	gc_sPrefix.GetString(g_sPrefix, sizeof(g_sPrefix));
+	gc_sSoundSuicideBomberPath.GetString(g_sSoundSuicideBomberPath, sizeof(g_sSoundSuicideBomberPath));
+	gc_sSoundBoomPath.GetString(g_sSoundBoomPath, sizeof(g_sSoundBoomPath));
+	gc_sOverlayStartPath.GetString(g_sOverlayStartPath, sizeof(g_sOverlayStartPath));
+	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
+	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
 
 	// Set custom Commands
 	int iCount = 0;
@@ -380,7 +396,7 @@ public Action Command_SetSuicideBomber(int client, int args)
 {
 	if (!gc_bPlugin.BoolValue)
 	{
-		CReplyToCommand(client, "%t %t", "suicidebomber_tag", "suicidebomber_disabled");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "suicidebomber_disabled");
 		return Plugin_Handled;
 	}
 
@@ -402,13 +418,13 @@ public Action Command_SetSuicideBomber(int client, int args)
 	{
 		if (!gc_bSetA.BoolValue)
 		{
-			CReplyToCommand(client, "%t %t", "suicidebomber_tag", "suicidebomber_setbyadmin");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "suicidebomber_setbyadmin");
 			return Plugin_Handled;
 		}
 
 		if (GetTeamClientCount(CS_TEAM_CT) == 0 || GetTeamClientCount(CS_TEAM_T) == 0)
 		{
-			CReplyToCommand(client, "%t %t", "suicidebomber_tag", "suicidebomber_minplayer");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "suicidebomber_minplayer");
 			return Plugin_Handled;
 		}
 
@@ -419,14 +435,14 @@ public Action Command_SetSuicideBomber(int client, int args)
 
 			if (!StrEqual(EventDay, "none", false))
 			{
-				CReplyToCommand(client, "%t %t", "suicidebomber_tag", "suicidebomber_progress", EventDay);
+				CReplyToCommand(client, "%s %t", g_sPrefix, "suicidebomber_progress", EventDay);
 				return Plugin_Handled;
 			}
 		}
 
 		if (g_iCoolDown > 0 && !gc_bSetABypassCooldown.BoolValue)
 		{
-			CReplyToCommand(client, "%t %t", "suicidebomber_tag", "suicidebomber_wait", g_iCoolDown);
+			CReplyToCommand(client, "%s %t", g_sPrefix, "suicidebomber_wait", g_iCoolDown);
 			return Plugin_Handled;
 		}
 
@@ -446,19 +462,19 @@ public Action Command_SetSuicideBomber(int client, int args)
 	{
 		if (!warden_iswarden(client))
 		{
-			CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
 			return Plugin_Handled;
 		}
 		
 		if (!gc_bSetW.BoolValue)
 		{
-			CReplyToCommand(client, "%t %t", "warden_tag", "suicidebomber_setbywarden");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "suicidebomber_setbywarden");
 			return Plugin_Handled;
 		}
 
 		if (GetTeamClientCount(CS_TEAM_CT) == 0 || GetTeamClientCount(CS_TEAM_T) == 0)
 		{
-			CReplyToCommand(client, "%t %t", "suicidebomber_tag", "suicidebomber_minplayer");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "suicidebomber_minplayer");
 			return Plugin_Handled;
 		}
 
@@ -469,14 +485,14 @@ public Action Command_SetSuicideBomber(int client, int args)
 
 			if (!StrEqual(EventDay, "none", false))
 			{
-				CReplyToCommand(client, "%t %t", "suicidebomber_tag", "suicidebomber_progress", EventDay);
+				CReplyToCommand(client, "%s %t", g_sPrefix, "suicidebomber_progress", EventDay);
 				return Plugin_Handled;
 			}
 		}
 
 		if (g_iCoolDown > 0)
 		{
-			CReplyToCommand(client, "%t %t", "suicidebomber_tag", "suicidebomber_wait", g_iCoolDown);
+			CReplyToCommand(client, "%s %t", g_sPrefix, "suicidebomber_wait", g_iCoolDown);
 			return Plugin_Handled;
 		}
 
@@ -494,7 +510,7 @@ public Action Command_SetSuicideBomber(int client, int args)
 	}
 	else
 	{
-		CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
 	}
 
 	return Plugin_Handled;
@@ -505,19 +521,19 @@ public Action Command_VoteSuicideBomber(int client, int args)
 {
 	if (!gc_bPlugin.BoolValue)
 	{
-		CReplyToCommand(client, "%t %t", "suicidebomber_tag", "suicidebomber_disabled");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "suicidebomber_disabled");
 		return Plugin_Handled;
 	}
 
 	if (!gc_bVote.BoolValue)
 	{
-		CReplyToCommand(client, "%t %t", "suicidebomber_tag", "suicidebomber_voting");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "suicidebomber_voting");
 		return Plugin_Handled;
 	}
 
 	if (GetTeamClientCount(CS_TEAM_CT) == 0 || GetTeamClientCount(CS_TEAM_T) == 0)
 	{
-		CReplyToCommand(client, "%t %t", "suicidebomber_tag", "suicidebomber_minplayer");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "suicidebomber_minplayer");
 		return Plugin_Handled;
 	}
 
@@ -528,14 +544,14 @@ public Action Command_VoteSuicideBomber(int client, int args)
 
 		if (!StrEqual(EventDay, "none", false))
 		{
-			CReplyToCommand(client, "%t %t", "suicidebomber_tag", "suicidebomber_progress", EventDay);
+			CReplyToCommand(client, "%s %t", g_sPrefix, "suicidebomber_progress", EventDay);
 			return Plugin_Handled;
 		}
 	}
 
 	if (g_iCoolDown > 0)
 	{
-		CReplyToCommand(client, "%t %t", "suicidebomber_tag", "suicidebomber_wait", g_iCoolDown);
+		CReplyToCommand(client, "%s %t", g_sPrefix, "suicidebomber_wait", g_iCoolDown);
 		return Plugin_Handled;
 	}
 
@@ -544,7 +560,7 @@ public Action Command_VoteSuicideBomber(int client, int args)
 
 	if (StrContains(g_sHasVoted, steamid, true) != -1)
 	{
-		CReplyToCommand(client, "%t %t", "suicidebomber_tag", "suicidebomber_voted");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "suicidebomber_voted");
 		return Plugin_Handled;
 	}
 
@@ -570,7 +586,7 @@ public Action Command_VoteSuicideBomber(int client, int args)
 	}
 	else
 	{
-		CPrintToChatAll("%t %t", "suicidebomber_tag", "suicidebomber_need", Missing, client);
+		CPrintToChatAll("%s %t", g_sPrefix, "suicidebomber_need", Missing, client);
 	}
 
 	return Plugin_Handled;
@@ -720,7 +736,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 				MyJailbreak_SetEventDayName("none");
 			}
 
-			CPrintToChatAll("%t %t", "suicidebomber_tag", "suicidebomber_end");
+			CPrintToChatAll("%s %t", g_sPrefix, "suicidebomber_end");
 		}
 	}
 
@@ -731,7 +747,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			CreateInfoPanel(i);
 		}
 
-		CPrintToChatAll("%t %t", "suicidebomber_tag", "suicidebomber_next");
+		CPrintToChatAll("%s %t", g_sPrefix, "suicidebomber_next");
 		PrintCenterTextAll("%t", "suicidebomber_next_nc");
 	}
 }
@@ -844,7 +860,7 @@ void ResetEventDay()
 		MyJailbreak_SetEventDayName("none");
 	}
 
-	CPrintToChatAll("%t %t", "suicidebomber_tag", "suicidebomber_end");
+	CPrintToChatAll("%s %t", g_sPrefix, "suicidebomber_end");
 }
 
 // Check pressed buttons
@@ -979,7 +995,7 @@ void StartEventRound(bool thisround)
 
 		CreateTimer(3.0, Timer_PrepareEvent);
 
-		CPrintToChatAll("%t %t", "suicidebomber_tag", "suicidebomber_now");
+		CPrintToChatAll("%s %t", g_sPrefix, "suicidebomber_now");
 		PrintCenterTextAll("%t", "suicidebomber_now_nc");
 	}
 	else
@@ -987,7 +1003,7 @@ void StartEventRound(bool thisround)
 		g_bStartSuicideBomber = true;
 		g_iCoolDown++;
 
-		CPrintToChatAll("%t %t", "suicidebomber_tag", "suicidebomber_next");
+		CPrintToChatAll("%s %t", g_sPrefix, "suicidebomber_next");
 		PrintCenterTextAll("%t", "suicidebomber_next_nc");
 	}
 }
@@ -1111,7 +1127,7 @@ void PrepareDay(bool thisround)
 		MyWeapons_AllowTeam(CS_TEAM_CT, false);
 	}
 
-	CPrintToChatAll("%t %t", "suicidebomber_tag", "suicidebomber_rounds", g_iRound, g_iMaxRound);
+	CPrintToChatAll("%s %t", g_sPrefix, "suicidebomber_rounds", g_iRound, g_iMaxRound);
 
 	GameRules_SetProp("m_iRoundTime", gc_iRoundTime.IntValue*60, 4, 0, true);
 
@@ -1214,7 +1230,7 @@ public Action Timer_StartEvent(Handle timer)
 
 	PrintCenterTextAll("%t", "suicidebomber_start_nc");
 
-	CPrintToChatAll("%t %t", "suicidebomber_tag", "suicidebomber_start");
+	CPrintToChatAll("%s %t", g_sPrefix, "suicidebomber_start");
 
 	if (gp_bSmartJailDoors)
 	{
@@ -1306,13 +1322,13 @@ public Action Command_StartSprint(int client, int args)
 			g_iSprintStatus[client] |= IsSprintUsing | IsSprintCoolDown;
 			SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", gc_fSprintSpeed.FloatValue);
 			EmitSoundToClient(client, "player/suit_sprint.wav", SOUND_FROM_PLAYER, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, 0.8);
-			CReplyToCommand(client, "%t %t", "suicidebomber_tag", "suicidebomber_sprint");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "suicidebomber_sprint");
 			g_hTimerSprint[client] = CreateTimer(gc_iSprintTime.FloatValue, Timer_SprintEnd, client);
 		}
 
 		return(Plugin_Handled);
 	}
-	else CReplyToCommand(client, "%t %t", "suicidebomber_tag", "suicidebomber_disabled");
+	else CReplyToCommand(client, "%s %t", g_sPrefix, "suicidebomber_disabled");
 
 	return(Plugin_Handled);
 }
@@ -1349,7 +1365,7 @@ public Action Timer_SprintEnd(Handle timer, any client)
 		if (IsPlayerAlive(client) && GetClientTeam(client) > 1)
 		{
 			g_hTimerSprint[client] = CreateTimer(gc_iSprintCooldown.FloatValue, Timer_SprintCooldown, client);
-			CPrintToChat(client, "%t %t", "suicidebomber_tag", "suicidebomber_sprintend", gc_iSprintCooldown.IntValue);
+			CPrintToChat(client, "%s %t", g_sPrefix, "suicidebomber_sprintend", gc_iSprintCooldown.IntValue);
 		}
 	}
 
@@ -1363,7 +1379,7 @@ public Action Timer_SprintCooldown(Handle timer, any client)
 	if (IsClientInGame(client) && (g_iSprintStatus[client] & IsSprintCoolDown))
 	{
 		g_iSprintStatus[client] &= ~ IsSprintCoolDown;
-		CPrintToChat(client, "%t %t", "suicidebomber_tag", "suicidebomber_sprintagain", gc_iSprintCooldown.IntValue);
+		CPrintToChat(client, "%s %t", g_sPrefix, "suicidebomber_sprintagain", gc_iSprintCooldown.IntValue);
 	}
 
 	return;

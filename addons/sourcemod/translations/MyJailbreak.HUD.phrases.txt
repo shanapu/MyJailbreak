@@ -38,11 +38,6 @@
 		"en"		"Prisoner:"
 	}
 
-	"hud_tag"
-	{
-		"en"		"[MyJB.HUD]"
-	}
-
 	"hud_on"
 	{
 		"en"		"HUD {purple}is enabled!"

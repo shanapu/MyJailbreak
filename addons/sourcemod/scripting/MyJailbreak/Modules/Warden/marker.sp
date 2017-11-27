@@ -218,7 +218,7 @@ stock void MarkerMenu(int client)
 {
 	if (!IsValidClient(client, false, false) || (!IsClientWarden(client) && !IsClientDeputy(client)))
 	{
-		CPrintToChat(client, "%t %t", "warden_tag", "warden_notwarden");
+		CPrintToChat(client, "%s %t", g_sPrefix, "warden_notwarden");
 		return;
 	}
 
@@ -226,7 +226,7 @@ stock void MarkerMenu(int client)
 	if (marker != -1)
 	{
 		RemoveMarker(marker);
-		CPrintToChatAll("%t %t", "warden_tag", "warden_marker_remove", g_sColorNames[marker]);
+		CPrintToChatAll("%s %t", g_sPrefix, "warden_marker_remove", g_sColorNames[marker]);
 		return;
 	}
 
@@ -234,7 +234,7 @@ stock void MarkerMenu(int client)
 	if (radius <= 0.0)
 	{
 		RemoveMarker(marker);
-		CPrintToChat(client, "%t %t", "warden_tag", "warden_wrong");
+		CPrintToChat(client, "%s %t", g_sPrefix, "warden_wrong");
 		return;
 	}
 
@@ -244,7 +244,7 @@ stock void MarkerMenu(int client)
 	float range = GetVectorDistance(g_fPos, g_fMarkerSetupStartOrigin);
 	if (range > g_fMarkerRangeMax)
 	{
-		CPrintToChat(client, "%t %t", "warden_tag", "warden_range");
+		CPrintToChat(client, "%s %t", g_sPrefix, "warden_range");
 		return;
 	}
 
@@ -284,7 +284,7 @@ public int Handle_MarkerMenu(Menu menu, MenuAction action, int client, int itemN
 
 	if (!IsClientWarden(client) && !IsClientDeputy(client))
 	{
-		CPrintToChat(client, "%t %t", "warden_tag", "warden_notwarden");
+		CPrintToChat(client, "%s %t", g_sPrefix, "warden_notwarden");
 		return;
 	}
 
@@ -297,7 +297,7 @@ public int Handle_MarkerMenu(Menu menu, MenuAction action, int client, int itemN
 		if (found)
 		{
 			SetupMarker(marker);
-			CPrintToChatAll("%t %t", "warden_tag", "warden_marker_set", g_sColorNames[marker]);
+			CPrintToChatAll("%s %t", g_sPrefix, "warden_marker_set", g_sColorNames[marker]);
 		}
 	}
 }
@@ -333,7 +333,7 @@ void Draw_Markers()
 
 		if (GetVectorDistance(fWardenOrigin, g_fMarkerOrigin[j]) > g_fMarkerRangeMax)
 		{
-			CPrintToChat(g_iWarden, "%t %t", "warden_tag", "warden_marker_faraway", g_sColorNames[j]);
+			CPrintToChat(g_iWarden, "%s %t", g_sPrefix, "warden_marker_faraway", g_sColorNames[j]);
 			RemoveMarker(j);
 			continue;
 		}

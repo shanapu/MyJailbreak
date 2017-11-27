@@ -7,12 +7,6 @@
 //
 "Phrases"
 {
-
-	"oneinthechamber_tag"
-	{
-		"en"		"[{green}MyJB.OITC{default}]"
-	}
-
 	"oneinthechamber_need"
 	{
 		"#format"	"{1:i},{2:N}"

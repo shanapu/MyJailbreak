@@ -70,6 +70,7 @@ bool gp_bMyWeapons;
 
 // Console Variables
 ConVar gc_bPlugin;
+ConVar gc_sPrefix;
 ConVar gc_bSetW;
 ConVar gc_bSetA;
 ConVar gc_bSetABypassCooldown;
@@ -127,6 +128,7 @@ Handle g_hTimerFreeze;
 Handle g_hTimerBeacon;
 
 // Strings
+char g_sPrefix[64];
 char g_sSoundUnFreezePath[256];
 char g_sSoundFreezePath[256];
 char g_sHasVoted[1500];
@@ -170,6 +172,7 @@ public void OnPluginStart()
 
 	AutoExecConfig_CreateConVar("sm_catch_version", MYJB_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_catch_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true, 0.0, true, 1.0);
+	gc_sPrefix = AutoExecConfig_CreateConVar("sm_catch_prefix", "[{green}MyJB.Catch{default}]", "Set your chat prefix for this plugin.");
 	gc_sCustomCommandVote = AutoExecConfig_CreateConVar("sm_catch_cmds_vote", "cat, catchfreeze", "Set your custom chat command for Event voting(!catch (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_sCustomCommandSet = AutoExecConfig_CreateConVar("sm_catch_cmds_set", "scat, scatchfreeze", "Set your custom chat command for set Event(!setcatch (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_catch_warden", "1", "0 - disabled, 1 - allow warden to set catch round", _, true, 0.0, true, 1.0);
@@ -217,6 +220,7 @@ public void OnPluginStart()
 	HookConVarChange(gc_sSoundFreezePath, OnSettingChanged);
 	HookConVarChange(gc_sSoundUnFreezePath, OnSettingChanged);
 	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
+	HookConVarChange(gc_sPrefix, OnSettingChanged);
 
 	// Hooks
 	HookEvent("round_start", Event_RoundStart);
@@ -301,6 +305,10 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 			PrecacheDecalAnyDownload(g_sOverlayStartPath);
 		}
 	}
+	else if (convar == gc_sPrefix)
+	{
+		strcopy(g_sPrefix, sizeof(g_sPrefix), newValue);
+	}
 }
 
 public void OnAllPluginsLoaded()
@@ -358,9 +366,17 @@ public void OnLibraryAdded(const char[] name)
 // Initialize Plugin
 public void OnConfigsExecuted()
 {
-	g_iFreezeTime = gc_iFreezeTime.IntValue;
-	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
+	// FindConVar
 	g_iMaxRound = gc_iRounds.IntValue;
+	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
+
+	gc_sPrefix.GetString(g_sPrefix, sizeof(g_sPrefix));
+	gc_sOverlayStartPath.GetString(g_sOverlayStartPath, sizeof(g_sOverlayStartPath));
+	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
+	gc_sSoundFreezePath.GetString(g_sSoundFreezePath, sizeof(g_sSoundFreezePath));
+	gc_sSoundUnFreezePath.GetString(g_sSoundUnFreezePath, sizeof(g_sSoundUnFreezePath));
+	gc_sOverlayFreeze.GetString(g_sOverlayFreeze, sizeof(g_sOverlayFreeze));
+	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
 
 	// FindConVar
 	if (gp_bHosties)
@@ -418,7 +434,7 @@ public Action Command_SetCatch(int client, int args)
 {
 	if (!gc_bPlugin.BoolValue)
 	{
-		CReplyToCommand(client, "%t %t", "catch_tag", "catch_disabled");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "catch_disabled");
 		return Plugin_Handled;
 	}
 
@@ -440,13 +456,13 @@ public Action Command_SetCatch(int client, int args)
 	{
 		if (!gc_bSetA.BoolValue)
 		{
-			CReplyToCommand(client, "%t %t", "catch_tag", "catch_setbyadmin");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "catch_setbyadmin");
 			return Plugin_Handled;
 		}
 
 		if (GetTeamClientCount(CS_TEAM_CT) == 0 || GetTeamClientCount(CS_TEAM_T) == 0)
 		{
-			CReplyToCommand(client, "%t %t", "catch_tag", "catch_minplayer");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "catch_minplayer");
 			return Plugin_Handled;
 		}
 
@@ -457,14 +473,14 @@ public Action Command_SetCatch(int client, int args)
 
 			if (!StrEqual(EventDay, "none", false))
 			{
-				CReplyToCommand(client, "%t %t", "catch_tag", "catch_progress", EventDay);
+				CReplyToCommand(client, "%s %t", g_sPrefix, "catch_progress", EventDay);
 				return Plugin_Handled;
 			}
 		}
 
 		if (g_iCoolDown > 0 && !gc_bSetABypassCooldown.BoolValue)
 		{
-			CReplyToCommand(client, "%t %t", "catch_tag", "catch_wait", g_iCoolDown);
+			CReplyToCommand(client, "%s %t", g_sPrefix, "catch_wait", g_iCoolDown);
 			return Plugin_Handled;
 		}
 
@@ -484,19 +500,19 @@ public Action Command_SetCatch(int client, int args)
 	{
 		if (!warden_iswarden(client))
 		{
-			CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
 			return Plugin_Handled;
 		}
 		
 		if (!gc_bSetW.BoolValue)
 		{
-			CReplyToCommand(client, "%t %t", "warden_tag", "catch_setbywarden");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "catch_setbywarden");
 			return Plugin_Handled;
 		}
 
 		if (GetTeamClientCount(CS_TEAM_CT) == 0 || GetTeamClientCount(CS_TEAM_T) == 0)
 		{
-			CReplyToCommand(client, "%t %t", "catch_tag", "catch_minplayer");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "catch_minplayer");
 			return Plugin_Handled;
 		}
 
@@ -507,14 +523,14 @@ public Action Command_SetCatch(int client, int args)
 
 			if (!StrEqual(EventDay, "none", false))
 			{
-				CReplyToCommand(client, "%t %t", "catch_tag", "catch_progress", EventDay);
+				CReplyToCommand(client, "%s %t", g_sPrefix, "catch_progress", EventDay);
 				return Plugin_Handled;
 			}
 		}
 
 		if (g_iCoolDown > 0)
 		{
-			CReplyToCommand(client, "%t %t", "catch_tag", "catch_wait", g_iCoolDown);
+			CReplyToCommand(client, "%s %t", g_sPrefix, "catch_wait", g_iCoolDown);
 			return Plugin_Handled;
 		}
 
@@ -532,7 +548,7 @@ public Action Command_SetCatch(int client, int args)
 	}
 	else
 	{
-		CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
 	}
 
 	return Plugin_Handled;
@@ -543,19 +559,19 @@ public Action Command_VoteCatch(int client, int args)
 {
 	if (!gc_bPlugin.BoolValue)
 	{
-		CReplyToCommand(client, "%t %t", "catch_tag", "catch_disabled");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "catch_disabled");
 		return Plugin_Handled;
 	}
 
 	if (!gc_bVote.BoolValue)
 	{
-		CReplyToCommand(client, "%t %t", "catch_tag", "catch_voting");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "catch_voting");
 		return Plugin_Handled;
 	}
 
 	if (GetTeamClientCount(CS_TEAM_CT) == 0 || GetTeamClientCount(CS_TEAM_T) == 0)
 	{
-		CReplyToCommand(client, "%t %t", "catch_tag", "catch_minplayer");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "catch_minplayer");
 		return Plugin_Handled;
 	}
 
@@ -566,14 +582,14 @@ public Action Command_VoteCatch(int client, int args)
 
 		if (!StrEqual(EventDay, "none", false))
 		{
-			CReplyToCommand(client, "%t %t", "catch_tag", "catch_progress", EventDay);
+			CReplyToCommand(client, "%s %t", g_sPrefix, "catch_progress", EventDay);
 			return Plugin_Handled;
 		}
 	}
 
 	if (g_iCoolDown > 0)
 	{
-		CReplyToCommand(client, "%t %t", "catch_tag", "catch_wait", g_iCoolDown);
+		CReplyToCommand(client, "%s %t", g_sPrefix, "catch_wait", g_iCoolDown);
 		return Plugin_Handled;
 	}
 
@@ -582,7 +598,7 @@ public Action Command_VoteCatch(int client, int args)
 
 	if (StrContains(g_sHasVoted, steamid, true) != -1)
 	{
-		CReplyToCommand(client, "%t %t", "catch_tag", "catch_voted");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "catch_voted");
 		return Plugin_Handled;
 	}
 
@@ -608,7 +624,7 @@ public Action Command_VoteCatch(int client, int args)
 	}
 	else
 	{
-		CPrintToChatAll("%t %t", "catch_tag", "catch_need", Missing, client);
+		CPrintToChatAll("%s %t", g_sPrefix, "catch_need", Missing, client);
 	}
 
 	return Plugin_Handled;
@@ -729,7 +745,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 				MyJailbreak_SetEventDayName("none");
 			}
 
-			CPrintToChatAll("%t %t", "catch_tag", "catch_end");
+			CPrintToChatAll("%s %t", g_sPrefix, "catch_end");
 		}
 	}
 
@@ -740,7 +756,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			CreateInfoPanel(i);
 		}
 
-		CPrintToChatAll("%t %t", "catch_tag", "catch_next");
+		CPrintToChatAll("%s %t", g_sPrefix, "catch_next");
 		PrintCenterTextAll("%t", "catch_next_nc");
 	}
 }
@@ -975,7 +991,7 @@ void ResetEventDay()
 			MyJailbreak_SetEventDayRunning(false, 0);
 		}
 
-		CPrintToChatAll("%t %t", "catch_tag", "catch_end");
+		CPrintToChatAll("%s %t", g_sPrefix, "catch_end");
 	}
 }
 
@@ -1015,7 +1031,7 @@ void StartEventRound(bool thisround)
 
 		CreateTimer(3.0, Timer_PrepareEvent);
 
-		CPrintToChatAll("%t %t", "catch_tag", "catch_now");
+		CPrintToChatAll("%s %t", g_sPrefix, "catch_now");
 		PrintCenterTextAll("%t", "catch_now_nc");
 	}
 	else
@@ -1023,7 +1039,7 @@ void StartEventRound(bool thisround)
 		g_bStartCatch = true;
 		g_iCoolDown++;
 		
-		CPrintToChatAll("%t %t", "catch_tag", "catch_next");
+		CPrintToChatAll("%s %t", g_sPrefix, "catch_next");
 		PrintCenterTextAll("%t", "catch_next_nc");
 	}
 }
@@ -1158,7 +1174,7 @@ void PrepareDay(bool thisround)
 		}
 	}
 
-	CPrintToChatAll("%t %t", "catch_tag", "catch_rounds", g_iRound, g_iMaxRound);
+	CPrintToChatAll("%s %t", g_sPrefix, "catch_rounds", g_iRound, g_iMaxRound);
 
 	GameRules_SetProp("m_iRoundTime", gc_iRoundTime.IntValue*60, 4, 0, true);
 
@@ -1186,7 +1202,7 @@ void CatchEm(int client, int attacker)
 		CreateTimer(3.0, DeleteOverlay, GetClientUserId(client));
 	}
 
-	CPrintToChatAll("%t %t", "catch_tag", "catch_catch", attacker, client);
+	CPrintToChatAll("%s %t", g_sPrefix, "catch_catch", attacker, client);
 }
 
 
@@ -1205,7 +1221,7 @@ void FreeEm(int client, int attacker)
 		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) EmitSoundToAllAny(g_sSoundUnFreezePath);
 	}
 
-	CPrintToChatAll("%t %t", "catch_tag", "catch_unfreeze", attacker, client);
+	CPrintToChatAll("%s %t", g_sPrefix, "catch_unfreeze", attacker, client);
 }
 
 
@@ -1222,7 +1238,7 @@ void CheckStatus()
 
 	if (count == 0)
 	{
-		CPrintToChatAll("%t %t", "catch_tag", "catch_win");
+		CPrintToChatAll("%s %t", g_sPrefix, "catch_win");
 
 		CS_TerminateRound(5.0, CSRoundEnd_CTWin);
 	}
@@ -1375,7 +1391,7 @@ public Action Timer_StartEvent(Handle timer)
 
 	PrintCenterTextAll("%t", "catch_start_nc");
 
-	CPrintToChatAll("%t %t", "catch_tag", "catch_start");
+	CPrintToChatAll("%s %t", g_sPrefix, "catch_start");
 
 	g_hTimerFreeze = null;
 
@@ -1440,7 +1456,7 @@ public Action Command_StartSprint(int client, int args)
 {
 	if (!g_bIsCatch)
 	{
-		CReplyToCommand(client, "%t %t", "catch_tag", "catch_disabled");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "catch_disabled");
 		return Plugin_Handled;
 	}
 
@@ -1456,7 +1472,7 @@ public Action Command_StartSprint(int client, int args)
 		SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", gc_fSprintSpeed.FloatValue);
 		EmitSoundToClient(client, "player/suit_sprint.wav", SOUND_FROM_PLAYER, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, 0.8);
 
-		CReplyToCommand(client, "%t %t", "catch_tag", "catch_sprint");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "catch_sprint");
 
 		g_hTimerSprint[client] = CreateTimer(gc_fSprintTime.FloatValue, Timer_SprintEnd, client);
 	}
@@ -1511,7 +1527,7 @@ public Action Timer_SprintEnd(Handle timer, any client)
 		if (IsPlayerAlive(client) && GetClientTeam(client) > 1)
 		{
 			g_hTimerSprint[client] = CreateTimer(gc_iSprintCooldown.FloatValue, Timer_SprintCooldown, client);
-			CPrintToChat(client, "%t %t", "catch_tag", "catch_sprintend", gc_iSprintCooldown.IntValue);
+			CPrintToChat(client, "%s %t", g_sPrefix, "catch_sprintend", gc_iSprintCooldown.IntValue);
 		}
 	}
 
@@ -1525,7 +1541,7 @@ public Action Timer_SprintCooldown(Handle timer, any client)
 	if (IsClientInGame(client) && (g_iSprintStatus[client] & IsSprintCoolDown))
 	{
 		g_iSprintStatus[client] &= ~ IsSprintCoolDown;
-		CPrintToChat(client, "%t %t", "catch_tag", "catch_sprintagain", gc_iSprintCooldown.IntValue);
+		CPrintToChat(client, "%s %t", g_sPrefix, "catch_sprintagain", gc_iSprintCooldown.IntValue);
 	}
 
 	return Plugin_Handled;

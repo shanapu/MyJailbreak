@@ -138,7 +138,7 @@ public Action Command_PainterMenu(int client, int args)
 				menu.ExitButton = true;
 				menu.Display(client, 20);
 			}
-			else CReplyToCommand(client, "%t %t", "warden_tag", "warden_vipfeature");
+			else CReplyToCommand(client, "%s %t", g_sPrefix, "warden_vipfeature");
 		}
 	}
 
@@ -269,7 +269,7 @@ public Action TogglePainterT(int client, int args)
 			if (!g_bPainterT) 
 			{
 				g_bPainterT = true;
-				CPrintToChatAll("%t %t", "warden_tag", "warden_tpainteron");
+				CPrintToChatAll("%s %t", g_sPrefix, "warden_tpainteron");
 				
 				for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, true))
 				{
@@ -289,7 +289,7 @@ public Action TogglePainterT(int client, int args)
 					}
 				}
 				g_bPainterT = false;
-				CPrintToChatAll("%t %t", "warden_tag", "warden_tpainteroff");
+				CPrintToChatAll("%s %t", g_sPrefix, "warden_tpainteroff");
 			}
 		}
 	}
@@ -352,7 +352,7 @@ public int Handler_PainterMenu(Menu menu, MenuAction action, int client, int sel
 		if (strcmp(info, "off") == 0)
 		{
 			g_bPainter[client] = false;
-			CPrintToChat(client, "%t %t", "warden_tag", "warden_painteroff");
+			CPrintToChat(client, "%s %t", g_sPrefix, "warden_painteroff");
 		}
 		else if (strcmp(info, "terror") == 0)
 		{
@@ -360,71 +360,71 @@ public int Handler_PainterMenu(Menu menu, MenuAction action, int client, int sel
 		}
 		else if (strcmp(info, "rainbow") == 0)
 		{
-			if (!g_bPainter[client]) CPrintToChat(client, "%t %t", "warden_tag", "warden_painteron");
-			CPrintToChat(client, "%t %t", "warden_tag", "warden_painter", g_sColorNamesRainbow);
+			if (!g_bPainter[client]) CPrintToChat(client, "%s %t", g_sPrefix, "warden_painteron");
+			CPrintToChat(client, "%s %t", g_sPrefix, "warden_painter", g_sColorNamesRainbow);
 			g_bPainter[client] = true;
 			g_bPainterColorRainbow[client] = true;
 		}
 		else if (strcmp(info, "white") == 0)
 		{
-			if (!g_bPainter[client]) CPrintToChat(client, "%t %t", "warden_tag", "warden_painteron");
-			CPrintToChat(client, "%t %t", "warden_tag", "warden_painter", g_sColorNamesWhite);
+			if (!g_bPainter[client]) CPrintToChat(client, "%s %t", g_sPrefix, "warden_painteron");
+			CPrintToChat(client, "%s %t", g_sPrefix, "warden_painter", g_sColorNamesWhite);
 			g_bPainter[client] = true;
 			g_bPainterColorRainbow[client] = false;
 			g_iPainterColor[client] = 0;
 		}
 		else if (strcmp(info, "red") == 0)
 		{
-			if (!g_bPainter[client]) CPrintToChat(client, "%t %t", "warden_tag", "warden_painteron");
-			CPrintToChat(client, "%t %t", "warden_tag", "warden_painter", g_sColorNamesRed);
+			if (!g_bPainter[client]) CPrintToChat(client, "%s %t", g_sPrefix, "warden_painteron");
+			CPrintToChat(client, "%s %t", g_sPrefix, "warden_painter", g_sColorNamesRed);
 			g_bPainter[client] = true;
 			g_bPainterColorRainbow[client] = false;
 			g_iPainterColor[client] = 1;
 		}
 		else if (strcmp(info, "green") == 0)
 		{
-			if (!g_bPainter[client]) CPrintToChat(client, "%t %t", "warden_tag", "warden_painteron");
-			CPrintToChat(client, "%t %t", "warden_tag", "warden_painter", g_sColorNamesGreen);
+			if (!g_bPainter[client]) CPrintToChat(client, "%s %t", g_sPrefix, "warden_painteron");
+			CPrintToChat(client, "%s %t", g_sPrefix, "warden_painter", g_sColorNamesGreen);
 			g_bPainter[client] = true;
 			g_bPainterColorRainbow[client] = false;
 			g_iPainterColor[client] = 2;
 		}
 		else if (strcmp(info, "blue") == 0)
 		{
-			if (!g_bPainter[client]) CPrintToChat(client, "%t %t", "warden_tag", "warden_painteron");
-			CPrintToChat(client, "%t %t", "warden_tag", "warden_painter", g_sColorNamesBlue);
+			if (!g_bPainter[client]) CPrintToChat(client, "%s %t", g_sPrefix, "warden_painteron");
+			CPrintToChat(client, "%s %t", g_sPrefix, "warden_painter", g_sColorNamesBlue);
 			g_bPainter[client] = true;
 			g_bPainterColorRainbow[client] = false;
 			g_iPainterColor[client] = 3;
 		}
 		else if (strcmp(info, "yellow") == 0)
 		{
-			if (!g_bPainter[client]) CPrintToChat(client, "%t %t", "warden_tag", "warden_painteron");
-			CPrintToChat(client, "%t %t", "warden_tag", "warden_painter", g_sColorNamesYellow);
+			if (!g_bPainter[client]) CPrintToChat(client, "%s %t", g_sPrefix, "warden_painteron");
+			CPrintToChat(client, "%s %t", g_sPrefix, "warden_painter", g_sColorNamesYellow);
 			g_bPainter[client] = true;
 			g_bPainterColorRainbow[client] = false;
 			g_iPainterColor[client] = 4;
 		}
 		else if (strcmp(info, "cyan") == 0)
 		{
-			if (!g_bPainter[client]) CPrintToChat(client, "%t %t", "warden_tag", "warden_painteron");
-			CPrintToChat(client, "%t %t", "warden_tag", "warden_painter", g_sColorNamesCyan);
+			if (!g_bPainter[client]) CPrintToChat(client, "%s %t", g_sPrefix, "warden_painteron");
+			CPrintToChat(client, "%s %t", g_sPrefix, "warden_painter", g_sColorNamesCyan);
 			g_bPainter[client] = true;
 			g_bPainterColorRainbow[client] = false;
 			g_iPainterColor[client] = 5;
 		}
 		else if (strcmp(info, "magenta") == 0)
 		{
-			if (!g_bPainter[client]) CPrintToChat(client, "%t %t", "warden_tag", "warden_painteron");
-			CPrintToChat(client, "%t %t", "warden_tag", "warden_painter", g_sColorNamesMagenta);
+			if (!g_bPainter[client]) CPrintToChat(client, "%s %t", g_sPrefix, "warden_painteron");
+			CPrintToChat(client, "%s %t", g_sPrefix, "warden_painter", g_sColorNamesMagenta);
 			g_bPainter[client] = true;
 			g_bPainterColorRainbow[client] = false;
 			g_iPainterColor[client] = 6;
 		}
 		else if (strcmp(info, "orange") == 0)
 		{
-			if (!g_bPainter[client]) CPrintToChat(client, "%t %t", "warden_tag", "warden_painteron");
-			CPrintToChat(client, "%t %t", "warden_tag", "warden_painter", g_sColorNamesOrange);
+			if (!g_bPainter[client]) CPrintToChat(client, "%s %t", g_sPrefix, "warden_painteron");
+			CPrintToChat(client, "%s %t", g_sPrefix, "warden_painter", g_sColorNamesOrange);
 			g_bPainter[client] = true;
 			g_bPainterColorRainbow[client] = false;
 			g_iPainterColor[client] = 7;

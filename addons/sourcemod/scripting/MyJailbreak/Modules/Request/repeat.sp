@@ -118,7 +118,7 @@ public Action Command_Repeat(int client, int args)
 					{
 						g_iRepeatCounter[client]++;
 						g_bRepeated[client] = true;
-						CPrintToChatAll("%t %t", "request_tag", "request_repeatpls", client);
+						CPrintToChatAll("%s %t", g_sPrefix, "request_repeatpls", client);
 						g_hTimerRepeat[client] = CreateTimer(10.0, Timer_RepeatEnd, GetClientUserId(client));
 						if ((gp_bWarden || gp_bMyJBWarden) && warden_exist())
 						{
@@ -128,11 +128,11 @@ public Action Command_Repeat(int client, int args)
 						
 						if (gc_bSounds.BoolValue)EmitSoundToAllAny(g_sSoundRepeatPath);
 					}
-					else CReplyToCommand(client, "%t %t", "request_tag", "request_repeattimes", gc_iRepeatLimit.IntValue);
+					else CReplyToCommand(client, "%s %t", g_sPrefix, "request_repeattimes", gc_iRepeatLimit.IntValue);
 				}
-				else CReplyToCommand(client, "%t %t", "request_tag", "request_alreadyrepeat");
+				else CReplyToCommand(client, "%s %t", g_sPrefix, "request_alreadyrepeat");
 			}
-			else CReplyToCommand(client, "%t %t", "request_tag", "request_notalivect");
+			else CReplyToCommand(client, "%s %t", g_sPrefix, "request_notalivect");
 		}
 	}
 

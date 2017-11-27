@@ -59,9 +59,6 @@ public void Reminder_OnPluginStart()
 	// Hooks
 	HookEvent("round_start", Reminder_Event_RoundStart);
 	HookEvent("round_end", Reminder_Event_RoundEnd);
-
-	// FindConVar
-	g_bFF = FindConVar("mp_teammates_are_enemies");
 }
 
 /******************************************************************************
@@ -115,7 +112,7 @@ public Action Timer_g_hTimerReminder(Handle timer)
 		if (g_iRoundTime == 180 && (g_iWarden != -1))
 		{
 			EmitSoundToClient(g_iWarden, "weapons/c4/c4_beep1.wav", SOUND_FROM_PLAYER, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, 1.0);
-			Format(timeinfo, sizeof(timeinfo), "%T %T %T", "warden_tag", g_iWarden, "warden_180", g_iWarden, "warden_remaining", g_iWarden);
+			Format(timeinfo, sizeof(timeinfo), "%s %T %T", g_sPrefix, "warden_180", g_iWarden, "warden_remaining", g_iWarden);
 			CPrintToChat(g_iWarden, timeinfo);
 			Format(timeinfo, sizeof(timeinfo), "%T %T", "warden_180", g_iWarden, "warden_remaining", g_iWarden);
 			PrintCenterText(g_iWarden, timeinfo);
@@ -124,7 +121,7 @@ public Action Timer_g_hTimerReminder(Handle timer)
 		if (g_iRoundTime == 120 && (g_iWarden != -1))
 		{
 			EmitSoundToClient(g_iWarden, "weapons/c4/c4_beep1.wav", SOUND_FROM_PLAYER, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, 1.0);
-			Format(timeinfo, sizeof(timeinfo), "%T %T %T", "warden_tag", g_iWarden, "warden_120", g_iWarden, "warden_remaining", g_iWarden);
+			Format(timeinfo, sizeof(timeinfo), "%s %T %T", g_sPrefix, "warden_120", g_iWarden, "warden_remaining", g_iWarden);
 			CPrintToChat(g_iWarden, timeinfo);
 			Format(timeinfo, sizeof(timeinfo), "%T %T", "warden_120", g_iWarden, "warden_remaining", g_iWarden);
 			PrintCenterText(g_iWarden, timeinfo);
@@ -133,7 +130,7 @@ public Action Timer_g_hTimerReminder(Handle timer)
 		if (g_iRoundTime == 60 && (g_iWarden != -1))
 		{
 			EmitSoundToClient(g_iWarden, "weapons/c4/c4_beep1.wav", SOUND_FROM_PLAYER, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, 1.0);
-			Format(timeinfo, sizeof(timeinfo), "%T %T %T", "warden_tag", g_iWarden, "warden_60", g_iWarden, "warden_remaining", g_iWarden);
+			Format(timeinfo, sizeof(timeinfo), "%s %T %T", g_sPrefix, "warden_60", g_iWarden, "warden_remaining", g_iWarden);
 			CPrintToChat(g_iWarden, timeinfo);
 			Format(timeinfo, sizeof(timeinfo), "%T %T", "warden_60", g_iWarden, "warden_remaining", g_iWarden);
 			PrintCenterText(g_iWarden, timeinfo);
@@ -142,7 +139,7 @@ public Action Timer_g_hTimerReminder(Handle timer)
 		if (g_iRoundTime == 30 && (g_iWarden != -1))
 		{
 			EmitSoundToClient(g_iWarden, "weapons/c4/c4_beep1.wav", SOUND_FROM_PLAYER, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, 1.0);
-			Format(timeinfo, sizeof(timeinfo), "%T %T %T", "warden_tag", g_iWarden, "warden_30", g_iWarden, "warden_remaining", g_iWarden);
+			Format(timeinfo, sizeof(timeinfo), "%s %T %T", g_sPrefix, "warden_30", g_iWarden, "warden_remaining", g_iWarden);
 			CPrintToChat(g_iWarden, timeinfo);
 			Format(timeinfo, sizeof(timeinfo), "%T %T", "warden_30", g_iWarden, "warden_remaining", g_iWarden);
 			PrintCenterText(g_iWarden, timeinfo);
@@ -152,7 +149,7 @@ public Action Timer_g_hTimerReminder(Handle timer)
 		if (g_iRoundTime == 180 && (g_iDeputy != -1))
 		{
 			EmitSoundToClient(g_iDeputy, "weapons/c4/c4_beep1.wav", SOUND_FROM_PLAYER, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, 1.0);
-			Format(timeinfo, sizeof(timeinfo), "%T %T %T", "warden_tag", g_iDeputy, "warden_180", g_iDeputy, "warden_remaining", g_iDeputy);
+			Format(timeinfo, sizeof(timeinfo), "%s %T %T", g_sPrefix, "warden_180", g_iDeputy, "warden_remaining", g_iDeputy);
 			CPrintToChat(g_iDeputy, timeinfo);
 			Format(timeinfo, sizeof(timeinfo), "%T %T", "warden_180", g_iDeputy, "warden_remaining", g_iDeputy);
 			PrintCenterText(g_iDeputy, timeinfo);
@@ -161,7 +158,7 @@ public Action Timer_g_hTimerReminder(Handle timer)
 		if (g_iRoundTime == 120 && (g_iDeputy != -1))
 		{
 			EmitSoundToClient(g_iDeputy, "weapons/c4/c4_beep1.wav", SOUND_FROM_PLAYER, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, 1.0);
-			Format(timeinfo, sizeof(timeinfo), "%T %T %T", "warden_tag", g_iDeputy, "warden_120", g_iDeputy, "warden_remaining", g_iDeputy);
+			Format(timeinfo, sizeof(timeinfo), "%s %T %T", g_sPrefix, "warden_120", g_iDeputy, "warden_remaining", g_iDeputy);
 			CPrintToChat(g_iDeputy, timeinfo);
 			Format(timeinfo, sizeof(timeinfo), "%T %T", "warden_120", g_iDeputy, "warden_remaining", g_iDeputy);
 			PrintCenterText(g_iDeputy, timeinfo);
@@ -170,7 +167,7 @@ public Action Timer_g_hTimerReminder(Handle timer)
 		if (g_iRoundTime == 60 && (g_iDeputy != -1))
 		{
 			EmitSoundToClient(g_iDeputy, "weapons/c4/c4_beep1.wav", SOUND_FROM_PLAYER, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, 1.0);
-			Format(timeinfo, sizeof(timeinfo), "%T %T %T", "warden_tag", g_iDeputy, "warden_60", g_iDeputy, "warden_remaining", g_iDeputy);
+			Format(timeinfo, sizeof(timeinfo), "%s %T %T", g_sPrefix, "warden_60", g_iDeputy, "warden_remaining", g_iDeputy);
 			CPrintToChat(g_iDeputy, timeinfo);
 			Format(timeinfo, sizeof(timeinfo), "%T %T", "warden_60", g_iDeputy, "warden_remaining", g_iDeputy);
 			PrintCenterText(g_iDeputy, timeinfo);
@@ -179,7 +176,7 @@ public Action Timer_g_hTimerReminder(Handle timer)
 		if (g_iRoundTime == 30 && (g_iDeputy != -1))
 		{
 			EmitSoundToClient(g_iDeputy, "weapons/c4/c4_beep1.wav", SOUND_FROM_PLAYER, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, 1.0);
-			Format(timeinfo, sizeof(timeinfo), "%T %T %T", "warden_tag", g_iDeputy, "warden_30", g_iDeputy, "warden_remaining", g_iDeputy);
+			Format(timeinfo, sizeof(timeinfo), "%s %T %T", g_sPrefix, "warden_30", g_iDeputy, "warden_remaining", g_iDeputy);
 			CPrintToChat(g_iDeputy, timeinfo);
 			Format(timeinfo, sizeof(timeinfo), "%T %T", "warden_30", g_iDeputy, "warden_remaining", g_iDeputy);
 			PrintCenterText(g_iDeputy, timeinfo);

@@ -74,6 +74,7 @@ Handle g_hWeapons2 = null;
 // Console Variables
 ConVar gc_bSpawn;
 ConVar gc_bPlugin;
+ConVar gc_sPrefix;
 ConVar gc_bTAWarden;
 ConVar gc_bTADeputy;
 ConVar gc_bEventDay;
@@ -94,6 +95,7 @@ ConVar g_bTaserWarden;
 ConVar g_bTaserDeputy;
 
 // Strings
+char g_sPrefix[64];
 char primaryWeapon[MAXPLAYERS + 1][24];
 char secondaryWeapon[MAXPLAYERS + 1][24];
 
@@ -170,6 +172,7 @@ public void OnPluginStart()
 
 	AutoExecConfig_CreateConVar("sm_weapons_version", MYJB_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_weapons_enable", "1", "0 - disabled, 1 - enable weapons menu", _, true, 0.0, true, 1.0);
+	gc_sPrefix = AutoExecConfig_CreateConVar("sm_weapons_prefix", "[{green}MyJB.Weapons{default}]", "Set your chat prefix for this plugin.");
 	gc_sCustomCommandWeapon = AutoExecConfig_CreateConVar("sm_weapons_cmds", "gun, guns, weapons, gunmenu, weaponmenu, giveweapon, arms", "Set your custom chat command for weapon menu(!weapon (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_bSpawn = AutoExecConfig_CreateConVar("sm_weapons_spawnmenu", "1", "0 - disabled, 1 -  enable autoopen weapon menu on spawn", _, true, 0.0, true, 1.0);
 	gc_bEventDay = AutoExecConfig_CreateConVar("sm_weapons_noeventday", "1", "0 - disabled, 1 - enable the weapon menu on non-EventDays round (normal/simon rounds)", _, true, 0.0, true, 1.0);
@@ -191,6 +194,7 @@ public void OnPluginStart()
 
 	// Hooks
 	HookEvent("player_spawn", Event_PlayerSpawn);
+	HookConVarChange(gc_sPrefix, OnSettingChanged);
 
 	// Cookies
 	g_hWeapons1 = RegClientCookie("Primary Weapons", "", CookieAccess_Private);
@@ -206,6 +210,15 @@ public void OnPluginStart()
 		}
 
 		g_bIsLateLoad = false;
+	}
+}
+
+// ConVarChange for Strings
+public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
+{
+	if (convar == gc_sPrefix)
+	{
+		strcopy(g_sPrefix, sizeof(g_sPrefix), newValue);
 	}
 }
 
@@ -254,6 +267,8 @@ public void OnAllPluginsLoaded()
 // Initialize Plugin
 public void OnConfigsExecuted()
 {
+	gc_sPrefix.GetString(g_sPrefix, sizeof(g_sPrefix));
+
 	g_aPrimary = CreateArray(128);
 	g_aSecondary = CreateArray(128);
 	ListWeapons();
@@ -306,7 +321,7 @@ public Action Command_Weapons(int client, int args)
 
 		return Plugin_Continue;
 	}
-	else CReplyToCommand(client, "%t %t", "weapons_tag", "weapons_disabled");
+	else CReplyToCommand(client, "%s %t", g_sPrefix, "weapons_disabled");
 
 	return Plugin_Continue;
 }
@@ -454,14 +469,14 @@ void GiveSavedWeapons(int client)
 				if (gc_bHealthWarden.BoolValue && !g_bTA[client])
 				{
 					GivePlayerItem(client, "weapon_healthshot");
-					CPrintToChat(client, "%t %t", "weapons_tag", "weapons_health");
+					CPrintToChat(client, "%s %t", g_sPrefix, "weapons_health");
 					g_bTA[client] = true;
 				}
 
 				if (gc_bTAWarden.BoolValue && !g_bHealth[client])
 				{
 					GivePlayerItem(client, "weapon_tagrenade");
-					CPrintToChat(client, "%t %t", "weapons_tag", "weapons_ta");
+					CPrintToChat(client, "%s %t", g_sPrefix, "weapons_ta");
 					g_bHealth[client] = true;
 				}
 
@@ -479,14 +494,14 @@ void GiveSavedWeapons(int client)
 					if (gc_bHealthDeputy.BoolValue && !g_bTA[client])
 					{
 						GivePlayerItem(client, "weapon_healthshot");
-						CPrintToChat(client, "%t %t", "weapons_tag", "weapons_health");
+						CPrintToChat(client, "%s %t", g_sPrefix, "weapons_health");
 						g_bTA[client] = true;
 					}
 
 					if (gc_bTADeputy.BoolValue && !g_bHealth[client])
 					{
 						GivePlayerItem(client, "weapon_tagrenade");
-						CPrintToChat(client, "%t %t", "weapons_tag", "weapons_ta");
+						CPrintToChat(client, "%s %t", g_sPrefix, "weapons_ta");
 						g_bHealth[client] = true;
 					}
 
@@ -781,24 +796,24 @@ public int Handler_BuildOptionsMenu(Menu menu, MenuAction action, int client, in
 		else if (StrEqual(info, "Same 1"))
 		{
 			g_bWeaponsSelected[client] = true;
-			if (!IsPlayerAlive(client)) CPrintToChat(client, "%t %t", "weapons_tag", "weapons_next");
-			else CPrintToChat(client, "%t %t", "weapons_tag", "weapons_same");
+			if (!IsPlayerAlive(client)) CPrintToChat(client, "%s %t", g_sPrefix, "weapons_next");
+			else CPrintToChat(client, "%s %t", g_sPrefix, "weapons_same");
 			
 			GiveSavedWeapons(client);
 			g_bRememberChoice[client] = false;
 		}
 		else if (StrEqual(info, "Same All"))
 		{
-			if (!IsPlayerAlive(client)) CPrintToChat(client, "%t %t", "weapons_tag", "weapons_next");
-			else CPrintToChat(client, "%t %t", "weapons_tag", "weapons_sameall");
+			if (!IsPlayerAlive(client)) CPrintToChat(client, "%s %t", g_sPrefix, "weapons_next");
+			else CPrintToChat(client, "%s %t", g_sPrefix, "weapons_sameall");
 			GiveSavedWeapons(client);
 			g_bRememberChoice[client] = true;
 		}
 		else if (StrEqual(info, "Random 1"))
 		{
 			g_bWeaponsSelected[client] = true;
-			if (!IsPlayerAlive(client)) CPrintToChat(client, "%t %t", "weapons_tag", "weapons_next");
-			else CPrintToChat(client, "%t %t", "weapons_tag", "weapons_random");
+			if (!IsPlayerAlive(client)) CPrintToChat(client, "%s %t", g_sPrefix, "weapons_next");
+			else CPrintToChat(client, "%s %t", g_sPrefix, "weapons_random");
 			
 			primaryWeapon[client] = "random";
 			secondaryWeapon[client] = "random";
@@ -807,8 +822,8 @@ public int Handler_BuildOptionsMenu(Menu menu, MenuAction action, int client, in
 		}
 		else if (StrEqual(info, "Random All"))
 		{
-			if (!IsPlayerAlive(client)) CPrintToChat(client, "%t %t", "weapons_tag", "weapons_next");
-			else CPrintToChat(client, "%t %t", "weapons_tag", "weapons_randomall");
+			if (!IsPlayerAlive(client)) CPrintToChat(client, "%s %t", g_sPrefix, "weapons_next");
+			else CPrintToChat(client, "%s %t", g_sPrefix, "weapons_randomall");
 			primaryWeapon[client] = "random";
 			secondaryWeapon[client] = "random";
 			GiveSavedWeapons(client);
@@ -876,7 +891,7 @@ public int Menu_Secondary(Menu menu, MenuAction action, int client, int param2)
 		secondaryWeapon[client] = info;
 		GiveSavedWeapons(client);
 		if (!IsPlayerAlive(client))
-			CPrintToChat(client, "%t %t", "weapons_tag", "weapons_next");
+			CPrintToChat(client, "%s %t", g_sPrefix, "weapons_next");
 	}
 }
 

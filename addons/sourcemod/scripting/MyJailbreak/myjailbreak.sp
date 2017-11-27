@@ -221,7 +221,7 @@ public Action Command_ResetEvent(int client, int args)
 	}
 	else
 	{
-		ReplyToCommand(client, "No Event Day planned/running");
+		ReplyToCommand(client, "[MyJB] No Event Day planned/running");
 	}
 
 	return Plugin_Handled;

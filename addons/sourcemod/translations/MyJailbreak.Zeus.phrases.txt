@@ -7,12 +7,6 @@
 //
 "Phrases"
 {
-
-	"zeus_tag"
-	{
-		"en"		"[{green}MyJB.zeus{default}]"
-	}
-
 	"zeus_need"
 	{
 		"#format"	"{1:i},{2:N}"

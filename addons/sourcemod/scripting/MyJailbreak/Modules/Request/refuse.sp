@@ -134,7 +134,7 @@ public Action Command_refuse(int client, int args)
 				{
 					g_bAllowRefuse = true;
 					g_hTimerAllowRefuse = CreateTimer(1.0, Timer_NoAllowRefuse, _, TIMER_REPEAT);
-					CPrintToChatAll("%t %t", "request_tag", "request_openrefuse");
+					CPrintToChatAll("%s %t", g_sPrefix, "request_openrefuse");
 				}
 			}
 			if ((!gp_bWarden && !gp_bMyJBWarden) || !warden_iswarden(client))
@@ -150,19 +150,19 @@ public Action Command_refuse(int client, int args)
 								g_iRefuseCounter[client]++;
 								g_bRefused[client] = true;
 								SetEntityRenderColor(client, gc_iRefuseColorRed.IntValue, gc_iRefuseColorGreen.IntValue, gc_iRefuseColorBlue.IntValue, 255);
-								CPrintToChatAll("%t %t", "request_tag", "request_refusing", client);
+								CPrintToChatAll("%s %t", g_sPrefix, "request_refusing", client);
 								g_iCountStopTime = gc_fRefuseTime.IntValue;
 								g_hTimerRefuse[client] = CreateTimer(gc_fRefuseTime.FloatValue, Timer_ResetColorRefuse, client);
 								if (warden_exist()) for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) RefuseMenu(i);
 								if (gc_bSounds.BoolValue)EmitSoundToAllAny(g_sSoundRefusePath);
 							}
-							else CReplyToCommand(client, "%t %t", "request_tag", "request_refusedtimes", gc_iRefuseLimit.IntValue);
+							else CReplyToCommand(client, "%s %t", g_sPrefix, "request_refusedtimes", gc_iRefuseLimit.IntValue);
 						}
-						else CReplyToCommand(client, "%t %t", "request_tag", "request_refuseallow");
+						else CReplyToCommand(client, "%s %t", g_sPrefix, "request_refuseallow");
 					}
-					else CReplyToCommand(client, "%t %t", "request_tag", "request_alreadyrefused");
+					else CReplyToCommand(client, "%s %t", g_sPrefix, "request_alreadyrefused");
 				}
-				else CReplyToCommand(client, "%t %t", "request_tag", "request_notalivect");
+				else CReplyToCommand(client, "%s %t", g_sPrefix, "request_notalivect");
 			}
 		}
 	}
@@ -291,7 +291,7 @@ public Action Timer_NoAllowRefuse(Handle timer)
 			{
 				PrintCenterText(i, "%t", "request_stopcountdown_nc", g_iCountStopTime);
 			}
-			CPrintToChatAll("%t %t", "request_tag", "request_stopcountdown", g_iCountStopTime);
+			CPrintToChatAll("%s %t", g_sPrefix, "request_stopcountdown", g_iCountStopTime);
 		}
 		g_iCountStopTime--;
 		return Plugin_Continue;
@@ -311,7 +311,7 @@ public Action Timer_NoAllowRefuse(Handle timer)
 			g_iCountStopTime = gc_fRefuseTime.IntValue;
 			return Plugin_Stop;
 		}
-		CPrintToChatAll("%t %t", "request_tag", "request_countdownstop");
+		CPrintToChatAll("%s %t", g_sPrefix, "request_countdownstop");
 	}
 
 	return Plugin_Continue;

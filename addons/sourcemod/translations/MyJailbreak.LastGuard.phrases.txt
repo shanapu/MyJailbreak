@@ -8,11 +8,6 @@
 "Phrases"
 {
 
-	"lastguard_tag"
-	{
-		"en"		"[{green}MyJB.LastGuardRule{default}]"
-	}
-
 	"lastguard_need"
 	{
 		"#format"	"{1:i},{2:N}"

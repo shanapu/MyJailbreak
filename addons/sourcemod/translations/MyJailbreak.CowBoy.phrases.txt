@@ -7,12 +7,6 @@
 //
 "Phrases"
 {
-
-	"cowboy_tag"
-	{
-		"en"		"[{green}MyJB.cowboy{default}]"
-	}
-
 	"cowboy_need"
 	{
 		"#format"	"{1:i},{2:N}"

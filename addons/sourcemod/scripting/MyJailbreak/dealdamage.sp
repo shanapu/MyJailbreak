@@ -72,6 +72,7 @@ bool gp_bMyWeapons;
 
 // Console Variables    gc_i = global convar integer / gc_b = global convar bool ...
 ConVar gc_bPlugin;
+ConVar gc_sPrefix;
 ConVar gc_bSetW;
 ConVar gc_iCooldownStart;
 ConVar gc_bSetA;
@@ -138,6 +139,7 @@ Handle g_hTimerTruce;
 Handle g_hTimerBeacon;
 
 // Strings    g_s = global string
+char g_sPrefix[64];
 char g_sHasVoted[1500];
 char g_sSoundStartPath[256];
 char g_sEventsLogFile[PLATFORM_MAX_PATH];
@@ -182,6 +184,7 @@ public void OnPluginStart()
 
 	AutoExecConfig_CreateConVar("sm_dealdamage_version", MYJB_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_dealdamage_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true, 0.0, true, 1.0);
+	gc_sPrefix = AutoExecConfig_CreateConVar("sm_dealdamage_prefix", "[{green}MyJB.DealDamage{default}]", "Set your chat prefix for this plugin.");
 	gc_sCustomCommandVote = AutoExecConfig_CreateConVar("sm_dealdamage_cmds_vote", "dd, damage, deal", "Set your custom chat command for Event voting(!dealdamage (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_sCustomCommandSet = AutoExecConfig_CreateConVar("sm_dealdamage_cmds_set", "sdd, sdeal, sdamage", "Set your custom chat command for set Event(!setdealdamage (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_dealdamage_warden", "1", "0 - disabled, 1 - allow warden to set dealdamage round", _, true, 0.0, true, 1.0);
@@ -231,6 +234,7 @@ public void OnPluginStart()
 	HookConVarChange(gc_sOverlayRedPath, OnSettingChanged);
 	HookConVarChange(gc_sModelPathRed, OnSettingChanged);
 	HookConVarChange(gc_sModelPathBlue, OnSettingChanged);
+	HookConVarChange(gc_sPrefix, OnSettingChanged);
 
 	// Find
 	gc_sOverlayStartPath.GetString(g_sOverlayStartPath, sizeof(g_sOverlayStartPath));
@@ -310,6 +314,10 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 	{
 		strcopy(g_sAdminFlag, sizeof(g_sAdminFlag), newValue);
 	}
+	else if (convar == gc_sPrefix)
+	{
+		strcopy(g_sPrefix, sizeof(g_sPrefix), newValue);
+	}
 }
 
 public void OnAllPluginsLoaded()
@@ -379,7 +387,15 @@ public void OnConfigsExecuted()
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iMaxRound = gc_iRounds.IntValue;
 
-	// Set custom Commands
+	gc_sPrefix.GetString(g_sPrefix, sizeof(g_sPrefix));
+	gc_sOverlayStartPath.GetString(g_sOverlayStartPath, sizeof(g_sOverlayStartPath));
+	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
+	gc_sOverlayBluePath.GetString(g_sOverlayBluePath, sizeof(g_sOverlayBluePath));
+	gc_sOverlayRedPath.GetString(g_sOverlayRedPath, sizeof(g_sOverlayRedPath));
+	gc_sModelPathRed.GetString(g_sModelPathRed, sizeof(g_sModelPathRed));
+	gc_sModelPathBlue.GetString(g_sModelPathBlue, sizeof(g_sModelPathBlue));
+	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
+
 	int iCount = 0;
 	char sCommands[128], sCommandsL[12][32], sCommand[32];
 
@@ -429,7 +445,7 @@ public Action Command_SetDealDamage(int client, int args)
 {
 	if (!gc_bPlugin.BoolValue)
 	{
-		CReplyToCommand(client, "%t %t", "dealdamage_tag", "dealdamage_disabled");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "dealdamage_disabled");
 		return Plugin_Handled;
 	}
 
@@ -451,7 +467,7 @@ public Action Command_SetDealDamage(int client, int args)
 	{
 		if (!gc_bSetA.BoolValue)
 		{
-			CReplyToCommand(client, "%t %t", "dealdamage_tag", "dealdamage_setbyadmin");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "dealdamage_setbyadmin");
 			return Plugin_Handled;
 		}
 
@@ -462,14 +478,14 @@ public Action Command_SetDealDamage(int client, int args)
 
 			if (!StrEqual(EventDay, "none", false))
 			{
-				CReplyToCommand(client, "%t %t", "dealdamage_tag", "dealdamage_progress", EventDay);
+				CReplyToCommand(client, "%s %t", g_sPrefix, "dealdamage_progress", EventDay);
 				return Plugin_Handled;
 			}
 		}
 
 		if (g_iCoolDown > 0 && !gc_bSetABypassCooldown.BoolValue)
 		{
-			CReplyToCommand(client, "%t %t", "dealdamage_tag", "dealdamage_wait", g_iCoolDown);
+			CReplyToCommand(client, "%s %t", g_sPrefix, "dealdamage_wait", g_iCoolDown);
 			return Plugin_Handled;
 		}
 
@@ -489,13 +505,13 @@ public Action Command_SetDealDamage(int client, int args)
 	{
 		if (!warden_iswarden(client))
 		{
-			CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
 			return Plugin_Handled;
 		}
 
 		if (!gc_bSetW.BoolValue)
 		{
-			CReplyToCommand(client, "%t %t", "warden_tag", "dealdamage_setbywarden");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "dealdamage_setbywarden");
 			return Plugin_Handled;
 		}
 
@@ -506,14 +522,14 @@ public Action Command_SetDealDamage(int client, int args)
 
 			if (!StrEqual(EventDay, "none", false))
 			{
-				CReplyToCommand(client, "%t %t", "dealdamage_tag", "dealdamage_progress", EventDay);
+				CReplyToCommand(client, "%s %t", g_sPrefix, "dealdamage_progress", EventDay);
 				return Plugin_Handled;
 			}
 		}
 
 		if (g_iCoolDown > 0)
 		{
-			CReplyToCommand(client, "%t %t", "dealdamage_tag", "dealdamage_wait", g_iCoolDown);
+			CReplyToCommand(client, "%s %t", g_sPrefix, "dealdamage_wait", g_iCoolDown);
 			return Plugin_Handled;
 		}
 
@@ -531,7 +547,7 @@ public Action Command_SetDealDamage(int client, int args)
 	}
 	else
 	{
-		CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
 	}
 
 	return Plugin_Handled;
@@ -542,13 +558,13 @@ public Action Command_VoteDealDamage(int client, int args)
 {
 	if (!gc_bPlugin.BoolValue)
 	{
-		CReplyToCommand(client, "%t %t", "dealdamage_tag", "dealdamage_disabled");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "dealdamage_disabled");
 		return Plugin_Handled;
 	}
 
 	if (!gc_bVote.BoolValue)
 	{
-		CReplyToCommand(client, "%t %t", "dealdamage_tag", "dealdamage_voting");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "dealdamage_voting");
 		return Plugin_Handled;
 	}
 
@@ -559,14 +575,14 @@ public Action Command_VoteDealDamage(int client, int args)
 
 		if (!StrEqual(EventDay, "none", false))
 		{
-			CReplyToCommand(client, "%t %t", "dealdamage_tag", "dealdamage_progress", EventDay);
+			CReplyToCommand(client, "%s %t", g_sPrefix, "dealdamage_progress", EventDay);
 			return Plugin_Handled;
 		}
 	}
 
 	if (g_iCoolDown > 0)
 	{
-		CReplyToCommand(client, "%t %t", "dealdamage_tag", "dealdamage_wait", g_iCoolDown);
+		CReplyToCommand(client, "%s %t", g_sPrefix, "dealdamage_wait", g_iCoolDown);
 		return Plugin_Handled;
 	}
 
@@ -575,7 +591,7 @@ public Action Command_VoteDealDamage(int client, int args)
 
 	if (StrContains(g_sHasVoted, steamid, true) != -1)
 	{
-		CReplyToCommand(client, "%t %t", "dealdamage_tag", "dealdamage_voted");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "dealdamage_voted");
 		return Plugin_Handled;
 	}
 
@@ -601,7 +617,7 @@ public Action Command_VoteDealDamage(int client, int args)
 	}
 	else
 	{
-		CPrintToChatAll("%t %t", "dealdamage_tag", "dealdamage_need", Missing, client);
+		CPrintToChatAll("%s %t", g_sPrefix, "dealdamage_need", Missing, client);
 	}
 
 	return Plugin_Handled;
@@ -742,7 +758,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			SetCvar("sv_infinite_ammo", 0);
 			SetCvar("sm_hud_enable", g_iOldHUD);
 
-			CPrintToChatAll("%t %t", "dealdamage_tag", "dealdamage_end");
+			CPrintToChatAll("%s %t", g_sPrefix, "dealdamage_end");
 		}
 	}
 
@@ -753,7 +769,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			CreateInfoPanel(i);
 		}
 
-		CPrintToChatAll("%t %t", "dealdamage_tag", "dealdamage_next");
+		CPrintToChatAll("%s %t", g_sPrefix, "dealdamage_next");
 		PrintCenterTextAll("%t", "dealdamage_next_nc");
 	}
 }
@@ -893,7 +909,7 @@ void ResetEventDay()
 	SetCvar("sv_infinite_ammo", 0);
 	SetCvar("sm_hud_enable", g_iOldHUD);
 
-	CPrintToChatAll("%t %t", "dealdamage_tag", "dealdamage_end");
+	CPrintToChatAll("%s %t", g_sPrefix, "dealdamage_end");
 }
 
 // Set Client Hook
@@ -971,7 +987,7 @@ void StartEventRound(bool thisround)
 
 		CreateTimer(3.0, Timer_PrepareEvent);
 
-		CPrintToChatAll("%t %t", "dealdamage_tag", "dealdamage_now");
+		CPrintToChatAll("%s %t", g_sPrefix, "dealdamage_now");
 		PrintCenterTextAll("%t", "dealdamage_now_nc");
 	}
 	else
@@ -985,7 +1001,7 @@ void StartEventRound(bool thisround)
 			SetCvar("mp_randomspawn_los", 1);
 		}
 
-		CPrintToChatAll("%t %t", "dealdamage_tag", "dealdamage_next");
+		CPrintToChatAll("%s %t", g_sPrefix, "dealdamage_next");
 		PrintCenterTextAll("%t", "dealdamage_next_nc");
 	}
 }
@@ -1087,8 +1103,8 @@ void PrepareDay(bool thisround)
 			g_iBlueTeamCount++;
 			bFlip = false;
 			if (gc_bColor.BoolValue) SetEntityRenderColor(i, 0, 0, 240, 0);
-			CPrintToChat(i, "%t %t", "dealdamage_tag", "dealdamage_teamblue");
-			CPrintToChatAll("%t %t", "dealdamage_tag", "dealdamage_playerteamblue", i);
+			CPrintToChat(i, "%s %t", g_sPrefix, "dealdamage_teamblue");
+			CPrintToChatAll("%s %t", g_sPrefix, "dealdamage_playerteamblue", i);
 			PrintCenterText(i, "%t \n<font face='Arial' color='#0000FF'>%t</font>", "dealdamage_start_nc", "dealdamage_teamblue_nc");
 			if (gc_bOverlays.BoolValue)ShowOverlay(i, g_sOverlayBluePath, 0.0);
 		}
@@ -1098,8 +1114,8 @@ void PrepareDay(bool thisround)
 			g_iRedTeamCount++;
 			bFlip = true;
 			if (gc_bColor.BoolValue) SetEntityRenderColor(i, 240, 0, 0, 0);
-			CPrintToChat(i, "%t %t", "dealdamage_tag", "dealdamage_teamred");
-			CPrintToChatAll("%t %t", "dealdamage_tag", "dealdamage_playerteamred", i);
+			CPrintToChat(i, "%s %t", g_sPrefix, "dealdamage_teamred");
+			CPrintToChatAll("%s %t", g_sPrefix, "dealdamage_playerteamred", i);
 			PrintCenterText(i, "%t \n<font face='Arial' color='#FF0000'>%t</font>", "dealdamage_start_nc", "dealdamage_teamred_nc");
 			if (gc_bOverlays.BoolValue)ShowOverlay(i, g_sOverlayRedPath, 0.0);
 		}
@@ -1143,7 +1159,7 @@ void PrepareDay(bool thisround)
 		MyWeapons_AllowTeam(CS_TEAM_CT, true);
 	}
 
-	CPrintToChatAll("%t %t", "dealdamage_tag", "dealdamage_rounds", g_iRound, g_iMaxRound);
+	CPrintToChatAll("%s %t", g_sPrefix, "dealdamage_rounds", g_iRound, g_iMaxRound);
 
 	GameRules_SetProp("m_iRoundTime", gc_iRoundTime.IntValue*60, 4, 0, true);
 
@@ -1206,46 +1222,46 @@ void SendResults(int client)
 	InfoPanel.SetTitle(info);
 
 	if (gc_bConsole.BoolValue) PrintToConsole(client, info);
-	Format(info, sizeof(info), "%t %t", "dealdamage_tag", "dealdamage_result");
+	Format(info, sizeof(info), "%s %t", g_sPrefix, "dealdamage_result");
 	if (gc_bChat.BoolValue) CPrintToChat(client, info);
 	InfoPanel.DrawText("                                   ");
 	Format(info, sizeof(info), "%t", "dealdamage_total", g_iTotalDamage);
 	InfoPanel.DrawText(info);
 	if (gc_bConsole.BoolValue) PrintToConsole(client, info);
-	Format(info, sizeof(info), "%t %t", "dealdamage_tag", "dealdamage_total", g_iTotalDamage);
+	Format(info, sizeof(info), "%s %t", g_sPrefix, "dealdamage_total", g_iTotalDamage);
 	if (gc_bChat.BoolValue) CPrintToChat(client, info);
 	Format(info, sizeof(info), "%t", "dealdamage_most", g_iBestPlayer, g_iDamageDealed[g_iBestPlayer]);
 	InfoPanel.DrawText(info);
 	if (gc_bConsole.BoolValue) PrintToConsole(client, info);
-	Format(info, sizeof(info), "%t %t", "dealdamage_tag", "dealdamage_most", g_iBestPlayer, g_iDamageDealed[g_iBestPlayer]);
+	Format(info, sizeof(info), "%s %t", g_sPrefix, "dealdamage_most", g_iBestPlayer, g_iDamageDealed[g_iBestPlayer]);
 	if (gc_bChat.BoolValue) CPrintToChat(client, info);
 	InfoPanel.DrawText("                                   ");
 	Format(info, sizeof(info), "%t", "dealdamage_ct", g_iDamageBLUE);
 	InfoPanel.DrawText(info);
 	if (gc_bConsole.BoolValue) PrintToConsole(client, info);
-	Format(info, sizeof(info), "%t %t", "dealdamage_tag", "dealdamage_ct", g_iDamageBLUE);
+	Format(info, sizeof(info), "%s %t", g_sPrefix, "dealdamage_ct", g_iDamageBLUE);
 	if (gc_bChat.BoolValue) CPrintToChat(client, info);
 	Format(info, sizeof(info), "%t", "dealdamage_t", g_iDamageRED);
 	InfoPanel.DrawText(info);
 	if (gc_bConsole.BoolValue) PrintToConsole(client, info);
-	Format(info, sizeof(info), "%t %t", "dealdamage_tag", "dealdamage_t", g_iDamageRED);
+	Format(info, sizeof(info), "%s %t", g_sPrefix, "dealdamage_t", g_iDamageRED);
 	if (gc_bChat.BoolValue) CPrintToChat(client, info);
 	InfoPanel.DrawText("                                   ");
 	Format(info, sizeof(info), "%t", "dealdamage_bestct", g_iBestBLUE, g_iBestBLUEdamage);
 	InfoPanel.DrawText(info);
 	if (gc_bConsole.BoolValue) PrintToConsole(client, info);
-	Format(info, sizeof(info), "%t %t", "dealdamage_tag", "dealdamage_bestct", g_iBestBLUE, g_iBestBLUEdamage);
+	Format(info, sizeof(info), "%s %t", g_sPrefix, "dealdamage_bestct", g_iBestBLUE, g_iBestBLUEdamage);
 	if (gc_bChat.BoolValue) CPrintToChat(client, info);
 	Format(info, sizeof(info), "%t", "dealdamage_bestt", g_iBestRED, g_iBestREDdamage);
 	InfoPanel.DrawText(info);
 	if (gc_bConsole.BoolValue) PrintToConsole(client, info);
-	Format(info, sizeof(info), "%t %t", "dealdamage_tag", "dealdamage_bestt", g_iBestRED, g_iBestREDdamage);
+	Format(info, sizeof(info), "%s %t", g_sPrefix, "dealdamage_bestt", g_iBestRED, g_iBestREDdamage);
 	if (gc_bChat.BoolValue) CPrintToChat(client, info);
 	Format(info, sizeof(info), "%t", "dealdamage_client", g_iDamageDealed[client]);
 	InfoPanel.DrawText(info);
 	if (gc_bConsole.BoolValue) PrintToConsole(client, info);
 	InfoPanel.DrawText("                                   ");
-	Format(info, sizeof(info), "%t %t", "dealdamage_tag", "dealdamage_client", g_iDamageDealed[client]);
+	Format(info, sizeof(info), "%s %t", g_sPrefix, "dealdamage_client", g_iDamageDealed[client]);
 	if (gc_bChat.BoolValue) CPrintToChat(client, info);
 
 	if (gc_bShowPanel.BoolValue) InfoPanel.Send(client, Handler_NullCancel, 20); // open info Panel
@@ -1295,7 +1311,7 @@ public Action Timer_StartEvent(Handle timer)
 
 	PrintCenterTextAll("%t", "dealdamage_start_nc");
 	
-	CPrintToChatAll("%t %t", "dealdamage_tag", "dealdamage_start");
+	CPrintToChatAll("%s %t", g_sPrefix, "dealdamage_start");
 
 	CreateTimer(2.2, Timer_Overlay);
 

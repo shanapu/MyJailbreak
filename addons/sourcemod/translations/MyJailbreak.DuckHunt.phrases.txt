@@ -7,12 +7,6 @@
 //
 "Phrases"
 {
-
-	"duckhunt_tag"
-	{
-		"en"		"[{green}MyJB.Duckhunt{default}]"
-	}
-
 	"duckhunt_rounds"
 	{
 		"#format"	"{1:i},{2:i}"

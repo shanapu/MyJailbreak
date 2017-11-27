@@ -124,7 +124,7 @@ public Action Command_FreeDay(int client, int args)
 			menu.ExitButton = true;
 			menu.Display(client, MENU_TIME_FOREVER);
 		}
-		else CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+		else CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
 	}
 
 	return Plugin_Handled;
@@ -167,7 +167,7 @@ public Action Command_RemoveFreeDay(int client, int args)
 			menu.ExitButton = true;
 			menu.Display(client, MENU_TIME_FOREVER);
 		}
-		else CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+		else CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
 	}
 
 	return Plugin_Handled;
@@ -192,7 +192,7 @@ public void Freedays_Event_RoundStart_Post(Event event, char[] name, bool dontBr
 	{
 		if (g_bGetFreeDay[i] && GetClientTeam(i) == CS_TEAM_T)
 		{
-			CPrintToChatAll("%t %t", "warden_tag", "warden_havefreeday", i);
+			CPrintToChatAll("%s %t", g_sPrefix, "warden_havefreeday", i);
 			SetEntityRenderColor(i, gc_iFreeDayColorRed.IntValue, gc_iFreeDayColorGreen.IntValue, gc_iFreeDayColorBlue.IntValue, 255);
 			g_bGetFreeDay[i] = false;
 			g_bHasFreeDay[i] = true;
@@ -290,8 +290,8 @@ public int Handler_GiveFreeDayChoose(Menu menu5, MenuAction action, int client, 
 		else
 		{
 			g_bGetFreeDay[user] = true;
-			CPrintToChatAll("%t %t", "warden_tag", "warden_personalfreeday", user);
-			CPrintToChat(user, "%t %t", "warden_tag", "warden_freedayforyou");
+			CPrintToChatAll("%s %t", g_sPrefix, "warden_personalfreeday", user);
+			CPrintToChat(user, "%s %t", g_sPrefix, "warden_freedayforyou");
 			Command_FreeDay(client, 0); // reopen menu
 		}
 	}
@@ -329,8 +329,8 @@ public int Handler_RemoveFreeDayChoose(Menu menu5, MenuAction action, int client
 
 		Command_RemoveFreeDay(client, 0); // reopen menu
 
-		CPrintToChatAll("%t %t", "warden_tag", "warden_removepersonalfreeday", user);
-		CPrintToChat(user, "%t %t", "warden_tag", "warden_removefreedayforyou");
+		CPrintToChatAll("%s %t", g_sPrefix, "warden_removepersonalfreeday", user);
+		CPrintToChat(user, "%s %t", g_sPrefix, "warden_removefreedayforyou");
 
 	}
 	else if (action == MenuAction_Cancel)
@@ -360,14 +360,14 @@ public int Handler_GiveFreeDay(Menu menu6, MenuAction action, int client, int Po
 		if (strcmp(info, "0") == 0) // next round
 		{
 			g_bGetFreeDay[user] = true;
-			CPrintToChatAll("%t %t", "warden_tag", "warden_personalfreeday", user);
-			CPrintToChat(user, "%t %t", "warden_tag", "warden_freedayforyou");
+			CPrintToChatAll("%s %t", g_sPrefix, "warden_personalfreeday", user);
+			CPrintToChat(user, "%s %t", g_sPrefix, "warden_freedayforyou");
 			Command_FreeDay(client, 0);
 		}
 		else if (strcmp(info, "1") == 0) // thisround
 		{
 			g_bHasFreeDay[user] = true;
-			CPrintToChatAll("%t %t", "warden_tag", "warden_havefreeday", user);
+			CPrintToChatAll("%s %t", g_sPrefix, "warden_havefreeday", user);
 			SetEntityRenderColor(user, gc_iFreeDayColorRed.IntValue, gc_iFreeDayColorGreen.IntValue, gc_iFreeDayColorBlue.IntValue, 255);
 			Command_FreeDay(client, 0); // reopen freeday menu
 		}

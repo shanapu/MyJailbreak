@@ -85,15 +85,15 @@ public Action Command_NoLR(int client, int args)
 				if (g_bIsNoLR)
 				{
 					g_bIsNoLR = false;
-					CPrintToChatAll("%t %t", "warden_tag", "warden_withhold_off");
+					CPrintToChatAll("%s %t", g_sPrefix, "warden_withhold_off");
 				}
 				else
 				{
 					g_bIsNoLR = true;
-					CPrintToChatAll("%t %t", "warden_tag", "warden_withhold_on");
+					CPrintToChatAll("%s %t", g_sPrefix, "warden_withhold_on");
 				}
 			}
-			else CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+			else CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
 		}
 	}
 
@@ -119,7 +119,7 @@ public void NoLR_Event_PlayerDeath(Event event, const char[] name, bool dontBroa
 	if (IsClientWarden(client))
 	{
 		g_bIsNoLR = false;
-		CPrintToChatAll("%t %t", "warden_tag", "warden_withhold_off");
+		CPrintToChatAll("%s %t", g_sPrefix, "warden_withhold_off");
 	}
 }
 
@@ -169,7 +169,7 @@ public Action Listen_OnCommand(int client, const char[] command, int args)
 	//Seach for command in cmd array
 	if (FindStringInArray(g_aLRcmds, command[3]) != -1) //command[3] so that we can skip the "sm_"
 	{
-		CPrintToChat(client, "%t %t", "warden_tag", "warden_withhold_lr");
+		CPrintToChat(client, "%s %t", g_sPrefix, "warden_withhold_lr");
 
 		return Plugin_Stop;
 	}

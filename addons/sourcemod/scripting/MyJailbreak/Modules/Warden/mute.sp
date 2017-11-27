@@ -169,7 +169,7 @@ public Action Command_UnMuteMenu(int client, any args)
 			menu4.ExitButton = true;
 			menu4.Display(client, MENU_TIME_FOREVER);
 		}
-		else CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+		else CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
 	}
 
 	return Plugin_Handled;
@@ -200,7 +200,7 @@ public Action Command_MuteMenu(int client, int args)
 			menu1.ExitButton = true;
 			menu1.Display(client, MENU_TIME_FOREVER);
 		}
-		else CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+		else CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
 	}
 
 	return Plugin_Handled;
@@ -222,7 +222,7 @@ public void Mute_Event_RoundStart(Event event, const char[] name, bool dontBroad
 				g_bIsMuted[i] = true;
 			}
 		}
-		CPrintToChatAll("%t %t", "warden_tag", "warden_mutedefault");
+		CPrintToChatAll("%s %t", g_sPrefix, "warden_mutedefault");
 	}
 }
 
@@ -316,12 +316,12 @@ public Action MuteClient(int client, int time, int muter)
 
 			if (time == 0)
 			{
-				CPrintToChatAll("%t %t", "warden_tag", "warden_muteend", muter, client);
+				CPrintToChatAll("%s %t", g_sPrefix, "warden_muteend", muter, client);
 				if (gp_bMyJailBreak) if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Warden/Deputy %L muted player %L until round end", muter, client);
 			}
 			else
 			{
-				CPrintToChatAll("%t %t", "warden_tag", "warden_mute", muter, client, time);
+				CPrintToChatAll("%s %t", g_sPrefix, "warden_mute", muter, client, time);
 				if (gp_bMyJailBreak) if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Warden/Deputy %L muted player %L for %i seconds", muter, client, time);
 			}
 		}
@@ -352,11 +352,11 @@ public void UnMuteClient(any client, int unmuter)
 		SetClientListeningFlags(client, VOICE_NORMAL);
 		g_bIsMuted[client] = false;
 
-		CPrintToChat(client, "%t %t", "warden_tag", "warden_unmute", client);
+		CPrintToChat(client, "%s %t", g_sPrefix, "warden_unmute", client);
 
 		if (unmuter != -1)
 		{
-			CPrintToChat(unmuter, "%t %t", "warden_tag", "warden_unmute", client);
+			CPrintToChat(unmuter, "%s %t", g_sPrefix, "warden_unmute", client);
 		}
 	}
 }
@@ -393,7 +393,7 @@ public Action MuteMenuPlayer(int client, int args)
 			menu5.ExitButton = true;
 			menu5.Display(client, MENU_TIME_FOREVER);
 		}
-		else CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+		else CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
 	}
 
 	return Plugin_Handled;

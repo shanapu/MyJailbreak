@@ -7,12 +7,6 @@
 //
 "Phrases"
 {
-
-	"freeday_tag"
-	{
-		"en"		"[{green}JB.Freeday{default}]"
-	}
-
 	"freeday_end"
 	{
 		"en"		"{purple}Freeday{default} has ended."

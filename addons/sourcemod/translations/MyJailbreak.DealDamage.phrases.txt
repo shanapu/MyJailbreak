@@ -7,12 +7,6 @@
 //
 "Phrases"
 {
-
-	"dealdamage_tag"
-	{
-		"en"		"[{green}MyJB.DealDamage{default}]"
-	}
-
 	"dealdamage_need"
 	{
 		"#format"	"{1:i},{2:N}"

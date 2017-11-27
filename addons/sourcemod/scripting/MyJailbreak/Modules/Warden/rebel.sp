@@ -80,7 +80,7 @@ public Action Command_MarkRebel(int client, int args)
 			{
 				Menu_MarkRebelMenu(client);
 			}
-			else CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+			else CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
 		}
 	}
 

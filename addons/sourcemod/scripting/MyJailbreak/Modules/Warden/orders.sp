@@ -223,7 +223,7 @@ void Command_Handler(char[] number)
 			kvMenu.GetString("chat", sValue, sizeof(sValue));
 			if (strlen(sValue) > 0)
 			{
-				CPrintToChatAll("%t %s", "warden_tag", sValue);
+				CPrintToChatAll("%s %s", g_sPrefix, sValue);
 			}
 
 			kvMenu.GetString("HUD", sValue, sizeof(sValue));
@@ -275,7 +275,7 @@ public Action Command_OrderMenu(int client, int iItem)
 			{
 				Menu_BuildOrderMenu(client);
 			}
-			else CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+			else CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
 		}
 	}
 
@@ -373,7 +373,7 @@ public int Handler_Menu(Menu menu, MenuAction action, int client, int param)
 				kvMenu.GetString("chat", sValue, sizeof(sValue));
 				if (strlen(sValue) > 0)
 				{
-					CPrintToChatAll("%t %s", "warden_tag", sValue);
+					CPrintToChatAll("%s %s", g_sPrefix, sValue);
 				}
 
 				kvMenu.GetString("HUD", sValue, sizeof(sValue));

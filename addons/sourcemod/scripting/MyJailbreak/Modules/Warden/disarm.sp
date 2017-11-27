@@ -93,7 +93,7 @@ public Action Disarm_Event_PlayerHurt(Event event, char[] name, bool dontBroadca
 						if (gc_bDisarmKnife.BoolValue && (StrContains(sWeaponName, "knife") != -1))
 							return Plugin_Handled;
 						
-						CPrintToChatAll("%t %t", "warden_tag", "warden_disarmed", victim, attacker);
+						CPrintToChatAll("%s %t", g_sPrefix, "warden_disarmed", victim, attacker);
 						PrintCenterText(victim, "%t", "warden_lostgun");
 						
 						if (gc_iDisarmMode.IntValue == 1)

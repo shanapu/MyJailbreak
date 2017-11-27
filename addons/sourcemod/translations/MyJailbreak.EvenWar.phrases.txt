@@ -2,11 +2,6 @@
 "Phrases"
 {
 
-	"evenwar_tag"
-	{
-		"en"		"[{green}MyJB.EvenWar{default}]"
-	}
-
 	"evenwar_need"
 	{
 		"#format"	"{1:i},{2:N}"

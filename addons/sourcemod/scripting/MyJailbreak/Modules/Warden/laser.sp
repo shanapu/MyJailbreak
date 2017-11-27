@@ -126,9 +126,9 @@ public Action Command_LaserMenu(int client, int args)
 				menu.ExitButton = true;
 				menu.Display(client, 20);
 			}
-			else CReplyToCommand(client, "%t %t", "warden_tag", "warden_vipfeature");
+			else CReplyToCommand(client, "%s %t", g_sPrefix, "warden_vipfeature");
 		}
-		else CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+		else CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
 	}
 
 	return Plugin_Handled;
@@ -226,75 +226,75 @@ public int Handler_LaserMenu(Menu menu, MenuAction action, int client, int selec
 		if (strcmp(info, "off") == 0)
 		{
 			g_bLaser[client] = false;
-			CPrintToChat(client, "%t %t", "warden_tag", "warden_laseroff");
+			CPrintToChat(client, "%s %t", g_sPrefix, "warden_laseroff");
 		}
 		else if (strcmp(info, "rainbow") == 0)
 		{
-			if (!g_bLaser[client]) CPrintToChat(client, "%t %t", "warden_tag", "warden_laseron");
-			CPrintToChat(client, "%t %t", "warden_tag", "warden_laser", g_sColorNamesRainbow);
+			if (!g_bLaser[client]) CPrintToChat(client, "%s %t", g_sPrefix, "warden_laseron");
+			CPrintToChat(client, "%s %t", g_sPrefix, "warden_laser", g_sColorNamesRainbow);
 			g_bLaser[client] = true;
 			g_bLaserColorRainbow[client] = true;
 		}
 		else if (strcmp(info, "white") == 0)
 		{
-			if (!g_bLaser[client]) CPrintToChat(client, "%t %t", "warden_tag", "warden_laseron");
-			CPrintToChat(client, "%t %t", "warden_tag", "warden_laser", g_sColorNamesWhite);
+			if (!g_bLaser[client]) CPrintToChat(client, "%s %t", g_sPrefix, "warden_laseron");
+			CPrintToChat(client, "%s %t", g_sPrefix, "warden_laser", g_sColorNamesWhite);
 			g_bLaser[client] = true;
 			g_bLaserColorRainbow[client] = false;
 			g_iLaserColor[client] = 0;
 		}
 		else if (strcmp(info, "red") == 0)
 		{
-			if (!g_bLaser[client]) CPrintToChat(client, "%t %t", "warden_tag", "warden_laseron");
-			CPrintToChat(client, "%t %t", "warden_tag", "warden_laser", g_sColorNamesRed);
+			if (!g_bLaser[client]) CPrintToChat(client, "%s %t", g_sPrefix, "warden_laseron");
+			CPrintToChat(client, "%s %t", g_sPrefix, "warden_laser", g_sColorNamesRed);
 			g_bLaser[client] = true;
 			g_bLaserColorRainbow[client] = false;
 			g_iLaserColor[client] = 1;
 		}
 		else if (strcmp(info, "green") == 0)
 		{
-			if (!g_bLaser[client]) CPrintToChat(client, "%t %t", "warden_tag", "warden_laseron");
-			CPrintToChat(client, "%t %t", "warden_tag", "warden_laser", g_sColorNamesGreen);
+			if (!g_bLaser[client]) CPrintToChat(client, "%s %t", g_sPrefix, "warden_laseron");
+			CPrintToChat(client, "%s %t", g_sPrefix, "warden_laser", g_sColorNamesGreen);
 			g_bLaser[client] = true;
 			g_bLaserColorRainbow[client] = false;
 			g_iLaserColor[client] = 2;
 		}
 		else if (strcmp(info, "blue") == 0)
 		{
-			if (!g_bLaser[client]) CPrintToChat(client, "%t %t", "warden_tag", "warden_laseron");
-			CPrintToChat(client, "%t %t", "warden_tag", "warden_laser", g_sColorNamesBlue);
+			if (!g_bLaser[client]) CPrintToChat(client, "%s %t", g_sPrefix, "warden_laseron");
+			CPrintToChat(client, "%s %t", g_sPrefix, "warden_laser", g_sColorNamesBlue);
 			g_bLaser[client] = true;
 			g_bLaserColorRainbow[client] = false;
 			g_iLaserColor[client] = 3;
 		}
 		else if (strcmp(info, "yellow") == 0)
 		{
-			if (!g_bLaser[client]) CPrintToChat(client, "%t %t", "warden_tag", "warden_laseron");
-			CPrintToChat(client, "%t %t", "warden_tag", "warden_laser", g_sColorNamesYellow);
+			if (!g_bLaser[client]) CPrintToChat(client, "%s %t", g_sPrefix, "warden_laseron");
+			CPrintToChat(client, "%s %t", g_sPrefix, "warden_laser", g_sColorNamesYellow);
 			g_bLaser[client] = true;
 			g_bLaserColorRainbow[client] = false;
 			g_iLaserColor[client] = 4;
 		}
 		else if (strcmp(info, "cyan") == 0)
 		{
-			if (!g_bLaser[client]) CPrintToChat(client, "%t %t", "warden_tag", "warden_laseron");
-			CPrintToChat(client, "%t %t", "warden_tag", "warden_laser", g_sColorNamesCyan);
+			if (!g_bLaser[client]) CPrintToChat(client, "%s %t", g_sPrefix, "warden_laseron");
+			CPrintToChat(client, "%s %t", g_sPrefix, "warden_laser", g_sColorNamesCyan);
 			g_bLaser[client] = true;
 			g_bLaserColorRainbow[client] = false;
 			g_iLaserColor[client] = 5;
 		}
 		else if (strcmp(info, "magenta") == 0)
 		{
-			if (!g_bLaser[client]) CPrintToChat(client, "%t %t", "warden_tag", "warden_laseron");
-			CPrintToChat(client, "%t %t", "warden_tag", "warden_laser", g_sColorNamesMagenta);
+			if (!g_bLaser[client]) CPrintToChat(client, "%s %t", g_sPrefix, "warden_laseron");
+			CPrintToChat(client, "%s %t", g_sPrefix, "warden_laser", g_sColorNamesMagenta);
 			g_bLaser[client] = true;
 			g_bLaserColorRainbow[client] = false;
 			g_iLaserColor[client] = 6;
 		}
 		else if (strcmp(info, "orange") == 0)
 		{
-			if (!g_bLaser[client]) CPrintToChat(client, "%t %t", "warden_tag", "warden_laseron");
-			CPrintToChat(client, "%t %t", "warden_tag", "warden_laser", g_sColorNamesOrange);
+			if (!g_bLaser[client]) CPrintToChat(client, "%s %t", g_sPrefix, "warden_laseron");
+			CPrintToChat(client, "%s %t", g_sPrefix, "warden_laser", g_sColorNamesOrange);
 			g_bLaser[client] = true;
 			g_bLaserColorRainbow[client] = false;
 			g_iLaserColor[client] = 7;

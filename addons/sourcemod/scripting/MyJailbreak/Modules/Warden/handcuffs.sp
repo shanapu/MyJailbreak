@@ -495,8 +495,8 @@ void CuffsEm(int client, int attacker)
 		g_iCuffed++;
 		if (gc_bSounds)EmitSoundToAllAny(g_sSoundCuffsPath);
 
-		CPrintToChatAll("%t %t", "warden_tag", "warden_cuffson", attacker, client);
-		CPrintToChat(attacker, "%t %t", "warden_tag", "warden_cuffsgot", g_iPlayerHandCuffs[attacker]);
+		CPrintToChatAll("%s %t", g_sPrefix, "warden_cuffson", attacker, client);
+		CPrintToChat(attacker, "%s %t", g_sPrefix, "warden_cuffsgot", g_iPlayerHandCuffs[attacker]);
 		if (CheckVipFlag(client, g_sAdminFlagCuffs))
 		{
 			CreateTimer (2.5, Timer_HasPaperClip, client);
@@ -520,7 +520,7 @@ void FreeEm(int client, int attacker)
 		int weapon = GetEntPropEnt(attacker, Prop_Send, "m_hActiveWeapon");
 		SetPlayerAmmo(attacker, weapon, _, 0);
 	}
-	if (attacker != 0) CPrintToChatAll("%t %t", "warden_tag", "warden_cuffsoff", attacker, client);
+	if (attacker != 0) CPrintToChatAll("%s %t", g_sPrefix, "warden_cuffsoff", attacker, client);
 }
 
 /******************************************************************************
@@ -544,7 +544,7 @@ public Action Timer_HasPaperClip(Handle timer, int client)
 
 		if (g_iPlayerPaperClips[client] > 0) // if yes tell him that
 		{
-			CPrintToChat(client, "%t %t", "warden_tag", "warden_gotpaperclip", g_iPlayerPaperClips[client]);
+			CPrintToChat(client, "%s %t", g_sPrefix, "warden_gotpaperclip", g_iPlayerPaperClips[client]);
 			PrintCenterText(client, "%t", "warden_gotpaperclip", g_iPlayerPaperClips[client]);
 		}
 	}
@@ -671,7 +671,7 @@ public Action Timer_ProgressOpen(Handle timer, int client)
 	{
 		if (gc_bSounds) StopSoundAny(client, SNDCHAN_AUTO, g_sSoundUnLockCuffsPath);
 		PrintCenterText(client, "%s", "<font size='14'>\t░░░█▀▀▀▀▀▀▀▀▀▀▀▀▀█\n\t░░░<font color='#00FF00'>█░█░█░█░█░█░█░</font>█\n\t<u>░░░░░░░░░░░░░░░░░█</u>");
-		CPrintToChat(client, "%t %t", "warden_tag", "warden_unlock");
+		CPrintToChat(client, "%s %t", g_sPrefix, "warden_unlock");
 		if (gc_bSounds) EmitSoundToAllAny(g_sSoundBreakCuffsPath);
 		SetEntityMoveType(client, MOVETYPE_WALK);
 		SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
@@ -700,7 +700,7 @@ public Action Timer_ProgressBroke(Handle timer, int client)
 		PrintCenterText(client, "%s", "<font size='14'>\t░░░█▀█▀█▀█▀█▀█▀█▀█\n\t░░░█<font color='#FF0000'>■█■█■█■█■█■█■</font>█\n\t<u>░░░░░░░░░░░░░░░░░█</u>");
 		g_iPlayerPaperClips[client]--;
 		TickTime[client]= 0;
-		CPrintToChat(client, "%t %t", "warden_tag", "warden_brokepaperclip");
+		CPrintToChat(client, "%s %t", g_sPrefix, "warden_brokepaperclip");
 		return Plugin_Continue;
 	}
 	else if (TickTime[client] == 0)
@@ -719,7 +719,7 @@ public Action Timer_StillPaperClip(Handle timer, int client)
 {
 	if (g_bCuffed[client])
 	{
-		CPrintToChat(client, "%t %t", "warden_tag", "warden_gotpaperclip", g_iPlayerPaperClips[client]);
+		CPrintToChat(client, "%s %t", g_sPrefix, "warden_gotpaperclip", g_iPlayerPaperClips[client]);
 		PrintCenterText(client, "%t", "warden_gotpaperclip", g_iPlayerPaperClips[client]);
 	}
 }

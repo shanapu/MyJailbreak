@@ -7,12 +7,6 @@
 //
 "Phrases"
 {
-
-	"noscope_tag"
-	{
-		"en"		"[{green}MyJB.noscope{default}]"
-	}
-
 	"noscope_need"
 	{
 		"#format"	"{1:i},{2:N}"

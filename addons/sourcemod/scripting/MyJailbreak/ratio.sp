@@ -46,6 +46,7 @@
 #pragma newdecls required
 
 // Console Variables
+ConVar gc_sPrefix;
 ConVar gc_fPrisonerPerGuard;
 ConVar gc_sCustomCommandGuard;
 ConVar gc_sCustomCommandQueue;
@@ -90,6 +91,7 @@ int g_iRandomAnswer[MAXPLAYERS+1];
 int g_iQuestionTimes[MAXPLAYERS+1];
 
 // Strings
+char g_sPrefix[64];
 char g_sRestrictedSound[32] = "buttons/button11.wav";
 char g_sRightAnswerSound[32] = "buttons/button14.wav";
 char g_sAdminFlag[64];
@@ -127,6 +129,7 @@ public void OnPluginStart()
 	AutoExecConfig_SetCreateFile(true);
 
 	AutoExecConfig_CreateConVar("sm_ratio_version", MYJB_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
+	gc_sPrefix = AutoExecConfig_CreateConVar("sm_ratio_prefix", "[{green}MyJB.Ratio{default}]", "Set your chat prefix for this plugin.");
 	gc_sCustomCommandGuard = AutoExecConfig_CreateConVar("sm_ratio_cmds_guard", "g, ct, guards", "Set your custom chat command for become guard(!guard (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_sCustomCommandQueue = AutoExecConfig_CreateConVar("sm_ratio_cmds_queue", "vq, queue", "Set your custom chat command for view guard queue (!viewqueue (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_sCustomCommandLeave = AutoExecConfig_CreateConVar("sm_ratio_cmds_leave", "lq, stay", "Set your custom chat command for view leave queue (!leavequeue (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
@@ -161,6 +164,7 @@ public void OnPluginStart()
 	HookEvent("player_team", Event_PlayerTeam_Post, EventHookMode_Post);
 	HookEvent("round_end", Event_RoundEnd_Post, EventHookMode_Post);
 	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
+	HookConVarChange(gc_sPrefix, OnSettingChanged);
 	
 	// FindConVar
 	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
@@ -177,18 +181,26 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 	{
 		strcopy(g_sAdminFlag, sizeof(g_sAdminFlag), newValue);
 	}
+	else if (convar == gc_sAdminFlag)
+	{
+		strcopy(g_sAdminFlag, sizeof(g_sAdminFlag), newValue);
+	}
 }
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	gF_OnClientJoinGuards = CreateGlobalForward("MyJailbreak_OnJoinGuardQueue", ET_Event, Param_Cell);
-	
+
 	RegPluginLibrary("myratio");
 	return APLRes_Success;
 }
 
 public void OnConfigsExecuted()
 {
+	// FindConVar
+	gc_sPrefix.GetString(g_sPrefix, sizeof(g_sPrefix));
+	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
+
 	Handle hConVar = FindConVar("mp_force_pick_time");
 	if (hConVar == INVALID_HANDLE)
 		return;
@@ -347,19 +359,19 @@ public Action Command_LeaveQueue(int client, int iArgNum)
 
 	if (!g_bRatioEnable)
 	{
-		CReplyToCommand(client, "%t %t", "ratio_tag", "ratio_disabled");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_disabled");
 		return Plugin_Handled;
 	}
 
 	if (iIndex == -1)
 	{
-		CReplyToCommand(client, "%t %t", "ratio_tag", "ratio_notonqueue");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_notonqueue");
 		return Plugin_Handled;
 	}
 	else
 	{
 		RemovePlayerFromGuardQueue(client);
-		CReplyToCommand(client, "%t %t", "ratio_tag", "ratio_leavedqueue");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_leavedqueue");
 		return Plugin_Handled;
 	}
 }
@@ -371,13 +383,13 @@ public Action Command_ViewGuardQueue(int client, int args)
 
 	if (!g_bRatioEnable)
 	{
-		CReplyToCommand(client, "%t %t", "ratio_tag", "ratio_disabled");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_disabled");
 		return Plugin_Handled;
 	}
 
 	if (GetArraySize(g_aGuardQueue) < 1)
 	{
-		CReplyToCommand(client, "%t %t", "ratio_tag", "ratio_empty");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_empty");
 		return Plugin_Handled;
 	}
 	char info[64];
@@ -418,7 +430,7 @@ public Action Command_JoinGuardQueue(int client, int iArgNum)
 
 	if (!g_bRatioEnable)
 	{
-		CReplyToCommand(client, "%t %t", "ratio_tag", "ratio_disabled");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_disabled");
 		return Plugin_Handled;
 	}
 
@@ -427,14 +439,14 @@ public Action Command_JoinGuardQueue(int client, int iArgNum)
 	if (team == CS_TEAM_CT)
 	{
 		ClientCommand(client, "play %s", g_sRestrictedSound);
-		CReplyToCommand(client, "%t %t", "ratio_tag", "ratio_noct");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_noct");
 		return Plugin_Handled;
 	}
 	else if (team == CS_TEAM_SPECTATOR)
 	{
 		if (gc_bSwapSpecT.BoolValue)
 		{
-			CReplyToCommand(client, "%t %t", "ratio_tag", "ratio_swap_spec");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_swap_spec");
 			ChangeClientTeam(client, CS_TEAM_T);
 		}
 	}
@@ -442,7 +454,7 @@ public Action Command_JoinGuardQueue(int client, int iArgNum)
 
 	if (g_bQueueCooldown[client])
 	{
-		CReplyToCommand(client, "%t %t", "ratio_tag", "ratio_cooldown");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_cooldown");
 		return Plugin_Handled;
 	}
 
@@ -460,7 +472,7 @@ public Action Command_JoinGuardQueue(int client, int iArgNum)
 	if (!g_bEnableGuard[client])
 	{
 		g_bEnableGuard[client] = true;
-		CReplyToCommand(client, "%t %t", "ratio_tag", "ratio_guard_enable");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_guard_enable");
 	}
 
 	if (!CanClientJoinGuards(client))
@@ -485,11 +497,11 @@ public Action Command_JoinGuardQueue(int client, int iArgNum)
 		}
 		else
 		{
-			CReplyToCommand(client, "%t %t", "ratio_tag", "ratio_number", iIndex + 1);
+			CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_number", iIndex + 1);
 
 			if (gc_bAdsVIP.BoolValue && gc_bVIPQueue.BoolValue && !CheckVipFlag(client, g_sAdminFlag))
 			{
-				CReplyToCommand(client, "%t %t", "ratio_tag", "ratio_advip");
+				CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_advip");
 			}
 		}
 
@@ -524,28 +536,28 @@ public Action Command_JoinGuardQueue(int client, int iArgNum)
 						SetArrayCell(g_aGuardQueue, 0, client);
 					}
 
-					CReplyToCommand(client, "%t %t", "ratio_tag", "ratio_thxvip");
-					CReplyToCommand(client, "%t %t", "ratio_tag", "ratio_number", iIndex + 1);
+					CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_thxvip");
+					CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_number", iIndex + 1);
 				}
 				else
 				{
 					iIndex = PushArrayCell(g_aGuardQueue, client);
 					
-					CReplyToCommand(client, "%t %t", "ratio_tag", "ratio_number", iIndex + 1);
+					CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_number", iIndex + 1);
 
 					if (gc_bAdsVIP.BoolValue && gc_bVIPQueue.BoolValue)
 					{
-						CReplyToCommand(client, "%t %t", "ratio_tag", "ratio_advip");
+						CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_advip");
 					}
 				}
 			}
 			else
 			{
-				CReplyToCommand(client, "%t %t", "ratio_tag", "ratio_number", iIndex + 1);
+				CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_number", iIndex + 1);
 
 				if (gc_bAdsVIP.BoolValue && gc_bVIPQueue.BoolValue && !CheckVipFlag(client, g_sAdminFlag))
 				{
-					CReplyToCommand(client, "%t %t", "ratio_tag", "ratio_advip");
+					CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_advip");
 				}
 			}
 		}
@@ -571,13 +583,13 @@ public Action AdminCommand_RemoveFromQueue(int client, int args)
 
 	if (!g_bRatioEnable)
 	{
-		CReplyToCommand(client, "%t %t", "ratio_tag", "ratio_disabled");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_disabled");
 		return Plugin_Handled;
 	}
 
 	if (GetArraySize(g_aGuardQueue) < 1)
 	{
-		CReplyToCommand(client, "%t %t", "ratio_tag", "ratio_empty");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_empty");
 		return Plugin_Handled;
 	}
 
@@ -608,7 +620,7 @@ public Action AdminCommand_RemoveFromQueue(int client, int args)
 public Action AdminCommand_ClearQueue(int client, int args)
 {
 	ClearArray(g_aGuardQueue);
-	CPrintToChatAll("%t %t", "ratio_tag", "ratio_clearqueue");
+	CPrintToChatAll("%s %t", g_sPrefix, "ratio_clearqueue");
 }
 
 public Action Command_ToggleRatio(int client, int args)
@@ -618,23 +630,23 @@ public Action Command_ToggleRatio(int client, int args)
 		if (g_bRatioEnable)
 		{
 			g_bRatioEnable = false;
-			CPrintToChatAll("%t %t", "ratio_tag", "ratio_hasdisabled");
+			CPrintToChatAll("%s %t", g_sPrefix, "ratio_hasdisabled");
 		}
 		else
 		{
 			g_bRatioEnable = true;
-			CPrintToChatAll("%t %t", "ratio_tag", "ratio_hasactivated");
+			CPrintToChatAll("%s %t", g_sPrefix, "ratio_hasactivated");
 		}
 	}
 	else
 	{
 		if (g_bRatioEnable)
 		{
-			CReplyToCommand(client, "%t %t", "ratio_tag", "ratio_active", gc_fPrisonerPerGuard.FloatValue);
+			CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_active", gc_fPrisonerPerGuard.FloatValue);
 		}
 		else
 		{
-			CReplyToCommand(client, "%t %t", "ratio_tag", "ratio_disabled");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_disabled");
 		}
 	}
 
@@ -646,12 +658,12 @@ public Action Command_NoGuard(int client, int args)
 	if (!g_bEnableGuard[client])
 	{
 		g_bEnableGuard[client] = true;
-		CReplyToCommand(client, "%t %t", "ratio_tag", "ratio_guard_enable");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_guard_enable");
 	}
 	else
 	{
 		g_bEnableGuard[client] = false;
-		CReplyToCommand(client, "%t %t", "ratio_tag", "ratio_guard_disable");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_guard_disable");
 	}
 
 	return Plugin_Handled;
@@ -689,7 +701,7 @@ public Action Event_RoundEnd_Post(Event event, const char[] szName, bool bDontBr
 	}
 	else if (gc_bToggleAnnounce.BoolValue)
 	{
-		CPrintToChatAll("%t %t", "ratio_tag", "ratio_disabled");
+		CPrintToChatAll("%s %t", g_sPrefix, "ratio_disabled");
 	}
 
 	for (int i = 1; i <= MaxClients; i++)
@@ -720,7 +732,7 @@ public Action Event_OnJoinTeam(int client, const char[] szCommand, int iArgCount
 
 	if (!g_bRatioEnable)
 	{
-		CPrintToChat(client, "%t %t", "ratio_tag", "ratio_disabled");
+		CPrintToChat(client, "%s %t", g_sPrefix, "ratio_disabled");
 		return Plugin_Continue;
 	}
 
@@ -731,7 +743,7 @@ public Action Event_OnJoinTeam(int client, const char[] szCommand, int iArgCount
 	if (!iTeam)
 	{
 		ClientCommand(client, "play %s", g_sRestrictedSound);
-		CPrintToChat(client, "%t %t", "ratio_tag", "ratio_auto");
+		CPrintToChat(client, "%s %t", g_sPrefix, "ratio_auto");
 		return Plugin_Handled;
 	}
 
@@ -740,7 +752,7 @@ public Action Event_OnJoinTeam(int client, const char[] szCommand, int iArgCount
 
 	if (g_bQueueCooldown[client])
 	{
-		CReplyToCommand(client, "%t %t", "ratio_tag", "ratio_cooldown");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_cooldown");
 		return Plugin_Handled;
 	}
 
@@ -758,7 +770,7 @@ public Action Event_OnJoinTeam(int client, const char[] szCommand, int iArgCount
 	if (!g_bEnableGuard[client])
 	{
 		g_bEnableGuard[client] = true;
-		CReplyToCommand(client, "%t %t", "ratio_tag", "ratio_guard_enable");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_guard_enable");
 	}
 
 	if (!CanClientJoinGuards(client))
@@ -786,11 +798,11 @@ public Action Event_OnJoinTeam(int client, const char[] szCommand, int iArgCount
 		}
 		else
 		{
-			CPrintToChat(client, "%t %t", "ratio_tag", "ratio_fullqueue", iIndex + 1);
+			CPrintToChat(client, "%s %t", g_sPrefix, "ratio_fullqueue", iIndex + 1);
 
 			if (gc_bAdsVIP.BoolValue && gc_bVIPQueue.BoolValue && !CheckVipFlag(client, g_sAdminFlag))
 			{
-				CPrintToChat(client, "%t %t", "ratio_tag", "ratio_advip");
+				CPrintToChat(client, "%s %t", g_sPrefix, "ratio_advip");
 			}
 		}
 
@@ -846,15 +858,15 @@ void AddToQueue(int client)
 				ShiftArrayUp(g_aGuardQueue, 0);
 				SetArrayCell(g_aGuardQueue, 0, client);
 			}
-			CPrintToChat(client, "%t %t", "ratio_tag", "ratio_thxvip");
-			CPrintToChat(client, "%t %t", "ratio_tag", "ratio_number", iIndex + 1);
+			CPrintToChat(client, "%s %t", g_sPrefix, "ratio_thxvip");
+			CPrintToChat(client, "%s %t", g_sPrefix, "ratio_number", iIndex + 1);
 		}
 		else
 		{
 			iIndex = PushArrayCell(g_aGuardQueue, client);
 
-			CPrintToChat(client, "%t %t", "ratio_tag", "ratio_number", iIndex + 1);
-			if (gc_bAdsVIP.BoolValue && gc_bVIPQueue.BoolValue) CPrintToChat(client, "%t %t", "ratio_tag", "ratio_advip");
+			CPrintToChat(client, "%s %t", g_sPrefix, "ratio_number", iIndex + 1);
+			if (gc_bAdsVIP.BoolValue && gc_bVIPQueue.BoolValue) CPrintToChat(client, "%s %t", g_sPrefix, "ratio_advip");
 		}
 	}
 }
@@ -1115,7 +1127,7 @@ public int ViewQueueMenuHandle(Menu hMenu, MenuAction action, int client, int op
 
 		RemovePlayerFromGuardQueue(user);
 
-		CPrintToChatAll("%t %t", "ratio_tag", "ratio_removed", client, user);
+		CPrintToChatAll("%s %t", g_sPrefix, "ratio_removed", client, user);
 	}
 	else if (action == MenuAction_Cancel)
 	{
@@ -1222,7 +1234,7 @@ void FixTeamRatio()
 			client = GetArrayCell(g_aGuardQueue, 0);
 			RemovePlayerFromGuardQueue(client);
 
-			CPrintToChatAll("%t %t", "ratio_tag", "ratio_find", client);
+			CPrintToChatAll("%s %t", g_sPrefix, "ratio_find", client);
 		}
 		else if (gc_bBalanceTerror.BoolValue)
 		{
@@ -1232,7 +1244,7 @@ void FixTeamRatio()
 				client = GetRandomClientFromTeam(CS_TEAM_T);
 			}
 
-			CPrintToChatAll("%t %t", "ratio_tag", "ratio_random", client);
+			CPrintToChatAll("%s %t", g_sPrefix, "ratio_random", client);
 		}
 		else
 		{
@@ -1241,7 +1253,7 @@ void FixTeamRatio()
 
 		if (!IsValidClient(client, true, true))
 		{
-			CPrintToChatAll("%t %t", "ratio_tag", "ratio_novalid");
+			CPrintToChatAll("%s %t", g_sPrefix, "ratio_novalid");
 
 			break;
 		}
@@ -1319,7 +1331,7 @@ void FixTeamRatio()
 		if (!client)
 			break;
 
-		CPrintToChatAll("%t %t", "ratio_tag", "ratio_movetot", client);
+		CPrintToChatAll("%s %t", g_sPrefix, "ratio_movetot", client);
 		SetClientPendingTeam(client, CS_TEAM_T);
 		MinusDeath(client);
 		RemovePlayerFromGuardList(client);
@@ -1489,12 +1501,12 @@ public int ChangeMenu(Menu menu, MenuAction action, int client, int selection)
 					{
 						newGuard = GetArrayCell(g_aGuardQueue, 0);
 						RemovePlayerFromGuardQueue(newGuard);
-						CPrintToChatAll("%t %t", "ratio_tag", "ratio_find", newGuard);
+						CPrintToChatAll("%s %t", g_sPrefix, "ratio_find", newGuard);
 					}
 					else if (gc_bBalanceTerror.BoolValue)
 					{
 						newGuard = GetRandomClientFromTeam(CS_TEAM_T);
-						CPrintToChatAll("%t %t", "ratio_tag", "ratio_random", newGuard);
+						CPrintToChatAll("%s %t", g_sPrefix, "ratio_random", newGuard);
 					}
 					else
 					{
@@ -1503,7 +1515,7 @@ public int ChangeMenu(Menu menu, MenuAction action, int client, int selection)
 
 					if (!IsValidClient(newGuard, true, true))
 					{
-						CPrintToChatAll("%t %t", "ratio_tag", "ratio_novalid");
+						CPrintToChatAll("%s %t", g_sPrefix, "ratio_novalid");
 					}
 
 					ChangeClientTeam(newGuard, CS_TEAM_CT);

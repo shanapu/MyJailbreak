@@ -233,11 +233,6 @@
 		"en"		"Mute Menu"
 	}
 
-	"menu_tag"
-	{
-		"en"		"[{green}MyJB.menu{default}]"
-	}
-
 	"menu_painter"
 	{
 		"en"		"Painter Menu"

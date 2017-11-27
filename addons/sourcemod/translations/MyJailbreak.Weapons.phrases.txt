@@ -7,12 +7,6 @@
 //
 "Phrases"
 {
-
-	"weapons_tag"
-	{
-		"en"		"[{green}MyJB.weapons{default}]"
-	}
-
 	"weapons_disabled"
 	{
 		"en"		"The {purple}weapons menu is currently {default} disabled!"

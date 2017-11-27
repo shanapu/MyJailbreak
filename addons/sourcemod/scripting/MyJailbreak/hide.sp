@@ -65,6 +65,7 @@ bool gp_bMyWeapons;
 
 // Console Variables
 ConVar gc_bPlugin;
+ConVar gc_sPrefix;
 ConVar gc_bSetW;
 ConVar gc_bSetA;
 ConVar gc_bSetABypassCooldown;
@@ -112,6 +113,7 @@ Handle g_hTimerFreeze;
 Handle g_hTimerBeacon;
 
 // Strings
+char g_sPrefix[64];
 char g_sHasVoted[1500];
 char g_sSoundStartPath[256];
 char g_sEventsLogFile[PLATFORM_MAX_PATH];
@@ -152,6 +154,7 @@ public void OnPluginStart()
 
 	AutoExecConfig_CreateConVar("sm_hide_version", MYJB_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_hide_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true, 0.0, true, 1.0);
+	gc_sPrefix = AutoExecConfig_CreateConVar("sm_hide_prefix", "[{green}MyJB.Hide{default}]", "Set your chat prefix for this plugin.");
 	gc_sCustomCommandVote = AutoExecConfig_CreateConVar("sm_hide_cmds_vote", "hidenseek", "Set your custom chat command for Event voting(!hide (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_sCustomCommandSet = AutoExecConfig_CreateConVar("sm_hide_cmds_set", "shide", "Set your custom chat command for set Event(!hide (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_hide_warden", "1", "0 - disabled, 1 - allow warden to set hide round", _, true, 0.0, true, 1.0);
@@ -190,6 +193,7 @@ public void OnPluginStart()
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
 	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
+	HookConVarChange(gc_sPrefix, OnSettingChanged);
 
 	// FindConVar
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
@@ -238,6 +242,10 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 	else if (convar == gc_sAdminFlag)
 	{
 		strcopy(g_sAdminFlag, sizeof(g_sAdminFlag), newValue);
+	}
+	else if (convar == gc_sPrefix)
+	{
+		strcopy(g_sPrefix, sizeof(g_sPrefix), newValue);
 	}
 }
 
@@ -297,12 +305,17 @@ public void OnLibraryAdded(const char[] name)
 // Initialize Plugin
 public void OnConfigsExecuted()
 {
+	// FindConVar
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iMaxRound = gc_iRounds.IntValue;
 	g_iMaxTA = gc_iTAgrenades.IntValue - 1;
 
-	// FindConVar
+	gc_sPrefix.GetString(g_sPrefix, sizeof(g_sPrefix));
+	gc_sOverlayStartPath.GetString(g_sOverlayStartPath, sizeof(g_sOverlayStartPath));
+	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
+	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
+
 	if (gp_bHosties)
 	{
 		g_iTerrorForLR = FindConVar("sm_hosties_lr_ts_max");
@@ -359,7 +372,7 @@ public Action Command_SetHide(int client, int args)
 {
 	if (!gc_bPlugin.BoolValue)
 	{
-		CReplyToCommand(client, "%t %t", "hide_tag", "hide_disabled");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "hide_disabled");
 		return Plugin_Handled;
 	}
 
@@ -381,13 +394,13 @@ public Action Command_SetHide(int client, int args)
 	{
 		if (!gc_bSetA.BoolValue)
 		{
-			CReplyToCommand(client, "%t %t", "hide_tag", "hide_setbyadmin");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "hide_setbyadmin");
 			return Plugin_Handled;
 		}
 
 		if (GetTeamClientCount(CS_TEAM_CT) == 0 || GetTeamClientCount(CS_TEAM_T) == 0)
 		{
-			CReplyToCommand(client, "%t %t", "hide_tag", "hide_minplayer");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "hide_minplayer");
 			return Plugin_Handled;
 		}
 
@@ -398,14 +411,14 @@ public Action Command_SetHide(int client, int args)
 
 			if (!StrEqual(EventDay, "none", false))
 			{
-				CReplyToCommand(client, "%t %t", "hide_tag", "hide_progress", EventDay);
+				CReplyToCommand(client, "%s %t", g_sPrefix, "hide_progress", EventDay);
 				return Plugin_Handled;
 			}
 		}
 
 		if (g_iCoolDown > 0 && !gc_bSetABypassCooldown.BoolValue)
 		{
-			CReplyToCommand(client, "%t %t", "hide_tag", "hide_wait", g_iCoolDown);
+			CReplyToCommand(client, "%s %t", g_sPrefix, "hide_wait", g_iCoolDown);
 			return Plugin_Handled;
 		}
 
@@ -425,19 +438,19 @@ public Action Command_SetHide(int client, int args)
 	{
 		if (!warden_iswarden(client))
 		{
-			CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
 			return Plugin_Handled;
 		}
 		
 		if (!gc_bSetW.BoolValue)
 		{
-			CReplyToCommand(client, "%t %t", "warden_tag", "hide_setbywarden");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "hide_setbywarden");
 			return Plugin_Handled;
 		}
 
 		if (GetTeamClientCount(CS_TEAM_CT) == 0 || GetTeamClientCount(CS_TEAM_T) == 0)
 		{
-			CReplyToCommand(client, "%t %t", "hide_tag", "hide_minplayer");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "hide_minplayer");
 			return Plugin_Handled;
 		}
 
@@ -448,14 +461,14 @@ public Action Command_SetHide(int client, int args)
 
 			if (!StrEqual(EventDay, "none", false))
 			{
-				CReplyToCommand(client, "%t %t", "hide_tag", "hide_progress", EventDay);
+				CReplyToCommand(client, "%s %t", g_sPrefix, "hide_progress", EventDay);
 				return Plugin_Handled;
 			}
 		}
 
 		if (g_iCoolDown > 0)
 		{
-			CReplyToCommand(client, "%t %t", "hide_tag", "hide_wait", g_iCoolDown);
+			CReplyToCommand(client, "%s %t", g_sPrefix, "hide_wait", g_iCoolDown);
 			return Plugin_Handled;
 		}
 
@@ -473,7 +486,7 @@ public Action Command_SetHide(int client, int args)
 	}
 	else
 	{
-		CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
 	}
 
 	return Plugin_Handled;
@@ -484,19 +497,19 @@ public Action Command_VoteHide(int client, int args)
 {
 	if (!gc_bPlugin.BoolValue)
 	{
-		CReplyToCommand(client, "%t %t", "hide_tag", "hide_disabled");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "hide_disabled");
 		return Plugin_Handled;
 	}
 
 	if (!gc_bVote.BoolValue)
 	{
-		CReplyToCommand(client, "%t %t", "hide_tag", "hide_voting");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "hide_voting");
 		return Plugin_Handled;
 	}
 
 	if (GetTeamClientCount(CS_TEAM_CT) == 0 || GetTeamClientCount(CS_TEAM_T) == 0)
 	{
-		CReplyToCommand(client, "%t %t", "hide_tag", "hide_minplayer");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "hide_minplayer");
 		return Plugin_Handled;
 	}
 
@@ -507,14 +520,14 @@ public Action Command_VoteHide(int client, int args)
 
 		if (!StrEqual(EventDay, "none", false))
 		{
-			CReplyToCommand(client, "%t %t", "hide_tag", "hide_progress", EventDay);
+			CReplyToCommand(client, "%s %t", g_sPrefix, "hide_progress", EventDay);
 			return Plugin_Handled;
 		}
 	}
 
 	if (g_iCoolDown > 0)
 	{
-		CReplyToCommand(client, "%t %t", "hide_tag", "hide_wait", g_iCoolDown);
+		CReplyToCommand(client, "%s %t", g_sPrefix, "hide_wait", g_iCoolDown);
 		return Plugin_Handled;
 	}
 
@@ -523,7 +536,7 @@ public Action Command_VoteHide(int client, int args)
 
 	if (StrContains(g_sHasVoted, steamid, true) != -1)
 	{
-		CReplyToCommand(client, "%t %t", "hide_tag", "hide_voted");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "hide_voted");
 		return Plugin_Handled;
 	}
 
@@ -549,7 +562,7 @@ public Action Command_VoteHide(int client, int args)
 	}
 	else
 	{
-		CPrintToChatAll("%t %t", "hide_tag", "hide_need", Missing, client);
+		CPrintToChatAll("%s %t", g_sPrefix, "hide_need", Missing, client);
 	}
 
 	return Plugin_Handled;
@@ -672,7 +685,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 				MyJailbreak_FogOff();
 			}
 
-			CPrintToChatAll("%t %t", "hide_tag", "hide_end");
+			CPrintToChatAll("%s %t", g_sPrefix, "hide_end");
 		}
 	}
 
@@ -683,7 +696,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			CreateInfoPanel(i);
 		}
 
-		CPrintToChatAll("%t %t", "hide_tag", "hide_next");
+		CPrintToChatAll("%s %t", g_sPrefix, "hide_next");
 		PrintCenterTextAll("%t", "hide_next_nc");
 	}
 }
@@ -705,9 +718,9 @@ public void Event_TA_Detonate(Event event, const char[] name, bool dontBroadcast
 			int g_iTAgot = (g_iMaxTA - g_iTA[target]);
 			g_iTA[target]++;
 
-			CPrintToChat(target, "%t %t", "hide_tag", "hide_stillta", g_iTAgot);
+			CPrintToChat(target, "%s %t", g_sPrefix, "hide_stillta", g_iTAgot);
 		}
-		else CPrintToChat(target, "%t %t", "hide_tag", "hide_nota");
+		else CPrintToChat(target, "%s %t", g_sPrefix, "hide_nota");
 	}
 }
 
@@ -882,7 +895,7 @@ void ResetEventDay()
 			MyJailbreak_FogOff();
 		}
 
-		CPrintToChatAll("%t %t", "hide_tag", "hide_end");
+		CPrintToChatAll("%s %t", g_sPrefix, "hide_end");
 	}
 }
 
@@ -924,7 +937,7 @@ void StartEventRound(bool thisround)
 
 		CreateTimer(3.0, Timer_PrepareEvent);
 
-		CPrintToChatAll("%t %t", "hide_tag", "hide_now");
+		CPrintToChatAll("%s %t", g_sPrefix, "hide_now");
 		PrintCenterTextAll("%t", "hide_now_nc");
 	}
 	else
@@ -932,7 +945,7 @@ void StartEventRound(bool thisround)
 		g_bStartHide = true;
 		g_iCoolDown++;
 
-		CPrintToChatAll("%t %t", "hide_tag", "hide_next");
+		CPrintToChatAll("%s %t", g_sPrefix, "hide_next");
 		PrintCenterTextAll("%t", "hide_next_nc");
 	}
 }
@@ -1078,7 +1091,7 @@ void PrepareDay(bool thisround)
 		}
 	}
 
-	CPrintToChatAll("%t %t", "hide_tag", "hide_rounds", g_iRound, g_iMaxRound);
+	CPrintToChatAll("%s %t", g_sPrefix, "hide_rounds", g_iRound, g_iMaxRound);
 
 	GameRules_SetProp("m_iRoundTime", gc_iRoundTime.IntValue*60, 4, 0, true);
 
@@ -1200,7 +1213,7 @@ public Action Timer_StartEvent(Handle timer)
 
 	PrintCenterTextAll("%t", "hide_start_nc");
 
-	CPrintToChatAll("%t %t", "hide_tag", "hide_start");
+	CPrintToChatAll("%s %t", g_sPrefix, "hide_start");
 
 	g_hTimerFreeze = null;
 

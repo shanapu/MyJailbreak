@@ -94,16 +94,16 @@ public Action Command_BulletSparks(int client, int args)
 					if (!g_bBulletSparks[client])
 					{
 						g_bBulletSparks[client] = true;
-						CPrintToChat(client, "%t %t", "warden_tag", "warden_bulletmarkon");
+						CPrintToChat(client, "%s %t", g_sPrefix, "warden_bulletmarkon");
 					}
 					else if (g_bBulletSparks[client])
 					{
 						g_bBulletSparks[client] = false;
-						CPrintToChat(client, "%t %t", "warden_tag", "warden_bulletmarkoff");
+						CPrintToChat(client, "%s %t", g_sPrefix, "warden_bulletmarkoff");
 					}
 				}
 			}
-			else CPrintToChat(client, "%t %t", "warden_tag", "warden_notwarden");
+			else CPrintToChat(client, "%s %t", g_sPrefix, "warden_notwarden");
 		}
 	}
 }

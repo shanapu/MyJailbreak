@@ -65,6 +65,7 @@ bool gp_bMyWeapons;
 
 // Console Variables
 ConVar gc_bPlugin;
+ConVar gc_sPrefix;
 ConVar gc_bSetW;
 ConVar gc_bFirst;
 ConVar gc_bAuto;
@@ -86,16 +87,14 @@ ConVar gc_bBeginSetW;
 ConVar gc_bBeginSetV;
 ConVar gc_bBeginSetVW;
 
-// Extern Convars
-//ConVar g_iMPRoundTime;
 
 // Integers
-//int g_iOldRoundTime;
 int g_iCoolDown;
 int g_iVoteCount;
 int g_iCollision_Offset;
 
 // Strings
+char g_sPrefix[64];
 char g_sHasVoted[1500];
 char g_sEventsLogFile[PLATFORM_MAX_PATH];
 char g_sAdminFlag[64];
@@ -130,6 +129,7 @@ public void OnPluginStart()
 
 	AutoExecConfig_CreateConVar("sm_freeday_version", MYJB_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_freeday_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true, 0.0, true, 1.0);
+	gc_sPrefix = AutoExecConfig_CreateConVar("sm_freeday_prefix", "[{green}MyJB.FreeDay{default}]", "Set your chat prefix for this plugin.");
 	gc_sCustomCommandVote = AutoExecConfig_CreateConVar("sm_freeday_cmds_vote", "fd, free", "Set your custom chat command for Event voting(!freeday (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_sCustomCommandSet = AutoExecConfig_CreateConVar("sm_freeday_cmds_set", "sfreeday, sfd", "Set your custom chat command for set Event(!setfreeday (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_freeday_warden", "1", "0 - disabled, 1 - allow warden to set freeday round", _, true, 0.0, true, 1.0);
@@ -160,6 +160,7 @@ public void OnPluginStart()
 	HookEvent("round_end", Event_RoundEnd);
 	HookEvent("player_death", Event_PlayerDeath);
 	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
+	HookConVarChange(gc_sPrefix, OnSettingChanged);
 
 	// FindConVar
 //	g_iMPRoundTime = FindConVar("mp_roundtime");
@@ -179,6 +180,10 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 	if (convar == gc_sAdminFlag)
 	{
 		strcopy(g_sAdminFlag, sizeof(g_sAdminFlag), newValue);
+	}
+	else if (convar == gc_sPrefix)
+	{
+		strcopy(g_sPrefix, sizeof(g_sPrefix), newValue);
 	}
 }
 
@@ -230,6 +235,10 @@ public void OnLibraryAdded(const char[] name)
 // Initialize Event
 public void OnConfigsExecuted()
 {
+	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
+	gc_sPrefix.GetString(g_sPrefix, sizeof(g_sPrefix));
+	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
+
 	// Set custom Commands
 	int iCount = 0;
 	char sCommands[128], sCommandsL[12][32], sCommand[32];
@@ -281,7 +290,7 @@ public Action Command_SetFreeday(int client, int args)
 {
 	if (!gc_bPlugin.BoolValue)
 	{
-		CReplyToCommand(client, "%t %t", "freeday_tag", "freeday_disabled");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "freeday_disabled");
 		return Plugin_Handled;
 	}
 
@@ -303,7 +312,7 @@ public Action Command_SetFreeday(int client, int args)
 	{
 		if (!gc_bSetA.BoolValue)
 		{
-			CReplyToCommand(client, "%t %t", "freeday_tag", "freeday_setbyadmin");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "freeday_setbyadmin");
 			return Plugin_Handled;
 		}
 
@@ -314,14 +323,14 @@ public Action Command_SetFreeday(int client, int args)
 
 			if (!StrEqual(EventDay, "none", false))
 			{
-				CReplyToCommand(client, "%t %t", "freeday_tag", "freeday_progress", EventDay);
+				CReplyToCommand(client, "%s %t", g_sPrefix, "freeday_progress", EventDay);
 				return Plugin_Handled;
 			}
 		}
 
 		if (g_iCoolDown > 0 && !gc_bSetABypassCooldown.BoolValue)
 		{
-			CReplyToCommand(client, "%t %t", "freeday_tag", "freeday_wait", g_iCoolDown);
+			CReplyToCommand(client, "%s %t", g_sPrefix, "freeday_wait", g_iCoolDown);
 			return Plugin_Handled;
 		}
 
@@ -341,13 +350,13 @@ public Action Command_SetFreeday(int client, int args)
 	{
 		if (!warden_iswarden(client))
 		{
-			CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
 			return Plugin_Handled;
 		}
 
 		if (!gc_bSetW.BoolValue)
 		{
-			CReplyToCommand(client, "%t %t", "warden_tag", "freeday_setbywarden");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "freeday_setbywarden");
 			return Plugin_Handled;
 		}
 
@@ -358,14 +367,14 @@ public Action Command_SetFreeday(int client, int args)
 
 			if (!StrEqual(EventDay, "none", false))
 			{
-				CReplyToCommand(client, "%t %t", "freeday_tag", "freeday_progress", EventDay);
+				CReplyToCommand(client, "%s %t", g_sPrefix, "freeday_progress", EventDay);
 				return Plugin_Handled;
 			}
 		}
 
 		if (g_iCoolDown > 0)
 		{
-			CReplyToCommand(client, "%t %t", "freeday_tag", "freeday_wait", g_iCoolDown);
+			CReplyToCommand(client, "%s %t", g_sPrefix, "freeday_wait", g_iCoolDown);
 			return Plugin_Handled;
 		}
 
@@ -383,7 +392,7 @@ public Action Command_SetFreeday(int client, int args)
 	}
 	else
 	{
-		CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
 	}
 
 	return Plugin_Handled;
@@ -394,13 +403,13 @@ public Action Command_VoteFreeday(int client, int args)
 {
 	if (!gc_bPlugin.BoolValue)
 	{
-		CReplyToCommand(client, "%t %t", "freeday_tag", "freeday_disabled");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "freeday_disabled");
 		return Plugin_Handled;
 	}
 
 	if (!gc_bVote.BoolValue)
 	{
-		CReplyToCommand(client, "%t %t", "freeday_tag", "freeday_voting");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "freeday_voting");
 		return Plugin_Handled;
 	}
 
@@ -411,14 +420,14 @@ public Action Command_VoteFreeday(int client, int args)
 
 		if (!StrEqual(EventDay, "none", false))
 		{
-			CReplyToCommand(client, "%t %t", "freeday_tag", "freeday_progress", EventDay);
+			CReplyToCommand(client, "%s %t", g_sPrefix, "freeday_progress", EventDay);
 			return Plugin_Handled;
 		}
 	}
 
 	if (g_iCoolDown > 0)
 	{
-		CReplyToCommand(client, "%t %t", "freeday_tag", "freeday_wait", g_iCoolDown);
+		CReplyToCommand(client, "%s %t", g_sPrefix, "freeday_wait", g_iCoolDown);
 		return Plugin_Handled;
 	}
 
@@ -427,7 +436,7 @@ public Action Command_VoteFreeday(int client, int args)
 
 	if (StrContains(g_sHasVoted, steamid, true) != -1)
 	{
-		CReplyToCommand(client, "%t %t", "freeday_tag", "freeday_voted");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "freeday_voted");
 		return Plugin_Handled;
 	}
 
@@ -453,7 +462,7 @@ public Action Command_VoteFreeday(int client, int args)
 	}
 	else
 	{
-		CPrintToChatAll("%t %t", "freeday_tag", "freeday_need", Missing, client);
+		CPrintToChatAll("%s %t", g_sPrefix, "freeday_need", Missing, client);
 	}
 
 	return Plugin_Handled;
@@ -564,7 +573,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 
 //		g_iMPRoundTime.IntValue = g_iOldRoundTime;
 
-		CPrintToChatAll("%t %t", "freeday_tag", "freeday_end");
+		CPrintToChatAll("%s %t", g_sPrefix, "freeday_end");
 	}
 
 	if (g_bStartFreeday)
@@ -574,7 +583,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			CreateInfoPanel(i);
 		}
 
-		CPrintToChatAll("%t %t", "freeday_tag", "freeday_next");
+		CPrintToChatAll("%s %t", g_sPrefix, "freeday_next");
 		PrintCenterTextAll("%t", "freeday_next_nc");
 	}
 }
@@ -682,7 +691,7 @@ void StartEventRound(bool thisround)
 
 		CreateTimer(3.0, Timer_PrepareEvent);
 
-		CPrintToChatAll("%t %t", "freeday_tag", "freeday_now");
+		CPrintToChatAll("%s %t", g_sPrefix, "freeday_now");
 		PrintCenterTextAll("%t", "freeday_now_nc");
 	}
 	else
@@ -690,7 +699,7 @@ void StartEventRound(bool thisround)
 		g_bStartFreeday = true;
 		g_iCoolDown++;
 
-		CPrintToChatAll("%t %t", "freeday_tag", "freeday_next");
+		CPrintToChatAll("%s %t", g_sPrefix, "freeday_next");
 		PrintCenterTextAll("%t", "freeday_next_nc");
 	}
 }
@@ -788,7 +797,7 @@ void PrepareDay()
 	CreateTimer (gc_iRespawnTime.FloatValue, Timer_StopRespawn);
 
 	PrintCenterTextAll("%t", "freeday_start_nc");
-	CPrintToChatAll("%t %t", "freeday_tag", "freeday_start");
+	CPrintToChatAll("%s %t", g_sPrefix, "freeday_start");
 }
 
 /******************************************************************************

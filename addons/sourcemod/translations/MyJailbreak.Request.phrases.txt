@@ -7,12 +7,6 @@
 //
 "Phrases"
 {
-
-	"request_tag"
-	{
-		"en"		"[{green}MyJB.requests{default}]"
-	}
-
 	"request_openrefuse"
 	{
 		"en"		"The warden has enabled refusals.{purple} Type !refuse to refuse the game!"

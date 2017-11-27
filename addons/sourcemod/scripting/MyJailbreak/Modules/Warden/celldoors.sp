@@ -102,11 +102,11 @@ public Action Command_OpenDoors(int client, int args)
 					}
 					g_hTimerOpen = null;
 
-					CPrintToChatAll("%t %t", "warden_tag", "warden_dooropen");
+					CPrintToChatAll("%s %t", g_sPrefix, "warden_dooropen");
 				}
-				else CReplyToCommand(client, "%t %t", "warden_tag", "warden_dooropen_unavailable");
+				else CReplyToCommand(client, "%s %t", g_sPrefix, "warden_dooropen_unavailable");
 			}
-			else CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+			else CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
 		}
 	}
 
@@ -125,11 +125,11 @@ public Action Command_CloseDoors(int client, int args)
 				{
 					SJD_CloseDoors();
 
-					CPrintToChatAll("%t %t", "warden_tag", "warden_doorclose");
+					CPrintToChatAll("%s %t", g_sPrefix, "warden_doorclose");
 				}
-				else CReplyToCommand(client, "%t %t", "warden_tag", "warden_doorclose_unavailable");
+				else CReplyToCommand(client, "%s %t", g_sPrefix, "warden_doorclose_unavailable");
 			}
-			else CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+			else CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
 		}
 	}
 
@@ -149,7 +149,7 @@ public void CellDoors_Event_RoundStart(Event event, const char[] name, bool dont
 			g_iOpenTimer = gc_iOpenTimer.IntValue;
 			g_hTimerOpen = CreateTimer(1.0, Timer_OpenCounter, _, TIMER_REPEAT);
 		}
-		else CPrintToChatAll("%t %t", "warden_tag", "warden_openauto_unavailable");
+		else CPrintToChatAll("%s %t", g_sPrefix, "warden_openauto_unavailable");
 	}
 
 	if (GameRules_GetProp("m_bWarmupPeriod") == 1)
@@ -210,7 +210,7 @@ public Action Timer_OpenCounter(Handle timer, Handle pack)
 				if (gc_bOpenTimer.BoolValue)
 				{
 					SJD_OpenDoors();
-					CPrintToChatAll("%t %t", "warden_tag", "warden_openauto");
+					CPrintToChatAll("%s %t", g_sPrefix, "warden_openauto");
 
 					g_hTimerOpen = null;
 					return Plugin_Stop;
@@ -221,9 +221,9 @@ public Action Timer_OpenCounter(Handle timer, Handle pack)
 				if (gc_bOpenTimerWarden.BoolValue)
 				{
 					SJD_OpenDoors();
-					CPrintToChatAll("%t %t", "warden_tag", "warden_openauto");
+					CPrintToChatAll("%s %t", g_sPrefix, "warden_openauto");
 				}
-				else CPrintToChatAll("%t %t", "warden_tag", "warden_opentime");
+				else CPrintToChatAll("%s %t", g_sPrefix, "warden_opentime");
 
 				g_hTimerOpen = null;
 				return Plugin_Stop;

@@ -7,12 +7,6 @@
 //
 "Phrases"
 {
-
-	"ffa_tag"
-	{
-		"en"		"[{green}MyJB.FFA{default}]"
-	}
-
 	"ffa_need"
 	{
 		"#format"	"{1:i},{2:N}"

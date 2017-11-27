@@ -7,12 +7,6 @@
 //
 "Phrases"
 {
-
-	"suicidebomber_tag"
-	{
-		"en"		"[{green}MyJB.SuicideBomber{default}]"
-	}
-
 	"suicidebomber_need"
 	{
 		"#format"	"{1:i},{2:N}"

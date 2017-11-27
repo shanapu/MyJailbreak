@@ -56,6 +56,7 @@
 
 // Console Variables
 ConVar gc_bPlugin;
+ConVar gc_sPrefix;
 ConVar gc_bVote;
 ConVar gc_bStayWarden;
 ConVar gc_bBecomeWarden;
@@ -131,6 +132,7 @@ Handle g_hCooldown;
 Handle g_hLimit;
 
 // Strings
+char g_sPrefix[64];
 char g_sHasVoted[1500];
 char g_sModelPathPrevious[256];
 char g_sModelPathWarden[256];
@@ -200,6 +202,7 @@ public void OnPluginStart()
 
 	AutoExecConfig_CreateConVar("sm_warden_version", MYJB_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_warden_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true, 0.0, true, 1.0);
+	gc_sPrefix = AutoExecConfig_CreateConVar("sm_warden_prefix", "[{green}MyJB.Warden{default}]", "Set your chat prefix for this plugin.");
 	gc_sCustomCommandWarden = AutoExecConfig_CreateConVar("sm_warden_cmds_become", "w, simon", "Set your custom chat commands for become warden(!warden (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_sCustomCommandUnWarden = AutoExecConfig_CreateConVar("sm_warden_cmds_retire", "uw, unsimon", "Set your custom chat commands for retire from warden(!unwarden (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_sCustomCommandVetoWarden = AutoExecConfig_CreateConVar("sm_warden_cmds_veto", "vw, votewarden", "Set your custom chat commands for vote against warden(!vetowarden (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
@@ -264,6 +267,7 @@ public void OnPluginStart()
 	HookConVarChange(gc_sModelPathWarden, OnSettingChanged);
 	HookConVarChange(gc_sUnWarden, OnSettingChanged);
 	HookConVarChange(gc_sWarden, OnSettingChanged);
+	HookConVarChange(gc_sPrefix, OnSettingChanged);
 
 	// FindConVar
 	gc_sWarden.GetString(g_sWarden, sizeof(g_sWarden));
@@ -310,11 +314,21 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 			PrecacheModel(g_sModelPathWarden);
 		}
 	}
+	else if (convar == gc_sPrefix)
+	{
+		strcopy(g_sPrefix, sizeof(g_sPrefix), newValue);
+	}
 }
 
 // Initialize Plugin
 public void OnConfigsExecuted()
 {
+	// FindConVar
+	gc_sPrefix.GetString(g_sPrefix, sizeof(g_sPrefix));
+	gc_sWarden.GetString(g_sWarden, sizeof(g_sWarden));
+	gc_sUnWarden.GetString(g_sUnWarden, sizeof(g_sUnWarden));
+	gc_sModelPathWarden.GetString(g_sModelPathWarden, sizeof(g_sModelPathWarden));
+
 	Deputy_OnConfigsExecuted();
 	Math_OnConfigsExecuted();
 	RandomKill_OnConfigsExecuted();
@@ -476,43 +490,43 @@ public Action Command_BecomeWarden(int client, int args)
 {
 	if (!gc_bPlugin.BoolValue || (g_bIsLR && gc_bRemoveLR.BoolValue))  // "sm_warden_enable" "1" and no last request
 	{
-		CReplyToCommand(client, "%t %t", "warden_tag", "warden_disabled");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "warden_disabled");
 		return Plugin_Handled;
 	}
 
 	if (g_iWarden != -1)  // Is there already a warden
 	{
-		CReplyToCommand(client, "%t %t", "warden_tag", "warden_exist", g_iWarden);
+		CReplyToCommand(client, "%s %t", g_sPrefix, "warden_exist", g_iWarden);
 		return Plugin_Handled;
 	}
 
 	if (!gc_bBecomeWarden.BoolValue)  // "sm_warden_become" "1"
 	{
-		CReplyToCommand(client, "%t %t", "warden_tag", "warden_nobecome", g_iWarden);
+		CReplyToCommand(client, "%s %t", g_sPrefix, "warden_nobecome", g_iWarden);
 		return Plugin_Handled;
 	}
 
 	if (GetClientTeam(client) != CS_TEAM_CT)  // Is player a guard
 	{
-		CReplyToCommand(client, "%t %t", "warden_tag", "warden_ctsonly");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "warden_ctsonly");
 		return Plugin_Handled;
 	}
 
 	if (!IsPlayerAlive(client))  // Alive?
 	{
-		CReplyToCommand(client, "%t %t", "warden_tag", "warden_playerdead");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "warden_playerdead");
 		return Plugin_Handled;
 	}
 
 	if (GetCoolDown(client) > 0)
 	{
-		CReplyToCommand(client, "%t %t", "warden_tag", "warden_cooldown", GetCoolDown(client));
+		CReplyToCommand(client, "%s %t", g_sPrefix, "warden_cooldown", GetCoolDown(client));
 		return Plugin_Handled;
 	}
 
 	if (g_bCMDCoolDown[client])
 	{
-		CReplyToCommand(client, "%t %t", "warden_tag", "warden_wait", RoundFloat(gc_fCMDCooldown.FloatValue));
+		CReplyToCommand(client, "%s %t", g_sPrefix, "warden_wait", RoundFloat(gc_fCMDCooldown.FloatValue));
 		return Plugin_Handled;
 	}
 
@@ -526,7 +540,7 @@ public Action Command_BecomeWarden(int client, int args)
 	else
 	{
 		SetCoolDown(client, gc_iCoolDownLimit.IntValue);
-		CReplyToCommand(client, "%t %t", "warden_tag", "warden_limit", gc_iLimitWarden.IntValue, GetCoolDown(client));
+		CReplyToCommand(client, "%s %t", g_sPrefix, "warden_limit", gc_iLimitWarden.IntValue, GetCoolDown(client));
 	}
 
 	return Plugin_Handled;
@@ -537,20 +551,20 @@ public Action Command_ExitWarden(int client, int args)
 {
 	if (!gc_bPlugin.BoolValue)  // "sm_warden_enable" "1"
 	{
-		CReplyToCommand(client, "%t %t", "warden_tag", "warden_disabled");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "warden_disabled");
 		return Plugin_Handled;
 	}
 
 	if (!IsClientWarden(client))  // Is client the warden
 	{
-		CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
 		return Plugin_Handled;
 	}
 
 	Forward_OnWardenRemovedBySelf(client);
 	RemoveTheWarden();
 
-	CPrintToChatAll("%t %t", "warden_tag", "warden_retire", client);
+	CPrintToChatAll("%s %t", g_sPrefix, "warden_retire", client);
 	if (gc_bBetterNotes.BoolValue)
 	{
 		PrintCenterTextAll("%t", "warden_retire_nc", client);
@@ -564,19 +578,19 @@ public Action Command_VoteWarden(int client, int args)
 {
 	if (!gc_bPlugin.BoolValue)  // "sm_warden_enable" "1"
 	{
-		CReplyToCommand(client, "%t %t", "warden_tag", "warden_disabled");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "warden_disabled");
 		return Plugin_Handled;
 	}
 
 	if (!gc_bVote.BoolValue)  // "sm_warden_vote" "1"
 	{
-		CReplyToCommand(client, "%t %t", "warden_tag", "warden_voting");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "warden_voting");
 		return Plugin_Handled;
 	}
 
 	if (g_iWarden == -1)
 	{
-		CReplyToCommand(client, "%t %t", "warden_tag", "warden_noexist");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "warden_noexist");
 		return Plugin_Handled;
 	}
 
@@ -585,7 +599,7 @@ public Action Command_VoteWarden(int client, int args)
 
 	if (StrContains(g_sHasVoted, steamid, true) != -1)  // Check steam ID has already voted
 	{
-		CReplyToCommand(client, "%t %t", "warden_tag", "warden_voted");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "warden_voted");
 		return Plugin_Handled;
 	}
 
@@ -596,14 +610,14 @@ public Action Command_VoteWarden(int client, int args)
 
 	if (g_iVoteCount < playercount)
 	{
-		CPrintToChatAll("%t %t", "warden_tag", "warden_need", Missing, client);
+		CPrintToChatAll("%s %t", g_sPrefix, "warden_need", Missing, client);
 		return Plugin_Handled;
 	}
 
 	SetCoolDown(g_iWarden, gc_iCoolDownRemove.IntValue);
 
 	RemoveTheWarden();
-	CPrintToChatAll("%t %t", "warden_tag", "warden_votesuccess");
+	CPrintToChatAll("%s %t", g_sPrefix, "warden_votesuccess");
 
 	if (!gp_bMyJailBreak)
 		return Plugin_Handled;
@@ -624,7 +638,7 @@ public Action AdminCommand_RemoveWarden(int client, int args)
 
 	if (g_iWarden == -1)
 	{
-		CReplyToCommand(client, "%t %t", "warden_tag", "warden_noexist");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "warden_noexist");
 		return Plugin_Handled;
 	}
 
@@ -633,7 +647,7 @@ public Action AdminCommand_RemoveWarden(int client, int args)
 	RemoveTheWarden();
 	Forward_OnWardenRemovedByAdmin(client);
 
-	CPrintToChatAll("%t %t", "warden_tag", "warden_removed", client, g_iLastWarden); 
+	CPrintToChatAll("%s %t", g_sPrefix, "warden_removed", client, g_iLastWarden); 
 	if (gc_bBetterNotes.BoolValue)
 	{
 		PrintCenterTextAll("%t", "warden_removed_nc", client, g_iLastWarden);
@@ -676,7 +690,7 @@ public void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast
 		Forward_OnWardenDeath(client);
 		Forward_OnWardenRemoved(client);
 
-		CPrintToChatAll("%t %t", "warden_tag", "warden_dead", client);
+		CPrintToChatAll("%s %t", g_sPrefix, "warden_dead", client);
 
 		if (gc_bBetterNotes.BoolValue)
 		{
@@ -712,7 +726,7 @@ public void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
 		Forward_OnWardenDeath(client);
 		RemoveTheWarden();
 
-		CPrintToChatAll("%t %t", "warden_tag", "warden_retire", client);
+		CPrintToChatAll("%s %t", g_sPrefix, "warden_retire", client);
 		if (gc_bBetterNotes.BoolValue)
 		{
 			PrintCenterTextAll("%t", "warden_retire_nc", client);
@@ -738,7 +752,7 @@ public void Event_PostRoundStart(Event event, const char[] name, bool dontBroadc
 
 			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, false)) if (GetClientTeam(i) == CS_TEAM_CT)
 			{
-				CPrintToChat(i, "%t %t", "warden_tag", "warden_nowarden");
+				CPrintToChat(i, "%s %t", g_sPrefix, "warden_nowarden");
 				
 				if (gc_bBetterNotes.BoolValue) PrintCenterText(i, "%t", "warden_nowarden_nc");
 			}
@@ -834,7 +848,7 @@ public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 		{
 			SetCoolDown(g_iWarden, gc_iCoolDownLimit.IntValue);
 			SetLimit(g_iWarden, 0);
-			CPrintToChat(g_iWarden, "%t %t", "warden_tag", "warden_limit", gc_iLimitWarden.IntValue, GetCoolDown(g_iWarden));
+			CPrintToChat(g_iWarden, "%s %t", g_sPrefix, "warden_limit", gc_iLimitWarden.IntValue, GetCoolDown(g_iWarden));
 			CreateTimer(0.1, Timer_RemoveColor, g_iWarden);
 			SetEntityModel(g_iWarden, g_sModelPathPrevious);
 			Forward_OnWardenRemoved(g_iWarden);
@@ -915,7 +929,7 @@ public void OnClientDisconnect(int client)
 {
 	if (IsClientWarden(client))
 	{
-		CPrintToChatAll("%t %t", "warden_tag", "warden_disconnected", client);
+		CPrintToChatAll("%s %t", g_sPrefix, "warden_disconnected", client);
 		if (gc_bBetterNotes.BoolValue)
 		{
 			PrintCenterTextAll("%t", "warden_disconnected_nc", client);
@@ -1036,7 +1050,7 @@ Action SetTheWarden(int client, int caller)
 
 		OnWardenCreation(client);
 
-		CPrintToChatAll("%t %t", "warden_tag", "warden_new", client);
+		CPrintToChatAll("%s %t", g_sPrefix, "warden_new", client);
 		if (gc_bBetterNotes.BoolValue)
 		{
 			PrintCenterTextAll("%t", "warden_new_nc", client);
@@ -1074,7 +1088,7 @@ Action SetTheWarden(int client, int caller)
 		}
 		g_hTimerRandom = null;
 	}
-	else CReplyToCommand(client, "%t %t", "warden_tag", "warden_disabled");
+	else CReplyToCommand(client, "%s %t", g_sPrefix, "warden_disabled");
 
 	return Plugin_Continue;
 }
@@ -1254,7 +1268,7 @@ public int Handler_SetWardenOverwrite(Menu menu, MenuAction action, int client, 
 			int newwarden = GetClientOfUserId(g_iTempWarden[client]);
 			if (g_iWarden != -1)
 			{
-				CPrintToChatAll("%t %t", "warden_tag", "warden_removed", client, g_iWarden);
+				CPrintToChatAll("%s %t", g_sPrefix, "warden_removed", client, g_iWarden);
 			}
 
 			RemoveTheWarden();
@@ -1311,7 +1325,7 @@ public Action Timer_ChooseRandom(Handle timer)
 
 	if (SetTheWarden(i, 0) != Plugin_Handled)
 	{
-		CPrintToChatAll("%t %t", "warden_tag", "warden_randomwarden");
+		CPrintToChatAll("%s %t", g_sPrefix, "warden_randomwarden");
 	}
 	else CreateTimer (0.1, Timer_ChooseRandom);
 

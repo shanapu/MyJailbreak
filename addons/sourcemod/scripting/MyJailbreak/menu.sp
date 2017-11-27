@@ -61,6 +61,7 @@ int g_iCoolDown;
 
 // Console Variables
 ConVar gc_bPlugin;
+ConVar gc_sPrefix;
 ConVar gc_bTerror;
 ConVar gc_bCTerror;
 ConVar gc_bWarden;
@@ -135,6 +136,7 @@ ConVar gc_bOrdersDeputy;
 ConVar gc_bVoteNoMenu;
 
 // Strings
+char g_sPrefix[64];
 char g_sAdminFlagBulletSparks[64];
 char g_sAdminFlagLaser[64];
 char g_sAdminFlagPainter[64];
@@ -188,6 +190,7 @@ public void OnPluginStart()
 
 	AutoExecConfig_CreateConVar("sm_menu_version", MYJB_VERSION, "The version of the SourceMod plugin MyJailbreak - Menu", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_menu_enable", "1", "0 - disabled, 1 - enable jailbrek menu", _, true, 0.0, true, 1.0);
+	gc_sPrefix = AutoExecConfig_CreateConVar("sm_menu_prefix", "[{green}MyJB.Menu{default}]", "Set your chat prefix for this plugin.");
 	gc_sCustomCommandMenu = AutoExecConfig_CreateConVar("sm_menu_cmds_menu", "panel, menus, m", "Set your custom chat command for open menu(!menu (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_sCustomCommandDays = AutoExecConfig_CreateConVar("sm_menu_cmds_days", "days, day, ed", "Set your custom chat command for open menu(!eventdays (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_sCustomCommandSetDay = AutoExecConfig_CreateConVar("sm_menu_cmds_setday", "sd, setdays", "Set your custom chat command for open menu(!menu (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
@@ -220,6 +223,7 @@ public void OnPluginStart()
 	HookEvent("player_spawn", Event_OnPlayerSpawn);
 	HookEvent("round_start", Event_RoundStart);
 	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
+	HookConVarChange(gc_sPrefix, OnSettingChanged);
 
 	// Find
 	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
@@ -438,6 +442,10 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 	{
 		strcopy(g_sAdminFlag, sizeof(g_sAdminFlag), newValue);
 	}
+	else if (convar == gc_sPrefix)
+	{
+		strcopy(g_sPrefix, sizeof(g_sPrefix), newValue);
+	}
 }
 
 // Check for optional Plugins
@@ -489,6 +497,8 @@ public void OnLibraryAdded(const char[] name)
 // FindConVar
 public void OnConfigsExecuted()
 {
+	gc_sPrefix.GetString(g_sPrefix, sizeof(g_sPrefix));
+
 	g_bWarden = FindConVar("sm_warden_enable");
 	g_bDeputy = FindConVar("sm_warden_deputy_enable");
 	g_bDeputySet = FindConVar("sm_warden_deputy_set");
@@ -1829,15 +1839,15 @@ public Action Command_VotingMenu(int client, int args)
 						menu.DisplayVoteToAll(25);
 						g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 					}
-					else CReplyToCommand(client, "%t %t", "menu_tag", "menu_wait", g_iCoolDown);
+					else CReplyToCommand(client, "%s %t", g_sPrefix, "menu_wait", g_iCoolDown);
 				}
-				else CReplyToCommand(client, "%t %t", "menu_tag", "menu_progress", EventDay);
+				else CReplyToCommand(client, "%s %t", g_sPrefix, "menu_progress", EventDay);
 			}
-			else CReplyToCommand(client, "%t %t", "menu_tag", "menu_minplayer");
+			else CReplyToCommand(client, "%s %t", g_sPrefix, "menu_minplayer");
 		}
-		else CReplyToCommand(client, "%t %t", "menu_tag", "warden_notwarden");
+		else CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
 	}
-	else CReplyToCommand(client, "%t %t", "menu_tag", "menu_disabled");
+	else CReplyToCommand(client, "%s %t", g_sPrefix, "menu_disabled");
 
 	return Plugin_Handled;
 }
@@ -1863,15 +1873,15 @@ public int VotingResults(Menu menu, int num_votes, int num_clients, const int[][
 		if (num_items > 1 && (item_info[0][VOTEINFO_ITEM_VOTES] == item_info[1][VOTEINFO_ITEM_VOTES]))
 		{
 			winner = GetRandomInt(0, 1);
-			CPrintToChatAll("%t %t", "menu_tag", "menu_votingdraw");
+			CPrintToChatAll("%s %t", g_sPrefix, "menu_votingdraw");
 		}
 		char event[64];
 		menu.GetItem(item_info[winner][VOTEINFO_ITEM_INDEX], event, sizeof(event));
-		CPrintToChatAll("%t %t", "menu_tag", "menu_votingwon", event, num_clients, num_items);
+		CPrintToChatAll("%s %t", g_sPrefix, "menu_votingwon", event, num_clients, num_items);
 
 		if (!StrEqual("No Event",event)) ServerCommand("sm_set%s", event);
 	}
-	else CPrintToChatAll("%t %t", "menu_tag", "menu_votingcancel", EventDay);
+	else CPrintToChatAll("%s %t", g_sPrefix, "menu_votingcancel", EventDay);
 }
 
 /******************************************************************************
@@ -1882,6 +1892,6 @@ public Action Timer_WelcomeMessage(Handle timer, any client)
 {
 	if (gc_bWelcome.BoolValue && IsValidClient(client, false, true))
 	{
-		CPrintToChat(client, "%t %t", "menu_tag", "menu_info");
+		CPrintToChat(client, "%s %t", g_sPrefix, "menu_info");
 	}
 }

@@ -189,18 +189,18 @@ public Action Command_SetDeputy(int client, int args)
 							if (!IsClientWarden(client)) SetTheDeputy(client);
 							else Menu_SetDeputy(client);
 						}
-						else CPrintToChat(client, "%t %t", "warden_tag", "warden_deputy_playerdead");
+						else CPrintToChat(client, "%s %t", g_sPrefix, "warden_deputy_playerdead");
 					}
-					else CPrintToChat(client, "%t %t", "warden_tag", "warden_deputy_ctsonly");
+					else CPrintToChat(client, "%s %t", g_sPrefix, "warden_deputy_ctsonly");
 				}
-				else if (!gc_bBecomeDeputy.BoolValue && !IsClientWarden(client)) CPrintToChat(client, "%t %t", "warden_tag", "warden_deputy_nobecome");
-				else if (!gc_bSetDeputy.BoolValue && IsClientWarden(client)) CPrintToChat(client, "%t %t", "warden_tag", "warden_deputy_noset");
+				else if (!gc_bBecomeDeputy.BoolValue && !IsClientWarden(client)) CPrintToChat(client, "%s %t", g_sPrefix, "warden_deputy_nobecome");
+				else if (!gc_bSetDeputy.BoolValue && IsClientWarden(client)) CPrintToChat(client, "%s %t", g_sPrefix, "warden_deputy_noset");
 			}
-			else CPrintToChat(client, "%t %t", "warden_tag", "warden_nowarden");
+			else CPrintToChat(client, "%s %t", g_sPrefix, "warden_nowarden");
 		}
-		else CPrintToChat(client, "%t %t", "warden_tag", "warden_deputy_exist", g_iDeputy);
+		else CPrintToChat(client, "%s %t", g_sPrefix, "warden_deputy_exist", g_iDeputy);
 	}
-	else CPrintToChat(client, "%t %t", "warden_tag", "warden_deputy_disabled");
+	else CPrintToChat(client, "%s %t", g_sPrefix, "warden_deputy_disabled");
 }
 
 // Exit / Retire Deputy
@@ -212,7 +212,7 @@ public Action Command_ExitDeputy(int client, int args)
 		{
 			RemoveTheDeputy();
 			
-			CPrintToChatAll("%t %t", "warden_tag", "warden_deputy_retire", client);
+			CPrintToChatAll("%s %t", g_sPrefix, "warden_deputy_retire", client);
 			if (gc_bBetterNotes.BoolValue)
 			{
 				PrintCenterTextAll("%t", "warden_deputy_retire_nc", client);
@@ -220,16 +220,16 @@ public Action Command_ExitDeputy(int client, int args)
 		}
 		else if (IsClientWarden(client) && g_iDeputy != -1)  // Is client the deputy
 		{
-			CPrintToChatAll("%t %t", "warden_tag", "warden_deputy_fired", client, g_iDeputy);
+			CPrintToChatAll("%s %t", g_sPrefix, "warden_deputy_fired", client, g_iDeputy);
 			if (gc_bBetterNotes.BoolValue)
 			{
 				PrintCenterTextAll("%t", "warden_deputy_fired_nc", client, g_iDeputy);
 			}
 			RemoveTheDeputy();
 		}
-		else CPrintToChat(client, "%t %t", "warden_tag", "warden_notwarden");
+		else CPrintToChat(client, "%s %t", g_sPrefix, "warden_notwarden");
 	}
-	else CPrintToChat(client, "%t %t", "warden_tag", "warden_deputy_disabled");
+	else CPrintToChat(client, "%s %t", g_sPrefix, "warden_deputy_disabled");
 }
 
 // Remove Deputy for Admins
@@ -239,7 +239,7 @@ public Action AdminCommand_RemoveDeputy(int client, int args)
 	{
 		if (g_iDeputy != -1)  // Is there a warden to remove
 		{
-			CPrintToChatAll("%t %t", "warden_tag", "warden_deputy_removed", client, g_iDeputy); // if client is console !=
+			CPrintToChatAll("%s %t", g_sPrefix, "warden_deputy_removed", client, g_iDeputy); // if client is console !=
 			if (gc_bBetterNotes.BoolValue) PrintCenterTextAll("%t", "warden_deputy_removed_nc", client, g_iDeputy);
 			
 			if (gp_bMyJailBreak) if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Admin %L removed player %L as Deputy", client, g_iDeputy);
@@ -264,7 +264,7 @@ public void Deputy_Event_PlayerDeath(Event event, const char[] name, bool dontBr
 	{
 		Forward_OnDeputyRemoved(client);
 		
-		CPrintToChatAll("%t %t", "warden_tag", "warden_deputy_dead", client);
+		CPrintToChatAll("%s %t", g_sPrefix, "warden_deputy_dead", client);
 		if (gc_bBetterNotes.BoolValue)
 		{
 			PrintCenterTextAll("%t", "warden_deputy_dead_nc", client);
@@ -291,7 +291,7 @@ public void Deputy_Event_PlayerTeam(Event event, const char[] name, bool dontBro
 	{
 		RemoveTheDeputy();
 		
-		CPrintToChatAll("%t %t", "warden_tag", "warden_deputy_retire", client);
+		CPrintToChatAll("%s %t", g_sPrefix, "warden_deputy_retire", client);
 		if (gc_bBetterNotes.BoolValue)
 		{
 			PrintCenterTextAll("%t", "warden_deputy_retire_nc", client);
@@ -366,7 +366,7 @@ public void Deputy_OnClientDisconnect(int client)
 {
 	if (IsClientDeputy(client))
 	{
-		CPrintToChatAll("%t %t", "warden_tag", "warden_deputy_disconnected", client);
+		CPrintToChatAll("%s %t", g_sPrefix, "warden_deputy_disconnected", client);
 		if (gc_bBetterNotes.BoolValue)
 		{
 			PrintCenterTextAll("%t", "warden_deputy_disconnected_nc", client);
@@ -449,8 +449,8 @@ public Action Timer_NoDeputy(Handle timer)
 {
 	if ((g_iDeputy == -1) && (g_iWarden != -1))
 	{
-		if (gc_bBecomeDeputy.BoolValue) CPrintToChatAll("%t %t", "warden_tag", "warden_deputy_become");
-		if (gc_bSetDeputy.BoolValue) CPrintToChat(g_iWarden, "%t %t", "warden_tag", "warden_deputy_set");
+		if (gc_bBecomeDeputy.BoolValue) CPrintToChatAll("%s %t", g_sPrefix, "warden_deputy_become");
+		if (gc_bSetDeputy.BoolValue) CPrintToChat(g_iWarden, "%s %t", g_sPrefix, "warden_deputy_set");
 	}
 }
 
@@ -464,7 +464,7 @@ void SetTheDeputy(int client)
 {
 	if (gc_bDeputy.BoolValue && gc_bPlugin.BoolValue)
 	{
-		CPrintToChatAll("%t %t", "warden_tag", "warden_deputy_new", client);
+		CPrintToChatAll("%s %t", g_sPrefix, "warden_deputy_new", client);
 		if (gc_bBetterNotes.BoolValue) PrintCenterTextAll("%t", "warden_deputy_new_nc", client);
 
 		g_iDeputy = client;
@@ -478,7 +478,7 @@ void SetTheDeputy(int client)
 		SetClientListeningFlags(client, VOICE_NORMAL);
 		Forward_OnDeputyCreated(client);
 	}
-	else CPrintToChat(client, "%t %t", "warden_tag", "warden_deputy_disabled");
+	else CPrintToChat(client, "%s %t", g_sPrefix, "warden_deputy_disabled");
 }
 
 // Remove the current deputy
