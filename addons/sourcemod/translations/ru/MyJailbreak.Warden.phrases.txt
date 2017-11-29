@@ -435,7 +435,7 @@
 
 	"warden_unmute"
 	{
-		"ru"		"{1] включен микрофон"
+		"ru"		"{1} включен микрофон"
 	}
 
 	"warden_cdmenu_title"
