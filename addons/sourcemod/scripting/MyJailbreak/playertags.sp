@@ -285,14 +285,11 @@ void LoadPlayerTags(int client)
 	// Check flags
 	char flags[32];
 	GetAdminFlagsEx(client, flags);
-	LogMessage("Flags: %s", flags);
 	// backwards loop
 	for (int i = strlen(flags)-1; i >= 0 ; i--)
 	{
-		LogMessage("Flags vor buffer: %s", flags[i]);
 		char buffer[2];
 		Format(buffer, sizeof(buffer), flags[i]);
-		LogMessage("Flags nach buffer: %s", buffer);
 
 		if (kvMenu.JumpToKey(buffer, false))
 		{
