@@ -95,9 +95,9 @@ bool gp_bChatProcessor = false;
 bool gp_bSimpleChatProcessor = false;
 bool gp_bBasecomm = false;
 bool gp_bSourceComms = false;
-bool g_bCMDCoolDown[MAXPLAYERS+1] = {false, ...};
 
 // Integers
+int g_iCMDCoolDown[MAXPLAYERS+1] = 0;
 int g_iWarden = -1;
 int g_iLastWarden = -1;
 int g_iTempWarden[MAXPLAYERS+1] = -1;
@@ -218,7 +218,7 @@ public void OnPluginStart()
 	gc_iCoolDownRemove = AutoExecConfig_CreateConVar("sm_warden_cooldown_remove", "3", "0 - disabled, rounds player can't become warden after he was vote out or removed by admin", _, true, 0.0);
 	gc_bStayWarden = AutoExecConfig_CreateConVar("sm_warden_stay", "1", "0 - disabled, 1 - enable warden stay after round end", _, true, 0.0, true, 1.0);
 	gc_bRemoveLR = AutoExecConfig_CreateConVar("sm_warden_remove_lr", "0", "0 - disabled, 1 - enable warden will be removed on last request", _, true, 0.0, true, 1.0);
-	gc_fCMDCooldown = AutoExecConfig_CreateConVar("sm_warden_cooldown_roundstart", "15.0", "Time in seconds a the warden of last round must wait until become warden again, to give other player chance to be warden (need sm_warden_stay '0')", _, true, 5.0);
+	gc_fCMDCooldown = AutoExecConfig_CreateConVar("sm_warden_cooldown_roundstart", "15.0", "Time in seconds a the warden of last round must wait until become warden again, to give other player chance to be warden (need sm_warden_stay '0')", _, true, 0.0);
 	gc_bBetterNotes = AutoExecConfig_CreateConVar("sm_warden_better_notifications", "1", "0 - disabled, 1 - Will use hint and center text", _, true, 0.0, true, 1.0);
 	gc_bModel = AutoExecConfig_CreateConVar("sm_warden_model", "1", "0 - disabled, 1 - enable warden model", 0, true, 0.0, true, 1.0);
 	gc_sModelPathWarden = AutoExecConfig_CreateConVar("sm_warden_model_path", "models/player/custom_player/legacy/security/security.mdl", "Path to the model for warden.");
@@ -524,7 +524,7 @@ public Action Command_BecomeWarden(int client, int args)
 		return Plugin_Handled;
 	}
 
-	if (g_bCMDCoolDown[client])
+	if (g_iCMDCoolDown[client] > GetTime())
 	{
 		CReplyToCommand(client, "%s %t", g_sPrefix, "warden_wait", RoundFloat(gc_fCMDCooldown.FloatValue));
 		return Plugin_Handled;
@@ -806,9 +806,7 @@ public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 
 		if (g_iLastWarden != -1 && GetAlivePlayersCount(CS_TEAM_CT) > 1 )
 		{
-			g_bCMDCoolDown[g_iLastWarden] = true;
-
-			CreateTimer(gc_fCMDCooldown.FloatValue, Timer_CMDCoolDown, g_iLastWarden);
+			g_iCMDCoolDown[g_iLastWarden] = GetTime() + RoundFloat(gc_fCMDCooldown.FloatValue);
 		}
 	}
 
@@ -1333,10 +1331,6 @@ public Action Timer_ChooseRandom(Handle timer)
 	return Plugin_Stop;
 }
 
-public Action Timer_CMDCoolDown(Handle timer, int client)
-{
-	g_bCMDCoolDown[client] = false;
-}
 
 /******************************************************************************
                    STOCKS
