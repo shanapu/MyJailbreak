@@ -243,7 +243,7 @@ void LoadPlayerTags(int client)
 		return;
 	}
 
-	KeyValues kvMenu = CreateKeyValues("PlayerTags");
+	KeyValues kvMenu = new KeyValues("PlayerTags");
 
 	if (!kvMenu.ImportFromFile(g_sConfigFile))
 	{
