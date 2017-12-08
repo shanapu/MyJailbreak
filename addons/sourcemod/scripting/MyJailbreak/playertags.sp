@@ -283,24 +283,19 @@ void LoadPlayerTags(int client)
 	}
 
 	// Check flags
-	char flags[32];
-	GetAdminFlagsEx(client, flags);
-	LogMessage("Flags: %s", flags);
+	char[] sFlags = "abcdefghijklnmopqrstz"; //Idk if it's required 'z' here
+
 	// backwards loop
-	for (int i = strlen(flags)-1; i >= 0 ; i--)
+	for (int i = strlen(sFlags)-1; i >= 0 ; i--)
 	{
-		LogMessage("Flags vor buffer: %s", flags[i]);
-		char buffer[2];
-		Format(buffer, sizeof(buffer), flags[i]);
-		LogMessage("Flags nach buffer: %s", buffer);
-
-		if (kvMenu.JumpToKey(buffer, false))
-		{
-			GetTags(client, kvMenu);
-
-			delete kvMenu;
-			return;
-		}
+		if (GetUserFlagBits(client) & ReadFlagString(sFlags[i]))
+			if (kvMenu.JumpToKey(sFlags[i]))
+			{
+				GetTags(client, kvMenu);
+				
+				delete kvMenu;
+				return;
+			}
 	}
 
 	// use the default tags
@@ -310,20 +305,6 @@ void LoadPlayerTags(int client)
 	}
 
 	delete kvMenu;
-}
-
-void GetAdminFlagsEx(int client, char[] buffer)
-{
-	AdminFlag flags[32];
-	int num = FlagBitsToArray(GetUserFlagBits(client), flags, sizeof(flags));
-	for(int i = 0; i < num; i++)
-	{
-		int flagchar;
-		FindFlagChar(flags[i], flagchar);
-		buffer[i] = flagchar;
-	}
-
-	buffer[num] = '\0';
 }
 
 void GetTags(int client, KeyValues kvMenu)
