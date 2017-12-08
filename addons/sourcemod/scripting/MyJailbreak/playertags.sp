@@ -283,7 +283,8 @@ void LoadPlayerTags(int client)
 	}
 
 	// Check groups
-	if ((AdminId admin = GetUserAdmin(int client)) != INVALID_ADMIN_ID)
+	AdminId admin = GetUserAdmin(client);
+	if (admin != INVALID_ADMIN_ID)
 	{
 		char sGroup[32];
 		admin.GetGroup(0, sGroup, sizeof(sGroup));
