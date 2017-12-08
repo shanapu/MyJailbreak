@@ -251,7 +251,7 @@ void LoadPlayerTags(int client)
 		return;
 	}
 
-	char steamid64[24];
+	char steamid[24];
 	if (!GetClientAuthId(client, AuthId_Steam2, steamid64, sizeof(steamid64)))
 	{
 		LogError("COULDN'T GET STEAMID of %L", client);
@@ -259,7 +259,7 @@ void LoadPlayerTags(int client)
 	}
 
 	// Check SteamID
-	if (kvMenu.JumpToKey(steamid64, false))
+	if (kvMenu.JumpToKey(steamid, false))
 	{
 		GetTags(client, kvMenu);
 
@@ -268,13 +268,13 @@ void LoadPlayerTags(int client)
 	}
 
 	// Check SteamID again with bad steam universe
-	if (StrContains(steamid64, "STEAM_0", false) != -1)
+	if (StrContains(steamid, "STEAM_0", false) != -1)
 	{
-		ReplaceString(steamid64, sizeof(steamid64), "STEAM_0", "STEAM_1", false);
+		ReplaceString(steamid, sizeof(steamid), "STEAM_0", "STEAM_1", false);
 	}
-	else ReplaceString(steamid64, sizeof(steamid64), "STEAM_1", "STEAM_0", false);
+	else ReplaceString(steamid, sizeof(steamid), "STEAM_1", "STEAM_0", false);
 
-	if (kvMenu.JumpToKey(steamid64, false))
+	if (kvMenu.JumpToKey(steamid, false))
 	{
 		GetTags(client, kvMenu);
 
