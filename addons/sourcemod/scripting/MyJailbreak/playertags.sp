@@ -252,7 +252,7 @@ void LoadPlayerTags(int client)
 	}
 
 	char steamid[24];
-	if (!GetClientAuthId(client, AuthId_Steam2, steamid64, sizeof(steamid64)))
+	if (!GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid)))
 	{
 		LogError("COULDN'T GET STEAMID of %L", client);
 		return;
@@ -282,6 +282,20 @@ void LoadPlayerTags(int client)
 		return;
 	}
 
+	// Check groups
+	if ((AdminId admin = GetUserAdmin(int client)) != INVALID_ADMIN_ID)
+	{
+		char sGroup[32];
+		admin.GetGroup(0, sGroup, sizeof(sGroup));
+		Format(sGroup, sizeof(sGroup), "@%s", sGroup);
+		
+		if (kvMenu.JumpToKey(sGroup))
+		{
+			GetTags(client, kvMenu);
+			return;
+		}
+	}
+	
 	// Check flags
 	char[] sFlags = "abcdefghijklnmopqrstz"; //Idk if it's required 'z' here
 
