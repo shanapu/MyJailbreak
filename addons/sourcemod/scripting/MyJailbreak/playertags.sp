@@ -193,7 +193,7 @@ public void Event_CheckTag(Event event, char[] name, bool dontBroadcast)
 
 public void OnClientPostAdminCheck(int client)
 {
-	CS_GetClientClanTag(client, g_sPlayerTag[client], sizeof(g_sPlayerTag));
+	CS_GetClientClanTag(client, g_sPlayerTag[client], sizeof(g_sPlayerTag[]));
 
 	// Search for matching tag in cfg
 	LoadPlayerTags(client);
