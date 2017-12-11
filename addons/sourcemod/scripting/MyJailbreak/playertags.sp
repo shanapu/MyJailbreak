@@ -82,7 +82,7 @@ enum g_eROLES
 char g_sConfigFile[64];
 char g_sChatTag[MAXPLAYERS + 1][g_eROLES][64];
 char g_sStatsTag[MAXPLAYERS + 1][g_eROLES][64];
-char g_sPlayerTag[MAXPLAYERS + 1];
+char g_sPlayerTag[MAXPLAYERS + 1][64];
 
 // Info
 public Plugin myinfo =
