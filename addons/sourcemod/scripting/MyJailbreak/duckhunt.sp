@@ -570,7 +570,7 @@ public Action Command_VoteDuckHunt(int client, int args)
 
 public Action Command_ToggleFly(int client, int args)
 {
-	if (!IsValidClient(i, true, false))
+	if (!IsValidClient(client, true, false))
 		return Plugin_Continue;
 
 	if (g_bIsDuckHunt && (GetClientTeam(client) == CS_TEAM_T) && gc_bFlyMode.BoolValue)
