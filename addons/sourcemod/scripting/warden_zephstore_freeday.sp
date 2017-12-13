@@ -1,5 +1,5 @@
 /*
- * MyJailbreak Warden - Zephyrus store PaperClips
+ * MyJailbreak Warden - Zephyrus store Freeday
  * by: shanapu
  * https://github.com/shanapu/MyJailbreak/
  * 
@@ -42,37 +42,27 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-// Integers
-int g_iRoundLimit[MAXPLAYERS+1] = {0,...};
-
 // ConVars
-ConVar gc_iRoundLimit;
-ConVar gc_iAmount;
 ConVar gc_sTag;
 
 // Info
 public Plugin myinfo = {
-	name = "MyJailbreak - Wardens Paperclips Support for Zephyrus Store",
+	name = "MyJailbreak - Wardens Freeday Support for Zephyrus Store",
 	author = "shanapu",
-	description = "Adds support for MyJB wardens paperclips to Zephyrus Store plugin",
+	description = "Adds support for MyJB wardens freeday to Zephyrus Store plugin",
 	version = MYJB_VERSION,
 	url = MYJB_URL_LINK
 };
 
 public void OnPluginStart()
 {
-	Store_RegisterHandler("paperclips", "", PaperClips_OnMapStart, PaperClips_Reset, PaperClips_Config, PaperClips_Equip, PaperClips_Remove, false);
+	Store_RegisterHandler("freeday", "", Freeday_OnMapStart, Freeday_Reset, Freeday_Config, Freeday_Equip, Freeday_Remove, false);
 
 	AutoExecConfig_SetFile("plugin.store");
 	AutoExecConfig_SetCreateFile(true);
 
-	gc_iRoundLimit = AutoExecConfig_CreateConVar("sm_store_paperclips_round_limit", "1", "Number of times you can buy paperclips in a round", _, true, 1.0);
-	gc_iAmount = AutoExecConfig_CreateConVar("sm_store_paperclips_amount", "2", "Number of paperclips you get", _, true, 1.0);
-
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
-
-	HookEvent("round_start", Event_RoundStart);
 }
 
 public void OnConfigsExecuted()
@@ -80,50 +70,33 @@ public void OnConfigsExecuted()
 	gc_sTag = FindConVar("sm_store_chat_tag");
 }
 
-public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
-{
-	for (int i = 1; i <= MaxClients; i++)
-	{
-		if (!IsClientInGame(i))
-			continue;
 
-		g_iRoundLimit[i] = 0;
-	}
-}
-
-public void PaperClips_OnMapStart()
+public void Freeday_OnMapStart()
 {
 }
 
-public void PaperClips_Reset()
+public void Freeday_Reset()
 {
 }
 
-public int PaperClips_Config(Handle kv, int itemid)
+public int Freeday_Config(Handle kv, int itemid)
 {
 	Store_SetDataIndex(itemid, 0);
 
 	return true;
 }
 
-public int PaperClips_Equip(int client, int id)
+public int Freeday_Equip(int client, int id)
 {
 	char sTag[64];
 	gc_sTag.GetString(sTag, sizeof(sTag));
 
-	if (g_iRoundLimit[client] >= gc_iRoundLimit.IntValue)
-	{
-		CPrintToChat(client, "%s You have reached the maximum amount of paperclips you can buy this round.", sTag);
-		return 1;
-	}
+	warden_freeday_set(client);
 
-	warden_handcuffs_givepaperclip(client, gc_iAmount.IntValue);
-
-	++g_iRoundLimit[client];
 	return 0;
 }
 
-public int PaperClips_Remove(int client)
+public int Freeday_Remove(int client)
 {
 	return 0;
 }
