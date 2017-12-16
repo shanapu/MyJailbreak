@@ -268,11 +268,7 @@ void LoadPlayerTags(int client)
 	}
 
 	// Check SteamID again with bad steam universe
-	if (StrContains(steamid, "STEAM_0", false) != -1)
-	{
-		ReplaceString(steamid, sizeof(steamid), "STEAM_0", "STEAM_1", false);
-	}
-	else ReplaceString(steamid, sizeof(steamid), "STEAM_1", "STEAM_0", false);
+	steamid[6] = '0';
 
 	if (kvMenu.JumpToKey(steamid, false))
 	{
