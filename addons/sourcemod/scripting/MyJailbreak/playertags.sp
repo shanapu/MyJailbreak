@@ -193,7 +193,7 @@ public void Event_CheckTag(Event event, char[] name, bool dontBroadcast)
 
 public void OnClientPostAdminCheck(int client)
 {
-	CS_GetClientClanTag(client, g_sPlayerTag[client], sizeof(g_sPlayerTag));
+	CS_GetClientClanTag(client, g_sPlayerTag[client], sizeof(g_sPlayerTag[]));
 
 	// Search for matching tag in cfg
 	LoadPlayerTags(client);
@@ -251,15 +251,15 @@ void LoadPlayerTags(int client)
 		return;
 	}
 
-	char steamid64[24];
-	if (!GetClientAuthId(client, AuthId_Steam2, steamid64, sizeof(steamid64)))
+	char steamid[24];
+	if (!GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid)))
 	{
 		LogError("COULDN'T GET STEAMID of %L", client);
 		return;
 	}
 
 	// Check SteamID
-	if (kvMenu.JumpToKey(steamid64, false))
+	if (kvMenu.JumpToKey(steamid, false))
 	{
 		GetTags(client, kvMenu);
 
@@ -268,13 +268,9 @@ void LoadPlayerTags(int client)
 	}
 
 	// Check SteamID again with bad steam universe
-	if (StrContains(steamid64, "STEAM_0", false) != -1)
-	{
-		ReplaceString(steamid64, sizeof(steamid64), "STEAM_0", "STEAM_1", false);
-	}
-	else ReplaceString(steamid64, sizeof(steamid64), "STEAM_1", "STEAM_0", false);
+	steamid[6] = '0';
 
-	if (kvMenu.JumpToKey(steamid64, false))
+	if (kvMenu.JumpToKey(steamid, false))
 	{
 		GetTags(client, kvMenu);
 
@@ -282,21 +278,39 @@ void LoadPlayerTags(int client)
 		return;
 	}
 
-	// Check flags
-	char flags[32];
-	GetAdminFlagsEx(client, flags);
-	// backwards loop
-	for (int i = strlen(flags)-1; i >= 0 ; i--)
+	// Check groups
+	AdminId admin = GetUserAdmin(client);
+	if (admin != INVALID_ADMIN_ID)
 	{
-		char buffer[2];
-		Format(buffer, sizeof(buffer), flags[i]);
-
-		if (kvMenu.JumpToKey(buffer, false))
+		char sGroup[32];
+		admin.GetGroup(0, sGroup, sizeof(sGroup));
+		Format(sGroup, sizeof(sGroup), "@%s", sGroup);
+		
+		if (kvMenu.JumpToKey(sGroup))
 		{
 			GetTags(client, kvMenu);
-
-			delete kvMenu;
 			return;
+		}
+	}
+	
+	// Check flags
+	char sFlags[21] = "abcdefghijklmnopqrstz";
+
+	// backwards loop
+	for (int i = sizeof(sFlags)-1; i >= 0; i--)
+	{
+		char sFlag[1];
+		sFlag[0] = sFlags[i]; //Get only one char
+		
+		if (ReadFlagString(sFlag) & GetUserFlagBits(client))
+		{
+			if (kvMenu.JumpToKey(sFlag))
+			{
+				GetTags(client, kvMenu);
+				
+				delete kvMenu;
+				return;
+			}
 		}
 	}
 
@@ -307,20 +321,6 @@ void LoadPlayerTags(int client)
 	}
 
 	delete kvMenu;
-}
-
-void GetAdminFlagsEx(int client, char[] buffer)
-{
-	AdminFlag flags[32];
-	int num = FlagBitsToArray(GetUserFlagBits(client), flags, sizeof(flags));
-	for(int i = 0; i < num; i++)
-	{
-		int flagchar;
-		FindFlagChar(flags[i], flagchar);
-		buffer[i] = flagchar;
-	}
-
-	buffer[num] = '\0';
 }
 
 void GetTags(int client, KeyValues kvMenu)
