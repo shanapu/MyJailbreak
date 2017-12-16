@@ -294,19 +294,24 @@ void LoadPlayerTags(int client)
 	}
 	
 	// Check flags
-	char[] sFlags = "abcdefghijklnmopqrstz"; //Idk if it's required 'z' here
+	char sFlags[21] = "abcdefghijklmnopqrstz";
 
 	// backwards loop
-	for (int i = strlen(sFlags)-1; i >= 0 ; i--)
+	for (int i = sizeof(sFlags)-1; i >= 0; i--)
 	{
-		if (GetUserFlagBits(client) & ReadFlagString(sFlags[i]))
-			if (kvMenu.JumpToKey(sFlags[i]))
+		char sFlag[1];
+		sFlag[0] = sFlags[i]; //Get only one char
+		
+		if (ReadFlagString(sFlag) & GetUserFlagBits(client))
+		{
+			if (kvMenu.JumpToKey(sFlag))
 			{
 				GetTags(client, kvMenu);
 				
 				delete kvMenu;
 				return;
 			}
+		}
 	}
 
 	// use the default tags
