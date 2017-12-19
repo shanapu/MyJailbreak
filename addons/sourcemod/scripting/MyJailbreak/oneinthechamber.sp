@@ -834,7 +834,7 @@ public Action OnWeaponDrop(int client, int weapon)
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &weapon, float damageForce[3], float damagePosition[3], int damagecustom)
 {
-	if (!g_bIsOITC)
+	if (!g_bIsOITC || weapon == -1)
 		return Plugin_Continue;
 
 	if (damagetype & DMG_BULLET || damagetype & DMG_SLASH)
