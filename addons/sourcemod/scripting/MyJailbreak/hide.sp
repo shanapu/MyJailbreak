@@ -795,7 +795,7 @@ public void OnClientPutInServer(int client)
 
 public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
 {
-	if (g_bIsHide && g_iTruceTime > 0)
+	if (g_bIsHide && g_iFreezeTime > 0)
 	{
 		if (buttons & IN_ATTACK)
 		{

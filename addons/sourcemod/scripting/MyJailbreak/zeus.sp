@@ -722,7 +722,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 			buttons &= ~IN_ATTACK2;
 		}
 	}
-	
+}
 	
 	
 public void MyJailbreak_ResetEventDay()
