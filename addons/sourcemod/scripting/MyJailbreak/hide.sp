@@ -640,6 +640,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 
 		delete g_hTimerBeacon;
 		delete g_hTimerFreeze;
+		g_iFreezeTime = gc_iFreezeTime.IntValue;
 
 		int winner = event.GetInt("winner");
 		if (winner == 2)
@@ -792,6 +793,24 @@ public void OnClientPutInServer(int client)
 	SDKHook(client, SDKHook_OnTakeDamage, Hook_OnTakeDamage);
 }
 
+public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
+{
+	if (g_bIsHide && g_iTruceTime > 0)
+	{
+		if (buttons & IN_ATTACK)
+		{
+			buttons &= ~IN_ATTACK;
+		}
+
+		if (buttons & IN_ATTACK2)
+		{
+			buttons &= ~IN_ATTACK2;
+		}
+	}
+	
+	return Plugin_Continue;
+}
+
 // Knife only for Terrorists
 public Action OnWeaponCanUse(int client, int weapon)
 {
@@ -863,6 +882,7 @@ void ResetEventDay()
 
 	delete g_hTimerFreeze;
 	delete g_hTimerBeacon;
+	g_iFreezeTime = gc_iFreezeTime.IntValue;
 
 	if (g_iRound == g_iMaxRound)
 	{
@@ -1145,10 +1165,10 @@ void CreateInfoPanel(int client)
 // Start Timer
 public Action Timer_StartEvent(Handle timer)
 {
+	g_iFreezeTime--;
+	
 	if (g_iFreezeTime > 0)
 	{
-		g_iFreezeTime--;
-
 		if (g_iFreezeTime == gc_iFreezeTime.IntValue-3)
 		{
 			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
@@ -1174,8 +1194,6 @@ public Action Timer_StartEvent(Handle timer)
 
 		return Plugin_Continue;
 	}
-
-	g_iFreezeTime = gc_iFreezeTime.IntValue;
 
 	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
 	{

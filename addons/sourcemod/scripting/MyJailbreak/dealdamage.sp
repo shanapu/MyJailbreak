@@ -706,6 +706,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 
 		delete g_hTimerTruce; // kill start time if still running
 		delete g_hTimerBeacon;
+		g_iTruceTime = gc_iTruceTime.IntValue;
 
 		int winner = event.GetInt("winner");
 		if (winner == 2)
@@ -832,6 +833,24 @@ public void OnMapEnd()
 	g_sHasVoted[0] = '\0';
 }
 
+public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
+{
+	if (g_bIsDealDamage && g_iTruceTime > 0)
+	{
+		if (buttons & IN_ATTACK)
+		{
+			buttons &= ~IN_ATTACK;
+		}
+
+		if (buttons & IN_ATTACK2)
+		{
+			buttons &= ~IN_ATTACK2;
+		}
+	}
+	
+	return Plugin_Continue;
+}
+
 public void MyJailbreak_ResetEventDay()
 {
 	g_bStartDealDamage = false;
@@ -869,6 +888,7 @@ void ResetEventDay()
 
 	delete g_hTimerTruce; // kill start time if still running
 	delete g_hTimerBeacon;
+	g_iTruceTime = gc_iTruceTime.IntValue;
 
 	// return to default start values
 	g_bIsDealDamage = false;
@@ -1274,10 +1294,10 @@ void SendResults(int client)
 // Start Timer
 public Action Timer_StartEvent(Handle timer)
 {
+	g_iTruceTime--;
+
 	if (g_iTruceTime > 0) // countdown to start
 	{
-		g_iTruceTime--;
-
 		if (g_iTruceTime == gc_iTruceTime.IntValue-3)
 		{
 			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
@@ -1290,9 +1310,6 @@ public Action Timer_StartEvent(Handle timer)
 
 		return Plugin_Continue;
 	}
-
-	g_iTruceTime = gc_iTruceTime.IntValue;
-
 
 	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
 	{

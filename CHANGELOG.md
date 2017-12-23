@@ -1,6 +1,36 @@
 ### Change Log
   
   
+**[Beta 13.dev]** - Tags & Prefixs to configs,
+  
+    
+*Added*
+  
+  
+*Changed*
+*  All Plugins: moved the plugins chat prefix e.g. [MyJB.Tag] from translation to plugins .cfg
+    *  new cvars - sm_PLUGINNAME_prefix - Set your chat prefix for this plugin.
+*  PlayerTags: Plugin rewritten. Suport admin groups & providing support for TogsClanTags, CCC & ZstoreTags. moved the player chat tags e.g. [Warden] from translation and to new cfg
+    *  new config - sourcemod/configs/MyJailbreak/player_tags.cfg check comments in this cfg for configuration
+    *  removed cvars - sm_playertag_ROLEflag - All cvars to set player tags are removed. check new config file.
+    *  new cvar - sm_playertag_extern - 0 - disabled, 1 - don't overwrite chat tags given by extern plugins like ccc, togsclantags or zephyrus store
+    *  changed cvar - sm_playertag_overwrite - 0 - if no tag is set in config clear the tag (show nothing) / 1 - if no tag is set in config show players steam group tag
+*  Warden: Set minimum value of sm_warden_cooldown_roundstart to 0
+*  Freeday: Remove teleport to CT spawn
+*  EventDays: restrict weapon shooting while truce/freeze-time
+*  Add-On: Support for adding freeday to Zephyrus store
+    *  new plugin - disabled/warden_zephstore_freeday.smx
+		"FreeDay"
+		{
+			"price" "800"
+			"type" "freeday"
+		}
+  
+  
+  *Fixed*
+*  minor error
+  
+  
 **[Beta 13]** - New Events, new features & many changes
   
 *Thanks* 

@@ -648,6 +648,7 @@ public void Event_RoundEnd_Pre(Event event, char[] name, bool dontBroadcast)
 		delete g_hTimerFreeze;
 		delete g_hTimerBeacon;
 		delete g_hTimerRegen;
+		g_iFreezeTime = gc_iFreezeTime.IntValue;
 
 		int winner = event.GetInt("winner");
 		if (winner == 2)
@@ -907,6 +908,7 @@ void ResetEventDay()
 	delete g_hTimerFreeze;
 	delete g_hTimerBeacon;
 	delete g_hTimerRegen;
+	g_iFreezeTime = gc_iFreezeTime.IntValue;
 
 	if (g_iRound == g_iMaxRound)
 	{
@@ -1312,10 +1314,10 @@ void CreateInfoPanel(int client)
 // Start Timer
 public Action Timer_StartEvent(Handle timer)
 {
+	g_iFreezeTime--;
+
 	if (g_iFreezeTime > 0)
 	{
-		g_iFreezeTime--;
-		
 		if (g_iFreezeTime == gc_iFreezeTime.IntValue-3)
 		{
 			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
@@ -1341,9 +1343,6 @@ public Action Timer_StartEvent(Handle timer)
 
 		return Plugin_Continue;
 	}
-
-	g_iFreezeTime = gc_iFreezeTime.IntValue;
-
 
 	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
 	{

@@ -580,6 +580,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 		delete g_hTimerWiggle;
 		delete g_hTimerBeacon;
 		delete g_hTimerTruce; // kill start time if still running
+		g_iTruceTime = gc_iTruceTime.IntValue;
 
 		int winner = event.GetInt("winner");
 		if (winner == 2)
@@ -735,6 +736,7 @@ void ResetEventDay()
 	delete g_hTimerWiggle;
 	delete g_hTimerBeacon;
 	delete g_hTimerTruce; // kill start time if still running
+	g_iTruceTime = gc_iTruceTime.IntValue;
 
 	if (g_iRound == g_iMaxRound) // if this was the last round
 	{
@@ -987,6 +989,19 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 			}
 		}
 
+		if (g_iTruceTime > 0)
+		{
+			if (buttons & IN_ATTACK)
+			{
+				buttons &= ~IN_ATTACK;
+			}
+
+			if (buttons & IN_ATTACK2)
+			{
+				buttons &= ~IN_ATTACK2;
+			}
+		}
+
 		return Plugin_Changed;
 	}
 
@@ -1038,10 +1053,10 @@ void CreateInfoPanel(int client)
 // Start Timer
 public Action Timer_StartEvent(Handle timer)
 {
+	g_iTruceTime--;
+	
 	if (g_iTruceTime > 0) // countdown to start
 	{
-		g_iTruceTime--;
-
 		if (g_iTruceTime == gc_iTruceTime.IntValue-3)
 		{
 			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
@@ -1054,9 +1069,6 @@ public Action Timer_StartEvent(Handle timer)
 
 		return Plugin_Continue;
 	}
-
-	g_iTruceTime = gc_iTruceTime.IntValue;
-
 
 	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
 	{
