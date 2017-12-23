@@ -99,9 +99,6 @@ char g_sHasVoted[1500];
 char g_sEventsLogFile[PLATFORM_MAX_PATH];
 char g_sAdminFlag[64];
 
-// Floats
-float g_fPos[3];
-
 // Info
 public Plugin myinfo =
 {
@@ -716,8 +713,10 @@ void PrepareDay()
 		SJD_OpenDoors();
 	}
 
+/*
 	if (!gp_bSmartJailDoors || (gp_bSmartJailDoors && (SJD_IsCurrentMapConfigured() != true))) // spawn Terrors to CT Spawn 
 	{
+		float g_fPos[3];
 		int RandomCT = 0;
 		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 		{
@@ -740,7 +739,7 @@ void PrepareDay()
 			}
 		}
 	}
-
+*/
 	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 	{
 		CreateInfoPanel(i);
