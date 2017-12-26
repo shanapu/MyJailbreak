@@ -33,12 +33,12 @@
 #include <autoexecconfig>
 #include <mystocks>
 #include <myjailbreak>
-#include <hosties>
-#include <lastrequest>
 
 // Optional Plugins
 #undef REQUIRE_PLUGIN
 #include <myjbwarden>
+#include <hosties>
+#include <lastrequest>
 #define REQUIRE_PLUGIN
 
 // Compiler Options
@@ -61,6 +61,7 @@ TG_Team TGTeam[MAXPLAYERS+1];
 // Booleans
 bool g_bIsLateLoad = false;
 bool gp_bMyJBWarden = false;
+bool gp_bHosties = false;
 
 // Console Variables
 ConVar gc_bPlugin;
@@ -133,6 +134,7 @@ public void OnPluginStart()
 public void OnAllPluginsLoaded()
 {
 	gp_bMyJBWarden = LibraryExists("myjbwarden");
+	gp_bHosties = LibraryExists("lastrequest");
 }
 
 
@@ -140,12 +142,16 @@ public void OnLibraryRemoved(const char[] name)
 {
 	if (StrEqual(name, "myjbwarden"))
 		gp_bMyJBWarden = false;
+	else if (StrEqual(name, "lastrequest"))
+		gp_bHosties = false;
 }
 
 public void OnLibraryAdded(const char[] name)
 {
 	if (StrEqual(name, "myjbwarden"))
 		gp_bMyJBWarden = true;
+	else if (StrEqual(name, "lastrequest"))
+		gp_bHosties = true;
 }
 
 // ConVarChange for Strings
@@ -294,71 +300,74 @@ void ShowHUD()
 	char EventDay[64];
 	MyJailbreak_GetEventDayName(EventDay);
 	
-	if (gc_bPlugin.BoolValue)
+	if (!gc_bPlugin.BoolValue)
+		return;
+
+	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, gc_bAlive.BoolValue))
 	{
-		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, gc_bAlive.BoolValue))
+		if (!g_bEnableHud[i])
+			continue;
+		
+		if (gp_bHosties && IsClientInLastRequest(i))
+			continue;
+
+		ConVar cv_TGNotification = FindConVar("tg_team_notification");
+		
+		if (cv_TGNotification != null && (cv_TGNotification.IntValue == 1 || cv_TGNotification.IntValue == 2))
 		{
-			if (g_bEnableHud[i] && !IsClientInLastRequest(i))
+			if ((TGTeam[i] == TG_RedTeam) || (TGTeam[i] == TG_BlueTeam))
+				return;
+		}
+
+		if (MyJailbreak_IsLastGuardRule())
+		{
+			if (iLastCT != -1)
 			{
-				ConVar cv_TGNotification = FindConVar("tg_team_notification");
-				
-				if (cv_TGNotification != null && (cv_TGNotification.IntValue == 1 || cv_TGNotification.IntValue == 2))
+				if (MyJailbreak_IsEventDayPlanned())
 				{
-					if ((TGTeam[i] == TG_RedTeam) || (TGTeam[i] == TG_BlueTeam))
-						return;
-				}
-	
-				if (MyJailbreak_IsLastGuardRule())
-				{
-					if (iLastCT != -1)
-					{
-						if (MyJailbreak_IsEventDayPlanned())
-						{
-							PrintHintText(i, "<font face='Arial' color='#006699'>%t </font>%s</font>\n<font face='Arial' color='#B980EF'>%t</font> %s\n<font color='#5E97D8'>%t</font> %i/%i\t<font color='#E3AD39'>%t</font> %i/%i\n", "hud_lastCT", sLastCT, "hud_planned", EventDay, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
-						}
-						else
-						{
-							PrintHintText(i, "<font face='Arial' color='#006699'>%t </font>%s</font>\n<font color='#5E97D8'>%t</font> %i/%i\t<font color='#E3AD39'>%t</font> %i/%i\n", "hud_lastCT", sLastCT, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
-						}
-					}
-				}
-				else if (MyJailbreak_IsEventDayRunning())
-				{
-					PrintHintText(i, "<font face='Arial' color='#B980EF'>%t </font>%s\n<font color='#5E97D8'>%t</font> %i/%i\t<font color='#E3AD39'>%t</font> %i/%i\n", "hud_running", EventDay, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
-				}
-				else if (gp_bMyJBWarden && warden == -1)
-				{
-					if (MyJailbreak_IsEventDayPlanned())
-					{
-						PrintHintText(i, "<font face='Arial' color='#006699'>%t </font><font face='Arial' color='#FE4040'>%t</font>\n<font color='#B980EF'>%t</font> %s\n<font color='#5E97D8'>%t</font> %i/%i\t<font color='#E3AD39'>%t</font> %i/%i", "hud_warden", "hud_nowarden", "hud_planned", EventDay, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
-					}
-					else
-					{
-						PrintHintText(i, "<font face='Arial' color='#006699'>%t </font><font face='Arial' color='#FE4040'>%t</font>\n<font color='#5E97D8'>%t</font> %i/%i\t<font color='#E3AD39'>%t</font> %i/%i\n", "hud_warden", "hud_nowarden", "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
-					}
-				}
-				else if (gp_bMyJBWarden)
-				{
-					if (MyJailbreak_IsEventDayPlanned())
-					{
-						PrintHintText(i, "<font face='Arial' color='#006699'>%t </font>%s\n<font face='Arial' color='#B980EF'>%t</font> %s\n<font color='#5E97D8'>%t</font> %i/%i\t<font color='#E3AD39'>%t</font> %i/%i\n", "hud_warden", sWarden, "hud_planned", EventDay, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
-					}
-					else
-					{
-						PrintHintText(i, "<font face='Arial' color='#006699'>%t </font>%s\n<font color='#5E97D8'>%t</font> %i/%i\t<font color='#E3AD39'>%t</font> %i/%i\n", "hud_warden", sWarden, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
-					}
+					PrintHintText(i, "<font face='Arial' color='#006699'>%t </font>%s</font>\n<font face='Arial' color='#B980EF'>%t</font> %s\n<font color='#5E97D8'>%t</font> %i/%i\t<font color='#E3AD39'>%t</font> %i/%i\n", "hud_lastCT", sLastCT, "hud_planned", EventDay, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
 				}
 				else
 				{
-					if (MyJailbreak_IsEventDayPlanned())
-					{
-						PrintHintText(i, "<font face='Arial' color='#B980EF'>%t</font> %s\n<font color='#5E97D8'>%t</font> %i/%i\t<font color='#E3AD39'>%t</font> %i/%i\n", "hud_planned", EventDay, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
-					}
-					else
-					{
-						PrintHintText(i, "<font color='#5E97D8'>%t</font> %i/%i\t<font color='#E3AD39'>%t</font> %i/%i\n", "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
-					}
+					PrintHintText(i, "<font face='Arial' color='#006699'>%t </font>%s</font>\n<font color='#5E97D8'>%t</font> %i/%i\t<font color='#E3AD39'>%t</font> %i/%i\n", "hud_lastCT", sLastCT, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
 				}
+			}
+		}
+		else if (MyJailbreak_IsEventDayRunning())
+		{
+			PrintHintText(i, "<font face='Arial' color='#B980EF'>%t </font>%s\n<font color='#5E97D8'>%t</font> %i/%i\t<font color='#E3AD39'>%t</font> %i/%i\n", "hud_running", EventDay, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
+		}
+		else if (gp_bMyJBWarden && warden == -1)
+		{
+			if (MyJailbreak_IsEventDayPlanned())
+			{
+				PrintHintText(i, "<font face='Arial' color='#006699'>%t </font><font face='Arial' color='#FE4040'>%t</font>\n<font color='#B980EF'>%t</font> %s\n<font color='#5E97D8'>%t</font> %i/%i\t<font color='#E3AD39'>%t</font> %i/%i", "hud_warden", "hud_nowarden", "hud_planned", EventDay, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
+			}
+			else
+			{
+				PrintHintText(i, "<font face='Arial' color='#006699'>%t </font><font face='Arial' color='#FE4040'>%t</font>\n<font color='#5E97D8'>%t</font> %i/%i\t<font color='#E3AD39'>%t</font> %i/%i\n", "hud_warden", "hud_nowarden", "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
+			}
+		}
+		else if (gp_bMyJBWarden)
+		{
+			if (MyJailbreak_IsEventDayPlanned())
+			{
+				PrintHintText(i, "<font face='Arial' color='#006699'>%t </font>%s\n<font face='Arial' color='#B980EF'>%t</font> %s\n<font color='#5E97D8'>%t</font> %i/%i\t<font color='#E3AD39'>%t</font> %i/%i\n", "hud_warden", sWarden, "hud_planned", EventDay, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
+			}
+			else
+			{
+				PrintHintText(i, "<font face='Arial' color='#006699'>%t </font>%s\n<font color='#5E97D8'>%t</font> %i/%i\t<font color='#E3AD39'>%t</font> %i/%i\n", "hud_warden", sWarden, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
+			}
+		}
+		else
+		{
+			if (MyJailbreak_IsEventDayPlanned())
+			{
+				PrintHintText(i, "<font face='Arial' color='#B980EF'>%t</font> %s\n<font color='#5E97D8'>%t</font> %i/%i\t<font color='#E3AD39'>%t</font> %i/%i\n", "hud_planned", EventDay, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
+			}
+			else
+			{
+				PrintHintText(i, "<font color='#5E97D8'>%t</font> %i/%i\t<font color='#E3AD39'>%t</font> %i/%i\n", "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
 			}
 		}
 	}
