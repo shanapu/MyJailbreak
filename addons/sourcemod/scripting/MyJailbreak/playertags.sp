@@ -94,6 +94,13 @@ public Plugin myinfo =
 	url = MYJB_URL_LINK
 }
 
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+	MarkNativeAsOptional("Store_GetEquippedItem");
+	
+	return APLRes_Success;
+}
+
 // Start
 public void OnPluginStart()
 {
@@ -439,9 +446,9 @@ public Action CP_OnChatMessage(int &client, ArrayList recipients, char[] flagstr
 
 	if (gp_bStore && !gc_bExtern.BoolValue)
 	{
-		if (Store_GetEquippedItem(client, "nametag") < 0 && 
-			Store_GetEquippedItem(client, "namecolor") < 0 && 
-			Store_GetEquippedItem(client, "msgcolor") < 0)
+		if (Store_GetEquippedItem(client, "nametag") >= 0 && 
+			Store_GetEquippedItem(client, "namecolor") >= 0 && 
+			Store_GetEquippedItem(client, "msgcolor") >= 0)
 			return Plugin_Continue;
 	}
 
@@ -534,9 +541,9 @@ public Action OnChatMessage(int &client, Handle recipients, char[] name, char[] 
 
 	if (gp_bStore && !gc_bExtern.BoolValue)
 	{
-		if (Store_GetEquippedItem(client, "nametag") < 0 && 
-			Store_GetEquippedItem(client, "namecolor") < 0 && 
-			Store_GetEquippedItem(client, "msgcolor") < 0)
+		if (Store_GetEquippedItem(client, "nametag") >= 0 && 
+			Store_GetEquippedItem(client, "namecolor") >= 0 && 
+			Store_GetEquippedItem(client, "msgcolor") >= 0)
 			return Plugin_Continue;
 	}
 
