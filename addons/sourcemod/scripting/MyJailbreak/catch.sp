@@ -416,11 +416,17 @@ public void OnConfigsExecuted()
 		}
 	}
 
+	if (!gp_bMyJailbreak)
+		return;
+
 	MyJailbreak_AddEventDay("catch");
 }
 
 public void OnPluginEnd()
 {
+	if (!gp_bMyJailbreak)
+		return;
+
 	MyJailbreak_RemoveEventDay("catch");
 }
 
@@ -695,7 +701,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 
 			g_iSprintStatus[i] = 0;
 			g_bCatched[i] = false;
-
+			
 			if (GetClientTeam(i) == CS_TEAM_T)
 			{
 				StripAllPlayerWeapons(i);
@@ -801,7 +807,7 @@ public void OnMapStart()
 	{
 		PrecacheDecalAnyDownload(g_sOverlayFreeze);
 	}
-
+	
 	PrecacheSound("player/suit_sprint.wav", true);
 }
 
@@ -1240,7 +1246,7 @@ void FreeEm(int client, int attacker)
 	{
 		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) EmitSoundToAllAny(g_sSoundUnFreezePath);
 	}
-
+	
 	CPrintToChatAll("%s %t", g_sPrefix, "catch_unfreeze", attacker, client);
 }
 
