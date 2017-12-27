@@ -86,3 +86,5 @@ addons/sourcemod/scripting/include/version_auto.inc
 addons/sourcemod/scripting/funcommands.sp
 addons/sourcemod/scripting/funcommands/
 *.lnk
+
+addons/sourcemod/scripting/include/sdktools_variant_t\.inc
