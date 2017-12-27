@@ -143,34 +143,34 @@ public void Mute_OnConfigsExecuted()
 
 public Action Command_UnMuteMenu(int client, any args)
 {
-	if (gc_bPlugin.BoolValue)
+	if (!gc_bPlugin.BoolValue || !g_bEnabled || !gc_bMute.BoolValue)
+		return Plugin_Handled;
+
+	if ((IsClientWarden(client) || (IsClientDeputy(client) && gc_bMuteDeputy.BoolValue)) && gc_bMute.BoolValue)
 	{
-		if ((IsClientWarden(client) || (IsClientDeputy(client) && gc_bMuteDeputy.BoolValue)) && gc_bMute.BoolValue)
+		char info1[255];
+		Menu menu4 = CreateMenu(Handler_UnMuteMenu);
+
+		Format(info1, sizeof(info1), "%T", "warden_choose", client);
+		menu4.SetTitle(info1);
+
+		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true))
 		{
-			char info1[255];
-			Menu menu4 = CreateMenu(Handler_UnMuteMenu);
-
-			Format(info1, sizeof(info1), "%T", "warden_choose", client);
-			menu4.SetTitle(info1);
-
-			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true))
+			if (GetClientTeam(i) != CS_TEAM_CT && g_bIsMuted[i])
 			{
-				if (GetClientTeam(i) != CS_TEAM_CT && g_bIsMuted[i])
-				{
-					char userid[11];
-					char username[MAX_NAME_LENGTH];
-					IntToString(GetClientUserId(i), userid, sizeof(userid));
-					Format(username, sizeof(username), "%N", i);
-					menu4.AddItem(userid, username);
-				}
+				char userid[11];
+				char username[MAX_NAME_LENGTH];
+				IntToString(GetClientUserId(i), userid, sizeof(userid));
+				Format(username, sizeof(username), "%N", i);
+				menu4.AddItem(userid, username);
 			}
-			
-			menu4.ExitBackButton = true;
-			menu4.ExitButton = true;
-			menu4.Display(client, MENU_TIME_FOREVER);
 		}
-		else CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
+		
+		menu4.ExitBackButton = true;
+		menu4.ExitButton = true;
+		menu4.Display(client, MENU_TIME_FOREVER);
 	}
+	else CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
 
 	return Plugin_Handled;
 }
@@ -178,30 +178,31 @@ public Action Command_UnMuteMenu(int client, any args)
 
 public Action Command_MuteMenu(int client, int args)
 {
-	if (gc_bMute.BoolValue) 
+
+	if (!gc_bPlugin.BoolValue || !g_bEnabled || gc_bMute.BoolValue)
+		return Plugin_Handled;
+
+	if ((IsClientWarden(client) || (IsClientDeputy(client) && gc_bMuteDeputy.BoolValue)) && gc_bMute.BoolValue)
 	{
-		if ((IsClientWarden(client) || (IsClientDeputy(client) && gc_bMuteDeputy.BoolValue)) && gc_bMute.BoolValue)
-		{
-			char info[255];
-			Menu menu1 = CreateMenu(Handler_MuteMenu);
+		char info[255];
+		Menu menu1 = CreateMenu(Handler_MuteMenu);
 
-			Format(info, sizeof(info), "%T", "warden_mute_title", client);
-			menu1.SetTitle(info);
-			Format(info, sizeof(info), "%T", "warden_menu_mute", client);
-			menu1.AddItem("0", info);
-			Format(info, sizeof(info), "%T", "warden_menu_unmute", client);
-			menu1.AddItem("1", info);
-			Format(info, sizeof(info), "%T", "warden_menu_muteall", client);
-			menu1.AddItem("2", info);
-			Format(info, sizeof(info), "%T", "warden_menu_unmuteall", client);
-			menu1.AddItem("3", info);
+		Format(info, sizeof(info), "%T", "warden_mute_title", client);
+		menu1.SetTitle(info);
+		Format(info, sizeof(info), "%T", "warden_menu_mute", client);
+		menu1.AddItem("0", info);
+		Format(info, sizeof(info), "%T", "warden_menu_unmute", client);
+		menu1.AddItem("1", info);
+		Format(info, sizeof(info), "%T", "warden_menu_muteall", client);
+		menu1.AddItem("2", info);
+		Format(info, sizeof(info), "%T", "warden_menu_unmuteall", client);
+		menu1.AddItem("3", info);
 
-			menu1.ExitBackButton = true;
-			menu1.ExitButton = true;
-			menu1.Display(client, MENU_TIME_FOREVER);
-		}
-		else CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
+		menu1.ExitBackButton = true;
+		menu1.ExitButton = true;
+		menu1.Display(client, MENU_TIME_FOREVER);
 	}
+	else CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
 
 	return Plugin_Handled;
 }
@@ -367,34 +368,34 @@ public void UnMuteClient(any client, int unmuter)
 
 public Action MuteMenuPlayer(int client, int args)
 {
-	if (gc_bPlugin.BoolValue)
+	if (!gc_bPlugin.BoolValue || !g_bEnabled || gc_bMute.BoolValue)
+		return Plugin_Handled;
+
+	if ((IsClientWarden(client) || (IsClientDeputy(client) && gc_bMuteDeputy.BoolValue)) && gc_bMute.BoolValue)
 	{
-		if ((IsClientWarden(client) || (IsClientDeputy(client) && gc_bMuteDeputy.BoolValue)) && gc_bMute.BoolValue)
+		char info1[255];
+		Menu menu5 = CreateMenu(Handler_MuteMenuPlayer);
+
+		Format(info1, sizeof(info1), "%T", "warden_choose", client);
+		menu5.SetTitle(info1);
+
+		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true))
 		{
-			char info1[255];
-			Menu menu5 = CreateMenu(Handler_MuteMenuPlayer);
-
-			Format(info1, sizeof(info1), "%T", "warden_choose", client);
-			menu5.SetTitle(info1);
-
-			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true))
+			if ((GetClientTeam(i) != CS_TEAM_CT) && !CheckVipFlag(i, g_sAdminFlagMute) && !g_bIsMuted[i])
 			{
-				if ((GetClientTeam(i) != CS_TEAM_CT) && !CheckVipFlag(i, g_sAdminFlagMute) && !g_bIsMuted[i])
-				{
-					char userid[11];
-					char username[MAX_NAME_LENGTH];
-					IntToString(GetClientUserId(i), userid, sizeof(userid));
-					Format(username, sizeof(username), "%N", i);
-					menu5.AddItem(userid, username);
-				}
+				char userid[11];
+				char username[MAX_NAME_LENGTH];
+				IntToString(GetClientUserId(i), userid, sizeof(userid));
+				Format(username, sizeof(username), "%N", i);
+				menu5.AddItem(userid, username);
 			}
-
-			menu5.ExitBackButton = true;
-			menu5.ExitButton = true;
-			menu5.Display(client, MENU_TIME_FOREVER);
 		}
-		else CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
+
+		menu5.ExitBackButton = true;
+		menu5.ExitButton = true;
+		menu5.Display(client, MENU_TIME_FOREVER);
 	}
+	else CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
 
 	return Plugin_Handled;
 }

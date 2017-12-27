@@ -96,7 +96,7 @@ public Action Timer_WardenFixColor(Handle timer, any client)
 	{
 		if (IsClientWarden(client) || IsClientDeputy(client))
 		{
-			if (gc_bPlugin.BoolValue)
+			if (gc_bPlugin.BoolValue && g_bEnabled)
 			{
 				if (gc_bColor.BoolValue)
 				{

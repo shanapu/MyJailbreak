@@ -140,9 +140,12 @@ public Action Command_LaserMenu(int client, int args)
 
 public Action Laser_OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
 {
-	if ((buttons & IN_USE) && (IsClientWarden(client) || (IsClientDeputy(client) && gc_bLaserDeputy.BoolValue)) && gc_bPlugin.BoolValue)
+	if (!gc_bPlugin.BoolValue || !g_bEnabled || gc_bLaser.BoolValue)
+		return Plugin_Continue;
+
+	if ((buttons & IN_USE) && (IsClientWarden(client) || (IsClientDeputy(client) && gc_bLaserDeputy.BoolValue)))
 	{
-		if (gc_bLaser.BoolValue && CheckVipFlag(client, g_sAdminFlagLaser))
+		if (CheckVipFlag(client, g_sAdminFlagLaser))
 		{
 			if (g_bLaser[client])
 			{
@@ -167,6 +170,8 @@ public Action Laser_OnPlayerRunCmd(int client, int &buttons, int &impulse, float
 	{
 		g_bLaserUse[client] = false;
 	}
+
+	return Plugin_Continue;
 }
 
 public void Laser_OnConfigsExecuted()

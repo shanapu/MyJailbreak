@@ -76,26 +76,29 @@ public void NoLR_OnPluginStart()
 
 public Action Command_NoLR(int client, int args)
 {
-	if (gc_bPlugin.BoolValue)
+	if (!gc_bPlugin.BoolValue || !g_bEnabled)
 	{
-		if (gc_bNoLR.BoolValue)
+		CReplyToCommand(client, "%s %t", g_sPrefix, "warden_disabled");
+		return Plugin_Handled;
+	}
+
+	if (!gc_bNoLR.BoolValue)
+		return Plugin_Handled;
+		
+	if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bNoLRDeputy.BoolValue))
+	{
+		if (g_bIsNoLR)
 		{
-			if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bNoLRDeputy.BoolValue))
-			{
-				if (g_bIsNoLR)
-				{
-					g_bIsNoLR = false;
-					CPrintToChatAll("%s %t", g_sPrefix, "warden_withhold_off");
-				}
-				else
-				{
-					g_bIsNoLR = true;
-					CPrintToChatAll("%s %t", g_sPrefix, "warden_withhold_on");
-				}
-			}
-			else CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
+			g_bIsNoLR = false;
+			CPrintToChatAll("%s %t", g_sPrefix, "warden_withhold_off");
+		}
+		else
+		{
+			g_bIsNoLR = true;
+			CPrintToChatAll("%s %t", g_sPrefix, "warden_withhold_on");
 		}
 	}
+	else CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
 
 	return Plugin_Handled;
 }
@@ -163,7 +166,7 @@ public void NoLR_OnConfigsExecuted()
 
 public Action Listen_OnCommand(int client, const char[] command, int args)
 {
-	if (!g_bIsNoLR || !gc_bNoLR.BoolValue || !gc_bPlugin.BoolValue)
+	if (!g_bIsNoLR || !gc_bNoLR.BoolValue || !gc_bPlugin.BoolValue || !g_bEnabled)
 		return Plugin_Continue;
 
 	//Seach for command in cmd array

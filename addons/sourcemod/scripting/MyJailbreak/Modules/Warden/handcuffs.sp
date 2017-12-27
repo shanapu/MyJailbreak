@@ -167,7 +167,7 @@ public void HandCuffs_OnSettingChanged(Handle convar, const char[] oldValue, con
 
 public void HandCuffs_Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
-	if (!gc_bPlugin.BoolValue || !gc_bHandCuff.BoolValue)
+	if (!gc_bPlugin.BoolValue || !g_bEnabled || !gc_bHandCuff.BoolValue)
 		return;
 
 	if (!g_bIsLR && gc_bStayWarden.BoolValue)
@@ -188,7 +188,7 @@ public void HandCuffs_Event_RoundStart(Event event, const char[] name, bool dont
 
 public void HandCuffs_Event_ItemEquip(Event event, const char[] name, bool dontBroadcast)
 {
-	if (!gc_bPlugin.BoolValue || !gc_bHandCuff.BoolValue)
+	if (!gc_bPlugin.BoolValue || !g_bEnabled || !gc_bHandCuff.BoolValue)
 		return;
 
 	int client = GetClientOfUserId(event.GetInt("userid"));
@@ -205,7 +205,7 @@ public void HandCuffs_Event_ItemEquip(Event event, const char[] name, bool dontB
 
 public void HandCuffs_Event_PlayerTeamDeath(Event event, const char[] name, bool dontBroadcast) 
 {
-	if (!gc_bPlugin.BoolValue || !gc_bHandCuff.BoolValue)
+	if (!gc_bPlugin.BoolValue || !g_bEnabled || !gc_bHandCuff.BoolValue)
 		return;
 
 	int client = GetClientOfUserId(event.GetInt("userid")); // Get the dead clients id
@@ -222,7 +222,7 @@ public void HandCuffs_Event_PlayerTeamDeath(Event event, const char[] name, bool
 
 public void HandCuffs_Event_WeaponFire(Event event, char[] name, bool dontBroadcast)
 {
-	if (!gc_bPlugin.BoolValue || !gc_bHandCuff.BoolValue)
+	if (!gc_bPlugin.BoolValue || !g_bEnabled || !gc_bHandCuff.BoolValue)
 		return;
 
 	int client = GetClientOfUserId(event.GetInt("userid"));
@@ -256,7 +256,7 @@ public Action HandCuffs_OnPlayerRunCmd(int client, int &buttons, int &impulse, f
 {
 	if (buttons & IN_ATTACK2)
 	{
-		if (gc_bHandCuff.BoolValue && (StrEqual(g_sEquipWeapon[client], "taser")) && (IsClientWarden(client) || (IsClientDeputy(client) && gc_bHandCuffDeputy.BoolValue)) && gc_bPlugin.BoolValue)
+		if (gc_bHandCuff.BoolValue && (StrEqual(g_sEquipWeapon[client], "taser")) && (IsClientWarden(client) || (IsClientDeputy(client) && gc_bHandCuffDeputy.BoolValue)))
 		{
 			int Target = GetClientAimTarget(client, true);
 			
@@ -355,13 +355,14 @@ public Action HandCuffs_OnTakedamage(int victim, int &attacker, int &inflictor, 
 	char sWeapon[32];
 	if (IsValidEntity(weapon)) GetEntityClassname(weapon, sWeapon, sizeof(sWeapon));
 
+	if (!gc_bPlugin.BoolValue || !g_bEnabled || !gc_bHandCuff.BoolValue)
+		return Plugin_Continue;
+		
+	if ((!IsClientWarden(attacker) && !IsClientDeputy(attacker)) || (IsClientDeputy(attacker) && !gc_bHandCuffDeputy.BoolValue) || !IsValidEdict(weapon) || (!gc_bHandCuffCT.BoolValue && (GetClientTeam(victim) == CS_TEAM_CT)))
+		return Plugin_Continue;
+
 	if (g_bCuffed[attacker])
 		return Plugin_Handled;
-
-	if (!gc_bPlugin.BoolValue || !gc_bHandCuff.BoolValue || (!IsClientWarden(attacker) && !IsClientDeputy(attacker)) || (IsClientDeputy(attacker) && !gc_bHandCuffDeputy.BoolValue) || !IsValidEdict(weapon) || (!gc_bHandCuffCT.BoolValue && (GetClientTeam(victim) == CS_TEAM_CT)))
-	{
-		return Plugin_Continue;
-	}
 
 	if (!StrEqual(sWeapon, "weapon_taser"))
 		return Plugin_Continue;

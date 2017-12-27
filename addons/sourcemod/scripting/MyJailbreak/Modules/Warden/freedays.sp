@@ -89,86 +89,86 @@ public void Freedays_OnPluginStart()
 
 public Action Command_FreeDay(int client, int args)
 {
-	if (gc_bPlugin.BoolValue && gc_bFreeDay.BoolValue)
+	if (!gc_bPlugin.BoolValue || !g_bEnabled || !gc_bFreeDay.BoolValue)
+		return Plugin_Continue;
+		
+	if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bFreeDayDeputy.BoolValue) || (GetClientTeam(client) == CS_TEAM_CT && gc_bFreeDayGuards.BoolValue))
 	{
-		if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bFreeDayDeputy.BoolValue) || (GetClientTeam(client) == CS_TEAM_CT && gc_bFreeDayGuards.BoolValue))
+		char info1[255];
+		Menu menu = CreateMenu(Handler_GiveFreeDayChoose);
+
+		Format(info1, sizeof(info1), "%T", "warden_givefreeday", client);
+		menu.SetTitle(info1);
+
+		int iValidCount = 0;
+		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true))
 		{
-			char info1[255];
-			Menu menu = CreateMenu(Handler_GiveFreeDayChoose);
-
-			Format(info1, sizeof(info1), "%T", "warden_givefreeday", client);
-			menu.SetTitle(info1);
-
-			int iValidCount = 0;
-			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true))
+			if ((GetClientTeam(i) == CS_TEAM_T) && !g_bGetFreeDay[i] && !g_bHasFreeDay[i])
 			{
-				if ((GetClientTeam(i) == CS_TEAM_T) && !g_bGetFreeDay[i] && !g_bHasFreeDay[i])
-				{
-					char userid[11];
-					char username[MAX_NAME_LENGTH];
-					IntToString(GetClientUserId(i), userid, sizeof(userid));
-					if (IsPlayerAlive(i))Format(username, sizeof(username), "%N", i);
-					if (!IsPlayerAlive(i))Format(username, sizeof(username), "%N [†]", i);
-					menu.AddItem(userid, username);
-					iValidCount++;
-				}
+				char userid[11];
+				char username[MAX_NAME_LENGTH];
+				IntToString(GetClientUserId(i), userid, sizeof(userid));
+				if (IsPlayerAlive(i))Format(username, sizeof(username), "%N", i);
+				if (!IsPlayerAlive(i))Format(username, sizeof(username), "%N [†]", i);
+				menu.AddItem(userid, username);
+				iValidCount++;
 			}
-
-			if (iValidCount == 0)
-			{
-				Format(info1, sizeof(info1), "%T", "warden_noplayer", client);
-				menu.AddItem("", info1, ITEMDRAW_DISABLED);
-			}
-
-			menu.ExitBackButton = true;
-			menu.ExitButton = true;
-			menu.Display(client, MENU_TIME_FOREVER);
 		}
-		else CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
+
+		if (iValidCount == 0)
+		{
+			Format(info1, sizeof(info1), "%T", "warden_noplayer", client);
+			menu.AddItem("", info1, ITEMDRAW_DISABLED);
+		}
+
+		menu.ExitBackButton = true;
+		menu.ExitButton = true;
+		menu.Display(client, MENU_TIME_FOREVER);
 	}
+	else CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
 
 	return Plugin_Handled;
 }
 
 public Action Command_RemoveFreeDay(int client, int args)
 {
-	if (gc_bPlugin.BoolValue && gc_bFreeDay.BoolValue)
+	if (!gc_bPlugin.BoolValue || !g_bEnabled || !gc_bFreeDay.BoolValue)
+		return Plugin_Continue;
+		
+	if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bFreeDayDeputy.BoolValue) || (GetClientTeam(client) == CS_TEAM_CT && gc_bFreeDayGuards.BoolValue))
 	{
-		if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bFreeDayDeputy.BoolValue) || (GetClientTeam(client) == CS_TEAM_CT && gc_bFreeDayGuards.BoolValue))
+		char info1[255];
+		Menu menu = CreateMenu(Handler_RemoveFreeDayChoose);
+
+		Format(info1, sizeof(info1), "%T", "warden_removefreeday", client);
+		menu.SetTitle(info1);
+
+		int iValidCount = 0;
+		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true))
 		{
-			char info1[255];
-			Menu menu = CreateMenu(Handler_RemoveFreeDayChoose);
-
-			Format(info1, sizeof(info1), "%T", "warden_removefreeday", client);
-			menu.SetTitle(info1);
-
-			int iValidCount = 0;
-			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true))
+			if ((GetClientTeam(i) == CS_TEAM_T) && (g_bGetFreeDay[i] || g_bHasFreeDay[i]))
 			{
-				if ((GetClientTeam(i) == CS_TEAM_T) && (g_bGetFreeDay[i] || g_bHasFreeDay[i]))
-				{
-					char userid[11];
-					char username[MAX_NAME_LENGTH];
-					IntToString(GetClientUserId(i), userid, sizeof(userid));
-					if (IsPlayerAlive(i))Format(username, sizeof(username), "%N", i);
-					if (!IsPlayerAlive(i))Format(username, sizeof(username), "%N [†]", i);
-					menu.AddItem(userid, username);
-					iValidCount++;
-				}
+				char userid[11];
+				char username[MAX_NAME_LENGTH];
+				IntToString(GetClientUserId(i), userid, sizeof(userid));
+				if (IsPlayerAlive(i))Format(username, sizeof(username), "%N", i);
+				if (!IsPlayerAlive(i))Format(username, sizeof(username), "%N [†]", i);
+				menu.AddItem(userid, username);
+				iValidCount++;
 			}
-
-			if (iValidCount == 0)
-			{
-				Format(info1, sizeof(info1), "%T","warden_noplayer", client);
-				menu.AddItem("", info1, ITEMDRAW_DISABLED);
-			}
-
-			menu.ExitBackButton = true;
-			menu.ExitButton = true;
-			menu.Display(client, MENU_TIME_FOREVER);
 		}
-		else CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
+
+		if (iValidCount == 0)
+		{
+			Format(info1, sizeof(info1), "%T","warden_noplayer", client);
+			menu.AddItem("", info1, ITEMDRAW_DISABLED);
+		}
+
+		menu.ExitBackButton = true;
+		menu.ExitButton = true;
+		menu.Display(client, MENU_TIME_FOREVER);
 	}
+	else CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
 
 	return Plugin_Handled;
 }

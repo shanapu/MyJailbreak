@@ -83,29 +83,28 @@ public void BulletSparks_OnSettingChanged(Handle convar, const char[] oldValue, 
 
 public Action Command_BulletSparks(int client, int args)
 {
-	if (gc_bPlugin.BoolValue)
+	if (!gc_bPlugin.BoolValue || !g_bEnabled || gc_bBulletSparks.BoolValue)
+		return Plugin_Handled;
+
+	if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bBulletSparksDeputy.BoolValue))
 	{
-		if (gc_bBulletSparks.BoolValue)
+		if (CheckVipFlag(client, g_sAdminFlagBulletSparks))
 		{
-			if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bBulletSparksDeputy.BoolValue))
+			if (!g_bBulletSparks[client])
 			{
-				if (CheckVipFlag(client, g_sAdminFlagBulletSparks))
-				{
-					if (!g_bBulletSparks[client])
-					{
-						g_bBulletSparks[client] = true;
-						CPrintToChat(client, "%s %t", g_sPrefix, "warden_bulletmarkon");
-					}
-					else if (g_bBulletSparks[client])
-					{
-						g_bBulletSparks[client] = false;
-						CPrintToChat(client, "%s %t", g_sPrefix, "warden_bulletmarkoff");
-					}
-				}
+				g_bBulletSparks[client] = true;
+				CPrintToChat(client, "%s %t", g_sPrefix, "warden_bulletmarkon");
 			}
-			else CPrintToChat(client, "%s %t", g_sPrefix, "warden_notwarden");
+			else if (g_bBulletSparks[client])
+			{
+				g_bBulletSparks[client] = false;
+				CPrintToChat(client, "%s %t", g_sPrefix, "warden_bulletmarkoff");
+			}
 		}
 	}
+	else CPrintToChat(client, "%s %t", g_sPrefix, "warden_notwarden");
+
+	return Plugin_Handled;
 }
 
 /******************************************************************************
@@ -116,7 +115,7 @@ public Action BulletSparks_Event_BulletImpact(Event event, char[] sName, bool bD
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));
 
-	if (!gc_bPlugin.BoolValue || !gc_bBulletSparks.BoolValue || !g_bBulletSparks[client] || !CheckVipFlag(client, g_sAdminFlagBulletSparks))
+	if (!gc_bPlugin.BoolValue || !g_bEnabled || !gc_bBulletSparks.BoolValue || !g_bBulletSparks[client] || !CheckVipFlag(client, g_sAdminFlagBulletSparks))
 		return Plugin_Continue;
 
 	if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bBulletSparksDeputy.BoolValue))

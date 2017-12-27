@@ -94,38 +94,38 @@ public void GunDropPrevention_OnAvailableLR(int Announced)
 
 public Action CS_OnCSWeaponDrop(int client, int weapon)
 {
-	if (gc_bPlugin.BoolValue)
+	if (!gc_bPlugin.BoolValue || !g_bEnabled)
+		return Plugin_Continue;
+		
+	if (gc_bGunPlant.BoolValue)
 	{
-		if (gc_bGunPlant.BoolValue)
+		if (GetClientTeam(client) == CS_TEAM_CT)
 		{
-			if (GetClientTeam(client) == CS_TEAM_CT)
+			if (!g_bAllowDrop)
 			{
-				if (!g_bAllowDrop)
+				char g_sWeaponName[80];
+				if (GetEntityClassname(weapon, g_sWeaponName, sizeof(g_sWeaponName)))
+				if (StrEqual("weapon_taser", g_sWeaponName, false))
 				{
-					char g_sWeaponName[80];
-					if (GetEntityClassname(weapon, g_sWeaponName, sizeof(g_sWeaponName)))
-					if (StrEqual("weapon_taser", g_sWeaponName, false))
-					{
-						return Plugin_Continue;
-					}
-					
-					if (gp_bHosties && gp_bLastRequest) if (IsClientInLastRequest(client))
-						return Plugin_Continue;
+					return Plugin_Continue;
+				}
+				
+				if (gp_bHosties && gp_bLastRequest) if (IsClientInLastRequest(client))
+					return Plugin_Continue;
 
-					if (g_bWeaponDropped[client]) 
-						return Plugin_Handled;
+				if (g_bWeaponDropped[client]) 
+					return Plugin_Handled;
 
-					if (gc_bGunNoDrop.BoolValue)
-						return Plugin_Handled;
+				if (gc_bGunNoDrop.BoolValue)
+					return Plugin_Handled;
 
-					Handle hData = CreateDataPack();
-					WritePackCell(hData, client);
-					WritePackCell(hData, weapon);
+				Handle hData = CreateDataPack();
+				WritePackCell(hData, client);
+				WritePackCell(hData, weapon);
 
-					if (IsValidEntity(weapon))
-					{
-						if (!g_bWeaponDropped[client]) CreateTimer(0.1, Timer_DroppedWeapon, hData, TIMER_FLAG_NO_MAPCHANGE);
-					}
+				if (IsValidEntity(weapon))
+				{
+					if (!g_bWeaponDropped[client]) CreateTimer(0.1, Timer_DroppedWeapon, hData, TIMER_FLAG_NO_MAPCHANGE);
 				}
 			}
 		}

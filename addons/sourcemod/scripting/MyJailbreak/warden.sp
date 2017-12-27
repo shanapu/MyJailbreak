@@ -85,6 +85,7 @@ ConVar gc_fCMDCooldown;
 ConVar g_bMenuClose;
 
 // Booleans
+bool g_bEnabled = true;
 bool g_bIsLateLoad = false;
 bool g_bIsLR = false;
 bool gp_bMyJailBreak = false;
@@ -488,7 +489,7 @@ public void OnLibraryAdded(const char[] name)
 // Become Warden
 public Action Command_BecomeWarden(int client, int args)
 {
-	if (!gc_bPlugin.BoolValue || (g_bIsLR && gc_bRemoveLR.BoolValue))  // "sm_warden_enable" "1" and no last request
+	if (!gc_bPlugin.BoolValue || !g_bEnabled || (g_bIsLR && gc_bRemoveLR.BoolValue))  // "sm_warden_enable" "1" and no last request
 	{
 		CReplyToCommand(client, "%s %t", g_sPrefix, "warden_disabled");
 		return Plugin_Handled;
@@ -549,7 +550,7 @@ public Action Command_BecomeWarden(int client, int args)
 // Exit / Retire Warden
 public Action Command_ExitWarden(int client, int args) 
 {
-	if (!gc_bPlugin.BoolValue)  // "sm_warden_enable" "1"
+	if (!gc_bPlugin.BoolValue || !g_bEnabled)  // "sm_warden_enable" "1"
 	{
 		CReplyToCommand(client, "%s %t", g_sPrefix, "warden_disabled");
 		return Plugin_Handled;
@@ -576,7 +577,7 @@ public Action Command_ExitWarden(int client, int args)
 // Voting against Warden
 public Action Command_VoteWarden(int client, int args)
 {
-	if (!gc_bPlugin.BoolValue)  // "sm_warden_enable" "1"
+	if (!gc_bPlugin.BoolValue || !g_bEnabled)  // "sm_warden_enable" "1"
 	{
 		CReplyToCommand(client, "%s %t", g_sPrefix, "warden_disabled");
 		return Plugin_Handled;
@@ -633,7 +634,7 @@ public Action Command_VoteWarden(int client, int args)
 // Remove Warden for Admins
 public Action AdminCommand_RemoveWarden(int client, int args)
 {
-	if (!gc_bPlugin.BoolValue)  // "sm_warden_enable" "1"
+	if (!gc_bPlugin.BoolValue || !g_bEnabled)  // "sm_warden_enable" "1"
 		return Plugin_Handled;
 
 	if (g_iWarden == -1)
@@ -668,7 +669,7 @@ public Action AdminCommand_RemoveWarden(int client, int args)
 // Set new Warden for Admins
 public Action AdminCommand_SetWarden(int client, int args)
 {
-	if (!gc_bPlugin.BoolValue)  // "sm_warden_enable" "1"
+	if (!gc_bPlugin.BoolValue || !g_bEnabled)  // "sm_warden_enable" "1"
 		return Plugin_Handled;
 
 	Menu_SetWarden(client);
@@ -737,25 +738,25 @@ public void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
 // Round Start Post
 public void Event_PostRoundStart(Event event, const char[] name, bool dontBroadcast)
 {
-	if (gc_bPlugin.BoolValue)
+	if (!gc_bPlugin.BoolValue || !g_bEnabled)
+		return;
+
+	if ((g_iWarden == -1) && gc_bBecomeWarden.BoolValue)
 	{
-		if ((g_iWarden == -1) && gc_bBecomeWarden.BoolValue)
+		//	delete g_hTimerOpen; // why delete don't work?
+		if (g_hTimerRandom != null)
 		{
-			//	delete g_hTimerOpen; // why delete don't work?
-			if (g_hTimerRandom != null)
-			{
-				KillTimer(g_hTimerRandom);
-			}
-			g_hTimerRandom = null;
+			KillTimer(g_hTimerRandom);
+		}
+		g_hTimerRandom = null;
 
-			g_hTimerRandom = CreateTimer(gc_fRandomTimer.FloatValue, Timer_ChooseRandom);
+		g_hTimerRandom = CreateTimer(gc_fRandomTimer.FloatValue, Timer_ChooseRandom);
 
-			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, false)) if (GetClientTeam(i) == CS_TEAM_CT)
-			{
-				CPrintToChat(i, "%s %t", g_sPrefix, "warden_nowarden");
-				
-				if (gc_bBetterNotes.BoolValue) PrintCenterText(i, "%t", "warden_nowarden_nc");
-			}
+		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, false)) if (GetClientTeam(i) == CS_TEAM_CT)
+		{
+			CPrintToChat(i, "%s %t", g_sPrefix, "warden_nowarden");
+			
+			if (gc_bBetterNotes.BoolValue) PrintCenterText(i, "%t", "warden_nowarden_nc");
 		}
 	}
 }
@@ -763,7 +764,7 @@ public void Event_PostRoundStart(Event event, const char[] name, bool dontBroadc
 // Round Start Post
 public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
-	if (!gc_bPlugin.BoolValue)
+	if (!gc_bPlugin.BoolValue || !g_bEnabled)
 	{
 		if (g_iWarden != -1)
 		{
@@ -1007,7 +1008,7 @@ public void MyJailbreak_OnEventDayStart(char[] EventDayName)
 // Check Keyboard Input for modules
 public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
 {
-	if ((IsClientWarden(client) || IsClientDeputy(client)) && gc_bPlugin.BoolValue)
+	if ((IsClientWarden(client) || IsClientDeputy(client)) && gc_bPlugin.BoolValue && g_bEnabled)
 	{
 		Marker_OnPlayerRunCmd(client, buttons, impulse, vel, angles, weapon);
 		Laser_OnPlayerRunCmd(client, buttons, impulse, vel, angles, weapon);
@@ -1015,8 +1016,6 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 
 	Painter_OnPlayerRunCmd(client, buttons, impulse, vel, angles, weapon);
 	HandCuffs_OnPlayerRunCmd(client, buttons, impulse, vel, angles, weapon);
-
-	return Plugin_Continue;
 }
 
 /******************************************************************************
@@ -1031,7 +1030,7 @@ Action SetTheWarden(int client, int caller)
 		return Plugin_Handled;
 	}
 
-	if (gc_bPlugin.BoolValue)
+	if (gc_bPlugin.BoolValue && g_bEnabled)
 	{
 		Action res = Plugin_Continue;
 
@@ -1313,7 +1312,7 @@ public int Handler_SetWardenOverwrite(Menu menu, MenuAction action, int client, 
 // Choose a random Warden after a defined time
 public Action Timer_ChooseRandom(Handle timer)
 {
-	if (!gc_bPlugin.BoolValue || (g_bIsLR && gc_bRemoveLR.BoolValue) || g_iWarden != -1 || !gc_bChooseRandom.BoolValue)
+	if (!gc_bPlugin.BoolValue || !g_bEnabled || (g_bIsLR && gc_bRemoveLR.BoolValue) || g_iWarden != -1 || !gc_bChooseRandom.BoolValue)
 	{
 		g_hTimerRandom = null;
 		return Plugin_Stop;
@@ -1354,6 +1353,9 @@ bool IsClientWarden(int client)
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	// Natives
+	CreateNative("warden_enable", Native_Enable);
+	CreateNative("warden_isenabled", Native_IsEnabled);	
+	
 	CreateNative("warden_exist", Native_ExistWarden);
 	CreateNative("warden_iswarden", Native_IsWarden);
 	CreateNative("warden_set", Native_SetWarden);
@@ -1455,6 +1457,27 @@ public int Native_GetWarden(Handle plugin, int argc)
 public int Native_GetLastWarden(Handle plugin, int argc)
 {
 	return g_iLastWarden;
+}
+
+// Get last wardens Client Index
+public int Native_Enable(Handle plugin, int argc)
+{
+	g_bEnabled = GetNativeCell(1);
+	
+	if (!g_bEnabled && g_iWarden != -1)
+	{
+		CreateTimer(0.1, Timer_RemoveColor, g_iWarden);
+		SetEntityModel(g_iWarden, g_sModelPathPrevious);
+		Forward_OnWardenRemoved(g_iWarden);
+		g_iLastWarden = g_iWarden;
+		g_iWarden = -1;
+	}
+}
+
+// Get last wardens Client Index
+public int Native_IsEnabled(Handle plugin, int argc)
+{
+	return g_bEnabled;
 }
 
 /******************************************************************************

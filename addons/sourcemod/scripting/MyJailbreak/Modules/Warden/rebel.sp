@@ -72,7 +72,7 @@ public void MarkRebel_OnPluginStart()
 
 public Action Command_MarkRebel(int client, int args)
 {
-	if (gc_bPlugin.BoolValue && gp_bHosties && gp_bLastRequest)
+	if (gc_bPlugin.BoolValue && g_bEnabled && gp_bHosties && gp_bLastRequest)
 	{
 		if (gc_bMarkRebel.BoolValue)
 		{

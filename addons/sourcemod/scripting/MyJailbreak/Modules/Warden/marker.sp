@@ -158,9 +158,12 @@ public void Marker_Event_ItemEquip(Event event, const char[] name, bool dontBroa
 
 public Action Marker_OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
 {
+	if (!gc_bPlugin.BoolValue || !g_bEnabled || gc_bMarker.BoolValue)
+		return Plugin_Continue;
+
 	if (buttons & IN_ATTACK2 || g_bCanMarker[client])
 	{
-		if (gc_bMarker.BoolValue && !g_bCanZoom[client] && !g_bHasSilencer[client] && (g_iWrongWeapon[client] != 0) && (g_iWrongWeapon[client] != 8) && (g_iWrongWeapon[client] != 9) && (IsClientWarden(client) || (IsClientDeputy(client) && gc_bMarkerDeputy.BoolValue)) && gc_bPlugin.BoolValue)
+		if (!g_bCanZoom[client] && !g_bHasSilencer[client] && (g_iWrongWeapon[client] != 0) && (g_iWrongWeapon[client] != 8) && (g_iWrongWeapon[client] != 9) && (IsClientWarden(client) || (IsClientDeputy(client) && gc_bMarkerDeputy.BoolValue)))
 		{
 			if (!g_bMarkerSetup[client])
 				GetClientAimTargetPos(client, g_fMarkerSetupStartOrigin);
@@ -188,6 +191,8 @@ public Action Marker_OnPlayerRunCmd(int client, int &buttons, int &impulse, floa
 		MarkerMenu(client);
 		g_bMarkerSetup[client] = false;
 	}
+
+	return Plugin_Continue;
 }
 
 public void Marker_OnWardenRemoved()
