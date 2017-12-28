@@ -38,6 +38,7 @@
 #undef REQUIRE_PLUGIN
 #include <myjailbreak>
 #include <myweapons>
+#include <myjbwarden>
 #include <hosties>
 #include <lastrequest>
 #include <CustomPlayerSkins>
@@ -59,6 +60,7 @@ bool gp_bHosties;
 bool gp_bSmartJailDoors;
 bool gp_bCustomPlayerSkins;
 bool gp_bMyWeapons;
+bool gp_bMyJBWarden;
 
 // Console Variables
 ConVar gc_bPlugin;
@@ -198,47 +200,69 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 
 public void OnAllPluginsLoaded()
 {
+	gp_bMyJBWarden = LibraryExists("myjbwarden");
 	gp_bMyJailBreak = LibraryExists("myjailbreak");
-	gp_bHosties = LibraryExists("hosties");
+	gp_bHosties = LibraryExists("lastrequest");
 	gp_bSmartJailDoors = LibraryExists("smartjaildoors");
 	gp_bCustomPlayerSkins = LibraryExists("CustomPlayerSkins");
 	gp_bMyWeapons = LibraryExists("myweapons");
 }
 
+
 public void OnLibraryRemoved(const char[] name)
 {
-	if (StrEqual(name, "myjailbreak"))
-		gp_bMyJailBreak = false;
-
-	if (StrEqual(name, "hosties"))
+	if (StrEqual(name, "myjbwarden"))
+	{
+		gp_bMyJBWarden = false;
+	}
+	else if (StrEqual(name, "lastrequest"))
+	{
 		gp_bHosties = false;
-
-	if (StrEqual(name, "smartjaildoors"))
-		gp_bSmartJailDoors = false;
-
-	if (StrEqual(name, "CustomPlayerSkins"))
+	}
+	else if (StrEqual(name, "CustomPlayerSkins"))
+	{
 		gp_bCustomPlayerSkins = false;
-
-	if (StrEqual(name, "myweapons"))
+	}
+	else if (StrEqual(name, "smartjaildoors"))
+	{
+		gp_bSmartJailDoors = false;
+	}
+	else if (StrEqual(name, "myjailbreak"))
+	{
+		gp_bMyJailBreak = false;
+	}
+	else if (StrEqual(name, "myweapons"))
+	{
 		gp_bMyWeapons = false;
+	}
 }
 
 public void OnLibraryAdded(const char[] name)
 {
-	if (StrEqual(name, "myjailbreak"))
-		gp_bMyJailBreak = true;
-
-	if (StrEqual(name, "hosties"))
+	if (StrEqual(name, "myjbwarden"))
+	{
+		gp_bMyJBWarden = true;
+	}
+	else if (StrEqual(name, "lastrequest"))
+	{
 		gp_bHosties = true;
-
-	if (StrEqual(name, "smartjaildoors"))
-		gp_bSmartJailDoors = true;
-
-	if (StrEqual(name, "CustomPlayerSkins"))
+	}
+	else if (StrEqual(name, "CustomPlayerSkins"))
+	{
 		gp_bCustomPlayerSkins = true;
-
-	if (StrEqual(name, "myweapons"))
+	}
+	else if (StrEqual(name, "smartjaildoors"))
+	{
+		gp_bSmartJailDoors = true;
+	}
+	else if (StrEqual(name, "myjailbreak"))
+	{
+		gp_bMyJailBreak = true;
+	}
+	else if (StrEqual(name, "myweapons"))
+	{
 		gp_bMyWeapons = true;
+	}
 }
 
 public void OnConfigsExecuted()
@@ -422,7 +446,10 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			SetCvar("sm_hosties_lr", 1);
 		}
 
-		SetCvar("sm_warden_enable", 1);
+		if (gp_bMyJBWarden)
+		{
+			warden_enable(true);
+		}
 
 		CPrintToChatAll("%s %t", g_sPrefix, "lastguard_end");
 	}
@@ -484,7 +511,10 @@ void StartLastGuard()
 			MyWeapons_AllowTeam(CS_TEAM_CT, true);
 		}
 
-		SetCvar("sm_warden_enable", 0);
+		if (gp_bMyJBWarden)
+		{
+			warden_enable(false);
+		}
 
 		int Tcount = (GetAlivePlayersCount(CS_TEAM_T)*gc_iTimePerT.IntValue);
 		if (gc_iTime.IntValue != 0)

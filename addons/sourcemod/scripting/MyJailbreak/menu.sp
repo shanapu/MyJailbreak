@@ -114,7 +114,6 @@ ConVar g_bOpenDeputy;
 ConVar g_bRandomDeputy;
 ConVar g_bRandom;
 ConVar g_bRequest;
-ConVar g_bWarden;
 ConVar g_bDeputy;
 ConVar g_bDeputySet;
 ConVar g_bDeputyBecome;
@@ -268,9 +267,12 @@ void MyAdminMenuReady(Handle h_TopMenu)
 		{
 			AddToTopMenu(gH_TopMenu, "sm_setday", TopMenuObject_Item, Handler_AdminMenu_SetDay, gM_MyJB, "sm_setday");
 		}
-		AddToTopMenu(gH_TopMenu, "sm_setwarden", TopMenuObject_Item, Handler_AdminMenu_SetWarden, gM_MyJB, "sm_setwarden");
-		AddToTopMenu(gH_TopMenu, "sm_removewarden", TopMenuObject_Item, Handler_AdminMenu_RemoveWarden, gM_MyJB, "sm_removewarden");
-		AddToTopMenu(gH_TopMenu, "sm_removedeputy", TopMenuObject_Item, Handler_AdminMenu_RemoveDeputy, gM_MyJB, "sm_removedeputy");
+		if (gp_bMyJBWarden)
+		{
+			AddToTopMenu(gH_TopMenu, "sm_setwarden", TopMenuObject_Item, Handler_AdminMenu_SetWarden, gM_MyJB, "sm_setwarden");
+			AddToTopMenu(gH_TopMenu, "sm_removewarden", TopMenuObject_Item, Handler_AdminMenu_RemoveWarden, gM_MyJB, "sm_removewarden");
+			AddToTopMenu(gH_TopMenu, "sm_removedeputy", TopMenuObject_Item, Handler_AdminMenu_RemoveDeputy, gM_MyJB, "sm_removedeputy");
+		}
 		AddToTopMenu(gH_TopMenu, "sm_removequeue", TopMenuObject_Item, Handler_AdminMenu_RemoveQueue, gM_MyJB, "sm_removequeue");
 		AddToTopMenu(gH_TopMenu, "sm_clearqueue", TopMenuObject_Item, Handler_AdminMenu_ClearQueue, gM_MyJB, "sm_clearqueue");
 	}
@@ -451,47 +453,59 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 // Check for optional Plugins
 public void OnAllPluginsLoaded()
 {
-	gp_bMyJailShop = LibraryExists("myjailshop");
-	gp_bSmartJailDoors = LibraryExists("smartjaildoors");
-	gp_bMyWeapons = LibraryExists("myweapons");
-	gp_bMyJBWarden = LibraryExists("myjbwarden");
 	gp_bWarden = LibraryExists("warden");
+	gp_bMyJBWarden = LibraryExists("myjbwarden");
+	gp_bSmartJailDoors = LibraryExists("smartjaildoors");
+	gp_bMyJailShop = LibraryExists("myjailshop");
+	gp_bMyWeapons = LibraryExists("myweapons");
 }
 
 public void OnLibraryRemoved(const char[] name)
 {
-	if (StrEqual(name, "myjailshop"))
-		gp_bMyJailShop = false;
-
-	if (StrEqual(name, "smartjaildoors"))
-		gp_bSmartJailDoors = false;
-
-	if (StrEqual(name, "myweapons"))
-		gp_bMyWeapons = false;
-
-	if (StrEqual(name, "myjbwarden"))
-		gp_bMyJBWarden = false;
-
 	if (StrEqual(name, "warden"))
+	{
 		gp_bWarden = false;
+	}
+	else if (StrEqual(name, "myjbwarden"))
+	{
+		gp_bMyJBWarden = false;
+	}
+	else if (StrEqual(name, "smartjaildoors"))
+	{
+		gp_bSmartJailDoors = false;
+	}
+	else if (StrEqual(name, "myjailshop"))
+	{
+		gp_bMyJailShop = false;
+	}
+	else if (StrEqual(name, "myweapons"))
+	{
+		gp_bMyWeapons = false;
+	}
 }
 
 public void OnLibraryAdded(const char[] name)
 {
-	if (StrEqual(name, "myjailshop"))
-		gp_bMyJailShop = true;
-
-	if (StrEqual(name, "smartjaildoors"))
-		gp_bSmartJailDoors = true;
-
-	if (StrEqual(name, "myweapons"))
-		gp_bMyWeapons = true;
-
-	if (StrEqual(name, "myjbwarden"))
-		gp_bMyJBWarden = true;
-
 	if (StrEqual(name, "warden"))
+	{
 		gp_bWarden = true;
+	}
+	else if (StrEqual(name, "myjbwarden"))
+	{
+		gp_bMyJBWarden = true;
+	}
+	else if (StrEqual(name, "smartjaildoors"))
+	{
+		gp_bSmartJailDoors = true;
+	}
+	else if (StrEqual(name, "myjailshop"))
+	{
+		gp_bMyJailShop = true;
+	}
+	else if (StrEqual(name, "myweapons"))
+	{
+		gp_bMyWeapons = true;
+	}
 }
 
 // FindConVar
@@ -499,7 +513,6 @@ public void OnConfigsExecuted()
 {
 	gc_sPrefix.GetString(g_sPrefix, sizeof(g_sPrefix));
 
-	g_bWarden = FindConVar("sm_warden_enable");
 	g_bDeputy = FindConVar("sm_warden_deputy_enable");
 	g_bDeputySet = FindConVar("sm_warden_deputy_set");
 	g_bDeputyBecome = FindConVar("sm_warden_deputy_become");
@@ -685,7 +698,7 @@ public Action Command_OpenMenu(int client, int args)
 			Call_PushCell(mainmenu);
 			Call_Finish();
 
-			if ((gp_bWarden || gp_bMyJBWarden) && warden_iswarden(client) && gc_bWarden.BoolValue)
+			if (gc_bWarden.BoolValue && gp_bMyJBWarden && warden_iswarden(client))
 			{
 				if (gp_bMyWeapons)
 				{
@@ -894,7 +907,7 @@ public Action Command_OpenMenu(int client, int args)
 				Format(menuinfo, sizeof(menuinfo), "%T", "menu_unwarden", client);
 				mainmenu.AddItem("unwarden", menuinfo);
 			}// HERE END THE WARDEN MENU
-			else if (gp_bMyJBWarden && warden_deputy_isdeputy(client) && gc_bDeputy.BoolValue) // HERE STARTS THE DEPUTY MENU)
+			else if (gp_bMyJBWarden && warden_deputy_isdeputy(client) && gc_bDeputy.BoolValue && warden_isenabled()) // HERE STARTS THE DEPUTY MENU)
 			{
 				if (gp_bMyWeapons)
 				{
@@ -1085,25 +1098,18 @@ public Action Command_OpenMenu(int client, int args)
 					}
 				}
 
-				if (g_bWarden != null || g_bWarden)
+				if (gp_bMyJBWarden && warden_isenabled())
 				{
 					if (!warden_exist() && IsPlayerAlive(client))
 					{
-						if (g_bWarden.BoolValue)
-						{
-							Format(menuinfo, sizeof(menuinfo), "%T", "menu_getwarden", client);
-							mainmenu.AddItem("getwarden", menuinfo);
-						}
-						
+						Format(menuinfo, sizeof(menuinfo), "%T", "menu_getwarden", client);
+						mainmenu.AddItem("getwarden", menuinfo);
 					}
 
-					if (g_bDeputy != null && g_bDeputyBecome != null)
+					if (warden_exist() && g_bDeputy.BoolValue && g_bDeputyBecome.BoolValue && !warden_deputy_exist())
 					{
-						if (warden_exist() && g_bDeputy.BoolValue && g_bDeputyBecome.BoolValue && !warden_deputy_exist())
-						{
-							Format(menuinfo, sizeof(menuinfo), "%T", "menu_deputybecome", client);
-							mainmenu.AddItem("becomedeputy", menuinfo);
-						}
+						Format(menuinfo, sizeof(menuinfo), "%T", "menu_deputybecome", client);
+						mainmenu.AddItem("becomedeputy", menuinfo);
 					}
 				}
 
@@ -1180,17 +1186,14 @@ public Action Command_OpenMenu(int client, int args)
 					}
 				}
 
-				if (g_bWarden != null)
+				if (gp_bMyJBWarden)
 				{
 					if (warden_exist())
 					{
-						if (g_bWarden.BoolValue)
+						if (g_bVote.BoolValue)
 						{
-							if (g_bVote.BoolValue)
-							{
-								Format(menuinfo, sizeof(menuinfo), "%T", "menu_votewarden", client);
-								mainmenu.AddItem("votewarden", menuinfo);
-							}
+							Format(menuinfo, sizeof(menuinfo), "%T", "menu_votewarden", client);
+							mainmenu.AddItem("votewarden", menuinfo);
 						}
 					}
 				}
@@ -1269,10 +1272,7 @@ public Action Command_OpenMenu(int client, int args)
 				*/
 				if (gc_iAdminMenu.IntValue == 1 || gc_iAdminMenu.IntValue == 3)
 				{
-					char EventDay[64];
-					MyJailbreak_GetEventDayName(EventDay);
-					
-					if (StrEqual(EventDay, "none", false)) // is an other event running or set?
+					if (!MyJailbreak_IsEventDayPlanned() && !MyJailbreak_IsEventDayRunning()) // is an other event running or set?
 					{
 						if ((gp_bWarden || gp_bMyJBWarden) && !warden_iswarden(client))
 						{
@@ -1289,9 +1289,9 @@ public Action Command_OpenMenu(int client, int args)
 							}
 						}
 					}
-					if (g_bWarden != null)
+					if (gp_bMyJBWarden)
 					{
-						if (g_bWarden.BoolValue)
+						if (warden_isenabled())
 						{
 							Format(menuinfo, sizeof(menuinfo), "%T", "menu_setwarden", client);
 							mainmenu.AddItem("setwarden", menuinfo);
