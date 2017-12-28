@@ -901,7 +901,7 @@ public void OnMapStart()
 	}
 
 	g_iVoteCount = 0;
-
+	g_bEnabled = true;
 	
 	g_iSmokeSprite = PrecacheModel("materials/sprites/steam1.vmt");
 	g_iBeamSprite = PrecacheModel("materials/sprites/laserbeam.vmt");
