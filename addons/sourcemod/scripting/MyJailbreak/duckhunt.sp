@@ -966,7 +966,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 		{
 			return Plugin_Handled;
 		}
-		if(!gc_bFlyMode.BoolValue)
+		if (!gc_bFlyMode.BoolValue)
 		{
 			if (GetEntityMoveType(client) == MOVETYPE_LADDER)
 			{
@@ -1035,7 +1035,7 @@ void StartEventRound(bool thisround)
 		MyJailbreak_SetEventDayPlanned(true);
 	}
 
-	if(thisround && g_bIsRoundEnd)
+	if (thisround && g_bIsRoundEnd)
 	{
 		thisround = false;
 	}

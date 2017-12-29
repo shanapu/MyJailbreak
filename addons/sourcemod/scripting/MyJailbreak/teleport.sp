@@ -829,7 +829,7 @@ void StartEventRound(bool thisround)
 		MyJailbreak_SetEventDayPlanned(true);
 	}
 
-	if(thisround && g_bIsRoundEnd)
+	if (thisround && g_bIsRoundEnd)
 	{
 		thisround = false;
 	}
@@ -1097,7 +1097,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	GetClientAbsOrigin(victim, victimPos);
 	GetClientAbsOrigin(attacker, attackerPos);
 	
-	if(gc_bTeleportAim.BoolValue)
+	if (gc_bTeleportAim.BoolValue)
 	{
 		float attackerEyePos[3];
 		float victimEyePos[3];

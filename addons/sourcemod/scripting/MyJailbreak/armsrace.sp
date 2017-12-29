@@ -838,7 +838,7 @@ void StartEventRound(bool thisround)
 		MyJailbreak_SetEventDayPlanned(true);
 	}
 
-	if(thisround && g_bIsRoundEnd)
+	if (thisround && g_bIsRoundEnd)
 	{
 		thisround = false;
 	}
@@ -1105,7 +1105,7 @@ void GetWeapons()
 	{
 		char line[128];
 
-		if(!ReadFileLine(file, line, sizeof(line)))
+		if (!ReadFileLine(file, line, sizeof(line)))
 		{
 			break;
 		}
@@ -1240,7 +1240,7 @@ public Action OnWeaponCanUse(int client, int weapon)
 		return Plugin_Continue;
 	}
 
-	if(g_iLevel[client] == g_iMaxLevel)
+	if (g_iLevel[client] == g_iMaxLevel)
 	{
 		return Plugin_Continue;
 	}

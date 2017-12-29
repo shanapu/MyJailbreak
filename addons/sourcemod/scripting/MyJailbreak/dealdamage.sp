@@ -704,7 +704,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 	{
 		CalcResults();
 		
-		if(gc_bKillLoser.BoolValue)
+		if (gc_bKillLoser.BoolValue)
 		{
 			if (g_iDamageBLUE > g_iDamageRED) 
 			{
@@ -1021,7 +1021,7 @@ void StartEventRound(bool thisround)
 		MyJailbreak_SetEventDayPlanned(true);
 	}
 
-	if(thisround && g_bIsRoundEnd)
+	if (thisround && g_bIsRoundEnd)
 	{
 		thisround = false;
 	}

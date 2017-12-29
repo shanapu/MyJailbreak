@@ -1006,7 +1006,7 @@ void StartEventRound(bool thisround)
 		MyJailbreak_SetEventDayPlanned(true);
 	}
 
-	if(thisround && g_bIsRoundEnd)
+	if (thisround && g_bIsRoundEnd)
 	{
 		thisround = false;
 	}

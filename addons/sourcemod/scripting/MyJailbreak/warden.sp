@@ -1025,7 +1025,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 // Set a new warden
 Action SetTheWarden(int client, int caller)
 {
-	if(!IsValidClient(client, true, false))
+	if (!IsValidClient(client, true, false))
 	{
 		return Plugin_Handled;
 	}
@@ -1374,7 +1374,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	CreateNative("warden_handcuffs_givepaperclip", Native_GivePaperClip);
 	CreateNative("warden_handcuffs_iscuffed", Native_IsClientCuffed);
 
-	CreateNative("warden_freeday_set", Native_GiveFreeday);
+	CreateNative("warden_freeday_set", Native_SetFreeday);
 	CreateNative("warden_freeday_has", Native_HasClientFreeday);
 
 	// Forwards

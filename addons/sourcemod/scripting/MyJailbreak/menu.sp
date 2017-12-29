@@ -687,7 +687,7 @@ public Action Command_OpenMenu(int client, int args)
 			Menu mainmenu = new Menu(JBMenuHandler);
 			mainmenu.SetTitle(menuinfo);
 
-			if(gc_bCleanMenu.BoolValue)
+			if (gc_bCleanMenu.BoolValue)
 			{
 				mainmenu.AddItem("1", "0", ITEMDRAW_SPACER);
 				mainmenu.AddItem("1", "0", ITEMDRAW_SPACER);
@@ -1586,7 +1586,7 @@ public Action Command_VoteEventDays(int client, int args)
 		Format(menuinfo, sizeof(menuinfo), "%T", "menu_event_Titlevote", client);
 		menu.SetTitle(menuinfo);
 
-		if(gc_bCleanMenu.BoolValue)
+		if (gc_bCleanMenu.BoolValue)
 		{
 			menu.AddItem("1", "0", ITEMDRAW_SPACER);
 			menu.AddItem("1", "0", ITEMDRAW_SPACER);
@@ -1670,7 +1670,7 @@ void Command_SetWardenEventDay(int client)
 			Format(menuinfo, sizeof(menuinfo), "%T", "menu_event_Titlestart", client);
 			menu.SetTitle(menuinfo);
 
-			if(gc_bCleanMenu.BoolValue)
+			if (gc_bCleanMenu.BoolValue)
 			{
 				menu.AddItem("1", "0", ITEMDRAW_SPACER);
 				menu.AddItem("1", "0", ITEMDRAW_SPACER);
@@ -1714,7 +1714,7 @@ void Command_SetAdminEventDay(int client)
 			Format(menuinfo, sizeof(menuinfo), "%T", "menu_event_Titlestart", client);
 			menu.SetTitle(menuinfo);
 
-			if(gc_bCleanMenu.BoolValue)
+			if (gc_bCleanMenu.BoolValue)
 			{
 				menu.AddItem("1", "0", ITEMDRAW_SPACER);
 				menu.AddItem("1", "0", ITEMDRAW_SPACER);
@@ -1802,13 +1802,13 @@ public Action Command_VotingMenu(int client, int args)
 						Format(menuinfo, sizeof(menuinfo), "%T", "menu_voting", LANG_SERVER);
 						menu.SetTitle(menuinfo);
 
-						if(gc_bCleanMenu.BoolValue)
+						if (gc_bCleanMenu.BoolValue)
 						{
 							menu.AddItem("1", "0", ITEMDRAW_SPACER);
 							menu.AddItem("1", "0", ITEMDRAW_SPACER);
 						}
 
-						if(gc_bVoteNoMenu.BoolValue)
+						if (gc_bVoteNoMenu.BoolValue)
 						{
 							Format(menuinfo, sizeof(menuinfo), "%T", "menu_noevent", LANG_SERVER);
 							menu.AddItem("No Event", menuinfo);

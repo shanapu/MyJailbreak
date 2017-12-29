@@ -897,7 +897,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 {
 	if (IsPlayerAlive(client))
 	{
-		if(g_bIsKnifeFight && gc_bGrav.BoolValue)
+		if (g_bIsKnifeFight && gc_bGrav.BoolValue)
 		{
 			if (GetEntityMoveType(client) == MOVETYPE_LADDER)
 			{
@@ -950,7 +950,7 @@ void StartEventRound(bool thisround)
 		MyJailbreak_SetEventDayPlanned(true);
 	}
 
-	if(thisround && g_bIsRoundEnd)
+	if (thisround && g_bIsRoundEnd)
 	{
 		thisround = false;
 	}

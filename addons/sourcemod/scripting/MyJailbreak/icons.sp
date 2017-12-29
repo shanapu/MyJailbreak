@@ -472,7 +472,7 @@ void SpawnIcon(int client)
 
 	RemoveIcon(client);
 
-	if(gc_bEventDay.BoolValue && MyJailbreak_IsEventDayRunning())
+	if (gc_bEventDay.BoolValue && MyJailbreak_IsEventDayRunning())
 		return;
 
 	if (g_bBlockIcon[client])
