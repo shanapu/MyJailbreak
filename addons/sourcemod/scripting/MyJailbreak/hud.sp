@@ -33,6 +33,7 @@
 #include <autoexecconfig>
 #include <mystocks>
 #include <myjailbreak>
+#include <clientprefs>
 
 // Optional Plugins
 #undef REQUIRE_PLUGIN
@@ -68,9 +69,18 @@ ConVar gc_bPlugin;
 ConVar gc_sPrefix;
 ConVar gc_sCustomCommandHUD;
 ConVar gc_bAlive;
+ConVar gc_bType;
+ConVar gc_iRed;
+ConVar gc_iBlue;
+ConVar gc_iGreen;
+ConVar gc_iAlpha;
 
 // Booleans
-g_bEnableHud[MAXPLAYERS+1] = true;
+bool g_bEnableHud[MAXPLAYERS+1] = true;
+
+// Handle
+Handle g_hHUD;
+Handle g_hCookie = null;
 
 // Strings
 char g_sPrefix[64];
@@ -100,6 +110,9 @@ public void OnPluginStart()
 
 	RegConsoleCmd("sm_hud", Command_HUD, "Allows player to toggle the hud display.");
 
+	g_hCookie = RegClientCookie("PlayerHUD", "MyJailbreak HUD prefs", CookieAccess_Public);
+	SetCookiePrefabMenu(g_hCookie, CookieMenu_OnOff_Int, "MyJailbreak HUD", Handler_CookieSound);
+
 	// AutoExecConfig
 	AutoExecConfig_SetFile("PlayerHUD", "MyJailbreak");
 	AutoExecConfig_SetCreateFile(true);
@@ -108,6 +121,11 @@ public void OnPluginStart()
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_hud_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true, 0.0, true, 1.0);
 	gc_sPrefix = AutoExecConfig_CreateConVar("sm_hud_prefix", "[{green}MyJB.HUD{default}]", "Set your chat prefix for this plugin.");
 	gc_bAlive = AutoExecConfig_CreateConVar("sm_hud_alive", "1", "0 - show hud only to alive player, 1 - show hud to dead & alive player", _, true, 0.0, true, 1.0);
+	gc_bType = AutoExecConfig_CreateConVar("sm_hud_type", "1", "0 - show hud via a center-bottom hint box (sm_hsay), 1 - show hud via 'new hud' system", _, true, 0.0, true, 1.0);
+	gc_iRed = AutoExecConfig_CreateConVar("sm_hud_red", "0", "Color of sm_hud_type '1' (set R, G and B values to 255 to disable) (Rgb): x - red value", _, true, 0.0, true, 255.0);
+	gc_iBlue = AutoExecConfig_CreateConVar("sm_hud_green", "200", "Color of sm_hud_type '1' (set R, G and B values to 255 to disable) (rGb): x - green value", _, true, 0.0, true, 255.0);
+	gc_iGreen = AutoExecConfig_CreateConVar("sm_hud_blue", "200", "Color of sm_hud_type '1' (set R, G and B values to 255 to disable) (rgB): x - blue value", _, true, 0.0, true, 255.0);
+	gc_iAlpha = AutoExecConfig_CreateConVar("sm_hud_alpha", "200", "Alpha value of sm_hud_type '1' (set value to 255 to disable for transparency)", _, true, 0.0, true, 255.0);
 	gc_sCustomCommandHUD = AutoExecConfig_CreateConVar("sm_hud_cmds", "HUD", "Set your custom chat commands for toggle HUD(!hud (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 
 	AutoExecConfig_ExecuteFile();
@@ -123,7 +141,7 @@ public void OnPluginStart()
 	{
 		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 		{
-			OnClientPutInServer(i);
+			OnClientCookiesCached(i);
 		}
 
 		g_bIsLateLoad = false;
@@ -141,17 +159,25 @@ public void OnAllPluginsLoaded()
 public void OnLibraryRemoved(const char[] name)
 {
 	if (StrEqual(name, "myjbwarden"))
+	{
 		gp_bMyJBWarden = false;
+	}
 	else if (StrEqual(name, "lastrequest"))
+	{
 		gp_bHosties = false;
+	}
 }
 
 public void OnLibraryAdded(const char[] name)
 {
 	if (StrEqual(name, "myjbwarden"))
+	{
 		gp_bMyJBWarden = true;
+	}
 	else if (StrEqual(name, "lastrequest"))
+	{
 		gp_bHosties = true;
+	}
 }
 
 // ConVarChange for Strings
@@ -188,7 +214,7 @@ public void OnConfigsExecuted()
 }
 
 /******************************************************************************
-                   COMMANDS
+                   COMMANDS & COOKIE
 ******************************************************************************/
 
 // Toggle hud
@@ -197,16 +223,41 @@ public Action Command_HUD(int client, int args)
 	if (!g_bEnableHud[client])
 	{
 		g_bEnableHud[client] = true;
+		SetClientCookie(client, g_hCookie, "1");
+
 		CReplyToCommand(client, "%s %t", g_sPrefix, "hud_on");
 	}
 	else
 	{
 		g_bEnableHud[client] = false;
+		SetClientCookie(client, g_hCookie, "0");
+
 		CReplyToCommand(client, "%s %t", g_sPrefix, "hud_off");
 	}
 
 	return Plugin_Handled;
 }
+
+public void Handler_CookieSound(int client, CookieMenuAction action, any info, char [] buffer, int maxlen)
+{
+	if (action == CookieMenuAction_SelectOption)
+	{
+		OnClientCookiesCached(client);
+	}
+}
+
+public void OnClientCookiesCached(int client)
+{
+	g_bEnableHud[client] = true;
+	char sBuffer[8];
+	GetClientCookie(client, g_hCookie, sBuffer, sizeof(sBuffer));
+
+	if(sBuffer[0] != '\0')
+	{
+		g_bEnableHud[client] = view_as<bool>(StringToInt(sBuffer));
+	}
+}
+
 
 /******************************************************************************
                    EVENTS
@@ -232,13 +283,11 @@ public void OnMapStart()
 {
 	if (gc_bPlugin.BoolValue)
 	{
-		CreateTimer(1.0, Timer_ShowHUD, _, TIMER_REPEAT);
+		CreateTimer(1.0, Timer_ShowHUD, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 	}
-}
 
-public void OnClientPutInServer(int client)
-{
-	g_bEnableHud[client] = true;
+	g_hHUD = CreateHudSynchronizer();
+	SetHudTextParams(-1.0, 0.1, 5.0, gc_iRed.IntValue, gc_iGreen.IntValue, gc_iBlue.IntValue, gc_iAlpha.IntValue, 1, 1.0, 0.0, 0.0);
 }
 
 public void warden_OnWardenCreatedByUser(int client)
@@ -272,10 +321,11 @@ public Action Timer_ShowHUD(Handle timer, Handle pack)
 void ShowHUD()
 {
 	int warden = -1;
-	if(gp_bMyJBWarden)
+	if (gp_bMyJBWarden)
 	{
 		warden = warden_get();
 	}
+
 	int aliveCT = GetAlivePlayersCount(CS_TEAM_CT);
 	int allCT = GetTeamClientCount(CS_TEAM_CT);
 	int aliveT = GetAlivePlayersCount(CS_TEAM_T);
@@ -283,23 +333,23 @@ void ShowHUD()
 	int iLastCT = -1;
 	char sLastCT[32];
 	char sWarden[32];
-	
+
 	if (MyJailbreak_IsLastGuardRule())
 	{
 		iLastCT = GetLastAlive(CS_TEAM_CT);
 		GetClientName(iLastCT, sLastCT, sizeof(sLastCT));
 		ReplaceString(sLastCT, sizeof(sLastCT), "<", "", false);
 	}
-	
+
 	if (warden != -1)
 	{
 		GetClientName(warden, sWarden, sizeof(sWarden));
 		ReplaceString(sWarden, sizeof(sWarden), "<", "", false);
 	}
-	
+
 	char EventDay[64];
 	MyJailbreak_GetEventDayName(EventDay);
-	
+
 	if (!gc_bPlugin.BoolValue)
 		return;
 
@@ -319,55 +369,114 @@ void ShowHUD()
 				return;
 		}
 
-		if (MyJailbreak_IsLastGuardRule())
+		if(gc_bType.BoolValue)
 		{
-			if (iLastCT != -1)
+			ClearSyncHud(i, g_hHUD);
+
+			if (MyJailbreak_IsLastGuardRule())
+			{
+				if (iLastCT != -1)
+				{
+					if (MyJailbreak_IsEventDayPlanned())
+					{
+						ShowSyncHudText(i, g_hHUD, "%t %s\n%t %s\n%t %i/%i\t%t %i/%i\n", "hud_lastCT", sLastCT, "hud_planned", EventDay, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
+					}
+					else
+					{
+						ShowSyncHudText(i, g_hHUD, "%t %s\n%t %i/%i\t%t %i/%i\n", "hud_lastCT", sLastCT, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
+					}
+				}
+			}
+			else if (MyJailbreak_IsEventDayRunning())
+			{
+				ShowSyncHudText(i, g_hHUD, "%t %s\n%t %i/%i\t%t %i/%i\n", "hud_running", EventDay, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
+			}
+			else if (gp_bMyJBWarden && warden == -1)
 			{
 				if (MyJailbreak_IsEventDayPlanned())
 				{
-					PrintHintText(i, "<font face='Arial' color='#006699'>%t </font>%s</font>\n<font face='Arial' color='#B980EF'>%t</font> %s\n<font color='#5E97D8'>%t</font> %i/%i\t<font color='#E3AD39'>%t</font> %i/%i\n", "hud_lastCT", sLastCT, "hud_planned", EventDay, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
+					ShowSyncHudText(i, g_hHUD, "%t %t\n%t %s\n%t %i/%i\t%t %i/%i", "hud_warden", "hud_nowarden", "hud_planned", EventDay, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
 				}
 				else
 				{
-					PrintHintText(i, "<font face='Arial' color='#006699'>%t </font>%s</font>\n<font color='#5E97D8'>%t</font> %i/%i\t<font color='#E3AD39'>%t</font> %i/%i\n", "hud_lastCT", sLastCT, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
+					ShowSyncHudText(i, g_hHUD, "%t %t\n%t %i/%i\t%t %i/%i\n", "hud_warden", "hud_nowarden", "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
 				}
 			}
-		}
-		else if (MyJailbreak_IsEventDayRunning())
-		{
-			PrintHintText(i, "<font face='Arial' color='#B980EF'>%t </font>%s\n<font color='#5E97D8'>%t</font> %i/%i\t<font color='#E3AD39'>%t</font> %i/%i\n", "hud_running", EventDay, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
-		}
-		else if (gp_bMyJBWarden && warden == -1)
-		{
-			if (MyJailbreak_IsEventDayPlanned())
+			else if (gp_bMyJBWarden)
 			{
-				PrintHintText(i, "<font face='Arial' color='#006699'>%t </font><font face='Arial' color='#FE4040'>%t</font>\n<font color='#B980EF'>%t</font> %s\n<font color='#5E97D8'>%t</font> %i/%i\t<font color='#E3AD39'>%t</font> %i/%i", "hud_warden", "hud_nowarden", "hud_planned", EventDay, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
+				if (MyJailbreak_IsEventDayPlanned())
+				{
+					ShowSyncHudText(i, g_hHUD, "%t %s\n%t %s\n%t %i/%i\t%t %i/%i\n", "hud_warden", sWarden, "hud_planned", EventDay, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
+				}
+				else
+				{
+					ShowSyncHudText(i, g_hHUD, "%t %s\n%t %i/%i\t%t %i/%i\n", "hud_warden", sWarden, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
+				}
 			}
 			else
 			{
-				PrintHintText(i, "<font face='Arial' color='#006699'>%t </font><font face='Arial' color='#FE4040'>%t</font>\n<font color='#5E97D8'>%t</font> %i/%i\t<font color='#E3AD39'>%t</font> %i/%i\n", "hud_warden", "hud_nowarden", "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
-			}
-		}
-		else if (gp_bMyJBWarden)
-		{
-			if (MyJailbreak_IsEventDayPlanned())
-			{
-				PrintHintText(i, "<font face='Arial' color='#006699'>%t </font>%s\n<font face='Arial' color='#B980EF'>%t</font> %s\n<font color='#5E97D8'>%t</font> %i/%i\t<font color='#E3AD39'>%t</font> %i/%i\n", "hud_warden", sWarden, "hud_planned", EventDay, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
-			}
-			else
-			{
-				PrintHintText(i, "<font face='Arial' color='#006699'>%t </font>%s\n<font color='#5E97D8'>%t</font> %i/%i\t<font color='#E3AD39'>%t</font> %i/%i\n", "hud_warden", sWarden, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
+				if (MyJailbreak_IsEventDayPlanned())
+				{
+					ShowSyncHudText(i, g_hHUD, "%t %s\n%t %i/%i\t%t %i/%i\n", "hud_planned", EventDay, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
+				}
+				else
+				{
+					ShowSyncHudText(i, g_hHUD, "%t %i/%i\t%t %i/%i\n", "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
+				}
 			}
 		}
 		else
 		{
-			if (MyJailbreak_IsEventDayPlanned())
+			if (MyJailbreak_IsLastGuardRule())
 			{
-				PrintHintText(i, "<font face='Arial' color='#B980EF'>%t</font> %s\n<font color='#5E97D8'>%t</font> %i/%i\t<font color='#E3AD39'>%t</font> %i/%i\n", "hud_planned", EventDay, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
+				if (iLastCT != -1)
+				{
+					if (MyJailbreak_IsEventDayPlanned())
+					{
+						PrintHintText(i, "<font face='Arial' color='#006699'>%t </font>%s</font>\n<font face='Arial' color='#B980EF'>%t</font> %s\n<font color='#5E97D8'>%t</font> %i/%i\t<font color='#E3AD39'>%t</font> %i/%i\n", "hud_lastCT", sLastCT, "hud_planned", EventDay, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
+					}
+					else
+					{
+						PrintHintText(i, "<font face='Arial' color='#006699'>%t </font>%s</font>\n<font color='#5E97D8'>%t</font> %i/%i\t<font color='#E3AD39'>%t</font> %i/%i\n", "hud_lastCT", sLastCT, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
+					}
+				}
+			}
+			else if (MyJailbreak_IsEventDayRunning())
+			{
+				PrintHintText(i, "<font face='Arial' color='#B980EF'>%t </font>%s\n<font color='#5E97D8'>%t</font> %i/%i\t<font color='#E3AD39'>%t</font> %i/%i\n", "hud_running", EventDay, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
+			}
+			else if (gp_bMyJBWarden && warden == -1)
+			{
+				if (MyJailbreak_IsEventDayPlanned())
+				{
+					PrintHintText(i, "<font face='Arial' color='#006699'>%t </font><font face='Arial' color='#FE4040'>%t</font>\n<font color='#B980EF'>%t</font> %s\n<font color='#5E97D8'>%t</font> %i/%i\t<font color='#E3AD39'>%t</font> %i/%i", "hud_warden", "hud_nowarden", "hud_planned", EventDay, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
+				}
+				else
+				{
+					PrintHintText(i, "<font face='Arial' color='#006699'>%t </font><font face='Arial' color='#FE4040'>%t</font>\n<font color='#5E97D8'>%t</font> %i/%i\t<font color='#E3AD39'>%t</font> %i/%i\n", "hud_warden", "hud_nowarden", "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
+				}
+			}
+			else if (gp_bMyJBWarden)
+			{
+				if (MyJailbreak_IsEventDayPlanned())
+				{
+					PrintHintText(i, "<font face='Arial' color='#006699'>%t </font>%s\n<font face='Arial' color='#B980EF'>%t</font> %s\n<font color='#5E97D8'>%t</font> %i/%i\t<font color='#E3AD39'>%t</font> %i/%i\n", "hud_warden", sWarden, "hud_planned", EventDay, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
+				}
+				else
+				{
+					PrintHintText(i, "<font face='Arial' color='#006699'>%t </font>%s\n<font color='#5E97D8'>%t</font> %i/%i\t<font color='#E3AD39'>%t</font> %i/%i\n", "hud_warden", sWarden, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
+				}
 			}
 			else
 			{
-				PrintHintText(i, "<font color='#5E97D8'>%t</font> %i/%i\t<font color='#E3AD39'>%t</font> %i/%i\n", "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
+				if (MyJailbreak_IsEventDayPlanned())
+				{
+					PrintHintText(i, "<font face='Arial' color='#B980EF'>%t</font> %s\n<font color='#5E97D8'>%t</font> %i/%i\t<font color='#E3AD39'>%t</font> %i/%i\n", "hud_planned", EventDay, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
+				}
+				else
+				{
+					PrintHintText(i, "<font color='#5E97D8'>%t</font> %i/%i\t<font color='#E3AD39'>%t</font> %i/%i\n", "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
+				}
 			}
 		}
 	}
