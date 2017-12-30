@@ -74,6 +74,8 @@ ConVar gc_iRed;
 ConVar gc_iBlue;
 ConVar gc_iGreen;
 ConVar gc_iAlpha;
+ConVar gc_fX;
+ConVar gc_fY;
 
 // Booleans
 bool g_bEnableHud[MAXPLAYERS+1] = true;
@@ -122,6 +124,8 @@ public void OnPluginStart()
 	gc_sPrefix = AutoExecConfig_CreateConVar("sm_hud_prefix", "[{green}MyJB.HUD{default}]", "Set your chat prefix for this plugin.");
 	gc_bAlive = AutoExecConfig_CreateConVar("sm_hud_alive", "1", "0 - show hud only to alive player, 1 - show hud to dead & alive player", _, true, 0.0, true, 1.0);
 	gc_bType = AutoExecConfig_CreateConVar("sm_hud_type", "1", "0 - show hud via a center-bottom hint box (sm_hsay), 1 - show hud via 'new hud' system", _, true, 0.0, true, 1.0);
+	gc_fX = AutoExecConfig_CreateConVar("sm_hud_x", "-1", "x coordinate, from 0 to 1. -1.0 is the center of sm_hud_type '1'", _, true, -1.0, true, 1.0);
+	gc_fY = AutoExecConfig_CreateConVar("sm_hud_y", "0.1", "y coordinate, from 0 to 1. -1.0 is the center of sm_hud_type '1'", _, true, -1.0, true, 1.0);
 	gc_iRed = AutoExecConfig_CreateConVar("sm_hud_red", "0", "Color of sm_hud_type '1' (set R, G and B values to 255 to disable) (Rgb): x - red value", _, true, 0.0, true, 255.0);
 	gc_iBlue = AutoExecConfig_CreateConVar("sm_hud_green", "200", "Color of sm_hud_type '1' (set R, G and B values to 255 to disable) (rGb): x - green value", _, true, 0.0, true, 255.0);
 	gc_iGreen = AutoExecConfig_CreateConVar("sm_hud_blue", "200", "Color of sm_hud_type '1' (set R, G and B values to 255 to disable) (rgB): x - blue value", _, true, 0.0, true, 255.0);
@@ -146,6 +150,8 @@ public void OnPluginStart()
 
 		g_bIsLateLoad = false;
 	}
+
+	g_hHUD = CreateHudSynchronizer();
 }
 
 // Check for optional Plugins
@@ -285,9 +291,6 @@ public void OnMapStart()
 	{
 		CreateTimer(1.0, Timer_ShowHUD, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 	}
-
-	g_hHUD = CreateHudSynchronizer();
-	SetHudTextParams(-1.0, 0.1, 5.0, gc_iRed.IntValue, gc_iGreen.IntValue, gc_iBlue.IntValue, gc_iAlpha.IntValue, 1, 1.0, 0.0, 0.0);
 }
 
 public void warden_OnWardenCreatedByUser(int client)
@@ -372,6 +375,7 @@ void ShowHUD()
 		if(gc_bType.BoolValue)
 		{
 			ClearSyncHud(i, g_hHUD);
+			SetHudTextParams(gc_fX.FloatValue, gc_fY.FloatValue, 5.0, gc_iRed.IntValue, gc_iGreen.IntValue, gc_iBlue.IntValue, gc_iAlpha.IntValue, 1, 1.0, 0.0, 0.0);
 
 			if (MyJailbreak_IsLastGuardRule())
 			{
