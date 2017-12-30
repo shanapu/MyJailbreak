@@ -78,6 +78,7 @@ echo "Move all addons binary files to disbaled folder"
   mv addons/sourcemod/plugins/MyJailbreak/warden_zephstore_paperclips.smx addons/sourcemod/plugins/MyJailbreak/disabled
   mv addons/sourcemod/plugins/MyJailbreak/warden_zephstore_freeday.smx addons/sourcemod/plugins/MyJailbreak/disabled
   mv addons/sourcemod/plugins/MyJailbreak/menu_custom.smx addons/sourcemod/plugins/MyJailbreak/disabled
+  mv addons/sourcemod/plugins/MyJailbreak/eventday_toggle.smx addons/sourcemod/plugins/MyJailbreak/disabled
   rm -r addons/sourcemod/plugins/MyJailbreak/template_custom_menu.smx
 
 echo "Remove build folder if exists"

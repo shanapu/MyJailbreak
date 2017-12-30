@@ -18,6 +18,18 @@
 *  Warden: Set minimum value of sm_warden_cooldown_roundstart to 0
 *  Freeday: Remove teleport to CT spawn
 *  EventDays: restrict weapon shooting while truce/freeze-time
+*  HUD: removed hosties dependency
+*  HUD: use the 'new HUD' sytsem for csgo
+    *  new cvars - sm_hud_type - 0 - show hud via a center-bottom hint box (sm_hsay), 1 - show hud via 'new hud' system
+    *  new cvars - sm_hud_red - Color of sm_hud_type '1' (set R, G and B values to 255 to disable) (Rgb): x - red value
+    *  new cvars - sm_hud_green - Color of sm_hud_type '1' (set R, G and B values to 255 to disable) (rGb): x - green value
+    *  new cvars - sm_hud_blue - Color of sm_hud_type '1' (set R, G and B values to 255 to disable) (rgB): x - blue value
+    *  new cvars - sm_hud_alpha - Alpha value of sm_hud_type '1' set value to 255 to disable for transparency
+    *  new cvars - sm_hud_x - x coordinate, from 0 to 1. -1.0 is the center of sm_hud_type '1'
+    *  new cvars - sm_hud_y - y coordinate, from 0 to 1. -1.0 is the center of sm_hud_type '1'
+*  Add-On: Change ConVars, block or execute commands & un/load plugins on EventDay start/end
+    *  new plugin - disabled/eventday_toggle.smx
+    *  new config - sourcemod/configs/MyJailbreak/eventday_toggle.cfg check comments in this cfg for configuration
 *  Add-On: Support for adding freeday to Zephyrus store
     *  new plugin - disabled/warden_zephstore_freeday.smx
 		"FreeDay"
@@ -29,6 +41,14 @@
   
   *Fixed*
 *  minor error
+  
+  
+  
+  Developer stuff*
+*  New natives to dis/enable warden and check if enabled
+    *  new native - void warden_enable(bool status) - Disable & enable warden plugin
+    *  new native - bool warden_isenabled() - get the current status of warden plugin
+  
   
   
 **[Beta 13]** - New Events, new features & many changes

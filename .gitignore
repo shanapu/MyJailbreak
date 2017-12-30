@@ -9,6 +9,7 @@ wip_*.*
 graphics/*
 addons/sourcemod/plugins/*
 addons/sourcemod/scripting/snips/*
+addons/sourcemod/scripting/wip/*
 addons/sourcemod/scripting/compiled
 addons/sourcemod/scripting/compile.exe
 addons/sourcemod/scripting/spcomp.exe
@@ -69,6 +70,7 @@ addons/sourcemod/scripting/include/sdktools_stringtables.inc
 addons/sourcemod/scripting/include/sdktools_tempents.inc
 addons/sourcemod/scripting/include/sdktools_tempents_stocks.inc
 addons/sourcemod/scripting/include/sdktools_trace.inc
+addons/sourcemod/scripting/include/sdktools_variant_t.inc
 addons/sourcemod/scripting/include/sdktools_voice.inc
 addons/sourcemod/scripting/include/sorting.inc
 addons/sourcemod/scripting/include/sourcemod.inc
