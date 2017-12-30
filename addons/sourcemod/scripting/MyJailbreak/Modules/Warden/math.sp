@@ -234,7 +234,7 @@ public Action OnChatMessage(int &author, Handle recipients, char [] name, char [
 		if (!IsPlayerAlive(author))
 			return Plugin_Continue;
 
-		if(!gc_bAllowCT.BoolValue && GetClientTeam(author) != CS_TEAM_T)
+		if (!gc_bAllowCT.BoolValue && GetClientTeam(author) != CS_TEAM_T)
 			return Plugin_Continue;
 
 		char bit[1][5];
@@ -256,7 +256,7 @@ public Action CP_OnChatMessage(int& author, ArrayList recipients, char[] flagstr
 		if (!IsPlayerAlive(author))
 			return Plugin_Continue;
 
-		if(!gc_bAllowCT.BoolValue && GetClientTeam(author) != CS_TEAM_T)
+		if (!gc_bAllowCT.BoolValue && GetClientTeam(author) != CS_TEAM_T)
 			return Plugin_Continue;
 
 		char bit[2][5];

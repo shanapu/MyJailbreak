@@ -88,7 +88,7 @@ public void MyJailbreak_OnLastGuardRuleStart()
 
 public Action TG_OnPlayerRebel(int client, TG_Team team)
 {
-	if(MyJailbreak_IsEventDayRunning())
+	if (MyJailbreak_IsEventDayRunning())
 	{
 		return Plugin_Handled;
 	}

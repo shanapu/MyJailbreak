@@ -1065,7 +1065,7 @@ void StartEventRound(bool thisround)
 		MyJailbreak_SetEventDayPlanned(true);
 	}
 
-	if(thisround && g_bIsRoundEnd)
+	if (thisround && g_bIsRoundEnd)
 	{
 		thisround = false;
 	}
@@ -1290,9 +1290,8 @@ void CheckStatus()
 
 	if (count == 0)
 	{
-		CPrintToChatAll("%s %t", g_sPrefix, "catch_win");
-
 		CS_TerminateRound(5.0, CSRoundEnd_CTWin);
+		CPrintToChatAll("%s %t", g_sPrefix, "catch_win");
 	}
 }
 

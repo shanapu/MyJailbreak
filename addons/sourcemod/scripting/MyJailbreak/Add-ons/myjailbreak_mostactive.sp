@@ -216,13 +216,13 @@ int SecondsToString(int Time, char[] buffer, int buffersize, int client)
 		iMinutes++;
 		iSeconds -= 60;
 	}
-	if(iHours >= 1)
+	if (iHours >= 1)
 	{
 		Format(buffer, buffersize, "%d %t", iHours, "ratio_hours", client);
 		Format(buffer, buffersize, "%s %d %t", buffer, iMinutes, "ratio_minutes", client);
 		Format(buffer, buffersize, "%s %d %t", buffer, iSeconds, "ratio_seconds", client);
 	}
-	else if(iMinutes >= 1)
+	else if (iMinutes >= 1)
 	{
 		Format(buffer, buffersize, "%d %t", iMinutes, "ratio_minutes", client);
 		Format(buffer, buffersize, "%s %d %t", buffer, iSeconds, "ratio_seconds", client);
