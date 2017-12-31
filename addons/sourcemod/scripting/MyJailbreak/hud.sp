@@ -113,7 +113,7 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_hud", Command_HUD, "Allows player to toggle the hud display.");
 
 	g_hCookie = RegClientCookie("PlayerHUD", "MyJailbreak HUD prefs", CookieAccess_Public);
-	SetCookiePrefabMenu(g_hCookie, CookieMenu_OnOff_Int, "MyJailbreak HUD", Handler_CookieSound);
+	SetCookiePrefabMenu(g_hCookie, CookieMenu_OnOff_Int, "MyJailbreak HUD", Handler_Cookie);
 
 	// AutoExecConfig
 	AutoExecConfig_SetFile("PlayerHUD", "MyJailbreak");
@@ -244,7 +244,7 @@ public Action Command_HUD(int client, int args)
 	return Plugin_Handled;
 }
 
-public void Handler_CookieSound(int client, CookieMenuAction action, any info, char [] buffer, int maxlen)
+public void Handler_Cookie(int client, CookieMenuAction action, any info, char [] buffer, int maxlen)
 {
 	if (action == CookieMenuAction_SelectOption)
 	{

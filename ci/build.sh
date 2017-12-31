@@ -219,6 +219,9 @@ unzip -qo translations.zip -d build/gameserver/
 wget -q -O translations.zip http://translator.mitchdempsey.com/sourcemod_plugins/283/download/MyJailbreak.OneIntheChamber.translations.zip
 unzip -qo translations.zip -d build/gameserver/
 
+wget -q -O translations.zip http://translator.mitchdempsey.com/sourcemod_plugins/298/download/MyJailbreak.Icons.translations.zip
+unzip -qo translations.zip -d build/gameserver/
+
 
 
 

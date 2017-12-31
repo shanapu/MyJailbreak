@@ -1,0 +1,14 @@
+
+"Phrases"
+{
+	"icons_on"
+	{
+		"en"		"Icons {purple}are enabled!"
+	}
+
+	"icons_off"
+	{
+		"en"		"Icons {purple}are disabled"
+	}
+
+}

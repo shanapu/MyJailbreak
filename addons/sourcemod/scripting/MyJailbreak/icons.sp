@@ -33,6 +33,7 @@
 #include <autoexecconfig>
 #include <mystocks>
 #include <myicons>
+#include <clientprefs>
 
 // Optional Plugins
 #undef REQUIRE_PLUGIN
@@ -63,8 +64,11 @@ ConVar gc_bIconRebel;
 ConVar gc_sIconRebelPath;
 ConVar gc_bIconFreeday;
 ConVar gc_sIconFreedayPath;
+ConVar gc_sCustomCommand;
+ConVar gc_sPrefix;
 
 // Bools
+bool g_bIsLateLoad = false;
 bool gp_bWarden = false;
 bool gp_bMyJBWarden = false;
 bool gp_bHosties = false;
@@ -81,6 +85,11 @@ char g_sIconPrisonerPath[256];
 char g_sIconRebelPath[256];
 char g_sIconCuffedPath[256];
 char g_sIconFreedayPath[256];
+char g_sPrefix[64];
+
+
+bool g_bEnable[MAXPLAYERS+1] = true;
+Handle g_hCookie = null;
 
 // Info
 public Plugin myinfo = {
@@ -94,6 +103,14 @@ public Plugin myinfo = {
 // Start
 public void OnPluginStart()
 {
+	// Translation
+	LoadTranslations("MyJailbreak.Icons.phrases");
+
+	RegConsoleCmd("sm_icons", Command_Icons, "Allows player to toggle the player icons.");
+
+	g_hCookie = RegClientCookie("PlayerIcons", "MyJailbreak Icons prefs", CookieAccess_Public);
+	SetCookiePrefabMenu(g_hCookie, CookieMenu_OnOff_Int, "MyJailbreak Icons", Handler_Cookie);
+
 	// AutoExecConfig
 	AutoExecConfig_SetFile("Icons", "MyJailbreak");
 	AutoExecConfig_SetCreateFile(true);
@@ -112,8 +129,10 @@ public void OnPluginStart()
 	gc_sIconRebelPath = AutoExecConfig_CreateConVar("sm_icons_rebel_path", "decals/MyJailbreak/rebel", "Path to the rebel prisoner icon DONT TYPE .vmt or .vft");
 	gc_bIconCuffed = AutoExecConfig_CreateConVar("sm_icons_cuffs_enable", "1", "0 - disabled, 1 - enable the icon above the cuffed prisoners head", _, true, 0.0, true, 1.0);
 	gc_sIconCuffedPath = AutoExecConfig_CreateConVar("sm_icons_cuffs_path", "decals/MyJailbreak/cuffed", "Path to the cuffed prisoner icon DONT TYPE .vmt or .vft");
-	gc_bIconFreeday = AutoExecConfig_CreateConVar("sm_warden_icons_freeday_enable", "1", "0 - disabled, 1 - enable the icon above the prisoners with freeday head", _, true, 0.0, true, 1.0);
-	gc_sIconFreedayPath = AutoExecConfig_CreateConVar("sm_warden_icons_freeday", "decals/MyJailbreak/freeday", "Path to the freeday icon DONT TYPE .vmt or .vft");
+	gc_bIconFreeday = AutoExecConfig_CreateConVar("sm_icons_freeday_enable", "1", "0 - disabled, 1 - enable the icon above the prisoners with freeday head", _, true, 0.0, true, 1.0);
+	gc_sIconFreedayPath = AutoExecConfig_CreateConVar("sm_icons_freeday", "decals/MyJailbreak/freeday", "Path to the freeday icon DONT TYPE .vmt or .vft");
+	gc_sCustomCommand = AutoExecConfig_CreateConVar("sm_icons_cmds", "icon", "Set your custom chat commands for toggle Icons(!icons (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
+	gc_sPrefix = AutoExecConfig_CreateConVar("sm_icons_prefix", "[{green}MyJB.Icons{default}]", "Set your chat prefix for this plugin.");
 
 	// AutoExecConfig
 	AutoExecConfig_ExecuteFile();
@@ -130,6 +149,7 @@ public void OnPluginStart()
 	HookConVarChange(gc_sIconRebelPath, OnSettingChanged);
 	HookConVarChange(gc_sIconCuffedPath, OnSettingChanged);
 	HookConVarChange(gc_sIconFreedayPath, OnSettingChanged);
+	HookConVarChange(gc_sPrefix, OnSettingChanged);
 
 	// FindConVar
 	gc_sIconWardenPath.GetString(g_sIconWardenPath, sizeof(g_sIconWardenPath));
@@ -139,11 +159,26 @@ public void OnPluginStart()
 	gc_sIconRebelPath.GetString(g_sIconRebelPath, sizeof(g_sIconRebelPath));
 	gc_sIconCuffedPath.GetString(g_sIconCuffedPath, sizeof(g_sIconCuffedPath));
 	gc_sIconFreedayPath.GetString(g_sIconFreedayPath, sizeof(g_sIconFreedayPath));
+
+	// Late loading
+	if (g_bIsLateLoad)
+	{
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+		{
+			OnClientCookiesCached(i);
+		}
+
+		g_bIsLateLoad = false;
+	}
 }
 
 public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
-	if (convar == gc_sIconWardenPath)
+	if (convar == gc_sPrefix)
+	{
+		strcopy(g_sPrefix, sizeof(g_sPrefix), newValue);
+	}
+	else if (convar == gc_sIconWardenPath)
 	{
 		strcopy(g_sIconWardenPath, sizeof(g_sIconWardenPath), newValue);
 		if (gc_bIconWarden.BoolValue)
@@ -231,6 +266,76 @@ public void OnLibraryAdded(const char[] name)
 	if (StrEqual(name, "lastrequest"))
 		gp_bHosties = true;
 }
+
+// Initialize Plugin
+public void OnConfigsExecuted()
+{
+	gc_sPrefix.GetString(g_sPrefix, sizeof(g_sPrefix));
+
+	// Set custom Commands
+	int iCount = 0;
+	char sCommands[128], sCommandsL[12][32], sCommand[32];
+
+	// HUd
+	gc_sCustomCommand.GetString(sCommands, sizeof(sCommands));
+	ReplaceString(sCommands, sizeof(sCommands), " ", "");
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+
+	for (int i = 0; i < iCount; i++)
+	{
+		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		{
+			RegConsoleCmd(sCommand, Command_Icons, "Allows player to toggle the player icons.");
+		}
+	}
+}
+
+/******************************************************************************
+                   COMMANDS & COOKIE
+******************************************************************************/
+
+// Toggle hud
+public Action Command_Icons(int client, int args)
+{
+	if (!g_bEnable[client])
+	{
+		g_bEnable[client] = true;
+		SetClientCookie(client, g_hCookie, "1");
+
+		CReplyToCommand(client, "%s %t", g_sPrefix, "icons_on");
+	}
+	else
+	{
+		g_bEnable[client] = false;
+		SetClientCookie(client, g_hCookie, "0");
+
+		CReplyToCommand(client, "%s %t", g_sPrefix, "icons_off");
+	}
+
+	return Plugin_Handled;
+}
+
+public void Handler_Cookie(int client, CookieMenuAction action, any info, char [] buffer, int maxlen)
+{
+	if (action == CookieMenuAction_SelectOption)
+	{
+		OnClientCookiesCached(client);
+	}
+}
+
+public void OnClientCookiesCached(int client)
+{
+	g_bEnable[client] = true;
+	char sBuffer[8];
+	GetClientCookie(client, g_hCookie, sBuffer, sizeof(sBuffer));
+
+	if(sBuffer[0] != '\0')
+	{
+		g_bEnable[client] = view_as<bool>(StringToInt(sBuffer));
+	}
+}
+
 
 /******************************************************************************
                    EVENTS
@@ -336,6 +441,9 @@ public Action Timer_Delay(Handle timer, Handle pack)
 
 public Action Should_TransmitG(int entity, int client)
 {
+	if (!g_bEnable[client])
+		return Plugin_Handled;
+
 	char m_ModelName[PLATFORM_MAX_PATH];
 	char iconbuffer[256];
 
@@ -353,6 +461,9 @@ public Action Should_TransmitG(int entity, int client)
 
 public Action Should_TransmitW(int entity, int client)
 {
+	if (!g_bEnable[client])
+		return Plugin_Handled;
+
 	char m_ModelName[PLATFORM_MAX_PATH];
 	char iconbuffer[256];
 
@@ -371,6 +482,9 @@ public Action Should_TransmitW(int entity, int client)
 
 public Action Should_TransmitD(int entity, int client)
 {
+	if (!g_bEnable[client])
+		return Plugin_Handled;
+
 	char m_ModelName[PLATFORM_MAX_PATH];
 	char iconbuffer[256];
 
@@ -389,6 +503,9 @@ public Action Should_TransmitD(int entity, int client)
 
 public Action Should_TransmitP(int entity, int client)
 {
+	if (!g_bEnable[client])
+		return Plugin_Handled;
+
 	char m_ModelName[PLATFORM_MAX_PATH];
 	char iconbuffer[256];
 
@@ -404,9 +521,11 @@ public Action Should_TransmitP(int entity, int client)
 	return Plugin_Handled;
 }
 
-
 public Action Should_TransmitR(int entity, int client)
 {
+	if (!g_bEnable[client])
+		return Plugin_Handled;
+
 	char m_ModelName[PLATFORM_MAX_PATH];
 	char iconbuffer[256];
 
@@ -425,6 +544,9 @@ public Action Should_TransmitR(int entity, int client)
 
 public Action Should_TransmitC(int entity, int client)
 {
+	if (!g_bEnable[client])
+		return Plugin_Handled;
+
 	char m_ModelName[PLATFORM_MAX_PATH];
 	char iconbuffer[256];
 
@@ -443,6 +565,9 @@ public Action Should_TransmitC(int entity, int client)
 
 public Action Should_TransmitF(int entity, int client)
 {
+	if (!g_bEnable[client])
+		return Plugin_Handled;
+
 	char m_ModelName[PLATFORM_MAX_PATH];
 	char iconbuffer[256];
 
@@ -645,6 +770,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	CreateNative("MyIcons_BlockClientIcon", Native_BlockIcon);
 
 	RegPluginLibrary("myicons");
+
+	g_bIsLateLoad = late;
 
 	return APLRes_Success;
 }
