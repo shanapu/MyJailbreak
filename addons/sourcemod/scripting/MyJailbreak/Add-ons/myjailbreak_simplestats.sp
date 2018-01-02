@@ -45,6 +45,9 @@
 ConVar gc_iMinTimeRatio;
 ConVar gc_iMinTimeWarden;
 
+char g_sPrefixW[64];
+char g_sPrefixR[64];
+
 
 // Info
 public Plugin myinfo = {
@@ -94,6 +97,15 @@ public void OnAllPluginsLoaded()
 	}
 }
 
+public void OnConfigsExecuted()
+{
+	ConVar cBuffer = FindConVar("sm_ratio_prefix");
+	cBuffer.GetString(g_sPrefixR, sizeof(g_sPrefixR));
+
+	cBuffer = FindConVar("sm_warden_prefix");
+	cBuffer.GetString(g_sPrefixW, sizeof(g_sPrefixW));
+}
+
 
 public Action MyJailbreak_OnJoinGuardQueue(int client)
 {
@@ -102,7 +114,7 @@ public Action MyJailbreak_OnJoinGuardQueue(int client)
 		char buffer[124];
 		SecondsToString(gc_iMinTimeRatio.IntValue, buffer, sizeof(buffer), client);
 		
-		CPrintToChat(client, "%t %t", "ratio_tag", "ratio_simplestats", buffer);
+		CPrintToChat(client, "%s %t", g_sPrefixR, "ratio_simplestats", buffer);
 		return Plugin_Handled;
 	}
 
@@ -117,7 +129,7 @@ public Action warden_OnWardenCreate(int client, int caller)
 		char buffer[124];
 		SecondsToString(gc_iMinTimeWarden.IntValue, buffer, sizeof(buffer), client);
 		
-		CPrintToChat(client, "%t %t", "warden_tag", "warden_simplestats", buffer);
+		CPrintToChat(client, "%s %t", g_sPrefixW, "warden_simplestats", buffer);
 		return Plugin_Handled;
 	}
 
@@ -143,7 +155,7 @@ public Action Event_OnPlayerSpawn(Event event, const char[] name, bool bDontBroa
 		char buffer[124];
 		SecondsToString(gc_iMinTimeRatio.IntValue, buffer, sizeof(buffer), client);
 		
-		CPrintToChat(client, "%t %t", "ratio_tag", "ratio_simplestats", buffer);
+		CPrintToChat(client, "%s %t", g_sPrefixR, "ratio_simplestats", buffer);
 		CreateTimer(5.0, Timer_SlayPlayer, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 		return Plugin_Continue;
 	}

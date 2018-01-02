@@ -42,6 +42,9 @@
 ConVar gc_iMinRankMePointsRatio;
 ConVar gc_iMinRankMePointsWarden;
 
+char g_sPrefixW[64];
+char g_sPrefixR[64];
+
 // Info
 public Plugin myinfo = {
 	name = "MyJailbreak - RankMe Support for Ratio & Warden", 
@@ -88,11 +91,20 @@ public void OnAllPluginsLoaded()
 	}
 }
 
+public void OnConfigsExecuted()
+{
+	ConVar cBuffer = FindConVar("sm_ratio_prefix");
+	cBuffer.GetString(g_sPrefixR, sizeof(g_sPrefixR));
+
+	cBuffer = FindConVar("sm_warden_prefix");
+	cBuffer.GetString(g_sPrefixW, sizeof(g_sPrefixW));
+}
+
 public Action MyJailbreak_OnJoinGuardQueue(int client)
 {
 	if (RankMe_GetPoints(client) < gc_iMinRankMePointsRatio.IntValue)
 	{
-		CPrintToChat(client, "%t %t", "ratio_tag", "ratio_rankme", gc_iMinRankMePointsRatio.IntValue);
+		CPrintToChat(client, "%s %t", g_sPrefixR, "ratio_rankme", gc_iMinRankMePointsRatio.IntValue);
 		return Plugin_Handled;
 	}
 
@@ -103,7 +115,7 @@ public Action warden_OnWardenCreate(int client, int caller)
 {
 	if (RankMe_GetPoints(client) < gc_iMinRankMePointsWarden.IntValue)
 	{
-		CPrintToChat(client, "%t %t", "warden_tag", "warden_rankme", gc_iMinRankMePointsWarden.IntValue);
+		CPrintToChat(client, "%s %t", g_sPrefixW, "warden_rankme", gc_iMinRankMePointsWarden.IntValue);
 		return Plugin_Handled;
 	}
 
@@ -127,7 +139,7 @@ public Action Event_OnPlayerSpawn(Event event, const char[] name, bool bDontBroa
 
 	if (RankMe_GetPoints(client) < gc_iMinRankMePointsRatio.IntValue)
 	{
-		CPrintToChat(client, "%t %t", "ratio_tag", "ratio_rankme", gc_iMinRankMePointsRatio.IntValue);
+		CPrintToChat(client, "%s %t", g_sPrefixR, "ratio_rankme", gc_iMinRankMePointsRatio.IntValue);
 		CreateTimer(5.0, Timer_SlayPlayer, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 		return Plugin_Continue;
 	}

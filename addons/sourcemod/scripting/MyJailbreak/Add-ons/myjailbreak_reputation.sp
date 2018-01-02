@@ -42,6 +42,9 @@
 ConVar gc_iMinReputationRatio;
 ConVar gc_iMinReputationWarden;
 
+char g_sPrefixW[64];
+char g_sPrefixR[64];
+
 // Info
 public Plugin myinfo = {
 	name = "MyJailbreak - Reputation Support for Ratio & Warden", 
@@ -88,11 +91,20 @@ public void OnAllPluginsLoaded()
 	}
 }
 
+public void OnConfigsExecuted()
+{
+	ConVar cBuffer = FindConVar("sm_ratio_prefix");
+	cBuffer.GetString(g_sPrefixR, sizeof(g_sPrefixR));
+
+	cBuffer = FindConVar("sm_warden_prefix");
+	cBuffer.GetString(g_sPrefixW, sizeof(g_sPrefixW));
+}
+
 public Action MyJailbreak_OnJoinGuardQueue(int client)
 {
 	if (Reputation_GetRep(client) < gc_iMinReputationRatio.IntValue)
 	{
-		CPrintToChat(client, "%t %t", "ratio_tag", "ratio_reputation", gc_iMinReputationRatio.IntValue);
+		CPrintToChat(client, "%s %t", g_sPrefixR, "ratio_reputation", gc_iMinReputationRatio.IntValue);
 		return Plugin_Handled;
 	}
 
@@ -103,7 +115,7 @@ public Action warden_OnWardenCreate(int client, int caller)
 {
 	if (Reputation_GetRep(client) < gc_iMinReputationWarden.IntValue)
 	{
-		CPrintToChat(client, "%t %t", "warden_tag", "warden_reputation", gc_iMinReputationWarden.IntValue);
+		CPrintToChat(client, "%s %t", g_sPrefixW, "warden_reputation", gc_iMinReputationWarden.IntValue);
 		return Plugin_Handled;
 	}
 
@@ -125,7 +137,7 @@ public Action Event_OnPlayerSpawn(Event event, const char[] name, bool bDontBroa
 
 	if (Reputation_GetRep(client) < gc_iMinReputationRatio.IntValue)
 	{
-		CPrintToChat(client, "%t %t", "ratio_tag", "ratio_reputation", gc_iMinReputationRatio.IntValue);
+		CPrintToChat(client, "%s %t", g_sPrefixR, "ratio_reputation", gc_iMinReputationRatio.IntValue);
 		CreateTimer(5.0, Timer_SlayPlayer, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 		return Plugin_Continue;
 	}

@@ -54,6 +54,8 @@ bool g_IsScammer[MAXPLAYERS+1];
 ConVar gc_bcheckIP;
 ConVar gc_sExclude;
 
+char g_sPrefixR[64];
+
 // Info
 public Plugin myinfo = {
 	name = "MyJailbreak - Ratio - SteamRep Support", 
@@ -106,6 +108,12 @@ public void OnAllPluginsLoaded()
 {
 	if (!LibraryExists("myratio"))
 		SetFailState("You're missing the MyJailbreak - Ratio (ratio.smx) plugin");
+}
+
+public void OnConfigsExecuted()
+{
+	ConVar cBuffer = FindConVar("sm_ratio_prefix");
+	cBuffer.GetString(g_sPrefixR, sizeof(g_sPrefixR));
 }
 
 public void OnClientConnected(int client)
@@ -185,7 +193,7 @@ public Action MyJailbreak_OnJoinGuardQueue(int client)
 {
 	if (g_IsScammer[client])
 	{
-		CPrintToChat(client, "%t %t", "ratio_tag", "ratio_steamrep");
+		CPrintToChat(client, "%s %t", g_sPrefixR, "ratio_steamrep");
 		return Plugin_Handled;
 	}
 
@@ -207,7 +215,7 @@ public Action Event_OnPlayerSpawn(Event event, const char[] name, bool bDontBroa
 
 	if (g_IsScammer[client])
 	{
-		CPrintToChat(client, "%t %t", "ratio_tag", "ratio_steamrep", gc_iMinSteamRepPoints.IntValue);
+		CPrintToChat(client, "%s %t", g_sPrefixR, "ratio_steamrep", gc_iMinSteamRepPoints.IntValue);
 		CreateTimer(5.0, Timer_SlayPlayer, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 		return Plugin_Continue;
 	}

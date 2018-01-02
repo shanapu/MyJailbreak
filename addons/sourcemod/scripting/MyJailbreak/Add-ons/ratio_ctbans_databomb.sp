@@ -45,6 +45,8 @@
 Handle g_hCookieCTBan;
 Handle g_hIsBannedAllowed;
 
+char g_sPrefixR[64];
+
 // Info
 public Plugin myinfo = {
 	name = "MyJailbreak - Ratio - CT Ban Support - Databomb", 
@@ -72,13 +74,19 @@ public void OnAllPluginsLoaded()
 		SetFailState("You're missing the MyJailbreak - Ratio (ratio.smx) plugin");
 }
 
+public void OnConfigsExecuted()
+{
+	ConVar cBuffer = FindConVar("sm_ratio_prefix");
+	cBuffer.GetString(g_sPrefixR, sizeof(g_sPrefixR));
+}
+
 public Action MyJailbreak_OnJoinGuardQueue(int client)
 {
 	char szCookie[2];
 	GetClientCookie(client, g_hCookieCTBan, szCookie, sizeof(szCookie));
 	if (szCookie[0] == '1')
 	{
-		CReplyToCommand(client, "%t %t", "ratio_tag", "ratio_banned");
+		CReplyToCommand(client, "%s %t", g_sPrefixR, "ratio_banned");
 		PrintCenterText(client, "%t", "ratio_banned_nc");
 		if (g_hIsBannedAllowed != null && GetConVarBool(g_hIsBannedAllowed))
 			FakeClientCommand(client, "sm_isbanned @me");

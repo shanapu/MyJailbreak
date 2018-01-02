@@ -35,10 +35,8 @@
 ConVar gc_iAmount;
 ConVar gc_bAlive;
 
-ConVar gc_sTag;
-
 // Strings
-char g_sTag[64];
+char g_sPrefix[64];
 
 public Plugin myinfo = 
 {
@@ -63,8 +61,8 @@ public void OnPluginStart()
 
 public void OnConfigsExecuted()
 {
-	gc_sTag = FindConVar("sm_store_chat_tag");
-	gc_sTag.GetString(g_sTag, sizeof(g_sTag));
+	ConVar cBuffer = FindConVar("sm_store_chat_tag");
+	cBuffer.GetString(g_sPrefix, sizeof(g_sPrefix));
 }
 
 public void MyJailbreak_OnEventDayEnd(char[] name, int winner)
@@ -83,7 +81,7 @@ public void MyJailbreak_OnEventDayEnd(char[] name, int winner)
 			int oldCredits = Store_GetCreditsEx(accountId);
 			Store_GiveCredits(accountId, (oldCredits + gc_iAmount.IntValue));
 
-			CPrintToChat(i, "%s You earned %i credits for winning the EventDay.", g_sTag, gc_iAmount.IntValue);
+			CPrintToChat(i, "%s You earned %i credits for winning the EventDay.", g_sPrefix, gc_iAmount.IntValue);
 		}
 	}
 }

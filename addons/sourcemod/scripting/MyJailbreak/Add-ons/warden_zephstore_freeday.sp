@@ -42,8 +42,6 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-// ConVars
-ConVar gc_sTag;
 
 // Info
 public Plugin myinfo = {
@@ -65,11 +63,6 @@ public void OnPluginStart()
 	AutoExecConfig_CleanFile();
 }
 
-public void OnConfigsExecuted()
-{
-	gc_sTag = FindConVar("sm_store_chat_tag");
-}
-
 
 public void Freeday_OnMapStart()
 {
@@ -88,9 +81,6 @@ public int Freeday_Config(Handle kv, int itemid)
 
 public int Freeday_Equip(int client, int id)
 {
-	char sTag[64];
-	gc_sTag.GetString(sTag, sizeof(sTag));
-
 	warden_freeday_set(client);
 
 	return 0;

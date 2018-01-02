@@ -41,6 +41,8 @@
 #pragma semicolon 1
 #pragma newdecls required
 
+char g_sPrefixR[64];
+
 // Info
 public Plugin myinfo = {
 	name = "MyJailbreak - Ratio - CT Bans Support - Addicted",
@@ -65,11 +67,17 @@ public void OnAllPluginsLoaded()
 		SetFailState("You're missing the MyJailbreak - Ratio (ratio.smx) plugin");
 }
 
+public void OnConfigsExecuted()
+{
+	ConVar cBuffer = FindConVar("sm_ratio_prefix");
+	cBuffer.GetString(g_sPrefixR, sizeof(g_sPrefixR));
+}
+
 public Action MyJailbreak_OnJoinGuardQueue(int client)
 {
 	if (CTBans_IsCTBanned(client))
 	{
-		CPrintToChat(client, "%t %t", "ratio_tag", "ratio_banned");
+		CPrintToChat(client, "%s %t", g_sPrefixR, "ratio_banned");
 		return Plugin_Handled;
 	}
 
@@ -91,7 +99,7 @@ public Action Event_OnPlayerSpawn(Event event, const char[] name, bool bDontBroa
 
 	if (CTBans_IsCTBanned(client))
 	{
-		CPrintToChat(client, "%t %t", "ratio_tag", "ratio_banned");
+		CPrintToChat(client, "%s %t", g_sPrefixR, "ratio_banned");
 		CreateTimer(5.0, Timer_SlayPlayer, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 		return Plugin_Continue;
 	}

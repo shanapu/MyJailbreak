@@ -46,6 +46,9 @@ ConVar gc_sGroupWarden;
 char g_sGroupRatio[12];
 char g_sGroupWarden[12];
 
+char g_sPrefixW[64];
+char g_sPrefixR[64];
+
 // Bools
 bool g_bIsLateLoad = false;
 bool IsMemberRatio[MAXPLAYERS+1] = {false, ...};
@@ -133,11 +136,20 @@ public void OnAllPluginsLoaded()
 	}
 }
 
+public void OnConfigsExecuted()
+{
+	ConVar cBuffer = FindConVar("sm_ratio_prefix");
+	cBuffer.GetString(g_sPrefixR, sizeof(g_sPrefixR));
+
+	cBuffer = FindConVar("sm_warden_prefix");
+	cBuffer.GetString(g_sPrefixW, sizeof(g_sPrefixW));
+}
+
 public Action warden_OnWardenCreate(int client, int caller)
 {
 	if (!IsMemberWarden[client] && gc_sGroupWarden.IntValue != 0)
 	{
-		CPrintToChat(client, "%t %t", "warden_tag", "warden_steamgroup");
+		CPrintToChat(client, "%s %t", g_sPrefixW, "warden_steamgroup");
 		return Plugin_Handled;
 	}
 
@@ -148,7 +160,7 @@ public Action MyJailbreak_OnJoinGuardQueue(int client)
 {
 	if (!IsMemberRatio[client] && gc_sGroupRatio.IntValue != 0)
 	{
-		CPrintToChat(client, "%t %t", "ratio_tag", "ratio_steamgroup");
+		CPrintToChat(client, "%s %t", g_sPrefixR, "ratio_steamgroup");
 		return Plugin_Handled;
 	}
 
@@ -216,7 +228,7 @@ public Action Event_OnPlayerSpawn(Event event, const char[] name, bool bDontBroa
 
 	if (!IsMemberRatio[client] && gc_sGroupRatio.IntValue != 0)
 	{
-		CPrintToChat(client, "%t %t", "ratio_tag", "ratio_steamgroup");
+		CPrintToChat(client, "%s %t", g_sPrefixR, "ratio_steamgroup");
 		CreateTimer(5.0, Timer_SlayPlayer, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 		return Plugin_Continue;
 	}
