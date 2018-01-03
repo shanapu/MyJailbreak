@@ -83,7 +83,7 @@ public void BulletSparks_OnSettingChanged(Handle convar, const char[] oldValue, 
 
 public Action Command_BulletSparks(int client, int args)
 {
-	if (!gc_bPlugin.BoolValue || !g_bEnabled || gc_bBulletSparks.BoolValue)
+	if (!gc_bPlugin.BoolValue || !g_bEnabled || !gc_bBulletSparks.BoolValue)
 		return Plugin_Handled;
 
 	if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bBulletSparksDeputy.BoolValue))

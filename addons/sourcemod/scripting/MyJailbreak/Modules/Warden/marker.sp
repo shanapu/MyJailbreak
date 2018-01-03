@@ -158,7 +158,7 @@ public void Marker_Event_ItemEquip(Event event, const char[] name, bool dontBroa
 
 public Action Marker_OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
 {
-	if (!gc_bPlugin.BoolValue || !g_bEnabled || gc_bMarker.BoolValue)
+	if (!gc_bPlugin.BoolValue || !g_bEnabled || !gc_bMarker.BoolValue)
 		return Plugin_Continue;
 
 	if (buttons & IN_ATTACK2 || g_bCanMarker[client])
