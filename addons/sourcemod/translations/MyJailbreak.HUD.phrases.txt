@@ -23,6 +23,11 @@
 		"en"		"Warden:"
 	}
 
+	"hud_youwarden"
+	{
+		"en"		"You are the Warden!"
+	}
+
 	"hud_nowarden"
 	{
 		"en"		"Currently no warden"

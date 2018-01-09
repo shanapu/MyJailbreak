@@ -410,11 +410,25 @@ void ShowHUD()
 			{
 				if (MyJailbreak_IsEventDayPlanned())
 				{
-					ShowSyncHudText(i, g_hHUD, "%t %s\n%t %s\n%t %i/%i\t%t %i/%i\n", "hud_warden", sWarden, "hud_planned", EventDay, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
+					if (warden == i)
+					{
+						ShowSyncHudText(i, g_hHUD, "%t\n%t %s\n%t %i/%i\t%t %i/%i\n", "hud_youwarden", "hud_planned", EventDay, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
+					}
+					else
+					{
+						ShowSyncHudText(i, g_hHUD, "%t %s\n%t %s\n%t %i/%i\t%t %i/%i\n", "hud_warden", sWarden, "hud_planned", EventDay, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
+					}
 				}
 				else
 				{
-					ShowSyncHudText(i, g_hHUD, "%t %s\n%t %i/%i\t%t %i/%i\n", "hud_warden", sWarden, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
+					if (warden == i)
+					{
+						ShowSyncHudText(i, g_hHUD, "%t\n%t %i/%i\t%t %i/%i\n", "hud_youwarden", "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
+					}
+					else
+					{
+						ShowSyncHudText(i, g_hHUD, "%t %s\n%t %i/%i\t%t %i/%i\n", "hud_warden", sWarden, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
+					}
 				}
 			}
 			else
@@ -464,11 +478,25 @@ void ShowHUD()
 			{
 				if (MyJailbreak_IsEventDayPlanned())
 				{
-					PrintHintText(i, "<font face='Arial' color='#006699'>%t </font>%s\n<font face='Arial' color='#B980EF'>%t</font> %s\n<font color='#5E97D8'>%t</font> %i/%i\t<font color='#E3AD39'>%t</font> %i/%i\n", "hud_warden", sWarden, "hud_planned", EventDay, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
+					if (warden == i)
+					{
+						PrintHintText(i, "<font face='Arial' color='#006699'>%t</font>\n<font face='Arial' color='#B980EF'>%t</font> %s\n<font color='#5E97D8'>%t</font> %i/%i\t<font color='#E3AD39'>%t</font> %i/%i\n", "hud_youwarden", "hud_planned", EventDay, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
+					}
+					else
+					{
+						PrintHintText(i, "<font face='Arial' color='#006699'>%t </font>%s\n<font face='Arial' color='#B980EF'>%t</font> %s\n<font color='#5E97D8'>%t</font> %i/%i\t<font color='#E3AD39'>%t</font> %i/%i\n", "hud_warden", sWarden, "hud_planned", EventDay, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
+					}
 				}
 				else
 				{
-					PrintHintText(i, "<font face='Arial' color='#006699'>%t </font>%s\n<font color='#5E97D8'>%t</font> %i/%i\t<font color='#E3AD39'>%t</font> %i/%i\n", "hud_warden", sWarden, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
+					if (warden == i)
+					{
+						PrintHintText(i, "<font face='Arial' color='#006699'>%t</font>\n<font color='#5E97D8'>%t</font> %i/%i\t<font color='#E3AD39'>%t</font> %i/%i\n", "hud_youwarden", "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
+					}
+					else
+					{
+						PrintHintText(i, "<font face='Arial' color='#006699'>%t </font>%s\n<font color='#5E97D8'>%t</font> %i/%i\t<font color='#E3AD39'>%t</font> %i/%i\n", "hud_warden", sWarden, "hud_guards", aliveCT, allCT, "hud_prisoner", aliveT, allT);
+					}
 				}
 			}
 			else
