@@ -67,7 +67,9 @@ ConVar gc_iCoolDownLimit;
 ConVar gc_iCoolDownMinPlayer;
 ConVar gc_bSounds;
 ConVar gc_bOverlays;
+ConVar gc_sOverlayPath;
 ConVar gc_sWarden;
+ConVar gc_sYouWarden;
 ConVar gc_sUnWarden;
 ConVar gc_bRemoveLR;
 ConVar gc_sModelPathWarden;
@@ -137,8 +139,10 @@ char g_sPrefix[64];
 char g_sHasVoted[1500];
 char g_sModelPathPrevious[256];
 char g_sModelPathWarden[256];
+char g_sOverlayPath[256];
 char g_sUnWarden[256];
 char g_sWarden[256];
+char g_sYouWarden[256];
 char g_sMyJBLogFile[PLATFORM_MAX_PATH];
 char g_sRestrictedSound[32] = "buttons/button11.wav";
 
@@ -224,9 +228,11 @@ public void OnPluginStart()
 	gc_bModel = AutoExecConfig_CreateConVar("sm_warden_model", "1", "0 - disabled, 1 - enable warden model", 0, true, 0.0, true, 1.0);
 	gc_sModelPathWarden = AutoExecConfig_CreateConVar("sm_warden_model_path", "models/player/custom_player/legacy/security/security.mdl", "Path to the model for warden.");
 	gc_bSounds = AutoExecConfig_CreateConVar("sm_warden_sounds_enable", "1", "0 - disabled, 1 - enable sounds ", _, true, 0.0, true, 1.0);
-	gc_sWarden = AutoExecConfig_CreateConVar("sm_warden_sounds_warden", "music/MyJailbreak/warden.mp3", "Path to the soundfile which should be played for a int warden.");
+	gc_sWarden = AutoExecConfig_CreateConVar("sm_warden_sounds_warden", "music/MyJailbreak/warden.mp3", "Path to the soundfile which should be played to all player for new warden.");
+	gc_sYouWarden = AutoExecConfig_CreateConVar("sm_warden_sounds_youwarden", "music/MyJailbreak/youwarden.mp3", "Path to the soundfile which should be played for the new warden.");
 	gc_sUnWarden = AutoExecConfig_CreateConVar("sm_warden_sounds_unwarden", "music/MyJailbreak/unwarden.mp3", "Path to the soundfile which should be played when there is no warden anymore.");
 	gc_bOverlays = AutoExecConfig_CreateConVar("sm_warden_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true, 0.0, true, 1.0);
+	gc_sOverlayPath = AutoExecConfig_CreateConVar("sm_warden_overlays_warden", "overlays/MyJailbreak/warden", "Path to the warden Overlay DONT TYPE .vmt or .vft");
 
 	// Warden module
 	Deputy_OnPluginStart();
@@ -268,11 +274,15 @@ public void OnPluginStart()
 	HookConVarChange(gc_sModelPathWarden, OnSettingChanged);
 	HookConVarChange(gc_sUnWarden, OnSettingChanged);
 	HookConVarChange(gc_sWarden, OnSettingChanged);
+	HookConVarChange(gc_sYouWarden, OnSettingChanged);
+	HookConVarChange(gc_sOverlayPath, OnSettingChanged);
 	HookConVarChange(gc_sPrefix, OnSettingChanged);
 
 	// FindConVar
 	gc_sWarden.GetString(g_sWarden, sizeof(g_sWarden));
+	gc_sYouWarden.GetString(g_sYouWarden, sizeof(g_sYouWarden));
 	gc_sUnWarden.GetString(g_sUnWarden, sizeof(g_sUnWarden));
+	gc_sOverlayPath.GetString(g_sOverlayPath, sizeof(g_sOverlayPath));
 	gc_sModelPathWarden.GetString(g_sModelPathWarden, sizeof(g_sModelPathWarden));
 
 	// Set directory for LogFile - must be created before
@@ -301,10 +311,23 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 		strcopy(g_sWarden, sizeof(g_sWarden), newValue);
 		if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sWarden);
 	}
+	else if (convar == gc_sYouWarden)
+	{
+		strcopy(g_sYouWarden, sizeof(g_sYouWarden), newValue);
+		if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sYouWarden);
+	}
 	else if (convar == gc_sUnWarden)
 	{
 		strcopy(g_sUnWarden, sizeof(g_sUnWarden), newValue);
 		if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sUnWarden);
+	}
+	else if (convar == gc_sOverlayPath)
+	{
+		strcopy(g_sOverlayPath, sizeof(g_sOverlayPath), newValue);
+		if (gc_bOverlays.BoolValue)
+		{
+			PrecacheDecalAnyDownload(g_sOverlayPath);
+		}
 	}
 	else if (convar == gc_sModelPathWarden)
 	{
@@ -328,6 +351,7 @@ public void OnConfigsExecuted()
 	gc_sPrefix.GetString(g_sPrefix, sizeof(g_sPrefix));
 	gc_sWarden.GetString(g_sWarden, sizeof(g_sWarden));
 	gc_sUnWarden.GetString(g_sUnWarden, sizeof(g_sUnWarden));
+	gc_sYouWarden.GetString(g_sYouWarden, sizeof(g_sYouWarden));
 	gc_sModelPathWarden.GetString(g_sModelPathWarden, sizeof(g_sModelPathWarden));
 
 	Deputy_OnConfigsExecuted();
@@ -891,6 +915,7 @@ public void OnMapStart()
 	if (gc_bSounds.BoolValue)
 	{
 		PrecacheSoundAnyDownload(g_sWarden);
+		PrecacheSoundAnyDownload(g_sYouWarden);
 		PrecacheSoundAnyDownload(g_sUnWarden);
 	}
 
@@ -900,9 +925,14 @@ public void OnMapStart()
 		PrecacheModel(g_sModelPathWarden);
 	}
 
+	if (gc_bOverlays.BoolValue && strlen(g_sOverlayPath) > 0)
+	{
+		PrecacheDecalAnyDownload(g_sOverlayPath);
+	}
+
 	g_iVoteCount = 0;
 	g_bEnabled = true;
-	
+
 	g_iSmokeSprite = PrecacheModel("materials/sprites/steam1.vmt");
 	g_iBeamSprite = PrecacheModel("materials/sprites/laserbeam.vmt");
 	g_iHaloSprite = PrecacheModel("materials/sprites/glow01.vmt");
@@ -1071,11 +1101,28 @@ Action SetTheWarden(int client, int caller)
 			SetEntityModel(client, g_sModelPathWarden);
 		}
 
+		if (gc_bOverlays.BoolValue && strlen(g_sOverlayPath) > 0)
+		{
+			ShowOverlay(client, g_sOverlayPath, 2.5);
+		}
+
 		SetClientListeningFlags(client, VOICE_NORMAL);
 
 		if (gc_bSounds.BoolValue)
 		{
-			EmitSoundToAllAny(g_sWarden);
+			for (int i = 1; i <= MaxClients; i++)
+			{
+				if (!IsValidClient(i, false, true))
+					continue;
+
+				if (i == client)
+				{
+					EmitSoundToClientAny(i, g_sYouWarden);
+					continue;
+				}
+
+				EmitSoundToClientAny(i, g_sWarden);
+			}
 		}
 
 	//	delete g_hTimerOpen; // why delete don't work?
