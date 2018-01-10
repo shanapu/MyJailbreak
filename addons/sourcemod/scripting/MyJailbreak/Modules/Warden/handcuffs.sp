@@ -352,17 +352,17 @@ public Action HandCuffs_OnTakedamage(int victim, int &attacker, int &inflictor, 
 {
 	if (!IsValidClient(victim, true, false) || attacker == victim || !IsValidClient(attacker, true, false)) return Plugin_Continue;
 
-	char sWeapon[32];
-	if (IsValidEntity(weapon)) GetEntityClassname(weapon, sWeapon, sizeof(sWeapon));
-
 	if (!gc_bPlugin.BoolValue || !g_bEnabled || !gc_bHandCuff.BoolValue)
-		return Plugin_Continue;
-		
-	if ((!IsClientWarden(attacker) && !IsClientDeputy(attacker)) || (IsClientDeputy(attacker) && !gc_bHandCuffDeputy.BoolValue) || !IsValidEdict(weapon) || (!gc_bHandCuffCT.BoolValue && (GetClientTeam(victim) == CS_TEAM_CT)))
 		return Plugin_Continue;
 
 	if (g_bCuffed[attacker])
 		return Plugin_Handled;
+
+	if ((!IsClientWarden(attacker) && !IsClientDeputy(attacker)) || (IsClientDeputy(attacker) && !gc_bHandCuffDeputy.BoolValue) || !IsValidEdict(weapon) || (!gc_bHandCuffCT.BoolValue && (GetClientTeam(victim) == CS_TEAM_CT)))
+		return Plugin_Continue;
+
+	char sWeapon[32];
+	if (IsValidEntity(weapon)) GetEntityClassname(weapon, sWeapon, sizeof(sWeapon));
 
 	if (!StrEqual(sWeapon, "weapon_taser"))
 		return Plugin_Continue;
