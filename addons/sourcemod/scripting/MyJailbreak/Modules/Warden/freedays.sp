@@ -71,7 +71,7 @@ public void Freedays_OnPluginStart()
 	// AutoExecConfig
 	gc_bFreeDay = AutoExecConfig_CreateConVar("sm_warden_freeday_enable", "1", "0 - disabled, 1 - Allow the warden to set a personal freeday", _, true, 0.0, true, 1.0);
 	gc_sCustomCommandGiveFreeDay = AutoExecConfig_CreateConVar("sm_warden_cmds_freeday", "gfd, setfreeday, sfd", "Set your custom chat command for give a freeday(!givefreeday (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))", _, true, 0.0, true, 1.0);
-	gc_sCustomCommandRemoveFreeDay = AutoExecConfig_CreateConVar("sm_warden_cmds_freeday_remove", "rfd, nofreeday", "Set your custom chat command for give a freeday(!givefreeday (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))", _, true, 0.0, true, 1.0);
+	gc_sCustomCommandRemoveFreeDay = AutoExecConfig_CreateConVar("sm_warden_cmds_freeday_remove", "rfd, nofreeday", "Set your custom chat command for remove a freeday(!removefreeday (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))", _, true, 0.0, true, 1.0);
 	gc_iFreeDayColorRed = AutoExecConfig_CreateConVar("sm_warden_freeday_color_red", "0", "What color to turn the player with freeday into (set R, G and B values to 255 to disable) (Rgb): x - red value", _, true, 0.0, true, 255.0);
 	gc_iFreeDayColorGreen = AutoExecConfig_CreateConVar("sm_warden_freeday_color_green", "200", "What color to turn the player with freeday into (rGb): x - green value", _, true, 0.0, true, 255.0);
 	gc_iFreeDayColorBlue = AutoExecConfig_CreateConVar("sm_warden_freeday_color_blue", "0", "What color to turn the player with freeday into (rgB): x - blue value", _, true, 0.0, true, 255.0);
