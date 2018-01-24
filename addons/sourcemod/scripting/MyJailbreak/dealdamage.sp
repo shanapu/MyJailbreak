@@ -131,7 +131,6 @@ int g_iBestREDdamage = 0;
 int g_iBestBLUEdamage = 0;
 int g_iBestPlayer = -1;
 int g_iTotalDamage = 0;
-int g_iCollision_Offset;
 int g_iClientTeam[MAXPLAYERS+1] = -1;
 int g_iBlueTeamCount;
 int g_iRedTeamCount;
@@ -246,9 +245,6 @@ public void OnPluginStart()
 	gc_sModelPathRed.GetString(g_sModelPathRed, sizeof(g_sModelPathRed));
 	gc_sModelPathBlue.GetString(g_sModelPathBlue, sizeof(g_sModelPathBlue));
 	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
-
-	// Offsets
-	g_iCollision_Offset = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
 
 	// Logs
 	SetLogFile(g_sEventsLogFile, "Events", "MyJailbreak");
@@ -726,7 +722,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 
 		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 		{
-			SetEntData(i, g_iCollision_Offset, 0, 4, true); // disbale noblock
+			SetEntProp(i, Prop_Send, "m_CollisionGroup", 5);  // 2 - none / 5 - 'default'
 			SetEntityModel(i, g_sModelPathPrevious[i]);
 			if (gp_bCustomPlayerSkins) UnhookGlow(i);
 			CreateTimer(0.5, DeleteOverlay, GetClientUserId(i));
@@ -844,7 +840,7 @@ public void OnMapStart()
 	{
 		PrecacheDecalAnyDownload(g_sOverlayStartPath);
 	}
-	
+
 	Downloader_AddFileToDownloadsTable(g_sModelPathRed);
 	Downloader_AddFileToDownloadsTable(g_sModelPathBlue);
 	PrecacheModel(g_sModelPathBlue);
@@ -880,7 +876,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 			buttons &= ~IN_ATTACK2;
 		}
 	}
-	
+
 	return Plugin_Continue;
 }
 
@@ -896,7 +892,7 @@ void ResetEventDay()
 {
 	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 	{
-		SetEntData(i, g_iCollision_Offset, 0, 4, true); // disbale noblock
+		SetEntProp(i, Prop_Send, "m_CollisionGroup", 5);  // 2 - none / 5 - 'default' // disbale noblock
 
 		SetEntityModel(i, g_sModelPathPrevious[i]);
 
@@ -1142,12 +1138,12 @@ void PrepareDay(bool thisround)
 
 	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
 	{
-		SetEntData(i, g_iCollision_Offset, 2, 4, true);
+		SetEntProp(i, Prop_Send, "m_CollisionGroup", 2);  // 2 - none / 5 - 'default'
 
 		SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
 
 		SetEntityMoveType(i, MOVETYPE_NONE);
-		
+
 		g_iDamageDealed[i] = 0;
 
 		if (bFlip)
@@ -1360,7 +1356,6 @@ public Action Timer_StartEvent(Handle timer)
 	}
 
 	PrintCenterTextAll("%t", "dealdamage_start_nc");
-	
 	CPrintToChatAll("%s %t", g_sPrefix, "dealdamage_start");
 
 	CreateTimer(2.2, Timer_Overlay);

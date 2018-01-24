@@ -109,7 +109,6 @@ int g_iVoteCount;
 int g_iRound;
 int g_iMaxRound;
 int g_iTsLR;
-int g_iCollision_Offset;
 
 // Floats
 float g_fPos[3];
@@ -213,9 +212,6 @@ public void OnPluginStart()
 	{
 		SetFailState("sv_allow_thirdperson not found!");
 	}
-
-	// Offsets
-	g_iCollision_Offset = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
 
 	// Logs
 	SetLogFile(g_sEventsLogFile, "Events", "MyJailbreak");
@@ -653,7 +649,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 	{
 		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, true))
 		{
-			SetEntData(i, g_iCollision_Offset, 0, 4, true);
+			SetEntProp(i, Prop_Send, "m_CollisionGroup", 5);  // 2 - none / 5 - 'default'
 			SetEntityGravity(i, 1.0);
 			FirstPerson(i);
 		}
@@ -800,7 +796,7 @@ void ResetEventDay()
 {
 	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, true))
 	{
-		SetEntData(i, g_iCollision_Offset, 0, 4, true);
+		SetEntProp(i, Prop_Send, "m_CollisionGroup", 5);  // 2 - none / 5 - 'default'
 		SetEntityGravity(i, 1.0);
 		FirstPerson(i);
 		StripAllPlayerWeapons(i);
@@ -1028,7 +1024,7 @@ void PrepareDay(bool thisround)
 
 	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 	{
-		SetEntData(i, g_iCollision_Offset, 2, 4, true);
+		SetEntProp(i, Prop_Send, "m_CollisionGroup", 2);  // 2 - none / 5 - 'default'
 
 		SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
 

@@ -170,7 +170,7 @@ void MinusDeath(int client)
 	{
 		int frags = GetEntProp(client, Prop_Data, "m_iFrags");
 		int deaths = GetEntProp(client, Prop_Data, "m_iDeaths");
-		SetEntProp(client, Prop_Data, "m_iFrags", (frags+1));
-		SetEntProp(client, Prop_Data, "m_iDeaths", (deaths-1));
+		SetEntProp(client, Prop_Data, "m_iFrags", (frags + 1));
+		SetEntProp(client, Prop_Data, "m_iDeaths", (deaths - 1));
 	}
 }

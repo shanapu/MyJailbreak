@@ -52,7 +52,7 @@ ConVar g_bNoBlockSolid;
 bool g_bNoBlock = true;
 
 // Integers
-int g_iCollision_Offset;
+
 
 // Start
 public void NoBlock_OnPluginStart()
@@ -71,9 +71,6 @@ public void NoBlock_OnPluginStart()
 
 	// FindConVar
 	g_bNoBlockSolid = FindConVar("mp_solid_teammates");
-
-	// Offsets
-	g_iCollision_Offset = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
 }
 
 /******************************************************************************
@@ -92,7 +89,7 @@ public Action Command_ToggleNoBlock(int client, int args)
 				CPrintToChatAll("%s %t", g_sPrefix, "warden_noblockon");
 				for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true))
 				{
-					SetEntData(i, g_iCollision_Offset, 2, 4, true);
+					SetEntProp(i, Prop_Send, "m_CollisionGroup", 2);  // 2 - none / 5 - 'default'
 				}
 				if (gc_bNoBlockMode.BoolValue) SetCvar("mp_solid_teammates", 0);
 			}
@@ -102,7 +99,7 @@ public Action Command_ToggleNoBlock(int client, int args)
 				CPrintToChatAll("%s %t", g_sPrefix, "warden_noblockoff");
 				for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true))
 				{
-					SetEntData(i, g_iCollision_Offset, 5, 4, true);
+					SetEntProp(i, Prop_Send, "m_CollisionGroup", 5);  // 2 - none / 5 - 'default'
 				}
 				if (gc_bNoBlockMode.BoolValue) SetCvar("mp_solid_teammates", 1);
 			}

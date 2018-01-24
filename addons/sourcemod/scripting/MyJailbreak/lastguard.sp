@@ -86,7 +86,6 @@ ConVar gc_sCustomCommandLGR;
 // Integers
 int g_iTruceTime;
 int g_iVoteCount;
-int g_iCollision_Offset;
 
 // Handles
 Handle g_hTimerTruce;
@@ -165,9 +164,6 @@ public void OnPluginStart()
 	gc_sOverlayStartPath.GetString(g_sOverlayStartPath, sizeof(g_sOverlayStartPath));
 	gc_sSoundLastCTPath.GetString(g_sSoundLastCTPath, sizeof(g_sSoundLastCTPath));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
-
-	// Offsets
-	g_iCollision_Offset = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
 
 	// Logs
 	SetLogFile(g_sMyJBLogFile, "MyJB", "MyJailbreak");
@@ -409,7 +405,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 	{
 		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 		{
-			SetEntData(i, g_iCollision_Offset, 0, 4, true);
+			SetEntProp(i, Prop_Send, "m_CollisionGroup", 5);  // 2 - none / 5 - 'default'
 
 			if (gc_bWallhack.BoolValue && gp_bCustomPlayerSkins)
 			{
@@ -589,7 +585,7 @@ void StartLastGuard()
 
 			InfoPanel.Send(i, Handler_NullCancel, 20);
 
-			SetEntData(i, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
+			SetEntProp(i, Prop_Send, "m_CollisionGroup", 2);  // 2 - none / 5 - 'default'
 			SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
 
 			if (gc_bFreeze.BoolValue)

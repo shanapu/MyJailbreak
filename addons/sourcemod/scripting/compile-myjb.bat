@@ -53,7 +53,7 @@ echo.
 echo Compile: MyJailbreak Event Day Arms Race
 spcomp MyJailbreak/armsrace.sp -o../plugins/MyJailbreak/armsrace.smx 
 echo.
-echo Compile: MyJailbreak Event Day Catch & Freeze
+echo Compile: MyJailbreak Event Day CatchFreeze
 spcomp MyJailbreak/catch.sp -o../plugins/MyJailbreak/catch.smx 
 echo.
 echo Compile: MyJailbreak Event Day DuckHunt

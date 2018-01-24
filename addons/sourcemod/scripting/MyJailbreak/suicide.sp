@@ -114,7 +114,6 @@ int g_iFreezeTime;
 int g_iRound;
 int g_iSprintStatus[MAXPLAYERS+1];
 int g_iMaxRound;
-int g_iCollision_Offset;
 
 // Handles
 Handle g_hTimerSprint[MAXPLAYERS+1];
@@ -224,9 +223,6 @@ public void OnPluginStart()
 	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
 
 	AddCommandListener(Command_LAW, "+lookatweapon");
-
-	// Offsets
-	g_iCollision_Offset = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
 
 	// Logs
 	SetLogFile(g_sEventsLogFile, "Events", "MyJailbreak");
@@ -712,7 +708,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 	{
 		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 		{
-			SetEntData(i, g_iCollision_Offset, 0, 4, true);
+			SetEntProp(i, Prop_Send, "m_CollisionGroup", 5);  // 2 - none / 5 - 'default'
 			g_iSprintStatus[i] = 0;
 		}
 
@@ -844,7 +840,7 @@ void ResetEventDay()
 {
 	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 	{
-		SetEntData(i, g_iCollision_Offset, 0, 4, true);
+		SetEntProp(i, Prop_Send, "m_CollisionGroup", 5);  // 2 - none / 5 - 'default'
 		g_iSprintStatus[i] = 0;
 
 		SetEntityMoveType(i, MOVETYPE_WALK);
@@ -1107,7 +1103,7 @@ void PrepareDay(bool thisround)
 
 	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) 
 	{
-		SetEntData(i, g_iCollision_Offset, 2, 4, true);
+		SetEntProp(i, Prop_Send, "m_CollisionGroup", 2);  // 2 - none / 5 - 'default'
 
 		SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
 

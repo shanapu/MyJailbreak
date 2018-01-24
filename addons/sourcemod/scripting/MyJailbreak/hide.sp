@@ -108,7 +108,6 @@ int g_iMaxRound;
 int g_iMaxTA;
 int g_iTA[MAXPLAYERS + 1];
 int g_iTsLR;
-int g_iCollision_Offset;
 
 // Handles
 Handle g_hTimerFreeze;
@@ -203,9 +202,6 @@ public void OnPluginStart()
 	gc_sOverlayStartPath.GetString(g_sOverlayStartPath, sizeof(g_sOverlayStartPath));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
-
-	// Offsets
-	g_iCollision_Offset = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
 
 	// Logs
 	SetLogFile(g_sEventsLogFile, "Events", "MyJailbreak");
@@ -658,7 +654,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 	{
 		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 		{
-			SetEntData(i, g_iCollision_Offset, 0, 4, true);
+			SetEntProp(i, Prop_Send, "m_CollisionGroup", 5);  // 2 - none / 5 - 'default'
 			SetEntPropFloat(i, Prop_Data, "m_flLaggedMovementValue", 1.0);
 			g_iTA[i] = 0;
 
@@ -887,7 +883,7 @@ void ResetEventDay()
 {
 	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, true))
 	{
-		SetEntData(i, g_iCollision_Offset, 0, 4, true);
+		SetEntProp(i, Prop_Send, "m_CollisionGroup", 5);  // 2 - none / 5 - 'default'
 		SetEntPropFloat(i, Prop_Data, "m_flLaggedMovementValue", 1.0);
 		g_iTA[i] = 0;
 
@@ -1070,7 +1066,7 @@ void PrepareDay(bool thisround)
 
 	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 	{
-		SetEntData(i, g_iCollision_Offset, 2, 4, true);
+		SetEntProp(i, Prop_Send, "m_CollisionGroup", 2);  // 2 - none / 5 - 'default'
 
 		SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
 

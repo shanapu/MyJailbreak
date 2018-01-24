@@ -93,7 +93,6 @@ ConVar gc_bBeginSetVW;
 // Integers
 int g_iCoolDown;
 int g_iVoteCount;
-int g_iCollision_Offset;
 
 // Strings
 char g_sPrefix[64];
@@ -165,9 +164,6 @@ public void OnPluginStart()
 //	g_iMPRoundTime = FindConVar("mp_roundtime");
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
-
-	// Offsets
-	g_iCollision_Offset = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
 
 	// Logs
 	SetLogFile(g_sEventsLogFile, "Events", "MyJailbreak");
@@ -564,7 +560,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 	{
 		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, true))
 		{
-			SetEntData(i, g_iCollision_Offset, 0, 4, true);
+			SetEntProp(i, Prop_Send, "m_CollisionGroup", 5);  // 2 - none / 5 - 'default'
 		}
 
 		g_bIsFreeday = false;
@@ -773,7 +769,7 @@ void PrepareDay()
 	{
 		CreateInfoPanel(i);
 
-		SetEntData(i, g_iCollision_Offset, 2, 4, true);
+		SetEntProp(i, Prop_Send, "m_CollisionGroup", 2);  // 2 - none / 5 - 'default'
 
 		if (!gc_bdamage.BoolValue && IsValidClient(i))
 		{

@@ -352,6 +352,7 @@ public void OnConfigsExecuted()
 	gc_sWarden.GetString(g_sWarden, sizeof(g_sWarden));
 	gc_sUnWarden.GetString(g_sUnWarden, sizeof(g_sUnWarden));
 	gc_sYouWarden.GetString(g_sYouWarden, sizeof(g_sYouWarden));
+	gc_sOverlayPath.GetString(g_sOverlayPath, sizeof(g_sOverlayPath));
 	gc_sModelPathWarden.GetString(g_sModelPathWarden, sizeof(g_sModelPathWarden));
 
 	Deputy_OnConfigsExecuted();
