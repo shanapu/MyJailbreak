@@ -121,13 +121,6 @@ public void OnPluginStart()
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
 
-	// Hooks - Events to check for Tag
-	HookEvent("player_connect", Event_CheckTag);
-	HookEvent("player_team", Event_CheckTag);
-	HookEvent("player_spawn", Event_CheckTag);
-	HookEvent("player_death", Event_CheckTag);
-	HookEvent("round_start", Event_CheckTag);
-
 	BuildPath(Path_SM, g_sConfigFile, sizeof(g_sConfigFile), "configs/MyJailbreak/player_tags.cfg");
 }
 
@@ -185,13 +178,24 @@ public void OnLibraryAdded(const char[] name)
 
 }
 
-/******************************************************************************
-                   EVENTS
-******************************************************************************/
+/****************************************************************************** 
+                   EVENTS 
+******************************************************************************/ 
 
-public void Event_CheckTag(Event event, char[] name, bool dontBroadcast)
+//Thanks to https://forums.alliedmods.net/showpost.php?p=2573907&postcount=6
+public Action OnClientCommandKeyValues(int client, KeyValues TagKv)
 {
-	CreateTimer(1.0, Timer_DelayCheck);
+    char sKey[64]; 
+     
+    if (!TagKv.GetSectionName(sKey, sizeof(sKey)))
+    	return Plugin_Continue;
+    	
+    if(StrEqual(sKey, "ClanTagChanged"))
+    {
+    	RequestFrame(Frame_HandleTag, GetClientUserId(client));
+    }
+
+    return Plugin_Continue; 
 }
 
 /******************************************************************************
@@ -221,19 +225,21 @@ public void warden_OnWardenCreatedByAdmin(int client)
 
 public void warden_OnWardenRemoved(int client)
 {
-	CreateTimer(1.0, Timer_DelayCheck);
+	RequestFrame(Frame_HandleTag, GetClientUserId(client));
 }
 
-/******************************************************************************
-                   TIMER
+/****************************************************************************** 
+                   FRAME 
 ******************************************************************************/
 
-public Action Timer_DelayCheck(Handle timer) 
+public void Frame_HandleTag(any iUserId)
 {
-	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
-	{
-		HandleTag(i);
-	}
+	int client = GetClientOfUserId(iUserId);
+	
+	if (!client)
+		return;
+		
+	HandleTag(client);
 }
 
 /******************************************************************************
