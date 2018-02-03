@@ -183,11 +183,11 @@ public void OnLibraryAdded(const char[] name)
 ******************************************************************************/ 
 
 //Thanks to https://forums.alliedmods.net/showpost.php?p=2573907&postcount=6
-public Action OnClientCommandKeyValues(int client, KeyValues TagKv)
+public Action OnClientCommandKeyValues(int client, KeyValues kv)
 {
     char sKey[64]; 
      
-    if (!TagKv.GetSectionName(sKey, sizeof(sKey)))
+    if (!kv.GetSectionName(sKey, sizeof(sKey)))
     	return Plugin_Continue;
     	
     if(StrEqual(sKey, "ClanTagChanged"))
