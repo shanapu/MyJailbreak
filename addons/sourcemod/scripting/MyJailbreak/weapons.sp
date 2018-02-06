@@ -47,6 +47,9 @@
 #pragma semicolon 1
 #pragma newdecls required
 
+//Integers
+int iMenuUsages[MAXPLAYERS+1];
+
 // Booleans
 bool g_bIsLateLoad = false;
 bool g_bWeaponsSelected[MAXPLAYERS+1] = {false, ...};
@@ -89,6 +92,7 @@ ConVar gc_bKevlar;
 ConVar gc_bKevlarDays;
 ConVar gc_sCustomCommandWeapon;
 ConVar gc_bCleanMenu;
+ConVar gc_iMenuMaxUsages;
 
 // Extern Convars
 ConVar g_bTaserWarden;
@@ -188,6 +192,7 @@ public void OnPluginStart()
 	gc_bKevlarDays = AutoExecConfig_CreateConVar("sm_weapons_kevlar_eventdays", "1", "0 - remove all armor on eventdays, 1 - give all player armor on eventdays", _, true, 0.0, true, 1.0);
 	gc_bJBmenu = AutoExecConfig_CreateConVar("sm_weapons_jbmenu", "1", "0 - disabled, 1 - enable autoopen the MyJailbreak !menu after weapon given.", _, true, 0.0, true, 1.0);
 	gc_bCleanMenu = AutoExecConfig_CreateConVar("sm_weapons_cleanmenu", "1", "remove 1. & 2. on first page, to avoid conflict with weapon switch", _, true, 0.0, true, 1.0);
+	gc_iMenuMaxUsages = AutoExecConfig_CreateConVar("sm_weapons_max_usages", "0", "Max usages of !guns command allowed", _, true, 0.0);
 
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
@@ -312,7 +317,13 @@ public Action Command_Weapons(int client, int args)
 				if (IsClientInLastRequest(client) != 0)
 					return Plugin_Handled;
 			}
-
+			
+			if (gc_iMenuMaxUsages.IntValue <= iMenuUsages[client] || !gc_iMenuMaxUsages.IntValue)
+			{
+				CReplyToCommand(client, "%s %t", g_sPrefix, "weapon_menu_max_usages");
+				return Plugin_Handled;
+			}
+			
 			g_bRememberChoice[client] = false;
 			DisplayOptionsMenu(client);
 
@@ -337,6 +348,7 @@ public void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast
 
 	KillAllTimer(client);
 
+	iMenuUsages[client] = 0;
 	g_bHealth[client] = false;
 	g_bTA[client] = false;
 
@@ -459,6 +471,8 @@ void GiveSavedWeapons(int client)
 
 	if (((g_bAllowT && GetClientTeam(client) == CS_TEAM_T) || (g_bAllowCT && GetClientTeam(client) == CS_TEAM_CT)) && IsPlayerAlive(client))
 	{
+		iMenuUsages[client]++;
+		
 		StripAllPlayerWeapons(client);
 		GivePlayerItem(client, "weapon_knife");
 

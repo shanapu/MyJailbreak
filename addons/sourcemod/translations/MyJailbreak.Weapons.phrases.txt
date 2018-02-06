@@ -91,5 +91,9 @@
 	{
 		"en"		"Secondary Weapon:"
 	}
-
+	
+	"weapon_menu_max_usages"
+	{
+		"en"		"You've already reached that max usages of the guns!"
+	}
 }

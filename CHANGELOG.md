@@ -14,6 +14,8 @@
 *  Warden: New overlay & sound for the player when he becomes new warden
     *  new cvars - sm_warden_sounds_youwarden - Path to the soundfile which should be played for the new warden.
     *  new cvars - sm_warden_overlays_warden - Path to the warden Overlay DONT TYPE .vmt or .vft
+*  Weapons: Limit the usages of the !guns command.
+	*  new cvar - sm_weapons_max_usages - Max usages of !guns command allowed.
   
   
 *Changed*
