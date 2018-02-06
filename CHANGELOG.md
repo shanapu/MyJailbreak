@@ -5,10 +5,19 @@
   
     
 *Added*
+*  Add-On: EventDay Toggle - enable/disable commands, convars & plugins while event day is active
+    *  new plugin - disabled/eventday_toggle.smx
+    *  new config file - addons/sourcemod/configs/MyJailbreak/eventday_toggle.cfg
+*  Icons: Player command to enable/disable icons with clientprefs (cookies)
+    *  new command - sm_icons - Allows player to toggle the player icons.
+    *  new cvar - sm_icons_cmds - Set your custom chat commands for toggle icons(!icons (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
+*  Warden: New overlay & sound for the player when he becomes new warden
+    *  new cvars - sm_warden_sounds_youwarden - Path to the soundfile which should be played for the new warden.
+    *  new cvars - sm_warden_overlays_warden - Path to the warden Overlay DONT TYPE .vmt or .vft
   
   
 *Changed*
-*  All Plugins: moved the plugins chat prefix e.g. [MyJB.Tag] from translation to plugins .cfg
+*  All Plugins: moved the plugins chat prefix (e.g. [MyJB.Tag]) from translation to plugins .cfg
     *  new cvars - sm_PLUGINNAME_prefix - Set your chat prefix for this plugin.
 *  PlayerTags: Plugin rewritten. Suport admin groups & providing support for TogsClanTags, CCC & ZstoreTags. moved the player chat tags e.g. [Warden] from translation and to new cfg
     *  new config - sourcemod/configs/MyJailbreak/player_tags.cfg check comments in this cfg for configuration
@@ -19,7 +28,7 @@
 *  Freeday: Remove teleport to CT spawn
 *  EventDays: restrict weapon shooting while truce/freeze-time
 *  HUD: removed hosties dependency
-*  HUD: use the 'new HUD' sytsem for csgo
+*  HUD: use the 'new HUD' system for csgo
     *  new cvars - sm_hud_type - 0 - show hud via a center-bottom hint box (sm_hsay), 1 - show hud via 'new hud' system
     *  new cvars - sm_hud_red - Color of sm_hud_type '1' (set R, G and B values to 255 to disable) (Rgb): x - red value
     *  new cvars - sm_hud_green - Color of sm_hud_type '1' (set R, G and B values to 255 to disable) (rGb): x - green value
@@ -41,6 +50,7 @@
   
   *Fixed*
 *  minor error
+  
   
   
   

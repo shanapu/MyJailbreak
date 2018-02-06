@@ -350,7 +350,8 @@ public void OnButtonRelease2(int client, int button)
 
 public Action HandCuffs_OnTakedamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &weapon, float damageForce[3], float damagePosition[3], int damagecustom)
 {
-	if (!IsValidClient(victim, true, false) || attacker == victim || !IsValidClient(attacker, true, false)) return Plugin_Continue;
+	if (!IsValidClient(victim, true, false) || attacker == victim || !IsValidClient(attacker, true, false))
+		return Plugin_Continue;
 
 	if (!gc_bPlugin.BoolValue || !g_bEnabled || !gc_bHandCuff.BoolValue)
 		return Plugin_Continue;

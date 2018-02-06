@@ -179,10 +179,10 @@ public Action Command_UnMuteMenu(int client, any args)
 public Action Command_MuteMenu(int client, int args)
 {
 
-	if (!gc_bPlugin.BoolValue || !g_bEnabled || gc_bMute.BoolValue)
+	if (!gc_bPlugin.BoolValue || !g_bEnabled || !gc_bMute.BoolValue)
 		return Plugin_Handled;
 
-	if ((IsClientWarden(client) || (IsClientDeputy(client) && gc_bMuteDeputy.BoolValue)) && gc_bMute.BoolValue)
+	if ((IsClientWarden(client) || (IsClientDeputy(client) && gc_bMuteDeputy.BoolValue)))
 	{
 		char info[255];
 		Menu menu1 = CreateMenu(Handler_MuteMenu);
