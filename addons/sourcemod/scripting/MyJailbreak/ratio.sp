@@ -1031,10 +1031,7 @@ void Menu_GuardQuestions(int client)
 		InfoPanel.Send(client, Handler_GuardQuestions, 20);
 	}
 	
-	if (hKeyValues)
-	{
-		delete hKeyValues;
-	}
+	delete hKeyValues;
 
 	//char info[128], random[128];
 	//Panel InfoPanel = new Panel();
