@@ -620,7 +620,7 @@ public Action AdminCommand_ClearQueue(int client, int args)
 
 public Action Command_ToggleRatio(int client, int args)
 {
-	if (CheckVipFlag(client, g_sAdminFlag) && gc_bToggle.BoolValu)
+	if (CheckVipFlag(client, g_sAdminFlag) && gc_bToggle.BoolValue)
 	{
 		if (g_bRatioEnable)
 		{
