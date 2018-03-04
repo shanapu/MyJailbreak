@@ -630,7 +630,7 @@ public Action Command_ToggleRatio(int client, int args)
 		else
 		{
 			g_bRatioEnable = true;
-			CPrintToChatAll("%s% t", g_sPrefix, "ratio_hasactivated");
+			CPrintToChatAll("%s %t", g_sPrefix, "ratio_hasactivated");
 		}
 	}
 	else
@@ -978,7 +978,6 @@ void Menu_GuardQuestions(int client)
 	hKeyValues.Rewind();
 	if(hKeyValues.JumpToKey(szRandomQuestion))
 	{
-		char ;
 		char info[128], szBuffer[256];
 		Format(info, sizeof(info), "%T", "ratio_question_title", client);
 		InfoPanel.SetTitle(info);
