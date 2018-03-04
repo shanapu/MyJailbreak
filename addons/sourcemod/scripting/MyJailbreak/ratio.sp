@@ -476,7 +476,7 @@ public Action Command_JoinGuardQueue(int client, int iArgNum)
 
 		if (iIndex == -1)
 		{
-			if ((gc_iJoinMode.IntValue == 0) || (gc_bAdminBypass.BoolValue && CheckVipFlag(client, g_sAdminFlag))
+			if ((gc_iJoinMode.IntValue == 0) || (gc_bAdminBypass.BoolValue && CheckVipFlag(client, g_sAdminFlag)))
 			{
 				AddToQueue(client);
 			}
@@ -550,7 +550,7 @@ public Action Command_JoinGuardQueue(int client, int iArgNum)
 			{
 				CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_number", iIndex + 1);
 
-				if (gc_bAdsVIP.BoolValue && gc_bVIPQueue.BoolValue && !CheckVipFlag(client, g_sAdminFlag)
+				if (gc_bAdsVIP.BoolValue && gc_bVIPQueue.BoolValue && !CheckVipFlag(client, g_sAdminFlag))
 				{
 					CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_advip");
 				}
@@ -620,7 +620,7 @@ public Action AdminCommand_ClearQueue(int client, int args)
 
 public Action Command_ToggleRatio(int client, int args)
 {
-	if (CheckVipFlag(client, g_sAdminFlag)
+	if (CheckVipFlag(client, g_sAdminFlag))
 	{
 		if (g_bRatioEnable)
 		{
@@ -712,7 +712,7 @@ public Action Event_OnFullConnect(Event event, const char[] name, bool dontBroad
 	if (!gc_bForceTConnect.BoolValue || !g_bRatioEnable)
 		return Plugin_Continue;
 
-	if (!gc_bAdminBypass.BoolValue || !CheckVipFlag(client, g_sAdminFlag)
+	if (!gc_bAdminBypass.BoolValue || !CheckVipFlag(client, g_sAdminFlag))
 	{
 		CreateTimer(1.0, Timer_ForceTSide, client);
 	}
@@ -776,7 +776,7 @@ public Action Event_OnJoinTeam(int client, const char[] szCommand, int iArgCount
 
 		if (iIndex == -1)
 		{
-			if ((gc_iJoinMode.IntValue == 0) || (gc_bAdminBypass.BoolValue && CheckVipFlag(client, g_sAdminFlag))
+			if ((gc_iJoinMode.IntValue == 0) || (gc_bAdminBypass.BoolValue && CheckVipFlag(client, g_sAdminFlag)))
 			{
 				AddToQueue(client);
 			}
@@ -804,7 +804,7 @@ public Action Event_OnJoinTeam(int client, const char[] szCommand, int iArgCount
 		return Plugin_Handled;
 	}
 
-	if ((gc_iJoinMode.IntValue == 0) || (gc_bAdminBypass.BoolValue && CheckVipFlag(client, g_sAdminFlag))
+	if ((gc_iJoinMode.IntValue == 0) || (gc_bAdminBypass.BoolValue && CheckVipFlag(client, g_sAdminFlag)))
 	{
 		return Plugin_Continue;
 	}
@@ -971,7 +971,6 @@ void Menu_GuardQuestions(int client)
 			i++;
 		} while (hKeyValues.GotoNextKey());
 	}
-	char info[128], random[128];
 	Panel InfoPanel = new Panel();
 	char szRandomQuestion[16];
 	IntToString(GetRandomInt(1, i), szRandomQuestion, sizeof(szRandomQuestion));
@@ -979,8 +978,8 @@ void Menu_GuardQuestions(int client)
 	hKeyValues.Rewind();
 	if(hKeyValues.JumpToKey(szRandomQuestion))
 	{
-		char info[128];
-		char szBuffer[256];
+		char ;
+		char info[128], szBuffer[256];
 		Format(info, sizeof(info), "%T", "ratio_question_title", client);
 		InfoPanel.SetTitle(info);
 		InfoPanel.DrawText("-----------------------------------");
