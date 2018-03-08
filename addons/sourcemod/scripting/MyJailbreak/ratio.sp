@@ -967,7 +967,6 @@ void Menu_GuardQuestions(int client)
 	KeyValues hKeyValues = new KeyValues("GlobalKey");
 	hKeyValues.ImportFromFile(szPath);
 	int i = 0;
-	hKeyValues.Rewind();
 	if(hKeyValues.GotoFirstSubKey())
 	{
 		do
