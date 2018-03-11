@@ -516,6 +516,7 @@ public Action Command_JoinGuardQueue(int client, int iArgNum)
 			ChangeClientTeam(client, CS_TEAM_CT);
 			SetClientListeningFlags(client, VOICE_NORMAL); // unmute if sm_hosties or admin has muted prisoners on round start
 			MinusDeath(client);
+			CS_RespawnPlayer(client);
 		}
 		else
 		{
