@@ -1004,8 +1004,6 @@ void Menu_GuardQuestions(int client)
 		{
 			InfoPanel.DrawText("    ");
 			KvGetString(hKeyValues, "right", szBuffer, sizeof(szBuffer));
-			//hKeyValues.GetString("right", szBuffer, sizeof(szBuffer));
-			//PrintToChatAll("%s",szBuffer);
 			InfoPanel.DrawItem(szBuffer);
 		}
 		
@@ -1017,8 +1015,6 @@ void Menu_GuardQuestions(int client)
 		{
 			InfoPanel.DrawText("    ");
 			KvGetString(hKeyValues, "right", szBuffer, sizeof(szBuffer));
-			//hKeyValues.GetString("right", szBuffer, sizeof(szBuffer));
-			//PrintToChatAll("%s",szBuffer);
 			InfoPanel.DrawItem(szBuffer);
 		}
 
