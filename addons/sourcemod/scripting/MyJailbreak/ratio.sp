@@ -90,7 +90,7 @@ Handle hKeyValues;
 // Integer
 int g_iRandomAnswer[MAXPLAYERS+1];
 int g_iQuestionTimes[MAXPLAYERS+1];
-int countQuestions = 0;
+int countQuestions;
 
 // Strings
 char g_sPrefix[64];
@@ -893,8 +893,10 @@ public void OnMapStart()
 	
 	if(hKeyValues)
 	{
-		CloseHandle(hKeyValues);
+		delete hKeyValues;
 	}
+	
+	countQuestions = 0;
 	
 	char szPath[256];
 	hKeyValues = CreateKeyValues("Questions");
