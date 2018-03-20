@@ -896,7 +896,7 @@ public void OnMapStart()
 		delete hKeyValues;
 	}
 	
-	countQuestions = 0;
+	g_iCountQuestions = 0;
 	
 	char szPath[256];
 	hKeyValues = CreateKeyValues("Questions");
@@ -907,7 +907,7 @@ public void OnMapStart()
 		{
 			do
 			{
-				countQuestions++;
+				g_iCountQuestions++;
 			} while (KvGotoNextKey(hKeyValues));
 		}
 	}
@@ -987,7 +987,7 @@ void Menu_GuardQuestions(int client)
 {
 	Panel InfoPanel = new Panel();
 	char szRandomQuestion[16];
-	IntToString(GetRandomInt(1, countQuestions), szRandomQuestion, sizeof(szRandomQuestion));
+	IntToString(GetRandomInt(1, g_iCountQuestions), szRandomQuestion, sizeof(szRandomQuestion));
 	g_iRandomAnswer[client] = GetRandomInt(1, 3);
 	KvRewind(hKeyValues);
 	if(KvJumpToKey(hKeyValues, szRandomQuestion))
