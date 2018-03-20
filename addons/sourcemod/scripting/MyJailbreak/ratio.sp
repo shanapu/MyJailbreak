@@ -90,7 +90,7 @@ Handle hKeyValues;
 // Integer
 int g_iRandomAnswer[MAXPLAYERS+1];
 int g_iQuestionTimes[MAXPLAYERS+1];
-int countQuestions;
+int g_iCountQuestions;
 
 // Strings
 char g_sPrefix[64];
