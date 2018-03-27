@@ -1830,13 +1830,21 @@ public Action Command_VotingMenu(int client, int args)
 						for (int i = 0; i < EventDaysArray.Length; i++)
 						{
 							EventDaysArray.GetString(i, sBuffer, sizeof(sBuffer));
-							Format(sBuffer2, sizeof(sBuffer2), "menu_%s", sBuffer, LANG_SERVER);
-							Format(menuinfo, sizeof(menuinfo), "%t", sBuffer2, LANG_SERVER);
-							menu.AddItem(sBuffer, menuinfo);
+
+							Format(sBuffer2, sizeof(sBuffer2), "sm_%s_vote", sBuffer, LANG_SERVER);
+							ConVar cBuffer = FindConVar(sBuffer2);
+
+							if (cBuffer.BoolValue)
+							{
+								Format(sBuffer2, sizeof(sBuffer2), "menu_%s", sBuffer, LANG_SERVER);
+								Format(menuinfo, sizeof(menuinfo), "%t", sBuffer2, LANG_SERVER);
+								menu.AddItem(sBuffer, menuinfo);
+							}
 						}
 
 						menu.ExitButton = true;
 						menu.DisplayVoteToAll(25);
+
 						g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 					}
 					else CReplyToCommand(client, "%s %t", g_sPrefix, "menu_wait", g_iCoolDown);
