@@ -195,7 +195,7 @@ int GetUserAuthID(int authid)
 {
 	for (int i = 1; i <= MaxClients; i++)
 	{
-		if (!IsValidClient(i)) return -1;
+		if (!IsValidClient(i)) continue;
 		
 		char[] charauth = new char[64];
 		char[] authchar = new char[64];
