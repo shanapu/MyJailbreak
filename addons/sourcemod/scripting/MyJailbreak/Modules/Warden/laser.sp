@@ -140,7 +140,7 @@ public Action Command_LaserMenu(int client, int args)
 
 public Action Laser_OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
 {
-	if (!gc_bPlugin.BoolValue || !g_bEnabled || gc_bLaser.BoolValue)
+	if (!gc_bPlugin.BoolValue || !g_bEnabled || !gc_bLaser.BoolValue)
 		return Plugin_Continue;
 
 	if ((buttons & IN_USE) && (IsClientWarden(client) || (IsClientDeputy(client) && gc_bLaserDeputy.BoolValue)))
