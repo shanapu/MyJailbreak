@@ -408,8 +408,5 @@ public int Native_HasClientFreeday(Handle plugin, int argc)
 	if (!IsClientInGame(client) && !IsClientConnected(client))
 		ThrowNativeError(SP_ERROR_INDEX, "Client index %i is invalid", client);
 
-	if (g_bHasFreeDay[client])
-		return true;
-
-	return false;
+	return g_bHasFreeDay[client];
 }

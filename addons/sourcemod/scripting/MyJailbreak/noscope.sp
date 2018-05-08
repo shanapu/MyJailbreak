@@ -988,7 +988,7 @@ void PrepareDay(bool thisround)
 
 		SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
 
-		SetEntityMoveType(i, MOVETYPE_NONE);
+		SetEntityMoveType(i, MOVETYPE_WALK);
 
 		CreateInfoPanel(i);
 
@@ -1135,7 +1135,7 @@ public Action Timer_StartEvent(Handle timer)
 
 	if (g_iTruceTime > 0)
 	{
-		if (g_iTruceTime == gc_iTruceTime.IntValue-3)
+		if (g_iTruceTime <= gc_iTruceTime.IntValue-3)
 		{
 			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
 			{
