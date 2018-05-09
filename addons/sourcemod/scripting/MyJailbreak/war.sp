@@ -811,6 +811,27 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	
 	return Plugin_Continue;
 }
+
+
+public void OnClientPutInServer(int client)
+{
+	SDKHook(client, SDKHook_TraceAttack, OnTraceAttack);
+}
+
+
+public Action OnTraceAttack(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &ammotype, int hitbox, int hitgroup)
+{
+	if (!g_bIsWar)
+		return Plugin_Continue;
+
+	if (!IsValidClient(victim, true, false) || attacker == victim || !IsValidClient(attacker, true, false))
+		return Plugin_Continue;
+
+	if (GetClientTeam(victim) == GetClientTeam(attacker))
+		return Plugin_Handled;
+}
+
+
 /******************************************************************************
                    FUNCTIONS
 ******************************************************************************/
