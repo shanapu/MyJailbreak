@@ -1386,7 +1386,7 @@ public Action Timer_StartEvent(Handle timer)
 
 	if (g_iFreezeTime > 0)
 	{		
-		if (g_iFreezeTime == gc_iFreezeTime.IntValue-3)
+		if (g_iFreezeTime <= gc_iFreezeTime.IntValue - 3)
 		{
 			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
 			{

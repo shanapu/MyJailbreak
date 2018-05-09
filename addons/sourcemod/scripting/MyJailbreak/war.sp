@@ -1051,11 +1051,11 @@ void CreateInfoPanel(int client)
 // Freeze Timer
 public Action Timer_FreezeOnStart(Handle timer)
 {
-	if (g_iFreezeTime > 1)
-	{
-		g_iFreezeTime--;
+	g_iFreezeTime--;
 
-		if (g_iFreezeTime == gc_iFreezeTime.IntValue-3)
+	if (g_iFreezeTime > 0)
+	{
+		if (g_iFreezeTime <= gc_iFreezeTime.IntValue - 3)
 		{
 			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
 			{
