@@ -1128,6 +1128,9 @@ public Action Timer_StartEvent(Handle timer)
 	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
 	{
 		SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
+
+		SetEntityMoveType(i, MOVETYPE_WALK);
+
 		if (gc_bOverlays.BoolValue)
 		{
 			ShowOverlay(i, g_sOverlayStartPath, 2.0);

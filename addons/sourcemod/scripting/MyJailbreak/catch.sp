@@ -1385,7 +1385,7 @@ public Action Timer_StartEvent(Handle timer)
 	g_iFreezeTime--;
 
 	if (g_iFreezeTime > 0)
-	{		
+	{
 		if (g_iFreezeTime <= gc_iFreezeTime.IntValue - 3)
 		{
 			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
@@ -1416,9 +1416,10 @@ public Action Timer_StartEvent(Handle timer)
 	{
 		if (GetClientTeam(i) == CS_TEAM_CT)
 		{
-			SetEntityMoveType(i, MOVETYPE_WALK);
 			SetEntPropFloat(i, Prop_Data, "m_flLaggedMovementValue", 1.4);
 		}
+
+		SetEntityMoveType(i, MOVETYPE_WALK);
 
 		if (gc_bOverlays.BoolValue)
 		{

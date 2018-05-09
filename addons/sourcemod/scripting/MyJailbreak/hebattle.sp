@@ -1117,9 +1117,11 @@ public Action Timer_StartEvent(Handle timer)
 		{
 			SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
 
+		SetEntityMoveType(i, MOVETYPE_WALK);
+
 			if (gc_bGrav.BoolValue)
 			{
-				SetEntityGravity(i, gc_fGravValue.FloatValue);	
+				SetEntityGravity(i, gc_fGravValue.FloatValue);
 			}
 		}
 

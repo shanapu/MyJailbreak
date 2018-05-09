@@ -1375,7 +1375,6 @@ public Action Timer_StartEvent(Handle timer)
 	{
 		if (GetClientTeam(i) == CS_TEAM_CT)
 		{
-			SetEntityMoveType(i, MOVETYPE_WALK);
 			SetEntPropFloat(i, Prop_Data, "m_flLaggedMovementValue", 1.4);
 			DarkenScreen(i, false);
 
@@ -1391,6 +1390,8 @@ public Action Timer_StartEvent(Handle timer)
 		}
 
 		SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
+
+		SetEntityMoveType(i, MOVETYPE_WALK);
 
 		if (gc_bOverlays.BoolValue)
 		{

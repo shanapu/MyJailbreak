@@ -1232,14 +1232,13 @@ public Action Timer_StartEvent(Handle timer)
 
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
 
-
-	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) 
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 	{
 		if (IsValidClient(i, true, true))
 		{
-			SetEntityMoveType(i, MOVETYPE_WALK);
-
 			SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
+
+			SetEntityMoveType(i, MOVETYPE_WALK);
 		}
 
 		if (gc_bOverlays.BoolValue)

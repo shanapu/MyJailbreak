@@ -829,6 +829,8 @@ public Action OnTraceAttack(int victim, int &attacker, int &inflictor, float &da
 
 	if (GetClientTeam(victim) == GetClientTeam(attacker))
 		return Plugin_Handled;
+
+	return Plugin_Continue;
 }
 
 
@@ -1089,9 +1091,10 @@ public Action Timer_FreezeOnStart(Handle timer)
 	{
 		if (GetClientTeam(i) == CS_TEAM_T)
 		{
-			SetEntityMoveType(i, MOVETYPE_WALK);
 			DarkenScreen(i, false);
 		}
+
+		SetEntityMoveType(i, MOVETYPE_WALK);
 	}
 
 	g_hTimerFreeze = null;
