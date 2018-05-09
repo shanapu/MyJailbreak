@@ -1095,7 +1095,7 @@ void CreateInfoPanel(int client)
 public Action Timer_StartEvent(Handle timer)
 {
 	g_iTruceTime--;
-	
+
 	if (g_iTruceTime > 0)
 	{
 		if (g_iTruceTime == gc_iTruceTime.IntValue-3)
@@ -1117,7 +1117,7 @@ public Action Timer_StartEvent(Handle timer)
 		{
 			SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
 
-		SetEntityMoveType(i, MOVETYPE_WALK);
+			SetEntityMoveType(i, MOVETYPE_WALK);
 
 			if (gc_bGrav.BoolValue)
 			{
