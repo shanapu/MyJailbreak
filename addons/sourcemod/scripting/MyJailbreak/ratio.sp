@@ -71,6 +71,7 @@ ConVar gc_bBalanceGuards;
 ConVar gc_bBalanceWarden;
 ConVar gc_bRespawn;
 ConVar gc_bSwapSpecT;
+ConVar gc_bNoQueue;
 
 // Booleans
 bool g_bRatioEnable = true;
@@ -143,6 +144,7 @@ public void OnPluginStart()
 	gc_sCustomCommandNoCT = AutoExecConfig_CreateConVar("sm_ratio_cmds_noct", "noct", "Set your custom chat command for player to move to spectator (!noguard (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_fPrisonerPerGuard = AutoExecConfig_CreateConVar("sm_ratio_T_per_CT", "2", "How many prisoners for each guard.", _, true, 1.0);
 	gc_bVIPQueue = AutoExecConfig_CreateConVar("sm_ratio_flag", "1", "0 - disabled, 1 - enable VIPs moved to front of queue", _, true, 0.0, true, 1.0);
+	gc_bNoQueue = AutoExecConfig_CreateConVar("sm_ratio_disable_queue", "0", "1 - disabled guard queue, 0 - enable guard queue", _, true, 0.0, true, 1.0);
 	gc_bForceTConnect = AutoExecConfig_CreateConVar("sm_ratio_force_t", "1", "0 - disabled, 1 - force player on connect to join T side", _, true, 0.0, true, 1.0);
 	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_ratio_vipflag", "a", "Set the flag for VIP");
 	gc_bToggle = AutoExecConfig_CreateConVar("sm_ratio_disable", "0", "Allow the admin to toggle 'ratio check & autoswap' on/off with !ratio", _, true, 0.0, true, 1.0);
@@ -478,6 +480,13 @@ public Action Command_JoinGuardQueue(int client, int iArgNum)
 
 	if (!CanClientJoinGuards(client))
 	{
+		if (gc_bNoQueue.BoolValue)
+		{
+			CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_fullguards");
+
+			return Plugin_Handled;
+		}
+
 		int iIndex = FindValueInArray(g_aGuardQueue, client);
 
 		if (iIndex == -1)
@@ -777,6 +786,13 @@ public Action Event_OnJoinTeam(int client, const char[] szCommand, int iArgCount
 
 	if (!CanClientJoinGuards(client))
 	{
+		if (gc_bNoQueue.BoolValue)
+		{
+			CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_fullguards");
+
+			return Plugin_Handled;
+		}
+
 		int iIndex = FindValueInArray(g_aGuardQueue, client);
 
 		ClientCommand(client, "play %s", g_sRestrictedSound);
@@ -965,6 +981,7 @@ public int Handler_AcceptGuardRules(Handle menu, MenuAction action, int param1, 
 				{
 					ForcePlayerSuicide(client);
 					ChangeClientTeam(client, CS_TEAM_CT);
+
 					if (gc_bRespawn.BoolValue)
 					{
 						SetClientListeningFlags(client, VOICE_NORMAL); // unmute if sm_hosties or admin has muted prisoners on round start
@@ -972,8 +989,19 @@ public int Handler_AcceptGuardRules(Handle menu, MenuAction action, int param1, 
 						CS_RespawnPlayer(client);
 					}
 				}
-				else AddToQueue(client);
-				ClientCommand(client, "play %s", g_sRightAnswerSound);
+				else
+				{
+					if (gc_bNoQueue.BoolValue)
+					{
+						CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_fullguards");
+						ClientCommand(client, "play %s", g_sRestrictedSound);
+					}
+					else
+					{
+						AddToQueue(client);
+						ClientCommand(client, "play %s", g_sRightAnswerSound);
+					}
+				}
 			}
 			case 2:
 			{
@@ -991,6 +1019,7 @@ void Menu_GuardQuestions(int client)
 	IntToString(GetRandomInt(1, g_iCountQuestions), szRandomQuestion, sizeof(szRandomQuestion));
 	g_iRandomAnswer[client] = GetRandomInt(1, 3);
 	KvRewind(hKeyValues);
+
 	if(KvJumpToKey(hKeyValues, szRandomQuestion))
 	{
 		char info[128], szBuffer[256];
@@ -1002,14 +1031,14 @@ void Menu_GuardQuestions(int client)
 		KvGetString(hKeyValues, "line2", szBuffer, sizeof(szBuffer));
 		InfoPanel.DrawText(szBuffer);
 		InfoPanel.DrawText("-----------------------------------");
-		
+
 		if (g_iRandomAnswer[client] == 1)
 		{
 			InfoPanel.DrawText("    ");
 			KvGetString(hKeyValues, "right", szBuffer, sizeof(szBuffer));
 			InfoPanel.DrawItem(szBuffer);
 		}
-		
+
 		InfoPanel.DrawText("    ");
 		KvGetString(hKeyValues, "wrong1", szBuffer, sizeof(szBuffer));
 		InfoPanel.DrawItem(szBuffer);
@@ -1062,7 +1091,17 @@ public int Handler_GuardQuestions(Handle menu, MenuAction action, int param1, in
 								CS_RespawnPlayer(client);
 							}
 						}
-						else AddToQueue(client);
+						else if (gc_bNoQueue.BoolValue)
+						{
+							CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_fullguards");
+							ClientCommand(client, "play %s", g_sRestrictedSound);
+						}
+						else
+						{
+							AddToQueue(client);
+							ClientCommand(client, "play %s", g_sRightAnswerSound);
+						}
+					
 					}
 					else Menu_GuardQuestions(client);
 					ClientCommand(client, "play %s", g_sRightAnswerSound);
@@ -1091,7 +1130,16 @@ public int Handler_GuardQuestions(Handle menu, MenuAction action, int param1, in
 								CS_RespawnPlayer(client);
 							}
 						}
-						else AddToQueue(client);
+						else if (gc_bNoQueue.BoolValue)
+						{
+							CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_fullguards");
+							ClientCommand(client, "play %s", g_sRestrictedSound);
+						}
+						else
+						{
+							AddToQueue(client);
+							ClientCommand(client, "play %s", g_sRightAnswerSound);
+						}
 					}
 					else Menu_GuardQuestions(client);
 					ClientCommand(client, "play %s", g_sRightAnswerSound);
@@ -1120,7 +1168,16 @@ public int Handler_GuardQuestions(Handle menu, MenuAction action, int param1, in
 								CS_RespawnPlayer(client);
 							}
 						}
-						else AddToQueue(client);
+						else if (gc_bNoQueue.BoolValue)
+						{
+							CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_fullguards");
+							ClientCommand(client, "play %s", g_sRestrictedSound);
+						}
+						else
+						{
+							AddToQueue(client);
+							ClientCommand(client, "play %s", g_sRightAnswerSound);
+						}
 					}
 					else Menu_GuardQuestions(client);
 					ClientCommand(client, "play %s", g_sRightAnswerSound);
