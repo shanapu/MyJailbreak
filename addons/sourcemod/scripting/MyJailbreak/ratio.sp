@@ -85,10 +85,12 @@ Handle g_aGuardQueue;
 Handle g_aGuardList;
 Handle g_hDataPackTeam;
 Handle gF_OnClientJoinGuards;
+Handle hKeyValues;
 
 // Integer
 int g_iRandomAnswer[MAXPLAYERS+1];
 int g_iQuestionTimes[MAXPLAYERS+1];
+int g_iCountQuestions;
 
 // Strings
 char g_sPrefix[64];
@@ -147,7 +149,7 @@ public void OnPluginStart()
 	gc_bToggleAnnounce = AutoExecConfig_CreateConVar("sm_ratio_disable_announce", "0", "Announce in a chatmessage on roundend when ratio is disabled", _, true, 0.0, true, 1.0);
 	gc_bAdsVIP = AutoExecConfig_CreateConVar("sm_ratio_adsvip", "1", "0 - disabled, 1 - enable adverstiment for 'VIPs moved to front of queue' when player types !guard ", _, true, 0.0, true, 1.0);
 	gc_iJoinMode = AutoExecConfig_CreateConVar("sm_ratio_join_mode", "1", "0 - instandly join ct/queue, no confirmation / 1 - confirm rules / 2 - Qualification questions", _, true, 0.0, true, 2.0);
-	gc_iQuestionTimes = AutoExecConfig_CreateConVar("sm_ratio_questions", "3", "How many question a player have to answer before join ct/queue. need sm_ratio_join_mode 2", _, true, 1.0, true, 5.0);
+	gc_iQuestionTimes = AutoExecConfig_CreateConVar("sm_ratio_questions", "3", "How many question a player have to answer before join ct/queue. need sm_ratio_join_mode 2", _, true, 1.0);
 	gc_bAdminBypass = AutoExecConfig_CreateConVar("sm_ratio_vip_bypass", "1", "Bypass Admin/VIP though agreement / question", _, true, 0.0, true, 1.0);
 	gc_bBalanceTerror = AutoExecConfig_CreateConVar("sm_ratio_balance_terror", "1", "0 = Could result in unbalanced teams. 1 = Switch a random T, when nobody is in guardqueue to balance the teams.", _, true, 0.0, true, 1.0);
 	gc_bBalanceGuards = AutoExecConfig_CreateConVar("sm_ratio_balance_guard", "1", "Mode to choose a guard to be switch to T on balance the teams. 1 = Last In First Out / 0 = Random Guard", _, true, 0.0, true, 1.0);
@@ -190,17 +192,16 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	gF_OnClientJoinGuards = CreateGlobalForward("MyJailbreak_OnJoinGuardQueue", ET_Event, Param_Cell);
-
+	
 	RegPluginLibrary("myratio");
 	return APLRes_Success;
 }
 
 public void OnConfigsExecuted()
 {
-	// FindConVar
 	gc_sPrefix.GetString(g_sPrefix, sizeof(g_sPrefix));
 	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
-
+	
 	Handle hConVar = FindConVar("mp_force_pick_time");
 	if (hConVar == INVALID_HANDLE)
 		return;
@@ -890,6 +891,27 @@ public void OnClientDisconnect_Post(int client)
 public void OnMapStart()
 {
 	g_bRatioEnable = true;
+	
+	if(hKeyValues)
+	{
+		delete hKeyValues;
+	}
+	
+	g_iCountQuestions = 0;
+	
+	char szPath[256];
+	hKeyValues = CreateKeyValues("Questions");
+	BuildPath(Path_SM, szPath, sizeof(szPath), "configs/MyJailbreak/questions.ini");
+	if (FileToKeyValues(hKeyValues, szPath))
+	{
+		if(KvGotoFirstSubKey(hKeyValues))
+		{
+			do
+			{
+				g_iCountQuestions++;
+			} while (KvGotoNextKey(hKeyValues));
+		}
+	}
 }
 
 /******************************************************************************
@@ -964,58 +986,54 @@ public int Handler_AcceptGuardRules(Handle menu, MenuAction action, int param1, 
 
 void Menu_GuardQuestions(int client)
 {
-	char info[64], random[64];
 	Panel InfoPanel = new Panel();
-	int randomquestion = GetRandomInt(1, 5);
+	char szRandomQuestion[16];
+	IntToString(GetRandomInt(1, g_iCountQuestions), szRandomQuestion, sizeof(szRandomQuestion));
 	g_iRandomAnswer[client] = GetRandomInt(1, 3);
-
-	Format(info, sizeof(info), "%T", "ratio_question_title", client);
-	InfoPanel.SetTitle(info);
-	
-	InfoPanel.DrawText("-----------------------------------");
-	Format(random, sizeof(random), "ratio_question%i_line1", randomquestion);
-	Format(info, sizeof(info), "%T", random, client);
-	InfoPanel.DrawText(info);
-	Format(random, sizeof(random), "ratio_question%i_line2", randomquestion);
-	Format(info, sizeof(info), "%T", random, client);
-	InfoPanel.DrawText(info);
-	InfoPanel.DrawText("-----------------------------------");
-
-	if (g_iRandomAnswer[client] == 1)
+	KvRewind(hKeyValues);
+	if(KvJumpToKey(hKeyValues, szRandomQuestion))
 	{
+		char info[128], szBuffer[256];
+		Format(info, sizeof(info), "%T", "ratio_question_title", client);
+		InfoPanel.SetTitle(info);
+		InfoPanel.DrawText("-----------------------------------");
+		KvGetString(hKeyValues, "line1", szBuffer, sizeof(szBuffer));
+		InfoPanel.DrawText(szBuffer);
+		KvGetString(hKeyValues, "line2", szBuffer, sizeof(szBuffer));
+		InfoPanel.DrawText(szBuffer);
+		InfoPanel.DrawText("-----------------------------------");
+		
+		if (g_iRandomAnswer[client] == 1)
+		{
+			InfoPanel.DrawText("    ");
+			KvGetString(hKeyValues, "right", szBuffer, sizeof(szBuffer));
+			InfoPanel.DrawItem(szBuffer);
+		}
+		
 		InfoPanel.DrawText("    ");
-		Format(random, sizeof(random), "ratio_question%i_right", randomquestion);
-		Format(info, sizeof(info), "%T", random, client);
-		InfoPanel.DrawItem(info);
-	}
+		KvGetString(hKeyValues, "wrong1", szBuffer, sizeof(szBuffer));
+		InfoPanel.DrawItem(szBuffer);
 
-	InfoPanel.DrawText("    ");
-	Format(random, sizeof(random), "ratio_question%i_wrong1", randomquestion);
-	Format(info, sizeof(info), "%T", random, client);
-	InfoPanel.DrawItem(info);
+		if (g_iRandomAnswer[client] == 2)
+		{
+			InfoPanel.DrawText("    ");
+			KvGetString(hKeyValues, "right", szBuffer, sizeof(szBuffer));
+			InfoPanel.DrawItem(szBuffer);
+		}
 
-	if (g_iRandomAnswer[client] == 2)
-	{
 		InfoPanel.DrawText("    ");
-		Format(random, sizeof(random), "ratio_question%i_right", randomquestion);
-		Format(info, sizeof(info), "%T", random, client);
-		InfoPanel.DrawItem(info);
+		KvGetString(hKeyValues, "wrong2", szBuffer, sizeof(szBuffer));
+		InfoPanel.DrawItem(szBuffer);
+
+		if (g_iRandomAnswer[client] == 3)
+		{
+			InfoPanel.DrawText("    ");
+			KvGetString(hKeyValues, "right", szBuffer, sizeof(szBuffer));
+			InfoPanel.DrawItem(szBuffer);
+		}
+
+		InfoPanel.Send(client, Handler_GuardQuestions, 20);
 	}
-
-	InfoPanel.DrawText("    ");
-	Format(random, sizeof(random), "ratio_question%i_wrong2", randomquestion);
-	Format(info, sizeof(info), "%T", random, client);
-	InfoPanel.DrawItem(info);
-
-	if (g_iRandomAnswer[client] == 3)
-	{
-		InfoPanel.DrawText("    ");
-		Format(random, sizeof(random), "ratio_question%i_right", randomquestion);
-		Format(info, sizeof(info), "%T", random, client);
-		InfoPanel.DrawItem(info);
-	}
-
-	InfoPanel.Send(client, Handler_GuardQuestions, 20);
 }
 
 
@@ -1152,6 +1170,7 @@ public Action Timer_ForceTSide(Handle timer, any client)
 	if (IsValidClient(client, true, true))
 		ChangeClientTeam(client, CS_TEAM_T);
 }
+
 
 /******************************************************************************
                    STOCKS
