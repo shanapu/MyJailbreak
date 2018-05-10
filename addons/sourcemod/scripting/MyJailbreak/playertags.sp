@@ -29,6 +29,7 @@
 #include <sdktools>
 #include <sdkhooks>
 #include <cstrike>
+#include <colors>
 #include <autoexecconfig>
 #include <mystocks>
 
@@ -54,19 +55,25 @@
 #pragma newdecls required
 
 // Booleans
+bool g_bIsLateLoad = false;
 bool gp_bChatProcessor = false;
 bool gp_bStore = false;
 bool gp_bCCC = false;
 bool gp_bTOGsTags = false;
 bool gp_bMyJBWarden = false;
 bool gp_bWarden = false;
+bool g_bIncognito[MAXPLAYERS + 1] = false;
 
 // Console Variables
 ConVar gc_bPlugin;
+ConVar gc_sPrefix;
+ConVar gc_sCustomCommand;
 ConVar gc_bStats;
 ConVar gc_bChat;
 ConVar gc_bExtern;
 ConVar gc_bNoOverwrite;
+ConVar gc_bJoinIncognito;
+ConVar gc_fIncognitoTime;
 
 // Enum
 enum g_eROLES
@@ -83,6 +90,9 @@ char g_sConfigFile[64];
 char g_sChatTag[MAXPLAYERS + 1][g_eROLES][64];
 char g_sStatsTag[MAXPLAYERS + 1][g_eROLES][64];
 char g_sPlayerTag[MAXPLAYERS + 1][64];
+char g_sPrefix[64];
+
+Handle g_hIncognitoTimer[MAXPLAYERS + 1] = null;
 
 // Info
 public Plugin myinfo =
@@ -97,7 +107,9 @@ public Plugin myinfo =
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	MarkNativeAsOptional("Store_GetEquippedItem");
-	
+
+	g_bIsLateLoad = late;
+
 	return APLRes_Success;
 }
 
@@ -107,21 +119,41 @@ public void OnPluginStart()
 	// Translation
 	LoadTranslations("MyJailbreak.PlayerTags.phrases");
 
+	// Client commands
+	RegAdminCmd("sm_incognito", Command_Incognito, ADMFLAG_RESERVATION, "Allows admin to toggle incognito - show default tags instead of admin tags");
+
 	// AutoExecConfig
 	AutoExecConfig_SetFile("PlayerTags", "MyJailbreak");
 	AutoExecConfig_SetCreateFile(true);
 
 	AutoExecConfig_CreateConVar("sm_playertag_version", MYJB_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_playertag_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true, 0.0, true, 1.0);
+	gc_sPrefix = AutoExecConfig_CreateConVar("sm_playertag_prefix", "[{green}MyJB.Tag{default}]", "Set your chat prefix for this plugin.");
 	gc_bStats = AutoExecConfig_CreateConVar("sm_playertag_stats", "1", "0 - disabled, 1 - enable PlayerTag in stats", _, true, 0.0, true, 1.0);
 	gc_bChat = AutoExecConfig_CreateConVar("sm_playertag_chat", "1", "0 - disabled, 1 - enable PlayerTag in chat", _, true, 0.0, true, 1.0);
 	gc_bExtern = AutoExecConfig_CreateConVar("sm_playertag_extern", "1", "0 - disabled, 1 - don't overwrite chat tags given by extern plugins ccc, togsclantags or zephyrus store", _, true, 0.0, true, 1.0);
 	gc_bNoOverwrite = AutoExecConfig_CreateConVar("sm_playertag_overwrite", "1", "0 - if no tag is set in config clear the tag (show nothing) / 1 - if no tag is set in config show players steam group tag", _, true, 0.0, true, 1.0);
+	gc_bJoinIncognito = AutoExecConfig_CreateConVar("sm_playertag_incognito_join", "1", "0 - admins & VIP will recieve their tags right after join / 1 - admins & VIP will join incognito without admin tags.", _, true, 0.0, true, 1.0);
+	gc_fIncognitoTime = AutoExecConfig_CreateConVar("sm_playertag_incognito_time", "120", "seconds how long admins stay incognito - 0 - disabled, you have to !incognito to enable", _, true, 0.0);
+	gc_sCustomCommand = AutoExecConfig_CreateConVar("sm_playertag_cmds", "undercover, incog", "Set your custom chat commands for toggle incognito mode(!incognito (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
 
+	HookConVarChange(gc_sPrefix, OnSettingChanged);
+
 	BuildPath(Path_SM, g_sConfigFile, sizeof(g_sConfigFile), "configs/MyJailbreak/player_tags.cfg");
+
+	// Late loading
+	if (g_bIsLateLoad)
+	{
+		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+		{
+			OnClientPostAdminCheck(i);
+		}
+
+		g_bIsLateLoad = false;
+	}
 }
 
 // Check for supported plugins
@@ -175,8 +207,100 @@ public void OnLibraryAdded(const char[] name)
 
 	else if (StrEqual(name, "myjbwarden"))
 		gp_bMyJBWarden = true;
-
 }
+
+// ConVarChange for Strings
+public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
+{
+	if (convar == gc_sPrefix)
+	{
+		strcopy(g_sPrefix, sizeof(g_sPrefix), newValue);
+	}
+}
+
+// Initialize Plugin
+public void OnConfigsExecuted()
+{
+	gc_sPrefix.GetString(g_sPrefix, sizeof(g_sPrefix));
+
+	// Set custom Commands
+	int iCount = 0;
+	char sCommands[128], sCommandsL[12][32], sCommand[32];
+
+	gc_sCustomCommand.GetString(sCommands, sizeof(sCommands));
+	ReplaceString(sCommands, sizeof(sCommands), " ", "");
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+
+	for (int i = 0; i < iCount; i++)
+	{
+		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		{
+			RegAdminCmd(sCommand,  Command_Incognito, ADMFLAG_RESERVATION, "Allows admin to toggle incognito - show default tags instead of admin tags");
+		}
+	}
+}
+
+/******************************************************************************
+                   COMMANDS
+******************************************************************************/
+
+public Action Command_Incognito(int client, int args)
+{
+	if (!IsValidClient(client, false, true))
+		return Plugin_Handled;
+
+	if(g_bIncognito[client] && args == 0)
+	{
+		g_bIncognito[client] = false;
+
+		if (g_hIncognitoTimer[client] != INVALID_HANDLE)
+		{
+			KillTimer(g_hIncognitoTimer[client]);
+			g_hIncognitoTimer[client] = INVALID_HANDLE;
+		}
+
+		CReplyToCommand(client, "%s %t", g_sPrefix, "playertags_incognito_off");
+	}
+	else
+	{
+		g_bIncognito[client] = true;
+
+		float fIncognitoTime = gc_fIncognitoTime.FloatValue;
+
+		if (args != 0) // given time parameters
+		{
+			char sArgs[10];
+			GetCmdArg(1, sArgs, sizeof(sArgs));
+			fIncognitoTime = StringToFloat(sArgs);
+		}
+		
+		if (g_hIncognitoTimer[client] != null)
+		{
+			delete g_hIncognitoTimer[client];
+		}
+
+		if (fIncognitoTime > 0)
+		{
+			g_hIncognitoTimer[client] = CreateTimer(fIncognitoTime, Timer_Incognito, GetClientUserId(client));
+
+			CReplyToCommand(client, "%s %t", g_sPrefix, "playertags_incognito_on", fIncognitoTime);
+		}
+		else
+		{
+			CReplyToCommand(client, "%s %t", g_sPrefix, "playertags_incognito_on_perm", fIncognitoTime);
+		}
+	}
+
+	// Search for matching tag in cfg
+	LoadPlayerTags(client);
+
+	// Apply tag first time
+	HandleTag(client);
+
+	return Plugin_Handled;
+}
+
 
 /****************************************************************************** 
                    EVENTS 
@@ -185,17 +309,17 @@ public void OnLibraryAdded(const char[] name)
 //Thanks to https://forums.alliedmods.net/showpost.php?p=2573907&postcount=6
 public Action OnClientCommandKeyValues(int client, KeyValues kv)
 {
-    char sKey[64]; 
-     
-    if (!kv.GetSectionName(sKey, sizeof(sKey)))
-    	return Plugin_Continue;
-    	
-    if(StrEqual(sKey, "ClanTagChanged"))
-    {
-    	RequestFrame(Frame_HandleTag, GetClientUserId(client));
-    }
+	char sKey[64];
 
-    return Plugin_Continue; 
+	if (!kv.GetSectionName(sKey, sizeof(sKey)))
+		return Plugin_Continue;
+
+	if(StrEqual(sKey, "ClanTagChanged"))
+	{
+		RequestFrame(Frame_HandleTag, GetClientUserId(client));
+	}
+
+	return Plugin_Continue;
 }
 
 /******************************************************************************
@@ -206,11 +330,39 @@ public void OnClientPostAdminCheck(int client)
 {
 	CS_GetClientClanTag(client, g_sPlayerTag[client], sizeof(g_sPlayerTag[]));
 
+	if (gc_bJoinIncognito.BoolValue)
+	{
+		g_bIncognito[client] = true;
+
+		if (gc_fIncognitoTime.FloatValue > 0)
+		{
+			g_hIncognitoTimer[client] = CreateTimer(gc_fIncognitoTime.FloatValue, Timer_Incognito, GetClientUserId(client));
+		}
+	}
+
 	// Search for matching tag in cfg
 	LoadPlayerTags(client);
 
 	// Apply tag first time
 	HandleTag(client);
+}
+
+public Action Timer_Incognito(Handle tmr, int userid)
+{
+	int client = GetClientOfUserId(userid);
+
+	g_bIncognito[client] = false;
+
+	LoadPlayerTags(client);
+
+	// Apply tag first time
+	HandleTag(client);
+
+	//CPrintToChat(client, "%s %t", g_sPrefix, "playertags_incognito_off");
+
+	g_hIncognitoTimer[client] = null;
+
+	return Plugin_Handled;
 }
 
 public void warden_OnWardenCreatedByUser(int client)
@@ -228,17 +380,24 @@ public void warden_OnWardenRemoved(int client)
 	RequestFrame(Frame_HandleTag, GetClientUserId(client));
 }
 
+public void OnClientDisconnect(int client)
+{
+	if (g_hIncognitoTimer[client] != null)
+	{
+		delete g_hIncognitoTimer[client];
+	}
+}
 /****************************************************************************** 
                    FRAME 
 ******************************************************************************/
 
-public void Frame_HandleTag(any iUserId)
+public void Frame_HandleTag(int userid)
 {
-	int client = GetClientOfUserId(iUserId);
+	int client = GetClientOfUserId(userid);
 	
 	if (!client)
 		return;
-		
+
 	HandleTag(client);
 }
 
@@ -268,7 +427,26 @@ void LoadPlayerTags(int client)
 	if (!GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid)))
 	{
 		LogError("COULDN'T GET STEAMID of %L", client);
-		return;
+
+		if (kvMenu.JumpToKey("default", false))
+		{
+			GetTags(client, kvMenu);
+
+			delete kvMenu;
+			return;
+		}
+	}
+
+	// incognito -> use the default tags
+	if(g_bIncognito[client])
+	{
+		if (kvMenu.JumpToKey("default", false))
+		{
+			GetTags(client, kvMenu);
+
+			delete kvMenu;
+			return;
+		}
 	}
 
 	// Check SteamID
@@ -305,7 +483,7 @@ void LoadPlayerTags(int client)
 			return;
 		}
 	}
-	
+
 	// Check flags
 	char sFlags[21] = "abcdefghijklmnopqrstz";
 
