@@ -901,7 +901,7 @@ public void OnMapStart()
 	
 	char szPath[256];
 	hKeyValues = CreateKeyValues("Questions");
-	BuildPath(Path_SM, szPath, sizeof(szPath), "configs/MyJailbreak/questions.ini");
+	BuildPath(Path_SM, szPath, sizeof(szPath), "configs/MyJailbreak/questions.cfg");
 	if (FileToKeyValues(hKeyValues, szPath))
 	{
 		if(KvGotoFirstSubKey(hKeyValues))
