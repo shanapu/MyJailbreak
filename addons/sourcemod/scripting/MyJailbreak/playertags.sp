@@ -140,6 +140,8 @@ public void OnPluginStart()
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
 
+	HookEvent("player_team", Event_CheckTag);
+
 	HookConVarChange(gc_sPrefix, OnSettingChanged);
 
 	BuildPath(Path_SM, g_sConfigFile, sizeof(g_sConfigFile), "configs/MyJailbreak/player_tags.cfg");
@@ -314,7 +316,7 @@ public Action OnClientCommandKeyValues(int client, KeyValues kv)
 	if (!kv.GetSectionName(sKey, sizeof(sKey)))
 		return Plugin_Continue;
 
-	if(StrEqual(sKey, "ClanTagChanged"))
+	if (StrEqual(sKey, "ClanTagChanged"))
 	{
 		RequestFrame(Frame_HandleTag, GetClientUserId(client));
 	}
@@ -365,17 +367,29 @@ public Action Timer_Incognito(Handle tmr, int userid)
 	return Plugin_Handled;
 }
 
-public void warden_OnWardenCreatedByUser(int client)
+public void Event_CheckTag(Event event, char[] name, bool dontBroadcast)
 {
+	int client = GetClientOfUserId(event.GetInt("userid");
+
 	HandleTag(client);
 }
 
-public void warden_OnWardenCreatedByAdmin(int client)
+public void warden_OnWardenCreated(int client)
 {
 	HandleTag(client);
 }
 
 public void warden_OnWardenRemoved(int client)
+{
+	RequestFrame(Frame_HandleTag, GetClientUserId(client));
+}
+
+public void warden_OnDeputyCreated(int client)
+{
+	HandleTag(client);
+}
+
+public void warden_OnDeputyRemoved(int client)
 {
 	RequestFrame(Frame_HandleTag, GetClientUserId(client));
 }
