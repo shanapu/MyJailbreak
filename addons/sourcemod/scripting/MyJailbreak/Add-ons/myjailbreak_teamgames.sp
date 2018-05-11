@@ -52,7 +52,7 @@ public Plugin myinfo =
 }
 
 // Start
-public void OnPluginStart()
+public void OnAllPluginsLoaded()
 {
 	if (!FindConVar("tg_ct_friendlyfire"))
 	{
