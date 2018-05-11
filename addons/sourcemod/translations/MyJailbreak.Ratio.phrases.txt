@@ -275,4 +275,9 @@
 		"en"		"The guards are currently full. Please try again later."
 	}
 
+	"ratio_voice"
+	{
+		"en"		"You have not used your mic before, you cannot join guards without voice. Use your mic and try again."
+	}
+
 }
