@@ -369,7 +369,7 @@ public Action Timer_Incognito(Handle tmr, int userid)
 
 public void Event_CheckTag(Event event, char[] name, bool dontBroadcast)
 {
-	int client = GetClientOfUserId(event.GetInt("userid");
+	int client = GetClientOfUserId(event.GetInt("userid"));
 
 	HandleTag(client);
 }
