@@ -811,6 +811,8 @@ void ResetEventDay()
 		SetEntityMoveType(i, MOVETYPE_WALK);
 
 		SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
+
+		ToggleWeaponFire(i, true);
 	}
 
 	delete g_hTimerBeacon;
@@ -908,21 +910,6 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 				}
 			}
 		}
-
-		if (g_bIsKnifeFight && g_iTruceTime > 0)
-		{
-			if (buttons & IN_ATTACK)
-			{
-				buttons &= ~IN_ATTACK;
-			//	PrintToConsole(client, "Weapons shooting is blocked while trucetime");
-			}
-
-			if (buttons & IN_ATTACK2)
-			{
-				buttons &= ~IN_ATTACK2;
-			//	PrintToConsole(client, "Weapons shooting is blocked while trucetime");
-			}
-		}
 	}
 	
 	return Plugin_Continue;
@@ -958,6 +945,8 @@ void StartEventRound(bool thisround)
 		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
 		{
 			SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
+
+			ToggleWeaponFire(i, false);
 
 			SetEntityMoveType(i, MOVETYPE_NONE);
 		}
@@ -1027,6 +1016,8 @@ void PrepareDay(bool thisround)
 		SetEntProp(i, Prop_Send, "m_CollisionGroup", 2);  // 2 - none / 5 - 'default'
 
 		SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
+
+		ToggleWeaponFire(i, false);
 
 		SetEntityMoveType(i, MOVETYPE_NONE);
 
@@ -1181,6 +1172,8 @@ public Action Timer_StartEvent(Handle timer)
 	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
 	{
 		SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
+
+		ToggleWeaponFire(i, true);
 
 		if (gc_bOverlays.BoolValue)
 		{

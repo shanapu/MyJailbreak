@@ -734,23 +734,6 @@ public void OnMapStart()
 	}
 }
 
-public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
-{
-	if (g_bIsZeus && g_iTruceTime > 0)
-	{
-		if (buttons & IN_ATTACK)
-		{
-			buttons &= ~IN_ATTACK;
-		}
-
-		if (buttons & IN_ATTACK2)
-		{
-			buttons &= ~IN_ATTACK2;
-		}
-	}
-}
-	
-	
 public void MyJailbreak_ResetEventDay()
 {
 	g_bStartZeus = false;
@@ -787,6 +770,8 @@ void ResetEventDay()
 		SetEntityMoveType(i, MOVETYPE_WALK);
 
 		SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
+
+		ToggleWeaponFire(i, true);
 	}
 
 	delete g_hTimerBeacon;
@@ -910,6 +895,10 @@ void StartEventRound(bool thisround)
 		{
 			SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
 
+			ToggleWeaponFire(i, false);
+
+			ToggleWeaponFire(i, false);
+
 			SetEntityMoveType(i, MOVETYPE_NONE);
 		}
 
@@ -978,6 +967,8 @@ void PrepareDay(bool thisround)
 		SetEntProp(i, Prop_Send, "m_CollisionGroup", 2);  // 2 - none / 5 - 'default'
 
 		SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
+
+		ToggleWeaponFire(i, false);
 
 		SetEntityMoveType(i, MOVETYPE_NONE);
 
@@ -1103,6 +1094,8 @@ public Action Timer_StartEvent(Handle timer)
 	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
 	{
 		SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
+
+		ToggleWeaponFire(i, true);
 
 		SetEntityMoveType(i, MOVETYPE_WALK);
 

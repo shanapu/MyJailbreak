@@ -747,23 +747,6 @@ public void OnMapEnd()
 	g_sHasVoted[0] = '\0';
 }
 
-public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
-{
-	if (g_bIsGhosts && g_iTruceTime > 0)
-	{
-		if (buttons & IN_ATTACK)
-		{
-			buttons &= ~IN_ATTACK;
-		}
-
-		if (buttons & IN_ATTACK2)
-		{
-			buttons &= ~IN_ATTACK2;
-		}
-	}
-	
-	return Plugin_Continue;
-}
 
 public void MyJailbreak_ResetEventDay()
 {
@@ -806,6 +789,8 @@ void ResetEventDay()
 
 		SDKUnhook(i, SDKHook_SetTransmit, Hook_SetTransmit);
 		SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
+
+		ToggleWeaponFire(i, true);
 	}
 
 	g_bGhostsRunning = false;
@@ -880,6 +865,8 @@ void StartEventRound(bool thisround)
 		{
 			SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
 
+			ToggleWeaponFire(i, false);
+
 			SetEntityMoveType(i, MOVETYPE_NONE);
 		}
 
@@ -950,6 +937,8 @@ void PrepareDay(bool thisround)
 		SetEntProp(i, Prop_Send, "m_CollisionGroup", 2);  // 2 - none / 5 - 'default'
 
 		SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
+
+		ToggleWeaponFire(i, false);
 
 		SDKHook(i, SDKHook_SetTransmit, Hook_SetTransmit);
 
@@ -1080,6 +1069,8 @@ public Action Timer_StartEvent(Handle timer)
 
 		SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
 
+		ToggleWeaponFire(i, true);
+
 		SetEntityMoveType(i, MOVETYPE_WALK);
 
 		if (gc_bOverlays.BoolValue)
@@ -1110,6 +1101,8 @@ public Action Timer_ShowGhosts(Handle timer)
 	{
 		SDKUnhook(i, SDKHook_SetTransmit, Hook_SetTransmit);
 		SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
+
+		ToggleWeaponFire(i, true);
 	}
 
 	PrintCenterTextAll("<font size='30' color='#FF0000'>%t</font>", "ghosts_visible");
@@ -1129,6 +1122,8 @@ public Action Timer_MakeGhosts(Handle timer)
 		{
 			SDKHook(i, SDKHook_SetTransmit, Hook_SetTransmit);
 			SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
+
+			ToggleWeaponFire(i, false);
 		}
 
 		PrintCenterTextAll("<font size='30' color='#00FF00'>%t</font>", "ghosts_invisible");

@@ -757,23 +757,6 @@ public void OnMapEnd()
 	g_sHasVoted[0] = '\0';
 }
 
-public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
-{
-	if (g_bIsHEbattle && g_iTruceTime > 0)
-	{
-		if (buttons & IN_ATTACK)
-		{
-			buttons &= ~IN_ATTACK;
-		}
-
-		if (buttons & IN_ATTACK2)
-		{
-			buttons &= ~IN_ATTACK2;
-		}
-	}
-	
-	return Plugin_Continue;
-}
 
 public void MyJailbreak_ResetEventDay()
 {
@@ -813,6 +796,8 @@ void ResetEventDay()
 		SetEntityMoveType(i, MOVETYPE_WALK);
 
 		SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
+
+		ToggleWeaponFire(i, true);
 	}
 
 	delete g_hTimerBeacon;
@@ -914,6 +899,8 @@ void StartEventRound(bool thisround)
 			SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
 
 			SetEntityMoveType(i, MOVETYPE_NONE);
+
+			ToggleWeaponFire(i, false);
 		}
 
 		CreateTimer(3.0, Timer_PrepareEvent);
@@ -981,6 +968,8 @@ void PrepareDay(bool thisround)
 		CreateInfoPanel(i);
 		
 		SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
+
+		ToggleWeaponFire(i, false);
 
 		StripAllPlayerWeapons(i);
 
@@ -1116,6 +1105,8 @@ public Action Timer_StartEvent(Handle timer)
 		if (IsValidClient(i, true, false))
 		{
 			SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
+
+			ToggleWeaponFire(i, true);
 
 			SetEntityMoveType(i, MOVETYPE_WALK);
 

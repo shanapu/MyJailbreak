@@ -588,6 +588,8 @@ void StartLastGuard()
 			SetEntProp(i, Prop_Send, "m_CollisionGroup", 2);  // 2 - none / 5 - 'default'
 			SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
 
+			ToggleWeaponFire(i, false);
+
 			if (gc_bFreeze.BoolValue)
 			{
 				SetEntityMoveType(i, MOVETYPE_NONE);
@@ -722,6 +724,8 @@ public Action Timer_TruceUntilStart(Handle timer)
 	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (IsPlayerAlive(i))
 	{
 		SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
+
+		ToggleWeaponFire(i, true);
 
 		if (gc_bOverlays.BoolValue)
 		{

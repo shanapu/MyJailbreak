@@ -713,24 +713,6 @@ public void OnMapEnd()
 	g_sHasVoted[0] = '\0';
 }
 
-public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
-{
-	if (g_bIsTeleport && g_iTruceTime > 0)
-	{
-		if (buttons & IN_ATTACK)
-		{
-			buttons &= ~IN_ATTACK;
-		}
-
-		if (buttons & IN_ATTACK2)
-		{
-			buttons &= ~IN_ATTACK2;
-		}
-	}
-	
-	return Plugin_Continue;
-}
-
 public void MyJailbreak_ResetEventDay()
 {
 	g_bStartTeleport = false;
@@ -766,6 +748,8 @@ void ResetEventDay()
 		GivePlayerItem(i, "weapon_knife");
 
 		SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
+
+		ToggleWeaponFire(i, true);
 
 		SetEntityMoveType(i, MOVETYPE_WALK);
 	}
@@ -838,6 +822,8 @@ void StartEventRound(bool thisround)
 		{
 			SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
 
+			ToggleWeaponFire(i, false);
+
 			SetEntityMoveType(i, MOVETYPE_NONE);
 		}
 
@@ -904,6 +890,8 @@ void PrepareDay(bool thisround)
 	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
 	{
 		SetEntProp(i, Prop_Send, "m_CollisionGroup", 2);  // 2 - none / 5 - 'default'
+
+		ToggleWeaponFire(i, false);
 
 		SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
 
@@ -1032,6 +1020,8 @@ public Action Timer_StartEvent(Handle timer)
 	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
 	{
 		SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
+
+		ToggleWeaponFire(i, true);
 
 		if (gc_bOverlays.BoolValue)
 		{

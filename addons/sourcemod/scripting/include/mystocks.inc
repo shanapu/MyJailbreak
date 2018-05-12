@@ -226,6 +226,35 @@ stock void SetPlayerAmmo(int client, int weaponEnt, int clip = -1, int ammo = -1
 }
 
 
+
+stock void ToggleWeaponFire(int client, bool status = true)
+{
+	if (status) // true = allow shooting
+	{
+		SDKUnhook(client, SDKHook_PreThink, PreThinkWeapon);
+	}
+	else // false = suppress shooting
+	{
+		SDKHook(client, SDKHook_PreThink, PreThinkWeapon);
+	
+	}
+}
+
+
+stock Action PreThinkWeapon(int client)
+{
+	int weapon = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
+
+	if (weapon < 0 || !IsValidEdict(weapon) || !IsValidEntity(weapon))
+		return Plugin_Continue;
+
+	SetEntPropFloat(weapon, Prop_Send, "m_flNextPrimaryAttack", GetGameTime() + 0.25);
+	SetEntPropFloat(weapon, Prop_Send, "m_flNextSecondaryAttack", GetGameTime() + 0.25);
+
+	return Plugin_Continue;
+}
+
+
 // Remove a players render color
 stock Action Timer_RemoveColor(Handle timer, any client) 
 {
