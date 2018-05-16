@@ -279,5 +279,16 @@
 	{
 		"en"		"You have not used your mic before, you cannot join guards without voice. Use your mic and try again."
 	}
+	
+	"ratio_guardquestions_title"
+	{
+		"en"		"Question №"
+	}
+	
+	"ratio_guardquestions_timer"
+	{
+		"#format"	"{1:d}"
+		"en"		"Left {1} sec."
+	}
 
 }

@@ -81,7 +81,7 @@ bool g_bEnableGuard[MAXPLAYERS+1] = {true, ...};
 
 bool gp_bWarden = false;
 bool gp_bMyJBWarden = false;
-bool gp_bJWPBWarden = false;
+bool gp_bVIP_Core = false;
 bool g_bWrongAnswer[MAXPLAYERS+1] = false;
 
 // Handles
@@ -343,6 +343,7 @@ public void OnAllPluginsLoaded()
 {
 	gp_bMyJBWarden = LibraryExists("myjbwarden");
 	gp_bWarden = LibraryExists("warden");
+	gp_bVIP_Core = LibraryExists("vip_core");
 }
 
 public void OnLibraryRemoved(const char[] name)
@@ -352,6 +353,9 @@ public void OnLibraryRemoved(const char[] name)
 
 	if (StrEqual(name, "warden"))
 		gp_bWarden = false;
+		
+	if (StrEqual(name, "vip_core"))
+		gp_bVIP_Core = false;
 }
 
 public void OnLibraryAdded(const char[] name)
@@ -361,6 +365,9 @@ public void OnLibraryAdded(const char[] name)
 
 	if (StrEqual(name, "warden"))
 		gp_bWarden = true;
+		
+	if (StrEqual(name, "vip_core"))
+		gp_bVIP_Core = true;
 }
 
 /******************************************************************************
@@ -506,7 +513,7 @@ public Action Command_JoinGuardQueue(int client, int iArgNum)
 		{
 			g_iQuestionTimes[client] = gc_iQuestionTimes.IntValue;
 			//g_iQuestionTimes[client] = gc_iQuestionTimes.IntValue-CalcTime(MostActive_GetPlayTimeTotal(client));
-			if ((gc_iJoinMode.IntValue == 0) || (gc_bAdminBypass.BoolValue && (CheckVipFlag(client, g_sAdminFlag) || VIP_IsClientVIP(client)==true)))
+			if ((gc_iJoinMode.IntValue == 0) || (gc_bAdminBypass.BoolValue && (CheckVipFlag(client, g_sAdminFlag) || (gp_bVIP_Core && VIP_IsClientVIP(client)))))
 			{
 				AddToQueue(client);
 			}
@@ -549,7 +556,7 @@ public Action Command_JoinGuardQueue(int client, int iArgNum)
 			
 			if (iIndex == -1)
 			{
-				if (CheckVipFlag(client, g_sAdminFlag) && gc_bVIPQueue.BoolValue)
+				if ((CheckVipFlag(client, g_sAdminFlag) || (gp_bVIP_Core && VIP_IsClientVIP(client))) && gc_bVIPQueue.BoolValue)
 				{
 					if (iQueueSize == 0)
 					{
@@ -562,21 +569,6 @@ public Action Command_JoinGuardQueue(int client, int iArgNum)
 					}
 
 					CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_thxadmin");
-					CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_number", iIndex + 1);
-				}
-				else if (VIP_IsClientVIP(client)==true  && gc_bVIPQueue.BoolValue)
-				{
-					if (iQueueSize == 0)
-					{
-						iIndex = PushArrayCell(g_aGuardQueue, client);
-					}
-					else
-					{
-						ShiftArrayUp(g_aGuardQueue, 0);
-						SetArrayCell(g_aGuardQueue, 0, client);
-					}
-
-					CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_thxvip");
 					CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_number", iIndex + 1);
 				}
 				else
@@ -595,7 +587,7 @@ public Action Command_JoinGuardQueue(int client, int iArgNum)
 			{
 				CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_number", iIndex + 1);
 
-				if (gc_bAdsVIP.BoolValue && gc_bVIPQueue.BoolValue && (!CheckVipFlag(client, g_sAdminFlag) || VIP_IsClientVIP(client)==false))
+				if (gc_bAdsVIP.BoolValue && gc_bVIPQueue.BoolValue && (!CheckVipFlag(client, g_sAdminFlag) || (gp_bVIP_Core && !VIP_IsClientVIP(client))))
 				{
 					CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_advip");
 				}
@@ -663,7 +655,7 @@ public Action AdminCommand_ClearQueue(int client, int args)
 
 public Action Command_ToggleRatio(int client, int args)
 {
-	if ((CheckVipFlag(client, g_sAdminFlag) || VIP_IsClientVIP(client)==true) && gc_bToggle.BoolValue)
+	if ((CheckVipFlag(client, g_sAdminFlag) || (gp_bVIP_Core && VIP_IsClientVIP(client))) && gc_bToggle.BoolValue)
 	{
 		if (g_bRatioEnable)
 		{
@@ -755,7 +747,7 @@ public Action Event_OnFullConnect(Event event, const char[] name, bool dontBroad
 	if (!gc_bForceTConnect.BoolValue || !g_bRatioEnable)
 		return Plugin_Continue;
 
-	if ((!gc_bAdminBypass.BoolValue || (!CheckVipFlag(client, g_sAdminFlag) || VIP_IsClientVIP(client)==false)))
+	if ((!gc_bAdminBypass.BoolValue || (!CheckVipFlag(client, g_sAdminFlag) || (gp_bVIP_Core && !VIP_IsClientVIP(client)))))
 	{
 		CreateTimer(1.0, Timer_ForceTSide, client);
 	}
@@ -828,7 +820,7 @@ public Action Event_OnJoinTeam(int client, const char[] szCommand, int iArgCount
 		{
 			g_iQuestionTimes[client] = gc_iQuestionTimes.IntValue;
 			//g_iQuestionTimes[client] = gc_iQuestionTimes.IntValue-CalcTime(MostActive_GetPlayTimeTotal(client));
-			if ((gc_iJoinMode.IntValue == 0) || (gc_bAdminBypass.BoolValue && (CheckVipFlag(client, g_sAdminFlag) || VIP_IsClientVIP(client)==true)))
+			if ((gc_iJoinMode.IntValue == 0) || (gc_bAdminBypass.BoolValue && (CheckVipFlag(client, g_sAdminFlag) || (gp_bVIP_Core && VIP_IsClientVIP(client)))))
 			{
 				AddToQueue(client);
 			}
@@ -845,7 +837,7 @@ public Action Event_OnJoinTeam(int client, const char[] szCommand, int iArgCount
 		{
 			CPrintToChat(client, "%s %t", g_sPrefix, "ratio_fullqueue", iIndex + 1);
 
-			if (gc_bAdsVIP.BoolValue && gc_bVIPQueue.BoolValue && (!CheckVipFlag(client, g_sAdminFlag) || VIP_IsClientVIP(client)==false))
+			if (gc_bAdsVIP.BoolValue && gc_bVIPQueue.BoolValue && (!CheckVipFlag(client, g_sAdminFlag) || (gp_bVIP_Core && !VIP_IsClientVIP(client))))
 			{
 				CPrintToChat(client, "%s %t", g_sPrefix, "ratio_advip");
 			}
@@ -857,7 +849,7 @@ public Action Event_OnJoinTeam(int client, const char[] szCommand, int iArgCount
 	//g_iQuestionTimes[client] = gc_iQuestionTimes.IntValue-CalcTime(MostActive_GetPlayTimeTotal(client));
 	g_iQuestionTimes[client] = gc_iQuestionTimes.IntValue;
 
-	if ((gc_iJoinMode.IntValue == 0) || (gc_bAdminBypass.BoolValue && (CheckVipFlag(client, g_sAdminFlag) || VIP_IsClientVIP(client)==true)))
+	if ((gc_iJoinMode.IntValue == 0) || (gc_bAdminBypass.BoolValue && (CheckVipFlag(client, g_sAdminFlag) || (gp_bVIP_Core && VIP_IsClientVIP(client)))))
 	{
 		return Plugin_Continue;
 	}
@@ -895,7 +887,7 @@ void AddToQueue(int client)
 
 	if (iIndex == -1)
 	{
-		if ((CheckVipFlag(client, g_sAdminFlag) || VIP_IsClientVIP(client)==true)  && gc_bVIPQueue.BoolValue)
+		if ((CheckVipFlag(client, g_sAdminFlag) || (gp_bVIP_Core && VIP_IsClientVIP(client)))  && gc_bVIPQueue.BoolValue)
 		{
 			if (iQueueSize == 0)
 				iIndex = PushArrayCell(g_aGuardQueue, client);
@@ -1029,7 +1021,6 @@ public int Handler_AcceptGuardRules(Handle menu, MenuAction action, int param1, 
 							CS_RespawnPlayer(client);
 					}
 				}
-				else AddToQueue(client);
 				ClientCommand(client, "play %s", g_sRightAnswerSound);
 			}
 			case 2:
@@ -1059,29 +1050,22 @@ void Menu_GuardQuestions(int client)
 				break;
 			}
 		}
-		
 		g_iRemSec[client] = 15;
 	}
 	if(g_iRandomAnswer[client] < 1)
-	{
 		g_iRandomAnswer[client] = GetRandomInt(1, 4);
-	}
 	KvRewind(hKeyValues);
 	if(g_iQuestionTimes2[client] == 0)
-	{
 		g_iQuestionTimes2[client] = 1;
-	}
 	if(g_iQuestionTimes1[client] == 0)
-	{
 		g_iQuestionTimes1[client] = g_iQuestionTimes[client]+1;
-	}
 	if(KvJumpToKey(hKeyValues, szRandomQuestion[client]))
 	{
 		char info[128];
 		char szBuffer[256];
-		Format(info, sizeof(info), "Вопрос №[%i|%i] ", g_iQuestionTimes2[client], g_iQuestionTimes1[client]);
+		Format(info, sizeof(info), "%t[%i|%i] ", "ratio_guardquestions_title", g_iQuestionTimes2[client], g_iQuestionTimes1[client]);
 		InfoPanel.SetTitle(info);
-		Format(info, sizeof(info), "Осталось времени %i сек.", g_iRemSec[client]);
+		Format(info, sizeof(info), "%t", "ratio_guardquestions_timer", g_iRemSec[client]);
 		InfoPanel.DrawText(info);
 		InfoPanel.DrawText(" ");
 		KvGetString(hKeyValues, "line1", szBuffer, sizeof(szBuffer));
@@ -1122,7 +1106,6 @@ void Menu_GuardQuestions(int client)
 			KvGetString(hKeyValues, "right", szBuffer, sizeof(szBuffer));
 			InfoPanel.DrawItem(szBuffer);
 		}
-
 		InfoPanel.Send(client, Handler_GuardQuestions, 1);
 	}
 }
