@@ -1230,7 +1230,7 @@ void CatchEm(int client, int attacker)
 
 	if (gc_bSounds.BoolValue)
 	{
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) EmitSoundToAllAny(g_sSoundFreezePath);
+		EmitSoundToAllAny(g_sSoundFreezePath);
 	}
 
 	if (!gc_bStayOverlay.BoolValue)
@@ -1254,7 +1254,7 @@ void FreeEm(int client, int attacker)
 
 	if (gc_bSounds.BoolValue)
 	{
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) EmitSoundToAllAny(g_sSoundUnFreezePath);
+		EmitSoundToAllAny(g_sSoundUnFreezePath);
 	}
 	
 	CPrintToChatAll("%s %t", g_sPrefix, "catch_unfreeze", attacker, client);
@@ -1418,6 +1418,8 @@ public Action Timer_StartEvent(Handle timer)
 		{
 			Setup_WallhackSkin(i);
 		}
+
+		ToggleWeaponFire(i, true);
 	}
 
 	if (gc_bSounds.BoolValue)
