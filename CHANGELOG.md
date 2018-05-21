@@ -15,17 +15,28 @@
     *  new cvars - sm_warden_sounds_youwarden - Path to the soundfile which should be played for the new warden.
     *  new cvars - sm_warden_overlays_warden - Path to the warden Overlay DONT TYPE .vmt or .vft
 *  Weapons: Limit the usages of the !guns command.
-	*  new cvar - sm_weapons_max_usages - Max usages of !guns command allowed.
+    *  new cvar - sm_weapons_max_usages - Max usages of !guns command allowed.
+*  Ratio: new convar to disable guard queue.
+    *  new cvars - sm_ratio_disable_queue - 1 - disabled guard queue, 0 - enable guard queue
+*  Add-On: Ratio - voice check - Check with Voiceannounce_EX if player has already spoken before allow move to guards
+*  TeamGames: Version check
   
   
 *Changed*
 *  All Plugins: moved the plugins chat prefix (e.g. [MyJB.Tag]) from translation to plugins .cfg
     *  new cvars - sm_PLUGINNAME_prefix - Set your chat prefix for this plugin.
-*  PlayerTags: Plugin rewritten. Suport admin groups & providing support for TogsClanTags, CCC & ZstoreTags. moved the player chat tags e.g. [Warden] from translation and to new cfg
+*  Ratio: moved guard questions from translation own cfg file - BigThx to BaFer!
+    *  new config file - addons/sourcemod/configs/MyJailbreak/questions.cfg
+*  PlayerTags: Plugin rewritten. Incognito mode. Suport admin groups & providing support for TogsClanTags, CCC & ZstoreTags. moved the player chat tags e.g. [Warden] from translation and to new cfg
+    *  new command - sm_incognito - Allows admin to toggle incognito - show default tags instead of admin tags
     *  new config - sourcemod/configs/MyJailbreak/player_tags.cfg check comments in this cfg for configuration
-    *  removed cvars - sm_playertag_ROLEflag - All cvars to set player tags are removed. check new config file.
+    *  removed cvars - sm_playertag_flag - All cvars to set player tags are removed. check new config file.
     *  new cvar - sm_playertag_extern - 0 - disabled, 1 - don't overwrite chat tags given by extern plugins like ccc, togsclantags or zephyrus store
     *  changed cvar - sm_playertag_overwrite - 0 - if no tag is set in config clear the tag (show nothing) / 1 - if no tag is set in config show players steam group tag
+    *  new cvar - sm_playertag_prefix - Set your chat prefix for this plugin.
+    *  new cvar - sm_playertag_incognito_join - 0 - admins & VIP will recieve their tags right after join / 1 - admins & VIP will join incognito without admin tags
+    *  new cvar - sm_playertag_incognito_time - seconds how long admins stay incognito - 0 - disabled, you have to !incognito to enable
+    *  new cvar - sm_playertag_cmds - Set your custom chat commands for toggle incognito mode(!incognito (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
 *  Warden: Set minimum value of sm_warden_cooldown_roundstart to 0
 *  Freeday: Remove teleport to CT spawn
 *  EventDays: restrict weapon shooting while truce/freeze-time
@@ -51,6 +62,7 @@
   
   
   *Fixed*
+*  War: fix team damage
 *  minor error
   
   
