@@ -990,20 +990,21 @@ public Action OnWeaponCanUse(int client, int weapon)
 		return Plugin_Continue;
 	}
 
-	if (GetClientTeam(client) != CS_TEAM_CT)
-	{
+	if (!IsValidClient(client, true, false))
 		return Plugin_Continue;
-	}
+
+	if (GetClientTeam(client) != CS_TEAM_CT)
+		return Plugin_Continue;
 
 	char sWeapon[32];
 	GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
 
-	if (!StrEqual(sWeapon, "weapon_knife") && IsValidClient(client, true, false))
+	if ((StrContains(sWeapon, "knife", false) != -1) || (StrContains(sWeapon, "bayonet", false) != -1))
 	{
-		return Plugin_Handled;
+		return Plugin_Continue;
 	}
 
-	return Plugin_Continue;
+	return Plugin_Handled;
 }
 
 /******************************************************************************

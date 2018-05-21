@@ -236,7 +236,6 @@ stock void ToggleWeaponFire(int client, bool status = true)
 	else // false = suppress shooting
 	{
 		SDKHook(client, SDKHook_PreThink, PreThinkWeapon);
-	
 	}
 }
 

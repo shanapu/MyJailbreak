@@ -86,17 +86,27 @@ public void BackStab_Event_RoundStart(Event event, const char[] name, bool dontB
 
 public Action BackStab_OnTakedamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &weapon, float damageForce[3], float damagePosition[3], int damagecustom)
 {
-	if (!IsValidClient(victim, true, false) || attacker == victim || !IsValidClient(attacker, true, false)) return Plugin_Continue;
+	if (!gc_bBackstab.BoolValue)
+		return Plugin_Continue;
 
-	char sWeapon[32];
-	if (IsValidEntity(weapon)) GetEntityClassname(weapon, sWeapon, sizeof(sWeapon));
+	if (damage < 99.0)
+		return Plugin_Continue;
 
-	if (gc_bBackstab.BoolValue && IsClientInGame(attacker) && (IsClientWarden(victim) || (IsClientDeputy(victim) && gc_bBackstabDeputy.BoolValue)) && CheckVipFlag(victim, g_sAdminFlagBackstab))
+	if (!IsValidClient(victim, true, false) || attacker == victim || !IsValidClient(attacker, true, false))
+		return Plugin_Continue;
+
+	if (gp_bHosties && gp_bLastRequest) if (IsClientInLastRequest(victim))
+		return Plugin_Continue;
+
+	if ((IsClientWarden(victim) || (IsClientDeputy(victim) && gc_bBackstabDeputy.BoolValue)) && CheckVipFlag(victim, g_sAdminFlagBackstab))
 	{
-		if (gp_bHosties && gp_bLastRequest) if (IsClientInLastRequest(victim))
-			return Plugin_Continue;
-		
-		if ((StrEqual(sWeapon, "weapon_knife", false)) && (damage > 99.0))
+		char sWeapon[32];
+		if (IsValidEntity(weapon))
+		{
+			GetEntityClassname(weapon, sWeapon, sizeof(sWeapon));
+		}
+
+		if ((StrContains(sWeapon, "knife", false) != -1) || (StrContains(sWeapon, "bayonet", false) != -1))
 		{
 			if (gc_iBackstabNumber.IntValue == 0)
 			{

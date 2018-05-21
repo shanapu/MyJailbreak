@@ -844,11 +844,10 @@ public Action OnWeaponCanUse(int client, int weapon)
 	char sWeapon[32];
 	GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
 
-	if (StrEqual(sWeapon, "weapon_knife", false) || StrEqual(sWeapon, "weapon_taser", false))
-	{
+	if (StrContains(sWeapon, "knife", false) != -1 || StrContains(sWeapon, "bayonet", false) != -1 || StrEqual(sWeapon, "weapon_taser", false))
 		return Plugin_Continue;
-	}
-	else return Plugin_Handled;
+
+	return Plugin_Handled;
 }
 
 //Deny weapon drops
