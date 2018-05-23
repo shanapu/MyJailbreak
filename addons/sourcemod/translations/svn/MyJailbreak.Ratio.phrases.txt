@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-11-20 02:35:05 UTC
+// Date: 2018-05-23 19:42:34 UTC
 // Language: svn (svn)
 // 
 // To view other translations for this plugin, please visit:
@@ -7,11 +7,6 @@
 //
 "Phrases"
 {
-
-	"ratio_tag"
-	{
-		"svn"		"[{green}MyJB.Razmerje{default}]"
-	}
 
 	"ratio_auto"
 	{
@@ -126,136 +121,6 @@
 	"ratio_notaccept"
 	{
 		"svn"		"Ne, nočem postati paznik."
-	}
-
-	"ratio_question_title"
-	{
-		"svn"		"Prosim odgovori na naslednje uprašanje, da postaneš paznik."
-	}
-
-	"ratio_question1_line1"
-	{
-		"svn"		"Vrata celic so zaprta in zaporniki v celicah!"
-	}
-
-	"ratio_question1_line2"
-	{
-		"svn"		"Kaj narediš?"
-	}
-
-	"ratio_question1_wrong1"
-	{
-		"svn"		"Počakam, da se celice odprejo in pobijem vse!"
-	}
-
-	"ratio_question1_wrong2"
-	{
-		"svn"		"Ubijem enega po enega do Last Requesta."
-	}
-
-	"ratio_question1_right"
-	{
-		"svn"		"Počakam na prvi ukaz vodje."
-	}
-
-	"ratio_question2_line1"
-	{
-		"svn"		"Vodja je slab & ta runda je dolgočasna kot ponedeljek."
-	}
-
-	"ratio_question2_line2"
-	{
-		"svn"		"Odvržem orožje in ga dam zaporniku da pospešim dogajanje!"
-	}
-
-	"ratio_question2_wrong1"
-	{
-		"svn"		"To je dobra ideja."
-	}
-
-	"ratio_question2_wrong2"
-	{
-		"svn"		"Nikoli! Samo če je zapornik moj kolega!"
-	}
-
-	"ratio_question2_right"
-	{
-		"svn"		"Nikoli! Odvržti orožje zaporniku(Gun Planting) je prepovedano!"
-	}
-
-	"ratio_question3_line1"
-	{
-		"svn"		"Si prebral pravila?"
-	}
-
-	"ratio_question3_line2"
-	{
-		"svn"		"Razumeš pravila?"
-	}
-
-	"ratio_question3_wrong1"
-	{
-		"svn"		"Da, prebral sem jih. Ne bom jih upošteval."
-	}
-
-	"ratio_question3_wrong2"
-	{
-		"svn"		"Branje? Tukaj sem da se zabavam lol!"
-	}
-
-	"ratio_question3_right"
-	{
-		"svn"		"Da, prebral sem jih. Vem kako igrati na tem strežniku."
-	}
-
-	"ratio_question4_line1"
-	{
-		"svn"		"Imaš delujoč mikrofon?"
-	}
-
-	"ratio_question4_line2"
-	{
-		"svn"		"Govoriš slovensko?"
-	}
-
-	"ratio_question4_wrong1"
-	{
-		"svn"		"Oprostite?"
-	}
-
-	"ratio_question4_wrong2"
-	{
-		"svn"		"Moj mikrofon je pokvarjen, ukaze bom pisal ali pa samo sledil."
-	}
-
-	"ratio_question4_right"
-	{
-		"svn"		"Imam delujoč, dovolj dober mikrofon."
-	}
-
-	"ratio_question5_line1"
-	{
-		"svn"		"Vodja je bil ubit in ti si eden zadnjih paznikov."
-	}
-
-	"ratio_question5_line2"
-	{
-		"svn"		"Bi igral kot vodja?"
-	}
-
-	"ratio_question5_wrong1"
-	{
-		"svn"		"Bolje da začnem freeday..."
-	}
-
-	"ratio_question5_wrong2"
-	{
-		"svn"		"Ubijem vse zapornike do Last Requesta."
-	}
-
-	"ratio_question5_right"
-	{
-		"svn"		"Kot paznika, seveda bom moral igrati kot nov vodja."
 	}
 
 	"ratio_cooldown"

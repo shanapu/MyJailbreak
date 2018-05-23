@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-11-20 02:35:00 UTC
+// Date: 2018-05-23 19:27:19 UTC
 // Language: svn (svn)
 // 
 // To view other translations for this plugin, please visit:
@@ -231,11 +231,6 @@
 	"menu_mute"
 	{
 		"svn"		"Mute Menu"
-	}
-
-	"menu_tag"
-	{
-		"svn"		"[{green}MyJB.menu{default}]"
 	}
 
 	"menu_painter"

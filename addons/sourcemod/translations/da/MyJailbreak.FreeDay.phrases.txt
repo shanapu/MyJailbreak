@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-11-20 02:35:12 UTC
+// Date: 2018-05-23 19:26:39 UTC
 // Language: Danish (da)
 // 
 // To view other translations for this plugin, please visit:
@@ -86,6 +86,11 @@
 	"freeday_wait"
 	{
 		"da"		"Du skal vente {1} flere runder!"
+	}
+
+	"freeday_now"
+	{
+		"da"		"En {purple}freeday{default} runde begynder nu"
 	}
 
 }

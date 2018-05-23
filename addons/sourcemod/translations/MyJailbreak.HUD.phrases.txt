@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-11-20 02:34:58 UTC
+// Date: 2018-05-23 19:26:42 UTC
 // Language: English (en)
 // 
 // To view other translations for this plugin, please visit:
@@ -21,11 +21,6 @@
 	"hud_warden"
 	{
 		"en"		"Warden:"
-	}
-
-	"hud_youwarden"
-	{
-		"en"		"You are the Warden!"
 	}
 
 	"hud_nowarden"
@@ -56,6 +51,11 @@
 	"hud_lastCT"
 	{
 		"en"		"Last Guard:"
+	}
+
+	"hud_youwarden"
+	{
+		"en"		"You are the Warden!"
 	}
 
 }

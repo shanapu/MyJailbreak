@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-11-20 02:35:05 UTC
+// Date: 2018-05-23 19:42:33 UTC
 // Language: Czech (cze)
 // 
 // To view other translations for this plugin, please visit:
@@ -7,11 +7,6 @@
 //
 "Phrases"
 {
-
-	"ratio_tag"
-	{
-		"cze"		"[{green}MyJB.ratio{default}]"
-	}
 
 	"ratio_auto"
 	{
@@ -126,136 +121,6 @@
 	"ratio_notaccept"
 	{
 		"cze"		"Ne, nechci se stat dozorcem."
-	}
-
-	"ratio_question_title"
-	{
-		"cze"		"Prosim odpovezte na nasledujici otazky aby ste se stali Dozorcem"
-	}
-
-	"ratio_question1_line1"
-	{
-		"cze"		"Dvere na cele jsou zavreny, vezni jsou uvnitr !"
-	}
-
-	"ratio_question1_line2"
-	{
-		"cze"		"Co udelas?"
-	}
-
-	"ratio_question1_wrong1"
-	{
-		"cze"		"Pockam az se otevrou cely, a pak je vsechny zabiju !"
-	}
-
-	"ratio_question1_wrong2"
-	{
-		"cze"		"Zabij je jednoho po druhym az po posledni prani."
-	}
-
-	"ratio_question1_right"
-	{
-		"cze"		"Pockam na Wardenove prvni oznameni."
-	}
-
-	"ratio_question2_line1"
-	{
-		"cze"		"Warden je velice spatny & toto kolo je nudny jak prase."
-	}
-
-	"ratio_question2_line2"
-	{
-		"cze"		"Upusti svoji zbran a dej ji veznovi pro urychleni kola !"
-	}
-
-	"ratio_question2_wrong1"
-	{
-		"cze"		"Tohle je dobry napad."
-	}
-
-	"ratio_question2_wrong2"
-	{
-		"cze"		"Nikdy ! Hlavne kdyz vezen je muj kamos !"
-	}
-
-	"ratio_question2_right"
-	{
-		"cze"		"Nikdy ! Upusteni zbrane je zakazano !"
-	}
-
-	"ratio_question3_line1"
-	{
-		"cze"		"Cetl si pravidla servru ?"
-	}
-
-	"ratio_question3_line2"
-	{
-		"cze"		"Rozumis pravidlam servru ?"
-	}
-
-	"ratio_question3_wrong1"
-	{
-		"cze"		"Ano, cetl jsem je. Nebudu je nasledovat."
-	}
-
-	"ratio_question3_wrong2"
-	{
-		"cze"		"Ctes ? Ja jsem tady abych hral LOL !"
-	}
-
-	"ratio_question3_right"
-	{
-		"cze"		"Ano, cetl jsem je. Vim jak se hraje na tomhle servru."
-	}
-
-	"ratio_question4_line1"
-	{
-		"cze"		"Mas fungujici mikrofon ?"
-	}
-
-	"ratio_question4_line2"
-	{
-		"cze"		"Mluvis jazykem ktery se pouziva na servru ?"
-	}
-
-	"ratio_question4_wrong1"
-	{
-		"cze"		"Promin coze ?"
-	}
-
-	"ratio_question4_wrong2"
-	{
-		"cze"		"Muj mikrofon je rozbity, budu psat prikazy."
-	}
-
-	"ratio_question4_right"
-	{
-		"cze"		"Mam fungujici mikrofon se slusnou kvalitou."
-	}
-
-	"ratio_question5_line1"
-	{
-		"cze"		"Warden byl zabit, a ty jsi jeden z poslednich dozorcu."
-	}
-
-	"ratio_question5_line2"
-	{
-		"cze"		"Hral by jsi za Wardena ?"
-	}
-
-	"ratio_question5_wrong1"
-	{
-		"cze"		"Bude dobry zacit ten volny den..."
-	}
-
-	"ratio_question5_wrong2"
-	{
-		"cze"		"Zabij vsechny vezne jednoho po druhym az po posledni prani."
-	}
-
-	"ratio_question5_right"
-	{
-		"cze"		"Jako dozorce, budu samozrejme muset hrat jako novy Warden."
 	}
 
 	"ratio_cooldown"

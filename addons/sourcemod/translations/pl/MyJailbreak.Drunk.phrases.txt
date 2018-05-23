@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-11-20 02:35:14 UTC
+// Date: 2018-05-23 19:26:37 UTC
 // Language: Polish (pl)
 // 
 // To view other translations for this plugin, please visit:
@@ -61,6 +61,11 @@
 	"drunk_start"
 	{
 		"pl"		" {purple}Pijak{default} sie rozpoczal!"
+	}
+
+	"drunk_start_nc"
+	{
+		"pl"		"Dzień Pijactwa rozpoczął się!"
 	}
 
 	"drunk_voted"

@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-11-20 02:35:17 UTC
+// Date: 2018-05-23 19:26:53 UTC
 // Language: svn (svn)
 // 
 // To view other translations for this plugin, please visit:
@@ -7,11 +7,6 @@
 //
 "Phrases"
 {
-
-	"weapons_tag"
-	{
-		"svn"		"[{green}MyJB.Orožja{default}]"
-	}
 
 	"weapons_disabled"
 	{

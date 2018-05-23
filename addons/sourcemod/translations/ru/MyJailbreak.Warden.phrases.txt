@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-11-20 02:34:56 UTC
+// Date: 2018-05-23 19:27:42 UTC
 // Language: Russian (ru)
 // 
 // To view other translations for this plugin, please visit:
@@ -981,6 +981,26 @@
 	"warden_mostactive_terror"
 	{
 		"ru"		"Вам должны сыграть за заключённых хотя бы {1} раз, чтобы играть за охрану."
+	}
+
+	"warden_novalid"
+	{
+		"ru"		"Не удалось найти {green}бунтующего {default}заключенного в тюрьме."
+	}
+
+	"warden_withhold_lr"
+	{
+		"ru"		"Командир {purple}остановил{default} ваше последнее желание"
+	}
+
+	"warden_withhold_on"
+	{
+		"ru"		"Командир {purple}отказал{default} в последнем желание"
+	}
+
+	"warden_withhold_off"
+	{
+		"ru"		"Командир {purple}разрешил{default} последнее желание"
 	}
 
 }

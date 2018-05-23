@@ -1316,9 +1316,9 @@ sm_warden_cmds_lr "lr,lastrequest"
 }
 [/php]
 [/SPOILER]
-[IMG]http://shanapu.de/myjb/warden2.jpg[/IMG]
+[IMG]https://shanapu.de/MyJailbreak/images/warden2.jpg[/IMG]
 
-[IMG]http://shanapu.de/myjb/sparks.jpg[/IMG]
+[IMG]https://shanapu.de/MyJailbreak/images/sparks.jpg[/IMG]
 
 [youtube]tp6k_Q6K37c[/youtube]
 
@@ -1599,7 +1599,7 @@ sm_freekill_respawn "1"
 sm_freekill_respawn_cell "1"
 
 // 0 - disabled, 1 - Allow the warden to Kill a Freekiller
-// -
+ // -
 // Default: "1"
 sm_freekill_kill "1"
 
@@ -2433,7 +2433,7 @@ sm_weapons_jbmenu "1"
 sm_weapons_cleanmenu "1"
 [/CODE]
 [/SPOILER]
-[IMG]http://shanapu.de/myjb/weapons.jpg[/IMG]
+[IMG]https://shanapu.de/MyJailbreak/images/weapons.jpg[/IMG]
 
 
 
@@ -2846,7 +2846,7 @@ sm_warden_icons_freeday "decals/MyJailbreak/freeday"
 [/CODE]
 [/SPOILER]
 
-[IMG]http://shanapu.de/myjb/icons-overview.png[/IMG]
+[IMG]https://shanapu.de/MyJailbreak/images/icons-overview.png[/IMG]
 
 [U][B]MyJailbreak core[/B][/U]
 This plugins is the "interface" between Eventdays. Need for cooldowns and disable other days on running Eventday. Handle config & natives for some modules
@@ -3614,7 +3614,7 @@ sm_zombie_allow_lr "0"
 [/CODE]
 recomment for sm_zombie_glow "1", put sv_force_transmit_players "1" to your .cfg
 [/SPOILER]
-[IMG]http://shanapu.de/myjb/zombie-2.jpg[/IMG][IMG]http://shanapu.de/myjb/zombie-1.jpg[/IMG]
+[IMG]https://shanapu.de/MyJailbreak/images/zombie-2.jpg[/IMG][IMG]https://shanapu.de/MyJailbreak/images/zombie-1.jpg[/IMG]
 
 
 
@@ -4267,7 +4267,7 @@ sm_catch_allow_lr "0"
 sm_catch_kill_loser "0"
 [/CODE]
 [/SPOILER]
-[IMG]http://shanapu.de/myjb/catch.jpg[/IMG]
+[IMG]https://shanapu.de/MyJailbreak/images/catch.jpg[/IMG]
 
 
 
@@ -5113,7 +5113,7 @@ sm_dealdamage_overlays_blue "overlays/MyJailbreak/blue"
 sm_dealdamage_overlays_red "overlays/MyJailbreak/red"
 [/CODE]
 [/SPOILER]
-[IMG]http://shanapu.de/myjb/deal.jpg[/IMG]
+[IMG]https://shanapu.de/MyJailbreak/images/deal.jpg[/IMG]
 
 
 [U][B]Zeus[/B][/U]
@@ -7039,7 +7039,7 @@ native MyIcons_BlockClientIcon(int client, bool status);
 [*]New Eventday: Teleport War - A FreeForAll Deathmatch where attacker & victim switch positions on hit.
 [/LIST]
 [INDENT][LIST]
-    [*]new plugin - teleport.smx - please help translate http://translator.mitchdempsey.com/sourcemod_plugins/277
+    [*]new plugin - teleport.smx - please help translate [url]http://translator.mitchdempsey.com/sourcemod_plugins/277[/url]
 [/LIST]
 [INDENT][LIST]
         [*]new command - sm_setteleport - Allows the Admin or Warden to set Teleport War
@@ -7075,7 +7075,7 @@ native MyIcons_BlockClientIcon(int client, bool status);
 [*]New Eventday: Arms Race - A FreeForAll Deathmatch like original arms race
 [/LIST]
 [INDENT][LIST]
-    [*]new plugin - armsrace.smx - please help translate http://translator.mitchdempsey.com/sourcemod_plugins/277
+    [*]new plugin - armsrace.smx - please help translate [url]http://translator.mitchdempsey.com/sourcemod_plugins/277[/url]
 [/LIST]
 [INDENT][LIST]
         [*]new config file - addons/sourcemod/configs/MyJailbreak/armsrace.ini - define weapons & order
@@ -7111,7 +7111,7 @@ native MyIcons_BlockClientIcon(int client, bool status);
 [*]New Eventday: One in the Chamber - A FreeForAll Deathmatch like CODs One in the Chamber - Thx @hexah!
 [/LIST]
 [INDENT][LIST]
-    [*]new plugin - oneinthechamber.smx - please help translate http://translator.mitchdempsey.com/sourcemod_plugins/282
+    [*]new plugin - oneinthechamber.smx - please help translate [url]http://translator.mitchdempsey.com/sourcemod_plugins/282[/url]
 [/LIST]
 [INDENT][LIST]
         [*]new command - sm_setoneinthechamber - Allows the Admin or Warden to set One in the Chamber
@@ -7445,7 +7445,7 @@ native MyIcons_BlockClientIcon(int client, bool status);
 [QUOTE]
 [LIST]
 [*]Custom models: player can't see their hands. the weapon is floating  
-temp fix https://forums.alliedmods.net/showpost.php?p=2525507&postcount=6
+temp fix [url]https://forums.alliedmods.net/showpost.php?p=2525507&postcount=6[/url]
 [*]Warden: Player in handcuffs can be drag into walls [i]- need help[/i]
 [*]Duckhunt & HE Battle: player gets new grenade but [u]sometimes rarly[/u] can't throw anymore[i] - need help![/i]
 [*]RU translation - Not shown completly in rules menu cause cyrillic letters.[i] - need help![/i]
@@ -7555,9 +7555,8 @@ Drixevel, devu4, good_live, olegtsvetkov, headline, Weeeishy, kiko, Got Sw4g? te
 [SIZE="3"][B]The DEV (developers) branch is thought for developers & experienced server operators. Expect errors, crashes & unfinished features. Only use it, when you know what you are doing. [/B][/SIZE]
 
 
-[url=https://github.com/shanapu/MyJailbreak/blob/master/license.txt][img]https://img.shields.io/badge/license-AGPL-blue.svg?style=flat-square[/img][/url]
 
-[URL="https://travis-ci.org/shanapu/MyJailbreak/branches"][IMG]https://img.shields.io/travis/shanapu/MyJailbreak/master.svg?style=flat-square[/IMG][/url]   [URL="https://travis-ci.org/shanapu/MyJailbreak/branches"][IMG]https://img.shields.io/travis/shanapu/MyJailbreak/dev.svg?style=flat-square[/IMG][/URL]
+[url=https://github.com/shanapu/MyJailbreak/blob/master/license.txt][img]https://img.shields.io/badge/license-AGPL-blue.svg?style=flat-square[/img][/url] Master: [URL="https://travis-ci.org/shanapu/MyJailbreak/branches"][IMG]https://img.shields.io/travis/shanapu/MyJailbreak/master.svg?style=flat-square[/IMG][/url] Developer: [URL="https://travis-ci.org/shanapu/MyJailbreak/branches"][IMG]https://img.shields.io/travis/shanapu/MyJailbreak/dev.svg?style=flat-square[/IMG][/URL]
 
 [SIZE="3"]
 [B][U]Download release pack[/U][/B]
@@ -7588,7 +7587,7 @@ Drixevel, devu4, good_live, olegtsvetkov, headline, Weeeishy, kiko, Got Sw4g? te
 [url]https://github.com/shanapu/MyJailbreak/blob/dev/CHANGELOG.md[/url]
 
 
-coded with [IMG]http://shanapu.de/githearth-small.png[/IMG] free software
+coded with [IMG]http://shanapu.de/images/githearth-small.png[/IMG] free software
 
 Main Developers: [URL="https://github.com/shanapu/"]shanapu[/url] & [URL="https://github.com/Hexer10/"]papero[/url]
 
@@ -7597,4 +7596,4 @@ Main Developers: [URL="https://github.com/shanapu/"]shanapu[/url] & [URL="https:
 If you own a feature or extension for jail or have an idea that would fit in, I would be happy when you [U]share it with us[/U].
 
 
-[SIZE="1"]you can donate when you like my work for the community...[/SIZE] [URL="https://www.paypal.me/shanapu"] [IMG]https://www.paypalobjects.com/webstatic/en_US/i/btn/png/silver-rect-paypal-26px.png[/IMG][/URL]
+[SIZE="1"]when you like my work for the community, keep me motivated[/SIZE] [URL="https://www.paypal.me/shanapu"] [IMG]https://img.shields.io/badge/donate-paypal-blue.svg?style=flat-square[/IMG][/URL]
