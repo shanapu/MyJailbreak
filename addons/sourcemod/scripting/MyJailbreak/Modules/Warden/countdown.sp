@@ -227,7 +227,7 @@ public Action Command_StartCountDown(int client, int args)
 			if (!g_bIsCountDown)
 			{
 				g_iCountStopTime = 9;
-				g_hStartTimer = CreateTimer(1.0, Timer_StartCountdown, client, TIMER_REPEAT);
+				g_hStartTimer = CreateTimer(1.0, Timer_StartCountdown, GetClientUserId(client), TIMER_REPEAT);
 				
 				CPrintToChatAll("%s %t", g_sPrefix, "warden_startcountdownhint");
 				
@@ -255,7 +255,7 @@ public Action Command_StopCountDown(int client, int args)
 			if (!g_bIsCountDown)
 			{
 				g_iCountStopTime = 20;
-				g_hStopTimer = CreateTimer(1.0, Timer_StopCountdown, client, TIMER_REPEAT);
+				g_hStopTimer = CreateTimer(1.0, Timer_StopCountdown, GetClientUserId(client), TIMER_REPEAT);
 
 				CPrintToChatAll("%s %t", g_sPrefix, "warden_stopcountdownhint");
 
@@ -346,8 +346,8 @@ void SetStartStopCountDown(int client)
 			if (!g_bIsCountDown)
 			{
 				g_iCountStartTime = 9;
-				g_hStartTimer = CreateTimer(1.0, Timer_StartCountdown, client, TIMER_REPEAT);
-				g_hStartStopTimer = CreateTimer(1.0, Timer_StopStartStopCountdown, client, TIMER_REPEAT);
+				g_hStartTimer = CreateTimer(1.0, Timer_StartCountdown, GetClientUserId(client), TIMER_REPEAT);
+				g_hStartStopTimer = CreateTimer(1.0, Timer_StopStartStopCountdown, GetClientUserId(client), TIMER_REPEAT);
 
 				CPrintToChatAll("%s %t", g_sPrefix, "warden_startstopcountdownhint");
 
@@ -489,8 +489,10 @@ public int Handler_StartStopMenu(Menu menu, MenuAction action, int client, int s
                    TIMER
 ******************************************************************************/
 
-public Action Timer_StartCountdown(Handle timer, any client)
+public Action Timer_StartCountdown(Handle timer, int userid)
 {
+	int client = GetClientOfUserId(userid);
+
 	if (g_iCountStartTime > 0)
 	{
 		if (IsClientInGame(client) && IsPlayerAlive(client))
@@ -536,8 +538,10 @@ public Action Timer_StartCountdown(Handle timer, any client)
 	return Plugin_Continue;
 }
 
-public Action Timer_StopCountdown(Handle timer, any client)
+public Action Timer_StopCountdown(Handle timer, int userid)
 {
+	int client = GetClientOfUserId(userid);
+
 	if (g_iCountStopTime > 0)
 	{
 		if (IsClientInGame(client) && IsPlayerAlive(client))
@@ -583,8 +587,10 @@ public Action Timer_StopCountdown(Handle timer, any client)
 	return Plugin_Continue;
 }
 
-public Action Timer_StopStartStopCountdown(Handle timer, any client)
+public Action Timer_StopStartStopCountdown(Handle timer, int userid)
 {
+	int client = GetClientOfUserId(userid);
+
 	if (g_iSetCountStartStopTime > 0)
 	{
 		if (IsClientInGame(client) && IsPlayerAlive(client))

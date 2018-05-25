@@ -177,6 +177,7 @@ public Action Command_SetDeputy(int client, int args)
 	if (!gc_bDeputy.BoolValue || !gc_bPlugin.BoolValue || !g_bEnabled || g_bIsLR)
 	{
 		CPrintToChat(client, "%s %t", g_sPrefix, "warden_deputy_disabled");
+
 		return Plugin_Handled;
 	}
 
@@ -213,6 +214,7 @@ public Action Command_ExitDeputy(int client, int args)
 	if (!gc_bDeputy.BoolValue || !gc_bPlugin.BoolValue || !g_bEnabled)  // "sm_warden_deputy_enable" "1"
 	{
 		CPrintToChat(client, "%s %t", g_sPrefix, "warden_deputy_disabled");
+
 		return Plugin_Handled;
 	}
 
@@ -322,7 +324,7 @@ public void Deputy_Event_RoundStart(Event event, const char[] name, bool dontBro
 	{
 		if (g_iDeputy != -1)
 		{
-			CreateTimer(0.1, Timer_RemoveColor, g_iDeputy);
+			CreateTimer(0.1, Timer_RemoveColor, GetClientUserId(g_iDeputy));
 			SetEntityModel(g_iDeputy, g_sModelDeputyPathPrevious);
 			Forward_OnDeputyRemoved(g_iDeputy);
 			g_iLastDeputy = g_iDeputy;
@@ -339,7 +341,7 @@ public void Deputy_Event_RoundStart(Event event, const char[] name, bool dontBro
 		{
 			if (g_iDeputy != -1)
 			{
-				CreateTimer(0.1, Timer_RemoveColor, g_iDeputy);
+				CreateTimer(0.1, Timer_RemoveColor, GetClientUserId(g_iDeputy));
 				SetEntityModel(g_iDeputy, g_sModelDeputyPathPrevious);
 				Forward_OnDeputyRemoved(g_iDeputy);
 				g_iLastDeputy = g_iDeputy;
@@ -398,7 +400,7 @@ public void Deputy_OnMapEnd()
 {
 	if (g_iDeputy != -1)
 	{
-		CreateTimer(0.1, Timer_RemoveColor, g_iDeputy);
+		CreateTimer(0.1, Timer_RemoveColor, GetClientUserId(g_iDeputy));
 		Forward_OnDeputyRemoved(g_iDeputy);
 		g_iLastDeputy = -1;
 		g_iDeputy = -1;
@@ -494,7 +496,7 @@ void SetTheDeputy(int client)
 // Remove the current deputy
 void RemoveTheDeputy()
 {
-	CreateTimer(0.1, Timer_RemoveColor, g_iDeputy);
+	CreateTimer(0.1, Timer_RemoveColor, GetClientUserId(g_iDeputy));
 	SetEntityModel(g_iDeputy, g_sModelDeputyPathPrevious);
 
 	Forward_OnDeputyRemoved(g_iDeputy);

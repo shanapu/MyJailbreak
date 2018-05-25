@@ -164,8 +164,11 @@ public void OnPluginStart()
 	// Late loading
 	if (g_bIsLateLoad)
 	{
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+		for (int i = 1; i <= MaxClients; i++)
 		{
+			if (!IsClientInGame(i))
+				continue;
+
 			OnClientCookiesCached(i);
 		}
 
@@ -247,25 +250,33 @@ public void OnAllPluginsLoaded()
 public void OnLibraryRemoved(const char[] name)
 {
 	if (StrEqual(name, "warden"))
+	{
 		gp_bWarden = false;
-
-	if (StrEqual(name, "myjbwarden"))
+	}
+	else if (StrEqual(name, "myjbwarden"))
+	{
 		gp_bMyJBWarden = false;
-
-	if (StrEqual(name, "lastrequest"))
+	}
+	else if (StrEqual(name, "lastrequest"))
+	{
 		gp_bHosties = false;
+	}
 }
 
 public void OnLibraryAdded(const char[] name)
 {
 	if (StrEqual(name, "warden"))
+	{
 		gp_bWarden = true;
-
-	if (StrEqual(name, "myjbwarden"))
+	}
+	else if (StrEqual(name, "myjbwarden"))
+	{
 		gp_bMyJBWarden = true;
-
-	if (StrEqual(name, "lastrequest"))
+	}
+	else if (StrEqual(name, "lastrequest"))
+	{
 		gp_bHosties = true;
+	}
 }
 
 // Initialize Plugin
@@ -430,8 +441,11 @@ public void warden_OnDeputyRemoved(int client)
 
 public Action Timer_Delay(Handle timer, Handle pack)
 {
-	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+	for (int i = 1; i <= MaxClients; i++)
 	{
+		if (!IsValidClient(i, true, false))
+			continue;
+
 		SpawnIcon(i);
 	}
 }

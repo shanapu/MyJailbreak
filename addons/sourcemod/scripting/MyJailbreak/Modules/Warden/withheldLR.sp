@@ -80,6 +80,7 @@ public Action Command_NoLR(int client, int args)
 	if (!gc_bPlugin.BoolValue || !g_bEnabled)
 	{
 		CReplyToCommand(client, "%s %t", g_sPrefix, "warden_disabled");
+
 		return Plugin_Handled;
 	}
 

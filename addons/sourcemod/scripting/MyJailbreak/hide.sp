@@ -209,8 +209,11 @@ public void OnPluginStart()
 	// Late loading
 	if (g_bIsLateLoad)
 	{
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+		for (int i = 1; i <= MaxClients; i++)
 		{
+			if (!IsClientInGame(i))
+				continue;
+
 			OnClientPutInServer(i);
 		}
 
@@ -399,6 +402,7 @@ public Action Command_SetHide(int client, int args)
 	if (!gc_bPlugin.BoolValue)
 	{
 		CReplyToCommand(client, "%s %t", g_sPrefix, "hide_disabled");
+
 		return Plugin_Handled;
 	}
 
@@ -407,9 +411,7 @@ public Action Command_SetHide(int client, int args)
 		StartEventRound(gc_bBeginSetVW.BoolValue);
 
 		if (!gp_bMyJailbreak)
-		{
 			return Plugin_Handled;
-		}
 
 		if (MyJailbreak_ActiveLogging())
 		{
@@ -421,12 +423,14 @@ public Action Command_SetHide(int client, int args)
 		if (!gc_bSetA.BoolValue)
 		{
 			CReplyToCommand(client, "%s %t", g_sPrefix, "hide_setbyadmin");
+
 			return Plugin_Handled;
 		}
 
 		if (GetTeamClientCount(CS_TEAM_CT) == 0 || GetTeamClientCount(CS_TEAM_T) == 0)
 		{
 			CReplyToCommand(client, "%s %t", g_sPrefix, "hide_minplayer");
+
 			return Plugin_Handled;
 		}
 
@@ -438,6 +442,7 @@ public Action Command_SetHide(int client, int args)
 			if (!StrEqual(EventDay, "none", false))
 			{
 				CReplyToCommand(client, "%s %t", g_sPrefix, "hide_progress", EventDay);
+
 				return Plugin_Handled;
 			}
 		}
@@ -445,15 +450,14 @@ public Action Command_SetHide(int client, int args)
 		if (g_iCoolDown > 0 && !gc_bSetABypassCooldown.BoolValue)
 		{
 			CReplyToCommand(client, "%s %t", g_sPrefix, "hide_wait", g_iCoolDown);
+
 			return Plugin_Handled;
 		}
 
 		StartEventRound(gc_bBeginSetA.BoolValue);
 
 		if (!gp_bMyJailbreak)
-		{
 			return Plugin_Handled;
-		}
 
 		if (MyJailbreak_ActiveLogging())
 		{
@@ -465,18 +469,21 @@ public Action Command_SetHide(int client, int args)
 		if (!warden_iswarden(client))
 		{
 			CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
+
 			return Plugin_Handled;
 		}
 		
 		if (!gc_bSetW.BoolValue)
 		{
 			CReplyToCommand(client, "%s %t", g_sPrefix, "hide_setbywarden");
+
 			return Plugin_Handled;
 		}
 
 		if (GetTeamClientCount(CS_TEAM_CT) == 0 || GetTeamClientCount(CS_TEAM_T) == 0)
 		{
 			CReplyToCommand(client, "%s %t", g_sPrefix, "hide_minplayer");
+
 			return Plugin_Handled;
 		}
 
@@ -488,6 +495,7 @@ public Action Command_SetHide(int client, int args)
 			if (!StrEqual(EventDay, "none", false))
 			{
 				CReplyToCommand(client, "%s %t", g_sPrefix, "hide_progress", EventDay);
+
 				return Plugin_Handled;
 			}
 		}
@@ -495,15 +503,14 @@ public Action Command_SetHide(int client, int args)
 		if (g_iCoolDown > 0)
 		{
 			CReplyToCommand(client, "%s %t", g_sPrefix, "hide_wait", g_iCoolDown);
+
 			return Plugin_Handled;
 		}
 
 		StartEventRound(gc_bBeginSetW.BoolValue);
 
 		if (!gp_bMyJailbreak)
-		{
 			return Plugin_Handled;
-		}
 
 		if (MyJailbreak_ActiveLogging())
 		{
@@ -524,18 +531,21 @@ public Action Command_VoteHide(int client, int args)
 	if (!gc_bPlugin.BoolValue)
 	{
 		CReplyToCommand(client, "%s %t", g_sPrefix, "hide_disabled");
+
 		return Plugin_Handled;
 	}
 
 	if (!gc_bVote.BoolValue)
 	{
 		CReplyToCommand(client, "%s %t", g_sPrefix, "hide_voting");
+
 		return Plugin_Handled;
 	}
 
 	if (GetTeamClientCount(CS_TEAM_CT) == 0 || GetTeamClientCount(CS_TEAM_T) == 0)
 	{
 		CReplyToCommand(client, "%s %t", g_sPrefix, "hide_minplayer");
+
 		return Plugin_Handled;
 	}
 
@@ -547,6 +557,7 @@ public Action Command_VoteHide(int client, int args)
 		if (!StrEqual(EventDay, "none", false))
 		{
 			CReplyToCommand(client, "%s %t", g_sPrefix, "hide_progress", EventDay);
+
 			return Plugin_Handled;
 		}
 	}
@@ -554,6 +565,7 @@ public Action Command_VoteHide(int client, int args)
 	if (g_iCoolDown > 0)
 	{
 		CReplyToCommand(client, "%s %t", g_sPrefix, "hide_wait", g_iCoolDown);
+
 		return Plugin_Handled;
 	}
 
@@ -563,6 +575,7 @@ public Action Command_VoteHide(int client, int args)
 	if (StrContains(g_sHasVoted, steamid, true) != -1)
 	{
 		CReplyToCommand(client, "%s %t", g_sPrefix, "hide_voted");
+
 		return Plugin_Handled;
 	}
 
@@ -577,9 +590,7 @@ public Action Command_VoteHide(int client, int args)
 		StartEventRound(gc_bBeginSetV.BoolValue);
 
 		if (!gp_bMyJailbreak)
-		{
 			return Plugin_Handled;
-		}
 
 		if (MyJailbreak_ActiveLogging())
 		{
@@ -652,8 +663,11 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 
 	if (g_bIsHide)
 	{
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+		for (int i = 1; i <= MaxClients; i++)
 		{
+			if (!IsClientInGame(i))
+				continue;
+
 			SetEntProp(i, Prop_Send, "m_CollisionGroup", 5);  // 2 - none / 5 - 'default'
 			SetEntPropFloat(i, Prop_Data, "m_flLaggedMovementValue", 1.0);
 			g_iTA[i] = 0;
@@ -718,8 +732,11 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 
 	if (g_bStartHide)
 	{
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+		for (int i = 1; i <= MaxClients; i++)
 		{
+			if (!IsClientInGame(i))
+				continue;
+
 			CreateInfoPanel(i);
 		}
 
@@ -959,8 +976,11 @@ void StartEventRound(bool thisround)
 	{
 		g_bIsHide = true;
 
-		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+		for (int i = 1; i <= MaxClients; i++)
 		{
+			if (!IsValidClient(i, true, false))
+				continue;
+
 			SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
 
 			ToggleWeaponFire(i, false);
@@ -1007,8 +1027,11 @@ void PrepareDay(bool thisround)
 		int RandomCT = 0;
 		int RandomT = 0;
 
-		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+		for (int i = 1; i <= MaxClients; i++)
 		{
+			if (!IsValidClient(i, true, false))
+				continue;
+
 			if (GetClientTeam(i) == CS_TEAM_CT)
 			{
 				CS_RespawnPlayer(i);
@@ -1033,8 +1056,11 @@ void PrepareDay(bool thisround)
 			g_fPosT[2] = g_fPosT[2] + 5;
 			g_fPosCT[2] = g_fPosCT[2] + 5;
 
-			for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+			for (int i = 1; i <= MaxClients; i++)
 			{
+				if (!IsClientInGame(i))
+					continue;
+
 				if (!gp_bSmartJailDoors || (SJD_IsCurrentMapConfigured() != true))
 				{
 					TeleportEntity(i, g_fPosCT, NULL_VECTOR, NULL_VECTOR);
@@ -1051,8 +1077,11 @@ void PrepareDay(bool thisround)
 		}
 	}
 
-	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+	for (int i = 1; i <= MaxClients; i++)
 	{
+		if (!IsClientInGame(i))
+			continue;
+
 		SetEntProp(i, Prop_Send, "m_CollisionGroup", 2);  // 2 - none / 5 - 'default'
 
 		SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
@@ -1186,8 +1215,11 @@ public Action Timer_StartEvent(Handle timer)
 	{
 		if (g_iFreezeTime <= gc_iFreezeTime.IntValue - 3)
 		{
-			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+			for (int i = 1; i <= MaxClients; i++)
 			{
+				if (!IsValidClient(i, true, false))
+					continue;
+
 				if (GetClientTeam(i) == CS_TEAM_T)
 				{
 					SetEntityMoveType(i, MOVETYPE_WALK);
@@ -1195,8 +1227,11 @@ public Action Timer_StartEvent(Handle timer)
 			}
 		}
 
-		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+		for (int i = 1; i <= MaxClients; i++)
 		{
+			if (!IsValidClient(i, true, false))
+				continue;
+
 			if (GetClientTeam(i) == CS_TEAM_CT)
 			{
 				PrintCenterText(i, "%t", "hide_timetounfreeze_nc", g_iFreezeTime);
@@ -1210,8 +1245,11 @@ public Action Timer_StartEvent(Handle timer)
 		return Plugin_Continue;
 	}
 
-	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+	for (int i = 1; i <= MaxClients; i++)
 	{
+		if (!IsValidClient(i, true, false))
+			continue;
+
 		SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
 
 		ToggleWeaponFire(i, true);
@@ -1258,8 +1296,11 @@ public Action Timer_StartEvent(Handle timer)
 // Beacon Timer
 public Action Timer_BeaconOn(Handle timer)
 {
-	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+	for (int i = 1; i <= MaxClients; i++)
 	{
+		if (!IsValidClient(i, true, false))
+			continue;
+
 		MyJailbreak_BeaconOn(i, 2.0);
 	}
 

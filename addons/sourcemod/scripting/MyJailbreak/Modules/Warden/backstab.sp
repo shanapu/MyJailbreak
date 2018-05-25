@@ -111,12 +111,14 @@ public Action BackStab_OnTakedamage(int victim, int &attacker, int &inflictor, f
 			if (gc_iBackstabNumber.IntValue == 0)
 			{
 				PrintCenterText(attacker, "%t", "warden_backstab");
+
 				return Plugin_Handled;
 			}
 			else if (g_iBackstabNumber[victim] > 0)
 			{
 				PrintCenterText(attacker, "%t", "warden_backstab");
 				g_iBackstabNumber[victim]--;
+
 				return Plugin_Handled;
 			}
 		}

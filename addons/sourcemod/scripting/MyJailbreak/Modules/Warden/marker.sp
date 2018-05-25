@@ -311,7 +311,7 @@ public int Handle_MarkerMenu(Menu menu, MenuAction action, int client, int itemN
                    TIMER
 ******************************************************************************/
 
-public Action Timer_DrawMakers(Handle timer, any data)
+public Action Timer_DrawMakers(Handle timer)
 {
 	Draw_Markers();
 
@@ -428,7 +428,7 @@ int IsMarkerInRange(float g_fPos[3])
 	return -1;
 }
 
-public bool TraceFilterAllEntities(int entity, int contentsMask, any client)
+public bool TraceFilterAllEntities(int entity, int contentsMask, int client)
 {
 	if (entity == client)
 		return false;

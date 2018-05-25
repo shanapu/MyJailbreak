@@ -138,22 +138,38 @@ public void HandCuffs_OnSettingChanged(Handle convar, const char[] oldValue, con
 	if (convar == gc_sSoundCuffsPath)
 	{
 		strcopy(g_sSoundCuffsPath, sizeof(g_sSoundCuffsPath), newValue);
-		if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundCuffsPath);
+
+		if (gc_bSounds.BoolValue)
+		{
+			PrecacheSoundAnyDownload(g_sSoundCuffsPath);
+		}
 	}
 	else if (convar == gc_sSoundBreakCuffsPath)
 	{
 		strcopy(g_sSoundBreakCuffsPath, sizeof(g_sSoundBreakCuffsPath), newValue);
-		if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundBreakCuffsPath);
+
+		if (gc_bSounds.BoolValue)
+		{
+			PrecacheSoundAnyDownload(g_sSoundBreakCuffsPath);
+		}
 	}
 	else if (convar == gc_sSoundUnLockCuffsPath)
 	{
 		strcopy(g_sSoundUnLockCuffsPath, sizeof(g_sSoundUnLockCuffsPath), newValue);
-		if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundUnLockCuffsPath);
+
+		if (gc_bSounds.BoolValue)
+		{
+			PrecacheSoundAnyDownload(g_sSoundUnLockCuffsPath);
+		}
 	}
 	else if (convar == gc_sOverlayCuffsPath)
 	{
 		strcopy(g_sOverlayCuffsPath, sizeof(g_sOverlayCuffsPath), newValue);
-		if (gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayCuffsPath);
+
+		if (gc_bOverlays.BoolValue)
+		{
+			PrecacheDecalAnyDownload(g_sOverlayCuffsPath);
+		}
 	}
 	else if (convar == gc_sAdminFlagCuffs)
 	{

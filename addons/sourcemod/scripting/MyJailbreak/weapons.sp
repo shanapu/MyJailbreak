@@ -209,8 +209,11 @@ public void OnPluginStart()
 	// Late loading
 	if (g_bIsLateLoad)
 	{
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+		for (int i = 1; i <= MaxClients; i++)
 		{
+			if (!IsClientInGame(i))
+				continue;
+
 			OnClientPutInServer(i);
 			OnClientCookiesCached(i);
 		}
@@ -231,31 +234,41 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 public void OnLibraryRemoved(const char[] name)
 {
 	if (StrEqual(name, "warden"))
+	{
 		gp_bWarden = false;
-
-	if (StrEqual(name, "myjbwarden"))
+	}
+	else if (StrEqual(name, "myjbwarden"))
+	{
 		gp_bMyJBWarden = false;
-
-	if (StrEqual(name, "myjailbreak"))
+	}
+	else if (StrEqual(name, "myjailbreak"))
+	{
 		gp_bMyJailBreak = false;
-
-	if (StrEqual(name, "hosties"))
+	}
+	else if (StrEqual(name, "hosties"))
+	{
 		gp_bHosties = false;
+	}
 }
 
 public void OnLibraryAdded(const char[] name)
 {
 	if (StrEqual(name, "warden"))
+	{
 		gp_bWarden = true;
-
-	if (StrEqual(name, "myjbwarden"))
+	}
+	else if (StrEqual(name, "myjbwarden"))
+	{
 		gp_bMyJBWarden = true;
-
-	if (StrEqual(name, "myjailbreak"))
+	}
+	else if (StrEqual(name, "myjailbreak"))
+	{
 		gp_bMyJailBreak = true;
-
-	if (StrEqual(name, "hosties"))
+	}
+	else if (StrEqual(name, "hosties"))
+	{
 		gp_bHosties = true;
+	}
 }
 
 public void OnAllPluginsLoaded()
@@ -355,7 +368,7 @@ public void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast
 
 	if (gc_bSpawn.BoolValue)
 	{
-		g_hTimers[client] = CreateTimer(1.0, Timer_GetWeapons, client);
+		g_hTimers[client] = CreateTimer(1.0, Timer_GetWeapons, GetClientUserId(client));
 	}
 
 	if (gc_bKevlar.BoolValue && (GetClientTeam(client) == CS_TEAM_CT))
@@ -388,8 +401,11 @@ public void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast
 
 public void MyJailbreak_OnEventDayStart(char [] EventDayName)
 {
-	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+	for (int i = 1; i <= MaxClients; i++)
 	{
+		if (!IsValidClient(i, true, false))
+			continue;
+
 		if (gc_bKevlarDays.BoolValue)
 		{
 			SetEntProp(i, Prop_Send, "m_ArmorValue", 100);
@@ -456,12 +472,15 @@ void SetBuyZones(const char[] status)
 
 	for (int i = MaxClients + 1; i < maxEntities; i++)
 	{
-		if (IsValidEdict(i))
+		if (!IsValidEdict(i))
+			continue;
+
+		GetEdictClassname(i, class, sizeof(class));
+		if (StrEqual(class, "func_buyzone"))
 		{
-			GetEdictClassname(i, class, sizeof(class));
-			if (StrEqual(class, "func_buyzone"))
-				AcceptEntityInput(i, status);
+			AcceptEntityInput(i, status);
 		}
+
 	}
 }
 
@@ -553,7 +572,7 @@ void GiveSavedWeapons(int client)
 			FakeClientCommand(client, "sm_menu");
 		}
 
-		g_hTimers[client] = CreateTimer(6.0, Timer_Fix, client);
+		g_hTimers[client] = CreateTimer(6.0, Timer_Fix, GetClientUserId(client));
 	}
 }
 
@@ -933,8 +952,10 @@ void DisplayOptionsMenu(int client)
 ******************************************************************************/
 
 // Give choosed weapon timer
-public Action Timer_GetWeapons(Handle timer, any client)
+public Action Timer_GetWeapons(Handle timer, int userid)
 {
+	int client = GetClientOfUserId(userid);
+
 	g_hTimers[client] = null;
 
 	if (!gc_bEventDay.BoolValue && !MyJailbreak_IsEventDayRunning())
@@ -971,8 +992,10 @@ public Action Timer_GetWeapons(Handle timer, any client)
 	}
 }
 
-public Action Timer_Fix(Handle timer, any client)
+public Action Timer_Fix(Handle timer, int userid)
 {
+	int client = GetClientOfUserId(userid);
+
 	g_hTimers[client] = null;
 
 	if (IsClientInGame(client))

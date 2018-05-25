@@ -338,19 +338,25 @@ public void OnAllPluginsLoaded()
 public void OnLibraryRemoved(const char[] name)
 {
 	if (StrEqual(name, "myjbwarden"))
+	{
 		gp_bMyJBWarden = false;
-
-	if (StrEqual(name, "warden"))
+	}
+	else if (StrEqual(name, "warden"))
+	{
 		gp_bWarden = false;
+	}
 }
 
 public void OnLibraryAdded(const char[] name)
 {
 	if (StrEqual(name, "myjbwarden"))
+	{
 		gp_bMyJBWarden = true;
-
-	if (StrEqual(name, "warden"))
+	}
+	else if (StrEqual(name, "warden"))
+	{
 		gp_bWarden = true;
+	}
 }
 
 /******************************************************************************
@@ -364,18 +370,21 @@ public Action Command_LeaveQueue(int client, int iArgNum)
 	if (!g_bRatioEnable)
 	{
 		CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_disabled");
+
 		return Plugin_Handled;
 	}
 
 	if (iIndex == -1)
 	{
 		CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_notonqueue");
+
 		return Plugin_Handled;
 	}
 	else
 	{
 		RemovePlayerFromGuardQueue(client);
 		CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_leavedqueue");
+
 		return Plugin_Handled;
 	}
 }
@@ -388,12 +397,14 @@ public Action Command_ViewGuardQueue(int client, int args)
 	if (!g_bRatioEnable)
 	{
 		CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_disabled");
+
 		return Plugin_Handled;
 	}
 
 	if (GetArraySize(g_aGuardQueue) < 1)
 	{
 		CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_empty");
+
 		return Plugin_Handled;
 	}
 	char info[64];
@@ -435,6 +446,7 @@ public Action Command_JoinGuardQueue(int client, int iArgNum)
 	if (!g_bRatioEnable)
 	{
 		CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_disabled");
+
 		return Plugin_Handled;
 	}
 
@@ -444,6 +456,7 @@ public Action Command_JoinGuardQueue(int client, int iArgNum)
 	{
 		ClientCommand(client, "play %s", g_sRestrictedSound);
 		CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_noct");
+
 		return Plugin_Handled;
 	}
 	else if (team == CS_TEAM_SPECTATOR)
@@ -459,6 +472,7 @@ public Action Command_JoinGuardQueue(int client, int iArgNum)
 	if (g_bQueueCooldown[client])
 	{
 		CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_cooldown");
+
 		return Plugin_Handled;
 	}
 
@@ -470,6 +484,7 @@ public Action Command_JoinGuardQueue(int client, int iArgNum)
 	if (res >= Plugin_Handled)
 	{
 		ClientCommand(client, "play %s", g_sRestrictedSound);
+
 		return Plugin_Handled;
 	}
 
@@ -596,12 +611,14 @@ public Action AdminCommand_RemoveFromQueue(int client, int args)
 	if (!g_bRatioEnable)
 	{
 		CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_disabled");
+
 		return Plugin_Handled;
 	}
 
 	if (GetArraySize(g_aGuardQueue) < 1)
 	{
 		CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_empty");
+
 		return Plugin_Handled;
 	}
 
@@ -731,7 +748,7 @@ public Action Event_OnFullConnect(Event event, const char[] name, bool dontBroad
 
 	if (!gc_bAdminBypass.BoolValue || !CheckVipFlag(client, g_sAdminFlag))
 	{
-		CreateTimer(1.0, Timer_ForceTSide, client);
+		CreateTimer(1.0, Timer_ForceTSide, GetClientUserId(client));
 	}
 
 	return Plugin_Continue;
@@ -756,6 +773,7 @@ public Action Event_OnJoinTeam(int client, const char[] szCommand, int iArgCount
 	{
 		ClientCommand(client, "play %s", g_sRestrictedSound);
 		CPrintToChat(client, "%s %t", g_sPrefix, "ratio_auto");
+
 		return Plugin_Handled;
 	}
 
@@ -765,6 +783,7 @@ public Action Event_OnJoinTeam(int client, const char[] szCommand, int iArgCount
 	if (g_bQueueCooldown[client])
 	{
 		CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_cooldown");
+
 		return Plugin_Handled;
 	}
 
@@ -776,6 +795,7 @@ public Action Event_OnJoinTeam(int client, const char[] szCommand, int iArgCount
 	if (res >= Plugin_Handled)
 	{
 		ClientCommand(client, "play %s", g_sRestrictedSound);
+
 		return Plugin_Handled;
 	}
 
@@ -1223,10 +1243,16 @@ public int ViewQueueMenuHandle(Menu hMenu, MenuAction action, int client, int op
                    TIMER
 ******************************************************************************/
 
-public Action Timer_ForceTSide(Handle timer, any client)
+public Action Timer_ForceTSide(Handle timer, int userid)
 {
-	if (IsValidClient(client, true, true))
-		ChangeClientTeam(client, CS_TEAM_T);
+	int client = GetClientOfUserId(userid);
+
+	if (!IsValidClient(client, true, true))
+		return Plugin_Handled;
+
+	ChangeClientTeam(client, CS_TEAM_T);
+
+	return Plugin_Handled;
 }
 
 

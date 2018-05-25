@@ -214,7 +214,7 @@ public int Handler_KillMenu(Menu menu, MenuAction action, int client, int Positi
 						}
 					}
 
-					CreateTimer(1.0, Timer_KillPlayer, i);
+					CreateTimer(1.0, Timer_KillPlayer, GetClientUserId(i));
 					CPrintToChatAll("%s %t", g_sPrefix, "warden_israndom", i);
 
 					if (gp_bMyJailBreak)
@@ -255,8 +255,10 @@ public int Handler_KillMenu(Menu menu, MenuAction action, int client, int Positi
                    TIMER
 ******************************************************************************/
 
-public Action Timer_KillPlayer(Handle timer, any client) 
+public Action Timer_KillPlayer(Handle timer, int userid)
 {
+	int client = GetClientOfUserId(userid);
+
 	if (gc_iRandomMode.IntValue == 1)
 	{
 		int randomnum = GetRandomInt(0, 2);

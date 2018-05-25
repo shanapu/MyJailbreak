@@ -94,8 +94,11 @@ public void OnPluginStart()
 	// Late loading
 	if (g_bIsLateLoad)
 	{
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+		for (int i = 1; i <= MaxClients; i++)
 		{
+			if (!IsClientInGame(i))
+				continue;
+
 			OnClientConnected(i);
 			OnClientPostAdminCheck(i);
 		}
@@ -133,7 +136,7 @@ public void OnClientPostAdminCheck(int client)
 	SocketConnect(socket, OnSocketConnected, OnSocketReceive, OnSocketDisconnected, "steamrep.com", 80);
 }
 
-public int OnSocketConnected(Handle socket, any userid)
+public int OnSocketConnected(Handle socket, int userid)
 {
 	// socket is connected, send the http request
 	int client = GetClientOfUserId(userid);
@@ -162,7 +165,7 @@ public int OnSocketConnected(Handle socket, any userid)
 	}
 }
 
-public int OnSocketReceive(Handle socket, char[] receiveData, const int dataSize, any userid)
+public int OnSocketReceive(Handle socket, char[] receiveData, const int dataSize, int userid)
 {
 	// receive chunk
 	int client = GetClientOfUserId(userid);
@@ -176,13 +179,13 @@ public int OnSocketReceive(Handle socket, char[] receiveData, const int dataSize
 	g_IsScammer[client] = true;
 }
 
-public int OnSocketDisconnected(Handle socket, any client)
+public int OnSocketDisconnected(Handle socket, int client)
 {
 	// Connection: close advises the webserver to close the connection when the transfer is finished
 	CloseHandle(socket);
 }
 
-public int OnSocketError(Handle socket, const int errorType, const int errorNum, any client)
+public int OnSocketError(Handle socket, const int errorType, const int errorNum, int client)
 {
 	// a socket error occured
 	LogError("socket error %d (errno %d)", errorType, errorNum);
@@ -200,7 +203,7 @@ public Action MyJailbreak_OnJoinGuardQueue(int client)
 	return Plugin_Continue;
 }
 
-public Action Event_OnPlayerSpawn(Event event, const char[] name, bool bDontBroadcast) 
+public Action Event_OnPlayerSpawn(Event event, const char[] name, bool bDontBroadcast)
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));
 
@@ -223,9 +226,9 @@ public Action Event_OnPlayerSpawn(Event event, const char[] name, bool bDontBroa
 	return Plugin_Continue;
 }
 
-public Action Timer_SlayPlayer(Handle hTimer, any iUserId) 
+public Action Timer_SlayPlayer(Handle timer, int userid)
 {
-	int client = GetClientOfUserId(iUserId);
+	int client = GetClientOfUserId(userid);
 
 	if ((IsValidClient(client, false, false)) && (GetClientTeam(client) == CS_TEAM_CT))
 	{

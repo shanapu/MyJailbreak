@@ -601,8 +601,11 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 
 	if (g_bStartFreeday)
 	{
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+		for (int i = 1; i <= MaxClients; i++)
 		{
+			if (!IsClientInGame(i))
+				continue;
+
 			CreateInfoPanel(i);
 		}
 
@@ -705,8 +708,11 @@ void StartEventRound(bool thisround)
 	{
 		g_bIsFreeday = true;
 
-		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+		for (int i = 1; i <= MaxClients; i++)
 		{
+			if (!IsClientInGame(i))
+				continue;
+
 			SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
 
 			SetEntityMoveType(i, MOVETYPE_NONE);
@@ -744,8 +750,10 @@ void PrepareDay()
 	{
 		float g_fPos[3];
 		int RandomCT = 0;
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
-		{
+		for (int i = 1; i <= MaxClients; i++)		{
+			if (!IsClientInGame(i))
+				continue;
+
 			if (GetClientTeam(i) == CS_TEAM_CT)
 			{
 				RandomCT = i;
@@ -755,9 +763,7 @@ void PrepareDay()
 
 		if (RandomCT)
 		{
-			for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
-			{
-				GetClientAbsOrigin(RandomCT, g_fPos);
+			for (int i = 1; i <= MaxClients; i++)GetClientAbsOrigin(RandomCT, g_fPos);
 				
 				g_fPos[2] = g_fPos[2] + 5;
 				
@@ -766,8 +772,11 @@ void PrepareDay()
 		}
 	}
 */
-	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+	for (int i = 1; i <= MaxClients; i++)
 	{
+		if (!IsClientInGame(i))
+			continue;
+
 		CreateInfoPanel(i);
 
 		SetEntProp(i, Prop_Send, "m_CollisionGroup", 2);  // 2 - none / 5 - 'default'

@@ -152,7 +152,7 @@ public Action Command_refuse(int client, int args)
 								SetEntityRenderColor(client, gc_iRefuseColorRed.IntValue, gc_iRefuseColorGreen.IntValue, gc_iRefuseColorBlue.IntValue, 255);
 								CPrintToChatAll("%s %t", g_sPrefix, "request_refusing", client);
 								g_iCountStopTime = gc_fRefuseTime.IntValue;
-								g_hTimerRefuse[client] = CreateTimer(gc_fRefuseTime.FloatValue, Timer_ResetColorRefuse, client);
+								g_hTimerRefuse[client] = CreateTimer(gc_fRefuseTime.FloatValue, Timer_ResetColorRefuse, GetClientUserId(client));
 								if (warden_exist()) for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) RefuseMenu(i);
 								if (gc_bSounds.BoolValue)EmitSoundToAllAny(g_sSoundRefusePath);
 							}
@@ -270,8 +270,10 @@ public Action RefuseMenu(int client)
                    TIMER
 ******************************************************************************/
 
-public Action Timer_ResetColorRefuse(Handle timer, any client)
+public Action Timer_ResetColorRefuse(Handle timer, int userid)
 {
+	int client = GetClientOfUserId(userid);
+
 	if (IsValidClient(client,true,false))
 	{
 		SetEntityRenderColor(client, 255, 255, 255, 255);

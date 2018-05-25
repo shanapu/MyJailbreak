@@ -141,7 +141,7 @@ public void Mute_OnConfigsExecuted()
                    COMMANDS
 ******************************************************************************/
 
-public Action Command_UnMuteMenu(int client, any args)
+public Action Command_UnMuteMenu(int client, int args)
 {
 	if (!gc_bPlugin.BoolValue || !g_bEnabled || !gc_bMute.BoolValue)
 		return Plugin_Handled;

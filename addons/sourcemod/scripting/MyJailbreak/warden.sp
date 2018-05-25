@@ -295,8 +295,11 @@ public void OnPluginStart()
 	// Late loading
 	if (g_bIsLateLoad)
 	{
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+		for (int i = 1; i <= MaxClients; i++)
 		{
+			if (!IsClientInGame(i))
+				continue;
+
 			OnClientPutInServer(i);
 		}
 
@@ -310,21 +313,34 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 	if (convar == gc_sWarden)
 	{
 		strcopy(g_sWarden, sizeof(g_sWarden), newValue);
-		if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sWarden);
+
+		if (gc_bSounds.BoolValue)
+		{
+			PrecacheSoundAnyDownload(g_sWarden);
+		}
 	}
 	else if (convar == gc_sYouWarden)
 	{
 		strcopy(g_sYouWarden, sizeof(g_sYouWarden), newValue);
-		if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sYouWarden);
+
+		if (gc_bSounds.BoolValue)
+		{
+			PrecacheSoundAnyDownload(g_sYouWarden);
+		}
 	}
 	else if (convar == gc_sUnWarden)
 	{
 		strcopy(g_sUnWarden, sizeof(g_sUnWarden), newValue);
-		if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sUnWarden);
+
+		if (gc_bSounds.BoolValue)
+		{
+			PrecacheSoundAnyDownload(g_sUnWarden);
+		}
 	}
 	else if (convar == gc_sOverlayPath)
 	{
 		strcopy(g_sOverlayPath, sizeof(g_sOverlayPath), newValue);
+
 		if (gc_bOverlays.BoolValue)
 		{
 			PrecacheDecalAnyDownload(g_sOverlayPath);
@@ -333,6 +349,7 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 	else if (convar == gc_sModelPathWarden)
 	{
 		strcopy(g_sModelPathWarden, sizeof(g_sModelPathWarden), newValue);
+
 		if (gc_bModel.BoolValue) 
 		{
 			Downloader_AddFileToDownloadsTable(g_sModelPathWarden);
@@ -457,55 +474,73 @@ public void OnAllPluginsLoaded()
 public void OnLibraryRemoved(const char[] name)
 {
 	if (StrEqual(name, "myjailbreak"))
+	{
 		gp_bMyJailBreak = false;
-
-	if (StrEqual(name, "hosties"))
+	}
+	else if (StrEqual(name, "hosties"))
+	{
 		gp_bHosties = false;
-
-	if (StrEqual(name, "lastrequest"))
+	}
+	else if (StrEqual(name, "lastrequest"))
+	{
 		gp_bLastRequest = false;
-
-	if (StrEqual(name, "smartjaildoors"))
+	}
+	else if (StrEqual(name, "smartjaildoors"))
+	{
 		gp_bSmartJailDoors = false;
-
-	if (StrEqual(name, "chat-processor"))
+	}
+	else if (StrEqual(name, "chat-processor"))
+	{
 		gp_bChatProcessor = false;
-
-	if (StrEqual(name, "scp"))
+	}
+	else if (StrEqual(name, "scp"))
+	{
 		gp_bSimpleChatProcessor = false;
-
-	if (StrEqual(name, "basecomm"))
+	}
+	else if (StrEqual(name, "basecomm"))
+	{
 		gp_bBasecomm = false;
-
-	if (StrEqual(name, "sourcecomms"))
+	}
+	else if (StrEqual(name, "sourcecomms"))
+	{
 		gp_bSourceComms = false;
+	}
 }
 
 public void OnLibraryAdded(const char[] name)
 {
 	if (StrEqual(name, "myjailbreak"))
+	{
 		gp_bMyJailBreak = true;
-
-	if (StrEqual(name, "hosties"))
+	}
+	else if (StrEqual(name, "hosties"))
+	{
 		gp_bHosties = true;
-
-	if (StrEqual(name, "lastrequest"))
+	}
+	else if (StrEqual(name, "lastrequest"))
+	{
 		gp_bLastRequest = true;
-
-	if (StrEqual(name, "smartjaildoors"))
+	}
+	else if (StrEqual(name, "smartjaildoors"))
+	{
 		gp_bSmartJailDoors = true;
-
-	if (StrEqual(name, "chat-processor"))
+	}
+	else if (StrEqual(name, "chat-processor"))
+	{
 		gp_bChatProcessor = true;
-
-	if (StrEqual(name, "scp"))
+	}
+	else if (StrEqual(name, "scp"))
+	{
 		gp_bSimpleChatProcessor = true;
-
-	if (StrEqual(name, "basecomm"))
+	}
+	else if (StrEqual(name, "basecomm"))
+	{
 		gp_bBasecomm = true;
-
-	if (StrEqual(name, "sourcecomms"))
+	}
+	else if (StrEqual(name, "sourcecomms"))
+	{
 		gp_bSourceComms = true;
+	}
 }
 
 /******************************************************************************
@@ -524,6 +559,7 @@ public Action Command_BecomeWarden(int client, int args)
 	if (g_iWarden != -1)  // Is there already a warden
 	{
 		CReplyToCommand(client, "%s %t", g_sPrefix, "warden_exist", g_iWarden);
+
 		return Plugin_Handled;
 	}
 
@@ -778,11 +814,17 @@ public void Event_PostRoundStart(Event event, const char[] name, bool dontBroadc
 
 		g_hTimerRandom = CreateTimer(gc_fRandomTimer.FloatValue, Timer_ChooseRandom);
 
-		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, false)) if (GetClientTeam(i) == CS_TEAM_CT)
+		for (int i = 1; i <= MaxClients; i++)
 		{
+			if (!IsValidClient(i, false, false))
+				continue;
+
 			CPrintToChat(i, "%s %t", g_sPrefix, "warden_nowarden");
 			
-			if (gc_bBetterNotes.BoolValue) PrintCenterText(i, "%t", "warden_nowarden_nc");
+			if (gc_bBetterNotes.BoolValue)
+			{
+				PrintCenterText(i, "%t", "warden_nowarden_nc");
+			}
 		}
 	}
 }
@@ -794,7 +836,7 @@ public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 	{
 		if (g_iWarden != -1)
 		{
-			CreateTimer(0.1, Timer_RemoveColor, g_iWarden);
+			CreateTimer(0.1, Timer_RemoveColor, GetClientUserId(g_iWarden));
 			SetEntityModel(g_iWarden, g_sModelPathPrevious);
 			Forward_OnWardenRemoved(g_iWarden);
 			g_iLastWarden = g_iWarden;
@@ -811,7 +853,7 @@ public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 		{
 			if (g_iWarden != -1)
 			{
-				CreateTimer(0.1, Timer_RemoveColor, g_iWarden);
+				CreateTimer(0.1, Timer_RemoveColor, GetClientUserId(g_iWarden));
 				SetEntityModel(g_iWarden, g_sModelPathPrevious);
 				Forward_OnWardenRemoved(g_iWarden);
 				g_iLastWarden = g_iWarden;
@@ -824,7 +866,7 @@ public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 	{
 		if (g_iWarden != -1)
 		{
-			CreateTimer(0.1, Timer_RemoveColor, g_iWarden);
+			CreateTimer(0.1, Timer_RemoveColor, GetClientUserId(g_iWarden));
 			SetEntityModel(g_iWarden, g_sModelPathPrevious);
 			Forward_OnWardenRemoved(g_iWarden);
 			g_iLastWarden = g_iWarden;
@@ -839,8 +881,11 @@ public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 
 	if (gc_iLimitWarden.IntValue != 0)
 	{
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+		for (int i = 1; i <= MaxClients; i++) 
 		{
+			if (!IsClientInGame(i))
+				continue;
+
 			// /shiiet 
 			if (GetLimit(i) && (i != g_iLastWarden) && (i != g_iWarden))
 			{
@@ -874,7 +919,7 @@ public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 			SetCoolDown(g_iWarden, gc_iCoolDownLimit.IntValue);
 			SetLimit(g_iWarden, 0);
 			CPrintToChat(g_iWarden, "%s %t", g_sPrefix, "warden_limit", gc_iLimitWarden.IntValue, GetCoolDown(g_iWarden));
-			CreateTimer(0.1, Timer_RemoveColor, g_iWarden);
+			CreateTimer(0.1, Timer_RemoveColor, GetClientUserId(g_iWarden));
 			SetEntityModel(g_iWarden, g_sModelPathPrevious);
 			Forward_OnWardenRemoved(g_iWarden);
 			g_iLastWarden = g_iWarden;
@@ -989,7 +1034,7 @@ public void OnMapEnd()
 {
 	if (g_iWarden != -1)
 	{
-		CreateTimer(0.1, Timer_RemoveColor, g_iWarden);
+		CreateTimer(0.1, Timer_RemoveColor, GetClientUserId(g_iWarden));
 
 		Forward_OnWardenRemoved(g_iWarden);
 		g_iWarden = -1;
@@ -1029,7 +1074,7 @@ public void MyJailbreak_OnEventDayStart(char[] EventDayName)
 {
 	if (g_iWarden != -1)
 	{
-		CreateTimer(0.1, Timer_RemoveColor, g_iWarden);
+		CreateTimer(0.1, Timer_RemoveColor, GetClientUserId(g_iWarden));
 		SetEntityModel(g_iWarden, g_sModelPathPrevious);
 		Forward_OnWardenRemoved(g_iWarden);
 		g_iLastWarden = g_iWarden;
@@ -1142,7 +1187,7 @@ Action SetTheWarden(int client, int caller)
 // Remove the current warden
 void RemoveTheWarden()
 {
-	CreateTimer(0.1, Timer_RemoveColor, g_iWarden);
+	CreateTimer(0.1, Timer_RemoveColor, GetClientUserId(g_iWarden));
 	SetEntityModel(g_iWarden, g_sModelPathPrevious);
 
 	g_hTimerRandom = CreateTimer(gc_fRandomTimer.FloatValue, Timer_ChooseRandom);
@@ -1228,8 +1273,11 @@ void Menu_SetWarden(int client)
 	Format(info1, sizeof(info1), "%T", "warden_choose", client);
 	menu.SetTitle(info1);
 
-	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+	for (int i = 1; i <= MaxClients; i++)
 	{
+		if (!IsValidClient(i, true, false))
+			continue;
+
 		if (GetClientTeam(i) == CS_TEAM_CT && !IsClientWarden(i))
 		{
 			char userid[11];
@@ -1253,8 +1301,11 @@ public int Handler_SetWarden(Menu menu, MenuAction action, int client, int Posit
 		char Item[11];
 		menu.GetItem(Position, Item, sizeof(Item));
 
-		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+		for (int i = 1; i <= MaxClients; i++)
 		{
+			if (!IsValidClient(i, true, false))
+				continue;
+
 			if (GetClientTeam(i) == CS_TEAM_CT && !IsClientWarden(i))
 			{
 				char info4[255], info2[255], info3[255];
@@ -1515,7 +1566,7 @@ public int Native_Enable(Handle plugin, int argc)
 	
 	if (!g_bEnabled && g_iWarden != -1)
 	{
-		CreateTimer(0.1, Timer_RemoveColor, g_iWarden);
+		CreateTimer(0.1, Timer_RemoveColor, GetClientUserId(g_iWarden));
 		SetEntityModel(g_iWarden, g_sModelPathPrevious);
 		Forward_OnWardenRemoved(g_iWarden);
 		g_iLastWarden = g_iWarden;

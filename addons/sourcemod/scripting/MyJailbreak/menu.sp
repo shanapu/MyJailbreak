@@ -231,8 +231,11 @@ public void OnPluginStart()
 	// Late loading
 	if (g_bIsLateLoad)
 	{
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+		for (int i = 1; i <= MaxClients; i++)
 		{
+			if (!IsClientInGame(i))
+				continue;
+
 			OnClientPutInServer(i);
 		}
 
@@ -663,7 +666,7 @@ public void OnClientPutInServer(int client)
 {
 	if (gc_bWelcome.BoolValue)
 	{
-		CreateTimer(35.0, Timer_WelcomeMessage, client);
+		CreateTimer(35.0, Timer_WelcomeMessage, GetClientUserId(client));
 	}
 }
 
@@ -1897,8 +1900,10 @@ public int VotingResults(Menu menu, int num_votes, int num_clients, const int[][
                    TIMER
 ******************************************************************************/
 
-public Action Timer_WelcomeMessage(Handle timer, any client)
+public Action Timer_WelcomeMessage(Handle timer, int userid)
 {
+	int client = GetClientOfUserId(userid);
+
 	if (gc_bWelcome.BoolValue && IsValidClient(client, false, true))
 	{
 		CPrintToChat(client, "%s %t", g_sPrefix, "menu_info");

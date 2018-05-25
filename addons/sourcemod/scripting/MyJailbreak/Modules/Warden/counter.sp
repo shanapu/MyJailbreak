@@ -69,7 +69,7 @@ public void Counter_OnPluginStart()
 					COMMANDS
 ******************************************************************************/
 
-public Action Command_Counter(int client, any args)
+public Action Command_Counter(int client, int args)
 {
 	if (!gc_bPlugin.BoolValue || !g_bEnabled)
 		return Plugin_Handled;

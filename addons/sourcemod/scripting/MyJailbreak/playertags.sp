@@ -150,8 +150,11 @@ public void OnPluginStart()
 	// Late loading
 	if (g_bIsLateLoad)
 	{
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+		for (int i = 1; i <= MaxClients; i++)
 		{
+			if (!IsClientInGame(i))
+				continue;
+
 			OnClientPostAdminCheck(i);
 		}
 
@@ -173,43 +176,57 @@ public void OnAllPluginsLoaded()
 public void OnLibraryRemoved(const char[] name)
 {
 	if (StrEqual(name, "chat-processor"))
+	{
 		gp_bChatProcessor = false;
-
+	}
 	else if (StrEqual(name, "ccc"))
+	{
 		gp_bCCC = false;
-
+	}
 	else if (StrEqual(name, "togsclantags"))
+	{
 		gp_bTOGsTags = false;
-
+	}
 	else if (StrEqual(name, "store"))
+	{
 		gp_bStore = false;
-
+	}
 	else if (StrEqual(name, "warden"))
+	{
 		gp_bWarden = false;
-
+	}
 	else if (StrEqual(name, "myjbwarden"))
+	{
 		gp_bMyJBWarden = false;
+	}
 }
 
 public void OnLibraryAdded(const char[] name)
 {
 	if (StrEqual(name, "chat-processor"))
+	{
 		gp_bChatProcessor = true;
-
+	}
 	else if (StrEqual(name, "ccc"))
+	{
 		gp_bCCC = true;
-
+	}
 	else if (StrEqual(name, "togsclantags"))
+	{
 		gp_bTOGsTags = true;
-
+	}
 	else if (StrEqual(name, "store"))
+	{
 		gp_bStore = true;
-
+	}
 	else if (StrEqual(name, "warden"))
+	{
 		gp_bWarden = true;
-
+	}
 	else if (StrEqual(name, "myjbwarden"))
+	{
 		gp_bMyJBWarden = true;
+	}
 }
 
 // ConVarChange for Strings

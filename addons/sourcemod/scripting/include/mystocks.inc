@@ -142,7 +142,7 @@ stock void ShowOverlayAll(char[] path, float lifetime)
 
 
 // Remove overlay from a client
-stock Action DeleteOverlay(Handle timer, any userid)
+stock Action DeleteOverlay(Handle timer, int userid)
 {
 	int client = GetClientOfUserId(userid);
 	if (client <= 0 || !IsClientInGame(client) || IsFakeClient(client) || IsClientSourceTV(client) || IsClientReplay(client))
@@ -256,12 +256,16 @@ stock Action PreThinkWeapon(int client)
 
 
 // Remove a players render color
-stock Action Timer_RemoveColor(Handle timer, any client) 
+stock Action Timer_RemoveColor(Handle timer, int userid)
 {
+	int client = GetClientOfUserId(userid);
+
 	if (IsValidClient(client, true, true))
 	{
 		SetEntityRenderColor(client, 255, 255, 255, 255);
 	}
+
+	return Plugin_Handled;
 }
 
 

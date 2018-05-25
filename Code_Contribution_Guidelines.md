@@ -22,7 +22,8 @@ Maybe these guidelines could change in future.
 **don't forget to credit yourself**
 ***
 ### Comment your code
-**doing some magic? explain it! you don't need to comment "standard" code**
+**doing some magic? explain it!  
+you don't need to comment "standard" code**
 ***
 ### Give credits
 **(re)use code from an other author? give him credits as a comment above the snippet**
@@ -59,6 +60,8 @@ examples:
 	if (check) {
 		function(); }
 
+	if (check) { function(); }
+
 	if (check) {
 		function();
 		}
@@ -86,7 +89,7 @@ examples:
 ```
 ... and variants
 
-:alien: exceptions on a return immediately after check:
+:alien: exception only on a return immediately after check:
 ```
 	if (check)
 		return Plugin_Continue;
@@ -318,7 +321,7 @@ examples:
 	menu.AddItem("1", "Item")
 	menu.Display(client, MENU_TIME);
 ```
-... and variants
+... and variants  
 :x: bad:
 ```
 	Handle panel = CreatePanel();

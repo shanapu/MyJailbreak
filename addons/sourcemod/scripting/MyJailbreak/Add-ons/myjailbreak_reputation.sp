@@ -122,7 +122,7 @@ public Action warden_OnWardenCreate(int client, int caller)
 	return Plugin_Continue;
 }
 
-public Action Event_OnPlayerSpawn(Event event, const char[] name, bool bDontBroadcast) 
+public Action Event_OnPlayerSpawn(Event event, const char[] name, bool bDontBroadcast)
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));
 
@@ -145,9 +145,9 @@ public Action Event_OnPlayerSpawn(Event event, const char[] name, bool bDontBroa
 	return Plugin_Continue;
 }
 
-public Action Timer_SlayPlayer(Handle hTimer, any iUserId) 
+public Action Timer_SlayPlayer(Handle timer, int userid)
 {
-	int client = GetClientOfUserId(iUserId);
+	int client = GetClientOfUserId(userid);
 
 	if ((IsValidClient(client, false, false)) && (GetClientTeam(client) == CS_TEAM_CT))
 	{
