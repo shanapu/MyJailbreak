@@ -4,6 +4,7 @@
  * https://github.com/shanapu/
  * 
  * Copyright (C) 2016-2017 Thomas Schmidt (shanapu)
+ * Contributer: Hexer10
  *
  * Version 12.1
  *

@@ -4,6 +4,7 @@
  * https://github.com/shanapu/MyJailbreak/
  * 
  * Copyright (C) 2016-2017 Thomas Schmidt (shanapu)
+ * Contributer: Kxnrl
  *
  * This file is part of the MyJailbreak SourceMod Plugin.
  *

@@ -3,7 +3,8 @@
  * by: shanapu
  * https://github.com/shanapu/MyJailbreak/
  * 
- * Copyright (C) 2016-2017 Thomas Schmidt (shanapu) & Hexah
+ * Copyright (C) 2016-2017 Thomas Schmidt (shanapu)
+ * Contributer: Hexer10
  *
  * This file is part of the MyJailbreak SourceMod Plugin.
  *

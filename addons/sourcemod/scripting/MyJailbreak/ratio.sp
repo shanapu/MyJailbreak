@@ -5,6 +5,7 @@
  * based on Addicteds https://github.com/oaaron99/JailRatio
  *
  * Copyright (C) 2016-2017 Thomas Schmidt (shanapu)
+ * Contributer: Hexer10, baferpro, good-live
  *
  * This file is part of the MyJailbreak SourceMod Plugin.
  *
