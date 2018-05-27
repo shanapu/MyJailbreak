@@ -349,25 +349,33 @@ public void OnAllPluginsLoaded()
 public void OnLibraryRemoved(const char[] name)
 {
 	if (StrEqual(name, "myjbwarden"))
+	{
 		gp_bMyJBWarden = false;
-
-	if (StrEqual(name, "warden"))
+	}
+	else if (StrEqual(name, "warden"))
+	{
 		gp_bWarden = false;
-		
-	if (StrEqual(name, "vip_core"))
+	}
+	else if (StrEqual(name, "vip_core"))
+	{
 		gp_bVIP_Core = false;
+	}
 }
 
 public void OnLibraryAdded(const char[] name)
 {
 	if (StrEqual(name, "myjbwarden"))
+	{
 		gp_bMyJBWarden = true;
-
-	if (StrEqual(name, "warden"))
+	}
+	else if (StrEqual(name, "warden"))
+	{
 		gp_bWarden = true;
-		
-	if (StrEqual(name, "vip_core"))
+	}
+	else if (StrEqual(name, "vip_core"))
+	{
 		gp_bVIP_Core = true;
+	}
 }
 
 /******************************************************************************
