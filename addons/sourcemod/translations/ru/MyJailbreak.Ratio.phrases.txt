@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-11-20 02:35:05 UTC
+// Date: 2018-05-23 19:42:34 UTC
 // Language: Russian (ru)
 // 
 // To view other translations for this plugin, please visit:
@@ -7,11 +7,6 @@
 //
 "Phrases"
 {
-
-	"ratio_tag"
-	{
-		"ru"		"[{green}MyJB.баланс{default}]"
-	}
 
 	"ratio_auto"
 	{
@@ -126,136 +121,6 @@
 	"ratio_notaccept"
 	{
 		"ru"		"Нет, я не хочу стать охранником."
-	}
-
-	"ratio_question_title"
-	{
-		"ru"		"Ответьте на вопросы, чтобы стать охранником."
-	}
-
-	"ratio_question1_line1"
-	{
-		"ru"		"Камеры закрыты, заключенные внутри!"
-	}
-
-	"ratio_question1_line2"
-	{
-		"ru"		"Что вы будете делать?"
-	}
-
-	"ratio_question1_wrong1"
-	{
-		"ru"		"После открытия камер я убью всех!"
-	}
-
-	"ratio_question1_wrong2"
-	{
-		"ru"		"Я убью всех, до ЛР"
-	}
-
-	"ratio_question1_right"
-	{
-		"ru"		"Я буду ждать первого приказа КМД."
-	}
-
-	"ratio_question2_line1"
-	{
-		"ru"		"КМД сосет и этот раунд скучный, как дерьмо."
-	}
-
-	"ratio_question2_line2"
-	{
-		"ru"		"Отдамка своё оружие зэку, дабы ускорить раунд"
-	}
-
-	"ratio_question2_wrong1"
-	{
-		"ru"		"Это хорошая идея."
-	}
-
-	"ratio_question2_wrong2"
-	{
-		"ru"		"Только если заключённый мой приятель!"
-	}
-
-	"ratio_question2_right"
-	{
-		"ru"		"Никогда! Это запрещено!"
-	}
-
-	"ratio_question3_line1"
-	{
-		"ru"		"Вы читали правила сервера?"
-	}
-
-	"ratio_question3_line2"
-	{
-		"ru"		"Поняли ли вы правила?"
-	}
-
-	"ratio_question3_wrong1"
-	{
-		"ru"		"Я не буду следовать правилам сервера."
-	}
-
-	"ratio_question3_wrong2"
-	{
-		"ru"		"Чтение? Я здесь, чтобы играть, lol!"
-	}
-
-	"ratio_question3_right"
-	{
-		"ru"		"Да. Я знаю, как играть здесь."
-	}
-
-	"ratio_question4_line1"
-	{
-		"ru"		"У вас есть рабочий микрофон?"
-	}
-
-	"ratio_question4_line2"
-	{
-		"ru"		"Вы говорите на языке сервера?"
-	}
-
-	"ratio_question4_wrong1"
-	{
-		"ru"		"Простите, что?"
-	}
-
-	"ratio_question4_wrong2"
-	{
-		"ru"		"Мой микрофон сломан."
-	}
-
-	"ratio_question4_right"
-	{
-		"ru"		"У меня есть хороший микрофон."
-	}
-
-	"ratio_question5_line1"
-	{
-		"ru"		"КМД убит, вы один из последних охранников."
-	}
-
-	"ratio_question5_line2"
-	{
-		"ru"		"Станете ли вы командиром?"
-	}
-
-	"ratio_question5_wrong1"
-	{
-		"ru"		"Лучше всего начать freeday.."
-	}
-
-	"ratio_question5_wrong2"
-	{
-		"ru"		"Убью всех зэков, до ЛР"
-	}
-
-	"ratio_question5_right"
-	{
-		"ru"		"Я буду играть в качестве нового командира."
 	}
 
 	"ratio_cooldown"
@@ -400,7 +265,7 @@
 
 	"ratio_swap_spec"
 	{
-		"ru"		"Вы были перемещены в команду T, так как вы присоединились к очереди охраны"
+		"ru"		"Вы были перемещены за команду Террористов, так как заняли очередь за КТ"
 	}
 
 	"ratio_fullguards"
