@@ -125,6 +125,7 @@ int g_iColors[8][4] =
 // Handles
 Handle gF_OnWardenCreate;
 Handle gF_OnWardenRemoved;
+Handle gF_OnWardenCreated;
 Handle gF_OnWardenCreatedByUser;
 Handle gF_OnWardenCreatedByAdmin;
 Handle gF_OnWardenDisconnected;
@@ -1454,7 +1455,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 {
 	// Natives
 	CreateNative("warden_enable", Native_Enable);
-	CreateNative("warden_isenabled", Native_IsEnabled);	
+	CreateNative("warden_isenabled", Native_IsEnabled);
 	
 	CreateNative("warden_exist", Native_ExistWarden);
 	CreateNative("warden_iswarden", Native_IsWarden);
@@ -1479,6 +1480,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	// Forwards
 	gF_OnWardenCreate = CreateGlobalForward("warden_OnWardenCreate", ET_Event, Param_Cell, Param_Cell);
+	gF_OnWardenCreated = CreateGlobalForward("warden_OnWardenCreated", ET_Ignore, Param_Cell);
 	gF_OnWardenRemoved = CreateGlobalForward("warden_OnWardenRemoved", ET_Ignore, Param_Cell);
 	gF_OnWardenCreatedByUser = CreateGlobalForward("warden_OnWardenCreatedByUser", ET_Ignore, Param_Cell);
 	gF_OnWardenCreatedByAdmin = CreateGlobalForward("warden_OnWardenCreatedByAdmin", ET_Ignore, Param_Cell);
@@ -1590,12 +1592,20 @@ void Forward_OnWardenCreatedByUser(int client)
 	Call_StartForward(gF_OnWardenCreatedByUser);
 	Call_PushCell(client);
 	Call_Finish();
+
+	Call_StartForward(gF_OnWardenCreated);
+	Call_PushCell(client);
+	Call_Finish();
 }
 
 // New Warden was set (will only fire on set ByAdmin)
 void Forward_OnWardenCreatedByAdmin(int client)
 {
 	Call_StartForward(gF_OnWardenCreatedByAdmin);
+	Call_PushCell(client);
+	Call_Finish();
+
+	Call_StartForward(gF_OnWardenCreated);
 	Call_PushCell(client);
 	Call_Finish();
 }

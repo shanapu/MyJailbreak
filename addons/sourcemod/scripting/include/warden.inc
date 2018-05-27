@@ -39,10 +39,10 @@ forward void warden_OnWardenRemoved(int client);
 
 
 /*********************************************************
- * Called when a client trys to become deputy
+ * Called when a client become warden
  * By player, admin, randomchoose...
  *
- * @param client		The client who try to become deputy
+ * @param client		The client who become warden
  * @NoReturn
  *********************************************************/
 forward void warden_OnWardenCreated(int client);
