@@ -1,0 +1,16 @@
+// Exported from SourceMod Translator
+// Date: 2018-05-23 19:27:41 UTC
+// Language: Hungarian (hu)
+// 
+// To view other translations for this plugin, please visit:
+// http://translator.mitchdempsey.com/sourcemod_plugins/178
+//
+"Phrases"
+{
+
+	"warden_new"
+	{
+		"hu"		"{default}Mostantól {purple}{1}{default} a vezér a börtönben!"
+	}
+
+}

@@ -176,17 +176,29 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 	if (convar == gc_sOverlayStartPath)
 	{
 		strcopy(g_sOverlayStartPath, sizeof(g_sOverlayStartPath), newValue);
-		if (gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
+
+		if (gc_bOverlays.BoolValue)
+		{
+			PrecacheDecalAnyDownload(g_sOverlayStartPath);
+		}
 	}
 	else if (convar == gc_sSoundStartPath)
 	{
 		strcopy(g_sSoundStartPath, sizeof(g_sSoundStartPath), newValue);
-		if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
+
+		if (gc_bSounds.BoolValue)
+		{
+			PrecacheSoundAnyDownload(g_sSoundStartPath);
+		}
 	}
 	else if (convar == gc_sSoundLastCTPath)
 	{
 		strcopy(g_sSoundLastCTPath, sizeof(g_sSoundLastCTPath), newValue);
-		if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundLastCTPath);
+
+		if (gc_bSounds.BoolValue)
+		{
+			PrecacheSoundAnyDownload(g_sSoundLastCTPath);
+		}
 	}
 	else if (convar == gc_sPrefix)
 	{
@@ -403,8 +415,11 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 
 	if (g_bIsLastGuard)
 	{
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+		for (int i = 1; i <= MaxClients; i++)
 		{
+			if (!IsClientInGame(i))
+				continue;
+
 			SetEntProp(i, Prop_Send, "m_CollisionGroup", 5);  // 2 - none / 5 - 'default'
 
 			if (gc_bWallhack.BoolValue && gp_bCustomPlayerSkins)
@@ -553,8 +568,11 @@ void StartLastGuard()
 
 		int HPCT = RoundToCeil(HPterrors * (gc_iHPmultipler.FloatValue / 100.0));
 
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+		for (int i = 1; i <= MaxClients; i++)
 		{
+			if (!IsClientInGame(i))
+				continue;
+
 			char info[64];
 
 			Panel InfoPanel = new Panel();
@@ -648,10 +666,6 @@ public void OnMapStart()
 	if (gc_bSounds.BoolValue)
 	{
 		PrecacheSoundAnyDownload(g_sSoundStartPath);   // Add sound to download and precache table
-	}
-
-	if (gc_bSounds.BoolValue)
-	{
 		PrecacheSoundAnyDownload(g_sSoundLastCTPath);   // Add sound to download and precache table
 	}
 
@@ -760,8 +774,11 @@ public Action Timer_LastGuardBeginn(Handle timer)
 
 public Action Timer_BeaconOn(Handle timer)
 {
-	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+	for (int i = 1; i <= MaxClients; i++)
 	{
+		if (!IsValidClient(i, true, false))
+			continue;
+
 		MyJailbreak_BeaconOn(i, 2.0);
 	}
 
@@ -778,9 +795,7 @@ void Setup_WallhackSkin(int client)
 
 	int iSkin = CPS_SetSkin(client, sModel, CPS_RENDER);
 	if (iSkin == -1)
-	{
 		return;
-	}
 
 	if (SDKHookEx(iSkin, SDKHook_SetTransmit, OnSetTransmit_Wallhack))
 	{
@@ -815,21 +830,18 @@ void Setup_Wallhack(int iSkin)
 public Action OnSetTransmit_Wallhack(int iSkin, int client)
 {
 	if (!IsPlayerAlive(client) || GetClientTeam(client) != CS_TEAM_CT)
-	{
 		return Plugin_Handled;
-	}
 
-	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+	for (int i = 1; i <= MaxClients; i++)
 	{
-		if (!CPS_HasSkin(i))
-		{
+		if (!IsClientInGame(i))
 			continue;
-		}
+
+		if (!CPS_HasSkin(i))
+			continue;
 
 		if (EntRefToEntIndex(CPS_GetSkin(i)) != iSkin)
-		{
 			continue;
-		}
 
 		return Plugin_Continue;
 	}

@@ -1,5 +1,13 @@
+// Exported from SourceMod Translator
+// Date: 2018-05-23 19:26:09 UTC
+// Language: English (en)
+// 
+// To view other translations for this plugin, please visit:
+// http://translator.mitchdempsey.com/sourcemod_plugins/181
+//
 "Phrases"
 {
+
 	"playertags_incognito_on"
 	{
 		"#format"	"{1:.0f}"
@@ -15,4 +23,5 @@
 	{
 		"en"		"Incognito mode {purple}is disabled!"
 	}
+
 }

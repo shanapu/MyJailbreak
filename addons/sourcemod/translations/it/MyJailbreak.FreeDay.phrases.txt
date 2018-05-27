@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-11-20 02:35:12 UTC
+// Date: 2018-05-23 19:26:39 UTC
 // Language: Italian (it)
 // 
 // To view other translations for this plugin, please visit:
@@ -7,11 +7,6 @@
 //
 "Phrases"
 {
-
-	"freeday_tag"
-	{
-		"it"		"[{green}JB.Freeday{default}]"
-	}
 
 	"freeday_end"
 	{

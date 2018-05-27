@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-11-20 02:34:55 UTC
+// Date: 2018-05-23 19:27:41 UTC
 // Language: French (fr)
 // 
 // To view other translations for this plugin, please visit:
@@ -11,6 +11,11 @@
 	"warden_exist"
 	{
 		"fr"		"Le gardien actuel est: {purple}{1}{default}."
+	}
+
+	"warden_retire"
+	{
+		"fr"		"{purple}{1}{default} a décidé de quitter son rôle de Gardien. Vous pouvez maintenant en choisir un nouveau ! "
 	}
 
 	"warden_dead"
@@ -36,6 +41,11 @@
 	"warden_15"
 	{
 		"fr"		"15 secondes"
+	}
+
+	"warden_startmathquiz"
+	{
+		"fr"		"Attention ! Le Gardien a commencé un  {purple} quiz de Maths ! "
 	}
 
 }

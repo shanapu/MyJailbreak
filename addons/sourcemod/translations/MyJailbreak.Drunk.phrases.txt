@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-11-20 02:35:14 UTC
+// Date: 2018-05-23 19:26:37 UTC
 // Language: English (en)
 // 
 // To view other translations for this plugin, please visit:
@@ -7,6 +7,7 @@
 //
 "Phrases"
 {
+
 	"drunk_need"
 	{
 		"#format"	"{1:i},{2:N}"

@@ -3,7 +3,8 @@
  * by: shanapu
  * https://github.com/shanapu/MyJailbreak/
  * 
- * Copyright (C) 2016-2017 Thomas Schmidt (shanapu) & Hexah
+ * Copyright (C) 2016-2017 Thomas Schmidt (shanapu)
+ * Contributer: Hexer10
  *
  * This file is part of the MyJailbreak SourceMod Plugin.
  *
@@ -388,6 +389,7 @@ public Action Command_SetOITC(int client, int args)
 	if (!gc_bPlugin.BoolValue)
 	{
 		CReplyToCommand(client, "%s %t", g_sPrefix, "oneinthechamber_disabled");
+
 		return Plugin_Handled;
 	}
 
@@ -396,9 +398,7 @@ public Action Command_SetOITC(int client, int args)
 		StartEventRound(gc_bBeginSetVW.BoolValue);
 
 		if (!gp_bMyJailbreak)
-		{
 			return Plugin_Handled;
-		}
 
 		if (MyJailbreak_ActiveLogging())
 		{
@@ -410,12 +410,14 @@ public Action Command_SetOITC(int client, int args)
 		if (!gc_bSetA.BoolValue)
 		{
 			CReplyToCommand(client, "%s %t", g_sPrefix, "oneinthechamber_setbyadmin");
+
 			return Plugin_Handled;
 		}
 
 		if (GetTeamClientCount(CS_TEAM_CT) == 0 || GetTeamClientCount(CS_TEAM_T) == 0)
 		{
 			CReplyToCommand(client, "%s %t", g_sPrefix, "oneinthechamber_minplayer");
+
 			return Plugin_Handled;
 		}
 
@@ -427,6 +429,7 @@ public Action Command_SetOITC(int client, int args)
 			if (!StrEqual(EventDay, "none", false))
 			{
 				CReplyToCommand(client, "%s %t", g_sPrefix, "oneinthechamber_progress", EventDay);
+
 				return Plugin_Handled;
 			}
 		}
@@ -434,15 +437,14 @@ public Action Command_SetOITC(int client, int args)
 		if (g_iCoolDown > 0 && !gc_bSetABypassCooldown.BoolValue)
 		{
 			CReplyToCommand(client, "%s %t", g_sPrefix, "oneinthechamber_wait", g_iCoolDown);
+
 			return Plugin_Handled;
 		}
 
 		StartEventRound(gc_bBeginSetA.BoolValue);
 
 		if (!gp_bMyJailbreak)
-		{
 			return Plugin_Handled;
-		}
 
 		if (MyJailbreak_ActiveLogging())
 		{
@@ -454,18 +456,21 @@ public Action Command_SetOITC(int client, int args)
 		if (!warden_iswarden(client))
 		{
 			CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
+
 			return Plugin_Handled;
 		}
 
 		if (!gc_bSetW.BoolValue)
 		{
 			CReplyToCommand(client, "%s %t", g_sPrefix, "oneinthechamber_setbywarden");
+
 			return Plugin_Handled;
 		}
 
 		if (GetTeamClientCount(CS_TEAM_CT) == 0 || GetTeamClientCount(CS_TEAM_T) == 0)
 		{
 			CReplyToCommand(client, "%s %t", g_sPrefix, "oneinthechamber_minplayer");
+
 			return Plugin_Handled;
 		}
 
@@ -477,6 +482,7 @@ public Action Command_SetOITC(int client, int args)
 			if (!StrEqual(EventDay, "none", false))
 			{
 				CReplyToCommand(client, "%s %t", g_sPrefix, "oneinthechamber_progress", EventDay);
+
 				return Plugin_Handled;
 			}
 		}
@@ -484,15 +490,14 @@ public Action Command_SetOITC(int client, int args)
 		if (g_iCoolDown > 0)
 		{
 			CReplyToCommand(client, "%s %t", g_sPrefix, "oneinthechamber_wait", g_iCoolDown);
+
 			return Plugin_Handled;
 		}
 
 		StartEventRound(gc_bBeginSetW.BoolValue);
 
 		if (!gp_bMyJailbreak)
-		{
 			return Plugin_Handled;
-		}
 
 		if (MyJailbreak_ActiveLogging())
 		{
@@ -513,18 +518,21 @@ public Action Command_VoteOITC(int client, int args)
 	if (!gc_bPlugin.BoolValue)
 	{
 		CReplyToCommand(client, "%s %t", g_sPrefix, "oneinthechamber_disabled");
+
 		return Plugin_Handled;
 	}
 
 	if (!gc_bVote.BoolValue)
 	{
 		CReplyToCommand(client, "%s %t", g_sPrefix, "oneinthechamber_voting");
+
 		return Plugin_Handled;
 	}
 
 	if (GetTeamClientCount(CS_TEAM_CT) == 0 || GetTeamClientCount(CS_TEAM_T) == 0)
 	{
 		CReplyToCommand(client, "%s %t", g_sPrefix, "oneinthechamber_minplayer");
+
 		return Plugin_Handled;
 	}
 
@@ -536,6 +544,7 @@ public Action Command_VoteOITC(int client, int args)
 		if (!StrEqual(EventDay, "none", false))
 		{
 			CReplyToCommand(client, "%s %t", g_sPrefix, "oneinthechamber_progress", EventDay);
+
 			return Plugin_Handled;
 		}
 	}
@@ -543,6 +552,7 @@ public Action Command_VoteOITC(int client, int args)
 	if (g_iCoolDown > 0)
 	{
 		CReplyToCommand(client, "%s %t", g_sPrefix, "oneinthechamber_wait", g_iCoolDown);
+
 		return Plugin_Handled;
 	}
 
@@ -552,6 +562,7 @@ public Action Command_VoteOITC(int client, int args)
 	if (StrContains(g_sHasVoted, steamid, true) != -1)
 	{
 		CReplyToCommand(client, "%s %t", g_sPrefix, "oneinthechamber_voted");
+
 		return Plugin_Handled;
 	}
 
@@ -566,9 +577,7 @@ public Action Command_VoteOITC(int client, int args)
 		StartEventRound(gc_bBeginSetV.BoolValue);
 
 		if (!gp_bMyJailbreak)
-		{
 			return Plugin_Handled;
-		}
 
 		if (MyJailbreak_ActiveLogging())
 		{

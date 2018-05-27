@@ -155,6 +155,6 @@ public void MyJailbreak_MenuHandler(Menu menu, MenuAction action, int client, in
 // Remove this part for your own custom plugin!
 public void OnMapStart()
 {
-	SetFailState("This file is an template for developer and should'n run on productive servers! please remove");
+	SetFailState("This file is an template for developer and should'nt run on productive servers! please remove");
 }
 

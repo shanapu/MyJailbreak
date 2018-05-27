@@ -142,8 +142,10 @@ public void OnPluginStart()
 	// Late loading
 	if (g_bIsLateLoad)
 	{
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
-		{
+		for (int i = 1; i <= MaxClients; i++)		{
+			if (!IsClientInGame(i))
+				continue;
+
 			OnClientPutInServer(i);
 		}
 
@@ -171,31 +173,41 @@ public void OnAllPluginsLoaded()
 public void OnLibraryRemoved(const char[] name)
 {
 	if (StrEqual(name, "myjailbreak"))
+	{
 		gp_bMyJailBreak = false;
-
-	if (StrEqual(name, "smartjaildoors"))
+	}
+	else if (StrEqual(name, "smartjaildoors"))
+	{
 		gp_bSmartJailDoors = false;
-
-	if (StrEqual(name, "warden"))
+	}
+	else if (StrEqual(name, "warden"))
+	{
 		gp_bWarden = false;
-
-	if (StrEqual(name, "myjbwarden"))
+	}
+	else if (StrEqual(name, "myjbwarden"))
+	{
 		gp_bMyJBWarden = false;
+	}
 }
 
 public void OnLibraryAdded(const char[] name)
 {
 	if (StrEqual(name, "myjailbreak"))
+	{
 		gp_bMyJailBreak = true;
-
-	if (StrEqual(name, "smartjaildoors"))
+	}
+	else if (StrEqual(name, "smartjaildoors"))
+	{
 		gp_bSmartJailDoors = true;
-
-	if (StrEqual(name, "warden"))
+	}
+	else if (StrEqual(name, "warden"))
+	{
 		gp_bWarden = true;
-
-	if (StrEqual(name, "myjbwarden"))
+	}
+	else if (StrEqual(name, "myjbwarden"))
+	{
 		gp_bMyJBWarden = true;
+	}
 }
 
 /******************************************************************************
@@ -401,10 +413,19 @@ public int Command_RequestMenuHandler(Menu reqmenu, MenuAction action, int clien
                    TIMER
 ******************************************************************************/
 
-public Action Timer_IsRequest(Handle timer, any client)
+public Action Timer_IsRequest(Handle timer)
 {
 	g_bIsRequest = false;
 	g_hTimerRequest = null;
 
-	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (g_bFreeKilled[i]) g_bFreeKilled[i] = false;
+	for (int i = 1; i <= MaxClients; i++)
+	{
+		if (IsClientInGame(i))
+			continue;
+
+		if (!g_bFreeKilled[i])
+			continue;
+
+		g_bFreeKilled[i] = false;
+	}
 }

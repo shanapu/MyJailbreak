@@ -4,6 +4,7 @@
  * https://github.com/shanapu/MyJailbreak/
  * 
  * Copyright (C) 2016-2017 Thomas Schmidt (shanapu)
+ * Contributer: good-live
  *
  * This file is part of the MyJailbreak SourceMod Plugin.
  *
@@ -129,7 +130,7 @@ public Action Command_Heal(int client, int args)
 									g_iHealCounter[client]++;
 									CPrintToChatAll("%s %t", g_sPrefix, "request_heal", client);
 									SetEntityRenderColor(client, gc_iHealColorRed.IntValue, gc_iHealColorGreen.IntValue, gc_iHealColorBlue.IntValue, 255);
-									g_hTimerHeal[client] = CreateTimer(gc_fHealTime.FloatValue, Timer_ResetColorHeal, client);
+									g_hTimerHeal[client] = CreateTimer(gc_fHealTime.FloatValue, Timer_ResetColorHeal, GetClientUserId(client));
 									for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) HealMenu(i);
 								}
 								else CReplyToCommand(client, "%s %t", g_sPrefix, "request_processing");
@@ -157,8 +158,11 @@ public Action Command_Heal(int client, int args)
 
 public void Heal_Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
-	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+	for (int i = 1; i <= MaxClients; i++)
 	{
+		if (!IsClientInGame(i))
+			continue;
+
 		delete g_hTimerHeal[i];
 		
 		g_iHealCounter[i] = 0;
@@ -264,8 +268,10 @@ public int HealMenuHandler(Menu menu, MenuAction action, int client, int Positio
 ******************************************************************************/
 
 
-public Action Timer_ResetColorHeal(Handle timer, any client)
+public Action Timer_ResetColorHeal(Handle timer, int userid)
 {
+	int client = GetClientOfUserId(userid);
+
 	if (IsValidClient(client,true,false))
 	{
 		SetEntityRenderColor(client, 255, 255, 255, 255);

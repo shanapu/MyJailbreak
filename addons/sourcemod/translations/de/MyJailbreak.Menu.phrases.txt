@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-11-20 02:34:58 UTC
+// Date: 2018-05-23 19:27:17 UTC
 // Language: German (de)
 // 
 // To view other translations for this plugin, please visit:
@@ -238,11 +238,6 @@
 		"de"		"Mute Menu"
 	}
 
-	"menu_tag"
-	{
-		"de"		"[{green}MyJB.menu{default}]"
-	}
-
 	"menu_painter"
 	{
 		"de"		"Maler Menü"
@@ -381,6 +376,16 @@
 	"menu_joinspec"
 	{
 		"de"		"Zu Spectator wechseln"
+	}
+
+	"menu_gangs"
+	{
+		"de"		"Gangs Menü"
+	}
+
+	"menu_armsrace"
+	{
+		"de"		"Wettrüsten"
 	}
 
 	"menu_dealdamage"

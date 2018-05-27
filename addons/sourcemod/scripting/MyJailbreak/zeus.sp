@@ -6,6 +6,7 @@
  * Copyright (C) 2016-2017 Thomas Schmidt (shanapu)
  *
  * This file is part of the MyJailbreak SourceMod Plugin.
+ * Contributer: Hexer10, olegtsvetkov
  *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License, version 3.0, as published by the
@@ -206,8 +207,11 @@ public void OnPluginStart()
 	// Late loading
 	if (g_bIsLateLoad)
 	{
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+		for (int i = 1; i <= MaxClients; i++)
 		{
+			if (!IsClientInGame(i))
+				continue;
+
 			OnClientPutInServer(i);
 		}
 
@@ -324,7 +328,6 @@ public void OnConfigsExecuted()
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
 
-
 	if (gp_bHosties)
 	{
 		g_iTerrorForLR = FindConVar("sm_hosties_lr_ts_max");
@@ -387,6 +390,7 @@ public Action Command_SetZeus(int client, int args)
 	if (!gc_bPlugin.BoolValue)
 	{
 		CReplyToCommand(client, "%s %t", g_sPrefix, "zeus_disabled");
+
 		return Plugin_Handled;
 	}
 
@@ -395,9 +399,7 @@ public Action Command_SetZeus(int client, int args)
 		StartEventRound(gc_bBeginSetVW.BoolValue);
 
 		if (!gp_bMyJailbreak)
-		{
 			return Plugin_Handled;
-		}
 
 		if (MyJailbreak_ActiveLogging())
 		{
@@ -409,12 +411,14 @@ public Action Command_SetZeus(int client, int args)
 		if (!gc_bSetA.BoolValue)
 		{
 			CReplyToCommand(client, "%s %t", g_sPrefix, "zeus_setbyadmin");
+
 			return Plugin_Handled;
 		}
 
 		if (GetTeamClientCount(CS_TEAM_CT) == 0 || GetTeamClientCount(CS_TEAM_T) == 0)
 		{
 			CReplyToCommand(client, "%s %t", g_sPrefix, "zeus_minplayer");
+
 			return Plugin_Handled;
 		}
 
@@ -426,6 +430,7 @@ public Action Command_SetZeus(int client, int args)
 			if (!StrEqual(EventDay, "none", false))
 			{
 				CReplyToCommand(client, "%s %t", g_sPrefix, "zeus_progress", EventDay);
+
 				return Plugin_Handled;
 			}
 		}
@@ -433,15 +438,14 @@ public Action Command_SetZeus(int client, int args)
 		if (g_iCoolDown > 0 && !gc_bSetABypassCooldown.BoolValue)
 		{
 			CReplyToCommand(client, "%s %t", g_sPrefix, "zeus_wait", g_iCoolDown);
+
 			return Plugin_Handled;
 		}
 
 		StartEventRound(gc_bBeginSetA.BoolValue);
 
 		if (!gp_bMyJailbreak)
-		{
 			return Plugin_Handled;
-		}
 
 		if (MyJailbreak_ActiveLogging())
 		{
@@ -453,18 +457,21 @@ public Action Command_SetZeus(int client, int args)
 		if (!warden_iswarden(client))
 		{
 			CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
+
 			return Plugin_Handled;
 		}
 		
 		if (!gc_bSetW.BoolValue)
 		{
 			CReplyToCommand(client, "%s %t", g_sPrefix, "zeus_setbywarden");
+
 			return Plugin_Handled;
 		}
 
 		if (GetTeamClientCount(CS_TEAM_CT) == 0 || GetTeamClientCount(CS_TEAM_T) == 0)
 		{
 			CReplyToCommand(client, "%s %t", g_sPrefix, "zeus_minplayer");
+
 			return Plugin_Handled;
 		}
 
@@ -476,6 +483,7 @@ public Action Command_SetZeus(int client, int args)
 			if (!StrEqual(EventDay, "none", false))
 			{
 				CReplyToCommand(client, "%s %t", g_sPrefix, "zeus_progress", EventDay);
+
 				return Plugin_Handled;
 			}
 		}
@@ -483,15 +491,14 @@ public Action Command_SetZeus(int client, int args)
 		if (g_iCoolDown > 0)
 		{
 			CReplyToCommand(client, "%s %t", g_sPrefix, "zeus_wait", g_iCoolDown);
+
 			return Plugin_Handled;
 		}
 
 		StartEventRound(gc_bBeginSetW.BoolValue);
 
 		if (!gp_bMyJailbreak)
-		{
 			return Plugin_Handled;
-		}
 
 		if (MyJailbreak_ActiveLogging())
 		{
@@ -512,18 +519,21 @@ public Action Command_VoteZeus(int client, int args)
 	if (!gc_bPlugin.BoolValue)
 	{
 		CReplyToCommand(client, "%s %t", g_sPrefix, "zeus_disabled");
+
 		return Plugin_Handled;
 	}
 
 	if (!gc_bVote.BoolValue)
 	{
 		CReplyToCommand(client, "%s %t", g_sPrefix, "zeus_voting");
+
 		return Plugin_Handled;
 	}
 
 	if (GetTeamClientCount(CS_TEAM_CT) == 0 || GetTeamClientCount(CS_TEAM_T) == 0)
 	{
 		CReplyToCommand(client, "%s %t", g_sPrefix, "zeus_minplayer");
+
 		return Plugin_Handled;
 	}
 
@@ -535,6 +545,7 @@ public Action Command_VoteZeus(int client, int args)
 		if (!StrEqual(EventDay, "none", false))
 		{
 			CReplyToCommand(client, "%s %t", g_sPrefix, "zeus_progress", EventDay);
+
 			return Plugin_Handled;
 		}
 	}
@@ -542,6 +553,7 @@ public Action Command_VoteZeus(int client, int args)
 	if (g_iCoolDown > 0)
 	{
 		CReplyToCommand(client, "%s %t", g_sPrefix, "zeus_wait", g_iCoolDown);
+
 		return Plugin_Handled;
 	}
 
@@ -551,6 +563,7 @@ public Action Command_VoteZeus(int client, int args)
 	if (StrContains(g_sHasVoted, steamid, true) != -1)
 	{
 		CReplyToCommand(client, "%s %t", g_sPrefix, "zeus_voted");
+
 		return Plugin_Handled;
 	}
 
@@ -565,9 +578,7 @@ public Action Command_VoteZeus(int client, int args)
 		StartEventRound(gc_bBeginSetV.BoolValue);
 
 		if (!gp_bMyJailbreak)
-		{
 			return Plugin_Handled;
-		}
 
 		if (MyJailbreak_ActiveLogging())
 		{
@@ -628,8 +639,11 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 
 	if (g_bIsZeus)
 	{
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+		for (int i = 1; i <= MaxClients; i++)
 		{
+			if (!IsClientInGame(i))
+				continue;
+
 			SetEntProp(i, Prop_Send, "m_CollisionGroup", 5);  // 2 - none / 5 - 'default'
 		}
 
@@ -687,8 +701,11 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 
 	if (g_bStartZeus)
 	{
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+		for (int i = 1; i <= MaxClients; i++)
 		{
+			if (!IsClientInGame(i))
+				continue;
+
 			CreateInfoPanel(i);
 		}
 
@@ -756,8 +773,11 @@ public void OnAvailableLR(int Announced)
 
 void ResetEventDay()
 {
-	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+	for (int i = 1; i <= MaxClients; i++)
 	{
+		if (!IsClientInGame(i))
+			continue;
+
 		SetEntProp(i, Prop_Send, "m_CollisionGroup", 5);  // 2 - none / 5 - 'default'
 
 		StripAllPlayerWeapons(i);
@@ -844,20 +864,18 @@ public Action OnWeaponCanUse(int client, int weapon)
 	char sWeapon[32];
 	GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
 
-	if (StrEqual(sWeapon, "weapon_knife", false) || StrEqual(sWeapon, "weapon_taser", false))
-	{
+	if (StrContains(sWeapon, "knife", false) != -1 || StrContains(sWeapon, "bayonet", false) != -1 || StrEqual(sWeapon, "weapon_taser", false))
 		return Plugin_Continue;
-	}
-	else return Plugin_Handled;
+
+	return Plugin_Handled;
 }
 
 //Deny weapon drops
 public Action OnWeaponDrop(int client, int weapon)
 {
 	if (!g_bIsZeus || gc_bDrop.BoolValue)
-	{
 		return Plugin_Continue;
-	}
+
 	return Plugin_Handled;
 }
 
@@ -891,8 +909,11 @@ void StartEventRound(bool thisround)
 	{
 		g_bIsZeus = true;
 
-		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+		for (int i = 1; i <= MaxClients; i++)
 		{
+			if (!IsValidClient(i, true, false))
+				continue;
+
 			SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
 
 			ToggleWeaponFire(i, false);
@@ -939,8 +960,11 @@ void PrepareDay(bool thisround)
 	if ((thisround && gc_bTeleportSpawn.BoolValue) || !gc_bSpawnCell.BoolValue || !gp_bSmartJailDoors || (gc_bSpawnCell.BoolValue && (SJD_IsCurrentMapConfigured() != true))) // spawn Terrors to CT Spawn 
 	{
 		int RandomCT = 0;
-		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+		for (int i = 1; i <= MaxClients; i++)
 		{
+			if (!IsValidClient(i, true, false))
+				continue;
+
 			if (GetClientTeam(i) == CS_TEAM_CT)
 			{
 				CS_RespawnPlayer(i);
@@ -951,19 +975,25 @@ void PrepareDay(bool thisround)
 
 		if (RandomCT)
 		{
-			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+			for (int i = 1; i <= MaxClients; i++)
 			{
+				if (!IsValidClient(i, true, false))
+					continue;
+
 				GetClientAbsOrigin(RandomCT, g_fPos);
-				
+
 				g_fPos[2] = g_fPos[2] + 5;
-				
+
 				TeleportEntity(i, g_fPos, NULL_VECTOR, NULL_VECTOR);
 			}
 		}
 	}
 
-	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+	for (int i = 1; i <= MaxClients; i++)
 	{
+		if (!IsClientInGame(i))
+			continue;
+
 		SetEntProp(i, Prop_Send, "m_CollisionGroup", 2);  // 2 - none / 5 - 'default'
 
 		SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
@@ -1080,8 +1110,11 @@ public Action Timer_StartEvent(Handle timer)
 
 		if (g_iTruceTime == gc_iTruceTime.IntValue-3)
 		{
-			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+			for (int i = 1; i <= MaxClients; i++)
 			{
+				if (!IsValidClient(i, true, false))
+					continue;
+
 				SetEntityMoveType(i, MOVETYPE_WALK);
 			}
 		}
@@ -1091,8 +1124,11 @@ public Action Timer_StartEvent(Handle timer)
 		return Plugin_Continue;
 	}
 
-	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+	for (int i = 1; i <= MaxClients; i++)
 	{
+		if (!IsValidClient(i, true, false))
+			continue;
+
 		SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
 
 		ToggleWeaponFire(i, true);
@@ -1122,8 +1158,11 @@ public Action Timer_StartEvent(Handle timer)
 // Beacon Timer
 public Action Timer_BeaconOn(Handle timer)
 {
-	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+	for (int i = 1; i <= MaxClients; i++)
 	{
+		if (!IsValidClient(i, true, false))
+			continue;
+
 		MyJailbreak_BeaconOn(i, 2.0);
 	}
 

@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-11-20 02:34:58 UTC
+// Date: 2018-05-23 19:26:42 UTC
 // Language: Polish (pl)
 // 
 // To view other translations for this plugin, please visit:
@@ -38,11 +38,6 @@
 		"pl"		"Wiezniow:"
 	}
 
-	"hud_tag"
-	{
-		"pl"		"[MyJB.HUD]"
-	}
-
 	"hud_on"
 	{
 		"pl"		"HUD {purple}wlaczony"
@@ -56,6 +51,21 @@
 	"hud_lastCT"
 	{
 		"pl"		"Ostatni Straznik:"
+	}
+
+	"hud_youwarden"
+	{
+		"pl"		"Jesteś Wardenem!"
+	}
+
+	"hud_youwarden"
+	{
+		"pl"		"Jesteś Wardenem!"
+	}
+
+	"hud_youwarden"
+	{
+		"pl"		"Jesteś Wardenem!"
 	}
 
 }

@@ -4,6 +4,7 @@
  * https://github.com/shanapu/MyJailbreak/
  * 
  * Copyright (C) 2016-2017 Thomas Schmidt (shanapu)
+ * Contributer: olegtsvetkov
  *
  * This file is part of the MyJailbreak SourceMod Plugin.
  *
@@ -656,8 +657,11 @@ public void Event_RoundEnd_Pre(Event event, char[] name, bool dontBroadcast)
 {
 	if (g_bIsZombie)
 	{
-		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true))
+		for (int i = 1; i <= MaxClients; i++)
 		{
+			if (!IsValidClient(i, true, true))
+				continue;
+
 			SetEntProp(i, Prop_Send, "m_CollisionGroup", 5);  // 2 - none / 5 - 'default'
 			SetEntProp(i, Prop_Send, "m_bNightVisionOn", 0);
 
@@ -728,8 +732,11 @@ public void Event_RoundEnd_Pre(Event event, char[] name, bool dontBroadcast)
 
 	if (g_bStartZombie)
 	{
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+		for (int i = 1; i <= MaxClients; i++)
 		{
+			if (!IsClientInGame(i))
+				continue;
+
 			CreateInfoPanel(i);
 		}
 
@@ -787,11 +794,13 @@ public Action Event_PlayerDeath(Handle event, char[] name, bool dontBroadcast)
 	
 	g_bTerrorZombies[victim] = true;
 
-	CreateTimer(4.0, Timer_MakeZombie, victim, TIMER_FLAG_NO_MAPCHANGE);
+	CreateTimer(4.0, Timer_MakeZombie, GetClientUserId(victim), TIMER_FLAG_NO_MAPCHANGE);
 }
 
-public Action Timer_MakeZombie(Handle hTimer, any client)
+public Action Timer_MakeZombie(Handle timer, int userid)
 {
+	int client = GetClientOfUserId(userid);
+
 	if (IsValidClient(client, true, true))
 	{
 		ChangeClientTeam(client, CS_TEAM_CT);
@@ -990,20 +999,21 @@ public Action OnWeaponCanUse(int client, int weapon)
 		return Plugin_Continue;
 	}
 
-	if (GetClientTeam(client) != CS_TEAM_CT)
-	{
+	if (!IsValidClient(client, true, false))
 		return Plugin_Continue;
-	}
+
+	if (GetClientTeam(client) != CS_TEAM_CT)
+		return Plugin_Continue;
 
 	char sWeapon[32];
 	GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
 
-	if (!StrEqual(sWeapon, "weapon_knife") && IsValidClient(client, true, false))
+	if ((StrContains(sWeapon, "knife", false) != -1) || (StrContains(sWeapon, "bayonet", false) != -1))
 	{
-		return Plugin_Handled;
+		return Plugin_Continue;
 	}
 
-	return Plugin_Continue;
+	return Plugin_Handled;
 }
 
 /******************************************************************************
@@ -1033,8 +1043,11 @@ void StartEventRound(bool thisround)
 	{
 		g_bIsZombie = true;
 
-		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+		for (int i = 1; i <= MaxClients; i++)
 		{
+			if (!IsClientInGame(i))
+				continue;
+
 			SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
 
 			ToggleWeaponFire(i, false);
@@ -1079,8 +1092,11 @@ void PrepareDay(bool thisround)
 	if ((thisround && gc_bTeleportSpawn.BoolValue) || !gc_bSpawnCell.BoolValue || !gp_bSmartJailDoors || (gc_bSpawnCell.BoolValue && (SJD_IsCurrentMapConfigured() != true))) // spawn Terrors to CT Spawn 
 	{
 		int RandomCT = 0;
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+		for (int i = 1; i <= MaxClients; i++)
 		{
+			if (!IsClientInGame(i))
+				continue;
+
 			if (GetClientTeam(i) == CS_TEAM_CT)
 			{
 				CS_RespawnPlayer(i);
@@ -1091,12 +1107,15 @@ void PrepareDay(bool thisround)
 
 		if (RandomCT)
 		{
-			for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+			for (int i = 1; i <= MaxClients; i++)
 			{
+				if (!IsClientInGame(i))
+					continue;
+
 				GetClientAbsOrigin(RandomCT, g_fPos);
-				
+
 				g_fPos[2] = g_fPos[2] + 5;
-				
+
 				TeleportEntity(i, g_fPos, NULL_VECTOR, NULL_VECTOR);
 			}
 		}
@@ -1109,8 +1128,11 @@ void PrepareDay(bool thisround)
 		zombieHP = zombieHP + (gc_iZombieHPincrease.IntValue * difference);
 	}
 
-	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+	for (int i = 1; i <= MaxClients; i++)
 	{
+		if (!IsClientInGame(i))
+			continue;
+
 		SetEntProp(i, Prop_Send, "m_CollisionGroup", 2);  // 2 - none / 5 - 'default'
 
 		SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
@@ -1245,8 +1267,11 @@ public Action OnSetTransmit_GlowSkin(int iSkin, int client)
 	if (!IsPlayerAlive(client) || GetClientTeam(client) != CS_TEAM_CT)
 		return Plugin_Handled;
 
-	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+	for (int i = 1; i <= MaxClients; i++)
 	{
+		if (!IsClientInGame(i))
+			continue;
+
 		if (!CPS_HasSkin(i))
 		{
 			continue;
@@ -1364,23 +1389,23 @@ public Action Timer_StartEvent(Handle timer)
 			}
 		}
 		
-		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+		for (int i = 1; i <= MaxClients; i++)if (GetClientTeam(i) == CS_TEAM_CT)
 		{
-			if (GetClientTeam(i) == CS_TEAM_CT)
-			{
-				PrintCenterText(i, "%t", "zombie_timetounfreeze_nc", g_iFreezeTime);
-			}
-			else if (GetClientTeam(i) == CS_TEAM_T)
-			{
-				PrintCenterText(i, "%t", "zombie_timeuntilzombie_nc", g_iFreezeTime);
-			}
+			PrintCenterText(i, "%t", "zombie_timetounfreeze_nc", g_iFreezeTime);
+		}
+		else if (GetClientTeam(i) == CS_TEAM_T)
+		{
+			PrintCenterText(i, "%t", "zombie_timeuntilzombie_nc", g_iFreezeTime);
 		}
 
 		return Plugin_Continue;
 	}
 
-	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+	for (int i = 1; i <= MaxClients; i++)
 	{
+		if (!IsValidClient(i, true, false))
+			continue;
+
 		if (GetClientTeam(i) == CS_TEAM_CT)
 		{
 			SetEntPropFloat(i, Prop_Data, "m_flLaggedMovementValue", 1.4);
@@ -1445,8 +1470,11 @@ public Action Timer_SetModel(Handle timer, int client)
 
 public Action Timer_BeaconOn(Handle timer)
 {
-	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+	for (int i = 1; i <= MaxClients; i++)
 	{
+		if (!IsValidClient(i, true, false))
+			continue;
+
 		MyJailbreak_BeaconOn(i, 2.0);
 	}
 
@@ -1455,8 +1483,11 @@ public Action Timer_BeaconOn(Handle timer)
 
 public Action Timer_ReGenHealth(Handle timer)
 {
-	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+	for (int i = 1; i <= MaxClients; i++)
 	{
+		if (!IsValidClient(i, true, false))
+			continue;
+
 		if (GetClientTeam(i) == CS_TEAM_CT)
 		{
 			SetEntityHealth(i, GetClientHealth(i)+gc_iRegen.IntValue);

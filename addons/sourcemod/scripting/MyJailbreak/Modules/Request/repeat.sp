@@ -92,7 +92,10 @@ public void Repeat_OnSettingChanged(Handle convar, const char[] oldValue, const 
 	if (convar == gc_sSoundRepeatPath)
 	{
 		strcopy(g_sSoundRepeatPath, sizeof(g_sSoundRepeatPath), newValue);
-		if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundRepeatPath);
+		if (gc_bSounds.BoolValue)
+		{
+			PrecacheSoundAnyDownload(g_sSoundRepeatPath);
+		}
 	}
 	else if (convar == gc_sAdminFlagRepeat)
 	{
@@ -162,7 +165,10 @@ public void Repeat_Event_RoundStart(Event event, char[] name, bool dontBroadcast
 
 public void Repeat_OnMapStart()
 {
-	if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundRepeatPath);
+	if (gc_bSounds.BoolValue)
+	{
+		PrecacheSoundAnyDownload(g_sSoundRepeatPath);
+	}
 }
 
 public void Repeat_OnConfigsExecuted()

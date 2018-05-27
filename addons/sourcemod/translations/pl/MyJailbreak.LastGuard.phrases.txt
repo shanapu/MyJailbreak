@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-11-20 02:35:04 UTC
+// Date: 2018-05-23 19:27:12 UTC
 // Language: Polish (pl)
 // 
 // To view other translations for this plugin, please visit:
@@ -7,6 +7,56 @@
 //
 "Phrases"
 {
+
+	"lastguard_twin_nc"
+	{
+		"pl"		"Więźniowie przetrwałi!"
+	}
+
+	"lastguard_setbyadmin"
+	{
+		"pl"		"Ustawienie Last Guard Rule przez Admina została {purple}wyłączona!"
+	}
+
+	"lastguard_ctwin_nc"
+	{
+		"pl"		"Strażnicy wygrali!"
+	}
+
+	"lastguard_end"
+	{
+		"pl"		"{purple}Last Guard Rule{default} skończone!"
+	}
+
+	"lastguard_startnow"
+	{
+		"pl"		"Uwaga! {purple}Last Guard Rule{default} jest teraz aktywne!"
+	}
+
+	"lastguard_startnow_nc"
+	{
+		"pl"		"Uwaga! Last Guard jest teraz aktywne!"
+	}
+
+	"lastguard_start"
+	{
+		"pl"		"{purple}Last Guard Rule rozpoczęte!"
+	}
+
+	"lastguard_start_nc"
+	{
+		"pl"		"The Last Guard Rule rozpoczęte!"
+	}
+
+	"lastguard_voted"
+	{
+		"pl"		"Już zagłosowałeś na {purple}The Last Guard Rule! "
+	}
+
+	"lastguard_timeuntilstart_nc"
+	{
+		"pl"		"{1} sekunda do rozpoczęcia rundy!"
+	}
 
 	"lastguard_info_title"
 	{
@@ -16,6 +66,11 @@
 	"lastguard_info_line6"
 	{
 		"pl"		"Kazdy moze isc gdzie che i robic co chce"
+	}
+
+	"lastguard_close"
+	{
+		"pl"		"Wyjście"
 	}
 
 }

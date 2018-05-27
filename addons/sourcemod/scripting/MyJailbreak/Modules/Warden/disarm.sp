@@ -4,6 +4,7 @@
  * https://github.com/shanapu/MyJailbreak/
  * 
  * Copyright (C) 2016-2017 Thomas Schmidt (shanapu)
+ * Contributer: Hexer10
  *
  * This file is part of the MyJailbreak SourceMod Plugin.
  *
@@ -91,7 +92,8 @@ public Action Disarm_Event_PlayerHurt(Event event, char[] name, bool dontBroadca
 				{
 					char sWeaponName[64];
 					GetEdictClassname(victimweapon, sWeaponName, sizeof(sWeaponName));
-					if (gc_bDisarmKnife.BoolValue && (StrContains(sWeaponName, "knife") != -1))
+
+					if (gc_bDisarmKnife.BoolValue && (StrContains(sWeaponName, "knife", false) != -1 || StrContains(sWeaponName, "bayonet", false) != -1))
 						return Plugin_Handled;
 					
 					CPrintToChatAll("%s %t", g_sPrefix, "warden_disarmed", victim, attacker);

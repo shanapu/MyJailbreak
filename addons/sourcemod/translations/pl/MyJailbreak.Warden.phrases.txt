@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-11-20 02:34:55 UTC
+// Date: 2018-05-23 19:27:41 UTC
 // Language: Polish (pl)
 // 
 // To view other translations for this plugin, please visit:
@@ -593,9 +593,29 @@
 		"pl"		"Masz {green}{1}{default} jedne Kajdanki"
 	}
 
+	"warden_bulletmarkoff"
+	{
+		"pl"		"Iskry z pocisków zostały {purple}wyłączone!"
+	}
+
+	"warden_extend"
+	{
+		"pl"		"Warden {1} przedłużył rundę o {2} minut."
+	}
+
 	"warden_extendtimes"
 	{
 		"pl"		"Już przedłużyłeś rundę {1} razy w tej rundzie!"
+	}
+
+	"warden_close"
+	{
+		"pl"		"Wyjdź."
+	}
+
+	"warden_close"
+	{
+		"pl"		"Warden zamknął cele."
 	}
 
 	"warden_brokepaperclip"
@@ -643,6 +663,26 @@
 		"pl"		"Marker dla Terrorystow jest{purple}wylaczony"
 	}
 
+	"warden_remaining"
+	{
+		"pl"		"Zostało"
+	}
+
+	"warden_dooropen_unavailable"
+	{
+		"pl"		"{darkred}Ta mapa nie używa systemu zdalnego otwierania cel. {default}Musisz {purple} otworzyć cele przyciskiem."
+	}
+
+	"warden_doorclose_unavailable"
+	{
+		"pl"		"{darkred}Ta mapa nie używa systemu zdalnego zamykania cel. {default}Musisz {purple}zamknąć cele guzikiem!"
+	}
+
+	"warden_menu_muteall"
+	{
+		"pl"		"Wycisz wszystkich więźniów"
+	}
+
 	"warden_menu_unmuteall"
 	{
 		"pl"		"Zdejmij wyciszenie wszystkim Więźniom"
@@ -651,6 +691,11 @@
 	"warden_votesuccess"
 	{
 		"pl"		"Głosowanie za {purple}wyrzuceniem Wardena{default} przebiegło pomyślnie!"
+	}
+
+	"warden_mutedefault"
+	{
+		"pl"		"Wszyscy więźniowie są domyślnie zmutowani."
 	}
 
 	"warden_rebel_title"
@@ -673,9 +718,39 @@
 		"pl"		"Istnieje {1} więzień w twoim widoku"
 	}
 
+	"warden_deputy_playerdead"
+	{
+		"pl"		"Tylko {purple}żywi gracze{default} mogą zostać Zastępcą po stronie Anty-Terrorystów."
+	}
+
+	"warden_deputy_playerdead"
+	{
+		"pl"		"Tylko {purple}żywi gracze{default} mogą zostać Zastępcą po stronei Anty-Terrorystów."
+	}
+
+	"warden_deputy_ctsonly"
+	{
+		"pl"		"Tylko {purple}Anty-Terroryści{default} mogą zostać Zastępcą!"
+	}
+
 	"warden_deputy_disabled"
 	{
 		"pl"		"Deputy jest {purple}wylaczony{default}."
+	}
+
+	"warden_deputy_nobecome"
+	{
+		"pl"		"Nie możesz zostać Zastępcą, Prowadzący musi Cie wybrać na Zastępce"
+	}
+
+	"warden_deputy_retire"
+	{
+		"pl"		"{purple}{1}{default} postanowił nie być już dłużej Zastępcą. Możesz wybrać nowego Zastępce!"
+	}
+
+	"warden_deputy_retire_nc"
+	{
+		"pl"		"{1} postanowił nie być już dłużej Zastępcą. Możesz wybrać nowego Zastępce!"
 	}
 
 	"warden_deputy_fired_nc"
@@ -683,14 +758,54 @@
 		"pl"		"Warden: {1} zwolnił Deputy: {2}"
 	}
 
+	"warden_deputy_fired"
+	{
+		"pl"		"Prowadzący: {purple}{1}{default} zwolnił Zastępce: {purple}{2}"
+	}
+
+	"warden_deputy_dead"
+	{
+		"pl"		"Deputy jest teraz martwy. Moższ wybrać nowego."
+	}
+
+	"warden_deputy_disconnected"
+	{
+		"pl"		"Zastępca {purple}rozłączył się{default}. Możecie teraz wybrać nowego."
+	}
+
 	"warden_deputy_disconnected_nc"
 	{
 		"pl"		"Zastępca został odłączony. Teraz można wybrać nowego."
 	}
 
+	"warden_deputy_new_nc"
+	{
+		"pl"		"{1} jest teraz Zastępcą, Prowadzącego"
+	}
+
+	"warden_deputy_new"
+	{
+		"pl"		"{purple}{1}{default} jest teraz Zastępcą, Prowadzącego."
+	}
+
+	"warden_deputy_become"
+	{
+		"pl"		"Nikt jeszcze nie wybrał {purple}Zastępcy{purple}. Napisz {green}!deputy{default} żeby zostać zastępcą Wardena!"
+	}
+
+	"warden_picking"
+	{
+		"pl"		"Wybiera"
+	}
+
 	"warden_pickingaborted"
 	{
 		"pl"		"Owocobranie przerwane "
+	}
+
+	"warden_givefreeday"
+	{
+		"pl"		"Daj FreeDay'a:"
 	}
 
 	"warden_havefreeday"
@@ -718,14 +833,94 @@
 		"pl"		"Dostajesz {purple}FreeDay{default} w następnej rundzie"
 	}
 
+	"warden_personalfreeday"
+	{
+		"pl"		"{green} {1} {default} otrzymuje {purple} FreeDay {default} w następnej rundzie"
+	}
+
 	"warden_cooldown"
 	{
 		"pl"		"Posiadasz {purple}blokade wardena{default}. Poczekaj {green}{1}{default} rundy"
 	}
 
+	"warden_wait"
+	{
+		"pl"		"Jako {green} iż byłeś Prowadzącym w poprzedniej rundzie{default} musisz poczekać {purple}{1} sekund {default} żeby zostać znowu Prowadzącym."
+	}
+
+	"warden_deputy_removed"
+	{
+		"pl"		"Admin: {purple}{1}{default} zwolnił Zastępce: {purple}{2} "
+	}
+
+	"warden_deputy_removed"
+	{
+		"pl"		"Admin:{purple}{1}{default} zwolnił Zastępce: {purple}{2}"
+	}
+
 	"warden_deputy_removed_nc"
 	{
 		"pl"		"Admin: {1} zwolnił Deputy: {2}"
+	}
+
+	"warden_rankme"
+	{
+		"pl"		"Musisz mieć {1} RankMe Points żeby zagrać jako Prowadzący"
+	}
+
+	"warden_reputation"
+	{
+		"pl"		"Potrzebujesz jeszcze {1} punktów reputacji, żeby grać jako warden."
+	}
+
+	"warden_stamm"
+	{
+		"pl"		"Potrzebujesz jeszcze {1} punktów stamm żeby grać jako warden."
+	}
+
+	"warden_removefreedayforyou"
+	{
+		"pl"		"Twój {purple}FreeDay{default} został usunięty."
+	}
+
+	"warden_removepersonalfreeday"
+	{
+		"pl"		"{green}{1}s{default} {purple}FreeDay{default} został usuniety"
+	}
+
+	"warden_mostactive"
+	{
+		"pl"		"Musisz przegrać co najmniej {1} godzin by zostać wardenem."
+	}
+
+	"warden_mostactive_guard"
+	{
+		"pl"		"Musisz zagrać przynajmniej {1} jako strażnik by zostać Prowadzącym."
+	}
+
+	"warden_mostactive_terror"
+	{
+		"pl"		"Musisz zagrać przynajmniej {1} jako Terrorysta by grać jako Prowadzący po stronie Anty-Terrorystów."
+	}
+
+	"warden_novalid"
+	{
+		"pl"		"Nie znaleziono {green}nie zbuntowanych{default} więźniów na widoku."
+	}
+
+	"warden_withhold_lr"
+	{
+		"pl"		"Warden {purple}odrzuca{default} twoje rządanie "
+	}
+
+	"warden_withhold_off"
+	{
+		"pl"		"Prowadzący {purple}umożliwił{default} ostatnie życzenie"
+	}
+
+	"warden_withhold_off"
+	{
+		"pl"		"Prowadzący {purple} umożliwił{default} ostatnie życzenie"
 	}
 
 }

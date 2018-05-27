@@ -4,6 +4,7 @@
  * https://github.com/shanapu/MyJailbreak/
  * 
  * Copyright (C) 2016-2017 Thomas Schmidt (shanapu)
+ * Contributer: Hexer10
  *
  * This file is part of the MyJailbreak SourceMod Plugin.
  *
@@ -145,7 +146,7 @@ public Action Command_MathQuestion(int client, int args)
 		{
 			if (!g_bIsMathQuiz)
 			{
-				CreateTimer(4.0, Timer_CreateMathQuestion, client);
+				CreateTimer(4.0, Timer_CreateMathQuestion, GetClientUserId(client));
 				
 				CPrintToChatAll("%s %t", g_sPrefix, "warden_startmathquiz");
 				
@@ -155,6 +156,7 @@ public Action Command_MathQuestion(int client, int args)
 				}
 				
 				g_bIsMathQuiz = true;
+
 				return Plugin_Handled;
 			}
 		}
@@ -163,6 +165,7 @@ public Action Command_MathQuestion(int client, int args)
 			if (args != 1) // Not enough parameters
 			{
 				CReplyToCommand(client, "%s Use: sm_math <number>", g_sPrefix);
+
 				return Plugin_Handled;
 			}
 			
@@ -301,7 +304,7 @@ public void SendEndMathQuestion(int client)
 	if (client != -1)
 	{
 		Format(answer, sizeof(answer), "%s %t", g_sPrefix, "warden_math_correct", client, g_iMathResult);
-		CreateTimer(5.0, Timer_RemoveColor, client);
+		CreateTimer(5.0, Timer_RemoveColor, GetClientUserId(client));
 		SetEntityRenderColor(client, 0, 255, 0, 255);
 	}
 	else Format(answer, sizeof(answer), "%s %t", g_sPrefix, "warden_math_time", g_iMathResult);
@@ -327,8 +330,10 @@ public void SendEndMathQuestion(int client)
                    TIMER
 ******************************************************************************/
 
-public Action Timer_CreateMathQuestion(Handle timer, any client)
+public Action Timer_CreateMathQuestion(Handle timer, int userid)
 {
+	int client = GetClientOfUserId(userid);
+
 	if (gc_bMath.BoolValue)
 	{
 		int NumOne = GetRandomInt(g_iMathMin, g_iMathMax);

@@ -341,7 +341,7 @@ void GetClientSightEnd(int client, float out[3])
 		TR_GetEndPosition(out);
 }
 
-public bool TraceRayDontHitPlayers(int entity, int mask, any data)
+public bool TraceRayDontHitPlayers(int entity, int mask, int data)
 {
 	if (0 < entity <= MaxClients)
 		return false;
