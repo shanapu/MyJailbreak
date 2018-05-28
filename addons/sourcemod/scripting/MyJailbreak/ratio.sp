@@ -37,9 +37,10 @@
 
 // Optional Plugins
 #undef REQUIRE_PLUGIN
-#include <myjailbreak>
-#include <warden>
-#include <myjbwarden>
+#tryinclude <myjailbreak>
+#tryinclude <vip_core>
+#tryinclude <warden>
+#tryinclude <myjbwarden>
 #define REQUIRE_PLUGIN
 
 // Compiler Options
@@ -81,6 +82,8 @@ bool g_bEnableGuard[MAXPLAYERS+1] = {true, ...};
 
 bool gp_bWarden = false;
 bool gp_bMyJBWarden = false;
+bool gp_bVIP_Core = false;
+bool g_bWrongAnswer[MAXPLAYERS+1] = false;
 
 // Handles
 Handle g_aGuardQueue;
@@ -88,17 +91,24 @@ Handle g_aGuardList;
 Handle g_hDataPackTeam;
 Handle gF_OnClientJoinGuards;
 Handle hKeyValues;
+//Handle gH_Timer_Answer;
 
 // Integer
-int g_iRandomAnswer[MAXPLAYERS+1];
+int g_iRandomAnswer[MAXPLAYERS+1] = 0;
 int g_iQuestionTimes[MAXPLAYERS+1];
+int g_iQuestionTimes1[MAXPLAYERS+1] = 0;
+int g_iQuestionTimes2[MAXPLAYERS+1] = 1;
+int g_iRemSec[MAXPLAYERS+1] = 15;
+//int SecondOnAnswer[MAXPLAYERS+1] = 15;
 int g_iCountQuestions;
+int iArray[MAXPLAYERS+1];
 
 // Strings
 char g_sPrefix[64];
 char g_sRestrictedSound[32] = "buttons/button11.wav";
 char g_sRightAnswerSound[32] = "buttons/button14.wav";
 char g_sAdminFlag[64];
+char szRandomQuestion[MAXPLAYERS+1][8];
 
 // Info
 public Plugin myinfo = {
@@ -186,7 +196,7 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 	{
 		strcopy(g_sAdminFlag, sizeof(g_sAdminFlag), newValue);
 	}
-	else if (convar == gc_sAdminFlag)
+	else if (convar == gc_sAdminFlag)	
 	{
 		strcopy(g_sAdminFlag, sizeof(g_sAdminFlag), newValue);
 	}
@@ -327,12 +337,14 @@ public void OnConfigsExecuted()
 		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
 			RegAdminCmd(sCommand, AdminCommand_ClearQueue, ADMFLAG_GENERIC, "Allows the admin clear the CT queue");
 	}
+
 }
 
 public void OnAllPluginsLoaded()
 {
 	gp_bMyJBWarden = LibraryExists("myjbwarden");
 	gp_bWarden = LibraryExists("warden");
+	gp_bVIP_Core = LibraryExists("vip_core");
 }
 
 public void OnLibraryRemoved(const char[] name)
@@ -345,6 +357,10 @@ public void OnLibraryRemoved(const char[] name)
 	{
 		gp_bWarden = false;
 	}
+	else if (StrEqual(name, "vip_core"))
+	{
+		gp_bVIP_Core = false;
+	}
 }
 
 public void OnLibraryAdded(const char[] name)
@@ -356,6 +372,10 @@ public void OnLibraryAdded(const char[] name)
 	else if (StrEqual(name, "warden"))
 	{
 		gp_bWarden = true;
+	}
+	else if (StrEqual(name, "vip_core"))
+	{
+		gp_bVIP_Core = true;
 	}
 }
 
@@ -480,6 +500,8 @@ public Action Command_JoinGuardQueue(int client, int iArgNum)
 	Call_StartForward(gF_OnClientJoinGuards);
 	Call_PushCell(client);
 	Call_Finish(res);
+	//g_iQuestionTimes[client] = gc_iQuestionTimes.IntValue-CalcTime(MostActive_GetPlayTimeTotal(client));
+	g_iQuestionTimes[client] = gc_iQuestionTimes.IntValue;
 
 	if (res >= Plugin_Handled)
 	{
@@ -507,7 +529,9 @@ public Action Command_JoinGuardQueue(int client, int iArgNum)
 
 		if (iIndex == -1)
 		{
-			if ((gc_iJoinMode.IntValue == 0) || (gc_bAdminBypass.BoolValue && CheckVipFlag(client, g_sAdminFlag)))
+			g_iQuestionTimes[client] = gc_iQuestionTimes.IntValue;
+			//g_iQuestionTimes[client] = gc_iQuestionTimes.IntValue-CalcTime(MostActive_GetPlayTimeTotal(client));
+			if ((gc_iJoinMode.IntValue == 0) || (gc_bAdminBypass.BoolValue && (CheckVipFlag(client, g_sAdminFlag) || (gp_bVIP_Core && VIP_IsClientVIP(client)))))
 			{
 				AddToQueue(client);
 			}
@@ -519,7 +543,6 @@ public Action Command_JoinGuardQueue(int client, int iArgNum)
 			{
 				Menu_GuardQuestions(client);
 			}
-			g_iQuestionTimes[client] = gc_iQuestionTimes.IntValue-1;
 		}
 		else
 		{
@@ -551,7 +574,7 @@ public Action Command_JoinGuardQueue(int client, int iArgNum)
 			
 			if (iIndex == -1)
 			{
-				if (CheckVipFlag(client, g_sAdminFlag) && gc_bVIPQueue.BoolValue)
+				if ((CheckVipFlag(client, g_sAdminFlag) || (gp_bVIP_Core && VIP_IsClientVIP(client))) && gc_bVIPQueue.BoolValue)
 				{
 					if (iQueueSize == 0)
 					{
@@ -563,7 +586,7 @@ public Action Command_JoinGuardQueue(int client, int iArgNum)
 						SetArrayCell(g_aGuardQueue, 0, client);
 					}
 
-					CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_thxvip");
+					CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_thxadmin");
 					CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_number", iIndex + 1);
 				}
 				else
@@ -582,7 +605,7 @@ public Action Command_JoinGuardQueue(int client, int iArgNum)
 			{
 				CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_number", iIndex + 1);
 
-				if (gc_bAdsVIP.BoolValue && gc_bVIPQueue.BoolValue && !CheckVipFlag(client, g_sAdminFlag))
+				if (gc_bAdsVIP.BoolValue && gc_bVIPQueue.BoolValue && (!CheckVipFlag(client, g_sAdminFlag) || (gp_bVIP_Core && !VIP_IsClientVIP(client))))
 				{
 					CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_advip");
 				}
@@ -597,8 +620,6 @@ public Action Command_JoinGuardQueue(int client, int iArgNum)
 	{
 		Menu_GuardQuestions(client);
 	}
-
-	g_iQuestionTimes[client] = gc_iQuestionTimes.IntValue-1;
 
 	return Plugin_Handled;
 }
@@ -654,7 +675,7 @@ public Action AdminCommand_ClearQueue(int client, int args)
 
 public Action Command_ToggleRatio(int client, int args)
 {
-	if (CheckVipFlag(client, g_sAdminFlag) && gc_bToggle.BoolValue)
+	if ((CheckVipFlag(client, g_sAdminFlag) || (gp_bVIP_Core && VIP_IsClientVIP(client))) && gc_bToggle.BoolValue)
 	{
 		if (g_bRatioEnable)
 		{
@@ -746,7 +767,7 @@ public Action Event_OnFullConnect(Event event, const char[] name, bool dontBroad
 	if (!gc_bForceTConnect.BoolValue || !g_bRatioEnable)
 		return Plugin_Continue;
 
-	if (!gc_bAdminBypass.BoolValue || !CheckVipFlag(client, g_sAdminFlag))
+	if ((!gc_bAdminBypass.BoolValue || (!CheckVipFlag(client, g_sAdminFlag) || (gp_bVIP_Core && !VIP_IsClientVIP(client)))))
 	{
 		CreateTimer(1.0, Timer_ForceTSide, GetClientUserId(client));
 	}
@@ -820,7 +841,9 @@ public Action Event_OnJoinTeam(int client, const char[] szCommand, int iArgCount
 
 		if (iIndex == -1)
 		{
-			if ((gc_iJoinMode.IntValue == 0) || (gc_bAdminBypass.BoolValue && CheckVipFlag(client, g_sAdminFlag)))
+			g_iQuestionTimes[client] = gc_iQuestionTimes.IntValue;
+			//g_iQuestionTimes[client] = gc_iQuestionTimes.IntValue-CalcTime(MostActive_GetPlayTimeTotal(client));
+			if ((gc_iJoinMode.IntValue == 0) || (gc_bAdminBypass.BoolValue && (CheckVipFlag(client, g_sAdminFlag) || (gp_bVIP_Core && VIP_IsClientVIP(client)))))
 			{
 				AddToQueue(client);
 			}
@@ -832,14 +855,12 @@ public Action Event_OnJoinTeam(int client, const char[] szCommand, int iArgCount
 			{
 				Menu_GuardQuestions(client);
 			}
-
-			g_iQuestionTimes[client] = gc_iQuestionTimes.IntValue-1;
 		}
 		else
 		{
 			CPrintToChat(client, "%s %t", g_sPrefix, "ratio_fullqueue", iIndex + 1);
 
-			if (gc_bAdsVIP.BoolValue && gc_bVIPQueue.BoolValue && !CheckVipFlag(client, g_sAdminFlag))
+			if (gc_bAdsVIP.BoolValue && gc_bVIPQueue.BoolValue && (!CheckVipFlag(client, g_sAdminFlag) || (gp_bVIP_Core && !VIP_IsClientVIP(client))))
 			{
 				CPrintToChat(client, "%s %t", g_sPrefix, "ratio_advip");
 			}
@@ -848,7 +869,10 @@ public Action Event_OnJoinTeam(int client, const char[] szCommand, int iArgCount
 		return Plugin_Handled;
 	}
 
-	if ((gc_iJoinMode.IntValue == 0) || (gc_bAdminBypass.BoolValue && CheckVipFlag(client, g_sAdminFlag)))
+	//g_iQuestionTimes[client] = gc_iQuestionTimes.IntValue-CalcTime(MostActive_GetPlayTimeTotal(client));
+	g_iQuestionTimes[client] = gc_iQuestionTimes.IntValue;
+
+	if ((gc_iJoinMode.IntValue == 0) || (gc_bAdminBypass.BoolValue && (CheckVipFlag(client, g_sAdminFlag) || (gp_bVIP_Core && VIP_IsClientVIP(client)))))
 	{
 		return Plugin_Continue;
 	}
@@ -860,8 +884,6 @@ public Action Event_OnJoinTeam(int client, const char[] szCommand, int iArgCount
 	{
 		Menu_GuardQuestions(client);
 	}
-
-	g_iQuestionTimes[client] = gc_iQuestionTimes.IntValue-1;
 
 	return Plugin_Handled;
 }
@@ -888,7 +910,7 @@ void AddToQueue(int client)
 
 	if (iIndex == -1)
 	{
-		if (CheckVipFlag(client, g_sAdminFlag) && gc_bVIPQueue.BoolValue)
+		if ((CheckVipFlag(client, g_sAdminFlag) || (gp_bVIP_Core && VIP_IsClientVIP(client)))  && gc_bVIPQueue.BoolValue)
 		{
 			if (iQueueSize == 0)
 				iIndex = PushArrayCell(g_aGuardQueue, client);
@@ -933,9 +955,7 @@ public void OnMapStart()
 	{
 		delete hKeyValues;
 	}
-	
 	g_iCountQuestions = 0;
-	
 	char szPath[256];
 	hKeyValues = CreateKeyValues("Questions");
 	BuildPath(Path_SM, szPath, sizeof(szPath), "configs/MyJailbreak/questions.cfg");
@@ -1002,7 +1022,6 @@ public int Handler_AcceptGuardRules(Handle menu, MenuAction action, int param1, 
 				{
 					ForcePlayerSuicide(client);
 					ChangeClientTeam(client, CS_TEAM_CT);
-
 					if (gc_bRespawn.BoolValue)
 					{
 						SetClientListeningFlags(client, VOICE_NORMAL); // unmute if sm_hosties or admin has muted prisoners on round start
@@ -1021,8 +1040,11 @@ public int Handler_AcceptGuardRules(Handle menu, MenuAction action, int param1, 
 					{
 						AddToQueue(client);
 						ClientCommand(client, "play %s", g_sRightAnswerSound);
+						if (!MyJailbreak_IsEventDayRunning())
+							CS_RespawnPlayer(client);
 					}
 				}
+				ClientCommand(client, "play %s", g_sRightAnswerSound);
 			}
 			case 2:
 			{
@@ -1036,56 +1058,80 @@ public int Handler_AcceptGuardRules(Handle menu, MenuAction action, int param1, 
 void Menu_GuardQuestions(int client)
 {
 	Panel InfoPanel = new Panel();
-	char szRandomQuestion[16];
-	IntToString(GetRandomInt(1, g_iCountQuestions), szRandomQuestion, sizeof(szRandomQuestion));
-	g_iRandomAnswer[client] = GetRandomInt(1, 3);
-	KvRewind(hKeyValues);
-
-	if(KvJumpToKey(hKeyValues, szRandomQuestion))
+	if(szRandomQuestion[client][0] == 0)
 	{
-		char info[128], szBuffer[256];
-		Format(info, sizeof(info), "%T", "ratio_question_title", client);
+		iArray[g_iQuestionTimes2[client]] = GetRandomInt(1, g_iCountQuestions);
+		IntToString(iArray[g_iQuestionTimes2[client]], szRandomQuestion[client], sizeof(szRandomQuestion[]));
+		for (int i = 0; i < MAXPLAYERS+1; i++) 
+		{
+			if (iArray[i] == iArray[g_iQuestionTimes2[client]])
+			{
+				while(iArray[i] != iArray[g_iQuestionTimes2[client]])
+					iArray[g_iQuestionTimes2[client]] = GetRandomInt(1, g_iCountQuestions);
+				IntToString(iArray[g_iQuestionTimes2[client]], szRandomQuestion[client], sizeof(szRandomQuestion[]));
+				
+				break;
+			}
+		}
+		g_iRemSec[client] = 15;
+	}
+	if(g_iRandomAnswer[client] < 1)
+		g_iRandomAnswer[client] = GetRandomInt(1, 4);
+	KvRewind(hKeyValues);
+	if(g_iQuestionTimes2[client] == 0)
+		g_iQuestionTimes2[client] = 1;
+	if(g_iQuestionTimes1[client] == 0)
+		g_iQuestionTimes1[client] = g_iQuestionTimes[client]+1;
+	if(KvJumpToKey(hKeyValues, szRandomQuestion[client]))
+	{
+		char info[128];
+		char szBuffer[256];
+		Format(info, sizeof(info), "%t[%i|%i] ", "ratio_guardquestions_title", g_iQuestionTimes2[client], g_iQuestionTimes1[client]);
 		InfoPanel.SetTitle(info);
-		InfoPanel.DrawText("-----------------------------------");
+		Format(info, sizeof(info), "%t", "ratio_guardquestions_timer", g_iRemSec[client]);
+		InfoPanel.DrawText(info);
+		InfoPanel.DrawText(" ");
 		KvGetString(hKeyValues, "line1", szBuffer, sizeof(szBuffer));
 		InfoPanel.DrawText(szBuffer);
 		KvGetString(hKeyValues, "line2", szBuffer, sizeof(szBuffer));
 		InfoPanel.DrawText(szBuffer);
-		InfoPanel.DrawText("-----------------------------------");
-
+		InfoPanel.DrawText(" ");
+		
 		if (g_iRandomAnswer[client] == 1)
 		{
-			InfoPanel.DrawText("    ");
 			KvGetString(hKeyValues, "right", szBuffer, sizeof(szBuffer));
 			InfoPanel.DrawItem(szBuffer);
 		}
-
-		InfoPanel.DrawText("    ");
+		
 		KvGetString(hKeyValues, "wrong1", szBuffer, sizeof(szBuffer));
 		InfoPanel.DrawItem(szBuffer);
 
 		if (g_iRandomAnswer[client] == 2)
 		{
-			InfoPanel.DrawText("    ");
 			KvGetString(hKeyValues, "right", szBuffer, sizeof(szBuffer));
 			InfoPanel.DrawItem(szBuffer);
 		}
 
-		InfoPanel.DrawText("    ");
 		KvGetString(hKeyValues, "wrong2", szBuffer, sizeof(szBuffer));
 		InfoPanel.DrawItem(szBuffer);
 
 		if (g_iRandomAnswer[client] == 3)
 		{
-			InfoPanel.DrawText("    ");
 			KvGetString(hKeyValues, "right", szBuffer, sizeof(szBuffer));
 			InfoPanel.DrawItem(szBuffer);
 		}
-
-		InfoPanel.Send(client, Handler_GuardQuestions, 20);
+		
+		KvGetString(hKeyValues, "wrong3", szBuffer, sizeof(szBuffer));
+		InfoPanel.DrawItem(szBuffer);
+		
+		if (g_iRandomAnswer[client] == 4)
+		{
+			KvGetString(hKeyValues, "right", szBuffer, sizeof(szBuffer));
+			InfoPanel.DrawItem(szBuffer);
+		}
+		InfoPanel.Send(client, Handler_GuardQuestions, 1);
 	}
 }
-
 
 public int Handler_GuardQuestions(Handle menu, MenuAction action, int param1, int param2)
 {
@@ -1101,37 +1147,79 @@ public int Handler_GuardQuestions(Handle menu, MenuAction action, int param1, in
 				{
 					if (g_iQuestionTimes[client] <= 0)
 					{
-						if (CanClientJoinGuards(client))
+						if(!g_bWrongAnswer[client])
 						{
-							ForcePlayerSuicide(client);
-							ChangeClientTeam(client, CS_TEAM_CT);
-							SetClientListeningFlags(client, VOICE_NORMAL); // unmute if sm_hosties or admin has muted prisoners on round start
-							if (gc_bRespawn.BoolValue)
+							if (CanClientJoinGuards(client))
 							{
-								MinusDeath(client);
-								CS_RespawnPlayer(client);
+								g_iQuestionTimes2[client] = 1;
+								g_iRandomAnswer[client] = 0;
+								szRandomQuestion[client][0] = 0;
+								g_iRemSec[client] = 15;
+								ForcePlayerSuicide(client);
+								ChangeClientTeam(client, CS_TEAM_CT);
+								SetClientListeningFlags(client, VOICE_NORMAL); // unmute if sm_hosties or admin has muted prisoners on round start
+								if (gc_bRespawn.BoolValue)
+								{
+									MinusDeath(client);
+									if (!MyJailbreak_IsEventDayRunning())
+										CS_RespawnPlayer(client);
+								}
 							}
-						}
-						else if (gc_bNoQueue.BoolValue)
-						{
-							CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_fullguards");
-							ClientCommand(client, "play %s", g_sRestrictedSound);
+							else AddToQueue(client);
+							ClientCommand(client, "play %s", g_sRightAnswerSound);
 						}
 						else
 						{
-							AddToQueue(client);
-							ClientCommand(client, "play %s", g_sRightAnswerSound);
+							ClientCommand(client, "play %s", g_sRestrictedSound);
+							g_bQueueCooldown[client] = true;
+							g_iQuestionTimes2[client] = 1;
+							g_iRandomAnswer[client] = 0;
+							szRandomQuestion[client][0] = 0;
+							g_iRemSec[client] = 15;
 						}
-					
+						g_bWrongAnswer[client] = false;
+						iArray[0] = 0;
 					}
-					else Menu_GuardQuestions(client);
-					ClientCommand(client, "play %s", g_sRightAnswerSound);
+					else
+					{
+						g_iQuestionTimes2[client]++;
+						g_iRandomAnswer[client] = 0;
+						szRandomQuestion[client][0] = 0;
+						g_iRemSec[client] = 15;
+						Menu_GuardQuestions(client);
+					}
+					//ClientCommand(client, "play %s", g_sRightAnswerSound);
 					g_iQuestionTimes[client]--;
 				}
 				else
 				{
-					ClientCommand(client, "play %s", g_sRestrictedSound);
-					g_bQueueCooldown[client] = true;
+					if (g_iQuestionTimes[client] <= 0)
+					{
+						ClientCommand(client, "play %s", g_sRestrictedSound);
+						g_bQueueCooldown[client] = true;
+						g_iQuestionTimes2[client] = 1;
+						g_iRandomAnswer[client] = 0;
+						szRandomQuestion[client][0] = 0;
+						g_iRemSec[client] = 15;
+						g_bWrongAnswer[client] = false;
+						iArray[0] = 0;
+					}
+					else
+					{
+						g_bWrongAnswer[client] = true;
+						g_iQuestionTimes2[client]++;
+						g_iRandomAnswer[client] = 0;
+						szRandomQuestion[client][0] = 0;
+						g_iRemSec[client] = 15;
+						g_iQuestionTimes[client]--;
+						Menu_GuardQuestions(client);
+					}
+					//ClientCommand(client, "play %s", g_sRestrictedSound);
+					//g_bQueueCooldown[client] = true;
+					//g_iQuestionTimes2[client] = 1;
+					//g_iRandomAnswer[client] = 0;
+					//szRandomQuestion[client][0] = 0;
+					//g_iRemSec[client] = 15;
 				}
 			}
 			case 2:
@@ -1140,36 +1228,73 @@ public int Handler_GuardQuestions(Handle menu, MenuAction action, int param1, in
 				{
 					if (g_iQuestionTimes[client] <= 0)
 					{
-						if (CanClientJoinGuards(client))
+						if(!g_bWrongAnswer[client])
 						{
-							ForcePlayerSuicide(client);
-							ChangeClientTeam(client, CS_TEAM_CT);
-							SetClientListeningFlags(client, VOICE_NORMAL); // unmute if sm_hosties or admin has muted prisoners on round start
-							if (gc_bRespawn.BoolValue)
+							if (CanClientJoinGuards(client))
 							{
-								MinusDeath(client);
-								CS_RespawnPlayer(client);
+								g_iQuestionTimes2[client] = 1;
+								g_iRandomAnswer[client] = 0;
+								szRandomQuestion[client][0] = 0;
+								g_iRemSec[client] = 15;
+								ForcePlayerSuicide(client);
+								ChangeClientTeam(client, CS_TEAM_CT);
+								SetClientListeningFlags(client, VOICE_NORMAL); // unmute if sm_hosties or admin has muted prisoners on round start
+								if (gc_bRespawn.BoolValue)
+								{
+									MinusDeath(client);
+									if (!MyJailbreak_IsEventDayRunning())
+										CS_RespawnPlayer(client);
+								}
 							}
-						}
-						else if (gc_bNoQueue.BoolValue)
-						{
-							CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_fullguards");
-							ClientCommand(client, "play %s", g_sRestrictedSound);
+							else AddToQueue(client);
+							ClientCommand(client, "play %s", g_sRightAnswerSound);
 						}
 						else
 						{
-							AddToQueue(client);
-							ClientCommand(client, "play %s", g_sRightAnswerSound);
+							ClientCommand(client, "play %s", g_sRestrictedSound);
+							g_bQueueCooldown[client] = true;
+							g_iQuestionTimes2[client] = 1;
+							g_iRandomAnswer[client] = 0;
+							szRandomQuestion[client][0] = 0;
+							g_iRemSec[client] = 15;
 						}
+						g_bWrongAnswer[client] = false;
+						iArray[0] = 0;
 					}
-					else Menu_GuardQuestions(client);
-					ClientCommand(client, "play %s", g_sRightAnswerSound);
+					else
+					{
+						g_iQuestionTimes2[client]++;
+						g_iRandomAnswer[client] = 0;
+						szRandomQuestion[client][0] = 0;
+						g_iRemSec[client] = 15;
+						Menu_GuardQuestions(client);
+					}
+					//ClientCommand(client, "play %s", g_sRightAnswerSound);
 					g_iQuestionTimes[client]--;
 				}
 				else
 				{
-					ClientCommand(client, "play %s", g_sRestrictedSound);
-					g_bQueueCooldown[client] = true;
+					if (g_iQuestionTimes[client] <= 0)
+					{
+						ClientCommand(client, "play %s", g_sRestrictedSound);
+						g_bQueueCooldown[client] = true;
+						g_iQuestionTimes2[client] = 1;
+						g_iRandomAnswer[client] = 0;
+						szRandomQuestion[client][0] = 0;
+						g_iRemSec[client] = 15;
+						g_bWrongAnswer[client] = false;
+						iArray[0] = 0;
+					}
+					else
+					{
+						g_bWrongAnswer[client] = true;
+						g_iQuestionTimes2[client]++;
+						g_iRandomAnswer[client] = 0;
+						szRandomQuestion[client][0] = 0;
+						g_iRemSec[client] = 15;
+						g_iQuestionTimes[client]--;
+						Menu_GuardQuestions(client);
+					}
 				}
 			}
 			case 3:
@@ -1178,38 +1303,175 @@ public int Handler_GuardQuestions(Handle menu, MenuAction action, int param1, in
 				{
 					if (g_iQuestionTimes[client] <= 0)
 					{
-						if (CanClientJoinGuards(client))
+						if(!g_bWrongAnswer[client])
 						{
-							ForcePlayerSuicide(client);
-							ChangeClientTeam(client, CS_TEAM_CT);
-							SetClientListeningFlags(client, VOICE_NORMAL); // unmute if sm_hosties or admin has muted prisoners on round start
-							if (gc_bRespawn.BoolValue)
+							if (CanClientJoinGuards(client))
 							{
-								MinusDeath(client);
-								CS_RespawnPlayer(client);
+								g_iQuestionTimes2[client] = 1;
+								g_iRandomAnswer[client] = 0;
+								szRandomQuestion[client][0] = 0;
+								g_iRemSec[client] = 15;
+								ForcePlayerSuicide(client);
+								ChangeClientTeam(client, CS_TEAM_CT);
+								SetClientListeningFlags(client, VOICE_NORMAL); // unmute if sm_hosties or admin has muted prisoners on round start
+								if (gc_bRespawn.BoolValue)
+								{
+									MinusDeath(client);
+									if (!MyJailbreak_IsEventDayRunning())
+										CS_RespawnPlayer(client);
+								}
 							}
-						}
-						else if (gc_bNoQueue.BoolValue)
-						{
-							CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_fullguards");
-							ClientCommand(client, "play %s", g_sRestrictedSound);
+							else AddToQueue(client);
+							ClientCommand(client, "play %s", g_sRightAnswerSound);
 						}
 						else
 						{
-							AddToQueue(client);
-							ClientCommand(client, "play %s", g_sRightAnswerSound);
+							ClientCommand(client, "play %s", g_sRestrictedSound);
+							g_bQueueCooldown[client] = true;
+							g_iQuestionTimes2[client] = 1;
+							g_iRandomAnswer[client] = 0;
+							szRandomQuestion[client][0] = 0;
+							g_iRemSec[client] = 15;
 						}
+						g_bWrongAnswer[client] = false;
+						iArray[0] = 0;
 					}
-					else Menu_GuardQuestions(client);
-					ClientCommand(client, "play %s", g_sRightAnswerSound);
+					else
+					{
+						g_iQuestionTimes2[client]++;
+						g_iRandomAnswer[client] = 0;
+						szRandomQuestion[client][0] = 0;
+						g_iRemSec[client] = 15;
+						Menu_GuardQuestions(client);
+					}
+					//ClientCommand(client, "play %s", g_sRightAnswerSound);
 					g_iQuestionTimes[client]--;
 				}
 				else
 				{
-					ClientCommand(client, "play %s", g_sRestrictedSound);
-					g_bQueueCooldown[client] = true;
+					if (g_iQuestionTimes[client] <= 0)
+					{
+						ClientCommand(client, "play %s", g_sRestrictedSound);
+						g_bQueueCooldown[client] = true;
+						g_iQuestionTimes2[client] = 1;
+						g_iRandomAnswer[client] = 0;
+						szRandomQuestion[client][0] = 0;
+						g_iRemSec[client] = 15;
+						g_bWrongAnswer[client] = false;
+						iArray[0] = 0;
+					}
+					else
+					{
+						g_bWrongAnswer[client] = true;
+						g_iQuestionTimes2[client]++;
+						g_iRandomAnswer[client] = 0;
+						szRandomQuestion[client][0] = 0;
+						g_iRemSec[client] = 15;
+						g_iQuestionTimes[client]--;
+						Menu_GuardQuestions(client);
+					}
 				}
 			}
+			case 4:
+			{
+				if (g_iRandomAnswer[client] == 4)
+				{
+					if (g_iQuestionTimes[client] <= 0)
+					{
+						if(!g_bWrongAnswer[client])
+						{
+							if (CanClientJoinGuards(client))
+							{
+								g_iQuestionTimes2[client] = 1;
+								g_iRandomAnswer[client] = 0;
+								szRandomQuestion[client][0] = 0;
+								g_iRemSec[client] = 15;
+								ForcePlayerSuicide(client);
+								ChangeClientTeam(client, CS_TEAM_CT);
+								SetClientListeningFlags(client, VOICE_NORMAL); // unmute if sm_hosties or admin has muted prisoners on round start
+								if (gc_bRespawn.BoolValue)
+								{
+									MinusDeath(client);
+									if (!MyJailbreak_IsEventDayRunning())
+										CS_RespawnPlayer(client);
+								}
+							}
+							else AddToQueue(client);
+							ClientCommand(client, "play %s", g_sRightAnswerSound);
+						}
+						else
+						{
+							ClientCommand(client, "play %s", g_sRestrictedSound);
+							g_bQueueCooldown[client] = true;
+							g_iQuestionTimes2[client] = 1;
+							g_iRandomAnswer[client] = 0;
+							szRandomQuestion[client][0] = 0;
+							g_iRemSec[client] = 15;
+						}
+						g_bWrongAnswer[client] = false;
+						iArray[0] = 0;
+					}
+					else
+					{
+						g_iQuestionTimes2[client]++;
+						g_iRandomAnswer[client] = 0;
+						szRandomQuestion[client][0] = 0;
+						g_iRemSec[client] = 15;
+						Menu_GuardQuestions(client);
+					}
+					//ClientCommand(client, "play %s", g_sRightAnswerSound);
+					g_iQuestionTimes[client]--;
+				}
+				else
+				{
+					if (g_iQuestionTimes[client] <= 0)
+					{
+						ClientCommand(client, "play %s", g_sRestrictedSound);
+						g_bQueueCooldown[client] = true;
+						g_iQuestionTimes2[client] = 1;
+						g_iRandomAnswer[client] = 0;
+						szRandomQuestion[client][0] = 0;
+						g_iRemSec[client] = 15;
+						g_bWrongAnswer[client] = false;
+						iArray[0] = 0;
+					}
+					else
+					{
+						g_bWrongAnswer[client] = true;
+						g_iQuestionTimes2[client]++;
+						g_iRandomAnswer[client] = 0;
+						szRandomQuestion[client][0] = 0;
+						g_iRemSec[client] = 15;
+						g_iQuestionTimes[client]--;
+						Menu_GuardQuestions(client);
+					}
+				}
+			}
+		}
+	}
+	else if (action == MenuAction_Cancel)
+	{
+		if(param2 == MenuCancel_Timeout)
+		{
+			g_iRemSec[client]--;
+			if(g_iRemSec[client] != 0)
+				Menu_GuardQuestions(client);
+			else
+			{
+				ClientCommand(client, "play %s", g_sRestrictedSound);
+				g_bQueueCooldown[client] = true;
+				g_iQuestionTimes2[client] = 1;
+				g_iRandomAnswer[client] = 0;
+				szRandomQuestion[client][0] = 0;
+				g_iRemSec[client] = 15;
+			}
+		}
+		else
+		{
+			g_iQuestionTimes2[client] = 1;
+			g_iRandomAnswer[client] = 0;
+			szRandomQuestion[client][0] = 0;
+			g_iRemSec[client] = 15;
 		}
 	}
 }
@@ -1621,10 +1883,6 @@ public int ChangeMenu(Menu menu, MenuAction action, int client, int selection)
 					{
 						CPrintToChatAll("%s %t", g_sPrefix, "ratio_novalid");
 					}
-
-					ChangeClientTeam(newGuard, CS_TEAM_CT);
-					SetClientListeningFlags(newGuard, VOICE_NORMAL);
-					MinusDeath(newGuard);
 				}
 			}
 			else
