@@ -862,14 +862,14 @@ void StartEventRound(bool thisround)
 		g_bStartArmsRace = true;
 		g_iCoolDown++;
 
-		if (gc_bSpawnRandom.BoolValue)
-		{
-			SetCvar("mp_randomspawn", 1);
-			SetCvar("mp_randomspawn_los", 1);
-		}
-
 		CPrintToChatAll("%s %t", g_sPrefix, "armsrace_next");
 		PrintCenterTextAll("%t", "armsrace_next_nc");
+	}
+
+	if (gc_bSpawnRandom.BoolValue)
+	{
+		SetCvar("mp_randomspawn", 1);
+		SetCvar("mp_randomspawn_los", 1);
 	}
 }
 
