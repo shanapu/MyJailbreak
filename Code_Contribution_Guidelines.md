@@ -18,6 +18,9 @@ Maybe these guidelines could change in future.
 ***
 ### Send pull requests always to 'dev' branch
 ***
+### Only one feature/job per pull requests.
+**Split different features/edits/changes to different PRs**  
+***
 ### All sourcepawn (.sp /.inc) files need a GPL header
 **don't forget to credit yourself**
 ***
