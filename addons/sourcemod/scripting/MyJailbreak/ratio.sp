@@ -86,8 +86,8 @@ bool gp_bMyJBWarden = false;
 Handle g_aGuardQueue;
 Handle g_aGuardList;
 Handle g_hDataPackTeam;
-Handle gF_OnClientJoinGuards;
 Handle hKeyValues;
+Handle gF_OnClientJoinGuards;
 
 // Integer
 int g_iRandomAnswer[MAXPLAYERS+1];
@@ -108,6 +108,14 @@ public Plugin myinfo = {
 	version = MYJB_VERSION,
 	url = MYJB_URL_LINK
 };
+
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+	gF_OnClientJoinGuards = CreateGlobalForward("MyJailbreak_OnJoinGuardQueue", ET_Event, Param_Cell);
+
+	RegPluginLibrary("myratio");
+	return APLRes_Success;
+}
 
 // Start
 public void OnPluginStart()
@@ -170,7 +178,7 @@ public void OnPluginStart()
 	HookEvent("round_end", Event_RoundEnd_Post, EventHookMode_Post);
 	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
 	HookConVarChange(gc_sPrefix, OnSettingChanged);
-	
+
 	// FindConVar
 	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
 
@@ -192,25 +200,10 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 	}
 }
 
-public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
-{
-	gF_OnClientJoinGuards = CreateGlobalForward("MyJailbreak_OnJoinGuardQueue", ET_Event, Param_Cell);
-	
-	RegPluginLibrary("myratio");
-	return APLRes_Success;
-}
-
 public void OnConfigsExecuted()
 {
 	gc_sPrefix.GetString(g_sPrefix, sizeof(g_sPrefix));
 	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
-	
-	Handle hConVar = FindConVar("mp_force_pick_time");
-	if (hConVar == INVALID_HANDLE)
-		return;
-
-	HookConVarChange(hConVar, OnForcePickTimeChanged);
-	SetConVarInt(hConVar, 999999);
 
 	// Set custom Commands
 	int iCount = 0;
@@ -225,7 +218,9 @@ public void OnConfigsExecuted()
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
 		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		{
 			RegConsoleCmd(sCommand, Command_JoinGuardQueue, "Allows the prisoners to queue to CT");
+		}
 	}
 
 	// Join Prisoners
@@ -237,7 +232,9 @@ public void OnConfigsExecuted()
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
 		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		{
 			RegConsoleCmd(sCommand, Command_JoinTerror, "Allows the player to join prisoners");
+		}
 	}
 
 	// Join spectator
@@ -249,7 +246,9 @@ public void OnConfigsExecuted()
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
 		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		{
 			RegConsoleCmd(sCommand, Command_JoinSpec, "Allows the player to join spectator");
+		}
 	}
 
 	// View guardqueue
@@ -261,7 +260,9 @@ public void OnConfigsExecuted()
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
 		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		{
 			RegConsoleCmd(sCommand, Command_ViewGuardQueue, "Allows a player to show queue to CT");
+		}
 	}
 
 	// leave guardqueue
@@ -273,7 +274,9 @@ public void OnConfigsExecuted()
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
 		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		{
 			RegConsoleCmd(sCommand, Command_LeaveQueue, "Allows a player to leave queue to CT");
+		}
 	}
 
 	// View/toggle ratio
@@ -313,7 +316,9 @@ public void OnConfigsExecuted()
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
 		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		{
 			RegAdminCmd(sCommand, AdminCommand_RemoveFromQueue, ADMFLAG_GENERIC, "Allows the admin to remove player from queue to CT");
+		}
 	}
 
 	// Admin clear queue
@@ -325,8 +330,17 @@ public void OnConfigsExecuted()
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
 		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		{
 			RegAdminCmd(sCommand, AdminCommand_ClearQueue, ADMFLAG_GENERIC, "Allows the admin clear the CT queue");
+		}
 	}
+
+	Handle hConVar = FindConVar("mp_force_pick_time");
+	if (hConVar == INVALID_HANDLE)
+		return;
+
+	HookConVarChange(hConVar, OnForcePickTimeChanged);
+	SetConVarInt(hConVar, 999999);
 }
 
 public void OnAllPluginsLoaded()
@@ -507,7 +521,7 @@ public Action Command_JoinGuardQueue(int client, int iArgNum)
 
 		if (iIndex == -1)
 		{
-			if ((gc_iJoinMode.IntValue == 0) || (gc_bAdminBypass.BoolValue && CheckVipFlag(client, g_sAdminFlag)))
+			if ((gc_iJoinMode.IntValue == 0) || (gc_bAdminBypass.BoolValue && MyJailbreak_CheckVIPFlags(client, "sm_ratio_flag", gc_sAdminFlag, "sm_ratio_flag")))
 			{
 				AddToQueue(client);
 			}
@@ -525,7 +539,7 @@ public Action Command_JoinGuardQueue(int client, int iArgNum)
 		{
 			CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_number", iIndex + 1);
 
-			if (gc_bAdsVIP.BoolValue && gc_bVIPQueue.BoolValue && !CheckVipFlag(client, g_sAdminFlag))
+			if (gc_bAdsVIP.BoolValue && gc_bVIPQueue.BoolValue && !MyJailbreak_CheckVIPFlags(client, "sm_ratio_flag", gc_sAdminFlag, "sm_ratio_flag"))
 			{
 				CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_advip");
 			}
@@ -534,7 +548,7 @@ public Action Command_JoinGuardQueue(int client, int iArgNum)
 		return Plugin_Handled;
 	}
 
-	if ((gc_iJoinMode.IntValue == 0) || (gc_bAdminBypass.BoolValue && CheckVipFlag(client, g_sAdminFlag)))
+	if ((gc_iJoinMode.IntValue == 0) || (gc_bAdminBypass.BoolValue && MyJailbreak_CheckVIPFlags(client, "sm_ratio_flag", gc_sAdminFlag, "sm_ratio_flag")))
 	{
 		if (gc_bRespawn.BoolValue)
 		{
@@ -551,7 +565,7 @@ public Action Command_JoinGuardQueue(int client, int iArgNum)
 			
 			if (iIndex == -1)
 			{
-				if (CheckVipFlag(client, g_sAdminFlag) && gc_bVIPQueue.BoolValue)
+				if (gc_bVIPQueue.BoolValue && MyJailbreak_CheckVIPFlags(client, "sm_ratio_flag", gc_sAdminFlag, "sm_ratio_flag"))
 				{
 					if (iQueueSize == 0)
 					{
@@ -582,7 +596,7 @@ public Action Command_JoinGuardQueue(int client, int iArgNum)
 			{
 				CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_number", iIndex + 1);
 
-				if (gc_bAdsVIP.BoolValue && gc_bVIPQueue.BoolValue && !CheckVipFlag(client, g_sAdminFlag))
+				if (gc_bAdsVIP.BoolValue && gc_bVIPQueue.BoolValue && !MyJailbreak_CheckVIPFlags(client, "sm_ratio_flag", gc_sAdminFlag, "sm_ratio_flag"))
 				{
 					CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_advip");
 				}
@@ -654,7 +668,7 @@ public Action AdminCommand_ClearQueue(int client, int args)
 
 public Action Command_ToggleRatio(int client, int args)
 {
-	if (CheckVipFlag(client, g_sAdminFlag) && gc_bToggle.BoolValue)
+	if (gc_bToggle.BoolValue && MyJailbreak_CheckVIPFlags(client, "sm_ratio_flag", gc_sAdminFlag, "sm_ratio_flag"))
 	{
 		if (g_bRatioEnable)
 		{
@@ -746,7 +760,7 @@ public Action Event_OnFullConnect(Event event, const char[] name, bool dontBroad
 	if (!gc_bForceTConnect.BoolValue || !g_bRatioEnable)
 		return Plugin_Continue;
 
-	if (!gc_bAdminBypass.BoolValue || !CheckVipFlag(client, g_sAdminFlag))
+	if (!gc_bAdminBypass.BoolValue || !MyJailbreak_CheckVIPFlags(client, "sm_ratio_flag", gc_sAdminFlag, "sm_ratio_flag"))
 	{
 		CreateTimer(1.0, Timer_ForceTSide, GetClientUserId(client));
 	}
@@ -820,7 +834,7 @@ public Action Event_OnJoinTeam(int client, const char[] szCommand, int iArgCount
 
 		if (iIndex == -1)
 		{
-			if ((gc_iJoinMode.IntValue == 0) || (gc_bAdminBypass.BoolValue && CheckVipFlag(client, g_sAdminFlag)))
+			if ((gc_iJoinMode.IntValue == 0) || (gc_bAdminBypass.BoolValue && MyJailbreak_CheckVIPFlags(client, "sm_ratio_flag", gc_sAdminFlag, "sm_ratio_flag")))
 			{
 				AddToQueue(client);
 			}
@@ -839,7 +853,7 @@ public Action Event_OnJoinTeam(int client, const char[] szCommand, int iArgCount
 		{
 			CPrintToChat(client, "%s %t", g_sPrefix, "ratio_fullqueue", iIndex + 1);
 
-			if (gc_bAdsVIP.BoolValue && gc_bVIPQueue.BoolValue && !CheckVipFlag(client, g_sAdminFlag))
+			if (gc_bAdsVIP.BoolValue && gc_bVIPQueue.BoolValue && !MyJailbreak_CheckVIPFlags(client, "sm_ratio_flag", gc_sAdminFlag, "sm_ratio_flag"))
 			{
 				CPrintToChat(client, "%s %t", g_sPrefix, "ratio_advip");
 			}
@@ -848,7 +862,7 @@ public Action Event_OnJoinTeam(int client, const char[] szCommand, int iArgCount
 		return Plugin_Handled;
 	}
 
-	if ((gc_iJoinMode.IntValue == 0) || (gc_bAdminBypass.BoolValue && CheckVipFlag(client, g_sAdminFlag)))
+	if ((gc_iJoinMode.IntValue == 0) || (gc_bAdminBypass.BoolValue && MyJailbreak_CheckVIPFlags(client, "sm_ratio_flag", gc_sAdminFlag, "sm_ratio_flag")))
 	{
 		return Plugin_Continue;
 	}
@@ -888,7 +902,7 @@ void AddToQueue(int client)
 
 	if (iIndex == -1)
 	{
-		if (CheckVipFlag(client, g_sAdminFlag) && gc_bVIPQueue.BoolValue)
+		if (gc_bVIPQueue.BoolValue && MyJailbreak_CheckVIPFlags(client, "sm_ratio_flag", gc_sAdminFlag, "sm_ratio_flag"))
 		{
 			if (iQueueSize == 0)
 				iIndex = PushArrayCell(g_aGuardQueue, client);

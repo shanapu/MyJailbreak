@@ -139,6 +139,12 @@ echo.
 echo Compile: MyJailbreak Add-on Support Steamrep
 spcomp MyJailbreak/Add-ons/ratio_steamrep.sp -o../plugins/MyJailbreak/disabled/ratio_steamrep.smx  
 echo.
+echo Compile: MyJailbreak Add-on Support VIP core
+spcomp MyJailbreak/Add-ons/ratio_vipcore.sp -o../plugins/MyJailbreak/disabled/ratio_vipcore.smx  
+echo.
+echo Compile: MyJailbreak Add-on Support DevZones
+spcomp MyJailbreak/Add-ons/myjailbreak_devzones.sp -o../plugins/MyJailbreak/disabled/myjailbreak_devzones.smx  
+echo.
 echo Compile: MyJailbreak Add-on Support MostActive
 spcomp MyJailbreak/Add-ons/myjailbreak_mostactive.sp -o../plugins/MyJailbreak/disabled/myjailbreak_mostactive.smx  
 echo.

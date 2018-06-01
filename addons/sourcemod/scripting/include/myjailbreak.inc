@@ -167,6 +167,19 @@ forward void MyJailbreak_MenuEnd(int client, Menu menu);
 forward void MyJailbreak_MenuHandler(Menu menu, MenuAction action, int client, int itemNum);
 
 
+
+/*********************************************************
+ * Called on native MyJailbreak_CheckVIPFlags ONLY when
+ * CheckCommandAccess return false. 
+ * Feature name refers to plugin VIP Convar.
+ *
+ * @param client		client index
+ * @param feature		vip feature to check
+ * @Return 				true for VIP / false for no VIP
+ *********************************************************/
+forward bool MyJailbreak_OnCheckVIP(int client, char[] feature);
+
+
 /******************************************************************************
                    NATIVES
 ******************************************************************************/
@@ -314,3 +327,19 @@ native void MyJailbreak_BeaconOn(int client, float interval);
  * @noreturn
  *********************************************************/
 native void MyJailbreak_BeaconOff(int client);
+
+
+/*********************************************************
+ * Check bool if player is VIP -> this native calls the
+ * forward MyJailbreak_CheckVIP
+ *
+ * @param client		client index to check
+ * @param command		overwrite command name
+ * @param flags			flag string if the command or 
+ *						override is not found.
+ * @param feature		feature name to check with 
+ *						MyJailbreak_OnCheckVIPFlags when 
+ *						CheckCommandAccess return false
+ * @Return			true on allow, false if not
+ *********************************************************/
+native bool MyJailbreak_CheckVIPFlags(int client, const char[] command, ConVar flags, char[] feature);
