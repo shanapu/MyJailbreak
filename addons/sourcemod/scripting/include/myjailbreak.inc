@@ -53,7 +53,7 @@ public SharedPlugin __pl_myjailbreak =
 
 
 #if !defined REQUIRE_PLUGIN
-public __pl_myjailbreak_SetNTVOptional()
+public void __pl_myjailbreak_SetNTVOptional()
 {
 	MarkNativeAsOptional("MyJailbreak_AddEventDay");
 	MarkNativeAsOptional("MyJailbreak_RemoveEventDay");
