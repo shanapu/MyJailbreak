@@ -136,7 +136,6 @@ char g_sSoundFreezePath[256];
 char g_sHasVoted[1500];
 char g_sOverlayFreeze[256];
 char g_sEventsLogFile[PLATFORM_MAX_PATH];
-char g_sAdminFlag[64];
 char g_sSoundStartPath[256];
 char g_sOverlayStartPath[256];
 
@@ -221,7 +220,6 @@ public void OnPluginStart()
 	HookConVarChange(gc_sOverlayFreeze, OnSettingChanged);
 	HookConVarChange(gc_sSoundFreezePath, OnSettingChanged);
 	HookConVarChange(gc_sSoundUnFreezePath, OnSettingChanged);
-	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
 	HookConVarChange(gc_sPrefix, OnSettingChanged);
 
 	// Hooks
@@ -240,7 +238,6 @@ public void OnPluginStart()
 	gc_sSoundFreezePath.GetString(g_sSoundFreezePath, sizeof(g_sSoundFreezePath));
 	gc_sSoundUnFreezePath.GetString(g_sSoundUnFreezePath, sizeof(g_sSoundUnFreezePath));
 	gc_sOverlayFreeze.GetString(g_sOverlayFreeze, sizeof(g_sOverlayFreeze));
-	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
 
 	// Logs
 	SetLogFile(g_sEventsLogFile, "Events", "MyJailbreak");
@@ -270,10 +267,6 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 		{
 			PrecacheSoundAnyDownload(g_sSoundFreezePath);
 		}
-	}
-	else if (convar == gc_sAdminFlag)
-	{
-		strcopy(g_sAdminFlag, sizeof(g_sAdminFlag), newValue);
 	}
 	else if (convar == gc_sSoundUnFreezePath)
 	{
@@ -402,7 +395,6 @@ public void OnConfigsExecuted()
 	gc_sSoundFreezePath.GetString(g_sSoundFreezePath, sizeof(g_sSoundFreezePath));
 	gc_sSoundUnFreezePath.GetString(g_sSoundUnFreezePath, sizeof(g_sSoundUnFreezePath));
 	gc_sOverlayFreeze.GetString(g_sOverlayFreeze, sizeof(g_sOverlayFreeze));
-	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
 
 	// FindConVar
 	if (gp_bHosties)
@@ -483,7 +475,7 @@ public Action Command_SetCatch(int client, int args)
 			LogToFileEx(g_sEventsLogFile, "Event Catch was started by groupvoting");
 		}
 	}
-	else if (CheckVipFlag(client, g_sAdminFlag)) // Called by admin/VIP
+	else if (MyJailbreak_CheckVIPFlags(client, "sm_catch_flag", gc_sAdminFlag, "sm_catch_flag")) // Called by admin/VIP
 	{
 		if (!gc_bSetA.BoolValue)
 		{

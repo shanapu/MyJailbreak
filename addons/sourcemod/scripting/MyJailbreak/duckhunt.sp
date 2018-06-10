@@ -119,7 +119,6 @@ char g_sHasVoted[1500];
 char g_sSoundStartPath[256];
 char g_sHunterModel[256] = "models/player/custom_player/legacy/tm_phoenix_heavy.mdl";
 char g_sEventsLogFile[PLATFORM_MAX_PATH];
-char g_sAdminFlag[64];
 char g_sModelPathCTPrevious[MAXPLAYERS+1][256];
 char g_sModelPathTPrevious[MAXPLAYERS+1][256];
 char g_sOverlayStartPath[256];
@@ -201,14 +200,12 @@ public void OnPluginStart()
 	HookEvent("hegrenade_detonate", Event_HE_Detonate);
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
-	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
 	HookConVarChange(gc_sPrefix, OnSettingChanged);
 
 	g_bAllowTP = FindConVar("sv_allow_thirdperson");
 	gc_sPrefix.GetString(g_sPrefix, sizeof(g_sPrefix));
 	gc_sOverlayStartPath.GetString(g_sOverlayStartPath, sizeof(g_sOverlayStartPath));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
-	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
 
 	if (g_bAllowTP == INVALID_HANDLE)
 	{
@@ -250,10 +247,6 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 		{
 			PrecacheSoundAnyDownload(g_sSoundStartPath);
 		}
-	}
-	else if (convar == gc_sAdminFlag)
-	{
-		strcopy(g_sAdminFlag, sizeof(g_sAdminFlag), newValue);
 	}
 	else if (convar == gc_sPrefix)
 	{
@@ -338,7 +331,6 @@ public void OnConfigsExecuted()
 	gc_sPrefix.GetString(g_sPrefix, sizeof(g_sPrefix));
 	gc_sOverlayStartPath.GetString(g_sOverlayStartPath, sizeof(g_sOverlayStartPath));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
-	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
 
 	if (gp_bHosties)
 	{
@@ -418,7 +410,7 @@ public Action Command_SetDuckHunt(int client, int args)
 			LogToFileEx(g_sEventsLogFile, "Event duckhunt was started by groupvoting");
 		}
 	}
-	else if (CheckVipFlag(client, g_sAdminFlag)) // Called by admin/VIP
+	else if (MyJailbreak_CheckVIPFlags(client, "sm_duckhunt_flag", gc_sAdminFlag, "sm_duckhunt_flag")) // Called by admin/VIP
 	{
 		if (!gc_bSetA.BoolValue)
 		{

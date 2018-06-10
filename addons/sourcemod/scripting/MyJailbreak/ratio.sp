@@ -98,7 +98,7 @@ int g_iCountQuestions;
 char g_sPrefix[64];
 char g_sRestrictedSound[32] = "buttons/button11.wav";
 char g_sRightAnswerSound[32] = "buttons/button14.wav";
-char g_sAdminFlag[64];
+// char g_sAdminFlag[64];
 
 // Info
 public Plugin myinfo = {
@@ -176,11 +176,11 @@ public void OnPluginStart()
 	HookEvent("player_connect_full", Event_OnFullConnect, EventHookMode_Pre);
 	HookEvent("player_team", Event_PlayerTeam_Post, EventHookMode_Post);
 	HookEvent("round_end", Event_RoundEnd_Post, EventHookMode_Post);
-	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
+//	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
 	HookConVarChange(gc_sPrefix, OnSettingChanged);
 
 	// FindConVar
-	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
+//	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
 
 	// Prepare
 	g_aGuardQueue = CreateArray();
@@ -190,20 +190,16 @@ public void OnPluginStart()
 // ConVarChange for Strings
 public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
-	if (convar == gc_sAdminFlag)
+	if (convar == gc_sPrefix)
 	{
-		strcopy(g_sAdminFlag, sizeof(g_sAdminFlag), newValue);
-	}
-	else if (convar == gc_sAdminFlag)
-	{
-		strcopy(g_sAdminFlag, sizeof(g_sAdminFlag), newValue);
+		strcopy(g_sPrefix, sizeof(g_sPrefix), newValue);
 	}
 }
 
 public void OnConfigsExecuted()
 {
 	gc_sPrefix.GetString(g_sPrefix, sizeof(g_sPrefix));
-	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
+//	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
 
 	// Set custom Commands
 	int iCount = 0;

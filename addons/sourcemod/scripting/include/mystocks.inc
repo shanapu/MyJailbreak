@@ -6,7 +6,7 @@
  * Copyright (C) 2016-2017 Thomas Schmidt (shanapu)
  * Contributer: Hexer10
  *
- * Version 12.1
+ * Version 13.0
  *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License, version 3.0, as published by the
@@ -35,10 +35,27 @@
 // Check for valid clients with bool for bots & dead player 
 stock bool IsValidClient(int client, bool bAllowBots = false, bool bAllowDead = true)
 {
-	if (!(1 <= client <= MaxClients) || !IsClientInGame(client) || (IsFakeClient(client) && !bAllowBots) || IsClientSourceTV(client) || IsClientReplay(client) || (!bAllowDead && !IsPlayerAlive(client)))
-	{
+	if (client <= 0)
 		return false;
-	}
+
+	if (client > MaxClients)
+		return false;
+
+	if (!IsClientInGame(client))
+		return false;
+
+	if (IsFakeClient(client) && !bAllowBots)
+		return false;
+
+	if (IsClientSourceTV(client))
+		return false;
+
+	if (IsClientReplay(client))
+		return false;
+
+	if (!IsPlayerAlive(client) && !bAllowDead)
+		return false;
+
 	return true;
 }
 
@@ -95,6 +112,7 @@ stock void PrecacheSoundAnyDownload(char[] sSound)
 stock void StripAllPlayerWeapons(int client)
 {
 	int weapon;
+
 	for (int i = 0; i <= 4; i++)
 	{
 		if ((weapon = GetPlayerWeaponSlot(client, i)) != -1)
@@ -115,13 +133,15 @@ stock void StripAllPlayerWeapons(int client)
 // Show overlay to a client with lifetime | 0.0 = no auto remove
 stock void ShowOverlay(int client, char[] path, float lifetime)
 {
-	if (!IsClientInGame(client) || IsFakeClient(client) || IsClientSourceTV(client) || IsClientReplay(client))
+	if (!IsValidClient(client))
 		return;
 
 	ClientCommand(client, "r_screenoverlay \"%s.vtf\"", path);
 
 	if (lifetime != 0.0)
+	{
 		CreateTimer(lifetime, DeleteOverlay, GetClientUserId(client));
+	}
 }
 
 
@@ -130,13 +150,15 @@ stock void ShowOverlayAll(char[] path, float lifetime)
 {
 	for (int i = 1; i <= MaxClients; i++)
 	{
-		if (!IsClientInGame(i) || IsFakeClient(i) || IsClientSourceTV(i) || IsClientReplay(i))
+		if (!IsValidClient(i))
 			continue;
 
 		ClientCommand(i, "r_screenoverlay \"%s.vtf\"", path);
 
 		if (lifetime != 0.0)
+		{
 			CreateTimer(lifetime, DeleteOverlay, GetClientUserId(i));
+		}
 	}
 }
 
@@ -145,10 +167,13 @@ stock void ShowOverlayAll(char[] path, float lifetime)
 stock Action DeleteOverlay(Handle timer, int userid)
 {
 	int client = GetClientOfUserId(userid);
-	if (client <= 0 || !IsClientInGame(client) || IsFakeClient(client) || IsClientSourceTV(client) || IsClientReplay(client))
-		return;
+
+	if (!IsValidClient(client))
+		return Plugin_Handled;
 
 	ClientCommand(client, "r_screenoverlay \"\"");
+
+	return Plugin_Handled;
 }
 
 
@@ -156,7 +181,8 @@ stock Action DeleteOverlay(Handle timer, int userid)
 stock void SetCvar(char cvarName[64], int value)
 {
 	Handle IntCvar = FindConVar(cvarName);
-	if (IntCvar == null) return;
+	if (IntCvar == null)
+		return;
 
 	int flags = GetConVarFlags(IntCvar);
 	flags &= ~FCVAR_NOTIFY;
@@ -173,7 +199,8 @@ stock void SetCvar(char cvarName[64], int value)
 stock void SetCvarFloat(char cvarName[64], float value)
 {
 	Handle FloatCvar = FindConVar(cvarName);
-	if (FloatCvar == INVALID_HANDLE) return;
+	if (FloatCvar == INVALID_HANDLE)
+		return;
 
 	new flags = GetConVarFlags(FloatCvar);
 	flags &= ~FCVAR_NOTIFY;
@@ -212,23 +239,20 @@ stock void SetPlayerAmmo(int client, int weaponEnt, int clip = -1, int ammo = -1
 		return;
 
 	if (clip != -1)
-		SetEntProp(weaponEnt, Prop_Send, "m_iClip1", clip);
+	{
+		SetEntProp(weaponEnt, Prop_Data, "m_iClip1", clip);
+	}
 
 	if (ammo != -1)
 	{
-		int iOffset = FindDataMapInfo(client, "m_iAmmo") + (GetEntProp(weaponEnt, Prop_Data, "m_iPrimaryAmmoType") * 4);
-		SetEntData(client, iOffset, ammo, 4, true);
-
-		if (GetEngineVersion() == Engine_CSGO) 
-		{
-			SetEntProp(weaponEnt, Prop_Send, "m_iPrimaryReserveAmmoCount", ammo);
-		}
+		SetEntProp(weaponEnt, Prop_Data, "m_iPrimaryReserveAmmoCount", ammo);
+		SetEntProp(weaponEnt, Prop_Data, "m_iSecondaryReserveAmmoCount", ammo);
 	}
 }
 
 
 
-stock void ToggleWeaponFire(int client, bool status = true)
+stock void ToggleWeaponFire(int client, bool status = true) // rename EnableWeaponFire
 {
 	if (status) // true = allow shooting
 	{
@@ -244,7 +268,6 @@ stock void ToggleWeaponFire(int client, bool status = true)
 stock Action PreThinkWeapon(int client)
 {
 	int weapon = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
-
 	if (weapon < 0 || !IsValidEdict(weapon) || !IsValidEntity(weapon))
 		return Plugin_Continue;
 
@@ -260,10 +283,10 @@ stock Action Timer_RemoveColor(Handle timer, int userid)
 {
 	int client = GetClientOfUserId(userid);
 
-	if (IsValidClient(client, true, true))
-	{
-		SetEntityRenderColor(client, 255, 255, 255, 255);
-	}
+	if (!IsValidClient(client, true))
+		return Plugin_Handled;
+
+	SetEntityRenderColor(client, 255, 255, 255, 255);
 
 	return Plugin_Handled;
 }
@@ -275,61 +298,95 @@ stock int GetRandomPlayerNonRebel(int team)
 	int[] clients = new int[MaxClients];
 	int clientCount;
 
-	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+	for (int i = 1; i <= MaxClients; i++)
 	{
-		if ((GetClientTeam(i) == team) && IsPlayerAlive(i) && IsClientRebel(i))
-		{
-			clients[clientCount++] = i;
-		}
+		if (!IsValidClient(i))
+			continue;
+
+		if (!IsClientRebel(i))  // bool in function
+			continue;
+
+		clients[clientCount++] = i;
 	}
 
 	return (clientCount == 0) ? -1 : clients[GetRandomInt(0, clientCount-1)];
 }
 
 // Get random alive player
-stock int GetRandomPlayer(int team) 
+stock int GetRandomPlayer(int team)   // bool in function for rebel instead GetRandomPlayerNonRebel
 {
 	int[] clients = new int[MaxClients];
 	int clientCount;
 
-	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+	for (int i = 1; i <= MaxClients; i++)
 	{
-		if ((GetClientTeam(i) == team) && IsPlayerAlive(i))
-		{
-			clients[clientCount++] = i;
-		}
+		if (!IsValidClient(i))
+			continue;
+
+		if (GetClientTeam(i) != team)
+			continue;
+
+		clients[clientCount++] = i;
 	}
 
 	return (clientCount == 0) ? -1 : clients[GetRandomInt(0, clientCount-1)];
 }
 
 
-// Get alive player count of a team
-stock int GetAlivePlayersCount(int team)
+//new
+stock int GetRandomsPlayer(bool alive = true)
+{
+	int[] clients = new int[MaxClients];
+	int clientCount;
+
+	for (int i = 1; i <= MaxClients; i++)
+	{
+		if (!IsValidClient(i,_, !alive))
+			continue;
+
+		clients[clientCount++] = i;
+	}
+
+	return (clientCount == 0) ? -1 : clients[GetRandomInt(0, clientCount-1)];
+}
+
+//old
+stock int GetRandomAlivePlayer()
+{
+	int[] clients = new int[MaxClients];
+	int clientCount;
+
+	for (int i = 1; i <= MaxClients; i++)
+	{
+		if (!IsValidClient(i, _, true))
+			continue;
+
+		clients[clientCount++] = i;
+	}
+
+	return (clientCount == 0) ? -1 : clients[GetRandomInt(0, clientCount-1)];
+}
+
+// NEW
+stock int GetPlayerCount(bool alive = false, int team = -1)
 {
 	int iCount, i; iCount = 0;
 
-	for (i = 1; i <= MaxClients; i++)
-		if (IsValidClient(i, true, false) && GetClientTeam(i) == team)
+	for (int i = 1; i <= MaxClients; i++)
+	{
+		if (!IsValidClient(i,_, !alive))
+			continue;
+
+		if (team =! -1 && GetClientTeam(i) != team)
+			continue;
+
 		iCount++;
+	}
 
 	return iCount;
 }
 
-
-// Get alive & non-rebeling player count of a team (need lastrequest.inc)
-stock int GetAlivePlayersCountNonRebel(int team)
-{
-	int iCount, i; iCount = 0;
-
-	for (i = 1; i <= MaxClients; i++)
-		if (IsValidClient(i, true, false) && !IsClientRebel(i) && GetClientTeam(i) == team)
-		iCount++;
-
-	return iCount;
-}
-
-
+//old
 // Get all player count of a team
 stock int GetTeamPlayersCount(int team)
 {
@@ -342,6 +399,52 @@ stock int GetTeamPlayersCount(int team)
 	return iCount;
 }
 
+
+// Get alive player count of a team
+//old
+stock int GetAlivePlayersCount(int team)
+{
+	int iCount = 0;
+
+	for (int i = 1; i <= MaxClients; i++)
+	{
+		if (!IsValidClient(i,_, false))
+			continue;
+
+		if (GetClientTeam(i) != team)
+			continue;
+
+		iCount++;
+	}
+
+	return iCount;
+}
+
+
+// Get alive & non-rebeling player count of a team (need lastrequest.inc) MERGE WOITH GetAlivePlayersCount 
+stock int GetAlivePlayersCountNonRebel(int team)
+{
+	int iCount = 0;
+
+	for (int i = 1; i <= MaxClients; i++)
+	{
+		if (!IsValidClient(i,_, false))
+			continue;
+
+		if (GetClientTeam(i) != team)
+			continue;
+
+		if (!IsClientRebel(i))  // bool in function  
+			continue;
+
+		iCount++;
+	}
+
+	return iCount;
+}
+
+
+//old
 // Get all player count of a team
 stock int GetAllPlayersCount()
 {
@@ -355,22 +458,10 @@ stock int GetAllPlayersCount()
 }
 
 
+//MERGE TO ONE FUNTION
+
 // Get a alive random player of all teams
-stock int GetRandomAlivePlayer() 
-{
-	int[] clients = new int[MaxClients];
-	int clientCount;
 
-	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
-	{
-		if (IsPlayerAlive(i))
-		{
-			clients[clientCount++] = i;
-		}
-	}
-
-	return (clientCount == 0) ? -1 : clients[GetRandomInt(0, clientCount-1)];
-}
 
 
 // Get last alive player of a team
@@ -379,8 +470,14 @@ stock int GetLastAlive(int team)
 	int clientCount = 0;
 	int client;
 
-	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false)) if (GetClientTeam(i) == team)
+	for (int i = 1; i <= MaxClients; i++)
 	{
+		if (!IsValidClient(i,_, false))
+			continue;
+
+		if (GetClientTeam(i) != team)
+			continue;
+
 		clientCount++;
 		client = i;
 	}
@@ -416,9 +513,9 @@ stock bool CheckVipFlag(int client, char [] flagsNeed)
 // Menu Handler for Panels
 stock int Handler_NullCancel(Handle menu, MenuAction action, int param1, int param2)
 {
-	if (action == MenuAction_Select) 
+	if (action == MenuAction_Select)
 	{
-		switch (param2) 
+		switch (param2)
 		{
 			default: // cancel
 			{
@@ -487,15 +584,18 @@ stock int GetRandomPlayerInView(int team, int client)
 	int[] clients = new int[MaxClients];
 	int clientCount;
 
-	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+	for (int i = 1; i <= MaxClients; i++)
 	{
-		if ((GetClientTeam(i) == team) && IsPlayerAlive(i))
-		{
-			if (!ClientViews(client, i))
-				continue;
+		if (!IsValidClient(i,_, false))
+			continue;
 
-			clients[clientCount++] = i;
-		}
+		if (GetClientTeam(i) != team)
+			continue;
+
+		if (!ClientViews(i, i))
+			continue;
+
+		clients[clientCount++] = i;
 	}
 
 	return (clientCount == 0) ? -1 : clients[GetRandomInt(0, clientCount-1)];

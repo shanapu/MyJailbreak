@@ -99,7 +99,6 @@ int g_iVoteCount;
 char g_sPrefix[64];
 char g_sHasVoted[1500];
 char g_sEventsLogFile[PLATFORM_MAX_PATH];
-char g_sAdminFlag[64];
 
 // Info
 public Plugin myinfo =
@@ -158,13 +157,10 @@ public void OnPluginStart()
 	HookEvent("round_start", Event_RoundStart);
 	HookEvent("round_end", Event_RoundEnd);
 	HookEvent("player_death", Event_PlayerDeath);
-	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
 	HookConVarChange(gc_sPrefix, OnSettingChanged);
 
 	// FindConVar
-//	g_iMPRoundTime = FindConVar("mp_roundtime");
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
-	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
 
 	// Logs
 	SetLogFile(g_sEventsLogFile, "Events", "MyJailbreak");
@@ -173,11 +169,7 @@ public void OnPluginStart()
 // ConVarChange for Strings
 public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
-	if (convar == gc_sAdminFlag)
-	{
-		strcopy(g_sAdminFlag, sizeof(g_sAdminFlag), newValue);
-	}
-	else if (convar == gc_sPrefix)
+	if (convar == gc_sPrefix)
 	{
 		strcopy(g_sPrefix, sizeof(g_sPrefix), newValue);
 	}
@@ -254,7 +246,6 @@ public void OnConfigsExecuted()
 {
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 	gc_sPrefix.GetString(g_sPrefix, sizeof(g_sPrefix));
-	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
 
 	// Set custom Commands
 	int iCount = 0;
@@ -331,7 +322,7 @@ public Action Command_SetFreeday(int client, int args)
 			LogToFileEx(g_sEventsLogFile, "Event Freeday was started by groupvoting");
 		}
 	}
-	else if (CheckVipFlag(client, g_sAdminFlag)) // Called by admin/VIP
+	else if (MyJailbreak_CheckVIPFlags(client, "sm_freeday_flag", gc_sAdminFlag, "sm_freeday_flag")) // Called by admin/VIP
 	{
 		if (!gc_bSetA.BoolValue)
 		{

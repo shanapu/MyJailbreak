@@ -515,6 +515,9 @@ public int Native_CheckVIPFlags(Handle plugin, int argc)
 	ConVar cFlags = GetNativeCell(3);
 	cFlags.GetString(sBuffer, sizeof(sBuffer));
 
+	if (strlen(sBuffer) == 0) // ???
+		return true;
+
 	int iFlags = ReadFlagString(sBuffer);
 	if (CheckCommandAccess(client, sCommand, iFlags))
 		return true;
