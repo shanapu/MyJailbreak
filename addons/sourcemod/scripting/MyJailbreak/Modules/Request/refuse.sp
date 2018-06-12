@@ -176,15 +176,22 @@ public Action Command_refuse(int client, int args)
 
 public void Refuse_Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
-	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+	for (int i = 1; i <= MaxClients; i++)
 	{
+		if (!IsClientInGame(i))
+			continue;
+
 		delete g_hTimerRefuse[i];
 		delete g_hTimerAllowRefuse;
-		
+
 		g_iRefuseCounter[i] = 0;
 		g_bRefused[i] = false;
 		g_bAllowRefuse = false;
-		if (CheckVipFlag(i, g_sAdminFlagRefuse)) g_iRefuseCounter[i] = -1;
+
+		if (MyJailbreak_CheckVIPFlags(i, "sm_refuse_flag", gc_sAdminFlagRefuse, "sm_refuse_flag"))
+		{
+			g_iRefuseCounter[i] = -1;
+		}
 	}
 
 	g_iCountStopTime = gc_fRefuseTime.IntValue;
@@ -224,7 +231,12 @@ public void Refuse_OnConfigsExecuted()
 public void Refuse_OnClientPutInServer(int client)
 {
 	g_iRefuseCounter[client] = 0;
-	if (CheckVipFlag(client, g_sAdminFlagRefuse)) g_iRefuseCounter[client] = -1;
+
+	if (MyJailbreak_CheckVIPFlags(client, "sm_refuse_flag", gc_sAdminFlagRefuse, "sm_refuse_flag"))
+	{
+		g_iRefuseCounter[client] = -1;
+	}
+
 	g_bRefused[client] = false;
 }
 
@@ -247,17 +259,22 @@ public Action RefuseMenu(int client)
 		InfoPanel.SetTitle(info1);
 		InfoPanel.DrawText("-----------------------------------");
 		InfoPanel.DrawText("                                   ");
-		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+
+		for (int i = 1; i <= MaxClients; i++)
 		{
-			if (g_bRefused[i])
-			{
-				char userid[11];
-				char username[MAX_NAME_LENGTH];
-				IntToString(GetClientUserId(i), userid, sizeof(userid));
-				Format(username, sizeof(username), "%N", i);
-				InfoPanel.DrawText(username);
-			}
+			if (!IsValidClient(i, false, true))
+				continue;
+
+			if (!g_bRefused[i])
+				continue;
+
+			char userid[11];
+			char username[MAX_NAME_LENGTH];
+			IntToString(GetClientUserId(i), userid, sizeof(userid));
+			Format(username, sizeof(username), "%N", i);
+			InfoPanel.DrawText(username);
 		}
+
 		InfoPanel.DrawText("                                   ");
 		InfoPanel.DrawText("-----------------------------------");
 		Format(info1, sizeof(info1), "%T", "request_close", client);
@@ -289,8 +306,11 @@ public Action Timer_NoAllowRefuse(Handle timer)
 	{
 		if (g_iCountStopTime < 4)
 		{
-			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, true))
+			for (int i = 1; i <= MaxClients; i++)
 			{
+				if (!IsValidClient(i, false, true))
+					continue;
+
 				PrintCenterText(i, "%t", "request_stopcountdown_nc", g_iCountStopTime);
 			}
 			CPrintToChatAll("%s %t", g_sPrefix, "request_stopcountdown", g_iCountStopTime);
@@ -301,16 +321,21 @@ public Action Timer_NoAllowRefuse(Handle timer)
 
 	if (g_iCountStopTime == 0)
 	{
-		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, true))
+		for (int i = 1; i <= MaxClients; i++)
 		{
-			PrintCenterText(i, "%t", "request_countdownstop_nc");
+			if (!IsValidClient(i, false, true))
+				continue;
+
 			if (gc_bSounds.BoolValue)
 			{
 				EmitSoundToAllAny(g_sSoundRefuseStopPath);
 			}
+
 			g_bAllowRefuse = false;
 			g_hTimerAllowRefuse = null;
 			g_iCountStopTime = gc_fRefuseTime.IntValue;
+
+			PrintCenterText(i, "%t", "request_countdownstop_nc");
 			return Plugin_Stop;
 		}
 		CPrintToChatAll("%s %t", g_sPrefix, "request_countdownstop");

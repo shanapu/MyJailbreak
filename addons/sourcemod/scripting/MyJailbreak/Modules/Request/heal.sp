@@ -164,11 +164,14 @@ public void Heal_Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 			continue;
 
 		delete g_hTimerHeal[i];
-		
+
 		g_iHealCounter[i] = 0;
 		g_bHealed[i] = false;
-		
-		if (CheckVipFlag(i, g_sAdminFlagHeal)) g_iHealCounter[i] = -1;
+
+		if (MyJailbreak_CheckVIPFlags(i, "sm_heal_flag", gc_sAdminFlagHeal, "sm_heal_flag"))
+		{
+			g_iHealCounter[i] = -1;
+		}
 	}
 }
 
@@ -193,14 +196,21 @@ public void Heal_OnConfigsExecuted()
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
 		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		{
 			RegConsoleCmd(sCommand, Command_Heal, "Allows a Terrorist request healing");
+		}
 	}
 }
 
 public void Heal_OnClientPutInServer(int client)
 {
 	g_iHealCounter[client] = 0;
-	if (CheckVipFlag(client, g_sAdminFlagHeal)) g_iHealCounter[client] = -1;
+
+	if (MyJailbreak_CheckVIPFlags(client, "sm_heal_flag", gc_sAdminFlagHeal, "sm_heal_flag"))
+	{
+		g_iHealCounter[client] = -1;
+	}
+
 	g_bHealed[client] = false;
 }
 
@@ -241,8 +251,14 @@ public int HealMenuHandler(Menu menu, MenuAction action, int client, int Positio
 		int choice = StringToInt(Item);
 		if (choice == 1)
 		{
-			for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (g_bHealed[i])
+			for (int i = 1; i <= MaxClients; i++)
 			{
+				if (!IsValidClient(i, false, true))
+					continue;
+
+				if (!g_bHealed[i])
+					continue;
+
 				g_bIsRequest = false;
 				g_hTimerRequest = null;
 				if (gc_bHealthShot.BoolValue) GivePlayerItem(i, "weapon_healthshot");
@@ -254,8 +270,15 @@ public int HealMenuHandler(Menu menu, MenuAction action, int client, int Positio
 		{
 			g_bIsRequest = false;
 			g_hTimerRequest = null;
-			for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (g_bHealed[i])
+
+			for (int i = 1; i <= MaxClients; i++)
 			{
+				if (!IsValidClient(i, false, true))
+					continue;
+
+				if (!g_bHealed[i])
+					continue;
+
 				CPrintToChatAll("%s %t", g_sPrefix, "request_noaccepted", i, client);
 			}
 		}

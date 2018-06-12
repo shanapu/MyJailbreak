@@ -68,7 +68,6 @@ int g_iFreeKillCounter[MAXPLAYERS+1];
 
 // Strings
 char g_sFreeKillLogFile[PLATFORM_MAX_PATH];
-char g_sAdminFlag[64];
 
 // Start
 public void Freekill_OnPluginStart()
@@ -94,21 +93,9 @@ public void Freekill_OnPluginStart()
 	// Hooks 
 	HookEvent("round_start", Freekill_Event_RoundStart);
 	HookEvent("player_death", Freekill_Event_PlayerDeath);
-	HookConVarChange(gc_sAdminFlag, Freekill_OnSettingChanged);
-
-	// FindConVar
-	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
 
 	// Logs
 	SetLogFile(g_sFreeKillLogFile, "Freekills", "MyJailbreak");
-}
-
-public void Freekill_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
-{
-	if (convar == gc_sAdminFlag)
-	{
-		strcopy(g_sAdminFlag, sizeof(g_sAdminFlag), newValue);
-	}
 }
 
 /******************************************************************************
@@ -458,12 +445,16 @@ int GetRandomAdmin()
 	int[] admins = new int[MaxClients];
 	int adminsCount;
 
-	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+	for (int i = 1; i <= MaxClients; i++)
 	{
-		if (CheckVipFlag(i, g_sAdminFlag))
-		{
-			admins[adminsCount++] = i;
-		}
+		if (!IsValidClient(i, false, true))
+			continue;
+
+		if (!MyJailbreak_CheckVIPFlags(i, "sm_freekill_flag", gc_sAdminFlag, "sm_freekill_flag"))
+			continue;
+
+		admins[adminsCount++] = i;
 	}
+
 	return (adminsCount == 0) ? -1 : admins[GetRandomInt(0, adminsCount-1)];
 }

@@ -79,7 +79,6 @@ int TickTime[MAXPLAYERS+1];
 // Strings
 char g_sSoundCuffsPath[256];
 char g_sOverlayCuffsPath[256];
-char g_sAdminFlagCuffs[64];
 char g_sSoundBreakCuffsPath[256];
 char g_sSoundUnLockCuffsPath[256];
 char g_sEquipWeapon[MAXPLAYERS+1][32];
@@ -123,14 +122,12 @@ public void HandCuffs_OnPluginStart()
 	HookConVarChange(gc_sSoundBreakCuffsPath, HandCuffs_OnSettingChanged);
 	HookConVarChange(gc_sSoundUnLockCuffsPath, HandCuffs_OnSettingChanged);
 	HookConVarChange(gc_sOverlayCuffsPath, HandCuffs_OnSettingChanged);
-	HookConVarChange(gc_sAdminFlagCuffs, HandCuffs_OnSettingChanged);
 
 	// FindConVar
 	gc_sSoundCuffsPath.GetString(g_sSoundCuffsPath, sizeof(g_sSoundCuffsPath));
 	gc_sSoundBreakCuffsPath.GetString(g_sSoundBreakCuffsPath, sizeof(g_sSoundBreakCuffsPath));
 	gc_sSoundUnLockCuffsPath.GetString(g_sSoundUnLockCuffsPath, sizeof(g_sSoundUnLockCuffsPath));
 	gc_sOverlayCuffsPath.GetString(g_sOverlayCuffsPath, sizeof(g_sOverlayCuffsPath));
-	gc_sAdminFlagCuffs.GetString(g_sAdminFlagCuffs, sizeof(g_sAdminFlagCuffs));
 }
 
 public void HandCuffs_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
@@ -170,10 +167,6 @@ public void HandCuffs_OnSettingChanged(Handle convar, const char[] oldValue, con
 		{
 			PrecacheDecalAnyDownload(g_sOverlayCuffsPath);
 		}
-	}
-	else if (convar == gc_sAdminFlagCuffs)
-	{
-		strcopy(g_sAdminFlagCuffs, sizeof(g_sAdminFlagCuffs), newValue);
 	}
 }
 
@@ -515,7 +508,7 @@ void CuffsEm(int client, int attacker)
 
 		CPrintToChatAll("%s %t", g_sPrefix, "warden_cuffson", attacker, client);
 		CPrintToChat(attacker, "%s %t", g_sPrefix, "warden_cuffsgot", g_iPlayerHandCuffs[attacker]);
-		if (CheckVipFlag(client, g_sAdminFlagCuffs))
+		if (MyJailbreak_CheckVIPFlags(client, "sm_warden_handcuffs_flag", gc_sAdminFlagCuffs, "sm_warden_handcuffs_flag"))
 		{
 			CreateTimer (2.5, Timer_HasPaperClip, client);
 		}

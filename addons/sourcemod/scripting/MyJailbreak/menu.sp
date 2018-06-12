@@ -137,10 +137,6 @@ ConVar gc_bVoteNoMenu;
 
 // Strings
 char g_sPrefix[64];
-char g_sAdminFlagBulletSparks[64];
-char g_sAdminFlagLaser[64];
-char g_sAdminFlagPainter[64];
-char g_sAdminFlag[64];
 
 // Handles
 Handle gH_TopMenu = INVALID_HANDLE;
@@ -222,11 +218,7 @@ public void OnPluginStart()
 	// Hooks
 	HookEvent("player_spawn", Event_OnPlayerSpawn);
 	HookEvent("round_start", Event_RoundStart);
-	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
 	HookConVarChange(gc_sPrefix, OnSettingChanged);
-
-	// Find
-	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
 
 	// Late loading
 	if (g_bIsLateLoad)
@@ -444,11 +436,7 @@ public void Handler_AdminMenu_ClearQueue(Handle h_TopMenu, TopMenuAction action,
 // ConVarChange for Strings
 public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
-	if (convar == gc_sAdminFlag)
-	{
-		strcopy(g_sAdminFlag, sizeof(g_sAdminFlag), newValue);
-	}
-	else if (convar == gc_sPrefix)
+	if (convar == gc_sPrefix)
 	{
 		strcopy(g_sPrefix, sizeof(g_sPrefix), newValue);
 	}
@@ -562,13 +550,6 @@ public void OnConfigsExecuted()
 	gc_bOrders = FindConVar("sm_warden_orders");
 	gc_bOrdersDeputy = FindConVar("sm_warden_orders_deputy");
 	g_bEndRound = FindConVar("sm_myjb_allow_endround");
-
-	if (gp_bMyJBWarden)
-	{
-		gc_sAdminFlagLaser.GetString(g_sAdminFlagLaser, sizeof(g_sAdminFlagLaser));
-		gc_sAdminFlagPainter.GetString(g_sAdminFlagPainter, sizeof(g_sAdminFlagPainter));
-		gc_sAdminFlagBulletSparks.GetString(g_sAdminFlagBulletSparks, sizeof(g_sAdminFlagBulletSparks));
-	}
 
 	// Set custom Commands
 	int iCount = 0;
@@ -812,7 +793,7 @@ public Action Command_OpenMenu(int client, int args)
 
 				if (g_bSparks != null)
 				{
-					if (g_bSparks.BoolValue && CheckVipFlag(client, g_sAdminFlagBulletSparks))
+					if (g_bSparks.BoolValue && MyJailbreak_CheckVIPFlags(client, "sm_warden_bulletsparks_flag", gc_sAdminFlagBulletSparks, "sm_warden_bulletsparks_flag"))
 					{
 						Format(menuinfo, sizeof(menuinfo), "%T", "menu_sparks", client);
 						mainmenu.AddItem("sparks", menuinfo);
@@ -821,7 +802,7 @@ public Action Command_OpenMenu(int client, int args)
 
 				if (g_bPainter != null)
 				{
-					if (g_bPainter.BoolValue && CheckVipFlag(client, g_sAdminFlagPainter))
+					if (g_bPainter.BoolValue && MyJailbreak_CheckVIPFlags(client, "sm_warden_painter_flag", gc_sAdminFlagPainter, "sm_warden_painter_flag"))
 					{
 						Format(menuinfo, sizeof(menuinfo), "%T", "menu_painter", client);
 						mainmenu.AddItem("painter", menuinfo);
@@ -830,7 +811,7 @@ public Action Command_OpenMenu(int client, int args)
 
 				if (g_bLaser != null)
 				{
-					if (g_bLaser.BoolValue && CheckVipFlag(client, g_sAdminFlagLaser))
+					if (g_bLaser.BoolValue && MyJailbreak_CheckVIPFlags(client, "sm_warden_laser_flag", gc_sAdminFlagLaser, "sm_warden_laser_flag"))
 					{
 						Format(menuinfo, sizeof(menuinfo), "%T", "menu_laser", client);
 						mainmenu.AddItem("laser", menuinfo);
@@ -1000,7 +981,7 @@ public Action Command_OpenMenu(int client, int args)
 
 				if (g_bSparks != null)
 				{
-					if (g_bSparks.BoolValue && g_bSparksDeputy.BoolValue && CheckVipFlag(client, g_sAdminFlagBulletSparks))
+					if (g_bSparks.BoolValue && g_bSparksDeputy.BoolValue && MyJailbreak_CheckVIPFlags(client, "sm_warden_bulletsparks_flag", gc_sAdminFlagBulletSparks, "sm_warden_bulletsparks_flag"))
 					{
 						Format(menuinfo, sizeof(menuinfo), "%T", "menu_sparks", client);
 						mainmenu.AddItem("sparks", menuinfo);
@@ -1009,7 +990,7 @@ public Action Command_OpenMenu(int client, int args)
 
 				if (g_bPainter != null)
 				{
-					if (g_bPainter.BoolValue && g_bPainterDeputy.BoolValue && CheckVipFlag(client, g_sAdminFlagPainter))
+					if (g_bPainter.BoolValue && g_bPainterDeputy.BoolValue && MyJailbreak_CheckVIPFlags(client, "sm_warden_painter_flag", gc_sAdminFlagPainter, "sm_warden_painter_flag"))
 					{
 						Format(menuinfo, sizeof(menuinfo), "%T", "menu_painter", client);
 						mainmenu.AddItem("painter", menuinfo);
@@ -1018,7 +999,7 @@ public Action Command_OpenMenu(int client, int args)
 
 				if (g_bLaser != null)
 				{
-					if (g_bLaser.BoolValue && g_bLaserDeputy.BoolValue && CheckVipFlag(client, g_sAdminFlagLaser))
+					if (g_bLaser.BoolValue && g_bLaserDeputy.BoolValue && MyJailbreak_CheckVIPFlags(client, "sm_warden_laser_flag", gc_sAdminFlagLaser, "sm_warden_laser_flag"))
 					{
 						Format(menuinfo, sizeof(menuinfo), "%T", "menu_laser", client);
 						mainmenu.AddItem("laser", menuinfo);
@@ -1268,7 +1249,7 @@ public Action Command_OpenMenu(int client, int args)
 				}
 			}
 
-			if (CheckVipFlag(client, g_sAdminFlag))
+			if (MyJailbreak_CheckVIPFlags(client, "sm_menu_flag", gc_sAdminFlag, "sm_menu_flag"))
 			{
 				/* ADMIN PLACEHOLDER
 				Format(menuinfo, sizeof(menuinfo), "%T", "menu_PLACEHOLDER", client);
@@ -1654,7 +1635,7 @@ public int VoteEventMenuHandler(Menu daysmenu, MenuAction action, int client, in
 // Event Days Set Menu
 public Action Command_SetEventDay(int client, int args)
 {
-	if (CheckVipFlag(client, g_sAdminFlag))
+	if (MyJailbreak_CheckVIPFlags(client, "sm_menu_flag", gc_sAdminFlag, "sm_menu_flag"))
 	{
 		Command_SetAdminEventDay(client);
 	}
@@ -1784,7 +1765,7 @@ public Action Command_VotingMenu(int client, int args)
 {
 	if (gc_bPlugin.BoolValue && gc_bVoting.BoolValue)
 	{
-		if (((gp_bWarden || gp_bMyJBWarden) && warden_iswarden(client) && gc_bSetW.BoolValue) || (CheckVipFlag(client, g_sAdminFlag) && gc_bSetA.BoolValue) || client == 0)
+		if (((gp_bWarden || gp_bMyJBWarden) && warden_iswarden(client) && gc_bSetW.BoolValue) || (MyJailbreak_CheckVIPFlags(client, "sm_menu_flag", gc_sAdminFlag, "sm_menu_flag") && gc_bSetA.BoolValue) || client == 0)
 		{
 			if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0))
 			{

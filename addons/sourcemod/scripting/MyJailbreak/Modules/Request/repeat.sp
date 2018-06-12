@@ -62,7 +62,6 @@ Handle g_hTimerRepeat[MAXPLAYERS+1];
 
 // Strings
 char g_sSoundRepeatPath[256];
-char g_sAdminFlagRepeat[64];
 
 // Start
 public void Repeat_OnPluginStart()
@@ -80,11 +79,9 @@ public void Repeat_OnPluginStart()
 	// Hooks 
 	HookEvent("round_start", Repeat_Event_RoundStart);
 	HookConVarChange(gc_sSoundRepeatPath, Repeat_OnSettingChanged);
-	HookConVarChange(gc_sAdminFlagRepeat, Repeat_OnSettingChanged);
 
 	// FindConVar
 	gc_sSoundRepeatPath.GetString(g_sSoundRepeatPath, sizeof(g_sSoundRepeatPath));
-	gc_sAdminFlagRepeat.GetString(g_sAdminFlagRepeat, sizeof(g_sAdminFlagRepeat));
 }
 
 public void Repeat_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
@@ -97,10 +94,6 @@ public void Repeat_OnSettingChanged(Handle convar, const char[] oldValue, const 
 			PrecacheSoundAnyDownload(g_sSoundRepeatPath);
 		}
 	}
-	else if (convar == gc_sAdminFlagRepeat)
-	{
-		strcopy(g_sAdminFlagRepeat, sizeof(g_sAdminFlagRepeat), newValue);
-	}
 }
 
 /******************************************************************************
@@ -109,35 +102,50 @@ public void Repeat_OnSettingChanged(Handle convar, const char[] oldValue, const 
 
 public Action Command_Repeat(int client, int args)
 {
-	if (gc_bPlugin.BoolValue)
+	if (!gc_bPlugin.BoolValue)
+		return Plugin_Handled;
+
+	if (!gc_bRepeat.BoolValue)
+		return Plugin_Handled;
+
+	if (GetClientTeam(client) == CS_TEAM_T && IsPlayerAlive(client))
 	{
-		if (gc_bRepeat.BoolValue)
+		if (g_hTimerRepeat[client] == null)
 		{
-			if (GetClientTeam(client) == CS_TEAM_T && IsPlayerAlive(client))
+			if (g_iRepeatCounter[client] < gc_iRepeatLimit.IntValue)
 			{
-				if (g_hTimerRepeat[client] == null)
+				g_iRepeatCounter[client]++;
+				g_bRepeated[client] = true;
+				CPrintToChatAll("%s %t", g_sPrefix, "request_repeatpls", client);
+				g_hTimerRepeat[client] = CreateTimer(10.0, Timer_RepeatEnd, GetClientUserId(client));
+
+				if ((gp_bWarden || gp_bMyJBWarden) && warden_exist())
 				{
-					if (g_iRepeatCounter[client] < gc_iRepeatLimit.IntValue)
-					{
-						g_iRepeatCounter[client]++;
-						g_bRepeated[client] = true;
-						CPrintToChatAll("%s %t", g_sPrefix, "request_repeatpls", client);
-						g_hTimerRepeat[client] = CreateTimer(10.0, Timer_RepeatEnd, GetClientUserId(client));
-						if ((gp_bWarden || gp_bMyJBWarden) && warden_exist())
-						{
-							for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (warden_iswarden(i) || warden_deputy_isdeputy(i)) RepeatMenu(i);
-						}
-						else for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, false)) if (GetClientTeam(client) == CS_TEAM_CT) RepeatMenu(i);
-						
-						if (gc_bSounds.BoolValue)EmitSoundToAllAny(g_sSoundRepeatPath);
-					}
-					else CReplyToCommand(client, "%s %t", g_sPrefix, "request_repeattimes", gc_iRepeatLimit.IntValue);
+					int warden = warden_get();
+					RepeatMenu(warden);
 				}
-				else CReplyToCommand(client, "%s %t", g_sPrefix, "request_alreadyrepeat");
+				else for (int i = 1; i <= MaxClients; i++)
+				{
+					if (!IsValidClient(i, false, false))
+						continue;
+
+					if (GetClientTeam(i) != CS_TEAM_CT)
+						continue;
+
+					RepeatMenu(i);
+				}
+
+				if (gc_bSounds.BoolValue)
+				{
+					EmitSoundToAllAny(g_sSoundRepeatPath);
+				}
 			}
-			else CReplyToCommand(client, "%s %t", g_sPrefix, "request_notalivect");
+			else CReplyToCommand(client, "%s %t", g_sPrefix, "request_repeattimes", gc_iRepeatLimit.IntValue);
 		}
+		else CReplyToCommand(client, "%s %t", g_sPrefix, "request_alreadyrepeat");
 	}
+	else CReplyToCommand(client, "%s %t", g_sPrefix, "request_notalivect");
+
 
 	return Plugin_Handled;
 }
@@ -148,14 +156,20 @@ public Action Command_Repeat(int client, int args)
 
 public void Repeat_Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
-	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+	for (int i = 1; i <= MaxClients; i++)
 	{
+		if (!IsClientInGame(i))
+			continue;
+
 		delete g_hTimerRepeat[i];
-		
+
 		g_bRepeated[i] = false;
 		g_iRepeatCounter[i] = 0;
-		
-		if (CheckVipFlag(i, g_sAdminFlagRepeat)) g_iRepeatCounter[i] = -1;
+
+		if (MyJailbreak_CheckVIPFlags(i, "sm_repeat_flag", gc_sAdminFlagRepeat, "sm_repeat_flag"))
+		{
+			g_iRepeatCounter[i] = -1;
+		}
 	}
 }
 
@@ -186,14 +200,20 @@ public void Repeat_OnConfigsExecuted()
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
 		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		{
 			RegConsoleCmd(sCommand, Command_Repeat, "Allows a Terrorist request repeat");
+		}
 	}
 }
 
 public void Repeat_OnClientPutInServer(int client)
 {
 	g_iRepeatCounter[client] = 0;
-	if (CheckVipFlag(client, g_sAdminFlagRepeat)) g_iRepeatCounter[client] = -1;
+
+	if (MyJailbreak_CheckVIPFlags(client, "sm_repeat_flag", gc_sAdminFlagRepeat, "sm_repeat_flag"))
+	{
+		g_iRepeatCounter[client] = -1;
+	}
 
 	g_bRepeated[client] = false;
 }
@@ -219,16 +239,19 @@ void RepeatMenu(int client)
 	InfoPanel.DrawText("-----------------------------------");
 	InfoPanel.DrawText("                                   ");
 
-	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, true))
+	for (int i = 1; i <= MaxClients; i++)
 	{
-		if (g_bRepeated[i])
-		{
-			char userid[11];
-			char username[MAX_NAME_LENGTH];
-			IntToString(GetClientUserId(i), userid, sizeof(userid));
-			Format(username, sizeof(username), "%N", i);
-			InfoPanel.DrawText(username);
-		}
+		if (!IsValidClient(i, false, true))
+			continue;
+
+		if (!g_bRepeated[i])
+			continue;
+
+		char userid[11];
+		char username[MAX_NAME_LENGTH];
+		IntToString(GetClientUserId(i), userid, sizeof(userid));
+		Format(username, sizeof(username), "%N", i);
+		InfoPanel.DrawText(username);
 	}
 
 	InfoPanel.DrawText("                                   ");

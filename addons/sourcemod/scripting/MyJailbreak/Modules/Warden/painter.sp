@@ -56,9 +56,6 @@ bool g_bPainterColorRainbow[MAXPLAYERS+1] = true;
 // Integers
 int g_iPainterColor[MAXPLAYERS+1];
 
-// Strings
-char g_sAdminFlagPainter[64];
-
 // Floats
 float g_fLastPainter[MAXPLAYERS+1][3];
 
@@ -77,22 +74,11 @@ public void Painter_OnPluginStart()
 	gc_sCustomCommandPainter = AutoExecConfig_CreateConVar("sm_warden_cmds_painter", "paint, draw", "Set your custom chat commands for Painter menu(!painter (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 
 	// Hooks
-	HookConVarChange(gc_sAdminFlagPainter, Painter_OnSettingChanged);
 	HookEvent("round_end", Painter_Event_RoundEnd);
 	HookEvent("player_team", Painter_Event_PlayerTeamDeath);
 	HookEvent("player_death", Painter_Event_PlayerTeamDeath);
-
-	// FindConVar
-	gc_sAdminFlagLaser.GetString(g_sAdminFlagLaser, sizeof(g_sAdminFlagLaser));
 }
 
-public void Painter_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
-{
-	if (convar == gc_sAdminFlagPainter)
-	{
-		strcopy(g_sAdminFlagPainter, sizeof(g_sAdminFlagPainter), newValue);
-	}
-}
 
 /******************************************************************************
                    COMMANDS
@@ -104,7 +90,7 @@ public Action Command_PainterMenu(int client, int args)
 	{
 		if ((IsClientWarden(client)) || (IsClientDeputy(client) && gc_bPainterDeputy.BoolValue) || ((GetClientTeam(client) == CS_TEAM_T) && g_bPainterT))
 		{
-			if (CheckVipFlag(client, g_sAdminFlagPainter) || (GetClientTeam(client) == CS_TEAM_T))
+			if (MyJailbreak_CheckVIPFlags(client, "sm_warden_painter_flag", gc_sAdminFlagPainter, "sm_warden_painter_flag") || (GetClientTeam(client) == CS_TEAM_T))
 			{
 				char menuinfo[255];
 
@@ -195,7 +181,7 @@ public Action Painter_OnPlayerRunCmd(int client, int &buttons, int &impulse, flo
 	if (!IsPlayerAlive(client))
 		return;
 
-	if ((IsClientWarden(client) && gc_bPainter.BoolValue && g_bPainter[client] && CheckVipFlag(client, g_sAdminFlagPainter)) || ((GetClientTeam(client) == CS_TEAM_T) && gc_bPainter.BoolValue && g_bPainterT && g_bPainter[client]) || (IsClientDeputy(client) && gc_bPainterDeputy.BoolValue && g_bPainter[client]))
+	if ((IsClientWarden(client) && gc_bPainter.BoolValue && g_bPainter[client] && MyJailbreak_CheckVIPFlags(client, "sm_warden_painter_flag", gc_sAdminFlagPainter, "sm_warden_painter_flag")) || ((GetClientTeam(client) == CS_TEAM_T) && gc_bPainter.BoolValue && g_bPainterT && g_bPainter[client]) || (IsClientDeputy(client) && gc_bPainterDeputy.BoolValue && g_bPainter[client]))
 	{
 		for (int i = 0; i < MAX_BUTTONS; i++)
 		{
