@@ -244,7 +244,7 @@ public void HandCuffs_Event_WeaponFire(Event event, char[] name, bool dontBroadc
 		if (StrEqual(sWeapon, "weapon_taser"))
 		{
 			int weapon = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
-			SetPlayerAmmo(client, weapon, _, 2);
+			SetEntProp(weapon, Prop_Data, "m_iClip1", 2);
 		}
 	}
 }
@@ -529,7 +529,7 @@ void FreeEm(int client, int attacker)
 	if ((attacker != 0) && (g_iCuffed == 0) && (g_iPlayerHandCuffs[attacker] < 1))
 	{
 		int weapon = GetEntPropEnt(attacker, Prop_Send, "m_hActiveWeapon");
-		SetPlayerAmmo(attacker, weapon, _, 0);
+		SetEntProp(weapon, Prop_Data, "m_iClip1", 0);
 	}
 	if (attacker != 0) CPrintToChatAll("%s %t", g_sPrefix, "warden_cuffsoff", attacker, client);
 }
