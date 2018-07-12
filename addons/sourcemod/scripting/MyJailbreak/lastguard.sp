@@ -420,6 +420,8 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			if (!IsClientInGame(i))
 				continue;
 
+			ToggleWeaponFire(i, true);
+
 			SetEntProp(i, Prop_Send, "m_CollisionGroup", 5);  // 2 - none / 5 - 'default'
 
 			if (gc_bWallhack.BoolValue && gp_bCustomPlayerSkins)
@@ -634,7 +636,7 @@ void CheckStatus()
 {
 	if (gc_bPlugin.BoolValue && !g_bIsLR && !g_bIsLastGuard && gc_bAutomatic.BoolValue)
 	{
-		if ((GetAlivePlayersCount(CS_TEAM_CT) == 1) && (GetAlivePlayersCount(CS_TEAM_T) > 1) && !g_bIsLastGuard && !g_bIsLR && g_bMinCT)
+		if ((GetAlivePlayersCount(CS_TEAM_CT) == 1) && (GetAlivePlayersCount(CS_TEAM_T) > 1) && g_bMinCT)
 		{
 			if (gp_bMyJailBreak) if (MyJailbreak_IsEventDayRunning())
 			return;
