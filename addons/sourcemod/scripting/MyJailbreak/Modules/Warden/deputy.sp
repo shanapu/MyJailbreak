@@ -440,7 +440,7 @@ public void Deputy_OnAvailableLR(int Announced)
 	if (gc_bRemoveLRDeputy.BoolValue && g_iDeputy != -1)
 	{
 		RemoveTheDeputy();
-		Forward_OnDeputyRemoved(0); // 0 = console
+		Forward_OnDeputyRemoved(g_iDeputy);
 	}
 }
 /******************************************************************************
