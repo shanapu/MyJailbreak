@@ -1372,22 +1372,31 @@ public Action Timer_StartEvent(Handle timer)
 	{
 		if (g_iFreezeTime <= gc_iFreezeTime.IntValue - 3)
 		{
-			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+			for (int i = 1; i <= MaxClients; i++)
 			{
+				if (!IsValidClient(i, true, false))
+					continue;
+
 				if (GetClientTeam(i) == CS_TEAM_T)
 				{
 					SetEntityMoveType(i, MOVETYPE_WALK);
 				}
 			}
 		}
-		
-		for (int i = 1; i <= MaxClients; i++)if (GetClientTeam(i) == CS_TEAM_CT)
+
+		for (int i = 1; i <= MaxClients; i++)
 		{
-			PrintCenterText(i, "%t", "zombie_timetounfreeze_nc", g_iFreezeTime);
-		}
-		else if (GetClientTeam(i) == CS_TEAM_T)
-		{
-			PrintCenterText(i, "%t", "zombie_timeuntilzombie_nc", g_iFreezeTime);
+			if (!IsValidClient(i, false, true))
+				continue;
+
+			if (GetClientTeam(i) == CS_TEAM_CT)
+			{
+				PrintCenterText(i, "%t", "zombie_timetounfreeze_nc", g_iFreezeTime);
+			}
+			else
+			{
+				PrintCenterText(i, "%t", "zombie_timeuntilzombie_nc", g_iFreezeTime);
+			}
 		}
 
 		return Plugin_Continue;
