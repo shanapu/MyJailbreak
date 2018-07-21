@@ -79,6 +79,7 @@ ConVar gc_bVote;
 ConVar gc_iKey;
 ConVar gc_bStandStill;
 ConVar gc_fBombRadius;
+ConVar gc_fBombRadiusT;
 ConVar gc_fBeaconTime;
 ConVar gc_bSounds;
 ConVar gc_bOverlays;
@@ -181,7 +182,8 @@ public void OnPluginStart()
 	gc_bBeginSetVW = AutoExecConfig_CreateConVar("sm_suicidebomber_begin_daysvote", "0", "When warden/admin start eventday voting (!sm_voteday) and event wins = 0 - start event next round, 1 - start event current round", _, true, 0.0, true, 1.0);
 	gc_bTeleportSpawn = AutoExecConfig_CreateConVar("sm_suicidebomber_teleport_spawn", "0", "0 - start event in current round from current player positions, 1 - teleport players to spawn when start event on current round(only when sm_*_begin_admin, sm_*_begin_warden, sm_*_begin_vote or sm_*_begin_daysvote is on '1')", _, true, 0.0, true, 1.0);
 
-	gc_fBombRadius = AutoExecConfig_CreateConVar("sm_suicidebomber_bomb_radius", "200.0", "Radius for bomb damage", _, true, 10.0, true, 999.0);
+	gc_fBombRadius = AutoExecConfig_CreateConVar("sm_suicidebomber_bomb_radius", "200.0", "Radius for bomb damage on guards", _, true, 10.0, true, 999.0);
+	gc_fBombRadiusT = AutoExecConfig_CreateConVar("sm_suicidebomber_bomb_radius_t", "200.0", "Radius for bomb damage on prisoners (reduce when you have problem with teamkiller) / 0 - disable team damage at all", _, true, 0.0, true, 999.0);
 	gc_iFreezeTime = AutoExecConfig_CreateConVar("sm_suicidebomber_hidetime", "20", "Time to hide for CTs", _, true, 0.0);
 	gc_iRoundTime = AutoExecConfig_CreateConVar("sm_suicidebomber_roundtime", "5", "Round time in minutes for a single Suicide Bomber round", _, true, 1.0);
 	gc_fBeaconTime = AutoExecConfig_CreateConVar("sm_suicidebomber_beacon_time", "240", "Time in seconds until the beacon turned on (set to 0 to disable)", _, true, 0.0);
@@ -1341,7 +1343,7 @@ public Action Timer_DetonateBomb(Handle timer, int userid)
 
 			// If CT was in explosion radius, damage or kill them
 			// Formula used: damage = 200 - (d/2)
-			int damage = RoundToFloor(gc_fBombRadius.FloatValue - (distance / 2.0));
+			int damage = RoundToFloor(GetClientTeam(i) == CS_TEAM_T ? gc_fBombRadiusT.FloatValue : gc_fBombRadius.FloatValue - (distance / 2.0));
 
 			if (damage <= 0) // this player was not damaged 
 				continue;
