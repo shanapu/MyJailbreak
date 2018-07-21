@@ -605,6 +605,8 @@ public Action Command_BecomeWarden(int client, int args)
 	{
 		SetCoolDown(client, gc_iCoolDownLimit.IntValue);
 		CReplyToCommand(client, "%s %t", g_sPrefix, "warden_limit", gc_iLimitWarden.IntValue, GetCoolDown(client));
+
+		CheckWardenCoolDowns();
 	}
 
 	return Plugin_Handled;
@@ -925,6 +927,8 @@ public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 			Forward_OnWardenRemoved(g_iWarden);
 			g_iLastWarden = g_iWarden;
 			g_iWarden = -1;
+
+			CheckWardenCoolDowns();
 		}
 		else // stay warden
 		{
@@ -1252,6 +1256,7 @@ int GetLimit(int client)
 void SetLimit(int client, int limit)
 {
 	char steamid[24];
+
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
 
 	if (limit == 0)
@@ -1259,6 +1264,40 @@ void SetLimit(int client, int limit)
 		RemoveFromTrie(g_hLimit, steamid);
 	}
 	else SetTrieValue(g_hLimit, steamid, limit);
+}
+
+void CheckWardenCoolDowns()
+{
+	int count = 0;
+	for (int i = 1; i <= MaxClients; i++)
+	{
+		if (!IsValidClient(i, false, false))
+			continue;
+
+		if (GetClientTeam(i) != CS_TEAM_CT)
+			continue;
+
+		if (GetCoolDown(i) >= gc_iCoolDownLimit.IntValue)
+		{
+			count++;
+		}
+	}
+
+	if (count < GetAlivePlayersCount(CS_TEAM_CT))
+		return;
+
+	for (int i = 1; i <= MaxClients; i++)
+	{
+		if (!IsValidClient(i, false, true))
+			continue;
+
+		if (GetClientTeam(i) != CS_TEAM_CT)
+			continue;
+
+		SetCoolDown(i, 0);
+	}
+
+	CPrintToChatAll("%s %s", g_sPrefix, "The warden cooldown for all guards has been reseted");
 }
 
 /******************************************************************************
