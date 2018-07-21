@@ -1277,7 +1277,7 @@ void CheckWardenCoolDowns()
 		if (GetClientTeam(i) != CS_TEAM_CT)
 			continue;
 
-		if (GetCoolDown(i) >= gc_iCoolDownLimit.IntValue)
+		if (GetCoolDown(i) > 0)
 		{
 			count++;
 		}
