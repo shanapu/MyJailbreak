@@ -944,6 +944,7 @@ void ResetEventDay()
 public void OnClientPutInServer(int client)
 {
 	SDKHook(client, SDKHook_WeaponCanUse, OnWeaponCanUse);
+	SDKHook(client, SDKHook_TraceAttack, OnTraceAttack);
 }
 
 // Nova & Grenade only
@@ -964,6 +965,20 @@ public Action OnWeaponCanUse(int client, int weapon)
 
 		return Plugin_Handled;
 	}
+
+	return Plugin_Continue;
+}
+
+public Action OnTraceAttack(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &ammotype, int hitbox, int hitgroup)
+{
+	if (!g_bIsDuckHunt)
+		return Plugin_Continue;
+
+	if (!IsValidClient(victim, true, false) || attacker == victim || !IsValidClient(attacker, true, false))
+		return Plugin_Continue;
+
+	if (GetClientTeam(victim) == GetClientTeam(attacker))
+		return Plugin_Handled;
 
 	return Plugin_Continue;
 }
