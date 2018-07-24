@@ -1343,7 +1343,7 @@ public Action Timer_DetonateBomb(Handle timer, int userid)
 
 			// If CT was in explosion radius, damage or kill them
 			// Formula used: damage = 200 - (d/2)
-			int damage = RoundToFloor(GetClientTeam(i) == CS_TEAM_T ? gc_fBombRadiusT.FloatValue : gc_fBombRadius.FloatValue - (distance / 2.0));
+			int damage = RoundToFloor(GetClientTeam(i) == CS_TEAM_T ? gc_fBombRadiusT.FloatValue - (distance / 2.0) : gc_fBombRadius.FloatValue - (distance / 2.0));
 
 			if (damage <= 0) // this player was not damaged 
 				continue;
