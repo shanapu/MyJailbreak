@@ -346,14 +346,18 @@ public void Deputy_Event_RoundStart(Event event, const char[] name, bool dontBro
 				Forward_OnDeputyRemoved(g_iDeputy);
 				g_iLastDeputy = g_iDeputy;
 				g_iDeputy = -1;
-				
 			}
 		}
 	}
 
 	if (g_iDeputy != -1)
 	{
-		if (gc_bModelDeputy.BoolValue) SetEntityModel(g_iDeputy, g_sModelPathDeputy);
+		if (gc_bModelDeputy.BoolValue)
+		{
+			SetEntityModel(g_iDeputy, g_sModelPathDeputy);
+		}
+
+		Glow_OnDeputyCreation(g_iDeputy);
 	}
 }
 
@@ -665,6 +669,7 @@ void Forward_OnDeputyCreated(int client)
 
 	Color_OnDeputyCreation(client);
 	HandCuffs_OnDeputyCreation(client);
+	Glow_OnDeputyCreation(client);
 }
 
 // Deputy was removed (will fire all time - *BySelf *ByAdmin *Death ...)
@@ -676,4 +681,5 @@ void Forward_OnDeputyRemoved(int client)
 
 	Color_OnDeputyRemoved(client);
 	HandCuffs_OnDeputyRemoved(client);
+	Glow_OnDeputyRemoved(client);
 }

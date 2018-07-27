@@ -48,6 +48,7 @@
 #include <voiceannounce_ex>
 #include <chat-processor>
 #include <scp>
+#include <CustomPlayerSkins>
 #define REQUIRE_PLUGIN
 
 #include <mystocks>
@@ -99,6 +100,7 @@ bool gp_bChatProcessor = false;
 bool gp_bSimpleChatProcessor = false;
 bool gp_bBasecomm = false;
 bool gp_bSourceComms = false;
+bool gp_bCustomPlayerSkins = false;
 
 // Integers
 int g_iCMDCoolDown[MAXPLAYERS+1] = 0;
@@ -174,6 +176,7 @@ char g_sRestrictedSound[32] = "buttons/button11.wav";
 #include "MyJailbreak/Modules/Warden/orders.sp"
 #include "MyJailbreak/Modules/Warden/freedays.sp"
 #include "MyJailbreak/Modules/Warden/withheldLR.sp"
+#include "MyJailbreak/Modules/Warden/glow.sp"
 
 // Compiler Options
 #pragma semicolon 1
@@ -262,6 +265,7 @@ public void OnPluginStart()
 	Orders_OnPluginStart();
 	Freedays_OnPluginStart();
 	NoLR_OnPluginStart();
+	Glow_OnPluginStart();
 
 	// AutoExecConfig
 	AutoExecConfig_ExecuteFile();
@@ -470,6 +474,7 @@ public void OnAllPluginsLoaded()
 	gp_bChatProcessor = LibraryExists("chat-processor");
 	gp_bBasecomm = LibraryExists("basecomm");
 	gp_bSourceComms = LibraryExists("sourcecomms");
+	gp_bCustomPlayerSkins = LibraryExists("CustomPlayerSkins");
 }
 
 public void OnLibraryRemoved(const char[] name)
@@ -506,6 +511,10 @@ public void OnLibraryRemoved(const char[] name)
 	{
 		gp_bSourceComms = false;
 	}
+	else if (StrEqual(name, "CustomPlayerSkins"))
+	{
+		gp_bCustomPlayerSkins = false;
+	}
 }
 
 public void OnLibraryAdded(const char[] name)
@@ -541,6 +550,10 @@ public void OnLibraryAdded(const char[] name)
 	else if (StrEqual(name, "sourcecomms"))
 	{
 		gp_bSourceComms = true;
+	}
+	else if (StrEqual(name, "CustomPlayerSkins"))
+	{
+		gp_bCustomPlayerSkins = true;
 	}
 }
 
@@ -932,8 +945,13 @@ public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 		}
 		else // stay warden
 		{
-			if (gc_bModel.BoolValue) SetEntityModel(g_iWarden, g_sModelPathWarden);
+			if (gc_bModel.BoolValue)
+			{
+				SetEntityModel(g_iWarden, g_sModelPathWarden);
+			}
+
 			SetLimit(g_iWarden, GetLimit(g_iWarden)+1);
+			Glow_OnWardenCreation(g_iWarden);
 		}
 	}
 
@@ -1244,7 +1262,7 @@ int GetLimit(int client)
 	int limit;
 
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
-	
+
 	if (!GetTrieValue(g_hLimit, steamid, limit))
 	{
 		limit = 0;
@@ -1297,7 +1315,7 @@ void CheckWardenCoolDowns()
 		SetCoolDown(i, 0);
 	}
 
-	CPrintToChatAll("%s %s", g_sPrefix, "The warden cooldown for all guards has been reseted");
+	CPrintToChatAll("%s %s", g_sPrefix, "The warden cooldown for all guards has been reseted"); //ToDo Translate
 }
 
 /******************************************************************************
@@ -1662,6 +1680,7 @@ void Forward_OnWardenRemoved(int client)
 	Laser_OnWardenRemoved(client);
 	Painter_OnWardenRemoved(client);
 	HandCuffs_OnWardenRemoved(client);
+	Glow_OnWardenRemoved(client);
 }
 
 // Warden was removed (will only fire on ByAdmin)
@@ -1705,4 +1724,5 @@ void OnWardenCreation(int client)
 	Color_OnWardenCreation(client);
 	Laser_OnWardenCreation(client);
 	HandCuffs_OnWardenCreation(client);
+	Glow_OnWardenCreation(client);
 }
