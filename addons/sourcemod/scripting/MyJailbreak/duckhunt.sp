@@ -945,6 +945,25 @@ public void OnClientPutInServer(int client)
 {
 	SDKHook(client, SDKHook_WeaponCanUse, OnWeaponCanUse);
 	SDKHook(client, SDKHook_TraceAttack, OnTraceAttack);
+	SDKHook(client, SDKHook_PreThink, OnPreThinkWeapon);
+}
+
+stock Action OnPreThinkWeapon(int client)
+{
+	if (!g_bIsDuckHunt)
+		return Plugin_Continue;
+
+	if (GetClientTeam(client) != CS_TEAM_T)
+		return Plugin_Continue;
+
+	int weapon = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
+
+	if (weapon < 0 || !IsValidEdict(weapon) || !IsValidEntity(weapon))
+		return Plugin_Continue;
+
+	SetEntPropFloat(weapon, Prop_Send, "m_flNextPrimaryAttack", GetGameTime() + 0.25);
+
+	return Plugin_Continue;
 }
 
 // Nova & Grenade only
@@ -988,10 +1007,6 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 {
 	if (g_bIsDuckHunt && (GetClientTeam(client) == CS_TEAM_T) && IsClientInGame(client) && IsPlayerAlive(client))
 	{
-		if (buttons & IN_ATTACK)
-		{
-			return Plugin_Handled;
-		}
 		if (!gc_bFlyMode.BoolValue)
 		{
 			if (GetEntityMoveType(client) == MOVETYPE_LADDER)
