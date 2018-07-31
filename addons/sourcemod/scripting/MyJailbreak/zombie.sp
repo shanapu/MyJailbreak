@@ -103,6 +103,7 @@ ConVar gc_fKnockbackAmount;
 ConVar gc_iRegen;
 ConVar gc_bTerrorZombie;
 ConVar gc_bTerrorInfect;
+ConVar gc_fSpeed;
 
 ConVar gc_bBeginSetA;
 ConVar gc_bBeginSetW;
@@ -189,6 +190,7 @@ public void OnPluginStart()
 	gc_iZombieHPincrease = AutoExecConfig_CreateConVar("sm_zombie_zombie_hp_extra", "1000", "HP the Zombies get additional per extra Human", _, true, 1.0);
 	gc_iHumanHP = AutoExecConfig_CreateConVar("sm_zombie_human_hp", "65", "HP the Humans got on Spawn", _, true, 1.0);
 	gc_iRegen = AutoExecConfig_CreateConVar("sm_zombie_zombie_regen", "5", "0 - disabled, HPs a Zombie regenerates every 5 seconds", _, true, 0.0);
+	gc_fSpeed = AutoExecConfig_CreateConVar("sm_zombie_speed", "1.4", "Movement speed of zombies - 1.0 normal speed", _, true, 1.0);
 	gc_bDark = AutoExecConfig_CreateConVar("sm_zombie_dark", "1", "0 - disabled, 1 - enable Map Darkness", _, true, 0.0, true, 1.0);
 	gc_bGlow = AutoExecConfig_CreateConVar("sm_zombie_glow", "1", "0 - disabled, 1 - enable Glow effect for humans", _, true, 0.0, true, 1.0);
 	gc_iGlowMode = AutoExecConfig_CreateConVar("sm_zombie_glow_mode", "1", "1 - human contours with wallhack for zombies, 2 - human glow effect without wallhack for zombies", _, true, 1.0, true, 2.0);
@@ -637,7 +639,6 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		return;
 	}
 
-
 	g_bIsZombie = true;
 	g_bStartZombie = false;
 
@@ -656,6 +657,8 @@ public void Event_RoundEnd_Pre(Event event, char[] name, bool dontBroadcast)
 
 			SetEntProp(i, Prop_Send, "m_CollisionGroup", 5);  // 2 - none / 5 - 'default'
 			SetEntProp(i, Prop_Send, "m_bNightVisionOn", 0);
+
+			SetEntPropFloat(i, Prop_Data, "m_flLaggedMovementValue", 1.0);
 
 			if (gp_bCustomPlayerSkins && gc_bGlow.BoolValue)
 			{
@@ -807,6 +810,8 @@ public Action Timer_MakeZombie(Handle timer, int userid)
 
 		SetEntityHealth(client, zombieHP);
 
+		SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", gc_fSpeed.FloatValue);
+
 		StripAllPlayerWeapons(client);
 		GivePlayerItem(client, "weapon_knife");
 
@@ -911,6 +916,8 @@ void ResetEventDay()
 		SetEntProp(i, Prop_Send, "m_bNightVisionOn", 0);
 
 		SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
+
+		SetEntPropFloat(i, Prop_Data, "m_flLaggedMovementValue", 1.0);
 
 		ToggleWeaponFire(i, true);
 
@@ -1424,7 +1431,7 @@ public Action Timer_StartEvent(Handle timer)
 
 		if (GetClientTeam(i) == CS_TEAM_CT)
 		{
-			SetEntPropFloat(i, Prop_Data, "m_flLaggedMovementValue", 1.4);
+			SetEntPropFloat(i, Prop_Data, "m_flLaggedMovementValue", gc_fSpeed.FloatValue);
 			DarkenScreen(i, false);
 
 			if (gc_bVision.BoolValue)
