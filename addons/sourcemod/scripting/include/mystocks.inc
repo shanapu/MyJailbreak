@@ -33,7 +33,7 @@
 
 
 // Check for valid clients with bool for bots & dead player 
-stock bool IsValidClient(int client, bool bAllowBots = false, bool bAllowDead = true)
+stock bool IsValidClient(int client, bool bots = true, bool dead = true)
 {
 	if (client <= 0)
 		return false;
@@ -44,7 +44,7 @@ stock bool IsValidClient(int client, bool bAllowBots = false, bool bAllowDead = 
 	if (!IsClientInGame(client))
 		return false;
 
-	if (IsFakeClient(client) && !bAllowBots)
+	if (IsFakeClient(client) && !bots)
 		return false;
 
 	if (IsClientSourceTV(client))
@@ -53,7 +53,7 @@ stock bool IsValidClient(int client, bool bAllowBots = false, bool bAllowDead = 
 	if (IsClientReplay(client))
 		return false;
 
-	if (!IsPlayerAlive(client) && !bAllowDead)
+	if (!IsPlayerAlive(client) && !dead)
 		return false;
 
 	return true;
@@ -61,49 +61,49 @@ stock bool IsValidClient(int client, bool bAllowBots = false, bool bAllowDead = 
 
 
 // Easy precache & prepare download for decals
-stock void PrecacheDecalAnyDownload(char[] sDecal)
+stock void PrecacheDecalAnyDownload(char[] path)
 {
-	if (strlen(sDecal) == 0)
+	if (strlen(path) == 0)
 		return;
 
 	char sBuffer[256];
-	Format(sBuffer, sizeof(sBuffer), "%s.vmt", sDecal);
+	Format(sBuffer, sizeof(sBuffer), "%s.vmt", path);
 	PrecacheDecal(sBuffer, true);
-	Format(sBuffer, sizeof(sBuffer), "materials/%s.vmt", sDecal);
+	Format(sBuffer, sizeof(sBuffer), "materials/%s.vmt", path);
 	AddFileToDownloadsTable(sBuffer);
 
-	Format(sBuffer, sizeof(sBuffer), "%s.vtf", sDecal);
+	Format(sBuffer, sizeof(sBuffer), "%s.vtf", path);
 	PrecacheDecal(sBuffer, true);
-	Format(sBuffer, sizeof(sBuffer), "materials/%s.vtf", sDecal);
+	Format(sBuffer, sizeof(sBuffer), "materials/%s.vtf", path);
 	AddFileToDownloadsTable(sBuffer);
 }
 
 
 // Easy precache & prepare download for models (icons)
-stock void PrecacheModelAnyDownload(char[] sModel)
+stock void PrecacheModelAnyDownload(char[] path)
 {
-	if (strlen(sModel) == 0)
+	if (strlen(path) == 0)
 		return;
 
 	char sBuffer[256];
-	Format(sBuffer, sizeof(sBuffer), "materials/%s.vmt", sModel);
+	Format(sBuffer, sizeof(sBuffer), "materials/%s.vmt", path);
 	AddFileToDownloadsTable(sBuffer);
 	PrecacheModel(sBuffer, true);
-	Format(sBuffer, sizeof(sBuffer), "materials/%s.vtf", sModel);
+	Format(sBuffer, sizeof(sBuffer), "materials/%s.vtf", path);
 	AddFileToDownloadsTable(sBuffer);
 	PrecacheModel(sBuffer, true);
 }
 
 
 // Easy precache & prepare download for sounds
-stock void PrecacheSoundAnyDownload(char[] sSound)
+stock void PrecacheSoundAnyDownload(char[] path)
 {
-	if (strlen(sSound) == 0)
+	if (strlen(path) == 0)
 		return;
 
 	char sBuffer[256];
-	PrecacheSoundAny(sSound);
-	Format(sBuffer, sizeof(sBuffer), "sound/%s", sSound);
+	PrecacheSoundAny(path);
+	Format(sBuffer, sizeof(sBuffer), "sound/%s", path);
 	AddFileToDownloadsTable(sBuffer);
 }
 
@@ -178,75 +178,75 @@ stock Action DeleteOverlay(Handle timer, int userid)
 
 
 // Easy silent change of ConVars - Boolean
-stock void SetCvar(char cvarName[64], int value)
+stock void SetCvar(char[] cvar, int value)
 {
-	Handle IntCvar = FindConVar(cvarName);
-	if (IntCvar == null)
+	Handle hCvar = FindConVar(cvar);
+	if (hCvar == null)
 		return;
 
-	int flags = GetConVarFlags(IntCvar);
+	int flags = GetConVarFlags(hCvar);
 	flags &= ~FCVAR_NOTIFY;
-	SetConVarFlags(IntCvar, flags);
+	SetConVarFlags(hCvar, flags);
 
-	SetConVarInt(IntCvar, value);
+	SetConVarInt(hCvar, value);
 
 	flags |= FCVAR_NOTIFY;
-	SetConVarFlags(IntCvar, flags);
+	SetConVarFlags(hCvar, flags);
 }
 
 
 // Easy silent change of ConVars - Floats
-stock void SetCvarFloat(char cvarName[64], float value)
+stock void SetCvarFloat(char[] cvar, float value)
 {
-	Handle FloatCvar = FindConVar(cvarName);
-	if (FloatCvar == INVALID_HANDLE)
+	Handle hCvar = FindConVar(cvar);
+	if (hCvar == INVALID_HANDLE)
 		return;
 
-	new flags = GetConVarFlags(FloatCvar);
+	new flags = GetConVarFlags(hCvar);
 	flags &= ~FCVAR_NOTIFY;
-	SetConVarFlags(FloatCvar, flags);
+	SetConVarFlags(hCvar, flags);
 
-	SetConVarFloat(FloatCvar, value);
+	SetConVarFloat(hCvar, value);
 
 	flags |= FCVAR_NOTIFY;
-	SetConVarFlags(FloatCvar, flags);
+	SetConVarFlags(hCvar, flags);
 }
 
 
 // Easy silent change of ConVars - Strings
-stock void SetCvarString(char cvarName[64], char[] value)
+stock void SetCvarString(char[] cvar, char[] value)
 {
-	Handle cvar = FindConVar(cvarName);
-	SetConVarString(cvar, value, true);
+	Handle hCvar = FindConVar(cvar);
+	SetConVarString(hCvar, value, true);
 }
 
 
 // Define filename & path for logging 
-stock void SetLogFile(char LogFile[PLATFORM_MAX_PATH], char[] FileName, char[] FolderName)
+stock void SetLogFile(char path[PLATFORM_MAX_PATH], char[] file, char[] folder)
 {
 	char sDate[12];
 	FormatTime(sDate, sizeof(sDate), "%y-%m-%d");
-	Format(LogFile, sizeof(LogFile), "logs/%s/%s-%s.log", FolderName, FileName, sDate);
+	Format(path, sizeof(path), "logs/%s/%s-%s.log", folder, file, sDate);
 
-	BuildPath(Path_SM, LogFile, sizeof(LogFile), LogFile);
+	BuildPath(Path_SM, path, sizeof(path), path);
 }
 
 
 // Set the players Ammo for active weapon
-stock void SetPlayerAmmo(int client, int weaponEnt, int clip = -1, int ammo = -1)
+stock void SetPlayerAmmo(int client, int weapon, int clip = -1, int ammo = -1)
 {
-	if (weaponEnt == INVALID_ENT_REFERENCE)
+	if (weapon == INVALID_ENT_REFERENCE)
 		return;
 
 	if (clip != -1)
 	{
-		SetEntProp(weaponEnt, Prop_Data, "m_iClip1", clip);
+		SetEntProp(weapon, Prop_Data, "m_iClip1", clip);
 	}
 
 	if (ammo != -1)
 	{
-		SetEntProp(weaponEnt, Prop_Data, "m_iPrimaryReserveAmmoCount", ammo);
-		SetEntProp(weaponEnt, Prop_Data, "m_iSecondaryReserveAmmoCount", ammo);
+		SetEntProp(weapon, Prop_Data, "m_iPrimaryReserveAmmoCount", ammo);
+		SetEntProp(weapon, Prop_Data, "m_iSecondaryReserveAmmoCount", ammo);
 	}
 }
 
@@ -256,16 +256,16 @@ stock void ToggleWeaponFire(int client, bool status = true) // rename EnableWeap
 {
 	if (status) // true = allow shooting
 	{
-		SDKUnhook(client, SDKHook_PreThink, PreThinkWeapon);
+		SDKUnhook(client, SDKHook_PreThink, Stock_PreThinkWeapon);
 	}
 	else // false = suppress shooting
 	{
-		SDKHook(client, SDKHook_PreThink, PreThinkWeapon);
+		SDKHook(client, SDKHook_PreThink, Stock_PreThinkWeapon);
 	}
 }
 
 
-stock Action PreThinkWeapon(int client)
+stock Action Stock_PreThinkWeapon(int client)
 {
 	int weapon = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
 	if (weapon < 0 || !IsValidEdict(weapon) || !IsValidEntity(weapon))
@@ -293,7 +293,7 @@ stock Action Timer_RemoveColor(Handle timer, int userid)
 
 
 // Get random alive & non-rebeling player of a team (need lastrequest.inc)
-stock int GetRandomPlayerNonRebel(int team) 
+stock int GetRandomPlayerNonRebel(int team)
 {
 	int[] clients = new int[MaxClients];
 	int clientCount;
@@ -370,14 +370,14 @@ stock int GetRandomAlivePlayer()
 // NEW
 stock int GetPlayerCount(bool alive = false, int team = -1)
 {
-	int iCount, i; iCount = 0;
+	int i, iCount = 0;
 
-	for (int i = 1; i <= MaxClients; i++)
+	for (i = 1; i <= MaxClients; i++)
 	{
 		if (!IsValidClient(i,_, !alive))
 			continue;
 
-		if (team =! -1 && GetClientTeam(i) != team)
+		if (team != -1 && GetClientTeam(i) != team)
 			continue;
 
 		iCount++;
@@ -390,7 +390,7 @@ stock int GetPlayerCount(bool alive = false, int team = -1)
 // Get all player count of a team
 stock int GetTeamPlayersCount(int team)
 {
-	int iCount, i; iCount = 0;
+	int i, iCount = 0;
 
 	for (i = 1; i <= MaxClients; i++)
 		if (IsValidClient(i, true, true) && GetClientTeam(i) == team)
@@ -404,9 +404,9 @@ stock int GetTeamPlayersCount(int team)
 //old
 stock int GetAlivePlayersCount(int team)
 {
-	int iCount = 0;
+	int i, iCount = 0;
 
-	for (int i = 1; i <= MaxClients; i++)
+	for (i = 1; i <= MaxClients; i++)
 	{
 		if (!IsValidClient(i,_, false))
 			continue;
@@ -424,9 +424,9 @@ stock int GetAlivePlayersCount(int team)
 // Get alive & non-rebeling player count of a team (need lastrequest.inc) MERGE WOITH GetAlivePlayersCount 
 stock int GetAlivePlayersCountNonRebel(int team)
 {
-	int iCount = 0;
+	int i, iCount = 0;
 
-	for (int i = 1; i <= MaxClients; i++)
+	for (i = 1; i <= MaxClients; i++)
 	{
 		if (!IsValidClient(i,_, false))
 			continue;
@@ -448,7 +448,7 @@ stock int GetAlivePlayersCountNonRebel(int team)
 // Get all player count of a team
 stock int GetAllPlayersCount()
 {
-	int iCount, i; iCount = 0;
+	int i, iCount = 0;
 
 	for (i = 1; i <= MaxClients; i++)
 		if (IsValidClient(i, true, true))
@@ -487,13 +487,13 @@ stock int GetLastAlive(int team)
 
 
 // Get a player for a certain admin flag
-stock bool CheckVipFlag(int client, char [] flagsNeed)
+stock bool CheckVipFlag(int client, char[] flags)
 {
 	int iCount = 0;
 	char sflagNeed[22][8], sflagFormat[64];
 	bool bEntitled = false;
 
-	Format(sflagFormat, sizeof(sflagFormat), flagsNeed);
+	Format(sflagFormat, sizeof(sflagFormat), flags);
 	ReplaceString(sflagFormat, sizeof(sflagFormat), " ", "");
 	iCount = ExplodeString(sflagFormat, ",", sflagNeed, sizeof(sflagNeed), sizeof(sflagNeed[]));
 
@@ -527,15 +527,15 @@ stock int Handler_NullCancel(Handle menu, MenuAction action, int param1, int par
 	return;
 }
 
-stock void StringToUpper(char [] sz)
+stock void StringToUpper(char[] string)
 {
-	int len = strlen(sz);
+	int len = strlen(string);
 
 	for (int i = 0; i < len; i++)
 	{
-		if (IsCharLower(sz[i]))
+		if (IsCharLower(string[i]))
 		{
-			sz[i] = CharToUpper(sz[i]);
+			string[i] = CharToUpper(string[i]);
 		}
 	}
 }
@@ -554,7 +554,7 @@ stock bool IsClientStuck(int client)
 	return TR_DidHit();
 }
 
-stock bool FilterOnlyPlayers(int entity, int contentsMask, any data)
+stock bool FilterOnlyPlayers(int entity, int mask, any data)
 {
 	if(entity != data && entity > 0 && entity <= MaxClients) 
 		return true;
@@ -562,12 +562,12 @@ stock bool FilterOnlyPlayers(int entity, int contentsMask, any data)
 	return false;
 }
 
-stock void DarkenScreen(int client, bool darkOn)
+stock void DarkenScreen(int client, bool dark)
 {
 	Handle hFadeClient = StartMessageOne("Fade", client);
 	PbSetInt(hFadeClient, "duration", 1);
 	PbSetInt(hFadeClient, "hold_time", 3);
-	if(!darkOn)
+	if(!dark)
 	{
 		PbSetInt(hFadeClient, "flags", 0x0010); // FFADE_STAYOUT	0x0008		ignores the duration, stays faded out until new ScreenFade message received
 	}
@@ -628,37 +628,60 @@ stock bool ClientViews(int viewer, int target, float fMaxDistance=0.0, float fTh
 	// Check dot product. If it's negative, that means the viewer is facing
 	// backwards to the target.
 	NormalizeVector(fDistance, fTargetDir);
-	if (GetVectorDotProduct(fViewDir, fTargetDir) < fThreshold) return false;
+	if (GetVectorDotProduct(fViewDir, fTargetDir) < fThreshold)
+		return false;
 
 	// Now check if there are no obstacles in between through raycasting
 	Handle hTrace = TR_TraceRayFilterEx(fViewPos, fTargetPos, MASK_PLAYERSOLID_BRUSHONLY, RayType_EndPoint, ClientViewsFilter);
-	if (TR_DidHit(hTrace)) { CloseHandle(hTrace);return false;}
+	if (TR_DidHit(hTrace))
+	{
+		CloseHandle(hTrace);return false;
+	}
 	CloseHandle(hTrace);
 
 	// Done, it's visible
 	return true;
 }
 
-stock bool ClientViewsFilter(int Entity, int Mask, any Junk)
+stock bool ClientViewsFilter(int entity, int mask, any junk)
 {
-	if (Entity >= 1 && Entity <= MaxClients) 
+	if (entity >= 1 && entity <= MaxClients) 
 		return false;
 
 	return true;
 }
 
-stock bool DirExistsEx( const char[] szPath )
+stock bool DirExistsEx(const char[] path)
 {
-	if (!DirExists(szPath))
+	if (!DirExists(path))
 	{
-		CreateDirectory(szPath, 511);
-		
-		if (!DirExists(szPath))
+		CreateDirectory(path, 511);
+
+		if (!DirExists(path))
 		{
-			LogError("Couldn't create folder! (%s)", szPath);
+			LogError("Couldn't create folder! (%s)", path);
 			return false;
 		}
 	}
 
 	return true;
+}
+
+stock void DisablePlugin(char[] plugin)
+{
+	char sPath[64];
+	BuildPath(Path_SM, sPath, sizeof(sPath), "plugins/%s.smx", plugin);
+
+	if (!FileExists(sPath))
+		return;
+
+	char sNewPath[64];
+	BuildPath(Path_SM, sNewPath, sizeof(sNewPath), "plugins/disabled/%s.smx", plugin);
+	ServerCommand("sm plugins unload %s", plugin);
+	if (FileExists(sNewPath))
+	{
+		DeleteFile(sNewPath);
+	}
+	RenameFile(sNewFile, sPath);
+	LogMessage("%s was unloaded and moved to %s to avoid conflicts", sPath, sNewPath);
 }
