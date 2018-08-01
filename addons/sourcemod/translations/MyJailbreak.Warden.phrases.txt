@@ -117,7 +117,7 @@
 
 	"warden_randomwarden"
 	{
-		"en"		"A Random Warden has been chosen!"
+		"en"		"A Random Warden has been selected!"
 	}
 
 	"warden_dooropen"
@@ -1037,17 +1037,54 @@
 
 	"warden_withhold_lr"
 	{
-		"en"		"The warden {purple}withholds{default} your last request"
+		"en"		"The warden {purple}withholds{default} your last request."
 	}
 
 	"warden_withhold_on"
 	{
-		"en"		"The warden {purple}withhold{default} the last request"
+		"en"		"The warden {purple}withhold{default} the last request."
 	}
 
 	"warden_withhold_off"
 	{
-		"en"		"The warden {purple}has released{default} the last request"
+		"en"		"The warden {purple}has released{default} the last request."
+	}
+
+	"warden_apply_time"
+	{
+		"#format"	"{1:i}"
+		"en"		"{1} seconds time to apply for warden"
+	}
+
+	"warden_no_applications"
+	{
+		"en"		"No one applied for the position of warden. A {purple}random warden{default} was selected."
+	}
+
+	"warden_one_application"
+	{
+		"en"		"Only one application for warden."
+	}
+
+	"warden_apply_time_over"
+	{
+		"en"		"Application time is over. \n Vote your new warden!"
+	}
+
+	"warden_vote_applicants"
+	{
+		"en"		"Vote your new warden:"
+	}
+
+	"warden_vote_applicants"
+	{
+		"en"		"The vote ended in a 50/50 draw! A random warden was chosen."
+	}
+
+	"warden_vote_won"
+	{
+		"#format"	"{1:N}"
+		"en"		"{purple}{1}{default} with the most votes becomes your {purple}new warden."
 	}
 
 }

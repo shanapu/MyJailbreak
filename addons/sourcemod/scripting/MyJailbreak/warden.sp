@@ -85,7 +85,13 @@ ConVar gc_sCustomCommandRemoveWarden;
 ConVar gc_fRandomTimer;
 ConVar gc_fCMDCooldown;
 
-// 3rd party Convars 
+ConVar gc_bChoiceWarden;
+ConVar gc_bChoiceTeam;
+ConVar gc_iApplicationTime;
+ConVar gc_iChoiceTime;
+ConVar gc_iListType;
+
+// 3rd party Convars
 ConVar g_bMenuClose;
 
 // Booleans
@@ -103,6 +109,7 @@ bool gp_bSourceComms = false;
 bool gp_bCustomPlayerSkins = false;
 
 // Integers
+int g_iApplicationTime= 0;
 int g_iCMDCoolDown[MAXPLAYERS+1] = 0;
 int g_iWarden = -1;
 int g_iLastWarden = -1;
@@ -137,6 +144,7 @@ Handle gF_OnWardenRemovedByAdmin;
 Handle g_hTimerRandom;
 Handle g_hCooldown;
 Handle g_hLimit;
+ArrayList g_aApplicationQueue;
 
 // Strings
 char g_sPrefix[64];
@@ -192,7 +200,7 @@ public Plugin myinfo = {
 };
 
 // Start
-public void OnPluginStart() 
+public void OnPluginStart()
 {
 	// Translation
 	LoadTranslations("MyJailbreak.Warden.phrases");
@@ -238,6 +246,12 @@ public void OnPluginStart()
 	gc_sUnWarden = AutoExecConfig_CreateConVar("sm_warden_sounds_unwarden", "music/MyJailbreak/unwarden.mp3", "Path to the soundfile which should be played when there is no warden anymore.");
 	gc_bOverlays = AutoExecConfig_CreateConVar("sm_warden_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true, 0.0, true, 1.0);
 	gc_sOverlayPath = AutoExecConfig_CreateConVar("sm_warden_overlays_warden", "overlays/MyJailbreak/warden", "Path to the warden Overlay DONT TYPE .vmt or .vft");
+
+	gc_bChoiceWarden = AutoExecConfig_CreateConVar("sm_warden_choice", "0", "0 - disabled, 1 - enable player choose their warden - ignores cooldowns", _, true, 0.0, true, 1.0);
+	gc_bChoiceTeam = AutoExecConfig_CreateConVar("sm_warden_choice_team", "1", "0 - only Prisoner, 1 - Prisoner & guards can choose their warden", _, true, 0.0, true, 1.0);
+	gc_iApplicationTime = AutoExecConfig_CreateConVar("sm_warden_choice_application_time", "22", "How many seconds after roundstart guards can applicate for warden", _, true, 1.0);
+	gc_iChoiceTime = AutoExecConfig_CreateConVar("sm_warden_choice_vote_time", "12", "How many seconds player can vote their warden", _, true, 1.0);
+	gc_iListType = AutoExecConfig_CreateConVar("sm_warden_choice_list", "1", "0 - remove all applicans after vote, 1 - remove just the voted warden after vote, 2 - players stay on applicans list until !uw", _, true, 0.0, true, 2.0);
 
 	// Warden module
 	Deputy_OnPluginStart();
@@ -310,6 +324,8 @@ public void OnPluginStart()
 
 		g_bIsLateLoad = false;
 	}
+
+	g_aApplicationQueue = CreateArray();
 }
 
 // ConVarChange for Strings
@@ -589,6 +605,22 @@ public Action Command_BecomeWarden(int client, int args)
 		return Plugin_Handled;
 	}
 
+	if (gc_bChoiceWarden.BoolValue)
+	{
+		if(g_iApplicationTime < 1)
+			return Plugin_Handled;
+
+		int iIndex = g_aApplicationQueue.FindValue(client);
+
+		if(iIndex == -1)
+			return Plugin_Handled;
+
+		g_aApplicationQueue.Push(client);
+		CReplyToCommand(client, "%s %s", g_sPrefix, "ADDED TO APPLICATION LIST");
+
+		return Plugin_Handled;
+	}
+
 	if (!IsPlayerAlive(client))  // Alive?
 	{
 		CReplyToCommand(client, "%s %t", g_sPrefix, "warden_playerdead");
@@ -637,6 +669,18 @@ public Action Command_ExitWarden(int client, int args)
 	if (!IsClientWarden(client))  // Is client the warden
 	{
 		CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
+		return Plugin_Handled;
+	}
+
+	if (gc_bChoiceWarden.BoolValue && !IsClientWarden(client))
+	{
+		int iIndex = g_aApplicationQueue.FindValue(client);
+
+		if(g_iApplicationTime > 0 && iIndex != -1)
+		{
+			g_aApplicationQueue.Erase(iIndex);
+			CReplyToCommand(client, "%s %s", g_sPrefix, "REMOVED FROM APPLICATION LIST");
+		}
 		return Plugin_Handled;
 	}
 
@@ -811,6 +855,7 @@ public void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
 			PrintCenterTextAll("%t", "warden_retire_nc", client);
 		}
 	}
+
 }
 
 // Round Start Post
@@ -819,7 +864,7 @@ public void Event_PostRoundStart(Event event, const char[] name, bool dontBroadc
 	if (!gc_bPlugin.BoolValue || !g_bEnabled)
 		return;
 
-	if ((g_iWarden == -1) && gc_bBecomeWarden.BoolValue)
+	if ((g_iWarden == -1) && gc_bBecomeWarden.BoolValue && !gc_bChoiceWarden.BoolValue)
 	{
 		//	delete g_hTimerOpen; // why delete don't work?
 		if (g_hTimerRandom != null)
@@ -842,6 +887,12 @@ public void Event_PostRoundStart(Event event, const char[] name, bool dontBroadc
 				PrintCenterText(i, "%t", "warden_nowarden_nc");
 			}
 		}
+	}
+	else if ((g_iWarden == -1) && gc_bChoiceWarden.BoolValue)  // Start applications timer
+	{
+		g_iApplicationTime = gc_iApplicationTime.IntValue;
+
+		CreateTimer(1.0, Timer_Application, _, TIMER_REPEAT);
 	}
 }
 
@@ -958,10 +1009,149 @@ public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 	g_bIsLR = false;
 }
 
+
+public Action Timer_Application(Handle timer)
+{
+	g_iApplicationTime--;
+
+	if (g_iApplicationTime > 0)
+	{
+		PrintCenterTextAll("%s %t", g_sPrefix, "warden_apply_time", g_iApplicationTime);
+		return Plugin_Continue;
+	}
+
+	Voting_ChooseWarden();
+
+	return Plugin_Stop;
+}
+
+void Voting_ChooseWarden()
+{
+	if (g_aApplicationQueue.Length < 1)
+	{
+		int warden = GetRandomPlayer(CS_TEAM_CT);
+		if (SetTheWarden(warden, 0) != Plugin_Handled)
+		{
+			Forward_OnWardenCreatedByAdmin(warden);
+			CPrintToChatAll("%s %t", g_sPrefix, "warden_no_applications");
+		}
+		else
+		{
+			g_hTimerRandom = CreateTimer(gc_fRandomTimer.FloatValue, Timer_ChooseRandom);
+		}
+
+		return;
+	}
+
+	if (g_aApplicationQueue.Length == 1)
+	{
+		int warden = g_aApplicationQueue.Get(0);
+		if (SetTheWarden(warden, 0) != Plugin_Handled)
+		{
+			Forward_OnWardenCreatedByAdmin(warden);
+			CPrintToChatAll("%s %t", g_sPrefix, "warden_one_application");
+		}
+		else
+		{
+			g_hTimerRandom = CreateTimer(gc_fRandomTimer.FloatValue, Timer_ChooseRandom);
+		}
+
+		return;
+	}
+
+	PrintCenterTextAll("%s %t", g_sPrefix, "warden_apply_time_over");
+
+	char menuinfo[64];
+	Menu menu = new Menu(Voting_MenuHandler);
+	menu.VoteResultCallback = VotingResults;
+	Format(menuinfo, sizeof(menuinfo), "%t", "warden_vote_applicants", LANG_SERVER);
+	menu.SetTitle(menuinfo);
+
+	for (int i = 0; i < g_aApplicationQueue.Length; i++)
+	{
+		if (!IsValidClient(g_aApplicationQueue.Get(i), true, true))
+			continue;
+
+		char userid[11];
+		char username[MAX_NAME_LENGTH];
+		IntToString(GetClientUserId(i+1), userid, sizeof(userid));
+		Format(username, sizeof(username), "%N", g_aApplicationQueue.Get(i));
+		menu.AddItem(userid, username);
+	}
+	
+	int[] clients = new int[MaxClients];
+	int clientCount;
+
+	for (int i = 1; i <= MaxClients; i++)
+	{
+		if (!IsValidClient(i, false, false))
+			continue;
+
+		if (!gc_bChoiceTeam.BoolValue && GetClientTeam(i) != CS_TEAM_T)
+			continue;
+
+		clients[clientCount++] = i;
+	}
+
+	menu.ExitButton = false;
+	menu.DisplayVote(clients, clientCount, gc_iChoiceTime.IntValue, _);
+}
+
+public int VotingResults(Menu menu, int num_votes, int num_clients, const int[][] client_info, int num_items, const int[][] item_info)
+{
+	int winner = 0;
+	if (num_items > 1 && (item_info[0][VOTEINFO_ITEM_VOTES] == item_info[1][VOTEINFO_ITEM_VOTES]))
+	{
+		winner = GetRandomInt(0, 1);
+		CPrintToChatAll("%s %t", g_sPrefix, "warden_vote_draw");
+	}
+	char event[64];
+	menu.GetItem(item_info[winner][VOTEINFO_ITEM_INDEX], event, sizeof(event));
+
+	int warden = GetClientOfUserId(StringToInt(event));
+
+	if (SetTheWarden(warden, 0) != Plugin_Handled)
+	{
+		Forward_OnWardenCreatedByAdmin(warden);
+		CPrintToChatAll("%s %t", g_sPrefix, "warden_vote_won", warden);
+
+		if (gc_iListType.IntValue == 0)
+		{
+			g_aApplicationQueue.Clear();
+		}
+		else if (gc_iListType.IntValue == 1)
+		{
+			g_aApplicationQueue.Erase(g_aApplicationQueue.FindValue(warden));
+		}
+	}
+	else
+	{
+		g_hTimerRandom = CreateTimer(gc_fRandomTimer.FloatValue, Timer_ChooseRandom);
+	}
+
+}
+
+
+public int Voting_MenuHandler(Menu menu, MenuAction action, int param1, int param2)
+{
+	if (action == MenuAction_End)
+	{
+		/* This is called after VoteEnd */
+		delete menu;
+	}
+}
+
+
+
 // Round End
 public void Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 {
 	g_bIsLR = false;
+
+	if (gc_bChoiceWarden.BoolValue) // Start applications
+	{
+		g_iApplicationTime = gc_iApplicationTime.IntValue;
+	}
 }
 
 /******************************************************************************
@@ -1044,6 +1234,15 @@ public void OnClientDisconnect(int client)
 
 		g_iLastWarden = -1;
 		g_iWarden = -1;
+	}
+
+	if (gc_bChoiceWarden.BoolValue)
+	{
+		int iIndex = g_aApplicationQueue.FindValue(client);
+		if(iIndex != -1)
+		{
+			g_aApplicationQueue.Erase(iIndex);
+		}
 	}
 
 	Deputy_OnClientDisconnect(client);
@@ -1274,7 +1473,6 @@ int GetLimit(int client)
 void SetLimit(int client, int limit)
 {
 	char steamid[24];
-
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
 
 	if (limit == 0)
