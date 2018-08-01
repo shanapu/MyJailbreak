@@ -219,7 +219,7 @@ public void Marker_OnMapStart()
                    MENUS
 ******************************************************************************/
 
-stock void MarkerMenu(int client)
+void MarkerMenu(int client)
 {
 	if (!IsValidClient(client, false, false) || (!IsClientWarden(client) && !IsClientDeputy(client)))
 	{

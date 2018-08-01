@@ -738,8 +738,11 @@ public void OnAvailableLR(int Announced)
 
 void ResetEventDay()
 {
-	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, true))
+	for (int i = 1; i <= MaxClients; i++)
 	{
+		if (!IsValidClient(i, true, true))
+			continue;
+
 		SetEntProp(i, Prop_Send, "m_CollisionGroup", 5);  // 2 - none / 5 - 'default'
 
 		StripAllPlayerWeapons(i);
@@ -825,7 +828,7 @@ void StartEventRound(bool thisround)
 
 		for (int i = 1; i <= MaxClients; i++)
 		{
-			if (!IsValidClient(i, true, false))
+			if (!IsValidClient(i, true, true))
 				continue;
 
 			SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
@@ -903,7 +906,7 @@ void PrepareDay(bool thisround)
 
 	for (int i = 1; i <= MaxClients; i++)
 	{
-		if (!IsValidClient(i, true, false))
+		if (!IsValidClient(i, true, true))
 			continue;
 
 		SetEntProp(i, Prop_Send, "m_CollisionGroup", 2);  // 2 - none / 5 - 'default'

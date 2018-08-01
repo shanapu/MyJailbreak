@@ -827,8 +827,11 @@ public void MyJailbreak_ResetEventDay()
 
 void ResetEventDay()
 {
-	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true))
+	for (int i = 1; i <= MaxClients; i++)
 	{
+		if (!IsValidClient(i, true, true))
+			continue;
+
 		SetEntProp(i, Prop_Send, "m_CollisionGroup", 5);  // 2 - none / 5 - 'default'
 
 		CreateTimer(0.0, DeleteOverlay, GetClientUserId(i));
@@ -988,7 +991,7 @@ void StartEventRound(bool thisround)
 
 		for (int i = 1; i <= MaxClients; i++)
 		{
-			if (!IsValidClient(i, true, false))
+			if (!IsValidClient(i, true, true))
 				continue;
 
 			SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
@@ -1071,8 +1074,6 @@ void PrepareDay(bool thisround)
 		SetEntProp(i, Prop_Send, "m_CollisionGroup", 2);  // 2 - none / 5 - 'default'
 
 		SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
-
-		ToggleWeaponFire(i, false);
 
 		ToggleWeaponFire(i, false);
 
@@ -1362,8 +1363,11 @@ public Action Timer_StartEvent(Handle timer)
 		}
 	}
 
-	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)&& IsPlayerAlive(i))
+	for (int i = 1; i <= MaxClients; i++)
 	{
+		if (!IsValidClient(i, true, true))
+			continue;
+
 		if (gp_bCustomPlayerSkins && gc_bWallhack.BoolValue)
 		{
 			Setup_WallhackSkin(i);
@@ -1372,8 +1376,6 @@ public Action Timer_StartEvent(Handle timer)
 		if (i != g_iBurningZero)
 		{
 			SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
-
-			ToggleWeaponFire(i, true);
 
 			if (gc_bOverlays.BoolValue)
 			{

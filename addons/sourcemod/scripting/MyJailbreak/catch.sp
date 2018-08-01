@@ -966,8 +966,11 @@ public void OnAvailableLR(int Announced)
 
 void ResetEventDay()
 {
-	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, true))
+	for (int i = 1; i <= MaxClients; i++)
 	{
+		if (!IsValidClient(i, false, true))
+			continue;
+
 		g_iSprintStatus[i] = 0;
 		g_bCatched[i] = false;
 
@@ -1063,7 +1066,7 @@ void StartEventRound(bool thisround)
 
 		for (int i = 1; i <= MaxClients; i++)
 		{
-			if (!IsValidClient(i, true, false))
+			if (!IsValidClient(i, true, true))
 				continue;
 
 			SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
@@ -1433,7 +1436,7 @@ public Action Timer_StartEvent(Handle timer)
 
 	for (int i = 1; i <= MaxClients; i++)
 	{
-		if (!IsValidClient(i, true, false))
+		if (!IsValidClient(i, true, true))
 			continue;
 
 		if (GetClientTeam(i) == CS_TEAM_CT)

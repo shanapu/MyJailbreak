@@ -904,8 +904,11 @@ public void OnAvailableLR(int Announced)
 
 void ResetEventDay()
 {
-	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true))
+	for (int i = 1; i <= MaxClients; i++)
 	{
+		if (!IsValidClient(i, true, true))
+			continue;
+
 		SetEntProp(i, Prop_Send, "m_CollisionGroup", 5);  // 2 - none / 5 - 'default'
 
 		if (gp_bCustomPlayerSkins && gc_bGlow.BoolValue)
@@ -940,8 +943,6 @@ void ResetEventDay()
 		SetEntityMoveType(i, MOVETYPE_WALK);
 
 		SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
-
-		ToggleWeaponFire(i, true);
 	}
 
 	delete g_hTimerFreeze;
@@ -1426,7 +1427,7 @@ public Action Timer_StartEvent(Handle timer)
 
 	for (int i = 1; i <= MaxClients; i++)
 	{
-		if (!IsValidClient(i, true, false))
+		if (!IsValidClient(i, true, true))
 			continue;
 
 		if (GetClientTeam(i) == CS_TEAM_CT)

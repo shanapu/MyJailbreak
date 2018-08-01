@@ -1107,7 +1107,7 @@ public Action Timer_StartEvent(Handle timer)
 
 	for (int i = 1; i <= MaxClients; i++)
 	{
-		if (!IsValidClient(i, true, false))
+		if (!IsValidClient(i, true, true))
 			continue;
 
 		SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);

@@ -903,12 +903,10 @@ void StartEventRound(bool thisround)
 
 		for (int i = 1; i <= MaxClients; i++)
 		{
-			if (!IsValidClient(i, true, false))
+			if (!IsValidClient(i, true, true))
 				continue;
 
 			SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
-
-			ToggleWeaponFire(i, false);
 
 			ToggleWeaponFire(i, false);
 
@@ -1118,7 +1116,7 @@ public Action Timer_StartEvent(Handle timer)
 
 	for (int i = 1; i <= MaxClients; i++)
 	{
-		if (!IsValidClient(i, true, false))
+		if (!IsValidClient(i, true, true))
 			continue;
 
 		SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);

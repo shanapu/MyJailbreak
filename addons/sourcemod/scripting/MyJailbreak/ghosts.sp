@@ -773,8 +773,11 @@ public void OnAvailableLR(int Announced)
 
 void ResetEventDay()
 {
-	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, true))
+	for (int i = 1; i <= MaxClients; i++)
 	{
+		if (!IsValidClient(i, false, true))
+			continue;
+
 		SetEntProp(i, Prop_Send, "m_CollisionGroup", 5);  // 2 - none / 5 - 'default'
 		
 		SDKUnhook(i, SDKHook_SetTransmit, Hook_SetTransmit);
@@ -866,7 +869,7 @@ void StartEventRound(bool thisround)
 
 		for (int i = 1; i <= MaxClients; i++)
 		{
-			if (!IsValidClient(i, true, false))
+			if (!IsValidClient(i, true, true))
 				continue;
 
 			SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
@@ -1083,7 +1086,7 @@ public Action Timer_StartEvent(Handle timer)
 
 	for (int i = 1; i <= MaxClients; i++)
 	{
-		if (!IsValidClient(i, true, false))
+		if (!IsValidClient(i, true, true))
 			continue;
 
 		SDKUnhook(i, SDKHook_SetTransmit, Hook_SetTransmit);
@@ -1118,8 +1121,11 @@ public Action Timer_StartEvent(Handle timer)
 
 public Action Timer_ShowGhosts(Handle timer)
 {
-	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true))
+	for (int i = 1; i <= MaxClients; i++)
 	{
+		if (!IsValidClient(i, true, true))
+			continue;
+
 		SDKUnhook(i, SDKHook_SetTransmit, Hook_SetTransmit);
 		SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
 
@@ -1139,8 +1145,11 @@ public Action Timer_MakeGhosts(Handle timer)
 {
 	if (g_bIsGhosts && g_bGhostsRunning)
 	{
-		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true))
+		for (int i = 1; i <= MaxClients; i++)
 		{
+			if (!IsValidClient(i, true, true))
+				continue;
+
 			SDKHook(i, SDKHook_SetTransmit, Hook_SetTransmit);
 			SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
 

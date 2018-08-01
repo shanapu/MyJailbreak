@@ -737,8 +737,11 @@ public Action Timer_TruceUntilStart(Handle timer)
 
 	g_iTruceTime = gc_iTruceTime.IntValue;
 
-	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (IsPlayerAlive(i))
+	for (int i = 1; i <= MaxClients; i++)
 	{
+		if (!IsValidClient(i, true, true))
+			continue;
+
 		SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
 
 		ToggleWeaponFire(i, true);
