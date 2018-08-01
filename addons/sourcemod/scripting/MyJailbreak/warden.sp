@@ -856,6 +856,11 @@ public void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
 		}
 	}
 
+	int iIndex = g_aApplicationQueue.FindValue(client);
+	if(iIndex != -1)
+	{
+		g_aApplicationQueue.Erase(iIndex);
+	}
 }
 
 // Round Start Post
