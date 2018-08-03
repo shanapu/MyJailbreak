@@ -252,7 +252,7 @@ stock void SetPlayerAmmo(int client, int weapon, int clip = -1, int ammo = -1)
 
 
 
-stock void ToggleWeaponFire(int client, bool status = true) // rename EnableWeaponFire
+stock void EnableWeaponFire(int client, bool status = true) // rename EnableWeaponFire
 {
 	if (status) // true = allow shooting
 	{

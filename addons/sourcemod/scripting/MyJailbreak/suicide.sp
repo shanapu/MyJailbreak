@@ -861,7 +861,7 @@ void ResetEventDay()
 
 		SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
 
-		ToggleWeaponFire(i, true);
+		EnableWeaponFire(i, true);
 	}
 
 	delete g_hTimerFreeze;
@@ -1033,7 +1033,7 @@ void StartEventRound(bool thisround)
 
 			SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
 
-			ToggleWeaponFire(i, false);
+			EnableWeaponFire(i, false);
 
 			SetEntityMoveType(i, MOVETYPE_NONE);
 		}
@@ -1136,7 +1136,7 @@ void PrepareDay(bool thisround)
 
 		SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
 
-		ToggleWeaponFire(i, false);
+		EnableWeaponFire(i, false);
 
 		CreateInfoPanel(i);
 
@@ -1275,7 +1275,7 @@ public Action Timer_StartEvent(Handle timer)
 		{
 			SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
 
-			ToggleWeaponFire(i, true);
+			EnableWeaponFire(i, true);
 
 			SetEntityMoveType(i, MOVETYPE_WALK);
 		}

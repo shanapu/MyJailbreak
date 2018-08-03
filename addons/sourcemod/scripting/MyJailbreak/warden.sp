@@ -310,6 +310,7 @@ public void OnPluginStart()
 
 	g_hCooldown = CreateTrie();
 	g_hLimit = CreateTrie();
+	g_aApplicationQueue = CreateArray();
 
 	// Late loading
 	if (g_bIsLateLoad)
@@ -324,8 +325,6 @@ public void OnPluginStart()
 
 		g_bIsLateLoad = false;
 	}
-
-	g_aApplicationQueue = CreateArray();
 }
 
 // ConVarChange for Strings
@@ -424,7 +423,9 @@ public void OnConfigsExecuted()
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
 		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		{
 			RegConsoleCmd(sCommand, Command_BecomeWarden, "Allows the warde taking the charge over prisoners");
+		}
 	}
 
 	// Exit warden
@@ -436,7 +437,9 @@ public void OnConfigsExecuted()
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
 		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		{
 			RegConsoleCmd(sCommand, Command_ExitWarden, "Allows the player to retire from the position");
+		}
 	}
 
 	// Veto warden
@@ -448,7 +451,9 @@ public void OnConfigsExecuted()
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
 		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		{
 			RegConsoleCmd(sCommand, Command_VoteWarden, "Allows the player to vote against Warden");
+		}
 	}
 
 	// Set warden
@@ -460,7 +465,9 @@ public void OnConfigsExecuted()
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
 		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		{
 			RegAdminCmd(sCommand, AdminCommand_SetWarden, ADMFLAG_GENERIC, "Allows the admin to set a new Warden");
+		}
 	}
 
 	// Remove warden
@@ -472,7 +479,9 @@ public void OnConfigsExecuted()
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
 		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		{
 			RegAdminCmd(sCommand, AdminCommand_RemoveWarden, ADMFLAG_GENERIC, "Allows the admin to remove the Warden");
+		}
 	}
 }
 

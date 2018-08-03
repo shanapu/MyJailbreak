@@ -810,7 +810,7 @@ void ResetEventDay()
 
 		SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
 
-		ToggleWeaponFire(i, true);
+		EnableWeaponFire(i, true);
 	}
 
 	delete g_hTimerBeacon;
@@ -916,7 +916,7 @@ void StartEventRound(bool thisround)
 
 			SetEntityMoveType(i, MOVETYPE_NONE);
 
-			ToggleWeaponFire(i, false);
+			EnableWeaponFire(i, false);
 		}
 
 		CreateTimer(3.0, Timer_PrepareEvent);
@@ -994,7 +994,7 @@ void PrepareDay(bool thisround)
 		
 		SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
 
-		ToggleWeaponFire(i, false);
+		EnableWeaponFire(i, false);
 
 		StripAllPlayerWeapons(i);
 
@@ -1135,7 +1135,7 @@ public Action Timer_StartEvent(Handle timer)
 
 		SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
 
-		ToggleWeaponFire(i, true);
+		EnableWeaponFire(i, true);
 
 		SetEntityMoveType(i, MOVETYPE_WALK);
 

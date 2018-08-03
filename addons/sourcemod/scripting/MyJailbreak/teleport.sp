@@ -755,7 +755,7 @@ void ResetEventDay()
 
 		SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
 
-		ToggleWeaponFire(i, true);
+		EnableWeaponFire(i, true);
 
 		SetEntityMoveType(i, MOVETYPE_WALK);
 	}
@@ -831,7 +831,7 @@ void StartEventRound(bool thisround)
 
 			SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
 
-			ToggleWeaponFire(i, false);
+			EnableWeaponFire(i, false);
 
 			SetEntityMoveType(i, MOVETYPE_NONE);
 		}
@@ -909,7 +909,7 @@ void PrepareDay(bool thisround)
 
 		SetEntProp(i, Prop_Send, "m_CollisionGroup", 2);  // 2 - none / 5 - 'default'
 
-		ToggleWeaponFire(i, false);
+		EnableWeaponFire(i, false);
 
 		SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
 
@@ -1045,7 +1045,7 @@ public Action Timer_StartEvent(Handle timer)
 
 		SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
 
-		ToggleWeaponFire(i, true);
+		EnableWeaponFire(i, true);
 
 		if (gc_bOverlays.BoolValue)
 		{

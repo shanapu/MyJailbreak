@@ -20,7 +20,7 @@
     *  new cvar - sm_ratio_disable_queue - 1 - disabled guard queue, 0 - enable guard queue
 *  Add-On: Ratio - voice check - Check with Voiceannounce_EX if player has already spoken before allow move to guards
 *  TeamGames: Version check
-*  Add-On: restrict areas for EventDays - specify restricted areas with devzones (zone name - "MyJB-NoGo")
+*  Add-On: restrict areas for EventDays - specify restricted areas with Franugs devzones (zone name - "MyJB-NoGo")
     *  new plugin - disabled/myjailbreak_devzones.smx
 *  Suicidebomber: new cvar to smaller the bomb damage radius against teammates to counteract trolls.
     *  new cvar - sm_suicidebomber_bomb_radius_t - Radius for bomb damage on prisoners (reduce when you have problem with teamkiller) / 0 - disable team damage at all
@@ -35,16 +35,31 @@
     *  new cvar - sm_warden_glow_blue_deputy - What glow to turn the deputy into (rgB): x - blue value
 *  Add-On: Ratio: Support for r1kos VIP core
     *  new plugin - disabled/ratio_vipcore.smx
-*  zombie: new convar to adjust zombie movement speed.
+*  Zombie: new convar to adjust zombie movement speed.
     *  new cvar - sm_zombie_speed - Movement speed of zombies - 1.0 normal speed
-  
+*  Warden: New kind to choose warden. On roundbeginn guards can applicate as warden with !w. after a countdown all player get a vote menu to vote their next warden. Idea by Hexah!
+    *  new cvar - sm_warden_choice - 0 - disabled, 1 - enable player choose their warden - ignores cooldowns
+    *  new cvar - sm_warden_choice_team - 0 - only Prisoner, 1 - Prisoner & guards can choose their warden
+    *  new cvar - sm_warden_choice_application_time - How many seconds after roundstart guards can applicate for warden
+    *  new cvar - sm_warden_choice_vote_time - 0 - disabled, rounds in a row a player can be warden
+    *  new cvar - sm_warden_choice_list - 0 - remove all applicans after vote, 1 - remove just the voted warden after vote, 2 - players stay on applicans list until !uw
+*  Add-On: Change ConVars, block or execute commands & un/load plugins on EventDay start/end
+    *  new plugin - disabled/eventday_toggle.smx
+    *  new config - sourcemod/configs/MyJailbreak/eventday_toggle.cfg check comments in this cfg for configuration
+*  Add-On: Support for adding freeday to Zephyrus store
+    *  new plugin - disabled/warden_zephstore_freeday.smx
+		"FreeDay"
+		{
+			"price" "800"
+			"type" "freeday"
+		}
   
 *Changed*
 *  All Plugins: moved the plugins chat prefix (e.g. [MyJB.Tag]) from translation to plugins .cfg
     *  new cvar - sm_PLUGINNAME_prefix - Set your chat prefix for this plugin.
 *  Ratio: moved guard questions from translation own cfg file - BigThx to BaFer!
     *  new config file - addons/sourcemod/configs/MyJailbreak/questions.cfg
-*  PlayerTags: Plugin rewritten. Incognito mode. Suport admin groups & providing support for TogsClanTags, CCC & ZstoreTags. moved the player chat tags e.g. [Warden] from translation and to new cfg
+*  PlayerTags: Plugin rewritten. Incognito mode. Support admin groups & providing support for TogsClanTags, CCC & ZstoreTags. moved all the player tags(e.g. [Warden]) from translation and to new cfg
     *  new command - sm_incognito - Allows admin to toggle incognito - show default tags instead of admin tags
     *  new config - sourcemod/configs/MyJailbreak/player_tags.cfg check comments in this cfg for configuration
     *  removed cvars - sm_playertag_flag - All cvars to set player tags are removed. check new config file.
@@ -66,16 +81,6 @@
     *  new cvar - sm_hud_alpha - Alpha value of sm_hud_type '1' set value to 255 to disable for transparency
     *  new cvar - sm_hud_x - x coordinate, from 0 to 1. -1.0 is the center of sm_hud_type '1'
     *  new cvar - sm_hud_y - y coordinate, from 0 to 1. -1.0 is the center of sm_hud_type '1'
-*  Add-On: Change ConVars, block or execute commands & un/load plugins on EventDay start/end
-    *  new plugin - disabled/eventday_toggle.smx
-    *  new config - sourcemod/configs/MyJailbreak/eventday_toggle.cfg check comments in this cfg for configuration
-*  Add-On: Support for adding freeday to Zephyrus store
-    *  new plugin - disabled/warden_zephstore_freeday.smx
-		"FreeDay"
-		{
-			"price" "800"
-			"type" "freeday"
-		}
 *  Warden: reset cooldowns (sm_warden_cooldown_limit) when all CTs reached max.
   
   
@@ -83,7 +88,7 @@
 *  War, zombie & duckhunt: fix team damage
 *  Warden: taser clips
 *  events: fix sm_*eventname*_randomspawn
-*  minor errors
+*  minor errors, fixes & improvements
   
   
   
@@ -98,7 +103,7 @@
     *  new template plugin - Add-ons/template_vip_forward.sp - example to grand vip for different features through different "Vip"-types
 *  stock CheckVipFlag has been replaced with new native MyJailbreak_CheckVIPFlags
 *  Added Code contribution guidelines - read before do a pull request
-*  many code style adjustments
+*  many code style adjustments - check https://github.com/shanapu/MyJailbreak/blob/dev/Code_Contribution_Guidelines.md
   
   
   
