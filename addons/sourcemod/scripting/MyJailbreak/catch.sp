@@ -30,6 +30,7 @@
 #include <sdktools>
 #include <sdkhooks>
 #include <cstrike>
+#include <smartdm>
 #include <emitsoundany>
 #include <colors>
 #include <autoexecconfig>
@@ -79,6 +80,7 @@ ConVar gc_bSetA;
 ConVar gc_bSetABypassCooldown;
 ConVar gc_bVote;
 ConVar gc_bSounds;
+ConVar gc_sItemModel;
 ConVar gc_bOverlays;
 ConVar gc_bStayOverlay;
 ConVar gc_sOverlayStartPath;
@@ -123,6 +125,7 @@ int g_iCatchCounter[MAXPLAYERS+1];
 int g_iMaxRound;
 int g_iFreezeTime;
 int g_iTsLR;
+int g_iIceEntity[MAXPLAYERS+1] = -1;
 
 // Handles
 Handle g_hTimerSprint[MAXPLAYERS+1];
@@ -138,6 +141,7 @@ char g_sOverlayFreeze[256];
 char g_sEventsLogFile[PLATFORM_MAX_PATH];
 char g_sSoundStartPath[256];
 char g_sOverlayStartPath[256];
+char g_sItemModel[64];
 
 // Info
 public Plugin myinfo = {
@@ -200,6 +204,7 @@ public void OnPluginStart()
 	gc_sOverlayFreeze = AutoExecConfig_CreateConVar("sm_catch_overlayfreeze_path", "overlays/MyJailbreak/frozen", "Path to the Freeze Overlay DONT TYPE .vmt or .vft");
 	gc_bStayOverlay = AutoExecConfig_CreateConVar("sm_catch_stayoverlay", "1", "0 - overlays will removed after 3sec., 1 - overlays will stay until unfreeze", _, true, 0.0, true, 1.0);
 	gc_iFreezeTime = AutoExecConfig_CreateConVar("sm_catch_freezetime", "15", "Time in seconds CTs are freezed", _, true, 0.0);
+	gc_sItemModel = AutoExecConfig_CreateConVar("sm_catch_model", "models/spree/spree.mdl", "path to the ice model");
 	gc_bSounds = AutoExecConfig_CreateConVar("sm_catch_sounds_enable", "1", "0 - disabled, 1 - enable sounds ", _, true, 0.0, true, 1.0);
 	gc_sSoundStartPath = AutoExecConfig_CreateConVar("sm_catch_sounds_start", "music/MyJailbreak/start.mp3", "Path to the soundfile which should be played for a start.");
 	gc_sSoundFreezePath = AutoExecConfig_CreateConVar("sm_catch_sounds_freeze", "music/MyJailbreak/freeze.mp3", "Path to the soundfile which should be played on freeze.");
@@ -221,6 +226,7 @@ public void OnPluginStart()
 	HookConVarChange(gc_sSoundFreezePath, OnSettingChanged);
 	HookConVarChange(gc_sSoundUnFreezePath, OnSettingChanged);
 	HookConVarChange(gc_sPrefix, OnSettingChanged);
+	HookConVarChange(gc_sItemModel, OnSettingChanged);
 
 	// Hooks
 	HookEvent("round_start", Event_RoundStart);
@@ -238,6 +244,7 @@ public void OnPluginStart()
 	gc_sSoundFreezePath.GetString(g_sSoundFreezePath, sizeof(g_sSoundFreezePath));
 	gc_sSoundUnFreezePath.GetString(g_sSoundUnFreezePath, sizeof(g_sSoundUnFreezePath));
 	gc_sOverlayFreeze.GetString(g_sOverlayFreeze, sizeof(g_sOverlayFreeze));
+	gc_sItemModel.GetString(g_sItemModel, sizeof(g_sItemModel));
 
 	// Logs
 	SetLogFile(g_sEventsLogFile, "Events", "MyJailbreak");
@@ -299,6 +306,11 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 		{
 			PrecacheDecalAnyDownload(g_sOverlayStartPath);
 		}
+	}
+	else if (convar == gc_sItemModel)
+	{
+		strcopy(g_sItemModel, sizeof(g_sItemModel), newValue);
+		Downloader_AddFileToDownloadsTable(g_sItemModel);
 	}
 	else if (convar == gc_sPrefix)
 	{
@@ -395,6 +407,7 @@ public void OnConfigsExecuted()
 	gc_sSoundFreezePath.GetString(g_sSoundFreezePath, sizeof(g_sSoundFreezePath));
 	gc_sSoundUnFreezePath.GetString(g_sSoundUnFreezePath, sizeof(g_sSoundUnFreezePath));
 	gc_sOverlayFreeze.GetString(g_sOverlayFreeze, sizeof(g_sOverlayFreeze));
+	gc_sItemModel.GetString(g_sItemModel, sizeof(g_sItemModel));
 
 	// FindConVar
 	if (gp_bHosties)
@@ -836,7 +849,9 @@ public void OnMapStart()
 	{
 		PrecacheDecalAnyDownload(g_sOverlayFreeze);
 	}
-	
+
+	PrecacheModel(g_sItemModel);
+
 	PrecacheSound("player/suit_sprint.wav", true);
 }
 
@@ -864,8 +879,6 @@ public Action CS_OnTerminateRound(float &delay,  CSRoundEndReason &reason)
 			reason = CSRoundEnd_TerroristWin;
 			return Plugin_Changed;
 		}
-
-		return Plugin_Continue;
 	}
 
 	return Plugin_Continue;
@@ -875,14 +888,10 @@ public Action CS_OnTerminateRound(float &delay,  CSRoundEndReason &reason)
 public Action OnTraceAttack(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &ammotype, int hitbox, int hitgroup)
 {
 	if (!g_bIsCatch)
-	{
 		return Plugin_Continue;
-	}
 
 	if (!IsValidClient(victim, true, false) || attacker == victim || !IsValidClient(attacker, true, false))
-	{
 		return Plugin_Continue;
-	}
 
 	if (GetClientTeam(victim) == CS_TEAM_T && GetClientTeam(attacker) == CS_TEAM_CT && !g_bCatched[victim])
 	{
@@ -894,14 +903,13 @@ public Action OnTraceAttack(int victim, int &attacker, int &inflictor, float &da
 		{
 			CatchEm(victim, attacker);
 		}
-
-		CheckStatus();
 	}
 	else if (GetClientTeam(victim) == CS_TEAM_T && GetClientTeam(attacker) == CS_TEAM_T && g_bCatched[victim] && !g_bCatched[attacker])
 	{
 		FreeEm(victim, attacker);
-		CheckStatus();
 	}
+
+	CheckStatus();
 
 	return Plugin_Handled;
 }
@@ -909,9 +917,7 @@ public Action OnTraceAttack(int victim, int &attacker, int &inflictor, float &da
 public void OnClientDisconnect_Post(int client)
 {
 	if (!g_bIsCatch)
-	{
 		return;
-	}
 
 	CheckStatus();
 }
@@ -929,17 +935,13 @@ public void OnClientPutInServer(int client)
 public Action OnWeaponCanUse(int client, int weapon)
 {
 	if (!g_bIsCatch)
-	{
 		return Plugin_Continue;
-	}
 
 	char sWeapon[32];
 	GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
 
 	if (!StrEqual(sWeapon, "weapon_knife") && IsValidClient(client, true, false))
-	{
 		return Plugin_Handled;
-	}
 
 	return Plugin_Continue;
 }
@@ -1261,8 +1263,42 @@ void CatchEm(int client, int attacker)
 	}
 
 	CPrintToChatAll("%s %t", g_sPrefix, "catch_catch", attacker, client);
+
+	g_iIceEntity[client] = CreateEntityByName("prop_dynamic_override");
+
+	if (g_iIceEntity[client] == -1)
+		return;
+
+	SetEntityModel(g_iIceEntity[client], g_sItemModel);
+	SetEntProp(g_iIceEntity[client], Prop_Send, "m_nSolidType", 6);
+
+	float vec[3];
+	GetClientAbsOrigin(client, vec);
+
+	TeleportEntity(g_iIceEntity[client], vec, NULL_VECTOR, NULL_VECTOR);
+
+	SDKHook(g_iIceEntity[client], SDKHook_Touch, TouchCube);
 }
 
+
+void TouchCube(int entity, int client)
+{
+	for (int i = 1; i <= MaxClients; i++)
+	{
+		if (!IsClientInGame(i))
+			continue;
+
+		if (GetClientTeam(client) != CS_TEAM_T)
+			continue;
+
+		if (g_iIceEntity[i] != entity)
+			continue;
+
+		SDKUnhook(entity, SDKHook_Touch, TouchCube);
+		FreeEm(i, client);
+		break;
+	}
+}
 
 void FreeEm(int client, int attacker)
 {
@@ -1278,8 +1314,14 @@ void FreeEm(int client, int attacker)
 	{
 		EmitSoundToAllAny(g_sSoundUnFreezePath);
 	}
-	
+
 	CPrintToChatAll("%s %t", g_sPrefix, "catch_unfreeze", attacker, client);
+
+	if (g_iIceEntity[client] == -1)
+		return;
+
+	AcceptEntityInput(g_iIceEntity[client], "kill");
+	g_iIceEntity[client] = -1;
 }
 
 
@@ -1456,7 +1498,7 @@ public Action Timer_StartEvent(Handle timer)
 			Setup_WallhackSkin(i);
 		}
 
-		ToggleWeaponFire(i, true);
+		EnableWeaponFire(i, true);
 	}
 
 	if (gc_bSounds.BoolValue)
