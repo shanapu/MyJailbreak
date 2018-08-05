@@ -202,7 +202,7 @@ public void OnPluginStart()
 	gc_bOverlays = AutoExecConfig_CreateConVar("sm_catch_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true, 0.0, true, 1.0);
 	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_catch_overlays_start", "overlays/MyJailbreak/start", "Path to the start Overlay DONT TYPE .vmt or .vft");
 	gc_sOverlayFreeze = AutoExecConfig_CreateConVar("sm_catch_overlayfreeze_path", "overlays/MyJailbreak/frozen", "Path to the Freeze Overlay DONT TYPE .vmt or .vft");
-	gc_bStayOverlay = AutoExecConfig_CreateConVar("sm_catch_stayoverlay", "1", "0 - overlays will removed after 3sec., 1 - overlays will stay until unfreeze", _, true, 0.0, true, 1.0);
+	gc_bStayOverlay = AutoExecConfig_CreateConVar("sm_catch_stayoverlay", "0", "0 - overlays will removed after 3sec., 1 - overlays will stay until unfreeze", _, true, 0.0, true, 1.0);
 	gc_iFreezeTime = AutoExecConfig_CreateConVar("sm_catch_freezetime", "15", "Time in seconds CTs are freezed", _, true, 0.0);
 	gc_sItemModel = AutoExecConfig_CreateConVar("sm_catch_model", "models/spree/spree.mdl", "path to the ice model");
 	gc_bSounds = AutoExecConfig_CreateConVar("sm_catch_sounds_enable", "1", "0 - disabled, 1 - enable sounds ", _, true, 0.0, true, 1.0);
@@ -813,9 +813,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 public void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
 {
 	if (!g_bIsCatch)
-	{
 		return;
-	}
 
 	CheckStatus();
 
@@ -1270,35 +1268,15 @@ void CatchEm(int client, int attacker)
 		return;
 
 	SetEntityModel(g_iIceEntity[client], g_sItemModel);
-	SetEntProp(g_iIceEntity[client], Prop_Send, "m_nSolidType", 6);
+	SetEntProp(g_iIceEntity[client], Prop_Send, "m_CollisionGroup", 2);
 
 	float vec[3];
 	GetClientAbsOrigin(client, vec);
 
+	TeleportEntity(client, vec, NULL_VECTOR, NULL_VECTOR);
 	TeleportEntity(g_iIceEntity[client], vec, NULL_VECTOR, NULL_VECTOR);
-
-	SDKHook(g_iIceEntity[client], SDKHook_Touch, TouchCube);
 }
 
-
-void TouchCube(int entity, int client)
-{
-	for (int i = 1; i <= MaxClients; i++)
-	{
-		if (!IsClientInGame(i))
-			continue;
-
-		if (GetClientTeam(client) != CS_TEAM_T)
-			continue;
-
-		if (g_iIceEntity[i] != entity)
-			continue;
-
-		SDKUnhook(entity, SDKHook_Touch, TouchCube);
-		FreeEm(i, client);
-		break;
-	}
-}
 
 void FreeEm(int client, int attacker)
 {
@@ -1355,9 +1333,7 @@ void Setup_WallhackSkin(int client)
 
 	int iSkin = CPS_SetSkin(client, sModel, CPS_RENDER);
 	if (iSkin == -1)
-	{
 		return;
-	}
 
 	if (SDKHookEx(iSkin, SDKHook_SetTransmit, OnSetTransmit_Wallhack))
 	{
@@ -1392,9 +1368,7 @@ void Setup_Wallhack(int iSkin)
 public Action OnSetTransmit_Wallhack(int iSkin, int client)
 {
 	if (!IsPlayerAlive(client) || GetClientTeam(client) != CS_TEAM_CT)
-	{
 		return Plugin_Handled;
-	}
 
 	for (int i = 1; i <= MaxClients; i++)
 	{
@@ -1402,14 +1376,10 @@ public Action OnSetTransmit_Wallhack(int iSkin, int client)
 			continue;
 
 		if (!CPS_HasSkin(i) || !g_bCatched[i])
-		{
 			continue;
-		}
 
 		if (EntRefToEntIndex(CPS_GetSkin(i)) != iSkin)
-		{
 			continue;
-		}
 
 		return Plugin_Continue;
 	}
