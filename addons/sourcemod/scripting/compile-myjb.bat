@@ -64,4 +64,6 @@ spcomp MyJailbreak/Add-ons/myjailbreak_sm-store_credits.sp -o../plugins/MyJailbr
 spcomp MyJailbreak/Add-ons/myjailbreak_zephstore_credits.sp -o../plugins/MyJailbreak/disabled/myjailbreak_zephstore_credits.smx  
 spcomp MyJailbreak/Add-ons/myjailbreak_simplestats.sp -o../plugins/MyJailbreak/disabled/myjailbreak_simplestats.smx
 spcomp MyJailbreak/Add-ons/warden_zephstore_paperclips.sp -o../plugins/MyJailbreak/disabled/warden_zephstore_paperclips.smx
+spcomp MyJailbreak/Add-ons/menu_custom.sp -o../plugins/MyJailbreak/disabled/menu_custom.smx
+spcomp MyJailbreak/Add-ons/myjailbreak_gangs.sp -o../plugins/MyJailbreak/disabled/myjailbreak_gangs.smx
 pause
