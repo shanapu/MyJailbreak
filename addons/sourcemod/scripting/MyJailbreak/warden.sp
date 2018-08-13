@@ -621,11 +621,11 @@ public Action Command_BecomeWarden(int client, int args)
 
 		int iIndex = g_aApplicationQueue.FindValue(client);
 
-		if(iIndex == -1)
+		if(iIndex != -1)
 			return Plugin_Handled;
 
 		g_aApplicationQueue.Push(client);
-		CReplyToCommand(client, "%s %s", g_sPrefix, "ADDED TO APPLICATION LIST");
+		CPrintToChatAll("%s %t", g_sPrefix, "warden_apply_added", client);
 
 		return Plugin_Handled;
 	}
@@ -688,7 +688,7 @@ public Action Command_ExitWarden(int client, int args)
 		if(g_iApplicationTime > 0 && iIndex != -1)
 		{
 			g_aApplicationQueue.Erase(iIndex);
-			CReplyToCommand(client, "%s %s", g_sPrefix, "REMOVED FROM APPLICATION LIST");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "warden_apply_removed");
 		}
 		return Plugin_Handled;
 	}
@@ -1030,7 +1030,7 @@ public Action Timer_Application(Handle timer)
 
 	if (g_iApplicationTime > 0)
 	{
-		PrintCenterTextAll("%s %t", g_sPrefix, "warden_apply_time", g_iApplicationTime);
+		PrintCenterTextAll("%t", "warden_apply_time", g_iApplicationTime);
 		return Plugin_Continue;
 	}
 
@@ -1527,7 +1527,7 @@ void CheckWardenCoolDowns()
 		SetCoolDown(i, 0);
 	}
 
-	CPrintToChatAll("%s %s", g_sPrefix, "The warden cooldown for all guards has been reseted"); //ToDo Translate
+	CPrintToChatAll("%s %t", g_sPrefix, "warden_cooldown_reset");
 }
 
 /******************************************************************************
